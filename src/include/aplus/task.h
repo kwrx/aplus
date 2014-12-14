@@ -119,6 +119,12 @@ typedef struct task {
 		uint32_t ptr;
 		uint32_t length;
 	} image;
+
+	struct {
+		uint32_t strtab;
+		uint32_t symtab;
+		uint32_t count;
+	} symbols;
 	
 	void (*signal_handler) (int);
 	int signal_sig;

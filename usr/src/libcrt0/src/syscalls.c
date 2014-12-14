@@ -111,6 +111,7 @@ syscall1(29, fchdir)
 syscall1(30, pipe)
 syscall3(31, waitpid)
 syscall0(32, getppid)
+syscall1(33, uname)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

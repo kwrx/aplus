@@ -41,7 +41,7 @@
 #endif
 
 
-uint32_t memsize;
+uint64_t memsize;
 heap_t* current_heap;
 
 extern uint32_t* current_vmm;

@@ -37,6 +37,8 @@ struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
 		return NULL;
 		
 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+	memset(ino, 0, sizeof(inode_t));
+
 	strcpy(ino->name, name);
 	
 	ino->dev = inode->dev;
@@ -71,6 +73,8 @@ struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
 inode_t* devfs_mount() {
 	
 	devfs = (inode_t*) kmalloc(sizeof(inode_t));
+	memset(devfs, 0, sizeof(inode_t));
+
 	strcpy(devfs->name, "dev");
 	
 	devfs->dev = (dev_t) 0;

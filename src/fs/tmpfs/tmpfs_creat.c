@@ -21,6 +21,8 @@ inode_t* tmpfs_creat(inode_t* inode, char* name, mode_t mode) {
 		return NULL;
 		
 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+	memset(ino, 0, sizeof(inode_t));
+
 	strcpy(ino->name, name);
 	
 	ino->dev = inode->dev;

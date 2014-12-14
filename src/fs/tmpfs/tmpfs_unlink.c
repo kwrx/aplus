@@ -9,8 +9,9 @@
 #include <fcntl.h>
 
 int tmpfs_unlink(inode_t* inode, char* name) {
-	if((void*) vfs_mapped(inode, name) != NULL)
+	inode_t* ino;
+	if((ino = (inode_t*) vfs_mapped(inode, name)) != NULL)
 		return -1;
 		
-	return vfs_umap(inode, name);
+	return vfs_umap(ino);
 }

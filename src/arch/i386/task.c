@@ -6,6 +6,7 @@
 #include <aplus/fs.h>
 
 #include <setjmp.h>
+#include <grub.h>
 
 #if HAVE_SSE
 #define SSE_ALIGN(x)	(((uint32_t) x & 0x10) + 0x10)
@@ -226,6 +227,9 @@ int task_init() {
 	current_task->state = TASK_STATE_ALIVE;
 	current_task->priority = TASK_PRIORITY_REGULAR;
 	current_task->parent = NULL;
+
+
+	exec_init_kernel_task(current_task);
 
 
 	list_add(task_queue, (listval_t) current_task);

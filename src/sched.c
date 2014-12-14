@@ -344,7 +344,9 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	if(current_task->image.vaddr == 0)
 		return NULL;
 
-
+#ifdef SBRK_DEBUG
+	kprintf("sbrk: request for %d Bytes (%d MB)\n", increment, (current_task->image.length + increment) / 1024 / 1024);
+#endif
 
 	void* brk = (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);		
 	if(increment == 0)
@@ -353,13 +355,16 @@ void* schedule_sbrk(ptrdiff_t increment) {
 
 	increment = (increment & ~0xFFF) + 0x1000;
 
-	if(increment > 0)
-		vmm_alloc(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-	else
+	if(increment > 0) {
+		if(!vmm_alloc(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER)) {
+			errno = ENOMEM;
+			return NULL;
+		}
+	} else
 		vmm_free(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment);	
 
-	current_task->image.length += increment;
 
+	current_task->image.length += increment;
 	return brk;
 }
 

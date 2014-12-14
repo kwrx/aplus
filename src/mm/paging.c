@@ -32,6 +32,7 @@
 #include <grub.h>
 
 #define PGSIZE		(BLKSIZE)
+#define PGSIZE_4MB	(BLKSIZE * 1024)
 #define PGFLAGS		(0x00000000)
 
 #define PDSIZE		(1024)
@@ -41,7 +42,7 @@
 #define PTENTRY(x)	((uint32_t) x << 10 >> 10 >> 12)
 
 extern volatile heap_t* current_heap;
-extern uint32_t memsize;
+extern uint64_t memsize;
 
 uint32_t* current_vmm;
 uint32_t* kernel_vmm;
@@ -79,6 +80,7 @@ void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {
 	int pages = (len / PGSIZE) + 1;
 	uint32_t pframe = (uint32_t) paddr;
 	uint32_t vframe = (uint32_t) vaddr;
+
 	
 	for(int i = 0; i < pages; i++) {
 		uint32_t* e = &pd[PDENTRY(vframe)];
@@ -129,9 +131,10 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 
 void* vmm_alloc(uint32_t* vmm, void* vaddr, size_t size, int flags) {
 	void* paddr = (void*) halloc(current_heap, size);
+	if(!paddr)
+		return NULL;
 
 	vmm_map(vmm, paddr, vaddr, size, flags);
-
 	return paddr;
 }
 

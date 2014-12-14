@@ -91,6 +91,8 @@ void pipe_flush(inode_t* inode) {
 int pipe_create(inode_t inodes[2]) {
 
 	pipeinfo_t* pipe = (pipeinfo_t*) kmalloc(sizeof(pipeinfo_t));
+	memset(pipe, 0, sizeof(pipeinfo_t));
+
 	pipe->size = BUFSIZ;
 	pipe->stream = (void*) shm_acquire_chunk(&pipe->size);
 	pipe->read_offset = 0;

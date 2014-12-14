@@ -20,7 +20,7 @@ uint8_t serial_recv(uint8_t port) {
 }
 
 int serial_init() {
-	for(int i = 0; i < sizeof(serial); i++) {
+	for(int i = 0; i < 4; i++) {
 		outb(serial[i] + 1, 0x00);
 		outb(serial[i] + 3, 0x80);
 		outb(serial[i] + 0, 0x03);

@@ -61,7 +61,7 @@ int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 
 
 #ifdef SYSCALL_DEBUG
-	kprintf("syscall: %d call %s [%d] (%x, %x, %x, %x, %x);\n", sys_getpid(), elf_kernel_lookup(handler), idx, p0, p1, p2, p3, p4);
+	kprintf("syscall: %d call %s [%d] (%x, %x, %x, %x, %x);\n", sys_getpid(), elf_symbol_lookup(handler), idx, p0, p1, p2, p3, p4);
 #endif
 
 

@@ -4,8 +4,9 @@
 #include <stdint.h>
 #include <math.h>
 #include <errno.h>
-#include "clrconv.h"
 
+#include "clrconv.h"
+#include "config.h"
  
 extern atk_gfx_t* __gfx;
 static atk_mask_t* __mask = NULL;

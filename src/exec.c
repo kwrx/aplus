@@ -9,8 +9,7 @@
 
 
 extern task_t* current_task;
-
-#define ELF32_ADDRSPACE_MIN_LENGTH		0x100000
+extern task_t* kernel_task;
 
 
 typedef uint32_t Elf32_Addr;
@@ -239,11 +238,12 @@ int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 		phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
 	}
 
-	if(s < ELF32_ADDRSPACE_MIN_LENGTH)
-		s = ELF32_ADDRSPACE_MIN_LENGTH;
+	s &= ~0xFFFFF;
+	s += 0x100000;
+
 
 #ifdef ELF_DEBUG
-	kprintf("elf: address space at 0x%x (%d Bytes)\n", p, s);
+	kprintf("elf: address space at 0x%x (%d MB)\n", p, s / 1024 / 1024);
 #endif
 
 
@@ -290,16 +290,19 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 
 
 	elf32_shdr_t* sec = (elf32_shdr_t*) ((uint32_t) hdr->e_shoff + (uint32_t) hdr);
-	
+	uint32_t shstrtab = (uint32_t) hdr + sec[hdr->e_shstrndx].sh_offset;
+
 	int sn = hdr->e_shnum;
 	int ss = hdr->e_shentsize;
 
 	for(int i = 0; i < sn; i++) {
-		if(sec->sh_addr && sec->sh_offset) {
+		const char* name = (const char*) (shstrtab + sec->sh_name);
 
+		if(sec->sh_addr && sec->sh_offset) {
 #ifdef ELF_DEBUG
-			kprintf("elf: copy section to 0x%8x [%d] (%d Bytes)\n", sec->sh_addr, sec->sh_type, sec->sh_size);
+			kprintf("elf: copy section \"%s\" to 0x%8x [%d] (%d Bytes)\n", name, sec->sh_addr, sec->sh_type, sec->sh_size);
 #endif
+
 
 			if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
 				panic("elf: section overflow");
@@ -310,6 +313,21 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 			if(sec->sh_type == SHT_NOBITS)
 				memset((void*) sec->sh_addr, 0, sec->sh_size);
 		}
+#ifdef ELF_DEBUG
+		else
+			kprintf("elf: skip section \"%s\"\n", name);
+#endif
+
+		if(strcmp(name, ".strtab") == 0)
+			current_task->symbols.strtab = (uint32_t) hdr + sec->sh_offset;
+		
+
+		if(strcmp(name, ".symtab") == 0) {
+			current_task->symbols.symtab = (uint32_t) hdr + sec->sh_offset;
+			current_task->symbols.count = sec->sh_size;
+		}
+
+
 
 		sec = (elf32_shdr_t*) ((uint32_t) sec + ss);
 	}
@@ -318,33 +336,19 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	kprintf("elf: entrypoint at 0x%8x\n", hdr->e_entry);
 #endif
 
+
+
 	return (void*) hdr->e_entry;
 }
 
 
 
-char* elf_kernel_lookup(uint32_t symaddr) {
-	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->addr;
+char* elf_symbol_lookup(uint32_t symaddr) {
 	
-	uint32_t shstrtab = shdr[mbd->shndx].sh_addr;
 	
-	const char* strtab = NULL;
-	elf32_sym_t* symtab = NULL;
-
-	uint32_t symtabsz = 0;
-
-	for(int i = 0; i < mbd->num; i++) {
-		const char* name = (const char*) (shstrtab + shdr[i].sh_name);
-
-		if(strcmp(name, ".strtab") == 0)
-			strtab = (const char*) shdr[i].sh_addr;
-		
-
-		if(strcmp(name, ".symtab") == 0) {
-			symtab = (elf32_sym_t*) shdr[i].sh_addr;
-			symtabsz = shdr[i].sh_size;
-		}
-	}
+	const char* strtab = (const char*) current_task->symbols.strtab;
+	elf32_sym_t* symtab = (elf32_sym_t*) current_task->symbols.symtab;
+	uint32_t symtabsz = current_task->symbols.count;
 
 
 	for(int i = 0; i < (symtabsz / sizeof(elf32_sym_t)); i++) {
@@ -357,7 +361,43 @@ char* elf_kernel_lookup(uint32_t symaddr) {
 		}
 	}
 
+
+	strtab = (const char*) kernel_task->symbols.strtab;
+	symtab = (elf32_sym_t*) kernel_task->symbols.symtab;
+	symtabsz = kernel_task->symbols.count;
+
+	for(int i = 0; i < (symtabsz / sizeof(elf32_sym_t)); i++) {
+		if(ELF32_ST_TYPE(symtab[i].st_info) != 0x02)
+			continue;
+
+		if((symaddr >= symtab[i].st_value) && (symaddr < (symtab[i].st_value + symtab[i].st_size))) {
+			const char* name = (const char*) ((uint32_t) strtab + symtab[i].st_name);
+			return (char*) name;
+		}
+	}
+
 	return NULL;
+}
+
+
+int exec_init_kernel_task(task_t* k) {
+	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->addr;
+	uint32_t shstrtab = shdr[mbd->shndx].sh_addr;
+
+	for(int i = 0; i < mbd->num; i++) {
+		const char* name = (const char*) (shstrtab + shdr[i].sh_name);
+
+		if(strcmp(name, ".strtab") == 0)
+			k->symbols.strtab = (uint32_t) shdr[i].sh_addr;
+		
+
+		if(strcmp(name, ".symtab") == 0) {
+			k->symbols.symtab = (uint32_t) shdr[i].sh_addr;
+			k->symbols.count = shdr[i].sh_size;
+		}
+	}
+
+	return 0;
 }
 
 

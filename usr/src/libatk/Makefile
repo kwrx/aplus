@@ -14,7 +14,7 @@ AR			:= $(TARGET)-ar
 endif
 
 
-CFLAGS		+= -DDEBUG -I $(SRCDIR)/include -std=c99
+CFLAGS		+= -I $(SRCDIR)/include -I /opt/cross/usr/include/freetype2 -std=c99
 CXXFLAGS	+=
 LDFLAGS		+=
 ARFLAGS		+= -rcs
@@ -40,8 +40,9 @@ $(TSTDIR)/main: $(TSTDIR)/main.c
 	@$(CC) -Wall $< -o $@
 
 clean:
-	-@$(RM) $(SRCDIR)/*.o
-	-@$(RM) $(TSTDIR)/*.o
+	-@$(RM) $(OFILES)
+	-@$(RM) -r $(SRCDIR)/*.o
+	-@$(RM) -r $(TSTDIR)/*.o
 	-@$(RM) $(TSTDIR)/main
 	-@$(RM) $(OUTPUT)
 

@@ -255,7 +255,9 @@ int tty_open(int* master, int* slave, char* name, struct termios* ios, struct wi
 
 
 	inode_t* ino = current_task->fd[fd];
+
 	tty_t* tty = kmalloc(sizeof(tty_t));
+	memset(tty, 0, sizeof(tty_t));
 
 
 	ino->read = tty_read;

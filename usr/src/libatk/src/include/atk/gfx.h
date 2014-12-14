@@ -3,6 +3,7 @@
 
 #include <atk.h>
 #include <atk/bitmap.h>
+#include <atk/font.h>
 #include <stdint.h>
 
 typedef struct atk_gfx {
@@ -21,6 +22,7 @@ typedef struct atk_gfx {
 		atk_bitmap_t* bitmap;
 		atk_mask_t* mask;
 		atk_color_t color;
+		atk_font_t font;
 	} __c;
 } atk_gfx_t;
 

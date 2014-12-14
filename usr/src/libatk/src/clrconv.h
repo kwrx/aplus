@@ -2,8 +2,13 @@
 #define _CLRCONV_H
 
 #include <atk.h>
+#include <atk/gfx.h>
+
 #include <stdint.h>
 #include <assert.h>
+
+
+#include "config.h"
 
 /*
  *
@@ -91,6 +96,15 @@ static inline atk_color_t __alphablend(atk_color_t d, atk_color_t s, float a) {
 }
 
 
+__attribute__((fastcall))
+static inline void __atk_gfx_plot(void* buf, int w) {
+	extern atk_gfx_t* __gfx;
+
+	if(__gfx->__c.mask)
+		return;
+	else
+		__gfx->__plot(buf, __gfx->__c.color, w);
+}
 
 
 #endif

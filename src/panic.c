@@ -51,7 +51,7 @@ static void dump_stacktrace(int count) {
 
 	for(int i = 0; i < count; i++) {
 		int eip = *(++esp);
-		kprintf("[%d] 0x%x - %s\n", i, eip, elf_kernel_lookup(eip));
+		kprintf("[%d] 0x%x - %s\n", i, eip, elf_symbol_lookup(eip));
 		
 
 		esp = (int*) *(--esp);
@@ -97,8 +97,8 @@ static void dump_mmu() {
 
 	heap_t* h = (heap_t*) mm_getheap();
 
-	kprintf("\tUsed: %d MB (%d Bytes)\n", (h->used / 1024 / 1024), h->used);
-	kprintf("\tSize: %d MB (%d Bytes)\n", (h->size / 1024 / 1024), h->size);
+	kprintf("\tUsed: %d MB (%d Bytes)\n", (int)(h->used / 1024 / 1024), (int)h->used);
+	kprintf("\tSize: %d MB (%d Bytes)\n", (int)(h->size / 1024 / 1024), (int)h->size);
 
 	kprintf("\n\n");
 }

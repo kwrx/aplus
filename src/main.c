@@ -31,6 +31,7 @@
 #include <stddef.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/utsname.h>
 #include <sys/times.h>
 #include <time.h>
 
@@ -51,8 +52,21 @@ extern task_t* current_task;
  */
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_MIN);
+char* __argv[] = {
+		"/dev/ramdisk/bin/init", 
+		NULL
+	};
 
 
+	char* __envp[] = {
+		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
+		"SHELL=/bin/dash",
+		"USER=liveuser",
+		"TMPDIR=/tmp",
+		NULL
+	};
+//if(sys_fork() == 0)
+		sys_execve(__argv[0], __argv, __envp);
 	for(;;)
 		__asm__ ("pause");
 }
@@ -72,6 +86,11 @@ int main() {
 	tty_init();
 	netif_init();
 
+
+	struct utsname u;
+	sys_uname(&u);
+
+	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
 
 	if(mbd->mods_count == 0)
 		panic("no initrd module found");
@@ -107,27 +126,13 @@ int main() {
 	kprintf("VRAM: 0x%x\n", mbd->vbe_mode_info->physbase);
 
 
-	char* __argv[] = {
-		"/dev/ramdisk/bin/init", 
-		NULL
-	};
-
-
-	char* __envp[] = {
-		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
-		"SHELL=/bin/dash",
-		"USER=liveuser",
-		NULL
-	};
-
+	
 
 
 	task_clone(sysidle, NULL, NULL, 0xFF);
-
-
-	//if(sys_fork() == 0)
-		sys_execve(__argv[0], __argv, __envp);
-
+for(;;) sys_yield();
+	
+	
 }
 
 

@@ -28,6 +28,9 @@ void vfs_map(inode_t* inode) {
 
 
 void vfs_umap(inode_t* inode) {
+
+	fs_flush(inode);
+
 	list_remove(list_inodes, (listval_t) inode);
 	kfree(inode);
 }
@@ -85,6 +88,8 @@ inode_t* vfs_mknod(inode_t* inode, char* name, mode_t mode) {
 		return NULL;
 		
 	inode_t* ino = (inode_t*) kmalloc(sizeof(inode_t));
+	memset(ino, 0, sizeof(inode_t));
+
 	strcpy(ino->name, name);
 	
 	ino->dev = inode->dev;
@@ -120,6 +125,8 @@ int vfs_init() {
 	
 	
 	vfs_root = (inode_t*) kmalloc(sizeof(inode_t));
+	memset(vfs_root, 0, sizeof(inode_t));
+
 	vfs_root->name[0] = '/';
 	vfs_root->name[1] = 0;
 	

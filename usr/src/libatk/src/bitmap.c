@@ -7,6 +7,7 @@
 #include <errno.h>
 
 #include "clrconv.h"
+#include "config.h"
 
 extern atk_gfx_t* __gfx;
 
