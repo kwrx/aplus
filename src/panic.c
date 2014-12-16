@@ -115,11 +115,10 @@ void panic_r(char* msg, regs_t* r) {
 	
 	
 	dump_cpu(r);
-
-	dump_stacktrace(6);
 	dump_task();
 	dump_errno();
 	dump_mmu();	
+	dump_stacktrace(6);
 
 	for(;;);
 }

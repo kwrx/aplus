@@ -37,8 +37,8 @@ inode_t* tmpfs_creat(inode_t* inode, char* name, mode_t mode) {
 	ino->parent = inode;
 	ino->link = NULL;
 	
-	ino->read = tmpfs_write;
-	ino->write = tmpfs_read;
+	ino->read = tmpfs_read;
+	ino->write = tmpfs_write;
 	ino->readdir = NULL;
 	ino->finddir = NULL;
 	ino->creat = NULL;

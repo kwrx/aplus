@@ -29,6 +29,10 @@ int sys_unlink(const char* pathname) {
 		return -1;
 	}
 
+#ifdef IO_DEBUG
+	kprintf("io: unlink \"%s\"\n", pathname);
+#endif
+
 
 	inode_t* cwd = NULL;
 

@@ -17,7 +17,7 @@ old_library='libcairo.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' -L/opt/cross/usr/lib /opt/cross/usr/lib/libpixman-1.la -lpthread /opt/cross/usr/lib/libpng12.la -lz -lm'
+dependency_libs=' /usr/lib/libpixman-1.la -lpthread /usr/lib/libpng.la /usr/lib/libfreetype.la /usr/lib/libpng12.la -lz -lrt -lposix -lm'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''
@@ -38,4 +38,4 @@ dlopen=''
 dlpreopen=''
 
 # Directory that this library needs to be installed in:
-libdir='/opt/cross/usr/lib'
+libdir='/usr/lib'

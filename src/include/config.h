@@ -12,12 +12,12 @@
 //#define SCHED_TIMING_DEBUG
 #define SHM_DEBUG
 #define SBRK_DEBUG
+//#define IO_DEBUG
 
 //#define CHUNKS_CHECKING				1
 
 
 #define HAVE_SSE					1
-#define HAVE_RANDOM_MEMORY			1
 
 
 

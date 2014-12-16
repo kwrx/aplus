@@ -38,7 +38,7 @@ int sys_lseek(int fd, int pos, int dir) {
 			ino->position = pos;
 			break;
 		case SEEK_END:
-			ino->position = ino->size - pos;
+			ino->position = ino->size + pos;
 			break;
 		case SEEK_CUR:
 			ino->position = (ino->position + pos > ino->size ? ino->size : ino->position + pos);

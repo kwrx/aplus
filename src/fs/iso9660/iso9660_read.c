@@ -41,5 +41,6 @@ int iso9660_read(inode_t* ino, char* buf, int size) {
 	dev->position = (off_t) ino->userdata + ino->position;
 	fs_read(dev, buf, size);
 
+	ino->position += size;
 	return size;
 }

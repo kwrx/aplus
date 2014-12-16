@@ -31,6 +31,9 @@ int sys_read(int fd, void* ptr, size_t size) {
 		return -1;
 	}
 
+#ifdef IO_DEBUG
+	kprintf("io: read from %d (%s) %d Bytes\n", fd, ino->name, size);
+#endif
 
 	return fs_read(ino, ptr, size);
 }

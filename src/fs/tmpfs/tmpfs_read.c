@@ -36,6 +36,8 @@ int tmpfs_read(inode_t* ino, char* buf, int size) {
 		return 0;
 
 
-	memcpy(buf, ino->userdata, size);
+	memcpy(buf, (void*) ((uint32_t) ino->userdata + ino->position), size);
+	ino->position += size;
+
 	return size;
 }

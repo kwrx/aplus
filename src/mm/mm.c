@@ -42,6 +42,8 @@
 
 
 uint64_t memsize;
+uint32_t kernel_low_area_size;
+
 heap_t* current_heap;
 
 extern uint32_t* current_vmm;
@@ -234,6 +236,8 @@ int mm_init() {
 	memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
 	if(memsize > VMM_MAX_MEMORY)
 		memsize = VMM_MAX_MEMORY;
+
+	kernel_low_area_size = ((uint32_t*) mbd->mods_addr) [1];
 
 
 	kheap_init();

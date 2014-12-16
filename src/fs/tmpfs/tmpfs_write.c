@@ -28,6 +28,7 @@ int tmpfs_write(inode_t* ino, char* buf, int size) {
 	if(!size)
 		return 0;
 	
+
 	if(ino->position + size > ino->size)
 		tmpfs_realloc(ino, ino->position + size);
 
@@ -35,6 +36,8 @@ int tmpfs_write(inode_t* ino, char* buf, int size) {
 		return 0;
 
 
-	memcpy(ino->userdata, buf, size);
+	memcpy((void*) ((uint32_t) ino->userdata + ino->position), buf, size);
+	ino->position += size;
+
 	return size;
 }

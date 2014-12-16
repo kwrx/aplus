@@ -46,9 +46,7 @@
 
 static heap_t kheap;
 extern uint64_t memsize;
-
-
-static uint8_t __bitmap[131072];
+extern uint32_t kernel_low_area_size;
 
 
 static int bitmap_first(heap_t* heap, size_t size) {
@@ -90,9 +88,11 @@ static int bitmap_first(heap_t* heap, size_t size) {
 void* bitmap_alloc(heap_t* heap, size_t size) {
 	if(!heap)
 		return NULL;
-		
+
+	
 	if(!heap->bitmap)
 		return NULL;
+
 		
 	if(heap->used >= heap->size)
 		return NULL;
@@ -121,10 +121,11 @@ void* bitmap_alloc(heap_t* heap, size_t size) {
 void bitmap_free(heap_t* heap, void* addr, size_t size) {
 	if(!heap)
 		return;
-		
+	
+	
 	if(!heap->bitmap)
 		return;
-		
+
 
 	if(size % BLKSIZE) {
 		size /= BLKSIZE;
@@ -145,17 +146,16 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 
 int kheap_init() {
 
-	kheap.bitmap = (uint32_t*) __bitmap;
 	kheap.size = memsize;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;
-	
+
 	memset(kheap.bitmap, 0, (kheap.size / BLKSIZE));
 	mm_setheap(&kheap);
 	
 
 	/* Preserve Kernel Reserved Memory & initrd*/
-	halloc(&kheap, ((uint32_t*) mbd->mods_addr) [1]);
+	halloc(&kheap, kernel_low_area_size);
 
 	return 0;
 }

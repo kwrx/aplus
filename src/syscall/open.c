@@ -134,6 +134,10 @@ int sys_open(char* filename, int flags, mode_t mode) {
 	if(!current_task)
 		return -1;
 
+#ifdef IO_DEBUG
+	kprintf("io: open/create \"%s\"\n", filename);
+#endif
+
 	char* p = dupstr(filename);
 	inode_t* ino = ino_open(p, flags, mode);
 	kfree(p);

@@ -1,152 +1,138 @@
 #include <atk.h>
-#include <atk/bitmap.h>
-#include <atk/gfx.h>
 #include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#include <assert.h>
 
-#include "clrconv.h"
 #include "config.h"
 
-extern atk_gfx_t* __gfx;
+#ifdef HAVE_UNISTD_IO
 
-atk_bitmap_t* atk_bitmap_create_for_data(uint16_t width, uint16_t height, void* buffer) {
-	if(!(width && height && buffer)) {
-		errno = EINVAL;
-		return NULL;
-	}
+#include <unistd.h>
+#include <dirent.h>
+#include <fcntl.h>
 
-	atk_bitmap_t* b = (atk_bitmap_t*) malloc(sizeof(atk_bitmap_t));
-	if(!b) {
-		errno = ENOMEM;
-		return NULL;
-	}
+#ifndef O_BINARY
+#define O_BINARY	0
+#endif
 
-	b->size[ATK_SIZE_W] = width;
-	b->size[ATK_SIZE_H] = height;
+Sint64 __rw_size(SDL_RWops* rw) {
+	int sz = 0, cc = 0, fd = (int) rw->hidden.unknown.data1;
 
-	b->stride = width * (__gfx->bpp / 8);
-	b->lock = 0;
-	b->buffer = buffer;
+	cc = lseek(fd, 0, SEEK_CUR);
+	lseek(fd, 0, SEEK_END);
+	sz = lseek(fd, 0, SEEK_CUR);
+	lseek(fd, cc, SEEK_SET);
 
-	return b;
+	return (Sint64) sz;
 }
 
-atk_bitmap_t* atk_bitmap_create(uint16_t width, uint16_t height) {
-	if(!(width && height)) {
-		errno = EINVAL;
-		return NULL;
+Sint64 __rw_seek(SDL_RWops* rw, Sint64 offset, int whence) {
+
+	switch(whence) {
+		case RW_SEEK_SET:
+			whence = SEEK_SET;
+			break;
+		case RW_SEEK_CUR:
+			whence = SEEK_CUR;
+			break;
+		case RW_SEEK_END:
+			whence = SEEK_END;
+			break;
+		default:
+			ATK_ERROR("Invalid whence for file seek");
 	}
 
-	void* data = (void*) malloc(width * height * (__gfx->bpp >> 3));
-	if(!data) {
-		errno = ENOMEM;
-		return NULL;
-	}
-
-	return atk_bitmap_create_for_data(width, height, data);
-}
-
-
-atk_bitmap_t* atk_bitmap_from_framebuffer() {
-	static atk_bitmap_t b;
-	memset(&b, 0, sizeof(atk_bitmap_t));
-
-	b.size[ATK_SIZE_W] = __gfx->width;
-	b.size[ATK_SIZE_H] = __gfx->height;
-	b.stride = __gfx->width * (__gfx->bpp / 8);
-	b.lock = 0;
-	b.buffer = __gfx->framebuffer;
-
-	return &b;
-}
-
-int atk_destroy_bitmap(atk_bitmap_t* b) {
-	if(!b) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	if(b->lock) {
-		errno = EBUSY;
-		return -1;
-	}
-
-	free(b->buffer);
-	free(b);
-
-	return 0;	
+	return (Sint64) lseek((int) rw->hidden.unknown.data1, (off_t) offset, whence);
 }
 
 
-void* atk_bitmap_lockbits(atk_bitmap_t* b, atk_rect_t rectangle, int flags) {
-	if(!b) {
-		errno = EINVAL;
-		return NULL;
-	}
-
-	if(b->lock) {
-		errno = EBUSY;
-		return NULL;
-	}
-
-	b->lock = 1;
-
-	int stride = rectangle[ATK_RECT_W] * (__gfx->bpp >> 3);
-	int size = stride * rectangle[ATK_RECT_H];
-
-	void* data = (void*) malloc(size);
-	
-	for(register int i = 0,
-					 s = 0, 
-					 p = (b->stride * rectangle[ATK_RECT_Y]) + (rectangle[ATK_RECT_X] * (__gfx->bpp >> 3));
-			i < rectangle[ATK_RECT_H];
-			i++, s += stride, p += b->stride
-		)
-		memcpy(
-				(void*) ((uint32_t) data + s), 
-				(void*) ((uint32_t) b->buffer + p),
-				stride
-			);
-
-
-	b->__lockdata.region = rectangle;
-	b->__lockdata.data = data;
-	b->__lockdata.flags = flags;
-
-	return data;
+size_t __rw_read(SDL_RWops* rw, void* data, size_t size, size_t count) {
+	return (size_t) read((int) rw->hidden.unknown.data1, data, size * count);
 }
 
-void atk_bitmap_unlockbits(atk_bitmap_t* b) {
-	if(!b) {
-		errno = EINVAL;
-		return NULL;
-	}
-
-	
-	if(b->__lockdata.flags & ATK_BITMAP_LOCK_RDWR) {
-
-		int stride = b->__lockdata.region[ATK_RECT_W] * (__gfx->bpp >> 3);
-
-		for( int i = 0,
-						 s = 0, 
-						 p = (b->stride * b->__lockdata.region[ATK_RECT_Y]) + (b->__lockdata.region[ATK_RECT_X] * (__gfx->bpp >> 3));
-				i < b->__lockdata.region[ATK_RECT_H];
-				i++, s += stride, p += b->stride
-			)
-			memcpy(
-					(void*) ((uint32_t) b->buffer + p),
-					(void*) ((uint32_t) b->__lockdata.data + s),
-					stride
-				);
-	}
-
-	b->__lockdata.region[0] = b->__lockdata.region[1] = b->__lockdata.region[2] = b->__lockdata.region[3] = 0;
-	b->__lockdata.flags = 0;
-
-	free(b->__lockdata.data);
-	b->__lockdata.data = 0;
-
-	b->lock = 0;
+size_t __rw_write(SDL_RWops* rw, const void* data, size_t size, size_t count) {
+	return (size_t) write((int) rw->hidden.unknown.data1, (void*) data, size * count);
 }
+
+int __rw_close(SDL_RWops* rw) {
+	return (int) close((int) rw->hidden.unknown.data1);
+}
+
+#endif
+
+
+
+int atk_load_bitmap(atk_t* atk, atk_bitmap_t* bitmap, const char* path) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!bitmap)
+		ATK_ERROR("Invalid Bitmap context");
+
+	if(!path)
+		ATK_ERROR("Path cannot be null");
+
+
+#if HAVE_UNISTD_IO
+
+	int fd = open(path, O_RDONLY | O_BINARY, 0644);
+	if(fd < 0)
+		ATK_FILE_NOT_FOUND();
+
+	SDL_RWops* rw = SDL_AllocRW();
+	if(rw == NULL)
+		ATK_OUT_OF_MEMORY();
+
+	rw->size = __rw_size;
+	rw->seek = __rw_seek;
+	rw->read = __rw_read;
+	rw->write = __rw_write;
+	rw->close = __rw_close;
+	rw->type = 0x78925306;
+	rw->hidden.unknown.data1 = fd;
+#else
+	SDL_RWops* rw = SDL_RWFromFile(path, "rb");
+#endif
+
+	bitmap = (atk_bitmap_t*) SDL_LoadBMP_RW(rw, 1);
+	bitmap = (atk_bitmap_t*) SDL_ConvertSurface((SDL_Surface*) bitmap, atk->surface->format, NULL);
+
+	if(bitmap == NULL)
+		ATK_ERROR("Loading and convert bitmap failed");	
+
+	return 0;
+}
+
+int atk_save_bitmap(atk_t* atk, atk_bitmap_t* bitmap, const char* path) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!bitmap)
+		ATK_ERROR("Invalid Bitmap context");
+
+	if(!path)
+		ATK_ERROR("Path cannot be null");
+
+#if HAVE_UNISTD_IO
+
+	int fd = open(path, O_CREAT | O_TRUNC | O_WRONLY | O_BINARY, 0644);
+	if(fd < 0)
+		ATK_FILE_NOT_FOUND();
+
+	SDL_RWops* rw = SDL_AllocRW();
+	if(rw == NULL)
+		ATK_OUT_OF_MEMORY();
+
+	rw->size = __rw_size;
+	rw->seek = __rw_seek;
+	rw->read = __rw_read;
+	rw->write = __rw_write;
+	rw->close = __rw_close;
+	rw->type = 0x78925306;
+	rw->hidden.unknown.data1 = fd;
+#else
+	SDL_RWops* rw = SDL_RWFromFile(path, "wb");
+#endif
+
+	return SDL_SaveBMP_RW((SDL_Surface*) bitmap, rw, 1);
+}
+

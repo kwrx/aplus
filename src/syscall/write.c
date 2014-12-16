@@ -33,6 +33,10 @@ int sys_write(int fd, void* ptr, size_t size) {
 	}
 
 
+#ifdef IO_DEBUG
+	kprintf("io: write in %d (%s) %d Bytes\n", fd, ino->name, size);
+#endif
+
 	return fs_write(ino, ptr, size);
 }
 

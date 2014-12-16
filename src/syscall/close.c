@@ -36,6 +36,10 @@ int sys_close(int fd) {
 		errno = EBADF;
 		return -1;
 	}
+
+#ifdef IO_DEBUG
+	kprintf("io: closing %d (%s)\n", fd, ((inode_t*) current_task->fd[fd])->name);
+#endif
 	
 	current_task->fd[fd] = 0;
 	return 0;

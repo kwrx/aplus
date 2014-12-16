@@ -43,6 +43,7 @@
 
 extern volatile heap_t* current_heap;
 extern uint64_t memsize;
+extern uint64_t kernel_low_area_size;
 
 uint32_t* current_vmm;
 uint32_t* kernel_vmm;
@@ -50,6 +51,8 @@ uint32_t* kernel_vmm;
 list_t* vmm_queue;
 
 
+__attribute__((aligned(0x1000)))
+static uint32_t __kvmm[PDSIZE];
 
 
 void vmm_switch(uint32_t* addr) {
@@ -87,9 +90,11 @@ void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {
 		
 		if(*e == 0) {
 			uint32_t* table = (uint32_t*) halloc(current_heap, PTSIZE * sizeof(uint32_t));
-			if(!table)
-				panic("vmm_map(): cannot allocate more table\n");
-				
+			if(!table) {
+				kprintf("vmm_map(): cannot allocate more table\n");
+				return NULL;
+			}				
+
 			if(current_vmm)
 				vmm_map(current_vmm, table, table, PTSIZE * sizeof(uint32_t), VMM_FLAGS_DEFAULT);
 			
@@ -158,11 +163,11 @@ void vmm_free(uint32_t* vmm, void* vaddr, size_t size) {
 }
 
 void vmm_mapkernel(uint32_t* dest) {
-	// Map 8MB to low area (kernel reserved)
+	// Map low area (Kernel reserved)
 	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
 
-	// Map all high-memory (kernel reserved)
-	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT);
+	// Map all high-memory (Shared Address Space)
+	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 
 	// Map Linear Frame Buffer
 	vmm_map(dest, (void*) mbd->vbe_mode_info->physbase, (void*) mbd->vbe_mode_info->physbase, 0x10000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
@@ -186,11 +191,7 @@ void vmm_destroy(uint32_t* vmm) {
 
 int vmm_init() {
 
-	kernel_vmm = (uint32_t*) halloc(current_heap, PDSIZE * sizeof(uint32_t));
-	if(!kernel_vmm)
-		panic("Could not initialize VMM");
-	
-
+	kernel_vmm = __kvmm;
 	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
 	
 	vmm_mapkernel(kernel_vmm);

@@ -59,8 +59,10 @@
 
 
 
+typedef uint32_t bmpvec_t[131072 >> 2];
+
 typedef struct heap {
-	uint32_t* bitmap;
+	bmpvec_t bitmap;
 	uint64_t size;
 	uint64_t used;
 	

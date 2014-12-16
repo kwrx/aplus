@@ -52,21 +52,7 @@ extern task_t* current_task;
  */
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_MIN);
-char* __argv[] = {
-		"/dev/ramdisk/bin/init", 
-		NULL
-	};
 
-
-	char* __envp[] = {
-		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
-		"SHELL=/bin/dash",
-		"USER=liveuser",
-		"TMPDIR=/tmp",
-		NULL
-	};
-//if(sys_fork() == 0)
-		sys_execve(__argv[0], __argv, __envp);
 	for(;;)
 		__asm__ ("pause");
 }
@@ -96,10 +82,13 @@ int main() {
 		panic("no initrd module found");
 	
 
-	uint32_t addr = ((uint32_t*) mbd->mods_addr) [0];
-	uint32_t endp = ((uint32_t*) mbd->mods_addr) [1];
+	uint32_t addr = (uint32_t) mm_vaddr((void*) ((uint32_t*) mbd->mods_addr) [0]);
+	uint32_t endp = (uint32_t) mm_vaddr((void*) ((uint32_t*) mbd->mods_addr) [1]);
 
 	kprintf("initrd: module found at addess: 0x%x (%d KB)\n", addr, (endp - addr) / 1024);
+
+	
+	
 
 
 	if(!mkramdev("/dev/ram0", addr, endp - addr))
@@ -126,13 +115,35 @@ int main() {
 	kprintf("VRAM: 0x%x\n", mbd->vbe_mode_info->physbase);
 
 
-	
-
 
 	task_clone(sysidle, NULL, NULL, 0xFF);
-for(;;) sys_yield();
 	
+	char* __argv[] = {
+		"/dev/ramdisk/bin/init",
+		NULL
+	};
+
+
+	char* __envp[] = {
+		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
+		"SHELL=/bin/dash",
+		"USER=liveuser",
+		"TMPDIR=/tmp",
+		"SDL_VIDEODRIVER=dummy",
+		NULL
+	};
+
+	int fd = sys_open("/dev/ramdisk/lib", 0, 0644);
+	struct dirent* ent;
+	int i = 0;
+	while(ent = sys_readdir(fd, i++))
+		kprintf("%s\n", ent->d_name);
+	sys_close(fd);
+
+//if(sys_fork() == 0)
+		sys_execve(__argv[0], __argv, __envp);
 	
+
 }
 
 

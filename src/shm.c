@@ -34,7 +34,6 @@ shm_chunk_t* shm_acquire_chunk(uint32_t* size) {
 	chunk->size = *size;
 	chunk->refcount = 1;
 
-
 	if(!current_task->shmmap) {
 		list_init(current_task->shmmap);
 	}
