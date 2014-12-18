@@ -16,7 +16,7 @@ TSTDIR		:= test
 
 
 
-WARNINGS	:= -w
+WARNINGS	:= -Wall -Wno-implicit-function-declaration
 
 CFLAGS		:= -Ofast -mfpmath=sse -msse2 $(WARNINGS)
 CXXFLAGS	:= -O2 $(WARNINGS)

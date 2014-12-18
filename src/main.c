@@ -130,20 +130,17 @@ int main() {
 		"USER=liveuser",
 		"TMPDIR=/tmp",
 		"SDL_VIDEODRIVER=dummy",
+		"SCREEN_WIDTH=800",
+		"SCREEN_HEIGHT=600",
+		"SCREEN_BPP=32",
 		NULL
 	};
 
-	int fd = sys_open("/dev/ramdisk/lib", 0, 0644);
-	struct dirent* ent;
-	int i = 0;
-	while(ent = sys_readdir(fd, i++))
-		kprintf("%s\n", ent->d_name);
-	sys_close(fd);
 
 //if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 	
-
+	for(;;);
 }
 
 

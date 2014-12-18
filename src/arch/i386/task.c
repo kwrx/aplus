@@ -92,7 +92,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 		child->cwd = (inode_t*) vfs_root;
 
 	if(flags & CLONE_PARENT)
-		child->parent = current_task; //current_task->parent;	
+		child->parent = current_task->parent;	
 	else
 		child->parent = current_task;
 

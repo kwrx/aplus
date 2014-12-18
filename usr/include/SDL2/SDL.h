@@ -92,6 +92,14 @@
 #include "SDL_version.h"
 #include "SDL_video.h"
 
+#include "SDL_ttf.h"
+#include "SDL_image.h"
+#include "SDL2_framerate.h"
+#include "SDL2_gfxPrimitives.h"
+#include "SDL2_imageFilter.h"
+#include "SDL2_rotozoom.h"
+
+
 #include "begin_code.h"
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus

@@ -5,6 +5,44 @@
 #include "config.h"
 
 
+int atk_absolute_position(atk_t* atk, atk_widget_t* widget, int* x, int* y) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!widget)
+		ATK_ERROR("Invalid Widget context");
+
+	atk_widget_t* tmp = widget->parent;
+	while(tmp) {
+		*x += tmp->window.x;
+		*y += tmp->window.y;		
+
+		tmp = tmp->next;
+	}
+
+	return 0;
+}
+
+
+int atk_relative_position(atk_t* atk, atk_widget_t* widget, int* x, int* y) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!widget)
+		ATK_ERROR("Invalid Widget context");
+
+	atk_widget_t* tmp = widget->parent;
+	while(tmp) {
+		*x -= tmp->window.x;
+		*y -= tmp->window.y;		
+
+		tmp = tmp->next;
+	}
+
+	return 0;
+}
+
+
 int atk_create_widget_from(atk_t* atk, atk_widget_t* parent, atk_widget_t* widget, int width, int height) {
 	if(!atk)
 		ATK_ERROR("Invalid ATK context");
@@ -45,6 +83,33 @@ int atk_create_widget_from(atk_t* atk, atk_widget_t* parent, atk_widget_t* widge
 	return 0;
 }
 
+int atk_resize_widget(atk_t* atk, atk_widget_t* widget, int width, int height) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!widget)
+		ATK_ERROR("Invalid Widget context");
+
+	if(width < 0 || height < 0 || width > atk->window.w || height > atk->window.h)
+		ATK_ERROR("Invalid size of widget");
+
+
+	ATK_ERROR("Resize not supported for now");
+}
+
+int atk_move_widget(atk_t* atk, atk_widget_t* widget, int x, int y) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!widget)
+		ATK_ERROR("Invalid Widget context");
+
+	widget->window.x = x;
+	widget->window.y = y;
+
+	return 0;
+}
+
 int atk_create_widget(atk_t* atk, atk_widget_t* widget, int width, int height) {
 	return atk_create_widget_from(atk, NULL, widget, width, height);
 }
@@ -63,6 +128,8 @@ int atk_destroy_widget(atk_t* atk, atk_widget_t* widget) {
 			tmp->next = widget->next;
 			break;
 		}
+
+		tmp = tmp->next;
 	}
 
 	SDL_DestroyRenderer(widget->renderer);
@@ -71,6 +138,8 @@ int atk_destroy_widget(atk_t* atk, atk_widget_t* widget) {
 	memset(widget, 0, sizeof(atk_widget_t));
 	return 0;
 }
+
+
 
 int atk_draw_widget(atk_t* atk, atk_widget_t* widget) {
 	if(!widget)
@@ -92,6 +161,14 @@ int atk_raise_event_widget(atk_t* atk, atk_widget_t* widget, atk_event_t* e) {
 	return widget->event(atk, widget, e);
 }
 
-int atk_present_widget(atk_t* atk, atk_widget_t* widget) {
-	SDL_BlitSurface(widget->surface, NULL, atk->surface, &widget->window);
+int atk_present_widget(atk_t* atk, atk_widget_t* widget, atk_rect_t* rect) {
+	SDL_Rect w;
+	w.x = widget->window.x + rect->x;
+	w.y = widget->window.y + rect->y;
+	w.w = rect->w;
+	w.h = rect->h;
+	atk_absolute_position(atk, widget, &w.x, &w.y);
+
+	SDL_BlitSurface(widget->surface, NULL, atk->surface, &w);
+	return 0;
 }

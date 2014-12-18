@@ -238,7 +238,10 @@ int mm_init() {
 		memsize = VMM_MAX_MEMORY;
 
 	kernel_low_area_size = ((uint32_t*) mbd->mods_addr) [1];
+	kernel_low_area_size &= ~0xFFFFF;
+	kernel_low_area_size += 0x100000;
 
+	kprintf("mm: low area size %d MB\n", kernel_low_area_size / 1024 / 1024);
 
 	kheap_init();
 	vmm_init();

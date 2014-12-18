@@ -1,86 +1,132 @@
 #ifndef _ATK_H
 #define _ATK_H
 
-#ifndef __GNUC__
-#error "Only GNU Compiler is supported"
-#endif
+#include <SDL2/SDL.h>
+#include <stdint.h>
+
+#define ATK_ZINDEX_TOP					1000000
+#define ATK_ZINDEX_BOTTOM				-1000000
+#define ATK_ZINDEX_DEFAULT				0
 
 
-#if 1
-typedef int atk_v2si __attribute__ ((vector_size(sizeof(int) * 2)));
-typedef int atk_v3si __attribute__ ((vector_size(sizeof(int) * 4)));
-typedef int atk_v4si __attribute__ ((vector_size(sizeof(int) * 4)));
+#define ATK_TTF_STYLE_BOLD				TTF_STYLE_BOLD
+#define ATK_TTF_STYLE_ITALIC			TTF_STYLE_ITALIC
+#define ATK_TTF_STYLE_UNDERLINE			TTF_STYLE_UNDERLINE
+#define ATK_TTF_STYLE_STRIKETHROUGH		TTF_STYLE_STRIKETHROUGH
 
-typedef float atk_v2f __attribute__ ((vector_size(sizeof(float) * 2)));
-typedef float atk_v3f __attribute__ ((vector_size(sizeof(float) * 4)));
-typedef float atk_v4f __attribute__ ((vector_size(sizeof(float) * 4)));
+#define ATK_TTF_ENCODING_ASCII			127
+#define ATK_TTF_ENCODING_UTF8			255
+#define ATK_TTF_ENCODING_UNICODE		65535
+#define ATK_TTF_ENCODING_DEFAULT		ATK_TTF_ENCODING_UTF8
+
+
+#define ATK_EVENT_INIT				1
+#define ATK_EVENT_DNIT				2
+
+#define ATK_EVENT_DEFAULT_MASK		\
+	ATK_EVENT_INIT				|	\
+	ATK_EVENT_DNIT
+
+
+
+
+typedef void atk_image_t;
+typedef void atk_font_t;
+typedef void atk_render_t;
+
+typedef SDL_Color atk_color_t;
+typedef SDL_Point atk_point_t;
+typedef SDL_Rect atk_rect_t;
+
+typedef struct atk atk_t;
+typedef struct atk_widget atk_widget_t;
+typedef struct atk_event atk_event_t;
+
+typedef uint64_t atk_emask_t;
+
+struct atk {
+	SDL_Surface* surface;
+	SDL_Renderer* renderer;
+	SDL_Rect window;
+
+	atk_widget_t* widgets;
+};
+
+
+struct atk_widget {
+	atk_image_t* surface;
+	atk_render_t* renderer;
+	atk_rect_t window;
+
+	atk_emask_t emask;
+	int zindex;
+
+	int (*draw) (atk_t* atk, atk_widget_t* widget);
+	int (*event) (atk_t* atk, atk_widget_t* widget, atk_event_t* e);
+
+	struct atk_widget* parent;
+	struct atk_widget* next;
+};
+
+
+struct atk_event {
+	int type;
+	void* param;
+};
+
+
+
+
+
+#ifdef NDEBUG
+#define ATK_ASSERT(a)				a
 #else
-typedef int atk_v2si[2];
-typedef int atk_v3si[3];
-typedef int atk_v4si[4];
-
-typedef float atk_v2f[2];
-typedef float atk_v3f[3];
-typedef float atk_v4f[4];
+#define ATK_ASSERT(a)																\
+	if((a) != 0) {																	\
+		printf("ATK_ASSERT failed: %s (%s)\n", atk_error(), SDL_GetError());		\
+		exit(-1);																	\
+	}
 #endif
 
-typedef atk_v4f atk_color_t;
-typedef atk_v4si atk_rect_t;
-typedef atk_v2si atk_size_t;
-typedef atk_v2si atk_pos_t;
-typedef void atk_list_t;
 
 
+#define atk_render_blit(src, srcrect, dst, dstrect)	\
+	SDL_BlitSurface((SDL_Surface*) src, (SDL_Rect*) srcrect, (SDL_Surface*) dst, (SDL_Rect*) dstrect)
 
-#define ATK_COLOR_BLACK			{ 1.0f, 0.0f, 0.0f, 0.0f }
-#define ATK_COLOR_WHITE			{ 1.0f, 1.0f, 1.0f, 1.0f }
-#define ATK_COLOR_TRANSPARENT	{ 0.0f, 0.0f, 0.0f, 0.0f }
+#define atk_render_blit_scaled(src, srcrect, dst, dstrect)	\
+	SDL_BlitScaled((SDL_Surface*) src, (SDL_Rect*) srcrect, (SDL_Surface*) dst, (SDL_Rect*) dstrect)
 
-#define ATK_COLOR_A				0
-#define ATK_COLOR_R				1
-#define ATK_COLOR_G				2
-#define ATK_COLOR_B				3
+#define atk_render_clear(r)	\
+	SDL_RenderClear((SDL_Renderer*) r)
 
-#define ATK_RECT_X				0
-#define ATK_RECT_Y				1
-#define ATK_RECT_W				2
-#define ATK_RECT_H				3
+#define atk_render_line(r, x1, y1, x2, y2)	\
+	SDL_RenderDrawLine((SDL_Renderer*) r, x1, y1, x2, y2)
 
-#define ATK_SIZE_W				0
-#define ATK_SIZE_H				1
+#define atk_render_lines(r, points, count)	\
+	SDL_RenderDrawLines((SDL_Renderer*) r, (const SDL_Point*) points, count)
 
-#define ATK_POS_X				0
-#define ATK_POS_Y				1
+#define atk_render_point(r, x, y)	\
+	SDL_RenderDrawPoint((SDL_Renderer*) r, x, y)
 
+#define atk_render_points(r, points, count)	\
+	SDL_RenderDrawPoints((SDL_Renderer*) r, (const SDL_Point*) points, count)
 
-#define ATK_RECT_EMPTY			{ 0, 0, 0, 0 }
-#define ATK_SIZE_EMPTY			{ 0, 0 }
-#define ATK_POS_EMPTY			{ 0, 0 }
+#define atk_render_stroke_rect(r, rect)	\
+	SDL_RenderDrawRect((SDL_Renderer*) r, (SDL_Rect*) rect)
 
+#define atk_render_stroke_rects(r, rects, count)	\
+	SDL_RenderDrawRects((SDL_Renderer*) r, (const SDL_Rect*) rects, count)
 
-#include <atk/widget.h>
-#include <atk/gfx.h>
-#include <atk/bitmap.h>
+#define atk_render_fill_rect(r, rect)	\
+	SDL_RenderFillRect((SDL_Renderer*) r, (SDL_Rect*) rect)
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define atk_render_fill_rects(r, rects, count)	\
+	SDL_RenderFillRects((SDL_Renderer*) r, (const SDL_Rect*) rects, count)
 
-atk_gfx_t* atk_gfx_create(short width, short height, short bpp, void* buffer);
-void atk_set_gfx(atk_gfx_t* gfx);
-atk_gfx_t* atk_get_gfx();
-void atk_gfx_set_color(atk_color_t color);
-void atk_gfx_set_color_argb(float a, float r, float g, float b);
-void atk_gfx_set_color_rgb(float r, float g, float b);
-void atk_gfx_set_bitmap(atk_bitmap_t* bitmap);
-int atk_gfx_clear();
-int atk_gfx_hline(int x0, int y0, int x1);
-int atk_gfx_vline(int x0, int y0, int y1);
-int atk_gfx_line(int ix0, int iy0, int ix1, int iy1);
-int atk_gfx_fill_rectangle(int x, int y, int w, int h);
-int atk_gfx_stroke_rectangle(int x, int y, int w, int h);
+#define atk_render_color(re, r, g, b, a)	\
+	SDL_SetRenderDrawColor((SDL_Renderer*) re, r, g, b, a)
 
-#ifdef __cplusplus
-}
-#endif
+#define atk_render_scale(r, x, y)	\
+	SDL_RenderSetScale((SDL_Renderer*) r, x, y)
+
 #endif

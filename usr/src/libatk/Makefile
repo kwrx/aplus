@@ -19,6 +19,8 @@ CXXFLAGS	+=
 LDFLAGS		+=
 ARFLAGS		+= -rcs
 
+HEADER		:= atk.h
+
 
 CFILES		:= $(shell find $(SRCDIR)/* -type f -name "*.c")
 OFILES		:= $(CFILES:.c=.o)
@@ -48,6 +50,7 @@ clean:
 
 
 install: $(OUTPUT)
+	@install -m 644 $(SRCDIR)/include/$(HEADER) $(SYSROOT)/$(PREFIX)/include/$(HEADER)
 	@install -m 644 $(OUTPUT) $(SYSROOT)/$(PREFIX)/lib/$(OUTPUT)
 	@install -m 644 $(OUTPUT) $(SYSROOT)/$(PREFIX2)/lib/$(OUTPUT)
 

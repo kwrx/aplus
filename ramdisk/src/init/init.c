@@ -7,7 +7,7 @@
 #include <dlfcn.h>
 #include <string.h>
 
-#include <SDL2/SDL.h>
+#include <atk.h>
 
 
 #define MOD_PATH		"/dev/ramdisk/mod"
@@ -43,100 +43,35 @@ int main(int argc, char** argv) {
 
 	closedir(d);*/
 
-
-	/*atk_set_gfx(atk_gfx_create(800, 600, 16, 0xFD000000));
+	atk_t atk;
+	ATK_ASSERT(atk_main(&atk));
 	
-	atk_gfx_set_bitmap(atk_bitmap_from_framebuffer());
-	atk_gfx_set_color_argb(0.5f, 1.0f, 1.0f, 1.0f);
-	
-	atk_gfx_set_font("/dev/ramdisk/share/fonts/ubunt000.ttf");
-	atk_gfx_set_font_size(14, 72);
-	
-	atk_gfx_text("#define ARGB_TO_V4F(c)		\n\
-	{											\n\
-		((float) ((c >> 24) & 0xFF)) / 0xFF, 	\n\
-		((float) ((c >> 16) & 0xFF)) / 0xFF,	\n\
-		((float) ((c >> 8) & 0xFF)) / 0xFF,		\n\
-		((float) (c & 0xFF)) / 0xFF				\n\
-	}", 0, 0);
-
-	atk_gfx_fill_rectangle(200, 200, 200, 200);
-	atk_gfx_fill_rectangle(250, 250, 200, 200);
-	*/
-
-
-	/*OSMesaContext ctx = OSMesaCreateContext(OSMESA_ARGB, NULL);
-	OSMesaMakeCurrent(ctx, (void*) 0xFD000000, GL_UNSIGNED_BYTE, 800, 600);
-	*/
-
-	/*int* x = malloc(15005404);
-	int* y = malloc(0x1000);
-	int* z = malloc(0x1000000);
-	int* w = malloc(0x1000);
-
-	
-	assert(y);
-	assert(z);
-	assert(w);
-	assert(x);
-
-	*x = *y = *z = *w = 0xFFFFFFFF;
-
-	printf("x: %d; y: %d; z: %d; w: %d\n", *x, *y, *z, *w);
-	
-	free(w);
-	free(z);
-	free(y);	
-	free(x);
-	*/
-	
-
-	/*cairo_surface_t* surface;
-	cairo_t* cr;
-	
-	surface = cairo_image_surface_create_for_data(0xFD000000, CAIRO_FORMAT_ARGB32, 800, 600, 800 * 4);
-	cr = cairo_create(surface);
-
-	cairo_set_source_rgb (cr, 0, 0, 0);
-	cairo_move_to (cr, 0, 0);
-	cairo_line_to (cr, 1, 1);
-	cairo_move_to (cr, 1, 0);
-	cairo_line_to (cr, 0, 1);
-	cairo_set_line_width (cr, 0.2);
-	cairo_stroke (cr);
-
-	cairo_rectangle (cr, 0, 0, 0.5, 0.5);
-	cairo_set_source_rgba (cr, 1, 0, 0, 0.80);
-	cairo_fill (cr);
-
-	cairo_rectangle (cr, 0, 0.5, 0.5, 0.5);
-	cairo_set_source_rgba (cr, 0, 1, 0, 0.60);
-	cairo_fill (cr);
-
-	cairo_rectangle (cr, 0.5, 0, 0.5, 0.5);
-	cairo_set_source_rgba (cr, 0, 0, 1, 0.40);
-	cairo_fill (cr);*/
-
 /*
-	for(;;) {
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
-		printf("cleared\n");
-		
-		glBegin(GL_POLYGON);
-		glColor3f(1.0f, 0, 0); glVertex3f(-0.6, 0.75, 0.5);
-		glColor3f(0, 1.0f, 0); glVertex3f(0.6, -0.75, 0);
-		glColor3f(0, 0, 1.0f); glVertex3f(0, 0.75, 0);
-		glEnd();
-
-		printf("flush\n");
-
-		glFlush();
-
-	}
+	atk_window(&atk, &wnd, "Hello", 10, 10, 200, 200, ATK_WINDOW_HIDDEN);
+	atk_window_destroy(&atk, &wnd);
+	atk_window_show(&atk, &wnd);
+	atk_window_hide(&atk, &wnd);
+	atk_window_get_surface(&atk, &wnd);
+	atk_window_get_renderer(&atk, &wnd);
+	atk_window_get_context(&atk, &wnd);
+	atk_window_get_flags(&atk, &wnd, &flags);
+	atk_window_set_flags(&atk, &wnd, flags);
+	atk_window_resize(&atk, &wnd);
+	atk_window_move(&atk, &wnd);
+	atk_window_add_widget(&atk, &wnd, &widget)
+	atk_window_remove_widget(&atk, &wnd, &widget)
+	atk_run(&atk);
 */
 
+	atk_image_t* image;
+	atk_load_image(&atk, &image, "/dev/ramdisk/share/images/test.png");
 
+	atk_rect_t R;
+	R.x = 0;
+	R.y = 0;
+	R.w = 500;
+	R.h = 500;
+	
 
 	for(;;) 
 		sched_yield();
