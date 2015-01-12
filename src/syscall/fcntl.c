@@ -70,18 +70,18 @@ extern inode_t* vfs_root;
     		Otherwise, -1 shall be returned and errno set to indicate the error
  */
 int sys_fcntl(int fd, int request, void* buf) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 		
 
-	if(fd < 0 || fd > TASK_MAX_FD) {
+	if(unlikely(fd < 0 || fd > TASK_MAX_FD)) {
 		errno = EBADF;
 		return -1;
 	}
 	
 	
 	inode_t* ino = current_task->fd[fd];
-	if(!ino) {
+	if(unlikely(!ino)) {
 		errno = EBADF;
 		return -1;
 	}

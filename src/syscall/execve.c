@@ -11,7 +11,7 @@ extern task_t* current_task;
 
 
 static char** __args_dup(char** a) {
-	if(!a)
+	if(unlikely(!a))
 		return NULL;
 
 	char** p = (char**) kmalloc(255 * sizeof(char*));

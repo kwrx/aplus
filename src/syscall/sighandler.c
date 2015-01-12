@@ -14,7 +14,7 @@ extern task_t* current_task;
 
 
 int sys__install_sighandler(void* handler) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 		
 	current_task->signal_handler = (void (*)(int)) handler;

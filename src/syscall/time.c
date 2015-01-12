@@ -17,7 +17,7 @@ time_t sys_time(time_t* ptr) {
 	sys_gettimeofday(&tv, &tz);
 
 
-	if(ptr)
+	if(likely(ptr))
 		*ptr = tv.tv_sec;
 
 	return tv.tv_sec;

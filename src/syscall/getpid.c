@@ -18,10 +18,10 @@ pid_t sys_getpid() {
 }
 
 pid_t sys_getppid() {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 
-	if(current_task->parent)
+	if(unlikely(current_task->parent))
 		return current_task->parent->pid;
 
 	errno = ESRCH;

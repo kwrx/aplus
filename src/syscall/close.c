@@ -24,15 +24,15 @@ extern task_t* current_task;
 			and errno set to indicate the error.
  */
 int sys_close(int fd) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 
-	if(fd > TASK_MAX_FD || fd < 0) {
+	if(unlikely(fd > TASK_MAX_FD || fd < 0)) {
 		errno = EBADF;
 		return -1;
 	}
 		
-	if(current_task->fd[fd] == 0) {		
+	if(unlikely(current_task->fd[fd] == 0)) {		
 		errno = EBADF;
 		return -1;
 	}

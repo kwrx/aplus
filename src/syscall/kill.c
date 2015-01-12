@@ -9,7 +9,7 @@
 
 int sys_kill(pid_t pid, int signal) {
 	task_t* task = (task_t*) schedule_getbypid(pid);
-	if(!task) {
+	if(unlikely(!task)) {
 		errno = ESRCH;
 		return -1;
 	}

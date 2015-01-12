@@ -13,6 +13,41 @@
 */
 
 
+extern atk_font_t** __font_cache;
+
+
+static int __window_draw(atk_t* atk, atk_window_t* window) {
+	if(!atk)
+		ATK_ERROR("Invalid ATK context");
+
+	if(!window)
+		ATK_ERROR("Invalid window context");
+
+
+
+	SDL_Color color_title = { ATK_WINDOW_COLOR_TITLE };
+
+	atk_render_color(window->renderer, ATK_WINDOW_COLOR_BACKGROUND);
+	atk_render_fill_rect(window->renderer, &window->ctx.window);
+
+	atk_render_color(window->renderer, ATK_WINDOW_COLOR_BORDER);
+	atk_render_stroke_rect(window->renderer, &window->ctx.window);
+
+	atk_render_color(window->renderer, ATK_WINDOW_COLOR_TITLE);
+	atk_render_font (
+		atk, 
+		__font_cache[ATK_WINDOW_FONT_INDEX], 
+		window->surface, 
+		window->title, 
+		ATK_WINDOW_PADDING_TOPBAR_X, 
+		ATK_WINDOW_PADDING_TOPBAR_Y, 
+		color_title, 
+		ATK_TTF_ENCODING_DEFAULT
+	);
+
+	return 0;
+}
+
 
 
 int atk_window_from(atk_t* atk, atk_window_t* parent, atk_window_t* window, char* title, int x, int y, int w, int h, int flags) {
@@ -27,10 +62,15 @@ int atk_window_from(atk_t* atk, atk_window_t* parent, atk_window_t* window, char
 
 	memset(window, 0, sizeof(atk_window_t));
 	
-	if(parent)
-		atk_create_widget_from(atk, &parent->ctx, &window->ctx, w, h);
-	else
-		atk_create_widget(atk, &window->ctx, w, h);
+	if(parent) {
+		if(atk_create_widget_from(atk, &parent->ctx, &window->ctx, w, h) != 0) {
+			return -1;
+		}
+	else {
+		if(atk_create_widget(atk, &window->ctx, w, h) != 0)
+			return -1;
+		}
+	}
 
 	atk_window_set_title(atk, window, title);
 	atk_window_set_flags(atk, window, flags);
@@ -38,6 +78,8 @@ int atk_window_from(atk_t* atk, atk_window_t* parent, atk_window_t* window, char
 
 	window->surface = window->ctx.surface;
 	window->renderer = window->ctx.renderer;
+
+	window->ctx.draw = (int (*) (atk_t*, atk_widget_t*)) __window_draw;
 
 	return 0;
 }

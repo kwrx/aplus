@@ -3,8 +3,9 @@
 #define SYSCODE			"int $0x80"
 
 #define syscall0(n, h)					\
+	__attribute__ ((weak))				\
 	h() {								\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -15,8 +16,9 @@
 	}
 
 #define syscall1(n, h)					\
+	__attribute__ ((weak))				\
 	h(p1) {								\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -27,8 +29,9 @@
 	}
 
 #define syscall2(n, h)					\
+	__attribute__ ((weak))				\
 	h(p1, p2) {							\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -39,8 +42,9 @@
 	}
 
 #define syscall3(n, h)					\
+	__attribute__ ((weak))				\
 	h(p1, p2, p3) {						\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -52,8 +56,9 @@
 	}
 
 #define syscall4(n, h)					\
+	__attribute__ ((weak))				\
 	h(p1, p2, p3, p4) {					\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -65,8 +70,9 @@
 	}
 
 #define syscall5(n, h)					\
+	__attribute__ ((weak))				\
 	h(p1, p2, p3, p4, p5) {				\
-		int r, e;							\
+		int r, e;						\
 		__asm__ __volatile__ (			\
 			SYSCODE						\
 			: "=a"(r), "=b"(e)	\
@@ -112,6 +118,8 @@ syscall1(30, pipe)
 syscall3(31, waitpid)
 syscall0(32, getppid)
 syscall1(33, uname)
+syscall5(34, mmap)
+syscall2(35, munmap)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

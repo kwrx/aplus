@@ -5,5 +5,5 @@
 
 
 int init() {
-	printf("Hello World");
+	puts("Hello WOrld");
 }

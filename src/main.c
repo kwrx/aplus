@@ -70,7 +70,10 @@ int main() {
 	schedule_init();
 	pci_init();
 	tty_init();
+
+#if HAVE_NETWORK
 	netif_init();
+#endif
 
 
 	struct utsname u;
@@ -78,7 +81,7 @@ int main() {
 
 	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
 
-	if(mbd->mods_count == 0)
+	if(unlikely(mbd->mods_count == 0))
 		panic("no initrd module found");
 	
 
@@ -91,24 +94,24 @@ int main() {
 	
 
 
-	if(!mkramdev("/dev/ram0", addr, endp - addr))
+	if(unlikely(!mkramdev("/dev/ram0", addr, endp - addr)))
 		panic("initrd: cannot create /dev/ram0");
 
 
-	if(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0)
+	if(unlikely(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0))
 		panic("initrd: cannot mount ramdisk");
 
 
-	if(sys_mount(NULL, "/dev/proc", "procfs", 0, 0) != 0)
+	if(unlikely(sys_mount(NULL, "/dev/proc", "procfs", 0, 0) != 0))
 		panic("procfs: cannot mount /dev/proc");
 
-	if(sys_mount(NULL, "/dev/tmp", "tmpfs", 0, 0) != 0)
+	if(unlikely(sys_mount(NULL, "/dev/tmp", "tmpfs", 0, 0) != 0))
 		panic("tmpfs: cannot mount /dev/tmp");
 
-	if(sys_symlink("/dev/proc", "/proc") != 0)
+	if(unlikely(sys_symlink("/dev/proc", "/proc") != 0))
 		panic("procfs: cannot create link for /proc");
 
-	if(sys_symlink("/dev/tmp", "/tmp") != 0)
+	if(unlikely(sys_symlink("/dev/tmp", "/tmp") != 0))
 		panic("tmpfs: cannot link for /tmp");
 
 
@@ -119,7 +122,8 @@ int main() {
 	task_clone(sysidle, NULL, NULL, 0xFF);
 	
 	char* __argv[] = {
-		"/dev/ramdisk/bin/init",
+		"/dev/ramdisk/bin/jvm",
+		"/dev/ramdisk/bin/p.j",
 		NULL
 	};
 

@@ -6,7 +6,7 @@
 
 
 int sys_openpty(int* master, int* slave, char* name, const struct termios* ios, const struct winsize* win) {
-	if(!master || !slave) {
+	if(unlikely(!master || !slave)) {
 		errno = EINVAL;
 		return -1;
 	}

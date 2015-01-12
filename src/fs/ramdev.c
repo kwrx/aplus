@@ -43,26 +43,26 @@ int ramdev_read(inode_t* ino, char* buf, int size) {
 }
 
 int ramdev_write(inode_t* ino, char* buf, int size) {
-	if(!ino)
+	if(unlikely(!ino))
 		return 0;
 
-	if(!buf)
+	if(unlikely(!buf))
 		return 0;
 
-	if(size > ino->size)
+	if(unlikely(size > ino->size))
 		size = ino->size;
 
-	if(ino->position > ino->size)
+	if(unlikely(ino->position > ino->size))
 		ino->position = ino->size;
 
-	if(ino->position + size > ino->size)
+	if(unlikely(ino->position + size > ino->size))
 		size = ino->size - ino->position;
 
-	if(!size)
+	if(unlikely(!size))
 		return 0;
 
 
-	if(shm_check_chunk(ino->userdata) < 0)
+	if(unlikely(shm_check_chunk(ino->userdata) < 0))
 		return 0;
 
 	shm_chunk_t* chunk = (shm_chunk_t*) ino->userdata;

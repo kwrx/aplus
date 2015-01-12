@@ -20,7 +20,7 @@
 extern task_t* current_task;
 
 int sys_mount(const char* dev, const char* dir, const char* fstype, int options, const void* data) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 
 
@@ -30,7 +30,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 	}
 
 
-	if(dir == NULL || strlen(dir) == 0) {
+	if(unlikely(dir == NULL || strlen(dir) == 0)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -86,7 +86,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 	idir->mode |= S_IFMT;
 	idir->dev = idev->ino;
 
-	if(found->mount(idev, idir, options) < 0) {
+	if(unlikely(found->mount(idev, idir, options) < 0)) {
 
 		idir->mode &= ~S_IFMT;
 		idir->dev = 0;		

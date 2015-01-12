@@ -22,19 +22,19 @@ extern task_t* current_task;
 			Otherwise, -1 shall be returned and errno set to indicate the error.
  */
 int sys_fstat(int fd, struct stat* st) {
-	if(!st) {
+	if(unlikely(!st)) {
 		errno = EINVAL;
 		return -1;
 	}
 
-	if(fd < 0 || fd > TASK_MAX_FD) {
+	if(unlikely(fd < 0 || fd > TASK_MAX_FD)) {
 		errno = EBADF;
 		return -1;
 	}
 	
 
 	inode_t* ino = current_task->fd[fd];
-	if(!ino) {
+	if(unlikely(!ino)) {
 		errno = EBADF;
 		return -1;
 	}

@@ -19,7 +19,7 @@ int syscall_init() {
 	list_foreach(value, syslist) {
 		syscall_t* sys = (syscall_t*) value;
 
-		if(syscall_handlers[sys->number])
+		if(unlikely(syscall_handlers[sys->number]))
 			kprintf("syscall: duplicate number of %d handler\n");
 
 		syscall_handlers[sys->number] = sys->handler;
@@ -54,7 +54,7 @@ int syscall_init() {
 int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 	void* handler = syscall_handlers[idx];	
 
-	if(handler == NULL) {
+	if(unlikely(handler == NULL)) {
 		errno = ENOSYS;
 		return -1;
 	}

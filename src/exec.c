@@ -265,18 +265,18 @@ int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
  *	\return Entry Point address.
  */
 void* elf32_load(void* image, int* vaddr, int* vsize) {
-	if(image == NULL) {
+	if(unlikely(image == NULL)) {
 		errno = EINVAL;
 		return NULL;
 	}
 
-	if(elf32_check(image, ET_EXEC) < 0)
+	if(unlikely(elf32_check(image, ET_EXEC) < 0))
 		return NULL;
 
 	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
 
 	int iptr, isiz;
-	if(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0)
+	if(unlikely(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0))
 		panic("elf: cannot found a valid address space"); 
 
 	schedule_release(current_task);
@@ -298,13 +298,13 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	for(int i = 0; i < sn; i++) {
 		const char* name = (const char*) (shstrtab + sec->sh_name);
 
-		if(sec->sh_addr && sec->sh_offset) {
+		if(likely(sec->sh_addr && sec->sh_offset)) {
 #ifdef ELF_DEBUG
 			kprintf("elf: copy section \"%s\" to 0x%8x [%d] (%d Bytes)\n", name, sec->sh_addr, sec->sh_type, sec->sh_size);
 #endif
 
 
-			if((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE))
+			if(unlikely((sec->sh_addr + sec->sh_size) < MM_UBASE || (sec->sh_addr + sec->sh_size) > (MM_UBASE + MM_USIZE)))
 				panic("elf: section overflow");
 			
 			

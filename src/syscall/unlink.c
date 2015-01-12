@@ -24,7 +24,7 @@ static char* dupstr(char* s) {
 
 
 int sys_unlink(const char* pathname) {
-	if(!pathname) {
+	if(unlikely(!pathname)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -41,8 +41,8 @@ int sys_unlink(const char* pathname) {
 	else
 	 	cwd = current_task->cwd;
 	
-	if(!cwd) {
-		if(!vfs_root) {
+	if(unlikely(!cwd)) {
+		if(unlikely(!vfs_root)) {
 			kprintf("sys_unlink: no root found for cwd.");
 		
 			errno = ENOENT;
@@ -70,7 +70,7 @@ int sys_unlink(const char* pathname) {
 			*p++ = 0;
 		
 			cwd = (inode_t*) fs_finddir(cwd, s);
-			if(!cwd) {
+			if(unlikely(!cwd)) {
 				errno = ENOENT;
 				return -1;
 			}

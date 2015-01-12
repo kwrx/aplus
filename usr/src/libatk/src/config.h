@@ -63,4 +63,9 @@ extern char* __atk_error;
 #define ATK_LOG(x)
 #endif
 
+
+#if HAVE_SDL_TTF
+#define FONT_PATH		"/dev/ramdisk/share/fonts/"
+#endif
+
 #endif

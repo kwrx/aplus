@@ -34,6 +34,8 @@ int atk_init(atk_t* atk, int width, int height, int bpp, void* framebuffer) {
 	if(!TTF_WasInit())
 		if(TTF_Init() != 0)
 			ATK_ERROR("TTF_Init failed");
+
+	__atk_initialize_fonts(atk);
 #endif
 
 
@@ -43,7 +45,7 @@ int atk_init(atk_t* atk, int width, int height, int bpp, void* framebuffer) {
 #endif
 
 	memset(atk, 0, sizeof(atk_t));
-	atk->surface = SDL_CreateRGBSurfaceFrom(
+	atk->surface = SDL_CreateRGBSurfaceFrom (
 		framebuffer,
 		width,
 		height,
@@ -75,12 +77,19 @@ int atk_destroy(atk_t* atk) {
 	return 0;
 }
 
-void atk_exit(void) {
+
+void atk_exit(atk_t* atk, int status) {
+	atk_destroy(atk);
+	exit(status);
+}
+
+void atk_atexit(void) {
 #if HAVE_SDL_TTF
+	__atk_finalize_fonts(NULL);
+
 	TTF_Quit();
 #endif
 	SDL_Quit();
-	exit(0);
 }
 
 
@@ -111,6 +120,6 @@ int atk_main(atk_t* atk) {
 
 	ATK_LOG("Mode %dx%dx%d\n", w, h, b);
 
-	atexit(atk_exit);
+	atexit(atk_atexit);
 	return atk_init(atk, w, h, b, (void*) ATK_SCREEN_BUFFER);
 }

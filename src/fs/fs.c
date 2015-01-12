@@ -15,7 +15,7 @@
 
 
 int fs_read (struct inode* inode, char* ptr, int len) {
-	if(inode->read)
+	if(likely(inode->read))
 		return inode->read(inode, ptr, len);
 	
 	errno = ENOSYS;		
@@ -23,7 +23,7 @@ int fs_read (struct inode* inode, char* ptr, int len) {
 }
 
 int fs_write (struct inode* inode, char* ptr, int len) {
-	if(inode->write)
+	if(likely(inode->write))
 		return inode->write(inode, ptr, len);
 		
 	errno = ENOSYS;	
@@ -33,7 +33,7 @@ int fs_write (struct inode* inode, char* ptr, int len) {
 struct dirent* fs_readdir (struct inode* inode, int index) {
 
 	inode_t* map = NULL;
-	if((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL) {
+	if(likely((map = (inode_t*) vfs_mapped_at_index(inode, index)) != NULL)) {
 		struct dirent* ent = (struct dirent*) kmalloc(sizeof(struct dirent));
 		strcpy(ent->d_name, map->name);
 		ent->d_ino = map->ino;
@@ -41,7 +41,7 @@ struct dirent* fs_readdir (struct inode* inode, int index) {
 		return ent;
 	}
 
-	if(inode->readdir)
+	if(likely(inode->readdir))
 		return inode->readdir(inode, index - vfs_mapped_count(inode));
 		
 	errno = ENOSYS;	
@@ -50,17 +50,17 @@ struct dirent* fs_readdir (struct inode* inode, int index) {
 
 struct inode* fs_finddir (struct inode* inode, char* name) {
 
-	if(strcmp(name, ".") == 0)
+	if(unlikely(strcmp(name, ".") == 0))
 		return inode;
 
-	if(strcmp(name, "..") == 0)
+	if(unlikely(strcmp(name, "..") == 0))
 		return inode->parent;
 
 	inode_t* map = NULL;
-	if((map = (inode_t*) vfs_mapped(inode, name)) != NULL)
+	if(likely((map = (inode_t*) vfs_mapped(inode, name)) != NULL))
 		return map;
 
-	if(inode->finddir)
+	if(likely(inode->finddir))
 		return inode->finddir(inode, name);
 		
 	errno = ENOSYS;	
@@ -68,7 +68,7 @@ struct inode* fs_finddir (struct inode* inode, char* name) {
 }
 
 struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
-	if(inode->creat)
+	if(likely(inode->creat))
 		return inode->creat(inode, name, mode);
 	
 	errno = ENOSYS;		
@@ -76,7 +76,7 @@ struct inode* fs_creat (struct inode* inode, char* name, mode_t mode) {
 }
 	
 int fs_rename (struct inode* inode, char* newname) {
-	if(inode->rename)
+	if(likely(inode->rename))
 		return inode->rename(inode, newname);
 	
 	errno = ENOSYS;		
@@ -84,7 +84,7 @@ int fs_rename (struct inode* inode, char* newname) {
 }
 
 int fs_unlink (struct inode* inode, char* name) {
-	if(inode->unlink)
+	if(likely(inode->unlink))
 		return inode->unlink(inode, name);
 		
 	errno = ENOSYS;	
@@ -92,7 +92,7 @@ int fs_unlink (struct inode* inode, char* name) {
 }
 
 int fs_chown (struct inode* inode, uid_t owner, gid_t group) {
-	if(inode->chown)
+	if(likely(inode->chown))
 		return inode->chown(inode, owner, group);
 		
 	errno = ENOSYS;	
@@ -100,7 +100,7 @@ int fs_chown (struct inode* inode, uid_t owner, gid_t group) {
 }
 
 void fs_flush(struct inode* inode) {
-	if(inode->flush)
+	if(likely(inode->flush))
 		inode->flush(inode);
 		
 	errno = ENOSYS;	
@@ -108,7 +108,7 @@ void fs_flush(struct inode* inode) {
 }
 
 int fs_ioctl(struct inode* inode, int req, void* buf) {
-	if(inode->ioctl)
+	if(likely(inode->ioctl))
 		return inode->ioctl(inode, req, buf);
 	
 	errno = ENOSYS;	

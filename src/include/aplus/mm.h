@@ -71,14 +71,14 @@ typedef struct heap {
 } heap_t;
 
 static inline void* mm_paddr(void* vaddr) {
-	if((uint32_t) vaddr > MM_VBASE)
+	if(likely((uint32_t) vaddr > MM_VBASE))
 		vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
 		
 	return vaddr;
 }
 
 static inline void* mm_vaddr(void* paddr) {
-	if((uint32_t) paddr < MM_VBASE)
+	if(likely((uint32_t) paddr < MM_VBASE))
 		paddr = (void*) ((uint32_t) paddr + MM_VBASE);
 		
 	return paddr;

@@ -23,7 +23,7 @@ DEFINES	:= -DKERNEL -DUSERNET -DARCH=\"$(ARCH)\"
 LIBS	:= -lpthread -lposix -lc -lm -lgcc
 WARN	:= -Wno-implicit-function-declaration -Wall
 
-CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib -std=c99 -g -mfpmath=sse -msse2 -O2
+CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib -std=c99 -mfpmath=sse -msse2 -O2
 CXXFLAGS:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib
 AFLAGS	:= $(DEFINES) -f elf
 LFLAGS	:= -T $(TOP)/src/link.ld -Map aplus.map -L $(LIBS)

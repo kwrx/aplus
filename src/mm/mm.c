@@ -79,7 +79,7 @@ static void __check_all_chunks_overflow() {
 	int e = 0;
 	for(uint32_t frame = 0; frame < current_heap->size; frame += 0x1000) {
 		block_t* block = (block_t*) frame;
-		if(block->magic != BLKMAGIC)
+		if(likely(block->magic != BLKMAGIC))
 			continue;
 
 
@@ -111,7 +111,7 @@ void* kmalloc(size_t size)
 {
 
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
-	if(!addr)
+	if(unlikely(!addr))
 		panic("halloc(): failed!");
 
 
@@ -136,7 +136,7 @@ void* kmalloc(size_t size)
 
 void* kvmalloc(size_t size) {
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
-	if(!addr)
+	if(unlikely(!addr))
 		panic("halloc(): failed!");
 
 
@@ -153,14 +153,14 @@ void kfree(void* ptr) {
 	__check_all_chunks_overflow();
 #endif
 
-	if(!ptr)
+	if(unlikely(!ptr))
 		return;
 		
 	
 	block_t* block = (block_t*) ptr;
 	block--;
 
-	if(block->magic != BLKMAGIC)
+	if(unlikely(block->magic != BLKMAGIC))
 		return;
 
 
@@ -195,14 +195,14 @@ void* krealloc(void* ptr, size_t size) {
 	block_t* block = (block_t*) ptr;
 	block--;
 
-	if(block->magic != BLKMAGIC)
+	if(unlikely(block->magic != BLKMAGIC))
 		return NULL;
 		
 	void* newptr = kmalloc(size);
-	if(!newptr)
+	if(unlikely(!newptr))
 		return NULL;
 		
-	if(size > block->size)
+	if(unlikely(size > block->size))
 		size = block->size;
 		
 	memcpy(newptr, ptr, size);

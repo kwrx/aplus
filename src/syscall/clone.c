@@ -30,10 +30,10 @@ extern task_t* current_task;
 			and errno will be set appropriately.
  */
 int sys_clone(int (*fn)(void*), void* child_stack, int flags, void* arg) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 	
-	if(fn == NULL) {
+	if(unlikely(fn == NULL)) {
 		errno = EINVAL;
 		return -1;
 	}

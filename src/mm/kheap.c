@@ -50,7 +50,7 @@ extern uint32_t kernel_low_area_size;
 
 
 static int bitmap_first(heap_t* heap, size_t size) {
-	if(size == 0)
+	if(unlikely(size == 0))
 		return -1;
 	
 
@@ -58,10 +58,10 @@ static int bitmap_first(heap_t* heap, size_t size) {
 	int hused = heap->used / BLKSIZE;
 
 
-	if(size > hsize)
+	if(unlikely(size > hsize))
 		return -1;
 
-	if(size >= (hsize - hused))
+	if(unlikely(size >= (hsize - hused)))
 		return -1;
 
 
@@ -86,18 +86,18 @@ static int bitmap_first(heap_t* heap, size_t size) {
 
 
 void* bitmap_alloc(heap_t* heap, size_t size) {
-	if(!heap)
+	if(unlikely(!heap))
 		return NULL;
 
 	
-	if(!heap->bitmap)
+	if(unlikely(!heap->bitmap))
 		return NULL;
 
 		
-	if(heap->used >= heap->size)
+	if(unlikely(heap->used >= heap->size))
 		return NULL;
 
-	if(!size)
+	if(unlikely(!size))
 		return NULL;
 		
 	
@@ -106,7 +106,7 @@ void* bitmap_alloc(heap_t* heap, size_t size) {
 	
 
 	int index = bitmap_first(heap, size);
-	if(index == -1)
+	if(unlikely(index == -1))
 		return NULL;
 				
 	for(int i = 0; i < size; i++)
@@ -119,11 +119,11 @@ void* bitmap_alloc(heap_t* heap, size_t size) {
 }
 
 void bitmap_free(heap_t* heap, void* addr, size_t size) {
-	if(!heap)
+	if(unlikely(!heap))
 		return;
 	
 	
-	if(!heap->bitmap)
+	if(unlikely(!heap->bitmap))
 		return;
 
 

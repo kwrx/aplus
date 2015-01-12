@@ -13,7 +13,7 @@
 extern task_t* current_task;
 
 int sys_pipe(int fd[2]) {
-	if(!fd) {
+	if(unlikely(!fd)) {
 		errno = EINVAL;
 		return -1;
 	}
@@ -21,7 +21,7 @@ int sys_pipe(int fd[2]) {
 	inode_t* nd = (inode_t*) kmalloc(sizeof(inode_t) * 2);
 	memset(nd, 0, sizeof(inode_t) * 2);
 
-	if(pipe_create(nd) != 0)
+	if(unlikely(pipe_create(nd) != 0))
 		return -1;
 
 	fd[0] = schedule_append_fd(current_task, &nd[0]);

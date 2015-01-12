@@ -166,12 +166,12 @@ void irq_handler(regs_t* r) {
 void pit_handler(regs_t* r) {
 	pit_ticks += (1000 / PIT_FREQ);
 	
-	if(pit_ticks >= 1000) {
+	if(unlikely(pit_ticks >= 1000)) {
 		pit_ticks = 0;
 		pit_seconds += 1;
 	}
 	
-	if(pit_seconds >= 86400) {
+	if(unlikely(pit_seconds >= 86400)) {
 		pit_seconds = 0;
 		pit_days += 1;
 	}

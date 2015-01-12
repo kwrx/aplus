@@ -59,7 +59,7 @@ void task_switch_ack() {
 
 
 task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
-	if(entry == NULL)
+	if(unlikely(entry == NULL))
 		return NULL;
 
 	if(stack == NULL)

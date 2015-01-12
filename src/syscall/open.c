@@ -32,7 +32,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 	else
 	 	cwd = current_task->cwd;
 	
-	if(!cwd) {
+	if(unlikely(!cwd)) {
 		if(!vfs_root) {
 			kprintf("sys_open: no root found for cwd.");
 		
@@ -59,7 +59,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 			*p++ = 0;
 		
 			cwd = (inode_t*) fs_finddir(cwd, s);
-			if(!cwd) {
+			if(unlikely(!cwd)) {
 				errno = ENOENT;
 				return NULL;
 			}
@@ -75,7 +75,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 			break;
 	}
 
-	if(*s == 0) {
+	if(unlikely(*s == 0)) {
 		errno = ENOENT;
 		return NULL;
 	}
@@ -84,7 +84,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 
 
 	if(flags & O_EXCL) {
-		if(ent) {
+		if(unlikely(ent)) {
 			errno = EEXIST;
 			return NULL;
 		}
@@ -101,14 +101,14 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 		}
 	}
 
-	if(!ent) {
+	if(unlikely(!ent)) {
 		errno = ENOENT;
 		return NULL;
 	}
 
 	if(!(flags & O_NOFOLLOW)) {
 		while(S_ISLNK(ent->mode)) {
-			if(ent == ent->link) {
+			if(unlikely(ent == ent->link)) {
 				errno = ELOOP;
 				return NULL;
 			}			
@@ -131,7 +131,7 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 }
 
 int sys_open(char* filename, int flags, mode_t mode) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 
 #ifdef IO_DEBUG
@@ -142,7 +142,7 @@ int sys_open(char* filename, int flags, mode_t mode) {
 	inode_t* ino = ino_open(p, flags, mode);
 	kfree(p);
 
-	if(!ino)
+	if(unlikely(!ino))
 		return -1;
 	
 	

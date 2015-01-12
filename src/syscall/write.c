@@ -17,24 +17,25 @@ extern inode_t* vfs_root;
 
 
 int sys_write(int fd, void* ptr, size_t size) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 		
-	if(fd < 0 || fd > TASK_MAX_FD) {
+	if(unlikely(fd < 0 || fd > TASK_MAX_FD)) {
 		errno = EBADF;
 		return -1;
 	}
 	
 	
 	inode_t* ino = current_task->fd[fd];
-	if(!ino) {
+	if(unlikely(!ino)) {
 		errno = EBADF;
 		return -1;
 	}
 
 
 #ifdef IO_DEBUG
-	kprintf("io: write in %d (%s) %d Bytes\n", fd, ino->name, size);
+	if(unlikely(!sys_isatty(fd)))
+		kprintf("io: write in %d (%s) %d Bytes\n", fd, ino->name, size);
 #endif
 
 	return fs_write(ino, ptr, size);

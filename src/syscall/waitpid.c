@@ -13,7 +13,7 @@
 extern task_t* current_task;
 
 int sys_waitpid(pid_t pid, int* status, int options) {
-	if(current_task == NULL) {
+	if(unlikely(current_task == NULL)) {
 		errno = EFAULT;
 		return -1;
 	}
@@ -27,7 +27,7 @@ int sys_waitpid(pid_t pid, int* status, int options) {
 		child = (task_t*) schedule_getbypid(pid);
 
 
-	if(child == NULL) {
+	if(unlikely(child == NULL)) {
 		errno = ECHILD;
 		return -1;
 	}

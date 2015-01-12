@@ -54,13 +54,16 @@ int atk_create_widget_from(atk_t* atk, atk_widget_t* parent, atk_widget_t* widge
 		ATK_ERROR("Invalid size of widget");
 
 	memset(widget, 0, sizeof(atk_widget_t));
-	widget->surface = SDL_CreateRGBSurface(
+	widget->surface = SDL_CreateRGBSurface (
 		0,
 		width,
 		height,
 		atk->surface->format->BitsPerPixel,
 		ATK_MASK_ARGB
 	);
+
+	if(widget->surface == NULL)
+		ATK_ERROR("SDL_CreateRGBSurface failed");
 
 	widget->renderer = SDL_CreateSoftwareRenderer(widget->surface);
 	widget->parent = parent;
@@ -81,6 +84,10 @@ int atk_create_widget_from(atk_t* atk, atk_widget_t* parent, atk_widget_t* widge
 	__atk_initialize_renderer(widget->renderer);
 
 	return 0;
+}
+
+int atk_create_widget(atk_t* atk, atk_widget_t* widget, int width, int height) {
+	return atk_create_widget_from(atk, NULL, widget, width, height);
 }
 
 int atk_resize_widget(atk_t* atk, atk_widget_t* widget, int width, int height) {
@@ -108,10 +115,6 @@ int atk_move_widget(atk_t* atk, atk_widget_t* widget, int x, int y) {
 	widget->window.y = y;
 
 	return 0;
-}
-
-int atk_create_widget(atk_t* atk, atk_widget_t* widget, int width, int height) {
-	return atk_create_widget_from(atk, NULL, widget, width, height);
 }
 
 int atk_destroy_widget(atk_t* atk, atk_widget_t* widget) {
@@ -163,12 +166,12 @@ int atk_raise_event_widget(atk_t* atk, atk_widget_t* widget, atk_event_t* e) {
 
 int atk_present_widget(atk_t* atk, atk_widget_t* widget, atk_rect_t* rect) {
 	SDL_Rect w;
-	w.x = widget->window.x + rect->x;
-	w.y = widget->window.y + rect->y;
+	w.x = rect->x;
+	w.y = rect->y;
 	w.w = rect->w;
 	w.h = rect->h;
 	atk_absolute_position(atk, widget, &w.x, &w.y);
 
-	SDL_BlitSurface(widget->surface, NULL, atk->surface, &w);
+	atk_render_blit(widget->surface, NULL, atk->surface, &w);
 	return 0;
 }

@@ -7,11 +7,11 @@
 extern task_t* current_task;
 
 struct dirent* sys_readdir(int fd, int position) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return NULL;
 
 
-	if(fd < 0 || fd > TASK_MAX_FD) {
+	if(unlikely(fd < 0 || fd > TASK_MAX_FD)) {
 		errno = EBADF;
 		return NULL;
 	}
@@ -19,7 +19,7 @@ struct dirent* sys_readdir(int fd, int position) {
 		
 	
 	inode_t* ino = current_task->fd[fd];
-	if(!ino) {
+	if(unlikely(!ino)) {
 		errno = EBADF;
 		return NULL;
 	}

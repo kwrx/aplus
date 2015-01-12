@@ -67,7 +67,7 @@ static uint32_t pci_get_bar(pci_device_t* device, uint8_t bar) {
 		return 0;
 
 	uint8_t header = pci_get_header_type(device);
-	if(header == 0x02 || (header == 0x01 && bar < 2))
+	if(unlikely(header == 0x02 || (header == 0x01 && bar < 2)))
 		return 0;
 
 	uint8_t reg = 0x10 + (0x04 * bar);
@@ -119,7 +119,7 @@ static void pci_load_device(pci_device_t* device, uint8_t bus, uint8_t dev, uint
 
 pci_device_t* pci_find_by_id(uint32_t vendorID, uint32_t deviceID) {
 	for(int i = 0; i < PCI_MAX_DEVICES; i++) {
-		if(pci_devices[i].vendorID != vendorID && pci_devices[i].deviceID != deviceID)
+		if(unlikely(pci_devices[i].vendorID != vendorID && pci_devices[i].deviceID != deviceID))
 			continue;
 
 		return &pci_devices[i];
@@ -131,7 +131,7 @@ pci_device_t* pci_find_by_id(uint32_t vendorID, uint32_t deviceID) {
 int pci_find_by_class(pci_device_t** rdevs, uint32_t class, uint32_t length) {
 	int j = 0;	
 	for(int i = 0; i < PCI_MAX_DEVICES && j < length; i++) {
-		if(pci_devices[i].pci_class != class)
+		if(unlikely(pci_devices[i].pci_class != class))
 			continue;
 
 		rdevs[j++] = &pci_devices[i];
@@ -151,7 +151,7 @@ int pci_init() {
 			for(int func = 0; func < PCI_MAX_FUNC; func++) {
 				uint32_t vendor = pci_config_read(bus, dev, func, 0) & 0xFFFF;
 
-				if(vendor == 0xFFFF || vendor == 0)
+				if(unlikely(vendor == 0xFFFF || vendor == 0))
 					continue;
 
 				pci_load_device(&pci_devices[i], bus, dev, func);

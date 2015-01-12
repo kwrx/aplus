@@ -123,10 +123,12 @@ struct atk_event {
 #define atk_render_fill_rects(r, rects, count)	\
 	SDL_RenderFillRects((SDL_Renderer*) r, (const SDL_Rect*) rects, count)
 
-#define atk_render_color(re, r, g, b, a)	\
-	SDL_SetRenderDrawColor((SDL_Renderer*) re, r, g, b, a)
-
 #define atk_render_scale(r, x, y)	\
 	SDL_RenderSetScale((SDL_Renderer*) r, x, y)
+
+
+static inline void atk_render_color(atk_render_t* re, int r, int g, int b, int a) {
+	SDL_SetRenderDrawColor((SDL_Renderer*) re, r, g, b, a);
+}
 
 #endif

@@ -119,7 +119,7 @@ static task_t* schedule_next() {
 	
 	do {
 		newtask = (task_t*) list_next(task_queue, (listval_t) newtask);
-		if(!newtask)
+		if(unlikely(!newtask))
 			newtask = (task_t*) list_head(task_queue);
 		
 	} while(newtask->state != TASK_STATE_ALIVE);
@@ -135,11 +135,11 @@ static task_t* schedule_next() {
  * 	\param sig Signal to send.
  */
 void schedule_signal(task_t* task, int sig) {
-	if(!task)
+	if(unlikely(!task))
 		return;
 
 	task->signal_sig = 0;
-	if(!task->signal_handler)
+	if(unlikely(!task->signal_handler))
 		return;
 
 	task_switch_ack();
@@ -151,19 +151,19 @@ void schedule_signal(task_t* task, int sig) {
  *	\brief Perform a scheduling and check TTL (Time To Live) for current task.
  */
 void schedule() {
-	if(sched_enabled == 0)
+	if(unlikely(sched_enabled == 0))
 		return;
 		
-	if(list_empty(task_queue))
+	if(unlikely(list_empty(task_queue)))
 		return;
 
 
-	if(current_task->signal_sig)
+	if(unlikely(current_task->signal_sig))
 		schedule_signal(current_task, current_task->signal_sig);
 
 	current_task->clock += 1;
 	
-	if(current_task->clock % current_task->priority)
+	if(likely(current_task->clock % current_task->priority))
 		return;
 
 	
@@ -175,10 +175,10 @@ void schedule() {
  *	\brief Perform a forced scheduling.
  */
 void schedule_yield() {
-	if(sched_enabled == 0)
+	if(unlikely(sched_enabled == 0))
 		return;
 		
-	if(list_empty(task_queue))
+	if(unlikely(list_empty(task_queue)))
 		return;
 		
 	task_switch(schedule_next());
@@ -190,7 +190,7 @@ void schedule_yield() {
  *	\param priority TTL for current task.
  */
 void schedule_setpriority(int priority) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return;
 		
 	current_task->priority = priority;
@@ -203,7 +203,7 @@ void schedule_setpriority(int priority) {
  *	\return Exit value of child or -1 in case of error.
  */
 int schedule_wait(task_t* child) {
-	if(!child)
+	if(unlikely(!child))
 		return -1;
 		
 	spinlock_waiton(child->state != TASK_STATE_DEAD);
@@ -215,7 +215,7 @@ int schedule_wait(task_t* child) {
  *	\return child task or NULL in case of error.
  */
 task_t* schedule_child() {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return NULL;
 		
 
@@ -235,7 +235,7 @@ task_t* schedule_child() {
  * 	\param task Pointer to task structure.
  */
 void schedule_release(task_t* task) {
-	if(!task)
+	if(unlikely(!task))
 		return;
 
 #ifdef DEBUG
@@ -276,7 +276,7 @@ void schedule_release(task_t* task) {
  *	\param status Exit Value.
  */
 void schedule_exit2(task_t* task, int status) {
-	if(!task)
+	if(unlikely(!task))
 		return;
 		
 	list_remove(task_queue, (listval_t) task);
@@ -307,7 +307,7 @@ void schedule_exit(int status) {
  *	\return Process ID or -1 in case of error.
  */
 pid_t schedule_getpid() {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return -1;
 		
 	return current_task->pid;
@@ -338,10 +338,10 @@ task_t* schedule_getbypid(pid_t pid) {
  *	\return Current size of address space or NULL in case of error.
  */
 void* schedule_sbrk(ptrdiff_t increment) {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return NULL;
 		
-	if(current_task->image.vaddr == 0)
+	if(unlikely(current_task->image.vaddr == 0))
 		return NULL;
 
 #ifdef SBRK_DEBUG
@@ -371,7 +371,7 @@ void* schedule_sbrk(ptrdiff_t increment) {
 
 int schedule_append_fd(task_t* t, inode_t* ino) {
 
-	if(!(t && ino)) {
+	if(unlikely(!(t && ino))) {
 		errno = EINVAL;
 		return -1;
 	}

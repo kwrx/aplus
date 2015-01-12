@@ -74,7 +74,7 @@ void vmm_disable() {
 
 
 void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
-	if(!pd)
+	if(unlikely(!pd))
 		return paddr;
 		
 	paddr = mm_align(paddr);
@@ -90,12 +90,12 @@ void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {
 		
 		if(*e == 0) {
 			uint32_t* table = (uint32_t*) halloc(current_heap, PTSIZE * sizeof(uint32_t));
-			if(!table) {
+			if(unlikely(!table)) {
 				kprintf("vmm_map(): cannot allocate more table\n");
 				return NULL;
 			}				
 
-			if(current_vmm)
+			if(likely(current_vmm))
 				vmm_map(current_vmm, table, table, PTSIZE * sizeof(uint32_t), VMM_FLAGS_DEFAULT);
 			
 			memset(table, 0, PTSIZE * sizeof(uint32_t));

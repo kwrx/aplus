@@ -14,14 +14,14 @@ extern task_t* current_task;
 
 int sys_ioctl(int fd, int req, void* buf) {
 
-	if(fd < 0 || fd > TASK_MAX_FD) {
+	if(unlikely(fd < 0 || fd > TASK_MAX_FD)) {
 		errno = EBADF;
 		return -1;
 	}
 	
 
 	inode_t* ino = current_task->fd[fd];
-	if(!ino) {
+	if(unlikely(!ino)) {
 		errno = EBADF;
 		return -1;
 	}

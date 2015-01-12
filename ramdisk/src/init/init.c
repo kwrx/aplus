@@ -7,13 +7,11 @@
 #include <dlfcn.h>
 #include <string.h>
 
-#include <atk.h>
-
 
 #define MOD_PATH		"/dev/ramdisk/mod"
 
 static int initmod(void* dl) {
-	int (*init) () = 0;//dlsym(dl, "init");
+	int (*init) () = dlsym(dl, "init");
 	assert(init);
 
 
@@ -24,7 +22,7 @@ static int initmod(void* dl) {
 
 
 int main(int argc, char** argv) {
-	/*DIR* d = opendir(MOD_PATH);
+	DIR* d = opendir(MOD_PATH);
 	assert(d);
 
 	struct dirent* ent;
@@ -41,36 +39,8 @@ int main(int argc, char** argv) {
 		exit(0);
 	}
 
-	closedir(d);*/
+	closedir(d);
 
-	atk_t atk;
-	ATK_ASSERT(atk_main(&atk));
-	
-/*
-	atk_window(&atk, &wnd, "Hello", 10, 10, 200, 200, ATK_WINDOW_HIDDEN);
-	atk_window_destroy(&atk, &wnd);
-	atk_window_show(&atk, &wnd);
-	atk_window_hide(&atk, &wnd);
-	atk_window_get_surface(&atk, &wnd);
-	atk_window_get_renderer(&atk, &wnd);
-	atk_window_get_context(&atk, &wnd);
-	atk_window_get_flags(&atk, &wnd, &flags);
-	atk_window_set_flags(&atk, &wnd, flags);
-	atk_window_resize(&atk, &wnd);
-	atk_window_move(&atk, &wnd);
-	atk_window_add_widget(&atk, &wnd, &widget)
-	atk_window_remove_widget(&atk, &wnd, &widget)
-	atk_run(&atk);
-*/
-
-	atk_image_t* image;
-	atk_load_image(&atk, &image, "/dev/ramdisk/share/images/test.png");
-
-	atk_rect_t R;
-	R.x = 0;
-	R.y = 0;
-	R.w = 500;
-	R.h = 500;
 	
 
 	for(;;) 
