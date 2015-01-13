@@ -53,8 +53,9 @@ extern task_t* current_task;
 static void sysidle() {
 	schedule_setpriority(TASK_PRIORITY_MIN);
 
+
 	for(;;)
-		__asm__ ("pause");
+		__asm__ ("pause; hlt;");
 }
 
 
@@ -93,10 +94,8 @@ int main() {
 	
 	
 
-
 	if(unlikely(!mkramdev("/dev/ram0", addr, endp - addr)))
 		panic("initrd: cannot create /dev/ram0");
-
 
 	if(unlikely(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0))
 		panic("initrd: cannot mount ramdisk");
@@ -141,7 +140,7 @@ int main() {
 	};
 
 
-//if(sys_fork() == 0)
+	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 	
 	for(;;);

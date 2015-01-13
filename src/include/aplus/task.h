@@ -90,6 +90,13 @@ typedef struct task_env {
 	uint32_t eip;
 } __attribute__ ((packed)) task_env_t;
 
+typedef struct task_image {
+	uint32_t vaddr;
+	uint32_t ptr;
+	uint32_t length;
+	int refcount;
+} task_image_t;
+
 
 typedef struct task {
 	pid_t pid;
@@ -101,7 +108,6 @@ typedef struct task {
 #if HAVE_SSE
 		uint8_t fpu[1024];
 #endif
-		pid_t owner;
 	} context;
 
 
@@ -114,11 +120,7 @@ typedef struct task {
 
 	list_t* shmmap;
 	
-	struct {
-		uint32_t vaddr;
-		uint32_t ptr;
-		uint32_t length;
-	} image;
+	task_image_t* image;
 
 	struct {
 		uint32_t strtab;

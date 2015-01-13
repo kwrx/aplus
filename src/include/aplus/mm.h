@@ -51,10 +51,13 @@
 #define VMM_FLAGS_4MB		0x80
 #define VMM_FLAGS_DEFAULT	(VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)
 
+#define VMM_MASK			~0xFFF
 #define VMM_MAX_MEMORY		(0xFFFFFFFF - MM_VBASE)
 
 
-#define BLKSIZE				0x1000
+#define BLKSIZE				0x4000
+#define MM_MASK				~0xFFF
+
 #define BLKMAGIC			0xF7A2
 
 
@@ -85,7 +88,7 @@ static inline void* mm_vaddr(void* paddr) {
 }
 
 static inline void* mm_align(void* vaddr) {
-	return (void*) ((uint32_t) vaddr & ~0xFFF);
+	return (void*) ((uint32_t) vaddr & VMM_MASK);
 }
 
 

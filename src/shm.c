@@ -42,16 +42,13 @@ shm_chunk_t* shm_acquire_chunk(uint32_t* size) {
 	return chunk;
 }
 
-void* shm_acquire(const char* path, uint32_t* size) {
-	if(!size)
+
+void* shm_acquire_from_inode(inode_t* ino, uint32_t* size) {
+	if(unlikely(!size))
 		return NULL;
 
-	int fd = sys_open(path, O_RDONLY, 0644);
-	if(fd < 0)
+	if(unlikely(!ino))
 		return NULL;
-
-	inode_t* ino = current_task->fd[fd];
-	sys_close(fd);
 
 	shm_chunk_t* chunk = NULL;
 
@@ -81,6 +78,20 @@ void* shm_acquire(const char* path, uint32_t* size) {
 #endif
 
 	return (void*) chunk->addr;
+}
+
+void* shm_acquire(const char* path, uint32_t* size) {
+	if(unlikely(!size))
+		return NULL;
+
+	int fd = sys_open(path, O_RDONLY, 0644);
+	if(unlikely(fd < 0))
+		return NULL;
+
+	inode_t* ino = current_task->fd[fd];
+	sys_close(fd);
+
+	return shm_acquire_from_inode(ino, size);
 }
 
 int shm_release_chunk(shm_chunk_t* chunk) {

@@ -281,7 +281,7 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 
 	schedule_release(current_task);
 	vmm_alloc(current_task->context.cr3, iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-
+	current_task->image->refcount++;
 
 	if(vaddr)
 		*vaddr = iptr;

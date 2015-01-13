@@ -85,7 +85,7 @@ void ramdev_flush(inode_t* ino) {
 
 inode_t* mkramdev(char* path, uint32_t addr, uint32_t size) {
 	int fd = sys_open(path, O_CREAT | O_EXCL | O_TRUNC, S_IFCHR);
-	if(fd < 0)
+	if(unlikely(fd < 0))
 		return NULL;
 
 	inode_t* ino = (inode_t*) current_task->fd[fd];
@@ -98,7 +98,7 @@ inode_t* mkramdev(char* path, uint32_t addr, uint32_t size) {
 
 
 	void* shm;
-	if((shm = (void*) shm_acquire(path, (uint32_t*) &ino->size)) == NULL)
+	if(unlikely((shm = (void*) shm_acquire_from_inode(ino, (uint32_t*) &ino->size)) == NULL))
 		panic("Cannot acquire Shared Memory Space");
 
 

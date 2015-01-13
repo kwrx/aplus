@@ -44,7 +44,7 @@
 
 
 
-static heap_t kheap;
+heap_t kheap;
 extern uint64_t memsize;
 extern uint32_t kernel_low_area_size;
 
@@ -67,7 +67,7 @@ static int bitmap_first(heap_t* heap, size_t size) {
 
 	for(register int i = 0; i < hsize; i++) {
 
-		if(heap->bitmap[i] == 0xFFFFFFFF)
+		if(unlikely(heap->bitmap[i] == 0xFFFFFFFF))
 			continue;
 	
 		for(register int j = 0, f = 0; j < size; j++) {
@@ -75,7 +75,7 @@ static int bitmap_first(heap_t* heap, size_t size) {
 				continue;
 			
 			f++;	
-			if(f == size)
+			if(unlikely(f == size))
 				return i;
 		}
 	}

@@ -31,8 +31,8 @@
 
 #include <grub.h>
 
-#define PGSIZE		(BLKSIZE)
-#define PGSIZE_4MB	(BLKSIZE * 1024)
+#define PGSIZE		(0x1000)
+#define PGSIZE_4MB	(PGSIZE * 1024)
 #define PGFLAGS		(0x00000000)
 
 #define PDSIZE		(1024)
@@ -102,7 +102,7 @@ void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {
 			*e = (uint32_t) table | flags;	
 		}
 		
-		uint32_t* t = (uint32_t*) (*e & ~0xFFF);
+		uint32_t* t = (uint32_t*) (*e & VMM_MASK);
 		t[PTENTRY(vframe)] = pframe | flags;
 		
 		pframe += PGSIZE;
@@ -127,7 +127,7 @@ void vmm_umap(uint32_t* pd, void* addr, size_t len) {
 		if((*e & 1) != 1)
 			continue;
 			
-		uint32_t* table = (uint32_t*) (*e & ~0xFFF);
+		uint32_t* table = (uint32_t*) (*e & VMM_MASK);
 		table[PTENTRY(frame)] = 0;
 	}
 	
@@ -155,8 +155,8 @@ void vmm_free(uint32_t* vmm, void* vaddr, size_t size) {
 		if((*e & 1) != 1)
 			continue;
 
-		uint32_t* table = (uint32_t*) (*e & ~0xFFF);
-		hfree(current_heap, table[PTENTRY(frame)] & ~0xFFF, PGSIZE);
+		uint32_t* table = (uint32_t*) (*e & VMM_MASK);
+		hfree(current_heap, table[PTENTRY(frame)] & VMM_MASK, PGSIZE);
 	}
 
 	vmm_umap(vmm, vaddr, size);

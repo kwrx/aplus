@@ -47,7 +47,7 @@ static char** __args_dup(char** a) {
 int sys_execve(char* filename, char** argv, char** environ) {
 	
 	int fd = sys_open(filename, O_RDONLY, 0644);
-	if(fd < 0) {
+	if(unlikely(fd < 0)) {
 		errno = ENOENT;
 		return -1;
 	}
@@ -57,14 +57,14 @@ int sys_execve(char* filename, char** argv, char** environ) {
 	sys_lseek(fd, 0, SEEK_SET);
 
 	void* image = kmalloc(size);
-	if(!image) {
+	if(unlikely(!image)) {
 		sys_close(fd);
 
 		errno = ENOMEM;
 		return -1;
 	}
 
-	if(sys_read(fd, image, size) < size) {
+	if(unlikely(sys_read(fd, image, size) < size)) {
 		sys_close(fd);
 		kfree(image);
 		
@@ -75,7 +75,7 @@ int sys_execve(char* filename, char** argv, char** environ) {
 	
 	int vaddr, vsize;
 	void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
-	if(entry) {
+	if(likely(entry)) {
 
 		argv = __args_dup(argv);
 		environ = __args_dup(environ);
@@ -84,9 +84,9 @@ int sys_execve(char* filename, char** argv, char** environ) {
 		current_task->argv = argv;
 		current_task->envp = environ;
 
-		current_task->image.ptr = (int) image;
-		current_task->image.vaddr = vaddr;
-		current_task->image.length = vsize;
+		current_task->image->ptr = (int) image;
+		current_task->image->vaddr = vaddr;
+		current_task->image->length = vsize;
 
 		sys_close(fd);
 

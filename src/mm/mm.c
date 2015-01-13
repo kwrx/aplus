@@ -77,7 +77,7 @@ static void __check_all_chunks_overflow() {
 	vmm_disable();
 	
 	int e = 0;
-	for(uint32_t frame = 0; frame < current_heap->size; frame += 0x1000) {
+	for(uint32_t frame = 0; frame < current_heap->size; frame += BLKSIZE) {
 		block_t* block = (block_t*) frame;
 		if(likely(block->magic != BLKMAGIC))
 			continue;
@@ -90,7 +90,7 @@ static void __check_all_chunks_overflow() {
 		 	*(uint32_t*) (frame + block->size + sizeof(block_t)) = CHUNK_MAGIC;
 		}
 
-		frame += block->size & ~0xFFF;
+		frame += block->size & MM_MASK;
 	}
 	
 	if(e)

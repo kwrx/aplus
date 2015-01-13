@@ -24,7 +24,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 		return -1;
 
 
-	if(!im_superuser()) {
+	if(unlikely(!im_superuser())) {
 		errno = EPERM;
 		return -1;
 	}
@@ -41,7 +41,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 
 	if(dev && strlen(dev) > 0) {
 		int dfd = sys_open(dev, O_RDONLY, 0644);
-		if(dfd < 0) {
+		if(unlikely(dfd < 0)) {
 			errno = ENOENT;
 			return -1;
 		}
@@ -52,7 +52,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 
 
 	int sfd = sys_open(dir, O_CREAT | O_DIRECTORY | O_RDONLY, S_IFDIR);
-	if(sfd < 0) {
+	if(unlikely(sfd < 0)) {
 		errno = ENOENT;
 		return -1;
 	}
@@ -60,12 +60,12 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 	idir = current_task->fd[sfd];
 	sys_close(sfd);
 
+
 	list_t* fs = attribute("fs");
-	if(list_empty(fs)) {
+	if(unlikely(list_empty(fs))) {
 		errno = ENODEV;
 		return -1;
 	}
-	
 
 	fsys_t* found = NULL;
 
@@ -78,7 +78,7 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 
 	list_destroy(fs);
 
-	if(found == NULL) {
+	if(unlikely(!found)) {
 		errno = ENODEV;
 		return -1;
 	}

@@ -102,28 +102,33 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	}
 
 
-	child->image.vaddr = current_task->image.vaddr;
-	child->image.length = current_task->image.length;
-	child->image.ptr = current_task->image.ptr;
+	
 
 
 	if(flags & CLONE_VM) {
 		child->context.cr3 = current_task->context.cr3;
-		child->context.owner = current_task->pid;
+		child->image = current_task->image;
 	} else {
 
-		child->context.owner = child->pid;
+		child->image = (task_image_t*) kmalloc(sizeof(task_image_t));
+		memset(child->image, 0, sizeof(task_image_t));
+
 		child->context.cr3 = vmm_create();
 		vmm_mapkernel(child->context.cr3);
 
 
-		if(current_task->image.vaddr && current_task->image.length) {
-			void* addr = (void*) kvmalloc(child->image.length);
-			memcpy(addr, (void*) child->image.vaddr, child->image.length);
+		if(current_task->image->vaddr && current_task->image->length) {
+			void* addr = (void*) kvmalloc(current_task->image->length);
+			memcpy(addr, (void*) current_task->image->vaddr, current_task->image->length);
 
-			vmm_map(child->context.cr3, mm_paddr(addr), child->image.vaddr, child->image.length);
+			vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length);
 		}
 	}
+
+	child->image->vaddr = current_task->image->vaddr;
+	child->image->length = current_task->image->length;
+	child->image->ptr = current_task->image->ptr;
+	child->image->refcount++;
 
 	
 	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
@@ -169,39 +174,19 @@ void task_switch(task_t* newtask) {
 
 
 
-static jmp_buf __fork_buf;
-
-static int __fork_child() {
-
-
-	uint32_t oldesp = __fork_buf->esp;
-	uint32_t stack = (uint32_t) mm_align(kmalloc(TASK_STACKSIZE));
-
-	for(int i = 0; i < TASK_STACKSIZE; i++)
-		((uint8_t*) stack)[i] = ((uint8_t*) (oldesp & ~0xFFF)) [i];
-
-
-	vmm_map(current_task->context.cr3, mm_paddr((void*) stack), (oldesp & ~0xFFF), TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);	
-
-	longjmp(__fork_buf, 1);
-	return 0;
-}
-
 
 task_t* task_fork() {
-	if(!current_task)
+	if(unlikely(!current_task))
 		return NULL;
 
-	schedule_disable();
-	task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
-
-	if(setjmp(__fork_buf) == 1) {
-		schedule_enable();
-		return NULL;
-	}
-
+	task_t* child = task_clone(&&__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
 	task_switch(child);
 	return child; 
+
+__fork_child:
+	kprintf("im child\n");
+	for(;;);
+	return NULL;
 }
 
 
@@ -227,6 +212,11 @@ int task_init() {
 	current_task->state = TASK_STATE_ALIVE;
 	current_task->priority = TASK_PRIORITY_REGULAR;
 	current_task->parent = NULL;
+
+	current_task->image = (task_image_t*) kmalloc(sizeof(task_image_t));
+	memset(current_task->image, 0, sizeof(task_image_t));
+
+	current_task->image->refcount = 1;
 
 
 	exec_init_kernel_task(current_task);

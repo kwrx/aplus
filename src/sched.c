@@ -238,7 +238,7 @@ void schedule_release(task_t* task) {
 	if(unlikely(!task))
 		return;
 
-#ifdef DEBUG
+#ifdef SCHED_DEBUG
 	heap_t* h = (heap_t*) mm_getheap();
 	int prevmm = h->used;
 #endif
@@ -257,11 +257,11 @@ void schedule_release(task_t* task) {
 		kfree(task->envp);
 	}
 
-	if(task->image.ptr && task->context.owner == task->pid)
-		kfree((void*) task->image.ptr);
+	if(--task->image->refcount <= 0)
+		kfree((void*) task->image->ptr);
 
-	if(task->image.vaddr && task->image.length && task->context.owner == task->pid)
-		vmm_free(task->context.cr3, task->image.vaddr, task->image.length);
+	if(task->image->vaddr && task->image->length && task->image->refcount <= 0)
+		vmm_free(task->context.cr3, task->image->vaddr, task->image->length);
 		
 
 
@@ -341,30 +341,31 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	if(unlikely(!current_task))
 		return NULL;
 		
-	if(unlikely(current_task->image.vaddr == 0))
+	if(unlikely(current_task->image->vaddr == 0))
 		return NULL;
 
 #ifdef SBRK_DEBUG
-	kprintf("sbrk: request for %d Bytes (%d MB)\n", increment, (current_task->image.length + increment) / 1024 / 1024);
+	extern heap_t kheap;
+	kprintf("sbrk: request for %d Bytes (%d MB; %d MB)\n", increment, (int)kheap.used / 1024 / 1024, (current_task->image->length + increment) / 1024 / 1024);
 #endif
 
-	void* brk = (void*) ((uint32_t) current_task->image.vaddr + current_task->image.length);		
+	void* brk = (void*) ((uint32_t) current_task->image->vaddr + current_task->image->length);		
 	if(increment == 0)
 		return brk;
 
 
-	increment = (increment & ~0xFFF) + 0x1000;
+	increment = (increment & MM_MASK) + BLKSIZE;
 
 	if(increment > 0) {
-		if(!vmm_alloc(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER)) {
+		if(!vmm_alloc(current_task->context.cr3, current_task->image->vaddr + current_task->image->length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER)) {
 			errno = ENOMEM;
 			return NULL;
 		}
 	} else
-		vmm_free(current_task->context.cr3, current_task->image.vaddr + current_task->image.length, increment);	
+		vmm_free(current_task->context.cr3, current_task->image->vaddr + current_task->image->length, increment);	
 
 
-	current_task->image.length += increment;
+	current_task->image->length += increment;
 	return brk;
 }
 

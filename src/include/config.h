@@ -23,7 +23,7 @@
 
 
 #ifndef ARCH
-#define ARCH						unknown
+#define ARCH						"unknown"
 #endif
 
 
@@ -36,9 +36,18 @@
 #define KERNEL_RELEASE_MAJOR		0
 #define KERNEL_RELEASE_MINOR		1
 #define KERNEL_RELEASE_LOWER		0
-#define KERNEL_RELEASE_SUFFIX		"generic"
 
+#ifdef DEBUG
+#define KERNEL_RELEASE_SUFFIX		"debug"
+#else
+#define KERNEL_RELEASE_SUFFIX		"generic"
+#endif
+
+#if HAVE_SSE
+#define KERNEL_MACHINE				ARCH "+sse"
+#else
 #define KERNEL_MACHINE				ARCH
+#endif
 
 #define KERNEL_VERSION_FORMAT		"%s - %s %s"
 #define KERNEL_VERSION_CODENAME		"TheRev"
