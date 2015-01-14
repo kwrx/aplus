@@ -4,6 +4,6 @@
 
 
 
-int init() {
-	puts("Hello WOrld");
+int main() {
+	printf("hello World\n");
 }

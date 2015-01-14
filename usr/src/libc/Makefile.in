@@ -41,7 +41,8 @@ $(OUTPUT) : $(OFILES)
 
 
 clean:
-	-@$(RM) $(SRCDIR)/*.o
+	-@$(RM) $(OFILES)
+	-@$(RM) -R *.o
 	-@$(RM) $(OUTPUT)
 
 

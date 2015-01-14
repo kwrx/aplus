@@ -121,7 +121,7 @@ int main() {
 	task_clone(sysidle, NULL, NULL, 0xFF);
 	
 	char* __argv[] = {
-		"/dev/ramdisk/bin/jvm",
+		"/dev/ramdisk/bin/init",
 		"/dev/ramdisk/bin/p.j",
 		NULL
 	};
@@ -138,6 +138,11 @@ int main() {
 		"SCREEN_BPP=32",
 		NULL
 	};
+
+
+	
+
+	kprintf("Tempo impiegato: %d", (int) (ce - cs));
 
 
 	//if(sys_fork() == 0)

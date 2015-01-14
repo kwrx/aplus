@@ -1,25 +1,26 @@
+#Change it to cross compile
+PLATFORM	:= posix
 
 
-
-PREFIX		:= /usr/local
-OUTPUT		:= libposix.a
-HEADERS		:= include
+PREFIX		:= @prefix@
+OUTPUT		:= @package@.a
 
 SYSROOT		:= /opt/cross
 
-PACKAGE		:= libposix
-VERSION		:= 1.0.0
+PACKAGE		:= @package@
+VERSION		:= @version@
 
-SRCDIR		:= src
+SRCDIR		:= @srcdir@
+TSTDIR		:= @tstdir@
 
-CC			:= i686-aplus-gcc
+CC			:= @CC@
 CXX			:= @CXX@
 LD			:= @LD@
-AR			:= i686-aplus-ar
+AR			:= @AR@
 
 WARNINGS	:= -Wall -Wno-return-type -Wno-implicit-int -Wno-implicit-function-declaration
 
-CFLAGS		:= -O2 $(WARNINGS)
+CFLAGS		:= -O2 $(WARNINGS) 
 CXXFLAGS	:= -O2 $(WARNINGS)
 LDFLAGS		:=
 ARFLAGS		:= -rcs
@@ -39,15 +40,20 @@ $(OUTPUT) : $(OFILES)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 
+test: $(TSTDIR)/main
+$(TSTDIR)/main : $(TSTDIR)/main.c
+	@echo "CC\t" $(notdir $<)
+	@$(CC) -Wall -Wno-implicit-function-declaration $< -o $@ -ldl
 
 clean:
 	-@$(RM) $(SRCDIR)/*.o
+	-@$(RM) $(TSTDIR)/*.o
+	-@$(RM) $(TSTDIR)/main
 	-@$(RM) $(OUTPUT)
 
 
 install: $(OUTPUT)
 	@install -m 644 $(OUTPUT) $(SYSROOT)/$(PREFIX)/lib/$(OUTPUT)
-	@install -m 644 $(HEADERS) $(SYSROOT)/$(PREFIX)/include
 
 
 distclean: clean

@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include "config.h"
 #include "dl.h"
 
 int dlclose(void* handle) {
@@ -9,13 +10,13 @@ int dlclose(void* handle) {
 		rtsym_t* t = rt;
 		rt = rt->next;
 
-		__dl_free(t);
+		dl_free(t);
 	}
 
 	dll->symbols = 0;
 
-	__dl_free(dll->image);
-	__dl_free(dll);
+	dl_free(dll->image);
+	dl_free(dll);
 
 	return 0;
 }

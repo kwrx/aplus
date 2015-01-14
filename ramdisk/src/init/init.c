@@ -11,11 +11,11 @@
 #define MOD_PATH		"/dev/ramdisk/mod"
 
 static int initmod(void* dl) {
-	int (*init) () = dlsym(dl, "init");
+	int (*init) () = dlsym(dl, "main");
 	assert(init);
 
 
-	init();
+	printf("init returned: %s\n", init());
 	return 0;
 }
 

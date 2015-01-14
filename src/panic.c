@@ -15,7 +15,7 @@ extern task_t* kernel_task;
  *	\brief Print last error number.
  */
 static void dump_errno() {
-	kprintf("errno: %d - %s\n", errno, strerror(errno));
+	kprintf("errno: %d - %s\n\n", errno, strerror(errno));
 }
 
 
@@ -51,7 +51,12 @@ static void dump_stacktrace(int count) {
 
 	for(int i = 0; i < count; i++) {
 		int eip = *(++esp);
-		kprintf("[%d] 0x%x - %s\n", i, eip, elf_symbol_lookup(eip));
+		char* sym = elf_symbol_lookup(eip);
+
+		if(unlikely(!sym))
+			break;
+
+		kprintf("[%d] 0x%x - %s\n", i, eip, sym);
 		
 
 		esp = (int*) *(--esp);
@@ -118,7 +123,7 @@ void panic_r(char* msg, regs_t* r) {
 	dump_task();
 	dump_errno();
 	dump_mmu();	
-	dump_stacktrace(6);
+	dump_stacktrace(10);
 
 	for(;;);
 }

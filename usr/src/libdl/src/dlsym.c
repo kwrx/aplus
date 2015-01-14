@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include "config.h"
 #include "dl.h"
 
 void* dlsym(void* handle, const char* name) {
@@ -6,7 +7,7 @@ void* dlsym(void* handle, const char* name) {
 
 	rtsym_t* rt = dll->symbols;
 	while(rt) {
-		if(strcmp(rt->name, name) == 0)
+		if(dl_strcmp(rt->name, name) == 0)
 			return rt->addr;
 
 		rt = rt->next;
