@@ -11,6 +11,8 @@
 
 #define HAVE_PTHREAD				0
 #define HAVE_DEV_RANDOM				0
+#define HAVE_SSE					1
+#define HAVE_SIGNALS				1
 
 
 #define PATH_SEPARATOR				'/'

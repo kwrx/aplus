@@ -20,7 +20,7 @@ MV		:= mv
 
 
 DEFINES	:= -DKERNEL -DUSERNET -DARCH=\"$(ARCH)\"
-LIBS	:= -lpthread -lposix -lc -lm -lgcc
+LIBS	:= -lpthread -lposix -lc -lm -lsys -lgcc
 WARN	:= -Wno-implicit-function-declaration -Wall
 
 CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib -std=c99 -mfpmath=sse -msse2 -O2

@@ -19,7 +19,7 @@ AR			:= @AR@
 
 WARNINGS	:= -Wall -Wno-return-type -Wno-implicit-int -Wno-implicit-function-declaration
 
-CFLAGS		:= -O2 $(WARNINGS)
+CFLAGS		:= -O2 $(WARNINGS) -masm=intel -fno-builtin
 CXXFLAGS	:= -O2 $(WARNINGS)
 LDFLAGS		:=
 ARFLAGS		:= -rcs
@@ -31,11 +31,11 @@ OFILES		:= $(CFILES:.c=.o)
 all: $(OUTPUT)
 
 $(OUTPUT) : $(OFILES)
-	@echo "AR\t" $(notdir $@)
+	@echo "  AR\t" $(notdir $@)
 	@$(AR) $(ARFLAGS) $@ $(OFILES)
 
 .c.o:
-	@echo "CC\t" $(notdir $<)
+	@echo "  CC\t" $(notdir $<)
 	@$(CC) $(CFLAGS) -c $< -o $@
 
 

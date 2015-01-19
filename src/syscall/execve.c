@@ -81,6 +81,7 @@ int sys_execve(char* filename, char** argv, char** environ) {
 		environ = __args_dup(environ);
 
 		current_task->exe = current_task->fd[fd];
+		current_task->cwd = current_task->fd[fd]->parent;
 		current_task->argv = argv;
 		current_task->envp = environ;
 

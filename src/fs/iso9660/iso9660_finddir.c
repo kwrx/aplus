@@ -19,21 +19,21 @@ extern struct dirent* iso9660_readdir(inode_t*, int);
 
 
 inode_t* iso9660_finddir(inode_t* ino, char* name) {
-	if(!ino)
+	if(unlikely(!ino))
 		return NULL;
 		
-	if(!ino->dev)
+	if(unlikely(!ino->dev))
 		return NULL;
 
-	if(!ino->userdata)
+	if(unlikely(!ino->userdata))
 		return NULL;
 
-	if(!name || strlen(name) == 0)
+	if(unlikely(!name || strlen(name) == 0))
 		return NULL;
 
 
 	inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
-	if(!dev)
+	if(unlikely(!dev))
 		return NULL;
 
 	iso9660_dir_t* dir = (iso9660_dir_t*) ino->userdata;
@@ -42,13 +42,13 @@ inode_t* iso9660_finddir(inode_t* ino, char* name) {
 
 
 	dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
-	if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
+	if(unlikely(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length))) {
 		kfree(nodes);
 		return NULL;
 	}
 
 	for(;;) {
-		if(nodes->size == 0) {
+		if(unlikely(nodes->size == 0)) {
 			kfree(snodes);
 			return 0;
 		}

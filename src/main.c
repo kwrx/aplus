@@ -76,6 +76,10 @@ int main() {
 	netif_init();
 #endif
 
+	go_usermode();
+
+
+
 
 	struct utsname u;
 	sys_uname(&u);
@@ -114,15 +118,10 @@ int main() {
 		panic("tmpfs: cannot link for /tmp");
 
 
-	kprintf("VRAM: 0x%x\n", mbd->vbe_mode_info->physbase);
-
-
-
-	task_clone(sysidle, NULL, NULL, 0xFF);
+	sys_clone(sysidle, NULL, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND);
 	
 	char* __argv[] = {
 		"/dev/ramdisk/bin/init",
-		"/dev/ramdisk/bin/p.j",
 		NULL
 	};
 
@@ -140,12 +139,8 @@ int main() {
 	};
 
 
-	
 
-	kprintf("Tempo impiegato: %d", (int) (ce - cs));
-
-
-	//if(sys_fork() == 0)
+	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 	
 	for(;;);

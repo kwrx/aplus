@@ -162,17 +162,11 @@ int tty_ioctl(inode_t* ino, int cmd, void* buf) {
 
 
 int tty_write(inode_t* ino, char* ptr, int size) {
-	if(!ino)
-		return 0;
-	
-	if(!ptr)
-		return 0;
-
-	if(!size)
+	if(unlikely(!ino || !ptr || !size))
 		return 0;
 
 	tty_t* tty = ino->userdata;
-	if(!tty) {
+	if(unlikely(!tty)) {
 		errno = ENOTTY;
 		return -1;
 	}
@@ -180,7 +174,7 @@ int tty_write(inode_t* ino, char* ptr, int size) {
 	spinlock_lock(&tty->lock);
 	memcpy(tty->obuffer, ptr, size);
 
-	if(tty->output)
+	if(likely(tty->output))
 		tty->output(tty, ptr, size);
 
 	spinlock_unlock(&tty->lock);
@@ -190,17 +184,11 @@ int tty_write(inode_t* ino, char* ptr, int size) {
 
 
 int tty_read(inode_t* ino, char* ptr, int size) {
-	if(!ino)
-		return 0;
-
-	if(!ptr)
-		return 0;
-	
-	if(!size)
+	if(unlikely(!ino || !ptr || !size))
 		return 0;
 
 	tty_t* tty = ino->userdata;
-	if(!tty) {
+	if(unlikely(!tty)) {
 		errno = ENOTTY;
 		return -1;
 	}
@@ -211,7 +199,7 @@ int tty_read(inode_t* ino, char* ptr, int size) {
 	memcpy(ptr, tty->ibuffer, tty->isize);
 	tty->isize -= size;
 
-	if(tty->output)
+	if(likely(tty->output))
 		tty->output(tty, ptr, size);
 
 	spinlock_unlock(&tty->lock);

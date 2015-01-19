@@ -6,6 +6,7 @@ The C standard library provides macros, type definitions, and functions for task
 #### Required syscalls
 
 ```
+ void sys_exit(int status);
  int sys_open(const char* file, int flags, ...);
  int sys_close(int fd);
  int sys_read(int fd, void* buf, int size);

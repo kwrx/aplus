@@ -12,6 +12,9 @@
 #define SSE_ALIGN(x)	(((uint32_t) x & 0x10) + 0x10)
 #endif
 
+
+
+
 __asm__ (
 	".global task_context_switch		\n"
 	"task_context_switch:				\n"
@@ -58,14 +61,10 @@ void task_switch_ack() {
 }
 
 
+
 task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	if(unlikely(entry == NULL))
 		return NULL;
-
-	if(stack == NULL)
-		stack = (void*) ((int)kvmalloc(TASK_STACKSIZE * 2) + TASK_STACKSIZE);
-
-	memset(stack, 0, TASK_STACKSIZE);
 
 
 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
@@ -102,9 +101,6 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	}
 
 
-	
-
-
 	if(flags & CLONE_VM) {
 		child->context.cr3 = current_task->context.cr3;
 		child->image = current_task->image;
@@ -130,9 +126,17 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	child->image->ptr = current_task->image->ptr;
 	child->image->refcount++;
 
-	
+
+	if(stack == NULL)
+		stack = (void*) kvmalloc(TASK_STACKSIZE);
+
+	memset(stack, 0, TASK_STACKSIZE);
+	stack = (void*) ((int) stack + TASK_STACKSIZE);
+
+
 	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
 	child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+	
 
 	child->context.env->eax = (uint32_t) arg;
 	child->context.env->eip = (uint32_t) entry;
@@ -174,19 +178,14 @@ void task_switch(task_t* newtask) {
 
 
 
-
 task_t* task_fork() {
 	if(unlikely(!current_task))
 		return NULL;
 
-	task_t* child = task_clone(&&__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
-	task_switch(child);
-	return child; 
 
-__fork_child:
-	kprintf("im child\n");
-	for(;;);
-	return NULL;
+	//task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
+	//return child;
+	return -1;
 }
 
 

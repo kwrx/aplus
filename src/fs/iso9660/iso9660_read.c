@@ -15,26 +15,26 @@
 
 
 int iso9660_read(inode_t* ino, char* buf, int size) {
-	if(!ino)
+	if(unlikely(!ino))
 		return 0;
 		
-	if(!buf)
+	if(unlikely(!buf))
 		return 0;
 		
-	if(size > ino->size)
+	if(unlikely(size > ino->size))
 		size = ino->size;
 		
-	if(ino->position > ino->size)
+	if(unlikely(ino->position > ino->size))
 		ino->position = ino->size;
 		
-	if(ino->position + size > ino->size)
+	if(unlikely(ino->position + size > ino->size))
 		size = ino->size - ino->position;
 		
-	if(!size)
+	if(unlikely(!size))
 		return 0;
 
 	inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
-	if(!dev)
+	if(unlikely(!dev))
 		return 0;
 
 	

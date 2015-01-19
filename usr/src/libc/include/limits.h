@@ -1,30 +1,37 @@
-#ifndef _LIMITS_H
-#define _LIMITS_H
+/* $Id$ */
 
-#define CHAR_BIT   8
-#define SCHAR_MIN  (-127)                    /* -((2^7)-1)  */
-#define SCHAR_MAX  (+127)                    /* (2^7)-1     */
-#define UCHAR_MAX  255                       /* (2^8)-1     */
+/* 7.10 Sizes of integer types <limits.h>
 
-#define CHAR_MIN   0
-#define CHAR_MAX   UCHAR_MAX
+   This file is part of the Public Domain C Library (PDCLib).
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
 
+#ifndef _PDCLIB_LIMITS_H
+#define _PDCLIB_LIMITS_H _PDCLIB_LIMITS_H
+#include <_PDCLIB_int.h>
+
+/* TODO: Defined to 1 as multibyte characters are not supported yet. */
 #define MB_LEN_MAX 1
 
-#define SHRT_MIN   (-32767)                  /* -((2^15)-1) */
-#define SHRT_MAX   (+32767)                  /* (2^15)-1    */
-#define USHRT_MAX  65535                     /* (2^16)-1    */
+#define LLONG_MIN  _PDCLIB_LLONG_MIN
+#define LLONG_MAX  _PDCLIB_LLONG_MAX
+#define ULLONG_MAX _PDCLIB_ULLONG_MAX
 
-#define INT_MIN    (-32767)                  /* -((2^15)-1) */
-#define INT_MAX    (+32767)                  /* (2^15)-1    */
-#define UINT_MAX   65535U                    /* (2^16)-1    */
-
-#define LONG_MIN   (-2147483647L)            /* -((2^31)-1) */
-#define LONG_MAX   (+2147483647L)            /* (2^31)-1    */
-#define ULONG_MAX  4294967295UL              /* (2^32)-1    */
-
-#define LLONG_MIN  (-9223372036854775807LL)  /* -((2^63)-1) */
-#define LLONG_MAX  (+9223372036854775807LL)  /* (2^63)-1    */
-#define ULLONG_MAX 18446744073709551615ULL   /* (2^64)-1    */
+#define CHAR_BIT   _PDCLIB_CHAR_BIT
+#define CHAR_MAX   _PDCLIB_CHAR_MAX
+#define CHAR_MIN   _PDCLIB_CHAR_MIN
+#define SCHAR_MAX  _PDCLIB_SCHAR_MAX
+#define SCHAR_MIN  _PDCLIB_SCHAR_MIN
+#define UCHAR_MAX  _PDCLIB_UCHAR_MAX
+#define SHRT_MAX   _PDCLIB_SHRT_MAX
+#define SHRT_MIN   _PDCLIB_SHRT_MIN
+#define INT_MAX    _PDCLIB_INT_MAX
+#define INT_MIN    _PDCLIB_INT_MIN
+#define LONG_MAX   _PDCLIB_LONG_MAX
+#define LONG_MIN   _PDCLIB_LONG_MIN
+#define USHRT_MAX  _PDCLIB_USHRT_MAX
+#define UINT_MAX   _PDCLIB_UINT_MAX
+#define ULONG_MAX  _PDCLIB_ULONG_MAX
 
 #endif
+

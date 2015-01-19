@@ -17,7 +17,7 @@ uint32_t iso9660_getroot(inode_t* dev) {
 	memset(pvd, 0, ISO9660_VOLDESC_SIZE);
 
 	dev->position = ISO9660_PVD;
-	if(fs_read(dev, pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE) {
+	if(unlikely(fs_read(dev, pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
 		kfree(pvd);
 		return 0;
 	}
@@ -32,7 +32,7 @@ int iso9660_check(inode_t* dev) {
 	memset(pvd, 0, ISO9660_VOLDESC_SIZE);
 
 	dev->position = ISO9660_PVD;
-	if(fs_read(dev, pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE) {
+	if(unlikely(fs_read(dev, pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
 		kfree(pvd);
 		return 0;
 	}
@@ -45,7 +45,7 @@ int iso9660_check(inode_t* dev) {
 
 void iso9660_checkname(char* name) {
 	char* p = strchr(name, ';');
-	if(p) {
+	if(likely(p)) {
 		*p-- = 0;
 	
 		if(*p == '.')

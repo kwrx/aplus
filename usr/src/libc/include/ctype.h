@@ -1,119 +1,96 @@
-#ifndef _CTYPE_H
-#define _CTYPE_H
+/* $Id$ */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* 7.4 Character handling <ctype.h>
 
+   This file is part of the Public Domain C Library (PDCLib).
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
 
-#define isalnum(c)							\
-	(										\
-		((c >= 'a') && (c <= 'z'))		||	\
-	 	((c >= 'A') && (c <= 'Z'))		||	\
-		((c >= '0') && (c <= '9'))			\
-	)
+#ifndef _PDCLIB_CTYPE_H
+#define _PDCLIB_CTYPE_H _PDCLIB_CTYPE_H
+#include <_PDCLIB_int.h>
+_PDCLIB_BEGIN_EXTERN_C
 
-#define isalpha(c)							\
-	(										\
-		((c >= 'a') && (c <= 'z'))		||	\
-	 	((c >= 'A') && (c <= 'Z'))			\
-	)
+/* Character classification functions */
 
-#define islower(c)							\
-	(										\
-		((c >= 'a') && (c <= 'z'))			\
-	)
+/* Note that there is a difference between "whitespace" (any printing, non-
+   graph character, like horizontal and vertical tab), and "blank" (the literal
+   ' ' space character).
 
-#define isupper(c)							\
-	(										\
-		((c >= 'A') && (c <= 'Z'))			\
-	)
+   There will be masking macros for each of these later on, but right now I
+   focus on the functions only.
+*/
 
-#define isdigit(c)							\
-	(										\
-		((c >= '0') && (c <= '9'))			\
-	)
+/* Returns isalpha( c ) || isdigit( c ) */
+int isalnum( int c ) _PDCLIB_nothrow;
 
-#define isxdigit(c)							\
-	(										\
-		((c >= 'a') && (c <= 'f'))		||	\
-	 	((c >= 'A') && (c <= 'F'))		||	\
-		((c >= '0') && (c <= '9'))			\
-	)
+/* Returns isupper( c ) || islower( c ) in the "C" locale.
+   In any other locale, also returns true for a locale-specific set of
+   alphabetic characters which are neither control characters, digits,
+   punctation, or whitespace.
+*/
+int isalpha( int c ) _PDCLIB_nothrow;
 
-#define iscntrl(c)							\
-	(										\
-		((c <= 0x1F) || (c == 0x7F))		\
-	)
+/* Returns true if the character isspace() and used for seperating words within
+   a line of text. In the "C" locale, only ' ' and '\t' are considered blanks.
+*/
+int isblank( int c ) _PDCLIB_nothrow;
 
-#define isgraph(c)							\
-	(										\
-		((c >= 0x21) && (c <= 0x2F))	||	\
-		((c >= 0x30) && (c <= 0x39))	||	\
-		((c >= 0x3A) && (c <= 0x40))	||	\
-		((c >= 0x41) && (c <= 0x46))	||	\
-		((c >= 0x47) && (c <= 0x5A))	||	\
-		((c >= 0x5B) && (c <= 0x60))	||	\
-		((c >= 0x61) && (c <= 0x66))	||	\
-		((c >= 0x67) && (c <= 0x7A))	||	\
-		((c >= 0x7B) && (c <= 0x7E))		\
-	)
+/* Returns true if the character is a control character. */
+int iscntrl( int c ) _PDCLIB_nothrow;
 
-#define isspace(c)							\
-	(										\
-		((c == 0x20))					||	\
-		((c == 0x0C))					||	\
-		((c == 0x0A))					||	\
-		((c == 0x0D))					||	\
-		((c == 0x09))					||	\
-		((c == 0x0B))						\
-	)
+/* Returns true if the character is a decimal digit. Locale-independent. */
+int isdigit( int c ) _PDCLIB_nothrow;
 
-#define isblank(c)							\
-	(										\
-		((c == 0x20))					||	\
-		((c == 0x09))						\
-	)
+/* Returns true for every printing character except space (' '). */
+int isgraph( int c ) _PDCLIB_nothrow;
 
-#define isprint(c)							\
-	(										\
-		((c == 0x20))					||	\
-		((c >= 0x21) && (c <= 0x2F))	||	\
-		((c >= 0x30) && (c <= 0x39))	||	\
-		((c >= 0x3A) && (c <= 0x40))	||	\
-		((c >= 0x41) && (c <= 0x46))	||	\
-		((c >= 0x47) && (c <= 0x5A))	||	\
-		((c >= 0x5B) && (c <= 0x60))	||	\
-		((c >= 0x61) && (c <= 0x66))	||	\
-		((c >= 0x67) && (c <= 0x7A))	||	\
-		((c >= 0x7B) && (c <= 0x7E))		\
-	)
+/* Returns true for lowercase letters in the "C" locale.
+   In any other locale, also returns true for a locale-specific set of
+   characters which are neither control characters, digits, punctation, or
+   space (' '). In a locale other than the "C" locale, a character might test
+   true for both islower() and isupper().
+*/
+int islower( int c ) _PDCLIB_nothrow;
 
-#define ispunct(c)							\
-	(										\
-		((c >= 0x21) && (c <= 0x2F))	||	\
-		((c >= 0x3A) && (c <= 0x40))	||	\
-		((c >= 0x5B) && (c <= 0x60))	||	\
-		((c >= 0x7B) && (c <= 0x7E))		\
-	)			
+/* Returns true for every printing character including space (' '). */
+int isprint( int c ) _PDCLIB_nothrow;
 
+/* Returns true for every printing character that is neither whitespace
+   nor alphanumeric in the "C" locale. In any other locale, there might be
+   characters that are printing characters, but neither whitespace nor
+   alphanumeric.
+*/
+int ispunct( int c ) _PDCLIB_nothrow;
 
+/* Returns true for every standard whitespace character (' ', '\f', '\n', '\r',
+   '\t', '\v') in the "C" locale. In any other locale, also returns true for a
+   locale-specific set of characters for which isalnum() is false.
+*/ 
+int isspace( int c ) _PDCLIB_nothrow;
 
-#define tolower(c)							\
-	(										\
-		((c >= 'A') && (c <= 'Z')) 	?		\
-			(c + 32)				:		\
-			(c)								\
-	)
+/* Returns true for uppercase letters in the "C" locale.
+   In any other locale, also returns true for a locale-specific set of
+   characters which are neither control characters, digits, punctation, or
+   space (' '). In a locale other than the "C" locale, a character might test
+   true for both islower() and isupper().
+*/
+int isupper( int c ) _PDCLIB_nothrow;
 
-#define toupper(c)							\
-	(										\
-		((c >= 'a') && (c <= 'z')) 	?		\
-			(c - 32)				:		\
-			(c)								\
-	)
+/* Returns true for any hexadecimal-digit character. Locale-independent. */
+int isxdigit( int c ) _PDCLIB_nothrow;
 
-#ifdef __cplusplus
-}
-#endif
+/* Character case mapping functions */
+
+/* Converts an uppercase letter to a corresponding lowercase letter. Input that
+   is not an uppercase letter remains unchanged.
+*/
+int tolower( int c ) _PDCLIB_nothrow;
+
+/* Converts a lowercase letter to a corresponding uppercase letter. Input that
+   is not a lowercase letter remains unchanged.
+*/
+int toupper( int c ) _PDCLIB_nothrow;
+
+_PDCLIB_END_EXTERN_C
 #endif

@@ -9,6 +9,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <errno.h>
+#include <stdarg.h>
 
 #include "../config.h"
 
@@ -22,6 +23,8 @@
 #if HAVE_PTHREAD
 #include <pthread.h>
 
+#define STDIO_INIT_LOCK_STATIC	PTHREAD_MUTEX_INITIALIZER
+
 #define STDIO_INIT_LOCK(x)	pthread_mutex_init(&STDIO_FILE(x)->lock, NULL)
 #define STDIO_DNIT_LOCK(x)	pthread_mutex_destroy(&STDIO_FILE(x)->lock)
 #define STDIO_LOCK(x)		pthread_mutex_lock(&STDIO_FILE(x)->lock)
@@ -31,6 +34,9 @@
 typedef pthread_mutex_t stdio_lock_t;
 
 #else
+
+#define STDIO_INIT_LOCK_STATIC	0
+
 #define STDIO_INIT_LOCK(x)	((void) x)
 #define STDIO_DNIT_LOCK(x)	((void) x)
 #define STDIO_LOCK(x)		((void) x)
@@ -78,6 +84,13 @@ typedef struct __STDIO_FILE {
 } __STDIO_FILE;
 
 
+#ifndef __VALIST
+#ifdef __GNUC__
+#define __VALIST		__gnuc_va_list
+#else
+#define __VALIST		char*
+#endif
+#endif
 
 
 #endif

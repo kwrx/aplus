@@ -139,7 +139,7 @@ isr0x80:
 	call __errno
 	mov ebx, [eax]
 	mov eax, [syscall_retval]
-iret
+iretd
 	
 	
 extern pagefault_handler
@@ -245,4 +245,24 @@ iret
 
 	
 
+global __go_usermode
+__go_usermode:
+	cli
+	mov ax, 0x23
+	mov ds, ax
+	mov es, ax
+	mov fs, ax
+	mov gs, ax
+
+
+	push dword 0x23
+	push dword esp
+	pushfd
+	push dword 0x1B
+	push dword .gogogo
+
+	iret
+.gogogo:
+	add esp, 4
+	ret
 

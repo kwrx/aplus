@@ -18,13 +18,13 @@ extern inode_t* iso9660_finddir(inode_t*, char*);
 
 
 int iso9660_mount(inode_t* dev, inode_t* ino, int flags) {
-	if(!dev)
+	if(unlikely(!dev))
 		return -1;
 		
-	if(!ino)
+	if(unlikely(!ino))
 		return -1;
 	
-	if(iso9660_check(dev) != 0) {
+	if(unlikely(iso9660_check(dev) != 0)) {
 		kprintf("iso9660: (%s) check failed\n", dev->name);
 		return -1;
 	}

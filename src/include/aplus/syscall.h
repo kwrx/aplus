@@ -5,6 +5,9 @@
 #include <aplus/attribute.h>
 
 #include <stdint.h>
+#include <errno.h>
+
+
 
 typedef struct __syscall {
 	void* handler;

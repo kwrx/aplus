@@ -10,6 +10,7 @@
 
 static void** syscall_handlers = NULL;
 
+
 int syscall_init() {
 	list_t* syslist = attribute("syscall");
 
@@ -47,6 +48,7 @@ int syscall_init() {
 			s++;
 	}
 #endif
+
 
 	return 0;
 }
@@ -92,3 +94,4 @@ int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 int syscall_handler(regs_t* r) {
 	return syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
 }
+

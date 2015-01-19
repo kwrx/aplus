@@ -36,6 +36,7 @@
 
 #define FAULT_MASK		0x3FFFFFE3
 #define PIT_FREQ		(CLOCKS_PER_SEC)
+#define PIT_INC			1
 
 
 typedef struct gdt_entry {
@@ -58,6 +59,36 @@ typedef struct idt_ptr {
 	uint16_t limit;
 	uint32_t base;
 } __attribute__((packed)) idt_ptr_t;
+
+typedef struct {
+	uint32_t prev_tss;
+	uint32_t esp0;
+	uint32_t ss0;
+	uint32_t esp1;
+	uint32_t ss1;
+	uint32_t esp2;
+	uint32_t ss2;
+	uint32_t cr3;
+	uint32_t eip;
+	uint32_t eflags;
+	uint32_t eax;
+	uint32_t ecx;
+	uint32_t edx;
+	uint32_t ebx;
+	uint32_t esp;
+	uint32_t ebp;
+	uint32_t esi;
+	uint32_t edi;
+	uint32_t es;
+	uint32_t cs;
+	uint32_t ss;
+	uint32_t ds;
+	uint32_t fs;
+	uint32_t gs;
+	uint32_t ldt;
+	uint16_t trap;
+	uint16_t iomap_base;
+} __attribute__((packed)) tss_entry_t;
 
 
 
@@ -101,12 +132,13 @@ static char *exception_messages[] = {
 
 static void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-static gdt_entry_t gdt_e[5];
+static gdt_entry_t gdt_e[6];
 static gdt_ptr_t gdt_p;
 
 static idt_entry_t idt_e[256];
 static idt_ptr_t idt_p;
 
+static tss_entry_t tss_entry;
 
 static uint32_t pit_ticks;
 static uint32_t pit_seconds;
@@ -117,6 +149,9 @@ uint8_t keyboard_ready = 0;
 
 extern void schedule();
 extern void syscall_handler(regs_t*);
+
+extern int kernel_stack;
+extern int kernel_stack_end;
 
 
 __asm__ (
@@ -134,6 +169,8 @@ __asm__ (
 	jmp 0x08:.done		\n\
 						\n\
 	.done:				\n\
+	mov ax, 0x2B		\n\
+	ltr ax				\n\
 	ret					\n\
 						\n\
 						\n\
@@ -164,9 +201,9 @@ void irq_handler(regs_t* r) {
 }
 
 void pit_handler(regs_t* r) {
-	pit_ticks += (1000 / PIT_FREQ);
+	pit_ticks += PIT_INC;
 	
-	if(unlikely(pit_ticks >= 1000)) {
+	if(unlikely(pit_ticks >= PIT_FREQ)) {
 		pit_ticks = 0;
 		pit_seconds += 1;
 	}
@@ -207,9 +244,9 @@ int desc_init() {
 		gdt_e[n].access = a
 				
 	
-	memset(&gdt_e, 0, sizeof(gdt_entry_t) * 5);
+	memset(&gdt_e, 0, sizeof(gdt_entry_t) * 6);
 		
-	gdt_p.limit = sizeof(gdt_entry_t) * 5 - 1;
+	gdt_p.limit = sizeof(gdt_entry_t) * 6 - 1;
 	gdt_p.base = (uint32_t) gdt_e;
 		
 	gdt_set(0, 0, 0, 0, 0);
@@ -217,10 +254,22 @@ int desc_init() {
 	gdt_set(2, 0, 0xFFFFFFFF, 0x92, 0xCF);
 	gdt_set(3, 0, 0xFFFFFFFF, 0xFA, 0xCF);
 	gdt_set(4, 0, 0xFFFFFFFF, 0XF2, 0xCF);
+	gdt_set(5, ((int) &tss_entry), ((int) &tss_entry + sizeof(tss_entry_t)), 0xE9, 0x00);
 
-	
+
+	memset(&tss_entry, 0, sizeof(tss_entry_t));
+	tss_entry.ss0 = 0x10;
+	tss_entry.esp = (uint32_t) &kernel_stack_end;
+	tss_entry.cs = 0x0B;
+	tss_entry.ss =
+	tss_entry.ds =
+	tss_entry.es =
+	tss_entry.fs =
+	tss_entry.gs = 0x13;
 
 	gdt_load();
+
+	
 	
 	
 	idt_p.limit = sizeof(idt_entry_t) * 256 - 1;
@@ -240,6 +289,7 @@ int desc_init() {
 	#define _i(n)									\
 		extern void isr##n();						\
 		idt_set(n, (uint32_t)isr##n, 0x08, 0x8E)
+
 		
 	_i(0);
 	_i(1);
@@ -391,5 +441,19 @@ uint32_t pit_gettime() {
 }
 
 uint32_t pit_getticks() {
-	return ((pit_days * 86400) * 1000) + (pit_seconds * 1000) + pit_ticks;
+	return ((pit_days * 86400) * PIT_FREQ) + (pit_seconds * PIT_FREQ) + pit_ticks;
+}
+
+
+void go_usermode() {
+#ifdef DEBUG
+	kprintf("aplus: loading user mode\n");
+#endif
+
+	
+	extern void __go_usermode();
+#if 0
+	__go_usermode();
+#endif
+
 }

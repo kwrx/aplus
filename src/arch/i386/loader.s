@@ -20,6 +20,7 @@ global _start
 global magic
 global mbd
 global kernel_stack
+global kernel_stack_end
 global multiboot
 
 
@@ -27,6 +28,7 @@ global multiboot
 section .bss
 align 0x1000
 kernel_stack: resb STACKSIZE
+kernel_stack_end:
 magic: resd 1
 mbd: resd 1
 	

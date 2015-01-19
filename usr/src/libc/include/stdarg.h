@@ -1,41 +1,24 @@
-#ifndef _STDARG_H
-#define _STDARG_H
+/* $Id$ */
 
-#ifdef __x86_64__
-#ifndef _WIN64
+/* 7.15 Variable arguments <stdarg.h> 
 
-typedef void *va_list;
+   This file is part of the Public Domain C Library (PDCLib).
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
 
-va_list __va_start(void *fp);
-void *__va_arg(va_list ap, int arg_type, int size);
-va_list __va_copy(va_list src);
-void __va_end(va_list ap);
+#ifndef _PDCLIB_STDARG_H
+#define _PDCLIB_STDARG_H _PDCLIB_STDARG_H
+#include <_PDCLIB_aux.h>
+#include <_PDCLIB_config.h>
+_PDCLIB_BEGIN_EXTERN_C
 
-#define va_start(ap, last) ((ap) = __va_start(__builtin_frame_address(0)))
-#define va_arg(ap, type)                                                \
-    (*(type *)(__va_arg(ap, __builtin_va_arg_types(type), sizeof(type))))
-#define va_copy(dest, src) ((dest) = __va_copy(src))
-#define va_end(ap) __va_end(ap)
+typedef _PDCLIB_va_list va_list;
 
-#else /* _WIN64 */
-typedef char *va_list;
-#define va_start(ap,last) ap = ((char *)&(last)) + ((sizeof(last)+7)&~7)
-#define va_arg(ap,type) (ap += (sizeof(type)+7)&~7, *(type *)(ap - ((sizeof(type)+7)&~7)))
-#define va_copy(dest, src) (dest) = (src)
-#define va_end(ap)
+#define va_arg( ap, type )    _PDCLIB_va_arg( ap, type )
+#define va_copy( dest, src )  _PDCLIB_va_copy( dest, src )
+#define va_end( ap )          _PDCLIB_va_end( ap )
+#define va_start( ap, parmN ) _PDCLIB_va_start( ap, parmN )
+
+_PDCLIB_END_EXTERN_C
 #endif
 
-#else /* __i386__ */
-typedef char *va_list;
-/* only correct for i386 */
-#define va_start(ap,last) ap = ((char *)&(last)) + ((sizeof(last)+3)&~3)
-#define va_arg(ap,type) (ap += (sizeof(type)+3)&~3, *(type *)(ap - ((sizeof(type)+3)&~3)))
-#define va_copy(dest, src) (dest) = (src)
-#define va_end(ap)
-#endif
-
-/* fix a buggy dependency on GCC in libio.h */
-typedef va_list __gnuc_va_list;
-#define _VA_LIST_DEFINED
-
-#endif /* _STDARG_H */

@@ -1,36 +1,38 @@
-#ifndef _STDDEF_H
-#define _STDDEF_H
+/* $Id$ */
 
-typedef __SIZE_TYPE__ size_t;
-typedef __PTRDIFF_TYPE__ ssize_t;
-typedef __WCHAR_TYPE__ wchar_t;
-typedef __PTRDIFF_TYPE__ ptrdiff_t;
-typedef __PTRDIFF_TYPE__ intptr_t;
-typedef __SIZE_TYPE__ uintptr_t;
+/* 7.17 Common definitions <stddef.h>
 
-#ifndef __int8_t_defined
-#define __int8_t_defined
-typedef signed char int8_t;
-typedef signed short int int16_t;
-typedef signed int int32_t;
-typedef signed long long int int64_t;
-typedef unsigned char uint8_t;
-typedef unsigned short int uint16_t;
-typedef unsigned int uint32_t;
-typedef unsigned long long int uint64_t;
+   This file is part of the Public Domain C Library (PDCLib).
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
+
+#ifndef _PDCLIB_STDDEF_H
+#define _PDCLIB_STDDEF_H _PDCLIB_STDDEF_H
+#include <_PDCLIB_config.h>
+#include <_PDCLIB_int.h>
+_PDCLIB_BEGIN_EXTERN_C
+
+typedef _PDCLIB_ptrdiff_t ptrdiff_t;
+
+#ifndef _PDCLIB_SIZE_T_DEFINED
+#define _PDCLIB_SIZE_T_DEFINED _PDCLIB_SIZE_T_DEFINED
+typedef _PDCLIB_size_t size_t;
 #endif
 
-#define NULL ((void*)0)
-#define offsetof(type, field) ((size_t)&((type *)0)->field)
-
-#ifdef __cplusplus
-extern "C" {
+#ifndef __cplusplus
+#ifndef _PDCLIB_WCHAR_T_DEFINED
+#define _PDCLIB_WCHAR_T_DEFINED _PDCLIB_WCHAR_T_DEFINED
+typedef _PDCLIB_wchar_t   wchar_t;
+#endif
 #endif
 
-void *alloca(size_t size);
-
-#ifdef __cplusplus
-}
+#ifndef _PDCLIB_NULL_DEFINED
+#define _PDCLIB_NULL_DEFINED _PDCLIB_NULL_DEFINED
+#define NULL _PDCLIB_NULL
 #endif
 
+#define offsetof( type, member ) _PDCLIB_offsetof( type, member )
+
+_PDCLIB_END_EXTERN_C
 #endif
+

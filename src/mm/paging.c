@@ -45,6 +45,9 @@ extern volatile heap_t* current_heap;
 extern uint64_t memsize;
 extern uint64_t kernel_low_area_size;
 
+extern task_t* kernel_task;
+extern task_t* current_task;
+
 uint32_t* current_vmm;
 uint32_t* kernel_vmm;
 
@@ -164,7 +167,10 @@ void vmm_free(uint32_t* vmm, void* vaddr, size_t size) {
 
 void vmm_mapkernel(uint32_t* dest) {
 	// Map low area (Kernel reserved)
-	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
+	//if(unlikely(dest == kernel_vmm))
+		vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	//else
+	//	vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT);
 
 	// Map all high-memory (Shared Address Space)
 	vmm_map(dest, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);

@@ -1,130 +1,86 @@
-#ifndef _SIGNAL_H
-#define _SIGNAL_H
+/* $Id$ */
 
-#define NSIG			32
+/* 7.14 Signal handling <string.h>
 
-#define SIGHUP			1
-#define SIGINT			2
-#define SIGQUIT			3
-#define SIGILL			4
+   This file is part of the Public Domain C Library (PDCLib).
+   Permission is granted to use, modify, and / or redistribute at will.
+*/
 
-#ifndef _POSIX_SOURCE
-#define SIGIOT			SIGABRT
-#define SIGEMT			7
-#endif
+#ifndef _PDCLIB_SIGNAL_H
+#define _PDCLIB_SIGNAL_H _PDCLIB_SIGNAL_H
+#include <_PDCLIB_config.h>
 
-#define SIGFPE			8
-#define SIGKILL			9
+/* Signals ------------------------------------------------------------------ */
 
-#ifndef _POSIX_SOURCE
-#define SIGBUS			10
-#endif
+/* A word on signals, to the people using PDCLib in their OS projects.
 
-#define SIGSEGV			11
+   The definitions of the C standard leave about everything that *could* be
+   useful to be "implementation defined". Without additional, non-standard
+   arrangements, it is not possible to turn them into a useful tool.
 
-#ifndef _POSIX_SOURCE
-#define SIGSYS			12
-#endif
+   This example implementation chose to "not generate any of these signals,
+   except as a result of explicit calls to the raise function", which is
+   allowed by the standard but of course does nothing for the usefulness of
+   <signal.h>.
 
-#define SIGPIPE			13
-#define SIGALRM			14
-#define SIGTERM			15
+   A useful signal handling would:
+   1) make signal() a system call that registers the signal handler with the OS
+   2) make raise() a system call triggering an OS signal to the running process
+   3) make provisions that further signals of the same type are blocked until
+      the signal handler returns (optional for SIGILL)
+*/
 
-#ifndef _POSIX_SOURCE
-#define SIGURG			16
-#endif
+/* These are the values used by Linux. */
 
-#define SIGSTOP			17
-#define SIGTSTP			18
-#define SIGCONT			19
-#define SIGCHLD			20
-#define SIGTTIN			21
-#define SIGTTOU			22
+/* Abnormal termination / abort() */
+#define SIGABRT 6
+/* Arithmetic exception / division by zero / overflow */
+#define SIGFPE  8
+/* Illegal instruction */
+#define SIGILL  4
+/* Interactive attention signal */
+#define SIGINT  2
+/* Invalid memory access */
+#define SIGSEGV 11
+/* Termination request */
+#define SIGTERM 15
 
-#ifndef _POSIX_SOURCE
-#define SIGIO			23
-#define SIGXCPU			24
-#define SIGXFSZ			25
-#define SIGVTALRM		26
-#define SIGPROF			27
-#define SIGWINCH		28
-#define SIGINFO			29
-#endif
+/* The following should be defined to pointer values that could NEVER point to
+   a valid signal handler function. (They are used as special arguments to
+   signal().) Again, these are the values used by Linux.
+*/
+#define SIG_DFL (void (*)( int ))0
+#define SIG_ERR (void (*)( int ))-1
+#define SIG_IGN (void (*)( int ))1
 
-#define SIGUSR1			30
-#define SIGUSR2			31
+typedef _PDCLIB_sig_atomic sig_atomic_t;
 
+/* Installs a signal handler "func" for the given signal.
+   A signal handler is a function that takes an integer as argument (the signal
+   number) and returns void.
 
+   Note that a signal handler can do very little else than:
+   1) assign a value to a static object of type "volatile sig_atomic_t",
+   2) call signal() with the value of sig equal to the signal received,
+   3) call _Exit(),
+   4) call abort().
+   Virtually everything else is undefind.
 
+   The signal() function returns the previous installed signal handler, which
+   at program start may be SIG_DFL or SIG_ILL. (This implementation uses
+   SIG_DFL for all handlers.) If the request cannot be honored, SIG_ERR is
+   returned and errno is set to an unspecified positive value.
+*/
+void (*signal( int sig, void (*func)( int ) ) )( int );
 
-
-#define SIG_DFL			((void (*) (int)) 0)
-#define SIG_IGN			((void (*) (int)) 1)
-#define SIG_ERR			((void (*) (int)) -1)
-
-
-typedef unsigned int sigset_t;
-
-struct sigaction {
-	void (*sa_handler) ();
-	sigset_t sa_mask;
-	int sa_flags;
-};
-
-#ifndef _POSIX_SOURCE
-#define SA_ONSTACK			0x0001
-#define SA_RESTART			0x0002
-#define SA_DISABLE			0x0004
-#endif
-
-#define SA_NOCLDSTOP		0x0008
-
-
-#define SIG_BLOCK			1
-#define SIG_UNBLOCK			2
-#define SIG_SETMASK			3
-
-typedef void (*sig_t) __P((int));
-
-struct sigaltstack {
-	char* ss_base;
-	int ss_size;
-	int ss_flags;
-};
-
-
-#define MINSIGSTKSZ			4096
-#define SIGSTKSZ			4096
-
-struct sigvec {
-	void (*sv_handler) ();
-	int sv_mask;
-	int sv_flags;
-};
-
-
-#define SV_ONSTACK			SA_ONSTACK
-#define SV_INTERRUPT		SA_RESTART
-
-
-struct sigstack {
-	char** ss_sp;
-	int ss_onstack;
-};
-
-
-#define sigmask(m)			(1 << ((m) - 1))
-#define BADSIG				SIG_ERR
-
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void (*signal __P((int, void(*) __P((int))))) __P((int));
-
-#ifdef __cplusplus
-}
-#endif
+/* Raises the given signal (executing the registered signal handler with the
+   given signal number as parameter).
+   This implementation does not prevent further signals of the same time from
+   occuring, but executes signal( sig, SIG_DFL ) before entering the signal
+   handler (i.e., a second signal before the signal handler re-registers itself
+   or SIG_IGN will end the program).
+   Returns zero if successful, nonzero otherwise. */
+int raise( int sig );
 
 #endif
+

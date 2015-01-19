@@ -136,6 +136,23 @@ static inline void write_eflags(uint32_t val) {
 	insx(b, uint8_t, al)
 	insx(w, uint16_t, ax)
 	insx(l, uint32_t, eax)
+
+
+static inline void wrmsr(uint32_t i, uint64_t v) {
+	__asm__ __volatile__ ("wrmsr" : : "c"(i), "A"(v));
+}
+
+static inline uint64_t rdmsr(uint32_t i) {
+	uint64_t v;
+	__asm__ __volatile__ ("rdmsr" : "=A"(v) : "c"(i));
+	return v;
+}
+
+static inline uint64_t rdtsc(void) {
+	uint64_t r;
+	__asm__ __volatile__ ("cpuid; rdtsc" : "=A"(r));
+	return r;
+} 
 	
 	
 typedef struct regs {

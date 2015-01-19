@@ -14,17 +14,17 @@
 #include "iso9660.h"
 
 struct dirent* iso9660_readdir(inode_t* ino, int index) {
-	if(!ino)
+	if(unlikely(!ino))
 		return NULL;
 		
-	if(!ino->dev)
+	if(unlikely(!ino->dev))
 		return NULL;
 
-	if(!ino->userdata)
+	if(unlikely(!ino->userdata))
 		return NULL;
 
 	inode_t* dev = (inode_t*) devfs_getdevice(ino->dev);
-	if(!dev)
+	if(unlikely(!dev))
 		return NULL;
 
 	iso9660_dir_t* dir = (iso9660_dir_t*) ino->userdata;
@@ -32,7 +32,7 @@ struct dirent* iso9660_readdir(inode_t* ino, int index) {
 	iso9660_dir_t* snodes = nodes;
 
 	dev->position = iso9660_getlsb32(dir->lba) * ISO9660_SECTOR_SIZE;
-	if(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length)) {
+	if(unlikely(fs_read(dev, nodes, iso9660_getlsb32(dir->length)) != iso9660_getlsb32(dir->length))) {
 		kfree(nodes);
 		return NULL;
 	}
@@ -42,7 +42,7 @@ struct dirent* iso9660_readdir(inode_t* ino, int index) {
 	nodes = (iso9660_dir_t*) ((uint32_t) nodes + nodes->size);
 
 	for(int i = 0; i < index; i++) {		
-		if(nodes->size == 0) {		
+		if(unlikely(nodes->size == 0)) {		
 			kfree(snodes);
 			return NULL;
 		}
@@ -51,7 +51,7 @@ struct dirent* iso9660_readdir(inode_t* ino, int index) {
 	}
 
 
-	if(nodes->size == 0) {
+	if(unlikely(nodes->size == 0)) {
 		kfree(snodes);
 		return NULL;
 	}
