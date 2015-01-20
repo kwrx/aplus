@@ -7,6 +7,8 @@
 
 #if HAVE_DISASM
 #include <libdis.h>
+
+#define DISASM_RANGE		32
 #endif
 
 #undef kprintf
@@ -48,12 +50,13 @@ static void dump_cpu(regs_t* r) {
 	x86_init(opt_none, NULL, NULL);
 	x86_insn_t op;
 
-	char* codebuf = (char*) r->eip;
+	int eip = r->eip;
+	char* codebuf = (char*) eip;
 	char* linebuf[256];
 	
 	int i, p;
-	for(i = 0, p = 0; i < 10; i++) {
-		int s = x86_disasm(codebuf, 1024, r->eip, p, &op);
+	for(i = 0, p = 0; i < DISASM_RANGE; i++) {
+		int s = x86_disasm(codebuf, 1024, eip, p, &op);
 		if(likely(s)) {
 			x86_format_insn(&op, linebuf, 256, intel_syntax);
 			kprintf("%c %x:\t%s\n", op.addr == r->eip ? '>' : ' ', op.addr, linebuf);
