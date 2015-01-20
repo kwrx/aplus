@@ -19,6 +19,7 @@
 
 #define HAVE_FASTCALL				1	/* Sysenter/Sysexit*/
 #define HAVE_SSE					1
+#define HAVE_DISASM					1
 //#define HAVE_NETWORK				1
 
 

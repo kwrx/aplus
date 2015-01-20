@@ -5,6 +5,11 @@
 #include <aplus/list.h>
 #include <errno.h>
 
+#if HAVE_DISASM
+#include <libdis.h>
+#endif
+
+#undef kprintf
 
 extern list_t* task_queue;
 extern task_t* current_task;
@@ -34,6 +39,35 @@ static void dump_cpu(regs_t* r) {
 	}
 
 	kprintf("pit: %dms\n", pit_getticks());
+
+#if HAVE_DISASM
+
+	kprintf("\n\n");
+	kprintf("Code:\n");
+
+	x86_init(opt_none, NULL, NULL);
+	x86_insn_t op;
+
+	char* codebuf = (char*) r->eip;
+	char* linebuf[256];
+	
+	int i, p;
+	for(i = 0, p = 0; i < 10; i++) {
+		int s = x86_disasm(codebuf, 1024, r->eip, p, &op);
+		if(likely(s)) {
+			x86_format_insn(&op, linebuf, 256, intel_syntax);
+			kprintf("%c %x:\t%s\n", op.addr == r->eip ? '>' : ' ', op.addr, linebuf);
+			
+			p += s;
+		} else {
+			kprintf("\t???\n");
+			p++;
+		}
+	}
+
+	x86_cleanup();
+#endif
+
 
 	kprintf("\n\n");
 }
@@ -89,8 +123,10 @@ static void dump_task() {
 		if(task == kernel_task)
 			kprintf("(kernel) ");
 			
-		kprintf("\n\n");
+		kprintf("\n");
 	}
+
+	kprintf("\n\n");
 }
 
 

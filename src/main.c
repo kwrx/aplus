@@ -138,7 +138,10 @@ int main() {
 		NULL
 	};
 
-
+	
+	int p = sys_fork();
+	kprintf("p: %d from %d\n", p, sys_getpid());
+	for(;;);
 
 	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);

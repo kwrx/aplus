@@ -13,6 +13,7 @@
 #endif
 
 
+#define __FORK			0x80000000
 
 
 __asm__ (
@@ -63,10 +64,7 @@ void task_switch_ack() {
 
 
 task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
-	if(unlikely(entry == NULL))
-		return NULL;
-
-
+	
 	task_t* child = (task_t*) kmalloc(sizeof(task_t));
 	memset(child, 0, sizeof(task_t));
 
@@ -134,14 +132,34 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	stack = (void*) ((int) stack + TASK_STACKSIZE);
 
 
-	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
-	child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+	if(flags & __FORK) {
 	
+		/* Update context */
+		schedule_yield();
 
-	child->context.env->eax = (uint32_t) arg;
-	child->context.env->eip = (uint32_t) entry;
-	child->context.env->ebp = (uint32_t) child->context.env; 
+		entry = (void*) read_eip();
+		if(child == current_task)
+			return child;
 
+		child->context.stack = current_task->context.stack;
+		child->context.env = current_task->context.env;
+
+		memcpy(stack, current_task->context.stack, TASK_STACKSIZE);
+		vmm_map(child->context.cr3, mm_paddr(stack), child->context.stack, TASK_STACKSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+		task_env_t* env = (task_env_t*) (((uint32_t) stack & ~0xFFF) + ((uint32_t) child->context.env & 0xFFF));
+		env->eip = (uint32_t) entry;
+		env->eax = (uint32_t) arg;
+		env->ebp = (uint32_t) child->context.env;
+
+	} else {
+		child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
+		child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+	
+		child->context.env->eax = (uint32_t) arg;
+		child->context.env->eip = (uint32_t) entry;
+		child->context.env->ebp = (uint32_t) child->context.env; 
+	}
 	
 
 	list_add(task_queue, (listval_t) child);
@@ -178,14 +196,19 @@ void task_switch(task_t* newtask) {
 
 
 
+
+
+
 task_t* task_fork() {
 	if(unlikely(!current_task))
 		return NULL;
 
 
-	//task_t* child = task_clone(__fork_child, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND);	
-	//return child;
-	return -1;
+	task_t* child = task_clone(NULL, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND | __FORK);
+	if(child == current_task)
+		return NULL;
+
+	return child;
 }
 
 

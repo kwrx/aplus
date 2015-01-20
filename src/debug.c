@@ -183,6 +183,7 @@ void ksprintf(char* buf, char* fmt, ...) {
 void kprintf(char* fmt, ...) {
 	static char __kprintf_buf[1024];
 	static char __kprintf_buf_tm[32];
+	static char nline = 0;
 
 	memset(__kprintf_buf, 0, 1024);
 	memset(__kprintf_buf_tm, 0, 32);
@@ -192,11 +193,17 @@ void kprintf(char* fmt, ...) {
 	vasprintf(__kprintf_buf, fmt, lst);
 	va_end(lst);
 
+	if(nline) {
+		ksprintf(__kprintf_buf_tm, "[%d] ", pit_getticks());	
+		debug_puts(__kprintf_buf_tm);
 
-	ksprintf(__kprintf_buf_tm, "[%d] ", pit_getticks());
-	
-	debug_puts(__kprintf_buf_tm);
+		nline = 0;
+	}
+
 	debug_puts(__kprintf_buf);
+
+	if(__kprintf_buf[strlen(__kprintf_buf) - 1] == '\n')
+		nline = 1;
 }
 
 
