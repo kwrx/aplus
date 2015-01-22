@@ -37,9 +37,6 @@
 
 #include <aplus/netif.h>
 #include <aplus/net/eth.h>
-#include <aplus/net/ipv4.h>
-#include <aplus/net/ipv6.h>
-
 #include <errno.h>
 
 
@@ -138,13 +135,10 @@ int main() {
 		NULL
 	};
 
-	
-	int p = sys_fork();
-	kprintf("p: %d from %d\n", p, sys_getpid());
-	for(;;);
 
-	if(sys_fork() == 0)
-		sys_execve(__argv[0], __argv, __envp);
+
+	//if(sys_fork() == 0)
+		//sys_execve(__argv[0], __argv, __envp);
 	
 	for(;;);
 }

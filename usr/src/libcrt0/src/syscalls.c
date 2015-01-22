@@ -120,6 +120,9 @@ syscall0(32, getppid)
 syscall1(33, uname)
 syscall5(34, mmap)
 syscall2(35, munmap)
+syscall3(36, socket)
+syscall3(37, bind)
+syscall2(38, shutdown)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)

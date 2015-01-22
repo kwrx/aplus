@@ -1,37 +1,27 @@
 #include <aplus.h>
 #include <aplus/list.h>
+
+#define _NO_STACK
+#define _NO_PROTO
+#define _NO_BRDCST
 #include <aplus/netif.h>
 #include <aplus/attribute.h>
 
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
-
-#include <aplus/net/arp.h>
-
-
-static list_t* lst_netif = NULL;
-static list_t* lst_packets = NULL;
+#include <errno.h>
 
 
+netif_protocol_t* netif_protocols[NETIF_MAX_PROTOCOLS] = { 0 };
 
-uint32_t netif_htonl(uint32_t h) {
-	return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
-			((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
-}
+list_t* lst_netif = NULL;
+list_t* netif_stack[NETIF_MAX_PROTOCOLS] = { 0 };
 
-uint16_t netif_htons(uint16_t h) {
-	return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
-}
 
-uint32_t netif_ntohl(uint32_t h) {
-	return ((h & 0xFF000000) >> 24) | ((h & 0x000000FF) << 24) |
-			((h & 0x00FF0000) >> 8) | ((h & 0x0000FF00) << 8);
-}
 
-uint32_t netif_ntohs(uint32_t h) {
-	return ((h & 0xFF00) >> 8) | ((h & 0x00FF) << 8);
-}
+macaddr_t __netif_macaddr_broadcast = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
+
 
 netif_t* netif_find_by_ipv4(ipv4_t* ipv4) {
 	if(lst_netif == NULL)
@@ -101,7 +91,7 @@ int netif_ifup() {
 		if(netif->ifup)
 			netif->ifup(netif);
 
-		arp_send(netif);
+		netif->flags |= NETIF_FLAGS_ENABLE;
 	}
 
 	return -1;
@@ -116,6 +106,8 @@ int netif_ifdown() {
 
 		if(netif->ifdown)
 			netif->ifdown(netif);
+
+		netif->flags &= ~NETIF_FLAGS_ENABLE;
 	}
 
 	return -1;
@@ -143,6 +135,9 @@ int netif_add(netif_t* netdev) {
 		return -1;
 	}
 
+#ifdef DEBUG
+	kprintf("netif: loaded interface \"%s\"\n", netdev->name);
+#endif
 
 #ifdef NETIF_DEBUG
 	kprintf("\n%s:\tipv4\t%d.%d.%d.%d\n\tnetmask\t%d.%d.%d.%d\n",
@@ -220,72 +215,95 @@ int netif_remove(netif_t* netdev) {
 }
 
 int netif_init() {
-	list_init(lst_packets);
+	memset(netif_protocols, 0, sizeof(netif_protocol_t*) * NETIF_MAX_PROTOCOLS);
+	memset(netif_stack, 0, sizeof(list_t*) * NETIF_MAX_PROTOCOLS);
 
-	list_t* lst_netif = attribute("netif");
-	if(list_empty(lst_netif))
+	list_t* lst = attribute("netif");
+	if(list_empty(lst))
 		return -1;
 
-	list_foreach(value, lst_netif) {
+	list_foreach(value, lst) {
 		int (*handler) () = (int (*) ()) value;
 
 		if(handler)
 			handler();
 	}
 	
-	list_destroy(lst_netif);
+	list_destroy(lst);
 
+
+	for(int i = 0; i < NETIF_MAX_PROTOCOLS; i++)
+		{ list_init(netif_stack[i]); }
+
+
+	lst = attribute("protocols");
+	if(list_empty(lst))
+		goto done;
+
+	list_foreach(value, lst) {
+		netif_protocols[((netif_protocol_t*) value)->id] = (netif_protocol_t*) value;
+
+#ifdef NETIF_DEBUG
+		kprintf("netif: registered protocol \"%s\" (%d)\n", ((netif_protocol_t*) value)->name, ((netif_protocol_t*) value)->id);
+#endif	
+	}
+
+done:
 	netif_ifup();
 	return 0;
 }
 
 
-int netif_packets_add(netif_packet_t* packet) {
-	static uint64_t nextid = 0;
-	
-	packet->id = nextid++;
-	return list_add(lst_packets, (listval_t) packet);
-}
-
-int netif_packets_remove(netif_packet_t* packet) {
-	return list_remove(lst_packets, (listval_t) packet);
-}
-
-netif_packet_t* netif_packets_find_by_id(uint64_t id) {
-	list_foreach(value, lst_packets) {
-		netif_packet_t* pkt = (netif_packet_t*) value;
-
-		if(pkt->id == id)
-			return pkt;
+uint64_t netif_packet_push(uint16_t proto, void* header, uint32_t hlen, void* data, uint32_t dlen) {
+	if(unlikely(!header || !data)) {
+		errno = EINVAL;	
+		return -1;
 	}
 
-	return NULL;
-}
-
-list_t* netif_packets_find_by_protocol(int protocol) {
-	list_t* tmp = NULL;
-	list_init(tmp);
-
-
-	list_foreach(value, lst_packets) {
-		netif_packet_t* pkt = (netif_packet_t*) value;
-
-		if(pkt->protocol == protocol)
-			list_add(tmp, (listval_t) pkt);
+	
+	netif_packet_t* p = (netif_packet_t*) kmalloc(sizeof(netif_packet_t) + hlen + dlen);
+	if(unlikely(!p)) {
+		errno = ENOMEM;
+		return -1;
 	}
 
-	return tmp;
-}
 
-netif_packet_t* netif_packets_create(netif_t* netif, int protocol, int tot_length, int head_length, void* data) {
-	netif_packet_t* pkt = (netif_packet_t*) kmalloc(sizeof(netif_packet_t) + tot_length);
-	pkt->netif = netif;
-	pkt->protocol = protocol;
-	pkt->length = tot_length - head_length;
+	static uint64_t packet_id = 1;
+	static spinlock_t p_lock = 0;
+
+	spinlock_lock(&p_lock);
 	
-	memcpy(pkt->header, data, head_length);
-	memcpy(pkt->data, (void*) ((uint32_t) data + head_length), pkt->length);
+	p->id = packet_id++;
+	p->proto = proto;
+	p->header.length = hlen;
+	p->header.ptr = (void*) ((uint32_t) p + sizeof(netif_packet_t));
+	p->data.length = dlen;
+	p->data.ptr = (void*) ((uint32_t) p + sizeof(netif_packet_t) + hlen);
 
-	return pkt;
+
+
+	memcpy(p->header.ptr, header, hlen);
+	memcpy(p->data.ptr, data, dlen);
+
+
+	list_add(netif_stack[proto], (listval_t) p);
+
+	spinlock_unlock(&p_lock);
+	return p->id;
 }
+
+int netif_packet_pop(netif_packet_t* p) {
+	if(unlikely(!p)) {
+		errno = EINVAL;	
+		return -1;
+	}
+	
+	return list_remove(netif_stack[p->proto], (listval_t) p);
+}
+
+
+netif_t* netif_get_interface(int index) {
+	return (netif_t*) list_at_index(lst_netif, index);
+}
+
 

@@ -44,9 +44,8 @@ iso: aplus
 	@genisoimage -o $(TOP)/bin/initrd ramdisk
 	@grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
 	@$(RM) *.pcap
-	@qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
-	@tcpdump -r *.pcap
-
+	#@qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
+	@bochs -f bochs.conf
 
 clean:
 	-@$(RM) $(OFILES)

@@ -1,106 +1,112 @@
 #include <aplus.h>
-#include <aplus/list.h>
 #include <aplus/netif.h>
+#include <aplus/spinlock.h>
+#include <aplus/attribute.h>
 
-#include <stddef.h>
-#include <stdint.h>
 #include <string.h>
+#include <stdint.h>
+#include <errno.h>
+
 
 #include <aplus/net/eth.h>
 
+
 int eth_recv(netif_t* netif, void* buf, size_t length) {
-	eth_header_t* ethpkt = (eth_header_t*) buf;
+	eth_t* pkt = (eth_t*) buf;
 
-	#define __params	\
-		netif, (void*) ((uint32_t) buf + sizeof(eth_header_t)), length - sizeof(eth_header_t)
+	#define __p											\
+		netif, 											\
+		pkt->data,										\
+		length - sizeof(eth_t)
 
-	switch(ethpkt->type) {
+
+	switch(pkt->type) {
 		case ETH_TYPE_IPV4:
-			if(ipv4_recv(__params) == 0)
-				return 0;
-			return length;
-
+			/*if(unlikely(ipv4_recv(__p) == 0))
+				return 0;*/
+			break;
 		case ETH_TYPE_IPV6:
-			if(ipv6_recv(__params) == 0)
-				return 0;
-			return length;
-
+			/*if(unlikely(ipv6_recv(__p) == 0))
+				return 0;*/
+			break;
 		case ETH_TYPE_ARP:
-			if(arp_recv(__params) == 0)
-				return 0;
-			return length;
+			/*if(unlikely(arp_recv(__p) == 0))
+				return 0;*/
+			break;
 	}
 
-
-	/* ETH_TYPE_RAW */
-	netif_packets_add (
-		netif_packets_create (
-							netif,
-							NETIF_ETH, 
-							length, 
-							sizeof(eth_header_t), 
-							buf
-		)
-	);
+	netif_packet_push(NETIF_ETH, pkt, sizeof(eth_t), pkt->data, length - sizeof(eth_t));
 	return length;
 }
 
 
-static int eth_send_packet(netif_t* netif, void* buf, size_t length, int type) {
-	eth_header_t* ethpkt = kmalloc(length + sizeof(eth_header_t));
-	memset((void*) ethpkt->dest, 0xFF, sizeof(macaddr_t));
-	memcpy((void*) ethpkt->source, (void*) netif->macaddr, sizeof(macaddr_t));
-	memcpy((void*) ((uint32_t) ethpkt + sizeof(eth_header_t)), buf, length);
+eth_t* eth_packet(netif_t* netif, macaddr_t dest, int type, void* data, size_t* length) {
+	if(unlikely(!length))
+		return NULL;
+	
+	
+	eth_t* p = (eth_t*) kmalloc(sizeof(eth_t) + *length);
+
+	memcpy(p->dest, dest, sizeof(macaddr_t));
+	memcpy(p->source, netif->macaddr, sizeof(macaddr_t));
+
 
 	switch(type) {
 		case NETIF_INET:
-			ethpkt->type = ETH_TYPE_IPV4;
+			p->type = ETH_TYPE_IPV4;
 			break;
 		case NETIF_INET6:
-			ethpkt->type = ETH_TYPE_IPV6;
+			p->type = ETH_TYPE_IPV6;
 			break;
 		case NETIF_ARP:
-			ethpkt->type = ETH_TYPE_ARP;
+			p->type = ETH_TYPE_ARP;
 			break;
 		default:
-			ethpkt->type = ETH_TYPE_RAW;
+			p->type = ETH_TYPE_RAW;
 			break;
 	}
 
-	
-	length += sizeof(eth_header_t);
-	
-	int ret = netif->send(netif, ethpkt, length, NETIF_ETH);
-	kfree(ethpkt);
-	
-	return ret;
-}
+	if(likely(data))
+		memcpy(p->data, data, *length);
 
-int eth_send(netif_t* netif, void* buf, size_t length, int type) {
-
-	if(length + sizeof(eth_header_t) < netif->mtu) {
-		if(eth_send_packet(netif, buf, length, type) > 0)
-			return length;
-		else
-			return 0;
-	}
-
-	int delta = netif->mtu - sizeof(eth_header_t);
-	int ret = 0;
+	*length += sizeof(eth_t);
+	
+	return p;
+} 
 
 
-	for(int i = 0; i < length; i += delta)
-		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + i), delta, type);
+int eth_check(netif_socket_t* sock, netif_packet_t* packet) {
+	if(unlikely(!packet))
+		return 0;
 
-	if((length % delta) != 0)
-		ret += eth_send_packet(netif, (void*) ((uint32_t) buf + length - (length % delta)), length % delta, type);
-	
-	
-	if(ret)
-		return length;
-	
+	eth_t* eth = (eth_t*) packet->header.ptr;
+
+	if (
+		(memcmp(eth->dest, sock->netif->macaddr, sizeof(macaddr_t)) == 0)	||
+		(memcmp(eth->dest, MACADDR_BROADCAST, sizeof(macaddr_t)) == 0)
+	) return 1;
+
 	return 0;
 }
 
 
+int eth_send(netif_socket_t* sock, void* buf, size_t size) {
+	if(unlikely(!buf || !size || !sock))
+		return 0;
 
+	eth_t* eth = eth_packet(sock->netif, ((struct sockaddr_eth*) (&sock->sockaddr))->set_addr.eth_addr, NETIF_RAW, buf, &size);
+
+	if(size > sock->netif->mtu)
+		size = sock->netif->mtu;
+
+	int r = sock->netif->send(sock->netif, (void*) eth, size, NETIF_ETH);
+	kfree(eth);
+
+	return r - sizeof(eth_t);
+}
+
+int eth_close(netif_socket_t* sock, int status) {
+	return 0;
+}
+
+NETIF_PROTO(AF_INET, NETIF_ETH, eth);

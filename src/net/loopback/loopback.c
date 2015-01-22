@@ -1,9 +1,6 @@
 #include <aplus.h>
 #include <aplus/netif.h>
-#include <aplus/mm.h>
-#include <aplus/task.h>
 #include <aplus/spinlock.h>
-#include <aplus/list.h>
 #include <aplus/attribute.h>
 
 #include <string.h>
@@ -11,55 +8,34 @@
 #include <errno.h>
 
 
-#define LOOPBACK_MAGIC				0x127001FF
-#define LOOPBACK_MTU				65563
-
-
-int loopback_ifup(netif_t* netif) {
-	netif->flags |= NETIF_FLAGS_ENABLE;
-	return 0;
-}
-
-int loopback_ifdown(netif_t* netif) {
-	netif->flags &= ~NETIF_FLAGS_ENABLE;
-	return 0;
-}
-
+#define LOOPBACK_MTU			0x1000000
 
 
 int loopback_recv(netif_t* netif, void* buf, size_t len) {
-	if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
-		return 0;
-
-	if(eth_recv(netif, buf, len) > 0) {
+	if(likely(eth_recv(netif, buf, len) > 0)) {
 		netif->state.rx_packets += 1;
 		netif->state.rx_bytes += len;
 
 		return len;
 	}
-		
+
 	netif->state.rx_errors += 1;
 	return 0;
 }
 
-int loopback_send(netif_t* netif, void* buf, size_t len, int type) {
-	if((netif->flags & NETIF_FLAGS_ENABLE) == 0)
-		return 0;
 
+int loopback_send(netif_t* netif, void* buf, size_t len, int type) {
 	if(len > LOOPBACK_MTU) {
 		netif->state.tx_errors += 1;
 		return 0;
 	}
 
-
 	netif->state.tx_packets += 1;
 	netif->state.tx_bytes += len;
 
-
-	loopback_recv(netif, buf, len);	
+	loopback_recv(netif, buf, len);
 	return len;
 }
-
 
 int loopback_init() {
 
@@ -92,8 +68,8 @@ int loopback_init() {
 
 	netif->mtu = LOOPBACK_MTU;
 	netif->send = loopback_send;
-	netif->ifup = loopback_ifup;
-	netif->ifdown = loopback_ifdown;
+	netif->ifup = NULL;
+	netif->ifdown = NULL;
 	netif->data = NULL;
 
 	netif_add(netif);

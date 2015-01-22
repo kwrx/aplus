@@ -26,6 +26,7 @@ static void dump_errno() {
 }
 
 
+
 /**
  *	\brief Print current registers & cpu status.
  */
@@ -50,15 +51,15 @@ static void dump_cpu(regs_t* r) {
 	x86_init(opt_none, NULL, NULL);
 	x86_insn_t op;
 
-	int eip = r->eip;
-	char* codebuf = (char*) eip;
-	char* linebuf[256];
+	int eip = r->eip ;
+	uint8_t* codebuf = (uint8_t*) eip;
+	uint8_t* linebuf[256];
 	
 	int i, p;
 	for(i = 0, p = 0; i < DISASM_RANGE; i++) {
 		int s = x86_disasm(codebuf, 1024, eip, p, &op);
 		if(likely(s)) {
-			x86_format_insn(&op, linebuf, 256, intel_syntax);
+			x86_format_insn(&op, (char*) linebuf, 256, intel_syntax);
 			kprintf("%c %x:\t%s\n", op.addr == r->eip ? '>' : ' ', op.addr, linebuf);
 			
 			p += s;
@@ -88,7 +89,7 @@ static void dump_stacktrace(int count) {
 
 	for(int i = 0; i < count; i++) {
 		int eip = *(++esp);
-		char* sym = elf_symbol_lookup(eip);
+		char* sym = (char*) elf_symbol_lookup(eip);
 
 		if(unlikely(!sym))
 			break;

@@ -148,6 +148,7 @@ static inline uint64_t rdmsr(uint32_t i) {
 	return v;
 }
 
+
 static inline uint64_t rdtsc(void) {
 	uint64_t r;
 	__asm__ __volatile__ ("cpuid; rdtsc" : "=A"(r));
