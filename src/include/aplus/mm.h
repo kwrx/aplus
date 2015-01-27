@@ -93,14 +93,8 @@ static inline void* mm_align(void* vaddr) {
 
 
 
-#ifdef CHUNKS_CHECKING
-void* __kmalloc(size_t, char*, int);
-#define kmalloc(s)	__kmalloc(s, __FILE__, __LINE__)
-#else
+
 void* kmalloc(size_t);
-#endif
-
-
 void kfree(void*);
 void* krealloc(void*, size_t);
 

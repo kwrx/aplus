@@ -5,8 +5,6 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <grub.h>
-
 
 extern task_t* current_task;
 extern task_t* kernel_task;
@@ -381,10 +379,10 @@ char* elf_symbol_lookup(uint32_t symaddr) {
 
 
 int exec_init_kernel_task(task_t* k) {
-	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->addr;
-	uint32_t shstrtab = shdr[mbd->shndx].sh_addr;
+	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->exec.addr;
+	uint32_t shstrtab = shdr[mbd->exec.shndx].sh_addr;
 
-	for(int i = 0; i < mbd->num; i++) {
+	for(int i = 0; i < mbd->exec.num; i++) {
 		const char* name = (const char*) (shstrtab + shdr[i].sh_name);
 
 		if(strcmp(name, ".strtab") == 0)

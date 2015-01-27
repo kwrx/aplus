@@ -1,9 +1,13 @@
+#ifdef __i386__
+
 #include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/syscall.h>
 #include <aplus/attribute.h>
 
 #include <errno.h>
+
+#include "i386.h"
 
 
 #define NSYSCALLS		1024
@@ -95,3 +99,5 @@ int syscall_handler(regs_t* r) {
 	return syscall_invoke(r->eax, r->ebx, r->ecx, r->edx, r->esi, r->edi);
 }
 
+
+#endif

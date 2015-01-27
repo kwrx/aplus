@@ -1,7 +1,11 @@
+#ifdef __i386__
+
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
 #include <stdint.h>
+
+#include "i386.h"
 
 
 static uint16_t serial[] = {
@@ -32,3 +36,5 @@ int serial_init() {
 
 	return 0;
 }
+
+#endif

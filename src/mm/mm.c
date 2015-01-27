@@ -29,16 +29,6 @@
 #include <aplus/list.h>
 #include <aplus/task.h>
 
-#include <grub.h>
-
-
-
-/**
- *	\see aplus/mm.h
- */
-#ifdef CHUNKS_CHECKING
-#define CHUNK_MAGIC		0x12345678
-#endif
 
 
 uint64_t memsize;
@@ -58,57 +48,12 @@ extern list_t* vmm_queue;
 typedef struct block {
 	uint16_t magic;
 	size_t size;
-
-#ifdef CHUNKS_CHECKING
-	char* file;
-	int line;
-#endif
 } __attribute__((packed)) block_t;
 
 
 
 
-#ifdef CHUNKS_CHECKING
-static void __check_all_chunks_overflow() {
-	if(current_task != kernel_task)
-		return;
-
-	schedule_disable();
-	vmm_disable();
-	
-	int e = 0;
-	for(uint32_t frame = 0; frame < current_heap->size; frame += BLKSIZE) {
-		block_t* block = (block_t*) frame;
-		if(likely(block->magic != BLKMAGIC))
-			continue;
-
-
-		if(*(uint32_t*) (frame + block->size + sizeof(block_t)) != CHUNK_MAGIC) {
-			kprintf("mm: chunk overflow at 0x%x (%x) allocated from %s (%d)\n", frame, block->size, block->file, block->line);
-			e++;
-
-		 	*(uint32_t*) (frame + block->size + sizeof(block_t)) = CHUNK_MAGIC;
-		}
-
-		frame += block->size & MM_MASK;
-	}
-	
-	if(e)
-		kprintf("There was %d chunks overflow\n", e);
-
-	vmm_enable();
-	schedule_enable();
-}
-#endif
-
-
-
-#ifdef CHUNKS_CHECKING
-void* __kmalloc(size_t size, char* file, int line)
-#else
-void* kmalloc(size_t size) 
-#endif
-{
+void* kmalloc(size_t size) {
 
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(unlikely(!addr))
@@ -120,15 +65,6 @@ void* kmalloc(size_t size)
 	block_t* block = (block_t*) addr;
 	block->magic = BLKMAGIC;
 	block->size = size;
-
-#ifdef CHUNKS_CHECKING
-	block->file = file;
-	block->line = line;
-
-	*(uint32_t*) ((uint32_t) block + size + sizeof(block_t)) = CHUNK_MAGIC;
-
-	__check_all_chunks_overflow();
-#endif
 
 	return (void*) ((uint32_t) block + sizeof(block_t));
 }
@@ -149,10 +85,6 @@ void* kvmalloc(size_t size) {
  * 	\param ptr Pointer to data allocated.
  */
 void kfree(void* ptr) {
-#ifdef CHUNKS_CHECKING
-	__check_all_chunks_overflow();
-#endif
-
 	if(unlikely(!ptr))
 		return;
 		
@@ -167,11 +99,6 @@ void kfree(void* ptr) {
 	size_t size = block->size;
 	block->size = 0;
 	block->magic = 0;
-	
-#ifdef CHUNKS_CHECKING
-	block->file = 0;
-	block->line = 0;
-#endif
 	
 	hfree(current_heap, mm_paddr(mm_align(ptr)), size + sizeof(block_t));
 }
@@ -233,11 +160,11 @@ heap_t* mm_getheap() {
  */
 int mm_init() {
 
-	memsize = (mbd->mem_upper + mbd->mem_lower) * 1024;
+	memsize = mbd->memory.size;
 	if(memsize > VMM_MAX_MEMORY)
 		memsize = VMM_MAX_MEMORY;
 
-	kernel_low_area_size = ((uint32_t*) mbd->mods_addr) [1];
+	kernel_low_area_size = ((uint32_t*) mbd->memory.start) [1];
 	kernel_low_area_size &= ~0xFFFFF;
 	kernel_low_area_size += 0x100000;
 

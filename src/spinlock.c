@@ -74,5 +74,5 @@ void __spinlock_waiton() {
  *	\see fastlock_waiton
  */
 void __fastlock_waiton() {
-	__asm__ __volatile__("pause");
+	cpu_wait();
 }

@@ -1,3 +1,5 @@
+#ifdef __i386__
+
 #include <aplus.h>
 #include <aplus/pci.h>
 #include <aplus/mm.h>
@@ -6,6 +8,8 @@
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
+
+#include "i386.h"
 
 
 #define PCI_CONFIG_ADDRESS		0x0CF8
@@ -182,3 +186,6 @@ int pci_init() {
 
 	return 0;
 }
+
+
+#endif

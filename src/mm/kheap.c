@@ -25,8 +25,6 @@
 #include <sys/types.h>
 
 #include <aplus/mm.h>
-#include <grub.h>
-
 
 #define BITMAP_SET(bmp, bit)	\
 	bmp[bit >> 5] |= (1 << (bit % 32))

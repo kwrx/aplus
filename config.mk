@@ -3,14 +3,16 @@ PATH	:= /opt/cross/usr/bin:$(PATH)
 
 TOP		:= $(PWD)
 
-ARCH	:= i686
-TARGET	:= $(ARCH)-aplus
+ARCH	:= rpi
+TARGET	:= arm-none-eabi
 PREFIX	:= $(TOP)/bin
 
 
 CC		:= $(TARGET)-gcc
 CXX		:= $(TARGET)-g++
 ASM		:= nasm
+AS		:= $(TARGET)-as
+
 LD		:= $(TARGET)-ld
 OBJCPY	:= $(TARGET)-objcopy
 
@@ -19,14 +21,20 @@ CP		:= cp
 MV		:= mv
 
 
-DEFINES	:= -DKERNEL -DUSERNET -DARCH=\"$(ARCH)\"
-LIBS	:= -ldisasm -lpthread -lposix -lc -lm -lsys -lgcc
+DEFINES	:= -DKERNEL -D__aplus__ -D__$(ARCH)__ -DARCH=\"$(ARCH)\"
+LIBS	:=  -lc -lm -lgcc
 WARN	:= -Wno-implicit-function-declaration -Wall
 
-CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib -std=c99 -mfpmath=sse -msse2 -O2
-CXXFLAGS:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -masm=intel -nostdlib
+CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -nostdlib -std=c99 -O2
+CXXFLAGS:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -nostdlib
 AFLAGS	:= $(DEFINES) -f elf
-LFLAGS	:= -T $(TOP)/src/link.ld -Map aplus.map -L $(LIBS)
+ASFLAGS	:= --defsym __$(ARCH)__=0x0 -c
+LFLAGS	:= -T $(TOP)/src/link/$(ARCH).ld -Map aplus.map -L $(LIBS)
+
+ifeq ($(ARCH),i386)
+CFLAGS	+= -masm=intel -mfpmath=sse -msse2
+LIBS	:= -ldisasm $(LIBS)
+endif
 
 
 CROSSLIB:= /opt/cross/usr

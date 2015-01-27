@@ -19,30 +19,34 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <aplus.h>
-#include <aplus/fs.h>
-#include <aplus/list.h>
-#include <grub.h>
-#include <aplus/fs.h>
-#include <aplus/task.h>
-#include <aplus/attribute.h>
-#include <aplus/mm.h>
 
+#include <stdint.h>
 #include <stddef.h>
 #include <unistd.h>
-#include <fcntl.h>
+#include <sys/types.h>
 #include <sys/utsname.h>
-#include <sys/times.h>
-#include <time.h>
 
-#include <aplus/netif.h>
-#include <aplus/net/eth.h>
-#include <errno.h>
+#include <aplus.h>
+#include <aplus/fs.h>
+#include <aplus/task.h>
 
 
 extern inode_t* vfs_root;
 extern task_t* current_task;
 
+bootargs_t __mbd;
+bootargs_t* mbd = &__mbd;
+
+
+
+int vmm_alloc() {}
+int task_fork() {}
+int task_init() {}
+int task_switch_ack() {}
+int task_switch() {}
+int vmm_free() {}
+int task_clone() {}
+int vmm_init() {}
 
 /**
  *	\brief Put Kernel Task in optimized loop for powersave.
@@ -52,7 +56,7 @@ static void sysidle() {
 
 
 	for(;;)
-		__asm__ ("pause; hlt;");
+		cpu_idle();
 }
 
 
@@ -60,17 +64,14 @@ static void sysidle() {
  *	\brief Entry point for kernel.
  */
 int main() {
-	serial_init();
-	mm_init();
-	desc_init();
-	syscall_init();
-	vfs_init();
-	schedule_init();
-	pci_init();
-	tty_init();
+	arch_init();
+
+	//vfs_init();
+	//schedule_init();
+	//tty_init();
 
 #if HAVE_NETWORK
-	netif_init();
+	//netif_init();
 #endif
 
 	go_usermode();
@@ -83,18 +84,17 @@ int main() {
 
 	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
 
-	if(unlikely(mbd->mods_count == 0))
+	if(unlikely(mbd->ramdisk.ptr == 0))
 		panic("no initrd module found");
 	
 
-	uint32_t addr = (uint32_t) mm_vaddr((void*) ((uint32_t*) mbd->mods_addr) [0]);
-	uint32_t endp = (uint32_t) mm_vaddr((void*) ((uint32_t*) mbd->mods_addr) [1]);
+	uint32_t addr = (uint32_t) mm_vaddr((void*) mbd->ramdisk.ptr);
+	uint32_t endp = (uint32_t) mm_vaddr((void*) (mbd->ramdisk.ptr + mbd->ramdisk.size));
 
 	kprintf("initrd: module found at addess: 0x%x (%d KB)\n", addr, (endp - addr) / 1024);
 
 	
 	
-
 	if(unlikely(!mkramdev("/dev/ram0", addr, endp - addr)))
 		panic("initrd: cannot create /dev/ram0");
 

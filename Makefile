@@ -4,14 +4,16 @@ include config.mk
 
 CFILES 	:= $(shell find $(TOP)/src -type f -name "*.c")
 CXXFILES:= $(shell find $(TOP)/src -type f -name "*.cpp")
-AFILES	:= $(shell find $(TOP)/src -type f -name "*.s")
+AFILES	:= $(shell find $(TOP)/src -type f -name "*.asm")
+ASFILES	:= $(shell find $(TOP)/src -type f -name "*.s")
 HFILES	:= $(shell find $(TOP)/src -type f -name "*.h")
 
-SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES)
-OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.s=.o)
+SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES) $(ASFILES)
+OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.asm=.o) $(ASFILES:.s=.o)
 
 
 .PHONY: all clean git
+.SUFFIXES: .asm
 
 all: iso
 
@@ -28,16 +30,20 @@ aplus : $(OFILES)
 	$(MV) $(PREFIX)/$@.gz $(PREFIX)/apluz
 
 .c.o:
-	@echo "  CC      " $(notdir $<)
+	@echo "  CC      " $<
 	@$(CC) $(CFLAGS) $< -o $@
 
 .cpp.o:
-	@echo "  CXX     " $(notdir $<)
+	@echo "  CXX     " $<
 	@$(CXX) $(CXXFLAGS) $< -o $@
 
-.s.o:
-	@echo "  ASM     " $(notdir $<)
+.asm.o:
+	@echo "  ASM     " $<
 	@$(ASM) $(AFLAGS) $< -o $@
+
+.s.o:
+	@echo "  AS      " $<
+	@$(AS) $(ASFLAGS) $< -o $@
 	
 
 iso: aplus
@@ -60,8 +66,6 @@ doc:
 git: clean
 	-@mkdir ./usr
 	-@cp -r $(CROSSLIB)/src ./usr
-	-@cp -r $(CROSSLIB)/include ./usr
-	-@cp -r $(CROSSLIB)/lib ./usr
 	-@git add --all .
 	-@git commit -m "$(COMMIT)"
 	-@git push origin master

@@ -19,19 +19,19 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+#ifdef __i386__
 
 #include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/mm.h>
-
-#include <grub.h>
 
 
 #include <stdint.h>
 #include <errno.h>
 #include <time.h>
 #include <sys/times.h>
+
+#include "i386.h"
 
 
 #define FAULT_MASK		0x3FFFFFE3
@@ -186,7 +186,7 @@ __asm__ (
 
 
 void isr_handler(regs_t* r) {
-	panic_r(exception_messages[r->int_no], r);
+	arch_panic(exception_messages[r->int_no], r);
 }
 
 void irq_handler(regs_t* r) {
@@ -222,7 +222,7 @@ void pagefault_handler(regs_t* r) {
 	__asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
 
 	kprintf("Page fault at address: 0x%x\n", faultaddr);
-	panic_r("Page Fault", r);
+	arch_panic("Page Fault", r);
 }
 
 
@@ -420,7 +420,7 @@ static uint8_t rtc(uint8_t addr) {
 	return r;
 }
 
-uint32_t pit_gettime() {
+uint32_t timer_gettime() {
 
 	#define BCD2BIN(bcd) 	((((bcd) & 0x0F) + ((bcd) / 16) * 10))
 	#define BCD2BIN2(bcd)	(((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
@@ -440,8 +440,12 @@ uint32_t pit_gettime() {
 	return (uint32_t) mktime(&t);
 }
 
-uint32_t pit_getticks() {
+uint32_t timer_getticks() {
 	return ((pit_days * 86400) * PIT_FREQ) + (pit_seconds * PIT_FREQ) + pit_ticks;
+}
+
+uint32_t timer_getfreq() {
+	return PIT_FREQ;
 }
 
 
@@ -457,3 +461,5 @@ void go_usermode() {
 #endif
 
 }
+
+#endif

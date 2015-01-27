@@ -1,3 +1,5 @@
+#ifdef __i386__
+
 #include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/task.h>
@@ -6,7 +8,7 @@
 #include <aplus/fs.h>
 
 #include <setjmp.h>
-#include <grub.h>
+#include "i386.h"
 
 #if HAVE_SSE
 #define SSE_ALIGN(x)	(((uint32_t) x & 0x10) + 0x10)
@@ -255,3 +257,5 @@ int task_init() {
 	return 0;
 }
 
+
+#endif

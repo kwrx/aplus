@@ -16,9 +16,11 @@
 //#define CHUNKS_CHECKING				1
 
 
-
+#ifdef __i386__
 #define HAVE_SSE					1
 #define HAVE_DISASM					1
+#endif
+
 #define HAVE_NETWORK				1
 
 
@@ -44,10 +46,14 @@
 #define KERNEL_RELEASE_SUFFIX		"generic"
 #endif
 
-#if HAVE_SSE
-#define KERNEL_MACHINE				ARCH "+sse"
-#else
 #define KERNEL_MACHINE				ARCH
+
+
+#ifdef __i386__
+#if HAVE_SSE
+#undef KERNEL_MACHINE
+#define KERNEL_MACHINE				ARCH "+sse"
+#endif
 #endif
 
 #define KERNEL_VERSION_FORMAT		"%s - %s %s"

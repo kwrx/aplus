@@ -14,7 +14,7 @@ extern task_t* current_task;
 
 clock_t sys_times(struct tms* tm) {
 	if(tm == NULL) 
-		return (clock_t) pit_getticks();
+		return (clock_t) current_task->clock;
 	
 
 	tm->tms_utime = current_task->clock;
@@ -29,7 +29,7 @@ clock_t sys_times(struct tms* tm) {
 		tm->tms_cutime = 0;
 
 
-	return (clock_t) pit_getticks();
+	return (clock_t) current_task->clock;
 }
 
 SYSCALL(sys_times, 14);

@@ -4,6 +4,6 @@
 
 
 
-int main() {
-	printf("hello World\n");
+int init() {
+	//printf("hello World\n");
 }

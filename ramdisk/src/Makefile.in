@@ -3,7 +3,7 @@ CP			:= cp
 RM			:= rm
 CC			:= $(ARCH)-aplus-gcc
 LD			:= $(ARCH)-aplus-gcc
-DLL			:= $(ARCH)-aplus-gcc -pie -fPIE
-MOD			:= $(DLL)
+DLL			:= $(ARCH)-aplus-gcc -shared
+MOD			:= $(ARCH)-aplus-gcc -r
 
 PREFIX		:= /opt/prj/aPlus/ramdisk

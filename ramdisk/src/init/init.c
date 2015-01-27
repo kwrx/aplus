@@ -4,21 +4,44 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <assert.h>
-#include <dlfcn.h>
 #include <string.h>
+#include <errno.h>
+#include <aplus/elf.h>
 
 
 #define MOD_PATH		"/dev/ramdisk/mod"
 
-static int initmod(void* dl) {
-	int (*init) () = dlsym(dl, "main");
-	assert(init);
+
+void load_module(char* filename) {
+	int fd = open(filename, O_RDONLY, 0644);
+	if(fd < 0) {
+		printf("init: cannot open module %s: %s\n", filename, strerror(errno));
+		return;
+	}
+
+	lseek(fd, 0, SEEK_END);
+	int sz = lseek(fd, 0, SEEK_CUR);
+	lseek(fd, 0, SEEK_SET);
+
+	void* image = (void*) malloc(sz);
+	read(fd, image, sz);
+	close(fd);
 
 
-	printf("init returned: %s\n", init());
-	return 0;
+	elf_module_t elf;
+	if(elf_load_module(&elf, image, sz, "init") != 0) {
+		printf("init: cannot load module %s: %s\n", filename, strerror(errno));
+		return;
+	}
+
+	for(;;);
+	
+
+	if(elf.start)
+		((void (*) ()) elf.start) ();
+	else
+		printf("init: cannot load entry point for %s\n", filename);
 }
-
 
 
 int main(int argc, char** argv) {
@@ -32,11 +55,7 @@ int main(int argc, char** argv) {
 
 		sprintf(buf, MOD_PATH "/%s", ent->d_name);
 
-		void* dl = dlopen(buf, RTLD_NOW);
-		assert(dl);
-
-		assert(initmod(dl) == 0);
-		exit(0);
+		load_module(buf);
 	}
 
 	closedir(d);
