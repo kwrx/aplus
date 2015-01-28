@@ -39,14 +39,6 @@ bootargs_t* mbd = &__mbd;
 
 
 
-int vmm_alloc() {}
-int task_fork() {}
-int task_init() {}
-int task_switch_ack() {}
-int task_switch() {}
-int vmm_free() {}
-int task_clone() {}
-int vmm_init() {}
 
 /**
  *	\brief Put Kernel Task in optimized loop for powersave.
@@ -66,6 +58,7 @@ static void sysidle() {
 int main() {
 	arch_init();
 
+
 	//vfs_init();
 	//schedule_init();
 	//tty_init();
@@ -75,8 +68,6 @@ int main() {
 #endif
 
 	go_usermode();
-
-
 
 
 	struct utsname u;

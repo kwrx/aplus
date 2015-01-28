@@ -25,9 +25,11 @@ aplus : $(OFILES)
 	@echo "  STRIP   " $@
 	@$(OBJCPY) --strip-debug $@ $@
 	@echo "  ZIP     " apluz
-	$(CP) $@ $(PREFIX)/$@
-	$(ZIP) $(PREFIX)/$@
-	$(MV) $(PREFIX)/$@.gz $(PREFIX)/apluz
+	@$(CP) $@ $(PREFIX)/$@
+	@$(ZIP) $(PREFIX)/$@
+	@$(MV) $(PREFIX)/$@.gz $(PREFIX)/apluz
+	@echo "  IMG      " $@.img
+	@$(OBJCPY) $@ -O binary $@.img
 
 .c.o:
 	@echo "  CC      " $<
@@ -50,8 +52,7 @@ iso: aplus
 	@genisoimage -o $(TOP)/bin/initrd ramdisk
 	@grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
 	@$(RM) *.pcap
-	#@qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
-	@bochs -f bochs.conf
+	@$(VMM)
 
 clean:
 	-@$(RM) $(OFILES)

@@ -36,5 +36,17 @@ CFLAGS	+= -masm=intel -mfpmath=sse -msse2
 LIBS	:= -ldisasm $(LIBS)
 endif
 
+ifeq ($(ARCH),rpi)
+CFLAGS	+= -mcpu=arm1176jzf-s -fpic
+endif
+
+
+ifeq ($(ARCH),i386)
+#@qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
+VMM		:= bochs -f bochs.conf
+endif
+ifeq ($(ARCH),rpi)
+VMM		:= qemu-system-arm -kernel aplus -initrd bin/initrd -M raspi -cpu arm1176 -serial stdio -m 256M
+endif
 
 CROSSLIB:= /opt/cross/usr
