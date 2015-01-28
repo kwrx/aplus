@@ -36,6 +36,7 @@ int lfb_init() {
 	mbd->lfb.base = mmio_r32(LFBIO_BASE + 32);
 	mbd->lfb.size = mmio_r32(LFBIO_BASE + 36);
 
+
 	kprintf("lfb: %dx%dx%d at 0x%x\n", mbd->lfb.width, mbd->lfb.height, mbd->lfb.depth, mbd->lfb.base);
 
 	return 0;

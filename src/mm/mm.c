@@ -57,7 +57,7 @@ void* kmalloc(size_t size) {
 
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(unlikely(!addr))
-		panic("halloc(): failed!");
+		panic("kmalloc: halloc() failed!");
 
 
 	addr = mm_vaddr(addr);
@@ -73,7 +73,7 @@ void* kmalloc(size_t size) {
 void* kvmalloc(size_t size) {
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(unlikely(!addr))
-		panic("halloc(): failed!");
+		panic("kvmalloc: halloc() failed!");
 
 
 	addr = mm_vaddr(addr);
@@ -164,7 +164,7 @@ int mm_init() {
 	if(memsize > VMM_MAX_MEMORY)
 		memsize = VMM_MAX_MEMORY;
 
-	kernel_low_area_size = ((uint32_t*) mbd->memory.start) [1];
+	kernel_low_area_size = mbd->memory.start;
 	kernel_low_area_size &= ~0xFFFFF;
 	kernel_low_area_size += 0x100000;
 

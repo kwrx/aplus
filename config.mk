@@ -22,7 +22,7 @@ MV		:= mv
 
 
 DEFINES	:= -DKERNEL -D__aplus__ -D__$(ARCH)__ -DARCH=\"$(ARCH)\"
-LIBS	:=  -lc -lm -lgcc
+LIBS	:= -ljvm -lc -lm -lgcc
 WARN	:= -Wno-implicit-function-declaration -Wall
 
 CFLAGS	:= $(DEFINES) $(WARN) -I $(TOP)/src/include -c -nostdlib -std=c99 -O2

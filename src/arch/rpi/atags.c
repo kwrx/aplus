@@ -9,6 +9,9 @@
 #include <stdint.h>
 
 
+extern int end;
+
+
 #define ATAG_NONE       0x00000000
 #define ATAG_CORE       0x54410001
 #define ATAG_MEM        0x54410002
@@ -18,7 +21,7 @@
 #define ATAG_SERIAL     0x54410006
 #define ATAG_REVISION   0x54410007
 #define ATAG_VIDEOLFB   0x54410008
-#define ATAG_CMDLINE    0x5441000
+#define ATAG_CMDLINE    0x54410000
 
 typedef struct atag {
 	struct {
@@ -117,7 +120,6 @@ void rpi_parse_atags(int armtype, atag_t* atags) {
 #endif
 
 
-
 	if(unlikely(atags))
 		atags = (atag_t*) 0x100;
 
@@ -163,6 +165,13 @@ void rpi_parse_atags(int armtype, atag_t* atags) {
 
 		atags = t_next(atags);
 	}
+
+
+	if(mbd->memory.start == 0)
+		mbd->memory.start = (uint32_t) &end;
+
+	if(mbd->memory.size == 0)
+		mbd->memory.size = 0x1000000;
 }
 
 

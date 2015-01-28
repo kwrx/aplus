@@ -91,7 +91,6 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 	}
 
 
-
 	if(flags & O_CREAT) {
 		if(!ent) {
 			if(flags & O_VIRT)

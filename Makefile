@@ -28,8 +28,8 @@ aplus : $(OFILES)
 	@$(CP) $@ $(PREFIX)/$@
 	@$(ZIP) $(PREFIX)/$@
 	@$(MV) $(PREFIX)/$@.gz $(PREFIX)/apluz
-	@echo "  IMG      " $@.img
-	@$(OBJCPY) $@ -O binary $@.img
+	@echo "  IMG      " kernel.img
+	@$(OBJCPY) $@ -O binary kernel.img
 
 .c.o:
 	@echo "  CC      " $<

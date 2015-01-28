@@ -30,6 +30,8 @@
 #include <aplus/fs.h>
 #include <aplus/task.h>
 
+#include <jvm/jvm.h>
+
 
 extern inode_t* vfs_root;
 extern task_t* current_task;
@@ -59,21 +61,26 @@ int main() {
 	arch_init();
 
 
-	//vfs_init();
-	//schedule_init();
-	//tty_init();
+	vfs_init();
+	schedule_init();
+	tty_init();
 
 #if HAVE_NETWORK
-	//netif_init();
+	netif_init();
 #endif
 
 	go_usermode();
-
 
 	struct utsname u;
 	sys_uname(&u);
 
 	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
+
+
+#ifdef __rpi__
+	return __rpi_java_exec();
+#endif
+
 
 	if(unlikely(mbd->ramdisk.ptr == 0))
 		panic("no initrd module found");
@@ -125,7 +132,6 @@ int main() {
 		"SCREEN_BPP=32",
 		NULL
 	};
-
 
 
 	//if(sys_fork() == 0)
