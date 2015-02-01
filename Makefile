@@ -1,12 +1,12 @@
 
-include config.mk
+include Makefile.config
 
 
-CFILES 	:= $(shell find $(TOP)/src -type f -name "*.c")
-CXXFILES:= $(shell find $(TOP)/src -type f -name "*.cpp")
-AFILES	:= $(shell find $(TOP)/src -type f -name "*.asm")
-ASFILES	:= $(shell find $(TOP)/src -type f -name "*.s")
-HFILES	:= $(shell find $(TOP)/src -type f -name "*.h")
+CFILES 	:= $(shell find src -type f -name "*.c")
+CXXFILES:= $(shell find src -type f -name "*.cpp")
+AFILES	:= $(shell find src -type f -name "*.asm" -path */$(ARCH)/*)
+ASFILES	:= $(shell find src -type f -name "*.s" -path */$(ARCH)/*)
+HFILES	:= $(shell find src -type f -name "*.h")
 
 SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES) $(ASFILES)
 OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.asm=.o) $(ASFILES:.s=.o)
@@ -28,7 +28,7 @@ aplus : $(OFILES)
 	@$(CP) $@ $(PREFIX)/$@
 	@$(ZIP) $(PREFIX)/$@
 	@$(MV) $(PREFIX)/$@.gz $(PREFIX)/apluz
-	@echo "  IMG      " kernel.img
+	@echo "  IMG     " kernel.img
 	@$(OBJCPY) $@ -O binary kernel.img
 
 .c.o:

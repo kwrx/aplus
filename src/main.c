@@ -30,7 +30,6 @@
 #include <aplus/fs.h>
 #include <aplus/task.h>
 
-#include <jvm/jvm.h>
 
 
 extern inode_t* vfs_root;
@@ -76,10 +75,6 @@ int main() {
 
 	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
 
-
-#ifdef __rpi__
-	return __rpi_java_exec();
-#endif
 
 
 	if(unlikely(mbd->ramdisk.ptr == 0))
@@ -135,7 +130,7 @@ int main() {
 
 
 	//if(sys_fork() == 0)
-		//sys_execve(__argv[0], __argv, __envp);
+		sys_execve(__argv[0], __argv, __envp);
 	
 	for(;;);
 }

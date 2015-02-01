@@ -16,6 +16,10 @@ int arch_init() {
 	lfb_init();
 	intr_init();
 
+#if HAVE_USB
+	usbd_init();
+#endif
+
 	return 0;
 }
 

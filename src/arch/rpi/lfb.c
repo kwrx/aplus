@@ -3,6 +3,8 @@
 #include <aplus.h>
 #include "rpi.h"
 
+
+__attribute__((align(4)))
 uint32_t lfbio[] = {
 	LFB_WIDTH,
 	LFB_HEIGHT,

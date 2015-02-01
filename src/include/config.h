@@ -22,6 +22,7 @@
 #endif
 
 #define HAVE_NETWORK				1
+#define HAVE_USB					1
 
 
 

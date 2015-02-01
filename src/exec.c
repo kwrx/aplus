@@ -380,6 +380,9 @@ char* elf_symbol_lookup(uint32_t symaddr) {
 
 int exec_init_kernel_task(task_t* k) {
 	elf32_shdr_t* shdr = (elf32_shdr_t*) mbd->exec.addr;
+	if(unlikely(!shdr))
+		return -1;
+
 	uint32_t shstrtab = shdr[mbd->exec.shndx].sh_addr;
 
 	for(int i = 0; i < mbd->exec.num; i++) {

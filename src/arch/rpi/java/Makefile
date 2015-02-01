@@ -1,7 +1,0 @@
-
-
-all:
-	
-
-clean:
-	rm *.c

@@ -39,8 +39,8 @@
 
 
 
-#define LFB_WIDTH			640
-#define LFB_HEIGHT			480
+#define LFB_WIDTH			800
+#define LFB_HEIGHT			600
 #define LFB_DEPTH			32
 
 
@@ -63,10 +63,40 @@ static inline void mmio_w32(uint32_t r, uint32_t d) {
 	);
 }
 
+static inline void mmio_w16(uint32_t r, uint16_t d) {
+	__asm__ __volatile__ (
+		"strh %[d], [%[r]]" : : [r]"r"(r), [d]"r"(d)
+	);
+}
+
+static inline void mmio_w8(uint32_t r, uint8_t d) {
+	__asm__ __volatile__ (
+		"strb %[d], [%[r]]" : : [r]"r"(r), [d]"r"(d)
+	);
+}
+
 static inline uint32_t mmio_r32(uint32_t r) {
 	uint32_t d;
 	__asm__ __volatile__ (
 		"ldr %[d], [%[r]]" : [d]"=r"(d) : [r]"r"(r)
+	);
+
+	return d;
+}
+
+static inline uint16_t mmio_r16(uint32_t r) {
+	uint16_t d;
+	__asm__ __volatile__ (
+		"ldrh %[d], [%[r]]" : [d]"=r"(d) : [r]"r"(r)
+	);
+
+	return d;
+}
+
+static inline uint8_t mmio_r8(uint32_t r) {
+	uint8_t d;
+	__asm__ __volatile__ (
+		"ldrb %[d], [%[r]]" : [d]"=r"(d) : [r]"r"(r)
 	);
 
 	return d;

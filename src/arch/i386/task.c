@@ -55,7 +55,7 @@ extern list_t* task_queue;
 extern uint32_t* kernel_vmm;
 extern uint32_t* current_vmm;
 
-extern volatile inode_t* vfs_root;
+extern inode_t* vfs_root;
 extern void task_context_switch(task_env_t** old, task_env_t** new);
 
 

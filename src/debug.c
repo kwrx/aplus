@@ -69,6 +69,7 @@ static void print_dec(unsigned int value, unsigned int width, char* buf, int* pt
  */
 static void print_hex(unsigned int value, unsigned int width, char* buf, int* ptr) {
 	int i = width;
+	int z = 0;
 
 	if (i == 0) i = 8;
 
@@ -88,8 +89,10 @@ static void print_hex(unsigned int value, unsigned int width, char* buf, int* pt
 
 	i = (int)n_width;
 	while (i-- > 0) {
-		if(((value >> (i * 4)) & 0xF) == 0)
+		if(((value >> (i * 4)) & 0xF) == 0 && !z)
 			continue;
+		else
+			z++;
 
 		buf[*ptr] = "0123456789abcdef"[(value>>(i*4))&0xF];
 		*ptr += + 1;
@@ -149,7 +152,7 @@ size_t vasprintf(char * buf, const char *fmt, va_list args) {
 				print_dec((unsigned long)va_arg(args, unsigned long), arg_width, buf, &ptr);
 				break;
 			case 'f':
-				(void) va_arg(args, float);
+				(void) va_arg(args, double);
 				break;
 			case '%': /* Escape */
 				buf[ptr++] = '%';

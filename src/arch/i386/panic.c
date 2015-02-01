@@ -15,7 +15,6 @@
 #define DISASM_RANGE		32
 #endif
 
-#undef kprintf
 
 extern list_t* task_queue;
 extern task_t* current_task;
@@ -26,7 +25,7 @@ extern task_t* kernel_task;
  *	\brief Print last error number.
  */
 static void dump_errno() {
-	kprintf("errno: %d - %s\n\n", errno, strerror(errno));
+	kprintf("Errno:\n\t%d - %s\n", errno, strerror(errno));
 }
 
 
@@ -49,7 +48,6 @@ static void dump_cpu(regs_t* r) {
 
 #if HAVE_DISASM
 
-	kprintf("\n\n");
 	kprintf("Code:\n");
 
 	x86_init(opt_none, NULL, NULL);
@@ -76,8 +74,7 @@ static void dump_cpu(regs_t* r) {
 	x86_cleanup();
 #endif
 
-
-	kprintf("\n\n");
+	kprintf("\n");
 }
 
 
@@ -98,7 +95,7 @@ static void dump_stacktrace(int count) {
 		if(unlikely(!sym))
 			break;
 
-		kprintf("[%d] 0x%x - %s\n", i, eip, sym);
+		kprintf("\t[%d] 0x%x - %s\n", i, eip, sym);
 		
 
 		esp = (int*) *(--esp);
@@ -106,7 +103,7 @@ static void dump_stacktrace(int count) {
 			break;
 	}
 
-	kprintf("\n\n");
+	kprintf("\n");
 }
 
 
@@ -118,7 +115,7 @@ static void dump_task() {
 	
 	list_foreach(value, task_queue) {
 		task_t* task = (task_t*) value;
-		kprintf(" # %d: ", task->pid);
+		kprintf("\t%d: ", task->pid);
 		
 		if(task->exe)
 			kprintf("%s ", task->exe->name);
@@ -133,8 +130,6 @@ static void dump_task() {
 			
 		kprintf("\n");
 	}
-
-	kprintf("\n\n");
 }
 
 
@@ -149,7 +144,6 @@ static void dump_mmu() {
 	kprintf("\tUsed: %d MB (%d Bytes)\n", (int)(h->used / 1024 / 1024), (int)h->used);
 	kprintf("\tSize: %d MB (%d Bytes)\n", (int)(h->size / 1024 / 1024), (int)h->size);
 
-	kprintf("\n\n");
 }
 
 
