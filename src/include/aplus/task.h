@@ -79,6 +79,7 @@
 
 
 typedef struct task_env {
+#if defined(__i386__)
 	uint32_t edi;
 	uint32_t esi;
 	uint32_t ebx;
@@ -88,7 +89,26 @@ typedef struct task_env {
 	uint32_t eflags;
 	uint32_t ebp;
 	uint32_t eip;
+#elif defined(__rpi__) || defined(__arm__)
+	uint32_t r0;
+	uint32_t r1;
+	uint32_t r2;
+	uint32_t r3;
+	uint32_t r4;
+	uint32_t r5;
+	uint32_t r6;
+	uint32_t r7;
+	uint32_t r8;
+	uint32_t r9;
+	uint32_t r10;
+	uint32_t r11;
+	uint32_t r12;
+	uint32_t r13;
+	uint32_t r14;
+	uint32_t r15;
+#endif
 } __attribute__ ((packed)) task_env_t;
+
 
 typedef struct task_image {
 	uint32_t vaddr;

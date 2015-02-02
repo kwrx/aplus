@@ -153,7 +153,7 @@ static void dump_mmu() {
  */
 void arch_panic(char* msg, regs_t* r) {
 	__asm__ ("cli");
-	kprintf("panic: \"%s\"\n", msg);
+	kprintf("\naplus: PANIC! \"%s\"\n", msg);
 	
 	
 	

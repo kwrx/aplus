@@ -13,11 +13,35 @@ extern uint32_t* current_vmm;
 
 extern inode_t* vfs_root;
 
+__asm__ (
+	".globl task_context_switch			\n"
+	"task_context_switch:				\n"
+	"	str sp, [r0]					\n"
+	"	stmfd sp!, {r0-r15}				\n"
+	"	ldr sp, [r1]					\n"
+	"	ldmfd sp!, {r0-r15}				\n"
+);
+
+
 
 task_t* task_fork() {
 	return NULL;
 }
 
+
+void task_switch_ack() {
+	return;
+}
+
+
+void task_switch(task_t* newtask) {
+	task_t* old = current_task;
+	current_task = newtask;
+
+
+	task_switch_ack();
+	task_context_switch(&old->context.env, current_task->context.env);
+}
 
 int task_init() {
 	extern uint32_t kernel_stack;
@@ -51,16 +75,8 @@ int task_init() {
 
 	list_add(task_queue, (listval_t) current_task);
 	task_switch(current_task);
-}
 
-
-void task_switch_ack() {
-	return;
-}
-
-
-void task_switch(task_t* newtask) {
-	current_task = newtask;
+	return 0;
 }
 
 

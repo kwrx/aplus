@@ -35,14 +35,14 @@ i_reset:
 	ldr r8, =_start
 	mov r9, #0x0000
 
-	ldmia r8!, {r4, r5, r6, r7}
-	stmia r9!, {r4, r5, r6, r7}
-	ldmia r8!, {r4, r5, r6, r7}
-	stmia r9!, {r4, r5, r6, r7}
-	ldmia r8!, {r4, r5, r6, r7}
-	stmia r9!, {r4, r5, r6, r7}
-	ldmia r8!, {r4, r5, r6, r7}
-	stmia r9!, {r4, r5, r6, r7}
+	ldmia r8!, {r4-r7}
+	stmia r9!, {r4-r7}
+	ldmia r8!, {r4-r7}
+	stmia r9!, {r4-r7}
+	ldmia r8!, {r4-r7}
+	stmia r9!, {r4-r7}
+	ldmia r8!, {r4-r7}
+	stmia r9!, {r4-r7}
 
 	mov r4, #0x80000
 
@@ -74,7 +74,7 @@ i_reset:
 	mov r7, #0
 	mov r8, #0
 
-	b .L0
+	b .L1
 
 .L0:
 	stmia r4!, {r5-r8}

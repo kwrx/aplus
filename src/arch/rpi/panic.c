@@ -61,9 +61,16 @@ static void dump_mmu() {
 
 }
 
-void arch_panic(char* msg, regs_t* r) {
-	kprintf("panic: %s\n", msg);
 
+static void dump_cpu(regs_t* r) {
+	kprintf("Registers:\n");	
+	kprintf("\ttmr: %d ticks (%d Hz)\n", timer_getticks(), timer_getfreq());
+}
+
+void arch_panic(char* msg, regs_t* r) {
+	kprintf("\naplus: PANIC! \"%s\"\n", msg);
+
+	dump_cpu(r);
 	dump_task();
 	dump_errno();
 	dump_mmu();	

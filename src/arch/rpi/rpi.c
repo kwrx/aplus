@@ -15,6 +15,7 @@ int arch_init() {
 	mm_init();
 	lfb_init();
 	intr_init();
+	syscall_init();
 
 #if HAVE_USB
 	usbd_init();
@@ -30,11 +31,11 @@ void go_usermode() {
 
 
 void cpu_idle() {
-	return;
+	__asm__ __volatile__ ("nop");
 }
 
 void cpu_wait() {
-	return;
+	__asm__ __volatile__ ("nop");
 }
 
 

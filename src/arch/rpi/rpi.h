@@ -49,6 +49,26 @@
 #define TIMER_CTNL			0
 #define TIMER_TICK			4
 
+#define INTR_BASE				0x2000B200
+#define INTR_TIMER				(1 << 0)
+#define INTR_MAILBOX			(1 << 1)
+#define INTR_DOORBELL_0			(1 << 2)
+#define INTR_DOORBELL_1			(1 << 3)
+#define INTR_GPU0_HALT			(1 << 4)
+#define INTR_GPU1_HALT			(1 << 5)
+#define INTR_ACCESS_ERR_1		(1 << 6)
+#define INTR_ACCESS_ERR_0		(1 << 7)
+
+#define INTR_TIMER_BASE					0x2000B400
+#define INTR_TIMER_CTRL_23BIT			(1 << 1)
+#define INTR_TIMER_CTRL_PRESCALE_1		(0 << 2)
+#define INTR_TIMER_CTRL_PRESCALE_16		(1 << 2)
+#define INTR_TIMER_CTRL_PRESCALE_256	(2 << 2)
+#define INTR_TIMER_CTRL_INT_ENABLE		(1 << 5)
+#define INTR_TIMER_CTRL_INT_DISABLE		(0 << 5)
+#define INTR_TIMER_CTRL_ENABLE			(1 << 7)
+#define INTR_TIMER_CTRL_DISABLE			(0 << 7)
+
 
 static inline void delay(uint32_t count) {
 	__asm__ __volatile__ (

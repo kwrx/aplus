@@ -7,4 +7,4 @@ int sys_test(int p0, int p1) {
 	return 255;
 }
 
-SYSCALL(sys_test, 1000);
+SYSCALL(sys_test, 255);

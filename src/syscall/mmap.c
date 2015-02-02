@@ -17,6 +17,12 @@ void* sys_mmap(void* addr, size_t length /*, int prot */, int flags, int fd, off
 	return NULL;
 }
 
+int sys_umap(void* addr, size_t length) {
+	errno = ENOSYS;	
+	return -1;
+}
+
 
 
 SYSCALL(sys_mmap, 34);
+SYSCALL(sys_umap, 35);

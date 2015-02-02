@@ -1,5 +1,5 @@
 
 VMM		:= qemu-system-arm -kernel aplus -initrd bin/initrd -M raspi -cpu arm1176 -serial stdio -m 256M
 
-CFLAGS	+= -Wa,-mcpu=arm1176jzf-s -Wa,-march=armv6 -fpic -I $(TOP)/src/include/arch/rpi/csud
+CFLAGS	+= -Ofast -mfpu=vfp -Wa,-mcpu=arm1176jzf-s -fpic -I $(TOP)/src/include/arch/rpi/csud
 LIBS	:= -lcsud $(LIBS)
