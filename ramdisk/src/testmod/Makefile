@@ -4,7 +4,7 @@ O 	:= testmod.k
 
 all: $(O)
 $(O):
-	$(MOD) *.c -o $@ -lposix -lc -lsys
+	$(MOD) *.c -o $@ -lposix -lc -lsys -lgcc
 clean:
 	-$(RM) $(O)
 

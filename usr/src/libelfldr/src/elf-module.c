@@ -68,8 +68,8 @@ static int elf_module_link(elf_module_t *elf, elf_module_link_cbs_t *cbs)
 
     for (sym = &symtab[1]; sym < end; sym++) {
 	switch (sym->st_shndx) {
-	case SHN_COMMON:
-	    return -EME_NOEXEC;
+	case SHN_COMMON:    
+		break;
 
 	case SHN_ABS:
 	    break;
@@ -88,13 +88,17 @@ static int elf_module_link(elf_module_t *elf, elf_module_link_cbs_t *cbs)
 		elf->sections[sym->st_shndx].sh_addr);
 
 	    if (ELF_SYM_TYPE(sym->st_info) != STT_SECTION) {
+			
 		err = cbs->define(elf, elf_module_sym_name(elf, sym->st_name),
 		    (void *) sym->st_value);
+		
 		if (err < 0)
 		    return err;
 	    }
 	}
     }
+
+
     return 0;
 }
 
@@ -157,9 +161,11 @@ int elf_module_load(elf_module_t *elf, void *dest, elf_module_link_cbs_t *cbs)
 	if (!(shdr->sh_flags & SHF_ALLOC))
 	    continue;
 
+	
 	memcpy(elf_module_get_ptr(elf, shdr->sh_addr),
 	    (void *) elf->header + shdr->sh_offset, shdr->sh_size);
     }
+
 
     res = elf_module_link(elf, cbs);
     if (res < 0)

@@ -43,7 +43,7 @@
 
 
 heap_t kheap;
-extern uint64_t memsize;
+extern uint32_t memsize;
 extern uint32_t kernel_low_area_size;
 
 

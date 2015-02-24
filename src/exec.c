@@ -232,7 +232,7 @@ int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 		if(!p || p > phdr->p_vaddr)
 			p = phdr->p_vaddr;
 
-		s += phdr->p_memsz;
+		s += (p - phdr->p_vaddr) + phdr->p_memsz;
 		phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
 	}
 

@@ -5,12 +5,12 @@
 #define NETIF_DEBUG
 #define SOCKET_DEBUG
 //#define PCI_DEBUG
-#define SYSCALL_DEBUG
-//#define ELF_DEBUG
-//#define SCHED_DEBUG
+//#define SYSCALL_DEBUG
+#define ELF_DEBUG
+#define SCHED_DEBUG
 //#define SCHED_TIMING_DEBUG
 //#define SHM_DEBUG
-//#define SBRK_DEBUG
+#define SBRK_DEBUG
 //#define IO_DEBUG
 
 //#define CHUNKS_CHECKING				1

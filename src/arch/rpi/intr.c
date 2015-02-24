@@ -46,7 +46,6 @@ struct intr_timer_t {
 
 
 
-
 void _I("UNDEF") i_undef() {
 	panic("ARM Undefined istruction");
 }
@@ -81,7 +80,7 @@ void _I("IRQ") i_irq() {
 void _I("FIQ") i_fiq() {
 	intr_timer->irq_clear = 1;
 
-	schedule();	
+	schedule();
 }
 
 
@@ -99,6 +98,7 @@ int intr_init() {
 
 	cpsr_set(cpsr_get() & ~(1 << 7));
 	cpsr_set(cpsr_get() & ~(1 << 6));
+
 
 	return 0;
 }

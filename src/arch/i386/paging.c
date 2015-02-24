@@ -45,8 +45,8 @@
 #define PTENTRY(x)	((uint32_t) x << 10 >> 10 >> 12)
 
 extern volatile heap_t* current_heap;
-extern uint64_t memsize;
-extern uint64_t kernel_low_area_size;
+extern uint32_t memsize;
+extern uint32_t kernel_low_area_size;
 
 extern task_t* kernel_task;
 extern task_t* current_task;
@@ -54,7 +54,6 @@ extern task_t* current_task;
 uint32_t* current_vmm;
 uint32_t* kernel_vmm;
 
-list_t* vmm_queue;
 
 
 __attribute__((aligned(0x1000)))
@@ -207,7 +206,6 @@ int vmm_init() {
 	vmm_switch(kernel_vmm);
 	vmm_enable();
 
-	list_init(vmm_queue);
 	return 0;
 }
 

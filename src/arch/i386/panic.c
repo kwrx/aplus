@@ -153,17 +153,33 @@ static void dump_mmu() {
  */
 void arch_panic(char* msg, regs_t* r) {
 	__asm__ ("cli");
+
+#ifdef DEBUG
+
+	static int halted = 0;
+	if(halted) {
+		kprintf("aplus: PANIC! \"Double fault\"\nSystem halted\n");
+		for(;;);
+	}
+	halted = 1;
+
+	
 	kprintf("\naplus: PANIC! \"%s\"\n", msg);
 	
 	
-	
-	dump_cpu(r);
 	dump_task();
 	dump_errno();
-	dump_mmu();	
+	dump_mmu();
+	dump_cpu(r);
 	dump_stacktrace(10);
 
-	for(;;);
+	halted = 0;
+
+#endif
+
+
+	sys_exit(-1);
+	//sys_kill(getpid(), SIGABRT);
 }
 
 #endif

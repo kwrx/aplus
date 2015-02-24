@@ -3,7 +3,6 @@
 #include <math.h>
 
 
-
-int init() {
-	//printf("hello World\n");
+int main(int argc, char** argv) {
+	printf("hello World\n");
 }

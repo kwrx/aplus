@@ -3,6 +3,8 @@
 
 #include <stddef.h>
 
+#define TEST
+
 #ifdef TEST
 #define DEBUG
 #include <assert.h>

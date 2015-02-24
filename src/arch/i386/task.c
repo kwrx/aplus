@@ -160,11 +160,14 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 
 	} else {
 		child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
-		child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t));
+		child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t) - sizeof(void*) * 2);
 	
 		child->context.env->eax = (uint32_t) arg;
 		child->context.env->eip = (uint32_t) entry;
-		child->context.env->ebp = (uint32_t) child->context.env; 
+		child->context.env->ebp = (uint32_t) child->context.env;
+
+		void** sp = (void**) ((uint32_t) child->context.env + sizeof(task_env_t));
+		sp[1] = arg;
 	}
 	
 

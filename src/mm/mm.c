@@ -31,7 +31,7 @@
 
 
 
-uint64_t memsize;
+uint32_t memsize;
 uint32_t kernel_low_area_size;
 
 heap_t* current_heap;
@@ -160,7 +160,7 @@ heap_t* mm_getheap() {
  */
 int mm_init() {
 
-	memsize = mbd->memory.size;
+	memsize = (uint32_t) mbd->memory.size;
 	if(memsize > VMM_MAX_MEMORY)
 		memsize = VMM_MAX_MEMORY;
 
@@ -169,6 +169,7 @@ int mm_init() {
 	kernel_low_area_size += 0x100000;
 
 	kprintf("mm: low area size %d MB\n", kernel_low_area_size / 1024 / 1024);
+	kprintf("mm: memory size %d MB\n", memsize / 1024 / 1024);
 
 	kheap_init();
 	vmm_init();

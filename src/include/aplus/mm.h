@@ -45,6 +45,7 @@
 
 
 
+
 #define VMM_FLAGS_PRESENT	0x01
 #define VMM_FLAGS_RDWR		0x02
 #define VMM_FLAGS_USER		0x04

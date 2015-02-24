@@ -13,8 +13,8 @@ int arch_init() {
 	rpi_parse_atags(__rpi_armtype, __rpi_atags);
 
 	mm_init();
-	lfb_init();
 	intr_init();
+	lfb_init();
 	syscall_init();
 
 #if HAVE_USB
