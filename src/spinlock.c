@@ -29,10 +29,12 @@
  *	\param spin Spinlock address.
  */
 void spinlock_lock(spinlock_t* spin) {
+#if HAVE_LOCK
 	if(unlikely((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0))
 		spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
 	else
 		fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
+#endif
 
 	*spin |= SPINLOCK_FLAGS_LOCKED;
 }
@@ -53,9 +55,11 @@ void spinlock_unlock(spinlock_t* spin) {
  *	\return 0 for success else -1.
  */
 int spinlock_trylock(spinlock_t* spin) {
+#if HAVE_LOCK
 	if(unlikely(*spin & SPINLOCK_FLAGS_LOCKED))
 		return -1;
-		
+#endif
+
 	*spin |= SPINLOCK_FLAGS_LOCKED;
 	return 0;
 }

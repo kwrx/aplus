@@ -94,8 +94,14 @@ static inline void* mm_align(void* vaddr) {
 
 
 
-
+#ifdef MM_DEBUG
+#define kmalloc(x)	__kmalloc(x, __FILE__, __LINE__)
+void* __kmalloc(size_t, char*, int);
+#else
 void* kmalloc(size_t);
+#endif
+
+
 void kfree(void*);
 void* krealloc(void*, size_t);
 

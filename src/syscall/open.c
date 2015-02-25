@@ -18,13 +18,21 @@ extern inode_t* vfs_root;
 
 static char* dupstr(char* s) {
 	char* p = (char*) kmalloc(strlen(s) + 1);
-	strcpy(p, s);
+	if(unlikely(!p))
+		return NULL;
 
+	strcpy(p, s);
 	return p;
 }
 
 
 static inode_t* ino_open(char* filename, int flags, mode_t mode) {
+
+	if(unlikely(!filename)) {
+		errno = EINVAL;
+		return NULL;
+	}
+
 	inode_t* cwd = NULL;
 
 	if(filename[0] == '/')

@@ -15,6 +15,11 @@ static char** __args_dup(char** a) {
 		return NULL;
 
 	char** p = (char**) kmalloc(255 * sizeof(char*));
+	if(unlikely(!p)) {
+		errno = ENOMEM;	
+		return NULL;
+	}
+
 	memset(p, 0, 255 * sizeof(char*));
 
 	int i = 0;
@@ -72,13 +77,22 @@ int sys_execve(char* filename, char** argv, char** environ) {
 		return -1;
 	}
 
+	argv = __args_dup(argv);
+	environ = __args_dup(environ);
+
 	
+	if(unlikely(!argv || !environ)) {
+		sys_close(fd);
+		kfree(image);
+
+		errno = ENOMEM;	
+		return -1;
+	}
+	
+
 	int vaddr, vsize;
 	void (*entry) () = (void (*) ()) elf32_load(image, &vaddr, &vsize);
 	if(likely(entry)) {
-
-		argv = __args_dup(argv);
-		environ = __args_dup(environ);
 
 		current_task->exe = current_task->fd[fd];
 		current_task->cwd = current_task->fd[fd]->parent;

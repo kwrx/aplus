@@ -4,5 +4,8 @@
 
 
 int main(int argc, char** argv) {
-	printf("hello World\n");
+	printf("Hello World\n");
+	
+	for(;;)
+		sched_yield();
 }

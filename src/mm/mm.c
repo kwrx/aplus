@@ -29,6 +29,8 @@
 #include <aplus/list.h>
 #include <aplus/task.h>
 
+#include <errno.h>
+
 
 
 uint32_t memsize;
@@ -52,12 +54,23 @@ typedef struct block {
 
 
 
-
+#ifdef MM_DEBUG
+void* __kmalloc(size_t size, char* file, int line) {
+#else
 void* kmalloc(size_t size) {
+#endif
+
 
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
-	if(unlikely(!addr))
-		panic("kmalloc: halloc() failed!");
+	if(unlikely(!addr)) {
+
+#ifdef MM_DEBUG
+		kprintf("kmalloc: cannot allocate RAM for %d bytes (%s:%d)\n", size, file, line);
+#endif
+
+		errno = ENOMEM;
+		return NULL;
+	}
 
 
 	addr = mm_vaddr(addr);

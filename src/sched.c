@@ -54,12 +54,12 @@ list_t* task_queue;
 static int sched_enabled = 0;
 
 /**
- *	\brief Get root permissions for current task.
+ *	\brief Check root permissions for current task.
  * 	\return true or false.
  */
 int im_superuser() {
 	if(!current_task)
-		return -1;
+		return 0;
 
 	if(current_task == kernel_task)
 		return 1;
@@ -118,9 +118,9 @@ static task_t* schedule_next() {
 	task_t* newtask = current_task;
 	
 	do {
-		newtask = (task_t*) list_next(task_queue, (listval_t) newtask);
+		newtask = (task_t*) list_prev(task_queue, (listval_t) newtask);
 		if(unlikely(!newtask))
-			newtask = (task_t*) list_head(task_queue);
+			newtask = (task_t*) list_tail(task_queue);
 		
 	} while(newtask->state != TASK_STATE_ALIVE);
 

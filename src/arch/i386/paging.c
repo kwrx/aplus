@@ -81,6 +81,11 @@ void vmm_disable() {
 void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {	
 	if(unlikely(!pd))
 		return paddr;
+
+#ifdef DEBUG
+	if(unlikely(!flags))
+		panic("vmm_map() flags cannot be null");
+#endif
 		
 	paddr = mm_align(paddr);
 	vaddr = mm_align(vaddr);

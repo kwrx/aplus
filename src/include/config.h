@@ -8,12 +8,10 @@
 //#define SYSCALL_DEBUG
 #define ELF_DEBUG
 #define SCHED_DEBUG
-//#define SCHED_TIMING_DEBUG
 //#define SHM_DEBUG
 #define SBRK_DEBUG
-//#define IO_DEBUG
-
-//#define CHUNKS_CHECKING				1
+#define IO_DEBUG
+#define MM_DEBUG
 
 
 #ifdef __i386__
@@ -21,6 +19,7 @@
 #define HAVE_DISASM					1
 #endif
 
+#define HAVE_LOCK					1
 #define HAVE_NETWORK				1
 #define HAVE_USB					1
 

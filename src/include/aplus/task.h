@@ -125,8 +125,10 @@ typedef struct task {
 		task_env_t* env;
 		uint32_t stack;
 		uint32_t cr3;
+#ifdef __i386__
 #if HAVE_SSE
 		uint8_t fpu[1024];
+#endif
 #endif
 	} context;
 
@@ -155,15 +157,10 @@ typedef struct task {
 	char** argv;
 	char** envp;
 	
-	uint32_t state;
-	uint32_t priority;
-	uint32_t clock;
+	uint16_t state;
+	uint16_t priority;
+	uint64_t clock;
 	int exitcode;
-
-#ifdef SCHED_TIMING_DEBUG
-	uint32_t timing_last_clock;
-	uint32_t timing_tm;
-#endif
 	
 	struct task* parent;
 } task_t;

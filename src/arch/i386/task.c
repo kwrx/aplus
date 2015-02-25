@@ -117,7 +117,11 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 			void* addr = (void*) kvmalloc(current_task->image->length);
 			memcpy(addr, (void*) current_task->image->vaddr, current_task->image->length);
 
-			vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length);
+			vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+#ifdef SCHED_DEBUG
+			kprintf("clone: remap address space at 0x%x (%d Bytes)\n", current_task->image->vaddr, current_task->image->length);
+#endif
 		}
 	}
 
@@ -183,14 +187,6 @@ void task_switch(task_t* newtask) {
 	task_t* old = current_task;
 	current_task = newtask;
 
-#ifdef SCHED_TIMING_DEBUG
-	if(current_task->timing_tm != sys_time(NULL)) {
-		current_task->timing_tm = sys_time(NULL);
-
-		kprintf("task: [%d] %d %%\n", current_task->pid, (current_task->clock - current_task->timing_last_clock) / CLOCKS_PER_SEC * 100);
-		current_task->timing_last_clock = current_task->clock;
-	}
-#endif
 
 	vmm_switch(current_task->context.cr3);
 	
