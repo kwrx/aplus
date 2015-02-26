@@ -147,6 +147,7 @@ void schedule_signal(task_t* task, int sig) {
 }
 
 
+
 /**
  *	\brief Perform a scheduling and check TTL (Time To Live) for current task.
  */
@@ -160,9 +161,10 @@ void schedule() {
 
 	if(unlikely(current_task->signal_sig))
 		schedule_signal(current_task, current_task->signal_sig);
+	
 
 	current_task->clock += 1;
-	
+
 	if(likely(current_task->clock % current_task->priority))
 		return;
 
@@ -266,7 +268,7 @@ void schedule_release(task_t* task) {
 
 
 #ifdef SCHED_DEBUG
-	kprintf("task: released memory for %d Bytes\n", prevmm - h->used);
+	kprintf("task: released memory for %d of %d Bytes\n", task->pid, prevmm - h->used);
 #endif
 }
 
@@ -284,6 +286,9 @@ void schedule_exit2(task_t* task, int status) {
 	task->state = TASK_STATE_DEAD;
 	task->exitcode = status;
 	
+#ifdef SCHED_DEBUG
+	kprintf("task: exit with status %d for %d\n", status, task->pid);
+#endif
 		
 	schedule_release(task);
 }

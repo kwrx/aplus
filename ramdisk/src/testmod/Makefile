@@ -4,10 +4,11 @@ O 	:= testmod.k
 
 all: $(O)
 $(O):
-	$(MOD) *.c -o $@ -lposix -lc -lsys -lgcc
+	@$(MOD) *.c -o $@ -lposix -lc -lsys -lgcc
+
 clean:
-	-$(RM) $(O)
+	-@$(RM) $(O)
 
 install:
-	$(CP) $(O) $(PREFIX)/mod
+	@$(CP) $(O) $(PREFIX)/mod
 

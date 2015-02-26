@@ -189,11 +189,20 @@ int elf32_check(elf32_hdr_t* hdr, int type) {
 		return -1;
 	}
 
+#ifdef ELF_DEBUG
+	#define check(cond)											\
+		if(cond) {												\
+			kprintf("elf: condition \"%s\" failed\n", #cond);	\
+			errno = ENOEXEC;									\
+			return -1;											\
+		}
+#else
 	#define check(cond)				\
 		if(cond) {					\
 			errno = ENOEXEC;		\
 			return -1;				\
 		}
+#endif
 
 	check(
 		(hdr->e_ident[EI_MAG0] != ELF_MAG0) ||
@@ -273,7 +282,7 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 
 	elf32_hdr_t* hdr = (elf32_hdr_t*) image;
 
-	int iptr, isiz;
+	int iptr = 0, isiz = 0;
 	if(unlikely(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0))
 		panic("elf: cannot found a valid address space"); 
 
@@ -281,9 +290,9 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 	vmm_alloc(current_task->context.cr3, iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 	current_task->image->refcount++;
 
-	if(vaddr)
+	if(likely(vaddr))
 		*vaddr = iptr;
-	if(vsize)
+	if(likely(vsize))
 		*vsize = isiz;
 
 

@@ -24,7 +24,7 @@ clock_t sys_times(struct tms* tm) {
 	
 	task_t* child = (task_t*) schedule_child();
 	if(child)
-		tm->tms_cutime = current_task->clock + child->clock;
+		tm->tms_cutime = child->clock;
 	 else 
 		tm->tms_cutime = 0;
 

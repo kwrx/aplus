@@ -17,7 +17,6 @@
 
 
 #define MOD_PATH		"/dev/ramdisk/mod"
-#define async(x, y)		clone((int (*)(void*)) x, NULL, CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, (void*) y)
 
 int load_module(char* filename) {
 	char* args[2];
@@ -26,14 +25,12 @@ int load_module(char* filename) {
 
 
 	printf("init: loading %s\n", args[0]);
-	exit(execve(args[0], args, environ));
+	if(execve(args[0], args, environ) != 0)
+		printf("init: failed to execute module %s - %s\n", filename, strerror(errno));
+
+	exit(1);
 }
 
-
-int test0(void* unused) {
-	printf("test0: %d\n", getpid());
-	for(;;) sched_yield();
-}
 
 
 int main(int argc, char** argv) {
@@ -47,26 +44,13 @@ int main(int argc, char** argv) {
 
 		sprintf(buf, MOD_PATH "/%s", ent->d_name);
 
-		//async(load_module, buf);
+		clone((int (*)(void*)) load_module, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_PARENT, (void*) buf);
 	}
 
 	closedir(d);
 
 	printf("init: drivers loaded\n");
 
-	int i;
-	for(i = 0; i < 10; i++)
-		async(test0, NULL);
-
-	for(;;) {
-		int t0 = time(NULL);
-		double cs = clock();
-		while(t0 == time(NULL))
-			;//sched_yield();
-	
-		double ce = clock();
-		printf("init: cpu usage %g%%\n", (ce - cs) / CLOCKS_PER_SEC * 100.0);
-	}
-
+	for(;;) sched_yield();
 	return 0;
 }

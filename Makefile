@@ -1,21 +1,28 @@
 
 include Makefile.config
 
+# Kernel
+CFILES 		:= $(shell find src -type f -name "*.c")
+CXXFILES	:= $(shell find src -type f -name "*.cpp")
+AFILES		:= $(shell find src -type f -name "*.asm" -path */$(ARCH)/*)
+ASFILES		:= $(shell find src -type f -name "*.s" -path */$(ARCH)/*)
+HFILES		:= $(shell find src -type f -name "*.h")
 
-CFILES 	:= $(shell find src -type f -name "*.c")
-CXXFILES:= $(shell find src -type f -name "*.cpp")
-AFILES	:= $(shell find src -type f -name "*.asm" -path */$(ARCH)/*)
-ASFILES	:= $(shell find src -type f -name "*.s" -path */$(ARCH)/*)
-HFILES	:= $(shell find src -type f -name "*.h")
-
-SFILES 	:= $(CFILES) $(CXXFILES) $(AFILES) $(ASFILES)
-OFILES	:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.asm=.o) $(ASFILES:.s=.o)
+SFILES 		:= $(CFILES) $(CXXFILES) $(AFILES) $(ASFILES)
+OFILES		:= $(CFILES:.c=.o) $(CXXFILES:.cpp=.o) $(AFILES:.asm=.o) $(ASFILES:.s=.o)
 
 
 .PHONY: all clean git
 .SUFFIXES: .asm
 
 all: iso
+
+
+ramdisk: aplus
+	@cd ramdisk/src && $(MAKE) && $(MAKE) install
+
+ramdisk_clean:
+	@cd ramdisk/src && $(MAKE) clean
 
 aplus : $(OFILES)
 	@echo "  LD      " $@
@@ -48,13 +55,13 @@ aplus : $(OFILES)
 	@$(AS) $(ASFLAGS) $< -o $@
 	
 
-iso: aplus
+iso: ramdisk
 	@genisoimage -o $(TOP)/bin/initrd ramdisk
 	@grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
 	@$(RM) *.pcap
 	@$(VMM)
 
-clean:
+clean: ramdisk_clean
 	-@$(RM) $(OFILES)
 
 
