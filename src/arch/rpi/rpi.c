@@ -7,7 +7,7 @@ static void* __rpi_atags = NULL;
 static int __rpi_armtype = 0;
 
 
-int arch_init() {
+int arch_pre_init() {
 	serial_init();
 
 	rpi_parse_atags(__rpi_armtype, __rpi_atags);
@@ -17,6 +17,10 @@ int arch_init() {
 	lfb_init();
 	syscall_init();
 
+	return 0;
+}
+
+int arch_post_init() {
 #if HAVE_USB
 	usbd_init();
 #endif

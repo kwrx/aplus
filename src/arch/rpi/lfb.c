@@ -38,6 +38,9 @@ int lfb_init() {
 	mbd->lfb.base = mmio_r32(LFBIO_BASE + 32);
 	mbd->lfb.size = mmio_r32(LFBIO_BASE + 36);
 
+#ifdef DEBUG
+	memset((void*) mbd->lfb.base, 0xFF, mbd->lfb.size);
+#endif
 
 	kprintf("lfb: %dx%dx%d at 0x%x\n", mbd->lfb.width, mbd->lfb.height, mbd->lfb.depth, mbd->lfb.base);
 

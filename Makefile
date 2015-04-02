@@ -19,10 +19,10 @@ all: iso
 
 
 ramdisk: aplus
-	@cd ramdisk/src && $(MAKE) && $(MAKE) install
+	@-cd ramdisk/src && $(MAKE) && $(MAKE) install
 
 ramdisk_clean:
-	@cd ramdisk/src && $(MAKE) clean
+	@-cd ramdisk/src && $(MAKE) clean
 
 aplus : $(OFILES)
 	@echo "  LD      " $@

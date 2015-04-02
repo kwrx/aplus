@@ -4,12 +4,20 @@
 #include "i386.h"
 
 
-int arch_init() {
+int arch_pre_init() {
 	serial_init();
 	mm_init();
 	desc_init();
 	syscall_init();
 	pci_init();
+
+	return 0;
+}
+
+int arch_post_init() {
+#if HAVE_USB
+	//usbd_init();
+#endif
 
 	return 0;
 }

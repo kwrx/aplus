@@ -58,7 +58,7 @@ static void sysidle() {
  *	\brief Entry point for kernel.
  */
 int main() {
-	arch_init();
+	arch_pre_init();
 
 
 	vfs_init();
@@ -69,6 +69,7 @@ int main() {
 	netif_init();
 #endif
 
+	arch_post_init();
 	go_usermode();
 
 	struct utsname u;

@@ -1,9 +1,17 @@
-ARCH		:= i686
-CP			:= cp
-RM			:= rm
-CC			:= $(ARCH)-aplus-gcc
-LD			:= $(ARCH)-aplus-gcc
-DLL			:= $(ARCH)-aplus-gcc -shared
-MOD			:= $(ARCH)-aplus-gcc
+
+CC		:= $(TARGET)-gcc
+CXX		:= $(TARGET)-g++
+ASM		:= nasm
+AS		:= $(TARGET)-as
+
+LD		:= $(TARGET)-ld
+OBJCPY	:= $(TARGET)-objcopy
+
+ZIP		:= gzip -f
+CP		:= cp
+MV		:= mv
+
+DLL			:= $(CC) -shared
+MOD			:= $(CC)
 
 PREFIX		:= /opt/prj/aPlus/ramdisk
