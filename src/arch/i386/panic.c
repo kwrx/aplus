@@ -152,21 +152,14 @@ static void dump_mmu() {
  *	\brief Go in Kernel Panic, dump exception registers, halt system.
  */
 void arch_panic(char* msg, regs_t* r) {
-	__asm__ ("cli");
+	schedule_disable();
 
+	
+#undef DEBUG
 #ifdef DEBUG
 
-	static int halted = 0;
-	if(halted) {
-		kprintf("aplus: PANIC! \"Double fault\"\nSystem halted\n");
-		for(;;);
-	}
-	halted = 1;
+	kprintf("aplus: PANIC! \"%s\"\n", msg);
 
-	
-	kprintf("\naplus: PANIC! \"%s\"\n", msg);
-	
-	
 	dump_task();
 	dump_errno();
 	dump_mmu();
@@ -177,7 +170,8 @@ void arch_panic(char* msg, regs_t* r) {
 
 #endif
 
-
+	
+	schedule_enable();
 	sys_exit(-1);
 	//sys_kill(getpid(), SIGABRT);
 }

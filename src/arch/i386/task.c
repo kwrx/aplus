@@ -109,9 +109,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 		child->image = (task_image_t*) kmalloc(sizeof(task_image_t));
 		memset(child->image, 0, sizeof(task_image_t));
 
-		child->context.cr3 = vmm_create();
-		vmm_mapkernel(child->context.cr3);
-
+		child->context.cr3 = vmm_clone(NULL, current_task->context.cr3);
 
 		if(current_task->image->vaddr && current_task->image->length) {
 			void* addr = (void*) kvmalloc(current_task->image->length);
@@ -147,20 +145,14 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 		if(child == current_task)
 			return child;
 
-		child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
-		child->context.env = (task_env_t*) ((((uint32_t) stack - TASK_STACKSIZE) & ~0xFFF) + ((uint32_t) current_task->context.env & 0xFFF)); 
+		child->context.stack = current_task->context.stack;
+		child->context.env = current_task->context.env;
 
-		memcpy((void*) child->context.stack, (void*) current_task->context.stack, TASK_STACKSIZE);
-		memcpy((void*) child->context.env, (void*) current_task->context.env, sizeof(task_env_t));
-
-		int i = 0;
-		for(uint32_t* s = (uint32_t*) child->context.stack; i < TASK_STACKSIZE; s++, i += sizeof(uint32_t))
-			if((*s & ~0xFFF) == current_task->context.stack)
-				*s = ((uint32_t) child->context.stack & ~0xFFF) + (*s & 0xFFF);
 
 		child->context.env->eax = (uint32_t) arg;
 		child->context.env->eip = (uint32_t) entry;
-		child->context.env->ebp = (uint32_t) child->context.env; 
+		child->context.env->ebp = (uint32_t) child->context.env;
+
 
 	} else {
 		child->context.stack = (uint32_t) stack - TASK_STACKSIZE;

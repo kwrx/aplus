@@ -29,7 +29,8 @@ int pipe_read(inode_t* inode, char* ptr, int len) {
 	pipeinfo_t* pipe = inode->userdata;
 	shm_chunk_t* chunk = (shm_chunk_t*) pipe->stream;
 
-	spinlock_waiton(pipe->read_offset + len > pipe->write_offset);
+	while(pipe->read_offset + len > pipe->write_offset)
+		schedule_yield();
 	
 	int p;
 	for(p = 0; p < (len / pipe->size); p++) {

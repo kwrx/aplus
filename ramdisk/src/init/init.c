@@ -34,6 +34,11 @@ int load_module(char* filename) {
 
 
 int main(int argc, char** argv) {
+
+	int ret = fork();
+	printf("\n\n\n\n\n\nfork() -> %d from %d\n", ret, getpid());
+	for(;;);
+
 	DIR* d = opendir(MOD_PATH);
 	assert(d);
 
@@ -45,6 +50,10 @@ int main(int argc, char** argv) {
 		sprintf(buf, MOD_PATH "/%s", ent->d_name);
 
 		clone((int (*)(void*)) load_module, NULL, CLONE_FS | CLONE_FILES | CLONE_SIGHAND | CLONE_PARENT, (void*) buf);
+		/*
+			if(fork())
+				load_module(buf);
+		*/
 	}
 
 	closedir(d);

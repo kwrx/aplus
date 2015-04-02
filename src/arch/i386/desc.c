@@ -221,7 +221,7 @@ void pagefault_handler(regs_t* r) {
 	uint32_t faultaddr;
 	__asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
 
-	kprintf("Page fault at address: 0x%x (%x, %s, %s, %s, %s, %s)\n",
+	kprintf("mmu: Page fault at 0x%x (%x, %s, %s, %s, %s, %s)\n",
 		faultaddr,
 		r->err_code,
 		r->err_code & 0x01 ? "P" : "N/A",
@@ -231,7 +231,7 @@ void pagefault_handler(regs_t* r) {
 		r->err_code & 0x10 ? "I/D" : "\b\b" 
 	);
 
-	arch_panic("Page Fault", r);
+	arch_panic("Page fault", r);
 }
 
 

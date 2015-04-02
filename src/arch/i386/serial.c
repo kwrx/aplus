@@ -13,12 +13,15 @@ static uint16_t serial[] = {
 };
 
 void serial_send(uint8_t port, uint8_t value) {
-	fastlock_waiton(((inb(serial[port] + 5) & 32) == 0));
+	while(((inb(serial[port] + 5) & 32) == 0))
+		cpu_wait();
+
 	outb(serial[port], value);
 }
 
 uint8_t serial_recv(uint8_t port) {
-	fastlock_waiton((inb(serial[port] + 5) & 1) == 0);
+	while((inb(serial[port] + 5) & 1) == 0)
+		cpu_wait();
 	
 	return inb(serial[port]);
 }

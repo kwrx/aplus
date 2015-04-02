@@ -2,16 +2,16 @@
 #define _APLUS_CONFIG_H
 
 #define DEBUG
-#define NETIF_DEBUG
-#define SOCKET_DEBUG
+//#define NETIF_DEBUG
+//#define SOCKET_DEBUG
 //#define PCI_DEBUG
 //#define SYSCALL_DEBUG
-#define ELF_DEBUG
-#define SCHED_DEBUG
+//#define ELF_DEBUG
+//#define SCHED_DEBUG
 //#define SHM_DEBUG
-#define SBRK_DEBUG
-#define IO_DEBUG
-#define MM_DEBUG
+//#define SBRK_DEBUG
+//#define IO_DEBUG
+//#define MM_DEBUG
 
 
 #ifdef __i386__
@@ -60,7 +60,12 @@
 #define KERNEL_VERSION_CODENAME		"TheRev"
 #define KERNEL_VERSION_DATE			__DATE__
 #define KERNEL_VERSION_TIME			__TIME__
+
+#ifdef __GNUC__
 #define KERNEL_VERSION_COMPILER		"gcc " __VERSION__
+#else
+#define KERNEL_VERSION_COMPILER		"unknown compiler"
+#endif
 
 
 #endif

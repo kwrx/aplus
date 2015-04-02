@@ -60,6 +60,7 @@ __attribute__((aligned(0x1000)))
 static uint32_t __kvmm[PDSIZE];
 
 
+
 void vmm_switch(uint32_t* addr) {
 	current_vmm = addr;
 	
@@ -173,6 +174,9 @@ void vmm_free(uint32_t* vmm, void* vaddr, size_t size) {
 }
 
 void vmm_mapkernel(uint32_t* dest) {
+	memcpy(dest, kernel_vmm, PDSIZE * sizeof(uint32_t));
+
+	/*
 	// Map low area (Kernel reserved)
 	//if(unlikely(dest == kernel_vmm))
 		vmm_map(dest, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
@@ -184,6 +188,7 @@ void vmm_mapkernel(uint32_t* dest) {
 
 	// Map Linear Frame Buffer
 	vmm_map(dest, (void*) mbd->lfb.base, (void*) mbd->lfb.base, mbd->lfb.size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	*/
 }
 
 
@@ -202,12 +207,65 @@ void vmm_destroy(uint32_t* vmm) {
 	memset(vmm, 0, PDSIZE * sizeof(uint32_t));
 }
 
+
+
+
+
+
+static uint32_t __clone_table(uint32_t* tsrc) {
+	uint32_t* tdst = (uint32_t*) kmalloc(PTSIZE * sizeof(uint32_t));
+	memset(tdst, 0, PTSIZE * sizeof(uint32_t));
+
+	for(int i = 0; i < 1024; i++) {
+		if(likely(tsrc[i])) {
+			tdst[i] = (uint32_t) halloc(current_heap, PTSIZE * sizeof(uint32_t));
+			if(unlikely(!tdst[i])) {
+				kprintf("__clone_table(): cannot allocate more table\n");
+				return 0;
+			}
+
+
+			if(likely(current_vmm))
+				vmm_map(current_vmm, (uint32_t*) tdst[i], (uint32_t*) tdst[i], PTSIZE * sizeof(uint32_t), VMM_FLAGS_DEFAULT);
+			
+			memcpy(tdst[i], tsrc[i] & VMM_MASK, PTSIZE * sizeof(uint32_t));
+			tdst[i] |= tsrc[i] & ~(VMM_MASK);
+		}
+	}
+
+	return (uint32_t) tdst;
+}
+
+uint32_t* vmm_clone(uint32_t* dest, uint32_t* src) {
+	if(!dest)
+		dest = vmm_create();
+	
+	for(int i = 0; i < 1024; i++) {
+		if(src[i] == 0)
+			continue;
+
+		if(src[i] == kernel_vmm[i])
+			dest[i] = src[i];
+		else
+			dest[i] = __clone_table((uint32_t*) (src[i] & VMM_MASK)) | (src[i] & ~(VMM_MASK));
+	}
+
+	return dest;
+}
+
+
+
 int vmm_init() {
 
 	kernel_vmm = __kvmm;
 	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
+
+	vmm_map(kernel_vmm, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	vmm_map(kernel_vmm, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	vmm_map(kernel_vmm, (void*) mbd->lfb.base, (void*) mbd->lfb.base, mbd->lfb.size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
 	
-	vmm_mapkernel(kernel_vmm);
+	//vmm_mapkernel(kernel_vmm);
 	vmm_switch(kernel_vmm);
 	vmm_enable();
 

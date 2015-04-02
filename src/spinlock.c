@@ -30,13 +30,22 @@
  */
 void spinlock_lock(spinlock_t* spin) {
 #if HAVE_LOCK
-	if(unlikely((*spin & SPINLOCK_FLAGS_FASTLOCK) == 0))
-		spinlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
-	else
-		fastlock_waiton(*spin & SPINLOCK_FLAGS_LOCKED);
-#endif
+	spinlock_waiton(spin);
 
-	*spin |= SPINLOCK_FLAGS_LOCKED;
+	__sync_lock_test_and_set(spin, SPINLOCK_FLAGS_LOCKED);
+#endif
+}
+
+/**
+ *	\brief Acquire a fastlock.
+ *	\param spin Spinlock address.
+ */
+void fastlock_lock(spinlock_t* spin) {
+#if HAVE_LOCK
+	fastlock_waiton(spin);
+
+	__sync_lock_test_and_set(spin, SPINLOCK_FLAGS_LOCKED);
+#endif
 }
 
 
@@ -45,7 +54,19 @@ void spinlock_lock(spinlock_t* spin) {
  *	\param spin Spinlock address.
  */
 void spinlock_unlock(spinlock_t* spin) {
-	*spin &= ~SPINLOCK_FLAGS_LOCKED;
+#if HAVE_LOCK
+	__sync_lock_release(spin);
+#endif
+}
+
+/**
+ *	\brief Unlock a fastlock.
+ *	\param spin Spinlock address.
+ */
+void fastlock_unlock(spinlock_t* spin) {
+#if HAVE_LOCK
+	__sync_lock_release(spin);
+#endif
 }
 
 
@@ -56,11 +77,24 @@ void spinlock_unlock(spinlock_t* spin) {
  */
 int spinlock_trylock(spinlock_t* spin) {
 #if HAVE_LOCK
-	if(unlikely(*spin & SPINLOCK_FLAGS_LOCKED))
+	if(unlikely(!__sync_bool_compare_and_swap(spin, SPINLOCK_FLAGS_UNLOCKED, SPINLOCK_FLAGS_LOCKED)))
 		return -1;
 #endif
 
-	*spin |= SPINLOCK_FLAGS_LOCKED;
+	return 0;
+}
+
+/**
+ *	\brief Try to acquire a fastlock
+ *	\param spin Spinlock address.
+ *	\return 0 for success else -1.
+ */
+int fastlock_trylock(spinlock_t* spin) {
+#if HAVE_LOCK
+	if(unlikely(!__sync_bool_compare_and_swap(spin, SPINLOCK_FLAGS_UNLOCKED, SPINLOCK_FLAGS_LOCKED)))
+		return -1;
+#endif
+
 	return 0;
 }
 

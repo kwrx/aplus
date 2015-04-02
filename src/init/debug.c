@@ -1,6 +1,7 @@
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
+static spinlock_t debug_lock;
 
 /**
  *	\brief Send a character to serial debug port.
@@ -17,12 +18,12 @@ void debug_putc(char ch) {
  *	\see debug_putc
  */
 void debug_puts(char* str) {
-	lock();
+	spinlock_lock(&debug_lock);
 	
 	while(*str)
 		debug_putc(*str++);
 	
-	unlock();
+	spinlock_unlock(&debug_lock);
 }
 
 

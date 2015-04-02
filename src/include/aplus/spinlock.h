@@ -23,33 +23,42 @@
 #ifndef _SPINLOCK_H
 #define _SPINLOCK_H
 
+#define SPINLOCK_FLAGS_UNLOCKED						0
 #define SPINLOCK_FLAGS_LOCKED						1
-#define SPINLOCK_FLAGS_FASTLOCK						2
 
 typedef volatile int spinlock_t;
+#define fastlock_t spinlock_t
 
 void spinlock_lock(spinlock_t* spin);
 void spinlock_unlock(spinlock_t* spin);
 int spinlock_trylock(spinlock_t* spin); 
+
+void fastlock_lock(spinlock_t* spin);
+void fastlock_unlock(spinlock_t* spin);
+int fastlock_trylock(spinlock_t* spin); 
+
 void __spinlock_waiton();
 void __fastlock_waiton();
 
 
-#define lock()										\
-	static spinlock_t __func__##_lock = 0;			\
-	spinlock_lock(&__func__##_lock)
-	
-#define unlock()									\
-	spinlock_unlock(&__func__##_lock)
-	
-	
-
 #define spinlock_waiton(cond)						\
-	while(cond)										\
+	while(											\
+			!__sync_bool_compare_and_swap(			\
+				cond,								\
+				SPINLOCK_FLAGS_UNLOCKED,			\
+				SPINLOCK_FLAGS_LOCKED				\
+			)										\
+	)												\
 		__spinlock_waiton()
 
 #define fastlock_waiton(cond)						\
-	while(cond)										\
+	while(											\
+			!__sync_bool_compare_and_swap(			\
+				cond,								\
+				SPINLOCK_FLAGS_UNLOCKED,			\
+				SPINLOCK_FLAGS_LOCKED				\
+			)										\
+	)												\
 		__fastlock_waiton()
 
 

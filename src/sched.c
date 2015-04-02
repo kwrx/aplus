@@ -208,7 +208,9 @@ int schedule_wait(task_t* child) {
 	if(unlikely(!child))
 		return -1;
 		
-	spinlock_waiton(child->state != TASK_STATE_DEAD);
+	while(child->state != TASK_STATE_DEAD)
+		schedule_yield();
+
 	return child->exitcode;
 }
 
@@ -280,6 +282,9 @@ void schedule_release(task_t* task) {
 void schedule_exit2(task_t* task, int status) {
 	if(unlikely(!task))
 		return;
+
+	if(unlikely(kernel_task == current_task))
+		__builtin_unreachable();
 		
 	list_remove(task_queue, (listval_t) task);
 		

@@ -194,7 +194,8 @@ int tty_read(inode_t* ino, char* ptr, int size) {
 	}
 
 	spinlock_lock(&tty->lock);
-	spinlock_waiton(size > tty->isize);
+	while(size > tty->isize)
+		schedule_yield();
 
 	memcpy(ptr, tty->ibuffer, tty->isize);
 	tty->isize -= size;
