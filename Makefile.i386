@@ -2,5 +2,5 @@
 VMM			:= qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump
 #VMM		:= bochs -f bochs.conf
 
-CFLAGS	+= -masm=intel -mfpmath=sse -msse2 -Ofast
+CFLAGS	+= -masm=intel -mfpmath=sse -msse2 -Ofast -I $(TOP)/src/include/arch/i386/acpi
 LIBS	:= -ldisasm -lc -lm -lsys -lgcc

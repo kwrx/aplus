@@ -2,6 +2,7 @@
 #define _APLUS_CONFIG_H
 
 #define DEBUG
+#define ACPI_DEBUG
 //#define NETIF_DEBUG
 //#define SOCKET_DEBUG
 //#define PCI_DEBUG

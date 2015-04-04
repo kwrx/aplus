@@ -6,6 +6,7 @@
 
 int arch_pre_init() {
 	serial_init();
+	acpi_init();
 	mm_init();
 	desc_init();
 	syscall_init();
