@@ -6,7 +6,6 @@
 
 int arch_pre_init() {
 	serial_init();
-	acpi_init();
 	mm_init();
 	desc_init();
 	syscall_init();
@@ -24,6 +23,11 @@ int arch_post_init() {
 }
 
 
+
+void cpu_halt() {
+	__asm__ ("cli; hlt;");
+}
+
 void cpu_idle() {
 	__asm__ ("pause; hlt;");
 }
@@ -31,5 +35,10 @@ void cpu_idle() {
 void cpu_wait() {
 	__asm__ ("pause");
 }
+
+
+EXPORT_SYMBOL(cpu_halt);
+EXPORT_SYMBOL(cpu_idle);
+EXPORT_SYMBOL(cpu_wait);
 
 #endif

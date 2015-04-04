@@ -7,4 +7,4 @@ void panic(char* msg) {
 	arch_panic(msg, NULL);
 }
 
-
+EXPORT_SYMBOL(panic);

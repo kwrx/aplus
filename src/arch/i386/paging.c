@@ -272,5 +272,10 @@ int vmm_init() {
 	return 0;
 }
 
+
+EXPORT_SYMBOL(vmm_alloc);
+EXPORT_SYMBOL(vmm_free);
+EXPORT_SYMBOL(vmm_clone);
+
 #endif
 

@@ -181,6 +181,10 @@ void vmm_destroy(uint32_t* vmm) {
 }
 
 
+uint32_t* vmm_clone(uint32_t* dest, uint32_t* src) {
+	return NULL;
+}
+
 void vmm_switch(uint32_t* vmm) {
 	__asm__ __volatile__ ("mcr p15, 0, %0, c2, c0, 0" : : "r"(vmm));
 	inv_tlb();
@@ -223,5 +227,9 @@ int vmm_init() {
 	return 0;
 }
 
+
+EXPORT_SYMBOL(vmm_alloc);
+EXPORT_SYMBOL(vmm_free);
+EXPORT_SYMBOL(vmm_clone);
 
 #endif

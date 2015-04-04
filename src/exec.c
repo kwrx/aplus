@@ -410,5 +410,5 @@ int exec_init_kernel_task(task_t* k) {
 	return 0;
 }
 
-
+EXPORT_SYMBOL(elf_symbol_lookup);
 

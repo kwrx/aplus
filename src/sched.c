@@ -399,3 +399,8 @@ int schedule_append_fd(task_t* t, inode_t* ino) {
 	return -1;
 }
 
+
+EXPORT_SYMBOL(im_superuser);
+EXPORT_SYMBOL(schedule_enable);
+EXPORT_SYMBOL(schedule_disable);
+

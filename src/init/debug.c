@@ -204,3 +204,5 @@ void kprintf(char* fmt, ...) {
 }
 
 
+EXPORT_SYMBOL(kprintf);
+

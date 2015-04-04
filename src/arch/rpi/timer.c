@@ -15,6 +15,8 @@ uint32_t timer_getfreq() {
 	return TIMER_FREQ;
 }
 
-
+EXPORT_SYMBOL(timer_gettime);
+EXPORT_SYMBOL(timer_getticks);
+EXPORT_SYMBOL(timer_getfreq);
 
 #endif

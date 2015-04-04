@@ -19,15 +19,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#include <sys/types.h>
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
-
 #include <aplus.h>
 #include <aplus/mm.h>
 #include <aplus/list.h>
 #include <aplus/task.h>
+
+#include <sys/types.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <string.h>
 
 #include <errno.h>
 
@@ -189,3 +189,8 @@ int mm_init() {
 
 	return 0;
 }
+
+
+EXPORT_SYMBOL(kmalloc);
+EXPORT_SYMBOL(krealloc);
+EXPORT_SYMBOL(kfree);

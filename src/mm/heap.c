@@ -22,6 +22,7 @@
 #include <stddef.h>
 #include <sys/types.h>
 
+#include <aplus.h>
 #include <aplus/mm.h>
 
 

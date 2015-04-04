@@ -43,4 +43,8 @@ uint8_t serial_recv(uint8_t ch) {
 	return (uint8_t) mmio_r32(UART_DR(UART0));
 }
 
+
+EXPORT_SYMBOL(serial_send);
+EXPORT_SYMBOL(serial_recv);
+
 #endif

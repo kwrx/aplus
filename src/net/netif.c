@@ -306,4 +306,10 @@ netif_t* netif_get_interface(int index) {
 	return (netif_t*) list_at_index(lst_netif, index);
 }
 
-
+EXPORT_SYMBOL(netif_add);
+EXPORT_SYMBOL(netif_remove);
+EXPORT_SYMBOL(netif_ifup);
+EXPORT_SYMBOL(netif_ifdown);
+EXPORT_SYMBOL(netif_packet_push);
+EXPORT_SYMBOL(netif_packet_pop);
+EXPORT_SYMBOL(netif_get_interface);

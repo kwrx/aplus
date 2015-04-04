@@ -106,4 +106,6 @@ inode_t* mkramdev(char* path, uint32_t addr, uint32_t size) {
 	return ino;
 }
 
+EXPORT_SYMBOL(mkramdev);
+
 

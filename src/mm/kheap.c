@@ -24,6 +24,7 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <aplus.h>
 #include <aplus/mm.h>
 
 #define BITMAP_SET(bmp, bit)	\

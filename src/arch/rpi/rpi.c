@@ -34,6 +34,10 @@ void go_usermode() {
 }
 
 
+void cpu_halt() {
+	for(;;);
+}
+
 void cpu_idle() {
 	__asm__ __volatile__ ("nop");
 }
@@ -48,5 +52,9 @@ void rpi_save_args(int unused, int armtype, void* atags) {
 	__rpi_armtype = armtype;
 }
 
+
+EXPORT_SYMBOL(cpu_halt);
+EXPORT_SYMBOL(cpu_idle);
+EXPORT_SYMBOL(cpu_wait);
 
 #endif

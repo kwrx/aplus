@@ -40,4 +40,8 @@ int serial_init() {
 	return 0;
 }
 
+
+EXPORT_SYMBOL(serial_send);
+EXPORT_SYMBOL(serial_recv);
+
 #endif

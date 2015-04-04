@@ -19,14 +19,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#ifndef _LIST_H
-#define _LIST_H
+#ifndef _ALIST_H
+#define _ALIST_H
 
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/types.h>
 
 #if defined(__aplus__)
+
+
+#include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/mm.h>
 
@@ -38,6 +41,8 @@
 #define __list_lock_t			spinlock_t
 
 #endif
+
+
 
 typedef uint32_t listval_t;
 
@@ -53,6 +58,8 @@ typedef struct list {
 	__list_lock_t lock;
 	size_t size;
 } list_t;
+
+
 
 
 

@@ -19,16 +19,15 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program. If not, see <http://www.gnu.org/licenses/>.
 
+#include <aplus.h>
+#include <aplus/fs.h>
+#include <aplus/task.h>
 
 #include <stdint.h>
 #include <stddef.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
-
-#include <aplus.h>
-#include <aplus/fs.h>
-#include <aplus/task.h>
 
 #include <errno.h>
 

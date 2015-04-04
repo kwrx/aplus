@@ -29,6 +29,8 @@
 #include <string.h>
 #include <config.h>
 
+
+
 typedef struct bootargs {
 	struct {
 		uint64_t size;
@@ -88,4 +90,23 @@ extern bootargs_t* mbd;
 #endif
 
 
+#include <aplus/attribute.h>
+
+/* EXPORT_SYMBOL_AS(kprintf, "printf"); */
+#define EXPORT_SYMBOL_AS(x, y)					\
+	struct {									\
+		char* name;								\
+		void* address;							\
+	} __packed __EXPORTED_##x = {				\
+		(char*) y, 								\
+		(void*) x								\
+	}; ATTRIBUTE("exports", __EXPORTED_##x)
+
+/* EXPORT_SYMBOL(kprintf); */
+#define EXPORT_SYMBOL(x)						\
+	EXPORT_SYMBOL_AS(x, #x)
+
+
+
+#define APLUS_HEADER_INCLUDED					1
 #endif

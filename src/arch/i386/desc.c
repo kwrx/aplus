@@ -471,4 +471,9 @@ void go_usermode() {
 
 }
 
+
+EXPORT_SYMBOL(timer_gettime);
+EXPORT_SYMBOL(timer_getticks);
+EXPORT_SYMBOL(timer_getfreq);
+
 #endif

@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdint.h>
+#include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/list.h>
 
@@ -114,3 +115,13 @@ void __spinlock_waiton() {
 void __fastlock_waiton() {
 	cpu_wait();
 }
+
+
+EXPORT_SYMBOL(spinlock_lock);
+EXPORT_SYMBOL(fastlock_lock);
+
+EXPORT_SYMBOL(spinlock_trylock);
+EXPORT_SYMBOL(fastlock_trylock);
+
+EXPORT_SYMBOL(spinlock_unlock);
+EXPORT_SYMBOL(fastlock_unlock);

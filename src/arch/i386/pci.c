@@ -188,4 +188,6 @@ int pci_init() {
 }
 
 
+EXPORT_SYMBOL(pci_find_by_id);
+
 #endif
