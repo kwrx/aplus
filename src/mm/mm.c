@@ -83,6 +83,10 @@ void* kmalloc(size_t size) {
 }
 
 
+void* malloc(size_t size) {
+	return kmalloc(size);
+}
+
 void* kvmalloc(size_t size) {
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(unlikely(!addr))
@@ -116,6 +120,10 @@ void kfree(void* ptr) {
 	hfree(current_heap, mm_paddr(mm_align(ptr)), size + sizeof(block_t));
 }
 
+
+void free(void* ptr) {
+	kfree(ptr);
+}
 
 /**
  *	\brief Realloc memory from Kernel Heap.

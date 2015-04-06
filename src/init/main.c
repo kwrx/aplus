@@ -109,8 +109,9 @@ int main() {
 
 
 
+	init_modules();
 
-	
+#if 0
 	char* __argv[] = {
 		"/dev/ramdisk/bin/init",
 		NULL
@@ -130,9 +131,9 @@ int main() {
 	};
 
 
-	//if(sys_fork() == 0)
+	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
-
+#endif
 	
 	sysidle();
 }

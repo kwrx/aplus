@@ -19,7 +19,8 @@ typedef struct __syscall {
 	static syscall_t syscall_##n = {										\
 		(void*) h, (int) n													\
 	}; 																		\
-	ATTRIBUTE("syscall", syscall_##n)
+	ATTRIBUTE("syscall", syscall_##n);										\
+	EXPORT_SYMBOL(h)
 
 
 #endif

@@ -21,8 +21,14 @@ all: iso
 ramdisk: aplus
 	@-cd ramdisk/src && $(MAKE) && $(MAKE) install
 
+modules: aplus
+	@-cd modules && $(MAKE) && $(MAKE) install
+
 ramdisk_clean:
 	@-cd ramdisk/src && $(MAKE) clean
+
+modules_clean:
+	@-cd modules && $(MAKE) clean
 
 aplus : $(OFILES)
 	@echo "  LD      " $@
@@ -55,13 +61,13 @@ aplus : $(OFILES)
 	@$(AS) $(ASFLAGS) $< -o $@
 	
 
-iso: ramdisk
+iso: ramdisk modules
 	@genisoimage -o $(TOP)/bin/initrd ramdisk
 	@grub-mkrescue $(TOP)/bin -o $(TOP)/aplus.iso
 	@$(RM) *.pcap
 	@$(VMM)
 
-clean: ramdisk_clean
+clean: ramdisk_clean modules_clean
 	-@$(RM) $(OFILES)
 
 

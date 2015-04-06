@@ -20,6 +20,8 @@ extern list_t* task_queue;
 extern task_t* current_task;
 extern task_t* kernel_task;
 
+#undef DEBUG
+#ifdef DEBUG
 
 /**
  *	\brief Print last error number.
@@ -146,7 +148,7 @@ static void dump_mmu() {
 
 }
 
-
+#endif
 
 /**
  *	\brief Go in Kernel Panic, dump exception registers, halt system.
@@ -154,8 +156,7 @@ static void dump_mmu() {
 void arch_panic(char* msg, regs_t* r) {
 	schedule_disable();
 
-	
-#undef DEBUG
+
 #ifdef DEBUG
 
 	kprintf("aplus: PANIC! \"%s\"\n", msg);

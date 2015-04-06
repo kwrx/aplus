@@ -17,19 +17,8 @@ extern inode_t* vfs_root;
 extern task_t* current_task;
 
 
-inode_t* devfs; 
+inode_t* devfs = NULL; 
 
-
-inode_t* devfs_getdevice(dev_t dev) {
-	int index = 0;
-	inode_t* map = NULL;
-
-	while((map = (inode_t*) vfs_mapped_at_index(devfs, index++)) != NULL)
-		if(map->ino == dev)
-			return map;
-	
-	return NULL;
-}
 
 
 struct inode* devfs_creat (struct inode* inode, char* name, mode_t mode) {
@@ -102,3 +91,30 @@ inode_t* devfs_mount() {
 	
 	return devfs;
 }
+
+
+
+
+
+
+
+inode_t* devfs_getdevice(dev_t dev) {
+	int index = 0;
+	inode_t* map = NULL;
+
+	while((map = (inode_t*) vfs_mapped_at_index(devfs, index++)) != NULL)
+		if(map->ino == dev)
+			return map;
+	
+	return NULL;
+}
+
+inode_t* devfs_makedevice(char* name, mode_t mode) {
+	return devfs_creat(devfs, name, mode);
+}
+
+
+
+
+EXPORT_SYMBOL(devfs_getdevice);
+EXPORT_SYMBOL(devfs_makedevice);

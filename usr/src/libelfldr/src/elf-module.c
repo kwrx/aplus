@@ -69,10 +69,10 @@ static int elf_module_link(elf_module_t *elf, elf_module_link_cbs_t *cbs)
     for (sym = &symtab[1]; sym < end; sym++) {
 	switch (sym->st_shndx) {
 	case SHN_COMMON:    
-		break;
+		continue;
 
 	case SHN_ABS:
-	    break;
+	    continue;
 	
 	case SHN_UNDEF:
 	    /* resolve external symbol */

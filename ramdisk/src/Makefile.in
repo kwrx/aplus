@@ -1,4 +1,6 @@
 
+TARGET	:= i686-aplus
+
 CC		:= $(TARGET)-gcc
 CXX		:= $(TARGET)-g++
 ASM		:= nasm
@@ -12,6 +14,6 @@ CP		:= cp
 MV		:= mv
 
 DLL			:= $(CC) -shared
-MOD			:= $(CC)
+MOD			:= $(CC) -r -s -fno-common -nostdlib
 
 PREFIX		:= /opt/prj/aPlus/ramdisk

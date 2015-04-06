@@ -14,7 +14,7 @@
 extern task_t* current_task;
 
 
-static int __sock_read(inode_t* ino, void* buf, int size) {
+static int __sock_read(inode_t* ino, char* buf, int size) {
 	if(unlikely(!ino || !buf || !size || !ino->userdata)) {
 		errno = EINVAL;
 		return 0;
@@ -37,7 +37,7 @@ static int __sock_read(inode_t* ino, void* buf, int size) {
 	return i;
 }
 
-static int __sock_write(inode_t* ino, void* buf, int size) {
+static int __sock_write(inode_t* ino, char* buf, int size) {
 	if(unlikely(!ino || !buf || !size || !ino->userdata)) {
 		errno = EINVAL;
 		return 0;

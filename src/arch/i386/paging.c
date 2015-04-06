@@ -228,7 +228,7 @@ static uint32_t __clone_table(uint32_t* tsrc) {
 			if(likely(current_vmm))
 				vmm_map(current_vmm, (uint32_t*) tdst[i], (uint32_t*) tdst[i], PTSIZE * sizeof(uint32_t), VMM_FLAGS_DEFAULT);
 			
-			memcpy(tdst[i], tsrc[i] & VMM_MASK, PTSIZE * sizeof(uint32_t));
+			memcpy((void*) tdst[i], (void*) (tsrc[i] & VMM_MASK), PTSIZE * sizeof(uint32_t));
 			tdst[i] |= tsrc[i] & ~(VMM_MASK);
 		}
 	}

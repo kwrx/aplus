@@ -1,6 +1,8 @@
 #include <aplus.h>
 #include <aplus/mm.h>
 #include <aplus/task.h>
+#include <aplus/attribute.h>
+#include <aplus/elf.h>
 
 #include <stdint.h>
 #include <errno.h>
@@ -22,8 +24,6 @@ typedef uint32_t Elf32_Word;
 #define ET_EXEC				2
 #define ET_DYN				3
 #define ET_CORE				4
-#define ET_LOPROC			0xFF00
-#define ET_HIPROC			0xFFFF
 
 #define EI_NIDENT			16
 #define EI_MAG0				0
@@ -60,18 +60,9 @@ typedef uint32_t Elf32_Word;
 #define SHT_SHLIB			10
 #define SHT_DYNSYM			11
 
-#define SHF_WRITE			1
-#define SHF_ALLOC			2
-#define SHF_EXECINSTR		4
 #define SHF_MASK			0xF0000000
 
 #define SHN_UNDEF			0
-#define SHN_LORESERVE		0xFF00
-#define SHN_LOPROC			0xFF00
-#define SHN_HIPROC			0xFF1F
-#define SHN_ABS				0xFFF1
-#define SHN_COMMON			0xFFF2
-#define SHN_HIRESERVE		0xFFFF
 
 #define STB_LOCAL			0
 #define STB_GLOBAL			1
@@ -176,13 +167,124 @@ typedef struct elf32_sym_t {
 	Elf32_Half st_shndx;
 } elf32_sym_t;
 
+
+
+
+
+static int elf_define_symbol(elf_module_t* elf, char* name, void* addr) {
+	symbol_t* sym = elf->symbols;
+	while(sym) {
+		if(strcmp(sym->name, name) == 0) {
+#ifdef ELF_DEBUG
+			kprintf("elf: WARNING! symbol %s already defined at 0x%x\n", name, sym->addr);
+#endif
+		}
+
+		sym = sym->next;
+	}
+
+	sym = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1);
+	strcpy(sym->name, name);
+	sym->addr = addr;
+	sym->next = elf->symbols;
+	elf->symbols = sym;
+
+
+	return 0;
+}
+
+
+static void* elf_resolve_symbol(elf_module_t* elf, char* name) {
+	symbol_t* sym = elf->symbols;	
+	while(sym) {
+		if(strcmp(sym->name, name) == 0)
+			return sym->addr;
+
+		sym = sym->next;
+	}
+
+
+	kprintf("elf: could not resolve \"%s\"\n", name);
+
+	return NULL;
+}
+
+
+static int elf_load_module(elf_module_t* elf, void* image, int size, char* start) {
+
+	elf_module_link_cbs_t lnk = {
+		.resolve = elf_resolve_symbol,
+		.define = elf_define_symbol
+	};
+
+
+	int e;
+	if((e = elf_module_init(elf, image, size)) < 0) {
+#ifdef ELF_DEBUG
+		kprintf("elf: elf_module_init() failed with -%d\n", -e);
+#endif
+		errno = ENOEXEC;
+		return -1;
+	}
+	
+
+	void* core = (void*) kmalloc(size);
+	if(!core) {
+#ifdef ELF_DEBUG
+		kprintf("elf: cannot alloc memory for module\n");
+#endif
+		errno = ENOMEM;
+		return -1;
+	}
+
+
+	if((e = elf_module_load(elf, core, &lnk)) < 0) {
+#ifdef ELF_DEBUG
+		kprintf("elf: elf_module_load() failed with -%d\n", -e);
+#endif
+		errno = ENOEXEC;
+		return -1;
+	}
+
+
+	elf->start = elf_resolve_symbol(elf, start);
+	kfree(image);
+
+#ifdef ELF_DEBUG
+	kprintf("elf: resolved entry %s at 0x%x\n", start, elf->start);
+#endif
+
+	return 0;
+}
+
+
+
+static int elf_load_ksyms(elf_module_t* elf) {
+	list_t* syms = attribute("exports");
+	if(list_empty(syms))
+		return -1;
+
+	list_foreach(v, syms) {
+		struct sym_t {
+			char* name;
+			void* addr;
+		} __packed *vs = (struct sym_t*) v;
+
+		elf_define_symbol(elf, vs->name, vs->addr); 
+	}
+
+	list_destroy(syms);
+	return 0;
+}
+
+
 /**
  *	\brief Check for valid ELF32 header.
  *	\param hdr ELF32 Header.
  *	\param type Type of executable.
  * 	\return 0 for valid header or -1 in case of errors.
  */
-int elf32_check(elf32_hdr_t* hdr, int type) {
+static int elf32_check(elf32_hdr_t* hdr, int type) {
 
 	if(!hdr) {
 		errno = EINVAL;	
@@ -226,7 +328,7 @@ int elf32_check(elf32_hdr_t* hdr, int type) {
  *	\param size Size of memory address.
  *	\return if success 0, otherwise -1.
  */
-int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
+static int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 	if(elf32_check(hdr, ET_EXEC) < 0)
 		return -1;
 
@@ -346,6 +448,34 @@ void* elf32_load(void* image, int* vaddr, int* vsize) {
 
 
 	return (void*) hdr->e_entry;
+}
+
+
+void* elf32_load_module(void* image, int size) {
+	if(unlikely(image == NULL)) {
+		errno = EINVAL;
+		return NULL;
+	}
+
+	if(unlikely(elf32_check(image, ET_REL) < 0)) {
+		errno = ENOEXEC;
+		return NULL;
+	}
+
+	elf_module_t elf;
+	memset(&elf, 0, sizeof(elf_module_t));
+
+	if(elf_load_ksyms(&elf) != 0) {
+#ifdef ELF_DEBUG
+		kprintf("elf: cannot load kernel symbols\n");
+#endif
+		return NULL;
+}
+
+	if(elf_load_module(&elf, image, size, "__init") != 0)
+		return NULL;
+
+	return (void*) elf.start;
 }
 
 
