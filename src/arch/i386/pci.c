@@ -9,7 +9,7 @@
 #include <string.h>
 #include <errno.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 #define PCI_CONFIG_ADDRESS		0x0CF8

@@ -2,7 +2,7 @@
 
 #include <aplus.h>
 #include <aplus/task.h>
-#include "rpi.h"
+#include <arch/rpi/rpi.h>
 
 extern task_t* current_task;
 extern task_t* kernel_task;

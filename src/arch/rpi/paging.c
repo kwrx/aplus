@@ -3,7 +3,7 @@
 #include <aplus.h>
 #include <aplus/task.h>
 #include <aplus/mm.h>
-#include "rpi.h"
+#include <arch/rpi/rpi.h>
 
 #include <stdint.h>
 #include <stddef.h>

@@ -139,3 +139,5 @@ int main() {
 }
 
 
+EXPORT_SYMBOL_OBJ(mbd);
+

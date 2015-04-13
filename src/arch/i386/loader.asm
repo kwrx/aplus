@@ -46,7 +46,7 @@ align 4
 	dd 0
 	dd 800
 	dd 600
-	dd 32
+	dd 16
 		
 		
 	

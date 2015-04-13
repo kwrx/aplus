@@ -7,7 +7,7 @@
 #include <aplus/list.h>
 #include <errno.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 #if HAVE_DISASM
 #include <libdis.h>

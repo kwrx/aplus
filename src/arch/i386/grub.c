@@ -3,7 +3,7 @@
 #include <aplus.h>
 
 #include "grub.h"
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 BootInfo* mbd_grub;

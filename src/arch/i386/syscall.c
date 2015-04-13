@@ -7,7 +7,7 @@
 
 #include <errno.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 #define NSYSCALLS		1024

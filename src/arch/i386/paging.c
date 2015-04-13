@@ -31,7 +31,7 @@
 #include <aplus/task.h>
 #include <aplus/list.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 #define PGSIZE		(0x1000)
@@ -262,7 +262,10 @@ int vmm_init() {
 
 	vmm_map(kernel_vmm, (void*) MM_LBASE, (void*) MM_LBASE, MM_LSIZE, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 	vmm_map(kernel_vmm, (void*) 0, mm_vaddr((void*) 0), memsize, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-	vmm_map(kernel_vmm, (void*) mbd->lfb.base, (void*) mbd->lfb.base, mbd->lfb.size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+	vmm_map(kernel_vmm, (void*) 0xE0000000, (void*) 0xE0000000, 0x1F000000, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+	if(likely(mbd->lfb.base && mbd->lfb.size))
+		vmm_map(kernel_vmm, (void*) mbd->lfb.base, (void*) mbd->lfb.base, mbd->lfb.size, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
 
 	
 	//vmm_mapkernel(kernel_vmm);
@@ -276,6 +279,7 @@ int vmm_init() {
 EXPORT_SYMBOL(vmm_alloc);
 EXPORT_SYMBOL(vmm_free);
 EXPORT_SYMBOL(vmm_clone);
+EXPORT_SYMBOL(vmm_switch);
 
 #endif
 

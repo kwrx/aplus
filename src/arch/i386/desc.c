@@ -31,7 +31,7 @@
 #include <time.h>
 #include <sys/times.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 #define FAULT_MASK		0x3FFFFFE3
@@ -475,5 +475,9 @@ void go_usermode() {
 EXPORT_SYMBOL(timer_gettime);
 EXPORT_SYMBOL(timer_getticks);
 EXPORT_SYMBOL(timer_getfreq);
+
+EXPORT_SYMBOL(irq_set);
+EXPORT_SYMBOL(irq_unset);
+EXPORT_SYMBOL(irq_get);
 
 #endif

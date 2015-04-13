@@ -102,9 +102,21 @@ extern bootargs_t* mbd;
 		(void*) x								\
 	}; ATTRIBUTE("exports", __EXPORTED_##x)
 
+#define EXPORT_SYMBOL_OBJ_AS(x, y)				\
+	struct {									\
+		char* name;								\
+		void* address;							\
+	} __packed __EXPORTED_##x = {				\
+		(char*) y, 								\
+		(void*) &x								\
+	}; ATTRIBUTE("exports", __EXPORTED_##x)
+
 /* EXPORT_SYMBOL(kprintf); */
 #define EXPORT_SYMBOL(x)						\
 	EXPORT_SYMBOL_AS(x, #x)
+
+#define EXPORT_SYMBOL_OBJ(x)					\
+	EXPORT_SYMBOL_OBJ_AS(x, #x)
 
 
 

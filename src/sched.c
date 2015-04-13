@@ -404,3 +404,6 @@ EXPORT_SYMBOL(im_superuser);
 EXPORT_SYMBOL(schedule_enable);
 EXPORT_SYMBOL(schedule_disable);
 
+EXPORT_SYMBOL_OBJ(current_task);
+EXPORT_SYMBOL_OBJ(kernel_task);
+

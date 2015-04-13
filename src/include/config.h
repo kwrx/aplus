@@ -2,10 +2,9 @@
 #define _APLUS_CONFIG_H
 
 #define DEBUG
-#define ACPI_DEBUG
 //#define NETIF_DEBUG
 //#define SOCKET_DEBUG
-//#define PCI_DEBUG
+#define PCI_DEBUG
 //#define SYSCALL_DEBUG
 //#define ELF_DEBUG
 //#define SCHED_DEBUG
@@ -13,6 +12,7 @@
 //#define SBRK_DEBUG
 //#define IO_DEBUG
 //#define MM_DEBUG
+//#define DEV_DEBUG
 
 
 #ifdef __i386__

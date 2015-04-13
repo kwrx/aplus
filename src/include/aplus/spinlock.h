@@ -64,6 +64,8 @@ void __fastlock_waiton();
 
 #define spinlock_init(spin, flags)					\
 	*(spin) = flags
+#define fastlock_init(spin, flags)					\
+	spinlock_init(spin, flags)
 
 
 #endif

@@ -8,7 +8,7 @@
 #include <aplus/fs.h>
 
 #include <setjmp.h>
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 #if HAVE_SSE
 #define SSE_ALIGN(x)	(((uint32_t) x & 0x10) + 0x10)

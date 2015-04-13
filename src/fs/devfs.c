@@ -110,6 +110,9 @@ inode_t* devfs_getdevice(dev_t dev) {
 }
 
 inode_t* devfs_makedevice(char* name, mode_t mode) {
+#ifdef DEV_DEBUG
+	kprintf("devfs: installed device %s (%x)\n", name, mode);
+#endif	
 	return devfs_creat(devfs, name, mode);
 }
 

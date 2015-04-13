@@ -7,7 +7,7 @@
 #include <aplus/list.h>
 #include <errno.h>
 
-#include "rpi.h"
+#include <arch/rpi/rpi.h>
 
 
 extern list_t* task_queue;

@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 static uint16_t serial[] = {

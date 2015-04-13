@@ -1,7 +1,7 @@
 #ifdef __i386__
 
 #include <aplus.h>
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 
 int arch_pre_init() {

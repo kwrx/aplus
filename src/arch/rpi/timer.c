@@ -1,7 +1,7 @@
 #ifdef __rpi__
 
 #include <aplus.h>
-#include "rpi.h"
+#include <arch/rpi/rpi.h>
 
 uint32_t timer_gettime() {
 	return 0;

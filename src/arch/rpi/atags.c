@@ -2,7 +2,7 @@
 
 
 #include <aplus.h>
-#include "rpi.h"
+#include <arch/rpi/rpi.h>
 
 
 #include <stddef.h>
