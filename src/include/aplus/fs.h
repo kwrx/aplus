@@ -72,7 +72,7 @@ typedef struct inode {
 
 	struct inode* parent;
 	struct inode* link;
-} inode_t;
+} __packed inode_t;
 
 
 #endif

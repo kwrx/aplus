@@ -16,6 +16,7 @@ extern task_t* current_task;
 extern inode_t* vfs_root;
 
 
+
 static char* dupstr(char* s) {
 	char* p = (char*) kmalloc(strlen(s) + 1);
 	if(unlikely(!p))

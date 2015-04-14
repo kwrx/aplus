@@ -40,7 +40,7 @@ int sys_umount2(const char* file, int flags) {
 	ino->chown = NULL;
 
 	ino->dev = (dev_t) 0;
-	ino->mode &= ~S_IFMT;
+	//ino->mode &= ~S_IFMT;
 
 	return 0;
 }

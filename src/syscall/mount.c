@@ -83,12 +83,13 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, int options,
 		return -1;
 	}
 
-	idir->mode |= S_IFMT;
+
+	//idir->mode |= S_IFMT;
 	idir->dev = idev->ino;
 
 	if(unlikely(found->mount(idev, idir, options) < 0)) {
 
-		idir->mode &= ~S_IFMT;
+		//idir->mode &= ~S_IFMT;
 		idir->dev = 0;		
 
 		errno = ENODEV;

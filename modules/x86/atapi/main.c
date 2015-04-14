@@ -20,6 +20,7 @@ int init() {
 #include "atapi.h"
 
 fastlock_t irq_lock;
+spinlock_t crd_lock;
 
 static void irq_handler(void* unused) {
 	(void) unused;
@@ -154,14 +155,24 @@ int atapi_read(inode_t* ino, char* buf, int length) {
 	int bus = (int) ino->userdata >> 16;
 	int drv = (int) ino->userdata & 0xFF;
 	int l = 0;
+	int i = 0;
 
-	for(int i = 0; i < length; i += ATAPI_SECTOR_SIZE) {
+	
+	spinlock_lock(&crd_lock);
+
+	for(i = 0; i < length; i += ATAPI_SECTOR_SIZE) {
 		if(unlikely(atapi_read_sector(bus, drv, ino->position / ATAPI_SECTOR_SIZE, (uint8_t*) ((uint32_t) buf + i)) != ATAPI_SECTOR_SIZE))
-			break;
+			//break;
+
 
 		l += ATAPI_SECTOR_SIZE;
 		ino->position += ATAPI_SECTOR_SIZE;
 	}
+
+	
+	
+		
+	spinlock_unlock(&crd_lock);
 
 	return l;
 }
@@ -169,6 +180,7 @@ int atapi_read(inode_t* ino, char* buf, int length) {
 
 int init() {
 	fastlock_init(&irq_lock, SPINLOCK_FLAGS_UNLOCKED);
+	spinlock_init(&crd_lock, SPINLOCK_FLAGS_UNLOCKED);
 
 
 	irq_set(ATA_IRQ_PRIMARY, irq_handler);
@@ -181,15 +193,16 @@ int init() {
 			kprintf("atapi: could not create device cd%d\n", n);	\
 			return -1;												\
 		}															\
-		dev->size = atapi_check_size(b, d);							\
 		dev->read = atapi_read;										\
 		dev->userdata = (void*) ((b << 16) | (d & 0xFF));			\
+		dev->size = atapi_check_size(b, d);							\
 	}
 
 	_C(0, ATA_BUS_PRIMARY, ATA_DRIVE_MASTER);
 	_C(1, ATA_BUS_PRIMARY, ATA_DRIVE_SLAVE);
 	_C(2, ATA_BUS_SECONDARY, ATA_DRIVE_MASTER);
 	_C(3, ATA_BUS_SECONDARY, ATA_DRIVE_SLAVE);
+
 
 	return 0;
 }
@@ -201,4 +214,4 @@ int dnit() {
 }
 
 
-/* FIXME: ATAPI polling */
+/* FIXME: ATAPI polling and reading */

@@ -111,7 +111,7 @@ int main() {
 
 	init_modules();
 
-#if 0
+#if 1
 	char* __argv[] = {
 		"/dev/ramdisk/bin/init",
 		NULL
@@ -123,15 +123,14 @@ int main() {
 		"SHELL=/bin/dash",
 		"USER=liveuser",
 		"TMPDIR=/tmp",
+		"ROOTDEV=/dev/cd0",
+		"ROOTFS=iso9660",
 		"SDL_VIDEODRIVER=dummy",
-		"SCREEN_WIDTH=800",
-		"SCREEN_HEIGHT=600",
-		"SCREEN_BPP=32",
 		NULL
 	};
 
 
-	if(sys_fork() == 0)
+	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 #endif
 	
