@@ -35,7 +35,7 @@ int sys_write(int fd, void* ptr, size_t size) {
 
 #ifdef IO_DEBUG
 	if(unlikely(!sys_isatty(fd)))
-		kprintf("io: write in %d (%s) %d Bytes\n", fd, ino->name, size);
+		kprintf("io: write in %d (%s, 0x%x) %d Bytes\n", fd, ino->name, ino->write, size);
 #endif
 
 	return fs_write(ino, ptr, size);

@@ -83,7 +83,7 @@ Script del linker e mappa della memoria
                 0x00000000                VBASE = 0x0
                 0x00100030                . = (. + VBASE)
 
-.text           0x00100040     0xefe0
+.text           0x00100040     0xf0a0
                 0x00100040                text = .
  *(.text)
  .text          0x00100040        0x0 src/init/main.o
@@ -185,662 +185,669 @@ Script del linker e mappa della memoria
  .text          0x00102ac0        0xb src/syscall/isatty.o
                 0x00102ac0                sys_isatty
  *fill*         0x00102acb        0x5 
- .text          0x00102ad0       0x33 src/syscall/args.o
-                0x00102ad0                sys__get_argv
-                0x00102af0                sys__get_envp
- *fill*         0x00102b03        0xd 
- .text          0x00102b10       0x2b src/syscall/time.o
-                0x00102b10                sys_time
- *fill*         0x00102b3b        0x5 
- .text          0x00102b40       0x41 src/syscall/getpid.o
-                0x00102b40                sys_getpid
-                0x00102b50                sys_getppid
- *fill*         0x00102b81        0xf 
- .text          0x00102b90       0xa9 src/syscall/lseek.o
-                0x00102b90                sys_lseek
- *fill*         0x00102c39        0x7 
- .text          0x00102c40      0x102 src/syscall/pipe.o
-                0x00102c40                sys_pipe
- *fill*         0x00102d42        0xe 
- .text          0x00102d50       0x93 src/syscall/chown.o
-                0x00102d50                sys_chown
- *fill*         0x00102de3        0xd 
- .text          0x00102df0       0x28 src/syscall/test.o
-                0x00102df0                sys_test
- *fill*         0x00102e18        0x8 
- .text          0x00102e20        0x5 src/syscall/_exit.o
-                0x00102e20                sys_exit
- *fill*         0x00102e25        0xb 
- .text          0x00102e30      0x1f5 src/syscall/socket.o
-                0x00102e30                sys_socket
- *fill*         0x00103025        0xb 
- .text          0x00103030       0x40 src/syscall/ioctl.o
-                0x00103030                sys_ioctl
- .text          0x00103070       0x27 src/syscall/mmap.o
-                0x00103070                sys_mmap
-                0x00103080                sys_umap
- *fill*         0x00103097        0x9 
- .text          0x001030a0      0x181 src/syscall/uname.o
-                0x001030a0                sys_uname
- *fill*         0x00103221        0xf 
- .text          0x00103230      0x2ec src/syscall/mount.o
-                0x00103230                sys_mount
- *fill*         0x0010351c        0x4 
- .text          0x00103520       0x3c src/syscall/wait.o
-                0x00103520                sys_wait
- *fill*         0x0010355c        0x4 
- .text          0x00103560       0xb8 src/syscall/fcntl.o
-                0x00103560                sys_fcntl
- *fill*         0x00103618        0x8 
- .text          0x00103620       0x79 src/syscall/waitpid.o
-                0x00103620                sys_waitpid
- *fill*         0x00103699        0x7 
- .text          0x001036a0      0x174 src/syscall/umount.o
-                0x001036a0                sys_umount
-                0x00103760                sys_umount2
- *fill*         0x00103814        0xc 
- .text          0x00103820       0xb7 src/syscall/symlink.o
-                0x00103820                sys_symlink
- *fill*         0x001038d7        0x9 
- .text          0x001038e0      0x2ae src/syscall/open.o
-                0x001038e0                sys_open
- *fill*         0x00103b8e        0x2 
- .text          0x00103b90       0x55 src/syscall/bind.o
-                0x00103b90                sys_bind
- *fill*         0x00103be5        0xb 
- .text          0x00103bf0       0x48 src/syscall/readdir.o
-                0x00103bf0                sys_readdir
- *fill*         0x00103c38        0x8 
- .text          0x00103c40      0x3f3 src/syscall/execve.o
-                0x00103c40                sys_execve
- *fill*         0x00104033        0xd 
- .text          0x00104040       0x1a src/syscall/sighandler.o
-                0x00104040                sys__install_sighandler
- *fill*         0x0010405a        0x6 
- .text          0x00104060       0x31 src/syscall/openpty.o
-                0x00104060                sys_openpty
- *fill*         0x00104091        0xf 
- .text          0x001040a0       0x59 src/syscall/getgroups.o
-                0x001040a0                sys_getgroups
- *fill*         0x001040f9        0x7 
- .text          0x00104100      0x736 src/sched.o
-                0x00104100                im_superuser
-                0x00104140                schedule_enable
-                0x00104150                schedule_disable
-                0x00104160                schedule_nextpid
-                0x00104170                schedule_init
-                0x001041b0                schedule_signal
-                0x001041f0                schedule
-                0x001042d0                schedule_yield
-                0x00104350                schedule_setpriority
-                0x00104370                schedule_wait
-                0x00104450                schedule_child
-                0x001044c0                schedule_release
-                0x001045c0                schedule_exit2
-                0x00104670                schedule_exit
-                0x00104690                schedule_getpid
-                0x001046a0                schedule_getbypid
-                0x00104710                schedule_sbrk
-                0x001047d0                schedule_append_fd
- *fill*         0x00104836        0xa 
- .text          0x00104840       0x39 src/fs/procfs/procfs_unlink.o
-                0x00104840                procfs_unlink
- *fill*         0x00104879        0x7 
- .text          0x00104880      0x1d1 src/fs/procfs/procfs_finddir.o
-                0x00104880                procfs_finddir
- *fill*         0x00104a51        0xf 
- .text          0x00104a60      0x136 src/fs/procfs/procfs_creat.o
-                0x00104a60                procfs_creat
- *fill*         0x00104b96        0xa 
- .text          0x00104ba0      0x112 src/fs/procfs/procfs_readdir.o
-                0x00104ba0                procfs_readdir
- *fill*         0x00104cb2        0xe 
- .text          0x00104cc0       0x74 src/fs/procfs/procfs.o
-                0x00104cc0                procfs_mknod
- *fill*         0x00104d34        0xc 
- .text          0x00104d40       0x39 src/fs/procfs/procfs_mount.o
-                0x00104d40                procfs_mount
- *fill*         0x00104d79        0x7 
- .text          0x00104d80      0x781 src/fs/vfs.o
-                0x00104d80                vfs_map
-                0x00104df0                vfs_umap
-                0x00104e80                vfs_mapped
-                0x00104f10                vfs_mapped_at_index
-                0x00104f80                vfs_mapped_count
-                0x00105020                vfs_chroot
-                0x00105040                vfs_mknod
-                0x001052c0                vfs_init
- *fill*         0x00105501        0xf 
- .text          0x00105510      0x255 src/fs/iso9660/iso9660.o
-                0x00105510                iso9660_getroot
-                0x001055d0                iso9660_check
-                0x001056b0                iso9660_checkname
-                0x00105730                iso9660_getmsb16
-                0x00105740                iso9660_getmsb32
-                0x00105750                iso9660_getlsb16
-                0x00105760                iso9660_getlsb32
- *fill*         0x00105765        0xb 
- .text          0x00105770       0x92 src/fs/iso9660/iso9660_read.o
-                0x00105770                iso9660_read
- *fill*         0x00105802        0xe 
- .text          0x00105810       0x66 src/fs/iso9660/iso9660_mount.o
-                0x00105810                iso9660_mount
- *fill*         0x00105876        0xa 
- .text          0x00105880      0x43e src/fs/iso9660/iso9660_finddir.o
-                0x00105880                iso9660_finddir
- *fill*         0x00105cbe        0x2 
- .text          0x00105cc0      0x1ca src/fs/iso9660/iso9660_readdir.o
-                0x00105cc0                iso9660_readdir
- *fill*         0x00105e8a        0x6 
- .text          0x00105e90       0x90 src/fs/tmpfs/tmpfs_write.o
-                0x00105e90                tmpfs_write
- .text          0x00105f20      0x1dd src/fs/tmpfs/tmpfs_creat.o
-                0x00105f20                tmpfs_creat
- *fill*         0x001060fd        0x3 
- .text          0x00106100       0x29 src/fs/tmpfs/tmpfs_flush.o
-                0x00106100                tmpfs_flush
- *fill*         0x00106129        0x7 
- .text          0x00106130       0x39 src/fs/tmpfs/tmpfs_mount.o
-                0x00106130                tmpfs_mount
- *fill*         0x00106169        0x7 
- .text          0x00106170       0x8a src/fs/tmpfs/tmpfs_read.o
-                0x00106170                tmpfs_read
- *fill*         0x001061fa        0x6 
- .text          0x00106200       0x39 src/fs/tmpfs/tmpfs_unlink.o
-                0x00106200                tmpfs_unlink
- *fill*         0x00106239        0x7 
- .text          0x00106240      0x21a src/fs/ramdev.o
-                0x00106240                ramdev_read
-                0x001062f0                ramdev_write
-                0x00106380                ramdev_flush
-                0x001063b0                mkramdev
- *fill*         0x0010645a        0x6 
- .text          0x00106460      0x381 src/fs/pipe.o
-                0x00106460                pipe_read
-                0x00106560                pipe_write
-                0x00106640                pipe_flush
-                0x00106670                pipe_create
- *fill*         0x001067e1        0xf 
- .text          0x001067f0      0x2ab src/fs/fs.o
-                0x001067f0                fs_read
-                0x00106820                fs_write
-                0x00106850                fs_readdir
-                0x001068e0                fs_finddir
-                0x00106960                fs_creat
-                0x00106990                fs_rename
-                0x001069c0                fs_unlink
-                0x001069f0                fs_chown
-                0x00106a40                fs_flush
-                0x00106a70                fs_ioctl
- *fill*         0x00106a9b        0x5 
- .text          0x00106aa0      0x581 src/fs/devfs.o
-                0x00106aa0                devfs_getdevice
-                0x00106ae0                devfs_creat
-                0x00106cc0                devfs_makedevice
-                0x00106ea0                devfs_mount
- *fill*         0x00107021        0xf 
- .text          0x00107030      0xb0b src/fs/tty.o
-                0x00107030                tty_ioctl
-                0x001072e0                tty_read
-                0x00107390                tty_flush
-                0x00107480                tty_write
-                0x00107510                tty_open
-                0x00107830                tty_init
- *fill*         0x00107b3b        0x5 
- .text          0x00107b40       0x1b src/panic.o
-                0x00107b40                panic
- *fill*         0x00107b5b        0x5 
- .text          0x00107b60      0x50a src/shm.o
-                0x00107b60                shm_check_chunk
-                0x00107b80                shm_acquire_chunk
-                0x00107c70                shm_acquire_from_inode
-                0x00107d60                shm_acquire
-                0x00107e80                shm_release_chunk
-                0x00107f50                shm_release
- *fill*         0x0010806a        0x6 
- .text          0x00108070       0xd5 src/spinlock.o
-                0x00108070                spinlock_unlock
-                0x00108080                fastlock_unlock
-                0x00108090                spinlock_trylock
-                0x001080b0                fastlock_trylock
-                0x001080d0                spinlock_lock
-                0x00108100                fastlock_lock
-                0x00108130                __spinlock_waiton
-                0x00108140                __fastlock_waiton
- *fill*         0x00108145        0xb 
- .text          0x00108150      0x38b src/mm/mm.o
-                0x00108150                kfree
-                0x001081a0                kmalloc
-                0x001081f0                krealloc
-                0x00108360                malloc
-                0x001083b0                kvmalloc
-                0x00108400                free
-                0x00108450                mm_setheap
-                0x00108460                mm_getheap
-                0x00108470                mm_init
- *fill*         0x001084db        0x5 
- .text          0x001084e0       0x52 src/mm/heap.o
-                0x001084e0                halloc
-                0x00108510                hfree
- *fill*         0x00108532        0xe 
- .text          0x00108540      0x23c src/mm/kheap.o
-                0x00108540                bitmap_alloc
-                0x001086a0                bitmap_free
-                0x00108710                kheap_init
- *fill*         0x0010877c        0x4 
- .text          0x00108780       0x96 src/arch/i386/grub.o
-                0x00108780                load_bootargs
- *fill*         0x00108816        0xa 
- .text          0x00108820      0xd73 src/arch/i386/desc.o
-                0x00108820                gdt_load
-                0x00108844                idt_load
-                0x00108850                timer_getticks
-                0x00108870                timer_getfreq
-                0x00108880                pit_handler
-                0x001088d0                timer_gettime
-                0x00108a20                irq_set
-                0x00108a60                irq_unset
-                0x00108aa0                irq_get
-                0x00108ad0                isr_handler
-                0x00108b00                irq_handler
-                0x00108b40                pagefault_handler
-                0x00108bf0                desc_init
-                0x00109580                go_usermode
- *fill*         0x00109593        0xd 
- .text          0x001095a0      0x711 src/arch/i386/task.o
-                0x001095a0                task_context_switch
-                0x001095c0                task_switch_ack
-                0x001095d0                task_clone
-                0x00109a20                task_switch
-                0x00109a80                task_fork
-                0x00109ad0                task_init
- *fill*         0x00109cb1        0xf 
- .text          0x00109cc0      0x449 src/arch/i386/pci.o
-                0x00109cc0                pci_find_by_id
-                0x00109d00                pci_find_by_class
-                0x00109d60                pci_init
- *fill*         0x0010a109        0x7 
- .text          0x0010a110      0xc6c src/arch/i386/paging.o
-                0x0010a110                vmm_switch
-                0x0010a3c0                vmm_free
-                0x0010a490                vmm_clone
-                0x0010a6d0                vmm_enable
-                0x0010a6f0                vmm_disable
-                0x0010a700                vmm_map
-                0x0010a8a0                vmm_alloc
-                0x0010a8f0                vmm_umap
-                0x0010a950                vmm_mapkernel
-                0x0010a9e0                vmm_create
-                0x0010aa10                vmm_destroy
-                0x0010aa80                vmm_init
- *fill*         0x0010ad7c        0x4 
- .text          0x0010ad80       0x1d src/arch/i386/panic.o
-                0x0010ad80                arch_panic
- *fill*         0x0010ad9d        0x3 
- .text          0x0010ada0      0x157 src/arch/i386/serial.o
-                0x0010ada0                serial_send
-                0x0010ade0                serial_recv
-                0x0010ae20                serial_init
- *fill*         0x0010aef7        0x9 
- .text          0x0010af00       0x63 src/arch/i386/i386.o
-                0x0010af00                cpu_halt
-                0x0010af10                cpu_idle
-                0x0010af20                cpu_wait
-                0x0010af30                arch_pre_init
-                0x0010af60                arch_post_init
- *fill*         0x0010af63        0xd 
- .text          0x0010af70      0x2cb src/arch/i386/syscall.o
-                0x0010af70                syscall_init
-                0x0010b1a0                syscall_invoke
-                0x0010b1f0                syscall_handler
- .text          0x0010b23b        0x0 src/arch/rpi/task.o
- .text          0x0010b23b        0x0 src/arch/rpi/timer.o
- .text          0x0010b23b        0x0 src/arch/rpi/paging.o
- .text          0x0010b23b        0x0 src/arch/rpi/rpi.o
- .text          0x0010b23b        0x0 src/arch/rpi/usb/usbd.o
- .text          0x0010b23b        0x0 src/arch/rpi/usb/usbdep.o
- .text          0x0010b23b        0x0 src/arch/rpi/panic.o
- .text          0x0010b23b        0x0 src/arch/rpi/lfb.o
- .text          0x0010b23b        0x0 src/arch/rpi/serial.o
- .text          0x0010b23b        0x0 src/arch/rpi/spinlock.o
- .text          0x0010b23b        0x0 src/arch/rpi/syscall.o
- .text          0x0010b23b        0x0 src/arch/rpi/intr.o
- .text          0x0010b23b        0x0 src/arch/rpi/atags.o
- *fill*         0x0010b23b        0x5 
- .text          0x0010b240       0x6f src/arch/i386/loader.o
-                0x0010b240                _start
- *fill*         0x0010b2af        0x1 
- .text          0x0010b2b0      0x273 src/arch/i386/_desc.o
-                0x0010b2b0                isr0
-                0x0010b2b9                isr1
-                0x0010b2c2                isr2
-                0x0010b2cb                isr3
-                0x0010b2d4                isr4
-                0x0010b2dd                isr5
-                0x0010b2e6                isr6
-                0x0010b2ef                isr7
-                0x0010b2f8                isr8
-                0x0010b2ff                isr9
-                0x0010b308                isr10
-                0x0010b30f                isr11
-                0x0010b316                isr12
-                0x0010b31d                isr13
-                0x0010b324                isr15
-                0x0010b32d                isr16
-                0x0010b336                isr17
-                0x0010b33f                isr18
-                0x0010b348                isr19
-                0x0010b351                isr20
-                0x0010b35a                isr21
-                0x0010b363                isr22
-                0x0010b36c                isr23
-                0x0010b375                isr24
-                0x0010b37e                isr25
-                0x0010b387                isr26
-                0x0010b390                isr27
-                0x0010b399                isr28
-                0x0010b3a2                isr29
-                0x0010b3ab                isr30
-                0x0010b3b4                isr31
-                0x0010b3bd                irq0
-                0x0010b3c6                irq1
-                0x0010b3cf                irq2
-                0x0010b3d8                irq3
-                0x0010b3e1                irq4
-                0x0010b3ea                irq5
-                0x0010b3f3                irq6
-                0x0010b3fc                irq7
-                0x0010b405                irq8
-                0x0010b40e                irq9
-                0x0010b417                irq10
-                0x0010b420                irq11
-                0x0010b429                irq12
-                0x0010b432                irq13
-                0x0010b43b                irq14
-                0x0010b444                irq15
-                0x0010b451                isr0x80
-                0x0010b489                isr14
-                0x0010b4b3                read_eip
-                0x0010b4b6                isr_stub
-                0x0010b4de                irq_stub
-                0x0010b506                __go_usermode
- *fill*         0x0010b523        0xd 
- .text          0x0010b530      0x33b /opt/cross/usr/lib/libelfldr.a(elf-module.o)
-                0x0010b530                elf_module_init
-                0x0010b650                elf_module_get_size
-                0x0010b660                elf_module_set_data
-                0x0010b670                elf_module_get_data
-                0x0010b680                elf_module_load
-                0x0010b7f0                elf_module_lookup_symbol
- *fill*         0x0010b86b        0x5 
- .text          0x0010b870       0xc6 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
-                0x0010b870                elf_module_check_machine
-                0x0010b890                elf_module_reloc_section
-                0x0010b930                elf_module_reloca_section
- *fill*         0x0010b936        0xa 
- .text          0x0010b940       0x5b /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
-                0x0010b940                atoi
-                0x0010b970                _atoi_r
- *fill*         0x0010b99b        0x5 
- .text          0x0010b9a0        0x6 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
-                0x0010b9a0                __errno
- .text          0x0010b9a6        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- .text          0x0010b9a6       0x52 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
-                0x0010b9a6                memcmp
- .text          0x0010b9f8       0x48 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
-                0x0010b9f8                memcpy
- .text          0x0010ba40       0x88 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
-                0x0010ba40                memset
- *fill*         0x0010bac8        0x8 
- .text          0x0010bad0      0x826 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
-                0x0010be30                mktime
- *fill*         0x0010c2f6        0xa 
- .text          0x0010c300      0x6d7 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
-                0x0010c300                __tzcalc_limits
-                0x0010c540                _mktm_r
- *fill*         0x0010c9d7        0x9 
- .text          0x0010c9e0       0xfc /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
-                0x0010c9e0                strchr
- *fill*         0x0010cadc        0x4 
- .text          0x0010cae0       0x62 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
-                0x0010cae0                strcmp
- *fill*         0x0010cb42        0xe 
- .text          0x0010cb50       0x65 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
-                0x0010cb50                strcpy
- *fill*         0x0010cbb5        0xb 
- .text          0x0010cbc0      0x53c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
-                0x0010cbc0                _strerror_r
-                0x0010d0d0                strerror
- *fill*         0x0010d0fc        0x4 
- .text          0x0010d100       0x79 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
-                0x0010d100                strlen
- *fill*         0x0010d179        0x7 
- .text          0x0010d180       0xb2 /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
-                0x0010d180                strncpy
- *fill*         0x0010d232        0xe 
- .text          0x0010d240      0x21c /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
-                0x0010d240                _strtol_r
-                0x0010d430                strtol
- *fill*         0x0010d45c        0x4 
- .text          0x0010d460       0x12 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
-                0x0010d460                __tz_lock
-                0x0010d470                __tz_unlock
- .text          0x0010d472        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- *fill*         0x0010d472        0xe 
- .text          0x0010d480        0x3 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
-                0x0010d480                _user_strerror
- .text          0x0010d483        0x0 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
- *fill*         0x0010d483        0xd 
- .text          0x0010d490       0x61 /opt/cross/usr/lib/libc.a(lib_a-div.o)
-                0x0010d490                div
- *fill*         0x0010d4f1        0xf 
- .text          0x0010d500        0x6 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
-                0x0010d500                __gettzinfo
- *fill*         0x0010d506        0xa 
- .text          0x0010d510      0x16f /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
-                0x0010d510                __umoddi3
+ .text          0x00102ad0       0x71 src/syscall/chroot.o
+                0x00102ad0                sys_chroot
+ *fill*         0x00102b41        0xf 
+ .text          0x00102b50       0x33 src/syscall/args.o
+                0x00102b50                sys__get_argv
+                0x00102b70                sys__get_envp
+ *fill*         0x00102b83        0xd 
+ .text          0x00102b90       0x2b src/syscall/time.o
+                0x00102b90                sys_time
+ *fill*         0x00102bbb        0x5 
+ .text          0x00102bc0       0x41 src/syscall/getpid.o
+                0x00102bc0                sys_getpid
+                0x00102bd0                sys_getppid
+ *fill*         0x00102c01        0xf 
+ .text          0x00102c10       0xa9 src/syscall/lseek.o
+                0x00102c10                sys_lseek
+ *fill*         0x00102cb9        0x7 
+ .text          0x00102cc0      0x102 src/syscall/pipe.o
+                0x00102cc0                sys_pipe
+ *fill*         0x00102dc2        0xe 
+ .text          0x00102dd0       0x93 src/syscall/chown.o
+                0x00102dd0                sys_chown
+ *fill*         0x00102e63        0xd 
+ .text          0x00102e70       0x28 src/syscall/test.o
+                0x00102e70                sys_test
+ *fill*         0x00102e98        0x8 
+ .text          0x00102ea0        0x5 src/syscall/_exit.o
+                0x00102ea0                sys_exit
+ *fill*         0x00102ea5        0xb 
+ .text          0x00102eb0      0x1f5 src/syscall/socket.o
+                0x00102eb0                sys_socket
+ *fill*         0x001030a5        0xb 
+ .text          0x001030b0       0x40 src/syscall/ioctl.o
+                0x001030b0                sys_ioctl
+ .text          0x001030f0       0x27 src/syscall/mmap.o
+                0x001030f0                sys_mmap
+                0x00103100                sys_umap
+ *fill*         0x00103117        0x9 
+ .text          0x00103120      0x181 src/syscall/uname.o
+                0x00103120                sys_uname
+ *fill*         0x001032a1        0xf 
+ .text          0x001032b0      0x2ec src/syscall/mount.o
+                0x001032b0                sys_mount
+ *fill*         0x0010359c        0x4 
+ .text          0x001035a0       0x3c src/syscall/wait.o
+                0x001035a0                sys_wait
+ *fill*         0x001035dc        0x4 
+ .text          0x001035e0       0xb8 src/syscall/fcntl.o
+                0x001035e0                sys_fcntl
+ *fill*         0x00103698        0x8 
+ .text          0x001036a0       0x79 src/syscall/waitpid.o
+                0x001036a0                sys_waitpid
+ *fill*         0x00103719        0x7 
+ .text          0x00103720      0x174 src/syscall/umount.o
+                0x00103720                sys_umount
+                0x001037e0                sys_umount2
+ *fill*         0x00103894        0xc 
+ .text          0x001038a0       0xb7 src/syscall/symlink.o
+                0x001038a0                sys_symlink
+ *fill*         0x00103957        0x9 
+ .text          0x00103960      0x2ae src/syscall/open.o
+                0x00103960                sys_open
+ *fill*         0x00103c0e        0x2 
+ .text          0x00103c10       0x55 src/syscall/bind.o
+                0x00103c10                sys_bind
+ *fill*         0x00103c65        0xb 
+ .text          0x00103c70       0x48 src/syscall/readdir.o
+                0x00103c70                sys_readdir
+ *fill*         0x00103cb8        0x8 
+ .text          0x00103cc0      0x3f3 src/syscall/execve.o
+                0x00103cc0                sys_execve
+ *fill*         0x001040b3        0xd 
+ .text          0x001040c0       0x1a src/syscall/sighandler.o
+                0x001040c0                sys__install_sighandler
+ *fill*         0x001040da        0x6 
+ .text          0x001040e0       0x31 src/syscall/openpty.o
+                0x001040e0                sys_openpty
+ *fill*         0x00104111        0xf 
+ .text          0x00104120       0x59 src/syscall/getgroups.o
+                0x00104120                sys_getgroups
+ *fill*         0x00104179        0x7 
+ .text          0x00104180      0x736 src/sched.o
+                0x00104180                im_superuser
+                0x001041c0                schedule_enable
+                0x001041d0                schedule_disable
+                0x001041e0                schedule_nextpid
+                0x001041f0                schedule_init
+                0x00104230                schedule_signal
+                0x00104270                schedule
+                0x00104350                schedule_yield
+                0x001043d0                schedule_setpriority
+                0x001043f0                schedule_wait
+                0x001044d0                schedule_child
+                0x00104540                schedule_release
+                0x00104640                schedule_exit2
+                0x001046f0                schedule_exit
+                0x00104710                schedule_getpid
+                0x00104720                schedule_getbypid
+                0x00104790                schedule_sbrk
+                0x00104850                schedule_append_fd
+ *fill*         0x001048b6        0xa 
+ .text          0x001048c0       0x39 src/fs/procfs/procfs_unlink.o
+                0x001048c0                procfs_unlink
+ *fill*         0x001048f9        0x7 
+ .text          0x00104900      0x1d1 src/fs/procfs/procfs_finddir.o
+                0x00104900                procfs_finddir
+ *fill*         0x00104ad1        0xf 
+ .text          0x00104ae0      0x136 src/fs/procfs/procfs_creat.o
+                0x00104ae0                procfs_creat
+ *fill*         0x00104c16        0xa 
+ .text          0x00104c20      0x112 src/fs/procfs/procfs_readdir.o
+                0x00104c20                procfs_readdir
+ *fill*         0x00104d32        0xe 
+ .text          0x00104d40       0x74 src/fs/procfs/procfs.o
+                0x00104d40                procfs_mknod
+ *fill*         0x00104db4        0xc 
+ .text          0x00104dc0       0x39 src/fs/procfs/procfs_mount.o
+                0x00104dc0                procfs_mount
+ *fill*         0x00104df9        0x7 
+ .text          0x00104e00      0x781 src/fs/vfs.o
+                0x00104e00                vfs_map
+                0x00104e70                vfs_umap
+                0x00104f00                vfs_mapped
+                0x00104f90                vfs_mapped_at_index
+                0x00105000                vfs_mapped_count
+                0x001050a0                vfs_chroot
+                0x001050c0                vfs_mknod
+                0x00105340                vfs_init
+ *fill*         0x00105581        0xf 
+ .text          0x00105590      0x255 src/fs/iso9660/iso9660.o
+                0x00105590                iso9660_getroot
+                0x00105650                iso9660_check
+                0x00105730                iso9660_checkname
+                0x001057b0                iso9660_getmsb16
+                0x001057c0                iso9660_getmsb32
+                0x001057d0                iso9660_getlsb16
+                0x001057e0                iso9660_getlsb32
+ *fill*         0x001057e5        0xb 
+ .text          0x001057f0       0x92 src/fs/iso9660/iso9660_read.o
+                0x001057f0                iso9660_read
+ *fill*         0x00105882        0xe 
+ .text          0x00105890       0x66 src/fs/iso9660/iso9660_mount.o
+                0x00105890                iso9660_mount
+ *fill*         0x001058f6        0xa 
+ .text          0x00105900      0x43e src/fs/iso9660/iso9660_finddir.o
+                0x00105900                iso9660_finddir
+ *fill*         0x00105d3e        0x2 
+ .text          0x00105d40      0x1ca src/fs/iso9660/iso9660_readdir.o
+                0x00105d40                iso9660_readdir
+ *fill*         0x00105f0a        0x6 
+ .text          0x00105f10       0x90 src/fs/tmpfs/tmpfs_write.o
+                0x00105f10                tmpfs_write
+ .text          0x00105fa0      0x1dd src/fs/tmpfs/tmpfs_creat.o
+                0x00105fa0                tmpfs_creat
+ *fill*         0x0010617d        0x3 
+ .text          0x00106180       0x29 src/fs/tmpfs/tmpfs_flush.o
+                0x00106180                tmpfs_flush
+ *fill*         0x001061a9        0x7 
+ .text          0x001061b0       0x39 src/fs/tmpfs/tmpfs_mount.o
+                0x001061b0                tmpfs_mount
+ *fill*         0x001061e9        0x7 
+ .text          0x001061f0       0x8a src/fs/tmpfs/tmpfs_read.o
+                0x001061f0                tmpfs_read
+ *fill*         0x0010627a        0x6 
+ .text          0x00106280       0x39 src/fs/tmpfs/tmpfs_unlink.o
+                0x00106280                tmpfs_unlink
+ *fill*         0x001062b9        0x7 
+ .text          0x001062c0      0x21a src/fs/ramdev.o
+                0x001062c0                ramdev_read
+                0x00106370                ramdev_write
+                0x00106400                ramdev_flush
+                0x00106430                mkramdev
+ *fill*         0x001064da        0x6 
+ .text          0x001064e0      0x381 src/fs/pipe.o
+                0x001064e0                pipe_read
+                0x001065e0                pipe_write
+                0x001066c0                pipe_flush
+                0x001066f0                pipe_create
+ *fill*         0x00106861        0xf 
+ .text          0x00106870      0x2ab src/fs/fs.o
+                0x00106870                fs_read
+                0x001068a0                fs_write
+                0x001068d0                fs_readdir
+                0x00106960                fs_finddir
+                0x001069e0                fs_creat
+                0x00106a10                fs_rename
+                0x00106a40                fs_unlink
+                0x00106a70                fs_chown
+                0x00106ac0                fs_flush
+                0x00106af0                fs_ioctl
+ *fill*         0x00106b1b        0x5 
+ .text          0x00106b20      0x581 src/fs/devfs.o
+                0x00106b20                devfs_getdevice
+                0x00106b60                devfs_creat
+                0x00106d40                devfs_makedevice
+                0x00106f20                devfs_mount
+ *fill*         0x001070a1        0xf 
+ .text          0x001070b0      0xb0b src/fs/tty.o
+                0x001070b0                tty_ioctl
+                0x00107360                tty_read
+                0x00107410                tty_flush
+                0x00107500                tty_write
+                0x00107590                tty_open
+                0x001078b0                tty_init
+ *fill*         0x00107bbb        0x5 
+ .text          0x00107bc0       0x1b src/panic.o
+                0x00107bc0                panic
+ *fill*         0x00107bdb        0x5 
+ .text          0x00107be0      0x50a src/shm.o
+                0x00107be0                shm_check_chunk
+                0x00107c00                shm_acquire_chunk
+                0x00107cf0                shm_acquire_from_inode
+                0x00107de0                shm_acquire
+                0x00107f00                shm_release_chunk
+                0x00107fd0                shm_release
+ *fill*         0x001080ea        0x6 
+ .text          0x001080f0       0xd5 src/spinlock.o
+                0x001080f0                spinlock_unlock
+                0x00108100                fastlock_unlock
+                0x00108110                spinlock_trylock
+                0x00108130                fastlock_trylock
+                0x00108150                spinlock_lock
+                0x00108180                fastlock_lock
+                0x001081b0                __spinlock_waiton
+                0x001081c0                __fastlock_waiton
+ *fill*         0x001081c5        0xb 
+ .text          0x001081d0      0x38b src/mm/mm.o
+                0x001081d0                kfree
+                0x00108220                kmalloc
+                0x00108270                krealloc
+                0x001083e0                malloc
+                0x00108430                kvmalloc
+                0x00108480                free
+                0x001084d0                mm_setheap
+                0x001084e0                mm_getheap
+                0x001084f0                mm_init
+ *fill*         0x0010855b        0x5 
+ .text          0x00108560       0x52 src/mm/heap.o
+                0x00108560                halloc
+                0x00108590                hfree
+ *fill*         0x001085b2        0xe 
+ .text          0x001085c0      0x23c src/mm/kheap.o
+                0x001085c0                bitmap_alloc
+                0x00108720                bitmap_free
+                0x00108790                kheap_init
+ *fill*         0x001087fc        0x4 
+ .text          0x00108800       0x96 src/arch/i386/grub.o
+                0x00108800                load_bootargs
+ *fill*         0x00108896        0xa 
+ .text          0x001088a0      0xd73 src/arch/i386/desc.o
+                0x001088a0                gdt_load
+                0x001088c4                idt_load
+                0x001088d0                timer_getticks
+                0x001088f0                timer_getfreq
+                0x00108900                pit_handler
+                0x00108950                timer_gettime
+                0x00108aa0                irq_set
+                0x00108ae0                irq_unset
+                0x00108b20                irq_get
+                0x00108b50                isr_handler
+                0x00108b80                irq_handler
+                0x00108bc0                pagefault_handler
+                0x00108c70                desc_init
+                0x00109600                go_usermode
+ *fill*         0x00109613        0xd 
+ .text          0x00109620      0x711 src/arch/i386/task.o
+                0x00109620                task_context_switch
+                0x00109640                task_switch_ack
+                0x00109650                task_clone
+                0x00109aa0                task_switch
+                0x00109b00                task_fork
+                0x00109b50                task_init
+ *fill*         0x00109d31        0xf 
+ .text          0x00109d40      0x449 src/arch/i386/pci.o
+                0x00109d40                pci_find_by_id
+                0x00109d80                pci_find_by_class
+                0x00109de0                pci_init
+ *fill*         0x0010a189        0x7 
+ .text          0x0010a190      0xc6c src/arch/i386/paging.o
+                0x0010a190                vmm_switch
+                0x0010a440                vmm_free
+                0x0010a510                vmm_clone
+                0x0010a750                vmm_enable
+                0x0010a770                vmm_disable
+                0x0010a780                vmm_map
+                0x0010a920                vmm_alloc
+                0x0010a970                vmm_umap
+                0x0010a9d0                vmm_mapkernel
+                0x0010aa60                vmm_create
+                0x0010aa90                vmm_destroy
+                0x0010ab00                vmm_init
+ *fill*         0x0010adfc        0x4 
+ .text          0x0010ae00       0x1d src/arch/i386/panic.o
+                0x0010ae00                arch_panic
+ *fill*         0x0010ae1d        0x3 
+ .text          0x0010ae20      0x157 src/arch/i386/serial.o
+                0x0010ae20                serial_send
+                0x0010ae60                serial_recv
+                0x0010aea0                serial_init
+ *fill*         0x0010af77        0x9 
+ .text          0x0010af80       0x63 src/arch/i386/i386.o
+                0x0010af80                cpu_halt
+                0x0010af90                cpu_idle
+                0x0010afa0                cpu_wait
+                0x0010afb0                arch_pre_init
+                0x0010afe0                arch_post_init
+ *fill*         0x0010afe3        0xd 
+ .text          0x0010aff0      0x2cb src/arch/i386/syscall.o
+                0x0010aff0                syscall_init
+                0x0010b220                syscall_invoke
+                0x0010b270                syscall_handler
+ .text          0x0010b2bb        0x0 src/arch/rpi/task.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/timer.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/paging.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/rpi.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/usb/usbd.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/usb/usbdep.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/panic.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/lfb.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/serial.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/spinlock.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/syscall.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/intr.o
+ .text          0x0010b2bb        0x0 src/arch/rpi/atags.o
+ *fill*         0x0010b2bb        0x5 
+ .text          0x0010b2c0       0x6f src/arch/i386/loader.o
+                0x0010b2c0                _start
+ *fill*         0x0010b32f        0x1 
+ .text          0x0010b330      0x273 src/arch/i386/_desc.o
+                0x0010b330                isr0
+                0x0010b339                isr1
+                0x0010b342                isr2
+                0x0010b34b                isr3
+                0x0010b354                isr4
+                0x0010b35d                isr5
+                0x0010b366                isr6
+                0x0010b36f                isr7
+                0x0010b378                isr8
+                0x0010b37f                isr9
+                0x0010b388                isr10
+                0x0010b38f                isr11
+                0x0010b396                isr12
+                0x0010b39d                isr13
+                0x0010b3a4                isr15
+                0x0010b3ad                isr16
+                0x0010b3b6                isr17
+                0x0010b3bf                isr18
+                0x0010b3c8                isr19
+                0x0010b3d1                isr20
+                0x0010b3da                isr21
+                0x0010b3e3                isr22
+                0x0010b3ec                isr23
+                0x0010b3f5                isr24
+                0x0010b3fe                isr25
+                0x0010b407                isr26
+                0x0010b410                isr27
+                0x0010b419                isr28
+                0x0010b422                isr29
+                0x0010b42b                isr30
+                0x0010b434                isr31
+                0x0010b43d                irq0
+                0x0010b446                irq1
+                0x0010b44f                irq2
+                0x0010b458                irq3
+                0x0010b461                irq4
+                0x0010b46a                irq5
+                0x0010b473                irq6
+                0x0010b47c                irq7
+                0x0010b485                irq8
+                0x0010b48e                irq9
+                0x0010b497                irq10
+                0x0010b4a0                irq11
+                0x0010b4a9                irq12
+                0x0010b4b2                irq13
+                0x0010b4bb                irq14
+                0x0010b4c4                irq15
+                0x0010b4d1                isr0x80
+                0x0010b509                isr14
+                0x0010b533                read_eip
+                0x0010b536                isr_stub
+                0x0010b55e                irq_stub
+                0x0010b586                __go_usermode
+ *fill*         0x0010b5a3        0xd 
+ .text          0x0010b5b0      0x33b /opt/cross/usr/lib/libelfldr.a(elf-module.o)
+                0x0010b5b0                elf_module_init
+                0x0010b6d0                elf_module_get_size
+                0x0010b6e0                elf_module_set_data
+                0x0010b6f0                elf_module_get_data
+                0x0010b700                elf_module_load
+                0x0010b870                elf_module_lookup_symbol
+ *fill*         0x0010b8eb        0x5 
+ .text          0x0010b8f0       0xc6 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
+                0x0010b8f0                elf_module_check_machine
+                0x0010b910                elf_module_reloc_section
+                0x0010b9b0                elf_module_reloca_section
+ *fill*         0x0010b9b6        0xa 
+ .text          0x0010b9c0       0x5b /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
+                0x0010b9c0                atoi
+                0x0010b9f0                _atoi_r
+ *fill*         0x0010ba1b        0x5 
+ .text          0x0010ba20        0x6 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+                0x0010ba20                __errno
+ .text          0x0010ba26        0x0 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ .text          0x0010ba26       0x52 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+                0x0010ba26                memcmp
+ .text          0x0010ba78       0x48 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+                0x0010ba78                memcpy
+ .text          0x0010bac0       0x88 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+                0x0010bac0                memset
+ *fill*         0x0010bb48        0x8 
+ .text          0x0010bb50      0x826 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+                0x0010beb0                mktime
+ *fill*         0x0010c376        0xa 
+ .text          0x0010c380      0x6d7 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+                0x0010c380                __tzcalc_limits
+                0x0010c5c0                _mktm_r
+ *fill*         0x0010ca57        0x9 
+ .text          0x0010ca60       0xfc /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+                0x0010ca60                strchr
+ *fill*         0x0010cb5c        0x4 
+ .text          0x0010cb60       0x62 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+                0x0010cb60                strcmp
+ *fill*         0x0010cbc2        0xe 
+ .text          0x0010cbd0       0x65 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+                0x0010cbd0                strcpy
+ *fill*         0x0010cc35        0xb 
+ .text          0x0010cc40      0x53c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x0010cc40                _strerror_r
+                0x0010d150                strerror
+ *fill*         0x0010d17c        0x4 
+ .text          0x0010d180       0x79 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+                0x0010d180                strlen
+ *fill*         0x0010d1f9        0x7 
+ .text          0x0010d200       0xb2 /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
+                0x0010d200                strncpy
+ *fill*         0x0010d2b2        0xe 
+ .text          0x0010d2c0      0x21c /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
+                0x0010d2c0                _strtol_r
+                0x0010d4b0                strtol
+ *fill*         0x0010d4dc        0x4 
+ .text          0x0010d4e0       0x12 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+                0x0010d4e0                __tz_lock
+                0x0010d4f0                __tz_unlock
+ .text          0x0010d4f2        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ *fill*         0x0010d4f2        0xe 
+ .text          0x0010d500        0x3 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+                0x0010d500                _user_strerror
+ .text          0x0010d503        0x0 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
+ *fill*         0x0010d503        0xd 
+ .text          0x0010d510       0x61 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+                0x0010d510                div
+ *fill*         0x0010d571        0xf 
+ .text          0x0010d580        0x6 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+                0x0010d580                __gettzinfo
+ *fill*         0x0010d586        0xa 
+ .text          0x0010d590      0x16f /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
+                0x0010d590                __umoddi3
  *(.rodata*)
  .rodata.str1.1
-                0x0010d67f      0x125 src/init/main.o
+                0x0010d6ff      0x125 src/init/main.o
                                 0x141 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x0010d7a4       0xcb src/init/main.o
+                0x0010d824       0xcb src/init/main.o
  .rodata.str1.1
-                0x0010d86f       0x20 src/init/debug.o
+                0x0010d8ef       0x20 src/init/debug.o
  .rodata.str1.1
-                0x0010d88f       0x4c src/init/modules.o
- *fill*         0x0010d8db        0x1 
+                0x0010d90f       0x4c src/init/modules.o
+ *fill*         0x0010d95b        0x1 
  .rodata.str1.4
-                0x0010d8dc       0x20 src/init/modules.o
+                0x0010d95c       0x20 src/init/modules.o
  .rodata.str1.1
-                0x0010d8fc       0xe5 src/net/netif.o
+                0x0010d97c       0xe5 src/net/netif.o
  .rodata.str1.1
-                0x0010d9e1        0x4 src/net/eth.o
+                0x0010da61        0x4 src/net/eth.o
  .rodata.str1.1
-                0x0010d9e5       0x64 src/exec.o
+                0x0010da65       0x64 src/exec.o
  .rodata.str1.1
-                0x0010da49        0xa src/syscall/times.o
+                0x0010dac9        0xa src/syscall/times.o
  .rodata.str1.1
-                0x0010da53        0x9 src/syscall/sbrk.o
+                0x0010dad3        0x9 src/syscall/sbrk.o
  .rodata.str1.1
-                0x0010da5c        0x9 src/syscall/link.o
+                0x0010dadc        0x9 src/syscall/link.o
  .rodata.str1.1
-                0x0010da65        0xa src/syscall/close.o
+                0x0010dae5        0xa src/syscall/close.o
  .rodata.str1.1
-                0x0010da6f        0xa src/syscall/fstat.o
+                0x0010daef        0xa src/syscall/fstat.o
  .rodata.str1.1
-                0x0010da79        0xa src/syscall/yield.o
+                0x0010daf9        0xa src/syscall/yield.o
  .rodata.str1.1
-                0x0010da83        0x9 src/syscall/fork.o
+                0x0010db03        0x9 src/syscall/fork.o
  .rodata.str1.4
-                0x0010da8c       0x23 src/syscall/unlink.o
+                0x0010db0c       0x23 src/syscall/unlink.o
  .rodata.str1.1
-                0x0010daaf        0xb src/syscall/unlink.o
+                0x0010db2f        0xb src/syscall/unlink.o
  .rodata.str1.1
-                0x0010daba        0x9 src/syscall/stat.o
+                0x0010db3a        0x9 src/syscall/stat.o
  .rodata.str1.1
-                0x0010dac3        0x9 src/syscall/kill.o
+                0x0010db43        0x9 src/syscall/kill.o
  .rodata.str1.1
-                0x0010dacc        0xa src/syscall/clone.o
+                0x0010db4c        0xa src/syscall/clone.o
  .rodata.str1.1
-                0x0010dad6        0x9 src/syscall/read.o
+                0x0010db56        0x9 src/syscall/read.o
  .rodata.str1.1
-                0x0010dadf       0x19 src/syscall/shutdown.o
+                0x0010db5f       0x19 src/syscall/shutdown.o
  .rodata.str1.1
-                0x0010daf8        0xa src/syscall/write.o
+                0x0010db78        0xa src/syscall/write.o
  .rodata.str1.1
-                0x0010db02        0xb src/syscall/fchdir.o
+                0x0010db82        0xb src/syscall/fchdir.o
  .rodata.str1.1
-                0x0010db0d       0x11 src/syscall/gettimeofday.o
+                0x0010db8d       0x11 src/syscall/gettimeofday.o
  .rodata.str1.1
-                0x0010db1e        0xb src/syscall/isatty.o
- .rodata.str1.1
-                0x0010db29       0x1c src/syscall/args.o
- .rodata.str1.1
-                0x0010db45       0x17 src/syscall/getpid.o
- .rodata.str1.1
-                0x0010db5c        0xa src/syscall/lseek.o
- .rodata.str1.1
-                0x0010db66        0x9 src/syscall/pipe.o
- *fill*         0x0010db6f        0x1 
+                0x0010db9e        0xb src/syscall/isatty.o
+ *fill*         0x0010dba9        0x3 
  .rodata.str1.4
-                0x0010db70       0x36 src/syscall/chown.o
+                0x0010dbac       0x37 src/syscall/chroot.o
  .rodata.str1.1
-                0x0010dba6        0xa src/syscall/chown.o
+                0x0010dbe3        0xb src/syscall/chroot.o
+ .rodata.str1.1
+                0x0010dbee       0x1c src/syscall/args.o
+ .rodata.str1.1
+                0x0010dc0a       0x17 src/syscall/getpid.o
+ .rodata.str1.1
+                0x0010dc21        0xa src/syscall/lseek.o
+ .rodata.str1.1
+                0x0010dc2b        0x9 src/syscall/pipe.o
  .rodata.str1.4
-                0x0010dbb0       0x27 src/syscall/test.o
+                0x0010dc34       0x36 src/syscall/chown.o
  .rodata.str1.1
-                0x0010dbd7        0x9 src/syscall/test.o
+                0x0010dc6a        0xa src/syscall/chown.o
+ .rodata.str1.4
+                0x0010dc74       0x27 src/syscall/test.o
  .rodata.str1.1
-                0x0010dbe0        0x9 src/syscall/_exit.o
+                0x0010dc9b        0x9 src/syscall/test.o
  .rodata.str1.1
-                0x0010dbe9        0xb src/syscall/socket.o
+                0x0010dca4        0x9 src/syscall/_exit.o
+ .rodata.str1.1
+                0x0010dcad        0xb src/syscall/socket.o
                                  0x17 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x0010dbf4        0xa src/syscall/ioctl.o
+                0x0010dcb8        0xa src/syscall/ioctl.o
  .rodata.str1.1
-                0x0010dbfe       0x12 src/syscall/mmap.o
+                0x0010dcc2       0x12 src/syscall/mmap.o
  .rodata.str1.1
-                0x0010dc10       0x58 src/syscall/uname.o
+                0x0010dcd4       0x58 src/syscall/uname.o
                                  0x5b (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x0010dc68        0xa src/syscall/mount.o
+                0x0010dd2c        0xa src/syscall/mount.o
                                   0xd (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x0010dc72        0x9 src/syscall/wait.o
+                0x0010dd36        0x9 src/syscall/wait.o
  .rodata.str1.1
-                0x0010dc7b        0xa src/syscall/fcntl.o
+                0x0010dd3f        0xa src/syscall/fcntl.o
  .rodata.str1.1
-                0x0010dc85        0xc src/syscall/waitpid.o
+                0x0010dd49        0xc src/syscall/waitpid.o
  .rodata.str1.1
-                0x0010dc91       0x17 src/syscall/umount.o
+                0x0010dd55       0x17 src/syscall/umount.o
  .rodata.str1.1
-                0x0010dca8        0xc src/syscall/symlink.o
+                0x0010dd6c        0xc src/syscall/symlink.o
  .rodata.str1.4
-                0x0010dcb4       0x21 src/syscall/open.o
+                0x0010dd78       0x21 src/syscall/open.o
  .rodata.str1.1
-                0x0010dcd5        0x9 src/syscall/open.o
+                0x0010dd99        0x9 src/syscall/open.o
  .rodata.str1.1
-                0x0010dcde        0x9 src/syscall/bind.o
+                0x0010dda2        0x9 src/syscall/bind.o
  .rodata.str1.1
-                0x0010dce7        0xc src/syscall/readdir.o
+                0x0010ddab        0xc src/syscall/readdir.o
  .rodata.str1.1
-                0x0010dcf3        0xb src/syscall/execve.o
+                0x0010ddb7        0xb src/syscall/execve.o
  .rodata.str1.1
-                0x0010dcfe       0x18 src/syscall/sighandler.o
+                0x0010ddc2       0x18 src/syscall/sighandler.o
  .rodata.str1.1
-                0x0010dd16        0xc src/syscall/openpty.o
+                0x0010ddda        0xc src/syscall/openpty.o
  .rodata.str1.1
-                0x0010dd22        0xe src/syscall/getgroups.o
+                0x0010dde6        0xe src/syscall/getgroups.o
  .rodata.str1.1
-                0x0010dd30       0x47 src/sched.o
+                0x0010ddf4       0x47 src/sched.o
  .rodata.str1.1
                 0x00000000       0x47 src/fs/procfs/procfs_readdir.o
                                   0x3 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x0010dd77        0x9 src/fs/procfs/procfs.o
+                0x0010de3b        0x9 src/fs/procfs/procfs.o
  .rodata.str1.1
-                0x0010dd80        0x6 src/fs/iso9660/iso9660.o
+                0x0010de44        0x6 src/fs/iso9660/iso9660.o
  .rodata.str1.1
-                0x0010dd86       0x1c src/fs/iso9660/iso9660_mount.o
- *fill*         0x0010dda2        0x2 
+                0x0010de4a       0x1c src/fs/iso9660/iso9660_mount.o
+ *fill*         0x0010de66        0x2 
  .rodata.str1.4
-                0x0010dda4       0x23 src/fs/ramdev.o
+                0x0010de68       0x23 src/fs/ramdev.o
  .rodata.str1.1
-                0x0010ddc7        0x9 src/fs/ramdev.o
+                0x0010de8b        0x9 src/fs/ramdev.o
  .rodata.str1.1
-                0x0010ddd0        0x3 src/fs/fs.o
+                0x0010de94        0x3 src/fs/fs.o
                                   0x5 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x0010ddd3       0x21 src/fs/devfs.o
- .rodata        0x0010ddf4      0x15c src/fs/tty.o
+                0x0010de97       0x21 src/fs/devfs.o
+ .rodata        0x0010deb8      0x15c src/fs/tty.o
  .rodata.str1.1
-                0x0010df50       0x49 src/fs/tty.o
- *fill*         0x0010df99        0x3 
+                0x0010e014       0x49 src/fs/tty.o
+ *fill*         0x0010e05d        0x3 
  .rodata.str1.4
-                0x0010df9c       0x1f src/fs/tty.o
+                0x0010e060       0x1f src/fs/tty.o
  .rodata.str1.1
-                0x0010dfbb        0x6 src/panic.o
+                0x0010e07f        0x6 src/panic.o
  .rodata.str1.1
-                0x0010dfc1       0x5e src/spinlock.o
+                0x0010e085       0x5e src/spinlock.o
  .rodata.str1.1
-                0x0010e01f       0x62 src/mm/mm.o
+                0x0010e0e3       0x62 src/mm/mm.o
  .rodata.str1.1
-                0x0010e081      0x1be src/arch/i386/desc.o
+                0x0010e145      0x1be src/arch/i386/desc.o
                                 0x1c0 (dimensione prima del rilassamento)
- *fill*         0x0010e23f        0x1 
+ *fill*         0x0010e303        0x1 
  .rodata.str1.4
-                0x0010e240       0x32 src/arch/i386/desc.o
- *fill*         0x0010e272        0xe 
- .rodata        0x0010e280       0x80 src/arch/i386/desc.o
+                0x0010e304       0x32 src/arch/i386/desc.o
+ *fill*         0x0010e336        0xa 
+ .rodata        0x0010e340       0x80 src/arch/i386/desc.o
  .rodata.str1.1
-                0x0010e300       0x27 src/arch/i386/pci.o
- *fill*         0x0010e327        0x1 
+                0x0010e3c0       0x27 src/arch/i386/pci.o
+ *fill*         0x0010e3e7        0x1 
  .rodata.str1.4
-                0x0010e328       0x77 src/arch/i386/paging.o
+                0x0010e3e8       0x77 src/arch/i386/paging.o
  .rodata.str1.1
-                0x0010e39f       0x28 src/arch/i386/paging.o
+                0x0010e45f       0x28 src/arch/i386/paging.o
  .rodata.str1.1
-                0x0010e3c7       0x18 src/arch/i386/serial.o
- *fill*         0x0010e3df        0x1 
- .rodata        0x0010e3e0        0x8 src/arch/i386/serial.o
+                0x0010e487       0x18 src/arch/i386/serial.o
+ *fill*         0x0010e49f        0x1 
+ .rodata        0x0010e4a0        0x8 src/arch/i386/serial.o
  .rodata.str1.1
-                0x0010e3e8       0x1b src/arch/i386/i386.o
+                0x0010e4a8       0x1b src/arch/i386/i386.o
  .rodata.str1.1
-                0x0010e403       0x25 src/arch/i386/syscall.o
+                0x0010e4c3       0x25 src/arch/i386/syscall.o
  .rodata.str1.4
-                0x0010e428       0x29 src/arch/i386/syscall.o
+                0x0010e4e8       0x29 src/arch/i386/syscall.o
  .rodata.str1.1
-                0x0010e451        0x5 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
- *fill*         0x0010e456        0x2 
- .rodata        0x0010e458        0x4 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
-                0x0010e458                _global_impure_ptr
+                0x0010e511        0x5 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
+ *fill*         0x0010e516        0x2 
+ .rodata        0x0010e518        0x4 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+                0x0010e518                _global_impure_ptr
  .rodata.str1.1
-                0x0010e45c        0x2 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
- *fill*         0x0010e45e        0x2 
- .rodata        0x0010e460       0x70 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- *fill*         0x0010e4d0       0x10 
- .rodata        0x0010e4e0       0x80 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+                0x0010e51c        0x2 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+ *fill*         0x0010e51e        0x2 
+ .rodata        0x0010e520       0x70 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ *fill*         0x0010e590       0x10 
+ .rodata        0x0010e5a0       0x80 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
  .rodata.str1.1
-                0x0010e560      0x4e4 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x0010e620      0x4e4 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                 0x4e5 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x0010ea44       0xfc /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+                0x0010eb04       0xfc /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                  0xfa (dimensione prima del rilassamento)
- .rodata        0x0010eb40      0x23c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .rodata        0x0010ec00      0x23c /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
  .rodata.str1.1
-                0x0010ed7c        0x4 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
- .rodata        0x0010ed80      0x2a0 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
-                0x0010ed80                _ctype_
+                0x0010ee3c        0x4 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+ .rodata        0x0010ee40      0x2a0 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
+                0x0010ee40                _ctype_
 
-.text.startup   0x0010f020      0x2ce
- .text.startup  0x0010f020      0x2ce src/init/main.o
-                0x0010f020                main
+.text.startup   0x0010f0e0      0x2ce
+ .text.startup  0x0010f0e0      0x2ce src/init/main.o
+                0x0010f0e0                main
 
-.iplt           0x0010f2f0        0x0
+.iplt           0x0010f3b0        0x0
  .iplt          0x00000000        0x0 src/init/main.o
 
-.rel.dyn        0x0010f2f0        0x0
+.rel.dyn        0x0010f3b0        0x0
  .rel.iplt      0x00000000        0x0 src/init/main.o
  .rel.data      0x00000000        0x0 src/init/main.o
  .rel.text.startup
@@ -849,652 +856,659 @@ Script del linker e mappa della memoria
  .rel.multiboot
                 0x00000000        0x0 src/init/main.o
 
-.data           0x0010f300      0xc60
+.data           0x0010f3c0      0xc80
  *(.data)
- .data          0x0010f300        0xc src/init/main.o
-                0x0010f300                __EXPORTED_mbd
-                0x0010f308                mbd
- .data          0x0010f30c        0x8 src/init/debug.o
-                0x0010f30c                __EXPORTED_kprintf
- .data          0x0010f314        0x0 src/init/modules.o
- *fill*         0x0010f314        0x4 
- .data          0x0010f318       0x46 src/net/netif.o
-                0x0010f320                __EXPORTED_netif_get_interface
-                0x0010f328                __EXPORTED_netif_packet_pop
-                0x0010f330                __EXPORTED_netif_packet_push
-                0x0010f338                __EXPORTED_netif_ifdown
-                0x0010f340                __EXPORTED_netif_ifup
-                0x0010f348                __EXPORTED_netif_remove
-                0x0010f350                __EXPORTED_netif_add
-                0x0010f358                __netif_macaddr_broadcast
- .data          0x0010f35e        0x0 src/net/socket.o
- .data          0x0010f35e        0x0 src/net/loopback/loopback.o
- .data          0x0010f35e       0x18 src/net/eth.o
- .data          0x0010f376        0x8 src/exec.o
-                0x0010f376                __EXPORTED_elf_symbol_lookup
- .data          0x0010f37e       0x10 src/syscall/times.o
-                0x0010f37e                __EXPORTED_sys_times
- .data          0x0010f38e       0x10 src/syscall/sbrk.o
-                0x0010f38e                __EXPORTED_sys_sbrk
- .data          0x0010f39e       0x10 src/syscall/link.o
-                0x0010f39e                __EXPORTED_sys_link
- .data          0x0010f3ae       0x10 src/syscall/close.o
-                0x0010f3ae                __EXPORTED_sys_close
- .data          0x0010f3be       0x10 src/syscall/fstat.o
-                0x0010f3be                __EXPORTED_sys_fstat
- .data          0x0010f3ce       0x10 src/syscall/yield.o
-                0x0010f3ce                __EXPORTED_sys_yield
- .data          0x0010f3de       0x10 src/syscall/fork.o
-                0x0010f3de                __EXPORTED_sys_fork
- .data          0x0010f3ee       0x10 src/syscall/unlink.o
-                0x0010f3ee                __EXPORTED_sys_unlink
- .data          0x0010f3fe       0x10 src/syscall/stat.o
-                0x0010f3fe                __EXPORTED_sys_stat
- .data          0x0010f40e       0x10 src/syscall/kill.o
-                0x0010f40e                __EXPORTED_sys_kill
- .data          0x0010f41e       0x10 src/syscall/clone.o
-                0x0010f41e                __EXPORTED_sys_clone
- .data          0x0010f42e       0x10 src/syscall/read.o
-                0x0010f42e                __EXPORTED_sys_read
- .data          0x0010f43e       0x10 src/syscall/shutdown.o
-                0x0010f43e                __EXPORTED_sys_shutdown
- .data          0x0010f44e       0x10 src/syscall/write.o
-                0x0010f44e                __EXPORTED_sys_write
- .data          0x0010f45e       0x10 src/syscall/fchdir.o
-                0x0010f45e                __EXPORTED_sys_fchdir
- .data          0x0010f46e       0x10 src/syscall/gettimeofday.o
-                0x0010f46e                __EXPORTED_sys_gettimeofday
- .data          0x0010f47e       0x10 src/syscall/isatty.o
-                0x0010f47e                __EXPORTED_sys_isatty
- .data          0x0010f48e       0x20 src/syscall/args.o
-                0x0010f48e                __EXPORTED_sys__get_envp
-                0x0010f49e                __EXPORTED_sys__get_argv
- .data          0x0010f4ae        0x0 src/syscall/time.o
- .data          0x0010f4ae       0x20 src/syscall/getpid.o
-                0x0010f4ae                __EXPORTED_sys_getppid
-                0x0010f4be                __EXPORTED_sys_getpid
- .data          0x0010f4ce       0x10 src/syscall/lseek.o
-                0x0010f4ce                __EXPORTED_sys_lseek
- .data          0x0010f4de       0x10 src/syscall/pipe.o
-                0x0010f4de                __EXPORTED_sys_pipe
- .data          0x0010f4ee       0x10 src/syscall/chown.o
-                0x0010f4ee                __EXPORTED_sys_chown
- .data          0x0010f4fe       0x10 src/syscall/test.o
-                0x0010f4fe                __EXPORTED_sys_test
- .data          0x0010f50e       0x10 src/syscall/_exit.o
-                0x0010f50e                __EXPORTED_sys_exit
- .data          0x0010f51e       0x10 src/syscall/socket.o
-                0x0010f51e                __EXPORTED_sys_socket
- .data          0x0010f52e       0x10 src/syscall/ioctl.o
-                0x0010f52e                __EXPORTED_sys_ioctl
- .data          0x0010f53e       0x20 src/syscall/mmap.o
-                0x0010f53e                __EXPORTED_sys_umap
-                0x0010f54e                __EXPORTED_sys_mmap
- .data          0x0010f55e       0x10 src/syscall/uname.o
-                0x0010f55e                __EXPORTED_sys_uname
- .data          0x0010f56e       0x10 src/syscall/mount.o
-                0x0010f56e                __EXPORTED_sys_mount
- .data          0x0010f57e       0x10 src/syscall/wait.o
-                0x0010f57e                __EXPORTED_sys_wait
- .data          0x0010f58e       0x10 src/syscall/fcntl.o
-                0x0010f58e                __EXPORTED_sys_fcntl
- .data          0x0010f59e       0x10 src/syscall/waitpid.o
-                0x0010f59e                __EXPORTED_sys_waitpid
- .data          0x0010f5ae       0x20 src/syscall/umount.o
-                0x0010f5ae                __EXPORTED_sys_umount2
-                0x0010f5be                __EXPORTED_sys_umount
- .data          0x0010f5ce       0x10 src/syscall/symlink.o
-                0x0010f5ce                __EXPORTED_sys_symlink
- .data          0x0010f5de       0x10 src/syscall/open.o
-                0x0010f5de                __EXPORTED_sys_open
- .data          0x0010f5ee       0x10 src/syscall/bind.o
-                0x0010f5ee                __EXPORTED_sys_bind
- .data          0x0010f5fe       0x10 src/syscall/readdir.o
-                0x0010f5fe                __EXPORTED_sys_readdir
- .data          0x0010f60e       0x10 src/syscall/execve.o
-                0x0010f60e                __EXPORTED_sys_execve
- .data          0x0010f61e       0x10 src/syscall/sighandler.o
-                0x0010f61e                __EXPORTED_sys__install_sighandler
- .data          0x0010f62e       0x10 src/syscall/openpty.o
-                0x0010f62e                __EXPORTED_sys_openpty
- .data          0x0010f63e       0x10 src/syscall/getgroups.o
-                0x0010f63e                __EXPORTED_sys_getgroups
- .data          0x0010f64e       0x28 src/sched.o
-                0x0010f64e                __EXPORTED_kernel_task
-                0x0010f656                __EXPORTED_current_task
-                0x0010f65e                __EXPORTED_schedule_disable
-                0x0010f666                __EXPORTED_schedule_enable
-                0x0010f66e                __EXPORTED_im_superuser
- .data          0x0010f676        0x0 src/fs/procfs/procfs_unlink.o
- .data          0x0010f676        0x0 src/fs/procfs/procfs_finddir.o
- .data          0x0010f676        0x0 src/fs/procfs/procfs_creat.o
- .data          0x0010f676        0x0 src/fs/procfs/procfs_readdir.o
- .data          0x0010f676        0x0 src/fs/procfs/procfs.o
- *fill*         0x0010f676        0xa 
- .data          0x0010f680      0x103 src/fs/procfs/procfs_mount.o
- .data          0x0010f783        0x0 src/fs/vfs.o
- .data          0x0010f783        0x0 src/fs/iso9660/iso9660.o
- .data          0x0010f783        0x0 src/fs/iso9660/iso9660_read.o
- *fill*         0x0010f783       0x1d 
- .data          0x0010f7a0      0x103 src/fs/iso9660/iso9660_mount.o
- .data          0x0010f8a3        0x0 src/fs/iso9660/iso9660_finddir.o
- .data          0x0010f8a3        0x0 src/fs/iso9660/iso9660_readdir.o
- .data          0x0010f8a3        0x0 src/fs/tmpfs/tmpfs_write.o
- .data          0x0010f8a3        0x0 src/fs/tmpfs/tmpfs_creat.o
- .data          0x0010f8a3        0x0 src/fs/tmpfs/tmpfs_flush.o
- *fill*         0x0010f8a3       0x1d 
- .data          0x0010f8c0      0x103 src/fs/tmpfs/tmpfs_mount.o
- .data          0x0010f9c3        0x0 src/fs/tmpfs/tmpfs_read.o
- .data          0x0010f9c3        0x0 src/fs/tmpfs/tmpfs_unlink.o
- .data          0x0010f9c3        0x8 src/fs/ramdev.o
-                0x0010f9c3                __EXPORTED_mkramdev
- .data          0x0010f9cb        0x0 src/fs/pipe.o
- .data          0x0010f9cb        0x0 src/fs/fs.o
- .data          0x0010f9cb       0x10 src/fs/devfs.o
-                0x0010f9cb                __EXPORTED_devfs_makedevice
-                0x0010f9d3                __EXPORTED_devfs_getdevice
- .data          0x0010f9db        0x0 src/fs/tty.o
- .data          0x0010f9db        0x8 src/panic.o
-                0x0010f9db                __EXPORTED_panic
- .data          0x0010f9e3        0x0 src/shm.o
- .data          0x0010f9e3       0x30 src/spinlock.o
-                0x0010f9e3                __EXPORTED_fastlock_unlock
-                0x0010f9eb                __EXPORTED_spinlock_unlock
-                0x0010f9f3                __EXPORTED_fastlock_trylock
-                0x0010f9fb                __EXPORTED_spinlock_trylock
-                0x0010fa03                __EXPORTED_fastlock_lock
-                0x0010fa0b                __EXPORTED_spinlock_lock
- .data          0x0010fa13       0x18 src/mm/mm.o
-                0x0010fa13                __EXPORTED_kfree
-                0x0010fa1b                __EXPORTED_krealloc
-                0x0010fa23                __EXPORTED_kmalloc
- .data          0x0010fa2b        0x0 src/mm/heap.o
- .data          0x0010fa2b        0x0 src/mm/kheap.o
- .data          0x0010fa2b        0x0 src/arch/i386/grub.o
- .data          0x0010fa2b       0x30 src/arch/i386/desc.o
-                0x0010fa2b                __EXPORTED_irq_get
-                0x0010fa33                __EXPORTED_irq_unset
-                0x0010fa3b                __EXPORTED_irq_set
-                0x0010fa43                __EXPORTED_timer_getfreq
-                0x0010fa4b                __EXPORTED_timer_getticks
-                0x0010fa53                __EXPORTED_timer_gettime
- .data          0x0010fa5b        0x0 src/arch/i386/task.o
- .data          0x0010fa5b        0x8 src/arch/i386/pci.o
-                0x0010fa5b                __EXPORTED_pci_find_by_id
- .data          0x0010fa63       0x20 src/arch/i386/paging.o
-                0x0010fa63                __EXPORTED_vmm_switch
-                0x0010fa6b                __EXPORTED_vmm_clone
-                0x0010fa73                __EXPORTED_vmm_free
-                0x0010fa7b                __EXPORTED_vmm_alloc
- .data          0x0010fa83        0x0 src/arch/i386/panic.o
- .data          0x0010fa83       0x10 src/arch/i386/serial.o
-                0x0010fa83                __EXPORTED_serial_recv
-                0x0010fa8b                __EXPORTED_serial_send
- .data          0x0010fa93       0x18 src/arch/i386/i386.o
-                0x0010fa93                __EXPORTED_cpu_wait
-                0x0010fa9b                __EXPORTED_cpu_idle
-                0x0010faa3                __EXPORTED_cpu_halt
- .data          0x0010faab        0x0 src/arch/i386/syscall.o
- .data          0x0010faab        0x0 src/arch/rpi/task.o
- .data          0x0010faab        0x0 src/arch/rpi/timer.o
- .data          0x0010faab        0x0 src/arch/rpi/paging.o
- .data          0x0010faab        0x0 src/arch/rpi/rpi.o
- .data          0x0010faab        0x0 src/arch/rpi/usb/usbd.o
- .data          0x0010faab        0x0 src/arch/rpi/usb/usbdep.o
- .data          0x0010faab        0x0 src/arch/rpi/panic.o
- .data          0x0010faab        0x0 src/arch/rpi/lfb.o
- .data          0x0010faab        0x0 src/arch/rpi/serial.o
- .data          0x0010faab        0x0 src/arch/rpi/spinlock.o
- .data          0x0010faab        0x0 src/arch/rpi/syscall.o
- .data          0x0010faab        0x0 src/arch/rpi/intr.o
- .data          0x0010faab        0x0 src/arch/rpi/atags.o
- .data          0x0010faab        0x0 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
- .data          0x0010faab        0x0 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
- .data          0x0010faab        0x0 /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
- .data          0x0010faab        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
- *fill*         0x0010faab       0x15 
- .data          0x0010fac0      0x444 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
-                0x0010fac0                _impure_ptr
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
- .data          0x0010ff04        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
- .data          0x0010ff04        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
-                0x0010ff04                _tzname
- .data          0x0010ff0c        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
- .data          0x0010ff0c        0x4 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
-                0x0010ff0c                __ctype_ptr__
- .data          0x0010ff10        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
- *fill*         0x0010ff10       0x10 
- .data          0x0010ff20       0x40 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
- .data          0x0010ff60        0x0 /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
+ .data          0x0010f3c0        0xc src/init/main.o
+                0x0010f3c0                __EXPORTED_mbd
+                0x0010f3c8                mbd
+ .data          0x0010f3cc        0x8 src/init/debug.o
+                0x0010f3cc                __EXPORTED_kprintf
+ .data          0x0010f3d4        0x0 src/init/modules.o
+ *fill*         0x0010f3d4        0x4 
+ .data          0x0010f3d8       0x46 src/net/netif.o
+                0x0010f3e0                __EXPORTED_netif_get_interface
+                0x0010f3e8                __EXPORTED_netif_packet_pop
+                0x0010f3f0                __EXPORTED_netif_packet_push
+                0x0010f3f8                __EXPORTED_netif_ifdown
+                0x0010f400                __EXPORTED_netif_ifup
+                0x0010f408                __EXPORTED_netif_remove
+                0x0010f410                __EXPORTED_netif_add
+                0x0010f418                __netif_macaddr_broadcast
+ .data          0x0010f41e        0x0 src/net/socket.o
+ .data          0x0010f41e        0x0 src/net/loopback/loopback.o
+ .data          0x0010f41e       0x18 src/net/eth.o
+ .data          0x0010f436        0x8 src/exec.o
+                0x0010f436                __EXPORTED_elf_symbol_lookup
+ .data          0x0010f43e       0x10 src/syscall/times.o
+                0x0010f43e                __EXPORTED_sys_times
+ .data          0x0010f44e       0x10 src/syscall/sbrk.o
+                0x0010f44e                __EXPORTED_sys_sbrk
+ .data          0x0010f45e       0x10 src/syscall/link.o
+                0x0010f45e                __EXPORTED_sys_link
+ .data          0x0010f46e       0x10 src/syscall/close.o
+                0x0010f46e                __EXPORTED_sys_close
+ .data          0x0010f47e       0x10 src/syscall/fstat.o
+                0x0010f47e                __EXPORTED_sys_fstat
+ .data          0x0010f48e       0x10 src/syscall/yield.o
+                0x0010f48e                __EXPORTED_sys_yield
+ .data          0x0010f49e       0x10 src/syscall/fork.o
+                0x0010f49e                __EXPORTED_sys_fork
+ .data          0x0010f4ae       0x10 src/syscall/unlink.o
+                0x0010f4ae                __EXPORTED_sys_unlink
+ .data          0x0010f4be       0x10 src/syscall/stat.o
+                0x0010f4be                __EXPORTED_sys_stat
+ .data          0x0010f4ce       0x10 src/syscall/kill.o
+                0x0010f4ce                __EXPORTED_sys_kill
+ .data          0x0010f4de       0x10 src/syscall/clone.o
+                0x0010f4de                __EXPORTED_sys_clone
+ .data          0x0010f4ee       0x10 src/syscall/read.o
+                0x0010f4ee                __EXPORTED_sys_read
+ .data          0x0010f4fe       0x10 src/syscall/shutdown.o
+                0x0010f4fe                __EXPORTED_sys_shutdown
+ .data          0x0010f50e       0x10 src/syscall/write.o
+                0x0010f50e                __EXPORTED_sys_write
+ .data          0x0010f51e       0x10 src/syscall/fchdir.o
+                0x0010f51e                __EXPORTED_sys_fchdir
+ .data          0x0010f52e       0x10 src/syscall/gettimeofday.o
+                0x0010f52e                __EXPORTED_sys_gettimeofday
+ .data          0x0010f53e       0x10 src/syscall/isatty.o
+                0x0010f53e                __EXPORTED_sys_isatty
+ .data          0x0010f54e       0x10 src/syscall/chroot.o
+                0x0010f54e                __EXPORTED_sys_chroot
+ .data          0x0010f55e       0x20 src/syscall/args.o
+                0x0010f55e                __EXPORTED_sys__get_envp
+                0x0010f56e                __EXPORTED_sys__get_argv
+ .data          0x0010f57e        0x0 src/syscall/time.o
+ .data          0x0010f57e       0x20 src/syscall/getpid.o
+                0x0010f57e                __EXPORTED_sys_getppid
+                0x0010f58e                __EXPORTED_sys_getpid
+ .data          0x0010f59e       0x10 src/syscall/lseek.o
+                0x0010f59e                __EXPORTED_sys_lseek
+ .data          0x0010f5ae       0x10 src/syscall/pipe.o
+                0x0010f5ae                __EXPORTED_sys_pipe
+ .data          0x0010f5be       0x10 src/syscall/chown.o
+                0x0010f5be                __EXPORTED_sys_chown
+ .data          0x0010f5ce       0x10 src/syscall/test.o
+                0x0010f5ce                __EXPORTED_sys_test
+ .data          0x0010f5de       0x10 src/syscall/_exit.o
+                0x0010f5de                __EXPORTED_sys_exit
+ .data          0x0010f5ee       0x10 src/syscall/socket.o
+                0x0010f5ee                __EXPORTED_sys_socket
+ .data          0x0010f5fe       0x10 src/syscall/ioctl.o
+                0x0010f5fe                __EXPORTED_sys_ioctl
+ .data          0x0010f60e       0x20 src/syscall/mmap.o
+                0x0010f60e                __EXPORTED_sys_umap
+                0x0010f61e                __EXPORTED_sys_mmap
+ .data          0x0010f62e       0x10 src/syscall/uname.o
+                0x0010f62e                __EXPORTED_sys_uname
+ .data          0x0010f63e       0x10 src/syscall/mount.o
+                0x0010f63e                __EXPORTED_sys_mount
+ .data          0x0010f64e       0x10 src/syscall/wait.o
+                0x0010f64e                __EXPORTED_sys_wait
+ .data          0x0010f65e       0x10 src/syscall/fcntl.o
+                0x0010f65e                __EXPORTED_sys_fcntl
+ .data          0x0010f66e       0x10 src/syscall/waitpid.o
+                0x0010f66e                __EXPORTED_sys_waitpid
+ .data          0x0010f67e       0x20 src/syscall/umount.o
+                0x0010f67e                __EXPORTED_sys_umount2
+                0x0010f68e                __EXPORTED_sys_umount
+ .data          0x0010f69e       0x10 src/syscall/symlink.o
+                0x0010f69e                __EXPORTED_sys_symlink
+ .data          0x0010f6ae       0x10 src/syscall/open.o
+                0x0010f6ae                __EXPORTED_sys_open
+ .data          0x0010f6be       0x10 src/syscall/bind.o
+                0x0010f6be                __EXPORTED_sys_bind
+ .data          0x0010f6ce       0x10 src/syscall/readdir.o
+                0x0010f6ce                __EXPORTED_sys_readdir
+ .data          0x0010f6de       0x10 src/syscall/execve.o
+                0x0010f6de                __EXPORTED_sys_execve
+ .data          0x0010f6ee       0x10 src/syscall/sighandler.o
+                0x0010f6ee                __EXPORTED_sys__install_sighandler
+ .data          0x0010f6fe       0x10 src/syscall/openpty.o
+                0x0010f6fe                __EXPORTED_sys_openpty
+ .data          0x0010f70e       0x10 src/syscall/getgroups.o
+                0x0010f70e                __EXPORTED_sys_getgroups
+ .data          0x0010f71e       0x28 src/sched.o
+                0x0010f71e                __EXPORTED_kernel_task
+                0x0010f726                __EXPORTED_current_task
+                0x0010f72e                __EXPORTED_schedule_disable
+                0x0010f736                __EXPORTED_schedule_enable
+                0x0010f73e                __EXPORTED_im_superuser
+ .data          0x0010f746        0x0 src/fs/procfs/procfs_unlink.o
+ .data          0x0010f746        0x0 src/fs/procfs/procfs_finddir.o
+ .data          0x0010f746        0x0 src/fs/procfs/procfs_creat.o
+ .data          0x0010f746        0x0 src/fs/procfs/procfs_readdir.o
+ .data          0x0010f746        0x0 src/fs/procfs/procfs.o
+ *fill*         0x0010f746       0x1a 
+ .data          0x0010f760      0x103 src/fs/procfs/procfs_mount.o
+ .data          0x0010f863        0x0 src/fs/vfs.o
+ .data          0x0010f863        0x0 src/fs/iso9660/iso9660.o
+ .data          0x0010f863        0x0 src/fs/iso9660/iso9660_read.o
+ *fill*         0x0010f863       0x1d 
+ .data          0x0010f880      0x103 src/fs/iso9660/iso9660_mount.o
+ .data          0x0010f983        0x0 src/fs/iso9660/iso9660_finddir.o
+ .data          0x0010f983        0x0 src/fs/iso9660/iso9660_readdir.o
+ .data          0x0010f983        0x0 src/fs/tmpfs/tmpfs_write.o
+ .data          0x0010f983        0x0 src/fs/tmpfs/tmpfs_creat.o
+ .data          0x0010f983        0x0 src/fs/tmpfs/tmpfs_flush.o
+ *fill*         0x0010f983       0x1d 
+ .data          0x0010f9a0      0x103 src/fs/tmpfs/tmpfs_mount.o
+ .data          0x0010faa3        0x0 src/fs/tmpfs/tmpfs_read.o
+ .data          0x0010faa3        0x0 src/fs/tmpfs/tmpfs_unlink.o
+ .data          0x0010faa3        0x8 src/fs/ramdev.o
+                0x0010faa3                __EXPORTED_mkramdev
+ .data          0x0010faab        0x0 src/fs/pipe.o
+ .data          0x0010faab        0x0 src/fs/fs.o
+ .data          0x0010faab       0x10 src/fs/devfs.o
+                0x0010faab                __EXPORTED_devfs_makedevice
+                0x0010fab3                __EXPORTED_devfs_getdevice
+ .data          0x0010fabb        0x0 src/fs/tty.o
+ .data          0x0010fabb        0x8 src/panic.o
+                0x0010fabb                __EXPORTED_panic
+ .data          0x0010fac3        0x0 src/shm.o
+ .data          0x0010fac3       0x30 src/spinlock.o
+                0x0010fac3                __EXPORTED_fastlock_unlock
+                0x0010facb                __EXPORTED_spinlock_unlock
+                0x0010fad3                __EXPORTED_fastlock_trylock
+                0x0010fadb                __EXPORTED_spinlock_trylock
+                0x0010fae3                __EXPORTED_fastlock_lock
+                0x0010faeb                __EXPORTED_spinlock_lock
+ .data          0x0010faf3       0x18 src/mm/mm.o
+                0x0010faf3                __EXPORTED_kfree
+                0x0010fafb                __EXPORTED_krealloc
+                0x0010fb03                __EXPORTED_kmalloc
+ .data          0x0010fb0b        0x0 src/mm/heap.o
+ .data          0x0010fb0b        0x0 src/mm/kheap.o
+ .data          0x0010fb0b        0x0 src/arch/i386/grub.o
+ .data          0x0010fb0b       0x30 src/arch/i386/desc.o
+                0x0010fb0b                __EXPORTED_irq_get
+                0x0010fb13                __EXPORTED_irq_unset
+                0x0010fb1b                __EXPORTED_irq_set
+                0x0010fb23                __EXPORTED_timer_getfreq
+                0x0010fb2b                __EXPORTED_timer_getticks
+                0x0010fb33                __EXPORTED_timer_gettime
+ .data          0x0010fb3b        0x0 src/arch/i386/task.o
+ .data          0x0010fb3b        0x8 src/arch/i386/pci.o
+                0x0010fb3b                __EXPORTED_pci_find_by_id
+ .data          0x0010fb43       0x20 src/arch/i386/paging.o
+                0x0010fb43                __EXPORTED_vmm_switch
+                0x0010fb4b                __EXPORTED_vmm_clone
+                0x0010fb53                __EXPORTED_vmm_free
+                0x0010fb5b                __EXPORTED_vmm_alloc
+ .data          0x0010fb63        0x0 src/arch/i386/panic.o
+ .data          0x0010fb63       0x10 src/arch/i386/serial.o
+                0x0010fb63                __EXPORTED_serial_recv
+                0x0010fb6b                __EXPORTED_serial_send
+ .data          0x0010fb73       0x18 src/arch/i386/i386.o
+                0x0010fb73                __EXPORTED_cpu_wait
+                0x0010fb7b                __EXPORTED_cpu_idle
+                0x0010fb83                __EXPORTED_cpu_halt
+ .data          0x0010fb8b        0x0 src/arch/i386/syscall.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/task.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/timer.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/paging.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/rpi.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/usb/usbd.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/usb/usbdep.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/panic.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/lfb.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/serial.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/spinlock.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/syscall.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/intr.o
+ .data          0x0010fb8b        0x0 src/arch/rpi/atags.o
+ .data          0x0010fb8b        0x0 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
+ .data          0x0010fb8b        0x0 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
+ .data          0x0010fb8b        0x0 /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
+ .data          0x0010fb8b        0x0 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ *fill*         0x0010fb8b       0x15 
+ .data          0x0010fba0      0x444 /opt/cross/usr/lib/libc.a(lib_a-impure.o)
+                0x0010fba0                _impure_ptr
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcmp.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-memcpy.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-memset.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strchr.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strlen.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
+ .data          0x0010ffe4        0x0 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .data          0x0010ffe4        0x8 /opt/cross/usr/lib/libc.a(lib_a-tzvars.o)
+                0x0010ffe4                _tzname
+ .data          0x0010ffec        0x0 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .data          0x0010ffec        0x4 /opt/cross/usr/lib/libc.a(lib_a-ctype_.o)
+                0x0010ffec                __ctype_ptr__
+ .data          0x0010fff0        0x0 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ *fill*         0x0010fff0       0x10 
+ .data          0x00110000       0x40 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+ .data          0x00110040        0x0 /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
 
-.eh_frame       0x0010ff60     0x4a5c
- .eh_frame      0x0010ff60       0x40 src/init/main.o
- .eh_frame      0x0010ffa0      0x11c src/init/debug.o
+.eh_frame       0x00110040     0x4aa4
+ .eh_frame      0x00110040       0x40 src/init/main.o
+ .eh_frame      0x00110080      0x11c src/init/debug.o
                                 0x130 (dimensione prima del rilassamento)
- .eh_frame      0x001100bc       0x6c src/init/modules.o
+ .eh_frame      0x0011019c       0x6c src/init/modules.o
                                  0x80 (dimensione prima del rilassamento)
- .eh_frame      0x00110128      0x59c src/net/netif.o
+ .eh_frame      0x00110208      0x59c src/net/netif.o
                                 0x5b0 (dimensione prima del rilassamento)
- .eh_frame      0x001106c4      0x1a0 src/net/socket.o
+ .eh_frame      0x001107a4      0x1a0 src/net/socket.o
                                 0x1b4 (dimensione prima del rilassamento)
- .eh_frame      0x00110864      0x138 src/net/loopback/loopback.o
+ .eh_frame      0x00110944      0x138 src/net/loopback/loopback.o
                                 0x14c (dimensione prima del rilassamento)
- .eh_frame      0x0011099c      0x150 src/net/eth.o
+ .eh_frame      0x00110a7c      0x150 src/net/eth.o
                                 0x164 (dimensione prima del rilassamento)
- .eh_frame      0x00110aec      0x2cc src/exec.o
+ .eh_frame      0x00110bcc      0x2cc src/exec.o
                                 0x2e0 (dimensione prima del rilassamento)
- .eh_frame      0x00110db8       0x38 src/syscall/times.o
+ .eh_frame      0x00110e98       0x38 src/syscall/times.o
                                  0x4c (dimensione prima del rilassamento)
- .eh_frame      0x00110df0       0x10 src/syscall/sbrk.o
+ .eh_frame      0x00110ed0       0x10 src/syscall/sbrk.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00110e00       0x10 src/syscall/link.o
+ .eh_frame      0x00110ee0       0x10 src/syscall/link.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00110e10       0x28 src/syscall/close.o
+ .eh_frame      0x00110ef0       0x28 src/syscall/close.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x00110e38       0x28 src/syscall/fstat.o
+ .eh_frame      0x00110f18       0x28 src/syscall/fstat.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x00110e60       0x10 src/syscall/yield.o
+ .eh_frame      0x00110f40       0x10 src/syscall/yield.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00110e70       0x2c src/syscall/fork.o
+ .eh_frame      0x00110f50       0x2c src/syscall/fork.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00110e9c       0x98 src/syscall/unlink.o
+ .eh_frame      0x00110f7c       0x98 src/syscall/unlink.o
                                  0xac (dimensione prima del rilassamento)
- .eh_frame      0x00110f34       0x48 src/syscall/stat.o
+ .eh_frame      0x00111014       0x48 src/syscall/stat.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00110f7c       0x28 src/syscall/kill.o
+ .eh_frame      0x0011105c       0x28 src/syscall/kill.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x00110fa4       0x28 src/syscall/clone.o
+ .eh_frame      0x00111084       0x28 src/syscall/clone.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x00110fcc       0x48 src/syscall/read.o
+ .eh_frame      0x001110ac       0x48 src/syscall/read.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00111014       0x5c src/syscall/shutdown.o
+ .eh_frame      0x001110f4       0x5c src/syscall/shutdown.o
                                  0x70 (dimensione prima del rilassamento)
- .eh_frame      0x00111070       0x48 src/syscall/write.o
+ .eh_frame      0x00111150       0x48 src/syscall/write.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x001110b8       0x28 src/syscall/fchdir.o
+ .eh_frame      0x00111198       0x28 src/syscall/fchdir.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x001110e0       0x48 src/syscall/gettimeofday.o
+ .eh_frame      0x001111c0       0x48 src/syscall/gettimeofday.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00111128       0x10 src/syscall/isatty.o
+ .eh_frame      0x00111208       0x10 src/syscall/isatty.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00111138       0x20 src/syscall/args.o
+ .eh_frame      0x00111218       0x48 src/syscall/chroot.o
+                                 0x5c (dimensione prima del rilassamento)
+ .eh_frame      0x00111260       0x20 src/syscall/args.o
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x00111158       0x30 src/syscall/time.o
+ .eh_frame      0x00111280       0x30 src/syscall/time.o
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x00111188       0x30 src/syscall/getpid.o
+ .eh_frame      0x001112b0       0x30 src/syscall/getpid.o
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x001111b8       0xa4 src/syscall/lseek.o
+ .eh_frame      0x001112e0       0xa4 src/syscall/lseek.o
                                  0xb8 (dimensione prima del rilassamento)
- .eh_frame      0x0011125c       0x58 src/syscall/pipe.o
+ .eh_frame      0x00111384       0x58 src/syscall/pipe.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x001112b4       0x78 src/syscall/chown.o
+ .eh_frame      0x001113dc       0x78 src/syscall/chown.o
                                  0x8c (dimensione prima del rilassamento)
- .eh_frame      0x0011132c       0x20 src/syscall/test.o
+ .eh_frame      0x00111454       0x20 src/syscall/test.o
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x0011134c       0x10 src/syscall/_exit.o
+ .eh_frame      0x00111474       0x10 src/syscall/_exit.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x0011135c      0x18c src/syscall/socket.o
+ .eh_frame      0x00111484      0x18c src/syscall/socket.o
                                 0x1a0 (dimensione prima del rilassamento)
- .eh_frame      0x001114e8       0x48 src/syscall/ioctl.o
+ .eh_frame      0x00111610       0x48 src/syscall/ioctl.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00111530       0x30 src/syscall/mmap.o
+ .eh_frame      0x00111658       0x30 src/syscall/mmap.o
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x00111560       0x48 src/syscall/uname.o
+ .eh_frame      0x00111688       0x48 src/syscall/uname.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x001115a8       0x6c src/syscall/mount.o
+ .eh_frame      0x001116d0       0x6c src/syscall/mount.o
                                  0x80 (dimensione prima del rilassamento)
- .eh_frame      0x00111614       0x28 src/syscall/wait.o
+ .eh_frame      0x0011173c       0x28 src/syscall/wait.o
                                  0x3c (dimensione prima del rilassamento)
- .eh_frame      0x0011163c       0x78 src/syscall/fcntl.o
+ .eh_frame      0x00111764       0x78 src/syscall/fcntl.o
                                  0x8c (dimensione prima del rilassamento)
- .eh_frame      0x001116b4       0x48 src/syscall/waitpid.o
+ .eh_frame      0x001117dc       0x48 src/syscall/waitpid.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x001116fc       0x70 src/syscall/umount.o
+ .eh_frame      0x00111824       0x70 src/syscall/umount.o
                                  0x84 (dimensione prima del rilassamento)
- .eh_frame      0x0011176c       0x48 src/syscall/symlink.o
+ .eh_frame      0x00111894       0x48 src/syscall/symlink.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x001117b4       0x98 src/syscall/open.o
+ .eh_frame      0x001118dc       0x98 src/syscall/open.o
                                  0xac (dimensione prima del rilassamento)
- .eh_frame      0x0011184c       0x48 src/syscall/bind.o
+ .eh_frame      0x00111974       0x48 src/syscall/bind.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00111894       0x2c src/syscall/readdir.o
+ .eh_frame      0x001119bc       0x2c src/syscall/readdir.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x001118c0       0x6c src/syscall/execve.o
+ .eh_frame      0x001119e8       0x6c src/syscall/execve.o
                                  0x80 (dimensione prima del rilassamento)
- .eh_frame      0x0011192c       0x10 src/syscall/sighandler.o
+ .eh_frame      0x00111a54       0x10 src/syscall/sighandler.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x0011193c       0x60 src/syscall/openpty.o
+ .eh_frame      0x00111a64       0x60 src/syscall/openpty.o
                                  0x74 (dimensione prima del rilassamento)
- .eh_frame      0x0011199c       0x34 src/syscall/getgroups.o
+ .eh_frame      0x00111ac4       0x34 src/syscall/getgroups.o
                                  0x48 (dimensione prima del rilassamento)
- .eh_frame      0x001119d0      0x368 src/sched.o
+ .eh_frame      0x00111af8      0x368 src/sched.o
                                 0x37c (dimensione prima del rilassamento)
- .eh_frame      0x00111d38       0x2c src/fs/procfs/procfs_unlink.o
+ .eh_frame      0x00111e60       0x2c src/fs/procfs/procfs_unlink.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00111d64       0x98 src/fs/procfs/procfs_finddir.o
+ .eh_frame      0x00111e8c       0x98 src/fs/procfs/procfs_finddir.o
                                  0xac (dimensione prima del rilassamento)
- .eh_frame      0x00111dfc       0x54 src/fs/procfs/procfs_creat.o
+ .eh_frame      0x00111f24       0x54 src/fs/procfs/procfs_creat.o
                                  0x68 (dimensione prima del rilassamento)
- .eh_frame      0x00111e50       0x80 src/fs/procfs/procfs_readdir.o
+ .eh_frame      0x00111f78       0x80 src/fs/procfs/procfs_readdir.o
                                  0x94 (dimensione prima del rilassamento)
- .eh_frame      0x00111ed0       0x48 src/fs/procfs/procfs.o
+ .eh_frame      0x00111ff8       0x48 src/fs/procfs/procfs.o
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00111f18       0x10 src/fs/procfs/procfs_mount.o
+ .eh_frame      0x00112040       0x10 src/fs/procfs/procfs_mount.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00111f28      0x344 src/fs/vfs.o
+ .eh_frame      0x00112050      0x344 src/fs/vfs.o
                                 0x358 (dimensione prima del rilassamento)
- .eh_frame      0x0011226c      0x138 src/fs/iso9660/iso9660.o
+ .eh_frame      0x00112394      0x138 src/fs/iso9660/iso9660.o
                                 0x14c (dimensione prima del rilassamento)
- .eh_frame      0x001123a4       0x58 src/fs/iso9660/iso9660_read.o
+ .eh_frame      0x001124cc       0x58 src/fs/iso9660/iso9660_read.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x001123fc       0x58 src/fs/iso9660/iso9660_mount.o
+ .eh_frame      0x00112524       0x58 src/fs/iso9660/iso9660_mount.o
                                  0x6c (dimensione prima del rilassamento)
- .eh_frame      0x00112454       0x6c src/fs/iso9660/iso9660_finddir.o
+ .eh_frame      0x0011257c       0x6c src/fs/iso9660/iso9660_finddir.o
                                  0x80 (dimensione prima del rilassamento)
- .eh_frame      0x001124c0       0x6c src/fs/iso9660/iso9660_readdir.o
+ .eh_frame      0x001125e8       0x6c src/fs/iso9660/iso9660_readdir.o
                                  0x80 (dimensione prima del rilassamento)
- .eh_frame      0x0011252c       0x98 src/fs/tmpfs/tmpfs_write.o
+ .eh_frame      0x00112654       0x98 src/fs/tmpfs/tmpfs_write.o
                                  0xac (dimensione prima del rilassamento)
- .eh_frame      0x001125c4       0x98 src/fs/tmpfs/tmpfs_creat.o
+ .eh_frame      0x001126ec       0x98 src/fs/tmpfs/tmpfs_creat.o
                                  0xac (dimensione prima del rilassamento)
- .eh_frame      0x0011265c       0x30 src/fs/tmpfs/tmpfs_flush.o
+ .eh_frame      0x00112784       0x30 src/fs/tmpfs/tmpfs_flush.o
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x0011268c       0x10 src/fs/tmpfs/tmpfs_mount.o
+ .eh_frame      0x001127b4       0x10 src/fs/tmpfs/tmpfs_mount.o
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x0011269c       0x90 src/fs/tmpfs/tmpfs_read.o
+ .eh_frame      0x001127c4       0x90 src/fs/tmpfs/tmpfs_read.o
                                  0xa4 (dimensione prima del rilassamento)
- .eh_frame      0x0011272c       0x2c src/fs/tmpfs/tmpfs_unlink.o
+ .eh_frame      0x00112854       0x2c src/fs/tmpfs/tmpfs_unlink.o
                                  0x40 (dimensione prima del rilassamento)
- .eh_frame      0x00112758      0x150 src/fs/ramdev.o
+ .eh_frame      0x00112880      0x150 src/fs/ramdev.o
                                 0x164 (dimensione prima del rilassamento)
- .eh_frame      0x001128a8      0x16c src/fs/pipe.o
+ .eh_frame      0x001129d0      0x16c src/fs/pipe.o
                                 0x180 (dimensione prima del rilassamento)
- .eh_frame      0x00112a14      0x2f8 src/fs/fs.o
+ .eh_frame      0x00112b3c      0x2f8 src/fs/fs.o
                                 0x30c (dimensione prima del rilassamento)
- .eh_frame      0x00112d0c      0x1b8 src/fs/devfs.o
+ .eh_frame      0x00112e34      0x1b8 src/fs/devfs.o
                                 0x1cc (dimensione prima del rilassamento)
- .eh_frame      0x00112ec4      0x2f4 src/fs/tty.o
+ .eh_frame      0x00112fec      0x2f4 src/fs/tty.o
                                 0x308 (dimensione prima del rilassamento)
- .eh_frame      0x001131b8       0x20 src/panic.o
+ .eh_frame      0x001132e0       0x20 src/panic.o
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x001131d8      0x254 src/shm.o
+ .eh_frame      0x00113300      0x254 src/shm.o
                                 0x268 (dimensione prima del rilassamento)
- .eh_frame      0x0011342c       0xf8 src/spinlock.o
+ .eh_frame      0x00113554       0xf8 src/spinlock.o
                                 0x10c (dimensione prima del rilassamento)
- .eh_frame      0x00113524      0x180 src/mm/mm.o
+ .eh_frame      0x0011364c      0x180 src/mm/mm.o
                                 0x194 (dimensione prima del rilassamento)
- .eh_frame      0x001136a4       0x40 src/mm/heap.o
+ .eh_frame      0x001137cc       0x40 src/mm/heap.o
                                  0x54 (dimensione prima del rilassamento)
- .eh_frame      0x001136e4      0x10c src/mm/kheap.o
+ .eh_frame      0x0011380c      0x10c src/mm/kheap.o
                                 0x120 (dimensione prima del rilassamento)
- .eh_frame      0x001137f0       0x34 src/arch/i386/grub.o
+ .eh_frame      0x00113918       0x34 src/arch/i386/grub.o
                                  0x48 (dimensione prima del rilassamento)
- .eh_frame      0x00113824      0x1ec src/arch/i386/desc.o
+ .eh_frame      0x0011394c      0x1ec src/arch/i386/desc.o
                                 0x200 (dimensione prima del rilassamento)
- .eh_frame      0x00113a10      0x138 src/arch/i386/task.o
+ .eh_frame      0x00113b38      0x138 src/arch/i386/task.o
                                 0x14c (dimensione prima del rilassamento)
- .eh_frame      0x00113b48       0xf8 src/arch/i386/pci.o
+ .eh_frame      0x00113c70       0xf8 src/arch/i386/pci.o
                                 0x10c (dimensione prima del rilassamento)
- .eh_frame      0x00113c40      0x35c src/arch/i386/paging.o
+ .eh_frame      0x00113d68      0x35c src/arch/i386/paging.o
                                 0x370 (dimensione prima del rilassamento)
- .eh_frame      0x00113f9c       0x20 src/arch/i386/panic.o
+ .eh_frame      0x001140c4       0x20 src/arch/i386/panic.o
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x00113fbc       0x94 src/arch/i386/serial.o
+ .eh_frame      0x001140e4       0x94 src/arch/i386/serial.o
                                  0xa8 (dimensione prima del rilassamento)
- .eh_frame      0x00114050       0x60 src/arch/i386/i386.o
+ .eh_frame      0x00114178       0x60 src/arch/i386/i386.o
                                  0x74 (dimensione prima del rilassamento)
- .eh_frame      0x001140b0      0x124 src/arch/i386/syscall.o
+ .eh_frame      0x001141d8      0x124 src/arch/i386/syscall.o
                                 0x138 (dimensione prima del rilassamento)
- .eh_frame      0x001141d4      0x1e0 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
+ .eh_frame      0x001142fc      0x1e0 /opt/cross/usr/lib/libelfldr.a(elf-module.o)
                                 0x1f4 (dimensione prima del rilassamento)
- .eh_frame      0x001143b4       0xb0 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
+ .eh_frame      0x001144dc       0xb0 /opt/cross/usr/lib/libelfldr.a(elf-module-i386.o)
                                  0xc4 (dimensione prima del rilassamento)
- .eh_frame      0x00114464       0x40 /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
+ .eh_frame      0x0011458c       0x40 /opt/cross/usr/lib/libc.a(lib_a-atoi.o)
                                  0x54 (dimensione prima del rilassamento)
- .eh_frame      0x001144a4       0x10 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
+ .eh_frame      0x001145cc       0x10 /opt/cross/usr/lib/libc.a(lib_a-errno.o)
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x001144b4       0xbc /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
+ .eh_frame      0x001145dc       0xbc /opt/cross/usr/lib/libc.a(lib_a-mktime.o)
                                  0xd0 (dimensione prima del rilassamento)
- .eh_frame      0x00114570      0x104 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
+ .eh_frame      0x00114698      0x104 /opt/cross/usr/lib/libc.a(lib_a-mktm_r.o)
                                 0x118 (dimensione prima del rilassamento)
- .eh_frame      0x00114674       0x30 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
+ .eh_frame      0x0011479c       0x30 /opt/cross/usr/lib/libc.a(lib_a-strcmp.o)
                                  0x44 (dimensione prima del rilassamento)
- .eh_frame      0x001146a4       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
+ .eh_frame      0x001147cc       0x44 /opt/cross/usr/lib/libc.a(lib_a-strcpy.o)
                                  0x58 (dimensione prima del rilassamento)
- .eh_frame      0x001146e8       0x48 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
+ .eh_frame      0x00114810       0x48 /opt/cross/usr/lib/libc.a(lib_a-strerror.o)
                                  0x5c (dimensione prima del rilassamento)
- .eh_frame      0x00114730       0x7c /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
+ .eh_frame      0x00114858       0x7c /opt/cross/usr/lib/libc.a(lib_a-strncpy.o)
                                  0x90 (dimensione prima del rilassamento)
- .eh_frame      0x001147ac       0x8c /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
+ .eh_frame      0x001148d4       0x8c /opt/cross/usr/lib/libc.a(lib_a-strtol.o)
                                  0xa0 (dimensione prima del rilassamento)
- .eh_frame      0x00114838       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
+ .eh_frame      0x00114960       0x20 /opt/cross/usr/lib/libc.a(lib_a-tzlock.o)
                                  0x34 (dimensione prima del rilassamento)
- .eh_frame      0x00114858       0x10 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
+ .eh_frame      0x00114980       0x10 /opt/cross/usr/lib/libc.a(lib_a-u_strerr.o)
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x00114868       0x60 /opt/cross/usr/lib/libc.a(lib_a-div.o)
+ .eh_frame      0x00114990       0x60 /opt/cross/usr/lib/libc.a(lib_a-div.o)
                                  0x74 (dimensione prima del rilassamento)
- .eh_frame      0x001148c8       0x10 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
+ .eh_frame      0x001149f0       0x10 /opt/cross/usr/lib/libc.a(lib_a-gettzinfo.o)
                                  0x24 (dimensione prima del rilassamento)
- .eh_frame      0x001148d8       0xe4 /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
+ .eh_frame      0x00114a00       0xe4 /opt/cross/usr/lib/libgcc.a(_umoddi3.o)
 
-.igot.plt       0x001149bc        0x0
+.igot.plt       0x00114ae4        0x0
  .igot.plt      0x00000000        0x0 src/init/main.o
 
-.attribute      0x00114a00     0x8b00
-                0x00114a00                attribute_start = .
+.attribute      0x00114b00     0x8d00
+                0x00114b00                attribute_start = .
  *(.attribute)
- .attribute     0x00114a00      0x100 src/init/main.o
-                0x00114a00                attribute___EXPORTED_mbd0
- .attribute     0x00114b00      0x100 src/init/debug.o
-                0x00114b00                attribute___EXPORTED_kprintf0
- .attribute     0x00114c00      0x700 src/net/netif.o
-                0x00114c00                attribute___EXPORTED_netif_get_interface6
-                0x00114d00                attribute___EXPORTED_netif_packet_pop5
-                0x00114e00                attribute___EXPORTED_netif_packet_push4
-                0x00114f00                attribute___EXPORTED_netif_ifdown3
-                0x00115000                attribute___EXPORTED_netif_ifup2
-                0x00115100                attribute___EXPORTED_netif_remove1
-                0x00115200                attribute___EXPORTED_netif_add0
- .attribute     0x00115300      0x100 src/net/loopback/loopback.o
-                0x00115300                attribute_loopback_init0
- .attribute     0x00115400      0x100 src/net/eth.o
-                0x00115400                attribute_netif_proto_eth0
- .attribute     0x00115500      0x100 src/exec.o
-                0x00115500                attribute___EXPORTED_elf_symbol_lookup0
- .attribute     0x00115600      0x200 src/syscall/times.o
-                0x00115600                attribute___EXPORTED_sys_times1
-                0x00115700                attribute_syscall_140
- .attribute     0x00115800      0x200 src/syscall/sbrk.o
-                0x00115800                attribute___EXPORTED_sys_sbrk1
-                0x00115900                attribute_syscall_120
- .attribute     0x00115a00      0x200 src/syscall/link.o
-                0x00115a00                attribute___EXPORTED_sys_link1
-                0x00115b00                attribute_syscall_80
- .attribute     0x00115c00      0x200 src/syscall/close.o
-                0x00115c00                attribute___EXPORTED_sys_close1
-                0x00115d00                attribute_syscall_10
- .attribute     0x00115e00      0x200 src/syscall/fstat.o
-                0x00115e00                attribute___EXPORTED_sys_fstat1
-                0x00115f00                attribute_syscall_40
- .attribute     0x00116000      0x200 src/syscall/yield.o
-                0x00116000                attribute___EXPORTED_sys_yield1
-                0x00116100                attribute_syscall_230
- .attribute     0x00116200      0x200 src/syscall/fork.o
-                0x00116200                attribute___EXPORTED_sys_fork1
-                0x00116300                attribute_syscall_30
- .attribute     0x00116400      0x200 src/syscall/unlink.o
-                0x00116400                attribute___EXPORTED_sys_unlink1
-                0x00116500                attribute_syscall_150
- .attribute     0x00116600      0x200 src/syscall/stat.o
-                0x00116600                attribute___EXPORTED_sys_stat1
-                0x00116700                attribute_syscall_130
- .attribute     0x00116800      0x200 src/syscall/kill.o
-                0x00116800                attribute___EXPORTED_sys_kill1
-                0x00116900                attribute_syscall_70
- .attribute     0x00116a00      0x200 src/syscall/clone.o
-                0x00116a00                attribute___EXPORTED_sys_clone1
-                0x00116b00                attribute_syscall_220
- .attribute     0x00116c00      0x200 src/syscall/read.o
-                0x00116c00                attribute___EXPORTED_sys_read1
-                0x00116d00                attribute_syscall_110
- .attribute     0x00116e00      0x200 src/syscall/shutdown.o
-                0x00116e00                attribute___EXPORTED_sys_shutdown1
-                0x00116f00                attribute_syscall_380
- .attribute     0x00117000      0x200 src/syscall/write.o
-                0x00117000                attribute___EXPORTED_sys_write1
-                0x00117100                attribute_syscall_170
- .attribute     0x00117200      0x200 src/syscall/fchdir.o
-                0x00117200                attribute___EXPORTED_sys_fchdir1
-                0x00117300                attribute_syscall_290
- .attribute     0x00117400      0x200 src/syscall/gettimeofday.o
-                0x00117400                attribute___EXPORTED_sys_gettimeofday1
-                0x00117500                attribute_syscall_180
- .attribute     0x00117600      0x200 src/syscall/isatty.o
-                0x00117600                attribute___EXPORTED_sys_isatty1
-                0x00117700                attribute_syscall_60
- .attribute     0x00117800      0x400 src/syscall/args.o
-                0x00117800                attribute___EXPORTED_sys__get_envp3
-                0x00117900                attribute_syscall_1012
-                0x00117a00                attribute___EXPORTED_sys__get_argv1
-                0x00117b00                attribute_syscall_1000
- .attribute     0x00117c00      0x400 src/syscall/getpid.o
-                0x00117c00                attribute___EXPORTED_sys_getppid3
-                0x00117d00                attribute_syscall_322
-                0x00117e00                attribute___EXPORTED_sys_getpid1
-                0x00117f00                attribute_syscall_50
- .attribute     0x00118000      0x200 src/syscall/lseek.o
-                0x00118000                attribute___EXPORTED_sys_lseek1
-                0x00118100                attribute_syscall_90
- .attribute     0x00118200      0x200 src/syscall/pipe.o
-                0x00118200                attribute___EXPORTED_sys_pipe1
-                0x00118300                attribute_syscall_300
- .attribute     0x00118400      0x200 src/syscall/chown.o
-                0x00118400                attribute___EXPORTED_sys_chown1
-                0x00118500                attribute_syscall_210
- .attribute     0x00118600      0x200 src/syscall/test.o
-                0x00118600                attribute___EXPORTED_sys_test1
-                0x00118700                attribute_syscall_2550
- .attribute     0x00118800      0x200 src/syscall/_exit.o
-                0x00118800                attribute___EXPORTED_sys_exit1
-                0x00118900                attribute_syscall_00
- .attribute     0x00118a00      0x200 src/syscall/socket.o
-                0x00118a00                attribute___EXPORTED_sys_socket1
-                0x00118b00                attribute_syscall_360
- .attribute     0x00118c00      0x200 src/syscall/ioctl.o
-                0x00118c00                attribute___EXPORTED_sys_ioctl1
-                0x00118d00                attribute_syscall_200
- .attribute     0x00118e00      0x400 src/syscall/mmap.o
-                0x00118e00                attribute___EXPORTED_sys_umap3
-                0x00118f00                attribute_syscall_352
-                0x00119000                attribute___EXPORTED_sys_mmap1
-                0x00119100                attribute_syscall_340
- .attribute     0x00119200      0x200 src/syscall/uname.o
-                0x00119200                attribute___EXPORTED_sys_uname1
-                0x00119300                attribute_syscall_330
- .attribute     0x00119400      0x200 src/syscall/mount.o
-                0x00119400                attribute___EXPORTED_sys_mount1
-                0x00119500                attribute_syscall_240
- .attribute     0x00119600      0x200 src/syscall/wait.o
-                0x00119600                attribute___EXPORTED_sys_wait1
-                0x00119700                attribute_syscall_160
- .attribute     0x00119800      0x200 src/syscall/fcntl.o
-                0x00119800                attribute___EXPORTED_sys_fcntl1
-                0x00119900                attribute_syscall_190
- .attribute     0x00119a00      0x200 src/syscall/waitpid.o
-                0x00119a00                attribute___EXPORTED_sys_waitpid1
-                0x00119b00                attribute_syscall_310
- .attribute     0x00119c00      0x400 src/syscall/umount.o
-                0x00119c00                attribute___EXPORTED_sys_umount23
-                0x00119d00                attribute_syscall_262
-                0x00119e00                attribute___EXPORTED_sys_umount1
-                0x00119f00                attribute_syscall_250
- .attribute     0x0011a000      0x200 src/syscall/symlink.o
-                0x0011a000                attribute___EXPORTED_sys_symlink1
-                0x0011a100                attribute_syscall_280
- .attribute     0x0011a200      0x200 src/syscall/open.o
-                0x0011a200                attribute___EXPORTED_sys_open1
-                0x0011a300                attribute_syscall_100
- .attribute     0x0011a400      0x200 src/syscall/bind.o
-                0x0011a400                attribute___EXPORTED_sys_bind1
-                0x0011a500                attribute_syscall_370
- .attribute     0x0011a600      0x200 src/syscall/readdir.o
-                0x0011a600                attribute___EXPORTED_sys_readdir1
-                0x0011a700                attribute_syscall_800
- .attribute     0x0011a800      0x200 src/syscall/execve.o
-                0x0011a800                attribute___EXPORTED_sys_execve1
-                0x0011a900                attribute_syscall_20
- .attribute     0x0011aa00      0x200 src/syscall/sighandler.o
-                0x0011aa00                attribute___EXPORTED_sys__install_sighandler1
-                0x0011ab00                attribute_syscall_1020
- .attribute     0x0011ac00      0x200 src/syscall/openpty.o
-                0x0011ac00                attribute___EXPORTED_sys_openpty1
-                0x0011ad00                attribute_syscall_270
- .attribute     0x0011ae00      0x200 src/syscall/getgroups.o
-                0x0011ae00                attribute___EXPORTED_sys_getgroups1
-                0x0011af00                attribute_syscall_810
- .attribute     0x0011b000      0x500 src/sched.o
-                0x0011b000                attribute___EXPORTED_kernel_task4
-                0x0011b100                attribute___EXPORTED_current_task3
-                0x0011b200                attribute___EXPORTED_schedule_disable2
-                0x0011b300                attribute___EXPORTED_schedule_enable1
-                0x0011b400                attribute___EXPORTED_im_superuser0
- .attribute     0x0011b500      0x100 src/fs/procfs/procfs_mount.o
-                0x0011b500                attribute_fs_procfs0
- .attribute     0x0011b600      0x100 src/fs/iso9660/iso9660_mount.o
-                0x0011b600                attribute_fs_iso96600
- .attribute     0x0011b700      0x100 src/fs/tmpfs/tmpfs_mount.o
-                0x0011b700                attribute_fs_tmpfs0
- .attribute     0x0011b800      0x100 src/fs/ramdev.o
-                0x0011b800                attribute___EXPORTED_mkramdev0
- .attribute     0x0011b900      0x200 src/fs/devfs.o
-                0x0011b900                attribute___EXPORTED_devfs_makedevice1
-                0x0011ba00                attribute___EXPORTED_devfs_getdevice0
- .attribute     0x0011bb00      0x100 src/panic.o
-                0x0011bb00                attribute___EXPORTED_panic0
- .attribute     0x0011bc00      0x600 src/spinlock.o
-                0x0011bc00                attribute___EXPORTED_fastlock_unlock5
-                0x0011bd00                attribute___EXPORTED_spinlock_unlock4
-                0x0011be00                attribute___EXPORTED_fastlock_trylock3
-                0x0011bf00                attribute___EXPORTED_spinlock_trylock2
-                0x0011c000                attribute___EXPORTED_fastlock_lock1
-                0x0011c100                attribute___EXPORTED_spinlock_lock0
- .attribute     0x0011c200      0x300 src/mm/mm.o
-                0x0011c200                attribute___EXPORTED_kfree2
-                0x0011c300                attribute___EXPORTED_krealloc1
-                0x0011c400                attribute___EXPORTED_kmalloc0
- .attribute     0x0011c500      0x600 src/arch/i386/desc.o
-                0x0011c500                attribute___EXPORTED_irq_get5
-                0x0011c600                attribute___EXPORTED_irq_unset4
-                0x0011c700                attribute___EXPORTED_irq_set3
-                0x0011c800                attribute___EXPORTED_timer_getfreq2
-                0x0011c900                attribute___EXPORTED_timer_getticks1
-                0x0011ca00                attribute___EXPORTED_timer_gettime0
- .attribute     0x0011cb00      0x100 src/arch/i386/pci.o
-                0x0011cb00                attribute___EXPORTED_pci_find_by_id0
- .attribute     0x0011cc00      0x400 src/arch/i386/paging.o
-                0x0011cc00                attribute___EXPORTED_vmm_switch3
-                0x0011cd00                attribute___EXPORTED_vmm_clone2
-                0x0011ce00                attribute___EXPORTED_vmm_free1
-                0x0011cf00                attribute___EXPORTED_vmm_alloc0
- .attribute     0x0011d000      0x200 src/arch/i386/serial.o
-                0x0011d000                attribute___EXPORTED_serial_recv1
-                0x0011d100                attribute___EXPORTED_serial_send0
- .attribute     0x0011d200      0x300 src/arch/i386/i386.o
-                0x0011d200                attribute___EXPORTED_cpu_wait2
-                0x0011d300                attribute___EXPORTED_cpu_idle1
-                0x0011d400                attribute___EXPORTED_cpu_halt0
-                0x0011d500                attribute_end = .
+ .attribute     0x00114b00      0x100 src/init/main.o
+                0x00114b00                attribute___EXPORTED_mbd0
+ .attribute     0x00114c00      0x100 src/init/debug.o
+                0x00114c00                attribute___EXPORTED_kprintf0
+ .attribute     0x00114d00      0x700 src/net/netif.o
+                0x00114d00                attribute___EXPORTED_netif_get_interface6
+                0x00114e00                attribute___EXPORTED_netif_packet_pop5
+                0x00114f00                attribute___EXPORTED_netif_packet_push4
+                0x00115000                attribute___EXPORTED_netif_ifdown3
+                0x00115100                attribute___EXPORTED_netif_ifup2
+                0x00115200                attribute___EXPORTED_netif_remove1
+                0x00115300                attribute___EXPORTED_netif_add0
+ .attribute     0x00115400      0x100 src/net/loopback/loopback.o
+                0x00115400                attribute_loopback_init0
+ .attribute     0x00115500      0x100 src/net/eth.o
+                0x00115500                attribute_netif_proto_eth0
+ .attribute     0x00115600      0x100 src/exec.o
+                0x00115600                attribute___EXPORTED_elf_symbol_lookup0
+ .attribute     0x00115700      0x200 src/syscall/times.o
+                0x00115700                attribute___EXPORTED_sys_times1
+                0x00115800                attribute_syscall_140
+ .attribute     0x00115900      0x200 src/syscall/sbrk.o
+                0x00115900                attribute___EXPORTED_sys_sbrk1
+                0x00115a00                attribute_syscall_120
+ .attribute     0x00115b00      0x200 src/syscall/link.o
+                0x00115b00                attribute___EXPORTED_sys_link1
+                0x00115c00                attribute_syscall_80
+ .attribute     0x00115d00      0x200 src/syscall/close.o
+                0x00115d00                attribute___EXPORTED_sys_close1
+                0x00115e00                attribute_syscall_10
+ .attribute     0x00115f00      0x200 src/syscall/fstat.o
+                0x00115f00                attribute___EXPORTED_sys_fstat1
+                0x00116000                attribute_syscall_40
+ .attribute     0x00116100      0x200 src/syscall/yield.o
+                0x00116100                attribute___EXPORTED_sys_yield1
+                0x00116200                attribute_syscall_230
+ .attribute     0x00116300      0x200 src/syscall/fork.o
+                0x00116300                attribute___EXPORTED_sys_fork1
+                0x00116400                attribute_syscall_30
+ .attribute     0x00116500      0x200 src/syscall/unlink.o
+                0x00116500                attribute___EXPORTED_sys_unlink1
+                0x00116600                attribute_syscall_150
+ .attribute     0x00116700      0x200 src/syscall/stat.o
+                0x00116700                attribute___EXPORTED_sys_stat1
+                0x00116800                attribute_syscall_130
+ .attribute     0x00116900      0x200 src/syscall/kill.o
+                0x00116900                attribute___EXPORTED_sys_kill1
+                0x00116a00                attribute_syscall_70
+ .attribute     0x00116b00      0x200 src/syscall/clone.o
+                0x00116b00                attribute___EXPORTED_sys_clone1
+                0x00116c00                attribute_syscall_220
+ .attribute     0x00116d00      0x200 src/syscall/read.o
+                0x00116d00                attribute___EXPORTED_sys_read1
+                0x00116e00                attribute_syscall_110
+ .attribute     0x00116f00      0x200 src/syscall/shutdown.o
+                0x00116f00                attribute___EXPORTED_sys_shutdown1
+                0x00117000                attribute_syscall_380
+ .attribute     0x00117100      0x200 src/syscall/write.o
+                0x00117100                attribute___EXPORTED_sys_write1
+                0x00117200                attribute_syscall_170
+ .attribute     0x00117300      0x200 src/syscall/fchdir.o
+                0x00117300                attribute___EXPORTED_sys_fchdir1
+                0x00117400                attribute_syscall_290
+ .attribute     0x00117500      0x200 src/syscall/gettimeofday.o
+                0x00117500                attribute___EXPORTED_sys_gettimeofday1
+                0x00117600                attribute_syscall_180
+ .attribute     0x00117700      0x200 src/syscall/isatty.o
+                0x00117700                attribute___EXPORTED_sys_isatty1
+                0x00117800                attribute_syscall_60
+ .attribute     0x00117900      0x200 src/syscall/chroot.o
+                0x00117900                attribute___EXPORTED_sys_chroot1
+                0x00117a00                attribute_syscall_390
+ .attribute     0x00117b00      0x400 src/syscall/args.o
+                0x00117b00                attribute___EXPORTED_sys__get_envp3
+                0x00117c00                attribute_syscall_1012
+                0x00117d00                attribute___EXPORTED_sys__get_argv1
+                0x00117e00                attribute_syscall_1000
+ .attribute     0x00117f00      0x400 src/syscall/getpid.o
+                0x00117f00                attribute___EXPORTED_sys_getppid3
+                0x00118000                attribute_syscall_322
+                0x00118100                attribute___EXPORTED_sys_getpid1
+                0x00118200                attribute_syscall_50
+ .attribute     0x00118300      0x200 src/syscall/lseek.o
+                0x00118300                attribute___EXPORTED_sys_lseek1
+                0x00118400                attribute_syscall_90
+ .attribute     0x00118500      0x200 src/syscall/pipe.o
+                0x00118500                attribute___EXPORTED_sys_pipe1
+                0x00118600                attribute_syscall_300
+ .attribute     0x00118700      0x200 src/syscall/chown.o
+                0x00118700                attribute___EXPORTED_sys_chown1
+                0x00118800                attribute_syscall_210
+ .attribute     0x00118900      0x200 src/syscall/test.o
+                0x00118900                attribute___EXPORTED_sys_test1
+                0x00118a00                attribute_syscall_2550
+ .attribute     0x00118b00      0x200 src/syscall/_exit.o
+                0x00118b00                attribute___EXPORTED_sys_exit1
+                0x00118c00                attribute_syscall_00
+ .attribute     0x00118d00      0x200 src/syscall/socket.o
+                0x00118d00                attribute___EXPORTED_sys_socket1
+                0x00118e00                attribute_syscall_360
+ .attribute     0x00118f00      0x200 src/syscall/ioctl.o
+                0x00118f00                attribute___EXPORTED_sys_ioctl1
+                0x00119000                attribute_syscall_200
+ .attribute     0x00119100      0x400 src/syscall/mmap.o
+                0x00119100                attribute___EXPORTED_sys_umap3
+                0x00119200                attribute_syscall_352
+                0x00119300                attribute___EXPORTED_sys_mmap1
+                0x00119400                attribute_syscall_340
+ .attribute     0x00119500      0x200 src/syscall/uname.o
+                0x00119500                attribute___EXPORTED_sys_uname1
+                0x00119600                attribute_syscall_330
+ .attribute     0x00119700      0x200 src/syscall/mount.o
+                0x00119700                attribute___EXPORTED_sys_mount1
+                0x00119800                attribute_syscall_240
+ .attribute     0x00119900      0x200 src/syscall/wait.o
+                0x00119900                attribute___EXPORTED_sys_wait1
+                0x00119a00                attribute_syscall_160
+ .attribute     0x00119b00      0x200 src/syscall/fcntl.o
+                0x00119b00                attribute___EXPORTED_sys_fcntl1
+                0x00119c00                attribute_syscall_190
+ .attribute     0x00119d00      0x200 src/syscall/waitpid.o
+                0x00119d00                attribute___EXPORTED_sys_waitpid1
+                0x00119e00                attribute_syscall_310
+ .attribute     0x00119f00      0x400 src/syscall/umount.o
+                0x00119f00                attribute___EXPORTED_sys_umount23
+                0x0011a000                attribute_syscall_262
+                0x0011a100                attribute___EXPORTED_sys_umount1
+                0x0011a200                attribute_syscall_250
+ .attribute     0x0011a300      0x200 src/syscall/symlink.o
+                0x0011a300                attribute___EXPORTED_sys_symlink1
+                0x0011a400                attribute_syscall_280
+ .attribute     0x0011a500      0x200 src/syscall/open.o
+                0x0011a500                attribute___EXPORTED_sys_open1
+                0x0011a600                attribute_syscall_100
+ .attribute     0x0011a700      0x200 src/syscall/bind.o
+                0x0011a700                attribute___EXPORTED_sys_bind1
+                0x0011a800                attribute_syscall_370
+ .attribute     0x0011a900      0x200 src/syscall/readdir.o
+                0x0011a900                attribute___EXPORTED_sys_readdir1
+                0x0011aa00                attribute_syscall_800
+ .attribute     0x0011ab00      0x200 src/syscall/execve.o
+                0x0011ab00                attribute___EXPORTED_sys_execve1
+                0x0011ac00                attribute_syscall_20
+ .attribute     0x0011ad00      0x200 src/syscall/sighandler.o
+                0x0011ad00                attribute___EXPORTED_sys__install_sighandler1
+                0x0011ae00                attribute_syscall_1020
+ .attribute     0x0011af00      0x200 src/syscall/openpty.o
+                0x0011af00                attribute___EXPORTED_sys_openpty1
+                0x0011b000                attribute_syscall_270
+ .attribute     0x0011b100      0x200 src/syscall/getgroups.o
+                0x0011b100                attribute___EXPORTED_sys_getgroups1
+                0x0011b200                attribute_syscall_810
+ .attribute     0x0011b300      0x500 src/sched.o
+                0x0011b300                attribute___EXPORTED_kernel_task4
+                0x0011b400                attribute___EXPORTED_current_task3
+                0x0011b500                attribute___EXPORTED_schedule_disable2
+                0x0011b600                attribute___EXPORTED_schedule_enable1
+                0x0011b700                attribute___EXPORTED_im_superuser0
+ .attribute     0x0011b800      0x100 src/fs/procfs/procfs_mount.o
+                0x0011b800                attribute_fs_procfs0
+ .attribute     0x0011b900      0x100 src/fs/iso9660/iso9660_mount.o
+                0x0011b900                attribute_fs_iso96600
+ .attribute     0x0011ba00      0x100 src/fs/tmpfs/tmpfs_mount.o
+                0x0011ba00                attribute_fs_tmpfs0
+ .attribute     0x0011bb00      0x100 src/fs/ramdev.o
+                0x0011bb00                attribute___EXPORTED_mkramdev0
+ .attribute     0x0011bc00      0x200 src/fs/devfs.o
+                0x0011bc00                attribute___EXPORTED_devfs_makedevice1
+                0x0011bd00                attribute___EXPORTED_devfs_getdevice0
+ .attribute     0x0011be00      0x100 src/panic.o
+                0x0011be00                attribute___EXPORTED_panic0
+ .attribute     0x0011bf00      0x600 src/spinlock.o
+                0x0011bf00                attribute___EXPORTED_fastlock_unlock5
+                0x0011c000                attribute___EXPORTED_spinlock_unlock4
+                0x0011c100                attribute___EXPORTED_fastlock_trylock3
+                0x0011c200                attribute___EXPORTED_spinlock_trylock2
+                0x0011c300                attribute___EXPORTED_fastlock_lock1
+                0x0011c400                attribute___EXPORTED_spinlock_lock0
+ .attribute     0x0011c500      0x300 src/mm/mm.o
+                0x0011c500                attribute___EXPORTED_kfree2
+                0x0011c600                attribute___EXPORTED_krealloc1
+                0x0011c700                attribute___EXPORTED_kmalloc0
+ .attribute     0x0011c800      0x600 src/arch/i386/desc.o
+                0x0011c800                attribute___EXPORTED_irq_get5
+                0x0011c900                attribute___EXPORTED_irq_unset4
+                0x0011ca00                attribute___EXPORTED_irq_set3
+                0x0011cb00                attribute___EXPORTED_timer_getfreq2
+                0x0011cc00                attribute___EXPORTED_timer_getticks1
+                0x0011cd00                attribute___EXPORTED_timer_gettime0
+ .attribute     0x0011ce00      0x100 src/arch/i386/pci.o
+                0x0011ce00                attribute___EXPORTED_pci_find_by_id0
+ .attribute     0x0011cf00      0x400 src/arch/i386/paging.o
+                0x0011cf00                attribute___EXPORTED_vmm_switch3
+                0x0011d000                attribute___EXPORTED_vmm_clone2
+                0x0011d100                attribute___EXPORTED_vmm_free1
+                0x0011d200                attribute___EXPORTED_vmm_alloc0
+ .attribute     0x0011d300      0x200 src/arch/i386/serial.o
+                0x0011d300                attribute___EXPORTED_serial_recv1
+                0x0011d400                attribute___EXPORTED_serial_send0
+ .attribute     0x0011d500      0x300 src/arch/i386/i386.o
+                0x0011d500                attribute___EXPORTED_cpu_wait2
+                0x0011d600                attribute___EXPORTED_cpu_idle1
+                0x0011d700                attribute___EXPORTED_cpu_halt0
+                0x0011d800                attribute_end = .
 
 .bss            0x0011e000    0x28008
                 0x0011e000                bss = .
@@ -1552,6 +1566,7 @@ Script del linker e mappa della memoria
  .bss           0x0013e610        0x0 src/syscall/fchdir.o
  .bss           0x0013e610        0x0 src/syscall/gettimeofday.o
  .bss           0x0013e610        0x0 src/syscall/isatty.o
+ .bss           0x0013e610        0x0 src/syscall/chroot.o
  .bss           0x0013e610        0x0 src/syscall/args.o
  .bss           0x0013e610        0x0 src/syscall/time.o
  .bss           0x0013e610        0x0 src/syscall/getpid.o
@@ -1698,6 +1713,7 @@ LOAD src/syscall/write.o
 LOAD src/syscall/fchdir.o
 LOAD src/syscall/gettimeofday.o
 LOAD src/syscall/isatty.o
+LOAD src/syscall/chroot.o
 LOAD src/syscall/args.o
 LOAD src/syscall/time.o
 LOAD src/syscall/getpid.o
@@ -1812,6 +1828,7 @@ OUTPUT(aplus elf32-i386)
  .comment       0x00000000       0x12 src/syscall/fchdir.o
  .comment       0x00000000       0x12 src/syscall/gettimeofday.o
  .comment       0x00000000       0x12 src/syscall/isatty.o
+ .comment       0x00000000       0x12 src/syscall/chroot.o
  .comment       0x00000000       0x12 src/syscall/args.o
  .comment       0x00000000       0x12 src/syscall/time.o
  .comment       0x00000000       0x12 src/syscall/getpid.o

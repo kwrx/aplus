@@ -18,7 +18,9 @@
 
 
 extern fbdev_gfx_t* __stub_gfx;
+static spinlock_t fb_lock = 0;
 
+fbdev_gfx_t* fbgfx = NULL;
 
 #define __FB_WIDTH		800
 #define __FB_HEIGHT		600
@@ -39,8 +41,7 @@ fb_videomode_t fbvm = {
 };
 
 
-fbdev_gfx_t* fbgfx = NULL;
-spinlock_t fb_lock = 0;
+
 
 int fb_ioctl(inode_t* ino, int req, void* buf) {
 	if(unlikely(!ino)) {

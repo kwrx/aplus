@@ -19,18 +19,20 @@ int init() {
 #include <arch/i386/i386.h>
 #include "atapi.h"
 
-fastlock_t irq_lock;
-spinlock_t crd_lock;
+static volatile int irq_fired;
+static spinlock_t crd_lock;
 
 static void irq_handler(void* unused) {
 	(void) unused;
 
-	fastlock_unlock(&irq_lock);
+	irq_fired = 1;
 }
 
 static int irq_wait(void) {
-	fastlock_lock(&irq_lock);
-	fastlock_unlock(&irq_lock);
+	while(irq_fired == 0)
+		cpu_wait();
+
+	irq_fired = 0;
 }
 
 
@@ -60,9 +62,6 @@ static int atapi_check_size(uint32_t bus, uint32_t drive) {
 		return 0;
 
 
-
-	fastlock_lock(&irq_lock);
-
 	outsw(ATA_DATA(bus), ((uint16_t*) c), 6);
 	irq_wait();
 
@@ -81,10 +80,9 @@ static int atapi_check_size(uint32_t bus, uint32_t drive) {
 	lb = (int) (__builtin_bswap64(buffer) >> 32);
 	
 	
-	while((e = inb(ATA_COMMAND(bus))) & 0x08)
+	while((e = inb(ATA_COMMAND(bus))) & 0x88)
 		cpu_wait();
 
-	
 	return (lb + 1) * ss;
 }
 
@@ -103,9 +101,12 @@ static int atapi_read_sector(uint32_t bus, uint32_t drive, uint32_t lba, uint8_t
 	outb(ATA_ADDR3(bus), (ATAPI_SECTOR_SIZE >> 8) & 0xFF);
 	outb(ATA_COMMAND(bus), 0xA0);
 
+
+	
 	int e = 0;
 	while((e = inb(ATA_COMMAND(bus)) & 0x80))
 		cpu_wait();
+
 
 	while(!((e = inb(ATA_COMMAND(bus))) & 0x08) && !(e & 0x01))
 		cpu_wait();
@@ -113,16 +114,18 @@ static int atapi_read_sector(uint32_t bus, uint32_t drive, uint32_t lba, uint8_t
 	if(unlikely(e & 0x01))
 		return 0;
 
+	
 	c[9] = 1;
 	c[2] = (lba >> 0x18) & 0xFF;
 	c[3] = (lba >> 0x10) & 0xFF;
 	c[4] = (lba >> 0x08) & 0xFF;
 	c[5] = (lba >> 0x00) & 0xFF;
 
-	fastlock_lock(&irq_lock);
-
+		
 	outsw(ATA_DATA(bus), ((uint16_t*) c), 6);
 	irq_wait();
+
+
 
 	int s = (((int) inb(ATA_ADDR3(bus))) << 8) | (int) (inb(ATA_ADDR2(bus)));
 	if(unlikely(!s))
@@ -130,7 +133,7 @@ static int atapi_read_sector(uint32_t bus, uint32_t drive, uint32_t lba, uint8_t
 
 	insw(ATA_DATA(bus), ((int16_t*) buffer), s / 2);
 	
-	while((e = inb(ATA_COMMAND(bus))) & 0x08)
+	while((e = inb(ATA_COMMAND(bus))) & 0x88)
 		cpu_wait();
 
 	return s;
@@ -157,20 +160,28 @@ int atapi_read(inode_t* ino, char* buf, int length) {
 	int l = 0;
 	int i = 0;
 
-	
 	spinlock_lock(&crd_lock);
 
 	for(i = 0; i < length; i += ATAPI_SECTOR_SIZE) {
-		if(unlikely(atapi_read_sector(bus, drv, ino->position / ATAPI_SECTOR_SIZE, (uint8_t*) ((uint32_t) buf + i)) != ATAPI_SECTOR_SIZE))
-			//break;
+		static uint8_t tbuf[ATAPI_SECTOR_SIZE << 1];
+		if(unlikely(atapi_read_sector(bus, drv, ino->position / ATAPI_SECTOR_SIZE, tbuf) != ATAPI_SECTOR_SIZE))
+			break;
+
+		register int tlen = (length - i) > ATAPI_SECTOR_SIZE
+								? ATAPI_SECTOR_SIZE
+								: (length - i);
 
 
-		l += ATAPI_SECTOR_SIZE;
-		ino->position += ATAPI_SECTOR_SIZE;
+		memcpy(
+			(void*) ((uint32_t) buf + i), 
+			(void*) ((uint32_t) tbuf + (ino->position % ATAPI_SECTOR_SIZE)),
+			tlen
+		);
+
+		l += tlen;
+		ino->position += tlen;
 	}
 
-	
-	
 		
 	spinlock_unlock(&crd_lock);
 
@@ -179,7 +190,6 @@ int atapi_read(inode_t* ino, char* buf, int length) {
 
 
 int init() {
-	fastlock_init(&irq_lock, SPINLOCK_FLAGS_UNLOCKED);
 	spinlock_init(&crd_lock, SPINLOCK_FLAGS_UNLOCKED);
 
 

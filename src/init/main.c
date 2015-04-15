@@ -119,10 +119,12 @@ int main() {
 
 
 	char* __envp[] = {
-		"PATH=/bin:/usr/bin:/usr/local/bin:/dev/ramdisk/bin",
-		"SHELL=/bin/dash",
-		"USER=liveuser",
+		"PATH=/bin:/usr/bin:/usr/local/bin",
+		"SHELL=/bin/sh",
+		"USER=warex",
+		"OS=aPlus",
 		"TMPDIR=/tmp",
+		"HOME=/usr",
 		"ROOTDEV=/dev/cd0",
 		"ROOTFS=iso9660",
 		"SDL_VIDEODRIVER=dummy",

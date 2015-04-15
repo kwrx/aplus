@@ -33,7 +33,7 @@ int sys_read(int fd, void* ptr, size_t size) {
 
 #ifdef IO_DEBUG
 	if(unlikely(!sys_isatty(fd)))
-		kprintf("io: read from %d (%s) %d Bytes\n", fd, ino->name, size);
+		kprintf("io: read from %d (%s, 0x%x) %d Bytes\n", fd, ino->name, ino->read, size);
 #endif
 
 	return fs_read(ino, ptr, size);

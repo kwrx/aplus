@@ -123,6 +123,7 @@ syscall2(35, munmap)
 syscall3(36, socket)
 syscall3(37, bind)
 syscall2(38, shutdown)
+syscall1(39, chroot)
 
 #ifdef __aplus__
 syscall2(80, aplus_readdir)
