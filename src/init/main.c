@@ -94,7 +94,6 @@ int main() {
 	if(unlikely(sys_mount("/dev/ram0", "/dev/ramdisk", "iso9660", 0, 0) != 0))
 		panic("initrd: cannot mount ramdisk");
 
-
 	if(unlikely(sys_mount(NULL, "/dev/proc", "procfs", 0, 0) != 0))
 		panic("procfs: cannot mount /dev/proc");
 
@@ -111,7 +110,7 @@ int main() {
 
 	init_modules();
 
-#if 1
+
 	char* __argv[] = {
 		"/dev/ramdisk/bin/init",
 		NULL
@@ -134,7 +133,7 @@ int main() {
 
 	//if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
-#endif
+
 	
 	sysidle();
 }

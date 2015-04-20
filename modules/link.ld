@@ -1,4 +1,4 @@
-ENTRY(__init)
+ENTRY(_start)
 SEARCH_DIR("/opt/cross/usr/lib");
 
 SECTIONS {

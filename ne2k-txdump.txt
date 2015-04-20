@@ -1,4 +1,0 @@
-null packetmover readable log file
-net IF = xl0
-MAC address = fe:fd:de:ad:be:ef
---

@@ -30,8 +30,8 @@ int sys_chroot(char* filename) {
 		return -1;
 	
 	
-	inode_t* ino = current_task->fd[fd];
-	return vfs_chroot(ino);
+	current_task->root = current_task->fd[fd];
+	return 0;
 }
 
 

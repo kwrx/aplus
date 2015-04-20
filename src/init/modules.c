@@ -44,8 +44,8 @@ int init_modules() {
 		sys_close(fd);
 
 
-		int (*init) () = NULL;
-		if((init = (int (*)()) elf32_load_module(image, ino->size)) == NULL) {
+		void (*init) () = NULL;
+		if((init = (void (*)()) elf32_load_module(image, ino->size)) == NULL) {
 			kprintf("mod: cannot load %s\n", name);
 			continue;
 		}

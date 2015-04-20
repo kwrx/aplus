@@ -136,6 +136,7 @@ typedef struct task {
 	uid_t uid;
 	gid_t gid;
 	
+	inode_t* root;
 	inode_t* cwd;
 	inode_t* exe;
 	inode_t* fd[TASK_MAX_FD];

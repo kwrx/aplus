@@ -4,7 +4,7 @@
 #define DEBUG
 //#define NETIF_DEBUG
 //#define SOCKET_DEBUG
-//#define PCI_DEBUG
+#define PCI_DEBUG
 //#define SYSCALL_DEBUG
 //#define ELF_DEBUG
 //#define SCHED_DEBUG

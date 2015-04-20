@@ -472,7 +472,7 @@ void* elf32_load_module(void* image, int size) {
 		return NULL;
 }
 
-	if(elf_load_module(&elf, image, size, "__init") != 0)
+	if(elf_load_module(&elf, image, size, "_start") != 0)
 		return NULL;
 
 	return (void*) elf.start;

@@ -47,7 +47,8 @@ int task_init() {
 	
 	
 	current_task->pid = schedule_nextpid();
-	current_task->cwd = (inode_t*) vfs_root;
+	current_task->cwd = vfs_root;
+	current_task->root = vfs_root;
 	current_task->uid = (uid_t) 0;
 	current_task->gid = (gid_t) 0;
 	
@@ -77,7 +78,6 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 
 
 	child->pid = schedule_nextpid();
-	child->exe = current_task->exe;
 	child->uid = current_task->uid;
 	child->gid = current_task->gid;
 	
@@ -85,16 +85,17 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	child->priority = current_task->priority;
 	child->clock = 0;
 
+	child->root = current_task->root;
+	child->cwd = current_task->cwd;
+	child->exe = current_task->exe;
+
+
 
 	if(flags & CLONE_FILES) {
 		for(int i = 0; i < TASK_MAX_FD; i++)
 			child->fd[i] = current_task->fd[i];
 	}
 
-	if(flags & CLONE_FS)
-		child->cwd = current_task->cwd;
-	else
-		child->cwd = (inode_t*) vfs_root;
 
 	if(flags & CLONE_PARENT)
 		child->parent = current_task->parent;	

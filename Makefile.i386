@@ -1,5 +1,5 @@
 
-VMM				:= qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump -vga cirrus -soundhw sb16,es1370,adlib
+VMM				:= qemu-system-i386 -m 64 -serial stdio -cdrom aplus.iso -net nic,model=rtl8139 -net dump -vga cirrus -soundhw sb16,es1370,adlib -net dump,file=/tmp/vm0.pcap -netdev user,id=usernet -device e1000,netdev=usernet
 #VMM			:= bochs -f bochs.conf
 
 CFLAGS		+= -masm=intel -mfpmath=sse -msse2 -Ofast -I $(TOP)/src/include/arch/i386/acpi

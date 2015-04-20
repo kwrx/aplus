@@ -122,12 +122,9 @@ static void pci_load_device(pci_device_t* device, uint8_t bus, uint8_t dev, uint
 
 
 pci_device_t* pci_find_by_id(uint32_t vendorID, uint32_t deviceID) {
-	for(int i = 0; i < PCI_MAX_DEVICES; i++) {
-		if(unlikely(pci_devices[i].vendorID != vendorID && pci_devices[i].deviceID != deviceID))
-			continue;
-
-		return &pci_devices[i];
-	}
+	for(int i = 0; i < PCI_MAX_DEVICES; i++)
+		if(unlikely(pci_devices[i].vendorID == vendorID && pci_devices[i].deviceID == deviceID))
+			return &pci_devices[i];
 
 	return NULL;
 }

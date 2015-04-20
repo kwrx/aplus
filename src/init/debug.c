@@ -1,7 +1,7 @@
 #include <aplus.h>
 #include <aplus/spinlock.h>
 
-static spinlock_t debug_lock;
+static spinlock_t debug_lock = 0;
 
 /**
  *	\brief Send a character to serial debug port.

@@ -35,21 +35,29 @@ static inode_t* ino_open(char* filename, int flags, mode_t mode) {
 	}
 
 	inode_t* cwd = NULL;
+	inode_t* root = NULL;
+
+
+	if(likely(current_task))
+		root = current_task->root;
+	else
+		root = vfs_root;
+
 
 	if(filename[0] == '/')
-		cwd = vfs_root;
+		cwd = root;
 	else
 	 	cwd = current_task->cwd;
 	
 	if(unlikely(!cwd)) {
-		if(!vfs_root) {
+		if(!root) {
 			kprintf("sys_open: no root found for cwd.");
 		
 			errno = ENOENT;
 			return NULL;
 		}
 		
-		cwd = vfs_root;
+		cwd = root;
 	}
 	
 	
