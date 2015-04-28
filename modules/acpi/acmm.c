@@ -6,7 +6,7 @@ void* AcpiOsMapMemory(ACPI_PHYSICAL_ADDRESS PhysicalAddress, ACPI_SIZE Length) {
 	kprintf("acpica: map memory at 0x%x (%d Bytes)\n", PhysicalAddress, Length);
 #endif
 
-	return PhysicalAddress;
+	return (void*) PhysicalAddress;
 }
 
 void AcpiOsUnmapMemory(void* where, ACPI_SIZE Length) {
@@ -18,12 +18,12 @@ void AcpiOsUnmapMemory(void* where, ACPI_SIZE Length) {
 }
 
 ACPI_STATUS AcpiOsGetPhysicalAddress(void *LogicalAddress, ACPI_PHYSICAL_ADDRESS *PhysicalAddress) {
-	*PhysicalAddress = LogicalAddress;
+	*PhysicalAddress = (ACPI_PHYSICAL_ADDRESS) LogicalAddress;
 	return 0;
 }
 
 void* AcpiOsAllocate(ACPI_SIZE Size) {
-	return kmalloc(Size);
+	return (void*) kmalloc(Size);
 }
 
 void AcpiOsFree(void* ptr) {

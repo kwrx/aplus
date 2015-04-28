@@ -33,14 +33,12 @@ int main(int argc, char** argv) {
 	chroot("/dev/root");
 
 
-
-
-
-	DIR* d = opendir("/");
-	struct dirent* ent;
-	while((ent = readdir(d)))
-		printf(" - %s\n", ent->d_name);
-	closedir(d);
+#if 0
+	if(fork() == 0)
+		execl("/bin/session", NULL);
+	else
+		wait(NULL);
+#endif
 
 	return 0;
 }

@@ -160,6 +160,13 @@ void* krealloc(void* ptr, size_t size) {
 }
 
 
+void* kcalloc(size_t n, size_t m) {
+	void* p = (void*) kmalloc(n * m);
+	memset(p, 0, sizeof(n * m));
+
+	return p;
+}
+
 
 /**
  *	\brief Set current heap for memory operations.
@@ -198,7 +205,12 @@ int mm_init() {
 	return 0;
 }
 
-
+#ifdef MM_DEBUG
+EXPORT_SYMBOL(__kmalloc);
+#else
 EXPORT_SYMBOL(kmalloc);
+#endif
+
 EXPORT_SYMBOL(krealloc);
 EXPORT_SYMBOL(kfree);
+EXPORT_SYMBOL(kcalloc);

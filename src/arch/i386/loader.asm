@@ -29,8 +29,11 @@ global multiboot
 
 section .bss
 align 0x1000
+
 kernel_stack: resb STACKSIZE
 kernel_stack_end:
+
+align 0x1000
 	
 section .multiboot
 multiboot:

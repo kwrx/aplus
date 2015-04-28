@@ -453,6 +453,10 @@ uint32_t timer_getticks() {
 	return ((pit_days * 86400) * PIT_FREQ) + (pit_seconds * PIT_FREQ) + pit_ticks;
 }
 
+uint32_t timer_getms() {
+	return timer_getticks();
+}
+
 uint32_t timer_getfreq() {
 	return PIT_FREQ;
 }
@@ -474,6 +478,7 @@ void go_usermode() {
 
 EXPORT_SYMBOL(timer_gettime);
 EXPORT_SYMBOL(timer_getticks);
+EXPORT_SYMBOL(timer_getms);
 EXPORT_SYMBOL(timer_getfreq);
 
 EXPORT_SYMBOL(irq_set);

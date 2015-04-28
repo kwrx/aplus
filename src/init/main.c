@@ -65,7 +65,7 @@ int main() {
 	tty_init();
 
 #if HAVE_NETWORK
-	netif_init();
+	tcpip_init();
 #endif
 
 	arch_post_init();

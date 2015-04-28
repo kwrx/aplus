@@ -77,6 +77,9 @@
 #define CLONE_PARENT	16
 #endif
 
+#define __CLONE_THREAD	(CLONE_VM | CLONE_SIGHAND | CLONE_FS | CLONE_FILES)
+#define __CLONE_PROC	(CLONE_SIGHAND | CLONE_FS | CLONE_FILES)
+
 
 typedef struct task_env {
 #if defined(__i386__)

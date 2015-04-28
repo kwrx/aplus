@@ -46,7 +46,7 @@ static uint8_t eeprom_detect(void) {
 	return 0;
 }
 
-static uint32_t eeprom_read(uint8_t a) {
+static uint16_t eeprom_read(uint8_t a) {
 	int t = 0;
 	if(e1000.eeprom_exists) {
 		cmdwr(REG_EEPROM, 1 | ((uint32_t) (a) << 8));
@@ -68,7 +68,7 @@ static int read_macaddr(macaddr_t* macaddr) {
 	uint8_t mt[6];
 
 	if(e1000.eeprom_exists) {
-		uint32_t t = eeprom_read(0);
+		register uint16_t t = eeprom_read(0);
 		mt[0] = t & 0xFF;
 		mt[1] = (t >> 8) & 0xFF;
 	
@@ -247,7 +247,7 @@ int init() {
 #endif
 	
 	memset(&e1000, 0, sizeof(e1000_t));
-	e1000.bar_type = e1000_device->header;
+	e1000.bar_type = 0;
 	e1000.mem_base = e1000_device->membase;
 	e1000.io_base = e1000_device->iobase;
 	e1000.eeprom_exists = 0;
@@ -255,7 +255,7 @@ int init() {
 
 	macaddr_t macaddr;
 
-	eeprom_detect();
+	e1000.eeprom_exists = eeprom_detect();
 	read_macaddr(&macaddr);
 
 	e1000_link();	

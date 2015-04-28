@@ -45,12 +45,12 @@ int init_modules() {
 
 
 		void (*init) () = NULL;
-		if((init = (void (*)()) elf32_load_module(image, ino->size)) == NULL) {
+		if((init = (void (*)()) exec_load(name, image, NULL, (size_t*) &ino->size)) == NULL) {
 			kprintf("mod: cannot load %s\n", name);
 			continue;
 		}
 
-		sys_clone(init, NULL, CLONE_SIGHAND | CLONE_VM | CLONE_FILES | CLONE_FS, NULL);
+		sys_clone(init, NULL, CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);
 	}
 
 	sys_close(fd);

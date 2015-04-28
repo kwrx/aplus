@@ -2,9 +2,10 @@
 #define _APLUS_CONFIG_H
 
 #define DEBUG
-//#define NETIF_DEBUG
+//#define EXEC_DEBUG
+#define NET_DEBUG
 //#define SOCKET_DEBUG
-#define PCI_DEBUG
+//#define PCI_DEBUG
 //#define SYSCALL_DEBUG
 //#define ELF_DEBUG
 //#define SCHED_DEBUG
@@ -18,6 +19,7 @@
 #ifdef __i386__
 #define HAVE_SSE					1
 #define HAVE_DISASM					1
+#define HAVE_DYNELF					1
 #endif
 
 #define HAVE_LOCK					1

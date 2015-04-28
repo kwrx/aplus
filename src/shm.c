@@ -74,7 +74,7 @@ void* shm_acquire_from_inode(inode_t* ino, uint32_t* size) {
 	}
 
 #ifdef SHM_DEBUG
-	kprintf("shm: acquired chunk \"%s\" at 0x%x (%d Bytes) (ref: %d)\n", path, chunk->addr, *size, chunk->refcount);
+	kprintf("shm: acquired chunk \"%s\" at 0x%x (%d Bytes) (ref: %d)\n", ino->name, chunk->addr, *size, chunk->refcount);
 #endif
 
 	return (void*) chunk->addr;

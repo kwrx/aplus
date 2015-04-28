@@ -15,7 +15,6 @@
 #endif
 
 
-#define __FORK			0x80000000
 
 
 __asm__ (
@@ -32,8 +31,8 @@ __asm__ (
 	"	push esi						\n"
 	"	push edi						\n"
 	"	mov eax, [ebp + 8]				\n"
-	"	mov edx, [ebp + 12]				\n"
 	"	mov [eax], esp					\n"
+	"	mov edx, [ebp + 12]				\n"
 	"	mov esp, [edx]					\n"
 	"	pop edi							\n"
 	"	pop esi							\n"
@@ -135,35 +134,16 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 	stack = (void*) ((int) stack + TASK_STACKSIZE);
 
 
-	if(flags & __FORK) {
+
+	child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
+	child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t) - sizeof(void*) * 2);
 	
-		/* Update context */
-		schedule_yield();
+	child->context.env->eax = (uint32_t) arg;
+	child->context.env->eip = (uint32_t) entry;
+	child->context.env->ebp = (uint32_t) child->context.env;
 
-		entry = (void*) read_eip();
-		if(child == current_task)
-			return child;
-
-		child->context.stack = current_task->context.stack;
-		child->context.env = current_task->context.env;
-
-
-		child->context.env->eax = (uint32_t) arg;
-		child->context.env->eip = (uint32_t) entry;
-		child->context.env->ebp = (uint32_t) child->context.env;
-
-
-	} else {
-		child->context.stack = (uint32_t) stack - TASK_STACKSIZE;
-		child->context.env = (task_env_t*) ((uint32_t) stack - sizeof(task_env_t) - sizeof(void*) * 2);
-	
-		child->context.env->eax = (uint32_t) arg;
-		child->context.env->eip = (uint32_t) entry;
-		child->context.env->ebp = (uint32_t) child->context.env;
-
-		void** sp = (void**) ((uint32_t) child->context.env + sizeof(task_env_t));
-		sp[1] = arg;
-	}
+	void** sp = (void**) ((uint32_t) child->context.env + sizeof(task_env_t));
+	sp[1] = arg;
 	
 
 	list_add(task_queue, (listval_t) child);
@@ -178,13 +158,13 @@ void task_switch(task_t* newtask) {
 	task_t* old = current_task;
 	current_task = newtask;
 
-
 	vmm_switch(current_task->context.cr3);
-	
+
 #if HAVE_SSE
 	__asm__ ("fxsave [eax]" : : "a"(SSE_ALIGN(old->context.fpu)));
 	__asm__ ("fxrstor [eax]" : : "a"(SSE_ALIGN(current_task->context.fpu)));
 #endif
+
 
 	task_switch_ack();
 	task_context_switch(&old->context.env, &current_task->context.env);
@@ -200,10 +180,68 @@ task_t* task_fork() {
 		return NULL;
 
 
-	task_t* child = task_clone(NULL, NULL, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND | __FORK);
-	if(child == current_task)
+	schedule_disable();
+
+	task_t* child = (task_t*) kmalloc(sizeof(task_t));
+	memset(child, 0, sizeof(task_t));
+
+	child->pid = schedule_nextpid();
+	child->uid = current_task->uid;
+	child->gid = current_task->gid;
+	
+	child->state = TASK_STATE_ALIVE;
+	child->priority = current_task->priority;
+	child->clock = 0;
+
+
+	child->root = current_task->root;
+	child->cwd = current_task->cwd;
+	child->exe = current_task->exe;
+
+	
+	for(int i = 0; i < TASK_MAX_FD; i++)
+		child->fd[i] = current_task->fd[i];
+	
+
+	child->parent = current_task;
+
+ 	child->signal_handler = current_task->signal_handler;
+	child->signal_sig = current_task->signal_sig;
+
+
+	child->image = (task_image_t*) kmalloc(sizeof(task_image_t));
+	memset(child->image, 0, sizeof(task_image_t));
+
+	child->context.cr3 = vmm_clone(NULL, current_task->context.cr3);
+
+	if(current_task->image->vaddr && current_task->image->length) {
+		void* addr = (void*) kvmalloc(current_task->image->length);
+		memcpy(addr, (void*) current_task->image->vaddr, current_task->image->length);
+
+		vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+
+#ifdef SCHED_DEBUG
+		kprintf("fork: remap address space at 0x%x (%d Bytes)\n", current_task->image->vaddr, current_task->image->length);
+#endif
+	}
+
+	child->image->vaddr = current_task->image->vaddr;
+	child->image->length = current_task->image->length;
+	child->image->ptr = current_task->image->ptr;
+	child->image->refcount++;
+
+	/* TODO: Remap stack */
+
+	uint32_t eip = read_eip();
+	if(current_task == child)
 		return NULL;
 
+	child->context.env->eip = eip;
+
+
+	list_add(task_queue, (listval_t) child);
+
+	schedule_enable();
 	return child;
 }
 

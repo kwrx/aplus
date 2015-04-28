@@ -10,7 +10,7 @@
 #include <time.h>
 #include <sys/times.h>
 
-#include "i386.h"
+#include <arch/i386/i386.h>
 
 #define SCI_EN		1
 
