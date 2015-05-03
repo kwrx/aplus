@@ -90,6 +90,14 @@ extern bootargs_t* mbd;
 #endif
 
 
+#ifdef __GNUC__
+#define __PRAGMA(x)			_Pragma(#x)
+#define WARNING(x)			__PRAGMA(GCC diagnostic ignored x)
+#else
+#define WARNING(x)
+#endif
+
+
 #include <aplus/attribute.h>
 
 /* EXPORT_SYMBOL_AS(kprintf, "printf"); */
@@ -117,7 +125,6 @@ extern bootargs_t* mbd;
 
 #define EXPORT_SYMBOL_OBJ(x)					\
 	EXPORT_SYMBOL_OBJ_AS(x, #x)
-
 
 
 #define APLUS_HEADER_INCLUDED					1

@@ -12,8 +12,8 @@
 
 #include "e1000.h"
 #include <aplus/mmio.h>
-#include <aplus/netif.h>
 #include <aplus/mm.h>
+#include <aplus/pci.h>
 
 #include <arch/i386/i386.h>
 
@@ -205,7 +205,7 @@ static void e1000_handler(void* unused) {
 		e1000_link();
 	else if(s & 0x10)
 		/* Nothing */;
-	else
+	else if(s & 0x80)
 		e1000_recv();
 }
 
@@ -275,9 +275,9 @@ int init() {
 #endif
 	
 
-	char* pkt = kmalloc(60);
-	memset(pkt, 0, 60);
-	e1000_sendpacket(pkt, 60);
+	char* pkt = kmalloc(400);
+	memset(pkt, 0, 400);
+	e1000_sendpacket(pkt, 400);
 
 	kprintf("e1000: trasmitted\n");
 	

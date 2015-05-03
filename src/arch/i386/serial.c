@@ -12,6 +12,8 @@ static uint16_t serial[] = {
 	0x3F8, 0x2F8, 0x3E8, 0x2E8
 };
 
+
+
 void serial_send(uint8_t port, uint8_t value) {
 	while(((inb(serial[port] + 5) & 32) == 0))
 		cpu_wait();

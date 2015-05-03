@@ -8,7 +8,7 @@ static spinlock_t debug_lock = 0;
  *	\param ch Character to send.
  */
 void debug_putc(char ch) {
-	serial_send(0, ch);
+	arch_debug_putc(ch);
 }
 
 
@@ -205,4 +205,5 @@ void kprintf(char* fmt, ...) {
 
 
 EXPORT_SYMBOL(kprintf);
+EXPORT_SYMBOL(ksprintf);
 

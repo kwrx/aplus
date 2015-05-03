@@ -41,6 +41,9 @@ int sys_close(int fd) {
 	kprintf("io: closing %d (%s)\n", fd, ((inode_t*) current_task->fd[fd])->name);
 #endif
 	
+	//if(((inode_t*) current_task->fd[fd])->flush)
+	//	((inode_t*) current_task->fd[fd])->flush(((inode_t*) current_task->fd[fd]));
+
 	current_task->fd[fd] = 0;
 	return 0;
 }

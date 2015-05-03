@@ -2,7 +2,6 @@
 #define _E1000_H
 
 #include <aplus.h>
-#include <aplus/netif.h>
 
 #define INTEL_VEND			0x8086
 
@@ -137,9 +136,11 @@ typedef struct e1000 {
 	uint16_t rx_cur;
 	uint16_t tx_cur;
 
-	netif_t* netif;
+	//netif_t* netif;
 } e1000_t;
 
+
+typedef char macaddr_t[6];
 
 #define E1000_BAR_MMIO			0
 #define E1000_BAR_IO			1

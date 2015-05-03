@@ -1,5 +1,7 @@
 %ifdef __i386__
 
+%define VIDEOMODE	0
+
 [BITS 32]
 
 extern load_bootargs
@@ -46,10 +48,17 @@ align 4
 	dd bss
 	dd end
 	dd _start
+%if VIDEOMODE
 	dd 0
 	dd 800
 	dd 600
 	dd 16
+%else
+	dd 1
+	dd 0
+	dd 0
+	dd 0
+%endif
 		
 		
 	
