@@ -156,12 +156,13 @@ static int __tcpip_ioctl(inode_t* ino, int req, void* buf) {
 #endif
 
 #define __p(x)	printf(#x ": %d\n", (x))
-#define TEST_TCP 0
+#define TEST_TCP 1
 int writed = 0;
 int ready = 0;
 
 void client(void* unused) {
-	sleep(1);
+	while(!ready)
+		sys_yield();
 	
 	kprintf("TRY CONNECT...\n");
 
@@ -185,7 +186,6 @@ void client(void* unused) {
 	__p(sp = lwip_socket(AF_INET, SOCK_DGRAM, 0));
 #endif
 
-	while(!ready);
 
 	__p(lwip_connect(sp, (struct sockaddr*) &cin, sizeof(cin)));
 	
@@ -244,7 +244,8 @@ int init() {
 	__p(sc = lwip_accept(sd, (struct sockaddr*) &cin, &scin));
 #endif
 
-	while(!writed);
+	while(!writed)
+		sys_yield();
 	kprintf("READING\n");
 #if TEST_TCP
 	__p(lwip_read(sc, buf, 32));

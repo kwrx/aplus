@@ -4,7 +4,7 @@ CFILES		:= $(shell find . -name "*.c")
 all: $(O)
 $(O):
 	@echo "  CC      " $@
-	@$(CC) $(CFLAGS) $(CRTMOD) $(CFILES) -o $@ -T $(LINK) -I $(INCDIR) -lposix -lc -lsys -lgcc
+	@$(CC) $(CFLAGS) $(CRTMOD) $(CFILES) -o $@ -T $(LINK) -I $(INCDIR) -lposix -lc -lm -lsys -lgcc
 
 clean:
 	-@$(RM) $(O)

@@ -24,6 +24,7 @@ SECTIONS {
 	
 	.data : AT(ADDR(.data) - VBASE) {
 		*(.data)
+		
 	}
 	
 	.attribute : AT(ADDR(.attribute) - VBASE) {

@@ -15,14 +15,16 @@ static uint16_t serial[] = {
 
 
 void serial_send(uint8_t port, uint8_t value) {
-	while(((inb(serial[port] + 5) & 32) == 0))
+	int i = 0;
+	while(((inb(serial[port] + 5) & 32) == 0) && ++i < 1000000)
 		cpu_wait();
 
 	outb(serial[port], value);
 }
 
 uint8_t serial_recv(uint8_t port) {
-	while((inb(serial[port] + 5) & 1) == 0)
+	int i = 0;
+	while(((inb(serial[port] + 5) & 1) == 0) && ++i < 1000000)
 		cpu_wait();
 	
 	return inb(serial[port]);

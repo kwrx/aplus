@@ -17,12 +17,14 @@
 
 #define ATTRIBUTE(name, value)																		\
 	attribute_t __UNION(attribute_, value, __COUNTER__) __attribute__((section(".attribute"))) = {	\
-		name, (uint32_t) &value																		\
+		ATTRIBUTE_MAGIC, name, (uint32_t) &value																		\
 	}																								\
 
 
+#define ATTRIBUTE_MAGIC		0xABCD1234
 
 typedef struct attribute {
+	uint32_t magic;
 	char name[0x80];
 	uint32_t value;
 } __attribute__((aligned(0x100))) attribute_t;
@@ -34,12 +36,16 @@ static inline list_t* attribute(const char* name) {
 	
 	uint32_t attr_s = (uint32_t) &attribute_start;
 	uint32_t attr_e = (uint32_t) &attribute_end;
+
 	
 	list_t* tmp;
 	list_init(tmp);
 	
 	while(attr_s < attr_e) {
 		attribute_t* attr = (attribute_t*) attr_s;
+
+		if(attr->magic != ATTRIBUTE_MAGIC)
+			break;
 
 		if(strcmp(attr->name, name) == 0)
 			list_add(tmp, (listval_t) attr->value);

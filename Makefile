@@ -19,10 +19,10 @@ all: iso
 
 
 ramdisk: aplus
-	@-cd ramdisk/src && $(MAKE) && $(MAKE) install
+	@cd ramdisk/src && $(MAKE) && $(MAKE) install
 
 modules: aplus
-	@-cd modules && $(MAKE) clean && $(MAKE) && $(MAKE) install
+	@cd modules && $(MAKE) clean && $(MAKE) && $(MAKE) install
 
 ramdisk_clean:
 	@-cd ramdisk/src && $(MAKE) clean

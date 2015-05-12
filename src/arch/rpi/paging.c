@@ -219,8 +219,8 @@ int vmm_init() {
 	memset(kernel_vmm, 0, PDSIZE * sizeof(uint32_t));
 
 	
-	vmm_mapkernel(kernel_vmm);
-	vmm_switch(kernel_vmm);
+	//vmm_mapkernel(kernel_vmm);
+	//vmm_switch(kernel_vmm);
 	//vmm_enable();
 
 

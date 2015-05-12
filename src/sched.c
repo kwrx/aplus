@@ -34,18 +34,18 @@
 /**
  *	\brief Current task address
  */
-task_t* current_task;
+task_t* current_task = NULL;
 
 /**
  *	\brief Kernel task address
  */
-task_t* kernel_task;
+task_t* kernel_task = NULL;
 
 
 /**
  *	\brief List of all Task
  */
-list_t* task_queue;
+list_t* task_queue = NULL;
 
 
 /**
@@ -195,7 +195,7 @@ void schedule_setpriority(int priority) {
 	if(unlikely(!current_task))
 		return;
 		
-	current_task->priority = priority;
+	current_task->priority = (TASK_DEFAULT_JIFFIES - priority) + 1;
 }
 
 
@@ -367,7 +367,7 @@ void* schedule_sbrk(ptrdiff_t increment) {
 	increment = (increment & MM_MASK) + BLKSIZE;
 
 	if(increment > 0) {
-		if(!vmm_alloc(current_task->context.cr3, current_task->image->vaddr + current_task->image->length, increment, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER)) {
+		if(!vmm_alloc(current_task->context.cr3, current_task->image->vaddr + current_task->image->length, increment, VMM_PROT_READ | VMM_PROT_WRITE | VMM_PROT_EXEC)) {
 			errno = ENOMEM;
 			return NULL;
 		}

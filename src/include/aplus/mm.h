@@ -46,11 +46,12 @@
 
 
 
-#define VMM_FLAGS_PRESENT	0x01
-#define VMM_FLAGS_RDWR		0x02
-#define VMM_FLAGS_USER		0x04
-#define VMM_FLAGS_4MB		0x80
-#define VMM_FLAGS_DEFAULT	(VMM_FLAGS_PRESENT | VMM_FLAGS_RDWR)
+#define VMM_PROT_READ		1
+#define VMM_PROT_WRITE		2
+#define VMM_PROT_EXEC		4
+#define VMM_PROT_NONE		0
+
+
 
 #define VMM_MASK			~0xFFF
 #define VMM_MAX_MEMORY		(0xFFFFFFFF - MM_VBASE)
@@ -61,6 +62,21 @@
 
 #define BLKMAGIC			0xF7A2
 
+
+#define MM_ERROR			1
+#define MM_OK				0
+
+#define MMZONE_NO_BUFFER	1
+
+
+typedef struct mmzone {
+	void* address;
+	size_t length;
+	int flags;
+	void* ctx;
+	void* buffer;
+	int (*handler) (void* request_addr);
+} mmzone_t;
 
 
 typedef uint32_t bmpvec_t[131072 >> 2];
@@ -74,19 +90,6 @@ typedef struct heap {
 	void (*free) (struct heap*, void*, size_t);
 } heap_t;
 
-static inline void* mm_paddr(void* vaddr) {
-	if(likely((uint32_t) vaddr > MM_VBASE))
-		vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
-		
-	return vaddr;
-}
-
-static inline void* mm_vaddr(void* paddr) {
-	if(likely((uint32_t) paddr < MM_VBASE))
-		paddr = (void*) ((uint32_t) paddr + MM_VBASE);
-		
-	return paddr;
-}
 
 static inline void* mm_align(void* vaddr) {
 	return (void*) ((uint32_t) vaddr & VMM_MASK);
@@ -104,5 +107,6 @@ void* kmalloc(size_t);
 
 void kfree(void*);
 void* krealloc(void*, size_t);
+
 
 #endif

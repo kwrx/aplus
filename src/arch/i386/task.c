@@ -113,7 +113,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 			void* addr = (void*) kvmalloc(current_task->image->length);
 			memcpy(addr, (void*) current_task->image->vaddr, current_task->image->length);
 
-			vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+			vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_PROT_READ | VMM_PROT_WRITE | VMM_PROT_EXEC);
 
 #ifdef SCHED_DEBUG
 			kprintf("clone: remap address space at 0x%x (%d Bytes)\n", current_task->image->vaddr, current_task->image->length);
@@ -218,7 +218,7 @@ task_t* task_fork() {
 		void* addr = (void*) kvmalloc(current_task->image->length);
 		memcpy(addr, (void*) current_task->image->vaddr, current_task->image->length);
 
-		vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
+		vmm_map(child->context.cr3, mm_paddr(addr), current_task->image->vaddr, current_task->image->length, VMM_PROT_READ | VMM_PROT_WRITE | VMM_PROT_EXEC);
 
 #ifdef SCHED_DEBUG
 		kprintf("fork: remap address space at 0x%x (%d Bytes)\n", current_task->image->vaddr, current_task->image->length);
@@ -267,7 +267,6 @@ int task_init() {
 	current_task->gid = (gid_t) 0;
 	
 	current_task->state = TASK_STATE_ALIVE;
-	current_task->priority = TASK_PRIORITY_REGULAR;
 	current_task->parent = NULL;
 
 	current_task->image = (task_image_t*) kmalloc(sizeof(task_image_t));
@@ -276,6 +275,9 @@ int task_init() {
 	current_task->image->refcount = 1;
 
 
+
+
+	schedule_setpriority(TASK_PRIORITY_REGULAR);
 	exec_init_kernel_task(current_task);
 
 

@@ -34,9 +34,11 @@
 #include <arch/i386/i386.h>
 
 
-#define FAULT_MASK		0x3FFFFFE3
-#define PIT_FREQ		(CLOCKS_PER_SEC)
-#define PIT_INC			1
+#define FAULT_MASK			0x3FFFFFE3
+#define PIT_FREQ			(CLOCKS_PER_SEC)
+#define PIT_INC				1
+
+#define CURRENT_IRQ_NULL	-1
 
 
 typedef struct gdt_entry {
@@ -131,6 +133,8 @@ static char *exception_messages[] = {
 };
 
 static void* irqs[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+static void* irqs_data[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+int current_irq = CURRENT_IRQ_NULL;
 
 static gdt_entry_t gdt_e[6];
 static gdt_ptr_t gdt_p;
@@ -149,6 +153,7 @@ uint8_t keyboard_ready = 0;
 
 extern void schedule();
 extern void syscall_handler(regs_t*);
+extern void pagefault_handler(regs_t*);
 
 extern int kernel_stack;
 extern int kernel_stack_end;
@@ -191,6 +196,8 @@ void isr_handler(regs_t* r) {
 
 void irq_handler(regs_t* r) {
 
+	current_irq = r->int_no - 32;
+
 	if(irqs[r->int_no - 32])
 		((void (*)(regs_t*)) irqs[r->int_no - 32]) (r);
 
@@ -198,6 +205,8 @@ void irq_handler(regs_t* r) {
 		outb(0xA0, 0x20);
 		
 	outb(0x20, 0x20);
+
+	current_irq = CURRENT_IRQ_NULL;
 }
 
 void pit_handler(regs_t* r) {
@@ -215,26 +224,6 @@ void pit_handler(regs_t* r) {
 	
 	schedule();
 }
-
-
-void pagefault_handler(regs_t* r) {
-	uint32_t faultaddr;
-	__asm__ __volatile__("mov eax, cr2" : "=a"(faultaddr));
-
-	kprintf("mmu: Page fault at 0x%x (%x, %s, %s, %s, %s, %s)\n",
-		faultaddr,
-		r->err_code,
-		r->err_code & 0x01 ? "P" : "N/A",
-		r->err_code & 0x02 ? "W" : "R",
-		r->err_code & 0x04 ? "U" : "S",
-		r->err_code & 0x08 ? "RSVD" : "\b\b",
-		r->err_code & 0x10 ? "I/D" : "\b\b" 
-	);
-
-	arch_panic("Page fault", r);
-}
-
-
 
 
 
@@ -420,6 +409,25 @@ void* irq_get(int n) {
 }
 
 
+int irq_set_data(int n, void* data) {
+	if(n > 16) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	irqs_data[n] = data;
+	return 0;
+}
+
+void* irq_get_data(void) {
+	if(current_irq == CURRENT_IRQ_NULL) {
+		errno = EINVAL;
+		return NULL;
+	}
+	
+	return irqs_data[current_irq];
+}
+
 
 static uint8_t rtc(uint8_t addr) {
 	outb(0x70, addr);
@@ -484,5 +492,7 @@ EXPORT_SYMBOL(timer_getfreq);
 EXPORT_SYMBOL(irq_set);
 EXPORT_SYMBOL(irq_unset);
 EXPORT_SYMBOL(irq_get);
+EXPORT_SYMBOL(irq_set_data);
+EXPORT_SYMBOL(irq_get_data);
 
 #endif

@@ -40,6 +40,7 @@
 #define __list_unlock(x)		spinlock_unlock(x)
 #define __list_lock_t			spinlock_t
 
+
 #endif
 
 
@@ -92,9 +93,10 @@ static inline int list_add(list_t* list, listval_t v) {
 	val->value = v;
 	val->next = list->body;
 	
+
 	list->body = val;
 	list->size += 1;
-	
+
 	__list_unlock(&list->lock);
 	return 0;
 }

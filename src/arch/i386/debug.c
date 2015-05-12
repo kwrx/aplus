@@ -9,12 +9,16 @@
 #define VIDY			(25)
 #define VIDTAB			4
 
+
 void arch_debug_putc(uint8_t value) {
 #if HAVE_DEBUG_SERIAL
-	serial_send(0, ch);
+	serial_send(0, value);
 #else
 	static int cps = 0;
 	register uint16_t* vm = (uint16_t*) VIDMEM;
+
+	if(cps == 0)
+		memset((void*) VIDMEM, 0, VIDSIZ);
 
 	switch(value) {
 		case '\n':

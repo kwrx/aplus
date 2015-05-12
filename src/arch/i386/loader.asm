@@ -1,6 +1,6 @@
 %ifdef __i386__
 
-%define VIDEOMODE	0
+%define VIDEOMODE	1
 
 [BITS 32]
 
@@ -65,16 +65,14 @@ align 4
 section .text
 _start:
 	mov [mbd_grub], ebx
-	xor eax, eax
-	
 	mov esp, kernel_stack + STACKSIZE
-
 	
 	cli
 	call enable_fpu
 	call enable_sse
 	call enable_kb
 	call load_bootargs
+	;call load_bss
 	call main
 	call reboot
 	jmp $
@@ -118,6 +116,16 @@ enable_kb:
 	in al, 0x60
 	xor eax, eax
 ret
+
+load_bss:
+	xor eax, eax
+	mov edi, bss
+	mov ecx, end
+	sub ecx, edi
+	cld
+	rep stosb
+ret
+
 
 %endif
 	

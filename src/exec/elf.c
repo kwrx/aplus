@@ -264,6 +264,10 @@ static int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 	if(elf32_check(hdr, ET_EXEC) < 0)
 		return -1;
 
+
+	schedule_release(current_task);
+	current_task->image->refcount++;
+
 	elf32_phdr_t* phdr = (elf32_phdr_t*) ((uint32_t) hdr->e_phoff + (uint32_t) hdr);
 	int pn = hdr->e_phnum;
 	int ps = hdr->e_phentsize;
@@ -271,20 +275,25 @@ static int elf32_getspace(elf32_hdr_t* hdr, void** ptr, size_t* size) {
 	int p = 0;
 	int s = 0;
 
+#ifdef ELF_DEBUG
+	kprintf("elf: phnum = %d; phentsize = %d\n", pn, ps);
+#endif
+	
 	for(int i = 0; i < pn; i++) {
 		if(!p || p > phdr->p_vaddr)
 			p = phdr->p_vaddr;
 
-		s += (p - phdr->p_vaddr) + phdr->p_memsz;
+		if(!s || s < (phdr->p_vaddr + phdr->p_memsz))
+			s = phdr->p_vaddr + phdr->p_memsz;
+
 		phdr = (elf32_phdr_t*) ((uint32_t) phdr + ps);
 	}
 
-	s &= ~0xFFFFF;
-	s += 0x100000;
-
+	s -= p;
+	vmm_alloc(current_task->context.cr3, p, s, VMM_PROT_READ | VMM_PROT_WRITE | VMM_PROT_EXEC);
 
 #ifdef ELF_DEBUG
-	kprintf("elf: address space at 0x%x (%d MB)\n", p, s / 1024 / 1024);
+	kprintf("elf: address space at 0x%x (%d KB)\n", p, s / 1024);
 #endif
 
 
@@ -311,11 +320,8 @@ static void* elf32_load_executable(void* image, uintptr_t* vaddr, size_t* vsize)
 
 	int iptr = 0, isiz = 0;
 	if(unlikely(elf32_getspace(hdr, (void**) &iptr, (size_t*) &isiz) != 0))
-		panic("elf: cannot found a valid address space"); 
+		panic("elf: cannot found a valid address space");
 
-	schedule_release(current_task);
-	vmm_alloc(current_task->context.cr3, iptr, isiz, VMM_FLAGS_DEFAULT | VMM_FLAGS_USER);
-	current_task->image->refcount++;
 
 	if(likely(vaddr))
 		*vaddr = (uintptr_t) iptr;

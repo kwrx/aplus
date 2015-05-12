@@ -10,6 +10,7 @@ BootInfo* mbd_grub;
 
 
 int load_bootargs() {
+	memset(mbd, 0, sizeof(bootargs_t));
 
 	mbd->memory.size = (mbd_grub->mem_lower + mbd_grub->mem_upper) * 1024;
 	mbd->memory.pagesize = 4096;

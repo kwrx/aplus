@@ -33,10 +33,10 @@
 
 
 
-uint32_t memsize;
-uint32_t kernel_low_area_size;
+uint32_t memsize = 0;
+uint32_t kernel_low_area_size = 0;
 
-heap_t* current_heap;
+heap_t* current_heap = NULL;
 
 extern uint32_t* current_vmm;
 extern uint32_t* kernel_vmm;
@@ -52,6 +52,21 @@ typedef struct block {
 	size_t size;
 } __attribute__((packed)) block_t;
 
+
+void* mm_paddr(void* vaddr) {
+	void* p = (void*) vmm_v2p(current_vmm, vaddr);
+	if(p)
+		return p;
+		
+	if(likely((uint32_t) vaddr > MM_VBASE))
+		vaddr = (void*) ((uint32_t) vaddr - MM_VBASE);
+
+	return vaddr;
+}
+
+void* mm_vaddr(void* paddr) {
+	return (void*) vmm_p2v(NULL, paddr);
+}
 
 
 #ifdef MM_DEBUG
@@ -73,7 +88,7 @@ void* kmalloc(size_t size) {
 	}
 
 
-	addr = mm_vaddr(addr);
+	addr = (void*) mm_vaddr(addr);
 
 	block_t* block = (block_t*) addr;
 	block->magic = BLKMAGIC;
@@ -90,10 +105,10 @@ void* malloc(size_t size) {
 void* kvmalloc(size_t size) {
 	void* addr = (void*) halloc(current_heap, size + sizeof(block_t));
 	if(unlikely(!addr))
-		panic("kvmalloc: halloc() failed!");
+		return NULL;
 
 
-	addr = mm_vaddr(addr);
+	addr = (void*) mm_vaddr(addr);
 	return addr;
 }
 
@@ -120,6 +135,13 @@ void kfree(void* ptr) {
 	hfree(current_heap, mm_paddr(mm_align(ptr)), size + sizeof(block_t));
 }
 
+
+void kvfree(void* ptr, size_t size) {
+	if(unlikely(!ptr || !size))
+		return;
+
+	hfree(current_heap, mm_paddr(mm_align(ptr)), size);
+}
 
 void free(void* ptr) {
 	kfree(ptr);
@@ -168,6 +190,8 @@ void* kcalloc(size_t n, size_t m) {
 }
 
 
+
+
 /**
  *	\brief Set current heap for memory operations.
  */
@@ -183,6 +207,8 @@ heap_t* mm_getheap() {
 }
 
 
+
+
 /**
  *	\brief Initialize MMU.
  */
@@ -196,11 +222,12 @@ int mm_init() {
 	kernel_low_area_size &= ~0xFFFFF;
 	kernel_low_area_size += 0x100000;
 
+	kheap_init();
+	vmm_init();
+
 	kprintf("mm: low area size %d MB\n", kernel_low_area_size / 1024 / 1024);
 	kprintf("mm: memory size %d MB\n", memsize / 1024 / 1024);
 
-	kheap_init();
-	vmm_init();
 
 	return 0;
 }
@@ -214,3 +241,10 @@ EXPORT_SYMBOL(kmalloc);
 EXPORT_SYMBOL(krealloc);
 EXPORT_SYMBOL(kfree);
 EXPORT_SYMBOL(kcalloc);
+EXPORT_SYMBOL(kvmalloc);
+EXPORT_SYMBOL(kvfree);
+
+EXPORT_SYMBOL(mm_vaddr);
+EXPORT_SYMBOL(mm_paddr);
+
+EXPORT_SYMBOL_OBJ(current_heap);

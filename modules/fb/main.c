@@ -16,7 +16,6 @@
 #include "fbdev.h"
 
 
-
 extern fbdev_gfx_t* __stub_gfx;
 static spinlock_t fb_lock = 0;
 
@@ -243,6 +242,7 @@ int init() {
 	ino->ioctl = fb_ioctl;
 
 	kprintf("fb0: %s (%dx%dx%d) HW: %d\n", fbgfx->name, fbvm.width, fbvm.height, fbvm.depth, fbgfx->hw_isavail);
+	
 	return 0;
 }
 

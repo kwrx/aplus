@@ -145,6 +145,8 @@ void bitmap_free(heap_t* heap, void* addr, size_t size) {
 
 int kheap_init() {
 
+	
+	kheap.used = 0;
 	kheap.size = memsize;
 	kheap.alloc = bitmap_alloc;
 	kheap.free = bitmap_free;

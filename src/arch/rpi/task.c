@@ -53,7 +53,6 @@ int task_init() {
 	current_task->gid = (gid_t) 0;
 	
 	current_task->state = TASK_STATE_ALIVE;
-	current_task->priority = TASK_PRIORITY_REGULAR;
 	current_task->parent = NULL;
 
 	current_task->image = (task_image_t*) kmalloc(sizeof(task_image_t));
@@ -62,11 +61,15 @@ int task_init() {
 	current_task->image->refcount = 1;
 
 
+
+
+	schedule_setpriority(TASK_PRIORITY_REGULAR);
 	exec_init_kernel_task(current_task);
 
 
 	list_add(task_queue, (listval_t) current_task);
 	task_switch(current_task);
+
 
 	return 0;
 }

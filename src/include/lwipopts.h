@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <aplus.h>
+#include <aplus/mm.h>
 
 #ifdef NETWORK_DEBUG
 #define LWIP_DEBUG 				1
@@ -55,10 +56,6 @@
 
 #define LWIP_TCPIP_CORE_LOCKING	1
 
-
-extern void* kmalloc(size_t);
-extern void kfree(void*);
-extern void* kcalloc(size_t, size_t);
 
 #define mem_malloc	kmalloc
 #define mem_free	kfree

@@ -5,7 +5,7 @@ O 	:= init
 all: $(O)
 $(O): init.c
 	@echo "  CC      " $<
-	@$(CC) -w -O2 -msse2 -mfpmath=sse $< -o $@ -lelfldr -lposix -lz -lm -lc
+	@$(CC) -s -w -O2 $< -o $@ -lcairo -lpixman-1 -lfreetype -lpng -lz -lposix -lz -lm -lc
 
 clean:
 	-@$(RM) $(O)

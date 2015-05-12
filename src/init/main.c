@@ -36,6 +36,7 @@
 extern inode_t* vfs_root;
 extern task_t* current_task;
 
+
 bootargs_t __mbd;
 bootargs_t* mbd = &__mbd;
 
@@ -75,7 +76,6 @@ int main() {
 	sys_uname(&u);
 
 	kprintf("%s %s %s %s %s\n", u.sysname, u.nodename, u.release, u.version, u.machine);
-
 
 	if(unlikely(mbd->ramdisk.ptr == 0))
 		panic("no initrd module found");

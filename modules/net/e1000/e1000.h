@@ -136,11 +136,10 @@ typedef struct e1000 {
 	uint16_t rx_cur;
 	uint16_t tx_cur;
 
-	//netif_t* netif;
+	uint8_t macaddr[6];
+	void* netif;
 } e1000_t;
 
-
-typedef char macaddr_t[6];
 
 #define E1000_BAR_MMIO			0
 #define E1000_BAR_IO			1

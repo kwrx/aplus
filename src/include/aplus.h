@@ -89,6 +89,9 @@ extern bootargs_t* mbd;
 #define __packed			__attribute__((packed))
 #endif
 
+#ifndef __section
+#define __section(x)		__attribute__((section(x)))
+#endif
 
 #ifdef __GNUC__
 #define __PRAGMA(x)			_Pragma(#x)

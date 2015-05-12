@@ -8,25 +8,45 @@
 
 #include "lwip/opt.h"
 
+#include "lwip/api.h"
+#include "lwip/api_msg.h"
+#include "lwip/arch.h"
+#include "lwip/autoip.h"
+#include "lwip/debug.h"
+#include "lwip/def.h"
+#include "lwip/dhcp.h"
+#include "lwip/dns.h"
+#include "lwip/err.h"
+#include "lwip/icmp.h"
+#include "lwip/igmp.h"
+#include "lwip/inet.h"
+#include "lwip/inet_chksum.h"
 #include "lwip/init.h"
-#include "lwip/stats.h"
-#include "lwip/sys.h"
+#include "lwip/ip.h"
+#include "lwip/ip_addr.h"
+#include "lwip/ip_frag.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
-#include "lwip/pbuf.h"
-#include "lwip/netif.h"
-#include "lwip/sockets.h"
-#include "lwip/ip.h"
-#include "lwip/raw.h"
-#include "lwip/udp.h"
-#include "lwip/tcp_impl.h"
-#include "lwip/snmp_msg.h"
-#include "lwip/autoip.h"
-#include "lwip/igmp.h"
-#include "lwip/dns.h"
-#include "lwip/timers.h"
+#include "lwip/netbuf.h"
 #include "lwip/netdb.h"
-#include "netif/etharp.h"
+#include "lwip/netif.h"
+#include "lwip/netifapi.h"
+#include "lwip/opt.h"
+#include "lwip/pbuf.h"
+#include "lwip/raw.h"
+#include "lwip/sio.h"
+#include "lwip/snmp.h"
+#include "lwip/snmp_asn1.h"
+#include "lwip/snmp_msg.h"
+#include "lwip/snmp_structs.h"
+#include "lwip/sockets.h"
+#include "lwip/stats.h"
+#include "lwip/sys.h"
+#include "lwip/tcp.h"
+#include "lwip/tcp_impl.h"
+#include "lwip/tcpip.h"
+#include "lwip/timers.h"
+#include "lwip/udp.h"
 
 
 
@@ -230,3 +250,29 @@ EXPORT_SYMBOL(lwip_ioctl);
 EXPORT_SYMBOL(lwip_fcntl);
 
 EXPORT_SYMBOL(lwip_gethostbyname);
+
+EXPORT_SYMBOL(lwip_htons);
+EXPORT_SYMBOL(lwip_htonl);
+EXPORT_SYMBOL(lwip_ntohs);
+EXPORT_SYMBOL(lwip_ntohl);
+
+EXPORT_SYMBOL(etharp_output);
+EXPORT_SYMBOL(tcpip_input);
+
+EXPORT_SYMBOL(pbuf_alloc);
+EXPORT_SYMBOL(pbuf_free);
+EXPORT_SYMBOL(pbuf_header);
+
+EXPORT_SYMBOL(dhcp_start);
+EXPORT_SYMBOL(dhcp_stop);
+
+EXPORT_SYMBOL(netif_add);
+EXPORT_SYMBOL(netif_remove);
+EXPORT_SYMBOL(netif_find);
+EXPORT_SYMBOL(netif_set_up);
+EXPORT_SYMBOL(netif_set_down);
+EXPORT_SYMBOL(netif_set_default);
+
+
+
+EXPORT_SYMBOL_OBJ(lwip_stats);
