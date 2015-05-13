@@ -7,10 +7,6 @@
 #include <assert.h>
 #include <signal.h>
 
-#define CAIRO 0
-#if CAIRO
-#include <cairo/cairo.h>
-#endif
 
 static void die(int unused) {
 	(void) unused;
@@ -25,6 +21,7 @@ int main(int argc, char** argv) {
 
 	char* rootdev = (char*) getenv("ROOTDEV");
 	char* fstype = (char*) getenv("ROOTFS");
+	char* shell = (char*) getenv("SHELL");
 
 	if(!rootdev || !fstype)
 		die(printf("init: cannot found root device!\n"));
@@ -40,18 +37,6 @@ int main(int argc, char** argv) {
 	chroot("/dev/root");
 
 
-	sleep(2);
-	printf("Hllo\n");
-
-
-#if CAIRO
-	cairo_t* cx;
-	cairo_surface_t* sx = cairo_image_surface_create_for_data(0xfc000000, CAIRO_FORMAT_RGB24, 800, 600, 800 * 4);
-	cx = cairo_create(sx);
-
-	printf("CAIRO_STATUS: %d == %d\n", cairo_status(cx), CAIRO_STATUS_SUCCESS);
-#endif
-
 
 #if 0
 	if(fork() == 0)
@@ -59,6 +44,9 @@ int main(int argc, char** argv) {
 	else
 		wait(NULL);
 #endif
+
+	if(execlp(shell, NULL))
+		perror(shell);
 
 	return 0;
 }

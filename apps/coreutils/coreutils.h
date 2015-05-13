@@ -9,11 +9,11 @@
 		{ x (y); }
 
 
-#define do_sync(x, y)		\
+#define do_sync(x, y, r)	\
 	if(fork() == 0)			\
 		{ x (y); }			\
 	else
-		wait(NULL)
+		r = wait(NULL)
 #endif
 
 
@@ -22,10 +22,10 @@
 					CLONE_FS	|				\
 					CLONE_SIGHAND);
 
-#define do_sync(x, y)							\
+#define do_sync(x, y, r)						\
 	{ clone(x, NULL, 	CLONE_FILES		|		\
 						CLONE_FS		|		\
 						CLONE_SIGHAND);			\
-		wait(NULL);	}
+		r = wait(NULL);	}
 
 #endif

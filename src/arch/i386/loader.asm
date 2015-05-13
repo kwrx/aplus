@@ -1,6 +1,6 @@
 %ifdef __i386__
 
-%define VIDEOMODE	1
+%define VIDEOMODE	0
 
 [BITS 32]
 

@@ -23,7 +23,7 @@
 #define HAVE_DYNELF					1
 #endif
 
-#define HAVE_DEBUG_SERIAL			1
+#define HAVE_DEBUG_SERIAL			0
 #define HAVE_LOCK					1
 #define HAVE_NETWORK				1
 #define HAVE_USB					1

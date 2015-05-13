@@ -10,13 +10,15 @@
 #define ERR_HELP		2
 #define ERR_CMDARG		3
 #define ERR_ARG			4
+#define ERR_KBD			5
 
 static char* __errors[] = {
 	"",
 	"usage: " __PROGNAME " [options]",
 	"help: " __PROGNAME " blabla...",
 	"-c requieres an argument",
-	"Invalid arguments"
+	"Invalid arguments",
+	"No input device found",
 };
 
 #endif

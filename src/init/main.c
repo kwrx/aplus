@@ -119,7 +119,7 @@ int main() {
 
 	char* __envp[] = {
 		"PATH=/bin:/usr/bin:/usr/local/bin",
-		"SHELL=/bin/sh",
+		"SHELL=/usr/bin/sh",
 		"USER=warex",
 		"OS=aPlus",
 		"TMPDIR=/tmp",

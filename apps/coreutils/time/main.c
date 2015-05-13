@@ -3,17 +3,19 @@
 #include <time.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../coreutils.h"
 
-int do_execve(char** argv) {
-	return execvp(argv[0], argv);
+int do_exec(char** argv) {
+	exit(execvp(argv[0], argv));
 }
 
 
 int main(int argc, char** argv) {
+	int r;
 	if(argc > 1)
-		do_sync(do_execve, &argv[1]);
+		do_sync(do_exec, &argv[1], r);
 
 	struct tms t0;
 	times(&t0);
