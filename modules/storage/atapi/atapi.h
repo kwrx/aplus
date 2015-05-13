@@ -39,6 +39,7 @@
 		inb(ATA_DCR(bus));		\
 	}
 	
-	
+
+
 
 #endif

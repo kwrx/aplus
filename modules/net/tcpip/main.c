@@ -155,54 +155,6 @@ static int __tcpip_ioctl(inode_t* ino, int req, void* buf) {
 
 #endif
 
-#define __p(x)	printf(#x ": %d\n", (x))
-#define TEST_TCP 1
-int writed = 0;
-int ready = 0;
-
-void client(void* unused) {
-	while(!ready)
-		sys_yield();
-	
-	kprintf("TRY CONNECT...\n");
-
-	struct hostent* h;
-	struct sockaddr_in cin;
-	cin.sin_family = AF_INET;
-	cin.sin_port = __builtin_bswap16(5000);
-	
-	h = lwip_gethostbyname("127.0.0.1");
-	if(!h) {
-		kprintf("CANNOT GET HOST\n");
-		_exit(0);
-	}
-	memcpy(&cin.sin_addr, h->h_addr, h->h_length);
-
-	
-	int sp;
-#if TEST_TCP
-	__p(sp = lwip_socket(AF_INET, SOCK_STREAM, 0));
-#else
-	__p(sp = lwip_socket(AF_INET, SOCK_DGRAM, 0));
-#endif
-
-
-	__p(lwip_connect(sp, (struct sockaddr*) &cin, sizeof(cin)));
-	
-	kprintf("CLIENT CONNECTED!\n");
-
-	char* buf = "Hello!!";
-	kprintf("WRITING\n");
-#if TEST_TCP
-	__p(lwip_write(sp, buf, strlen(buf)));
-#else
-	__p(lwip_send(sp, buf, strlen(buf), 0));
-#endif
-
-	writed = 1;
-
-	for(;;);
-}
 
 
 int init() {
@@ -214,46 +166,9 @@ int init() {
 	}
 
 	ino->ioctl = __tcpip_ioctl;
-#endif
-
-
-	struct sockaddr_in sin, cin;
-	socklen_t scin = sizeof(cin);
-
-	sin.sin_family = AF_INET;
-	sin.sin_port = __builtin_bswap16(5000);
-	sin.sin_addr.s_addr = INADDR_ANY;
-
-	__p(sys_clone(client, NULL, __CLONE_THREAD, NULL));
-
-	char buf[32];
-	int sd, sc;
-#if TEST_TCP
-	__p(sd = lwip_socket(AF_INET, SOCK_STREAM, 0));
 #else
-	__p(sd = lwip_socket(AF_INET, SOCK_DGRAM, 0));
+	return -1;
 #endif
-	__p(lwip_bind(sd, (struct sockaddr*) &sin, sizeof(sin)));
-#if TEST_TCP
-	__p(lwip_listen(sd, 5));
-#endif
-
-	ready = 1;
-
-#if TEST_TCP
-	__p(sc = lwip_accept(sd, (struct sockaddr*) &cin, &scin));
-#endif
-
-	while(!writed)
-		sys_yield();
-	kprintf("READING\n");
-#if TEST_TCP
-	__p(lwip_read(sc, buf, 32));
-#else
-	__p(lwip_recv(sc, buf, 32, 0));
-#endif
-	kprintf("MSG: %s\n", buf);
-
 
 	return 0;
 }

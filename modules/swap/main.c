@@ -73,7 +73,7 @@ static int release_chunk(mmzone_t* mz) {
 	if(unlikely(fd < 0))
 		return -1;
 
-	mz->buffer = kvmalloc(CHUNKSIZ);
+	mz->buffer = (void*) kvmalloc(CHUNKSIZ);
 	if(unlikely(!mz->buffer)) {
 		errno = ENOMEM;
 		return -1;
@@ -136,26 +136,6 @@ int init() {
 			}
 		} /* Per-task swapping */
 #endif
-
-		swapped = 0;
-
-		for(uintptr_t p = 0; p < 60 * 1024 * 1024; p += CHUNKSIZ) {
-			if(p < (MM_LBASE + MM_LSIZE))
-				continue;	/* Skip kernel pages */
-
-
-			void* ptr = (void*) (p + MM_VBASE);
-			if(vmm_accessed(NULL, (void*) ptr) == 0) {
-				swapped++;				
-				//acquire_chunk((void*) ptr);			
-				//p += 0x1000;
-			}
-
-		}
-
-		kprintf("Swapped: %d KB (%d Pages)\n", (swapped * CHUNKSIZ) / 1024, swapped);
-		for(int i = 0; i < 1000000; i++)
-			cpu_wait();	
 	}
 
 	return 0;
