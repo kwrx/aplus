@@ -469,6 +469,12 @@ uint32_t timer_getfreq() {
 	return PIT_FREQ;
 }
 
+void timer_delay(uint32_t ms) {
+	volatile uint32_t ticks = timer_getms() + ms;
+	while(ticks > timer_getms())
+		cpu_wait();
+}
+
 
 void go_usermode() {
 #ifdef DEBUG
@@ -488,6 +494,7 @@ EXPORT_SYMBOL(timer_gettime);
 EXPORT_SYMBOL(timer_getticks);
 EXPORT_SYMBOL(timer_getms);
 EXPORT_SYMBOL(timer_getfreq);
+EXPORT_SYMBOL(timer_delay);
 
 EXPORT_SYMBOL(irq_set);
 EXPORT_SYMBOL(irq_unset);

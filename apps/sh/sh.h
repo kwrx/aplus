@@ -21,5 +21,11 @@ static char* __errors[] = {
 	"No input device found",
 };
 
+
+#define _EC(x)	extern x (char**)
+
+_EC(cmd_cd);
+_EC(cmd_exit);
+
 #endif
 

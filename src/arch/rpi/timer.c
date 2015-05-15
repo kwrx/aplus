@@ -19,9 +19,16 @@ uint32_t timer_getfreq() {
 	return TIMER_FREQ;
 }
 
+void timer_delay(uint32_t ms) {
+	volatile uint32_t ticks = timer_getms() + ms;
+	while(ticks > timer_getms())
+		cpu_wait();
+}
+
 EXPORT_SYMBOL(timer_gettime);
 EXPORT_SYMBOL(timer_getticks);
 EXPORT_SYMBOL(timer_getms);
 EXPORT_SYMBOL(timer_getfreq);
+EXPORT_SYMBOL(timer_delay);
 
 #endif

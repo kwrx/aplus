@@ -108,7 +108,7 @@ void* vmm_v2p(uint32_t* pd, void* virt) {
 	if(likely(vmm_enabled))
 		t = vmm_p2v(pd, t);
 
-	return t[PTENTRY(vframe)] & VMM_MASK;
+	return (void*) (t[PTENTRY(vframe)] & VMM_MASK);
 }
 
 
@@ -141,12 +141,11 @@ void vmm_flush(void* addr) {
 
 
 int vmm_accessed(uint32_t* pd, void* vaddr) {
-	if(unlikely(!pd))
-		if(likely(current_vmm))
-			pd = current_vmm;
-		else
-			return -1;
-			
+	if(unlikely(!pd && current_vmm))
+		pd = current_vmm;
+	else
+		return -1;
+	
 
 	vaddr = mm_align(vaddr);
 	uint32_t vframe = (uint32_t) vaddr;
@@ -160,7 +159,7 @@ int vmm_accessed(uint32_t* pd, void* vaddr) {
 		return -1;
 
 	if(likely(vmm_enabled))
-		t = mm_vaddr(t);
+		t = (uint32_t*) mm_vaddr(t);
 
 
 	register int f = t[PTENTRY(vframe)] & X86_MMU_ACCESSED;
@@ -196,7 +195,7 @@ void* vmm_map(uint32_t* pd, void* paddr, void* vaddr, size_t len, int flags) {
 
 			
 			if(likely(vmm_enabled))
-				table = mm_vaddr(table);
+				table = (uint32_t*) mm_vaddr(table);
 
 			
 			memset(table, 0, PTSIZE * sizeof(uint32_t));

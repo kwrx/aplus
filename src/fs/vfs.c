@@ -15,10 +15,10 @@
 
 extern task_t* current_task;
 
-static list_t* list_inodes = 0;
+static list_t* list_inodes = NULL;
 static uint32_t nextinode = 0;
 
-inode_t* vfs_root; 
+inode_t* vfs_root = NULL; 
 
 
 void vfs_map(inode_t* inode) {
@@ -54,7 +54,7 @@ inode_t* vfs_mapped_at_index(inode_t* parent, int index) {
 		if(value->parent == parent)
 			index--;
 			
-		if(index == -1)
+		if(index <= -1)
 			return value;
 	}
 	

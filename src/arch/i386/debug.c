@@ -33,6 +33,8 @@ void arch_debug_putc(uint8_t value) {
 		case '\r':
 			cps -= cps % (VIDX / sizeof(uint16_t));
 			break;
+		case '\b':
+			vm[--cps] = (0x7000) | 0x20;
 		default:
 			vm[cps++] = (0x0700) | (value & 0xFF);
 	}

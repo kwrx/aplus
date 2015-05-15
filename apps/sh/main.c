@@ -6,6 +6,16 @@
 #include "../coreutils/coreutils.h"
 
 
+struct command {
+	char* name;
+	int (*handler) (char** argv);
+} commands[3] = {
+	{ "cd", cmd_cd },
+	{ "exit", cmd_exit },
+	{ NULL, NULL }
+};
+
+
 static void die(int e) {
 	printf("%s: %s\n", __PROGNAME, __errors[e]);
 	exit(1);
@@ -19,6 +29,12 @@ static void reset() {
 
 
 static void do_exec(char** argv) {
+	int i;
+	for(i = 0; i < sizeof(commands) / sizeof(struct command); i++)
+		if(strcmp(commands[i].name, argv[0]) == 0)
+			exit(commands[i].handler(argv));
+
+
 	exit(execvp(argv[0], argv));
 }
 

@@ -16,7 +16,6 @@ struct dirent* sys_readdir(int fd, int position) {
 		return NULL;
 	}
 	
-		
 	
 	inode_t* ino = current_task->fd[fd];
 	if(unlikely(!ino)) {
