@@ -1,3 +1,5 @@
+/*
+
 #include <aplus.h>
 #include <aplus/spinlock.h>
 #include <aplus/pci.h>
@@ -219,6 +221,48 @@ static void i825xx_intr_handler(void* unused) {
 	mmio_r32(dev->mmio_address + 0xC0);
 }
 
+
+int net_i825xx_init(pci_device_t* pci) {
+	i825xx_device_t* dev = (i825xx_device_t*) kmalloc(sizeof(i825xx_device_t));
+	memset(dev, 0, sizeof(i825xx_device_t));
+
+	dev->mmio_address = (uintptr_t) pci->membase;
+
+	irq_set(pci->intr_line, i825xx_intr_handler);
+	irq_set_data(pci->intr_line, dev);
+
+	uint16_t a = net_i825xx_eeprom_read(dev, 0);
+	uint8_t mac[6];
+
+	mac[0] = (a & 0xFF);
+	mac[1] = (a >> 8) & 0xFF;
+
+	a = net_i825xx_eeprom_read(dev, 1);
+
+	mac[2] = (a & 0xFF);
+	mac[3] = (a >> 8) & 0xFF;
+
+	a = net_i825xx_eeprom_read(dev, 2);
+
+	mac[4] = (a & 0xFF);
+	mac[5] = (a >> 8) & 0xFF;
+
+	mmio_w32(i825xx_REG_CTRL, (mmio_r32(i825xx_REG_CTRL) | CTRL_SLU));
+
+	int i;
+	for(i = 0; i < 128; i++)
+		mmio_w32(i825xx_REG_MTA + (i * 4), 0);
+
+	mmio_w32(i825xx_REG_IMS, 0x1F6DC);
+	mmio_r32(dev->mmio_address + 0xC0);
+
+	net_i825xx_rx_init(dev);
+	net_i825xx_tx_init(dev);
+
+	net_i825xx_rx_enable(dev);
+}
+
+*/
 
 int init(void) {
 	

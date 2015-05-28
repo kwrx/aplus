@@ -23,7 +23,6 @@ struct dirent* sys_readdir(int fd, int position) {
 		return NULL;
 	}
 
-
 	return (struct dirent*) fs_readdir(ino, position);
 }
 

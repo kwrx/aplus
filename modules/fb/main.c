@@ -21,9 +21,9 @@ static spinlock_t fb_lock = 0;
 
 fbdev_gfx_t* fbgfx = NULL;
 
-#define __FB_WIDTH		800
-#define __FB_HEIGHT		600
-#define __FB_DEPTH		16
+#define __FB_WIDTH		1024
+#define __FB_HEIGHT		768
+#define __FB_DEPTH		32
 
 fb_videomode_t fbvm = {
 	.vmode = FBVM_LFB,
@@ -241,8 +241,12 @@ int init() {
 	ino->write = fb_write;
 	ino->ioctl = fb_ioctl;
 
-	kprintf("fb0: %s (%dx%dx%d) HW: %d\n", fbgfx->name, fbvm.width, fbvm.height, fbvm.depth, fbgfx->hw_isavail);
+	kprintf("fb0: %s (%dx%dx%d:0x%x) HW: %d\n", fbgfx->name, fbvm.width, fbvm.height, fbvm.depth, fbvm.base, fbgfx->hw_isavail);
 	
+
+
+
+
 	return 0;
 }
 

@@ -109,4 +109,11 @@ void kfree(void*);
 void* krealloc(void*, size_t);
 
 
+void* mm_paddr(void*);
+void* mm_vaddr(void*);
+
+#define V2P(x)	mm_paddr((void*) x)
+#define P2V(x)	mm_vaddr((void*) x)
+
+
 #endif

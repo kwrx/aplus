@@ -41,7 +41,10 @@ int atk_init(atk_t* atk, int width, int height, int bpp, void* framebuffer) {
 
 #if HAVE_SDL_IMAGE
 	if(IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
-		ATK_ERROR("IMG_Init failed");
+		ATK_ERROR("IMG_Init(PNG) failed");
+
+	if(IMG_Init(IMG_INIT_JPG) != IMG_INIT_JPG)
+		ATK_ERROR("IMG_Init(JPG) failed");
 #endif
 
 	memset(atk, 0, sizeof(atk_t));

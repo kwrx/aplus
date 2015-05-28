@@ -98,27 +98,28 @@ static int read_macaddr(e1000_t* e1000) {
 }
 
 static void e1000_rx_init(e1000_t* e1000) {
-	e1000_rx_desc_t* descs = (e1000_rx_desc_t*) kmalloc(sizeof(e1000_rx_desc_t) * E1000_NUM_RX_DESC + 16);
+	e1000_rx_desc_t* descs = (e1000_rx_desc_t*) kvmalloc(sizeof(e1000_rx_desc_t) * E1000_NUM_RX_DESC + 16);
 	for(int i = 0; i < E1000_NUM_RX_DESC; i++) {
 		e1000->rx_descs[i] = (e1000_rx_desc_t*) ((uint32_t) descs + i * 16);
 		e1000->rx_descs[i]->addr = (uintptr_t) mm_paddr((void*) kmalloc(8192 + 16));
 		e1000->rx_descs[i]->status = 0;
 	}
 
-	/* FIXME */
-	cmdwr(e1000, REG_RXDESCLO, (uint32_t) mm_paddr((void*) descs));
-	cmdwr(e1000, REG_RXDESCHI, 0);
+	
+	cmdwr(e1000, REG_RXDESCLO, (uint32_t) V2P(descs));
+	cmdwr(e1000, REG_RXDESCHI, (uint32_t) 0);
 
 	cmdwr(e1000, REG_RXDESCLEN, E1000_NUM_RX_DESC * 16);
+
 	cmdwr(e1000, REG_RXDESCHEAD, 0);
-	cmdwr(e1000, REG_RXDESCTAIL, E1000_NUM_RX_DESC - 1);
+	cmdwr(e1000, REG_RXDESCTAIL, E1000_NUM_RX_DESC);
 
 	e1000->rx_cur = 0;
 
 	cmdwr(
 			e1000, 
 			REG_RCTRL,
-
+		
 		 	RCTL_EN 		|
 			RCTL_SBP		|
 			RCTL_UPE		|
@@ -129,11 +130,13 @@ static void e1000_rx_init(e1000_t* e1000) {
 			RCTL_SECRC		|
 			RCTL_BSIZE_2048
 	);
+
+	
 }
 
 
 static void e1000_tx_init(e1000_t* e1000) {
-	e1000_tx_desc_t* descs = (e1000_tx_desc_t*) kmalloc(sizeof(e1000_tx_desc_t) * E1000_NUM_TX_DESC + 16);
+	e1000_tx_desc_t* descs = (e1000_tx_desc_t*) kvmalloc(sizeof(e1000_tx_desc_t) * E1000_NUM_TX_DESC + 16);
 	for(int i = 0; i < E1000_NUM_TX_DESC; i++) {
 		e1000->tx_descs[i] = (e1000_tx_desc_t*) ((uint32_t) descs + i * 16);
 		e1000->tx_descs[i]->addr = (uintptr_t) 0;
@@ -141,13 +144,14 @@ static void e1000_tx_init(e1000_t* e1000) {
 		e1000->tx_descs[i]->status = TSTA_DD;
 	}
 
-	/* FIXME */
-	cmdwr(e1000, REG_TXDESCLO, (uint32_t) mm_paddr((void*) descs));
+	
+	cmdwr(e1000, REG_TXDESCLO, (uint32_t) V2P(descs));
 	cmdwr(e1000, REG_TXDESCHI, (uint32_t) 0);
 
 	cmdwr(e1000, REG_TXDESCLEN, E1000_NUM_TX_DESC * 16);
+
 	cmdwr(e1000, REG_TXDESCHEAD, 0);
-	cmdwr(e1000, REG_TXDESCTAIL, E1000_NUM_TX_DESC - 1);
+	cmdwr(e1000, REG_TXDESCTAIL, E1000_NUM_TX_DESC);
 	
 	e1000->tx_cur = 0;
 
@@ -280,7 +284,14 @@ int init() {
 	e1000_rx_init(e1000);
 	e1000_tx_init(e1000);
 
+
+
+
 	e1000->netif = (void*) e1000_netif_init(e1000);
+
+
+	char pkt[60] = { 0 };
+	e1000_sendpacket(e1000, pkt, sizeof(pkt));
 
 #ifdef E1000_DEBUG
 	kprintf("e1000: started successful!\n");

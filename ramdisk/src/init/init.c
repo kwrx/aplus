@@ -8,6 +8,8 @@
 #include <signal.h>
 #include <sys/stat.h>
 
+#include <atk.h>
+
 static void die(int unused) {
 	(void) unused;
 
@@ -15,28 +17,19 @@ static void die(int unused) {
 }
 
 
-static void lsdir(char* path, int depth) {
-	DIR* d = opendir(path);
-	if(!d)
-		return;
-
-	struct dirent* ent;
-	while((ent = readdir(d))) {
-		int i;
-		for(i = 0; i < depth; i++)
-			printf("\t");
-
-		printf("%s\n", ent->d_name);
-	}
-
-	closedir(d);
-}
-
-
 int main(int argc, char** argv) {
+	atk_t atk;
+	atk_main(&atk);
 
-	lsdir("/dev", 0);
-	printf("FINE\n");
+#if 1
+	atk_image_t* image;
+	if(atk_load_image(&atk, &image, "/dev/ramdisk/bin/image.jpg") != 0)
+		die(printf("init: cannot open image\n"));
+
+	atk_render_blit(image, NULL, atk.surface, NULL);
+#endif
+	for(;;);
+
 
 	char* rootdev = (char*) getenv("ROOTDEV");
 	char* fstype = (char*) getenv("ROOTFS");
@@ -57,6 +50,7 @@ int main(int argc, char** argv) {
 
 
 
+
 #if 0
 	if(fork() == 0)
 		execl("/bin/session", NULL);
@@ -64,7 +58,7 @@ int main(int argc, char** argv) {
 		wait(NULL);
 #endif
 
-
+	for(;;);
 	if(execlp(shell, NULL))
 		perror(shell);
 

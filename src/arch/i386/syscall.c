@@ -74,7 +74,7 @@ int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 
 	int r = 0;
 
-	__asm__ (
+	__asm__ __volatile__ (
 		"push ebx			\n"
 		"push ecx			\n"
 		"push edx			\n"
@@ -85,7 +85,6 @@ int syscall_invoke(int idx, int p0, int p1, int p2, int p3, int p4) {
 		: "=a"(r) 
 		: "a"(handler), "b"(p4), "c"(p3), "d"(p2), "S"(p1), "D"(p0)
 	);
-
 
 #ifdef SYSCALL_DEBUG
 	kprintf("% returned %x\n", r);

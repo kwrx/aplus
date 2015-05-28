@@ -152,7 +152,7 @@ task_t* task_clone(void* entry, void* arg, void* stack, int flags) {
 
 
 void task_switch(task_t* newtask) {
-
+	return;
 	__asm__("cli");
 
 	task_t* old = current_task;
@@ -290,3 +290,4 @@ int task_init() {
 
 
 #endif
+

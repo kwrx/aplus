@@ -388,11 +388,11 @@ int schedule_append_fd(task_t* t, inode_t* ino) {
 	}
 
 	for(int i = 0; i < TASK_MAX_FD; i++) {
-		if(t->fd[i] == 0) {
-			t->fd[i] = ino;
-			
-			return i;
-		}
+		if(t->fd[i])
+			continue;
+		
+		t->fd[i] = ino;
+		return i;
 	}
 	
 	errno = EMFILE;
@@ -406,4 +406,5 @@ EXPORT_SYMBOL(schedule_disable);
 
 EXPORT_SYMBOL_OBJ(current_task);
 EXPORT_SYMBOL_OBJ(kernel_task);
+
 

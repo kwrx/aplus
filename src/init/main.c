@@ -66,7 +66,7 @@ int main() {
 	tty_init();
 
 #if HAVE_NETWORK
-	network_init();
+	//network_init();
 #endif
 
 	arch_post_init();
@@ -105,7 +105,6 @@ int main() {
 
 	if(unlikely(sys_symlink("/dev/tmp", "/tmp") != 0))
 		panic("tmpfs: cannot link for /tmp");
-
 
 
 	init_modules();

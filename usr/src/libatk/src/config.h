@@ -45,17 +45,17 @@ extern char* __atk_error;
 /* Newlib stdio fix */
 #define HAVE_UNISTD_IO		1
 #define HAVE_ALPHABLEND		1
-#define HAVE_SDL_TTF		1
+#define HAVE_SDL_TTF		0
 #define HAVE_SDL_IMAGE		1
 #define HAVE_DEBUG			1
 
 
-#define ATK_SCREEN_WIDTH		800
-#define ATK_SCREEN_HEIGHT		600
+#define ATK_SCREEN_WIDTH		1024
+#define ATK_SCREEN_HEIGHT		768
 #define ATK_SCREEN_BPP			32
 
 /* FIXME */
-#define ATK_SCREEN_BUFFER		0xFD000000
+#define ATK_SCREEN_BUFFER		0xFC000000
 
 
 #if !HAVE_DEBUG
@@ -65,7 +65,7 @@ extern char* __atk_error;
 
 
 #if HAVE_SDL_TTF
-#define FONT_PATH		"/dev/ramdisk/share/fonts/"
+#define FONT_PATH		"/usr/share/fonts/"
 #endif
 
 #endif

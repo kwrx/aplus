@@ -1,6 +1,6 @@
 %ifdef __i386__
 
-%define VIDEOMODE	0
+%define VIDEOMODE	1
 
 [BITS 32]
 
@@ -50,9 +50,9 @@ align 4
 	dd _start
 %if VIDEOMODE
 	dd 0
-	dd 800
-	dd 600
-	dd 16
+	dd 1024
+	dd 768
+	dd 32
 %else
 	dd 1
 	dd 0

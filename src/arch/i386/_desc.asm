@@ -182,7 +182,7 @@ read_eip:
 	jmp eax
 
 
-		
+
 		
 		
 global isr_stub	

@@ -1,5 +1,5 @@
 
-VMM				:= qemu-system-i386 -serial stdio -m 64 -cdrom aplus.iso -vga cirrus -soundhw sb16,es1370,adlib -net dump,file=/tmp/vm0.pcap -netdev user,id=usernet -device e1000,netdev=usernet
+VMM				:= qemu-system-i386 -serial stdio -m 128 -cdrom aplus.iso -vga cirrus -soundhw sb16,es1370,adlib -net dump,file=/tmp/vm0.pcap -netdev user,id=usernet -device e1000,netdev=usernet
 #VMM			:= bochs -f bochs.conf
 #VMM			:= VBoxManage startvm aplus
 

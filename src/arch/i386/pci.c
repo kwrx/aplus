@@ -12,6 +12,7 @@
 #include <arch/i386/i386.h>
 
 
+
 #define PCI_CONFIG_ADDRESS		0x0CF8
 #define PCI_CONFIG_DATA			0x0CFC
 #define PCI_MAX_DEVICES			65536

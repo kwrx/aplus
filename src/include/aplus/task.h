@@ -116,9 +116,9 @@ typedef struct task_env {
 
 
 typedef struct task_image {
-	uint32_t vaddr;
-	uint32_t ptr;
-	uint32_t length;
+	uintptr_t vaddr;
+	uintptr_t ptr;
+	uintptr_t length;
 	int refcount;
 } task_image_t;
 
@@ -128,9 +128,9 @@ typedef struct task {
 
 	struct {
 		task_env_t* env;
-		uint32_t stack;
-		uint32_t cr3;
-#ifdef __i386__
+		uintptr_t stack;
+		uintptr_t cr3;
+#if defined(__i386__) || defined(__x86_64__)
 #if HAVE_SSE
 		uint8_t fpu[1024];
 #endif

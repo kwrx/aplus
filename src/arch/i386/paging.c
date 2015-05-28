@@ -118,6 +118,7 @@ void vmm_switch(uint32_t* addr) {
 	write_cr3((uint32_t) mm_paddr((void*) addr));
 }
 
+
 void vmm_enable() {
 	write_cr4(read_cr4() & ~0x00000010);
 	write_cr0(read_cr0() | 0x80000000);

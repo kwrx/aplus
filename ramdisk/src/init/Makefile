@@ -1,15 +1,31 @@
 include ../Makefile.in
 
+LIBS	:=	-latk			\
+			-lSDL2			\
+			-lSDL2_image	\
+			-lSDL2_ttf		\
+			-lSDL2_gfx		\
+			-lfreetype		\
+			-lpng			\
+			-ljpeg			\
+			-lposix			\
+			-lpthread		\
+			-lz				\
+			-lc				\
+			-lm				\
+			-lgcc
+
 O 	:= init
 
 all: $(O)
 $(O): init.c
 	@echo "  CC      " $<
-	@$(CC) -s -w -O2 $< -o $@ -lcairo -lpixman-1 -lfreetype -lpng -lz -lposix -lz -lm -lc
+	@$(CC) -s -O2 $< -o $@ $(LIBS)
 
 clean:
 	-@$(RM) $(O)
 
 install:
 	@$(CP) $(O) $(PREFIX)/bin
+	-@$(RM) $(O)
 

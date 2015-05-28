@@ -81,6 +81,10 @@ void* kmalloc(size_t size) {
 
 #ifdef MM_DEBUG
 		kprintf("kmalloc: cannot allocate RAM for %d bytes (%s:%d)\n", size, file, line);
+		kprintf("kmalloc: memory stats\n");
+		kprintf("\tUsed: %d KB\n", current_heap->used / 1024);
+		kprintf("\tSize: %d KB\n", current_heap->size / 1024);
+		kprintf("\tTotal: %d KB\n", memsize / 1024);
 #endif
 
 		errno = ENOMEM;
