@@ -13,4 +13,6 @@ EXPORT(strcat);
 EXPORT(strlen);
 EXPORT(strcmp);
 EXPORT(strncmp);
+EXPORT(rand);
+EXPORT(srand);
 EXPORT(__divdi3);

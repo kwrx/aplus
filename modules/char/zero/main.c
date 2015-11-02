@@ -20,7 +20,7 @@ static int zero_read(struct inode* inode, void* buf, size_t size) {
 
 int init(void) {
 	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0666)) != E_OK))
+	if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0666)) == NULL))
 		return E_ERR;
 
 

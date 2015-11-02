@@ -8,7 +8,7 @@
 
 SYSCALL(19, fcntl,
 int sys_fcntl(int fd, int cmd, long arg) {
-	if(unlikely(fd > TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
 		return lwip_fcntl(fd - TASK_FD_COUNT, cmd, arg);
 #else

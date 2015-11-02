@@ -10,7 +10,7 @@ MODULE_LICENSE("GPL");
 
 
 int init(void) {
-	if(unlikely(vfs_mkdev("null", -1, S_IFCHR | 0666) != E_OK))
+	if(unlikely(vfs_mkdev("null", -1, S_IFCHR | 0666) == NULL))
 		return E_ERR;
 
 	return E_OK;

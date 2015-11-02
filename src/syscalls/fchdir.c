@@ -7,7 +7,7 @@
 
 SYSCALL(29, fchdir,
 int sys_fchdir(int fd) {
-	if(unlikely(fd > TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT)) {
 		errno = EBADF;
 		return -1;
 	}

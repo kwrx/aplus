@@ -8,7 +8,7 @@
 
 SYSCALL(11, write,
 int sys_write(int fd, void* buf, size_t size) {
-	if(unlikely(fd > TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
 		return lwip_write(fd - TASK_FD_COUNT, buf, size);
 #else

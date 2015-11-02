@@ -151,10 +151,10 @@ int sys_open(const char* name, int flags, mode_t mode) {
 
 
 	int fd = 0;
-	while((current_task->fd[fd].inode) && (TASK_FD_COUNT > fd))
+	while((current_task->fd[fd].inode) && (fd < TASK_FD_COUNT))
 		fd++;
 
-	if(fd > TASK_FD_COUNT) {
+	if(fd >= TASK_FD_COUNT) {
 		errno = EMFILE;
 		return -1;
 	}

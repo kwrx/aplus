@@ -4,11 +4,12 @@
 #include <xdev/ipc.h>
 #include <xdev/syscall.h>
 #include <xdev/network.h>
+#include <xdev/debug.h>
 #include <libc.h>
 
 SYSCALL(11, read,
 int sys_read(int fd, void* buf, size_t size) {
-	if(unlikely(fd > TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
 		return lwip_read(fd - TASK_FD_COUNT, buf, size);
 #else
@@ -25,7 +26,7 @@ int sys_read(int fd, void* buf, size_t size) {
 	}
 
 	if(unlikely(!(
-		(current_task->fd[fd].flags & O_RDONLY)	||
+		!(current_task->fd[fd].flags & O_WRONLY) ||
 		(current_task->fd[fd].flags & O_RDWR)
 	))) {
 		errno = EPERM;
