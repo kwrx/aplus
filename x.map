@@ -395,7 +395,7 @@ Script del linker e mappa della memoria
  *(.multiboot.*)
                 0x00000000c0100030                . = (. + KERNEL_HIGH)
 
-.text           0x00000000c0101000    0x62f0c indirizzo di caricamento 0x0000000000101000
+.text           0x00000000c0101000    0x62f8c indirizzo di caricamento 0x0000000000101000
                 0x00000000c0101000                text = .
  *(.text)
  .text          0x00000000c0101000       0xd6 src/arch/i386/binfmt/elf_module.o
@@ -406,1740 +406,1740 @@ Script del linker e mappa della memoria
  .text          0x00000000c01010e0       0xd3 src/arch/i386/boot/grub.o
                 0x00000000c01010e0                load_bootargs
  *fill*         0x00000000c01011b3        0xd 
- .text          0x00000000c01011c0      0x2b6 src/arch/i386/debug.o
+ .text          0x00000000c01011c0      0x317 src/arch/i386/debug.o
                 0x00000000c01011c0                debug_send
- *fill*         0x00000000c0101476        0xa 
- .text          0x00000000c0101480       0x15 src/arch/i386/i386.o
-                0x00000000c0101480                i386_init
- *fill*         0x00000000c0101495        0xb 
- .text          0x00000000c01014a0      0xc30 src/arch/i386/intr.o
-                0x00000000c01014a0                intr_enable
-                0x00000000c01014d0                irq_ack
-                0x00000000c0101500                intr_disable
-                0x00000000c0101520                irq_enable
-                0x00000000c0101580                irq_disable
-                0x00000000c01015e0                irq_set_data
-                0x00000000c0101640                irq_get_data
-                0x00000000c0101690                intr_init
-                0x00000000c0101fc0                isr_handler
-                0x00000000c0102080                irq_handler
- .text          0x00000000c01020d0       0x2e src/arch/i386/mm/pagefault.o
-                0x00000000c01020d0                pagefault_handler
- *fill*         0x00000000c01020fe        0x2 
- .text          0x00000000c0102100     0x1191 src/arch/i386/mm/vmm.o
-                0x00000000c0102100                __V2P
-                0x00000000c01021a0                unmap_page
-                0x00000000c0102240                get_free_pages
-                0x00000000c0102680                map_page
-                0x00000000c0102990                __vmmcpy
-                0x00000000c0102c00                vmm_clone
-                0x00000000c0103100                vmm_release
-                0x00000000c0103260                vmm_switch
- *fill*         0x00000000c0103291        0xf 
- .text          0x00000000c01032a0      0x53f src/arch/i386/pci.o
-                0x00000000c01032a0                pci_write_field
-                0x00000000c01032e0                pci_read_field
-                0x00000000c0103380                pci_find_type
-                0x00000000c01035d0                pci_scan
- *fill*         0x00000000c01037df        0x1 
- .text          0x00000000c01037e0      0x7f1 src/arch/i386/task.o
-                0x00000000c01037e0                return_from_fork
-                0x00000000c01037f5                return_from_clone
-                0x00000000c0103800                fork_handler
-                0x00000000c0103a10                arch_task_clone
-                0x00000000c0103cd0                arch_task_fork
-                0x00000000c0103ce0                arch_task_yield
-                0x00000000c0103cf0                arch_task_switch
-                0x00000000c0103df0                arch_task_release
-                0x00000000c0103e80                task_init
- *fill*         0x00000000c0103fd1        0xf 
- .text          0x00000000c0103fe0      0x12e src/arch/i386/timer.o
-                0x00000000c0103fe0                timer_gettime
-                0x00000000c0103ff0                timer_getticks
-                0x00000000c0104010                timer_getms
-                0x00000000c0104030                timer_getfreq
-                0x00000000c0104040                timer_delay
-                0x00000000c01040e0                timer_init
- *fill*         0x00000000c010410e        0x2 
- .text          0x00000000c0104110      0x135 src/arch/i386/loader.o
-                0x00000000c0104110                _start
- *fill*         0x00000000c0104245        0xb 
- .text          0x00000000c0104250      0x21d src/arch/i386/_intr.o
-                0x00000000c0104250                isr0
-                0x00000000c0104259                isr1
-                0x00000000c0104262                isr2
-                0x00000000c010426b                isr3
-                0x00000000c0104274                isr4
-                0x00000000c010427d                isr5
-                0x00000000c0104286                isr6
-                0x00000000c010428f                isr7
-                0x00000000c0104298                isr8
-                0x00000000c010429f                isr9
-                0x00000000c01042a8                isr10
-                0x00000000c01042af                isr11
-                0x00000000c01042b6                isr12
-                0x00000000c01042bd                isr13
-                0x00000000c01042c4                isr15
-                0x00000000c01042cd                isr16
-                0x00000000c01042d6                isr17
-                0x00000000c01042df                isr18
-                0x00000000c01042e8                isr19
-                0x00000000c01042f1                isr20
-                0x00000000c01042fa                isr21
-                0x00000000c0104303                isr22
-                0x00000000c010430c                isr23
-                0x00000000c0104315                isr24
-                0x00000000c010431e                isr25
-                0x00000000c0104327                isr26
-                0x00000000c0104330                isr27
-                0x00000000c0104339                isr28
-                0x00000000c0104342                isr29
-                0x00000000c010434b                isr30
-                0x00000000c0104354                isr31
-                0x00000000c010435d                isr0x7F
-                0x00000000c0104366                isr0x80
-                0x00000000c0104372                irq0
-                0x00000000c010437b                irq1
-                0x00000000c0104384                irq2
-                0x00000000c010438d                irq3
-                0x00000000c0104396                irq4
-                0x00000000c010439f                irq5
-                0x00000000c01043a8                irq6
-                0x00000000c01043b1                irq7
-                0x00000000c01043ba                irq8
-                0x00000000c01043c3                irq9
-                0x00000000c01043c9                irq10
-                0x00000000c01043cf                irq11
-                0x00000000c01043d5                irq12
-                0x00000000c01043db                irq13
-                0x00000000c01043e1                irq14
-                0x00000000c01043e7                irq15
-                0x00000000c01043ed                isr14
-                0x00000000c0104418                read_eip
-                0x00000000c010441b                isr_stub
-                0x00000000c0104444                irq_stub
- *fill*         0x00000000c010446d        0x3 
- .text          0x00000000c0104470      0x75b src/binfmt/elf_module.o
-                0x00000000c0104bb0                elf_module_register
- *fill*         0x00000000c0104bcb        0x5 
- .text          0x00000000c0104bd0      0x157 src/binfmt.o
-                0x00000000c0104bd0                binfmt_register
-                0x00000000c0104c10                binfmt_load_image
-                0x00000000c0104cc0                binfmt_check_image
- *fill*         0x00000000c0104d27        0x9 
- .text          0x00000000c0104d30      0xc87 src/fs/vfs.o
-                0x00000000c0104d30                vfs_inode
-                0x00000000c0104d60                vfs_open
-                0x00000000c0104d80                vfs_close
-                0x00000000c0104da0                vfs_read
-                0x00000000c0104dc0                vfs_write
-                0x00000000c0104de0                vfs_chown
-                0x00000000c0104e30                vfs_chmod
-                0x00000000c0104e70                vfs_ioctl
-                0x00000000c0104e90                vfs_fsys_find
-                0x00000000c0104ef0                vfs_rename
-                0x00000000c0104f40                vfs_unlink
-                0x00000000c0105060                vfs_umount
-                0x00000000c01050f0                vfs_finddir
-                0x00000000c01051a0                vfs_mknod
-                0x00000000c0105330                vfs_mount
-                0x00000000c01053a0                vfs_fsys_register
-                0x00000000c0105430                vfs_mkdev
-                0x00000000c0105610                vfs_init
- .text          0x00000000c01059b7        0x0 src/init/hostname.o
- .text          0x00000000c01059b7        0x0 src/init/mbd.o
- *fill*         0x00000000c01059b7        0x9 
- .text          0x00000000c01059c0      0x1d3 src/init/module.o
-                0x00000000c0105ab0                module_init
- *fill*         0x00000000c0105b93        0xd 
- .text          0x00000000c0105ba0      0x19b src/ipc/mutex.o
-                0x00000000c0105ba0                mutex_init
-                0x00000000c0105bf0                mutex_lock
-                0x00000000c0105c60                mutex_trylock
-                0x00000000c0105cd0                mutex_unlock
- *fill*         0x00000000c0105d3b        0x5 
- .text          0x00000000c0105d40      0x2d5 src/ipc/shm.o
-                0x00000000c0105d40                shm_obtain
-                0x00000000c0105f00                shm_release
- *fill*         0x00000000c0106015        0xb 
- .text          0x00000000c0106020       0x6b src/ipc/spinlock.o
-                0x00000000c0106020                spinlock_lock
-                0x00000000c0106030                spinlock_init
-                0x00000000c0106060                spinlock_trylock
-                0x00000000c0106080                spinlock_unlock
- .text          0x00000000c010608b        0x0 src/libk/exports.o
- *fill*         0x00000000c010608b        0x5 
- .text          0x00000000c0106090      0x142 src/libk/kprintf.o
-                0x00000000c0106090                kprintf
-                0x00000000c0106150                std_kprintf
- *fill*         0x00000000c01061d2        0xe 
- .text          0x00000000c01061e0       0x2f src/libk/strdup.o
-                0x00000000c01061e0                strdup
- .text          0x00000000c010620f        0x0 src/main.o
- *fill*         0x00000000c010620f        0x1 
- .text          0x00000000c0106210       0x13 src/mm/mm.o
-                0x00000000c0106210                mm_init
- *fill*         0x00000000c0106223        0xd 
- .text          0x00000000c0106230      0x375 src/mm/pmm.o
-                0x00000000c0106230                pmm_free_frame
-                0x00000000c0106250                pmm_state
-                0x00000000c01062d0                pmm_claim
-                0x00000000c0106340                pmm_alloc_frame
-                0x00000000c01063e0                pmm_alloc_frames
-                0x00000000c01064d0                pmm_free_frames
-                0x00000000c0106510                pmm_init
- *fill*         0x00000000c01065a5        0xb 
- .text          0x00000000c01065b0      0x4f7 src/mm/slab.o
-                0x00000000c01065b0                kfree
-                0x00000000c0106630                kmalloc
-                0x00000000c01067f0                kvalloc
-                0x00000000c0106830                malloc
-                0x00000000c0106850                kcalloc
-                0x00000000c0106890                calloc
-                0x00000000c01068d0                free
-                0x00000000c0106950                std_kmalloc
-                0x00000000c0106970                std_kcalloc
-                0x00000000c01069b0                std_kfree
-                0x00000000c0106a30                slab_init
- *fill*         0x00000000c0106aa7        0x9 
- .text          0x00000000c0106ab0     0x146d src/net/api/api_lib.o
-                0x00000000c0106ab0                netconn_new_with_proto_and_callback
-                0x00000000c0106c50                netconn_delete
-                0x00000000c0106cb0                netconn_getaddr
-                0x00000000c0106df0                netconn_bind
-                0x00000000c0106ec0                netconn_connect
-                0x00000000c0106f90                netconn_disconnect
-                0x00000000c0107020                netconn_listen_with_backlog
-                0x00000000c01070c0                netconn_accept
-                0x00000000c01071f0                netconn_recv_tcp_pbuf
-                0x00000000c0107400                netconn_recv
-                0x00000000c0107880                netconn_recved
-                0x00000000c01078e0                netconn_sendto
-                0x00000000c01079a0                netconn_send
-                0x00000000c0107a30                netconn_write_partly
-                0x00000000c0107bb0                netconn_close
-                0x00000000c0107c40                netconn_shutdown
-                0x00000000c0107cf0                netconn_join_leave_group
-                0x00000000c0107df0                netconn_gethostbyname
- *fill*         0x00000000c0107f1d        0x3 
- .text          0x00000000c0107f20     0x2266 src/net/api/api_msg.o
-                0x00000000c0108f60                do_newconn
-                0x00000000c01090a0                netconn_alloc
-                0x00000000c0109170                netconn_free
-                0x00000000c01095f0                do_delconn
-                0x00000000c01097d0                do_bind
-                0x00000000c0109880                do_connect
-                0x00000000c0109a00                do_disconnect
-                0x00000000c0109a40                do_listen
-                0x00000000c0109b60                do_send
-                0x00000000c0109c40                do_recv
-                0x00000000c0109cc0                do_write
-                0x00000000c0109e80                do_getaddr
-                0x00000000c0109fa0                do_close
-                0x00000000c010a0b0                do_join_leave_group
-                0x00000000c010a140                do_gethostbyname
- *fill*         0x00000000c010a186        0xa 
- .text          0x00000000c010a190        0xf src/net/api/err.o
-                0x00000000c010a190                lwip_strerr
- *fill*         0x00000000c010a19f        0x1 
- .text          0x00000000c010a1a0      0x3fe src/net/api/netbuf.o
-                0x00000000c010a1a0                netbuf_new
-                0x00000000c010a1e0                netbuf_delete
-                0x00000000c010a230                netbuf_alloc
-                0x00000000c010a2e0                netbuf_free
-                0x00000000c010a340                netbuf_ref
-                0x00000000c010a3e0                netbuf_chain
-                0x00000000c010a460                netbuf_data
-                0x00000000c010a4f0                netbuf_next
-                0x00000000c010a550                netbuf_first
- *fill*         0x00000000c010a59e        0x2 
- .text          0x00000000c010a5a0      0x3ca src/net/api/netdb.o
-                0x00000000c010a5a0                lwip_gethostbyname
-                0x00000000c010a630                lwip_gethostbyname_r
-                0x00000000c010a770                lwip_freeaddrinfo
-                0x00000000c010a7a0                lwip_getaddrinfo
- *fill*         0x00000000c010a96a        0x6 
- .text          0x00000000c010a970      0x196 src/net/api/netifapi.o
-                0x00000000c010a970                do_netifapi_netif_add
-                0x00000000c010a9b0                do_netifapi_netif_set_addr
-                0x00000000c010a9e0                do_netifapi_netif_common
-                0x00000000c010aa30                netifapi_netif_add
-                0x00000000c010aa90                netifapi_netif_set_addr
-                0x00000000c010aad0                netifapi_netif_common
- *fill*         0x00000000c010ab06        0xa 
- .text          0x00000000c010ab10     0x39ad src/net/api/sockets.o
-                0x00000000c010b640                lwip_socket_init
-                0x00000000c010b650                lwip_accept
-                0x00000000c010b9d0                lwip_bind
-                0x00000000c010bad0                lwip_close
-                0x00000000c010bb80                lwip_connect
-                0x00000000c010bc80                lwip_listen
-                0x00000000c010bd40                lwip_recvfrom
-                0x00000000c010c290                lwip_read
-                0x00000000c010c5f0                lwip_recv
-                0x00000000c010c610                lwip_send
-                0x00000000c010c820                lwip_sendto
-                0x00000000c010ca90                lwip_socket
-                0x00000000c010cbe0                lwip_write
-                0x00000000c010cdd0                lwip_select
-                0x00000000c010dba0                lwip_shutdown
-                0x00000000c010dc80                lwip_getpeername
-                0x00000000c010dda0                lwip_getsockname
-                0x00000000c010dec0                lwip_getsockopt
-                0x00000000c010e140                lwip_setsockopt
-                0x00000000c010e3c0                lwip_ioctl
-                0x00000000c010e430                lwip_fcntl
- *fill*         0x00000000c010e4bd        0x3 
- .text          0x00000000c010e4c0      0x7ea src/net/api/tcpip.o
-                0x00000000c010e690                tcpip_input
-                0x00000000c010e730                tcpip_callback_with_block
-                0x00000000c010e7e0                tcpip_timeout
-                0x00000000c010e860                tcpip_untimeout
-                0x00000000c010e8d0                tcpip_apimsg
-                0x00000000c010e9d0                tcpip_apimsg_lock
-                0x00000000c010ea10                tcpip_netifapi_lock
-                0x00000000c010ea50                tcpip_callbackmsg_new
-                0x00000000c010ea80                tcpip_callbackmsg_delete
-                0x00000000c010ea90                tcpip_trycallback
-                0x00000000c010ead0                tcpip_init
-                0x00000000c010eb90                pbuf_free_callback
-                0x00000000c010ec20                mem_free_callback
- *fill*         0x00000000c010ecaa        0x6 
- .text          0x00000000c010ecb0       0x37 src/net/core/def.o
-                0x00000000c010ecb0                lwip_htons
-                0x00000000c010ecc0                lwip_ntohs
-                0x00000000c010ecd0                lwip_htonl
-                0x00000000c010ece0                lwip_ntohl
- *fill*         0x00000000c010ece7        0x9 
- .text          0x00000000c010ecf0     0x474f src/net/core/dhcp.o
-                0x00000000c01118a0                dhcp_set_struct
-                0x00000000c0111980                dhcp_cleanup
-                0x00000000c01119e0                dhcp_start
-                0x00000000c0111c00                dhcp_inform
-                0x00000000c0112080                dhcp_network_changed
-                0x00000000c01120e0                dhcp_arp_reply
-                0x00000000c0112700                dhcp_renew
-                0x00000000c0112cc0                dhcp_coarse_tmr
-                0x00000000c0112d50                dhcp_release
-                0x00000000c0113260                dhcp_fine_tmr
-                0x00000000c0113390                dhcp_stop
- *fill*         0x00000000c011343f        0x1 
- .text          0x00000000c0113440     0x114e src/net/core/dns.o
-                0x00000000c01138e0                dns_init
-                0x00000000c0113960                dns_setserver
-                0x00000000c01139a0                dns_getserver
-                0x00000000c01139d0                dns_tmr
-                0x00000000c0113cb0                dns_gethostbyname
- *fill*         0x00000000c011458e        0x2 
- .text          0x00000000c0114590       0x38 src/net/core/init.o
-                0x00000000c0114590                lwip_init
- *fill*         0x00000000c01145c8        0x8 
- .text          0x00000000c01145d0      0x5d8 src/net/core/ipv4/autoip.o
-                0x00000000c01145d0                autoip_set_struct
-                0x00000000c01146a0                autoip_start
-                0x00000000c0114830                autoip_network_changed
-                0x00000000c01148d0                autoip_stop
-                0x00000000c01148f0                autoip_tmr
-                0x00000000c0114ad0                autoip_arp_reply
- *fill*         0x00000000c0114ba8        0x8 
- .text          0x00000000c0114bb0      0x520 src/net/core/ipv4/icmp.o
-                0x00000000c0114bb0                icmp_input
-                0x00000000c0114ed0                icmp_dest_unreach
-                0x00000000c0114fd0                icmp_time_exceeded
- .text          0x00000000c01150d0      0x9c5 src/net/core/ipv4/igmp.o
-                0x00000000c0115210                igmp_init
-                0x00000000c0115230                igmp_dump_group_list
-                0x00000000c0115250                igmp_start
-                0x00000000c0115310                igmp_stop
-                0x00000000c01153a0                igmp_report_groups
-                0x00000000c0115410                igmp_lookfor_group
-                0x00000000c0115460                igmp_input
-                0x00000000c01156f0                igmp_joingroup
-                0x00000000c01158b0                igmp_leavegroup
-                0x00000000c0115a40                igmp_tmr
- .text          0x00000000c0115a95        0x0 src/net/core/ipv4/inet.o
- *fill*         0x00000000c0115a95        0xb 
- .text          0x00000000c0115aa0      0x5cc src/net/core/ipv4/inet_chksum.o
-                0x00000000c0115aa0                inet_chksum_pseudo
-                0x00000000c0115c50                inet_chksum_pseudo_partial
-                0x00000000c0115e80                inet_chksum
-                0x00000000c0115f30                inet_chksum_pbuf
- *fill*         0x00000000c011606c        0x4 
- .text          0x00000000c0116070      0xeac src/net/core/ipv4/ip.o
-                0x00000000c0116070                ip_route
-                0x00000000c01160c0                ip_input
-                0x00000000c0116690                ip_output_if
-                0x00000000c0116900                ip_output_if_opt
-                0x00000000c0116c50                ip_output
- *fill*         0x00000000c0116f1c        0x4 
- .text          0x00000000c0116f20      0x75c src/net/core/ipv4/ip_addr.o
-                0x00000000c0116f20                ip4_addr_isbroadcast
-                0x00000000c0116f80                ip4_addr_netmask_valid
-                0x00000000c0116ff0                ipaddr_aton
-                0x00000000c01171d0                ipaddr_addr
-                0x00000000c0117200                ipaddr_ntoa
-                0x00000000c0117580                ipaddr_ntoa_r
- *fill*         0x00000000c011767c        0x4 
- .text          0x00000000c0117680      0xd8f src/net/core/ipv4/ip_frag.o
-                0x00000000c0117910                ip_reass_tmr
-                0x00000000c0117950                ip_reass
-                0x00000000c0118130                ip_frag
- .text          0x00000000c011840f        0x0 src/net/core/mem.o
- .text          0x00000000c011840f        0x0 src/net/core/memp.o
- *fill*         0x00000000c011840f        0x1 
- .text          0x00000000c0118410      0xc14 src/net/core/netif.o
-                0x00000000c0118470                netif_loop_output
-                0x00000000c01185d0                netif_poll
-                0x00000000c0118710                netif_init
-                0x00000000c01189d0                netif_remove
-                0x00000000c0118ad0                netif_find
-                0x00000000c0118b20                netif_set_ipaddr
-                0x00000000c0118c10                netif_set_addr
-                0x00000000c0118c80                netif_add
-                0x00000000c0118de0                netif_set_gw
-                0x00000000c0118e10                netif_set_netmask
-                0x00000000c0118e60                netif_set_default
-                0x00000000c0118eb0                netif_set_up
-                0x00000000c0118f30                netif_set_down
-                0x00000000c0118f80                netif_set_link_up
-                0x00000000c0119010                netif_set_link_down
- *fill*         0x00000000c0119024        0xc 
- .text          0x00000000c0119030     0x165b src/net/core/pbuf.o
-                0x00000000c0119080                pbuf_alloced_custom
-                0x00000000c0119190                pbuf_header
-                0x00000000c01192d0                pbuf_free
-                0x00000000c0119440                pbuf_alloc
-                0x00000000c0119830                pbuf_realloc
-                0x00000000c01199c0                pbuf_clen
-                0x00000000c01199e0                pbuf_ref
-                0x00000000c01199f0                pbuf_cat
-                0x00000000c0119b00                pbuf_chain
-                0x00000000c0119c20                pbuf_dechain
-                0x00000000c0119d10                pbuf_copy
-                0x00000000c0119f90                pbuf_copy_partial
-                0x00000000c011a070                pbuf_take
-                0x00000000c011a190                pbuf_coalesce
-                0x00000000c011a2e0                pbuf_get_at
-                0x00000000c011a330                pbuf_memcmp
-                0x00000000c011a400                pbuf_memfind
-                0x00000000c011a540                pbuf_strstr
- *fill*         0x00000000c011a68b        0x5 
- .text          0x00000000c011a690      0x495 src/net/core/raw.o
-                0x00000000c011a690                raw_input
-                0x00000000c011a730                raw_bind
-                0x00000000c011a760                raw_connect
-                0x00000000c011a790                raw_recv
-                0x00000000c011a7b0                raw_sendto
-                0x00000000c011a910                raw_send
-                0x00000000c011aa60                raw_remove
-                0x00000000c011aac0                raw_new
- *fill*         0x00000000c011ab25        0xb 
- .text          0x00000000c011ab30      0x955 src/net/core/snmp/asn1_dec.o
-                0x00000000c011ab30                snmp_asn1_dec_type
-                0x00000000c011ab90                snmp_asn1_dec_length
-                0x00000000c011ad90                snmp_asn1_dec_u32t
-                0x00000000c011aef0                snmp_asn1_dec_s32t
-                0x00000000c011b190                snmp_asn1_dec_oid
-                0x00000000c011b3b0                snmp_asn1_dec_raw
- *fill*         0x00000000c011b485        0xb 
- .text          0x00000000c011b490      0x844 src/net/core/snmp/asn1_enc.o
-                0x00000000c011b490                snmp_asn1_enc_length_cnt
-                0x00000000c011b4c0                snmp_asn1_enc_u32t_cnt
-                0x00000000c011b520                snmp_asn1_enc_s32t_cnt
-                0x00000000c011b570                snmp_asn1_enc_oid_cnt
-                0x00000000c011b5e0                snmp_asn1_enc_type
-                0x00000000c011b640                snmp_asn1_enc_length
-                0x00000000c011b700                snmp_asn1_enc_u32t
-                0x00000000c011b820                snmp_asn1_enc_s32t
-                0x00000000c011b900                snmp_asn1_enc_oid
-                0x00000000c011bc00                snmp_asn1_enc_raw
- *fill*         0x00000000c011bcd4        0xc 
- .text          0x00000000c011bce0     0x380f src/net/core/snmp/mib2.o
-                0x00000000c011bce0                noleafs_get_object_def
-                0x00000000c011bcf0                noleafs_get_value
-                0x00000000c011bd00                noleafs_set_test
-                0x00000000c011bd10                noleafs_set_value
-                0x00000000c011e2c0                objectidncpy
-                0x00000000c011e2f0                snmp_set_sysdesr
-                0x00000000c011e310                snmp_get_sysobjid_ptr
-                0x00000000c011e320                snmp_set_sysobjid
-                0x00000000c011e340                snmp_inc_sysuptime
-                0x00000000c011e350                snmp_add_sysuptime
-                0x00000000c011e360                snmp_get_sysuptime
-                0x00000000c011e390                snmp_set_syscontact
-                0x00000000c011e3b0                snmp_set_sysname
-                0x00000000c011e3d0                snmp_set_syslocation
-                0x00000000c011e3f0                snmp_add_ifinoctets
-                0x00000000c011e400                snmp_inc_ifinucastpkts
-                0x00000000c011e410                snmp_inc_ifinnucastpkts
-                0x00000000c011e420                snmp_inc_ifindiscards
-                0x00000000c011e430                snmp_add_ifoutoctets
-                0x00000000c011e440                snmp_inc_ifoutucastpkts
-                0x00000000c011e450                snmp_inc_ifoutnucastpkts
-                0x00000000c011e460                snmp_inc_ifoutdiscards
-                0x00000000c011e470                snmp_inc_iflist
-                0x00000000c011e4b0                snmp_dec_iflist
-                0x00000000c011e4e0                snmp_insert_arpidx_tree
-                0x00000000c011e690                snmp_delete_arpidx_tree
-                0x00000000c011e810                snmp_inc_ipinreceives
-                0x00000000c011e820                snmp_inc_ipinhdrerrors
-                0x00000000c011e830                snmp_inc_ipinaddrerrors
-                0x00000000c011e840                snmp_inc_ipforwdatagrams
-                0x00000000c011e850                snmp_inc_ipinunknownprotos
-                0x00000000c011e860                snmp_inc_ipindiscards
-                0x00000000c011e870                snmp_inc_ipindelivers
-                0x00000000c011e880                snmp_inc_ipoutrequests
-                0x00000000c011e890                snmp_inc_ipoutdiscards
-                0x00000000c011e8a0                snmp_inc_ipoutnoroutes
-                0x00000000c011e8b0                snmp_inc_ipreasmreqds
-                0x00000000c011e8c0                snmp_inc_ipreasmoks
-                0x00000000c011e8d0                snmp_inc_ipreasmfails
-                0x00000000c011e8e0                snmp_inc_ipfragoks
-                0x00000000c011e8f0                snmp_inc_ipfragfails
-                0x00000000c011e900                snmp_inc_ipfragcreates
-                0x00000000c011e910                snmp_inc_iproutingdiscards
-                0x00000000c011e920                snmp_insert_ipaddridx_tree
-                0x00000000c011ea30                snmp_delete_ipaddridx_tree
-                0x00000000c011eba0                snmp_insert_iprteidx_tree
-                0x00000000c011ec90                snmp_delete_iprteidx_tree
-                0x00000000c011edf0                snmp_inc_icmpinmsgs
-                0x00000000c011ee00                snmp_inc_icmpinerrors
-                0x00000000c011ee10                snmp_inc_icmpindestunreachs
-                0x00000000c011ee20                snmp_inc_icmpintimeexcds
-                0x00000000c011ee30                snmp_inc_icmpinparmprobs
-                0x00000000c011ee40                snmp_inc_icmpinsrcquenchs
-                0x00000000c011ee50                snmp_inc_icmpinredirects
-                0x00000000c011ee60                snmp_inc_icmpinechos
-                0x00000000c011ee70                snmp_inc_icmpinechoreps
-                0x00000000c011ee80                snmp_inc_icmpintimestamps
-                0x00000000c011ee90                snmp_inc_icmpintimestampreps
-                0x00000000c011eea0                snmp_inc_icmpinaddrmasks
-                0x00000000c011eeb0                snmp_inc_icmpinaddrmaskreps
-                0x00000000c011eec0                snmp_inc_icmpoutmsgs
-                0x00000000c011eed0                snmp_inc_icmpouterrors
-                0x00000000c011eee0                snmp_inc_icmpoutdestunreachs
-                0x00000000c011eef0                snmp_inc_icmpouttimeexcds
-                0x00000000c011ef00                snmp_inc_icmpoutparmprobs
-                0x00000000c011ef10                snmp_inc_icmpoutsrcquenchs
-                0x00000000c011ef20                snmp_inc_icmpoutredirects
-                0x00000000c011ef30                snmp_inc_icmpoutechos
-                0x00000000c011ef40                snmp_inc_icmpoutechoreps
-                0x00000000c011ef50                snmp_inc_icmpouttimestamps
-                0x00000000c011ef60                snmp_inc_icmpouttimestampreps
-                0x00000000c011ef70                snmp_inc_icmpoutaddrmasks
-                0x00000000c011ef80                snmp_inc_icmpoutaddrmaskreps
-                0x00000000c011ef90                snmp_inc_tcpactiveopens
-                0x00000000c011efa0                snmp_inc_tcppassiveopens
-                0x00000000c011efb0                snmp_inc_tcpattemptfails
-                0x00000000c011efc0                snmp_inc_tcpestabresets
-                0x00000000c011efd0                snmp_inc_tcpinsegs
-                0x00000000c011efe0                snmp_inc_tcpoutsegs
-                0x00000000c011eff0                snmp_inc_tcpretranssegs
-                0x00000000c011f000                snmp_inc_tcpinerrs
-                0x00000000c011f010                snmp_inc_tcpoutrsts
-                0x00000000c011f020                snmp_inc_udpindatagrams
-                0x00000000c011f030                snmp_inc_udpnoports
-                0x00000000c011f040                snmp_inc_udpinerrors
-                0x00000000c011f050                snmp_inc_udpoutdatagrams
-                0x00000000c011f060                snmp_insert_udpidx_tree
-                0x00000000c011f170                snmp_delete_udpidx_tree
-                0x00000000c011f310                snmp_inc_snmpinpkts
-                0x00000000c011f320                snmp_inc_snmpoutpkts
-                0x00000000c011f330                snmp_inc_snmpinbadversions
-                0x00000000c011f340                snmp_inc_snmpinbadcommunitynames
-                0x00000000c011f350                snmp_inc_snmpinbadcommunityuses
-                0x00000000c011f360                snmp_inc_snmpinasnparseerrs
-                0x00000000c011f370                snmp_inc_snmpintoobigs
-                0x00000000c011f380                snmp_inc_snmpinnosuchnames
-                0x00000000c011f390                snmp_inc_snmpinbadvalues
-                0x00000000c011f3a0                snmp_inc_snmpinreadonlys
-                0x00000000c011f3b0                snmp_inc_snmpingenerrs
-                0x00000000c011f3c0                snmp_add_snmpintotalreqvars
-                0x00000000c011f3d0                snmp_add_snmpintotalsetvars
-                0x00000000c011f3e0                snmp_inc_snmpingetrequests
-                0x00000000c011f3f0                snmp_inc_snmpingetnexts
-                0x00000000c011f400                snmp_inc_snmpinsetrequests
-                0x00000000c011f410                snmp_inc_snmpingetresponses
-                0x00000000c011f420                snmp_inc_snmpintraps
-                0x00000000c011f430                snmp_inc_snmpouttoobigs
-                0x00000000c011f440                snmp_inc_snmpoutnosuchnames
-                0x00000000c011f450                snmp_inc_snmpoutbadvalues
-                0x00000000c011f460                snmp_inc_snmpoutgenerrs
-                0x00000000c011f470                snmp_inc_snmpoutgetrequests
-                0x00000000c011f480                snmp_inc_snmpoutgetnexts
-                0x00000000c011f490                snmp_inc_snmpoutsetrequests
-                0x00000000c011f4a0                snmp_inc_snmpoutgetresponses
-                0x00000000c011f4b0                snmp_inc_snmpouttraps
-                0x00000000c011f4c0                snmp_get_snmpgrpid_ptr
-                0x00000000c011f4d0                snmp_set_snmpenableauthentraps
-                0x00000000c011f4e0                snmp_get_snmpenableauthentraps
- *fill*         0x00000000c011f4ef        0x1 
- .text          0x00000000c011f4f0     0x12e7 src/net/core/snmp/mib_structs.o
-                0x00000000c011f4f0                snmp_ifindextonetif
-                0x00000000c011f530                snmp_netiftoifindex
-                0x00000000c011f580                snmp_oidtoip
-                0x00000000c011f5b0                snmp_iptooid
-                0x00000000c011f5e0                snmp_mib_ln_alloc
-                0x00000000c011f620                snmp_mib_ln_free
-                0x00000000c011f630                snmp_mib_lrn_alloc
-                0x00000000c011f690                snmp_mib_lrn_free
-                0x00000000c011f6a0                snmp_mib_node_insert
-                0x00000000c011f820                snmp_mib_node_find
-                0x00000000c011f8d0                snmp_mib_node_delete
-                0x00000000c011f9e0                snmp_search_tree
-                0x00000000c011fbc0                snmp_expand_tree
-                0x00000000c0120680                snmp_iso_prefix_tst
-                0x00000000c01206c0                snmp_iso_prefix_expand
- *fill*         0x00000000c01207d7        0x9 
- .text          0x00000000c01207e0     0x2493 src/net/core/snmp/msg_in.o
-                0x00000000c0121600                snmp_init
-                0x00000000c0121670                snmp_varbind_alloc
-                0x00000000c0122b20                snmp_msg_event
-                0x00000000c0122b70                snmp_varbind_free
-                0x00000000c0122bb0                snmp_varbind_list_free
-                0x00000000c0122c10                snmp_varbind_tail_add
-                0x00000000c0122c50                snmp_varbind_tail_remove
- *fill*         0x00000000c0122c73        0xd 
- .text          0x00000000c0122c80     0x1370 src/net/core/snmp/msg_out.o
-                0x00000000c0123130                snmp_trap_dst_enable
-                0x00000000c0123150                snmp_trap_dst_ip_set
-                0x00000000c0123180                snmp_send_response
-                0x00000000c01234c0                snmp_send_trap
-                0x00000000c0123a40                snmp_coldstart_trap
-                0x00000000c0123fa0                snmp_authfail_trap
- .text          0x00000000c0123ff0        0x2 src/net/core/stats.o
-                0x00000000c0123ff0                stats_init
- *fill*         0x00000000c0123ff2        0xe 
- .text          0x00000000c0124000       0x51 src/net/core/sys.o
-                0x00000000c0124000                sys_msleep
- *fill*         0x00000000c0124051        0xf 
- .text          0x00000000c0124060     0x25cc src/net/core/tcp.o
-                0x00000000c0124070                tcp_init
-                0x00000000c0124080                tcp_bind
-                0x00000000c01241f0                tcp_listen_with_backlog
-                0x00000000c0124360                tcp_update_rcv_ann_wnd
-                0x00000000c0124410                tcp_recved
-                0x00000000c0124590                tcp_connect
-                0x00000000c0124830                tcp_segs_free
-                0x00000000c0124870                tcp_seg_free
-                0x00000000c01248b0                tcp_setprio
-                0x00000000c01248c0                tcp_seg_copy
-                0x00000000c0124910                tcp_arg
-                0x00000000c0124920                tcp_recv
-                0x00000000c0124980                tcp_sent
-                0x00000000c01249e0                tcp_err
-                0x00000000c0124a40                tcp_accept
-                0x00000000c0124a50                tcp_poll
-                0x00000000c0124ac0                tcp_pcb_purge
-                0x00000000c0124c70                tcp_slowtmr
-                0x00000000c0125320                tcp_pcb_remove
-                0x00000000c01257c0                tcp_recv_null
-                0x00000000c0125990                tcp_process_refused_data
-                0x00000000c0125a40                tcp_fasttmr
-                0x00000000c0125ae0                tcp_tmr
-                0x00000000c0125ba0                tcp_abandon
-                0x00000000c0125d70                tcp_abort
-                0x00000000c0125d90                tcp_alloc
-                0x00000000c0125fc0                tcp_new
-                0x00000000c01261b0                tcp_close
-                0x00000000c0126480                tcp_shutdown
-                0x00000000c01265c0                tcp_next_iss
-                0x00000000c01265e0                tcp_eff_send_mss
-                0x00000000c0126620                tcp_debug_state_str
- *fill*         0x00000000c012662c        0x4 
- .text          0x00000000c0126630     0x211d src/net/core/tcp_in.o
-                0x00000000c01278f0                tcp_input
- *fill*         0x00000000c012874d        0x3 
- .text          0x00000000c0128750     0x1dad src/net/core/tcp_out.o
-                0x00000000c0128750                tcp_send_fin
-                0x00000000c01289d0                tcp_write
-                0x00000000c0129560                tcp_enqueue_flags
-                0x00000000c01298a0                tcp_send_empty_ack
-                0x00000000c01299e0                tcp_output
-                0x00000000c0129ec0                tcp_rst
-                0x00000000c012a010                tcp_rexmit_rto
-                0x00000000c012a060                tcp_rexmit
-                0x00000000c012a100                tcp_rexmit_fast
-                0x00000000c012a1e0                tcp_keepalive
-                0x00000000c012a310                tcp_zero_window_probe
- *fill*         0x00000000c012a4fd        0x3 
- .text          0x00000000c012a500      0xa7d src/net/core/timers.o
-                0x00000000c012abb0                tcp_timer_needed
-                0x00000000c012acc0                sys_timeout
-                0x00000000c012ad90                sys_timeouts_init
-                0x00000000c012ae20                sys_untimeout
-                0x00000000c012ae90                sys_timeouts_mbox_fetch
- *fill*         0x00000000c012af7d        0x3 
- .text          0x00000000c012af80     0x11a6 src/net/core/udp.o
-                0x00000000c012af80                udp_init
-                0x00000000c012af90                udp_input
-                0x00000000c012b530                udp_bind
-                0x00000000c012b6c0                udp_sendto_if
-                0x00000000c012b980                udp_sendto
-                0x00000000c012bca0                udp_send
-                0x00000000c012bfa0                udp_connect
-                0x00000000c012c030                udp_disconnect
-                0x00000000c012c050                udp_recv
-                0x00000000c012c070                udp_remove
-                0x00000000c012c0e0                udp_new
- *fill*         0x00000000c012c126        0xa 
- .text          0x00000000c012c130     0x1525 src/net/netif/etharp.o
-                0x00000000c012c4c0                etharp_tmr
-                0x00000000c012c590                etharp_cleanup_netif
-                0x00000000c012c620                etharp_find_addr
-                0x00000000c012c6b0                etharp_raw
-                0x00000000c012c9c0                etharp_query
-                0x00000000c012cc80                etharp_output
-                0x00000000c012d080                etharp_request
-                0x00000000c012d210                ethernet_input
- .text          0x00000000c012d655        0x0 src/net/netif/ethernetif.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/auth.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/chap.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/chpms.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/fsm.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/ipcp.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/lcp.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/magic.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/md5.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/pap.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/ppp.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/ppp_oe.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/randm.o
- .text          0x00000000c012d655        0x0 src/net/netif/ppp/vj.o
- .text          0x00000000c012d655        0x0 src/net/netif/slipif.o
- *fill*         0x00000000c012d655        0xb 
- .text          0x00000000c012d660       0x8c src/net/network.o
-                0x00000000c012d6d0                network_init
- *fill*         0x00000000c012d6ec        0x4 
- .text          0x00000000c012d6f0      0x3d5 src/net/sys.o
-                0x00000000c012d6f0                sys_init
-                0x00000000c012d700                sys_sem_new
-                0x00000000c012d750                sys_sem_free
-                0x00000000c012d780                sys_sem_signal
-                0x00000000c012d790                sys_arch_sem_wait
-                0x00000000c012d810                sys_mbox_new
-                0x00000000c012d870                sys_mbox_free
-                0x00000000c012d8b0                sys_mbox_trypost
-                0x00000000c012d8f0                sys_mbox_post
-                0x00000000c012d920                sys_arch_mbox_fetch
-                0x00000000c012da00                sys_arch_mbox_tryfetch
-                0x00000000c012da70                sys_thread_new
-                0x00000000c012daa0                sys_arch_protect
-                0x00000000c012dab0                sys_arch_unprotect
-                0x00000000c012dac0                sys_now
- *fill*         0x00000000c012dac5        0xb 
- .text          0x00000000c012dad0      0x1ee src/sched.o
-                0x00000000c012dad0                sched_nextpid
-                0x00000000c012dae0                schedule
-                0x00000000c012dbf0                schedule_yield
- *fill*         0x00000000c012dcbe        0x2 
- .text          0x00000000c012dcc0      0x184 src/syscall.o
-                0x00000000c012dcc0                syscall_unregister
-                0x00000000c012dd10                syscall_register
-                0x00000000c012dd60                syscall_init
-                0x00000000c012de00                syscall_handler
- *fill*         0x00000000c012de44        0xc 
- .text          0x00000000c012de50       0x26 src/syscalls/getppid.o
-                0x00000000c012de50                sys_getppid
- *fill*         0x00000000c012de76        0xa 
- .text          0x00000000c012de80       0xc4 src/syscalls/sbrk.o
-                0x00000000c012de80                sys_sbrk
- *fill*         0x00000000c012df44        0xc 
- .text          0x00000000c012df50       0x76 src/syscalls/chown.o
-                0x00000000c012df50                sys_chown
- *fill*         0x00000000c012dfc6        0xa 
- .text          0x00000000c012dfd0       0x87 src/syscalls/chroot.o
-                0x00000000c012dfd0                sys_chroot
- *fill*         0x00000000c012e057        0x9 
- .text          0x00000000c012e060       0x44 src/syscalls/clone.o
-                0x00000000c012e060                sys_clone
- *fill*         0x00000000c012e0a4        0xc 
- .text          0x00000000c012e0b0       0x74 src/syscalls/close.o
-                0x00000000c012e0b0                sys_close
- *fill*         0x00000000c012e124        0xc 
- .text          0x00000000c012e130      0x20f src/syscalls/execve.o
-                0x00000000c012e130                sys_execve
- *fill*         0x00000000c012e33f        0x1 
- .text          0x00000000c012e340       0x72 src/syscalls/fchdir.o
-                0x00000000c012e340                sys_fchdir
- *fill*         0x00000000c012e3b2        0xe 
- .text          0x00000000c012e3c0       0xe4 src/syscalls/fcntl.o
-                0x00000000c012e3c0                sys_fcntl
- *fill*         0x00000000c012e4a4        0xc 
- .text          0x00000000c012e4b0       0x26 src/syscalls/fork.o
-                0x00000000c012e4b0                sys_fork
- *fill*         0x00000000c012e4d6        0xa 
- .text          0x00000000c012e4e0       0xa2 src/syscalls/fstat.o
-                0x00000000c012e4e0                sys_fstat
- *fill*         0x00000000c012e582        0xe 
- .text          0x00000000c012e590       0xe4 src/syscalls/getdents.o
-                0x00000000c012e590                sys_getdents
- *fill*         0x00000000c012e674        0xc 
- .text          0x00000000c012e680       0x16 src/syscalls/getpid.o
-                0x00000000c012e680                sys_getpid
- *fill*         0x00000000c012e696        0xa 
- .text          0x00000000c012e6a0       0x47 src/syscalls/stat.o
-                0x00000000c012e6a0                sys_stat
- *fill*         0x00000000c012e6e7        0x9 
- .text          0x00000000c012e6f0       0xd2 src/syscalls/symlink.o
-                0x00000000c012e6f0                sys_symlink
- *fill*         0x00000000c012e7c2        0xe 
- .text          0x00000000c012e7d0       0x38 src/syscalls/times.o
-                0x00000000c012e7d0                sys_times
- *fill*         0x00000000c012e808        0x8 
- .text          0x00000000c012e810       0x55 src/syscalls/umask.o
-                0x00000000c012e810                sys_umask
- *fill*         0x00000000c012e865        0xb 
- .text          0x00000000c012e870       0xf5 src/syscalls/umount.o
-                0x00000000c012e870                sys_umount2
-                0x00000000c012e8f0                sys_umount
- *fill*         0x00000000c012e965        0xb 
- .text          0x00000000c012e970       0x85 src/syscalls/uname.o
-                0x00000000c012e970                sys_uname
- *fill*         0x00000000c012e9f5        0xb 
- .text          0x00000000c012ea00      0x17a src/syscalls/unlink.o
-                0x00000000c012ea00                sys_unlink
- *fill*         0x00000000c012eb7a        0x6 
- .text          0x00000000c012eb80       0x14 src/syscalls/wait.o
-                0x00000000c012eb80                sys_wait
- *fill*         0x00000000c012eb94        0xc 
- .text          0x00000000c012eba0      0x2ff src/syscalls/waitpid.o
-                0x00000000c012eba0                sys_waitpid
- *fill*         0x00000000c012ee9f        0x1 
- .text          0x00000000c012eea0       0xa4 src/syscalls/write.o
-                0x00000000c012eea0                sys_write
- *fill*         0x00000000c012ef44        0xc 
- .text          0x00000000c012ef50        0x5 src/syscalls/yield.o
-                0x00000000c012ef50                sys_yield
- *fill*         0x00000000c012ef55        0xb 
- .text          0x00000000c012ef60       0xf0 src/syscalls/_exit.o
-                0x00000000c012ef60                sys_exit
- .text          0x00000000c012f050       0x45 src/syscalls/gettimeofday.o
-                0x00000000c012f050                sys_gettimeofday
- *fill*         0x00000000c012f095        0xb 
- .text          0x00000000c012f0a0       0x75 src/syscalls/ioctl.o
-                0x00000000c012f0a0                sys_ioctl
- *fill*         0x00000000c012f115        0xb 
- .text          0x00000000c012f120        0xb src/syscalls/isatty.o
-                0x00000000c012f120                sys_isatty
- *fill*         0x00000000c012f12b        0x5 
- .text          0x00000000c012f130       0x96 src/syscalls/kill.o
-                0x00000000c012f130                sys_kill
- *fill*         0x00000000c012f1c6        0xa 
- .text          0x00000000c012f1d0       0xd2 src/syscalls/link.o
-                0x00000000c012f1d0                sys_link
- *fill*         0x00000000c012f2a2        0xe 
- .text          0x00000000c012f2b0       0xc5 src/syscalls/lseek.o
-                0x00000000c012f2b0                sys_lseek
- *fill*         0x00000000c012f375        0xb 
- .text          0x00000000c012f380       0xb9 src/syscalls/mount.o
-                0x00000000c012f380                sys_mount
- *fill*         0x00000000c012f439        0x7 
- .text          0x00000000c012f440      0x325 src/syscalls/open.o
-                0x00000000c012f440                sys_open
- *fill*         0x00000000c012f765        0xb 
- .text          0x00000000c012f770       0xa4 src/syscalls/read.o
-                0x00000000c012f770                sys_read
- *fill*         0x00000000c012f814        0xc 
- .text          0x00000000c012f820       0x38 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-atoi.o)
-                0x00000000c012f820                atoi
-                0x00000000c012f840                _atoi_r
- *fill*         0x00000000c012f858        0x8 
- .text          0x00000000c012f860        0x6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-errno.o)
-                0x00000000c012f860                __errno
- .text          0x00000000c012f866        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-impure.o)
- .text          0x00000000c012f866       0x52 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memcmp.o)
-                0x00000000c012f866                memcmp
- .text          0x00000000c012f8b8       0x48 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memcpy.o)
-                0x00000000c012f8b8                memcpy
- .text          0x00000000c012f900       0x8d /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memmove.o)
-                0x00000000c012f900                memmove
- .text          0x00000000c012f98d       0x88 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memset.o)
-                0x00000000c012f98d                memset
- *fill*         0x00000000c012fa15        0xb 
- .text          0x00000000c012fa20       0x69 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-rand.o)
-                0x00000000c012fa20                srand
-                0x00000000c012fa40                rand
- *fill*         0x00000000c012fa89        0x7 
- .text          0x00000000c012fa90       0xd3 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sprintf.o)
-                0x00000000c012fa90                _sprintf_r
-                0x00000000c012fb00                sprintf
- *fill*         0x00000000c012fb63        0xd 
- .text          0x00000000c012fb70       0x6d /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcat.o)
-                0x00000000c012fb70                strcat
- *fill*         0x00000000c012fbdd        0x3 
- .text          0x00000000c012fbe0       0xfc /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strchr.o)
-                0x00000000c012fbe0                strchr
- *fill*         0x00000000c012fcdc        0x4 
- .text          0x00000000c012fce0       0x62 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcmp.o)
-                0x00000000c012fce0                strcmp
- *fill*         0x00000000c012fd42        0xe 
- .text          0x00000000c012fd50       0x65 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcpy.o)
-                0x00000000c012fd50                strcpy
- *fill*         0x00000000c012fdb5        0xb 
- .text          0x00000000c012fdc0       0x79 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strlen.o)
-                0x00000000c012fdc0                strlen
- *fill*         0x00000000c012fe39        0x7 
- .text          0x00000000c012fe40       0xd6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strncmp.o)
-                0x00000000c012fe40                strncmp
- *fill*         0x00000000c012ff16        0xa 
- .text          0x00000000c012ff20      0x20b /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strtol.o)
-                0x00000000c012ff20                _strtol_r
-                0x00000000c0130110                strtol
- *fill*         0x00000000c013012b        0x5 
- .text          0x00000000c0130130     0x2054 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
-                0x00000000c0130130                _svfprintf_r
- *fill*         0x00000000c0132184        0xc 
- .text          0x00000000c0132190       0x8e /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-vsprintf.o)
-                0x00000000c0132190                _vsprintf_r
-                0x00000000c0132200                vsprintf
- *fill*         0x00000000c013221e        0x2 
- .text          0x00000000c0132220      0x554 /xdev/cross/usr/i686-cross/lib/libc.a(syscalls.o)
-                0x00000000c0132220                _exit
-                0x00000000c0132240                close
-                0x00000000c0132260                execve
-                0x00000000c0132280                fork
-                0x00000000c0132290                fstat
-                0x00000000c01322b0                getpid
-                0x00000000c01322c0                isatty
-                0x00000000c01322e0                kill
-                0x00000000c0132300                link
-                0x00000000c0132320                lseek
-                0x00000000c0132340                open
-                0x00000000c0132360                read
-                0x00000000c0132380                sbrk
-                0x00000000c01323a0                stat
-                0x00000000c01323c0                times
-                0x00000000c01323e0                unlink
-                0x00000000c0132400                wait
-                0x00000000c0132420                write
-                0x00000000c0132440                gettimeofday
-                0x00000000c0132460                fcntl
-                0x00000000c0132480                ioctl
-                0x00000000c01324a0                chown
-                0x00000000c01324c0                clone
-                0x00000000c01324f0                sched_yield
-                0x00000000c0132500                mount
-                0x00000000c0132530                umount
-                0x00000000c0132550                umount2
-                0x00000000c0132570                openpty
-                0x00000000c01325a0                symlink
-                0x00000000c01325c0                fchdir
-                0x00000000c01325e0                pipe
-                0x00000000c0132600                waitpid
-                0x00000000c0132620                getppid
-                0x00000000c0132630                uname
-                0x00000000c0132650                mmap
-                0x00000000c0132680                munmap
-                0x00000000c01326a0                socket
-                0x00000000c01326c0                bind
-                0x00000000c01326e0                shutdown
-                0x00000000c0132700                chroot
-                0x00000000c0132720                getdents
-                0x00000000c0132740                __get_argv
-                0x00000000c0132750                __get_envp
-                0x00000000c0132760                __install_sighandler
- .text          0x00000000c0132774        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-ctype_.o)
- *fill*         0x00000000c0132774        0xc 
- .text          0x00000000c0132780     0x1632 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
-                0x00000000c0132990                _dtoa_r
- *fill*         0x00000000c0133db2        0xe 
- .text          0x00000000c0133dc0       0xe6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
-                0x00000000c0133dc0                _setlocale_r
-                0x00000000c0133e30                __locale_charset
-                0x00000000c0133e40                __locale_mb_cur_max
-                0x00000000c0133e50                __locale_msgcharset
-                0x00000000c0133e60                __locale_cjk_lang
-                0x00000000c0133e70                _localeconv_r
-                0x00000000c0133e80                setlocale
-                0x00000000c0133ea0                localeconv
- *fill*         0x00000000c0133ea6        0xa 
- .text          0x00000000c0133eb0      0x76f /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mallocr.o)
-                0x00000000c0133eb0                _malloc_r
- *fill*         0x00000000c013461f        0x1 
- .text          0x00000000c0134620       0x95 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memchr.o)
-                0x00000000c0134620                memchr
- *fill*         0x00000000c01346b5        0xb 
- .text          0x00000000c01346c0       0x12 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mlock.o)
-                0x00000000c01346c0                __malloc_lock
-                0x00000000c01346d0                __malloc_unlock
- *fill*         0x00000000c01346d2        0xe 
- .text          0x00000000c01346e0      0xf29 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
-                0x00000000c01346e0                _Balloc
-                0x00000000c0134770                _Bfree
-                0x00000000c0134790                __multadd
-                0x00000000c01348a0                __s2b
-                0x00000000c01349b0                __hi0bits
-                0x00000000c0134a20                __lo0bits
-                0x00000000c0134ab0                __i2b
-                0x00000000c0134ad0                __multiply
-                0x00000000c0134cd0                __pow5mult
-                0x00000000c0134de0                __lshift
-                0x00000000c0134f30                __mcmp
-                0x00000000c0134f90                __mdiff
-                0x00000000c0135120                __ulp
-                0x00000000c01351b0                __b2d
-                0x00000000c01352e0                __d2b
-                0x00000000c0135410                __ratio
-                0x00000000c01354d0                _mprec_log10
-                0x00000000c0135510                __copybits
-                0x00000000c0135580                __any_on
- *fill*         0x00000000c0135609        0x7 
- .text          0x00000000c0135610       0x44 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sbrkr.o)
-                0x00000000c0135610                _sbrk_r
- *fill*         0x00000000c0135654        0xc 
- .text          0x00000000c0135660       0x61 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-s_fpclassify.o)
-                0x00000000c0135660                __fpclassifyd
- *fill*         0x00000000c01356c1        0xf 
- .text          0x00000000c01356d0     0x1126 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
-                0x00000000c01356d0                __ssprint_r
-                0x00000000c01358e0                _svfiprintf_r
- *fill*         0x00000000c01367f6        0xa 
- .text          0x00000000c0136800       0xc4 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-callocr.o)
-                0x00000000c0136800                _calloc_r
- *fill*         0x00000000c01368c4        0xc 
- .text          0x00000000c01368d0      0x382 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-freer.o)
-                0x00000000c01368d0                _malloc_trim_r
-                0x00000000c01369c0                _free_r
- *fill*         0x00000000c0136c52        0xe 
- .text          0x00000000c0136c60      0x548 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-reallocr.o)
-                0x00000000c0136c60                _realloc_r
- *fill*         0x00000000c01371a8        0x8 
- .text          0x00000000c01371b0      0x1e0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_divdi3.o)
-                0x00000000c01371b0                __divdi3
- .text          0x00000000c0137390      0x175 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_umoddi3.o)
-                0x00000000c0137390                __umoddi3
+ *fill*         0x00000000c01014d7        0x9 
+ .text          0x00000000c01014e0       0x15 src/arch/i386/i386.o
+                0x00000000c01014e0                i386_init
+ *fill*         0x00000000c01014f5        0xb 
+ .text          0x00000000c0101500      0xc30 src/arch/i386/intr.o
+                0x00000000c0101500                intr_enable
+                0x00000000c0101530                irq_ack
+                0x00000000c0101560                intr_disable
+                0x00000000c0101580                irq_enable
+                0x00000000c01015e0                irq_disable
+                0x00000000c0101640                irq_set_data
+                0x00000000c01016a0                irq_get_data
+                0x00000000c01016f0                intr_init
+                0x00000000c0102020                isr_handler
+                0x00000000c01020e0                irq_handler
+ .text          0x00000000c0102130       0x2e src/arch/i386/mm/pagefault.o
+                0x00000000c0102130                pagefault_handler
+ *fill*         0x00000000c010215e        0x2 
+ .text          0x00000000c0102160     0x1191 src/arch/i386/mm/vmm.o
+                0x00000000c0102160                __V2P
+                0x00000000c0102200                unmap_page
+                0x00000000c01022a0                get_free_pages
+                0x00000000c01026e0                map_page
+                0x00000000c01029f0                __vmmcpy
+                0x00000000c0102c60                vmm_clone
+                0x00000000c0103160                vmm_release
+                0x00000000c01032c0                vmm_switch
+ *fill*         0x00000000c01032f1        0xf 
+ .text          0x00000000c0103300      0x53f src/arch/i386/pci.o
+                0x00000000c0103300                pci_write_field
+                0x00000000c0103340                pci_read_field
+                0x00000000c01033e0                pci_find_type
+                0x00000000c0103630                pci_scan
+ *fill*         0x00000000c010383f        0x1 
+ .text          0x00000000c0103840      0x7f1 src/arch/i386/task.o
+                0x00000000c0103840                return_from_fork
+                0x00000000c0103855                return_from_clone
+                0x00000000c0103860                fork_handler
+                0x00000000c0103a70                arch_task_clone
+                0x00000000c0103d30                arch_task_fork
+                0x00000000c0103d40                arch_task_yield
+                0x00000000c0103d50                arch_task_switch
+                0x00000000c0103e50                arch_task_release
+                0x00000000c0103ee0                task_init
+ *fill*         0x00000000c0104031        0xf 
+ .text          0x00000000c0104040      0x12e src/arch/i386/timer.o
+                0x00000000c0104040                timer_gettime
+                0x00000000c0104050                timer_getticks
+                0x00000000c0104070                timer_getms
+                0x00000000c0104090                timer_getfreq
+                0x00000000c01040a0                timer_delay
+                0x00000000c0104140                timer_init
+ *fill*         0x00000000c010416e        0x2 
+ .text          0x00000000c0104170      0x135 src/arch/i386/loader.o
+                0x00000000c0104170                _start
+ *fill*         0x00000000c01042a5        0xb 
+ .text          0x00000000c01042b0      0x21d src/arch/i386/_intr.o
+                0x00000000c01042b0                isr0
+                0x00000000c01042b9                isr1
+                0x00000000c01042c2                isr2
+                0x00000000c01042cb                isr3
+                0x00000000c01042d4                isr4
+                0x00000000c01042dd                isr5
+                0x00000000c01042e6                isr6
+                0x00000000c01042ef                isr7
+                0x00000000c01042f8                isr8
+                0x00000000c01042ff                isr9
+                0x00000000c0104308                isr10
+                0x00000000c010430f                isr11
+                0x00000000c0104316                isr12
+                0x00000000c010431d                isr13
+                0x00000000c0104324                isr15
+                0x00000000c010432d                isr16
+                0x00000000c0104336                isr17
+                0x00000000c010433f                isr18
+                0x00000000c0104348                isr19
+                0x00000000c0104351                isr20
+                0x00000000c010435a                isr21
+                0x00000000c0104363                isr22
+                0x00000000c010436c                isr23
+                0x00000000c0104375                isr24
+                0x00000000c010437e                isr25
+                0x00000000c0104387                isr26
+                0x00000000c0104390                isr27
+                0x00000000c0104399                isr28
+                0x00000000c01043a2                isr29
+                0x00000000c01043ab                isr30
+                0x00000000c01043b4                isr31
+                0x00000000c01043bd                isr0x7F
+                0x00000000c01043c6                isr0x80
+                0x00000000c01043d2                irq0
+                0x00000000c01043db                irq1
+                0x00000000c01043e4                irq2
+                0x00000000c01043ed                irq3
+                0x00000000c01043f6                irq4
+                0x00000000c01043ff                irq5
+                0x00000000c0104408                irq6
+                0x00000000c0104411                irq7
+                0x00000000c010441a                irq8
+                0x00000000c0104423                irq9
+                0x00000000c0104429                irq10
+                0x00000000c010442f                irq11
+                0x00000000c0104435                irq12
+                0x00000000c010443b                irq13
+                0x00000000c0104441                irq14
+                0x00000000c0104447                irq15
+                0x00000000c010444d                isr14
+                0x00000000c0104478                read_eip
+                0x00000000c010447b                isr_stub
+                0x00000000c01044a4                irq_stub
+ *fill*         0x00000000c01044cd        0x3 
+ .text          0x00000000c01044d0      0x75b src/binfmt/elf_module.o
+                0x00000000c0104c10                elf_module_register
+ *fill*         0x00000000c0104c2b        0x5 
+ .text          0x00000000c0104c30      0x157 src/binfmt.o
+                0x00000000c0104c30                binfmt_register
+                0x00000000c0104c70                binfmt_load_image
+                0x00000000c0104d20                binfmt_check_image
+ *fill*         0x00000000c0104d87        0x9 
+ .text          0x00000000c0104d90      0xc87 src/fs/vfs.o
+                0x00000000c0104d90                vfs_inode
+                0x00000000c0104dc0                vfs_open
+                0x00000000c0104de0                vfs_close
+                0x00000000c0104e00                vfs_read
+                0x00000000c0104e20                vfs_write
+                0x00000000c0104e40                vfs_chown
+                0x00000000c0104e90                vfs_chmod
+                0x00000000c0104ed0                vfs_ioctl
+                0x00000000c0104ef0                vfs_fsys_find
+                0x00000000c0104f50                vfs_rename
+                0x00000000c0104fa0                vfs_unlink
+                0x00000000c01050c0                vfs_umount
+                0x00000000c0105150                vfs_finddir
+                0x00000000c0105200                vfs_mknod
+                0x00000000c0105390                vfs_mount
+                0x00000000c0105400                vfs_fsys_register
+                0x00000000c0105490                vfs_mkdev
+                0x00000000c0105670                vfs_init
+ .text          0x00000000c0105a17        0x0 src/init/hostname.o
+ .text          0x00000000c0105a17        0x0 src/init/mbd.o
+ *fill*         0x00000000c0105a17        0x9 
+ .text          0x00000000c0105a20      0x1d3 src/init/module.o
+                0x00000000c0105b10                module_init
+ *fill*         0x00000000c0105bf3        0xd 
+ .text          0x00000000c0105c00      0x19b src/ipc/mutex.o
+                0x00000000c0105c00                mutex_init
+                0x00000000c0105c50                mutex_lock
+                0x00000000c0105cc0                mutex_trylock
+                0x00000000c0105d30                mutex_unlock
+ *fill*         0x00000000c0105d9b        0x5 
+ .text          0x00000000c0105da0      0x2d5 src/ipc/shm.o
+                0x00000000c0105da0                shm_obtain
+                0x00000000c0105f60                shm_release
+ *fill*         0x00000000c0106075        0xb 
+ .text          0x00000000c0106080       0x6b src/ipc/spinlock.o
+                0x00000000c0106080                spinlock_lock
+                0x00000000c0106090                spinlock_init
+                0x00000000c01060c0                spinlock_trylock
+                0x00000000c01060e0                spinlock_unlock
+ .text          0x00000000c01060eb        0x0 src/libk/exports.o
+ *fill*         0x00000000c01060eb        0x5 
+ .text          0x00000000c01060f0      0x142 src/libk/kprintf.o
+                0x00000000c01060f0                kprintf
+                0x00000000c01061b0                std_kprintf
+ *fill*         0x00000000c0106232        0xe 
+ .text          0x00000000c0106240       0x2f src/libk/strdup.o
+                0x00000000c0106240                strdup
+ .text          0x00000000c010626f        0x0 src/main.o
+ *fill*         0x00000000c010626f        0x1 
+ .text          0x00000000c0106270       0x13 src/mm/mm.o
+                0x00000000c0106270                mm_init
+ *fill*         0x00000000c0106283        0xd 
+ .text          0x00000000c0106290      0x375 src/mm/pmm.o
+                0x00000000c0106290                pmm_free_frame
+                0x00000000c01062b0                pmm_state
+                0x00000000c0106330                pmm_claim
+                0x00000000c01063a0                pmm_alloc_frame
+                0x00000000c0106440                pmm_alloc_frames
+                0x00000000c0106530                pmm_free_frames
+                0x00000000c0106570                pmm_init
+ *fill*         0x00000000c0106605        0xb 
+ .text          0x00000000c0106610      0x4f7 src/mm/slab.o
+                0x00000000c0106610                kfree
+                0x00000000c0106690                kmalloc
+                0x00000000c0106850                kvalloc
+                0x00000000c0106890                malloc
+                0x00000000c01068b0                kcalloc
+                0x00000000c01068f0                calloc
+                0x00000000c0106930                free
+                0x00000000c01069b0                std_kmalloc
+                0x00000000c01069d0                std_kcalloc
+                0x00000000c0106a10                std_kfree
+                0x00000000c0106a90                slab_init
+ *fill*         0x00000000c0106b07        0x9 
+ .text          0x00000000c0106b10     0x146d src/net/api/api_lib.o
+                0x00000000c0106b10                netconn_new_with_proto_and_callback
+                0x00000000c0106cb0                netconn_delete
+                0x00000000c0106d10                netconn_getaddr
+                0x00000000c0106e50                netconn_bind
+                0x00000000c0106f20                netconn_connect
+                0x00000000c0106ff0                netconn_disconnect
+                0x00000000c0107080                netconn_listen_with_backlog
+                0x00000000c0107120                netconn_accept
+                0x00000000c0107250                netconn_recv_tcp_pbuf
+                0x00000000c0107460                netconn_recv
+                0x00000000c01078e0                netconn_recved
+                0x00000000c0107940                netconn_sendto
+                0x00000000c0107a00                netconn_send
+                0x00000000c0107a90                netconn_write_partly
+                0x00000000c0107c10                netconn_close
+                0x00000000c0107ca0                netconn_shutdown
+                0x00000000c0107d50                netconn_join_leave_group
+                0x00000000c0107e50                netconn_gethostbyname
+ *fill*         0x00000000c0107f7d        0x3 
+ .text          0x00000000c0107f80     0x2266 src/net/api/api_msg.o
+                0x00000000c0108fc0                do_newconn
+                0x00000000c0109100                netconn_alloc
+                0x00000000c01091d0                netconn_free
+                0x00000000c0109650                do_delconn
+                0x00000000c0109830                do_bind
+                0x00000000c01098e0                do_connect
+                0x00000000c0109a60                do_disconnect
+                0x00000000c0109aa0                do_listen
+                0x00000000c0109bc0                do_send
+                0x00000000c0109ca0                do_recv
+                0x00000000c0109d20                do_write
+                0x00000000c0109ee0                do_getaddr
+                0x00000000c010a000                do_close
+                0x00000000c010a110                do_join_leave_group
+                0x00000000c010a1a0                do_gethostbyname
+ *fill*         0x00000000c010a1e6        0xa 
+ .text          0x00000000c010a1f0        0xf src/net/api/err.o
+                0x00000000c010a1f0                lwip_strerr
+ *fill*         0x00000000c010a1ff        0x1 
+ .text          0x00000000c010a200      0x3fe src/net/api/netbuf.o
+                0x00000000c010a200                netbuf_new
+                0x00000000c010a240                netbuf_delete
+                0x00000000c010a290                netbuf_alloc
+                0x00000000c010a340                netbuf_free
+                0x00000000c010a3a0                netbuf_ref
+                0x00000000c010a440                netbuf_chain
+                0x00000000c010a4c0                netbuf_data
+                0x00000000c010a550                netbuf_next
+                0x00000000c010a5b0                netbuf_first
+ *fill*         0x00000000c010a5fe        0x2 
+ .text          0x00000000c010a600      0x3ca src/net/api/netdb.o
+                0x00000000c010a600                lwip_gethostbyname
+                0x00000000c010a690                lwip_gethostbyname_r
+                0x00000000c010a7d0                lwip_freeaddrinfo
+                0x00000000c010a800                lwip_getaddrinfo
+ *fill*         0x00000000c010a9ca        0x6 
+ .text          0x00000000c010a9d0      0x196 src/net/api/netifapi.o
+                0x00000000c010a9d0                do_netifapi_netif_add
+                0x00000000c010aa10                do_netifapi_netif_set_addr
+                0x00000000c010aa40                do_netifapi_netif_common
+                0x00000000c010aa90                netifapi_netif_add
+                0x00000000c010aaf0                netifapi_netif_set_addr
+                0x00000000c010ab30                netifapi_netif_common
+ *fill*         0x00000000c010ab66        0xa 
+ .text          0x00000000c010ab70     0x39ad src/net/api/sockets.o
+                0x00000000c010b6a0                lwip_socket_init
+                0x00000000c010b6b0                lwip_accept
+                0x00000000c010ba30                lwip_bind
+                0x00000000c010bb30                lwip_close
+                0x00000000c010bbe0                lwip_connect
+                0x00000000c010bce0                lwip_listen
+                0x00000000c010bda0                lwip_recvfrom
+                0x00000000c010c2f0                lwip_read
+                0x00000000c010c650                lwip_recv
+                0x00000000c010c670                lwip_send
+                0x00000000c010c880                lwip_sendto
+                0x00000000c010caf0                lwip_socket
+                0x00000000c010cc40                lwip_write
+                0x00000000c010ce30                lwip_select
+                0x00000000c010dc00                lwip_shutdown
+                0x00000000c010dce0                lwip_getpeername
+                0x00000000c010de00                lwip_getsockname
+                0x00000000c010df20                lwip_getsockopt
+                0x00000000c010e1a0                lwip_setsockopt
+                0x00000000c010e420                lwip_ioctl
+                0x00000000c010e490                lwip_fcntl
+ *fill*         0x00000000c010e51d        0x3 
+ .text          0x00000000c010e520      0x7ea src/net/api/tcpip.o
+                0x00000000c010e6f0                tcpip_input
+                0x00000000c010e790                tcpip_callback_with_block
+                0x00000000c010e840                tcpip_timeout
+                0x00000000c010e8c0                tcpip_untimeout
+                0x00000000c010e930                tcpip_apimsg
+                0x00000000c010ea30                tcpip_apimsg_lock
+                0x00000000c010ea70                tcpip_netifapi_lock
+                0x00000000c010eab0                tcpip_callbackmsg_new
+                0x00000000c010eae0                tcpip_callbackmsg_delete
+                0x00000000c010eaf0                tcpip_trycallback
+                0x00000000c010eb30                tcpip_init
+                0x00000000c010ebf0                pbuf_free_callback
+                0x00000000c010ec80                mem_free_callback
+ *fill*         0x00000000c010ed0a        0x6 
+ .text          0x00000000c010ed10       0x37 src/net/core/def.o
+                0x00000000c010ed10                lwip_htons
+                0x00000000c010ed20                lwip_ntohs
+                0x00000000c010ed30                lwip_htonl
+                0x00000000c010ed40                lwip_ntohl
+ *fill*         0x00000000c010ed47        0x9 
+ .text          0x00000000c010ed50     0x474f src/net/core/dhcp.o
+                0x00000000c0111900                dhcp_set_struct
+                0x00000000c01119e0                dhcp_cleanup
+                0x00000000c0111a40                dhcp_start
+                0x00000000c0111c60                dhcp_inform
+                0x00000000c01120e0                dhcp_network_changed
+                0x00000000c0112140                dhcp_arp_reply
+                0x00000000c0112760                dhcp_renew
+                0x00000000c0112d20                dhcp_coarse_tmr
+                0x00000000c0112db0                dhcp_release
+                0x00000000c01132c0                dhcp_fine_tmr
+                0x00000000c01133f0                dhcp_stop
+ *fill*         0x00000000c011349f        0x1 
+ .text          0x00000000c01134a0     0x114e src/net/core/dns.o
+                0x00000000c0113940                dns_init
+                0x00000000c01139c0                dns_setserver
+                0x00000000c0113a00                dns_getserver
+                0x00000000c0113a30                dns_tmr
+                0x00000000c0113d10                dns_gethostbyname
+ *fill*         0x00000000c01145ee        0x2 
+ .text          0x00000000c01145f0       0x38 src/net/core/init.o
+                0x00000000c01145f0                lwip_init
+ *fill*         0x00000000c0114628        0x8 
+ .text          0x00000000c0114630      0x5d8 src/net/core/ipv4/autoip.o
+                0x00000000c0114630                autoip_set_struct
+                0x00000000c0114700                autoip_start
+                0x00000000c0114890                autoip_network_changed
+                0x00000000c0114930                autoip_stop
+                0x00000000c0114950                autoip_tmr
+                0x00000000c0114b30                autoip_arp_reply
+ *fill*         0x00000000c0114c08        0x8 
+ .text          0x00000000c0114c10      0x520 src/net/core/ipv4/icmp.o
+                0x00000000c0114c10                icmp_input
+                0x00000000c0114f30                icmp_dest_unreach
+                0x00000000c0115030                icmp_time_exceeded
+ .text          0x00000000c0115130      0x9c5 src/net/core/ipv4/igmp.o
+                0x00000000c0115270                igmp_init
+                0x00000000c0115290                igmp_dump_group_list
+                0x00000000c01152b0                igmp_start
+                0x00000000c0115370                igmp_stop
+                0x00000000c0115400                igmp_report_groups
+                0x00000000c0115470                igmp_lookfor_group
+                0x00000000c01154c0                igmp_input
+                0x00000000c0115750                igmp_joingroup
+                0x00000000c0115910                igmp_leavegroup
+                0x00000000c0115aa0                igmp_tmr
+ .text          0x00000000c0115af5        0x0 src/net/core/ipv4/inet.o
+ *fill*         0x00000000c0115af5        0xb 
+ .text          0x00000000c0115b00      0x5cc src/net/core/ipv4/inet_chksum.o
+                0x00000000c0115b00                inet_chksum_pseudo
+                0x00000000c0115cb0                inet_chksum_pseudo_partial
+                0x00000000c0115ee0                inet_chksum
+                0x00000000c0115f90                inet_chksum_pbuf
+ *fill*         0x00000000c01160cc        0x4 
+ .text          0x00000000c01160d0      0xeac src/net/core/ipv4/ip.o
+                0x00000000c01160d0                ip_route
+                0x00000000c0116120                ip_input
+                0x00000000c01166f0                ip_output_if
+                0x00000000c0116960                ip_output_if_opt
+                0x00000000c0116cb0                ip_output
+ *fill*         0x00000000c0116f7c        0x4 
+ .text          0x00000000c0116f80      0x75c src/net/core/ipv4/ip_addr.o
+                0x00000000c0116f80                ip4_addr_isbroadcast
+                0x00000000c0116fe0                ip4_addr_netmask_valid
+                0x00000000c0117050                ipaddr_aton
+                0x00000000c0117230                ipaddr_addr
+                0x00000000c0117260                ipaddr_ntoa
+                0x00000000c01175e0                ipaddr_ntoa_r
+ *fill*         0x00000000c01176dc        0x4 
+ .text          0x00000000c01176e0      0xd8f src/net/core/ipv4/ip_frag.o
+                0x00000000c0117970                ip_reass_tmr
+                0x00000000c01179b0                ip_reass
+                0x00000000c0118190                ip_frag
+ .text          0x00000000c011846f        0x0 src/net/core/mem.o
+ .text          0x00000000c011846f        0x0 src/net/core/memp.o
+ *fill*         0x00000000c011846f        0x1 
+ .text          0x00000000c0118470      0xc14 src/net/core/netif.o
+                0x00000000c01184d0                netif_loop_output
+                0x00000000c0118630                netif_poll
+                0x00000000c0118770                netif_init
+                0x00000000c0118a30                netif_remove
+                0x00000000c0118b30                netif_find
+                0x00000000c0118b80                netif_set_ipaddr
+                0x00000000c0118c70                netif_set_addr
+                0x00000000c0118ce0                netif_add
+                0x00000000c0118e40                netif_set_gw
+                0x00000000c0118e70                netif_set_netmask
+                0x00000000c0118ec0                netif_set_default
+                0x00000000c0118f10                netif_set_up
+                0x00000000c0118f90                netif_set_down
+                0x00000000c0118fe0                netif_set_link_up
+                0x00000000c0119070                netif_set_link_down
+ *fill*         0x00000000c0119084        0xc 
+ .text          0x00000000c0119090     0x165b src/net/core/pbuf.o
+                0x00000000c01190e0                pbuf_alloced_custom
+                0x00000000c01191f0                pbuf_header
+                0x00000000c0119330                pbuf_free
+                0x00000000c01194a0                pbuf_alloc
+                0x00000000c0119890                pbuf_realloc
+                0x00000000c0119a20                pbuf_clen
+                0x00000000c0119a40                pbuf_ref
+                0x00000000c0119a50                pbuf_cat
+                0x00000000c0119b60                pbuf_chain
+                0x00000000c0119c80                pbuf_dechain
+                0x00000000c0119d70                pbuf_copy
+                0x00000000c0119ff0                pbuf_copy_partial
+                0x00000000c011a0d0                pbuf_take
+                0x00000000c011a1f0                pbuf_coalesce
+                0x00000000c011a340                pbuf_get_at
+                0x00000000c011a390                pbuf_memcmp
+                0x00000000c011a460                pbuf_memfind
+                0x00000000c011a5a0                pbuf_strstr
+ *fill*         0x00000000c011a6eb        0x5 
+ .text          0x00000000c011a6f0      0x495 src/net/core/raw.o
+                0x00000000c011a6f0                raw_input
+                0x00000000c011a790                raw_bind
+                0x00000000c011a7c0                raw_connect
+                0x00000000c011a7f0                raw_recv
+                0x00000000c011a810                raw_sendto
+                0x00000000c011a970                raw_send
+                0x00000000c011aac0                raw_remove
+                0x00000000c011ab20                raw_new
+ *fill*         0x00000000c011ab85        0xb 
+ .text          0x00000000c011ab90      0x955 src/net/core/snmp/asn1_dec.o
+                0x00000000c011ab90                snmp_asn1_dec_type
+                0x00000000c011abf0                snmp_asn1_dec_length
+                0x00000000c011adf0                snmp_asn1_dec_u32t
+                0x00000000c011af50                snmp_asn1_dec_s32t
+                0x00000000c011b1f0                snmp_asn1_dec_oid
+                0x00000000c011b410                snmp_asn1_dec_raw
+ *fill*         0x00000000c011b4e5        0xb 
+ .text          0x00000000c011b4f0      0x844 src/net/core/snmp/asn1_enc.o
+                0x00000000c011b4f0                snmp_asn1_enc_length_cnt
+                0x00000000c011b520                snmp_asn1_enc_u32t_cnt
+                0x00000000c011b580                snmp_asn1_enc_s32t_cnt
+                0x00000000c011b5d0                snmp_asn1_enc_oid_cnt
+                0x00000000c011b640                snmp_asn1_enc_type
+                0x00000000c011b6a0                snmp_asn1_enc_length
+                0x00000000c011b760                snmp_asn1_enc_u32t
+                0x00000000c011b880                snmp_asn1_enc_s32t
+                0x00000000c011b960                snmp_asn1_enc_oid
+                0x00000000c011bc60                snmp_asn1_enc_raw
+ *fill*         0x00000000c011bd34        0xc 
+ .text          0x00000000c011bd40     0x380f src/net/core/snmp/mib2.o
+                0x00000000c011bd40                noleafs_get_object_def
+                0x00000000c011bd50                noleafs_get_value
+                0x00000000c011bd60                noleafs_set_test
+                0x00000000c011bd70                noleafs_set_value
+                0x00000000c011e320                objectidncpy
+                0x00000000c011e350                snmp_set_sysdesr
+                0x00000000c011e370                snmp_get_sysobjid_ptr
+                0x00000000c011e380                snmp_set_sysobjid
+                0x00000000c011e3a0                snmp_inc_sysuptime
+                0x00000000c011e3b0                snmp_add_sysuptime
+                0x00000000c011e3c0                snmp_get_sysuptime
+                0x00000000c011e3f0                snmp_set_syscontact
+                0x00000000c011e410                snmp_set_sysname
+                0x00000000c011e430                snmp_set_syslocation
+                0x00000000c011e450                snmp_add_ifinoctets
+                0x00000000c011e460                snmp_inc_ifinucastpkts
+                0x00000000c011e470                snmp_inc_ifinnucastpkts
+                0x00000000c011e480                snmp_inc_ifindiscards
+                0x00000000c011e490                snmp_add_ifoutoctets
+                0x00000000c011e4a0                snmp_inc_ifoutucastpkts
+                0x00000000c011e4b0                snmp_inc_ifoutnucastpkts
+                0x00000000c011e4c0                snmp_inc_ifoutdiscards
+                0x00000000c011e4d0                snmp_inc_iflist
+                0x00000000c011e510                snmp_dec_iflist
+                0x00000000c011e540                snmp_insert_arpidx_tree
+                0x00000000c011e6f0                snmp_delete_arpidx_tree
+                0x00000000c011e870                snmp_inc_ipinreceives
+                0x00000000c011e880                snmp_inc_ipinhdrerrors
+                0x00000000c011e890                snmp_inc_ipinaddrerrors
+                0x00000000c011e8a0                snmp_inc_ipforwdatagrams
+                0x00000000c011e8b0                snmp_inc_ipinunknownprotos
+                0x00000000c011e8c0                snmp_inc_ipindiscards
+                0x00000000c011e8d0                snmp_inc_ipindelivers
+                0x00000000c011e8e0                snmp_inc_ipoutrequests
+                0x00000000c011e8f0                snmp_inc_ipoutdiscards
+                0x00000000c011e900                snmp_inc_ipoutnoroutes
+                0x00000000c011e910                snmp_inc_ipreasmreqds
+                0x00000000c011e920                snmp_inc_ipreasmoks
+                0x00000000c011e930                snmp_inc_ipreasmfails
+                0x00000000c011e940                snmp_inc_ipfragoks
+                0x00000000c011e950                snmp_inc_ipfragfails
+                0x00000000c011e960                snmp_inc_ipfragcreates
+                0x00000000c011e970                snmp_inc_iproutingdiscards
+                0x00000000c011e980                snmp_insert_ipaddridx_tree
+                0x00000000c011ea90                snmp_delete_ipaddridx_tree
+                0x00000000c011ec00                snmp_insert_iprteidx_tree
+                0x00000000c011ecf0                snmp_delete_iprteidx_tree
+                0x00000000c011ee50                snmp_inc_icmpinmsgs
+                0x00000000c011ee60                snmp_inc_icmpinerrors
+                0x00000000c011ee70                snmp_inc_icmpindestunreachs
+                0x00000000c011ee80                snmp_inc_icmpintimeexcds
+                0x00000000c011ee90                snmp_inc_icmpinparmprobs
+                0x00000000c011eea0                snmp_inc_icmpinsrcquenchs
+                0x00000000c011eeb0                snmp_inc_icmpinredirects
+                0x00000000c011eec0                snmp_inc_icmpinechos
+                0x00000000c011eed0                snmp_inc_icmpinechoreps
+                0x00000000c011eee0                snmp_inc_icmpintimestamps
+                0x00000000c011eef0                snmp_inc_icmpintimestampreps
+                0x00000000c011ef00                snmp_inc_icmpinaddrmasks
+                0x00000000c011ef10                snmp_inc_icmpinaddrmaskreps
+                0x00000000c011ef20                snmp_inc_icmpoutmsgs
+                0x00000000c011ef30                snmp_inc_icmpouterrors
+                0x00000000c011ef40                snmp_inc_icmpoutdestunreachs
+                0x00000000c011ef50                snmp_inc_icmpouttimeexcds
+                0x00000000c011ef60                snmp_inc_icmpoutparmprobs
+                0x00000000c011ef70                snmp_inc_icmpoutsrcquenchs
+                0x00000000c011ef80                snmp_inc_icmpoutredirects
+                0x00000000c011ef90                snmp_inc_icmpoutechos
+                0x00000000c011efa0                snmp_inc_icmpoutechoreps
+                0x00000000c011efb0                snmp_inc_icmpouttimestamps
+                0x00000000c011efc0                snmp_inc_icmpouttimestampreps
+                0x00000000c011efd0                snmp_inc_icmpoutaddrmasks
+                0x00000000c011efe0                snmp_inc_icmpoutaddrmaskreps
+                0x00000000c011eff0                snmp_inc_tcpactiveopens
+                0x00000000c011f000                snmp_inc_tcppassiveopens
+                0x00000000c011f010                snmp_inc_tcpattemptfails
+                0x00000000c011f020                snmp_inc_tcpestabresets
+                0x00000000c011f030                snmp_inc_tcpinsegs
+                0x00000000c011f040                snmp_inc_tcpoutsegs
+                0x00000000c011f050                snmp_inc_tcpretranssegs
+                0x00000000c011f060                snmp_inc_tcpinerrs
+                0x00000000c011f070                snmp_inc_tcpoutrsts
+                0x00000000c011f080                snmp_inc_udpindatagrams
+                0x00000000c011f090                snmp_inc_udpnoports
+                0x00000000c011f0a0                snmp_inc_udpinerrors
+                0x00000000c011f0b0                snmp_inc_udpoutdatagrams
+                0x00000000c011f0c0                snmp_insert_udpidx_tree
+                0x00000000c011f1d0                snmp_delete_udpidx_tree
+                0x00000000c011f370                snmp_inc_snmpinpkts
+                0x00000000c011f380                snmp_inc_snmpoutpkts
+                0x00000000c011f390                snmp_inc_snmpinbadversions
+                0x00000000c011f3a0                snmp_inc_snmpinbadcommunitynames
+                0x00000000c011f3b0                snmp_inc_snmpinbadcommunityuses
+                0x00000000c011f3c0                snmp_inc_snmpinasnparseerrs
+                0x00000000c011f3d0                snmp_inc_snmpintoobigs
+                0x00000000c011f3e0                snmp_inc_snmpinnosuchnames
+                0x00000000c011f3f0                snmp_inc_snmpinbadvalues
+                0x00000000c011f400                snmp_inc_snmpinreadonlys
+                0x00000000c011f410                snmp_inc_snmpingenerrs
+                0x00000000c011f420                snmp_add_snmpintotalreqvars
+                0x00000000c011f430                snmp_add_snmpintotalsetvars
+                0x00000000c011f440                snmp_inc_snmpingetrequests
+                0x00000000c011f450                snmp_inc_snmpingetnexts
+                0x00000000c011f460                snmp_inc_snmpinsetrequests
+                0x00000000c011f470                snmp_inc_snmpingetresponses
+                0x00000000c011f480                snmp_inc_snmpintraps
+                0x00000000c011f490                snmp_inc_snmpouttoobigs
+                0x00000000c011f4a0                snmp_inc_snmpoutnosuchnames
+                0x00000000c011f4b0                snmp_inc_snmpoutbadvalues
+                0x00000000c011f4c0                snmp_inc_snmpoutgenerrs
+                0x00000000c011f4d0                snmp_inc_snmpoutgetrequests
+                0x00000000c011f4e0                snmp_inc_snmpoutgetnexts
+                0x00000000c011f4f0                snmp_inc_snmpoutsetrequests
+                0x00000000c011f500                snmp_inc_snmpoutgetresponses
+                0x00000000c011f510                snmp_inc_snmpouttraps
+                0x00000000c011f520                snmp_get_snmpgrpid_ptr
+                0x00000000c011f530                snmp_set_snmpenableauthentraps
+                0x00000000c011f540                snmp_get_snmpenableauthentraps
+ *fill*         0x00000000c011f54f        0x1 
+ .text          0x00000000c011f550     0x12e7 src/net/core/snmp/mib_structs.o
+                0x00000000c011f550                snmp_ifindextonetif
+                0x00000000c011f590                snmp_netiftoifindex
+                0x00000000c011f5e0                snmp_oidtoip
+                0x00000000c011f610                snmp_iptooid
+                0x00000000c011f640                snmp_mib_ln_alloc
+                0x00000000c011f680                snmp_mib_ln_free
+                0x00000000c011f690                snmp_mib_lrn_alloc
+                0x00000000c011f6f0                snmp_mib_lrn_free
+                0x00000000c011f700                snmp_mib_node_insert
+                0x00000000c011f880                snmp_mib_node_find
+                0x00000000c011f930                snmp_mib_node_delete
+                0x00000000c011fa40                snmp_search_tree
+                0x00000000c011fc20                snmp_expand_tree
+                0x00000000c01206e0                snmp_iso_prefix_tst
+                0x00000000c0120720                snmp_iso_prefix_expand
+ *fill*         0x00000000c0120837        0x9 
+ .text          0x00000000c0120840     0x2493 src/net/core/snmp/msg_in.o
+                0x00000000c0121660                snmp_init
+                0x00000000c01216d0                snmp_varbind_alloc
+                0x00000000c0122b80                snmp_msg_event
+                0x00000000c0122bd0                snmp_varbind_free
+                0x00000000c0122c10                snmp_varbind_list_free
+                0x00000000c0122c70                snmp_varbind_tail_add
+                0x00000000c0122cb0                snmp_varbind_tail_remove
+ *fill*         0x00000000c0122cd3        0xd 
+ .text          0x00000000c0122ce0     0x1370 src/net/core/snmp/msg_out.o
+                0x00000000c0123190                snmp_trap_dst_enable
+                0x00000000c01231b0                snmp_trap_dst_ip_set
+                0x00000000c01231e0                snmp_send_response
+                0x00000000c0123520                snmp_send_trap
+                0x00000000c0123aa0                snmp_coldstart_trap
+                0x00000000c0124000                snmp_authfail_trap
+ .text          0x00000000c0124050        0x2 src/net/core/stats.o
+                0x00000000c0124050                stats_init
+ *fill*         0x00000000c0124052        0xe 
+ .text          0x00000000c0124060       0x51 src/net/core/sys.o
+                0x00000000c0124060                sys_msleep
+ *fill*         0x00000000c01240b1        0xf 
+ .text          0x00000000c01240c0     0x25cc src/net/core/tcp.o
+                0x00000000c01240d0                tcp_init
+                0x00000000c01240e0                tcp_bind
+                0x00000000c0124250                tcp_listen_with_backlog
+                0x00000000c01243c0                tcp_update_rcv_ann_wnd
+                0x00000000c0124470                tcp_recved
+                0x00000000c01245f0                tcp_connect
+                0x00000000c0124890                tcp_segs_free
+                0x00000000c01248d0                tcp_seg_free
+                0x00000000c0124910                tcp_setprio
+                0x00000000c0124920                tcp_seg_copy
+                0x00000000c0124970                tcp_arg
+                0x00000000c0124980                tcp_recv
+                0x00000000c01249e0                tcp_sent
+                0x00000000c0124a40                tcp_err
+                0x00000000c0124aa0                tcp_accept
+                0x00000000c0124ab0                tcp_poll
+                0x00000000c0124b20                tcp_pcb_purge
+                0x00000000c0124cd0                tcp_slowtmr
+                0x00000000c0125380                tcp_pcb_remove
+                0x00000000c0125820                tcp_recv_null
+                0x00000000c01259f0                tcp_process_refused_data
+                0x00000000c0125aa0                tcp_fasttmr
+                0x00000000c0125b40                tcp_tmr
+                0x00000000c0125c00                tcp_abandon
+                0x00000000c0125dd0                tcp_abort
+                0x00000000c0125df0                tcp_alloc
+                0x00000000c0126020                tcp_new
+                0x00000000c0126210                tcp_close
+                0x00000000c01264e0                tcp_shutdown
+                0x00000000c0126620                tcp_next_iss
+                0x00000000c0126640                tcp_eff_send_mss
+                0x00000000c0126680                tcp_debug_state_str
+ *fill*         0x00000000c012668c        0x4 
+ .text          0x00000000c0126690     0x211d src/net/core/tcp_in.o
+                0x00000000c0127950                tcp_input
+ *fill*         0x00000000c01287ad        0x3 
+ .text          0x00000000c01287b0     0x1dad src/net/core/tcp_out.o
+                0x00000000c01287b0                tcp_send_fin
+                0x00000000c0128a30                tcp_write
+                0x00000000c01295c0                tcp_enqueue_flags
+                0x00000000c0129900                tcp_send_empty_ack
+                0x00000000c0129a40                tcp_output
+                0x00000000c0129f20                tcp_rst
+                0x00000000c012a070                tcp_rexmit_rto
+                0x00000000c012a0c0                tcp_rexmit
+                0x00000000c012a160                tcp_rexmit_fast
+                0x00000000c012a240                tcp_keepalive
+                0x00000000c012a370                tcp_zero_window_probe
+ *fill*         0x00000000c012a55d        0x3 
+ .text          0x00000000c012a560      0xa7d src/net/core/timers.o
+                0x00000000c012ac10                tcp_timer_needed
+                0x00000000c012ad20                sys_timeout
+                0x00000000c012adf0                sys_timeouts_init
+                0x00000000c012ae80                sys_untimeout
+                0x00000000c012aef0                sys_timeouts_mbox_fetch
+ *fill*         0x00000000c012afdd        0x3 
+ .text          0x00000000c012afe0     0x11a6 src/net/core/udp.o
+                0x00000000c012afe0                udp_init
+                0x00000000c012aff0                udp_input
+                0x00000000c012b590                udp_bind
+                0x00000000c012b720                udp_sendto_if
+                0x00000000c012b9e0                udp_sendto
+                0x00000000c012bd00                udp_send
+                0x00000000c012c000                udp_connect
+                0x00000000c012c090                udp_disconnect
+                0x00000000c012c0b0                udp_recv
+                0x00000000c012c0d0                udp_remove
+                0x00000000c012c140                udp_new
+ *fill*         0x00000000c012c186        0xa 
+ .text          0x00000000c012c190     0x1525 src/net/netif/etharp.o
+                0x00000000c012c520                etharp_tmr
+                0x00000000c012c5f0                etharp_cleanup_netif
+                0x00000000c012c680                etharp_find_addr
+                0x00000000c012c710                etharp_raw
+                0x00000000c012ca20                etharp_query
+                0x00000000c012cce0                etharp_output
+                0x00000000c012d0e0                etharp_request
+                0x00000000c012d270                ethernet_input
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ethernetif.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/auth.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/chap.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/chpms.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/fsm.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/ipcp.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/lcp.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/magic.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/md5.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/pap.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/ppp.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/ppp_oe.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/randm.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/ppp/vj.o
+ .text          0x00000000c012d6b5        0x0 src/net/netif/slipif.o
+ *fill*         0x00000000c012d6b5        0xb 
+ .text          0x00000000c012d6c0       0x8c src/net/network.o
+                0x00000000c012d730                network_init
+ *fill*         0x00000000c012d74c        0x4 
+ .text          0x00000000c012d750      0x3d5 src/net/sys.o
+                0x00000000c012d750                sys_init
+                0x00000000c012d760                sys_sem_new
+                0x00000000c012d7b0                sys_sem_free
+                0x00000000c012d7e0                sys_sem_signal
+                0x00000000c012d7f0                sys_arch_sem_wait
+                0x00000000c012d870                sys_mbox_new
+                0x00000000c012d8d0                sys_mbox_free
+                0x00000000c012d910                sys_mbox_trypost
+                0x00000000c012d950                sys_mbox_post
+                0x00000000c012d980                sys_arch_mbox_fetch
+                0x00000000c012da60                sys_arch_mbox_tryfetch
+                0x00000000c012dad0                sys_thread_new
+                0x00000000c012db00                sys_arch_protect
+                0x00000000c012db10                sys_arch_unprotect
+                0x00000000c012db20                sys_now
+ *fill*         0x00000000c012db25        0xb 
+ .text          0x00000000c012db30      0x1ee src/sched.o
+                0x00000000c012db30                sched_nextpid
+                0x00000000c012db40                schedule
+                0x00000000c012dc50                schedule_yield
+ *fill*         0x00000000c012dd1e        0x2 
+ .text          0x00000000c012dd20      0x184 src/syscall.o
+                0x00000000c012dd20                syscall_unregister
+                0x00000000c012dd70                syscall_register
+                0x00000000c012ddc0                syscall_init
+                0x00000000c012de60                syscall_handler
+ *fill*         0x00000000c012dea4        0xc 
+ .text          0x00000000c012deb0       0x26 src/syscalls/getppid.o
+                0x00000000c012deb0                sys_getppid
+ *fill*         0x00000000c012ded6        0xa 
+ .text          0x00000000c012dee0       0xc4 src/syscalls/sbrk.o
+                0x00000000c012dee0                sys_sbrk
+ *fill*         0x00000000c012dfa4        0xc 
+ .text          0x00000000c012dfb0       0x76 src/syscalls/chown.o
+                0x00000000c012dfb0                sys_chown
+ *fill*         0x00000000c012e026        0xa 
+ .text          0x00000000c012e030       0x87 src/syscalls/chroot.o
+                0x00000000c012e030                sys_chroot
+ *fill*         0x00000000c012e0b7        0x9 
+ .text          0x00000000c012e0c0       0x44 src/syscalls/clone.o
+                0x00000000c012e0c0                sys_clone
+ *fill*         0x00000000c012e104        0xc 
+ .text          0x00000000c012e110       0x74 src/syscalls/close.o
+                0x00000000c012e110                sys_close
+ *fill*         0x00000000c012e184        0xc 
+ .text          0x00000000c012e190      0x20f src/syscalls/execve.o
+                0x00000000c012e190                sys_execve
+ *fill*         0x00000000c012e39f        0x1 
+ .text          0x00000000c012e3a0       0x72 src/syscalls/fchdir.o
+                0x00000000c012e3a0                sys_fchdir
+ *fill*         0x00000000c012e412        0xe 
+ .text          0x00000000c012e420       0xe4 src/syscalls/fcntl.o
+                0x00000000c012e420                sys_fcntl
+ *fill*         0x00000000c012e504        0xc 
+ .text          0x00000000c012e510       0x26 src/syscalls/fork.o
+                0x00000000c012e510                sys_fork
+ *fill*         0x00000000c012e536        0xa 
+ .text          0x00000000c012e540       0xa2 src/syscalls/fstat.o
+                0x00000000c012e540                sys_fstat
+ *fill*         0x00000000c012e5e2        0xe 
+ .text          0x00000000c012e5f0       0xe4 src/syscalls/getdents.o
+                0x00000000c012e5f0                sys_getdents
+ *fill*         0x00000000c012e6d4        0xc 
+ .text          0x00000000c012e6e0       0x16 src/syscalls/getpid.o
+                0x00000000c012e6e0                sys_getpid
+ *fill*         0x00000000c012e6f6        0xa 
+ .text          0x00000000c012e700       0x47 src/syscalls/stat.o
+                0x00000000c012e700                sys_stat
+ *fill*         0x00000000c012e747        0x9 
+ .text          0x00000000c012e750       0xd2 src/syscalls/symlink.o
+                0x00000000c012e750                sys_symlink
+ *fill*         0x00000000c012e822        0xe 
+ .text          0x00000000c012e830       0x38 src/syscalls/times.o
+                0x00000000c012e830                sys_times
+ *fill*         0x00000000c012e868        0x8 
+ .text          0x00000000c012e870       0x55 src/syscalls/umask.o
+                0x00000000c012e870                sys_umask
+ *fill*         0x00000000c012e8c5        0xb 
+ .text          0x00000000c012e8d0       0xf5 src/syscalls/umount.o
+                0x00000000c012e8d0                sys_umount2
+                0x00000000c012e950                sys_umount
+ *fill*         0x00000000c012e9c5        0xb 
+ .text          0x00000000c012e9d0       0x85 src/syscalls/uname.o
+                0x00000000c012e9d0                sys_uname
+ *fill*         0x00000000c012ea55        0xb 
+ .text          0x00000000c012ea60      0x17a src/syscalls/unlink.o
+                0x00000000c012ea60                sys_unlink
+ *fill*         0x00000000c012ebda        0x6 
+ .text          0x00000000c012ebe0       0x14 src/syscalls/wait.o
+                0x00000000c012ebe0                sys_wait
+ *fill*         0x00000000c012ebf4        0xc 
+ .text          0x00000000c012ec00      0x2ff src/syscalls/waitpid.o
+                0x00000000c012ec00                sys_waitpid
+ *fill*         0x00000000c012eeff        0x1 
+ .text          0x00000000c012ef00       0xa4 src/syscalls/write.o
+                0x00000000c012ef00                sys_write
+ *fill*         0x00000000c012efa4        0xc 
+ .text          0x00000000c012efb0        0x5 src/syscalls/yield.o
+                0x00000000c012efb0                sys_yield
+ *fill*         0x00000000c012efb5        0xb 
+ .text          0x00000000c012efc0       0xf0 src/syscalls/_exit.o
+                0x00000000c012efc0                sys_exit
+ .text          0x00000000c012f0b0       0x45 src/syscalls/gettimeofday.o
+                0x00000000c012f0b0                sys_gettimeofday
+ *fill*         0x00000000c012f0f5        0xb 
+ .text          0x00000000c012f100       0x75 src/syscalls/ioctl.o
+                0x00000000c012f100                sys_ioctl
+ *fill*         0x00000000c012f175        0xb 
+ .text          0x00000000c012f180        0xb src/syscalls/isatty.o
+                0x00000000c012f180                sys_isatty
+ *fill*         0x00000000c012f18b        0x5 
+ .text          0x00000000c012f190       0x96 src/syscalls/kill.o
+                0x00000000c012f190                sys_kill
+ *fill*         0x00000000c012f226        0xa 
+ .text          0x00000000c012f230       0xd2 src/syscalls/link.o
+                0x00000000c012f230                sys_link
+ *fill*         0x00000000c012f302        0xe 
+ .text          0x00000000c012f310       0xc5 src/syscalls/lseek.o
+                0x00000000c012f310                sys_lseek
+ *fill*         0x00000000c012f3d5        0xb 
+ .text          0x00000000c012f3e0       0xb9 src/syscalls/mount.o
+                0x00000000c012f3e0                sys_mount
+ *fill*         0x00000000c012f499        0x7 
+ .text          0x00000000c012f4a0      0x325 src/syscalls/open.o
+                0x00000000c012f4a0                sys_open
+ *fill*         0x00000000c012f7c5        0xb 
+ .text          0x00000000c012f7d0       0xa4 src/syscalls/read.o
+                0x00000000c012f7d0                sys_read
+ *fill*         0x00000000c012f874        0xc 
+ .text          0x00000000c012f880       0x38 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-atoi.o)
+                0x00000000c012f880                atoi
+                0x00000000c012f8a0                _atoi_r
+ *fill*         0x00000000c012f8b8        0x8 
+ .text          0x00000000c012f8c0        0x6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-errno.o)
+                0x00000000c012f8c0                __errno
+ .text          0x00000000c012f8c6        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-impure.o)
+ .text          0x00000000c012f8c6       0x52 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memcmp.o)
+                0x00000000c012f8c6                memcmp
+ .text          0x00000000c012f918       0x48 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memcpy.o)
+                0x00000000c012f918                memcpy
+ .text          0x00000000c012f960       0x8d /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memmove.o)
+                0x00000000c012f960                memmove
+ .text          0x00000000c012f9ed       0x88 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memset.o)
+                0x00000000c012f9ed                memset
+ *fill*         0x00000000c012fa75        0xb 
+ .text          0x00000000c012fa80       0x69 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-rand.o)
+                0x00000000c012fa80                srand
+                0x00000000c012faa0                rand
+ *fill*         0x00000000c012fae9        0x7 
+ .text          0x00000000c012faf0       0xd3 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sprintf.o)
+                0x00000000c012faf0                _sprintf_r
+                0x00000000c012fb60                sprintf
+ *fill*         0x00000000c012fbc3        0xd 
+ .text          0x00000000c012fbd0       0x6d /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcat.o)
+                0x00000000c012fbd0                strcat
+ *fill*         0x00000000c012fc3d        0x3 
+ .text          0x00000000c012fc40       0xfc /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strchr.o)
+                0x00000000c012fc40                strchr
+ *fill*         0x00000000c012fd3c        0x4 
+ .text          0x00000000c012fd40       0x62 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcmp.o)
+                0x00000000c012fd40                strcmp
+ *fill*         0x00000000c012fda2        0xe 
+ .text          0x00000000c012fdb0       0x65 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcpy.o)
+                0x00000000c012fdb0                strcpy
+ *fill*         0x00000000c012fe15        0xb 
+ .text          0x00000000c012fe20       0x79 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strlen.o)
+                0x00000000c012fe20                strlen
+ *fill*         0x00000000c012fe99        0x7 
+ .text          0x00000000c012fea0       0xd6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strncmp.o)
+                0x00000000c012fea0                strncmp
+ *fill*         0x00000000c012ff76        0xa 
+ .text          0x00000000c012ff80      0x20b /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strtol.o)
+                0x00000000c012ff80                _strtol_r
+                0x00000000c0130170                strtol
+ *fill*         0x00000000c013018b        0x5 
+ .text          0x00000000c0130190     0x2054 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
+                0x00000000c0130190                _svfprintf_r
+ *fill*         0x00000000c01321e4        0xc 
+ .text          0x00000000c01321f0       0x8e /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-vsprintf.o)
+                0x00000000c01321f0                _vsprintf_r
+                0x00000000c0132260                vsprintf
+ *fill*         0x00000000c013227e        0x2 
+ .text          0x00000000c0132280      0x554 /xdev/cross/usr/i686-cross/lib/libc.a(syscalls.o)
+                0x00000000c0132280                _exit
+                0x00000000c01322a0                close
+                0x00000000c01322c0                execve
+                0x00000000c01322e0                fork
+                0x00000000c01322f0                fstat
+                0x00000000c0132310                getpid
+                0x00000000c0132320                isatty
+                0x00000000c0132340                kill
+                0x00000000c0132360                link
+                0x00000000c0132380                lseek
+                0x00000000c01323a0                open
+                0x00000000c01323c0                read
+                0x00000000c01323e0                sbrk
+                0x00000000c0132400                stat
+                0x00000000c0132420                times
+                0x00000000c0132440                unlink
+                0x00000000c0132460                wait
+                0x00000000c0132480                write
+                0x00000000c01324a0                gettimeofday
+                0x00000000c01324c0                fcntl
+                0x00000000c01324e0                ioctl
+                0x00000000c0132500                chown
+                0x00000000c0132520                clone
+                0x00000000c0132550                sched_yield
+                0x00000000c0132560                mount
+                0x00000000c0132590                umount
+                0x00000000c01325b0                umount2
+                0x00000000c01325d0                openpty
+                0x00000000c0132600                symlink
+                0x00000000c0132620                fchdir
+                0x00000000c0132640                pipe
+                0x00000000c0132660                waitpid
+                0x00000000c0132680                getppid
+                0x00000000c0132690                uname
+                0x00000000c01326b0                mmap
+                0x00000000c01326e0                munmap
+                0x00000000c0132700                socket
+                0x00000000c0132720                bind
+                0x00000000c0132740                shutdown
+                0x00000000c0132760                chroot
+                0x00000000c0132780                getdents
+                0x00000000c01327a0                __get_argv
+                0x00000000c01327b0                __get_envp
+                0x00000000c01327c0                __install_sighandler
+ .text          0x00000000c01327d4        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-ctype_.o)
+ *fill*         0x00000000c01327d4        0xc 
+ .text          0x00000000c01327e0     0x1632 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
+                0x00000000c01329f0                _dtoa_r
+ *fill*         0x00000000c0133e12        0xe 
+ .text          0x00000000c0133e20       0xe6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
+                0x00000000c0133e20                _setlocale_r
+                0x00000000c0133e90                __locale_charset
+                0x00000000c0133ea0                __locale_mb_cur_max
+                0x00000000c0133eb0                __locale_msgcharset
+                0x00000000c0133ec0                __locale_cjk_lang
+                0x00000000c0133ed0                _localeconv_r
+                0x00000000c0133ee0                setlocale
+                0x00000000c0133f00                localeconv
+ *fill*         0x00000000c0133f06        0xa 
+ .text          0x00000000c0133f10      0x76f /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mallocr.o)
+                0x00000000c0133f10                _malloc_r
+ *fill*         0x00000000c013467f        0x1 
+ .text          0x00000000c0134680       0x95 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-memchr.o)
+                0x00000000c0134680                memchr
+ *fill*         0x00000000c0134715        0xb 
+ .text          0x00000000c0134720       0x12 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mlock.o)
+                0x00000000c0134720                __malloc_lock
+                0x00000000c0134730                __malloc_unlock
+ *fill*         0x00000000c0134732        0xe 
+ .text          0x00000000c0134740      0xf29 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
+                0x00000000c0134740                _Balloc
+                0x00000000c01347d0                _Bfree
+                0x00000000c01347f0                __multadd
+                0x00000000c0134900                __s2b
+                0x00000000c0134a10                __hi0bits
+                0x00000000c0134a80                __lo0bits
+                0x00000000c0134b10                __i2b
+                0x00000000c0134b30                __multiply
+                0x00000000c0134d30                __pow5mult
+                0x00000000c0134e40                __lshift
+                0x00000000c0134f90                __mcmp
+                0x00000000c0134ff0                __mdiff
+                0x00000000c0135180                __ulp
+                0x00000000c0135210                __b2d
+                0x00000000c0135340                __d2b
+                0x00000000c0135470                __ratio
+                0x00000000c0135530                _mprec_log10
+                0x00000000c0135570                __copybits
+                0x00000000c01355e0                __any_on
+ *fill*         0x00000000c0135669        0x7 
+ .text          0x00000000c0135670       0x44 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sbrkr.o)
+                0x00000000c0135670                _sbrk_r
+ *fill*         0x00000000c01356b4        0xc 
+ .text          0x00000000c01356c0       0x61 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-s_fpclassify.o)
+                0x00000000c01356c0                __fpclassifyd
+ *fill*         0x00000000c0135721        0xf 
+ .text          0x00000000c0135730     0x1126 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
+                0x00000000c0135730                __ssprint_r
+                0x00000000c0135940                _svfiprintf_r
+ *fill*         0x00000000c0136856        0xa 
+ .text          0x00000000c0136860       0xc4 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-callocr.o)
+                0x00000000c0136860                _calloc_r
+ *fill*         0x00000000c0136924        0xc 
+ .text          0x00000000c0136930      0x382 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-freer.o)
+                0x00000000c0136930                _malloc_trim_r
+                0x00000000c0136a20                _free_r
+ *fill*         0x00000000c0136cb2        0xe 
+ .text          0x00000000c0136cc0      0x548 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-reallocr.o)
+                0x00000000c0136cc0                _realloc_r
+ *fill*         0x00000000c0137208        0x8 
+ .text          0x00000000c0137210      0x1e0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_divdi3.o)
+                0x00000000c0137210                __divdi3
+ .text          0x00000000c01373f0      0x175 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_umoddi3.o)
+                0x00000000c01373f0                __umoddi3
  *(.rodata*)
  .rodata.str1.1
-                0x00000000c0137505       0x46 src/arch/i386/binfmt/elf_module.o
- *fill*         0x00000000c013754b        0x1 
- .rodata        0x00000000c013754c       0x1c src/arch/i386/debug.o
+                0x00000000c0137565       0x46 src/arch/i386/binfmt/elf_module.o
+ *fill*         0x00000000c01375ab        0x1 
+ .rodata        0x00000000c01375ac       0x1c src/arch/i386/debug.o
  .rodata.str1.1
-                0x00000000c0137568      0x1be src/arch/i386/intr.o
- *fill*         0x00000000c0137726        0x2 
+                0x00000000c01375c8      0x1be src/arch/i386/intr.o
+ *fill*         0x00000000c0137786        0x2 
  .rodata.str1.4
-                0x00000000c0137728       0x47 src/arch/i386/intr.o
- *fill*         0x00000000c013776f       0x11 
- .rodata        0x00000000c0137780       0xb1 src/arch/i386/intr.o
- *fill*         0x00000000c0137831        0x3 
+                0x00000000c0137788       0x47 src/arch/i386/intr.o
+ *fill*         0x00000000c01377cf       0x31 
+ .rodata        0x00000000c0137800       0xb1 src/arch/i386/intr.o
+ *fill*         0x00000000c01378b1        0x3 
  .rodata.str1.4
-                0x00000000c0137834       0x3b src/arch/i386/mm/pagefault.o
+                0x00000000c01378b4       0x3b src/arch/i386/mm/pagefault.o
  .rodata.str1.1
-                0x00000000c013786f       0x81 src/arch/i386/mm/vmm.o
+                0x00000000c01378ef       0x81 src/arch/i386/mm/vmm.o
                                          0x8c (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/arch/i386/mm/vmm.o
- .rodata        0x00000000c01378f0       0x3f src/arch/i386/mm/vmm.o
+ .rodata        0x00000000c0137970       0x3f src/arch/i386/mm/vmm.o
  .rodata.str1.1
-                0x00000000c013792f    0x1acff src/arch/i386/pci.o
+                0x00000000c01379af    0x1acff src/arch/i386/pci.o
                                       0x1ba11 (dimensione prima del rilassamento)
- *fill*         0x00000000c015262e        0x2 
+ *fill*         0x00000000c01526ae        0x2 
  .rodata.str1.4
-                0x00000000c0152630     0xc7ef src/arch/i386/pci.o
+                0x00000000c01526b0     0xc7ef src/arch/i386/pci.o
                                        0xc883 (dimensione prima del rilassamento)
- *fill*         0x00000000c015ee1f        0x1 
- .rodata        0x00000000c015ee20       0x2f src/arch/i386/pci.o
+ *fill*         0x00000000c015ee9f        0x1 
+ .rodata        0x00000000c015eea0       0x2f src/arch/i386/pci.o
  .rodata.str1.1
-                0x00000000c015ee4f       0x2a src/arch/i386/task.o
+                0x00000000c015eecf       0x2a src/arch/i386/task.o
                                          0x48 (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/arch/i386/task.o
- .rodata        0x00000000c015ee79       0x2f src/arch/i386/task.o
+ .rodata        0x00000000c015eef9       0x2f src/arch/i386/task.o
  .rodata.str1.1
-                0x00000000c015eea8       0x43 src/arch/i386/timer.o
+                0x00000000c015ef28       0x43 src/arch/i386/timer.o
  .rodata.str1.1
-                0x00000000c015eeeb       0x7f src/binfmt/elf_module.o
+                0x00000000c015ef6b       0x7f src/binfmt/elf_module.o
                                          0x89 (dimensione prima del rilassamento)
- *fill*         0x00000000c015ef6a        0x2 
+ *fill*         0x00000000c015efea        0x2 
  .rodata.str1.4
-                0x00000000c015ef6c       0x28 src/binfmt/elf_module.o
+                0x00000000c015efec       0x28 src/binfmt/elf_module.o
                                          0x50 (dimensione prima del rilassamento)
- .rodata        0x00000000c015ef94       0x10 src/binfmt/elf_module.o
+ .rodata        0x00000000c015f014       0x10 src/binfmt/elf_module.o
  .rodata.str1.4
-                0x00000000c015efa4       0x24 src/binfmt.o
+                0x00000000c015f024       0x24 src/binfmt.o
  .rodata.str1.1
-                0x00000000c015efc8       0x22 src/binfmt.o
+                0x00000000c015f048       0x22 src/binfmt.o
  .rodata.str1.1
-                0x00000000c015efea       0xbe src/fs/vfs.o
+                0x00000000c015f06a       0xbe src/fs/vfs.o
                                          0xc8 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f0a8        0x9 src/init/hostname.o
- *fill*         0x00000000c015f0b1        0x3 
+                0x00000000c015f128        0x9 src/init/hostname.o
+ *fill*         0x00000000c015f131        0x3 
  .rodata.str1.4
-                0x00000000c015f0b4       0x4f src/init/module.o
+                0x00000000c015f134       0x4f src/init/module.o
  .rodata.str1.1
-                0x00000000c015f103       0x1b src/init/module.o
+                0x00000000c015f183       0x1b src/init/module.o
                                          0x26 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f11e       0x31 src/ipc/mutex.o
+                0x00000000c015f19e       0x31 src/ipc/mutex.o
  .rodata.str1.1
-                0x00000000c015f14f       0x18 src/ipc/shm.o
+                0x00000000c015f1cf       0x18 src/ipc/shm.o
                                          0x1a (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/ipc/shm.o
- .rodata        0x00000000c015f167       0x1f src/ipc/shm.o
+ .rodata        0x00000000c015f1e7       0x1f src/ipc/shm.o
  .rodata.str1.1
-                0x00000000c015f186       0x3d src/ipc/spinlock.o
+                0x00000000c015f206       0x3d src/ipc/spinlock.o
  .rodata.str1.1
-                0x00000000c015f1c3       0x58 src/libk/exports.o
+                0x00000000c015f243       0x58 src/libk/exports.o
                                          0x5d (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f21b       0x26 src/libk/kprintf.o
+                0x00000000c015f29b       0x26 src/libk/kprintf.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/libk/kprintf.o
- .rodata        0x00000000c015f241        0x8 src/libk/kprintf.o
+ .rodata        0x00000000c015f2c1        0x8 src/libk/kprintf.o
  .rodata.str1.1
-                0x00000000c015f249        0x7 src/libk/strdup.o
+                0x00000000c015f2c9        0x7 src/libk/strdup.o
  .rodata.str1.1
-                0x00000000c015f250       0x34 src/main.o
+                0x00000000c015f2d0       0x34 src/main.o
                                          0x3d (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f284       0x5a src/mm/pmm.o
+                0x00000000c015f304       0x5a src/mm/pmm.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/mm/pmm.o
- .rodata        0x00000000c015f2de       0x2b src/mm/pmm.o
+ .rodata        0x00000000c015f35e       0x2b src/mm/pmm.o
  .rodata.str1.1
-                0x00000000c015f309       0x2c src/mm/slab.o
+                0x00000000c015f389       0x2c src/mm/slab.o
                                          0x3f (dimensione prima del rilassamento)
- *fill*         0x00000000c015f335        0x3 
+ *fill*         0x00000000c015f3b5        0x3 
  .rodata.str1.4
-                0x00000000c015f338       0x24 src/mm/slab.o
+                0x00000000c015f3b8       0x24 src/mm/slab.o
                                          0x4a (dimensione prima del rilassamento)
- .rodata        0x00000000c015f35c        0x8 src/mm/slab.o
+ .rodata        0x00000000c015f3dc        0x8 src/mm/slab.o
  .rodata.str1.1
-                0x00000000c015f364      0x1e1 src/net/api/api_lib.o
+                0x00000000c015f3e4      0x1e1 src/net/api/api_lib.o
                                         0x1eb (dimensione prima del rilassamento)
- *fill*         0x00000000c015f545        0x3 
+ *fill*         0x00000000c015f5c5        0x3 
  .rodata.str1.4
-                0x00000000c015f548      0x168 src/net/api/api_lib.o
+                0x00000000c015f5c8      0x168 src/net/api/api_lib.o
  .rodata.str1.4
-                0x00000000c015f6b0      0x27f src/net/api/api_msg.o
+                0x00000000c015f730      0x27f src/net/api/api_msg.o
  .rodata.str1.1
-                0x00000000c015f92f      0x185 src/net/api/api_msg.o
+                0x00000000c015f9af      0x185 src/net/api/api_msg.o
                                         0x1bb (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015fab4      0x112 src/net/api/err.o
- *fill*         0x00000000c015fbc6       0x3a 
- .rodata        0x00000000c015fc00       0x40 src/net/api/err.o
+                0x00000000c015fb34      0x112 src/net/api/err.o
+ *fill*         0x00000000c015fc46       0x3a 
+ .rodata        0x00000000c015fc80       0x40 src/net/api/err.o
  .rodata.str1.1
-                0x00000000c015fc40       0xe3 src/net/api/netbuf.o
+                0x00000000c015fcc0       0xe3 src/net/api/netbuf.o
                                          0xff (dimensione prima del rilassamento)
- *fill*         0x00000000c015fd23        0x1 
+ *fill*         0x00000000c015fda3        0x1 
  .rodata.str1.4
-                0x00000000c015fd24       0x24 src/net/api/netbuf.o
+                0x00000000c015fda4       0x24 src/net/api/netbuf.o
  .rodata.str1.4
-                0x00000000c015fd48       0x33 src/net/api/netdb.o
+                0x00000000c015fdc8       0x33 src/net/api/netdb.o
  .rodata.str1.1
-                0x00000000c015fd7b       0x14 src/net/api/netdb.o
+                0x00000000c015fdfb       0x14 src/net/api/netdb.o
                                          0x30 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015fd8f      0x142 src/net/api/sockets.o
+                0x00000000c015fe0f      0x142 src/net/api/sockets.o
                                         0x16a (dimensione prima del rilassamento)
- *fill*         0x00000000c015fed1       0x2f 
- .rodata        0x00000000c015ff00      0x140 src/net/api/sockets.o
+ *fill*         0x00000000c015ff51       0x2f 
+ .rodata        0x00000000c015ff80      0x140 src/net/api/sockets.o
  .rodata.str1.4
-                0x00000000c0160040       0x70 src/net/api/sockets.o
+                0x00000000c01600c0       0x70 src/net/api/sockets.o
  .rodata.str1.1
-                0x00000000c01600b0       0x3f src/net/api/tcpip.o
+                0x00000000c0160130       0x3f src/net/api/tcpip.o
                                          0x5b (dimensione prima del rilassamento)
- *fill*         0x00000000c01600ef        0x1 
- .rodata        0x00000000c01600f0       0x1c src/net/api/tcpip.o
+ *fill*         0x00000000c016016f        0x1 
+ .rodata        0x00000000c0160170       0x1c src/net/api/tcpip.o
  .rodata.str1.4
-                0x00000000c016010c       0x45 src/net/api/tcpip.o
- *fill*         0x00000000c0160151        0x3 
+                0x00000000c016018c       0x45 src/net/api/tcpip.o
+ *fill*         0x00000000c01601d1        0x3 
  .rodata.str1.4
-                0x00000000c0160154      0x29c src/net/core/dhcp.o
+                0x00000000c01601d4      0x29c src/net/core/dhcp.o
  .rodata.str1.1
-                0x00000000c01603f0      0x114 src/net/core/dhcp.o
+                0x00000000c0160470      0x114 src/net/core/dhcp.o
                                         0x158 (dimensione prima del rilassamento)
- .rodata        0x00000000c0160504      0x1e0 src/net/core/dhcp.o
+ .rodata        0x00000000c0160584      0x1e0 src/net/core/dhcp.o
  .rodata.str1.1
-                0x00000000c01606e4       0x78 src/net/core/dns.o
+                0x00000000c0160764       0x78 src/net/core/dns.o
                                          0x94 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x00000000c016075c       0x43 src/net/core/dns.o
+                0x00000000c01607dc       0x43 src/net/core/dns.o
  .rodata.str1.1
-                0x00000000c016079f       0x2a src/net/core/ipv4/autoip.o
+                0x00000000c016081f       0x2a src/net/core/ipv4/autoip.o
                                          0x54 (dimensione prima del rilassamento)
- *fill*         0x00000000c01607c9        0x3 
+ *fill*         0x00000000c0160849        0x3 
  .rodata.str1.4
-                0x00000000c01607cc       0x26 src/net/core/ipv4/autoip.o
- *fill*         0x00000000c01607f2        0x2 
+                0x00000000c016084c       0x26 src/net/core/ipv4/autoip.o
+ *fill*         0x00000000c0160872        0x2 
  .rodata.str1.4
-                0x00000000c01607f4      0x118 src/net/core/ipv4/icmp.o
+                0x00000000c0160874      0x118 src/net/core/ipv4/icmp.o
  .rodata.str1.1
-                0x00000000c016090c       0x19 src/net/core/ipv4/icmp.o
+                0x00000000c016098c       0x19 src/net/core/ipv4/icmp.o
                                          0x35 (dimensione prima del rilassamento)
- *fill*         0x00000000c0160925        0x3 
+ *fill*         0x00000000c01609a5        0x3 
  .rodata.str1.4
-                0x00000000c0160928      0x115 src/net/core/ipv4/igmp.o
+                0x00000000c01609a8      0x115 src/net/core/ipv4/igmp.o
  .rodata.str1.1
-                0x00000000c0160a3d       0x19 src/net/core/ipv4/igmp.o
+                0x00000000c0160abd       0x19 src/net/core/ipv4/igmp.o
                                          0x35 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c0160a56        0xa src/net/core/ipv4/inet_chksum.o
+                0x00000000c0160ad6        0xa src/net/core/ipv4/inet_chksum.o
                                          0x26 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x00000000c0160a60       0x20 src/net/core/ipv4/inet_chksum.o
+                0x00000000c0160ae0       0x20 src/net/core/ipv4/inet_chksum.o
  .rodata.str1.1
-                0x00000000c0160a80       0x23 src/net/core/ipv4/ip.o
+                0x00000000c0160b00       0x23 src/net/core/ipv4/ip.o
                                          0x3f (dimensione prima del rilassamento)
- *fill*         0x00000000c0160aa3        0x1 
+ *fill*         0x00000000c0160b23        0x1 
  .rodata.str1.4
-                0x00000000c0160aa4       0x2d src/net/core/ipv4/ip.o
+                0x00000000c0160b24       0x2d src/net/core/ipv4/ip.o
  .rodata.str1.1
-                0x00000000c0160ad1       0x26 src/net/core/ipv4/ip_addr.o
+                0x00000000c0160b51       0x26 src/net/core/ipv4/ip_addr.o
                                          0x42 (dimensione prima del rilassamento)
- *fill*         0x00000000c0160af7        0x1 
- .rodata        0x00000000c0160af8       0x1c src/net/core/ipv4/ip_addr.o
-                0x00000000c0160b0c                ip_addr_broadcast
-                0x00000000c0160b10                ip_addr_any
+ *fill*         0x00000000c0160b77        0x1 
+ .rodata        0x00000000c0160b78       0x1c src/net/core/ipv4/ip_addr.o
+                0x00000000c0160b8c                ip_addr_broadcast
+                0x00000000c0160b90                ip_addr_any
  .rodata.str1.1
-                0x00000000c0160b14       0xc2 src/net/core/ipv4/ip_frag.o
+                0x00000000c0160b94       0xc2 src/net/core/ipv4/ip_frag.o
                                          0xde (dimensione prima del rilassamento)
- *fill*         0x00000000c0160bd6        0x2 
+ *fill*         0x00000000c0160c56        0x2 
  .rodata.str1.4
-                0x00000000c0160bd8       0x74 src/net/core/ipv4/ip_frag.o
- *fill*         0x00000000c0160c4c       0x14 
- .rodata        0x00000000c0160c60       0x28 src/net/core/memp.o
-                0x00000000c0160c60                memp_sizes
+                0x00000000c0160c58       0x74 src/net/core/ipv4/ip_frag.o
+ *fill*         0x00000000c0160ccc       0x14 
+ .rodata        0x00000000c0160ce0       0x28 src/net/core/memp.o
+                0x00000000c0160ce0                memp_sizes
  .rodata.str1.4
-                0x00000000c0160c88       0x84 src/net/core/netif.o
+                0x00000000c0160d08       0x84 src/net/core/netif.o
  .rodata.str1.1
-                0x00000000c0160d0c       0x2c src/net/core/netif.o
+                0x00000000c0160d8c       0x2c src/net/core/netif.o
                                          0x48 (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x00000000c0160d38      0x1a7 src/net/core/pbuf.o
+                0x00000000c0160db8      0x1a7 src/net/core/pbuf.o
  .rodata.str1.1
-                0x00000000c0160edf      0x1e6 src/net/core/pbuf.o
+                0x00000000c0160f5f      0x1e6 src/net/core/pbuf.o
                                         0x20c (dimensione prima del rilassamento)
- *fill*         0x00000000c01610c5        0x3 
+ *fill*         0x00000000c0161145        0x3 
  .rodata.str1.4
-                0x00000000c01610c8       0x26 src/net/core/raw.o
+                0x00000000c0161148       0x26 src/net/core/raw.o
  .rodata.str1.1
-                0x00000000c01610ee       0x13 src/net/core/raw.o
+                0x00000000c016116e       0x13 src/net/core/raw.o
                                          0x2f (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c0161101       0x4b src/net/core/snmp/mib2.o
+                0x00000000c0161181       0x4b src/net/core/snmp/mib2.o
                                          0x80 (dimensione prima del rilassamento)
- *fill*         0x00000000c016114c       0x34 
- .rodata        0x00000000c0161180      0xdc4 src/net/core/snmp/mib2.o
-                0x00000000c016161c                internet
-                0x00000000c0161638                internet_nodes
-                0x00000000c016163c                internet_ids
-                0x00000000c0161640                mgmt
-                0x00000000c016165c                mgmt_nodes
-                0x00000000c0161660                mgmt_ids
-                0x00000000c0161664                mib2
-                0x00000000c0161680                mib2_nodes
-                0x00000000c01616a0                mib2_ids
-                0x00000000c01616c0                sys_tem
-                0x00000000c01616dc                sys_tem_nodes
-                0x00000000c01616f8                sys_tem_ids
-                0x00000000c0161714                sys_tem_scalar
-                0x00000000c0161728                interfaces
-                0x00000000c0161744                interfaces_nodes
-                0x00000000c016174c                interfaces_ids
-                0x00000000c0161754                interfaces_scalar
-                0x00000000c0161768                ifentry
-                0x00000000c01617c0                ifentry_nodes
-                0x00000000c0161840                ifentry_ids
-                0x00000000c0161898                attable
-                0x00000000c01618b4                attable_node
-                0x00000000c01618b8                attable_id
-                0x00000000c01618bc                atentry
-                0x00000000c01618d8                atentry_nodes
-                0x00000000c01618e4                atentry_ids
-                0x00000000c01618f0                mib2_ip
-                0x00000000c0161940                ip_nodes
-                0x00000000c01619c0                ip_ids
-                0x00000000c0161a1c                ip_scalar
-                0x00000000c0161a30                ipaddrentry
-                0x00000000c0161a4c                ipaddrentry_nodes
-                0x00000000c0161a60                ipaddrentry_ids
-                0x00000000c0161a74                iprteentry
-                0x00000000c0161aa0                iprteentry_nodes
-                0x00000000c0161ae0                iprteentry_ids
-                0x00000000c0161b14                ipntomentry
-                0x00000000c0161b30                ipntomentry_nodes
-                0x00000000c0161b40                ipntomentry_ids
-                0x00000000c0161b50                icmp
-                0x00000000c0161b80                icmp_nodes
-                0x00000000c0161c00                icmp_ids
-                0x00000000c0161c68                icmp_scalar
-                0x00000000c0161c7c                tcp
-                0x00000000c0161ca0                tcp_nodes
-                0x00000000c0161ce0                tcp_ids
-                0x00000000c0161d1c                tcp_scalar
-                0x00000000c0161d30                tcpconnentry
-                0x00000000c0161d4c                tcpconnentry_nodes
-                0x00000000c0161d60                tcpconnentry_ids
-                0x00000000c0161d74                udp
-                0x00000000c0161d90                udp_nodes
-                0x00000000c0161da4                udp_ids
-                0x00000000c0161db8                udp_scalar
-                0x00000000c0161dcc                udpentry
-                0x00000000c0161de8                udpentry_nodes
-                0x00000000c0161df0                udpentry_ids
-                0x00000000c0161df8                snmp
-                0x00000000c0161e40                snmp_nodes
-                0x00000000c0161ec0                snmp_ids
-                0x00000000c0161f30                snmp_scalar
+ *fill*         0x00000000c01611cc       0x34 
+ .rodata        0x00000000c0161200      0xdc4 src/net/core/snmp/mib2.o
+                0x00000000c016169c                internet
+                0x00000000c01616b8                internet_nodes
+                0x00000000c01616bc                internet_ids
+                0x00000000c01616c0                mgmt
+                0x00000000c01616dc                mgmt_nodes
+                0x00000000c01616e0                mgmt_ids
+                0x00000000c01616e4                mib2
+                0x00000000c0161700                mib2_nodes
+                0x00000000c0161720                mib2_ids
+                0x00000000c0161740                sys_tem
+                0x00000000c016175c                sys_tem_nodes
+                0x00000000c0161778                sys_tem_ids
+                0x00000000c0161794                sys_tem_scalar
+                0x00000000c01617a8                interfaces
+                0x00000000c01617c4                interfaces_nodes
+                0x00000000c01617cc                interfaces_ids
+                0x00000000c01617d4                interfaces_scalar
+                0x00000000c01617e8                ifentry
+                0x00000000c0161840                ifentry_nodes
+                0x00000000c01618c0                ifentry_ids
+                0x00000000c0161918                attable
+                0x00000000c0161934                attable_node
+                0x00000000c0161938                attable_id
+                0x00000000c016193c                atentry
+                0x00000000c0161958                atentry_nodes
+                0x00000000c0161964                atentry_ids
+                0x00000000c0161970                mib2_ip
+                0x00000000c01619c0                ip_nodes
+                0x00000000c0161a40                ip_ids
+                0x00000000c0161a9c                ip_scalar
+                0x00000000c0161ab0                ipaddrentry
+                0x00000000c0161acc                ipaddrentry_nodes
+                0x00000000c0161ae0                ipaddrentry_ids
+                0x00000000c0161af4                iprteentry
+                0x00000000c0161b20                iprteentry_nodes
+                0x00000000c0161b60                iprteentry_ids
+                0x00000000c0161b94                ipntomentry
+                0x00000000c0161bb0                ipntomentry_nodes
+                0x00000000c0161bc0                ipntomentry_ids
+                0x00000000c0161bd0                icmp
+                0x00000000c0161c00                icmp_nodes
+                0x00000000c0161c80                icmp_ids
+                0x00000000c0161ce8                icmp_scalar
+                0x00000000c0161cfc                tcp
+                0x00000000c0161d20                tcp_nodes
+                0x00000000c0161d60                tcp_ids
+                0x00000000c0161d9c                tcp_scalar
+                0x00000000c0161db0                tcpconnentry
+                0x00000000c0161dcc                tcpconnentry_nodes
+                0x00000000c0161de0                tcpconnentry_ids
+                0x00000000c0161df4                udp
+                0x00000000c0161e10                udp_nodes
+                0x00000000c0161e24                udp_ids
+                0x00000000c0161e38                udp_scalar
+                0x00000000c0161e4c                udpentry
+                0x00000000c0161e68                udpentry_nodes
+                0x00000000c0161e70                udpentry_ids
+                0x00000000c0161e78                snmp
+                0x00000000c0161ec0                snmp_nodes
+                0x00000000c0161f40                snmp_ids
+                0x00000000c0161fb0                snmp_scalar
  .rodata.str1.1
-                0x00000000c0161f44       0x14 src/net/core/snmp/mib_structs.o
+                0x00000000c0161fc4       0x14 src/net/core/snmp/mib_structs.o
                                          0x3a (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x00000000c0161f58       0x41 src/net/core/snmp/mib_structs.o
- *fill*         0x00000000c0161f99        0x3 
- .rodata        0x00000000c0161f9c       0x10 src/net/core/snmp/mib_structs.o
-                0x00000000c0161f9c                prefix
+                0x00000000c0161fd8       0x41 src/net/core/snmp/mib_structs.o
+ *fill*         0x00000000c0162019        0x3 
+ .rodata        0x00000000c016201c       0x10 src/net/core/snmp/mib_structs.o
+                0x00000000c016201c                prefix
  .rodata.str1.1
-                0x00000000c0161fac       0x2a src/net/core/snmp/msg_in.o
+                0x00000000c016202c       0x2a src/net/core/snmp/msg_in.o
                                          0x46 (dimensione prima del rilassamento)
- *fill*         0x00000000c0161fd6        0x2 
+ *fill*         0x00000000c0162056        0x2 
  .rodata.str1.4
-                0x00000000c0161fd8       0x5a src/net/core/snmp/msg_in.o
- *fill*         0x00000000c0162032        0x2 
- .rodata        0x00000000c0162034      0x14c src/net/core/snmp/msg_in.o
-                0x00000000c0162174                snmp_publiccommunity
-                0x00000000c016217c                snmp_version
- .rodata        0x00000000c0162180      0x228 src/net/core/snmp/msg_out.o
+                0x00000000c0162058       0x5a src/net/core/snmp/msg_in.o
+ *fill*         0x00000000c01620b2        0x2 
+ .rodata        0x00000000c01620b4      0x14c src/net/core/snmp/msg_in.o
+                0x00000000c01621f4                snmp_publiccommunity
+                0x00000000c01621fc                snmp_version
+ .rodata        0x00000000c0162200      0x228 src/net/core/snmp/msg_out.o
  .rodata.str1.4
-                0x00000000c01623a8      0x34d src/net/core/tcp.o
+                0x00000000c0162428      0x34d src/net/core/tcp.o
  .rodata.str1.1
-                0x00000000c01626f5      0x10d src/net/core/tcp.o
+                0x00000000c0162775      0x10d src/net/core/tcp.o
                                         0x130 (dimensione prima del rilassamento)
- *fill*         0x00000000c0162802       0x1e 
- .rodata        0x00000000c0162820       0xac src/net/core/tcp.o
-                0x00000000c0162860                tcp_pcb_lists
-                0x00000000c0162870                tcp_persist_backoff
-                0x00000000c0162877                tcp_backoff
-                0x00000000c01628a0                tcp_state_str
+ *fill*         0x00000000c0162882       0x1e 
+ .rodata        0x00000000c01628a0       0xac src/net/core/tcp.o
+                0x00000000c01628e0                tcp_pcb_lists
+                0x00000000c01628f0                tcp_persist_backoff
+                0x00000000c01628f7                tcp_backoff
+                0x00000000c0162920                tcp_state_str
  .rodata.str1.1
-                0x00000000c01628cc       0xb5 src/net/core/tcp_in.o
+                0x00000000c016294c       0xb5 src/net/core/tcp_in.o
                                          0xd1 (dimensione prima del rilassamento)
- *fill*         0x00000000c0162981        0x3 
+ *fill*         0x00000000c0162a01        0x3 
  .rodata.str1.4
-                0x00000000c0162984      0x228 src/net/core/tcp_in.o
- .rodata        0x00000000c0162bac       0x20 src/net/core/tcp_in.o
+                0x00000000c0162a04      0x228 src/net/core/tcp_in.o
+ .rodata        0x00000000c0162c2c       0x20 src/net/core/tcp_in.o
  .rodata.str1.4
-                0x00000000c0162bcc      0x2a6 src/net/core/tcp_out.o
+                0x00000000c0162c4c      0x2a6 src/net/core/tcp_out.o
  .rodata.str1.1
-                0x00000000c0162e72       0x9d src/net/core/tcp_out.o
+                0x00000000c0162ef2       0x9d src/net/core/tcp_out.o
                                          0xb9 (dimensione prima del rilassamento)
- *fill*         0x00000000c0162f0f        0x1 
+ *fill*         0x00000000c0162f8f        0x1 
  .rodata.str1.4
-                0x00000000c0162f10       0x3d src/net/core/timers.o
+                0x00000000c0162f90       0x3d src/net/core/timers.o
  .rodata.str1.1
-                0x00000000c0162f4d       0x16 src/net/core/timers.o
+                0x00000000c0162fcd       0x16 src/net/core/timers.o
                                          0x32 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c0162f63       0x47 src/net/core/udp.o
+                0x00000000c0162fe3       0x47 src/net/core/udp.o
                                          0x63 (dimensione prima del rilassamento)
- *fill*         0x00000000c0162faa        0x2 
+ *fill*         0x00000000c016302a        0x2 
  .rodata.str1.4
-                0x00000000c0162fac       0x2e src/net/core/udp.o
+                0x00000000c016302c       0x2e src/net/core/udp.o
  .rodata.str1.1
-                0x00000000c0162fda       0x6a src/net/netif/etharp.o
+                0x00000000c016305a       0x6a src/net/netif/etharp.o
                                          0x9e (dimensione prima del rilassamento)
  .rodata.str1.4
-                0x00000000c0163044      0x11f src/net/netif/etharp.o
+                0x00000000c01630c4      0x11f src/net/netif/etharp.o
                                         0x143 (dimensione prima del rilassamento)
- .rodata        0x00000000c0163163        0xc src/net/netif/etharp.o
-                0x00000000c0163163                ethzero
-                0x00000000c0163169                ethbroadcast
+ .rodata        0x00000000c01631e3        0xc src/net/netif/etharp.o
+                0x00000000c01631e3                ethzero
+                0x00000000c01631e9                ethbroadcast
  .rodata.str1.1
-                0x00000000c016316f       0x21 src/net/network.o
+                0x00000000c01631ef       0x21 src/net/network.o
  .rodata.str1.4
-                0x00000000c0163190       0x28 src/net/network.o
+                0x00000000c0163210       0x28 src/net/network.o
                                          0x25 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c01631b8      0x1e5 src/net/sys.o
+                0x00000000c0163238      0x1e5 src/net/sys.o
  .rodata.str1.1
-                0x00000000c016339d       0x24 src/sched.o
+                0x00000000c016341d       0x24 src/sched.o
                                          0x30 (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/sched.o
- .rodata        0x00000000c01633c1        0xb src/sched.o
+ .rodata        0x00000000c0163441        0xb src/sched.o
  .rodata.str1.1
-                0x00000000c01633cc       0x47 src/syscall.o
+                0x00000000c016344c       0x47 src/syscall.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscall.o
- .rodata        0x00000000c0163413       0x24 src/syscall.o
+ .rodata        0x00000000c0163493       0x24 src/syscall.o
  .rodata.str1.1
-                0x00000000c0163437        0xc src/syscalls/getppid.o
+                0x00000000c01634b7        0xc src/syscalls/getppid.o
  .rodata.str1.1
-                0x00000000c0163443        0x9 src/syscalls/sbrk.o
+                0x00000000c01634c3        0x9 src/syscalls/sbrk.o
  .rodata.str1.1
-                0x00000000c016344c        0xa src/syscalls/chown.o
+                0x00000000c01634cc        0xa src/syscalls/chown.o
  .rodata.str1.1
-                0x00000000c0163456        0xb src/syscalls/chroot.o
+                0x00000000c01634d6        0xb src/syscalls/chroot.o
  .rodata.str1.1
-                0x00000000c0163461        0xa src/syscalls/clone.o
+                0x00000000c01634e1        0xa src/syscalls/clone.o
  .rodata.str1.1
-                0x00000000c016346b        0xa src/syscalls/close.o
+                0x00000000c01634eb        0xa src/syscalls/close.o
  .rodata.str1.1
-                0x00000000c0163475       0x21 src/syscalls/execve.o
+                0x00000000c01634f5       0x21 src/syscalls/execve.o
                                          0x2a (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/execve.o
- .rodata        0x00000000c0163496        0xb src/syscalls/execve.o
+ .rodata        0x00000000c0163516        0xb src/syscalls/execve.o
  .rodata.str1.1
-                0x00000000c01634a1        0xb src/syscalls/fchdir.o
- .rodata        0x00000000c01634ac       0x14 src/syscalls/fcntl.o
+                0x00000000c0163521        0xb src/syscalls/fchdir.o
+ .rodata        0x00000000c016352c       0x14 src/syscalls/fcntl.o
  .rodata.str1.1
-                0x00000000c01634c0        0xa src/syscalls/fcntl.o
+                0x00000000c0163540        0xa src/syscalls/fcntl.o
  .rodata.str1.1
-                0x00000000c01634ca        0x9 src/syscalls/fork.o
+                0x00000000c016354a        0x9 src/syscalls/fork.o
  .rodata.str1.1
-                0x00000000c01634d3        0xa src/syscalls/fstat.o
+                0x00000000c0163553        0xa src/syscalls/fstat.o
  .rodata.str1.1
-                0x00000000c01634dd        0xd src/syscalls/getdents.o
+                0x00000000c016355d        0xd src/syscalls/getdents.o
  .rodata.str1.1
-                0x00000000c01634ea        0xb src/syscalls/getpid.o
+                0x00000000c016356a        0xb src/syscalls/getpid.o
  .rodata.str1.1
-                0x00000000c01634f5        0x9 src/syscalls/stat.o
+                0x00000000c0163575        0x9 src/syscalls/stat.o
  .rodata.str1.1
-                0x00000000c01634fe        0xc src/syscalls/symlink.o
+                0x00000000c016357e        0xc src/syscalls/symlink.o
  .rodata.str1.1
-                0x00000000c016350a        0xa src/syscalls/times.o
+                0x00000000c016358a        0xa src/syscalls/times.o
  .rodata.str1.1
-                0x00000000c0163514       0x1f src/syscalls/umask.o
+                0x00000000c0163594       0x1f src/syscalls/umask.o
                                          0x2c (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/umask.o
- .rodata        0x00000000c0163533        0xa src/syscalls/umask.o
+ .rodata        0x00000000c01635b3        0xa src/syscalls/umask.o
  .rodata.str1.1
-                0x00000000c016353d       0x17 src/syscalls/umount.o
+                0x00000000c01635bd       0x17 src/syscalls/umount.o
  .rodata.str1.1
-                0x00000000c0163554        0xa src/syscalls/uname.o
+                0x00000000c01635d4        0xa src/syscalls/uname.o
  .rodata.str1.1
-                0x00000000c016355e       0x26 src/syscalls/unlink.o
+                0x00000000c01635de       0x26 src/syscalls/unlink.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/unlink.o
- .rodata        0x00000000c0163584        0xb src/syscalls/unlink.o
+ .rodata        0x00000000c0163604        0xb src/syscalls/unlink.o
  .rodata.str1.1
-                0x00000000c016358f        0x9 src/syscalls/wait.o
+                0x00000000c016360f        0x9 src/syscalls/wait.o
  .rodata.str1.1
-                0x00000000c0163598       0x26 src/syscalls/waitpid.o
+                0x00000000c0163618       0x26 src/syscalls/waitpid.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/waitpid.o
- .rodata        0x00000000c01635be       0x30 src/syscalls/waitpid.o
+ .rodata        0x00000000c016363e       0x30 src/syscalls/waitpid.o
  .rodata.str1.1
-                0x00000000c01635ee        0xa src/syscalls/write.o
+                0x00000000c016366e        0xa src/syscalls/write.o
  .rodata.str1.1
-                0x00000000c01635f8        0xa src/syscalls/yield.o
+                0x00000000c0163678        0xa src/syscalls/yield.o
  .rodata.str1.1
-                0x00000000c0163602       0x3a src/syscalls/_exit.o
+                0x00000000c0163682       0x3a src/syscalls/_exit.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/_exit.o
- .rodata        0x00000000c016363c        0x9 src/syscalls/_exit.o
+ .rodata        0x00000000c01636bc        0x9 src/syscalls/_exit.o
  .rodata.str1.1
-                0x00000000c0163645       0x11 src/syscalls/gettimeofday.o
+                0x00000000c01636c5       0x11 src/syscalls/gettimeofday.o
  .rodata.str1.1
-                0x00000000c0163656        0xa src/syscalls/ioctl.o
+                0x00000000c01636d6        0xa src/syscalls/ioctl.o
  .rodata.str1.1
-                0x00000000c0163660        0xb src/syscalls/isatty.o
+                0x00000000c01636e0        0xb src/syscalls/isatty.o
  .rodata.str1.1
-                0x00000000c016366b        0x9 src/syscalls/kill.o
+                0x00000000c01636eb        0x9 src/syscalls/kill.o
  .rodata.str1.1
-                0x00000000c0163674        0x9 src/syscalls/link.o
+                0x00000000c01636f4        0x9 src/syscalls/link.o
  .rodata.str1.1
-                0x00000000c016367d        0xa src/syscalls/lseek.o
+                0x00000000c01636fd        0xa src/syscalls/lseek.o
  .rodata.str1.1
-                0x00000000c0163687        0xa src/syscalls/mount.o
+                0x00000000c0163707        0xa src/syscalls/mount.o
  .rodata.str1.1
-                0x00000000c0163691       0x1d src/syscalls/open.o
+                0x00000000c0163711       0x1d src/syscalls/open.o
                                          0x22 (dimensione prima del rilassamento)
  .rodata.str1.4
                 0x0000000000000000       0x26 src/syscalls/open.o
- .rodata        0x00000000c01636ae        0x9 src/syscalls/open.o
+ .rodata        0x00000000c016372e        0x9 src/syscalls/open.o
  .rodata.str1.1
-                0x00000000c01636b7        0x9 src/syscalls/read.o
- .rodata        0x00000000c01636c0        0x4 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-impure.o)
-                0x00000000c01636c0                _global_impure_ptr
+                0x00000000c0163737        0x9 src/syscalls/read.o
+ .rodata        0x00000000c0163740        0x4 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-impure.o)
+                0x00000000c0163740                _global_impure_ptr
  .rodata.str1.1
                 0x0000000000000000        0x9 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-impure.o)
                                           0x2 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c01636c4       0x39 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
+                0x00000000c0163744       0x39 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
                                          0x3b (dimensione prima del rilassamento)
- *fill*         0x00000000c01636fd        0x3 
- .rodata        0x00000000c0163700      0x184 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
- *fill*         0x00000000c0163884       0x3c 
- .rodata        0x00000000c01638c0      0x2c0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-ctype_.o)
-                0x00000000c01638c0                _ctype_
+ *fill*         0x00000000c016377d        0x3 
+ .rodata        0x00000000c0163780      0x184 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
+ *fill*         0x00000000c0163904       0x3c 
+ .rodata        0x00000000c0163940      0x2c0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-ctype_.o)
+                0x00000000c0163940                _ctype_
  .rodata.str1.1
-                0x00000000c0163b80        0xd /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
+                0x00000000c0163c00        0xd /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
                                           0xf (dimensione prima del rilassamento)
- *fill*         0x00000000c0163b8d        0x3 
- .rodata.cst4   0x00000000c0163b90       0x18 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
- .rodata.cst8   0x00000000c0163ba8       0x18 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
+ *fill*         0x00000000c0163c0d        0x3 
+ .rodata.cst4   0x00000000c0163c10       0x18 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
+ .rodata.cst8   0x00000000c0163c28       0x18 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
  .rodata.str1.1
-                0x00000000c0163bc0        0x6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
+                0x00000000c0163c40        0x6 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
                                           0xb (dimensione prima del rilassamento)
- *fill*         0x00000000c0163bc6       0x3a 
- .rodata        0x00000000c0163c00      0x188 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
-                0x00000000c0163c20                __mprec_tinytens
-                0x00000000c0163c60                __mprec_bigtens
-                0x00000000c0163cc0                __mprec_tens
+ *fill*         0x00000000c0163c46       0x3a 
+ .rodata        0x00000000c0163c80      0x188 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
+                0x00000000c0163ca0                __mprec_tinytens
+                0x00000000c0163ce0                __mprec_bigtens
+                0x00000000c0163d40                __mprec_tens
  .rodata.cst4   0x0000000000000000        0x4 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
  .rodata.str1.1
                 0x0000000000000000       0x29 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
- .rodata        0x00000000c0163d88      0x184 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
+ .rodata        0x00000000c0163e08      0x184 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
 
-.text.unlikely  0x00000000c0163f0c        0x0 indirizzo di caricamento 0x0000000000163f0c
+.text.unlikely  0x00000000c0163f8c        0x0 indirizzo di caricamento 0x0000000000163f8c
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/binfmt/elf_module.o
+                0x00000000c0163f8c        0x0 src/arch/i386/binfmt/elf_module.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/boot/grub.o
+                0x00000000c0163f8c        0x0 src/arch/i386/boot/grub.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/debug.o
+                0x00000000c0163f8c        0x0 src/arch/i386/debug.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/i386.o
+                0x00000000c0163f8c        0x0 src/arch/i386/i386.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/intr.o
+                0x00000000c0163f8c        0x0 src/arch/i386/intr.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/mm/pagefault.o
+                0x00000000c0163f8c        0x0 src/arch/i386/mm/pagefault.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/mm/vmm.o
+                0x00000000c0163f8c        0x0 src/arch/i386/mm/vmm.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/pci.o
+                0x00000000c0163f8c        0x0 src/arch/i386/pci.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/task.o
+                0x00000000c0163f8c        0x0 src/arch/i386/task.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/arch/i386/timer.o
+                0x00000000c0163f8c        0x0 src/arch/i386/timer.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/binfmt/elf_module.o
+                0x00000000c0163f8c        0x0 src/binfmt/elf_module.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/binfmt.o
+                0x00000000c0163f8c        0x0 src/binfmt.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/fs/vfs.o
+                0x00000000c0163f8c        0x0 src/fs/vfs.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/init/module.o
+                0x00000000c0163f8c        0x0 src/init/module.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/ipc/mutex.o
+                0x00000000c0163f8c        0x0 src/ipc/mutex.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/ipc/shm.o
+                0x00000000c0163f8c        0x0 src/ipc/shm.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/ipc/spinlock.o
+                0x00000000c0163f8c        0x0 src/ipc/spinlock.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/libk/kprintf.o
+                0x00000000c0163f8c        0x0 src/libk/kprintf.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/libk/strdup.o
+                0x00000000c0163f8c        0x0 src/libk/strdup.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/main.o
+                0x00000000c0163f8c        0x0 src/main.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/mm/mm.o
+                0x00000000c0163f8c        0x0 src/mm/mm.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/mm/pmm.o
+                0x00000000c0163f8c        0x0 src/mm/pmm.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/mm/slab.o
+                0x00000000c0163f8c        0x0 src/mm/slab.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/api_lib.o
+                0x00000000c0163f8c        0x0 src/net/api/api_lib.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/api_msg.o
+                0x00000000c0163f8c        0x0 src/net/api/api_msg.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/err.o
+                0x00000000c0163f8c        0x0 src/net/api/err.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/netbuf.o
+                0x00000000c0163f8c        0x0 src/net/api/netbuf.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/netdb.o
+                0x00000000c0163f8c        0x0 src/net/api/netdb.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/netifapi.o
+                0x00000000c0163f8c        0x0 src/net/api/netifapi.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/sockets.o
+                0x00000000c0163f8c        0x0 src/net/api/sockets.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/api/tcpip.o
+                0x00000000c0163f8c        0x0 src/net/api/tcpip.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/def.o
+                0x00000000c0163f8c        0x0 src/net/core/def.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/dhcp.o
+                0x00000000c0163f8c        0x0 src/net/core/dhcp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/dns.o
+                0x00000000c0163f8c        0x0 src/net/core/dns.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/init.o
+                0x00000000c0163f8c        0x0 src/net/core/init.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/autoip.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/autoip.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/icmp.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/icmp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/igmp.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/igmp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/inet_chksum.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/inet_chksum.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/ip.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/ip.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/ip_addr.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/ip_addr.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/ipv4/ip_frag.o
+                0x00000000c0163f8c        0x0 src/net/core/ipv4/ip_frag.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/netif.o
+                0x00000000c0163f8c        0x0 src/net/core/netif.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/pbuf.o
+                0x00000000c0163f8c        0x0 src/net/core/pbuf.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/raw.o
+                0x00000000c0163f8c        0x0 src/net/core/raw.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/asn1_dec.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/asn1_dec.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/asn1_enc.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/asn1_enc.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/mib2.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/mib2.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/mib_structs.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/mib_structs.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/msg_in.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/msg_in.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/snmp/msg_out.o
+                0x00000000c0163f8c        0x0 src/net/core/snmp/msg_out.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/stats.o
+                0x00000000c0163f8c        0x0 src/net/core/stats.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/sys.o
+                0x00000000c0163f8c        0x0 src/net/core/sys.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/tcp.o
+                0x00000000c0163f8c        0x0 src/net/core/tcp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/tcp_in.o
+                0x00000000c0163f8c        0x0 src/net/core/tcp_in.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/tcp_out.o
+                0x00000000c0163f8c        0x0 src/net/core/tcp_out.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/timers.o
+                0x00000000c0163f8c        0x0 src/net/core/timers.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/core/udp.o
+                0x00000000c0163f8c        0x0 src/net/core/udp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/netif/etharp.o
+                0x00000000c0163f8c        0x0 src/net/netif/etharp.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/network.o
+                0x00000000c0163f8c        0x0 src/net/network.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/net/sys.o
+                0x00000000c0163f8c        0x0 src/net/sys.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/sched.o
+                0x00000000c0163f8c        0x0 src/sched.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscall.o
+                0x00000000c0163f8c        0x0 src/syscall.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/getppid.o
+                0x00000000c0163f8c        0x0 src/syscalls/getppid.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/sbrk.o
+                0x00000000c0163f8c        0x0 src/syscalls/sbrk.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/chown.o
+                0x00000000c0163f8c        0x0 src/syscalls/chown.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/chroot.o
+                0x00000000c0163f8c        0x0 src/syscalls/chroot.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/clone.o
+                0x00000000c0163f8c        0x0 src/syscalls/clone.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/close.o
+                0x00000000c0163f8c        0x0 src/syscalls/close.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/execve.o
+                0x00000000c0163f8c        0x0 src/syscalls/execve.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/fchdir.o
+                0x00000000c0163f8c        0x0 src/syscalls/fchdir.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/fcntl.o
+                0x00000000c0163f8c        0x0 src/syscalls/fcntl.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/fork.o
+                0x00000000c0163f8c        0x0 src/syscalls/fork.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/fstat.o
+                0x00000000c0163f8c        0x0 src/syscalls/fstat.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/getdents.o
+                0x00000000c0163f8c        0x0 src/syscalls/getdents.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/getpid.o
+                0x00000000c0163f8c        0x0 src/syscalls/getpid.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/stat.o
+                0x00000000c0163f8c        0x0 src/syscalls/stat.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/symlink.o
+                0x00000000c0163f8c        0x0 src/syscalls/symlink.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/times.o
+                0x00000000c0163f8c        0x0 src/syscalls/times.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/umask.o
+                0x00000000c0163f8c        0x0 src/syscalls/umask.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/umount.o
+                0x00000000c0163f8c        0x0 src/syscalls/umount.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/uname.o
+                0x00000000c0163f8c        0x0 src/syscalls/uname.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/unlink.o
+                0x00000000c0163f8c        0x0 src/syscalls/unlink.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/wait.o
+                0x00000000c0163f8c        0x0 src/syscalls/wait.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/waitpid.o
+                0x00000000c0163f8c        0x0 src/syscalls/waitpid.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/write.o
+                0x00000000c0163f8c        0x0 src/syscalls/write.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/yield.o
+                0x00000000c0163f8c        0x0 src/syscalls/yield.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/_exit.o
+                0x00000000c0163f8c        0x0 src/syscalls/_exit.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/gettimeofday.o
+                0x00000000c0163f8c        0x0 src/syscalls/gettimeofday.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/ioctl.o
+                0x00000000c0163f8c        0x0 src/syscalls/ioctl.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/isatty.o
+                0x00000000c0163f8c        0x0 src/syscalls/isatty.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/kill.o
+                0x00000000c0163f8c        0x0 src/syscalls/kill.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/link.o
+                0x00000000c0163f8c        0x0 src/syscalls/link.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/lseek.o
+                0x00000000c0163f8c        0x0 src/syscalls/lseek.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/mount.o
+                0x00000000c0163f8c        0x0 src/syscalls/mount.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/open.o
+                0x00000000c0163f8c        0x0 src/syscalls/open.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 src/syscalls/read.o
+                0x00000000c0163f8c        0x0 src/syscalls/read.o
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-atoi.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-atoi.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-errno.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-errno.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-rand.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-rand.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sprintf.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sprintf.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcat.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcat.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcmp.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcmp.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcpy.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strcpy.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strncmp.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strncmp.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strtol.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-strtol.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfprintf.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-vsprintf.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-vsprintf.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(syscalls.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(syscalls.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-dtoa.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-locale.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mallocr.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mallocr.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mlock.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mlock.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-mprec.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sbrkr.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-sbrkr.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-s_fpclassify.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-s_fpclassify.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-svfiprintf.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-callocr.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-callocr.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-freer.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-freer.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-reallocr.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/i686-cross/lib/libc.a(lib_a-reallocr.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_divdi3.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_divdi3.o)
  .text.unlikely
-                0x00000000c0163f0c        0x0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_umoddi3.o)
+                0x00000000c0163f8c        0x0 /xdev/cross/usr/lib/gcc/i686-cross/4.9.2/libgcc.a(_umoddi3.o)
 
-.iplt           0x00000000c0163f10        0x0 indirizzo di caricamento 0x0000000000163f10
+.iplt           0x00000000c0163f90        0x0 indirizzo di caricamento 0x0000000000163f90
  .iplt          0x0000000000000000        0x0 src/arch/i386/binfmt/elf_module.o
 
-.text.startup   0x00000000c0163f10       0x59 indirizzo di caricamento 0x0000000000163f10
- .text.startup  0x00000000c0163f10       0x59 src/main.o
-                0x00000000c0163f10                main
+.text.startup   0x00000000c0163f90       0x59 indirizzo di caricamento 0x0000000000163f90
+ .text.startup  0x00000000c0163f90       0x59 src/main.o
+                0x00000000c0163f90                main
 
 .data           0x00000000c0164000    0x1fb40 indirizzo di caricamento 0x0000000000164000
                 0x00000000c0164000                data = .

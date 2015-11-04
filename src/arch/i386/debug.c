@@ -49,7 +49,8 @@ void debug_send(char value, int flags) {
 			p -= (p % VGA_WIDTH);
 			break;
 		case '\t':
-			p += 4;
+			p += 4 - ((p % VGA_WIDTH) % 4);
+			break;
 		case '\b':
 			tm[--p] = (__cga_colors[flags] << 8) | ' ';
 			break;
@@ -69,6 +70,12 @@ void debug_send(char value, int flags) {
 		for(x = 0; x < VGA_WIDTH; x++)
 			tm[p + x] = (__cga_colors[0] << 8) | ' ';
 	}
+
+
+	outb(0x3D4, 0x0F);
+	outb(0x3D5, p & 0xFF);
+	outb(0x3D4, 0x0E);
+	outb(0x3D5, (p >> 8) & 0xFF);
 
 	mutex_unlock(&mtx_debug);
 }
