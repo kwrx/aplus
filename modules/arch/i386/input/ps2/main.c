@@ -59,9 +59,9 @@ static struct {
 	uint16_t y;
 	uint16_t z;
 
-	uint16_t dx;
-	uint16_t dy;
-	uint16_t dz;
+	int16_t dx;
+	int16_t dy;
+	int16_t dz;
 
 	struct {
 		uint16_t left;
@@ -150,6 +150,7 @@ void kb_intr(void* unused) {
 			break;
 	}
 
+
 	switch(vkscan) {
 		case VK_CAPSLOCK:
 			kb.capslock != kb.capslock;
@@ -181,7 +182,7 @@ void kb_intr(void* unused) {
 
 	kb.vkeys[(vkscan & 0x7F) + (kb.e0 ? 128 : 0)] = !!!(vkscan & 0x80);
 	kb.e0 = 0;
-
+	return;
 	PS2_WAIT;
 	return;
 
@@ -206,8 +207,7 @@ setled:
 
 void mouse_intr(void* unused) {
 	int s, j;
-	if(!(s = inb(PS2_CTRL) & 0x01))
-		return;
+	s = inb(PS2_CTRL);
 
 	while((s & 0x01)) {
 		j = inb(PS2_DATA);
@@ -224,21 +224,21 @@ void mouse_intr(void* unused) {
 					mouse.cycle++;
 					break;
 				case 1:
-				case 2:
+				//case 2:
 					mouse.cycle++;
 					break;
-				case 3:
+				case 2:
 					if(
 						(mouse.pack[0] & 0x80) ||
 						(mouse.pack[0] & 0x40)
 					) break;
 				
-					mouse.dx = mouse.pack[1] * mouse.speed * ((mouse.pack[0] & 0x10) ? -1 : 1);
-					mouse.dy = mouse.pack[2] * mouse.speed * ((mouse.pack[0] & 0x20) ? -1 : 1);
-					mouse.dz = mouse.pack[3];
+					mouse.dx = (mouse.pack[1] - ((mouse.pack[0] & 0x10) ? 256 : 0)) * mouse.speed;
+					mouse.dy = (mouse.pack[2] - ((mouse.pack[0] & 0x20) ? 256 : 0)) * mouse.speed;
 
-					if(mouse.dx)
-						kprintf(INFO, "DZ: %d\n", mouse.dx);
+					//mouse.dz = mouse.pack[3];
+
+
 	
 					mouse.buttons[0] = (mouse.pack[0] & 0x01);
 					mouse.buttons[1] = (mouse.pack[0] & 0x02);
@@ -264,13 +264,11 @@ int init(void) {
 		PS2_WAIT;		\
 		outb(PS2_CTRL, 0xD4);	\
 		PS2_WAIT;		\
-		outb(PS2_DATA, x);
+		outb(PS2_DATA, x)
 
 	#define MOUSE_READ(x)		\
 		PS2_WAIT_0;		\
 		x = inb(PS2_DATA)
-
-
 
 
 	PS2_WAIT;
@@ -284,20 +282,30 @@ int init(void) {
 
 	outb(PS2_CTRL, 0x60);
 	PS2_WAIT;
-	outb(PS2_CTRL, s);
+	outb(PS2_DATA, s);
 
 
 
 	MOUSE_WRITE(0xF6);
 	MOUSE_READ(s);
-	/*MOUSE_WRITE(0xF3);
+
+#if 0
+	MOUSE_WRITE(0xF3);
+	MOUSE_READ(s);
 	MOUSE_WRITE(200);
+	MOUSE_READ(s);
 	MOUSE_WRITE(0xF3);
+	MOUSE_READ(s);
 	MOUSE_WRITE(100);
+	MOUSE_READ(s);
 	MOUSE_WRITE(0xF3);
+	MOUSE_READ(s);
 	MOUSE_WRITE(80);
+	MOUSE_READ(s);
 	MOUSE_WRITE(0xF2);
-	MOUSE_READ(s);*/
+	MOUSE_READ(s);
+#endif
+
 	MOUSE_WRITE(0xF4);
 	MOUSE_READ(s);
 	
@@ -310,10 +318,9 @@ int init(void) {
 	mouse.clip.bottom = 0xFFFF;
 
 
-	irq_enable(0, kb_intr);
+	irq_enable(1, kb_intr);
 	irq_enable(12, mouse_intr);
 
-	kprintf(INFO, "PS/2 Initialized\n");
 
 	return E_OK;
 }

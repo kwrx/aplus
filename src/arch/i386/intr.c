@@ -187,8 +187,8 @@ void* irq_get_data(int number) {
 void irq_ack(int irq_no) {
 	if(irq_no >= 8)
 		outb(0xA0, 0x20);
-	else
-		outb(0x20, 0x20);
+
+	outb(0x20, 0x20);
 }
 
 
