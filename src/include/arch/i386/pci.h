@@ -10,7 +10,7 @@
 #define PCI_REVISION_ID		0x08
 
 
-#define PCI_PROF_IF		0x09
+#define PCI_PROG_IF		0x09
 #define PCI_SUBCLASS		0x0A
 #define PCI_CLASS		0x0B
 #define PCI_CACHE_LINE_SIZE	0x0C

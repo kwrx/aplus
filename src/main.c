@@ -22,5 +22,7 @@ int main(int argc, char** argv) {
 	//sys_mount("/dev/hd0", "/hdd", "fat", 0, NULL);
 
 
+	
+
 	for(;;);
 }

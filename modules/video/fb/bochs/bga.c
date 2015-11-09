@@ -1,12 +1,15 @@
 #include <xdev.h>
 #include <xdev/module.h>
 #include <xdev/vfs.h>
+#include <xdev/mm.h>
 #include <libc.h>
 
 #include <fbdev.h>
 
 #if defined(__i386__)
 #include <arch/i386/i386.h>
+#include <arch/i386/pci.h>
+#include <arch/i386/pci_list.h>
 #elif defined(__x86_64__)
 #include <arch/x86_64/x86_64.h>
 #endif
@@ -36,6 +39,7 @@
 
 
 extern fbdev_t* fbdev;
+static uintptr_t __lfbptr = 0;
 
 #if defined(__i386__) || defined(__x86_64__)
 
@@ -45,6 +49,20 @@ int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t v
 	#define wr(i, v)				\
 		outw(VBE_DISPI_IOPORT_INDEX, i);	\
 		outw(VBE_DISPI_IOPORT_DATA, v);
+
+	#define ALIGN(x)				\
+		(((x) + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1))
+	
+	if(__lfbptr) {
+		uintptr_t frame = ALIGN(__lfbptr);
+		uintptr_t end = ALIGN(frame + (width * height * (depth / 8)));
+
+		for(; frame < end; frame += PAGE_SIZE)
+			map_page(frame, frame, 1);
+	} else
+		return -1;
+
+
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
 	wr(VBE_DISPI_INDEX_XRES, width);
@@ -57,24 +75,8 @@ int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t v
 
 
 
-	if(!mbd->lfb.base) {
-		uint32_t* vmem = (uint32_t*) 0xA0000;
-		vmem[0] = 0x0BADC0DE;
-
-		uintptr_t base;
-		for(base = 0xE0000000; base < 0xFF000000; base += 0x1000)
-			if(*(uint32_t*) base == 0x0BADC0DE)
-				break;
-
-		if(base == 0xFF000000)
-			return -1;
-
-		if(lfbptr)
-			*lfbptr = (void*) base;
-	} else {
-		if(lfbptr)
-			*lfbptr = (void*) mbd->lfb.base;
-	}
+	if(lfbptr)
+		*lfbptr = (void*) __lfbptr;
 
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
@@ -88,6 +90,29 @@ int bochs_init(void) {
 	int n = inw(VBE_DISPI_IOPORT_DATA);
 	if(!(CHECK_BGA(n)))
 		return -1;
+
+
+
+	void pci_func(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* arg) {
+		
+		if(likely(!(
+			(vendor_id == 0x1234) &&
+			(device_id == 0x1111)
+		))) return;
+
+		
+		__lfbptr = (uintptr_t) pci_read_field(device, PCI_BAR0, 4);
+	}
+
+	int i;
+	for(i = 0; i < 65536 && !__lfbptr; i++)
+		pci_scan(&pci_func, i, NULL);
+
+
+	if(!__lfbptr)
+		return -1;
+	
+
 
 
 	fbdev->name = "Bochs VBE Extensions";

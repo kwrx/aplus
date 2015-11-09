@@ -95,6 +95,29 @@ void pci_scan(pci_func_t f, int type, void* arg) {
 	}
 }
 
+
+int pci_init(void) {
+
+#if DEBUG
+	void pci_func(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* arg) {
+		int i;
+		for(i = 0; i < PCI_DEVTABLE_LEN; i++)
+			if(
+				(PciDevTable[i].VenId == vendor_id)	&&
+				(PciDevTable[i].DevId == device_id)
+			) kprintf(LOG, "pci: %x:%x - %s - %s\n", vendor_id, device_id, PciDevTable[i].Chip, PciDevTable[i].ChipDesc);
+
+	}
+
+	int i;
+	for(i = 0; i < 65536; i++)
+		pci_scan(&pci_func, i, NULL);
+
+#endif
+
+	return 0;
+}
+
 EXPORT(pci_scan);
 EXPORT(pci_find_type);
 EXPORT(pci_write_field);
