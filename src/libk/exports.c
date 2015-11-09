@@ -3,6 +3,7 @@
 
 extern int __divdi3;
 
+EXPORT(mbd);
 EXPORT(__errno);
 EXPORT(memset);
 EXPORT(memcpy);

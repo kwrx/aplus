@@ -1482,45 +1482,45 @@ Script del linker e mappa della memoria
  .rodata.str1.1
                 0x00000000c015f1c6       0x3d src/ipc/spinlock.o
  .rodata.str1.1
-                0x00000000c015f203       0x58 src/libk/exports.o
-                                         0x5d (dimensione prima del rilassamento)
+                0x00000000c015f203       0x5c src/libk/exports.o
+                                         0x61 (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f25b       0x26 src/libk/kprintf.o
+                0x00000000c015f25f       0x26 src/libk/kprintf.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/libk/kprintf.o
- .rodata        0x00000000c015f281        0x8 src/libk/kprintf.o
+ .rodata        0x00000000c015f285        0x8 src/libk/kprintf.o
  .rodata.str1.1
-                0x00000000c015f289        0x7 src/libk/strdup.o
+                0x00000000c015f28d        0x7 src/libk/strdup.o
  .rodata.str1.1
-                0x00000000c015f290       0x34 src/main.o
+                0x00000000c015f294       0x34 src/main.o
                                          0x3d (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015f2c4       0x5a src/mm/pmm.o
+                0x00000000c015f2c8       0x5a src/mm/pmm.o
  .rodata.str1.4
                 0x0000000000000000       0x26 src/mm/pmm.o
- .rodata        0x00000000c015f31e       0x2b src/mm/pmm.o
+ .rodata        0x00000000c015f322       0x2b src/mm/pmm.o
  .rodata.str1.1
-                0x00000000c015f349       0x2c src/mm/slab.o
+                0x00000000c015f34d       0x2c src/mm/slab.o
                                          0x3f (dimensione prima del rilassamento)
- *fill*         0x00000000c015f375        0x3 
+ *fill*         0x00000000c015f379        0x3 
  .rodata.str1.4
-                0x00000000c015f378       0x24 src/mm/slab.o
+                0x00000000c015f37c       0x24 src/mm/slab.o
                                          0x4a (dimensione prima del rilassamento)
- .rodata        0x00000000c015f39c        0x8 src/mm/slab.o
+ .rodata        0x00000000c015f3a0        0x8 src/mm/slab.o
  .rodata.str1.1
-                0x00000000c015f3a4      0x1e1 src/net/api/api_lib.o
+                0x00000000c015f3a8      0x1e1 src/net/api/api_lib.o
                                         0x1eb (dimensione prima del rilassamento)
- *fill*         0x00000000c015f585        0x3 
+ *fill*         0x00000000c015f589        0x3 
  .rodata.str1.4
-                0x00000000c015f588      0x168 src/net/api/api_lib.o
+                0x00000000c015f58c      0x168 src/net/api/api_lib.o
  .rodata.str1.4
-                0x00000000c015f6f0      0x27f src/net/api/api_msg.o
+                0x00000000c015f6f4      0x27f src/net/api/api_msg.o
  .rodata.str1.1
-                0x00000000c015f96f      0x185 src/net/api/api_msg.o
+                0x00000000c015f973      0x185 src/net/api/api_msg.o
                                         0x1bb (dimensione prima del rilassamento)
  .rodata.str1.1
-                0x00000000c015faf4      0x112 src/net/api/err.o
- *fill*         0x00000000c015fc06       0x3a 
+                0x00000000c015faf8      0x112 src/net/api/err.o
+ *fill*         0x00000000c015fc0a       0x36 
  .rodata        0x00000000c015fc40       0x40 src/net/api/err.o
  .rodata.str1.1
                 0x00000000c015fc80       0xe3 src/net/api/netbuf.o
@@ -2500,7 +2500,7 @@ Script del linker e mappa della memoria
  *(.syscalls.*)
                 0x00000000c01e5118                syscalls_end = .
 
-.exports        0x00000000c01e6000      0x4e0 indirizzo di caricamento 0x00000000001e6000
+.exports        0x00000000c01e6000      0x4e8 indirizzo di caricamento 0x00000000001e6000
                 0x00000000c01e6000                export_start = .
  *(.exports)
  .exports       0x00000000c01e6000       0x18 src/arch/i386/binfmt/elf_module.o
@@ -2564,7 +2564,7 @@ Script del linker e mappa della memoria
                 0x00000000c01e6180                __export_spinlock_trylock
                 0x00000000c01e6188                __export_spinlock_lock
                 0x00000000c01e6190                __export_spinlock_init
- .exports       0x00000000c01e6198       0x68 src/libk/exports.o
+ .exports       0x00000000c01e6198       0x70 src/libk/exports.o
                 0x00000000c01e6198                __export___divdi3
                 0x00000000c01e61a0                __export_srand
                 0x00000000c01e61a8                __export_rand
@@ -2578,141 +2578,142 @@ Script del linker e mappa della memoria
                 0x00000000c01e61e8                __export_memcpy
                 0x00000000c01e61f0                __export_memset
                 0x00000000c01e61f8                __export___errno
- .exports       0x00000000c01e6200        0x8 src/libk/kprintf.o
-                0x00000000c01e6200                __export_kprintf
- .exports       0x00000000c01e6208        0x8 src/libk/strdup.o
-                0x00000000c01e6208                __export_strdup
- .exports       0x00000000c01e6210       0x20 src/mm/pmm.o
-                0x00000000c01e6210                __export_pmm_claim
-                0x00000000c01e6218                __export_pmm_free_frame
-                0x00000000c01e6220                __export_pmm_alloc_frame
-                0x00000000c01e6228                __export_pmm_state
- .exports       0x00000000c01e6230       0x38 src/mm/slab.o
-                0x00000000c01e6230                __export_free
-                0x00000000c01e6238                __export_calloc
-                0x00000000c01e6240                __export_malloc
-                0x00000000c01e6248                __export_kfree
-                0x00000000c01e6250                __export_kcalloc
-                0x00000000c01e6258                __export_kvalloc
-                0x00000000c01e6260                __export_kmalloc
- .exports       0x00000000c01e6268      0x138 src/net/sys.o
-                0x00000000c01e6268                __export_lwip_stats
-                0x00000000c01e6270                __export_netif_set_default
-                0x00000000c01e6278                __export_netif_set_down
-                0x00000000c01e6280                __export_netif_set_up
-                0x00000000c01e6288                __export_netif_find
-                0x00000000c01e6290                __export_netif_remove
-                0x00000000c01e6298                __export_netif_add
-                0x00000000c01e62a0                __export_dhcp_stop
-                0x00000000c01e62a8                __export_dhcp_start
-                0x00000000c01e62b0                __export_pbuf_header
-                0x00000000c01e62b8                __export_pbuf_free
-                0x00000000c01e62c0                __export_pbuf_alloc
-                0x00000000c01e62c8                __export_tcpip_input
-                0x00000000c01e62d0                __export_etharp_output
-                0x00000000c01e62d8                __export_lwip_ntohl
-                0x00000000c01e62e0                __export_lwip_ntohs
-                0x00000000c01e62e8                __export_lwip_htonl
-                0x00000000c01e62f0                __export_lwip_htons
-                0x00000000c01e62f8                __export_lwip_gethostbyname
-                0x00000000c01e6300                __export_lwip_fcntl
-                0x00000000c01e6308                __export_lwip_ioctl
-                0x00000000c01e6310                __export_lwip_select
-                0x00000000c01e6318                __export_lwip_write
-                0x00000000c01e6320                __export_lwip_socket
-                0x00000000c01e6328                __export_lwip_sendto
-                0x00000000c01e6330                __export_lwip_send
-                0x00000000c01e6338                __export_lwip_recvfrom
-                0x00000000c01e6340                __export_lwip_read
-                0x00000000c01e6348                __export_lwip_recv
-                0x00000000c01e6350                __export_lwip_listen
-                0x00000000c01e6358                __export_lwip_connect
-                0x00000000c01e6360                __export_lwip_close
-                0x00000000c01e6368                __export_lwip_setsockopt
-                0x00000000c01e6370                __export_lwip_getsockopt
-                0x00000000c01e6378                __export_lwip_getsockname
-                0x00000000c01e6380                __export_lwip_getpeername
-                0x00000000c01e6388                __export_lwip_shutdown
-                0x00000000c01e6390                __export_lwip_bind
-                0x00000000c01e6398                __export_lwip_accept
- .exports       0x00000000c01e63a0       0x18 src/sched.o
-                0x00000000c01e63a0                __export_task_queue
-                0x00000000c01e63a8                __export_kernel_task
-                0x00000000c01e63b0                __export_current_task
- .exports       0x00000000c01e63b8       0x10 src/syscall.o
-                0x00000000c01e63b8                __export_syscall_unregister
-                0x00000000c01e63c0                __export_syscall_register
- .exports       0x00000000c01e63c8        0x8 src/syscalls/getppid.o
-                0x00000000c01e63c8                __export_sys_getppid
- .exports       0x00000000c01e63d0        0x8 src/syscalls/sbrk.o
-                0x00000000c01e63d0                __export_sys_sbrk
- .exports       0x00000000c01e63d8        0x8 src/syscalls/chown.o
-                0x00000000c01e63d8                __export_sys_chown
- .exports       0x00000000c01e63e0        0x8 src/syscalls/chroot.o
-                0x00000000c01e63e0                __export_sys_chroot
- .exports       0x00000000c01e63e8        0x8 src/syscalls/clone.o
-                0x00000000c01e63e8                __export_sys_clone
- .exports       0x00000000c01e63f0        0x8 src/syscalls/close.o
-                0x00000000c01e63f0                __export_sys_close
- .exports       0x00000000c01e63f8        0x8 src/syscalls/execve.o
-                0x00000000c01e63f8                __export_sys_execve
- .exports       0x00000000c01e6400        0x8 src/syscalls/fchdir.o
-                0x00000000c01e6400                __export_sys_fchdir
- .exports       0x00000000c01e6408        0x8 src/syscalls/fcntl.o
-                0x00000000c01e6408                __export_sys_fcntl
- .exports       0x00000000c01e6410        0x8 src/syscalls/fork.o
-                0x00000000c01e6410                __export_sys_fork
- .exports       0x00000000c01e6418        0x8 src/syscalls/fstat.o
-                0x00000000c01e6418                __export_sys_fstat
- .exports       0x00000000c01e6420        0x8 src/syscalls/getdents.o
-                0x00000000c01e6420                __export_sys_getdents
- .exports       0x00000000c01e6428        0x8 src/syscalls/getpid.o
-                0x00000000c01e6428                __export_sys_getpid
- .exports       0x00000000c01e6430        0x8 src/syscalls/stat.o
-                0x00000000c01e6430                __export_sys_stat
- .exports       0x00000000c01e6438        0x8 src/syscalls/symlink.o
-                0x00000000c01e6438                __export_sys_symlink
- .exports       0x00000000c01e6440        0x8 src/syscalls/times.o
-                0x00000000c01e6440                __export_sys_times
- .exports       0x00000000c01e6448        0x8 src/syscalls/umask.o
-                0x00000000c01e6448                __export_sys_umask
- .exports       0x00000000c01e6450       0x10 src/syscalls/umount.o
-                0x00000000c01e6450                __export_sys_umount2
-                0x00000000c01e6458                __export_sys_umount
- .exports       0x00000000c01e6460        0x8 src/syscalls/uname.o
-                0x00000000c01e6460                __export_sys_uname
- .exports       0x00000000c01e6468        0x8 src/syscalls/unlink.o
-                0x00000000c01e6468                __export_sys_unlink
- .exports       0x00000000c01e6470        0x8 src/syscalls/wait.o
-                0x00000000c01e6470                __export_sys_wait
- .exports       0x00000000c01e6478        0x8 src/syscalls/waitpid.o
-                0x00000000c01e6478                __export_sys_waitpid
- .exports       0x00000000c01e6480        0x8 src/syscalls/write.o
-                0x00000000c01e6480                __export_sys_write
- .exports       0x00000000c01e6488        0x8 src/syscalls/yield.o
-                0x00000000c01e6488                __export_sys_yield
- .exports       0x00000000c01e6490        0x8 src/syscalls/_exit.o
-                0x00000000c01e6490                __export_sys_exit
- .exports       0x00000000c01e6498        0x8 src/syscalls/gettimeofday.o
-                0x00000000c01e6498                __export_sys_gettimeofday
- .exports       0x00000000c01e64a0        0x8 src/syscalls/ioctl.o
-                0x00000000c01e64a0                __export_sys_ioctl
- .exports       0x00000000c01e64a8        0x8 src/syscalls/isatty.o
-                0x00000000c01e64a8                __export_sys_isatty
- .exports       0x00000000c01e64b0        0x8 src/syscalls/kill.o
-                0x00000000c01e64b0                __export_sys_kill
- .exports       0x00000000c01e64b8        0x8 src/syscalls/link.o
-                0x00000000c01e64b8                __export_sys_link
- .exports       0x00000000c01e64c0        0x8 src/syscalls/lseek.o
-                0x00000000c01e64c0                __export_sys_lseek
- .exports       0x00000000c01e64c8        0x8 src/syscalls/mount.o
-                0x00000000c01e64c8                __export_sys_mount
- .exports       0x00000000c01e64d0        0x8 src/syscalls/open.o
-                0x00000000c01e64d0                __export_sys_open
- .exports       0x00000000c01e64d8        0x8 src/syscalls/read.o
-                0x00000000c01e64d8                __export_sys_read
+                0x00000000c01e6200                __export_mbd
+ .exports       0x00000000c01e6208        0x8 src/libk/kprintf.o
+                0x00000000c01e6208                __export_kprintf
+ .exports       0x00000000c01e6210        0x8 src/libk/strdup.o
+                0x00000000c01e6210                __export_strdup
+ .exports       0x00000000c01e6218       0x20 src/mm/pmm.o
+                0x00000000c01e6218                __export_pmm_claim
+                0x00000000c01e6220                __export_pmm_free_frame
+                0x00000000c01e6228                __export_pmm_alloc_frame
+                0x00000000c01e6230                __export_pmm_state
+ .exports       0x00000000c01e6238       0x38 src/mm/slab.o
+                0x00000000c01e6238                __export_free
+                0x00000000c01e6240                __export_calloc
+                0x00000000c01e6248                __export_malloc
+                0x00000000c01e6250                __export_kfree
+                0x00000000c01e6258                __export_kcalloc
+                0x00000000c01e6260                __export_kvalloc
+                0x00000000c01e6268                __export_kmalloc
+ .exports       0x00000000c01e6270      0x138 src/net/sys.o
+                0x00000000c01e6270                __export_lwip_stats
+                0x00000000c01e6278                __export_netif_set_default
+                0x00000000c01e6280                __export_netif_set_down
+                0x00000000c01e6288                __export_netif_set_up
+                0x00000000c01e6290                __export_netif_find
+                0x00000000c01e6298                __export_netif_remove
+                0x00000000c01e62a0                __export_netif_add
+                0x00000000c01e62a8                __export_dhcp_stop
+                0x00000000c01e62b0                __export_dhcp_start
+                0x00000000c01e62b8                __export_pbuf_header
+                0x00000000c01e62c0                __export_pbuf_free
+                0x00000000c01e62c8                __export_pbuf_alloc
+                0x00000000c01e62d0                __export_tcpip_input
+                0x00000000c01e62d8                __export_etharp_output
+                0x00000000c01e62e0                __export_lwip_ntohl
+                0x00000000c01e62e8                __export_lwip_ntohs
+                0x00000000c01e62f0                __export_lwip_htonl
+                0x00000000c01e62f8                __export_lwip_htons
+                0x00000000c01e6300                __export_lwip_gethostbyname
+                0x00000000c01e6308                __export_lwip_fcntl
+                0x00000000c01e6310                __export_lwip_ioctl
+                0x00000000c01e6318                __export_lwip_select
+                0x00000000c01e6320                __export_lwip_write
+                0x00000000c01e6328                __export_lwip_socket
+                0x00000000c01e6330                __export_lwip_sendto
+                0x00000000c01e6338                __export_lwip_send
+                0x00000000c01e6340                __export_lwip_recvfrom
+                0x00000000c01e6348                __export_lwip_read
+                0x00000000c01e6350                __export_lwip_recv
+                0x00000000c01e6358                __export_lwip_listen
+                0x00000000c01e6360                __export_lwip_connect
+                0x00000000c01e6368                __export_lwip_close
+                0x00000000c01e6370                __export_lwip_setsockopt
+                0x00000000c01e6378                __export_lwip_getsockopt
+                0x00000000c01e6380                __export_lwip_getsockname
+                0x00000000c01e6388                __export_lwip_getpeername
+                0x00000000c01e6390                __export_lwip_shutdown
+                0x00000000c01e6398                __export_lwip_bind
+                0x00000000c01e63a0                __export_lwip_accept
+ .exports       0x00000000c01e63a8       0x18 src/sched.o
+                0x00000000c01e63a8                __export_task_queue
+                0x00000000c01e63b0                __export_kernel_task
+                0x00000000c01e63b8                __export_current_task
+ .exports       0x00000000c01e63c0       0x10 src/syscall.o
+                0x00000000c01e63c0                __export_syscall_unregister
+                0x00000000c01e63c8                __export_syscall_register
+ .exports       0x00000000c01e63d0        0x8 src/syscalls/getppid.o
+                0x00000000c01e63d0                __export_sys_getppid
+ .exports       0x00000000c01e63d8        0x8 src/syscalls/sbrk.o
+                0x00000000c01e63d8                __export_sys_sbrk
+ .exports       0x00000000c01e63e0        0x8 src/syscalls/chown.o
+                0x00000000c01e63e0                __export_sys_chown
+ .exports       0x00000000c01e63e8        0x8 src/syscalls/chroot.o
+                0x00000000c01e63e8                __export_sys_chroot
+ .exports       0x00000000c01e63f0        0x8 src/syscalls/clone.o
+                0x00000000c01e63f0                __export_sys_clone
+ .exports       0x00000000c01e63f8        0x8 src/syscalls/close.o
+                0x00000000c01e63f8                __export_sys_close
+ .exports       0x00000000c01e6400        0x8 src/syscalls/execve.o
+                0x00000000c01e6400                __export_sys_execve
+ .exports       0x00000000c01e6408        0x8 src/syscalls/fchdir.o
+                0x00000000c01e6408                __export_sys_fchdir
+ .exports       0x00000000c01e6410        0x8 src/syscalls/fcntl.o
+                0x00000000c01e6410                __export_sys_fcntl
+ .exports       0x00000000c01e6418        0x8 src/syscalls/fork.o
+                0x00000000c01e6418                __export_sys_fork
+ .exports       0x00000000c01e6420        0x8 src/syscalls/fstat.o
+                0x00000000c01e6420                __export_sys_fstat
+ .exports       0x00000000c01e6428        0x8 src/syscalls/getdents.o
+                0x00000000c01e6428                __export_sys_getdents
+ .exports       0x00000000c01e6430        0x8 src/syscalls/getpid.o
+                0x00000000c01e6430                __export_sys_getpid
+ .exports       0x00000000c01e6438        0x8 src/syscalls/stat.o
+                0x00000000c01e6438                __export_sys_stat
+ .exports       0x00000000c01e6440        0x8 src/syscalls/symlink.o
+                0x00000000c01e6440                __export_sys_symlink
+ .exports       0x00000000c01e6448        0x8 src/syscalls/times.o
+                0x00000000c01e6448                __export_sys_times
+ .exports       0x00000000c01e6450        0x8 src/syscalls/umask.o
+                0x00000000c01e6450                __export_sys_umask
+ .exports       0x00000000c01e6458       0x10 src/syscalls/umount.o
+                0x00000000c01e6458                __export_sys_umount2
+                0x00000000c01e6460                __export_sys_umount
+ .exports       0x00000000c01e6468        0x8 src/syscalls/uname.o
+                0x00000000c01e6468                __export_sys_uname
+ .exports       0x00000000c01e6470        0x8 src/syscalls/unlink.o
+                0x00000000c01e6470                __export_sys_unlink
+ .exports       0x00000000c01e6478        0x8 src/syscalls/wait.o
+                0x00000000c01e6478                __export_sys_wait
+ .exports       0x00000000c01e6480        0x8 src/syscalls/waitpid.o
+                0x00000000c01e6480                __export_sys_waitpid
+ .exports       0x00000000c01e6488        0x8 src/syscalls/write.o
+                0x00000000c01e6488                __export_sys_write
+ .exports       0x00000000c01e6490        0x8 src/syscalls/yield.o
+                0x00000000c01e6490                __export_sys_yield
+ .exports       0x00000000c01e6498        0x8 src/syscalls/_exit.o
+                0x00000000c01e6498                __export_sys_exit
+ .exports       0x00000000c01e64a0        0x8 src/syscalls/gettimeofday.o
+                0x00000000c01e64a0                __export_sys_gettimeofday
+ .exports       0x00000000c01e64a8        0x8 src/syscalls/ioctl.o
+                0x00000000c01e64a8                __export_sys_ioctl
+ .exports       0x00000000c01e64b0        0x8 src/syscalls/isatty.o
+                0x00000000c01e64b0                __export_sys_isatty
+ .exports       0x00000000c01e64b8        0x8 src/syscalls/kill.o
+                0x00000000c01e64b8                __export_sys_kill
+ .exports       0x00000000c01e64c0        0x8 src/syscalls/link.o
+                0x00000000c01e64c0                __export_sys_link
+ .exports       0x00000000c01e64c8        0x8 src/syscalls/lseek.o
+                0x00000000c01e64c8                __export_sys_lseek
+ .exports       0x00000000c01e64d0        0x8 src/syscalls/mount.o
+                0x00000000c01e64d0                __export_sys_mount
+ .exports       0x00000000c01e64d8        0x8 src/syscalls/open.o
+                0x00000000c01e64d8                __export_sys_open
+ .exports       0x00000000c01e64e0        0x8 src/syscalls/read.o
+                0x00000000c01e64e0                __export_sys_read
  *(.exports.*)
-                0x00000000c01e64e0                export_end = .
+                0x00000000c01e64e8                export_end = .
 
 .stack          0x00000000c01e7000     0x1000 indirizzo di caricamento 0x00000000001e7000
  *(.stack)
