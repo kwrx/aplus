@@ -29,6 +29,11 @@ static int __check_perm(int uid, int gid, int other, mode_t mode, int flags) {
 
 SYSCALL(10, open,
 int sys_open(const char* name, int flags, mode_t mode) {
+	if(unlikely(!name)) {
+		errno = EINVAL;
+		return -1;
+	}
+
 	char namebuf[strlen(name) + 1];
 	strcpy(namebuf, name);
 
@@ -76,11 +81,12 @@ int sys_open(const char* name, int flags, mode_t mode) {
 		s = p;
 	} while(s);
 
-
+	KASSERT(s);
 	inode_t* cp = cino;
 
 	if(*s)
 		cino = vfs_finddir(cp, s);
+
 
 	if(!cino) {
 		if(flags & O_CREAT) {
@@ -148,6 +154,11 @@ int sys_open(const char* name, int flags, mode_t mode) {
 	if(vfs_open(cino) == E_ERR)
 		return -1;
 	
+	if(flags & O_APPEND)
+		cino->position = cino->size;
+	else
+		cino->position = 0;
+
 
 
 	int fd = 0;

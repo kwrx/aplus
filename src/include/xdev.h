@@ -69,6 +69,7 @@ typedef struct bootargs {
 extern bootargs_t* mbd;
 
 
+extern int sys_mount(const char* dev, const char* dir, const char* fstype, unsigned long int options, const void* data);
 extern int sys_chown(const char*, uid_t, gid_t);
 extern int sys_chroot(const char*);
 extern int sys_clone(int (*)(void*), void*, int, void*);

@@ -8,6 +8,7 @@
 #define MODULE_DEPS(x)	\
 	const char* __module_deps__ = x
 
+
 #define MODULE_AUTHOR(x);
 #define MODULE_LICENSE(x);
 

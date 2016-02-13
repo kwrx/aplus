@@ -41,18 +41,19 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	else
 		r = __check_perm(2, inode->mode);
 
+#if 0
 	if(unlikely(!r)) {
 		errno = EACCES;
 		return -1;
 	}
-
+#endif
 
 	size_t size = sys_lseek(fd, 0, SEEK_END);
 	sys_lseek(fd, 0, SEEK_SET);
 
 
 	void* image = (void*) kmalloc(size, GFP_USER);
-	if(unlikely(sys_read(fd, image, size) != size)) {
+	if(unlikely(sys_read(fd, image, size) != size)) { /* ERROR */
 		kfree(image);
 		
 		errno = EIO;
@@ -60,6 +61,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	}
 
 	sys_close(fd);
+
 
 	if(binfmt_check_image(image, NULL) != E_OK) {
 		kfree(image);

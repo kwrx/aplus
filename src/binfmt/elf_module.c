@@ -211,6 +211,7 @@ static void* elf_module_load(void* image, void** address, size_t* size) {
 	char** __module_deps__ = (char**) elf_resolve(elf, "__module_deps__");
 	KASSERT(__module_deps__);
 
+
 	symbol_t* sym, *s2;
 	for(sym = elf->symbols; sym;) {
 		s2 = sym;		

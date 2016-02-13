@@ -3,6 +3,7 @@
 #include <xdev/task.h>
 #include <xdev/ipc.h>
 #include <xdev/syscall.h>
+#include <xdev/debug.h>
 #include <libc.h>
 
 SYSCALL(39, chroot,
@@ -13,6 +14,7 @@ int sys_chroot(const char* path) {
 
 	inode_t* inode = current_task->fd[fd].inode;
 	sys_close(fd);
+
 
 	if(unlikely(!(S_ISDIR(inode->mode)))) {
 		errno = ENOTDIR;

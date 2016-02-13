@@ -36,12 +36,7 @@ int init(void) {
 		if(hooks[i - 1] () == 0)
 			break;
 
-	void* p = NULL;
-	if(fbdev->setvideomode)
-		fbdev->setvideomode(800, 600, 32, 0, 0, &p);
 
-
-	kprintf(LOG, "fb: initialized \"%s\" at %x\n", fbdev->name, p);
 	return 0;
 }
 

@@ -8,7 +8,7 @@
 #include <xdev/mm.h>
 #include <libc.h>
 
-MODULE_NAME("i386/atapi");
+MODULE_NAME("i386/ata");
 MODULE_DEPS("");
 MODULE_AUTHOR("WareX");
 MODULE_LICENSE("GPL");
@@ -39,7 +39,7 @@ struct ata_device {
 	uint32_t bar4;
 
 	mutex_t lock;
-	uint8_t cache[ATA_SECTOR_SIZE];
+	uint8_t cache[ATAPI_SECTOR_SIZE];
 };
 
 
@@ -364,6 +364,92 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 
 
+static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
+	uint8_t pk[12] = { 0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	
+	uint16_t bus = dev->io_base;
+	uint8_t slave = dev->slave;
+
+
+	outb(bus + ATA_REG_CONTROL, 0x02);
+	
+	ata_wait(dev, 0);
+	outb(bus + ATA_REG_HDDEVSEL, 0xE0 | (slave << 4) | (lba & 0x0F000000) >> 24);
+	ata_wait(dev, 0);
+
+	outb(bus + ATA_REG_FEATURES, 0x00);
+	outb(bus + ATA_REG_LBA1, ATAPI_SECTOR_SIZE & 0xFF);
+	outb(bus + ATA_REG_LBA2, ATAPI_SECTOR_SIZE >> 8);
+	outb(bus + ATA_REG_COMMAND, ATA_CMD_PACKET);
+
+	ata_wait(dev, 0);
+	
+	pk[9] = 1;
+	pk[2] = (lba >> 0x18) & 0xFF;
+	pk[3] = (lba >> 0x10) & 0xFF;
+	pk[4] = (lba >> 0x08) & 0xFF;
+	pk[5] = (lba >> 0x00) & 0xFF;
+
+	outsw(bus + ATA_REG_DATA, (uint16_t*) pk, 6);
+	insw(bus + ATA_REG_DATA, buf, ATAPI_SECTOR_SIZE / 2);
+	
+	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
+	ata_wait(dev, 0);
+}
+
+
+static int atapi_read(inode_t* ino, void* buffer, size_t size) {
+	if(ino->position > ino->size)
+		return 0;
+
+	if(ino->position + size > ino->size)
+		size = ino->size - ino->position;
+
+	if(!size)
+		return 0;
+
+	struct ata_device* dev = (struct ata_device*) ino->userdata;
+
+	long sb = ino->position / ATAPI_SECTOR_SIZE;
+	long eb = (ino->position + size - 1) / ATAPI_SECTOR_SIZE;
+	off64_t xoff = 0;
+
+	if(ino->position % ATAPI_SECTOR_SIZE) {
+		long p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+
+		mutex_lock(&dev->lock);
+		atapi_device_read_sector(dev, sb, dev->cache);
+
+		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATAPI_SECTOR_SIZE)), p);
+		xoff += p;
+		sb++;
+
+		mutex_unlock(&dev->lock);
+	}
+
+	if(((ino->position + size) % ATAPI_SECTOR_SIZE) && (sb <= eb)) {
+		long p = (ino->position + size) % ATAPI_SECTOR_SIZE;
+
+		mutex_lock(&dev->lock);
+		atapi_device_read_sector(dev, eb, dev->cache);
+
+		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
+		eb--;
+
+		mutex_unlock(&dev->lock);
+	}
+
+	while(sb <= eb) {
+		atapi_device_read_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff));
+		xoff += ATAPI_SECTOR_SIZE;
+		sb++;
+	}
+
+	ino->position += size;
+	return size;
+}
+
+
 static int ata_device_detect(struct ata_device* dev) {
 	ata_soft_reset(dev);
 	ata_io_wait(dev);
@@ -375,7 +461,7 @@ static int ata_device_detect(struct ata_device* dev) {
 
 	uint8_t cl = inb(dev->io_base + ATA_REG_LBA1);
 	uint8_t ch = inb(dev->io_base + ATA_REG_LBA2);
-	uint8_t c = 0;
+	uint8_t c = 0, d = 0;
 
 	if(cl == 0xFF && ch == 0xFF)
 		return 0;
@@ -393,6 +479,18 @@ static int ata_device_detect(struct ata_device* dev) {
 		inode->read = ata_read;
 		inode->write = ata_write;
 		inode->userdata = (void*) dev;
+	} else if(
+		(cl == 0x14 && ch == 0xEB)	/* ATAPI  */
+		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
+	) {
+		mutex_init(&dev->lock, MTX_KIND_DEFAULT);
+		ata_device_init(dev);
+
+		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0666);
+		inode->size = 700 * 1024 * 1024; //ata_max_offset(dev);
+		inode->read = atapi_read;
+		inode->write = NULL;
+		inode->userdata = (void*) dev;
 	}
 }
 
@@ -407,6 +505,7 @@ int init(void) {
 	ata_device_detect(&ata_secondary_master);
 	ata_device_detect(&ata_primary_slave);
 	ata_device_detect(&ata_secondary_slave);
+
 
 	return E_OK;
 }

@@ -13,9 +13,9 @@ static module_t* mod_queue = NULL;
 
 static int module_load(const char* name);
 
-static void module_resolve_deps(module_t* mod) {
+static int module_resolve_deps(module_t* mod) {
 	if(mod->deps[0] == '\0')
-		return;
+		return E_OK;
 
 	char* sp = strdup(mod->deps);
 	char* s = sp;	
@@ -29,13 +29,14 @@ static void module_resolve_deps(module_t* mod) {
 			kprintf(ERROR, "module: cannot load dependency \"%s\" of \"%s\"\n", s, mod->name);
 			kfree(sp);
 
-			return;
+			return E_ERR;
 		}
 
 		s = p;
 	} while(s);
 
 	kfree(sp);
+	return E_OK;
 }
 
 
@@ -48,7 +49,10 @@ static int module_load(const char* name) {
 		if(tmp->loaded)
 			return E_OK;
 
-		module_resolve_deps(tmp);
+		if(unlikely(module_resolve_deps(tmp) == E_ERR))
+			continue;
+
+
 		tmp->init();
 		tmp->loaded = 1;
 
@@ -88,7 +92,13 @@ int module_init(void) {
 
 	module_t* tmp;
 	for(tmp = mod_queue; tmp; tmp = tmp->next) {
-		module_resolve_deps(tmp);
+		if(tmp->loaded)
+			return E_OK;
+
+		if(unlikely(module_resolve_deps(tmp) == E_ERR))
+			continue;
+
+
 		tmp->init();
 		tmp->loaded = 1;
 	}

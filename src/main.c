@@ -19,10 +19,10 @@ int main(int argc, char** argv) {
 
 	kprintf(INFO, "%s %s-%s %s %s %s\n", KERNEL_NAME, KERNEL_VERSION, KERNEL_CODENAME, KERNEL_DATE, KERNEL_TIME, KERNEL_PLATFORM);
 
-	//sys_mount("/dev/hd0", "/hdd", "fat", 0, NULL);
+	sys_mount("/dev/cd0", "/cdrom", "iso9660", 0, NULL);
+	sys_mount(NULL, "/tmp", "tmpfs", 0, NULL);
 
 
 	
-
 	for(;;);
 }
