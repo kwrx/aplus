@@ -73,7 +73,7 @@ typedef struct elf_shdr {
 } Elf_Shdr;
 
 
-typedef struct elf32_phdr {
+typedef struct elf_phdr {
 	Elf_Word p_type;
 	Elf_Off p_offset;
 	Elf_Addr p_vaddr;
@@ -82,7 +82,7 @@ typedef struct elf32_phdr {
 	Elf_Word p_memsz;
 	Elf_Word p_flags;
 	Elf_Word p_align;
-} elf32_phdr_t;
+} Elf_Phdr;
 
 #else
 
@@ -161,6 +161,7 @@ typedef struct {
 
 typedef Elf_Sym elf32_sym_t;
 typedef Elf_Shdr elf32_shdr_t;
+typedef Elf_Phdr elf32_phdr_t;
 typedef Elf_Ehdr elf32_hdr_t;
 
 
@@ -287,6 +288,7 @@ typedef struct symbol {
 typedef struct {
 	struct elf_ehdr *header;
 	struct elf_shdr *sections;
+	struct elf_phdr *programs;
 	struct elf_shdr *symtab;
 	struct elf_shdr *strtab;
 

@@ -58,6 +58,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 	}
 
 	elf->sections = (void*) ((uintptr_t) image + elf->header->e_shoff);
+	elf->programs = (void*) ((uintptr_t) image + elf->header->e_phoff);
 	elf->strings = (void*) ((uintptr_t) image + elf->sections[elf->header->e_shstrndx].sh_offset);
 	elf->size = 0;
 
@@ -73,21 +74,40 @@ static void* elf_load(void* image, void** address, size_t* size) {
 	}
 
 	elf_layout(elf);
-
-
 	elf->start = (void*) elf->header->e_entry;
 	
-	Elf_Shdr* shdr;
+
+	Elf_Phdr* phdr;
+	for(i = 0; i < elf->header->e_phnum; i++) {
+		phdr = &elf->programs[i];
+
+		switch(phdr->p_type) {
+			case 0:
+				continue;
+			case 1: /* LOAD */
+				if(unlikely(!sys_mmap(phdr->p_vaddr, phdr->p_memsz, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
+					kprintf(ERROR, "elf: invalid mapping 0x%x (%d Bytes)\n", phdr->p_vaddr, phdr->p_memsz);
+					return NULL;
+				}
+
+				memcpy (
+					(void*) phdr->p_vaddr,
+					(void*) ((uintptr_t) elf->header + phdr->p_offset),
+					phdr->p_filesz
+				);
+		}
+	}
+
+
+	/*Elf_Shdr* shdr;
 	for(i = 1; i < elf->header->e_shnum; i++) {
 		shdr = &elf->sections[i];
 
 		if(!(shdr->sh_flags & SHF_ALLOC))
 			continue;
 
-		//sys_mmap((void*) shdr->sh_addr, (size_t) shdr->sh_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANONYMOUS, -1, NULL);
-
-		memcpy(
-			(void*) shdr->sh_addr, 
+		memcpy (
+			(void*) shdr->sh_addr,
 			(void*) ((uintptr_t) elf->header + shdr->sh_offset),
 			shdr->sh_size
 		);
@@ -98,7 +118,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 				0,
 				shdr->sh_size
 			);
-	}
+	}*/
 
 
 

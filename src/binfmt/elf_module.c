@@ -155,7 +155,9 @@ static void* elf_module_load(void* image, void** address, size_t* size) {
 		return NULL;
 	}
 
+	
 	elf->sections = (void*) ((uintptr_t) image + elf->header->e_shoff);
+	elf->programs = (void*) ((uintptr_t) image + elf->header->e_phoff);
 	elf->strings = (void*) ((uintptr_t) image + elf->sections[elf->header->e_shstrndx].sh_offset);
 	elf->size = 0;
 

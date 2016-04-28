@@ -39,7 +39,7 @@ struct ata_device {
 	uint32_t bar4;
 
 	mutex_t lock;
-	uint8_t cache[ATAPI_SECTOR_SIZE];
+	uint8_t* cache;
 };
 
 
@@ -196,7 +196,8 @@ static void ata_device_init(struct ata_device* dev) {
 		dev->bar4 &= 0xFFFFFFFC;
 
 
-	memset(dev->cache, 0, ATA_SECTOR_SIZE);
+	dev->cache = (uint8_t*) kmalloc(ATA_CACHE_SIZE, GFP_KERNEL);
+	memset(dev->cache, 0, ATA_CACHE_SIZE);
 }
 
 
@@ -391,6 +392,7 @@ static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void*
 	pk[5] = (lba >> 0x00) & 0xFF;
 
 	outsw(bus + ATA_REG_DATA, (uint16_t*) pk, 6);
+	ata_wait(dev, 0);
 	insw(bus + ATA_REG_DATA, buf, ATAPI_SECTOR_SIZE / 2);
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	

@@ -26,6 +26,7 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
 
 	if(strncmp(ctx->pvd.id, ISO9660_ID, 5) != 0) {
 		kprintf(ERROR, "iso9660: (%s) invalid iso9660 ID\n", dev->name);
+
 		kfree(ctx);
 		return E_ERR;
 	}
