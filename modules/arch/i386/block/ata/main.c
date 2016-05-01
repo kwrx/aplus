@@ -270,7 +270,9 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 	off64_t xoff = 0;
 
 	if(ino->position % ATA_SECTOR_SIZE) {
-		long p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
+		long p;
+		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		p = p > size ? size : p;
 
 		mutex_lock(&dev->lock);
 		ata_device_read_sector(dev, sb, dev->cache);
@@ -323,7 +325,9 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 
 	if(ino->position % ATA_SECTOR_SIZE) {
-		long p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
+		long p;
+		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		p = p > size ? size : p;
 
 
 		mutex_lock(&dev->lock);
@@ -417,7 +421,9 @@ static int atapi_read(inode_t* ino, void* buffer, size_t size) {
 	off64_t xoff = 0;
 
 	if(ino->position % ATAPI_SECTOR_SIZE) {
-		long p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		long p;
+		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		p = p > size ? size : p;	
 
 		mutex_lock(&dev->lock);
 		atapi_device_read_sector(dev, sb, dev->cache);
@@ -428,6 +434,7 @@ static int atapi_read(inode_t* ino, void* buffer, size_t size) {
 
 		mutex_unlock(&dev->lock);
 	}
+
 
 	if(((ino->position + size) % ATAPI_SECTOR_SIZE) && (sb <= eb)) {
 		long p = (ino->position + size) % ATAPI_SECTOR_SIZE;

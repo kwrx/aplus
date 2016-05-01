@@ -85,6 +85,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	current_task->image.end = current_task->image.start + size;
 	current_task->name = strdup(filename);
 	current_task->argv = (char**) argv;
+	current_task->environ = (char**) envp;
 
 	INTR_ON;
 

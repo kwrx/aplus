@@ -16,9 +16,11 @@ long syscall_handler(long, long, long, long, long, long);
 	struct {				\
 		int a;				\
 		void* b;			\
+		char* name;			\
 	} __sc_##y = {				\
 		(int) x,			\
-		(void*) sys_##y			\
+		(void*) sys_##y,		\
+		(char*) #y			\
 	}; EXPORT(sys_##y)	
 
 

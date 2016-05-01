@@ -85,7 +85,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 			case 0:
 				continue;
 			case 1: /* LOAD */
-				if(unlikely(!sys_mmap(phdr->p_vaddr, phdr->p_memsz, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
+				if(unlikely(!sys_mmap(phdr->p_vaddr, (phdr->p_memsz + phdr->p_align - 1) & ~(phdr->p_align - 1), PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
 					kprintf(ERROR, "elf: invalid mapping 0x%x (%d Bytes)\n", phdr->p_vaddr, phdr->p_memsz);
 					return NULL;
 				}

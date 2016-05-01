@@ -37,6 +37,7 @@ typedef struct task {
 	char* name;
 	char* description;
 	char** argv;
+	char** environ;
 
 	pid_t pid;
 	uid_t uid;

@@ -25,7 +25,7 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
 	uintptr_t rd = NULL;
 	if(flags & MAP_FIXED)
-		rd = addr;
+		rd = (uintptr_t) addr;
 	else {
 		if(flags & MAP_PRIVATE)
 			rd = (uintptr_t) sys_sbrk(len);
@@ -48,10 +48,10 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
 
 	if(flags & MAP_ANON)
-		memset(rd, 0, len);
+		memset((void*) rd, 0, len);
 
 
 	kprintf(INFO, "mmap: mapped 0x%x at 0x%x (%x Bytes)\n", addr, rd, len);
 
-	return rd;
+	return (void*) rd;
 });

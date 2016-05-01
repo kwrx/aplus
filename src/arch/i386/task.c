@@ -73,6 +73,7 @@ void fork_handler(i386_context_t* context) {
 	child->name = strdup(current_task->name);
 	child->description = strdup(current_task->description);
 	child->argv = current_task->argv;
+	child->environ = current_task->environ;
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
@@ -139,6 +140,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	child->name = strdup(current_task->name);
 	child->description = strdup(current_task->description);
 	child->argv = current_task->argv;
+	child->environ = current_task->environ;
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
@@ -301,6 +303,7 @@ int task_init(void) {
 	t->name = "init";
 	t->description = NULL;
 	t->argv = NULL;
+	t->environ = NULL;
 	
 	t->status = TASK_STATUS_READY;
 	t->priority = TASK_PRIO_REGULAR;

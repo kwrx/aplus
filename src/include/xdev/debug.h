@@ -28,6 +28,10 @@ int std_kprintf(const char* fmt, ...);
 	if(unlikely(!(x)))																										\
 		{ kprintf(ERROR, "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
 
+#define KASSERTF(x, y...)																											\
+	if(unlikely(!(x)))																										\
+		{ kprintf(ERROR, "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(ERROR, y); kprintf(ERROR, "\n"); for(;;); }
+
 
 #endif
 

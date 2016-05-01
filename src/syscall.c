@@ -28,6 +28,7 @@ int syscall_init(void) {
 	struct {
 		int number;
 		void* ptr;
+		char* name;
 	} *handler = (void*) &syscalls_start;
 
 	for(
@@ -43,7 +44,7 @@ int syscall_init(void) {
 
 int syscall_register(int number, void* handler) {
 	KASSERT(number < MAX_SYSCALL);
-
+	KASSERTF(!__handlers[number], "%d", number);
 
 	__handlers[number] = (syscall_handler_t) handler;
 	return E_OK;
@@ -58,6 +59,8 @@ int syscall_unregister(int number) {
 
 
 long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
+	KASSERTF(__handlers[number], "%d", number);
+
 	mutex_lock(&mtx_syscall);
 	long r = __handlers[number] (p0, p1, p2, p3, p4);
 	mutex_unlock(&mtx_syscall);
