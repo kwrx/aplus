@@ -82,7 +82,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image.start, &size, NULL);
 	KASSERT(_start);
 
-	current_task->image.end = current_task->image.start + size;
+	current_task->image.end = ((current_task->image.start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
 	current_task->argv = (char**) argv;
 	current_task->environ = (char**) envp;

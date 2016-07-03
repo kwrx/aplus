@@ -12,7 +12,7 @@ LDFLAGS		:= -T src/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x10
 LIBS		:= -lc -lm -lgcc
 
 
-VMM		:= qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -m 64 -serial stdio -hda hdd.img -boot d
+VMM		    := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -m 64 -serial stdio -hda hdd.img -boot d
 
 
 
@@ -31,5 +31,5 @@ endif
 ifeq ($(ARCH),arm)
 AFLAGS		+= -mcpu=arm1176jzf-s
 CFLAGS		+= -mcpu=arm1176jzf-s -fpic -mfloat-abi=softfp
-VMM		:= qemu-system-arm -M raspi -cpu arm1176jzf-s -m 256 -kernel $(KERNEL_OUTPUT) -serial stdio
+VMM		    := qemu-system-arm -M raspi -cpu arm1176jzf-s -m 256 -kernel $(KERNEL_OUTPUT) -serial stdio
 endif

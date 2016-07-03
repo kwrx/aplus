@@ -20,7 +20,7 @@ int iso9660_read(inode_t* ino, void* buf, size_t size) {
 		ino->position = ino->size;
 		
 	if(unlikely(ino->position + (off64_t) size > ino->size))
-		size = ino->size - ino->position;
+		size = (off_t) (ino->size - ino->position);
 		
 	if(unlikely(!size))
 		return 0;

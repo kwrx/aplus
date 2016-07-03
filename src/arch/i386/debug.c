@@ -11,7 +11,8 @@ static char __cga_colors[] = {
 	7,
 	14,
 	15,
-	12
+	12,
+	11
 };
 
 #define VGA_WIDTH			80

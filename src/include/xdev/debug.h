@@ -10,6 +10,7 @@
 #define WARN				1
 #define INFO				2
 #define ERROR				3
+#define USER				4
 
 #ifndef __ASSEMBLY__
 void debug_send(char value, int flags);

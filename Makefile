@@ -10,7 +10,7 @@ include build/Makefile.tools
 include build/Makefile.sources
 include build/Makefile.flags
 
-all:				\
+all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
 	$(KERNEL_ISO)

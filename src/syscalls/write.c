@@ -9,7 +9,6 @@
 
 SYSCALL(17, write,
 int sys_write(int fd, void* buf, size_t size) {
-	kprintf(LOG, "sys_write(%d, %p, %d)\n", fd, buf, size);
 	if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
 		return lwip_write(fd - TASK_FD_COUNT, buf, size);
@@ -19,8 +18,13 @@ int sys_write(int fd, void* buf, size_t size) {
 #endif
 	}
 
-	if(fd < 3)
-		return kprintf(WARN, "%s", buf);
+	if(fd == 1 || fd == 2) {
+		int i;
+		for(i = 0; i < size; i++)
+			kprintf(fd == 1 ? USER : ERROR, "%c", ((char*)buf)[i] & 0xFF);
+			
+		return size;
+	}
 
 	inode_t* inode = current_task->fd[fd].inode;
 	

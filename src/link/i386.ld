@@ -1,7 +1,7 @@
 ENTRY(_start)
-SEARCH_DIR("/xdev/cross/usr/lib")
-SEARCH_DIR("/xdev/cross/usr/i686-cross/lib")
-SEARCH_DIR("/xdev/cross/usr/lib/gcc/i686-cross/4.9.2")
+SEARCH_DIR("/opt/cross/lib")
+SEARCH_DIR("/opt/cross/i686-cross/lib")
+SEARCH_DIR("/opt/cross/lib/gcc/i686-cross/6.1.0")
 
 KERNEL_LOW = 0x00100000;
 KERNEL_HIGH = 0xC0000000;

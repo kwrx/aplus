@@ -35,5 +35,5 @@ off_t sys_lseek(int fd, off_t off, int dir) {
 			return -1;
 	}
 
-	return inode->position;
+	return (off_t) inode->position;
 });

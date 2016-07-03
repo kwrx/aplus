@@ -11,7 +11,7 @@ void pagefault_handler(i386_context_t* context) {
 	__asm__ ("mov eax, cr2" : "=a"(p));
 
 
-	kprintf(ERROR, "Exception! Page Fault at address 0x%x (PID: %d, PC: 0x%x)\n", p, sys_getpid(), context->eip);
+	kprintf(ERROR, "Exception! Page Fault at address %p\n\t (PID: %d, PC: %p, SP: %p)\n", p, sys_getpid(), context->eip, context->esp);
 	
 
 	__asm__ ("cli");

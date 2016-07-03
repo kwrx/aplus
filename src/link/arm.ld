@@ -1,7 +1,7 @@
 ENTRY(_start)
-SEARCH_DIR("/xdev/cross/usr/lib")
-SEARCH_DIR("/xdev/cross/usr/i686-cross/lib")
-SEARCH_DIR("/xdev/cross/usr/lib/gcc/arm-cross/4.9.2")
+SEARCH_DIR("/opt/cross/lib")
+SEARCH_DIR("/opt/cross/arm-cross/lib")
+SEARCH_DIR("/opt/cross/lib/gcc/arm-cross/6.1.0")
 
 SECTIONS {
 	. = 0x8000;

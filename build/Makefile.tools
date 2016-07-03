@@ -4,10 +4,10 @@ CC		:= $(TARGET)-gcc
 LD		:= $(TARGET)-ld
 AS		:= $(TARGET)-gcc
 ASM		:= nasm
-OBJCPY		:= $(TARGET)-objcopy
+OBJCPY	:= $(TARGET)-objcopy
 
 CP		:= /usr/bin/cp
 MV		:= /usr/bin/mv
-FIND		:= /usr/bin/find
+FIND	:= /usr/bin/find
 ZIP		:= gzip -f
 

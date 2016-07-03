@@ -2,9 +2,9 @@
 .SUFFIXES: .asm
 
 
-KERNEL_NAME		:= x
+KERNEL_NAME			:= x
 KERNEL_OUTPUT		:= bin/$(KERNEL_NAME)
-KERNEL_ISO		:= x.iso
+KERNEL_ISO			:= x.iso
 
 KERNEL_ARCH_C		:= $(shell $(FIND) src/arch/$(ARCH) -type f -name "*.c")
 KERNEL_ARCH_S		:= $(shell $(FIND) src/arch/$(ARCH) -type f -name "*.s")
@@ -16,9 +16,9 @@ KERNEL_MODULES		:= $(shell $(FIND) modules -type f -name "Makefile" -printf '%h.
 KERNEL_SOURCES		:= $(shell $(FIND) src -type f -not -path *arch* -name "*.c")
 
 KERNEL_OBJECTS		:= 	$(KERNEL_ARCH_C:.c=.o) 		\
-				$(KERNEL_ARCH_S:.s=.o)		\
-				$(KERNEL_ARCH_A:.asm=.o)	\
-				$(KERNEL_SOURCES:.c=.o)
+						$(KERNEL_ARCH_S:.s=.o)		\
+						$(KERNEL_ARCH_A:.asm=.o)	\
+						$(KERNEL_SOURCES:.c=.o)
 
 
 
