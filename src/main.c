@@ -24,7 +24,6 @@ int main(int argc, char** argv) {
 	sys_mount(NULL, "/tmp", "tmpfs", 0, NULL);
 
 
-
 	char* __argv[] = { "/cdrom/usr/bin/lua", NULL };
 	char* __envp[] = { 0 };
 
