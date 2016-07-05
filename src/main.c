@@ -25,7 +25,7 @@ int main(int argc, char** argv) {
 
 
 
-	char* __argv[] = { "/cdrom/usr/bin/lua", "/cdrom/main.lua", NULL };
+	char* __argv[] = { "/cdrom/usr/bin/lua", NULL };
 	char* __envp[] = { 0 };
 
 	if(sys_fork() == 0)
