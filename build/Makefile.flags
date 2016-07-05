@@ -1,0 +1,35 @@
+
+DEBUG		:= yes
+
+DEFINES		:= -DKERNEL
+WARNINGS	:= -Wall -Werror
+
+CFLAGS		:= $(DEFINES) $(WARNINGS) -c -pipe -I src/include -include config.h -nostdlib -std=c99 -O3
+AFLAGS		:= -c -I src/include -include config.h
+NFLAGS		:= $(DEFINES) -w-number-overflow
+LDFLAGS		:= -T src/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
+
+LIBS		:= -lc -lm -lgcc
+
+
+VMM		    := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -m 64 -serial stdio -hda hdd.img -boot d
+
+
+
+ifeq ($(ARCH),x86_64)
+CFLAGS		+= -mno-red-zone -mcmodel=kernel -masm=intel
+NFLAGS		+= -felf64
+endif
+
+ifeq ($(ARCH),i386)
+AFLAGS		+= -masm=intel
+CFLAGS		+= -masm=intel
+NFLAGS		+= -felf
+#VMM		:= echo "c" | bochs -q -f bochs.conf
+endif
+
+ifeq ($(ARCH),arm)
+AFLAGS		+= -mcpu=arm1176jzf-s
+CFLAGS		+= -mcpu=arm1176jzf-s -fpic -mfloat-abi=softfp
+VMM		    := qemu-system-arm -M raspi -cpu arm1176jzf-s -m 256 -kernel $(KERNEL_OUTPUT) -serial stdio
+endif
