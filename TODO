@@ -1,0 +1,2 @@
+Fix "video/fb" Bochs VBE driver
+Add "sys/ioctl.h" header

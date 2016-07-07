@@ -31,29 +31,29 @@ extern void return_from_fork(void);
 extern void return_from_clone(void);
 __asm__ (
 	".globl return_from_fork	\n"
-	"return_from_fork:		\n"
-	"	pop gs			\n"
-	"	pop fs			\n"
-	"	pop es			\n"
-	"	pop ds			\n"
-	"	popa			\n"
-	"	add esp, 8		\n"
-	"	mov dx, 0x20		\n"
-	"	mov al, 0x20		\n"
-	"	out dx, al		\n"
-	"	xor eax, eax		\n"
-	"	sti			\n"
-	"iret				\n"
+	"return_from_fork:			\n"
+	"	pop gs					\n"
+	"	pop fs					\n"
+	"	pop es					\n"
+	"	pop ds					\n"
+	"	popa					\n"
+	"	add esp, 8				\n"
+	"	mov dx, 0x20			\n"
+	"	mov al, 0x20			\n"
+	"	out dx, al				\n"
+	"	xor eax, eax			\n"
+	"	sti						\n"
+	"iret						\n"
 );
 
 
 __asm__ (
 	".globl return_from_clone	\n"
-	"return_from_clone:		\n"
-	"	push eax		\n"
-	"	call sys_exit		\n"
-	".L0:				\n"
-	"	jmp .L0			\n"
+	"return_from_clone:			\n"
+	"	push eax				\n"
+	"	call sys_exit			\n"
+	".L0:						\n"
+	"	jmp .L0					\n"
 );
 
 void fork_handler(i386_context_t* context) {
@@ -264,13 +264,13 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	INTR_ON;
 
 	__asm__ __volatile__ (
-		"cli		\n"
+		"cli			\n"
 		"mov ebx, %0	\n"
 		"mov esp, %1	\n"
 		"mov ebp, %2	\n"
 		"mov cr3, %3	\n"
 		"xor eax, eax	\n"
-		"jmp ebx	\n"
+		"jmp ebx		\n"
 		: : "r"(eip), "r"(esp), "r"(ebp), "r"(pd->physaddr)
 		: "ebx", "esp", "eax"
 	);	
@@ -300,7 +300,7 @@ int task_init(void) {
 	t->gid = TASK_ROOT_GID;
 	t->sid = 0;
 	
-	t->name = "init";
+	t->name = "X";
 	t->description = NULL;
 	t->argv = NULL;
 	t->environ = NULL;

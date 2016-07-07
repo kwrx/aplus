@@ -23,9 +23,14 @@ int main(int argc, char** argv) {
 	sys_mount("/dev/cd0", "/cdrom", "iso9660", 0, NULL);
 	sys_mount(NULL, "/tmp", "tmpfs", 0, NULL);
 
-
-	char* __argv[] = { "/cdrom/usr/bin/lua", NULL };
+	sys_open("/dev/stdin", O_RDONLY, 0);
+	sys_open("/dev/stdout", O_WRONLY, 0);
+	sys_open("/dev/stderr", O_WRONLY, 0);
+	
+	
+	char* __argv[] = { "/cdrom/usr/bin/test", NULL };
 	char* __envp[] = { 0 };
+
 
 	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);

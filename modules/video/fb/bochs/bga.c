@@ -2,9 +2,10 @@
 #include <xdev/module.h>
 #include <xdev/vfs.h>
 #include <xdev/mm.h>
+#include <xdev/debug.h>
 #include <libc.h>
 
-#include <fbdev.h>
+#include <aplus/fbdev.h>
 
 #if defined(__i386__)
 #include <arch/i386/i386.h>
@@ -35,7 +36,8 @@
 #define VBE_DISPI_LFB_ENABLED 0x40
 #define VBE_DISPI_NOCLEARMEM 0x80
 
-#define CHECK_BGA(n) (n >= 0xB0C0 || n <= 0xB0C5)
+#define CHECK_BGA(n) 					(n >= 0xB0C0 || n <= 0xB0C5)
+#define BGA_VIDEORAM_SIZE				0x1000000
 
 
 extern fbdev_t* fbdev;
@@ -49,19 +51,6 @@ int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t v
 	#define wr(i, v)										\
 		outw(VBE_DISPI_IOPORT_INDEX, i);					\
 		outw(VBE_DISPI_IOPORT_DATA, v);
-
-	#define ALIGN(x)										\
-		(((x) + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1))
-	
-	if(__lfbptr) {
-		uintptr_t frame = ALIGN(__lfbptr);
-		uintptr_t end = ALIGN(frame + (width * height * (depth / 8)));
-
-		for(; frame < end; frame += PAGE_SIZE)
-			map_page(frame, frame, 1);
-	} else
-		return -1;
-
 
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
@@ -80,7 +69,8 @@ int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t v
 
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
-	return 0;
+	fbdev->enabled = 1;
+	return E_OK;
 }
 
 int bochs_init(void) {
@@ -89,7 +79,7 @@ int bochs_init(void) {
 	
 	int n = inw(VBE_DISPI_IOPORT_DATA);
 	if(!(CHECK_BGA(n)))
-		return -1;
+		return E_ERR;
 
 
 
@@ -108,18 +98,29 @@ int bochs_init(void) {
 	for(i = 0; i < 65536 && !__lfbptr; i++)
 		pci_scan(&pci_func, i, NULL);
 
-
 	if(!__lfbptr)
-		return -1;
-	
+		return E_ERR;
 
+
+	#define ALIGN(x)										\
+		(((x) + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1))
+	
+	if(__lfbptr) {
+		uintptr_t frame = ALIGN(__lfbptr) - PAGE_SIZE;
+		uintptr_t end = ALIGN(frame + BGA_VIDEORAM_SIZE);
+
+		for(; frame < end; frame += PAGE_SIZE)
+			map_page(frame, frame, 1);
+	} else
+		return E_ERR;
+	
 
 
 	fbdev->name = "Bochs VBE Extensions";
 	fbdev->setvideomode = bga_setvideomode;
-	return 0;
+	return E_OK;
 #else
 int bga_init(void) {
-	return -1;
+	return E_ERR;
 #endif
 }

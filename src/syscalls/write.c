@@ -18,14 +18,6 @@ int sys_write(int fd, void* buf, size_t size) {
 #endif
 	}
 
-	if(fd == 1 || fd == 2) {
-		int i;
-		for(i = 0; i < size; i++)
-			kprintf(fd == 1 ? USER : ERROR, "%c", ((char*)buf)[i] & 0xFF);
-			
-		return size;
-	}
-
 	inode_t* inode = current_task->fd[fd].inode;
 	
 	if(unlikely(!inode)) {

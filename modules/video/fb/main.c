@@ -5,7 +5,7 @@
 #include <xdev/mm.h>
 #include <libc.h>
 
-#include <fbdev.h>
+#include <aplus/fbdev.h>
 
 MODULE_NAME("video/fb");
 MODULE_DEPS("");
@@ -28,6 +28,7 @@ static fbdev_t __fbdev;
 fbdev_t* fbdev = &__fbdev;
 
 
+
 int init(void) {
 	memset(fbdev, 0, sizeof(fbdev_t));
 
@@ -37,7 +38,22 @@ int init(void) {
 			break;
 
 
-	return 0;
+
+
+
+	inode_t* ino;
+	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0666)) == NULL))
+		return E_ERR;
+
+
+	extern int fb_ioctl(struct inode*, int, void*);
+	extern int fb_write(struct inode*, void*, size_t);
+
+	ino->ioctl = fb_ioctl;
+	ino->write = fb_write;
+	
+	
+	return E_OK;
 }
 
 
@@ -45,5 +61,5 @@ int dnit(void) {
 	if(fbdev->dnit)
 		fbdev->dnit();
 
-	return 0;
+	return E_OK;
 }

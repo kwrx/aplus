@@ -42,9 +42,6 @@ int sys_open(const char* name, int flags, mode_t mode) {
 
 	inode_t* cino = NULL;
 
-	
-	mode |= ~current_task->umask;
-
 	if(s[0] == '/') {
 		cino = current_task->root;
 		s++;

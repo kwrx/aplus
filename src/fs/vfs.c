@@ -99,8 +99,6 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
 		return NULL;
 	}
 
-
-
 	child = (inode_t*) kmalloc(sizeof(inode_t), GFP_KERNEL);
 	memset(child, 0, sizeof(inode_t));
 

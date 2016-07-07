@@ -17,6 +17,7 @@ void* sys_sbrk(ptrdiff_t incr) {
 
 	incr += PAGE_SIZE;
 	incr &= ~(PAGE_SIZE - 1);
+	
 
 	int i;
 	if(incr > 0)

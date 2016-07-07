@@ -78,10 +78,6 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	INTR_OFF;
 	arch_task_release(current_task);
 
-	int i;
-	for(i = 0; i < TASK_FD_COUNT; i++)
-		sys_close(i);
-
 
 	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image.start, &size, NULL);
 	KASSERT(_start);

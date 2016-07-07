@@ -3,7 +3,7 @@
 #include <xdev/vfs.h>
 #include <libc.h>
 
-#include <fbdev.h>
+#include <aplus/fbdev.h>
 
 extern fbdev_t* fbdev;
 

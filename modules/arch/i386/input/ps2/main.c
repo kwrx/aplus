@@ -11,9 +11,11 @@ MODULE_AUTHOR("WareX");
 MODULE_LICENSE("GPL");
 
 
+#define MOUSE_DEVICE	"/dev/mouse"
+#define KBD_DEVICE		"/dev/kbd"
+
 #if defined(__i386__)
 #include <arch/i386/i386.h>
-
 
 
 #define PS2_DATA		0x60
@@ -23,18 +25,18 @@ MODULE_LICENSE("GPL");
 
 
 
-#define PS2_WAIT						\
-	{							\
-		int t = 100000;					\
+#define PS2_WAIT									\
+	{												\
+		int t = 100000;								\
 		while((inb(PS2_CTRL) & 0x02) && t > 0)		\
-			t--;					\
+			t--;									\
 	}
 
-#define PS2_WAIT_0						\
-	{							\
-		int t = 100000;					\
+#define PS2_WAIT_0									\
+	{												\
+		int t = 100000;								\
 		while(!(inb(PS2_CTRL) & 0x01) && t > 0)		\
-			t--;					\
+			t--;									\
 	}
 
 
@@ -42,7 +44,7 @@ MODULE_LICENSE("GPL");
 
 #define VK_CAPSLOCK		(0x3A)
 #define VK_NUMLOCK		(0x45)
-#define VK_SCORRLOCK		(0x46)
+#define VK_SCORRLOCK	(0x46)
 #define VK_LSHIFT		(0x2A)
 #define VK_RSHIFT		(0x36)
 #define VK_LCTRL		(0x1D)
@@ -72,17 +74,17 @@ static struct {
 
 	uint8_t pack[4];
 	uint8_t cycle;
+	int fd;
 } mouse;
 
 static struct {
 	uint8_t keymap[1024];
 	uint8_t vkeys[256];
-	uint8_t inbuf[256];
-	uint8_t inoff;
 	uint8_t capslock;
 	uint8_t numlock;
 	uint8_t scorrlock;
 	uint8_t e0;
+	int fd;
 } kb = {
 	.keymap = {
 		0x00, 0x1B, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
@@ -132,6 +134,16 @@ static struct {
 };
 
 
+static void __fifo_send(const char* dev, void* ptr, size_t size) {
+	int fd = sys_open(dev, O_WRONLY, 0);
+	if(fd < 0)
+		return;
+	
+	sys_write(fd, ptr, size);
+	sys_close(fd);
+}
+
+
 void kb_intr(void* unused) {
 	if(!(inb(PS2_CTRL) & 0x01))
 		return;
@@ -175,7 +187,8 @@ void kb_intr(void* unused) {
 				off = 256;
 	
 			if(kb.keymap[vkscan + off])
-				kb.inbuf[kb.inoff++] = kb.keymap[vkscan + off];
+				__fifo_send(KBD_DEVICE, &kb.keymap[vkscan + off], 1);
+			
 	}
 
 
@@ -261,13 +274,13 @@ int init(void) {
 
 
 	#define MOUSE_WRITE(x)		\
-		PS2_WAIT;		\
+		PS2_WAIT;				\
 		outb(PS2_CTRL, 0xD4);	\
-		PS2_WAIT;		\
+		PS2_WAIT;				\
 		outb(PS2_DATA, x)
 
 	#define MOUSE_READ(x)		\
-		PS2_WAIT_0;		\
+		PS2_WAIT_0;				\
 		x = inb(PS2_DATA)
 
 
@@ -317,6 +330,13 @@ int init(void) {
 	mouse.clip.right = 0xFFFF;
 	mouse.clip.bottom = 0xFFFF;
 
+
+	if(sys_mkfifo(KBD_DEVICE, 0777) != 0)
+		kprintf(ERROR, "%s: cannot create FIFO device!\n", KBD_DEVICE);
+		
+	if(sys_mkfifo(MOUSE_DEVICE, 0777) != 0)
+		kprintf(ERROR, "%s: cannot create FIFO device!\n", MOUSE_DEVICE);
+		
 
 	irq_enable(1, kb_intr);
 	irq_enable(12, mouse_intr);

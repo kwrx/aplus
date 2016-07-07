@@ -14,6 +14,8 @@
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/utsname.h>
+#include <sys/termios.h>
 #include <sys/mman.h>
 #include <sys/string.h>
 #include <sched.h>
+#include <signal.h>
