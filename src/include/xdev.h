@@ -97,7 +97,8 @@ extern int sys_execve(const char* filename, char* const argv[], char* const envp
 extern int sys_mkfifo(const char* pathname, mode_t mode);
 extern int sys_symlink(const char*, const char*);
 
-extern void arch_loop_idle();
+
+extern int mounts_init();
 
 #endif
 

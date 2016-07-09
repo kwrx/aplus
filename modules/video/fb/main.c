@@ -28,7 +28,6 @@ static fbdev_t __fbdev;
 fbdev_t* fbdev = &__fbdev;
 
 
-
 int init(void) {
 	memset(fbdev, 0, sizeof(fbdev_t));
 
@@ -37,21 +36,13 @@ int init(void) {
 		if(hooks[i - 1] () == 0)
 			break;
 
-
-
-
-
 	inode_t* ino;
 	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0666)) == NULL))
 		return E_ERR;
 
 
 	extern int fb_ioctl(struct inode*, int, void*);
-	extern int fb_write(struct inode*, void*, size_t);
-
 	ino->ioctl = fb_ioctl;
-	ino->write = fb_write;
-	
 	
 	return E_OK;
 }

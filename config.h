@@ -2,24 +2,27 @@
 #define _CONFIG_H
 
 #define CONFIG_HAVE_LIBC			1
-#define CONFIG_SMP				0
-#define CONFIG_IPC				1
-#define CONFIG_VMM				1
+#define CONFIG_SMP					0
+#define CONFIG_IPC					1
+#define CONFIG_VMM					1
 #define CONFIG_NETWORK				1
 #define CONFIG_BOCHS				1
-#define CONFIG_CLOCKS_PER_SEC			1000
+#define CONFIG_SERIAL_DEBUG			1
+#define CONFIG_IO_DEBUG				1
+#define CONFIG_CLOCKS_PER_SEC		1000
+#define CONFIG_ROOT					"/cdrom"
 
-#define DEBUG					1
+#define DEBUG						1
 
 
 
 
 
-#define KERNEL_NAME				"aplus"
+#define KERNEL_NAME					"aplus"
 #define KERNEL_VERSION				"0.1"
 #define KERNEL_CODENAME				"generic"
-#define KERNEL_DATE				__DATE__
-#define KERNEL_TIME				__TIME__
+#define KERNEL_DATE					__DATE__
+#define KERNEL_TIME					__TIME__
 
 #if DEBUG
 #	undef KERNEL_CODENAME
@@ -28,15 +31,15 @@
 
 
 #if defined(__i386__)
-#	define CONFIG_BITS				32
+#	define CONFIG_BITS					32
 #	define CONFIG_KERNEL_BASE			0xC0000000L
 #	define CONFIG_HEAP_BASE				0xD0000000L
 #	define CONFIG_STACK_BASE			0xFFC00000L
-#	define CONFIG_HEAP_SIZE				0x01000000ULL
+#	define CONFIG_HEAP_SIZE				0x03000000ULL
 #	define CONFIG_STACK_SIZE			0x00001000ULL
 #	define KERNEL_PLATFORM				"i386"
 #elif defined(__x86_64__)
-#	define CONFIG_BITS				64
+#	define CONFIG_BITS					64
 #	define CONFIG_KERNEL_BASE			0xFFFFFFFFC0000000L
 #	define CONFIG_HEAP_BASE				0xFFFFFFFFD0000000L
 #	define CONFIG_STACK_BASE			0xFFFFFFFFF0000000L
@@ -44,7 +47,7 @@
 #	define CONFIG_STACK_SIZE			0x00004000ULL
 #	define KERNEL_PLATFORM				"x86_64"
 #elif defined(__arm__)
-#	define CONFIG_BITS				32
+#	define CONFIG_BITS					32
 #	if defined (__rpi__)
 		/* TODO */
 #		define KERNEL_PLATFORM			"armv6-rpi"
@@ -64,19 +67,19 @@
 
 
 #ifdef __GNUC__
-#define likely(x)				__builtin_expect(!!(x), 1)
-#define unlikely(x)				__builtin_expect(!!(x), 0)
+#define likely(x)					__builtin_expect(!!(x), 1)
+#define unlikely(x)					__builtin_expect(!!(x), 0)
 #else
-#define likely(x)				(!!(x))
-#define unlikely(x)				(!!(x))
+#define likely(x)					(!!(x))
+#define unlikely(x)					(!!(x))
 #endif
 
 #ifndef __weak
-#define __weak					__attribute__((weak))
+#define __weak						__attribute__((weak))
 #endif
 
 #ifndef __packed
-#define __packed				__attribute__((packed))
+#define __packed					__attribute__((packed))
 #endif
 
 #ifndef __section
@@ -84,11 +87,11 @@
 #endif
 
 #ifndef __align
-#define __align(x)				__attribute__((align(x)))
+#define __align(x)					__attribute__((align(x)))
 #endif
 
 #ifndef __malloc
-#define __malloc				__attribute__((malloc))
+#define __malloc					__attribute__((malloc))
 #endif
 
 #ifndef __optimize
@@ -96,8 +99,8 @@
 #endif
 
 #ifdef __GNUC__
-#define __PRAGMA(x)				_Pragma(#x)
-#define WARNING(x)				__PRAGMA(GCC diagnostic ignored x)
+#define __PRAGMA(x)					_Pragma(#x)
+#define WARNING(x)					__PRAGMA(GCC diagnostic ignored x)
 #else
 #define WARNING(x)
 #endif

@@ -4,7 +4,8 @@
 
 KERNEL_NAME			:= x
 KERNEL_OUTPUT		:= bin/$(KERNEL_NAME)
-KERNEL_ISO			:= x.iso
+KERNEL_SYM			:= $(KERNEL_NAME).sym
+KERNEL_ISO			:= $(KERNEL_NAME).iso
 
 KERNEL_ARCH_C		:= $(shell $(FIND) src/arch/$(ARCH) -type f -name "*.c")
 KERNEL_ARCH_S		:= $(shell $(FIND) src/arch/$(ARCH) -type f -name "*.s")

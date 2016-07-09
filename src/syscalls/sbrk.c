@@ -14,6 +14,7 @@ void* sys_sbrk(ptrdiff_t incr) {
 	}
 
 	uintptr_t cr = current_task->image.end;
+	
 
 	incr += PAGE_SIZE;
 	incr &= ~(PAGE_SIZE - 1);

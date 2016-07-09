@@ -7,10 +7,6 @@
 #include "tty.h"
 
 
-static void __wch(char ch) {
-    
-}
-
 
 int tty_write(struct inode* inode, void* ptr, size_t len) {
     if(unlikely(!inode || !ptr)) {
@@ -25,13 +21,6 @@ int tty_write(struct inode* inode, void* ptr, size_t len) {
     
     if(unlikely(!len))
         return 0;
-
-    int fd = sys_open("/dev/fb0", O_WRONLY, 0666);
-    if(unlikely(fd) < 0) {
-        errno = ENODEV;
-        return E_ERR;
-    }
-
 
 
     struct termios* ios = (struct termios*) inode->userdata;
@@ -52,7 +41,7 @@ int tty_write(struct inode* inode, void* ptr, size_t len) {
         if(*buf == ios->c_cc[VEOF])
             break;
         else if(*buf == ios->c_cc[VERASE])
-            { char ch = '\b'; sys_write(fd, &ch, 1); }
+            kprintf(USER, "\b");
         else if(*buf == ios->c_cc[VINTR])
             sys_kill(current_task->pid, SIGINT);
         else if(*buf == ios->c_cc[VKILL])
@@ -60,12 +49,11 @@ int tty_write(struct inode* inode, void* ptr, size_t len) {
         else if(*buf == ios->c_cc[VQUIT])
             sys_kill(current_task->pid, SIGQUIT);
         else
-            sys_write(fd, buf, 1);
+            kprintf(USER, "%c", *buf);
         
         buf++;
         p++;
     }
     
-    sys_close(fd);
     return p;
 }

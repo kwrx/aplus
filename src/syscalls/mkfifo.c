@@ -28,7 +28,6 @@ static int fifo_read(struct inode* inode, void* ptr, size_t len) {
 		
 	if(unlikely(!len))
 		return 0;
-	
 		
 	if(len > BUFSIZ)
 		len = BUFSIZ;
@@ -63,6 +62,7 @@ static int fifo_write(struct inode* inode, void* ptr, size_t len) {
 		
 	if(len > BUFSIZ)
 		len = BUFSIZ;
+		
 		
 	fifo_t* fifo = (fifo_t*) inode->userdata;
 	register uint8_t* buf = (uint8_t*) ptr;

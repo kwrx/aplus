@@ -33,10 +33,28 @@ void debug_send(char value, int flags) {
 		for(y = 0; y < VGA_HEIGHT; y++)
 			for(x = 0; x < VGA_WIDTH; x++)
 				tm[y * VGA_WIDTH + x] = (__cga_colors[0] << 8) | ' ';
+				
+				
+#if CONFIG_SERIAL_DEBUG
+		outb(0x3F8 + 1, 0x00);
+		outb(0x3F8 + 3, 0x80);
+		outb(0x3F8 + 0, 0x03);
+		outb(0x3F8 + 1, 0x00);
+		outb(0x3F8 + 3, 0x03);
+		outb(0x3F8 + 2, 0xC7);
+		outb(0x3F8 + 4, 0x0B);
+#endif
 	}
 
 #if CONFIG_BOCHS
 	outb(0xE9, value);
+#endif
+
+#if CONFIG_SERIAL_DEBUG
+	int i;
+	for(i = 0; i < 100000 && ((inb(0x3F8 + 5) & 0x20) == 0); i++)
+		;
+	outb(0x3F8, value);
 #endif
 
 	switch(value) {

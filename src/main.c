@@ -16,24 +16,24 @@ int main(int argc, char** argv) {
 	(void) network_init();
 #endif
 	(void) module_init();
-
-	kprintf(INFO, "%s %s-%s %s %s %s\n", KERNEL_NAME, KERNEL_VERSION, KERNEL_CODENAME, KERNEL_DATE, KERNEL_TIME, KERNEL_PLATFORM);
-
-
-	sys_mount("/dev/cd0", "/cdrom", "iso9660", 0, NULL);
-	sys_mount(NULL, "/tmp", "tmpfs", 0, NULL);
-
-	sys_open("/dev/stdin", O_RDONLY, 0);
-	sys_open("/dev/stdout", O_WRONLY, 0);
-	sys_open("/dev/stderr", O_WRONLY, 0);
+	(void) mounts_init();
 	
-	
-	char* __argv[] = { "/cdrom/usr/bin/test", NULL };
-	char* __envp[] = { 0 };
+	kprintf(INFO, "%s %s-%s %s %s %s\n", 
+			KERNEL_NAME, 
+			KERNEL_VERSION,
+			KERNEL_CODENAME,
+			KERNEL_DATE,
+			KERNEL_TIME,
+			KERNEL_PLATFORM);
 
+	
+	char* __argv[] = { "/usr/bin/init", NULL };
+	char* __envp[] = { NULL };
 
 	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
+		
+		
 		
 	for(;;)
 		sys_yield();

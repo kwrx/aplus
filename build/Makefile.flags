@@ -12,19 +12,21 @@ LDFLAGS		:= -T src/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x10
 LIBS		:= -lc -lm -lgcc
 
 
-VMM		    := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -m 64 -serial stdio -boot d
+VMM		    := qemu-system-$(ARCH) -s -S -cdrom $(KERNEL_ISO) -m 64 -serial stdio -boot d
 
 
 
 ifeq ($(ARCH),x86_64)
 CFLAGS		+= -mno-red-zone -mcmodel=kernel -masm=intel
 NFLAGS		+= -felf64
+VMM         += -vga std
 endif
 
 ifeq ($(ARCH),i386)
 AFLAGS		+= -masm=intel
 CFLAGS		+= -masm=intel
 NFLAGS		+= -felf
+VMM         += -vga std
 #VMM		    := echo "c" | bochs -q -f bochs.conf
 endif
 

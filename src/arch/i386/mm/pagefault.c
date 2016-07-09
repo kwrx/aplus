@@ -19,7 +19,7 @@ void pagefault_handler(i386_context_t* context) {
 		for(;;) __asm__("hlt");
 	}
 	
-	
+
 	__asm__("sti");
 	sys_kill(current_task->pid, SIGSEGV);
 }

@@ -56,6 +56,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 		kprintf(ERROR, "elf: invalid elf image\n");
 		return NULL;
 	}
+	
 
 	elf->sections = (void*) ((uintptr_t) image + elf->header->e_shoff);
 	elf->programs = (void*) ((uintptr_t) image + elf->header->e_phoff);

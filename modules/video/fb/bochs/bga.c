@@ -82,6 +82,7 @@ int bochs_init(void) {
 		return E_ERR;
 
 
+	__lfbptr = 0;
 
 	void pci_func(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* arg) {
 		
@@ -89,7 +90,6 @@ int bochs_init(void) {
 			(vendor_id == 0x1234) &&
 			(device_id == 0x1111)
 		))) return;
-
 		
 		__lfbptr = (uintptr_t) pci_read_field(device, PCI_BAR0, 4);
 	}

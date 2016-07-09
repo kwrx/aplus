@@ -14,11 +14,13 @@ all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
 	$(KERNEL_ISO)
-	@$(VMM)
+	@$(VMM) & $(DEBUGGER)
 
 $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 	@echo "  LD     " $@
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
+	@echo "  OBJCPY " $(KERNEL_SYM)
+	@$(OBJCPY) --only-keep-debug $@ $(KERNEL_SYM)
 
 KERNEL_MODULES:
 	@echo "multiboot /x" > bin/boot/grub/grub.cfg
@@ -44,6 +46,6 @@ $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES
 	@$(ASM) $(NFLAGS) -o $@ $<
 
 clean:
-	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_MODULES) $(KERNEL_ISO) $(KERNEL_OUTPUT)
+	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_MODULES) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
 	@$(RM) -r *.o
 
