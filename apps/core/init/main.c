@@ -4,6 +4,7 @@
 #include <string.h>
 #include <fcntl.h>
 
+#include <sys/ioctl.h>
 #include <aplus/fbdev.h>
 
 #define SYSCONFIG       "/etc/config"

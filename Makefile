@@ -28,7 +28,7 @@ KERNEL_MODULES:
 	@echo "boot" >> bin/boot/grub/grub.cfg
 	
 APPS:
-	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
+	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX);)
 
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
 	@echo "  ISO    " $@

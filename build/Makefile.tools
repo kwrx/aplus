@@ -1,6 +1,7 @@
 
 
 CC		    := $(TARGET)-gcc
+CXX         := $(TARGET)-g++
 LD		    := $(TARGET)-ld
 AS		    := $(TARGET)-gcc
 ASM		    := nasm

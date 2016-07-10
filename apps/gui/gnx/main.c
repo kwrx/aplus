@@ -9,6 +9,7 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/ioctl.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
