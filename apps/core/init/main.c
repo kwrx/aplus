@@ -7,6 +7,8 @@
 #include <aplus/fbdev.h>
 
 #define SYSCONFIG       "/etc/config"
+#define APPS_GUI        "/usr/bin/gnx"
+#define APPS_SHELL      "/usr/bin/sh"
 
 
 
@@ -17,14 +19,29 @@ int main() {
     open("/dev/stdout", O_WRONLY);
     open("/dev/stderr", O_WRONLY);
     
+    char* __envp[] = {
+        "BASH=" APPS_SHELL,
+        "HOME=/home",
+        "PATH=/usr/bin:/usr/local/bin",
+        NULL
+    };
+    
+    char* __argv[] = {
+        APPS_SHELL,
+        NULL,
+    };
+    
+    
+    
+    
     FILE* fp = fopen(SYSCONFIG, "r");
     if(!fp) {
         fprintf(stderr, SYSCONFIG ": not found! Using default settings\n");
         return 0;
     }
 
-
-    if(ini_read(fp, "screen.enabled")) {
+    int v;
+    if(v = ini_read(fp, "screen.enabled")) {
         int fd = open("/dev/fb0", O_RDONLY);
         if(fd < 0)
             perror("/dev/fb0");
@@ -39,9 +56,10 @@ int main() {
             
             ioctl(fd, FBIOCTL_SETMODE, &mode);
             ioctl(fd, FBIOCTL_ENABLE, 1);
+            close(fd);
+            
+            __argv[0] = APPS_GUI;
         }
-        
-        close(fd);
     }
     
     int p;
@@ -50,20 +68,5 @@ int main() {
     }
     
     fclose(fp);
-    
-    
-    
-    char* __envp[] = {
-        "BASH=/usr/bin/sh",
-        "HOME=/home",
-        "PATH=/usr/bin:/usr/local/bin",
-        NULL
-    };
-    
-    char* __argv[] = {
-        "/usr/bin/lua",
-        NULL
-    };
-    
     return execve(__argv[0], __argv, __envp);
 }
