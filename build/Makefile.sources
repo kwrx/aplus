@@ -14,6 +14,10 @@ KERNEL_ARCH_A		:= $(shell $(FIND) src/arch/$(ARCH) -type f -name "*.asm")
 KERNEL_MODULES_MAKE	:= $(shell $(FIND) modules -type f -name "Makefile" -printf '%h\n')
 KERNEL_MODULES		:= $(shell $(FIND) modules -type f -name "Makefile" -printf '%h.ko\n' | sed 's!.*/!!' | sed 's/^/bin\/boot\/mods\//')
 
+APPS_MAKE			:= $(shell $(FIND) apps -type f -name "Makefile" -printf '%h\n')
+APPS				:= $(shell $(FIND) apps -type f -name "Makefile" -printf '%h\n' | sed 's!.*/!!' | sed 's/^/bin\/usr\/bin\//')
+
+
 KERNEL_SOURCES		:= $(shell $(FIND) src -type f -not -path *arch* -name "*.c")
 
 KERNEL_OBJECTS		:= 	$(KERNEL_ARCH_C:.c=.o) 		\

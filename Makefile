@@ -26,8 +26,11 @@ KERNEL_MODULES:
 	@echo "multiboot /x" > bin/boot/grub/grub.cfg
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
 	@echo "boot" >> bin/boot/grub/grub.cfg
+	
+APPS:
+	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
 
-$(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES
+$(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
 	@echo "  ISO    " $@
 	@echo "multiboot /x" >> bin/boot/grub/grub.cfg
 	@echo "boot" >> bin/boot/grub/grub.cfg
@@ -46,6 +49,6 @@ $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES
 	@$(ASM) $(NFLAGS) -o $@ $<
 
 clean:
-	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_MODULES) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
+	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_MODULES) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM) $(APPS)
 	@$(RM) -r *.o
 

@@ -1,0 +1,12 @@
+# Screen
+screen.enabled=1
+screen.width=1280
+screen.height=768
+screen.bpp=32
+
+# Energy saving
+#   0 - Disabled
+#   1 - Low
+#   2 - Medium
+#   3 = High
+idle.priority=0
