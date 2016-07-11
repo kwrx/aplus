@@ -1,3 +1,5 @@
 Fix "video/fb" Bochs VBE driver         [OK]
 Add "sys/ioctl.h" header                [OK]
 Fix GNX communication
+Add socket syscalls
+Add select syscall

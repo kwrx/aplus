@@ -13,12 +13,14 @@
 
 
 
-extern int ini_read(FILE* fp, const char* ini_name);
+extern char* ini_read(FILE* fp, const char* ini_name);
+extern int ini_read_int(FILE* fp, const char* ini_name);
+
 
 int main() {
-    open("/dev/stdin", O_RDONLY);
-    open("/dev/stdout", O_WRONLY);
-    open("/dev/stderr", O_WRONLY);
+    fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
+    fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
+    fcntl(open("/dev/stderr", O_WRONLY), F_DUPFD, STDERR_FILENO);
     
     char* __envp[] = {
         "BASH=" APPS_SHELL,
@@ -42,16 +44,16 @@ int main() {
     }
 
     int v;
-    if(v = ini_read(fp, "screen.enabled")) {
+    if(v = ini_read_int(fp, "screen.enabled")) {
         int fd = open("/dev/fb0", O_RDONLY);
         if(fd < 0)
             perror("/dev/fb0");
         else {
             
             fbdev_mode_t mode;
-            mode.width = ini_read(fp, "screen.width");
-            mode.height = ini_read(fp, "screen.height");
-            mode.bpp = ini_read(fp, "screen.bpp");
+            mode.width = ini_read_int(fp, "screen.width");
+            mode.height = ini_read_int(fp, "screen.height");
+            mode.bpp = ini_read_int(fp, "screen.bpp");
             mode.vx =
             mode.vy = 0;
             
@@ -64,7 +66,7 @@ int main() {
     }
     
     int p;
-    if(p = ini_read(fp, "idle.priority")) {
+    if(p = ini_read_int(fp, "idle.priority")) {
         /* TODO */
     }
     

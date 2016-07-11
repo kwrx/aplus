@@ -8,7 +8,7 @@
 
 SYSCALL(19, fcntl,
 int sys_fcntl(int fd, int cmd, long arg) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_fcntl(fd - TASK_FD_COUNT, cmd, arg);
 #else
@@ -19,6 +19,9 @@ int sys_fcntl(int fd, int cmd, long arg) {
 
 	switch(cmd) {
 		case F_DUPFD:
+			if(fd == (int) arg)
+				return (int) arg;
+				
 			sys_close(arg);
 			memcpy((void*) &current_task->fd[arg], (void*) &current_task->fd[fd], sizeof(fd_t));
 	

@@ -14,10 +14,23 @@ int sys_uname(struct utsname* buf) {
 		errno = EFAULT;
 		return -1;
 	}
+	
+	
+	char* __hostname = hostname;
 
+	int fd = sys_open("/etc/hostname", O_RDONLY, 0666);
+	if(likely(fd >= 0)) {
+		static char buf[BUFSIZ];
+		memset(buf, 0, BUFSIZ);
+		
+		read(fd, buf, BUFSIZ);
+		close(fd);
+		
+		__hostname = buf;
+	}
 
 	strcpy(buf->sysname, KERNEL_NAME);
-	strcpy(buf->nodename, hostname);
+	strcpy(buf->nodename, __hostname);
 	strcpy(buf->release, KERNEL_VERSION);
 	strcpy(buf->version, KERNEL_CODENAME);
 	strcpy(buf->machine, KERNEL_PLATFORM);

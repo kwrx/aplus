@@ -6,9 +6,6 @@
 #include <xdev/debug.h>
 #include <libc.h>
 
-
-
-SYSCALL(34, mmap,
 void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t off) {
 	(void) fildes;
 	(void) off;
@@ -51,4 +48,19 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 		memset((void*) rd, 0, len);
 
 	return (void*) rd;
-});
+}
+
+SYSCALL(34, _mmap,
+	void* sys__mmap(uintptr_t* p) {
+		return sys_mmap(
+			(void*) p[0],
+			(size_t) p[1],
+			(int) p[2],
+			(int) p[3],
+			(int) p[4],
+			(off_t) p[5]
+		);
+	}
+);
+
+EXPORT(sys_mmap);

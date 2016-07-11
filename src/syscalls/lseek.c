@@ -8,7 +8,7 @@
 
 SYSCALL(9, lseek,
 off_t sys_lseek(int fd, off_t off, int dir) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 		errno = EBADF;
 		return -1;
 	}

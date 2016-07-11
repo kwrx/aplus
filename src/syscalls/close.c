@@ -8,7 +8,7 @@
 
 SYSCALL(1, close,
 int sys_close(int fd) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_close(fd - TASK_FD_COUNT);
 #else

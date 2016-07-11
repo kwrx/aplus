@@ -6,7 +6,7 @@
 #include <fcntl.h>
 
 
-int ini_read(FILE* fp, const char* ini_name) {
+char* ini_read(FILE* fp, const char* ini_name) {
     
     int line_count = 0;
     static char name[BUFSIZ];
@@ -62,8 +62,21 @@ int ini_read(FILE* fp, const char* ini_name) {
     static char line[BUFSIZ];
     while(fgets(line, BUFSIZ, fp))
         if(parse_line(line) != -1)
-            return atoi(value);  
+            return strdup(value);  
            
            
     return 0;
+}
+
+
+int ini_read_int(FILE* fp, const char* ini_name) {
+    register int r = -1;
+    char* s = ini_read(fp, ini_name);
+    if(!s)
+        return r;
+        
+    r = atoi(s);
+    free(s);
+    
+    return r;
 }

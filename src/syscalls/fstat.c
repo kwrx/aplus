@@ -7,7 +7,7 @@
 
 SYSCALL(4, fstat,
 int sys_fstat(int fd, struct stat* st) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 		errno = EBADF;
 		return -1;
 	}

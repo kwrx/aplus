@@ -119,7 +119,7 @@ int main(int argc, char** argv, char** env) {
                 
                 __gnx_new_window(handle, &rect);
                 break;
-            }    
+            }
             case GNX_WND_GETFLAGS: {
                 gnx_window_t* w;
                 read(fd, &w, sizeof(gnx_handle_t));

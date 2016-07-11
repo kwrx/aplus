@@ -15,6 +15,7 @@
 #include <sys/times.h>
 #include <sys/utsname.h>
 #include <sys/termios.h>
+#include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/string.h>
 #include <sched.h>

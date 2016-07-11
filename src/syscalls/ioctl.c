@@ -8,7 +8,7 @@
 
 SYSCALL(20, ioctl,
 int sys_ioctl(int fd, int req, void* arg) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_ioctl(fd - TASK_FD_COUNT, req, arg);
 #else

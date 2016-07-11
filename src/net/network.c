@@ -45,6 +45,8 @@ static void tcpip_init_done(void* arg) {
 	} else
 		kprintf(WARN, "netif: Loopback interface not found\n");
 
+
+	lwip_socket_init();
 }
 
 

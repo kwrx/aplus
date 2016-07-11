@@ -9,7 +9,7 @@
 
 SYSCALL(11, read,
 int sys_read(int fd, void* buf, size_t size) {
-	if(unlikely(fd >= TASK_FD_COUNT)) {
+	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_read(fd - TASK_FD_COUNT, buf, size);
 #else
