@@ -19,6 +19,7 @@ void debug_send(char value, int flags);
 #if !DEBUG
 #define debug_send(a)
 #define KASSERT(x)
+#define KASSERTF(x, y...)
 #define kprintf(f, a, b...)
 #else
 

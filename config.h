@@ -6,14 +6,14 @@
 #define CONFIG_IPC					1
 #define CONFIG_VMM					1
 #define CONFIG_NETWORK				1
-#define CONFIG_BOCHS				1
-#define CONFIG_SERIAL_DEBUG			1
-#define CONFIG_IO_DEBUG				1
 #define CONFIG_CLOCKS_PER_SEC		1000
 #define CONFIG_ROOT					"/cdrom"
 
 #define DEBUG						1
 
+#define CONFIG_BOCHS				DEBUG
+#define CONFIG_SERIAL_DEBUG			DEBUG
+#define CONFIG_IO_DEBUG				DEBUG
 
 
 

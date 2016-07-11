@@ -91,4 +91,6 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	_start((char**) argv, (char**) envp);
 	KASSERT(0);
+	
+	return -1;
 });

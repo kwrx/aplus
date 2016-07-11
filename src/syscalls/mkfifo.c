@@ -36,11 +36,13 @@ static int fifo_read(struct inode* inode, void* ptr, size_t len) {
 	register uint8_t* buf = (uint8_t*) ptr;
 	
 	mutex_lock(&fifo->r_lock);
-	while(len--) {
+	
+	int i;
+	for(i = 0; i < len; i++) {
 		while(!(fifo->w_pos > fifo->r_pos))
 			sys_yield();
 			
-		*buf = fifo->buffer[fifo->r_pos++ % BUFSIZ];
+		*buf++ = fifo->buffer[fifo->r_pos++ % BUFSIZ];
 	}
 	
 	mutex_unlock(&fifo->r_lock);
@@ -70,7 +72,8 @@ static int fifo_write(struct inode* inode, void* ptr, size_t len) {
 	
 	mutex_lock(&fifo->w_lock);
 	
-	while(len--)
+	int i;
+	for(i = 0; i < len; i++)
 		fifo->buffer[fifo->w_pos++ % BUFSIZ] = *buf++;
 		
 	mutex_unlock(&fifo->w_lock);

@@ -1,2 +1,3 @@
-Fix "video/fb" Bochs VBE driver
-Add "sys/ioctl.h" header
+Fix "video/fb" Bochs VBE driver         [OK]
+Add "sys/ioctl.h" header                [OK]
+Fix GNX communication
