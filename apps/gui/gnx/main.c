@@ -56,9 +56,6 @@ int main(int argc, char** argv, char** env) {
     /* Load Render*/
     screen_render = SDL_CreateSoftwareRenderer(screen);
     check_sdl_errors(SDL, !screen_render);
-    
-    /* Load Device */   
-    check_errors(GNX_DEVICE, mkfifo(GNX_DEVICE, 0777) != 0);
  
     /* Load Wallpaper */
     wallpaper = __optimize_sdl_surface(IMG_Load(PATH_WALLPAPER), 1);
@@ -73,37 +70,43 @@ int main(int argc, char** argv, char** env) {
  
     
     /* Start GNX Server */
-    fd = open(GNX_DEVICE, O_RDWR);
-    check_errors(GNX_DEVICE, fd < 0);
+    static struct sockaddr_in tmp;
+   
+    int sd = socket(AF_INET, SOCK_STREAM, 0);
+    check_errors("socket", sd < 0);
     
+    tmp.sin_len = sizeof(tmp);
+    tmp.sin_family = AF_INET;
+    tmp.sin_addr.s_addr = INADDR_ANY;
+    tmp.sin_port = __builtin_bswap16(GNX_PORT);
+    
+    check_errors("bind", bind(sd, (struct sockaddr*) &tmp, sizeof(tmp)) != 0);
+    check_errors("listen", listen(sd, 10) != 0);
+
 #if DEBUG
-    /* Load test window */
-    if(fork() == 0) {
-        #define W(x)    write(fd, &x, sizeof(x))
-        
-        gnx_cmd_t cmd = GNX_WND_CREATE;
-        W(cmd);
-        
-        gnx_handle_t handle = GNX_HANDLE_NULL;
-        W(handle);
-        
-        gnx_rect_t r;
-        r.x = 100;
-        r.y = 100;
-        r.w = 500;
-        r.h = 400;
-        W(r);
-        
-        exit(0);
-    }
- #endif
+    fprintf(stderr, "gnx: listening connections\n");
+#endif
     
-    while(1) {
+    do {
+        fd = accept(sd, 0, 0);
+        check_errors("accept", fd < 0);
+        
+#if DEBUG
+        fprintf(stderr, "gnx: accepted connection request from %d\n", fd);
+#endif
+        
+        if(fork() == 0)
+            break;
+    } while(1);
+    
+    
+    do {
         static gnx_cmd_t cmd;
-        read(fd, &cmd, sizeof(cmd));
+        while(read(fd, &cmd, sizeof(cmd)) != sizeof(cmd))
+            sched_yield();
 
 #if DEBUG        
-        fprintf(stderr, "gnx: received command <%02d>\n", cmd);
+        fprintf(stderr, "gnx: received command <%02d> from %d\n", cmd, fd);
 #endif
      
         switch(cmd) {
@@ -146,7 +149,7 @@ int main(int argc, char** argv, char** env) {
         }
         
         return 0;
-    }
+    } while(1);
    
    
     return 0;

@@ -3,6 +3,7 @@
 #include <xdev/task.h>
 #include <xdev/ipc.h>
 #include <xdev/syscall.h>
+#include <xdev/debug.h>
 #include <libc.h>
 
 /* See src/init/hostname.c */
@@ -10,6 +11,7 @@ extern char* hostname;
 
 SYSCALL(33, uname,
 int sys_uname(struct utsname* buf) {
+	kprintf(LOG, "sys_uname(%p)\n", buf);
 	if(unlikely(!buf)) {
 		errno = EFAULT;
 		return -1;
@@ -17,6 +19,7 @@ int sys_uname(struct utsname* buf) {
 	
 	
 	char* __hostname = hostname;
+
 
 	int fd = sys_open("/etc/hostname", O_RDONLY, 0666);
 	if(likely(fd >= 0)) {

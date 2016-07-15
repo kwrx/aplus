@@ -1,8 +1,10 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <getopt.h>
 
 #include <sys/ioctl.h>
 #include <aplus/fbdev.h>
@@ -17,7 +19,7 @@ extern char* ini_read(FILE* fp, const char* ini_name);
 extern int ini_read_int(FILE* fp, const char* ini_name);
 
 
-int main() {
+int main(int argc, char** argv) {
     fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
     fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
     fcntl(open("/dev/stderr", O_WRONLY), F_DUPFD, STDERR_FILENO);
@@ -31,10 +33,33 @@ int main() {
     
     char* __argv[] = {
         APPS_SHELL,
-        NULL,
+        NULL
     };
     
     
+    
+    static int graphics_enabled = -1;
+    static struct option long_options[] = {
+        { "graphics", no_argument, &graphics_enabled, 1},
+        { "console", no_argument, &graphics_enabled, 0}
+    };
+    
+    int i, idx;
+    while((i = getopt_long(argc, argv, "gc", long_options, &idx)) != -1) {
+        switch(i) {
+            case 0:
+                break;
+            case 'g':
+                graphics_enabled = 1;
+                break;
+            case 'c':
+                graphics_enabled = 0;
+                break;
+            default:
+                fprintf(stderr, "init: invalid argument %d\n", i);
+                abort();
+        }     
+    }
     
     
     FILE* fp = fopen(SYSCONFIG, "r");
@@ -44,7 +69,7 @@ int main() {
     }
 
     int v;
-    if(v = ini_read_int(fp, "screen.enabled")) {
+    if(v = ini_read_int(fp, "screen.enabled") && abs(graphics_enabled) == 1) {
         int fd = open("/dev/fb0", O_RDONLY);
         if(fd < 0)
             perror("/dev/fb0");
@@ -70,6 +95,6 @@ int main() {
         /* TODO */
     }
     
-    fclose(fp);
+    fclose(fp);    
     return execve(__argv[0], __argv, __envp);
 }

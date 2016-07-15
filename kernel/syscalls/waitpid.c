@@ -109,7 +109,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
 		for(tmp = waiters; tmp; tmp = tmp->next) {
 	
 			if(tmp->task->status == TASK_STATUS_KILLED) {
-				if(status)
+				if(likely(status))
 					*status = (tmp->task->exit.status << 16) | tmp->task->exit.value;
 				cnt = tmp->task->pid;
 				

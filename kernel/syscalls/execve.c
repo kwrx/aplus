@@ -28,6 +28,31 @@ static int __check_perm(int type, mode_t mode) {
 }
 #endif
 
+
+static char** args_dup(char** args) {
+	int len = 0;
+	char** ret = NULL;
+	
+	if(unlikely(!args)) {
+		ret = (char**) kmalloc(sizeof(char**), GFP_USER);
+		ret[0] = NULL;
+		
+		return ret;	
+	}
+	
+	while(args[len])
+		len++;
+
+	ret = (char**) kmalloc(sizeof(char**) * (len + 1), GFP_USER);
+	
+	int i;
+	for(i = 0; i < len; i++)
+		ret[i] = strdup(args[i]);
+		
+	ret[len] = NULL;
+	return ret;
+}
+
 SYSCALL(2, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	int fd = sys_open(filename, O_RDONLY, 0);
@@ -73,6 +98,10 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 		errno = ENOEXEC;
 		return -1;
 	}
+	
+	
+	current_task->argv = args_dup((char**) argv);
+	current_task->environ = args_dup((char**) envp);
 
 
 	INTR_OFF;
@@ -84,12 +113,10 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	current_task->image.end = ((current_task->image.start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
-	current_task->argv = (char**) argv;
-	current_task->environ = (char**) envp;
 
 	INTR_ON;
 
-	_start((char**) argv, (char**) envp);
+	_start((char**) current_task->argv, (char**) current_task->environ);
 	KASSERT(0);
 	
 	return -1;

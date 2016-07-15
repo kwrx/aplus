@@ -46,7 +46,7 @@ void schedule(void) {
 
 	
 	current_task->clock += 1;
-	if(likely(current_task->clock % ((20 - current_task->priority) + 1)))
+	if(likely((int)current_task->clock % (int)((20 - current_task->priority) + 1)))
 		goto nosched;
 
 	if(likely(current_task->status == TASK_STATUS_RUNNING))

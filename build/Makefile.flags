@@ -4,10 +4,10 @@ DEBUG		:= yes
 DEFINES		:= -DKERNEL
 WARNINGS	:= -Wall -Werror
 
-CFLAGS		:= $(DEFINES) $(WARNINGS) -c -pipe -I src/include -include config.h -nostdlib -std=c99 -O3
-AFLAGS		:= -c -I src/include -include config.h
+CFLAGS		:= $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O3
+AFLAGS		:= -c -I kernel/include -include config.h
 NFLAGS		:= $(DEFINES) -w-number-overflow
-LDFLAGS		:= -T src/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
+LDFLAGS		:= -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
 
 LIBS		:= -lc -lm -lgcc
 

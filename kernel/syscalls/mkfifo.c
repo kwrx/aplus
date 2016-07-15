@@ -74,7 +74,7 @@ static int fifo_write(struct inode* inode, void* ptr, size_t len) {
 	
 	int i;
 	for(i = 0; i < len; i++)
-		fifo->buffer[fifo->w_pos++ % BUFSIZ] = *buf++;
+		fifo->buffer[(int) fifo->w_pos++ % BUFSIZ] = *buf++;
 		
 	mutex_unlock(&fifo->w_lock);
 	return len;

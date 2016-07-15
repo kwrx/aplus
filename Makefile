@@ -49,6 +49,8 @@ $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
 	@$(ASM) $(NFLAGS) -o $@ $<
 
 clean:
-	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_MODULES) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM) $(APPS)
+	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
+	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
+	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
 	@$(RM) -r *.o
 

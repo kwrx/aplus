@@ -1,3 +1,7 @@
 *.o
 *.ko
 *.map
+*.sym
+*.iso
+x
+bin/usr/bin/*
