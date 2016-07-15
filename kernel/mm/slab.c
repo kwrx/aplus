@@ -11,6 +11,11 @@ mutex_t mtx_kfree;
 
 __section(".pool")
 static uint32_t slab_bitmap[((CONFIG_HEAP_SIZE / MM_BLOCKSZ) / 8) / sizeof(uint32_t)] = { 0 };
+static mm_state_t __kvm_state = {
+	0LL,
+	0LL,
+	(uint8_t*) slab_bitmap
+};
 
 __section(".pool")
 static uint8_t slab_pool[256 * 1024] = { 0 };
@@ -156,7 +161,6 @@ void kfree(void* p) {
 		FR_CLR(address + count);
 
 	mutex_unlock(&mtx_kfree);
-
 }
 
 
@@ -209,7 +213,20 @@ int slab_init(void) {
 	return E_OK;
 }
 
+mm_state_t* kvm_state(void) {
+	__kvm_state.used = 0;
+	__kvm_state.total = CONFIG_HEAP_SIZE;
+	__kvm_state.frames = (uint8_t*) slab_bitmap;	
 
+	int i, j;
+	for(i = 0; i < (int)(sizeof(slab_bitmap) / sizeof(uint32_t)); i++) {
+		for(j = 0; j < 32; j++)
+			if((slab_bitmap[i] & (1 << j)))
+				__kvm_state.used += MM_BLOCKSZ;
+	}
+
+	return &__kvm_state;
+}
 
 
 
@@ -221,3 +238,4 @@ EXPORT(kfree);
 EXPORT(malloc);
 EXPORT(calloc);
 EXPORT(free);
+EXPORT(kvm_state);

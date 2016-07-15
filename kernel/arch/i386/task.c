@@ -234,7 +234,6 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 			irq_ack(0);
 			current_task->sig_handler(sig_no);
 		}
-
 		return;
 	}
 

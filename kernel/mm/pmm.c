@@ -5,7 +5,7 @@
 
 __section(".pool")
 static uint32_t frames[MM_POOL_SIZE / sizeof(uint32_t)] = { 0 };
-static pmm_state_t __pmm_state = {
+static mm_state_t __pmm_state = {
 	0LL,
 	0LL,
 	(uint8_t*) frames
@@ -88,10 +88,10 @@ void pmm_claim(physaddr_t mstart, physaddr_t mend) {
 }
 
 
-pmm_state_t* pmm_state(void) {
+mm_state_t* pmm_state(void) {
 
 	__pmm_state.used = 0;
-	__pmm_state.total = MM_POOL_SIZE * MM_BLOCKSZ;
+	__pmm_state.total = ((long long) MM_POOL_SIZE * MM_BLOCKSZ * 8) - 1;
 	__pmm_state.frames = (uint8_t*) frames;	
 
 	int i, j;

@@ -16,8 +16,10 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 		return NULL;
 	}
 
-	len &= ~(PAGE_SIZE - 1);
-	len += PAGE_SIZE;
+	if(len & (PAGE_SIZE - 1)) {
+		len &= ~(PAGE_SIZE - 1);
+		len += PAGE_SIZE;
+	}
 
 
 	uintptr_t rd = 0;
@@ -37,7 +39,7 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
 	
 	rd &= ~(PAGE_SIZE - 1);
-
+	kprintf(LOG, "[%d] map %p-%p (%p) (%d KB; %d/%d KB)\n", sys_getpid(), rd, rd + len, len, pmm_state()->used / 1024, kvm_state()->used / 1024, kvm_state()->total / 1024);
 
 	uintptr_t i;
 	for(i = 0; i < len; i += PAGE_SIZE)

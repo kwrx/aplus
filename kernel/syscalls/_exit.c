@@ -45,6 +45,5 @@ void sys_exit(int status) {
 
 
 	INTR_ON;
-	sys_yield();
-	for(;;);
+	for(;;) sys_yield();
 });

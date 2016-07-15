@@ -80,7 +80,6 @@ void schedule_yield(void) {
 
 	volatile task_t* prev_task = current_task;
 	sched_next();
-
 	
 	arch_task_switch(prev_task, current_task);
 	current_task->status = TASK_STATUS_RUNNING;

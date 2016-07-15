@@ -1,6 +1,7 @@
 #ifndef _CONFIG_H
 #define _CONFIG_H
 
+#define CONFIG_HOST_MEMORY			128
 #define CONFIG_HAVE_LIBC			1
 #define CONFIG_SMP					0
 #define CONFIG_IPC					1
@@ -35,7 +36,11 @@
 #	define CONFIG_KERNEL_BASE			0xC0000000L
 #	define CONFIG_HEAP_BASE				0xD0000000L
 #	define CONFIG_STACK_BASE			0xFFC00000L
-#	define CONFIG_HEAP_SIZE				0x03000000ULL
+#	if CONFIG_HOST_MEMORY > 64
+#		define CONFIG_HEAP_SIZE			0x04000000ULL
+#	else
+#		define CONFIG_HEAP_SIZE			((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
+#	endif
 #	define CONFIG_STACK_SIZE			0x00001000ULL
 #	define KERNEL_PLATFORM				"i386"
 #elif defined(__x86_64__)

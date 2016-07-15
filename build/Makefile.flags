@@ -12,7 +12,7 @@ LDFLAGS		:= -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0
 LIBS		:= -lc -lm -lgcc
 
 
-VMM		    := qemu-system-$(ARCH) -s -S -cdrom $(KERNEL_ISO) -m 64 -serial stdio -boot d
+VMM		    := qemu-system-$(ARCH) -s -S -cdrom $(KERNEL_ISO) -m 128 -serial stdio -boot d
 
 
 

@@ -35,8 +35,10 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
     
     while(p < len) {
         uint8_t ch;
-        if(sys_read(fd, &ch, sizeof(ch)) == 0)
-            return p;
+        if(sys_read(fd, &ch, sizeof(ch)) == 0) {
+            errno = EIO;
+            return E_ERR;
+        }
        
  
                

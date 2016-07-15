@@ -128,7 +128,7 @@ read_eip:
 		
 global isr_stub	
 isr_stub:
-	cli		
+	cli	
 	pusha
 	push ds
 	push es
