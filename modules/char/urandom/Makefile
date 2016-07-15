@@ -16,7 +16,7 @@ SFLAGS		:=  -c -I $(ROOT)/kernel/include -I include -include config.h
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -nostdlib -O3 -r -o $@ $(OFILES) -lgcc
+	@$(CC) -nostdlib -O3 -r -o $@ $(OFILES)
 	@echo "module /boot/mods/$(notdir $(subst $(ROOT)/,,$@))" >> $(ROOT)/bin/boot/grub/grub.cfg
 
 
