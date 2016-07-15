@@ -23,6 +23,7 @@ void iso9660_checkname(char* name) {
 			name[i] += 32;
 }
 
+
 uint16_t iso9660_getmsb16(uint32_t val) {
 	return (val >> 16) & 0xFFFF;
 }

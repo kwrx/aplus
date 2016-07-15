@@ -23,8 +23,9 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 	@$(OBJCPY) --only-keep-debug $@ $(KERNEL_SYM)
 
 KERNEL_MODULES:
-	@echo "multiboot /x" > bin/boot/grub/grub.cfg
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
+	@echo "multiboot /x" > bin/boot/grub/grub.cfg
+	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
 	@echo "boot" >> bin/boot/grub/grub.cfg
 	
 APPS:
@@ -32,8 +33,6 @@ APPS:
 
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
 	@echo "  ISO    " $@
-	@echo "multiboot /x" >> bin/boot/grub/grub.cfg
-	@echo "boot" >> bin/boot/grub/grub.cfg
 	@grub-mkrescue -o $@ bin
 
 .c.o:

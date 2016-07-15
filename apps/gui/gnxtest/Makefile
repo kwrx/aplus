@@ -2,7 +2,7 @@
 OUTPUT		?=
 CC			?=
 ROOT		?=
-OUTPUT		:= bin/usr/bin/$(notdir $(PWD))
+OUTPUT		:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
@@ -15,7 +15,7 @@ SFLAGS		:=  -c -I include
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $@
-	@$(CC) -pipe -O3 -s -o $(ROOT)/$(OUTPUT) $(OFILES) -lgcc
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lgcc
 
 
 .c.o:
@@ -32,4 +32,4 @@ $(OUTPUT): $(OFILES)
 	
 	
 clean:
-	$(RM) $(OFILES) $(ROOT)/$(OUTPUT)
+	$(RM) $(OFILES) $(OUTPUT)

@@ -3,7 +3,7 @@
 OUTPUT		?=
 CC			?=
 ROOT		?=
-OUTPUT		:= bin/boot/mods/$(notdir $(PWD)).ko
+OUTPUT		:= $(ROOT)/bin/boot/mods/$(notdir $(PWD)).ko
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
@@ -15,9 +15,9 @@ SFLAGS		:=  -c -I $(ROOT)/kernel/include -I include -include config.h
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
-	@echo "  CCLD   " $@
-	@$(CC) -nostdlib -O3 -r -o $(ROOT)/$(OUTPUT) $(OFILES) -lgcc
-	@echo "module /boot/mods/$(notdir $(OUTPUT))" >> $(ROOT)/bin/boot/grub/grub.cfg
+	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
+	@$(CC) -nostdlib -O3 -r -o $@ $(OFILES) -lgcc
+	@echo "module /boot/mods/$(notdir $(subst $(ROOT)/,,$@))" >> $(ROOT)/bin/boot/grub/grub.cfg
 
 
 .c.o:
@@ -34,4 +34,4 @@ $(OUTPUT): $(OFILES)
 	
 	
 clean:
-	$(RM) $(OFILES) $(ROOT)/$(OUTPUT)
+	$(RM) $(OFILES) $(OUTPUT)
