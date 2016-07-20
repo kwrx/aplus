@@ -234,6 +234,7 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 			irq_ack(0);
 			current_task->sig_handler(sig_no);
 		}
+
 		return;
 	}
 
@@ -263,7 +264,7 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	INTR_ON;
 
 	__asm__ __volatile__ (
-		"cli			\n"
+		//"cli			\n"
 		"mov ebx, %0	\n"
 		"mov esp, %1	\n"
 		"mov ebp, %2	\n"
@@ -278,6 +279,22 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 void arch_task_release(volatile task_t* task) {
 	KASSERT(task);
 	KASSERT(task != kernel_task);
+
+	int i;
+	if(likely(current_task->argv)) {
+		for(i = 0; current_task->argv[i]; i++)
+			kfree(current_task->argv[i]);
+			
+		kfree(current_task->argv);
+	}
+		
+	if(likely(current_task->environ)) {
+		for(i = 0; current_task->environ[i]; i++)
+			kfree(current_task->environ[i]);		
+		
+		kfree(current_task->environ);
+	}
+
 
 	vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
 }

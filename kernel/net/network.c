@@ -32,7 +32,7 @@
 
 static void tcpip_init_done(void* arg) {
 #if DEBUG
-	kprintf(LOG, "tcpip: initialized in %d MS\n", timer_getms() - (uint32_t) arg);
+	kprintf(LOG, "[%d] tcpip: initialized in %d MS\n", sys_getpid(), timer_getms() - (uint32_t) arg);
 #else
 	(void) arg;
 #endif
@@ -48,7 +48,6 @@ static void tcpip_init_done(void* arg) {
 
 	lwip_socket_init();
 }
-
 
 
 int network_init() {

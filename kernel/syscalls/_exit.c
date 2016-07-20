@@ -26,23 +26,12 @@ void sys_exit(int status) {
 		}
 	}
 
-
 	int i;
 	for(i = 0; i < TASK_FD_COUNT; i++)
 		sys_close(i);
 		
-	for(i = 0; current_task->argv[i]; i++)
-		kfree(current_task->argv[i]);
-		
-	for(i = 0; current_task->environ[i]; i++)
-		kfree(current_task->environ[i]);
-		
-	kfree(current_task->argv);
-	kfree(current_task->environ);
-
 
 	arch_task_release(current_task);
-
 
 	INTR_ON;
 	for(;;) sys_yield();

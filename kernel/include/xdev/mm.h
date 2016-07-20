@@ -58,7 +58,6 @@ void pmm_free_frames(physaddr_t address, int count);
 void pmm_claim(physaddr_t mstart, physaddr_t mend);
 
 
-
 void* kmalloc(size_t, int);
 void* kvalloc(size_t, int);
 void* kcalloc(size_t, size_t, int);

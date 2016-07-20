@@ -67,7 +67,7 @@ int main(int argc, char** argv, char** env) {
     SDL_UnlockSurface(screen);
     
  
- 
+    return 0;
     
     /* Start GNX Server */
     static struct sockaddr_in tmp;

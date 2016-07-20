@@ -99,10 +99,11 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 		return -1;
 	}
 	
-	
-	current_task->argv = args_dup((char**) argv);
-	current_task->environ = args_dup((char**) envp);
 
+	char** __new_argv = args_dup((char**) argv);
+	char** __new_envp = args_dup((char**) envp);
+	
+	
 
 	INTR_OFF;
 	arch_task_release(current_task);
@@ -110,7 +111,12 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image.start, &size, NULL);
 	KASSERT(_start);
+	
+	kfree(image);
+	
 
+	current_task->argv = __new_argv;
+	current_task->environ = __new_envp;
 	current_task->image.end = ((current_task->image.start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
 

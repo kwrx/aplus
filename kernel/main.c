@@ -26,6 +26,7 @@ int main(int argc, char** argv) {
 			KERNEL_TIME,
 			KERNEL_PLATFORM);
 
+
 	
 	char* __argv[] = { "/usr/bin/init", "--console", NULL };
 	char* __envp[] = { NULL };

@@ -35,16 +35,16 @@ extern struct {
 	irq_handler_t* handler;
 } IRQ32[16];
 
-
+int current_irq = -1;
 
 
 int intr_init() {
-	#define _i(x)										\
-		extern void isr##x (void*);							\
+	#define _i(x)															\
+		extern void isr##x (void*);											\
 		IDT32.e[x].base_low = ((uintptr_t) isr##x) & 0xFFFF;				\
 		IDT32.e[x].base_high = ((uintptr_t) isr##x >> 16) & 0xFFFF;			\
-		IDT32.e[x].selector = 0x08;							\
-		IDT32.e[x].unused = 0;								\
+		IDT32.e[x].selector = 0x08;											\
+		IDT32.e[x].unused = 0;												\
 		IDT32.e[x].flags = 0x8E
 
 
@@ -88,12 +88,12 @@ int intr_init() {
 
 
 	#undef _i
-	#define _i(x)										\
-		extern void irq##x (void*);							\
-		IDT32.e[x + 32].base_low = ((uintptr_t) irq##x) & 0xFFFF;			\
+	#define _i(x)																\
+		extern void irq##x (void*);												\
+		IDT32.e[x + 32].base_low = ((uintptr_t) irq##x) & 0xFFFF;				\
 		IDT32.e[x + 32].base_high = ((uintptr_t) irq##x >> 16) & 0xFFFF;		\
-		IDT32.e[x + 32].selector = 0x08;						\
-		IDT32.e[x + 32].unused = 0;							\
+		IDT32.e[x + 32].selector = 0x08;										\
+		IDT32.e[x + 32].unused = 0;												\
 		IDT32.e[x + 32].flags = 0x8E
 
 
@@ -152,6 +152,8 @@ void intr_disable(void) {
 		intr_sync = 1;
 	else
 		intr_sync++;
+		
+	__asm__ __volatile__("cli");
 }
 
 
@@ -185,10 +187,14 @@ void* irq_get_data(int number) {
 }
 
 void irq_ack(int irq_no) {
+	if(current_irq == -1)
+		return;
+		
 	if(irq_no >= 8)
 		outb(0xA0, 0x20);
 
 	outb(0x20, 0x20);
+	current_irq = -1;
 }
 
 
@@ -263,6 +269,7 @@ void isr_handler(i386_context_t* context) {
 
 void irq_handler(i386_context_t* context) {
 	int irq_no = context->int_no - 32;
+	current_irq = irq_no;
 
 	if(likely(IRQ32[irq_no].handler))
 		IRQ32[irq_no].handler ((void*) context);

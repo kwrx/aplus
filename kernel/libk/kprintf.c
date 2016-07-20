@@ -1,6 +1,7 @@
 #include <xdev.h>
 #include <xdev/debug.h>
 #include <xdev/ipc.h>
+#include <xdev/mm.h>
 #include <libc.h>
 
 #if DEBUG
@@ -27,7 +28,7 @@ kprintf(int flags, const char *fmt, ...) {
 	mutex_unlock(&mtx_kprintf);
 
 
-
+	
 	va_end(args);
 	return out;
 }
