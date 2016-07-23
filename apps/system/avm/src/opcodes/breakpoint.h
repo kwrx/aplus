@@ -1,0 +1,5 @@
+
+
+OPCODE(breakpoint) {
+	ATHROW("Breakpoint", "");
+}

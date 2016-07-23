@@ -4,6 +4,7 @@ CC		    := $(TARGET)-gcc
 CXX         := $(TARGET)-g++
 LD		    := $(TARGET)-ld
 AS		    := $(TARGET)-gcc
+AR          := $(TARGET)-ar
 ASM		    := nasm
 OBJCPY	    := $(TARGET)-objcopy
 

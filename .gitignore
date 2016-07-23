@@ -3,5 +3,9 @@
 *.map
 *.sym
 *.iso
+*.class
+*.a
+*.jar
+*.tar.gz
 x
 bin/usr/bin/*
