@@ -69,8 +69,8 @@ char* ini_read(FILE* fp, const char* ini_name) {
 }
 
 
-int ini_read_int(FILE* fp, const char* ini_name) {
-    register int r = -1;
+int ini_read_int_or(FILE* fp, const char* ini_name, int onerr) {
+    register int r = onerr;
     char* s = ini_read(fp, ini_name);
     if(!s)
         return r;

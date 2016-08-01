@@ -480,7 +480,7 @@ static int ata_device_detect(struct ata_device* dev) {
 		(cl == 0x3C && ch == 0xC3)
 	) {
 
-		mutex_init(&dev->lock, MTX_KIND_DEFAULT);
+		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "hdd");
 		ata_device_init(dev);
 
 		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0666);
@@ -492,7 +492,7 @@ static int ata_device_detect(struct ata_device* dev) {
 		(cl == 0x14 && ch == 0xEB)	/* ATAPI  */
 		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
 	) {
-		mutex_init(&dev->lock, MTX_KIND_DEFAULT);
+		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "cdrom");
 		ata_device_init(dev);
 
 		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0666);

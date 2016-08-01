@@ -4,7 +4,7 @@
 #include <arch/i386/i386.h>
 
 #if DEBUG
-mutex_t mtx_debug = MTX_INIT(MTX_KIND_DEFAULT);
+mutex_t mtx_debug = MTX_INIT(MTX_KIND_DEFAULT, NULL);
 
 
 static char __cga_colors[] = {

@@ -98,8 +98,14 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
 	fifo->w_pos =
 	fifo->r_pos = 0;
 	
-	mutex_init(&fifo->r_lock, MTX_KIND_DEFAULT);
-	mutex_init(&fifo->w_lock, MTX_KIND_DEFAULT);
+#if CONFIG_IPC_DEBUG
+	#define mtxname strdup(pathname)
+#else
+	#define mtxname NULL
+#endif
+	
+	mutex_init(&fifo->r_lock, MTX_KIND_DEFAULT, mtxname);
+	mutex_init(&fifo->w_lock, MTX_KIND_DEFAULT, mtxname);
 	
 		
 	inode_t* inode = current_task->fd[fd].inode;

@@ -46,10 +46,16 @@ $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
 .asm.o:
 	@echo "  ASM    " $@
 	@$(ASM) $(NFLAGS) -o $@ $<
-
-clean:
+	
+clean_modules:
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
+
+clean_apps:
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
+	
+clean_kernel:
 	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
+	
+clean: clean_modules clean_apps clean_kernel
 	@$(RM) -r *.o
 

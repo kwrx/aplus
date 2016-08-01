@@ -19,8 +19,8 @@ void spinlock_lock(spinlock_t* lock) {
 		sys_yield();
 	*lock = 1;
 #else 
-	//while(!__sync_bool_compare_and_swap(lock, 0, 1))
-	//	sys_yield();
+	while(!__sync_bool_compare_and_swap(lock, 0, 1))
+		sys_yield();
 #endif
 }
 

@@ -29,6 +29,7 @@ extern int end;
 
 extern void return_from_fork(void);
 extern void return_from_clone(void);
+extern void return_from_clone_and_exit(void);
 __asm__ (
 	".globl return_from_fork	\n"
 	"return_from_fork:			\n"
@@ -48,13 +49,25 @@ __asm__ (
 
 
 __asm__ (
+	".globl return_from_clone_and_exit		\n"
+	"return_from_clone_and_exit:			\n"
+	"	push eax							\n"
+	"	call sys_exit						\n"
+	".L0:									\n"
+	"	jmp .L0								\n"
+);
+
+__asm__ (
 	".globl return_from_clone	\n"
 	"return_from_clone:			\n"
-	"	push eax				\n"
-	"	call sys_exit			\n"
-	".L0:						\n"
-	"	jmp .L0					\n"
+	"	mov dx, 0x20			\n"
+	"	mov al, 0x20			\n"
+	"	out dx, al				\n"
+	"	sti						\n"
+	"	pop eax					\n"
+	"	jmp eax					\n"
 );
+
 
 void fork_handler(i386_context_t* context) {
 	INTR_OFF;
@@ -100,7 +113,7 @@ void fork_handler(i386_context_t* context) {
 	CTX(child)->eip = (uintptr_t) &return_from_fork;
 	CTX(child)->esp = 
 	CTX(child)->ebp = (uintptr_t) context;
-	CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd);
+	CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 1);
 
 	
 	child->parent = (task_t*) current_task;
@@ -120,9 +133,10 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	if(unlikely(!stack))
 		stack = (void*) ((uintptr_t) kvalloc(PAGE_SIZE, GFP_USER) + PAGE_SIZE);
 
-	uintptr_t* sptr = (uintptr_t*) stack; 
+	uintptr_t* sptr = (uintptr_t*) stack;
 	*--sptr = (uintptr_t) arg;
-	*--sptr = (uintptr_t) &return_from_clone;
+	*--sptr = (uintptr_t) &return_from_clone_and_exit;
+	*--sptr = (uintptr_t) fn;
 
 	
 
@@ -177,14 +191,14 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	KASSERT(child->context);
 
 
-	CTX(child)->eip = (uintptr_t) fn;
+	CTX(child)->eip = (uintptr_t) &return_from_clone;
 	CTX(child)->esp = 
 	CTX(child)->ebp = (uintptr_t) sptr;
 
 	if(flags & CLONE_VM)
-		CTX(child)->vmmpd = CTX(current_task)->vmmpd;
+		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 0);
 	else
-		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd);
+		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 1);
 
 
 	if(flags & CLONE_PARENT)
@@ -248,7 +262,8 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 		: : "r"(FPU(CTX(prev_task)->fpu)), "r"(FPU(CTX(new_task)->fpu))
 	);
 	
-
+	
+	
 	eip = CTX(new_task)->eip;
 	esp = CTX(new_task)->esp;
 	ebp = CTX(new_task)->ebp;
@@ -262,9 +277,8 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 #endif
 
 	INTR_ON;
-
 	__asm__ __volatile__ (
-		//"cli			\n"
+		"cli			\n"
 		"mov ebx, %0	\n"
 		"mov esp, %1	\n"
 		"mov ebp, %2	\n"

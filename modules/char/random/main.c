@@ -12,7 +12,7 @@ MODULE_LICENSE("GPL");
 
 
 
-static mutex_t rnd_lock = MTX_INIT(MTX_KIND_DEFAULT);
+static mutex_t rnd_lock = MTX_INIT(MTX_KIND_DEFAULT, "random");
 
 static int random_read(struct inode* inode, void* buf, size_t size) {
 

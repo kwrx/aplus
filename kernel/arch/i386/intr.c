@@ -130,7 +130,7 @@ int intr_init() {
 	return E_OK;
 }
 
-static int intr_sync = 1;
+static int intr_sync = 0;
 
 void intr_enable(void) {
 	if(intr_sync <= 1)

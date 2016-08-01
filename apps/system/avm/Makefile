@@ -57,4 +57,4 @@ $(OUTPUT_INC):
 	@javac -classpath lib $<
 	
 clean:
-	$(RM) $(OFILES) $(CLASSFILES) $(OUTPUT_BIN) $(OUTPUT_LIB) $(OUTPUT_INC) $(OUTPUT_RT)
+	$(RM) $(OFILES) $(CLASSFILES) $(OUTPUT_BIN) $(OUTPUT_LIB) $(OUTPUT_RT)

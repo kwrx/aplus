@@ -5,7 +5,7 @@
 #include <libc.h>
 
 #if DEBUG
-mutex_t mtx_kprintf = MTX_INIT(MTX_KIND_DEFAULT);
+mutex_t mtx_kprintf = MTX_INIT(MTX_KIND_DEFAULT, NULL);
 
 
 int

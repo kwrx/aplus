@@ -6,6 +6,8 @@
 #include <sys/wait.h>
 
 
+
+
 int main(int argc, char** argv, char** env) {
     fprintf(stderr, "aPlus Shell\n");
     do {
@@ -21,12 +23,13 @@ int main(int argc, char** argv, char** env) {
         if(!fgets(buf, BUFSIZ, stdin))
             continue;
             
-       buf[strlen(buf) - 1] = 0;
+                
+        buf[strlen(buf) - 1] = 0;
 
-       __argv[0] = buf;
-       __argv[1] = NULL;
-        
-        static int e = 0;
+        __argv[0] = buf;
+        __argv[1] = NULL;
+            
+        volatile int e = 0;
         e = fork();
         if(e == -1) {
             perror("fork");

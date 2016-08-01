@@ -13,18 +13,16 @@ volatile task_t* current_task = NULL;
 volatile task_t* kernel_task = NULL;
 volatile task_t* task_queue = NULL;
 
-mutex_t mtx_schedule = MTX_INIT(MTX_KIND_DEFAULT);
+mutex_t mtx_schedule = MTX_INIT(MTX_KIND_DEFAULT, "schedule");
 
 
 static void sched_next(void) {
 	do {
-
 		current_task = current_task->next;
 		if(unlikely(!current_task))
 			current_task = task_queue;
 
 		KASSERT(current_task);
-
 	} while(current_task->status != TASK_STATUS_READY);
 }
 

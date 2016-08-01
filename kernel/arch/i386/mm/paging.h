@@ -41,7 +41,7 @@ typedef struct pdt {
 extern volatile pdt_t* current_pdt;
 extern volatile pdt_t* kernel_pdt;
 
-volatile pdt_t* vmm_clone(volatile pdt_t*);
+volatile pdt_t* vmm_clone(volatile pdt_t*, int);
 void __vmmcpy(physaddr_t, physaddr_t);
 
 volatile pdt_t* vmm_switch(volatile pdt_t*);

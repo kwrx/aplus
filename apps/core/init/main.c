@@ -13,10 +13,14 @@
 #define APPS_GUI        "/usr/bin/gnx"
 #define APPS_SHELL      "/usr/bin/sh"
 
+#define GRAPHICS_WIDTH      800
+#define GRAPHICS_HEIGHT     600
+#define GRAPHICS_BPP        32
+
 
 
 extern char* ini_read(FILE* fp, const char* ini_name);
-extern int ini_read_int(FILE* fp, const char* ini_name);
+extern int ini_read_int_or(FILE* fp, const char* ini_name, int onerr);
 
 
 int main(int argc, char** argv) {
@@ -26,6 +30,7 @@ int main(int argc, char** argv) {
     
     char* __envp[] = {
         "BASH=" APPS_SHELL,
+        "GUI=" APPS_GUI,
         "HOME=/home",
         "PATH=/usr/bin:/usr/local/bin",
         NULL
@@ -69,16 +74,16 @@ int main(int argc, char** argv) {
     }
 
     int v;
-    if(v = ini_read_int(fp, "screen.enabled") && abs(graphics_enabled) == 1) {
+    if(v = ini_read_int_or(fp, "screen.enabled", 0) && abs(graphics_enabled) == 1) {
         int fd = open("/dev/fb0", O_RDONLY);
         if(fd < 0)
             perror("/dev/fb0");
         else {
             
             fbdev_mode_t mode;
-            mode.width = ini_read_int(fp, "screen.width");
-            mode.height = ini_read_int(fp, "screen.height");
-            mode.bpp = ini_read_int(fp, "screen.bpp");
+            mode.width = ini_read_int_or(fp, "screen.width", GRAPHICS_WIDTH);
+            mode.height = ini_read_int_or(fp, "screen.height", GRAPHICS_HEIGHT);
+            mode.bpp = ini_read_int_or(fp, "screen.bpp", GRAPHICS_BPP);
             mode.vx =
             mode.vy = 0;
             
@@ -91,7 +96,7 @@ int main(int argc, char** argv) {
     }
     
     int p;
-    if(p = ini_read_int(fp, "idle.priority")) {
+    if(p = ini_read_int_or(fp, "idle.priority", 0)) {
         /* TODO */
     }
     

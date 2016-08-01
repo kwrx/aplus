@@ -7,6 +7,7 @@
 #include <libc.h>
 
 SYSCALL(0, exit,
+__attribute__((noreturn))
 void sys_exit(int status) {
 	KASSERT(current_task != kernel_task);
 

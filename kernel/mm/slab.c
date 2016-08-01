@@ -195,8 +195,8 @@ void free(void* ptr) {
 
 
 int slab_init(void) {
-	mutex_init(&mtx_kmalloc, MTX_KIND_DEFAULT);
-	mutex_init(&mtx_kfree, MTX_KIND_DEFAULT);
+	mutex_init(&mtx_kmalloc, MTX_KIND_DEFAULT, "kmalloc");
+	mutex_init(&mtx_kfree, MTX_KIND_DEFAULT, "kfree");
 
 	memset(slab_bitmap, 0, sizeof(slab_bitmap));
 

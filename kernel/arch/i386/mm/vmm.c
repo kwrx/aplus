@@ -200,7 +200,13 @@ physaddr_t __V2P(virtaddr_t virtaddr) {
 
 
 
-volatile pdt_t* vmm_clone(volatile pdt_t* src) {
+volatile pdt_t* vmm_clone(volatile pdt_t* src, int dup) {
+	if(unlikely(!dup)) {
+		src->refcount++;
+		return src;	
+	}
+	
+	
 	INTR_OFF;
 
 

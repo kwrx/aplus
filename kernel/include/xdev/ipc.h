@@ -12,12 +12,13 @@
 
 #ifndef __ASSEMBLY__
 
-#define MTX_INIT(t)					\
+#define MTX_INIT(t, n)				\
 	{								\
 		0,							\
 		0,							\
 		t,							\
-		-1							\
+		-1,							\
+		n							\
 	}
 
 typedef volatile long spinlock_t;
@@ -27,6 +28,7 @@ typedef struct {
 	long recursion;
 	long kind;
 	long owner;
+	const char* name;
 } __packed mutex_t;
 
 
@@ -39,20 +41,20 @@ void spinlock_lock(spinlock_t* lock);
 int spinlock_trylock(spinlock_t* lock);
 void spinlock_unlock(spinlock_t* lock);
 
-int mutex_init(mutex_t* mtx, long kind);
+int mutex_init(mutex_t* mtx, long kind, const char* name);
 int mutex_lock(mutex_t* mtx);
 int mutex_trylock(mutex_t* mtx);
 int mutex_unlock(mutex_t* mtx);
 #elif !CONFIG_IPC
 #define spinlock_init(x)
-#define spinlock_lock(x)
-#define spinlock_trylock(x)
-#define spinlock_unlock(x)
+#define spinlock_lock(x)		((void) x)
+#define spinlock_trylock(x)		(1)
+#define spinlock_unlock(x)		((void) x)
 
-#define mutex_init(x, y)
-#define mutex_lock(x)
-#define mutex_trylock(x)
-#define mutex_unlock(x)
+#define mutex_init(x, y, z)
+#define mutex_lock(x)			((void) x)
+#define mutex_trylock(x)		(1)
+#define mutex_unlock(x)			((void) x)
 #endif
 
 
