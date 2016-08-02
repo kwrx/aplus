@@ -25,9 +25,23 @@ int main(int argc, char** argv, char** env) {
             
                 
         buf[strlen(buf) - 1] = 0;
-
+        
+        if(buf[0] == '\0')
+            continue;
+        
+        char* s = buf;
+        char* p = s;
+        int idx = 0;
+        
+        while((p = strchr(s, ' '))) {
+            *p++ = 0;
+            __argv[idx++] = s;
+            s = p;
+        }
+        
         __argv[0] = buf;
-        __argv[1] = NULL;
+        __argv[idx++] = s;
+        __argv[idx++] = NULL;
             
         volatile int e = 0;
         e = fork();
@@ -36,8 +50,9 @@ int main(int argc, char** argv, char** env) {
             return e;
         }
         else if(e == 0)
-            exit(execve(buf, __argv, NULL));
-        else
+            exit(execvp(buf, __argv));
+        else 
             wait(NULL);
+            
     } while(1);
 }

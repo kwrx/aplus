@@ -43,7 +43,7 @@
 #	else
 #		define CONFIG_HEAP_SIZE			((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #	endif
-#	define CONFIG_STACK_SIZE			0x00001000ULL
+#	define CONFIG_STACK_SIZE			0x00008000ULL
 #	define KERNEL_PLATFORM				"i386"
 #elif defined(__x86_64__)
 #	define CONFIG_BITS					64

@@ -32,7 +32,7 @@ void show_usage(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-	struct utsname u;
+	static struct utsname u;
     memset(&u, 0, sizeof(u));
 
 	int c;
@@ -67,6 +67,7 @@ int main(int argc, char** argv) {
 	}
     
     
+	
 	uname(&u);
 
 	if (!flags) {

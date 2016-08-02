@@ -8,9 +8,9 @@
 #include "paging.h"
 
 
-#define __invlpg(x)	\
+#define __invlpg(x)																	\
 	__asm__ __volatile__ ("invlpg [%0]" : : "r"(x))
-#define __invlpg_all()	\
+#define __invlpg_all()																\
 	__asm__ __volatile__ ("mov eax, cr3; mov cr3, eax" : : : "eax");
 
 
@@ -221,9 +221,9 @@ volatile pdt_t* vmm_clone(volatile pdt_t* src, int dup) {
 		KASSERT(src->vpages[i]);
 
 		if(unlikely(
-			(kernel_pdt->vpages[i] == src->vpages[i])) 
+			(kernel_pdt->vpages[i] == src->vpages[i])
 			&& (i != (CONFIG_STACK_BASE >> 22))
-		) {
+		)) {
 			dest->vpages[i] = src->vpages[i];
 
 			dest->pages[i].frame = src->pages[i].frame;
@@ -272,9 +272,9 @@ void vmm_release(volatile pdt_t* src) {
 		KASSERT(src->vpages[i]);
 
 		if(unlikely(
-			(kernel_pdt->vpages[i] == src->vpages[i])) 
+			(kernel_pdt->vpages[i] == src->vpages[i])
 			&& (i != (CONFIG_STACK_BASE >> 22))
-		) {
+		)) {
 			continue;
 
 		} else {

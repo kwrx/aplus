@@ -294,6 +294,7 @@ void arch_task_release(volatile task_t* task) {
 	KASSERT(task);
 	KASSERT(task != kernel_task);
 
+#if 1
 	int i;
 	if(likely(current_task->argv)) {
 		for(i = 0; current_task->argv[i]; i++)
@@ -308,9 +309,11 @@ void arch_task_release(volatile task_t* task) {
 		
 		kfree(current_task->environ);
 	}
+#endif
 
-
+#if 0
 	vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
+#endif
 }
 
 

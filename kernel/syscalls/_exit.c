@@ -35,5 +35,6 @@ void sys_exit(int status) {
 	arch_task_release(current_task);
 
 	INTR_ON;
-	for(;;) sys_yield();
+	for(;;) 
+		sys_yield();
 });

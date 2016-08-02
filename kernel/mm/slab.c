@@ -38,14 +38,20 @@ static int FR_FIRST(int count) {
 			continue;
 
 		for(j = 0; j < 32; j++) {
-			if(!(slab_bitmap[i] & (1 << j)))
-				f++;
-			else
-				f = 0;
-
-			if(count == f)
-				return (i * 32) + (j - f + 1);
-
+			if(!(slab_bitmap[i] & (1 << j))) {
+				register int b = i * 32 + j;
+				register int c = 0;
+			
+				for(f = 0; f <= count; f++) {
+					if(!FR_TST(b + f))
+						c++;
+					else
+						break;
+						
+					if(c == count)
+						return b;
+				}
+			}
 		}
 	}
 
@@ -56,6 +62,9 @@ static int FR_FIRST(int count) {
 __malloc
 void* kmalloc(size_t size, int gfp) {
 	void* p = NULL;
+	
+	if(unlikely(!size))
+		return NULL;
 
 retry:
 	mutex_lock(&mtx_kmalloc);
@@ -105,7 +114,7 @@ retry:
 		uint8_t data[0];
 	} *h = p;
 
-	h->magic = KMALLOC_MAGIC;
+	h->magic = -1; //KMALLOC_MAGIC;
 	h->size = size;
 
 	return h->data;
@@ -148,6 +157,9 @@ void kfree(void* p) {
 	} *h = (void*) ((uintptr_t) p - 8);
 
 	if(unlikely(h->magic != KMALLOC_MAGIC))
+		return;
+		
+	if(unlikely(!((uintptr_t) h->data > CONFIG_HEAP_BASE)))
 		return;
 
 	mutex_lock(&mtx_kfree);

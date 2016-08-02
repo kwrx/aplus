@@ -11,7 +11,6 @@ extern char* hostname;
 
 SYSCALL(33, uname,
 int sys_uname(struct utsname* buf) {
-	kprintf(LOG, "sys_uname(%p)\n", buf);
 	if(unlikely(!buf)) {
 		errno = EFAULT;
 		return -1;

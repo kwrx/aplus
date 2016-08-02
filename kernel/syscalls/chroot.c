@@ -22,5 +22,6 @@ int sys_chroot(const char* path) {
 	}
 
 	current_task->root = inode;
+	current_task->cwd = inode;
 	return 0;
 });
