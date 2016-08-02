@@ -12,8 +12,7 @@
 
 #define FLAG_ALL (FLAG_SYSNAME|FLAG_NODENAME|FLAG_RELEASE|FLAG_VERSION|FLAG_MACHINE)
 
-#define _ITALIC "\033[3m"
-#define _END    "\033[0m\n"
+
 
 void show_usage(int argc, char** argv) {
 	fprintf(stderr,
@@ -21,12 +20,12 @@ void show_usage(int argc, char** argv) {
 			"\n"
 			"usage: %s [-asnrvm]\n"
 			"\n"
-			" -a     " _ITALIC "Print the standard uname string we all love" _END
-			" -s     " _ITALIC "Print kernel name" _END
-			" -n     " _ITALIC "Print system name" _END
-			" -r     " _ITALIC "Print kernel version number" _END
-			" -v     " _ITALIC "Print the extra kernel version information" _END
-			" -m     " _ITALIC "Print the architecture name" _END
+			" -a     Print the standard uname string we all love\n"
+			" -s     Print kernel name\n"
+			" -n     Print system name\n"
+			" -r     Print kernel version number\n"
+			" -v     Print the extra kernel version information\n"
+			" -m     Print the architecture name\n"
 			"\n", argv[0]);
 	exit(1);
 }

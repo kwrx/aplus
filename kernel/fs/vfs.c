@@ -328,8 +328,8 @@ int vfs_init(void) {
 	kernel_task->root = vfs_root;
 
 
-	devfs = vfs_mknod(vfs_root, "dev", S_IFDIR | 0777);
-	sysfs = vfs_mknod(vfs_root, "sys", S_IFDIR | 0777);
+	devfs = vfs_mknod(vfs_root, "dev", S_IFDIR | 0666);
+	sysfs = vfs_mknod(vfs_root, "sys", S_IFDIR | 0666);
 
 	return E_OK;
 }
