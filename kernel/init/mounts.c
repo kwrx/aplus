@@ -16,15 +16,18 @@ int mounts_init(void) {
                     a, CONFIG_ROOT a);                              \
         }
     
-    mount_and_check(NULL, "/tmp", "tmpfs");
+    
 	mount_and_check("/dev/cd0", "/cdrom", "iso9660");
     
     relink("/dev");
     relink("/sys");
-    relink("/tmp");
+
     
     if(unlikely(sys_chroot(CONFIG_ROOT) != 0))
         kprintf(ERROR, "%s: failed to chroot", CONFIG_ROOT);
+        
+    mount_and_check(NULL, "/tmp", "tmpfs");
+    mount_and_check(NULL, "/proc", "procfs");
         
     return E_OK;
 }

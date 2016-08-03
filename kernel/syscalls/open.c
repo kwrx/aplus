@@ -116,6 +116,9 @@ int sys_open(const char* name, int flags, mode_t mode) {
 #endif
 		S_ISLNK(cino->mode)
 	) {
+		if(vfs_open(cino) == E_ERR)
+			return -1;
+		
 		if(cino->link) {
 			if(cino->link == cino) {
 				errno = ELOOP;

@@ -114,7 +114,7 @@ retry:
 		uint8_t data[0];
 	} *h = p;
 
-	h->magic = -1; //KMALLOC_MAGIC;
+	h->magic = KMALLOC_MAGIC;
 	h->size = size;
 
 	return h->data;
@@ -150,6 +150,7 @@ void* kcalloc(size_t x, size_t y, int gfp) {
 
 
 void kfree(void* p) {
+	return;
 	struct {
 		uint32_t magic;
 		uint32_t size;

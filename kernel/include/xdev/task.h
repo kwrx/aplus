@@ -47,7 +47,7 @@ typedef struct task {
 	void* context;
 	
 
-	uint64_t clock;
+	struct tms clock;
 	int status;
 	int priority;
 

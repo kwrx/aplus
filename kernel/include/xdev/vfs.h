@@ -70,6 +70,9 @@ struct inode {
 };
 
 
+extern fsys_t* fsys_queue;
+extern inode_t* devfs;
+extern inode_t* sysfs;
 
 
 int vfs_init(void);
@@ -94,6 +97,9 @@ fsys_t* vfs_fsys_find(const char* name);
 int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inode*));
 
 inode_t* vfs_mkdev(const char* name, dev_t rdev, mode_t mode);
+
+
+
 
 
 #endif

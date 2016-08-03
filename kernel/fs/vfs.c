@@ -14,7 +14,7 @@ inode_t* vfs_root = &__vfs_root;
 inode_t* devfs = NULL;
 inode_t* sysfs = NULL;
 
-static fsys_t* fsys_queue = NULL;
+fsys_t* fsys_queue = NULL;
  
 int vfs_open(struct inode* inode) {
 	if(likely(inode->open))
@@ -52,7 +52,8 @@ struct inode* vfs_finddir(struct inode* inode, char* name) {
 		return inode;
 
 	if(name[0] == '.' && name[1] == '.' && name[2] == '\0')
-		return inode->parent;
+		if(likely(inode != current_task->root))
+			return inode->parent;
 
 
 	if(inode->childs) {
@@ -364,3 +365,7 @@ EXPORT(vfs_fsys_register);
 EXPORT(vfs_fsys_find);
 EXPORT(vfs_inode);
 EXPORT(vfs_mkdev);
+
+EXPORT(fsys_queue);
+EXPORT(devfs);
+EXPORT(sysfs);

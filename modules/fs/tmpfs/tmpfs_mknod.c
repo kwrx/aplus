@@ -51,11 +51,5 @@ struct inode* tmpfs_mknod(struct inode* inode, char* name, mode_t mode) {
 	child->open = NULL;
 	child->close = NULL;
 
-
-	struct inode_childs* cx = (struct inode_childs*) kmalloc(sizeof(struct inode_childs), GFP_KERNEL);
-	cx->inode = child;
-	cx->next = inode->childs;
-	inode->childs = cx;
-
 	return child;
 }

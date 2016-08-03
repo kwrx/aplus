@@ -91,7 +91,7 @@ void pmm_claim(physaddr_t mstart, physaddr_t mend) {
 mm_state_t* pmm_state(void) {
 
 	__pmm_state.used = 0;
-	__pmm_state.total = ((long long) MM_POOL_SIZE * MM_BLOCKSZ * 8) - 1;
+	__pmm_state.total = mbd->memory.size;
 	__pmm_state.frames = (uint8_t*) frames;	
 
 	int i, j;

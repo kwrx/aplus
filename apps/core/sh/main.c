@@ -9,9 +9,14 @@
 
 
 int main(int argc, char** argv, char** env) {
+    
+    
     fprintf(stderr, "aPlus Shell\n");
     do {
-        fprintf(stderr, " #> ");
+        char cwd[BUFSIZ];
+        getcwd(cwd, BUFSIZ);
+        
+        fprintf(stderr, " #%s> ", cwd);
         
         static char buf[BUFSIZ];
         memset(buf, 0, sizeof(buf));
@@ -28,6 +33,7 @@ int main(int argc, char** argv, char** env) {
         
         if(buf[0] == '\0')
             continue;
+         
         
         char* s = buf;
         char* p = s;
@@ -39,9 +45,17 @@ int main(int argc, char** argv, char** env) {
             s = p;
         }
         
+        int no_wait = 0;
+        if(strcmp(s, "&") == 0)
+            no_wait = 1;
+        else
+            __argv[idx++] = s;
+        
         __argv[0] = buf;
-        __argv[idx++] = s;
         __argv[idx++] = NULL;
+        
+        if(strcmp(buf, "cd") == 0)
+            { if(chdir(__argv[1]) != 0) perror("cd"); continue; }
             
         volatile int e = 0;
         e = fork();
@@ -52,7 +66,8 @@ int main(int argc, char** argv, char** env) {
         else if(e == 0)
             exit(execvp(buf, __argv));
         else 
-            wait(NULL);
+            if(!no_wait)
+                wait(NULL);
             
     } while(1);
 }

@@ -59,10 +59,10 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	if(fd < 0)
 		return -1;
 
+	inode_t* inode = current_task->fd[fd].inode;
 
 #if CHECKPERM
 	int r;
-	inode_t* inode = current_task->fd[fd].inode;
 	if(inode->uid == current_task->uid)
 		r = __check_perm(0, inode->mode);
 	else if(inode->gid == current_task->gid)
@@ -119,6 +119,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	current_task->environ = __new_envp;
 	current_task->image.end = ((current_task->image.start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
+	current_task->exe = inode;
 
 	INTR_ON;
 

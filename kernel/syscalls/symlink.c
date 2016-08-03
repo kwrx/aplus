@@ -5,7 +5,6 @@
 #include <xdev/syscall.h>
 #include <libc.h>
 
-
 SYSCALL(28, symlink,
 int sys_symlink(const char* oldname, const char* newname) {
 	if(unlikely(!oldname || !newname)) {

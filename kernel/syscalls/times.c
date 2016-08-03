@@ -2,19 +2,16 @@
 #include <xdev/syscall.h>
 #include <xdev/debug.h>
 #include <xdev/task.h>
+#include <xdev/timer.h>
 #include <libc.h>
 
 
 SYSCALL(14, times,
 clock_t sys_times(struct tms* tms) {
 	if(!tms)
-		return current_task->clock;
+		return timer_getticks();
 
 
-	tms->tms_utime = current_task->clock;
-	tms->tms_stime = 0;
-	tms->tms_cutime = 0;
-	tms->tms_cstime = 0;
-
-	return tms->tms_utime;
+	memcpy(tms, &current_task->clock, sizeof(struct tms));
+	return timer_getticks();
 });

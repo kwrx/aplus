@@ -19,7 +19,7 @@ int sys_link(const char* oldname, const char* newname) {
 	}
 
 
-	int dfd = sys_open(oldname, O_EXCL | O_CREAT | O_RDONLY, S_IFLNK | 0666);
+	int dfd = sys_open(newname, O_EXCL | O_CREAT | O_RDONLY, S_IFLNK | 0666);
 	if(dfd < 0)
 		return -1;
 	

@@ -81,7 +81,7 @@ int main(int argc, char** argv) {
 				sprintf(buf, "%s/%s", p, ent->d_name);
 				
 				struct stat st;
-				if(stat(buf, &st) != -1) {
+				if(lstat(buf, &st) != -1) {
 					#define IS(x, y)								\
 						if(S_IS##x (st.st_mode)) { printf(y); }
 						

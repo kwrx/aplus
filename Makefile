@@ -14,7 +14,7 @@ all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
 	$(KERNEL_ISO)
-	@$(VMM) & $(DEBUGGER)
+	@$(VMM)
 
 $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 	@echo "  LD     " $@

@@ -17,7 +17,7 @@ int tmpfs_write(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!len))
 		return 0;
 
-	if(inode->position + len > inode->size) {
+	if(inode->position + (off64_t) len > inode->size) {
 		void* np = (void*) kmalloc(inode->position + len, GFP_USER);
 		
 
@@ -26,7 +26,7 @@ int tmpfs_write(struct inode* inode, void* ptr, size_t len) {
 			kfree(inode->userdata);
 		}
 
-		inode->size = inode->position + len;
+		inode->size = inode->position + (off64_t) len;
 		inode->userdata = np;
 	}
 

@@ -1,17 +1,19 @@
 #include "gnx-private.h"
 
-#define check_errors(a, b)              \
-    if(b) {                             \
-        perror(a);                      \
-        return -1;                      \
-    }
+#define check_errors(a, b)                          \
+    fprintf(stderr, "checking for %s: \"%s\"...", a, #b);\
+    if(b) {                                         \
+        perror(a);                                  \
+        return -1;                                  \
+    } fprintf(stderr, "OK\n")
     
-    #define check_sdl_errors(a, b)      \
-    if(b) {                             \
-        fprintf(stderr, "%s: %s\n",     \
-        #a, a##_GetError());            \
-        return -1;                      \
-    }
+    #define check_sdl_errors(a, b)                  \
+    fprintf(stderr, "checking for %s: \"%s\"...", #a, #b);\
+    if(b) {                                         \
+        fprintf(stderr, "%s: %s\n",                 \
+        #a, a##_GetError());                        \
+        return -1;                                  \
+    } fprintf(stderr, "OK\n")
     
 
 SDL_Surface* screen = NULL;
@@ -66,11 +68,9 @@ int main(int argc, char** argv, char** env) {
     memcpy(screen->pixels, wallpaper->pixels, screen->pitch * screen->h);
     SDL_UnlockSurface(screen);
     
- 
-    return 0;
     
     /* Start GNX Server */
-    static struct sockaddr_in tmp;
+    struct sockaddr_in tmp;
    
     int sd = socket(AF_INET, SOCK_STREAM, 0);
     check_errors("socket", sd < 0);
@@ -81,11 +81,12 @@ int main(int argc, char** argv, char** env) {
     tmp.sin_port = __builtin_bswap16(GNX_PORT);
     
     check_errors("bind", bind(sd, (struct sockaddr*) &tmp, sizeof(tmp)) != 0);
-    check_errors("listen", listen(sd, 10) != 0);
+    check_errors("listen", listen(sd, 7) != 0);
 
 #if DEBUG
     fprintf(stderr, "gnx: listening connections\n");
 #endif
+
     
     do {
         fd = accept(sd, 0, 0);
@@ -117,8 +118,8 @@ int main(int argc, char** argv, char** env) {
                 gnx_rect_t rect;
                 read(fd, &rect, sizeof(gnx_rect_t));
                 
-                //gnx_handle_t* ret;
-                //read(fd, &ret, sizeof(gnx_handle_t*));
+                gnx_handle_t* ret;
+                read(fd, &ret, sizeof(gnx_handle_t*));
                 
                 __gnx_new_window(handle, &rect);
                 break;
