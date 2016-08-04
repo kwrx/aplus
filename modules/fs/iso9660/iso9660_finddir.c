@@ -104,6 +104,8 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
 		if(nodes->flags & ISO9660_FLAGS_DIRECTORY) {
 			child->open = iso9660_open;
 			child->close = iso9660_close;
+			child->finddir = iso9660_finddir;
+			child->unlink = iso9660_unlink;
 		} else {
 			child->read = iso9660_read;
 			child->write = NULL;

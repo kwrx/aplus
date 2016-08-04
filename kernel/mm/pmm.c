@@ -24,24 +24,31 @@ static mm_state_t __pmm_state = {
 
 static int FR_FIRST(int count) {
 	register long i, j, f = 0;
-	for(i = 0; i < (MM_POOL_SIZE / sizeof(uint32_t)); i++) {
+	for(i = 0; i < (sizeof(frames) / sizeof(uint32_t)); i++) {
 		if(likely(frames[i] == 0xFFFFFFFF))
 			continue;
 
 		for(j = 0; j < 32; j++) {
-			if(!(frames[i] & (1 << j)))
-				f++;
-			else
-				f = 0;
-
-			if(count == f)
-				return (i * 32) + (j - f + 1);
-
+			if(!(frames[i] & (1 << j))) {
+				register int b = i * 32 + j;
+				register int c = 0;
+			
+				for(f = 0; f <= count; f++) {
+					if(!FR_TST(b + f))
+						c++;
+					else
+						break;
+						
+					if(c == count)
+						return b;
+				}
+			}
 		}
 	}
 
 	return E_ERR;
 }
+
 
 
 physaddr_t pmm_alloc_frame(void) {

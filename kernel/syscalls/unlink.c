@@ -53,11 +53,8 @@ int sys_unlink(const char* name) {
 		s = p;
 	} while(s);
 
+	KASSERT(s);
+	KASSERT(*s);
 	
-	if(S_ISLNK(cino->mode))
-		if(cino->link)
-			cino->link->nlink--;
-
-	cino->link = NULL;
 	return vfs_unlink(cino, s);
 });

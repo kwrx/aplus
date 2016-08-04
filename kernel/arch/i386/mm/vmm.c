@@ -286,7 +286,7 @@ void vmm_release(volatile pdt_t* src) {
 				if(!(src->vpages[i]->frames[j].flags & X86_FLAG_PRESENT))
 					continue;
 
-				pmm_free_frame(src->vpages[i]->frames[j].entry);
+				//pmm_free_frame(src->vpages[i]->frames[j].entry);
 			}
 
 

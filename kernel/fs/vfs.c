@@ -148,10 +148,13 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
 
 int vfs_unlink(struct inode* inode, char* name) {
-	int r = E_ERR;	
+	int r = E_OK;	
 	if(likely(inode->unlink))
 		r = inode->unlink(inode, name);
 	
+	if(unlikely(r == E_ERR))
+		return r;
+		
 	if(unlikely(!inode->childs))
 		return r;
 

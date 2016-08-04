@@ -80,7 +80,26 @@ int procfs_mount(struct inode* dev, struct inode* dir) {
 	procfs_add_child(self, cwd, S_IFLNK, { inode->link = current_task->cwd; });
 	procfs_add_child(self, root, S_IFLNK, { inode->link = current_task->root; });
 	procfs_add_child(self, exe, S_IFLNK, { inode->link = current_task->exe; });
-	procfs_add_child(self, cmdline, S_IFREG, { strcpy(buf, current_task->name); });
+	
+	procfs_add_child(self, cmdline, S_IFREG, {
+		if(current_task->argv != NULL) {
+			int i;
+			for(i = 0; current_task->argv[i]; i++) {
+				strcat(buf, current_task->argv[i]);
+				strcat(buf, " ");
+			}
+		}
+	});
+	
+	procfs_add_child(self, environ, S_IFREG, {
+		if(current_task->environ != NULL) {
+			int i;
+			for(i = 0; current_task->environ[i]; i++) {
+				strcat(buf, current_task->environ[i]);
+				strcat(buf, "\n");
+			}
+		}
+	});
 		
 	cwd->link = current_task->cwd;
 	root->link = current_task->root;

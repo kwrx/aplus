@@ -113,6 +113,7 @@ int iso9660_open(struct inode* inode) {
 			child->open = iso9660_open;
 			child->close = iso9660_close;
 			child->finddir = iso9660_finddir;
+			child->unlink = iso9660_unlink;
 		} else {
 			child->read = iso9660_read;
 			child->write = NULL;

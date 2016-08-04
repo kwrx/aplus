@@ -68,6 +68,7 @@ __asm__ (
 	"	jmp eax					\n"
 );
 
+extern char** args_dup(char**);
 
 void fork_handler(i386_context_t* context) {
 	INTR_OFF;
@@ -85,8 +86,8 @@ void fork_handler(i386_context_t* context) {
 	
 	child->name = strdup(current_task->name);
 	child->description = strdup(current_task->description);
-	child->argv = current_task->argv;
-	child->environ = current_task->environ;
+	child->argv = args_dup(current_task->argv);
+	child->environ = args_dup(current_task->environ);
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
@@ -153,8 +154,8 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	
 	child->name = strdup(current_task->name);
 	child->description = strdup(current_task->description);
-	child->argv = current_task->argv;
-	child->environ = current_task->environ;
+	child->argv = args_dup(current_task->argv);
+	child->environ = args_dup(current_task->environ);
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
@@ -294,7 +295,7 @@ void arch_task_release(volatile task_t* task) {
 	KASSERT(task);
 	KASSERT(task != kernel_task);
 
-#if 1
+		
 	int i;
 	if(likely(current_task->argv)) {
 		for(i = 0; current_task->argv[i]; i++)
@@ -309,11 +310,9 @@ void arch_task_release(volatile task_t* task) {
 		
 		kfree(current_task->environ);
 	}
-#endif
 
-#if 0
+
 	vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
-#endif
 }
 
 

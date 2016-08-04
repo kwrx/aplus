@@ -133,7 +133,7 @@ void* kvalloc(size_t size, int gfp) {
 	} *h = (void*) p;
 
 	h->magic = KMALLOC_MAGIC;
-	h->size = size + 0x1000;
+	h->size = size;
 
 	return h->data;
 }
@@ -150,7 +150,6 @@ void* kcalloc(size_t x, size_t y, int gfp) {
 
 
 void kfree(void* p) {
-	return;
 	struct {
 		uint32_t magic;
 		uint32_t size;

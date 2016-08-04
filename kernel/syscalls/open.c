@@ -84,8 +84,9 @@ int sys_open(const char* name, int flags, mode_t mode) {
 	} while(s);
 
 	KASSERT(s);
+	
+	
 	inode_t* cp = cino;
-
 	if(*s)
 		cino = vfs_finddir(cp, s);
 

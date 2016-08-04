@@ -38,6 +38,7 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
 	dir->open = iso9660_open;
 	dir->close = iso9660_close;
 	dir->finddir = iso9660_finddir;
+	dir->unlink = iso9660_unlink;
 
 	dir->userdata = (void*) ctx;
 

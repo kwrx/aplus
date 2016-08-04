@@ -93,7 +93,7 @@ int main(int argc, char** argv) {
         
         switch(linkmode) {
             case 0: {
-                #define CHUNK (4096 * 1024)
+                #define CHUNK (64 * 1024)
                 static char buf[CHUNK];
                 
                 int r;
