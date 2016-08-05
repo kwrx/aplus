@@ -109,6 +109,12 @@ int main(int argc, char** argv) {
                 
                 close(s);
                 close(d);
+                
+                struct stat st;
+                if(lstat(ss, &st) != 0)
+                    break;
+                
+                chmod(ds, st.st_mode);
             } break;
             
             case 1: {
@@ -156,7 +162,7 @@ int main(int argc, char** argv) {
             char buf[BUFSIZ];
             sprintf(buf, "%s/%s", argv[argc - 1], basename(argv[i]));
             
-            int d = open(buf, O_CREAT | O_TRUNC | O_RDWR, st.st_mode);
+            int d = open(buf, O_CREAT | O_TRUNC | O_RDWR, (st.st_mode & ~0777) | 0666);
             if(d < 0) {
                 fprintf(stderr, "%s: %s: cannot create target file\n", argv[0], buf);
                 exit(-1);
@@ -177,7 +183,7 @@ int main(int argc, char** argv) {
             exit(-1);
         }
         
-        m = st.st_mode;
+        m = (st.st_mode & ~0777) | 0666;
         
         
         

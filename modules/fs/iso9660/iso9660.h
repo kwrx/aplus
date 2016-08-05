@@ -5,15 +5,15 @@
 #include <libc.h>
 
 
-#define ISO9660_SECTOR_SIZE					2048
+#define ISO9660_SECTOR_SIZE						2048
 
-#define ISO9660_PVD						(0x10 * ISO9660_SECTOR_SIZE)
-#define ISO9660_ID						"CD001"
-#define ISO9660_VERSION						0x01
+#define ISO9660_PVD								(0x10 * ISO9660_SECTOR_SIZE)
+#define ISO9660_ID								"CD001"
+#define ISO9660_VERSION							0x01
 
 #define ISO9660_VOLDESC_BOOTRECORD				0
 #define ISO9660_VOLDESC_PRIMARY					1
-#define ISO9660_VOLDESC_SUPPLEMENTARY				2
+#define ISO9660_VOLDESC_SUPPLEMENTARY			2
 #define ISO9660_VOLDESC_PARTITION				3
 #define ISO9660_VOLDESC_TERMINATOR				255
 
@@ -22,14 +22,14 @@
 
 #define ISO9660_FLAGS_HIDDEN					(1 << 0)
 #define ISO9660_FLAGS_DIRECTORY					(1 << 1)
-#define ISO9660_FLAGS_FILE					(1 << 2)
+#define ISO9660_FLAGS_FILE						(1 << 2)
 #define ISO9660_FLAGS_EXTATTR					(1 << 3)
 #define ISO9660_FLAGS_EXTFLAGS					(1 << 4)
 #define ISO9660_FLAGS_NOTLAST					(1 << 7)
 
-#define ISO9660_NAME_LENGTH					(1024)
+#define ISO9660_NAME_LENGTH						(1024)
 
-
+#define HAVE_ROCKRIDGE							1
 
 typedef struct iso9660_volume_descriptor {
 	int8_t type;
@@ -121,5 +121,10 @@ uint32_t iso9660_getlsb32(uint64_t val);
 uint16_t iso9660_getlsb16(uint32_t val);
 uint32_t iso9660_getmsb32(uint64_t val);
 uint16_t iso9660_getmsb16(uint32_t val);
+
+#if HAVE_ROCKRIDGE
+char* rockridge_getname(void* offset);
+void rockridge_getmode(void* offset, mode_t* mode, uid_t* uid, gid_t* gid, nlink_t* nlink);
+#endif
 
 #endif

@@ -10,8 +10,7 @@
 #include <xdev/mm.h>
 #include <libc.h>
 
-#define CHECKPERM 0
-#if CHECKPERM
+
 static int __check_perm(int type, mode_t mode) {
 	switch(type) {
 		case 0: /* UID */
@@ -26,7 +25,6 @@ static int __check_perm(int type, mode_t mode) {
 	
 	return 0;
 }
-#endif
 
 
 extern char** args_dup(char**);
@@ -39,7 +37,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	inode_t* inode = current_task->fd[fd].inode;
 
-#if CHECKPERM
+
 	int r;
 	if(inode->uid == current_task->uid)
 		r = __check_perm(0, inode->mode);
@@ -53,7 +51,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 		errno = EACCES;
 		return -1;
 	}
-#endif
+
 
 	size_t size = sys_lseek(fd, 0, SEEK_END);
 	sys_lseek(fd, 0, SEEK_SET);

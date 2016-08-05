@@ -51,9 +51,12 @@ struct inode* vfs_finddir(struct inode* inode, char* name) {
 	if(name[0] == '.' && name[1] == '\0')
 		return inode;
 
-	if(name[0] == '.' && name[1] == '.' && name[2] == '\0')
+	if(name[0] == '.' && name[1] == '.' && name[2] == '\0') {
 		if(likely(inode != current_task->root))
 			return inode->parent;
+		
+		return NULL;
+	}
 
 
 	if(inode->childs) {

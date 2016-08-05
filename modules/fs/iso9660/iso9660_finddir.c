@@ -44,98 +44,122 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
 	nodes = (iso9660_dir_t*) ((uintptr_t) nodes + nodes->size);
 	nodes = (iso9660_dir_t*) ((uintptr_t) nodes + nodes->size);
 
+	int i;
+	for(i = 0; i < iso9660_getlsb32(ctx->dir.length); i += ISO9660_SECTOR_SIZE) {
+		if(i != 0)
+			nodes = (iso9660_dir_t*) ((uintptr_t) snodes + i);
+		
+		for(
+			; 
+			nodes->size;
+			nodes = (iso9660_dir_t*) ((uintptr_t) nodes + nodes->size)
+		) {
 
-	for(
-		; 
-		nodes->size;
-		nodes = (iso9660_dir_t*) ((uintptr_t) nodes + nodes->size)
-	) {
+			inode_t* child = (inode_t*) kmalloc(sizeof(inode_t), GFP_ATOMIC);
+			if(unlikely(!child)) {
+				errno = ENOMEM;
+				return NULL;
+			}
 
-		inode_t* child = (inode_t*) kmalloc(sizeof(inode_t), GFP_ATOMIC);
-		if(unlikely(!child)) {
-			errno = ENOMEM;
-			return NULL;
+			memset(child, 0, sizeof(inode_t));
+
+
+
+
+#if HAVE_ROCKRIDGE
+			register int len = nodes->idlen;
+			if(!(len & 1))
+				len++;
+			
+			void* rockridge_offset = (void*) ((uintptr_t) &nodes->reserved + len);
+#endif	
+
+
+#if HAVE_ROCKRIDGE			
+			child->name = rockridge_getname(rockridge_offset);
+#else
+
+			child->name = (const char*) kmalloc(nodes->idlen + 1, GFP_USER);
+			KASSERT(child->name);
+			
+			memset((void*) child->name, 0, nodes->idlen + 1);
+			strncpy((char*) child->name, nodes->reserved, nodes->idlen);
+			
+			iso9660_checkname((char*) child->name);
+#endif
+
+			if(strcmp(child->name, name) != 0) {
+				kfree((void*) child->name);
+				kfree((void*) child);
+
+				continue;
+			}
+		
+
+			
+			child->ino = vfs_inode();
+			child->mode = (nodes->flags & ISO9660_FLAGS_DIRECTORY ? S_IFDIR : S_IFREG) | 0666 & ~current_task->umask;
+
+			child->dev =
+			child->rdev =
+			child->nlink = 0;
+
+			child->uid = current_task->uid;
+			child->gid = current_task->gid;
+			child->size = (off64_t) iso9660_getlsb32(nodes->length);
+
+
+			child->atime = 
+			child->ctime = 
+			child->mtime = timer_gettime();
+		
+			child->parent = inode;
+			child->link = NULL;
+
+			child->childs = NULL;
+
+
+			if(nodes->flags & ISO9660_FLAGS_DIRECTORY) {
+				child->open = iso9660_open;
+				child->close = iso9660_close;
+				child->finddir = iso9660_finddir;
+				child->unlink = iso9660_unlink;
+			} else {
+				child->read = iso9660_read;
+				child->write = NULL;
+			}
+			
+			child->chown = NULL;
+			child->chmod = NULL;
+			child->ioctl = NULL;
+
+#if HAVE_ROCKRIDGE
+			rockridge_getmode(rockridge_offset, &child->mode,
+												&child->uid,
+												&child->gid,
+												&child->nlink);
+#endif			
+
+			iso9660_t* cctx = (iso9660_t*) kmalloc(sizeof(iso9660_t), GFP_USER);
+			KASSERT(cctx);
+
+			memcpy(cctx, ctx, sizeof(iso9660_t));
+			memcpy(&cctx->dir, nodes, sizeof(iso9660_dir_t));
+
+			child->userdata = (void*) cctx;
+
+
+
+			
+
+			struct inode_childs* cx = (struct inode_childs*) kmalloc(sizeof(struct inode_childs), GFP_KERNEL);
+			cx->inode = child;
+			cx->next = inode->childs;
+			inode->childs = cx;
+
+			return child;
 		}
-
-		memset(child, 0, sizeof(inode_t));
-
-
-
-		child->name = (const char*) kmalloc(nodes->idlen + 1, GFP_USER);
-		KASSERT(child->name);
-		
-		memset((void*) child->name, 0, nodes->idlen + 1);
-		strncpy((char*) child->name, nodes->reserved, nodes->idlen);
-		
-		iso9660_checkname((char*) child->name);
-
-
-		if(strcmp(child->name, name) != 0) {
-			kfree((void*) child->name);
-			kfree((void*) child);
-
-			continue;
-		}
-	
-
-		
-		child->ino = vfs_inode();
-		child->mode = (nodes->flags & ISO9660_FLAGS_DIRECTORY ? S_IFDIR : S_IFREG) | 0666 & ~current_task->umask;
-
-		child->dev =
-		child->rdev =
-		child->nlink = 0;
-
-		child->uid = current_task->uid;
-		child->gid = current_task->gid;
-		child->size = (off64_t) iso9660_getlsb32(nodes->length);
-
-
-		child->atime = 
-		child->ctime = 
-		child->mtime = timer_gettime();
-	
-		child->parent = inode;
-		child->link = NULL;
-
-		child->childs = NULL;
-
-
-		if(nodes->flags & ISO9660_FLAGS_DIRECTORY) {
-			child->open = iso9660_open;
-			child->close = iso9660_close;
-			child->finddir = iso9660_finddir;
-			child->unlink = iso9660_unlink;
-		} else {
-			child->read = iso9660_read;
-			child->write = NULL;
-		}
-		
-		child->chown = NULL;
-		child->chmod = NULL;
-		child->ioctl = NULL;
-		
-
-		iso9660_t* cctx = (iso9660_t*) kmalloc(sizeof(iso9660_t), GFP_USER);
-		KASSERT(cctx);
-
-		memcpy(cctx, ctx, sizeof(iso9660_t));
-		memcpy(&cctx->dir, nodes, sizeof(iso9660_dir_t));
-
-		child->userdata = (void*) cctx;
-
-
-
-		
-
-		struct inode_childs* cx = (struct inode_childs*) kmalloc(sizeof(struct inode_childs), GFP_KERNEL);
-		cx->inode = child;
-		cx->next = inode->childs;
-		inode->childs = cx;
-
-		return child;
 	}
-
 
 	kfree(snodes);
 

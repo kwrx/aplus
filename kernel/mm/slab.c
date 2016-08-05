@@ -150,6 +150,9 @@ void* kcalloc(size_t x, size_t y, int gfp) {
 
 
 void kfree(void* p) {
+	if(unlikely(!p))
+		return;
+		
 	struct {
 		uint32_t magic;
 		uint32_t size;
