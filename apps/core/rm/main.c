@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <getopt.h>
 
 
@@ -95,7 +97,7 @@ int main(int argc, char** argv) {
             if(force)
                 return;
               
-            fprintf(stderr, "%s: %s: can not remove\n", argv[0], file);
+            fprintf(stderr, "%s: %s: can not remove: %s\n", argv[0], file, strerror(errno));
             exit(-1);
         }
         
@@ -109,7 +111,7 @@ int main(int argc, char** argv) {
             if(force)
                 return -1;
                 
-            fprintf(stderr, "%s: %s: can not open directory\n", argv[0], dir);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], dir, strerror(errno));
             exit(-1);
         }
         
@@ -125,7 +127,7 @@ int main(int argc, char** argv) {
                 if(force)
                     return -1;
                     
-                fprintf(stderr, "%s: %s: can not remove\n", argv[0], buf);
+                fprintf(stderr, "%s: %s: can not remove: %s\n", argv[0], buf, strerror(errno));
                 exit(-1);
             }
             
@@ -133,7 +135,7 @@ int main(int argc, char** argv) {
                 if(rm_r(buf) != 0) {
                     free(buf);
                     
-                    fprintf(stderr, "%s: %s: can not remove\n", argv[0], buf);
+                    fprintf(stderr, "%s: %s: can not remove: %s\n", argv[0], buf, strerror(errno));
                     exit(-1);
                 }
             } else
@@ -155,7 +157,7 @@ int main(int argc, char** argv) {
             if(force)
                 return;
                 
-            fprintf(stderr, "%s: %s: can not open directory\n", argv[0], dir);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], dir, strerror(errno));
             exit(-1);
         }
         
@@ -166,7 +168,7 @@ int main(int argc, char** argv) {
             if(force)
                 return;
                 
-            fprintf(stderr, "%s: %s: directory not empty\n", argv[0], dir);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], dir, strerror(ENOTEMPTY));
             exit(-1);
         }
         
@@ -181,14 +183,14 @@ int main(int argc, char** argv) {
             if(force)
                 continue;
                 
-            fprintf(stderr, "%s: %s: no such file or directory\n", argv[0], argv[i]);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
             exit(-1);
         }
         
         if(S_ISDIR(st.st_mode)) {
             switch(rmmode) {
                 case 0:
-                    fprintf(stderr, "%s: %s: is a directory\n", argv[0], argv[i]);
+                    fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(EISDIR));
                     exit(-1);
                 case 1:
                     rm_r(argv[i]);

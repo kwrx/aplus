@@ -18,13 +18,13 @@ JFILES		:=  $(shell $(FIND) $(PWD)/lib/* -type f -name "*.java")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 CLASSFILES	:=	$(JFILES:.java=.class)
 
-CFLAGS		:=  -pipe -I src/include -include config.h -std=c99 -O3 -c
-SFLAGS		:=  -c -I include
+CFLAGS		:=  -pipe -I /opt/cross/i686-cross/lib/libzip/include -I /opt/cross/i686-cross/lib/libffi*/include -I src/include -include config.h -std=c99 -O3 -c
+SFLAGS		:=  -c -I src/include
 
 all: $(OUTPUT_BIN) $(OUTPUT_LIB) $(OUTPUT_INC) $(OUTPUT_RT)
 $(OUTPUT_BIN): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lc -lm -lgcc
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lffi -lzip -lz -lc -lm -lgcc
 
 $(OUTPUT_LIB): $(OFILES)
 	@echo "  AR     " $(subst $(ROOT)/,,$@)

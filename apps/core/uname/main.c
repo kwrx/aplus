@@ -100,5 +100,6 @@ int main(int argc, char** argv) {
 	}
 
 	printf("\n");
+	fflush(stdout);
 	return 0;
 }

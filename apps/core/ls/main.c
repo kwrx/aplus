@@ -6,6 +6,7 @@
 #include <getopt.h>
 #include <sys/stat.h>
 #include <time.h>
+#include <errno.h>
 #include <fcntl.h>
 
 #ifndef MAXNAMLEN
@@ -58,10 +59,21 @@ int main(int argc, char** argv) {
 	}
 	
 	
-	void showdir(char* p) {	
+	void showdir(char* p) {
+		struct stat st;
+		if(stat(p, &st) != 0) {
+			fprintf(stderr, "%s: %s: %s\n", argv[0], p, strerror(errno));
+			return;
+		}
+		
+		if(!(S_ISDIR(st.st_mode))) {
+			fprintf(stderr, "%s: %s: %s\n", argv[0], p, strerror(ENOTDIR));
+			return;
+		}
+		
 		DIR* d = opendir(p);
 		if(!d) {
-			perror(p);
+			fprintf(stderr, "%s: %s: %s\n", argv[0], p, strerror(errno));
 			return;
 		}
 		

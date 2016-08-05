@@ -1,8 +1,11 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <getopt.h>
 #include <unistd.h>
+#include <errno.h>
+#include <libgen.h>
 #include <fcntl.h>
 
 static void show_usage(int argc, char** argv) {
@@ -124,7 +127,7 @@ int main(int argc, char** argv) {
                 unlink(ds);
                 
                 if(link(ss, ds) != 0) {
-                    fprintf(stderr, "%s: cannot create link of %s in %s\n", argv[0], ss, ds);
+                    fprintf(stderr, "%s: cannot create link of %s in %s: %s\n", argv[0], ss, ds, strerror(errno));
                     exit(-1);
                 }
             } break;
@@ -136,7 +139,7 @@ int main(int argc, char** argv) {
                 unlink(ds);
                 
                 if(symlink(ss, ds) != 0) {
-                    fprintf(stderr, "%s: cannot create symlink of %s in %s\n", argv[0], ss, ds);
+                    fprintf(stderr, "%s: cannot create symlink of %s in %s: %s\n", argv[0], ss, ds, strerror(errno));
                     exit(-1);
                 }
             } break;
@@ -155,7 +158,7 @@ int main(int argc, char** argv) {
         for(i = optind; i < argc - 1; i++) {
             int s = open(argv[i], O_RDONLY);
             if(s < 0 || stat(argv[i], &st) != 0) {
-                fprintf(stderr, "%s: %s: no such file or directory\n", argv[0], argv[i]);
+                fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
                 exit(-1);
             }
            
@@ -164,7 +167,7 @@ int main(int argc, char** argv) {
             
             int d = open(buf, O_CREAT | O_TRUNC | O_RDWR, (st.st_mode & ~0777) | 0666);
             if(d < 0) {
-                fprintf(stderr, "%s: %s: cannot create target file\n", argv[0], buf);
+                fprintf(stderr, "%s: %s: %s\n", argv[0], buf, strerror(errno));
                 exit(-1);
             }
            
@@ -179,7 +182,7 @@ int main(int argc, char** argv) {
         
         s = open(argv[optind], O_RDONLY);
         if(s < 0 || stat(argv[optind], &st) != 0) {
-            fprintf(stderr, "%s: %s: no such file or directory\n", argv[0], argv[optind]);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], argv[optind], strerror(errno));
             exit(-1);
         }
         
@@ -191,7 +194,7 @@ int main(int argc, char** argv) {
             d = open(argv[argc - 1], O_CREAT | O_TRUNC | O_RDWR, m);
             
             if(d < 0) {
-                fprintf(stderr, "%s: %s: cannot create target file\n", argv[0], argv[argc - 1]);
+                fprintf(stderr, "%s: %s: %s\n", argv[0], argv[argc - 1], strerror(errno));
                 exit(-1);
             }
             
@@ -202,7 +205,7 @@ int main(int argc, char** argv) {
                 
                 d = open(buf, O_CREAT | O_TRUNC | O_RDWR, m);
                 if(d < 0) {
-                    fprintf(stderr, "%s: %s: cannot create target file\n", argv[0], buf);
+                    fprintf(stderr, "%s: %s: %s\n", argv[0], buf, strerror(errno));
                     exit(-1);
                 }
                 
@@ -210,7 +213,7 @@ int main(int argc, char** argv) {
             } else {
                 d = open(argv[argc - 1], O_CREAT | O_TRUNC | O_RDWR, m);
                 if(d < 0) {
-                    fprintf(stderr, "%s: %s: cannot create target file\n", argv[0], argv[argc - 1]);
+                    fprintf(stderr, "%s: %s: %s\n", argv[0], argv[argc - 1], strerror(errno));
                     exit(-1);
                 }
                 

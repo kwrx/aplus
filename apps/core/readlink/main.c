@@ -4,18 +4,20 @@
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include <fcntl.h>
 #include <errno.h>
 #include <getopt.h>
 
 
 static void show_usage(int argc, char** argv) {
     printf(
-        "Use: mkdir [options]... [DIRECTORY]...\n"
-        "Create the DIRECTORY(ies), if they do not already exist.\n\n"
-        "   -m, --mode=MODE             set file mode (as in chmod), not a=rwx - umask\n"
-        "   -p, --parents               no error if existing, make parent directories as needed\n"
+        "Use: readlink [options]... FILE...\n"
+        "Print value of symbolic link.\n\n"
+        "   -f, --canonicalize          canonicalize by following every symlink\n"
+        "   -n, --no-newline            do not output the trailing delimiter\n"
+        "   -q, --quiet,                \n"
+        "   -s, --silent                suppress most error messages\n"
         "   -v, --verbose               explain what is being done\n"
+        "   -z, --zero                  end each output line with NUL, not newline\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
     );
@@ -44,34 +46,42 @@ int main(int argc, char** argv) {
         show_usage(argc, argv);
     
     static struct option long_options[] = {
-        { "mode", no_argument, NULL, 'f'},
-        { "parents", no_argument, NULL, 'r'},
+        { "canonicalize", no_argument, NULL, 'f'},
+        { "no-newline", no_argument, NULL, 'n'},
+        { "quiet", no_argument, NULL, 'q'},
+        { "silent", no_argument, NULL, 's'},
+        { "zero", no_argument, NULL, 'z'},
         { "verbose", no_argument, NULL, 'v'},
         { "help", no_argument, NULL, 'h'},
-        { "version", no_argument, NULL, 'q'},
+        { "version", no_argument, NULL, 'w'},
         { NULL, 0, NULL, 0 }
     };
     
     
     
-    int mkparents = 0;
+    int canonicalize = 0;
     int verbose = 0;
-    int mode = 0666;
+    int newline = 1;
     
     
     int c, idx;
-    while((c = getopt_long(argc, argv, "mpv", long_options, &idx)) != -1) {
+    while((c = getopt_long(argc, argv, "fnqszv", long_options, &idx)) != -1) {
         switch(c) {
-            case 'm':
-                /* TODO */
+            case 'f':
+                canonicalize = 1;
                 break;
-            case 'p':
-                mkparents = 1;
+            case 'n':
+            case 'z':
+                newline = 0;
+                break;
+            case 'q':
+            case 's':
+                verbose = -1;
                 break;
             case 'v':
                 verbose = 1;
                 break;
-            case 'q':
+            case 'w':
                 show_version(argc, argv);
                 break;
             case 'h':
@@ -85,24 +95,23 @@ int main(int argc, char** argv) {
     
     if(optind >= argc)
         show_usage(argc, argv);
- 
-    
+        
+        
     int i;
     for(i = optind; i < argc; i++) {
-        int fd = open(argv[i], O_CREAT | O_EXCL | O_RDONLY, S_IFDIR | mode);
-        if(fd < 0) {
-            if(mkparents)
-                continue;
-                
-            fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
-            exit(-1);
+        char buf[BUFSIZ];
+        if(readlink(argv[i], buf, BUFSIZ) < 0) {
+            if(verbose)
+                fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
+        
+            continue;
         }
         
-        if(verbose)
-            fprintf(stdout, "%s: directory \'%s\' created\n", argv[0], argv[i]);
-        
-        close(fd);
+        fprintf(stdout, "%s", buf);
+        if(newline)
+            fprintf(stdout, "\n");
     }
- 
-    return 0;       
+        
+    fflush(stdout);
+    return 0;
 }

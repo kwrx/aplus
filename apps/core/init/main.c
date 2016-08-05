@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
         "BASH=" APPS_SHELL,
         "GUI=" APPS_GUI,
         "HOME=/home",
-        "PATH=/usr/bin:/usr/local/bin",
+        "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin",
         NULL
     };
     

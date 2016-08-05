@@ -17,8 +17,9 @@
 #define HAVE_SYS_TYPES_H 1
 
 
-/* #undef HAVE_ZIP_H */
-/* #undef HAVE_FFI_H */
+
+#define HAVE_ZIP_H 1
+#define HAVE_FFI_H 1
 /* #undef HAVE_GC_H */
 
 /* #undef DEBUG */
@@ -27,8 +28,8 @@
 
 #define APP_NAME "avm"
 #define APP_VERSION "0.1-alpha"
-#define APP_COPY "2015 Antonio Natale"
-#define APP_CC "i686-cross-gcc"
+#define APP_COPY "2016 Antonio Natale"
+#define APP_CC "gcc"
 
 
 

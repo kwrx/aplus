@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <errno.h>
 #include <getopt.h>
 
 
@@ -106,7 +107,7 @@ int main(int argc, char** argv) {
     for(i = optind; i < argc; i++) {
         FILE* fp = fopen(argv[i], "r");
         if(!fp) {
-            fprintf(stderr, "%s: %s: no such file or directory\n", argv[0], argv[i]);
+            fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
             continue;
         }
         

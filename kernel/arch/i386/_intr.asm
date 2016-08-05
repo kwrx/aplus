@@ -150,7 +150,7 @@ isr_stub:
 	pop es
 	pop ds
 	popa
-	add esp, 8		
+	add esp, 8
 	sti
 iret
 		

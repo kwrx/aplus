@@ -7,7 +7,8 @@
 
 
 int main(int argc, char** argv) {
-	kill(getppid(), SIGKILL);
+	if(kill(getppid(), SIGKILL) != 0)
+		perror(argv[0]);
 	
 	return 0;
 }
