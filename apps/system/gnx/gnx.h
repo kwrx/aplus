@@ -16,6 +16,15 @@ typedef struct {
 } __attribute__ ((packed)) gnxctl_packet_t;
 
 
+typedef struct gnx_app {
+    const char* name;
+    const char* path;
+    const 
+    
+    struct gnx_app* next;
+} __attribute__ ((packed)) gnx_app_t;
+
+
 
 extern int verbose;
 int gnx_init(int display);
@@ -25,6 +34,9 @@ int gnxctl_open(void);
 int gnxctl_close(int fd);
 int gnxctl_send(int fd, int type, int hwnd, int param, int dlen, void* data);
 int gnxctl_recv(int fd, gnxctl_packet_t** p);
+
+
+int gnx_apps_run(const char* path);
 
 
 #endif

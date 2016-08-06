@@ -43,11 +43,11 @@ int gnxctl_recv(int fd, gnxctl_packet_t** p) {
         return -1;
         
     gnxctl_packet_t tmp;
-    if(read(fd, &tmp, sizeof(p)) != sizeof(tmp))
+    if(read(fd, &tmp, sizeof(tmp)) != sizeof(tmp))
         return -1;
         
     *p = malloc(sizeof(tmp) + tmp.g_dlen);
-    if(*p)
+    if(!*p)
         return -1;
     
     

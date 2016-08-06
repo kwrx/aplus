@@ -49,7 +49,6 @@ int main(int argc, char** argv) {
     };
     
     #define gnx_apps_kill(s) 0
-    #define gnx_apps_run(s) 0
     #define gnx_apps_list(s) 0
     
  

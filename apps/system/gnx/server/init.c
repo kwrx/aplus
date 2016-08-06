@@ -87,6 +87,27 @@ static int gnx_init_display(int display) {
 }
 
 
+static int gnx_fini_display(int display) {
+    if(display > GNX_MAX_DISPLAY) {
+        fprintf(stderr, "gnx: invalid display %d (accepted: 0-%d)\n", display, GNX_MAX_DISPLAY);
+        return -1;
+    }
+    
+    if(!GNX_Display[display]) {
+        fprintf(stderr, "gnx: display %d is not opened\n", display);
+        return -1;
+    }
+    
+    SDL_FreeSurface(GNX_Display[display]);
+    GNX_Display[display] = NULL;
+    
+    if(verbose)
+        fprintf(stdout, "gnx: display %d closed\n", display);
+    
+    return 0;
+}
+
+
 static int gnx_init_server(int display) {
     if(verbose)
         fprintf(stdout, "gnx: initializing server\n");
@@ -137,17 +158,46 @@ static int gnx_init_server(int display) {
     do {
         gnxctl_packet_t* pk;
         if(gnxctl_recv(fd, &pk) != 0) {
-            fprintf(stderr, "gnx: /tmp/gnx/gnxctl: %s\n", strerror(errno));
-            return -1;
+            fprintf(stderr, "gnx-server: /tmp/gnx/gnxctl (%d): %s\n", fd, strerror(errno));
+            continue;
         }
         
-        if(verbose)
-            fprintf(stdout, "gnxctl: received packet %d\n", pk->g_type);
+            
+        #define CASE(x)                                                 \
+            case x:                                                     \
+                {                                                       \
+                    if(verbose)                                         \
+                        fprintf(stdout,                                 \
+                            "gnx-server: received packet %s\n", #x);    \
+                }    
+        
+        switch(pk->g_type) {
+            CASE(GNXCTL_TYPE_INIT_DISPLAY) {
+                gnx_init_display(pk->g_param);
+            } break;
+            
+            CASE(GNXCTL_TYPE_FINI_DISPLAY) {
+                gnx_fini_display(pk->g_param);
+            }
+            
+            default:
+                fprintf(stderr, "gnx-server: invalid packet type %d\n", pk->g_type);
+                break;
+        }   
+            
             
         free(pk);
     } while(1);
         
-    gnxctl_close(fd);   
+    gnxctl_close(fd);
+    
+    
+    /* TODO: Kill all apps */
+    
+    unlink("/tmp/gnx/gnxctl");
+    unlink("/tmp/gnx/gnx.log");
+    unlink("/tmp/gnx/apps");
+    unlink("/tmp/gnx");  
     return 0;
 }
 
