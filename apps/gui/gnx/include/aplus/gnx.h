@@ -1,1 +1,0 @@
-/opt/usr/include/aplus/gnx.h
