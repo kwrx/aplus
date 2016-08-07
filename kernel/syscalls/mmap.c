@@ -47,6 +47,9 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
 	if(flags & MAP_ANON)
 		memset((void*) rd, 0, len);
+		
+		
+		
 
 	return (void*) rd;
 }

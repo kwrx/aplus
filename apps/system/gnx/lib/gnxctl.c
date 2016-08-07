@@ -8,7 +8,7 @@
 #include <sys/types.h>
 #include <sys/ioctl.h>
 
-#include "../gnx.h"
+#include <aplus/gnx.h>
 
 int gnxctl_open(void) {
     return open("/tmp/gnx/gnxctl", O_RDWR);
