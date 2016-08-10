@@ -15,21 +15,12 @@
 #include <aplus/gnx.h>
 #include "gnxsrv.h"
 
-typedef struct gnx_res {
-    char* name;
-    int type;
-    union {
-        void* data;
-        SDL_Surface* image;
-        TTF_Font* font;   
-    };
-    struct gnx_res* next;
-} __attribute__((packed)) gnx_res_t;
+
 
 static gnx_res_t* gnx_res_queue = NULL;
 
 
-gnx_res_t* gnx_resources_find(const char* name) {
+gnx_res_t* gnxsrv_resources_find(const char* name) {
     gnx_res_t* tmp;
     for(tmp = gnx_res_queue; tmp; tmp = tmp->next)
         if(strcmp(name, tmp->name) == 0)
@@ -38,12 +29,15 @@ gnx_res_t* gnx_resources_find(const char* name) {
     return NULL;
 }
 
-int gnx_resources_unload(const char* name) {
+int gnxsrv_resources_unload_by_name(const char* name) {
     gnx_res_t* res;
-    if((res = gnx_resources_find(name)) == NULL) {
+    if((res = gnxsrv_resources_find(name)) == NULL) {
         fprintf(stderr, "gnx-server: unable to unload resources %s\n", name);
         return -1;
     }
+    
+    if(--res->refcount)
+        return 0;
     
     gnx_res_t* tmp = NULL;
     for(tmp = gnx_res_queue; tmp; tmp = tmp->next)
@@ -85,10 +79,67 @@ int gnx_resources_unload(const char* name) {
     return 0;
 }
 
-int gnx_resources_load(const char* path, int type) {
+int gnxsrv_resources_unload(void* data) {
+    gnx_res_t* res;
+    for(res = gnx_res_queue; res; res = res->next)
+        if(res->data == data)
+            break;
+            
+    if(!res) {
+        fprintf(stderr, "gnx-server: unable to unload resources data %p\n", data);
+        return -1;
+    }
     
-    if(gnx_resources_find(path))
+    if(--res->refcount)
         return 0;
+    
+    gnx_res_t* tmp = NULL;
+    for(tmp = gnx_res_queue; tmp; tmp = tmp->next)
+        if(tmp->next == res)
+            break;
+            
+    if(!tmp && res != gnx_res_queue) {
+        fprintf(stderr, "gnx-server: BUG!! %s::%s (%d)\n", __FILE__, __func__, __LINE__);
+        return -1;
+    }
+    
+    if(res == gnx_res_queue)
+        gnx_res_queue = res->next;
+    else
+        tmp->next = res->next;
+        
+    switch(res->type) {
+        case GNXRES_TYPE_UNKNOWN:
+            free(res->data);
+            break;
+        case GNXRES_TYPE_FONT:
+            TTF_CloseFont(res->font);
+            break;
+        case GNXRES_TYPE_IMAGE:
+            SDL_FreeSurface(res->image);
+            break;
+        default:
+            fprintf(stderr, "gnx-server: BUG!! %s::%s (%d)\n", __FILE__, __func__, __LINE__);
+            return -1;
+    }
+    
+    if(verbose)
+        fprintf(stdout, "gnx-server: unloaded resource: %s\n", res->name);
+        
+    
+    free(res->name);
+    free(res);
+    
+    return 0;
+}
+
+int gnxsrv_resources_load(const char* path, int type) {
+    
+    gnx_res_t* res;
+    if(res = gnxsrv_resources_find(path)) {
+        res->refcount++;
+        return 0;
+    }
     
     
     switch(type) {
@@ -103,6 +154,7 @@ int gnx_resources_load(const char* path, int type) {
             r->name = strdup(path);
             r->type = type;
             r->data = malloc(st.st_size);
+            r->refcount = 1;
             r->next = gnx_res_queue;
             
             if(!r->data) {
@@ -151,6 +203,7 @@ int gnx_resources_load(const char* path, int type) {
             gnx_res_t* r = (gnx_res_t*) malloc(sizeof(gnx_res_t));
             r->name = strdup(path);
             r->type = type;
+            r->refcount = 1;
             r->next = gnx_res_queue;
             
             r->font = TTF_OpenFont(path, 16);
@@ -179,6 +232,7 @@ int gnx_resources_load(const char* path, int type) {
             gnx_res_t* r = (gnx_res_t*) malloc(sizeof(gnx_res_t));
             r->name = strdup(path);
             r->type = type;
+            r->refcount = 1;
             r->next = gnx_res_queue;
             
             r->image = IMG_Load(path);

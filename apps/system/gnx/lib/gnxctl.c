@@ -19,7 +19,7 @@ int gnxctl_close(int fd) {
     return close(fd);
 }
 
-int gnxctl_send(int fd, int type, int hwnd, int param, int dlen, void* data) {
+int gnxctl_send(int fd, uint8_t type, gnx_hwnd_t hwnd, gnx_param_t param, size_t dlen, void* data) {
     gnxctl_packet_t* p = (gnxctl_packet_t*) malloc(sizeof(gnxctl_packet_t) + dlen);
     p->g_type = type;
     p->g_hwnd = hwnd;

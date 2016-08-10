@@ -38,6 +38,7 @@ int main(int argc, char** argv) {
     
     char* __argv[] = {
         APPS_SHELL,
+        "--verbose",
         NULL
     };
     

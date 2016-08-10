@@ -25,7 +25,20 @@ typedef struct hwnd {
 static hwnd_t* hwnd_queue = NULL;
 static gnx_hwnd_t hwnd_id = 0;
 
-int gnx_hwnd_raise(hwnd_t* hwnd, gnx_wid_t wid, uint8_t type, int param, size_t dlen, void* data) {
+int gnxsrv_hwnd_raise(gnx_hwnd_t hid, gnx_wid_t wid, uint8_t type, gnx_param_t param, size_t dlen, void* data) {
+    if(hid == -1)
+        return 0;
+        
+    hwnd_t* hwnd;
+    for(hwnd = hwnd_queue; hwnd; hwnd = hwnd->next)
+        if(hwnd->h_id == hid)
+            break;
+    
+    if(!hwnd) {
+        fprintf(stderr, "gnx-server: can not raise event: invalid handle: %d\n", hid);
+        return -1;
+    }
+    
     int fd = open(hwnd->h_path, O_RDWR);
     if(fd < 0) {
         fprintf(stderr, "gnx-server: can not raise event for %s: %s\n", hwnd->h_appname, strerror(errno));
@@ -51,8 +64,8 @@ int gnx_hwnd_raise(hwnd_t* hwnd, gnx_wid_t wid, uint8_t type, int param, size_t 
     
         
     
-    if(pid != -1 && kill(pid, SIGUSR1) != 0) {
-        fprintf(stderr, "gnx-server: (%d) SIGUSR1: %s\n", pid, strerror(errno));
+    if(hwnd->h_pid != -1 && kill(hwnd->h_pid, SIGUSR1) != 0) {
+        fprintf(stderr, "gnx-server: (%d) SIGUSR1: %s\n", hwnd->h_pid, strerror(errno));
         return -1;
     }
     
@@ -60,14 +73,14 @@ int gnx_hwnd_raise(hwnd_t* hwnd, gnx_wid_t wid, uint8_t type, int param, size_t 
 }
 
 
-int gnx_create_hwnd(char* appname, pid_t pid) {
+int gnxsrv_create_hwnd(char* appname, pid_t pid) {
     if(!appname) {
         fprintf(stderr, "gnx-server: appname: %s\n", strerror(EINVAL));
         return -1;
     }
     
     char buf[BUFSIZ];
-    sprintf(buf, "/tmp/gnx/apps/%s", appname);
+    sprintf(buf, "/tmp/gnx/apps/%s.%d", appname, pid);
     
     struct stat st;
     if(stat(buf, &st) == 0) {
@@ -90,42 +103,47 @@ int gnx_create_hwnd(char* appname, pid_t pid) {
     h->next = hwnd_queue;
     hwnd_queue = h;
     
-    gnx_hwnd_raise(h, -1, GNXEV_TYPE_INIT, h->h_id, 0, NULL);
+    gnxsrv_hwnd_raise(h->h_id, -1, GNXEV_TYPE_INIT, h->h_id, 0, NULL);
     
     
     if(verbose)
-        fprintf(stdout, "gnx-server: created handle %s\n", appname);
+        fprintf(stdout, "gnx-server: created handle %s.%d (hwnd: %d)\n", appname, pid, h->h_id);
     
     
     return 0;
 }
 
-int gnx_close_hwnd(char* appname) {
-    if(!appname) {
-        fprintf(stderr, "gnx-server: appname: %s\n", strerror(EINVAL));
+int gnxsrv_close_hwnd(gnx_hwnd_t hwnd) {
+    
+    hwnd_t* h;
+    for(h = hwnd_queue; h; h = h->next)
+        if(h->h_id == hwnd)
+            break;
+            
+    if(!h) {
+        fprintf(stderr, "gnx-server: unable to find handle with id %d\n", hwnd);
         return -1;
     }
     
     hwnd_t* tmp;
     for(tmp = hwnd_queue; tmp->next; tmp = tmp->next)
-        if(strcmp(tmp->next->h_appname, appname) == 0)
+        if(tmp->next = h)
             break;
             
-    if(!tmp->next && (strcmp(hwnd_queue->h_appname, appname) == 0)) {
-        tmp = hwnd_queue;
-        hwnd_queue = hwnd_queue->next;
-        
-        free(tmp);
-    } else
+   if(!tmp && h != hwnd_queue) {
+        fprintf(stderr, "gnx-server: BUG!! %s::%s (%d)\n", __FILE__, __func__, __LINE__);
         return -1;
+    }
     
-    hwnd_t* t0 = tmp->next;
-    tmp->next = tmp->next->next;
-    free(t0);
+    if(h == hwnd_queue)
+        hwnd_queue = h->next;
+    else
+        tmp->next = h->next;
     
+  
     
     char buf[BUFSIZ];
-    sprintf(buf, "/tmp/gnx/apps/%s", appname);
+    sprintf(buf, "/tmp/gnx/apps/%s.%d", h->h_appname, h->h_pid);
     
     if(unlink(buf) != 0) {
         fprintf(stderr, "gnx-server: %s: %s\n", buf, strerror(errno));
@@ -133,8 +151,8 @@ int gnx_close_hwnd(char* appname) {
     }
     
      if(verbose)
-        fprintf(stdout, "gnx-server: closed handle %s\n", appname);
+        fprintf(stdout, "gnx-server: closed handle %s.%d\n", h->h_appname, h->h_pid);
     
-    
+    free(h);
     return 0;
 }

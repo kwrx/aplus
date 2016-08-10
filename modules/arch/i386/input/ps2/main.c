@@ -3,6 +3,7 @@
 #include <xdev/module.h>
 #include <xdev/vfs.h>
 #include <xdev/intr.h>
+#include <aplus/input.h>
 #include <libc.h>
 
 MODULE_NAME("i386/input/ps2");
@@ -10,9 +11,6 @@ MODULE_DEPS("");
 MODULE_AUTHOR("WareX");
 MODULE_LICENSE("GPL");
 
-
-#define MOUSE_DEVICE	"/dev/mouse"
-#define KBD_DEVICE		"/dev/kbd"
 
 #if defined(__i386__)
 #include <arch/i386/i386.h>
@@ -42,40 +40,9 @@ MODULE_LICENSE("GPL");
 
 
 
-#define VK_CAPSLOCK		(0x3A)
-#define VK_NUMLOCK		(0x45)
-#define VK_SCORRLOCK	(0x46)
-#define VK_LSHIFT		(0x2A)
-#define VK_RSHIFT		(0x36)
-#define VK_LCTRL		(0x1D)
-#define VK_RCTRL		(0x1D + 128)
-#define VK_LALT			(0x38)
-#define VK_RALT			(0x38 + 128)
 
 
-static struct {
-	uint8_t buttons[5];
-	uint16_t speed;
-
-	uint16_t x;
-	uint16_t y;
-	uint16_t z;
-
-	int16_t dx;
-	int16_t dy;
-	int16_t dz;
-
-	struct {
-		uint16_t left;
-		uint16_t top;
-		uint16_t right;
-		uint16_t bottom;
-	} clip;
-
-	uint8_t pack[4];
-	uint8_t cycle;
-	int fd;
-} mouse;
+static mouse_t mouse;
 
 static struct {
 	uint8_t keymap[1024];
@@ -84,7 +51,6 @@ static struct {
 	uint8_t numlock;
 	uint8_t scorrlock;
 	uint8_t e0;
-	int fd;
 } kb = {
 	.keymap = {
 		0x00, 0x1B, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
@@ -251,11 +217,18 @@ void mouse_intr(void* unused) {
 
 					//mouse.dz = mouse.pack[3];
 
-
+					mouse.x += mouse.dx;
+					mouse.y -= mouse.dy;
+					
+					/* TODO: Add clipping */
+					
 	
 					mouse.buttons[0] = (mouse.pack[0] & 0x01);
 					mouse.buttons[1] = (mouse.pack[0] & 0x02);
 					mouse.buttons[2] = (mouse.pack[0] & 0x04);
+					
+					
+					__fifo_send(MOUSE_DEVICE, &mouse, sizeof(mouse));
 					
 					mouse.cycle = 0;
 					break;

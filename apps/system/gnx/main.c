@@ -22,6 +22,7 @@ static void show_usage(int argc, char** argv) {
         "       --unload-resource [R] unload GNX loaded resource\n"
         "       --create-handle [H]   create handle with appname H\n"
         "       --close-handle [H]    close handle with appname H\n"
+        "       --disable-cursor      disable mouse cursor drawing\n"
         "   -v, --verbose             explains what it is doing\n"
         "       --help                show this help\n"
         "       --version             print version info and exit\n"
@@ -55,6 +56,7 @@ int main(int argc, char** argv) {
         { "unload-resource", required_argument, NULL, 'g'},
         { "create-handle", required_argument, NULL, 'i'},
         { "close-handle", required_argument, NULL, 'l'},
+        { "disable-cursor", no_argument, NULL, 'm'},
         { "verbose", no_argument, NULL, 'v'},
         { "help", no_argument, NULL, 'h'},
         { "version", no_argument, NULL, 'z'},
@@ -99,9 +101,12 @@ int main(int argc, char** argv) {
             case 'i':
                 gnx_send_command(GNXCTL_TYPE_CREATE_HWND, 0, -1, strlen(optarg) + 1, optarg);
             case 'l':
-                gnx_send_command(GNXCTL_TYPE_CLOSE_HWND, 0, 0, strlen(optarg) + 1, optarg);
+                gnx_send_command(GNXCTL_TYPE_CLOSE_HWND, 0, atoi(optarg), 0, 0);
+            case 'm':
+                /* TODO */
+                exit(0);
             case 'k':
-                gnx_send_command(GNXCTL_TYPE_KILL_SERVER, 0, atoi(optarg), 0, NULL);
+                gnx_send_command(GNXCTL_TYPE_KILL_SERVER, 0, 0, 0, NULL);
             case 'v':
                 verbose = 1;
                 break;
@@ -111,6 +116,7 @@ int main(int argc, char** argv) {
             case 'h':
             case '?':
                 //show_usage(argc, argv);
+                exit(-1);
                 break;
             default:
                 abort();

@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <sched.h>
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -19,8 +20,10 @@
 
 SDL_Surface* GNX_Display[GNX_MAX_DISPLAY] = { NULL, NULL, NULL, NULL };
 SDL_Surface* GNX_CurrentDisplay = NULL;
+int GNX_CurrentDisplayIndex = -1;
+int gnxsrv_alive = 1;
 
-static int gnx_init_display(int display) {
+static int gnxsrv_init_display(int display) {
     if(display > GNX_MAX_DISPLAY) {
         fprintf(stderr, "gnx-server: invalid display %d (accepted: 0-%d)\n", display, GNX_MAX_DISPLAY);
         return -1;
@@ -89,7 +92,7 @@ static int gnx_init_display(int display) {
 }
 
 
-static int gnx_fini_display(int display) {
+static int gnxsrv_fini_display(int display) {
     if(display > GNX_MAX_DISPLAY) {
         fprintf(stderr, "gnx-server: invalid display %d (accepted: 0-%d)\n", display, GNX_MAX_DISPLAY);
         return -1;
@@ -114,7 +117,7 @@ static int gnx_fini_display(int display) {
     return 0;
 }
 
-static int gnx_select_display(int display) {
+static int gnxsrv_select_display(int display) {
     if(display > GNX_MAX_DISPLAY) {
         fprintf(stderr, "gnx-server: invalid display %d (accepted: 0-%d)\n", display, GNX_MAX_DISPLAY);
         return -1;
@@ -126,6 +129,7 @@ static int gnx_select_display(int display) {
     }
     
     GNX_CurrentDisplay = GNX_Display[display];
+    GNX_CurrentDisplayIndex = display;
     
     if(verbose)
         fprintf(stdout, "gnx-server: display %d set as default\n", display);
@@ -134,23 +138,23 @@ static int gnx_select_display(int display) {
 }
 
 
-static int gnx_init_server(int display) {
+static int gnxsrv_init_server(int display) {
     if(verbose)
         fprintf(stdout, "gnx-server: initializing server\n");
         
         
-    #define mknod(x, t)                                                 \
-    {                                                                   \
-        int fd;                                                         \
-        if((fd = open(x, O_CREAT | O_RDONLY, t | 0666)) < 0) {          \
-            fprintf(stderr, "gnx-server: %s: %s\n", x, strerror(errno));       \
-            return -1;                                                  \
-        }                                                               \
-                                                                        \
-        close(fd);                                                      \
-                                                                        \
-        if(verbose)                                                     \
-            fprintf(stdout, "gnx-server: created %s\n", x);                    \
+    #define mknod(x, t)                                                     \
+    {                                                                       \
+        int fd;                                                             \
+        if((fd = open(x, O_CREAT | O_RDONLY, t | 0666)) < 0) {              \
+            fprintf(stderr, "gnx-server: %s: %s\n", x, strerror(errno));    \
+            return -1;                                                      \
+        }                                                                   \
+                                                                            \
+        close(fd);                                                          \
+                                                                            \
+        if(verbose)                                                         \
+            fprintf(stdout, "gnx-server: created %s\n", x);                 \
     }
     
     
@@ -167,11 +171,20 @@ static int gnx_init_server(int display) {
         fprintf(stdout, "gnx-server: created %s\n", "/tmp/gnx/gnxctl");
     
     
-    if(gnx_init_display(display) != 0)
+    if(gnxsrv_init_display(display) != 0)
         return -1;
         
-    if(gnx_select_display(display) != 0)
+    if(gnxsrv_select_display(display) != 0)
         return -1;
+    
+    
+    if(verbose)
+        fprintf(stdout, "gnx-server: initializing cursor thread\n");
+    
+    if(clone(gnxsrv_cursor_update_thread, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND | CLONE_VM, NULL) < 0) {
+        fprintf(stderr, "gnx-server: clone(): %s\n", strerror(errno));
+        return -1;
+    }
     
     
     int fd;
@@ -183,8 +196,9 @@ static int gnx_init_server(int display) {
         
     if(verbose)
         fprintf(stdout, "gnxctl: waiting for packets\n");
-     
-    int e = 1;   
+        
+    
+       
     do {
         gnxctl_packet_t* pk;
         if(gnxctl_recv(fd, &pk) != 0) {
@@ -203,36 +217,57 @@ static int gnx_init_server(int display) {
         
         switch(pk->g_type) {
             CASE(GNXCTL_TYPE_KILL_SERVER) {
-                e = 0;
+                gnxsrv_alive = 0;
             } break;
             
             CASE(GNXCTL_TYPE_INIT_DISPLAY) {
-                gnx_init_display(pk->g_param);
+                gnxsrv_init_display(pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_FINI_DISPLAY) {
-                gnx_fini_display(pk->g_param);
+                gnxsrv_fini_display(pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_SELECT_DISPLAY) {
-                gnx_select_display(pk->g_param);
+                gnxsrv_select_display(pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_LOAD_RESOURCE) {
-                gnx_resources_load(pk->g_data, pk->g_param);
+                gnxsrv_resources_load(pk->g_data, pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_UNLOAD_RESOURCE) {
-                gnx_resources_unload(pk->g_data);
+                gnxsrv_resources_unload_by_name(pk->g_data);
             } break;
             
             CASE(GNXCTL_TYPE_CREATE_HWND) {
-                gnx_create_hwnd(pk->g_data, pk->g_param);
+                gnxsrv_create_hwnd(pk->g_data, pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_CLOSE_HWND) {
-                gnx_close_hwnd(pk->g_data);
+                gnxsrv_close_hwnd(pk->g_param);
             } break;
+            
+            CASE(GNXCTL_TYPE_CREATE_WINDOW) {
+                gnxsrv_window_create(pk->g_hwnd, pk->g_param);
+            } break;
+            
+            CASE(GNXCTL_TYPE_CLOSE_WINDOW) {
+                gnxsrv_window_close(pk->g_hwnd, pk->g_param);
+            } break;
+            
+            CASE(GNXCTL_TYPE_BLIT_WINDOW) {
+                gnxsrv_window_blit(pk->g_hwnd, pk->g_param);
+            } break;
+            
+            CASE(GNXCTL_TYPE_SET_WINDOW_FONT) {
+                gnxsrv_window_set_font(pk->g_hwnd, pk->g_param, pk->g_data);
+            } break;
+            
+            CASE(GNXCTL_TYPE_SET_WINDOW_TITLE) {
+                gnxsrv_window_set_title(pk->g_hwnd, pk->g_param, pk->g_data);
+            } break;
+            
             
             default:
                 fprintf(stderr, "gnx-server: invalid packet type %d\n", pk->g_type);
@@ -241,7 +276,7 @@ static int gnx_init_server(int display) {
             
             
         free(pk);
-    } while(e);
+    } while(gnxsrv_alive);
     
     
         
@@ -267,7 +302,7 @@ static int gnx_init_server(int display) {
 int gnxsrv_init(int display) {
     int fd;
     if((fd = gnxctl_open()) < 0)
-        return gnx_init_server(display);
+        return gnxsrv_init_server(display);
     
     gnxctl_send(fd, GNXCTL_TYPE_INIT_DISPLAY, 0, display, 0, NULL);
     gnxctl_close(fd);

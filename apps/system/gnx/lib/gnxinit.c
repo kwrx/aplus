@@ -14,6 +14,7 @@
 
 char* gnx_appname;
 char* gnx_hwnd_path;
+gnx_hwnd_t gnx_hwnd;
 
 gnx_event_handler_t gnx_sighwnd_handler = NULL;
 
@@ -38,6 +39,9 @@ static void gnx_sighwnd(int sig) {
         
         goto done;
     }
+    
+    if(ev->e_type == GNXEV_TYPE_INIT)
+        gnx_hwnd = ev->e_param;
     
     if(gnx_sighwnd_handler)
         gnx_sighwnd_handler(fd, ev);
@@ -65,7 +69,7 @@ int gnx_init(char* appname, gnx_event_handler_t handler) {
     
     
     char buf[BUFSIZ];
-    sprintf(buf, "/tmp/gnx/apps/%s", appname);
+    sprintf(buf, "/tmp/gnx/apps/%s.%d", appname, getpid());
     
     gnx_appname = strdup(appname);
     gnx_hwnd_path = strdup(buf);
