@@ -95,6 +95,8 @@ void fork_handler(i386_context_t* context) {
 	child->sig_handler = current_task->sig_handler;
 	child->sig_no = current_task->sig_no;
 	child->sig_mask = current_task->sig_mask;
+	
+	
 
 	int i;
 	for(i = 0; i < TASK_FD_COUNT; i++)
@@ -104,8 +106,13 @@ void fork_handler(i386_context_t* context) {
 	child->exe = current_task->exe;
 	child->root = current_task->root;
 	child->umask = current_task->umask;
-
-
+	
+	memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
+	memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
+	memcpy(&child->__image, current_task->image, sizeof(child->__image));
+	
+	child->image = &child->__image;
+		
 
 	child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
 	KASSERT(child->context);
@@ -159,6 +166,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
+	
 
 	if(flags & CLONE_SIGHAND) {
 		child->sig_handler = current_task->sig_handler;
@@ -186,6 +194,8 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	child->exe = current_task->exe;
 
 
+	memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
+	memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 
 
 	child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
@@ -196,11 +206,15 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	CTX(child)->esp = 
 	CTX(child)->ebp = (uintptr_t) sptr;
 
-	if(flags & CLONE_VM)
+	if(flags & CLONE_VM) {
 		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 0);
-	else
+		child->image = current_task->image;
+	} else {
 		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 1);
-
+		
+		memcpy(&child->__image, current_task->image, sizeof(child->__image));
+		child->image = &child->__image;
+	}
 
 	if(flags & CLONE_PARENT)
 		child->parent = (task_t*) current_task->parent;
@@ -358,8 +372,9 @@ int task_init(void) {
 	t->exit.value = 0;
 
 
-	t->image.start = CONFIG_KERNEL_BASE;
-	t->image.end = (uintptr_t) &end;
+	t->image = &t->__image;
+	t->image->start = CONFIG_KERNEL_BASE;
+	t->image->end = (uintptr_t) &end;
 
 	t->parent = NULL;
 	t->next = NULL;

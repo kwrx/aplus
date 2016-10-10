@@ -133,12 +133,12 @@ int gnxsrv_resources_unload(void* data) {
     return 0;
 }
 
-int gnxsrv_resources_load(const char* path, int type) {
+void* gnxsrv_resources_load(const char* path, int type) {
     
     gnx_res_t* res;
     if(res = gnxsrv_resources_find(path)) {
         res->refcount++;
-        return 0;
+        return res->data;
     }
     
     
@@ -147,7 +147,7 @@ int gnxsrv_resources_load(const char* path, int type) {
             struct stat st;
             if(stat(path, &st) != 0) {
                 fprintf(stderr, "gnx-server: %s: %s\n", path, strerror(errno));
-                return -1;
+                return NULL;
             }
             
             gnx_res_t* r = (gnx_res_t*) malloc(sizeof(gnx_res_t));
@@ -163,7 +163,7 @@ int gnxsrv_resources_load(const char* path, int type) {
                 free(r->name);
                 free(r->data);
                 free(r);
-                return -1;
+                return NULL;
             }
             
             int fd = open(path, O_RDONLY);
@@ -173,7 +173,7 @@ int gnxsrv_resources_load(const char* path, int type) {
                 free(r->name);
                 free(r->data);
                 free(r);
-                return -1;
+                return NULL;
             }
             
             if(read(fd, r->data, st.st_size) != st.st_size) {
@@ -182,7 +182,7 @@ int gnxsrv_resources_load(const char* path, int type) {
                 free(r->name);
                 free(r->data);
                 free(r);
-                return -1;
+                return NULL;
             }
             
             close(fd);
@@ -191,13 +191,14 @@ int gnxsrv_resources_load(const char* path, int type) {
             if(verbose)
                 fprintf(stdout, "gnx-server: loaded unknown resources: %s (%d Bytes)\n", path, st.st_size);
         
+            return r->data;
         } break;
         
         case GNXRES_TYPE_FONT: {
             struct stat st;
             if(stat(path, &st) != 0) {
                 fprintf(stderr, "gnx-server: %s: %s\n", path, strerror(errno));
-                return -1;
+                return NULL;
             }
             
             gnx_res_t* r = (gnx_res_t*) malloc(sizeof(gnx_res_t));
@@ -212,7 +213,7 @@ int gnxsrv_resources_load(const char* path, int type) {
                 
                 free(r->name);
                 free(r);
-                return -1;
+                return NULL;
             }
             
             gnx_res_queue = r;
@@ -220,13 +221,14 @@ int gnxsrv_resources_load(const char* path, int type) {
             if(verbose)
                 fprintf(stdout, "gnx-server: loaded font: %s (%d Bytes)\n", path, st.st_size);
         
+            return r->data;
         } break;
         
         case GNXRES_TYPE_IMAGE: {
             struct stat st;
             if(stat(path, &st) != 0) {
                 fprintf(stderr, "gnx-server: %s: %s\n", path, strerror(errno));
-                return -1;
+                return NULL;
             }
             
             gnx_res_t* r = (gnx_res_t*) malloc(sizeof(gnx_res_t));
@@ -236,12 +238,12 @@ int gnxsrv_resources_load(const char* path, int type) {
             r->next = gnx_res_queue;
             
             r->image = IMG_Load(path);
-            if(!r->font) {
+            if(!r->image) {
                 fprintf(stderr, "gnx-server: %s: %s\n", path, IMG_GetError());
                 
                 free(r->name);
                 free(r);
-                return -1;
+                return NULL;
             }
             
             gnx_res_queue = r;
@@ -249,12 +251,13 @@ int gnxsrv_resources_load(const char* path, int type) {
             if(verbose)
                 fprintf(stdout, "gnx-server: loaded image: %s (%d Bytes)\n", path, st.st_size);
         
+            return r->data;
         } break;
         
         default:
             fprintf(stderr, "gnx-server: invalid resource type\n");
-            return -1;
+            return NULL;
     }
     
-    return 0;
+    return NULL;
 }

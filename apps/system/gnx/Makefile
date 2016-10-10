@@ -19,7 +19,7 @@ SFLAGS		:=  -c -I include
 all: $(OUTPUT) $(LIBRARY)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) \
+	@$(CC) -pipe -Ofast -s -o $@ $(OFILES) \
 		-lSDL2 -lSDL2_ttf -lSDL2_image -lfreetype -lpng -ljpeg -lz -lgcc
 
 $(LIBRARY): $(LFILES)

@@ -90,7 +90,7 @@ typedef struct task {
 	struct {
 		uintptr_t start;
 		uintptr_t end;
-	} image;
+	} __image, *image;
 
 
 	struct task* parent;

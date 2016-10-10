@@ -12,7 +12,7 @@ static void on_event(int sender, gnx_event_t* e) {
         
         case GNXEV_TYPE_WINDOW_INIT: {
             gnx_window_set_font(e->e_wid, "/usr/share/fonts/default.ttf");
-            gnx_window_set_title(e->e_wid, "MainWindow");
+            gnx_window_set_title(e->e_wid, "Main Window");
             gnx_window_blit(e->e_wid);
         } break;
         

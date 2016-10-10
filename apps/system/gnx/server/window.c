@@ -12,6 +12,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
+#include <cairo/cairo.h>
+
 #include <aplus/fbdev.h>
 #include <aplus/gnx.h>
 
@@ -36,6 +38,20 @@ static window_t* wnd_queue = NULL;
 static gnx_wid_t wnd_id = 0;
 
 
+int gnxsrv_window_update(void) {
+    void blit(window_t* wnd) {
+        gnxsrv_window_blit(wnd->usr.w_id);
+        
+        window_t* tmp;
+        for(tmp = wnd_queue; tmp; tmp = tmp->next)
+            if(tmp->usr.w_id_parent == wnd->usr.w_id)
+                blit(tmp);
+    }
+    
+    if(wnd_queue)
+        blit(wnd_queue);
+    return 0;
+}
 
 int gnxsrv_window_create(gnx_hwnd_t hwnd, gnx_wid_t parent) {
     window_t* wnd = (window_t*) malloc(sizeof(window_t));
@@ -58,6 +74,7 @@ int gnxsrv_window_create(gnx_hwnd_t hwnd, gnx_wid_t parent) {
     }
     
     wnd->usr.w_id = wnd_id++;
+    wnd->usr.w_id_parent = parent;
     wnd->usr.w_x = GNX_CurrentDisplay->w / 2 - 200;
     wnd->usr.w_y = GNX_CurrentDisplay->h / 2 - 150;
     wnd->usr.w_width = 400;
@@ -78,7 +95,7 @@ int gnxsrv_window_create(gnx_hwnd_t hwnd, gnx_wid_t parent) {
     return wnd->usr.w_id;
 }
 
-int gnxsrv_window_close(gnx_hwnd_t hwnd, gnx_wid_t wid) {
+int gnxsrv_window_close(gnx_wid_t wid) {
     
     window_t* tmp;
     for(tmp = wnd_queue; tmp; tmp = tmp->next)
@@ -116,7 +133,7 @@ int gnxsrv_window_close(gnx_hwnd_t hwnd, gnx_wid_t wid) {
     return 0;
 }
 
-int gnxsrv_window_resize(gnx_hwnd_t hwnd, gnx_wid_t wid) {
+int gnxsrv_window_resize(gnx_wid_t wid) {
     window_t* tmp;
     for(tmp = wnd_queue; tmp; tmp = tmp->next)
         if(tmp->usr.w_id == wid)
@@ -140,7 +157,7 @@ int gnxsrv_window_resize(gnx_hwnd_t hwnd, gnx_wid_t wid) {
     return 0;
 }
 
-int gnxsrv_window_blit(gnx_hwnd_t hwnd, gnx_wid_t wid) {
+int gnxsrv_window_blit(gnx_wid_t wid) {
     window_t* tmp;
     for(tmp = wnd_queue; tmp; tmp = tmp->next)
         if(tmp->usr.w_id == wid)
@@ -182,13 +199,13 @@ int gnxsrv_window_blit(gnx_hwnd_t hwnd, gnx_wid_t wid) {
         r.w = tmp->usr.w_width;
         r.h = tmp->usr.w_height;
         
-        SDL_BlitSurface(tmp->surface, NULL, GNX_CurrentDisplay, &r);
+        GNX_BlitSurface(tmp->surface, NULL, GNX_CurrentDisplay, &r);
     }
     
     return 0;
 }
 
-int gnxsrv_window_set_font(gnx_hwnd_t hwnd, gnx_wid_t wid, char* fontface) {
+int gnxsrv_window_set_font(gnx_wid_t wid, char* fontface) {
     window_t* tmp;
     for(tmp = wnd_queue; tmp; tmp = tmp->next)
         if(tmp->usr.w_id == wid)
@@ -202,15 +219,13 @@ int gnxsrv_window_set_font(gnx_hwnd_t hwnd, gnx_wid_t wid, char* fontface) {
     if(tmp->text.font)
         gnxsrv_resources_unload(tmp->text.font);
         
-    if(gnxsrv_resources_load(fontface, GNXRES_TYPE_FONT) != 0)
+    if(!(tmp->text.font = gnxsrv_resources_load(fontface, GNXRES_TYPE_FONT)))
         return -1;
         
-    gnx_res_t* res = gnxsrv_resources_find(fontface);
-    tmp->text.font = res->font;
     return 0;
 }
 
-int gnxsrv_window_set_title(gnx_hwnd_t hwnd, gnx_wid_t wid, char* title) {
+int gnxsrv_window_set_title(gnx_wid_t wid, char* title) {
     window_t* tmp;
     for(tmp = wnd_queue; tmp; tmp = tmp->next)
         if(tmp->usr.w_id == wid)

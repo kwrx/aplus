@@ -20,8 +20,49 @@
 
 SDL_Surface* GNX_Display[GNX_MAX_DISPLAY] = { NULL, NULL, NULL, NULL };
 SDL_Surface* GNX_CurrentDisplay = NULL;
+SDL_Surface* GNX_PDisplay = NULL;
 int GNX_CurrentDisplayIndex = -1;
 int gnxsrv_alive = 1;
+
+
+int gnxsrv_pdisplay_update_thread(void* arg) {
+    (void) arg;
+    
+     if(verbose)
+        fprintf(stdout, "gnx-server: gnxsrv_pdisplay_update_thread() running\n");
+       
+
+#define FPS 1
+#if FPS   
+    int t0 = time(NULL);
+    int fps = 0;
+    clock_t cs = clock();
+#endif
+
+    uint32_t clear_color = SDL_MapRGB(GNX_CurrentDisplay->format, 0, 0, 0);
+
+    for(; gnxsrv_alive; sched_yield()) {
+        if(!GNX_CurrentDisplay->userdata)
+            continue;
+            
+        gnxsrv_window_update();
+        gnxsrv_cursor_update();
+        GNX_CurrentDisplay->userdata = NULL;
+        
+        
+        SDL_BlitSurface(GNX_CurrentDisplay, NULL, GNX_PDisplay, NULL);
+        SDL_FillRect(GNX_CurrentDisplay, NULL, clear_color);
+#if FPS       
+        fps++;
+        if(t0 != time(NULL)) {
+            fprintf(stderr, "FPS: %d; CPU: %d %%\n", fps, (clock() - cs) / 10);
+            fps = 0;
+            cs = clock();
+            t0 = time(NULL);
+        }
+#endif      
+    }
+}
 
 static int gnxsrv_init_display(int display) {
     if(display > GNX_MAX_DISPLAY) {
@@ -67,18 +108,35 @@ static int gnxsrv_init_display(int display) {
         }
     }
     
+    if(!GNX_PDisplay) {
+        GNX_PDisplay = SDL_CreateRGBSurfaceFrom (
+            mode.lfbptr,
+            mode.width,
+            mode.height,
+            mode.bpp,
+            mode.width * (mode.bpp / 8),
+            0x00FF0000,
+            0x0000FF00,
+            0x000000FF,
+            0xFF000000
+        );
+        
+        //SDL_SetSurfaceBlendMode(GNX_PDisplay, SDL_BLENDMODE_NONE);
+    }
     
-    GNX_Display[display] = SDL_CreateRGBSurfaceFrom (
-        mode.lfbptr,
+    GNX_Display[display] = SDL_CreateRGBSurface (
+        0,
         mode.width,
         mode.height,
         mode.bpp,
-        mode.width * (mode.bpp / 8),
         0x00FF0000,
         0x0000FF00,
         0x000000FF,
         0xFF000000
     );
+    
+    //SDL_SetSurfaceBlendMode(GNX_Display[display], SDL_BLENDMODE_NONE);
+
     
     if(!GNX_Display[display]) {
         fprintf(stderr, "gnx-server: can not initialize display %d: %s\n", display, SDL_GetError());
@@ -186,6 +244,14 @@ static int gnxsrv_init_server(int display) {
         return -1;
     }
     
+    if(verbose)
+        fprintf(stdout, "gnx-server: initializing doublebuffer thread\n");
+    
+    if(clone(gnxsrv_pdisplay_update_thread, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND | CLONE_VM, NULL) < 0) {
+        fprintf(stderr, "gnx-server: clone(): %s\n", strerror(errno));
+        return -1;
+    }
+    
     
     int fd;
     if((fd = gnxctl_open()) < 0) {
@@ -253,19 +319,19 @@ static int gnxsrv_init_server(int display) {
             } break;
             
             CASE(GNXCTL_TYPE_CLOSE_WINDOW) {
-                gnxsrv_window_close(pk->g_hwnd, pk->g_param);
+                gnxsrv_window_close(pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_BLIT_WINDOW) {
-                gnxsrv_window_blit(pk->g_hwnd, pk->g_param);
+                gnxsrv_window_blit(pk->g_param);
             } break;
             
             CASE(GNXCTL_TYPE_SET_WINDOW_FONT) {
-                gnxsrv_window_set_font(pk->g_hwnd, pk->g_param, pk->g_data);
+                gnxsrv_window_set_font(pk->g_param, pk->g_data);
             } break;
             
             CASE(GNXCTL_TYPE_SET_WINDOW_TITLE) {
-                gnxsrv_window_set_title(pk->g_hwnd, pk->g_param, pk->g_data);
+                gnxsrv_window_set_title(pk->g_param, pk->g_data);
             } break;
             
             

@@ -85,7 +85,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	arch_task_release(current_task);
 
 
-	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image.start, &size, NULL);
+	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &size, NULL);
 	KASSERT(_start);
 	
 	kfree(image);
@@ -93,7 +93,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	current_task->argv = __new_argv;
 	current_task->environ = __new_envp;
-	current_task->image.end = ((current_task->image.start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
+	current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
 	current_task->exe = inode;
 
