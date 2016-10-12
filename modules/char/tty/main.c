@@ -7,7 +7,7 @@
 
 MODULE_NAME("char/tty");
 MODULE_DEPS("video/fb");
-MODULE_AUTHOR("WareX");
+MODULE_AUTHOR("Antonio Natale");
 MODULE_LICENSE("GPL");
 
 

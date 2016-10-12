@@ -8,7 +8,7 @@
 
 MODULE_NAME("i386/input/ps2");
 MODULE_DEPS("");
-MODULE_AUTHOR("WareX");
+MODULE_AUTHOR("Antonio Natale");
 MODULE_LICENSE("GPL");
 
 

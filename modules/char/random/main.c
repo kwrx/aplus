@@ -7,7 +7,7 @@
 
 MODULE_NAME("char/random");
 MODULE_DEPS("");
-MODULE_AUTHOR("WareX");
+MODULE_AUTHOR("Antonio Natale");
 MODULE_LICENSE("GPL");
 
 

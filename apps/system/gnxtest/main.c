@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <aplus/gnx.h>
 
 
@@ -26,4 +26,5 @@ int main(int argc, char** argv) {
     gnx_init("aplus.gnxtest", on_event);
     
     for(;;) sched_yield();
-}
+}*/
+int main() {}
