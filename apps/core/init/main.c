@@ -10,7 +10,7 @@
 #include <aplus/fbdev.h>
 
 #define SYSCONFIG       "/etc/config"
-#define APPS_GUI        "/usr/bin/gnx2"
+#define APPS_GUI        "/usr/bin/gnx"
 #define APPS_SHELL      "/usr/bin/sh"
 
 #define GRAPHICS_WIDTH      800
