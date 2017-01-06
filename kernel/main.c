@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
 			KERNEL_PLATFORM);
 
 	
-	char* __argv[] = { "/usr/sbin/init", "-g", NULL };
+	char* __argv[] = { "/usr/sbin/init", NULL };
 	char* __envp[] = { NULL };
 
 	if(sys_fork() == 0)

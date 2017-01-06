@@ -9,13 +9,13 @@ SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I include -std=c99 -O3 -c
-SFLAGS		:=  -c -I include
+CFLAGS		:=  -pipe -I include -I $(PWD)/../../../bin/usr/include -std=c99 -O3 -c
+SFLAGS		:=  -c -I include 
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -L$(ROOT)/bin/usr/lib -lgnx -lgcc
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -L $(PWD)/../../../bin/usr/lib -lavm -lffi -lzip -lz -lc -lm -lgcc
 
 
 .c.o:
