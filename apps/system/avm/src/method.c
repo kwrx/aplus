@@ -186,7 +186,7 @@ j_value java_method_invoke(java_context_t* j, java_assembly_t* assembly, java_me
 			return JVALUE_NULL;
 		}
 
-		LOGF("> (native) %s.%s ()", func->classname, func->name);
+		LOGF("> (native) %s.%s (%s)", func->classname, func->name, func->desc);
 		j_value r = java_native_invoke(method, func, params, nargs);
 		LOGF("---> %lld", r.i64);
 

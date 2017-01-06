@@ -89,10 +89,10 @@ void avm_end(void) {
 static int __java_assembly_open_wrapper(const char* filename) { return java_assembly_open(NULL, filename); }
 
 int avm_open(const char* filename) {
-	int (*open_wrapper) (const char*) = __java_assembly_open_wrapper;
+	int (*open_wrapper) (const char*) = jar_open;
 
-	if(strcmp(&filename[strlen(filename) - 4], ".jar") == 0)
-		open_wrapper = jar_open;
+	if(strcmp(&filename[strlen(filename) - 6], ".class") == 0)
+		open_wrapper = __java_assembly_open_wrapper;
 
 
 	if(open_wrapper(filename) == J_OK)

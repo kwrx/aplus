@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
         }
     }
     
-
+    
 	
 	avm_init();
 	avm_config_path_add("/usr/lib/avm");
@@ -93,22 +93,22 @@ int main(int argc, char** argv) {
 	
 	
 	ZETA_LIBRARY_LOAD();
-	
-	
+ 
+	 
 	if(avm_open_library("rt.jar") == J_ERR) {
 		perror("rt.jar");
 		return 0;
 	}
 	
-	/*if(avm_open_library("zeta.jar") == J_ERR) {
-		perror("rt.jar");
+	if(avm_open_library("zeta.jar") == J_ERR) {
+		perror("zeta.jar");
 		return 0;
-	}*/
-	
+	}
+    
 	
 	avm_begin();
-	avm_main(argc, argv);
-	avm_end();
+	__Z(Activity_Load) ("System");
+    avm_end();
 	
 	return 0;
 }

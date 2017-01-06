@@ -12,8 +12,6 @@ static inode_t __vfs_root;
 inode_t* vfs_root = &__vfs_root;
 
 inode_t* devfs = NULL;
-inode_t* sysfs = NULL;
-
 fsys_t* fsys_queue = NULL;
  
 int vfs_open(struct inode* inode) {
@@ -336,8 +334,6 @@ int vfs_init(void) {
 
 
 	devfs = vfs_mknod(vfs_root, "dev", S_IFDIR | 0666);
-	sysfs = vfs_mknod(vfs_root, "sys", S_IFDIR | 0666);
-
 	return E_OK;
 }
 
@@ -374,4 +370,3 @@ EXPORT(vfs_mkdev);
 
 EXPORT(fsys_queue);
 EXPORT(devfs);
-EXPORT(sysfs);

@@ -18,9 +18,7 @@ int mounts_init(void) {
     
     
 	mount_and_check("/dev/cd0", "/cdrom", "iso9660");
-    
     relink("/dev");
-    relink("/sys");
 
     
     if(unlikely(sys_chroot(CONFIG_ROOT) != 0))
