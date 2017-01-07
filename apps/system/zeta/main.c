@@ -107,7 +107,7 @@ int main(int argc, char** argv) {
     
 	
 	avm_begin();
-	__Z(Activity_Load) ("System");
+	__Z(Activity_Load) ("zCore");
     avm_end();
 	
 	return 0;

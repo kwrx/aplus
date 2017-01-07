@@ -26,6 +26,9 @@ int jar_open(const char* filename) {
 		struct zip_stat sb;
 		zip_stat_init(&sb);
 		zip_stat_index(zip, i, 0, &sb);
+		
+		if(sb.name[strlen(sb.name) - 1] == '/')
+			continue;
 
 		if(strcmp(sb.name, "META-INF/MANIFEST.MF") == 0)
 			continue;

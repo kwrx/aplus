@@ -11,9 +11,11 @@
 
 #include "../../zeta.h"
 
+ 
 
-
-j_value __Z(Activity_Load) (char* name) {
+void* __Z(Activity_Load) (char* name) {
+    fprintf(stderr, "Activity.Load(%s : %p)\n", name, name);
+    
     char buf[BUFSIZ];
     sprintf(buf, "%s/%s.app", ZETA_APPS_PATH, name);
     
@@ -33,5 +35,5 @@ j_value __Z(Activity_Load) (char* name) {
         athrow(NULL, "java/lang/NoSuchMethodError", "void OnStart()");
     
     java_method_invoke(NULL, method->assembly, method, params, 1);
-    return (j_value) params[0];
+    return (void*) params[0].ptr;
 }

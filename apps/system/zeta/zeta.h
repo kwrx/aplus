@@ -20,7 +20,7 @@
 
 #ifdef _ZETA_MAIN_H
 
-extern j_value __Z(Activity_Load) (char*);
+extern void* __Z(Activity_Load) (char*);
 
 static inline void ZETA_LIBRARY_LOAD() {
     #include "lib/native/Activity.h"

@@ -17,6 +17,15 @@ OPCODE(invokevirtual) {
 	for(; i >= 0; i--)
 		params[i] = JPOP_JV();
 
+		
+	java_object_t* tobj = (java_object_t*) params[0].ptr;
+	if(tobj == NULL)
+		ATHROW("java/lang/NullPointerException", "");
+		
+		
+	if(java_method_find(&method, tobj->name, method->name, method->desc) != J_OK)
+		ATHROW("java/lang/NoSuchMethodError", strfmt("Method from index %d not found", (int) idx));
+
 
 	j_value R0 = java_method_invoke(j, method->assembly, method, params, method->nargs + 1);
 	avm->free(params);
@@ -42,6 +51,15 @@ OPCODE(invokespecial) {
 	int i = method->nargs /* + 1 (this) */;
 	for(; i >= 0; i--)
 		params[i] = JPOP_JV();
+
+
+	java_object_t* tobj = (java_object_t*) params[0].ptr;
+	if(tobj == NULL)
+		ATHROW("java/lang/NullPointerException", "");
+		
+		
+	if(java_method_find(&method, tobj->name, method->name, method->desc) != J_OK)
+		ATHROW("java/lang/NoSuchMethodError", strfmt("Method from index %d not found", (int) idx));
 
 
 	j_value R0 = java_method_invoke(j, method->assembly, method, params, method->nargs + 1);
