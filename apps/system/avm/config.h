@@ -22,7 +22,7 @@
 #define HAVE_FFI_H 1
 /* #undef HAVE_GC_H */
 
-#define DEBUG 1
+//#define DEBUG 1
 #define CONFIG_SYSROOT ""
 
 

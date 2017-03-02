@@ -41,11 +41,34 @@
 
 
 extern fbdev_t* fbdev;
+static fbdev_mode_t fbmode;
 static uintptr_t __lfbptr = 0;
 
 #if defined(__i386__) || defined(__x86_64__)
 
-int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t vx, uint16_t vy, void** lfbptr) {
+
+int bga_getvideomode(fbdev_mode_t* m) {
+	
+	#define rd(i, v)										\
+		outw(VBE_DISPI_IOPORT_INDEX, i);					\
+		(v) = inw(VBE_DISPI_IOPORT_DATA);
+		
+	
+	rd(VBE_DISPI_INDEX_XRES, m->width);
+	rd(VBE_DISPI_INDEX_YRES, m->height);
+	rd(VBE_DISPI_INDEX_BPP, m->bpp);
+	rd(VBE_DISPI_INDEX_X_OFFSET, m->vx);
+	rd(VBE_DISPI_INDEX_Y_OFFSET, m->vy);
+	rd(VBE_DISPI_INDEX_VIRT_WIDTH, m->width);
+	rd(VBE_DISPI_INDEX_VIRT_HEIGHT, m->height);
+	
+	m->lfbptr = (void*) __lfbptr;
+	memcpy(&fbmode, m, sizeof(fbdev_mode_t));
+	
+	return E_OK;
+}
+
+int bga_setvideomode(fbdev_mode_t* m) {
 
 
 	#define wr(i, v)										\
@@ -54,23 +77,34 @@ int bga_setvideomode(uint16_t width, uint16_t height, uint16_t depth, uint16_t v
 
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
-	wr(VBE_DISPI_INDEX_XRES, width);
-	wr(VBE_DISPI_INDEX_YRES, height);
-	wr(VBE_DISPI_INDEX_BPP, depth);
-	wr(VBE_DISPI_INDEX_X_OFFSET, vx);
-	wr(VBE_DISPI_INDEX_Y_OFFSET, vy);
-	wr(VBE_DISPI_INDEX_VIRT_WIDTH, width);
-	wr(VBE_DISPI_INDEX_VIRT_HEIGHT, height);
+	wr(VBE_DISPI_INDEX_XRES, m->width);
+	wr(VBE_DISPI_INDEX_YRES, m->height);
+	wr(VBE_DISPI_INDEX_BPP, m->bpp);
+	wr(VBE_DISPI_INDEX_X_OFFSET, m->vx);
+	wr(VBE_DISPI_INDEX_Y_OFFSET, m->vy);
+	wr(VBE_DISPI_INDEX_VIRT_WIDTH, m->width);
+	wr(VBE_DISPI_INDEX_VIRT_HEIGHT, m->height);
 
-
-
-	if(lfbptr)
-		*lfbptr = (void*) __lfbptr;
-
+	m->lfbptr = (void*) __lfbptr;
+	memcpy(&fbmode, m, sizeof(fbdev_mode_t));
 
 	wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
 	fbdev->enabled = 1;
 	return E_OK;
+}
+
+
+int bga_update_surface(fbdev_surface_t* surface) {
+	uintptr_t stride = fbmode.bpp << 3;
+	uintptr_t p = __lfbptr + ((surface->y * fbmode.width * stride) + surface->x * stride);
+	uintptr_t k = (uintptr_t) surface->ptr;
+	uintptr_t h = surface->height;
+	
+	register int i, j;
+	for(i = p, j = k; h--; i += stride, j += surface->stride)
+		memcpy((void*) p, (void*) j, surface->stride);
+		
+	return 0;
 }
 
 int bochs_init(void) {
@@ -118,6 +152,9 @@ int bochs_init(void) {
 
 	fbdev->name = "Bochs VBE Extensions";
 	fbdev->setvideomode = bga_setvideomode;
+	fbdev->getvideomode = bga_getvideomode;
+	fbdev->update_surface = bga_update_surface;
+	
 	return E_OK;
 #else
 int bga_init(void) {

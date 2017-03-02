@@ -1,20 +1,19 @@
-# /etc/config
-# aPlus configuration file
-#
-# N.B:
-#   Comments to use default value
+# -- /etc/config
+# -- aPlus configuration file
 
+# -- Startup
+sys.startup=/usr/bin/sh
+#system.startup=/usr/bin/gnx
+sys.shell=/usr/bin/sh
 
-
-# Screen
-screen.enabled=0
+# -- Screen
 screen.width=1280
 screen.height=768
 screen.bpp=32
 
-# Energy saving
-#   0 - Disabled
-#   1 - Low
-#   2 - Medium
-#   3 = High
+# -- Energy saving
+# --  0 - Disabled
+# --  1 - Low
+# --  2 - Medium
+# --  3 = High
 idle.priority=0
