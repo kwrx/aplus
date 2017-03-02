@@ -1,8 +1,8 @@
 #ifndef _ARM_H
 #define _ARM_H
 
-#include <xdev.h>
-#include <xdev/mmio.h>
+#include <aplus.h>
+#include <aplus/mmio.h>
 #include <libc.h>
 
 #define MAILBOX_BASE		0x2000B880

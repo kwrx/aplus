@@ -1,6 +1,6 @@
-#include <xdev.h>
-#include <xdev/ipc.h>
-#include <xdev/mm.h>
+#include <aplus.h>
+#include <aplus/ipc.h>
+#include <aplus/mm.h>
 
 #define ALIGN(x)		(((x) + (PAGE_ALIGN - 1)) & ~(PAGE_ALIGN - 1))
 

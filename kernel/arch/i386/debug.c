@@ -1,6 +1,6 @@
-#include <xdev.h>
-#include <xdev/ipc.h>
-#include <xdev/debug.h>
+#include <aplus.h>
+#include <aplus/ipc.h>
+#include <aplus/debug.h>
 #include <arch/i386/i386.h>
 
 #if DEBUG

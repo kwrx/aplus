@@ -45,13 +45,11 @@ int main(int argc, char** argv) {
     Window* Win2 = new Window(Desktop, "Win2", 400, 300);
     Window* Win3 = new Window(Desktop, "Win3", 400, 300);
 
-    
-    
-    //mx(Desktop);
-    mx(Win1);
-    mx(Win2);
-    mx(Win3);
-    
+    /* TODO: Add clip rect */
+
+    Desktop->Paint([](int x, int y) {
+        ((uint32_t*) Screen::FrameBuffer) [x + y * Screen::Width] = 0xFFFFFFFF;
+    });
   
  
     return 0;

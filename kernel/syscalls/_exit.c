@@ -1,9 +1,9 @@
-#include <xdev.h>
-#include <xdev/ipc.h>
-#include <xdev/syscall.h>
-#include <xdev/task.h>
-#include <xdev/debug.h>
-#include <xdev/intr.h>
+#include <aplus.h>
+#include <aplus/ipc.h>
+#include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/debug.h>
+#include <aplus/intr.h>
 #include <libc.h>
 
 SYSCALL(0, exit,

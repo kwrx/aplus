@@ -1,8 +1,8 @@
-#include <xdev.h>
-#include <xdev/module.h>
-#include <xdev/vfs.h>
-#include <xdev/ipc.h>
-#include <xdev/debug.h>
+#include <aplus.h>
+#include <aplus/module.h>
+#include <aplus/vfs.h>
+#include <aplus/ipc.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
 MODULE_NAME("char/random");

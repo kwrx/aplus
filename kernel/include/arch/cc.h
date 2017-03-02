@@ -1,8 +1,8 @@
 #ifndef _CC_H
 #define _CC_H
 
-#include <xdev.h>
-#include <xdev/debug.h>
+#include <aplus.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
 typedef int8_t s8_t;

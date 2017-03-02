@@ -5,8 +5,8 @@
 #error "__i386__ not defined, invalid arch!"
 #endif
 
-#include <xdev.h>
-#include <xdev/mm.h>
+#include <aplus.h>
+#include <aplus/mm.h>
 #include <libc.h>
 
 

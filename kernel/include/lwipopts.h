@@ -1,9 +1,9 @@
 #ifndef _LWIPOPTS_H
 #define _LWIPOPTS_H
 
-#include <xdev.h>
-#include <xdev/mm.h>
-#include <xdev/debug.h>
+#include <aplus.h>
+#include <aplus/mm.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
 #if DEBUG

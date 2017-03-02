@@ -1,7 +1,7 @@
-#include <xdev.h>
-#include <xdev/mmio.h>
-#include <xdev/ipc.h>
-#include <xdev/debug.h>
+#include <aplus.h>
+#include <aplus/mmio.h>
+#include <aplus/ipc.h>
+#include <aplus/debug.h>
 #include <libc.h>
 #include "arm.h"
 

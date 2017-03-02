@@ -1,7 +1,7 @@
 #ifndef _VFS_H
 #define _VFS_H
 
-#include <xdev.h>
+#include <aplus.h>
 #include <libc.h>
 
 #ifndef __ASSEMBLY__

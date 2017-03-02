@@ -1,8 +1,8 @@
 #ifndef _SYS_ARCH_H
 #define _SYS_ARCH_H
 
-#include <xdev.h>
-#include <xdev/ipc.h>
+#include <aplus.h>
+#include <aplus/ipc.h>
 #include <libc.h>
 #include "arch/cc.h"
 

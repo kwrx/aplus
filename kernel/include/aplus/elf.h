@@ -1,7 +1,7 @@
 #ifndef _ELF_H
 #define _ELF_H
 
-#include <xdev.h>
+#include <aplus.h>
 #include <libc.h>
 
 #if CONFIG_BITS == 32

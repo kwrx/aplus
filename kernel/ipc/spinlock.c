@@ -1,5 +1,5 @@
-#include <xdev.h>
-#include <xdev/ipc.h>
+#include <aplus.h>
+#include <aplus/ipc.h>
 
 #if CONFIG_IPC
 

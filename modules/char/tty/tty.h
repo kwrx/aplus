@@ -1,7 +1,7 @@
 #ifndef _TTY_H
 #define _TTY_H
 
-#include <xdev.h>
+#include <aplus.h>
 #include <libc.h>
 
 #define TTY_DEFAULT_INPUT_DEVICE    "/dev/kbd"

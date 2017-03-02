@@ -1,13 +1,14 @@
-#ifndef _XDEV_H
-#define _XDEV_H
+#ifndef _APLUS_H
+#define _APLUS_H
+
+#define __APLUS_KERNEL__		1
+
+#define E_ERR					(-1)
+#define E_OK					(0)
 
 
-
-#define E_ERR		(-1)
-#define E_OK		(0)
 
 #ifndef __ASSEMBLY__
-
 #include <libc.h>
 
 #define volatile
@@ -102,5 +103,4 @@ extern int sys_symlink(const char*, const char*);
 extern int mounts_init();
 
 #endif
-
 #endif

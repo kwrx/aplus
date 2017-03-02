@@ -1,7 +1,7 @@
 #ifndef _PAGING_H
 #define _PAGING_H
 
-#include <xdev.h>
+#include <aplus.h>
 
 #define X86_PT_ENTRIES							1024
 #define X86_PD_ENTRIES							1024

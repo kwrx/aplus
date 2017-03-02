@@ -1,5 +1,5 @@
-#include <xdev.h>
-#include <xdev/mm.h>
+#include <aplus.h>
+#include <aplus/mm.h>
 #include <libc.h>
 
 char* strdup(const char* s) {

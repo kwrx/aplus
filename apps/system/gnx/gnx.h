@@ -103,7 +103,7 @@ namespace GNX {
                     plot(this->X + x, this->Y + this->Height);
                 }
                 
-                for(int y = 0; x < this->Height; y++) {
+                for(int y = 0; y < this->Height; y++) {
                     plot(this->X, this->Y + y);
                     plot(this->X + this->Width, this->Y + y);
                 }
@@ -154,6 +154,14 @@ namespace GNX {
                 
                 if(this->Parent)
                     this->Parent->Childs->remove(this);
+            }
+            
+            inline void Paint(void (*plot) (int x, int y)) {
+                for(auto i = this->Context->ClipRectangles->begin(); i != this->Context->ClipRectangles->end(); i++)
+                    (*i)->Draw(plot);
+                    
+                for(auto i = this->Childs->begin(); i != this->Childs->end(); i++)
+                    (*i)->Paint(plot);
             }
             
             string Title;
