@@ -21,6 +21,10 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
 	@echo "  OBJCPY " $(KERNEL_SYM)
 	@$(OBJCPY) --only-keep-debug $@ $(KERNEL_SYM)
+	@echo "  ZIP    " $@.gz
+	@$(ZIP) $@
+	@echo "  MV     " $@
+	@$(MV) $@.gz $@
 
 KERNEL_MODULES:
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)

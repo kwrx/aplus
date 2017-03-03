@@ -11,6 +11,6 @@ OBJCPY	    := $(TARGET)-objcopy
 CP		    := /usr/bin/cp
 MV		    := /usr/bin/mv
 FIND	    := /usr/bin/find
-ZIP		    := gzip -f
+ZIP		    := gzip -9 -f
 
 
