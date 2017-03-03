@@ -24,7 +24,7 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 
 KERNEL_MODULES:
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
-	@echo "multiboot /x" > bin/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME)" > bin/boot/grub/grub.cfg
 	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
 	@echo "boot" >> bin/boot/grub/grub.cfg
 	
@@ -57,5 +57,5 @@ clean_kernel:
 	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
 	
 clean: clean_modules clean_apps clean_kernel
-	@$(RM) -r *.o
+	@$(RM) -r *.o *.map
 

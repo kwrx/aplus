@@ -7,6 +7,6 @@
 *.a
 *.jar
 *.tar.gz
-x
+aplus
 bin/usr/bin/*
 bin/usr/sbin/*

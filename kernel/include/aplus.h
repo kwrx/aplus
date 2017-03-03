@@ -1,7 +1,6 @@
 #ifndef _APLUS_H
 #define _APLUS_H
 
-#define __APLUS_KERNEL__		1
 
 #define E_ERR					(-1)
 #define E_OK					(0)
