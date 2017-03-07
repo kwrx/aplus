@@ -27,13 +27,7 @@ int main(int argc, char** argv) {
     };
     
     char* __argv[] = { "/usr/bin/sh", NULL };
-    
-    
-    
-    int p;
-    if((p = (int) sysconfig("idle.priority", SYSCONFIG_FORMAT_INT, 0)) > 0) {
-        /* TODO */
-    }
+
     
     
     __argv[0] = (char*)

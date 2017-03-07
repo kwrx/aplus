@@ -6,6 +6,31 @@
 #include <aplus/vfs.h>
 #include <aplus/module.h>
 #include <aplus/network.h>
+#include <aplus/sysconfig.h>
+
+static void idle() {
+	int p;
+    if((p = (int) sysconfig("idle.priority", SYSCONFIG_FORMAT_INT, 0)) > 0) {
+        switch(p) {
+			case 1:
+				kernel_task->priority = TASK_PRIO_MIN;
+				break;
+			case 2:
+				kernel_task->priority = TASK_PRIO_REGULAR;
+				break;
+			case 3:
+				kernel_task->priority = TASK_PRIO_MAX;
+				break;
+			default:
+				for(;;)
+					sys_yield();
+		}
+    }
+		
+	for(;;)
+		__pause__();
+}
+
 
 
 int main(int argc, char** argv) {
@@ -33,7 +58,7 @@ int main(int argc, char** argv) {
 	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
 		
-		
-	for(;;)
-		sys_yield();
+
+    idle();
+	return 0;
 }

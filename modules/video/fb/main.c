@@ -16,6 +16,7 @@ MODULE_LICENSE("GPL");
 
 extern int (*stub_init) ();
 extern int (*bochs_init) ();
+extern int (*vesa_init) ();
 
 extern int (*fb_window_init) ();
 
@@ -25,6 +26,7 @@ extern int (*fb_window_init) ();
 static int (*hooks[]) (void) = {
 	(void*) &stub_init,
 #if defined(__i386__) || defined(__x86_64__)
+	(void*) &vesa_init,
 	(void*) &bochs_init,
 #endif
 };

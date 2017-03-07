@@ -3,7 +3,7 @@
 
 # -- Startup
 sys.startup=/usr/bin/sh
-#system.startup=/usr/bin/gnx
+#sys.startup=/usr/bin/gnx
 sys.shell=/usr/bin/sh
 
 # -- Screen

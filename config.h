@@ -45,6 +45,7 @@
 #	endif
 #	define CONFIG_STACK_SIZE			0x00008000ULL
 #	define KERNEL_PLATFORM				"i386"
+#	define __pause__()					__asm__ __volatile__ ("pause; hlt")
 #elif defined(__x86_64__)
 #	define CONFIG_BITS					64
 #	define CONFIG_KERNEL_BASE			0xFFFFFFFFC0000000L
@@ -53,6 +54,7 @@
 #	define CONFIG_HEAP_SIZE				0x01000000ULL
 #	define CONFIG_STACK_SIZE			0x00004000ULL
 #	define KERNEL_PLATFORM				"x86_64"
+#	define __pause__()					__asm__ __volatile__ ("pause; hlt")
 #elif defined(__arm__)
 #	define CONFIG_BITS					32
 #	if defined (__rpi__)
@@ -66,6 +68,7 @@
 #		define CONFIG_STACK_SIZE		0x00004000ULL
 #		define KERNEL_PLATFORM			"armv7"
 #	endif
+#	define __pause__()					__asm__ __volatile__ ("wfe")
 #endif
 
 #ifndef KERNEL_PLATFORM
