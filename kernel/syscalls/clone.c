@@ -3,6 +3,7 @@
 #include <aplus/task.h>
 #include <aplus/ipc.h>
 #include <aplus/syscall.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
 SYSCALL(22, clone,

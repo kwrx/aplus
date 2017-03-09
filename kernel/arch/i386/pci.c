@@ -6,6 +6,7 @@
 #include <arch/i386/pci.h>
 #include <arch/i386/pci_list.h>
 
+
 static void pci_scan_hit(pci_func_t f, uint32_t dev, void* extra);
 static void pci_scan_func(pci_func_t f, int type, int bus, int slot, int func, void* extra);
 static void pci_scan_slot(pci_func_t f, int type, int bus, int slot, void * extra);
@@ -122,4 +123,3 @@ EXPORT(pci_scan);
 EXPORT(pci_find_type);
 EXPORT(pci_write_field);
 EXPORT(pci_read_field);
-

@@ -27,7 +27,7 @@ static uintptr_t __lfbptr = 0;
 
 #if defined(__i386__) || defined(__x86_64__)
 
-/* TODO */
+
 int vesa_getvideomode(fbdev_mode_t* m) {
 	memcpy(&fbmode, m, sizeof(fbdev_mode_t));
 	
@@ -71,10 +71,11 @@ int vesa_init(void) {
 	
 
 
-	fbdev->name = "Vesa 3.0";
+	fbdev->name = "VBE - Vesa Graphics Extension 3.0";
 	fbdev->setvideomode = vesa_setvideomode;
 	fbdev->getvideomode = vesa_getvideomode;
 	fbdev->update_surface = vesa_update_surface;
+	
 	
 	return E_OK;
 #else

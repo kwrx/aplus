@@ -44,7 +44,6 @@ struct inode {
 	
 	void* userdata;
 
-
 	int (*open) (struct inode* inode);
 	int (*close) (struct inode* inode);
 

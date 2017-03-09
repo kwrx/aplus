@@ -15,7 +15,7 @@ SFLAGS		:=  -c -I include
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CXX) -pipe -O3 -s -o $@ $(OFILES) -lgcc
+	@$(CXX) -pipe -O3 -s -o $@ $(OFILES) -lSDL2 -lSDL2_image -lSDL2_ttf -lfreetype -lpng -ljpeg -lz -lgcc
 
 
 .cpp.o:

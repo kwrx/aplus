@@ -35,6 +35,7 @@ static int fifo_read(struct inode* inode, void* ptr, size_t len) {
 	fifo_t* fifo = (fifo_t*) inode->userdata;
 	register uint8_t* buf = (uint8_t*) ptr;
 	
+	
 	mutex_lock(&fifo->r_lock);
 	
 	int i;

@@ -1,4 +1,5 @@
 #include <aplus.h>
+#include <aplus/base.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
@@ -153,7 +154,7 @@ void kb_intr(void* unused) {
 				off = 256;
 	
 			if(kb.keymap[vkscan + off])
-				__fifo_send(KBD_DEVICE, &kb.keymap[vkscan + off], 1);
+				__fifo_send(PATH_KBDEV, &kb.keymap[vkscan + off], 1);
 			
 	}
 
@@ -228,7 +229,7 @@ void mouse_intr(void* unused) {
 					mouse.buttons[2] = (mouse.pack[0] & 0x04);
 					
 					
-					__fifo_send(MOUSE_DEVICE, &mouse, sizeof(mouse));
+					__fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
 					
 					mouse.cycle = 0;
 					break;
@@ -304,11 +305,11 @@ int init(void) {
 	mouse.clip.bottom = 0xFFFF;
 
 
-	if(sys_mkfifo(KBD_DEVICE, 0777) != 0)
-		kprintf(ERROR, "%s: cannot create FIFO device!\n", KBD_DEVICE);
+	if(sys_mkfifo(PATH_KBDEV, 0777) != 0)
+		kprintf(ERROR, "%s: cannot create FIFO device!\n", PATH_KBDEV);
 		
-	if(sys_mkfifo(MOUSE_DEVICE, 0777) != 0)
-		kprintf(ERROR, "%s: cannot create FIFO device!\n", MOUSE_DEVICE);
+	if(sys_mkfifo(PATH_MOUSEDEV, 0777) != 0)
+		kprintf(ERROR, "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
 		
 
 	irq_enable(1, kb_intr);

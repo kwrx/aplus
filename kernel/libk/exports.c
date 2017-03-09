@@ -23,3 +23,10 @@ EXPORT(srand);
 EXPORT(__divdi3);
 EXPORT(fprintf);
 EXPORT(_impure_ptr);
+
+
+#if defined(__i386__) || defined(__x86_64__)
+#include <aplus/bios.h>
+
+/* TODO */
+#endif

@@ -40,7 +40,7 @@ int init(void) {
 
 	int i;
 	for(i = sizeof(hooks) / sizeof(void*); i > 0 ; i--)
-		if(hooks[i - 1] () == 0)
+		if(hooks[i - 1] () == E_OK)
 			break;
 
 	inode_t* ino;

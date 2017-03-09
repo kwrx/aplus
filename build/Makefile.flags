@@ -2,7 +2,7 @@
 DEBUG		:= yes
 
 DEFINES		:= -DKERNEL
-WARNINGS	:= -Wall -Werror
+WARNINGS	:= -Wall
 
 CFLAGS		:= $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O3
 AFLAGS		:= -c -I kernel/include -include config.h

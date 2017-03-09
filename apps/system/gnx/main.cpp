@@ -2,13 +2,23 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+#define GSHM_INCLUDE_OPERATOR
 #include <aplus/gshm.h>
+#include <aplus/base.h>
+#include <aplus/input.h>
 #include <aplus/fbdev.h>
 #include <aplus/sysconfig.h>
-#include "gnx.h"
+
+#include <SDL2/SDL.h>
+
+#include <gnx/Screen.h>
+#include <gnx/Window.h>
+#include <gnx/Server.h>
+#include <gnx/Input.h>
 
 using namespace std;
 using namespace GNX;
+
 
 
 
@@ -19,7 +29,7 @@ int main(int argc, char** argv) {
         return -1;
     }
     
-    
+
     fbdev_mode_t m;
     m.width = (uint16_t) sysconfig("screen.width", SYSCONFIG_FORMAT_INT, Screen::Width);
     m.height = (uint16_t) sysconfig("screen.height", SYSCONFIG_FORMAT_INT, Screen::Height);
@@ -31,26 +41,36 @@ int main(int argc, char** argv) {
     ioctl(fd, FBIOCTL_SETMODE, &m);
     ioctl(fd, FBIOCTL_GETMODE, &m);
     close(fd);
-    
-    
-    Screen::Width = m.width;
-    Screen::Height = m.height;
-    Screen::Bpp = m.bpp;
-    Screen::Stride = m.width * (m.bpp >> 3);
-    Screen::FrameBuffer = m.lfbptr;
-    
-    
-    Window* Desktop = new Window(NULL, "Desktop", Screen::Width, Screen::Height);
-    Window* Win1 = new Window(Desktop, "Win1", 600, 400);
-    Window* Win2 = new Window(Desktop, "Win2", 400, 300);
-    Window* Win3 = new Window(Desktop, "Win3", 400, 300);
 
-    /* TODO: Add clip rect */
 
-    Desktop->Paint([](int x, int y) {
-        ((uint32_t*) Screen::FrameBuffer) [x + y * Screen::Width] = 0xFFFFFFFF;
-    });
-  
+    Server* gnx = new Server(m.width, m.height, m.bpp, m.lfbptr);
+    gnx->Initialize();
+
+    /* DEBUG */
+    Window* Win1 = new Window(gnx->Desktop, "Win1", 600, 400);
+    Window* Win2 = new Window(gnx->Desktop, "Win2", 400, 300);
+
+    gnx->Desktop->Paint();
+    
+    
+    Input* gnxInput = new Input();
+
+    /* Use Threading instead fork */
+    if(fork() == 0)
+        for(;;)
+            gnxInput->PollKeyboard([&] (uint8_t e) { 
+                gnx->HandleKeyboard(e);
+            });
+    
+
+    if(fork() == 0)
+        for(;;)
+            gnxInput->PollMouse([&] (mouse_t* e) {
+                gnx->HandleMouse(e);
+            });
+    
  
+    
+    gnx->Run();
     return 0;
 }
