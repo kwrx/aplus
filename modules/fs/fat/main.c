@@ -6,7 +6,7 @@
 
 MODULE_NAME("fs/fat");
 MODULE_DEPS("");
-MODULE_AUTHOR("Antonio Natale");
+MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 

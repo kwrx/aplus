@@ -9,7 +9,7 @@
 
 MODULE_NAME("binfmt/elf");
 MODULE_DEPS("");
-MODULE_AUTHOR("Antonio Natale");
+MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 

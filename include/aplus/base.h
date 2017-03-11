@@ -31,6 +31,7 @@
 #define PATH_GHSM                       "/dev/gshm"
 #define PATH_MOUSEDEV                   "/dev/mouse"
 #define PATH_KBDEV                      "/dev/kbd"
+#define PATH_PWM                        "/dev/pwm"
 #define PATH_SYSCONFIG                  "/etc/config"
 
 #define PATH_CURSORS                    "/usr/share/cursor"

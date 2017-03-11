@@ -57,7 +57,6 @@ int main(int argc, char** argv) {
 
 	if(sys_fork() == 0)
 		sys_execve(__argv[0], __argv, __envp);
-		
 
     idle();
 	return 0;

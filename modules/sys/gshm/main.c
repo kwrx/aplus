@@ -10,7 +10,7 @@
 
 MODULE_NAME("char/gshm");
 MODULE_DEPS("");
-MODULE_AUTHOR("Antonio Natale");
+MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 static int gshm_ioctl(struct inode* inode, int req, void* ptr) {

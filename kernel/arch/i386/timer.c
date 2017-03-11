@@ -55,27 +55,26 @@ long timer_gettime() {
 	t.tm_hour = BCD2BIN2(RTC(4));
 	t.tm_mday = BCD2BIN(RTC(7));
 	t.tm_mon = BCD2BIN(RTC(8));
-	t.tm_year = BCD2BIN(RTC(9)) + 100;
+	t.tm_year = BCD2BIN(RTC(9)) + 2000;
 	t.tm_wday = 0;
 	t.tm_yday = 0;
 	t.tm_isdst = 0;
+
 	
 	const int m[] =
 		{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 		
-	long ty = t.tm_year - 70;
+	long ty = t.tm_year - 1970;
 	long lp = (ty + 2) / 4;
 	long td = 0;
 	
 	int i;
-	for(i = 0; i < t.tm_mon; i++)
+	for(i = 0; i < t.tm_mon - 1; i++)
 		td += m[i];
 		
 	td += t.tm_mday - 1;
-	td = td * (ty * 365) + lp;
-	
-	return t.tm_sec;
-	
+	td = td + (ty * 365) + lp;
+
 	return (long) ((td * 86400) + (t.tm_hour * 3600) +
 			(t.tm_min * 60) + t.tm_sec);
 }

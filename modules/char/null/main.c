@@ -5,7 +5,7 @@
 
 MODULE_NAME("char/null");
 MODULE_DEPS("");
-MODULE_AUTHOR("Antonio Natale");
+MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 

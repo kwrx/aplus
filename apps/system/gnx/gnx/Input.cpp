@@ -1,4 +1,4 @@
-#include <gnx/Input.h>
+#include <gnx/InputController.h>
 #include <gnx/Window.h>
 #include <gnx/Server.h>
 #include <gnx/Screen.h>
@@ -14,7 +14,7 @@ using namespace GNX;
 
 
 
-Input::Input() {
+InputController::InputController() {
     this->kb_fd = open(PATH_KBDEV, O_RDONLY);
     if(this->kb_fd < 0) {
         fprintf(stderr, "%s::%s(%d): could not open %s\n", __FILE__, __func__, __LINE__, PATH_KBDEV);
@@ -28,20 +28,20 @@ Input::Input() {
     }
 }
 
-Input::~Input() {
+InputController::~InputController() {
     close(this->kb_fd);
     close(this->ms_fd);
 }
 
 
-void Input::PollKeyboard(std::function<void(uint8_t)> fn) {
+void InputController::PollKeyboard(std::function<void(uint8_t)> fn) {
     uint8_t ch = 0;
     if(read(this->kb_fd, &ch, sizeof(uint8_t)) == sizeof(uint8_t))
         if(likely(fn))
             fn(ch);
 }
 
-void Input::PollMouse(std::function<void(mouse_t*)> fn) {
+void InputController::PollMouse(std::function<void(mouse_t*)> fn) {
     mouse_t e;
     if(read(this->ms_fd, &e, sizeof(e)) == sizeof(e))
         if(likely(fn))

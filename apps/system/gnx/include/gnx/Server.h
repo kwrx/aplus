@@ -3,6 +3,7 @@
 
 #include <list>
 #include <gnx/Window.h>
+#include <gnx/InputController.h>
 
 
 #define GNX_CURSOR_ARROW            0
@@ -29,6 +30,7 @@ namespace GNX {
         public:
             Window* Desktop;
             Window* FocusWindow;
+            InputController* Input;
 
             int CursorIndex;
             SDL_Surface* Cursor[GNX_CURSORS_LENGTH];

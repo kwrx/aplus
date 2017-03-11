@@ -28,7 +28,7 @@
 
 #define APP_NAME "avm"
 #define APP_VERSION "0.1-alpha"
-#define APP_COPY "2016 Antonio Natale"
+#define APP_COPY "2016 Antonino Natale"
 #define APP_CC "gcc"
 
 

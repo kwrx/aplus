@@ -14,11 +14,10 @@
 #include <gnx/Screen.h>
 #include <gnx/Window.h>
 #include <gnx/Server.h>
-#include <gnx/Input.h>
+#include <gnx/InputController.h>
 
 using namespace std;
 using namespace GNX;
-
 
 
 
@@ -42,6 +41,7 @@ int main(int argc, char** argv) {
     ioctl(fd, FBIOCTL_GETMODE, &m);
     close(fd);
 
+    
 
     Server* gnx = new Server(m.width, m.height, m.bpp, m.lfbptr);
     gnx->Initialize();
@@ -51,26 +51,9 @@ int main(int argc, char** argv) {
     Window* Win2 = new Window(gnx->Desktop, "Win2", 400, 300);
 
     gnx->Desktop->Paint();
-    
-    
-    Input* gnxInput = new Input();
 
-    /* Use Threading instead fork */
-    if(fork() == 0)
-        for(;;)
-            gnxInput->PollKeyboard([&] (uint8_t e) { 
-                gnx->HandleKeyboard(e);
-            });
-    
 
-    if(fork() == 0)
-        for(;;)
-            gnxInput->PollMouse([&] (mouse_t* e) {
-                gnx->HandleMouse(e);
-            });
-    
- 
-    
+   
     gnx->Run();
     return 0;
 }

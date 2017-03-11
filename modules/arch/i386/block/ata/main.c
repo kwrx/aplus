@@ -10,7 +10,7 @@
 
 MODULE_NAME("i386/ata");
 MODULE_DEPS("");
-MODULE_AUTHOR("Antonio Natale");
+MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 

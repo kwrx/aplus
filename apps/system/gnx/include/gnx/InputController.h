@@ -6,10 +6,10 @@
 #include <aplus/input.h>
 
 namespace GNX {
-    class Input {
+    class InputController {
         public:
-            Input();
-            ~Input();
+            InputController();
+            ~InputController();
 
             void PollKeyboard(std::function<void(uint8_t)>);
             void PollMouse(std::function<void(mouse_t*)>);
