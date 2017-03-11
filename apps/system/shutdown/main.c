@@ -10,6 +10,7 @@
 #include <sys/stat.h>
 #include <sys/sched.h>
 #include <sys/wait.h>
+#include <sys/ioctl.h>
 
 #include <aplus/base.h>
 #include <aplus/pwm.h>

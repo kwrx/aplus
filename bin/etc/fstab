@@ -1,0 +1,8 @@
+# -- /etc/fstab
+# -- aPlus Mount Table
+
+
+# |  Device  |   Directory   |  Filesystem  |
+
+    0           /proc           procfs
+    0           /tmp            tmpfs 

@@ -4,8 +4,10 @@
 
 #include <arch/i386/i386.h>
 #include <arch/i386/pci.h>
-#include <arch/i386/pci_list.h>
 
+#if DEBUG
+#include <arch/i386/pci_list.h>
+#endif
 
 static void pci_scan_hit(pci_func_t f, uint32_t dev, void* extra);
 static void pci_scan_func(pci_func_t f, int type, int bus, int slot, int func, void* extra);
@@ -100,6 +102,13 @@ void pci_scan(pci_func_t f, int type, void* arg) {
 int pci_init(void) {
 
 #if DEBUG
+
+	(void) PciDevSelFlags;
+	(void) PciStatusFlags;
+	(void) PciCommandFlags;
+	(void) PciClassCodeTable;
+	(void) PciVenTable;
+
 	void pci_func(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* arg) {
 		int i;
 		for(i = 0; i < PCI_DEVTABLE_LEN; i++)

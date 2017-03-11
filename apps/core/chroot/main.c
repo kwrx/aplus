@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#ifdef __BSD_VISIBLE
+#undef __BSD_VISIBLE
+#endif
+#define __BSD_VISIBLE 1
+
 #include <unistd.h>
 #include <dirent.h>
 #include <sys/stat.h>

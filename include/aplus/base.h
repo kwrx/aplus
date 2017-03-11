@@ -32,7 +32,9 @@
 #define PATH_MOUSEDEV                   "/dev/mouse"
 #define PATH_KBDEV                      "/dev/kbd"
 #define PATH_PWM                        "/dev/pwm"
+
 #define PATH_SYSCONFIG                  "/etc/config"
+#define PATH_FSTAB                      "/etc/fstab"
 
 #define PATH_CURSORS                    "/usr/share/cursor"
 #define PATH_FONTS                      "/usr/share/fonts"
