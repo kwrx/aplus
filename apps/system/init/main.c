@@ -26,9 +26,8 @@ int main(int argc, char** argv) {
         NULL
     };
     
-    char* __argv[] = { "/usr/bin/sh", NULL };
+    char* __argv[] = { NULL, NULL };
 
-    
     
     __argv[0] = (char*)
         sysconfig("sys.startup", SYSCONFIG_FORMAT_STRING,     // OR

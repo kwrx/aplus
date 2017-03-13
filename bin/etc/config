@@ -1,19 +1,30 @@
 # -- /etc/config
-# -- aPlus configuration file
+# -- aPlus config
 
-# -- Startup
+
+
+
+# -- System
+sys.locale=it-IT
 sys.startup=/usr/bin/sh
-#sys.startup=/usr/bin/gnx
 sys.shell=/usr/bin/sh
+
+
+# -- Keyboard
+kb.enabled=1
+kb.keymap=$sys.locale
+
 
 # -- Screen
 screen.width=1280
 screen.height=768
 screen.bpp=32
 
+
 # -- Energy saving
-# --  0 - Disabled
-# --  1 - Low
-# --  2 - Medium
-# --  3 = High
-idle.priority=0
+idle.priority.disabled=0
+idle.priority.low=1
+idle.priority.medium=2
+idle.priority.high=3
+idle.priority=$idle.priority.disabled
+

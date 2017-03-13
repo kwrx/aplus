@@ -10,6 +10,7 @@ include build/Makefile.tools
 include build/Makefile.sources
 include build/Makefile.flags
 
+
 all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
@@ -62,4 +63,7 @@ clean_kernel:
 	
 clean: clean_modules clean_apps clean_kernel
 	@$(RM) -r *.o *.map
+
+debug:
+	@$(MAKE) -s DEBUG=yes
 

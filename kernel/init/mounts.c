@@ -89,7 +89,7 @@ int mounts_init(void) {
             kprintf(ERROR, "%s: failed to mount \'%s\' with \'%s\'\n", __p(0), __p(1), __p(2));
 
 
-        kprintf(INFO, "/etc/fstab: mount \'%s\' in \'%s\' with \'%s\'\n", __p(0), __p(1), __p(2));
+        kprintf(INFO, "mount: \'%s\' in \'%s\' with \'%s\'\n", __p(0), __p(1), __p(2));
         cl++;
     }
 

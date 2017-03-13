@@ -21,7 +21,7 @@ EXPORT(sprintf);
 EXPORT(rand);
 EXPORT(srand);
 EXPORT(__divdi3);
-EXPORT(fprintf);
+EXPORT(strerror);
 EXPORT(_impure_ptr);
 
 

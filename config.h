@@ -3,6 +3,9 @@
 
 #include <aplus/base.h>
 
+#define DEBUG							1
+
+
 #define CONFIG_HOST_MEMORY				128
 #define CONFIG_HAVE_LIBC				1
 #define CONFIG_SMP						0
@@ -12,7 +15,6 @@
 #define CONFIG_CLOCKS_PER_SEC			1000
 #define CONFIG_ROOT						"/cdrom"
 
-#define DEBUG							1
 
 #define CONFIG_BOCHS					DEBUG
 #define CONFIG_SERIAL_DEBUG				DEBUG

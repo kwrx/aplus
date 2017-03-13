@@ -88,6 +88,9 @@ static inline uintptr_t sysconfig(const char* option, char fmt, uintptr_t onerr)
     while(fgets(line, BUFSIZ, fp)) {
         if(parse_line(line) != -1) {
             fclose(fp);
+
+            if(value[0] == '$')
+                return sysconfig(strdup(&value[1]), fmt, (uintptr_t) value);
             
             switch(fmt) {
                 case SYSCONFIG_FORMAT_STRING:

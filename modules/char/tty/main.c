@@ -1,12 +1,15 @@
 #include <aplus.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
+#include <aplus/debug.h>
+#include <aplus/base.h>
+#include <aplus/sysconfig.h>
 #include <libc.h>
 
 #include "tty.h"
 
 MODULE_NAME("char/tty");
-MODULE_DEPS("video/fb");
+MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -15,6 +18,8 @@ struct termios ios;
 
 
 int init(void) {
+	tty_read_init();
+
 	inode_t* ino;
 	if(unlikely((ino = vfs_mkdev("tty", 0, S_IFCHR | 0666)) == NULL))
 		return E_ERR;
@@ -39,7 +44,6 @@ int init(void) {
 	ino->write = tty_write;
 	//ino->ioctl = tty_ioctl;
 	ino->userdata = (void*) &ios;
-
 	
 	sys_symlink("/dev/tty0", "/dev/stdin");
 	sys_symlink("/dev/tty0", "/dev/stdout");

@@ -40,5 +40,6 @@
 #define PATH_FONTS                      "/usr/share/fonts"
 #define PATH_ICONS                      "/usr/share/icons"
 #define PATH_IMAGES                     "/usr/share/images"
+#define PATH_KEYMAPS                    "/usr/share/keymaps"
 
 #endif

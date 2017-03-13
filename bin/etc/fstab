@@ -5,4 +5,5 @@
 # |  Device  |   Directory   |  Filesystem  |
 
     0           /proc           procfs
-    0           /tmp            tmpfs 
+    0           /tmp            tmpfs
+    /dev/hd0    /mnt/hdd        fat
