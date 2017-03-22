@@ -7,14 +7,18 @@
 #include <aplus/input.h>
 #include <libc.h>
 
-MODULE_NAME("i386/input/ps2");
+MODULE_NAME("pc/input/ps2");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#if defined(__i386__)
-#include <arch/i386/i386.h>
+#if defined(__i386__) || defined(__x86_64__)
+#	if defined(__i386__)
+#		include <arch/i386/i386.h>
+#	elif defined(__x86_64__)
+#		include <arch/x86_64/x86_64.h>
+#	endif
 
 
 #define PS2_DATA		0x60

@@ -26,7 +26,7 @@
 
 
 #define KERNEL_NAME						"aplus"
-#define KERNEL_VERSION					"0.1"
+#define KERNEL_VERSION					"0.3"
 #define KERNEL_CODENAME					"generic"
 #define KERNEL_DATE						__DATE__
 #define KERNEL_TIME						__TIME__

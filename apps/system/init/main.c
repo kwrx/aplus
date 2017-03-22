@@ -23,6 +23,7 @@ int main(int argc, char** argv) {
     char* __envp[] = {
         "HOME=/home",
         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin",
+        "USER=root",
         NULL
     };
     

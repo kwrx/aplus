@@ -4,14 +4,18 @@
 #include <aplus/vfs.h>
 #include <libc.h>
 
-MODULE_NAME("i386/uart");
+MODULE_NAME("pc/char/uart");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#if defined(__i386__)
-#include <arch/i386/i386.h>
+#if defined(__i386__) || defined(__x86_64__)
+#	if defined(__i386__)
+#		include <arch/i386/i386.h>
+#	elif defined(__x86_64__)
+#		include <arch/x86_64/x86_64.h>
+#	endif
 
 static int COM[] = {
 	0x3F8, 0x2F8, 0x3E8, 0x2E8

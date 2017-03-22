@@ -119,9 +119,7 @@ int pci_init(void) {
 
 	}
 
-	int i;
-	for(i = 0; i < 65536; i++)
-		pci_scan(&pci_func, i, NULL);
+	
 
 #endif
 

@@ -143,9 +143,12 @@ void sys_mbox_free(struct sys_mbox** mbox) {
 	(*mbox) = NULL;
 }
 
+
+
 err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
 	if((*mbox)->count > (*mbox)->size)
 		return ERR_MEM;
+
 
 	(*mbox)->msg[(*mbox)->count++] = msg;
 	return ERR_OK;
@@ -154,6 +157,7 @@ err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
 void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 	sys_mbox_trypost(mbox, msg);
 }
+
 
 u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 	
@@ -170,8 +174,10 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 		return SYS_ARCH_TIMEOUT;
 
 
+
 	void* mx = (*mbox)->msg[0];
 	memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
+	(*mbox)->msg[(*mbox)->count] = NULL;
 	
 	if(msg)
 		*msg = mx;		
@@ -194,6 +200,7 @@ u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
 
 	void* mx = (*mbox)->msg[0];
 	memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
+	(*mbox)->msg[(*mbox)->count] = NULL;
 	
 	if(msg)
 		*msg = mx;		

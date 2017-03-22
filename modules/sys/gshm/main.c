@@ -8,7 +8,7 @@
 
 /* Global Shared Memory */
 
-MODULE_NAME("char/gshm");
+MODULE_NAME("sys/gshm");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");

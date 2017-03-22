@@ -4,70 +4,119 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <errno.h>
+#include <getopt.h>
 
+
+#include "sh.h"
+
+#if HAVE_LOGIN
+#   include "md5.h"
+#endif
+
+#if HAVE_LUA
+#   include <lua.h>
+#   include <lauxlib.h>
+#   include <lualib.h>
+#endif
+
+
+static char buf[BUFSIZ];
+
+
+static void show_usage(int argc, char** argv) {
+    printf(
+        "Use: sh [options] ...\n"
+        "aPlus Shell.\n\n"
+        "   -c, --command               execute a command\n"
+        "   -h, --help                  show this help\n"
+        "   -v, --version               print version info and exit\n"
+    );
+    
+    exit(0);
+}
+
+static void show_version(int argc, char** argv) {
+    printf(
+        "%s (aPlus coreutils) 0.1\n"
+        "Copyright (c) 2016-2017 Antonino Natale.\n"
+        "Built with gcc %s (%s)\n",
+        
+        argv[0], __VERSION__, __TIMESTAMP__
+    );
+    
+    exit(0);
+}
+
+
+
+static void cmd_cd(char** argv) {
+    if(argv[1] != NULL)
+        chroot(argv[1]);
+}
 
 
 
 int main(int argc, char** argv, char** env) {
+
+    sh_alias("la", (void*) "ls -lh", SH_ALIAS_TYPE_STRING);
+    sh_alias("cd", (void*) cmd_cd, SH_ALIAS_TYPE_FUNC);
+
+
+
+    static struct option long_options[] = {
+        { "command", no_argument, NULL, 'c'},
+        { "help", no_argument, NULL, 'h'},
+        { "version", no_argument, NULL, 'v'},
+        { NULL, 0, NULL, 0 }
+    };
+    
+ 
+    
+    int c, idx;
+    while((c = getopt_long(argc, argv, "frRdv", long_options, &idx)) != -1) {
+        switch(c) {
+            case 'c':
+                sh_cmdline(argv[optind + 1]);
+                break;
+            case 'v':
+                show_version(argc, argv);
+                break;
+            case 'h':
+            case '?':
+                show_usage(argc, argv);
+                break;
+            default:
+                abort();
+        }
+    }
     
     
-    fprintf(stderr, "aPlus Shell\n");
+
+
+
+        
+    char* username;
+    char* hostname = sh_gethostname();
+
+    
+#if HAVE_LOGIN
+    username = sh_login(hostname);
+#else
+    username = strdup(getenv("USER"));
+#endif
+
+
+
     do {
-        char cwd[BUFSIZ];
-        getcwd(cwd, BUFSIZ);
-        
-        fprintf(stderr, " #%s> ", cwd);
-        
-        static char buf[BUFSIZ];
-        memset(buf, 0, sizeof(buf));
-        
-        static char* __argv[255];
-        memset(__argv, 0, sizeof(__argv));
-        
-        
-        if(!fgets(buf, BUFSIZ, stdin))
-            continue;
-            
-                
-        buf[strlen(buf) - 1] = 0;
-        
-        if(buf[0] == '\0')
-            continue;
-         
-        
-        char* s = buf;
-        char* p = s;
-        int idx = 0;
-        
-        while((p = strchr(s, ' '))) {
-            *p++ = 0;
-            __argv[idx++] = s;
-            s = p;
+        CLRBUF();
+        fprintf(stdout, "[%s@%s %s]# ", username, hostname, getcwd(buf, BUFSIZ));
+        fflush(stdout);
+
+        CLRBUF();
+        if(fgets(buf, BUFSIZ, stdin) > 0) {
+            buf[strlen(buf) - 1] = '\0';
+            sh_cmdline(buf);
         }
-        
-        int no_wait = 0;
-        if(strcmp(s, "&") == 0)
-            no_wait = 1;
-        else
-            __argv[idx++] = s;
-        
-        __argv[0] = buf;
-        __argv[idx++] = NULL;
-        
-        if(strcmp(buf, "cd") == 0)
-            { if(chdir(__argv[1]) != 0) perror("cd"); continue; }
-            
-        volatile int e = 0;
-        e = fork();
-        if(e == -1) {
-            perror("fork");
-            return e;
-        }
-        else if(e == 0)
-            exit(execvp(buf, __argv));
-        else 
-            if(!no_wait)
-                wait(NULL);
-            
     } while(1);
 }

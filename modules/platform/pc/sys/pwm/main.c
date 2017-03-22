@@ -6,14 +6,18 @@
 #include <aplus/pwm.h>
 #include <libc.h>
 
-MODULE_NAME("i386/pwm");
+MODULE_NAME("pc/sys/pwm");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#if defined(__i386__)
-#include <arch/i386/i386.h>
+#if defined(__i386__) || defined(__x86_64__)
+#	if defined(__i386__)
+#		include <arch/i386/i386.h>
+#	elif defined(__x86_64__)
+#		include <arch/x86_64/x86_64.h>
+#	endif
 
 
 

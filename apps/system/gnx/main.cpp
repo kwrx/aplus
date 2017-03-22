@@ -9,7 +9,6 @@
 #include <aplus/fbdev.h>
 #include <aplus/sysconfig.h>
 
-#include <SDL2/SDL.h>
 
 #include <gnx/Screen.h>
 #include <gnx/Window.h>

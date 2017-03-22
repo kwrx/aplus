@@ -1,6 +1,7 @@
 
 .SUFFIXES: .asm
 
+SYSROOT				:= /opt/cross
 
 KERNEL_NAME			:= aplus
 KERNEL_OUTPUT		:= bin/$(KERNEL_NAME)
@@ -16,6 +17,9 @@ KERNEL_MODULES		:= $(shell $(FIND) modules -type f -name "Makefile" -printf '%h.
 
 APPS_MAKE			:= $(shell $(FIND) apps -type f -name "Makefile" -printf '%h\n')
 APPS				:= $(shell $(FIND) apps -type f -name "Makefile" -printf '%h\n' | sed 's!.*/!!' | sed 's/^/bin\/usr\/bin\//')
+
+LIBS_MAKE			:= $(shell $(FIND) libs -type f -name "Makefile" -printf '%h\n')
+LIBRARIES			:= $(shell $(FIND) libs -type f -name "Makefile" -printf '%h\n' | sed 's!.*/!!' | sed 's/^/bin\/usr\/lib\//')
 
 
 KERNEL_SOURCES		:= $(shell $(FIND) kernel -type f -not -path *arch* -name "*.c")

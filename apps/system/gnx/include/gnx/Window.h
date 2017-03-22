@@ -15,17 +15,32 @@ using namespace std;
 
 
 namespace GNX {
-    class Window {
+    
+    class WindowContext {
         public:
-            string Title;
             uint16_t Width;
             uint16_t Height;
             uint16_t X;
             uint16_t Y;
             uint32_t ColorKey;
+            
+            SDL_Surface* Surface;
+            list<SDL_Rect*>* ClipRects;
+
+
+            WindowContext(uint16_t w, uint16_t h, void* data);
+            ~WindowContext();
+
+            void IntersectClipRect(SDL_Rect* r);
+            void SubtractClipRect(SDL_Rect* r);
+    };
+
+
+    class Window {
+        public:
             int flags;
             
-            SDL_Surface* Context;
+            WindowContext* Context;
             list<Window*>* Childs;
             Window* Parent;
 

@@ -8,15 +8,21 @@
 #include <aplus/mm.h>
 #include <libc.h>
 
-MODULE_NAME("i386/ata");
+MODULE_NAME("pc/block/ata");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#if defined(__i386__)
-#include <arch/i386/i386.h>
-#include <arch/i386/pci.h>
+#if defined(__i386__) || defined(__x86_64__)
+#	if defined(__i386__)
+#		include <arch/i386/i386.h>
+#		include <arch/i386/pci.h>
+#	elif defined(__x86_64__)
+#		include <arch/x86_64/x86_64.h>
+#		include <arch/x86_64/pci.h>
+#	endif
+
 #include "ata.h"
 
 static uintptr_t ata_pci = 0;

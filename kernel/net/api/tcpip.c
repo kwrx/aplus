@@ -143,7 +143,7 @@ tcpip_thread(void *arg)
       break;
 
     default:
-      LWIP_DEBUGF(TCPIP_DEBUG, ("tcpip_thread: invalid message: %d\n", msg->type));
+      LWIP_DEBUGF(TCPIP_DEBUG, ("tcpip_thread: invalid message: %d (%p)\n", msg->type, msg));
       LWIP_ASSERT("tcpip_thread: invalid message", 0);
       break;
     }

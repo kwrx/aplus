@@ -17,7 +17,7 @@ all:					\
 	$(KERNEL_ISO)
 	@$(VMM)
 
-$(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
+$(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
 	@echo "  LD     " $@
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
 	@echo "  OBJCPY " $(KERNEL_SYM)
@@ -27,16 +27,19 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS)
 	@echo "  MV     " $@
 	@$(MV) $@.gz $@
 
-KERNEL_MODULES:
+KERNEL_MODULES: LIBRARIES
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
 	@echo "multiboot /$(KERNEL_NAME)" > bin/boot/grub/grub.cfg
 	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
 	@echo "boot" >> bin/boot/grub/grub.cfg
 	
-APPS:
+APPS: LIBRARIES
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
-$(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS
+LIBRARIES:
+	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
+
+$(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 	@echo "  ISO    " $@
 	@grub-mkrescue -o $@ bin
 
@@ -57,11 +60,14 @@ clean_modules:
 
 clean_apps:
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
+
+clean_libs:
+	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
 	
 clean_kernel:
 	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
 	
-clean: clean_modules clean_apps clean_kernel
+clean: clean_modules clean_apps clean_kernel clean_libs
 	@$(RM) -r *.o *.map
 
 debug:
