@@ -87,58 +87,23 @@ char* sh_login(char* hostname) {
 void sh_cmdline(char* cmdline) {
     if(!cmdline)
         return;
-    
-    while(cmdline[0] == ' ')
-        cmdline = &cmdline[1];
 
     if(cmdline[0] == '\0')
         return;
 
-
-    static char* argv[127];
+    
+    char* argv[32];
     memset(argv, 0, sizeof(argv));
 
-    void add_argv(int s, int e, int i) {
-        if(e <= s) {
-            fprintf(stderr, "sh: BUG! %s (%d): invalid expr 'e <= s' : %d <= %d\n", __FILE__, __LINE__, e, s);
-            exit(-1);
-        }
 
-        argv[i] = (char*) calloc(1, e - s + 1);
-        strncpy(argv[i], &cmdline[s], e - s);
-    }
 
-    int i, j, k;
-    for(j = 0, i = 0, k = 0; cmdline[j] != '\0'; j++) {
-        switch(cmdline[j]) {
-            case '\'':
-            case '\"':
-                k = ++j;
-                
-                while(cmdline[j] != '\"') {
-                    if(cmdline[j] == '\0') {
-                        fprintf(stderr, "sh: syntax error: expected \'\"\' before end of line\n");
-                        return;
-                    }
+    cmdline = strdup(cmdline);
+   
+    int i = 0;
+    for(char* p = strtok(cmdline, " "); p; p = strtok(NULL, " "))
+        argv[i++] = p;
 
-                    j++;
-                }
-                
-                add_argv(k, j, i++);
-                j += 1;
-                k = j;
-                break;
-            case ' ':
-                add_argv(k, j - 1, i++);
-                while(cmdline[j] == ' ')
-                    j++;
-
-                k = j;
-                break;
-            default:
-                continue;
-        }
-    }
+    free(cmdline);
 
 
 
@@ -161,8 +126,13 @@ void sh_cmdline(char* cmdline) {
         }
     }
 
-    if(fork() == 0)
-        exit(execvp(argv[0], argv));
+
+
+    if(fork() == 0) {
+        execvp(argv[0], argv);
+        perror(argv[0]);
+        exit(-1);
+    }
     else
         wait(NULL);
 

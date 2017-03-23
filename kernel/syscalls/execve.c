@@ -57,7 +57,9 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	sys_lseek(fd, 0, SEEK_SET);
 
 
-	void* image = (void*) kmalloc(size, GFP_USER);
+	void* image = (void*) kmalloc(size + 1, GFP_USER);
+	((char*) image) [size] = 0;
+	
 	if(unlikely(sys_read(fd, image, size) != size)) { /* ERROR */
 		kfree(image);
 		
@@ -68,7 +70,8 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	sys_close(fd);
 
 
-	if(binfmt_check_image(image, NULL) != E_OK) {
+	char* loader;
+	if(!(loader = binfmt_check_image(image, NULL))) {
 		kfree(image);
 
 		errno = ENOEXEC;
@@ -85,7 +88,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	arch_task_release(current_task);
 
 
-	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &size, NULL);
+	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &size, loader);
 	KASSERT(_start);
 	
 	kfree(image);

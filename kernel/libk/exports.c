@@ -10,6 +10,7 @@ EXPORT(memset);
 EXPORT(memcpy);
 EXPORT(memcmp);
 EXPORT(memmove);
+EXPORT(strtok);
 EXPORT(strcpy);
 EXPORT(strcat);
 EXPORT(strlen);

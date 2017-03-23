@@ -110,7 +110,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
 	
 			if(tmp->task->status == TASK_STATUS_KILLED) {
 				if(likely(status))
-					*status = (tmp->task->exit.status << 16) | tmp->task->exit.value;
+					*status = (tmp->task->exit.status << 16) | (tmp->task->exit.value & 0xFFFF);
 				cnt = tmp->task->pid;
 				
 				break;

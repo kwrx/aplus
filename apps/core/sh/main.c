@@ -51,8 +51,12 @@ static void show_version(int argc, char** argv) {
 
 
 static void cmd_cd(char** argv) {
-    if(argv[1] != NULL)
-        chroot(argv[1]);
+    char* p = argv[1];
+    if(argv[1] == NULL)
+        p = "/";
+
+    if(chdir(p) != 0)
+        perror(p);
 }
 
 

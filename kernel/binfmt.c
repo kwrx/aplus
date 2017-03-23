@@ -6,7 +6,7 @@
 
 static binfmt_t* binfmt_queue = NULL;
 
-int binfmt_check_image(void* image, const char* loader) {
+char* binfmt_check_image(void* image, const char* loader) {
 	binfmt_t* tmp;
 	for(tmp = binfmt_queue; tmp; tmp = tmp->next) {
 		if(loader)	
@@ -14,29 +14,28 @@ int binfmt_check_image(void* image, const char* loader) {
 				continue;
 
 		if(tmp->check(image) == E_OK)
-			return E_OK;
+			return (char*) tmp->name;
 
 	}
 
-
-	return E_ERR;
+	return NULL;
 }
 
 void* binfmt_load_image(void* image, void** address, size_t* size, const char* loader) {
 	
 	binfmt_t* tmp;
 	for(tmp = binfmt_queue; tmp; tmp = tmp->next) {
-		if(loader)	
+		if(loader) {
 			if(strcmp(tmp->name, loader) != 0)
 				continue;
+		} else
+			if(tmp->check(image) != E_OK)
+				continue;
 
-		if(tmp->check(image) == E_OK)
-			return tmp->load(image, address, size);
-
+		return tmp->load(image, address, size);
 	}
 
 	kprintf(ERROR, "binfmt: invalid executable format!\n");
-
 	return NULL;
 }
 

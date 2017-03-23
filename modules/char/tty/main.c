@@ -45,6 +45,8 @@ int init(void) {
 	//ino->ioctl = tty_ioctl;
 	ino->userdata = (void*) &ios;
 	
+
+
 	sys_symlink("/dev/tty0", "/dev/stdin");
 	sys_symlink("/dev/tty0", "/dev/stdout");
 	sys_symlink("/dev/tty0", "/dev/stderr");
