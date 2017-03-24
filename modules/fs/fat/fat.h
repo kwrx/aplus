@@ -156,20 +156,8 @@ struct inode* fat_finddir(struct inode* inode, char* name);
 int fat_unlink(struct inode* inode, char* name);
 struct inode* fat_mknod(struct inode* inode, char* name, mode_t mode);
 
-void lfncat(const char* name, uint16_t* lfn, size_t size);
-void fatcat(const char* name, char* fatnm, char* fatex);
-const char* lfncpy(uint16_t* lfn, const char* name, size_t size);
 
-
-void fat_update_FAT(fat_t* fat);
-uint32_t fat_get_cluster(fat_t* fat, int index);
-void fat_set_cluster(fat_t* fat, int index, uint32_t value);
-
-uint32_t fat_next_sector(fat_t* fat, uint32_t sector);
-int fat_check_entry(fat_t* fat, int* entry);
-
-int fat_alloc_sector(fat_t* fat, int end);
-int fat_alloc_cluster(fat_t* fat);
+int fat_mount(struct inode*, struct inode*);
 
 
 #endif

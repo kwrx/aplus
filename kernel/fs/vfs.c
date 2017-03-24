@@ -32,6 +32,7 @@ int vfs_read(struct inode* inode, void* ptr, size_t len) {
 	if(likely(inode->read))
 		return inode->read(inode, ptr, len);
 
+	errno = ENOSYS;
 	return 0;
 }
 
@@ -39,6 +40,7 @@ int vfs_write(struct inode* inode, void* ptr, size_t len) {
 	if(likely(inode->write))
 		return inode->write(inode, ptr, len);
 
+	errno = ENOSYS;
 	return 0;
 }
 

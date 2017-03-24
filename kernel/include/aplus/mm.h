@@ -23,21 +23,42 @@
 #define V2P(x)								__V2P((virtaddr_t) (x))
 
 
+#define KCACHE_FREE_ALL						0
+#define KCACHE_FREE_BLOCKS					1
+#define KCACHE_FREE_OLDEST					2
 
 
 #ifndef __ASSEMBLY__
 
 #include <aplus.h>
+#include <aplus/ipc.h>
+#include <aplus/timer.h>
 #include <libc.h>
 
 typedef uintptr_t physaddr_t;
 typedef uintptr_t virtaddr_t;
+typedef uint64_t kcache_index_t;
 
 typedef struct {
 	uintptr_t used;
 	uintptr_t total;
 	uint8_t* frames;
 } mm_state_t;
+
+typedef struct kcache_block {
+    kcache_index_t index;
+    void* ptr;
+	spinlock_t lock;
+    struct kcache_block* next;
+} kcache_block_t;
+
+typedef struct kcache_pool {
+    ktime_t last_access;
+    size_t blksize;
+    size_t cachesize;
+    struct kcache_block* blocks;
+    struct kcache_pool* next;
+} kcache_pool_t;
 
 
 int slab_init(void);
@@ -70,6 +91,15 @@ void std_kfree(void*);
 
 mm_state_t* pmm_state(void);
 mm_state_t* kvm_state(void);
+
+
+void kcache_free(int mode);
+void kcache_free_pool(kcache_pool_t* pool);
+void kcache_register_pool(kcache_pool_t* pool, size_t blksize);
+void kcache_unregister_pool(kcache_pool_t* pool);
+void kcache_free_block(kcache_pool_t* pool, kcache_index_t index);
+int kcache_obtain_block(kcache_pool_t* pool, kcache_index_t index, void** ptr);
+void kcache_release_block(kcache_pool_t* pool, kcache_index_t index);
 
 
 #endif

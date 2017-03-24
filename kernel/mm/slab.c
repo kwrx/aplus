@@ -97,6 +97,9 @@ retry:
 
 	if(unlikely(!p)) {
 		if(gfp & __GFP_WAIT) {
+#if CONFIG_CACHE
+			kcache_free(KCACHE_FREE_BLOCKS);
+#endif
 			if(gfp & __GFP_HIGH)
 				goto retry;
 			

@@ -4,13 +4,14 @@
 #include <aplus/mm.h>
 #include <libc.h>
 
+#include "fat.h"
+
 MODULE_NAME("fs/fat");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-extern int fat_mount(struct inode*, struct inode*);
 
 
 int init(void) {

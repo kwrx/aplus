@@ -3,11 +3,35 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+#include <signal.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <time.h>
+#include <sys/time.h>
+#include <sys/times.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <getopt.h>
+
+extern int gettimeofday(struct timeval*, struct timezone*);
+
+
+static int ibs = 512;
+static int obs = 512;
+static int count = INT_MAX;
+static int seek = 0;
+static int skip = 0;
+static int status = 0;
+static int progress = 0;
+
+static struct timeval progress_ce;
+static struct timeval progress_cs;
+
+static FILE* out;
+static FILE* in;
+
+
+
 
 
 static void show_usage(int argc, char** argv) {
@@ -52,7 +76,8 @@ static void show_version(int argc, char** argv) {
 
 
 
-int parse_number(char* s) {
+
+static int parse_number(char* s) {
     char* p;
     if(isdigit(s[strlen(s) - 1])) {
         if((p = strchr(s, 'x')))
@@ -88,6 +113,64 @@ int parse_number(char* s) {
 }
 
 
+static char* sn(long n, long m) {
+    if(n == 0)
+        return "0";
+
+    int i, j;
+    for(i = 1, j = 0; n / i > m; j++)
+        i *= m;
+
+    if(j > 3)
+        return "<overflow>";
+
+    char buf[8];
+    sprintf(buf, "%ld%c", n / i, "\0kMG"[j]);
+
+    return strdup(buf);
+}
+
+
+static void print_xfer() {
+    fprintf(stderr, "%d+%d record in\n", progress, 0);
+    fprintf(stderr, "%d+%d record out\n", progress, 0);
+}
+
+static void print_status() {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+
+    double tm = (double) (tv.tv_sec - progress_cs.tv_sec) + (double) (tv.tv_usec - progress_cs.tv_usec) / 1000000.0;
+    tm = tm == 0.0 ? 1.0 : tm;
+
+    fprintf(stderr, "%d bytes (%sB, %siB) copied, %4.2f s, %sB/s\n", progress * obs, sn(progress * obs, 1000), sn(progress * obs, 1024), tm, sn((long)((double) (progress * obs) / tm), 1024));
+}
+
+
+static void dd_sighand(int sig) {
+    switch(sig) {
+        case SIGUSR1:
+        case SIGINT:
+            if(status < 2)
+                print_status();
+            break;
+        case SIGQUIT:
+        case SIGTERM:
+        case SIGKILL:
+            if(status < 2) {
+                print_xfer();
+                print_status();
+            }
+
+            _exit(sig);
+            break;
+        default:
+            break;
+    }
+
+    signal(sig, dd_sighand);
+}
+
 
 
 int main(int argc, char** argv) {
@@ -100,7 +183,14 @@ int main(int argc, char** argv) {
     };
     
     
- 
+    in = stdin;
+    out = stdout;
+
+    signal(SIGUSR1, dd_sighand);
+    signal(SIGQUIT, dd_sighand);
+    signal(SIGTERM, dd_sighand);
+    signal(SIGKILL, dd_sighand);
+    signal(SIGINT, dd_sighand);
     
     
     int c, idx;
@@ -118,19 +208,6 @@ int main(int argc, char** argv) {
                 abort();
         }
     }
-
-
-    int ibs = 512;
-    int obs = 512;
-    int count = INT_MAX;
-    int seek = 0;
-    int skip = 0;
-    int status = 0;
-
-
-    FILE* out = stdout;
-    FILE* in = stdin;
-
 
 
     
@@ -203,23 +280,41 @@ int main(int argc, char** argv) {
     }
 
 
-    clock_t cs = clock();
+    gettimeofday(&progress_cs, NULL);
     
-    int k;
     for(
-        k = 0;
-        fread(bb, ibs, 1, in) > 0 && k < count;
-        k++
-    )
-        fwrite(bb, obs, 1, out);
+        progress = 0;
+        fread(bb, ibs, 1, in) > 0 && progress < count;
+        progress++
+    ) {
+        if(fwrite(bb, obs, 1, out) <= 0) {
+            perror("I/O");
+            exit(-1);
+        }
 
-    clock_t ce = clock();
+        if(!status) { 
+            static time_t t0;
+            if(time(NULL) != t0) {
+                print_status();
+                t0 = time(NULL);
+            }
+        }
+    }
+
+    gettimeofday(&progress_ce, NULL);
+
+
 
     fclose(in);
     fclose(out);
     
-    if(!status)
+
+    if(status < 1)
         print_xfer();
+
+    if(status < 2)
+        print_status();
+
         
     return 0;
 }

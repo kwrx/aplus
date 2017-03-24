@@ -30,7 +30,7 @@
 
 static void tcpip_init_done(void* arg) {
 #if DEBUG
-	kprintf(LOG, "[%d] tcpip: initialized in %d MS\n", sys_getpid(), timer_getms() - (uint32_t) arg);
+	kprintf(LOG, "[%d] tcpip: initialized in %d MS\n", sys_getpid(), (uintptr_t) (timer_getms() - (uintptr_t) arg));
 #else
 	(void) arg;
 #endif
@@ -50,7 +50,7 @@ static void tcpip_init_done(void* arg) {
 
 int network_init() {
 #if DEBUG
-	tcpip_init(tcpip_init_done, (void*) timer_getms());
+	tcpip_init(tcpip_init_done, (void*) ((uintptr_t) timer_getms()));
 #else
 	tcpip_init(tcpip_init_done, NULL);
 #endif

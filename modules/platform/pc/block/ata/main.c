@@ -46,6 +46,10 @@ struct ata_device {
 
 	mutex_t lock;
 	uint8_t* cache;
+
+#if CONFIG_CACHE
+	kcache_pool_t pool;
+#endif
 };
 
 
@@ -208,6 +212,16 @@ static void ata_device_init(struct ata_device* dev) {
 
 
 static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
+#if CONFIG_CACHE
+	void* ptr = NULL;
+	if(likely(kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr) == 0)) {
+		memcpy(buf, ptr, ATA_SECTOR_SIZE);
+
+		kcache_release_block(&dev->pool, (kcache_index_t) lba);
+		return;
+	}
+#endif
+
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
 
@@ -230,6 +244,11 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
+
+#if CONFIG_CACHE
+	memcpy(ptr, buf, ATA_SECTOR_SIZE);
+	kcache_release_block(&dev->pool, (kcache_index_t) lba);
+#endif
 }
 
 
@@ -256,6 +275,13 @@ static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* 
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
+
+#if CONFIG_CACHE
+	void* ptr = NULL;
+	kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr);
+	memcpy(buf, ptr, ATA_SECTOR_SIZE);
+	kcache_release_block(&dev->pool, (kcache_index_t) lba);
+#endif
 }
 
 
@@ -376,6 +402,16 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 
 static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
+#if CONFIG_CACHE
+	void* ptr = NULL;
+	if(likely(kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr) == 0)) {
+		memcpy(buf, ptr, ATAPI_SECTOR_SIZE);
+
+		kcache_release_block(&dev->pool, (kcache_index_t) lba);
+		return;
+	}
+#endif
+	
 	uint8_t pk[12] = { 0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	
 	uint16_t bus = dev->io_base;
@@ -407,6 +443,11 @@ static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void*
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
+
+#if CONFIG_CACHE
+	memcpy(ptr, buf, ATAPI_SECTOR_SIZE);
+	kcache_release_block(&dev->pool, (kcache_index_t) lba);
+#endif
 }
 
 
@@ -487,6 +528,9 @@ static int ata_device_detect(struct ata_device* dev) {
 	) {
 
 		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "hdd");
+#if CONFIG_CACHE
+		kcache_register_pool(&dev->pool, ATA_SECTOR_SIZE);
+#endif
 		ata_device_init(dev);
 
 		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0666);
@@ -499,6 +543,9 @@ static int ata_device_detect(struct ata_device* dev) {
 		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
 	) {
 		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "cdrom");
+#if CONFIG_CACHE
+		kcache_register_pool(&dev->pool, ATAPI_SECTOR_SIZE);
+#endif
 		ata_device_init(dev);
 
 		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0666);

@@ -11,6 +11,7 @@
 #define CONFIG_SMP						0
 #define CONFIG_IPC						0
 #define CONFIG_VMM						1
+#define CONFIG_CACHE					0
 #define CONFIG_NETWORK					1
 #define CONFIG_CLOCKS_PER_SEC			1000
 #define CONFIG_ROOT						"/cdrom"

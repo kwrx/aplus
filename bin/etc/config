@@ -28,3 +28,9 @@ idle.priority.medium=2
 idle.priority.high=3
 idle.priority=$idle.priority.disabled
 
+
+# -- UI
+ui.dpi=72
+ui.font=Arial
+ui.wallpaper=/usr/share/images/wp.png
+

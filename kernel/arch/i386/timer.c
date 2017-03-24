@@ -2,14 +2,15 @@
 #include <aplus/intr.h>
 #include <aplus/debug.h>
 #include <aplus/task.h>
+#include <aplus/timer.h>
 #include <libc.h>
 
 #include <arch/i386/i386.h>
 
 
-static long ticks = 0;
-static long seconds = 0;
-static long days = 0;
+static ktime_t ticks = 0;
+static ktime_t seconds = 0;
+static ktime_t days = 0;
 
 
 static void timer_handler(void* context) {
@@ -29,7 +30,7 @@ static void timer_handler(void* context) {
 }
 
 int timer_init() {
-	long f = 1193180 / TIMER_FREQ;
+	ktime_t f = 1193180 / TIMER_FREQ;
 	
 	outb(0x43, 0x36);
 	outb(0x40, (uint8_t) (f & 0xFF));
@@ -39,7 +40,7 @@ int timer_init() {
 	return E_OK;
 }
 
-long timer_gettime() {
+ktime_t timer_gettime() {
 	inline uint8_t RTC(uint8_t x)
 		{ outb(0x70, x); return inb(0x71); }
 		
@@ -64,9 +65,9 @@ long timer_gettime() {
 	const int m[] =
 		{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 		
-	long ty = t.tm_year - 1970;
-	long lp = (ty + 2) / 4;
-	long td = 0;
+	ktime_t ty = t.tm_year - 1970;
+	ktime_t lp = (ty + 2) / 4;
+	ktime_t td = 0;
 	
 	int i;
 	for(i = 0; i < t.tm_mon - 1; i++)
@@ -75,28 +76,30 @@ long timer_gettime() {
 	td += t.tm_mday - 1;
 	td = td + (ty * 365) + lp;
 
-	return (long) ((td * 86400) + (t.tm_hour * 3600) +
+	return (ktime_t) ((td * 86400) + (t.tm_hour * 3600) +
 			(t.tm_min * 60) + t.tm_sec);
 }
 
-long timer_getticks() {
+
+ktime_t timer_getticks() {
 	return ((days * 86400) * TIMER_FREQ) + (seconds * TIMER_FREQ) + ticks;
 }
 
-long timer_getms() {
+ktime_t timer_getms() {
 	return timer_getticks();
 }
 
-long timer_getfreq() {
+ktime_t timer_getfreq() {
 	return TIMER_FREQ;
 }
 
 __optimize(0)
-void timer_delay(long ms) {
-	volatile long tk = timer_getms() + ms;
+void timer_delay(ktime_t ms) {
+	volatile ktime_t tk = timer_getms() + ms;
 	while(tk > timer_getms())
 		__asm__ __volatile__ ("pause;");
 }
+
 
 EXPORT(timer_gettime);
 EXPORT(timer_getticks);

@@ -3,11 +3,14 @@
 
 
 #ifndef __ASSEMBLY__
-long timer_gettime();
-long timer_getticks();
-long timer_getms();
-long timer_getfreq();
-void timer_delay(long ms);
+#include <stdint.h>
+typedef uint64_t ktime_t;
+
+ktime_t timer_gettime();
+ktime_t timer_getticks();
+ktime_t timer_getms();
+ktime_t timer_getfreq();
+void timer_delay(ktime_t ms);
 
 #ifdef CLOCKS_PER_SEC
 #undef CLOCKS_PER_SEC

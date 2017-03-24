@@ -9,7 +9,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static int full_read(struct inode* inode, void* buf, size_t size) {
+static int full_write(struct inode* inode, void* buf, size_t size) {
 	errno = ENOSPC;
 	return 0;
 }
@@ -20,7 +20,7 @@ int init(void) {
 		return E_ERR;
 
 
-	ino->read = full_read;
+	ino->write = full_write;
 	return E_OK;
 }
 
