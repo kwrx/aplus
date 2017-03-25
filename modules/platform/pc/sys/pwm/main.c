@@ -19,6 +19,7 @@ MODULE_LICENSE("GPL");
 #		include <arch/x86_64/x86_64.h>
 #	endif
 
+#include "acpi.h"
 
 
 static int pwm_ioctl(struct inode* inode, int req, void* buf) {
@@ -29,7 +30,7 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 
 	switch(req) {
 		case PWMIOCTL_POWEROFF:
-			/* TODO: Rebooting for now... */
+			
 		case PWMIOCTL_REBOOT:
 			while(inb(0x64) & 2)
 				;	
@@ -51,6 +52,11 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 
 
 int init(void) {
+	if(ACPI_FAILURE(AcpiInitializeSubsystem())) {
+		kprintf(ERROR, "acpica: subsystem initialization failed!\n");
+		return E_ERR;
+	}
+
 	inode_t* ino = vfs_mkdev("pwm", -1, S_IFCHR | 0666);
 	ino->ioctl = pwm_ioctl;
 

@@ -29,9 +29,9 @@ static int elf_define(elf_module_t* elf, char* name, void* value) {
 			continue;
 
 
-		kprintf(WARN, "elf: symbol %s already defined at 0x%x\n", name, sym->addr);
+		//kprintf(WARN, "elf: symbol %s already defined at 0x%x\n", name, sym->addr);
 		sym->addr = value;
-		return E_OK;
+		return 1;
 	}
 
 	sym = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);

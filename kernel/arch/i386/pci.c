@@ -101,8 +101,6 @@ void pci_scan(pci_func_t f, int type, void* arg) {
 
 int pci_init(void) {
 
-
-
 	(void) PciDevSelFlags;
 	(void) PciStatusFlags;
 	(void) PciCommandFlags;
