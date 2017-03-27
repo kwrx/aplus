@@ -161,8 +161,11 @@
  *
  *****************************************************************************/
 
-#if defined(_LINUX) || defined(__linux__) || defined(__aplus__)
+#if defined(_LINUX) || defined(__linux__)
 #include "aclinuxex.h"
+
+#elif defined(__aplus__)
+#include "acaplusex.h"
 
 #elif defined(__DragonFly__)
 #include "acdragonflyex.h"

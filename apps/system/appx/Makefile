@@ -1,23 +1,21 @@
-
 .PHONY: all
-OUTPUT		?=
+
 CC			?=
 ROOT		?=
-OUTPUT		:= $(ROOT)/bin/boot/mods/$(notdir $(PWD)).ko
+OUTPUT		:= $(ROOT)/bin/usr/sbin/$(notdir $(PWD))
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -w -pipe -I $(ROOT)/kernel/include -I include -include $(ROOT)/config.h -O3 -std=c99 -nostdlib -masm=intel -c
-SFLAGS		:=  -c -I $(ROOT)/kernel/include -I include -include config.h
+CFLAGS		:=  -pipe -I include -std=c99 -O3 -c
+SFLAGS		:=  -c -I include
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -nostdlib -O3 -r -o $@ $(OFILES)
-	@echo "module /boot/mods/$(notdir $(subst $(ROOT)/,,$@))" >> $(ROOT)/bin/boot/grub/grub.cfg
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lzip -lz -lgcc
 
 
 .c.o:

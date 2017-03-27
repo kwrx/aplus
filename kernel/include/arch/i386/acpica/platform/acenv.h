@@ -290,8 +290,11 @@
 
 #endif
 
-#if defined(_LINUX) || defined(__linux__) || defined(__aplus__)
+#if defined(_LINUX) || defined(__linux__)
 #include "aclinux.h"
+
+#elif defined(__aplus__)
+#include "acaplus.h"
 
 #elif defined(_APPLE) || defined(__APPLE__)
 #include "acmacosx.h"

@@ -19,8 +19,7 @@ MODULE_LICENSE("GPL");
 #		include <arch/x86_64/x86_64.h>
 #	endif
 
-#include "acpi.h"
-
+#include <arch/i386/acpica/acpi.h>
 
 static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 	if(!inode) {
@@ -30,10 +29,13 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 
 	switch(req) {
 		case PWMIOCTL_POWEROFF:
-			
+			AcpiEnterSleepStatePrep(5);
+			__asm__ ("cli");
+			AcpiEnterSleepState(5);
+			break;
 		case PWMIOCTL_REBOOT:
 			while(inb(0x64) & 2)
-				;	
+				;
 			outb(0x64, 0xFE);
 		case PWMIOCTL_HALT:
 			__asm__ __volatile__ (

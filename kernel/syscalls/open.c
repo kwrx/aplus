@@ -24,7 +24,22 @@ static int __check_perm(int uid, int gid, int other, mode_t mode, int flags) {
 		((flags & O_RDWR) ? ((mode & S_IROTH) && (mode & S_IWOTH)) : 1);
 }
 
+static void strslashcpy(char* s1, const char* s2) {
+	int sh = 0;
+	for(; *s2; s2++) {
+		if(*s2 == '/') {
+			if(sh)
+				continue;
+			else
+				sh++;
+		} else
+			sh = 0;
 
+		*s1++ = *s2;
+	}
+
+	*s1++ = '\0';
+}
 
 
 SYSCALL(10, open,
@@ -34,8 +49,10 @@ int sys_open(const char* name, int flags, mode_t mode) {
 		return -1;
 	}
 
+
 	char namebuf[strlen(name) + 1];
-	strcpy(namebuf, name);
+	strslashcpy(namebuf, name);
+
 
 	char* s = namebuf;
 	char* p = NULL;

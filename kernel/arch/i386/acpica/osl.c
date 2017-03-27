@@ -5,6 +5,7 @@
 #include <aplus/intr.h>
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
+#include <aplus/task.h>
 
 #include <sys/mman.h>
 #include "acpi.h"
@@ -14,8 +15,8 @@
 #   include <arch/i386/i386.h>
 #endif
 
-#define __TRACE kprintf(LOG, "acpi-trace: (%d):%s ()\n", __LINE__, __func__);
-
+//#define __TRACE kprintf(LOG, "acpi-trace: (%d):%s ()\n", __LINE__, __func__);
+#define __TRACE
 
 ACPI_STATUS AcpiOsInitialize() { __TRACE
     return AE_OK;
@@ -64,19 +65,9 @@ ACPI_STATUS AcpiOsGetPhysicalAddress(void *LogicalAddress, ACPI_PHYSICAL_ADDRESS
 }
 
 void *AcpiOsAllocate(ACPI_SIZE n) { __TRACE
-n += 2048;
-    void* p = kmalloc(n, GFP_KERNEL);
-    kprintf(LOG, "acpi-trace: allocated %d in %p\n", n, p);
-    return p;
+    return kmalloc(n, GFP_KERNEL);
 }
 
-void* AcpiOsAllocateZeroed(ACPI_SIZE n) { __TRACE
-    void* p = AcpiOsAllocate(n);
-    if(unlikely(!p))
-        return NULL;
-
-    memset(p, 0, n);
-}
 
 void AcpiOsFree(void *addr) { __TRACE
     kfree(addr);
@@ -95,7 +86,8 @@ ACPI_THREAD_ID AcpiOsGetThreadId() { __TRACE
 }
 
 ACPI_STATUS AcpiOsExecute(ACPI_EXECUTE_TYPE Type, ACPI_OSD_EXEC_CALLBACK Function, void *Context) { __TRACE
-    Function(Context);
+    sys_clone((int (*)(void*)) Function, NULL, CLONE_FILES | CLONE_FS | CLONE_SIGHAND | CLONE_VM, Context);
+    return AE_OK;
 }
 
 void AcpiOsSleep(UINT64 Milliseconds) { __TRACE
@@ -137,20 +129,21 @@ void AcpiOsDeleteLock(ACPI_SPINLOCK Handle) { __TRACE
 
 ACPI_CPU_FLAGS AcpiOsAcquireLock(ACPI_SPINLOCK Handle) { __TRACE
     return AE_OK;
-}
+} 
 
 void AcpiOsReleaseLock(ACPI_SPINLOCK Handle, ACPI_CPU_FLAGS Flags) { __TRACE
-    return;
+    
 }
-
 
 
 ACPI_STATUS AcpiOsInstallInterruptHandler(UINT32 InterruptLevel, ACPI_OSD_HANDLER Handler, void *Context) { __TRACE
-    irq_enable(InterruptLevel, Handler);
+    irq_enable(InterruptLevel, (void (*)(void*)) Handler);
+    return AE_OK;
 }
 
 ACPI_STATUS AcpiOsRemoveInterruptHandler(UINT32 InterruptNumber, ACPI_OSD_HANDLER Handler) { __TRACE
     irq_disable(InterruptNumber);
+    return AE_OK;
 }
 
 
@@ -262,12 +255,19 @@ ACPI_STATUS AcpiOsWritePciConfiguration(ACPI_PCI_ID *pciId, UINT32 reg, UINT64 v
 }
 
 
-void ACPI_INTERNAL_VAR_XFACE AcpiOsPrintf(const char *Format, ...) {
-    
+void AcpiOsVprintf(const char *fmt, va_list args) {
+    static char buf[BUFSIZ];
+    memset(buf, 0, BUFSIZ);
+
+    vsprintf(buf, fmt, args);
+    kprintf(INFO, buf);
 }
 
-void AcpiOsVprintf(const char *fmt, va_list args) {
-    
+void ACPI_INTERNAL_VAR_XFACE AcpiOsPrintf(const char *fmt, ...) {
+    va_list args;
+	va_start(args, fmt);
+	AcpiOsVprintf(fmt, args);
+    va_end(args);
 }
 
 void AcpiOsRedirectOutput(void *dst) {
@@ -286,7 +286,9 @@ ACPI_STATUS AcpiOsGetLine(char *buf, UINT32 len, UINT32 *read) {
     return AE_OK; 
 }
 
-
 ACPI_STATUS AcpiOsEnterSleep (UINT8 SleepState, UINT32 RegaValue, UINT32 RegbValue) { __TRACE
     return AE_OK;
 }
+
+
+EXPORT(AcpiInitializeSubsystem);

@@ -3,7 +3,7 @@ DEFINES         := -DKERNEL
 WARNINGS        := -Wall
 LIBS            := -lc -lm -lgcc
 
-CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O3
+CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O2
 AFLAGS          := -c -I kernel/include -include config.h
 NFLAGS          := $(DEFINES) -w-number-overflow
 LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
@@ -21,7 +21,7 @@ endif
 
 ifeq ($(ARCH),i386)
 AFLAGS          += -masm=intel
-CFLAGS          += -masm=intel
+CFLAGS          += -masm=intel -fno-strict-aliasing -I kernel/include/arch/i386/acpica
 NFLAGS          += -felf
 VMM             += -vga std -soundhw ac97
 #VMM                := echo "c" | bochs -q -f bochs.conf
