@@ -92,7 +92,6 @@ int fat_mount(struct inode* dev, struct inode* dir) {
 	}
 
 
-
 	dir->userdata = (void*) fat;
 	dir->open = fat_open;
 	dir->close = fat_close;

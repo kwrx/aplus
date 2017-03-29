@@ -33,25 +33,14 @@ const char* lfncpy(uint16_t* lfn, const char* name, size_t size) {
 }
 
 void lfncat(const char* name, uint16_t* lfn, size_t size) {
-	if(*lfn == 0xFFFF)
-		return;
-
-
-	char buf[size + 1];
-	int i;
-	for(i = 0; i < size; i++, lfn++) {
-		if(*lfn == 0) {
-			strcpy((char*) name, (const char*) buf);
+	while(size--) {
+		if(*lfn == 0xFFFF)
 			return;
-		}		
 
-		buf[i] = *lfn & 0xFF;
-		buf[i + 1] = '\0';
+		char p = *lfn & 0xFF;
+		strncat(name, &p, 1);
+		lfn++;
 	}
-
-	
-	memmove((void*) &name[strlen(buf)], name, strlen(name));
-	memcpy((void*) name, buf, strlen(buf));
 }
 
 void fatcat(const char* name, char* fatnm, char* fatex) {

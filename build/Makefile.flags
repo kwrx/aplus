@@ -10,7 +10,7 @@ LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page
 
 
 
-VMM             := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -m 128 -serial stdio -boot d
+VMM             := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -hda hdd.img -m 128 -serial stdio -boot d
 
 
 ifeq ($(ARCH),x86_64)

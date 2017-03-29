@@ -112,19 +112,19 @@ typedef struct {
 #define FAT_END_CLUSTER		(-1)
 #define FAT_UNUSED_CLUSTER 	(0)
 
-#define FAT32		1
-#define FAT16		2
-#define FAT12		3
+#define FAT32			1
+#define FAT16			2
+#define FAT12			3
 
-#define ATTR_RDONLY	1
-#define ATTR_HIDDEN	2
-#define ATTR_SYSTEM	4
-#define ATTR_VOLID	8
+#define ATTR_RDONLY		1
+#define ATTR_HIDDEN		2
+#define ATTR_SYSTEM		4
+#define ATTR_VOLID		8
 #define ATTR_DIRECTORY	16
 #define ATTR_ARCHIVE	32
-#define ATTR_LFN	15
+#define ATTR_LFN		15
 
-#define FAT_MAXFN	1024
+#define FAT_MAXFN		1024
 
 #define CLUSTER_TO_SECTOR(x, y)		\
 	((((int) (y) - 2) * x->sector_per_cluster) + x->first_data_sector)
