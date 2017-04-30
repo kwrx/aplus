@@ -38,6 +38,7 @@ namespace GNX {
 
     class Window {
         public:
+            string Title;
             int flags;
             
             WindowContext* Context;

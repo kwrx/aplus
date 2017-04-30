@@ -12,7 +12,6 @@
 
 
 static int __check_perm(int type, mode_t mode) {
-	return 1;
 	switch(type) {
 		case 0: /* UID */
 			return (mode & S_IXUSR);
@@ -83,25 +82,31 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	char** __new_argv = args_dup((char**) argv);
 	char** __new_envp = args_dup((char**) envp);
 	
-	
+
+
 
 	INTR_OFF;
 	arch_task_release(current_task);
 
 
+
 	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &size, loader);
 	KASSERT(_start);
+
 	
 	kfree(image);
+
 	
 
 	current_task->argv = __new_argv;
 	current_task->environ = __new_envp;
 	current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
 	current_task->name = strdup(filename);
+	current_task->description = "";
 	current_task->exe = inode;
 
 	INTR_ON;
+	syscall_ack();
 
 	_start((char**) current_task->argv, (char**) current_task->environ);
 	KASSERT(0);

@@ -12,6 +12,7 @@ void sys__yield(void) {
 
 
 void sys_yield(void) {
+	syscall_ack();
 	arch_task_yield();
 }
 

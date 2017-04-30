@@ -1,16 +1,13 @@
 #ifndef _APLUS_H
 #define _APLUS_H
 
-
-#define E_ERR					(-1)
-#define E_OK					(0)
+#include <aplus/base.h>
 
 
 
 #ifndef __ASSEMBLY__
 #include <libc.h>
 
-#define volatile
 
 typedef struct bootargs {
 	struct {

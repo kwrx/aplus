@@ -29,7 +29,7 @@ static int elf_define(elf_module_t* elf, char* name, void* value) {
 			continue;
 
 
-		//kprintf(WARN, "elf: symbol %s already defined at 0x%x\n", name, sym->addr);
+		kprintf(WARN "elf: symbol %s already defined at 0x%x\n", name, sym->addr);
 		sym->addr = value;
 		return 1;
 	}
@@ -51,7 +51,7 @@ static void* elf_resolve(elf_module_t* elf, char* name) {
 		if(strcmp(sym->name, name) == 0)
 			return sym->addr;
 
-	kprintf(ERROR, "elf: cannot resolve \"%s\"\n", name);
+	kprintf(ERROR "elf: cannot resolve \"%s\"\n", name);
 	return NULL;
 }
 
@@ -151,7 +151,7 @@ static void* elf_module_load(void* image, void** address, size_t* size) {
 	elf->header = (Elf_Ehdr*) image;
 
 	if(memcmp(elf->header->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(elf))) {
-		kprintf(ERROR, "elf: invalid elf image\n");
+		kprintf(ERROR "elf: invalid elf image\n");
 		return NULL;
 	}
 

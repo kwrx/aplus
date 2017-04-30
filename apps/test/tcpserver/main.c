@@ -29,14 +29,32 @@ int main(int argc, char** argv) {
     }
 
     listen(fd, 5);
-    
+
     int cfd;
     struct sockaddr_in c;
     socklen_t clen = sizeof(c);
 
     while((cfd = accept(fd, (struct sockaddr*) &c, &clen)) >= 0) {
         fprintf(stderr, "tcpserver: Accepted new client on: %d.%d.%d.%d:%d\n", (c.sin_addr.s_addr & 0xFF000000) >> 24, (c.sin_addr.s_addr & 0x00FF0000) >> 16, (c.sin_addr.s_addr & 0x0000FF00) >> 8, (c.sin_addr.s_addr & 0x000000FF), htons(c.sin_port));
-        close(cfd);
+
+
+        int i;
+        for(i = 0; i < 10; i++)
+            sched_yield();
+
+        while(1) {
+            char buf[20];
+            memset(buf, 0, sizeof(buf));
+
+        
+
+            if(read(cfd, buf, sizeof(buf)) > 0)
+                fprintf(stderr, "tcpserver: %s\n", buf);
+
+                int i;
+                for(i = 0; i < 10; i++)
+                    sched_yield();
+        }
     }
 
     return 0;

@@ -1,27 +1,27 @@
 
 DEFINES         := -DKERNEL
-WARNINGS        := -Wall
+WARNINGS        := -Wall -Wno-discarded-qualifiers
 LIBS            := -lc -lm -lgcc
 
-CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O2
+CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=c99 -O3
 AFLAGS          := -c -I kernel/include -include config.h
 NFLAGS          := $(DEFINES) -w-number-overflow
 LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
 
 
 
-VMM             := qemu-system-$(ARCH) -cdrom $(KERNEL_ISO) -hda hdd.img -m 128 -serial stdio -boot d
+VMM             := qemu-system-i386 -hda $(HDD) -cdrom $(KERNEL_ISO) -m 128 -serial stdio -boot c -d cpu_reset
 
 
 ifeq ($(ARCH),x86_64)
 CFLAGS          += -mno-red-zone -mcmodel=kernel -masm=intel
 NFLAGS          += -felf64
-VMM             += -vga std
+VMM             += -vga std -net nic
 endif
 
 ifeq ($(ARCH),i386)
 AFLAGS          += -masm=intel
-CFLAGS          += -masm=intel -fno-strict-aliasing -I kernel/include/arch/i386/acpica
+CFLAGS          += -masm=intel
 NFLAGS          += -felf
 VMM             += -vga std -soundhw ac97
 #VMM                := echo "c" | bochs -q -f bochs.conf

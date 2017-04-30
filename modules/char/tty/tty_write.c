@@ -8,6 +8,16 @@
 
 
 
+void __tty_flush(struct tty_context* tio) {
+    int fd = sys_open(TTY_DEFAULT_OUTPUT_DEVICE, O_WRONLY, 0);
+    if(likely(fd >= 0)) {
+	    sys_write(fd, tio->outbuf, tio->outlen);
+        sys_close(fd);
+    }
+
+    tio->outlen = 0;
+}
+
 int tty_write(struct inode* inode, void* ptr, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
@@ -23,7 +33,7 @@ int tty_write(struct inode* inode, void* ptr, size_t len) {
         return 0;
 
 
-    struct termios* ios = (struct termios*) inode->userdata;
+    struct tty_context* tio = (struct tty_context*) inode->userdata;
     uint8_t* buf = (uint8_t*) ptr;
     size_t p = 0;
     
@@ -31,29 +41,38 @@ int tty_write(struct inode* inode, void* ptr, size_t len) {
     
     while(p < len) {
 #ifdef OLCUC
-        if(ios->c_oflag & OLCUC)
+        if(tio->ios.c_oflag & OLCUC)
             *buf = (*buf >= 'a' && *buf <= 'z')
                     ? *buf - 32
                     : *buf;
 #endif
 
      
-        if(*buf == ios->c_cc[VEOF])
+        if(*buf == tio->ios.c_cc[VEOF])
             break;
-        else if(*buf == ios->c_cc[VERASE])
-            kprintf(USER, "\b");
-        else if(*buf == ios->c_cc[VINTR])
+        else if(*buf == tio->ios.c_cc[VERASE])
+            kprintf("\b");
+        else if(*buf == tio->ios.c_cc[VINTR])
             sys_kill(current_task->pid, SIGINT);
-        else if(*buf == ios->c_cc[VKILL])
+        else if(*buf == tio->ios.c_cc[VKILL])
             sys_kill(current_task->pid, SIGKILL);
-        else if(*buf == ios->c_cc[VQUIT])
+        else if(*buf == tio->ios.c_cc[VQUIT])
             sys_kill(current_task->pid, SIGQUIT);
+        else if(*buf == tio->ios.c_cc[VSTOP])
+            tio->output = 0;
+        else if(*buf == tio->ios.c_cc[VSTART])
+            tio->output = 1;
         else
-            kprintf(USER, "%c", *buf);
+            tio->outbuf[tio->outlen++] = *buf;
+        
         
         buf++;
         p++;
     }
     
+
+    if(tio->output)
+        __tty_flush(tio);
+
     return p;
 }

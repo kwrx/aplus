@@ -35,7 +35,7 @@ void* binfmt_load_image(void* image, void** address, size_t* size, const char* l
 		return tmp->load(image, address, size);
 	}
 
-	kprintf(ERROR, "binfmt: invalid executable format!\n");
+	kprintf(ERROR "binfmt: invalid executable format!\n");
 	return NULL;
 }
 

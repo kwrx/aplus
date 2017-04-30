@@ -48,13 +48,17 @@ typedef struct task {
 	
 
 	struct tms clock;
+	time_t alarm;
 	int status;
 	int priority;
+	uintptr_t vmsize;
+
 
 	int (*sig_handler) (int);
 	int16_t sig_no;
 	uint64_t sig_mask;
 
+	fifo_t fifo;
 	fd_t fd[TASK_FD_COUNT];
 
 	inode_t* root;
@@ -92,6 +96,16 @@ typedef struct task {
 		uintptr_t end;
 	} __image, *image;
 
+	struct {
+		uint64_t rchar;
+		uint64_t wchar;
+		uint64_t syscr;
+		uint64_t syscw;
+		uint64_t read_bytes;
+		uint64_t write_bytes;
+		uint64_t cancelled_write_bytes;
+	} iostat;
+
 
 	struct task* parent;
 	struct task* next;
@@ -111,6 +125,14 @@ extern volatile task_t* arch_task_fork(void);
 extern volatile task_t* arch_task_clone(int (*) (void*), void*, int, void*);
 extern void arch_task_yield(void);
 extern void arch_task_release(volatile task_t* task);
+
+
+#define task_create_tasklet(nm, handler, task)																	\
+		task = arch_task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);			\
+		task->name = strdup(nm);
+
+
+
 
 #endif
 

@@ -27,7 +27,17 @@
 #endif
 
 
+#ifndef E_OK
+#define E_OK                            0
+#endif
+
+#ifndef E_ERR
+#define E_ERR                           -1
+#endif
+
+
 #define PATH_FBDEV                      "/dev/fb0"
+#define PATH_CONDEV                     "/dev/console"
 #define PATH_GHSM                       "/dev/gshm"
 #define PATH_MOUSEDEV                   "/dev/mouse"
 #define PATH_KBDEV                      "/dev/kbd"

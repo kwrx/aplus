@@ -29,6 +29,11 @@ idle.priority.high=3
 idle.priority=$idle.priority.disabled
 
 
+# -- I/O Scheduler
+iosched.priority=0
+iosched.blksize=4194304
+
+
 # -- UI
 ui.dpi=72
 ui.font=Arial

@@ -5,6 +5,8 @@
 #include <fcntl.h>
 #include <time.h>
 #include <signal.h>
+#include <ctype.h>
+#include <dirent.h>
 #include <errno.h>
 #include <getopt.h>
 #include <sys/stat.h>
@@ -61,19 +63,24 @@ static int shutdown_exec(uint8_t mode) {
 
     fprintf(stdout, "\t- Killing processes\n");
 
-    /* FIXME: get processes from /proc */
-    pid_t pid;
-    for(pid = 1; pid < 65535; pid++)
+    DIR* d = opendir("/proc");
+    if(!d) {
+        perror("/proc");
+        return -1;
+    }
+
+    struct dirent* ent;
+    while((ent = readdir(d))) {
+        if(!isdigit(ent->d_name[0]))
+            continue;
+
+        int pid = atoi(ent->d_name);
         if(getpid() != pid)
-            kill(pid, SIGKILL);
+            if(kill(pid, SIGKILL) == 0)
+                waitpid(pid, NULL, 0);
+    }
 
-
-    fprintf(stdout, "\t- Waiting for remaining processes to terminate\n");
-    for(pid = 1; pid < 65535; pid++)
-        if(getpid() != pid)
-            waitpid(pid, NULL, 0);
-
-
+    closedir(d);
     fprintf(stdout, "\t- Done! Goodbye!\n");
 
 

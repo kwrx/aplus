@@ -134,8 +134,10 @@ Window::Window() {
 Window::Window(Window* parent, string title, uint16_t w, uint16_t h) 
     : Window() {
     this->Parent = parent;
+    this->Title = title;
     this->flags = WF_SHOW;
-    
+
+
     if(this->Parent)
         this->Parent->Childs->push_back(this);
 

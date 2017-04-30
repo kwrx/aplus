@@ -25,8 +25,8 @@ int sys_uname(struct utsname* buf) {
 		static char buf[BUFSIZ];
 		memset(buf, 0, BUFSIZ);
 		
-		read(fd, buf, BUFSIZ);
-		close(fd);
+		sys_read(fd, buf, BUFSIZ);
+		sys_close(fd);
 		
 		__hostname = buf;
 	}

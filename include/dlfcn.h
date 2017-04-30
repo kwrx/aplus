@@ -29,6 +29,14 @@
 
 __BEGIN_DECLS
 
+#define RTLD_LAZY           0
+#define RTLD_NOW            1
+#define RTLD_GLOBAL         2
+#define RTLD_LOCAL          0
+#define RTLD_NODELETE       4
+#define RTLD_NOLOAD         8
+#define RTLD_DEEPBIND       16
+
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
 extern void *dlopen (__const char *__file, int __mode) __THROW;

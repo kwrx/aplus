@@ -7,105 +7,103 @@
 
 #include "procfs.h"
 
+
+
+static int procfs_open(struct inode* inode) {
+	if(unlikely(!inode)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+
+	volatile task_t* tmp;
+	for(tmp = task_queue; tmp; tmp = tmp->next) {
+		char buf[32];
+		memset(buf, 0, sizeof(buf));
+		sprintf(buf, "%d", tmp->pid);
+
+		if(vfs_finddir(inode, buf))
+			continue;
+
+		inode_t* i = vfs_mknod(inode, buf, S_IFDIR | 0666);
+		if(unlikely(!i)) {
+			kprintf(ERROR "procfs: error on creating %s\n", buf);
+			return E_ERR;
+		}
+
+		procfs_add_childs(i, tmp);
+	}
+
+	return 0;
+}
+
+static int meminfo_open(struct inode* inode) {
+	if(unlikely(!inode)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if(!inode->userdata)
+		inode->userdata = (void*) kmalloc(sizeof(procfs_t), GFP_KERNEL);
+
+	procfs_t* pfs = (procfs_t*) inode->userdata;
+
+
+	static char buf[BUFSIZ];
+	memset(buf, 0, BUFSIZ);
+
+	sprintf(buf, 
+		"MemTotal:       %12d kB\n"
+		"MemUsed:        %12d kB\n"
+		"MemFree:        %12d kB\n"
+		"MemAvailable:   %12d kB\n"
+		"Slab:           %12d kB\n",
+
+		pmm_state()->total / 1024,
+		pmm_state()->used / 1024,
+		(pmm_state()->total - pmm_state()->used) / 1024,
+		((pmm_state()->total - pmm_state()->used) + (kvm_state()->total - kvm_state()->used)) / 1024,
+		kvm_state()->used / 1024
+	);
+
+	pfs->data = strdup(buf);
+	inode->size = (off64_t) strlen(buf);
+	
+	return 0;
+}
+
+
+
 int procfs_mount(struct inode* dev, struct inode* dir) {
 	(void) dev;
 
 
-	#define procfs_add_child(r, a, m, b)							\
-		inode_t* a = vfs_mknod(r, #a, m | 0666);					\
-		if(unlikely(!a)) {											\
-			kprintf(ERROR, "procfs: cannot create %s node\n", #a);	\
-			return E_ERR;											\
-		}															\
-		int a##_open (inode_t* inode) {								\
-			static char buf[BUFSIZ];								\
-			memset(buf, 0, sizeof(buf));							\
-			b														\
-			if(strlen(buf)) {										\
-				if(likely(inode->userdata))							\
-				kfree(inode->userdata);								\
-																	\
-				inode->userdata = strdup(buf);						\
-				inode->size = strlen(buf);							\
-				inode->position = 0;								\
-			}														\
-			return 0;												\
-		}															\
-		a->open = a##_open;											\
-		a->read = procfs_read;
+	dir->open = procfs_open;
+	dir->close = NULL;
+	dir->finddir = NULL;
+	dir->mknod = NULL;
+	dir->unlink = NULL;
+	dir->read = NULL;
+	dir->write = NULL;
+	dir->ioctl = NULL;
+	dir->rename = NULL;
 
 
+	inode_t* meminfo = vfs_mknod(dir, "meminfo", S_IFREG | 0666);
+	if(unlikely(!meminfo)) {
+		kprintf(ERROR "procfs: error on creating meminfo\n");
+		return E_ERR;
+	}
 
+	meminfo->open = meminfo_open;
+	meminfo->read = procfs_read;
 
+	inode_t* i = vfs_mknod(dir, "self", S_IFDIR | 0666);
+	if(unlikely(!i)) {
+		kprintf(ERROR "procfs: error on creating self\n");
+		return E_ERR;
+	}
 
-
-	procfs_add_child(dir, filesystems, S_IFREG, {
-		fsys_t* tmp;
-		for(tmp = fsys_queue; tmp; tmp = tmp->next) {
-			strcat(buf, tmp->name);
-			strcat(buf, "\n");	
-		}
-	});
-	
-	procfs_add_child(dir, meminfo, S_IFREG, {
-		sprintf(buf,
-			"MemTotal:      %12d kB\n"
-			"MemUsed:       %12d kB\n"
-			"MemAvailable:  %12d kB\n"
-			"Slab:          %12d kB\n",
-			pmm_state()->total / 1024,
-			pmm_state()->used / 1024,
-			(pmm_state()->total - pmm_state()->used) / 1024,
-			kvm_state()->used / 1024
-		);
-	});
-	
-	
-	procfs_add_child(dir, version, S_IFREG, {
-		sprintf(buf, "%s %s-%s %s %s %s\n", 
-			KERNEL_NAME, 
-			KERNEL_VERSION,
-			KERNEL_CODENAME,
-			KERNEL_DATE,
-			KERNEL_TIME,
-			KERNEL_PLATFORM);
-	});
-	
-	procfs_add_child(dir, uptime, S_IFREG, {
-		sprintf(buf, "%d.%d\n", (int) sys_times(NULL) / CLOCKS_PER_SEC, (int) sys_times(NULL) % CLOCKS_PER_SEC);
-	});
-	
-	
-	procfs_add_child(dir, self, S_IFDIR, {});
-	procfs_add_child(self, cwd, S_IFLNK, { inode->link = current_task->cwd; });
-	procfs_add_child(self, root, S_IFLNK, { inode->link = current_task->root; });
-	procfs_add_child(self, exe, S_IFLNK, { inode->link = current_task->exe; });
-	
-	procfs_add_child(self, cmdline, S_IFREG, {
-		if(current_task->argv != NULL) {
-			int i;
-			for(i = 0; current_task->argv[i]; i++) {
-				strcat(buf, current_task->argv[i]);
-				strcat(buf, " ");
-			}
-		}
-	});
-	
-	procfs_add_child(self, environ, S_IFREG, {
-		if(current_task->environ != NULL) {
-			int i;
-			for(i = 0; current_task->environ[i]; i++) {
-				strcat(buf, current_task->environ[i]);
-				strcat(buf, "\n");
-			}
-		}
-	});
-		
-	cwd->link = current_task->cwd;
-	root->link = current_task->root;
-		
-		
-		
-
+	procfs_add_childs(i, NULL);
 	return E_OK;
 }

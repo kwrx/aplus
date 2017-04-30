@@ -116,6 +116,7 @@ int iso9660_close(struct inode* inode);
 struct inode* iso9660_finddir(struct inode* inode, char* name);
 int iso9660_unlink(struct inode* inode, char* path);
 
+
 void iso9660_checkname(char* name);
 uint32_t iso9660_getlsb32(uint64_t val);
 uint16_t iso9660_getlsb16(uint32_t val);

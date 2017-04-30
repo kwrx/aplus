@@ -38,5 +38,6 @@
 # define WTERMSIG(val)	(((val)>>8)&0x7f)
 # define WIFSTOPPED(val) (((val)&0xff)==0177)
 # define WSTOPSIG(val)	(((val)>>8)&0xff)
+
 #endif	/* _SYS_WAIT_H */
 

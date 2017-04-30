@@ -8,9 +8,7 @@
 
 
 int main(int argc, char** argv) {
-	int i;
-	for(i = 0; i < 10; i++)
-		printf("\n\n\n\n\n\n\n\n\n\n");
-	
+	fprintf(stdout, "\e[2J");
+	fflush(stdout);
 	return 0;
 }

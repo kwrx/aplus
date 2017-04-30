@@ -41,7 +41,7 @@ static int gshm_ioctl(struct inode* inode, int req, void* ptr) {
 
 int init(void) {
 	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("gshm", -1, S_IFCHR | 0666)) == NULL))
+	if(unlikely((ino = vfs_mkdev("gshm", -1, S_IFCHR | 0440)) == NULL))
 		return E_ERR;
 
 

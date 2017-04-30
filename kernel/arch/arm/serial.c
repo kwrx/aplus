@@ -6,10 +6,12 @@
 #include "arm.h"
 
 
-mutex_t serial_lock = MTX_INIT(MTX_KIND_DEFAULT);
+spinlock_t serial_lock;
 
 
 int serial_init() {
+
+	spinlock_init(&serial_lock);
 
 	mmio_w32(UART_CR(UART0), 0);
 	mmio_w32(GPPUD, 0);
@@ -39,25 +41,25 @@ int serial_init() {
 void serial_send(uint8_t ch, uint8_t v) {
 	(void) ch;
 
-	mutex_lock(&serial_lock);
+	spinlock_lock(&serial_lock);
 
 	while(mmio_r32(UART_FR(UART0)) & (1 << 5))
 		;
 	mmio_w32(UART_DR(UART0), v);
 
-	mutex_unlock(&serial_lock);
+	spinlock_unlock(&serial_lock);
 }
 
 uint8_t serial_recv(uint8_t ch) {
 	(void) ch;
 
-	mutex_lock(&serial_lock);
+	spinlock_lock(&serial_lock);
 
 	while(mmio_r32(UART_FR(UART0)) & (1 << 4))
 		;
 	register uint8_t t = (uint8_t) mmio_r32(UART_DR(UART0));
 
-	mutex_lock(&serial_lock);
+	spinlock_lock(&serial_lock);
 	return t;
 }
 

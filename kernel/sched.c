@@ -13,7 +13,6 @@ volatile task_t* current_task = NULL;
 volatile task_t* kernel_task = NULL;
 volatile task_t* task_queue = NULL;
 
-mutex_t mtx_schedule = MTX_INIT(MTX_KIND_DEFAULT, "schedule");
 
 
 static void sched_next(void) {
@@ -40,8 +39,6 @@ void schedule(void) {
 		return;
 
 
-	mutex_lock(&mtx_schedule);
-
 	
 	current_task->clock.tms_utime += 1;
 	if(likely(current_task->parent))
@@ -58,21 +55,16 @@ void schedule(void) {
 	sched_next();
 
 	
-	arch_task_switch(prev_task, current_task);
 	current_task->status = TASK_STATUS_RUNNING;
+	arch_task_switch(prev_task, current_task);
 
 nosched:
-
-	mutex_unlock(&mtx_schedule);
-	return;	
+	return;
 }
 
 void schedule_yield(void) {
 	if(unlikely(!current_task))
 		return;
-
-
-	mutex_lock(&mtx_schedule);
 
 
 	if(likely(current_task->status == TASK_STATUS_RUNNING))
@@ -82,12 +74,9 @@ void schedule_yield(void) {
 	volatile task_t* prev_task = current_task;
 	sched_next();
 	
-	arch_task_switch(prev_task, current_task);
+
 	current_task->status = TASK_STATUS_RUNNING;
-
-
-	mutex_unlock(&mtx_schedule);
-	return;
+	arch_task_switch(prev_task, current_task);
 }
 
 

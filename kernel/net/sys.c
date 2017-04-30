@@ -49,13 +49,13 @@
 
 struct sys_sem {
 	int lock;
-};
+} __packed;
 
 struct sys_mbox {
 	uint16_t size;
 	uint16_t count;
 	void** msg;
-};
+} __packed;
 
 
 
@@ -69,7 +69,7 @@ err_t sys_sem_new(struct sys_sem** s, u8_t count) {
 	sx->lock = count;
 
 	SYS_STATS_INC_USED(sem);
-	*s = sx; 
+	*s = sx;
 	return ERR_OK;
 }
 
@@ -88,16 +88,16 @@ void sys_sem_signal(struct sys_sem** sem) {
 }
 
 u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t __timeout) {
-
 	register u32_t timeout = __timeout;
 
 	if(timeout)
 		timeout += timer_getms();
 
+
 #if CONFIG_SMP
-	__sync_synchronize();
+    __sync_synchronize();
 #endif
-	(*sem)->lock--;
+    (*sem)->lock--;
 
 	while(
 		((*sem)->lock < 0)
@@ -108,22 +108,23 @@ u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t __timeout) {
 
 	if(__timeout == 0)
 		return SYS_ARCH_TIMEOUT;
-	
+
 	int s = timeout - (timeout - timer_getms());
 	if(s < timeout)
 		return s;
-	
+
 	return SYS_ARCH_TIMEOUT;
 }
 
 
 err_t sys_mbox_new(struct sys_mbox** mbox, int size) {
+	size = 1024;
 
-	struct sys_mbox* mb = (struct sys_mbox*) kmalloc(sizeof(struct sys_mbox), GFP_KERNEL);	
+	struct sys_mbox* mb = (struct sys_mbox*) kmalloc(sizeof(struct sys_mbox), GFP_KERNEL);
 
 	mb->size = size;
 	mb->count = 0;
-	mb->msg = kmalloc(sizeof(void*) * size, GFP_KERNEL);
+	mb->msg = kcalloc(sizeof(void*), size, GFP_KERNEL);
 
 	SYS_STATS_INC_USED(mbox);
 	*mbox = mb;
@@ -160,9 +161,8 @@ void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 
 
 u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
-	
 	if(timeout) {
-		timeout += timer_getms();	
+		timeout += timer_getms();
 		while(((*mbox)->count == 0) && (timeout > timer_getms()))
 			sys_yield();
 	}
@@ -174,13 +174,13 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 		return SYS_ARCH_TIMEOUT;
 
 
+    void* mx = (*mbox)->msg[--(*mbox)->count];
+	//void* mx = (*mbox)->msg[0];
+	//memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
+	//(*mbox)->msg[(*mbox)->count] = NULL;
 
-	void* mx = (*mbox)->msg[0];
-	memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
-	(*mbox)->msg[(*mbox)->count] = NULL;
-	
 	if(msg)
-		*msg = mx;		
+		*msg = mx;
 
 
 	if(timeout == 0)
@@ -198,12 +198,13 @@ u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
 		return SYS_MBOX_EMPTY;
 
 
-	void* mx = (*mbox)->msg[0];
-	memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
-	(*mbox)->msg[(*mbox)->count] = NULL;
-	
+    void* mx = (*mbox)->msg[--(*mbox)->count];
+	//void* mx = (*mbox)->msg[0];
+	//memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
+	//(*mbox)->msg[(*mbox)->count] = NULL;
+
 	if(msg)
-		*msg = mx;		
+		*msg = mx;
 
 	return 0;
 }

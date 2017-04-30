@@ -6,45 +6,36 @@
 
 
 
-#define LOG					0
-#define WARN				1
-#define INFO				2
-#define ERROR				3
-#define USER				4
+#define LOG					"[ LOG   ] "
+#define WARN				"[ WARN  ] "
+#define INFO				"[ LOG   ] "
+#define ERROR				"[ ERROR ] "
+#define USER				"[ USER  ] "
+
 
 #ifndef __ASSEMBLY__
-void debug_send(char value, int flags);
+void debug_send(char value);
 
 
 #if !DEBUG
 #define debug_send(a)
 #define KASSERT(x)
 #define KASSERTF(x, y...)
-#define kprintf(f, a, b...)
+#define kprintf(a, b...)
 #else
 
-int kprintf(int flags, const char* fmt, ...);
-int std_kprintf(const char* fmt, ...);
+int kprintf(const char* fmt, ...);
 
 #define KASSERT(x)																											\
 	if(unlikely(!(x)))																										\
-		{ kprintf(ERROR, "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
+		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
 
 #define KASSERTF(x, y...)																											\
-	if(unlikely(!(x)))																										\
-		{ kprintf(ERROR, "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(ERROR, y); kprintf(ERROR, "\n"); for(;;); }
+	if(unlikely(!(x)))																												\
+		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(ERROR y); kprintf(ERROR "\n"); for(;;); }
 
 
 #endif
-
-
-
 #endif
-
-
-
-
-
-
 
 #endif

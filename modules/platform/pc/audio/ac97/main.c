@@ -46,14 +46,14 @@ int init(void) {
     pci_scan(&find_ac97_pci, -1, &ac97_pci);
 
     if(unlikely(!ac97_pci)) {
-        kprintf(ERROR, "ac97: no pci device found!\n");
+        kprintf(ERROR "ac97: no pci device found!\n");
         return E_ERR;
     }
 
-    vfs_mkdev("snd", -1, S_IFCHR | 0666);
-    vfs_mkdev("mixer", -1, S_IFCHR | 0666);
+    vfs_mkdev("snd", -1, S_IFCHR | 0444);
+    vfs_mkdev("mixer", -1, S_IFCHR | 0444);
     
-    kprintf(WARN, "ac97: Intel AC97 not yet supported! it doesn't work\n");
+    kprintf(WARN "ac97: Intel AC97 not yet supported! it doesn't work\n");
     return E_OK;
 }
 

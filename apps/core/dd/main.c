@@ -141,7 +141,7 @@ static void print_status() {
     gettimeofday(&tv, NULL);
 
     double tm = (double) (tv.tv_sec - progress_cs.tv_sec) + (double) (tv.tv_usec - progress_cs.tv_usec) / 1000000.0;
-    tm = tm == 0.0 ? 1.0 : tm;
+    tm = tm == 0.0 ? 0.01 : tm;
 
     fprintf(stderr, "%d bytes (%sB, %siB) copied, %4.2f s, %sB/s\n", progress * obs, sn(progress * obs, 1000), sn(progress * obs, 1024), tm, sn((long)((double) (progress * obs) / tm), 1024));
 }

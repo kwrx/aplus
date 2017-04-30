@@ -14,11 +14,6 @@
 #   include "md5.h"
 #endif
 
-#if HAVE_LUA
-#   include <lua.h>
-#   include <lauxlib.h>
-#   include <lualib.h>
-#endif
 
 
 static char buf[BUFSIZ];
@@ -78,11 +73,11 @@ int main(int argc, char** argv, char** env) {
  
     
     int c, idx;
-    while((c = getopt_long(argc, argv, "frRdv", long_options, &idx)) != -1) {
+    while((c = getopt_long(argc, argv, "chv", long_options, &idx)) != -1) {
         switch(c) {
             case 'c':
-                sh_cmdline(argv[optind + 1]);
-                break;
+                sh_cmdline(argv[optind]);
+                return 0;
             case 'v':
                 show_version(argc, argv);
                 break;
@@ -94,7 +89,6 @@ int main(int argc, char** argv, char** env) {
                 abort();
         }
     }
-    
     
 
 
@@ -114,7 +108,7 @@ int main(int argc, char** argv, char** env) {
 
     do {
         CLRBUF();
-        fprintf(stdout, "[%s@%s %s]# ", username, hostname, getcwd(buf, BUFSIZ));
+        fprintf(stdout, "\033[36m[%s@%s %s]#\033[39m ", username, hostname, getcwd(buf, BUFSIZ));
         fflush(stdout);
 
         CLRBUF();

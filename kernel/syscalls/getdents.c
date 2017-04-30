@@ -33,8 +33,8 @@ int sys_getdents(int fd, struct dirent* buf, size_t size) {
 	struct inode_childs* tmp;
 	for(tmp = inode->childs; tmp; tmp = tmp->next) {
 		if(
-			dd_loc 				+
-			sizeof(struct dirent) 		+
+			dd_loc 						+
+			sizeof(struct dirent)		+
 			strlen(tmp->inode->name) > size
 		) return dd_loc;
 		

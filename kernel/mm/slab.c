@@ -2,11 +2,12 @@
 #include <aplus/mm.h>
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
+#include <aplus/task.h>
 
 static int heap_allocated = 0;
 
-mutex_t mtx_kmalloc;
-mutex_t mtx_kfree;
+spinlock_t lck_kmalloc = SPINLOCK_UNLOCKED;
+spinlock_t lck_kfree = SPINLOCK_UNLOCKED;
 
 
 __section(".pool")
@@ -48,7 +49,7 @@ static int FR_FIRST(int count) {
 					else
 						break;
 						
-					if(c == count)
+					if(c > count)
 						return b;
 				}
 			}
@@ -63,11 +64,13 @@ __malloc
 void* kmalloc(size_t size, int gfp) {
 	void* p = NULL;
 	
-	if(unlikely(!size))
-		return NULL;
+	if(unlikely(!size)) {
+		kprintf(WARN "slab: attempt to allocate 0 bytes from %d\n", sys_getpid());
+		size += 1;
+	}
 
 retry:
-	mutex_lock(&mtx_kmalloc);
+	spinlock_lock(&lck_kmalloc);
 	
 	do {
 
@@ -80,7 +83,7 @@ retry:
 			break;
 		}
 
-		int count = (size / MM_BLOCKSZ) + 1;
+		int count = ((size + 8) / MM_BLOCKSZ) + 1;
 
 		register int fx = FR_FIRST(count);
 		if(unlikely(fx == E_ERR))
@@ -88,14 +91,17 @@ retry:
 
 		while(count--)
 			FR_SET(fx + count);
+		FR_SET(fx);
 
 		p = (void*) CONFIG_HEAP_BASE + (fx * MM_BLOCKSZ);
 
 	} while(0);
 
-	mutex_unlock(&mtx_kmalloc);
+	spinlock_unlock(&lck_kmalloc);
 
 	if(unlikely(!p)) {
+		kprintf(WARN, "slab: no memory left!\n");
+
 		if(gfp & __GFP_WAIT) {
 #if CONFIG_CACHE
 			kcache_free(KCACHE_FREE_BLOCKS);
@@ -119,6 +125,9 @@ retry:
 
 	h->magic = KMALLOC_MAGIC;
 	h->size = size;
+
+	if(likely(current_task))
+		current_task->vmsize += size;
 
 	return h->data;
 }
@@ -153,9 +162,10 @@ void* kcalloc(size_t x, size_t y, int gfp) {
 
 
 void kfree(void* p) {
-	if(unlikely(!p))
+	if(unlikely((uintptr_t) p < CONFIG_HEAP_BASE))
 		return;
-		
+
+
 	struct {
 		uint32_t magic;
 		uint32_t size;
@@ -168,17 +178,22 @@ void kfree(void* p) {
 	if(unlikely(!((uintptr_t) h->data > CONFIG_HEAP_BASE)))
 		return;
 
-	mutex_lock(&mtx_kfree);
+	spinlock_lock(&lck_kfree);
 
 	uintptr_t address = (uintptr_t) h;
 	address -= CONFIG_HEAP_BASE;
 	address /= MM_BLOCKSZ;
 
-	int count = (h->size / MM_BLOCKSZ) + 1;
+
+	int count = ((h->size + 8) / MM_BLOCKSZ) + 1;
 	while(count--)
 		FR_CLR(address + count);
+	FR_CLR(address);
 
-	mutex_unlock(&mtx_kfree);
+	if(likely(current_task))
+		current_task->vmsize -= h->size;
+
+	spinlock_unlock(&lck_kfree);
 }
 
 
@@ -213,11 +228,10 @@ void free(void* ptr) {
 
 
 int slab_init(void) {
-	mutex_init(&mtx_kmalloc, MTX_KIND_DEFAULT, "kmalloc");
-	mutex_init(&mtx_kfree, MTX_KIND_DEFAULT, "kfree");
+	spinlock_init(&lck_kmalloc);
+	spinlock_init(&lck_kfree);
 
 	memset(slab_bitmap, 0, sizeof(slab_bitmap));
-
 
 
 	uintptr_t frame = CONFIG_HEAP_BASE;

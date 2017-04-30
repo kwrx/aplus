@@ -39,7 +39,7 @@ static int FR_FIRST(int count) {
 					else
 						break;
 						
-					if(c == count)
+					if(c > count)
 						return b;
 				}
 			}
@@ -65,6 +65,7 @@ physaddr_t pmm_alloc_frames(int count) {
 
 	while(count--)
 		FR_SET(fx + count);
+	FR_SET(fx);
 
 	return (physaddr_t) fx;
 }
@@ -76,13 +77,14 @@ void pmm_free_frame(physaddr_t address) {
 void pmm_free_frames(physaddr_t address, int count) {
 	while(count--)
 		FR_CLR(address + count);
+	FR_CLR(address);
 }
 
 void pmm_claim(physaddr_t mstart, physaddr_t mend) {
 	KASSERT(mstart < mend);
 
 #if 0
-	kprintf(INFO, "pmm_claim(0x%x, 0x%x)\n", mstart, mend);
+	kprintf(INFO "pmm_claim(0x%x, 0x%x)\n", mstart, mend);
 #endif
 
 	register int i = mstart / MM_BLOCKSZ;

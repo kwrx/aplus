@@ -1,8 +1,2 @@
-Fix "video/fb" Bochs VBE driver             [OK]
-Add "sys/ioctl.h" header                    [OK]
-Fix GNX communication
-Add socket syscalls                         [OK]
-Add gethostbyname syscall                   [OK]
-Finish --unset (apps/core/env/main.c:67)
-Finish --mode (apps/core/mkdir/main.c:63)
-Finish Vesa Fb Module
+ - Fix modules permissions
+ - Add Ext2 support

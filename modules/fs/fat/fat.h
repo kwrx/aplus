@@ -3,6 +3,7 @@
 
 /* Long file name's support */
 #define CONFIG_LFN		1
+#define DEBUG			1
 
 
 typedef struct {
@@ -12,7 +13,7 @@ typedef struct {
 	uint8_t sector_per_cluster;
 	uint16_t reserved_sectors;
 	uint8_t fat_count;
-	uint16_t dir_entries;
+	uint16_t rootdir_entries;
 	uint16_t total_sectors;
 	uint8_t media_type;
 	uint16_t number_of_sector_per_fat;
@@ -143,6 +144,8 @@ typedef struct {
 	uint32_t total_clusters;
 	uint32_t bytes_per_sector;
 	uint32_t entry_sector;
+	uint32_t entry_cluster;
+	uint32_t entry_offset;
 	uint8_t type;
 	uint8_t* FAT;
 
@@ -150,28 +153,64 @@ typedef struct {
 } __packed fat_t;
 
 
-int fat_open(struct inode* inode);
-int fat_close(struct inode* inode);
-struct inode* fat_finddir(struct inode* inode, char* name);
-int fat_unlink(struct inode* inode, char* name);
-struct inode* fat_mknod(struct inode* inode, char* name, mode_t mode);
 
-void lfncat(const char* name, uint16_t* lfn, size_t size);
-void fatcat(const char* name, char* fatnm, char* fatex);
-const char* lfncpy(uint16_t* lfn, const char* name, size_t size);
+#define fail_if(x, y)                                       						\
+    if(unlikely(x)) {                                       						\
+        kprintf(ERROR "[FAT]f %s(%d) failed on " #x "\n", __func__, __LINE__);     \
+        errno = y;                                          						\
+        return E_ERR;                                       						\
+    }
+
+#define return_if(x, y)                                       						\
+    if(unlikely(x)) {                                       						\
+        kprintf(ERROR "[FAT]r %s(%d) failed on " #x "\n", __func__, __LINE__);     \
+        errno = y;                                          						\
+        return;        			                               						\
+    }
+
+#define null_if(x, y)                                       						\
+    if(unlikely(x)) {                                       						\
+        kprintf(ERROR "[FAT]n %s(%d) failed on " #x "\n", __func__, __LINE__);     \
+        errno = y;                                          						\
+        return NULL;	                                       						\
+    }
+
+#define zero_if(x, y)                                       						\
+    if(unlikely(x)) {                                       						\
+        kprintf(ERROR "[FAT]z %s(%d) failed on " #x "\n", __func__, __LINE__);     \
+        errno = y;                                          						\
+        return 0;	                                       							\
+    }
 
 
-void fat_update_FAT(fat_t* fat);
-uint32_t fat_get_cluster(fat_t* fat, int index);
-void fat_set_cluster(fat_t* fat, int index, uint32_t value);
+#define FAT_EXTRACT_DONE		0
+#define FAT_EXTRACT_END			1
+#define FAT_EXTRACT_CONTINUE	2
 
-uint32_t fat_next_sector(fat_t* fat, uint32_t sector);
-int fat_check_entry(fat_t* fat, int* entry);
 
-int fat_alloc_sector(fat_t* fat, int end);
-int fat_alloc_cluster(fat_t* fat);
+void fatcat(char* name, char* fatnm, char* fatex);
+void lfncat(char* name, uint16_t* lfn, size_t size);
+
+char* fatutils_extract_name(char* bufname, int* r, fat_entry_t* e);
+void fatutils_new_child(fat_t* fat, fat_entry_t* e, uint32_t entry_offset, inode_t** childptr, inode_t* parent);
+int fatutils_next_cluster(fat_t* fat, int current_cluster);
+int fatutils_alloc_cluster(fat_t* fat, int active_cluster, int* ncluster);
+int fatutils_free_cluster(fat_t* fat, int active_cluster);
+int fatutils_update_entry(fat_t* fat, struct inode* inode, int);
+int fatutils_update_fat(fat_t* fat);
 
 
 int fat_mount(struct inode* dev, struct inode* dir);
+int fat12_16_root_open(struct inode* inode);
+inode_t* fat12_16_root_finddir(struct inode* inode, char* name);
+inode_t* fat12_16_root_mknod(struct inode* inode, char* name, mode_t mode);
+
+int fat_open(struct inode* inode);
+int fat_close(struct inode* inode);
+inode_t* fat_finddir(struct inode* inode, char* name);
+int fat_read(inode_t* ino, void* buf, size_t size);
+int fat_write(inode_t* ino, void* buf, size_t size);
+int fat_unlink(struct inode* inode, char* name);
+inode_t* fat_mknod(struct inode* inode, char* name, mode_t mode);
 
 #endif

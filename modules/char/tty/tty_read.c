@@ -45,7 +45,7 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
     }
     
         
-    struct termios* ios = (struct termios*) inode->userdata;
+    struct tty_context* tio = (struct tty_context*) inode->userdata;
     register uint8_t* buf = (uint8_t*) ptr;
     register int p = 0;
     
@@ -113,7 +113,7 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
                     *--buf = 0;
                     p--;
                     
-                    if(ios->c_lflag & ECHO)
+                    if(tio->ios.c_lflag & ECHO)
                         tty_write(inode, &ch, 1);
                 }
 
@@ -122,16 +122,22 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
                 if(tty_control) {
                     switch(ch) {
                         case 'c':
-                            tty_write(inode, &ios->c_cc[VKILL], 1);
+                            tty_write(inode, &tio->ios.c_cc[VKILL], 1);
+                            tty_write(inode, "^C\n", 3);
                             continue;
                         case 'd':
-                            tty_write(inode, &ios->c_cc[VEOF], 1);
-                            continue;
-                        case 'q':
-                            tty_write(inode, &ios->c_cc[VQUIT], 1);
+                            tty_write(inode, &tio->ios.c_cc[VQUIT], 1);
+                            tty_write(inode, "^D\n", 3);
                             continue;
                         case 'z':
-                            tty_write(inode, &ios->c_cc[VINTR], 1);
+                            tty_write(inode, &tio->ios.c_cc[VINTR], 1);
+                            tty_write(inode, "^Z\n", 3);
+                            continue;
+                        case 's':
+                            tty_write(inode, &tio->ios.c_cc[VSTOP], 1);
+                            continue;
+                        case 'q':
+                            tty_write(inode, &tio->ios.c_cc[VSTART], 1);
                             continue;
                         default:
                             break;
@@ -142,10 +148,10 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
                 break;
         }
         
-        if(ios->c_lflag & ECHO)
+        if(tio->ios.c_lflag & ECHO)
             tty_write(inode, &ch, 1);
                     
-        if(!(ios->c_iflag & IGNCR)) {
+        if(!(tio->ios.c_iflag & IGNCR)) {
             if(ch == '\n')
                 break;
         }
@@ -155,7 +161,7 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
     
 
     if(p < len) {
-        if(!(ios->c_iflag & IGNCR)) {
+        if(!(tio->ios.c_iflag & IGNCR)) {
             *buf++ = '\n';
             p++;
         }

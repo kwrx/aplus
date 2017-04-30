@@ -96,7 +96,6 @@ void fork_handler(i386_context_t* context) {
 	child->sig_no = current_task->sig_no;
 	child->sig_mask = current_task->sig_mask;
 	
-	
 
 	int i;
 	for(i = 0; i < TASK_FD_COUNT; i++)
@@ -107,6 +106,8 @@ void fork_handler(i386_context_t* context) {
 	child->root = current_task->root;
 	child->umask = current_task->umask;
 	
+	memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
+	//memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
 	memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
 	memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 	memcpy(&child->__image, current_task->image, sizeof(child->__image));
@@ -166,8 +167,8 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
 	child->status = TASK_STATUS_READY;
 	child->priority = current_task->priority;
-	
 
+	
 	if(flags & CLONE_SIGHAND) {
 		child->sig_handler = current_task->sig_handler;
 		child->sig_no = current_task->sig_no;
@@ -193,7 +194,8 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
 	child->exe = current_task->exe;
 
-
+	memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
+	//memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
 	memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
 	memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 
@@ -253,6 +255,13 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	
 	eip = read_eip();
 	if(eip == 0) {
+		if(unlikely(current_task->alarm > 0)) {
+			if(likely(current_task->alarm <= timer_gettime())) {
+				current_task->sig_no = SIGALRM;
+				current_task->alarm = 0;
+			}
+		}
+
 		if(unlikely(
 			(current_task->sig_no != -1) &&
 			(current_task->sig_handler != NULL)
@@ -263,7 +272,7 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 			irq_ack(0);
 			current_task->sig_handler(sig_no);
 		}
-
+		
 		return;
 	}
 
@@ -354,6 +363,8 @@ int task_init(void) {
 	t->sig_handler = NULL;
 	t->sig_no = -1;
 	t->sig_mask = 0;
+
+	fifo_init(&t->fifo);
 
 	int i;
 	for(i = 0; i < TASK_FD_COUNT; i++)

@@ -377,11 +377,11 @@ int init(void) {
 	mouse.clip.bottom = 0xFFFF;
 
 
-	if(sys_mkfifo(PATH_KBDEV, 0777) != 0)
-		kprintf(ERROR, "%s: cannot create FIFO device!\n", PATH_KBDEV);
+	if(sys_mkfifo(PATH_KBDEV, 0666) != 0)
+		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_KBDEV);
 		
-	if(sys_mkfifo(PATH_MOUSEDEV, 0777) != 0)
-		kprintf(ERROR, "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
+	if(sys_mkfifo(PATH_MOUSEDEV, 0666) != 0)
+		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
 		
 
 	irq_enable(1, kb_intr);

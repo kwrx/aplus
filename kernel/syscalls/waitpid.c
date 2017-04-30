@@ -101,6 +101,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
 
 
 
+	syscall_ack();
 
 	struct wait* tmp;
 	pid_t cnt = -1;

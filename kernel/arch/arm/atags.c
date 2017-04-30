@@ -116,7 +116,7 @@ int atags_init() {
 	#define t_next(t)		((atag_t*) ((uintptr_t) (t)) + (t)->header.size)
 
 #if DEBUG
-	#define t_case(t)		case t: kprintf(INFO, "atag: %s\n", #t);
+	#define t_case(t)		case t: kprintf(INFO "atag: %s\n", #t);
 #else
 	#define t_case(t)		case t: 
 #endif

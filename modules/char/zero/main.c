@@ -10,17 +10,13 @@ MODULE_LICENSE("GPL");
 
 
 static int zero_read(struct inode* inode, void* buf, size_t size) {
-	char* bc = (char*) buf;
-	size_t i;
-	for(i = 0; i < size; i++)
-		*bc++ = '\0';
-
+	memset(buf, 0, size);
 	return size;
 }
 
 int init(void) {
 	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0666)) == NULL))
+	if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
 		return E_ERR;
 
 

@@ -88,6 +88,11 @@ struct inode* vfs_finddir(struct inode* inode, char* name) {
 
 struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
+	if(unlikely(vfs_finddir(inode, name))) {
+		errno = EEXIST;
+		return NULL;
+	}
+
 	inode_t* child;
 
 	if(likely(inode->mknod)) {

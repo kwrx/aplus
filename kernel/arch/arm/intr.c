@@ -12,15 +12,15 @@
 
 
 void _I("UNDEF") i_undef() {
-	kprintf(ERROR, "PANIC! ARM Undefined istruction\n");
+	kprintf(ERROR "PANIC! ARM Undefined istruction\n");
 }
 
 void _I("ABORT") i_abrtp() {
-	kprintf(ERROR, "PANIC! ARM abort prefetch\n");
+	kprintf(ERROR "PANIC! ARM abort prefetch\n");
 }
 
 void _I("ABORT") i_abrtd() {
-	kprintf(ERROR, "PANIC! ARM abort data\n");
+	kprintf(ERROR "PANIC! ARM abort data\n");
 }
 
 void _I("SWI") i_swint(int r0, int r1, int r2, int r3) {

@@ -5,7 +5,6 @@
 extern int __divdi3;
 extern int __udivdi3;
 extern int __umoddi3;
-extern int __ctype_ptr__;
 
 EXPORT(mbd);
 EXPORT(__errno);
@@ -27,6 +26,9 @@ EXPORT(sprintf);
 EXPORT(rand);
 EXPORT(srand);
 EXPORT(strerror);
+EXPORT(tmpnam);
+EXPORT(atoi);
+EXPORT(sscanf);
 
 EXPORT(__divdi3);
 EXPORT(__udivdi3);
@@ -35,8 +37,3 @@ EXPORT(__ctype_ptr__);
 EXPORT(_impure_ptr);
 
 
-#if defined(__i386__) || defined(__x86_64__)
-#include <aplus/bios.h>
-
-/* TODO */
-#endif

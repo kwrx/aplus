@@ -33,15 +33,15 @@ typedef uintptr_t mem_ptr_t;
 #define PACK_STRUCT_END
 
 
-#define LWIP_PLATFORM_DIAG(x)	do { std_kprintf x; } while(0)
+#define LWIP_PLATFORM_DIAG(x)	do { kprintf x; } while(0)
 #define LWIP_PLATFORM_ASSERT(x) 								\
 	do { 														\
-		kprintf (ERROR, "tcpip: ASSERT! (%s, %d) %s\n",			\
+		kprintf (ERROR "tcpip: ASSERT! (%s, %d) %s\n",			\
 			__FILE__,											\
 			__LINE__,											\
 			x													\
 		); 														\
-		sys_exit(1);											\
+		sys_exit(-1);											\
 	} while(0)
 
 #define LWIP_RAND() ((u32_t)rand())

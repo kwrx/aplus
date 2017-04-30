@@ -29,4 +29,11 @@ void appx_lck_acquire();
 void appx_lck_release();
 void appx_install_from(const char* filename);
 
+
+#define breakpoint() {                                                                                                                  \
+        fprintf(stderr, "breakpoint: file %s, line %d, function %s\nPress enter key to continue...\n", __FILE__, __LINE__, __func__);   \
+        char ch;                                                                                                                        \
+        fgets(&ch, 1, stdin);                                                                                                           \
+    }
+
 #endif

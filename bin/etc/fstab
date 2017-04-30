@@ -2,8 +2,8 @@
 # -- aPlus Mount Table
 
 
-# |  Device  |   Directory   |  Filesystem  |
+# |   Device   |   Directory   |   Filesystem   |    Flags    |
 
-    0           /proc           procfs
-    0           /tmp            tmpfs
-    /dev/hd0    /mnt/hdd        fat
+      nodev        /proc           procfs           defaults
+      nodev        /tmp            tmpfs            defaults
+#     /dev/cd0     /mnt/cdrom      iso9660          readonly

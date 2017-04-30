@@ -15,7 +15,7 @@ static void show_usage(int argc, char** argv) {
         "   -u, --update                Update local database\n"
         "   -U, --upgrade               Upgrade appliations\n"
         "   -l, --list                  Show installed applications\n"
-        "   -y, --yes                   Yes!"
+        "   -y, --yes                   Yes!\n"
         "   -q, --quiet                 Do not show log on stdout\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
@@ -37,7 +37,6 @@ static void show_version(int argc, char** argv) {
 }
 
 int main(int argc, char** argv) {
-    
     static struct option long_options[] = {
         { "run", no_argument, NULL, 'R'},
         { "install", no_argument, NULL, 's'},
@@ -59,7 +58,7 @@ int main(int argc, char** argv) {
     
     
     int c, idx;
-    while((c = getopt_long(argc, argv, "RsiruUlqhv", long_options, &idx)) != -1) {
+    while((c = getopt_long(argc, argv, "RsruUlqyivh", long_options, &idx)) != -1) {
         switch(c) {
             case 'R':
             case 's':

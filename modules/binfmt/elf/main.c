@@ -53,7 +53,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 	elf->header = (Elf_Ehdr*) image;
 
 	if(memcmp(elf->header->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(elf))) {
-		kprintf(ERROR, "elf: invalid elf image\n");
+		kprintf(ERROR "elf: invalid elf image\n");
 		return NULL;
 	}
 	
@@ -87,7 +87,7 @@ static void* elf_load(void* image, void** address, size_t* size) {
 				continue;
 			case 1: // LOAD
 				if(unlikely(!sys_mmap((void*) phdr->p_vaddr, (phdr->p_memsz + phdr->p_align - 1) & ~(phdr->p_align - 1), PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
-					kprintf(ERROR, "elf: invalid mapping 0x%x (%d Bytes)\n", phdr->p_vaddr, phdr->p_memsz);
+					kprintf(ERROR "elf: invalid mapping 0x%x (%d Bytes)\n", phdr->p_vaddr, phdr->p_memsz);
 					return NULL;
 				}
 
@@ -99,33 +99,6 @@ static void* elf_load(void* image, void** address, size_t* size) {
 		}
 	}
 
-
-
-	/*Elf_Shdr* shdr;
-	for(i = 1; i < elf->header->e_shnum; i++) {
-		shdr = &elf->sections[i];
-
-		if(!(shdr->sh_flags & SHF_ALLOC))
-			continue;
-			
-		if(unlikely(!sys_mmap((void*) shdr->sh_addr, shdr->sh_size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
-				kprintf(ERROR, "elf: invalid mapping 0x%x (%d Bytes)\n", shdr->sh_addr, shdr->sh_size);
-				return NULL;
-		}
-
-		memcpy (
-			(void*) shdr->sh_addr,
-			(void*) ((uintptr_t) elf->header + shdr->sh_offset),
-			shdr->sh_size
-		);
-	
-		if(shdr->sh_type == SHT_NOBITS)
-			memset(
-				(void*) shdr->sh_addr,
-				0,
-				shdr->sh_size
-			);
-	}*/
 
 
 

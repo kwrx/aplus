@@ -41,7 +41,7 @@ int lfb_init() {
 	memset((void*) mbd->lfb.base, 0xFF, mbd->lfb.size);
 #endif
 
-	kprintf(LOG, "lfb: %dx%dx%d at 0x%x\n", mbd->lfb.width, mbd->lfb.height, mbd->lfb.depth, mbd->lfb.base);
+	kprintf(LOG "lfb: %dx%dx%d at 0x%x\n", mbd->lfb.width, mbd->lfb.height, mbd->lfb.depth, mbd->lfb.base);
 
 	return 0;
 }

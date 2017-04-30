@@ -113,7 +113,7 @@ int pci_init(void) {
 			if(
 				(PciDevTable[i].VenId == vendor_id)	&&
 				(PciDevTable[i].DevId == device_id)
-			) kprintf(LOG, "pci: %x:%x - %s - %s\n", vendor_id, device_id, PciDevTable[i].Chip, PciDevTable[i].ChipDesc);
+			) kprintf(LOG "pci: %x:%x - %s - %s\n", vendor_id, device_id, PciDevTable[i].Chip, PciDevTable[i].ChipDesc);
 
 	}
 

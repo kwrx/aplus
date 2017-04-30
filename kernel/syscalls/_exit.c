@@ -33,6 +33,7 @@ void sys_exit(int status) {
 		
 
 	arch_task_release(current_task);
+	syscall_ack();
 
 	INTR_ON;
 	for(;;) 

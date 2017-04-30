@@ -44,7 +44,7 @@ struct ata_device {
 	uintptr_t dma_start_phys;
 	uint32_t bar4;
 
-	mutex_t lock;
+	spinlock_t lock;
 	uint8_t* cache;
 
 #if CONFIG_CACHE
@@ -98,7 +98,7 @@ static void ata_io_wait(struct ata_device* dev) {
 
 static int ata_status_wait(struct ata_device* dev, int timeout) {
 	int e, i = 0;
-	if(timeout > 0)
+	if(unlikely(timeout > 0))
 		while((e = inb(dev->io_base + ATA_REG_STATUS)) & ATA_SR_BSY && (i < timeout))
 			i++;
 	else
@@ -111,7 +111,7 @@ static int ata_wait(struct ata_device* dev, int advanced) {
 	ata_io_wait(dev);
 	int e = ata_status_wait(dev, -1);
 
-	if(advanced) {
+	if(unlikely(advanced)) {
 		e = inb(dev->io_base + ATA_REG_STATUS);
 
 		if(e & ATA_SR_ERR)
@@ -180,9 +180,9 @@ static void ata_device_init(struct ata_device* dev) {
 	}
 
 #if 0
-	kprintf(LOG, "[ATA] Device Name:  %s\n", dev->identify.model);
-	kprintf(LOG, "[ATA] Sectors (48): %lld\n", dev->identify.sectors_48);
-	kprintf(LOG, "[ATA] Sectors (28): %d\n", dev->identify.sectors_28);
+	kprintf(LOG "[ATA] Device Name:  %s\n", dev->identify.model);
+	kprintf(LOG "[ATA] Sectors (48): %lld\n", dev->identify.sectors_48);
+	kprintf(LOG "[ATA] Sectors (28): %d\n", dev->identify.sectors_28);
 #endif
 
 	dev->dma_prdt = (void*) kvalloc(8, GFP_KERNEL);
@@ -240,7 +240,7 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 
 	ata_wait(dev, 0);
 	
-	insw(bus, buf, ATA_SECTOR_SIZE / 2);
+	insw(bus, buf, ATA_SECTOR_SIZE >> 1);
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
@@ -271,7 +271,7 @@ static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* 
 
 	ata_wait(dev, 0);
 	
-	outsw(bus, buf, ATA_SECTOR_SIZE / 2);
+	outsw(bus, buf, ATA_SECTOR_SIZE >> 1);
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
@@ -286,14 +286,15 @@ static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* 
 
 
 static int ata_read(inode_t* ino, void* buffer, size_t size) {
-	if(ino->position > ino->size)
+	if(unlikely(ino->position > ino->size))
 		return 0;
 
-	if(ino->position + size > ino->size)
+	if(unlikely((ino->position + size) > ino->size))
 		size = ino->size - ino->position;
 
-	if(!size)
+	if(unlikely(!size))
 		return 0;
+
 
 	struct ata_device* dev = (struct ata_device*) ino->userdata;
 
@@ -303,29 +304,29 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 
 	if(ino->position % ATA_SECTOR_SIZE) {
 		long p;
-		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
 		p = p > size ? size : p;
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 		ata_device_read_sector(dev, sb, dev->cache);
 
 		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), p);
 		xoff += p;
 		sb++;
 
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 	if(((ino->position + size) % ATA_SECTOR_SIZE) && (sb <= eb)) {
 		long p = (ino->position + size) % ATA_SECTOR_SIZE;
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 		ata_device_read_sector(dev, eb, dev->cache);
 
 		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
 		eb--;
 
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 	while(sb <= eb) {
@@ -339,13 +340,13 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 }
 
 static int ata_write(inode_t* ino, void* buffer, size_t size) {
-	if(ino->position > ino->size)
+	if(unlikely(ino->position > ino->size))
 		return 0;
 
-	if((ino->position + size) > ino->size)
+	if(unlikely((ino->position + size) > ino->size))
 		size = ino->size - ino->position;
 
-	if(!size)
+	if(unlikely(!size))
 		return 0;
 
 
@@ -358,11 +359,11 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 	if(ino->position % ATA_SECTOR_SIZE) {
 		long p;
-		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
+		p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
 		p = p > size ? size : p;
 
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 
 		ata_device_read_sector(dev, sb, dev->cache);
 		memcpy((void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), buffer, p);
@@ -371,21 +372,21 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 		xoff += p;
 		sb++;
 
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 	if(((ino->position + size) % ATA_SECTOR_SIZE) && (sb <= eb)) {
 		long p = (ino->position + size) % ATA_SECTOR_SIZE;
 
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 
 		ata_device_read_sector(dev, eb, dev->cache);
 		memcpy(dev->cache, (void*) ((uintptr_t) buffer + size - p), p);
 		ata_device_write_sector(dev, eb, dev->cache);
 
 		eb--;
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 	while(sb <= eb) {
@@ -472,27 +473,27 @@ static int atapi_read(inode_t* ino, void* buffer, size_t size) {
 		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
 		p = p > size ? size : p;	
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 		atapi_device_read_sector(dev, sb, dev->cache);
 
 		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATAPI_SECTOR_SIZE)), p);
 		xoff += p;
 		sb++;
 
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 
 	if(((ino->position + size) % ATAPI_SECTOR_SIZE) && (sb <= eb)) {
 		long p = (ino->position + size) % ATAPI_SECTOR_SIZE;
 
-		mutex_lock(&dev->lock);
+		spinlock_lock(&dev->lock);
 		atapi_device_read_sector(dev, eb, dev->cache);
 
 		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
 		eb--;
 
-		mutex_unlock(&dev->lock);
+		spinlock_unlock(&dev->lock);
 	}
 
 	while(sb <= eb) {
@@ -504,6 +505,7 @@ static int atapi_read(inode_t* ino, void* buffer, size_t size) {
 	ino->position += size;
 	return size;
 }
+
 
 
 static int ata_device_detect(struct ata_device* dev) {
@@ -527,28 +529,30 @@ static int ata_device_detect(struct ata_device* dev) {
 		(cl == 0x3C && ch == 0xC3)
 	) {
 
-		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "hdd");
+		spinlock_init(&dev->lock);
 #if CONFIG_CACHE
 		kcache_register_pool(&dev->pool, ATA_SECTOR_SIZE);
 #endif
 		ata_device_init(dev);
 
-		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0666);
+		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0440);
 		inode->size = ata_max_offset(dev);
 		inode->read = ata_read;
 		inode->write = ata_write;
 		inode->userdata = (void*) dev;
+
+		mbr_init(inode);
 	} else if(
 		(cl == 0x14 && ch == 0xEB)	/* ATAPI  */
 		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
 	) {
-		mutex_init(&dev->lock, MTX_KIND_DEFAULT, "cdrom");
+		spinlock_init(&dev->lock);
 #if CONFIG_CACHE
 		kcache_register_pool(&dev->pool, ATAPI_SECTOR_SIZE);
 #endif
 		ata_device_init(dev);
 
-		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0666);
+		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0440);
 		inode->size = 700 * 1024 * 1024; //ata_max_offset(dev);
 		inode->read = atapi_read;
 		inode->write = NULL;

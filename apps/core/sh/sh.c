@@ -10,7 +10,6 @@
 #include "sh.h"
 
 
-
 static char buf[BUFSIZ];
 sh_alias_t* sh_aliases = NULL;
 
@@ -92,18 +91,20 @@ void sh_cmdline(char* cmdline) {
         return;
 
     
-    char* argv[32];
-    memset(argv, 0, sizeof(argv));
+    char** argv = (char**) calloc(32, sizeof(char*));
 
-
-
-    cmdline = strdup(cmdline);
    
+    cmdline = strdup(cmdline);
+    
     int i = 0;
+    int nowait = 0;
     for(char* p = strtok(cmdline, " "); p; p = strtok(NULL, " "))
-        argv[i++] = p;
+        if(strcmp(p, "&") == 0)
+            nowait = 1;
+        else
+            argv[i++] = p;
 
-    free(cmdline);
+    argv[i++] = NULL;
 
 
 
@@ -127,15 +128,18 @@ void sh_cmdline(char* cmdline) {
     }
 
 
-
-    if(fork() == 0) {
+    int e = fork();
+    if(e == 0) {
         execvp(argv[0], argv);
         perror(argv[0]);
-        exit(-1);
-    }
+        exit(100);
+    } else if(e < 0)
+        perror("fork");
     else
-        wait(NULL);
+        if(!nowait)
+            wait(NULL);
 
+    free(argv);
     return;
 }
 

@@ -23,7 +23,12 @@ int procfs_read(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!len))
 		return 0;
 
-	memcpy(ptr, (void*) ((uintptr_t) inode->userdata + (uintptr_t) inode->position), len);
+	procfs_t* pfs = (procfs_t*) inode->userdata;
+	if(unlikely(!pfs->data))
+		return 0;
+
+
+	memcpy(ptr, (void*) ((uintptr_t) pfs->data + (uintptr_t) inode->position), len);
 	inode->position += len;
 
 	return len;

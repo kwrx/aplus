@@ -130,30 +130,13 @@ int intr_init() {
 	return E_OK;
 }
 
-static int intr_sync = 0;
 
 void intr_enable(void) {
-	if(intr_sync <= 1)
-		__asm__ __volatile__ ("sti"); 
-	else
-		intr_sync--;
+	__asm__ __volatile__ ("sti");
 }
 
 void intr_disable(void) {
-	uintptr_t flags;
-	__asm__ __volatile__ (
-		"pushf		\n"
-		"pop eax	\n"
-		: "=a"(flags)
-	);
-
-
-	if(flags & (1 << 9))
-		intr_sync = 1;
-	else
-		intr_sync++;
-		
-	__asm__ __volatile__("cli");
+	__asm__ __volatile__ ("cli");
 }
 
 
@@ -259,8 +242,8 @@ void isr_handler(i386_context_t* context) {
 	}
 
 
-	kprintf(ERROR, "Exception! %s (%x:%x:%x) 0x%x\n", exception_messages[context->int_no], context->err_code & 1, (context->err_code >> 1) & 3, (context->err_code >> 3) & 0xFFF1);
-	
+	kprintf(ERROR "Exception! %s (%x:%x:%x) 0x%x\n", exception_messages[context->int_no], context->err_code & 1, (context->err_code >> 1) & 3, (context->err_code >> 3) & 0xFFF1);
+	kprintf(ERROR "IP: %08x, SP: %08x\n", context->eip, context);
 
 	__asm__ ("cli");
 	for(;;);

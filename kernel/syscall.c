@@ -2,7 +2,13 @@
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/intr.h>
 #include <libc.h>
+
+#if 0
+#undef CONFIG_SYSCALL_DEBUG
+#define CONFIG_SYSCALL_DEBUG 1
+#endif
 
 
 #define MAX_SYSCALL			1024
@@ -11,7 +17,7 @@ typedef long (*syscall_handler_t)
 		(long, long, long, long, long);
 
 
-static mutex_t mtx_syscall;
+static spinlock_t lck_syscall;
 static syscall_handler_t __handlers[MAX_SYSCALL];
 #if CONFIG_SYSCALL_DEBUG
 static char* __handlers_name[MAX_SYSCALL];
@@ -24,7 +30,7 @@ extern int syscalls_end;
 
 
 int syscall_init(void) {
-	mutex_init(&mtx_syscall, MTX_KIND_DEFAULT, "syscall");
+	spinlock_init(&lck_syscall);
 
 	memset(__handlers, 0, sizeof(__handlers));
 	
@@ -70,14 +76,23 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
 	KASSERTF(__handlers[number], "%d", number);
 	
 #if CONFIG_SYSCALL_DEBUG
-	kprintf(LOG, "syscall(%d): %s (%p, %p, %p, %p, %p)\n", number, __handlers_name[number], p0, p1, p2, p3, p4);
+	kprintf(LOG "syscall(%d): %s (%p, %p, %p, %p, %p) from %d\n", number, __handlers_name[number], p0, p1, p2, p3, p4, sys_getpid());
 #endif
 
-	mutex_lock(&mtx_syscall);
+	if(unlikely(lck_syscall))
+		kprintf(WARN "syscall: context locked for %d from %d\n", number, sys_getpid());
+
+	INTR_ON;
+	//spinlock_lock(&lck_syscall);
 	long r = __handlers[number] (p0, p1, p2, p3, p4);
-	mutex_unlock(&mtx_syscall);
+	syscall_ack();
 
 	return r;
+}
+
+void syscall_ack(void) {
+	INTR_ON;
+	spinlock_unlock(&lck_syscall);
 }
 
 EXPORT(syscall_register);

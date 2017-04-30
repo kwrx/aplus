@@ -9,10 +9,10 @@
 
 int tmpfs_read(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!inode))
-		return E_ERR;
+		return 0;
 
 	if(unlikely(!ptr))
-		return E_ERR;
+		return 0;
 
 	if(unlikely(!inode->userdata))
 		return 0;

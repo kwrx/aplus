@@ -19,13 +19,13 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
 	
 	dev->position = ISO9660_PVD;
 	if(unlikely(vfs_read(dev, &ctx->pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
-		kprintf(ERROR, "iso9660: (%s) cannot read from this device\n", dev->name);
+		kprintf(ERROR "iso9660: (%s) cannot read from this device\n", dev->name);
 		kfree(ctx);
 		return E_ERR;
 	}
 
 	if(strncmp(ctx->pvd.id, ISO9660_ID, 5) != 0) {
-		kprintf(ERROR, "iso9660: (%s) invalid iso9660 ID\n", dev->name);
+		kprintf(ERROR "iso9660: (%s) invalid iso9660 ID\n", dev->name);
 
 		kfree(ctx);
 		return E_ERR;

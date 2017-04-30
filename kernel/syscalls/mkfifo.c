@@ -8,16 +8,9 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-typedef struct {
-    uint8_t buffer[BUFSIZ];
-    int w_pos;
-    int r_pos;
-	mutex_t w_lock;
-	mutex_t r_lock;
-} fifo_t;
 
 
-static int fifo_read(struct inode* inode, void* ptr, size_t len) {
+static int inode_fifo_read(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!inode || !ptr)) {
 		errno = EINVAL;
 		return E_ERR;
@@ -26,31 +19,13 @@ static int fifo_read(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!inode->userdata))
 		return E_ERR;
 		
-	if(unlikely(!len))
-		return 0;
-		
-	if(len > BUFSIZ)
-		len = BUFSIZ;
+
 		
 	fifo_t* fifo = (fifo_t*) inode->userdata;
-	register uint8_t* buf = (uint8_t*) ptr;
-	
-	
-	mutex_lock(&fifo->r_lock);
-	
-	int i;
-	for(i = 0; i < len; i++) {
-		while(!(fifo->w_pos > fifo->r_pos))
-			sys_yield();
-			
-		*buf++ = fifo->buffer[fifo->r_pos++ % BUFSIZ];
-	}
-	
-	mutex_unlock(&fifo->r_lock);
-	return len;			
+	return fifo_read(fifo, ptr, len);		
 }
 
-static int fifo_write(struct inode* inode, void* ptr, size_t len) {
+static int inode_fifo_write(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!inode || !ptr)) {
 		errno = EINVAL;
 		return E_ERR;
@@ -59,26 +34,9 @@ static int fifo_write(struct inode* inode, void* ptr, size_t len) {
 	if(unlikely(!inode->userdata))
 		return E_ERR;
 		
-	if(unlikely(!len))
-		return 0;
-	
-		
-	if(len > BUFSIZ)
-		len = BUFSIZ;
-		
 		
 	fifo_t* fifo = (fifo_t*) inode->userdata;
-	register uint8_t* buf = (uint8_t*) ptr;
-	
-	
-	mutex_lock(&fifo->w_lock);
-	
-	int i;
-	for(i = 0; i < len; i++)
-		fifo->buffer[(int) fifo->w_pos++ % BUFSIZ] = *buf++;
-		
-	mutex_unlock(&fifo->w_lock);
-	return len;
+	return fifo_write(fifo, ptr, len);
 }
 
 
@@ -96,8 +54,7 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
 	}
 	
 	
-	fifo->w_pos =
-	fifo->r_pos = 0;
+	fifo_init(fifo);
 	
 #if CONFIG_IPC_DEBUG
 	#define mtxname strdup(pathname)
@@ -110,8 +67,8 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
 	
 		
 	inode_t* inode = current_task->fd[fd].inode;
-	inode->read = fifo_read;
-	inode->write = fifo_write;
+	inode->read = inode_fifo_read;
+	inode->write = inode_fifo_write;
 	inode->userdata = (void*) fifo;
 	
 	sys_close(fd);

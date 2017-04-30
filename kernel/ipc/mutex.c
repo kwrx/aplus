@@ -25,7 +25,7 @@ int mutex_lock(mutex_t* mtx) {
 	if(mtx->owner != sys_getpid()) {
 #if CONFIG_IPC_DEBUG
 		if(likely(mtx->name))
-			kprintf(LOG, "[%d] %s: LOCKED from %d\n", mtx->owner, mtx->name, sys_getpid());
+			kprintf(LOG "[%d] %s: LOCKED from %d\n", mtx->owner, mtx->name, sys_getpid());
 #endif	
 		spinlock_lock(&mtx->lock);
 
@@ -34,7 +34,7 @@ int mutex_lock(mutex_t* mtx) {
 	} else if(mtx->kind == MTX_KIND_ERRORCHECK) {
 #if CONFIG_IPC_DEBUG
 		if(likely(mtx->name))
-			kprintf(ERROR, "[%d] %s: DEADLOCK from %d\n", mtx->owner, mtx->name, sys_getpid());
+			kprintf(ERROR "[%d] %s: DEADLOCK from %d\n", mtx->owner, mtx->name, sys_getpid());
 #endif
 		return E_ERR;
 	}
@@ -75,7 +75,7 @@ int mutex_unlock(mutex_t* mtx) {
 
 #if CONFIG_IPC_DEBUG
 		if(likely(mtx->name))
-			kprintf(LOG, "[%d] %s: UNLOCKED from %d\n", mtx->owner, mtx->name, sys_getpid());
+			kprintf(LOG "[%d] %s: UNLOCKED from %d\n", mtx->owner, mtx->name, sys_getpid());
 #endif
 	
 		spinlock_unlock(&mtx->lock);

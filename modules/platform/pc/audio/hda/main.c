@@ -45,16 +45,16 @@ int init(void) {
     pci_scan(&find_hda_pci, -1, &hda_pci);
 
     if(unlikely(!hda_pci)) {
-        kprintf(ERROR, "hda: no pci device found!\n");
+        kprintf(ERROR "hda: no pci device found!\n");
         return E_ERR;
     }
 
 
 
-    vfs_mkdev("snd", -1, S_IFCHR | 0666);
-    vfs_mkdev("mixer", -1, S_IFCHR | 0666);
+    vfs_mkdev("snd", -1, S_IFCHR | 0444);
+    vfs_mkdev("mixer", -1, S_IFCHR | 0444);
 
-    kprintf(WARN, "hda: Intel HDA not yet supported! it doesn't work\n");
+    kprintf(WARN "hda: Intel HDA not yet supported! it doesn't work\n");
     return E_OK;
 }
 

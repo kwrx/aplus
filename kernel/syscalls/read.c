@@ -9,6 +9,9 @@
 
 SYSCALL(11, read,
 int sys_read(int fd, void* buf, size_t size) {
+	current_task->iostat.rchar += (uint64_t) size;
+	current_task->iostat.syscr += 1;
+
 	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_read(fd - TASK_FD_COUNT, buf, size);
@@ -34,5 +37,10 @@ int sys_read(int fd, void* buf, size_t size) {
 	}
 
 
-	return vfs_read(inode, buf, size);
+	register int e = vfs_read(inode, buf, size);
+	if(unlikely(e <= 0))
+		return 0;
+	
+	current_task->iostat.read_bytes += (uint64_t) e;
+	return e;
 });

@@ -33,14 +33,25 @@ static int script_check(void* image) {
 
 
 	int i = 0;
-    for(char* p = strtok((char*) image, " "); p; p = strtok(NULL, " "))
-        argv[i++] = p;
-
-	argv[i++] = p;
+    for(char* s = strtok((char*) image, " "); s; s = strtok(NULL, " "))
+        argv[i++] = s;
 	argv[i++] = NULL;
 
+
+	int fd = sys_open(tmpnam(NULL), O_CREAT | O_RDWR, S_IFREG | 0666);
+	KASSERT(fd >= 0);
+
+	fd = sys_fcntl(fd, F_DUPFD, STDIN_FILENO);
+	KASSERT(fd == 0);
+
+	fd = sys_write(STDIN_FILENO, p, strlen(p));
+	KASSERT(fd == strlen(p));
+
+	fd = sys_lseek(STDIN_FILENO, 0, SEEK_SET);
+	KASSERT(fd == 0);
+
 	sys_execve(argv[0], argv, current_task->environ);
-	return E_OK;
+	return E_ERR;
 }
 
 static void* script_load(void* image, void** address, size_t* size) {

@@ -9,6 +9,9 @@
 
 SYSCALL(17, write,
 int sys_write(int fd, void* buf, size_t size) {
+	current_task->iostat.wchar += (uint64_t) size;
+	current_task->iostat.syscw += 1;
+
 	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
 		return lwip_write(fd - TASK_FD_COUNT, buf, size);
@@ -34,5 +37,10 @@ int sys_write(int fd, void* buf, size_t size) {
 	}
 
 
-	return vfs_write(inode, buf, size);
+	register int e = vfs_write(inode, buf, size);
+	if(unlikely(e <= 0))
+		return 0;
+	
+	current_task->iostat.write_bytes += (uint64_t) e;
+	return e;
 });

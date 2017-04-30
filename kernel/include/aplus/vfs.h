@@ -27,7 +27,7 @@ struct inode_childs {
 };
 
 struct inode {
-	const char* name;
+	char* name;
 	dev_t dev;
 	ino64_t ino;
 	mode_t mode;

@@ -9,6 +9,9 @@
 #include <aplus/sysconfig.h>
 
 static void idle() {
+	current_task->name = "[idle]";
+	current_task->description = "System Idle Process";
+
 	int p;
     if((p = (int) sysconfig("idle.priority", SYSCONFIG_FORMAT_INT, 0)) > 0) {
         switch(p) {
@@ -43,7 +46,7 @@ int main(int argc, char** argv) {
 	(void) module_init();
 	(void) mounts_init();
 	
-	kprintf(INFO, "%s %s-%s %s %s %s\n", 
+	kprintf(INFO "%s %s-%s %s %s %s\n", 
 			KERNEL_NAME, 
 			KERNEL_VERSION,
 			KERNEL_CODENAME,

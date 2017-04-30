@@ -26,7 +26,7 @@ static int module_resolve_deps(module_t* mod) {
 			*p++ = 0;
 
 		if(module_load(s) == E_ERR) {
-			kprintf(ERROR, "module: cannot load dependency \"%s\" of \"%s\"\n", s, mod->name);
+			kprintf(ERROR "module: cannot load dependency \"%s\" of \"%s\"\n", s, mod->name);
 			kfree(sp);
 
 			return E_ERR;
@@ -77,7 +77,7 @@ int module_init(void) {
 
 		module_t* mod = (module_t*) binfmt_load_image((void*) mbd->modules.ptr[i].ptr, NULL, &size, "ELF_MODULE");
 		if(unlikely(!mod)) {
-			kprintf(ERROR, "module: cannot load module %d\n", i);
+			kprintf(ERROR "module: cannot load module %d\n", i);
 			continue;
 		}
 
@@ -85,7 +85,7 @@ int module_init(void) {
 		mod_queue = mod;
 
 #if DEBUG
-		kprintf(INFO, "module: loaded \"%s\" at %p\n", mod->name, mod->loaded_address);
+		kprintf(INFO "module: loaded \"%s\" at %p\n", mod->name, mod->loaded_address);
 #endif
 	}
 

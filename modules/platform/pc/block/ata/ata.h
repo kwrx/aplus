@@ -143,5 +143,6 @@ typedef struct {
 	uint8_t signature[2];
 } __attribute__((packed)) mbr_t;
 
+int mbr_init(struct inode* dev);
 
 #endif

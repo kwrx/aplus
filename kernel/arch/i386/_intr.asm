@@ -114,7 +114,7 @@ isr14:
 	popa
 	add esp, 8
 	sti
-iret
+iretd
 	
 	
 global read_eip
@@ -152,7 +152,7 @@ isr_stub:
 	popa
 	add esp, 8
 	sti
-iret
+iretd
 		
 		
 		
@@ -185,7 +185,7 @@ irq_stub:
 	pop es
 	pop ds
 	popa
-	add esp, 8		
+	add esp, 8	
 	sti	
-iret
+iretd
 

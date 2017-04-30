@@ -5,13 +5,12 @@
 #include <libc.h>
 
 #if DEBUG
-mutex_t mtx_kprintf = MTX_INIT(MTX_KIND_DEFAULT, NULL);
+spinlock_t lck_kprintf = SPINLOCK_UNLOCKED;
 
 
 int
-kprintf(int flags, const char *fmt, ...) {
+kprintf(const char *fmt, ...) {
 
-	KASSERT(flags < 16);
 
 	char buf[1024] = {0};
 	va_list args;
@@ -19,13 +18,13 @@ kprintf(int flags, const char *fmt, ...) {
 	int out = vsprintf(buf, fmt, args);
 	
 	
-	mutex_lock(&mtx_kprintf);
+	spinlock_lock(&lck_kprintf);
 
 	int i;
 	for(i = 0; i < out; i++)
-		debug_send(buf[i], flags);
+		debug_send(buf[i]);
 
-	mutex_unlock(&mtx_kprintf);
+	spinlock_unlock(&lck_kprintf);
 
 
 	
@@ -33,28 +32,6 @@ kprintf(int flags, const char *fmt, ...) {
 	return out;
 }
 
-int
-std_kprintf(const char *fmt, ...) {
-
-	char buf[1024] = {0};
-	va_list args;
-	va_start(args, fmt);
-	int out = vsprintf(buf, fmt, args);
-	
-	
-	mutex_lock(&mtx_kprintf);
-
-	int i;
-	for(i = 0; i < out; i++)
-		debug_send(buf[i], LOG);
-
-	mutex_unlock(&mtx_kprintf);
-
-
-
-	va_end(args);
-	return out;
-}
 
 EXPORT(kprintf);
 

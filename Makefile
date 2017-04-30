@@ -14,7 +14,8 @@ include build/Makefile.flags
 all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
-	$(KERNEL_ISO)
+	$(KERNEL_ISO)		\
+	$(HDD)
 	@$(VMM)
 
 $(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
@@ -22,10 +23,6 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
 	@echo "  OBJCPY " $(KERNEL_SYM)
 	@$(OBJCPY) --only-keep-debug $@ $(KERNEL_SYM)
-	@echo "  ZIP    " $@.gz
-	@$(ZIP) $@
-	@echo "  MV     " $@
-	@$(MV) $@.gz $@
 
 KERNEL_MODULES: LIBRARIES
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
@@ -39,9 +36,22 @@ APPS: LIBRARIES
 LIBRARIES:
 	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
+$(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
+	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
+	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
+	@losetup /dev/loop0 hdd.img
+	@losetup /dev/loop1 hdd.img -o 1048576
+	@mkdosfs -F32 /dev/loop1 > /dev/null
+	@mkdir -p /mnt/hdd
+	@mount /dev/loop1 /mnt/hdd
+	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop0 >> /dev/null
+	@cp -r bin/* /mnt/hdd
+	@umount /mnt/hdd
+	@losetup -D
+	@sync
+
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
-	@echo "  ISO    " $@
-	@grub-mkrescue -o $@ bin
+	grub-mkrescue -o $@ bin
 
 .c.o:
 	@echo "  CC     " $@
@@ -73,3 +83,4 @@ clean: clean_modules clean_apps clean_kernel clean_libs
 debug:
 	@$(MAKE) -s DEBUG=yes
 
+	

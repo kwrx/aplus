@@ -1,5 +1,7 @@
 #include <aplus.h>
 #include <aplus/ipc.h>
+#include <aplus/debug.h>
+#include <aplus/intr.h>
 
 #if CONFIG_IPC
 
@@ -18,7 +20,7 @@ void spinlock_lock(spinlock_t* lock) {
 	while(*lock)
 		sys_yield();
 	*lock = 1;
-#else 
+#else
 	while(!__sync_bool_compare_and_swap(lock, 0, 1))
 		sys_yield();
 #endif
@@ -44,6 +46,7 @@ void spinlock_unlock(spinlock_t* lock) {
 	__sync_lock_release(lock);
 #endif
 }
+
 
 EXPORT(spinlock_init);
 EXPORT(spinlock_lock);

@@ -6,7 +6,6 @@
 #include <libc.h>
 
 #include <aplus/fbdev.h>
-#include <aplus/bios.h>
 
 #if defined(__i386__)
 #include <arch/i386/i386.h>

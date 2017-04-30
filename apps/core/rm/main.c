@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <getopt.h>
+#include <glob.h>
 
 
 static void show_usage(int argc, char** argv) {
@@ -178,29 +179,42 @@ int main(int argc, char** argv) {
         
     int i;
     for(i = optind; i < argc; i++) {
-        struct stat st;
-        if(lstat(argv[i], &st) != 0) {
-            if(force)
-                continue;
-                
-            fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(errno));
-            exit(-1);
+        glob_t gl;
+        if(glob(argv[i], GLOB_NOSORT, NULL, &gl) != 0) {
+            fprintf(stderr, "%s: no such file or directory\n", argv[i]);
+            globfree(&gl);
+            continue;
         }
-        
-        if(S_ISDIR(st.st_mode)) {
-            switch(rmmode) {
-                case 0:
-                    fprintf(stderr, "%s: %s: %s\n", argv[0], argv[i], strerror(EISDIR));
-                    exit(-1);
-                case 1:
-                    rm_r(argv[i]);
-                    break;
-                case 2:
-                    rm_d(argv[i]);
-                    break;
+
+        int j;
+        for(j = 0; j < gl.gl_pathc; j++) {
+
+            struct stat st;
+            if(lstat(gl.gl_pathv[j], &st) != 0) {
+                if(force)
+                    continue;
+                    
+                fprintf(stderr, "%s: %s: %s\n", argv[0], gl.gl_pathv[j], strerror(errno));
+                exit(-1);
             }
-        } else 
-            rm(argv[i]);
+            
+            if(S_ISDIR(st.st_mode)) {
+                switch(rmmode) {
+                    case 0:
+                        fprintf(stderr, "%s: %s: %s\n", argv[0], gl.gl_pathv[j], strerror(EISDIR));
+                        exit(-1);
+                    case 1:
+                        rm_r(gl.gl_pathv[j]);
+                        break;
+                    case 2:
+                        rm_d(gl.gl_pathv[j]);
+                        break;
+                }
+            } else 
+                rm(gl.gl_pathv[j]);
+        }
+
+        globfree(&gl);
     }
     
     return 0;

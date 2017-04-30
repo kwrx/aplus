@@ -44,7 +44,7 @@ int init(void) {
 			break;
 
 	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0666)) == NULL))
+	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0440)) == NULL))
 		return E_ERR;
 
 

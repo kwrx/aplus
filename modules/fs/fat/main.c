@@ -6,7 +6,7 @@
 
 #include "fat.h"
 
-MODULE_NAME("fs/fat");
+MODULE_NAME("fs/vfat");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");

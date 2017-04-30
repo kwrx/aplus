@@ -12,7 +12,7 @@ int sys_stat(const char* name, struct stat* st) {
 	if(fd < 0)
 		return -1;
 
-	register int r = fstat(fd, st);
+	register int r = sys_fstat(fd, st);
 	sys_close(fd);
 
 	return r; 
@@ -24,7 +24,7 @@ int sys_lstat(const char* name, struct stat* st) {
 	if(fd < 0)
 		return -1;
 
-	register int r = fstat(fd, st);
+	register int r = sys_fstat(fd, st);
 	sys_close(fd);
 
 	return r; 

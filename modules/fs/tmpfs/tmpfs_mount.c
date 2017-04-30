@@ -10,8 +10,11 @@ int tmpfs_mount(struct inode* dev, struct inode* dir) {
 	(void) dev;
 
 
+	dir->open = NULL;
+	dir->close = NULL;
 	dir->unlink = tmpfs_unlink;
 	dir->mknod = tmpfs_mknod;
+	dir->finddir = NULL;
 
 	return E_OK;
 }

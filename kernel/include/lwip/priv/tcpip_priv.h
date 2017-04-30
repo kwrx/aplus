@@ -49,7 +49,7 @@ struct netif;
 
 #if LWIP_MPU_COMPATIBLE
 #define API_VAR_REF(name)               (*(name))
-#define API_VAR_DECLARE(type, name)     type * name
+#define API_VAR_DECLARE(type, name)     type * name = NULL
 #define API_VAR_ALLOC(type, pool, name, errorval) do { \
                                           name = (type *)memp_malloc(pool); \
                                           if (name == NULL) { \
