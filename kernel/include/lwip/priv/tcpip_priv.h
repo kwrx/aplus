@@ -1,3 +1,8 @@
+/**
+ * @file
+ * TCPIP API internal implementations (do not use in application code)
+ */
+
 /*
  * Copyright (c) 2001-2004 Swedish Institute of Computer Science.
  * All rights reserved.
@@ -38,18 +43,18 @@
 
 #include "lwip/tcpip.h"
 #include "lwip/sys.h"
-#include "lwip/timers.h"
+#include "lwip/timeouts.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-  
+
 struct pbuf;
 struct netif;
 
 #if LWIP_MPU_COMPATIBLE
 #define API_VAR_REF(name)               (*(name))
-#define API_VAR_DECLARE(type, name)     type * name = NULL
+#define API_VAR_DECLARE(type, name)     type * name
 #define API_VAR_ALLOC(type, pool, name, errorval) do { \
                                           name = (type *)memp_malloc(pool); \
                                           if (name == NULL) { \
@@ -64,7 +69,7 @@ struct netif;
                                         } while(0)
 #define API_VAR_FREE(pool, name)        memp_free(pool, name)
 #define API_VAR_FREE_POOL(pool, name)   LWIP_MEMPOOL_FREE(pool, name)
-#define API_EXPR_REF(expr)              &(expr)
+#define API_EXPR_REF(expr)              (&(expr))
 #if LWIP_NETCONN_SEM_PER_THREAD
 #define API_EXPR_REF_SEM(expr)          (expr)
 #else
@@ -82,7 +87,7 @@ struct netif;
 #define API_VAR_FREE_POOL(pool, name)
 #define API_EXPR_REF(expr)              expr
 #define API_EXPR_REF_SEM(expr)          API_EXPR_REF(expr)
-#define API_EXPR_DEREF(expr)            *(expr)
+#define API_EXPR_DEREF(expr)            (*(expr))
 #define API_MSG_M_DEF(m)                *m
 #define API_MSG_M_DEF_C(t, m)           const t * m
 #endif /* LWIP_MPU_COMPATIBLE */
@@ -107,10 +112,10 @@ enum tcpip_msg_type {
   TCPIP_MSG_API,
   TCPIP_MSG_API_CALL,
   TCPIP_MSG_INPKT,
-#if LWIP_TCPIP_TIMEOUT
+#if LWIP_TCPIP_TIMEOUT && LWIP_TIMERS
   TCPIP_MSG_TIMEOUT,
   TCPIP_MSG_UNTIMEOUT,
-#endif /* LWIP_TCPIP_TIMEOUT */
+#endif /* LWIP_TCPIP_TIMEOUT && LWIP_TIMERS */
   TCPIP_MSG_CALLBACK,
   TCPIP_MSG_CALLBACK_STATIC
 };
@@ -136,13 +141,13 @@ struct tcpip_msg {
       tcpip_callback_fn function;
       void *ctx;
     } cb;
-#if LWIP_TCPIP_TIMEOUT
+#if LWIP_TCPIP_TIMEOUT && LWIP_TIMERS
     struct {
       u32_t msecs;
       sys_timeout_handler h;
       void *arg;
     } tmo;
-#endif /* LWIP_TCPIP_TIMEOUT */
+#endif /* LWIP_TCPIP_TIMEOUT && LWIP_TIMERS */
   } msg;
 };
 

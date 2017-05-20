@@ -27,7 +27,7 @@ struct inode* tmpfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
 	child->atime = 
 	child->ctime = 
-	child->mtime = timer_gettime();
+	child->mtime = timer_gettimestamp();
 	
 	child->parent = inode;
 	child->link = NULL;

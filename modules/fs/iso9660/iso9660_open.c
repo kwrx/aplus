@@ -118,7 +118,7 @@ int iso9660_open(struct inode* inode) {
 
 			child->atime = 
 			child->ctime = 
-			child->mtime = timer_gettime();
+			child->mtime = timer_gettimestamp();
 		
 			child->parent = inode;
 			child->link = NULL;

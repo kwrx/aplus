@@ -1,23 +1,4 @@
-#include <iostream>
-#include <unistd.h>
-#include <fcntl.h>
-
-#define GSHM_INCLUDE_OPERATOR
-#include <aplus/gshm.h>
-#include <aplus/base.h>
-#include <aplus/input.h>
-#include <aplus/fbdev.h>
-#include <aplus/sysconfig.h>
-
-
-#include <gnx/Screen.h>
-#include <gnx/Window.h>
-#include <gnx/Server.h>
-#include <gnx/InputController.h>
-
-using namespace std;
-using namespace GNX;
-
+#include <gnxserver.h>
 
 
 int main(int argc, char** argv) {
@@ -29,9 +10,9 @@ int main(int argc, char** argv) {
     
 
     fbdev_mode_t m;
-    m.width = (uint16_t) sysconfig("screen.width", SYSCONFIG_FORMAT_INT, Screen::Width);
-    m.height = (uint16_t) sysconfig("screen.height", SYSCONFIG_FORMAT_INT, Screen::Height);
-    m.bpp = (uint16_t) sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, Screen::Bpp);
+    m.width = (uint16_t) sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
+    m.height = (uint16_t) sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
+    m.bpp = (uint16_t) sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
     m.vx =
     m.vy = 0;
     m.lfbptr = NULL;
@@ -42,17 +23,8 @@ int main(int argc, char** argv) {
 
     
 
-    Server* gnx = new Server(m.width, m.height, m.bpp, m.lfbptr);
-    gnx->Initialize();
-
-    /* DEBUG */
-    Window* Win1 = new Window(gnx->Desktop, "Win1", 600, 400);
-    Window* Win2 = new Window(gnx->Desktop, "Win2", 400, 300);
-
-    gnx->Desktop->Paint();
-
-
-   
-    gnx->Run();
+    //Server* gnx = new Server(m.width, m.height, m.bpp, m.lfbptr);
+    
+    //gnx->Run();
     return 0;
 }

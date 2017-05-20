@@ -31,6 +31,7 @@
 #define API_MSG_DEBUG				    LWIP_DBG_OFF
 
 
+
 #define LWIP_IGMP				        1
 #define LWIP_ICMP				        1
 #define LWIP_BROADCAST_PING			    1
@@ -47,6 +48,7 @@
 #define LWIP_COMPAT_SOCKETS			    0
 #define LWIP_POSIX_SOCKETS_IO_NAMES		0
 #define LWIP_MPU_COMPATIBLE             1
+#define LWIP_COMPAT_MUTEX_ALLOWED       1
 
 #define LWIP_NETIF_LOOPBACK			    1
 #define LWIP_NETIF_HOSTNAME			    1
@@ -56,6 +58,7 @@
 #define LWIP_TIMEVAL_PRIVATE			0
 
 #define LWIP_HAVE_LOOPIF			    1
+#define LWIP_NETIF_LOOPBACK             1
 //#define LWIP_PROVIDE_ERRNO			1
 
 #define LWIP_TCP_KEEPALIVE			    1
@@ -93,9 +96,9 @@
 
 
 
-#define mem_malloc				        std_kmalloc
-#define mem_free				        std_kfree
-#define mem_calloc				        std_kcalloc
+#define mem_clib_malloc				    std_kmalloc
+#define mem_clib_free				    std_kfree
+#define mem_clib_calloc				    std_kcalloc
 
 
 WARNING("-Waddress")

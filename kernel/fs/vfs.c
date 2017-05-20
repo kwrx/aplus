@@ -125,7 +125,7 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
 	child->atime = 
 	child->ctime = 
-	child->mtime = timer_gettime();
+	child->mtime = timer_gettimestamp();
 	
 	child->parent = inode;
 	child->link = NULL;
@@ -316,7 +316,7 @@ int vfs_init(void) {
 
 	vfs_root->atime = 
 	vfs_root->ctime = 
-	vfs_root->mtime = timer_gettime();
+	vfs_root->mtime = timer_gettimestamp();
 	
 	vfs_root->parent =
 	vfs_root->link = NULL;

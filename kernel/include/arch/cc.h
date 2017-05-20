@@ -3,6 +3,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/intr.h>
 #include <libc.h>
 
 typedef int8_t s8_t;
@@ -48,8 +49,8 @@ typedef uintptr_t mem_ptr_t;
 
 
 #define SYS_ARCH_DECL_PROTECT(x)
-#define SYS_ARCH_PROTECT(x)
-#define SYS_ARCH_UNPROTECT(x)
+#define SYS_ARCH_PROTECT(x)				INTR_OFF
+#define SYS_ARCH_UNPROTECT(x)			INTR_ON
 
 #define BYTE_ORDER						LITTLE_ENDIAN
 #define LWIP_CHKSUM_ALGORITHM 			2

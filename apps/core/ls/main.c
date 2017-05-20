@@ -8,7 +8,6 @@
 #include <time.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <glob.h>
 
 #ifndef MAXNAMLEN
 #define MAXNAMLEN	256
@@ -170,22 +169,10 @@ int main(int argc, char** argv) {
 		showdir(".");
 	else
 		while(optind++ < argc) {
-			glob_t gl;
-			if(glob(argv[optind - 1], GLOB_ERR, NULL, &gl) != 0
-				|| gl.gl_pathc == 0) {
-				fprintf(stderr, "%s: no such file or directory\n", argv[optind - 1]);
-				globfree(&gl);
-				continue;
-			}
-
-			if(gl.gl_pathc > 1)
+			if(argc - optind > 0)
 				print_dir = 1;
 
-			int j;
-			for(j = 0; j < gl.gl_pathc; j++)
-				showdir(gl.gl_pathv[j]);
-			
-			globfree(&gl);
+			showdir(argv[optind - 1]);
 		}
 			
 	

@@ -82,7 +82,7 @@ void fatutils_new_child(fat_t* fat, fat_entry_t* e, uint32_t entry_offset, inode
 
     child->atime = 
     child->ctime = 
-    child->mtime = timer_gettime();
+    child->mtime = timer_gettimestamp();
 
     child->parent = parent;
     child->link = NULL;

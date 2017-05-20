@@ -111,7 +111,7 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
 
 			child->atime = 
 			child->ctime = 
-			child->mtime = timer_gettime();
+			child->mtime = timer_gettimestamp();
 		
 			child->parent = inode;
 			child->link = NULL;

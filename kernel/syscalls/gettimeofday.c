@@ -15,8 +15,8 @@ int sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
 		return -1;
 	}
 
-	tv->tv_sec = timer_gettime();
-	tv->tv_usec = timer_getms() * 1000;
+	tv->tv_sec = timer_gettimestamp();
+	tv->tv_usec = timer_getus() % 1000000;
 
 	return 0;
 });

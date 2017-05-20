@@ -25,7 +25,6 @@
 #include "lwip/init.h"
 #include "lwip/ip.h"
 #include "lwip/ip_addr.h"
-#include "lwip/ip_frag.h"
 #include "lwip/mem.h"
 #include "lwip/memp.h"
 #include "lwip/netbuf.h"
@@ -42,7 +41,6 @@
 #include "lwip/sys.h"
 #include "lwip/tcp.h"
 #include "lwip/tcpip.h"
-#include "lwip/timers.h"
 #include "lwip/udp.h"
 
 
@@ -89,36 +87,32 @@ void sys_sem_signal(struct sys_sem** sem) {
 
 u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t __timeout) {
 	register u32_t timeout = __timeout;
+	timeout += timer_getms();
 
-	if(timeout)
-		timeout += timer_getms();
+	while(
+		((*sem)->lock < 1)
+		&&
+		(__timeout ? timeout > timer_getms() : 1)
+	) sys_yield();
 
+	if(timeout > timer_getms())
+		return SYS_ARCH_TIMEOUT;
 
 #if CONFIG_SMP
     __sync_synchronize();
 #endif
     (*sem)->lock--;
 
-	while(
-		((*sem)->lock < 0)
-		&&
-		(__timeout ? timeout > timer_getms() : 1)
-	) sys_yield();
-
 
 	if(__timeout == 0)
-		return SYS_ARCH_TIMEOUT;
+		return timer_getms() - timeout;
 
-	int s = timeout - (timeout - timer_getms());
-	if(s < timeout)
-		return s;
-
-	return SYS_ARCH_TIMEOUT;
+	return timeout - timer_getms();
 }
 
 
 err_t sys_mbox_new(struct sys_mbox** mbox, int size) {
-	size = 1024;
+	size = 128;
 
 	struct sys_mbox* mb = (struct sys_mbox*) kmalloc(sizeof(struct sys_mbox), GFP_KERNEL);
 
@@ -160,18 +154,20 @@ void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 }
 
 
-u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
-	if(timeout) {
-		timeout += timer_getms();
+u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
+	register u32_t timeout = __timeout;
+	timeout += timer_getms();
+
+	if(__timeout) {
 		while(((*mbox)->count == 0) && (timeout > timer_getms()))
 			sys_yield();
+
+		if((*mbox)->count == 0)
+			return SYS_ARCH_TIMEOUT;
 	}
 	else
 		while(((*mbox)->count == 0))
 			sys_yield();
-
-	if((*mbox)->count == 0)
-		return SYS_ARCH_TIMEOUT;
 
 
     void* mx = (*mbox)->msg[--(*mbox)->count];
@@ -179,18 +175,16 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 	//memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
 	//(*mbox)->msg[(*mbox)->count] = NULL;
 
+
 	if(msg)
 		*msg = mx;
 
 
-	if(timeout == 0)
-		return SYS_ARCH_TIMEOUT;
+	if(__timeout == 0)
+		return timer_getms() - timeout;
 
-	int s = timeout - (timeout - timer_getms());
-	if(s < timeout)
-		return s;
 
-	return SYS_ARCH_TIMEOUT;
+	return timeout - timer_getms();
 }
 
 u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
@@ -202,6 +196,7 @@ u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
 	//void* mx = (*mbox)->msg[0];
 	//memcpy(&(*mbox)->msg[0], &(*mbox)->msg[1], sizeof(void*) * (--(*mbox)->count));
 	//(*mbox)->msg[(*mbox)->count] = NULL;
+
 
 	if(msg)
 		*msg = mx;
@@ -220,11 +215,13 @@ sys_thread_t sys_thread_new(const char* name, lwip_thread_fn thread, void* arg, 
 
 
 sys_prot_t sys_arch_protect(void) {
+	INTR_OFF;
+
 	return 0;
 }
 
 void sys_arch_unprotect(sys_prot_t pval) {
-	return;
+	INTR_ON;
 }
 
 
@@ -255,11 +252,6 @@ EXPORT(lwip_ioctl);
 EXPORT(lwip_fcntl);
 
 EXPORT(lwip_gethostbyname);
-
-EXPORT(lwip_htons);
-EXPORT(lwip_htonl);
-EXPORT(lwip_ntohs);
-EXPORT(lwip_ntohl);
 
 EXPORT(etharp_output);
 EXPORT(tcpip_input);

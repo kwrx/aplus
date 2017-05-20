@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <getopt.h>
+#include <glob.h>
 
 #include "sh.h"
 
@@ -91,7 +92,8 @@ void sh_cmdline(char* cmdline) {
         return;
 
     
-    char** argv = (char**) calloc(32, sizeof(char*));
+    char** argv = (char**) calloc(1024, sizeof(char*));
+    char** trgv = (char**) calloc(1024, sizeof(char*));
 
    
     cmdline = strdup(cmdline);
@@ -102,9 +104,33 @@ void sh_cmdline(char* cmdline) {
         if(strcmp(p, "&") == 0)
             nowait = 1;
         else
-            argv[i++] = p;
+            trgv[i++] = p;
 
-    argv[i++] = NULL;
+    trgv[i++] = NULL;
+
+
+
+    glob_t gl;
+
+    int j = 0;
+    for(i = 0; trgv[i]; i++) {
+        if(trgv[i][0] == '-')
+            argv[j++] = strdup(trgv[i]);
+
+
+        glob(trgv[i], GLOB_NOSORT, NULL, &gl);
+
+        if(gl.gl_pathc) {
+            int k;
+            for(k = 0; k < gl.gl_pathc; k++)
+                argv[j++] = strdup(gl.gl_pathv[k]);
+        } else
+            argv[j++] = strdup(trgv[i]);
+            
+        globfree(&gl);
+    }
+    
+    free(trgv);
 
 
 
@@ -138,6 +164,12 @@ void sh_cmdline(char* cmdline) {
     else
         if(!nowait)
             wait(NULL);
+
+
+
+
+    for(i = 0; argv[i]; i++)
+        free(argv[i]);
 
     free(argv);
     return;

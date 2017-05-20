@@ -8,7 +8,7 @@
 
 #define LOG					"[ LOG   ] "
 #define WARN				"[ WARN  ] "
-#define INFO				"[ LOG   ] "
+#define INFO				"[ INFO  ] "
 #define ERROR				"[ ERROR ] "
 #define USER				"[ USER  ] "
 
@@ -26,8 +26,8 @@ void debug_send(char value);
 
 int kprintf(const char* fmt, ...);
 
-#define KASSERT(x)																											\
-	if(unlikely(!(x)))																										\
+#define KASSERT(x)																													\
+	if(unlikely(!(x)))																												\
 		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
 
 #define KASSERTF(x, y...)																											\

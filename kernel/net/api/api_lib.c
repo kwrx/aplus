@@ -1,7 +1,24 @@
 /**
  * @file
  * Sequential API External module
- *
+ * 
+ * @defgroup netconn Netconn API
+ * @ingroup sequential_api
+ * Thread-safe, to be called from non-TCPIP threads only.
+ * TX/RX handling based on @ref netbuf (containing @ref pbuf)
+ * to avoid copying data around.
+ * 
+ * @defgroup netconn_common Common functions
+ * @ingroup netconn
+ * For use with TCP and UDP
+ * 
+ * @defgroup netconn_tcp TCP only
+ * @ingroup netconn
+ * TCP only functions
+ * 
+ * @defgroup netconn_udp UDP only
+ * @ingroup netconn
+ * UDP only functions
  */
 
 /*
@@ -33,7 +50,6 @@
  * This file is part of the lwIP TCP/IP stack.
  *
  * Author: Adam Dunkels <adam@sics.se>
- *
  */
 
 /* This is the part of the API that is linked with
@@ -138,6 +154,7 @@ netconn_new_with_proto_and_callback(enum netconn_type t, u8_t proto, netconn_cal
 }
 
 /**
+ * @ingroup netconn_common
  * Close a netconn 'connection' and free its resources.
  * UDP and RAW connection are completely closed, TCP pcbs might still be in a waitstate
  * after this returns.
@@ -219,12 +236,13 @@ netconn_getaddr(struct netconn *conn, ip_addr_t *addr, u16_t *port, u8_t local)
 }
 
 /**
+ * @ingroup netconn_common
  * Bind a netconn to a specific local IP address and port.
  * Binding one netconn twice might not always be checked correctly!
  *
  * @param conn the netconn to bind
- * @param addr the local IP address to bind the netconn to (use IP_ADDR_ANY
- *             to bind to all addresses)
+ * @param addr the local IP address to bind the netconn to 
+ *             (use IP4_ADDR_ANY/IP6_ADDR_ANY to bind to all addresses)
  * @param port the local port to bind the netconn to (not used for RAW)
  * @return ERR_OK if bound, any other err_t on failure
  */
@@ -236,10 +254,22 @@ netconn_bind(struct netconn *conn, const ip_addr_t *addr, u16_t port)
   
   LWIP_ERROR("netconn_bind: invalid conn", (conn != NULL), return ERR_ARG;);
 
+#if LWIP_IPV4
   /* Don't propagate NULL pointer (IP_ADDR_ANY alias) to subsequent functions */
   if (addr == NULL) {
-    addr = IP_ADDR_ANY;
+    addr = IP4_ADDR_ANY;
   }
+#endif /* LWIP_IPV4 */
+  
+#if LWIP_IPV4 && LWIP_IPV6
+  /* "Socket API like" dual-stack support: If IP to bind to is IP6_ADDR_ANY,
+   * and NETCONN_FLAG_IPV6_V6ONLY is 0, use IP_ANY_TYPE to bind
+   */
+  if ((netconn_get_ipv6only(conn) == 0) &&
+     ip_addr_cmp(addr, IP6_ADDR_ANY)) {
+    addr = IP_ANY_TYPE;
+  }
+#endif /* LWIP_IPV4 && LWIP_IPV6 */
 
   API_MSG_VAR_ALLOC(msg);
   API_MSG_VAR_REF(msg).conn = conn;
@@ -252,6 +282,7 @@ netconn_bind(struct netconn *conn, const ip_addr_t *addr, u16_t port)
 }
 
 /**
+ * @ingroup netconn_common
  * Connect a netconn to a specific remote IP address and port.
  *
  * @param conn the netconn to connect
@@ -267,10 +298,12 @@ netconn_connect(struct netconn *conn, const ip_addr_t *addr, u16_t port)
 
   LWIP_ERROR("netconn_connect: invalid conn", (conn != NULL), return ERR_ARG;);
 
+#if LWIP_IPV4
   /* Don't propagate NULL pointer (IP_ADDR_ANY alias) to subsequent functions */
   if (addr == NULL) {
-    addr = IP_ADDR_ANY;
+    addr = IP4_ADDR_ANY;
   }
+#endif /* LWIP_IPV4 */
 
   API_MSG_VAR_ALLOC(msg);
   API_MSG_VAR_REF(msg).conn = conn;
@@ -283,10 +316,11 @@ netconn_connect(struct netconn *conn, const ip_addr_t *addr, u16_t port)
 }
 
 /**
+ * @ingroup netconn_udp
  * Disconnect a netconn from its current peer (only valid for UDP netconns).
  *
  * @param conn the netconn to disconnect
- * @return TODO: return value is not set here...
+ * @return See @ref err_t
  */
 err_t
 netconn_disconnect(struct netconn *conn)
@@ -305,6 +339,7 @@ netconn_disconnect(struct netconn *conn)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Set a TCP netconn into listen mode
  *
  * @param conn the tcp netconn to set to listen mode
@@ -341,6 +376,7 @@ netconn_listen_with_backlog(struct netconn *conn, u8_t backlog)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Accept a new connection on a TCP listening netconn.
  *
  * @param conn the TCP listen netconn
@@ -354,7 +390,6 @@ netconn_accept(struct netconn *conn, struct netconn **new_conn)
 #if LWIP_TCP
   void *accept_ptr;
   struct netconn *newconn;
-  err_t err;
 #if TCP_LISTEN_BACKLOG
   API_MSG_VAR_DECLARE(msg);
 #endif /* TCP_LISTEN_BACKLOG */
@@ -363,11 +398,10 @@ netconn_accept(struct netconn *conn, struct netconn **new_conn)
   *new_conn = NULL;
   LWIP_ERROR("netconn_accept: invalid conn",       (conn != NULL),                      return ERR_ARG;);
 
-  err = conn->last_err;
-  if (ERR_IS_FATAL(err)) {
+  if (ERR_IS_FATAL(conn->last_err)) {
     /* don't recv on fatal errors: this might block the application task
        waiting on acceptmbox forever! */
-    return err;
+    return conn->last_err;
   }
   if (!sys_mbox_valid(&conn->acceptmbox)) {
     return ERR_CLSD;
@@ -429,6 +463,7 @@ netconn_accept(struct netconn *conn, struct netconn **new_conn)
 }
 
 /**
+ * @ingroup netconn_common
  * Receive data: actual implementation that doesn't care whether pbuf or netbuf
  * is received
  *
@@ -442,9 +477,11 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
 {
   void *buf = NULL;
   u16_t len;
-  err_t err;
 #if LWIP_TCP
   API_MSG_VAR_DECLARE(msg);
+#if LWIP_MPU_COMPATIBLE
+  msg = NULL;
+#endif
 #endif /* LWIP_TCP */
 
   LWIP_ERROR("netconn_recv: invalid pointer", (new_buf != NULL), return ERR_ARG;);
@@ -463,13 +500,12 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
 #endif /* LWIP_TCP */
   LWIP_ERROR("netconn_recv: invalid recvmbox", sys_mbox_valid(&conn->recvmbox), return ERR_CONN;);
 
-  err = conn->last_err;
-  if (ERR_IS_FATAL(err)) {
+  if (ERR_IS_FATAL(conn->last_err)) {
     /* don't recv on fatal errors: this might block the application task
        waiting on recvmbox forever! */
     /* @todo: this does not allow us to fetch data that has been put into recvmbox
        before the fatal error occurred - is that a problem? */
-    return err;
+    return conn->last_err;
   }
 #if LWIP_TCP
 #if (LWIP_UDP || LWIP_RAW)
@@ -479,7 +515,7 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
     API_MSG_VAR_ALLOC(msg);
   }
 #endif /* LWIP_TCP */
-    
+
 #if LWIP_SO_RCVTIMEO
   if (sys_arch_mbox_fetch(&conn->recvmbox, &buf, conn->recv_timeout) == SYS_ARCH_TIMEOUT) {
 #if LWIP_TCP
@@ -502,7 +538,7 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
 #endif /* (LWIP_UDP || LWIP_RAW) */
   {
     /* Let the stack know that we have taken the data. */
-    /* TODO: Speedup: Don't block and wait for the answer here
+    /* @todo: Speedup: Don't block and wait for the answer here
        (to prevent multiple thread-switches). */
     API_MSG_VAR_REF(msg).conn = conn;
     if (buf != NULL) {
@@ -518,6 +554,10 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
     /* If we are closed, we indicate that we no longer wish to use the socket */
     if (buf == NULL) {
       API_EVENT(conn, NETCONN_EVT_RCVMINUS, 0);
+      if (conn->pcb.ip == NULL) {
+        /* race condition: RST during recv */
+        return conn->last_err == ERR_OK ? ERR_RST : conn->last_err;
+      }
       /* RX side is closed, so deallocate the recvmbox */
       netconn_close_shutdown(conn, NETCONN_SHUT_RD);
       /* Don' store ERR_CLSD as conn->err since we are only half-closed */
@@ -532,7 +572,7 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
 #if (LWIP_UDP || LWIP_RAW)
   {
     LWIP_ASSERT("buf != NULL", buf != NULL);
-    len = netbuf_len((struct netbuf *)buf);
+    len = netbuf_len((struct netbuf*)buf);
   }
 #endif /* (LWIP_UDP || LWIP_RAW) */
 
@@ -550,6 +590,7 @@ netconn_recv_data(struct netconn *conn, void **new_buf)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Receive data (in form of a pbuf) from a TCP netconn
  *
  * @param conn the netconn from which to receive data
@@ -568,6 +609,7 @@ netconn_recv_tcp_pbuf(struct netconn *conn, struct pbuf **new_buf)
 }
 
 /**
+ * @ingroup netconn_common
  * Receive data (in form of a netbuf containing a packet buffer) from a netconn
  *
  * @param conn the netconn from which to receive data
@@ -627,6 +669,7 @@ netconn_recv(struct netconn *conn, struct netbuf **new_buf)
 }
 
 /**
+ * @ingroup netconn_udp
  * Send data (in form of a netbuf) to a specific remote IP address and port.
  * Only to be used for UDP and RAW netconns (not TCP).
  *
@@ -648,6 +691,7 @@ netconn_sendto(struct netconn *conn, struct netbuf *buf, const ip_addr_t *addr, 
 }
 
 /**
+ * @ingroup netconn_udp
  * Send data over a UDP or RAW netconn (that is already connected).
  *
  * @param conn the UDP or RAW netconn over which to send data
@@ -663,6 +707,7 @@ netconn_send(struct netconn *conn, struct netbuf *buf)
   LWIP_ERROR("netconn_send: invalid conn",  (conn != NULL), return ERR_ARG;);
 
   LWIP_DEBUGF(API_LIB_DEBUG, ("netconn_send: sending %"U16_F" bytes\n", buf->p->tot_len));
+
   API_MSG_VAR_ALLOC(msg);
   API_MSG_VAR_REF(msg).conn = conn;
   API_MSG_VAR_REF(msg).msg.b = buf;
@@ -673,6 +718,7 @@ netconn_send(struct netconn *conn, struct netbuf *buf)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Send data over a TCP netconn.
  *
  * @param conn the TCP netconn over which to send data
@@ -699,6 +745,11 @@ netconn_write_partly(struct netconn *conn, const void *dataptr, size_t size,
     return ERR_OK;
   }
   dontblock = netconn_is_nonblocking(conn) || (apiflags & NETCONN_DONTBLOCK);
+#if LWIP_SO_SNDTIMEO
+  if (conn->send_timeout != 0) {
+    dontblock = 1;
+  }
+#endif /* LWIP_SO_SNDTIMEO */
   if (dontblock && !bytes_written) {
     /* This implies netconn_write() cannot be used for non-blocking send, since
        it has no way to return the number of bytes written. */
@@ -726,11 +777,7 @@ netconn_write_partly(struct netconn *conn, const void *dataptr, size_t size,
      non-blocking version here. */
   err = netconn_apimsg(lwip_netconn_do_write, &API_MSG_VAR_REF(msg));
   if ((err == ERR_OK) && (bytes_written != NULL)) {
-    if (dontblock
-#if LWIP_SO_SNDTIMEO
-        || (conn->send_timeout != 0)
-#endif /* LWIP_SO_SNDTIMEO */
-       ) {
+    if (dontblock) {
       /* nonblocking write: maybe the data has been sent partly */
       *bytes_written = API_MSG_VAR_REF(msg).msg.w.len;
     } else {
@@ -744,6 +791,7 @@ netconn_write_partly(struct netconn *conn, const void *dataptr, size_t size,
 }
 
 /**
+ * @ingroup netconn_tcp
  * Close or shutdown a TCP netconn (doesn't delete it).
  *
  * @param conn the TCP netconn to close or shutdown
@@ -780,6 +828,7 @@ netconn_close_shutdown(struct netconn *conn, u8_t how)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Close a TCP netconn (doesn't delete it).
  *
  * @param conn the TCP netconn to close
@@ -793,9 +842,12 @@ netconn_close(struct netconn *conn)
 }
 
 /**
+ * @ingroup netconn_tcp
  * Shut down one or both sides of a TCP netconn (doesn't delete it).
  *
  * @param conn the TCP netconn to shut down
+ * @param shut_rx shut down the RX side (no more read possible after this)
+ * @param shut_tx shut down the TX side (no more write possible after this)
  * @return ERR_OK if the netconn was closed, any other err_t on error
  */
 err_t
@@ -806,6 +858,7 @@ netconn_shutdown(struct netconn *conn, u8_t shut_rx, u8_t shut_tx)
 
 #if LWIP_IGMP || (LWIP_IPV6 && LWIP_IPV6_MLD)
 /**
+ * @ingroup netconn_udp
  * Join multicast groups for UDP netconns.
  *
  * @param conn the UDP netconn for which to change multicast addresses
@@ -828,13 +881,15 @@ netconn_join_leave_group(struct netconn *conn,
 
   API_MSG_VAR_ALLOC(msg);
 
+#if LWIP_IPV4
   /* Don't propagate NULL pointer (IP_ADDR_ANY alias) to subsequent functions */
   if (multiaddr == NULL) {
-    multiaddr = IP_ADDR_ANY;
+    multiaddr = IP4_ADDR_ANY;
   }
   if (netif_addr == NULL) {
-    netif_addr = IP_ADDR_ANY;
+    netif_addr = IP4_ADDR_ANY;
   }
+#endif /* LWIP_IPV4 */
 
   API_MSG_VAR_REF(msg).conn = conn;
   API_MSG_VAR_REF(msg).msg.jl.multiaddr = API_MSG_VAR_REF(multiaddr);
@@ -849,10 +904,12 @@ netconn_join_leave_group(struct netconn *conn,
 
 #if LWIP_DNS
 /**
+ * @ingroup netconn_common
  * Execute a DNS query, only one IP address is returned
  *
  * @param name a string representation of the DNS host name to query
  * @param addr a preallocated ip_addr_t where to store the resolved IP address
+ * @param dns_addrtype IP address type (IPv4 / IPv6)
  * @return ERR_OK: resolving succeeded
  *         ERR_MEM: memory error, try again later
  *         ERR_ARG: dns client not initialized or invalid hostname
@@ -871,6 +928,7 @@ netconn_gethostbyname(const char *name, ip_addr_t *addr)
   sys_sem_t sem;
 #endif /* LWIP_MPU_COMPATIBLE */
   err_t err;
+  err_t cberr;
 
   LWIP_ERROR("netconn_gethostbyname: invalid name", (name != NULL), return ERR_ARG;);
   LWIP_ERROR("netconn_gethostbyname: invalid addr", (addr != NULL), return ERR_ARG;);
@@ -903,13 +961,13 @@ netconn_gethostbyname(const char *name, ip_addr_t *addr)
   }
 #endif /* LWIP_NETCONN_SEM_PER_THREAD */
 
-  err = tcpip_callback(lwip_netconn_do_gethostbyname, &API_VAR_REF(msg));
-  if (err != ERR_OK) {
+  cberr = tcpip_callback(lwip_netconn_do_gethostbyname, &API_VAR_REF(msg));
+  if (cberr != ERR_OK) {
 #if !LWIP_NETCONN_SEM_PER_THREAD
     sys_sem_free(API_EXPR_REF(API_VAR_REF(msg).sem));
 #endif /* !LWIP_NETCONN_SEM_PER_THREAD */
     API_VAR_FREE(MEMP_DNS_API_MSG, msg);
-    return err;
+    return cberr;
   }
   sys_sem_wait(API_EXPR_REF_SEM(API_VAR_REF(msg).sem));
 #if !LWIP_NETCONN_SEM_PER_THREAD

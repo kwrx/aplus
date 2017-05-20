@@ -12,10 +12,10 @@ unsigned int sys_alarm(unsigned int seconds) {
 
     unsigned int e = 0;
     if(current_task->alarm)
-        e = current_task->alarm - timer_gettime();
+        e = current_task->alarm - timer_gettimestamp();
 
     if(seconds)
-        current_task->alarm = timer_gettime() + seconds;
+        current_task->alarm = timer_gettimestamp() + seconds;
     else
         current_task->alarm = 0;
         

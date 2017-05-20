@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <time.h>
 
 
 static void update_values();
@@ -103,7 +104,7 @@ typedef struct task {
     time_t stime;
     time_t cutime;
     time_t cstime;
-    int cpu;
+    double cpu;
     int nice;
     int vmsize;
     int io;
@@ -116,13 +117,13 @@ static task_t* task_queue = NULL;
 
 
 static void update_value(task_t* tq, task_t* tmp) {
-    int tcpu = tmp->utime + tmp->stime;
-    int qcpu = tq->utime + tq->stime;
+    double tcpu = tmp->utime + tmp->stime;
+    double qcpu = tq->utime + tq->stime;
     int tio = tmp->io;
     int qio = tq->io;
 
     memcpy(tq, tmp, sizeof(task_t) - sizeof(struct task*));
-    tq->cpu = (tcpu - qcpu) / 10;
+    tq->cpu = (tcpu - qcpu) / (CLOCKS_PER_SEC / 100.0);
     tq->io = (tio - qio);
 }
 
@@ -255,11 +256,11 @@ static void update_values() {
 }
 
 static void dump_values() {
-    fprintf(stdout, "\e[2J\e[30;47m\e[K");
+    fprintf(stdout, "\4\e[2J\e[30;47m\e[K");
     fprintf(stdout, " %-4s %-24s %-6s %6s %7s  %10s  %10s\n", "Pid", "Name", "Status", "PPid", "CPU", "I/O", "Memory");
     fprintf(stdout, "\e[39;49m");
 
-    int cpu = 0;
+    double cpu = 0;
     int io = 0;
     int memory = 0;
     
@@ -271,16 +272,18 @@ static void dump_values() {
         if(tq->status[0] == 'R')
             fprintf(stdout, "\033[37m");
 
-        cpu += tq->cpu;
+        if(tq->pid != 0)
+            cpu += tq->cpu;
+        
         io += tq->io;
         memory += tq->vmsize;
 
-        fprintf(stdout, " %-4d %-24s %-6s %6d %6d%% %6.02g MB/s %8.02g MB\n", tq->pid, tq->name, tq->status, tq->ppid, tq->cpu, (double) tq->io / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
+        fprintf(stdout, " %-4d %-24s %-6s %6d %6.01f%% %6.02f MB/s %8.02f MB\n", tq->pid, tq->name, tq->status, tq->ppid, tq->cpu, (double) tq->io / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
         fprintf(stdout, "\033[39m");
     }
 
     fprintf(stdout, "\n\e[30;47m\e[K");
-    fprintf(stdout, " %-4s %-24s %-6s %6s %6d%% %6.02g MB/s %8.02g MB\n", "", "Total", "", "", cpu, (double) io / 1024.0 / 1024.0, (double) memory / 1024.0 / 1024.0);
-    fprintf(stdout, "\033[39;49m");
+    fprintf(stdout, " %-4s %-24s %-6s %6s %6.01f%% %6.02f MB/s %8.02f MB\n", "", "Total", "", "", cpu, (double) io / 1024.0 / 1024.0, (double) memory / 1024.0 / 1024.0);
+    fprintf(stdout, "\033[39;49m\2");
     fflush(stdout);
 }

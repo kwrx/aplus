@@ -23,7 +23,6 @@
 #include "lwip/autoip.h"
 #include "lwip/igmp.h"
 #include "lwip/dns.h"
-#include "lwip/timers.h"
 #include "lwip/tcpip.h"
 #include "netif/etharp.h"
 

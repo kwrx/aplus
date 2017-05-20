@@ -256,18 +256,18 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	eip = read_eip();
 	if(eip == 0) {
 		if(unlikely(current_task->alarm > 0)) {
-			if(likely(current_task->alarm <= timer_gettime())) {
+			if(likely(current_task->alarm <= timer_gettimestamp())) {
 				current_task->sig_no = SIGALRM;
 				current_task->alarm = 0;
 			}
 		}
 
 		if(unlikely(
-			(current_task->sig_no != -1) &&
+			(current_task->sig_no != 0) &&
 			(current_task->sig_handler != NULL)
 		)) {
 			register int sig_no = current_task->sig_no;
-			current_task->sig_no = -1;
+			current_task->sig_no = 0;
 
 			irq_ack(0);
 			current_task->sig_handler(sig_no);
@@ -361,7 +361,7 @@ int task_init(void) {
 	t->priority = TASK_PRIO_REGULAR;
 	
 	t->sig_handler = NULL;
-	t->sig_no = -1;
+	t->sig_no = 0;
 	t->sig_mask = 0;
 
 	fifo_init(&t->fifo);

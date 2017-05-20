@@ -23,4 +23,5 @@ void pagefault_handler(i386_context_t* context) {
 
 	__asm__("sti");
 	sys_kill(current_task->pid, SIGSEGV);
+	sys_yield();
 }

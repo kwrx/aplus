@@ -11,10 +11,13 @@
 static ktime_t ticks = 0;
 static ktime_t seconds = 0;
 static ktime_t days = 0;
+static ktime_t jiffies = 0;
+static ktime_t cycles = 0;
 
 
 static void timer_handler(void* context) {
 	ticks += 1;
+	cycles = rdtsc();
 			
 	if(unlikely(ticks >= TIMER_FREQ)) {
 		ticks = 0;
@@ -37,10 +40,34 @@ int timer_init() {
 	outb(0x40, (uint8_t) ((f >> 8) & 0xFF));
 
 	irq_enable(0, timer_handler);
+
+
+
+	__asm__("sti");
+	timer_delay(1);
+
+
+	int i;
+	for(i = 0; i < 100; i++) {
+		uint64_t t0, t1;
+		
+		t0 = rdtsc();
+		timer_delay(1);
+		t1 = rdtsc();
+
+		if(likely(jiffies))
+			jiffies = (jiffies + (t1 - t0)) >> 1;
+		else
+			jiffies = t1 - t0;
+	}
+
+
+
+	__asm__("cli");
 	return E_OK;
 }
 
-ktime_t timer_gettime() {
+ktime_t timer_gettimestamp() {
 	inline uint8_t RTC(uint8_t x)
 		{ outb(0x70, x); return inb(0x71); }
 		
@@ -89,6 +116,17 @@ ktime_t timer_getms() {
 	return timer_getticks();
 }
 
+ktime_t timer_getus() {
+	double a = (double) timer_getticks();
+	double b = (double) jiffies;
+
+	uint64_t r = (uint64_t) ((a * 1000.0) + ((double)(rdtsc() - cycles) / (b / 1000.0)));
+	if(unlikely(r < 0))
+		return (uint64_t) a * 1000;
+	
+	return r;
+}
+
 ktime_t timer_getfreq() {
 	return TIMER_FREQ;
 }
@@ -101,9 +139,10 @@ void timer_delay(ktime_t ms) {
 }
 
 
-EXPORT(timer_gettime);
+EXPORT(timer_gettimestamp);
 EXPORT(timer_getticks);
 EXPORT(timer_getms);
+EXPORT(timer_getus);
 EXPORT(timer_getfreq);
 EXPORT(timer_delay);
 

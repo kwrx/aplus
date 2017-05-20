@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <errno.h>
 #include <getopt.h>
+#include <glob.h>
 
 
 #include "sh.h"
@@ -50,9 +51,12 @@ static void cmd_cd(char** argv) {
     if(argv[1] == NULL)
         p = "/";
 
-    if(chdir(p) != 0)
+    if(chdir(p))
         perror(p);
 }
+    
+    
+
 
 
 

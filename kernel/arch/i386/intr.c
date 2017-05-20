@@ -39,6 +39,8 @@ int current_irq = -1;
 
 
 int intr_init() {
+	__asm__ __volatile__ ("cli");
+	
 	#define _i(x)															\
 		extern void isr##x (void*);											\
 		IDT32.e[x].base_low = ((uintptr_t) isr##x) & 0xFFFF;				\
@@ -256,6 +258,8 @@ void irq_handler(i386_context_t* context) {
 
 	if(likely(IRQ32[irq_no].handler))
 		IRQ32[irq_no].handler ((void*) context);
+	else
+		kprintf(WARN "irq_handler(): unhandled IRQ #%d\n", irq_no);
 
 	irq_ack(irq_no);
 }

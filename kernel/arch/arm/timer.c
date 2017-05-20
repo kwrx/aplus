@@ -3,7 +3,7 @@
 #include "arm.h"
 
 
-long timer_gettime() {
+long timer_gettimestamp() {
 	return 0;
 }
 
@@ -25,7 +25,7 @@ void timer_delay(long ms) {
 		;
 }
 
-EXPORT(timer_gettime);
+EXPORT(timer_gettimestamp);
 EXPORT(timer_getticks);
 EXPORT(timer_getms);
 EXPORT(timer_getfreq);

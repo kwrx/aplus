@@ -28,17 +28,24 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 
 	switch(req) {
 		case PWMIOCTL_POWEROFF:
+			kprintf(INFO "pwm: shutdown\n");
 			/* TODO */
 		case PWMIOCTL_REBOOT:
+			kprintf(INFO "pwm: rebooting\n");
+			
 			while(inb(0x64) & 2)
 				;
 			outb(0x64, 0xFE);
 		case PWMIOCTL_HALT:
+			kprintf(INFO "pwm: system halted\n");
+
 			__asm__ __volatile__ (
 				"cli; hlt;"
 			); for(;;);
 
 		case PWMIOCTL_STANDBY:
+			kprintf(INFO "pwm: standby\n");
+
 		default:
 			errno = ENOSYS;
 			return E_ERR;

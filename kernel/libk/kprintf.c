@@ -12,10 +12,17 @@ int
 kprintf(const char *fmt, ...) {
 
 
-	char buf[1024] = {0};
+	static char buf[BUFSIZ] = {0};
+	static char bfmt[BUFSIZ] = {0};
+
+	memset(buf, 0, sizeof(buf));
+	memset(bfmt, 0, sizeof(bfmt));
+
+	sprintf(bfmt, "[%8f]%s", (double) timer_getus() / 1000000, fmt);
+
 	va_list args;
 	va_start(args, fmt);
-	int out = vsprintf(buf, fmt, args);
+	int out = vsprintf(buf, bfmt, args);
 	
 	
 	spinlock_lock(&lck_kprintf);

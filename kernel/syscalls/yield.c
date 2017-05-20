@@ -7,12 +7,12 @@
 
 SYSCALL(23, _yield,
 void sys__yield(void) {
+	syscall_ack();
 	schedule_yield();
 });
 
 
 void sys_yield(void) {
-	syscall_ack();
 	arch_task_yield();
 }
 

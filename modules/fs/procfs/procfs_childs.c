@@ -19,7 +19,7 @@ static int environ_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
     
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -53,7 +53,7 @@ static int cmdline_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
 
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -89,7 +89,7 @@ static int status_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
 
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -149,7 +149,7 @@ static int stat_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
 
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -237,7 +237,7 @@ static int statm_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
 
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -274,7 +274,7 @@ static int io_open(inode_t* inode) {
     if(pfs->data)
         kfree(pfs->data);
 
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
     if(tk == NULL)
         tk = current_task;
 
@@ -314,7 +314,7 @@ static int procfs_cwd_open(inode_t* inode) {
 		return E_ERR;
 
 	procfs_t* pfs = (procfs_t*) inode->userdata;
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
         tk = current_task;
@@ -331,7 +331,7 @@ static int procfs_root_open(inode_t* inode) {
 		return E_ERR;
 
 	procfs_t* pfs = (procfs_t*) inode->userdata;
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
         tk = current_task;
@@ -348,7 +348,7 @@ static int procfs_exe_open(inode_t* inode) {
 		return E_ERR;
 
 	procfs_t* pfs = (procfs_t*) inode->userdata;
-    task_t* tk = pfs->tk;
+    volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
         tk = current_task;

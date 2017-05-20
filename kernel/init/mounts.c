@@ -16,6 +16,9 @@ int mounts_init(void) {
                     a, CONFIG_ROOT a);                              \
         }
     
+#if DEBUG
+    kprintf(LOG "mounts: mount root in %s\n", CONFIG_ROOT);
+#endif    
     
     if(unlikely(sys_mount(CONFIG_ROOT, "/root", CONFIG_ROOTFS, 0, NULL) != E_OK))
         kprintf(ERROR "/dev/hd0/0: failed to mount /root\n");

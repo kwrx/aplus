@@ -634,7 +634,7 @@ static void mkdir_ext2(inode_t* parent, char* name, uint16_t permission) {
 	uint32_t inode_no = allocate_inode(ext2);
 	ext2_inodetable_t* inode = read_inode(ext2, inode_no);
 
-	inode->atime = timer_gettime();
+	inode->atime = timer_gettimestamp();
 	inode->ctime = inode->atime;
 	inode->mtime = inode->atime;
 	inode->dtime = 0;
@@ -714,7 +714,7 @@ static void create_ext2(inode_t* parent, char* name, uint16_t permission) {
 	uint32_t inode_no = allocate_inode(ext2);
 	ext2_inodetable_t * inode = read_inode(ext2,inode_no);
 
-	inode->atime = timer_gettime();
+	inode->atime = timer_gettimestamp();
 	inode->ctime = inode->atime;
 	inode->mtime = inode->atime;
 	inode->dtime = 0;

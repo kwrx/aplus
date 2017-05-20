@@ -88,7 +88,7 @@ static void kb_setled() {
 void kb_intr(void* unused) {
 	if(!(inb(PS2_CTRL) & 0x01))
 		return;
-
+	
 	uint8_t vkscan = inb(PS2_DATA);
 	switch(vkscan) {
 		case PS2_ACK:
@@ -265,6 +265,7 @@ int init(void) {
 	_k(0x42) = VK_F8;
 	_k(0x43) = VK_F9;
 	_k(0x44) = VK_F10;
+	_k(0x56) = VK_OEM_5;
 	_k(0x57) = VK_F11;
 	_k(0x58) = VK_F12;
 	_k(0x46) = VK_SCROLL;
@@ -377,10 +378,10 @@ int init(void) {
 	mouse.clip.bottom = 0xFFFF;
 
 
-	if(sys_mkfifo(PATH_KBDEV, 0666) != 0)
+	if(sys_mkfifo(PATH_KBDEV, 0644) != 0)
 		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_KBDEV);
 		
-	if(sys_mkfifo(PATH_MOUSEDEV, 0666) != 0)
+	if(sys_mkfifo(PATH_MOUSEDEV, 0644) != 0)
 		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
 		
 

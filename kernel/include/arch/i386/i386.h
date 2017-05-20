@@ -13,11 +13,11 @@
 #define TIMER_FREQ			1000
 
 
-#define read_reg(n)										\
+#define read_reg(n)												\
 	static inline uint32_t read_##n() {							\
-		uint32_t ret;									\
-		__asm__ __volatile__ ("mov %0, " #n : "=r"(ret));				\
-		return ret;									\
+		uint32_t ret;											\
+		__asm__ __volatile__ ("mov %0, " #n : "=r"(ret));		\
+		return ret;												\
 	}
 	
 	read_reg(eax)
@@ -47,9 +47,9 @@ static inline uint32_t read_eflags() {
 }
 	
 	
-#define write_reg(n)										\
-	static inline void write_##n(uint32_t val) {						\
-		__asm__ __volatile__ ("mov " #n ", %0" : : "r"(val));				\
+#define write_reg(n)												\
+	static inline void write_##n(uint32_t val) {					\
+		__asm__ __volatile__ ("mov " #n ", %0" : : "r"(val));		\
 	}
 
 
@@ -77,9 +77,9 @@ static inline void write_eflags(uint32_t val) {
 	__asm__ __volatile__("push eax; popfd" : : "a"(val));
 }	
 
-#define outx(n, t, reg)										\
-	static inline void out##n(uint16_t p, t v) {						\
-		__asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));			\
+#define outx(n, t, reg)												\
+	static inline void out##n(uint16_t p, t v) {					\
+		__asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));	\
 	}
 	
 	outx(b, uint8_t, al)
@@ -87,11 +87,11 @@ static inline void write_eflags(uint32_t val) {
 	outx(l, uint32_t, eax)
 	
 	
-#define inx(n, t, reg)										\
-	static inline t in##n(uint16_t p) {							\
-		t r;										\
-		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));			\
-		return r;									\
+#define inx(n, t, reg)													\
+	static inline t in##n(uint16_t p) {									\
+		t r;															\
+		__asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));	\
+		return r;														\
 	}
 	
 	inx(b, uint8_t, al)
@@ -135,7 +135,8 @@ static inline uint64_t rdmsr(uint32_t i) {
 
 static inline uint64_t rdtsc(void) {
 	uint64_t r;
-	__asm__ __volatile__ ("cpuid; rdtsc" : "=A"(r));
+	__asm__ __volatile__ (
+		"rdtsc\n" : "=A"(r));
 	return r;
 } 
 	
