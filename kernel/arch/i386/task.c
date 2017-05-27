@@ -300,7 +300,6 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	vmm_switch(pd);
 #endif
 
-	INTR_ON;
 	__asm__ __volatile__ (
 		"cli			\n"
 		"mov ebx, %0	\n"

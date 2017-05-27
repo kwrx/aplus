@@ -6,6 +6,7 @@
 
 # -- System
 sys.locale=it-IT
+sys.timezone=2
 sys.startup=/usr/bin/sh
 sys.shell=/usr/bin/sh
 

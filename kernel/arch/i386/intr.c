@@ -224,6 +224,10 @@ void isr_handler(i386_context_t* context) {
 	};
 #endif
 
+
+
+
+	int signo;
 	switch(context->int_no) {
 		case 0x80:
 			context->eax = syscall_handler(context->eax, context->ebx, context->ecx, context->edx, context->esi, context->edi);
@@ -239,16 +243,46 @@ void isr_handler(i386_context_t* context) {
 					return;
 			}
 			return;
+
+		case 0x00:
+		case 0x04:
+		case 0x10:
+		case 0x13:
+			signo = SIGFPE;
+			break;
+		case 0x0B:
+		case 0x0C:
+		case 0x0D:
+		case 0x0E:
+			signo = SIGSEGV;
+			break;
+		case 0x06:
+		case 0x0A:
+			signo = SIGILL;
+			break;
+		case 0x01:
+		case 0x03:
+			signo = SIGTRAP;
+			break;
 		default:
+			signo = SIGABRT;
 			break;
 	}
 
 
-	kprintf(ERROR "Exception! %s (%x:%x:%x) 0x%x\n", exception_messages[context->int_no], context->err_code & 1, (context->err_code >> 1) & 3, (context->err_code >> 3) & 0xFFF1);
+	kprintf(ERROR "Exception! %s (%x:%x:%x) 0x%x from PID %d\n", exception_messages[context->int_no], context->err_code & 1, (context->err_code >> 1) & 3, (context->err_code >> 3) & 0xFFF1, current_task ? current_task->pid : -1);
 	kprintf(ERROR "IP: %08x, SP: %08x\n", context->eip, context);
 
-	__asm__ ("cli");
-	for(;;);
+
+
+	if(unlikely(current_task == kernel_task))
+		for(;;) 
+			__asm__ __volatile__ ("cli; hlt");
+	
+
+	__asm__ __volatile__ ("sti");
+	sys_kill(current_task->pid, signo);
+	sys_yield();
 }
 
 

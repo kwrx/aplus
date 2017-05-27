@@ -32,7 +32,7 @@ int kprintf(const char* fmt, ...);
 
 #define KASSERTF(x, y...)																											\
 	if(unlikely(!(x)))																												\
-		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(ERROR y); kprintf(ERROR "\n"); for(;;); }
+		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(y); kprintf("\n"); for(;;); }
 
 
 #endif

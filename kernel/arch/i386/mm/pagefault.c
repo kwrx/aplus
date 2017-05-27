@@ -13,8 +13,6 @@ void pagefault_handler(i386_context_t* context) {
 	
 	kprintf(ERROR "Exception! Page Fault at address %p\n\t (PID: %d, PC: %p, SP: %p)\n", p, sys_getpid(), context->eip, context->esp);
 
-
-
 	if(unlikely(current_task == kernel_task)) {
 		__asm__ ("cli");
 		for(;;) __asm__("hlt");

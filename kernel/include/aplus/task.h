@@ -19,7 +19,7 @@
 #define TASK_PRIO_MIN				20
 #define TASK_PRIO_REGULAR			0
 
-#define TASK_FD_COUNT				256
+#define TASK_FD_COUNT				20
 
 #define TASK_ROOT_UID				0
 #define TASK_ROOT_GID				0

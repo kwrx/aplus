@@ -36,7 +36,7 @@ static void print_status(const char* package, const char* filename, int progress
         break;
     }
 
-    fprintf(stdout, "\r%-10s %40s: [%-20s] %2d%%", package, p, buf, max);
+    fprintf(stdout, "\r%-20s %30s: [%-20s] %2d%%", package, p, buf, max);
     fflush(stdout);
 }
 

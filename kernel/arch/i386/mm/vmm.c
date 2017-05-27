@@ -11,7 +11,7 @@
 #define __invlpg(x)																	\
 	__asm__ __volatile__ ("invlpg [%0]" : : "r"(x))
 #define __invlpg_all()																\
-	__asm__ __volatile__ ("mov eax, cr3; mov cr3, eax" : : : "eax");
+	__asm__ __volatile__ ("mov eax, cr3; mov cr3, eax");
 
 
 extern int PDT;
@@ -303,13 +303,11 @@ volatile pdt_t* vmm_switch(volatile pdt_t* context) {
 		return p;
 
 
-	INTR_OFF;
 
 	current_pdt = context;
 	__invlpg_all();
 	
 
-	INTR_ON;
 
 	return p;
 }

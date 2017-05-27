@@ -10,3 +10,4 @@
 *.img
 bin/usr/bin/*
 bin/usr/sbin/*
+packages/*

@@ -9,9 +9,9 @@
 SYSCALL(14, times,
 clock_t sys_times(struct tms* tms) {
 	if(!tms)
-		return timer_getticks();
+		return timer_getus();
 
 
 	memcpy(tms, &current_task->clock, sizeof(struct tms));
-	return timer_getticks();
+	return timer_getus();
 });
