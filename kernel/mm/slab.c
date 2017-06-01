@@ -100,11 +100,14 @@ retry:
 	spinlock_unlock(&lck_kmalloc);
 
 	if(unlikely(!p)) {
-		kprintf(WARN, "slab: no memory left!\n");
+		kprintf(WARN "slab: no memory left!\n");
 
 		if(gfp & __GFP_WAIT) {
 #if CONFIG_CACHE
-			kcache_free(KCACHE_FREE_BLOCKS);
+			if(kcache_free(KCACHE_FREE_BLOCKS) == 0) {
+				errno = ENOMEM;
+				return NULL;
+			}
 #endif
 			if(gfp & __GFP_HIGH)
 				goto retry;
@@ -241,7 +244,6 @@ int slab_init(void) {
 		map_page(frame, pmm_alloc_frame() << 12, 0);
 
 	heap_allocated = 1;
-
 	return E_OK;
 }
 

@@ -31,6 +31,18 @@ extern char** args_dup(char**);
 
 SYSCALL(2, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
+#if CONFIG_CACHE
+	static int e_initialized = 0;
+	static kcache_pool_t e_pool;
+
+	if(unlikely(!e_initialized)) {
+		e_initialized++;
+
+		kcache_register_pool(&e_pool);
+	}
+#endif
+
+
 	int fd = sys_open(filename, O_RDONLY, 0);
 	if(fd < 0)
 		return -1;
@@ -49,6 +61,8 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 
 	if(unlikely(!r)) {
+		sys_close(fd);
+
 		errno = EACCES;
 		return -1;
 	}
@@ -59,14 +73,37 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 
 	void* image = (void*) kmalloc(size + 1, GFP_USER);
-	((char*) image) [size] = 0;
-	
-	if(unlikely(sys_read(fd, image, size) != size)) { /* ERROR */
-		kfree(image);
-		
-		errno = EIO;
+	if(unlikely(!image)) {
+		sys_close(fd);
 		return -1;
 	}
+
+	((char*) image) [size] = 0;
+
+#if CONFIG_CACHE
+	void* cache = NULL;
+	if(kcache_obtain_block(&e_pool, inode->ino, &cache, size) != 0) {
+		if(unlikely(!cache))
+			cache = image;
+#else
+	void* cache = image;
+#endif
+	
+		if(unlikely(sys_read(fd, cache, size) != size)) { /* ERROR */
+			kfree(image);
+			
+			errno = EIO;
+			return -1;
+		}
+
+#if CONFIG_CACHE
+	}
+	
+	if(likely(cache != image))
+		memcpy(image, cache, size);
+		
+	kcache_release_block(&e_pool, inode->ino);
+#endif
 
 	sys_close(fd);
 

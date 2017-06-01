@@ -1,6 +1,8 @@
 #include <aplus.h>
 #include <aplus/module.h>
+#include <aplus/debug.h>
 #include <aplus/vfs.h>
+#include <aplus/mm.h>
 #include <libc.h>
 
 MODULE_NAME("char/zero");

@@ -37,7 +37,7 @@ LIBRARIES:
 	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
 $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
-	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
+	@dd status=none if=/dev/zero of=hdd.img bs=4M count=200
 	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
 	@losetup /dev/loop0 hdd.img
 	@losetup /dev/loop1 hdd.img -o 1048576

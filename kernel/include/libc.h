@@ -19,5 +19,6 @@
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/string.h>
+#include <sys/poll.h>
 #include <sched.h>
 #include <signal.h>

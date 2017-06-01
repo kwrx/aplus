@@ -5,9 +5,11 @@
 *.iso
 *.class
 *.a
+*.so
 *.jar
 *.tar.gz
 *.img
+bin/aplus
 bin/usr/bin/*
 bin/usr/sbin/*
 packages/*

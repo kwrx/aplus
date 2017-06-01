@@ -48,13 +48,13 @@ typedef struct {
 typedef struct kcache_block {
     kcache_index_t index;
     void* ptr;
+    size_t size;
 	spinlock_t lock;
     struct kcache_block* next;
 } kcache_block_t;
 
 typedef struct kcache_pool {
     ktime_t last_access;
-    size_t blksize;
     size_t cachesize;
     struct kcache_block* blocks;
     struct kcache_pool* next;
@@ -91,14 +91,15 @@ void std_kfree(void*);
 
 mm_state_t* pmm_state(void);
 mm_state_t* kvm_state(void);
+mm_state_t* kcache_state(void);
 
 
-void kcache_free(int mode);
+size_t kcache_free(int mode);
 void kcache_free_pool(kcache_pool_t* pool);
-void kcache_register_pool(kcache_pool_t* pool, size_t blksize);
+void kcache_register_pool(kcache_pool_t* pool);
 void kcache_unregister_pool(kcache_pool_t* pool);
 void kcache_free_block(kcache_pool_t* pool, kcache_index_t index);
-int kcache_obtain_block(kcache_pool_t* pool, kcache_index_t index, void** ptr);
+int kcache_obtain_block(kcache_pool_t* pool, kcache_index_t index, void** ptr, size_t size);
 void kcache_release_block(kcache_pool_t* pool, kcache_index_t index);
 
 

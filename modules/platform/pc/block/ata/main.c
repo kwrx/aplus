@@ -37,7 +37,7 @@ struct ata_device {
 		uintptr_t offset;
 		uint16_t bytes;
 		uint16_t last;
-	} *dma_prdt;
+	} __packed *dma_prdt;
 
 	uintptr_t dma_prdt_phys;
 	uint8_t* dma_start;
@@ -46,10 +46,6 @@ struct ata_device {
 
 	spinlock_t lock;
 	uint8_t* cache;
-
-#if CONFIG_CACHE
-	kcache_pool_t pool;
-#endif
 };
 
 
@@ -197,7 +193,7 @@ static void ata_device_init(struct ata_device* dev) {
 
 	
 	uint16_t cmd = pci_read_field(ata_pci, PCI_COMMAND, 4);
-	if(!(cmd & (1 << 2)))
+	if(!(cmd & (1 << 2))) 
 		pci_write_field(ata_pci, PCI_COMMAND, 4, cmd | (1 << 2));
 	
 	dev->bar4 = pci_read_field(ata_pci, PCI_BAR4, 4);
@@ -211,77 +207,113 @@ static void ata_device_init(struct ata_device* dev) {
 }
 
 
-static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
-#if CONFIG_CACHE
-	void* ptr = NULL;
-	if(likely(kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr) == 0)) {
-		memcpy(buf, ptr, ATA_SECTOR_SIZE);
 
-		kcache_release_block(&dev->pool, (kcache_index_t) lba);
-		return;
-	}
-#endif
-
+static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
 
-	outb(bus + ATA_REG_CONTROL, 0x02);
+	outb(bus + ATA_REG_CONTROL, 0x00);	
+	outb(bus + ATA_REG_HDDEVSEL, 0x40 | (slave << 4));
 	
 	ata_wait(dev, 0);
-	outb(bus + ATA_REG_HDDEVSEL, 0xE0 | (slave << 4) | (lba & 0x0F000000) >> 24);
-	ata_wait(dev, 0);
 
-	outb(bus + ATA_REG_FEATURES, 0x00);
-	outb(bus + ATA_REG_SECCOUNT0, 0x01);
+	outb(bus + ATA_REG_SECCOUNT0, (count >> 8) & 0xFF);
+	outb(bus + ATA_REG_LBA0, (lba & 0xFF00000) >> 24);
+	outb(bus + ATA_REG_LBA1, (lba & 0xFF0000000) >> 32);
+	outb(bus + ATA_REG_LBA2, 0);
+	outb(bus + ATA_REG_SECCOUNT0, count & 0xFF);
 	outb(bus + ATA_REG_LBA0, lba & 0xFF);
 	outb(bus + ATA_REG_LBA1, (lba & 0xFF00) >> 8);
 	outb(bus + ATA_REG_LBA2, (lba & 0xFF0000) >> 16);
-	outb(bus + ATA_REG_COMMAND, ATA_CMD_READ_PIO);
+	outb(bus + ATA_REG_COMMAND, ATA_CMD_READ_PIO_EXT);
 
 	ata_wait(dev, 0);
 	
-	insw(bus, buf, ATA_SECTOR_SIZE >> 1);
+	int i;
+	uintptr_t b = (uintptr_t) buf;
+	for(i = 0; i < count; i++, b += ATA_SECTOR_SIZE) {
+		insw(bus, b, ATA_SECTOR_SIZE >> 1);
+		ata_io_wait(dev);
+		ata_wait(dev, 0);
+	}
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
-
-#if CONFIG_CACHE
-	memcpy(ptr, buf, ATA_SECTOR_SIZE);
-	kcache_release_block(&dev->pool, (kcache_index_t) lba);
-#endif
 }
 
-
-static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* buf) {
+#if 0
+static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
 
-	outb(bus + ATA_REG_CONTROL, 0x02);
-	
 	ata_wait(dev, 0);
-	outb(bus + ATA_REG_HDDEVSEL, 0xE0 | (slave << 4) | (lba & 0x0F000000) >> 24);
+	outb(dev->bar4, 0x00);
+	outl(dev->bar4 + 0x04, dev->dma_prdt_phys);
+	outb(dev->bar4 + 0x02, inb(dev->bar4 + 0x02) | 0x04 | 0x02);
+	outb(dev->bar4, 0x08);
 	ata_wait(dev, 0);
 
-	outb(bus + ATA_REG_FEATURES, 0x00);
-	outb(bus + ATA_REG_SECCOUNT0, 0x01);
+	outb(bus + ATA_REG_SECCOUNT0, (count >> 8) & 0xFF);
+	outb(bus + ATA_REG_LBA0, (lba & 0xFF00000) >> 24);
+	outb(bus + ATA_REG_LBA1, (lba & 0xFF0000000) >> 32);
+	outb(bus + ATA_REG_LBA2, 0);
+	outb(bus + ATA_REG_SECCOUNT0, count & 0xFF);
 	outb(bus + ATA_REG_LBA0, lba & 0xFF);
 	outb(bus + ATA_REG_LBA1, (lba & 0xFF00) >> 8);
 	outb(bus + ATA_REG_LBA2, (lba & 0xFF0000) >> 16);
-	outb(bus + ATA_REG_COMMAND, ATA_CMD_WRITE_PIO);
+	ata_wait(dev, 0);
+
+	outb(bus + ATA_REG_COMMAND, ATA_CMD_READ_DMA_EXT);
+	ata_io_wait(dev);
+
+	outb(dev->bar4, 0x08 | 0x01);
+
+	while(1) {
+		int s1 = inb(dev->bar4 + 0x02);
+		int s2 = inb(dev->io_base + ATA_REG_STATUS);
+
+		if(!(s1 & 0x04))
+			continue;
+		if(!(s2 & ATA_SR_BSY))
+			break;
+	}
+
+	memcpy(buf, dev->dma_start, count * ATA_SECTOR_SIZE);
+	outb(dev->bar4 + 0x02, inb(dev->bar4 + 0x02) | 0x04 | 0x02);
+}
+#endif
+
+static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
+	uint16_t bus = dev->io_base;
+	uint8_t slave = dev->slave;
+
+	outb(bus + ATA_REG_CONTROL, 0x00);	
+	outb(bus + ATA_REG_HDDEVSEL, 0x40 | (slave << 4));
+	
+	ata_wait(dev, 0);
+
+	outb(bus + ATA_REG_SECCOUNT0, (count >> 8) & 0xFF);
+	outb(bus + ATA_REG_LBA0, (lba & 0xFF00000) >> 24);
+	outb(bus + ATA_REG_LBA1, (lba & 0xFF0000000) >> 32);
+	outb(bus + ATA_REG_LBA2, 0);
+	outb(bus + ATA_REG_SECCOUNT0, count & 0xFF);
+	outb(bus + ATA_REG_LBA0, lba & 0xFF);
+	outb(bus + ATA_REG_LBA1, (lba & 0xFF00) >> 8);
+	outb(bus + ATA_REG_LBA2, (lba & 0xFF0000) >> 16);
+	outb(bus + ATA_REG_COMMAND, ATA_CMD_WRITE_PIO_EXT);
 
 	ata_wait(dev, 0);
 	
-	outsw(bus, buf, ATA_SECTOR_SIZE >> 1);
+	int i;
+	uintptr_t b = (uintptr_t) buf;
+	for(i = 0; i < count; i++, b += ATA_SECTOR_SIZE) {
+		outsw(bus, (void*) b, ATA_SECTOR_SIZE >> 1);
+		ata_io_wait(dev);
+		ata_wait(dev, 0);
+	}
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
-
-#if CONFIG_CACHE
-	void* ptr = NULL;
-	kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr);
-	memcpy(buf, ptr, ATA_SECTOR_SIZE);
-	kcache_release_block(&dev->pool, (kcache_index_t) lba);
-#endif
 }
 
 
@@ -308,7 +340,7 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 		p = p > size ? size : p;
 
 		spinlock_lock(&dev->lock);
-		ata_device_read_sector(dev, sb, dev->cache);
+		ata_device_read_sector(dev, sb, dev->cache, 1);
 
 		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), p);
 		xoff += p;
@@ -321,7 +353,7 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 		long p = (ino->position + size) % ATA_SECTOR_SIZE;
 
 		spinlock_lock(&dev->lock);
-		ata_device_read_sector(dev, eb, dev->cache);
+		ata_device_read_sector(dev, eb, dev->cache, 1);
 
 		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
 		eb--;
@@ -329,11 +361,11 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 		spinlock_unlock(&dev->lock);
 	}
 
-	while(sb <= eb) {
-		ata_device_read_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff));
-		xoff += ATA_SECTOR_SIZE;
-		sb++;
-	}
+
+	long i = eb - sb + 1;
+	if(likely(i > 0))
+		ata_device_read_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff), i);
+
 
 	ino->position += size;
 	return size;
@@ -365,9 +397,9 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 		spinlock_lock(&dev->lock);
 
-		ata_device_read_sector(dev, sb, dev->cache);
+		ata_device_read_sector(dev, sb, dev->cache, 1);
 		memcpy((void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), buffer, p);
-		ata_device_write_sector(dev, sb, dev->cache);
+		ata_device_write_sector(dev, sb, dev->cache, 1);
 
 		xoff += p;
 		sb++;
@@ -381,20 +413,18 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 		spinlock_lock(&dev->lock);
 
-		ata_device_read_sector(dev, eb, dev->cache);
+		ata_device_read_sector(dev, eb, dev->cache, 1);
 		memcpy(dev->cache, (void*) ((uintptr_t) buffer + size - p), p);
-		ata_device_write_sector(dev, eb, dev->cache);
+		ata_device_write_sector(dev, eb, dev->cache, 1);
 
 		eb--;
 		spinlock_unlock(&dev->lock);
 	}
 
-	while(sb <= eb) {
-		ata_device_write_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff));
-			
-		xoff += ATA_SECTOR_SIZE;
-		sb++;
-	}
+
+	long i = eb - sb + 1;
+	if(likely(i > 0))
+		ata_device_write_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff), i);
 
 	ino->position += size;
 	return size;
@@ -403,16 +433,6 @@ static int ata_write(inode_t* ino, void* buffer, size_t size) {
 
 
 static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
-#if CONFIG_CACHE
-	void* ptr = NULL;
-	if(likely(kcache_obtain_block(&dev->pool, (kcache_index_t) lba, &ptr) == 0)) {
-		memcpy(buf, ptr, ATAPI_SECTOR_SIZE);
-
-		kcache_release_block(&dev->pool, (kcache_index_t) lba);
-		return;
-	}
-#endif
-	
 	uint8_t pk[12] = { 0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	
 	uint16_t bus = dev->io_base;
@@ -444,11 +464,6 @@ static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void*
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
-
-#if CONFIG_CACHE
-	memcpy(ptr, buf, ATAPI_SECTOR_SIZE);
-	kcache_release_block(&dev->pool, (kcache_index_t) lba);
-#endif
 }
 
 
@@ -530,12 +545,9 @@ static int ata_device_detect(struct ata_device* dev) {
 	) {
 
 		spinlock_init(&dev->lock);
-#if CONFIG_CACHE
-		kcache_register_pool(&dev->pool, ATA_SECTOR_SIZE);
-#endif
 		ata_device_init(dev);
 
-		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0440);
+		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0660);
 		inode->size = ata_max_offset(dev);
 		inode->read = ata_read;
 		inode->write = ata_write;
@@ -547,9 +559,6 @@ static int ata_device_detect(struct ata_device* dev) {
 		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
 	) {
 		spinlock_init(&dev->lock);
-#if CONFIG_CACHE
-		kcache_register_pool(&dev->pool, ATAPI_SECTOR_SIZE);
-#endif
 		ata_device_init(dev);
 
 		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0440);

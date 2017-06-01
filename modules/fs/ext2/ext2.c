@@ -357,7 +357,7 @@ static uint32_t allocate_block(ext2_fs_t * ext2) {
 	}
 
 	if (!block_no) {
-		kprintf(ERROR, "No available blocks, disk is out of space!\n");
+		kprintf(ERROR "No available blocks, disk is out of space!\n");
 		kfree(bg_buffer);
 		return 0;
 	}
@@ -385,7 +385,7 @@ static uint32_t allocate_block(ext2_fs_t * ext2) {
 
 
 static int allocate_inode_block(ext2_fs_t * ext2, ext2_inodetable_t * inode, uint32_t inode_no, uint32_t block) {
-	kprintf(INFO, "ext2: allocating block #%d for inode #%d\n", block, inode_no);
+	kprintf(INFO "ext2: allocating block #%d for inode #%d\n", block, inode_no);
 	uint32_t block_no = allocate_block(ext2);
 
 	if (!block_no) {

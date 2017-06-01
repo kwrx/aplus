@@ -57,13 +57,20 @@ static int meminfo_open(struct inode* inode) {
 		"MemUsed:        %12d kB\n"
 		"MemFree:        %12d kB\n"
 		"MemAvailable:   %12d kB\n"
-		"Slab:           %12d kB\n",
+		"Slab:           %12d kB\n"
+#if CONFIG_CACHE
+		"Cache:          %12d kB\n"
+#endif
+		,
 
 		pmm_state()->total / 1024,
 		pmm_state()->used / 1024,
 		(pmm_state()->total - pmm_state()->used) / 1024,
 		((pmm_state()->total - pmm_state()->used) + (kvm_state()->total - kvm_state()->used)) / 1024,
 		kvm_state()->used / 1024
+#if CONFIG_CACHE
+		, kcache_state()->used / 1024
+#endif
 	);
 
 	pfs->data = strdup(buf);
