@@ -96,17 +96,6 @@ typedef struct {
 	uint16_t nien;
 } ide_channel_regs_t;
 
-typedef struct {
-	uint8_t reserved;
-	uint8_t channel;
-	uint8_t drive;
-	uint16_t type;
-	uint16_t signature;
-	uint16_t capabilities;
-	uint32_t command_sets;
-	uint32_t size;
-	uint8_t model[41];
-} ide_device_t;
 
 typedef struct {
 	uint8_t status;

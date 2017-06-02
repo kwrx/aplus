@@ -175,11 +175,22 @@ static void ata_device_init(struct ata_device* dev) {
 		ptr[i] = t;
 	}
 
-#if 0
-	kprintf(LOG "[ATA] Device Name:  %s\n", dev->identify.model);
-	kprintf(LOG "[ATA] Sectors (48): %lld\n", dev->identify.sectors_48);
-	kprintf(LOG "[ATA] Sectors (28): %d\n", dev->identify.sectors_28);
-#endif
+
+	dev->identify.model[39] = '\0';
+	dev->identify.serial[19] = '\0';
+	dev->identify.firmware[7] = '\0';
+
+	kprintf(LOG "ata: initialize device:\n"
+					"\t Model:    %40s\n"
+					"\t Serial:   %20s\n"
+					"\t Firmware: %8s\n"
+					"\t Size:     %6.3f GB\n",
+			dev->identify.model,
+			dev->identify.serial,
+			dev->identify.firmware,
+			(double) (dev->identify.sectors_48 * ATA_SECTOR_SIZE) / 1024.0 / 1024.0 / 1024.0
+	);
+
 
 	dev->dma_prdt = (void*) kvalloc(8, GFP_KERNEL);
 	dev->dma_start = (void*) kvalloc(4096, GFP_KERNEL);
@@ -197,7 +208,6 @@ static void ata_device_init(struct ata_device* dev) {
 		pci_write_field(ata_pci, PCI_COMMAND, 4, cmd | (1 << 2));
 	
 	dev->bar4 = pci_read_field(ata_pci, PCI_BAR4, 4);
-
 	if(dev->bar4 & 1)
 		dev->bar4 &= 0xFFFFFFFC;
 
@@ -207,7 +217,7 @@ static void ata_device_init(struct ata_device* dev) {
 }
 
 
-
+#if 1
 static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
@@ -232,7 +242,7 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	int i;
 	uintptr_t b = (uintptr_t) buf;
 	for(i = 0; i < count; i++, b += ATA_SECTOR_SIZE) {
-		insw(bus, b, ATA_SECTOR_SIZE >> 1);
+		insw(bus, (void*) b, ATA_SECTOR_SIZE >> 1);
 		ata_io_wait(dev);
 		ata_wait(dev, 0);
 	}
@@ -241,10 +251,11 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	ata_wait(dev, 0);
 }
 
-#if 0
+#else
 static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
+
 
 	ata_wait(dev, 0);
 	outb(dev->bar4, 0x00);

@@ -2,6 +2,7 @@
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
+#include <aplus/task.h>
 #include <libc.h>
 
 MODULE_NAME("pc/video/console");
@@ -29,13 +30,24 @@ struct cc {
 	int escape_offset;
 	int escape_saved_cursor;
 	int style;
+	int colors;
 	char escape_buffer[32];
 } __packed;
 
 
 
 
-#define VRAM		((short*) CONSOLE_VRAM)
+#define VRAM			((short*) CONSOLE_VRAM)
+
+
+__fastcall
+static inline uint32_t __C(uint32_t p) {
+	if(unlikely(p > CONSOLE_WIDTH * CONSOLE_HEIGHT))
+		p = CONSOLE_WIDTH * CONSOLE_HEIGHT;
+ 
+	return p;
+}
+
 
 static void plot_value(struct cc* cc, char value) {
     if(cc->escape) {
@@ -55,18 +67,10 @@ static void plot_value(struct cc* cc, char value) {
 		else {
 			int x, y;
 			switch(value) {
-				case 'J':
-					for(x = 0; x < CONSOLE_WIDTH * CONSOLE_HEIGHT; x++)
-                        VRAM[x] = (cc->style << 8) | ' ';
-                        
-
-					cc->p = 0;
-					break;
-				case 'K':
-					for(x = 0; x < CONSOLE_WIDTH; x++)
-						VRAM[cc->p - (cc->p % CONSOLE_WIDTH) + x] = (cc->style << 8) | ' ';
-
-					cc->p -= (cc->p % CONSOLE_WIDTH);
+				case '@':
+					y = atoi(cc->escape_buffer);
+					for(x = 0; x < y; x++)
+						VRAM[__C(cc->p + x)] = (cc->style << 8) | ' ';
 					break;
 				case 'A':
 					y = atoi(cc->escape_buffer);
@@ -74,19 +78,98 @@ static void plot_value(struct cc* cc, char value) {
 						cc->p -= CONSOLE_WIDTH;
 					break;
 				case 'B':
+				case 'e':
 					y = atoi(cc->escape_buffer);
 					for(x = 0; x < y; x++)
 						cc->p += CONSOLE_WIDTH;
 					break;
 				case 'C':
+				case 'a':
 					cc->p += atoi(cc->escape_buffer);
 					break;
 				case 'D':
 					cc->p -= atoi(cc->escape_buffer);
 					break;
+				case 'E':
+					y = atoi(cc->escape_buffer);
+					for(x = 0; x < y; x++)
+						cc->p += CONSOLE_WIDTH - (cc->p % CONSOLE_WIDTH);
+					break;
+				case 'F':
+					y = atoi(cc->escape_buffer);
+					for(x = 0; x < y; x++) 
+						cc->p -= CONSOLE_WIDTH + (cc->p % CONSOLE_WIDTH);
+					break;
+				case 'G':
+					cc->p -= (cc->p % CONSOLE_WIDTH);
+					cc->p += atoi(cc->escape_buffer);
+					break;
 				case 'H':
+				case 'f':
 					sscanf(cc->escape_buffer, "%d;%d", &y, &x);
 					cc->p = y * CONSOLE_WIDTH + x;
+					break;
+				case 'J':
+					y = atoi(cc->escape_buffer);
+					switch(y) {
+						case 1:
+							x = cc->p;
+							while(x < CONSOLE_WIDTH * CONSOLE_HEIGHT)
+								VRAM[x++] = (cc->style << 8) | ' ';
+							break;
+						default:
+							for(x = 0; x < CONSOLE_WIDTH * CONSOLE_HEIGHT; x++)
+                        		VRAM[x] = (cc->style << 8) | ' ';
+
+							cc->p = 0;
+							break;
+					}
+					break;
+				case 'K':
+					y = atoi(cc->escape_buffer);
+					switch(y) {
+						case 1:
+							x = cc->p - (cc->p % CONSOLE_WIDTH);
+							while(x < cc->p)
+								VRAM[__C(x++)] = (cc->style << 8) | ' ';
+							break;
+						case 2:
+							for(x = 0; x < CONSOLE_WIDTH; x++)
+								VRAM[__C(cc->p - (cc->p % CONSOLE_WIDTH) + x)] = (cc->style << 8) | ' ';
+							break;
+					}
+					break;
+				case 'L':
+					y = atoi(cc->escape_buffer) * CONSOLE_WIDTH;
+					y -= (cc->p % CONSOLE_WIDTH);
+
+					x = cc->p - (cc->p % CONSOLE_WIDTH);
+					while(x < y)
+						VRAM[__C(x++)] = (cc->style << 8) | ' ';
+					
+					break;
+				case 'M':
+					y = atoi(cc->escape_buffer) * CONSOLE_WIDTH;
+					y += (cc->p % CONSOLE_WIDTH);
+
+					x = cc->p + (CONSOLE_WIDTH - (cc->p % CONSOLE_WIDTH));
+					while(x > y)
+						VRAM[__C(x--)] = (cc->style << 8) | ' ';
+					
+					break;
+				case 'P':
+					y = atoi(cc->escape_buffer);
+					while(y--)
+						VRAM[__C(cc->p--)] = (cc->style << 8) | ' ';
+					break;
+				case 'X':
+					y = atoi(cc->escape_buffer);
+					while(y)
+						VRAM[__C(cc->p - y--)] = (cc->style << 8) | ' ';
+					break;
+				case 'd':
+					y = atoi(cc->escape_buffer);
+					cc->p = (CONSOLE_WIDTH * y) + (cc->p % CONSOLE_WIDTH);
 					break;
 				case 's':
 					cc->escape_saved_cursor = cc->p;
@@ -96,16 +179,29 @@ static void plot_value(struct cc* cc, char value) {
 					break;
 				case 'm':
 					for(char* p = strtok(cc->escape_buffer, ";"); p; p = strtok(NULL, ";")) {
-						char colors[] = { 0, 12, 10, 14, 9, 13, 11, 15 };
+						char colors[2][8] = {
+							{ 0x0, 0x4, 0x2, 0x6, 0x1, 0x5, 0x3, 0x7 },
+							{ 0x8, 0xC, 0xA, 0xE, 0x9, 0xD, 0xB, 0xF }
+						};
 
 						x = atoi(p);
 						switch(x) {
+							case 0:
+								cc->style = 0x07;
+								break;
+							case 2:
+								cc->colors = 0;
+								break;
+							case 22:
+								cc->colors = 1;
+								break; 
 							case 30 ... 37:
-								cc->style = (cc->style & 0xF0) | (colors[x - 30] & 0x0F);
+								cc->style = (cc->style & 0xF0) | (colors[cc->colors][x - 30] & 0x0F);
 								break;
 							case 40 ... 47:
-								cc->style = (cc->style & 0x0F) | (colors[x - 40] << 4);
+								cc->style = (cc->style & 0x0F) | (colors[cc->colors][x - 40] << 4);
 								break;
+							case 38:
 							case 39:
 								cc->style = (cc->style & 0xF0) | 0x07;
 								break;
@@ -142,13 +238,13 @@ static void plot_value(struct cc* cc, char value) {
 				cc->p += 4 - ((cc->p % CONSOLE_WIDTH) % 4);
 				break;
 			case '\b':
-				VRAM[--cc->p] = (cc->style << 8) | ' ';
+				VRAM[__C(--cc->p)] = (cc->style << 8) | ' ';
 				break;
 			case '\e':
 				cc->escape = 1;
 				break;
 			default:
-				VRAM[cc->p++] = (cc->style << 8) | value;
+				VRAM[__C(cc->p++)] = (cc->style << 8) | value;
 				break;
 		}
 	}
@@ -164,7 +260,7 @@ static void plot_value(struct cc* cc, char value) {
 		cc->p -= CONSOLE_WIDTH;
 
 		for(x = 0; x < CONSOLE_WIDTH; x++)
-			VRAM[cc->p + x] = (cc->style << 8) | ' ';
+			VRAM[__C(cc->p + x)] = (cc->style << 8) | ' ';
 
     }
 
@@ -189,7 +285,7 @@ static int console_write(struct inode* inode, void* buf, size_t size) {
 
     char* s = buf;
     for(int i = 0; i < size; i++)
-        plot_value(inode->userdata, s[i]);
+        plot_value(cc, s[i]);
 
     return size;
 }
@@ -202,7 +298,8 @@ int init(void) {
 	}
 
     memset(cc, 0, sizeof(struct cc));
-    cc->style = 0x07;
+    cc->style = 0x0F;
+	cc->colors = 1;
 
 
 	int i;

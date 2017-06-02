@@ -46,7 +46,7 @@ static void elf_layout(elf_module_t* elf) {
 	}
 }
 
-static void* elf_load(void* image, void** address, size_t* size) {
+static void* elf_load(void* image, void** address, symbol_t** symtab, size_t* size) {
 	elf_module_t _elf;
 	elf_module_t* elf = &_elf;
 	

@@ -30,7 +30,7 @@ void sys_exit(int status) {
 	int i;
 	for(i = 0; i < TASK_FD_COUNT; i++)
 		sys_close(i);
-		
+
 
 	arch_task_release(current_task);
 	syscall_ack();

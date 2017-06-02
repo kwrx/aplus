@@ -82,6 +82,7 @@ int main(int argc, char** argv) {
         "HOME=/home",
         "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
         "USER=root",
+        "TERM=linux",
         NULL
     };
     

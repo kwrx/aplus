@@ -54,7 +54,12 @@ static int script_check(void* image) {
 	return E_ERR;
 }
 
-static void* script_load(void* image, void** address, size_t* size) {
+static void* script_load(void* image, void** address, symbol_t** symtab, size_t* size) {
+	(void) image;
+	(void) address;
+	(void) symtab;
+	(void) size;
+
 	return fake_start;
 }
 

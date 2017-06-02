@@ -4,6 +4,7 @@
 #include <aplus.h>
 #include <aplus/mm.h>
 #include <aplus/vfs.h>
+#include <aplus/binfmt.h>
 #include <libc.h>
 
 
@@ -31,6 +32,8 @@ typedef struct fd {
 	inode_t* inode;
 	int flags;
 } fd_t;
+
+
 
 typedef struct task {
 
@@ -94,6 +97,7 @@ typedef struct task {
 	struct {
 		uintptr_t start;
 		uintptr_t end;
+		symbol_t* symtab;
 	} __image, *image;
 
 	struct {

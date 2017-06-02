@@ -3,6 +3,7 @@
 #include <aplus/debug.h>
 #include <aplus/mm.h>
 #include <aplus/elf.h>
+#include <aplus/task.h>
 #include <aplus/module.h>
 #include <libc.h>
 
@@ -144,10 +145,11 @@ static int elf_link(elf_module_t* elf) {
 }
 
 
-static void* elf_module_load(void* image, void** address, size_t* size) {
+static void* elf_module_load(void* image, void** address, symbol_t** symtab, size_t* size) {
 	elf_module_t _elf;
 	elf_module_t* elf = &_elf;
 	
+	memset(elf, 0, sizeof(elf_module_t));
 	elf->header = (Elf_Ehdr*) image;
 
 	if(memcmp(elf->header->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(elf))) {
@@ -171,6 +173,7 @@ static void* elf_module_load(void* image, void** address, size_t* size) {
 			elf->names = (char*) ((uintptr_t) image + elf->strtab->sh_offset);
 		}
 	}
+
 
 	elf_layout(elf);
 
@@ -214,13 +217,22 @@ static void* elf_module_load(void* image, void** address, size_t* size) {
 	KASSERT(__module_deps__);
 
 
+	
 	symbol_t* sym, *s2;
 	for(sym = elf->symbols; sym;) {
 		s2 = sym;		
 		sym = sym->next;
 
-		kfree(s2);
+		if(!symtab)
+			kfree(s2);
+		else {
+			s2->next = *symtab;
+			*symtab = s2;
+		}
 	}
+	
+	
+	
 
 	module_t* mod = (module_t*) kmalloc(sizeof(module_t), GFP_KERNEL);
 	mod->name = strdup(*__module_name__);

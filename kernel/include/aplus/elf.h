@@ -2,6 +2,7 @@
 #define _ELF_H
 
 #include <aplus.h>
+#include <aplus/binfmt.h>
 #include <libc.h>
 
 #if CONFIG_BITS == 32
@@ -275,12 +276,6 @@ enum {
 };
 
 
-typedef struct symbol {
-	struct symbol* next;
-
-	void* addr;
-	char name[1];	
-} symbol_t;
 
 /*
  * ELF module descriptor.

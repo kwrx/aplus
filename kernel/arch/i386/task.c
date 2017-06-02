@@ -338,6 +338,7 @@ void arch_task_release(volatile task_t* task) {
 }
 
 
+
 int task_init(void) {
 	static task_t __t;
 	static i386_task_context_t __c;

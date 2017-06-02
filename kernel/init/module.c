@@ -82,7 +82,7 @@ int module_init(void) {
 		size = mbd->modules.ptr[i].size;
 
 
-		module_t* mod = (module_t*) binfmt_load_image((void*) mbd->modules.ptr[i].ptr, NULL, &size, "ELF_MODULE");
+		module_t* mod = (module_t*) binfmt_load_image((void*) mbd->modules.ptr[i].ptr, NULL, &kernel_task->image->symtab, &size, "ELF_MODULE");
 		if(unlikely(!mod)) {
 			kprintf(ERROR "module: cannot load module %d\n", i);
 			continue;

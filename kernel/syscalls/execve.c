@@ -128,7 +128,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	arch_task_release(current_task);
 
 
-	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &size, loader);
+	void (*_start) (char**, char**) = (void (*) (char**, char**)) binfmt_load_image(image, (void**) &current_task->image->start, &current_task->image->symtab, &size, loader);
 	KASSERT(_start);
 
 	
