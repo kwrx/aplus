@@ -5,14 +5,27 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <dirent.h>
 
 #include <sys/ioctl.h>
 #include <aplus/base.h>
-#include <aplus/fbdev.h>
 
 #define SYSCONFIG_VERBOSE
 #include <aplus/sysconfig.h>
 
+
+
+static char* __envp[] = {
+    "HOME=/home/root",
+    "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
+    "USER=root",
+    "LOGNAME=root",
+    "TERM=linux",
+    "SHELL=/usr/bin/sh",
+    "TMPDIR=/tmp",
+    NULL
+};
+    
 
 
 static void parse_fstab() {
@@ -62,7 +75,7 @@ static void parse_fstab() {
         if(unlikely(mount(opt[0], opt[1], opt[2], flags, NULL) != 0))
             fprintf(stderr, "%s: failed to mount \'%s\' with \'%s\' (%s)\n", opt[0], opt[1], opt[2], opt[3]);
 
-        fprintf(stdout, "mount: \'%s\' in \'%s\' with \'%s\' (%s)\n", opt[0], opt[1], opt[2], opt[3]);
+        fprintf(stdout, "init: mount \'%s\' in \'%s\' with \'%s\' (%s) \e[70G[ \e[32mOK\e[37m ]\n", opt[0], opt[1], opt[2], opt[3]);
     }
    
 
@@ -70,33 +83,64 @@ static void parse_fstab() {
 }
 
 
+
+static void parse_initd() {
+    DIR* d = opendir("/etc/init.d");
+    if(!d) {
+        fprintf(stderr, "init: no /etc/init.d directory found!\n");
+        return;
+    }
+
+    struct dirent* ent;
+    while((ent = readdir(d))) {
+        static char path[BUFSIZ];
+        sprintf(path, "/etc/init.d/%s", ent->d_name);
+
+        int e = -1;
+        do {
+            if(strcmp(&ent->d_name[strlen(ent->d_name) - 4], ".lnk") == 0) {
+                int fd = open(path, O_RDONLY);
+                if(fd < 0)
+                    break;
+
+                memset(path, 0, sizeof(path));
+                if(read(fd, path, sizeof(path)) <= 0)
+                    break;
+                
+                if(path[strlen(path) - 1] == '\n')
+                    path[strlen(path) - 1] = '\0';
+
+                close(fd);
+            }
+
+            
+            if(access(path, F_OK) != 0)
+                break;
+            
+            pid_t pid = fork();
+            if(pid == -1)
+                break;
+            else if(pid == 0)
+                exit(execle(path, "start", NULL, __envp));
+            
+            e = 0;
+        } while(0);
+        
+        fprintf(stderr, "init: starting \e[36m%s\e[37m \e[70G[ %3s ]\n", ent->d_name, e == 0 ? "\e[32mOK\e[37m" : "\e[31mERR\e[37m");
+    }
+
+    closedir(d);
+}
+
+
 int main(int argc, char** argv) {
     fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
     fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
     fcntl(open("/dev/stderr", O_WRONLY), F_DUPFD, STDERR_FILENO);
+   
 
     parse_fstab();
+    parse_initd();
 
-   
-    char* __envp[] = {
-        "HOME=/home/root",
-        "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
-        "USER=root",
-        "LOGNAME=root",
-        "TERM=linux",
-        "SHELL=/usr/bin/sh",
-        "TMPDIR=/tmp",
-        NULL
-    };
-    
-    char* __argv[] = { NULL, NULL };
-
-    
-    __argv[0] = (char*)
-        sysconfig("sys.startup", SYSCONFIG_FORMAT_STRING,     // OR
-        sysconfig("sys.shell", SYSCONFIG_FORMAT_STRING,       // OR
-        0
-    ));
-    
-    return execve(__argv[0], __argv, __envp);
+    return 0;
 }

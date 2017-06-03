@@ -1,5 +1,5 @@
 .PHONY: all
-OUTPUT		?=
+
 CC			?=
 ROOT		?=
 OUTPUT		:= $(ROOT)/bin/usr/sbin/$(notdir $(PWD))

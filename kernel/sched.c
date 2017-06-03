@@ -36,7 +36,7 @@ static void sched_next(void) {
 
 
 pid_t sched_nextpid() {
-	static pid_t nextpid = 0;
+	static pid_t nextpid = 1;
 	return nextpid++;
 }
 
