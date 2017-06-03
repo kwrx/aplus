@@ -27,63 +27,6 @@ char* sh_gethostname(void) {
 }
 
 
-char* sh_login(char* hostname) {
-    char* username;
-    char* passwd;
-
-    do {
-        fprintf(stdout, "\n%s login: ", hostname);
-        fflush(stdout);
-
-        CLRBUF();
-        if(fgets(buf, BUFSIZ, stdin) <= 0)
-            continue;
-
-        username = strdup(buf);
-        username[strlen(username) - 1] = '\0';
-
-        CLRBUF();
-        sprintf(buf, "/home/%s/.passwd", username);
-
-        FILE* fp = fopen(buf, "rb");
-        if(!fp) {
-            fprintf(stderr, "Error: invalid username!\n");
-            free(username);
-            continue;
-        }
-
-        fread(buf, 16, 1, fp);
-        fclose(fp);
-
-        passwd = strdup(buf);
-        passwd[strlen(passwd) - 1] = '\0';
-        CLRBUF();
-
-        fprintf(stdout, "password: ");
-        fflush(stdout);
-
-        if(fgets(buf, BUFSIZ, stdin) <= 0) {
-            free(username);
-            free(passwd);
-            continue;
-        }
-
-        md5(buf, buf, strlen(buf));
-
-        fprintf(stdout, "buf: %s\npasswd: %s\n", buf, passwd);
-
-        if(strcmp(buf, passwd) == 0)
-            break;
-    
-        fprintf(stderr, "Error: invalid password!\n");
-        free(username);
-        free(passwd);
-    } while(1);
-
-    free(passwd);
-    return username;
-}
-
 void sh_cmdline(char* cmdline) {
     if(!cmdline)
         return;

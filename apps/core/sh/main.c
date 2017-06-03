@@ -98,21 +98,18 @@ int main(int argc, char** argv, char** env) {
 
 
         
-    char* username;
+    char* username = strdup(getenv("USER"));
     char* hostname = sh_gethostname();
-
-    
-#if HAVE_LOGIN
-    username = sh_login(hostname);
-#else
-    username = strdup(getenv("USER"));
-#endif
-
 
 
     do {
         CLRBUF();
-        fprintf(stdout, "\033[36m[%s@%s %s]#\033[39m ", username, hostname, getcwd(buf, BUFSIZ));
+        char* cwd = getcwd(buf, BUFSIZ);
+        if(getenv("HOME"))
+            if(strcmp(cwd, getenv("HOME")) == 0)
+                cwd = "~";
+
+        fprintf(stdout, "\033[36m[%s@%s %s]%c\033[39m ", username, hostname, cwd, geteuid() == 0 ? '#' : '$');
         fflush(stdout);
 
         CLRBUF();

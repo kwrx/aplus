@@ -16,12 +16,8 @@
 
 
 static char* __envp[] = {
-    "HOME=/home/root",
     "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
-    "USER=root",
-    "LOGNAME=root",
     "TERM=linux",
-    "SHELL=/usr/bin/sh",
     "TMPDIR=/tmp",
     NULL
 };
@@ -98,22 +94,6 @@ static void parse_initd() {
 
         int e = -1;
         do {
-            if(strcmp(&ent->d_name[strlen(ent->d_name) - 4], ".lnk") == 0) {
-                int fd = open(path, O_RDONLY);
-                if(fd < 0)
-                    break;
-
-                memset(path, 0, sizeof(path));
-                if(read(fd, path, sizeof(path)) <= 0)
-                    break;
-                
-                if(path[strlen(path) - 1] == '\n')
-                    path[strlen(path) - 1] = '\0';
-
-                close(fd);
-            }
-
-            
             if(access(path, F_OK) != 0)
                 break;
             
@@ -121,7 +101,7 @@ static void parse_initd() {
             if(pid == -1)
                 break;
             else if(pid == 0)
-                exit(execle(path, "start", NULL, __envp));
+                exit(execle(path, path, "start", NULL, __envp));
             
             e = 0;
         } while(0);
