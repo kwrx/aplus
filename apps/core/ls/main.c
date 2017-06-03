@@ -7,6 +7,7 @@
 #include <sys/stat.h>
 #include <time.h>
 #include <errno.h>
+#include <pwd.h>
 #include <fcntl.h>
 
 #ifndef MAXNAMLEN
@@ -101,7 +102,17 @@ int main(int argc, char** argv) {
 				
 				printf(" %d ", st.st_nlink);
 				
-				/* TODO: print username for uid and gid */
+				char* nuid = "unknown";
+				char* ngid = "unknown";
+
+
+				struct passwd* pwd;
+				if((pwd = getpwuid(st.st_uid)) != NULL)
+					nuid = pwd->pw_name;
+				if((pwd = getpwuid(st.st_gid)) != NULL)
+					ngid = pwd->pw_name;
+
+				printf("%s %s ", nuid, ngid);
 				
 				if(human_readable) {
 					register int s = st.st_size;

@@ -31,6 +31,8 @@
 static void tcpip_init_done(void* arg) {
 	current_task->name = "[tcpipd]";
 	current_task->description = "TCP/IP Stack Deamon";
+	current_task->gid = current_task->uid = 1;
+
 
 #if DEBUG
 	kprintf(LOG "[%d] tcpip: initialized in %d MS\n", sys_getpid(), (uintptr_t) (timer_getms() - (uintptr_t) arg));

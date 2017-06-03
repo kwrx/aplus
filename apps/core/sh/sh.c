@@ -118,7 +118,7 @@ void sh_cmdline(char* cmdline) {
             argv[j++] = strdup(trgv[i]);
 
 
-        glob(trgv[i], GLOB_NOSORT, NULL, &gl);
+        glob(trgv[i], GLOB_NOSORT | GLOB_TILDE, NULL, &gl);
 
         if(gl.gl_pathc) {
             int k;

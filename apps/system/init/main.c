@@ -79,10 +79,13 @@ int main(int argc, char** argv) {
 
    
     char* __envp[] = {
-        "HOME=/home",
+        "HOME=/home/root",
         "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
         "USER=root",
+        "LOGNAME=root",
         "TERM=linux",
+        "SHELL=/usr/bin/sh",
+        "TMPDIR=/tmp",
         NULL
     };
     
