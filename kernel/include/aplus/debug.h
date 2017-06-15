@@ -15,10 +15,12 @@
 
 #ifndef __ASSEMBLY__
 void debug_send(char value);
+void debug_dump(void* context, char* errmsg, uintptr_t dump);
 
 
 #if !DEBUG
-#define debug_send(a)
+#define debug_send(a)			(void) 0
+#define debug_dump(x, y, z)		(void) 0
 #define KASSERT(x)
 #define KASSERTF(x, y...)
 #define kprintf(a, b...)

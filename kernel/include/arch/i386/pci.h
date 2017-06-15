@@ -25,6 +25,9 @@
 #define PCI_BAR4		0x20
 #define PCI_BAR5		0x24
 
+#define PCI_SUBSYSID	0x2C
+#define PCI_SUBVENID	0x2E
+
 #define PCI_INTERRUPT_LINE	0x3C
 #define PCI_SECONDARY_BUS	0x09
 

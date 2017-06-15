@@ -270,18 +270,7 @@ void isr_handler(i386_context_t* context) {
 	}
 
 
-
-	#define lookup(s, a)														\
-		!(s = binfmt_lookup_symbol(current_task->image->symtab, a))				\
-			? !(s = binfmt_lookup_symbol(kernel_task->image->symtab, a))		\
-				? s = "<unknown>" : (void) 0 : (void) 0;
-
-	char* s;
-	lookup(s, context->eip);
-
-	kprintf(ERROR "Exception! %s (%x:%x:%x) 0x%x from PID %d\n", exception_messages[context->int_no], context->err_code & 1, (context->err_code >> 1) & 3, (context->err_code >> 3) & 0xFFF1, current_task ? current_task->pid : -1);
-	kprintf(ERROR "\t IP: %08x (%s)\n\t SP: %08x\n", context->eip, s, context);
-
+	debug_dump(context, exception_messages[context->int_no], context->eip);
 
 
 	if(unlikely(current_task == kernel_task))

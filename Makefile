@@ -14,8 +14,9 @@ include build/Makefile.flags
 all:					\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
+	$(KERNEL_ISO)		\
 	$(HDD)
-	@$(VMM)
+	$(VMM)
 
 $(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
 	@echo "  LD     " $@

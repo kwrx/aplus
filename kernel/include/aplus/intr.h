@@ -16,6 +16,8 @@ void intr_disable(void);
 void intr_enable(void);
 
 
+extern int current_irq;
+
 #define INTR_OFF	intr_disable()
 #define INTR_ON		intr_enable()
 

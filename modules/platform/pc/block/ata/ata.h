@@ -1,9 +1,11 @@
 #ifndef _ATAPI_H
 #define _ATAPI_H
 
+#define ATA_DMA_SIZE				127
+
 #define ATAPI_SECTOR_SIZE			2048
 #define ATA_SECTOR_SIZE				512
-#define ATA_CACHE_SIZE				8129
+#define ATA_CACHE_SIZE				8192
 
 #define ATA_IRQ_PRIMARY				0x0E
 #define ATA_IRQ_SECONDARY			0x0F

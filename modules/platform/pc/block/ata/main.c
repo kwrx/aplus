@@ -73,7 +73,7 @@ static struct ata_device ata_secondary_slave = {
 
 
 static void find_ata_pci(uint32_t device, uint16_t vendorid, uint16_t deviceid, void* arg) {
-	if((vendorid == 0x8086) && (deviceid & 0x7010))
+	if((vendorid == 0x8086) && (deviceid == 0x7010))
 		*((uintptr_t*) arg) = device;
 }
 
@@ -193,23 +193,26 @@ static void ata_device_init(struct ata_device* dev) {
 
 
 	dev->dma_prdt = (void*) kvalloc(8, GFP_KERNEL);
-	dev->dma_start = (void*) kvalloc(4096, GFP_KERNEL);
+	dev->dma_start = (void*) kvalloc(ATA_SECTOR_SIZE * ATA_DMA_SIZE, GFP_KERNEL);
 
 	dev->dma_prdt_phys = V2P(dev->dma_prdt);
 	dev->dma_start_phys = V2P(dev->dma_start);
 
 	dev->dma_prdt[0].offset = dev->dma_start_phys;
-	dev->dma_prdt[0].bytes = ATA_SECTOR_SIZE;
+	dev->dma_prdt[0].bytes = ATA_SECTOR_SIZE * ATA_DMA_SIZE;
 	dev->dma_prdt[0].last = 0x8000;
 
 	
 	uint16_t cmd = pci_read_field(ata_pci, PCI_COMMAND, 4);
 	if(!(cmd & (1 << 2))) 
 		pci_write_field(ata_pci, PCI_COMMAND, 4, cmd | (1 << 2));
-	
+
+
 	dev->bar4 = pci_read_field(ata_pci, PCI_BAR4, 4);
 	if(dev->bar4 & 1)
 		dev->bar4 &= 0xFFFFFFFC;
+	else
+		kprintf(WARN "ata: invalid registers: %x\n", dev->bar4);
 
 
 	dev->cache = (uint8_t*) kmalloc(ATA_CACHE_SIZE, GFP_KERNEL);
@@ -217,42 +220,23 @@ static void ata_device_init(struct ata_device* dev) {
 }
 
 
-#if 1
 static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
-	uint16_t bus = dev->io_base;
-	uint8_t slave = dev->slave;
+	if(likely(count > ATA_DMA_SIZE)) {
+		int i;
+		for(i = 0; i + ATA_DMA_SIZE < count; i += ATA_DMA_SIZE)
+			ata_device_read_sector(dev, lba + i, (void*) ((uintptr_t) buf + (i * ATA_SECTOR_SIZE)), ATA_DMA_SIZE);
 
-	outb(bus + ATA_REG_CONTROL, 0x00);	
-	outb(bus + ATA_REG_HDDEVSEL, 0x40 | (slave << 4));
-	
-	ata_wait(dev, 0);
+		if(unlikely(!(count - i)))
+			return;
 
-	outb(bus + ATA_REG_SECCOUNT0, (count >> 8) & 0xFF);
-	outb(bus + ATA_REG_LBA0, (lba & 0xFF00000) >> 24);
-	outb(bus + ATA_REG_LBA1, (lba & 0xFF0000000) >> 32);
-	outb(bus + ATA_REG_LBA2, 0);
-	outb(bus + ATA_REG_SECCOUNT0, count & 0xFF);
-	outb(bus + ATA_REG_LBA0, lba & 0xFF);
-	outb(bus + ATA_REG_LBA1, (lba & 0xFF00) >> 8);
-	outb(bus + ATA_REG_LBA2, (lba & 0xFF0000) >> 16);
-	outb(bus + ATA_REG_COMMAND, ATA_CMD_READ_PIO_EXT);
-
-	ata_wait(dev, 0);
-	
-	int i;
-	uintptr_t b = (uintptr_t) buf;
-	for(i = 0; i < count; i++, b += ATA_SECTOR_SIZE) {
-		insw(bus, (void*) b, ATA_SECTOR_SIZE >> 1);
-		ata_io_wait(dev);
-		ata_wait(dev, 0);
+		lba += i;
+		count -= i;
+		buf = (void*) ((uintptr_t) buf + (i * ATA_SECTOR_SIZE));
 	}
-	
-	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
-	ata_wait(dev, 0);
-}
 
-#else
-static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
+
+	spinlock_lock(&dev->lock);
+
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
 
@@ -262,7 +246,15 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	outl(dev->bar4 + 0x04, dev->dma_prdt_phys);
 	outb(dev->bar4 + 0x02, inb(dev->bar4 + 0x02) | 0x04 | 0x02);
 	outb(dev->bar4, 0x08);
-	ata_wait(dev, 0);
+	
+
+	while(1)
+		if(!(inb(dev->io_base + ATA_REG_STATUS) & ATA_SR_BSY))
+			break;
+
+	outb(bus + ATA_REG_CONTROL, 0x00);	
+	outb(bus + ATA_REG_HDDEVSEL, 0x40 | (slave << 4));
+	ata_io_wait(dev);
 
 	outb(bus + ATA_REG_SECCOUNT0, (count >> 8) & 0xFF);
 	outb(bus + ATA_REG_LBA0, (lba & 0xFF00000) >> 24);
@@ -272,7 +264,12 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	outb(bus + ATA_REG_LBA0, lba & 0xFF);
 	outb(bus + ATA_REG_LBA1, (lba & 0xFF00) >> 8);
 	outb(bus + ATA_REG_LBA2, (lba & 0xFF0000) >> 16);
-	ata_wait(dev, 0);
+	
+	while(1) {
+		uint8_t s = inb(dev->io_base + ATA_REG_STATUS);
+		if(!(s & ATA_SR_BSY) && (s & ATA_SR_DRDY))
+			break;
+	}
 
 	outb(bus + ATA_REG_COMMAND, ATA_CMD_READ_DMA_EXT);
 	ata_io_wait(dev);
@@ -289,10 +286,13 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 			break;
 	}
 
-	memcpy(buf, dev->dma_start, count * ATA_SECTOR_SIZE);
+
+	memcpy(buf, dev->dma_start, ATA_SECTOR_SIZE * count);
 	outb(dev->bar4 + 0x02, inb(dev->bar4 + 0x02) | 0x04 | 0x02);
+
+	spinlock_unlock(&dev->lock);
 }
-#endif
+
 
 static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
 	uint16_t bus = dev->io_base;
@@ -350,26 +350,20 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 		p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
 		p = p > size ? size : p;
 
-		spinlock_lock(&dev->lock);
 		ata_device_read_sector(dev, sb, dev->cache, 1);
 
 		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), p);
 		xoff += p;
 		sb++;
-
-		spinlock_unlock(&dev->lock);
 	}
 
 	if(((ino->position + size) % ATA_SECTOR_SIZE) && (sb <= eb)) {
 		long p = (ino->position + size) % ATA_SECTOR_SIZE;
 
-		spinlock_lock(&dev->lock);
 		ata_device_read_sector(dev, eb, dev->cache, 1);
 
 		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
 		eb--;
-
-		spinlock_unlock(&dev->lock);
 	}
 
 
@@ -583,6 +577,20 @@ static int ata_device_detect(struct ata_device* dev) {
 int init(void) {
 	
 	pci_scan(&find_ata_pci, -1, &ata_pci);
+	if(!ata_pci) {
+		kprintf(ERROR "ata: pci device not found!\n");
+		return E_ERR;
+	}
+
+	kprintf(INFO "ata: pci %d\n\tBAR0: %p\n\tBAR1: %p\n\tBAR2: %p\n\tBAR3: %p\n\tBAR4: %p\n",
+        ata_pci,
+		pci_read_field(ata_pci, PCI_BAR0, 4) & ~0xF,
+        pci_read_field(ata_pci, PCI_BAR1, 4) & ~0xF,
+        pci_read_field(ata_pci, PCI_BAR2, 4) & ~0xF,
+        pci_read_field(ata_pci, PCI_BAR3, 4) & ~0xF,
+        pci_read_field(ata_pci, PCI_BAR4, 4) & ~0xF
+    
+    );
 
 	irq_enable(ATA_IRQ_PRIMARY, irq_handler_1);
 	irq_enable(ATA_IRQ_SECONDARY, irq_handler_2);

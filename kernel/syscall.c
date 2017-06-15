@@ -83,7 +83,6 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
 		kprintf(WARN "syscall: context locked for %d from %d\n", number, sys_getpid());
 
 	INTR_ON;
-	//spinlock_lock(&lck_syscall);
 	long r = __handlers[number] (p0, p1, p2, p3, p4);
 	syscall_ack();
 

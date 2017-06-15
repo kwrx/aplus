@@ -313,7 +313,7 @@ int init(void) {
     e1000->pci = 0;
     pci_scan(&find_pci, -1, &e1000->pci);
     if(!e1000->pci) {
-        kprintf(ERROR "e1000: pci device not found!");
+        kprintf(ERROR "e1000: pci device not found!\n");
         return E_ERR;
     }
 

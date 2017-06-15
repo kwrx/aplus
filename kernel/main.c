@@ -47,14 +47,17 @@ int main(int argc, char** argv) {
 #endif
 	(void) module_init();
 	(void) mounts_init();
+
 	
-	kprintf(INFO "%s %s-%s %s %s %s\n", 
+	kprintf(INFO "%s %s-%s %s %s %s (%d Mb)\n", 
 			KERNEL_NAME, 
 			KERNEL_VERSION,
 			KERNEL_CODENAME,
 			KERNEL_DATE,
 			KERNEL_TIME,
-			KERNEL_PLATFORM);
+			KERNEL_PLATFORM,
+			(int) mbd->memory.size / 1024 / 1024);
+
 
 	
 	char* __argv[] = { "/usr/sbin/init", NULL };
@@ -66,3 +69,4 @@ int main(int argc, char** argv) {
     idle();
 	return 0;
 }
+

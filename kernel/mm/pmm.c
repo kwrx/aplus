@@ -115,9 +115,9 @@ mm_state_t* pmm_state(void) {
 
 int pmm_init(void) {
 	memset(frames, 0, sizeof(frames));
-
 	pmm_claim(0x00000000, (physaddr_t) mbd->memory.start);
 	
+
 	return E_OK;
 }
 

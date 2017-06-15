@@ -9,7 +9,7 @@
 #define CONFIG_HOST_MEMORY				128
 #define CONFIG_HAVE_LIBC				1
 #define CONFIG_SMP						0	/* TODO */
-#define CONFIG_IPC						0	/* FIXME */
+#define CONFIG_IPC						1	/* FIXME */
 #define CONFIG_VMM						1
 #define CONFIG_CACHE					0	/* FIXME */
 #define CONFIG_IOSCHED					1
@@ -52,7 +52,7 @@
 #	endif
 #	define CONFIG_STACK_SIZE			0x00008000ULL
 #	define KERNEL_PLATFORM				"i386"
-#	define __pause__()					__asm__ __volatile__ ("pause; hlt")
+#	define __pause__()					__asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__x86_64__)
 #	define CONFIG_BITS					64
 #	define CONFIG_KERNEL_BASE			0xFFFFFFFFC0000000L

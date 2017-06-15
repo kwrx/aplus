@@ -352,7 +352,7 @@ int task_init(void) {
 	t->gid = TASK_ROOT_GID;
 	t->sid = 0;
 	
-	t->name = "X";
+	t->name = "aplus";
 	t->description = NULL;
 	t->argv = NULL;
 	t->environ = NULL;
