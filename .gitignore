@@ -9,6 +9,7 @@
 *.jar
 *.tar.gz
 *.img
+*.vdi
 bin/aplus
 bin/usr/bin/*
 bin/usr/sbin/*

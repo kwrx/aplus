@@ -7,7 +7,7 @@ KERNEL_NAME			:= aplus
 KERNEL_OUTPUT		:= bin/$(KERNEL_NAME)
 KERNEL_SYM			:= $(KERNEL_NAME).sym
 KERNEL_ISO			:= $(KERNEL_NAME).iso
-HDD					:= hdd.img
+HDD					:= hdd.vdi
 
 KERNEL_ARCH_C		:= $(shell $(FIND) kernel/arch/$(ARCH) -type f -name "*.c")
 KERNEL_ARCH_S		:= $(shell $(FIND) kernel/arch/$(ARCH) -type f -name "*.s")

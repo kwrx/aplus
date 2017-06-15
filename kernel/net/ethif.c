@@ -11,7 +11,7 @@
 
 
 #ifndef ETHERNETIF_MAXFRAMES
-#define ETHERNETIF_MAXFRAMES            0
+#define ETHERNETIF_MAXFRAMES            1
 #endif
 
 
@@ -64,6 +64,7 @@ void ethif_input(struct netif* netif) {
 
         LINK_STATS_INC(link.recv);
 
+
         hdr = p->payload;
         switch(lwip_htons(hdr->type)) {
             case ETHTYPE_IP:
@@ -84,6 +85,7 @@ void ethif_input(struct netif* netif) {
                 p = NULL;
                 break;
         }
+
     } while((!ETHERNETIF_MAXFRAMES) || (++frames < ETHERNETIF_MAXFRAMES));
 }
 
@@ -100,7 +102,7 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
 #endif
     
     for(q = p; q; q = q->next)
-        ethif->low_level_output(ethif->internals, q->payload, q->len);
+        ethif->low_level_output(ethif->internals, p->payload, p->len);
 
     ethif->low_level_endoutput(ethif->internals, p->tot_len);
 
@@ -122,10 +124,10 @@ err_t ethif_init(struct netif* netif) {
     netif->hostname = hostname;
 #endif
 
-    NETIF_INIT_SNMP(netif, snmp_ifType_ethernet_csmacd, 10 * 1024 * 1024);
+    NETIF_INIT_SNMP(netif, snmp_ifType_ethernet_csmacd, 100 * 1024 * 1024);
 
     netif->name[0] = 'e';
-    netif->name[1] = 't';
+    netif->name[1] = 'n';
 
     netif->output = etharp_output;
     netif->linkoutput = ethif_linkoutput;

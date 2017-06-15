@@ -64,6 +64,15 @@ static int rtl8139_irqno = 0;
 
 
 int rtl8139_startoutput(void* internals) {
+    struct rtl8139* dev = (struct rtl8139*) internals;
+    if(unlikely(!dev)) {
+        kprintf(ERROR "rtl8139: rtl8139_startoutput() invalid args\n");
+        return 0;
+    }
+
+    dev->offset = 0;
+    dev->size = 0;
+
     return 1;
 }
 
@@ -74,9 +83,19 @@ void rtl8139_output(void* internals, void* buf, uint16_t len) {
         return;
     }
 
-    kprintf(INFO "rtl8139: sending %d bytes from %p\n", len, buf);
+    memcpy((void*) ((uintptr_t) dev->cache + dev->offset), buf, len);
+    dev->offset += len;
+}
 
-    memcpy(dev->txbuf[dev->txcur], buf, len);
+void rtl8139_endoutput(void* internals, uint16_t len) {
+    struct rtl8139* dev = (struct rtl8139*) internals;
+    if(unlikely(!dev)) {
+        kprintf(ERROR "rtl8139: rtl8139_endoutput() invalid args\n");
+        return;
+    }
+
+
+    memcpy(dev->txbuf[dev->txcur], dev->cache, len);
     outl(dev->io + RTL_PORT_TXBUF + 4 * dev->txcur, dev->txbufp[dev->txcur]);
     outl(dev->io + RTL_PORT_TXSTAT + 4 * dev->txcur, len);
 
@@ -86,10 +105,8 @@ void rtl8139_output(void* internals, void* buf, uint16_t len) {
     dev->txcur++;
     if(dev->txcur == 4)
         dev->txcur = 0;
-}
 
-void rtl8139_endoutput(void* internals, uint16_t totlen) {
-    return;
+    kprintf(INFO "rtl8139: sending %d bytes\n", len);
 }
 
 void rtl8139_endinput(void* internals);
@@ -106,7 +123,6 @@ int rtl8139_startinput(void* internals) {
         return 0;
     }
       
-    kprintf(WARN "rtl8139: reiceved %d bytes (status: %08x)\n", s >> 16, s);
     size_t size = (s >> 16) & 0xFFFF;
     
     void* pkt = &((uint32_t*) ((uintptr_t) dev->rxbuf + (dev->rxcur % 0x2000))) [1];
@@ -122,6 +138,9 @@ int rtl8139_startinput(void* internals) {
 
     dev->size = size;
     dev->offset = 0;
+
+
+    kprintf(WARN "rtl8139: reiceved %d bytes (status: %08x)\n", s >> 16, s);
     return size;
 }
 
@@ -175,6 +194,8 @@ void rtl8139_irq(void* context) {
     if(!(s = inw(dev->io + RTL_PORT_ISR)))
         return;
 
+    outw(dev->io + RTL_PORT_ISR, s);
+    irq_ack(dev->irq);
 
 
     if(s & 1 || s & 2)
@@ -186,9 +207,8 @@ void rtl8139_irq(void* context) {
         inl(dev->io + RTL_PORT_TXSTAT + 4 * dev->txcurd);
 
         dev->txcurd++;
-        if(dev->txcurd == 4)
+        if(dev->txcurd == 5)
             dev->txcurd = 0;
-
     }
 
     outw(dev->io + RTL_PORT_ISR, s);

@@ -48,6 +48,9 @@ $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 	@cp -r bin/* /mnt/hdd
 	@umount /mnt/hdd
 	@losetup -D
+	@qemu-img convert -f raw -O vdi hdd.img hdd.vdi
+	@sync
+	@rm -f hdd.img
 	@sync
 
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
