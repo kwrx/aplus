@@ -79,10 +79,11 @@ static void client_add(void* data) {
 
     cl->data = data;
     cl->next = client_queue;
+
+    client_update(cl);
     client_queue = cl;
 
     fprintf(stdout, "gnx: client_add(%p): %d:%d %dx%d\n", data, cl->data->x, cl->data->y, cl->data->w, cl->data->h);
-    client_update(cl);
 }
 
 

@@ -30,8 +30,11 @@ global PT_1MB
 global GDT32
 global IDT32
 global IRQ32
+global TSS32
+
 
 global arch_loop_idle
+global gdt_load
 
 
 MALIGN 		equ 	(1 << 0)
@@ -137,12 +140,12 @@ high_start:
 	mov dword [PDT.VPAGES + 12], 0
 	
 
-
-
 	lgdt [GDT32.PTR]
-	jmp GDT32.KCODE:.L1
 
 .L1:
+	jmp GDT32.KCODE:.L2
+
+.L2:
 	mov cx, GDT32.KDATA
 	mov ds, cx
 	mov ss, cx
@@ -178,7 +181,9 @@ arch_loop_idle:
 	jmp arch_loop_idle
 
 
-
+gdt_load:
+	lgdt [GDT32.PTR]
+ret
 
 
 
@@ -277,6 +282,10 @@ IDT32:
 
 IRQ32:
 	times 16 dq 0
+
+TSS32:
+	times 100 db 0
+
 
 
 section .stack

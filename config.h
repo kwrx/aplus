@@ -6,13 +6,12 @@
 #define DEBUG							1
 
 
-#define CONFIG_HOST_MEMORY				128
+#define CONFIG_HOST_MEMORY				512
 #define CONFIG_HAVE_LIBC				1
 #define CONFIG_SMP						0	/* TODO */
-#define CONFIG_IPC						1	/* FIXME */
+#define CONFIG_IPC						1
 #define CONFIG_VMM						1
 #define CONFIG_CACHE					0	/* FIXME */
-#define CONFIG_IOSCHED					1
 #define CONFIG_NETWORK					1
 #define CONFIG_CLOCKS_PER_SEC			1000000
 #define CONFIG_ROOT						"/dev/hd0/0"
@@ -43,13 +42,9 @@
 #if defined(__i386__)
 #	define CONFIG_BITS					32
 #	define CONFIG_KERNEL_BASE			0xC0000000L
-#	define CONFIG_HEAP_BASE				0xD0000000L
+#	define CONFIG_HEAP_BASE				0xC4000000L
 #	define CONFIG_STACK_BASE			0xFFC00000L
-#	if CONFIG_HOST_MEMORY > 64
-#		define CONFIG_HEAP_SIZE			0x04000000ULL
-#	else
-#		define CONFIG_HEAP_SIZE			((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
-#	endif
+#	define CONFIG_HEAP_SIZE				((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #	define CONFIG_STACK_SIZE			0x00008000ULL
 #	define KERNEL_PLATFORM				"i386"
 #	define __pause__()					__asm__ __volatile__ ("pause; hlt" ::: "memory")

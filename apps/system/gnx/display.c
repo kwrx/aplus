@@ -79,7 +79,7 @@ void* th_display(void* arg) {
     fprintf(stdout, "gnx: initialized display controller: #%d\n", getpid());
 
     for(;;) {
-        register int dirty = 0;
+        int dirty = 0;
         client_t* tmp;
         for(tmp = client_queue; tmp; tmp = tmp->next)
             dirty += tmp->data->dirty;
@@ -93,9 +93,8 @@ void* th_display(void* arg) {
             tmp->data->dirty = 0;
 #if 1
             cairo_save(cr);
-            cairo_set_source_surface(cr, tmp->surface, 0, 0);
-            cairo_rectangle(cr, tmp->data->x, tmp->data->y, tmp->data->w, tmp->data->h);
-            cairo_fill(cr);
+            cairo_set_source_surface(cr, tmp->surface, tmp->data->x, tmp->data->y);
+            cairo_paint(cr);
             cairo_restore(cr);
 #endif
         }

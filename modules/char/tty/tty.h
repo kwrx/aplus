@@ -13,7 +13,6 @@
 #define TTY_DEFAULT_OUTPUT_DEVICE   PATH_CONDEV
 
 
-extern char tty_keymap[1024];
 
 int tty_write(struct inode* inode, void* ptr, size_t len);
 int tty_read(struct inode* inode, void* ptr, size_t len);
@@ -36,6 +35,7 @@ struct tty_context {
 };
 
 int tty_read_init();
+int tty_load_keymap(char* keymap);
 void __tty_flush(struct tty_context* tio);
 
 

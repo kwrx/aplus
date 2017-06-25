@@ -49,7 +49,7 @@ void debug_send(char value) {
 }
 
 
-void debug_dump(void* _context, char* errmsg, uintptr_t dump) {
+void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode) {
 	#define lookup(s, a)														\
 		!(s = binfmt_lookup_symbol(current_task->image->symtab, a))				\
 			? !(s = binfmt_lookup_symbol(kernel_task->image->symtab, a))		\
@@ -65,11 +65,12 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump) {
 	kprintf(ERROR "%s\n"
 				  "\t Task: %d (%s)\n"
 				  "\t Address: %p\n"
+				  "\t Error: %p\n"
 				  "\t PC: %p (%s)\n"
 				  "\t SP: %p\n",
 				  errmsg, 
 				  current_task->pid, current_task->name,
-				  dump,
+				  dump, errcode,
 				  context->eip, sym, context->esp
 	);
 
@@ -78,6 +79,8 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump) {
 
 	lookup(sym, dump);
 	kprintf("Dump: %s\n", sym);
+
+	dump = context->eip - 32;
 
 
 	static char line[BUFSIZ];
@@ -89,9 +92,12 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump) {
 	
 	size_t s, p = 0;
 	do {
-		while((s = x86_disasm((void*) dump, 64, 0, p, &i)) > 0) {
+		while((s = x86_disasm((void*) dump, 64, current_task->image->start, p, &i)) > 0) {
 			x86_format_insn(&i, line, BUFSIZ, intel_syntax);
-			kprintf("\t%08x:\t\t%s\n", dump + p, line);
+			if(p != 32)
+				kprintf("     %08x:           %s\n", dump + p, line);
+			else
+				kprintf("  >> %08x:           %s\n", dump + p, line);
 
 			p += s;
 		}

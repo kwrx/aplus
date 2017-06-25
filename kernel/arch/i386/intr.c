@@ -11,9 +11,12 @@
 
 
 
-extern void idt_load();
+extern void gdt_load();
 extern void fork_handler(void*);
 extern void yield_handler(void*);
+
+
+extern uint64_t GDT32[6];
 
 extern struct {
 	struct {
@@ -35,12 +38,67 @@ extern struct {
 	irq_handler_t* handler;
 } IRQ32[16];
 
+extern struct {
+	uint32_t link;
+	uint32_t esp0;
+	uint32_t ss0;
+	uint32_t esp1;
+	uint32_t ss1;
+	uint32_t esp2;
+	uint32_t ss2;
+	uint32_t cr3;
+	uint32_t eip;
+	uint32_t eflags;
+	uint32_t eax;
+	uint32_t ecx;
+	uint32_t edx;
+	uint32_t ebx;
+	uint32_t esp;
+	uint32_t ebp;
+	uint32_t esi;
+	uint32_t edi;
+	uint32_t es;
+	uint32_t cs;
+	uint32_t ss;
+	uint32_t ds;
+	uint32_t fs;
+	uint32_t gs;
+	uint32_t ldtr;
+	uint32_t iopb;
+} TSS32;
+
+
+static char tmp_stack[CONFIG_STACK_SIZE];
 int current_irq = -1;
 
 
 int intr_init() {
 	__asm__ __volatile__ ("cli");
+
+#if 0
+	GDT32[5] = (uint64_t) (
+			   (((uint64_t) ((uintptr_t) &TSS32) & 0x00FFFFFFULL) << 16)		|
+			   (((uint64_t) ((uintptr_t) &TSS32) & 0xFF000000ULL) << 32)		|
+			   (0x0000890000000000ULL)											|
+			   (sizeof(TSS32) - 1));
+
+
 	
+	TSS32.es =
+	TSS32.ss =
+	TSS32.ds =
+	TSS32.fs =
+	TSS32.gs = 0x10;
+	TSS32.cs = 0x08;
+
+	TSS32.ss0 = 0x10;
+	TSS32.esp = (uint32_t) &tmp_stack[CONFIG_STACK_SIZE];
+
+	__asm__ __volatile__("ltr %%ax" : : "a"((5 << 3)));
+	gdt_load();
+#endif
+
+
 	#define _i(x)															\
 		extern void isr##x (void*);											\
 		IDT32.e[x].base_low = ((uintptr_t) isr##x) & 0xFFFF;				\
@@ -127,6 +185,9 @@ int intr_init() {
 	_i(13);
 	_i(14);
 	_i(15);
+
+
+
 
 	__asm__ __volatile__ ("sti");
 	return E_OK;
@@ -270,7 +331,7 @@ void isr_handler(i386_context_t* context) {
 	}
 
 
-	debug_dump(context, exception_messages[context->int_no], context->eip);
+	debug_dump(context, exception_messages[context->int_no], 0, context->err_code);
 
 
 	if(unlikely(current_task == kernel_task))
@@ -294,6 +355,11 @@ void irq_handler(i386_context_t* context) {
 		kprintf(WARN "irq_handler(): unhandled IRQ #%d\n", irq_no);
 
 	irq_ack(irq_no);
+}
+
+
+void x86_intr_kernel_stack(uintptr_t address) {
+	TSS32.esp0 = (uint32_t) address;
 }
 
 EXPORT(irq_enable);

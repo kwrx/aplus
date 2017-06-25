@@ -48,6 +48,8 @@ typedef struct task {
 	uid_t sid;
 
 	void* context;
+	void* sys_stack;
+		
 	
 
 	struct tms clock;

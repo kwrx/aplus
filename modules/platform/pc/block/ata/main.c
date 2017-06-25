@@ -334,7 +334,7 @@ static int ata_read(inode_t* ino, void* buffer, size_t size) {
 
 	if(unlikely((ino->position + size) > ino->size))
 		size = ino->size - ino->position;
-
+	
 	if(unlikely(!size))
 		return 0;
 

@@ -2,7 +2,7 @@
 OUTPUT		:= kmgen
 
 all: $(OUTPUT)
-$(OUTPUT): main.c
+$(OUTPUT): kmgen.c
 	gcc $< -o $@ -include ../../include/aplus/input.h
 
 clean:

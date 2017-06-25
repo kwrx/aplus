@@ -9,6 +9,7 @@
 
 #include <sys/ioctl.h>
 #include <aplus/base.h>
+#include <aplus/input.h>
 
 #define SYSCONFIG_VERBOSE
 #include <aplus/sysconfig.h>
@@ -122,5 +123,6 @@ int main(int argc, char** argv) {
     parse_fstab();
     parse_initd();
 
+    ioctl(STDIN_FILENO, TIOCLKEYMAP, sysconfig("sys.locale", SYSCONFIG_FORMAT_STRING, (uintptr_t) "en-US"));
     return 0;
 }

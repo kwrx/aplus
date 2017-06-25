@@ -88,7 +88,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 #else
 	void* cache = image;
 #endif
-	
+
 		if(unlikely(sys_read(fd, cache, size) != size)) { /* ERROR */
 			kfree(image);
 			
@@ -106,7 +106,6 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 #endif
 
 	sys_close(fd);
-
 
 	char* loader;
 	if(!(loader = binfmt_check_image(image, NULL))) {

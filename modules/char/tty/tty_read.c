@@ -13,6 +13,7 @@ static int tty_shift = 0;
 static int tty_alt = 0;
 static int tty_control = 0;
 static int tty_released = 0;
+static char tty_keymap[1024];
 
 int tty_read_init() {
     tty_capslock =
@@ -21,6 +22,27 @@ int tty_read_init() {
     tty_control =
     tty_released = 0;
 
+    memset(tty_keymap, 0, sizeof(tty_keymap));
+    return 0;
+}
+
+int tty_load_keymap(char* keymap) {
+    static char buf[BUFSIZ];
+    memset(buf, 0, sizeof(buf));
+
+    sprintf(buf, PATH_KEYMAPS "/%s", keymap);
+    int fd = sys_open(buf, O_RDONLY, 0);
+    if(fd < 0)
+        return -1;
+
+    if(sys_read(fd, tty_keymap, 1024) != 1024) {
+        sys_close(fd);
+        return -1;
+    }
+
+
+    kprintf(INFO "tty: keymap \'%s\'\n", keymap);
+    sys_close(fd);
     return 0;
 }
 
@@ -51,29 +73,29 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
     
     
     while(p < len) {
-        uint8_t ch;
+        uint16_t ch;
         if(sys_read(fd, &ch, sizeof(ch)) == 0) {
             errno = EIO;
             return E_ERR;
         }
 
         switch(ch) {
-            case VK_RELEASED:
+            case KEY_RELEASED:
                 tty_released = 1;
                 continue;
-            case VK_MENU:
-            case VK_RMENU:
+            case KEY_LEFTALT:
+            case KEY_RIGHTALT:
                 tty_alt = !!!(tty_released);
                 break;
-            case VK_LSHIFT:
-            case VK_RSHIFT:
+            case KEY_LEFTSHIFT:
+            case KEY_RIGHTSHIFT:
                 tty_shift = !!!(tty_released);
                 break;
-            case VK_LCONTROL:
-            case VK_RCONTROL:
+            case KEY_LEFTCTRL:
+            case KEY_RIGHTCTRL:
                 tty_control = !!!(tty_control);
                 break;
-            case VK_CAPITAL:
+            case KEY_CAPSLOCK:
                 tty_capslock = tty_released ? tty_capslock : !tty_capslock;
                 break;
             default:

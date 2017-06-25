@@ -2,6 +2,7 @@
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
 #include <aplus/task.h>
+#include <aplus/intr.h>
 #include <aplus/mm.h>
 #include <libc.h>
 
@@ -46,7 +47,7 @@ void schedule(void) {
 	if(unlikely(!current_task))
 		return;
 
-
+	INTR_OFF;
 
 	__timing(t);
 
@@ -69,6 +70,7 @@ void schedule(void) {
 	arch_task_switch(prev_task, current_task);
 
 nosched:
+	INTR_ON;
 	return;
 }
 
@@ -76,6 +78,7 @@ void schedule_yield(void) {
 	if(unlikely(!current_task))
 		return;
 
+	INTR_OFF;
 
 	__timing(t);
 
@@ -93,6 +96,8 @@ void schedule_yield(void) {
 
 	current_task->status = TASK_STATUS_RUNNING;
 	arch_task_switch(prev_task, current_task);
+
+	INTR_ON;
 }
 
 

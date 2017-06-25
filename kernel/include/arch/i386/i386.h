@@ -146,6 +146,7 @@ typedef struct i386_context {
 } __attribute__((packed)) i386_context_t;
 
 extern uintptr_t read_eip();
+extern void x86_intr_kernel_stack(uintptr_t address);
 
 
 #endif

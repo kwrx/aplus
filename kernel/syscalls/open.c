@@ -49,8 +49,8 @@ int sys_open(const char* name, int flags, mode_t mode) {
 		return -1;
 	}
 
-	/* FIXME */
-	char* namebuf = (char*) kmalloc(strlen(name) + 1, GFP_KERNEL);
+	
+	char namebuf[strlen(name) + 1];
 	strslashcpy(namebuf, name);
 
 

@@ -124,6 +124,12 @@ void fork_handler(i386_context_t* context) {
 	CTX(child)->ebp = (uintptr_t) context;
 	CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 1);
 
+
+	char* sys_stack = (char*) kmalloc(CONFIG_STACK_SIZE, GFP_KERNEL);
+	KASSERT(sys_stack);
+	memcpy(sys_stack, current_task->sys_stack, CONFIG_STACK_SIZE);
+	child->sys_stack = &sys_stack[CONFIG_STACK_SIZE];
+
 	
 	child->parent = (task_t*) current_task;
 	child->next = (task_t*) task_queue;
@@ -207,6 +213,13 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	CTX(child)->eip = (uintptr_t) &return_from_clone;
 	CTX(child)->esp = 
 	CTX(child)->ebp = (uintptr_t) sptr;
+
+
+	char* sys_stack = (char*) kmalloc(CONFIG_STACK_SIZE, GFP_KERNEL);
+	KASSERT(sys_stack);
+	memcpy(sys_stack, current_task->sys_stack, CONFIG_STACK_SIZE);
+	child->sys_stack = &sys_stack[CONFIG_STACK_SIZE];
+
 
 	if(flags & CLONE_VM) {
 		CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 0);
@@ -292,7 +305,9 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 	esp = CTX(new_task)->esp;
 	ebp = CTX(new_task)->ebp;
 
-	
+	x86_intr_kernel_stack((uintptr_t) new_task->sys_stack);
+
+
 
 	volatile pdt_t* pd = (volatile pdt_t*) CTX(new_task)->vmmpd;
 
@@ -342,6 +357,8 @@ void arch_task_release(volatile task_t* task) {
 int task_init(void) {
 	static task_t __t;
 	static i386_task_context_t __c;
+	static char __sys_stack[CONFIG_STACK_SIZE];
+
 	volatile task_t* t = task_queue = kernel_task = (volatile task_t*) &__t;
 
 	KASSERT(t);
@@ -376,6 +393,7 @@ int task_init(void) {
 	t->umask = 0;
 
 	t->context = &__c;
+	t->sys_stack = &__sys_stack[CONFIG_STACK_SIZE];
 	CTX(t)->vmmpd = (uintptr_t) current_pdt;
 
 
@@ -389,6 +407,9 @@ int task_init(void) {
 
 	t->parent = NULL;
 	t->next = NULL;
+
+
+	x86_intr_kernel_stack((uintptr_t) t->sys_stack);
 
 	current_task = t;
 	return E_OK;

@@ -188,4 +188,3 @@ irq_stub:
 	add esp, 8	
 	sti	
 iretd
-

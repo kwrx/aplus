@@ -83,10 +83,6 @@ void pmm_free_frames(physaddr_t address, int count) {
 void pmm_claim(physaddr_t mstart, physaddr_t mend) {
 	KASSERT(mstart < mend);
 
-#if 0
-	kprintf(INFO "pmm_claim(0x%x, 0x%x)\n", mstart, mend);
-#endif
-
 	register int i = mstart / MM_BLOCKSZ;
 	register int j = mend / MM_BLOCKSZ;
 

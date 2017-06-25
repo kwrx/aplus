@@ -100,7 +100,11 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
             _p(data);
             *(int*) data = tio->pgrp;
             break;
-            
+
+        case TIOCLKEYMAP:
+            _p(data);
+            return tty_load_keymap(data);
+    
         default:
             errno = ENOSYS;
             return -1;
