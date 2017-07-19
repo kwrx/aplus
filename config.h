@@ -14,8 +14,6 @@
 #define CONFIG_CACHE					0	/* FIXME */
 #define CONFIG_NETWORK					1
 #define CONFIG_CLOCKS_PER_SEC			1000000
-#define CONFIG_ROOT						"/dev/hd0/0"
-#define CONFIG_ROOTFS					"fat"
 
 
 #define CONFIG_BOCHS					DEBUG
@@ -56,7 +54,7 @@
 #	define CONFIG_HEAP_SIZE				0x01000000ULL
 #	define CONFIG_STACK_SIZE			0x00004000ULL
 #	define KERNEL_PLATFORM				"x86_64"
-#	define __pause__()					__asm__ __volatile__ ("pause; hlt")
+#	define __pause__()					__asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__arm__)
 #	define CONFIG_BITS					32
 #	if defined (__rpi__)

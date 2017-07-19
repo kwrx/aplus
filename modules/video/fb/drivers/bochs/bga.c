@@ -80,8 +80,8 @@ int bga_setvideomode(fbdev_mode_t* m) {
 	wr(VBE_DISPI_INDEX_BPP, m->bpp);
 	wr(VBE_DISPI_INDEX_X_OFFSET, m->vx);
 	wr(VBE_DISPI_INDEX_Y_OFFSET, m->vy);
-	wr(VBE_DISPI_INDEX_VIRT_WIDTH, m->width);
-	wr(VBE_DISPI_INDEX_VIRT_HEIGHT, m->height);
+	wr(VBE_DISPI_INDEX_VIRT_WIDTH, m->width + m->vx);
+	wr(VBE_DISPI_INDEX_VIRT_HEIGHT, m->height + m->vy);
 
 	m->lfbptr = (void*) __lfbptr;
 	memcpy(&fbmode, m, sizeof(fbdev_mode_t));

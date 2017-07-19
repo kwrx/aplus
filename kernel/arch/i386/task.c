@@ -146,7 +146,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 	INTR_OFF;
 
 	if(unlikely(!stack))
-		stack = (void*) ((uintptr_t) kvalloc(PAGE_SIZE, GFP_USER) + PAGE_SIZE);
+		stack = (void*) ((uintptr_t) kvalloc((uintptr_t) CONFIG_STACK_SIZE, GFP_USER) + (uintptr_t) CONFIG_STACK_SIZE);
 
 	uintptr_t* sptr = (uintptr_t*) stack;
 	*--sptr = (uintptr_t) arg;

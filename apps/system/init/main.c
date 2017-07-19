@@ -101,9 +101,12 @@ static void parse_initd() {
             pid_t pid = fork();
             if(pid == -1)
                 break;
-            else if(pid == 0)
-                exit(execle(path, path, "start", NULL, __envp));
-            
+            else if(pid == 0) {
+                if(execle(path, path, "start", NULL, __envp) < 0)
+                    perror(path);
+
+                exit(-1);
+            }
             e = 0;
         } while(0);
         

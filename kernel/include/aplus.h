@@ -47,6 +47,13 @@ typedef struct bootargs {
 		uint32_t shndx;
 	} exec;
 
+	struct {
+		uint32_t speed;
+		uint32_t cores;
+		uint32_t threads;
+		char* family;
+	} cpu;
+
 	int flags;
 } bootargs_t;
 

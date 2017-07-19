@@ -7,6 +7,7 @@ static fbdev_mode_t vm;
 
 int surface_format = 0;
 int surface_bpp = 0;
+int global_dirty = 0;
 
 
 void init_display() {
@@ -79,7 +80,7 @@ void* th_display(void* arg) {
     fprintf(stdout, "gnx: initialized display controller: #%d\n", getpid());
 
     for(;;) {
-        int dirty = 0;
+        int dirty = global_dirty;
         client_t* tmp;
         for(tmp = client_queue; tmp; tmp = tmp->next)
             dirty += tmp->data->dirty;
@@ -89,14 +90,21 @@ void* th_display(void* arg) {
             goto done;
 
 
+       
+
         for(tmp = client_queue; tmp; tmp = tmp->next) {
             tmp->data->dirty = 0;
-#if 1
             cairo_save(cr);
             cairo_set_source_surface(cr, tmp->surface, tmp->data->x, tmp->data->y);
             cairo_paint(cr);
             cairo_restore(cr);
-#endif
+        }
+
+        if(likely(cx_cursors[cx_index])) {
+            cairo_save(cr);
+            cairo_set_source_surface(cr, cx_cursors[cx_index], cx_x, cx_y);
+            cairo_paint(cr);
+            cairo_restore(cr);
         }
 
 done:       

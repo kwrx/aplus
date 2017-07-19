@@ -73,3 +73,11 @@ void Window::Paint(Graphics* G) {
     if(this->gcontext)
         this->gcontext->dirty = 1;
 }
+
+void Window::Move(double x, double y) {
+    this->X = x;
+    this->Y = y;
+    this->gcontext->x = x;
+    this->gcontext->y = y;
+    this->gcontext->dirty = 1;
+}

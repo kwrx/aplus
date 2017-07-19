@@ -42,8 +42,7 @@ int timer_init() {
 	irq_enable(0, timer_handler);
 
 
-
-	__asm__("sti");
+	INTR_ON;
 	timer_delay(1);
 
 
@@ -63,7 +62,7 @@ int timer_init() {
 
 
 
-	__asm__("cli");
+	INTR_OFF;
 	return E_OK;
 }
 

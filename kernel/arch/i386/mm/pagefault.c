@@ -14,7 +14,7 @@ void pagefault_handler(i386_context_t* context) {
 
 	debug_dump(context, "Exception! Page Fault occured!", p, context->err_code);
 	
-	if(unlikely(current_task == kernel_task)) {
+	if(unlikely(current_task != kernel_task)) {
 		__asm__ ("cli");
 		for(;;) __asm__("hlt");
 	}

@@ -43,6 +43,11 @@ typedef struct client {
 client_t* client_queue;
 int surface_format;
 int surface_bpp;
+int global_dirty;
+int cx_index;
+int cx_x;
+int cx_y;
+cairo_surface_t* cx_cursors[GNX_CURSOR_COUNT];
 
 
 void init_display(void);
@@ -50,5 +55,11 @@ void* th_display(void*);
 
 void init_clients(void);
 void* th_clients(void*);
+
+void init_cursor(void);
+void* th_cursor(void*);
+
+
+void display_draw_surface(cairo_surface_t* surface, int x, int y);
 
 #endif

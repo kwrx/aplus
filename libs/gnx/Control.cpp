@@ -41,3 +41,8 @@ void Control::Paint(Graphics* G) {
     for(auto i = this->Childs->begin(); i != this->Childs->end(); i++)
         (*i)->Paint(G);
 }
+
+void Control::Move(double x, double y) {
+    this->X = x;
+    this->Y = y;
+}

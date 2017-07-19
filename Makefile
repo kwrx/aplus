@@ -26,9 +26,14 @@ $(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
 
 KERNEL_MODULES: LIBRARIES
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
-	@echo "multiboot /$(KERNEL_NAME)" > bin/boot/grub/grub.cfg
+	@echo "menuentry \"HDD\" {" > bin/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME) root=/dev/hd0/0 rootfs=fat" >> bin/boot/grub/grub.cfg
 	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
-	@echo "boot" >> bin/boot/grub/grub.cfg
+	@echo "boot }" >> bin/boot/grub/grub.cfg
+	@echo "menuentry \"CDROM\" {" >> bin/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME) root=/dev/cd0 rootfs=iso9660" >> bin/boot/grub/grub.cfg
+	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
+	@echo "boot }" >> bin/boot/grub/grub.cfg
 	
 APPS: LIBRARIES
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)

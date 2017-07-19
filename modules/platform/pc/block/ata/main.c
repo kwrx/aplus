@@ -582,15 +582,6 @@ int init(void) {
 		return E_ERR;
 	}
 
-	kprintf(INFO "ata: pci %d\n\tBAR0: %p\n\tBAR1: %p\n\tBAR2: %p\n\tBAR3: %p\n\tBAR4: %p\n",
-        ata_pci,
-		pci_read_field(ata_pci, PCI_BAR0, 4) & ~0xF,
-        pci_read_field(ata_pci, PCI_BAR1, 4) & ~0xF,
-        pci_read_field(ata_pci, PCI_BAR2, 4) & ~0xF,
-        pci_read_field(ata_pci, PCI_BAR3, 4) & ~0xF,
-        pci_read_field(ata_pci, PCI_BAR4, 4) & ~0xF
-    
-    );
 
 	irq_enable(ATA_IRQ_PRIMARY, irq_handler_1);
 	irq_enable(ATA_IRQ_SECONDARY, irq_handler_2);

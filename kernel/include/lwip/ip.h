@@ -151,7 +151,7 @@ extern struct ip_globals ip_data;
  * This function must only be called from a receive callback (udp_recv,
  * raw_recv, tcp_accept). It will return NULL otherwise. */
 #define ip6_current_header()      ((const struct ip6_hdr*)(ip_data.current_ip6_header))
-/** Returns TRUE if the current IP input packet is IPv6, FALSE if it is IPv4 */
+/** Returns 1 if the current IP input packet is IPv6, 0 if it is IPv4 */
 #define ip_current_is_v6()        (ip6_current_header() != NULL)
 /** Source IPv6 address of current_header */
 #define ip6_current_src_addr()    (ip_2_ip6(&ip_data.current_iphdr_src))
@@ -176,7 +176,7 @@ extern struct ip_globals ip_data;
  * This function must only be called from a receive callback (udp_recv,
  * raw_recv, tcp_accept). It will return NULL otherwise. */
 #define ip4_current_header()     ((const struct ip_hdr*)(ip_data.current_ip4_header))
-/** Always returns FALSE when only supporting IPv4 only */
+/** Always returns 0 when only supporting IPv4 only */
 #define ip_current_is_v6()        0
 /** Get the transport layer protocol */
 #define ip_current_header_proto() IPH_PROTO(ip4_current_header())
@@ -193,7 +193,7 @@ extern struct ip_globals ip_data;
  * This function must only be called from a receive callback (udp_recv,
  * raw_recv, tcp_accept). It will return NULL otherwise. */
 #define ip6_current_header()      ((const struct ip6_hdr*)(ip_data.current_ip6_header))
-/** Always returns TRUE when only supporting IPv6 only */
+/** Always returns 1 when only supporting IPv6 only */
 #define ip_current_is_v6()        1
 /** Get the transport layer protocol */
 #define ip_current_header_proto() IP6H_NEXTH(ip6_current_header())

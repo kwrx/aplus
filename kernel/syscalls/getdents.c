@@ -43,6 +43,7 @@ int sys_getdents(int fd, struct dirent* buf, size_t size) {
 
 		buf = (struct dirent*) (dd_buf + dd_loc);
 		buf->d_ino = (long) tmp->inode->ino;
+		buf->d_type = (tmp->inode->mode & S_IFMT) >> 12;
 		buf->d_off = (off_t) dd_loc + sizeof(struct dirent) + strlen(tmp->inode->name);
 		buf->d_reclen = (uint16_t) sizeof(struct dirent) + strlen(tmp->inode->name);
 		strcpy(buf->d_name, tmp->inode->name);

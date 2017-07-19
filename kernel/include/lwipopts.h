@@ -11,8 +11,8 @@
 #endif
 
 
-#define LWIP_DBG_TYPES_ON			    LWIP_DBG_ON
-#define NETIF_DEBUG				        LWIP_DBG_ON
+#define LWIP_DBG_TYPES_ON			    LWIP_DBG_OFF
+#define NETIF_DEBUG				        LWIP_DBG_OFF
 #define PBUF_DEBUG				        LWIP_DBG_OFF
 #define INET_DEBUG				        LWIP_DBG_OFF
 #define IP_DEBUG				        LWIP_DBG_OFF
@@ -20,9 +20,9 @@
 #define RAW_DEBUG				        LWIP_DBG_OFF
 #define SYS_DEBUG				        LWIP_DBG_OFF
 #define TIMERS_DEBUG				    LWIP_DBG_OFF
-#define TCP_DEBUG				        LWIP_DBG_ON
+#define TCP_DEBUG				        LWIP_DBG_OFF
 #define TCPIP_DEBUG				        LWIP_DBG_OFF
-#define UDP_DEBUG				        LWIP_DBG_ON
+#define UDP_DEBUG				        LWIP_DBG_OFF
 #define DHCP_DEBUG				        LWIP_DBG_OFF
 #define DNS_DEBUG				        LWIP_DBG_OFF
 #define TCP_INPUT_DEBUG				    LWIP_DBG_OFF

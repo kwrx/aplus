@@ -62,9 +62,8 @@ int fat_mount(struct inode* dev, struct inode* dir) {
     fat->FAT = (uint8_t*) kmalloc(fat->fat_size * fat->bytes_per_sector, GFP_KERNEL);
     fail_if(!fat->FAT, ENOMEM);
 
-    dev->position = fat->first_fat_sector * fat->bytes_per_sector;
+	dev->position = fat->first_fat_sector * fat->bytes_per_sector;
     fail_if(vfs_read(dev, fat->FAT, fat->fat_size * fat->bytes_per_sector) != (fat->fat_size * fat->bytes_per_sector), EIO);
-
 
     
 

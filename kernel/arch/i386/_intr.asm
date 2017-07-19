@@ -88,7 +88,7 @@ extern pagefault_handler
 
 global isr14
 isr14:
-	cli
+	sti
 	push dword 14
 
 	pusha
@@ -96,7 +96,7 @@ isr14:
 	push es
 	push fs
 	push gs
-	
+
 	mov ax, 0x10
 	mov ds, ax
 	mov es, ax
@@ -188,3 +188,8 @@ irq_stub:
 	add esp, 8	
 	sti	
 iretd
+
+
+
+times 1024 db 0
+stack:

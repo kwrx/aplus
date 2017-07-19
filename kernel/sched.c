@@ -57,7 +57,7 @@ void schedule(void) {
 		
 	if(likely(((int)current_task->clock.tms_utime / 1000) % ((int)((20 - current_task->priority) + 1))))
 		goto nosched;
-
+	
 	if(likely(current_task->status == TASK_STATUS_RUNNING))
 		current_task->status = TASK_STATUS_READY;
 

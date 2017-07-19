@@ -17,6 +17,7 @@ MODULE_LICENSE("GPL");
 extern int (*stub_init) ();
 extern int (*bochs_init) ();
 extern int (*vesa_init) ();
+extern int (*vmware_init) ();
 
 extern int (*fb_window_init) ();
 
@@ -28,6 +29,7 @@ static int (*hooks[]) (void) = {
 #if defined(__i386__) || defined(__x86_64__)
 	(void*) &vesa_init,
 	(void*) &bochs_init,
+	(void*) &vmware_init,
 #endif
 };
 
@@ -42,6 +44,9 @@ int init(void) {
 	for(i = sizeof(hooks) / sizeof(void*); i > 0 ; i--)
 		if(hooks[i - 1] () == E_OK)
 			break;
+
+	kprintf(INFO "fb: %s\n", fbdev->name);
+	
 
 	inode_t* ino;
 	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0440)) == NULL))

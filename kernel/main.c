@@ -48,6 +48,11 @@ int main(int argc, char** argv) {
 	(void) module_init();
 	(void) mounts_init();
 
+	kprintf(INFO "cpu: %s %d MHz (Cores: %d, Threads: %d)\n",
+			mbd->cpu.family,
+			mbd->cpu.speed,
+			mbd->cpu.cores,
+			mbd->cpu.threads);
 	
 	kprintf(INFO "%s %s-%s %s %s %s (%d Mb)\n", 
 			KERNEL_NAME, 
@@ -57,14 +62,21 @@ int main(int argc, char** argv) {
 			KERNEL_TIME,
 			KERNEL_PLATFORM,
 			(int) mbd->memory.size / 1024 / 1024);
-
+		
+	kprintf(INFO "%s %s %p\n",
+			KERNEL_NAME,
+			mbd->cmdline.args, mbd->memory.start);
 
 	
 	char* __argv[] = { "/usr/sbin/init", NULL };
 	char* __envp[] = { NULL };
 
-	if(sys_fork() == 0)
-		sys_execve(__argv[0], __argv, __envp);
+	if(sys_fork() == 0) {
+		if(sys_execve(__argv[0], __argv, __envp) < 0)
+			kprintf(ERROR "%s: %s\n", __argv[0], strerror(errno));
+
+		sys_exit(-1);
+	}
 
     idle();
 	return 0;

@@ -338,6 +338,8 @@ void kb_intr(void* unused) {
 			return;
 	}
 
+  irq_ack(1);
+
 
 	uint16_t vkey = KEY_RESERVED;
 	if(kb.e0)
@@ -379,6 +381,7 @@ void kb_intr(void* unused) {
 void mouse_intr(void* unused) {
 	int s, j;
 	s = inb(PS2_CTRL);
+
 
 	while((s & 0x01)) {
 		j = inb(PS2_DATA);
@@ -498,8 +501,8 @@ int init(void) {
 	mouse.speed = 1;
 	mouse.clip.left = 0;
 	mouse.clip.top = 0;
-	mouse.clip.right = 0xFFFF;
-	mouse.clip.bottom = 0xFFFF;
+	mouse.clip.right = 0x7FFF;
+	mouse.clip.bottom = 0x7FFF;
 
 
 	if(sys_mkfifo(PATH_KBDEV, 0644) != 0)

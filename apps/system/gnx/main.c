@@ -55,17 +55,21 @@ int main(int argc, char** argv) {
 
 
     int ld = open("/dev/log", O_WRONLY);
-    if(ld >= 0)
+    if(ld >= 0) {
         dup2(ld, STDOUT_FILENO);
+        dup2(ld, STDERR_FILENO);
+    }
 
     
     init_clients();
     init_display();
+    init_cursor();
     
 
-    pthread_t t0, t1;
+    pthread_t t0, t1, t2;
     pthread_create(&t0, NULL, th_clients, NULL);
     pthread_create(&t1, NULL, th_display, NULL);
+    pthread_create(&t2, NULL, th_cursor, NULL);
     pthread_join(t0, NULL);
     pthread_detach(t1);
 

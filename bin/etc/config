@@ -9,11 +9,6 @@ sys.locale=it-IT
 sys.timezone=2
 
 
-# -- Keyboard
-kb.enabled=1
-kb.keymap=$sys.locale
-
-
 # -- Screen
 screen.width=1280
 screen.height=768
@@ -35,6 +30,8 @@ iosched.blksize=4194304
 
 # -- UI
 ui.dpi=72
-ui.font=Arial
+ui.font.regular="Ubuntu"
+ui.font.monospace="Ubuntu Mono"
+ui.font.condensed="Ubuntu Condensed"
 ui.wallpaper=/usr/share/images/wp.png
 
