@@ -29,9 +29,10 @@ iosched.blksize=4194304
 
 
 # -- UI
+ui.enabled=false
 ui.dpi=72
-ui.font.regular="Ubuntu"
-ui.font.monospace="Ubuntu Mono"
-ui.font.condensed="Ubuntu Condensed"
+ui.font.regular=Ubuntu
+ui.font.monospace=Ubuntu Mono
+ui.font.condensed=Ubuntu Condensed
 ui.wallpaper=/usr/share/images/wp.png
 

@@ -12,6 +12,7 @@
 #include <fontconfig/fontconfig.h>
 
 
+
 static void __load_from_path(dmx_t* dmx, char* path) {
     DIR* d = opendir(path);
     if(!d) {
@@ -26,7 +27,6 @@ static void __load_from_path(dmx_t* dmx, char* path) {
 
         if(ent->d_type == DT_DIR) {
             __load_from_path(dmx, buf);
-         
             continue;
         }
 
@@ -36,21 +36,70 @@ static void __load_from_path(dmx_t* dmx, char* path) {
             continue;
 
 
+        dmx_font_t* ft = (dmx_font_t*) calloc(1, sizeof(dmx_font_t));
+        if(!ft) {
+            TRACE("no memory left!");
+            FT_Done_Face(face);
+            return;
+        }
         
-        FT_SfntName sn;
-        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_FAMILY, &sn) != 0)
+
+        FT_SfntName sn_family;
+        FT_SfntName sn_subfamily;
+
+        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_FAMILY, &sn_family) != 0) {
+            TRACE("FT_Get_Sfnt_Name(FAMILY) failed!");
             continue;
+        }
+        strncpy(ft->family, sn_family.string, sn_family.string_len);
 
-        char tmp[sn.string_len + 1];
-        strncpy(tmp, sn.string, sn.string_len);
 
-        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_SUBFAMILY, &sn) != 0)
+        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_SUBFAMILY, &sn_subfamily) != 0) {
+            TRACE("FT_Get_Sfnt_Name(SUBFAMILY) failed!");
             continue;
+        }
+        strncpy(ft->subfamily, sn_subfamily.string, sn_subfamily.string_len);
 
-        char tmp2[sn.string_len + 1];
-        strncpy(tmp2, sn.string, sn.string_len);
-        TRACE("Loaded %s : %s\n", tmp, tmp2);
-    
+
+        FT_Done_Face(face);
+
+
+
+        int fd = open(buf, O_RDONLY);
+        if(fd < 0) {
+            TRACE("%s: could not open\n", buf);
+            continue;
+        }
+
+
+        
+
+
+        lseek(fd, 0, SEEK_END);
+        ft->bufsiz = lseek(fd, 0, SEEK_CUR);
+        lseek(fd, 0, SEEK_SET);
+
+
+        ft->buffer = (void*) malloc(ft->bufsiz);
+        if(!ft->buffer) {
+            TRACE("no memory left!");
+            return;
+        }
+
+        if(read(fd, ft->buffer, ft->bufsiz) != ft->bufsiz) {
+            TRACE("%s: I/O error\n", buf);
+
+            free(ft->buffer);
+            free(ft);
+            close(fd);
+            continue;
+        }
+
+        close(fd);
+
+
+        ft->next = dmx->ft_fonts;
+        dmx->ft_fonts = ft;
     }
 
     closedir(d);
@@ -64,55 +113,61 @@ int init_fontengine(dmx_t* dmx) {
 
 
     TRACE("Loading System Fonts...\n");
-
     __load_from_path(dmx, PATH_FONTS);
-    return -1;
+
 
     
-    #define _(x, y, z)                                                                                      \
-        if(dmx_font_obtain(&dmx->ft_cache[x], (char*) sysconfig(y, SYSCONFIG_FORMAT_STRING, 0), z) != 0) {  \
-            TRACE("dmx_font_obtain() failed!\n");                                                           \
-            return -1;                                                                                      \
+    #define _(x, y, z)                                                                                              \
+        if(dmx_font_obtain(dmx, &dmx->ft_cache[x], (char*) sysconfig(y, SYSCONFIG_FORMAT_STRING, 0), z) != 0) {     \
+            TRACE("dmx_font_obtain() failed!\n");                                                                   \
+            return -1;                                                                                              \
         }
 
 
-    _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_NORMAL, "ui.font.regular", "Regular");
+
+    TRACE("Loading Cache...\n");
+
+
     _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_NORMAL, "ui.font.condensed", "Regular");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Regular");
 
+    _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_NORMAL, "ui.font.regular", "Regular");
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_NORMAL, "ui.font.regular", "Light");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_NORMAL, "ui.font.condensed", "Light");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Light");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.regular", "Medium");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.condensed", "Medium");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Medium");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.regular", "Bold");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.condensed", "Bold");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Bold");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_ITALIC, "ui.font.regular", "Italic");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_ITALIC, "ui.font.condensed", "Italic");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_ITALIC, "ui.font.monospace", "Italic");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_ITALIC, "ui.font.regular", "Light Italic");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_ITALIC, "ui.font.condensed", "Light Italic");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_LIGHT | DMX_FONT_STYLE_ITALIC, "ui.font.monospace", "Light Italic");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.regular", "Medium Italic");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.condensed", "Medium Italic");
-    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.monospace", "Medium Italic");
-
     _(DMX_FONT_TYPE_REGULAR | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.regular", "Bold Italic");
-    _(DMX_FONT_TYPE_CONDENSED | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.condensed", "Bold Italic");
+
+    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Regular");
+    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_NORMAL, "ui.font.monospace", "Bold");
+    _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_REGULAR | DMX_FONT_STYLE_ITALIC, "ui.font.monospace", "Italic");
     _(DMX_FONT_TYPE_MONOSPACE | DMX_FONT_WEIGHT_MEDIUM | DMX_FONT_STYLE_ITALIC, "ui.font.monospace", "Bold Italic");
+
 
     TRACE("Done!\n");
     return 0;
 }
 
 
-int dmx_font_obtain(FT_Face* face, char* family, char* style) {
-    
+int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* subfamily) {
+    dmx_font_t* ft;
+    for(ft = dmx->ft_fonts; ft; ft = ft->next) {
+        if(strcmp(ft->family, family) != 0 || strcmp(ft->subfamily, subfamily) != 0)
+            continue;
+        
+        break;
+    }
+
+    if(!ft) {
+        TRACE("%s %s not found!\n", family, subfamily);
+        return -1;
+    }
+
+    if(FT_New_Memory_Face(dmx->ft_library, ft->buffer, ft->bufsiz, 0, face) != 0) {
+        TRACE("%s %s failed on FT_New_Face()\n");
+        return -1;
+    }
+
+    return 0;
 }

@@ -174,6 +174,16 @@ int sys_open(const char* name, int flags, mode_t mode) {
 
 
 
+	int fd = 0;
+	while((fd < TASK_FD_COUNT) && (current_task->fd[fd].inode))
+		fd++;
+
+	if(fd >= TASK_FD_COUNT) {	
+		errno = EMFILE;
+		return -1;
+	}
+
+
 	if(vfs_open(cino) == E_ERR)
 		return -1;
 	
@@ -182,16 +192,6 @@ int sys_open(const char* name, int flags, mode_t mode) {
 	else
 		cino->position = 0;
 
-
-
-	int fd = 0;
-	while((current_task->fd[fd].inode) && (fd < TASK_FD_COUNT))
-		fd++;
-
-	if(fd >= TASK_FD_COUNT) {
-		errno = EMFILE;
-		return -1;
-	}
 
 	current_task->fd[fd].inode = cino;
 	current_task->fd[fd].flags = flags;

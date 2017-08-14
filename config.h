@@ -72,41 +72,46 @@
 #endif
 
 #ifndef KERNEL_PLATFORM
-#define KERNEL_PLATFORM					"unknown"
+#	define KERNEL_PLATFORM				"unknown"
 #endif
 
-
-#ifndef __weak
-#define __weak							__attribute__((weak))
-#endif
-
-#ifndef __packed
-#define __packed						__attribute__((packed))
-#endif
-
-#ifndef __section
-#define __section(x)					__attribute__((section(x)))
-#endif
-
-#ifndef __align
-#define __align(x)						__attribute__((align(x)))
-#endif
-
-#ifndef __malloc
-#define __malloc						__attribute__((malloc))
-#endif
-
-#ifndef __optimize
-#define __optimize(x)					__attribute__((optimize("O" #x)))
-#endif
 
 #ifdef __GNUC__
-#define __PRAGMA(x)						_Pragma(#x)
-#define WARNING(x)						__PRAGMA(GCC diagnostic ignored x)
-#else
-#define WARNING(x)
-#endif
+#	ifndef __weak
+#		define __weak					__attribute__((weak))
+#	endif
 
+#	ifndef __packed
+#		define __packed					__attribute__((packed))
+#	endif
+
+#	ifndef __section
+#		define __section(x)				__attribute__((section(x)))
+#	endif
+
+#	ifndef __align
+#		define __align(x)				__attribute__((align(x)))
+#	endif
+
+#	ifndef __malloc
+#		define __malloc					__attribute__((malloc))
+#	endif
+
+#	ifndef __optimize
+#		define __optimize(x)			__attribute__((optimize("O" #x)))
+#	endif
+
+#	define __PRAGMA(x)					_Pragma(#x)
+#	define WARNING(x)					__PRAGMA(GCC diagnostic ignored x)
+#else
+#	define __weak
+#	define __packed
+#	define __section(x)
+#	define __align(x)
+#	define __malloc
+#	define __optimize(x)
+#	define WARNING(x)
+#endif
 
 
 #endif

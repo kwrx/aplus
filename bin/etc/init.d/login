@@ -1,0 +1,10 @@
+#!/usr/sbin/dux
+
+
+if(sysconfig("ui.enabled") == "true")
+    exec("/usr/sbin/dmx");
+
+
+/* Fallback */
+exec("/usr/sbin/getty /dev/tty0");
+

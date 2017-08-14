@@ -22,7 +22,7 @@ static void show_usage(int argc, char** argv) {
 
 static void show_version(int argc, char** argv) {
     printf(
-        "%s (aPlus coreutils) 0.1\n"
+        "%s (aPlus sysutils) 0.1\n"
         "Copyright (c) 2016 Antonino Natale.\n"
         "Built with gcc %s (%s)\n",
         
@@ -96,23 +96,16 @@ int main(int argc, char** argv) {
     }
 
 
+    /* Test */
     static dmx_window_t wnd;
-    wnd.x = 200;
-    wnd.y = 300;
-    wnd.w = 300;
-    wnd.h = 200;
+    wnd.x = 0;
+    wnd.y = 0;
+    wnd.w = 1280;
+    wnd.h = 768;
     wnd.alpha = 1.0;
     wnd.flags = 0;
     wnd.next = NULL;
-    wnd.surface = cairo_image_surface_create(dmx.format, 300, 200);
-    cairo_t* cr = cairo_create(wnd.surface);
-
-    
-    cairo_save(cr);
-    cairo_rectangle(cr, 0, 0, 300.0, 200.0);
-    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
-    cairo_fill(cr);
-    cairo_restore(cr);
+    wnd.surface = cairo_image_surface_create_from_png("/usr/share/images/wp.png");
 
     dmx.windows = &wnd;
     dmx_mark_window(&dmx, &wnd, NULL);

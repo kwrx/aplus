@@ -5,11 +5,15 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <fcntl.h>
+#include <time.h>
+
+#include "lib/duktape.h"
+#include "dux.h"
 
 static void show_usage(int argc, char** argv) {
     printf(
-        "Use: getty [OPTIONS...] <ttydevice>\n"
-        "Get TTY control.\n\n"
+        "Use: xjs [OPTIONS...] [FILE]\n"
+        "Run JavaScript files\n\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
     );
@@ -28,6 +32,7 @@ static void show_version(int argc, char** argv) {
     
     exit(0);
 }
+
 
 
 
@@ -55,25 +60,59 @@ int main(int argc, char** argv) {
         }
     }
     
+
+    FILE* fp = stdin;
+    char* input = "<stdin>";
     
-    if(optind >= argc)
-        show_usage(argc, argv);
-        
+    if(optind < argc) {
+        input = argv[optind];
+        fp = fopen(argv[optind], "r");
+    }
+
     
-    int fd = open(argv[optind], O_RDWR);
-    if(fd < 0) {
-        perror(argv[optind]);
+    if(!fp) {
+        perror(input);
         return -1;
     }
 
 
-    setsid();
+    fseek(fp, 0, SEEK_END);
+    fpos_t p = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
 
-    dup2(fd, STDIN_FILENO);
-    dup2(fd, STDOUT_FILENO);
-    dup2(fd, STDERR_FILENO);
+    char* buf = (char*) calloc(1, p);
+    if(!buf) {
+        perror("malloc");
+        fclose(fp);
+        return -1;
+    }
 
-    execl("/usr/sbin/login", "/usr/sbin/login", NULL);
-    perror("login");
-    return -1;
+
+    if(fread(buf, 1, p, fp) != p) {
+        perror("I/O");
+        fclose(fp);
+        return -1;
+    }
+
+    fclose(fp);
+
+
+
+
+    duk_context* ctx = duk_create_heap_default();
+    
+    int i;
+    for(i = 0; c_funcs[i].value; i++) {
+        duk_push_c_function(ctx, c_funcs[i].value, c_funcs[i].nargs);
+        duk_put_global_string(ctx, c_funcs[i].key);
+    }
+
+
+    if(duk_peval_string_noresult(ctx, buf) != 0) {
+        fprintf(stderr, "%s: %s\n", input, duk_safe_to_string(ctx, -1));
+        return -1;
+    }
+    
+    duk_destroy_heap(ctx);
+    return 0;       
 }

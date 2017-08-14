@@ -60,11 +60,12 @@ void* th_cursor(void* arg) {
         pthread_exit(NULL);
     }
 
+
     for(;;) {
         mouse_t m;
         if(read(fd, &m, sizeof(m)) <= 0) {
-            perror(PATH_MOUSEDEV);
-            continue;
+            TRACE(PATH_MOUSEDEV ": I/O error\n");
+            break;
         }
 
         dmx->cursor_x = m.x > dmx->width ? dmx->width : m.x;

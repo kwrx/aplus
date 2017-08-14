@@ -33,6 +33,15 @@ typedef struct dmx_window {
     struct dmx_window* next;
 } dmx_window_t;
 
+typedef struct dmx_font {
+    char family[64];
+    char subfamily[64];
+    void* buffer;
+    size_t bufsiz;
+
+    struct dmx_font* next;
+} dmx_font_t;
+
 typedef struct {
     int fd;
     uint16_t width;
@@ -69,13 +78,6 @@ typedef struct {
     /* TODO */
 } dmx_packet_t;
 
-typedef struct {
-    char family[64];
-    char subfamily[64];
-    char path[256];
-
-    struct dmx_font* next;
-} dmx_font_t;
 
 
 
@@ -89,7 +91,7 @@ void* th_cursor(void* arg);
 void dmx_mark_window(dmx_t* dmx, dmx_window_t* wnd, dmx_rect_t* subrect);
 void dmx_blit_window(dmx_t* dmx, dmx_window_t* wnd);
 
-int dmx_font_obtain(FT_Face* face, char* family, char* style);
+int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* style);
 
 #if VERBOSE
 #define TRACE(x...) {                               \

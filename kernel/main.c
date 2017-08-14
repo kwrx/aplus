@@ -18,13 +18,13 @@ static void idle() {
     if((p = (int) sysconfig("idle.priority", SYSCONFIG_FORMAT_INT, 0)) > 0) {
         switch(p) {
 			case 1:
-				kernel_task->priority = TASK_PRIO_MIN;
+				current_task->priority = TASK_PRIO_MIN;
 				break;
 			case 2:
-				kernel_task->priority = TASK_PRIO_REGULAR;
+				current_task->priority = TASK_PRIO_REGULAR;
 				break;
 			case 3:
-				kernel_task->priority = TASK_PRIO_MAX;
+				current_task->priority = TASK_PRIO_MAX;
 				break;
 			default:
 				for(;;)
@@ -48,6 +48,8 @@ int main(int argc, char** argv) {
 	(void) module_init();
 	(void) mounts_init();
 
+
+
 	kprintf(INFO "cpu: %s %d MHz (Cores: %d, Threads: %d)\n",
 			mbd->cpu.family,
 			mbd->cpu.speed,
@@ -66,6 +68,8 @@ int main(int argc, char** argv) {
 	kprintf(INFO "%s %s %p\n",
 			KERNEL_NAME,
 			mbd->cmdline.args, mbd->memory.start);
+
+
 
 	
 	char* __argv[] = { "/usr/sbin/init", NULL };
