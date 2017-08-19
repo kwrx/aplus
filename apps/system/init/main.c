@@ -17,7 +17,10 @@
 
 
 static char* __envp[] = {
-    "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin",
+    "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/bin",
+    "LD_DEBUG=all",
+    "LD_DEBUG_OUTPUT=/dev/log",
+    "LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:/lib",
     "TERM=linux",
     "TMPDIR=/tmp",
     NULL

@@ -278,7 +278,12 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        setenv("PATH", "/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin", 1);
+
+
+        setenv("PATH", "/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/bin", 1);
+        setenv("LD_DEBUG", "all", 1);
+        setenv("LD_DEBUG_OUTPUT", "/dev/log", 1);
+        setenv("LD_LIBRARY_PATH", "/usr/lib:/usr/local/lib:/lib", 1);
         setenv("TERM", "linux", 1);
         setenv("TMPDIR", "/tmp", 1);
         setenv("LANG", sysconfig("sys.locale", SYSCONFIG_FORMAT_STRING, (uintptr_t) ""), 1);

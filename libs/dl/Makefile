@@ -23,7 +23,7 @@ $(OUTPUT_A): $(OFILES)
 
 $(OUTPUT_SO): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(LD) -r -o $@ $(OFILES)
+	@$(LD) -shared -o $@ $(OFILES)
 
 
 .c.o:
