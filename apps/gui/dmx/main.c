@@ -71,14 +71,11 @@ int main(int argc, char** argv) {
     memset(&dmx, 0, sizeof(dmx_t));
 
 
-#if 0
+
     if(init_server(&dmx) != 0) {
         TRACE("init_server() failed!\n");
         return -1;
     }
-#endif
-
-
 
     if(init_fontengine(&dmx) != 0) {
         TRACE("init_fontengine() failed!\n");
@@ -104,18 +101,16 @@ int main(int argc, char** argv) {
     wnd.h = 768;
     wnd.alpha = 1.0;
     wnd.flags = 0;
-    wnd.next = NULL;
     wnd.surface = cairo_image_surface_create_from_png("/usr/share/images/wp.png");
 
-    dmx.windows = &wnd;
+    list_push(dmx.windows, &wnd);
     dmx_mark_window(&dmx, &wnd, NULL);
 
 
-    //pthread_create(&dmx.th_server, NULL, th_server, &dmx);
+    pthread_create(&dmx.th_server, NULL, th_server, &dmx);
     pthread_create(&dmx.th_render, NULL, th_render, &dmx);
     pthread_create(&dmx.th_cursor, NULL, th_cursor, &dmx);
-    //pthread_join(dmx.th_server, NULL);
-    pthread_join(dmx.th_render, NULL);
+    pthread_join(dmx.th_server, NULL);
     pthread_detach(dmx.th_render);
     pthread_detach(dmx.th_cursor);
 

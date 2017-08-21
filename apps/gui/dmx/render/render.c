@@ -106,25 +106,20 @@ void* th_render(void* arg) {
     dmx_t* dmx = (dmx_t*) arg;
 
     for(;;) {
-        dmx_rect_t* r;
-        for(r = dmx->dirty; r;) {
+        list_each(dmx->dirtyrects, r) {
             cairo_save(dmx->backbuffer);
             cairo_rectangle(dmx->backbuffer, r->x, r->y, r->w, r->h);
             cairo_clip(dmx->backbuffer);
             cairo_new_path(dmx->backbuffer);
             
-            dmx_window_t* w;
-            for(w = dmx->windows; w; w = w->next)
+            list_each(dmx->windows, w)
                 dmx_blit_window(dmx, w);
 
             cairo_restore(dmx->backbuffer);
-
-
-            r = r->next;
-
-            free(dmx->dirty);
-            dmx->dirty = r;
+            free(r);
         }
+
+        list_clear(dmx->dirtyrects);
 
         if(!dmx->redraw)
             goto done;

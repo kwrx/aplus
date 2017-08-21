@@ -96,10 +96,7 @@ static void __load_from_path(dmx_t* dmx, char* path) {
         }
 
         close(fd);
-
-
-        ft->next = dmx->ft_fonts;
-        dmx->ft_fonts = ft;
+        list_push(dmx->ft_fonts, ft);
     }
 
     closedir(d);
@@ -151,11 +148,12 @@ int init_fontengine(dmx_t* dmx) {
 
 
 int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* subfamily) {
-    dmx_font_t* ft;
-    for(ft = dmx->ft_fonts; ft; ft = ft->next) {
-        if(strcmp(ft->family, family) != 0 || strcmp(ft->subfamily, subfamily) != 0)
+    dmx_font_t* ft = NULL;
+    list_each(dmx->ft_fonts, v) {
+        if(strcmp(v->family, family) != 0 || strcmp(v->subfamily, subfamily) != 0)
             continue;
         
+        ft = v;
         break;
     }
 

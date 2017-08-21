@@ -35,6 +35,5 @@ void dmx_mark_window(dmx_t* dmx, dmx_window_t* wnd, dmx_rect_t* subrect) {
         r->h = wnd->h;
     }
 
-    r->next = dmx->dirty;
-    dmx->dirty = r;
+    list_push(dmx->dirtyrects, r);
 }

@@ -7,6 +7,7 @@
 #include <aplus/dmx.h>
 #include <cairo/cairo.h>
 #include <pthread.h>
+#include <list.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -17,8 +18,6 @@
 
 typedef struct dmx_rect {
     double x, y, w, h;
-
-    struct dmx_rect* next;
 } dmx_rect_t;
 
 typedef struct dmx_window {
@@ -28,9 +27,6 @@ typedef struct dmx_window {
 
     cairo_surface_t* surface;
     int flags;
-
-
-    struct dmx_window* next;
 } dmx_window_t;
 
 typedef struct dmx_font {
@@ -38,9 +34,24 @@ typedef struct dmx_font {
     char subfamily[64];
     void* buffer;
     size_t bufsiz;
-
-    struct dmx_font* next;
 } dmx_font_t;
+
+typedef struct {
+    pid_t pid;
+    pid_t cid;
+    
+    uint16_t width;
+    uint16_t height;
+    uint16_t x;
+    uint16_t y;
+    
+    int flags;
+    int cmd;
+    int arg;
+    int lock;
+
+    char frame[0];
+} dmx_context_t;
 
 typedef struct {
     int fd;
@@ -58,8 +69,6 @@ typedef struct {
     uint16_t cursor_x;
     uint16_t cursor_y;
 
-    dmx_rect_t* dirty;
-    dmx_window_t* windows;
     dmx_window_t* window_top;
     dmx_window_t* window_focused;
 
@@ -69,14 +78,16 @@ typedef struct {
 
     FT_Library ft_library;
     FT_Face ft_cache[32];
-    dmx_font_t* ft_fonts;
+
+    list(dmx_font_t*, ft_fonts);
+    list(dmx_context_t*, clients);
+    list(dmx_window_t*, windows);
+    list(dmx_rect_t*, dirtyrects);
 
     int redraw;
 } dmx_t;
 
-typedef struct {
-    /* TODO */
-} dmx_packet_t;
+
 
 
 
@@ -84,9 +95,11 @@ typedef struct {
 int init_render(dmx_t* dmx);
 int init_cursor(dmx_t* dmx);
 int init_fontengine(dmx_t* dmx);
+int init_server(dmx_t* dmx);
 
 void* th_render(void* arg);
 void* th_cursor(void* arg);
+void* th_server(void* arg);
 
 void dmx_mark_window(dmx_t* dmx, dmx_window_t* wnd, dmx_rect_t* subrect);
 void dmx_blit_window(dmx_t* dmx, dmx_window_t* wnd);
