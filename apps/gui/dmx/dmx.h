@@ -36,22 +36,6 @@ typedef struct dmx_font {
     size_t bufsiz;
 } dmx_font_t;
 
-typedef struct {
-    pid_t pid;
-    pid_t cid;
-    
-    uint16_t width;
-    uint16_t height;
-    uint16_t x;
-    uint16_t y;
-    
-    int flags;
-    int cmd;
-    int arg;
-    int lock;
-
-    char frame[0];
-} dmx_context_t;
 
 typedef struct {
     int fd;
@@ -100,6 +84,8 @@ int init_server(dmx_t* dmx);
 void* th_render(void* arg);
 void* th_cursor(void* arg);
 void* th_server(void* arg);
+void* th_main(void* arg);
+
 
 void dmx_mark_window(dmx_t* dmx, dmx_window_t* wnd, dmx_rect_t* subrect);
 void dmx_blit_window(dmx_t* dmx, dmx_window_t* wnd);
@@ -107,9 +93,9 @@ void dmx_blit_window(dmx_t* dmx, dmx_window_t* wnd);
 int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* style);
 
 #if VERBOSE
-#define TRACE(x...) {                               \
-    fprintf(stdout, "dmx: %s() ", __func__);        \
-    fprintf(stdout, x);                             \
+#define TRACE(x...) {                                           \
+    fprintf(stdout, "dmx: #%02d %s() ", getpid(), __func__);     \
+    fprintf(stdout, x);                                         \
 }
 #else
 #define TRACE(x...) ((void) 0)

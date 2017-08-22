@@ -110,11 +110,8 @@ int main(int argc, char** argv) {
     pthread_create(&dmx.th_server, NULL, th_server, &dmx);
     pthread_create(&dmx.th_render, NULL, th_render, &dmx);
     pthread_create(&dmx.th_cursor, NULL, th_cursor, &dmx);
-    pthread_join(dmx.th_server, NULL);
-    pthread_detach(dmx.th_render);
-    pthread_detach(dmx.th_cursor);
+    
 
-
-    unlink(DMX_PIPE);
+    th_main((void*) &dmx);
     return 0;
 }

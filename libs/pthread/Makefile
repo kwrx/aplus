@@ -12,7 +12,7 @@ SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -O3 -c
+CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c
 SFLAGS		:=  -c -I include
 
 

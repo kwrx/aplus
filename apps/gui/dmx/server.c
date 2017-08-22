@@ -49,31 +49,65 @@ void* th_server(void* arg) {
         if(!ctx)
             continue;
 
-        if(!ctx->lock)
-            continue;
+        int found = 0;
+        list_each(dmx->clients, cc) {
+            if(cc != ctx)
+                continue;
 
-        switch(ctx->cmd) {
-            case DMX_PROTO_NULL:
-                break;
-
-            case DMX_PROTO_CONNECT:
-                list_push(dmx->clients, ctx);
-                
-                ctx->cid = nextcid++;
-                TRACE("context #%d:%d registered! (%p, %d:%d %dx%d)\n", ctx->pid, ctx->cid, ctx, ctx->x, ctx->y, ctx->width, ctx->height);
-                break;
-
-            case DMX_PROTO_CLOSE:
-                list_remove(dmx->clients, ctx);
-
-                TRACE("client #%d:%d diconnected!\n", ctx->pid, ctx->cid);
-                break;
-
-            default:
-                TRACE("client %d:%d sent invalid command\n", ctx->pid, ctx->cid);
-                break;
+            found++;
+            break;
         }
 
-        ctx->lock = 0;
+        if(found) {
+            TRACE("client #%d:%d already registered\n", ctx->pid, ctx->cid);
+            continue;
+        }
+
+        list_push(dmx->clients, ctx);
     }
+}
+
+
+void* th_main(void* arg) {
+    TRACE("Running\n");
+    dmx_t* dmx = (dmx_t*) arg;
+
+    for(;;) {
+        list_each(dmx->clients, ctx) {
+            if(!ctx->lock)
+                continue;
+
+            switch(ctx->cmd) {
+                case DMX_PROTO_NULL:
+                    break;
+
+                case DMX_PROTO_CONNECT:                  
+                    ctx->cid = nextcid++;
+                    ctx->screen.width = dmx->width;
+                    ctx->screen.height = dmx->height;
+                    ctx->screen.bpp = dmx->bpp;
+                    ctx->screen.stride = dmx->stride;
+                    ctx->screen.format = dmx->format;
+                    
+                    TRACE("client #%d:%d registered! (%p, %d:%d %dx%d)\n", ctx->pid, ctx->cid, ctx, ctx->window.x, ctx->window.y, ctx->window.w, ctx->window.h);
+                    break;
+
+                case DMX_PROTO_CLOSE:
+                    list_remove(dmx->clients, ctx);
+
+                    TRACE("client #%d:%d diconnected!\n", ctx->pid, ctx->cid);
+                    break;
+
+                default:
+                    TRACE("client %d:%d sent invalid command\n", ctx->pid, ctx->cid);
+                    break;
+            }
+
+            ctx->lock = 0;
+        }
+
+        usleep(25000);
+    }
+
+    unlink(DMX_PIPE);
 }

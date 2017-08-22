@@ -13,8 +13,6 @@
 #include <fcntl.h>
 #include <getopt.h>
 
-extern int gettimeofday(struct timeval*, struct timezone*);
-
 
 static int ibs = 512;
 static int obs = 512;
