@@ -59,14 +59,14 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	else
 		r = __check_perm(2, inode->mode);
 
-#if 0
+
 	if(unlikely(!r)) {
 		sys_close(fd);
 
 		errno = EACCES;
 		return -1;
 	}
-#endif
+
 
 	size_t size = sys_lseek(fd, 0, SEEK_END);
 	sys_lseek(fd, 0, SEEK_SET);

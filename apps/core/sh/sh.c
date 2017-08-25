@@ -15,7 +15,6 @@ static char buf[BUFSIZ];
 sh_alias_t* sh_aliases = NULL;
 
 
-
 char* sh_gethostname(void) {
     CLRBUF();
     if(gethostname(buf, BUFSIZ) != 0) {

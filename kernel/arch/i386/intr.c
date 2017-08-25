@@ -68,7 +68,7 @@ extern struct {
 } TSS32;
 
 
-static char tmp_stack[CONFIG_STACK_SIZE];
+//static char tmp_stack[CONFIG_STACK_SIZE];
 int current_irq = -1;
 
 

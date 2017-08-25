@@ -101,6 +101,7 @@ extern void* sys_munmap(void* addr, size_t len);
 extern int sys_execve(const char* filename, char* const argv[], char* const envp[]);
 extern int sys_mkfifo(const char* pathname, mode_t mode);
 extern int sys_symlink(const char*, const char*);
+extern int sys_fcntl(int, int, long);
 
 
 extern int mounts_init();

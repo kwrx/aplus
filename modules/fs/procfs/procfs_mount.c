@@ -31,7 +31,7 @@ static int procfs_open(struct inode* inode) {
 			return E_ERR;
 		}
 
-		procfs_add_childs(i, tmp);
+		procfs_add_childs(i, (task_t*) tmp);
 	}
 
 	return 0;

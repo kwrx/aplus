@@ -13,94 +13,39 @@
 
 
 
-static void __load_from_path(dmx_t* dmx, char* path) {
-    DIR* d = opendir(path);
-    if(!d) {
-        TRACE("opendir(%s) failed!\n", PATH_FONTS);
-        return;
+static int load_fontconfig(dmx_t* dmx) {
+    FILE* fp = fopen("/etc/fonts/fonts.conf", "r");
+    if(!fp) {
+        TRACE("/etc/fonts/fonts.conf not found!\n");
+        return -1;
     }
 
-    struct dirent* ent;
-    while((ent = readdir(d))) {
-        char buf[strlen(path) + strlen(ent->d_name) + 1];
-        sprintf(buf, "%s/%s", path, ent->d_name);
 
-        if(ent->d_type == DT_DIR) {
-            __load_from_path(dmx, buf);
-            continue;
+
+    char buf[BUFSIZ];
+    while(fgets(buf, BUFSIZ, fp)) {
+        if(!strchr(buf, ':')) {
+            TRACE("syntax-error: expected \':\' character!");
+            break;
         }
 
 
-        FT_Face face;
-        if(FT_New_Face(dmx->ft_library, buf, 0, &face) != 0)
-            continue;
-
-
-        dmx_font_t* ft = (dmx_font_t*) calloc(1, sizeof(dmx_font_t));
-        if(!ft) {
-            TRACE("no memory left!");
-            FT_Done_Face(face);
-            return;
-        }
-        
-
-        FT_SfntName sn_family;
-        FT_SfntName sn_subfamily;
-
-        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_FAMILY, &sn_family) != 0) {
-            TRACE("FT_Get_Sfnt_Name(FAMILY) failed!");
-            continue;
-        }
-        strncpy(ft->family, sn_family.string, sn_family.string_len);
-
-
-        if(FT_Get_Sfnt_Name(face, TT_NAME_ID_FONT_SUBFAMILY, &sn_subfamily) != 0) {
-            TRACE("FT_Get_Sfnt_Name(SUBFAMILY) failed!");
-            continue;
-        }
-        strncpy(ft->subfamily, sn_subfamily.string, sn_subfamily.string_len);
-
-
-        FT_Done_Face(face);
-
-
-
-        int fd = open(buf, O_RDONLY);
-        if(fd < 0) {
-            TRACE("%s: could not open\n", buf);
-            continue;
+        dmx_font_t* d = (dmx_font_t*) calloc(1, sizeof(dmx_font_t));
+        if(!d) {
+            TRACE("%s: no memory left for new dmx_font\n");
+            break;
         }
 
-
-        
-
-
-        lseek(fd, 0, SEEK_END);
-        ft->bufsiz = lseek(fd, 0, SEEK_CUR);
-        lseek(fd, 0, SEEK_SET);
+        strcpy(d->path, strtok(buf, ":"));
+        strcpy(d->family, strtok(NULL, ":"));
+        strcpy(d->subfamily, strtok(NULL, "\n"));
 
 
-        ft->buffer = (void*) malloc(ft->bufsiz);
-        if(!ft->buffer) {
-            TRACE("no memory left!");
-            return;
-        }
-
-        if(read(fd, ft->buffer, ft->bufsiz) != ft->bufsiz) {
-            TRACE("%s: I/O error\n", buf);
-
-            free(ft->buffer);
-            free(ft);
-            close(fd);
-            continue;
-        }
-
-        close(fd);
-        list_push(dmx->ft_fonts, ft);
+        list_push(dmx->ft_fonts, d);
     }
-
-    closedir(d);
-    return;
+    
+    fclose(fp);
+    return 0;
 }
 
 
@@ -110,7 +55,10 @@ int init_fontengine(dmx_t* dmx) {
 
 
     TRACE("Loading System Fonts...\n");
-    __load_from_path(dmx, PATH_FONTS);
+    if(load_fontconfig(dmx) != 0) {
+        TRACE("load_fontconfig() failed!\n");
+        return -1;
+    }
 
 
     
@@ -162,7 +110,29 @@ int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* subfamily) {
         return -1;
     }
 
-    if(FT_New_Memory_Face(dmx->ft_library, ft->buffer, ft->bufsiz, 0, face) != 0) {
+    if(!ft->cache) {
+        FILE* fp = fopen(ft->path, "rb");
+        if(!fp) {
+            TRACE("%s: could not open for %s %s\n", ft->path, family, subfamily);
+            return -1;
+        }
+
+        fseek(fp, 0, SEEK_END);
+        ft->cachesize = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        ft->cache = (void*) malloc(ft->cachesize);
+        if(!ft->cache) {
+            TRACE("no memory left for %s %s\n", family, subfamily);
+            fclose(fp);
+            return -1;
+        }
+
+        fread(ft->cache, 1, ft->cachesize, fp);
+        fclose(fp);
+    }
+
+    if(FT_New_Memory_Face(dmx->ft_library, ft->cache, ft->cachesize, 0, face) != 0) {
         TRACE("%s %s failed on FT_New_Face()\n");
         return -1;
     }

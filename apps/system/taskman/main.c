@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <ctype.h>
 #include <sys/types.h>
+#include <libgen.h>
 #include <time.h>
 
 

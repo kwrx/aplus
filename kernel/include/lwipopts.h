@@ -77,7 +77,7 @@
 #define MEMP_NUM_TCP_SEG			    256
 #define MEMP_NUM_REASSDATA			    32
 #define MEMP_NUM_NETBUF				    1024
-#define MEMP_NUM_NETCONN			    128
+#define MEMP_NUM_NETCONN			    64
 
 
 #define DNS_TABLE_SIZE				    16

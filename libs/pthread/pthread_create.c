@@ -68,7 +68,8 @@ PUBLIC int pthread_create(pthread_t* thread, const pthread_attr_t* attr, void *(
 	__pthread_queue = ctx;
 		
 
-
-	ctx->tid = clone(__pthread_handler__, NULL, CLONE_SIGHAND | CLONE_FILES | CLONE_FS | CLONE_VM, ctx);
+	/* FIXME */
+	extern pid_t clone(void* (*fn) (void*), void*, int, void*);
+	ctx->tid = clone((void* (*)(void*)) __pthread_handler__, NULL, CLONE_SIGHAND | CLONE_FILES | CLONE_FS | CLONE_VM, ctx);
 	return 0;
 }

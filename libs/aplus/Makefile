@@ -1,21 +1,29 @@
 .PHONY: all
-OUTPUT		?=
 CC			?=
 ROOT		?=
-OUTPUT		:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
+SYSROOT		?=
+TARGET		?=
+
+OUTPUT_A	:= $(SYSROOT)/$(TARGET)/lib/lib$(notdir $(PWD)).a
+OUTPUT_SO	:= $(ROOT)/bin/usr/lib/lib$(notdir $(PWD)).so
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -O3 -c
+CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c
 SFLAGS		:=  -c -I include
 
-all: $(OUTPUT)
-$(OUTPUT): $(OFILES)
+
+all: $(OUTPUT_A) $(OUTPUT_SO)
+$(OUTPUT_A): $(OFILES)
+	@echo "  AR     " $(subst $(ROOT)/,,$@)
+	@$(AR) -rcs $@ $(OFILES)
+
+$(OUTPUT_SO): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lpthread -lgcc
+	@$(LD) -shared -o $@ $(OFILES)
 
 
 .c.o:
@@ -32,4 +40,4 @@ $(OUTPUT): $(OFILES)
 	
 	
 clean:
-	$(RM) $(OFILES) $(OUTPUT)
+	$(RM) $(OFILES) $(OUTPUT_A) $(OUTPUT_SO)

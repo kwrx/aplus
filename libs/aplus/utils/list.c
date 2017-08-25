@@ -28,7 +28,8 @@
  * SUCH DAMAGE.
  */
 
-#include "list.h"
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
 
 /* This file contains private helper functions for the macros defined in list.h.
  *
@@ -66,14 +67,14 @@ size_t _list_length (list_head * list)
 void _list_push (list_head ** p_list, size_t value_size, void * value)
 {
    if (!*p_list)
-      *p_list = (list_head *) calloc (sizeof (list_head), 1);
+      *p_list = (list_head *) __libaplus_calloc (sizeof (list_head), 1);
 
    list_head * list = *p_list;
 
    ++ list->length;
 
    list_element * elem = (list_element *)
-       malloc (sizeof (*elem) + value_size);
+       __libaplus_malloc (sizeof (*elem) + value_size);
 
    memset (elem, 0, sizeof (*elem));
    memcpy (get_value_ptr (elem), value, value_size);
@@ -95,14 +96,14 @@ void _list_push (list_head ** p_list, size_t value_size, void * value)
 void _list_push_front (list_head ** p_list, size_t value_size, void * value)
 {
    if (!*p_list)
-      *p_list = (list_head *) calloc (sizeof (list_head), 1);
+      *p_list = (list_head *) __libaplus_calloc (sizeof (list_head), 1);
 
    list_head * list = *p_list;
 
    ++ list->length;
 
    list_element * elem = (list_element *)
-       malloc (sizeof (*elem) + value_size);
+       __libaplus_malloc (sizeof (*elem) + value_size);
 
    memset (elem, 0, sizeof (*elem));
    memcpy (get_value_ptr (elem), value, value_size);
@@ -170,7 +171,7 @@ void _list_remove (list_element * elem)
    if (elem == list->last)
       list->last = elem->prev;
 
-   free (elem);
+   __libaplus_free (elem);
 }
 
 void _list_clear (list_head ** list, size_t value_size)
@@ -183,11 +184,11 @@ void _list_clear (list_head ** list, size_t value_size)
    while (elem)
    {
       list_element * next = elem->next;
-      free (elem);
+      __libaplus_free (elem);
       elem = next;
    }
 
-   free (*list);
+   __libaplus_free (*list);
    *list = 0;
 }
 

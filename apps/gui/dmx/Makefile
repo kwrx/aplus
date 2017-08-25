@@ -15,8 +15,8 @@ SFLAGS		:=  -c -I include
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -lpthread -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lpng -lz -lgcc
-	@$(CC) -pipe -O3 -o $@.sym $(OFILES) -lpthread -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lpng -lz -lgcc
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -laplus -lpthread -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lpng -lz -lgcc
+	@$(CC) -pipe -O3 -o $@.sym $(OFILES) -laplus -lpthread -lcairo -lpixman-1 -lfontconfig -lexpat -lfreetype -lpng -lz -lgcc
 
 
 .c.o:

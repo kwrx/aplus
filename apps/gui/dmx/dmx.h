@@ -5,9 +5,9 @@
 #include <aplus/base.h>
 #include <aplus/input.h>
 #include <aplus/dmx.h>
+#include <aplus/utils/list.h>
 #include <cairo/cairo.h>
 #include <pthread.h>
-#include <list.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -32,8 +32,9 @@ typedef struct dmx_window {
 typedef struct dmx_font {
     char family[64];
     char subfamily[64];
-    void* buffer;
-    size_t bufsiz;
+    char path[256];
+    void* cache;
+    size_t cachesize;
 } dmx_font_t;
 
 
