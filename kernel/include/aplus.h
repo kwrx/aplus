@@ -105,6 +105,7 @@ extern int sys_fcntl(int, int, long);
 
 
 extern int mounts_init();
+extern int libk_init();
 
 #endif
 #endif

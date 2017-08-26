@@ -2,8 +2,12 @@
 #define _ELF_H
 
 #include <aplus.h>
-#include <aplus/binfmt.h>
 #include <libc.h>
+
+typedef struct symbol {
+	void* address;
+	char name[1];	
+} symbol_t;
 
 #if CONFIG_BITS == 32
 typedef uint8_t Elf_Byte;
@@ -276,26 +280,6 @@ enum {
 };
 
 
-
-/*
- * ELF module descriptor.
- */
-typedef struct {
-	struct elf_ehdr *header;
-	struct elf_shdr *sections;
-	struct elf_phdr *programs;
-	struct elf_shdr *symtab;
-	struct elf_shdr *strtab;
-
-	char *names;
-	char *strings;
-
-	size_t size;
-	void *start;
-
-	void *data; /* user data */
-	symbol_t* symbols;
-} elf_module_t;
 
 
 

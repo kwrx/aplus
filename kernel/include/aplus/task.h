@@ -4,7 +4,7 @@
 #include <aplus.h>
 #include <aplus/mm.h>
 #include <aplus/vfs.h>
-#include <aplus/binfmt.h>
+#include <aplus/elf.h>
 #include <libc.h>
 
 

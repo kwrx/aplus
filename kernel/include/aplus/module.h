@@ -20,10 +20,9 @@ typedef struct module {
 	const char* deps;
 	int (*init) (void);
 	int (*dnit) (void);
+	
 	uintptr_t loaded_address;
 	int loaded;
-	
-	struct module* next;
 } module_t;
 
 int module_init(void);

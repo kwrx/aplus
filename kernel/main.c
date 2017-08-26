@@ -39,6 +39,7 @@ static void idle() {
 
 
 int main(int argc, char** argv) {
+	(void) libk_init();
 	(void) mm_init();
 	(void) syscall_init();
 	(void) vfs_init();

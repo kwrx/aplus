@@ -49,10 +49,38 @@ void debug_send(char value) {
 }
 
 
+char* debug_lookup_symbol(symbol_t* symtab, uintptr_t address) {
+#if 0
+	symbol_t* tmp, *found = NULL;
+	for(tmp = symtab; tmp; tmp = tmp->next) {
+		if((uintptr_t) tmp->addr == address) {
+			found = tmp;
+			break;
+		}
+
+		if((uintptr_t) tmp->addr < address)
+			if(!found || found->addr < tmp->addr)
+				found = tmp;
+	}
+	
+
+	if(!found)
+		return NULL;
+		
+	static char buf[BUFSIZ];
+	memset(buf, 0, BUFSIZ);
+
+	sprintf(buf, "%s+%p", found->name, (void*) (address - (uintptr_t) found->addr));
+	return strdup(buf);
+#endif
+	return NULL;
+}
+
+
 void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode) {
 	#define lookup(s, a)														\
-		!(s = binfmt_lookup_symbol(current_task->image->symtab, a))				\
-			? !(s = binfmt_lookup_symbol(kernel_task->image->symtab, a))		\
+		!(s = debug_lookup_symbol(current_task->image->symtab, a))				\
+			? !(s = debug_lookup_symbol(kernel_task->image->symtab, a))			\
 				? s = "<unknown>" : (void) 0 : (void) 0;
 
 
