@@ -13,38 +13,12 @@
 
 extern int arch_elf_check_machine(Elf_Ehdr* elf);
 extern char* strndup(const char*, size_t);
-
-static int __check_perm(int type, mode_t mode) {
-	switch(type) {
-		case 0: /* UID */
-			return (mode & S_IXUSR);
-		case 1: /* GID */
-			return (mode & S_IXGRP);
-		case 2: /* OTH */
-			return (mode & S_IXOTH);
-		default:
-			break;
-	}
-	
-	return 0;
-}
-
-
 extern char** args_dup(char**);
+
+
 
 SYSCALL(2, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
-#if CONFIG_CACHE
-	static int e_initialized = 0;
-	static kcache_pool_t e_pool;
-
-	if(unlikely(!e_initialized)) {
-		e_initialized++;
-
-		kcache_register_pool(&e_pool);
-	}
-#endif
-
 
 	int fd = sys_open(filename, O_RDONLY, 0);
 	if(fd < 0)
@@ -56,11 +30,11 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 	int r;
 	if(inode->uid == current_task->uid)
-		r = __check_perm(0, inode->mode);
+		r = (inode->mode & S_IXUSR);
 	else if(inode->gid == current_task->gid)
-		r = __check_perm(1, inode->mode);
+		r = (inode->mode & S_IXGRP);
 	else
-		r = __check_perm(2, inode->mode);
+		r = (inode->mode & S_IXOTH);
 
 
 	if(unlikely(!r)) {
@@ -71,80 +45,55 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	}
 
 
-	size_t size = sys_lseek(fd, 0, SEEK_END);
-	sys_lseek(fd, 0, SEEK_SET);
-
-
-	void* image = (void*) kmalloc(size + 1, GFP_USER);
-	if(unlikely(!image)) {
-		sys_close(fd);
-		return -1;
-	}
-
-	((char*) image) [size] = 0;
-
 	
-
-#if CONFIG_CACHE
-	void* cache = NULL;
-	if(kcache_obtain_block(&e_pool, inode->ino, &cache, size) != 0) {
-		if(unlikely(!cache))
-			cache = image;
-#else
-	void* cache = image;
-#endif
-
-		if(unlikely(sys_read(fd, cache, size) != size)) { /* ERROR */
-			kfree(image);
-			
-			errno = EIO;
-			return -1;
+	#define RXX(a, b, c)									\
+		if(likely(b != -1))									\
+			sys_lseek(fd, b, SEEK_SET);						\
+		if(unlikely(sys_read(fd, a, c) <= 0)) {				\
+			errno = EIO;									\
+			return -1;										\
 		}
 
-#if CONFIG_CACHE
-	}
-	
-	if(likely(cache != image))
-		memcpy(image, cache, size);
-		
-	kcache_release_block(&e_pool, inode->ino);
-#endif
-
-	sys_close(fd);
 
 	
-	if(strncmp((const char*) image, "#!", 2) == 0) {
-		char* p;
-		if((p = strchr((const char*) image, '\n')))
-			p = strndup(image, (uintptr_t) p - (uintptr_t) image);
-		else
-			p = strdup((char*) image);
+	char sign[2];
+	RXX(sign, 0, 2);
 
-		p++;
-		p++;
+	if(strncmp(sign, "#!", 2) == 0) {
+		char p[BUFSIZ];
+		RXX(p, 2, BUFSIZ);
+
+		for(int i = 0; p[i] && i < BUFSIZ; i++) {
+			if(p[i] != '\n')
+				continue;
+
+			p[i] = 0;	
+			break;
+		}
 
 
 		char* argv[32];
 		memset(argv, 0, sizeof(argv));
 
 		int i = 0;
-		for(char* s = strtok((char*) p, " "); s; s = strtok(NULL, " "))
+		for(char* s = strtok((char*) strdup(p), " "); s; s = strtok(NULL, " "))
 			argv[i++] = s;
 		argv[i++] = NULL;
 
 
 
-		if((p = strchr((const char*) image, '\n'))) {
-			size -= (uintptr_t) ++p - (uintptr_t) image;
-
-			int fd = sys_open(tmpnam(NULL), O_CREAT | O_RDWR, S_IFREG | 0666);
-			if(fd < 0) {
-				kfree(image);
+		if(sys_lseek(fd, strlen(p) + 2, SEEK_SET) != -1) {
+			int fp = sys_open(tmpnam(NULL), O_CREAT | O_RDWR, S_IFREG | 0666);
+			if(fp < 0)
 				return -1;
-			}
+			
 
-			sys_fcntl(fd, F_DUPFD, STDIN_FILENO);
-			sys_write(STDIN_FILENO, p, size);
+			sys_fcntl(fp, F_DUPFD, STDIN_FILENO);
+			
+			size_t size;
+			while((size = sys_read(fd, p, BUFSIZ)))
+				sys_write(STDIN_FILENO, p, size);
+
 			sys_lseek(STDIN_FILENO, 0, SEEK_SET);
 			sys_close(fd);
 		}
@@ -154,12 +103,12 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	
 
 
-	Elf_Ehdr* hdr = (Elf_Ehdr*) image;
-	if ((memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1)) 	||
-		(arch_elf_check_machine(hdr)) 								||
-		(hdr->e_type != ET_EXEC)) {
+	Elf_Ehdr hdr;
+	RXX(&hdr, 0, sizeof(Elf_Ehdr));
 
-		kfree(image);
+	if ((memcmp(hdr.e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1)) 	||
+		(arch_elf_check_machine(&hdr)) 								||
+		(hdr.e_type != ET_EXEC)) {
 
 		errno = ENOEXEC;
 		return -1;
@@ -179,48 +128,59 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 	arch_task_release(current_task);
 
 	
-	Elf_Shdr* shdr = (Elf_Shdr*) ((uintptr_t) image + hdr->e_shoff);
-	for(int i = 1; i < hdr->e_shnum; i++) {
-		if(!(shdr[i].sh_flags & SHF_ALLOC))
-			continue;
+	size_t size = 0;
+	uintptr_t nbase = 0xFFFFFFFF;
+	uintptr_t nend = 0;
+	int is_dynamic = 0;
 
-		shdr[i].sh_addr = shdr->sh_addralign
-			? (size + shdr[i].sh_addralign - 1) & ~(shdr[i].sh_addralign - 1)
-			: (size)
-			;
 
-		size = shdr[i].sh_addr + shdr[i].sh_size;
-	}
+	for(int i = 0; i < hdr.e_phnum; i++) {
+		Elf_Phdr phdr;
+		RXX(&phdr, hdr.e_phoff + (i * hdr.e_phentsize), hdr.e_phentsize);
 
-	Elf_Phdr* phdr = (Elf_Phdr*) ((uintptr_t) image + hdr->e_phoff);
-	for(int i = 0; i < hdr->e_phnum; i++) {
-		switch(phdr[i].p_type) {
-			case 0:
-				continue;
-			case 1:
-				if(unlikely(!sys_mmap((void*) phdr[i].p_vaddr, (phdr[i].p_memsz + phdr[i].p_align - 1) & ~(phdr[i].p_align - 1), PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {
-					kprintf(ERROR "elf: invalid mapping 0x%x (%d Bytes)\n", phdr[i].p_vaddr, phdr[i].p_memsz);
-					kfree(image);
+		switch(phdr.p_type) {
+			case PT_LOAD:
+
+				size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
+
+				if(phdr.p_vaddr < nbase)
+					nbase = phdr.p_vaddr;
+
+				if(size + phdr.p_vaddr > nend)
+					nend = size + phdr.p_vaddr;
+				
+				
+				if(unlikely(!sys_mmap((void*) phdr.p_vaddr, size, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_FIXED | MAP_ANON, -1, 0))) {			
+					kprintf(ERROR "elf: invalid mapping 0x%x (%d Bytes)\n", phdr.p_vaddr, size);
 					
 					errno = EFAULT;
 					return -1;
 				}
 
-				memcpy (
-					(void*) phdr[i].p_vaddr,
-					(void*) ((uintptr_t) image + phdr[i].p_offset),
-					phdr[i].p_filesz
-				);
+				RXX((void*) phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
 				break;
+
+			case PT_DYNAMIC:
+				is_dynamic++;
+				break;
+
+			default:
+				continue;
 		}
 	}
 
+	KASSERT(nbase != 0xFFFFFFFF);
+	size = nend - nbase;
+
+	if(is_dynamic)
+		kprintf(WARN "elf: dynamic object not yet supported!\n");
+	
+	sys_close(fd);
 
 
 
-	void (*_start) (char**, char**) = (void (*) (char**, char**)) hdr->e_entry;
+	void (*_start) (char**, char**) = (void (*) (char**, char**)) hdr.e_entry;
 	KASSERT(_start);
-	kfree(image);
 
 
 
