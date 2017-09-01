@@ -2,6 +2,8 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
+#include <aplus/debug.h>
+#include <aplus/blkdev.h>
 #include <libc.h>
 
 
@@ -23,6 +25,8 @@ typedef struct {
 } mbr_partition_t;
 
 
+
+
 static int mbr_read(inode_t* ino, void* buf, size_t size) {
 	if(unlikely(!ino)) {
 		errno = EINVAL;
@@ -35,9 +39,8 @@ static int mbr_read(inode_t* ino, void* buf, size_t size) {
 		return 0;
 	}
 
-	int e;
 	mbr->dev->position = ino->position + mbr->offset;
-	e = vfs_read(mbr->dev, buf, size);
+	int e = vfs_read(mbr->dev, buf, size);
 	ino->position += (off64_t) e;
 
 	return e;
@@ -55,15 +58,16 @@ static int mbr_write(inode_t* ino, void* buf, size_t size) {
 		return 0;
 	}
 
-	int e;
 	mbr->dev->position = ino->position + mbr->offset;
-	e = vfs_write(mbr->dev, buf, size);
+	int e = vfs_write(mbr->dev, buf, size);
 	ino->position += (off64_t) e;
 
 	return e;
 }
 
-int mbr_init(struct inode* dev) {
+int blkdev_init_mbr(blkdev_t* blkdev) {
+    struct inode* dev = blkdev->dev;
+    
     if(unlikely(!dev))
 		return E_ERR;
 
@@ -91,7 +95,7 @@ int mbr_init(struct inode* dev) {
 		name[0] = '0' + j++;
 		name[1] = '\0';
 
-		inode_t* ch = vfs_mknod(dev, strdup(name), S_IFBLK);
+		inode_t* ch = vfs_mkdev(dev->name, i, S_IFBLK | blkdev->mode);
 		if(unlikely(!ch))
 			return E_ERR;
 
@@ -106,7 +110,6 @@ int mbr_init(struct inode* dev) {
 		ch->read = mbr_read;
 		ch->write = mbr_write;
 	}
-
 
 
     return E_OK;

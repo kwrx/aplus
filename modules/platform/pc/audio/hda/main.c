@@ -10,7 +10,7 @@
 #include <libc.h>
 
 MODULE_NAME("pc/audio/hda");
-MODULE_DEPS("");
+MODULE_DEPS("arch/x86");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 

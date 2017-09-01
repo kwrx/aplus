@@ -6,10 +6,11 @@
 #include <aplus/intr.h>
 #include <aplus/timer.h>
 #include <aplus/mm.h>
+#include <aplus/blkdev.h>
 #include <libc.h>
 
 MODULE_NAME("pc/block/ata");
-MODULE_DEPS("");
+MODULE_DEPS("arch/x86,block/blkdev");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -220,14 +221,16 @@ static void ata_device_init(struct ata_device* dev) {
 }
 
 
-static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
+static size_t ata_device_read_sector(void* userdata, uint32_t lba, void* buf, size_t count) {
+	struct ata_device* dev = userdata;
+
 	if(likely(count > ATA_DMA_SIZE)) {
 		int i;
 		for(i = 0; i + ATA_DMA_SIZE < count; i += ATA_DMA_SIZE)
 			ata_device_read_sector(dev, lba + i, (void*) ((uintptr_t) buf + (i * ATA_SECTOR_SIZE)), ATA_DMA_SIZE);
 
 		if(unlikely(!(count - i)))
-			return;
+			return count;
 
 		lba += i;
 		count -= i;
@@ -291,10 +294,14 @@ static void ata_device_read_sector(struct ata_device* dev, uint32_t lba, void* b
 	outb(dev->bar4 + 0x02, inb(dev->bar4 + 0x02) | 0x04 | 0x02);
 
 	spinlock_unlock(&dev->lock);
+	return count;
 }
 
 
-static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* buf, size_t count) {
+static size_t ata_device_write_sector(void* userdata, uint32_t lba, void* buf, size_t count) {
+	struct ata_device* dev = userdata;
+	spinlock_lock(&dev->lock);
+	
 	uint16_t bus = dev->io_base;
 	uint8_t slave = dev->slave;
 
@@ -325,206 +332,57 @@ static void ata_device_write_sector(struct ata_device* dev, uint32_t lba, void* 
 	
 	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
 	ata_wait(dev, 0);
-}
 
-
-static int ata_read(inode_t* ino, void* buffer, size_t size) {
-	if(unlikely(ino->position > ino->size))
-		return 0;
-
-	if(unlikely((ino->position + size) > ino->size))
-		size = ino->size - ino->position;
-	
-	if(unlikely(!size))
-		return 0;
-
-
-	struct ata_device* dev = (struct ata_device*) ino->userdata;
-
-	long sb = ino->position / ATA_SECTOR_SIZE;
-	long eb = (ino->position + size - 1) / ATA_SECTOR_SIZE;
-	off64_t xoff = 0;
-
-	if(ino->position % ATA_SECTOR_SIZE) {
-		long p;
-		p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
-		p = p > size ? size : p;
-
-		ata_device_read_sector(dev, sb, dev->cache, 1);
-
-		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), p);
-		xoff += p;
-		sb++;
-	}
-
-	if(((ino->position + size) % ATA_SECTOR_SIZE) && (sb <= eb)) {
-		long p = (ino->position + size) % ATA_SECTOR_SIZE;
-
-		ata_device_read_sector(dev, eb, dev->cache, 1);
-
-		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
-		eb--;
-	}
-
-
-	long i = eb - sb + 1;
-	if(likely(i > 0))
-		ata_device_read_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff), i);
-
-
-	ino->position += size;
-	return size;
-}
-
-static int ata_write(inode_t* ino, void* buffer, size_t size) {
-	if(unlikely(ino->position > ino->size))
-		return 0;
-
-	if(unlikely((ino->position + size) > ino->size))
-		size = ino->size - ino->position;
-
-	if(unlikely(!size))
-		return 0;
-
-
-	struct ata_device* dev = (struct ata_device*) ino->userdata;
-
-	long sb = ino->position / ATA_SECTOR_SIZE;
-	long eb = (ino->position + size - 1) / ATA_SECTOR_SIZE;
-	off64_t xoff = 0;
-
-
-	if(ino->position % ATA_SECTOR_SIZE) {
-		long p;
-		p = ATA_SECTOR_SIZE - (ino->position % ATA_SECTOR_SIZE);
-		p = p > size ? size : p;
-
-
-		spinlock_lock(&dev->lock);
-
-		ata_device_read_sector(dev, sb, dev->cache, 1);
-		memcpy((void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATA_SECTOR_SIZE)), buffer, p);
-		ata_device_write_sector(dev, sb, dev->cache, 1);
-
-		xoff += p;
-		sb++;
-
-		spinlock_unlock(&dev->lock);
-	}
-
-	if(((ino->position + size) % ATA_SECTOR_SIZE) && (sb <= eb)) {
-		long p = (ino->position + size) % ATA_SECTOR_SIZE;
-
-
-		spinlock_lock(&dev->lock);
-
-		ata_device_read_sector(dev, eb, dev->cache, 1);
-		memcpy(dev->cache, (void*) ((uintptr_t) buffer + size - p), p);
-		ata_device_write_sector(dev, eb, dev->cache, 1);
-
-		eb--;
-		spinlock_unlock(&dev->lock);
-	}
-
-
-	long i = eb - sb + 1;
-	if(likely(i > 0))
-		ata_device_write_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff), i);
-
-	ino->position += size;
-	return size;
+	spinlock_unlock(&dev->lock);
+	return count;
 }
 
 
 
-static void atapi_device_read_sector(struct ata_device* dev, uint32_t lba, void* buf) {
-	uint8_t pk[12] = { 0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+static size_t atapi_device_read_sector(void* userdata, uint32_t lba, void* buf, size_t count) {
+	struct ata_device* dev = userdata;
+
+	while(count--) {
+		uint8_t pk[12] = { 0xA8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 	
-	uint16_t bus = dev->io_base;
-	uint8_t slave = dev->slave;
+		uint16_t bus = dev->io_base;
+		uint8_t slave = dev->slave;
 
 
-	outb(bus + ATA_REG_CONTROL, 0x02);
-	
-	ata_wait(dev, 0);
-	outb(bus + ATA_REG_HDDEVSEL, 0xE0 | (slave << 4) | (lba & 0x0F000000) >> 24);
-	ata_wait(dev, 0);
+		outb(bus + ATA_REG_CONTROL, 0x02);
+		
+		ata_wait(dev, 0);
+		outb(bus + ATA_REG_HDDEVSEL, 0xE0 | (slave << 4) | (lba & 0x0F000000) >> 24);
+		ata_wait(dev, 0);
 
-	outb(bus + ATA_REG_FEATURES, 0x00);
-	outb(bus + ATA_REG_LBA1, ATAPI_SECTOR_SIZE & 0xFF);
-	outb(bus + ATA_REG_LBA2, ATAPI_SECTOR_SIZE >> 8);
-	outb(bus + ATA_REG_COMMAND, ATA_CMD_PACKET);
+		outb(bus + ATA_REG_FEATURES, 0x00);
+		outb(bus + ATA_REG_LBA1, ATAPI_SECTOR_SIZE & 0xFF);
+		outb(bus + ATA_REG_LBA2, ATAPI_SECTOR_SIZE >> 8);
+		outb(bus + ATA_REG_COMMAND, ATA_CMD_PACKET);
 
-	ata_wait(dev, 0);
-	
-	pk[9] = 1;
-	pk[2] = (lba >> 0x18) & 0xFF;
-	pk[3] = (lba >> 0x10) & 0xFF;
-	pk[4] = (lba >> 0x08) & 0xFF;
-	pk[5] = (lba >> 0x00) & 0xFF;
+		ata_wait(dev, 0);
+		
+		pk[9] = 1;
+		pk[2] = (lba >> 0x18) & 0xFF;
+		pk[3] = (lba >> 0x10) & 0xFF;
+		pk[4] = (lba >> 0x08) & 0xFF;
+		pk[5] = (lba >> 0x00) & 0xFF;
 
-	outsw(bus + ATA_REG_DATA, (uint16_t*) pk, 6);
-	ata_wait(dev, 0);
-	insw(bus + ATA_REG_DATA, buf, ATAPI_SECTOR_SIZE / 2);
-	
-	outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
-	ata_wait(dev, 0);
+		outsw(bus + ATA_REG_DATA, (uint16_t*) pk, 6);
+		ata_wait(dev, 0);
+		insw(bus + ATA_REG_DATA, buf, ATAPI_SECTOR_SIZE / 2);
+		
+		outb(bus + 0x07, ATA_CMD_CACHE_FLUSH);	
+		ata_wait(dev, 0);
+
+		lba++;
+		buf = (void*) ((uintptr_t) buf + ATAPI_SECTOR_SIZE);
+	}
+
+	return count;
 }
 
-
-static int atapi_read(inode_t* ino, void* buffer, size_t size) {
-	if(ino->position > ino->size)
-		return 0;
-
-	if(ino->position + size > ino->size)
-		size = ino->size - ino->position;
-
-	if(!size)
-		return 0;
-
-	struct ata_device* dev = (struct ata_device*) ino->userdata;
-
-	long sb = ino->position / ATAPI_SECTOR_SIZE;
-	long eb = (ino->position + size - 1) / ATAPI_SECTOR_SIZE;
-	off64_t xoff = 0;
-
-	if(ino->position % ATAPI_SECTOR_SIZE) {
-		long p;
-		p = ATAPI_SECTOR_SIZE - (ino->position % ATAPI_SECTOR_SIZE);
-		p = p > size ? size : p;	
-
-		spinlock_lock(&dev->lock);
-		atapi_device_read_sector(dev, sb, dev->cache);
-
-		memcpy(buffer, (void*) ((uintptr_t) dev->cache + ((uintptr_t) ino->position % ATAPI_SECTOR_SIZE)), p);
-		xoff += p;
-		sb++;
-
-		spinlock_unlock(&dev->lock);
-	}
-
-
-	if(((ino->position + size) % ATAPI_SECTOR_SIZE) && (sb <= eb)) {
-		long p = (ino->position + size) % ATAPI_SECTOR_SIZE;
-
-		spinlock_lock(&dev->lock);
-		atapi_device_read_sector(dev, eb, dev->cache);
-
-		memcpy((void*) ((uintptr_t) buffer + size - p), dev->cache, p);
-		eb--;
-
-		spinlock_unlock(&dev->lock);
-	}
-
-	while(sb <= eb) {
-		atapi_device_read_sector(dev, sb, (void*) ((uintptr_t) buffer + (uintptr_t) xoff));
-		xoff += ATAPI_SECTOR_SIZE;
-		sb++;
-	}
-
-	ino->position += size;
-	return size;
-}
 
 
 
@@ -540,6 +398,14 @@ static int ata_device_detect(struct ata_device* dev) {
 	uint8_t cl = inb(dev->io_base + ATA_REG_LBA1);
 	uint8_t ch = inb(dev->io_base + ATA_REG_LBA2);
 	uint8_t c = 0, d = 0;
+	
+	char* hdname[] = {
+		"sda", "sdb", "sdc", "sdd", NULL
+	};
+
+	char* cdname[] = {
+		"cda", "cdb", "cdc", "cdd", NULL
+	};
 
 	if(cl == 0xFF && ch == 0xFF)
 		return 0;
@@ -552,13 +418,21 @@ static int ata_device_detect(struct ata_device* dev) {
 		spinlock_init(&dev->lock);
 		ata_device_init(dev);
 
-		inode_t* inode = vfs_mkdev("hd", c++, S_IFBLK | 0660);
-		inode->size = ata_max_offset(dev);
-		inode->read = ata_read;
-		inode->write = ata_write;
-		inode->userdata = (void*) dev;
+		blkdev_t* blkdev = (blkdev_t*) kmalloc(sizeof(blkdev_t), GFP_KERNEL);
+		memset(blkdev, 0, sizeof(blkdev_t));
 
-		mbr_init(inode);
+		blkdev->mode = 0660;
+		blkdev->blksize = ATA_SECTOR_SIZE;
+		blkdev->blkcount = ata_max_offset(dev) / ATA_SECTOR_SIZE + 1;
+		blkdev->userdata = dev;
+
+		blkdev->read = ata_device_read_sector;
+		blkdev->write = ata_device_write_sector;
+
+
+		if(blkdev_register_device(blkdev, strdup(hdname[c++]), -1, BLKDEV_FLAGS_MBR) != E_OK)
+			kprintf("ata: could not register block device /dev/%s\n", hdname[c - 1]);
+
 	} else if(
 		(cl == 0x14 && ch == 0xEB)	/* ATAPI  */
 		//(cl == 0x69 && ch == 0x96) 	/* SATAPI */
@@ -566,11 +440,20 @@ static int ata_device_detect(struct ata_device* dev) {
 		spinlock_init(&dev->lock);
 		ata_device_init(dev);
 
-		inode_t* inode = vfs_mkdev("cd", d++, S_IFBLK | 0440);
-		inode->size = 700 * 1024 * 1024; //ata_max_offset(dev);
-		inode->read = atapi_read;
-		inode->write = NULL;
-		inode->userdata = (void*) dev;
+		blkdev_t* blkdev = (blkdev_t*) kmalloc(sizeof(blkdev_t), GFP_KERNEL);
+		memset(blkdev, 0, sizeof(blkdev_t));
+
+		blkdev->mode = 0440;
+		blkdev->blksize = ATAPI_SECTOR_SIZE;
+		blkdev->blkcount = 358400;
+		blkdev->userdata = dev;
+
+		blkdev->read = atapi_device_read_sector;
+		blkdev->write = NULL;
+
+		if(blkdev_register_device(blkdev, strdup(cdname[d++]), -1, BLKDEV_FLAGS_RDONLY) != E_OK)
+			kprintf("ata: could not register block device /dev/%s\n", cdname[d - 1]);
+
 	}
 }
 

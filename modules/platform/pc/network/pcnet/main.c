@@ -11,7 +11,7 @@
 
 
 MODULE_NAME("pc/network/pcnet");
-MODULE_DEPS("");
+MODULE_DEPS("arch/x86");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 

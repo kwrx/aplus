@@ -2,12 +2,14 @@
 #include <aplus/base.h>
 #include <aplus/mm.h>
 #include <aplus/utils/list.h>
+#include <aplus/utils/hashmap.h>
 #include <libc.h>
 
 
 extern int __divdi3;
 extern int __udivdi3;
 extern int __umoddi3;
+extern int __moddi3;
 
 int libk_init() {
     libaplus_init(kmalloc, kcalloc, kfree);
@@ -46,10 +48,17 @@ EXPORT(_list_prev);
 EXPORT(_list_length);
 EXPORT(_list_remove);
 EXPORT(_list_clear);
+EXPORT(hashmap_new);
+EXPORT(hashmap_get);
+EXPORT(hashmap_put);
+EXPORT(hashmap_remove);
+EXPORT(hashmap_iterate);
+EXPORT(hashmap_free);
 
 EXPORT(__divdi3);
 EXPORT(__udivdi3);
 EXPORT(__umoddi3);
+EXPORT(__moddi3);
 EXPORT(__ctype_ptr__);
 EXPORT(_impure_ptr);
 

@@ -5,7 +5,9 @@
 #include <aplus/elf.h>
 #include <aplus/base.h>
 #include <aplus/utils/list.h>
+#include <aplus/utils/hashmap.h>
 #include <libc.h>
+
 
 extern int arch_elf_check_machine(Elf_Ehdr* elf);
 
@@ -23,9 +25,9 @@ static void module_export(module_t* mod, char* name, void* address) {
 		else if(strcmp(name, "dnit") == 0)
 			mod->dnit = address;
 		else if(strcmp(name, "__module_name__") == 0)
-			mod->name = (char*) address;
+			;
 		else if(strcmp(name, "__module_deps__") == 0)
-			mod->deps = (char*) address;
+			;
 		else
 			def++;
 
@@ -64,86 +66,31 @@ static void* module_resolve(char* name) {
 }
 
 
-static int module_run(char* name) {
+static int module_load(char* name) {
 	list_each(m_queue, mod) {
 		if(strcmp(mod->name, name) != 0)
 			continue;
 
-		if(mod->loaded)
+		if(mod->loaded_address)
 			return E_OK;
 
-		if(mod->deps && strlen(mod->deps) > 0) {
-			list(char*, l_deps);
-			char* deps = strdup(mod->deps);
-
-			char* p;
-			for(p = strtok(deps, ","); p; p = strtok(NULL, ","))
-				list_push(l_deps, p);
-
-			list_each(l_deps, v) {
-				if(module_run(v) != E_OK) {
-					kprintf(ERROR "module: unresolved dependency \'%s\' for %s\n", v, mod->name);
-					return E_ERR;
-				}
+		list_each(mod->deps, d) {
+			if(module_load(d) != E_OK) {
+				kprintf(ERROR "module: unresolved dependency on loading \'%s\' for %s\n", d, mod->name);
+				return E_ERR;
 			}
-
-			list_clear(l_deps);
-			kfree(deps);
-		}
-
-		if(!mod->init) {
-			kprintf(ERROR, "module: unresolved entrypoint \'init()\' for %s\n", mod->name);
-			return E_ERR;
 		}
 
 
-		kprintf(INFO "module: running %s (%s)\n", mod->name, mod->deps);
-		mod->init();
-		mod->loaded++;
 
-		return E_OK;
-	}
-
-	return E_ERR;
-}
-
-
-int module_init(void) {
-
-	extern int export_start;
-	extern int export_end;
-
-	struct {
-		char* name;
-		void* address;
-	} *exports = NULL;
-
-	for(exports = (void*) &export_start; (void*) exports < (void*) &export_end; exports++)
-		module_export(NULL, exports->name, exports->address);
-
-
-
-	int i;
-	for(i = 0; i < mbd->modules.count; i++) {
-		
-		size_t size = (size_t) mbd->modules.ptr[i].size;
-		void* image = (void*) mbd->modules.ptr[i].ptr;
-
-		module_t* mod = (module_t*) kmalloc(sizeof(module_t), GFP_KERNEL);
-		memset(mod, 0, sizeof(module_t));
-
+		void* image = (void*) mod->image_address;
 		Elf_Ehdr* hdr = (Elf_Ehdr*) image;
-		if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
-			kprintf(ERROR "module[%d]: invalid executable!\n", i);
-			continue;
-		}
-
-
 		Elf_Shdr* shdr = (Elf_Shdr*) ((uintptr_t) image + hdr->e_shoff);
 		Elf_Shdr* symtab = NULL;
 		Elf_Shdr* strtab = NULL;
 		char* names = NULL;
 
+		size_t size = 0;
 		for(int i = 1; i < hdr->e_shnum; i++) {
 			if(shdr[i].sh_type == SHT_SYMTAB) {
 				symtab = &shdr[i];
@@ -162,20 +109,19 @@ int module_init(void) {
 			size = shdr[i].sh_addr + shdr[i].sh_size;
 		}
 
-		if(!symtab || !strtab || !names) {
-			kprintf(ERROR "module[%d]: could not found symtab, strtab or names\n", i);
-			continue;
-		}
-
-
 		void* core = (void*) kmalloc(size, GFP_KERNEL);
 		if(!core) {
-			kprintf(ERROR "module[%d]: could not allocate %d bytes of memory!\n", i, size);
+			kprintf(ERROR "module: could not allocate %d bytes of memory for %s!\n", size, name);
 			continue;
 		}
 
-
 		for(int i = 1; i < hdr->e_shnum; i++) {
+			if(shdr[i].sh_type == SHT_SYMTAB) {
+				symtab = &shdr[i];
+				strtab = &shdr[shdr[i].sh_link];
+				names = (char*) ((uintptr_t) image + strtab->sh_offset);
+			}
+
 			if(!(shdr[i].sh_flags & SHF_ALLOC))
 				continue;
 
@@ -184,6 +130,12 @@ int module_init(void) {
 				(void*) ((uintptr_t) image + shdr[i].sh_offset),
 				shdr[i].sh_size
 			);
+		}
+
+
+		if(!symtab || !strtab || !names) {
+			kprintf(ERROR "module: could not found symtab, strtab or names for %s\n", name);
+			continue;
 		}
 
 		Elf_Sym* sym = (Elf_Sym*) ((uintptr_t) image + symtab->sh_offset);
@@ -197,6 +149,7 @@ int module_init(void) {
 
 				case SHN_UNDEF:
 					sym[i].st_value = (Elf_Addr) module_resolve((char*) ((uintptr_t) names + sym[i].st_name));
+
 					break;
 				
 				default:
@@ -209,6 +162,8 @@ int module_init(void) {
 			}
 		}
 
+		
+		
 		for(int i = 0; i < hdr->e_shnum; i++) {
 			if(shdr[i].sh_type != SHT_REL)
 				continue;
@@ -235,17 +190,136 @@ int module_init(void) {
 
 
 
-		mod->name = *((char**) mod->name);
-		mod->deps = *((char**) mod->deps);
+
 		mod->loaded_address = (uintptr_t) core;
+		return E_OK;
+	}
+
+	return E_ERR;
+}
+
+static int module_run(char* name) {
+	list_each(m_queue, mod) {
+		if(strcmp(mod->name, name) != 0)
+			continue;
+
+		if(mod->loaded)
+			return E_OK;
+
+		list_each(mod->deps, d) {
+			if(module_run(d) != E_OK) {
+				kprintf(ERROR "module: unresolved dependency on running \'%s\' for %s\n", d, mod->name);
+				return E_ERR;
+			}
+		}
+
+
+		if(!mod->init) {
+			kprintf(ERROR, "module: unresolved entrypoint \'init()\' for %s\n", mod->name);
+			return E_ERR;
+		}
+
+
+		kprintf(INFO "module: running \'%s\'\n", mod->name);
+		if(mod->init() != E_OK)
+			return E_ERR;
+
+		mod->loaded++;
+		return E_OK;
+	}
+
+	return E_ERR;
+}
+
+
+int module_init(void) {
+	memset(&m_queue, 0, sizeof(m_queue));
+	memset(&m_symtab, 0, sizeof(m_queue));
+
+
+	extern int export_start;
+	extern int export_end;
+
+	struct {
+		char* name;
+		void* address;
+	} *exports = NULL;
+
+	for(exports = (void*) &export_start; (void*) exports < (void*) &export_end; exports++)
+		module_export(NULL, exports->name, exports->address);
+
+
+	int i;
+	for(i = 0; i < mbd->modules.count; i++) {
+		void* image = (void*) mbd->modules.ptr[i].ptr;
+
+	
+		Elf_Ehdr* hdr = (Elf_Ehdr*) image;
+		if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
+			kprintf(ERROR "module[%d]: invalid executable!\n", i);
+			continue;
+		}
+
+		Elf_Shdr* shdr = (Elf_Shdr*) ((uintptr_t) image + hdr->e_shoff);
+		char* shstr = (char*) ((uintptr_t) image + shdr[hdr->e_shstrndx].sh_offset);
+		char* deps = NULL;
+
+
+		module_t* mod = (module_t*) kmalloc(sizeof(module_t), GFP_KERNEL);
+		memset(mod, 0, sizeof(module_t));
+
+		for(int i = 1; i < hdr->e_shnum; i++) {
+			if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_name") == 0)
+				mod->name = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
+
+			if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_deps") == 0)
+				deps = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
+		}
+
+
+		if(deps && strlen(deps) > 0) {
+			char* p;
+			for(p = strtok(deps, ","); p; p = strtok(NULL, ","))
+				list_push(mod->deps, p);
+		}
+
+
+
+		mod->image_address = (uintptr_t) image;
+		mod->loaded_address = 0;
 		mod->loaded = 0;
 
 		list_push(m_queue, mod);
 	}
 
-
+	
+	list_each(m_queue, mod)
+		module_load(mod->name);
+	
 	list_each(m_queue, mod)
 		module_run(mod->name);
 
+
 	return E_OK;
 }
+
+
+int module_dnit(void) {
+	list_each(m_queue, mod) {
+		if(!mod->loaded)
+			continue;
+
+		if(!mod->dnit)
+			continue;
+
+
+		kprintf(INFO "module: unloading \'%s\'\n", mod->name);
+		mod->dnit();
+	}
+
+	return E_OK;
+}
+
+
+EXPORT(module_init);
+EXPORT(module_dnit);

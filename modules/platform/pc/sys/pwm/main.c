@@ -7,7 +7,7 @@
 #include <libc.h>
 
 MODULE_NAME("pc/sys/pwm");
-MODULE_DEPS("");
+MODULE_DEPS("arch/x86");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -24,6 +24,15 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 	if(!inode) {
 		errno = EINVAL;
 		return E_ERR;
+	}
+
+	switch(req) {
+		case PWMIOCTL_HALT:
+		case PWMIOCTL_POWEROFF:
+		case PWMIOCTL_REBOOT:
+			module_dnit();
+		default:
+			break;
 	}
 
 	switch(req) {
