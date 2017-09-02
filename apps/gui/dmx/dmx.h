@@ -60,6 +60,7 @@ typedef struct {
     pthread_t th_server;
     pthread_t th_render;
     pthread_t th_cursor;
+    pthread_t th_keyboard;
 
     FT_Library ft_library;
     FT_Face ft_cache[32];
@@ -84,6 +85,7 @@ int init_server(dmx_t* dmx);
 
 void* th_render(void* arg);
 void* th_cursor(void* arg);
+void* th_keyboard(void* arg);
 void* th_server(void* arg);
 void* th_main(void* arg);
 

@@ -79,7 +79,8 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
 	kprintf(LOG "syscall(%d): %s (%p, %p, %p, %p, %p) from %d\n", number, __handlers_name[number], p0, p1, p2, p3, p4, sys_getpid());
 #endif
 
-	if(unlikely(lck_syscall))
+	//spinlock_lock(&lck_syscall);
+	if(unlikely(spinlock_trylock(&lck_syscall) != E_OK))
 		kprintf(WARN "syscall: context locked for %d from %d\n", number, sys_getpid());
 
 	INTR_ON;

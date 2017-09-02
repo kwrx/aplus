@@ -7,7 +7,7 @@
 
 #include <aplus/base.h>
 #include <aplus/dmx.h>
-#include "lib/list.h"
+#include <aplus/utils/list.h>
 
 #define LIBDMX_TIMEOUT          5
 #define LIBDMX_ERROR(x, y)      \

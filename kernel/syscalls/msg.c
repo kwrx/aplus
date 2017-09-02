@@ -24,7 +24,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
 				return 0;
 			}
 
-            pid = getpid();
+            pid = sys_getpid();
             if(fifo_write(&tmp->fifo, &pid, sizeof(pid_t)) != sizeof(pid_t)) {
                 errno = EIO;
                 return 0;

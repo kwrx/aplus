@@ -110,6 +110,7 @@ int main(int argc, char** argv) {
     pthread_create(&dmx.th_server, NULL, th_server, &dmx);
     pthread_create(&dmx.th_render, NULL, th_render, &dmx);
     pthread_create(&dmx.th_cursor, NULL, th_cursor, &dmx);
+    pthread_create(&dmx.th_keyboard, NULL, th_keyboard, &dmx);
     
 
     th_main((void*) &dmx);
