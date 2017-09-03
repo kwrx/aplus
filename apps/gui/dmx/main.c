@@ -87,7 +87,7 @@ int main(int argc, char** argv) {
         return -1;
     }
 
-    if(init_cursor(&dmx) != 0) {
+    if(init_input(&dmx) != 0) {
         TRACE("init_cursor() failed!\n");
         return -1;
     }
@@ -109,8 +109,7 @@ int main(int argc, char** argv) {
 
     pthread_create(&dmx.th_server, NULL, th_server, &dmx);
     pthread_create(&dmx.th_render, NULL, th_render, &dmx);
-    pthread_create(&dmx.th_cursor, NULL, th_cursor, &dmx);
-    pthread_create(&dmx.th_keyboard, NULL, th_keyboard, &dmx);
+    pthread_create(&dmx.th_input, NULL, th_input, &dmx);
     
 
     th_main((void*) &dmx);

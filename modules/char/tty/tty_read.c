@@ -12,15 +12,13 @@ static int tty_capslock = 0;
 static int tty_shift = 0;
 static int tty_alt = 0;
 static int tty_control = 0;
-static int tty_released = 0;
 static char tty_keymap[1024];
 
 int tty_read_init() {
     tty_capslock =
     tty_shift =
     tty_alt =
-    tty_control =
-    tty_released = 0;
+    tty_control = 0;
 
     memset(tty_keymap, 0, sizeof(tty_keymap));
     return 0;
@@ -73,41 +71,37 @@ int tty_read(struct inode* inode, void* ptr, size_t len) {
     
     
     while(p < len) {
-        uint16_t ch;
-        if(sys_read(fd, &ch, sizeof(ch)) == 0) {
+        keyboard_t k;
+        if(sys_read(fd, &k, sizeof(keyboard_t)) == 0) {
             errno = EIO;
             return E_ERR;
         }
 
-        switch(ch) {
-            case KEY_RELEASED:
-                tty_released = 1;
-                continue;
+        switch(k.vkey) {
             case KEY_LEFTALT:
             case KEY_RIGHTALT:
-                tty_alt = !!!(tty_released);
+                tty_alt = k.down;
                 break;
             case KEY_LEFTSHIFT:
             case KEY_RIGHTSHIFT:
-                tty_shift = !!!(tty_released);
+                tty_shift = k.down;
                 break;
             case KEY_LEFTCTRL:
             case KEY_RIGHTCTRL:
-                tty_control = !!!(tty_control);
+                tty_control = k.down;
                 break;
             case KEY_CAPSLOCK:
-                tty_capslock = tty_released ? tty_capslock : !tty_capslock;
+                tty_capslock = !(k.down) ? tty_capslock : !tty_capslock;
                 break;
             default:
                 break;
         }
-       
 
-
-        if(unlikely(tty_released)) {
-            tty_released = 0;
+        if(!k.down)
             continue;
-        }
+
+
+        uint8_t ch = k.vkey;
 
         if(tty_alt && tty_shift)
             ch = tty_keymap[ch + 768];

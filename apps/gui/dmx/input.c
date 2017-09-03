@@ -1,10 +1,12 @@
-#include "../dmx.h"
+#include "dmx.h"
+#include <aplus/base.h>
 #include <aplus/input.h>
+#include <aplus/event.h>
 #include <unistd.h>
 #include <fcntl.h>
 
-int init_cursor(dmx_t* dmx) {
-    TRACE("Initializing Cursors\n");
+int init_input(dmx_t* dmx) {
+    TRACE("Initializing InputManager\n");
 
     #define lc(p, i) {                                                              \
         dmx->cursors[i] = cairo_image_surface_create_from_png(p);                   \
@@ -50,27 +52,41 @@ int init_cursor(dmx_t* dmx) {
 }
 
 
-void* th_cursor(void* arg) {
+void* th_input(void* arg) {
     TRACE("Running\n");
     dmx_t* dmx = (dmx_t*) arg;
 
-    int fd = open(PATH_MOUSEDEV, O_RDONLY);
+    int fd = open("/dev/ev0", O_RDONLY);
     if(fd < 0) {
-        TRACE(PATH_MOUSEDEV ": could not open\n");
+        TRACE("/dev/ev0: could not open\n");
         pthread_exit(NULL);
     }
 
 
     for(;;) {
-        mouse_t m;
-        if(read(fd, &m, sizeof(m)) <= 0) {
-            TRACE(PATH_MOUSEDEV ": I/O error\n");
+        event_t e;
+        if(read(fd, &e, sizeof(e)) <= 0) {
+            TRACE("/dev/ev0: I/O error\n");
             break;
         }
 
-        dmx->cursor_x = m.x > dmx->width ? dmx->width : m.x;
-        dmx->cursor_y = m.y > dmx->height ? dmx->height : m.y;
-        dmx->redraw = 1;
+        switch(e.ev_type) {
+            case EV_REL: {
+                int dx = (int) dmx->cursor_x + e.ev_rel.x;
+                int dy = (int) dmx->cursor_y + e.ev_rel.y;
+
+                dmx->cursor_x = dx < 0 ? 0 : (dx > dmx->width ? dmx->width : dx);
+                dmx->cursor_y = dy < 0 ? 0 : (dy > dmx->height ? dmx->height : dy);
+                dmx->redraw = 1;
+                break;
+            }
+            case EV_KEY:
+                /* TODO */
+            default:
+                continue;
+        }
+
+        
     }
 
     close(fd);

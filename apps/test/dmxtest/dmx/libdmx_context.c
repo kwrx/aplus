@@ -14,7 +14,7 @@
 #include <aplus/input.h>
 #include <aplus/msg.h>
 
-#include "lib/list.h"
+#include <aplus/utils/list.h>
 #include "libdmx.h"
 
 int dmx_context_sync(dmx_context_t* ctx) {

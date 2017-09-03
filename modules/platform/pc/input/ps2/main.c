@@ -5,10 +5,11 @@
 #include <aplus/vfs.h>
 #include <aplus/intr.h>
 #include <aplus/input.h>
+#include <aplus/event.h>
 #include <libc.h>
 
 MODULE_NAME("pc/input/ps2");
-MODULE_DEPS("arch/x86");
+MODULE_DEPS("arch/x86,sys/event");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -286,7 +287,6 @@ static uint16_t ps2_codemap[] = {
 
 
 
-static uint16_t vkrel = KEY_RELEASED;
 static mouse_t mouse;
 static struct {
 	uint16_t* vkeymap;
@@ -295,6 +295,9 @@ static struct {
 	uint8_t scrolllock;
 	uint8_t e0;
 } kb;
+
+static evid_t kdid;
+static evid_t mdid;
 
 
 static void __fifo_send(const char* dev, void* ptr, size_t size) {
@@ -369,11 +372,13 @@ void kb_intr(void* unused) {
 	}
 
 
-	if(vkscan & 0x80)
-		__fifo_send(PATH_KBDEV, &vkrel, 2);
 
-	__fifo_send(PATH_KBDEV, &vkey, 2);
+  keyboard_t k;
+  k.vkey = vkey;
+  k.down = !!!(vkscan & 0x80);
 
+  __event_raise_EV_KEY(kdid, k.vkey, k.down);
+	__fifo_send(PATH_KBDEV, &k, sizeof(keyboard_t));
 	PS2_WAIT;
 }
 
@@ -408,7 +413,7 @@ void mouse_intr(void* unused) {
 					) break;
 				
 					mouse.dx = (mouse.pack[1] - ((mouse.pack[0] & 0x10) ? 256 : 0)) * mouse.speed;
-					mouse.dy = (mouse.pack[2] - ((mouse.pack[0] & 0x20) ? 256 : 0)) * mouse.speed;
+					mouse.dy = -(mouse.pack[2] - ((mouse.pack[0] & 0x20) ? 256 : 0)) * mouse.speed;
 
 					//mouse.dz = mouse.pack[3];
 
@@ -423,6 +428,12 @@ void mouse_intr(void* unused) {
 					mouse.buttons[2] = (mouse.pack[0] & 0x04);
 					
 					
+          
+          
+          for(int i = 0; i < 3; i++)
+            __event_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
+
+          __event_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
 					__fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
 					
 					mouse.cycle = 0;
@@ -511,6 +522,12 @@ int init(void) {
 	if(sys_mkfifo(PATH_MOUSEDEV, 0644) != 0)
 		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
 		
+
+  kdid = __event_device_add("ps2-keyboard", EC_KEY | EC_LED);
+  mdid = __event_device_add("ps2-mouse", EC_KEY | EC_REL);
+
+  __event_device_set_enabled(kdid, 1);
+  __event_device_set_enabled(mdid, 1);
 
 	irq_enable(1, kb_intr);
 	irq_enable(12, mouse_intr);

@@ -12,7 +12,8 @@
 #include <aplus/input.h>
 #include <aplus/msg.h>
 
-#include "lib/list.h"
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
 #include "libdmx.h"
 
 list(dmx_context_t*, contexts);

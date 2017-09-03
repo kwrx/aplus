@@ -14,14 +14,53 @@ int sys_poll(struct pollfd* fds, nfds_t nfds, int timeout) {
         return -1;
     }
 
+    if(timeout > 0)
+        timeout += timer_getms();
 
 	int i;
-    for(i = 0; i < nfds; i++) {
-        if(fds[i].fd < 0) {
-            fds[i].revents = 0;
-            continue;
+    for(;;) {
+        for(i = 0; i < nfds; i++) {
+            if(fds[i].fd < 0) {
+                fds[i].revents = 0;
+                continue;
+            }
+
+            inode_t* inode = current_task->fd[fds[i].fd].inode;
+            if(!inode) {
+                fds[i].revents |= POLLNVAL;
+                continue;
+            }
+
+            if(!(S_ISFIFO(inode->mode)) || !inode->userdata) {
+                fds[i].revents |= POLLERR;
+                continue;
+            }
+
+            if(fds[i].events == 0)
+                continue;
+
+            fifo_t* fifo = (fifo_t*) inode->userdata;
+            if(fifo_available(fifo) > 0)
+                if(fds[i].events & POLLIN)
+                    fds[i].revents |= POLLIN;
+
+            if(fds[i].events & POLLOUT)
+                fds[i].revents |= POLLOUT;
         }
+
+        if(timeout == 0)
+            break;
+
+        if((timeout > 0) && (timer_getms() > timeout))
+            break;
+
+        sys_yield();
     }
 
-    return nfds;
+    int n = 0;
+    for(i = 0; i < nfds; i++)
+        if(fds[i].revents != 0)
+            n++;
+            
+    return n;
 });

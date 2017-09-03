@@ -59,8 +59,7 @@ typedef struct {
 
     pthread_t th_server;
     pthread_t th_render;
-    pthread_t th_cursor;
-    pthread_t th_keyboard;
+    pthread_t th_input;
 
     FT_Library ft_library;
     FT_Face ft_cache[32];
@@ -79,13 +78,12 @@ typedef struct {
 
 
 int init_render(dmx_t* dmx);
-int init_cursor(dmx_t* dmx);
+int init_input(dmx_t* dmx);
 int init_fontengine(dmx_t* dmx);
 int init_server(dmx_t* dmx);
 
 void* th_render(void* arg);
-void* th_cursor(void* arg);
-void* th_keyboard(void* arg);
+void* th_input(void* arg);
 void* th_server(void* arg);
 void* th_main(void* arg);
 
