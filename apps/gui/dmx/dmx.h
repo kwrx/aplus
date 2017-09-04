@@ -20,14 +20,6 @@ typedef struct dmx_rect {
     double x, y, w, h;
 } dmx_rect_t;
 
-typedef struct dmx_window {
-    double x, y;
-    double w, h;
-    double alpha;
-
-    cairo_surface_t* surface;
-    int flags;
-} dmx_window_t;
 
 typedef struct dmx_font {
     char family[64];
@@ -54,8 +46,8 @@ typedef struct {
     uint16_t cursor_x;
     uint16_t cursor_y;
 
-    dmx_window_t* window_top;
-    dmx_window_t* window_focused;
+    dmx_context_t* window_top;
+    dmx_context_t* window_focused;
 
     pthread_t th_server;
     pthread_t th_render;
@@ -66,7 +58,6 @@ typedef struct {
 
     list(dmx_font_t*, ft_fonts);
     list(dmx_context_t*, clients);
-    list(dmx_window_t*, windows);
     list(dmx_rect_t*, dirtyrects);
 
     int redraw;
@@ -88,8 +79,8 @@ void* th_server(void* arg);
 void* th_main(void* arg);
 
 
-void dmx_mark_window(dmx_t* dmx, dmx_window_t* wnd, dmx_rect_t* subrect);
-void dmx_blit_window(dmx_t* dmx, dmx_window_t* wnd);
+void dmx_mark_view(dmx_t* dmx, dmx_context_t* wnd, dmx_rect_t* subrect);
+void dmx_blit_view(dmx_t* dmx, dmx_context_t* wnd);
 
 int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* style);
 

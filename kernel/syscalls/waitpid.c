@@ -5,130 +5,57 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-struct wait {
-	volatile task_t* task;
-	struct wait* next;
-};
 
-
-static struct wait* __wait_for_pid(pid_t pid) {
-	volatile task_t* tmp;
-	for(tmp = task_queue; tmp; tmp = tmp->next) {
-		if(tmp->parent != current_task)
-			continue;
-
-		if(tmp->pid == pid) {
-			struct wait* wx = (struct wait*) kmalloc(sizeof(struct wait), GFP_KERNEL);
-			KASSERT(wx);
-		
-			wx->task = tmp;
-			wx->next = NULL;
-
-			return wx;
-		}
-	}
-
-	errno = ESRCH;
-	return NULL;
-}
-
-static struct wait* __wait_for_gid(gid_t gid) {
-
-	struct wait* wq = NULL;
-	volatile task_t* tmp;
-	for(tmp = task_queue; tmp; tmp = tmp->next) {
-		if(tmp->parent != current_task)
-			continue;
-
-		if(tmp->gid == gid) {
-			struct wait* wx = (struct wait*) kmalloc(sizeof(struct wait), GFP_KERNEL);
-			KASSERT(wx);
-		
-			wx->task = tmp;
-			wx->next = wq;
-			wq = wx;
-		}
-	}
-
-	if(unlikely(!wq))
-		errno = ESRCH;
-
-	return wq;
-}
-
-static struct wait* __wait_for_childs() {
-
-	struct wait* wq = NULL;
-	volatile task_t* tmp;
-	for(tmp = task_queue; tmp; tmp = tmp->next) {
-		if(tmp->parent != current_task)
-			continue;
-		
-		struct wait* wx = (struct wait*) kmalloc(sizeof(struct wait), GFP_KERNEL);
-		KASSERT(wx);
-		
-		wx->task = tmp;
-		wx->next = wq;
-		wq = wx;
-	}
-
-	if(unlikely(!wq))
-		errno = ESRCH;
-
-	return wq;
-}
+#define __wait_for(cond)								        \
+    {													        \
+        volatile task_t* v;								        \
+        for(v = task_queue; v; v = v->next) {			        \
+            if(v->parent != current_task)				        \
+                continue;								        \
+                                                                \
+            if((cond))									        \
+                list_push(current_task->waiters, v);	        \
+        }												        \
+    }
 
 
 SYSCALL(31, waitpid,
 pid_t sys_waitpid(pid_t pid, int* status, int options) {
-
-	struct wait* waiters = NULL;
-
-	if(pid > 0)
-		waiters = __wait_for_pid(pid);
-
-	if(pid == 0)
-		waiters = __wait_for_gid(current_task->gid);
-
-	if(pid < -1)
-		waiters = __wait_for_gid(-pid);
-
-	if(pid == -1)
-		waiters = __wait_for_childs();
-
-	if(unlikely(!waiters))
-		return -1;
+    if(pid < -1)
+        __wait_for(v->gid == -pid)
+    else if(pid == -1)
+        __wait_for(1)
+    else if(pid == 0)
+        __wait_for(v->gid == current_task->gid)
+    else if(pid > 0)
+        __wait_for(v->pid == pid)
 
 
-
-	syscall_ack();
-
-	struct wait* tmp;
-	pid_t cnt = -1;
-
-	do {
-		for(tmp = waiters; tmp; tmp = tmp->next) {
-	
-			if(tmp->task->status == TASK_STATUS_KILLED) {
-				if(likely(status))
-					*status = (tmp->task->exit.status << 16) | (tmp->task->exit.value & 0xFFFF);
-				cnt = tmp->task->pid;
-				
-				break;
-			}
-		}
-
-		sys_yield();
-	} while(cnt == -1);
+    if(list_length(current_task->waiters) == 0) {
+        errno = ECHILD;
+        return -1;
+    }
 
 
-	struct wait* t2;
-	for(tmp = waiters; tmp;) {
-		t2 = tmp;
-		tmp = tmp->next;
+    syscall_ack();
 
-		kfree(t2);
-	}
+    current_task->status = TASK_STATUS_SLEEP;
+    while(current_task->status == TASK_STATUS_SLEEP)
+        sys_yield();
 
-	return cnt;
+
+    pid_t p = -1;
+    list_each(current_task->waiters, w) {
+        if(w->status != TASK_STATUS_KILLED)
+            continue;
+            
+        if(status)
+            *status = (w->exit.status << 16) | (w->exit.value & 0xFFFF);
+        
+        p = w->pid;
+        break;
+    }
+
+    list_clear(current_task->waiters);
+    return p;
 });

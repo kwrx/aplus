@@ -116,8 +116,9 @@ static int status_open(inode_t* inode) {
         tk->umask,
         (
             (tk->status == TASK_STATUS_READY ? "S (Sleeping)" :
+            (tk->status == TASK_STATUS_SLEEP ? "S (Sleeping)" :
             (tk->status == TASK_STATUS_RUNNING ? "R (Running)" :
-            (tk->status == TASK_STATUS_KILLED ? "X (Dead)" : "Unknown")))
+            (tk->status == TASK_STATUS_KILLED ? "X (Dead)" : "Unknown"))))
         ),
         tk->pid,
         tk->parent ? tk->parent->pid : 0,
@@ -164,8 +165,9 @@ static int stat_open(inode_t* inode) {
         tk->name,
         (
             (tk->status == TASK_STATUS_READY ? "S" :
+            (tk->status == TASK_STATUS_SLEEP ? "S" :
             (tk->status == TASK_STATUS_RUNNING ? "R" :
-            (tk->status == TASK_STATUS_KILLED ? "X" : "N")))
+            (tk->status == TASK_STATUS_KILLED ? "X" : "N"))))
         ),
         tk->parent ? tk->parent->pid : 0,
         tk->gid,

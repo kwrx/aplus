@@ -30,6 +30,20 @@ static void sched_next(void) {
 			current_task = task_queue;
 
 		KASSERT(current_task);
+
+
+
+		if(likely(current_task->status != TASK_STATUS_SLEEP))
+			continue;
+
+		list_each(current_task->waiters, w) {
+			if(likely(w->status != TASK_STATUS_KILLED))
+				continue;
+
+			current_task->status = TASK_STATUS_READY;
+			break;
+		}
+
 	} while(current_task->status != TASK_STATUS_READY);
 }
 

@@ -93,18 +93,6 @@ int main(int argc, char** argv) {
     }
 
 
-    /* Test */
-    static dmx_window_t wnd;
-    wnd.x = 0;
-    wnd.y = 0;
-    wnd.w = 1280;
-    wnd.h = 768;
-    wnd.alpha = 1.0;
-    wnd.flags = 0;
-    wnd.surface = cairo_image_surface_create_from_png("/usr/share/images/wp.png");
-
-    list_push(dmx.windows, &wnd);
-    dmx_mark_window(&dmx, &wnd, NULL);
 
 
     pthread_create(&dmx.th_server, NULL, th_server, &dmx);

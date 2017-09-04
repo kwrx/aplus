@@ -17,11 +17,10 @@ screen.bpp=32
 
 
 # -- Energy saving
-idle.priority.disabled=0
 idle.priority.low=1
 idle.priority.medium=2
 idle.priority.high=3
-idle.priority=$idle.priority.disabled
+idle.priority=$idle.priority.low
 
 
 # -- I/O Scheduler

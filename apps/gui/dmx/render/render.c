@@ -112,8 +112,8 @@ void* th_render(void* arg) {
             cairo_clip(dmx->backbuffer);
             cairo_new_path(dmx->backbuffer);
             
-            list_each(dmx->windows, w)
-                dmx_blit_window(dmx, w);
+            list_each(dmx->clients, w)
+                dmx_blit_view(dmx, w);
 
             cairo_restore(dmx->backbuffer);
             free(r);

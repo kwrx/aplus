@@ -98,6 +98,10 @@ void* th_main(void* arg) {
                     TRACE("client #%d:%d diconnected!\n", ctx->pid, ctx->cid);
                     break;
 
+                case DMX_PROTO_INVALIDATE:
+                    dmx_mark_view(dmx, ctx, NULL);
+                    break;
+
                 default:
                     TRACE("client %d:%d sent invalid command\n", ctx->pid, ctx->cid);
                     break;

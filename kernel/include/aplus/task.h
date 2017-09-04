@@ -2,9 +2,11 @@
 #define _TASK_H
 
 #include <aplus.h>
+#include <aplus/base.h>
 #include <aplus/mm.h>
 #include <aplus/vfs.h>
 #include <aplus/elf.h>
+#include <aplus/utils/list.h>
 #include <libc.h>
 
 
@@ -14,7 +16,8 @@
 
 #define TASK_STATUS_READY			0
 #define TASK_STATUS_RUNNING			1
-#define TASK_STATUS_KILLED			2
+#define TASK_STATUS_SLEEP			2
+#define TASK_STATUS_KILLED			3
 
 #define TASK_PRIO_MAX				-20
 #define TASK_PRIO_MIN				20
@@ -71,6 +74,8 @@ typedef struct task {
 	inode_t* exe;
 	mode_t umask;
 
+
+	list(struct task*, waiters);
 
 	struct {
 		int status:16;

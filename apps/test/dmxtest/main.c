@@ -17,8 +17,19 @@ int main(int argc, char** argv) {
     if(dmx_context_open(fd, &dmx) != 0)
         dmx_throw();
 
-    printf("dmx#%d -> screen: %dx%dx%d\n", dmx->cid, dmx->screen.width, dmx->screen.height, dmx->screen.bpp);
-    dmx_close(fd);
+
+    dmx_view_set_position(dmx, 300.0, 300.0);
+    dmx_view_set_size(dmx, 600.0, 400.0);
+    dmx_view_set_alpha(dmx, 1.0);
+    dmx_view_set_font(dmx, 0);
+    dmx_view_show(dmx);
+
+    memset(dmx->window.frame, 0xFF, 600 * 400 * 4);
+
+    dmx_view_invalidate(dmx);
+
+    sleep(100);
+    //dmx_close(fd);
     
     return 0;
 }

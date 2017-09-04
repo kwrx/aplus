@@ -26,9 +26,6 @@ static void idle() {
 			case 3:
 				current_task->priority = TASK_PRIO_MAX;
 				break;
-			default:
-				for(;;)
-					sys_yield();
 		}
     }
 		

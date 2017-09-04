@@ -39,5 +39,10 @@ int load_bootargs() {
 		mbd->modules.ptr[i].cmdline += CONFIG_KERNEL_BASE;
 	}
 
+
+	if(mbd->lfb.base) {
+		
+	}
+
 	return 0;
 }

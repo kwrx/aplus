@@ -297,7 +297,7 @@ int vfs_umount(struct inode* dir) {
 
 
 ino64_t vfs_inode() {
-	static ino64_t ino = 1;
+	static ino64_t ino = UINT32_MAX;
 	return ino++;
 }
 
