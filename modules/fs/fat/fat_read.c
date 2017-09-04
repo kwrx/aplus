@@ -12,30 +12,30 @@
 
 int fat_read(inode_t* ino, void* buf, size_t size) {
     if(unlikely(!ino))
-		return 0;
-		
-	if(unlikely(!buf))
-		return 0;
-		
-	if(unlikely((off64_t) size > ino->size))
-		size = ino->size;
-		
-	if(unlikely(ino->position > ino->size))
-		ino->position = ino->size;
-		
-	if(unlikely(ino->position + (off64_t) size > ino->size))
-		size = (off_t) (ino->size - ino->position);
-		
-	if(unlikely(!size))
-		return 0;
+        return 0;
+        
+    if(unlikely(!buf))
+        return 0;
+        
+    if(unlikely((off64_t) size > ino->size))
+        size = ino->size;
+        
+    if(unlikely(ino->position > ino->size))
+        ino->position = ino->size;
+        
+    if(unlikely(ino->position + (off64_t) size > ino->size))
+        size = (off_t) (ino->size - ino->position);
+        
+    if(unlikely(!size))
+        return 0;
 
-	fat_t* fat = (fat_t*) ino->userdata;
+    fat_t* fat = (fat_t*) ino->userdata;
     zero_if(!fat, EINVAL);
 
     if(fat->entry_cluster == 0)
         return 0;
-	
-	int current_cluster = fat->entry_cluster;
+    
+    int current_cluster = fat->entry_cluster;
 
 
     long i, s, c;
@@ -87,6 +87,6 @@ int fat_read(inode_t* ino, void* buf, size_t size) {
         }
     } while(1);
 
-	errno = EIO;
-	return 0;
+    errno = EIO;
+    return 0;
 }

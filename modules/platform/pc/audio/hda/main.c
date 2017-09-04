@@ -16,13 +16,13 @@ MODULE_LICENSE("GPL");
 
 
 #if defined(__i386__) || defined(__x86_64__)
-#	if defined(__i386__)
-#		include <arch/i386/i386.h>
-#		include <arch/i386/pci.h>
-#	elif defined(__x86_64__)
-#		include <arch/x86_64/x86_64.h>
-#		include <arch/x86_64/pci.h>
-#	endif
+#    if defined(__i386__)
+#        include <arch/i386/i386.h>
+#        include <arch/i386/pci.h>
+#    elif defined(__x86_64__)
+#        include <arch/x86_64/x86_64.h>
+#        include <arch/x86_64/pci.h>
+#    endif
 
 
 
@@ -34,10 +34,10 @@ static uint32_t hda_devices[] = {
 
 
 static void find_hda_pci(uint32_t device, uint16_t vendorid, uint16_t deviceid, void* arg) {
-	int i;
+    int i;
     for(i = 0; hda_devices[i]; i += 2)
         if(vendorid == hda_devices[i] && deviceid == hda_devices[i + 1])
-		    *((uintptr_t*) arg) = device;
+            *((uintptr_t*) arg) = device;
 }
 
 int init(void) {
@@ -61,12 +61,12 @@ int init(void) {
 #else
 
 int init(void) {
-	return E_OK;
+    return E_OK;
 }
 
 #endif
 
 
 int dnit(void) {
-	return E_OK;
+    return E_OK;
 }

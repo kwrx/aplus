@@ -10,5 +10,5 @@ SYSCALL(44, getgid,
 int sys_getgid(void) {
     KASSERT(current_task);
 
-	return current_task->gid;
+    return current_task->gid;
 });

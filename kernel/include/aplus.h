@@ -10,64 +10,64 @@
 
 
 typedef struct bootargs {
-	struct {
-		uint64_t size;
-		uint32_t pagesize;
-		uintptr_t start;
-	} memory;
+    struct {
+        uint64_t size;
+        uint32_t pagesize;
+        uintptr_t start;
+    } memory;
 
-	struct {
-		struct {
-			uintptr_t ptr;
-			size_t size;
-			uintptr_t cmdline;
-			uintptr_t reserved;
-		} __packed *ptr;
-		size_t count;
-	} modules;
+    struct {
+        struct {
+            uintptr_t ptr;
+            size_t size;
+            uintptr_t cmdline;
+            uintptr_t reserved;
+        } __packed *ptr;
+        size_t count;
+    } modules;
 
-	struct {
-		uint16_t width;
-		uint16_t height;
-		uint16_t depth;
-		uint32_t pitch;
-		uintptr_t base;
-		uint32_t size;
-	} lfb;
+    struct {
+        uint16_t width;
+        uint16_t height;
+        uint16_t depth;
+        uint32_t pitch;
+        uintptr_t base;
+        uint32_t size;
+    } lfb;
 
-	struct {
-		char* args;
-		int length;
-	} cmdline;
+    struct {
+        char* args;
+        int length;
+    } cmdline;
 
-	struct {
-		uint32_t num;
-		uintptr_t addr;
-		uint32_t size;
-		uint32_t shndx;
-	} exec;
+    struct {
+        uint32_t num;
+        uintptr_t addr;
+        uint32_t size;
+        uint32_t shndx;
+    } exec;
 
-	struct {
-		uint32_t speed;
-		uint32_t cores;
-		uint32_t threads;
-		char* family;
-	} cpu;
+    struct {
+        uint32_t speed;
+        uint32_t cores;
+        uint32_t threads;
+        char* family;
+    } cpu;
 
-	int flags;
+    int flags;
 } bootargs_t;
 
 
 
-#define EXPORT(f)			\
-	__section(".exports")	\
-	struct {				\
-		char* name;			\
-		void* addr;			\
-	} __export_##f = {		\
-		(char*) #f,			\
-		(void*) &f			\
-	};
+#define EXPORT(f)            \
+    __section(".exports")    \
+    struct {                \
+        char* name;            \
+        void* addr;            \
+    } __export_##f = {        \
+        (char*) #f,            \
+        (void*) &f            \
+    };
 
 
 

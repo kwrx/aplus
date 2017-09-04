@@ -8,7 +8,7 @@
 
 SYSCALL(50, setsid,
 int sys_setsid(void) {
-	KASSERT(current_task);
+    KASSERT(current_task);
 
     if(current_task->sid == current_task->pid) {
         errno = EPERM;

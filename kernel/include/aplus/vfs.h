@@ -15,57 +15,57 @@ typedef struct inode inode_t;
 
 
 typedef struct fsys {
-	const char* name;
-	int (*mount) (struct inode*, struct inode*);
+    const char* name;
+    int (*mount) (struct inode*, struct inode*);
 
-	struct fsys* next;
+    struct fsys* next;
 } fsys_t;
 
 struct inode_childs {
-	inode_t* inode;
-	struct inode_childs* next;
+    inode_t* inode;
+    struct inode_childs* next;
 };
 
 struct inode {
-	char* name;
-	dev_t dev;
-	ino64_t ino;
-	mode_t mode;
-	nlink_t nlink;
-	uid_t uid;
-	gid_t gid;
-	dev_t rdev;
-	off64_t size;
-	off64_t position;
+    char* name;
+    dev_t dev;
+    ino64_t ino;
+    mode_t mode;
+    nlink_t nlink;
+    uid_t uid;
+    gid_t gid;
+    dev_t rdev;
+    off64_t size;
+    off64_t position;
 
-	time_t atime;
-	time_t mtime;
-	time_t ctime;
-	
-	void* userdata;
+    time_t atime;
+    time_t mtime;
+    time_t ctime;
+    
+    void* userdata;
 
-	int (*open) (struct inode* inode);
-	int (*close) (struct inode* inode);
+    int (*open) (struct inode* inode);
+    int (*close) (struct inode* inode);
 
-	int (*read) (struct inode* inode, void* ptr, size_t len);
-	int (*write) (struct inode* inode, void* ptr, size_t len);
-	
-	
-	struct inode* (*finddir) (struct inode* inode, char* name);
-	struct inode* (*mknod) (struct inode* inode, char* name, mode_t mode);
-	int (*unlink) (struct inode* inode, char* name);
-	
-	int (*rename) (struct inode* inode, char* newname);
-	int (*chown) (struct inode* inode, uid_t owner, gid_t group);
-	int (*chmod) (struct inode* inode, mode_t mode);
-	
-	int (*ioctl) (struct inode* inode, int req, void* buf);
+    int (*read) (struct inode* inode, void* ptr, size_t len);
+    int (*write) (struct inode* inode, void* ptr, size_t len);
+    
+    
+    struct inode* (*finddir) (struct inode* inode, char* name);
+    struct inode* (*mknod) (struct inode* inode, char* name, mode_t mode);
+    int (*unlink) (struct inode* inode, char* name);
+    
+    int (*rename) (struct inode* inode, char* newname);
+    int (*chown) (struct inode* inode, uid_t owner, gid_t group);
+    int (*chmod) (struct inode* inode, mode_t mode);
+    
+    int (*ioctl) (struct inode* inode, int req, void* buf);
 
 
-	struct inode_childs* childs;
+    struct inode_childs* childs;
 
-	struct inode* parent;
-	struct inode* link;
+    struct inode* parent;
+    struct inode* link;
 };
 
 

@@ -4,13 +4,13 @@
 #include <aplus/base.h>
 #include <aplus/utils/list.h>
 
-#define MODULE_NAME(x)								\
-	__attribute__((section(".module_name")))		\
-	const char __module_name__[] = x "\0"
+#define MODULE_NAME(x)                                \
+    __attribute__((section(".module_name")))        \
+    const char __module_name__[] = x "\0"
 
-#define MODULE_DEPS(x)								\
-	__attribute__((section(".module_deps")))		\
-	const char __module_deps__[] = x "\0"
+#define MODULE_DEPS(x)                                \
+    __attribute__((section(".module_deps")))        \
+    const char __module_deps__[] = x "\0"
 
 
 #define MODULE_AUTHOR(x);
@@ -19,16 +19,16 @@
 
 
 typedef struct module {
-	const char* name;
-	list(char*, deps);
+    const char* name;
+    list(char*, deps);
 
-	int (*init) (void);
-	int (*dnit) (void);
-	
-	uintptr_t loaded_address;
-	uintptr_t image_address;
+    int (*init) (void);
+    int (*dnit) (void);
+    
+    uintptr_t loaded_address;
+    uintptr_t image_address;
 
-	int loaded;
+    int loaded;
 } module_t;
 
 int module_init(void);

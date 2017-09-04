@@ -1,24 +1,24 @@
 
 OPCODE(ineg) {
-	int32_t a = JPOP(i32);
+    int32_t a = JPOP(i32);
 
-	JPUSH(i32, -a);
+    JPUSH(i32, -a);
 }
 
 OPCODE(lneg) {
-	int64_t a = JPOP(i64);
+    int64_t a = JPOP(i64);
 
-	JPUSH(i64, -a);
+    JPUSH(i64, -a);
 }
 
 OPCODE(fneg) {
-	float a = JPOP(f32);
+    float a = JPOP(f32);
 
-	JPUSH(f32, -a);
+    JPUSH(f32, -a);
 }
 
 OPCODE(dneg) {
-	double a = JPOP(f64);
+    double a = JPOP(f64);
 
-	JPUSH(f64, -a);
+    JPUSH(f64, -a);
 }

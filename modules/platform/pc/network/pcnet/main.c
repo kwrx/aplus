@@ -387,8 +387,8 @@ int init(void) {
     dev->bufp = (uintptr_t) V2P((void*) dev->buf);
 
     uint16_t cmd = pci_read_field(dev->pci, PCI_COMMAND, 4);
-	if(!(cmd & (1 << 2))) 
-		pci_write_field(dev->pci, PCI_COMMAND, 4, cmd | (1 << 2));
+    if(!(cmd & (1 << 2))) 
+        pci_write_field(dev->pci, PCI_COMMAND, 4, cmd | (1 << 2));
 
 
     dev->irq = pci_read_field(dev->pci, PCI_INTERRUPT_LINE, 1);

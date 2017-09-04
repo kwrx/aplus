@@ -12,25 +12,25 @@
 
 int ext2_read(inode_t* ino, void* buf, size_t size) {
     if(unlikely(!ino))
-		return 0;
-		
-	if(unlikely(!buf))
-		return 0;
-		
-	if(unlikely((off64_t) size > ino->size))
-		size = ino->size;
-		
-	if(unlikely(ino->position > ino->size))
-		ino->position = ino->size;
-		
-	if(unlikely(ino->position + (off64_t) size > ino->size))
-		size = (off_t) (ino->size - ino->position);
-		
-	if(unlikely(!size))
-		return 0;
+        return 0;
+        
+    if(unlikely(!buf))
+        return 0;
+        
+    if(unlikely((off64_t) size > ino->size))
+        size = ino->size;
+        
+    if(unlikely(ino->position > ino->size))
+        ino->position = ino->size;
+        
+    if(unlikely(ino->position + (off64_t) size > ino->size))
+        size = (off_t) (ino->size - ino->position);
+        
+    if(unlikely(!size))
+        return 0;
 
     ext2_priv_t* priv = (ext2_priv_t*) ino->userdata;
-	
+    
     ext2_inode_t in;
     ext2_read_inode(priv->priv, &in, (uint32_t) ino->ino);
 

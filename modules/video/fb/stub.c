@@ -8,6 +8,6 @@
 extern fbdev_t* fbdev;
 
 int stub_init(void) {
-	fbdev->name = "VGA Controller";
-	return 0;
+    fbdev->name = "VGA Controller";
+    return 0;
 }

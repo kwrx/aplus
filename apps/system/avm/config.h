@@ -33,18 +33,18 @@
 
 
 
-#define APP_CDATE		__DATE__
-#define APP_CTIME		__TIME__
+#define APP_CDATE        __DATE__
+#define APP_CTIME        __TIME__
 
-#define APP_CC_VERSION		__VERSION__
+#define APP_CC_VERSION        __VERSION__
 
 
 
-#define APP_VERSION_FORMAT										\
-		"%s %s\nCopyright (C) %s\nBuilt with %s %s (%s:%s)\n"
-#define APP_VERSION_ARGS										\
-		APP_NAME, APP_VERSION, APP_COPY, APP_CC, APP_CC_VERSION,				\
-		APP_CDATE, APP_CTIME
+#define APP_VERSION_FORMAT                                        \
+        "%s %s\nCopyright (C) %s\nBuilt with %s %s (%s:%s)\n"
+#define APP_VERSION_ARGS                                        \
+        APP_NAME, APP_VERSION, APP_COPY, APP_CC, APP_CC_VERSION,                \
+        APP_CDATE, APP_CTIME
 
 
 
@@ -99,21 +99,21 @@ double fmod(double, double);
 #if HAVE_FCNTL_H
 #include <fcntl.h>
 #else
-#define O_RDONLY		0
+#define O_RDONLY        0
 
-#define SEEK_SET		0
-#define SEEK_CUR		1
-#define SEEK_END		2
+#define SEEK_SET        0
+#define SEEK_CUR        1
+#define SEEK_END        2
 #endif
 
 
 #if HAVE_ZIP_H
-#define CONFIG_JAR		1
+#define CONFIG_JAR        1
 #include <zip.h>
 #endif
 
 #if HAVE_FFI_H
-#define CONFIG_JNI		1
+#define CONFIG_JNI        1
 #include <ffi.h>
 #endif
 
@@ -121,16 +121,16 @@ double fmod(double, double);
 #include <gc.h>
 
 static inline void* __gc_calloc(size_t x, size_t y) {
-	void* p = GC_malloc_uncollectable(x * y);
-	if(!p)
-		return NULL;
+    void* p = GC_malloc_uncollectable(x * y);
+    if(!p)
+        return NULL;
 
-	register int i = x * y;
-	char* d;
-	for(d = p; i--; d++)
-		*d = 0;
-		
-	return p;
+    register int i = x * y;
+    char* d;
+    for(d = p; i--; d++)
+        *d = 0;
+        
+    return p;
 }
 
 #define strdup(s) GC_STRDUP(s)
@@ -184,13 +184,13 @@ int sched_yield(void);
 
 
 #if DEBUG
-#define LOG(x)			\
-	{ avm->printf("%s: %s\n", APP_NAME, x); }
-#define LOGF(x, y...)	\
-	{ avm->printf("%s: " x "\n", APP_NAME, y); }
+#define LOG(x)            \
+    { avm->printf("%s: %s\n", APP_NAME, x); }
+#define LOGF(x, y...)    \
+    { avm->printf("%s: " x "\n", APP_NAME, y); }
 
-#define ASSERT(x)	\
-	{ if(unlikely(!(x))) { LOGF("Assertion \"%s\" failed in %s:%d", #x, __FILE__, __LINE__); abort(); } }
+#define ASSERT(x)    \
+    { if(unlikely(!(x))) { LOGF("Assertion \"%s\" failed in %s:%d", #x, __FILE__, __LINE__); abort(); } }
 
 #else
 #define LOG(x)
@@ -198,8 +198,8 @@ int sched_yield(void);
 #define ASSERT(x)
 #endif
 
-#define PRINTF(x, y...)	\
-	{ avm->printf(x, y); }
+#define PRINTF(x, y...)    \
+    { avm->printf(x, y); }
 
 
 
@@ -209,10 +209,10 @@ int sched_yield(void);
 
 
 
-#define INITIALIZE_PATH() {									\
-		avm_config_path_add(CONFIG_SYSROOT "/usr/lib/avm");				\
-		avm_config_path_add(CONFIG_SYSROOT "/usr/local/lib/avm");			\
-		avm_config_path_add(CONFIG_SYSROOT "/usr/share/java");				\
-	}
+#define INITIALIZE_PATH() {                                    \
+        avm_config_path_add(CONFIG_SYSROOT "/usr/lib/avm");                \
+        avm_config_path_add(CONFIG_SYSROOT "/usr/local/lib/avm");            \
+        avm_config_path_add(CONFIG_SYSROOT "/usr/share/java");                \
+    }
 
 #endif

@@ -11,66 +11,66 @@
 
 
 static int inode_fifo_read(struct inode* inode, void* ptr, size_t len) {
-	if(unlikely(!inode || !ptr)) {
-		errno = EINVAL;
-		return E_ERR;
-	}
-	
-	if(unlikely(!inode->userdata))
-		return E_ERR;
-		
+    if(unlikely(!inode || !ptr)) {
+        errno = EINVAL;
+        return E_ERR;
+    }
+    
+    if(unlikely(!inode->userdata))
+        return E_ERR;
+        
 
-		
-	fifo_t* fifo = (fifo_t*) inode->userdata;
-	return fifo_read(fifo, ptr, len);		
+        
+    fifo_t* fifo = (fifo_t*) inode->userdata;
+    return fifo_read(fifo, ptr, len);        
 }
 
 static int inode_fifo_write(struct inode* inode, void* ptr, size_t len) {
-	if(unlikely(!inode || !ptr)) {
-		errno = EINVAL;
-		return E_ERR;
-	}
-	
-	if(unlikely(!inode->userdata))
-		return E_ERR;
-		
-		
-	fifo_t* fifo = (fifo_t*) inode->userdata;
-	return fifo_write(fifo, ptr, len);
+    if(unlikely(!inode || !ptr)) {
+        errno = EINVAL;
+        return E_ERR;
+    }
+    
+    if(unlikely(!inode->userdata))
+        return E_ERR;
+        
+        
+    fifo_t* fifo = (fifo_t*) inode->userdata;
+    return fifo_write(fifo, ptr, len);
 }
 
 
 SYSCALL(30, mkfifo,
 int sys_mkfifo(const char* pathname, mode_t mode) {
-	int fd = sys_open(pathname, O_RDWR | O_CREAT | O_EXCL, S_IFIFO | mode);
-	if(unlikely(fd < 0))
-		return -1;
-		
-	
-	fifo_t* fifo = (fifo_t*) kmalloc(sizeof(fifo_t), GFP_USER);
-	if(unlikely(!fifo)) {
-		errno = ENOMEM;
-		return -1;
-	}
-	
-	
-	fifo_init(fifo);
-	
+    int fd = sys_open(pathname, O_RDWR | O_CREAT | O_EXCL, S_IFIFO | mode);
+    if(unlikely(fd < 0))
+        return -1;
+        
+    
+    fifo_t* fifo = (fifo_t*) kmalloc(sizeof(fifo_t), GFP_USER);
+    if(unlikely(!fifo)) {
+        errno = ENOMEM;
+        return -1;
+    }
+    
+    
+    fifo_init(fifo);
+    
 #if CONFIG_IPC_DEBUG
-	#define mtxname strdup(pathname)
+    #define mtxname strdup(pathname)
 #else
-	#define mtxname NULL
+    #define mtxname NULL
 #endif
-	
-	mutex_init(&fifo->r_lock, MTX_KIND_DEFAULT, mtxname);
-	mutex_init(&fifo->w_lock, MTX_KIND_DEFAULT, mtxname);
-	
-		
-	inode_t* inode = current_task->fd[fd].inode;
-	inode->read = inode_fifo_read;
-	inode->write = inode_fifo_write;
-	inode->userdata = (void*) fifo;
-	
-	sys_close(fd);
-	return 0;
+    
+    mutex_init(&fifo->r_lock, MTX_KIND_DEFAULT, mtxname);
+    mutex_init(&fifo->w_lock, MTX_KIND_DEFAULT, mtxname);
+    
+        
+    inode_t* inode = current_task->fd[fd].inode;
+    inode->read = inode_fifo_read;
+    inode->write = inode_fifo_write;
+    inode->userdata = (void*) fifo;
+    
+    sys_close(fd);
+    return 0;
 });

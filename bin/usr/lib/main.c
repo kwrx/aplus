@@ -3,6 +3,6 @@
 #include <stdio.h>
 
 int main(int argc, char** argv) {
-	printf("Hello World = %s\n", md5("Hello World"));
-	return 0;
+    printf("Hello World = %s\n", md5("Hello World"));
+    return 0;
 }

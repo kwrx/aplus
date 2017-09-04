@@ -45,7 +45,7 @@
 #define SVGA_REG_ENABLE_ENABLE      1
 #define SVGA_REG_ENABLE_HIDE        2
 #define SVGA_REG_ENABLE_ENABLE_HIDE (SVGA_REG_ENABLE_ENABLE |\
-				     SVGA_REG_ENABLE_HIDE)
+                     SVGA_REG_ENABLE_HIDE)
 
 /*
  * Legal values for the SVGA_REG_CURSOR_ON register in old-fashioned

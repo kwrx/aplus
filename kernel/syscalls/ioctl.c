@@ -8,21 +8,21 @@
 
 SYSCALL(20, ioctl,
 int sys_ioctl(int fd, int req, void* arg) {
-	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
-		return lwip_ioctl(fd - TASK_FD_COUNT, req, arg);
+        return lwip_ioctl(fd - TASK_FD_COUNT, req, arg);
 #else
-		errno = EBADF;
-		return -1;
+        errno = EBADF;
+        return -1;
 #endif
-	}
+    }
 
-	inode_t* inode = current_task->fd[fd].inode;
-	
-	if(unlikely(!inode)) {
-		errno = EBADF;
-		return -1;
-	}
+    inode_t* inode = current_task->fd[fd].inode;
+    
+    if(unlikely(!inode)) {
+        errno = EBADF;
+        return -1;
+    }
 
-	return vfs_ioctl(inode, req, arg);
+    return vfs_ioctl(inode, req, arg);
 });

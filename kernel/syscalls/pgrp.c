@@ -6,7 +6,7 @@
 
 SYSCALL(47, setpgid,
 int sys_setpgid(pid_t pid, gid_t pgid) {
-	if(pid == 0)
+    if(pid == 0)
         current_task->gid = pgid == 0 
                                 ? current_task->pid 
                                 : pgid
@@ -27,7 +27,7 @@ int sys_setpgid(pid_t pid, gid_t pgid) {
                 return 0;   
             }
         }
-	
+    
         errno = ESRCH;
         return -1;
     }
@@ -37,7 +37,7 @@ int sys_setpgid(pid_t pid, gid_t pgid) {
 
 SYSCALL(48, getpgid,
 gid_t sys_getpgid(pid_t pid) {
-	if(pid == 0)
+    if(pid == 0)
         return current_task->gid;
     else {
         volatile task_t* tmp;

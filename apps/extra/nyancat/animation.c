@@ -799,19 +799,19 @@ static const char * frame11[] = {
 ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,"};
 
 static const char ** frames[] = {
-	frame0,
-	frame1,
-	frame2,
-	frame3,
-	frame4,
-	frame5,
-	frame6,
-	frame7,
-	frame8,
-	frame9,
-	frame10,
-	frame11,
-	NULL
+    frame0,
+    frame1,
+    frame2,
+    frame3,
+    frame4,
+    frame5,
+    frame6,
+    frame7,
+    frame8,
+    frame9,
+    frame10,
+    frame11,
+    NULL
 };
 
 #define FRAME_WIDTH  64

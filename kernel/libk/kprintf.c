@@ -12,31 +12,31 @@ int
 kprintf(const char *fmt, ...) {
 
 
-	static char buf[BUFSIZ] = {0};
-	static char bfmt[BUFSIZ] = {0};
+    static char buf[BUFSIZ] = {0};
+    static char bfmt[BUFSIZ] = {0};
 
-	memset(buf, 0, sizeof(buf));
-	memset(bfmt, 0, sizeof(bfmt));
+    memset(buf, 0, sizeof(buf));
+    memset(bfmt, 0, sizeof(bfmt));
 
-	sprintf(bfmt, "[%8f]%s", (double) timer_getus() / 1000000, fmt);
+    sprintf(bfmt, "[%8f]%s", (double) timer_getus() / 1000000, fmt);
 
-	va_list args;
-	va_start(args, fmt);
-	int out = vsprintf(buf, bfmt, args);
-	
-	
-	spinlock_lock(&lck_kprintf);
+    va_list args;
+    va_start(args, fmt);
+    int out = vsprintf(buf, bfmt, args);
+    
+    
+    spinlock_lock(&lck_kprintf);
 
-	int i;
-	for(i = 0; i < out; i++)
-		debug_send(buf[i]);
+    int i;
+    for(i = 0; i < out; i++)
+        debug_send(buf[i]);
 
-	spinlock_unlock(&lck_kprintf);
+    spinlock_unlock(&lck_kprintf);
 
 
-	
-	va_end(args);
-	return out;
+    
+    va_end(args);
+    return out;
 }
 
 

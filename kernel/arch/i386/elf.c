@@ -6,10 +6,10 @@
 
 
 int arch_elf_check_machine(Elf_Ehdr* elf) {
-	if((elf->e_machine == EM_386) || (elf->e_machine == EM_486))
-		return E_OK;
+    if((elf->e_machine == EM_386) || (elf->e_machine == EM_486))
+        return E_OK;
 
-	return E_ERR;
+    return E_ERR;
 }
 
 

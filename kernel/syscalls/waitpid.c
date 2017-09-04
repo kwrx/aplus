@@ -6,16 +6,16 @@
 #include <libc.h>
 
 
-#define __wait_for(cond)								        \
-    {													        \
-        volatile task_t* v;								        \
-        for(v = task_queue; v; v = v->next) {			        \
-            if(v->parent != current_task)				        \
-                continue;								        \
-                                                                \
-            if((cond))									        \
-                list_push(current_task->waiters, v);	        \
-        }												        \
+#define __wait_for(cond)                                            \
+    {                                                               \
+        volatile task_t* v;                                         \
+        for(v = task_queue; v; v = v->next) {                       \
+            if(v->parent != current_task)                           \
+                continue;                                           \
+                                                                    \
+            if((cond))                                              \
+                list_push(current_task->waiters, v);                \
+        }                                                           \
     }
 
 

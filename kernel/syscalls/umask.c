@@ -9,9 +9,9 @@
 
 SYSCALL(41, umask,
 mode_t sys_umask(mode_t cmask) {
-	KASSERT(current_task);
+    KASSERT(current_task);
 
-	register mode_t omask = current_task->umask;
-	current_task->umask = cmask;
-	return omask;
+    register mode_t omask = current_task->umask;
+    current_task->umask = cmask;
+    return omask;
 });

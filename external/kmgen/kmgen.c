@@ -11,11 +11,11 @@
 
 
 struct {
-	char* name;
-	void* data;
+    char* name;
+    void* data;
 } keymaps[] = {
-	{ "it-IT", &it_IT_keymap },
-	{ "en-US", &en_US_keymap },
+    { "it-IT", &it_IT_keymap },
+    { "en-US", &en_US_keymap },
     { NULL, NULL }
 };
 

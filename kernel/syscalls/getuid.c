@@ -10,5 +10,5 @@ SYSCALL(43, getuid,
 int sys_getuid(void) {
     KASSERT(current_task);
 
-	return current_task->uid;
+    return current_task->uid;
 });

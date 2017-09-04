@@ -1,31 +1,31 @@
 #ifndef _MM_H
 #define _MM_H
 
-#define KMALLOC_MAGIC						0xCAFE1234
+#define KMALLOC_MAGIC                        0xCAFE1234
 
-#define __GFP_HIGH							1
-#define __GFP_WAIT							2
+#define __GFP_HIGH                            1
+#define __GFP_WAIT                            2
 
-#define GFP_ATOMIC							(__GFP_HIGH)
-#define GFP_KERNEL							(__GFP_HIGH | __GFP_WAIT)
-#define GFP_USER							(__GFP_WAIT)
+#define GFP_ATOMIC                            (__GFP_HIGH)
+#define GFP_KERNEL                            (__GFP_HIGH | __GFP_WAIT)
+#define GFP_USER                            (__GFP_WAIT)
 
-#define HF_NULL								(0)
-#define HF_ZERO								(1)
+#define HF_NULL                                (0)
+#define HF_ZERO                                (1)
 
-#define MM_POOL_SIZE						131072
-#define MM_BLOCKSZ							4096
+#define MM_POOL_SIZE                        131072
+#define MM_BLOCKSZ                            4096
 
-#define PAGE_SIZE							(0x1000)
-
-
-#define P2V(x)								((x) + CONFIG_KERNEL_BASE)
-#define V2P(x)								__V2P((virtaddr_t) (x))
+#define PAGE_SIZE                            (0x1000)
 
 
-#define KCACHE_FREE_ALL						0
-#define KCACHE_FREE_BLOCKS					1
-#define KCACHE_FREE_OLDEST					2
+#define P2V(x)                                ((x) + CONFIG_KERNEL_BASE)
+#define V2P(x)                                __V2P((virtaddr_t) (x))
+
+
+#define KCACHE_FREE_ALL                        0
+#define KCACHE_FREE_BLOCKS                    1
+#define KCACHE_FREE_OLDEST                    2
 
 
 #ifndef __ASSEMBLY__
@@ -40,16 +40,16 @@ typedef uintptr_t virtaddr_t;
 typedef uint64_t kcache_index_t;
 
 typedef struct {
-	uintptr_t used;
-	uintptr_t total;
-	uint8_t* frames;
+    uintptr_t used;
+    uintptr_t total;
+    uint8_t* frames;
 } mm_state_t;
 
 typedef struct kcache_block {
     kcache_index_t index;
     void* ptr;
     size_t size;
-	spinlock_t lock;
+    spinlock_t lock;
     struct kcache_block* next;
 } kcache_block_t;
 

@@ -85,9 +85,9 @@ void dmx_blit_view(dmx_t* dmx, dmx_context_t* wnd);
 int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* style);
 
 #if VERBOSE
-#define TRACE(x...) {                                           \
-    fprintf(stdout, "dmx: #%02d %s() ", getpid(), __func__);     \
-    fprintf(stdout, x);                                         \
+#define TRACE(x...) {                                               \
+    fprintf(stdout, "dmx: #%02d %s() ", getpid(), __func__);        \
+    fprintf(stdout, x);                                             \
 }
 #else
 #define TRACE(x...) ((void) 0)

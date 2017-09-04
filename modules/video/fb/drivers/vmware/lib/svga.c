@@ -80,8 +80,8 @@ SVGA_Init(void)
         return E_ERR;
 
     uint16_t cmd = pci_read_field(pci, PCI_COMMAND, 4);
-	if(!(cmd & (1 << 2))) 
-		pci_write_field(pci, PCI_COMMAND, 4, cmd | (1 << 2));
+    if(!(cmd & (1 << 2))) 
+        pci_write_field(pci, PCI_COMMAND, 4, cmd | (1 << 2));
 
     
     gSVGA.pciAddr = pci;

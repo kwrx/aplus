@@ -6,7 +6,7 @@
 
 SYSCALL(49, sigprocmask,
 int sys_sigprocmask(int how, sigset_t* set, sigset_t* oldset) {
-	if(oldset)
+    if(oldset)
         *oldset = current_task->sig_mask;
 
     switch(how) {

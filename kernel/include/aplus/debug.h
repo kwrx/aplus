@@ -6,11 +6,11 @@
 
 
 
-#define LOG					"[ LOG   ] "
-#define WARN				"[ WARN  ] "
-#define INFO				"[ INFO  ] "
-#define ERROR				"[ ERROR ] "
-#define USER				"[ USER  ] "
+#define LOG                    "[ LOG   ] "
+#define WARN                "[ WARN  ] "
+#define INFO                "[ INFO  ] "
+#define ERROR                "[ ERROR ] "
+#define USER                "[ USER  ] "
 
 
 #ifndef __ASSEMBLY__
@@ -19,8 +19,8 @@ void debug_dump(void* context, char* errmsg, uintptr_t dump, uintptr_t errcode);
 
 
 #if !DEBUG
-#define debug_send(a)			(void) 0
-#define debug_dump(x, y, z, w)	(void) 0
+#define debug_send(a)            (void) 0
+#define debug_dump(x, y, z, w)    (void) 0
 #define KASSERT(x)
 #define KASSERTF(x, y...)
 #define kprintf(a, b...)
@@ -28,13 +28,13 @@ void debug_dump(void* context, char* errmsg, uintptr_t dump, uintptr_t errcode);
 
 int kprintf(const char* fmt, ...);
 
-#define KASSERT(x)																													\
-	if(unlikely(!(x)))																												\
-		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
+#define KASSERT(x)                                                                                                                    \
+    if(unlikely(!(x)))                                                                                                                \
+        { kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__); for(;;); }
 
-#define KASSERTF(x, y...)																											\
-	if(unlikely(!(x)))																												\
-		{ kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(y); kprintf("\n"); for(;;); }
+#define KASSERTF(x, y...)                                                                                                            \
+    if(unlikely(!(x)))                                                                                                                \
+        { kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__); kprintf(y); kprintf("\n"); for(;;); }
 
 
 #endif

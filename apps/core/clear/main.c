@@ -8,7 +8,7 @@
 
 
 int main(int argc, char** argv) {
-	fprintf(stdout, "\e[2J");
-	fflush(stdout);
-	return 0;
+    fprintf(stdout, "\e[2J");
+    fflush(stdout);
+    return 0;
 }

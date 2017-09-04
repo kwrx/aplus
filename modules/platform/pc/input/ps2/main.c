@@ -15,33 +15,33 @@ MODULE_LICENSE("GPL");
 
 
 #if defined(__i386__) || defined(__x86_64__)
-#	if defined(__i386__)
-#		include <arch/i386/i386.h>
-#	elif defined(__x86_64__)
-#		include <arch/x86_64/x86_64.h>
-#	endif
+#    if defined(__i386__)
+#        include <arch/i386/i386.h>
+#    elif defined(__x86_64__)
+#        include <arch/x86_64/x86_64.h>
+#    endif
 
 
-#define PS2_DATA		0x60
-#define PS2_CTRL		0x64
-#define PS2_ACK			0xFA
-#define PS2_RESEND		0xFE
+#define PS2_DATA        0x60
+#define PS2_CTRL        0x64
+#define PS2_ACK            0xFA
+#define PS2_RESEND        0xFE
 
 
 
-#define PS2_WAIT									\
-	{												\
-		int t = 100000;								\
-		while((inb(PS2_CTRL) & 0x02) && t > 0)		\
-			t--;									\
-	}
+#define PS2_WAIT                                        \
+    {                                                   \
+        int t = 100000;                                 \
+        while((inb(PS2_CTRL) & 0x02) && t > 0)          \
+            t--;                                        \
+    }
 
-#define PS2_WAIT_0									\
-	{												\
-		int t = 100000;								\
-		while(!(inb(PS2_CTRL) & 0x01) && t > 0)		\
-			t--;									\
-	}
+#define PS2_WAIT_0                                      \
+    {                                                   \
+        int t = 100000;                                 \
+        while(!(inb(PS2_CTRL) & 0x01) && t > 0)         \
+            t--;                                        \
+    }
 
 
 
@@ -289,11 +289,11 @@ static uint16_t ps2_codemap[] = {
 
 static mouse_t mouse;
 static struct {
-	uint16_t* vkeymap;
-	uint8_t capslock;
-	uint8_t numlock;
-	uint8_t scrolllock;
-	uint8_t e0;
+    uint16_t* vkeymap;
+    uint8_t capslock;
+    uint8_t numlock;
+    uint8_t scrolllock;
+    uint8_t e0;
 } kb;
 
 static evid_t kdid;
@@ -301,75 +301,75 @@ static evid_t mdid;
 
 
 static void __fifo_send(const char* dev, void* ptr, size_t size) {
-	int fd = sys_open(dev, O_WRONLY, 0);
-	if(fd < 0)
-		return;
-	
-	sys_write(fd, ptr, size);
-	sys_close(fd);
+    int fd = sys_open(dev, O_WRONLY, 0);
+    if(fd < 0)
+        return;
+    
+    sys_write(fd, ptr, size);
+    sys_close(fd);
 }
 
 static void kb_setled() {
-	PS2_WAIT;
-	outb(PS2_DATA, 0xED);
+    PS2_WAIT;
+    outb(PS2_DATA, 0xED);
 
 
-	PS2_WAIT;
-	outb (
-		PS2_DATA,
-	
-		(kb.scrolllock ? (1 << 0) : 0)	|
-		(kb.numlock ? (1 << 1) : 0) 	|
-		(kb.capslock ? (1 << 2) : 0)
-	);
-	
-	PS2_WAIT;
+    PS2_WAIT;
+    outb (
+        PS2_DATA,
+    
+        (kb.scrolllock ? (1 << 0) : 0)    |
+        (kb.numlock ? (1 << 1) : 0)     |
+        (kb.capslock ? (1 << 2) : 0)
+    );
+    
+    PS2_WAIT;
 }
 
 void kb_intr(void* unused) {
-	if(!(inb(PS2_CTRL) & 0x01))
-		return;
-	
-	uint8_t vkscan = inb(PS2_DATA);
-	switch(vkscan) {
-		case PS2_ACK:
-		case PS2_RESEND:
-			return;
-		case 0xE0:
-		case 0xE1:
-			kb.e0++;
-			return;
-	}
+    if(!(inb(PS2_CTRL) & 0x01))
+        return;
+    
+    uint8_t vkscan = inb(PS2_DATA);
+    switch(vkscan) {
+        case PS2_ACK:
+        case PS2_RESEND:
+            return;
+        case 0xE0:
+        case 0xE1:
+            kb.e0++;
+            return;
+    }
 
   irq_ack(1);
 
 
-	uint16_t vkey = KEY_RESERVED;
-	if(kb.e0)
-		vkey = kb.vkeymap[0x100 | (vkscan & 0x7F)];
-	else
-		vkey = kb.vkeymap[vkscan & 0x7F];
+    uint16_t vkey = KEY_RESERVED;
+    if(kb.e0)
+        vkey = kb.vkeymap[0x100 | (vkscan & 0x7F)];
+    else
+        vkey = kb.vkeymap[vkscan & 0x7F];
 
   kb.e0 = 0;
 
 
 
-	if(vkey == KEY_RESERVED)
-		return;
+    if(vkey == KEY_RESERVED)
+        return;
 
-	switch(vkey) {
-		case KEY_CAPSLOCK:
-			kb.capslock != kb.capslock;
-			kb_setled();
-			break;
-		case KEY_NUMLOCK:
-			kb.numlock != kb.numlock;
-			kb_setled();
-			break;
-		case KEY_SCROLLLOCK:
-			kb.scrolllock != kb.scrolllock;
-			kb_setled();
-	}
+    switch(vkey) {
+        case KEY_CAPSLOCK:
+            kb.capslock != kb.capslock;
+            kb_setled();
+            break;
+        case KEY_NUMLOCK:
+            kb.numlock != kb.numlock;
+            kb_setled();
+            break;
+        case KEY_SCROLLLOCK:
+            kb.scrolllock != kb.scrolllock;
+            kb_setled();
+    }
 
 
 
@@ -378,150 +378,150 @@ void kb_intr(void* unused) {
   k.down = !!!(vkscan & 0x80);
 
   __event_raise_EV_KEY(kdid, k.vkey, k.down);
-	__fifo_send(PATH_KBDEV, &k, sizeof(keyboard_t));
-	PS2_WAIT;
+    __fifo_send(PATH_KBDEV, &k, sizeof(keyboard_t));
+    PS2_WAIT;
 }
 
 
 void mouse_intr(void* unused) {
-	int s, j;
-	s = inb(PS2_CTRL);
+    int s, j;
+    s = inb(PS2_CTRL);
 
 
-	while((s & 0x01)) {
-		j = inb(PS2_DATA);
-		
-		if((s & 0x20)) {
-	
-			mouse.pack[mouse.cycle] = j;
+    while((s & 0x01)) {
+        j = inb(PS2_DATA);
+        
+        if((s & 0x20)) {
+    
+            mouse.pack[mouse.cycle] = j;
 
-			switch(mouse.cycle) {
-				case 0:
-					if(!(j & 0x08))
-						return;
+            switch(mouse.cycle) {
+                case 0:
+                    if(!(j & 0x08))
+                        return;
 
-					mouse.cycle++;
-					break;
-				case 1:
-				//case 2:
-					mouse.cycle++;
-					break;
-				case 2:
-					if(
-						(mouse.pack[0] & 0x80) ||
-						(mouse.pack[0] & 0x40)
-					) break;
-				
-					mouse.dx = (mouse.pack[1] - ((mouse.pack[0] & 0x10) ? 256 : 0)) * mouse.speed;
-					mouse.dy = -(mouse.pack[2] - ((mouse.pack[0] & 0x20) ? 256 : 0)) * mouse.speed;
+                    mouse.cycle++;
+                    break;
+                case 1:
+                //case 2:
+                    mouse.cycle++;
+                    break;
+                case 2:
+                    if(
+                        (mouse.pack[0] & 0x80) ||
+                        (mouse.pack[0] & 0x40)
+                    ) break;
+                
+                    mouse.dx = (mouse.pack[1] - ((mouse.pack[0] & 0x10) ? 256 : 0)) * mouse.speed;
+                    mouse.dy = -(mouse.pack[2] - ((mouse.pack[0] & 0x20) ? 256 : 0)) * mouse.speed;
 
-					//mouse.dz = mouse.pack[3];
+                    //mouse.dz = mouse.pack[3];
 
-					mouse.x += mouse.dx;
-					mouse.y -= mouse.dy;
-					
-					/* TODO: Add clipping */
-					
-	
-					mouse.buttons[0] = (mouse.pack[0] & 0x01);
-					mouse.buttons[1] = (mouse.pack[0] & 0x02);
-					mouse.buttons[2] = (mouse.pack[0] & 0x04);
-					
-					
+                    mouse.x += mouse.dx;
+                    mouse.y -= mouse.dy;
+                    
+                    /* TODO: Add clipping */
+                    
+    
+                    mouse.buttons[0] = (mouse.pack[0] & 0x01);
+                    mouse.buttons[1] = (mouse.pack[0] & 0x02);
+                    mouse.buttons[2] = (mouse.pack[0] & 0x04);
+                    
+                    
           
           
           for(int i = 0; i < 3; i++)
             __event_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
 
           __event_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
-					__fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
-					
-					mouse.cycle = 0;
-					break;
-			}
-		}
-	
-		s = inb(PS2_CTRL);
-	}
+                    __fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
+                    
+                    mouse.cycle = 0;
+                    break;
+            }
+        }
+    
+        s = inb(PS2_CTRL);
+    }
 }
 
 
 
 int init(void) {
-	memset(&kb, 0, sizeof(kb));
-	memset(&mouse, 0, sizeof(mouse));
+    memset(&kb, 0, sizeof(kb));
+    memset(&mouse, 0, sizeof(mouse));
 
-	kb.vkeymap = &ps2_codemap[0];
-
-
-
-	#define MOUSE_WRITE(x)		\
-		PS2_WAIT;				\
-		outb(PS2_CTRL, 0xD4);	\
-		PS2_WAIT;				\
-		outb(PS2_DATA, x)
-
-	#define MOUSE_READ(x)		\
-		PS2_WAIT_0;				\
-		x = inb(PS2_DATA)
+    kb.vkeymap = &ps2_codemap[0];
 
 
 
-	inb(0x60);
-	
-	PS2_WAIT;
-	outb(PS2_CTRL, 0xA8);
-	PS2_WAIT;
-	outb(PS2_CTRL, 0x20);
-	PS2_WAIT_0;
-	
-	int s = inb(PS2_DATA) | 2;
-	PS2_WAIT;
+    #define MOUSE_WRITE(x)        \
+        PS2_WAIT;                \
+        outb(PS2_CTRL, 0xD4);    \
+        PS2_WAIT;                \
+        outb(PS2_DATA, x)
 
-	outb(PS2_CTRL, 0x60);
-	PS2_WAIT;
-	outb(PS2_DATA, s);
+    #define MOUSE_READ(x)        \
+        PS2_WAIT_0;                \
+        x = inb(PS2_DATA)
 
 
 
-	MOUSE_WRITE(0xF6);
-	MOUSE_READ(s);
+    inb(0x60);
+    
+    PS2_WAIT;
+    outb(PS2_CTRL, 0xA8);
+    PS2_WAIT;
+    outb(PS2_CTRL, 0x20);
+    PS2_WAIT_0;
+    
+    int s = inb(PS2_DATA) | 2;
+    PS2_WAIT;
+
+    outb(PS2_CTRL, 0x60);
+    PS2_WAIT;
+    outb(PS2_DATA, s);
+
+
+
+    MOUSE_WRITE(0xF6);
+    MOUSE_READ(s);
 
 #if 0
-	MOUSE_WRITE(0xF3);
-	MOUSE_READ(s);
-	MOUSE_WRITE(200);
-	MOUSE_READ(s);
-	MOUSE_WRITE(0xF3);
-	MOUSE_READ(s);
-	MOUSE_WRITE(100);
-	MOUSE_READ(s);
-	MOUSE_WRITE(0xF3);
-	MOUSE_READ(s);
-	MOUSE_WRITE(80);
-	MOUSE_READ(s);
-	MOUSE_WRITE(0xF2);
-	MOUSE_READ(s);
+    MOUSE_WRITE(0xF3);
+    MOUSE_READ(s);
+    MOUSE_WRITE(200);
+    MOUSE_READ(s);
+    MOUSE_WRITE(0xF3);
+    MOUSE_READ(s);
+    MOUSE_WRITE(100);
+    MOUSE_READ(s);
+    MOUSE_WRITE(0xF3);
+    MOUSE_READ(s);
+    MOUSE_WRITE(80);
+    MOUSE_READ(s);
+    MOUSE_WRITE(0xF2);
+    MOUSE_READ(s);
 #endif
 
-	MOUSE_WRITE(0xF4);
-	MOUSE_READ(s);
-	
+    MOUSE_WRITE(0xF4);
+    MOUSE_READ(s);
+    
 
 
-	mouse.speed = 1;
-	mouse.clip.left = 0;
-	mouse.clip.top = 0;
-	mouse.clip.right = 0x7FFF;
-	mouse.clip.bottom = 0x7FFF;
+    mouse.speed = 1;
+    mouse.clip.left = 0;
+    mouse.clip.top = 0;
+    mouse.clip.right = 0x7FFF;
+    mouse.clip.bottom = 0x7FFF;
 
 
-	if(sys_mkfifo(PATH_KBDEV, 0644) != 0)
-		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_KBDEV);
-		
-	if(sys_mkfifo(PATH_MOUSEDEV, 0644) != 0)
-		kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
-		
+    if(sys_mkfifo(PATH_KBDEV, 0644) != 0)
+        kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_KBDEV);
+        
+    if(sys_mkfifo(PATH_MOUSEDEV, 0644) != 0)
+        kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
+        
 
   kdid = __event_device_add("ps2-keyboard", EC_KEY | EC_LED);
   mdid = __event_device_add("ps2-mouse", EC_KEY | EC_REL);
@@ -529,23 +529,23 @@ int init(void) {
   __event_device_set_enabled(kdid, 1);
   __event_device_set_enabled(mdid, 1);
 
-	irq_enable(1, kb_intr);
-	irq_enable(12, mouse_intr);
+    irq_enable(1, kb_intr);
+    irq_enable(12, mouse_intr);
 
 
-	return E_OK;
+    return E_OK;
 }
 
 
 #else
 
 int init(void) {
-	return E_ERR;
+    return E_ERR;
 }
 
 #endif
 
 
 int dnit(void) {
-	return E_OK;
+    return E_OK;
 }

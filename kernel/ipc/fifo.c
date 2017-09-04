@@ -41,8 +41,8 @@ int fifo_write(fifo_t* fifo, void* ptr, size_t len) {
     register uint8_t* buf = ptr;
 
     int i;
-	for(i = 0; i < len; i++)
-		fifo->buffer[(int) fifo->w_pos++ % BUFSIZ] = *buf++;
+    for(i = 0; i < len; i++)
+        fifo->buffer[(int) fifo->w_pos++ % BUFSIZ] = *buf++;
 
     return len;
 }

@@ -8,23 +8,23 @@
 
 
 void pagefault_handler(i386_context_t* context) {
-	uintptr_t p;
-	__asm__ ("mov eax, cr2" : "=a"(p));
+    uintptr_t p;
+    __asm__ ("mov eax, cr2" : "=a"(p));
 
 
-	debug_dump(context, "Exception! Page Fault occured!", p, context->err_code);
-	
-	if(unlikely(current_task == kernel_task)) {
-		__asm__ ("cli");
-		for(;;) __asm__("hlt");
-	}
+    debug_dump(context, "Exception! Page Fault occured!", p, context->err_code);
+    
+    if(unlikely(current_task == kernel_task)) {
+        __asm__ ("cli");
+        for(;;) __asm__("hlt");
+    }
 
-	
-		
-	
+    
+        
+    
 
-	__asm__("sti");
-	sys_kill(current_task->pid, SIGSEGV);
-	sys_yield();
-	sys_exit(SIGSEGV);
+    __asm__("sti");
+    sys_kill(current_task->pid, SIGSEGV);
+    sys_yield();
+    sys_exit(SIGSEGV);
 }

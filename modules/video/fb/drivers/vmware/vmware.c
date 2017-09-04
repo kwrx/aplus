@@ -23,20 +23,20 @@ extern fbdev_t* fbdev;
 
 
 int vmware_getvideomode(fbdev_mode_t* m) {
-	m->width = gSVGA.width;
+    m->width = gSVGA.width;
     m->height = gSVGA.height;
     m->bpp = gSVGA.bpp;
     m->vx =
     m->vy = 0;
     m->lfbptr = gSVGA.fbMem;
-	
-	return E_OK;
+    
+    return E_OK;
 }
 
 int vmware_setvideomode(fbdev_mode_t* m) {
     SVGA_SetMode(m->width, m->height, m->bpp);
 
-	return E_OK;
+    return E_OK;
 }
 
 
@@ -45,27 +45,27 @@ int vmware_init(void) {
     if(SVGA_Init() != E_OK)
         return E_ERR;
 
-	#define ALIGN(x)										\
-		((((uintptr_t) x) + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1))
-	
-	if(gSVGA.fbMem) {
-		uintptr_t frame = ALIGN(gSVGA.fbMem) - PAGE_SIZE;
-		uintptr_t end = ALIGN(frame + gSVGA.fbSize);
+    #define ALIGN(x)                                        \
+        ((((uintptr_t) x) + (PAGE_SIZE - 1)) & ~(PAGE_SIZE - 1))
+    
+    if(gSVGA.fbMem) {
+        uintptr_t frame = ALIGN(gSVGA.fbMem) - PAGE_SIZE;
+        uintptr_t end = ALIGN(frame + gSVGA.fbSize);
 
-		for(; frame < end; frame += PAGE_SIZE)
-			map_page(frame, frame, 1);
-	} else
-		return E_ERR;
-	
+        for(; frame < end; frame += PAGE_SIZE)
+            map_page(frame, frame, 1);
+    } else
+        return E_ERR;
+    
 
 
-	fbdev->name = "VMWare SVGA-II";
-	fbdev->setvideomode = vmware_setvideomode;
-	fbdev->getvideomode = vmware_getvideomode;
-	
-	return E_OK;
+    fbdev->name = "VMWare SVGA-II";
+    fbdev->setvideomode = vmware_setvideomode;
+    fbdev->getvideomode = vmware_getvideomode;
+    
+    return E_OK;
 #else
 int bga_init(void) {
-	return E_ERR;
+    return E_ERR;
 #endif
 }

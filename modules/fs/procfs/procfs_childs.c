@@ -10,12 +10,12 @@
 
 static int environ_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
     
@@ -44,12 +44,12 @@ static int environ_open(inode_t* inode) {
 
 static int cmdline_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
 
@@ -80,12 +80,12 @@ static int cmdline_open(inode_t* inode) {
 
 static int status_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
 
@@ -141,12 +141,12 @@ static int status_open(inode_t* inode) {
 
 static int stat_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
 
@@ -230,12 +230,12 @@ static int stat_open(inode_t* inode) {
 
 static int statm_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
 
@@ -267,12 +267,12 @@ static int statm_open(inode_t* inode) {
 
 static int io_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     if(pfs->data)
         kfree(pfs->data);
 
@@ -310,12 +310,12 @@ static int io_open(inode_t* inode) {
 
 static int procfs_cwd_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
@@ -327,12 +327,12 @@ static int procfs_cwd_open(inode_t* inode) {
 
 static int procfs_root_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
@@ -344,12 +344,12 @@ static int procfs_root_open(inode_t* inode) {
 
 static int procfs_exe_open(inode_t* inode) {
     if(unlikely(!inode))
-		return E_ERR;
+        return E_ERR;
 
-	if(unlikely(!inode->userdata))
-		return E_ERR;
+    if(unlikely(!inode->userdata))
+        return E_ERR;
 
-	procfs_t* pfs = (procfs_t*) inode->userdata;
+    procfs_t* pfs = (procfs_t*) inode->userdata;
     volatile task_t* tk = pfs->tk;
 
     if(tk == NULL)
@@ -364,7 +364,7 @@ int procfs_add_childs(inode_t* parent, task_t* tk) {
     #define mknod_or_error(x)                                       \
         inode_t* x = vfs_mknod(parent, #x, S_IFREG | 0666);         \
         if(unlikely(!x)) {                                          \
-            kprintf(ERROR "procfs: error on creating %s\n", #x);   \
+            kprintf(ERROR "procfs: error on creating %s\n", #x);    \
         }
 
 

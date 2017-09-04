@@ -8,7 +8,7 @@
 
 SYSCALL(51, setuid,
 int sys_setuid(uid_t uid) {
-	KASSERT(current_task);
+    KASSERT(current_task);
 
 
     current_task->uid = uid;

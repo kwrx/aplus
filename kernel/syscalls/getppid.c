@@ -7,9 +7,9 @@
 
 SYSCALL(32, getppid,
 pid_t sys_getppid(void) {
-	if(current_task)
-		if(current_task->parent)
-			return current_task->parent->pid;
+    if(current_task)
+        if(current_task->parent)
+            return current_task->parent->pid;
 
-	return -1;
+    return -1;
 });

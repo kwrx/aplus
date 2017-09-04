@@ -12,22 +12,22 @@ MODULE_LICENSE("GPL");
 
 
 static int zero_read(struct inode* inode, void* buf, size_t size) {
-	memset(buf, 0, size);
-	return size;
+    memset(buf, 0, size);
+    return size;
 }
 
 int init(void) {
-	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
-		return E_ERR;
+    inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
+        return E_ERR;
 
 
-	ino->read = zero_read;
-	return E_OK;
+    ino->read = zero_read;
+    return E_OK;
 }
 
 
 
 int dnit(void) {
-	return E_OK;
+    return E_OK;
 }

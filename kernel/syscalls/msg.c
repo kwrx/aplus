@@ -16,13 +16,13 @@
 
 SYSCALL(105, msg_send,
 int sys_msg_send(pid_t pid, void* data, size_t len) {
-	volatile task_t* tmp;
-	for(tmp = task_queue; tmp; tmp = tmp->next) {
-		if(tmp->pid == pid) {
-			if(tmp->sig_mask & (1 << SIGMSG)) {
-				errno = EPERM;
-				return 0;
-			}
+    volatile task_t* tmp;
+    for(tmp = task_queue; tmp; tmp = tmp->next) {
+        if(tmp->pid == pid) {
+            if(tmp->sig_mask & (1 << SIGMSG)) {
+                errno = EPERM;
+                return 0;
+            }
 
             pid = sys_getpid();
             if(fifo_write(&tmp->fifo, &pid, sizeof(pid_t)) != sizeof(pid_t)) {
@@ -41,13 +41,13 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
             }
 
 
-			tmp->sig_no = SIGMSG;
-			return len;
-		}
-	}
+            tmp->sig_no = SIGMSG;
+            return len;
+        }
+    }
 
-	errno = ESRCH;
-	return 0;
+    errno = ESRCH;
+    return 0;
 });
 
 SYSCALL(106, msg_recv,
@@ -57,7 +57,7 @@ int sys_msg_recv(pid_t* pid, void* data, size_t len) {
         return 0;
     }
 
-	if(fifo_read(&current_task->fifo, pid, sizeof(pid_t)) != sizeof(pid_t)) {
+    if(fifo_read(&current_task->fifo, pid, sizeof(pid_t)) != sizeof(pid_t)) {
         errno = EIO;
         return 0;
     }

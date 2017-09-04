@@ -70,7 +70,7 @@ void fatutils_new_child(fat_t* fat, fat_entry_t* e, uint32_t entry_offset, inode
     child->userdata = (void*) fc;
     child->ino = vfs_inode();
     child->mode = (e->flags & ATTR_DIRECTORY ? S_IFDIR : S_IFREG | S_IXUSR | S_IXGRP | S_IXOTH) |
-				    (e->flags & ATTR_RDONLY ? 0444 : 0666) & ~current_task->umask;
+                    (e->flags & ATTR_RDONLY ? 0444 : 0666) & ~current_task->umask;
     
     child->dev =
     child->rdev =
@@ -105,7 +105,7 @@ void fatutils_new_child(fat_t* fat, fat_entry_t* e, uint32_t entry_offset, inode
     child->chown = NULL;
     child->chmod = NULL;
     child->ioctl = NULL;
-			
+            
     
     fc->entry_cluster = (e->cluster_high << 16) | (e->cluster_low & 0xFFFF);
     fc->entry_offset = entry_offset;
@@ -117,66 +117,66 @@ void fatutils_new_child(fat_t* fat, fat_entry_t* e, uint32_t entry_offset, inode
 int fatutils_next_cluster(fat_t* fat, int active_cluster) {
     int next_cluster = 0;
 
-	switch(fat->type) {
-		case FAT12:
-			next_cluster = *(uint16_t*) &fat->FAT[(active_cluster + (active_cluster / 2))];
-			
-			if(active_cluster & 1)
-				next_cluster >>= 4;
-			else
-				next_cluster &= 0x0FFF;
+    switch(fat->type) {
+        case FAT12:
+            next_cluster = *(uint16_t*) &fat->FAT[(active_cluster + (active_cluster / 2))];
+            
+            if(active_cluster & 1)
+                next_cluster >>= 4;
+            else
+                next_cluster &= 0x0FFF;
 
-			if(next_cluster == 0xFF7)
-				return FAT_BAD_CLUSTER;
+            if(next_cluster == 0xFF7)
+                return FAT_BAD_CLUSTER;
 
-			if(next_cluster >= 0xFF8)
-				return FAT_END_CLUSTER;
+            if(next_cluster >= 0xFF8)
+                return FAT_END_CLUSTER;
 
-			if(next_cluster == 0)
-				return FAT_UNUSED_CLUSTER;
+            if(next_cluster == 0)
+                return FAT_UNUSED_CLUSTER;
 
-			return next_cluster;
-		case FAT16:
-			next_cluster = *(uint16_t*) &fat->FAT[(active_cluster * 2)];
-			
-		
-			if(next_cluster == 0xFFF7)
-				return FAT_BAD_CLUSTER;
+            return next_cluster;
+        case FAT16:
+            next_cluster = *(uint16_t*) &fat->FAT[(active_cluster * 2)];
+            
+        
+            if(next_cluster == 0xFFF7)
+                return FAT_BAD_CLUSTER;
 
-			if(next_cluster >= 0xFFF8)
-				return FAT_END_CLUSTER;
+            if(next_cluster >= 0xFFF8)
+                return FAT_END_CLUSTER;
 
-			if(next_cluster == 0)
-				return FAT_UNUSED_CLUSTER;
+            if(next_cluster == 0)
+                return FAT_UNUSED_CLUSTER;
 
-			return next_cluster;
-		case FAT32:
-			next_cluster = *(uint32_t*) &fat->FAT[(active_cluster * 4)];
-			next_cluster &= 0x0FFFFFFF;
+            return next_cluster;
+        case FAT32:
+            next_cluster = *(uint32_t*) &fat->FAT[(active_cluster * 4)];
+            next_cluster &= 0x0FFFFFFF;
 
-		
-			if(next_cluster == 0xFFFFFF7)
-				return FAT_BAD_CLUSTER;
+        
+            if(next_cluster == 0xFFFFFF7)
+                return FAT_BAD_CLUSTER;
 
-			if(next_cluster >= 0xFFFFFF8)
-				return FAT_END_CLUSTER;
+            if(next_cluster >= 0xFFFFFF8)
+                return FAT_END_CLUSTER;
 
-			if(next_cluster == 0)
-				return FAT_UNUSED_CLUSTER;
+            if(next_cluster == 0)
+                return FAT_UNUSED_CLUSTER;
 
-			return next_cluster;
-	}
+            return next_cluster;
+    }
 
-	return FAT_END_CLUSTER;
+    return FAT_END_CLUSTER;
 }
 
 
 int fatutils_alloc_cluster(fat_t* fat, int active_cluster, int* ncluster) {
     int i;
-	switch(fat->type) {
-		case FAT12:
+    switch(fat->type) {
+        case FAT12:
             break;
-		case FAT16:
+        case FAT16:
             for(i = 0; i < fat->fat_size * fat->bytes_per_sector; i += 2) {
                 if((*(uint16_t*) &fat->FAT[i]) != 0)
                     continue;
@@ -190,7 +190,7 @@ int fatutils_alloc_cluster(fat_t* fat, int active_cluster, int* ncluster) {
                 return E_OK;            
             }
             break;
-		case FAT32:
+        case FAT32:
             for(i = 0; i < fat->fat_size * fat->bytes_per_sector; i += 4) {
                 if((*(uint32_t*) &fat->FAT[i] & 0x0FFFFFFF) != 0)
                     continue;
@@ -204,54 +204,54 @@ int fatutils_alloc_cluster(fat_t* fat, int active_cluster, int* ncluster) {
                 return E_OK;
             }
             break;
-	}
+    }
 
-	errno = ENOSPC;
-	return E_ERR;
+    errno = ENOSPC;
+    return E_ERR;
 }
 
 int fatutils_free_cluster(fat_t* fat, int active_cluster) {
     int i;
-	switch(fat->type) {
-		case FAT12:
+    switch(fat->type) {
+        case FAT12:
             i = *(uint16_t*) &fat->FAT[(active_cluster + (active_cluster / 2))];
             *(uint16_t*) &fat->FAT[(active_cluster + (active_cluster / 2))] = 0;
 
             if(active_cluster & 1)
-				i >>= 4;
-			else
-				i &= 0x0FFF;
+                i >>= 4;
+            else
+                i &= 0x0FFF;
 
             if(i == 0xFF7)
-				i = FAT_BAD_CLUSTER;
+                i = FAT_BAD_CLUSTER;
 
-			if(i >= 0xFF8)
-				i = FAT_END_CLUSTER;
+            if(i >= 0xFF8)
+                i = FAT_END_CLUSTER;
 
             break;
-		case FAT16:
+        case FAT16:
             i = *(uint16_t*) &fat->FAT[(active_cluster * 2)];
             *(uint16_t*) &fat->FAT[(active_cluster * 2)] = 0;
 
             if(i == 0xFFF7)
-				i = FAT_BAD_CLUSTER;
+                i = FAT_BAD_CLUSTER;
 
-			if(i >= 0xFFF8)
-				i = FAT_END_CLUSTER;
+            if(i >= 0xFFF8)
+                i = FAT_END_CLUSTER;
 
             break;
-		case FAT32:
+        case FAT32:
             i = *(uint16_t*) &fat->FAT[(active_cluster * 4)] & 0x0FFFFFFF;
             *(uint16_t*) &fat->FAT[(active_cluster * 4)] = 0;
 
             if(i == 0xFFFFFF7)
-				i = FAT_BAD_CLUSTER;
+                i = FAT_BAD_CLUSTER;
 
-			if(i >= 0xFFFFFF8)
-				i = FAT_END_CLUSTER;
+            if(i >= 0xFFFFFF8)
+                i = FAT_END_CLUSTER;
 
             break;
-	}
+    }
 
     return i;
 }
@@ -291,45 +291,45 @@ void lfncat(char* name, uint16_t* lfn, size_t size) {
     for(i = strlen(name) + 1; i >= 0; i--)
         name[i + size] = name[i];
 
-	for(i = 0; i < size; i++) {
-		if(*lfn == 0xFFFF)
-			return;
+    for(i = 0; i < size; i++) {
+        if(*lfn == 0xFFFF)
+            return;
     
-		name[i] = *lfn & 0xFF;
-		lfn++;
-	}
+        name[i] = *lfn & 0xFF;
+        lfn++;
+    }
 }
 
 void fatcat(char* name, char* fatnm, char* fatex) {
 
-	int i = 7;
-	while(fatnm[i] == ' ')
-		i--;
+    int i = 7;
+    while(fatnm[i] == ' ')
+        i--;
 
 
-	char *p = (char*) &name[strlen(name)];
+    char *p = (char*) &name[strlen(name)];
 
-	int n;
-	for(n = 0; n <= i; n++, p++, fatnm++)
-		*p = *fatnm >= 'A' && *fatnm <= 'Z'
-			? *fatnm + 32
-			: *fatnm
-			;
+    int n;
+    for(n = 0; n <= i; n++, p++, fatnm++)
+        *p = *fatnm >= 'A' && *fatnm <= 'Z'
+            ? *fatnm + 32
+            : *fatnm
+            ;
 
-	if(strncmp(fatex, "   ", 3) == 0)
-		return;
+    if(strncmp(fatex, "   ", 3) == 0)
+        return;
 
-	i = 2;
-	while(fatex[i] == ' ')
-		i--;
+    i = 2;
+    while(fatex[i] == ' ')
+        i--;
 
-	*p++ = '.';
+    *p++ = '.';
 
-	for(n = 0; n <= i; n++, p++, fatex++)
-		*p = *fatex >= 'A' && *fatex <= 'Z'
-			? *fatex + 32
-			: *fatex
-			;
+    for(n = 0; n <= i; n++, p++, fatex++)
+        *p = *fatex >= 'A' && *fatex <= 'Z'
+            ? *fatex + 32
+            : *fatex
+            ;
 }
 
 

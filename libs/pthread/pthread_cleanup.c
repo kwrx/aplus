@@ -7,8 +7,8 @@
 
 void pthread_cleanup_push(void (*routine) (void*), void* arg) {
     pthread_t ptx = pthread_self();
-	pthread_context_t* ctx = (pthread_context_t*) ptx;
-	
+    pthread_context_t* ctx = (pthread_context_t*) ptx;
+    
     struct pthread_cleanup* ct = calloc(sizeof(struct pthread_cleanup), 1);
     if(!ct) {
         errno = ENOMEM;
@@ -24,8 +24,8 @@ void pthread_cleanup_push(void (*routine) (void*), void* arg) {
 
 void pthread_cleanup_pop(int ex) {
     pthread_t ptx = pthread_self();
-	pthread_context_t* ctx = (pthread_context_t*) ptx;
-	
+    pthread_context_t* ctx = (pthread_context_t*) ptx;
+    
     if(!ctx->cleanup_handlers)
         return;
 

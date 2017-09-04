@@ -11,7 +11,7 @@
 void __tty_flush(struct tty_context* tio) {
     int fd = sys_open(TTY_DEFAULT_OUTPUT_DEVICE, O_WRONLY, 0);
     if(likely(fd >= 0)) {
-	    sys_write(fd, tio->outbuf, tio->outlen);
+        sys_write(fd, tio->outbuf, tio->outlen);
         sys_close(fd);
     }
 

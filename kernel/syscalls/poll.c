@@ -17,7 +17,7 @@ int sys_poll(struct pollfd* fds, nfds_t nfds, int timeout) {
     if(timeout > 0)
         timeout += timer_getms();
 
-	int i;
+    int i;
     for(;;) {
         for(i = 0; i < nfds; i++) {
             if(fds[i].fd < 0) {

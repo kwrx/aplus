@@ -10,6 +10,6 @@
 
 SYSCALL(35, munmap,
 void* sys_munmap(void* addr, size_t len) {
-	errno = ENOSYS;	
-	return NULL;
+    errno = ENOSYS;    
+    return NULL;
 });

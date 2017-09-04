@@ -20,27 +20,27 @@ MODULE_LICENSE("GPL");
 #include <arch/i386/pci.h>
 
 
-#define E1000_NUM_RX_DESC           32
-#define E1000_NUM_TX_DESC           8
+#define E1000_NUM_RX_DESC               32
+#define E1000_NUM_TX_DESC               8
 
-#define E1000_REG_CTRL       0x0000
-#define E1000_REG_STATUS     0x0008
-#define E1000_REG_EEPROM     0x0014
-#define E1000_REG_CTRL_EXT   0x0018
+#define E1000_REG_CTRL                  0x0000
+#define E1000_REG_STATUS                0x0008
+#define E1000_REG_EEPROM                0x0014
+#define E1000_REG_CTRL_EXT              0x0018
 
-#define E1000_REG_RCTRL      0x0100
-#define E1000_REG_RXDESCLO   0x2800
-#define E1000_REG_RXDESCHI   0x2804
-#define E1000_REG_RXDESCLEN  0x2808
-#define E1000_REG_RXDESCHEAD 0x2810
-#define E1000_REG_RXDESCTAIL 0x2818
+#define E1000_REG_RCTRL                 0x0100
+#define E1000_REG_RXDESCLO              0x2800
+#define E1000_REG_RXDESCHI              0x2804
+#define E1000_REG_RXDESCLEN             0x2808
+#define E1000_REG_RXDESCHEAD            0x2810
+#define E1000_REG_RXDESCTAIL            0x2818
 
-#define E1000_REG_TCTRL      0x0400
-#define E1000_REG_TXDESCLO   0x3800
-#define E1000_REG_TXDESCHI   0x3804
-#define E1000_REG_TXDESCLEN  0x3808
-#define E1000_REG_TXDESCHEAD 0x3810
-#define E1000_REG_TXDESCTAIL 0x3818
+#define E1000_REG_TCTRL                 0x0400
+#define E1000_REG_TXDESCLO              0x3800
+#define E1000_REG_TXDESCHI              0x3804
+#define E1000_REG_TXDESCLEN             0x3808
+#define E1000_REG_TXDESCHEAD            0x3810
+#define E1000_REG_TXDESCTAIL            0x3818
 
 #define RCTL_EN                         (1 << 1)    /* Receiver Enable */
 #define RCTL_SBP                        (1 << 2)    /* Store Bad Packets */
@@ -180,37 +180,37 @@ static void e1000_irq_handler(void* context) {
 
 static void init_rx(void) {
 
-	wrcmd(e1000, E1000_REG_RXDESCLO, e1000->rxaddr);
-	wrcmd(e1000, E1000_REG_RXDESCHI, 0);
+    wrcmd(e1000, E1000_REG_RXDESCLO, e1000->rxaddr);
+    wrcmd(e1000, E1000_REG_RXDESCHI, 0);
 
-	wrcmd(e1000, E1000_REG_RXDESCLEN, E1000_NUM_RX_DESC * sizeof(rx_t));
+    wrcmd(e1000, E1000_REG_RXDESCLEN, E1000_NUM_RX_DESC * sizeof(rx_t));
 
-	wrcmd(e1000, E1000_REG_RXDESCHEAD, 0);
-	wrcmd(e1000, E1000_REG_RXDESCTAIL, E1000_NUM_RX_DESC - 1);
+    wrcmd(e1000, E1000_REG_RXDESCHEAD, 0);
+    wrcmd(e1000, E1000_REG_RXDESCTAIL, E1000_NUM_RX_DESC - 1);
 
-	e1000->rx_index = 0;
+    e1000->rx_index = 0;
 
-	wrcmd(e1000, E1000_REG_RCTRL,
-		RCTL_EN  |
-		(rdcmd(e1000, E1000_REG_RCTRL) & (~((1 << 17) | (1 << 16)))));
+    wrcmd(e1000, E1000_REG_RCTRL,
+        RCTL_EN  |
+        (rdcmd(e1000, E1000_REG_RCTRL) & (~((1 << 17) | (1 << 16)))));
 
 }
 
 static void init_tx(void) {
-	wrcmd(e1000, E1000_REG_TXDESCLO, e1000->txaddr);
-	wrcmd(e1000, E1000_REG_TXDESCHI, 0);
+    wrcmd(e1000, E1000_REG_TXDESCLO, e1000->txaddr);
+    wrcmd(e1000, E1000_REG_TXDESCHI, 0);
 
-	wrcmd(e1000, E1000_REG_TXDESCLEN, E1000_NUM_TX_DESC * sizeof(tx_t));
+    wrcmd(e1000, E1000_REG_TXDESCLEN, E1000_NUM_TX_DESC * sizeof(tx_t));
 
-	wrcmd(e1000, E1000_REG_TXDESCHEAD, 0);
-	wrcmd(e1000, E1000_REG_TXDESCTAIL, 0);
+    wrcmd(e1000, E1000_REG_TXDESCHEAD, 0);
+    wrcmd(e1000, E1000_REG_TXDESCTAIL, 0);
 
-	e1000->tx_index = 0;
+    e1000->tx_index = 0;
 
-	wrcmd(e1000, E1000_REG_TCTRL,
-		TCTL_EN |
-		TCTL_PSP |
-		rdcmd(e1000, E1000_REG_TCTRL));
+    wrcmd(e1000, E1000_REG_TCTRL,
+        TCTL_EN |
+        TCTL_PSP |
+        rdcmd(e1000, E1000_REG_TCTRL));
 }
 
 

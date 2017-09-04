@@ -8,7 +8,7 @@
 
 SYSCALL(102, __install_sighandler,
 void sys___install_sighandler(int (*handler) (int)) {
-	KASSERT(current_task);
+    KASSERT(current_task);
 
-	current_task->sig_handler = handler;
+    current_task->sig_handler = handler;
 });

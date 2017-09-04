@@ -3,38 +3,38 @@
 
 #include <aplus.h>
 
-#define X86_PT_ENTRIES							1024
-#define X86_PD_ENTRIES							1024
+#define X86_PT_ENTRIES                              1024
+#define X86_PD_ENTRIES                              1024
 
-#define X86_PAGE_SIZE							4096
+#define X86_PAGE_SIZE                               4096
 
 
-#define X86_FLAG_PRESENT						1
-#define X86_FLAG_RDWR							2
-#define X86_FLAG_USER							4
+#define X86_FLAG_PRESENT                            1
+#define X86_FLAG_RDWR                               2
+#define X86_FLAG_USER                               4
 
 
 typedef struct {
-	uintptr_t flags:12;
-	uintptr_t entry:20;
+    uintptr_t flags:12;
+    uintptr_t entry:20;
 } __packed frame_t;
 
 typedef struct {
-	frame_t frames[X86_PT_ENTRIES];
+    frame_t frames[X86_PT_ENTRIES];
 } __packed pt_t;
 
 typedef struct pdt {
-	struct {
-		uintptr_t flags:12;
-		uintptr_t frame:20;
-	} __packed pages[X86_PD_ENTRIES];
+    struct {
+        uintptr_t flags:12;
+        uintptr_t frame:20;
+    } __packed pages[X86_PD_ENTRIES];
 
-	pt_t* vpages[X86_PD_ENTRIES];
+    pt_t* vpages[X86_PD_ENTRIES];
 
-	uintptr_t physaddr;
-	int refcount;
+    uintptr_t physaddr;
+    int refcount;
 
-	volatile struct pdt* next;
+    volatile struct pdt* next;
 } __packed pdt_t;
 
 

@@ -8,7 +8,7 @@
 
 #if DEBUG
 void debug_send(char value, int flags) {
-	serial_send(0, value);
+    serial_send(0, value);
 }
 #endif
 

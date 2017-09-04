@@ -12,24 +12,24 @@
 
 int fat_write(inode_t* ino, void* buf, size_t size) {
     if(unlikely(!ino))
-		return 0;
+        return 0;
 
-	if(unlikely(!buf))
-		return 0;
-		
-	if(unlikely(!size))
-		return 0;
+    if(unlikely(!buf))
+        return 0;
+        
+    if(unlikely(!size))
+        return 0;
 
     if(ino->position > ino->size)
         return 0;
 
 
-	fat_t* fat = (fat_t*) ino->userdata;
+    fat_t* fat = (fat_t*) ino->userdata;
     zero_if(!fat, EINVAL);
 
 
-	
-	int current_cluster = fat->entry_cluster;
+    
+    int current_cluster = fat->entry_cluster;
     int end_cluster = 0;
     
 
@@ -108,6 +108,6 @@ int fat_write(inode_t* ino, void* buf, size_t size) {
         }
     } while(1);
 
-	errno = EIO;
-	return 0;
+    errno = EIO;
+    return 0;
 }

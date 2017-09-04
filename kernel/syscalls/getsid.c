@@ -10,5 +10,5 @@ SYSCALL(45, getsid,
 int sys_getsid(void) {
     KASSERT(current_task);
 
-	return current_task->sid;
+    return current_task->sid;
 });

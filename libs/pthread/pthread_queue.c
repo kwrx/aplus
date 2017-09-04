@@ -11,32 +11,32 @@ PUBLIC uint32_t __pthread_counts = 1;
 
 
 PRIVATE void __pthread_dnit() {
-	pthread_context_t* tmp = __pthread_queue;
+    pthread_context_t* tmp = __pthread_queue;
 
-	while(tmp) {
-		if(tmp != &__current_thread)
-			pthread_detach((pthread_t) tmp);
-		
-		tmp = tmp->next;
-	}
+    while(tmp) {
+        if(tmp != &__current_thread)
+            pthread_detach((pthread_t) tmp);
+        
+        tmp = tmp->next;
+    }
 }
 
 PUBLIC void __pthread_init_queue() {
-	static int init = 0;
-	if(init)
-		return;
+    static int init = 0;
+    if(init)
+        return;
 
-	init++;
+    init++;
 
-	__current_thread.tid = getpid();
-	__current_thread.entry = NULL;
-	__current_thread.param = NULL;
-	__current_thread.exitval = NULL;
-	__current_thread.once.done = 0;
-	__current_thread.once.started = -1;
-	__current_thread.cond = NULL;
-	__current_thread.next = NULL;
+    __current_thread.tid = getpid();
+    __current_thread.entry = NULL;
+    __current_thread.param = NULL;
+    __current_thread.exitval = NULL;
+    __current_thread.once.done = 0;
+    __current_thread.once.started = -1;
+    __current_thread.cond = NULL;
+    __current_thread.next = NULL;
 
-	memset(&__current_thread.attr, 0, sizeof(pthread_attr_t));
-	atexit(__pthread_dnit);
+    memset(&__current_thread.attr, 0, sizeof(pthread_attr_t));
+    atexit(__pthread_dnit);
 }

@@ -10,7 +10,7 @@ SYSCALL(90, sysconf,
 long sys_sysconf(int n) {
     errno = 0;
 
-	switch(n) {
+    switch(n) {
         #define __case(x, y) case x: return y
 
         __case(_SC_ARG_MAX, 4096);

@@ -8,26 +8,26 @@
 
 SYSCALL(1, close,
 int sys_close(int fd) {
-	if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
 #if CONFIG_NETWORK
-		return lwip_close(fd - TASK_FD_COUNT);
+        return lwip_close(fd - TASK_FD_COUNT);
 #else
-		errno = EBADF;
-		return -1;
+        errno = EBADF;
+        return -1;
 #endif
-	}
+    }
 
 
 
-	inode_t* inode = current_task->fd[fd].inode;
-	
-	if(unlikely(!inode)) {
-		errno = EBADF;
-		return -1;
-	}
+    inode_t* inode = current_task->fd[fd].inode;
+    
+    if(unlikely(!inode)) {
+        errno = EBADF;
+        return -1;
+    }
 
-	current_task->fd[fd].inode = NULL;
-	current_task->fd[fd].flags = 0;
+    current_task->fd[fd].inode = NULL;
+    current_task->fd[fd].flags = 0;
 
-	return vfs_close(inode);
+    return vfs_close(inode);
 });

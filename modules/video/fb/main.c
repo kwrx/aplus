@@ -25,11 +25,11 @@ extern int (*fb_window_init) ();
 
 
 static int (*hooks[]) (void) = {
-	(void*) &stub_init,
+    (void*) &stub_init,
 #if defined(__i386__) || defined(__x86_64__)
-	(void*) &vesa_init,
-	(void*) &bochs_init,
-	(void*) &vmware_init,
+    (void*) &vesa_init,
+    (void*) &bochs_init,
+    (void*) &vmware_init,
 #endif
 };
 
@@ -38,31 +38,31 @@ fbdev_t* fbdev = &__fbdev;
 
 
 int init(void) {
-	memset(fbdev, 0, sizeof(fbdev_t));
+    memset(fbdev, 0, sizeof(fbdev_t));
 
-	int i;
-	for(i = sizeof(hooks) / sizeof(void*); i > 0 ; i--)
-		if(hooks[i - 1] () == E_OK)
-			break;
+    int i;
+    for(i = sizeof(hooks) / sizeof(void*); i > 0 ; i--)
+        if(hooks[i - 1] () == E_OK)
+            break;
 
-	kprintf(INFO "fb: %s\n", fbdev->name);
-	
+    kprintf(INFO "fb: %s\n", fbdev->name);
+    
 
-	inode_t* ino;
-	if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0440)) == NULL))
-		return E_ERR;
+    inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0440)) == NULL))
+        return E_ERR;
 
 
-	extern int fb_ioctl(struct inode*, int, void*);
-	ino->ioctl = fb_ioctl;
-	
-	return E_OK;
+    extern int fb_ioctl(struct inode*, int, void*);
+    ino->ioctl = fb_ioctl;
+    
+    return E_OK;
 }
 
 
 int dnit(void) {
-	if(fbdev->dnit)
-		fbdev->dnit();
+    if(fbdev->dnit)
+        fbdev->dnit();
 
-	return E_OK;
+    return E_OK;
 }

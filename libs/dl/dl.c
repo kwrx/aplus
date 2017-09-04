@@ -27,17 +27,17 @@ char* dl_path[] = {
 
 int __dl_define(dl_t* dl, char* name, void* value) {
     symbol_t* sym;
-	for(sym = dl->symbols; sym; sym = sym->next) {
-		if(strcmp(sym->name, name) != 0)
-			continue;
+    for(sym = dl->symbols; sym; sym = sym->next) {
+        if(strcmp(sym->name, name) != 0)
+            continue;
 
 #if DEBUG
-		fprintf(stderr, "libdl: symbol %s already defined in %s at 0x%x\n", dl->libname, name, sym->addr);
+        fprintf(stderr, "libdl: symbol %s already defined in %s at 0x%x\n", dl->libname, name, sym->addr);
 #endif
-		
-		__dlerrno = EME_MULTIPLE_DEFINITIONS;
+        
+        __dlerrno = EME_MULTIPLE_DEFINITIONS;
         return -1;
-	}
+    }
 
 
     sym = (symbol_t*) malloc(sizeof(symbol_t) + strlen(name) + 1);
@@ -46,13 +46,13 @@ int __dl_define(dl_t* dl, char* name, void* value) {
         return -1;
     }
 
-	memset(sym, 0, sizeof(symbol_t) + strlen(name) + 1);
-	strcpy(sym->name, name);
-	sym->addr = value;
+    memset(sym, 0, sizeof(symbol_t) + strlen(name) + 1);
+    strcpy(sym->name, name);
+    sym->addr = value;
 
-	sym->next = dl->symbols;
-	dl->symbols = sym;
-	return 0;
+    sym->next = dl->symbols;
+    dl->symbols = sym;
+    return 0;
 }
 
 

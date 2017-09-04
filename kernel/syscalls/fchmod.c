@@ -7,7 +7,7 @@
 
 SYSCALL(87, fchmod,
 int sys_fchmod(int fd, mode_t mode) {
-	inode_t* inode = current_task->fd[fd].inode;
+    inode_t* inode = current_task->fd[fd].inode;
     if(unlikely(!inode)) {
         errno = EBADF;
         return -1;
@@ -18,5 +18,5 @@ int sys_fchmod(int fd, mode_t mode) {
         return -1;
     }
 
-	return vfs_chmod(inode, mode);
+    return vfs_chmod(inode, mode);
 });

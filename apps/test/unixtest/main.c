@@ -10,7 +10,7 @@
 
 #define __test(x, y, z) {                                                                       \
     y r;                                                                                        \
-    fprintf(stderr, "\e[37m" #x ": \e[39m");                                                                   \
+    fprintf(stderr, "\e[37m" #x ": \e[39m");                                                    \
     if((r = (x)) == z)                                                                          \
         fprintf(stderr, "failed, returned %p, errno: %d (%s)\n", r, errno, strerror(errno));    \
     else                                                                                        \

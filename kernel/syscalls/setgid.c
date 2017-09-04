@@ -8,7 +8,7 @@
 
 SYSCALL(52, setgid,
 int sys_setgid(gid_t gid) {
-	KASSERT(current_task);
+    KASSERT(current_task);
 
     current_task->gid = gid;
     return 0;

@@ -8,5 +8,5 @@
 
 
 int fat_close(struct inode* inode) {
-	return E_OK;
+    return E_OK;
 }

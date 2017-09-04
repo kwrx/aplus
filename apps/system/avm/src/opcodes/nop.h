@@ -1,6 +1,6 @@
 
 
 OPCODE(nop) {
-	/* Best istruction ever */
-	return;
+    /* Best istruction ever */
+    return;
 }

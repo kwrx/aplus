@@ -13,14 +13,14 @@ MODULE_LICENSE("GPL");
 
 int init(void) {
 #if defined(__i386__) || defined(__x86_64__)
-	return E_OK;
+    return E_OK;
 #else
-	return E_ERR;
+    return E_ERR;
 #endif
 }
 
 
 
 int dnit(void) {
-	return E_OK;
+    return E_OK;
 }

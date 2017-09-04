@@ -1,17 +1,17 @@
 
 
 OPCODE(iload) {
-	register int8_t idx = PC8;
-	PC++;
+    register int8_t idx = PC8;
+    PC++;
 
-	JPUSH_JV(j->frame.locals[idx]);
+    JPUSH_JV(j->frame.locals[idx]);
 }
 
 OPCODE(istore) {
-	register int8_t idx = PC8;
-	PC++;
+    register int8_t idx = PC8;
+    PC++;
 
-	j->frame.locals[idx] = JPOP_JV();
+    j->frame.locals[idx] = JPOP_JV();
 }
 
 #define j_op_lload j_op_iload
@@ -27,35 +27,35 @@ OPCODE(istore) {
 
 
 OPCODE(iload_0) {
-	JPUSH_JV(j->frame.locals[0]);
+    JPUSH_JV(j->frame.locals[0]);
 }
 
 OPCODE(iload_1) {
-	JPUSH_JV(j->frame.locals[1]);
+    JPUSH_JV(j->frame.locals[1]);
 }
 
 OPCODE(iload_2) {
-	JPUSH_JV(j->frame.locals[2]);
+    JPUSH_JV(j->frame.locals[2]);
 }
 
 OPCODE(iload_3) {
-	JPUSH_JV(j->frame.locals[3]);
+    JPUSH_JV(j->frame.locals[3]);
 }
 
 OPCODE(istore_0) {
-	j->frame.locals[0] = JPOP_JV();
+    j->frame.locals[0] = JPOP_JV();
 }
 
 OPCODE(istore_1) {
-	j->frame.locals[1] = JPOP_JV();
+    j->frame.locals[1] = JPOP_JV();
 }
 
 OPCODE(istore_2) {
-	j->frame.locals[2] = JPOP_JV();
+    j->frame.locals[2] = JPOP_JV();
 }
 
 OPCODE(istore_3) {
-	j->frame.locals[3] = JPOP_JV();
+    j->frame.locals[3] = JPOP_JV();
 }
 
 
