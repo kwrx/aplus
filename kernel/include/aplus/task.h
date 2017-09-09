@@ -10,23 +10,23 @@
 #include <libc.h>
 
 
-#define TASK_EXIT_EXITED            0
-#define TASK_EXIT_STOPPED            1
-#define TASK_EXIT_TERMED            2
+#define TASK_EXIT_EXITED                0
+#define TASK_EXIT_STOPPED               1
+#define TASK_EXIT_TERMED                2
 
-#define TASK_STATUS_READY            0
-#define TASK_STATUS_RUNNING            1
-#define TASK_STATUS_SLEEP            2
-#define TASK_STATUS_KILLED            3
+#define TASK_STATUS_READY               0
+#define TASK_STATUS_RUNNING             1
+#define TASK_STATUS_SLEEP               2
+#define TASK_STATUS_KILLED              3
 
-#define TASK_PRIO_MAX                -20
-#define TASK_PRIO_MIN                20
-#define TASK_PRIO_REGULAR            0
+#define TASK_PRIO_MAX                   -20
+#define TASK_PRIO_MIN                   20
+#define TASK_PRIO_REGULAR               0
 
-#define TASK_FD_COUNT                32
+#define TASK_FD_COUNT                   32
 
-#define TASK_ROOT_UID                0
-#define TASK_ROOT_GID                0
+#define TASK_ROOT_UID                   0
+#define TASK_ROOT_GID                   0
 
 
 #ifndef __ASSEMBLY__
@@ -62,10 +62,13 @@ typedef struct task {
     uintptr_t vmsize;
 
 
-    int (*sig_handler) (int);
-    int16_t sig_no;
-    uint64_t sig_mask;
+    struct {
+        void (*s_handler) (int);
+        uint64_t s_mask;
+        list(int16_t, s_queue);
+    } signal;
 
+    
     fifo_t fifo;
     fd_t fd[TASK_FD_COUNT];
 
@@ -78,25 +81,24 @@ typedef struct task {
     list(struct task*, waiters);
 
     struct {
-        int status:16;
         union {
             struct {
-                int signo:8;
-                int o177:8;
+                int16_t signo:8;
+                int16_t o177:8;
             } stopped;
 
             struct {
-                int retval:8;
-                int zero:8;
+                int16_t retval:8;
+                int16_t zero:8;
             } exited;
 
             struct {
-                int zero:8;
-                int corep:1;
-                int signo:7;
+                int16_t zero:8;
+                int16_t corep:1;
+                int16_t signo:7;
             } termed;
 
-            int value:16;
+            int16_t value:16;
         };
     } exit;
 

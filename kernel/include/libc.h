@@ -20,5 +20,6 @@
 #include <sys/mman.h>
 #include <sys/string.h>
 #include <sys/poll.h>
+#include <sys/wait.h>
 #include <sched.h>
 #include <signal.h>

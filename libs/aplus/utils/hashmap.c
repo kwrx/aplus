@@ -385,6 +385,34 @@ int hashmap_remove(hashmap_t in, char* key){
     return HM_MISSING;
 }
 
+int hashmap_get_one(hashmap_t in, any_t* v, int rem) {
+    hashmap_map* m = (hashmap_map*) in;
+
+    if (hashmap_length(m) <= 0)
+        return HM_MISSING; 
+
+    int i;
+    for(i = 0; i < m->table_size; i++) {
+        if(!m->data[i].in_use)
+            continue;
+
+        if(v)
+            *v = (m->data[i].data);
+
+        if(rem) {
+            m->data[i].in_use = 0;
+            m->data[i].data = NULL;
+            m->data[i].key = NULL;
+
+            m->size--;
+        }
+
+        return HM_OK;
+    }
+
+    return HM_MISSING;
+}
+
 /* Deallocate the hashmap */
 void hashmap_free(hashmap_t in){
     hashmap_map* m = (hashmap_map*) in;

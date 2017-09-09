@@ -1,9 +1,11 @@
 #include <aplus.h>
+#include <aplus/base.h>
 #include <aplus/mm.h>
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
 #include <aplus/task.h>
 #include <aplus/intr.h>
+#include <aplus/utils/list.h>
 #include <libc.h>
 
 #include <arch/i386/i386.h>
@@ -92,10 +94,13 @@ void fork_handler(i386_context_t* context) {
     child->status = TASK_STATUS_READY;
     child->priority = current_task->priority;
 
-    child->sig_handler = current_task->sig_handler;
-    child->sig_no = current_task->sig_no;
-    child->sig_mask = current_task->sig_mask;
+    child->signal.s_handler = current_task->signal.s_handler;
+    child->signal.s_mask = current_task->signal.s_mask;
     
+    list_each(current_task->signal.s_queue, q)
+        list_push(child->signal.s_queue, q);
+
+
 
     int i;
     for(i = 0; i < TASK_FD_COUNT; i++)
@@ -176,9 +181,11 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
     
     if(flags & CLONE_SIGHAND) {
-        child->sig_handler = current_task->sig_handler;
-        child->sig_no = current_task->sig_no;
-        child->sig_mask = current_task->sig_mask;
+        child->signal.s_handler = current_task->signal.s_handler;
+        child->signal.s_mask = current_task->signal.s_mask;
+        
+        list_each(current_task->signal.s_queue, q)
+            list_push(child->signal.s_queue, q);
     }
 
 
@@ -270,20 +277,21 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     if(eip == 0) {
         if(unlikely(current_task->alarm > 0)) {
             if(likely(current_task->alarm <= timer_gettimestamp())) {
-                current_task->sig_no = SIGALRM;
+                list_push(current_task->signal.s_queue, SIGALRM);
                 current_task->alarm = 0;
             }
         }
 
         if(unlikely(
-            (current_task->sig_no != 0) &&
-            (current_task->sig_handler != NULL)
+            (list_length(current_task->signal.s_queue) > 0) &&
+            (current_task->signal.s_handler != NULL)
         )) {
-            register int sig_no = current_task->sig_no;
-            current_task->sig_no = 0;
-
             irq_ack(0);
-            current_task->sig_handler(sig_no);
+
+            register int q;
+            q = list_back(current_task->signal.s_queue);
+            list_pop_back(current_task->signal.s_queue);
+            current_task->signal.s_handler(q);
         }
         
         return;
@@ -369,17 +377,10 @@ int task_init(void) {
     t->gid = TASK_ROOT_GID;
     t->sid = 0;
     
-    t->name = "aplus";
-    t->description = NULL;
-    t->argv = NULL;
-    t->environ = NULL;
-    
+    t->name = KERNEL_NAME;    
     t->status = TASK_STATUS_READY;
     t->priority = TASK_PRIO_REGULAR;
     
-    t->sig_handler = NULL;
-    t->sig_no = 0;
-    t->sig_mask = 0;
 
     fifo_init(&t->fifo);
 
@@ -387,26 +388,17 @@ int task_init(void) {
     for(i = 0; i < TASK_FD_COUNT; i++)
         memset((void*) &t->fd[i], 0, sizeof(fd_t));
     
-    t->cwd = NULL;
-    t->exe = NULL;
-    t->root = NULL;
-    t->umask = 0;
 
     t->context = &__c;
     t->sys_stack = &__sys_stack[CONFIG_STACK_SIZE];
     CTX(t)->vmmpd = (uintptr_t) current_pdt;
 
 
-    t->exit.status = 0;
-    t->exit.value = 0;
 
 
     t->image = &t->__image;
     t->image->start = CONFIG_KERNEL_BASE;
     t->image->end = (uintptr_t) &end;
-
-    t->parent = NULL;
-    t->next = NULL;
 
 
     x86_intr_kernel_stack((uintptr_t) t->sys_stack);

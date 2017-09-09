@@ -29,5 +29,6 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/zero");
     return E_OK;
 }

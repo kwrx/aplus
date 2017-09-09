@@ -19,7 +19,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
     volatile task_t* tmp;
     for(tmp = task_queue; tmp; tmp = tmp->next) {
         if(tmp->pid == pid) {
-            if(tmp->sig_mask & (1 << SIGMSG)) {
+            if(tmp->signal.s_mask & (1 << SIGMSG)) {
                 errno = EPERM;
                 return 0;
             }
@@ -41,7 +41,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
             }
 
 
-            tmp->sig_no = SIGMSG;
+            list_push(tmp->signal.s_queue, SIGMSG);
             return len;
         }
     }

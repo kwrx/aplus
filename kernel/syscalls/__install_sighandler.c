@@ -7,8 +7,8 @@
 #include <libc.h>
 
 SYSCALL(102, __install_sighandler,
-void sys___install_sighandler(int (*handler) (int)) {
+void sys___install_sighandler(void (*handler) (int)) {
     KASSERT(current_task);
 
-    current_task->sig_handler = handler;
+    current_task->signal.s_handler = handler;
 });

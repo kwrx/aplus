@@ -78,5 +78,9 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/stdin");
+    sys_unlink("/dev/stdout");
+    sys_unlink("/dev/stderr");
+    sys_unlink("/dev/tty0");
     return E_OK;
 }

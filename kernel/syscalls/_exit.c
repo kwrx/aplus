@@ -12,10 +12,10 @@ void sys_exit(int status) {
     KASSERT(current_task != kernel_task);
 
     INTR_OFF;
-
     current_task->status = TASK_STATUS_KILLED;
-    current_task->exit.status = TASK_EXIT_EXITED;
     current_task->exit.value = status & 0xFFFF;
+
+    kprintf(INFO "exit: task %d (%s) exited with %04X\n", current_task->pid, current_task->name, status & 0xFFFF);    
 
     if(current_task == task_queue)
         task_queue = current_task->next;

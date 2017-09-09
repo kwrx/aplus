@@ -37,6 +37,9 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
     }
 
 
+    if(options & WNOHANG)
+        return 0;
+
     syscall_ack();
 
     current_task->status = TASK_STATUS_SLEEP;
@@ -50,7 +53,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
             continue;
             
         if(status)
-            *status = (w->exit.status << 16) | (w->exit.value & 0xFFFF);
+            *status = (int) w->exit.value;
         
         p = w->pid;
         break;

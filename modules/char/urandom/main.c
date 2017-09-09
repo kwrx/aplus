@@ -31,5 +31,6 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/urandom");
     return E_OK;
 }

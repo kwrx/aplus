@@ -68,11 +68,14 @@ int blkdev_unregister_device(char* name) {
         errno = ESRCH;
         return E_ERR;
     }
+    
+    hashmap_remove(hm_blkdev, name);
+
 
     blk->dev->read = NULL;
     blk->dev->write = NULL;
     
-    hashmap_remove(hm_blkdev, name);
+    vfs_unlink(blk->dev->parent, blk->dev->name);
     return E_OK;
 }
 
@@ -266,5 +269,12 @@ int init(void) {
 }
 
 int dnit(void) {
+#if 0  
+    blkdev_t* blk;
+    while(hashmap_get_one(hm_blkdev, (any_t*) &blk, 1) == HM_OK)
+        vfs_unlink(blk->dev->parent, blk->dev->name);
+#endif
+
+    hashmap_free(hm_blkdev);
     return E_OK;
 }

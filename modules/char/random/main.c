@@ -40,5 +40,6 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/random");
     return E_OK;
 }

@@ -7,17 +7,17 @@
 SYSCALL(49, sigprocmask,
 int sys_sigprocmask(int how, sigset_t* set, sigset_t* oldset) {
     if(oldset)
-        *oldset = current_task->sig_mask;
+        *oldset = current_task->signal.s_mask;
 
     switch(how) {
         case SIG_BLOCK:
-            current_task->sig_mask |= *set;
+            current_task->signal.s_mask |= *set;
             break;
         case SIG_UNBLOCK:
-            current_task->sig_mask &= ~(*set);
+            current_task->signal.s_mask &= ~(*set);
             break;
         case SIG_SETMASK:
-            current_task->sig_mask = *set;
+            current_task->signal.s_mask = *set;
             break;
         default:
             errno = EINVAL;

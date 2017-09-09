@@ -21,7 +21,7 @@ int sys_kill(pid_t pid, int signal) {
                     ret;                                            \
                                                                     \
                                                                     \
-                if(tmp->sig_mask & (1 << signal)) {                 \
+                if(tmp->signal.s_mask & (1 << signal)) {            \
                     if(pid <= 0)                                    \
                         continue;                                   \
                                                                     \
@@ -29,7 +29,7 @@ int sys_kill(pid_t pid, int signal) {
                     return -1;                                      \
                 }                                                   \
                                                                     \
-                tmp->sig_no = signal;                               \
+                list_push(tmp->signal.s_queue, signal);             \
                 ret;                                                \
             }                                                       \
         }                                                           \

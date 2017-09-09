@@ -27,5 +27,6 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/full");
     return E_OK;
 }

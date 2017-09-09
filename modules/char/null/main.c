@@ -28,5 +28,6 @@ int init(void) {
 
 
 int dnit(void) {
+    sys_unlink("/dev/null");
     return E_OK;
 }
