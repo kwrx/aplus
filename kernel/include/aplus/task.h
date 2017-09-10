@@ -50,16 +50,18 @@ typedef struct task {
     gid_t gid;
     uid_t sid;
 
+    int status;
+    int priority;
+    uintptr_t vmsize;
+
     void* context;
     void* sys_stack;
         
     
-
     struct tms clock;
+    struct timespec sleep;
     time_t alarm;
-    int status;
-    int priority;
-    uintptr_t vmsize;
+
 
 
     struct {

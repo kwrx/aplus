@@ -275,13 +275,6 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     
     eip = read_eip();
     if(eip == 0) {
-        if(unlikely(current_task->alarm > 0)) {
-            if(likely(current_task->alarm <= timer_gettimestamp())) {
-                list_push(current_task->signal.s_queue, SIGALRM);
-                current_task->alarm = 0;
-            }
-        }
-
         if(unlikely(
             (list_length(current_task->signal.s_queue) > 0) &&
             (current_task->signal.s_handler != NULL)

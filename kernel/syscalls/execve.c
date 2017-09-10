@@ -119,8 +119,6 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
     char** __new_argv = args_dup((char**) argv);
     char** __new_envp = args_dup((char**) envp);
-    
-    filename = strdup(filename);
 
 
 
@@ -188,7 +186,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->environ = __new_envp;
     current_task->image->start = (uintptr_t) _start;
     current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
-    current_task->name = filename;
+    current_task->name = __new_argv[0];
     current_task->description = "";
     current_task->exe = inode;
 

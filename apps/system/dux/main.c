@@ -35,7 +35,6 @@ static void show_version(int argc, char** argv) {
 
 
 
-
 int main(int argc, char** argv) {
     
     static struct option long_options[] = {
@@ -95,7 +94,6 @@ int main(int argc, char** argv) {
     }
 
     fclose(fp);
-
 
 
 

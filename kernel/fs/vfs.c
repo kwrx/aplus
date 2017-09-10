@@ -198,6 +198,8 @@ int vfs_rename(struct inode* inode, char* newname) {
 
 
     inode->name = strdup(newname);
+    inode->dirty++;
+
     return E_OK;
 }
 
@@ -209,6 +211,7 @@ int vfs_chown(struct inode* inode, uid_t owner, gid_t group) {
 
     inode->uid = owner;
     inode->gid = group;
+    inode->dirty++;
 
     return E_OK;
 }
@@ -220,6 +223,8 @@ int vfs_chmod(struct inode* inode, mode_t mode) {
 
 
     inode->mode = mode;
+    inode->dirty++;
+
     return E_OK;
 }
 
@@ -227,6 +232,19 @@ int vfs_chmod(struct inode* inode, mode_t mode) {
 int vfs_ioctl(struct inode* inode, int req, void* buf) {
     if(likely(inode->ioctl))
         return inode->ioctl(inode, req, buf);
+
+    return E_ERR;
+}
+
+
+int vfs_fsync(struct inode* inode) {
+    if(likely(inode->fsync)) {
+        int e;
+        if((e = inode->fsync(inode)) == E_OK)
+            inode->dirty = 0;
+    
+        return e;
+    }
 
     return E_ERR;
 }
@@ -334,6 +352,7 @@ int vfs_init(void) {
     vfs_root->ioctl = NULL;
     vfs_root->open = NULL;
     vfs_root->close = NULL;
+    vfs_root->fsync = NULL;
 
     
     kernel_task->cwd =

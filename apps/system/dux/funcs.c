@@ -48,6 +48,11 @@ _(exec, 0, {
     execvp(argv[0], argv);
 })
 
+
+_(sleep, 0, {
+    sleep(duk_to_int(ctx, 0));
+})
+
 _(sysconfig, 1, {
     char* s = (char*) sysconfig(duk_to_string(ctx, 0), SYSCONFIG_FORMAT_STRING, 0);
     if(!s)

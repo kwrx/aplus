@@ -21,6 +21,10 @@ int main(int argc, char** argv) {
     pid_t pid;
 
     __test(sleep(1), unsigned int, -1);
+    __test(sleep(1), unsigned int, -1);
+    __test(sleep(1), unsigned int, -1);
+    __test(sleep(1), unsigned int, -1);
+    __test(sleep(1), unsigned int, -1);
     __test(usleep(100), int, -1);
     //__test(posix_spawn(&pid, "/usr/bin/echo", NULL, NULL, argv, environ), int, -1);
     __test(getlogin(), char*, NULL);

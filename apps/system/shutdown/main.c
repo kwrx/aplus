@@ -60,7 +60,6 @@ static int shutdown_exec(uint8_t mode) {
     unlink("/tmp/shutdown.lock");
     
 
-
     fprintf(stdout, "\t- Killing processes\n");
 
     DIR* d = opendir("/proc");
@@ -81,8 +80,12 @@ static int shutdown_exec(uint8_t mode) {
     }
 
     closedir(d);
-    fprintf(stdout, "\t- Done! Goodbye!\n");
 
+    
+    fprintf(stdout, "\t- Synchronize cached writes\n");
+    sync();
+
+    fprintf(stdout, "\t- Done! Goodbye!\n");
 
 
     int fd = open(PATH_PWM, O_RDONLY);

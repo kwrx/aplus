@@ -8,6 +8,7 @@
 sys.locale=it-IT
 sys.timezone=2
 sys.events=16
+sys.syncd=10
 
 
 # -- Screen

@@ -103,6 +103,7 @@ extern int sys_mkfifo(const char* pathname, mode_t mode);
 extern int sys_symlink(const char*, const char*);
 extern int sys_fcntl(int, int, long);
 int sys_unlink(const char*);
+int sys_clock_gettime(clockid_t id, struct timespec *tv);
 
 
 extern int mounts_init();

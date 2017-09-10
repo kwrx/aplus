@@ -36,6 +36,8 @@ static void sched_next(void) {
         if(likely(current_task->status != TASK_STATUS_SLEEP))
             continue;
 
+
+        /* Check Waiters */
         list_each(current_task->waiters, w) {
             if(likely(w->status != TASK_STATUS_KILLED))
                 continue;
@@ -44,7 +46,30 @@ static void sched_next(void) {
             break;
         }
 
+
+        /* Check Sleep */
+        if(unlikely(current_task->sleep.tv_sec || current_task->sleep.tv_nsec)) {
+            uint64_t ts = current_task->sleep.tv_sec;
+            uint64_t tn = current_task->sleep.tv_nsec;
+
+            struct timespec t0;
+            sys_clock_gettime(CLOCK_MONOTONIC, &t0);
+
+            if((ts * 1000000000ULL) + tn < ((uint64_t) t0.tv_sec * 1000000000ULL) + t0.tv_nsec)
+                current_task->status = TASK_STATUS_READY;
+        }
+
     } while(current_task->status != TASK_STATUS_READY);
+
+
+
+    /* Check Alarms */
+    if(unlikely(current_task->alarm > 0)) {
+        if(likely(current_task->alarm <= timer_gettimestamp())) {
+            list_push(current_task->signal.s_queue, SIGALRM);
+            current_task->alarm = 0;
+        }
+    }
 }
 
 

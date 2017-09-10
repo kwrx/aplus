@@ -31,7 +31,6 @@
 static void tcpip_init_done(void* arg) {
     current_task->name = "[tcpipd]";
     current_task->description = "TCP/IP Stack Deamon";
-    current_task->gid = current_task->uid = 1;
     current_task->priority = TASK_PRIO_MIN;
 
 

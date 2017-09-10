@@ -43,6 +43,7 @@ struct inode {
     time_t ctime;
     
     void* userdata;
+    int dirty;
 
     int (*open) (struct inode* inode);
     int (*close) (struct inode* inode);
@@ -60,6 +61,7 @@ struct inode {
     int (*chmod) (struct inode* inode, mode_t mode);
     
     int (*ioctl) (struct inode* inode, int req, void* buf);
+    int (*fsync) (struct inode* inode);
 
 
     struct inode_childs* childs;
@@ -72,6 +74,7 @@ struct inode {
 extern fsys_t* fsys_queue;
 extern inode_t* devfs;
 extern inode_t* sysfs;
+extern inode_t* vfs_root;
 
 
 int vfs_init(void);
@@ -88,6 +91,7 @@ int vfs_rename(struct inode* inode, char* newname);
 int vfs_chown(struct inode* inode, uid_t owner, gid_t group);
 int vfs_chmod(struct inode* inode, mode_t mode);
 int vfs_ioctl(struct inode* inode, int req, void* buf);
+int vfs_fsync(struct inode* inode);
 
 int vfs_mount(struct inode* dev, struct inode* dir, const char* fstype);
 int vfs_umount(struct inode* dir);
