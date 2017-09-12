@@ -37,11 +37,9 @@ static void sched_next(void) {
             continue;
 
 
-        /* Check Waiters */
-        list_each(current_task->waiters, w) {
-            if(likely(w->status != TASK_STATUS_KILLED))
-                continue;
-
+        
+        /* Check Signals */
+        if(unlikely(list_length(current_task->signal.s_queue) > 0)) {
             current_task->status = TASK_STATUS_READY;
             break;
         }
@@ -55,9 +53,22 @@ static void sched_next(void) {
             struct timespec t0;
             sys_clock_gettime(CLOCK_MONOTONIC, &t0);
 
-            if((ts * 1000000000ULL) + tn < ((uint64_t) t0.tv_sec * 1000000000ULL) + t0.tv_nsec)
+            if((ts * 1000000000ULL) + tn < ((uint64_t) t0.tv_sec * 1000000000ULL) + t0.tv_nsec) {
                 current_task->status = TASK_STATUS_READY;
+                break;
+            }
         }
+
+        
+        /* Check Waiters */
+        list_each(current_task->waiters, w) {
+            if(likely(w->status != TASK_STATUS_KILLED))
+                continue;
+
+            current_task->status = TASK_STATUS_READY;
+            break;
+        }
+
 
     } while(current_task->status != TASK_STATUS_READY);
 

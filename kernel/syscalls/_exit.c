@@ -17,6 +17,10 @@ void sys_exit(int status) {
 
     kprintf(INFO "exit: task %d (%s) exited with %04X\n", current_task->pid, current_task->name, status & 0xFFFF);    
 
+
+    if(current_task->parent)
+        list_push(current_task->parent->signal.s_queue, SIGCHLD);
+
     if(current_task == task_queue)
         task_queue = current_task->next;
     else {

@@ -238,15 +238,13 @@ int vfs_ioctl(struct inode* inode, int req, void* buf) {
 
 
 int vfs_fsync(struct inode* inode) {
-    if(likely(inode->fsync)) {
-        int e;
-        if((e = inode->fsync(inode)) == E_OK)
-            inode->dirty = 0;
+    if(likely(inode->fsync))
+        if(inode->fsync(inode) != E_OK)
+            return E_ERR;
     
-        return e;
-    }
 
-    return E_ERR;
+    inode->dirty = 0;
+    return E_OK;
 }
 
 

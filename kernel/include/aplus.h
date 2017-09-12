@@ -59,14 +59,14 @@ typedef struct bootargs {
 
 
 
-#define EXPORT(f)            \
-    __section(".exports")    \
-    struct {                \
-        char* name;            \
-        void* addr;            \
-    } __export_##f = {        \
-        (char*) #f,            \
-        (void*) &f            \
+#define EXPORT(f)               \
+    __section(".exports")       \
+    struct {                    \
+        char* name;             \
+        void* addr;             \
+    } __export_##f = {          \
+        (char*) #f,             \
+        (void*) &f              \
     };
 
 
@@ -104,6 +104,7 @@ extern int sys_symlink(const char*, const char*);
 extern int sys_fcntl(int, int, long);
 int sys_unlink(const char*);
 int sys_clock_gettime(clockid_t id, struct timespec *tv);
+int sys_pause(void);
 
 
 extern int mounts_init();

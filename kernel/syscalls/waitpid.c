@@ -41,10 +41,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
         return 0;
 
     syscall_ack();
-
-    current_task->status = TASK_STATUS_SLEEP;
-    while(current_task->status == TASK_STATUS_SLEEP)
-        sys_yield();
+    sys_pause();
 
 
     pid_t p = -1;
@@ -60,5 +57,10 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
     }
 
     list_clear(current_task->waiters);
+
+
+    if(unlikely(p == -1))
+        errno = EINTR;
+
     return p;
 });

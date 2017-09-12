@@ -74,6 +74,7 @@ int main(int argc, char** argv) {
             while(strlen(buf) == 0) {
                 fprintf(stderr, "username: ");
                 scanf("%s", buf);
+                fflush(stdin);
             }
 
             username = buf;
