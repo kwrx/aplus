@@ -4,12 +4,12 @@
 #include <aplus/base.h>
 #include <aplus/utils/list.h>
 
-#define MODULE_NAME(x)                                \
-    __attribute__((section(".module_name")))        \
+#define MODULE_NAME(x)                                  \
+    __attribute__((section(".module_name")))            \
     const char __module_name__[] = x "\0"
 
-#define MODULE_DEPS(x)                                \
-    __attribute__((section(".module_deps")))        \
+#define MODULE_DEPS(x)                                  \
+    __attribute__((section(".module_deps")))            \
     const char __module_deps__[] = x "\0"
 
 

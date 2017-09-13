@@ -18,16 +18,16 @@ struct sys_mbox;
 typedef struct sys_mbox* sys_mbox_t;
 
 
-#define LWIP_COMPAT_MUTEX         1
+#define LWIP_COMPAT_MUTEX               1
 
-#define SYS_MBOX_NULL            NULL
-#define SYS_SEM_NULL            NULL
+#define SYS_MBOX_NULL                   NULL
+#define SYS_SEM_NULL                    NULL
 
 
-#define sys_sem_valid(s)        (((s) != NULL) && (*(s) != NULL))
-#define sys_sem_set_invalid(s)        do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
+#define sys_sem_valid(s)                (((s) != NULL) && (*(s) != NULL))
+#define sys_sem_set_invalid(s)          do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
 
-#define sys_mbox_valid(s)        (((s) != NULL) && (*(s) != NULL))
-#define sys_mbox_set_invalid(s)        do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
+#define sys_mbox_valid(s)               (((s) != NULL) && (*(s) != NULL))
+#define sys_mbox_set_invalid(s)         do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
 
 #endif

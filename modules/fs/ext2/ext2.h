@@ -107,7 +107,8 @@ typedef struct __ext2_priv_data {
 } __attribute__((packed)) ext2_t;
 
 typedef struct {
-    ext2_t* priv;
+    ext2_inode_t inode;
+    ext2_t* ext2;
     uint32_t* blockchain;
 } ext2_priv_t;
 

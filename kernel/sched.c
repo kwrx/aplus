@@ -33,6 +33,16 @@ static void sched_next(void) {
 
 
 
+        /* Check Alarms */
+        if(unlikely(current_task->alarm > 0)) {
+            if(likely(current_task->alarm <= timer_gettimestamp())) {
+                list_push(current_task->signal.s_queue, SIGALRM);
+                current_task->alarm = 0;
+            }
+        }
+
+
+
         if(likely(current_task->status != TASK_STATUS_SLEEP))
             continue;
 
@@ -71,16 +81,6 @@ static void sched_next(void) {
 
 
     } while(current_task->status != TASK_STATUS_READY);
-
-
-
-    /* Check Alarms */
-    if(unlikely(current_task->alarm > 0)) {
-        if(likely(current_task->alarm <= timer_gettimestamp())) {
-            list_push(current_task->signal.s_queue, SIGALRM);
-            current_task->alarm = 0;
-        }
-    }
 }
 
 

@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-char* md5(char* buf) {
+char* md5(const char* buf) {
     uint8_t* initial_msg = (uint8_t*) buf;
     size_t initial_len = strlen(buf);
 

@@ -10,24 +10,20 @@
 
 
 inode_t* ext2_finddir(struct inode* inode, char* filename) {
-    ext2_t* priv = (ext2_t*) inode->userdata;
+    ext2_priv_t* priv = (ext2_priv_t*) inode->userdata;
     if(!priv) {
         errno = EINVAL;
         return NULL;
     }
 
-
-    ext2_inode_t e;
-    ext2_read_inode(priv, &e, (uint32_t) inode->ino);
-
     for(int i = 0; i < 12; i++) {
-        if(!e.dbp[i])
+        if(!priv->inode.dbp[i])
             break;
 
 
 
-        ext2_dir_t* d = (ext2_dir_t*) kmalloc(priv->blocksize, GFP_KERNEL);
-        ext2_read_block(priv, d, e.dbp[i]);
+        ext2_dir_t* d = (ext2_dir_t*) kmalloc(priv->ext2->blocksize, GFP_KERNEL);
+        ext2_read_block(priv->ext2, d, priv->inode.dbp[i]);
 
 
         for(; d->inode; ) {
@@ -47,7 +43,7 @@ inode_t* ext2_finddir(struct inode* inode, char* filename) {
 
             
             inode_t* child;
-            ext2_mkchild(priv, &child, inode, d->inode, name);
+            ext2_mkchild(priv->ext2, &child, inode, d->inode, name);
 
 
             struct inode_childs* cx = (struct inode_childs*) kmalloc(sizeof(struct inode_childs), GFP_KERNEL);

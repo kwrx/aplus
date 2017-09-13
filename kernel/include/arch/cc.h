@@ -28,32 +28,32 @@ typedef uintptr_t mem_ptr_t;
 #define X32_F "x"
 #define SZT_F "u"
 
-#define PACK_STRUCT_FIELD(x)            x
-#define PACK_STRUCT_STRUCT                __attribute__((packed))
+#define PACK_STRUCT_FIELD(x)                x
+#define PACK_STRUCT_STRUCT                  __attribute__((packed))
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 
 
 #define LWIP_PLATFORM_DIAG(x)    do { kprintf x; } while(0)
-#define LWIP_PLATFORM_ASSERT(x)                                 \
-    do {                                                         \
-        kprintf (ERROR "tcpip: ASSERT! (%s, %d) %s\n",            \
-            __FILE__,                                            \
-            __LINE__,                                            \
-            x                                                    \
-        );                                                         \
-        sys_exit(-1);                                            \
+#define LWIP_PLATFORM_ASSERT(x)                                     \
+    do {                                                            \
+        kprintf (ERROR "tcpip: ASSERT! (%s, %d) %s\n",              \
+            __FILE__,                                               \
+            __LINE__,                                               \
+            x                                                       \
+        );                                                          \
+        sys_exit(-1);                                               \
     } while(0)
 
 #define LWIP_RAND() ((u32_t)rand())
 
 
-#define SYS_ARCH_DECL_PROTECT(x)
-#define SYS_ARCH_PROTECT(x)                INTR_OFF
-#define SYS_ARCH_UNPROTECT(x)            INTR_ON
+#define SYS_ARCH_DECL_PROTECT(x) 
+#define SYS_ARCH_PROTECT(x)                 INTR_OFF
+#define SYS_ARCH_UNPROTECT(x)               INTR_ON
 
-#define BYTE_ORDER                        LITTLE_ENDIAN
-#define LWIP_CHKSUM_ALGORITHM             2
+#define BYTE_ORDER                          LITTLE_ENDIAN
+#define LWIP_CHKSUM_ALGORITHM               2
 
 
 #endif

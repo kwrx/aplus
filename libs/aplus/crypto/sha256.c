@@ -5,6 +5,8 @@ This code is based on public domain code from Wei Dai's Crypto++ library. */
 #include <aplus/base.h>
 #include <aplus/utils/rotate-bits.h>
 #include <aplus/crypto/sha256.h>
+#include <string.h>
+#include <stdio.h>
 
 /* define it for speed optimization */
 #define _SHA256_UNROLL
@@ -162,13 +164,24 @@ sha256_write_byte_block(sha256_t *p)
 }
 
 
-void
-sha256(char *buf, const unsigned char *data, size_t size)
+char*
+sha256(const char* data)
 {
+  char* out = (char*) __libaplus_malloc(SHA256_DIGEST_SIZE * 2);
+
   sha256_t hash;
+  char buf[SHA256_DIGEST_SIZE];
   sha256_init(&hash);
-  sha256_update(&hash, data, size);
+  sha256_update(&hash, data, strlen(data));
   sha256_final(&hash, buf);
+
+
+  int i;
+  for(i = 0; i < SHA256_DIGEST_SIZE; i++)
+      sprintf(&out[i * 2], "%02x", buf[i] & 0xFF);
+
+
+  return out;
 }
 
 

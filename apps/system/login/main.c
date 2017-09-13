@@ -12,7 +12,7 @@
 
 #include <aplus/base.h>
 #include <aplus/sysconfig.h>
-#include <aplus/crypto/md5.h>
+#include <aplus/crypto/sha256.h>
 
 static void show_usage(int argc, char** argv) {
     printf(
@@ -126,6 +126,7 @@ int main(int argc, char** argv) {
 
             if(strlen(pwd->pw_passwd) > 0) {
                 static char buf[BUFSIZ];
+                static char buf2[BUFSIZ];
                 memset(buf, 0, sizeof(buf));
 
                 while(strlen(buf) == 0) {
@@ -146,7 +147,8 @@ int main(int argc, char** argv) {
                 }
 
 
-                if(strcmp(md5(buf), pwd->pw_passwd) != 0) {
+
+                if(strcmp(sha256(buf), pwd->pw_passwd) != 0) {
                     fprintf(stderr, "login: invalid password, try again!\n");
                     continue;
                 }

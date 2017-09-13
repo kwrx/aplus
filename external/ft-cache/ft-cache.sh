@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# Usage: ft-cache [SYSROOT]
 
 echo -n "" > $1/etc/fonts/fonts.conf
 for line in $(find $1/usr/share/fonts/* -type f); do

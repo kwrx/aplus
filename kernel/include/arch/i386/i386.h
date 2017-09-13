@@ -13,11 +13,11 @@
 #define TIMER_FREQ            1000
 
 
-#define read_reg(n)                                                \
-    static inline uint32_t read_##n() {                            \
-        uint32_t ret;                                            \
-        __asm__ __volatile__ ("mov %0, " #n : "=r"(ret));        \
-        return ret;                                                \
+#define read_reg(n)                                                 \
+    static inline uint32_t read_##n() {                             \
+        uint32_t ret;                                               \
+        __asm__ __volatile__ ("mov %0, " #n : "=r"(ret));           \
+        return ret;                                                 \
     }
     
     read_reg(eax)
@@ -47,9 +47,9 @@ static inline uint32_t read_eflags() {
 }
     
     
-#define write_reg(n)                                                \
-    static inline void write_##n(uint32_t val) {                    \
-        __asm__ __volatile__ ("mov " #n ", %0" : : "r"(val));        \
+#define write_reg(n)                                                    \
+    static inline void write_##n(uint32_t val) {                        \
+        __asm__ __volatile__ ("mov " #n ", %0" : : "r"(val));           \
     }
 
 
@@ -77,9 +77,9 @@ static inline void write_eflags(uint32_t val) {
     __asm__ __volatile__("push eax; popfd" : : "a"(val));
 }    
 
-#define outx(n, t, reg)                                                \
-    static inline void out##n(uint16_t p, t v) {                    \
-        __asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));    \
+#define outx(n, t, reg)                                                 \
+    static inline void out##n(uint16_t p, t v) {                        \
+        __asm__ __volatile__ ("out dx, " #reg : : "a"(v), "d"(p));      \
     }
     
     outx(b, uint8_t, al)
@@ -87,21 +87,21 @@ static inline void write_eflags(uint32_t val) {
     outx(l, uint32_t, eax)
     
     
-#define inx(n, t, reg)                                                    \
-    static inline t in##n(uint16_t p) {                                    \
-        t r;                                                            \
-        __asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));    \
-        return r;                                                        \
+#define inx(n, t, reg)                                                      \
+    static inline t in##n(uint16_t p) {                                     \
+        t r;                                                                \
+        __asm__ __volatile__ ("in " #reg ", dx" : "=a"(r) : "d"(p));        \
+        return r;                                                           \
     }
     
     inx(b, uint8_t, al)
     inx(w, uint16_t, ax)
     inx(l, uint32_t, eax)
     
-#define outsx(n, t, reg)                                    \
+#define outsx(n, t, reg)                                                        \
     static inline void outs##n(uint16_t p, t* v, uint32_t len) {                \
-        for(int i = 0; i < len; i++)                            \
-            out##n(p, v[i]);                            \
+        for(int i = 0; i < len; i++)                                            \
+            out##n(p, v[i]);                                                    \
     }
     
     outsx(b, uint8_t, al)
@@ -109,12 +109,12 @@ static inline void write_eflags(uint32_t val) {
     outsx(l, uint32_t, eax)
     
     
-#define insx(n, t, reg)                                        \
-    static inline t* ins##n(uint16_t p, t* v, uint32_t len) {                \
-        for(int i = 0; i < len; i++)                            \
-            v[i] = in##n(p);                            \
-                                                \
-        return v;                                    \
+#define insx(n, t, reg)                                                         \
+    static inline t* ins##n(uint16_t p, t* v, uint32_t len) {                   \
+        for(int i = 0; i < len; i++)                                            \
+            v[i] = in##n(p);                                                    \
+                                                                                \
+        return v;                                                               \
     }
     
     insx(b, uint8_t, al)

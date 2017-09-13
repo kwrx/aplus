@@ -146,46 +146,47 @@ void ext2_get_blockchain(ext2_t* priv, ext2_inode_t* in, uint32_t** pchain) {
 
 
 void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino, char* name) {
-    ext2_inode_t in;
-    ext2_read_inode(priv, &in, ino);
+    ext2_priv_t* p = (ext2_priv_t*) kmalloc(sizeof(ext2_priv_t), GFP_KERNEL);
+    ext2_read_inode(priv, &p->inode, ino);
     
     inode_t* child = (inode_t*) kmalloc(sizeof(inode_t), GFP_KERNEL);
     memset(child, 0, sizeof(inode_t));
 
     child->name = strdup(name);
-    child->userdata = parent->userdata;
+    child->userdata = (void*) p;
     child->ino = ino;
-    child->mode = in.type;
+    child->mode = p->inode.type;
     
     child->dev =
     child->rdev = 0;
-    child->nlink = in.hardlinks;
+    child->nlink = p->inode.hardlinks;
     
-    child->uid = in.uid;
-    child->gid = in.gid;
-    child->size = (off64_t) in.size;
+    child->uid = p->inode.uid;
+    child->gid = p->inode.gid;
+    child->size = (off64_t) p->inode.size;
     
-    child->atime = in.last_access;
-    child->mtime = in.last_modif;
-    child->ctime = in.create_time;
+    child->atime = p->inode.last_access;
+    child->mtime = p->inode.last_modif;
+    child->ctime = p->inode.create_time;
 
     child->parent = parent;
     child->link = NULL;
     child->childs = NULL;
     
+    p->ext2 = priv;
+    p->blockchain = NULL;
 
-    if((in.type & 0xF000) == INODE_TYPE_DIRECTORY) {
+
+
+    if((p->inode.type & 0xF000) == INODE_TYPE_DIRECTORY) {
         child->open = ext2_open;
         child->finddir = ext2_finddir;
     } else {
         child->read = ext2_read;
 
-        ext2_priv_t* p = (ext2_priv_t*) kmalloc(sizeof(ext2_priv_t), GFP_KERNEL);
-        ext2_get_blockchain(priv, &in, &p->blockchain);
-
-        p->priv = priv;
-        child->userdata = (void*) p;
+        ext2_get_blockchain(priv, &p->inode, &p->blockchain);
     }
+
 
     if(pchild)
         *pchild = child;
@@ -207,6 +208,7 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
     ext2_t* priv = (ext2_t*) kmalloc(sizeof(ext2_t), GFP_KERNEL);
     memcpy(&priv->sb, &sb, sizeof(superblock_t));
 
+
     priv->blocksize = 1024 << sb.blocksize_hint;
     priv->inodes_per_block = priv->blocksize / sizeof(ext2_inode_t);
     priv->sectors_per_block = priv->blocksize / 512;
@@ -221,13 +223,19 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
     if(priv->first_bgd == 0)
         priv->first_bgd++;
 
-    dir->userdata = (void*) priv;
+
     dir->childs = NULL;
     dir->ino = 2;
-
     dir->open = ext2_open;
     dir->finddir = ext2_finddir;
 
+
+    ext2_priv_t* p = (ext2_priv_t*) kmalloc(sizeof(ext2_priv_t), GFP_KERNEL);
+    ext2_read_inode(priv, &p->inode, dir->ino);
+    p->ext2 = priv;
+    p->blockchain = NULL;
+
+    dir->userdata = (void*) p;
 
     return E_OK;
 }

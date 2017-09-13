@@ -279,17 +279,22 @@ void sha1_final(
     memset(&finalcount, '\0', sizeof(finalcount));
 }
 
-void sha1(
-    char *hash_out,
-    const unsigned char *str,
-    size_t len)
+char* sha1(const char* str)
 {
     sha1_t ctx;
     unsigned int ii;
+    char hash[SHA1_DIGEST_SIZE];
+    char* buf = __libaplus_malloc(SHA1_DIGEST_SIZE * 2);
+
 
     sha1_init(&ctx);
-    for (ii=0; ii<len; ii+=1)
+    for (ii=0; ii<strlen(str); ii+=1)
         sha1_update(&ctx, (const unsigned char*)str + ii, 1);
-    sha1_final(&ctx, (unsigned char *)hash_out);
-    hash_out[SHA1_DIGEST_SIZE] = '\0';
+    sha1_final(&ctx, (unsigned char *) hash);
+    hash[SHA1_DIGEST_SIZE] = '\0';
+
+    for(ii = 0; ii < SHA1_DIGEST_SIZE; ii++)
+        sprintf(&buf[ii * 2], "%02x", hash[ii] & 0xFF);
+
+    return buf;
 }
