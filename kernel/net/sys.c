@@ -263,6 +263,8 @@ EXPORT(pbuf_header);
 EXPORT(dhcp_start);
 EXPORT(dhcp_stop);
 
+EXPORT(dns_setserver);
+
 EXPORT(netif_add);
 EXPORT(netif_remove);
 EXPORT(netif_find);

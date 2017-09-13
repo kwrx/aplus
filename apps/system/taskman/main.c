@@ -87,9 +87,8 @@ int main(int argc, char** argv) {
     update_values();
     dump_values();
 
-    char ch;
-    while(read(STDIN_FILENO, &ch, 1))
-        ;
+    for(;;)
+        pause();
 }
 
 

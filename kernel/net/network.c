@@ -48,6 +48,16 @@ static void tcpip_init_done(void* arg) {
         netif_set_default(lo);
     } else
         kprintf(WARN "netif: Loopback interface not found\n");
+
+
+
+
+    ip_addr_t dns[2];
+    IP4_ADDR(&dns[0], 8, 8, 8, 8);
+    IP4_ADDR(&dns[1], 8, 8, 4, 4);
+
+    dns_setserver(0, &dns[0]);
+    dns_setserver(1, &dns[1]);
 }
 
 
