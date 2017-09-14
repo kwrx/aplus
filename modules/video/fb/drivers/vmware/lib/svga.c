@@ -1344,8 +1344,7 @@ SVGA_ClearIRQ(void)
 uint32_t
 SVGA_WaitForIRQ(void)
 {
-   while(!gSVGA.irq.pending)
-      sys_yield();
+   ipc_wait(!gSVGA.irq.pending);
 
     gSVGA.irq.pending = 0;
 }

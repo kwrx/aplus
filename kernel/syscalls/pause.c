@@ -14,8 +14,7 @@ int sys_pause(void) {
     syscall_ack();
     
     current_task->status = TASK_STATUS_SLEEP;
-    while(current_task->status == TASK_STATUS_SLEEP)
-        sys_yield();
+    ipc_wait(current_task->status == TASK_STATUS_SLEEP);
 
     errno = EINTR;
     return -1;

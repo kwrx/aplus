@@ -9,12 +9,7 @@
 #include <libdis.h>
 
 
-spinlock_t lck_debug = SPINLOCK_UNLOCKED;
-
-
 void debug_send(char value) {
-
-    spinlock_lock(&lck_debug);
     static int initialized = 0;
 
     if(!initialized) {
@@ -43,9 +38,6 @@ void debug_send(char value) {
         ;
     outb(0x3F8, value);
 #endif
-    
-
-    spinlock_unlock(&lck_debug);
 }
 
 

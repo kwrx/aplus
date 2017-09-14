@@ -49,6 +49,8 @@
 #define LWIP_POSIX_SOCKETS_IO_NAMES         0 
 #define LWIP_MPU_COMPATIBLE                 1
 #define LWIP_COMPAT_MUTEX_ALLOWED           1
+#define LWIP_SO_RCVTIMEO                    0
+#define LWIP_SO_SNDTIMEO                    0
 
 #define LWIP_NETIF_LOOPBACK                 1
 #define LWIP_NETIF_HOSTNAME                 1
@@ -63,7 +65,7 @@
 
 #define LWIP_TCP_KEEPALIVE                  1
 #define TCP_KEEPIDLE_DEFAULT                10000UL
-#define    TCP_KEEPINTVL_DEFAULT            2000UL
+#define TCP_KEEPINTVL_DEFAULT               2000UL
 #define TCP_KEEPCNT_DEFAULT                 9U
 
 #define MEM_LIBC_MALLOC                     1

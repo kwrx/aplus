@@ -16,12 +16,11 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len) {
     if(unlikely(!len))
         return 0;
 
-    register uint8_t* buf = ptr;
+    uint8_t* buf = ptr;
 
     int i;
     for(i = 0; i < len; i++) {
-        while(!(fifo->w_pos > fifo->r_pos))
-            sys_yield();
+        ipc_wait(!(fifo->w_pos > fifo->r_pos));
 
         *buf++ = fifo->buffer[fifo->r_pos++ % BUFSIZ];
     }
@@ -38,7 +37,7 @@ int fifo_write(fifo_t* fifo, void* ptr, size_t len) {
     if(unlikely(!len))
         return 0;
 
-    register uint8_t* buf = ptr;
+    uint8_t* buf = ptr;
 
     int i;
     for(i = 0; i < len; i++)

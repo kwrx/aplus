@@ -68,7 +68,6 @@ extern struct {
 } TSS32;
 
 
-//static char tmp_stack[CONFIG_STACK_SIZE];
 int current_irq = -1;
 
 
@@ -92,7 +91,7 @@ int intr_init() {
     TSS32.cs = 0x08;
 
     TSS32.ss0 = 0x10;
-    TSS32.esp = (uint32_t) &tmp_stack[CONFIG_STACK_SIZE];
+    TSS32.esp = 0x00;
 
     __asm__ __volatile__("ltr %%ax" : : "a"((5 << 3)));
     gdt_load();
@@ -333,11 +332,6 @@ void isr_handler(i386_context_t* context) {
 
     debug_dump(context, exception_messages[context->int_no], 0, context->err_code);
 
-
-    if(unlikely(current_task == kernel_task))
-        for(;;) 
-            __asm__ __volatile__ ("cli; hlt");
-    
 
     __asm__ __volatile__ ("sti");
     sys_kill(current_task->pid, signo);

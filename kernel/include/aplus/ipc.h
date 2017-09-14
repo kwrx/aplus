@@ -79,5 +79,26 @@ int fifo_available(fifo_t* fifo);
     }
 
 
+
+#define ipc_timed_wait(cond)                                            \
+    {                                                                   \
+        ktime_t timeout = timer_getms() + CONFIG_IPC_TIMEOUT;           \
+        while((cond)) {                                                 \
+            if(timer_getms() > timeout) {                               \
+                kprintf(WARN "ipc: deadlock timeout expired!\n");       \
+                break;                                                  \
+            }                                                           \
+                                                                        \
+            sys_yield();                                                \
+        }                                                               \
+    }    
+
+#define ipc_wait(cond)                                                  \
+    {                                                                   \
+        while((cond))                                                   \
+            sys_yield();                                                \
+    }   
+
+
 #endif
 #endif

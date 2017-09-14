@@ -35,7 +35,7 @@ static int uart_read(struct inode* inode, void* buf, size_t size) {
     size_t i;
     for(i = 0; i < size; i++) {
         while((inb(COM[idx] + 5) & 1) == 0)
-            sys_yield();
+            ;
 
         *bc++ = inb(COM[idx]);
     }
@@ -50,7 +50,7 @@ static int uart_write(struct inode* inode, void* buf, size_t size) {
     size_t i;
     for(i = 0; i < size; i++) {
         while((inb(COM[idx] + 5) & 0x20) == 0)
-            sys_yield();
+            ;
 
         
 

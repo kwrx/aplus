@@ -5,8 +5,6 @@
 #include <libc.h>
 
 #if DEBUG
-spinlock_t lck_kprintf = SPINLOCK_UNLOCKED;
-
 
 int
 kprintf(const char *fmt, ...) {
@@ -25,16 +23,11 @@ kprintf(const char *fmt, ...) {
     int out = vsprintf(buf, bfmt, args);
     
     
-    spinlock_lock(&lck_kprintf);
-
     int i;
     for(i = 0; i < out; i++)
         debug_send(buf[i]);
 
-    spinlock_unlock(&lck_kprintf);
 
-
-    
     va_end(args);
     return out;
 }

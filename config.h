@@ -10,6 +10,7 @@
 #define CONFIG_HAVE_LIBC                    1
 #define CONFIG_SMP                          0    /* TODO */
 #define CONFIG_IPC                          1
+#define CONFIG_IPC_TIMEOUT                  10000
 #define CONFIG_VMM                          1
 #define CONFIG_CACHE                        0    /* FIXME */
 #define CONFIG_NETWORK                      1

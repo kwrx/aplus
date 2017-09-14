@@ -394,7 +394,7 @@ int task_init(void) {
     t->image->end = (uintptr_t) &end;
 
 
-    x86_intr_kernel_stack((uintptr_t) t->sys_stack);
+    //x86_intr_kernel_stack((uintptr_t) t->sys_stack);
 
     current_task = t;
     return E_OK;
