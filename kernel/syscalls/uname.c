@@ -22,10 +22,10 @@ int sys_uname(struct utsname* buf) {
 
     int fd = sys_open("/etc/hostname", O_RDONLY, 0666);
     if(likely(fd >= 0)) {
-        static char buf[BUFSIZ];
-        memset(buf, 0, BUFSIZ);
+        char buf[64];
+        memset(buf, 0, sizeof(buf));
         
-        sys_read(fd, buf, BUFSIZ);
+        sys_read(fd, buf, sizeof(buf));
         sys_close(fd);
         
         __hostname = buf;

@@ -69,7 +69,7 @@ int sys_msg_recv(pid_t* pid, void* data, size_t len) {
     }
 
 
-    static char buf[BUFSIZ];
+    char buf[BUFSIZ];
     if(fifo_read(&current_task->fifo, buf, l) != l) {
         errno = EIO;
         return 0;

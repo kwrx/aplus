@@ -116,14 +116,10 @@ ktime_t timer_getms() {
 }
 
 ktime_t timer_getus() {
-    double a = (double) timer_getticks();
-    double b = (double) jiffies;
-
-    uint64_t r = (uint64_t) ((a * 1000.0) + ((double)(rdtsc() - cycles) / (b / 1000.0)));
-    if(unlikely(r < 0))
-        return (uint64_t) a * 1000;
+    long double b = (long double) jiffies;
+    long double a = ((long double) (rdtsc() - cycles) / (b / 1000.0));
     
-    return r;
+    return (timer_getticks() * 1000) + ((ktime_t) a % 1000);
 }
 
 ktime_t timer_getfreq() {

@@ -10,8 +10,8 @@ int
 kprintf(const char *fmt, ...) {
 
 
-    static char buf[BUFSIZ] = {0};
-    static char bfmt[BUFSIZ] = {0};
+    char buf[BUFSIZ] = {0};
+    char bfmt[BUFSIZ] = {0};
 
     memset(buf, 0, sizeof(buf));
     memset(bfmt, 0, sizeof(bfmt));

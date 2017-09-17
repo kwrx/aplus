@@ -261,7 +261,7 @@ static void update_values() {
 }
 
 static void dump_values() {
-    fprintf(stdout, "\4\e[2J\e[30;47m\e[2K");
+    fprintf(stdout, "\4\e[2J\e[H\e[30;47m\e[2K");
     fprintf(stdout, " Pid  Name                 S  Owner       PPid     CPU        I/O       Memory\n");
     fprintf(stdout, "\e[39;49m");
 

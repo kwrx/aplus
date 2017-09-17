@@ -162,7 +162,7 @@ void pcnet_endoutput(void* internals, uint16_t len) {
     if(dev->txid == PCNET_TX_COUNT)
         dev->txid = 0;
 
-    kprintf(INFO "pcnet: sending %d bytes\n", len);
+    //kprintf(INFO "pcnet: sending %d bytes\n", len);
 }
 
 int pcnet_startinput(void* internals) {
@@ -174,7 +174,7 @@ int pcnet_startinput(void* internals) {
 
     
     uint16_t size = *(uint16_t*) (dev->rxdes + (dev->rxid * PCNET_DE_SIZE + 8));
-    kprintf(WARN "pcnet: reiceved %d bytes from %d\n", size, dev->rxid);
+    //kprintf(INFO "pcnet: reiceved %d bytes from %d\n", size, dev->rxid);
     
     void* buf = (void*) (dev->rxbuf + dev->rxid * PCNET_BUFSIZE);
     memcpy(dev->cache, buf, size);

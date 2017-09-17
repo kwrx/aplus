@@ -2,30 +2,88 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <netdb.h>
+#include <errno.h>
+
+void http_request(int fd, char* host, char* resource) {
+    char buf[BUFSIZ];
+    memset(buf, 0, sizeof(buf));
+
+    sprintf(buf,
+        "GET %s HTTP/1.1\r\n"
+        "Host: %s\r\n"
+        "Connection: keep-alive\r\n"
+        "\r\n\0",
+        resource, host);
 
 
-#define htons(x)  __builtin_bswap16(x)
-#define htonl(x)  __builtin_bswap32(x)
+    if(write(fd, buf, strlen(buf)) <= 0) {
+        perror("http_request->send()");
+        return;
+    }
+}
 
 
-int mkrequest(char* url, char* resource) {
-    fprintf(stdout, "\nGET \033[37m%s%s\033[39m\n", url, resource);
-
-    struct hostent* e = gethostbyname(url);
-    if(!e) {
-        fprintf(stderr, "%s: HOST_NOT_FOUND\n", url);
-        return -1;
+void http_response(int fd, char** data, size_t* size) {
+    if(!data || !size) {
+        errno = EINVAL;
+        perror("http_response()");
+        return;
     }
 
-    fprintf(stdout, "\t => Resolved DNS %d.%d.%d.%d\n",
-        e->h_addr_list[0][0] & 0xFF,
-        e->h_addr_list[0][1] & 0xFF,
-        e->h_addr_list[0][2] & 0xFF,
-        e->h_addr_list[0][3] & 0xFF
-    );
+
+    char buf[BUFSIZ];
+    memset(buf, 0, sizeof(buf));
+
+    if(read(fd, buf, sizeof(buf)) <= 0) {
+        fprintf(stderr, "http_response->read(): I/O error");
+        return;
+    }
+
+    if(strncmp(buf, "HTTP/1.1", 8) != 0) {
+        fprintf(stderr, "Invalid HTTP Response\n%s", buf);
+        return;
+    }
+
+    int status = atoi(&buf[9]);
+    if(status != 200) {
+        fprintf(stderr, "HTTP: Bad status %d", status);
+        return;
+    }
+
+    if(strstr(buf, "Content-Length: "))
+        *size = atoi(&strstr(buf, "Content-Length: ")[16]);
+
+    char* p = (char*) malloc(*size);
+    if(!p) {
+        fprintf(stderr, "http_request->malloc(): no memory left");
+        return;
+    }
+
+    *data = p;
+
+
+    int i;
+    for(i = 0; i < *size; i += BUFSIZ) {
+        if(read(fd, p, BUFSIZ) < BUFSIZ)
+            return;
+
+        p = &p[BUFSIZ];
+    }
+}
+
+
+int fetch(char* url, char* resource) {
+    struct hostent* e = gethostbyname(url);
+    if(!e) {
+        perror(url);
+        return -1;
+    }
 
     int fd = socket(AF_INET, SOCK_STREAM, 0);
     if(fd < 0) {
@@ -34,57 +92,43 @@ int mkrequest(char* url, char* resource) {
     }
 
     struct sockaddr_in in;
-    memset(&in, 0, sizeof(in));
-
     in.sin_family = AF_INET;
-    in.sin_port = htons(80);
+    in.sin_port = __builtin_bswap16(80);
     memcpy(&in.sin_addr.s_addr, e->h_addr_list[0], e->h_length);
-
-
-    if(connect(fd, (const struct sockaddr*) &in, sizeof(in)) < 0) {
+    
+    if(connect(fd, (struct sockaddr*) &in, sizeof(in)) != 0) {
         perror("connect");
         return -1;
     }
-
-    char buf[BUFSIZ];
-    sprintf(buf, 
-        "GET %s HTTP/1.0\r\n"
-        "Host: %s\r\n"
-        "\r\n"
-    , resource, url);
-
-    if(write(fd, buf, strlen(buf)) < 0)
-        perror("send");
-
-    fprintf(stdout, "\t => Sent %d Bytes\n", strlen(buf));
-    memset(buf, 0, BUFSIZ);
-
-    size_t n = 0;
-    for(;;)
-        if((n = read(fd, buf, BUFSIZ)) > 0)
-            break;
-    fprintf(stdout, "\t => Received %d Bytes\n", n);
-
     
-    char* p = buf;
-    while(*p != '\r')
-        p++;
-    *p++ = 0;
-    p++;
 
-    fprintf(stdout, "\t => Response %s\n", &buf[9]);
+
+    char* data = NULL;
+    size_t size = 0;
     
-    while(*p && strncmp(p, "\r\n\r\n", strlen("\r\n\r\n")) != 0)
-        p++;
+
+    fprintf(stderr, "GET http://%s%s -> ", url, resource);
+
+    http_request(fd, url, resource);
+    http_response(fd, &data, &size);
+
+    if(size)
+        fprintf(stderr, "%d bytes", size);
+    fprintf(stderr, "\n");
 
 
-    fprintf(stdout, "\n%s\n", p);
+    if(data)
+        free(data);
+
     close(fd);
-    return 0;
+    return size;   
 }
 
-int main(int argc, char** argv) {
-    mkrequest("www.geekstribe.altervista.org", "/index.php");
 
+int main(int argc, char** argv) {
+    //fetch("www.osdev.org", "/");
+    //fetch("www.geekstribe.altervista.org", "/index.php");
+    //fetch("www.cplusplus.com", "/");
+    fetch("ipv4.download.thinkbroadband.com", "/5MB.zip");
     return 0;
 }

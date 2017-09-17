@@ -65,7 +65,7 @@ static void plot_value(struct cc* cc, char value) {
         if(isdigit(value) || value == ';')
             cc->escape_buffer[cc->escape_offset++] = value;
         else {
-            int x, y;
+            int x = 0, y = 0;
             switch(value) {
                 case '@':
                     y = atoi(cc->escape_buffer);
@@ -120,8 +120,6 @@ static void plot_value(struct cc* cc, char value) {
                         default:
                             for(x = 0; x < CONSOLE_WIDTH * CONSOLE_HEIGHT; x++)
                                 VRAM[x] = (cc->style << 8) | ' ';
-
-                            cc->p = 0;
                             break;
                     }
                     break;

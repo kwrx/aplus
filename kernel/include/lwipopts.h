@@ -69,16 +69,17 @@
 #define TCP_KEEPCNT_DEFAULT                 9U
 
 #define MEM_LIBC_MALLOC                     1
-#define MEM_SIZE                            (8192 * 1024 /* 8MiB */)
+#define MEM_SIZE                            (CONFIG_HOST_MEMORY * 1024 * 1024)
 
+#define MEMP_MEM_MALLOC                     1
 #define MEMP_NUM_SYS_TIMEOUT                10
 #define MEMP_MEM_MALLOC                     1
-#define MEMP_NUM_PBUF                       1024
+#define MEMP_NUM_PBUF                       8192
 #define MEMP_NUM_UDP_PCB                    64
 #define MEMP_NUM_TCP_PCB_LISTEN             64
 #define MEMP_NUM_TCP_SEG                    256
 #define MEMP_NUM_REASSDATA                  32
-#define MEMP_NUM_NETBUF                     1024
+#define MEMP_NUM_NETBUF                     8192
 #define MEMP_NUM_NETCONN                    64
 
 
