@@ -128,4 +128,6 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
     x86_cleanup();
 }
 
+EXPORT(debug_send);
+EXPORT(debug_dump);
 #endif

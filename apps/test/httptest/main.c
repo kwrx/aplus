@@ -10,6 +10,37 @@
 #include <netdb.h>
 #include <errno.h>
 
+
+void print_status(size_t bytes_read, size_t size, time_t tm) {
+    static time_t __time = 0;
+    static size_t __lastbytes = 0;
+    static size_t __speed = 0;
+
+    if(!size) {
+        __time =
+        __lastbytes =
+        __speed = 0;
+        return;
+    }
+
+    fprintf(stderr, "\r [");
+    
+    int i;
+    for(i = 0; i < 20; i++)
+        if(i < (int) (((double) bytes_read / (double) size) * 100.0 / 5.0))
+            fprintf(stderr, "*");
+        else
+            fprintf(stderr, " ");
+
+    fprintf(stderr, "] %.2f/%.2f kB (%.2f kB/s)", (double) bytes_read / 1024.0, (double) size / 1024.0, (double) __speed / 1024.0);
+
+    if(tm != __time) {
+        __time = tm;
+        __speed = bytes_read - __lastbytes;
+        __lastbytes = bytes_read;
+    }
+}
+
 void http_request(int fd, char* host, char* resource) {
     char buf[BUFSIZ];
     memset(buf, 0, sizeof(buf));
@@ -18,6 +49,7 @@ void http_request(int fd, char* host, char* resource) {
         "GET %s HTTP/1.1\r\n"
         "Host: %s\r\n"
         "Connection: keep-alive\r\n"
+        "Accept-Encoding: identity, *;q=0\r\n"
         "\r\n\0",
         resource, host);
 
@@ -40,7 +72,8 @@ void http_response(int fd, char** data, size_t* size) {
     char buf[BUFSIZ];
     memset(buf, 0, sizeof(buf));
 
-    if(read(fd, buf, sizeof(buf)) <= 0) {
+    int n;
+    if((n = read(fd, buf, sizeof(buf))) < 0) {
         fprintf(stderr, "http_response->read(): I/O error");
         return;
     }
@@ -59,22 +92,35 @@ void http_response(int fd, char** data, size_t* size) {
     if(strstr(buf, "Content-Length: "))
         *size = atoi(&strstr(buf, "Content-Length: ")[16]);
 
-    char* p = (char*) malloc(*size);
+    char* p = *data = (char*) malloc(*size);
     if(!p) {
         fprintf(stderr, "http_request->malloc(): no memory left");
         return;
     }
 
-    *data = p;
+    char* d = &strstr(buf, "\r\n\r\n")[4];
+    int c = n - ((uintptr_t) d - (uintptr_t) buf);
+    memcpy(p, buf, c);
+    p = &p[c];
 
+    print_status(0, 0, 0);
 
     int i;
     for(i = 0; i < *size; i += BUFSIZ) {
-        if(read(fd, p, BUFSIZ) < BUFSIZ)
-            return;
+        n = read(fd, p, BUFSIZ);
+        c += n;
 
-        p = &p[BUFSIZ];
+        if(n < 0)
+            break;
+
+        if(n == 0)
+            continue;
+
+        p = &p[n];
+        print_status(c, *size, time(NULL));
     }
+
+    print_status(c, *size, time(NULL));
 }
 
 
@@ -107,15 +153,12 @@ int fetch(char* url, char* resource) {
     size_t size = 0;
     
 
-    fprintf(stderr, "GET http://%s%s -> ", url, resource);
+    fprintf(stderr, "GET http://%s%s\n", url, resource);
 
     http_request(fd, url, resource);
     http_response(fd, &data, &size);
 
-    if(size)
-        fprintf(stderr, "%d bytes", size);
     fprintf(stderr, "\n");
-
 
     if(data)
         free(data);

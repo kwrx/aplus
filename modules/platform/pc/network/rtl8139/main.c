@@ -106,7 +106,7 @@ void rtl8139_endoutput(void* internals, uint16_t len) {
     if(dev->txcur == 4)
         dev->txcur = 0;
 
-    kprintf(INFO "rtl8139: sending %d bytes\n", len);
+    //kprintf(INFO "rtl8139: sending %d bytes\n", len);
 }
 
 void rtl8139_endinput(void* internals);
@@ -140,7 +140,7 @@ int rtl8139_startinput(void* internals) {
     dev->offset = 0;
 
 
-    kprintf(WARN "rtl8139: reiceved %d bytes (status: %08x)\n", s >> 16, s);
+    //kprintf(WARN "rtl8139: reiceved %d bytes (status: %08x)\n", s >> 16, s);
     return size;
 }
 
