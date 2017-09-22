@@ -14,9 +14,14 @@ MODULE_LICENSE("GPL");
 static int log_write(struct inode* inode, void* buf, size_t size) {
 #if DEBUG
     ((char*) buf) [size] = 0;
-    //kprintf(LOG "%s", buf);
-    for(char* p = buf; *p; p++)
+    kprintf(LOG "");
+
+    for(char* p = buf; *p; p++) {
         debug_send(*p);
+
+        if(*p == '\n' && p[1] != '\0')
+            kprintf(LOG "");
+    }
 #endif
 
     return size;

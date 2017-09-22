@@ -1,0 +1,4 @@
+#!/usr/sbin/dux
+
+
+exec("/usr/sbin/ntp --deamon");

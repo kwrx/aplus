@@ -64,11 +64,16 @@ int main(int argc, char** argv) {
     if(!deamon)
         sync();
     else {
+        if(strcmp(sysconfig("syncd.enabled", SYSCONFIG_FORMAT_STRING, "false"), "true") != 0) {
+            fprintf(stderr, "syncd: deamon disabled by /etc/config\n");
+            return 0;
+        }
+
         if(strcmp(argv[0], "[syncd]") != 0)
             execl("/proc/self/exe", "[syncd]", "--deamon", NULL);
         
         
-        int s = sysconfig("sys.syncd", SYSCONFIG_FORMAT_INT, 10);
+        int s = sysconfig("syncd.timeout", SYSCONFIG_FORMAT_INT, 10);
         
         FILE* fp = fopen("/dev/log", "w");
         if(fp)

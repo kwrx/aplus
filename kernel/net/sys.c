@@ -86,7 +86,7 @@ void sys_sem_signal(struct sys_sem** sem) {
 }
 
 u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t __timeout) {
-    u32_t timeout = __timeout;
+    ktime_t timeout = (ktime_t) __timeout;
     timeout += timer_getms();
 
     ipc_wait (
@@ -105,9 +105,9 @@ u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t __timeout) {
 
 
     if(__timeout == 0)
-        return timer_getms() - timeout;
+        return (u32_t) (timer_getms() - timeout);
 
-    return timeout - timer_getms();
+    return (u32_t) (timeout - timer_getms());
 }
 
 
@@ -155,7 +155,7 @@ void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 
 
 u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
-    u32_t timeout = __timeout;
+    ktime_t timeout = (ktime_t) __timeout;
     timeout += timer_getms();
 
     if(__timeout) {
@@ -179,10 +179,10 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
 
 
     if(__timeout == 0)
-        return timer_getms() - timeout;
+        return (u32_t) (timer_getms() - timeout);
 
 
-    return timeout - timer_getms();
+    return (u32_t) (timeout - timer_getms());
 }
 
 u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {

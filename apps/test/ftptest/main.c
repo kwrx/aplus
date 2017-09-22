@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
     print_status(0, 0, 0);
 
     int n, c = 0;
-    while((n = read(sock, buf, sizeof(buf))) > 0) {
+    while((n = recv(sock, buf, sizeof(buf), 0)) > 0) {
         c += n;
         print_status(c, 3425730, time(NULL));
     }
