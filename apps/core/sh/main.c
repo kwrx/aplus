@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
@@ -109,6 +110,11 @@ int main(int argc, char** argv, char** env) {
             if(strcmp(cwd, getenv("HOME")) == 0)
                 cwd = "~";
 
+
+        time_t t0 = time(NULL);
+        struct tm* tm = localtime(&t0);
+
+        fprintf(stdout, "\033[63C[\033[33m%02d/%02d \033[31m%02d:%02d:%02d\033[39m]\033[79D", tm->tm_mday, tm->tm_mon + 1, tm->tm_hour, tm->tm_min, tm->tm_sec);
         fprintf(stdout, "\033[36m[%s@%s %s]%c\033[39m ", username, hostname, cwd, geteuid() == 0 ? '#' : '$');
         fflush(stdout);
 

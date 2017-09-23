@@ -49,7 +49,7 @@
 #define LWIP_POSIX_SOCKETS_IO_NAMES         0 
 #define LWIP_MPU_COMPATIBLE                 1
 #define LWIP_COMPAT_MUTEX_ALLOWED           1
-#define LWIP_SO_RCVTIMEO                    0
+#define LWIP_SO_RCVTIMEO                    1
 #define LWIP_SO_SNDTIMEO                    0
 
 #define LWIP_NETIF_LOOPBACK                 1

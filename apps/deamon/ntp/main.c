@@ -85,8 +85,13 @@ static void do_ntp() {
         return;
     }
 
-    int timeout = 3000;
-    setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeout, sizeof(timeout));
+    struct timeval timeout;
+    timeout.tv_sec = 3;
+    timeout.tv_usec = 0;
+    if(setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, (char*) &timeout, sizeof(timeout)) < 0) {
+        perror("ntpd: setsockopt()");
+        return;
+    }
     
     struct {
         uint8_t li_vn_mode;
@@ -103,7 +108,7 @@ static void do_ntp() {
     } __attribute__ ((packed)) ntp;
 
     memset(&ntp, 0, sizeof(ntp));
-    ntp.li_vn_mode = SNTP_LI_NO_WARNING | SNTP_VERSION | SNTP_MODE_CLIENT;
+    ntp.li_vn_mode = 0x1B; //SNTP_LI_NO_WARNING | SNTP_VERSION | SNTP_MODE_CLIENT;
 
     if(sendto(fd, &ntp, SNTP_MSG_LEN, 0, (struct sockaddr*) &in, sizeof(in)) < 0) {
         perror("ntpd: sendto()");
@@ -112,7 +117,10 @@ static void do_ntp() {
     
     socklen_t len = sizeof(in);
     if(recvfrom(fd, &ntp, SNTP_MSG_LEN, 0, (struct sockaddr*) &in, &len) != SNTP_MSG_LEN) {
-        perror("ntpd: recvfrom()");
+        if(errno == EAGAIN)
+            fprintf(stderr, "ntpd: server not responding: %s\n", host);
+        else
+            perror("ntpd: recvfrom()");
         return;
     }
     

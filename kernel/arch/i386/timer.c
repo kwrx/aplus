@@ -102,8 +102,11 @@ ktime_t timer_gettimestamp() {
     td += t.tm_mday - 1;
     td = td + (ty * 365) + lp;
 
+
+    extern int local_timezone;
+
     return (ktime_t) ((td * 86400) + (t.tm_hour * 3600) +
-            (t.tm_min * 60) + t.tm_sec);
+            (t.tm_min * 60) + t.tm_sec) + (3600 * local_timezone);
 }
 
 

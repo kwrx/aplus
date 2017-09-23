@@ -6,7 +6,7 @@
 
 # -- System
 sys.locale=it-IT
-sys.timezone=2
+sys.timezone=1
 sys.events=16
 
 # -- [syncd]
@@ -16,7 +16,7 @@ syncd.timeout=10
 # -- [ntpd]
 ntpd.enabled=true
 ntpd.timeout=3600
-ntpd.server=0.it.pool.ntp.org
+ntpd.server=it.pool.ntp.org
 
 
 # -- Screen

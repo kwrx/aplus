@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 #endif
     (void) module_init();
     (void) mounts_init();
-
+    (void) local_init();
 
 
     kprintf(INFO "cpu: %s %d MHz (Cores: %d, Threads: %d)\n",
@@ -66,7 +66,6 @@ int main(int argc, char** argv) {
     kprintf(INFO "%s %s %p\n",
             KERNEL_NAME,
             mbd->cmdline.args, mbd->memory.start);
-
 
 
     

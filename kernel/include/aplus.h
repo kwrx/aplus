@@ -109,6 +109,7 @@ int sys_pause(void);
 
 extern int mounts_init();
 extern int libk_init();
+extern int local_init();
 
 #endif
 #endif
