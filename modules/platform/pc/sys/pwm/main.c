@@ -34,6 +34,7 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
         case PWMIOCTL_POWEROFF:
         case PWMIOCTL_REBOOT:
             __event_raise_EV_PWR(pwid, 1);
+            sys_sync();
             module_dnit();
         default:
             break;

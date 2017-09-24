@@ -105,6 +105,7 @@ extern int sys_fcntl(int, int, long);
 int sys_unlink(const char*);
 int sys_clock_gettime(clockid_t id, struct timespec *tv);
 int sys_pause(void);
+int sys_sync(void);
 
 
 extern int mounts_init();

@@ -118,7 +118,7 @@ static void do_ntp() {
     socklen_t len = sizeof(in);
     if(recvfrom(fd, &ntp, SNTP_MSG_LEN, 0, (struct sockaddr*) &in, &len) != SNTP_MSG_LEN) {
         if(errno == EAGAIN)
-            fprintf(stderr, "ntpd: server not responding: %s\n", host);
+            fprintf(stderr, "ntpd: connection timed out: %s\n", host);
         else
             perror("ntpd: recvfrom()");
         return;
