@@ -11,7 +11,7 @@
 #include <arch/i386/i386.h>
 
 static void idle() {
-    current_task->name = "[idle]";
+    current_task->name = "[systemd]";
     current_task->description = "System Idle Process";
 
     int p;

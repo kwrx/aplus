@@ -64,7 +64,7 @@ int main(int argc, char** argv) {
     if(!deamon)
         sync();
     else {
-        if(strcmp(sysconfig("syncd.enabled", SYSCONFIG_FORMAT_STRING, "false"), "true") != 0) {
+        if(strcmp((const char*) sysconfig("syncd.enabled", SYSCONFIG_FORMAT_STRING, (uintptr_t) "false"), "true") != 0) {
             fprintf(stderr, "syncd: deamon disabled by /etc/config\n");
             return 0;
         }

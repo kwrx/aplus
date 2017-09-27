@@ -80,25 +80,45 @@ int fifo_available(fifo_t* fifo);
 
 
 
-#define ipc_timed_wait(cond)                                            \
+#define ipc_timed_wait(cond, tm)                                        \
     {                                                                   \
-        ktime_t timeout = timer_getms() + CONFIG_IPC_TIMEOUT;           \
+        ktime_t __t = timer_getms() + tm;                               \
         while((cond)) {                                                 \
-            if(timer_getms() > timeout) {                               \
-                kprintf(WARN "ipc: deadlock timeout expired!\n");       \
-                break;                                                  \
+            if(timer_getms() > __t) {                                   \
+                kprintf(WARN "ipc: deadlock timeout expired for "       \
+                             "(%s) %s:%d!\n",                           \
+                             #cond, __FILE__, __LINE__);                \
+                                                                        \
+                __t = timer_getms() + tm;                               \
             }                                                           \
                                                                         \
             sys_yield();                                                \
         }                                                               \
     }    
 
+#if DEBUG
+#define ipc_wait(cond)                                                  \
+    {                                                                   \
+        ktime_t __t = timer_getms() + CONFIG_IPC_TIMEOUT;               \
+        while((cond)) {                                                 \
+            if(timer_getms() > __t) {                                   \
+                kprintf(WARN "ipc: deadlock timeout expired for "       \
+                             "(%s) %s:%d!\n",                           \
+                             #cond, __FILE__, __LINE__);                \
+                                                                        \
+                __t = timer_getms() + CONFIG_IPC_TIMEOUT;               \
+            }                                                           \
+                                                                        \
+            sys_yield();                                                \
+        }                                                               \
+    }     
+#else
 #define ipc_wait(cond)                                                  \
     {                                                                   \
         while((cond))                                                   \
             sys_yield();                                                \
     }   
-
+#endif
 
 #endif
 #endif

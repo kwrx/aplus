@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdio.h>
 
 
 char* md5(const char* buf) {

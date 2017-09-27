@@ -18,6 +18,9 @@ all:					\
 	$(HDD)
 	$(VMM)
 
+vm:
+	$(VMM)
+
 $(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
 	@echo "  LD     " $@
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)

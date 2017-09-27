@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <aplus/base.h>
 #include <aplus/dmx.h>
+#include <unistd.h>
 
 int main(int argc, char** argv) {
     FILE* fp = fopen("/dev/log", "w");

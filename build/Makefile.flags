@@ -24,7 +24,7 @@ LIBS            += -ldisasm
 AFLAGS          += -masm=intel
 CFLAGS          += -masm=intel
 NFLAGS          += -felf
-VMM             += -M accel="tcg" -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::5000-:5000,hostfwd=udp::123-:123 -no-kvm-irqchip
+VMM             += -M accel="tcg" -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=udp::5000-:5000 -no-kvm-irqchip
 #VMM                := echo "c" | bochs -q -f bochs.conf
 endif
 
