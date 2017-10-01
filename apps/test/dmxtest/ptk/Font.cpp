@@ -1,6 +1,9 @@
 #include <ptk/Font.h>
 #include <cairo/cairo.h>
-
+#include <cairo/cairo-ft.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 using namespace std;
 using namespace ptk;
 
@@ -62,10 +65,28 @@ Font::Font(string family, FT_F26Dot6 ptSize, FT_UInt dpi)  {
     auto i = Font::Cache.find(p);
 
     if(i == Font::Cache.end()) {
+        #if 0
+        int fd = open(p.c_str(), O_RDONLY);
+        if(fd < 0) {
+            cerr << "ptk-error: \'" << p << "\' font not found!" << endl;
+            return;
+        }
+
+        struct stat st;
+        fstat(fd, &st);
+
+        void* buffer = (void*) malloc(st.st_size);
+        read(fd, buffer, st.st_size);
+        close(fd);
+
+        FT_New_Memory_Face(Font::Library, (const FT_Byte*) buffer, st.st_size, 0, &this->Face);
+        #endif
+
         if(FT_New_Face(Font::Library, p.c_str(), 0, &this->Face) != 0) {
             cerr << "ptk-error: \'" << p << "\' font not found!" << endl;
             return;
         }
+
 
         Font::Cache[p] = this->Face;
     } else
@@ -81,16 +102,19 @@ bool Font::IsLoaded(void) {
 }
 
 void Font::DrawTo(ptk::Frame* frame, string text, double x, double y) {
-    FT_Set_Char_Size(this->Face, 0, 0, 0, 0);
-    FT_Set_Transform(this->Face, NULL, NULL);
-    //FT_Set_Pixel_Sizes(this->Face, 0, 16);
-    cairo_save(frame->Fx);
+    this->DrawTo(frame, text, x, y, this->PtSize, this->Dpi);
+}
 
+void Font::DrawTo(ptk::Frame* frame, string text, double x, double y, FT_F26Dot6 ptSize, FT_UInt dpi) {
+    //FT_Set_Char_Size(this->Face, 0, ptSize * 64, dpi, dpi);
+    //FT_Set_Pixel_Sizes(this->Face, 0, 48);
+    cairo_save(frame->Fx);
+#if 0    
     int i;
     for(i = 0; text[i]; i++) {
         if(FT_Load_Char(this->Face, text[i], FT_LOAD_RENDER))
-           ; continue;
-
+            continue;
+        break;
         FT_GlyphSlot sl = this->Face->glyph;
             
 
@@ -102,14 +126,29 @@ void Font::DrawTo(ptk::Frame* frame, string text, double x, double y) {
             sl->bitmap.width
         );
 
+        //cairo_set_mask_rgb_color(frame->Fx, 1.0, 1.0, 1.0);
+        //cairo_set_mask_alpha(Frame->Fx, 1.0);
         cairo_mask_surface(frame->Fx, mask, x + (double) sl->bitmap_left, y - (double) sl->bitmap_top);
         x += (double) (sl->advance.x >> 6);
         y += (double) (sl->advance.y >> 6);
 
-        cairo_fill(frame->Fx);
+        cairo_paint(frame->Fx);
         cairo_surface_destroy(mask);
     }
+#endif
 
+    cairo_font_face_t* face = cairo_ft_font_face_create_for_ft_face(this->Face, 0);
+    if(!face) {
+        fprintf(stderr, "!face!!\n");
+        return;
+    }
+    
+    //cairo_rectangle(frame->Fx, 0.0, 0.0, 1280.0, 720.0);
+    cairo_set_source_rgba(frame->Fx, 1.0, 1.0, 1.0, 1.0);
+    cairo_set_font_face(frame->Fx, face);
+    cairo_set_font_size(frame->Fx, 12.0);
+    //cairo_move_to(frame->Fx, 20, 30);
+    cairo_show_text(frame->Fx, "Hello World");
+    cairo_paint(frame->Fx);
     cairo_restore(frame->Fx);
 }
-

@@ -37,5 +37,6 @@ namespace ptk {
 
         bool IsLoaded();
         void DrawTo(ptk::Frame* frame, string text, double x = 0.0, double y = 0.0);
+        void DrawTo(ptk::Frame* frame, string text, double x, double y, FT_F26Dot6 ptSize, FT_UInt dpi = 72);
     };
 }

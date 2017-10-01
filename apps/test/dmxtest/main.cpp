@@ -9,7 +9,7 @@
 
 #include <cairo/cairo.h>
 
-#define TEST
+//#define TEST
 #include <aplus/utils/unittest.h>
 
 
@@ -47,11 +47,12 @@ int main(int argc, char** argv) {
     Font* F = new Font("Ubuntu Regular", 32);
     __unittest_eq(F->IsLoaded(), 1, bool);
 
+    cairo_save(Screen->Fx);
     cairo_rectangle(Screen->Fx, 0, 0, Screen->Width, Screen->Height);
     cairo_set_source_rgb(Screen->Fx, 0, 0, 1);
     cairo_fill(Screen->Fx);
+    cairo_restore(Screen->Fx);
 
-    cairo_set_source_rgb(Screen->Fx, 1.0, 1.0, 1.0);
     F->DrawTo(Screen, "Hello World", 0, 0);
     
     __unittest_eq(Font::Done(), 0, int);
