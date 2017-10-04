@@ -15,6 +15,7 @@
 
 #include <ptk/Frame.h>
 #include <ptk/Font.h>
+#include <ptk/Window.h>
 
 using namespace std;
 using namespace ptk;
@@ -43,17 +44,30 @@ int main(int argc, char** argv) {
 
     __unittest_eq(Font::Initialize(), 0, int);
 
-    Frame* Screen = new Frame(fb.lfbptr, fb.width, fb.height, fb.bpp);
-    Font* F = new Font("Ubuntu Regular", 32);
-    __unittest_eq(F->IsLoaded(), 1, bool);
+    ptk::Window* Window = new ptk::Window();
+    Window->Width = (double) (fb.width - 6);
+    Window->Height = (double) (fb.height - 6);
 
-    cairo_save(Screen->Fx);
-    cairo_rectangle(Screen->Fx, 0, 0, Screen->Width, Screen->Height);
-    cairo_set_source_rgb(Screen->Fx, 0, 0, 1);
-    cairo_fill(Screen->Fx);
-    cairo_restore(Screen->Fx);
+    Window->OnCreate = [&] (auto W) -> void {
+        W->View = new Frame(fb.lfbptr, fb.width, fb.height, fb.bpp);
+        W->View->Paint([&] (auto cr) -> void {
+            cairo_save(cr);
+            cairo_rectangle(cr, 0.0, 0.0, (double) fb.width, (double) fb.height);
+            cairo_set_source_rgba(cr, 0, 0, 0.0, 1.0);
+            cairo_fill(cr);
+        });
+    };
 
-    F->DrawTo(Screen, "Hello World", 0, 0);
+    Window->OnPaint = [] (auto W, auto cr) -> void {
+        cairo_set_font_face(cr, Font::Load("Ubuntu Regular"));
+        cairo_set_font_size(cr, 64.0);
+        cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
+        cairo_move_to(cr, 300.0, 300.0);
+        cairo_show_text(cr, "Hello World");
+        cairo_restore(cr);
+    };
+
+    Window->Show();
     
     __unittest_eq(Font::Done(), 0, int);
     __unittest_end();

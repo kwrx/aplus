@@ -38,7 +38,7 @@ int mounts_init(void) {
     kprintf(LOG "mounts: mount root in %s (%s)\n", rootmnt, rootfs);
     
     if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != E_OK))
-        kprintf(ERROR "/dev/hd0/0: failed to mount /root\n");
+        kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
 
     if(unlikely(sys_symlink("/dev", "root/dev") != E_OK))
         kprintf(ERROR "/dev: failed to link in /root/dev");

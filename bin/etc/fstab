@@ -6,4 +6,4 @@
 
       nodev        /proc           procfs           defaults
       nodev        /tmp            tmpfs            defaults
-#     /dev/cd0     /mnt/cdrom      iso9660          readonly
+#     /dev/cda     /mnt/cdrom      iso9660          readonly

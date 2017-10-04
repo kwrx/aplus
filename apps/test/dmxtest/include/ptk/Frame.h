@@ -4,6 +4,7 @@
 #endif
 
 #include <iostream>
+#include <functional>
 #include <cairo/cairo.h>
 
 using namespace std;
@@ -53,7 +54,7 @@ namespace ptk {
         Frame(void* buffer, uint16_t width, uint16_t height, uint8_t bitsperpixel) :
             Buffer(buffer), Width(width), Height(height), BitsPerPixel(bitsperpixel),
             BytesPerPixel(bitsperpixel / 8), Stride(width * (bitsperpixel / 8)) {
-;
+
             switch(bitsperpixel) {
                 case 16:
                     this->Format = CAIRO_FORMAT_RGB16_565;
@@ -129,17 +130,30 @@ namespace ptk {
             );
         }
 
-        inline cairo_surface_t* LockSurface(double cx, double cy, double cw, double ch) {
+        inline cairo_t* LockSurface(double cx, double cy, double cw, double ch) {
             if(this->Locked)
                 return NULL;
 
             this->Locked++;
-            return cairo_surface_create_for_rectangle(this->Surface, cx, cy, cw, ch);
+            cairo_surface_t* s = cairo_surface_create_for_rectangle(this->Surface, cx, cy, cw, ch);
+            if(!s)
+                return NULL;
+
+            return cairo_create(s);
         }
 
-        inline void UnlockSurface(cairo_surface_t* data) {
-            cairo_surface_destroy(data);
+        inline void UnlockSurface(cairo_t* data) {
+            cairo_surface_destroy(cairo_get_target(data));
+            cairo_destroy(data);
+
             this->Locked = 0;
+        }
+
+        inline void Paint(function<void (cairo_t*)> OnPaintHandler = NULL) {
+            if(OnPaintHandler)
+                OnPaintHandler(this->Fx);
+
+            /* TODO */
         }
     };
 }

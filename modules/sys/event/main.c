@@ -113,7 +113,7 @@ static int event_ioctl(inode_t* inode, int req, void* data) {
 }
 
 
-evid_t __event_device_add(char* name, int caps) {
+evid_t sys_event_device_add(char* name, int caps) {
     event_device_t* d = (event_device_t*) kmalloc(sizeof(event_device_t), GFP_KERNEL);
     memset(d, 0, sizeof(event_device_t));
 
@@ -130,7 +130,7 @@ evid_t __event_device_add(char* name, int caps) {
     return d->ed_id;
 }
 
-int __event_device_remove(evid_t id) {
+int sys_event_device_remove(evid_t id) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -148,7 +148,7 @@ int __event_device_remove(evid_t id) {
     return -1;
 }
 
-int __event_device_set_enabled(evid_t id, int enabled) {
+int sys_event_device_set_enabled(evid_t id, int enabled) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -161,7 +161,7 @@ int __event_device_set_enabled(evid_t id, int enabled) {
     return -1;
 }
 
-int __event_device_set_caps(evid_t id, int caps) {
+int sys_event_device_set_caps(evid_t id, int caps) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -174,7 +174,7 @@ int __event_device_set_caps(evid_t id, int caps) {
     return -1;
 }
 
-int __event_device_set_exclusive(evid_t id, int evno) {
+int sys_event_device_set_exclusive(evid_t id, int evno) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -188,7 +188,7 @@ int __event_device_set_exclusive(evid_t id, int evno) {
 }
 
 
-int __event_raise(event_t* e) {
+int sys_event_raise(event_t* e) {
     list_each(ev_devices, d) {
         if(d->ed_id != e->ev_devid)
             continue;

@@ -3,7 +3,7 @@
 
 %define CONFIG_KERNEL_BASE			0xC0000000
 %define CONFIG_STACK_BASE			0xFFC00000
-%define CONFIG_STACK_SIZE			0x00008000
+%define CONFIG_STACK_SIZE			0x00020000
 %define CONFIG_VIDEOMODE			(0)
 
 %define V2P(x)						((x) - CONFIG_KERNEL_BASE)
@@ -196,15 +196,13 @@ PT:
 PT_1MB:
 	times 1024 dd 0
 PT_STACK:
-	dd V2P(stack_bottom) + 0x3
-	dd V2P(stack_bottom) + 0x1000 + 0x3
-	dd V2P(stack_bottom) + 0x2000 + 0x3
-	dd V2P(stack_bottom) + 0x3000 + 0x3
-	dd V2P(stack_bottom) + 0x4000 + 0x3
-	dd V2P(stack_bottom) + 0x5000 + 0x3
-	dd V2P(stack_bottom) + 0x6000 + 0x3
-	dd V2P(stack_bottom) + 0x7000 + 0x3
-	times 1016 dd 0
+%assign i 0
+%rep (CONFIG_STACK_SIZE / 4096)
+	dd V2P(stack_bottom) + i + 0x03
+%assign i i + 0x1000
+%endrep
+	times (1024 - (CONFIG_STACK_SIZE / 4096)) dd 0
+
 
 PDT:
 	dd V2P(PT) + 0x3

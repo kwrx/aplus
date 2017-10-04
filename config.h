@@ -44,7 +44,7 @@
 #    define CONFIG_HEAP_BASE                0xC4000000L
 #    define CONFIG_STACK_BASE               0xFFC00000L
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
-#    define CONFIG_STACK_SIZE               0x00008000ULL
+#    define CONFIG_STACK_SIZE               0x00020000ULL
 #    define KERNEL_PLATFORM                 "i386"
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__x86_64__)

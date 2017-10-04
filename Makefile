@@ -47,12 +47,12 @@ LIBRARIES:
 $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
 	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
-	@losetup /dev/loop0 hdd.img
-	@losetup /dev/loop1 hdd.img -o 1048576
-	@mkfs -text2 /dev/loop1 > /dev/null
+	@losetup /dev/loop2 hdd.img
+	@losetup /dev/loop3 hdd.img -o 1048576
+	@mkfs -text2 /dev/loop3 > /dev/null
 	@mkdir -p /mnt/hdd
-	@mount /dev/loop1 /mnt/hdd
-	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop0 >> /dev/null
+	@mount /dev/loop3 /mnt/hdd
+	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop2 >> /dev/null
 	@cp -r bin/* /mnt/hdd
 	@umount /mnt/hdd
 	@losetup -D

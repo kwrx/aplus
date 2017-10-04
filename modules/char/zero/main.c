@@ -12,6 +12,11 @@ MODULE_LICENSE("GPL");
 
 
 static int zero_read(struct inode* inode, void* buf, size_t size) {
+    if(unlikely(!buf || !size)) {
+        errno = EINVAL;
+        return -1;
+    }
+    
     memset(buf, 0, size);
     return size;
 }

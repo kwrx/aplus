@@ -33,7 +33,7 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
         case PWMIOCTL_HALT:
         case PWMIOCTL_POWEROFF:
         case PWMIOCTL_REBOOT:
-            __event_raise_EV_PWR(pwid, 1);
+            sys_event_raise_EV_PWR(pwid, 1);
             sys_sync();
             module_dnit();
         default:
@@ -74,8 +74,8 @@ int init(void) {
     inode_t* ino = vfs_mkdev("pwm", -1, S_IFCHR | 0440);
     ino->ioctl = pwm_ioctl;
 
-    pwid = __event_device_add("system-power-manager", EC_PWR);
-    __event_device_set_enabled(pwid, 1);
+    pwid = sys_event_device_add("system-power-manager", EC_PWR);
+    sys_event_device_set_enabled(pwid, 1);
     return E_OK;
 }
 

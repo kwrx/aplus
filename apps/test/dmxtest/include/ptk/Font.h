@@ -7,6 +7,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <cairo/cairo.h>
+#include <cairo/cairo-ft.h>
 
 #include <ptk/Frame.h>
 
@@ -27,16 +28,6 @@ namespace ptk {
         static int Done(void);
         static string GetFontPath(string family);
 
-
-
-        FT_Face Face;
-        FT_F26Dot6 PtSize;
-        FT_UInt Dpi;
-        
-        Font(string family, FT_F26Dot6 ptSize = 12, FT_UInt dpi = 72);
-
-        bool IsLoaded();
-        void DrawTo(ptk::Frame* frame, string text, double x = 0.0, double y = 0.0);
-        void DrawTo(ptk::Frame* frame, string text, double x, double y, FT_F26Dot6 ptSize, FT_UInt dpi = 72);
+        static cairo_font_face_t* Load(string family, int flags = 0);
     };
 }

@@ -22,10 +22,10 @@ MODULE_LICENSE("GPL");
 #    endif
 
 
-#define PS2_DATA        0x60
-#define PS2_CTRL        0x64
-#define PS2_ACK            0xFA
-#define PS2_RESEND        0xFE
+#define PS2_DATA            0x60
+#define PS2_CTRL            0x64
+#define PS2_ACK             0xFA
+#define PS2_RESEND          0xFE
 
 
 
@@ -318,8 +318,8 @@ static void kb_setled() {
     outb (
         PS2_DATA,
     
-        (kb.scrolllock ? (1 << 0) : 0)    |
-        (kb.numlock ? (1 << 1) : 0)     |
+        (kb.scrolllock ? (1 << 0) : 0)      |
+        (kb.numlock ? (1 << 1) : 0)         |
         (kb.capslock ? (1 << 2) : 0)
     );
     
@@ -377,7 +377,7 @@ void kb_intr(void* unused) {
   k.vkey = vkey;
   k.down = !!!(vkscan & 0x80);
 
-  __event_raise_EV_KEY(kdid, k.vkey, k.down);
+sys_event_raise_EV_KEY(kdid, k.vkey, k.down);
     __fifo_send(PATH_KBDEV, &k, sizeof(keyboard_t));
     PS2_WAIT;
 }
@@ -430,10 +430,10 @@ void mouse_intr(void* unused) {
                     
           
           
-          for(int i = 0; i < 3; i++)
-            __event_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
+                    for(int i = 0; i < 3; i++)
+                        sys_event_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
 
-          __event_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
+                    sys_event_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
                     __fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
                     
                     mouse.cycle = 0;
@@ -455,14 +455,14 @@ int init(void) {
 
 
 
-    #define MOUSE_WRITE(x)        \
-        PS2_WAIT;                \
-        outb(PS2_CTRL, 0xD4);    \
-        PS2_WAIT;                \
+    #define MOUSE_WRITE(x)          \
+        PS2_WAIT;                   \
+        outb(PS2_CTRL, 0xD4);       \
+        PS2_WAIT;                   \
         outb(PS2_DATA, x)
 
-    #define MOUSE_READ(x)        \
-        PS2_WAIT_0;                \
+    #define MOUSE_READ(x)           \
+        PS2_WAIT_0;                 \
         x = inb(PS2_DATA)
 
 
@@ -523,11 +523,11 @@ int init(void) {
         kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
         
 
-  kdid = __event_device_add("ps2-keyboard", EC_KEY | EC_LED);
-  mdid = __event_device_add("ps2-mouse", EC_KEY | EC_REL);
+    kdid = sys_event_device_add("ps2-keyboard", EC_KEY | EC_LED);
+    mdid = sys_event_device_add("ps2-mouse", EC_KEY | EC_REL);
 
-  __event_device_set_enabled(kdid, 1);
-  __event_device_set_enabled(mdid, 1);
+    sys_event_device_set_enabled(kdid, 1);
+    sys_event_device_set_enabled(mdid, 1);
 
     irq_enable(1, kb_intr);
     irq_enable(12, mouse_intr);

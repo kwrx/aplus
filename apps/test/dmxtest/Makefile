@@ -7,7 +7,7 @@ OUTPUT		:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
 CXXFILES	:=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
 OFILES		:=  $(CXXFILES:.cpp=.o)
 
-CXXFLAGS	:=  -pipe -I include -fpic -O3 -c
+CXXFLAGS	:=  -pipe -I include -fpic -O3 -c -std=gnu++14
 SFLAGS		:=  -c -I include
 
 all: $(OUTPUT)
