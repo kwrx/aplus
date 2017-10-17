@@ -1,0 +1,7 @@
+#!/bin/bash
+
+find . -regextype posix-egrep \
+    -type f \
+    -iregex '.*\.png$' \
+    -exec test '{}'.webp -ot '{}' \; \
+    -execdir "/opt/prj/aPlus/packages/generic/share/icons/convert-png-to-webp" '{}' \;

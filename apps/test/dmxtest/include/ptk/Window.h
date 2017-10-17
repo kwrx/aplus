@@ -26,6 +26,18 @@ namespace ptk {
     //typedef function<void (Window*, KeyEventArgs*> OnKeyDownHandler;
     // ...
 
+
+    class WindowStyle {
+    public:
+        static double MarginLeft;
+        static double MarginTop;
+        static double MarginRight;
+        static double MarginBottom;
+        static double BorderRadius;
+
+        static void DrawBorders(Window*);
+    };
+
     class Window {
     public:
 
@@ -65,28 +77,9 @@ namespace ptk {
         inline void Invalidate(void) {
             if(this->View) {
                 this->View->Paint([this] (auto cr) {
-                    /* TODO: Add WindowTheme::DrawBorders() */
+                    WindowStyle::DrawBorders(this);
 
-                    double b = 8.0;
-                    double w = 800.0;
-                    double h = 600.0;
-                    cairo_save(cr);
-                    cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-                    cairo_set_line_width(cr, b);
-                    cairo_rectangle(cr, b / 2, b / 2, w - b * 1.5, h - b * 1.5);
-                    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-                    cairo_stroke(cr);
-                    cairo_rectangle(cr, b / 2, b / 2, w- b * 1.5, 24.0);
-                    cairo_fill(cr);
-                    cairo_set_font_face(cr, Font::Load("Ubuntu Regular"));
-                    cairo_set_font_size(cr, 16.0);
-                    cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 1.0);
-                    cairo_move_to(cr, b / 2 + 15, b / 2 + 15);
-                    cairo_show_text(cr, "Hello World");
-                    cairo_restore(cr);
-
-                    /* TODO: Add WindowTheme */
-                    cairo_t* cx = this->View->LockSurface(6.0, 6.0, this->Width - 12.0, this->Height - 12.0);
+                    cairo_t* cx = this->View->LockSurface(WindowStyle::MarginLeft, WindowStyle::MarginTop, this->Width - WindowStyle::MarginRight, this->Height - WindowStyle::MarginBottom);
                     if(!cx)
                         return;
 

@@ -3,15 +3,19 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 
 #include <aplus/base.h>
 #include <aplus/fbdev.h>
 
 #include <cairo/cairo.h>
+#include <cairo-ext/cairo-webp.h>
 
 //#define TEST
 #include <aplus/utils/unittest.h>
-
+#include <webp/decode.h>
+#include <webp/encode.h>
+#include <webp/types.h>
 
 #include <ptk/Frame.h>
 #include <ptk/Font.h>
@@ -45,8 +49,9 @@ int main(int argc, char** argv) {
     __unittest_eq(Font::Initialize(), 0, int);
 
     ptk::Window* Window = new ptk::Window();
-    Window->Width = (double) (fb.width - 6);
-    Window->Height = (double) (fb.height - 6);
+    Window->Width = (double) (fb.width - 1);
+    Window->Height = (double) (fb.height - 1);
+    Window->Title = "Hello World";
 
     Window->OnCreate = [&] (auto W) -> void {
         W->View = new Frame(fb.lfbptr, fb.width, fb.height, fb.bpp);
@@ -59,6 +64,17 @@ int main(int argc, char** argv) {
     };
 
     Window->OnPaint = [] (auto W, auto cr) -> void {
+        cairo_surface_t* s = cairo_image_surface_create_from_webp("/usr/share/images/01.webp");
+        if(!s)
+            return;
+        
+        cairo_save(cr);
+        cairo_set_source_surface(cr, s, 0, 0);
+        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+        cairo_paint(cr);
+        cairo_restore(cr);
+
+        cairo_save(cr);
         cairo_set_font_face(cr, Font::Load("Ubuntu Regular"));
         cairo_set_font_size(cr, 64.0);
         cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 1.0);
