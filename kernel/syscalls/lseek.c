@@ -21,20 +21,25 @@ off_t sys_lseek(int fd, off_t off, int dir) {
     }
 
 
+    if(S_ISFIFO(inode->mode)) {
+        errno = ESPIPE;
+        return -1;
+    }
+
     switch(dir) {
         case SEEK_SET:
-            inode->position = (off64_t) off;
+            current_task->fd[fd].position = off;
             break;
         case SEEK_CUR:
-            inode->position += (off64_t) off;
+            current_task->fd[fd].position += off;
             break;
         case SEEK_END:
-            inode->position = (off64_t) off + (off64_t) inode->size;
+            current_task->fd[fd].position = off + inode->size;
             break;
         default:
             errno = EINVAL;
             return -1;
     }
 
-    return (off_t) inode->position;
+    return current_task->fd[fd].position;
 });

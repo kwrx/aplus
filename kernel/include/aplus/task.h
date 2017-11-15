@@ -33,6 +33,7 @@
 
 typedef struct fd {
     inode_t* inode;
+    off_t position;
     int flags;
 } fd_t;
 

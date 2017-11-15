@@ -36,7 +36,6 @@ static int environ_open(inode_t* inode) {
     }
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;
@@ -70,7 +69,6 @@ static int cmdline_open(inode_t* inode) {
     }
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;
@@ -133,7 +131,6 @@ static int status_open(inode_t* inode) {
     );
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;
@@ -221,7 +218,6 @@ static int stat_open(inode_t* inode) {
     );
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;
@@ -258,7 +254,6 @@ static int statm_open(inode_t* inode) {
     );
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;
@@ -301,7 +296,6 @@ static int io_open(inode_t* inode) {
     );
 
     pfs->data = strdup(buf);
-    inode->position = (off64_t) 0;
     inode->size = (off64_t) strlen(buf);
 
     return E_OK;

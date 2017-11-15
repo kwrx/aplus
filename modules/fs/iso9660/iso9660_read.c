@@ -6,21 +6,21 @@
 
 #include "iso9660.h"
 
-int iso9660_read(inode_t* ino, void* buf, size_t size) {
+int iso9660_read(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino))
         return 0;
         
     if(unlikely(!buf))
         return 0;
         
-    if(unlikely((off64_t) size > ino->size))
+    if(unlikely(size > ino->size))
         size = ino->size;
         
-    if(unlikely(ino->position > ino->size))
-        ino->position = ino->size;
+    if(unlikely(pos > ino->size))
+        pos = ino->size;
         
-    if(unlikely(ino->position + (off64_t) size > ino->size))
-        size = (off_t) (ino->size - ino->position);
+    if(unlikely(pos + size > ino->size))
+        size = (off_t) (ino->size - pos);
         
     if(unlikely(!size))
         return 0;
@@ -29,11 +29,6 @@ int iso9660_read(inode_t* ino, void* buf, size_t size) {
     if(unlikely(!ctx))
         return 0;
 
-    
-    ctx->dev->position = (iso9660_getlsb32(ctx->dir.lba) * ISO9660_SECTOR_SIZE) + ino->position;
-    size = vfs_read(ctx->dev, buf, size);
-
-
-    ino->position += (off64_t) size;
-    return size;
+        
+    return vfs_read(ctx->dev, buf, (iso9660_getlsb32(ctx->dir.lba) * ISO9660_SECTOR_SIZE) + pos, size);
 }

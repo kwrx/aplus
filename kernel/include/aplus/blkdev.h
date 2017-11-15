@@ -22,7 +22,7 @@ typedef struct {
 
     struct {
         char c_data[BLKDEV_BLKMAXSIZE];
-        uint64_t c_blkno;
+        uint32_t c_blkno;
         int c_cached;
     } cache;
 
@@ -32,8 +32,8 @@ typedef struct {
 
 int blkdev_register_device(blkdev_t* blk, char* name, int idx, int flags);
 int blkdev_unregister_device(char* name);
-int blkdev_read(inode_t* ino, void* buf, size_t size);
-int blkdev_write(inode_t* inode, void* buf, size_t size);
+int blkdev_read(inode_t* ino, void* buf, off_t pos, size_t size);
+int blkdev_write(inode_t* inode, void* buf, off_t pos, size_t size);
 
 
 #endif

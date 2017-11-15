@@ -198,7 +198,7 @@ int sys_event_raise(event_t* e) {
 
         if(d->ed_exclusive == -1) {
             list_each(ev_nodes, n)
-                vfs_write(n, e, sizeof(event_t));
+                vfs_write(n, e, -1, sizeof(event_t));
 
             return 0;
         } else {
@@ -218,7 +218,7 @@ int sys_event_raise(event_t* e) {
                 return -1;
             }
 
-            vfs_write(p, e, sizeof(event_t));
+            vfs_write(p, e, -1, sizeof(event_t));
             return 0;
         }
     }

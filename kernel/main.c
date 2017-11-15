@@ -45,6 +45,9 @@ int main(int argc, char** argv) {
 #endif
     (void) module_init();
     (void) mounts_init();
+#if CONFIG_IOSCHED
+    (void) iosched_init();
+#endif
     (void) local_init();
 
 
@@ -66,6 +69,7 @@ int main(int argc, char** argv) {
     kprintf(INFO "%s %s %p\n",
             KERNEL_NAME,
             mbd->cmdline.args, mbd->memory.start);
+
 
 
     

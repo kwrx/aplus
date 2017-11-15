@@ -1,31 +1,35 @@
 .PHONY: all
 OUTPUT		?=
-CXX			?=
+CC			?=
 ROOT		?=
 OUTPUT		:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
-CXXFILES	:=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
-OFILES		:=  $(CFILES:.c=.o) $(CXXFILES:.cpp=.o)
+SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
+AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
+OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I include -fpic -O3 -c -std=gnu99
-CXXFLAGS	:=  -pipe -I include -fpic -O3 -c -std=gnu++14
-
+CFLAGS		:=  -pipe -I include -std=gnu99 -O3 -c
+SFLAGS		:=  -c -I include
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -o $@ $(OFILES) -laplus -lcairo -lpixman-1 -lfreetype -lwebp -lpng -ltiff -ljpeg -lz -lstdc++ -lsupc++ -lgcc
-	@$(RM) $(OFILES)
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -laplus -lcairo -lpixman-1 -lfreetype -lwebp -lpng -ltiff -ljpeg -lz -lgcc
 
-
-.cpp.o:
-	@echo "  CXX    " $(subst $(ROOT)/,,$@)
-	@$(CXX) $(CXXFLAGS) -o $@ $<
 
 .c.o:
 	@echo "  CC     " $(subst $(ROOT)/,,$@)
 	@$(CC) $(CFLAGS) -o $@ $<
+
+.s.o:
+	@echo "  AS     " $(subst $(ROOT)/,,$@)
+	@$(AS) $(AFLAGS) -o $@ $<
+
+.asm.o:
+	@echo "  ASM    " $(subst $(ROOT)/,,$@)
+	@$(ASM) $(NFLAGS) -o $@ $<
+	
 	
 clean:
 	$(RM) $(OFILES) $(OUTPUT)

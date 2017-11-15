@@ -64,15 +64,8 @@ int main(int argc, char** argv) {
     };
 
     Window->OnPaint = [] (auto W, auto cr) -> void {
-        cairo_surface_t* s = cairo_image_surface_create_from_webp("/usr/share/images/01.webp");
-        if(!s)
-            return;
-        
-        cairo_save(cr);
-        cairo_set_source_surface(cr, s, 0, 0);
-        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+        cairo_set_source_rgb(cr, 0.2, 0.2, 0.2);
         cairo_paint(cr);
-        cairo_restore(cr);
 
         cairo_save(cr);
         cairo_set_font_face(cr, Font::Load("Ubuntu Regular"));

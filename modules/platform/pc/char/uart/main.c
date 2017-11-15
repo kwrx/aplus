@@ -27,7 +27,7 @@ static int uart_ioctl(struct inode* inode, int req, void* buf) {
     return -1;
 }
 
-static int uart_read(struct inode* inode, void* buf, size_t size) {
+static int uart_read(struct inode* inode, void* buf, off_t pos, size_t size) {
 
     int idx = '0' - inode->name[4];
 
@@ -43,7 +43,7 @@ static int uart_read(struct inode* inode, void* buf, size_t size) {
     return size;
 }
 
-static int uart_write(struct inode* inode, void* buf, size_t size) {
+static int uart_write(struct inode* inode, void* buf, off_t pos, size_t size) {
     int idx = '0' - inode->name[4];
 
     char* bc = (char*) buf;

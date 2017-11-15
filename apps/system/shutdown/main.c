@@ -61,25 +61,9 @@ static int shutdown_exec(uint8_t mode) {
     
 
     fprintf(stdout, "\t- Killing processes\n");
-
-    DIR* d = opendir("/proc");
-    if(!d) {
-        perror("/proc");
-        return -1;
-    }
-
-    struct dirent* ent;
-    while((ent = readdir(d))) {
-        if(!isdigit(ent->d_name[0]))
-            continue;
-
-        int pid = atoi(ent->d_name);
-        if(getpid() != pid)
-            if(kill(pid, SIGKILL) == 0)
-                waitpid(pid, NULL, 0);
-    }
-
-    closedir(d);
+    if(kill(-1, SIGKILL) != 0)
+        perror("shutdown");
+    
 
     
     fprintf(stdout, "\t- Synchronize cached writes\n");
@@ -189,7 +173,8 @@ int main(int argc, char** argv) {
     while((c = getopt_long(argc, argv, "HPrhc", long_options, &idx)) != -1) {
         switch(c) {
             case 'c':
-                unlink("/tmp/shutdown.lock");
+                if(unlink("/tmp/shutdown.lock") != 0)
+                    perror("shutdown: /tmp/shutdown.lock");
                 return 0;
             case 'H':
                 mode = S_HALT;
@@ -216,6 +201,11 @@ int main(int argc, char** argv) {
         }
     }
     
+
+    if(getuid() != 0) {
+        fprintf(stderr, "shutdown: you must be a superuser to perform shutting down\n");
+        return -1;
+    }
     
     if(optind >= argc)
         return shutdown(time(NULL) + 60, mode);

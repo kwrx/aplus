@@ -188,13 +188,12 @@ int sys_open(const char* name, int flags, mode_t mode) {
         return -1;
     
     if(flags & O_APPEND)
-        cino->position = cino->size;
+        current_task->fd[fd].position = cino->size;
     else
-        cino->position = 0;
+        current_task->fd[fd].position = 0;
 
-
+    
     current_task->fd[fd].inode = cino;
     current_task->fd[fd].flags = flags;
-
     return fd;
 });

@@ -220,7 +220,7 @@ static int module_run(char* name) {
         }
 
 
-        kprintf(INFO "module: running \'%s\'\n", mod->name);
+        //kprintf(INFO "module: running \'%s\'\n", mod->name);
         if(mod->init() != E_OK)
             return E_ERR;
 
@@ -313,7 +313,7 @@ int module_dnit(void) {
             continue;
 
 
-        kprintf(INFO "module: unloading \'%s\'\n", mod->name);
+        //kprintf(INFO "module: unloading \'%s\'\n", mod->name);
         mod->dnit();
     }
 

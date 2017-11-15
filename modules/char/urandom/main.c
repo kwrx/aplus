@@ -9,7 +9,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static int urandom_read(struct inode* inode, void* buf, size_t size) {
+static int urandom_read(struct inode* inode, void* buf, off_t pos, size_t size) {
     char* bc = (char*) buf;
     size_t i;
     for(i = 0; i < size; i++)

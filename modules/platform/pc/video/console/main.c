@@ -269,7 +269,7 @@ static void plot_value(struct cc* cc, char value) {
     outb(0x3D5, (cc->p >> 8) & 0xFF);
 }
 
-static int console_write(struct inode* inode, void* buf, size_t size) {
+static int console_write(struct inode* inode, void* buf, off_t pos, size_t size) {
     if(unlikely(!inode || !buf || !inode->userdata)) {
         errno = EINVAL;
         return -1;

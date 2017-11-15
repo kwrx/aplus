@@ -2,6 +2,9 @@
 #define _VFS_H
 
 #include <aplus.h>
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
+#include <aplus/ipc.h>
 #include <libc.h>
 
 #ifndef __ASSEMBLY__
@@ -21,6 +24,18 @@ typedef struct fsys {
     struct fsys* next;
 } fsys_t;
 
+
+struct iorequest {
+    inode_t* inode;
+    off_t offset;
+    void* buffer;
+    size_t size;
+
+    int (*fn) (inode_t*, void*, size_t);
+    spinlock_t lock;
+    int ioerr;
+};
+
 struct inode_childs {
     inode_t* inode;
     struct inode_childs* next;
@@ -36,7 +51,6 @@ struct inode {
     gid_t gid;
     dev_t rdev;
     off64_t size;
-    off64_t position;
 
     time_t atime;
     time_t mtime;
@@ -48,8 +62,8 @@ struct inode {
     int (*open) (struct inode* inode);
     int (*close) (struct inode* inode);
 
-    int (*read) (struct inode* inode, void* ptr, size_t len);
-    int (*write) (struct inode* inode, void* ptr, size_t len);
+    int (*read) (struct inode* inode, void* ptr, off_t pos, size_t len);
+    int (*write) (struct inode* inode, void* ptr, off_t pos, size_t len);
     
     
     struct inode* (*finddir) (struct inode* inode, char* name);
@@ -63,6 +77,10 @@ struct inode {
     int (*ioctl) (struct inode* inode, int req, void* buf);
     int (*fsync) (struct inode* inode);
 
+#if CONFIG_IOSCHED
+    list(struct iorequest*, ioqueue);
+    spinlock_t iolock;
+#endif
 
     struct inode_childs* childs;
 
@@ -82,8 +100,8 @@ ino64_t vfs_inode();
 
 int vfs_open(struct inode* inode);
 int vfs_close(struct inode* inode);
-int vfs_read(struct inode* inode, void* ptr, size_t len);
-int vfs_write(struct inode* inode, void* ptr, size_t len);
+int vfs_read(struct inode* inode, void* ptr, off_t pos, size_t len);
+int vfs_write(struct inode* inode, void* ptr, off_t pos, size_t len);
 struct inode* vfs_finddir(struct inode* inode, char* name);
 struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode);
 int vfs_unlink(struct inode* inode, char* name);
@@ -101,9 +119,11 @@ int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inod
 
 inode_t* vfs_mkdev(const char* name, dev_t rdev, mode_t mode);
 
-
-
-
+#if CONFIG_IOSCHED
+int iosched_read(struct inode*, void*, off_t, size_t);
+int iosched_write(struct inode*, void*, off_t, size_t);
+int iosched_init(void);
+#endif
 
 #endif
 

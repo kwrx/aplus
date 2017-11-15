@@ -10,7 +10,7 @@
 
 
 
-int ext2_read(inode_t* ino, void* buf, size_t size) {
+int ext2_read(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino))
         return 0;
         
@@ -20,11 +20,11 @@ int ext2_read(inode_t* ino, void* buf, size_t size) {
     if(unlikely((off64_t) size > ino->size))
         size = ino->size;
         
-    if(unlikely(ino->position > ino->size))
-        ino->position = ino->size;
+    if(unlikely(pos > ino->size))
+        pos = ino->size;
         
-    if(unlikely(ino->position + (off64_t) size > ino->size))
-        size = (off_t) (ino->size - ino->position);
+    if(unlikely(pos + size > ino->size))
+        size = (off_t) (ino->size - pos);
         
     if(unlikely(!size))
         return 0;
@@ -35,25 +35,25 @@ int ext2_read(inode_t* ino, void* buf, size_t size) {
         return 0;
     }
     
-    uint32_t sb = ino->position / priv->ext2->blocksize;
-    uint32_t eb = (ino->position + size - 1) / priv->ext2->blocksize;
+    uint32_t sb = pos / priv->ext2->blocksize;
+    uint32_t eb = (pos + size - 1) / priv->ext2->blocksize;
     off64_t off = 0;
 
-    if(ino->position % priv->ext2->blocksize) {
+    if(pos % priv->ext2->blocksize) {
         long p;
-        p = priv->ext2->blocksize - (ino->position % priv->ext2->blocksize);
+        p = priv->ext2->blocksize - (pos % priv->ext2->blocksize);
         p = p > size ? size : p;
 
         ext2_read_block(priv->ext2, priv->ext2->cache, priv->blockchain[sb]);
-        memcpy(buf, (void*) ((uintptr_t) priv->ext2->cache + ((uintptr_t) ino->position % priv->ext2->blocksize)), p);
+        memcpy(buf, (void*) ((uintptr_t) priv->ext2->cache + ((uintptr_t) pos % priv->ext2->blocksize)), p);
     
         off += p;
         sb++;
     }
 
 
-    if(((ino->position + size) % priv->ext2->blocksize) && (sb <= eb)) {
-        long p = (ino->position + size) % priv->ext2->blocksize;
+    if(((pos + size) % priv->ext2->blocksize) && (sb <= eb)) {
+        long p = (pos + size) % priv->ext2->blocksize;
 
         ext2_read_block(priv->ext2, priv->ext2->cache, priv->blockchain[eb]);
         memcpy((void*) ((uintptr_t) buf + size - p), priv->ext2->cache, p);
@@ -67,6 +67,6 @@ int ext2_read(inode_t* ino, void* buf, size_t size) {
     }
 
 
-    ino->position += size;
+    pos += size;
     return size;
 }

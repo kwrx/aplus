@@ -30,8 +30,7 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
 
     
 
-    ctx->dev->position = iso9660_getlsb32(ctx->dir.lba) * ISO9660_SECTOR_SIZE;
-    if(unlikely(vfs_read(ctx->dev, nodes, iso9660_getlsb32(ctx->dir.length)) != iso9660_getlsb32(ctx->dir.length))) {
+    if(unlikely(vfs_read(ctx->dev, nodes, iso9660_getlsb32(ctx->dir.lba) * ISO9660_SECTOR_SIZE, iso9660_getlsb32(ctx->dir.length)) != iso9660_getlsb32(ctx->dir.length))) {
         kfree(nodes);
 
         errno = EIO;

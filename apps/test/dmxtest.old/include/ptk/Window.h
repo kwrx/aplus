@@ -8,6 +8,7 @@
 #include <ptk/Frame.h>
 #include <ptk/Font.h>
 #include <ptk/Color.h>
+#include <ptk/Renderer.h>
 
 #include <cairo/cairo.h>
 #include <cairo/cairo-ft.h>
@@ -26,17 +27,6 @@ namespace ptk {
     //typedef function<void (Window*, KeyEventArgs*> OnKeyDownHandler;
     // ...
 
-
-    class WindowStyle {
-    public:
-        static double MarginLeft;
-        static double MarginTop;
-        static double MarginRight;
-        static double MarginBottom;
-        static double BorderRadius;
-
-        static void DrawBorders(Window*);
-    };
 
     class Window {
     public:

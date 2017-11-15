@@ -7,7 +7,7 @@
 #include "procfs.h"
 
 
-int procfs_read(struct inode* inode, void* ptr, size_t len) {
+int procfs_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode))
         return E_ERR;
 
@@ -17,8 +17,8 @@ int procfs_read(struct inode* inode, void* ptr, size_t len) {
     if(unlikely(!inode->userdata))
         return 0;
 
-    if(inode->position + len > inode->size)
-        len = inode->size - inode->position;
+    if(pos + len > inode->size)
+        len = (size_t) inode->size - pos;
 
     if(unlikely(!len))
         return 0;
@@ -28,8 +28,6 @@ int procfs_read(struct inode* inode, void* ptr, size_t len) {
         return 0;
 
 
-    memcpy(ptr, (void*) ((uintptr_t) pfs->data + (uintptr_t) inode->position), len);
-    inode->position += len;
-
+    memcpy(ptr, (void*) ((uintptr_t) pfs->data + (uintptr_t) pos), len);
     return len;
 }

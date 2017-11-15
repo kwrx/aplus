@@ -110,7 +110,7 @@ typedef struct iso9660 {
 
 
 int iso9660_mount(struct inode* dev, struct inode* dir);
-int iso9660_read(inode_t* ino, void* buf, size_t size);
+int iso9660_read(inode_t* ino, void* buf, off_t pos, size_t size);
 int iso9660_open(struct inode* inode);
 int iso9660_close(struct inode* inode);
 struct inode* iso9660_finddir(struct inode* inode, char* name);

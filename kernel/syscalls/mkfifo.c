@@ -10,7 +10,9 @@
 
 
 
-static int inode_fifo_read(struct inode* inode, void* ptr, size_t len) {
+static int inode_fifo_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
+    (void) pos;
+    
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
         return E_ERR;
@@ -25,7 +27,9 @@ static int inode_fifo_read(struct inode* inode, void* ptr, size_t len) {
     return fifo_read(fifo, ptr, len);        
 }
 
-static int inode_fifo_write(struct inode* inode, void* ptr, size_t len) {
+static int inode_fifo_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
+    (void) pos;
+
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
         return E_ERR;

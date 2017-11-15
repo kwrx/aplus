@@ -28,17 +28,25 @@ int vfs_close(struct inode* inode) {
     return E_OK;
 }
 
-int vfs_read(struct inode* inode, void* ptr, size_t len) {
+int vfs_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(likely(inode->read))
-        return inode->read(inode, ptr, len);
+#if CONFIG_IOSCHED
+        return iosched_read(inode, ptr, pos, len);
+#else
+        return inode->read(inode, ptr, pos, len);
+#endif
 
     errno = ENOSYS;
     return 0;
 }
 
-int vfs_write(struct inode* inode, void* ptr, size_t len) {
+int vfs_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(likely(inode->write))
-        return inode->write(inode, ptr, len);
+    #if CONFIG_IOSCHED
+        return iosched_write(inode, ptr, pos, len);
+    #else
+        return inode->write(inode, ptr, pos, len);
+    #endif
 
     errno = ENOSYS;
     return 0;

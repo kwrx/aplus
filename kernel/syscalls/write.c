@@ -37,10 +37,11 @@ int sys_write(int fd, void* buf, size_t size) {
     }
 
 
-    register int e = vfs_write(inode, buf, size);
+    register int e = vfs_write(inode, buf, current_task->fd[fd].position, size);
     if(unlikely(e <= 0))
         return 0;
     
+    current_task->fd[fd].position += e;
     current_task->iostat.write_bytes += (uint64_t) e;
     return e;
 });

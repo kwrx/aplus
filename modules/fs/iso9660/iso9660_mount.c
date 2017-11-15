@@ -17,8 +17,7 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
     KASSERT(ctx);
     memset(ctx, 0, sizeof(iso9660_t));
     
-    dev->position = ISO9660_PVD;
-    if(unlikely(vfs_read(dev, &ctx->pvd, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
+    if(unlikely(vfs_read(dev, &ctx->pvd, ISO9660_PVD, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
         kprintf(ERROR "iso9660: (%s) cannot read from this device\n", dev->name);
         kfree(ctx);
         return E_ERR;

@@ -14,8 +14,8 @@
 
 
 
-int tty_write(struct inode* inode, void* ptr, size_t len);
-int tty_read(struct inode* inode, void* ptr, size_t len);
+int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len);
+int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len);
 int tty_ioctl(struct inode* inode, int req, void* data);
 
 

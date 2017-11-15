@@ -18,7 +18,7 @@ void __tty_flush(struct tty_context* tio) {
     tio->outlen = 0;
 }
 
-int tty_write(struct inode* inode, void* ptr, size_t len) {
+int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
         return E_ERR;

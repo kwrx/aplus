@@ -27,7 +27,7 @@ typedef struct {
 
 
 
-static int mbr_read(inode_t* ino, void* buf, size_t size) {
+static int mbr_read(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino)) {
         errno = EINVAL;
         return 0;
@@ -39,14 +39,10 @@ static int mbr_read(inode_t* ino, void* buf, size_t size) {
         return 0;
     }
 
-    mbr->dev->position = ino->position + mbr->offset;
-    int e = vfs_read(mbr->dev, buf, size);
-    ino->position += (off64_t) e;
-
-    return e;
+    return vfs_read(mbr->dev, buf, pos + mbr->offset, size);
 }
 
-static int mbr_write(inode_t* ino, void* buf, size_t size) {
+static int mbr_write(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino)) {
         errno = EINVAL;
         return 0;
@@ -58,11 +54,7 @@ static int mbr_write(inode_t* ino, void* buf, size_t size) {
         return 0;
     }
 
-    mbr->dev->position = ino->position + mbr->offset;
-    int e = vfs_write(mbr->dev, buf, size);
-    ino->position += (off64_t) e;
-
-    return e;
+    return vfs_write(mbr->dev, buf, pos + mbr->offset, size);
 }
 
 int blkdev_init_mbr(blkdev_t* blkdev) {
@@ -74,8 +66,8 @@ int blkdev_init_mbr(blkdev_t* blkdev) {
     mbr_ptable_t table[4];
     char name[2];
 
-    dev->position = 0x1BE;
-    if(unlikely(vfs_read(dev, &table, 64) != 64))
+
+    if(unlikely(vfs_read(dev, &table, 0x1BE, 64) != 64))
         return E_ERR;
 
     

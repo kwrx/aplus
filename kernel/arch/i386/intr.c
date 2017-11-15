@@ -232,7 +232,7 @@ void* irq_get_data(int number) {
 }
 
 void irq_ack(int irq_no) {
-    if(current_irq == -1)
+    if(unlikely(current_irq == -1))
         return;
         
     if(irq_no >= 8)
@@ -329,9 +329,9 @@ void isr_handler(i386_context_t* context) {
             break;
     }
 
-
+#if DEBUG
     debug_dump(context, exception_messages[context->int_no], 0, context->err_code);
-
+#endif
 
     __asm__ __volatile__ ("sti");
     sys_kill(current_task->pid, signo);

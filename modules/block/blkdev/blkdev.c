@@ -15,7 +15,7 @@ MODULE_LICENSE("GPL");
 
 
 extern int blkdev_init_mbr(blkdev_t* blkdev);
-static hashmap_t hm_blkdev;
+static list(blkdev_t*, ll_blkdev);
 
 
 #define __cache_is_cached(x, y)                 \
@@ -34,9 +34,11 @@ int blkdev_register_device(blkdev_t* blk, char* name, int idx, int flags) {
         return E_ERR;
     }
 
-    if(hashmap_get(hm_blkdev, name, NULL) == HM_OK) {
-        errno = EEXIST;
-        return E_ERR;
+    list_each(ll_blkdev, v) {
+        if(strcmp(v->dev->name, name) == 0) {
+            errno = EEXIST;
+            return E_ERR;
+        }
     }
 
 
@@ -52,8 +54,8 @@ int blkdev_register_device(blkdev_t* blk, char* name, int idx, int flags) {
         blkdev_init_mbr(blk);
 
 
-    hashmap_put(hm_blkdev, name, blk);
-    kprintf(INFO "blkdev: registered \'%s\'\n", blk->dev->name);
+    kprintf(INFO "blkdev: registered \'%s\' (%d MB)\n", blk->dev->name, blk->dev->size >> 20);        
+    list_push(ll_blkdev, blk);
     return E_OK;
 }
 
@@ -63,24 +65,34 @@ int blkdev_unregister_device(char* name) {
         return E_ERR;
     }
 
-    blkdev_t* blk;
-    if(hashmap_get(hm_blkdev, name, (any_t) &blk) != HM_OK) {
-        errno = ESRCH;
-        return E_ERR;
+    blkdev_t* blk = NULL;
+    list_each(ll_blkdev, v) {
+        if(strcmp(v->dev->name, name) != 0)
+            continue;
+
+        blk = v;
+        break;
     }
-    
-    hashmap_remove(hm_blkdev, name);
+
+    if(unlikely(!blk)) {
+        errno = ENOENT;
+        return -1;
+    }
+
+    list_remove(ll_blkdev, blk);
 
 
     blk->dev->read = NULL;
     blk->dev->write = NULL;
-    
+ 
+
+    kprintf(INFO "blkdev: unregistered \'%s\' (%d MB)\n", blk->dev->name, blk->dev->size >> 20);        
     vfs_unlink(blk->dev->parent, blk->dev->name);
     return E_OK;
 }
 
 
-int blkdev_read(inode_t* ino, void* buf, size_t size) {
+int blkdev_read(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino || !buf)) {
         errno = EINVAL;
         return -1;
@@ -96,24 +108,24 @@ int blkdev_read(inode_t* ino, void* buf, size_t size) {
     if(unlikely(!blkdev->read))
         return 0;
 
-    if(unlikely(ino->position > ino->size))
+    if(unlikely(pos > ino->size))
         return 0;
 
-    if(unlikely((ino->position + size) > ino->size))
-        size = ino->size - ino->position;
+    if(unlikely((pos + size) > ino->size))
+        size = ino->size - pos;
 
     if(unlikely(!size))
         return 0;
 
 
-    uint32_t sb = ino->position / blkdev->blksize;
-    uint32_t eb = (ino->position + size - 1) / blkdev->blksize;
+    uint32_t sb = pos / blkdev->blksize;
+    uint32_t eb = (pos + size - 1) / blkdev->blksize;
     off64_t xoff = 0;
 
 
-    if(ino->position % blkdev->blksize) {
+    if(pos % blkdev->blksize) {
         long p;
-        p = blkdev->blksize - (ino->position % blkdev->blksize);
+        p = blkdev->blksize - (pos % blkdev->blksize);
         p = p > size ? size : p;
 
         
@@ -126,15 +138,15 @@ int blkdev_read(inode_t* ino, void* buf, size_t size) {
             __cache_update(blkdev->cache, sb, 1);
         }
 
-        memcpy(buf, (void*) ((uintptr_t) blkdev->cache.c_data + ((uintptr_t) ino->position % blkdev->blksize)), p);
+        memcpy(buf, (void*) ((uintptr_t) blkdev->cache.c_data + ((uintptr_t) pos % blkdev->blksize)), p);
 
         xoff += p;
         sb++;
     }
 
 
-    if(((ino->position + size) % blkdev->blksize) && (sb <= eb)) {
-        long p = (ino->position + size) % blkdev->blksize;
+    if(((pos + size) % blkdev->blksize) && (sb <= eb)) {
+        long p = (pos + size) % blkdev->blksize;
 
         if(unlikely(!__cache_is_cached(blkdev->cache, eb))) {
             if(blkdev->read(blkdev->userdata, eb, blkdev->cache.c_data, 1) <= 0) {
@@ -158,11 +170,10 @@ int blkdev_read(inode_t* ino, void* buf, size_t size) {
         }
     }
 
-    ino->position += size;
     return size;
 }
 
-int blkdev_write(inode_t* ino, void* buf, size_t size) {
+int blkdev_write(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!ino || !buf)) {
         errno = EINVAL;
         return -1;
@@ -178,24 +189,24 @@ int blkdev_write(inode_t* ino, void* buf, size_t size) {
         return 0;
 
 
-    if(unlikely(ino->position > ino->size))
+    if(unlikely(pos > ino->size))
         return 0;
 
-    if(unlikely((ino->position + size) > ino->size))
-        size = ino->size - ino->position;
+    if(unlikely((pos + size) > ino->size))
+        size = ino->size - pos;
 
     if(unlikely(!size))
         return 0;
 
 
-    uint32_t sb = ino->position / blkdev->blksize;
-    uint32_t eb = (ino->position + size - 1) / blkdev->blksize;
+    uint32_t sb = pos / blkdev->blksize;
+    uint32_t eb = (pos + size - 1) / blkdev->blksize;
     off64_t xoff = 0;
 
 
-    if(ino->position % blkdev->blksize) {
+    if(pos % blkdev->blksize) {
         long p;
-        p = blkdev->blksize - (ino->position % blkdev->blksize);
+        p = blkdev->blksize - (pos % blkdev->blksize);
         p = p > size ? size : p;
 
         
@@ -209,7 +220,7 @@ int blkdev_write(inode_t* ino, void* buf, size_t size) {
         }
 
 
-        memcpy((void*) ((uintptr_t) blkdev->cache.c_data + ((uintptr_t) ino->position % blkdev->blksize)), buf, p);
+        memcpy((void*) ((uintptr_t) blkdev->cache.c_data + ((uintptr_t) pos % blkdev->blksize)), buf, p);
         
         if(blkdev->write(blkdev->userdata, sb, blkdev->cache.c_data, 1) <= 0) {
             errno = EIO;
@@ -221,8 +232,8 @@ int blkdev_write(inode_t* ino, void* buf, size_t size) {
     }
 
 
-    if(((ino->position + size) % blkdev->blksize) && (sb <= eb)) {
-        long p = (ino->position + size) % blkdev->blksize;
+    if(((pos + size) % blkdev->blksize) && (sb <= eb)) {
+        long p = (pos + size) % blkdev->blksize;
 
         if(unlikely(!__cache_is_cached(blkdev->cache, eb))) {
             if(blkdev->read(blkdev->userdata, eb, blkdev->cache.c_data, 1) <= 0) {
@@ -252,29 +263,19 @@ int blkdev_write(inode_t* ino, void* buf, size_t size) {
         }
     }
 
-    ino->position += size;
     return size;
 }
 
 
 int init(void) {
-    hm_blkdev = hashmap_new();
-    if(!hm_blkdev) {
-        kprintf(ERROR "blkdev: could not allocate memory!\n");
-        return E_ERR;
-    }
-
+    memset(&ll_blkdev, 0, sizeof(ll_blkdev));
 
     return E_OK;
 }
 
-int dnit(void) {
-#if 0  
-    blkdev_t* blk;
-    while(hashmap_get_one(hm_blkdev, (any_t*) &blk, 1) == HM_OK)
-        vfs_unlink(blk->dev->parent, blk->dev->name);
-#endif
+int dnit(void) { 
+    list_each(ll_blkdev, v)
+        blkdev_unregister_device(v->dev->name);
 
-    hashmap_free(hm_blkdev);
     return E_OK;
 }

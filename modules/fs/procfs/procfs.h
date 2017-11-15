@@ -26,7 +26,7 @@ static inline void* procfs_make_userdata(task_t* tk, void* data) {
 }
 
 int procfs_mount(struct inode* dev, struct inode* dir);
-int procfs_read(struct inode* inode, void* ptr, size_t len);
+int procfs_read(struct inode* inode, void* ptr, off_t pos, size_t len);
 int procfs_add_childs(inode_t* parent, task_t* tk);
 
 #endif

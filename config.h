@@ -14,6 +14,7 @@
 #define CONFIG_VMM                          1
 #define CONFIG_CACHE                        0    /* FIXME */
 #define CONFIG_NETWORK                      1
+#define CONFIG_IOSCHED                      0    /* FIXME */
 #define CONFIG_CLOCKS_PER_SEC               1000000
 
 

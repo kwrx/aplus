@@ -39,10 +39,16 @@ int sys_kill(pid_t pid, int signal) {
         _do(tmp->pid == pid, return 0)
     else if(pid == 0)
         _do(tmp->gid == current_task->gid, continue)
-    else if(pid == -1)
-        _do(tmp != current_task, continue)
-    else
+    else if(pid < -1)
         _do(tmp->gid == abs(pid), continue)
+    else {
+        if(current_task->uid != 0) {
+            errno = EPERM;
+            return -1;
+        }
+
+        _do(tmp != current_task, continue)
+    }
     
 
 

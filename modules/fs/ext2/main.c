@@ -193,10 +193,9 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
 }
 
 static int ext2_mount(inode_t* dev, inode_t* dir) {
-    dev->position = 1024;
-
+    
     superblock_t sb;
-    vfs_read(dev, &sb, 1024);
+    vfs_read(dev, &sb, 1024, 1024);
 
     if(sb.ext2_sig != EXT2_SIGNATURE) {
         kprintf(ERROR "ext2: invalid signature!\n");

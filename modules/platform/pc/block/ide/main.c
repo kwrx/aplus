@@ -9,7 +9,7 @@
 #include <aplus/blkdev.h>
 #include <libc.h>
 
-MODULE_NAME("pc/block/ata");
+MODULE_NAME("pc/block/ide");
 MODULE_DEPS("arch/x86,block/blkdev");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
@@ -24,7 +24,7 @@ MODULE_LICENSE("GPL");
 #        include <arch/x86_64/pci.h>
 #    endif
 
-#include "ata.h"
+#include "ide.h"
 
 static uintptr_t ata_pci = 0;
 
@@ -181,7 +181,8 @@ static void ata_device_init(struct ata_device* dev) {
     dev->identify.serial[19] = '\0';
     dev->identify.firmware[7] = '\0';
 
-    kprintf(LOG "ata: initialize device:\n"
+#if 0
+    kprintf(LOG "ide: initialize device:\n"
                     "\t Model:    %40s\n"
                     "\t Serial:   %20s\n"
                     "\t Firmware: %8s\n"
@@ -191,7 +192,7 @@ static void ata_device_init(struct ata_device* dev) {
             dev->identify.firmware,
             (double) (dev->identify.sectors_48 * ATA_SECTOR_SIZE) / 1024.0 / 1024.0 / 1024.0
     );
-
+#endif
 
     dev->dma_prdt = (void*) kvalloc(8, GFP_KERNEL);
     dev->dma_start = (void*) kvalloc(ATA_SECTOR_SIZE * ATA_DMA_SIZE, GFP_KERNEL);
@@ -213,7 +214,7 @@ static void ata_device_init(struct ata_device* dev) {
     if(dev->bar4 & 1)
         dev->bar4 &= 0xFFFFFFFC;
     else
-        kprintf(WARN "ata: invalid registers: %x\n", dev->bar4);
+        kprintf(WARN "ide: invalid registers: %x\n", dev->bar4);
 
 
     dev->cache = (uint8_t*) kmalloc(ATA_CACHE_SIZE, GFP_KERNEL);
@@ -431,11 +432,11 @@ static int ata_device_detect(struct ata_device* dev) {
 
 
         if(blkdev_register_device(blkdev, strdup(hdname[c++]), -1, BLKDEV_FLAGS_MBR) != E_OK)
-            kprintf("ata: could not register block device /dev/%s\n", hdname[c - 1]);
+            kprintf("ide: could not register block device /dev/%s\n", hdname[c - 1]);
 
     } else if(
-        (cl == 0x14 && ch == 0xEB)    /* ATAPI  */
-        //(cl == 0x69 && ch == 0x96)     /* SATAPI */
+        (cl == 0x14 && ch == 0xEB)          /* ATAPI  */
+        //(cl == 0x69 && ch == 0x96)        /* SATAPI */
     ) {
         spinlock_init(&dev->lock);
         ata_device_init(dev);
@@ -452,7 +453,7 @@ static int ata_device_detect(struct ata_device* dev) {
         blkdev->write = NULL;
 
         if(blkdev_register_device(blkdev, strdup(cdname[d++]), -1, BLKDEV_FLAGS_RDONLY) != E_OK)
-            kprintf("ata: could not register block device /dev/%s\n", cdname[d - 1]);
+            kprintf("ide: could not register block device /dev/%s\n", cdname[d - 1]);
 
     }
 }
@@ -461,7 +462,7 @@ int init(void) {
     
     pci_scan(&find_ata_pci, -1, &ata_pci);
     if(!ata_pci) {
-        kprintf(ERROR "ata: pci device not found!\n");
+        kprintf(ERROR "ide: pci device not found!\n");
         return E_ERR;
     }
 

@@ -9,7 +9,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static int null_read_write(struct inode* inode, void* buf, size_t size) {
+static int null_read_write(struct inode* inode, void* buf, off_t pos, size_t size) {
     return size;
 }
 

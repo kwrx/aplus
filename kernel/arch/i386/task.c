@@ -101,19 +101,17 @@ void fork_handler(i386_context_t* context) {
         list_push(child->signal.s_queue, q);
 
 
-
-    int i;
-    for(i = 0; i < TASK_FD_COUNT; i++)
-        memcpy((void*) &child->fd[i], (const void*) &current_task->fd[i], sizeof(fd_t));
     
     child->cwd = current_task->cwd;
     child->exe = current_task->exe;
     child->root = current_task->root;
     child->umask = current_task->umask;
+
     
+    memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * TASK_FD_COUNT);    
     memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
-    memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
+    //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
     memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
     memcpy(&child->__image, current_task->image, sizeof(child->__image));
     
@@ -189,11 +187,9 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
     }
 
 
-    if(flags & CLONE_FILES) {
-        int i;
-        for(i = 0; i < TASK_FD_COUNT; i++)
-            memcpy((void*) &child->fd[i], (const void*) &current_task->fd[i], sizeof(fd_t));
-    }
+    if(flags & CLONE_FILES)
+        memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * sizeof(TASK_FD_COUNT));
+
 
     if(flags & CLONE_FS) {
         child->cwd = current_task->cwd;
@@ -209,7 +205,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
     memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
-    memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
+    //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
     memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 
 
