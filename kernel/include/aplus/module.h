@@ -34,4 +34,7 @@ typedef struct module {
 int module_init(void);
 int module_dnit(void);
 
+
+
+#define __APLUS_MODULE__        1
 #endif

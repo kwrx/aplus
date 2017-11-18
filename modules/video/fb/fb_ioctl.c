@@ -5,11 +5,10 @@
 #include <aplus/mm.h>
 #include <libc.h>
 
-#include <aplus/fbdev.h>
-
-extern fbdev_t* fbdev;
+#include <aplus/fb.h>
 
 
+#if 0
 int fb_ioctl(struct inode* inode, int req, void* ptr) {
     
     #define cp(x)                   \
@@ -41,3 +40,4 @@ int fb_ioctl(struct inode* inode, int req, void* ptr) {
     errno = ENOSYS;
     return E_ERR;
 }
+#endif

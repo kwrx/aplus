@@ -5,7 +5,8 @@
 #include <aplus/mm.h>
 #include <libc.h>
 
-#include <aplus/fbdev.h>
+#include <aplus/base.h>
+#include <aplus/fb.h>
 
 MODULE_NAME("video/fb");
 MODULE_DEPS("");
@@ -13,56 +14,47 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-
-extern int (*stub_init) ();
-extern int (*bochs_init) ();
-extern int (*vesa_init) ();
-extern int (*vmware_init) ();
-
-extern int (*fb_window_init) ();
+static list(fbdev_t*, fbdevs);
 
 
+int fbdev_register_device(fbdev_t* fbdev, char* name) {
+    if(unlikely(!fbdev || !name)) {
+        errno = EINVAL;
+        return E_ERR;
+    }
 
+    fbdev->name = strdup(name);
+    //fbdev->inode->ioctl = fb_ioctl;
+    
+    int e = E_OK;
+    if(likely(fbdev->init))
+        e = fbdev->init(fbdev);
 
-static int (*hooks[]) (void) = {
-    (void*) &stub_init,
-#if defined(__i386__) || defined(__x86_64__)
-    (void*) &vesa_init,
-    (void*) &bochs_init,
-    (void*) &vmware_init,
-#endif
-};
+    kprintf(INFO "fb: register device %s\n", fbdev->name);
+    return E_OK; 
+}
 
-static fbdev_t __fbdev;
-fbdev_t* fbdev = &__fbdev;
+int fbdev_unregister_device(fbdev_t* fbdev) {
+    if(likely(fbdev->dnit))
+        if(unlikely(fbdev->dnit(fbdev) != E_OK))
+            kprintf(WARN "fb: (%s)->dnit() error!\n", fbdev->name);
+
+    list_remove(fbdevs, fbdev);
+    kprintf(INFO "fb: unregister device %s\n", fbdev->name);  
+    return E_OK;
+}
 
 
 int init(void) {
-    memset(fbdev, 0, sizeof(fbdev_t));
-
-    int i;
-    for(i = sizeof(hooks) / sizeof(void*); i > 0 ; i--)
-        if(hooks[i - 1] () == E_OK)
-            break;
-
-    kprintf(INFO "fb: %s\n", fbdev->name);
-    
-
-    inode_t* ino;
-    if(unlikely((ino = vfs_mkdev("fb", 0, S_IFCHR | 0440)) == NULL))
-        return E_ERR;
-
-
-    extern int fb_ioctl(struct inode*, int, void*);
-    ino->ioctl = fb_ioctl;
-    
+    memset(&fbdevs, 0, sizeof(fbdevs));
     return E_OK;
 }
 
 
 int dnit(void) {
-    if(fbdev->dnit)
-        fbdev->dnit();
+    list_each(fbdevs, v)
+        v->dnit(v);
 
+    list_clear(fbdevs);
     return E_OK;
 }
