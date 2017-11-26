@@ -8,7 +8,12 @@
 
 SYSCALL(1, close,
 int sys_close(int fd) {
-    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd < 0)) {
+        errno = EBADF;
+        return -1;
+    }
+
+    if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
         return lwip_close(fd - TASK_FD_COUNT);
 #else

@@ -9,10 +9,12 @@
 
 SYSCALL(11, read,
 int sys_read(int fd, void* buf, size_t size) {
-    current_task->iostat.rchar += (uint64_t) size;
-    current_task->iostat.syscr += 1;
+    if(unlikely(fd < 0)) {
+        errno = EBADF;
+        return -1;
+    }
 
-    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
         return lwip_read(fd - TASK_FD_COUNT, buf, size);
 #else
@@ -35,6 +37,10 @@ int sys_read(int fd, void* buf, size_t size) {
         errno = EPERM;
         return -1;
     }
+
+
+    current_task->iostat.rchar += (uint64_t) size;
+    current_task->iostat.syscr += 1;
 
 
     register int e = vfs_read(inode, buf, current_task->fd[fd].position, size);

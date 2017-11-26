@@ -57,7 +57,7 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
         return -1;
     }
     
-    
+
     fifo_init(fifo);
     
 #if CONFIG_IPC_DEBUG

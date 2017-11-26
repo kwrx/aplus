@@ -9,10 +9,12 @@
 
 SYSCALL(17, write,
 int sys_write(int fd, void* buf, size_t size) {
-    current_task->iostat.wchar += (uint64_t) size;
-    current_task->iostat.syscw += 1;
-
-    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd < 0)) {
+        errno = EBADF;
+        return -1;
+    }
+    
+    if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
         return lwip_write(fd - TASK_FD_COUNT, buf, size);
 #else
@@ -36,6 +38,9 @@ int sys_write(int fd, void* buf, size_t size) {
         return -1;
     }
 
+
+    current_task->iostat.wchar += (uint64_t) size;
+    current_task->iostat.syscw += 1;
 
     register int e = vfs_write(inode, buf, current_task->fd[fd].position, size);
     if(unlikely(e <= 0))

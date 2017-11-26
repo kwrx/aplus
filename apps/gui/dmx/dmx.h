@@ -2,12 +2,20 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <pthread.h>
+
+
 #include <aplus/base.h>
 #include <aplus/input.h>
+#include <aplus/fb.h>
 #include <aplus/dmx.h>
+#include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
+#include <aplus/cairo-ext/cairo-webp.h>
+
 #include <cairo/cairo.h>
-#include <pthread.h>
+#include <cairo/cairo-ft.h>
+
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -16,14 +24,10 @@
 
 #define VERBOSE 1
 
-typedef struct dmx_rect {
-    double x, y, w, h;
-} dmx_rect_t;
 
 
 typedef struct dmx_font {
     char family[64];
-    char subfamily[64];
     char path[256];
     void* cache;
     size_t cachesize;
@@ -46,19 +50,17 @@ typedef struct {
     uint16_t cursor_x;
     uint16_t cursor_y;
 
-    dmx_context_t* window_top;
-    dmx_context_t* window_focused;
+    dmx_gc_t* window_top;
+    dmx_gc_t* window_focused;
 
-    pthread_t th_server;
     pthread_t th_render;
     pthread_t th_input;
 
     FT_Library ft_library;
     FT_Face ft_cache[32];
 
-    list(dmx_font_t*, ft_fonts);
-    list(dmx_context_t*, clients);
-    list(dmx_rect_t*, dirtyrects);
+    list(dmx_font_t*, fonts);
+    list(dmx_gc_t*, clients);
 
     int redraw;
 } dmx_t;
@@ -68,27 +70,15 @@ typedef struct {
 
 
 
-int init_render(dmx_t* dmx);
-int init_input(dmx_t* dmx);
-int init_fontengine(dmx_t* dmx);
-int init_server(dmx_t* dmx);
 
 void* th_render(void* arg);
 void* th_input(void* arg);
-void* th_server(void* arg);
-void* th_main(void* arg);
 
 
-void dmx_mark_view(dmx_t* dmx, dmx_context_t* wnd, dmx_rect_t* subrect);
-void dmx_blit_view(dmx_t* dmx, dmx_context_t* wnd);
+void dmx_proto_ack(int type, pid_t pid, void* arg);
+void dmx_proto_disconnect_client(dmx_t* dmx, dmx_packet_connection_t* pk);
+void dmx_proto_create_gc(dmx_t* dmx, dmx_packet_gc_t* pk);
+void dmx_proto_destroy_gc(dmx_t* dmx, dmx_packet_gc_t* pk);
 
-int dmx_font_obtain(dmx_t* dmx, FT_Face* face, char* family, char* style);
-
-#if VERBOSE
-#define TRACE(x...) {                                               \
-    fprintf(stdout, "dmx: #%02d %s() ", getpid(), __func__);        \
-    fprintf(stdout, x);                                             \
-}
-#else
-#define TRACE(x...) ((void) 0)
-#endif
+dmx_gc_t* dmx_gc_alloc(dmx_t* dmx, pid_t pid, double width, double height);
+void dmx_gc_free(dmx_gc_t* gc);

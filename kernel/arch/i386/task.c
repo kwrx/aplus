@@ -188,7 +188,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
 
     if(flags & CLONE_FILES)
-        memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * sizeof(TASK_FD_COUNT));
+        memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * TASK_FD_COUNT);
 
 
     if(flags & CLONE_FS) {

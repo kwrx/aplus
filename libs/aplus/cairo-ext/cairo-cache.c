@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <aplus/utils/hashmap.h>
+
 
 #include <cairo/cairo.h>
-#include <cairo-ext/cairo-cache.h>
+
+#include <aplus/base.h>
+#include <aplus/utils/hashmap.h>
+#include <aplus/cairo-ext/cairo-cache.h>
 
 hashmap_t hm_cache = NULL;
 
@@ -22,7 +25,7 @@ cairo_surface_t* cairo_cache_obtain_resource(const char* path) {
     if(hashmap_get(hm_cache, (char*) path, (any_t*) &R) != HM_OK)
         return NULL;
 
-    void* out = (void*) malloc (
+    void* out = (void*) __libaplus_malloc (
         cairo_image_surface_get_stride(R) * cairo_image_surface_get_height(R)
     );
 

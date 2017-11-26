@@ -1,4 +1,4 @@
-#include "dmx_priv.h"
+#include "../dmx_priv.h"
 
 void dmx_object_new(dmx_widget_t* w) {
     (*w) = (dmx_widget_t) malloc(sizeof(dmx_object_t));

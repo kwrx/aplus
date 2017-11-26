@@ -20,6 +20,7 @@ ntpd.server=it.pool.ntp.org
 
 
 # -- Screen
+screen.device=/dev/fb0
 screen.width=1280
 screen.height=768
 screen.bpp=32

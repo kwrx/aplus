@@ -15,7 +15,51 @@ MODULE_LICENSE("GPL");
 
 
 static list(fbdev_t*, fbdevs);
+static uintptr_t fbid;
 
+
+static int fb_ioctl(struct inode* inode, int req, void* ptr) {
+    
+    #define cp(x)                   \
+        if(unlikely(!x)) {          \
+            errno = EINVAL;         \
+            return E_ERR;           \
+        }
+
+    fbdev_t* fbdev = (fbdev_t*) inode->userdata;
+    cp(fbdev);
+
+
+    switch(req) {
+        case FBIOGET_VSCREENINFO:
+            cp(ptr);
+            
+            memcpy(ptr, &fbdev->vs, sizeof(struct fb_var_screeninfo));
+            break;
+
+        case FBIOPUT_VSCREENINFO:
+            cp(ptr);
+            
+            memcpy(&fbdev->vs, ptr, sizeof(struct fb_var_screeninfo));
+
+            if(likely(fbdev->update))
+                return fbdev->update(fbdev);
+
+            break;
+
+        case FBIOGET_FSCREENINFO:
+            cp(ptr);
+            
+            memcpy(ptr, &fbdev->fs, sizeof(struct fb_fix_screeninfo));
+            break;
+            
+        default:
+            errno = ENOSYS;
+            return E_ERR;
+    }
+    
+    return 0;
+}
 
 int fbdev_register_device(fbdev_t* fbdev, char* name) {
     if(unlikely(!fbdev || !name)) {
@@ -23,14 +67,19 @@ int fbdev_register_device(fbdev_t* fbdev, char* name) {
         return E_ERR;
     }
 
+
+    if(unlikely((fbdev->inode = vfs_mkdev("fb", fbid++, S_IFCHR | 0222)) == NULL))
+        return E_ERR;
+
     fbdev->name = strdup(name);
-    //fbdev->inode->ioctl = fb_ioctl;
+    fbdev->inode->ioctl = fb_ioctl;
+    fbdev->inode->userdata = (void*) fbdev;
     
     int e = E_OK;
     if(likely(fbdev->init))
         e = fbdev->init(fbdev);
 
-    kprintf(INFO "fb: register device %s\n", fbdev->name);
+    kprintf(INFO "fb%d: registered \'%s\'\n", fbid - 1, fbdev->name);
     return E_OK; 
 }
 
@@ -39,14 +88,19 @@ int fbdev_unregister_device(fbdev_t* fbdev) {
         if(unlikely(fbdev->dnit(fbdev) != E_OK))
             kprintf(WARN "fb: (%s)->dnit() error!\n", fbdev->name);
 
+
+    fbdev->inode->ioctl = NULL;
     list_remove(fbdevs, fbdev);
-    kprintf(INFO "fb: unregister device %s\n", fbdev->name);  
+
+    kprintf(INFO "fb: unregistered \'%s\'\n", fbdev->name);  
     return E_OK;
 }
 
 
 int init(void) {
     memset(&fbdevs, 0, sizeof(fbdevs));
+    fbid = 0;
+
     return E_OK;
 }
 

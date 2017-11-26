@@ -6,13 +6,14 @@
 #include <sys/stat.h>
 
 #include <cairo/cairo.h>
-#include <cairo-ext/cairo-webp.h>
-#include <cairo-ext/cairo-cache.h>
 
 #include <webp/decode.h>
 #include <webp/encode.h>
 #include <webp/types.h>
 
+#include <aplus/base.h>
+#include <aplus/cairo-ext/cairo-webp.h>
+#include <aplus/cairo-ext/cairo-cache.h>
 
 #ifndef O_BINARY
 #define O_BINARY 0
@@ -67,7 +68,7 @@ cairo_surface_t* cairo_image_surface_create_from_webp(const char* filename) {
     struct stat st;
     fstat(fd, &st);
 
-    void* buf = (void*) malloc(st.st_size);
+    void* buf = (void*) __libaplus_malloc(st.st_size);
     if(!buf) {
         close(fd);
         return _cairo_surface_create_in_error(CAIRO_STATUS_NO_MEMORY);

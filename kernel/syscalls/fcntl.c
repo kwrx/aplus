@@ -8,7 +8,12 @@
 
 SYSCALL(19, fcntl,
 int sys_fcntl(int fd, int cmd, long arg) {
-    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+    if(unlikely(fd < 0)) {
+        errno = EBADF;
+        return -1;
+    }
+
+    if(unlikely(fd >= TASK_FD_COUNT)) {
 #if CONFIG_NETWORK
         return lwip_fcntl(fd - TASK_FD_COUNT, cmd, arg);
 #else

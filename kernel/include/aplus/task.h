@@ -71,9 +71,9 @@ typedef struct task {
         list(int16_t, s_queue);
     } signal;
 
-    
+
+    fd_t fd[TASK_FD_COUNT];    
     fifo_t fifo;
-    fd_t fd[TASK_FD_COUNT];
 
     inode_t* root;
     inode_t* cwd;

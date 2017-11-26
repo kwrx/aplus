@@ -109,6 +109,7 @@ typedef struct task {
     int nice;
     int vmsize;
     int io;
+    int iodiff;
 
     int unused;
     struct task* next;
@@ -125,7 +126,8 @@ static void update_value(task_t* tq, task_t* tmp) {
 
     memcpy(tq, tmp, sizeof(task_t) - sizeof(struct task*));
     tq->cpu = (tcpu - qcpu) / (CLOCKS_PER_SEC / 100.0);
-    tq->io = (tio - qio);
+    tq->io = tio;
+    tq->iodiff = (tio - qio);
 }
 
 static void update_values() {
@@ -280,10 +282,10 @@ static void dump_values() {
         if(tq->pid != 1)
             cpu += tq->cpu;
         
-        io += tq->io;
+        io += tq->iodiff;
         memory += tq->vmsize;
 
-        fprintf(stdout, " %-4d %-20s %-2s %-9s %6d %6.01f%% %6.02f MB/s %8.02f MB\n", tq->pid, basename(tq->name), tq->status, tq->user, tq->ppid, tq->cpu, (double) tq->io / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
+        fprintf(stdout, " %-4d %-20s %-2s %-9s %6d %6.01f%% %6.02f MB/s %8.02f MB\n", tq->pid, basename(tq->name), tq->status, tq->user, tq->ppid, tq->cpu, (double) tq->iodiff / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
         fprintf(stdout, "\033[39m");
     }
 

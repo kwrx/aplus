@@ -279,20 +279,20 @@ static int io_open(inode_t* inode) {
     memset(buf, 0, sizeof(buf));
 
     sprintf(buf, 
-        "rchar:                 %ld\n"
-        "wchar:                 %ld\n"
-        "syscr:                 %ld\n"
-        "syscw:                 %ld\n"
-        "read_bytes:            %ld\n"
-        "write_bytes:           %ld\n"
-        "cancelled_write_bytes: %ld\n",
-        (long) tk->iostat.rchar,
-        (long) tk->iostat.wchar,
-        (long) tk->iostat.syscr,
-        (long) tk->iostat.syscw,
-        (long) tk->iostat.read_bytes,
-        (long) tk->iostat.write_bytes,
-        (long) tk->iostat.cancelled_write_bytes
+        "rchar:                 %lu\n"
+        "wchar:                 %lu\n"
+        "syscr:                 %lu\n"
+        "syscw:                 %lu\n"
+        "read_bytes:            %lu\n"
+        "write_bytes:           %lu\n"
+        "cancelled_write_bytes: %lu\n",
+        (unsigned long) tk->iostat.rchar,
+        (unsigned long) tk->iostat.wchar,
+        (unsigned long) tk->iostat.syscr,
+        (unsigned long) tk->iostat.syscw,
+        (unsigned long) tk->iostat.read_bytes,
+        (unsigned long) tk->iostat.write_bytes,
+        (unsigned long) tk->iostat.cancelled_write_bytes
     );
 
     pfs->data = strdup(buf);
