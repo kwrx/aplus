@@ -4,6 +4,7 @@
 SYSROOT				:= /opt/cross
 
 KERNEL_NAME			:= aplus
+KERNEL_VERSION		:= 0.4
 KERNEL_OUTPUT		:= bin/$(KERNEL_NAME)
 KERNEL_SYM			:= $(KERNEL_NAME).sym
 KERNEL_ISO			:= $(KERNEL_NAME).iso

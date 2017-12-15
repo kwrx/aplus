@@ -2,6 +2,7 @@
 .EXPORT_ALL_VARIABLES:
 
 ARCH		:= i386
+HOST		:= i686
 TARGET		:= i686-cross
 
 
@@ -94,4 +95,10 @@ clean: clean_modules clean_apps clean_kernel clean_libs
 debug:
 	@$(MAKE) -s DEBUG=yes
 
+release: $(KERNEL_OUTPUT)	\
+		 KERNEL_MODULES		\
+		 $(KERNEL_ISO)		\
+		 $(HDD)
+	@cd bin && tar -cf ../$(HOST)-aplus-$(KERNEL_VERSION).tar * && cd ..
+	@xz -z -T2 -q $(HOST)-aplus-$(KERNEL_VERSION).tar
 	

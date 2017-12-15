@@ -1,6 +1,6 @@
 
 DEFINES         := -DKERNEL
-WARNINGS        := -Wall -Wno-discarded-qualifiers
+WARNINGS        := -Wall
 LIBS            := -laplus -lc -lm -lgcc
 
 CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3

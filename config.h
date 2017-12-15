@@ -3,7 +3,7 @@
 
 #include <aplus/base.h>
 
-#define DEBUG                               1
+#define DEBUG                               0
 
 
 #define CONFIG_HOST_MEMORY                  512
@@ -28,7 +28,7 @@
 
 
 #define KERNEL_NAME                         "aplus"
-#define KERNEL_VERSION                      "0.3"
+#define KERNEL_VERSION                      "0.4"
 #define KERNEL_CODENAME                     "generic"
 #define KERNEL_DATE                         __DATE__
 #define KERNEL_TIME                         __TIME__

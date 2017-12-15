@@ -125,7 +125,7 @@ static int init_screen(dmx_t* dmx) {
         )
     );
 
-    if(!dmx->frontbuffer) {
+    if(!dmx->backbuffer) {
         fprintf(stderr, "dmx: cairo_create() failed for dmx->backbuffer\n");
         return -1;
     }
@@ -350,7 +350,19 @@ int main(int argc, char** argv) {
     pthread_create(&dmx.th_render, NULL, th_render, &dmx);
     pthread_create(&dmx.th_input, NULL, th_input, &dmx);
     
-    fprintf(stdout, "dmx: running...\n");    
+    fprintf(stdout, "dmx: running...\n");
+    
+#if 1 /* TEST */
+    do {
+        dmx_gc_t* gc = dmx_gc_alloc(&dmx, getpid(), 300, 300);
+        gc->window.x = 200;
+        gc->window.y = 200;
+        strcpy(gc->window.title, "Hello World");
+        
+        dmx_wm_draw_borders(&dmx, gc);
+        list_push(dmx.clients, gc);
+    } while(0);
+#endif
     
     for(;;) {
         int type;

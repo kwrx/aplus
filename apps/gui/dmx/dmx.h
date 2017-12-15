@@ -12,9 +12,11 @@
 #include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 #include <aplus/cairo-ext/cairo-webp.h>
+#include <aplus/cairo-ext/cairo-rounded-rectangle.h>
 
 #include <cairo/cairo.h>
 #include <cairo/cairo-ft.h>
+
 
 
 #include <ft2build.h>
@@ -82,3 +84,5 @@ void dmx_proto_destroy_gc(dmx_t* dmx, dmx_packet_gc_t* pk);
 
 dmx_gc_t* dmx_gc_alloc(dmx_t* dmx, pid_t pid, double width, double height);
 void dmx_gc_free(dmx_gc_t* gc);
+
+void dmx_wm_draw_borders(dmx_t* dmx, dmx_gc_t* gc);    
