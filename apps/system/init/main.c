@@ -10,6 +10,7 @@
 #include <sys/ioctl.h>
 #include <aplus/base.h>
 #include <aplus/input.h>
+#include <aplus/kd.h>
 
 #define SYSCONFIG_VERBOSE
 #include <aplus/sysconfig.h>
@@ -28,7 +29,7 @@ static char* __envp[] = {
     
 
 
-static void parse_fstab() {
+static void init_fstab() {
     FILE* fp = fopen("/etc/fstab", "r");
     if(!fp) {
         fprintf(stderr, "init: no /etc/fstab found!\n");
@@ -84,7 +85,7 @@ static void parse_fstab() {
 
 
 
-static void parse_initd() {
+static void init_initd() {
     DIR* d = opendir("/etc/init.d");
     if(!d) {
         fprintf(stderr, "init: no /etc/init.d directory found!\n");
@@ -120,14 +121,29 @@ static void parse_initd() {
 }
 
 
+static void init_console() {
+    int fd = open("/dev/console", O_RDONLY);
+    if(fd < 0) {
+        perror("init: /dev/console");
+        return;
+    }
+
+    if(ioctl(fd, KDSETMODE, KD_GRAPHICS) != 0)
+        perror("init: console_ioctl()");
+    
+    close(fd);
+}
+
+
 int main(int argc, char** argv) {
     fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
     fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
     fcntl(open("/dev/stderr", O_WRONLY), F_DUPFD, STDERR_FILENO);
    
-
-    parse_fstab();
-    parse_initd();
+    init_console();    
+    init_fstab();
+    init_initd();
+    
 
     ioctl(STDIN_FILENO, TIOCLKEYMAP, sysconfig("sys.locale", SYSCONFIG_FORMAT_STRING, (uintptr_t) "en-US"));
     return 0;

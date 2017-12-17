@@ -9,6 +9,10 @@
 #include <getopt.h>
 #include <glob.h>
 
+#include <sys/ioctl.h>
+#include <sys/termio.h>
+#include <sys/termios.h>
+
 
 #include "sh.h"
 
@@ -97,6 +101,8 @@ int main(int argc, char** argv, char** env) {
     
 
 
+    struct winsize ws;
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 
         
     char* username = strdup(getenv("USER"));
@@ -114,7 +120,7 @@ int main(int argc, char** argv, char** env) {
         time_t t0 = time(NULL);
         struct tm* tm = localtime(&t0);
 
-        fprintf(stdout, "\033[63C[\033[33m%02d/%02d \033[31m%02d:%02d:%02d\033[39m]\033[79D", tm->tm_mday, tm->tm_mon + 1, tm->tm_hour, tm->tm_min, tm->tm_sec);
+        fprintf(stdout, "\033[%dC[\033[33m%02d/%02d \033[31m%02d:%02d:%02d\033[39m]\033[%dD", ws.ws_col - 17, tm->tm_mday, tm->tm_mon + 1, tm->tm_hour, tm->tm_min, tm->tm_sec, ws.ws_col - 1);
         fprintf(stdout, "\033[36m[%s@%s %s]%c\033[39m ", username, hostname, cwd, geteuid() == 0 ? '#' : '$');
         fflush(stdout);
 

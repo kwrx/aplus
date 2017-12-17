@@ -3,7 +3,7 @@
 
 #include <aplus/base.h>
 
-#define DEBUG                               0
+#define DEBUG                               1
 
 
 #define CONFIG_HOST_MEMORY                  512

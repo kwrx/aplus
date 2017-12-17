@@ -66,8 +66,8 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
             memcpy(data, &tio->winsize, sizeof(struct winsize));
             break;
         case TIOCSWINSZ:
-            //_p(data);
-            //memcpy(&tio->winsize, data, sizeof(struct winsize));
+            _p(data);
+            memcpy(&tio->winsize, data, sizeof(struct winsize));
 
             sys_kill(current_task->pid, SIGWINCH);
             break;

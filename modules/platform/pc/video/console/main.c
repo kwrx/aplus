@@ -1,9 +1,20 @@
 #include <aplus.h>
+#include <aplus/base.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <aplus/task.h>
+#include <aplus/kd.h>
+#include <aplus/fb.h>
+#include <aplus/sysconfig.h>
 #include <libc.h>
+
+#include <sys/ioctl.h>
+#include <sys/termio.h>
+#include <sys/termios.h>
+
+
+#include "console-font.h"
 
 MODULE_NAME("pc/video/console");
 MODULE_DEPS("arch/x86");
@@ -11,9 +22,9 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#define CONSOLE_VRAM            0xb8000
-#define CONSOLE_WIDTH           80
-#define CONSOLE_HEIGHT          25
+#define CONSOLE_VRAM                0xb8000
+#define CONSOLE_WIDTH               80
+#define CONSOLE_HEIGHT              25
 
 
 #if defined(__i386__) || defined(__x86_64__)
@@ -32,18 +43,31 @@ struct cc {
     int style;
     int colors;
     char escape_buffer[32];
+
+    void* frame;
+    int width;
+    int height;
+    int vmode;
+
+    __fastcall
+    void (*output) (struct cc* cc, int pos, uint16_t ch);
+
+    __fastcall
+    void (*scroll) (struct cc* cc, int pos);
 } __packed;
 
 
 
+#include "console-output-textmode.h"
+#include "console-output-32.h"
 
-#define VRAM            ((short*) CONSOLE_VRAM)
+
 
 
 __fastcall
-static inline uint32_t __C(uint32_t p) {
-    if(unlikely(p > CONSOLE_WIDTH * CONSOLE_HEIGHT))
-        p = CONSOLE_WIDTH * CONSOLE_HEIGHT;
+static inline uint32_t __C(struct cc* cc, uint32_t p) {
+    if(unlikely(p > cc->width * cc->height))
+        p = cc->width * cc->height;
  
     return p;
 }
@@ -70,18 +94,18 @@ static void plot_value(struct cc* cc, char value) {
                 case '@':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++)
-                        VRAM[__C(cc->p + x)] = (cc->style << 8) | ' ';
+                        cc->output(cc, __C(cc, cc->p + x), (cc->style << 8) | ' ');
                     break;
                 case 'A':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++)
-                        cc->p -= CONSOLE_WIDTH;
+                        cc->p -= cc->width;
                     break;
                 case 'B':
                 case 'e':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++)
-                        cc->p += CONSOLE_WIDTH;
+                        cc->p += cc->width;
                     break;
                 case 'C':
                 case 'a':
@@ -93,33 +117,33 @@ static void plot_value(struct cc* cc, char value) {
                 case 'E':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++)
-                        cc->p += CONSOLE_WIDTH - (cc->p % CONSOLE_WIDTH);
+                        cc->p += cc->width - (cc->p % cc->width);
                     break;
                 case 'F':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++) 
-                        cc->p -= CONSOLE_WIDTH + (cc->p % CONSOLE_WIDTH);
+                        cc->p -= cc->width + (cc->p % cc->width);
                     break;
                 case 'G':
-                    cc->p -= (cc->p % CONSOLE_WIDTH);
+                    cc->p -= (cc->p % cc->width);
                     cc->p += atoi(cc->escape_buffer);
                     break;
                 case 'H':
                 case 'f':
                     sscanf(cc->escape_buffer, "%d;%d", &y, &x);
-                    cc->p = y * CONSOLE_WIDTH + x;
+                    cc->p = y * cc->width + x;
                     break;
                 case 'J':
                     y = atoi(cc->escape_buffer);
                     switch(y) {
                         case 1:
                             x = cc->p;
-                            while(x < CONSOLE_WIDTH * CONSOLE_HEIGHT)
-                                VRAM[x++] = (cc->style << 8) | ' ';
+                            while(x < cc->width * cc->height)
+                                cc->output(cc, x++, (cc->style << 8) | ' ');
                             break;
                         default:
-                            for(x = 0; x < CONSOLE_WIDTH * CONSOLE_HEIGHT; x++)
-                                VRAM[x] = (cc->style << 8) | ' ';
+                            for(x = 0; x < cc->width * cc->height; x++)
+                                cc->output(cc, x, (cc->style << 8) | ' ');
                             break;
                     }
                     break;
@@ -127,47 +151,47 @@ static void plot_value(struct cc* cc, char value) {
                     y = atoi(cc->escape_buffer);
                     switch(y) {
                         case 1:
-                            x = cc->p - (cc->p % CONSOLE_WIDTH);
+                            x = cc->p - (cc->p % cc->width);
                             while(x < cc->p)
-                                VRAM[__C(x++)] = (cc->style << 8) | ' ';
+                                cc->output(cc, __C(cc, x++), (cc->style << 8) | ' ');
                             break;
                         case 2:
-                            for(x = 0; x < CONSOLE_WIDTH; x++)
-                                VRAM[__C(cc->p - (cc->p % CONSOLE_WIDTH) + x)] = (cc->style << 8) | ' ';
+                            for(x = 0; x < cc->width; x++)
+                                cc->output(cc, __C(cc, cc->p - (cc->p % cc->width) + x), (cc->style << 8) | ' ');
                             break;
                     }
                     break;
                 case 'L':
-                    y = atoi(cc->escape_buffer) * CONSOLE_WIDTH;
-                    y -= (cc->p % CONSOLE_WIDTH);
+                    y = atoi(cc->escape_buffer) * cc->width;
+                    y -= (cc->p % cc->width);
 
-                    x = cc->p - (cc->p % CONSOLE_WIDTH);
+                    x = cc->p - (cc->p % cc->width);
                     while(x < y)
-                        VRAM[__C(x++)] = (cc->style << 8) | ' ';
+                        cc->output(cc, __C(cc, x++), (cc->style << 8) | ' ');
                     
                     break;
                 case 'M':
-                    y = atoi(cc->escape_buffer) * CONSOLE_WIDTH;
-                    y += (cc->p % CONSOLE_WIDTH);
+                    y = atoi(cc->escape_buffer) * cc->width;
+                    y += (cc->p % cc->width);
 
-                    x = cc->p + (CONSOLE_WIDTH - (cc->p % CONSOLE_WIDTH));
+                    x = cc->p + (cc->width - (cc->p % cc->width));
                     while(x > y)
-                        VRAM[__C(x--)] = (cc->style << 8) | ' ';
+                        cc->output(cc, __C(cc, x--), (cc->style << 8) | ' ');
                     
                     break;
                 case 'P':
                     y = atoi(cc->escape_buffer);
                     while(y--)
-                        VRAM[__C(cc->p--)] = (cc->style << 8) | ' ';
+                        cc->output(cc, __C(cc, cc->p--), (cc->style << 8) | ' ');
                     break;
                 case 'X':
                     y = atoi(cc->escape_buffer);
                     while(y)
-                        VRAM[__C(cc->p - y--)] = (cc->style << 8) | ' ';
+                        cc->output(cc, __C(cc, cc->p - y--), (cc->style << 8) | ' ');
                     break;
                 case 'd':
                     y = atoi(cc->escape_buffer);
-                    cc->p = (CONSOLE_WIDTH * y) + (cc->p % CONSOLE_WIDTH);
+                    cc->p = (cc->width * y) + (cc->p % cc->width);
                     break;
                 case 's':
                     cc->escape_saved_cursor = cc->p;
@@ -224,49 +248,109 @@ static void plot_value(struct cc* cc, char value) {
     } else {
         switch(value) {
             case '\n':
-                cc->p += CONSOLE_WIDTH - (cc->p % CONSOLE_WIDTH);
+                cc->p += cc->width - (cc->p % cc->width);
                 break;
             case '\v':
-                cc->p += CONSOLE_WIDTH;
+                cc->p += cc->width;
                 break;
             case '\r':
-                cc->p -= (cc->p % CONSOLE_WIDTH);
+                cc->p -= (cc->p % cc->width);
                 break;
             case '\t':
-                cc->p += 4 - ((cc->p % CONSOLE_WIDTH) % 4);
+                cc->p += 4 - ((cc->p % cc->width) % 4);
                 break;
             case '\b':
-                VRAM[__C(--cc->p)] = (cc->style << 8) | ' ';
+                cc->output(cc, __C(cc, --cc->p), (cc->style << 8) | ' ');
                 break;
             case '\e':
                 cc->escape = 1;
                 break;
             default:
-                VRAM[__C(cc->p++)] = (cc->style << 8) | value;
+                cc->output(cc, __C(cc, cc->p++), (cc->style << 8) | value);
                 break;
         }
     }
 
 
 
-    if(cc->p >= (CONSOLE_WIDTH * CONSOLE_HEIGHT)) {
-        int x, y;
-        for(y = 1; y < CONSOLE_HEIGHT; y++)
-            for(x = 0; x < CONSOLE_WIDTH; x++)
-                VRAM[(y - 1) * CONSOLE_WIDTH + x] = VRAM[y * CONSOLE_WIDTH + x];
+    if(cc->p >= (cc->width * cc->height)) {
+        cc->scroll(cc, 1);
+        cc->p -= cc->width;
 
-        cc->p -= CONSOLE_WIDTH;
-
-        for(x = 0; x < CONSOLE_WIDTH; x++)
-            VRAM[__C(cc->p + x)] = (cc->style << 8) | ' ';
+        int x;
+        for(x = 0; x < cc->width; x++)
+            cc->output(cc, __C(cc, cc->p + x), (cc->style << 8) | ' ');
 
     }
 
 
-    outb(0x3D4, 0x0F);
-    outb(0x3D5, cc->p & 0xFF);
-    outb(0x3D4, 0x0E);
-    outb(0x3D5, (cc->p >> 8) & 0xFF);
+    if(cc->vmode == KD_TEXT) {
+        /* Update VGA Cursor */
+        outb(0x3D4, 0x0F);
+        outb(0x3D5, cc->p & 0xFF);
+        outb(0x3D4, 0x0E);
+        outb(0x3D5, (cc->p >> 8) & 0xFF);
+    }
+}
+
+
+static int console_init_graphics(struct cc* cc) {
+    char* dev = (char*) sysconfig("screen.device", SYSCONFIG_FORMAT_STRING, (uintptr_t) "/dev/fb0");    
+    
+    
+    struct fb_var_screeninfo var;
+    struct fb_fix_screeninfo fix;
+    struct winsize ws;    
+
+    int fb = sys_open(dev, O_RDONLY, 0);
+    if(fb < 0) {
+        kprintf(ERROR "console: open framebuffer");
+        return -1;
+    }
+
+
+    memset(&var, 0, sizeof(var));
+    var.xres =
+    var.xres_virtual = sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
+    var.yres =
+    var.yres_virtual = sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
+    var.bits_per_pixel = sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
+    var.activate = FB_ACTIVATE_NOW;
+
+    sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);
+    sys_ioctl(fb, FBIOGET_VSCREENINFO, &var);
+    sys_ioctl(fb, FBIOGET_FSCREENINFO, &fix);
+    sys_close(fb);
+
+
+    sys_ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+    ws.ws_row = var.yres_virtual / 16;
+    ws.ws_col = var.xres_virtual / 8;
+    ws.ws_xpixel = var.xres_virtual;
+    ws.ws_ypixel = var.yres_virtual;
+    sys_ioctl(STDIN_FILENO, TIOCSWINSZ, &ws);
+
+
+    cc->frame = (void*) fix.smem_start;
+    cc->width = var.xres_virtual / 8;
+    cc->height = var.yres_virtual / 16;
+    cc->p = 0;
+    
+
+    switch(var.bits_per_pixel) {
+        case 8:
+        case 16:
+        case 24:
+            break;
+        case 32:
+            cc->output = console_output_32;
+            cc->scroll = console_scroll_32;
+            break;
+    }
+
+
+    kprintf(INFO "console: set graphics mode %dx%dx%d\n", var.xres, var.yres, var.bits_per_pixel);
+    return 0;
 }
 
 static int console_write(struct inode* inode, void* buf, off_t pos, size_t size) {
@@ -288,6 +372,57 @@ static int console_write(struct inode* inode, void* buf, off_t pos, size_t size)
     return size;
 }
 
+
+static int console_ioctl(struct inode* inode, int req, void* arg) {
+    if(unlikely(!inode || !inode->userdata)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    struct cc* cc = inode->userdata;
+    switch(req) {
+        case KDGETLED:
+        case KDSETLED:
+        case KDGKBLED:
+        case KDSKBLED:
+            errno = ENOSYS;
+            return -1;
+        case KDGKBTYPE:
+            return 0x02; /* KB_101 */
+        case KDADDIO:
+        case KDDELIO:
+        case KDENABIO:
+            errno = ENOSYS;
+            return -1;
+        case KDSETMODE:
+            switch((int) arg) {
+                case KD_TEXT:
+                    cc->vmode = KD_TEXT;
+                    return 0;
+                case KD_GRAPHICS:
+                    if(console_init_graphics(cc) != 0)
+                        return -1;
+                    
+                    cc->vmode = KD_GRAPHICS;
+                    return 0;
+                default:
+                    errno = EINVAL;
+                    return -1;
+            }
+        case KDGETMODE:
+            return cc->vmode;
+        case KDMKTONE:
+        case KIOCSOUND:
+            errno = ENOSYS;
+            return -1;
+    }   
+    
+    
+    errno = EINVAL;
+    return -1;
+}
+
 int init(void) {
     struct cc* cc = (void*) kmalloc(sizeof(struct cc), GFP_KERNEL);
     if(unlikely(!cc)) {
@@ -298,14 +433,19 @@ int init(void) {
     memset(cc, 0, sizeof(struct cc));
     cc->style = 0x0F;
     cc->colors = 1;
-
+    cc->vmode = KD_TEXT;
+    cc->width = CONSOLE_WIDTH;
+    cc->height = CONSOLE_HEIGHT;
+    cc->output = console_output_textmode;
+    cc->scroll = console_scroll_textmode;
 
     int i;
-    for(i = 0; i < CONSOLE_WIDTH * CONSOLE_HEIGHT; i++)
-        VRAM[i] = (cc->style << 8) | ' ';
+    for(i = 0; i < cc->width * cc->height; i++)
+        cc->output(cc, i, (cc->style << 8) | ' ');
 
 
     inode_t* ino = vfs_mkdev("console", -1, S_IFCHR | 0222);
+    ino->ioctl = console_ioctl;
     ino->write = console_write;
     ino->userdata = cc;
 
