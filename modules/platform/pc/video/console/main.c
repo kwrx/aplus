@@ -60,7 +60,9 @@ struct cc {
 
 #include "console-output-textmode.h"
 #include "console-output-32.h"
-
+#include "console-output-24.h"
+#include "console-output-16.h"
+#include "console-output-8.h"
 
 
 
@@ -294,6 +296,8 @@ static void plot_value(struct cc* cc, char value) {
 }
 
 
+
+
 static int console_init_graphics(struct cc* cc) {
     char* dev = (char*) sysconfig("screen.device", SYSCONFIG_FORMAT_STRING, (uintptr_t) "/dev/fb0");    
     
@@ -339,14 +343,23 @@ static int console_init_graphics(struct cc* cc) {
 
     switch(var.bits_per_pixel) {
         case 8:
+            cc->output = console_output_8;
+            cc->scroll = console_scroll_8;
+            break;
         case 16:
+            cc->output = console_output_16;
+            cc->scroll = console_scroll_16;
+            break;
         case 24:
+            cc->output = console_output_24;
+            cc->scroll = console_scroll_24;
             break;
         case 32:
             cc->output = console_output_32;
             cc->scroll = console_scroll_32;
             break;
     }
+
 
 
     kprintf(INFO "console: set graphics mode %dx%dx%d\n", var.xres, var.yres, var.bits_per_pixel);

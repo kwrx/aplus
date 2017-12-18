@@ -8,6 +8,11 @@
 #include <dirent.h>
 
 #include <sys/ioctl.h>
+#include <sys/termio.h>
+#include <sys/termios.h>
+
+
+#include <sys/ioctl.h>
 #include <aplus/base.h>
 #include <aplus/input.h>
 #include <aplus/kd.h>
@@ -36,6 +41,10 @@ static void init_fstab() {
         return;
     }
     
+
+    struct winsize ws;
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+
     int cl = 1;
 
     static char buf[BUFSIZ];
@@ -76,7 +85,7 @@ static void init_fstab() {
         if(unlikely(mount(opt[0], opt[1], opt[2], flags, NULL) != 0))
             fprintf(stderr, "%s: failed to mount \'%s\' with \'%s\' (%s)\n", opt[0], opt[1], opt[2], opt[3]);
 
-        fprintf(stdout, "init: mount \'%s\' in \'%s\' with \'%s\' (%s) \e[70G[ \e[32mOK\e[37m ]\n", opt[0], opt[1], opt[2], opt[3]);
+        fprintf(stdout, "init: mount \'%s\' in \'%s\' with \'%s\' (%s) \e[%dG[ \e[32mOK\e[37m ]\n", opt[0], opt[1], opt[2], opt[3], ws.ws_col - 10);
     }
    
 
@@ -91,6 +100,11 @@ static void init_initd() {
         fprintf(stderr, "init: no /etc/init.d directory found!\n");
         return;
     }
+
+
+    struct winsize ws;
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+
 
     struct dirent* ent;
     while((ent = readdir(d))) {
@@ -114,7 +128,7 @@ static void init_initd() {
             e = 0;
         } while(0);
         
-        fprintf(stderr, "init: starting \e[36m%s\e[37m \e[70G[ %3s ]\n", ent->d_name, e == 0 ? "\e[32mOK\e[37m" : "\e[31mERR\e[37m");
+        fprintf(stderr, "init: starting \e[36m%s\e[37m \e[%dG[ %3s ]\n", ent->d_name, ws.ws_col - 10, e == 0 ? "\e[32mOK\e[37m" : "\e[31mERR\e[37m");
     }
 
     closedir(d);
