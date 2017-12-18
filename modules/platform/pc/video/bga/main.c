@@ -71,7 +71,25 @@ int bga_update(fbdev_t* dev) {
         wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
     
 
-    strcpy(dev->fs.id, BGA_ID);
+    static int rgba[] = {
+        0, 0, 0, 0, 0, 0, 0, 0,     /* NULL             */
+        3, 5, 3, 2, 2, 0, 0, 0,     /* 8bpp RRRGGGBB    */
+        5, 11, 6, 6, 5, 0, 0, 0,    /* 16bpp RGB565     */
+        8, 16, 8, 8, 8, 0, 0, 0,    /* 24bpp RGB24      */
+        8, 16, 8, 8, 8, 0, 8, 24,   /* 32bpp ARGB       */
+    };
+
+    dev->vs.red.length = rgba[dev->vs.bits_per_pixel + 0];
+    dev->vs.red.offset = rgba[dev->vs.bits_per_pixel + 1];
+    dev->vs.green.length = rgba[dev->vs.bits_per_pixel + 2];
+    dev->vs.green.offset = rgba[dev->vs.bits_per_pixel + 3];
+    dev->vs.blue.length = rgba[dev->vs.bits_per_pixel + 4];
+    dev->vs.blue.offset = rgba[dev->vs.bits_per_pixel + 5];
+    dev->vs.transp.length = rgba[dev->vs.bits_per_pixel + 6];
+    dev->vs.transp.offset = rgba[dev->vs.bits_per_pixel + 7];
+
+
+    strncpy(dev->fs.id, BGA_ID, 16);
     dev->fs.smem_start = (unsigned long) dev->userdata;
     dev->fs.smem_len = BGA_VIDEORAM_SIZE;
     dev->fs.type = FB_TYPE_PLANES;

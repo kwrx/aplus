@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <errno.h>
@@ -23,6 +24,7 @@
 
 
 static char buf[BUFSIZ];
+static struct winsize ws;
 
 
 static void show_usage(int argc, char** argv) {
@@ -60,12 +62,18 @@ static void cmd_cd(char** argv) {
         perror(p);
 }
     
-    
 
+
+static void sigwinch(int sig) {
+    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
+    signal(SIGWINCH, sigwinch);
+}
 
 
 
 int main(int argc, char** argv, char** env) {
+
+    signal(SIGWINCH, sigwinch);
 
     sh_alias("la", (void*) "ls -lh", SH_ALIAS_TYPE_STRING);
     sh_alias("cd", (void*) cmd_cd, SH_ALIAS_TYPE_FUNC);
@@ -101,7 +109,6 @@ int main(int argc, char** argv, char** env) {
     
 
 
-    struct winsize ws;
     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 
         

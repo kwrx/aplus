@@ -313,15 +313,19 @@ static int console_init_graphics(struct cc* cc) {
     }
 
 
-    memset(&var, 0, sizeof(var));
-    var.xres =
-    var.xres_virtual = sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
-    var.yres =
-    var.yres_virtual = sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
-    var.bits_per_pixel = sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
-    var.activate = FB_ACTIVATE_NOW;
+    if(cc->vmode == KD_TEXT) {
+        memset(&var, 0, sizeof(var));
+        var.xres =
+        var.xres_virtual = sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
+        var.yres =
+        var.yres_virtual = sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
+        var.bits_per_pixel = sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
+        var.activate = FB_ACTIVATE_NOW;
 
-    sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);
+        sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);
+    }
+
+
     sys_ioctl(fb, FBIOGET_VSCREENINFO, &var);
     sys_ioctl(fb, FBIOGET_FSCREENINFO, &fix);
     sys_close(fb);

@@ -69,7 +69,7 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
             _p(data);
             memcpy(&tio->winsize, data, sizeof(struct winsize));
 
-            sys_kill(current_task->pid, SIGWINCH);
+            sys_kill(-1, SIGWINCH);
             break;
         
         case TCSBRK:

@@ -10,6 +10,7 @@
 *.tar.gz
 *.img
 *.vdi
+.vscode
 bin/aplus
 bin/usr/bin/*
 bin/usr/sbin/*
