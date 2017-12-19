@@ -133,7 +133,7 @@ int iso9660_open(struct inode* inode) {
                 child->unlink = iso9660_unlink;
             } else {
                 child->read = iso9660_read;
-                child->write = NULL;
+                child->write = iso9660_write;
             }
             
             child->chown = NULL;

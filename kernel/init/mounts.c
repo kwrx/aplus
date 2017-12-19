@@ -40,8 +40,8 @@ int mounts_init(void) {
     if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != E_OK))
         kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
 
-    if(unlikely(sys_symlink("/dev", "root/dev") != E_OK))
-        kprintf(ERROR "/dev: failed to link in /root/dev");
+     if(unlikely(sys_mount(NULL, "/root/dev", "devfs", 0, NULL) != E_OK))
+        kprintf(ERROR "%s: failed to mount /dev\n", rootmnt);
 
     if(unlikely(sys_chroot("/root") != E_OK))
         kprintf(ERROR "%s: failed to chroot", "/root");

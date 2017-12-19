@@ -126,7 +126,9 @@ typedef struct {
 
 int ext2_open(struct inode* inode);
 int ext2_read(inode_t* ino, void* buf, off_t pos, size_t size);
+int ext2_write(inode_t* ino, void* buf, off_t pos, size_t size);
 inode_t* ext2_finddir(struct inode* inode, char* filename);
+int ext2_unlink(struct inode* inode, char* path);
 
 void ext2_get_blockchain(ext2_t* priv, ext2_inode_t* in, uint32_t** pchain);
 void ext2_get_inode_block(ext2_t* priv, uint32_t inode, uint32_t* b, uint32_t* ioff);

@@ -181,8 +181,10 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
     if((p->inode.type & 0xF000) == INODE_TYPE_DIRECTORY) {
         child->open = ext2_open;
         child->finddir = ext2_finddir;
+        child->unlink = ext2_unlink;
     } else {
         child->read = ext2_read;
+        child->write = ext2_write;
 
         ext2_get_blockchain(priv, &p->inode, &p->blockchain);
     }
@@ -227,6 +229,7 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
     dir->ino = 2;
     dir->open = ext2_open;
     dir->finddir = ext2_finddir;
+    dir->unlink = ext2_unlink;
 
 
     ext2_priv_t* p = (ext2_priv_t*) kmalloc(sizeof(ext2_priv_t), GFP_KERNEL);

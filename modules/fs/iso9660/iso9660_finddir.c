@@ -125,7 +125,7 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
                 child->unlink = iso9660_unlink;
             } else {
                 child->read = iso9660_read;
-                child->write = NULL;
+                child->write = iso9660_write;
             }
             
             child->chown = NULL;

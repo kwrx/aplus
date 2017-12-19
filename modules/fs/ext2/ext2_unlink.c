@@ -6,13 +6,13 @@
 #include <aplus/timer.h>
 #include <libc.h>
 
-#include "iso9660.h"
+#include "ext2.h"
 
 
 
 
 
-int iso9660_unlink(struct inode* inode, char* path) {
+int ext2_unlink(struct inode* inode, char* path) {
     (void) inode;
     (void) path;
     

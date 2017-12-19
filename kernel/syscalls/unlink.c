@@ -56,10 +56,8 @@ int sys_unlink(const char* name) {
     KASSERT(s);
     KASSERT(*s);
     
-    if(vfs_unlink(cino, s) != E_OK) {
-        errno = ENOENT;
+    if(vfs_unlink(cino, s) != E_OK)
         return -1;
-    }
     
     return 0;
 });
