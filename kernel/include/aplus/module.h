@@ -19,7 +19,7 @@
 
 
 typedef struct module {
-    const char* name;
+    char* name;
     list(char*, deps);
 
     int (*init) (void);

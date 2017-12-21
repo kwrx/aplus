@@ -149,4 +149,20 @@ extern uintptr_t read_eip();
 extern void x86_intr_kernel_stack(uintptr_t address);
 
 
+
+
+
+typedef void (irq_handler_t) (void*);
+
+
+void irq_enable(int number, irq_handler_t handler);
+void irq_disable(int number);
+
+void* irq_set_data(int number, void* data);
+void* irq_get_data(int number);
+
+void irq_ack(int irq_no);
+
+extern int current_irq;
+
 #endif
