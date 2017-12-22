@@ -1,6 +1,8 @@
 #ifndef _WAIT_H
 # define _WAIT_H
 
+#include <sys/types.h>
+
 # define WNOHANG 1
 # define WUNTRACED 2
 
@@ -39,5 +41,13 @@
 # define WIFSTOPPED(val) (((val)&0xff)==0177)
 # define WSTOPSIG(val)	(((val)>>8)&0xff)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+pid_t wait(int* status);
+pid_t waitpid(pid_t, int*, int);
+#ifdef __cplusplus
+}
+#endif
 #endif	/* _SYS_WAIT_H */
 

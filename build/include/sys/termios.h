@@ -93,6 +93,11 @@
 # define B19200	000016
 # define B38400	000017
 
+#define PARMRK  0x0008
+#define PARODD  0x2000
+
+
+
 typedef unsigned char cc_t;
 typedef unsigned short tcflag_t;
 typedef char speed_t;

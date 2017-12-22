@@ -102,10 +102,11 @@ release: $(KERNEL_OUTPUT)	\
 	@cd bin && tar -cf ../$(HOST)-aplus-$(KERNEL_VERSION).tar * && cd ..
 	@xz -z -T2 -q $(HOST)-aplus-$(KERNEL_VERSION).tar
 
-commit:
+git_add:
 	@mkdir -p build/include
 	@mount --bind /opt/cross/include build/include
 	@git add --all .
-	@git commit -m "$(date)"
-	@git push origin master
 	
+git_push:
+	@git push origin master
+	@umount build/include

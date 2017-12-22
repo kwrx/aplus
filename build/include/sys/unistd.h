@@ -24,7 +24,7 @@ int     _EXFUN(chmod, (const char *__path, mode_t __mode ));
 #if !defined(__INSIDE_CYGWIN__)
 int     _EXFUN(chown, (const char *__path, uid_t __owner, gid_t __group ));
 #endif
-#if defined(__aplus__) || defined(__cross__) || __BSD_VISIBLE || (__XSI_VISIBLE >= 4 && __POSIX_VISIBLE < 200112)
+#if __BSD_VISIBLE || (__XSI_VISIBLE >= 4 && __POSIX_VISIBLE < 200112)
 int     _EXFUN(chroot, (const char *__path ));
 #endif
 int     _EXFUN(close, (int __fildes ));
@@ -264,7 +264,7 @@ char *	_EXFUN(mktemp, (char *));
 void    _EXFUN(sync, (void));
 #endif
 
-#if defined(__aplus__) || defined(__cross__) || __BSD_VISIBLE || __POSIX_VISIBLE >= 200112 || __XSI_VISIBLE >= 4
+#if defined(__cross__) || defined(__aplus__) || __BSD_VISIBLE || __POSIX_VISIBLE >= 200112 || __XSI_VISIBLE >= 4
 ssize_t _EXFUN(readlink, (const char *__restrict __path,
                           char *__restrict __buf, size_t __buflen));
 int     _EXFUN(symlink, (const char *__name1, const char *__name2));

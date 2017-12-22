@@ -481,6 +481,13 @@ extern "C" {
 
 #endif /* __CYGWIN__ */
 
+#if defined(__aplus__) || defined(__cross__)
+#define _POSIX_TIMERS	1
+#define _POSIX_MONOTONIC_CLOCK			200809L
+#define _POSIX_CPUTIME				1
+#define _POSIX_THREAD_CPUTIME			1
+#endif
+
 #ifdef __cplusplus
 }
 #endif
