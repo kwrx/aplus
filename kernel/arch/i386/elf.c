@@ -5,7 +5,7 @@
 #include <arch/i386/i386.h>
 
 
-int arch_elf_check_machine(Elf_Ehdr* elf) {
+int elf_check_machine(Elf_Ehdr* elf) {
     if((elf->e_machine == EM_386) || (elf->e_machine == EM_486))
         return E_OK;
 
@@ -13,4 +13,4 @@ int arch_elf_check_machine(Elf_Ehdr* elf) {
 }
 
 
-EXPORT(arch_elf_check_machine);
+EXPORT(elf_check_machine);

@@ -14,7 +14,6 @@ typedef pthread_t async_t;
 
 
 #define async(x, y) ({                                              \
-                                                                    \
     pthread_t th;                                                   \
     if(pthread_create(&th, NULL,                                    \
         ({ void* __fn__ (void* arg) { x };                          \
@@ -25,9 +24,11 @@ typedef pthread_t async_t;
 })
 
 
-#define await(x, y)                                                 \
-    pthread_join(x, y)
-
+#define await(x) ({                                                 \
+    void* r;                                                        \
+    pthread_join(x, &r);                                            \
+    r;                                                              \
+})
 
 
 #define async_do(x, y)                                              \

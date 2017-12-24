@@ -17,11 +17,11 @@
 ## Task
     `typedef STRUCT ARCH_task_context`
 
-    `volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void* arg)`
-    `volatile task_t* arch_task_fork(void)`
-    `void arch_task_yield(void)`
-    `void arch_task_switch(volatile* task_t* prev_task, volatile task_t* new_task)`
-    `void arch_task_release(volatile* task_t* task)`
+    `volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg)`
+    `volatile task_t* task_fork(void)`
+    `void task_yield(void)`
+    `void task_switch(volatile* task_t* prev_task, volatile task_t* new_task)`
+    `void task_release(volatile* task_t* task)`
 ---
 
 ## Memory
@@ -40,7 +40,7 @@
 ---
 
 ## ELF
-    `int arch_elf_check_machine(Elf_Ehdr* elf)`
+    `int elf_check_machine(Elf_Ehdr* elf)`
 ---
 
 ## Debug

@@ -6,7 +6,7 @@
 
 SYSCALL(3, fork,
 int sys_fork(void) {
-    volatile task_t* child = arch_task_fork();
+    volatile task_t* child = task_fork();
     
     if(child)
         return child->pid;

@@ -13,7 +13,7 @@ void sys__yield(void) {
 
 
 void sys_yield(void) {
-    arch_task_yield();
+    task_yield();
 }
 
 EXPORT(sys_yield);

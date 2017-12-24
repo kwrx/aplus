@@ -145,7 +145,7 @@ void fork_handler(i386_context_t* context) {
 }
 
 
-volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void* arg) {
+volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg) {
     INTR_OFF;
 
     if(unlikely(!stack))
@@ -249,7 +249,7 @@ volatile task_t* arch_task_clone(int (*fn) (void*), void* stack, int flags, void
 
 
 
-volatile task_t* arch_task_fork(void) {
+volatile task_t* task_fork(void) {
     
     volatile task_t* r = NULL;
     __asm__ __volatile__ ("int 0x7F" : "=a"(r) : "a"(0));
@@ -258,11 +258,11 @@ volatile task_t* arch_task_fork(void) {
 }
 
 
-void arch_task_yield(void) {
+void task_yield(void) {
     __asm__ __volatile__ ("int 0x7F" : : "a"(1));
 }
 
-void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
+void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     INTR_OFF;
 
     uintptr_t esp, ebp, eip;
@@ -325,7 +325,7 @@ void arch_task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     );    
 }
 
-void arch_task_release(volatile task_t* task) {
+void task_release(volatile task_t* task) {
     KASSERT(task);
     KASSERT(task != kernel_task);
 

@@ -11,7 +11,7 @@
 #include <libc.h>
 
 
-extern int arch_elf_check_machine(Elf_Ehdr* elf);
+extern int elf_check_machine(Elf_Ehdr* elf);
 extern char* strndup(const char*, size_t);
 extern char** args_dup(char**);
 
@@ -107,7 +107,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     RXX(&hdr, 0, sizeof(Elf_Ehdr));
 
     if ((memcmp(hdr.e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1))         ||
-        (arch_elf_check_machine(&hdr))                                  ||
+        (elf_check_machine(&hdr))                                  ||
         (hdr.e_type != ET_EXEC)) {
 
         errno = ENOEXEC;
@@ -123,7 +123,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 
     INTR_OFF;
-    arch_task_release(current_task);
+    task_release(current_task);
 
     
     size_t size = 0;

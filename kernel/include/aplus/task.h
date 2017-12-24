@@ -136,15 +136,15 @@ void schedule(void);
 void schedule_yield(void);
 pid_t sched_nextpid();
 
-extern void arch_task_switch(volatile task_t*, volatile task_t*);
-extern volatile task_t* arch_task_fork(void);
-extern volatile task_t* arch_task_clone(int (*) (void*), void*, int, void*);
-extern void arch_task_yield(void);
-extern void arch_task_release(volatile task_t* task);
+extern void task_switch(volatile task_t*, volatile task_t*);
+extern volatile task_t* task_fork(void);
+extern volatile task_t* task_clone(int (*) (void*), void*, int, void*);
+extern void task_yield(void);
+extern void task_release(volatile task_t* task);
 
 
 #define task_create_tasklet(nm, handler, task)                                                                      \
-        task = arch_task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);             \
+        task = task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);             \
         task->name = strdup(nm);
 
 

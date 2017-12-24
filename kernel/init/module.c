@@ -9,7 +9,7 @@
 #include <libc.h>
 
 
-extern int arch_elf_check_machine(Elf_Ehdr* elf);
+extern int elf_check_machine(Elf_Ehdr* elf);
 
 static list(module_t*, m_queue);
 static list(symbol_t*, m_symtab);
@@ -255,7 +255,7 @@ int module_init(void) {
 
     
         Elf_Ehdr* hdr = (Elf_Ehdr*) image;
-        if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (arch_elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
+        if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
             kprintf(ERROR "module[%d]: invalid executable!\n", i);
             continue;
         }

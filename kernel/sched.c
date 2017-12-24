@@ -117,7 +117,7 @@ void schedule(void) {
 
     
     current_task->status = TASK_STATUS_RUNNING;
-    arch_task_switch(prev_task, current_task);
+    task_switch(prev_task, current_task);
 
 nosched:
     INTR_ON;
@@ -145,7 +145,7 @@ void schedule_yield(void) {
     
 
     current_task->status = TASK_STATUS_RUNNING;
-    arch_task_switch(prev_task, current_task);
+    task_switch(prev_task, current_task);
 
     INTR_ON;
 }

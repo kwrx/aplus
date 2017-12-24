@@ -43,7 +43,7 @@ void sys_exit(int status) {
         sys_close(i);
 
 
-    arch_task_release(current_task);
+    task_release(current_task);
     syscall_ack();
 
     INTR_ON;
