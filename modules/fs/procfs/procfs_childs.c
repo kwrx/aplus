@@ -245,7 +245,7 @@ static int statm_open(inode_t* inode) {
     sprintf(buf, 
         "%u %u %u %u %u %u %u\n",
         (tk->image->end - tk->image->start + tk->vmsize),
-        (tk->image->end - tk->image->start + tk->vmsize),
+        (tk->image->end - tk->image->start),
         0,
         0,
         0,

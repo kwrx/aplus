@@ -38,6 +38,6 @@ typedef pthread_t async_t;
     async(do { x } while(cond);, y)  
 
 #define async_timer(x, y, us)                                       \
-    async(for(;; usleep(us)) { x }, y)
+    async(for(;; sleep(us)) { x }, y)
 
 #endif
