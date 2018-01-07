@@ -12,6 +12,7 @@
 #if defined(__i386__)
 #include <arch/i386/i386.h>
 #include <arch/i386/pci.h>
+#include "virtio-i386.h"
 #endif
 
 
@@ -21,7 +22,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static list(virtio_device_t*, devices);
+list(virtio_device_t*, virtio_devices);
 
 
 int virtio_init_device(virtio_device_t* dev, void (*negotiate) (uint32_t* features)) {
@@ -148,7 +149,7 @@ void vqueue_disable_interrupts(vqueue_t* v) {
 
 
 int init(void) {
-    memset(&devices, 0, sizeof(devices));
+    memset(&virtio_devices, 0, sizeof(virtio_devices));
 
 
 #if defined(__i386__)
@@ -162,7 +163,7 @@ int init(void) {
         d->type = pci_read_field(device, PCI_SUBSYSID, 2) & 0xFFFF;
         d->io = pci_read_field(device, PCI_BAR0, 4) & 0xFFF0;
 
-        list_push(devices, d);
+        list_push(virtio_devices, d);
     }
 
     pci_scan(&find_pci, -1, NULL);

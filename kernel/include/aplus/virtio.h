@@ -97,33 +97,31 @@ typedef struct {
     uintptr_t io;
 
     vqueue_t vqueue[16];
+    void* userdata;
 } virtio_device_t;
 
 
 
-#if defined(__i386__) || defined(__x86_64__)
-#define virtio_r8(x)          inb(x)
-#define virtio_r16(x)         inw(x)
-#define virtio_r32(x)         inl(x)
-#define virtio_w8(x, y)       outb(x, y)
-#define virtio_w16(x, y)      outw(x, y)
-#define virtio_w32(x, y)      outl(x, y)
-#else
-#include <aplus/mmio.h>
-#define virtio_r8(x)          mmio_r8(x)
-#define virtio_r16(x)         mmio_r16(x)
-#define virtio_r32(x)         mmio_r32(x)
-#define virtio_w8(x, y)       mmio_w8(x, y)
-#define virtio_w16(x, y)      mmio_w16(x, y)
-#define virtio_w32(x, y)      mmio_w32(x, y)
-#endif
 
 
 #ifdef __APLUS_MODULE__
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
+
+list(virtio_device_t*, virtio_devices);
+
 void vqueue_enable_interrupts(vqueue_t* v);
 void vqueue_disable_interrupts(vqueue_t* v);
 
 int virtio_init_device(virtio_device_t* dev, void (*negotiate) (uint32_t* features));
 int virtio_send_buffer(virtio_device_t* dev, uint16_t index, vqueue_buffer_info_t* buf, uint64_t size);
+
+
+uint8_t virtio_r8(uint16_t);
+uint16_t virtio_r16(uint16_t);
+uint32_t virtio_r32(uint16_t);
+void virtio_w8(uint16_t, uint8_t);
+void virtio_w16(uint16_t, uint16_t);
+void virtio_w32(uint16_t, uint32_t);
 #endif
 #endif
