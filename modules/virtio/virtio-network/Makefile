@@ -5,12 +5,12 @@ CC			?=
 ROOT		?=
 OUTPUT		:= $(ROOT)/bin/boot/mods/$(notdir $(PWD)).ko
 
-CFILES		:=  $(shell $(FIND) $(PWD)/* -maxdepth 0 -type f -name "*.c")
-SFILES		:=  $(shell $(FIND) $(PWD)/* -maxdepth 0 -type f -name "*.s")
-AFILES		:=  $(shell $(FIND) $(PWD)/* -maxdepth 0 -type f -name "*.asm")
+CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
+SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
+AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I $(ROOT)/kernel/include -I include -include $(ROOT)/config.h -O3 -std=gnu99 -nostdlib -masm=intel -c
+CFLAGS		:=  -pipe -I $(ROOT)/kernel/include -I include -include $(ROOT)/config.h -O3  -std=gnu99 -nostdlib -c
 SFLAGS		:=  -c -I $(ROOT)/kernel/include -I include -include config.h
 
 all: $(OUTPUT)

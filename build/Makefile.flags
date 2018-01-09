@@ -10,7 +10,7 @@ LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page
 
 
 
-VMM             := qemu-system-i386 -hda $(HDD) -m 512 -boot c -d cpu_reset,guest_errors -serial stdio -s
+VMM             := qemu-system-i386 -drive file=$(HDD),if=ide -m 512 -boot c -d cpu_reset,guest_errors -serial stdio -s
 
 
 ifeq ($(ARCH),x86_64)

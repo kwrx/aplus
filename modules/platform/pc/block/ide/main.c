@@ -419,6 +419,9 @@ static int ata_device_detect(struct ata_device* dev) {
         spinlock_init(&dev->lock);
         ata_device_init(dev);
 
+        if(ata_max_offset(dev) == 0)
+            return -1;
+
         blkdev_t* blkdev = (blkdev_t*) kmalloc(sizeof(blkdev_t), GFP_KERNEL);
         memset(blkdev, 0, sizeof(blkdev_t));
 
@@ -469,6 +472,7 @@ int init(void) {
 
     irq_enable(ATA_IRQ_PRIMARY, irq_handler_1);
     irq_enable(ATA_IRQ_SECONDARY, irq_handler_2);
+
 
     ata_device_detect(&ata_primary_master);
     ata_device_detect(&ata_secondary_master);

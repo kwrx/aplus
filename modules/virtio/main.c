@@ -151,18 +151,37 @@ void vqueue_disable_interrupts(vqueue_t* v) {
 int init(void) {
     memset(&virtio_devices, 0, sizeof(virtio_devices));
 
+#if DEBUG
+    static char* devtype[] = {
+        NULL,
+        "Network Card",
+        "Block Device",
+        "Console",
+        "Entropy Source",
+        "Memory Ballooing",
+        "IO Memory",
+        "RPMSG",
+        "SCSI Host",
+        "9P Transport",
+        "802.11 WLAN",
+        NULL
+    };
+#endif
 
 #if defined(__i386__)
     void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
         if(!((venid == 0x1AF4) && ((devid >= 0x1000) && (devid <= 0x103F))))
             return;
+       
 
         virtio_device_t* d = (virtio_device_t*) kmalloc(sizeof(virtio_device_t), GFP_KERNEL);
         d->pci = device;
         d->irq = pci_read_field(device, PCI_INTERRUPT_LINE, 1);
-        d->type = pci_read_field(device, PCI_SUBSYSID, 2) & 0xFFFF;
+        d->type = pci_read_field(device, PCI_SUBVENID, 2) & 0xFFFF;
         d->io = pci_read_field(device, PCI_BAR0, 4) & 0xFFF0;
 
+
+        kprintf(INFO "virtio: found \'%s\', io: %p, irq: %d\n", devtype[d->type], d->io, d->irq);
         list_push(virtio_devices, d);
     }
 

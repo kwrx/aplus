@@ -101,6 +101,15 @@ typedef struct {
 } virtio_device_t;
 
 
+#define DISABLE_FEATURE(v,feature)  \
+    v &= ~(1 << feature)
+
+#define ENABLE_FEATURE(v,feature)   \
+    v |= (1 << feature)
+
+#define HAS_FEATURE(v,feature)      \
+    (v & (1 << feature))
+
 
 
 
