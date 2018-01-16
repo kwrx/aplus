@@ -107,7 +107,7 @@ static inline int d_owns(uint8_t* t, int idx) {
 
 
 
-int pcnet_startoutput(void* internals) {
+static int pcnet_startoutput(void* internals) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_startoutput() invalid args\n");
@@ -125,7 +125,7 @@ int pcnet_startoutput(void* internals) {
     return 1;
 }
 
-void pcnet_output(void* internals, void* buf, uint16_t len) {
+static void pcnet_output(void* internals, void* buf, uint16_t len) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_output() invalid args\n");
@@ -136,7 +136,7 @@ void pcnet_output(void* internals, void* buf, uint16_t len) {
     dev->offset += len;
 }
 
-void pcnet_endoutput(void* internals, uint16_t len) {
+static void pcnet_endoutput(void* internals, uint16_t len) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_endoutput() invalid args\n");
@@ -165,7 +165,7 @@ void pcnet_endoutput(void* internals, uint16_t len) {
     //kprintf(INFO "pcnet: sending %d bytes\n", len);
 }
 
-int pcnet_startinput(void* internals) {
+static int pcnet_startinput(void* internals) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_startinput() invalid args\n");
@@ -184,7 +184,7 @@ int pcnet_startinput(void* internals) {
     return size;
 }
 
-void pcnet_input(void* internals, void* buf, uint16_t len) {
+static void pcnet_input(void* internals, void* buf, uint16_t len) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_startinput() invalid args\n");
@@ -203,7 +203,7 @@ void pcnet_input(void* internals, void* buf, uint16_t len) {
     dev->offset += len;
 }
 
-void pcnet_endinput(void* internals) {
+static void pcnet_endinput(void* internals) {
     struct pcnet* dev = (struct pcnet*) internals;
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: pcnet_endinput() invalid args\n");
@@ -221,11 +221,11 @@ void pcnet_endinput(void* internals) {
     dev->offset = 0;
 }
 
-void pcnet_input_nomem(void* internals, uint16_t len) {
+static void pcnet_input_nomem(void* internals, uint16_t len) {
     kprintf(ERROR "pcnet: no memory left for %d bytes\n", len);   
 }
 
-void pcnet_irq(void* context) {
+static void pcnet_irq(void* context) {
     struct pcnet* dev = (struct pcnet*) irq_get_data(pcnet_irqno);
     if(unlikely(!dev)) {
         kprintf(ERROR "pcnet: invalid irq#%d\n", pcnet_irqno);
@@ -241,7 +241,7 @@ void pcnet_irq(void* context) {
         ethif_input(dev->netif);
 }
 
-void pcnet_init(void* internals, uint8_t* address, void* mcast) {
+static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
     struct pcnet* dev = (struct pcnet*) internals;
 
     inl(dev->io + 0x18);

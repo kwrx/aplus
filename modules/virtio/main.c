@@ -178,7 +178,8 @@ int init(void) {
         d->pci = device;
         d->irq = pci_read_field(device, PCI_INTERRUPT_LINE, 1);
         d->type = pci_read_field(device, PCI_SUBVENID, 2) & 0xFFFF;
-        d->io = pci_read_field(device, PCI_BAR0, 4) & 0xFFF0;
+        d->io = pci_read_field(device, PCI_BAR0, 4) & 0xFFFC;
+        d->mmio = pci_read_field(device, PCI_BAR1, 4) & 0xFFFFFFF0;
 
 
         kprintf(INFO "virtio: found \'%s\', io: %p, irq: %d\n", devtype[d->type], d->io, d->irq);

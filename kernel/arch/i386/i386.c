@@ -1,4 +1,5 @@
 #include <aplus.h>
+#include <arch/i386/i386.h>
 
 extern int intr_init();
 extern int timer_init();
@@ -38,6 +39,7 @@ void i386_init() {
             break;
         }
     }
+
 
     (void) intr_init();
     (void) pci_init();

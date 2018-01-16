@@ -139,7 +139,11 @@ static inline uint64_t rdtsc(void) {
         "rdtsc\n" : "=A"(r));
     return r;
 } 
-    
+
+
+static inline void cpuid(long r, long* a, long* d) {
+    __asm__ __volatile__ ("cpuid" : "=a"(*a), "=d"(*d) : "a"(r) : "ecx", "ebx");
+}
     
 typedef struct i386_context {
     uint32_t gs, fs, es, ds, edi, esi, ebp, esp, ebx, edx, ecx, eax, int_no, err_code, eip, cs, eflags, useresp;

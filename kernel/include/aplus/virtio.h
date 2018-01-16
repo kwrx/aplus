@@ -95,6 +95,7 @@ typedef struct {
     int irq;
     int type;
     uintptr_t io;
+    uintptr_t mmio;
 
     vqueue_t vqueue[16];
     void* userdata;
