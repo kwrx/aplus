@@ -52,7 +52,9 @@ typedef uintptr_t mem_ptr_t;
 #define SYS_ARCH_PROTECT(x)                 INTR_OFF
 #define SYS_ARCH_UNPROTECT(x)               INTR_ON
 
+#ifndef BYTE_ORDER
 #define BYTE_ORDER                          LITTLE_ENDIAN
+#endif
 #define LWIP_CHKSUM_ALGORITHM               2
 
 

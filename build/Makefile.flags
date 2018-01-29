@@ -10,13 +10,14 @@ LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page
 
 
 
-VMM             := qemu-system-i386 -drive file=$(HDD),if=ide -m 512 -boot c -d cpu_reset,guest_errors -serial stdio -s
+VMM             := qemu-system-$(ARCH) -drive file=$(HDD),if=ide -m 512 -boot c -d cpu_reset,guest_errors -serial stdio -s
 
 
 ifeq ($(ARCH),x86_64)
 CFLAGS          += -mno-red-zone -mcmodel=kernel -masm=intel
+AFLAGS          += -masm=intel
 NFLAGS          += -felf64
-VMM             += -vga std -net nic
+VMM             += -M accel="tcg" -vga std -soundhw ac97 -device virtio-net,netdev=net0 -netdev user,id=net0,hostfwd=udp::5000-:5000 -no-kvm-irqchip
 endif
 
 ifeq ($(ARCH),i386)

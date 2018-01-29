@@ -97,6 +97,11 @@ typedef struct elf_phdr {
 	Elf_Word p_align;
 } Elf_Phdr;
 
+typedef Elf_Sym elf32_sym_t;
+typedef Elf_Shdr elf32_shdr_t;
+typedef Elf_Phdr elf32_phdr_t;
+typedef Elf_Ehdr elf32_hdr_t;
+
 #elif defined(__x86_64__)
 
 /* 64-bit ELF base types. */
@@ -178,14 +183,23 @@ typedef struct {
 	Elf_Xword sh_entsize;
 } Elf_Shdr;
 
+typedef struct elf_phdr {
+	Elf_Word p_type;
+	Elf_Word p_flags;
+	Elf_Off p_offset;
+	Elf_Addr p_vaddr;
+	Elf_Addr p_paddr;
+	Elf_Xword p_filesz;
+	Elf_Xword p_memsz;
+	Elf_Xword p_align;
+} Elf_Phdr;
+
+
 #else
 #error "elf.h: unknown platform!"
 #endif
 
-typedef Elf_Sym elf32_sym_t;
-typedef Elf_Shdr elf32_shdr_t;
-typedef Elf_Phdr elf32_phdr_t;
-typedef Elf_Ehdr elf32_hdr_t;
+
 
 
 /* File types */

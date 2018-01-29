@@ -8,7 +8,6 @@
 #include <aplus/network.h>
 #include <aplus/sysconfig.h>
 
-#include <arch/i386/i386.h>
 
 static void idle() {
     current_task->name = "[systemd]";

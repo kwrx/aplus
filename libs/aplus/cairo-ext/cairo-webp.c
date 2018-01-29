@@ -1,3 +1,4 @@
+#ifndef KERNEL
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -94,4 +95,5 @@ cairo_surface_t* cairo_image_surface_create_from_webp(const char* filename) {
 __attribute__((weak))
 cairo_surface_t* cairo_image_surface_create_from_webp_stream(cairo_read_func_t read, void* arg) {
     return NULL;
-}   
+}
+#endif

@@ -10,10 +10,9 @@ int load_bootargs() {
 
     mbd->memory.size = (mbd_grub->mem_lower + mbd_grub->mem_upper) * 1024;
     mbd->memory.pagesize = 4096;
-    mbd->memory.start = ((uint32_t*) mbd_grub->mods_addr) [1];
 
-    mbd->ramdisk.ptr = ((uint32_t*) mbd_grub->mods_addr) [0];
-    mbd->ramdisk.size = ((uint32_t*) mbd_grub->mods_addr) [1] - ((uint32_t*) mbd_grub->mods_addr) [0];
+    mbd->modules.ptr = (void*) mbd_grub->mods_addr;
+    mbd->modules.count = mbd_grub->mods_count;
     
     mbd->lfb.width = mbd_grub->vbe_mode_info->Xres;
     mbd->lfb.height = mbd_grub->vbe_mode_info->Yres;
@@ -29,6 +28,21 @@ int load_bootargs() {
     mbd->exec.addr = mbd_grub->addr;
     mbd->exec.size = mbd_grub->size;
     mbd->exec.shndx = mbd_grub->shndx;
+
+
+    mbd->memory.start = (mbd->modules.ptr[mbd->modules.count - 1].size + 0x4000) & ~0xFFF;
+    
+    int i;
+    for(i = 0; i < mbd->modules.count; i++) {
+        mbd->modules.ptr[i].size -= mbd->modules.ptr[i].ptr;
+        mbd->modules.ptr[i].ptr += CONFIG_KERNEL_BASE;
+        mbd->modules.ptr[i].cmdline += CONFIG_KERNEL_BASE;
+    }
+
+
+    if(mbd->lfb.base) {
+        
+    }
 
     return 0;
 }

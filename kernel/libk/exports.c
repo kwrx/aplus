@@ -64,7 +64,11 @@ EXPORT(__divdi3);
 EXPORT(__udivdi3);
 EXPORT(__umoddi3);
 EXPORT(__moddi3);
+
+#if defined(__i386__)
 EXPORT(__ctype_ptr__);
+#endif
+
 EXPORT(_impure_ptr);
 
 

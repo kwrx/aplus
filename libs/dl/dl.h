@@ -128,7 +128,7 @@ typedef struct {
 } Elf_Sym;
 
 /* ELF header */
-typedef struct {
+typedef struct elf_ehdr {
     Elf_Byte e_ident[16];
     Elf_Half e_type;
     Elf_Half e_machine;
@@ -146,7 +146,7 @@ typedef struct {
 } Elf_Ehdr;
 
 /* Section header */
-typedef struct {
+typedef struct elf_shdr {
     Elf_Word sh_name;
     Elf_Word sh_type;
     Elf_Xword sh_flags;
@@ -159,12 +159,21 @@ typedef struct {
     Elf_Xword sh_entsize;
 } Elf_Shdr;
 
+
+typedef struct elf_phdr {
+	Elf_Word p_type;
+	Elf_Word p_flags;
+	Elf_Off p_offset;
+	Elf_Addr p_vaddr;
+	Elf_Addr p_paddr;
+	Elf_Xword p_filesz;
+	Elf_Xword p_memsz;
+	Elf_Xword p_align;
+} Elf_Phdr;
+
+
 #endif
 
-typedef Elf_Sym elf32_sym_t;
-typedef Elf_Shdr elf32_shdr_t;
-typedef Elf_Phdr elf32_phdr_t;
-typedef Elf_Ehdr elf32_hdr_t;
 
 
 /* File types */
