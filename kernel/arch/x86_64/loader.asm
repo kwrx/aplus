@@ -9,6 +9,7 @@
 
 
 extern main
+extern x86_64_init
 extern load_bootargs
 
 extern text
@@ -182,9 +183,22 @@ mov dword [0xb8000], 0x40404040
 	mov rax, mbd_grub
 	mov [rax], rbx
 
-	;call load_bootargs
+	mov rcx, end
+	sub rcx, bss
+	xor rax, rax
+	mov rdi, bss
+	rep stosb
+
+	call load_bootargs
+	call x86_64_init
+
+	push qword 0
+	push qword 0
 	call main
+	add esp, 32
 	
+	cli
+
 arch_loop_idle:
 	hlt
 	jmp arch_loop_idle

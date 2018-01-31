@@ -1,7 +1,7 @@
 ENTRY(_start)
 SEARCH_DIR("/opt/cross/lib")
-SEARCH_DIR("/opt/cross/x86_64-cross/lib")
-SEARCH_DIR("/opt/cross/lib/gcc/x86_64-cross/6.1.0")
+SEARCH_DIR("/opt/cross/x86_64-aplus/lib")
+SEARCH_DIR("/opt/cross/lib/gcc/x86_64-aplus/7.2.0")
 
 KERNEL_LOW = 0x00100000;
 KERNEL_HIGH = 0xFFFFFFFFC0000000;

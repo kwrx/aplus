@@ -5,11 +5,12 @@
 #include <aplus/utils/hashmap.h>
 #include <libc.h>
 
-
+#if defined(__i386__)
 extern int __divdi3;
 extern int __udivdi3;
 extern int __umoddi3;
 extern int __moddi3;
+#endif
 
 int libk_init() {
     libaplus_init(kmalloc, kcalloc, kfree);
@@ -60,12 +61,11 @@ EXPORT(hashmap_remove);
 EXPORT(hashmap_iterate);
 EXPORT(hashmap_free);
 
+#if defined(__i386__)
 EXPORT(__divdi3);
 EXPORT(__udivdi3);
 EXPORT(__umoddi3);
 EXPORT(__moddi3);
-
-#if defined(__i386__)
 EXPORT(__ctype_ptr__);
 #endif
 

@@ -21,7 +21,7 @@ int load_bootargs() {
     mbd->lfb.base = mbd_grub->vbe_mode_info->physbase;
     mbd->lfb.size = mbd->lfb.pitch * mbd->lfb.height;
 
-    mbd->cmdline.args = (char*) mbd_grub->cmdline;
+    mbd->cmdline.args = (char*) ((uintptr_t) mbd_grub->cmdline);
     mbd->cmdline.length = 0;
 
     mbd->exec.num = mbd_grub->num;

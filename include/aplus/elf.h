@@ -102,6 +102,10 @@ typedef Elf_Shdr elf32_shdr_t;
 typedef Elf_Phdr elf32_phdr_t;
 typedef Elf_Ehdr elf32_hdr_t;
 
+#define ELF_ARCH	EM_386
+
+
+
 #elif defined(__x86_64__)
 
 /* 64-bit ELF base types. */
@@ -194,7 +198,7 @@ typedef struct elf_phdr {
 	Elf_Xword p_align;
 } Elf_Phdr;
 
-
+#define ELF_ARCH	EM_X86_64
 #else
 #error "elf.h: unknown platform!"
 #endif
@@ -309,7 +313,7 @@ typedef struct elf_phdr {
 #define R_386_32	1
 #define R_386_PC32	2
 
-#define ELF_ARCH	EM_386
+
 
 struct elf_ehdr;
 struct elf_shdr;
