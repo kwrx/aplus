@@ -12,6 +12,8 @@ extern int __umoddi3;
 extern int __moddi3;
 #endif
 
+
+
 int libk_init() {
     libaplus_init(kmalloc, kcalloc, kfree);
     return E_OK;
@@ -66,9 +68,9 @@ EXPORT(__divdi3);
 EXPORT(__udivdi3);
 EXPORT(__umoddi3);
 EXPORT(__moddi3);
-EXPORT(__ctype_ptr__);
 #endif
 
+EXPORT(__locale_ctype_ptr);
 EXPORT(_impure_ptr);
 
 

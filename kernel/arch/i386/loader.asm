@@ -89,7 +89,7 @@ enable_sse:
 
 
 initpaging:
-	mov ecx, 4095
+	mov ecx, 4096
 	mov esi, 3
 	mov edi, V2P(PT)
 
@@ -154,6 +154,7 @@ high_start:
 	mov es, cx
 
 	mov esp, CONFIG_STACK_BASE + CONFIG_STACK_SIZE
+
 
 	add ebx, CONFIG_KERNEL_BASE
 	mov [mbd_grub], ebx
@@ -287,6 +288,7 @@ TSS32:
 
 
 section .stack
+align 0x1000
 stack_bottom:
 times CONFIG_STACK_SIZE db 0
 stack:

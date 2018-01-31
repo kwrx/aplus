@@ -64,10 +64,10 @@ int main(int argc, char** argv) {
             KERNEL_TIME,
             KERNEL_PLATFORM,
             (int) mbd->memory.size / 1024 / 1024);
-        
-    kprintf(INFO "%s %s %p\n",
+        extern int mbd_grub;
+    kprintf(INFO "%s %s %p %p\n",
             KERNEL_NAME,
-            mbd->cmdline.args, mbd->memory.start);
+            mbd->cmdline.args, mbd->memory.start, mbd_grub);
 
 
 

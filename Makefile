@@ -1,12 +1,12 @@
 .PHONY: all clean
 .EXPORT_ALL_VARIABLES:
 
-#ARCH		:= i386
-#HOST		:= i686
-#TARGET		:= i686-cross
-ARCH		:= x86_64
-HOST		:= x86_64
-TARGET		:= x86_64-aplus
+ARCH		:= i386
+HOST		:= i686
+TARGET		:= i686-aplus
+#ARCH		:= x86_64
+#HOST		:= x86_64
+#TARGET		:= x86_64-aplus
 
 
 

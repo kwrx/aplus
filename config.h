@@ -50,11 +50,11 @@
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__x86_64__)
 #    define CONFIG_BITS                     64
-#    define CONFIG_KERNEL_BASE              0xFFFFFFFFC0000000L
-#    define CONFIG_HEAP_BASE                0xFFFFFFFFD0000000L
-#    define CONFIG_STACK_BASE               0xFFFFFFFFF0000000L
-#    define CONFIG_HEAP_SIZE                0x01000000ULL
-#    define CONFIG_STACK_SIZE               0x00004000ULL
+#    define CONFIG_KERNEL_BASE              0xFFFFFFFFF8000000L
+#    define CONFIG_HEAP_BASE                0xFFFFFFFFF9000000L
+#    define CONFIG_STACK_BASE               0xFFFFFFFFFFC00000L
+#    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
+#    define CONFIG_STACK_SIZE               0x00020000ULL
 #    define KERNEL_PLATFORM                 "x86_64"
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__arm__)

@@ -2,7 +2,9 @@
 
 
 
-%define CONFIG_KERNEL_BASE			(0xFFFFFFFFC0000000)
+%define CONFIG_KERNEL_BASE			(0xFFFFFFFFF8000000)
+%define CONFIG_STACK_BASE			(0xFFFFFFFFFFC00000)
+%define CONFIG_STACK_SIZE			(0x0000000000020000)
 %define CONFIG_VIDEOMODE			(0)
 
 %define V2P(x)						((x) - CONFIG_KERNEL_BASE)
@@ -17,10 +19,23 @@ extern bss
 extern end
 
 
-global mbd_grub
+extern mbd_grub
+
 global _start
+global stack
+
+global PML4T
+global PDT
+global PT
+global PT_1MB
+
+global GDT64
+global IDT64
+global IRQ64
+global TSS64
 
 global arch_loop_idle
+global gdt_load
 
 
 MALIGN 		equ 	(1 << 0)
@@ -59,7 +74,6 @@ align 4
 section .text
 _start:
 	mov esp, V2P(stack)
-	pushad
 
 	cli
 	finit
@@ -78,12 +92,12 @@ enable_sse:
 
 switch64:
 	mov ecx, 4096
-	mov ebx, 3
+	mov esi, 3
 	mov edi, V2P(PT)
 
 .L0:
-	mov [edi], ebx
-	add ebx, 0x1000
+	mov [edi], esi
+	add esi, 0x1000
 	add edi, 8
 	loop .L0
 
@@ -113,26 +127,84 @@ switch64:
 
 section .data
 align 0x1000
+
+PT:
+	times 4096 dq 0
+PT_1MB:
+	times 512 dq 0
+PT_STACK:
+%assign i 0
+%rep (CONFIG_STACK_SIZE / 4096)
+	dq V2P(stack_bottom) + i + 0x03
+%assign i i + 0x1000
+%endrep
+	times (512 - (CONFIG_STACK_SIZE / 4096)) dq 0
+
+
 PML4T:
 	dq V2P(PDPT) + 3
 	times 510 dq 0
 	dq V2P(PDPT) + 3
+.VFRAMES:
+	dq PDPT + 3
+	times 510 dq 0
+	dq PDPT + 3
+
 PDPT:
 	dq V2P(PDT) + 3
 	times 510 dq 0
 	dq V2P(PDT) + 3
+.VFRAMES:
+	dq PDT + 3
+	times 510 dq 0
+	dq PDT + 3
+
 PDT:
-	dq V2P(PT) + 3
-	dq V2P(PT) + 0x1000 + 3
-	dq V2P(PT) + 0x2000 + 3
-	dq V2P(PT) + 0x3000 + 3
-	dq V2P(PT) + 0x4000 + 3
-	dq V2P(PT) + 0x5000 + 3
-	dq V2P(PT) + 0x6000 + 3
-	dq V2P(PT) + 0x7000 + 3
-	times 504 dq 0
-PT:
-	times 4096 dq 0
+	dq V2P(PT) + 0x3
+	dq V2P(PT) + 0x1000 + 0x3
+	dq V2P(PT) + 0x2000 + 0x3
+	dq V2P(PT) + 0x3000 + 0x3
+	dq V2P(PT) + 0x4000 + 0x3
+	dq V2P(PT) + 0x5000 + 0x3
+	dq V2P(PT) + 0x6000 + 0x3
+	dq V2P(PT) + 0x7000 + 0x3
+	times 496 dq 0
+
+	dq V2P(PT) + 0x3
+	dq V2P(PT) + 0x1000 + 0x3
+	dq V2P(PT) + 0x2000 + 0x3
+	dq V2P(PT) + 0x3000 + 0x3
+	dq V2P(PT) + 0x4000 + 0x3
+	dq V2P(PT) + 0x5000 + 0x3
+	dq V2P(PT) + 0x6000 + 0x3
+	dq V2P(PT) + 0x7000 + 0x3
+.VPAGES:
+	dq PT
+	dq PT + 0x1000
+	dq PT + 0x2000
+	dq PT + 0x3000
+	dq PT + 0x4000
+	dq PT + 0x5000
+	dq PT + 0x6000
+	dq PT + 0x7000
+	times 496 dq 0
+
+	dq PT
+	dq PT + 0x1000
+	dq PT + 0x2000
+	dq PT + 0x3000
+	dq PT + 0x4000
+	dq PT + 0x5000
+	dq PT + 0x6000
+	dq PT + 0x7000
+
+.PHYSADDR:
+	dq V2P(PDT)
+.REFCOUNT:
+	dd 1
+.NEXT:
+	dq 0
+
 
 
 GDT64:
@@ -166,7 +238,7 @@ GDT64:
 section .text
 
 long_main:
-mov dword [0xb8000], 0x40404040
+	mov dword [0xb8000], 0x40404040
 	jmp $	
 	;lea rcx, [.L1]
 	;jmp rcx
@@ -178,10 +250,11 @@ mov dword [0xb8000], 0x40404040
 	mov gs, cx
 	mov fs, cx
 
-	mov rsp, stack
+	mov rsp, CONFIG_STACK_BASE + CONFIG_STACK_SIZE
 
-	mov rax, mbd_grub
-	mov [rax], rbx
+
+	add rbx, CONFIG_KERNEL_BASE
+	mov [mbd_grub], rbx
 
 	mov rcx, end
 	sub rcx, bss
@@ -206,11 +279,7 @@ arch_loop_idle:
 
 section .stack
 align 0x1000
-times 0x4000 db 0
+stack_bottom:
+times CONFIG_STACK_SIZE db 0
 stack:
-
-section .bss
-align 0x1000
-mbd_grub:
-	resq 0
 
