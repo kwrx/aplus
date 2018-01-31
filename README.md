@@ -1,29 +1,38 @@
 
 # aPlus
-Un sistema operativo interamente Built From Scratch (scritto da zero) con un kernel unix-like ibrido multipiattaforma.
-Il progetto, iniziato a Settembre 2014, è scritto C, C++ e Assembly.
+A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.
+The project started in September 2014, it's written in C/C++ and Assembly.
 
-![alt text](/extra/images/v0.4-cli.png "aPlus v0.4 - CLI")
+![alt text](/extra/images/v0.4-cli.png "aPlus v0.4 - CLI interface running on Qemu (800x300)")
 
+## Build Instructions
+To compile this project you need aPlus Toolchain which includes GCC, Binutils and System Libraries.
+So... I'm sure one day you'll be able to compile it by yourself but this is not the day ...
 
-## Features:
+## Kernel
+The kernel provides a basic Unix/Posix environment.
+It uses a hybrid modular architecture with support for various platforms like x86, x86_64, ARM, etc... and loadable modules.
+
 * [x] Multitasking
 * [ ] SMP
 * [x] Multi-User
 * [x] TCP/IP Network Stack
 * [x] Signals, Pipes, IPC, Shared Memory, Unix Sockets
 * [x] Virtual Filesystem
+* [x] Linux Framebuffer
+* [x] ELF Binary
 * [ ] GUI 
 
-## Platforms:
-* [x] i386
-* [ ] x86_64
-* [ ] ARM
-* [ ] AArch64
 
----
+## Userspace
+aPlus's userspace is still under development, it provides several GNU/Linux core tools, development tools like gcc or binutils, a very basic Java Virtual Machine, GUI, Windows Manager, services like NTP, I/O Cache Sync, other tools, etc...
 
-## Drivers:
+Userspace has Multi-User implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
+
+
+## Drivers
+Modules provides various core platform features, basic TTY/Console, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
+
 #### Storage:
 * [x] IDE
 * [ ] ACHI
@@ -59,7 +68,9 @@ Il progetto, iniziato a Settembre 2014, è scritto C, C++ e Assembly.
 
 ---
 
-## Porting:
+## Third-Party Software:
+aPlus uses and depends on a large number of third-party open-source libraries and applications which are outside of this repository.
+
 * [x] gcc-7.2.0
 * [x] binutils-2.29
 * [x] newlib-3.0.0
