@@ -1,7 +1,7 @@
 
 # aPlus
 A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.
-The project started in September 2014, it's written in C/C++ and Assembly.
+The project started in September 2013 as an educational and personal project, it's written mainly in C/C++ and Assembly.
 
 ![alt text](/extra/images/v0.4-cli.png "aPlus v0.4 - CLI interface running on Qemu (800x300)")
 
@@ -19,8 +19,8 @@ It uses a hybrid modular architecture with support for various platforms like x8
 * [x] TCP/IP Network Stack
 * [x] Signals, Pipes, IPC, Shared Memory, Unix Sockets
 * [x] Virtual Filesystem
-* [x] Linux Framebuffer
 * [x] ELF Binary
+* [x] Linux Framebuffer
 * [ ] GUI 
 
 
