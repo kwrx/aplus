@@ -107,4 +107,6 @@ release: $(KERNEL_OUTPUT)	\
 
 init:
 	@mkdir -p include
+	@mkdir -p build/newlib
 	@mount --bind /opt/cross/include include
+	@mount --bind /opt/src/newlib/3.0.0/newlib-3.0.0/newlib/libc/sys/aplus build/newlib
