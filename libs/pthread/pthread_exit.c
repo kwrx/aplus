@@ -1,19 +1,19 @@
-
-#include <stdint.h>
-#include <stdlib.h>
 #include <pthread.h>
+#include <sys/types.h>
+#include <sched.h>
+#include <errno.h>
 
 #include "pthread_internal.h"
 
-PUBLIC void pthread_exit(void* value_ptr) {
-    pthread_t ptx = pthread_self();
-    pthread_context_t* ctx = (pthread_context_t*) ptx;
+__dead2
+void pthread_exit(void* status) {
+    pthread_t th = pthread_self();
+    if(th < 0)
+        return -1;
 
-    if(ptx) {
-        ctx->exitval = value_ptr;
-        pthread_detach(ptx);
-    }else
-        abort();
+    struct pthread_context* cc = (struct pthread_context*) th;
+    cc->status = status;
 
-    for(;;);
+    __pthread_remove_queue(cc);
+    _exit(0);
 }

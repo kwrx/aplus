@@ -74,7 +74,7 @@ aPlus uses and depends on a large number of third-party open-source libraries an
 * [x] gcc-7.2.0
 * [x] binutils-2.29
 * [x] newlib-3.0.0
-* [x] lwip-2.4.0
+* [x] lwip-2.0.3
 * [x] libz-1.2.11
 * [ ] libjpeg-v6b
 * [x] libpng-1.6.34
