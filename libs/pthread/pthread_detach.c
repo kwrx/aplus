@@ -7,11 +7,10 @@
 #include "pthread_internal.h"
 
 int pthread_detach(pthread_t th) {
-    pthread_t th = pthread_self();
     if(th < 0)
         return -1;
 
-    struct pthread_context* cc = (struct pthread_context*) th;
+    struct p_context* cc = (struct p_context*) th;
 
     if(kill(cc->pid, SIGKILL) != 0)
         return -1;

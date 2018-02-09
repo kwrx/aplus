@@ -6,7 +6,7 @@
 #include "pthread_internal.h"
 
 pthread_t pthread_self(void) {
-    struct pthread_context* tmp;
+    struct p_context* tmp;
     for(tmp = __pthread_queue; tmp; tmp = tmp->next) {
         if(tmp->pid != getpid())
             continue;

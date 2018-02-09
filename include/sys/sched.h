@@ -50,6 +50,7 @@ struct sched_param {
 #endif
 };
 int sched_yield(void);
+int clone(int(*fn)(void*), void*, int, void*);
 #ifdef __cplusplus
 }
 #endif

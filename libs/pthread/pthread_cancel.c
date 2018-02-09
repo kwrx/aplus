@@ -10,7 +10,7 @@ int pthread_cancel(pthread_t th) {
         return -1;
     
 
-    struct pthread_context* cc = (struct pthread_context*) th;
+    struct p_context* cc = (struct p_context*) th;
     cc->cancel = (int) PTHREAD_CANCELED;
 
     if(cc->attr.detachstate == PTHREAD_CANCEL_ENABLE)
@@ -24,7 +24,7 @@ int pthread_setcancelstate(int state, int* oldstate) {
     if(th < 0)
         return -1;
 
-    struct pthread_context* cc = (struct pthread_context*) th;
+    struct p_context* cc = (struct p_context*) th;
     
     if(oldstate)
         *oldstate = cc->attr.detachstate;
@@ -37,7 +37,7 @@ int pthread_setcancelstate(int state, int* oldstate) {
     return 0;
 }
 
-int pthread_setcancelstate(int state, int* oldstate) {
+int pthread_setcanceltype(int state, int* oldstate) {
     pthread_t th = pthread_self();
     if(th < 0)
         return -1;

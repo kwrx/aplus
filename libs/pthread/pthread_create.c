@@ -1,13 +1,17 @@
 #include <pthread.h>
 #include <sys/types.h>
-#include <sched.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include <errno.h>
 
 #include "pthread_internal.h"
 
+#define _GNU_SOURCE
+#include <sched.h>
 
-static void* __pthread_routine(void* arg) {
-    struct pthread_context* cc = (struct pthread_context*) arg;
+static int __pthread_routine(void* arg) {
+    struct p_context* cc = (struct p_context*) arg;
     if(!cc)
         pthread_exit(NULL);
 
@@ -17,7 +21,7 @@ static void* __pthread_routine(void* arg) {
 int pthread_create(pthread_t* th, const pthread_attr_t* attr, void* (*start_routine) (void*), void* arg) {
     __pthread_init();
     
-    struct pthread_context* cc = (struct pthread_context*) calloc(1, sizeof(struct pthread_context));
+    struct p_context* cc = (struct p_context*) calloc(1, sizeof(struct p_context));
     if(!cc) {
         errno = ENOMEM;
         return -1;
