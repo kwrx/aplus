@@ -30,7 +30,7 @@ j_value java_native_invoke(java_method_t* method, java_native_t* func, j_value* 
         _C(T_FLOAT, float);
         _C(T_REFERENCE, pointer);
         _C(T_BYTE, sint8);
-        _C(T_CHAR, uint16_t);
+        _C(T_CHAR, uint16);
         _C(T_BOOLEAN, sint32);
         _C(T_SHORT, sint16);
         _C(T_VOID, void);
@@ -94,7 +94,7 @@ j_value java_native_invoke(java_method_t* method, java_native_t* func, j_value* 
                             _C(T_FLOAT, float);
                             _C(T_REFERENCE, pointer);
                             _C(T_BYTE, sint8);
-                            _C(T_CHAR, uint16_t);
+                            _C(T_CHAR, uint16);
                             _C(T_BOOLEAN, sint32);
                             _C(T_SHORT, sint16);
 

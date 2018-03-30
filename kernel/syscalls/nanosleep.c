@@ -32,6 +32,10 @@ int sys_nanosleep(struct timespec* req, struct timespec* rem) {
     
     current_task->sleep.tv_sec = req->tv_sec + t0.tv_sec;
     current_task->sleep.tv_nsec = (req->tv_nsec + t0.tv_nsec) % 1000000000;
+
+    if((req->tv_nsec + t0.tv_nsec) > 1000000000)
+        current_task->sleep.tv_sec++;
+
     
     syscall_ack();
     sys_pause();

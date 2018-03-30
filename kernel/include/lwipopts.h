@@ -46,7 +46,8 @@
 #define LWIP_NETCONN                        1
 #define LWIP_SOCKET                         1
 #define LWIP_COMPAT_SOCKETS                 0 
-#define LWIP_POSIX_SOCKETS_IO_NAMES         0 
+#define LWIP_POSIX_SOCKETS_IO_NAMES         0
+
 #define LWIP_MPU_COMPATIBLE                 1
 #define LWIP_COMPAT_MUTEX_ALLOWED           1
 #define LWIP_SO_RCVTIMEO                    1
