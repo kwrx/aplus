@@ -107,7 +107,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     RXX(&hdr, 0, sizeof(Elf_Ehdr));
 
     if ((memcmp(hdr.e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1))         ||
-        (elf_check_machine(&hdr))                                  ||
+        (elf_check_machine(&hdr))                                       ||
         (hdr.e_type != ET_EXEC)) {
 
         errno = ENOEXEC;
@@ -186,6 +186,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->environ = __new_envp;
     current_task->image->start = (uintptr_t) _start;
     current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
+    current_task->vmsize += current_task->image->end - current_task->image->start;
     current_task->name = __new_argv[0];
     current_task->description = "";
     current_task->exe = inode;

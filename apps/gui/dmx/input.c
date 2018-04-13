@@ -1,7 +1,7 @@
 #include "dmx.h"
 #include <aplus/base.h>
 #include <aplus/input.h>
-#include <aplus/event.h>
+#include <aplus/events.h>
 #include <unistd.h>
 #include <fcntl.h>
 
@@ -9,9 +9,9 @@
 void* th_input(void* arg) {
     dmx_t* dmx = (dmx_t*) arg;
 
-    int fd = open("/dev/ev0", O_RDONLY);
+    int fd = open("/dev/ev1", O_RDONLY);
     if(fd < 0) {
-        fprintf(stderr, "dmx: /dev/ev0: could not open\n");
+        fprintf(stderr, "dmx: /dev/ev1: could not open\n");
         pthread_exit(NULL);
     }
 
@@ -19,7 +19,7 @@ void* th_input(void* arg) {
     for(;;) {
         event_t e;
         if(read(fd, &e, sizeof(e)) <= 0) {
-            fprintf(stderr, "dmx: /dev/ev0: I/O error\n");
+            fprintf(stderr, "dmx: /dev/ev1: I/O error\n");
             break;
         }
 

@@ -53,11 +53,11 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         else if(*buf == tio->ios.c_cc[VERASE])
             kprintf("\b");
         else if(*buf == tio->ios.c_cc[VINTR])
-            sys_kill(current_task->pid, SIGINT);
+            sys_kill(-tio->pgrp, SIGINT);
         else if(*buf == tio->ios.c_cc[VKILL])
-            sys_kill(current_task->pid, SIGKILL);
+            sys_kill(-tio->pgrp, SIGKILL);
         else if(*buf == tio->ios.c_cc[VQUIT])
-            sys_kill(current_task->pid, SIGQUIT);
+            sys_kill(-tio->pgrp, SIGQUIT);
         else if(*buf == tio->ios.c_cc[VSTOP])
             tio->output = 0;
         else if(*buf == tio->ios.c_cc[VSTART])

@@ -125,7 +125,7 @@ static int status_open(inode_t* inode) {
         tk->sid,
         TASK_FD_COUNT,
         tk->priority,
-        (tk->image->end - tk->image->start + tk->vmsize) / 1024,
+        tk->vmsize / 1024,
         CONFIG_STACK_SIZE / 1024,
         tk->exe ? (int) tk->exe->size / 1024 : 0
     );
@@ -185,8 +185,8 @@ static int stat_open(inode_t* inode) {
         1,
         0,
         0,
-        (tk->image->end - tk->image->start + tk->vmsize),
-        (tk->image->end - tk->image->start + tk->vmsize) / PAGE_SIZE,
+        tk->vmsize,
+        tk->vmsize / PAGE_SIZE,
         -1,
         tk->image->start,
         tk->image->end,
@@ -244,7 +244,7 @@ static int statm_open(inode_t* inode) {
 
     sprintf(buf, 
         "%u %u %u %u %u %u %u\n",
-        (tk->image->end - tk->image->start + tk->vmsize),
+        (tk->vmsize),
         (tk->image->end - tk->image->start),
         0,
         0,

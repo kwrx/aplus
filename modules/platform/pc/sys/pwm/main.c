@@ -4,11 +4,11 @@
 #include <aplus/vfs.h>
 #include <aplus/base.h>
 #include <aplus/pwm.h>
-#include <aplus/event.h>
+#include <aplus/events.h>
 #include <libc.h>
 
 MODULE_NAME("pc/sys/pwm");
-MODULE_DEPS("arch/x86,sys/event");
+MODULE_DEPS("arch/x86,sys/events");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -33,7 +33,7 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
         case PWMIOCTL_HALT:
         case PWMIOCTL_POWEROFF:
         case PWMIOCTL_REBOOT:
-            sys_event_raise_EV_PWR(pwid, 1);
+            sys_events_raise_EV_PWR(pwid, 1);
             sys_sync();
             module_dnit();
         default:
@@ -74,8 +74,8 @@ int init(void) {
     inode_t* ino = vfs_mkdev("pwm", -1, S_IFCHR | 0440);
     ino->ioctl = pwm_ioctl;
 
-    pwid = sys_event_device_add("system-power-manager", EC_PWR);
-    sys_event_device_set_enabled(pwid, 1);
+    pwid = sys_events_device_add("system-power-manager", EC_PWR);
+    sys_events_device_set_enabled(pwid, 1);
     return E_OK;
 }
 

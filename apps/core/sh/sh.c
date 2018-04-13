@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <getopt.h>
 #include <glob.h>
+#include <sys/termios.h>
+#include <sys/ioctl.h>
 
 #include "sh.h"
 
@@ -98,6 +100,11 @@ void sh_cmdline(char* cmdline) {
 
     int e = fork();
     if(e == 0) {
+        setpgrp();
+
+        pid_t gid = getgid();
+        ioctl(STDIN_FILENO, TIOCSPGRP, &gid);
+
         execvp(argv[0], argv);
         perror(argv[0]);
         exit(100);

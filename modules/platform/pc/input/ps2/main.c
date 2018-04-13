@@ -5,11 +5,11 @@
 #include <aplus/vfs.h>
 #include <aplus/intr.h>
 #include <aplus/input.h>
-#include <aplus/event.h>
+#include <aplus/events.h>
 #include <libc.h>
 
 MODULE_NAME("pc/input/ps2");
-MODULE_DEPS("arch/x86,sys/event");
+MODULE_DEPS("arch/x86,sys/events");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -341,7 +341,7 @@ void kb_intr(void* unused) {
             return;
     }
 
-  irq_ack(1);
+    irq_ack(1);
 
 
     uint16_t vkey = KEY_RESERVED;
@@ -350,7 +350,7 @@ void kb_intr(void* unused) {
     else
         vkey = kb.vkeymap[vkscan & 0x7F];
 
-  kb.e0 = 0;
+    kb.e0 = 0;
 
 
 
@@ -373,12 +373,13 @@ void kb_intr(void* unused) {
 
 
 
-  keyboard_t k;
-  k.vkey = vkey;
-  k.down = !!!(vkscan & 0x80);
+    keyboard_t k;
+    k.vkey = vkey;
+    k.down = !!!(vkscan & 0x80);
 
-sys_event_raise_EV_KEY(kdid, k.vkey, k.down);
+    sys_events_raise_EV_KEY(kdid, k.vkey, k.down);
     __fifo_send(PATH_KBDEV, &k, sizeof(keyboard_t));
+
     PS2_WAIT;
 }
 
@@ -431,9 +432,9 @@ void mouse_intr(void* unused) {
           
           
                     for(int i = 0; i < 3; i++)
-                        sys_event_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
+                        sys_events_raise_EV_KEY(mdid, BTN_MOUSE + i, mouse.buttons[i]);
 
-                    sys_event_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
+                    sys_events_raise_EV_REL(mdid, mouse.dx, mouse.dy, mouse.dz);
                     __fifo_send(PATH_MOUSEDEV, &mouse, sizeof(mouse));
                     
                     mouse.cycle = 0;
@@ -523,11 +524,11 @@ int init(void) {
         kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
         
 
-    kdid = sys_event_device_add("ps2-keyboard", EC_KEY | EC_LED);
-    mdid = sys_event_device_add("ps2-mouse", EC_KEY | EC_REL);
+    kdid = sys_events_device_add("ps2-keyboard", EC_KEY | EC_LED);
+    mdid = sys_events_device_add("ps2-mouse", EC_KEY | EC_REL);
 
-    sys_event_device_set_enabled(kdid, 1);
-    sys_event_device_set_enabled(mdid, 1);
+    sys_events_device_set_enabled(kdid, 1);
+    sys_events_device_set_enabled(mdid, 1);
 
     irq_enable(1, kb_intr);
     irq_enable(12, mouse_intr);

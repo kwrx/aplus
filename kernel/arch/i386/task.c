@@ -232,6 +232,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
         
         memcpy(&child->__image, current_task->image, sizeof(child->__image));
         child->image = &child->__image;
+        child->vmsize += child->image->end - child->image->start;
     }
 
     if(flags & CLONE_PARENT)
@@ -388,6 +389,7 @@ int task_init(void) {
     t->image = &t->__image;
     t->image->start = CONFIG_KERNEL_BASE;
     t->image->end = (uintptr_t) &end;
+    t->vmsize += t->image->end - t->image->start;
 
 
     //x86_intr_kernel_stack((uintptr_t) t->sys_stack);

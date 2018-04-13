@@ -137,23 +137,12 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
             default:
                 if(tty_control) {
                     switch(ch) {
-                        case 'c':
-                            tty_write(inode, &tio->ios.c_cc[VKILL], 0, 1);
-                            tty_write(inode, "^C\n", 0, 3);
-                            continue;
-                        case 'd':
-                            tty_write(inode, &tio->ios.c_cc[VQUIT], 0, 1);
-                            tty_write(inode, "^D\n", 0, 3);
-                            continue;
-                        case 'z':
-                            tty_write(inode, &tio->ios.c_cc[VINTR], 0, 1);
-                            tty_write(inode, "^Z\n", 0, 3);
-                            continue;
-                        case 's':
-                            tty_write(inode, &tio->ios.c_cc[VSTOP], 0, 1);
-                            continue;
-                        case 'q':
-                            tty_write(inode, &tio->ios.c_cc[VSTART], 0, 1);
+                          case 'a' ... 'z':
+                            ch -= 32;
+                          case 'A' ... 'Z':
+                            tty_write(inode, "^", 0, 1);
+                            tty_write(inode, &ch, 0, 1);
+                            tty_write(inode, "\n", 0, 1);
                             continue;
                         default:
                             break;

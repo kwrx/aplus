@@ -7,13 +7,13 @@
 #include <libc.h>
 
 #include <aplus/base.h>
-#include <aplus/event.h>
+#include <aplus/events.h>
 #include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 
 
-MODULE_NAME("sys/event");
-MODULE_DEPS("");
+MODULE_NAME("sys/events");
+MODULE_DEPS("char/tty");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -23,7 +23,7 @@ static list(inode_t*, ev_nodes);
 static list(event_device_t*, ev_devices);
 
 
-static int event_ioctl(inode_t* inode, int req, void* data) {
+static int events_ioctl(inode_t* inode, int req, void* data) {
     if(unlikely(!inode)) {
         errno = EINVAL;
         return -1;
@@ -113,7 +113,7 @@ static int event_ioctl(inode_t* inode, int req, void* data) {
 }
 
 
-evid_t sys_event_device_add(char* name, int caps) {
+evid_t sys_events_device_add(char* name, int caps) {
     event_device_t* d = (event_device_t*) kmalloc(sizeof(event_device_t), GFP_KERNEL);
     memset(d, 0, sizeof(event_device_t));
 
@@ -124,20 +124,20 @@ evid_t sys_event_device_add(char* name, int caps) {
     d->ed_id = nextid++;
 
     
-    kprintf(INFO "event: registered device \'%s\'\n", name);
+    kprintf(INFO "events: registered device \'%s\'\n", name);
 
     list_push(ev_devices, d);
     return d->ed_id;
 }
 
-int sys_event_device_remove(evid_t id) {
+int sys_events_device_remove(evid_t id) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
 
 
 
-        kprintf(INFO "event: removed device \'%s\'\n", d->ed_name);
+        kprintf(INFO "events: removed device \'%s\'\n", d->ed_name);
 
         kfree(d);
         list_remove(ev_devices, d);
@@ -148,7 +148,7 @@ int sys_event_device_remove(evid_t id) {
     return -1;
 }
 
-int sys_event_device_set_enabled(evid_t id, int enabled) {
+int sys_events_device_set_enabled(evid_t id, int enabled) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -161,7 +161,7 @@ int sys_event_device_set_enabled(evid_t id, int enabled) {
     return -1;
 }
 
-int sys_event_device_set_caps(evid_t id, int caps) {
+int sys_events_device_set_caps(evid_t id, int caps) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -174,7 +174,7 @@ int sys_event_device_set_caps(evid_t id, int caps) {
     return -1;
 }
 
-int sys_event_device_set_exclusive(evid_t id, int evno) {
+int sys_events_device_set_exclusive(evid_t id, int evno) {
     list_each(ev_devices, d) {
         if(d->ed_id != id)
             continue;
@@ -188,7 +188,7 @@ int sys_event_device_set_exclusive(evid_t id, int evno) {
 }
 
 
-int sys_event_raise(event_t* e) {
+int sys_events_raise(event_t* e) {
     list_each(ev_devices, d) {
         if(d->ed_id != e->ev_devid)
             continue;
@@ -239,25 +239,29 @@ int init(void) {
         sprintf(buf, "/dev/ev%d", i);
 
         if(sys_mkfifo(buf, S_IFCHR | 0666) != 0) {
-            kprintf(ERROR "event: could not create \'%s\'\n", buf);
+            kprintf(ERROR "events: could not create \'%s\'\n", buf);
             return E_ERR;
         }
 
 
         int fd = sys_open(buf, O_RDONLY, 0);
         if(fd < 0) {
-            kprintf(ERROR "event: coult not open \'%s\'\n", buf);
+            kprintf(ERROR "events: coult not open \'%s\'\n", buf);
             return E_ERR;
         }
 
         inode_t* e = current_task->fd[fd].inode;
         sys_close(fd);
 
-        e->ioctl = event_ioctl;
+        e->ioctl = events_ioctl;
         list_push(ev_nodes, e);
     }
 
 
+    extern int events_deamon(void*);
+    if(sys_clone(events_deamon, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND, NULL) < 0)
+        kprintf(ERROR "events: deamon could not start! Some actions like keystroke's binding will be disabled\n");
+    
     return E_OK;
 }
 

@@ -28,5 +28,6 @@ void* sys_sbrk(ptrdiff_t incr) {
             unmap_page(current_task->image->end + i);
     
     current_task->image->end += incr;
+    current_task->vmsize += incr;
     return (void*) cr;
 });
