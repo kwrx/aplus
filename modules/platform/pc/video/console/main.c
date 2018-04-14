@@ -275,7 +275,7 @@ static void plot_value(struct cc* cc, char value) {
 
 
 
-    if(cc->p >= (cc->width * cc->height)) {
+    if(cc->p > (cc->width * cc->height)) {
         cc->scroll(cc, 1);
         cc->p -= cc->width;
 

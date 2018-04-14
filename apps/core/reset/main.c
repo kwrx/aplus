@@ -34,6 +34,7 @@ int main(int argc, char** argv) {
     ioctl(STDOUT_FILENO, TIOCSETA, &ios);
 
 
+    fprintf(stdout, "\e[39;49m");
     fprintf(stdout, "\e[2J\e[H");
     fflush(stdout);
     return 0;
