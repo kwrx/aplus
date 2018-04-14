@@ -3,7 +3,7 @@
 A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.
 The project started in September 2013 as an educational and personal project, it's written mainly in C/C++ and Assembly.
 
-![alt text](/extra/images/v0.4-cli.png "aPlus v0.4 - CLI interface running on Qemu (800x300)")
+![alt text](/extra/images/v0.4-os.png "aPlus v0.4 - CLI interface running on Qemu (800x300)")
 
 ## Build Instructions
 To compile this project you need aPlus Toolchain which includes GCC, Binutils and System Libraries.

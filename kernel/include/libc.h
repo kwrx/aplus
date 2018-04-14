@@ -1,3 +1,7 @@
+#define _POSIX_THREAD_CPUTIME
+#define _POSIX_CPUTIME
+#define _POSIX_MONOTONIC_CLOCK
+
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdint.h>
