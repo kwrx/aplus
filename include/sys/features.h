@@ -387,25 +387,6 @@ extern "C" {
 
 #endif
 
-
-#if defined(__aplus__)
-#define _POSIX_TIMERS			1
-#define _POSIX_MONOTONIC_CLOCK		200112L
-#define _POSIX_THREADS				1
-#define _POSIX_THREAD_ATTR_STACKADDR		1
-#define _POSIX_THREAD_ATTR_STACKSIZE		1
-#define _POSIX_THREAD_PRIORITY_SCHEDULING	1
-#define _POSIX_THREAD_PRIO_INHERIT		1
-#define _POSIX_THREAD_PRIO_PROTECT		1
-#define _POSIX_THREAD_PROCESS_SHARED		1
-#define _POSIX_THREAD_SAFE_FUNCTIONS		1
-#define _POSIX_CPUTIME				1
-#define _POSIX_THREAD_CPUTIME			1
-#define _POSIX_FSYNC			1
-#define _POSIX_PRIORITY_SCHEDULING 1
-#define _UNIX98_THREAD_MUTEX_ATTRIBUTES 1
-#endif
-
 /* XMK loosely adheres to POSIX -- 1003.1 */
 #ifdef __XMK__
 #define _POSIX_THREADS				1

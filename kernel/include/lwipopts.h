@@ -10,6 +10,8 @@
 #define LWIP_DEBUG                          1
 #endif
 
+#define LWIP_NOASSERT                       1
+
 
 #define LWIP_DBG_TYPES_ON                   LWIP_DBG_OFF
 #define NETIF_DEBUG                         LWIP_DBG_OFF

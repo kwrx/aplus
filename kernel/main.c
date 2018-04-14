@@ -56,20 +56,20 @@ int main(int argc, char** argv) {
             mbd->cpu.cores,
             mbd->cpu.threads);
     
-    kprintf(INFO "%s %s-%s %s %s %s (%d Mb)\n", 
+    kprintf(INFO "boot: %s %s\n",
+            KERNEL_NAME,
+            mbd->cmdline.args);
+    
+    kprintf(INFO "%s %s-%s %s %s %s (%p:%dMB)\n", 
             KERNEL_NAME, 
             KERNEL_VERSION,
             KERNEL_CODENAME,
             KERNEL_DATE,
             KERNEL_TIME,
             KERNEL_PLATFORM,
+            mbd->memory.start, 
             (int) mbd->memory.size / 1024 / 1024);
-        extern int mbd_grub;
-    kprintf(INFO "%s %s %p %p\n",
-            KERNEL_NAME,
-            mbd->cmdline.args, mbd->memory.start, mbd_grub);
-
-
+        
 
     
     char* __argv[] = { "/usr/sbin/init", NULL };

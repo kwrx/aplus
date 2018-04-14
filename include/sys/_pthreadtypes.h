@@ -26,7 +26,11 @@
  *  2.5 Primitive System Data Types,  P1003.1c/D10, p. 19.
  */
 
-typedef uintptr_t pthread_t;
+#if defined(__XMK__)
+typedef unsigned int pthread_t;          /* identify a thread */
+#else
+typedef __uint32_t pthread_t;            /* identify a thread */
+#endif
 
 /* P1003.1c/D10, p. 118-119 */
 #define PTHREAD_SCOPE_PROCESS 0
@@ -147,7 +151,7 @@ typedef struct {
 } pthread_mutexattr_t;
 
 #else /* !defined(__XMK__) */
-typedef uintptr_t pthread_mutex_t;      /* identify a mutex */
+typedef __uint32_t pthread_mutex_t;      /* identify a mutex */
 
 typedef struct {
   int   is_initialized;
@@ -165,7 +169,7 @@ typedef struct {
 } pthread_mutexattr_t;
 #endif /* !defined(__XMK__) */
 
-#define _PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) 0)
+#define _PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) 0xFFFFFFFF)
 
 /* Condition Variables */
 

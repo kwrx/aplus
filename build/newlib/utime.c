@@ -8,6 +8,10 @@ int utime(const char* filename, const struct utimbuf* times) {
 	return 0;
 }
 
+int utimes(const char* filename, const struct timeval times[2]) {
+    return 0;
+}
+
 
 int gettimeofday(struct timeval* tv, struct timeval* tz) {
 	(void*) tz;

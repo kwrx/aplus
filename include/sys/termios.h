@@ -119,8 +119,30 @@ struct termios {
 #  define cfgetispeed(tp)	((tp)->c_ispeed)
 #  define cfsetospeed(tp,s)	(((tp)->c_ospeed = (s)), 0)
 #  define cfsetispeed(tp,s)	(((tp)->c_ispeed = (s)), 0)
-#  define tcdrain(fd)		_ioctl (fd, _TCSBRK, 1)
+#  define tcdrain(fd)		ioctl (fd, _TCSBRK, 1)
+
+
+#define cfmakeraw(p) {                                                                  \
+    p->c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);  \
+    p->c_oflag &= ~OPOST;                                                               \
+    p->c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);                            \
+    p->c_cflag &= ~(CSIZE | PARENB);                                                    \
+    p->c_cflag |= CS8;                                                                  \
+}
+
+
 # endif	/* _NO_MACROS */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int tcsetattr(int fd, int flags, const struct termios* p);
+int tcgetattr(int fd, struct termios* p);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif	/* _SYS_TERMIOS_H */
 

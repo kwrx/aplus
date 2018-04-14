@@ -173,6 +173,7 @@ SC(1, 55, fsync)
 SC(2, 56, nanosleep)
 SC(0, 57, pause)
 SC(5, 58, select)
+SC(1, 59, dup)
 
 /* Socket */
 SC(3, 70, socket)

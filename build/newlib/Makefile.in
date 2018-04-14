@@ -56,7 +56,7 @@ lib_a_AR = $(AR) $(ARFLAGS)
 @MAY_SUPPLY_SYSCALLS_TRUE@	getegid.o access.o sleep.o usleep.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@	killpg.o dup2.o pgrp.o sigsuspend.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@	sigaction.o tcpgrp.o utime.o rmdir.o \
-@MAY_SUPPLY_SYSCALLS_TRUE@	mkdir.o vfork.o
+@MAY_SUPPLY_SYSCALLS_TRUE@	mkdir.o vfork.o netdb.o
 am_lib_a_OBJECTS =
 lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -180,14 +180,14 @@ noinst_LIBRARIES = lib.a
 @MAY_SUPPLY_SYSCALLS_TRUE@extra_objs = syscalls.o pipe.o gethostname.o system.o geteuid.o getegid.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@		access.o sleep.o usleep.o killpg.o dup2.o pgrp.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@		sigsuspend.o sigaction.o tcpgrp.o utime.o rmdir.o mkdir.o \
-@MAY_SUPPLY_SYSCALLS_TRUE@		vfork.o
+@MAY_SUPPLY_SYSCALLS_TRUE@		vfork.o netdb.o
 
 lib_a_SOURCES = 
 lib_a_LIBADD = $(extra_objs)
 EXTRA_lib_a_SOURCES = gethostname.c pipe.c syscalls.c system.c geteuid.c getegid.c \
 			 access.c sleep.c usleep.c killpg.c dup2.c pgrp.c \
 			 sigsuspend.c sigaction.c tcpgrp.o rmdir.c mkdir.c utime.c \
-			vfork.c \
+			vfork.c netdb.c \
 			crt0.c
 
 lib_a_DEPENDENCIES = $(extra_objs)
@@ -360,6 +360,12 @@ lib_a-vfork.o: vfork.c
 
 lib_a-vfork.obj: vfork.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-vfork.obj `if test -f 'vfork.c'; then $(CYGPATH_W) 'vfork.c'; else $(CYGPATH_W) '$(srcdir)/vfork.c'; fi`
+
+lib_a-netdb.o: netdb.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-netdb.o `test -f 'netdb.c' || echo '$(srcdir)/'`netdb.c
+
+lib_a-netdb.obj: netdb.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-netdb.obj `if test -f 'netdb.c'; then $(CYGPATH_W) 'netdb.c'; else $(CYGPATH_W) '$(srcdir)/netdb.c'; fi`
 
 lib_a-crt0.o: crt0.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-crt0.o `test -f 'crt0.c' || echo '$(srcdir)/'`crt0.c
