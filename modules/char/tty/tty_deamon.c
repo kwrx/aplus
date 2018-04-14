@@ -16,11 +16,11 @@
 #include <sys/ioctl.h>
 
 
-int events_deamon(void* unused) {
+int tty_deamon(void* unused) {
     (void) unused;
 
-    current_task->name = "[sysevd]";
-    current_task->description = "System's global events deamon";
+    current_task->name = "[ttyd]";
+    current_task->description = "System's global TTY deamon";
     current_task->priority = TASK_PRIO_MIN;
 
 

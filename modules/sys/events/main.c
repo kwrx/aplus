@@ -13,7 +13,7 @@
 
 
 MODULE_NAME("sys/events");
-MODULE_DEPS("char/tty");
+MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -258,10 +258,6 @@ int init(void) {
     }
 
 
-    extern int events_deamon(void*);
-    if(sys_clone(events_deamon, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND, NULL) < 0)
-        kprintf(ERROR "events: deamon could not start! Some actions like keystroke's binding will be disabled\n");
-    
     return E_OK;
 }
 

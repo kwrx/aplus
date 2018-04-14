@@ -10,7 +10,7 @@
 #include "tty.h"
 
 MODULE_NAME("char/tty");
-MODULE_DEPS("");
+MODULE_DEPS("sys/events");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -67,6 +67,10 @@ int init(void) {
     ino->userdata = (void*) tio;
     
 
+    extern int tty_deamon(void*);
+    if(sys_clone(tty_deamon, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND, NULL) < 0)
+        kprintf(ERROR "tty: deamon could not start! Some actions like keystroke's binding will be disabled\n");
+    
 
     sys_symlink("/dev/tty0", "/dev/stdin");
     sys_symlink("/dev/tty0", "/dev/stdout");

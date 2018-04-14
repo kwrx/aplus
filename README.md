@@ -76,14 +76,14 @@ aPlus uses and depends on a large number of third-party open-source libraries an
 * [x] newlib-3.0.0
 * [x] lwip-2.0.3
 * [x] libz-1.2.11
-* [ ] libjpeg-v6b
+* [x] libjpeg-v9c
 * [x] libpng-1.6.34
 * [x] libwebp-0.6.0
 * [ ] liblzma
 * [x] freetype-2.8
 * [x] pixman-0.34.0
 * [x] cairo-1.14.12
-* [ ] SDL2
+* [x] SDL2-2.0.8
 * [ ] SDL2 Image
 * [ ] SDL2 TTF
 
