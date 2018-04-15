@@ -180,7 +180,7 @@ int main(int argc, char** argv) {
     
     char* dev = getenv("FRAMEBUFFER") 
                     ? (char*) getenv("FRAMEBUFFER")
-                    : (char*) sysconfig("screen.device", SYSCONFIG_FORMAT_STRING, (uintptr_t) "/dev/fb0")
+                    : (char*) sysconfig("screen.device", "/dev/fb0")
                     ;
 
     

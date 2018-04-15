@@ -54,7 +54,7 @@ _(sleep, 0, {
 })
 
 _(sysconfig, 1, {
-    char* s = (char*) sysconfig(duk_to_string(ctx, 0), SYSCONFIG_FORMAT_STRING, 0);
+    char* s = (char*) sysconfig(duk_to_string(ctx, 0), NULL);
     if(!s)
         duk_push_undefined(ctx);
     else

@@ -1,6 +1,7 @@
 #include <aplus.h>
 #include <aplus/base.h>
 #include <aplus/mm.h>
+#include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 #include <aplus/utils/hashmap.h>
 #include <libc.h>
@@ -62,6 +63,7 @@ EXPORT(hashmap_put);
 EXPORT(hashmap_remove);
 EXPORT(hashmap_iterate);
 EXPORT(hashmap_free);
+EXPORT(__sysconfig);
 
 #if defined(__i386__)
 EXPORT(__divdi3);

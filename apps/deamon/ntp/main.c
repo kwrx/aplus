@@ -51,7 +51,7 @@ static void show_version(int argc, char** argv) {
 
 
 static void do_ntp() {
-    char* host = (char*) sysconfig("ntpd.server", SYSCONFIG_FORMAT_STRING, (uintptr_t) NULL);
+    char* host = (char*) sysconfig("ntpd.server", NULL);
     if(!host) {
         fprintf(stderr, "ntpd: invalid configuration for \'ntpd.server\' in /etc/config\n");
         return;
@@ -167,7 +167,7 @@ int main(int argc, char** argv) {
     if(!deamon)
         do_ntp();
     else {
-        if(strcmp((const char*) sysconfig("ntpd.enabled", SYSCONFIG_FORMAT_STRING, (uintptr_t) "false"), "true") != 0) {
+        if(strcmp((const char*) sysconfig("ntpd.enabled", "false"), "true") != 0) {
             fprintf(stderr, "ntpd: deamon disabled by /etc/config\n");
             return 0;
         }
@@ -176,7 +176,7 @@ int main(int argc, char** argv) {
             execl("/proc/self/exe", "[ntpd]", "--deamon", NULL);
         
         
-        int s = (int) sysconfig("ntpd.timeout", SYSCONFIG_FORMAT_INT, 10);
+        int s = (int) sysconfig("ntpd.timeout", 10);
         
         FILE* fp = fopen("/dev/log", "w");
         if(fp)

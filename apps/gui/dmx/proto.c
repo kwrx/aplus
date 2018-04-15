@@ -1,5 +1,6 @@
 #include "dmx.h"
 #include <aplus/msg.h>
+#include <errno.h>
 
 void dmx_proto_ack(int type, pid_t pid, void* arg) {
     dmx_packet_ack_t ack;

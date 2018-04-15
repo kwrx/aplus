@@ -173,7 +173,7 @@ int main(int argc, char** argv) {
         setenv("LD_LIBRARY_PATH", "/usr/lib:/usr/local/lib:/lib", 1);
         setenv("TERM", "linux", 1);
         setenv("TMPDIR", "/tmp", 1);
-        setenv("LANG", (const char*) sysconfig("sys.locale", SYSCONFIG_FORMAT_STRING, (uintptr_t) ""), 1);
+        setenv("LANG", (const char*) sysconfig("sys.locale", ""), 1);
         setenv("USER", pwd->pw_name, 1);
         setenv("LOGNAME", pwd->pw_name, 1);
         setenv("HOME", pwd->pw_dir, 1);

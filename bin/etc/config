@@ -5,22 +5,22 @@
 
 
 # -- System
-sys.locale=it-IT
+sys.locale="it-IT"
 sys.timezone=1
 sys.events=16
 
 # -- [syncd]
-syncd.enabled=true
+syncd.enabled="true"
 syncd.timeout=10
 
 # -- [ntpd]
-ntpd.enabled=true
+ntpd.enabled="true"
 ntpd.timeout=3600
-ntpd.server=it.pool.ntp.org
+ntpd.server="it.pool.ntp.org"
 
 
 # -- Screen
-screen.device=/dev/fb0
+screen.device="/dev/fb0"
 screen.width=1280
 screen.height=720
 screen.bpp=32
@@ -39,10 +39,10 @@ iosched.blksize=4194304
 
 
 # -- UI
-ui.enabled=false
+ui.enabled="false"
 ui.dpi=72
-ui.font.regular=Ubuntu
-ui.font.monospace=Ubuntu Mono
-ui.font.condensed=Ubuntu Condensed
-ui.wallpaper=/usr/share/images/wp.png
+ui.font.regular="Ubuntu"
+ui.font.monospace="Ubuntu Mono"
+ui.font.condensed="Ubuntu Condensed"
+ui.wallpaper="/usr/share/images/wp.png"
 

@@ -14,7 +14,7 @@ static void idle() {
     current_task->description = "System Idle Process";
 
     int p;
-    if((p = (int) sysconfig("idle.priority", SYSCONFIG_FORMAT_INT, 0)) > 0) {
+    if((p = (int) sysconfig("idle.priority", 0)) > 0) {
         switch(p) {
             case 1:
                 current_task->priority = TASK_PRIO_MIN;

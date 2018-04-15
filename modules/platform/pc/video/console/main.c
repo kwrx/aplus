@@ -299,7 +299,7 @@ static void plot_value(struct cc* cc, char value) {
 
 
 static int console_init_graphics(struct cc* cc) {
-    char* dev = (char*) sysconfig("screen.device", SYSCONFIG_FORMAT_STRING, (uintptr_t) "/dev/fb0");    
+    char* dev = (char*) sysconfig("screen.device", "/dev/fb0");    
     
     
     struct fb_var_screeninfo var;
@@ -316,10 +316,10 @@ static int console_init_graphics(struct cc* cc) {
     if(cc->vmode == KD_TEXT) {
         memset(&var, 0, sizeof(var));
         var.xres =
-        var.xres_virtual = sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
+        var.xres_virtual = (int) sysconfig("screen.width", 800);
         var.yres =
-        var.yres_virtual = sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
-        var.bits_per_pixel = sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
+        var.yres_virtual = (int) sysconfig("screen.height", 600);
+        var.bits_per_pixel = (int) sysconfig("screen.bpp", 32);
         var.activate = FB_ACTIVATE_NOW;
 
         sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);

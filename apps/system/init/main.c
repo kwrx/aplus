@@ -159,6 +159,6 @@ int main(int argc, char** argv) {
     init_initd();
     
 
-    ioctl(STDIN_FILENO, TIOCLKEYMAP, sysconfig("sys.locale", SYSCONFIG_FORMAT_STRING, (uintptr_t) "en-US"));
+    ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("sys.locale", "en-US"));
     return 0;
 }

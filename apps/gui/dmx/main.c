@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 
 
 
@@ -55,7 +56,7 @@ static int init_server(dmx_t* dmx) {
 }
 
 static int init_screen(dmx_t* dmx) {
-    char* dev = (char*) sysconfig("screen.device", SYSCONFIG_FORMAT_STRING, (uintptr_t) "/dev/fb0");
+    char* dev = (char*) sysconfig("screen.device", "/dev/fb0");
 
     int fb = open(dev, O_RDONLY);
     if(fb < 0) {
@@ -67,10 +68,10 @@ static int init_screen(dmx_t* dmx) {
     memset(&var, 0, sizeof(var));
 
     var.xres = 
-    var.xres_virtual = sysconfig("screen.width", SYSCONFIG_FORMAT_INT, 800);
+    var.xres_virtual = (int) sysconfig("screen.width", 800);
     var.yres = 
-    var.yres_virtual = sysconfig("screen.height", SYSCONFIG_FORMAT_INT, 600);
-    var.bits_per_pixel = sysconfig("screen.bpp", SYSCONFIG_FORMAT_INT, 32);
+    var.yres_virtual = (int) sysconfig("screen.height", 600);
+    var.bits_per_pixel = (int) sysconfig("screen.bpp", 32);
     var.activate = FB_ACTIVATE_NOW;
 
     ioctl(fb, FBIOPUT_VSCREENINFO, &var);
@@ -221,7 +222,7 @@ static int init_fonts(dmx_t* dmx) {
     }
 
     #define _(x, y, z)                                                                                          \
-        if(__obtain(dmx, &dmx->ft_cache[x], (char*) sysconfig(y, SYSCONFIG_FORMAT_STRING, 0), z) != 0)          \
+        if(__obtain(dmx, &dmx->ft_cache[x], (char*) sysconfig(y, 0), z) != 0)                                   \
             return -1;
 
 
