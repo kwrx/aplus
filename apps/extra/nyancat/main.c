@@ -15,6 +15,7 @@ static int min_col;
 static int max_col;
 static int min_row;
 static int max_row;
+static struct winsize ws;
 
 static void show_usage(int argc, char** argv) {
     printf(
@@ -42,7 +43,7 @@ static void show_version(int argc, char** argv) {
 
 
 static void SIGWINCH_handler(int sig) {
-    struct winsize ws;
+
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
 
     min_col = (FRAME_WIDTH - ws.ws_col / 2) / 2;
@@ -53,10 +54,12 @@ static void SIGWINCH_handler(int sig) {
     signal(SIGWINCH, SIGWINCH_handler);
 }
 
-static void atexit_handler() {
-    fprintf(stdout, "\e[39;49m");
+static void atexit_handler(int sig) {
+    fprintf(stdout, "\e[0;39;49m");
     fprintf(stdout, "\e[2J\e[H");
     fflush(stdout);
+
+    exit(0);
 }
 
 
@@ -102,28 +105,32 @@ int main(int argc, char** argv) {
 
 
     signal(SIGWINCH, SIGWINCH_handler);
-    atexit(atexit_handler);
+    signal(SIGINT, atexit_handler);
+    signal(SIGQUIT, atexit_handler);
+    signal(SIGTERM, atexit_handler);
+    signal(SIGKILL, atexit_handler);
 
-    struct winsize ws;
+    
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);
 
 
 
     static char* colors[256];
-    colors[',']  = "\033[25;44m";    /* Blue background */
-    colors['.']  = "\033[5;47m";     /* White stars */
-    colors['\''] = "\033[25;40m";    /* Black border */
-    colors['@']  = "\033[5;47m";     /* Tan poptart */
-    colors['$']  = "\033[5;45m";     /* Pink poptart */
-    colors['-']  = "\033[5;41m";     /* Red poptart */
-    colors['>']  = "\033[5;41m";     /* Red rainbow */
-    colors['&']  = "\033[25;43m";    /* Orange rainbow */
-    colors['+']  = "\033[5;43m";     /* Yellow Rainbow */
-    colors['#']  = "\033[5;42m";     /* Green rainbow */
-    colors['=']  = "\033[25;44m";    /* Light blue rainbow */
-    colors[';']  = "\033[5;44m";     /* Dark blue rainbow */
-    colors['*']  = "\033[5;40m";     /* Gray cat face */
-    colors['%']  = "\033[5;45m";     /* Pink cheeks */
+    colors[',']  = "\033[2;44m";    /* Blue background */
+    colors['.']  = "\033[22;47m";     /* White stars */
+    colors['\''] = "\033[2;40m";    /* Black border */
+    colors['@']  = "\033[22;47m";     /* Tan poptart */
+    colors['$']  = "\033[2;45m";     /* Pink poptart */
+    colors['-']  = "\033[2;41m";     /* Red poptart */
+    colors['>']  = "\033[2;41m";     /* Red rainbow */
+    colors['&']  = "\033[2;43m";    /* Orange rainbow */
+    colors['+']  = "\033[22;43m";     /* Yellow Rainbow */
+    colors['#']  = "\033[2;42m";     /* Green rainbow */
+    colors['=']  = "\033[22;46m";    /* Light blue rainbow */
+    colors[';']  = "\033[2;46m";     /* Dark blue rainbow */
+    colors['*']  = "\033[22;40m";     /* Gray cat face */
+    colors['%']  = "\033[22;45m";     /* Pink cheeks */
+
 
 
 
@@ -188,7 +195,7 @@ int main(int argc, char** argv) {
         for(j = (ws.ws_col - 29 - digits((int) diff)) / 2; j > 0; j--)
             fprintf(stdout, " ");
 
-        fprintf(stdout, "\033[37mYou have nyaned for %0.0f seconds!\033[39m", diff);
+        fprintf(stdout, "\033[22;37mYou have nyaned for %0.0f seconds!\033[2;39m", diff);
         fflush(stdout);
 
         l = 0;

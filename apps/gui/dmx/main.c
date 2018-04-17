@@ -263,6 +263,9 @@ static int init_input(dmx_t* dmx) {
                 case CAIRO_STATUS_READ_ERROR:                                       \
                     fprintf(stderr, "dmx: %s: CAIRO_STATUS_READ_ERROR\n", p);       \
                     break;                                                          \
+                default:                                                            \
+                    fprintf(stderr, "dmx: %s: CAIRO_UNKNOWN_ERROR\n", p);           \
+                    break;                                                          \
             }                                                                       \
                                                                                     \
             return -1;                                                              \
@@ -348,12 +351,14 @@ int main(int argc, char** argv) {
 
 
 
-    pthread_create(&dmx.th_render, NULL, th_render, &dmx);
-    pthread_create(&dmx.th_input, NULL, th_input, &dmx);
+    dmx.th_render = clone(th_render, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FS | CLONE_FILES, &dmx);
+    dmx.th_input = clone(th_input, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FS | CLONE_FILES, &dmx);
     
+    fprintf(stdout, "dmx: th_render()   #%d\n", dmx.th_render);
+    fprintf(stdout, "dmx: th_input()    #%d\n", dmx.th_input);
     fprintf(stdout, "dmx: running...\n");
     
-#if 1 /* TEST */
+#if 0 /* TEST */
     do {
         dmx_gc_t* gc = dmx_gc_alloc(&dmx, getpid(), 300, 300);
         gc->window.x = 200;

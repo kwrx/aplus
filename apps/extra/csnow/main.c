@@ -34,8 +34,6 @@ typedef struct {
 } flake_t;
 
 screen_t * init_screen() {
-	char * term = getenv("TERM");
-
 	screen_t * screen = malloc(sizeof(screen_t));
 
 	struct winsize w;

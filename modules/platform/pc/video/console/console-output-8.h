@@ -39,7 +39,7 @@ static void console_output_8(struct cc* cc, int pos, uint16_t ch) {
             if(unlikely(g[row] & (1 << b)))
                 offset[cx + p] = vga_colors[(ch & 0x0F00) >> 8];
             else
-                offset[cx + p] = vga_colors[(ch & 0x7000) >> 12];
+                offset[cx + p] = vga_colors[(ch & 0xF000) >> 12];
     }   
 }
 

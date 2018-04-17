@@ -15,7 +15,7 @@ SFLAGS		:=  -c -I include
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -laplus -lpthread -lcairo -lpixman-1 -lfreetype -lwebp -lpng -lz -lgcc
+	@$(CC) -pipe -O3 -o $@ $(OFILES) -laplus -lcairo -lpixman-1 -lfreetype -lwebp -lpng -lz -lgcc
 
 .c.o:
 	@echo "  CC     " $(subst $(ROOT)/,,$@)

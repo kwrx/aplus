@@ -16,12 +16,13 @@ void sys_exit(int status) {
     current_task->exit.value = status & 0xFFFF;
 
 #if DEBUG
-    kprintf(INFO "exit: task %d (%s) exited with %04X (U: %0.3fs, C: %0.3fs)\n", 
+    kprintf(INFO "exit: task %d (%s) exited with %04X (U: %0.3fs, C: %0.3fs, VM: %d)\n", 
         current_task->pid, 
         current_task->name,
         status & 0xFFFF,
         (double) current_task->clock.tms_utime / CLOCKS_PER_SEC,
-        (double) current_task->clock.tms_cutime / CLOCKS_PER_SEC
+        (double) current_task->clock.tms_cutime / CLOCKS_PER_SEC,
+        current_task->image->refcount
     );    
 #endif
 
@@ -43,7 +44,9 @@ void sys_exit(int status) {
         sys_close(i);
 
 
-    task_release(current_task);
+    if((--current_task->image->refcount) == 0)
+        task_release(current_task);
+
     syscall_ack();
 
     INTR_ON;

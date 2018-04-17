@@ -63,7 +63,8 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         else if(*buf == tio->ios.c_cc[VSTART])
             tio->output = 1;
         else
-            tio->outbuf[tio->outlen++] = *buf;
+            if(tio->outlen < sizeof(tio->outbuf))
+                tio->outbuf[tio->outlen++] = *buf;
         
         
         buf++;

@@ -265,7 +265,7 @@ static void update_values() {
 static void dump_values() {
     fprintf(stdout, "\4\e[2J\e[H\e[30;47m\e[2K");
     fprintf(stdout, " Pid  Name                 S  Owner       PPid     CPU        I/O       Memory\n");
-    fprintf(stdout, "\e[39;49m");
+    fprintf(stdout, "\e[0;39;49m");
 
     double cpu = 0;
     int io = 0;
@@ -291,6 +291,6 @@ static void dump_values() {
 
     fprintf(stdout, "\n\e[30;47m\e[2K");
     fprintf(stdout, " %-4s %-20s %-2s %-9s %6s %6.01f%% %6.02f MB/s %8.02f MB\n", "", "Total", "", "", "", cpu, (double) io / 1024.0 / 1024.0, (double) memory / 1024.0 / 1024.0);
-    fprintf(stdout, "\033[39;49m\2");
+    fprintf(stdout, "\033[0;39;49m\2");
     fflush(stdout);
 }

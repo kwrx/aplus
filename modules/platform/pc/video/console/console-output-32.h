@@ -24,6 +24,9 @@ static void console_output_32(struct cc* cc, int pos, uint16_t ch) {
         0xFFFFFFFF
     };
     
+
+
+
     
     const uint8_t* g = &__font_bitmap__[(ch & 0xFF) << 4];
     uint32_t stride = cc->width << 3;
@@ -39,7 +42,7 @@ static void console_output_32(struct cc* cc, int pos, uint16_t ch) {
             if(unlikely(g[row] & (1 << b)))
                 offset[cx + p] = vga_colors[(ch & 0x0F00) >> 8];
             else
-                offset[cx + p] = vga_colors[(ch & 0x7000) >> 12];
+                offset[cx + p] = vga_colors[(ch & 0xF000) >> 12];
     }   
 }
 

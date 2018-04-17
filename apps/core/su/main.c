@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    fprintf(stderr, "\e[39;49m");
+    fprintf(stderr, "\e[0;39;49m");
     char* username = NULL;
 
     if(optind >= argc || command)

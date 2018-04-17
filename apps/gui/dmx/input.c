@@ -12,7 +12,7 @@ void* th_input(void* arg) {
     int fd = open("/dev/ev1", O_RDONLY);
     if(fd < 0) {
         fprintf(stderr, "dmx: /dev/ev1: could not open\n");
-        pthread_exit(NULL);
+        exit(1);
     }
 
 
@@ -43,5 +43,5 @@ void* th_input(void* arg) {
     }
 
     close(fd);
-    pthread_exit(NULL);
+    exit(0);
 }

@@ -2,7 +2,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
-#include <pthread.h>
+#include <sched.h>
 
 
 #include <aplus/base.h>
@@ -55,8 +55,8 @@ typedef struct {
     dmx_gc_t* window_top;
     dmx_gc_t* window_focused;
 
-    pthread_t th_render;
-    pthread_t th_input;
+    pid_t th_render;
+    pid_t th_input;
 
     FT_Library ft_library;
     FT_Face ft_cache[32];

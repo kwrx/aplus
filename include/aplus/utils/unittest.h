@@ -19,6 +19,7 @@
     } __unittest;                                                                                   \
                                                                                                     \
     __unittest.fp = fopen("/dev/log", "w");                                                         \
+    setbuf(__unittest.fp, NULL);                                                                    \
     __unittest.errors = __unittest.success = 0;                                                     \
     if(!__unittest.fp)                                                                              \
         __unittest.fp = stderr;                                                                     \
@@ -31,6 +32,7 @@
     fprintf(__unittest.fp, "-- Errors/Success: %d/%d, Time: %.3fs\n\n",                             \
                 __unittest.errors, __unittest.success,                                              \
                 (double) (__unittest.t1 - __unittest.t0) / (double) CLOCKS_PER_SEC);                \
+    fflush(__unittest.fp);                                                                          \
     fclose(__unittest.fp);}
 
 #define __unittest(fn, cond, val, ret)                                                              \

@@ -110,6 +110,7 @@ typedef struct task {
         uintptr_t start;
         uintptr_t end;
         symbol_t* symtab;
+        int refcount;
     } __image, *image;
 
     struct {

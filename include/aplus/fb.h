@@ -2,7 +2,7 @@
 #define _APLUS_FB_H
 
 #include <sys/ioctl.h>
-
+#include <stdint.h>
 
 #define FB_MAX			                                32
 

@@ -42,7 +42,6 @@ static void sched_next(void) {
         }
 
 
-
         if(likely(current_task->status != TASK_STATUS_SLEEP))
             continue;
 

@@ -116,6 +116,7 @@ void fork_handler(i386_context_t* context) {
     memcpy(&child->__image, current_task->image, sizeof(child->__image));
     
     child->image = &child->__image;
+    child->image->refcount = 1;
         
 
     child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
@@ -227,11 +228,13 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     if(flags & CLONE_VM) {
         CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 0);
         child->image = current_task->image;
+        child->image->refcount++;
     } else {
         CTX(child)->vmmpd = (uintptr_t) vmm_clone((volatile pdt_t*) CTX(current_task)->vmmpd, 1);
         
         memcpy(&child->__image, current_task->image, sizeof(child->__image));
         child->image = &child->__image;
+        child->image->refcount = 1;
         child->vmsize += child->image->end - child->image->start;
     }
 
@@ -277,7 +280,7 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
             (current_task->signal.s_handler != NULL)
         )) {
             irq_ack(0);
-
+            
             register int q;
             q = list_back(current_task->signal.s_queue);
             list_pop_back(current_task->signal.s_queue);
@@ -389,6 +392,7 @@ int task_init(void) {
     t->image = &t->__image;
     t->image->start = CONFIG_KERNEL_BASE;
     t->image->end = (uintptr_t) &end;
+    t->image->refcount = 1;
     t->vmsize += t->image->end - t->image->start;
 
 

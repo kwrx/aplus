@@ -22,11 +22,13 @@ extern void __install_sighandler(void*);
 
 static void __default_sighandler__(int sig) {
 	psignal(sig, "exception");
-	exit((sig & 0177) << 8);
+	signal(sig, __default_sighandler__);
+	_exit((sig & 0177) << 8);
 }
 
 static void __default_sighandler__no_echo(int sig) {
-	exit((sig & 0177) << 8);
+    signal(sig, __default_sighandler__no_echo);
+	_exit((sig & 0177) << 8);
 }
 
 static void __init_traps() {

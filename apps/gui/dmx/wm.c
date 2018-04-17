@@ -3,7 +3,7 @@
 
 void* th_render(void* arg) {
     dmx_t* dmx = (dmx_t*) arg;
-
+    
     for(;;) {
         list_each(dmx->clients, v) {
             if(!v->dirty)
@@ -26,26 +26,15 @@ void* th_render(void* arg) {
 
         dmx->redraw = 0;
 
-
-        cairo_save(dmx->backbuffer);
-        cairo_set_source_surface(dmx->backbuffer, dmx->cursors[dmx->cursor_index], dmx->cursor_x, dmx->cursor_y);
-        cairo_paint(dmx->backbuffer);
-        cairo_restore(dmx->backbuffer);
-
-
         cairo_save(dmx->frontbuffer);
         cairo_set_operator(dmx->frontbuffer, CAIRO_OPERATOR_SOURCE);
         cairo_set_source_surface(dmx->frontbuffer, cairo_get_target(dmx->backbuffer), 0, 0);
         cairo_paint(dmx->frontbuffer);
+        cairo_set_source_surface(dmx->frontbuffer, dmx->cursors[dmx->cursor_index], dmx->cursor_x, dmx->cursor_y);
+        cairo_paint(dmx->frontbuffer);
         cairo_restore(dmx->frontbuffer);
-        
-#if 0
-        memcpy(
-                cairo_image_surface_get_data(cairo_get_target(dmx->frontbuffer)),
-                cairo_image_surface_get_data(cairo_get_target(dmx->backbuffer)),
-                dmx->stride * dmx->height
-        );
-#endif
+
+
 
 done:
         usleep(16666);

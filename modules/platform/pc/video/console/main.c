@@ -212,6 +212,7 @@ static void plot_value(struct cc* cc, char value) {
                         switch(x) {
                             case 0:
                                 cc->style = 0x07;
+                                cc->colors = 1;
                                 break;
                             case 2:
                                 cc->colors = 0;
