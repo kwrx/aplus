@@ -84,6 +84,7 @@ void fork_handler(i386_context_t* context) {
     child->uid = current_task->uid;
     child->gid = current_task->gid;
     child->sid = current_task->sid;
+    child->tgid = child->pid;
 
     
     child->name = strdup(current_task->name);
@@ -168,6 +169,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     child->uid = current_task->uid;
     child->gid = current_task->gid;
     child->sid = current_task->sid;
+    child->tgid = current_task->tgid;
 
     
     child->name = strdup(current_task->name);
@@ -368,6 +370,7 @@ int task_init(void) {
     t->pid = sched_nextpid();
     t->uid = TASK_ROOT_UID;
     t->gid = TASK_ROOT_GID;
+    t->tgid = t->pid;
     t->sid = 0;
     
     t->name = KERNEL_NAME;    

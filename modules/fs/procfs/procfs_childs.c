@@ -101,6 +101,7 @@ static int status_open(inode_t* inode) {
         "State:       %s\n"
         "Pid:         %d\n"
         "PPid:        %d\n"
+        "Tgid:        %d\n"
         "Uid:         %d\n"
         "Gid:         %d\n"
         "Sid:         %d\n"
@@ -120,6 +121,7 @@ static int status_open(inode_t* inode) {
         ),
         tk->pid,
         tk->parent ? tk->parent->pid : 0,
+        tk->tgid,
         tk->uid,
         tk->gid,
         tk->sid,

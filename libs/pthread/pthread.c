@@ -1,7 +1,3 @@
-#include <stdlib.h>
-#include <pthread.h>
-#include <sys/types.h>
-
 #include "pthread_internal.h"
 
 static int __pthread_initialized = 0;

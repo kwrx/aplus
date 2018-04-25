@@ -29,7 +29,7 @@
 #if defined(__XMK__)
 typedef unsigned int pthread_t;          /* identify a thread */
 #else
-typedef __uint32_t pthread_t;            /* identify a thread */
+typedef long pthread_t;            /* identify a thread */
 #endif
 
 /* P1003.1c/D10, p. 118-119 */
@@ -169,13 +169,13 @@ typedef struct {
 } pthread_mutexattr_t;
 #endif /* !defined(__XMK__) */
 
-#define _PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) 0xFFFFFFFF)
+#define _PTHREAD_MUTEX_INITIALIZER ((pthread_mutex_t) 0)
 
 /* Condition Variables */
 
 typedef __uint32_t pthread_cond_t;       /* identify a condition variable */
 
-#define _PTHREAD_COND_INITIALIZER ((pthread_cond_t) 0xFFFFFFFF)
+#define _PTHREAD_COND_INITIALIZER ((pthread_cond_t) 0)
 
 typedef struct {
   int      is_initialized;

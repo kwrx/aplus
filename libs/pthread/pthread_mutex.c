@@ -1,10 +1,3 @@
-#include <pthread.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sched.h>
-#include <errno.h>
-
 #include "pthread_internal.h"
 
 int	pthread_mutexattr_init (pthread_mutexattr_t *__attr) {
@@ -145,7 +138,8 @@ int	pthread_mutex_timedlock (pthread_mutex_t *__mutex, const struct timespec *__
         return -1;
     }
 
-    
+
+#if defined(_UNIX98_THREAD_MUTEX_ATTRIBUTES)
     switch(p->attr.type) {
         case PTHREAD_MUTEX_ERRORCHECK:
             if(p->lock && p->owner == getpid()) {
@@ -160,6 +154,7 @@ int	pthread_mutex_timedlock (pthread_mutex_t *__mutex, const struct timespec *__
         default:
             break;
     }
+#endif
 
     uint64_t ts1;
     if(__timeout) {
@@ -263,5 +258,88 @@ int	pthread_mutex_unlock (pthread_mutex_t *__mutex) {
     __sync_synchronize();
     
         
+    return 0;
+}
+
+
+int	pthread_mutexattr_setprotocol (pthread_mutexattr_t *__attr, int __protocol) {
+    if(!__attr) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    __attr->protocol = __protocol;
+    return 0;
+}
+
+int	pthread_mutexattr_getprotocol (const pthread_mutexattr_t *__attr, int *__protocol) {
+    if(!__attr) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(__protocol)
+        *__protocol = __attr->protocol;
+
+    return 0;
+}
+
+int	pthread_mutexattr_setprioceiling (pthread_mutexattr_t *__attr, int __prioceiling) {
+    if(!__attr) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    __attr->prio_ceiling = __prioceiling;
+    return 0;
+}
+
+int	pthread_mutexattr_getprioceiling (const pthread_mutexattr_t *__attr, int *__prioceiling) {
+    if(!__attr) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(__prioceiling)
+        *__prioceiling = __attr->prio_ceiling;
+
+    return 0;
+}
+
+
+int	pthread_mutex_setprioceiling (pthread_mutex_t *__mutex, int __prioceiling, int *__old_ceiling) {
+    if(!__mutex) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    struct p_mutex* p = (struct p_mutex*) *__mutex;
+    if(!p) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(__old_ceiling)
+        *__old_ceiling = p->attr.prio_ceiling;
+
+    p->attr.prio_ceiling = __prioceiling;
+    return 0;
+}
+
+int	pthread_mutex_getprioceiling (pthread_mutex_t *__mutex, int *__prioceiling) {
+    if(!__mutex) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    struct p_mutex* p = (struct p_mutex*) *__mutex;
+    if(!p) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(__prioceiling)
+        *__prioceiling = p->attr.prio_ceiling;
+
     return 0;
 }

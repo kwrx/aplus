@@ -47,6 +47,7 @@ typedef struct task {
     char** environ;
 
     pid_t pid;
+    gid_t tgid;
     uid_t uid;
     gid_t gid;
     uid_t sid;

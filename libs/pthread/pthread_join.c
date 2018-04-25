@@ -1,13 +1,10 @@
 #include "pthread_internal.h"
 
-int pthread_detach(pthread_t th) {
+
+int	pthread_join (pthread_t th, void** __value_ptr) {
     if(th <= 0)
         return -1;
 
     struct p_context* cc = (struct p_context*) th;
-
-    if(kill(cc->pid, SIGKILL) != 0)
-        return -1;
-
-    return 0;
+    return waitpid(cc->pid, __value_ptr, 0);
 }

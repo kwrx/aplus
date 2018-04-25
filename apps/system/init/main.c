@@ -160,5 +160,5 @@ int main(int argc, char** argv) {
     
 
     ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("sys.locale", "en-US"));
-    return 0;
+    return waitpid(-1, NULL, 0);
 }

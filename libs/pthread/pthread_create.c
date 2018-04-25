@@ -1,14 +1,5 @@
-#include <pthread.h>
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <errno.h>
-
 #include "pthread_internal.h"
 
-#define _GNU_SOURCE
-#include <sched.h>
 
 static int __pthread_routine(void* arg) {
     struct p_context* cc = (struct p_context*) arg;
@@ -45,3 +36,4 @@ int pthread_create(pthread_t* th, const pthread_attr_t* attr, void* (*start_rout
     (*th) = (pthread_t) cc;
     return 0;
 }
+

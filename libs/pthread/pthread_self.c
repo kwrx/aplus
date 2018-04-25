@@ -1,8 +1,3 @@
-#include <pthread.h>
-#include <sys/types.h>
-#include <sched.h>
-#include <errno.h>
-
 #include "pthread_internal.h"
 
 pthread_t pthread_self(void) {
@@ -17,3 +12,4 @@ pthread_t pthread_self(void) {
     errno = ESRCH;
     return -1;
 }
+

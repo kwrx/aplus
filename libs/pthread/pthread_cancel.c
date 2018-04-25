@@ -1,12 +1,7 @@
-#include <pthread.h>
-#include <sys/types.h>
-#include <sched.h>
-#include <errno.h>
-
 #include "pthread_internal.h"
 
 int pthread_cancel(pthread_t th) {
-    if(th < 0)
+    if(th <= 0)
         return -1;
     
 
@@ -21,7 +16,7 @@ int pthread_cancel(pthread_t th) {
 
 int pthread_setcancelstate(int state, int* oldstate) {
     pthread_t th = pthread_self();
-    if(th < 0)
+    if(th <= 0)
         return -1;
 
     struct p_context* cc = (struct p_context*) th;
@@ -39,7 +34,7 @@ int pthread_setcancelstate(int state, int* oldstate) {
 
 int pthread_setcanceltype(int state, int* oldstate) {
     pthread_t th = pthread_self();
-    if(th < 0)
+    if(th <= 0)
         return -1;
 
     if(oldstate)
