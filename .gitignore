@@ -17,4 +17,6 @@
 bin/aplus
 bin/usr/bin/*
 bin/usr/sbin/*
+bin/usr/lib/*
 packages/*
+
