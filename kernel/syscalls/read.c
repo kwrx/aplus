@@ -39,6 +39,24 @@ int sys_read(int fd, void* buf, size_t size) {
     }
 
 
+    if(unlikely(current_task->fd[fd].flags & O_NONBLOCK)) {
+        struct pollfd p;
+        p.fd = fd;
+        p.events = POLLIN;
+        p.revents = 0;
+
+        if(sys_poll(&p, 1, 0) < 0) {
+            errno = EIO;
+            return -1;
+        }
+
+        if(!(p.revents & POLLIN)) {
+            errno = EAGAIN;
+            return 0;
+        }
+    }
+
+
     current_task->iostat.rchar += (uint64_t) size;
     current_task->iostat.syscr += 1;
 

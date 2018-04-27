@@ -116,20 +116,20 @@ int main(int argc, char** argv) {
 
 
     static char* colors[256];
-    colors[',']  = "\033[2;44m";    /* Blue background */
-    colors['.']  = "\033[22;47m";     /* White stars */
-    colors['\''] = "\033[2;40m";    /* Black border */
-    colors['@']  = "\033[22;47m";     /* Tan poptart */
-    colors['$']  = "\033[2;45m";     /* Pink poptart */
-    colors['-']  = "\033[2;41m";     /* Red poptart */
-    colors['>']  = "\033[2;41m";     /* Red rainbow */
-    colors['&']  = "\033[2;43m";    /* Orange rainbow */
-    colors['+']  = "\033[22;43m";     /* Yellow Rainbow */
-    colors['#']  = "\033[2;42m";     /* Green rainbow */
-    colors['=']  = "\033[22;46m";    /* Light blue rainbow */
-    colors[';']  = "\033[2;46m";     /* Dark blue rainbow */
-    colors['*']  = "\033[22;40m";     /* Gray cat face */
-    colors['%']  = "\033[22;45m";     /* Pink cheeks */
+    colors[',']  = "\033[2;44m";        /* Blue background */
+    colors['.']  = "\033[22;47m";       /* White stars */
+    colors['\''] = "\033[2;40m";        /* Black border */
+    colors['@']  = "\033[22;47m";       /* Tan poptart */
+    colors['$']  = "\033[2;45m";        /* Pink poptart */
+    colors['-']  = "\033[2;41m";        /* Red poptart */
+    colors['>']  = "\033[2;41m";        /* Red rainbow */
+    colors['&']  = "\033[2;43m";        /* Orange rainbow */
+    colors['+']  = "\033[22;43m";       /* Yellow Rainbow */
+    colors['#']  = "\033[2;42m";        /* Green rainbow */
+    colors['=']  = "\033[22;46m";       /* Light blue rainbow */
+    colors[';']  = "\033[2;46m";        /* Dark blue rainbow */
+    colors['*']  = "\033[22;40m";       /* Gray cat face */
+    colors['%']  = "\033[22;45m";       /* Pink cheeks */
 
 
 

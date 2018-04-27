@@ -39,8 +39,26 @@ int sys_write(int fd, void* buf, size_t size) {
     }
 
 
+    if(unlikely(current_task->fd[fd].flags & O_NONBLOCK)) {
+        struct pollfd p;
+        p.fd = fd;
+        p.events = POLLOUT;
+        p.revents = 0;
+
+        if(sys_poll(&p, 1, 0) < 0) {
+            errno = EIO;
+            return -1;
+        }
+
+        if(!(p.revents & POLLOUT)) {
+            errno = EAGAIN;
+            return 0;
+        }
+    }
+
     current_task->iostat.wchar += (uint64_t) size;
     current_task->iostat.syscw += 1;
+
 
     register int e = vfs_write(inode, buf, current_task->fd[fd].position, size);
     if(unlikely(e <= 0))

@@ -20,9 +20,8 @@ static int inode_fifo_read(struct inode* inode, void* ptr, off_t pos, size_t len
     
     if(unlikely(!inode->userdata))
         return E_ERR;
-        
 
-        
+
     fifo_t* fifo = (fifo_t*) inode->userdata;
     return fifo_read(fifo, ptr, len);        
 }

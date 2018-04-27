@@ -27,6 +27,7 @@ screen.bpp=32
 
 
 # -- Energy saving
+idle.enabled="true"
 idle.priority.low=1
 idle.priority.medium=2
 idle.priority.high=3

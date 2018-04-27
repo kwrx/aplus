@@ -2,8 +2,8 @@
 
 __fastcall
 __optimize(fast)
-static void console_output_textmode(struct cc* cc, int pos, uint16_t ch) {
-    ((uint16_t*) CONSOLE_VRAM) [pos] = ch & 0x7FFF;
+static void console_output_textmode(struct cc* cc, int pos, uint8_t style, int32_t ch) {
+    ((uint16_t*) CONSOLE_VRAM) [pos] = ((style & 0x7F) << 8) | (ch & 0xFF);
 }
 
 __fastcall

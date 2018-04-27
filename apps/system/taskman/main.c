@@ -279,7 +279,7 @@ static void dump_values() {
         if(tq->status[0] == 'R')
             fprintf(stdout, "\033[37m");
 
-        if(tq->pid != 1)
+        if(strcmp(tq->name, "[idle]") != 0)
             cpu += tq->cpu;
         
         io += tq->iodiff;

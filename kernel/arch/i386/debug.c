@@ -128,6 +128,24 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
     x86_cleanup();
 }
 
+
+void debug_stacktrace(int frames) {
+    kprintf(LOG "\tStack Trace:\n");
+
+    uintptr_t* ebp = (uintptr_t*) ((uintptr_t) &frames - 8);
+    uintptr_t frame;
+    for(frame = 0; frame < frames; frame++) {
+        
+        uintptr_t eip = ebp[1];
+        if(!eip)
+            break;
+
+        ebp = (uintptr_t*) ebp[0];
+        kprintf(LOG "\t\t[%d] %p\n", -frame, eip);
+    }
+}
+
 EXPORT(debug_send);
 EXPORT(debug_dump);
+EXPORT(debug_stacktrace);
 #endif

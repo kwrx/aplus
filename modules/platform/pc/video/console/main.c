@@ -13,6 +13,9 @@
 #include <sys/termio.h>
 #include <sys/termios.h>
 
+#include <wchar.h>
+#include <aplus/utils/unicode.h>
+
 
 #include "console-font.h"
 
@@ -50,7 +53,7 @@ struct cc {
     int vmode;
 
     __fastcall
-    void (*output) (struct cc* cc, int pos, uint16_t ch);
+    void (*output) (struct cc* cc, int pos, uint8_t style, int32_t ch);
 
     __fastcall
     void (*scroll) (struct cc* cc, int pos);
@@ -75,7 +78,9 @@ static inline uint32_t __C(struct cc* cc, uint32_t p) {
 }
 
 
-static void plot_value(struct cc* cc, char value) {
+static void plot_value(struct cc* cc, int32_t uvalue) {
+    char value = uvalue & 0xFF;
+
     if(cc->escape) {
         if(likely(value == '[')) {
             cc->escape++;
@@ -96,7 +101,7 @@ static void plot_value(struct cc* cc, char value) {
                 case '@':
                     y = atoi(cc->escape_buffer);
                     for(x = 0; x < y; x++)
-                        cc->output(cc, __C(cc, cc->p + x), (cc->style << 8) | ' ');
+                        cc->output(cc, __C(cc, cc->p + x), cc->style, u' ');
                     break;
                 case 'A':
                     y = atoi(cc->escape_buffer);
@@ -141,11 +146,11 @@ static void plot_value(struct cc* cc, char value) {
                         case 1:
                             x = cc->p;
                             while(x < cc->width * cc->height)
-                                cc->output(cc, x++, (cc->style << 8) | ' ');
+                                cc->output(cc, x++, cc->style, u' ');
                             break;
                         default:
                             for(x = 0; x < cc->width * cc->height; x++)
-                                cc->output(cc, x, (cc->style << 8) | ' ');
+                                cc->output(cc, x, cc->style, u' ');
                             break;
                     }
                     break;
@@ -155,11 +160,11 @@ static void plot_value(struct cc* cc, char value) {
                         case 1:
                             x = cc->p - (cc->p % cc->width);
                             while(x < cc->p)
-                                cc->output(cc, __C(cc, x++), (cc->style << 8) | ' ');
+                                cc->output(cc, __C(cc, x++), cc->style, u' ');
                             break;
                         case 2:
                             for(x = 0; x < cc->width; x++)
-                                cc->output(cc, __C(cc, cc->p - (cc->p % cc->width) + x), (cc->style << 8) | ' ');
+                                cc->output(cc, __C(cc, cc->p - (cc->p % cc->width) + x), cc->style, u' ');
                             break;
                     }
                     break;
@@ -169,7 +174,7 @@ static void plot_value(struct cc* cc, char value) {
 
                     x = cc->p - (cc->p % cc->width);
                     while(x < y)
-                        cc->output(cc, __C(cc, x++), (cc->style << 8) | ' ');
+                        cc->output(cc, __C(cc, x++), cc->style, u' ');
                     
                     break;
                 case 'M':
@@ -178,18 +183,18 @@ static void plot_value(struct cc* cc, char value) {
 
                     x = cc->p + (cc->width - (cc->p % cc->width));
                     while(x > y)
-                        cc->output(cc, __C(cc, x--), (cc->style << 8) | ' ');
+                        cc->output(cc, __C(cc, x--), cc->style, u' ');
                     
                     break;
                 case 'P':
                     y = atoi(cc->escape_buffer);
                     while(y--)
-                        cc->output(cc, __C(cc, cc->p--), (cc->style << 8) | ' ');
+                        cc->output(cc, __C(cc, cc->p--), cc->style, u' ');
                     break;
                 case 'X':
                     y = atoi(cc->escape_buffer);
                     while(y)
-                        cc->output(cc, __C(cc, cc->p - y--), (cc->style << 8) | ' ');
+                        cc->output(cc, __C(cc, cc->p - y--), cc->style, u' ');
                     break;
                 case 'd':
                     y = atoi(cc->escape_buffer);
@@ -249,28 +254,32 @@ static void plot_value(struct cc* cc, char value) {
         }
 
     } else {
-        switch(value) {
-            case '\n':
-                cc->p += cc->width - (cc->p % cc->width);
-                break;
-            case '\v':
-                cc->p += cc->width;
-                break;
-            case '\r':
-                cc->p -= (cc->p % cc->width);
-                break;
-            case '\t':
-                cc->p += 4 - ((cc->p % cc->width) % 4);
-                break;
-            case '\b':
-                cc->output(cc, __C(cc, --cc->p), (cc->style << 8) | ' ');
-                break;
-            case '\e':
-                cc->escape = 1;
-                break;
-            default:
-                cc->output(cc, __C(cc, cc->p++), (cc->style << 8) | value);
-                break;
+        if(uvalue > 0x7F)
+            cc->output(cc, __C(cc, cc->p++), cc->style, uvalue);
+        else {
+            switch(value) {
+                case '\n':
+                    cc->p += cc->width - (cc->p % cc->width);
+                    break;
+                case '\v':
+                    cc->p += cc->width;
+                    break;
+                case '\r':
+                    cc->p -= (cc->p % cc->width);
+                    break;
+                case '\t':
+                    cc->p += 4 - ((cc->p % cc->width) % 4);
+                    break;
+                case '\b':
+                    cc->output(cc, __C(cc, --cc->p), cc->style, u' ');
+                    break;
+                case '\e':
+                    cc->escape = 1;
+                    break;
+                default:
+                    cc->output(cc, __C(cc, cc->p++), cc->style, uvalue);
+                    break;
+            }
         }
     }
 
@@ -282,7 +291,7 @@ static void plot_value(struct cc* cc, char value) {
 
         int x;
         for(x = 0; x < cc->width; x++)
-            cc->output(cc, __C(cc, cc->p + x), (cc->style << 8) | ' ');
+            cc->output(cc, __C(cc, cc->p + x), cc->style, u' ');
 
     }
 
@@ -383,9 +392,17 @@ static int console_write(struct inode* inode, void* buf, off_t pos, size_t size)
 
     struct cc* cc = inode->userdata;
 
-    char* s = buf;
-    for(int i = 0; i < size; i++)
-        plot_value(cc, s[i]);
+    const uint8_t* ch = (const uint8_t*) buf;
+    int i;
+    for(i = 0; i < size;) {     
+        i += utf8_bytes(*ch);
+
+        int32_t wch;
+        if((wch = utf8_to_ucs2(ch, &ch)) < 0)
+            break;
+
+        plot_value(cc, wch);
+    }
 
     return size;
 }
@@ -459,7 +476,7 @@ int init(void) {
 
     int i;
     for(i = 0; i < cc->width * cc->height; i++)
-        cc->output(cc, i, (cc->style << 8) | ' ');
+        cc->output(cc, i, cc->style, u' ');
 
 
     inode_t* ino = vfs_mkdev("console", -1, S_IFCHR | 0222);

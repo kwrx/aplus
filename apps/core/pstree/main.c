@@ -87,24 +87,24 @@ static void p_print(p_t* p, size_t depth, int indented, int more, char lines[]) 
 
     if(!indented && depth) {
         if(more) {
-            printf("-+-");
+            printf("─┬─");
             lines[depth + 1] = 1;
         } else
-            printf("---");
+            printf("───");
 
         depth += 3;
     } else if(depth) {
         for(i = 0; i < depth; i++)
             if(lines[i])
-                printf("|");
+                printf("│");
             else
                 printf(" ");
 
         if(more) {
-            printf(" |-");
+            printf(" ├─");
             lines[depth + 1] = 1;
         } else
-            printf(" '-");
+            printf(" └─");
 
         depth += 3;
     }

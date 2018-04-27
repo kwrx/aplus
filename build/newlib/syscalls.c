@@ -174,6 +174,7 @@ SC(2, 56, nanosleep)
 SC(0, 57, pause)
 SC(5, 58, select)
 SC(1, 59, dup)
+SC(1, 60, nice)
 
 /* Socket */
 SC(3, 70, socket)

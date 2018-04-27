@@ -88,6 +88,7 @@ int fifo_available(fifo_t* fifo);
                 kprintf(WARN "ipc: deadlock timeout expired for "       \
                              "(%s) %s:%d!\n",                           \
                              #cond, __FILE__, __LINE__);                \
+                debug_stacktrace(5);                                    \
                                                                         \
                 __t = timer_getms() + tm;                               \
             }                                                           \
@@ -105,6 +106,7 @@ int fifo_available(fifo_t* fifo);
                 kprintf(WARN "ipc: deadlock timeout expired for "       \
                              "(%s) %s:%d!\n",                           \
                              #cond, __FILE__, __LINE__);                \
+                debug_stacktrace(5);                                    \
                                                                         \
                 __t = timer_getms() + CONFIG_IPC_TIMEOUT;               \
             }                                                           \

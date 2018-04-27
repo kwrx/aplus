@@ -3,7 +3,7 @@
 
 __fastcall
 __optimize(fast)
-static void console_output_32(struct cc* cc, int pos, uint16_t ch) {
+static void console_output_32(struct cc* cc, int pos, uint8_t style, int32_t ch) {
     
     static int vga_colors[16] = {
         0xFF000000,
@@ -25,10 +25,21 @@ static void console_output_32(struct cc* cc, int pos, uint16_t ch) {
     };
     
 
+    int idx, i;
+    for(i = idx = 0; i < __font.Chars; i++) {
+        if(unlikely(ch < __font.Index[i]))
+            break;
 
+        if(likely(__font.Index[i] != ch))
+            continue;
 
+        idx = i;
+        break;
+    }
     
-    const uint8_t* g = &__font_bitmap__[(ch & 0xFF) << 4];
+    
+    
+    const uint8_t* g = &__font.Bitmap[idx << 4];
     uint32_t stride = cc->width << 3;
     uint32_t* offset = &((uint32_t*) cc->frame) [(((pos / cc->width)) * (stride << 4)) + ((pos % cc->width) << 3)];
     
@@ -40,9 +51,9 @@ static void console_output_32(struct cc* cc, int pos, uint16_t ch) {
         int cx, b;
         for(cx = 0, b = 8; cx < 8; cx++, b--)
             if(unlikely(g[row] & (1 << b)))
-                offset[cx + p] = vga_colors[(ch & 0x0F00) >> 8];
+                offset[cx + p] = vga_colors[(style & 0x0F)];
             else
-                offset[cx + p] = vga_colors[(ch & 0xF000) >> 12];
+                offset[cx + p] = vga_colors[(style & 0xF0) >> 4];
     }   
 }
 

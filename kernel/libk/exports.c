@@ -4,6 +4,7 @@
 #include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 #include <aplus/utils/hashmap.h>
+#include <aplus/utils/unicode.h>
 #include <libc.h>
 
 #if defined(__i386__)
@@ -64,6 +65,8 @@ EXPORT(hashmap_remove);
 EXPORT(hashmap_iterate);
 EXPORT(hashmap_free);
 EXPORT(__sysconfig);
+EXPORT(utf8_to_ucs2);
+EXPORT(utf8_bytes);
 
 #if defined(__i386__)
 EXPORT(__divdi3);

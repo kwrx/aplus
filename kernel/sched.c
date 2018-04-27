@@ -48,7 +48,7 @@ static void sched_next(void) {
 
         
         /* Check Signals */
-        if(unlikely(list_length(current_task->signal.s_queue) > 0)) {
+        if(unlikely(list_length(current_task->signal.s_queue) > 0 && current_task->signal.s_handler)) {
             current_task->status = TASK_STATUS_READY;
             break;
         }
@@ -104,7 +104,7 @@ void schedule(void) {
     if(likely(current_task->parent))
         current_task->parent->clock.tms_cutime += t;
         
-    if(likely(((int)current_task->clock.tms_utime / 1000) % ((int)((20 - current_task->priority) + 1))))
+    if(likely(((int)current_task->clock.tms_utime / 1000) % ((int)(20 - current_task->priority))))
         goto nosched;
     
     if(likely(current_task->status == TASK_STATUS_RUNNING))

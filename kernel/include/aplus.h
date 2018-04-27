@@ -103,10 +103,11 @@ extern int sys_mkfifo(const char* pathname, mode_t mode);
 extern int sys_symlink(const char*, const char*);
 extern int sys_fcntl(int, int, long);
 extern int sys_ioctl(int, int, void*);
-int sys_unlink(const char*);
-int sys_clock_gettime(clockid_t id, struct timespec *tv);
-int sys_pause(void);
-void sys_sync(void);
+extern int sys_unlink(const char*);
+extern int sys_clock_gettime(clockid_t id, struct timespec *tv);
+extern int sys_pause(void);
+extern void sys_sync(void);
+extern int sys_poll(struct pollfd*, nfds_t, int);
 
 
 extern int mounts_init();

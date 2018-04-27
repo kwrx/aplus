@@ -20,7 +20,7 @@
 #define TASK_STATUS_KILLED              3
 
 #define TASK_PRIO_MAX                   -20
-#define TASK_PRIO_MIN                   20
+#define TASK_PRIO_MIN                   19
 #define TASK_PRIO_REGULAR               0
 
 #define TASK_FD_COUNT                   32
