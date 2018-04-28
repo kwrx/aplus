@@ -23,11 +23,19 @@ void sys_exit(int status) {
         (double) current_task->clock.tms_utime / CLOCKS_PER_SEC,
         (double) current_task->clock.tms_cutime / CLOCKS_PER_SEC,
         current_task->image->refcount
-    );    
+    );   
 #endif
 
     if(current_task->parent)
         list_push(current_task->parent->signal.s_queue, SIGCHLD);
+
+
+    volatile task_t* tmp;
+    for(tmp = task_queue; tmp; tmp = tmp->next)
+        if(tmp->parent == current_task)
+            tmp->parent = kernel_task;
+
+
 
     if(current_task == task_queue)
         task_queue = current_task->next;
@@ -38,6 +46,7 @@ void sys_exit(int status) {
                 tmp->next = current_task->next;
         }
     }
+    
 
     int i;
     for(i = 0; i < TASK_FD_COUNT; i++)

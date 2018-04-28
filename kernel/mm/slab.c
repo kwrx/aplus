@@ -56,7 +56,7 @@ static int FR_FIRST(int count) {
         }
     }
 
-    return E_ERR;
+    return -1;
 }
 
 
@@ -244,7 +244,7 @@ int slab_init(void) {
         map_page(frame, pmm_alloc_frame() << 12, 0);
 
     heap_allocated = 1;
-    return E_OK;
+    return 0;
 }
 
 mm_state_t* kvm_state(void) {

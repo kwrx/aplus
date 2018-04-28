@@ -6,7 +6,7 @@
 
 int mutex_init(mutex_t* mtx, long kind, const char* name) {
     if(unlikely(!mtx))
-        return E_ERR;
+        return -1;
 
     spinlock_init(&mtx->lock);
     mtx->recursion = 0;
@@ -14,13 +14,13 @@ int mutex_init(mutex_t* mtx, long kind, const char* name) {
     mtx->owner = -1;
     mtx->name = name;
     
-    return E_OK;
+    return 0;
 }
 
 
 int mutex_lock(mutex_t* mtx) {
     if(unlikely(!mtx))
-        return E_ERR;
+        return -1;
 
     if(mtx->owner != sys_getpid()) {
 #if CONFIG_IPC_DEBUG
@@ -36,42 +36,42 @@ int mutex_lock(mutex_t* mtx) {
         if(likely(mtx->name))
             kprintf(ERROR "[%d] %s: DEADLOCK from %d\n", mtx->owner, mtx->name, sys_getpid());
 #endif
-        return E_ERR;
+        return -1;
     }
 
     if(mtx->kind == MTX_KIND_RECURSIVE)
         mtx->recursion += 1;
 
-    return E_OK;
+    return 0;
 }
 
 int mutex_trylock(mutex_t* mtx) {
     if(unlikely(!mtx))
-        return E_ERR;
+        return -1;
 
     if(mtx->owner != sys_getpid()) {
         if(spinlock_trylock(&mtx->lock) == E_ERR)
-            return E_ERR;
+            return -1;
 
         mtx->owner = sys_getpid();
         mtx->recursion = 0;
     } else if(mtx->kind == MTX_KIND_ERRORCHECK)
-        return E_ERR;
+        return -1;
 
     if(mtx->kind == MTX_KIND_RECURSIVE)
         mtx->recursion += 1;
 
-    return E_OK;
+    return 0;
 }
 
 int mutex_unlock(mutex_t* mtx) {
     if(unlikely(!mtx))
-        return E_ERR;
+        return -1;
 
     if(mtx->owner == sys_getpid()) {
         if(mtx->kind == MTX_KIND_RECURSIVE)
             if(--(mtx->recursion))
-                return E_OK;
+                return 0;
 
 #if CONFIG_IPC_DEBUG
         if(likely(mtx->name))
@@ -81,9 +81,9 @@ int mutex_unlock(mutex_t* mtx) {
         spinlock_unlock(&mtx->lock);
         mtx->owner = -1;
     } else if(mtx->kind == MTX_KIND_ERRORCHECK)
-        return E_ERR;
+        return -1;
 
-    return E_OK;
+    return 0;
 }
 
 EXPORT(mutex_init);

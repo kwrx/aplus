@@ -9,5 +9,5 @@ int mm_init(void) {
     pmm_init();
     slab_init();
 
-    return E_OK;
+    return 0;
 }

@@ -104,7 +104,7 @@ int bga_update(fbdev_t* dev) {
     dev->fs.accel = 0;
     dev->fs.capabilities = 0;
 
-    return E_OK;
+    return 0;
 }
 
 int init(void) {
@@ -113,7 +113,7 @@ int init(void) {
     
     int n = inw(VBE_DISPI_IOPORT_DATA);
     if(!(CHECK_BGA(n)))
-        return E_ERR;
+        return -1;
 
 
     uintptr_t __lfbptr = 0;
@@ -133,7 +133,7 @@ int init(void) {
         pci_scan(&pci_func, i, NULL);
 
     if(!__lfbptr)
-        return E_ERR;
+        return -1;
 
 
     #define ALIGN(x)                                        \
@@ -146,7 +146,7 @@ int init(void) {
         for(; frame < end; frame += PAGE_SIZE)
             map_page(frame, frame, 1);
     } else
-        return E_ERR;
+        return -1;
     
 
     memset(&fbdev, 0, sizeof(fbdev));
@@ -156,13 +156,13 @@ int init(void) {
     fbdev.userdata = (void*) __lfbptr;
 
     if(unlikely(fbdev_register_device(&fbdev, BGA_ID) != E_OK))
-        return E_ERR;
+        return -1;
     
-    return E_OK;
+    return 0;
 }
 
 
 int dnit(void) {
     fbdev_unregister_device(&fbdev);
-    return E_OK;
+    return 0;
 }

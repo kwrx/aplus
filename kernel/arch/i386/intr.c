@@ -189,7 +189,7 @@ int intr_init() {
 
 
     __asm__ __volatile__ ("sti");
-    return E_OK;
+    return 0;
 }
 
 

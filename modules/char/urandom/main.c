@@ -21,16 +21,16 @@ static int urandom_read(struct inode* inode, void* buf, off_t pos, size_t size) 
 int init(void) {
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("urandom", -1, S_IFCHR | 0444)) == NULL))
-        return E_ERR;
+        return -1;
 
 
     ino->read = urandom_read;
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
     sys_unlink("/dev/urandom");
-    return E_OK;
+    return 0;
 }

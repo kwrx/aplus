@@ -112,16 +112,16 @@ static int ata_wait(struct ata_device* dev, int advanced) {
         e = inb(dev->io_base + ATA_REG_STATUS);
 
         if(e & ATA_SR_ERR)
-            return E_ERR;
+            return -1;
 
         if(e & ATA_SR_DF)
-            return E_ERR;
+            return -1;
 
         if(!(e & ATA_SR_DRQ))
-            return E_ERR;
+            return -1;
     }
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -466,7 +466,7 @@ int init(void) {
     pci_scan(&find_ata_pci, -1, &ata_pci);
     if(!ata_pci) {
         kprintf(ERROR "ide: pci device not found!\n");
-        return E_ERR;
+        return -1;
     }
 
 
@@ -480,18 +480,18 @@ int init(void) {
     ata_device_detect(&ata_secondary_slave);
 
 
-    return E_OK;
+    return 0;
 }
 
 #else
 
 int init(void) {
-    return E_OK;
+    return 0;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

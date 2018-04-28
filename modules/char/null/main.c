@@ -17,17 +17,17 @@ static int null_read_write(struct inode* inode, void* buf, off_t pos, size_t siz
 int init(void) {
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("null", -1, S_IFCHR | 0666)) == NULL))
-        return E_ERR;
+        return -1;
 
     ino->read =
     ino->write = null_read_write;
 
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
     sys_unlink("/dev/null");
-    return E_OK;
+    return 0;
 }

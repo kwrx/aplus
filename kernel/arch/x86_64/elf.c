@@ -7,9 +7,9 @@
 
 int elf_check_machine(Elf_Ehdr* elf) {
     if(elf->e_machine == EM_X86_64)
-        return E_OK;
+        return 0;
 
-    return E_ERR;
+    return -1;
 }
 
 

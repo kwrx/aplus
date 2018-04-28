@@ -8,5 +8,5 @@
 
 
 int iso9660_close(struct inode* inode) {
-    return E_OK;
+    return 0;
 }

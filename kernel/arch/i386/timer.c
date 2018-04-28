@@ -63,7 +63,7 @@ int timer_init() {
 
 
     INTR_OFF;
-    return E_OK;
+    return 0;
 }
 
 ktime_t timer_gettimestamp() {

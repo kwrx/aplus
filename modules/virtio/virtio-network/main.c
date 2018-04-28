@@ -135,9 +135,9 @@ int init(void) {
         virtio_network_init_device(d);
     }
 
-    return E_OK;
+    return 0;
 }
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

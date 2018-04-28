@@ -163,6 +163,8 @@ int main(int argc, char** argv) {
         }
     }
   
+    nice(19);
+
 
     if(!deamon)
         do_ntp();

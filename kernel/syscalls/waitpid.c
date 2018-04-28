@@ -22,11 +22,11 @@
 SYSCALL(31, waitpid,
 pid_t sys_waitpid(pid_t pid, int* status, int options) {
     if(pid < -1)
-        __wait_for(v->gid == -pid)
+        __wait_for(v->pgid == -pid)
     else if(pid == -1)
         __wait_for(1)
     else if(pid == 0)
-        __wait_for(v->gid == current_task->gid)
+        __wait_for(v->pgid == current_task->pgid)
     else if(pid > 0)
         __wait_for(v->pid == pid)
 

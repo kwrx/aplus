@@ -240,14 +240,14 @@ int init(void) {
 
         if(sys_mkfifo(buf, S_IFCHR | 0666) != 0) {
             kprintf(ERROR "events: could not create \'%s\'\n", buf);
-            return E_ERR;
+            return -1;
         }
 
 
         int fd = sys_open(buf, O_RDONLY, 0);
         if(fd < 0) {
             kprintf(ERROR "events: coult not open \'%s\'\n", buf);
-            return E_ERR;
+            return -1;
         }
 
         inode_t* e = current_task->fd[fd].inode;
@@ -258,11 +258,11 @@ int init(void) {
     }
 
 
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

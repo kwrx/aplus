@@ -40,19 +40,19 @@ static int devfs_mount(struct inode* dev, struct inode* dir) {
 
     devfs->parent = dir->parent;
     tmp->inode = devfs;
-    return E_OK;
+    return 0;
 }
 
 
 int init(void) {
     if(vfs_fsys_register("devfs", devfs_mount) != E_OK)
-        return E_ERR;
+        return -1;
 
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

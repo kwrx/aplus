@@ -7,7 +7,7 @@
 SYSCALL(47, setpgid,
 int sys_setpgid(pid_t pid, gid_t pgid) {
     if(pid == 0)
-        current_task->gid = pgid == 0 
+        current_task->pgid = pgid == 0 
                                 ? current_task->pid 
                                 : pgid
                                 ;
@@ -20,7 +20,7 @@ int sys_setpgid(pid_t pid, gid_t pgid) {
                     return -1;
                 }
                 
-                tmp->gid = pgid == 0 
+                tmp->pgid = pgid == 0 
                                 ? tmp->pid 
                                 : pgid
                                 ;
@@ -38,12 +38,12 @@ int sys_setpgid(pid_t pid, gid_t pgid) {
 SYSCALL(48, getpgid,
 gid_t sys_getpgid(pid_t pid) {
     if(pid == 0)
-        return current_task->gid;
+        return current_task->pgid;
     else {
         volatile task_t* tmp;
         for(tmp = task_queue; tmp; tmp = tmp->next) {
             if(tmp->pid == pid)
-                return tmp->gid;
+                return tmp->pgid;
         }
     }
 

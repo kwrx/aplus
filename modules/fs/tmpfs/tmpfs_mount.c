@@ -16,5 +16,5 @@ int tmpfs_mount(struct inode* dev, struct inode* dir) {
     dir->mknod = tmpfs_mknod;
     dir->finddir = NULL;
 
-    return E_OK;
+    return 0;
 }

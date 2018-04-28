@@ -112,7 +112,7 @@ int init(void) {
         virtio_block_init(d);
     }
 
-    return E_OK;
+    return 0;
 }
 
 int dnit(void) {

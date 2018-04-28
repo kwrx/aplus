@@ -18,14 +18,14 @@ int vfs_open(struct inode* inode) {
     if(likely(inode->open))
         return inode->open(inode);
 
-    return E_OK;
+    return 0;
 }
 
 int vfs_close(struct inode* inode) {
     if(likely(inode->close))
         return inode->close(inode);
 
-    return E_OK;
+    return 0;
 }
 
 int vfs_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
@@ -186,54 +186,54 @@ int vfs_unlink(struct inode* inode, char* name) {
         kfree((void*) t0->inode);
         kfree((void*) t0);
 
-        return E_OK;
+        return 0;
     }
 
     if(strcmp(inode->childs->inode->name, name) != 0)
-        return E_ERR;
+        return -1;
 
     t0 = inode->childs;    
     inode->childs = inode->childs->next;
     
     kfree(t0);
-    return E_OK;
+    return 0;
 }
 
 int vfs_rename(struct inode* inode, char* newname) {
     if(likely(inode->rename))
         if(unlikely(inode->rename(inode, newname) != E_OK))
-            return E_ERR;
+            return -1;
 
 
     inode->name = strdup(newname);
     inode->dirty++;
 
-    return E_OK;
+    return 0;
 }
 
 int vfs_chown(struct inode* inode, uid_t owner, gid_t group) {
     if(likely(inode->chown))
         if(unlikely(inode->chown(inode, owner, group) != E_OK))
-            return E_ERR;
+            return -1;
 
 
     inode->uid = owner;
     inode->gid = group;
     inode->dirty++;
 
-    return E_OK;
+    return 0;
 }
 
 int vfs_chmod(struct inode* inode, mode_t mode) {
     if(likely(inode->chmod))
         if(unlikely(inode->chmod(inode, mode) != E_OK))
-            return E_ERR;
+            return -1;
 
 
     inode->mode = mode;
     inode->dirty++;
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -241,18 +241,18 @@ int vfs_ioctl(struct inode* inode, int req, void* buf) {
     if(likely(inode->ioctl))
         return inode->ioctl(inode, req, buf);
 
-    return E_ERR;
+    return -1;
 }
 
 
 int vfs_fsync(struct inode* inode) {
     if(likely(inode->fsync))
         if(inode->fsync(inode) != E_OK)
-            return E_ERR;
+            return -1;
     
 
     inode->dirty = 0;
-    return E_OK;
+    return 0;
 }
 
 
@@ -267,7 +267,7 @@ fsys_t* vfs_fsys_find(const char* name) {
 
 int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inode*)) {
     if(vfs_fsys_find(name))
-        return E_ERR;
+        return -1;
 
     fsys_t* fsys = (fsys_t*) kmalloc(sizeof(fsys_t), GFP_KERNEL);
     fsys->name = strdup(name);
@@ -275,7 +275,7 @@ int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inod
     fsys->next = fsys_queue;
     fsys_queue = fsys;
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -283,7 +283,7 @@ int vfs_mount(struct inode* dev, struct inode* dir, const char* fstype) {
     fsys_t* fsys = vfs_fsys_find(fstype);
     if(unlikely(!fsys)) {
         errno = ENODEV;
-        return E_ERR;
+        return -1;
     }
 
     
@@ -316,7 +316,7 @@ int vfs_umount(struct inode* dir) {
     dir->open = NULL;
     dir->close = NULL;
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -366,7 +366,7 @@ int vfs_init(void) {
 
 
     devfs = vfs_mknod(vfs_root, "dev", S_IFDIR | 0666);
-    return E_OK;
+    return 0;
 }
 
 

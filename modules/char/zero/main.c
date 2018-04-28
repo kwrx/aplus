@@ -24,16 +24,16 @@ static int zero_read(struct inode* inode, void* buf, off_t pos, size_t size) {
 int init(void) {
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
-        return E_ERR;
+        return -1;
 
 
     ino->read = zero_read;
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
     sys_unlink("/dev/zero");
-    return E_OK;
+    return 0;
 }

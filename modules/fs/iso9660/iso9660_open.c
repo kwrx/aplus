@@ -15,12 +15,12 @@
 int iso9660_open(struct inode* inode) {
     if(unlikely(!inode)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
     if(unlikely(!inode->userdata)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
 
@@ -38,7 +38,7 @@ int iso9660_open(struct inode* inode) {
         kfree(nodes);
 
         errno = EIO;
-        return E_ERR;
+        return -1;
     }
 
 
@@ -61,7 +61,7 @@ int iso9660_open(struct inode* inode) {
             inode_t* child = (inode_t*) kmalloc(sizeof(inode_t), GFP_ATOMIC);
             if(unlikely(!child)) {
                 errno = ENOMEM;
-                return E_ERR;
+                return -1;
             }
 
             memset(child, 0, sizeof(inode_t));
@@ -168,5 +168,5 @@ int iso9660_open(struct inode* inode) {
     }
 
     kfree(snodes);
-    return E_OK;
+    return 0;
 }

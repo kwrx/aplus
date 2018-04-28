@@ -70,7 +70,7 @@ int shm_release(const char* path) {
         kfree(t2->path);
         kfree(t2);
         
-        return E_OK;
+        return 0;
 
     } else {
         for(tmp = shm_queue; tmp->next; tmp = tmp->next) {
@@ -85,11 +85,11 @@ int shm_release(const char* path) {
                 kfree(t2->path);
                 kfree(t2);
 
-                return E_OK;
+                return 0;
             }
         }
     }
 
-    return E_ERR;
+    return -1;
 }
 

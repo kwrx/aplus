@@ -84,6 +84,7 @@ void fork_handler(i386_context_t* context) {
     child->uid = current_task->uid;
     child->gid = current_task->gid;
     child->sid = current_task->sid;
+    child->pgid = current_task->pgid;
     child->tgid = child->pid;
 
     
@@ -94,6 +95,8 @@ void fork_handler(i386_context_t* context) {
 
     child->status = TASK_STATUS_READY;
     child->priority = current_task->priority;
+    child->starttime = timer_getticks();
+
 
     child->signal.s_handler = current_task->signal.s_handler;
     child->signal.s_mask = current_task->signal.s_mask;
@@ -169,6 +172,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     child->uid = current_task->uid;
     child->gid = current_task->gid;
     child->sid = current_task->sid;
+    child->pgid = current_task->pgid;
     child->tgid = current_task->tgid;
 
     
@@ -179,6 +183,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
 
     child->status = TASK_STATUS_READY;
     child->priority = current_task->priority;
+    child->starttime = timer_getticks();
 
     
     if(flags & CLONE_SIGHAND) {
@@ -370,6 +375,7 @@ int task_init(void) {
     t->pid = sched_nextpid();
     t->uid = TASK_ROOT_UID;
     t->gid = TASK_ROOT_GID;
+    t->pgid = t->pid;
     t->tgid = t->pid;
     t->sid = 0;
     
@@ -402,5 +408,5 @@ int task_init(void) {
     //x86_intr_kernel_stack((uintptr_t) t->sys_stack);
 
     current_task = t;
-    return E_OK;
+    return 0;
 }

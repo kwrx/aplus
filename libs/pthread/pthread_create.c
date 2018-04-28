@@ -23,7 +23,7 @@ int pthread_create(pthread_t* th, const pthread_attr_t* attr, void* (*start_rout
 
     cc->start_routine = start_routine;
     cc->arg = arg;
-    cc->pid = clone(__pthread_routine, cc->attr.stackaddr, CLONE_FS | CLONE_FILES | CLONE_PARENT | CLONE_SIGHAND, cc);
+    cc->pid = clone(__pthread_routine, cc->attr.stackaddr, CLONE_FS | CLONE_FILES | CLONE_VM | CLONE_SIGHAND, cc);
 
     if(cc->pid < 0) {
         free(cc);

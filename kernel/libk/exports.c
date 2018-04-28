@@ -18,7 +18,7 @@ extern int __moddi3;
 
 int libk_init() {
     libaplus_init(kmalloc, kcalloc, kfree);
-    return E_OK;
+    return 0;
 }
 
 EXPORT(mbd);

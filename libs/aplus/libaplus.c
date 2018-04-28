@@ -13,5 +13,5 @@ int libaplus_init(void* (*mallocfp) (size_t), void* (*callocfp) (size_t, size_t)
     __libaplus_calloc = callocfp;
     __libaplus_free = freefp;
 
-    return E_OK;
+    return 0;
 }

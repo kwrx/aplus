@@ -17,7 +17,7 @@ static int kmem_ioctl(struct inode* inode, int req, void* ptr) {
     #define cp(x)                   \
         if(unlikely(!x)) {          \
             errno = EINVAL;         \
-            return E_ERR;           \
+            return -1;           \
         }
     
     switch(req) {
@@ -33,24 +33,24 @@ static int kmem_ioctl(struct inode* inode, int req, void* ptr) {
             break;
         default:
             errno = EINVAL;
-            return E_ERR;
+            return -1;
     }
     
-    return E_OK;
+    return 0;
 }
 
 int init(void) {
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("kmem", -1, S_IFCHR | 0440)) == NULL))
-        return E_ERR;
+        return -1;
 
 
     ino->ioctl = kmem_ioctl;
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

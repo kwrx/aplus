@@ -47,12 +47,12 @@ int tty_load_keymap(char* keymap) {
 int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!inode->userdata)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!len))
@@ -61,7 +61,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     int fd = sys_open(TTY_DEFAULT_INPUT_DEVICE, O_RDONLY, 0);
     if(fd < 0) {
         errno = EIO;
-        return E_ERR;
+        return -1;
     }
     
         
@@ -74,7 +74,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         keyboard_t k;
         if(sys_read(fd, &k, sizeof(keyboard_t)) == 0) {
             errno = EIO;
-            return E_ERR;
+            return -1;
         }
 
         switch(k.vkey) {

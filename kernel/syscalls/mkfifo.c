@@ -15,11 +15,11 @@ static int inode_fifo_read(struct inode* inode, void* ptr, off_t pos, size_t len
     
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!inode->userdata))
-        return E_ERR;
+        return -1;
 
 
     fifo_t* fifo = (fifo_t*) inode->userdata;
@@ -31,11 +31,11 @@ static int inode_fifo_write(struct inode* inode, void* ptr, off_t pos, size_t le
 
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!inode->userdata))
-        return E_ERR;
+        return -1;
         
         
     fifo_t* fifo = (fifo_t*) inode->userdata;

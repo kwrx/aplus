@@ -26,7 +26,7 @@ static evid_t pwid;
 static int pwm_ioctl(struct inode* inode, int req, void* buf) {
     if(!inode) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
     switch(req) {
@@ -62,10 +62,10 @@ static int pwm_ioctl(struct inode* inode, int req, void* buf) {
 
         default:
             errno = ENOSYS;
-            return E_ERR;
+            return -1;
     }
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -76,19 +76,19 @@ int init(void) {
 
     pwid = sys_events_device_add("system-power-manager", EC_PWR);
     sys_events_device_set_enabled(pwid, 1);
-    return E_OK;
+    return 0;
 }
 
 
 #else
 
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

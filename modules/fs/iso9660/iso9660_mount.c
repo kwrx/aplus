@@ -9,7 +9,7 @@
 int iso9660_mount(struct inode* dev, struct inode* dir) {
 
     if(unlikely(!dev || !dir))
-        return E_ERR;
+        return -1;
 
 
     iso9660_t* ctx = (iso9660_t*) kmalloc(sizeof(iso9660_t), GFP_USER);
@@ -20,14 +20,14 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
     if(unlikely(vfs_read(dev, &ctx->pvd, ISO9660_PVD, ISO9660_VOLDESC_SIZE) != ISO9660_VOLDESC_SIZE)) {
         kprintf(ERROR "iso9660: (%s) cannot read from this device\n", dev->name);
         kfree(ctx);
-        return E_ERR;
+        return -1;
     }
 
     if(strncmp(ctx->pvd.id, ISO9660_ID, 5) != 0) {
         kprintf(ERROR "iso9660: (%s) invalid iso9660 ID\n", dev->name);
 
         kfree(ctx);
-        return E_ERR;
+        return -1;
     }
 
 
@@ -41,5 +41,5 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
 
     dir->userdata = (void*) ctx;
 
-    return E_OK;
+    return 0;
 }

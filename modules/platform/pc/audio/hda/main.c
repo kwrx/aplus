@@ -46,7 +46,7 @@ int init(void) {
 
     if(unlikely(!hda_pci)) {
         kprintf(ERROR "hda: no pci device found!\n");
-        return E_ERR;
+        return -1;
     }
 
 
@@ -55,18 +55,18 @@ int init(void) {
     vfs_mkdev("mixer", -1, S_IFCHR | 0444);
 
     kprintf(WARN "hda: Intel HDA not yet supported! it doesn't work\n");
-    return E_OK;
+    return 0;
 }
 
 #else
 
 int init(void) {
-    return E_OK;
+    return 0;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

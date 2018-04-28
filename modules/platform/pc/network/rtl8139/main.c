@@ -274,7 +274,7 @@ int init(void) {
     pci_scan(&find_pci, -1, &pci);
     if(!pci) {
         kprintf(ERROR "rtl8139: pci device not found!\n");
-        return E_ERR;
+        return -1;
     }
 
     struct rtl8139* dev = (struct rtl8139*) kmalloc(sizeof(struct rtl8139), GFP_KERNEL);
@@ -335,24 +335,24 @@ int init(void) {
         kfree(dev);
         kfree(eth);
         kfree(netif);
-        return E_ERR;
+        return -1;
     }
 
     netif_set_default(netif);
     netif_set_up(netif);
 
-    return E_OK;
+    return 0;
 }
 
 
 
 #else
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

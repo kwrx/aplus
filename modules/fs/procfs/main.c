@@ -16,13 +16,13 @@ MODULE_LICENSE("GPL");
 
 int init(void) {
     if(vfs_fsys_register("procfs", procfs_mount) != E_OK)
-        return E_ERR;
+        return -1;
 
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

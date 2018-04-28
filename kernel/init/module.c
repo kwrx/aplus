@@ -72,12 +72,12 @@ static int module_load(char* name) {
             continue;
 
         if(mod->loaded_address)
-            return E_OK;
+            return 0;
 
         list_each(mod->deps, d) {
             if(module_load(d) != E_OK) {
                 kprintf(ERROR "module: unresolved dependency on loading \'%s\' for %s\n", d, mod->name);
-                return E_ERR;
+                return -1;
             }
         }
 
@@ -192,10 +192,10 @@ static int module_load(char* name) {
 
 
         mod->loaded_address = (uintptr_t) core;
-        return E_OK;
+        return 0;
     }
 
-    return E_ERR;
+    return -1;
 }
 
 static int module_run(char* name) {
@@ -204,31 +204,31 @@ static int module_run(char* name) {
             continue;
 
         if(mod->loaded)
-            return E_OK;
+            return 0;
 
         list_each(mod->deps, d) {
             if(module_run(d) != E_OK) {
                 kprintf(ERROR "module: unresolved dependency on running \'%s\' for %s\n", d, mod->name);
-                return E_ERR;
+                return -1;
             }
         }
 
 
         if(!mod->init) {
             kprintf(ERROR, "module: unresolved entrypoint \'init()\' for %s\n", mod->name);
-            return E_ERR;
+            return -1;
         }
 
 
         //kprintf(INFO "module: running \'%s\'\n", mod->name);
         if(mod->init() != E_OK)
-            return E_ERR;
+            return -1;
 
         mod->loaded++;
-        return E_OK;
+        return 0;
     }
 
-    return E_ERR;
+    return -1;
 }
 
 
@@ -300,7 +300,7 @@ int module_init(void) {
         module_run(mod->name);
 
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -317,7 +317,7 @@ int module_dnit(void) {
         mod->dnit();
     }
 
-    return E_OK;
+    return 0;
 }
 
 

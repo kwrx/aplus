@@ -9,10 +9,10 @@
 
 int procfs_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode))
-        return E_ERR;
+        return -1;
 
     if(unlikely(!ptr))
-        return E_ERR;
+        return -1;
 
     if(unlikely(!inode->userdata))
         return 0;
@@ -23,11 +23,9 @@ int procfs_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!len))
         return 0;
 
-    procfs_t* pfs = (procfs_t*) inode->userdata;
-    if(unlikely(!pfs->data))
-        return 0;
 
-
-    memcpy(ptr, (void*) ((uintptr_t) pfs->data + (uintptr_t) pos), len);
+    procfs_entry_t* e = (procfs_entry_t*) inode->userdata;
+    memcpy(ptr, &e->data[pos], len);
+    
     return len;
 }

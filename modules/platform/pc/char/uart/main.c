@@ -78,19 +78,19 @@ int init(void) {
         ino->write = uart_write;
     }
     
-    return E_OK;
+    return 0;
 }
 
 
 #else
 
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

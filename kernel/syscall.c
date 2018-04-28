@@ -52,7 +52,7 @@ int syscall_init(void) {
     }
 
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -61,14 +61,14 @@ int syscall_register(int number, void* handler) {
     KASSERTF(!__handlers[number], "%d", number);
 
     __handlers[number] = (syscall_handler_t) handler;
-    return E_OK;
+    return 0;
 }
 
 int syscall_unregister(int number) {
     KASSERT(number < MAX_SYSCALL);
 
     __handlers[number] = (syscall_handler_t) NULL;
-    return E_OK;
+    return 0;
 }
 
 

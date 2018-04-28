@@ -188,7 +188,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
     current_task->image->refcount = 1;
     current_task->vmsize += current_task->image->end - current_task->image->start;
-    current_task->name = __new_argv[0];
+    current_task->name = strdup(__new_argv[0]);
     current_task->description = "";
     current_task->exe = inode;
 

@@ -301,7 +301,7 @@ int init(void) {
     e1000 = (struct e1000*) kcalloc(sizeof(struct e1000), 1, GFP_KERNEL);
     if(!e1000) {
         kprintf(ERROR "e1000: no memory left!\n");
-        return E_ERR;
+        return -1;
     }
 
 
@@ -314,7 +314,7 @@ int init(void) {
     pci_scan(&find_pci, -1, &e1000->pci);
     if(!e1000->pci) {
         kprintf(ERROR "e1000: pci device not found!\n");
-        return E_ERR;
+        return -1;
     }
 
 #if 0
@@ -331,7 +331,7 @@ int init(void) {
     e1000->membase = pci_read_field(e1000->pci, PCI_BAR0, 4) & 0xFFFFFFF0;
     if(!sys_mmap((void*) (e1000->membase & ~0xFFF), 0x10000, PROT_READ | PROT_WRITE, MAP_FIXED, -1, 0)) {
         kprintf(ERROR "e1000: mapping %p failed\n", e1000->membase & ~0xFFF);
-        return E_ERR;
+        return -1;
     }
 
 
@@ -358,23 +358,23 @@ int init(void) {
 
     timer_delay(10);
     e1000_init();
-    return E_OK;
+    return 0;
 }
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }
 
 
 #else
 
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 
 int dnit(void) {
-    return E_ERR;
+    return -1;
 }
 
 #endif

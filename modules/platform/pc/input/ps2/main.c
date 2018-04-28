@@ -534,19 +534,19 @@ int init(void) {
     irq_enable(12, mouse_intr);
 
 
-    return E_OK;
+    return 0;
 }
 
 
 #else
 
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

@@ -47,7 +47,8 @@ typedef struct task {
     char** environ;
 
     pid_t pid;
-    gid_t tgid;
+    pid_t tgid;
+    pid_t pgid;
     uid_t uid;
     gid_t gid;
     uid_t sid;
@@ -63,6 +64,7 @@ typedef struct task {
     struct tms clock;
     struct timespec sleep;
     time_t alarm;
+    ktime_t starttime;
 
 
 

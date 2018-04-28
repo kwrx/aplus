@@ -53,7 +53,7 @@ int mounts_init(void) {
     FILE* fp = fopen("/etc/fstab", "r");
     if(!fp) {
         kprintf(ERROR "mounts: no /etc/fstab found!\n");
-        return E_ERR;
+        return -1;
     }
     
 
@@ -85,7 +85,7 @@ int mounts_init(void) {
         if(i < 4) {
             kprintf(ERROR "/etc/fstab: syntax error at line %d, expected three parameters\n", cl);
             fclose(fp);
-            return E_ERR;
+            return -1;
         }
 
 
@@ -102,5 +102,5 @@ int mounts_init(void) {
    
 
     fclose(fp);
-    return E_OK;
+    return 0;
 }

@@ -12,8 +12,8 @@ int tmpfs_unlink(struct inode* inode, char* name) {
         struct inode_childs* tmp;
         for(tmp = inode->childs; tmp; tmp = tmp->next)
             if(strcmp(tmp->inode->name, name) == 0)
-                { kfree((void*) tmp->inode->userdata); return E_OK; }
+                { kfree((void*) tmp->inode->userdata); return 0; }
     }
 
-    return E_ERR;
+    return -1;
 }

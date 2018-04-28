@@ -46,7 +46,7 @@ static int FR_FIRST(int count) {
         }
     }
 
-    return E_ERR;
+    return -1;
 }
 
 
@@ -114,7 +114,7 @@ int pmm_init(void) {
     pmm_claim(0x00000000, (physaddr_t) mbd->memory.start);
     
 
-    return E_OK;
+    return 0;
 }
 
 EXPORT(pmm_state);

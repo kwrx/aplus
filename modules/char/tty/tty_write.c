@@ -21,12 +21,12 @@ void __tty_flush(struct tty_context* tio) {
 int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!inode->userdata)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
     
     if(unlikely(!len))

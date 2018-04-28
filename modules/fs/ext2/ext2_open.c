@@ -13,7 +13,7 @@ int ext2_open(struct inode* inode) {
     ext2_priv_t* priv = (ext2_priv_t*) inode->userdata;
     if(!priv) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
 
@@ -62,5 +62,5 @@ done:
         kfree(d);
     }
     
-    return E_OK;
+    return 0;
 }

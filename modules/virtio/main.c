@@ -39,7 +39,7 @@ int virtio_init_device(virtio_device_t* dev, void (*negotiate) (uint32_t* featur
 
     if(!(virtio_r8(dev->io + VIRTIO_IO_DEVICE_STATUS) & VIRTIO_STATUS_FEATURES_OK)) {
         kprintf("virtio: device %d failed to negotiate features", dev->pci);
-        return E_ERR;
+        return -1;
     }
 
 
@@ -69,7 +69,7 @@ int virtio_init_device(virtio_device_t* dev, void (*negotiate) (uint32_t* featur
         v->address = (uintptr_t) kvalloc(vsize, GFP_KERNEL);
         if(!v->address) {
             kprintf(INFO "virtio: no memory left for %d bytes. Device %d, queue %d\n", vsize, dev->pci, i);
-            return E_ERR;
+            return -1;
         }
 
 
@@ -86,14 +86,14 @@ int virtio_init_device(virtio_device_t* dev, void (*negotiate) (uint32_t* featur
     }
 
     virtio_w8(dev->io + VIRTIO_IO_DEVICE_STATUS, VIRTIO_STATUS_ACK | VIRTIO_STATUS_LOADED | VIRTIO_STATUS_FEATURES_OK | VIRTIO_STATUS_READY);
-    return E_OK;
+    return 0;
 }
 
 int virtio_send_buffer(virtio_device_t* dev, uint16_t index, vqueue_buffer_info_t* b, uint64_t count) {
     vqueue_t* v = &dev->vqueue[index];
     if(unlikely(v->lock)) {
         errno = EAGAIN;
-        return E_ERR;
+        return -1;
     }
 
     v->lock = 1;
@@ -190,10 +190,10 @@ int init(void) {
 #endif
 
 
-    return E_OK;
+    return 0;
 }
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

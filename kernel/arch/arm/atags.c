@@ -177,5 +177,5 @@ int atags_init() {
     if(mbd->memory.size == 0)
         mbd->memory.size = 0x1000000;
 
-    return E_OK;
+    return 0;
 }

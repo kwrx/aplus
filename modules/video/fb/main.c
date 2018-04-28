@@ -23,7 +23,7 @@ static int fb_ioctl(struct inode* inode, int req, void* ptr) {
     #define cp(x)                   \
         if(unlikely(!x)) {          \
             errno = EINVAL;         \
-            return E_ERR;           \
+            return -1;           \
         }
 
     fbdev_t* fbdev = (fbdev_t*) inode->userdata;
@@ -55,7 +55,7 @@ static int fb_ioctl(struct inode* inode, int req, void* ptr) {
             
         default:
             errno = ENOSYS;
-            return E_ERR;
+            return -1;
     }
     
     return 0;
@@ -64,12 +64,12 @@ static int fb_ioctl(struct inode* inode, int req, void* ptr) {
 int fbdev_register_device(fbdev_t* fbdev, char* name) {
     if(unlikely(!fbdev || !name)) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
 
     if(unlikely((fbdev->inode = vfs_mkdev("fb", fbid++, S_IFCHR | 0222)) == NULL))
-        return E_ERR;
+        return -1;
 
     fbdev->name = strdup(name);
     fbdev->inode->ioctl = fb_ioctl;
@@ -80,7 +80,7 @@ int fbdev_register_device(fbdev_t* fbdev, char* name) {
         e = fbdev->init(fbdev);
 
     kprintf(INFO "fb%d: registered \'%s\'\n", fbid - 1, fbdev->name);
-    return E_OK; 
+    return 0; 
 }
 
 int fbdev_unregister_device(fbdev_t* fbdev) {
@@ -93,7 +93,7 @@ int fbdev_unregister_device(fbdev_t* fbdev) {
     list_remove(fbdevs, fbdev);
 
     kprintf(INFO "fb: unregistered \'%s\'\n", fbdev->name);  
-    return E_OK;
+    return 0;
 }
 
 
@@ -101,7 +101,7 @@ int init(void) {
     memset(&fbdevs, 0, sizeof(fbdevs));
     fbid = 0;
 
-    return E_OK;
+    return 0;
 }
 
 
@@ -110,5 +110,5 @@ int dnit(void) {
         v->dnit(v);
 
     list_clear(fbdevs);
-    return E_OK;
+    return 0;
 }

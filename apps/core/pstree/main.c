@@ -241,7 +241,7 @@ int main(int argc, char** argv) {
 
         fclose(fp);
 
-        if(strcmp(p->state, "X") == 0) {
+        if(strcmp(p->state, "Z") == 0) {
             free(p);
             continue;
         }

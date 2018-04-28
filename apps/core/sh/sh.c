@@ -102,8 +102,8 @@ void sh_cmdline(char* cmdline) {
     if(e == 0) {
         setpgrp();
 
-        pid_t gid = getgid();
-        ioctl(STDIN_FILENO, TIOCSPGRP, &gid);
+        pid_t pgid = getpgrp();
+        ioctl(STDIN_FILENO, TIOCSPGRP, &pgid);
 
         execvp(argv[0], argv);
         perror(argv[0]);

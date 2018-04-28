@@ -31,13 +31,13 @@ static list(blkdev_t*, ll_blkdev);
 int blkdev_register_device(blkdev_t* blk, char* name, int idx, int flags) {
     if(!blk || !name) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
     list_each(ll_blkdev, v) {
         if(strcmp(v->dev->name, name) == 0) {
             errno = EEXIST;
-            return E_ERR;
+            return -1;
         }
     }
 
@@ -56,13 +56,13 @@ int blkdev_register_device(blkdev_t* blk, char* name, int idx, int flags) {
 
     kprintf(INFO "blkdev: registered \'%s\' (%d MB)\n", blk->dev->name, blk->dev->size >> 20);        
     list_push(ll_blkdev, blk);
-    return E_OK;
+    return 0;
 }
 
 int blkdev_unregister_device(char* name) {
     if(!name || strlen(name) == 0) {
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
     blkdev_t* blk = NULL;
@@ -88,7 +88,7 @@ int blkdev_unregister_device(char* name) {
 
     kprintf(INFO "blkdev: unregistered \'%s\' (%d MB)\n", blk->dev->name, blk->dev->size >> 20);        
     vfs_unlink(blk->dev->parent, blk->dev->name);
-    return E_OK;
+    return 0;
 }
 
 
@@ -270,12 +270,12 @@ int blkdev_write(inode_t* ino, void* buf, off_t pos, size_t size) {
 int init(void) {
     memset(&ll_blkdev, 0, sizeof(ll_blkdev));
 
-    return E_OK;
+    return 0;
 }
 
 int dnit(void) { 
     list_each(ll_blkdev, v)
         blkdev_unregister_device(v->dev->name);
 
-    return E_OK;
+    return 0;
 }

@@ -264,7 +264,7 @@ static void update_values() {
 
 static void dump_values() {
     fprintf(stdout, "\4\e[2J\e[H\e[30;47m\e[2K");
-    fprintf(stdout, " Pid  Name                 S  Owner       PPid     CPU        I/O       Memory\n");
+    fprintf(stdout, " Pid  Name                 S  Priority    PPid     CPU        I/O       Memory\n");
     fprintf(stdout, "\e[0;39;49m");
 
     double cpu = 0;
@@ -273,7 +273,7 @@ static void dump_values() {
     
     task_t* tq;
     for(tq = task_queue; tq; tq = tq->next) {
-        if(tq->status[0] == 'X')
+        if(tq->status[0] == 'X' || tq->status[0] == 'Z')
             continue;
 
         if(tq->status[0] == 'R')
@@ -285,7 +285,7 @@ static void dump_values() {
         io += tq->iodiff;
         memory += tq->vmsize;
 
-        fprintf(stdout, " %-4d %-20s %-2s %-9s %6d %6.01f%% %6.02f MB/s %8.02f MB\n", tq->pid, basename(tq->name), tq->status, tq->user, tq->ppid, tq->cpu, (double) tq->iodiff / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
+        fprintf(stdout, " %-4d %-20s %-2s %-9d %6d %6.01f%% %6.02f MB/s %8.02f MB\n", tq->pid, basename(tq->name), tq->status, tq->nice, tq->ppid, tq->cpu, (double) tq->iodiff / 1024.0 / 1024.0, (double) tq->vmsize / 1024.0 / 1024.0);
         fprintf(stdout, "\033[39m");
     }
 

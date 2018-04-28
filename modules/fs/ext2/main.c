@@ -203,7 +203,7 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
         kprintf(ERROR "ext2: invalid signature!\n");
 
         errno = EINVAL;
-        return E_ERR;
+        return -1;
     }
 
     ext2_t* priv = (ext2_t*) kmalloc(sizeof(ext2_t), GFP_KERNEL);
@@ -239,18 +239,18 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
 
     dir->userdata = (void*) p;
 
-    return E_OK;
+    return 0;
 }
 
 int init(void) {
     if(vfs_fsys_register("ext2", ext2_mount) != E_OK)
-        return E_ERR;
+        return -1;
 
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

@@ -61,14 +61,14 @@ int blkdev_init_mbr(blkdev_t* blkdev) {
     struct inode* dev = blkdev->dev;
     
     if(unlikely(!dev))
-        return E_ERR;
+        return -1;
 
     mbr_ptable_t table[4];
     char name[2];
 
 
     if(unlikely(vfs_read(dev, &table, 0x1BE, 64) != 64))
-        return E_ERR;
+        return -1;
 
     
     int i, j = 0;
@@ -78,7 +78,7 @@ int blkdev_init_mbr(blkdev_t* blkdev) {
 
         mbr_partition_t* mbr = (mbr_partition_t*) kmalloc(sizeof(mbr_partition_t), GFP_KERNEL);
         if(unlikely(!mbr))
-            return E_ERR;
+            return -1;
 
         mbr->dev = dev;
         mbr->offset = (off64_t) table[i].lba * 512;
@@ -89,7 +89,7 @@ int blkdev_init_mbr(blkdev_t* blkdev) {
 
         inode_t* ch = vfs_mkdev(dev->name, i, S_IFBLK | blkdev->mode);
         if(unlikely(!ch))
-            return E_ERR;
+            return -1;
 
         ch->size = (off64_t) table[i].size * 512;
         ch->userdata = (void*) mbr;
@@ -104,5 +104,5 @@ int blkdev_init_mbr(blkdev_t* blkdev) {
     }
 
 
-    return E_OK;
+    return 0;
 }

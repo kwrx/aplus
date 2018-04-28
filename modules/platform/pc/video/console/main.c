@@ -77,7 +77,6 @@ static inline uint32_t __C(struct cc* cc, uint32_t p) {
     return p;
 }
 
-
 static void plot_value(struct cc* cc, int32_t uvalue) {
     char value = uvalue & 0xFF;
 
@@ -484,19 +483,19 @@ int init(void) {
     ino->write = console_write;
     ino->userdata = cc;
 
-    return E_OK;
+    return 0;
 }
 
 
 #else
 
 int init(void) {
-    return E_ERR;
+    return -1;
 }
 
 #endif
 
 
 int dnit(void) {
-    return E_OK;
+    return 0;
 }

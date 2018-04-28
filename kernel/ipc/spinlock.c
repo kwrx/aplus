@@ -9,10 +9,10 @@
 
 int spinlock_init(spinlock_t* lock) {
     if(unlikely(!lock))
-        return E_ERR;
+        return -1;
 
     *lock = 0;
-    return E_OK;
+    return 0;
 }
 
 
@@ -22,9 +22,9 @@ void spinlock_lock(spinlock_t* lock) {
 
 int spinlock_trylock(spinlock_t* lock) {
     if(unlikely(!__sync_bool_compare_and_swap(lock, 0, 1)))
-        return E_ERR;
+        return -1;
 
-    return E_OK;
+    return 0;
 }
 
 void spinlock_unlock(spinlock_t* lock) {

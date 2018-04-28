@@ -22,13 +22,13 @@ int init(void) {
 
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("tty", 0, S_IFCHR | 0666)) == NULL))
-        return E_ERR;
+        return -1;
 
 
     struct tty_context* tio = (struct tty_context*) kmalloc(sizeof(struct tty_context), GFP_KERNEL);
     if(unlikely(!tio)) {
         kprintf(ERROR "tty: no memory left!");
-        return E_ERR;
+        return -1;
     }
 
     memset(tio, 0, sizeof(struct tty_context));
@@ -76,7 +76,7 @@ int init(void) {
     sys_symlink("/dev/tty0", "/dev/stdout");
     sys_symlink("/dev/tty0", "/dev/stderr");
     
-    return E_OK;
+    return 0;
 }
 
 
@@ -86,5 +86,5 @@ int dnit(void) {
     sys_unlink("/dev/stdout");
     sys_unlink("/dev/stderr");
     sys_unlink("/dev/tty0");
-    return E_OK;
+    return 0;
 }

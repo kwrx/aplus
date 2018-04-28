@@ -17,16 +17,16 @@ static int full_write(struct inode* inode, void* buf, off_t pos, size_t size) {
 int init(void) {
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("full", -1, S_IFCHR | 0222)) == NULL))
-        return E_ERR;
+        return -1;
 
 
     ino->write = full_write;
-    return E_OK;
+    return 0;
 }
 
 
 
 int dnit(void) {
     sys_unlink("/dev/full");
-    return E_OK;
+    return 0;
 }
