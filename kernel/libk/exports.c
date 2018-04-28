@@ -37,6 +37,7 @@ EXPORT(strncmp);
 EXPORT(strchr);
 EXPORT(strtoul);
 EXPORT(strncpy);
+EXPORT(stpcpy);
 EXPORT(sprintf);
 EXPORT(fgets);
 EXPORT(fseek);

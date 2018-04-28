@@ -41,12 +41,15 @@ typedef struct procfs_entry {
 
 PROCFS_ENTRY(cmdline);
 PROCFS_ENTRY(cwd);
+PROCFS_ENTRY(devices);
 PROCFS_ENTRY(environ);
 PROCFS_ENTRY(exe);
 PROCFS_ENTRY(fd);
 PROCFS_ENTRY(fdnode);
+PROCFS_ENTRY(filesystems);
 PROCFS_ENTRY(io);
 PROCFS_ENTRY(meminfo);
+PROCFS_ENTRY(modules);
 PROCFS_ENTRY(pid);
 PROCFS_ENTRY(root);
 PROCFS_ENTRY(stat);

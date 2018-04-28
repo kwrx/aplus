@@ -11,8 +11,8 @@
 
 extern int elf_check_machine(Elf_Ehdr* elf);
 
-static list(module_t*, m_queue);
-static list(symbol_t*, m_symtab);
+list(module_t*, m_queue);
+list(symbol_t*, m_symtab);
 
 
 static void module_export(module_t* mod, char* name, void* address) {
@@ -286,6 +286,7 @@ int module_init(void) {
 
 
         mod->image_address = (uintptr_t) image;
+        mod->size = mbd->modules.ptr[i].size;
         mod->loaded_address = 0;
         mod->loaded = 0;
 
@@ -323,3 +324,5 @@ int module_dnit(void) {
 
 EXPORT(module_init);
 EXPORT(module_dnit);
+EXPORT(m_queue);
+EXPORT(m_symtab);

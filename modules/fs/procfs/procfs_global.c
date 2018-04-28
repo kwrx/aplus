@@ -35,13 +35,12 @@ procfs_entry_t* __procfs_mkentry(procfs_entry_t* parent, volatile task_t* task, 
 
 int procfs_init(procfs_entry_t* sb) {
     //list_push(sb->childs, procfs_mkentry(sb, NULL, bus));
-    //list_push(sb->childs, procfs_mkentry(sb, NULL, cgroups));
     list_push(sb->childs, procfs_mkentry(sb, kernel_task, cmdline));
     //list_push(sb->childs, procfs_mkentry(sb, NULL, cpuinfo));
-    //list_push(sb->childs, procfs_mkentry(sb, NULL, devices));
-    //list_push(sb->childs, procfs_mkentry(sb, NULL, filesystems));
+    list_push(sb->childs, procfs_mkentry(sb, NULL, devices));
+    list_push(sb->childs, procfs_mkentry(sb, NULL, filesystems));
     list_push(sb->childs, procfs_mkentry(sb, NULL, meminfo));
-    //list_push(sb->childs, procfs_mkentry(sb, NULL, modules));
+    list_push(sb->childs, procfs_mkentry(sb, NULL, modules));
     //list_push(sb->childs, procfs_mkentry(sb, NULL, net));
     list_push(sb->childs, procfs_mkentry(sb, NULL, uptime));
     list_push(sb->childs, procfs_mkentry(sb, NULL, version));
