@@ -14,7 +14,7 @@ MODULE_LICENSE("GPL");
 
 
 
-static int devfs_mount(struct inode* dev, struct inode* dir) {
+static int devfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     (void) dev;
 
     if(!dir->parent) {
@@ -39,7 +39,9 @@ static int devfs_mount(struct inode* dev, struct inode* dir) {
     }
 
     devfs->parent = dir->parent;
-    tmp->inode = devfs;
+    devfs->mtinfo = info;
+    dir->mtinfo = info;
+    tmp->inode = devfs; 
     return 0;
 }
 

@@ -2,7 +2,7 @@
 #define _TMPFS_H
 
 
-int tmpfs_mount(struct inode* dev, struct inode* dir);
+int tmpfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info);
 
 struct inode* tmpfs_mknod(struct inode* inode, char* name, mode_t mode);
 int tmpfs_unlink(struct inode* inode, char* name);

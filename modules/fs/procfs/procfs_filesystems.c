@@ -9,7 +9,7 @@
 
 int procfs_filesystems_init(procfs_entry_t* e) {
     fsys_t* tmp;
-    for(tmp = fsys_queue; tmp; tmp = tmp->next) {
+    list_each(fsys_queue, tmp) {
         strcat(e->data, tmp->name);
         strcat(e->data, "\n");
     }

@@ -8,7 +8,7 @@
 #include "procfs.h"
 
 
-int procfs_mount(struct inode* dev, struct inode* dir) {
+int procfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     (void) dev;
 
 
@@ -21,6 +21,7 @@ int procfs_mount(struct inode* dev, struct inode* dir) {
     dir->write = NULL;
     dir->ioctl = NULL;
     dir->rename = NULL;
+    dir->mtinfo = info;
 
 
     procfs_entry_t* sb = (procfs_entry_t*) kmalloc(sizeof(procfs_entry_t), GFP_KERNEL);

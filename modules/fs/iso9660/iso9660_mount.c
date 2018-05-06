@@ -6,7 +6,7 @@
 
 #include "iso9660.h"
 
-int iso9660_mount(struct inode* dev, struct inode* dir) {
+int iso9660_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
 
     if(unlikely(!dev || !dir))
         return -1;
@@ -40,6 +40,7 @@ int iso9660_mount(struct inode* dev, struct inode* dir) {
     dir->unlink = iso9660_unlink;
 
     dir->userdata = (void*) ctx;
+    dir->mtinfo = info;
 
     return 0;
 }

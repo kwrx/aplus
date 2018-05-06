@@ -50,6 +50,9 @@ PROCFS_ENTRY(filesystems);
 PROCFS_ENTRY(io);
 PROCFS_ENTRY(meminfo);
 PROCFS_ENTRY(modules);
+PROCFS_ENTRY(mountinfo);
+PROCFS_ENTRY(mounts);
+PROCFS_ENTRY(mountstats);
 PROCFS_ENTRY(pid);
 PROCFS_ENTRY(root);
 PROCFS_ENTRY(stat);
@@ -63,7 +66,7 @@ PROCFS_ENTRY(version);
 procfs_entry_t* __procfs_mkentry(procfs_entry_t* parent, volatile task_t* task, char* name,
                                     int (*init) (procfs_entry_t*), int (*update) (procfs_entry_t*), void* arg);
 
-int procfs_mount(struct inode* dev, struct inode* dir);
+int procfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info);
 int procfs_read(struct inode* inode, void* ptr, off_t pos, size_t len);
 int procfs_open(struct inode* inode);
 struct inode* procfs_finddir(struct inode* inode, char* name);

@@ -51,6 +51,7 @@ struct inode* procfs_finddir(struct inode* inode, char* name) {
 
         child->childs = NULL;
         child->userdata = v;
+        child->mtinfo = inode->mtinfo;
 
         if(!S_ISDIR(v->mode))
             child->read = procfs_read;

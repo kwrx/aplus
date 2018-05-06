@@ -155,6 +155,7 @@ int iso9660_open(struct inode* inode) {
             memcpy(&cctx->dir, nodes, sizeof(iso9660_dir_t));
 
             child->userdata = (void*) cctx;
+            child->mtinfo = inode->mtinfo;
 
 
 

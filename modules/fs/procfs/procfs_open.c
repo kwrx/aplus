@@ -67,6 +67,7 @@ int procfs_open(struct inode* inode) {
 
         child->childs = NULL;
         child->userdata = v;
+        child->mtinfo = inode->mtinfo;
 
         if(!S_ISDIR(v->mode))
             child->read = procfs_read;

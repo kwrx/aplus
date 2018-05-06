@@ -12,7 +12,7 @@ static inode_t __vfs_root;
 inode_t* vfs_root = &__vfs_root;
 
 inode_t* devfs = NULL;
-fsys_t* fsys_queue = NULL;
+list(fsys_t*, fsys_queue);
  
 int vfs_open(struct inode* inode) {
     if(likely(inode->open))
@@ -136,6 +136,7 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
     child->mtime = timer_gettimestamp();
     
     child->parent = inode;
+    child->mtinfo = inode->mtinfo;
     child->link = NULL;
 
     child->childs = NULL;
@@ -257,64 +258,21 @@ int vfs_fsync(struct inode* inode) {
 
 
 fsys_t* vfs_fsys_find(const char* name) {
-    fsys_t* tmp;
-    for(tmp = fsys_queue; tmp; tmp = tmp->next)
+    list_each(fsys_queue, tmp)
         if(strcmp(tmp->name, name) == 0)
             return tmp;
 
     return NULL;
 }
 
-int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inode*)) {
+int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inode*, struct mountinfo*)) {
     if(vfs_fsys_find(name))
         return -1;
 
     fsys_t* fsys = (fsys_t*) kmalloc(sizeof(fsys_t), GFP_KERNEL);
     fsys->name = strdup(name);
     fsys->mount = mount;
-    fsys->next = fsys_queue;
-    fsys_queue = fsys;
-
-    return 0;
-}
-
-
-int vfs_mount(struct inode* dev, struct inode* dir, const char* fstype) {
-    fsys_t* fsys = vfs_fsys_find(fstype);
-    if(unlikely(!fsys)) {
-        errno = ENODEV;
-        return -1;
-    }
-
-    
-    return fsys->mount(dev, dir);
-}
-
-int vfs_umount(struct inode* dir) {
-
-    struct inode_childs* t0 = dir->childs;
-    struct inode_childs* t1 = NULL;
-    for(; t0; ) {
-        t1 = t0;
-        t0 = t0->next;
-
-        kfree(t1);
-    }
-
-
-    dir->childs = NULL;
-
-    dir->read = NULL;
-    dir->write = NULL;
-    dir->finddir = NULL;
-    dir->mknod = NULL;
-    dir->rename = NULL;
-    dir->unlink = NULL;
-    dir->chown = NULL;
-    dir->chmod = NULL;
-    dir->ioctl = NULL;
-    dir->open = NULL;
-    dir->close = NULL;
+    list_push(fsys_queue, fsys);
 
     return 0;
 }
@@ -393,8 +351,6 @@ EXPORT(vfs_unlink);
 EXPORT(vfs_chown);
 EXPORT(vfs_chmod);
 EXPORT(vfs_ioctl);
-EXPORT(vfs_mount);
-EXPORT(vfs_umount);
 EXPORT(vfs_fsys_register);
 EXPORT(vfs_fsys_find);
 EXPORT(vfs_inode);

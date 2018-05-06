@@ -41,6 +41,7 @@ int procfs_init(procfs_entry_t* sb) {
     list_push(sb->childs, procfs_mkentry(sb, NULL, filesystems));
     list_push(sb->childs, procfs_mkentry(sb, NULL, meminfo));
     list_push(sb->childs, procfs_mkentry(sb, NULL, modules));
+    list_push(sb->childs, procfs_mkentry(sb, NULL, mounts));
     //list_push(sb->childs, procfs_mkentry(sb, NULL, net));
     list_push(sb->childs, procfs_mkentry(sb, NULL, uptime));
     list_push(sb->childs, procfs_mkentry(sb, NULL, version));

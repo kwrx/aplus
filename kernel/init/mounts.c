@@ -1,6 +1,8 @@
+#define _WITH_MNTFLAGS 1
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/mm.h>
+#include <aplus/vfs.h>
 #include <libc.h>
 
 
@@ -42,7 +44,7 @@ int mounts_init(void) {
     if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != E_OK))
         kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
 
-     if(unlikely(sys_mount(NULL, "/root/dev", "devfs", 0, NULL) != E_OK))
+     if(unlikely(sys_mount(NULL, "/root/dev", "devfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != E_OK))
         kprintf(ERROR "%s: failed to mount /dev\n", rootmnt);
 
     if(unlikely(sys_chroot("/root") != E_OK))
@@ -90,8 +92,16 @@ int mounts_init(void) {
 
 
         int flags = 0;
-        if(strcmp(opt[3], "readonly") == 0)
-            flags |= MNT_RDONLY;
+
+        for(p = strtok(opt[3], ","); p; p = strtok(NULL, ",")) {
+            for(i = 0; mnt_flags[i].option; i++) {
+                if(strcmp(p, mnt_flags[i].option) != 0)
+                    continue;
+            
+                flags |= mnt_flags[i].value;
+                break;
+            }
+        }
 
         
         if(unlikely(mount(opt[0], opt[1], opt[2], flags, NULL) != 0))

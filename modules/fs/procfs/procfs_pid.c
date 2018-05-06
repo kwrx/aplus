@@ -26,6 +26,10 @@ int procfs_pid_init(procfs_entry_t* e) {
     list_push(e->childs, procfs_mkentry(e, e->task, stat));
     list_push(e->childs, procfs_mkentry(e, e->task, statm));
     list_push(e->childs, procfs_mkentry(e, e->task, status));
+    list_push(e->childs, procfs_mkentry(e, e->task, mountinfo));
+    list_push(e->childs, procfs_mkentry(e, e->task, mounts));
+    list_push(e->childs, procfs_mkentry(e, e->task, mountstats));
+
 
 
     return 0;

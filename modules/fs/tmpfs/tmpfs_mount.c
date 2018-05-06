@@ -6,7 +6,7 @@
 
 #include "tmpfs.h"
 
-int tmpfs_mount(struct inode* dev, struct inode* dir) {
+int tmpfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     (void) dev;
 
 
@@ -15,6 +15,7 @@ int tmpfs_mount(struct inode* dev, struct inode* dir) {
     dir->unlink = tmpfs_unlink;
     dir->mknod = tmpfs_mknod;
     dir->finddir = NULL;
+    dir->mtinfo = info;
 
     return 0;
 }

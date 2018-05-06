@@ -154,6 +154,7 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
 
     child->name = strdup(name);
     child->userdata = (void*) p;
+    child->mtinfo = parent->mtinfo;
     child->ino = ino;
     child->mode = p->inode.type;
     
@@ -194,7 +195,7 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
         *pchild = child;
 }
 
-static int ext2_mount(inode_t* dev, inode_t* dir) {
+static int ext2_mount(inode_t* dev, inode_t* dir, struct mountinfo* info) {
     
     superblock_t sb;
     vfs_read(dev, &sb, 1024, 1024);
@@ -238,6 +239,7 @@ static int ext2_mount(inode_t* dev, inode_t* dir) {
     p->blockchain = NULL;
 
     dir->userdata = (void*) p;
+    dir->mtinfo = info;
 
     return 0;
 }

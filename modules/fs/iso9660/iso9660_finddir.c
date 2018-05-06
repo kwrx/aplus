@@ -146,7 +146,7 @@ struct inode* iso9660_finddir(struct inode* inode, char* name) {
             memcpy(&cctx->dir, nodes, sizeof(iso9660_dir_t));
 
             child->userdata = (void*) cctx;
-
+            child->mtinfo = inode->mtinfo;
 
 
             
