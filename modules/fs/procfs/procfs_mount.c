@@ -25,13 +25,13 @@ int procfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
 
     info->stat.f_bsize = PAGE_SIZE;
     info->stat.f_frsize = PAGE_SIZE;
-    info->stat.f_blocks = 0x100000 / PAGE_SIZE;
-    info->stat.f_bfree = 0x100000 / PAGE_SIZE;
-    info->stat.f_bavail = 0x100000 / PAGE_SIZE;
-    info->stat.f_files = 0x1000;
-    info->stat.f_ffree = 0x1000;
-    info->stat.f_favail = 0x1000;
-    info->stat.f_namemax = BUFSIZ;
+    info->stat.f_blocks = 0;
+    info->stat.f_bfree = 0;
+    info->stat.f_bavail = 0;
+    info->stat.f_files = 0;
+    info->stat.f_ffree = 0;
+    info->stat.f_favail = 0;
+    info->stat.f_namemax = UINT32_MAX;
 
 
     procfs_entry_t* sb = (procfs_entry_t*) kmalloc(sizeof(procfs_entry_t), GFP_KERNEL);

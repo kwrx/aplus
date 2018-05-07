@@ -88,16 +88,16 @@ static int pfsys(char* path, char* dev, char* fsys) {
             fprintf(stdout, 
                 "%12d %12d %12d %8d%%   %s\n",
                 (int) (inodes ? st.f_files 
-                            : (st.f_blocks * st.f_bsize) / 1024),
+                              : (st.f_blocks * st.f_bsize) / 1024),
 
                 (int) (inodes ? st.f_files - st.f_ffree
-                            : ((st.f_blocks - st.f_bfree) * st.f_bsize) / 1024),
+                              : ((st.f_blocks - st.f_bfree) * st.f_bsize) / 1024),
 
                 (int) (inodes ? st.f_ffree
-                            : (st.f_bfree * st.f_bsize) / 1024),
+                              : (st.f_bfree * st.f_bsize) / 1024),
 
-                (int) (inodes ? ((double) (st.f_files - st.f_ffree) / (double) st.f_files * 100.0)
-                            : ((double) (st.f_blocks - st.f_bfree) / (double) st.f_blocks * 100.0)),
+                (int) (inodes ? (st.f_files ? ((double) (st.f_files - st.f_ffree) / (double) st.f_files * 100.0) : 0)
+                              : (st.f_blocks ? ((double) (st.f_blocks - st.f_bfree) / (double) st.f_blocks * 100.0) : 0)),
                 path
             );
             break;
@@ -110,16 +110,16 @@ static int pfsys(char* path, char* dev, char* fsys) {
             fprintf(stdout, 
                 "%12s %12s %12s %8d%%   %s\n",
                 sn (inodes ? st.f_files 
-                            : (st.f_blocks * st.f_bsize), pmode),
+                           : (st.f_blocks * st.f_bsize), pmode),
 
                 sn (inodes ? st.f_files - st.f_ffree
-                            : ((st.f_blocks - st.f_bfree) * st.f_bsize), pmode),
+                           : ((st.f_blocks - st.f_bfree) * st.f_bsize), pmode),
 
                 sn (inodes ? st.f_ffree
-                            : (st.f_bfree * st.f_bsize), pmode),
+                           : (st.f_bfree * st.f_bsize), pmode),
 
-                (int) (inodes ? ((double) (st.f_files - st.f_ffree) / (double) st.f_files * 100.0)
-                            : ((double) (st.f_blocks - st.f_bfree) / (double) st.f_blocks * 100.0)),
+                (int) (inodes ? (st.f_files ? ((double) (st.f_files - st.f_ffree) / (double) st.f_files * 100.0) : 0)
+                              : (st.f_blocks ? ((double) (st.f_blocks - st.f_bfree) / (double) st.f_blocks * 100.0) : 0)),
                 path
             );
             break;
