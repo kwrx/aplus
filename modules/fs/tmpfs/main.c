@@ -15,7 +15,7 @@ MODULE_LICENSE("GPL");
 
 
 int init(void) {
-    if(vfs_fsys_register("tmpfs", tmpfs_mount) != E_OK)
+    if(vfs_fsys_register(TMPFS_MAGIC, "tmpfs", tmpfs_mount) != E_OK)
         return -1;
 
     return 0;

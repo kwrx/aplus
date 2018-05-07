@@ -52,5 +52,8 @@ struct inode* tmpfs_mknod(struct inode* inode, char* name, mode_t mode) {
     child->open = NULL;
     child->close = NULL;
 
+    inode->mtinfo->stat.f_ffree--;
+    inode->mtinfo->stat.f_favail--;
+
     return child;
 }

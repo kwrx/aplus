@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <signal.h>
 #include <unistd.h>
 #include <getopt.h>
 #include <aplus/base.h>
@@ -27,6 +29,12 @@ static void show_version(int argc, char** argv) {
     );
     
     exit(0);
+}
+
+
+static void atsig_handler(int sig) {
+    fprintf(stderr, "syncd: service stopped\n");
+    exit(sig);
 }
 
 
@@ -61,7 +69,9 @@ int main(int argc, char** argv) {
     }
   
     nice(19);
-
+    signal(SIGTERM, atsig_handler);
+    signal(SIGQUIT, atsig_handler);
+    signal(SIGKILL, atsig_handler);
 
     if(!deamon)
         sync();
@@ -79,7 +89,10 @@ int main(int argc, char** argv) {
         
         FILE* fp = fopen("/dev/log", "w");
         if(fp)
-            fprintf(fp, "syncd: running as deamon every %d seconds\n", s);
+            stderr = fp;
+
+        setbuf(stderr, NULL);
+        fprintf(stderr, "syncd: running as deamon every %d seconds\n", s);
 
 
         for(;; sleep(s))

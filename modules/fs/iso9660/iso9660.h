@@ -63,7 +63,10 @@ typedef struct iso9660_pvd {
     char volid[32];
     char null0[8];
     
-    uint64_t volsize;
+    struct {
+        int lsb;
+        int msb;
+    } volsize;
     
     char null1[32];
     

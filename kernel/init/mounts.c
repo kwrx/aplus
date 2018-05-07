@@ -44,7 +44,7 @@ int mounts_init(void) {
     if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != E_OK))
         kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
 
-     if(unlikely(sys_mount(NULL, "/root/dev", "devfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != E_OK))
+     if(unlikely(sys_mount(NULL, "/root/dev", "devtmpfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != E_OK))
         kprintf(ERROR "%s: failed to mount /dev\n", rootmnt);
 
     if(unlikely(sys_chroot("/root") != E_OK))

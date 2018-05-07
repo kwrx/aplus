@@ -265,11 +265,12 @@ fsys_t* vfs_fsys_find(const char* name) {
     return NULL;
 }
 
-int vfs_fsys_register(const char* name, int (*mount) (struct inode*, struct inode*, struct mountinfo*)) {
+int vfs_fsys_register(uint32_t id, const char* name, int (*mount) (struct inode*, struct inode*, struct mountinfo*)) {
     if(vfs_fsys_find(name))
         return -1;
 
     fsys_t* fsys = (fsys_t*) kmalloc(sizeof(fsys_t), GFP_KERNEL);
+    fsys->id = id;
     fsys->name = strdup(name);
     fsys->mount = mount;
     list_push(fsys_queue, fsys);

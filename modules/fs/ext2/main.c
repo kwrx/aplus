@@ -241,11 +241,22 @@ static int ext2_mount(inode_t* dev, inode_t* dir, struct mountinfo* info) {
     dir->userdata = (void*) p;
     dir->mtinfo = info;
 
+
+    info->stat.f_bsize = 1024 << sb.blocksize_hint;
+    info->stat.f_frsize = 1024 << sb.fragmentsize_hint;
+    info->stat.f_blocks = sb.blocks;
+    info->stat.f_bfree = sb.unallocatedblocks;
+    info->stat.f_bavail = sb.unallocatedblocks;
+    info->stat.f_files = sb.inodes;
+    info->stat.f_ffree = sb.unallocatedinodes;
+    info->stat.f_favail = sb.unallocatedinodes;
+    info->stat.f_namemax = UINT32_MAX;
+
     return 0;
 }
 
 int init(void) {
-    if(vfs_fsys_register("ext2", ext2_mount) != E_OK)
+    if(vfs_fsys_register(EXT2_SUPER_MAGIC, "ext2", ext2_mount) != E_OK)
         return -1;
 
     return 0;

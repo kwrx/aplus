@@ -15,7 +15,7 @@ MODULE_LICENSE("GPL");
 
 
 int init(void) {
-    if(vfs_fsys_register("iso9660", iso9660_mount) != E_OK)
+    if(vfs_fsys_register(ISOFS_SUPER_MAGIC, "iso9660", iso9660_mount) != E_OK)
         return -1;
 
     return 0;

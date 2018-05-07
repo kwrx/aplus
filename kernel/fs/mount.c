@@ -70,9 +70,31 @@ static int __vfs_mount(struct inode* dev, struct inode* dir, const char* fstype,
         return -1;
     }
 
+
+
+    strncpy(info->fstype, fstype, sizeof(info->fstype));
     info->flags = flags;
     info->dev = dev;
-    strncpy(info->fstype, fstype, sizeof(info->fstype));
+    info->stat.f_fsid = fsys->id;
+
+    #define _(x, y)                         \
+        if(flags & x)                       \
+            info->stat.f_flag |= y
+
+    
+    _(MS_MANDLOCK, ST_MANDLOCK);
+    _(MS_NOATIME, ST_NOATIME);
+    _(MS_NODEV, ST_NODEV);
+    _(MS_NODIRATIME, ST_NODIRATIME);
+    _(MS_NOEXEC, ST_NOEXEC);
+    _(MS_RDONLY, ST_RDONLY);
+    _(MS_RELATIME, ST_RELATIME);
+    _(MS_SYNCHRONOUS, ST_SYNCHRONOUS);
+
+    #undef _
+
+
+
 
     if(fsys->mount(dev, dir, info) != 0) {
         kfree(info);

@@ -175,6 +175,8 @@ SC(0, 57, pause)
 SC(5, 58, select)
 SC(1, 59, dup)
 SC(1, 60, nice)
+SC(2, 61, statvfs)
+SC(2, 62, fstatvfs)
 
 /* Socket */
 SC(3, 70, socket)

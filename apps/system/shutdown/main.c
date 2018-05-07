@@ -56,20 +56,33 @@ static void show_version(int argc, char** argv) {
 
 
 static int shutdown_exec(uint8_t mode) {
-    fprintf(stdout, "\n Shutdown:\n");
+    fprintf(stdout, "\nThe system is going down NOW!\n");
     unlink("/tmp/shutdown.lock");
+
+
+    signal(SIGTERM, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
     
 
-    fprintf(stdout, "\t- Killing processes\n");
-    if(kill(-1, SIGKILL) != 0)
+    fprintf(stdout, " - Sent signal to all processes\n");
+    if(kill(-1, SIGTERM) != 0)
         perror("shutdown");
-    
 
-    
-    fprintf(stdout, "\t- Synchronize cached writes\n");
+    sleep(1);
     sync();
 
-    fprintf(stdout, "\t- Done! Goodbye!\n");
+    
+    fprintf(stdout, " - Killing the survivors\n");
+    if(kill(-1, SIGKILL) != 0)
+        perror("shutdown");
+
+    sleep(1);
+    sync();
+
+
+
+    fprintf(stdout, " - Done! Goodbye!\n");
+    fflush(stdout);
 
 
     int fd = open(PATH_PWM, O_RDONLY);

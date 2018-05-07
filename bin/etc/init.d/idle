@@ -1,4 +1,0 @@
-#!/usr/sbin/dux
-
-
-exec("/usr/sbin/idle --deamon");

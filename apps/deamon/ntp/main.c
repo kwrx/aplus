@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
+#include <signal.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sys/time.h>
@@ -47,6 +48,12 @@ static void show_version(int argc, char** argv) {
     );
     
     exit(0);
+}
+
+
+static void atsig_handler(int sig) {
+    fprintf(stderr, "ntpd: service stopped\n");
+    exit(sig);
 }
 
 
@@ -164,6 +171,9 @@ int main(int argc, char** argv) {
     }
   
     nice(19);
+    signal(SIGTERM, atsig_handler);
+    signal(SIGQUIT, atsig_handler);
+    signal(SIGKILL, atsig_handler);
 
 
     if(!deamon)
@@ -184,6 +194,7 @@ int main(int argc, char** argv) {
         if(fp)
             stderr = fp;
 
+        setbuf(stderr, NULL);
         fprintf(stderr, "ntpd: running as deamon every %d seconds\n", s);
 
 

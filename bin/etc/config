@@ -34,6 +34,10 @@ idle.priority.high=3
 idle.priority=$idle.priority.low
 
 
+# -- TMP Filesystem
+tmpfs.size=0x1000000
+tmpfs.files=0x100000
+
 # -- I/O Scheduler
 iosched.priority=0
 iosched.blksize=4194304

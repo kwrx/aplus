@@ -4,7 +4,7 @@
 
 # |   Device   |   Directory   |   Filesystem   |    Flags    |
 
-      none         /proc           procfs           nodev,nosuid,rw
+      none         /proc           proc             nodev,nosuid,rw
       none         /tmp            tmpfs            nodev,nosuid,rw
       /usr/bin     /bin            none             bind
       /usr/sbin    /sbin           none             bind

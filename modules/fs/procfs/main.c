@@ -15,7 +15,7 @@ MODULE_LICENSE("GPL");
 
 
 int init(void) {
-    if(vfs_fsys_register("procfs", procfs_mount) != E_OK)
+    if(vfs_fsys_register(PROC_SUPER_MAGIC, "proc", procfs_mount) != E_OK)
         return -1;
 
     return 0;

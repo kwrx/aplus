@@ -136,7 +136,7 @@ static inline uint64_t rdmsr(uint32_t i) {
 static inline uint64_t rdtsc(void) {
     uint64_t r;
     __asm__ __volatile__ (
-        "rdtsc\n" : "=A"(r));
+        "lfence; rdtsc; lfence\n" : "=A"(r));
     return r;
 } 
 

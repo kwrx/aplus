@@ -42,5 +42,16 @@ int iso9660_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) 
     dir->userdata = (void*) ctx;
     dir->mtinfo = info;
 
+
+    info->stat.f_bsize =
+    info->stat.f_frsize = ctx->pvd.logical_blksize;
+    info->stat.f_blocks = ctx->pvd.volsize.lsb;
+    info->stat.f_bfree = 0;
+    info->stat.f_bavail = 0;
+    info->stat.f_files = 0;
+    info->stat.f_ffree = 0;
+    info->stat.f_favail = 0;
+    info->stat.f_namemax = ISO9660_NAME_LENGTH;
+
     return 0;
 }

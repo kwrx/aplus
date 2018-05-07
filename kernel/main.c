@@ -10,6 +10,40 @@
 
 
 
+int idle(void) {
+    current_task->name = "[systemd]";
+    current_task->description = "System Process";
+
+
+    int p;
+    if((p = (int) sysconfig("idle.priority", 0)) > 0) {
+        switch(p) {
+            case 1:
+                current_task->priority = TASK_PRIO_MIN;
+                break;
+            case 2:
+                current_task->priority = TASK_PRIO_REGULAR;
+                break;
+            case 3:
+                current_task->priority = TASK_PRIO_MAX;
+                break;
+            default:
+                for(;;)
+                    sys_yield();
+        }
+    }
+
+
+    for(;;)
+#if defined(__i386__) || defined(__x86_64__)
+        __builtin_ia32_pause()
+#endif
+    ;
+
+    return -1;
+}
+
+
 int main(int argc, char** argv) {
     (void) libk_init();
     (void) mm_init();
@@ -51,33 +85,23 @@ int main(int argc, char** argv) {
     char* __argv[] = { "/usr/sbin/init", NULL };
     char* __envp[] = { NULL };
 
-    do {
-        pid_t p = sys_fork();
-        switch(p) {
-            case -1:
-                kprintf(ERROR "PANIC! fork() failed! System Halted!\n");
-                return 0;
-            
-            case 0:
-                if(sys_execve(__argv[0], __argv, __envp) < 0)
-                    kprintf(ERROR "%s: %s\n", __argv[0], strerror(errno));
-
-                sys_exit(-1);
-
-            default:
-                current_task->name = "[systemd]";
-                current_task->description = "System Process";
-                break;
-        }
+   
+    pid_t p = sys_fork();
+    switch(p) {
+        case -1:
+            kprintf(ERROR "PANIC! fork() failed! System Halted!\n");
+            return 0;
         
+        case 0:
+            if(sys_execve(__argv[0], __argv, __envp) < 0)
+                kprintf(ERROR "%s: %s\n", __argv[0], strerror(errno));
 
-        if(sys_waitpid(p, NULL, 0) < 0) {
-            kprintf(WARN "waitpid(): could not wait for init process!\n");
-            
-            for(;;)
-                sys_pause();
-        }
-    } while(1);
+            sys_exit(-1);
 
-    return 0;
+        default:
+            break;
+    }
+    
+
+    return idle();
 }

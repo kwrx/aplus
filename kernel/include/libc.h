@@ -26,5 +26,6 @@
 #include <sys/poll.h>
 #include <sys/wait.h>
 #include <sys/mount.h>
+#include <sys/statvfs.h>
 #include <sched.h>
 #include <signal.h>
