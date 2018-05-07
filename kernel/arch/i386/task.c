@@ -291,6 +291,11 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
             register int q;
             q = list_back(current_task->signal.s_queue);
             list_pop_back(current_task->signal.s_queue);
+            
+
+            if(unlikely(q == SIGKILL))
+                sys_exit((SIGKILL & 0177) << 8);
+            
             current_task->signal.s_handler(q);
         }
         

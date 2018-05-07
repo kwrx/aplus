@@ -58,6 +58,8 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
             sys_kill(-tio->pgrp, SIGKILL);
         else if(*buf == tio->ios.c_cc[VQUIT])
             sys_kill(-tio->pgrp, SIGQUIT);
+        else if(*buf == tio->ios.c_cc[VSUSP])
+            sys_kill(-tio->pgrp, SIGSTOP);
         else if(*buf == tio->ios.c_cc[VSTOP])
             tio->output = 0;
         else if(*buf == tio->ios.c_cc[VSTART])

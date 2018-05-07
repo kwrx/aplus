@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <getopt.h>
+#include <fcntl.h>
 #include <aplus/base.h>
 #include <aplus/sysconfig.h>
 
@@ -71,7 +72,6 @@ int main(int argc, char** argv) {
     nice(19);
     signal(SIGTERM, atsig_handler);
     signal(SIGQUIT, atsig_handler);
-    signal(SIGKILL, atsig_handler);
 
     if(!deamon)
         sync();
@@ -84,16 +84,19 @@ int main(int argc, char** argv) {
         if(strcmp(argv[0], "[syncd]") != 0)
             execl("/proc/self/exe", "[syncd]", "--deamon", NULL);
         
-        
+        setsid();
+        chdir("/");
+
+        int fd = open("/dev/log", O_WRONLY);
+        if(fd >= 0) {
+            dup2(fd, STDIN_FILENO);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+        }
+
+
         int s = (int) sysconfig("syncd.timeout", 10);
-        
-        FILE* fp = fopen("/dev/log", "w");
-        if(fp)
-            stderr = fp;
-
-        setbuf(stderr, NULL);
         fprintf(stderr, "syncd: running as deamon every %d seconds\n", s);
-
 
         for(;; sleep(s))
             sync();

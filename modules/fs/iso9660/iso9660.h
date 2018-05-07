@@ -72,7 +72,12 @@ typedef struct iso9660_pvd {
     
     uint32_t volsetsize;
     uint32_t volnumber;
-    uint32_t logical_blksize;
+    
+    struct {
+        short lsb;
+        short msb;
+    } logical_blksize;
+
     uint64_t path_size;
     uint32_t path_lba;
     uint32_t optpath_lba;

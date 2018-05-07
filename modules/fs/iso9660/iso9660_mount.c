@@ -44,7 +44,7 @@ int iso9660_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) 
 
 
     info->stat.f_bsize =
-    info->stat.f_frsize = ctx->pvd.logical_blksize;
+    info->stat.f_frsize = ctx->pvd.logical_blksize.lsb;
     info->stat.f_blocks = ctx->pvd.volsize.lsb;
     info->stat.f_bfree = 0;
     info->stat.f_bavail = 0;

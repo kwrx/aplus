@@ -1,8 +1,10 @@
 #include <signal.h>
 #include <stdio.h>
+#include <string.h>
 
 
 int __aplus_crt__ = 1;
+char* __progname[BUFSIZ];
 
 extern void exit(int);
 extern int main(int, char**, char**);
@@ -21,7 +23,7 @@ extern void __install_sighandler(void*);
 
 
 static void __default_sighandler__(int sig) {
-	psignal(sig, "exception");
+	psignal(sig, __progname);
 	signal(sig, __default_sighandler__);
 	_exit((sig & 0177) << 8);
 }
@@ -48,6 +50,11 @@ void _start(char** argv, char** env) {
 	for(i = (long) &__bss_start; i < (long) &end; i++)
 		*(unsigned char*) i = 0;
 
+	char* p;
+	if(argv && argv[0])
+		strncpy(__progname, (p = strrchr(argv[0], '/')) 
+								? p + 1 
+								: argv[0], BUFSIZ);
 
 	int argc = 0;
 	if(argv)

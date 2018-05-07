@@ -108,7 +108,8 @@ int main(int argc, char** argv, char** env) {
     }
     
 
-
+    pid_t pgid = -1;
+    ioctl(STDIN_FILENO, TIOCSPGRP, &pgid);
     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 
         

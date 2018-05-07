@@ -4,6 +4,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <signal.h>
+#include <fcntl.h>
 #include <time.h>
 #include <sys/types.h>
 #include <sys/time.h>
@@ -186,15 +187,20 @@ int main(int argc, char** argv) {
 
         if(strcmp(argv[0], "[ntpd]") != 0)
             execl("/proc/self/exe", "[ntpd]", "--deamon", NULL);
-        
-        
-        int s = (int) sysconfig("ntpd.timeout", 10);
-        
-        FILE* fp = fopen("/dev/log", "w");
-        if(fp)
-            stderr = fp;
 
-        setbuf(stderr, NULL);
+        setsid();
+        chdir("/");
+
+        int fd = open("/dev/log", O_WRONLY);
+        if(fd >= 0) {
+            dup2(fd, STDIN_FILENO);
+            dup2(fd, STDOUT_FILENO);
+            dup2(fd, STDERR_FILENO);
+        }
+        
+
+
+        int s = (int) sysconfig("ntpd.timeout", 10);
         fprintf(stderr, "ntpd: running as deamon every %d seconds\n", s);
 
 

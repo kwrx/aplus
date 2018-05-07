@@ -70,14 +70,24 @@ int tty_deamon(void* unused) {
                     break;
 
                 switch(e.ev_key.vkey) {
+                    case KEY_D:
+                        sys_write(stdio, &ios.c_cc[VEOF], 1);
+                        break;
+                    case KEY_H:
+                        sys_write(stdio, &ios.c_cc[VERASE], 1);
+                        break;
                     case KEY_C:
+                        sys_write(stdio, &ios.c_cc[VINTR], 1);
+                        break;
+                    case KEY_U:
+                    case KEY_X:
                         sys_write(stdio, &ios.c_cc[VKILL], 1);
                         break;
-                    case KEY_D:
+                    case KEY_BACKSLASH:
                         sys_write(stdio, &ios.c_cc[VQUIT], 1);
                         break;
                     case KEY_Z:
-                        sys_write(stdio, &ios.c_cc[VINTR], 1);
+                        sys_write(stdio, &ios.c_cc[VSUSP], 1);
                         break;
                     case KEY_S:
                         sys_write(stdio, &ios.c_cc[VSTOP], 1);

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <pwd.h>
@@ -15,6 +16,12 @@
         fprintf(stderr, "failed, returned %p, errno: %d (%s)\n", r, errno, strerror(errno));    \
     else                                                                                        \
         fprintf(stderr, "success: returned %p\n", r);                                           \
+}
+
+
+void sighandler(int sig) {
+    fprintf(stderr, "signal: %d\n", sig);
+    signal(sig, sighandler);
 }
 
 int main(int argc, char** argv) {
@@ -31,6 +38,15 @@ int main(int argc, char** argv) {
     //__test(getpass("root"), char*, NULL);
     __test(ttyname(0), char*, NULL);
     __test(getpwnam("root"), struct passwd*, NULL);
+
+
+    signal(SIGTERM, sighandler);
+    signal(SIGINT, sighandler);
+    signal(SIGKILL, sighandler);
+
+
+    for(;;)
+        pause();
 
     return 0;
 }
