@@ -36,22 +36,16 @@ static void sched_next(void) {
         /* Check Alarms */
         if(unlikely(current_task->alarm > 0)) {
             if(likely(current_task->alarm <= timer_gettimestamp())) {
-                list_push(current_task->signal.s_queue, SIGALRM);
                 current_task->alarm = 0;
+                sched_signal(current_task, SIGALRM);
             }
         }
 
 
+
         if(likely(current_task->status != TASK_STATUS_SLEEP))
             continue;
-
-
         
-        /* Check Signals */
-        if(unlikely(list_length(current_task->signal.s_queue) > 0 && current_task->signal.s_handler)) {
-            current_task->status = TASK_STATUS_READY;
-            break;
-        }
 
 
         /* Check Sleep */
@@ -71,14 +65,13 @@ static void sched_next(void) {
         
         /* Check Waiters */
         list_each(current_task->waiters, w) {
-            if(likely(w->status != TASK_STATUS_KILLED))
+            if(likely(w->status != TASK_STATUS_KILLED || w->status != TASK_STATUS_STOP))
                 continue;
 
             current_task->status = TASK_STATUS_READY;
             break;
         }
-
-
+        
     } while(current_task->status != TASK_STATUS_READY);
 }
 
@@ -90,6 +83,46 @@ pid_t sched_nextpid() {
     return nextpid++;
 }
 
+
+void sched_dosignals() {
+    if(unlikely(
+        (list_length(current_task->signal.s_queue) > 0) &&
+        (current_task->signal.s_handler != NULL)
+    )) {            
+        register int sig;
+        sig = list_back(current_task->signal.s_queue);
+        list_pop_back(current_task->signal.s_queue);
+        
+        switch(sig) {
+            case SIGKILL:
+                sys_exit((1 << 31) | W_EXITCODE(0, SIGKILL));
+                break;
+            case SIGSTOP:
+                sys_exit((1 << 31) | W_STOPCODE(SIGSTOP));
+                break;
+            default:
+                current_task->signal.s_handler(sig);
+                break;
+        }
+    }
+}
+
+
+
+void sched_signal(task_t* tk, int sig) {
+    if(unlikely(!tk))
+        return;
+
+    if(unlikely(!tk->signal.s_handler))
+        return;
+
+
+
+    list_push(tk->signal.s_queue, sig);
+
+    if(tk->status != TASK_STATUS_STOP || sig == SIGCONT)
+        tk->status = TASK_STATUS_READY;
+}
 
 
 void schedule(void) {

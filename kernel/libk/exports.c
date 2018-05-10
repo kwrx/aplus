@@ -6,6 +6,7 @@
 #include <aplus/utils/hashmap.h>
 #include <aplus/utils/unicode.h>
 #include <libc.h>
+#include <vterm.h>
 
 #if defined(__i386__)
 extern int __divdi3;
@@ -50,6 +51,9 @@ EXPORT(tmpnam);
 EXPORT(atoi);
 EXPORT(atof);
 EXPORT(sscanf);
+
+
+/* libaplus */
 EXPORT(_list_push);
 EXPORT(_list_push_front);
 EXPORT(_list_front);
@@ -68,6 +72,21 @@ EXPORT(hashmap_free);
 EXPORT(__sysconfig);
 EXPORT(utf8_to_ucs2);
 EXPORT(utf8_bytes);
+
+
+/* libvterm */
+EXPORT(vterm_screen_set_callbacks);
+EXPORT(vterm_state_reset);
+EXPORT(vterm_screen_reset);
+EXPORT(vterm_obtain_screen);
+EXPORT(vterm_input_write);
+EXPORT(vterm_new_with_allocator);
+EXPORT(vterm_obtain_state);
+EXPORT(vterm_parser_set_callbacks);
+EXPORT(vterm_set_utf8);
+
+
+
 
 #if defined(__i386__)
 EXPORT(__divdi3);

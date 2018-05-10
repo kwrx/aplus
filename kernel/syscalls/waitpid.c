@@ -46,7 +46,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
 
     pid_t p = -1;
     list_each(current_task->waiters, w) {
-        if(w->status != TASK_STATUS_KILLED)
+        if(w->status != TASK_STATUS_KILLED || w->status != TASK_STATUS_STOP)
             continue;
             
         if(status)

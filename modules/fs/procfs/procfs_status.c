@@ -76,8 +76,9 @@ int procfs_status_update(procfs_entry_t* e) {
         (
             (tk->status == TASK_STATUS_READY   ? "S (sleeping)"   :
             (tk->status == TASK_STATUS_SLEEP   ? "S (sleeping)"   :
+            (tk->status == TASK_STATUS_STOP    ? "T (stopped)"    :
             (tk->status == TASK_STATUS_RUNNING ? "R (running)"    :
-            (tk->status == TASK_STATUS_KILLED  ? "Z (zombie)" : "X (dead)"))))
+            (tk->status == TASK_STATUS_KILLED  ? "Z (zombie)" : "X (dead)")))))
         ),
         tk->tgid,
         0,

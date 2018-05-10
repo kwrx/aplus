@@ -282,23 +282,8 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     
     eip = read_eip();
     if(eip == 0) {
-        if(unlikely(
-            (list_length(current_task->signal.s_queue) > 0) &&
-            (current_task->signal.s_handler != NULL)
-        )) {
-            irq_ack(0);
-            
-            register int q;
-            q = list_back(current_task->signal.s_queue);
-            list_pop_back(current_task->signal.s_queue);
-            
-
-            if(unlikely(q == SIGKILL))
-                sys_exit((SIGKILL & 0177) << 8);
-            
-            current_task->signal.s_handler(q);
-        }
-        
+        irq_ack(0);
+        sched_dosignals();
         return;
     }
 

@@ -41,7 +41,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
             }
 
 
-            list_push(tmp->signal.s_queue, SIGMSG);
+            sched_signal(tmp, SIGMSG);
             return len;
         }
     }

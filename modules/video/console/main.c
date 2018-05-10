@@ -14,28 +14,21 @@
 #include <sys/termios.h>
 
 #include <wchar.h>
+#include <vterm.h>
 #include <aplus/utils/unicode.h>
-
 
 #include "console-font.h"
 
-MODULE_NAME("pc/video/console");
-MODULE_DEPS("arch/x86");
+MODULE_NAME("video/console");
+MODULE_DEPS("video/fb");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#define CONSOLE_VRAM                0xb8000
+
 #define CONSOLE_WIDTH               80
 #define CONSOLE_HEIGHT              25
 
-
-#if defined(__i386__) || defined(__x86_64__)
-#    if defined(__i386__)
-#        include <arch/i386/i386.h>
-#    elif defined(__x86_64__)
-#        include <arch/x86_64/x86_64.h>
-#    endif
 
 
 struct cc {
@@ -61,7 +54,6 @@ struct cc {
 
 
 
-#include "console-output-textmode.h"
 #include "console-output-32.h"
 #include "console-output-24.h"
 #include "console-output-16.h"
@@ -78,6 +70,9 @@ static inline uint32_t __C(struct cc* cc, uint32_t p) {
 }
 
 static void plot_value(struct cc* cc, int32_t uvalue) {
+    if(unlikely(!cc->output))
+        return;
+
     char value = uvalue & 0xFF;
 
     if(cc->escape) {
@@ -293,15 +288,6 @@ static void plot_value(struct cc* cc, int32_t uvalue) {
             cc->output(cc, __C(cc, cc->p + x), cc->style, u' ');
 
     }
-
-
-    if(cc->vmode == KD_TEXT) {
-        /* Update VGA Cursor */
-        outb(0x3D4, 0x0F);
-        outb(0x3D5, cc->p & 0xFF);
-        outb(0x3D4, 0x0E);
-        outb(0x3D5, (cc->p >> 8) & 0xFF);
-    }
 }
 
 
@@ -373,8 +359,6 @@ static int console_init_graphics(struct cc* cc) {
             break;
     }
 
-
-
     kprintf(INFO "console: set graphics mode %dx%dx%d\n", var.xres, var.yres, var.bits_per_pixel);
     return 0;
 }
@@ -432,8 +416,8 @@ static int console_ioctl(struct inode* inode, int req, void* arg) {
         case KDSETMODE:
             switch((int) arg) {
                 case KD_TEXT:
-                    cc->vmode = KD_TEXT;
-                    return 0;
+                    errno = ENOSYS;
+                    return -1;
                 case KD_GRAPHICS:
                     if(console_init_graphics(cc) != 0)
                         return -1;
@@ -470,8 +454,11 @@ int init(void) {
     cc->vmode = KD_TEXT;
     cc->width = CONSOLE_WIDTH;
     cc->height = CONSOLE_HEIGHT;
-    cc->output = console_output_textmode;
-    cc->scroll = console_scroll_textmode;
+    cc->output = NULL;
+    cc->scroll = NULL;
+
+    console_init_graphics(cc);
+
 
     int i;
     for(i = 0; i < cc->width * cc->height; i++)
@@ -485,15 +472,6 @@ int init(void) {
 
     return 0;
 }
-
-
-#else
-
-int init(void) {
-    return -1;
-}
-
-#endif
 
 
 int dnit(void) {

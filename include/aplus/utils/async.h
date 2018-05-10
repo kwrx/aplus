@@ -16,8 +16,13 @@ typedef pthread_t async_t;
 #define async(x, y) ({                                              \
     pthread_t th;                                                   \
     if(pthread_create(&th, NULL,                                    \
-        ({ void* __fn__ (void* arg) { x };                          \
-            __fn__; }), (void*) y) != 0)                            \
+        ({                                                          \
+            void* __fn__ (void* __arg) {                            \
+                typeof(y) arg = (typeof(y)) __arg;                  \
+                x                                                   \
+            };                                                      \
+            __fn__;                                                 \
+        }), (void*) y) != 0)                                        \
         return -1;                                                  \
                                                                     \
     th;                                                             \
@@ -39,5 +44,12 @@ typedef pthread_t async_t;
 
 #define async_timer(x, y, us)                                       \
     async(for(;; sleep(us)) { x }, y)
+
+#define aexit(e)                                                    \
+    pthread_exit((void*) e)
+
+#define ayield()                                                    \
+    pthread_yield()
+
 
 #endif

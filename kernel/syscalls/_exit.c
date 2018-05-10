@@ -7,27 +7,44 @@
 #include <libc.h>
 
 SYSCALL(0, exit,
-__attribute__((noreturn))
 void sys_exit(int status) {
     KASSERT(current_task != kernel_task);
 
     INTR_OFF;
     current_task->status = TASK_STATUS_KILLED;
-    current_task->exit.value = status & 0xFFFF;
+    
+    if(status & (1 << 31))
+        current_task->exit.value = status & 0x7FFF;
+    else
+        current_task->exit.value = (status & 0377) << 8;    
+
 
 #if DEBUG
-    kprintf(INFO "exit: task %d (%s) exited with %04X (U: %0.3fs, C: %0.3fs, VM: %d)\n", 
+    kprintf(INFO "exit: task %d (%s) %s with %04X (U: %0.3fs, C: %0.3fs, VM: %d)\n", 
         current_task->pid, 
         current_task->name,
-        status & 0xFFFF,
+        WIFSTOPPED(current_task->exit.value) ? "stopped" : "exited",
+        current_task->exit.value,
         (double) current_task->clock.tms_utime / CLOCKS_PER_SEC,
         (double) current_task->clock.tms_cutime / CLOCKS_PER_SEC,
         current_task->image->refcount
     );   
 #endif
 
+
     if(current_task->parent)
-        list_push(current_task->parent->signal.s_queue, SIGCHLD);
+        sched_signal(current_task->parent, SIGCHLD);
+
+
+
+    if(WIFSTOPPED(current_task->exit.value)) {
+        current_task->status = TASK_STATUS_STOP;
+        while(current_task->status == TASK_STATUS_STOP)
+            sys_yield();
+
+        return;
+    }
+
 
 
     volatile task_t* tmp;

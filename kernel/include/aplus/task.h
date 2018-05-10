@@ -17,7 +17,8 @@
 #define TASK_STATUS_READY               0
 #define TASK_STATUS_RUNNING             1
 #define TASK_STATUS_SLEEP               2
-#define TASK_STATUS_KILLED              3
+#define TASK_STATUS_STOP                3
+#define TASK_STATUS_KILLED              4
 
 #define TASK_PRIO_MAX                   -20
 #define TASK_PRIO_MIN                   19
@@ -89,19 +90,19 @@ typedef struct task {
     struct {
         union {
             struct {
-                int16_t signo:8;
                 int16_t o177:8;
+                int16_t signo:8;
             } stopped;
 
             struct {
-                int16_t retval:8;
                 int16_t zero:8;
+                int16_t retval:8;
             } exited;
 
             struct {
-                int16_t zero:8;
-                int16_t corep:1;
                 int16_t signo:7;
+                int16_t corep:1;
+                int16_t zero:8;
             } termed;
 
             int16_t value:16;
@@ -139,6 +140,8 @@ extern volatile task_t* task_queue;
 void schedule(void);
 void schedule_yield(void);
 pid_t sched_nextpid();
+void sched_dosignals();
+void sched_signal(task_t*, int);
 
 extern void task_switch(volatile task_t*, volatile task_t*);
 extern volatile task_t* task_fork(void);
@@ -147,8 +150,8 @@ extern void task_yield(void);
 extern void task_release(volatile task_t* task);
 
 
-#define task_create_tasklet(nm, handler, task)                                                                      \
-        task = task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);             \
+#define task_create_tasklet(nm, handler, task)                                                                  \
+        task = task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);              \
         task->name = strdup(nm);
 
 

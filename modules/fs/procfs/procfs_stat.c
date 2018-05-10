@@ -35,8 +35,9 @@ int procfs_stat_update(procfs_entry_t* e) {
         (
             (tk->status == TASK_STATUS_READY   ? 'S'   :
             (tk->status == TASK_STATUS_SLEEP   ? 'S'   :
+            (tk->status == TASK_STATUS_STOP    ? 'T'   :
             (tk->status == TASK_STATUS_RUNNING ? 'R'   :
-            (tk->status == TASK_STATUS_KILLED  ? 'Z'   : 'X'))))
+            (tk->status == TASK_STATUS_KILLED  ? 'Z'   : 'X')))))
         ),
         tk->parent ? tk->parent->pid : 0,
         tk->pgid,

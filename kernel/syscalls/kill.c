@@ -29,7 +29,7 @@ int sys_kill(pid_t pid, int signal) {
                     return -1;                                      \
                 }                                                   \
                                                                     \
-                list_push(tmp->signal.s_queue, signal);             \
+                sched_signal(tmp, signal);                          \
                 ret;                                                \
             }                                                       \
         }                                                           \

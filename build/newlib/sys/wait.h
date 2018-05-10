@@ -1,53 +1,46 @@
-#ifndef _WAIT_H
-# define _WAIT_H
+#ifndef _SYS_WAIT_H
+# define _SYS_WAIT_H
 
 #include <sys/types.h>
 
-# define WNOHANG 1
-# define WUNTRACED 2
 
-/*
- * Unlike the atrocity that BSD ended up using, we do not have a "union
- * wait," although I could probably implement one.  Given the code I
- * sometimes end up porting, it might be a good thing.  Anyway, the
- * format of a stat thingy, filled in by the wait*() routines, is:
- * struct {
- *    int filler:16;
- *    union {
- *        struct stopped {
- *            int signo:8;
- *            int o177:8;	// will be 0177 
- *        };
- *        struct exited {
- *            int retval:8;
- *            int zero:8;	// 0, obviously 8-)
- *        };
- *        struct termed {
- *            int zero:8;	// zeroes
- *            int corep:1;	// was there a core file?
- *            int signo:7;	// what?!  Only 127 signals?!
- *        };
- *        int value:16;
- *     };
- * };
- *
- * Braver souls than I can turn that into a union wait, if desired.  Ick.
- */
 
-# define WIFEXITED(val)	((val)&0xff)
-# define WEXITSTATUS(val)	(((val)>>8)&0xff)
-# define WIFSIGNALED(val)	((val) && !((val)&0xff))
-# define WTERMSIG(val)	(((val)>>8)&0x7f)
-# define WIFSTOPPED(val) (((val)&0xff)==0177)
-# define WSTOPSIG(val)	(((val)>>8)&0xff)
+#define _WSTATUS(x)                 (x & 0177)
+#define _WSTOPPED                   0177
+
+
+#define WIFSTOPPED(x)               (_WSTATUS(x) == _WSTOPPED)
+#define WSTOPSIG(x)                 (x >> 8)
+#define WIFSIGNALED(x)              (_WSTATUS(x) != _WSTOPPED && _WSTATUS(x) != 0)
+#define WTERMSIG(x)                 (_WSTATUS(x))
+#define WIFEXITED(x)                (_WSTATUS(x) == 0)
+#define WEXITSTATUS(x)              (x >> 8)
+
+#ifndef _POSIX_SOURCE
+#define WCOREFLAG                   0200
+#define WCOREDUMP(x)                (x & WCOREFLAG)
+#define W_EXITCODE(ret, sig)        ((ret) << 8 | sig)
+#define W_STOPCODE(sig)             ((sig) << 8 | _WSTOPPED)
+
+#define WAIT_ANY                    (-1)
+#define WAIT_MYPGRP                 (0)
+#endif
+
+
+#define WNOHANG                     1
+#define WUNTRACED                   2
+
+
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 pid_t wait(int* status);
 pid_t waitpid(pid_t, int*, int);
+
 #ifdef __cplusplus
 }
 #endif
-#endif	/* _SYS_WAIT_H */
+#endif
 

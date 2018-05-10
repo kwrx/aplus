@@ -79,7 +79,7 @@ extern int sys_chown(const char*, uid_t, gid_t);
 extern int sys_chroot(const char*);
 extern int sys_clone(int (*)(void*), void*, int, void*);
 extern int sys_close(int);
-__attribute__((noreturn)) extern void sys_exit(int);
+extern void sys_exit(int);
 extern int sys_fork(void);
 extern int sys_fstat(int, struct stat*);
 extern int sys_getdents(int, struct dirent*, size_t);

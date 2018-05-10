@@ -24,8 +24,15 @@
 #include <sys/mman.h>
 #include <sys/string.h>
 #include <sys/poll.h>
-#include <sys/wait.h>
 #include <sys/mount.h>
 #include <sys/statvfs.h>
 #include <sched.h>
 #include <signal.h>
+
+#ifdef _POSIX_SOURCE
+#define _OLD_POSIX_SOURCE _POSIX_SOURCE
+#undef _POSIX_SOURCE
+#include <sys/wait.h>
+#define _POSIX_SOURCE _OLD_POSIX_SOURCE
+#undef _OLD_POSIX_SOURCE
+#endif

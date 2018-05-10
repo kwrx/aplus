@@ -37,15 +37,15 @@ int init(void) {
     tio->ios.c_cflag |= 0;
     tio->ios.c_lflag |= ISIG | ICANON | ECHO | ECHOE;
     
-    tio->ios.c_cc[VEOF] = 000;
+    tio->ios.c_cc[VEOF] = 004;
     tio->ios.c_cc[VEOL] = 000;
     tio->ios.c_cc[VERASE] = 0177;
     tio->ios.c_cc[VINTR] = 003;
     tio->ios.c_cc[VKILL] = 025;
     tio->ios.c_cc[VQUIT] = 034;
-    tio->ios.c_cc[VSTART] = 002;
-    tio->ios.c_cc[VSTOP] = 004;
-    tio->ios.c_cc[VMIN] = 0;
+    tio->ios.c_cc[VSTART] = 021;
+    tio->ios.c_cc[VSTOP] = 023;
+    tio->ios.c_cc[VSUSP] = 032;
 
     tio->ios.c_ispeed =
     tio->ios.c_ospeed = B9600;
