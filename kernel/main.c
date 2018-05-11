@@ -45,7 +45,7 @@ int idle(void) {
 
 
 int main(int argc, char** argv) {
-    (void) libk_init();
+    (void) core_init();
     (void) mm_init();
     (void) syscall_init();
     (void) vfs_init();

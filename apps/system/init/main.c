@@ -91,7 +91,13 @@ static void init_console() {
 }
 
 static void init_welcome() {
-    fprintf(stdout, "\033[0;39m\e[37mWelcome to aPlus!\e[39m\n");
+    FILE* fp = fopen("/etc/motd", "r");
+    if(!fp)
+        return;
+
+    char ln[BUFSIZ];
+    while(fgets(ln, BUFSIZ, fp) > 0)
+        fprintf(stdout, ln);
 }
 
 
@@ -106,10 +112,11 @@ int main(int argc, char** argv) {
     init_console();
     init_welcome();
     init_initd();
-    
 
     ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("sys.locale", "en-US"));
     
     for(; errno != ECHILD; )
         waitpid(-1, NULL, 0);
+
+    return 0;
 }

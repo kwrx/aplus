@@ -12,6 +12,8 @@
         for(v = task_queue; v; v = v->next) {                       \
             if(v->parent != current_task)                           \
                 continue;                                           \
+            if(v->status == TASK_STATUS_STOP)                       \
+                continue;                                           \
                                                                     \
             if((cond))                                              \
                 list_push(current_task->waiters, v);                \

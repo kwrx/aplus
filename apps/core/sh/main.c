@@ -2,36 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <time.h>
-#include <signal.h>
 #include <sys/types.h>
-#include <sys/wait.h>
-#include <errno.h>
 #include <getopt.h>
-#include <glob.h>
-
+#include <fcntl.h>
+#include <pwd.h>
+#include <termios.h>
 #include <sys/ioctl.h>
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <sys/utsname.h>
 
+#include <aplus/base.h>
+#include <aplus/sysconfig.h>
 
 #include "sh.h"
 
-#if HAVE_LOGIN
-#   include "md5.h"
-#endif
-
-
-
-static char buf[BUFSIZ];
-static struct winsize ws;
 
 
 static void show_usage(int argc, char** argv) {
     printf(
-        "Use: sh [options] ...\n"
-        "aPlus Shell.\n\n"
-        "   -c, --command               execute a command\n"
+        "Use: sh [options]\n"
+        "aPlus Shell\n"
+        "   -c, --command <command>     pass a single command to the shell with -c"
         "   -h, --help                  show this help\n"
         "   -v, --version               print version info and exit\n"
     );
@@ -52,49 +42,48 @@ static void show_version(int argc, char** argv) {
 }
 
 
+static char* getuser() {
+    char* s = getenv("USER");
+    if(s)
+        return strdup(s);
 
-static void cmd_cd(char** argv) {
-    char* p = argv[1];
-    if(argv[1] == NULL)
-        p = "/";
+    struct passwd* pw = getpwuid(getuid());
+    if(!pw)
+        return strdup("unknown");
 
-    if(chdir(p))
-        perror(p);
+    return strdup(pw->pw_name);
 }
+
+static char* gethost() {
+    struct utsname u;
+    if(uname(&u) != 0)
+        return strdup("unknown");
+
+    return strdup(u.nodename);
+}
+
+int main(int argc, char** argv) {
     
-
-
-static void sigwinch(int sig) {
-    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-    signal(SIGWINCH, sigwinch);
-}
-
-
-
-int main(int argc, char** argv, char** env) {
-
-    signal(SIGWINCH, sigwinch);
-
-    sh_alias("la", (void*) "ls -lh", SH_ALIAS_TYPE_STRING);
-    sh_alias("cd", (void*) cmd_cd, SH_ALIAS_TYPE_FUNC);
-
-
-
     static struct option long_options[] = {
-        { "command", no_argument, NULL, 'c'},
+        { "command", required_argument, NULL, 'c'},
         { "help", no_argument, NULL, 'h'},
         { "version", no_argument, NULL, 'v'},
         { NULL, 0, NULL, 0 }
     };
+
+
     
- 
-    
+    char* command = NULL;
+
     int c, idx;
-    while((c = getopt_long(argc, argv, "chv", long_options, &idx)) != -1) {
+    while((c = getopt_long(argc, argv, "c:hv", long_options, &idx)) != -1) {
         switch(c) {
             case 'c':
-                sh_cmdline(argv[optind]);
-                return 0;
+                if(strcmp(optarg, "-c") != 0)
+                    command = strdup(optarg);
+                else
+                    command = strdup(argv[optind]);
+                break;
             case 'v':
                 show_version(argc, argv);
                 break;
@@ -106,36 +95,36 @@ int main(int argc, char** argv, char** env) {
                 abort();
         }
     }
+
+
+    if(command)
+        sh_exec(command);
+
     
+    setsid();
+    setpgrp();
 
-    pid_t pgid = -1;
-    ioctl(STDIN_FILENO, TIOCSPGRP, &pgid);
-    ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
-
-        
-    char* username = strdup(getenv("USER"));
-    char* hostname = sh_gethostname();
+    char* user = getuser();
+    char* host = gethost();
 
 
+    int e = 0;
     do {
-        CLRBUF();
-        char* cwd = getcwd(buf, BUFSIZ);
-        if(getenv("HOME"))
-            if(strcmp(cwd, getenv("HOME")) == 0)
-                cwd = "~";
+        sh_prompt(user, host, e);
+        
+        
+        char line[BUFSIZ];
+        memset(line, 0, sizeof(line));
 
-
-        time_t t0 = time(NULL);
-        struct tm* tm = localtime(&t0);
-
-        fprintf(stdout, "\033[%dC[\033[33m%02d/%02d \033[31m%02d:%02d:%02d\033[39m]\033[%dD", ws.ws_col - 17, tm->tm_mday, tm->tm_mon + 1, tm->tm_hour, tm->tm_min, tm->tm_sec, ws.ws_col - 1);
-        fprintf(stdout, "\033[36m[%s@%s %s]%c\033[39m ", username, hostname, cwd, geteuid() == 0 ? '#' : '$');
-        fflush(stdout);
-
-        CLRBUF();
-        if(fgets(buf, BUFSIZ, stdin) > 0) {
-            buf[strlen(buf) - 1] = '\0';
-            sh_cmdline(buf);
-        }
+        if(!fgets(line, BUFSIZ, stdin))
+            continue;
+        
+        if(strrchr(line, '\n'))
+            *strrchr(line, '\n') = '\0';
+        
+        sh_history_add(line);
+        e = sh_exec(line);
     } while(1);
+
+    return 0;
 }

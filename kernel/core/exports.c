@@ -17,7 +17,7 @@ extern int __moddi3;
 
 
 
-int libk_init() {
+int core_init() {
     libaplus_init(kmalloc, kcalloc, kfree);
     return 0;
 }

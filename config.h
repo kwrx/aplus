@@ -3,8 +3,12 @@
 
 #include <aplus/base.h>
 
-#define DEBUG                               1
-
+/* Makefile generated */
+#define DEBUG 1
+#define COMMIT "482d8003"
+#define PLATFORM "i386"
+#define TARGET "i686-aplus"
+/**********************/
 
 #define CONFIG_HOST_MEMORY                  512
 #define CONFIG_HAVE_LIBC                    1
@@ -20,7 +24,6 @@
 
 #define CONFIG_BOCHS                        DEBUG
 #define CONFIG_SERIAL_DEBUG                 DEBUG
-#define CONFIG_IO_DEBUG                     DEBUG
 #define CONFIG_IPC_DEBUG                    0
 #define CONFIG_SYSCALL_DEBUG                0
 
@@ -28,14 +31,23 @@
 
 
 #define KERNEL_NAME                         "aplus"
-#define KERNEL_VERSION                      "0.4"
-#define KERNEL_CODENAME                     "generic"
+#define KERNEL_VERSION_MAJOR                "0"
+#define KERNEL_VERSION_MINOR                "4"
+#define KERNEL_CODENAME                     COMMIT "-generic"
 #define KERNEL_DATE                         __DATE__
 #define KERNEL_TIME                         __TIME__
+#define KERNEL_PLATFORM                     PLATFORM
+
+    
+#define KERNEL_VERSION                      \
+            KERNEL_VERSION_MAJOR "."        \
+            KERNEL_VERSION_MINOR "."        \
+            KERNEL_CODENAME
+
 
 #if DEBUG
 #    undef KERNEL_CODENAME
-#    define KERNEL_CODENAME                 "debug"
+#    define KERNEL_CODENAME                 COMMIT "-debug"
 #endif
 
 
@@ -46,7 +58,6 @@
 #    define CONFIG_STACK_BASE               0xFFC00000L
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #    define CONFIG_STACK_SIZE               0x00020000ULL
-#    define KERNEL_PLATFORM                 "i386"
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__x86_64__)
 #    define CONFIG_BITS                     64
@@ -55,27 +66,21 @@
 #    define CONFIG_STACK_BASE               0xFFFFFFFFFFC00000L
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #    define CONFIG_STACK_SIZE               0x00020000ULL
-#    define KERNEL_PLATFORM                 "x86_64"
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
 #elif defined(__arm__)
 #    define CONFIG_BITS                     32
 #    if defined (__rpi__)
         /* TODO */
-#        define KERNEL_PLATFORM             "armv6-rpi"
 #    else
 #        define CONFIG_KERNEL_BASE          0x80010000L
 #        define CONFIG_HEAP_BASE            0x8F000000L
 #        define CONFIG_STACK_BASE           0x8A000000L
 #        define CONFIG_HEAP_SIZE            0x00100000ULL
 #        define CONFIG_STACK_SIZE           0x00004000ULL
-#        define KERNEL_PLATFORM             "armv7"
 #    endif
 #    define __pause__()                     __asm__ __volatile__ ("wfe")
 #endif
 
-#ifndef KERNEL_PLATFORM
-#    define KERNEL_PLATFORM                 "unknown"
-#endif
 
 
 #ifdef __GNUC__

@@ -9,10 +9,10 @@
 
 int procfs_version_init(procfs_entry_t* e) {
     sprintf(e->data,
-        "%s version %s-%s (aplus-gcc %d.%d.%d) %s %s\n",
+        "%s version %s (%s-gcc %d.%d.%d) %s %s\n",
         KERNEL_NAME,
-        KERNEL_VERSION, KERNEL_CODENAME,
-        __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__,
+        KERNEL_VERSION,
+        TARGET, __GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__,
         KERNEL_DATE,
         KERNEL_TIME
     );

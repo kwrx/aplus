@@ -7,6 +7,7 @@ TARGET		:= i686-aplus
 #ARCH		:= x86_64
 #HOST		:= x86_64
 #TARGET		:= x86_64-aplus
+DEBUG		:= 1
 
 
 
@@ -16,6 +17,7 @@ include build/Makefile.flags
 
 
 all:					\
+	CONFIG				\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
 	$(KERNEL_ISO)		\
@@ -25,7 +27,18 @@ all:					\
 vm:
 	$(VMM)
 
-$(KERNEL_OUTPUT): $(KERNEL_OBJECTS) LIBRARIES
+
+CONFIG:
+	@echo "  GEN    " config.h
+	$(shell sed -i "s/#define COMMIT.*/#define COMMIT \"$(shell git rev-parse --short HEAD)\"/" config.h)
+	$(shell sed -i "s/#define DEBUG.*/#define DEBUG $(DEBUG)/" config.h)
+	$(shell sed -i "s/#define PLATFORM.*/#define PLATFORM \"$(ARCH)\"/" config.h)
+	$(shell sed -i "s/#define TARGET.*/#define TARGET \"$(TARGET)\"/" config.h)
+	$(shell sed -i "s/https:\/\/www.github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./bin/etc/motd)
+
+
+
+$(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES
 	@echo "  LD     " $@
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
 	@echo "  OBJCPY " $(KERNEL_SYM)
@@ -96,7 +109,7 @@ clean: clean_modules clean_apps clean_kernel clean_libs
 	@$(RM) -r *.o *.map
 
 debug:
-	@$(MAKE) -s DEBUG=yes
+	@$(MAKE) -s DEBUG=1
 
 release: $(KERNEL_OUTPUT)	\
 		 KERNEL_MODULES		\

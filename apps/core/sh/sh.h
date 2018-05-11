@@ -1,34 +1,20 @@
 #pragma once
 
-#define HAVE_LOGIN              0
-#define HAVE_LUA                1
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
 
-#define CLRBUF() memset(buf, 0, sizeof(buf))
+typedef int (*sh_command_t) (int, char**);
 
-
-typedef struct sh_alias {
-    char* key;
-    union {
-        void* value;
-        char* string;
-        void (*func)(char**);
-    };
-    int type;
-
-    struct sh_alias* next;
-} sh_alias_t;
+struct sh_command_list {
+    char* cmd;
+    char* description;
+    sh_command_t fn;
+};
 
 
+extern list(char*, sh_history);
+extern struct sh_command_list sh_commands[];
 
-#define SH_ALIAS_TYPE_STRING    1
-#define SH_ALIAS_TYPE_FUNC      2
-
-
-
-char* sh_gethostname(void);
-char* sh_login(char* hostname);
-void sh_cmdline(char* cmdline);
-void sh_alias(char* k, void* v, int t);
-
-
-extern sh_alias_t* sh_aliases;
+void sh_prompt(char* user, char* host, int last_err);
+void sh_history_add(char* line);
+int sh_exec(char*);
