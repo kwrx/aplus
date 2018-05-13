@@ -10,7 +10,8 @@
 #include "sh.h"
 
 
-void sh_prompt(char* user, char* host, int last_err) {
+
+static void sh_prompt_info(char* user, char* host) {
     struct winsize ws;
     ioctl(STDIN_FILENO, TIOCGWINSZ, &ws);
 
@@ -47,4 +48,114 @@ void sh_prompt(char* user, char* host, int last_err) {
     );
 
     fflush(stdout);
+}
+
+
+
+static void sh_prompt_history(char* line, char* user, char* host, int history) {
+    if(history < 0)
+        return;
+
+    do {
+        list_each_r(sh_history, h) {
+            if(history--)
+                continue;
+
+            memset(line, 0, BUFSIZ);
+            strcpy(line, h);
+
+            fprintf(stdout, "\e[2K\n\e[1A");
+            sh_prompt_info(user, host);
+            fprintf(stdout, h);
+            fflush(stdout);
+            break;
+        }
+    } while(history >= 0);
+}
+
+
+char* sh_prompt(char* line, char* user, char* host, int last_err) {
+    sh_prompt_info(user, host);
+
+    int history = 0;
+    int i = 0;
+
+    struct termios ios;
+    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ios.c_lflag &= ~(ICANON | ECHO);
+    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+
+
+
+    uint8_t ch[4];
+    do {
+        read(STDIN_FILENO, ch, 1);
+
+        if(history < 0)
+            history = 0;
+
+        switch(ch[0]) {
+            case '\e':
+                if(ch[1] != '[')
+                    break;
+                
+                switch(ch[2]) {
+                    case 'A':
+                        sh_prompt_history(line, user, host, history++);
+                        i = strlen(line);
+                        break;
+                    case 'B':
+                        sh_prompt_history(line, user, host, history--);
+                        i = strlen(line);
+                        break;
+                }
+                break;
+            case '\b':
+                if(i > 0) {
+                    line[--i] = '\0';
+
+                    fprintf(stdout, "\b");
+                }
+                break;
+            case 128 ... 255:
+                line[i++] = ch[0];
+                line[i++] = ch[1];
+                line[i] = '\0';
+
+                fprintf(stdout, "%c%c", ch[0], ch[1]);
+                break;
+            case 32 ... 127:
+            case '\t':
+                line[i++] = ch[0];
+                line[i] = '\0';
+
+                fprintf(stdout, "%c", ch[0]);
+                break;
+            case '\n':
+                break;
+            default:
+                fprintf(stdout, "^%c", 'A' + ch[0] - 1);
+                break;
+
+        }
+
+        fflush(stdout);
+    } while(ch[0] != '\n' && ch[0] != '\0');
+
+    if(line[i - 1] == '\n')
+        line[--i] = '\0';
+    
+
+
+
+
+    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ios.c_lflag |= (ICANON | ECHO);
+    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+
+
+    if(strlen(line))
+        return line;
+
+    return NULL;
 }

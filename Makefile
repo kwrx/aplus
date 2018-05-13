@@ -34,7 +34,8 @@ CONFIG:
 	$(shell sed -i "s/#define DEBUG.*/#define DEBUG $(DEBUG)/" config.h)
 	$(shell sed -i "s/#define PLATFORM.*/#define PLATFORM \"$(ARCH)\"/" config.h)
 	$(shell sed -i "s/#define TARGET.*/#define TARGET \"$(TARGET)\"/" config.h)
-	$(shell sed -i "s/https:\/\/www.github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./bin/etc/motd)
+	@echo "  GEN    " bin/etc/motd
+	$(shell sed -i "s/https:\/\/github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./bin/etc/motd)
 
 
 

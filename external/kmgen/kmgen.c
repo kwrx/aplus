@@ -5,25 +5,14 @@
 #include <errno.h>
 #include <getopt.h>
 
-
-#include "keymaps/it-IT.h"
+/* Select KEYMAP here */
 #include "keymaps/en-US.h"
-
-
-struct {
-    char* name;
-    void* data;
-} keymaps[] = {
-    { "it-IT", &it_IT_keymap },
-    { "en-US", &en_US_keymap },
-    { NULL, NULL }
-};
 
 
 static void show_usage(int argc, char** argv) {
     printf(
-        "Use: kmgen KEYMAP [OUTPUT]\n"
-        "Generate given KEYMAP in OUTPUT.\n\n"
+        "Use: kmgen\n"
+        "Generate compiled KEYMAP in stdout.\n\n"
         "   -h, --help                  show this help\n"
         "   -v, --version               print version info and exit\n"
     );
@@ -45,8 +34,7 @@ static void show_version(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     
-    if(argc < 2)
-        show_usage(argc, argv);
+  
     
     static struct option long_options[] = {
         { "help", no_argument, NULL, 'h'},
@@ -72,34 +60,23 @@ int main(int argc, char** argv) {
 
 
 
-    FILE* fp = stdout;
-    void* keydata = NULL;
-
-
-    if(optind >= argc)
-        show_usage(argc, argv);
-
-
-    int i;
-    for(i = 0; keymaps[i].name; i++)
-        if(strcmp(keymaps[i].name, argv[optind]) == 0)
-            keydata = keymaps[i].data;
-
-    if(!keydata) {
-        fprintf(stderr, "kmgen: keymap not found!\n");
-        return -1;
-    }    
-    
-    if(++optind < argc)
-        fp = fopen(argv[optind], "wb");
-
+    FILE* fp = fdopen(fileno(stdout), "wb");
     if(!fp) {
-        perror(argv[optind]);
+        perror("stdout");
         return -1;
     }
     
-    fwrite(keydata, 1, 1024, fp);
-    fclose(fp);
-
+    
+    unsigned short zeros[NR_KEYS];
+    memset(zeros, 0, sizeof(zeros));
+        
+    int i;
+    for(i = 0; i < 16; i++) {
+        if(key_maps[i])
+            fwrite(key_maps[i], sizeof(unsigned short) * NR_KEYS, 1, fp);
+        else
+            fwrite(zeros, sizeof(unsigned short) * NR_KEYS, 1, fp);
+    }
+    
     return 0;
 }

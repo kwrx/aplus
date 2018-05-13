@@ -9,5 +9,6 @@
 list(char*, sh_history);
 
 void sh_history_add(char* line) {
-    list_push(sh_history, strdup(line));
+    if(strlen(line))
+        list_push(sh_history, strdup(line));
 }

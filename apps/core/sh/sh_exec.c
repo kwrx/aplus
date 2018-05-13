@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <glob.h>
 #include <sys/ioctl.h>
+#include <sys/termios.h>
 #include <sys/wait.h>
 
 #include <aplus/base.h>
@@ -13,6 +14,17 @@
 
 #include "sh.h"
 
+
+void sh_reset_tty() {
+    struct termios ios;
+
+    pid_t pgrp = getpgrp();
+    ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
+    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+
+    ios.c_lflag &= ~ISIG;
+    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+}
 
 
 static int run(int argc, char** argv, int in, int out) {
@@ -53,6 +65,11 @@ static int run(int argc, char** argv, int in, int out) {
             pid_t pgrp = getpgrp();
             ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
 
+            struct termios ios;
+            ioctl(STDIN_FILENO, TIOCGETA, &ios);
+            ios.c_lflag |= ISIG;
+            ioctl(STDIN_FILENO, TIOCSETA, &ios);
+
             dup2(in, STDIN_FILENO);
             dup2(out, STDOUT_FILENO);
             dup2(out, STDERR_FILENO);
@@ -67,7 +84,8 @@ static int run(int argc, char** argv, int in, int out) {
             do {
                 err = waitpid(-1, &r, 0);
             } while((err != -1) || (err == -1 && errno != ECHILD));
-
+            
+            sh_reset_tty();
             return r;
         }
     }

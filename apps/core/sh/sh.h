@@ -15,6 +15,7 @@ struct sh_command_list {
 extern list(char*, sh_history);
 extern struct sh_command_list sh_commands[];
 
-void sh_prompt(char* user, char* host, int last_err);
+char* sh_prompt(char* line, char* user, char* host, int last_err);
 void sh_history_add(char* line);
 int sh_exec(char*);
+void sh_reset_tty(void);

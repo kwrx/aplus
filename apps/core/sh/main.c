@@ -62,6 +62,8 @@ static char* gethost() {
     return strdup(u.nodename);
 }
 
+
+
 int main(int argc, char** argv) {
     
     static struct option long_options[] = {
@@ -103,6 +105,7 @@ int main(int argc, char** argv) {
     
     setsid();
     setpgrp();
+    sh_reset_tty();
 
     char* user = getuser();
     char* host = gethost();
@@ -110,17 +113,11 @@ int main(int argc, char** argv) {
 
     int e = 0;
     do {
-        sh_prompt(user, host, e);
-        
-        
         char line[BUFSIZ];
         memset(line, 0, sizeof(line));
 
-        if(!fgets(line, BUFSIZ, stdin))
+        if(!sh_prompt(line, user, host, e))
             continue;
-        
-        if(strrchr(line, '\n'))
-            *strrchr(line, '\n') = '\0';
         
         sh_history_add(line);
         e = sh_exec(line);

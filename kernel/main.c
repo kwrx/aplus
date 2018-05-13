@@ -70,10 +70,9 @@ int main(int argc, char** argv) {
             KERNEL_NAME,
             mbd->cmdline.args);
     
-    kprintf(INFO "%s %s-%s %s %s %s (%p:%dMB)\n", 
+    kprintf(INFO "%s %s %s %s %s (%p:%dMB)\n", 
             KERNEL_NAME, 
             KERNEL_VERSION,
-            KERNEL_CODENAME,
             KERNEL_DATE,
             KERNEL_TIME,
             KERNEL_PLATFORM,

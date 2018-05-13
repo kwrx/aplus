@@ -16,9 +16,9 @@ MODULE_LICENSE("GPL");
 
 
 
-
 int init(void) {
     tty_read_init();
+
 
     inode_t* ino;
     if(unlikely((ino = vfs_mkdev("tty", 0, S_IFCHR | 0666)) == NULL))
@@ -35,7 +35,7 @@ int init(void) {
     tio->ios.c_iflag |= 0;
     tio->ios.c_oflag |= 0;
     tio->ios.c_cflag |= 0;
-    tio->ios.c_lflag |= ISIG | ICANON | ECHO | ECHOE;
+    tio->ios.c_lflag |= ISIG | ICANON | ECHO | ECHOE | ECHONL;
     
     tio->ios.c_cc[VEOF] = 004;
     tio->ios.c_cc[VEOL] = 000;

@@ -71,6 +71,7 @@ EXPORT(hashmap_iterate);
 EXPORT(hashmap_free);
 EXPORT(__sysconfig);
 EXPORT(utf8_to_ucs2);
+EXPORT(ucs2_to_utf8);
 EXPORT(utf8_bytes);
 
 

@@ -18,6 +18,12 @@ void __tty_flush(struct tty_context* tio) {
     tio->outlen = 0;
 }
 
+
+static void tty_signal(struct tty_context* tio, int sig) {
+    if(tio->ios.c_lflag & ISIG)
+        sys_kill(-tio->pgrp, sig);
+}
+
 int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
@@ -53,13 +59,13 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         else if(*buf == tio->ios.c_cc[VERASE])
             kprintf("\b");
         else if(*buf == tio->ios.c_cc[VINTR])
-            sys_kill(-tio->pgrp, SIGINT);
+            tty_signal(tio, SIGINT);
         else if(*buf == tio->ios.c_cc[VKILL])
-            sys_kill(-tio->pgrp, SIGKILL);
+            tty_signal(tio, SIGKILL);
         else if(*buf == tio->ios.c_cc[VQUIT])
-            sys_kill(-tio->pgrp, SIGQUIT);
+            tty_signal(tio, SIGQUIT);
         else if(*buf == tio->ios.c_cc[VSUSP])
-            sys_kill(-tio->pgrp, SIGSTOP);
+            tty_signal(tio, SIGSTOP);
         else if(*buf == tio->ios.c_cc[VSTOP])
             tio->output = 0;
         else if(*buf == tio->ios.c_cc[VSTART])

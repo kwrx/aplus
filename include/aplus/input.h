@@ -49,6 +49,7 @@ typedef struct keyboard {
  * SC - System Control
  */
 
+#define NR_KEYS                 256
 #define KEY_RESERVED            0
 #define KEY_ESC                 1
 #define KEY_1                   2
@@ -671,6 +672,26 @@ typedef struct keyboard {
 
 
 
+#define KT_LATIN                        0	/* we depend on this being zero */
+#define KT_LETTER                       11	/* symbol that can be acted upon by CapsLock */
+#define KT_FN                           1
+#define KT_SPEC                         2
+#define KT_PAD                          3
+#define KT_DEAD                         4
+#define KT_CONS                         5
+#define KT_CUR                          6
+#define KT_SHIFT                        7
+#define KT_META                         8
+#define KT_ASCII                        9
+#define KT_LOCK                         10
+#define KT_SLOCK                        12
+#define KT_DEAD2                        13
+#define KT_BRL                          14
+
+
+#define K(t,v)                          (((t)<<8)|(v))
+#define KTYP(x)                         ((x) >> 8)
+#define KVAL(x)                         ((x) & 0xff)
 
 #ifdef __cplusplus
 }
