@@ -58,6 +58,9 @@ int init(void) {
     tio->lined = TTYDISC;
     tio->output = 1;
     tio->outlen = 0;
+
+    fifo_init(&tio->in);
+    tio->in.async = 1;
     
     
     

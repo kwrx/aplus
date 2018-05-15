@@ -16,7 +16,7 @@ int main(int argc, char** argv) {
     ios.c_iflag = 0;
     ios.c_oflag = 0;
     ios.c_cflag = 0;
-    ios.c_lflag = ISIG | ICANON | ECHO | ECHOE;
+    ios.c_lflag = ISIG | ICANON | ECHO | ECHOE | ECHONL;
 
     ios.c_cc[VEOF] = 000;
     ios.c_cc[VEOL] = 000;

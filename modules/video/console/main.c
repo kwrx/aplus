@@ -91,6 +91,7 @@ static void plot_value(struct cc* cc, int32_t uvalue) {
             cc->escape_buffer[cc->escape_offset++] = value;
         else {
             int x = 0, y = 0;
+            char buf[32];
             switch(value) {
                 case '@':
                     y = atoi(cc->escape_buffer);
@@ -151,6 +152,11 @@ static void plot_value(struct cc* cc, int32_t uvalue) {
                 case 'K':
                     y = atoi(cc->escape_buffer);
                     switch(y) {
+                        case 0:
+                            x = cc->p + (cc->width - (cc->p % cc->width));
+                            while(x >= cc->p)
+                                cc->output(cc, __C(cc, x--), cc->style, u' ');
+                            break;
                         case 1:
                             x = cc->p - (cc->p % cc->width);
                             while(x < cc->p)

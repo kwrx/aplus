@@ -129,19 +129,32 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     
     if(unlikely(!len))
         return 0;
-        
+ 
+    struct tty_context* tio = (struct tty_context*) inode->userdata;
+    register uint8_t* buf = (uint8_t*) ptr;
+    register int p = 0;
+
+
+    if(tio->pgrp != current_task->pgid) 
+        sys_exit((1 << 31) | W_STOPCODE(SIGTTIN));
+
+    
+    int i;
+    if(fifo_available(&tio->in))
+        i = fifo_read(&tio->in, buf, len);
+
+    if(unlikely(!(len - i)))
+        return len;
+
+    buf += i;
+
+
     int fd = sys_open(TTY_DEFAULT_INPUT_DEVICE, O_RDONLY, 0);
     if(fd < 0) {
         errno = EIO;
         return -1;
     }
-    
-        
-    struct tty_context* tio = (struct tty_context*) inode->userdata;
-    register uint8_t* buf = (uint8_t*) ptr;
-    register int p = 0;
-    
-    
+
     while(p < len) {
         keyboard_t k;
         if(sys_read(fd, &k, sizeof(keyboard_t)) == 0) {
@@ -218,6 +231,15 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                         ch -= ch >= 'a' && ch <= 'Z' ? 32 : 0;
                 }
             case KT_ASCII:
+                if(unlikely(ch < 32)) {
+                    for(int i = 0; i < NCCS; i++) {
+                        if(ch != tio->ios.c_cc[i])
+                            continue;
+                        
+                        ch = 0;
+                        break;
+                    }
+                }
                 break;
 
             case KT_SPEC:
@@ -233,9 +255,9 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                     continue;
 
 
-                for(int i = 0; i < strlen(__kmap[KTYP(key)][KVAL(key)]); i++, p++)
-                    *buf++ = __kmap[KTYP(key)][KVAL(key)][i];
-                
+                fifo_write(&tio->in, &__kmap[KTYP(key)][KVAL(key)][i], strlen(__kmap[KTYP(key)][KVAL(key)]));
+                p += strlen(__kmap[KTYP(key)][KVAL(key)]);
+
                 if(tio->ios.c_lflag & ECHO)
                     tty_write(inode, __kmap[KTYP(key)][KVAL(key)], 0, strlen(__kmap[KTYP(key)][KVAL(key)]));
 
@@ -249,7 +271,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
             case '\x7f':
                 if(tio->ios.c_lflag & ICANON) {
                     if(p > 0) {
-                        *--buf = 0;
+                        fifo_peek(&tio->in, 1);
                         p--;
                         
                         if(tio->ios.c_lflag & ECHOE)
@@ -280,28 +302,34 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
 
         char utf8[UTF8_MAX_LENGTH];
         size_t utf8len = ucs2_to_utf8((int32_t) ch, utf8);
-
-        for(int i = 0; i < utf8len; i++, p++)
-            *buf++ = utf8[i];
+        
+        fifo_write(&tio->in, utf8, utf8len);
+        p += utf8len;
 
         if(tio->ios.c_lflag & ECHO)
             tty_write(inode, utf8, 0, utf8len);
+
                     
     }
 
 
+
     if(p < len) {
         if(!(tio->ios.c_iflag & IGNCR)) {
-            *buf++ = '\n';
+            char ch = '\n';
+            fifo_write(&tio->in, &ch, 1);
             p++;
 
 
             if(tio->ios.c_lflag & ECHONL)
-                tty_write(inode, buf - 1, 0, 1);
+                tty_write(inode, &ch, 0, 1);
         }
     }
     
-    //*buf++ = '\0';
+
+
+    if(fifo_available(&tio->in))
+        i = fifo_read(&tio->in, buf, len);
     
     
     sys_close(fd);

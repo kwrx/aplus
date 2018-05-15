@@ -50,6 +50,7 @@ EXPORT(strerror);
 EXPORT(tmpnam);
 EXPORT(atoi);
 EXPORT(atof);
+EXPORT(itoa);
 EXPORT(sscanf);
 
 

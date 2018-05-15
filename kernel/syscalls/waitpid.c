@@ -12,8 +12,6 @@
         for(v = task_queue; v; v = v->next) {                       \
             if(v->parent != current_task)                           \
                 continue;                                           \
-            if(v->status == TASK_STATUS_STOP)                       \
-                continue;                                           \
                                                                     \
             if((cond))                                              \
                 list_push(current_task->waiters, v);                \
@@ -38,9 +36,10 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
         return -1;
     }
 
-
-    if(options & WNOHANG)
+    if(options & WNOHANG) {
+        list_clear(current_task->waiters);
         return 0;
+    }
 
     syscall_ack();
     sys_pause();
@@ -48,8 +47,20 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
 
     pid_t p = -1;
     list_each(current_task->waiters, w) {
-        if(w->status != TASK_STATUS_KILLED || w->status != TASK_STATUS_STOP)
+        if(w->status != TASK_STATUS_KILLED && w->status != TASK_STATUS_STOP)
             continue;
+
+        if(w->status == TASK_STATUS_KILLED) {
+            if(w == task_queue)
+                task_queue = w->next;
+            else {
+                volatile task_t* tmp;
+                for(tmp = task_queue; tmp; tmp = tmp->next) {
+                    if(tmp->next == w)
+                        tmp->next = w->next;
+                }
+            }
+        }
             
         if(status)
             *status = (int) w->exit.value;

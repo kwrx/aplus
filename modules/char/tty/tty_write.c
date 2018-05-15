@@ -43,6 +43,9 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     uint8_t* buf = (uint8_t*) ptr;
     size_t p = 0;
     
+
+    if((tio->ios.c_lflag & TOSTOP) && (current_task->pgid != tio->pgrp))
+        sys_exit((1 << 31) | W_STOPCODE(SIGTTOU));
     
     
     while(p < len) {
@@ -57,7 +60,7 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         if(*buf == tio->ios.c_cc[VEOF])
             break;
         else if(*buf == tio->ios.c_cc[VERASE])
-            kprintf("\b");
+            { *buf-- = '\b'; p--; }
         else if(*buf == tio->ios.c_cc[VINTR])
             tty_signal(tio, SIGINT);
         else if(*buf == tio->ios.c_cc[VKILL])
@@ -65,11 +68,11 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         else if(*buf == tio->ios.c_cc[VQUIT])
             tty_signal(tio, SIGQUIT);
         else if(*buf == tio->ios.c_cc[VSUSP])
-            tty_signal(tio, SIGSTOP);
+            tty_signal(tio, SIGTSTP);
         else if(*buf == tio->ios.c_cc[VSTOP])
-            tio->output = 0;
+            tio->output = (tio->ios.c_lflag & ISIG) ? tio->output : 0;
         else if(*buf == tio->ios.c_cc[VSTART])
-            tio->output = 1;
+            tio->output = (tio->ios.c_lflag & ISIG) ? tio->output : 1;
         else
             if(tio->outlen < sizeof(tio->outbuf))
                 tio->outbuf[tio->outlen++] = *buf;

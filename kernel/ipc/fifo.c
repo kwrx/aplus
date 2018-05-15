@@ -20,7 +20,12 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len) {
 
     int i;
     for(i = 0; i < len; i++) {
-        ipc_wait(!(fifo->w_pos > fifo->r_pos));
+        if(fifo->async) {
+            if(unlikely(!(fifo->w_pos > fifo->r_pos)))
+                return i;
+        } else
+            ipc_wait(!(fifo->w_pos > fifo->r_pos));
+            
 
         *buf++ = fifo->buffer[fifo->r_pos++ % BUFSIZ];
     }
@@ -46,6 +51,18 @@ int fifo_write(fifo_t* fifo, void* ptr, size_t len) {
     return len;
 }
 
+int fifo_peek(fifo_t* fifo, size_t len) {
+
+    int i = len;
+    while(i--)
+        fifo->w_pos--;
+    
+    if(fifo->r_pos > fifo->w_pos)
+        fifo->r_pos = fifo->w_pos;
+            
+    return i;
+}
+
 
 int fifo_available(fifo_t* fifo) {
     if(unlikely(!fifo)) {
@@ -55,3 +72,8 @@ int fifo_available(fifo_t* fifo) {
 
     return fifo->w_pos - fifo->r_pos;
 }
+
+EXPORT(fifo_write);
+EXPORT(fifo_read);
+EXPORT(fifo_peek);
+EXPORT(fifo_available);

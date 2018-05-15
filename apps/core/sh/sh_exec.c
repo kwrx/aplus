@@ -14,18 +14,22 @@
 
 #include "sh.h"
 
+static struct termios ios;
 
 void sh_reset_tty() {
-    struct termios ios;
-
     pid_t pgrp = getpgrp();
     ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
     ioctl(STDIN_FILENO, TIOCGETA, &ios);
-
     ios.c_lflag &= ~ISIG;
     ioctl(STDIN_FILENO, TIOCSETA, &ios);
 }
 
+void sh_prepare_tty(pid_t pgrp) {
+    ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
+    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ios.c_lflag |= ISIG;
+    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+}
 
 static int run(int argc, char** argv, int in, int out) {
     int i;
@@ -33,6 +37,7 @@ static int run(int argc, char** argv, int in, int out) {
         if(strcmp(sh_commands[i].cmd, argv[0]) != 0)
             continue;
 
+        /*
         int old_in = dup(STDIN_FILENO);
         int old_out = dup(STDOUT_FILENO);
         int old_err = dup(STDERR_FILENO);
@@ -40,9 +45,11 @@ static int run(int argc, char** argv, int in, int out) {
         dup2(in, STDIN_FILENO);
         dup2(out, STDOUT_FILENO);
         dup2(out, STDERR_FILENO);
+        */
 
         int e = sh_commands[i].fn(argc, argv);
 
+        /*
         dup2(old_in, STDIN_FILENO);
         dup2(old_out, STDOUT_FILENO);
         dup2(old_err, STDERR_FILENO);
@@ -50,7 +57,8 @@ static int run(int argc, char** argv, int in, int out) {
         close(old_in);
         close(old_out);
         close(old_err);
-
+        */
+        
         return e;
     }
 
@@ -62,17 +70,11 @@ static int run(int argc, char** argv, int in, int out) {
         
         case 0: {
             setpgrp();
-            pid_t pgrp = getpgrp();
-            ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
+            sh_prepare_tty(getpgrp());
 
-            struct termios ios;
-            ioctl(STDIN_FILENO, TIOCGETA, &ios);
-            ios.c_lflag |= ISIG;
-            ioctl(STDIN_FILENO, TIOCSETA, &ios);
-
-            dup2(in, STDIN_FILENO);
-            dup2(out, STDOUT_FILENO);
-            dup2(out, STDERR_FILENO);
+            //dup2(in, STDIN_FILENO);
+            //dup2(out, STDOUT_FILENO);
+            //dup2(out, STDERR_FILENO);
 
             execvp(argv[0], argv);
             perror(argv[0]);
@@ -82,9 +84,14 @@ static int run(int argc, char** argv, int in, int out) {
         default: {
             int err, r;
             do {
-                err = waitpid(-1, &r, 0);
-            } while((err != -1) || (err == -1 && errno != ECHILD));
+                err = waitpid(e, &r, 0);
+            } while((err == -1 && errno == EINTR));
             
+
+            if(WIFSTOPPED(r))
+                sh_jobs_new(err, argv[0], 1);
+
+
             sh_reset_tty();
             return r;
         }

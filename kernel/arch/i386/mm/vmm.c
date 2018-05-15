@@ -19,7 +19,7 @@ volatile pdt_t* kernel_pdt = (volatile pdt_t*) &PDT;
 volatile pdt_t* current_pdt = (volatile pdt_t*) &PDT;
 
 
-static virtaddr_t __get_free_pages(volatile pdt_t* pdt, int count, int maked, int user) {
+static virtaddr_t __get_free_pages(volatile pdt_t* pdt, int count, int made, int user) {
     KASSERT(count < 1024);
 
 
@@ -27,7 +27,7 @@ static virtaddr_t __get_free_pages(volatile pdt_t* pdt, int count, int maked, in
     long i, j;
     for(i = 768; i < X86_PD_ENTRIES; i++) {
         if(unlikely(pdt->pages[i].frame == 0)) {
-            if(likely(maked))
+            if(likely(made))
                 continue;
             else
                 return (virtaddr_t) (i << 22);
@@ -40,7 +40,7 @@ static virtaddr_t __get_free_pages(volatile pdt_t* pdt, int count, int maked, in
             if(unlikely(!(pdt->pages[i].flags & X86_FLAG_USER)))
                 continue;
         
-        for(j = 0; j < X86_PT_ENTRIES - !(maked); j++) {
+        for(j = 0; j < X86_PT_ENTRIES - !(made); j++) {
             if(pdt->vpages[i]->frames[j].flags & X86_FLAG_PRESENT) {
                 f = 0;
                 continue;
@@ -161,8 +161,8 @@ void unmap_page(virtaddr_t virtaddr) {
 
 
 
-virtaddr_t get_free_pages(int count, int maked, int user) {
-    virtaddr_t p = __get_free_pages(current_pdt, count, maked, user);
+virtaddr_t get_free_pages(int count, int made, int user) {
+    virtaddr_t p = __get_free_pages(current_pdt, count, made, user);
     KASSERT(p);
     return p;
 }

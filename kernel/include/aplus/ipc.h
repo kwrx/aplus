@@ -38,6 +38,7 @@ typedef struct fifo {
     int r_pos;
     mutex_t w_lock;
     mutex_t r_lock;
+    int async;
 } __packed fifo_t;
 
 
@@ -70,10 +71,11 @@ int mutex_unlock(mutex_t* mtx);
 int fifo_read(fifo_t* fifo, void* ptr, size_t len);
 int fifo_write(fifo_t* fifo, void* ptr, size_t len);
 int fifo_available(fifo_t* fifo);
+int fifo_peek(fifo_t* fifo, size_t len);
 
 #define fifo_init(x)                                                    \
     {                                                                   \
-        (x)->w_pos = (x)->r_pos = 0;                                    \
+        (x)->w_pos = (x)->r_pos = (x)->async = 0;                       \
         mutex_init(&(x)->r_lock, MTX_KIND_DEFAULT, "fifo");             \
         mutex_init(&(x)->w_lock, MTX_KIND_DEFAULT, "fifo");             \
     }

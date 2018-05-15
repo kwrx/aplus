@@ -5,6 +5,7 @@
 #include <sys/types.h>
 #include <getopt.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <pwd.h>
 #include <termios.h>
 #include <sys/ioctl.h>
@@ -99,13 +100,19 @@ int main(int argc, char** argv) {
     }
 
 
+    char buf[BUFSIZ];
+    setenv("PWD", getcwd(buf, BUFSIZ), 1);
+
+
     if(command)
         sh_exec(command);
 
     
     setsid();
-    setpgrp();
+    sh_jobs_signal();
     sh_reset_tty();
+
+
 
     char* user = getuser();
     char* host = gethost();

@@ -68,10 +68,12 @@ int main(int argc, char** argv) {
 
 
     setsid();
+    tcsetpgrp(fd, getpgrp());
 
     dup2(fd, STDIN_FILENO);
     dup2(fd, STDOUT_FILENO);
     dup2(fd, STDERR_FILENO);
+
 
     execl("/usr/sbin/login", "/usr/sbin/login", NULL);
     perror("login");

@@ -1,8 +1,8 @@
 .PHONY: all
-OUTPUT		?=
+
 CC			?=
 ROOT		?=
-OUTPUT		:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
+OUTPUT		:= $(ROOT)/bin/usr/sbin/$(notdir $(PWD))
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")

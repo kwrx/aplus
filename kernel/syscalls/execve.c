@@ -192,6 +192,8 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->description = "";
     current_task->exe = inode;
 
+    list_clear(current_task->signal.s_queue);
+
 
     INTR_ON;
     syscall_ack();

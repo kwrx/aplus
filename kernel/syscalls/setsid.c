@@ -16,5 +16,7 @@ int sys_setsid(void) {
     }
 
     current_task->sid = current_task->pid;
-    return 0;
+    current_task->pgid = current_task->pid;
+    
+    return current_task->sid;
 });

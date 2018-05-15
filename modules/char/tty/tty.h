@@ -31,6 +31,8 @@ struct tty_context {
 
     char outbuf[65536];
     int outlen;
+    
+    fifo_t in;
     pid_t pgrp;
 };
 

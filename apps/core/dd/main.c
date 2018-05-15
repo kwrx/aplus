@@ -154,7 +154,6 @@ static void dd_sighand(int sig) {
             break;
         case SIGQUIT:
         case SIGTERM:
-        case SIGKILL:
             if(status < 2) {
                 print_xfer();
                 print_status();
@@ -187,7 +186,6 @@ int main(int argc, char** argv) {
     signal(SIGUSR1, dd_sighand);
     signal(SIGQUIT, dd_sighand);
     signal(SIGTERM, dd_sighand);
-    signal(SIGKILL, dd_sighand);
     signal(SIGINT, dd_sighand);
     
     

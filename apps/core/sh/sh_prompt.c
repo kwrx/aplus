@@ -6,9 +6,18 @@
 #include <sys/ioctl.h>
 #include <sys/termios.h>
 
+#include <aplus/base.h>
+#include <aplus/utils/unicode.h>
 
 #include "sh.h"
 
+
+list(char*, sh_history);
+
+void sh_history_add(char* line) {
+    if(strlen(line))
+        list_push(sh_history, strdup(line));
+}
 
 
 static void sh_prompt_info(char* user, char* host) {
@@ -87,19 +96,21 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
 
 
 
-    uint8_t ch[4];
+    uint8_t ch;
     do {
-        read(STDIN_FILENO, ch, 1);
+        read(STDIN_FILENO, &ch, 1);
 
         if(history < 0)
             history = 0;
 
-        switch(ch[0]) {
+        switch(ch) {
             case '\e':
-                if(ch[1] != '[')
+                read(STDIN_FILENO, &ch, 1);
+                if(ch != '[')
                     break;
                 
-                switch(ch[2]) {
+                read(STDIN_FILENO, &ch, 1);
+                switch(ch) {
                     case 'A':
                         sh_prompt_history(line, user, host, history++);
                         i = strlen(line);
@@ -118,29 +129,35 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 }
                 break;
             case 128 ... 255:
-                line[i++] = ch[0];
-                line[i++] = ch[1];
+                line[i++] = ch;
                 line[i] = '\0';
+                
+                fprintf(stdout, "%c", ch);
 
-                fprintf(stdout, "%c%c", ch[0], ch[1]);
+
+                for(int i = 0; i < utf8_bytes(ch) - 1; i++) {
+                    read(STDIN_FILENO, &ch, 1);
+                    fprintf(stdout, "%c", ch);
+                }
+
                 break;
             case 32 ... 127:
             case '\t':
-                line[i++] = ch[0];
+                line[i++] = ch;
                 line[i] = '\0';
 
-                fprintf(stdout, "%c", ch[0]);
+                fprintf(stdout, "%c", ch);
                 break;
             case '\n':
                 break;
             default:
-                fprintf(stdout, "^%c", 'A' + ch[0] - 1);
+                fprintf(stdout, "^%c", 'A' + ch - 1);
                 break;
 
         }
 
         fflush(stdout);
-    } while(ch[0] != '\n' && ch[0] != '\0');
+    } while(ch != '\n' && ch != '\0');
 
     if(line[i - 1] == '\n')
         line[--i] = '\0';

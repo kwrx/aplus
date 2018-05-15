@@ -10,8 +10,6 @@ SYSCALL(0, exit,
 void sys_exit(int status) {
     KASSERT(current_task != kernel_task);
 
-    INTR_OFF;
-    current_task->status = TASK_STATUS_KILLED;
     
     if(status & (1 << 31))
         current_task->exit.value = status & 0x7FFF;
@@ -24,7 +22,7 @@ void sys_exit(int status) {
         current_task->pid, 
         current_task->name,
         WIFSTOPPED(current_task->exit.value) ? "stopped" : "exited",
-        current_task->exit.value,
+        current_task->exit.value & 0xFFFF,
         (double) current_task->clock.tms_utime / CLOCKS_PER_SEC,
         (double) current_task->clock.tms_cutime / CLOCKS_PER_SEC,
         current_task->image->refcount
@@ -32,13 +30,17 @@ void sys_exit(int status) {
 #endif
 
 
+    current_task->status = (WIFSTOPPED(current_task->exit.value))
+        ? TASK_STATUS_STOP
+        : TASK_STATUS_KILLED;
+
+
     if(current_task->parent)
         sched_signal(current_task->parent, SIGCHLD);
 
 
 
-    if(WIFSTOPPED(current_task->exit.value)) {
-        current_task->status = TASK_STATUS_STOP;
+    if(current_task->status == TASK_STATUS_STOP) {
         while(current_task->status == TASK_STATUS_STOP)
             sys_yield();
 
@@ -46,25 +48,14 @@ void sys_exit(int status) {
     }
 
 
+    INTR_OFF;
 
     volatile task_t* tmp;
     for(tmp = task_queue; tmp; tmp = tmp->next)
         if(tmp->parent == current_task)
             tmp->parent = kernel_task;
 
-
-
-    if(current_task == task_queue)
-        task_queue = current_task->next;
-    else {
-        volatile task_t* tmp;
-        for(tmp = task_queue; tmp; tmp = tmp->next) {
-            if(tmp->next == current_task)
-                tmp->next = current_task->next;
-        }
-    }
     
-
     int i;
     for(i = 0; i < TASK_FD_COUNT; i++)
         sys_close(i);

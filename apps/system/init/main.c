@@ -102,13 +102,21 @@ static void init_welcome() {
 
 
 int main(int argc, char** argv) {
+    if(getppid() != 1)
+        return 1;
+
     signal(SIGTERM, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
+
 
     fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
     fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
     fcntl(open("/dev/stderr", O_WRONLY), F_DUPFD, STDERR_FILENO);
-   
+
+    setsid();
+    tcsetpgrp(STDIN_FILENO, getpgrp());
+
+
     init_console();
     init_welcome();
     init_initd();
