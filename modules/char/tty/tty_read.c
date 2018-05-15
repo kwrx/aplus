@@ -65,7 +65,7 @@ char* __kmap_dead[] = {
 };
     
 char* __kmap_cur[] = {
-    "\e[B", "\e[D", "\e[B", "\e[A"
+    "\e[B", "\e[D", "\e[C", "\e[A"
 };
 
 char** __kmap[] = {
@@ -129,6 +129,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     
     if(unlikely(!len))
         return 0;
+
  
     struct tty_context* tio = (struct tty_context*) inode->userdata;
     register uint8_t* buf = (uint8_t*) ptr;
@@ -139,14 +140,15 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         sys_exit((1 << 31) | W_STOPCODE(SIGTTIN));
 
     
-    int i;
+    int fz = 0;
     if(fifo_available(&tio->in))
-        i = fifo_read(&tio->in, buf, len);
+        fz = fifo_read(&tio->in, buf, len);
 
-    if(unlikely(!(len - i)))
+    if(unlikely(!(len - fz)))
         return len;
 
-    buf += i;
+    buf += fz;
+    len -= fz;
 
 
     int fd = sys_open(TTY_DEFAULT_INPUT_DEVICE, O_RDONLY, 0);
@@ -231,15 +233,6 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                         ch -= ch >= 'a' && ch <= 'Z' ? 32 : 0;
                 }
             case KT_ASCII:
-                if(unlikely(ch < 32)) {
-                    for(int i = 0; i < NCCS; i++) {
-                        if(ch != tio->ios.c_cc[i])
-                            continue;
-                        
-                        ch = 0;
-                        break;
-                    }
-                }
                 break;
 
             case KT_SPEC:
@@ -255,7 +248,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                     continue;
 
 
-                fifo_write(&tio->in, &__kmap[KTYP(key)][KVAL(key)][i], strlen(__kmap[KTYP(key)][KVAL(key)]));
+                fifo_write(&tio->in, __kmap[KTYP(key)][KVAL(key)], strlen(__kmap[KTYP(key)][KVAL(key)]));
                 p += strlen(__kmap[KTYP(key)][KVAL(key)]);
 
                 if(tio->ios.c_lflag & ECHO)
@@ -294,6 +287,25 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         }
 
 
+        if(unlikely(ch < 32)) {
+            for(int i = 0; i < NCCS; i++) {
+                if(ch != tio->ios.c_cc[i])
+                    continue;
+
+
+                fifo_write(&tio->in, &ch, 1);
+                p++;
+
+                ch = 0;
+                break;
+            }
+
+            if(unlikely(!ch))
+                continue;
+        }
+
+
+
         if(!(tio->ios.c_iflag & IGNCR)) {
             if(ch == '\n')
                 break;
@@ -307,9 +319,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         p += utf8len;
 
         if(tio->ios.c_lflag & ECHO)
-            tty_write(inode, utf8, 0, utf8len);
-
-                    
+            tty_write(inode, utf8, 0, utf8len);           
     }
 
 
@@ -324,14 +334,15 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
             if(tio->ios.c_lflag & ECHONL)
                 tty_write(inode, &ch, 0, 1);
         }
-    }
+    } else
+        p = len;
     
 
 
     if(fifo_available(&tio->in))
-        i = fifo_read(&tio->in, buf, len);
+        fifo_read(&tio->in, buf, p);
     
     
     sys_close(fd);
-    return p;
+    return p + fz;
 }

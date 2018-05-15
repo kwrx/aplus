@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
 #include <aplus/base.h>
 #include <aplus/utils/list.h>
@@ -67,6 +68,9 @@ int sh_cmd_cd(int argc, char** argv) {
 }
 
 int sh_cmd_exit(int argc, char** argv) {
+    list_each(sh_jobs, job)
+        kill(job->pid, SIGKILL);
+
     if(argv[1])
         exit(atoi(argv[1]));
 

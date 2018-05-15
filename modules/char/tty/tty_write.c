@@ -56,6 +56,10 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
                     : *buf;
 #endif
 
+
+        if(*buf == '\r' && tio->ios.c_iflag & ICRNL)
+            *buf = '\n';
+     
      
         if(*buf == tio->ios.c_cc[VEOF])
             break;
@@ -70,9 +74,9 @@ int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
         else if(*buf == tio->ios.c_cc[VSUSP])
             tty_signal(tio, SIGTSTP);
         else if(*buf == tio->ios.c_cc[VSTOP])
-            tio->output = (tio->ios.c_lflag & ISIG) ? tio->output : 0;
+            tio->output = (tio->ios.c_iflag & IXON) ? 0 : tio->output;
         else if(*buf == tio->ios.c_cc[VSTART])
-            tio->output = (tio->ios.c_lflag & ISIG) ? tio->output : 1;
+            tio->output = (tio->ios.c_iflag & IXON) ? 1 : tio->output;
         else
             if(tio->outlen < sizeof(tio->outbuf))
                 tio->outbuf[tio->outlen++] = *buf;

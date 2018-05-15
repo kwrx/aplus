@@ -32,8 +32,8 @@ int init(void) {
     }
 
     memset(tio, 0, sizeof(struct tty_context));
-    tio->ios.c_iflag |= 0;
-    tio->ios.c_oflag |= 0;
+    tio->ios.c_iflag |= ICRNL | IXON;
+    tio->ios.c_oflag |= OPOST;
     tio->ios.c_cflag |= 0;
     tio->ios.c_lflag |= ISIG | ICANON | ECHO | ECHOE | ECHONL;
     

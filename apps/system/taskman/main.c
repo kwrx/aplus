@@ -46,7 +46,7 @@ static void onexit_handler() {
 }
 
 static void timer_handler(int sig) {
-    signal(SIGALRM, timer_handler);
+    signal(sig, timer_handler);
     alarm(1);
 
 
@@ -81,6 +81,7 @@ int main(int argc, char** argv) {
 
     atexit(onexit_handler);
     signal(SIGALRM, timer_handler);
+    signal(SIGCONT, timer_handler);
     alarm(1);
 
 

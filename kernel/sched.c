@@ -122,7 +122,7 @@ void sched_signal(task_t* tk, int sig) {
     if(unlikely(!tk->signal.s_handler))
         return;
 
-    kprintf(INFO "sched_signal(): signaled %d with %d from %d\n", tk->pid, sig, current_task->pid);
+
     list_push(tk->signal.s_queue, sig);
 
     if (tk->status != TASK_STATUS_STOP || sig == SIGCONT)

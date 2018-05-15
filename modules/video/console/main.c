@@ -133,7 +133,7 @@ static void plot_value(struct cc* cc, int32_t uvalue) {
                 case 'H':
                 case 'f':
                     sscanf(cc->escape_buffer, "%d;%d", &y, &x);
-                    cc->p = y * cc->width + x;
+                    cc->p = ((y ? y - 1 : 0)) * cc->width + (x ? x - 1 : 0);
                     break;
                 case 'J':
                     y = atoi(cc->escape_buffer);

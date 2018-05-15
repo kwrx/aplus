@@ -62,12 +62,15 @@ static void sh_prompt_info(char* user, char* host) {
 
 
 static void sh_prompt_history(char* line, char* user, char* host, int history) {
-    if(history < 0)
+    if(history <= 0)
+        return;
+    
+    if(list_length(sh_history) == 0)
         return;
 
     do {
         list_each_r(sh_history, h) {
-            if(history--)
+            if(--history)
                 continue;
 
             memset(line, 0, BUFSIZ);
@@ -112,11 +115,11 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 read(STDIN_FILENO, &ch, 1);
                 switch(ch) {
                     case 'A':
-                        sh_prompt_history(line, user, host, history++);
+                        sh_prompt_history(line, user, host, ++history);
                         i = strlen(line);
                         break;
                     case 'B':
-                        sh_prompt_history(line, user, host, history--);
+                        sh_prompt_history(line, user, host, --history);
                         i = strlen(line);
                         break;
                 }
