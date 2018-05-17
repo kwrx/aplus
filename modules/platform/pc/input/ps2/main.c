@@ -9,7 +9,7 @@
 #include <libc.h>
 
 MODULE_NAME("pc/input/ps2");
-MODULE_DEPS("arch/x86,sys/events");
+MODULE_DEPS("arch/x86,system/events");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 

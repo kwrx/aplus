@@ -46,6 +46,7 @@ int main(int argc, char** argv) {
         { "version", no_argument, NULL, 'v'},
         { NULL, 0, NULL, 0 }
     };
+
     
     
     int c, idx;
@@ -62,6 +63,8 @@ int main(int argc, char** argv) {
                 abort();
         }
     }
+
+
 
     fprintf(stderr, "\e[0;39;49m");
     char* username = NULL;
@@ -167,13 +170,6 @@ int main(int argc, char** argv) {
 
 
 
-        setenv("PATH", "/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/bin", 1);
-        setenv("LD_DEBUG", "all", 1);
-        setenv("LD_DEBUG_OUTPUT", "/dev/log", 1);
-        setenv("LD_LIBRARY_PATH", "/usr/lib:/usr/local/lib:/lib", 1);
-        setenv("TERM", "linux", 1);
-        setenv("TMPDIR", "/tmp", 1);
-        setenv("LANG", (const char*) sysconfig("sys.locale", ""), 1);
         setenv("USER", pwd->pw_name, 1);
         setenv("LOGNAME", pwd->pw_name, 1);
         setenv("HOME", pwd->pw_dir, 1);

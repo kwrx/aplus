@@ -8,8 +8,6 @@
 #include <pthread.h>
 
 
-
-
 typedef pthread_t async_t;
 
 

@@ -164,6 +164,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
             return -1;
         }
 
+
         switch(k.vkey) {
             case KEY_LEFTALT:
                 tty_keys = !!(k.down) ? tty_keys | K_ALT : tty_keys & ~K_ALT;

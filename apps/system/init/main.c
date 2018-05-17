@@ -22,19 +22,7 @@
 #include <aplus/sysconfig.h>
 #include <aplus/utils/unicode.h>
 
-
-
-static char* __envp[] = {
-    "PATH=/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/bin:/sbin",
-    "LD_DEBUG=all",
-    "LD_DEBUG_OUTPUT=/dev/log",
-    "LD_LIBRARY_PATH=/usr/lib:/usr/local/lib:/lib",
-    "TERM=linux",
-    "TMPDIR=/tmp",
-    NULL
-};
     
-
 
 static void init_initd() {
     DIR* d = opendir("/etc/init.d");
@@ -62,7 +50,7 @@ static void init_initd() {
             if(pid == -1)
                 break;
             else if(pid == 0) {
-                if(execle(path, path, "start", NULL, __envp) < 0)
+                if(execl(path, path, "start", NULL) < 0)
                     perror(path);
 
                 exit(-1);
@@ -98,6 +86,59 @@ static void init_welcome() {
     char ln[BUFSIZ];
     while(fgets(ln, BUFSIZ, fp) > 0)
         fprintf(stdout, ln);
+
+    fclose(fp);
+}
+
+
+static void init_environment() {
+    FILE* fp = fopen("/etc/environment", "r");
+    if(!fp)
+        return;
+
+
+    char ln[BUFSIZ];
+    while(fgets(ln, BUFSIZ, fp) > 0) {
+        if(ln[strlen(ln) - 1] == '\n')
+            ln[strlen(ln) - 1] = '\0';
+
+        switch(ln[0]) {
+            case '\0':
+            case '#':
+                continue;
+
+            default:
+                putenv(ln);
+                break;
+        }
+    }
+
+
+    char* s;
+    if(!(s = getenv("LANG")) || !strlen(s))
+        setenv("LANG", (const char*) sysconfig("init.locale", "en-US"), 1);
+
+    fclose(fp);
+}
+
+
+static void init_timezone() {
+    int __do(char* at, char* p) {
+        char buf[BUFSIZ];
+        memset(buf, 0, sizeof(buf));
+        sprintf(buf, "%s/%s", at, p);
+
+        return symlink(buf, "/etc/localtime");
+    }
+
+    char* tz = (char*) sysconfig("init.timezone", "UTC");
+    char* dir = getenv("TZDIR");
+
+    if(!dir)
+        dir = PATH_TZDIR;
+
+    if(__do(dir, tz) != 0 && __do(dir, "UTC") != 0)
+        perror("init: localtime");
 }
 
 
@@ -119,9 +160,12 @@ int main(int argc, char** argv) {
 
     init_console();
     init_welcome();
+    init_environment();
+    init_timezone();
     init_initd();
 
-    ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("sys.locale", "en-US"));
+
+    ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("init.locale", "en-US"));
     
     for(; errno != ECHILD; )
         waitpid(-1, NULL, 0);

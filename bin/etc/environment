@@ -1,0 +1,14 @@
+## /etc/environment
+#
+# Syntax: simple "KEY=VAL" pairs on separate lines
+#
+
+
+PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
+LD_DEBUG_ALL=all
+LD_DEBUG_OUTPUT=/dev/log
+LD_LIBRARY_PATH=/usr/local/lib
+TMPDIR=/tmp
+TZDIR=/usr/share/zoneinfo
+TERM=linux
+LANG=

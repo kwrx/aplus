@@ -1,22 +1,12 @@
-# -- /etc/config
-# -- aPlus config
+## /etc/config
+#
+# System configuration file
+#
 
 
-
-
-# -- System
-sys.locale="it-IT"
-sys.timezone=2
-sys.events=16
-
-# -- [syncd]
-syncd.enabled="true"
-syncd.timeout=10
-
-# -- [ntpd]
-ntpd.enabled="true"
-ntpd.timeout=3600
-ntpd.server="it.pool.ntp.org"
+# -- Init
+init.locale="it-IT"
+init.timezone="Europe/Rome"
 
 
 # -- Screen
@@ -38,6 +28,7 @@ idle.priority=$idle.priority.low
 tmpfs.size=0x1000000
 tmpfs.files=0x100000
 
+
 # -- I/O Scheduler
 iosched.priority=0
 iosched.blksize=4194304
@@ -51,4 +42,15 @@ ui.font.regular="Ubuntu"
 ui.font.monospace="Ubuntu Mono"
 ui.font.condensed="Ubuntu Condensed"
 ui.wallpaper="/usr/share/images/wp.png"
+
+
+# -- [syncd]
+syncd.enabled="true"
+syncd.timeout=10
+
+
+# -- [ntpd]
+ntpd.enabled="true"
+ntpd.timeout=3600
+ntpd.server="it.pool.ntp.org"
 

@@ -10,7 +10,7 @@
 #include "tty.h"
 
 MODULE_NAME("char/tty");
-MODULE_DEPS("sys/events");
+MODULE_DEPS("system/events");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -37,15 +37,19 @@ int init(void) {
     tio->ios.c_cflag |= 0;
     tio->ios.c_lflag |= ISIG | ICANON | ECHO | ECHOE | ECHONL;
     
-    tio->ios.c_cc[VEOF] = 004;
-    tio->ios.c_cc[VEOL] = 000;
+
+    #define CTRL_KEY(i) \
+        ((i) & 037)
+
+    tio->ios.c_cc[VEOF] =   CTRL_KEY('d');
+    tio->ios.c_cc[VEOL] =   0000;
     tio->ios.c_cc[VERASE] = 0177;
-    tio->ios.c_cc[VINTR] = 003;
-    tio->ios.c_cc[VKILL] = 025;
-    tio->ios.c_cc[VQUIT] = 034;
-    tio->ios.c_cc[VSTART] = 021;
-    tio->ios.c_cc[VSTOP] = 023;
-    tio->ios.c_cc[VSUSP] = 032;
+    tio->ios.c_cc[VINTR] =  CTRL_KEY('c');
+    tio->ios.c_cc[VKILL] =  CTRL_KEY('u');
+    tio->ios.c_cc[VQUIT] =  CTRL_KEY('|');
+    tio->ios.c_cc[VSTART] = CTRL_KEY('q');
+    tio->ios.c_cc[VSTOP] =  CTRL_KEY('s');
+    tio->ios.c_cc[VSUSP] =  CTRL_KEY('z');
 
     tio->ios.c_ispeed =
     tio->ios.c_ospeed = B9600;

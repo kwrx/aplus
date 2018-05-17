@@ -98,7 +98,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
             sys_close(fd);
         }
 
-        return sys_execve(argv[0], argv, current_task->environ);
+        return sys_execve(argv[0], argv, envp);
     }
     
 

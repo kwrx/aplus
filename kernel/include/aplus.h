@@ -112,7 +112,6 @@ extern int sys_poll(struct pollfd*, nfds_t, int);
 
 extern int mounts_init();
 extern int core_init();
-extern int local_init();
 
 #endif
 #endif

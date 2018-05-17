@@ -57,7 +57,6 @@ int main(int argc, char** argv) {
 #if CONFIG_IOSCHED
     (void) iosched_init();
 #endif
-    (void) local_init();
 
 
     kprintf(INFO "cpu: %s %d MHz (Cores: %d, Threads: %d)\n",
