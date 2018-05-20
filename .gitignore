@@ -14,9 +14,9 @@
 *.0
 *.1
 .vscode
-bin/aplus
-bin/usr/bin/*
-bin/usr/sbin/*
-bin/usr/lib/*
-packages/*
+root/aplus
+root/usr/bin/*
+root/usr/sbin/*
+root/usr/lib/*
+extra/packages/*
 

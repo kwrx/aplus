@@ -32,7 +32,7 @@ static void sched_next(void) {
         KASSERT(current_task);
 
         
-        if(unlikely(current_task->status == TASK_STATUS_KILLED))
+        if(unlikely(current_task->status == TASK_STATUS_ZOMBIE))
             continue;
 
 
@@ -68,7 +68,7 @@ static void sched_next(void) {
         
         /* Check Waiters */
         list_each(current_task->waiters, w) {
-            if(likely(w->status != TASK_STATUS_KILLED && w->status != TASK_STATUS_STOP))
+            if(likely(w->status != TASK_STATUS_ZOMBIE && w->status != TASK_STATUS_STOP))
                 continue;
 
             current_task->status = TASK_STATUS_READY;
@@ -116,7 +116,7 @@ void sched_signal(task_t* tk, int sig) {
     if(unlikely(!tk))
         return;
 
-    if(unlikely(tk->status == TASK_STATUS_KILLED))
+    if(unlikely(tk->status == TASK_STATUS_ZOMBIE))
         return;
 
     if(unlikely(!tk->signal.s_handler))

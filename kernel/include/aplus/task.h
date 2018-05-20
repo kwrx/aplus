@@ -18,7 +18,7 @@
 #define TASK_STATUS_RUNNING             1
 #define TASK_STATUS_SLEEP               2
 #define TASK_STATUS_STOP                3
-#define TASK_STATUS_KILLED              4
+#define TASK_STATUS_ZOMBIE              4
 
 #define TASK_PRIO_MAX                   -20
 #define TASK_PRIO_MIN                   19

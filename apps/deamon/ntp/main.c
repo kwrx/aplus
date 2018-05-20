@@ -139,6 +139,8 @@ static void do_ntp() {
 
     fprintf(stderr, "ntpd: received_timestamp: %d : %d : %d\n", ntp.receive_timestamp[0], ntp.receive_timestamp[1], time(NULL));
     close(fd);
+    
+    /* TODO */
 }
 
 

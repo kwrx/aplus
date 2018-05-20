@@ -34,8 +34,8 @@ CONFIG:
 	$(shell sed -i "s/#define DEBUG.*/#define DEBUG $(DEBUG)/" config.h)
 	$(shell sed -i "s/#define PLATFORM.*/#define PLATFORM \"$(ARCH)\"/" config.h)
 	$(shell sed -i "s/#define TARGET.*/#define TARGET \"$(TARGET)\"/" config.h)
-	@echo "  GEN    " bin/etc/motd
-	$(shell sed -i "s/https:\/\/github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./bin/etc/motd)
+	@echo "  GEN    " root/etc/motd
+	$(shell sed -i "s/https:\/\/github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./root/etc/motd)
 
 
 
@@ -47,14 +47,14 @@ $(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES
 
 KERNEL_MODULES: LIBRARIES
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
-	@echo "menuentry \"HDD\" {" > bin/boot/grub/grub.cfg
-	@echo "multiboot /$(KERNEL_NAME) root=/dev/sda0 rootfs=ext2" >> bin/boot/grub/grub.cfg
-	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
-	@echo "boot }" >> bin/boot/grub/grub.cfg
-	@echo "menuentry \"CDROM\" {" >> bin/boot/grub/grub.cfg
-	@echo "multiboot /$(KERNEL_NAME) root=/dev/cda rootfs=iso9660" >> bin/boot/grub/grub.cfg
-	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst bin/,,$(mod)) >> bin/boot/grub/grub.cfg; )
-	@echo "boot }" >> bin/boot/grub/grub.cfg
+	@echo "menuentry \"HDD\" {" > root/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME) root=/dev/sda0 rootfs=ext2" >> root/boot/grub/grub.cfg
+	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst root/,,$(mod)) >> root/boot/grub/grub.cfg; )
+	@echo "boot }" >> root/boot/grub/grub.cfg
+	@echo "menuentry \"CDROM\" {" >> root/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME) root=/dev/cda rootfs=iso9660" >> root/boot/grub/grub.cfg
+	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst root/,,$(mod)) >> root/boot/grub/grub.cfg; )
+	@echo "boot }" >> root/boot/grub/grub.cfg
 	
 APPS: LIBRARIES
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
@@ -71,7 +71,7 @@ $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 	@mkdir -p /mnt/hdd
 	@mount /dev/loop3 /mnt/hdd
 	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop2 >> /dev/null
-	@cp -r bin/* /mnt/hdd
+	@cp -r root/* /mnt/hdd
 	@umount /mnt/hdd
 	@losetup -D
 	@qemu-img convert -f raw -O vdi hdd.img hdd.vdi
@@ -80,7 +80,7 @@ $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 	@sync
 
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
-	grub-mkrescue -o $@ bin
+	grub-mkrescue -o $@ root
 
 .c.o:
 	@echo "  CC     " $@
@@ -116,7 +116,7 @@ release: $(KERNEL_OUTPUT)	\
 		 KERNEL_MODULES		\
 		 $(KERNEL_ISO)		\
 		 $(HDD)
-	@cd bin && tar -cf ../$(HOST)-aplus-$(KERNEL_VERSION).tar * && cd ..
+	@cd root && tar -cf ../$(HOST)-aplus-$(KERNEL_VERSION).tar * && cd ..
 	@xz -z -T2 -q $(HOST)-aplus-$(KERNEL_VERSION).tar
 
 init:

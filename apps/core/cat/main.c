@@ -11,6 +11,7 @@
 #define SHOW_FLAG_ALL           4
 
 
+
 static void show_usage(int argc, char** argv) {
     printf(
         "Use: cat [options]... [FILE]...\n"

@@ -1,35 +1,32 @@
-.PHONY: all
+.PHONY: all clean
 
-CC			?=
-ROOT		?=
-OUTPUT		:= $(ROOT)/bin/usr/sbin/$(notdir $(PWD))
+OUTPUT      ?=
+CC          ?=
+CXX         ?=
+ROOT        ?=
+OUTPUT      := $(ROOT)/root/usr/sbin/$(notdir $(PWD))
 
-CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
-SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
-AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
-OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
+CFILES      :=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
+CPPFILES    :=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
+OFILES      :=  $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -O3 -c
-SFLAGS		:=  -c -I include
+CFLAGS      :=  -pipe -I include -std=gnu99 -O3 -c
+CPPFLAGS    :=  -pipe -I include -O3 -c
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -laplus -lpthread -lgcc
+	@$(CC) -pipe -O3 -s -o $@ $(OFILES) -laplus -lpthread -lstdc++ -lsupc++ -lc -lgcc
 
 
 .c.o:
 	@echo "  CC     " $(subst $(ROOT)/,,$@)
 	@$(CC) $(CFLAGS) -o $@ $<
 
-.s.o:
-	@echo "  AS     " $(subst $(ROOT)/,,$@)
-	@$(AS) $(AFLAGS) -o $@ $<
+.cpp.o:
+	@echo "  CXX    " $(subst $(ROOT)/,,$@)
+	@$(CXX) $(CPPFLAGS) -o $@ $<
 
-.asm.o:
-	@echo "  ASM    " $(subst $(ROOT)/,,$@)
-	@$(ASM) $(NFLAGS) -o $@ $<
-	
 	
 clean:
 	$(RM) $(OFILES) $(OUTPUT)

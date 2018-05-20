@@ -1,19 +1,19 @@
 .PHONY: all
 CC			?=
+CXX			?=
 ROOT		?=
 SYSROOT		?=
 TARGET		?=
 
 OUTPUT_A	:= $(SYSROOT)/$(TARGET)/lib/lib$(notdir $(PWD)).a
-OUTPUT_SO	:= $(ROOT)/bin/usr/lib/lib$(notdir $(PWD)).so
+OUTPUT_SO	:= $(ROOT)/root/usr/lib/lib$(notdir $(PWD)).so
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
-SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
-AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
-OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
+CPPFILES	:=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
+OFILES		:=  $(CFILES:.c=.o) $(CXXFILES:.cpp=.o)
 
 CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c
-SFLAGS		:=  -c -I include
+CPPFLAGS	:=  -pipe -I include -fpic -O3 -c
 
 
 all: $(OUTPUT_A) $(OUTPUT_SO)
@@ -30,13 +30,9 @@ $(OUTPUT_SO): $(OFILES)
 	@echo "  CC     " $(subst $(ROOT)/,,$@)
 	@$(CC) $(CFLAGS) -o $@ $<
 
-.s.o:
-	@echo "  AS     " $(subst $(ROOT)/,,$@)
-	@$(AS) $(AFLAGS) -o $@ $<
-
-.asm.o:
-	@echo "  ASM    " $(subst $(ROOT)/,,$@)
-	@$(ASM) $(NFLAGS) -o $@ $<
+.cpp.o:
+	@echo "  CXX    " $(subst $(ROOT)/,,$@)
+	@$(CXX) $(CPPFLAGS) -o $@ $<
 	
 	
 clean:

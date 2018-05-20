@@ -32,7 +32,7 @@ void sys_exit(int status) {
 
     current_task->status = (WIFSTOPPED(current_task->exit.value))
         ? TASK_STATUS_STOP
-        : TASK_STATUS_KILLED;
+        : TASK_STATUS_ZOMBIE;
 
 
     if(current_task->parent)

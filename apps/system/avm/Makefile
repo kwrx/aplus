@@ -6,10 +6,10 @@ CC			?=
 AR			?=
 ROOT		?=
 
-OUTPUT_BIN	:= $(ROOT)/bin/usr/bin/$(notdir $(PWD))
-OUTPUT_LIB	:= $(ROOT)/bin/usr/lib/lib$(notdir $(PWD)).a
-OUTPUT_INC	:= $(ROOT)/bin/usr/include/avm.h
-OUTPUT_RT	:= $(ROOT)/bin/usr/lib/avm/rt.jar
+OUTPUT_BIN	:= $(ROOT)/root/usr/bin/$(notdir $(PWD))
+OUTPUT_LIB	:= $(ROOT)/root/usr/lib/lib$(notdir $(PWD)).a
+OUTPUT_INC	:= $(ROOT)/root/usr/include/avm.h
+OUTPUT_RT	:= $(ROOT)/root/usr/lib/avm/rt.jar
 
 CFILES		:=  $(shell $(FIND) $(PWD)/src/* -type f -name "*.c")
 SFILES		:=  $(shell $(FIND) $(PWD)/src/* -type f -name "*.s")

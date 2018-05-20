@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <dlfcn.h>
+#include <libgen.h>
 
 #include "dl.h"
 
@@ -59,7 +60,7 @@ void* dlopen(const char* filename, int flag) {
 
 
     int fd;
-    if((fd = find_library(basename(filename))) < 0) {
+    if((fd = find_library(basename((char*) filename))) < 0) {
         __dlerrno = DL_ERR_CANNOT_LOAD_LIBRARY;
         return NULL;
     }
@@ -70,7 +71,7 @@ void* dlopen(const char* filename, int flag) {
         return NULL;
     }
 
-    strcpy(dl->filename, basename(filename));
+    strcpy(dl->filename, basename((char*) filename));
 
     list_push(__dl_loaded, dl);
     return (void*) dl;

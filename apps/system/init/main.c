@@ -8,12 +8,11 @@
 #include <errno.h>
 #include <dirent.h>
 
+#include <sys/wait.h>
 #include <sys/ioctl.h>
 #include <sys/termio.h>
 #include <sys/termios.h>
 
-
-#include <sys/ioctl.h>
 #include <aplus/base.h>
 #include <aplus/input.h>
 #include <aplus/kd.h>

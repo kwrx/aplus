@@ -5,7 +5,7 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "8e941323"
+#define COMMIT "8176494f"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/

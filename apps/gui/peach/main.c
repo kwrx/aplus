@@ -96,6 +96,12 @@ static void init_pipe(peach_server_t* pp) {
 
     if(pp->server == -1)
         die("peach: server");
+
+
+    static char display[8];
+    sprintf(display, "%d", i);
+
+    setenv("DISPLAY", display, 1);
 }
 
 
@@ -174,8 +180,6 @@ static void init_client(peach_server_t* pp, int fd) {
 
 
 int main(int argc, char** argv) {
-
-    void main() {}
    
     static struct option long_options[] = {
         { "help", no_argument, NULL, 'h'},
