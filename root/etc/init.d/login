@@ -1,10 +1,13 @@
-#!/usr/sbin/dux
+#!/bin/dash
 
-
-if(sysconfig("ui.enabled") == "true")
-    exec("/usr/sbin/dmx");
-
-
-/* Fallback */
-exec("/usr/sbin/getty /dev/tty0");
+case "$1" in
+    start)
+        exec /sbin/getty /dev/tty0
+        ;;
+    stop | status | restart)
+        ;;
+    *)
+        echo "Usage: `basename $0` {start|stop|status|restart}"
+        exit 1
+esac
 

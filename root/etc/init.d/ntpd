@@ -1,4 +1,12 @@
-#!/usr/sbin/dux
+#!/bin/dash
 
-
-exec("/usr/sbin/ntp --deamon");
+case "$1" in
+    start)
+        exec /sbin/ntp --deamon
+        ;;
+    stop | status | restart)
+        ;;
+    *)
+        echo "Usage: `basename $0` {start|stop|status|restart}"
+        exit 1
+esac
