@@ -6,13 +6,13 @@
 #include <fcntl.h>
 
 
-void* th_input(void* arg) {
+int th_input(void* arg) {
     dmx_t* dmx = (dmx_t*) arg;
 
     int fd = open("/dev/ev1", O_RDONLY);
     if(fd < 0) {
         fprintf(stderr, "dmx: /dev/ev1: could not open\n");
-        exit(1);
+        _exit(1);
     }
 
 
@@ -43,5 +43,5 @@ void* th_input(void* arg) {
     }
 
     close(fd);
-    exit(0);
+    _exit(0);
 }

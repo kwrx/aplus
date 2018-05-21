@@ -31,11 +31,18 @@ typedef struct module {
 
     size_t size;
     int loaded;
+    int refcount;
 } module_t;
 
 
 int module_init(void);
 int module_dnit(void);
+
+int module_check(void* image, size_t size, char** name);
+int module_run(char* name);
+int module_load(char* name);
+int module_exit(char* name);
+
 
 extern list(module_t*, m_queue);
 extern list(symbol_t*, m_symtab);

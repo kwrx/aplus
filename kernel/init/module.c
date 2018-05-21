@@ -66,7 +66,7 @@ static void* module_resolve(char* name) {
 }
 
 
-static int module_load(char* name) {
+int module_load(char* name) {
     list_each(m_queue, mod) {
         if(strcmp(mod->name, name) != 0)
             continue;
@@ -75,8 +75,9 @@ static int module_load(char* name) {
             return 0;
 
         list_each(mod->deps, d) {
-            if(module_load(d) != E_OK) {
+            if(module_load(d) != 0) {
                 kprintf(ERROR "module: unresolved dependency on loading \'%s\' for %s\n", d, mod->name);
+                errno = EBADMSG;
                 return -1;
             }
         }
@@ -112,7 +113,8 @@ static int module_load(char* name) {
         void* core = (void*) kmalloc(size, GFP_KERNEL);
         if(!core) {
             kprintf(ERROR "module: could not allocate %d bytes of memory for %s!\n", size, name);
-            continue;
+            errno = ENOMEM;
+            return -1;
         }
 
         for(int i = 1; i < hdr->e_shnum; i++) {
@@ -135,7 +137,8 @@ static int module_load(char* name) {
 
         if(!symtab || !strtab || !names) {
             kprintf(ERROR "module: could not found symtab, strtab or names for %s\n", name);
-            continue;
+            errno = EBADMSG;
+            return -1;
         }
 
         Elf_Sym* sym = (Elf_Sym*) ((uintptr_t) image + symtab->sh_offset);
@@ -195,20 +198,23 @@ static int module_load(char* name) {
         return 0;
     }
 
+    errno = ENOENT;
     return -1;
 }
 
-static int module_run(char* name) {
+int module_run(char* name) {
     list_each(m_queue, mod) {
         if(strcmp(mod->name, name) != 0)
             continue;
 
+        mod->refcount++;
         if(mod->loaded)
             return 0;
 
         list_each(mod->deps, d) {
-            if(module_run(d) != E_OK) {
+            if(module_run(d) != 0) {
                 kprintf(ERROR "module: unresolved dependency on running \'%s\' for %s\n", d, mod->name);
+                errno = EBADMSG;
                 return -1;
             }
         }
@@ -216,18 +222,103 @@ static int module_run(char* name) {
 
         if(!mod->init) {
             kprintf(ERROR, "module: unresolved entrypoint \'init()\' for %s\n", mod->name);
+            errno = EBADMSG;
             return -1;
         }
 
 
-        //kprintf(INFO "module: running \'%s\'\n", mod->name);
-        if(mod->init() != E_OK)
+        if(mod->init() != 0)
             return -1;
 
         mod->loaded++;
         return 0;
     }
 
+    return -1;
+}
+
+
+int module_check(void* image, size_t size, char** retname) {
+    Elf_Ehdr* hdr = (Elf_Ehdr*) image;
+    if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
+        errno = ENOEXEC;
+        return -1;
+    }
+
+    Elf_Shdr* shdr = (Elf_Shdr*) ((uintptr_t) image + hdr->e_shoff);
+    char* shstr = (char*) ((uintptr_t) image + shdr[hdr->e_shstrndx].sh_offset);
+    
+    
+    char* deps = NULL;
+    char* name = NULL;
+
+    for(int i = 1; i < hdr->e_shnum; i++) {
+        if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_name") == 0)
+            name = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
+
+        if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_deps") == 0)
+            deps = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
+    }
+
+
+    module_t* mod = (module_t*) kmalloc(sizeof(module_t), GFP_KERNEL);
+    memset(mod, 0, sizeof(module_t));
+
+    list_each(m_queue, m) {
+        if(strcmp(m->name, name) == 0) {
+            errno = EEXIST;
+            return -1;
+        }
+    }
+    
+
+    if(deps && strlen(deps))
+        for(char* p = strtok(deps, ","); p; p = strtok(NULL, ","))
+            list_push(mod->deps, p);
+
+
+    mod->name = name;
+    mod->image_address = (uintptr_t) image;
+    mod->size = size;
+    mod->loaded_address = 0;
+    mod->loaded = 0;
+    mod->refcount = 0;
+
+    if(retname)
+        *retname = mod->name;
+
+    list_push(m_queue, mod);
+    return 0;
+}
+
+
+int module_exit(char* name) {
+    list_each(m_queue, mod) {
+        if(strcmp(mod->name, name) != 0)
+            continue;
+
+        if(!mod->loaded) {
+            errno = EBUSY;
+            return -1;
+        }
+
+        if(mod->refcount > 1) {
+            errno = EWOULDBLOCK;
+            return -1;
+        }
+
+        if(mod->dnit)
+            mod->dnit();
+
+        
+
+        kfree((void*) mod->name);
+        kfree((void*) mod->loaded_address);
+        kfree((void*) mod);
+        return 0;
+    }
+
+    errno = ENOENT;
     return -1;
 }
 
@@ -250,49 +341,8 @@ int module_init(void) {
 
 
     int i;
-    for(i = 0; i < mbd->modules.count; i++) {
-        void* image = (void*) mbd->modules.ptr[i].ptr;
-
-    
-        Elf_Ehdr* hdr = (Elf_Ehdr*) image;
-        if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
-            kprintf(ERROR "module[%d]: invalid executable!\n", i);
-            continue;
-        }
-
-        Elf_Shdr* shdr = (Elf_Shdr*) ((uintptr_t) image + hdr->e_shoff);
-        char* shstr = (char*) ((uintptr_t) image + shdr[hdr->e_shstrndx].sh_offset);
-        char* deps = NULL;
-
-
-        module_t* mod = (module_t*) kmalloc(sizeof(module_t), GFP_KERNEL);
-        memset(mod, 0, sizeof(module_t));
-
-        for(int i = 1; i < hdr->e_shnum; i++) {
-            if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_name") == 0)
-                mod->name = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
-
-            if(strcmp((char*) ((uintptr_t) shstr + shdr[i].sh_name), ".module_deps") == 0)
-                deps = strdup((char*) ((uintptr_t) image + shdr[i].sh_offset));
-        }
-
-
-        if(deps && strlen(deps) > 0) {
-            char* p;
-            for(p = strtok(deps, ","); p; p = strtok(NULL, ","))
-                list_push(mod->deps, p);
-        }
-
-
-
-        mod->image_address = (uintptr_t) image;
-        mod->size = mbd->modules.ptr[i].size;
-        mod->loaded_address = 0;
-        mod->loaded = 0;
-
-        list_push(m_queue, mod);
-    }
-
+    for(i = 0; i < mbd->modules.count; i++)
+        module_check((void*) mbd->modules.ptr[i].ptr, mbd->modules.ptr[i].size, NULL);
     
     list_each(m_queue, mod)
         module_load(mod->name);

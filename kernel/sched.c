@@ -125,7 +125,7 @@ void sched_signal(task_t* tk, int sig) {
 
     list_push(tk->signal.s_queue, sig);
 
-    if (tk->status != TASK_STATUS_STOP || sig == SIGCONT)
+    if (tk->status != TASK_STATUS_STOP || (sig == SIGCONT || sig == SIGKILL))
         tk->status = TASK_STATUS_READY;
 }
 

@@ -332,18 +332,18 @@ void task_release(volatile task_t* task) {
 
         
     int i;
-    if(likely(current_task->argv)) {
-        for(i = 0; current_task->argv[i]; i++)
-            kfree(current_task->argv[i]);
+    if(likely(task->argv)) {
+        for(i = 0; task->argv[i]; i++)
+            kfree(task->argv[i]);
             
-        kfree(current_task->argv);
+        kfree(task->argv);
     }
         
-    if(likely(current_task->environ)) {
-        for(i = 0; current_task->environ[i]; i++)
-            kfree(current_task->environ[i]);        
+    if(likely(task->environ)) {
+        for(i = 0; task->environ[i]; i++)
+            kfree(task->environ[i]);        
         
-        kfree(current_task->environ);
+        kfree(task->environ);
     }
 
 

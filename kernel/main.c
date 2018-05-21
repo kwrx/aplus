@@ -11,8 +11,8 @@
 
 
 int idle(void) {
-    current_task->name = "[systemd]";
-    current_task->description = "System Process";
+    current_task->name = "init";
+    current_task->description = "System Init Process";
 
 
     int p;
@@ -94,7 +94,7 @@ int main(int argc, char** argv) {
             if(sys_execve(__argv[0], __argv, __envp) < 0)
                 kprintf(ERROR "%s: %s\n", __argv[0], strerror(errno));
 
-            sys_exit(-1);
+            sys_exit(1);
 
         default:
             break;

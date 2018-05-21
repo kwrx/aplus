@@ -28,6 +28,7 @@
 #include <sys/statvfs.h>
 #include <sched.h>
 #include <signal.h>
+#include <libgen.h>
 
 #ifdef _POSIX_SOURCE
 #define _OLD_POSIX_SOURCE _POSIX_SOURCE

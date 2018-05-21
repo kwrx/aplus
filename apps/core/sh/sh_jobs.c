@@ -16,7 +16,7 @@
 #include "sh.h"
 
 list(job_t*, sh_jobs);
-
+job_t* background_job = NULL;
 
 static job_t* jobs_find(int jobid) {
     job_t* job = NULL;
@@ -57,23 +57,14 @@ static job_t* jobs_find_by_pid(pid_t pid) {
 
 
 static int jobs_wait(job_t* job) {
-    pid_t pid = -1;
-    if(job)
-        pid = job->pid;
-
     int e, s;
     do {
-        e = waitpid(pid, &s, 0);
+        e = waitpid(job->pid, &s, 0);
     } while ((e == -1 && errno == EINTR));
     
     if(e == -1)
         return -1;
 
-    if(job) /* SIGCHLD */
-        return 0;
-    
-    if(!job && (!(job = jobs_find_by_pid(e))))
-        return -1;
 
     if(WIFSTOPPED(s)) {
         fprintf(stdout, "[%d]%c Stopped\t%s\n", job->id, job->id == 0 ? '+' : '-', job->name);
@@ -87,8 +78,8 @@ static int jobs_wait(job_t* job) {
 
 
 static void SIGCHLD_handler(int sig) {
-    jobs_wait(NULL);
-    signal(SIGCHLD, SIGCHLD_handler);
+    jobs_wait(background_job);
+    background_job = NULL;
 }
 
 int sh_jobs_foreground(int jobid) {
@@ -113,6 +104,7 @@ int sh_jobs_background(int jobid) {
     if(!(job = jobs_find(jobid)))
         return -1;
 
+    sh_jobs_signal(job);
     if(job->status == JOB_STATUS_STOPPED)
         if(kill(job->pid, SIGCONT) != 0)
             return -1;
@@ -143,6 +135,7 @@ int sh_jobs_new(pid_t pid, char* name, int stopped) {
     return job->id;
 }
 
-void sh_jobs_signal(void) {
+void sh_jobs_signal(job_t* job) {
+    background_job = job;
     signal(SIGCHLD, SIGCHLD_handler);
 }

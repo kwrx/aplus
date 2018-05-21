@@ -13,9 +13,6 @@
 int __aplus_crt__ = 1;
 char* __progname[BUFSIZ];
 
-extern void exit(int);
-extern int main(int, char**, char**);
-
 extern char** environ;
 extern int __bss_start;
 extern int end;
@@ -24,20 +21,27 @@ extern int __sigtramp(int);
 extern void __libc_init_array();
 extern void __libc_fini_array();
 extern void __install_sighandler(void*);
+extern void __exit(int);
+
+extern void exit(int);
+extern int main(int, char**, char**);
 
 
+static void __exit_from_signal(int e) {
+    __exit((1 << 31) | (e & 0x7FFF));
+}
 
 static void __df_sighandler_TERM(int sig) {
-    _exit((1 << 31) | W_EXITCODE(0, sig));
+    __exit_from_signal(W_EXITCODE(0, sig));
 }
 
 static void __df_sighandler_CORE(int sig) {
     /* TODO: Core dumping */
-    _exit((1 << 31) | W_EXITCODE(0, sig) | WCOREFLAG);
+    __exit_from_signal(W_EXITCODE(0, sig) | WCOREFLAG);
 }
 
 static void __df_sighandler_STOP(int sig) {
-    _exit((1 << 31) | W_STOPCODE(sig));
+    __exit_from_signal(W_STOPCODE(sig));
 }
 
 
@@ -103,7 +107,7 @@ static void __init_traps() {
 }
 
 
-static void __init_tz() {
+static void tzinit() {
     int fd = open("/etc/localtime", O_RDONLY);
     if(fd < 0)
         return;
@@ -171,9 +175,10 @@ void _start(char** argv, char** env) {
         while(*env)
             putenv(*env++);
 
-    __init_tz();
+
+    tzinit();
     tzset();
 
     atexit(__libc_fini_array);
-    exit(main(argc, argv, environ) & 0377);
+    exit(main(argc, argv, environ));
 }

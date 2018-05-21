@@ -74,8 +74,8 @@ typedef struct {
 
 
 
-void* th_render(void* arg);
-void* th_input(void* arg);
+int th_render(void* arg);
+int th_input(void* arg);
 
 
 void dmx_proto_ack(int type, pid_t pid, void* arg);

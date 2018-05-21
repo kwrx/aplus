@@ -50,6 +50,7 @@ pid_t sys_waitpid(pid_t pid, int* status, int options) {
         if(w->status != TASK_STATUS_ZOMBIE && w->status != TASK_STATUS_STOP)
             continue;
 
+
         if(w->status == TASK_STATUS_ZOMBIE) {
             if(w == task_queue)
                 task_queue = w->next;

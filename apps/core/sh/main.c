@@ -109,7 +109,6 @@ int main(int argc, char** argv) {
 
     
     setsid();
-    sh_jobs_signal();
     sh_reset_tty();
 
 

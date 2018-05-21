@@ -9,7 +9,6 @@
 SYSCALL(0, exit,
 void sys_exit(int status) {
     KASSERT(current_task != kernel_task);
-
     
     if(status & (1 << 31))
         current_task->exit.value = status & 0x7FFF;

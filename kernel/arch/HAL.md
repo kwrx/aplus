@@ -47,4 +47,5 @@
     `void debug_send(char value)`
     `void debug_lookup_symbol(symbol_t* symtab, uintptr_t address)`
     `void debug_dump(void* context, char* errmsg, uintptr_t dump, uintptr_t errcode)`
+    `void debug_stacktrace(int frames)`
 ---

@@ -517,10 +517,10 @@ int init(void) {
     mouse.clip.bottom = 0x7FFF;
 
 
-    if(sys_mkfifo(PATH_KBDEV, 0644) != 0)
+    if(sys_mkfifo(PATH_KBDEV, 0666) != 0)
         kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_KBDEV);
         
-    if(sys_mkfifo(PATH_MOUSEDEV, 0644) != 0)
+    if(sys_mkfifo(PATH_MOUSEDEV, 0666) != 0)
         kprintf(ERROR "%s: cannot create FIFO device!\n", PATH_MOUSEDEV);
         
 

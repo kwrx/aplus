@@ -38,4 +38,4 @@ void sh_prepare_tty(pid_t pgrp);
 int sh_jobs_new(pid_t pid, char* name, int stopped);
 int sh_jobs_background(int jobid);
 int sh_jobs_foreground(int jobid);
-void sh_jobs_signal(void);
+void sh_jobs_signal(job_t*);

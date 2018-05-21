@@ -280,7 +280,7 @@ static void dump_values() {
         if(tq->status[0] == 'R')
             fprintf(stdout, "\033[37m");
 
-        if(strcmp(tq->name, "[systemd]") != 0)
+        if(tq->pid != 1)
             cpu += tq->cpu;
         
         io += tq->iodiff;

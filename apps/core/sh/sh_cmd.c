@@ -20,6 +20,8 @@ int sh_cmd_jobs(int argc, char** argv) {
             job->name
         );
     }
+
+    return 0;
 }
 
 int sh_cmd_fg(int argc, char** argv) {
@@ -58,8 +60,10 @@ int sh_cmd_cd(int argc, char** argv) {
     if(!argv[1])
         return -1;
 
-    if(chdir(argv[1]) != 0)
+    if(chdir(argv[1]) != 0) {
+        perror(argv[1]);
         return -1;
+    }
 
     char buf[BUFSIZ];
     setenv("PWD", getcwd(buf, BUFSIZ), 1);
@@ -86,12 +90,17 @@ int sh_cmd_export(int argc, char** argv) {
         return 0;
     }
 
+    int e;
     if(strchr(argv[1], '='))
-        putenv(argv[1]);
+        e = putenv(argv[1]);
     else
-        setenv("_", argv[1], 1);
+        e = setenv("_", argv[1], 1);
 
-    return 0;
+
+    if(e == -1)
+        perror(argv[1]);
+
+    return e;
 }
 
 int sh_cmd_history(int argc, char** argv) {

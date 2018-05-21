@@ -113,7 +113,7 @@
 
 /* Standard */
 
- SC(1, 0, _exit)
+SC(1, 0, __exit)
 SC(1, 1, close)
 SC(3, 2, execve)
 SC(3, 2, _execve)
@@ -200,6 +200,8 @@ SC(2, 87, fchmod)
 
 /* System */
 SC(1, 90, sysconf)
+SC(3, 91, init_module)
+SC(2, 92, delete_module)
 
 /* CRT0 */
 SC(0, 100, __get_argv)				/* Deprecated */

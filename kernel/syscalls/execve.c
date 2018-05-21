@@ -71,34 +71,17 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
             break;
         }
 
-
-        char* argv[32];
-        memset(argv, 0, sizeof(argv));
-
-        int i = 0;
-        for(char* s = strtok((char*) strdup(p), " "); s; s = strtok(NULL, " "))
-            argv[i++] = s;
-        argv[i++] = NULL;
+        int argc = 0;
+        while(argv[argc])
+            argc++;
 
 
+        char* nargv[argc];
+        for(int i = 0; i < argc; i++)
+            nargv[i + 1] = argv[i];
 
-        if(sys_lseek(fd, strlen(p) + 2, SEEK_SET) != -1) {
-            int fp = sys_open(tmpnam(NULL), O_CREAT | O_RDWR, S_IFREG | 0666);
-            if(fp < 0)
-                return -1;
-            
-
-            sys_fcntl(fp, F_DUPFD, STDIN_FILENO);
-            
-            size_t size;
-            while((size = sys_read(fd, p, BUFSIZ)))
-                sys_write(STDIN_FILENO, p, size);
-
-            sys_lseek(STDIN_FILENO, 0, SEEK_SET);
-            sys_close(fd);
-        }
-
-        return sys_execve(argv[0], argv, envp);
+        nargv[0] = p;
+        return sys_execve(nargv[0], nargv, envp);
     }
     
 
@@ -188,7 +171,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
     current_task->image->refcount = 1;
     current_task->vmsize += current_task->image->end - current_task->image->start;
-    current_task->name = strdup(__new_argv[0]);
+    current_task->name = strdup(basename(__new_argv[0]));
     current_task->description = "";
     current_task->exe = inode;
 

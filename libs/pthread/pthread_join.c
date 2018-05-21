@@ -6,5 +6,5 @@ int	pthread_join (pthread_t th, void** __value_ptr) {
         return -1;
 
     struct p_context* cc = (struct p_context*) th;
-    return waitpid(cc->pid, __value_ptr, 0);
+    return waitpid(cc->pid, (int*) __value_ptr, 0);
 }

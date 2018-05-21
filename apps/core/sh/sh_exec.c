@@ -87,8 +87,8 @@ static int run(int argc, char** argv, int in, int out) {
                 err = waitpid(e, &r, 0);
             } while((err == -1 && errno == EINTR));
             
-
-            if(WIFSTOPPED(r))
+            
+            if(err != -1 && WIFSTOPPED(r))
                 sh_jobs_new(err, argv[0], 1);
 
 

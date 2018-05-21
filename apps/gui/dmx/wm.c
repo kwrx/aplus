@@ -1,7 +1,7 @@
 #include "dmx.h"
 #include <math.h>
 
-void* th_render(void* arg) {
+int th_render(void* arg) {
     dmx_t* dmx = (dmx_t*) arg;
     
     for(;;) {
