@@ -125,6 +125,7 @@ typedef struct {
 
 
 int ext2_open(struct inode* inode);
+int ext2_symlink_open(struct inode* inode);
 int ext2_read(inode_t* ino, void* buf, off_t pos, size_t size);
 int ext2_write(inode_t* ino, void* buf, off_t pos, size_t size);
 inode_t* ext2_finddir(struct inode* inode, char* filename);

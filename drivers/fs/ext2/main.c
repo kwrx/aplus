@@ -2,6 +2,7 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
+#include <aplus/task.h>
 #include <aplus/debug.h>
 #include <libc.h>
 
@@ -152,6 +153,7 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
     inode_t* child = (inode_t*) kmalloc(sizeof(inode_t), GFP_KERNEL);
     memset(child, 0, sizeof(inode_t));
 
+
     child->name = strdup(name);
     child->userdata = (void*) p;
     child->mtinfo = parent->mtinfo;
@@ -178,7 +180,6 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
     p->blockchain = NULL;
 
 
-
     if((p->inode.type & 0xF000) == INODE_TYPE_DIRECTORY) {
         child->open = ext2_open;
         child->finddir = ext2_finddir;
@@ -187,7 +188,11 @@ void ext2_mkchild(ext2_t* priv, inode_t** pchild, inode_t* parent, uint32_t ino,
         child->read = ext2_read;
         child->write = ext2_write;
 
-        ext2_get_blockchain(priv, &p->inode, &p->blockchain);
+        if((p->inode.type & 0xF000) != INODE_TYPE_SYMLINK || child->size >= 60)
+            ext2_get_blockchain(priv, &p->inode, &p->blockchain);
+        
+        if((p->inode.type & 0xF000) == INODE_TYPE_SYMLINK)
+            child->open = ext2_symlink_open;
     }
 
 

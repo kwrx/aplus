@@ -7,7 +7,7 @@
 #include <libc.h>
 
 SYSCALL(20, ioctl,
-int sys_ioctl(int fd, int req, void* arg) {
+int sys_ioctl(int fd, int req, void* arg) {    
     if(unlikely(fd < 0)) {
         errno = EBADF;
         return -1;
@@ -23,7 +23,6 @@ int sys_ioctl(int fd, int req, void* arg) {
     }
 
     inode_t* inode = current_task->fd[fd].inode;
-    
     if(unlikely(!inode)) {
         errno = EBADF;
         return -1;

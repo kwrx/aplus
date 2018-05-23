@@ -121,26 +121,6 @@ static void init_environment() {
 }
 
 
-static void init_timezone() {
-    int __do(char* at, char* p) {
-        char buf[BUFSIZ];
-        memset(buf, 0, sizeof(buf));
-        sprintf(buf, "%s/%s", at, p);
-
-        return symlink(buf, "/etc/localtime");
-    }
-
-    char* tz = (char*) sysconfig("init.timezone", "UTC");
-    char* dir = getenv("TZDIR");
-
-    if(!dir)
-        dir = PATH_TZDIR;
-
-    if(__do(dir, tz) != 0 && __do(dir, "UTC") != 0)
-        perror("init: localtime");
-}
-
-
 int main(int argc, char** argv) {
     if(getppid() != 1)
         return 1;
@@ -160,7 +140,6 @@ int main(int argc, char** argv) {
     init_console();
     init_welcome();
     init_environment();
-    init_timezone();
     init_initd();
 
 

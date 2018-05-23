@@ -6,7 +6,7 @@
 
 # -- Init
 init.locale="it-IT"
-init.timezone="Europe/Rome"
+#init.timezone="Europe/Rome"
 
 
 # -- Screen

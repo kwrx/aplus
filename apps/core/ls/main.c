@@ -114,16 +114,23 @@ int main(int argc, char** argv) {
 
                 printf("%s %s ", nuid, ngid);
                 
+
+                register int s = st.st_size;
+                if(S_ISLNK(st.st_mode)) {
+                    struct stat vst;
+                    if(stat(buf, &vst) == 0)
+                        s = vst.st_size;
+                }
+
                 if(human_readable) {
-                    register int s = st.st_size;
                     if(s >= (1 << 20))
                         printf("%d.%1dM", s / (1 << 20), (s - (s / (1 << 20)) * (1 << 20)) / ((1 << 20) / 10));
                     else if(s >= (1 << 10))
                         printf("%d.%1dK", s / (1 << 10), (s - (s / (1 << 10)) * (1 << 10)) / ((1 << 10) / 10));
                     else
-                        printf("%d", st.st_size);    
+                        printf("%d", s);    
                 } else
-                    printf("%d", st.st_size);
+                    printf("%d", s);
                     
                     
                 char timebuf[80];
