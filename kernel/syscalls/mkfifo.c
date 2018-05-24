@@ -57,7 +57,7 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
     }
     
 
-    fifo_init(fifo);
+    fifo_init(fifo, BUFSIZ, FIFO_SYNC);
     
 #if CONFIG_IPC_DEBUG
     #define mtxname strdup(pathname)

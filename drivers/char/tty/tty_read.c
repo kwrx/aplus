@@ -10,6 +10,7 @@
 
 #include "tty.h"
 
+
 #define KEYMAP_SIZE \
     (16 * NR_KEYS * sizeof(uint16_t))
 
@@ -253,7 +254,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                 p += strlen(__kmap[KTYP(key)][KVAL(key)]);
 
                 if(tio->ios.c_lflag & ECHO)
-                    tty_write(inode, __kmap[KTYP(key)][KVAL(key)], 0, strlen(__kmap[KTYP(key)][KVAL(key)]));
+                    tty_output_write(inode, __kmap[KTYP(key)][KVAL(key)], 0, strlen(__kmap[KTYP(key)][KVAL(key)]));
 
                 continue;
         }
@@ -274,7 +275,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
                             ch = '\x7f';
 
                         if(tio->ios.c_lflag & ECHO)
-                            tty_write(inode, &ch, 0, 1);
+                            tty_output_write(inode, &ch, 0, 1);
                     }
 
                     continue;
@@ -320,7 +321,7 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         p += utf8len;
 
         if(tio->ios.c_lflag & ECHO)
-            tty_write(inode, utf8, 0, utf8len);           
+            tty_output_write(inode, utf8, 0, utf8len);           
     }
 
 
@@ -332,8 +333,8 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
             p++;
 
 
-            if(tio->ios.c_lflag & ECHONL)
-                tty_write(inode, &ch, 0, 1);
+            if((tio->ios.c_lflag & ECHO) || (tio->ios.c_lflag & ICANON && tio->ios.c_lflag & ECHONL))
+                tty_output_write(inode, &ch, 0, 1);
         }
     } else
         p = len;

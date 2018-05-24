@@ -9,6 +9,9 @@
 #define SPINLOCK_LOCKED                 1
 #define SPINLOCK_UNLOCKED               0
 
+#define FIFO_ASYNC                      1
+#define FIFO_SYNC                       0
+
 
 #ifndef __ASSEMBLY__
 
@@ -33,12 +36,13 @@ typedef struct {
 
 
 typedef struct fifo {
-    uint8_t buffer[BUFSIZ];
+    uint8_t* buffer;
     int w_pos;
     int r_pos;
     mutex_t w_lock;
     mutex_t r_lock;
     int async;
+    size_t size;
 } __packed fifo_t;
 
 
@@ -72,14 +76,7 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len);
 int fifo_write(fifo_t* fifo, void* ptr, size_t len);
 int fifo_available(fifo_t* fifo);
 int fifo_peek(fifo_t* fifo, size_t len);
-
-#define fifo_init(x)                                                    \
-    {                                                                   \
-        (x)->w_pos = (x)->r_pos = (x)->async = 0;                       \
-        mutex_init(&(x)->r_lock, MTX_KIND_DEFAULT, "fifo");             \
-        mutex_init(&(x)->w_lock, MTX_KIND_DEFAULT, "fifo");             \
-    }
-
+int fifo_init(fifo_t*, size_t, int);
 
 
 #define ipc_timed_wait(cond, tm)                                        \

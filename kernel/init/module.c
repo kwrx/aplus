@@ -226,7 +226,6 @@ int module_run(char* name) {
             return -1;
         }
 
-
         if(mod->init() != 0)
             return -1;
 
@@ -363,8 +362,6 @@ int module_dnit(void) {
         if(!mod->dnit)
             continue;
 
-
-        //kprintf(INFO "module: unloading \'%s\'\n", mod->name);
         mod->dnit();
     }
 

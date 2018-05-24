@@ -373,8 +373,8 @@ int task_init(void) {
     t->status = TASK_STATUS_READY;
     t->priority = TASK_PRIO_REGULAR;
     
+    //fifo_init(&t->fifo, BUFSIZ, FIFO_SYNC);
 
-    fifo_init(&t->fifo);
 
     int i;
     for(i = 0; i < TASK_FD_COUNT; i++)

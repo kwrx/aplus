@@ -7,14 +7,19 @@
 
 #include <sys/termio.h>
 #include <sys/termios.h>
+#include <sys/ttydefaults.h>
 #include <sys/ioctl.h>
+#include <sys/wait.h>
+
 
 #define TTY_DEFAULT_INPUT_DEVICE    PATH_KBDEV
 #define TTY_DEFAULT_OUTPUT_DEVICE   PATH_CONDEV
+#define TTY_BUFSIZ                  65536
 
 
 
-int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len);
+int tty_output_write(struct inode* inode, void* ptr, off_t pos, size_t len);
+int tty_input_write(struct inode* inode, void* ptr, off_t pos, size_t len);
 int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len);
 int tty_ioctl(struct inode* inode, int req, void* data);
 
@@ -29,7 +34,7 @@ struct tty_context {
     int lined;
     int output;
 
-    char outbuf[65536];
+    char outbuf[TTY_BUFSIZ];
     int outlen;
     
     fifo_t in;

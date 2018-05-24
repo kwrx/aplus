@@ -20,8 +20,8 @@
 
 static void show_usage(int argc, char** argv) {
     printf(
-        "Use: sh [options]\n"
-        "aPlus Shell\n"
+        "Use: xsh [options]\n"
+        "aPlus eXperimental Shell\n"
         "   -c, --command <command>     pass a single command to the shell with -c"
         "   -h, --help                  show this help\n"
         "   -v, --version               print version info and exit\n"

@@ -32,7 +32,7 @@ static void sh_prompt_info(char* user, char* host) {
 
     char* home = getenv("HOME");
     if(home && (strstr(cwd, home) == cwd)) {
-        strcpy(cwd + 1, &cwd[strlen(home) + 1]);
+        strcpy(cwd + 1, &cwd[strlen(home)]);
         cwd[0] = '~';
         cwd[strlen(home) + 1] = '\0';
     }
@@ -94,7 +94,7 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
 
     struct termios ios;
     ioctl(STDIN_FILENO, TIOCGETA, &ios);
-    ios.c_lflag &= ~(ICANON | ECHO);
+    ios.c_lflag &= ~(ICANON | ECHO | ECHOE);
     ioctl(STDIN_FILENO, TIOCSETA, &ios);
 
 
@@ -125,6 +125,7 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 }
                 break;
             case '\b':
+            case '\x7f':
                 if(i > 0) {
                     line[--i] = '\0';
 
@@ -144,7 +145,7 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 }
 
                 break;
-            case 32 ... 127:
+            case 32 ... 126:
             case '\t':
                 line[i++] = ch;
                 line[i] = '\0';
@@ -152,6 +153,7 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 fprintf(stdout, "%c", ch);
                 break;
             case '\n':
+                fprintf(stdout, "\n");
                 break;
             default:
                 fprintf(stdout, "^%c", 'A' + ch - 1);
@@ -162,15 +164,9 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
         fflush(stdout);
     } while(ch != '\n' && ch != '\0');
 
-    if(line[i - 1] == '\n')
-        line[--i] = '\0';
-    
-
-
-
 
     ioctl(STDIN_FILENO, TIOCGETA, &ios);
-    ios.c_lflag |= (ICANON | ECHO);
+    ios.c_lflag |= (ICANON | ECHO | ECHOE);
     ioctl(STDIN_FILENO, TIOCSETA, &ios);
 
 

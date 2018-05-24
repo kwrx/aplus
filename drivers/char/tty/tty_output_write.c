@@ -24,7 +24,7 @@ static void tty_signal(struct tty_context* tio, int sig) {
         sys_kill(-tio->pgrp, sig);
 }
 
-int tty_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
+int tty_output_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
         return -1;

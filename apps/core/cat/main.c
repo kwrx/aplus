@@ -45,8 +45,6 @@ static void show_version(int argc, char** argv) {
 
 int main(int argc, char** argv) {
     
-    if(argc < 2)
-        show_usage(argc, argv);
     
     static struct option long_options[] = {
         { "show-all", no_argument, NULL, 'A'},
@@ -102,7 +100,7 @@ int main(int argc, char** argv) {
     }
     
     if(optind >= argc)
-        show_usage(argc, argv);
+        execlp(argv[0], argv[0], "/dev/stdin", NULL);
         
     int i, ln = 1;
     for(i = optind; i < argc; i++) {
