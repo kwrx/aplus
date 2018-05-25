@@ -38,6 +38,7 @@ struct tty_context {
     int outlen;
     
     fifo_t in;
+    fifo_t uin;
     pid_t pgrp;
 };
 

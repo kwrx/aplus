@@ -117,6 +117,112 @@ int tty_load_keymap(char* keymap) {
     return 0;
 }
 
+
+static uint8_t process_keyboard(inode_t* inode, struct tty_context* tio, int fd, int* pos) {
+    keyboard_t k;
+    if(sys_read(fd, &k, sizeof(keyboard_t)) == 0) {
+        errno = EIO;
+        return 0;
+    }
+
+
+    switch(k.vkey) {
+        case KEY_LEFTALT:
+            tty_keys = !!(k.down) ? tty_keys | K_ALT : tty_keys & ~K_ALT;
+            return 0;
+        case KEY_RIGHTALT:
+            tty_keys = !!(k.down) ? tty_keys | K_ALTGR : tty_keys & ~K_ALTGR;
+            return 0;
+        case KEY_LEFTSHIFT:
+        case KEY_RIGHTSHIFT:
+            tty_keys = !!(k.down) ? tty_keys | K_SHIFT : tty_keys & ~K_SHIFT;
+            return 0;
+        case KEY_LEFTCTRL:
+        case KEY_RIGHTCTRL:
+            tty_keys = !!(k.down) ? tty_keys | K_CTRL : tty_keys & ~K_CTRL;
+            return 0;
+        case KEY_CAPSLOCK:
+            tty_capslock = !(k.down) ? tty_capslock : !tty_capslock;
+            return 0;
+        default:
+            break;
+    }
+
+    if(!k.down)
+        return 0;
+
+
+    int16_t key;
+    uint8_t ch;
+
+    switch(tty_keys) {
+        #define _(x, y)    \
+            case x : { key = tty_keymap.y[k.vkey] & 0x0FFF; break; }
+
+        _(0, plain);
+        _(K_SHIFT, shift);
+        _(K_ALTGR, altgr);
+        _(K_SHIFT | K_ALTGR, shift_altgr);
+        _(K_CTRL, ctrl);
+        _(K_SHIFT | K_CTRL, shift_ctrl);
+        _(K_ALTGR | K_CTRL, altgr_ctrl);
+        _(K_ALTGR | K_SHIFT | K_CTRL, altgr_shift_ctrl);
+        _(K_ALT, alt);
+        _(K_SHIFT | K_ALT, shift_alt);
+        _(K_ALTGR | K_ALT, altgr_alt);
+        _(K_ALTGR | K_SHIFT | K_ALT, altgr_shift_alt);
+        _(K_CTRL | K_ALT, ctrl_alt);
+        _(K_SHIFT | K_CTRL | K_ALT, shift_ctrl_alt);
+        _(K_ALTGR | K_CTRL | K_ALT, altgr_ctrl_alt);
+        _(K_ALTGR | K_SHIFT | K_CTRL | K_ALT, altgr_shift_ctrl_alt);
+        
+        default:
+            key = 0;
+            break;
+
+        #undef _
+    }
+
+
+
+    ch = KVAL(key);
+    switch(KTYP(key)) {
+        case KT_LATIN:
+        case KT_LETTER:
+            if(tty_capslock) {
+                if(tty_keys & K_SHIFT)
+                    ch += ch >= 'A' && ch <= 'z' ? 32 : 0;
+                else
+                    ch -= ch >= 'a' && ch <= 'Z' ? 32 : 0;
+            }
+        case KT_ASCII:
+            break;
+
+        case KT_SPEC:
+        case KT_PAD:
+            if(!__kmap[KTYP(key)] || !__kmap[KTYP(key)][KVAL(key)])
+                return 0;
+
+            ch = __kmap[KTYP(key)][KVAL(key)][0];
+            break;
+
+        default:
+            if(!__kmap[KTYP(key)] || !__kmap[KTYP(key)][KVAL(key)])
+                return 0;
+
+
+            fifo_write(&tio->in, __kmap[KTYP(key)][KVAL(key)], strlen(__kmap[KTYP(key)][KVAL(key)]));
+            *pos = *pos + strlen(__kmap[KTYP(key)][KVAL(key)]);
+
+            if(tio->ios.c_lflag & ECHO)
+                tty_output_write(inode, __kmap[KTYP(key)][KVAL(key)], 0, strlen(__kmap[KTYP(key)][KVAL(key)]));
+
+            return 0;
+    }
+
+    return ch;
+}
+
 int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     if(unlikely(!inode || !ptr)) {
         errno = EINVAL;
@@ -133,24 +239,14 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
 
  
     struct tty_context* tio = (struct tty_context*) inode->userdata;
-    register uint8_t* buf = (uint8_t*) ptr;
-    register int p = 0;
+    uint8_t* buf = (uint8_t*) ptr;
+    int p = 0;
 
 
     if(tio->pgrp != current_task->pgid) 
         sys_exit((1 << 31) | W_STOPCODE(SIGTTIN));
 
     
-    int fz = 0;
-    if(fifo_available(&tio->in))
-        fz = fifo_read(&tio->in, buf, len);
-
-    if(unlikely(!(len - fz)))
-        return len;
-
-    buf += fz;
-    len -= fz;
-
 
     int fd = sys_open(TTY_DEFAULT_INPUT_DEVICE, O_RDONLY, 0);
     if(fd < 0) {
@@ -158,106 +254,22 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
         return -1;
     }
 
+
+    if(fifo_available(&tio->in)) {
+        char tmp[BUFSIZ];
+        for(int j = 0; (j = fifo_read(&tio->in, tmp, sizeof(tmp))) > 0;)
+            fifo_write(&tio->uin, tmp, j);
+    }
+    
+
     while(p < len) {
-        keyboard_t k;
-        if(sys_read(fd, &k, sizeof(keyboard_t)) == 0) {
-            errno = EIO;
-            return -1;
-        }
-
-
-        switch(k.vkey) {
-            case KEY_LEFTALT:
-                tty_keys = !!(k.down) ? tty_keys | K_ALT : tty_keys & ~K_ALT;
-                continue;
-            case KEY_RIGHTALT:
-                tty_keys = !!(k.down) ? tty_keys | K_ALTGR : tty_keys & ~K_ALTGR;
-                continue;
-            case KEY_LEFTSHIFT:
-            case KEY_RIGHTSHIFT:
-                tty_keys = !!(k.down) ? tty_keys | K_SHIFT : tty_keys & ~K_SHIFT;
-                continue;
-            case KEY_LEFTCTRL:
-            case KEY_RIGHTCTRL:
-                tty_keys = !!(k.down) ? tty_keys | K_CTRL : tty_keys & ~K_CTRL;
-                continue;
-            case KEY_CAPSLOCK:
-                tty_capslock = !(k.down) ? tty_capslock : !tty_capslock;
-                continue;
-            default:
-                break;
-        }
-
-        if(!k.down)
-            continue;
-
-
-        int16_t key;
         uint8_t ch;
-
-        switch(tty_keys) {
-            #define _(x, y)    \
-                case x : { key = tty_keymap.y[k.vkey] & 0x0FFF; break; }
-
-            _(0, plain);
-            _(K_SHIFT, shift);
-            _(K_ALTGR, altgr);
-            _(K_SHIFT | K_ALTGR, shift_altgr);
-            _(K_CTRL, ctrl);
-            _(K_SHIFT | K_CTRL, shift_ctrl);
-            _(K_ALTGR | K_CTRL, altgr_ctrl);
-            _(K_ALTGR | K_SHIFT | K_CTRL, altgr_shift_ctrl);
-            _(K_ALT, alt);
-            _(K_SHIFT | K_ALT, shift_alt);
-            _(K_ALTGR | K_ALT, altgr_alt);
-            _(K_ALTGR | K_SHIFT | K_ALT, altgr_shift_alt);
-            _(K_CTRL | K_ALT, ctrl_alt);
-            _(K_SHIFT | K_CTRL | K_ALT, shift_ctrl_alt);
-            _(K_ALTGR | K_CTRL | K_ALT, altgr_ctrl_alt);
-            _(K_ALTGR | K_SHIFT | K_CTRL | K_ALT, altgr_shift_ctrl_alt);
-            
-            default:
-                key = 0;
-                break;
-
-            #undef _
-        }
+        if(fifo_available(&tio->uin))
+            fifo_read(&tio->uin, &ch, sizeof(ch));
+        else
+            ch = process_keyboard(inode, tio, fd, &p);
 
 
-        ch = KVAL(key);
-        switch(KTYP(key)) {
-            case KT_LATIN:
-            case KT_LETTER:
-                if(tty_capslock) {
-                    if(tty_keys & K_SHIFT)
-                        ch += ch >= 'A' && ch <= 'z' ? 32 : 0;
-                    else
-                        ch -= ch >= 'a' && ch <= 'Z' ? 32 : 0;
-                }
-            case KT_ASCII:
-                break;
-
-            case KT_SPEC:
-            case KT_PAD:
-                if(!__kmap[KTYP(key)] || !__kmap[KTYP(key)][KVAL(key)])
-                    continue;
-
-                ch = __kmap[KTYP(key)][KVAL(key)][0];
-                break;
-
-            default:
-                if(!__kmap[KTYP(key)] || !__kmap[KTYP(key)][KVAL(key)])
-                    continue;
-
-
-                fifo_write(&tio->in, __kmap[KTYP(key)][KVAL(key)], strlen(__kmap[KTYP(key)][KVAL(key)]));
-                p += strlen(__kmap[KTYP(key)][KVAL(key)]);
-
-                if(tio->ios.c_lflag & ECHO)
-                    tty_output_write(inode, __kmap[KTYP(key)][KVAL(key)], 0, strlen(__kmap[KTYP(key)][KVAL(key)]));
-
-                continue;
-        }
 
         switch(ch) {
             case 0:
@@ -346,5 +358,5 @@ int tty_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     
     
     sys_close(fd);
-    return p + fz;
+    return p;
 }
