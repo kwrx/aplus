@@ -434,7 +434,7 @@ static int ata_device_detect(struct ata_device* dev) {
         blkdev->write = ata_device_write_sector;
 
 
-        if(blkdev_register_device(blkdev, strdup(hdname[c++]), -1, BLKDEV_FLAGS_MBR) != E_OK)
+        if(blkdev_register_device(blkdev, strdup(hdname[c++]), -1, BLKDEV_FLAGS_MBR) != 0)
             kprintf("ide: could not register block device /dev/%s\n", hdname[c - 1]);
 
     } else if(
@@ -455,7 +455,7 @@ static int ata_device_detect(struct ata_device* dev) {
         blkdev->read = atapi_device_read_sector;
         blkdev->write = NULL;
 
-        if(blkdev_register_device(blkdev, strdup(cdname[d++]), -1, BLKDEV_FLAGS_RDONLY) != E_OK)
+        if(blkdev_register_device(blkdev, strdup(cdname[d++]), -1, BLKDEV_FLAGS_RDONLY) != 0)
             kprintf("ide: could not register block device /dev/%s\n", cdname[d - 1]);
 
     }

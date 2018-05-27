@@ -80,7 +80,7 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
 #endif
 
     //spinlock_lock(&lck_syscall);
-    if(unlikely(spinlock_trylock(&lck_syscall) != E_OK))
+    if(unlikely(spinlock_trylock(&lck_syscall) != 0))
         kprintf(WARN "syscall: context locked for %d from %d\n", number, sys_getpid());
 
     INTR_ON;

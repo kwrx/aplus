@@ -155,7 +155,7 @@ int init(void) {
     fbdev.update = bga_update;
     fbdev.userdata = (void*) __lfbptr;
 
-    if(unlikely(fbdev_register_device(&fbdev, BGA_ID) != E_OK))
+    if(unlikely(fbdev_register_device(&fbdev, BGA_ID) != 0))
         return -1;
     
     return 0;

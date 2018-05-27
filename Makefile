@@ -63,20 +63,13 @@ LIBRARIES:
 	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
 $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
-	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
-	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
-	@losetup /dev/loop2 hdd.img
 	@losetup /dev/loop3 hdd.img -o 1048576
-	@mkfs -text2 /dev/loop3 > /dev/null
 	@mkdir -p /mnt/hdd
 	@mount /dev/loop3 /mnt/hdd
-	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop2 >> /dev/null
+	@rm -r /mnt/hdd/*
 	@cp -r root/* /mnt/hdd
 	@umount /mnt/hdd
 	@losetup -D
-	@qemu-img convert -f raw -O vdi hdd.img hdd.vdi
-	@sync
-	@rm -f hdd.img
 	@sync
 
 $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
@@ -124,3 +117,16 @@ init:
 	@mkdir -p build/newlib
 	@mount --bind /opt/cross/include include
 	@mount --bind /opt/src/newlib/3.0.0/newlib-3.0.0/newlib/libc/sys/aplus build/newlib
+
+hdd:
+	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
+	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
+	@losetup /dev/loop2 hdd.img
+	@losetup /dev/loop3 hdd.img -o 1048576
+	@mkfs -text2 /dev/loop3 > /dev/null
+	@mkdir -p /mnt/hdd
+	@mount /dev/loop3 /mnt/hdd
+	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop2 >> /dev/null
+	@umount /mnt/hdd
+	@losetup -D
+	@sync

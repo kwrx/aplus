@@ -57,6 +57,8 @@
 #endif
 
 #include <string.h>
+#include <aplus.h>
+#include <aplus/debug.h>
 
 /* Define some copy-macros for checksum-on-copy so that the code looks
    nicer by preventing too many ifdef's. */
@@ -1137,7 +1139,7 @@ tcp_output(struct tcp_pcb *pcb)
     if (TCP_TCPLEN(seg) > 0) {
       seg->next = NULL;
       /* unacked list is empty? */
-      if (pcb->unacked == NULL) {
+      if (pcb->unacked == NULL) { 
         pcb->unacked = seg;
         useg = seg;
       /* unacked list is not empty? */

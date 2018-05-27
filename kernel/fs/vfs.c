@@ -165,7 +165,7 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
 
 int vfs_unlink(struct inode* inode, char* name) {
-    int r = E_OK;    
+    int r = 0;    
     if(likely(inode->unlink))
         r = inode->unlink(inode, name);
     
@@ -202,7 +202,7 @@ int vfs_unlink(struct inode* inode, char* name) {
 
 int vfs_rename(struct inode* inode, char* newname) {
     if(likely(inode->rename))
-        if(unlikely(inode->rename(inode, newname) != E_OK))
+        if(unlikely(inode->rename(inode, newname) != 0))
             return -1;
 
 
@@ -214,7 +214,7 @@ int vfs_rename(struct inode* inode, char* newname) {
 
 int vfs_chown(struct inode* inode, uid_t owner, gid_t group) {
     if(likely(inode->chown))
-        if(unlikely(inode->chown(inode, owner, group) != E_OK))
+        if(unlikely(inode->chown(inode, owner, group) != 0))
             return -1;
 
 
@@ -227,7 +227,7 @@ int vfs_chown(struct inode* inode, uid_t owner, gid_t group) {
 
 int vfs_chmod(struct inode* inode, mode_t mode) {
     if(likely(inode->chmod))
-        if(unlikely(inode->chmod(inode, mode) != E_OK))
+        if(unlikely(inode->chmod(inode, mode) != 0))
             return -1;
 
 
@@ -248,7 +248,7 @@ int vfs_ioctl(struct inode* inode, int req, void* buf) {
 
 int vfs_fsync(struct inode* inode) {
     if(likely(inode->fsync))
-        if(inode->fsync(inode) != E_OK)
+        if(inode->fsync(inode) != 0)
             return -1;
     
 

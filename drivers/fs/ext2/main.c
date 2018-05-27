@@ -261,7 +261,7 @@ static int ext2_mount(inode_t* dev, inode_t* dir, struct mountinfo* info) {
 }
 
 int init(void) {
-    if(vfs_fsys_register(EXT2_SUPER_MAGIC, "ext2", ext2_mount) != E_OK)
+    if(vfs_fsys_register(EXT2_SUPER_MAGIC, "ext2", ext2_mount) != 0)
         return -1;
 
     return 0;

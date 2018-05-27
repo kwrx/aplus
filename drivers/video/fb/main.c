@@ -75,7 +75,7 @@ int fbdev_register_device(fbdev_t* fbdev, char* name) {
     fbdev->inode->ioctl = fb_ioctl;
     fbdev->inode->userdata = (void*) fbdev;
     
-    int e = E_OK;
+    int e = 0;
     if(likely(fbdev->init))
         e = fbdev->init(fbdev);
 
@@ -85,7 +85,7 @@ int fbdev_register_device(fbdev_t* fbdev, char* name) {
 
 int fbdev_unregister_device(fbdev_t* fbdev) {
     if(likely(fbdev->dnit))
-        if(unlikely(fbdev->dnit(fbdev) != E_OK))
+        if(unlikely(fbdev->dnit(fbdev) != 0))
             kprintf(WARN "fb: (%s)->dnit() error!\n", fbdev->name);
 
 

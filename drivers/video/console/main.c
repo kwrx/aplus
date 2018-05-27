@@ -20,7 +20,7 @@
 #include "console-font.h"
 
 MODULE_NAME("video/console");
-MODULE_DEPS("video/fb");
+MODULE_DEPS("video/fb,pc/video/bga"); /* FIXME */
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 

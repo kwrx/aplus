@@ -10,13 +10,13 @@
 int mounts_init(void) {
     #define mount_and_check(a, b, c)                                \
         {                                                           \
-            if(unlikely(sys_mount(a, b, c, 0, NULL) != E_OK))       \
+            if(unlikely(sys_mount(a, b, c, 0, NULL) != 0))          \
                 kprintf(ERROR "%s: failed to mount %s\n", a, b);    \
         }
     
     #define relink(a)                                               \
         {                                                           \
-            if(unlikely(sys_symlink(a, CONFIG_ROOT a) != E_OK))     \
+            if(unlikely(sys_symlink(a, CONFIG_ROOT a) != 0))        \
                 kprintf(ERROR "%s: failed to link in %s",           \
                     a, CONFIG_ROOT a);                              \
         }
@@ -41,13 +41,13 @@ int mounts_init(void) {
     
     kprintf(LOG "mounts: mount \'root\' in \'%s\' with %s (defaults)\n", rootmnt, rootfs);
     
-    if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != E_OK))
+    if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != 0))
         kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
 
-     if(unlikely(sys_mount(NULL, "/root/dev", "devtmpfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != E_OK))
+     if(unlikely(sys_mount(NULL, "/root/dev", "devtmpfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != 0))
         kprintf(ERROR "%s: failed to mount /dev\n", rootmnt);
 
-    if(unlikely(sys_chroot("/root") != E_OK))
+    if(unlikely(sys_chroot("/root") != 0))
         kprintf(ERROR "%s: failed to chroot", "/root");
 
 

@@ -54,3 +54,10 @@ ntpd.enabled="true"
 ntpd.timeout=3600
 ntpd.server="it.pool.ntp.org"
 
+
+# -- [httpd]
+httpd.enabled="false"
+httpd.root="/srv/http"
+httpd.port=80
+
+

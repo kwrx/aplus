@@ -17,7 +17,7 @@ typedef pthread_t async_t;
         ({                                                          \
             void* __fn__ (void* __arg) {                            \
                 typeof(y) arg = (typeof(y)) __arg;                  \
-                x                                                   \
+                x;                                                  \
             };                                                      \
             __fn__;                                                 \
         }), (void*) y) != 0)                                        \

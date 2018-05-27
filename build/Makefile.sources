@@ -8,7 +8,7 @@ KERNEL_VERSION		:= 0.4
 KERNEL_OUTPUT		:= root/$(KERNEL_NAME)
 KERNEL_SYM			:= $(KERNEL_NAME).sym
 KERNEL_ISO			:= $(KERNEL_NAME).iso
-HDD					:= hdd.vdi
+HDD					:= hdd.img
 
 KERNEL_ARCH_C		:= $(shell $(FIND) kernel/arch/$(ARCH) -type f -name "*.c")
 KERNEL_ARCH_S		:= $(shell $(FIND) kernel/arch/$(ARCH) -type f -name "*.s")

@@ -84,7 +84,7 @@ static void virtio_block_init(virtio_device_t* d) {
         DISABLE_FEATURE(*f, VIRTIO_BLK_F_TOPOLOGY);
     }
 
-    if(virtio_init_device(d, &negotiate) != E_OK) {
+    if(virtio_init_device(d, &negotiate) != 0) {
         kprintf(ERROR "virtio-blk: virtio_init_device() failed for device %d\n", d->pci);
         return;
     }

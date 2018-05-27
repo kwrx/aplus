@@ -3,7 +3,7 @@ DEFINES         := -DKERNEL
 WARNINGS        := -Wall -Wno-discarded-qualifiers
 LIBS            := -laplus -lvterm -lc -lm -lgcc
 
-CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3
+CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3 -g
 AFLAGS          := -c -I kernel/include -include config.h
 NFLAGS          := $(DEFINES) -w-number-overflow
 LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
@@ -25,7 +25,7 @@ LIBS            += -ldisasm
 AFLAGS          += -masm=intel
 CFLAGS          += -masm=intel
 NFLAGS          += -felf
-VMM             += -M accel="tcg" -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=udp::5000-:5000 -no-kvm-irqchip
+VMM             += -M accel="kvm" -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::80-:80 -no-kvm-irqchip
 endif
 
 ifeq ($(ARCH),arm)

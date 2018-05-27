@@ -59,7 +59,7 @@ static int devfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* i
 
 
 int init(void) {
-    if(vfs_fsys_register(BDEVFS_MAGIC, "devtmpfs", devfs_mount) != E_OK)
+    if(vfs_fsys_register(BDEVFS_MAGIC, "devtmpfs", devfs_mount) != 0)
         return -1;
 
     return 0;

@@ -82,7 +82,7 @@ int iosched_read(inode_t* inode, void* buf, off_t pos, size_t size) {
 
     list_push(inode->ioqueue, io);
     
-    while(spinlock_trylock(&io->lock) != E_OK)
+    while(spinlock_trylock(&io->lock) != 0)
         iosched_rw(inode);
 
 
@@ -117,7 +117,7 @@ int iosched_write(inode_t* inode, void* buf, off_t pos, size_t size) {
 
     list_push(inode->ioqueue, io);
     
-    while(spinlock_trylock(&io->lock) != E_OK)
+    while(spinlock_trylock(&io->lock) != 0)
         iosched_rw(inode);
 
 
