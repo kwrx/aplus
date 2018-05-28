@@ -1,0 +1,36 @@
+apps/                       System applications, tools and services
+drivers/                    Loadable kernel objects for aPlus
+libs/                       System libraries
+include/                    System wide include path
+
+kernel/                     Kernel source code
+kernel/include/             Kernel include path
+kernel/arch/                Arch dependent code
+kernel/net/                 TCP/IP Network stack (porting of lwip)
+kernel/main.c	            Where it all started
+
+root/                       Root filesystem
+root/aplus                  Compiled Kernel
+root/boot/mods/*.ko         Compiled output of kernel objects
+root/etc/config             System wide configuration
+
+build/                      Makefile dependencies
+build/newlib/               Newlib C runtime code for userspace
+build/newlib/crt0.c         CRT0 Runtime: _start()
+build/newlib/syscalls.c     Syscall declarations
+
+extra/images/               Screenshort, images, etc...
+extra/licenses/             Licenses of third-party tools and libraries
+extra/packages/             Pre-built packages for applications and libraries
+extra/third-party/          Third-party tools
+extra/utils/                Project utilities
+
+aplus.iso                   Cdrom image of root/
+aplus.map                   Executable Map of kernel
+aplus.sym                   Executable debug info of kernel
+hdd.img                     Hard-Disk image of root/
+config.h                    Source code configuration
+
+
+
+

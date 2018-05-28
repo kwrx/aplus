@@ -11,6 +11,9 @@ The project started in September 2013 as an educational and personal project, it
 To compile this project you need aPlus Toolchain which includes GCC, Binutils and System Libraries.
 So... I'm sure one day you'll be able to compile it by yourself but this is not the day ...
 
+Project structure can be found [here](/INDEX)
+
+
 ## Kernel
 The kernel provides a basic Unix/Posix environment.
 It uses a hybrid modular architecture with support for various platforms like x86, x86_64, ARM, etc... and loadable modules.
@@ -23,7 +26,7 @@ It uses a hybrid modular architecture with support for various platforms like x8
 * [x] Virtual Filesystem
 * [x] ELF Binary
 * [x] Linux Framebuffer
-* [ ] GUI 
+* [ ] GUI
 
 
 ## Userspace
@@ -63,7 +66,6 @@ Modules provides various core platform features, basic TTY/Console, char/block d
 #### Filesystems:
 * [x] Iso9660
 * [x] Ext2 (Read-only)
-* [x] Fat (Read-only)
 * [x] ProcFS
 * [x] TmpFs
 * [x] Devfs
@@ -71,21 +73,7 @@ Modules provides various core platform features, basic TTY/Console, char/block d
 ---
 
 ## Third-Party Software:
-aPlus uses and depends on a large number of third-party open-source libraries and applications which are outside of this repository.
+aPlus uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
-* [x] gcc-7.2.0
-* [x] binutils-2.29
-* [x] newlib-3.0.0
-* [x] lwip-2.0.3
-* [x] libz-1.2.11
-* [x] libjpeg-v9c
-* [x] libpng-1.6.34
-* [x] libwebp-0.6.0
-* [ ] liblzma
-* [x] freetype-2.8
-* [x] pixman-0.34.0
-* [x] cairo-1.14.12
-* [x] SDL2-2.0.8
-* [ ] SDL2 Image
-* [ ] SDL2 TTF
+License for the included third-party tools and libraries can be found [here](/extra/licenses), and for project [here](/LICENSE)
 
