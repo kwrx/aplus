@@ -72,7 +72,7 @@ static int __vfs_mount(struct inode* dev, struct inode* dir, const char* fstype,
 
 
 
-    strncpy(info->fstype, fstype, sizeof(info->fstype));
+    strncpy(info->fstype, fstype, sizeof(info->fstype) - 1);
     info->flags = flags;
     info->dev = dev;
     info->stat.f_fsid = fsys->id;

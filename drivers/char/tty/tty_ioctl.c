@@ -47,9 +47,12 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
             memcpy(data, &tio->io, sizeof(struct termio));
             break;
 
-        case TIOCFLUSH:
         case TIOCDRAIN:
-            __tty_flush(tio);
+            __tty_drain(tio);
+            break;
+
+        case TIOCFLUSH:
+            __tty_flush(tio, *(int*) data);
             break;
 
         case TIOCGETD:

@@ -114,9 +114,12 @@ static int pcnet_startoutput(void* internals) {
         return 0;
     }
 
-    if(!d_owns((uint8_t*) dev->txdes, dev->txid)) {
-        kprintf(ERROR "pcnet: no tx descriptor available!\n");
-        return 0;
+    while(!d_owns((uint8_t*) dev->txdes, dev->txid)) {
+        kprintf(ERROR "pcnet: no tx %d descriptor available!\n", dev->txid);
+        
+        dev->txid++;
+        if(dev->txid == PCNET_TX_COUNT)
+            dev->txid = 0;
     }
 
     dev->offset = 0;

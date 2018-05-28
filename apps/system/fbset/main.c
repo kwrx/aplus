@@ -198,7 +198,7 @@ int main(int argc, char** argv) {
                 dev = argv[optind];
                 break;
             case 'g':
-                return set_video_settings(dev, &argv[optind]);
+                return set_video_settings(dev, &argv[optind - 1]);
             case 'v':
                 show_version(argc, argv);
                 break;

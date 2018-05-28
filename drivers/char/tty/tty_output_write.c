@@ -8,7 +8,7 @@
 
 
 
-void __tty_flush(struct tty_context* tio) {
+void __tty_drain(struct tty_context* tio) {
     int fd = sys_open(TTY_DEFAULT_OUTPUT_DEVICE, O_WRONLY, 0);
     if(likely(fd >= 0)) {
         sys_write(fd, tio->outbuf, tio->outlen);
@@ -16,6 +16,21 @@ void __tty_flush(struct tty_context* tio) {
     }
 
     tio->outlen = 0;
+}
+
+void __tty_flush(struct tty_context* tio, int mode) {
+    switch(mode) {
+        case TCIFLUSH:
+            fifo_peek(&tio->in, fifo_available(&tio->in));
+            break;
+        case TCOFLUSH:
+            tio->outlen = 0;
+            break;
+        case TCIOFLUSH:
+            __tty_flush(tio, TCIFLUSH);
+            __tty_flush(tio, TCOFLUSH);
+            break;
+    }
 }
 
 
@@ -88,7 +103,7 @@ int tty_output_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
     
 
     if(tio->output)
-        __tty_flush(tio);
+        __tty_drain(tio);
 
     return p;
 }

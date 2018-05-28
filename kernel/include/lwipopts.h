@@ -55,6 +55,9 @@
 #define LWIP_COMPAT_MUTEX_ALLOWED           1
 #define LWIP_SO_RCVTIMEO                    1
 #define LWIP_SO_SNDTIMEO                    0
+#define LWIP_SO_RCVBUF                      1
+#define SO_REUSE                            1
+
 
 #define LWIP_NETIF_LOOPBACK                 1
 #define LWIP_NETIF_HOSTNAME                 1

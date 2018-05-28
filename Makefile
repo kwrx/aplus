@@ -48,7 +48,7 @@ $(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES
 KERNEL_MODULES: LIBRARIES
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC);)
 	@echo "menuentry \"HDD\" {" > root/boot/grub/grub.cfg
-	@echo "multiboot /$(KERNEL_NAME) root=/dev/sda0 rootfs=ext2" >> root/boot/grub/grub.cfg
+	@echo "multiboot /$(KERNEL_NAME) root=/dev/sda0 rootfs=$(ROOTFS)" >> root/boot/grub/grub.cfg
 	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst root/,,$(mod)) >> root/boot/grub/grub.cfg; )
 	@echo "boot }" >> root/boot/grub/grub.cfg
 	@echo "menuentry \"CDROM\" {" >> root/boot/grub/grub.cfg
@@ -123,7 +123,7 @@ hdd:
 	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
 	@losetup /dev/loop2 hdd.img
 	@losetup /dev/loop3 hdd.img -o 1048576
-	@mkfs -text2 /dev/loop3 > /dev/null
+	@mkfs -t$(ROOTFS) /dev/loop3 > /dev/null
 	@mkdir -p /mnt/hdd
 	@mount /dev/loop3 /mnt/hdd
 	@grub-install --root-directory=/mnt/hdd --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop2 >> /dev/null

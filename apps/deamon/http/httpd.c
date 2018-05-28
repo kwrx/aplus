@@ -74,6 +74,10 @@ static void http_response(FILE* fp, char* status, char* message) {
 
         status, strlen(message), message
     );
+
+    fprintf(stdout,
+        "Send %s: %s\n", status, message
+    );
 }
 
 static void http_free_request(http_request_t* r) {
@@ -103,8 +107,10 @@ static void on_request(socket_request_t* r) {
         memset(&proto, 0, sizeof(proto));
 
         char buf[BUFSIZ];
-        while(fgets(buf, BUFSIZ - 2, fp)) {
-            
+        while(!feof(fp)) {
+            if(!fgets(buf, BUFSIZ - 2, fp))
+                break;
+
             if(strcmp(buf, "\r\n") == 0 || strcmp(buf, "\n"))
                 break;
 
@@ -116,6 +122,7 @@ static void on_request(socket_request_t* r) {
 
             list_push(proto.header, strdup(buf));
         }
+        
 
         if(feof(fp)) {
             http_free_request(&proto);
@@ -124,6 +131,7 @@ static void on_request(socket_request_t* r) {
 
         int i = 0;
         list_each(proto.header, h) {
+            fprintf(stdout, "LINE: %s\n", h);
             char* c = strstr(h, ": ");
             if(!c) {
                 if(i > 0) {
@@ -222,8 +230,8 @@ static void on_request(socket_request_t* r) {
                 #undef if_eq
             }
         }
-    } while(0);
-
+    } while(1);
+    printf("NOOOOO\n");
 fail:
 printf("FIIIIIIIIIIIIIIIIIAAAAAAAAAIIIIIIIIIIILLLLLLLLL\n");
     (void) 0;
@@ -277,7 +285,7 @@ int httpd(int port) {
             &len
         );
 printf("httpd: [info] Server ACCEPTED\n");
-        //r->thread = async(on_request(arg), r);
+        r->thread = async(on_request(arg), r);
     } while(1);
 
 error:

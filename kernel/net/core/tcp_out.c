@@ -1147,6 +1147,11 @@ tcp_output(struct tcp_pcb *pcb)
         /* In the case of fast retransmit, the packet should not go to the tail
          * of the unacked queue, but rather somewhere before it. We need to check for
          * this case. -STJ Jul 27, 2004 */
+         if(!useg) {
+           kprintf(ERROR "tcpip: !useg!!\n");                                                                             /* FIXME */
+           pcb->flags |= TF_NAGLEMEMERR;
+           return -1;
+         }
         if (TCP_SEQ_LT(lwip_ntohl(seg->tcphdr->seqno), lwip_ntohl(useg->tcphdr->seqno))) {
           /* add segment to before tail of unacked list, keeping the list sorted */
           struct tcp_seg **cur_seg = &(pcb->unacked);

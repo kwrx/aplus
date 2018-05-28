@@ -10,7 +10,7 @@ pid_t tcgetpgrp(int fd) {
 	if(ioctl(fd, TIOCGPGRP, &pid) != 0)
 		return -1;
 
-	return pid; 
+	return pid;
 }
 
 int tcsetpgrp(int fd, pid_t pid) {
@@ -28,7 +28,7 @@ int tcsetattr(int fd, int flags, const struct termios* p) {
         default:
             break;
     }
-    
+
     errno = EINVAL;
     return -1;
 }
@@ -37,3 +37,30 @@ int tcgetattr(int fd, struct termios* p) {
     return ioctl(fd, TIOCGETA, p);
 }
 
+int tcdrain(int fd) {
+	return ioctl(fd, TIOCDRAIN, NULL);
+}
+
+int tcflush(int fd, int mode) {
+	return ioctl(fd, TIOCFLUSH, &mode);
+}
+
+int tcflow(int fd, int action) {
+	switch(action) {
+		case TCOOFF:
+		case TCIOFF:
+			return ioctl(fd, TIOCSTOP, NULL);
+		case TCOON:
+		case TCION:
+			return ioctl(fd, TIOCSTART, NULL);
+		default:
+			break;
+	}
+
+	errno = EINVAL;
+	return -1;
+}
+
+int tcsendbreak(int fd, int duration) {
+	return;
+}

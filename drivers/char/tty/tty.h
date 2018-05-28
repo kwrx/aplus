@@ -44,7 +44,8 @@ struct tty_context {
 
 int tty_read_init();
 int tty_load_keymap(char* keymap);
-void __tty_flush(struct tty_context* tio);
+void __tty_drain(struct tty_context* tio);
+void __tty_flush(struct tty_context* tio, int mode);
 
 
 #endif

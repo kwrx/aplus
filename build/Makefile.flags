@@ -8,7 +8,7 @@ AFLAGS          := -c -I kernel/include -include config.h
 NFLAGS          := $(DEFINES) -w-number-overflow
 LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000
 
-
+ROOTFS          := ext2
 
 VMM             := qemu-system-$(ARCH) -drive file=$(HDD),if=ide -m 512 -boot c -cdrom aplus.iso -d cpu_reset,guest_errors -serial stdio -s
 

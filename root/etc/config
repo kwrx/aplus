@@ -50,13 +50,13 @@ syncd.timeout=10
 
 
 # -- [ntpd]
-ntpd.enabled="true"
+ntpd.enabled="false"
 ntpd.timeout=3600
 ntpd.server="it.pool.ntp.org"
 
 
 # -- [httpd]
-httpd.enabled="false"
+httpd.enabled="true"
 httpd.root="/srv/http"
 httpd.port=80
 
