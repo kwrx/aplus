@@ -75,5 +75,5 @@ Modules provides various core platform features, basic TTY/Console, char/block d
 ## Third-Party Software:
 aPlus uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
-License for the included third-party tools and libraries can be found [here](/extra/licenses), and for project [here](/LICENSE)
+Licenses for the included third-party tools and libraries can be found [here](/extra/licenses), and for project [here](/LICENSE)
 
