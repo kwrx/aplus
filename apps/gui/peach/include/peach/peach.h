@@ -1,38 +1,139 @@
+/*
+ * Author:
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ * 
+ * Copyright (c) 2013-2018 Antonino Natale
+ * 
+ * 
+ * This file is part of aPlus.
+ * 
+ * aPlus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * aPlus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
 #ifndef _PEACH_H
 #define _PEACH_H
 
-#include <stdint.h>
-#include <aplus/base.h>
-#include <aplus/fb.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-typedef struct {
-    uint16_t magic;
-    uint16_t type;
-    uint16_t size;
-    char data[0];
-} peach_msg_t;
-
-typedef struct {
-    peach_msg_t header;
-    struct fb_fix_screeninfo fix;
-    struct fb_var_screeninfo var;
-} peach_msg_welcome_t;
+#include <iostream>
+#include <string>
+#include <cstring>
+#include <vector>
+#include <errno.h>
+#include <cairo/cairo.h>
+using namespace std;
 
 
-#define PEACH_MSG_MAGIC                     0xCAFE
-#define PEACH_MSG_SUBSCRIBE                 0x0100
-#define PEACH_MSG_WELCOME                   0x0101
+#define peach_die(x)                \
+    __p_die(x, __FILE__, __LINE__)
+
+#define __p_die(x, y, z)            \
+    {                               \
+        cerr << "peach: (" << y     \
+             << ":" << z << ") "    \
+             << x                   \
+             << strerror(errno)     \
+             << endl;               \
+        exit(1);                    \
+    }
 
 
-int peach_subscribe(int[2], int);
+#define WINDOW_SIZE_W_MIN           200
+#define WINDOW_SIZE_H_MIN           50
+#define WINDOW_MARGIN_BORDER        30
 
-#ifdef __cplusplus
-}
-#endif
 
+class Screen;
+class Window;
+class Renderer;
+class Peach;
+
+
+class Screen {
+    public:
+        uint16_t Width;
+        uint16_t Height;
+        uint16_t BitsPerPixel;
+        Renderer* Framebuffer;
+
+        Screen(Peach*);
+        ~Screen();
+
+        bool SetMode(uint16_t, uint16_t, uint16_t);
+        bool GetMode(uint16_t*, uint16_t*, uint16_t*);
+    private:
+        Peach* context;
+        uint16_t backupWidth;
+        uint16_t backupHeight;
+        uint16_t backupBitsPerPixel;
+};
+
+class Window {
+    public:
+        typedef enum : int {
+            Hide = 0,
+            Show = 1,
+            Focus = 2,
+            NoBorder = 4
+        } WindowFlags;
+
+
+        wstring Title;
+        uint16_t X;
+        uint16_t Y;
+        uint16_t Width;
+        uint16_t Height;
+        WindowFlags Flags;
+
+        bool MinimizeBox;
+        bool MaximizeBox;
+
+        Window(Peach*);
+        ~Window();
+        
+        bool Resize(uint16_t, uint16_t);
+    private:
+        Peach* context;
+        Renderer* surface;
+};
+
+
+class Renderer {
+    public:
+        uint16_t Width;
+        uint16_t Height;
+
+        Renderer(Peach*, uint16_t, uint16_t);
+        Renderer(Peach*, uint16_t, uint16_t, void*);
+        ~Renderer();
+
+    private:
+        cairo_surface_t* surface;
+        cairo_t* cairo;
+        Peach* context;
+};
+
+
+class Peach {
+    public:
+        Screen* DefaultScreen;
+
+        vector<Window*>* Windows;
+        Window* WindowTop;
+        Window* WindowFocused;
+
+        Peach();
+        ~Peach();
+};
 
 #endif
