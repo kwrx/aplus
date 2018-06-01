@@ -25,13 +25,14 @@ idle.priority=$idle.priority.low
 
 
 # -- TMP Filesystem
-tmpfs.size=0x1000000
-tmpfs.files=0x100000
+fs.tmpfs.size=0x1000000
+fs.tmpfs.files=0x100000
 
 
 # -- I/O Scheduler
-iosched.priority=0
-iosched.blksize=4194304
+fs.iosched.priority=0
+fs.iosched.blksize=4194304
+
 
 
 # -- UI
@@ -45,19 +46,20 @@ ui.wallpaper="/usr/share/images/wp.png"
 
 
 # -- [syncd]
-syncd.enabled="true"
-syncd.timeout=10
+deamons.syncd.enabled="true"
+deamons.syncd.timeout=10
 
 
 # -- [ntpd]
-ntpd.enabled="false"
-ntpd.timeout=3600
-ntpd.server="it.pool.ntp.org"
+deamons.ntpd.enabled="false"
+deamons.ntpd.timeout=3600
+deamons.ntpd.server="it.pool.ntp.org"
 
 
 # -- [httpd]
-httpd.enabled="true"
-httpd.root="/srv/http"
-httpd.port=80
+deamons.httpd.enabled="true"
+deamons.httpd.root="/srv/http"
+deamons.httpd.port=80
+
 
 

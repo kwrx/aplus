@@ -98,7 +98,6 @@ int procfs_open(struct inode* inode) {
         
         child->finddir = procfs_finddir;
         child->open = procfs_open;
-        child->rename = NULL;
         child->chown = NULL;
         child->chmod = NULL;
         child->ioctl = NULL;

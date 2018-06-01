@@ -187,7 +187,6 @@ struct inode {
     struct inode* (*mknod) (struct inode* inode, char* name, mode_t mode);
     int (*unlink) (struct inode* inode, char* name);
     
-    int (*rename) (struct inode* inode, char* newname);
     int (*chown) (struct inode* inode, uid_t owner, gid_t group);
     int (*chmod) (struct inode* inode, mode_t mode);
     

@@ -157,7 +157,7 @@ int iosched_write(inode_t* inode, void* buf, off_t pos, size_t size) {
 }
 
 int iosched_init(void) {
-    //iosched_blksiz = sysconfig("iosched.blksize", SYSCONFIG_FORMAT_INT, 4096);
+    //iosched_blksiz = sysconfig("fs.iosched.blksize", SYSCONFIG_FORMAT_INT, 4096);
     return 0;
 }
 #endif

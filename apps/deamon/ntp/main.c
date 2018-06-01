@@ -83,7 +83,7 @@ static void atsig_handler(int sig) {
 
 
 static void do_ntp() {
-    char* host = (char*) sysconfig("ntpd.server", NULL);
+    char* host = (char*) sysconfig("deamons.ntpd.server", NULL);
     if(!host) {
         fprintf(stderr, "ntpd: invalid configuration for \'ntpd.server\' in /etc/config\n");
         return;
@@ -206,7 +206,7 @@ int main(int argc, char** argv) {
     if(!deamon)
         do_ntp();
     else {
-        if(strcmp((const char*) sysconfig("ntpd.enabled", "false"), "true") != 0) {
+        if(strcmp((const char*) sysconfig("deamons.ntpd.enabled", "false"), "true") != 0) {
             fprintf(stderr, "ntpd: deamon disabled by /etc/config\n");
             return 0;
         }
@@ -227,7 +227,7 @@ int main(int argc, char** argv) {
         
 
 
-        int s = (int) sysconfig("ntpd.timeout", 10);
+        int s = (int) sysconfig("deamons.ntpd.timeout", 10);
         fprintf(stderr, "ntpd: running as deamon every %d seconds\n", s);
 
 

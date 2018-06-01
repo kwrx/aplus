@@ -43,8 +43,8 @@ int tmpfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     dir->mtinfo = info;
 
 
-    uint32_t size = (uint32_t) sysconfig("tmpfs.size", 0x1000000);
-    uint32_t files = (uint32_t) sysconfig("tmpfs.files", 0x100000);
+    uint32_t size = (uint32_t) sysconfig("fs.tmpfs.size", 0x1000000);
+    uint32_t files = (uint32_t) sysconfig("fs.tmpfs.files", 0x100000);
  
     size = size ? size : 0x1000000;
     files = files ? files : 0x100000;

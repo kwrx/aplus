@@ -69,7 +69,6 @@ struct inode* tmpfs_mknod(struct inode* inode, char* name, mode_t mode) {
 
 
     child->finddir = NULL;
-    child->rename = NULL;
     child->chown = NULL;
     child->chmod = NULL;
     child->ioctl = NULL;

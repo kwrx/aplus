@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
     if(!deamon)
         sync();
     else {
-        if(strcmp((const char*) sysconfig("syncd.enabled", "false"), "true") != 0) {
+        if(strcmp((const char*) sysconfig("deamons.syncd.enabled", "false"), "true") != 0) {
             fprintf(stderr, "syncd: deamon disabled by /etc/config\n");
             return 0;
         }
@@ -119,7 +119,7 @@ int main(int argc, char** argv) {
         }
 
 
-        int s = (int) sysconfig("syncd.timeout", 10);
+        int s = (int) sysconfig("deamons.syncd.timeout", 10);
         fprintf(stderr, "syncd: running as deamon every %d seconds\n", s);
 
         for(;; sleep(s))

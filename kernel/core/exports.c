@@ -63,6 +63,7 @@ EXPORT(strchr);
 EXPORT(strtoul);
 EXPORT(strncpy);
 EXPORT(stpcpy);
+EXPORT(strrchr);
 EXPORT(sprintf);
 EXPORT(fgets);
 EXPORT(fseek);

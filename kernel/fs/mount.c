@@ -61,7 +61,6 @@ static int __vfs_bind(struct inode* dev, struct inode* dir, int flags) {
     dir->finddir = dev->finddir;
     dir->mknod = dev->mknod;
     dir->unlink = dev->unlink;
-    dir->rename = dev->rename;
     dir->chown = dev->chown;
     dir->chmod = dev->chmod;
     dir->ioctl = dev->ioctl;
@@ -208,7 +207,6 @@ int vfs_umount(struct inode* dir) {
     dir->write = NULL;
     dir->finddir = NULL;
     dir->mknod = NULL;
-    dir->rename = NULL;
     dir->unlink = NULL;
     dir->chown = NULL;
     dir->chmod = NULL;

@@ -34,6 +34,34 @@
 
 
 
+static int inode_fifo_ioctl(struct inode* inode, int req, void* data) {
+    if(unlikely(!inode)) {
+        errno = EINVAL;
+        return -1;
+    }
+    
+    if(unlikely(!inode->userdata))
+        return -1;
+
+    fifo_t* fifo = (fifo_t*) inode->userdata;
+
+
+    switch(req) {
+        case FIONREAD:
+            *(int*) data = fifo_available(fifo);
+            break;
+        case FIONBIO:
+            fifo->async = !!((int) data);
+            break;
+        default:
+            errno = EINVAL;
+            return -1;
+    }
+
+    return 0;
+}
+
+
 static int inode_fifo_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
     (void) pos;
     
@@ -96,6 +124,7 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
     inode_t* inode = current_task->fd[fd].inode;
     inode->read = inode_fifo_read;
     inode->write = inode_fifo_write;
+    inode->ioctl = inode_fifo_ioctl;
     inode->userdata = (void*) fifo;
     
     sys_close(fd);

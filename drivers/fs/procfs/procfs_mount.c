@@ -44,7 +44,6 @@ int procfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     dir->read = NULL;
     dir->write = NULL;
     dir->ioctl = NULL;
-    dir->rename = NULL;
     dir->mtinfo = info;
 
     info->stat.f_bsize = PAGE_SIZE;

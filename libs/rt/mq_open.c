@@ -22,30 +22,11 @@
  */
 
 
-#include <peach/peach.h>
-#include <iostream>
-#include <list>
-#include <unistd.h>
-#include <fcntl.h>
-#include <aplus/base.h>
-#include <aplus/fb.h>
-#include <aplus/sysconfig.h>
-using namespace std;
+#include <stdio.h>
+#include <mqueue.h>
+#include <errno.h>
 
-
-Peach::Peach() {
-    this->DefaultScreen = new Screen(this);
-    this->DefaultScreen->SetMode (
-        reinterpret_cast<uint32_t>(sysconfig("screen.width", 800)),
-        reinterpret_cast<uint32_t>(sysconfig("screen.height", 600)),
-        reinterpret_cast<uint32_t>(sysconfig("screen.bpp", 32))
-    );
-
-    this->Windows = new vector<Window*>();
-    this->WindowTop = NULL;
-    this->WindowFocused = NULL;
-}
-
-Peach::~Peach() {
-    delete this->DefaultScreen;
+mqd_t mq_open(const char *name, int oflag, ...) {
+    errno = ENOSYS;
+    return -1;
 }

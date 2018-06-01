@@ -81,7 +81,6 @@ struct inode* procfs_finddir(struct inode* inode, char* name) {
             child->read = procfs_read;
         
         child->finddir = procfs_finddir;
-        child->rename = NULL;
         child->chown = NULL;
         child->chmod = NULL;
         child->ioctl = NULL;

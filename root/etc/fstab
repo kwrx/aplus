@@ -10,3 +10,5 @@
       /usr/sbin    /sbin           none             bind
       /usr/lib     /lib            none             bind
 #     /dev/cda     /mnt/cdrom      iso9660          readonly
+      /fat.img     /mnt            vfat             rw
+

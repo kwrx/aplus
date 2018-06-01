@@ -103,7 +103,7 @@ int main(int argc, char** argv) {
     if(!deamon)
         exit(1);
     else {
-        if(strcmp((const char*) sysconfig("httpd.enabled", "false"), "true") != 0) {
+        if(strcmp((const char*) sysconfig("deamons.httpd.enabled", "false"), "true") != 0) {
             fprintf(stderr, "httpd: deamon disabled by /etc/config\n");
             return 0;
         }
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
             execl("/proc/self/exe", "[httpd]", "--deamon", NULL);
         
         setsid();
-        chdir((const char*) sysconfig("httpd.root", "/srv/http"));
+        chdir((const char*) sysconfig("deamons.httpd.root", "/srv/http"));
 
 
         int fd = open("/dev/log", O_WRONLY);
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
         }
 
 
-        return httpd((int) sysconfig("httpd.port", 80));
+        return httpd((int) sysconfig("deamons.httpd.port", 80));
     }
 
     return 0;

@@ -80,6 +80,9 @@ int vfs_write(struct inode* inode, void* ptr, off_t pos, size_t len) {
 
 struct inode* vfs_finddir(struct inode* inode, char* name) {
 
+    if(unlikely(!name || !strlen(name)))
+        return NULL;
+
     if(name[0] == '.' && name[1] == '\0')
         return inode;
 
@@ -98,9 +101,9 @@ struct inode* vfs_finddir(struct inode* inode, char* name) {
                 return tmp->inode;
     }
 
+
     if(unlikely(!inode->finddir))
         return NULL;
-
 
 
     inode_t* child = inode->finddir(inode, name);
@@ -119,6 +122,11 @@ struct inode* vfs_finddir(struct inode* inode, char* name) {
 }
 
 struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
+
+    if(unlikely(!inode || !name)) {
+        errno = EINVAL;
+        return NULL;
+    }
 
     if(unlikely(vfs_finddir(inode, name))) {
         errno = EEXIST;
@@ -169,7 +177,6 @@ struct inode* vfs_mknod(struct inode* inode, char* name, mode_t mode) {
     child->write = NULL;
     child->finddir = NULL;
     child->mknod = NULL;
-    child->rename = NULL;
     child->unlink = NULL;
     child->chown = NULL;
     child->chmod = NULL;
@@ -225,11 +232,6 @@ int vfs_unlink(struct inode* inode, char* name) {
 }
 
 int vfs_rename(struct inode* inode, char* newname) {
-    if(likely(inode->rename))
-        if(unlikely(inode->rename(inode, newname) != 0))
-            return -1;
-
-
     inode->name = strdup(newname);
     inode->dirty++;
 
@@ -334,7 +336,6 @@ int vfs_init(void) {
     vfs_root->write = NULL;
     vfs_root->finddir = NULL;
     vfs_root->mknod = NULL;
-    vfs_root->rename = NULL;
     vfs_root->unlink = NULL;
     vfs_root->chown = NULL;
     vfs_root->chmod = NULL;

@@ -22,8 +22,35 @@
  */
 
 
-#ifndef _PEACH_H
-#define _PEACH_H
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/vfs.h>
+#include <aplus/mm.h>
+#include <libc.h>
+
+#include "fat.h"
 
 
-#endif
+int fat_read(struct inode* inode, void* ptr, off_t pos, size_t len) {
+    if(unlikely(!inode))
+        return 0;
+
+    if(unlikely(!ptr))
+        return 0;
+
+    if(unlikely(!inode->userdata))
+        return 0;
+
+    if(pos + len > inode->size)
+        len = inode->size - pos;
+
+    if(unlikely(!len))
+        return 0;
+
+
+    fat_t* fat = (fat_t*) inode->userdata;
+    uint32_t cidx = (pos / FAT_SECTOR_SIZE) / fat->sb->sectors_per_cluster;
+    uint32_t sect = (pos / FAT_SECTOR_SIZE) - (cidx * fat->sb->sectors_per_cluster);
+
+            
+}
