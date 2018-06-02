@@ -233,8 +233,8 @@ SC(0, 101, __get_envp)				/* Deprecated */
 SC(1, 102, __install_sighandler)
 
 /* aPlus IPC */
-SC(3, 105, msg_send)
-SC(3, 106, msg_recv)
+SC(3, 105, ipc_msg_send)
+SC(3, 106, ipc_msg_recv)
 
 
 #define __bswap(a, x, y)                \

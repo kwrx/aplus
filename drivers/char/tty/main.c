@@ -92,8 +92,8 @@ int init(void) {
     tio->output = 1;
     tio->outlen = 0;
 
-    fifo_init(&tio->in, TTY_BUFSIZ, FIFO_ASYNC);
-    fifo_init(&tio->uin, TTY_BUFSIZ, FIFO_ASYNC);
+    fifo_init(&tio->in, TTY_BUFSIZ, O_NONBLOCK);
+    fifo_init(&tio->uin, TTY_BUFSIZ, O_NONBLOCK);
     
     
     ino_outp->read = tty_read;

@@ -137,7 +137,6 @@ void fork_handler(i386_context_t* context) {
 
     
     memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * TASK_FD_COUNT);    
-    memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
     //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
     memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
@@ -145,6 +144,8 @@ void fork_handler(i386_context_t* context) {
     
     child->image = &child->__image;
     child->image->refcount = 1;
+
+    fifo_init(&child->fifo, BUFSIZ, 0);
         
 
     child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
@@ -235,10 +236,11 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
 
     child->exe = current_task->exe;
 
-    memcpy(&child->fifo, &current_task->fifo, sizeof(fifo_t));
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
     //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
     memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
+
+    fifo_init(&child->fifo, BUFSIZ, 0);
 
 
     child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
@@ -397,8 +399,6 @@ int task_init(void) {
     t->status = TASK_STATUS_READY;
     t->priority = TASK_PRIO_REGULAR;
     
-    //fifo_init(&t->fifo, BUFSIZ, FIFO_SYNC);
-
 
     int i;
     for(i = 0; i < TASK_FD_COUNT; i++)

@@ -29,7 +29,7 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "de5b5281"
+#define COMMIT "3db7379b"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/
@@ -39,6 +39,7 @@
 #define CONFIG_SMP                          0    /* TODO */
 #define CONFIG_IPC                          1
 #define CONFIG_IPC_TIMEOUT                  60000
+#define CONFIG_IPC_PIPEMAX                  4194304
 #define CONFIG_VMM                          1
 #define CONFIG_CACHE                        0    /* FIXME */
 #define CONFIG_NETWORK                      1

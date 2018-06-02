@@ -162,6 +162,17 @@ struct ttysize {
 #define	SIOCGARP	_IOWR('i',38, struct arpreq)	/* get arp entry */
 #define	SIOCDARP	_IOW('i', 32, struct arpreq)	/* delete arp entry */
 
+
+#ifdef __aplus__
+#ifndef F_SETPIPE_SZ
+#define F_SETPIPE_SZ	_IOWR('x', 1, size_t)
+#endif
+
+#ifndef F_GETPIPE_SZ
+#define F_GETPIPE_SZ	_IOR('x', 2, size_t)
+#endif
+#endif
+
 #ifndef KERNEL
 
 #include <sys/cdefs.h>

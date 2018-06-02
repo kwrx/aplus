@@ -33,9 +33,6 @@
 #define SPINLOCK_LOCKED                 1
 #define SPINLOCK_UNLOCKED               0
 
-#define FIFO_ASYNC                      1
-#define FIFO_SYNC                       0
-
 
 #ifndef __ASSEMBLY__
 
@@ -65,7 +62,7 @@ typedef struct fifo {
     int r_pos;
     mutex_t w_lock;
     mutex_t r_lock;
-    int async;
+    int nbio;
     size_t size;
 } __packed fifo_t;
 

@@ -25,5 +25,26 @@
 #ifndef _PEACH_H
 #define _PEACH_H
 
+#define PEACH_MSG_MAGIC             0x55AA
+#define PEACH_MSG_ACK               0x55AA
+
+#define PEACH_MSG_SUBSCRIBE         0x0001
+
+
+struct peach_msg {
+    struct {
+        uint16_t h_magic;
+        uint16_t h_size;
+        uint16_t h_type;
+    } msg_header;
+
+    union {
+        struct {
+            pid_t m_pid;
+        } msg_subscribe;
+
+        char msg_data[BUFSIZ];
+    };
+} __attribute__((packed));
 
 #endif

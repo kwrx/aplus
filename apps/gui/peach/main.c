@@ -39,8 +39,8 @@
 #include <aplus/utils/list.h>
 #include <aplus/utils/async.h>
 
-
-
+#include <aplus/peach.h>
+#include "peach.h"
 
 static void show_usage(int argc, char** argv) {
     printf(
@@ -107,6 +107,50 @@ int main(int argc, char** argv) {
 
 
 
+    if(mkfifo("/etc/peach", 0666) != 0)
+        die("peach: server already running");
+
+    int fd = open("/etc/peach", O_RDWR);
+    if(fd < 0)
+        die("peach: open()");
+
+
+
+    #define pipe_read(fd, buf, len) do {    \
+        int e;                              \
+        if((e = read(fd, buf, len)) == len) \
+            break;                          \
+        if(e == -1 && errno == EWOULDBLOCK) \
+            continue;                       \
+                                            \
+        die("peach: read(" #buf ")");       \
+                                            \
+    } while(1);
+    
+
+
+    do {
+        struct peach_msg msg;
+        pipe_read(fd, &msg.msg_header.h_magic, sizeof(msg.msg_header.h_magic));
+
+        if(msg.msg_header.h_magic != PEACH_MSG_MAGIC)
+            continue;
+
+        pipe_read(fd, &msg.msg_header.h_size, sizeof(msg.msg_header) - sizeof(msg.msg_header.h_magic));
+        pipe_read(fd, &msg.msg_data, msg.msg_header.h_size);
+
+
+        switch(msg.msg_header.h_type) {
+            case PEACH_MSG_SUBSCRIBE:
+                ack(msg.msg_subscribe.m_pid);
+                break;
+            
+            
+            default:
+                printf("peach: invalid request type!\n");
+                continue;
+        }
+    } while(1);
     
     return 0;
 }

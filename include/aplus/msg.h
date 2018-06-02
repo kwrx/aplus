@@ -37,8 +37,9 @@ extern "C" {
 
 #define SIGMSG			SIGUSR2
 
-int msg_send(pid_t pid, void* data, size_t len);
-int msg_recv(pid_t* pid, void* data, size_t len);
+
+int ipc_msg_send(pid_t pid, void* data, size_t len);
+int ipc_msg_recv(pid_t* pid, void* data, size_t len);
 
 
 #ifdef __cplusplus

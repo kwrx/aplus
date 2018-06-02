@@ -23,10 +23,46 @@
 
 
 #include <stdio.h>
-#include <mqueue.h>
+#include <stdlib.h>
+#include <string.h>
+#include <signal.h>
 #include <errno.h>
+#include <unistd.h>
+#include <fcntl.h>
 
-mqd_t mq_open(const char *name, int oflag, ...) {
-    errno = ENOSYS;
-    return -1;
+#include <aplus/base.h>
+#include <aplus/msg.h>
+#include <aplus/peach.h>
+
+
+static void die(char* s) {
+    perror(s);
+    exit(1);
+}
+
+static void peach_handler(int sig) {
+    printf("ACK!!\n");
+    signal(sig, peach_handler);
+}
+
+
+int main(int argc, char** argv) {
+    int fd = open("/etc/peach", O_RDWR);
+    if(fd < 0)
+        die("open");
+
+    struct peach_msg msg;
+    msg.msg_header.h_magic = PEACH_MSG_MAGIC;
+    msg.msg_header.h_type = PEACH_MSG_SUBSCRIBE;
+    msg.msg_header.h_size = sizeof(msg.msg_subscribe);
+    msg.msg_subscribe.m_pid = getpid();
+    
+    signal(SIGMSG, peach_handler);
+    write(fd, &msg, sizeof(msg.msg_header) + msg.msg_header.h_size);
+    close(fd);
+
+    for(;;)
+        pause();
+
+    return 0;
 }

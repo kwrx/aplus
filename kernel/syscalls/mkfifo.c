@@ -50,9 +50,27 @@ static int inode_fifo_ioctl(struct inode* inode, int req, void* data) {
         case FIONREAD:
             *(int*) data = fifo_available(fifo);
             break;
+
         case FIONBIO:
-            fifo->async = !!((int) data);
+            fifo->nbio = !!(*(int*) data);
             break;
+
+        case F_SETPIPE_SZ:
+            *(size_t*) data = *(size_t*) data == 0
+                                ? BUFSIZ
+                                : (
+                                    *(size_t*) data > CONFIG_IPC_PIPEMAX
+                                        ? CONFIG_IPC_PIPEMAX
+                                        : *(size_t*) data
+                                );
+            
+            fifo_init(fifo, *(size_t*) data, fifo->nbio);
+            break;
+            
+        case F_GETPIPE_SZ:
+            *(size_t*) data = fifo->size;
+            break;
+
         default:
             errno = EINVAL;
             return -1;
@@ -109,7 +127,7 @@ int sys_mkfifo(const char* pathname, mode_t mode) {
     }
     
 
-    fifo_init(fifo, BUFSIZ, FIFO_SYNC);
+    fifo_init(fifo, PAGE_SIZE, 0);
     
 #if CONFIG_IPC_DEBUG
     #define mtxname strdup(pathname)

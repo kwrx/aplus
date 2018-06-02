@@ -32,14 +32,17 @@
 #include <libc.h>
 
 
-int fifo_init(fifo_t* fifo, size_t size, int async) {
+int fifo_init(fifo_t* fifo, size_t size, int nbio) {
 
     fifo->w_pos =
     fifo->r_pos = 0;
 
-    fifo->async = async;
+    fifo->nbio = nbio;
     fifo->size = size;
 
+    if(fifo->buffer)
+        kfree(fifo->buffer);
+    
     fifo->buffer = kmalloc(size, GFP_KERNEL);
     KASSERT(fifo->buffer);
 
@@ -63,9 +66,11 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len) {
 
     int i;
     for(i = 0; i < len; i++) {
-        if(fifo->async) {
-            if(unlikely(!(fifo->w_pos > fifo->r_pos)))
+        if(fifo->nbio) {
+            if(unlikely(!(fifo->w_pos > fifo->r_pos))) {
+                errno = EWOULDBLOCK;
                 return i;
+            }
         } else
             ipc_wait(!(fifo->w_pos > fifo->r_pos));
             
