@@ -28,6 +28,10 @@
 #include <aplus/msg.h>
 #include <aplus/peach.h>
 
+
+#define NR_DISPLAY          16
+
+
 #define msg_build(m, t, s) {                                    \
     (m)->msg_header.h_magic = PEACH_MSG_MAGIC;                  \
     (m)->msg_header.h_type = t;                                 \
@@ -41,8 +45,37 @@
 
 
 
-#define ack(p) {                                                \
-    struct peach_msg ack;                                       \
-    msg_build(&ack, PEACH_MSG_ACK, 0);                          \
-    msg_send(p, &ack, 0)                                        \
+#define reply(m, type, size) {                                  \
+    (m)->msg_header.h_magic = PEACH_MSG_MAGIC;                  \
+    (m)->msg_header.h_type = type;                              \
+    (m)->msg_header.h_size = size;                              \
+    msg_send((m)->msg_header.h_pid, m, size)                    \
 }
+
+#define reply_error(m, e, d) {                                  \
+    (m)->msg_error.e_errno = e;                                 \
+    memcpy(&(m)->msg_error.e_details[0], d, strlen(d) + 1);     \
+    reply(m, PEACH_MSG_ERROR, strlen(d) + 1 + sizeof(int));     \
+}
+
+
+typedef struct peach_display {
+    uint8_t d_active;
+    uint16_t d_width;
+    uint16_t d_height;
+    uint16_t d_bpp;
+    uint32_t d_stride;
+    void* d_backbuffer;
+    void* d_framebuffer;
+    
+    void (*d_flip) (struct peach_display*);
+} peach_display_t;
+
+
+extern peach_display_t display[];
+
+
+
+void die(char*);
+
+void init_display(uint16_t w, uint16_t h, uint16_t bpp, void* framebuffer, int doublebuffer);

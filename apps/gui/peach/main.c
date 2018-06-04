@@ -67,7 +67,7 @@ static void show_version(int argc, char** argv) {
 }
 
 
-static void die(char* s) {
+void die(char* s) {
     perror(s);
     exit(1);
 }
@@ -112,7 +112,26 @@ int main(int argc, char** argv) {
 
     int fd = open("/etc/peach", O_RDWR);
     if(fd < 0)
-        die("peach: open()");
+        die("peach: pipe");
+
+
+    
+    int fb = open((const char*) sysconfig("screen.device", "/dev/fb0"), O_RDONLY);
+    if(fb < 0)
+        die("peach: screen-device");
+
+    struct fb_fix_screeninfo fix;
+    struct fb_var_screeninfo var;
+    ioctl(fb, FBIOGET_VSCREENINFO, &var);
+    ioctl(fb, FBIOGET_FSCREENINFO, &fix);
+    close(fb);
+
+    if(!fix.smem_start)
+        die("peach: could not open default display");
+
+    
+    init_display(var.xres, var.yres, var.bits_per_pixel, (void*) fix.smem_start, 0);
+
 
 
 
@@ -136,16 +155,28 @@ int main(int argc, char** argv) {
         if(msg.msg_header.h_magic != PEACH_MSG_MAGIC)
             continue;
 
-        pipe_read(fd, &msg.msg_header.h_size, sizeof(msg.msg_header) - sizeof(msg.msg_header.h_magic));
+        pipe_read(fd, &msg.msg_header.h_pid, sizeof(msg.msg_header) - sizeof(msg.msg_header.h_magic));
         pipe_read(fd, &msg.msg_data, msg.msg_header.h_size);
 
 
         switch(msg.msg_header.h_type) {
             case PEACH_MSG_SUBSCRIBE:
-                ack(msg.msg_subscribe.m_pid);
+                reply(&msg, PEACH_MSG_ACK, 0);
                 break;
             
-            
+            case PEACH_MSG_GET_DISPLAY: /* TODO */
+                if(msg.msg_display.d_index > NR_DISPLAY) {
+                    reply_error(&msg, EINVAL, "Index > NR_DISPLAY: invalid display number");
+                    break;
+                }
+
+                msg.msg_display.d_active = display[msg.msg_display.d_index].d_active;
+                msg.msg_display.d_width = display[msg.msg_display.d_index].d_width;
+                msg.msg_display.d_height = display[msg.msg_display.d_index].d_height;
+                msg.msg_display.d_bpp = display[msg.msg_display.d_index].d_bpp;
+                reply(&msg, PEACH_MSG_GET_DISPLAY, sizeof(msg.msg_display));
+                break;
+
             default:
                 printf("peach: invalid request type!\n");
                 continue;

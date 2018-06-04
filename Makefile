@@ -22,7 +22,7 @@ all:					\
 	KERNEL_MODULES		\
 	$(KERNEL_ISO)		\
 	$(HDD)
-	$(VMM)
+	@echo "Done!"
 
 vm:
 	$(VMM)
@@ -55,7 +55,7 @@ KERNEL_MODULES: LIBRARIES
 	@echo "multiboot /$(KERNEL_NAME) root=/dev/cda rootfs=iso9660" >> root/boot/grub/grub.cfg
 	@$(foreach mod, $(KERNEL_MODULES), echo module /$(subst root/,,$(mod)) >> root/boot/grub/grub.cfg; )
 	@echo "boot }" >> root/boot/grub/grub.cfg
-	
+
 APPS: LIBRARIES
 	@$(foreach dir, $(APPS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
@@ -86,7 +86,7 @@ $(KERNEL_ISO): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
 .asm.o:
 	@echo "  ASM    " $@
 	@$(ASM) $(NFLAGS) -o $@ $<
-	
+
 clean_modules:
 	@$(foreach dir, $(KERNEL_MODULES_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
 
@@ -95,10 +95,10 @@ clean_apps:
 
 clean_libs:
 	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) clean;)
-	
+
 clean_kernel:
 	@$(RM) $(KERNEL_OBJECTS) $(KERNEL_ISO) $(KERNEL_OUTPUT) $(KERNEL_SYM)
-	
+
 clean: clean_modules clean_apps clean_kernel clean_libs
 	@$(RM) -r *.o *.map
 

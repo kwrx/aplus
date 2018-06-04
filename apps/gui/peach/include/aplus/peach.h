@@ -27,21 +27,32 @@
 
 #define PEACH_MSG_MAGIC             0x55AA
 #define PEACH_MSG_ACK               0x55AA
+#define PEACH_MSG_ERROR             0xAA55
 
 #define PEACH_MSG_SUBSCRIBE         0x0001
-
+#define PEACH_MSG_GET_DISPLAY       0x0002
 
 struct peach_msg {
     struct {
         uint16_t h_magic;
-        uint16_t h_size;
+        pid_t h_pid;
         uint16_t h_type;
+        uint16_t h_size;
     } msg_header;
 
     union {
         struct {
-            pid_t m_pid;
-        } msg_subscribe;
+            uint8_t d_index;
+            uint8_t d_active;
+            uint16_t d_width;
+            uint16_t d_height;
+            uint16_t d_bpp;
+        } msg_display;
+
+        struct {
+            int e_errno;
+            char e_details[1];
+        } msg_error;
 
         char msg_data[BUFSIZ];
     };
