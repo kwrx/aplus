@@ -32,6 +32,7 @@
 
 #include <aplus/base.h>
 #include <aplus/fb.h>
+#include <cairo/cairo.h>
 #include "../peach.h"
 
 
@@ -60,21 +61,54 @@ int init_display(uint16_t w, uint16_t h, uint16_t bpp, void* framebuffer, int do
     display[i].d_bpp = bpp;
     display[i].d_stride = w * (bpp / 8);
 
-    display[i].d_backbuffer = !doublebuffer
-                                    ? (void*) framebuffer
-                                    : malloc(w * h * (bpp / 8))
-                                    ;
+    display[i].d_backbuffer.b_raw = !doublebuffer
+                                        ? (void*) framebuffer
+                                        : malloc(w * h * (bpp / 8))
+                                        ;
 
-    display[i].d_framebuffer = !doublebuffer
-                                    ? NULL 
-                                    : framebuffer
-                                    ;
+    display[i].d_framebuffer.b_raw = !doublebuffer
+                                        ? NULL 
+                                        : framebuffer
+                                        ;
 
-    if(!display[i].d_backbuffer) {
+    if(!display[i].d_backbuffer.b_raw) {
         errno = ENOMEM;
         return -1;
     }
 
+
+    display[i].d_backbuffer.b_surface = cairo_image_surface_create_for_data (
+        (unsigned char*) display[i].d_backbuffer.b_raw,
+        cairo_bpp2fmt(display[i].d_bpp),
+        display[i].d_width,
+        display[i].d_height,
+        display[i].d_stride
+    );
+
+    if(!display[i].d_backbuffer.b_surface)
+        return -1;
+
+    display[i].d_backbuffer.b_cairo = cairo_create(display[i].d_backbuffer.b_surface);
+    
+    if(!doublebuffer)
+        goto done;
+
+
+    display[i].d_framebuffer.b_surface = cairo_image_surface_create_for_data (
+        (unsigned char*) display[i].d_framebuffer.b_raw,
+        cairo_bpp2fmt(display[i].d_bpp),
+        display[i].d_width,
+        display[i].d_height,
+        display[i].d_stride
+    );
+
+    if(!display[i].d_framebuffer.b_surface)
+        return -1;
+
+    display[i].d_framebuffer.b_cairo = cairo_create(display[i].d_framebuffer.b_surface);
+    
+
+done:
     current_display = &display[i];
     return 0;
 }

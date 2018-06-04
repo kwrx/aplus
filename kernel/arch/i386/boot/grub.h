@@ -37,7 +37,7 @@ typedef struct vesaInfo_t {
     char *oem_vendor_name;
     char *oem_product_name;
     char *oem_product_rev;
-} vesaInfo;
+} __attribute__((packed)) vesaInfo;
 
 typedef struct vesaModeInfo_t {
     unsigned short attributes;
@@ -89,6 +89,6 @@ typedef struct BootInfo_t {
     unsigned int vbe_interface_seg;
     unsigned int vbe_interface_off;
     unsigned int vbe_interface_len;
-} BootInfo;
+} __attribute__((packed)) BootInfo;
 
 #endif    

@@ -138,18 +138,19 @@ int main(int argc, char** argv) {
 
 
 
-    #define pipe_read(fd, buf, len) do {    \
-        int e;                              \
-        if((e = read(fd, buf, len)) == len) \
-            break;                          \
-        if(e == -1 && errno == EWOULDBLOCK) \
-            continue;                       \
-                                            \
-        die("peach: read(" #buf ")");       \
-                                            \
+    #define pipe_read(fd, buf, len) do {        \
+        int e;                                  \
+        if((e = read(fd, buf, len)) == (len))   \
+            break;                              \
+        if(e == -1 && errno == EWOULDBLOCK)     \
+            continue;                           \
+                                                \
+        die("peach: read(" #buf ")");           \
+                                                \
     } while(1);
     
 
+    window_drawer();
 
     do {
         struct peach_msg msg;
@@ -161,11 +162,13 @@ int main(int argc, char** argv) {
         pipe_read(fd, &msg.msg_header.h_pid, sizeof(msg.msg_header) - sizeof(msg.msg_header.h_magic));
         pipe_read(fd, &msg.msg_data, msg.msg_header.h_size);
 
+
         if(!api_list[msg.msg_header.h_type]) {
             api_list[PEACH_MSG_ERROR] (&msg);
             continue;
         }
 
+        printf("Received %d\n", msg.msg_header.h_type);
         api_list[msg.msg_header.h_type] (&msg);
     } while(1);
     

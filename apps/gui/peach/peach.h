@@ -70,6 +70,7 @@
 }
 
 #define API_ERROR(m, e, d) {                                    \
+    printf("peach: API-ERROR: %s: %s\n", strerror(e), d);       \
     (m)->msg_error.e_errno = e;                                 \
     (m)->msg_error.e_type = (m)->msg_header.h_type;             \
     memcpy(&(m)->msg_error.e_details[0], d, strlen(d) + 1);     \
@@ -86,8 +87,20 @@ typedef struct peach_display {
     uint16_t d_height;
     uint16_t d_bpp;
     uint32_t d_stride;
-    void* d_backbuffer;
-    void* d_framebuffer;
+    struct {
+        void* b_raw;
+
+        cairo_surface_t* b_surface;
+        cairo_t* b_cairo;
+    } d_backbuffer;
+
+
+    struct {
+        void* b_raw;
+
+        cairo_surface_t* b_surface;
+        cairo_t* b_cairo;
+    } d_framebuffer;
     
     void (*d_flip) (struct peach_display*);
 } peach_display_t;
@@ -123,6 +136,7 @@ extern peach_display_t* current_display;
 void die(char*);
 int init_display(uint16_t w, uint16_t h, uint16_t bpp, void* framebuffer, int doublebuffer);
 
+int window_drawer(void);
 peach_window_t* window_create(pid_t pid, uint16_t w, uint16_t h);
 int window_destroy(uint32_t id);
 int window_set_title(uint32_t id, char* title);

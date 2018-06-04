@@ -62,14 +62,17 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len) {
     if(unlikely(!len))
         return 0;
 
+
+
     uint8_t* buf = ptr;
+    mutex_lock(&fifo->r_lock);
 
     int i;
     for(i = 0; i < len; i++) {
         if(fifo->nbio) {
             if(unlikely(!(fifo->w_pos > fifo->r_pos))) {
                 errno = EWOULDBLOCK;
-                return i;
+                break;
             }
         } else
             ipc_wait(!(fifo->w_pos > fifo->r_pos));
@@ -78,7 +81,8 @@ int fifo_read(fifo_t* fifo, void* ptr, size_t len) {
         *buf++ = fifo->buffer[fifo->r_pos++ % fifo->size];
     }
 
-    return len;
+    mutex_unlock(&fifo->r_lock);
+    return i;
 }
 
 int fifo_write(fifo_t* fifo, void* ptr, size_t len) {
@@ -91,12 +95,14 @@ int fifo_write(fifo_t* fifo, void* ptr, size_t len) {
         return 0;
 
     uint8_t* buf = ptr;
+    mutex_lock(&fifo->w_lock);
 
     int i;
     for(i = 0; i < len; i++)
-        fifo->buffer[(int) fifo->w_pos++ % fifo->size] = *buf++;
+        fifo->buffer[fifo->w_pos++ % fifo->size] = *buf++;
 
-    return len;
+    mutex_unlock(&fifo->w_lock);
+    return i;
 }
 
 int fifo_peek(fifo_t* fifo, size_t len) {

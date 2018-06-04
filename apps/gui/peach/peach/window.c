@@ -32,6 +32,7 @@
 
 #include <aplus/base.h>
 #include <aplus/kmem.h>
+#include <aplus/utils/async.h>
 #include <cairo/cairo.h>
 #include "../peach.h"
 
@@ -55,6 +56,52 @@
 
 peach_window_t window[NR_WINDOW];
 uint32_t window_count = 0;
+
+
+
+int window_drawer(void) {
+    void __window_border(peach_window_t* window) {
+#if 0
+        cairo_save(current_display->d_backbuffer.b_cairo);
+        cairo_set_source_rgb(current_display->d_backbuffer.b_cairo, 0.5, 0.5, 0.5);
+        cairo_rectangle(current_display->d_backbuffer.b_cairo, 0.0, 0.0, (double) window->w_width, 30.0);
+        cairo_fill(current_display->d_backbuffer.b_cairo);
+        cairo_rectangle(current_display->d_backbuffer.b_cairo, 0.0, 30.0, (double) window->w_width, (double) window->w_height + 30.0)
+        cairo_restore(current_display->d_backbuffer.b_cairo);
+#endif    
+    }
+
+    void __window_borderless(peach_window_t* window) {
+        cairo_save(current_display->d_backbuffer.b_cairo);
+        cairo_set_source_surface(current_display->d_backbuffer.b_cairo, window->w_surface, 0, 0);
+        cairo_rectangle(current_display->d_backbuffer.b_cairo, 0.0, 0.0, (double) window->w_width, (double) window->w_height);
+        cairo_set_operator(current_display->d_backbuffer.b_cairo, CAIRO_OPERATOR_SOURCE);
+        cairo_paint(current_display->d_backbuffer.b_cairo);
+        cairo_restore(current_display->d_backbuffer.b_cairo);
+    }
+
+
+    async_do ({
+        for(int i = 0, j = 0; i < NR_DISPLAY && j < window_count; i++) {
+            if(!window[i].w_active)
+                continue;
+
+            j++;
+
+            if(!(window[i].w_flags & PEACH_WINDOW_SHOW))
+                continue;
+
+            if(!(window[i].w_flags & PEACH_WINDOW_BORDERLESS))
+                __window_border(&window[i]);
+            else
+                __window_borderless(&window[i]);
+            
+        }
+
+        usleep(16666);
+    }, NULL);
+}
+
 
 peach_window_t* window_create(pid_t pid, uint16_t w, uint16_t h) {
     if(!current_display) {
@@ -89,7 +136,7 @@ peach_window_t* window_create(pid_t pid, uint16_t w, uint16_t h) {
     s->w_y = 0;
     s->w_width = w;
     s->w_height = h;
-    s->w_frame = (void*) kmem_alloc(current_display->d_stride * h);
+    s->w_frame = (void*) kmem_alloc(w * h * (current_display->d_bpp / 8));
 
     if(!s->w_frame) {
         errno = ENOMEM;

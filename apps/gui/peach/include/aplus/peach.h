@@ -45,13 +45,19 @@ enum {
 };
 
 
+enum {
+    PEACH_WINDOW_SHOW = 1,
+    PEACH_WINDOW_BORDERLESS = 2
+};
+
+
 struct peach_msg {
     struct {
         uint16_t h_magic;
         pid_t h_pid;
         uint16_t h_type;
         uint16_t h_size;
-    } msg_header;
+    } __packed msg_header;
 
     union {
         struct {
@@ -60,25 +66,25 @@ struct peach_msg {
             uint16_t d_width;
             uint16_t d_height;
             uint16_t d_bpp;
-        } msg_display;
+        } __packed msg_display;
 
         struct {
             uint32_t w_id;
             uint16_t w_width;
             uint16_t w_height;
             void* w_frame;
-        } msg_window;
+        } __packed msg_window;
 
         struct {
             uint32_t w_id;
             char w_title[1];
-        } msg_window_title;
+        } __packed msg_window_title;
 
         struct {
             uint32_t w_id;
             uint16_t w_flags;
             uint8_t w_set;
-        } msg_window_flags;
+        } __packed msg_window_flags;
 
         struct {
             uint32_t w_id;
@@ -86,16 +92,16 @@ struct peach_msg {
             uint16_t w_y;
             uint16_t w_width;
             uint16_t w_height;
-        } msg_window_bounds;
+        } __packed msg_window_bounds;
 
         struct {
             int e_errno;
             uint16_t e_type;
             char e_details[1];
-        } msg_error;
+        } __packed msg_error;
 
         char msg_data[BUFSIZ];
     };
-} __attribute__((packed));
+} __packed;
 
 #endif

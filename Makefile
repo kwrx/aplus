@@ -24,7 +24,7 @@ all:					\
 	$(HDD)
 	@echo "Done!"
 
-vm:
+vm: all
 	$(VMM)
 
 

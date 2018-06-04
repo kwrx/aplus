@@ -72,7 +72,7 @@ API(PEACH_MSG_DISPLAY) {
 
 
 API(PEACH_MSG_WINDOW_CREATE) {
-    if(!msg->msg_window.w_width || msg->msg_window.w_height)
+    if(!msg->msg_window.w_width || !msg->msg_window.w_height)
         API_ERROR(msg, EINVAL, "Size cannot be zero");
 
     peach_window_t* window = window_create(msg->msg_header.h_pid, msg->msg_window.w_width, msg->msg_window.w_height);

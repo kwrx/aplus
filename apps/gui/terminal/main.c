@@ -35,13 +35,16 @@
 #include <aplus/peach.h>
 
 
+int ack = 0;
+
 static void die(char* s) {
     perror(s);
     exit(1);
 }
 
 static void peach_handler(int sig) {
-    printf("ACK!!\n");
+    ack = 1;
+    printf("ACK\n");
     signal(sig, peach_handler);
 }
 
@@ -51,18 +54,42 @@ int main(int argc, char** argv) {
     if(fd < 0)
         die("open");
 
+
+    #define wait_ack()  \
+        ack = 0; while(!ack) pause();
+
     struct peach_msg msg;
     msg.msg_header.h_magic = PEACH_MSG_MAGIC;
     msg.msg_header.h_type = PEACH_MSG_SUBSCRIBE;
-    msg.msg_header.h_size = sizeof(msg.msg_subscribe);
-    msg.msg_subscribe.m_pid = getpid();
+    msg.msg_header.h_pid = getpid();
+    msg.msg_header.h_size = 0;
+
     
     signal(SIGMSG, peach_handler);
-    write(fd, &msg, sizeof(msg.msg_header) + msg.msg_header.h_size);
-    close(fd);
+    write(fd, &msg, sizeof(msg.msg_header));
+    wait_ack();
 
-    for(;;)
-        pause();
+    msg.msg_header.h_type = PEACH_MSG_WINDOW_CREATE;
+    msg.msg_header.h_size = sizeof(msg.msg_window);
+    msg.msg_window.w_width = 300;
+    msg.msg_window.w_height = 300;
+    write(fd, &msg, sizeof(msg.msg_header) + sizeof(msg.msg_window));
+    wait_ack();
 
+    memset(msg.msg_window.w_frame, 0xFF, 300 * 300 * 4);
+
+    int id = msg.msg_window.w_id;
+
+    msg.msg_header.h_type = PEACH_MSG_WINDOW_SET_FLAGS;
+    msg.msg_header.h_size = sizeof(msg.msg_window_flags);
+    msg.msg_window_flags.w_id = id;
+    msg.msg_window_flags.w_flags = PEACH_WINDOW_SHOW | PEACH_WINDOW_BORDERLESS;
+    msg.msg_window_flags.w_set = 1;
+    write(fd, &msg, sizeof(msg.msg_header) + sizeof(msg.msg_window_flags));
+    wait_ack();
+
+
+   
+   
     return 0;
 }
