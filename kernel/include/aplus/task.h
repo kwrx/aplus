@@ -34,10 +34,6 @@
 #include <libc.h>
 
 
-#define TASK_EXIT_EXITED                0
-#define TASK_EXIT_STOPPED               1
-#define TASK_EXIT_TERMED                2
-
 #define TASK_STATUS_READY               0
 #define TASK_STATUS_RUNNING             1
 #define TASK_STATUS_SLEEP               2
@@ -49,9 +45,10 @@
 #define TASK_PRIO_REGULAR               0
 
 #define TASK_FD_COUNT                   32
+#define TASK_FIFOSZ                     PAGE_SIZE
 
-#define TASK_ROOT_UID                   0
-#define TASK_ROOT_GID                   0
+#define TASK_ROOT_UID                   ((uid_t) 0)
+#define TASK_ROOT_GID                   ((gid_t) 0)
 
 
 #ifndef __ASSEMBLY__

@@ -25,12 +25,25 @@
 #ifndef _PEACH_H
 #define _PEACH_H
 
-#define PEACH_MSG_MAGIC             0x55AA
-#define PEACH_MSG_ACK               0x55AA
-#define PEACH_MSG_ERROR             0xAA55
 
-#define PEACH_MSG_SUBSCRIBE         0x0001
-#define PEACH_MSG_GET_DISPLAY       0x0002
+
+enum {
+    PEACH_MSG_ERROR = 0,
+    PEACH_MSG_SUBSCRIBE,
+    PEACH_MSG_DISPLAY,
+    PEACH_MSG_WINDOW_CREATE,
+    PEACH_MSG_WINDOW_DESTROY,
+    PEACH_MSG_WINDOW_SET_TITLE,
+    PEACH_MSG_WINDOW_GET_TITLE,
+    PEACH_MSG_WINDOW_SET_BOUNDS,
+    PEACH_MSG_WINDOW_GET_BOUNDS,
+    PEACH_MSG_WINDOW_SET_FLAGS,
+    PEACH_MSG_WINDOW_GET_FLAGS,
+
+
+    PEACH_MSG_MAGIC = 0x55AA
+};
+
 
 struct peach_msg {
     struct {
@@ -50,7 +63,34 @@ struct peach_msg {
         } msg_display;
 
         struct {
+            uint32_t w_id;
+            uint16_t w_width;
+            uint16_t w_height;
+            void* w_frame;
+        } msg_window;
+
+        struct {
+            uint32_t w_id;
+            char w_title[1];
+        } msg_window_title;
+
+        struct {
+            uint32_t w_id;
+            uint16_t w_flags;
+            uint8_t w_set;
+        } msg_window_flags;
+
+        struct {
+            uint32_t w_id;
+            uint16_t w_x;
+            uint16_t w_y;
+            uint16_t w_width;
+            uint16_t w_height;
+        } msg_window_bounds;
+
+        struct {
             int e_errno;
+            uint16_t e_type;
             char e_details[1];
         } msg_error;
 

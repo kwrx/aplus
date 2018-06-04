@@ -145,7 +145,7 @@ void fork_handler(i386_context_t* context) {
     child->image = &child->__image;
     child->image->refcount = 1;
 
-    fifo_init(&child->fifo, BUFSIZ, 0);
+    fifo_init(&child->fifo, TASK_FIFOSZ, 0);
         
 
     child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);
@@ -240,7 +240,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
     memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 
-    fifo_init(&child->fifo, BUFSIZ, 0);
+    fifo_init(&child->fifo, TASK_FIFOSZ, 0);
 
 
     child->context = (void*) kmalloc(sizeof(i386_task_context_t), GFP_KERNEL);

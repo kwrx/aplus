@@ -106,6 +106,9 @@ int main(int argc, char** argv) {
     }
 
 
+    memset(display, 0, sizeof(peach_display_t) * NR_DISPLAY);
+    memset(window, 0, sizeof(peach_window_t) * NR_WINDOW);
+
 
     if(mkfifo("/etc/peach", 0666) != 0)
         die("peach: server already running");
@@ -129,8 +132,8 @@ int main(int argc, char** argv) {
     if(!fix.smem_start)
         die("peach: could not open default display");
 
-    
-    init_display(var.xres, var.yres, var.bits_per_pixel, (void*) fix.smem_start, 0);
+    if(init_display(var.xres, var.yres, var.bits_per_pixel, (void*) fix.smem_start, 0) != 0)
+        die("peach: display");
 
 
 
@@ -158,29 +161,12 @@ int main(int argc, char** argv) {
         pipe_read(fd, &msg.msg_header.h_pid, sizeof(msg.msg_header) - sizeof(msg.msg_header.h_magic));
         pipe_read(fd, &msg.msg_data, msg.msg_header.h_size);
 
-
-        switch(msg.msg_header.h_type) {
-            case PEACH_MSG_SUBSCRIBE:
-                reply(&msg, PEACH_MSG_ACK, 0);
-                break;
-            
-            case PEACH_MSG_GET_DISPLAY: /* TODO */
-                if(msg.msg_display.d_index > NR_DISPLAY) {
-                    reply_error(&msg, EINVAL, "Index > NR_DISPLAY: invalid display number");
-                    break;
-                }
-
-                msg.msg_display.d_active = display[msg.msg_display.d_index].d_active;
-                msg.msg_display.d_width = display[msg.msg_display.d_index].d_width;
-                msg.msg_display.d_height = display[msg.msg_display.d_index].d_height;
-                msg.msg_display.d_bpp = display[msg.msg_display.d_index].d_bpp;
-                reply(&msg, PEACH_MSG_GET_DISPLAY, sizeof(msg.msg_display));
-                break;
-
-            default:
-                printf("peach: invalid request type!\n");
-                continue;
+        if(!api_list[msg.msg_header.h_type]) {
+            api_list[PEACH_MSG_ERROR] (&msg);
+            continue;
         }
+
+        api_list[msg.msg_header.h_type] (&msg);
     } while(1);
     
     return 0;
