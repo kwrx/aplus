@@ -50,8 +50,11 @@
 #include <sys/poll.h>
 #include <sys/mount.h>
 #include <sys/statvfs.h>
+#include <sys/resource.h>
+#include <sys/uio.h>
 #include <sched.h>
 #include <signal.h>
+#include <utime.h>
 #include <libgen.h>
 
 #ifdef _POSIX_SOURCE

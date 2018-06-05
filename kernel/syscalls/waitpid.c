@@ -43,7 +43,7 @@
     }
 
 
-SYSCALL(31, waitpid,
+SYSCALL(7, waitpid,
 pid_t sys_waitpid(pid_t pid, int* status, int options) {
     if(pid < -1)
         __wait_for(v->pgid == -pid)

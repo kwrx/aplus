@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(4, fstat,
+SYSCALL(108, fstat,
 int sys_fstat(int fd, struct stat* st) {
     if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
         errno = EBADF;

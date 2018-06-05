@@ -30,10 +30,8 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-/* See src/init/hostname.c */
-extern char* hostname;
 
-SYSCALL(33, uname,
+SYSCALL(122, uname,
 int sys_uname(struct utsname* buf) {
     if(unlikely(!buf)) {
         errno = EFAULT;

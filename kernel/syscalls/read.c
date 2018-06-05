@@ -31,7 +31,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(11, read,
+SYSCALL(3, read,
 int sys_read(int fd, void* buf, size_t size) {
     if(unlikely(fd < 0)) {
         errno = EBADF;

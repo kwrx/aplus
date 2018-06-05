@@ -30,7 +30,7 @@
 #include <libc.h>
 
 
-SYSCALL(14, times,
+SYSCALL(43, times,
 clock_t sys_times(struct tms* tms) {
     if(!tms)
         return timer_getus();

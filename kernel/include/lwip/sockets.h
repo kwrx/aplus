@@ -142,12 +142,6 @@ struct lwip_setgetsockopt_data {
 };
 #endif /* !LWIP_TCPIP_CORE_LOCKING */
 
-#if !defined(iovec)
-struct iovec {
-  void  *iov_base;
-  size_t iov_len;
-};
-#endif
 
 struct msghdr {
   void         *msg_name;

@@ -29,13 +29,6 @@
 #include <libc.h>
 
 
-SYSCALL(23, _yield,
-void sys__yield(void) {
-    syscall_ack();
-    schedule_yield();
-});
-
-
 void sys_yield(void) {
     task_yield();
 }

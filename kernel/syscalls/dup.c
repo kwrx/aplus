@@ -30,7 +30,7 @@
 #include <aplus/network.h>
 #include <libc.h>
 
-SYSCALL(59, dup,
+SYSCALL(41, dup,
 int sys_dup(int oldfd) {
     if(oldfd < 0 || oldfd >= TASK_FD_COUNT) {
         errno = EBADF;

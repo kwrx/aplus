@@ -33,7 +33,7 @@
 
 
 
-SYSCALL(56, nanosleep,
+SYSCALL(162, nanosleep,
 int sys_nanosleep(struct timespec* req, struct timespec* rem) {
     if(!req) {
         errno = EINVAL;

@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(60, nice,
+SYSCALL(34, nice,
 int sys_nice(int incr) {
     KASSERT(current_task);
 

@@ -31,7 +31,7 @@
 #include <aplus/module.h>
 #include <libc.h>
 
-SYSCALL(92, delete_module,
+SYSCALL(129, delete_module,
 int sys_delete_module(char* name, int flags) {
     if(unlikely(!name)) {
         errno = EINVAL;

@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(57, pause,
+SYSCALL(29, pause,
 int sys_pause(void) {
     KASSERT(current_task);
 

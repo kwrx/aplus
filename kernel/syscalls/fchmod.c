@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(87, fchmod,
+SYSCALL(94, fchmod,
 int sys_fchmod(int fd, mode_t mode) {
     inode_t* inode = current_task->fd[fd].inode;
     if(unlikely(!inode)) {

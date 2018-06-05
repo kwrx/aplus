@@ -31,7 +31,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(36, readlink,
+SYSCALL(85, readlink,
 ssize_t sys_readlink(const char* filename, char* buf, size_t bufsize) {
     if(unlikely(!filename || !buf || !bufsize)) {
         errno = EINVAL;

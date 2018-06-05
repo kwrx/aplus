@@ -19,12 +19,12 @@ include build/Makefile.flags
 all:					\
 	CONFIG				\
 	$(KERNEL_OUTPUT)	\
-	KERNEL_MODULES		\
-	$(KERNEL_ISO)		\
-	$(HDD)
+	KERNEL_MODULES
 	@echo "Done!"
 
-vm: all
+vm: all					\
+	$(KERNEL_ISO)		\
+	$(HDD)
 	$(VMM)
 
 

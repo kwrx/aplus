@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(46, alarm,
+SYSCALL(27, alarm,
 unsigned int sys_alarm(unsigned int seconds) {
     KASSERT(current_task);
 

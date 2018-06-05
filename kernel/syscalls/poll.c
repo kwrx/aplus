@@ -31,7 +31,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(85, poll,
+SYSCALL(168, poll,
 int sys_poll(struct pollfd* fds, nfds_t nfds, int timeout) {
     if(unlikely(!fds)) {
         errno = EINVAL;

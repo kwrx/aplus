@@ -30,21 +30,9 @@
 #include <libc.h>
 
 
-SYSCALL(13, stat,
+SYSCALL(106, stat,
 int sys_stat(const char* name, struct stat* st) {
     int fd = sys_open(name, O_RDONLY, 0);
-    if(fd < 0)
-        return -1;
-
-    register int r = sys_fstat(fd, st);
-    sys_close(fd);
-
-    return r; 
-});
-
-SYSCALL(38, lstat,
-int sys_lstat(const char* name, struct stat* st) {
-    int fd = sys_open(name, O_RDONLY | O_NOFOLLOW, 0);
     if(fd < 0)
         return -1;
 

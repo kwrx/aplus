@@ -66,7 +66,7 @@ static void strslashcpy(char* s1, const char* s2) {
 }
 
 
-SYSCALL(10, open,
+SYSCALL(5, open,
 int sys_open(const char* name, int flags, mode_t mode) {
     if(unlikely(!name)) {
         errno = EINVAL;

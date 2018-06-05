@@ -31,7 +31,7 @@
 #include <aplus/module.h>
 #include <libc.h>
 
-SYSCALL(91, init_module,
+SYSCALL(128, init_module,
 int sys_init_module(void* image, unsigned long len, const char* param_values) {
     if(unlikely(!image || !len)) {
         errno = EINVAL;

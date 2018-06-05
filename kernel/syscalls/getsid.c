@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(45, getsid,
+SYSCALL(147, getsid,
 int sys_getsid(void) {
     KASSERT(current_task);
 

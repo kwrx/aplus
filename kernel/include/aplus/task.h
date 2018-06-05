@@ -176,6 +176,8 @@ extern void task_release(volatile task_t* task);
         task->name = strdup(nm);
 
 
+#define is_superuser(task)                                                                                      \
+    ((task->uid == TASK_ROOT_UID) || (task->gid == TASK_ROOT_GID))
 
 
 #endif

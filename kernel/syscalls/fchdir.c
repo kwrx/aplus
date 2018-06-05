@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(29, fchdir,
+SYSCALL(133, fchdir,
 int sys_fchdir(int fd) {
     if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
         errno = EBADF;

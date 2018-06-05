@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(37, chdir,
+SYSCALL(12, chdir,
 int sys_chdir(const char* path) {
     int fd = sys_open(path, O_RDONLY, 0);
     if(fd < 0)

@@ -31,7 +31,7 @@
 #include <libc.h>
 
 
-SYSCALL(40, getdents,
+SYSCALL(141, getdents,
 int sys_getdents(int fd, struct dirent* buf, size_t size) {
     if(unlikely(fd > TASK_FD_COUNT)) {
         errno = EBADF;

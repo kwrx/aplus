@@ -30,7 +30,7 @@
 #include <aplus/intr.h>
 #include <libc.h>
 
-SYSCALL(0, exit,
+SYSCALL(1, exit,
 void sys_exit(int status) {
     KASSERT(current_task != kernel_task);
     

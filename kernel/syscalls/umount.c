@@ -29,9 +29,9 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(25, umount,
+SYSCALL(22, umount,
 int sys_umount(const char* dev) {
-    if((current_task->uid != TASK_ROOT_UID) && (current_task->gid != TASK_ROOT_GID)) {
+    if(!is_superuser(current_task)) {
         errno = EPERM;
         return -1;
     }
@@ -45,11 +45,4 @@ int sys_umount(const char* dev) {
     }
 
     return vfs_umount(dev_ino);
-});
-
-SYSCALL(26, umount2,
-int sys_umount2(const char* dev, int flags) {
-    (void) flags;
-
-    return sys_umount(dev);
 });

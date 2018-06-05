@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(42, chmod,
+SYSCALL(15, chmod,
 int sys_chmod(const char* pathname, mode_t mode) {
     int fd = sys_open(pathname, O_RDONLY, 0);
     if(fd < 0)

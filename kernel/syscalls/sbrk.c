@@ -34,7 +34,7 @@ SYSCALL(12, sbrk,
 void* sys_sbrk(ptrdiff_t incr) {
     if(current_task->image->end + incr < current_task->image->start) {
         errno = EINVAL;
-        return NULL;
+        return (void*) -1;
     }
 
     uintptr_t cr = current_task->image->end;

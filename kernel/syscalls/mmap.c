@@ -78,7 +78,7 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
     return (void*) rd;
 }
 
-SYSCALL(34, _mmap,
+SYSCALL(90, _mmap,
     void* sys__mmap(uintptr_t* p) {
         return sys_mmap(
             (void*) p[0],

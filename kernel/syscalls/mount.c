@@ -30,7 +30,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(24, mount,
+SYSCALL(21, mount,
 int sys_mount(const char* dev, const char* dir, const char* fstype, unsigned long int options, const void* data) {
     if((current_task->uid != TASK_ROOT_UID) && (current_task->gid != TASK_ROOT_GID)) {
         errno = EPERM;

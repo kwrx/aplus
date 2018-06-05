@@ -30,7 +30,7 @@
 #include <aplus/network.h>
 #include <libc.h>
 
-SYSCALL(1, close,
+SYSCALL(6, close,
 int sys_close(int fd) {
     if(unlikely(fd < 0)) {
         errno = EBADF;

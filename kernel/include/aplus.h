@@ -32,6 +32,8 @@
 #ifndef __ASSEMBLY__
 #include <libc.h>
 
+typedef int64_t off64_t;
+typedef int64_t ino64_t;
 
 typedef struct bootargs {
     struct {
@@ -132,10 +134,21 @@ extern int sys_clock_gettime(clockid_t id, struct timespec *tv);
 extern int sys_pause(void);
 extern void sys_sync(void);
 extern int sys_poll(struct pollfd*, nfds_t, int);
+extern int sys_stat(const char*, struct stat*);
+extern int sys_mknod(const char*, mode_t, dev_t);
+extern pid_t sys_getpgid(pid_t);
+extern int sys_fstatvfs(int, struct statvfs*);
+extern int sys__llseek(int, unsigned int, unsigned int, off64_t*, int);
+extern int sys_fsync(int);
+extern int sys_sigprocmask(int, sigset_t*, sigset_t*);
 
 
 extern int mounts_init();
 extern int core_init();
+
+
+/* See src/init/hostname.c */
+extern char* hostname;
 
 #endif
 #endif

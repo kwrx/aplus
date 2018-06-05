@@ -30,7 +30,7 @@
 #include <aplus/network.h>
 #include <libc.h>
 
-SYSCALL(20, ioctl,
+SYSCALL(54, ioctl,
 int sys_ioctl(int fd, int req, void* arg) {    
     if(unlikely(fd < 0)) {
         errno = EBADF;

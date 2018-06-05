@@ -31,7 +31,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(17, write,
+SYSCALL(4, write,
 int sys_write(int fd, void* buf, size_t size) {
     if(unlikely(fd < 0)) {
         errno = EBADF;

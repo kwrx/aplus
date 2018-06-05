@@ -112,8 +112,6 @@
 
 
 
-typedef int64_t off64_t;
-typedef int64_t ino64_t;
 
 typedef struct inode inode_t;
 

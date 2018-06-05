@@ -29,33 +29,6 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(62, fstatvfs,
-int sys_fstatvfs(int fd, struct statvfs* st) {
-    if(unlikely(!st)) {
-        errno = EINVAL;
-        return -1;
-    }
-
-    if(unlikely(fd < 0 || fd > TASK_FD_COUNT)) {
-        errno = EBADF;
-        return -1;
-    }
-
-    inode_t* inode = current_task->fd[fd].inode;
-    if(unlikely(!inode)) {
-        errno = EBADF;
-        return -1;
-    }
-
-    if(unlikely(!inode->mtinfo)) {
-        errno = ENOSYS;
-        return -1;
-    }
-
-    memcpy(st, &inode->mtinfo->stat, sizeof(struct statvfs));
-    return 0;
-});
-
 
 SYSCALL(61, statvfs,
 int sys_statvfs(const char* path, struct statvfs* st) {

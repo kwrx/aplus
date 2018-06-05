@@ -31,7 +31,7 @@
 #include <libc.h>
 
 
-SYSCALL(41, umask,
+SYSCALL(60, umask,
 mode_t sys_umask(mode_t cmask) {
     KASSERT(current_task);
 

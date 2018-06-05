@@ -28,7 +28,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(49, sigprocmask,
+SYSCALL(126, sigprocmask,
 int sys_sigprocmask(int how, sigset_t* set, sigset_t* oldset) {
     if(oldset)
         *oldset = current_task->signal.s_mask;

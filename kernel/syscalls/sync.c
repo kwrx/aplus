@@ -30,23 +30,7 @@
 #include <libc.h>
 
 
-SYSCALL(55, fsync,
-int sys_fsync(int fd) {
-    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
-        errno = EBADF;
-        return -1;
-    }
-
-    inode_t* inode = current_task->fd[fd].inode;
-    if(unlikely(!inode)) {
-        errno = EBADF;
-        return -1;
-    }
-
-    return vfs_fsync(inode);
-});
-
-SYSCALL(54, sync,
+SYSCALL(36, sync,
 void sys_sync(void) {
     inline void flush_inode(inode_t* inode) {
         struct inode_childs* cx;

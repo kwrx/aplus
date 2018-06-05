@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(15, unlink,
+SYSCALL(10, unlink,
 int sys_unlink(const char* name) {
     char namebuf[1024];
     strcpy(namebuf, name);

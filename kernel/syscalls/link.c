@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(8, link,
+SYSCALL(9, link,
 int sys_link(const char* oldname, const char* newname) {
     if(unlikely(!oldname || !newname)) {
         errno = EINVAL;

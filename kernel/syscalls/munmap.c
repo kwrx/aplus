@@ -32,7 +32,7 @@
 
 
 
-SYSCALL(35, munmap,
+SYSCALL(91, munmap,
 void* sys_munmap(void* addr, size_t len) {
     errno = ENOSYS;    
     return NULL;

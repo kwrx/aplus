@@ -30,8 +30,8 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(44, getgid,
-int sys_getgid(void) {
+SYSCALL(200, getgid,
+gid_t sys_getgid(void) {
     KASSERT(current_task);
 
     return current_task->gid;

@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(22, clone,
+SYSCALL(120, clone,
 int sys_clone(int (*fn)(void *), void *child_stack, int flags, void *arg) {
     volatile task_t* child = task_clone(fn, child_stack, flags, arg);
     if(unlikely(!child)) {

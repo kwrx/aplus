@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(21, chown,
+SYSCALL(212, chown,
 int sys_chown(const char* pathname, uid_t owner, gid_t group) {
     int fd = sys_open(pathname, O_RDONLY, 0);
     if(fd < 0)

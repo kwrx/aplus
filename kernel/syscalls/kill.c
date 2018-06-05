@@ -28,7 +28,7 @@
 #include <libc.h>
 
 
-SYSCALL(7, kill,
+SYSCALL(37, kill,
 int sys_kill(pid_t pid, int signal) {
     volatile task_t* tmp;
     int r = 0;

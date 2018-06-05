@@ -41,7 +41,7 @@ extern char** args_dup(char**);
 
 
 
-SYSCALL(2, execve,
+SYSCALL(11, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
     int fd = sys_open(filename, O_RDONLY, 0);
