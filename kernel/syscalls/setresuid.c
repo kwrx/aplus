@@ -32,7 +32,8 @@
 
 SYSCALL(208, setresuid,
 int sys_setresuid(uid_t ruid, uid_t euid, uid_t suid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    KASSERT(current_task);
+
+    current_task->uid = euid;
+    return 0;
 });

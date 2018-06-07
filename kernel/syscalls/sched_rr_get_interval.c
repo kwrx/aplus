@@ -32,7 +32,13 @@
 
 SYSCALL(161, sched_rr_get_interval,
 int sys_sched_rr_get_interval(pid_t pid, struct timespec* tm) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(!tm) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    tm->tv_sec = 0;
+    tm->tv_nsec = (typeof(tm->tv_nsec)) ((1.0 / CONFIG_CLOCKS_PER_SEC) * 1000000000.0);
+
+    return 0;
 });

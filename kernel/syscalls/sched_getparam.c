@@ -32,7 +32,25 @@
 
 SYSCALL(155, sched_getparam,
 int sys_sched_getparam(pid_t pid, struct sched_param* param) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
+    if(unlikely(!param)) {
+        errno = EINVAL;
+        return -1;
+    }
+    
+    if(pid == 0) {
+        param->sched_priority = current_task->priority;
+        return 0;
+    }
+
+    task_t* tmp;
+    for(tmp = task_queue; tmp; tmp = tmp->next) {
+        if(tmp->pid != pid)
+            continue;
+
+        param->sched_priority = tmp->priority;
+        return 0;
+    }
+
+    errno = ESRCH;
     return -1;
 });

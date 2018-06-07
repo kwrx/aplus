@@ -85,14 +85,18 @@ typedef struct task {
     
     struct tms clock;
     struct timespec sleep;
-    time_t alarm;
     ktime_t starttime;
+
+    struct {
+        ktime_t it_interval;
+        ktime_t it_value;
+    } itimers[3];
 
 
 
     struct {
         void (*s_handler) (int);
-        uint64_t s_mask;
+        sigset_t s_mask;
         list(int16_t, s_queue);
     } signal;
 
@@ -148,6 +152,8 @@ typedef struct task {
         uint64_t cancelled_write_bytes;
     } iostat;
 
+    struct rlimit rlimits[RLIM_NLIMITS];
+    struct rusage rusage;
 
     struct task* parent;
     struct task* next;

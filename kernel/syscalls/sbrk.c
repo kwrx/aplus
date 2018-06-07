@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(12, sbrk,
+SYSCALL(801, sbrk,
 void* sys_sbrk(ptrdiff_t incr) {
     if(current_task->image->end + incr < current_task->image->start) {
         errno = EINVAL;

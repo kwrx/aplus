@@ -32,7 +32,23 @@
 
 SYSCALL(75, setrlimit,
 int sys_setrlimit(int resource, const struct rlimit* lim) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(resource > RLIM_NLIMITS) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(!lim) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(current_task->rlimits[resource].rlim_max != lim->rlim_max &&
+       !is_superuser(current_task)) {
+           errno = EPERM;
+           return -1;
+    }
+
+    current_task->rlimits[resource].rlim_cur = lim->rlim_cur;
+    current_task->rlimits[resource].rlim_max = lim->rlim_max;
+    return 0;
 });

@@ -30,7 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(102, __install_sighandler,
+SYSCALL(900, __install_sighandler,
 void sys___install_sighandler(void (*handler) (int)) {
     KASSERT(current_task);
 

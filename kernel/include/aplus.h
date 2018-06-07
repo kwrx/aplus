@@ -140,7 +140,11 @@ extern pid_t sys_getpgid(pid_t);
 extern int sys_fstatvfs(int, struct statvfs*);
 extern int sys__llseek(int, unsigned int, unsigned int, off64_t*, int);
 extern int sys_fsync(int);
-extern int sys_sigprocmask(int, sigset_t*, sigset_t*);
+extern int sys_sigprocmask(int, const sigset_t*, sigset_t*);
+extern int sys_setitimer(int, const struct itimerval*, struct itimerval*);
+extern int sys_getitimer(int, struct itimerval*);
+extern int sys_setpriority(int, id_t, int);
+extern int sys_wait4(pid_t, int*, int, struct rusage*);
 
 
 extern int mounts_init();

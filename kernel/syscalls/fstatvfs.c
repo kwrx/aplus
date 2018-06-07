@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(62, fstatvfs,
+SYSCALL(804, fstatvfs,
 int sys_fstatvfs(int fd, struct statvfs* st) {
     if(unlikely(!st)) {
         errno = EINVAL;

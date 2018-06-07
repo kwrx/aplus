@@ -30,7 +30,7 @@
 #include <aplus/timer.h>
 #include <libc.h>
 
-SYSCALL(18, clock_gettime,
+SYSCALL(265, clock_gettime,
 int sys_clock_gettime(clockid_t id, struct timespec *tv) {
     if(unlikely(!tv)) {
         errno = EINVAL;
@@ -62,7 +62,7 @@ int sys_clock_gettime(clockid_t id, struct timespec *tv) {
     return 0;
 });
 
-SYSCALL(53, clock_getres,
+SYSCALL(266, clock_getres,
 int sys_clock_getres(clockid_t id, struct timespec *tv) {
     if(unlikely(!tv)) {
         errno = EINVAL;

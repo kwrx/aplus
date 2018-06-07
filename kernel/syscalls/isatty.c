@@ -27,7 +27,7 @@
 #include <libc.h>
 
 
-SYSCALL(6, isatty,
+SYSCALL(800, isatty,
 int sys_isatty(int fd) {
     return (fd < 3 && fd >= 0);
 });

@@ -35,6 +35,7 @@
 
 
 int __aplus_crt__ = 1;
+int __last_signo = -1;
 char* __progname[BUFSIZ];
 
 extern char** environ;
@@ -71,6 +72,7 @@ static void __df_sighandler_STOP(int sig) {
 
 
 static int __sigtramp_handler(int sig) {
+    __last_signo = sig;
     int e = __sigtramp(sig);
     switch(e) {
         case 2:

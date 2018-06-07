@@ -38,7 +38,7 @@
 /*  8-N: data   */
 
 
-SYSCALL(105, msg_send,
+SYSCALL(950, msg_send,
 int sys_msg_send(pid_t pid, void* data, size_t len) {
     volatile task_t* tmp;
     for(tmp = task_queue; tmp; tmp = tmp->next) {
@@ -74,7 +74,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
     return 0;
 });
 
-SYSCALL(106, msg_recv,
+SYSCALL(951, msg_recv,
 int sys_msg_recv(pid_t* pid, void* data, size_t len) {
     if(fifo_available(&current_task->fifo) < ((sizeof(pid_t) + sizeof(size_t)))) {
         errno = EAGAIN;

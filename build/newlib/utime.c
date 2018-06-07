@@ -5,30 +5,15 @@
 #include <errno.h>
 
 int utime(const char* filename, const struct utimbuf* times) {
-	return 0;
-}
+	if(!times)
+		return errno = EINVAL, -1;
+	
 
-int utimes(const char* filename, const struct timeval times[2]) {
-    return 0;
-}
+	struct timeval tv[2];
+	tv[0].tv_sec = times->actime;
+	tv[0].tv_usec = 0;
+	tv[1].tv_sec = times->modtime;
+	tv[1].tv_usec = 0;
 
-
-int gettimeofday(struct timeval* tv, struct timeval* tz) {
-	(void*) tz;
-
-	if(!tv) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	struct timespec ts;
-	if(clock_gettime(CLOCK_REALTIME, &ts) != 0) {
-		errno = EINVAL;
-		return -1;
-	}
-
-	tv->tv_sec = ts.tv_sec;
-	tv->tv_usec = ts.tv_nsec / 1000;
-
-	return 0;
+	return utimes(filename, tv);
 }

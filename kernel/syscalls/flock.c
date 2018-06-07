@@ -33,6 +33,6 @@
 SYSCALL(143, flock,
 int sys_flock(int fd, int operation) {
     kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    
+    return 0;
 });

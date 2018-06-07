@@ -30,7 +30,7 @@
 #include <libc.h>
 
 
-SYSCALL(61, statvfs,
+SYSCALL(803, statvfs,
 int sys_statvfs(const char* path, struct statvfs* st) {
     if(unlikely(!path || !st)) {
         errno = EINVAL;

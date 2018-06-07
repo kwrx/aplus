@@ -31,7 +31,7 @@
 #include <lwip/sockets.h>
 #include <libc.h>
 
-SYSCALL(71, bind,
+SYSCALL(701, bind,
 int sys_bind(int fd, const struct sockaddr* addr, socklen_t addrlen) {
 #if CONFIG_NETWORK
     return lwip_bind(fd - TASK_FD_COUNT, addr, addrlen);

@@ -31,9 +31,7 @@
 #include <libc.h>
 
 SYSCALL(150, mlock,
-int sys_mlock(void* addr, size_t len) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    
+int sys_mlock(void* addr, size_t len) {    
     if(!is_superuser(current_task)) {
         errno = EPERM;
         return -1;

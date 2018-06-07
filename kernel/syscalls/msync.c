@@ -32,6 +32,5 @@
 
 SYSCALL(144, msync,
 int sys_msync(void* addr, size_t len, int flags) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
     return 0;
 });

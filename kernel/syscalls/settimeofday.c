@@ -32,7 +32,6 @@
 
 SYSCALL(79, settimeofday,
 int sys_settimeofday(const struct timeval* tv, const struct timezone* tz) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
     errno = ENOSYS;
     return -1;
 });

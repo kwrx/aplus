@@ -30,9 +30,35 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
+
+#define __prio_by(property) {                   \
+    if(who == 0)                                \
+        return current_task->priority;          \
+                                                \
+    task_t* tmp;                                \
+    for(tmp = task_queue; tmp; tmp = tmp->next) \
+        if(tmp->property == who)                \
+            return tmp->priority;               \
+                                                \
+    errno = ESRCH;                              \
+    return -1;                                  \
+}
+
 SYSCALL(96, getpriority,
 int sys_getpriority(int which, id_t who) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
+    errno = 0;
+
+    switch(which) {
+        case PRIO_PROCESS:
+            __prio_by(pid);
+        case PRIO_PGRP:
+            __prio_by(pgid);
+        case PRIO_USER:
+            __prio_by(uid);
+        default:
+            break;
+    }
+
+    errno = EINVAL;
     return -1;
 });

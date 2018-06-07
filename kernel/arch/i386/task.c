@@ -139,7 +139,8 @@ void fork_handler(i386_context_t* context) {
     memcpy((void*) child->fd, (const void*) current_task->fd, sizeof(fd_t) * TASK_FD_COUNT);    
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
     //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
-    memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
+    memcpy((void*) &child->rlimits, (void*) &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
+    memcpy((void*) &child->exit, (void*) &current_task->exit, sizeof(current_task->exit));
     memcpy(&child->__image, current_task->image, sizeof(child->__image));
     
     child->image = &child->__image;
@@ -238,7 +239,8 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
 
     //memcpy(&child->iostat, &current_task->iostat, sizeof(current_task->iostat));
     //memcpy(&child->clock, &current_task->clock, sizeof(struct tms));
-    memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
+    memcpy((void*) &child->rlimits, (void*) &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
+    memcpy((void*) &child->exit, (void*) &current_task->exit, sizeof(current_task->exit));
 
     fifo_init(&child->fifo, TASK_FIFOSZ, 0);
 
@@ -410,6 +412,9 @@ int task_init(void) {
     CTX(t)->vmmpd = (uintptr_t) current_pdt;
 
 
+    for(i = 0; i < RLIM_NLIMITS; i++)
+        t->rlimits[i].rlim_cur =
+        t->rlimits[i].rlim_max = RLIM_INFINITY;
 
 
     t->image = &t->__image;

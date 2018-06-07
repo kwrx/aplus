@@ -32,7 +32,5 @@
 
 SYSCALL(0, restart_syscall,
 int sys_restart_syscall(void) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    return 0;
 });

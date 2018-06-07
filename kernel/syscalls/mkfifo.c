@@ -113,7 +113,7 @@ static int inode_fifo_write(struct inode* inode, void* ptr, off_t pos, size_t le
 }
 
 
-SYSCALL(30, mkfifo,
+SYSCALL(806, mkfifo,
 int sys_mkfifo(const char* pathname, mode_t mode) {
     int fd = sys_open(pathname, O_RDWR | O_CREAT | O_EXCL, S_IFIFO | mode);
     if(unlikely(fd < 0))

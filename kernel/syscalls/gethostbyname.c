@@ -32,7 +32,7 @@
 #include <lwip/netdb.h>
 #include <libc.h>
 
-SYSCALL(84, gethostbyname,
+SYSCALL(714, gethostbyname,
 struct hostent* sys_gethostbyname(const char* name) {
 #if CONFIG_NETWORK
     return lwip_gethostbyname(name);

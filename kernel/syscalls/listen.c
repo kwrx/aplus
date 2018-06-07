@@ -31,7 +31,7 @@
 #include <lwip/sockets.h>
 #include <libc.h>
 
-SYSCALL(79, listen,
+SYSCALL(709, listen,
 int sys_listen(int fd, int backlog) {
 #if CONFIG_NETWORK
     return lwip_listen(fd - TASK_FD_COUNT, backlog);

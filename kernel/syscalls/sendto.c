@@ -40,7 +40,7 @@ ssize_t sys_sendto(int fd, const void* buffer, size_t len, int flags, const stru
     return -1;
 }
 
-SYSCALL(83, _sendto,
+SYSCALL(713, _sendto,
 ssize_t sys__sendto(uintptr_t* p) {
     return sys_sendto(
         (int) p[0],

@@ -32,6 +32,5 @@
 
 SYSCALL(111, vhangup,
 int sys_vhangup(void) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
     return 0;
 });

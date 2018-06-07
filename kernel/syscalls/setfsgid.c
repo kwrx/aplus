@@ -32,7 +32,6 @@
 
 SYSCALL(216, setfsgid,
 int sys_setfsgid(gid_t gid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    //current_task->gid = gid;
+    return 0;
 });

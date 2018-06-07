@@ -30,9 +30,45 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
+
+#define __prio_by(property) {                       \
+    if(who == 0) {                                  \
+        current_task->priority = prio;              \
+        return 0;                                   \
+    }                                               \
+                                                    \
+    task_t* tmp;                                    \
+    for(tmp = task_queue; tmp; tmp = tmp->next) {   \
+        if(tmp->property != who)                    \
+            continue;                               \
+                                                    \
+        if(tmp->uid != current_task->uid &&         \
+           !is_superuser(current_task)) {           \
+            errno = EPERM;                          \
+            return -1;                              \
+        }                                           \
+                                                    \
+        tmp->priority = prio;                       \
+        return 0;                                   \
+    }                                               \
+                                                    \
+    errno = ESRCH;                                  \
+    return -1;                                      \
+}
+
 SYSCALL(97, setpriority,
 int sys_setpriority(int which, id_t who, int prio) {    
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
+    switch(which) {
+        case PRIO_PROCESS:
+            __prio_by(pid);
+        case PRIO_PGRP:
+            __prio_by(pgid);
+        case PRIO_USER:
+            __prio_by(uid);
+        default:
+            break;
+    }
+
+    errno = EINVAL;
     return -1;
 });

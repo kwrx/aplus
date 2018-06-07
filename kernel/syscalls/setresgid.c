@@ -32,7 +32,8 @@
 
 SYSCALL(210, setresgid,
 int sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    KASSERT(current_task);
+
+    current_task->gid = egid;
+    return 0;
 });

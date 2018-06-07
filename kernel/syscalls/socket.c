@@ -31,7 +31,7 @@
 #include <lwip/sockets.h>
 #include <libc.h>
 
-SYSCALL(70, socket,
+SYSCALL(700, socket,
 int sys_socket(int domain, int type, int protocol) {
 #if CONFIG_NETWORK
     int fd = lwip_socket(domain, type, protocol);

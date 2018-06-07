@@ -32,7 +32,13 @@
 
 SYSCALL(191, getrlimit,
 int sys_getrlimit(int resource, struct rlimit* lim) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(resource > RLIM_NLIMITS) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if(lim)
+        memcpy(lim, (void*) &current_task->rlimits[resource], sizeof(struct rlimit));
+
+    return 0;
 });

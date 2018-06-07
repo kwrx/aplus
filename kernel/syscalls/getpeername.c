@@ -31,7 +31,7 @@
 #include <lwip/sockets.h>
 #include <libc.h>
 
-SYSCALL(74, getpeername,
+SYSCALL(704, getpeername,
 int sys_getpeername(int fd, struct sockaddr* addr, socklen_t* addrlen) {
 #if CONFIG_NETWORK
     return lwip_getpeername(fd - TASK_FD_COUNT, addr, addrlen);

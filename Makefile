@@ -19,7 +19,9 @@ include build/Makefile.flags
 all:					\
 	CONFIG				\
 	$(KERNEL_OUTPUT)	\
-	KERNEL_MODULES
+	KERNEL_MODULES		\
+	LIBRARIES			\
+	APPS
 	@echo "Done!"
 
 vm: all					\
@@ -36,7 +38,6 @@ CONFIG:
 	$(shell sed -i "s/#define TARGET.*/#define TARGET \"$(TARGET)\"/" config.h)
 	@echo "  GEN    " root/etc/motd
 	$(shell sed -i "s/https:\/\/github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./root/etc/motd)
-
 
 
 $(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES

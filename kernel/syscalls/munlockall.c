@@ -31,9 +31,7 @@
 #include <libc.h>
 
 SYSCALL(153, munlockall,
-int sys_munlockall(void) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    
+int sys_munlockall(void) {    
     if(!is_superuser(current_task)) {
         errno = EPERM;
         return -1;

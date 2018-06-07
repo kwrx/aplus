@@ -35,13 +35,14 @@ unsigned int sys_alarm(unsigned int seconds) {
     KASSERT(current_task);
 
     unsigned int e = 0;
-    if(current_task->alarm)
-        e = current_task->alarm - timer_gettimestamp();
+    if(current_task->itimers[ITIMER_REAL].it_value)
+        e = (current_task->itimers[ITIMER_REAL].it_value / 1000000) - timer_gettimestamp();
 
     if(seconds)
-        current_task->alarm = timer_gettimestamp() + seconds;
+        current_task->itimers[ITIMER_REAL].it_value = (timer_gettimestamp() + seconds) * 1000000;
     else
-        current_task->alarm = 0;
+        current_task->itimers[ITIMER_REAL].it_value = 0;
         
+    current_task->itimers[ITIMER_REAL].it_interval = 0;
     return e;
 });

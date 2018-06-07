@@ -32,7 +32,9 @@
 
 SYSCALL(205, getgroups,
 int sys_getgroups(int size, gid_t* groups) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(size == 0)
+        return 1;
+
+    groups[0] = 0;
+    return 1;
 });

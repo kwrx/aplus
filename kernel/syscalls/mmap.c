@@ -47,9 +47,15 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
 
     uintptr_t rd = 0;
-    if(flags & MAP_FIXED)
+    if(flags & MAP_FIXED) {
         rd = (uintptr_t) addr;
-    else {
+        rd &= ~(PAGE_SIZE - 1);
+        
+        uintptr_t i;
+        for(i = 0; i < len; i += PAGE_SIZE)
+            map_page(rd + i, pmm_alloc_frame() << 12, 1);
+
+    } else {
         if(flags & MAP_PRIVATE)
             rd = (uintptr_t) sys_sbrk(len);
         else
@@ -61,18 +67,9 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
         return NULL;
     }
 
-    
-    rd &= ~(PAGE_SIZE - 1);
-    
-    uintptr_t i;
-    for(i = 0; i < len; i += PAGE_SIZE)
-        map_page(rd + i, pmm_alloc_frame() << 12, 1);
-
 
     if(flags & MAP_ANON)
         memset((void*) rd, 0, len);
-        
-        
         
 
     return (void*) rd;

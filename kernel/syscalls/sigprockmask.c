@@ -28,23 +28,34 @@
 #include <aplus/ipc.h>
 #include <aplus/mm.h>
 #include <aplus/debug.h>
+#include <lwip/sockets.h>
 #include <libc.h>
 
-SYSCALL(42, pipe,
-int sys_pipe(int fd[2]) {
-    if(!fd) {
-        errno = EINVAL;
-        return -1;
-    }
-    
-    char pathname[256];
-    tmpnam(pathname);
-    
-    if(sys_mkfifo(pathname, 0666) != 0)
-        return -1;
+SYSCALL(126, sigprocmask,
+int sys_sigprocmask(int how, const sigset_t* set, sigset_t* old) {
+    KASSERT(current_task);
+
+    if(likely(old))
+        *old = current_task->signal.s_mask;
+
+    if(unlikely(!set))
+        return 0;
         
-    fd[0] = sys_open(pathname, O_RDONLY, 0);
-    fd[1] = sys_open(pathname, O_WRONLY, 0);
     
+    switch(how) {
+        case SIG_BLOCK:
+            current_task->signal.s_mask |= (*set);
+            break;
+        case SIG_UNBLOCK:
+            current_task->signal.s_mask &= ~(*set);
+            break;
+        case SIG_SETMASK:
+            current_task->signal.s_mask = (*set);
+            break;
+        default:
+            errno = EINVAL;
+            return -1;
+    }
+
     return 0;
 });

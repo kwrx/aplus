@@ -32,7 +32,12 @@
 
 SYSCALL(211, getresgid,
 int sys_getresgid(gid_t* rgid, gid_t* egid, gid_t* sgid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(rgid)
+        *rgid = current_task->gid;
+    if(egid)
+        *egid = current_task->gid;
+    if(sgid)
+        *sgid = current_task->gid;
+    
+    return 0;
 });

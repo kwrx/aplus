@@ -32,7 +32,26 @@
 
 SYSCALL(104, setitimer,
 int sys_setitimer(int which, const struct itimerval* newval, struct itimerval* oldval) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(which > 2) {
+        errno = EINVAL;
+        return -1;
+    }
+    
+    if(oldval)
+        sys_getitimer(which, oldval);
+
+    if(!newval)
+        return 0;
+
+
+
+    ktime_t tm = (timer_gettimestamp() * 1000000) +
+                 (timer_getus() % 1000000);
+    
+    current_task->itimers[which].it_value = tm + (newval->it_value.tv_sec * 1000000) +
+                                                 (newval->it_value.tv_usec % 1000000);
+    
+    current_task->itimers[which].it_interval = (newval->it_interval.tv_sec * 1000000) +
+                                               (newval->it_interval.tv_usec % 1000000);
+    return 0;
 });

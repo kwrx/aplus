@@ -32,7 +32,10 @@
 
 SYSCALL(156, sched_setscheduler,
 int sys_sched_setscheduler(pid_t pid, int policy, const struct sched_param* param) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(policy != SCHED_RR) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    return 0;
 });

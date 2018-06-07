@@ -40,7 +40,7 @@ ssize_t sys_recvfrom(int fd, void *restrict buffer, size_t len, int flags, struc
     return -1;
 }
 
-SYSCALL(82, _recvfrom,
+SYSCALL(712, _recvfrom,
 ssize_t sys__recvfrom(uintptr_t* p) {
     return sys_recvfrom(
         (int) p[0],

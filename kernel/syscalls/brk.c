@@ -31,12 +31,12 @@
 #include <libc.h>
 
 SYSCALL(45, brk,
-int sys_brk(void* p) {
+void* sys_brk(void* p) {
     intptr_t c = (intptr_t) sys_sbrk(0);
     intptr_t d = (intptr_t) p;
 
-    if(sys_sbrk(d - c) == (void*) -1)
-        return -1;
+    if((p = sys_sbrk(d - c)) == (void*) -1)
+        return (void*) d;
 
-    return 0;
+    return p;
 });

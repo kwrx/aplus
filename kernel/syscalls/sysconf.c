@@ -30,7 +30,7 @@
 #include <libc.h>
 
 
-SYSCALL(90, sysconf,
+SYSCALL(805, sysconf,
 long sys_sysconf(int n) {
     errno = 0;
 

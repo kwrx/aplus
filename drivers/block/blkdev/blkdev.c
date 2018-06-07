@@ -27,6 +27,7 @@
 #include <aplus/module.h>
 #include <aplus/debug.h>
 #include <aplus/vfs.h>
+#include <aplus/task.h>
 #include <aplus/mm.h>
 #include <aplus/blkdev.h>
 #include <aplus/utils/hashmap.h>
@@ -141,6 +142,8 @@ int blkdev_read(inode_t* ino, void* buf, off_t pos, size_t size) {
     if(unlikely(!size))
         return 0;
 
+    current_task->rusage.ru_inblock++;
+
 
     uint32_t sb = pos / blkdev->blksize;
     uint32_t eb = (pos + size - 1) / blkdev->blksize;
@@ -221,6 +224,8 @@ int blkdev_write(inode_t* ino, void* buf, off_t pos, size_t size) {
 
     if(unlikely(!size))
         return 0;
+
+    current_task->rusage.ru_oublock++;
 
 
     uint32_t sb = pos / blkdev->blksize;

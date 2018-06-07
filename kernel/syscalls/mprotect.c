@@ -32,7 +32,5 @@
 
 SYSCALL(125, mprotect,
 int sys_mprotect(void* addr, size_t len, int prot) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    return 0;
 });

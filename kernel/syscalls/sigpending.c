@@ -28,11 +28,20 @@
 #include <aplus/ipc.h>
 #include <aplus/mm.h>
 #include <aplus/debug.h>
+#include <lwip/sockets.h>
 #include <libc.h>
 
 SYSCALL(73, sigpending,
 int sys_sigpending(sigset_t* set) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    KASSERT(current_task);
+
+    if(unlikely(!set)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    list_each(current_task->signal.s_queue, q)
+        *set |= q;
+
+    return 0;
 });

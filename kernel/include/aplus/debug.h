@@ -26,6 +26,7 @@
 #define _DEBUG_H
 
 #include <aplus.h>
+#include <aplus/task.h>
 #include <libc.h>
 
 
@@ -57,7 +58,7 @@ int kprintf(const char* fmt, ...);
 #define KASSERT(x)                                                                                                                                          \
     if(unlikely(!(x)))                                                                                                                                      \
         {                                                                                                                                                   \
-            kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\n", __func__, #x, __FILE__, __LINE__);                                                    \
+            kprintf(ERROR "[#%d %s] %s(): Assertion \"%s\" failed in %s:%d\n", current_task->pid, current_task->name, __func__, #x, __FILE__, __LINE__);                                                    \
             debug_stacktrace(5);                                                                                                                            \
             for(;;);                                                                                                                                        \
         }
@@ -65,7 +66,7 @@ int kprintf(const char* fmt, ...);
 #define KASSERTF(x, y...)                                                                                                                                   \
     if(unlikely(!(x)))                                                                                                                                      \
         {                                                                                                                                                   \
-            kprintf(ERROR "%s(): Assertion \"%s\" failed in %s:%d\nDetails: ", __func__, #x, __FILE__, __LINE__);                                           \
+            kprintf(ERROR "[#%d %s] %s(): Assertion \"%s\" failed in %s:%d\nDetails: ", current_task->pid, current_task->name, __func__, #x, __FILE__, __LINE__);                                           \
             kprintf(y);                                                                                                                                     \
             kprintf("\n");                                                                                                                                  \
             debug_stacktrace(5);                                                                                                                            \

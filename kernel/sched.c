@@ -61,10 +61,32 @@ static void sched_next(void) {
 
 
         /* Check Alarms */
-        if(unlikely(current_task->alarm > 0)) {
-            if(likely(current_task->alarm <= timer_gettimestamp())) {
-                current_task->alarm = 0;
-                sched_signal(current_task, SIGALRM);
+        for(int i = 0; i < 3; i++) {
+            if(likely(!current_task->itimers[i].it_value))
+                continue;
+                
+
+             ktime_t tm = (timer_gettimestamp() * 1000000) +
+                          (timer_getus() % 1000000);
+
+                        
+            if(likely(current_task->itimers[i].it_value <= tm)) {
+                if(current_task->itimers[i].it_interval)
+                    current_task->itimers[i].it_value += current_task->itimers[i].it_interval;
+                else
+                    current_task->itimers[i].it_value = 0;
+
+                switch(i) {
+                    case ITIMER_REAL:
+                        sched_signal(current_task, SIGALRM);
+                        break;
+                    case ITIMER_VIRTUAL:
+                        sched_signal(current_task, SIGVTALRM);
+                        break;
+                    case ITIMER_PROF:
+                        sched_signal(current_task, SIGPROF);
+                        break;
+                }
             }
         }
 
@@ -151,6 +173,8 @@ void sched_signal(task_t* tk, int sig) {
 
     if (tk->status != TASK_STATUS_STOP || (sig == SIGCONT || sig == SIGKILL))
         tk->status = TASK_STATUS_READY;
+
+    tk->rusage.ru_nsignals++;
 }
 
 
@@ -165,10 +189,14 @@ void schedule(void) {
     current_task->clock.tms_utime += t;
     if(likely(current_task->parent))
         current_task->parent->clock.tms_cutime += t;
-        
+
     if(likely(((int)current_task->clock.tms_utime / 1000) % ((int)(20 - current_task->priority))))
         goto nosched;
-    
+
+
+
+    current_task->rusage.ru_nivcsw++;
+
     if(likely(current_task->status == TASK_STATUS_RUNNING))
         current_task->status = TASK_STATUS_READY;
 
@@ -196,6 +224,9 @@ void schedule_yield(void) {
     current_task->clock.tms_utime += t;
     if(likely(current_task->parent))
         current_task->parent->clock.tms_cutime += t;
+
+
+    current_task->rusage.ru_nvcsw++;
 
     if(likely(current_task->status == TASK_STATUS_RUNNING))
         current_task->status = TASK_STATUS_READY;

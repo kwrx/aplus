@@ -32,7 +32,5 @@
 
 SYSCALL(157, sched_getscheduler,
 int sys_sched_getscheduler(pid_t pid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    return SCHED_RR;
 });

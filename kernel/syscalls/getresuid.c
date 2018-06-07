@@ -32,7 +32,12 @@
 
 SYSCALL(209, getresuid,
 int sys_getresuid(uid_t* ruid, uid_t* euid, uid_t* suid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    if(ruid)
+        *ruid = current_task->uid;
+    if(euid)
+        *euid = current_task->uid;
+    if(suid)
+        *suid = current_task->uid;
+    
+    return 0;
 });

@@ -32,7 +32,6 @@
 
 SYSCALL(215, setfsuid,
 int sys_setfsuid(uid_t uid) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    //current_task->uid = uid;
+    return 0;
 });
