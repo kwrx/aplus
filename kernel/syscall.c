@@ -97,7 +97,11 @@ int syscall_unregister(int number) {
 
 
 long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
-    KASSERTF(__handlers[number], "%d", number);
+    if(unlikely(number > MAX_SYSCALL))
+        return errno = ENOSYS, -1;
+
+    if(unlikely(!__handlers[number]))
+        return errno = ENOSYS, -1;
     
 #if CONFIG_SYSCALL_DEBUG
     kprintf(LOG "syscall(%d): %s (%p, %p, %p, %p, %p) from %d\n", number, __handlers_name[number], p0, p1, p2, p3, p4, sys_getpid());

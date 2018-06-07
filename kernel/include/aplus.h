@@ -123,7 +123,7 @@ extern int sys_waitpid(pid_t, int*, int);
 extern int sys_write(int, void*, size_t);
 extern void sys_yield(void);
 extern void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t off);
-extern void* sys_munmap(void* addr, size_t len);
+extern int sys_munmap(void* addr, size_t len);
 extern int sys_execve(const char* filename, char* const argv[], char* const envp[]);
 extern int sys_mkfifo(const char* pathname, mode_t mode);
 extern int sys_symlink(const char*, const char*);

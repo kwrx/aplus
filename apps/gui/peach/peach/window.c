@@ -29,9 +29,9 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 
 #include <aplus/base.h>
-#include <aplus/kmem.h>
 #include <aplus/utils/async.h>
 #include <cairo/cairo.h>
 #include "../peach.h"
@@ -136,7 +136,7 @@ peach_window_t* window_create(pid_t pid, uint16_t w, uint16_t h) {
     s->w_y = 0;
     s->w_width = w;
     s->w_height = h;
-    s->w_frame = (void*) kmem_alloc(w * h * (current_display->d_bpp / 8));
+    s->w_frame = (void*) mmap(NULL, w * h * (current_display->d_bpp / 8), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 
     if(!s->w_frame) {
         errno = ENOMEM;
@@ -172,7 +172,7 @@ int window_destroy(uint32_t id) {
 
     cairo_surface_destroy(s->w_surface);
     cairo_destroy(s->w_cairo);
-    kmem_free(s->w_frame);
+    munmap(s->w_frame, s->w_width * s->w_height * (current_display->d_bpp / 8));
 
     s->w_active = 0;
 

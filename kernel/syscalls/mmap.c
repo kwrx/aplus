@@ -30,14 +30,19 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t off) {
-    (void) fildes;
-    (void) off;
-
-
+void* sys_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t off) {
     if(unlikely(!len)) {
         errno = EINVAL;
-        return NULL;
+        return MAP_FAILED;
+    }
+
+    inode_t* inode = NULL;
+    if(unlikely(!(flags & MAP_ANON))) {
+        if(fd < 0)
+            return errno = EBADF, MAP_FAILED;
+
+        if(!(inode = current_task->fd[fd].inode))
+            return errno = EBADF, MAP_FAILED;
     }
 
     if(len & (PAGE_SIZE - 1)) {
@@ -64,13 +69,16 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fildes, off_t of
 
     if(unlikely(!rd)) {
         errno = ENOMEM;
-        return NULL;
+        return MAP_FAILED;
     }
 
 
     if(flags & MAP_ANON)
         memset((void*) rd, 0, len);
-        
+    else
+        if(vmm_swap_setup(rd, off, len, inode, prot, flags) < 0)
+            return errno = EFAULT, MAP_FAILED;
+
 
     return (void*) rd;
 }
@@ -83,7 +91,7 @@ SYSCALL(90, _mmap,
             (int) p[2],
             (int) p[3],
             (int) p[4],
-            (off_t) p[5]
+            (off_t) p[5] / 4096
         );
     }
 );

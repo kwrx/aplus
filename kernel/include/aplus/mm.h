@@ -57,6 +57,7 @@
 #include <aplus.h>
 #include <aplus/ipc.h>
 #include <aplus/timer.h>
+#include <aplus/vfs.h>
 #include <libc.h>
 
 typedef uintptr_t physaddr_t;
@@ -92,9 +93,16 @@ int mm_init(void);
 
 physaddr_t __V2P(virtaddr_t);
 
+void enable_page(virtaddr_t virtaddr);
+void disable_page(virtaddr_t virtaddr);
 void unmap_page(virtaddr_t virtaddr);
 void map_page(virtaddr_t virtaddr, physaddr_t physaddr, int user);
 virtaddr_t get_free_pages(int count, int maked, int user);
+
+int vmm_swap_setup(uintptr_t addr, off_t off, size_t size, inode_t* inode, int prot, int flags);
+int vmm_swap_remove(uintptr_t addr, size_t size);
+int vmm_swap_sync(uintptr_t addr, size_t size, int flags);
+int vmm_swap(uintptr_t address);
 
 physaddr_t pmm_alloc_frame(void);
 physaddr_t pmm_alloc_frames(int count);

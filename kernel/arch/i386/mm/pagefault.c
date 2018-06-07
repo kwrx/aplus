@@ -35,6 +35,11 @@ void pagefault_handler(i386_context_t* context) {
     uintptr_t p;
     __asm__ ("mov eax, cr2" : "=a"(p));
 
+    if(vmm_swap(p) == 0) {
+        __asm__ ("sti");
+        return;
+    }
+
 
     debug_dump(context, "Exception! Page Fault occured!", p, context->err_code);
     

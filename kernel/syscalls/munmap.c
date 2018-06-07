@@ -33,7 +33,20 @@
 
 
 SYSCALL(91, munmap,
-void* sys_munmap(void* addr, size_t len) {
-    errno = ENOSYS;    
-    return NULL;
+int sys_munmap(void* addr, size_t len) {
+    if((uintptr_t) addr & (PAGE_SIZE - 1)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    vmm_swap_remove((uintptr_t) addr, len);
+
+    uintptr_t p = (uintptr_t) addr;
+    if(p >= CONFIG_HEAP_BASE && p <= (CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE))
+        kfree(addr);
+    else
+        for(uintptr_t i = 0; i < len; i += PAGE_SIZE)
+            unmap_page(p + i);
+
+    return 0;
 });

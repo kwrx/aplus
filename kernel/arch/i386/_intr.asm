@@ -88,7 +88,7 @@ extern pagefault_handler
 
 global isr14
 isr14:
-	sti
+	cli
 	push dword 14
 
 	pusha

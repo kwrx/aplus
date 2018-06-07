@@ -57,7 +57,7 @@ lib_a_AR = $(AR) $(ARFLAGS)
 @MAY_SUPPLY_SYSCALLS_TRUE@	sigaction.o sigsuspend.o sleep.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@	system.o tcpgrp.o usleep.o utime.o \
 @MAY_SUPPLY_SYSCALLS_TRUE@	gettimeofday.o wait.o access.o \
-@MAY_SUPPLY_SYSCALLS_TRUE@	set_getpgrp.o sigwaitinfo.o
+@MAY_SUPPLY_SYSCALLS_TRUE@	set_getpgrp.o sigwaitinfo.o mmap.o
 am_lib_a_OBJECTS =
 lib_a_OBJECTS = $(am_lib_a_OBJECTS)
 DEFAULT_INCLUDES = -I.@am__isrc@
@@ -182,7 +182,8 @@ noinst_LIBRARIES = lib.a
 @MAY_SUPPLY_SYSCALLS_TRUE@			 killpg.o mkdir.o netdb.o pipe.o rmdir.o		\
 @MAY_SUPPLY_SYSCALLS_TRUE@			 sigaction.o sigsuspend.o sleep.o system.o		\
 @MAY_SUPPLY_SYSCALLS_TRUE@			 tcpgrp.o usleep.o utime.o gettimeofday.o		\
-@MAY_SUPPLY_SYSCALLS_TRUE@			 wait.o access.o set_getpgrp.o sigwaitinfo.o
+@MAY_SUPPLY_SYSCALLS_TRUE@			 wait.o access.o set_getpgrp.o sigwaitinfo.o	\
+@MAY_SUPPLY_SYSCALLS_TRUE@			 mmap.o
 
 lib_a_SOURCES = 
 lib_a_LIBADD = $(extra_objs)
@@ -192,7 +193,7 @@ EXTRA_lib_a_SOURCES = crt0.c syscalls.c dup2.c exit.c 		\
 					  rmdir.c sigaction.c sigsuspend.c		\
 					  sleep.c system.c tcpgrp.c usleep.c 	\
 					  utime.c wait.c access.c set_getpgrp.c	\
-					  sigwaitinfo.c
+					  sigwaitinfo.c mmap.c
 
 lib_a_DEPENDENCIES = $(extra_objs)
 lib_a_CCASFLAGS = $(AM_CCASFLAGS)
@@ -388,6 +389,12 @@ lib_a-sigwaitinfo.o: sigwaitinfo.c
 
 lib_a-sigwaitinfo.obj: sigwaitinfo.c
 	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-sigwaitinfo.obj `if test -f 'sigwaitinfo.c'; then $(CYGPATH_W) 'sigwaitinfo.c'; else $(CYGPATH_W) '$(srcdir)/sigwaitinfo.c'; fi`
+
+lib_a-mmap.o: mmap.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-mmap.o `test -f 'mmap.c' || echo '$(srcdir)/'`mmap.c
+
+lib_a-mmap.obj: mmap.c
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(lib_a_CFLAGS) $(CFLAGS) -c -o lib_a-mmap.obj `if test -f 'mmap.c'; then $(CYGPATH_W) 'mmap.c'; else $(CYGPATH_W) '$(srcdir)/mmap.c'; fi`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \

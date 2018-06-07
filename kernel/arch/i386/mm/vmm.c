@@ -65,7 +65,8 @@ static virtaddr_t __get_free_pages(volatile pdt_t* pdt, int count, int made, int
                 continue;
         
         for(j = 0; j < X86_PT_ENTRIES - !(made); j++) {
-            if(pdt->vpages[i]->frames[j].flags & X86_FLAG_PRESENT) {
+            if(pdt->vpages[i]->frames[j].flags & X86_FLAG_PRESENT ||
+               pdt->vpages[i]->frames[j].entry != 0) {
                 f = 0;
                 continue;
             }
@@ -145,6 +146,30 @@ static void __unmap_page(volatile pdt_t* pdt, virtaddr_t virtaddr) {
 }
 
 
+static void __enable_page(volatile pdt_t* pdt, virtaddr_t virtaddr) {
+    INTR_OFF;
+
+    register long vframe = virtaddr >> 12;
+    pdt->vpages[vframe >> 10]->frames[vframe % 1024].flags |= (X86_FLAG_PRESENT);
+
+    if(likely(current_pdt == pdt))    
+        __invlpg(virtaddr);
+
+    INTR_ON;
+}
+
+
+static void __disable_page(volatile pdt_t* pdt, virtaddr_t virtaddr) {
+    INTR_OFF;
+
+    register long vframe = virtaddr >> 12;
+    pdt->vpages[vframe >> 10]->frames[vframe % 1024].flags &= ~(X86_FLAG_PRESENT);
+
+    if(likely(current_pdt == pdt))    
+        __invlpg(virtaddr);
+
+    INTR_ON;
+}
 
 
 
@@ -177,6 +202,45 @@ void unmap_page(virtaddr_t virtaddr) {
         for(tmp = kernel_pdt; tmp; tmp = tmp->next)
             if(likely(tmp != current_pdt))
                  __unmap_page(tmp, virtaddr);
+
+    }
+
+    INTR_ON;
+}
+
+
+void enable_page(virtaddr_t virtaddr) {
+    INTR_OFF;
+
+    __enable_page(current_pdt, virtaddr);
+
+
+    if(virtaddr > CONFIG_KERNEL_BASE) {
+
+        volatile pdt_t* tmp;
+        for(tmp = kernel_pdt; tmp; tmp = tmp->next)
+            if(likely(tmp != current_pdt))
+                 __enable_page(tmp, virtaddr);
+
+    }
+
+    INTR_ON;
+}
+
+
+
+void disable_page(virtaddr_t virtaddr) {
+    INTR_OFF;
+
+    __disable_page(current_pdt, virtaddr);
+
+
+    if(virtaddr > CONFIG_KERNEL_BASE) {
+
+        volatile pdt_t* tmp;
+        for(tmp = kernel_pdt; tmp; tmp = tmp->next)
+            if(likely(tmp != current_pdt))
+                 __disable_page(tmp, virtaddr);
 
     }
 

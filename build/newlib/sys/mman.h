@@ -72,16 +72,24 @@
 #define	MADV_WILLNEED	3	/* will need these pages */
 #define	MADV_DONTNEED	4	/* dont need these pages */
 
+#define MS_SYNC         0
+#define MS_ASYNC        1
+#define MS_INVALIDATE   2
+
+#define MAP_FAILED      ((void*) -1)
+#define MAP_ANONYMOUS   MAP_ANON
+
 #ifndef KERNEL
 
 #include <sys/cdefs.h>
+#include <unistd.h>
 
 __BEGIN_DECLS
 /* Some of these int's should probably be size_t's */
-caddr_t	mmap __P((caddr_t, size_t, int, int, int, off_t));
-int	mprotect __P((caddr_t, int, int));
-int	munmap __P((caddr_t, int));
-int	msync __P((caddr_t, int));
+void*	mmap __P((void*, size_t, int, int, int, off_t));
+int	mprotect __P((void*, size_t, int));
+int	munmap __P((void*, size_t));
+int	msync __P((void*, size_t, int));
 __END_DECLS
 
 #endif /* !KERNEL */

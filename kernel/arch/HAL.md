@@ -31,6 +31,8 @@
     `physaddr_t __V2P(virtaddr_t virtaddr)`
     `void map_page(virtaddr_t virtaddr, physaddr_t physaddr, int user)`
     `void unmap_page(virtaddr_t virtaddr)`
+    `void enable_page(virtaddr_t virtaddr)`
+    `void disable_page(virtaddr_t virtaddr)`
     `virtaddr_t get_free_pages(int count, int maked, int user)`
 ---
 

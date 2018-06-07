@@ -32,5 +32,5 @@
 
 SYSCALL(144, msync,
 int sys_msync(void* addr, size_t len, int flags) {
-    return 0;
+    return vmm_swap_sync((uintptr_t) addr, len, flags);
 });
