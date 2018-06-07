@@ -11,7 +11,6 @@ The project started in September 2013 as an educational and personal project, it
 To compile this project you need aPlus Toolchain which includes GCC, Binutils and System Libraries.
 So... I'm sure one day you'll be able to compile it by yourself but this is not the day ...
 
-Project structure can be found [here](/INDEX)
 
 
 ## Kernel
