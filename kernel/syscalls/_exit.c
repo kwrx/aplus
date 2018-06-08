@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/debug.h>
+#include <aplus/mm.h>
 #include <aplus/intr.h>
 #include <libc.h>
 
@@ -86,6 +87,7 @@ void sys_exit(int status) {
 
     if((--current_task->image->refcount) == 0)
         task_release(current_task);
+
 
     syscall_ack();
 

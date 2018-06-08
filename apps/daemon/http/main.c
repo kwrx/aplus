@@ -40,7 +40,7 @@ static void show_usage(int argc, char** argv) {
     printf(
         "Use: http\n"
         "HTTP Server.\n\n"
-        "       --deamon                run as deamon [httpd]\n"
+        "       --daemon                run as daemon [httpd]\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
     );
@@ -71,19 +71,19 @@ static void atsig_handler(int sig) {
 int main(int argc, char** argv) {
     
     static struct option long_options[] = {
-        { "deamon", no_argument, NULL, 'd'},
+        { "daemon", no_argument, NULL, 'd'},
         { "help", no_argument, NULL, 'h'},
         { "version", no_argument, NULL, 'v'},
         { NULL, 0, NULL, 0 }
     };
     
     
-    int deamon = 0;
+    int daemon = 0;
     int c, idx;
     while((c = getopt_long(argc, argv, "d", long_options, &idx)) != -1) {
         switch(c) {
             case 'd':
-                deamon++;
+                daemon++;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -100,19 +100,19 @@ int main(int argc, char** argv) {
     signal(SIGTERM, atsig_handler);
     signal(SIGQUIT, atsig_handler);
 
-    if(!deamon)
+    if(!daemon)
         exit(1);
     else {
-        if(strcmp((const char*) sysconfig("deamons.httpd.enabled", "false"), "true") != 0) {
-            fprintf(stderr, "httpd: deamon disabled by /etc/config\n");
+        if(strcmp((const char*) sysconfig("daemons.httpd.enabled", "false"), "true") != 0) {
+            fprintf(stderr, "httpd: daemon disabled by /etc/config\n");
             return 0;
         }
 
         if(strcmp(argv[0], "[httpd]") != 0)
-            execl("/proc/self/exe", "[httpd]", "--deamon", NULL);
+            execl("/proc/self/exe", "[httpd]", "--daemon", NULL);
         
         setsid();
-        chdir((const char*) sysconfig("deamons.httpd.root", "/srv/http"));
+        chdir((const char*) sysconfig("daemons.httpd.root", "/srv/http"));
 
 
         int fd = open("/dev/log", O_WRONLY);
@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
         }
 
 
-        return httpd((int) sysconfig("deamons.httpd.port", 80));
+        return httpd((int) sysconfig("daemons.httpd.port", 80));
     }
 
     return 0;

@@ -18,5 +18,7 @@ root/aplus
 root/usr/bin/*
 root/usr/sbin/*
 root/usr/lib/*
+root/usr/include/*
+root/usr/local
 extra/packages/*
 

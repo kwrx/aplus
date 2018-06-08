@@ -122,7 +122,7 @@ void fork_handler(i386_context_t* context) {
     child->starttime = timer_getticks();
 
 
-    child->signal.s_handler = current_task->signal.s_handler;
+    memcpy(child->signal.s_handlers, current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
     child->signal.s_mask = current_task->signal.s_mask;
     
     list_each(current_task->signal.s_queue, q)
@@ -213,7 +213,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
 
     
     if(flags & CLONE_SIGHAND) {
-        child->signal.s_handler = current_task->signal.s_handler;
+        memcpy(child->signal.s_handlers, current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
         child->signal.s_mask = current_task->signal.s_mask;
         
         list_each(current_task->signal.s_queue, q)
@@ -375,7 +375,13 @@ void task_release(volatile task_t* task) {
     }
 
 
-    vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
+    if(task->image && task->image->start < CONFIG_KERNEL_BASE) {
+        uintptr_t p = task->image->start;
+        for(p &= ~(PAGE_SIZE - 1); p < task->image->end; p += PAGE_SIZE)
+            unmap_page(p);
+    }
+
+    //vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
 }
 
 

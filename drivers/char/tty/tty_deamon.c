@@ -40,11 +40,11 @@
 #include <sys/ioctl.h>
 
 
-int tty_deamon(void* unused) {
+int tty_daemon(void* unused) {
     (void) unused;
 
     current_task->name = "[ttyd]";
-    current_task->description = "System's global TTY deamon";
+    current_task->description = "System's global TTY daemon";
     current_task->priority = TASK_PRIO_MIN;
 
 

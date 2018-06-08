@@ -202,8 +202,6 @@ void kfree(void* p) {
     if(unlikely(h->magic != KMALLOC_MAGIC))
         return;
         
-    if(unlikely(!((uintptr_t) h->data > CONFIG_HEAP_BASE)))
-        return;
 
     spinlock_lock(&lck_kfree);
 

@@ -36,7 +36,7 @@ static void show_usage(int argc, char** argv) {
     printf(
         "Use: sync\n"
         "Synchronize cached writes to persistent storage.\n\n"
-        "       --deamon                run as deamon [syncd]\n"
+        "       --daemon                run as daemon [syncd]\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
     );
@@ -67,19 +67,19 @@ static void atsig_handler(int sig) {
 int main(int argc, char** argv) {
     
     static struct option long_options[] = {
-        { "deamon", no_argument, NULL, 'd'},
+        { "daemon", no_argument, NULL, 'd'},
         { "help", no_argument, NULL, 'h'},
         { "version", no_argument, NULL, 'v'},
         { NULL, 0, NULL, 0 }
     };
     
     
-    int deamon = 0;
+    int daemon = 0;
     int c, idx;
     while((c = getopt_long(argc, argv, "d", long_options, &idx)) != -1) {
         switch(c) {
             case 'd':
-                deamon++;
+                daemon++;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -97,16 +97,16 @@ int main(int argc, char** argv) {
     signal(SIGTERM, atsig_handler);
     signal(SIGQUIT, atsig_handler);
 
-    if(!deamon)
+    if(!daemon)
         sync();
     else {
-        if(strcmp((const char*) sysconfig("deamons.syncd.enabled", "false"), "true") != 0) {
-            fprintf(stderr, "syncd: deamon disabled by /etc/config\n");
+        if(strcmp((const char*) sysconfig("daemons.syncd.enabled", "false"), "true") != 0) {
+            fprintf(stderr, "syncd: daemon disabled by /etc/config\n");
             return 0;
         }
 
         if(strcmp(argv[0], "[syncd]") != 0)
-            execl("/proc/self/exe", "[syncd]", "--deamon", NULL);
+            execl("/proc/self/exe", "[syncd]", "--daemon", NULL);
         
         setsid();
         chdir("/");
@@ -119,8 +119,8 @@ int main(int argc, char** argv) {
         }
 
 
-        int s = (int) sysconfig("deamons.syncd.timeout", 10);
-        fprintf(stderr, "syncd: running as deamon every %d seconds\n", s);
+        int s = (int) sysconfig("daemons.syncd.timeout", 10);
+        fprintf(stderr, "syncd: running as daemon every %d seconds\n", s);
 
         for(;; sleep(s))
             sync();

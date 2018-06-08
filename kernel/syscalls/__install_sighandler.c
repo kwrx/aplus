@@ -33,6 +33,5 @@
 SYSCALL(900, __install_sighandler,
 void sys___install_sighandler(void (*handler) (int)) {
     KASSERT(current_task);
-
-    current_task->signal.s_handler = handler;
+    kprintf(INFO "[%d] %s: %s() deprecated syscall\n", current_task->pid, current_task->name, __func__);
 });

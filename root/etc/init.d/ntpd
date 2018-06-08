@@ -2,7 +2,7 @@
 
 case "$1" in
     start)
-        exec /sbin/ntp --deamon
+        exec /sbin/ntp --daemon
         ;;
     stop | status | restart)
         ;;

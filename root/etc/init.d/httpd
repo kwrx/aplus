@@ -2,7 +2,7 @@
 
 case "$1" in
     start)
-        exec /sbin/http --deamon
+        exec /sbin/http --daemon
         ;;
     stop | status | restart)
         ;;

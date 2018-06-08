@@ -133,7 +133,7 @@ static int shutdown_exec(uint8_t mode) {
 }
 
 
-static void shutdown_deamon() {
+static void shutdown_daemon() {
     if(fork())
         return;
 
@@ -167,7 +167,7 @@ static int shutdown(time_t tm, uint8_t mode) {
 
         fd = open("/tmp/shutdown.lock", O_RDWR | O_TRUNC);
     } else
-        shutdown_deamon();
+        shutdown_daemon();
     
 
     if(fd < 0) {

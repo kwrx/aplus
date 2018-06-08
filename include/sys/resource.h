@@ -1,6 +1,8 @@
 #ifndef _SYS_RESOURCE_H_
 #define _SYS_RESOURCE_H_
 
+#include <time.h>
+
 /*
  * Process priority specifications to get/setpriority.
  */
@@ -55,7 +57,7 @@ struct	rusage {
 #define	RLIMIT_RSS	5		/* resident set size */
 #define	RLIMIT_MEMLOCK	6		/* locked-in-memory address space */
 #define	RLIMIT_NPROC	7		/* number of processes */
-#define	RLIMIT_OFILE	8		/* number of open files */
+#define	RLIMIT_NOFILE	8		/* number of open files */
 
 #define	RLIM_NLIMITS	9		/* number of resource limits */
 

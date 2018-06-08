@@ -346,14 +346,10 @@ volatile pdt_t* vmm_clone(volatile pdt_t* src, int dup) {
 }
 
 void vmm_release(volatile pdt_t* src) {
-    if(--src->refcount)
-        return;
-
-    
     INTR_OFF;
 
     long i, j;
-    for(i = 0; i < X86_PD_ENTRIES; i++) {
+    for(i = 0; i < (CONFIG_KERNEL_BASE >> 22); i++) {
         if(likely(!(src->pages[i].flags & X86_FLAG_PRESENT)))
             continue;
 
@@ -374,7 +370,7 @@ void vmm_release(volatile pdt_t* src) {
                 if(!(src->vpages[i]->frames[j].flags & X86_FLAG_PRESENT))
                     continue;
 
-                //pmm_free_frame(src->vpages[i]->frames[j].entry);
+                pmm_free_frame(src->vpages[i]->frames[j].entry);
             }
 
 

@@ -2,7 +2,7 @@
 
 case "$1" in
     start)
-        exec /sbin/sync --deamon
+        exec /sbin/sync --daemon
         ;;
     stop | status | restart)
         ;;

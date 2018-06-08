@@ -75,34 +75,30 @@ static int FR_FIRST(int count) {
 
 
 
-physaddr_t pmm_alloc_frame(void) {
-    register int fx = FR_FIRST(1);
-    KASSERT(fx != E_ERR);
-
-    FR_SET(fx);
-    return (physaddr_t) fx;
-}
-
 physaddr_t pmm_alloc_frames(int count) {
     register int fx = FR_FIRST(count);
     KASSERT(fx != E_ERR);
 
     while(count--)
         FR_SET(fx + count);
-    FR_SET(fx);
 
     return (physaddr_t) fx;
 }
 
-void pmm_free_frame(physaddr_t address) {
-    FR_CLR(address);
+
+physaddr_t pmm_alloc_frame(void) {
+    return pmm_alloc_frames(1);
 }
 
 void pmm_free_frames(physaddr_t address, int count) {
     while(count--)
         FR_CLR(address + count);
-    FR_CLR(address);
 }
+
+void pmm_free_frame(physaddr_t address) {
+    pmm_free_frames(address, 1);
+}
+
 
 void pmm_claim(physaddr_t mstart, physaddr_t mend) {
     KASSERT(mstart < mend);
@@ -133,11 +129,11 @@ mm_state_t* pmm_state(void) {
     return &__pmm_state;
 }
 
+
 int pmm_init(void) {
     memset(frames, 0, sizeof(frames));
     pmm_claim(0x00000000, (physaddr_t) mbd->memory.start);
     
-
     return 0;
 }
 

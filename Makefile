@@ -64,9 +64,9 @@ LIBRARIES:
 	@$(foreach dir, $(LIBS_MAKE), cd $(PWD)/$(dir) && $(MAKE) -s ROOT=$(PWD) CC=$(CC) CXX=$(CXX) AR=$(AR);)
 
 $(HDD): $(KERNEL_OUTPUT) KERNEL_MODULES APPS LIBRARIES
-	@losetup /dev/loop3 hdd.img -o 1048576
+	@losetup /dev/loop1 hdd.img -o 1048576
 	@mkdir -p /mnt/hdd
-	@mount /dev/loop3 /mnt/hdd
+	@mount /dev/loop1 /mnt/hdd
 	@rm -r /mnt/hdd/*
 	@cp -r root/* /mnt/hdd
 	@umount /mnt/hdd
@@ -120,7 +120,7 @@ init:
 	@mount --bind /opt/src/newlib/3.0.0/newlib-3.0.0/newlib/libc/sys/aplus build/newlib
 
 hdd:
-	@dd status=none if=/dev/zero of=hdd.img bs=4M count=20
+	@dd status=none if=/dev/zero of=hdd.img bs=4M count=30
 	@/bin/echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img >> /dev/null
 	@losetup /dev/loop2 hdd.img
 	@losetup /dev/loop3 hdd.img -o 1048576
@@ -131,3 +131,9 @@ hdd:
 	@umount /mnt/hdd
 	@losetup -D
 	@sync
+
+commit:
+	@git add --all .
+	@git commit -m "$(shell date)"
+	@git push origin master
+

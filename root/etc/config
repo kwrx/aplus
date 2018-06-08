@@ -46,20 +46,20 @@ ui.wallpaper="/usr/share/images/wp.png"
 
 
 # -- [syncd]
-deamons.syncd.enabled="true"
-deamons.syncd.timeout=10
+daemons.syncd.enabled="true"
+daemons.syncd.timeout=10
 
 
 # -- [ntpd]
-deamons.ntpd.enabled="false"
-deamons.ntpd.timeout=3600
-deamons.ntpd.server="it.pool.ntp.org"
+daemons.ntpd.enabled="false"
+daemons.ntpd.timeout=3600
+daemons.ntpd.server="it.pool.ntp.org"
 
 
 # -- [httpd]
-deamons.httpd.enabled="true"
-deamons.httpd.root="/srv/http"
-deamons.httpd.port=80
+daemons.httpd.enabled="true"
+daemons.httpd.root="/srv/http"
+daemons.httpd.port=80
 
 
 

@@ -46,7 +46,6 @@ static ktime_t __last_scheduling = 0;
 
 
 
-
 static void sched_next(void) {
     do {
         current_task = current_task->next;
@@ -60,7 +59,7 @@ static void sched_next(void) {
             continue;
 
 
-        /* Check Alarms */
+        /* Check Timers */
         for(int i = 0; i < 3; i++) {
             if(likely(!current_task->itimers[i].it_value))
                 continue;
@@ -134,10 +133,67 @@ pid_t sched_nextpid() {
 
 
 void sched_dosignals() {
-    if(unlikely(
-        (list_length(current_task->signal.s_queue) > 0) &&
-        (current_task->signal.s_handler != NULL)
-    )) {            
+    void __do(struct sigaction* act, int sig) {
+        void* fn = act->sa_handler;
+        if(unlikely(fn == SIG_ERR || fn == SIG_IGN))
+            return;
+
+        if(likely(fn == SIG_DFL)) {
+            switch(sig) {
+
+                /* TERM */
+                case SIGHUP:
+                case SIGINT:
+                case SIGPIPE:
+                case SIGALRM:
+                case SIGTERM:
+                case SIGUSR1:
+                case SIGUSR2:
+                case SIGPOLL:
+                case SIGPROF:
+                case SIGVTALRM:
+                    sys_exit((1 << 31) | W_EXITCODE(0, sig));
+                    break;
+                
+                /* CORE */
+                case SIGQUIT:
+                case SIGILL:
+                case SIGABRT:
+                case SIGFPE:
+                case SIGSEGV:
+                case SIGBUS:
+                case SIGSYS:
+                case SIGXCPU:
+                case SIGXFSZ:
+                    sys_exit((1 << 31) | W_EXITCODE(0, sig) | WCOREFLAG);
+                    break;
+
+                /* STOP */
+                case SIGTSTP:
+                case SIGTTIN:
+                case SIGTTOU:
+                    sys_exit((1 << 31) | W_STOPCODE(sig));
+                    break;
+
+            }
+        } else {
+            sigset_t old;
+            sys_sigprocmask(SIG_SETMASK, &act->sa_mask, &old);
+            
+            act->sa_handler = SIG_DFL;
+#ifdef SA_SIGINFO
+            if(act->sa_flags & SA_SIGINFO)
+                ((void(*)(int, void*, void*)) fn) (sig, NULL, NULL);
+            else
+#endif
+                ((void(*)(int)) fn) (sig);
+
+            sys_sigprocmask(SIG_SETMASK, &old, NULL);
+        }
+    }
+
+
+    if(unlikely((list_length(current_task->signal.s_queue) > 0))) {            
         register int sig;
         sig = list_back(current_task->signal.s_queue);
         list_pop_back(current_task->signal.s_queue);
@@ -150,7 +206,7 @@ void sched_dosignals() {
                 sys_exit((1 << 31) | W_STOPCODE(SIGSTOP));
                 break;
             default:
-                current_task->signal.s_handler(sig);
+                __do(&current_task->signal.s_handlers[sig], sig);
                 break;
         }
     }
@@ -161,11 +217,14 @@ void sched_dosignals() {
 void sched_signal(task_t* tk, int sig) {
     if(unlikely(!tk))
         return;
+    
+    if(unlikely(sig < 0 || sig > TASK_NSIG))
+        return;
 
     if(unlikely(tk->status == TASK_STATUS_ZOMBIE))
         return;
 
-    if(unlikely(!tk->signal.s_handler))
+    if(unlikely(!tk->signal.s_handlers[sig].sa_handler))
         return;
 
 

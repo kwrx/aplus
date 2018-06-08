@@ -32,14 +32,9 @@
 
 int
 kprintf(const char *fmt, ...) {
-
-
     char buf[BUFSIZ] = {0};
     char bfmt[BUFSIZ] = {0};
-
-    memset(buf, 0, sizeof(buf));
-    memset(bfmt, 0, sizeof(bfmt));
-
+    
     sprintf(bfmt, "[%8f]%s", (double) timer_getus() / 1000000, fmt);
 
     va_list args;

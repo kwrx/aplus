@@ -107,9 +107,9 @@ int init(void) {
     ino_inp->userdata = (void*) tio;
     
 
-    extern int tty_deamon(void*);
-    if(sys_clone(tty_deamon, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND, NULL) < 0)
-        kprintf(ERROR "tty: deamon could not start! Some actions like keystroke's binding will be disabled\n");
+    extern int tty_daemon(void*);
+    if(sys_clone(tty_daemon, NULL, CLONE_VM | CLONE_FILES | CLONE_FS | CLONE_SIGHAND, NULL) < 0)
+        kprintf(ERROR "tty: daemon could not start! Some actions like keystroke's binding will be disabled\n");
     
 
     sys_symlink("/dev/tty1", "/dev/stdin");

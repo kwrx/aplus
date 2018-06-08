@@ -55,7 +55,7 @@ static void show_usage(int argc, char** argv) {
     printf(
         "Use: ntp\n"
         "Synchronize system time with network global time.\n\n"
-        "       --deamon                run as deamon [ntpd]\n"
+        "       --daemon                run as daemon [ntpd]\n"
         "       --help                  show this help\n"
         "       --version               print version info and exit\n"
     );
@@ -83,7 +83,7 @@ static void atsig_handler(int sig) {
 
 
 static void do_ntp() {
-    char* host = (char*) sysconfig("deamons.ntpd.server", NULL);
+    char* host = (char*) sysconfig("daemons.ntpd.server", NULL);
     if(!host) {
         fprintf(stderr, "ntpd: invalid configuration for \'ntpd.server\' in /etc/config\n");
         return;
@@ -171,19 +171,19 @@ static void do_ntp() {
 int main(int argc, char** argv) {
     
     static struct option long_options[] = {
-        { "deamon", no_argument, NULL, 'd'},
+        { "daemon", no_argument, NULL, 'd'},
         { "help", no_argument, NULL, 'h'},
         { "version", no_argument, NULL, 'v'},
         { NULL, 0, NULL, 0 }
     };
     
     
-    int deamon = 0;
+    int daemon = 0;
     int c, idx;
     while((c = getopt_long(argc, argv, "d", long_options, &idx)) != -1) {
         switch(c) {
             case 'd':
-                deamon++;
+                daemon++;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -203,17 +203,17 @@ int main(int argc, char** argv) {
     signal(SIGKILL, atsig_handler);
 
 
-    if(!deamon)
+    if(!daemon)
         do_ntp();
     else {
-        if(strcmp((const char*) sysconfig("deamons.ntpd.enabled", "false"), "true") != 0) {
-            fprintf(stderr, "ntpd: deamon disabled by /etc/config\n");
+        if(strcmp((const char*) sysconfig("daemons.ntpd.enabled", "false"), "true") != 0) {
+            fprintf(stderr, "ntpd: daemon disabled by /etc/config\n");
             return 0;
         }
 
             
         if(strcmp(argv[0], "[ntpd]") != 0)
-            execl("/proc/self/exe", "[ntpd]", "--deamon", NULL);
+            execl("/proc/self/exe", "[ntpd]", "--daemon", NULL);
 
         setsid();
         chdir("/");
@@ -227,8 +227,8 @@ int main(int argc, char** argv) {
         
 
 
-        int s = (int) sysconfig("deamons.ntpd.timeout", 10);
-        fprintf(stderr, "ntpd: running as deamon every %d seconds\n", s);
+        int s = (int) sysconfig("daemons.ntpd.timeout", 10);
+        fprintf(stderr, "ntpd: running as daemon every %d seconds\n", s);
 
 
         for(;; sleep(s))

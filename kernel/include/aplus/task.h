@@ -44,6 +44,7 @@
 #define TASK_PRIO_MIN                   19
 #define TASK_PRIO_REGULAR               0
 
+#define TASK_NSIG                       64
 #define TASK_FD_COUNT                   32
 #define TASK_FIFOSZ                     PAGE_SIZE
 
@@ -92,12 +93,10 @@ typedef struct task {
         ktime_t it_value;
     } itimers[3];
 
-
-
     struct {
-        void (*s_handler) (int);
-        sigset_t s_mask;
+        struct sigaction s_handlers[TASK_NSIG];
         list(int16_t, s_queue);
+        sigset_t s_mask;
     } signal;
 
 
