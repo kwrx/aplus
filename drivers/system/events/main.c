@@ -32,7 +32,6 @@
 
 #include <aplus/base.h>
 #include <aplus/events.h>
-#include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 
 

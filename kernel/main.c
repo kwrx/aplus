@@ -83,6 +83,7 @@ int main(int argc, char** argv) {
 #endif
 
 
+
     kprintf(INFO "cpu: %s %d MHz (Cores: %d, Threads: %d)\n",
             mbd->cpu.family,
             mbd->cpu.speed,

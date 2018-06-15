@@ -29,8 +29,7 @@
 #include <aplus/base.h>
 #include <libc.h>
 
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 #include <sys/ttydefaults.h>
 #include <sys/ioctl.h>
 #include <sys/wait.h>
@@ -49,12 +48,10 @@ int tty_ioctl(struct inode* inode, int req, void* data);
 
 
 struct tty_context {
-    union {
-        struct termio io;
-        struct termios ios;
-    };
-
+    
+    struct termios ios;
     struct winsize winsize;
+
     int lined;
     int output;
 

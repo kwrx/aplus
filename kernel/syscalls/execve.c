@@ -184,7 +184,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
 
 
-    void (*_start) (char**, char**) = (void (*) (char**, char**)) hdr.e_entry;
+    void (*_start) (int, char**) = (void (*) (int, char**)) hdr.e_entry;
     KASSERT(_start);
 
 
@@ -204,9 +204,8 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
     INTR_ON;
     syscall_ack();
-
-    _start((char**) current_task->argv, (char**) current_task->environ);
-    KASSERT(0);
+    task_call_entrypoint(_start); /* TODO */
     
+    KASSERT(0);
     return -1;
 });

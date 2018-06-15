@@ -30,7 +30,7 @@
 #include <signal.h>
 #include <getopt.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
+#include <termios.h>
 #include <sys/types.h>
 
 #include <aplus/base.h>

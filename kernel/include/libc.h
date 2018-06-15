@@ -22,10 +22,8 @@
  */
 
 
-#define _POSIX_THREAD_CPUTIME
-#define _POSIX_CPUTIME
-#define _POSIX_MONOTONIC_CLOCK
 
+#define _GNU_SOURCE
 #include <stddef.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -34,20 +32,17 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <dirent.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <errno.h>
 #include <time.h>
 #include <sys/time.h>
 #include <sys/times.h>
 #include <sys/utsname.h>
-#include <sys/termios.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
-#include <sys/string.h>
-#include <sys/poll.h>
 #include <sys/mount.h>
 #include <sys/statvfs.h>
 #include <sys/resource.h>
@@ -56,6 +51,9 @@
 #include <signal.h>
 #include <utime.h>
 #include <libgen.h>
+#include <poll.h>
+#include <termios.h>
+
 
 #ifdef _POSIX_SOURCE
 #define _OLD_POSIX_SOURCE _POSIX_SOURCE

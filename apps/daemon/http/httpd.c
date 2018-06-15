@@ -266,7 +266,7 @@ int httpd(int port) {
     struct sockaddr_in sin;
     sock_server = socket(AF_INET, SOCK_STREAM, 0);
     sin.sin_family = AF_INET;
-    sin.sin_port = __htons(port);
+    sin.sin_port = htons(port);
     sin.sin_addr.s_addr = INADDR_ANY;
 
 

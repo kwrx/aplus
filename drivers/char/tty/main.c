@@ -28,7 +28,6 @@
 #include <aplus/debug.h>
 #include <aplus/base.h>
 #include <aplus/mm.h>
-#include <aplus/sysconfig.h>
 #include <libc.h>
 
 #include "tty.h"
@@ -71,7 +70,6 @@ int init(void) {
     tio->ios.c_cc[VEOL] = CEOL;
     tio->ios.c_cc[VERASE] = CERASE;
     tio->ios.c_cc[VINTR] = CINTR;
-    tio->ios.c_cc[VSTATUS] = CSTATUS;
     tio->ios.c_cc[VKILL] = CKILL;
     tio->ios.c_cc[VMIN] = CMIN;
     tio->ios.c_cc[VQUIT] = CQUIT;
@@ -80,15 +78,15 @@ int init(void) {
     tio->ios.c_cc[VSTART] = CSTART;
     tio->ios.c_cc[VSTOP] = CSTOP;
 
-    tio->ios.c_ispeed =
-    tio->ios.c_ospeed = TTYDEF_SPEED;
+    tio->ios.__c_ispeed =
+    tio->ios.__c_ospeed = TTYDEF_SPEED;
 
     tio->winsize.ws_row = 25;
     tio->winsize.ws_col = 80;
     tio->winsize.ws_xpixel = 80 * 8;
     tio->winsize.ws_ypixel = 25 * 16;
 
-    tio->lined = TTYDISC;
+    tio->lined = 0;
     tio->output = 1;
     tio->outlen = 0;
 

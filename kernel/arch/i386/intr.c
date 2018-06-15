@@ -40,7 +40,7 @@ extern void fork_handler(void*);
 extern void yield_handler(void*);
 
 
-extern uint64_t GDT32[6];
+extern uint64_t GDT32[8192];
 
 extern struct {
     struct {
@@ -314,8 +314,12 @@ void isr_handler(i386_context_t* context) {
     int signo;
     switch(context->int_no) {
         case 0x80:
+            errno = 0;
             context->eax = syscall_handler(context->eax, context->ebx, context->ecx, context->edx, context->esi, context->edi);
-            context->ebx = errno;
+            
+            if(errno != 0)
+                context->eax = -errno;
+
             return;
         case 0x7F:
             switch(context->eax) {
@@ -355,6 +359,7 @@ void isr_handler(i386_context_t* context) {
 
 #if DEBUG
     debug_dump(context, exception_messages[context->int_no], 0, context->err_code);
+    for(;;);
 #endif
 
     __asm__ __volatile__ ("sti");
@@ -374,6 +379,7 @@ void irq_handler(i386_context_t* context) {
 
     irq_ack(irq_no);
 }
+
 
 
 void x86_intr_kernel_stack(uintptr_t address) {

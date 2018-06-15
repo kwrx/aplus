@@ -129,6 +129,7 @@ void fork_handler(i386_context_t* context) {
         list_push(child->signal.s_queue, q);
 
 
+    child->thread_area = current_task->thread_area;
     
     child->cwd = current_task->cwd;
     child->exe = current_task->exe;
@@ -210,6 +211,9 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     child->status = TASK_STATUS_READY;
     child->priority = current_task->priority;
     child->starttime = timer_getticks();
+
+    child->thread_area = current_task->thread_area;
+
 
     
     if(flags & CLONE_SIGHAND) {
@@ -381,7 +385,69 @@ void task_release(volatile task_t* task) {
             unmap_page(p);
     }
 
+    task_set_thread_area(task, NULL);
     //vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
+}
+
+
+int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
+    /* See kernel/arch/i386/intr.asm */
+    extern uint64_t GDT32[8192];
+    extern void gdt_load();
+
+    if(uinfo == NULL) {
+        if(!tk->thread_area)
+            return errno = EINVAL, -1;
+
+        *(uint64_t*) tk->thread_area = 0;
+        return 0;
+    }
+
+    int i;
+    if((i = uinfo->entry_number) == -1) {
+        for(i = 0; i < 8192; i++) {
+            if(GDT32[i] != 0)
+                continue;
+
+            break;
+        }
+
+        if(i == 8192) {
+            errno = ESRCH;
+            return -1;
+        }
+
+        tk->thread_area = &GDT32[i];
+        uinfo->entry_number = i;
+    }
+
+
+    uint8_t* p = (uint8_t*) &GDT32[i];
+    uintptr_t lm = uinfo->limit;
+    
+    if(lm > 65536) {
+        lm >>= 12;
+        p[6] = 0xC0;
+    } else
+        p[6] = 0x40;
+
+
+    /* Limit */
+    p[0] = lm & 0xFF;
+    p[1] = (lm >> 8) & 0xFF;
+    p[6] |= (lm >> 16) & 0x0F;
+
+    /* Base */
+    p[2] = uinfo->base_addr & 0xFF;
+    p[3] = (uinfo->base_addr >> 8) & 0xFF;
+    p[4] = (uinfo->base_addr >> 16) & 0xFF;
+    p[7] = (uinfo->base_addr >> 24) & 0xFF;
+
+    /* Flags */
+    p[5] = 0x92;
+
+    gdt_load();
+    return 0;
 }
 
 

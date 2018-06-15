@@ -254,21 +254,8 @@ GDT32:
 	db 0x92
 	db 0xCF
 	db 0
-.UCODE: equ $ - GDT32
-	dw 0xFFFF
-	dw 0
-	db 0
-	db 0xFA
-	db 0xCF
-.UDATA: equ $ - GDT32
-	dw 0xFFFF
-	dw 0
-	db 0
-	db 0xF2
-	db 0xCF
-	db 0
-.TSS: equ $ - GDT32
-	dd 0, 0
+.TLS:
+	times (8192 - 4) dq 0
 .PTR:
 	dw $ - GDT32 - 1
 	dd GDT32

@@ -52,6 +52,11 @@
 #define TASK_ROOT_GID                   ((gid_t) 0)
 
 
+#define WCOREFLAG                       0200
+#define W_EXITCODE(ret, sig)            ((ret) << 8 | sig)
+#define W_STOPCODE(sig)                 ((sig) << 8 | 0177)        
+
+
 #ifndef __ASSEMBLY__
 
 typedef struct fd {
@@ -60,6 +65,18 @@ typedef struct fd {
     int flags;
 } fd_t;
 
+
+struct __user_desc {
+    unsigned int entry_number;
+    unsigned long base_addr;
+    unsigned int limit;
+    unsigned int seg_32bit:1;
+    unsigned int contents:2;
+    unsigned int read_exec_only:1;
+    unsigned int limit_in_pages:1;
+    unsigned int seg_not_present:1;
+    unsigned int useable:1;
+};
 
 
 typedef struct task {
@@ -76,12 +93,15 @@ typedef struct task {
     gid_t gid;
     uid_t sid;
 
+    void* tid;
+
     int status;
     int priority;
     uintptr_t vmsize;
 
     void* context;
     void* sys_stack;
+    void* thread_area;
         
     
     struct tms clock;
@@ -95,7 +115,7 @@ typedef struct task {
 
     struct {
         struct sigaction s_handlers[TASK_NSIG];
-        list(int16_t, s_queue);
+        list(siginfo_t*, s_queue);
         sigset_t s_mask;
     } signal;
 
@@ -167,13 +187,14 @@ void schedule(void);
 void schedule_yield(void);
 pid_t sched_nextpid();
 void sched_dosignals();
-void sched_signal(task_t*, int);
+void sched_sigqueueinfo(task_t*, int, siginfo_t*);
 
 extern void task_switch(volatile task_t*, volatile task_t*);
 extern volatile task_t* task_fork(void);
 extern volatile task_t* task_clone(int (*) (void*), void*, int, void*);
 extern void task_yield(void);
 extern void task_release(volatile task_t* task);
+extern int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo);
 
 
 #define task_create_tasklet(nm, handler, task)                                                                  \

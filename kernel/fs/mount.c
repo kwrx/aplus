@@ -74,6 +74,11 @@ static int __vfs_bind(struct inode* dev, struct inode* dir, int flags) {
 
 static int __vfs_mount(struct inode* dev, struct inode* dir, const char* fstype, int flags) {
 
+    if(unlikely(!dir)) {
+        errno = EINVAL;
+        return -1;
+    }
+    
     if(flags & MS_BIND)
         return __vfs_bind(dev, dir, flags);
 
@@ -111,7 +116,6 @@ static int __vfs_mount(struct inode* dev, struct inode* dir, const char* fstype,
     _(MS_NODIRATIME, ST_NODIRATIME);
     _(MS_NOEXEC, ST_NOEXEC);
     _(MS_RDONLY, ST_RDONLY);
-    _(MS_RELATIME, ST_RELATIME);
     _(MS_SYNCHRONOUS, ST_SYNCHRONOUS);
 
     #undef _

@@ -29,11 +29,6 @@
 #include <aplus/intr.h>
 #include <libc.h>
 
-#if 0
-#undef CONFIG_SYSCALL_DEBUG
-#define CONFIG_SYSCALL_DEBUG 1
-#endif
-
 
 #define MAX_SYSCALL            1024
 
@@ -43,9 +38,6 @@ typedef long (*syscall_handler_t)
 
 static spinlock_t lck_syscall;
 static syscall_handler_t __handlers[MAX_SYSCALL];
-#if CONFIG_SYSCALL_DEBUG
-static char* __handlers_name[MAX_SYSCALL];
-#endif
 
 extern int syscalls_start;
 extern int syscalls_end;
@@ -68,12 +60,9 @@ int syscall_init(void) {
         handler = (void*) &syscalls_start;
         (uintptr_t) handler < (uintptr_t) &syscalls_end;
         handler++
-    ) {
+    )
         syscall_register(handler->number, handler->ptr);
-#if CONFIG_SYSCALL_DEBUG
-        __handlers_name[handler->number] = handler->name;
-#endif
-    }
+    
 
 
     return 0;
@@ -100,12 +89,11 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
     if(unlikely(number > MAX_SYSCALL))
         return errno = ENOSYS, -1;
 
-    if(unlikely(!__handlers[number]))
+    if(unlikely(!__handlers[number])) {
+        kprintf(ERROR "syscall: called invalid syscall #%d (%p, %p, %p, %p, %p)\n", number, p0, p1, p2, p3, p4);
         return errno = ENOSYS, -1;
+    }
     
-#if CONFIG_SYSCALL_DEBUG
-    kprintf(LOG "syscall(%d): %s (%p, %p, %p, %p, %p) from %d\n", number, __handlers_name[number], p0, p1, p2, p3, p4, sys_getpid());
-#endif
 
     //spinlock_lock(&lck_syscall);
     if(unlikely(spinlock_trylock(&lck_syscall) != 0))

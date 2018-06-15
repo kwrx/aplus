@@ -45,7 +45,7 @@ int sys_kill(pid_t pid, int signal) {
                     ret;                                            \
                                                                     \
                                                                     \
-                if(tmp->signal.s_mask & (1 << signal)) {            \
+                if(tmp->signal.s_mask.__bits[signal]) {             \
                     if(pid <= 0)                                    \
                         continue;                                   \
                                                                     \
@@ -53,7 +53,14 @@ int sys_kill(pid_t pid, int signal) {
                     return -1;                                      \
                 }                                                   \
                                                                     \
-                sched_signal(tmp, signal);                          \
+                                                                    \
+                siginfo_t si;                                       \
+                si.si_code = SI_USER;                               \
+                si.si_pid = current_task->pid;                      \
+                si.si_uid = current_task->uid;                      \
+                si.si_value.sival_ptr = NULL;                       \
+                                                                    \
+                sched_sigqueueinfo(tmp, signal, &si);               \
                 ret;                                                \
             }                                                       \
         }                                                           \

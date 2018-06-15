@@ -59,9 +59,15 @@ void sys_exit(int status) {
         : TASK_STATUS_ZOMBIE;
 
 
-    if(current_task->parent)
-        sched_signal(current_task->parent, SIGCHLD);
+    if(current_task->parent) {
+        siginfo_t si;
+        si.si_code = SI_KERNEL;
+        si.si_pid = current_task->pid;
+        si.si_uid = current_task->uid;
+        si.si_value.sival_int = current_task->exit.value;
 
+        sched_sigqueueinfo(current_task->parent, SIGCHLD, &si);
+    }
 
 
     if(current_task->status == TASK_STATUS_STOP) {

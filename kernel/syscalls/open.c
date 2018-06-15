@@ -77,7 +77,6 @@ int sys_open(const char* name, int flags, mode_t mode) {
     char namebuf[strlen(name) + 1];
     strslashcpy(namebuf, name);
 
-
     char* s = namebuf;
     char* p = NULL;
 
@@ -92,18 +91,19 @@ int sys_open(const char* name, int flags, mode_t mode) {
     KASSERT(cino);
 
 
-    
     do {
         if((p = strchr(s, '/')))
             *p++ = '\0';
         else
             break;
 
+
         cino = vfs_finddir(cino, s);
         if(unlikely(!cino)) {
             errno = ENOENT;
             return -1;
         }
+
 
         if(S_ISLNK(cino->mode)) {
             if(cino->link) {
@@ -126,7 +126,7 @@ int sys_open(const char* name, int flags, mode_t mode) {
 
     KASSERT(s);
     
-    
+
     inode_t* cp = cino;
     if(*s)
         cino = vfs_finddir(cp, s);
@@ -219,5 +219,6 @@ int sys_open(const char* name, int flags, mode_t mode) {
     
     current_task->fd[fd].inode = cino;
     current_task->fd[fd].flags = flags;
+
     return fd;
 });

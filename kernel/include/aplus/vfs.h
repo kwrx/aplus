@@ -116,7 +116,6 @@
 typedef struct inode inode_t;
 
 
-
 struct mountinfo {
     char fstype[64];
     int flags;

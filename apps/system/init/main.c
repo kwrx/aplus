@@ -34,8 +34,7 @@
 
 #include <sys/wait.h>
 #include <sys/ioctl.h>
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 #include <aplus/base.h>
 #include <aplus/input.h>

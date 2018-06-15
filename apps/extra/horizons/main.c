@@ -74,7 +74,7 @@ static int horizons_setup() {
 
     struct sockaddr_in sin;
     sin.sin_family = AF_INET;
-    sin.sin_port = __htons(6775);
+    sin.sin_port = htons(6775);
     memcpy(&sin.sin_addr.s_addr, e->h_addr_list[0], e->h_length);
 
 

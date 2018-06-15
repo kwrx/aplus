@@ -31,8 +31,7 @@
 
 
 #include <sys/ioctl.h>
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 #include "tty.h"
 
 
@@ -55,27 +54,22 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
     #define _p(x)   if(unlikely(!x)) { errno = EINVAL; return -1; }
 
     switch(req) {
-        case TIOCGETA:
+        case TCGETA:
             _p(data);
             memcpy(data, &tio->ios, sizeof(struct termios));
             break;
-        case TIOCSETA:
-        case TIOCSETAW:
-        case TIOCSETAF:
+        case TCSETA:
+        case TCSETAW:
+        case TCSETAF:
             _p(data);
             memcpy(&tio->ios, data, sizeof(struct termios));
             break;
 
-        case TCGETA:
-            _p(data);
-            memcpy(data, &tio->io, sizeof(struct termio));
-            break;
-
-        case TIOCDRAIN:
+        case TCXONC:
             __tty_drain(tio);
             break;
 
-        case TIOCFLUSH:
+        case TCFLSH:
             __tty_flush(tio, *(int*) data);
             break;
 
@@ -111,14 +105,14 @@ int tty_ioctl(struct inode* inode, int req, void* data) {
             break;
 
 
-        case TIOCSTART:
+        /*case TIOCSTART:
             tio->output = 1;
             break;
 
         case TIOCSTOP:
             tio->output = 0;
             break;
-
+        */
         case TIOCSPGRP:
             _p(data);
             tio->pgrp = *(int*) data;

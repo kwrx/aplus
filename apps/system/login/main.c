@@ -160,15 +160,15 @@ int main(int argc, char** argv) {
                     fprintf(stderr, "password: ");
 
                     struct termios ts;
-                    ioctl(STDIN_FILENO, TIOCGETA, &ts);
+                    ioctl(STDIN_FILENO, TCGETA, &ts);
                     ts.c_lflag &= ~ECHO;
-                    ioctl(STDIN_FILENO, TIOCSETA, &ts);
+                    ioctl(STDIN_FILENO, TCSETA, &ts);
 
                     scanf("%s", buf);
 
-                    ioctl(STDIN_FILENO, TIOCGETA, &ts);
+                    ioctl(STDIN_FILENO, TCGETA, &ts);
                     ts.c_lflag |= ECHO;
-                    ioctl(STDIN_FILENO, TIOCSETA, &ts);
+                    ioctl(STDIN_FILENO, TCSETA, &ts);
 
                     fprintf(stderr, "\n");
                 }

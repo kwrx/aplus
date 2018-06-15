@@ -33,6 +33,7 @@
 
 #include "sh.h"
 
+extern char** environ;
 
 int sh_cmd_jobs(int argc, char** argv) {
     list_each(sh_jobs, job) {

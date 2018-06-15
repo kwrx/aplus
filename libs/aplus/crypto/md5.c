@@ -25,6 +25,7 @@
 #include <aplus/base.h>
 #include <aplus/crypto/md5.h>
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 

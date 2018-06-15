@@ -357,7 +357,7 @@ int vfs_init(void) {
 inode_t* vfs_mkdev(const char* name, dev_t rdev, mode_t mode) {
     char buf[strlen(name) + 2];
     if(rdev != -1)
-        sprintf(buf, "%s%d", name, rdev);
+        sprintf(buf, "%s%d", name, (int) rdev);
     else
         strcpy(buf, name);
 

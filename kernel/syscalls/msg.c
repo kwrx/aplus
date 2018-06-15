@@ -43,7 +43,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
     volatile task_t* tmp;
     for(tmp = task_queue; tmp; tmp = tmp->next) {
         if(tmp->pid == pid) {
-            if(tmp->signal.s_mask & (1 << SIGMSG)) {
+            if(tmp->signal.s_mask.__bits[SIGMSG]) {
                 errno = EPERM;
                 return 0;
             }
@@ -65,7 +65,12 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
             }
 
 
-            sched_signal(tmp, SIGMSG);
+            siginfo_t si;
+            si.si_code = SI_MESGQ;
+            si.si_pid = current_task->pid;
+            si.si_uid = current_task->uid;
+
+            sched_sigqueueinfo(tmp, SIGMSG, &si);
             return len;
         }
     }

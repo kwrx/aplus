@@ -29,13 +29,12 @@
 #include <dirent.h>
 #include <getopt.h>
 #include <sys/ioctl.h>
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 
 int main(int argc, char** argv) {
     struct termios ios;
-    ioctl(STDOUT_FILENO, TIOCGETA, &ios);
+    ioctl(STDOUT_FILENO, TCGETA, &ios);
 
     ios.c_iflag = 0;
     ios.c_oflag = 0;
@@ -52,10 +51,10 @@ int main(int argc, char** argv) {
     ios.c_cc[VSTOP] = 004;
     ios.c_cc[VMIN] = 0;
 
-    ios.c_ispeed =
-    ios.c_ospeed = B9600;
+    ios.__c_ispeed =
+    ios.__c_ospeed = B9600;
 
-    ioctl(STDOUT_FILENO, TIOCSETA, &ios);
+    ioctl(STDOUT_FILENO, TCSETA, &ios);
 
 
     fprintf(stdout, "\e[0;39;49m");

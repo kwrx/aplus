@@ -62,14 +62,5 @@ int sys_mount(const char* dev, const char* dir, const char* fstype, unsigned lon
     dir_ino = current_task->fd[dirfd].inode;
     sys_close(dirfd);
 
-
-    
-#ifdef ENOTBLK
-    if(!(S_ISBLK(dev_ino->mode))) {
-        errno = ENOTBLK;
-        return -1;
-    }
-#endif
-
     return vfs_mount(dev_ino, dir_ino, fstype, options);
 });

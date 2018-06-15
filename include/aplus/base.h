@@ -60,6 +60,57 @@
 #endif
 
 
+
+#ifdef __GNUC__
+#    ifdef __weak
+#        undef __weak
+#    endif
+
+#    ifdef __packed
+#        undef __packed
+#    endif
+
+#    ifdef __section
+#        undef __section
+#    endif
+
+#    ifdef __align
+#        undef __align
+#    endif
+
+#    ifdef __malloc
+#        undef __malloc
+#    endif
+
+#    ifdef __optimize
+#        undef __optimize
+#    endif
+
+#    ifdef __fastcall
+#        undef __fastcall
+#    endif
+
+#    define __weak                          __attribute__((weak))
+#    define __packed                        __attribute__((packed))
+#    define __section(x)                    __attribute__((section(x)))
+#    define __align(x)                      __attribute__((align(x)))
+#    define __malloc                        __attribute__((malloc))
+#    define __optimize(x)                   __attribute__((optimize("O" #x)))
+#    define __fastcall                      __attribute__((fastcall))
+
+#    define __PRAGMA(x)                     _Pragma(#x)
+#    define WARNING(x)                      __PRAGMA(GCC diagnostic ignored x)
+#else
+#    define __weak
+#    define __packed
+#    define __section(x)
+#    define __align(x)
+#    define __malloc
+#    define __optimize(x)
+#    define WARNING(x)
+#endif
+
+
 #define PATH_FBDEV                      "/dev/fb0"
 #define PATH_CONDEV                     "/dev/console"
 #define PATH_KMEM                       "/dev/kmem"

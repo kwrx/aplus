@@ -30,7 +30,7 @@
 #include <errno.h>
 #include <glob.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
+#include <termios.h>
 #include <sys/wait.h>
 
 #include <aplus/base.h>
@@ -43,16 +43,16 @@ static struct termios ios;
 void sh_reset_tty() {
     pid_t pgrp = getpgrp();
     ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
-    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ioctl(STDIN_FILENO, TCGETA, &ios);
     ios.c_lflag &= ~ISIG;
-    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+    ioctl(STDIN_FILENO, TCSETA, &ios);
 }
 
 void sh_prepare_tty(pid_t pgrp) {
     ioctl(STDIN_FILENO, TIOCSPGRP, &pgrp);
-    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ioctl(STDIN_FILENO, TCGETA, &ios);
     ios.c_lflag |= ISIG;
-    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+    ioctl(STDIN_FILENO, TCSETA, &ios);
 }
 
 static int run(int argc, char** argv, int in, int out) {
@@ -197,7 +197,7 @@ int sh_exec(char* command) {
             } while(*++s);
 
             glob_t gl;
-            glob(p, GLOB_NOSORT | GLOB_TILDE, NULL, &gl);
+            glob(p, GLOB_NOSORT, NULL, &gl);
 
             if(!gl.gl_pathc)
                 list_push(args, strdup(p));

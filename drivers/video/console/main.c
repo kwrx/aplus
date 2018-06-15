@@ -34,11 +34,9 @@
 #include <libc.h>
 
 #include <sys/ioctl.h>
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 #include <wchar.h>
-#include <vterm.h>
 #include <aplus/utils/unicode.h>
 
 #include "console-font.h"

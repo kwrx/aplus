@@ -22,13 +22,14 @@
  */
 
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 #include <aplus/base.h>
 #include <aplus/utils/unicode.h>
@@ -117,9 +118,9 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
     int i = 0;
 
     struct termios ios;
-    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ioctl(STDIN_FILENO, TCGETA, &ios);
     ios.c_lflag &= ~(ICANON | ECHO | ECHOE);
-    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+    ioctl(STDIN_FILENO, TCSETA, &ios);
 
 
 
@@ -189,9 +190,9 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
     } while(ch != '\n' && ch != '\0');
 
 
-    ioctl(STDIN_FILENO, TIOCGETA, &ios);
+    ioctl(STDIN_FILENO, TCGETA, &ios);
     ios.c_lflag |= (ICANON | ECHO | ECHOE);
-    ioctl(STDIN_FILENO, TIOCSETA, &ios);
+    ioctl(STDIN_FILENO, TCSETA, &ios);
 
 
     if(strlen(line))

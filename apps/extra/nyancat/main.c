@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 #include "animation.h"
 

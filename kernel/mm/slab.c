@@ -247,9 +247,22 @@ void* calloc(size_t x, size_t y) {
     return kcalloc(x, y, GFP_KERNEL);
 }
 
+__malloc
+void* realloc(void* p, size_t size) {
+    void* r = kmalloc(size, GFP_KERNEL);
+    if(!r)
+        return NULL;
+
+    memcpy(r, p, size);
+    kfree(p);
+
+    return r;
+}
+
 void free(void* ptr) {
     kfree(ptr);
 }
+
 
 
 int slab_init(void) {

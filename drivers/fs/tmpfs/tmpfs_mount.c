@@ -26,7 +26,6 @@
 #include <aplus/debug.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
-#include <aplus/sysconfig.h>
 #include <libc.h>
 
 #include "tmpfs.h"
@@ -43,13 +42,9 @@ int tmpfs_mount(struct inode* dev, struct inode* dir, struct mountinfo* info) {
     dir->mtinfo = info;
 
 
-    uint32_t size = (uint32_t) sysconfig("fs.tmpfs.size", 0x1000000);
-    uint32_t files = (uint32_t) sysconfig("fs.tmpfs.files", 0x100000);
+    uint32_t size = 0x1000000;
+    uint32_t files = 0x100000;
  
-    size = size ? size : 0x1000000;
-    files = files ? files : 0x100000;
-
-
 
     info->stat.f_bsize = 1;
     info->stat.f_frsize = 1;

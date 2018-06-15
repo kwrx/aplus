@@ -75,15 +75,23 @@ static void sched_next(void) {
                 else
                     current_task->itimers[i].it_value = 0;
 
+
+                siginfo_t si;
+                si.si_code = SI_TIMER;
+                si.si_pid = current_task->pid;
+                si.si_uid = current_task->uid;
+                si.si_value.sival_ptr = NULL;
+                si.si_timerid = i;
+                 
                 switch(i) {
                     case ITIMER_REAL:
-                        sched_signal(current_task, SIGALRM);
+                        sched_sigqueueinfo(current_task, SIGALRM, &si);
                         break;
                     case ITIMER_VIRTUAL:
-                        sched_signal(current_task, SIGVTALRM);
+                        sched_sigqueueinfo(current_task, SIGVTALRM, &si);
                         break;
                     case ITIMER_PROF:
-                        sched_signal(current_task, SIGPROF);
+                        sched_sigqueueinfo(current_task, SIGPROF, &si);
                         break;
                 }
             }
@@ -133,13 +141,16 @@ pid_t sched_nextpid() {
 
 
 void sched_dosignals() {
-    void __do(struct sigaction* act, int sig) {
+    void __do(struct sigaction* act, siginfo_t* sig) {
         void* fn = act->sa_handler;
         if(unlikely(fn == SIG_ERR || fn == SIG_IGN))
             return;
 
+        if(act->sa_flags & SA_RESETHAND)
+            act->sa_handler = SIG_DFL;
+
         if(likely(fn == SIG_DFL)) {
-            switch(sig) {
+            switch(sig->si_signo) {
 
                 /* TERM */
                 case SIGHUP:
@@ -152,7 +163,7 @@ void sched_dosignals() {
                 case SIGPOLL:
                 case SIGPROF:
                 case SIGVTALRM:
-                    sys_exit((1 << 31) | W_EXITCODE(0, sig));
+                    sys_exit((1 << 31) | W_EXITCODE(0, sig->si_signo));
                     break;
                 
                 /* CORE */
@@ -165,72 +176,77 @@ void sched_dosignals() {
                 case SIGSYS:
                 case SIGXCPU:
                 case SIGXFSZ:
-                    sys_exit((1 << 31) | W_EXITCODE(0, sig) | WCOREFLAG);
+                    sys_exit((1 << 31) | W_EXITCODE(0, sig->si_signo) | WCOREFLAG);
                     break;
 
                 /* STOP */
                 case SIGTSTP:
                 case SIGTTIN:
                 case SIGTTOU:
-                    sys_exit((1 << 31) | W_STOPCODE(sig));
+                    sys_exit((1 << 31) | W_STOPCODE(sig->si_signo));
                     break;
 
             }
         } else {
             sigset_t old;
-            sys_sigprocmask(SIG_SETMASK, &act->sa_mask, &old);
+            sys_rt_sigprocmask(SIG_SETMASK, &act->sa_mask, &old, 0);
             
-            act->sa_handler = SIG_DFL;
-#ifdef SA_SIGINFO
             if(act->sa_flags & SA_SIGINFO)
-                ((void(*)(int, void*, void*)) fn) (sig, NULL, NULL);
+                ((void(*)(int, void*, void*)) fn) (sig->si_signo, sig, NULL);
             else
-#endif
-                ((void(*)(int)) fn) (sig);
+                ((void(*)(int)) fn) (sig->si_signo);
+                
 
-            sys_sigprocmask(SIG_SETMASK, &old, NULL);
+            sys_rt_sigprocmask(SIG_SETMASK, &old, NULL, 0);
         }
     }
 
 
     if(unlikely((list_length(current_task->signal.s_queue) > 0))) {            
-        register int sig;
+        siginfo_t* sig;
         sig = list_back(current_task->signal.s_queue);
         list_pop_back(current_task->signal.s_queue);
         
-        switch(sig) {
+        switch(sig->si_signo) {
             case SIGKILL:
+                kfree(sig);
                 sys_exit((1 << 31) | W_EXITCODE(0, SIGKILL));
                 break;
             case SIGSTOP:
                 sys_exit((1 << 31) | W_STOPCODE(SIGSTOP));
                 break;
             default:
-                __do(&current_task->signal.s_handlers[sig], sig);
+                __do(&current_task->signal.s_handlers[sig->si_signo], sig);
                 break;
         }
+
+        kfree(sig);
     }
 }
 
 
 
-void sched_signal(task_t* tk, int sig) {
-    if(unlikely(!tk))
+void sched_sigqueueinfo(task_t* tk, int signo, siginfo_t* sig) {
+    if(unlikely(!tk || !sig))
         return;
     
-    if(unlikely(sig < 0 || sig > TASK_NSIG))
+    if(unlikely(signo < 0 || signo > TASK_NSIG))
         return;
 
     if(unlikely(tk->status == TASK_STATUS_ZOMBIE))
         return;
 
-    if(unlikely(!tk->signal.s_handlers[sig].sa_handler))
+    if(unlikely(!tk->signal.s_handlers[signo].sa_handler))
         return;
 
 
-    list_push(tk->signal.s_queue, sig);
+    siginfo_t* vsig = (siginfo_t*) kmalloc(sizeof(siginfo_t), GFP_KERNEL);
+    memcpy(vsig, sig, sizeof(siginfo_t));
+    
+    vsig->si_signo = signo; 
+    list_push(tk->signal.s_queue, vsig);
 
-    if (tk->status != TASK_STATUS_STOP || (sig == SIGCONT || sig == SIGKILL))
+    if (tk->status != TASK_STATUS_STOP || (signo == SIGCONT || signo == SIGKILL))
         tk->status = TASK_STATUS_READY;
 
     tk->rusage.ru_nsignals++;

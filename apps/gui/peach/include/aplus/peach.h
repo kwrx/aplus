@@ -57,7 +57,7 @@ struct peach_msg {
         pid_t h_pid;
         uint16_t h_type;
         uint16_t h_size;
-    } __packed msg_header;
+    } __attribute__((packed)) msg_header;
 
     union {
         struct {
@@ -66,25 +66,25 @@ struct peach_msg {
             uint16_t d_width;
             uint16_t d_height;
             uint16_t d_bpp;
-        } __packed msg_display;
+        } __attribute__((packed)) msg_display;
 
         struct {
             uint32_t w_id;
             uint16_t w_width;
             uint16_t w_height;
             void* w_frame;
-        } __packed msg_window;
+        } __attribute__((packed)) msg_window;
 
         struct {
             uint32_t w_id;
             char w_title[1];
-        } __packed msg_window_title;
+        } __attribute__((packed)) msg_window_title;
 
         struct {
             uint32_t w_id;
             uint16_t w_flags;
             uint8_t w_set;
-        } __packed msg_window_flags;
+        } __attribute__((packed)) msg_window_flags;
 
         struct {
             uint32_t w_id;
@@ -92,16 +92,16 @@ struct peach_msg {
             uint16_t w_y;
             uint16_t w_width;
             uint16_t w_height;
-        } __packed msg_window_bounds;
+        } __attribute__((packed)) msg_window_bounds;
 
         struct {
             int e_errno;
             uint16_t e_type;
             char e_details[1];
-        } __packed msg_error;
+        } __attribute__((packed)) msg_error;
 
         char msg_data[BUFSIZ];
     };
-} __packed;
+} __attribute__((packed));
 
 #endif

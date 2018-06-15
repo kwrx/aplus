@@ -29,8 +29,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <termios.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
 
 #include <aplus/base.h>
 #include <aplus/fb.h>

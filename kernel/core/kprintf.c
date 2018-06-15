@@ -35,7 +35,13 @@ kprintf(const char *fmt, ...) {
     char buf[BUFSIZ] = {0};
     char bfmt[BUFSIZ] = {0};
     
-    sprintf(bfmt, "[%8f]%s", (double) timer_getus() / 1000000, fmt);
+    sprintf (bfmt, 
+        "[%8f] <%s(%d)>\t%s", 
+        (double) timer_getus() / 1000000,
+        current_task ? current_task->name : "kernel",
+        current_task ? current_task->pid : 1,
+        fmt
+    );
 
     va_list args;
     va_start(args, fmt);

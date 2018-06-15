@@ -14,14 +14,7 @@
 #ifndef FATFS_NO_DEF_TYPES
     typedef unsigned char uint8;
     typedef unsigned short uint16;
-
-    // If compiling on a 64-bit machine, use int as 32-bits
-    #ifdef FATFS_DEF_UINT32_AS_INT
-        typedef unsigned int uint32;
-    // Else for 32-bit machines & embedded systems, use long...
-    #else
-        typedef unsigned long uint32;
-    #endif
+    typedef unsigned int uint32;
 #endif
 
 #ifndef NULL

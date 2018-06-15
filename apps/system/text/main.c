@@ -22,6 +22,7 @@
  */
 
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -30,7 +31,7 @@
 #include <getopt.h>
 #include <errno.h>
 #include <sys/ioctl.h>
-#include <sys/termios.h>
+#include <termios.h>
 
 
 #define CTRL_KEY(ch) \

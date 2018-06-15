@@ -66,13 +66,13 @@ int mounts_init(void) {
     kprintf(LOG "mounts: mount \'root\' in \'%s\' with %s (defaults)\n", rootmnt, rootfs);
     
     if(unlikely(sys_mount(rootmnt, "/root", rootfs, 0, NULL) != 0))
-        kprintf(ERROR "%s: failed to mount /root\n", rootmnt);
+        kprintf(ERROR "%s: failed to mount /root: %s\n", rootmnt, strerror(errno));
 
      if(unlikely(sys_mount(NULL, "/root/dev", "devtmpfs", MS_NODEV | MS_NOSUID | MS_KERNMOUNT, NULL) != 0))
-        kprintf(ERROR "%s: failed to mount /dev\n", rootmnt);
+        kprintf(ERROR "%s: failed to mount /dev: %s\n", rootmnt, strerror(errno));
 
     if(unlikely(sys_chroot("/root") != 0))
-        kprintf(ERROR "%s: failed to chroot", "/root");
+        kprintf(ERROR "%s: failed to chroot: %s", "/root", strerror(errno));
 
 
 
@@ -128,8 +128,8 @@ int mounts_init(void) {
         }
 
         
-        if(unlikely(mount(opt[0], opt[1], opt[2], flags, NULL) != 0))
-            kprintf(ERROR "%s: failed to mount \'%s\' with \'%s\' (%s)\n", opt[0], opt[1], opt[2], opt[3]);
+        if(unlikely(sys_mount(opt[0], opt[1], opt[2], flags, NULL) != 0))
+            kprintf(ERROR "%s: failed to mount \'%s\' with \'%s\' (%s): %s\n", opt[0], opt[1], opt[2], opt[3], strerror(errno));
 
         kprintf(LOG "mounts: mount \'%s\' in \'%s\' with \'%s\' (%s)\n", opt[0], opt[1], opt[2], opt[3]);
     }

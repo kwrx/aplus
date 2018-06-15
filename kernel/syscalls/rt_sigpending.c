@@ -32,7 +32,15 @@
 
 SYSCALL(176, rt_sigpending,
 int sys_rt_sigpending(sigset_t* set, size_t setsize) {
-    kprintf(INFO "syscall: #%d %s() not implemented\n", __func__);
-    errno = ENOSYS;
-    return -1;
+    KASSERT(current_task);
+
+    if(unlikely(!set)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    list_each(current_task->signal.s_queue, q)
+        set->__bits[q->si_signo] = 1;
+
+    return 0;
 });

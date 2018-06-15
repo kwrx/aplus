@@ -32,11 +32,9 @@
 
 #include <aplus/base.h>
 #include <aplus/events.h>
-#include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 
-#include <sys/termio.h>
-#include <sys/termios.h>
+#include <termios.h>
 #include <sys/ioctl.h>
 
 
@@ -65,7 +63,7 @@ int tty_daemon(void* unused) {
 
     int key_ctrl = 0;
     struct termios ios;
-    sys_ioctl(stdio, TIOCGETA, &ios);
+    sys_ioctl(stdio, TCGETA, &ios);
 
 
     for(;;) {
