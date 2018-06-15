@@ -36,7 +36,7 @@ int sys_rt_sigprocmask(int how, const sigset_t* set, sigset_t* old, size_t setsi
     KASSERT(current_task);
 
     if(likely(old))
-        memcpy(old, &current_task->signal.s_mask, sizeof(sigset_t));
+        memcpy(old, &current_task->signal.s_mask, setsize);
 
     if(unlikely(!set))
         return 0;
@@ -44,17 +44,19 @@ int sys_rt_sigprocmask(int how, const sigset_t* set, sigset_t* old, size_t setsi
     
     switch(how) {
         case SIG_BLOCK:
-            for(int i = 0; i < _NSIG; i++)
-                if(set->__bits[i])
-                    current_task->signal.s_mask.__bits[i] = 1;
+            for(int i = 0; i < TASK_NSIG; i++)
+                if(sigismember(&current_task->signal.s_mask, i))
+                    sigaddset(&current_task->signal.s_mask, i);
+            
             break;
         case SIG_UNBLOCK:
-            for(int i = 0; i < _NSIG; i++)
-                if(set->__bits[i])
-                    current_task->signal.s_mask.__bits[i] = 0;
+            for(int i = 0; i < TASK_NSIG; i++)
+                if(sigismember(&current_task->signal.s_mask, i))
+                    sigdelset(&current_task->signal.s_mask, i);
+            
             break;
         case SIG_SETMASK:
-            memcpy(&current_task->signal.s_mask, set, sizeof(sigset_t));
+            memcpy(&current_task->signal.s_mask, set, setsize);
             break;
         default:
             errno = EINVAL;

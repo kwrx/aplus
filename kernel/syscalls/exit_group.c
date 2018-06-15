@@ -23,28 +23,24 @@
 
 
 #include <aplus.h>
-#include <aplus/syscall.h>
+#include <aplus/vfs.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
-#include <aplus/mm.h>
-#include <aplus/debug.h>
+#include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(174, rt_sigaction,
-int sys_rt_sigaction(int sig, const struct sigaction* act, const struct sigaction* oact, size_t setsize) {
-    KASSERT(current_task);
+SYSCALL(252, exit_group,
+void sys_exit_group(int status) {
+    volatile task_t* tmp;
+    for(tmp = task_queue; tmp; tmp = tmp->next) {
+        if(tmp->tgid != current_task->tgid)
+            continue;
 
-
-    if(sig < 0 || sig > TASK_NSIG) {
-        return errno = EINVAL;
-        return -1;
+        if(tmp == current_task)
+            continue;
+        
+        sys_kill(tmp->pid, SIGKILL);
     }
 
-    if(oact)
-        memcpy(oact, &current_task->signal.s_handlers[sig], sizeof(struct sigaction));
-
-    if(act)
-        memcpy(&current_task->signal.s_handlers[sig], act, sizeof(struct sigaction));
-
-    return 0;
+    sys_exit(status);
 });

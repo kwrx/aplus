@@ -100,9 +100,7 @@ int libk_init() {
     kernel_pthread.errno_val = 0;
     kernel_pthread.locale = (locale_t) &__c_dot_utf8_locale;
 
-    int i;
-    for(i = 0; i < (_NSIG / 8 / sizeof(long)); i++)
-        kernel_pthread.sigmask[i] = ~0;
+    sigfillset((sigset_t*) &kernel_pthread.sigmask);
 
     return 0;
 }

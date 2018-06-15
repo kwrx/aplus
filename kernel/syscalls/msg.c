@@ -43,7 +43,7 @@ int sys_msg_send(pid_t pid, void* data, size_t len) {
     volatile task_t* tmp;
     for(tmp = task_queue; tmp; tmp = tmp->next) {
         if(tmp->pid == pid) {
-            if(tmp->signal.s_mask.__bits[SIGMSG]) {
+            if(sigismember(&tmp->signal.s_mask, SIGMSG)) {
                 errno = EPERM;
                 return 0;
             }

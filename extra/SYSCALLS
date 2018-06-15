@@ -97,6 +97,7 @@
 187 sendfile
 190 vfork
 191 getrlimit
+192 mmap_pgoff
 198 lchown
 199 getuid
 200 getgid
@@ -118,6 +119,7 @@
 216 setfsgid
 221 fcntl64
 243 set_thread_area
+252 exit_group
 258 set_tid_address
 265 clock_gettime
 266 clock_getres

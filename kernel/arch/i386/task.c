@@ -122,8 +122,8 @@ void fork_handler(i386_context_t* context) {
     child->starttime = timer_getticks();
 
 
-    memcpy(child->signal.s_handlers, current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
-    child->signal.s_mask = current_task->signal.s_mask;
+    memcpy((void*) &child->signal.s_handlers, (void*) &current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
+    memcpy((void*) &child->signal.s_mask, (void*) &current_task->signal.s_mask, sizeof(sigset_t));
     
     list_each(current_task->signal.s_queue, q)
         list_push(child->signal.s_queue, q);
@@ -217,8 +217,8 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
 
     
     if(flags & CLONE_SIGHAND) {
-        memcpy(child->signal.s_handlers, current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
-        child->signal.s_mask = current_task->signal.s_mask;
+        memcpy((void*) &child->signal.s_handlers, (void*) &current_task->signal.s_handlers, sizeof(struct sigaction) * TASK_NSIG);
+        memcpy((void*) &child->signal.s_mask, (void*) &current_task->signal.s_mask, sizeof(sigset_t));
         
         list_each(current_task->signal.s_queue, q)
             list_push(child->signal.s_queue, q);

@@ -239,6 +239,8 @@ void sched_sigqueueinfo(task_t* tk, int signo, siginfo_t* sig) {
     if(unlikely(!tk->signal.s_handlers[signo].sa_handler))
         return;
 
+    if(unlikely(sigismember(&tk->signal.s_mask, signo)))
+        return;
 
     siginfo_t* vsig = (siginfo_t*) kmalloc(sizeof(siginfo_t), GFP_KERNEL);
     memcpy(vsig, sig, sizeof(siginfo_t));

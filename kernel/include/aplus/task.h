@@ -44,7 +44,7 @@
 #define TASK_PRIO_MIN                   19
 #define TASK_PRIO_REGULAR               0
 
-#define TASK_NSIG                       64
+#define TASK_NSIG                       _NSIG
 #define TASK_NARGS                      8192
 #define TASK_NAUXV                      38
 

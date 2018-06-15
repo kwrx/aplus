@@ -45,7 +45,7 @@ int sys_kill(pid_t pid, int signal) {
                     ret;                                            \
                                                                     \
                                                                     \
-                if(tmp->signal.s_mask.__bits[signal]) {             \
+                if(sigismember(&tmp->signal.s_mask, signal)) {      \
                     if(pid <= 0)                                    \
                         continue;                                   \
                                                                     \

@@ -30,21 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(174, rt_sigaction,
-int sys_rt_sigaction(int sig, const struct sigaction* act, const struct sigaction* oact, size_t setsize) {
-    KASSERT(current_task);
-
-
-    if(sig < 0 || sig > TASK_NSIG) {
-        return errno = EINVAL;
-        return -1;
-    }
-
-    if(oact)
-        memcpy(oact, &current_task->signal.s_handlers[sig], sizeof(struct sigaction));
-
-    if(act)
-        memcpy(&current_task->signal.s_handlers[sig], act, sizeof(struct sigaction));
-
-    return 0;
+SYSCALL(192, mmap_pgoff,
+void* sys_mmap_pgoff(void* addr, size_t len, int prot, int flags, int fd) {
+    return sys_mmap(addr, len, prot, flags, fd, 0);
 });

@@ -149,7 +149,7 @@ int main(int argc, char** argv) {
         return 1;
 
     signal(SIGTERM, SIG_IGN);
-    signal(SIGQUIT, SIG_IGN); /* FIXME: sigprocmask */
+    signal(SIGQUIT, SIG_IGN);
 
     fcntl(open("/dev/stdin", O_RDONLY), F_DUPFD, STDIN_FILENO);
     fcntl(open("/dev/stdout", O_WRONLY), F_DUPFD, STDOUT_FILENO);
