@@ -53,6 +53,7 @@
 #include <libgen.h>
 #include <poll.h>
 #include <termios.h>
+#include <limits.h>
 
 
 #ifdef _POSIX_SOURCE

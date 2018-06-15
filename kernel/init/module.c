@@ -182,7 +182,7 @@ int module_load(char* name) {
                 default:
                     sym[i].st_value += (Elf_Addr) ((uintptr_t) core + shdr[sym[i].st_shndx].sh_addr);
 
-                    if(ELF_SYM_TYPE(sym[i].st_info) != STT_SECTION)
+                    if(ELF_ST_TYPE(sym[i].st_info) != STT_SECTION)
                         module_export(mod, (char*) ((uintptr_t) names + sym[i].st_name), (void*) sym[i].st_value);
 
                     break;
@@ -200,9 +200,9 @@ int module_load(char* name) {
 
             for(int j = 0; j < shdr[i].sh_size / sizeof(Elf_Rel); j++) {
                 Elf_Addr* ptr = (Elf_Addr*) ((uintptr_t) core + shdr[shdr[i].sh_info].sh_addr + rel[j].r_offset);
-                Elf_Sym* sym = &stab[ELF_REL_SYM(rel[j].r_info)];
+                Elf_Sym* sym = &stab[ELF_R_SYM(rel[j].r_info)];
 
-                switch(ELF_REL_TYPE(rel[j].r_info)) {
+                switch(ELF_R_TYPE(rel[j].r_info)) {
                     case R_386_32:
                         *ptr += sym->st_value;
                         break;
@@ -263,7 +263,7 @@ int module_run(char* name) {
 
 int module_check(void* image, size_t size, char** retname) {
     Elf_Ehdr* hdr = (Elf_Ehdr*) image;
-    if(memcmp(hdr->e_ident, ELF_MAGIC, sizeof(ELF_MAGIC) - 1) || (elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
+    if(memcmp(hdr->e_ident, ELFMAG, sizeof(ELFMAG) - 1) || (elf_check_machine(hdr)) || (hdr->e_type != ET_REL)) {
         errno = ENOEXEC;
         return -1;
     }

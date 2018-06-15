@@ -30,7 +30,7 @@
 
 
 int elf_check_machine(Elf_Ehdr* elf) {
-    if((elf->e_machine == EM_386) || (elf->e_machine == EM_486))
+    if(likely(elf->e_machine == EM_386))
         return 0;
 
     return -1;

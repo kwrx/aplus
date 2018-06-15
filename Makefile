@@ -38,6 +38,9 @@ CONFIG:
 	$(shell sed -i "s/#define TARGET.*/#define TARGET \"$(TARGET)\"/" config.h)
 	@echo "  GEN    " root/etc/motd
 	$(shell sed -i "s/https:\/\/github.com\/kwrx\/aPlus.*/https:\/\/github.com\/kwrx\/aPlus\/commit\/$(shell git rev-parse --short HEAD)/" ./root/etc/motd)
+	@echo "  GEN    " extra/SYSCALLS
+	$(shell sed -i "6,$$ d" extra/SYSCALLS)
+	$(shell find kernel/syscalls/* -type f -name "*.c" -print | xargs cat | grep SYSCALL | sed "s/^SYSCALL//" | sed "s/^.//" | sed "s/,//g" | sort -n | sed "s/^//" >> extra/SYSCALLS)
 
 
 $(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES
@@ -124,6 +127,7 @@ init:
 	@mkdir -p root/usr/local/lib
 	@mkdir -p root/usr/local/include
 	@mkdir -p root/usr/local/share
+	@mkdir -p root/boot/mods
 
 hdd:
 	@dd status=none if=/dev/zero of=hdd.img bs=4M count=30

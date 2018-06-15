@@ -143,7 +143,7 @@ extern int sys_setitimer(int, const struct itimerval*, struct itimerval*);
 extern int sys_getitimer(int, struct itimerval*);
 extern int sys_setpriority(int, id_t, int);
 extern int sys_wait4(pid_t, int*, int, struct rusage*);
-
+extern int sys_fcntl64(int fd, int cmd, long arg);
 
 extern int mounts_init();
 extern int core_init();
