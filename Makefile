@@ -114,10 +114,16 @@ release: $(KERNEL_OUTPUT)	\
 	@xz -z -T2 -q $(HOST)-aplus-$(KERNEL_VERSION).tar
 
 init:
-	@mkdir -p include
-	@mkdir -p build/newlib
-	@mount --bind /opt/cross/include include
-	@mount --bind /opt/src/newlib/3.0.0/newlib-3.0.0/newlib/libc/sys/aplus build/newlib
+	@mkdir -p root/usr/bin
+	@mkdir -p root/usr/sbin
+	@mkdir -p root/usr/lib
+	@mkdir -p root/usr/include
+	@mkdir -p root/usr/share
+	@mkdir -p root/usr/local
+	@mkdir -p root/usr/local/bin
+	@mkdir -p root/usr/local/lib
+	@mkdir -p root/usr/local/include
+	@mkdir -p root/usr/local/share
 
 hdd:
 	@dd status=none if=/dev/zero of=hdd.img bs=4M count=30
