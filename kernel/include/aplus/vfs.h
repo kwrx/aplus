@@ -130,7 +130,7 @@ typedef struct fsys {
 } fsys_t;
 
 typedef struct mountpoint {
-    ino64_t id;
+    ino_t id;
     inode_t* root;
     struct mountinfo* info;
     struct mountpoint* parent;
@@ -157,7 +157,7 @@ struct inode_childs {
 struct inode {
     char* name;
     dev_t dev;
-    ino64_t ino;
+    ino_t ino;
     mode_t mode;
     nlink_t nlink;
     uid_t uid;
@@ -246,7 +246,7 @@ static struct {
 #endif
 
 int vfs_init(void);
-ino64_t vfs_inode();
+ino_t vfs_inode();
 
 int vfs_open(struct inode* inode);
 int vfs_close(struct inode* inode);

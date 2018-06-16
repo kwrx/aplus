@@ -23,14 +23,23 @@
 
 
 #include <aplus.h>
-#include <aplus/syscall.h>
+#include <aplus/vfs.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
-#include <aplus/mm.h>
+#include <aplus/syscall.h>
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(192, mmap_pgoff,
-void* sys_mmap_pgoff(void* addr, size_t len, int prot, int flags, int fd) {
-    return sys_mmap(addr, len, prot, flags, fd, 0);
-});
+
+SYSCALL(90, _mmap_old,
+    void* sys__mmap_old(uintptr_t* p) {
+        return sys_mmap(
+            (void*) p[0],
+            (size_t) p[1],
+            (int) p[2],
+            (int) p[3],
+            (int) p[4],
+            (off_t) p[5] / PAGE_SIZE
+        );
+    }
+);

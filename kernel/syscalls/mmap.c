@@ -23,21 +23,21 @@
 
 
 #include <aplus.h>
-#include <aplus/vfs.h>
+#include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
-#include <aplus/syscall.h>
+#include <aplus/mm.h>
 #include <aplus/debug.h>
 #include <libc.h>
 
-void* sys_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t off) {    
-    if(unlikely(!len)) {
-        errno = EINVAL;
-        return MAP_FAILED;
-    }
+
+static void* do_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t pgoff) {        
+    if(unlikely(!len))
+        return errno = EINVAL, MAP_FAILED;
+    
 
     inode_t* inode = NULL;
-    if(unlikely(!(flags & MAP_ANON))) {
+    if(unlikely(!(flags & MAP_ANONYMOUS))) {
         if(fd < 0)
             return errno = EBADF, MAP_FAILED;
 
@@ -46,8 +46,8 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t off) {
     }
 
     if(len & (PAGE_SIZE - 1)) {
+        len += PAGE_SIZE - 1;
         len &= ~(PAGE_SIZE - 1);
-        len += PAGE_SIZE;
     }
 
 
@@ -67,33 +67,20 @@ void* sys_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t off) {
             rd = (uintptr_t) kvalloc(len, GFP_ATOMIC);
     }
 
-    if(unlikely(!rd)) {
-        errno = ENOMEM;
-        return MAP_FAILED;
-    }
+    if(unlikely(!rd))
+        return errno = ENOMEM, MAP_FAILED;
 
 
-    if(flags & MAP_ANON)
-        memset((void*) rd, 0, len);
+    if(flags & MAP_ANONYMOUS)
+        ; //memset((void*) rd, 0, len);
     else
-        if(vmm_swap_setup(rd, off, len, inode, prot, flags) < 0)
+        if(vmm_swap_setup(rd, pgoff * PAGE_SIZE, len, inode, prot, flags) < 0)
             return errno = EFAULT, MAP_FAILED;
 
 
     return (void*) rd;
 }
 
-SYSCALL(90, _mmap,
-    void* sys__mmap(uintptr_t* p) {
-        return sys_mmap(
-            (void*) p[0],
-            (size_t) p[1],
-            (int) p[2],
-            (int) p[3],
-            (int) p[4],
-            (off_t) p[5] / 4096
-        );
-    }
+SYSCALL(192, mmap,
+    __weak_alias(do_mmap, sys_mmap);
 );
-
-EXPORT(sys_mmap);

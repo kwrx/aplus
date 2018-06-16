@@ -111,11 +111,12 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
                   "\t Address: %p\n"
                   "\t Error: %p\n"
                   "\t PC: %p (%s)\n"
-                  "\t SP: %p\n",
+                  "\t SP: %p\n"
+                  "\t GS: %p\n",
                   errmsg, 
                   current_task->pid, current_task->name,
                   dump, errcode,
-                  context->eip, sym, context->esp
+                  context->eip, sym, context->esp, context->gs
     );
 
     if(!dump)

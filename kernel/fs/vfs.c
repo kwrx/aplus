@@ -305,8 +305,8 @@ int vfs_fsys_register(uint32_t id, const char* name, int (*mount) (struct inode*
 }
 
 
-ino64_t vfs_inode() {
-    static ino64_t ino = UINT32_MAX;
+ino_t vfs_inode() {
+    static ino_t ino = UINT32_MAX;
     return ino++;
 }
 

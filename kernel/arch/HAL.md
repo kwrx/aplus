@@ -17,6 +17,7 @@
 ## Task
     `typedef STRUCT ARCH_task_context`
 
+    `int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo)`
     `volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg)`
     `volatile task_t* task_fork(void)`
     `void task_yield(void)`

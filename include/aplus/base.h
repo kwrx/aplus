@@ -66,6 +66,10 @@
 #        undef __weak
 #    endif
 
+#    ifdef __weak_alias
+#        undef __weak_alias
+#    endif
+
 #    ifdef __packed
 #        undef __packed
 #    endif
@@ -100,8 +104,14 @@
 
 #    define __PRAGMA(x)                     _Pragma(#x)
 #    define WARNING(x)                      __PRAGMA(GCC diagnostic ignored x)
+
+#    define __weak_alias(old, new)          \
+	    extern __typeof(old) new __attribute__((weak, alias(#old)))
+
+
 #else
 #    define __weak
+#    define __weak_alias(x, y)
 #    define __packed
 #    define __section(x)
 #    define __align(x)

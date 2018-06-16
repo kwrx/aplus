@@ -148,6 +148,7 @@ int main(int argc, char** argv) {
     if(getppid() != 1)
         return 1;
 
+
     signal(SIGTERM, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 
@@ -162,6 +163,7 @@ int main(int argc, char** argv) {
     init_welcome();
     init_environment();
     init_initd();
+    
 
 
     ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("init.locale", "en-US"));

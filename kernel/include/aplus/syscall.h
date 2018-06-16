@@ -31,7 +31,7 @@ int syscall_unregister(int);
 void syscall_ack(void);
 
 
-long syscall_handler(long, long, long, long, long, long);
+long syscall_handler(long, long, long, long, long, long, long);
 
 
 

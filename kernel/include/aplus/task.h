@@ -104,7 +104,7 @@ typedef struct task {
 
     void* context;
     void* sys_stack;
-    void* thread_area;
+    int thread_area;
         
     
     struct tms clock;

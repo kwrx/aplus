@@ -30,16 +30,33 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(45, brk,
-void* sys_brk(void* p) {
-    intptr_t c = (intptr_t) sys_sbrk(0);
-    intptr_t d = (intptr_t) p;
 
-    if(unlikely(!p))
-        return (void*) c;
+static int __check(struct stat* st, int flags, int rdflags, int wrflags, int exflags) {
+	if(flags & R_OK)
+		if(!(st->st_mode & rdflags))
+			return -1;
 
-    if((p = sys_sbrk(d - c)) == (void*) -1)
-        return (void*) d;
+	if(flags & W_OK)
+		if(!(st->st_mode & wrflags))
+			return -1;
 
-    return p;
+	if(flags & X_OK)
+		if(!(st->st_mode & exflags))
+			return -1;
+
+	return 0;
+}
+
+SYSCALL(33, access,
+int sys_access(const char* pathname, int flags) {
+    struct stat st;
+	if(sys_stat(pathname, &st) != 0)
+		return -1;
+
+    if(current_task->uid == st.st_uid)
+		return __check(&st, flags, S_IRUSR, S_IWUSR, S_IXUSR);
+	if(current_task->gid == st.st_gid)
+		return __check(&st, flags, S_IRGRP, S_IWGRP, S_IXGRP);
+
+	return __check(&st, flags, S_IROTH, S_IWOTH, S_IXOTH);
 });

@@ -59,13 +59,14 @@ static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
     KASSERT(phdr);
 
 
-    int args_index = 0;
+    int args_index = 1;
     int argc = 0;
 
     #define ARG(x)          \
         args[args_index++] = (long) x
     #define NEWAUXENT(x, y) \
         ARG(x); ARG(y)
+
 
     for(int i = 0; current_task->argv[i]; i++, argc++)
         ARG(current_task->argv[i]);
@@ -74,6 +75,8 @@ static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
     for(int i = 0; current_task->environ[i]; i++)
         ARG(current_task->environ[i]);
     ARG(NULL);
+
+    args[0] = argc;
 
 
     NEWAUXENT(AT_PHDR, phdr);
@@ -87,6 +90,7 @@ static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
     NEWAUXENT(AT_EGID, current_task->gid);
     NEWAUXENT(AT_CLKTCK, CLOCKS_PER_SEC);
     NEWAUXENT(AT_NULL, NULL);
+
 
     if(__args)
         *__args = args;
@@ -275,6 +279,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
 
     INTR_ON;
     syscall_ack();
+
 
     __start(args);
     __builtin_unreachable();

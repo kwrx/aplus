@@ -29,26 +29,31 @@
 #include <aplus/intr.h>
 #include <libc.h>
 
-
-#define MAX_SYSCALL            1024
-
-typedef long (*syscall_handler_t)
-        (long, long, long, long, long);
-
-
-static spinlock_t lck_syscall;
-static syscall_handler_t __handlers[MAX_SYSCALL];
-
 extern int syscalls_start;
 extern int syscalls_end;
 
 
 
+typedef long (*syscall_handler_t)
+        (long, long, long, long, long, long);
+
+#define MAX_SYSCALL             1024
+static syscall_handler_t syshandlers[MAX_SYSCALL];
+
+
+
+
+static void syscall_error(long number, long p0, long p1, long p2, long p3, long p4, long p5, int err) {
+    kprintf (ERROR
+        "syscall: #%d (%p, %p, %p, %p, %p, %p): %s\n",
+        number, p0, p1, p2, p3, p4, p5,
+        strerror(err)
+    );
+}
+
 
 int syscall_init(void) {
-    spinlock_init(&lck_syscall);
-
-    memset(__handlers, 0, sizeof(__handlers));
+    memset(syshandlers, 0, sizeof(syshandlers));
     
     struct {
         int number;
@@ -71,44 +76,42 @@ int syscall_init(void) {
 
 int syscall_register(int number, void* handler) {
     KASSERT(number < MAX_SYSCALL);
-    KASSERTF(!__handlers[number], "%d", number);
+    KASSERTF(!syshandlers[number], "%d", number);
 
-    __handlers[number] = (syscall_handler_t) handler;
+    syshandlers[number] = (syscall_handler_t) handler;
     return 0;
 }
 
 int syscall_unregister(int number) {
     KASSERT(number < MAX_SYSCALL);
 
-    __handlers[number] = (syscall_handler_t) NULL;
+    syshandlers[number] = (syscall_handler_t) NULL;
     return 0;
 }
 
 
-long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4) {
+long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4, long p5) {
     if(unlikely(number > MAX_SYSCALL))
-        return errno = ENOSYS, -1;
+        return syscall_error(number, p0, p1, p2, p3, p4, p5, ENOSYS), -ENOSYS;
 
-    if(unlikely(!__handlers[number])) {
-        kprintf(ERROR "syscall: called invalid syscall #%d (%p, %p, %p, %p, %p)\n", number, p0, p1, p2, p3, p4);
-        return errno = ENOSYS, -1;
-    }
+    if(unlikely(!syshandlers[number]))
+        return syscall_error(number, p0, p1, p2, p3, p4, p5, ENOSYS), -ENOSYS;
     
 
-    //spinlock_lock(&lck_syscall);
-    if(unlikely(spinlock_trylock(&lck_syscall) != 0))
-        kprintf(WARN "syscall: context locked for %d from %d\n", number, sys_getpid());
+    errno = 0;
+    long r = syshandlers[number] (p0, p1, p2, p3, p4, p5);
+
+    if(errno != 0) {
+        syscall_error(number, p0, p1, p2, p3, p4, p5, errno);
+        r = -errno;
+    }
 
     INTR_ON;
-    long r = __handlers[number] (p0, p1, p2, p3, p4);
-    syscall_ack();
-
     return r;
 }
 
 void syscall_ack(void) {
     INTR_ON;
-    spinlock_unlock(&lck_syscall);
 }
 
 EXPORT(syscall_register);

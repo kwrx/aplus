@@ -345,6 +345,14 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
     vmm_switch(pd);
 #endif
 
+
+#if 0
+    __asm__ __volatile__ (
+        "mov gs, %0         \n"
+        : : "r"(new_task->thread_area * 8)
+    );
+#endif
+
     __asm__ __volatile__ (
         "cli                \n"
         "mov ebx, %0        \n"
@@ -385,7 +393,7 @@ void task_release(volatile task_t* task) {
             unmap_page(p);
     }
 
-    task_set_thread_area(task, NULL);
+    //task_set_thread_area(task, NULL);
     //vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
 }
 
@@ -399,13 +407,13 @@ int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
         if(!tk->thread_area)
             return errno = EINVAL, -1;
 
-        *(uint64_t*) tk->thread_area = 0;
+        GDT32[tk->thread_area] = 0;
         return 0;
     }
 
     int i;
     if((i = uinfo->entry_number) == -1) {
-        for(i = 0; i < 8192; i++) {
+        for(i = 3; i < 8192; i++) {
             if(GDT32[i] != 0)
                 continue;
 
@@ -417,7 +425,7 @@ int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
             return -1;
         }
 
-        tk->thread_area = &GDT32[i];
+        tk->thread_area =
         uinfo->entry_number = i;
     }
 
@@ -481,12 +489,14 @@ int task_init(void) {
 
     t->context = &__c;
     t->sys_stack = &__sys_stack[CONFIG_STACK_SIZE];
+    t->thread_area = 2; /* gs: 0x10 */
     CTX(t)->vmmpd = (uintptr_t) current_pdt;
 
 
     for(i = 0; i < RLIM_NLIMITS; i++)
         t->rlimits[i].rlim_cur =
         t->rlimits[i].rlim_max = RLIM_INFINITY;
+
 
 
     t->image = &t->__image;

@@ -31,8 +31,8 @@
 #include <libc.h>
 
 
-SYSCALL(141, getdents,
-int sys_getdents(int fd, struct dirent* buf, size_t size) {
+SYSCALL(220, getdents64,
+int sys_getdents64(int fd, struct dirent* buf, size_t size) {
     if(unlikely(fd > TASK_FD_COUNT)) {
         errno = EBADF;
         return -1;

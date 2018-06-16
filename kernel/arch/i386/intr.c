@@ -314,12 +314,7 @@ void isr_handler(i386_context_t* context) {
     int signo;
     switch(context->int_no) {
         case 0x80:
-            errno = 0;
-            context->eax = syscall_handler(context->eax, context->ebx, context->ecx, context->edx, context->esi, context->edi);
-            
-            if(errno != 0)
-                context->eax = -errno;
-
+            context->eax = syscall_handler(context->eax, context->ebx, context->ecx, context->edx, context->esi, context->edi, *(long*) (context->esp + 128));
             return;
         case 0x7F:
             switch(context->eax) {
