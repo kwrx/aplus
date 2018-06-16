@@ -61,7 +61,7 @@ int syscall_init(void) {
         char* name;
     } *handler = (void*) &syscalls_start;
 
-    for(
+    for (
         handler = (void*) &syscalls_start;
         (uintptr_t) handler < (uintptr_t) &syscalls_end;
         handler++

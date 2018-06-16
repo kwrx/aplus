@@ -100,6 +100,9 @@
 190 vfork
 191 getrlimit
 192 mmap
+195 stat64
+196 lstat64
+197 fstat64
 198 lchown
 199 getuid
 200 getgid

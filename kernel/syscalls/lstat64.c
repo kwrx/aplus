@@ -23,13 +23,21 @@
 
 
 #include <aplus.h>
-#include <aplus/vfs.h>
+#include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
-#include <aplus/syscall.h>
+#include <aplus/mm.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
-SYSCALL(108, fstat,
-int sys_fstat(int fd, struct stat* st) {
-    return sys_fstat64(fd, st);
+SYSCALL(196, lstat64,
+int sys_lstat64(const char* pathname, struct stat64* st) {
+    int fd = sys_open(pathname, O_RDONLY | O_NOFOLLOW, 0);
+    if(fd < 0)
+        return -1;
+
+    register int r = sys_fstat64(fd, st);
+    sys_close(fd);
+
+    return r; 
 });

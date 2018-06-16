@@ -29,7 +29,15 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-SYSCALL(108, fstat,
-int sys_fstat(int fd, struct stat* st) {
-    return sys_fstat64(fd, st);
+
+SYSCALL(195, stat64,
+int sys_stat64(const char* name, struct stat64* st) {
+    int fd = sys_open(name, O_RDONLY, 0);
+    if(fd < 0)
+        return -1;
+
+    register int r = sys_fstat64(fd, st);
+    sys_close(fd);
+
+    return r; 
 });

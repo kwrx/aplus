@@ -145,6 +145,7 @@ extern int sys_setpriority(int, id_t, int);
 extern int sys_wait4(pid_t, int*, int, struct rusage*);
 extern int sys_fcntl64(int fd, int cmd, long arg);
 extern int sys_dup2(int oldfd, int newfd);
+extern int sys_fstat64(int fd, struct stat64* st);
 
 extern int mounts_init();
 extern int core_init();
