@@ -23,18 +23,36 @@
 
 
 #include <aplus.h>
-#include <aplus/syscall.h>
+#include <aplus/vfs.h>
 #include <aplus/task.h>
+#include <aplus/ipc.h>
+#include <aplus/syscall.h>
+#include <aplus/network.h>
 #include <libc.h>
 
+SYSCALL(63, dup2,
+int sys_dup2(int oldfd, int newfd) {
+    if(oldfd < 0 || oldfd >= TASK_FD_COUNT) {
+        errno = EBADF;
+        return -1;
+    }
 
-SYSCALL(2, fork,
-int sys_fork(void) {
-    volatile task_t* child = task_fork();
-    errno = 0;
-    
-    if(child)
-        return child->pid;
+    if(newfd < 0 || newfd >= TASK_FD_COUNT) {
+        errno = EBADF;
+        return -1;
+    }
 
-    return 0;
+    if(!current_task->fd[oldfd].inode) {
+        errno = EBADF;
+        return -1;
+    }
+
+    if(oldfd == newfd)
+        return newfd;
+
+    if(current_task->fd[newfd].inode)
+        sys_close(newfd);
+
+    memcpy((void*) &current_task->fd[newfd], (void*) &current_task->fd[oldfd], sizeof(fd_t));
+    return newfd;
 });

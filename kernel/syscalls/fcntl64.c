@@ -48,13 +48,7 @@ int sys_fcntl64(int fd, int cmd, long arg) {
 
     switch(cmd) {
         case F_DUPFD:
-            if(fd == (int) arg)
-                return (int) arg;
-                
-            sys_close(arg);
-            memcpy((void*) &current_task->fd[arg], (void*) &current_task->fd[fd], sizeof(fd_t));
-    
-            return (int) arg;
+            return sys_dup2(fd, arg);
         case F_GETFD:
             return 0;
         case F_SETFD:

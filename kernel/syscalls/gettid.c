@@ -25,16 +25,13 @@
 #include <aplus.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/debug.h>
 #include <libc.h>
 
+SYSCALL(224, gettid,
+pid_t sys_gettid(void) {
+    if(unlikely(!current_task))
+        return 1;
 
-SYSCALL(2, fork,
-int sys_fork(void) {
-    volatile task_t* child = task_fork();
-    errno = 0;
-    
-    if(child)
-        return child->pid;
-
-    return 0;
+    return current_task->tgid;
 });

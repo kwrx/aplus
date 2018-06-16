@@ -37,9 +37,6 @@ long sys_set_tid_address(pid_t* tidptr) {
         return -1;
     }
 
-
-    kprintf(INFO "set_tid_address: %d\n", *tidptr);
-
-    current_task->tgid = *tidptr;
+    /* TODO */
     return (long) current_task->tgid;
 });

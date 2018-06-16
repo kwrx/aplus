@@ -33,11 +33,5 @@
 
 SYSCALL(243, set_thread_area,
 int sys_set_thread_area(struct __user_desc* uinfo) {
-
-    kprintf (
-        INFO "set_thread_area: e: %d, base: %p, limit: %p\n",
-        uinfo->entry_number, uinfo->base_addr, uinfo->limit
-    );
-
     return task_set_thread_area(current_task, uinfo);
 });

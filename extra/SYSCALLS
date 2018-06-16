@@ -36,6 +36,7 @@
 57 setpgid
 60 umask
 61 chroot
+63 dup2
 64 getppid
 66 setsid
 74 sethostname
@@ -94,6 +95,7 @@
 176 rt_sigpending
 177 rt_sigtimedwait
 178 rt_sigqueueinfo
+183 getcwd
 187 sendfile
 190 vfork
 191 getrlimit
@@ -119,6 +121,7 @@
 216 setfsgid
 220 getdents64
 221 fcntl64
+224 gettid
 243 set_thread_area
 252 exit_group
 258 set_tid_address

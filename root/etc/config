@@ -46,7 +46,7 @@ ui.wallpaper="/usr/share/images/wp.png"
 
 
 # -- [syncd]
-daemons.syncd.enabled="true"
+daemons.syncd.enabled="false"
 daemons.syncd.timeout=10
 
 
@@ -57,7 +57,7 @@ daemons.ntpd.server="it.pool.ntp.org"
 
 
 # -- [httpd]
-daemons.httpd.enabled="true"
+daemons.httpd.enabled="false"
 daemons.httpd.root="/srv/http"
 daemons.httpd.port=80
 

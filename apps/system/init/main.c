@@ -148,7 +148,6 @@ int main(int argc, char** argv) {
     if(getppid() != 1)
         return 1;
 
-
     signal(SIGTERM, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 
@@ -158,6 +157,7 @@ int main(int argc, char** argv) {
 
     setsid();
     tcsetpgrp(STDIN_FILENO, getpgrp());
+
 
     init_console();
     init_welcome();
