@@ -198,7 +198,7 @@ extern volatile task_t* task_clone(int (*) (void*), void*, int, void*);
 extern void task_yield(void);
 extern void task_release(volatile task_t* task);
 extern int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo);
-
+extern int task_fork_thread_area(int th_area);
 
 #define task_create_tasklet(nm, handler, task)                                                                  \
         task = task_clone(handler, NULL, CLONE_VM | CLONE_SIGHAND | CLONE_FILES | CLONE_FS, NULL);              \

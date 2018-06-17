@@ -46,7 +46,7 @@
 
 SYSCALL(114, wait4,
 int sys_wait4(pid_t pid, int* status, int options, struct rusage* usage) {
-        if(pid < -1)
+    if(pid < -1)
         __wait_for(v->pgid == -pid)
     else if(pid == -1)
         __wait_for(1)

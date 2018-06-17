@@ -33,5 +33,8 @@
 
 SYSCALL(243, set_thread_area,
 int sys_set_thread_area(struct __user_desc* uinfo) {
+    if(current_task->thread_area)
+        task_set_thread_area(current_task, NULL);
+    
     return task_set_thread_area(current_task, uinfo);
 });

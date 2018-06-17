@@ -40,8 +40,9 @@
 #define MM_POOL_SIZE                            131072
 #define MM_BLOCKSZ                              4096
 
+#ifndef PAGE_SIZE
 #define PAGE_SIZE                               (0x1000)
-
+#endif
 
 #define P2V(x)                                  ((x) + CONFIG_KERNEL_BASE)
 #define V2P(x)                                  __V2P((virtaddr_t) (x))

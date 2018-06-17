@@ -45,8 +45,6 @@ char* sys_getcwd(char* pt, size_t size) {
                     ;
 
     if(unlikely(!tmp)) {
-        kprintf(ERROR "sys_getcwd: could not detect CWD\n");
-
         errno = EINVAL;
         return NULL;
     }

@@ -32,16 +32,21 @@
 
 int
 kprintf(const char *fmt, ...) {
+    static int newline = 1;
     char buf[BUFSIZ] = {0};
     char bfmt[BUFSIZ] = {0};
     
-    sprintf (bfmt, 
-        "[%8f] <%s(%d)>\t%s", 
-        (double) timer_getus() / 1000000,
-        current_task ? current_task->name : "kernel",
-        current_task ? current_task->pid : 1,
-        fmt
-    );
+    if(newline) {
+        sprintf (bfmt, 
+            "[%8f] <%s(%d)>\t%s", 
+            (double) timer_getus() / 1000000,
+            current_task ? current_task->name : "kernel",
+            current_task ? current_task->pid : 0,
+            fmt
+        );
+
+        newline = 0;
+    }
 
     va_list args;
     va_start(args, fmt);
@@ -49,8 +54,12 @@ kprintf(const char *fmt, ...) {
     
     
     int i;
-    for(i = 0; i < out; i++)
+    for(i = 0; i < out; i++) {
+        if(unlikely(i == '\n'))
+            newline++;
+            
         debug_send(buf[i]);
+    }
 
 
     va_end(args);

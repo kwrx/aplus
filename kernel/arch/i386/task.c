@@ -129,7 +129,7 @@ void fork_handler(i386_context_t* context) {
         list_push(child->signal.s_queue, q);
 
 
-    child->thread_area = current_task->thread_area;
+    child->thread_area = task_fork_thread_area(current_task->thread_area);
     
     child->cwd = current_task->cwd;
     child->exe = current_task->exe;
@@ -212,7 +212,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     child->priority = current_task->priority;
     child->starttime = timer_getticks();
 
-    child->thread_area = current_task->thread_area;
+    child->thread_area = task_fork_thread_area(current_task->thread_area);
 
 
     
@@ -346,7 +346,7 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 #endif
 
 
-#if 0
+#if 1
     __asm__ __volatile__ (
         "mov gs, %0         \n"
         : : "r"(new_task->thread_area * 8)
@@ -393,7 +393,7 @@ void task_release(volatile task_t* task) {
             unmap_page(p);
     }
 
-    //task_set_thread_area(task, NULL);
+    task_set_thread_area(task, NULL);
     //vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
 }
 
@@ -407,8 +407,11 @@ int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
         if(!tk->thread_area)
             return errno = EINVAL, -1;
 
+        if(tk->thread_area < 3)
+            return 0;
+
         GDT32[tk->thread_area] = 0;
-        return 0;
+        return tk->thread_area = 2, 0;
     }
 
     int i;
@@ -420,10 +423,8 @@ int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
             break;
         }
 
-        if(i == 8192) {
-            errno = ESRCH;
-            return -1;
-        }
+        if(i == 8192)
+            return errno = ESRCH, -1;
 
         tk->thread_area =
         uinfo->entry_number = i;
@@ -456,6 +457,30 @@ int task_set_thread_area(volatile task_t* tk, struct __user_desc* uinfo) {
 
     gdt_load();
     return 0;
+}
+
+
+int task_fork_thread_area(int th_area) {
+     /* See kernel/arch/i386/intr.asm */
+    extern uint64_t GDT32[8192];
+    extern void gdt_load();
+
+    if(!th_area)
+        return errno = EINVAL, -1;
+
+    int i;
+    for(i = 3; i < 8192; i++) {
+        if(GDT32[i] != 0)
+            continue;
+
+        break;
+    }
+
+    if(i == 8192)
+        return errno = ESRCH, -1;
+
+    GDT32[i] = GDT32[th_area];
+    return i;
 }
 
 
