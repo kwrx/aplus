@@ -117,7 +117,7 @@ int sh_cmd_export(int argc, char** argv) {
 
     int e;
     if(strchr(argv[1], '='))
-        e = putenv(argv[1]);
+        e = putenv(strdup(argv[1]));
     else
         e = setenv("_", argv[1], 1);
 

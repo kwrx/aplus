@@ -7,8 +7,8 @@ int __putenv(char *, size_t, char *);
 
 void __env_rm_add(char *old, char *new)
 {
-	static char **env_alloced;
-	static size_t env_alloced_n;
+	static char **env_alloced = NULL;
+	static size_t env_alloced_n = 0;
 	for (size_t i=0; i < env_alloced_n; i++)
 		if (env_alloced[i] == old) {
 			env_alloced[i] = new;

@@ -82,7 +82,6 @@ static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
     NEWAUXENT(AT_PHDR, phdr);
     NEWAUXENT(AT_PHENT, hdr->e_phentsize);
     NEWAUXENT(AT_PAGESZ, PAGE_SIZE);
-    NEWAUXENT(AT_BASE, NULL);
     NEWAUXENT(AT_ENTRY, hdr->e_entry);
     NEWAUXENT(AT_UID, current_task->uid);
     NEWAUXENT(AT_EUID, current_task->uid);
@@ -103,7 +102,6 @@ static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
 
 SYSCALL(11, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
-
     if(unlikely(!filename || !argv || !envp)) {
         errno = EINVAL;
         return -1;
@@ -259,7 +257,7 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     current_task->argv = __new_argv;
     current_task->environ = __new_envp;
     current_task->image->start = (uintptr_t) __start;
-    current_task->image->end = ((current_task->image->start + size + PAGE_SIZE) & ~(PAGE_SIZE - 1)) + 0x10000;
+    current_task->image->end = ((current_task->image->start + size) & ~(PAGE_SIZE - 1)) + 0x10000;
     current_task->image->refcount = 1;
     current_task->vmsize += current_task->image->end - current_task->image->start;
     current_task->name = strdup(basename(__new_argv[0]));

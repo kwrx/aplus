@@ -63,7 +63,7 @@ static void show_version(int argc, char** argv) {
 
 
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** env) {
     
     static struct option long_options[] = {
         { "help", no_argument, NULL, 'h'},
@@ -71,8 +71,7 @@ int main(int argc, char** argv) {
         { NULL, 0, NULL, 0 }
     };
 
-    
-    
+        
     int c, idx;
     while((c = getopt_long(argc, argv, "", long_options, &idx)) != -1) {
         switch(c) {

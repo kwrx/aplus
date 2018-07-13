@@ -40,10 +40,10 @@
 #include <aplus/input.h>
 #include <aplus/kd.h>
 
-#define SYSCONFIG_VERBOSE
 #include <aplus/sysconfig.h>
 #include <aplus/utils/unicode.h>
 
+#include <pthread.h>
     
 
 static void init_initd() {
@@ -124,23 +124,27 @@ static void init_environment() {
         if(ln[strlen(ln) - 1] == '\n')
             ln[strlen(ln) - 1] = '\0';
 
+
         switch(ln[0]) {
             case '\0':
             case '#':
                 continue;
 
             default:
-                putenv(ln);
+                putenv(strdup(ln));
                 break;
         }
     }
+
+
+    fclose(fp);
 
 
     char* s;
     if(!(s = getenv("LANG")) || !strlen(s))
         setenv("LANG", (const char*) sysconfig("init.locale", "en-US"), 1);
 
-    fclose(fp);
+    ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("init.locale", "en-US"));
 }
 
 
@@ -148,6 +152,7 @@ int main(int argc, char** argv) {
     if(getppid() != 1)
         return 1;
 
+    
     signal(SIGTERM, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
 
@@ -163,10 +168,6 @@ int main(int argc, char** argv) {
     init_welcome();
     init_environment();
     init_initd();
-    
-
-
-    ioctl(STDIN_FILENO, TIOCLKEYMAP, (void*) sysconfig("init.locale", "en-US"));
     
     for(; errno != ECHILD; )
         waitpid(-1, NULL, 0);

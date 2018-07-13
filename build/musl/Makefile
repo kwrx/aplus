@@ -171,7 +171,7 @@ lib/libc.a: $(AOBJS)
 lib/libk.a: $(AOBJS)
 	rm -f $@
 	$(AR) rc $@ $(AOBJS)
-	$(AR) dv $@ lite_malloc.o malloc.o __pthread_self.o
+	$(AR) dv $@ malloc.o __pthread_self.o
 	$(RANLIB) $@
 
 $(EMPTY_LIBS):

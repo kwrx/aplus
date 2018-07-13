@@ -89,7 +89,7 @@ static char* gethost() {
 
 
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv, char** env) {
     
     static struct option long_options[] = {
         { "command", required_argument, NULL, 'c'},
