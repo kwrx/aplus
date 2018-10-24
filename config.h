@@ -29,7 +29,7 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "c693dfec"
+#define COMMIT "091ef68c"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/

@@ -72,7 +72,7 @@ static void* do_mmap(void* addr, size_t len, int prot, int flags, int fd, off_t 
 
 
     if(flags & MAP_ANONYMOUS)
-        ; //memset((void*) rd, 0, len);
+        memset((void*) rd, 0, len);
     else
         if(vmm_swap_setup(rd, pgoff * PAGE_SIZE, len, inode, prot, flags) < 0)
             return errno = EFAULT, MAP_FAILED;

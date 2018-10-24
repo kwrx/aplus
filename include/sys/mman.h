@@ -14,6 +14,7 @@ extern "C" {
 #define __NEED_ssize_t
 #endif
 
+#include <sys/types.h>
 #include <bits/alltypes.h>
 
 #define MAP_FAILED ((void *) -1)

@@ -1,7 +1,7 @@
 
 DEFINES         := -DKERNEL
 WARNINGS        := -Wall -Wno-discarded-qualifiers
-LIBS            := -laplus -lk -lm -lgcc
+LIBS            := -laplus -lc -lm -lgcc
 
 CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3 -g
 AFLAGS          := -c -I kernel/include -include config.h
@@ -25,7 +25,7 @@ LIBS            := -ldisasm $(LIBS)
 AFLAGS          += -masm=intel
 CFLAGS          += -masm=intel
 NFLAGS          += -felf
-VMM             += -M accel="kvm" -cpu host -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::80-:80 -no-kvm-irqchip
+VMM             += -M accel="kvm" -cpu host -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::80-:80
 endif
 
 ifeq ($(ARCH),arm)

@@ -125,6 +125,7 @@
 220 getdents64
 221 fcntl64
 224 gettid
+240 futex
 243 set_thread_area
 252 exit_group
 258 set_tid_address

@@ -87,7 +87,8 @@ int sys_wait4(pid_t pid, int* status, int options, struct rusage* usage) {
                 }
             }
         }
-            
+
+             
         if(status)
             *status = (int) w->exit.value;
 
