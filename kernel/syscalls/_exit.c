@@ -77,7 +77,6 @@ void sys_exit(int status) {
         return;
     }
 
-
     INTR_OFF;
 
     volatile task_t* tmp;
@@ -93,7 +92,6 @@ void sys_exit(int status) {
 
     if((--current_task->image->refcount) == 0)
         task_release(current_task);
-
 
     syscall_ack();
 

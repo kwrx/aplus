@@ -38,6 +38,7 @@
 61 chroot
 63 dup2
 64 getppid
+65 getpgrp
 66 setsid
 74 sethostname
 75 setrlimit
@@ -69,6 +70,7 @@
 132 getpgid
 133 fchdir
 140 _llseek
+141 getdents
 142 select
 143 flock
 144 msync

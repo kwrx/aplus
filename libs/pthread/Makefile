@@ -9,16 +9,11 @@ OUTPUT_A	:= $(SYSROOT)/$(TARGET)/lib/lib$(notdir $(PWD)).a
 OUTPUT_SO	:= $(ROOT)/root/usr/lib/lib$(notdir $(PWD)).so
 
 CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
-SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.S")
-OFILES		:=  $(CFILES:.c=.o) $(SFILES:.S=.o)
+CPPFILES	:=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
+OFILES		:=  $(CFILES:.c=.o) $(CXXFILES:.cpp=.o)
 
-DEFS		:= 	-DHAVE_FCNTL -D_NO_POSIX_SPAWN -D_GNU_SOURCE				\
-				-D_I386MACH_NEED_SOTYPE_FUNCTION -DMISSING_SYSCALL_NAMES	\
-				-DINTERNAL_NEWLIB -DHAVE_SYSTEM
-
-
-CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -fno-builtin -O2 -c -g $(DEFS)
-SFLAGS		:=  -pipe -fpic -fno-builtin -O2 -c -g $(DEFS)
+CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c -g
+CPPFLAGS	:=  -pipe -I include -fpic -O3 -c -g
 
 
 all: $(OUTPUT_A) $(OUTPUT_SO)
@@ -35,9 +30,9 @@ $(OUTPUT_SO): $(OFILES)
 	@echo "  CC     " $(subst $(ROOT)/,,$@)
 	@$(CC) $(CFLAGS) -o $@ $<
 
-.S.o:
-	@echo "  AS     " $(subst $(ROOT)/,,$@)
-	@$(CC) $(SFLAGS) -o $@ $<
+.cpp.o:
+	@echo "  CXX    " $(subst $(ROOT)/,,$@)
+	@$(CXX) $(CPPFLAGS) -o $@ $<
 	
 	
 clean:

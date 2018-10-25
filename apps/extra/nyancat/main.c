@@ -108,7 +108,6 @@ int main(int argc, char** argv) {
     signal(SIGINT, atexit_handler);
     signal(SIGQUIT, atexit_handler);
     signal(SIGTERM, atexit_handler);
-    signal(SIGKILL, atexit_handler);
 
     
     ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws);

@@ -58,6 +58,7 @@ EXPORT(__divmoddi4);
 #endif
 
 
+EXPORT(__locale_ctype_ptr);
 EXPORT(mbd);
 EXPORT(memset);
 EXPORT(memcpy);

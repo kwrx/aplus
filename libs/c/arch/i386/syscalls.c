@@ -271,7 +271,7 @@ SC(2, 271, utimes)
 
 
 /* Extension */
-SC(1, 800, isatty)
+//SC(1, 800, isatty)
 SC(1, 801, sbrk)
 SC(5, 802, openpty)
 SC(2, 803, statvfs)

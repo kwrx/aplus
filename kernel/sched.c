@@ -191,6 +191,7 @@ void sched_dosignals() {
             sigset_t old;
             sys_rt_sigprocmask(SIG_SETMASK, &act->sa_mask, &old, 0);
             
+
             if(act->sa_flags & SA_SIGINFO)
                 ((void(*)(int, void*, void*)) fn) (sig->si_signo, sig, NULL);
             else
@@ -234,9 +235,6 @@ void sched_sigqueueinfo(task_t* tk, int signo, siginfo_t* sig) {
         return;
 
     if(unlikely(tk->status == TASK_STATUS_ZOMBIE))
-        return;
-
-    if(unlikely(!tk->signal.s_handlers[signo].sa_handler))
         return;
 
     if(unlikely(sigismember(&tk->signal.s_mask, signo)))

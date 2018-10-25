@@ -51,55 +51,6 @@ extern char** args_dup(char**);
 
 
 
-static int get_args(long** __args, int fd, Elf_Ehdr* hdr) {
-    long* args = (long*) sys_sbrk((TASK_NARGS * 2 + TASK_NAUXV * 2) * sizeof(long));
-    KASSERT(args);
-
-    Elf_Phdr* phdr = (Elf_Phdr*) sys_sbrk(hdr->e_phentsize * hdr->e_phnum);
-    KASSERT(phdr);
-
-
-    int args_index = 1;
-    int argc = 0;
-
-    #define ARG(x)          \
-        args[args_index++] = (long) x
-    #define NEWAUXENT(x, y) \
-        ARG(x); ARG(y)
-
-
-    for(int i = 0; current_task->argv[i]; i++, argc++)
-        ARG(current_task->argv[i]);
-    ARG(NULL);
-
-    for(int i = 0; current_task->environ[i]; i++)
-        ARG(current_task->environ[i]);
-    ARG(NULL);
-
-    args[0] = argc;
-
-
-    NEWAUXENT(AT_PHDR, phdr);
-    NEWAUXENT(AT_PHENT, hdr->e_phentsize);
-    NEWAUXENT(AT_PAGESZ, PAGE_SIZE);
-    NEWAUXENT(AT_ENTRY, hdr->e_entry);
-    NEWAUXENT(AT_UID, current_task->uid);
-    NEWAUXENT(AT_EUID, current_task->uid);
-    NEWAUXENT(AT_GID, current_task->gid);
-    NEWAUXENT(AT_EGID, current_task->gid);
-    NEWAUXENT(AT_CLKTCK, CLOCKS_PER_SEC);
-    NEWAUXENT(AT_NULL, NULL);
-
-
-    if(__args)
-        *__args = args;
-
-
-    RXX(phdr, hdr->e_phoff, hdr->e_phentsize * hdr->e_phnum);
-    return 0;
-}
-
-
 SYSCALL(11, execve,
 int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     if(unlikely(!filename || !argv || !envp)) {
@@ -247,9 +198,11 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     if(is_dynamic)
         kprintf(WARN "elf: dynamic object not yet supported!\n");
     
+    sys_close(fd);
 
 
-    void (*__start) (long*) = (void (*) (long*)) hdr.e_entry;
+
+    void (*__start) (char**, char**) = (void (*) (char**, char**)) hdr.e_entry;
     KASSERT(__start);
 
 
@@ -267,18 +220,11 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     list_clear(current_task->signal.s_queue);
 
 
-    long* args;
-    if(get_args(&args, fd, &hdr) != 0)
-        kprintf(WARN "execve: could not create args for _start(): %s\n", strerror(errno));
-        
-    sys_close(fd);
-
-
 
     INTR_ON;
     syscall_ack();
 
 
-    __start(args);
+    __start(__new_argv, __new_envp);
     __builtin_unreachable();
 });

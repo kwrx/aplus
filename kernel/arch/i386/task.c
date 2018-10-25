@@ -129,7 +129,7 @@ void fork_handler(i386_context_t* context) {
         list_push(child->signal.s_queue, q);
 
 
-    child->thread_area = task_fork_thread_area(current_task->thread_area);
+    //child->thread_area = task_fork_thread_area(current_task->thread_area);
     
     child->cwd = current_task->cwd;
     child->exe = current_task->exe;
@@ -212,7 +212,7 @@ volatile task_t* task_clone(int (*fn) (void*), void* stack, int flags, void* arg
     child->priority = current_task->priority;
     child->starttime = timer_getticks();
 
-    child->thread_area = task_fork_thread_area(current_task->thread_area);
+    //child->thread_area = task_fork_thread_area(current_task->thread_area);
 
 
     
@@ -346,7 +346,7 @@ void task_switch(volatile task_t* prev_task, volatile task_t* new_task) {
 #endif
 
 
-#if 1
+#if 0
     __asm__ __volatile__ (
         "mov gs, %0         \n"
         : : "r"(new_task->thread_area * 8)
@@ -393,7 +393,7 @@ void task_release(volatile task_t* task) {
             unmap_page(p);
     }
 
-    task_set_thread_area(task, NULL);
+    //task_set_thread_area(task, NULL);
     //vmm_release((volatile pdt_t*) CTX(task)->vmmpd);
 }
 

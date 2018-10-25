@@ -25,7 +25,7 @@ LIBS            := -ldisasm $(LIBS)
 AFLAGS          += -masm=intel
 CFLAGS          += -masm=intel
 NFLAGS          += -felf
-VMM             += -M accel="kvm" -cpu host -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::80-:80
+VMM             += -M accel="kvm" -cpu host -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::8000-:8000
 endif
 
 ifeq ($(ARCH),arm)

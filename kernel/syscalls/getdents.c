@@ -23,20 +23,17 @@
 
 
 #include <aplus.h>
-#include <aplus/syscall.h>
+#include <aplus/vfs.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
-#include <aplus/mm.h>
+#include <aplus/syscall.h>
 #include <aplus/debug.h>
 #include <libc.h>
 
 
-SYSCALL(243, set_thread_area,
-int sys_set_thread_area(struct __user_desc* uinfo) {
-    kprintf(INFO "[%d] %s: %s() deprecated syscall\n", current_task->pid, current_task->name, __func__);
-    
-    if(current_task->thread_area)
-        task_set_thread_area(current_task, NULL);
-    
-    return task_set_thread_area(current_task, uinfo);
+SYSCALL(141, getdents,
+int sys_getdents(int fd, struct dirent* buf, size_t size) {
+    return sys_getdents64(fd, buf, size);
 });
+
+

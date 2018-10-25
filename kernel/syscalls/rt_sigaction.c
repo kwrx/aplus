@@ -36,7 +36,7 @@ int sys_rt_sigaction(int sig, const struct sigaction* act, const struct sigactio
 
 
     if(sig < 0 || sig > TASK_NSIG) {
-        return errno = EINVAL;
+        errno = EINVAL;
         return -1;
     }
 
