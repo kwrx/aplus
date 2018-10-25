@@ -98,7 +98,7 @@ long syscall_handler(long number, long p0, long p1, long p2, long p3, long p4, l
         return syscall_error(number, p0, p1, p2, p3, p4, p5, ENOSYS), -ENOSYS;
     
 
-    errno = 0;
+    //errno = 0;
     long r = syshandlers[number] (p0, p1, p2, p3, p4, p5);
 
     //if(unlikely(errno != 0))
