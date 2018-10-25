@@ -34,17 +34,21 @@
 static int __check(struct stat* st, int flags, int rdflags, int wrflags, int exflags) {
 	if(flags & R_OK)
 		if(!(st->st_mode & rdflags))
-			return -1;
+			goto noperm;
 
 	if(flags & W_OK)
 		if(!(st->st_mode & wrflags))
-			return -1;
+			goto noperm;
 
 	if(flags & X_OK)
 		if(!(st->st_mode & exflags))
-			return -1;
+			goto noperm;
 
 	return 0;
+
+noperm:
+	errno = EACCES;
+	return -1;
 }
 
 SYSCALL(33, access,

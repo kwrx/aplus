@@ -230,6 +230,9 @@ void sched_dosignals() {
 void sched_sigqueueinfo(task_t* tk, int signo, siginfo_t* sig) {
     if(unlikely(!tk || !sig))
         return;
+
+    if(unlikely(tk == kernel_task))
+        return;
     
     if(unlikely(signo < 0 || signo > TASK_NSIG))
         return;

@@ -66,19 +66,22 @@ static void init_initd() {
         int e = -1;
         do {
             if(access(path, F_OK) != 0)
-                break;
+                printf("%s: access(): %s\n", path, strerror(errno));
             
             pid_t pid = fork();
             if(pid == -1)
                 break;
             else if(pid == 0) {
                 if(execl(path, path, "start", NULL) < 0)
-                    perror(path);
+                    printf("%s: execl(): %s\n", path, strerror(errno));
 
                 exit(-1);
             }
             e = 0;
         } while(0);
+        
+        if(e != 0)
+            perror(path);
         
         fprintf(stderr, "\e[37minit: starting \e[36m%s\e[37m \e[%dG[ %3s ]\n", ent->d_name, ws.ws_col - 10, e == 0 ? "\e[32mOK\e[37m" : "\e[31mERR\e[37m");
     }

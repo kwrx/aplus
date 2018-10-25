@@ -315,6 +315,7 @@ void isr_handler(i386_context_t* context) {
     switch(context->int_no) {
         case 0x80:
             context->eax = syscall_handler(context->eax, context->ebx, context->ecx, context->edx, context->esi, context->edi, *(long*) (context->esp + 128));
+            context->ebx = errno;
             return;
         case 0x7F:
             switch(context->eax) {
