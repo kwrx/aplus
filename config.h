@@ -29,13 +29,14 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "091ef68c"
+#define COMMIT "f51ede31"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/
 
 #define CONFIG_HOST_MEMORY                  512
 #define CONFIG_HAVE_LIBC                    1
+#define CONFIG_LFS                          0
 #define CONFIG_SMP                          0    /* TODO */
 #define CONFIG_IPC                          1
 #define CONFIG_IPC_TIMEOUT                  60000

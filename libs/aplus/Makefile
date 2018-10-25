@@ -12,7 +12,7 @@ CFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 CPPFILES	:=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
 OFILES		:=  $(CFILES:.c=.o) $(CXXFILES:.cpp=.o)
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c -g
+CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -O3 -c -g -DNO_CAIRO_EXTENSION
 CPPFLAGS	:=  -pipe -I include -fpic -O3 -c -g
 
 

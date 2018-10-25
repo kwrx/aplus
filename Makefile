@@ -18,9 +18,9 @@ include build/Makefile.flags
 
 all:					\
 	CONFIG				\
+	LIBRARIES			\
 	$(KERNEL_OUTPUT)	\
 	KERNEL_MODULES		\
-	LIBRARIES			\
 	APPS
 	@echo "Done!"
 

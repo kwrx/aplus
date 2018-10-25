@@ -29,7 +29,7 @@
 #include <aplus/syscall.h>
 #include <libc.h>
 
-
+#if CONFIG_LFS
 SYSCALL(195, stat64,
 int sys_stat64(const char* name, struct stat64* st) {
     int fd = sys_open(name, O_RDONLY, 0);
@@ -41,3 +41,4 @@ int sys_stat64(const char* name, struct stat64* st) {
 
     return r; 
 });
+#endif

@@ -3,7 +3,6 @@
 
 #include <sys/lock.h>
 #include <sys/reent.h>
-#include <bits/alltypes.h>
 
 /* Internal locking macros, used to protect stdio functions.  In the
    general case, expand to nothing. Use __SSTR flag in FILE _flags to

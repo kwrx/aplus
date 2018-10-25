@@ -31,5 +31,43 @@
 
 SYSCALL(108, fstat,
 int sys_fstat(int fd, struct stat* st) {
-    return sys_fstat64(fd, st);
+    if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
+        errno = EBADF;
+        return -1;
+    }
+
+    inode_t* inode = current_task->fd[fd].inode;
+    
+    if(unlikely(!inode)) {
+        errno = EBADF;
+        return -1;
+    }
+
+    if(unlikely(!st)) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    st->st_dev = inode->dev;
+    st->st_ino = inode->ino;
+    st->st_mode = inode->mode;
+    st->st_nlink = inode->nlink;
+    st->st_uid = inode->uid;
+    st->st_gid = inode->gid;
+    st->st_rdev = inode->rdev;
+    st->st_size = (off_t) inode->size;
+    st->st_blksize = BUFSIZ;
+    st->st_blocks = st->st_size / st->st_blksize;
+    st->st_atim.tv_sec = inode->atime;
+    st->st_mtim.tv_sec = inode->mtime;
+    st->st_ctim.tv_sec = inode->ctime;
+    st->st_atim.tv_nsec =
+    st->st_mtim.tv_nsec =
+    st->st_ctim.tv_nsec = 0;
+    
+    st->__st_dev_padding = 0;
+    st->__st_rdev_padding = 0;
+    st->__st_ino_truncated = (long) inode->ino;
+
+    return 0;
 });

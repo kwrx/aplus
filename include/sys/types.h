@@ -1,4 +1,4 @@
-/* unified sys/types.h:
+/* unified sys/types.h: 
    start with sef's sysvi386 version.
    merge go32 version -- a few ifdefs.
    h8300hms, h8300xray, and sysvnecv70 disagree on the following types:
@@ -10,8 +10,8 @@
    typedef int mode_t;
    typedef int caddr_t;
 
-   however, these aren't "reasonable" values, the sysvi386 ones make far
-   more sense, and should work sufficiently well (in particular, h8300
+   however, these aren't "reasonable" values, the sysvi386 ones make far 
+   more sense, and should work sufficiently well (in particular, h8300 
    doesn't have a stat, and the necv70 doesn't matter.) -- eichin
  */
 
@@ -20,7 +20,6 @@
 #include <_ansi.h>
 #include <sys/cdefs.h>
 #include <machine/_types.h>
-#include <bits/alltypes.h>
 
 /* BSD types permitted by POSIX and always exposed as in Glibc.  Only provided
    for backward compatibility with BSD code.  The uintN_t standard types should
@@ -30,7 +29,7 @@ typedef __uint8_t	u_int8_t;
 #endif
 #if ___int16_t_defined
 typedef __uint16_t	u_int16_t;
-#endif
+#endif 
 #if ___int32_t_defined
 typedef __uint32_t	u_int32_t;
 #endif
@@ -170,13 +169,10 @@ typedef unsigned long vm_size_t;
  * how the file was compiled (e.g. -mint16 vs -mint32, etc.).
  */
 
-
 #ifndef _OFF_T_DECLARED
 typedef	__off_t		off_t;		/* file offset */
 #define	_OFF_T_DECLARED
 #endif
-
-
 #ifndef _DEV_T_DECLARED
 typedef	__dev_t		dev_t;		/* device number or struct cdev */
 #define	_DEV_T_DECLARED

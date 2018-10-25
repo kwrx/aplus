@@ -11,7 +11,6 @@ extern "C" {
 #include <sys/cdefs.h>
 #include <sys/types.h>
 #include <sys/_types.h>
-#include <bits/alltypes.h>
 #include <stddef.h>
 
 extern char **environ;

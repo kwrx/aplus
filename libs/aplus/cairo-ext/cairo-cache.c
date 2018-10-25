@@ -22,6 +22,8 @@
  */
 
 
+#ifndef NO_CAIRO_EXTENSION
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,3 +79,5 @@ void cairo_cache_put_resource(const char* path, cairo_surface_t* surface) {
 
     hashmap_put(hm_cache, (char*) path, (any_t) cairo_surface_reference(surface));
 }
+
+#endif

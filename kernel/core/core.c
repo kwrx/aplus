@@ -34,7 +34,6 @@
 
 
 int core_init() {
-    libk_init();
     libaplus_init(kmalloc, kcalloc, kfree);
 
     return 0;
@@ -88,6 +87,7 @@ EXPORT(tmpnam);
 EXPORT(atoi);
 EXPORT(atof);
 EXPORT(sscanf);
+EXPORT(__errno);
 
 
 /* libaplus */

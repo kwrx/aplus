@@ -30,6 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
+#if CONFIG_LFS
 SYSCALL(197, fstat64,
 int sys_fstat64(int fd, struct stat64* st) {
     if(unlikely(fd >= TASK_FD_COUNT || fd < 0)) {
@@ -72,3 +73,5 @@ int sys_fstat64(int fd, struct stat64* st) {
 
     return 0;
 });
+
+#endif

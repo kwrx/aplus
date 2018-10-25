@@ -44,7 +44,7 @@
 #define TASK_PRIO_MIN                   19
 #define TASK_PRIO_REGULAR               0
 
-#define TASK_NSIG                       _NSIG
+#define TASK_NSIG                       NSIG
 #define TASK_NARGS                      8192
 #define TASK_NAUXV                      38
 
@@ -57,7 +57,7 @@
 
 #define WCOREFLAG                       0200
 #define W_EXITCODE(ret, sig)            ((ret) << 8 | sig)
-#define W_STOPCODE(sig)                 ((sig) << 8 | 0177)        
+#define W_STOPCODE(sig)                 ((sig) << 8 | 0177)
 
 
 #ifndef __ASSEMBLY__

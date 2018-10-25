@@ -1,15 +1,12 @@
-#ifndef	_SYS_TERMIOS_H
-#define	_SYS_TERMIOS_H
+#ifndef	_TERMIOS_H
+#define	_TERMIOS_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <features.h>
-
-#define __NEED_pid_t
-
-#include <bits/alltypes.h>
+#include <sys/features.h>
+#include <sys/types.h>
 
 typedef unsigned char cc_t;
 typedef unsigned int speed_t;

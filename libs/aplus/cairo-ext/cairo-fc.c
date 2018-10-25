@@ -21,6 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef NO_CAIRO_EXTENSION
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -158,3 +159,5 @@ void cairo_fc_select_font_face(cairo_t* cr, const char* family, cairo_font_slant
         cairo_set_font_face(cr, face);
 
 }
+
+#endif

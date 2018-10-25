@@ -22,7 +22,6 @@
 #include <newlib.h>
 #include <sys/config.h>
 #include <machine/_types.h>
-#include <bits/alltypes.h>
 #include <sys/lock.h>
 
 #ifndef __machine_blkcnt_t_defined
@@ -194,7 +193,10 @@ typedef	_CLOCK_T_	__clock_t;
 #endif
 typedef	_TIME_T_	__time_t;
 
+#ifndef __machine_clockid_t_defined
 #define	_CLOCKID_T_ 	unsigned long
+#endif
+
 typedef	_CLOCKID_T_	__clockid_t;
 
 #define	_TIMER_T_	unsigned long
@@ -208,6 +210,7 @@ typedef	__uint8_t	__sa_family_t;
 typedef	__uint32_t	__socklen_t;
 #endif
 
+typedef	int		__nl_item;
 typedef	unsigned short	__nlink_t;
 typedef	long		__suseconds_t;	/* microseconds (signed) */
 typedef	unsigned long	__useconds_t;	/* microseconds (unsigned) */

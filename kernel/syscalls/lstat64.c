@@ -30,6 +30,7 @@
 #include <aplus/debug.h>
 #include <libc.h>
 
+#if CONFIG_LFS
 SYSCALL(196, lstat64,
 int sys_lstat64(const char* pathname, struct stat64* st) {
     int fd = sys_open(pathname, O_RDONLY | O_NOFOLLOW, 0);
@@ -41,3 +42,4 @@ int sys_lstat64(const char* pathname, struct stat64* st) {
 
     return r; 
 });
+#endif
