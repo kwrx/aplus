@@ -24,47 +24,30 @@ extern "C" {
 #define stat64 stat
 #endif
 #else
-struct	stat 
-{
-  dev_t		st_dev;
-  ino_t		st_ino;
-  mode_t	st_mode;
-  nlink_t	st_nlink;
-  uid_t		st_uid;
-  gid_t		st_gid;
-  dev_t		st_rdev;
-  off_t		st_size;
-#if defined(__rtems__)
-  struct timespec st_atim;
-  struct timespec st_mtim;
-  struct timespec st_ctim;
-  blksize_t     st_blksize;
-  blkcnt_t	st_blocks;
-#else
-  /* SysV/sco doesn't have the rest... But Solaris, eabi does.  */
-#if defined(__svr4__) && !defined(__PPC__) && !defined(__sun__)
-  time_t	st_atime;
-  time_t	st_mtime;
-  time_t	st_ctime;
-#else
-  time_t	st_atime;
-  long		st_spare1;
-  time_t	st_mtime;
-  long		st_spare2;
-  time_t	st_ctime;
-  long		st_spare3;
-  blksize_t	st_blksize;
-  blkcnt_t	st_blocks;
-  long	st_spare4[2];
-#endif
-#endif
+struct stat {
+	dev_t st_dev;
+	int __st_dev_padding;
+	long __st_ino_truncated;
+	mode_t st_mode;
+	nlink_t st_nlink;
+	uid_t st_uid;
+	gid_t st_gid;
+	dev_t st_rdev;
+	int __st_rdev_padding;
+	off_t st_size;
+	blksize_t st_blksize;
+	blkcnt_t st_blocks;
+	struct timespec st_atim;
+	struct timespec st_mtim;
+	struct timespec st_ctim;
+	ino_t st_ino;
 };
 
-#if defined(__rtems__)
+
 #define st_atime st_atim.tv_sec
 #define st_ctime st_ctim.tv_sec
 #define st_mtime st_mtim.tv_sec
-#endif
+
 
 #endif
 

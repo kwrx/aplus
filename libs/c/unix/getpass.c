@@ -37,6 +37,7 @@ static char sccsid[] = "@(#)getpass.c	5.9 (Berkeley) 5/6/91";
 #include <pwd.h>
 #include <sys/termios.h>
 #include <sys/signal.h>
+#include <signal.h>
 #include <_syslist.h>
 
 #ifndef _PATH_PASSWD

@@ -24,9 +24,11 @@
 
 #include <sys/mman.h>
 
+extern void* __mmap(uintptr_t[6]);
+
 void* mmap(void* addr, size_t len, int prot, int flags, int fd, off_t offset) {
     uintptr_t p[6];
-    p[0] = addr;
+    p[0] = (uintptr_t) addr;
     p[1] = len;
     p[2] = prot;
     p[3] = flags;

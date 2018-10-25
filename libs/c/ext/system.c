@@ -24,13 +24,14 @@
 
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 
-int system(const char* s) {
+int _system(const char* s) {
     char* argv[4];
     argv[0] = "/usr/bin/sh";
     argv[1] = "-c";
-    argv[2] = s;
+    argv[2] = (char*) s;
     argv[3] = NULL;
 
     int e = fork();

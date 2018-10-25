@@ -23,6 +23,7 @@
 
 
 #include <stdio.h>
+#include <sys/wait.h>
 
 int wait(int* status) {
     return waitpid(-1, status, 0);

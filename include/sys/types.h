@@ -1,4 +1,4 @@
-/* unified sys/types.h: 
+/* unified sys/types.h:
    start with sef's sysvi386 version.
    merge go32 version -- a few ifdefs.
    h8300hms, h8300xray, and sysvnecv70 disagree on the following types:
@@ -10,8 +10,8 @@
    typedef int mode_t;
    typedef int caddr_t;
 
-   however, these aren't "reasonable" values, the sysvi386 ones make far 
-   more sense, and should work sufficiently well (in particular, h8300 
+   however, these aren't "reasonable" values, the sysvi386 ones make far
+   more sense, and should work sufficiently well (in particular, h8300
    doesn't have a stat, and the necv70 doesn't matter.) -- eichin
  */
 
@@ -29,7 +29,7 @@ typedef __uint8_t	u_int8_t;
 #endif
 #if ___int16_t_defined
 typedef __uint16_t	u_int16_t;
-#endif 
+#endif
 #if ___int32_t_defined
 typedef __uint32_t	u_int32_t;
 #endif
@@ -231,6 +231,21 @@ typedef	__useconds_t	useconds_t;	/* microseconds (unsigned) */
 #ifndef _SUSECONDS_T_DECLARED
 typedef	__suseconds_t	suseconds_t;
 #define	_SUSECONDS_T_DECLARED
+#endif
+
+#ifndef _SOCKLEN_T_DECLARED
+typedef __socklen_t socklen_t;
+#define _SOCKLEN_T_DECLARED
+#endif
+
+#ifndef _SA_FAMILY_T_DECLARED
+typedef unsigned short sa_family_t;
+#define _SA_FAMILY_T_DECLARED
+#endif
+
+#ifndef _STRUCT_IOVEC_DEFINED
+struct iovec { void *iov_base; size_t iov_len; };
+#define _STRUCT_IOVEC_DEFINED
 #endif
 
 typedef	__int64_t	sbintime_t;

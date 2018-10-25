@@ -41,7 +41,7 @@ typedef __uint32_t __fsfilcnt_t;
 #endif
 
 #ifndef __machine_off_t_defined
-typedef long _off_t;
+typedef long long _off_t;
 #endif
 
 #if defined(__XMK__)
@@ -68,9 +68,9 @@ typedef __uint32_t __id_t;
 #ifndef __machine_ino_t_defined
 #if (defined(__i386__) && (defined(GO32) || defined(__MSDOS__))) || \
     defined(__sparc__) || defined(__SPU__)
-typedef unsigned long __ino_t;
+typedef unsigned long long __ino_t;
 #else
-typedef unsigned short __ino_t;
+typedef unsigned long long __ino_t;
 #endif
 #endif
 
