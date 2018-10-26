@@ -172,8 +172,10 @@ int main(int argc, char** argv) {
     init_environment();
     init_initd();
     
+
     for(; errno != ECHILD; )
         waitpid(-1, NULL, 0);
 
+    fprintf(stderr, "\nSystem Halted!\n");
     return 0;
 }
