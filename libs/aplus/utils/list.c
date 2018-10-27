@@ -64,10 +64,12 @@ size_t _list_length (list_head * list)
    return list ? list->length : 0;
 }
 
+#include <stdio.h>
 void _list_push (list_head ** p_list, size_t value_size, void * value)
 {
    if (!*p_list)
       *p_list = (list_head *) __libaplus_calloc (sizeof (list_head), 1);
+
 
    list_head * list = *p_list;
 
@@ -76,9 +78,10 @@ void _list_push (list_head ** p_list, size_t value_size, void * value)
    list_element * elem = (list_element *)
        __libaplus_malloc (sizeof (*elem) + value_size);
 
+
    memset (elem, 0, sizeof (*elem));
    memcpy (get_value_ptr (elem), value, value_size);
-
+   
    elem->list = list;
    elem->prev = list->last;
 

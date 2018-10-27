@@ -41,7 +41,7 @@ typedef __uint32_t __fsfilcnt_t;
 #endif
 
 #ifndef __machine_off_t_defined
-typedef long long _off_t;
+typedef long _off_t;
 #endif
 
 #if defined(__XMK__)

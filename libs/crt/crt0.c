@@ -79,6 +79,7 @@ static void tzinit() {
     if(head.version < '2')
         goto done;
 
+
     lseek(fd, -2, SEEK_END);
     do {
         char ch;

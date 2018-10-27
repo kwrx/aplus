@@ -46,12 +46,12 @@ ui.wallpaper="/usr/share/images/wp.png"
 
 
 # -- [syncd]
-daemons.syncd.enabled="false"
+daemons.syncd.enabled="true"
 daemons.syncd.timeout=10
 
 
 # -- [ntpd]
-daemons.ntpd.enabled="false"
+daemons.ntpd.enabled="true"
 daemons.ntpd.timeout=3600
 daemons.ntpd.server="it.pool.ntp.org"
 

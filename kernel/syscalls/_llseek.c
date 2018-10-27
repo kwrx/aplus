@@ -59,7 +59,7 @@ int sys__llseek(int fd, unsigned int high, unsigned int low, off64_t* res, int d
             current_task->fd[fd].position += off;
             break;
         case SEEK_END:
-            current_task->fd[fd].position = off + inode->size;
+            current_task->fd[fd].position = inode->size + off;
             break;
         default:
             errno = EINVAL;

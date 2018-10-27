@@ -33,7 +33,7 @@
 SYSCALL(19, lseek,
 off_t sys_lseek(int fd, off_t off, int dir) {
     off64_t r;
-    if(sys__llseek(fd, 0, off, &r, dir) < 0)
+    if(sys__llseek(fd, 0, (unsigned int) off, &r, dir) < 0)
         return -1;
 
     return (off_t) r;

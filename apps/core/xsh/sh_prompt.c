@@ -162,7 +162,7 @@ char* sh_prompt(char* line, char* user, char* host, int last_err) {
                 line[i] = '\0';
                 
                 fprintf(stdout, "%c", ch);
-
+                
 
                 for(int i = 0; i < utf8_bytes(ch) - 1; i++) {
                     read(STDIN_FILENO, &ch, 1);

@@ -16,7 +16,7 @@ CPPFLAGS    :=  -pipe -I include -O3 -c -g
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)
 	@echo "  CCLD   " $(subst $(ROOT)/,,$@)
-	@$(CC) -pipe -O3 -o $@ $(OFILES) -laplus -lpthread -lstdc++ -lsupc++ -lc -lgcc
+	@$(CC) -pipe -O3 -o $@ $(OFILES) -laplus -lc -lgcc
 
 
 .c.o:

@@ -183,6 +183,24 @@ typedef struct list_element list_element;
    }
 #endif
 
+#ifndef _MSC_VER
+   #define list_get_at(list, index) ({                                        \
+      list_elem (list) elem = list_elem_front (list);                         \
+      for (int i = 0; i <= index && elem; elem = list_elem_next (elem))       \
+         if (i == index)                                                      \
+            break;                                                            \
+      elem;                                                                   \
+   })
+
+   #define list_remove_at(list, index) {                                      \
+      list_elem (list) elem = list_elem_front (list);                         \
+      for (int i = 0; i <= index && elem; elem = list_elem_next (elem))       \
+         if (i == index)                                                      \
+            _list_remove ((list_element *) elem);                             \
+                                                                              \
+   }
+#endif
+
 #define list_remove(list, value)                                              \
    list_elem_remove (list_find (list, value))                                 \
 
@@ -206,6 +224,11 @@ typedef struct list_element list_element;
 
 #define list_pop_back(list)                                                   \
    list_elem_remove (list_elem_back (list))                                   \
+
+#define list_printf(list, fmt) {                                              \
+   list_each(list, v)                                                         \
+      printf(fmt, v);                                                         \
+}
 
 #ifdef __cplusplus
    extern "C"

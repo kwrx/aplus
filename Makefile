@@ -19,7 +19,7 @@ include build/Makefile.flags
 all:					\
 	CONFIG				\
 	LIBRARIES			\
-	$(KERNEL_OUTPUT)	\
+	KERNEL				\
 	KERNEL_MODULES		\
 	APPS
 	@echo "Done!"
@@ -43,6 +43,7 @@ CONFIG:
 	$(shell find kernel/syscalls/* -type f -name "*.c" -print | xargs cat | grep SYSCALL | sed "s/^SYSCALL//" | sed "s/^.//" | sed "s/,//g" | sort -n | sed "s/^//" >> extra/SYSCALLS)
 
 
+KERNEL: $(KERNEL_OUTPUT)
 $(KERNEL_OUTPUT): CONFIG $(KERNEL_OBJECTS) LIBRARIES
 	@echo "  LD     " $@
 	@$(LD) $(LDFLAGS) -o $@ $(KERNEL_OBJECTS) $(LIBS)
