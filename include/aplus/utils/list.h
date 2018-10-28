@@ -186,7 +186,7 @@ typedef struct list_element list_element;
 #ifndef _MSC_VER
    #define list_get_at(list, index) ({                                        \
       list_elem (list) elem = list_elem_front (list);                         \
-      for (int i = 0; i <= index && elem; elem = list_elem_next (elem))       \
+      for (int i = 0; i <= index && elem; i++, elem = list_elem_next (elem))       \
          if (i == index)                                                      \
             break;                                                            \
       elem;                                                                   \
@@ -194,7 +194,7 @@ typedef struct list_element list_element;
 
    #define list_remove_at(list, index) {                                      \
       list_elem (list) elem = list_elem_front (list);                         \
-      for (int i = 0; i <= index && elem; elem = list_elem_next (elem))       \
+      for (int i = 0; i <= index && elem; i++, elem = list_elem_next (elem))       \
          if (i == index)                                                      \
             _list_remove ((list_element *) elem);                             \
                                                                               \

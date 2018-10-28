@@ -25,6 +25,7 @@ int main(int argc, char** argv, char** env) {
     list_printf(ls, "%d\n");
 
     printf("\n get_at(%d): %d\n", 3, list_get_at(ls, 3));
+    
     list_remove_at(ls, 3);
     list_printf(ls, "%d\n");
     return 0;
