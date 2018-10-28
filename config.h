@@ -29,7 +29,7 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "c9ddf04d"
+#define COMMIT "584ef3a2"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/
@@ -85,6 +85,7 @@
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #    define CONFIG_STACK_SIZE               0x00020000ULL
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
+#    define __halt()                        __asm__ __volatile__ ("cli; 1: jmp 1;")
 #elif defined(__x86_64__)
 #    define CONFIG_BITS                     64
 #    define CONFIG_KERNEL_BASE              0xFFFFFFFFF8000000L
@@ -93,6 +94,7 @@
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #    define CONFIG_STACK_SIZE               0x00020000ULL
 #    define __pause__()                     __asm__ __volatile__ ("pause; hlt" ::: "memory")
+#    define __halt()                        __asm__ __volatile__ ("cli; 1: jmp 1;")
 #elif defined(__arm__)
 #    define CONFIG_BITS                     32
 #    if defined (__rpi__)
@@ -105,6 +107,7 @@
 #        define CONFIG_STACK_SIZE           0x00004000ULL
 #    endif
 #    define __pause__()                     __asm__ __volatile__ ("wfe")
+#    define __halt()                        __asm__ __volatile__ ("1: b $1;")
 #endif
 
 

@@ -70,6 +70,7 @@ static int FR_FIRST(int count) {
         }
     }
 
+    kprintf(ERROR "pmm: no memory left!\n");
     return -1;
 }
 

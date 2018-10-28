@@ -24,6 +24,7 @@
 
 #include <aplus.h>
 #include <aplus/base.h>
+#include <aplus/debug.h>
 #include <aplus/mm.h>
 #include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
@@ -34,12 +35,39 @@
 
 
 int core_init() {
-    libaplus_init(kmalloc, kcalloc, kfree);
+#if DEBUG
+    extern void __stack_chk_init();
+    __stack_chk_init();
+#endif
 
+    libaplus_init(kmalloc, kcalloc, kfree);
     return 0;
 }
 
 
+#if DEBUG
+void __attribute__((__noreturn__)) __chk_fail(void) {
+    kprintf(ERROR "*** buffer overflow detected ***: kernel panic!\n");
+    __halt();
+    __builtin_unreachable();
+}
+
+void __attribute__((__noreturn__)) __stack_chk_fail (void) {
+    kprintf(ERROR "*** stack smashing detected ***: kernel panic!\n");
+    __halt();
+    __builtin_unreachable();
+}
+
+#ifdef __ELF__
+void __attribute__((visibility ("hidden"))) __stack_chk_fail_local (void) {
+	__stack_chk_fail();
+}
+#endif
+
+EXPORT(__chk_fail);
+EXPORT(__stack_chk_fail);
+EXPORT(__stack_chk_fail_local);
+#endif
 
 
 

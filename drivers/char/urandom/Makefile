@@ -10,7 +10,7 @@ SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I $(ROOT)/kernel/include -I include -include $(ROOT)/config.h -O3 -std=gnu99 -nostdlib -c
+CFLAGS		:=  -pipe -I $(ROOT)/kernel/include -I include -include $(ROOT)/config.h -O3 -std=gnu99 -nostdlib -fstack-protector-strong -c
 SFLAGS		:=  -c -I $(ROOT)/kernel/include -I include -include config.h
 
 all: $(OUTPUT)

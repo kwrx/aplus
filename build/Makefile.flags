@@ -3,7 +3,7 @@ DEFINES         := -DKERNEL
 WARNINGS        := -Wall -Wno-discarded-qualifiers
 LIBS            := -laplus -lc -lm -lgcc
 
-CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3 -g
+CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3 -g -fstack-protector-strong
 AFLAGS          := -c -I kernel/include -include config.h
 NFLAGS          := $(DEFINES) -w-number-overflow
 LDFLAGS         := -T kernel/link/$(ARCH).ld -Map $(KERNEL_NAME).map -z max-page-size=0x1000

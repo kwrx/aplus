@@ -206,6 +206,8 @@ int sys_execve(const char* filename, char* const argv[], char* const envp[]) {
     KASSERT(__start);
 
 
+    kprintf(LOG "execve: loading \'%s\' at %p:%p (%d Mb)\n", __new_argv[0], __start, V2P(__start), pmm_state()->used / 1024 / 1024);
+
 
     current_task->argv = __new_argv;
     current_task->environ = __new_envp;

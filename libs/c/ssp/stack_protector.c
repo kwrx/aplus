@@ -26,7 +26,7 @@ __stack_chk_init (void)
 }
 
 void
-__attribute__((__noreturn__))
+__attribute__((weak, __noreturn__))
 __stack_chk_fail (void)
 {
   char msg[] = "*** stack smashing detected ***: terminated\n";
@@ -37,7 +37,7 @@ __stack_chk_fail (void)
 
 #ifdef __ELF__
 void
-__attribute__((visibility ("hidden")))
+__attribute__((weak, visibility ("hidden")))
 __stack_chk_fail_local (void)
 {
 	__stack_chk_fail();
