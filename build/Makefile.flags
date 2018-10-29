@@ -17,7 +17,7 @@ ifeq ($(ARCH),x86_64)
 CFLAGS          += -mno-red-zone -mcmodel=kernel -masm=intel
 AFLAGS          += -masm=intel
 NFLAGS          += -felf64
-VMM             += -M accel="tcg" -vga std -soundhw ac97 -device virtio-net,netdev=net0 -netdev user,id=net0,hostfwd=udp::5000-:5000 -no-kvm-irqchip
+VMM             += -M accel="kvm" -vga std -soundhw ac97 -device virtio-net,netdev=net0 -netdev user,id=net0,hostfwd=udp::5000-:5000 -no-kvm-irqchip
 endif
 
 ifeq ($(ARCH),i386)

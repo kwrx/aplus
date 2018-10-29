@@ -14,22 +14,6 @@
 
 
 int main(int argc, char** argv, char** env) {
-
-    static list(int, ls);
-    memset(ls, 0, sizeof(ls));
-
-    int i;
-    for(i = 1; i <= 5; i++)
-        list_push(ls, i);
-
-    list_printf(ls, "%d\n");
-
-    printf("\n get_at(%d): %d\n", 3, list_get_at(ls, 3));
-    
-    list_remove_at(ls, 3);
-    list_printf(ls, "%d\n");
-    return 0;
-
     int fb = open("/dev/fb0", O_RDONLY);
     if(fb < 0)
         die("wsbe: screen-device");

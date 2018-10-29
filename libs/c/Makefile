@@ -17,7 +17,7 @@ DEFS		:= 	-DHAVE_FCNTL -D_NO_POSIX_SPAWN -D_GNU_SOURCE				\
 				-DINTERNAL_NEWLIB -DHAVE_SYSTEM
 
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -fno-builtin -O2 -c -g $(DEFS)
+CFLAGS		:=  -pipe -I include -std=gnu99 -fpic -fno-builtin -O2 -fstack-protector-strong -c -g $(DEFS)
 SFLAGS		:=  -pipe -fpic -fno-builtin -O2 -c -g $(DEFS)
 
 
