@@ -10,8 +10,8 @@ CFILES      :=  $(shell $(FIND) $(PWD)/* -type f -name "*.c")
 CPPFILES    :=  $(shell $(FIND) $(PWD)/* -type f -name "*.cpp")
 OFILES      :=  $(CFILES:.c=.o) $(CPPFILES:.cpp=.o)
 
-CFLAGS      :=  -pipe -I include -std=gnu99 -O3 -g -c
-CPPFLAGS    :=  -pipe -I include -O3 -g -c
+CFLAGS      :=  -pipe -I include -include $(ROOT)/config.h -fstack-protector-strong -std=gnu99 -O3 -c -g
+CPPFLAGS    :=  -pipe -I include -include $(ROOT)/config.h -fstack-protector-strong -O3 -c -g
 
 all: $(OUTPUT)
 $(OUTPUT): $(OFILES)

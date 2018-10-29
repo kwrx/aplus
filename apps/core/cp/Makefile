@@ -9,7 +9,7 @@ SFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.s")
 AFILES		:=  $(shell $(FIND) $(PWD)/* -type f -name "*.asm")
 OFILES		:=  $(CFILES:.c=.o) $(AFILES:.asm=.o) $(SFILES:.s:.o)
 
-CFLAGS		:=  -pipe -I include -std=gnu99 -O3 -c -g
+CFLAGS		:=  -pipe -I include -include $(ROOT)/config.h -fstack-protector-strong -std=gnu99 -O3 -c -g
 SFLAGS		:=  -c -I include
 
 all: $(OUTPUT)

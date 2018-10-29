@@ -26,6 +26,7 @@
 #include <aplus/base.h>
 #include <aplus/debug.h>
 #include <aplus/mm.h>
+#include <aplus/task.h>
 #include <aplus/sysconfig.h>
 #include <aplus/utils/list.h>
 #include <aplus/utils/hashmap.h>
@@ -48,13 +49,29 @@ int core_init() {
 #if DEBUG
 void __attribute__((__noreturn__)) __chk_fail(void) {
     kprintf(ERROR "*** buffer overflow detected ***: kernel panic!\n");
-    __halt();
+
+    if(unlikely(current_task == kernel_task))
+        __halt();
+    
+
+    sys_kill(current_task->pid, SIGSEGV);
+    sys_yield();
+    sys_exit(SIGSEGV);
+
     __builtin_unreachable();
 }
 
 void __attribute__((__noreturn__)) __stack_chk_fail (void) {
     kprintf(ERROR "*** stack smashing detected ***: kernel panic!\n");
-    __halt();
+
+    if(unlikely(current_task == kernel_task))
+        __halt();
+    
+    
+    sys_kill(current_task->pid, SIGSEGV);
+    sys_yield();
+    sys_exit(SIGSEGV);
+
     __builtin_unreachable();
 }
 

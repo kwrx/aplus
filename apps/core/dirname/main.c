@@ -45,11 +45,11 @@ static void show_usage(int argc, char** argv) {
 
 static void show_version(int argc, char** argv) {
     printf(
-        "%s (aPlus coreutils) 0.1\n"
-        "Copyright (c) 2018 Antonino Natale.\n"
+        "%s (aPlus coreutils) 0.1.%s\n"
+        "Copyright (c) %s Antonino Natale.\n"
         "Built with gcc %s (%s)\n",
         
-        argv[0], __VERSION__, __TIMESTAMP__
+        argv[0], COMMIT, __DATE__ + 7, __VERSION__, __TIMESTAMP__
     );
     
     exit(0);
