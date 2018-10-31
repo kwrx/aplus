@@ -37,6 +37,7 @@ extern int elf_check_machine(Elf_Ehdr* elf);
 
 list(module_t*, m_queue);
 list(symbol_t*, m_symtab);
+list(symbol_t*, k_symtab);
 
 
 static void module_export(module_t* mod, char* name, void* address) {
@@ -182,7 +183,7 @@ int module_load(char* name) {
                 default:
                     sym[i].st_value += (Elf_Addr) ((uintptr_t) core + shdr[sym[i].st_shndx].sh_addr);
 
-                    if(ELF_ST_TYPE(sym[i].st_info) != STT_SECTION)
+                    if(ELF_ST_TYPE(sym[i].st_info) == STT_FUNC)
                         module_export(mod, (char*) ((uintptr_t) names + sym[i].st_name), (void*) sym[i].st_value);
 
                     break;
@@ -345,11 +346,60 @@ int module_exit(char* name) {
     return -1;
 }
 
+#if DEBUG
+static void init_ksymtab(void) {
+    Elf_Shdr* shdr = (Elf_Shdr*) mbd->exec.addr;
+    for(int i = 0; i < mbd->exec.num; i++) {
+        if(shdr[i].sh_type != SHT_SYMTAB)
+            continue;
+
+
+        Elf_Sym* sym = (Elf_Sym*) ((uintptr_t) CONFIG_KERNEL_BASE + shdr[i].sh_addr);
+
+        for(int j = 1; j < shdr[i].sh_size / sizeof(Elf_Sym); j++) {     
+            switch(sym[j].st_shndx) {
+                case SHN_COMMON:
+                    continue;
+                
+                case SHN_ABS:
+                    continue;
+
+                case SHN_UNDEF:
+                    continue;
+                
+                default:
+                    if(ELF_ST_TYPE(sym[j].st_info) != STT_FUNC)
+                        continue;
+                    
+
+                    char* name = (char*) ((uintptr_t) (shdr[shdr[i].sh_link].sh_addr + CONFIG_KERNEL_BASE) + sym[j].st_name);
+                    void* address = (void*) sym[j].st_value;
+                    
+                    symbol_t* s = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
+                    if(!s) {
+                        kprintf(ERROR "module: could not allocate memory for a new kernel symbol!\n");
+                        return;
+                    }
+
+                    s->address = address;
+                    strcpy(s->name, name);
+
+                    list_push(k_symtab, s);
+                    break;
+            }
+        }
+    }
+}
+#endif
 
 int module_init(void) {
     memset(&m_queue, 0, sizeof(m_queue));
-    memset(&m_symtab, 0, sizeof(m_queue));
+    memset(&m_symtab, 0, sizeof(m_symtab));
+    memset(&k_symtab, 0, sizeof(k_symtab));
 
+#if DEBUG
+    init_ksymtab();
+#endif
 
     extern int export_start;
     extern int export_end;
@@ -397,3 +447,4 @@ EXPORT(module_init);
 EXPORT(module_dnit);
 EXPORT(m_queue);
 EXPORT(m_symtab);
+EXPORT(k_symtab);

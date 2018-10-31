@@ -134,6 +134,24 @@ mm_state_t* pmm_state(void) {
 int pmm_init(void) {
     memset(frames, 0, sizeof(frames));
     pmm_claim(0x00000000, (physaddr_t) mbd->memory.start);
+
+    int i;
+    for(i = 0; i < mbd->mmap.count; i++) {
+        if(mbd->mmap.ptr[i].type == BOOTARGS_MMAP_AVAILABLE)
+            continue;
+
+        if(mbd->mmap.ptr[i].address > mbd->memory.size)
+            continue;
+
+        if(mbd->mmap.ptr[i].address + mbd->mmap.ptr[i].length > mbd->memory.size)
+            continue;
+    
+         
+        pmm_claim (
+            (uintptr_t) mbd->mmap.ptr[i].address,
+            (uintptr_t) (mbd->mmap.ptr[i].address + mbd->mmap.ptr[i].length)
+        );
+    }
     
     return 0;
 }

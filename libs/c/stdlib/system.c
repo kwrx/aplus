@@ -56,6 +56,10 @@ Supporting OS subroutines required: <<_exit>>, <<_execve>>, <<_fork_r>>,
 static int do_system (struct _reent *ptr, const char *s);
 #endif
 
+#if defined(HAVE_SYSTEM)
+int _system(const char*);
+#endif
+
 int
 _system_r (struct _reent *ptr,
      const char *s)

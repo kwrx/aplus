@@ -527,6 +527,16 @@ extern "C" {
 
 #endif /* __CYGWIN__ */
 
+
+#if 0
+#ifdef __aplus__
+#define _POSIX_TIMERS                           1
+#define _POSIX_MONOTONIC_CLOCK                  1
+#define _POSIX_THREAD_CPUTIME                   1
+#define _POSIX_CPUTIME                          1
+#endif
+#endif /* TODO */
+
 #ifdef __cplusplus
 }
 #endif

@@ -31,11 +31,16 @@ BootInfo* mbd_grub;
 
 int load_bootargs() {
 
+    mbd->flags = mbd_grub->flags;
+    
     mbd->memory.size = (mbd_grub->mem_lower + mbd_grub->mem_upper) * 1024;
     mbd->memory.pagesize = 4096;
 
     mbd->modules.ptr = (void*) mbd_grub->mods_addr;
     mbd->modules.count = mbd_grub->mods_count;
+
+    mbd->mmap.ptr = (void*) mbd_grub->mmap_addr;
+    mbd->mmap.count = mbd_grub->mmap_length / sizeof(*mbd->mmap.ptr);
     
     mbd->lfb.width = mbd_grub->vbe_mode_info->Xres;
     mbd->lfb.height = mbd_grub->vbe_mode_info->Yres;
@@ -62,6 +67,8 @@ int load_bootargs() {
         mbd->modules.ptr[i].cmdline += CONFIG_KERNEL_BASE;
     }
 
+    if(mbd->exec.addr)
+        mbd->exec.addr += CONFIG_KERNEL_BASE;
 
     if(mbd->lfb.base) {
         

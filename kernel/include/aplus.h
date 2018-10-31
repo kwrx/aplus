@@ -27,7 +27,11 @@
 
 #include <aplus/base.h>
 
-
+#define BOOTARGS_MMAP_AVAILABLE                 1
+#define BOOTARGS_MMAP_RESERVED                  2
+#define BOOTARGS_MMAP_ACPI_RECLAIMABLE          3
+#define BOOTARGS_MMAP_NVS                       4
+#define BOOTARGS_MMAP_BADRAM                    5
 
 #ifndef __ASSEMBLY__
 #include <libc.h>
@@ -49,6 +53,16 @@ typedef struct bootargs {
         } __packed *ptr;
         size_t count;
     } modules;
+
+    struct {
+        struct {
+            uint32_t size;
+            uint64_t address;
+            uint64_t length;
+            uint32_t type;
+        } __packed *ptr;
+        size_t count;
+    } mmap;
 
     struct {
         uint16_t width;

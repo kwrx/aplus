@@ -50,6 +50,15 @@ int _dummy_raise;
 #include <reent.h>
 #include <signal.h>
 
+
+int
+_raise_r (struct _reent *reent,
+	int sig)
+{
+  return _kill_r (reent, _getpid_r (reent), sig);
+}
+
+
 #ifndef _REENT_ONLY
 
 int
@@ -59,12 +68,5 @@ raise (int sig)
 }
 
 #endif
-
-int
-_raise_r (struct _reent *reent,
-	int sig)
-{
-  return _kill_r (reent, _getpid_r (reent), sig);
-}
 
 #endif /* SIGNAL_PROVIDED */

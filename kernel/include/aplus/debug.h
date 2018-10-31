@@ -42,6 +42,7 @@
 void debug_send(char value);
 void debug_dump(void* context, char* errmsg, uintptr_t dump, uintptr_t errcode);
 void debug_stacktrace(int);
+char* debug_lookup_symbol(uintptr_t);
 
 
 #if !DEBUG

@@ -70,6 +70,7 @@ int module_exit(char* name);
 
 extern list(module_t*, m_queue);
 extern list(symbol_t*, m_symtab);
+extern list(symbol_t*, k_symtab);
 
 
 #define __APLUS_MODULE__        1

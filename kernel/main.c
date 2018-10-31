@@ -103,7 +103,6 @@ int main(int argc, char** argv) {
             mbd->memory.start, 
             (int) mbd->memory.size / 1024 / 1024);
         
-
     
     char* __argv[] = { "/usr/sbin/init", NULL };
     char* __envp[] = { NULL };

@@ -44,6 +44,9 @@ DESCRIPTION
 	<<errno>>.
 */
 
+#define stat64 stat     /* FIXME */
+#define _stat64 _stat   /* FIXME */
+
 int
 _stat64_r (struct _reent *ptr,
      const char *file,

@@ -26,8 +26,12 @@
 #include <aplus/ipc.h>
 #include <aplus/debug.h>
 #include <aplus/task.h>
+#include <aplus/module.h>
 #include <arch/i386/i386.h>
 #include <libc.h>
+
+#include <aplus/base.h>
+#include <aplus/utils/list.h>
 
 #if DEBUG
 #include <libdis.h>
@@ -65,46 +69,44 @@ void debug_send(char value) {
 }
 
 
-char* debug_lookup_symbol(symbol_t* symtab, uintptr_t address) {
-#if 0
-    symbol_t* tmp, *found = NULL;
-    for(tmp = symtab; tmp; tmp = tmp->next) {
-        if((uintptr_t) tmp->addr == address) {
-            found = tmp;
-            break;
+char* debug_lookup_symbol(uintptr_t address) {
+   
+    symbol_t* find(list(symbol_t*, symtab), uintptr_t address) {
+        symbol_t* found = NULL;
+        list_each(symtab, tmp) {
+            if((uintptr_t) tmp->address == address) {
+                found = tmp;
+                break;
+            }
+
+            if((uintptr_t) tmp->address < address)
+                if(!found || found->address < tmp->address)
+                    found = tmp;
         }
 
-        if((uintptr_t) tmp->addr < address)
-            if(!found || found->addr < tmp->addr)
-                found = tmp;
+        return found;
     }
-    
 
-    if(!found)
-        return NULL;
+    symbol_t* found;
+    if(!(found = find(k_symtab, address)))
+        if(!(found = find(m_symtab, address)))
+            return NULL;
+
         
     static char buf[BUFSIZ];
     memset(buf, 0, BUFSIZ);
 
-    sprintf(buf, "%s+%p", found->name, (void*) (address - (uintptr_t) found->addr));
+    sprintf(buf, "%s+%p", found->name, (void*) (address - (uintptr_t) found->address));
     return strdup(buf);
-#endif
-    return NULL;
 }
 
 
 void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode) {
-    #define lookup(s, a)                                                            \
-        !(s = debug_lookup_symbol(current_task->image->symtab, a))                  \
-            ? !(s = debug_lookup_symbol(kernel_task->image->symtab, a))             \
-                ? s = "<unknown>" : (void) 0 : (void) 0;
-
-
     i386_context_t* context = (i386_context_t*) _context;
 
-
-    char* sym;
-    lookup(sym, context->eip);
+    char* sym = debug_lookup_symbol(context->eip);
+    if(unlikely(!sym))
+        sym = "unknown";
     
     kprintf(ERROR "%s\n"
                   "\t Task: %d (%s)\n"
@@ -119,17 +121,9 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
                   context->eip, sym, context->esp, context->gs
     );
 
-    if(!dump)
-        return;
+    //debug_stacktrace(5);
+    kprintf("<%s>:\n", sym);
 
-    debug_stacktrace(5);
-
-
-
-    lookup(sym, dump);
-    kprintf("Dump: %s\n", sym);
-
-    dump = context->eip - 32;
 
 
     static char line[BUFSIZ];
@@ -138,7 +132,10 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
 
     x86_insn_t i;
     x86_init(opt_none, NULL, NULL);
-    
+
+
+    dump = context->eip - 32;
+
     size_t s, p = 0;
     do {
         while((s = x86_disasm((void*) dump, 64, current_task->image->start, p, &i)) > 0) {

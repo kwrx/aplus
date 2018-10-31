@@ -43,7 +43,6 @@ int init(void) {
     if(unlikely((ino = vfs_mkdev("full", -1, S_IFCHR | 0222)) == NULL))
         return -1;
 
-
     ino->write = full_write;
     return 0;
 }
