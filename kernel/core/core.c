@@ -32,6 +32,7 @@
 #include <aplus/utils/hashmap.h>
 #include <aplus/utils/unicode.h>
 #include <libc.h>
+#include <vterm.h>
 
 
 
@@ -160,7 +161,7 @@ EXPORT(utf8_bytes);
 
 
 /* libvterm */
-#if 0
+#if 1
 EXPORT(vterm_screen_set_callbacks);
 EXPORT(vterm_state_reset);
 EXPORT(vterm_screen_reset);
@@ -169,6 +170,7 @@ EXPORT(vterm_input_write);
 EXPORT(vterm_new_with_allocator);
 EXPORT(vterm_obtain_state);
 EXPORT(vterm_parser_set_callbacks);
+EXPORT(vterm_screen_get_cell);
 EXPORT(vterm_set_utf8);
 #endif
 

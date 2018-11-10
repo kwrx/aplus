@@ -121,6 +121,9 @@ void debug_dump(void* _context, char* errmsg, uintptr_t dump, uintptr_t errcode)
                   context->eip, sym, context->esp, context->gs
     );
 
+    if(!context->eip)
+        return;
+        
     //debug_stacktrace(5);
     kprintf("<%s>:\n", sym);
 

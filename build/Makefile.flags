@@ -1,7 +1,7 @@
 
 DEFINES         := -DKERNEL
 WARNINGS        := -Wall -Wno-discarded-qualifiers
-LIBS            := -laplus -lc -lm -lgcc
+LIBS            := -lvterm -laplus -lc -lm -lgcc
 
 CFLAGS          := $(DEFINES) $(WARNINGS) -c -pipe -I kernel/include -include config.h -nostdlib -std=gnu99 -O3 -g -fstack-protector-strong
 AFLAGS          := -c -I kernel/include -include config.h

@@ -21,7 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#if defined(__i386__)
 #include <stdint.h>
 #include <errno.h>
 
@@ -314,3 +314,4 @@ __bswap(16, ntohs, unsigned short)
 __bswap(32, htonl, unsigned int)
 __bswap(32, ntohl, unsigned int)
 
+#endif

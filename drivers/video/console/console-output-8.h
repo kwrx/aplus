@@ -3,27 +3,48 @@
 
 __fastcall
 __optimize(fast)
-static void console_output_8(struct cc* cc, int pos, uint8_t style, int32_t ch) {
-    
-    static uint8_t vga_colors[16] = {
-        0x00,
-        0x03,
-        0x1C,
-        0x0F,
-        0xE0,
-        0xE3,
-        0xEC,
-        0x6D,
-        0x25,
-        0x67,
-        0x7D,
-        0x7F,
-        0xED,
-        0xEF,
-        0xFC,
-        0xFF
-    };
-    
+static void console_output_clear_8(context_t* cx, uint16_t sr, uint16_t er, uint16_t sc, uint16_t ec) {
+    long sy = (sr * ROW);
+    long ey = (er * ROW);
+    long sx = (sc * COL);
+    long ex = (ec * COL);
+
+    for(; sy < ey; sy++)
+        memset (
+            (void*) ((uintptr_t) cx->screen.backbuffer + (sy * cx->screen.stride) + (sx)),
+            0,
+            (ex - sx)
+        );
+}
+
+
+__fastcall
+__optimize(fast)
+static void console_output_move_8(context_t* cx, uint16_t dsr, uint16_t der, uint16_t dsc, uint16_t dec, uint16_t ssr, uint16_t ser, uint16_t ssc, uint16_t sec) {
+    long dx0 = dsc * COL;
+    long dx1 = dec * COL;
+    long dy0 = dsr * ROW;
+    long dy1 = der * ROW;
+
+    long sx0 = ssc * COL;
+    long sx1 = sec * COL;
+    long sy0 = ssr * ROW;
+    long sy1 = ser * ROW;
+
+
+    for(long y = 0; y < (dy1 - dy0); y++)
+        memmove(
+            (void*) ((uintptr_t) cx->screen.backbuffer + ((dy0 + y) * cx->screen.stride) + (dx0)),
+            (void*) ((uintptr_t) cx->screen.backbuffer + ((sy0 + y) * cx->screen.stride) + (sx0)),
+            (sx1 - sx0)
+        );
+}
+
+
+
+__fastcall
+__optimize(fast)
+static void console_output_putc_8(context_t* cx, uint16_t r, uint16_t c, uint32_t ch, uint32_t fg, uint32_t bg) {
     int idx, i;
     for(i = idx = 0; i < __font.Chars; i++) {
         if(unlikely(ch < __font.Index[i]))
@@ -35,31 +56,18 @@ static void console_output_8(struct cc* cc, int pos, uint8_t style, int32_t ch) 
         idx = i;
         break;
     }
-    
 
-
-    
     const uint8_t* g = &__font.Bitmap[idx << 4];
-    uint32_t stride = cc->width << 3;
-    uint8_t* offset = &((uint8_t*) cc->frame) [(((pos / cc->width)) * (stride << 4)) + ((pos % cc->width) << 3)];
-    
-        
+    uint8_t* offset = &((uint8_t*) cx->screen.backbuffer) [((r * ROW) * cx->screen.stride) + ((c * COL))];
 
     int row, p;
-    for(row = 0, p = 0; row < 16; row++, p += stride) {
+    for(row = 0, p = 0; row < 16; row++, p += cx->screen.stride) {
 
         int cx, b;
         for(cx = 0, b = 8; cx < 8; cx++, b--)
             if(unlikely(g[row] & (1 << b)))
-                offset[cx + p] = vga_colors[(style & 0x0F)];
+                offset[cx + p] = (uint8_t) fg; /* FIXME */
             else
-                offset[cx + p] = vga_colors[(style & 0xF0) >> 4];
+                offset[cx + p] = (uint8_t) bg; /* FIXME */
     }   
-}
-
-
-__fastcall
-__optimize(fast)
-static void console_scroll_8(struct cc* cc, int pos) {
-    memmove(cc->frame, (void*) ((uintptr_t) cc->frame + ((cc->width << 3) << 4)), ((cc->width << 3) * ((cc->height - 1) << 3)) << 3);
 }
