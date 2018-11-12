@@ -3,16 +3,16 @@
 
 __fastcall
 __optimize(fast)
-static void console_output_clear_8(context_t* cx, uint16_t sr, uint16_t er, uint16_t sc, uint16_t ec) {
+static void console_output_render_8(context_t* cx, uint16_t sr, uint16_t er, uint16_t sc, uint16_t ec) {
     long sy = (sr * ROW);
     long ey = (er * ROW);
     long sx = (sc * COL);
     long ex = (ec * COL);
 
     for(; sy < ey; sy++)
-        memset (
+        memcpy (
+            (void*) ((uintptr_t) cx->screen.framebuffer + (sy * cx->screen.stride) + (sx)),
             (void*) ((uintptr_t) cx->screen.backbuffer + (sy * cx->screen.stride) + (sx)),
-            0,
             (ex - sx)
         );
 }
@@ -61,7 +61,7 @@ static void console_output_putc_8(context_t* cx, uint16_t r, uint16_t c, uint32_
     uint8_t* offset = &((uint8_t*) cx->screen.backbuffer) [((r * ROW) * cx->screen.stride) + ((c * COL))];
 
     int row, p;
-    for(row = 0, p = 0; row < 16; row++, p += cx->screen.stride) {
+    for(row = 0, p = 0; row < 16; row++, p += cx->screen.width) {
 
         int cx, b;
         for(cx = 0, b = 8; cx < 8; cx++, b--)

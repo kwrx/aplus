@@ -47,7 +47,7 @@ static int fb_ioctl(struct inode* inode, int req, void* ptr) {
     #define cp(x)                   \
         if(unlikely(!x)) {          \
             errno = EINVAL;         \
-            return -1;           \
+            return -1;              \
         }
 
     fbdev_t* fbdev = (fbdev_t*) inode->userdata;

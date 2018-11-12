@@ -29,7 +29,7 @@
 
 /* Makefile generated */
 #define DEBUG 1
-#define COMMIT "0b3e7df4"
+#define COMMIT "8c0bf675"
 #define PLATFORM "i386"
 #define TARGET "i686-aplus"
 /**********************/
@@ -80,7 +80,7 @@
 #if defined(__i386__)
 #    define CONFIG_BITS                     32
 #    define CONFIG_KERNEL_BASE              0xC0000000L
-#    define CONFIG_HEAP_BASE                0xC4000000L
+#    define CONFIG_HEAP_BASE                0xC8000000L
 #    define CONFIG_STACK_BASE               0xFFC00000L
 #    define CONFIG_HEAP_SIZE                ((CONFIG_HOST_MEMORY * 1024 * 1024) / 2)
 #    define CONFIG_STACK_SIZE               0x00020000ULL

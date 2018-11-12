@@ -3,16 +3,16 @@
 
 __fastcall
 __optimize(fast)
-static void console_output_clear_32(context_t* cx, uint16_t sr, uint16_t er, uint16_t sc, uint16_t ec) {
+static void console_output_render_32(context_t* cx, uint16_t sr, uint16_t er, uint16_t sc, uint16_t ec) {
     long sy = (sr * ROW);
     long ey = (er * ROW);
     long sx = (sc * COL);
     long ex = (ec * COL);
 
     for(; sy < ey; sy++)
-        memset (
+        memcpy (
+            (void*) ((uintptr_t) cx->screen.framebuffer + (sy * cx->screen.stride) + (sx << 2)),
             (void*) ((uintptr_t) cx->screen.backbuffer + (sy * cx->screen.stride) + (sx << 2)),
-            0,
             (ex - sx) << 2
         );
 }
@@ -33,11 +33,13 @@ static void console_output_move_32(context_t* cx, uint16_t dsr, uint16_t der, ui
 
 
     for(long y = 0; y < (dy1 - dy0); y++)
-        memmove(
+        memmove (
             (void*) ((uintptr_t) cx->screen.backbuffer + ((dy0 + y) * cx->screen.stride) + (dx0 << 2)),
             (void*) ((uintptr_t) cx->screen.backbuffer + ((sy0 + y) * cx->screen.stride) + (sx0 << 2)),
             (sx1 - sx0) << 2
         );
+
+    cx->fb.render(cx, 0, cx->console.rows, 0, cx->console.cols);
 }
 
 
@@ -61,7 +63,7 @@ static void console_output_putc_32(context_t* cx, uint16_t r, uint16_t c, uint32
     uint32_t* offset = (uint32_t*) &((uint8_t*) cx->screen.backbuffer) [((r * ROW) * cx->screen.stride) + ((c * COL) << 2)];
 
     int row, p;
-    for(row = 0, p = 0; row < 16; row++, p += cx->screen.stride) {
+    for(row = 0, p = 0; row < 16; row++, p += cx->screen.width) {
 
         int cx, b;
         for(cx = 0, b = 8; cx < 8; cx++, b--)

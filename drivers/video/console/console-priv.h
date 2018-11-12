@@ -28,7 +28,7 @@ typedef struct context {
 
     struct {
         __attribute__((fastcall))
-        void (*clear) (struct context*, uint16_t, uint16_t, uint16_t, uint16_t);
+        void (*render) (struct context*, uint16_t, uint16_t, uint16_t, uint16_t);
 
         __attribute__((fastcall))
         void (*move) (struct context*, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t, uint16_t);
@@ -40,6 +40,8 @@ typedef struct context {
 
     VTerm* vt;
     VTermScreen* vs;
+    VTermState* vc;
+    int vmode;
 } context_t;
 
 

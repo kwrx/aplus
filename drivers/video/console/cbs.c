@@ -1,5 +1,6 @@
 #include <aplus.h>
 #include <aplus/base.h>
+#include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/mm.h>
 #include <aplus/sysconfig.h>
@@ -25,11 +26,6 @@
 int console_cbs_damage(VTermRect r, void* user) {
     DECLARE_CONTEXT(cx);
 
-    cx->fb.clear (
-        cx, 
-        r.start_row, r.end_row,
-        r.start_col, r.end_col
-    );
 
     VTermScreenCell c;
     VTermPos p;
@@ -42,6 +38,9 @@ int console_cbs_damage(VTermRect r, void* user) {
             p.row = row;
             vterm_screen_get_cell(cx->vs, p, &c);
 
+            if(c.chars[0] < 32)
+                c.chars[0] = ' ';
+
             cx->fb.putc (
                 cx,
                 row, col,
@@ -53,8 +52,12 @@ int console_cbs_damage(VTermRect r, void* user) {
         }
     }
 
-    memcpy(cx->screen.framebuffer, cx->screen.backbuffer, cx->screen.stride * cx->screen.height);
-    __halt();
+
+    cx->fb.render (
+        cx, 
+        r.start_row, r.end_row,
+        r.start_col, r.end_col
+    );
 
     return 1;
 }
@@ -81,11 +84,6 @@ int console_cbs_moverect(VTermRect d, VTermRect s, void* user) {
 int console_cbs_movecursor(VTermPos p, VTermPos op, int visible, void* user) {
     DECLARE_CONTEXT(cx);
 
-    cx->fb.clear (
-        cx,
-        op.row, (op.row + 1),
-        op.col, (op.col + 1)
-    );
 
     VTermScreenCell c;
     vterm_screen_get_cell(cx->vs, op, &c);
@@ -104,23 +102,28 @@ int console_cbs_movecursor(VTermPos p, VTermPos op, int visible, void* user) {
 }
 
 int console_cbs_settermprop(VTermProp p, VTermValue* v, void* user) {
-    return 1;
+    DECLARE_CONTEXT(cx);
+    return 0;
 }
 
 int console_cbs_bell(void* user) {
-    return 1;
+    DECLARE_CONTEXT(cx);
+    return 0;
 }
 
 int console_cbs_resize(int r, int c, void* user) {
-    return 1;
+    DECLARE_CONTEXT(cx);
+    return 0;
 }
 
 int console_cbs_sb_pushline(int cl, const VTermScreenCell* c, void* user) {
-    return 1;
+    DECLARE_CONTEXT(cx);
+    return 0;
 }
 
 int console_cbs_sb_popline(int cl, VTermScreenCell* c, void* user) {
-    return 1;
+    DECLARE_CONTEXT(cx); 
+    return 0;
 }
 
 

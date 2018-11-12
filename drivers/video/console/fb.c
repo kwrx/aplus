@@ -5,6 +5,7 @@
 #include <aplus/mm.h>
 #include <aplus/sysconfig.h>
 #include <aplus/fb.h>
+#include <aplus/kd.h>
 #include <libc.h>
 
 #include "console-font.h"
@@ -22,7 +23,6 @@ int fb_init(context_t* cx) {
         "/dev/fb0"
     );    
     
-    
 
     struct fb_var_screeninfo var;
     struct fb_fix_screeninfo fix;
@@ -35,16 +35,18 @@ int fb_init(context_t* cx) {
     }
 
 
-    memset(&var, 0, sizeof(var));
-    var.xres =
-    var.xres_virtual = (int) sysconfig("screen.width", 640);
-    var.yres =
-    var.yres_virtual = (int) sysconfig("screen.height", 400);
-    var.bits_per_pixel = (int) sysconfig("screen.bpp", 32);
-    var.activate = FB_ACTIVATE_NOW;
+     if(cx->vmode == KD_TEXT) {
+        memset(&var, 0, sizeof(var));
+        var.xres =
+        var.xres_virtual = 800;//(int) sysconfig("screen.width", 800);
+        var.yres =
+        var.yres_virtual = 600;//(int) sysconfig("screen.height", 600);
+        var.bits_per_pixel = (int) sysconfig("screen.bpp", 32);
+        var.activate = FB_ACTIVATE_NOW;
 
+        sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);
+    }
 
-    sys_ioctl(fb, FBIOPUT_VSCREENINFO, &var);
     sys_ioctl(fb, FBIOGET_VSCREENINFO, &var);
     sys_ioctl(fb, FBIOGET_FSCREENINFO, &fix);
     sys_close(fb);
@@ -78,22 +80,22 @@ int fb_init(context_t* cx) {
 
     switch(var.bits_per_pixel) {
         case 8:
-            cx->fb.clear = console_output_clear_8;
+            cx->fb.render = console_output_render_8;
             cx->fb.move = console_output_move_8;
             cx->fb.putc = console_output_putc_8;
             break;
         case 16:
-            cx->fb.clear = console_output_clear_16;
+            cx->fb.render = console_output_render_16;
             cx->fb.move = console_output_move_16;
             cx->fb.putc = console_output_putc_16;
             break;
         case 24:
-            cx->fb.clear = console_output_clear_24;
+            cx->fb.render = console_output_render_24;
             cx->fb.move = console_output_move_24;
             cx->fb.putc = console_output_putc_24;
             break;
         case 32:
-            cx->fb.clear = console_output_clear_32;
+            cx->fb.render = console_output_render_32;
             cx->fb.move = console_output_move_32;
             cx->fb.putc = console_output_putc_32;
             break;

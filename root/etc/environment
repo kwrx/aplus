@@ -10,5 +10,5 @@ LD_DEBUG_OUTPUT=/dev/log
 LD_LIBRARY_PATH=/usr/local/lib
 TMPDIR=/tmp
 TZDIR=/usr/share/zoneinfo
-TERM=linux
+TERM=vt100
 LANG=

@@ -81,6 +81,7 @@ static void sh_prompt_info(char* user, char* host) {
         geteuid() == 0 ? '#' : '$'
     );
 
+
     fflush(stdout);
 }
 
