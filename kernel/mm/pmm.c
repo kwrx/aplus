@@ -78,10 +78,10 @@ static int FR_FIRST(int count) {
 
 physaddr_t pmm_alloc_frames(int count) {
     register int fx = FR_FIRST(count);
-    KASSERT(fx != E_ERR);
+    KASSERT(fx != -1);
 
-    while(count--)
-        FR_SET(fx + count);
+    for(int i = 0; i < count; i++)
+        FR_SET(fx + i);
 
     return (physaddr_t) fx;
 }
@@ -92,8 +92,8 @@ physaddr_t pmm_alloc_frame(void) {
 }
 
 void pmm_free_frames(physaddr_t address, int count) {
-    while(count--)
-        FR_CLR(address + count);
+    for(int i = 0; i < count; i++)
+        FR_CLR(address + i);
 }
 
 void pmm_free_frame(physaddr_t address) {
@@ -107,10 +107,8 @@ void pmm_claim(physaddr_t mstart, physaddr_t mend) {
     register int i = mstart / MM_BLOCKSZ;
     register int j = mend / MM_BLOCKSZ;
 
-    while(i < j) {
+    for(; i < j; i++)
         FR_SET(i);
-        i++;
-    }
 }
 
 

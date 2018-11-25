@@ -1,0 +1,125 @@
+diff -Naur binutils-2.31/bfd/config.bfd aplus-binutils-2.31/bfd/config.bfd
+--- binutils-2.31/bfd/config.bfd	2018-07-09 09:44:53.000000000 +0200
++++ aplus-binutils-2.31/bfd/config.bfd	2018-11-25 20:04:33.360154723 +0100
+@@ -223,6 +223,11 @@
+ 
+ # START OF targmatch.h
+ #ifdef BFD64
++  x86_64-*-aplus*)
++    targ_defvec=x86_64_elf64_vec
++    targ_selvecs=i386_elf32_vec
++    want64=true
++    ;;
+   aarch64-*-darwin*)
+     targ_defvec=aarch64_mach_o_vec
+     targ_selvecs="arm_mach_o_vec mach_o_le_vec mach_o_be_vec mach_o_fat_vec"
+@@ -315,6 +320,12 @@
+     ;;
+ #endif /* BFD64 */
+ 
++  i[34567]86-*-aplus*)
++    targ_defvec=i386_elf32_vec
++    targ_selvecs=
++    targ64_selvecs=x86_64_elf64_vec
++    ;;
++    
+   am33_2.0-*-linux*)
+     targ_defvec=am33_elf32_linux_vec
+     ;;
+diff -Naur binutils-2.31/config.sub aplus-binutils-2.31/config.sub
+--- binutils-2.31/config.sub	2018-07-06 09:13:31.000000000 +0200
++++ aplus-binutils-2.31/config.sub	2018-11-25 20:02:06.626811309 +0100
+@@ -1349,7 +1349,7 @@
+ 	# The portable systems comes first.
+ 	# Each alternative MUST end in a * to match a version number.
+ 	# sysv* is not here because it comes later, after sysvr4.
+-	gnu* | bsd* | mach* | minix* | genix* | ultrix* | irix* \
++	gnu* | bsd* | mach* | minix* | genix* | ultrix* | irix* | aplus* \
+ 	     | *vms* | esix* | aix* | cnk* | sunos | sunos[34]*\
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* | kopensolaris* | plan9* \
+diff -Naur binutils-2.31/gas/configure.tgt aplus-binutils-2.31/gas/configure.tgt
+--- binutils-2.31/gas/configure.tgt	2018-06-24 20:38:57.000000000 +0200
++++ aplus-binutils-2.31/gas/configure.tgt	2018-11-25 20:06:31.640162864 +0100
+@@ -121,6 +121,7 @@
+ generic_target=${cpu_type}-$vendor-$os
+ # Note: This table is alpha-sorted, please try to keep it that way.
+ case ${generic_target} in
++  i386-*-aplus*)       fmt=elf em=gnu;;
+   aarch64*-*-elf*)			fmt=elf;;
+   aarch64*-*-fuchsia*)			fmt=elf;;
+   aarch64*-*-linux*)			fmt=elf em=linux
+diff -Naur binutils-2.31/ld/configure.tgt aplus-binutils-2.31/ld/configure.tgt
+--- binutils-2.31/ld/configure.tgt	2018-07-09 09:44:53.000000000 +0200
++++ aplus-binutils-2.31/ld/configure.tgt	2018-11-25 20:07:37.716834065 +0100
+@@ -45,6 +45,15 @@
+ # architecture variants should be kept together even if their names
+ # break the alpha sorting.
+ case "${targ}" in
++i[34567]86-*-aplus*)
++			targ_emul=elf_i386_aplus
++			targ_extra_emuls=elf_i386
++			targ64_extra_emuls="elf_x86_64_aplus elf_x86_64"
++			;;
++x86_64-*-aplus*)
++			targ_emul=elf_x86_64_aplus
++			targ_extra_emuls="elf_i386_aplus elf_x86_64 elf_i386"
++			;;
+ aarch64_be-*-elf)	targ_emul=aarch64elfb
+ 			targ_extra_emuls="aarch64elf aarch64elf32 aarch64elf32b armelfb armelf" ;;
+ aarch64-*-elf | aarch64-*-rtems*)
+diff -Naur binutils-2.31/ld/emulparams/elf_i386_aplus.sh aplus-binutils-2.31/ld/emulparams/elf_i386_aplus.sh
+--- binutils-2.31/ld/emulparams/elf_i386_aplus.sh	1970-01-01 01:00:00.000000000 +0100
++++ aplus-binutils-2.31/ld/emulparams/elf_i386_aplus.sh	2018-11-25 20:09:05.950173468 +0100
+@@ -0,0 +1,4 @@
++. ${srcdir}/emulparams/elf_i386.sh
++GENERATE_SHLIB_SCRIPT=yes
++GENERATE_PIE_SCRIPT=yes
++
+diff -Naur binutils-2.31/ld/emulparams/elf_x86_64_aplus.sh aplus-binutils-2.31/ld/emulparams/elf_x86_64_aplus.sh
+--- binutils-2.31/ld/emulparams/elf_x86_64_aplus.sh	1970-01-01 01:00:00.000000000 +0100
++++ aplus-binutils-2.31/ld/emulparams/elf_x86_64_aplus.sh	2018-11-25 20:10:07.566844374 +0100
+@@ -0,0 +1,2 @@
++. ${srcdir}/emulparams/elf_x86_64.sh
++
+diff -Naur binutils-2.31/ld/Makefile.am aplus-binutils-2.31/ld/Makefile.am
+--- binutils-2.31/ld/Makefile.am	2018-06-24 20:38:57.000000000 +0200
++++ aplus-binutils-2.31/ld/Makefile.am	2018-11-25 20:12:34.520187790 +0100
+@@ -153,6 +153,7 @@
+ LIBIBERTY = ../libiberty/libiberty.a
+ 
+ ALL_EMULATION_SOURCES = \
++	eelf_i386_aplus.c \
+ 	eaix5ppc.c \
+ 	eaix5rs6.c \
+ 	eaixppc.c \
+@@ -384,6 +385,7 @@
+ ALL_EMULATIONS = $(ALL_EMULATION_SOURCES:.c=.@OBJEXT@)
+ 
+ ALL_64_EMULATION_SOURCES = \
++	eelf_x86_64_aplus.c \
+ 	eaarch64elf.c \
+ 	eaarch64elf32.c \
+ 	eaarch64elfb.c \
+@@ -1276,6 +1278,10 @@
+ 
+ eelf_i386.c: $(srcdir)/emulparams/elf_i386.sh \
+   $(ELF_X86_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++  
++eelf_i386_aplus.c: $(srcdir)/emulparams/elf_i386_aplus.sh \
++  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_i386_aplus "$(tdir_elf_i386_aplus)"
+ 
+ eelf_i386_be.c: $(srcdir)/emulparams/elf_i386_be.sh \
+   $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
+@@ -1832,6 +1838,10 @@
+ 
+ eelf_x86_64.c: $(srcdir)/emulparams/elf_x86_64.sh \
+   $(ELF_X86_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++  
++eelf_x86_64_aplus.c: $(srcdir)/emulparams/elf_x86_64_aplus.sh \
++  $(ELF_DEPS) $(srcdir)/scripttempl/elf.sc ${GEN_DEPENDS}
++	${GENSCRIPTS} elf_x86_64_aplus "$(tdir_elf_x86_64_aplus)"
+ 
+ eelf_x86_64_cloudabi.c: $(srcdir)/emulparams/elf_x86_64_cloudabi.sh \
+   $(srcdir)/emulparams/elf_x86_64.sh \

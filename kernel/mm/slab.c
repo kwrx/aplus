@@ -110,12 +110,11 @@ retry:
         int count = ((size + 8) / MM_BLOCKSZ) + 1;
 
         register int fx = FR_FIRST(count);
-        if(unlikely(fx == E_ERR))
+        if(unlikely(fx == -1))
             break;
 
-        while(count--)
-            FR_SET(fx + count);
-        FR_SET(fx);
+        for(int i = 0; i < count; i++)
+            FR_SET(fx + i);
 
         p = (void*) CONFIG_HEAP_BASE + (fx * MM_BLOCKSZ);
 
@@ -211,9 +210,8 @@ void kfree(void* p) {
 
 
     int count = ((h->size + 8) / MM_BLOCKSZ) + 1;
-    while(count--)
-        FR_CLR(address + count);
-    FR_CLR(address);
+    for(int i = 0; i < count; i++)
+        FR_CLR(address + i);
 
     if(likely(current_task))
         current_task->vmsize -= h->size;
