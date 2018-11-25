@@ -1,0 +1,11 @@
+--- automake-old	2018-11-25 20:48:37.683669000 +0100
++++ automake	2018-11-25 20:54:09.250359148 +0100
+@@ -4156,7 +4156,7 @@
+ sub substitute_ac_subst_variables ($)
+ {
+   my ($text) = @_;
+-  $text =~ s/\${([^ \t=:+{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
++  $text =~ s/\$\{([^ \t=:+\{}]+)}/&substitute_ac_subst_variables_worker ($1)/ge;
+   return $text;
+ }
+ 
