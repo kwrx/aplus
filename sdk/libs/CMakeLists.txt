@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.1)
+add_subdirectory(c)
+add_subdirectory(m)
+add_subdirectory(crt)
+add_subdirectory(aplus)
+add_subdirectory(crypt)
+add_subdirectory(pthread)
+add_subdirectory(ssp)

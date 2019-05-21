@@ -1,0 +1,342 @@
+#!/bin/sh
+
+
+rootdir=$(pwd)
+target=${TARGET:-"x86_64-aplus"}
+arch=$(echo $target | cut -d- -f1)
+version=${VERSION:-"0.3.0"}
+cpus=${CPUS:-"2"}
+
+
+binutils="2.31"
+gcc="8.2.0"
+autoconf="2.69"
+autoconf_gcc="2.64"
+automake="1.15.1"
+
+
+pushd () {
+    command pushd "$@" > /dev/null
+}
+
+popd () {
+    command popd "$@" > /dev/null
+}
+
+error () {
+    cat $rootdir/output.log | tail -n5
+    echo ""
+    echo "error: there was an error during the execution of the script, see output.log for more information"
+    exit 1
+}
+
+export pushd popd
+
+
+echo "[1] Check requirements"
+
+reqs="\
+    automake            \
+    autoconf            \
+    make                \
+    libtool             \
+    bison               \
+    flex                \
+    gcc                 \
+    g++                 \
+    nasm                \
+    ld                  \
+    ar                  \
+    wget                \
+    patch               \
+    tar                 \
+    xz                  \
+    bzip2               \
+    diff                \
+    grub-install        \
+    hexdump             \
+    pv"    
+    
+
+for r in $reqs; do
+    echo -n "Checking for $r... "
+    if ! which $r &> /dev/null; then
+        echo "not found"
+        echo "$r: is required to run build-tools"
+        exit 1
+    else
+        echo $(which $r)
+    fi
+done
+
+echo "[2] Make toolchain environment"
+mkdir -p toolchain
+mkdir -p toolchain/bin
+mkdir -p toolchain/$target
+mkdir -p toolchain/$target/include
+mkdir -p toolchain/src
+mkdir -p toolchain/src/binutils
+mkdir -p toolchain/src/gcc
+mkdir -p toolchain/src/autoconf
+mkdir -p toolchain/src/automake
+
+export PATH="$rootdir/toolchain/bin:$PATH"
+
+
+echo "[3] Check and download tools"
+
+if [ ! -f toolchain/src/autoconf-$autoconf.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf.tar.xz
+fi
+
+if [ ! -f toolchain/src/autoconf-$autoconf_gcc.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src https://ftp.gnu.org/gnu/autoconf/autoconf-$autoconf_gcc.tar.xz
+fi
+
+if [ ! -f toolchain/src/automake-$automake.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src https://ftp.gnu.org/gnu/automake/automake-$automake.tar.xz
+fi
+
+if [ ! -f toolchain/src/binutils-$binutils.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src http://ftp.gnu.org/gnu/binutils/binutils-$binutils.tar.xz
+fi
+
+if [ ! -f toolchain/src/binutils/binutils-$binutils.patch ]; then
+    wget -q --show-progress -P toolchain/src/binutils https://github.com/kwrx/aplus-packages/raw/master/generic/patches/binutils-$binutils.patch
+fi
+
+if [ ! -f toolchain/src/gcc-$gcc.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src http://mirror2.mirror.garr.it/mirrors/gnuftp/gcc/gcc-$gcc/gcc-$gcc.tar.xz
+fi
+
+if [ ! -f toolchain/src/gcc/gcc-$gcc.patch ]; then
+    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/generic/patches/gcc-$gcc.patch
+fi
+
+if [ ! -f toolchain/src/gcc/gcc-headers.patch ]; then
+    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/generic/patches/gcc-headers.patch
+fi
+
+if [ ! -f toolchain/src/gcc/$target-headers-$version.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/$arch/$target-headers-$version.tar.xz
+fi
+
+
+
+echo "[4] Check and extract tools"
+
+if [ ! -d toolchain/src/autoconf/autoconf-$autoconf ]; then
+    pv toolchain/src/autoconf-$autoconf.tar.xz | tar -xJf - -C toolchain/src/autoconf
+fi
+
+if [ ! -d toolchain/src/autoconf/autoconf-$autoconf_gcc ]; then
+    pv toolchain/src/autoconf-$autoconf_gcc.tar.xz | tar -xJf - -C toolchain/src/autoconf
+fi
+
+if [ ! -d toolchain/src/automake/automake-$automake ]; then
+    pv toolchain/src/automake-$automake.tar.xz | tar -xJf - -C toolchain/src/automake
+fi
+
+if [ ! -d toolchain/src/binutils/binutils-$binutils ]; then
+    pv toolchain/src/binutils-$binutils.tar.xz | tar -xJf - -C toolchain/src/binutils
+fi
+
+if [ ! -d toolchain/src/gcc/gcc-$gcc ]; then
+    pv toolchain/src/gcc-$gcc.tar.xz | tar -xJf - -C toolchain/src/gcc
+fi
+
+
+
+echo "[5] Build autoconf-$autoconf"
+if [[ $(autoconf --version | head -n1 - | cut -d' ' -f4) != $autoconf ]]; then
+    echo " > Prepare"
+    mkdir -p toolchain/src/autoconf/build-autoconf
+
+    pushd toolchain/src/autoconf/build-autoconf
+        echo " > Configure"
+        if ! ../autoconf-$autoconf/configure --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile"
+        if ! make -j$cpus &>> $rootdir/output.log; then error; fi
+
+        echo " > Install"
+        if ! make install &>> $rootdir/output.log; then error; fi
+    popd
+
+    echo " > Clean"
+    rm -rf toolchain/src/autoconf/build-autoconf
+fi
+
+
+
+
+echo "[6] Build automake-$automake"
+if ! (which automake | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
+    echo " > Prepare"
+    mkdir -p toolchain/src/automake/build-automake
+
+    pushd toolchain/src/automake/build-automake
+        echo " > Configure"
+        if ! ../automake-$automake/configure --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile"
+        if ! make -j$cpus &>> $rootdir/output.log; then error; fi
+
+        echo " > Install"
+        if ! make install &>> $rootdir/output.log; then error; fi
+    popd
+
+    echo " > Clean"
+    rm -rf toolchain/src/automake/build-automake
+fi
+
+
+
+echo "[7] Build binutils-$binutils"
+if ! (which $target-ld | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
+    echo " > Prepare"
+    mkdir -p toolchain/src/binutils/build-binutils
+
+    pushd toolchain/src/binutils/build-binutils
+        echo " > Patch"
+        pushd ../binutils-$binutils
+            patch -p1 < ../binutils-$binutils.patch &>> $rootdir/output.log
+            pushd ld
+                if ! automake &>> $rootdir/output.log; then error; fi
+            popd
+        popd
+
+        echo " > Configure"
+        if ! ../binutils-$binutils/configure --target=$target --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile"
+        if ! make -j$cpus &>> $rootdir/output.log; then error; fi
+
+        echo " > Install"
+        if ! make install &>> $rootdir/output.log; then error; fi
+    popd
+
+    echo " > Clean"
+    rm -rf toolchain/src/binutils/build-binutils
+fi
+
+
+echo "[8] Build autoconf-$autoconf_gcc"
+if [[ $(autoconf --version | head -n1 - | cut -d' ' -f4) != $autoconf_gcc ]]; then
+    echo " > Prepare"
+    mkdir -p toolchain/src/autoconf/build-autoconf
+
+    pushd toolchain/src/autoconf/build-autoconf
+        echo " > Configure"
+        if ! ../autoconf-$autoconf_gcc/configure --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile"
+        if ! make -j$cpus &>> $rootdir/output.log; then error; fi
+
+        echo " > Install"
+        if ! make install &>> $rootdir/output.log; then error; fi
+    popd
+
+    echo " > Clean"
+    rm -rf toolchain/src/autoconf/build-autoconf
+fi
+
+
+echo "[9] Build gcc-$gcc"
+if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
+    echo " > Prepare"
+    mkdir -p toolchain/src/gcc/build-gcc
+
+    pushd toolchain/src/gcc/build-gcc
+        echo " > Patch"
+        pushd ../gcc-$gcc
+            patch -p1 < ../gcc-$gcc.patch &>> $rootdir/output.log
+            
+            pushd libstdc++-v3
+                if ! autoconf &>> $rootdir/output.log; then error; fi
+            popd
+
+            pushd $rootdir/toolchain/$target/include
+                patch -p1 < $rootdir/toolchain/src/gcc/gcc-headers.patch &>> $rootdir/output.log
+            popd
+        popd
+
+        echo " > Download prerequisites (gmp, mpc, mpfr, isl)"
+        pushd ../gcc-$gcc
+            if ! ./contrib/download_prerequisites &>> $rootdir/output.log; then error; fi
+        popd
+
+        echo " > Configure"
+        if ! ../gcc-$gcc/configure --target=$target --prefix=$rootdir/toolchain --enable-languages=c,c++ &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile (gcc)"
+        if ! make -j$cpus all-gcc &>> $rootdir/output.log; then error; fi
+
+        echo " > Compile (libgcc)"
+        if ! make -j$cpus all-target-libgcc &>> $rootdir/output.log; then error; fi
+
+        echo " > Install (gcc)"
+        if ! make install-gcc &>> $rootdir/output.log; then error; fi
+
+        echo " > Install (libgcc)"
+        if ! make install-target-libgcc &>> $rootdir/output.log; then error; fi
+
+        echo " > Clean"
+        pushd $rootdir/toolchain/$target/include
+            rm -rf *
+        popd
+
+        echo " > Install (headers)"
+        if ! tar --overwrite -xJf $rootdir/toolchain/src/gcc/$target-headers-$version.tar.xz -C $rootdir/toolchain &>> $rootdir/output.log; then error; fi
+    popd
+fi
+
+
+
+echo "[10] Build libstdc++-v3"
+if [ -f $($target-gcc --print-file-name crt0.o) ]; then
+    if [ ! -f $($target-gcc --print-file-name libstdc++.a) ]; then
+        echo " > Prepare"
+        pushd toolchain/src/gcc/build-gcc
+            echo " > Compile (libstdc++-v3)"
+            if ! make -j$cpus all-target-libstdc++-v3 &>> $rootdir/output.log; then error; fi
+
+            echo " > Install (libstdc++-v3)"
+            if ! make -j$cpus install-target-libstdc++-v3 &>> $rootdir/output.log; then error; fi
+        popd
+
+        echo " > Clean"
+        rm -rf toolchain/src/gcc/build-gcc
+    fi
+else
+    echo "No C Library found for now, skipping"
+fi
+
+
+
+echo "[11] Generate toolchain-config.mk"
+echo "TOOLCHAIN_PATH := $rootdir/toolchain" > toolchain-config.mk
+echo "PATH := $rootdir/toolchain/bin:\$(PATH)" >> toolchain-config.mk
+
+
+echo "[12] Toolchain build has done"
+echo ""
+echo "  Prefix:             $rootdir/toolchain"
+echo "  Binaries:           $rootdir/toolchain/bin"
+echo "  Toolchain-config:   $rootdir/toolchain-config.mk"
+if [ ! -f $($target-gcc --print-file-name libstdc++.a) ]; then
+    echo "  C++ Support:        no"
+else
+    echo "  C++ Support:        yes"
+fi
+echo ""
+echo "Remember to copy 'toolchain-config.mk' file:"
+echo "  toolchain-config.mk -> aplus/build/toolchain-config.mk"
+echo ""
+
+if [ ! -f $($target-gcc --print-file-name crt0.o) ]; then
+    echo ""
+    echo "Note: Run './build libc.a' on aplus directory and re-run 'build-toolchain' for C++ support"
+fi
+
+exit 0

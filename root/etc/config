@@ -1,0 +1,65 @@
+## /etc/config
+#
+# System wide configuration file
+#
+
+
+# -- Init
+init.locale="it-IT"
+#init.timezone="Europe/Rome"
+
+
+# -- Screen
+screen.device="/dev/fb0"
+screen.width=1280
+screen.height=720
+screen.bpp=32
+
+
+# -- Energy saving
+idle.enabled="true"
+idle.priority.low=1
+idle.priority.medium=2
+idle.priority.high=3
+idle.priority=$idle.priority.low
+
+
+# -- TMP Filesystem
+fs.tmpfs.size=0x1000000
+fs.tmpfs.files=0x100000
+
+
+# -- I/O Scheduler
+fs.iosched.priority=0
+fs.iosched.blksize=4194304
+
+
+
+# -- UI
+ui.enabled="false"
+ui.dpi=72
+ui.font.config="/etc/fonts/fonts.conf"
+ui.font.regular="Ubuntu"
+ui.font.monospace="Ubuntu Mono"
+ui.font.condensed="Ubuntu Condensed"
+ui.wallpaper="/usr/share/images/wp.png"
+
+
+# -- [syncd]
+daemons.syncd.enabled="true"
+daemons.syncd.timeout=10
+
+
+# -- [ntpd]
+daemons.ntpd.enabled="true"
+daemons.ntpd.timeout=3600
+daemons.ntpd.server="it.pool.ntp.org"
+
+
+# -- [httpd]
+daemons.httpd.enabled="false"
+daemons.httpd.root="/srv/http"
+daemons.httpd.port=80
+
+
+

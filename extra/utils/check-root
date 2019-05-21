@@ -1,0 +1,25 @@
+#!/bin/sh
+
+mkdir -p root
+mkdir -p root/boot
+mkdir -p root/boot/grub
+mkdir -p root/usr
+mkdir -p root/usr/lib
+mkdir -p root/usr/lib/modules
+mkdir -p root/usr/bin
+mkdir -p root/usr/sbin
+mkdir -p root/usr/share
+mkdir -p root/usr/include
+mkdir -p root/home
+mkdir -p root/home/root
+mkdir -p root/etc
+mkdir -p root/etc/init.d
+mkdir -p root/etc/fonts
+mkdir -p root/mnt
+mkdir -p root/proc
+mkdir -p root/srv
+mkdir -p root/srv/http
+mkdir -p root/sys
+mkdir -p root/tmp
+mkdir -p root/var
+mkdir -p root/var/cache

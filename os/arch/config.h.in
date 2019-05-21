@@ -1,0 +1,10 @@
+#pragma once
+
+#cmakedefine ARCH_X86_32 @ARCH_X86_32@
+#cmakedefine ARCH_X86_64 @ARCH_X86_64@
+#cmakedefine ARCH_ARM @ARCH_ARM@
+#cmakedefine ARCH_AARCH64 @ARCH_AARCH64@
+
+
+#cmakedefine ARCH_BITS @ARCH_BITS@
+#cmakedefine PAGE_SIZE @PAGE_SIZE@

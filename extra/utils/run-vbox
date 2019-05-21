@@ -1,0 +1,16 @@
+#!/bin/sh
+
+qemu-img convert -f raw -O vmdk hdd.img hdd.vmdk
+
+touch vbox.log
+tail -f vbox.log &
+
+VBoxManage internalcommands sethduuid hdd.vmdk 33831c99-24f7-4268-96c8-bdcbf07fcd5d
+VBoxManage startvm aplus
+
+while VBoxManage list runningvms | grep aplus &> /dev/null; do
+    sleep 1
+done
+
+kill %1 &> /dev/null
+rm hdd.vmdk vbox.log

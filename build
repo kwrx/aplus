@@ -1,0 +1,165 @@
+#!/bin/sh
+
+
+target="i686"
+toolchain="$(pwd)/sdk/toolchain"
+generator="Ninja"
+mode="run"
+build="Debug"
+project=""
+nobuild="no"
+norun="no"
+gdb="no"
+builddir="/tmp/aplus-build"
+
+
+check () {
+    if [ ! $? -eq 0 ]; then
+        echo "build: failed with $?"
+        exit
+    fi
+}
+
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -t|--target)
+            target="$2"
+            shift
+            shift
+            ;;
+
+        -g|--generator)
+            generator="$2"
+            shift
+            shift
+            ;;
+
+        -p|--project)
+            project="$2"
+            shift
+            shift
+            ;;
+
+        -n|--nobuild)
+            nobuild="yes"
+            shift
+            ;;
+
+        -r|--norun)
+            norun="yes"
+            shift
+            ;;
+
+        -b|--build)
+            build="$2"
+            shift
+            shift
+            ;;
+
+        -d|--gdb)
+            gdb="yes"
+            shift
+            ;;
+
+        run)
+            mode="run"
+            shift
+            ;;
+
+        clean)
+            mode="clean"
+            shift
+            ;;
+
+
+        -h|--help)
+            echo " Usage: ./build MODE [-t TARGET] [-g GENERATOR] [-p PROJECT] [-b BUILD] [-nrd]"
+            echo ""
+            echo "  MODE:                run, rebuild, clean             (default: $mode)"
+            echo ""
+            echo "    -t, --target       i386, x86-64, arm, aarch64      (default: $target)"
+            echo "    -g, --generator    see cmake generators...         (default: $generator)"
+            echo "    -p, --project      project to build                (default: all)"
+            echo "    -b, --build        build (Release, Debug)          (default: $build)"
+            echo "    -n, --nobuild      configure only"
+            echo "    -r, --norun        configure and build only"
+            echo "    -d, --gdb          run vm with gdb support"
+            echo ""
+            exit
+            ;;
+        *)
+            echo "build: unknown argument $1"
+            exit
+            ;;
+    esac
+done
+
+
+case $mode in
+    run)
+        mkdir -p $builddir
+        srcdir=$(pwd)
+
+        ./extra/utils/check-root
+        check
+
+        ./extra/utils/gen-files
+        check
+
+        pushd $builddir &> /dev/null
+
+            cmake -DCMAKE_BUILD_TYPE=$build -DTOOLCHAIN=$toolchain -DTOOLCHAIN_PREFIX=$toolchain/$target-aplus -DTARGET=$target -DCMAKE_TOOLCHAIN_FILE=$srcdir/extra/build/toolchain.cmake -G"$generator" $srcdir
+            check
+
+            if [ "$nobuild" = "yes" ]; then
+                exit
+            fi
+
+            case $generator in
+                Ninja)
+                    ninja $project
+                    check
+                    ninja install
+                    check
+                    ;;
+                "Unix Makefiles")
+                    make $project
+                    check
+                    make install
+                    check
+                    ;;
+                *)
+                    echo "Sorry, I have no idea what i'm doing :("
+                    exit
+                    ;;
+            esac
+
+            if [ "$norun" = "yes" ]; then
+                exit
+            fi
+
+        popd &> /dev/null
+
+
+        ./extra/utils/gen-grubcfg > $(pwd)/root/boot/grub/grub.cfg
+        check
+
+        ./extra/utils/gen-image
+        check
+        
+        
+        if [ "$gdb" = "yes" ]; then
+            ./extra/utils/run-qemu $target --debug
+        else
+            ./extra/utils/run-qemu $target
+        fi
+
+        ;;
+    clean)
+        rm -rf $builddir
+        ;;
+esac
+
+
+

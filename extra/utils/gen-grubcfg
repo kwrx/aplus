@@ -1,0 +1,31 @@
+#!/bin/sh
+
+echo -e "\
+menuentry \"aPlus\" { \n\
+    multiboot /aplus root=/dev/sda0 rootfs=ext2"
+
+for ko in root/usr/lib/modules/*.ko; do
+    test -f "$ko" || continue
+    echo -e "\
+    module /usr/lib/modules/$(basename $ko)"
+done
+
+echo -e "\
+    boot \n\
+}"
+
+echo ""
+
+echo -e "\
+menuentry \"aPlus - Text Mode\" { \n\
+    multiboot /aplus root=/dev/sda0 rootfs=ext2 graphics=no"
+
+for ko in root/usr/lib/modules/*.ko; do
+    test -f "$ko" || continue
+    echo -e "\
+    module /usr/lib/modules/$(basename $ko)"
+done
+
+echo -e "\
+    boot \n\
+}"

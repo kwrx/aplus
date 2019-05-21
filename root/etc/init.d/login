@@ -1,0 +1,13 @@
+#!/bin/dash
+
+case "$1" in
+    start)
+        exec /sbin/getty /dev/tty0
+        ;;
+    stop | status | restart)
+        ;;
+    *)
+        echo "Usage: `basename $0` {start|stop|status|restart}"
+        exit 1
+esac
+

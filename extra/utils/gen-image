@@ -1,0 +1,25 @@
+#!/bin/sh
+
+if [ ! -f hdd.img ]; then
+    dd status=none if=/dev/zero of=hdd.img bs=4M count=30
+    echo -e "n\np\n\n\n\nw\n" | fdisk hdd.img &> /dev/null
+    sudo losetup /dev/loop1 hdd.img
+    sudo losetup /dev/loop2 hdd.img -o 1048576
+    sudo mkfs -text2 /dev/loop2 &> /dev/null
+    mkdir -p /tmp/hdd
+    sudo mount /dev/loop2 /tmp/hdd
+    sudo grub-install --root-directory=/tmp/hdd --target=i386-pc --force --no-floppy --modules="normal part_msdos fat multiboot biosdisk" /dev/loop1 &> /dev/null
+    sudo umount /tmp/hdd
+    sudo losetup -d /dev/loop1
+    sudo losetup -d /dev/loop2
+    sync
+fi
+
+sudo losetup /dev/loop2 hdd.img -o 1048576
+mkdir -p /tmp/hdd
+sudo mount /dev/loop2 /tmp/hdd
+sudo rm -rf /tmp/hdd/*
+sudo cp -r root/* /tmp/hdd
+sudo umount /tmp/hdd
+sudo losetup -d /dev/loop2
+sync

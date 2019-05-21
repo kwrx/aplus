@@ -1,0 +1,27 @@
+#!/bin/sh
+
+arch=""
+flags=""
+
+case $1 in
+    i[3-7]86|x86*)
+        arch="x86_64"
+        flags="-drive file=hdd.img,if=ide,format=raw -boot c -m 512 -M accel=kvm -smp 4 -vga std -soundhw ac97 -device pcnet,netdev=net0 -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        ;;
+    *)
+        echo "run-vm: unknown ARCH \"$1\""
+        exit 1
+        ;;
+esac
+
+if ! which qemu-system-$arch &> /dev/null; then
+    echo "run-vm: qemu-system-$arch not found, you should try to install \"qemu-arch-extra\" package"
+    exit 1
+fi
+
+debug=""
+if [ ! -z $2 ]; then
+    debug="-S"
+fi
+
+qemu-system-$arch -d page,guest_errors,int -serial stdio -s $debug $flags
