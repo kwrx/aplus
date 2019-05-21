@@ -2,7 +2,7 @@
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
  * 
- * Copyright (c) 2013-2018 Antonino Natale
+ * Copyright (c) 2013-2019 Antonino Natale
  * 
  * 
  * This file is part of aPlus.

@@ -2,7 +2,7 @@
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
  * 
- * Copyright (c) 2013-2018 Antonino Natale
+ * Copyright (c) 2013-2019 Antonino Natale
  * 
  * 
  * This file is part of aPlus.
@@ -142,9 +142,20 @@
     __SC_##x (y, z)
 
 
+
+SC(2, 4, stat)
+SC(2, 5, fstat)
+SC(2, 6, lstat)
+SC(1, 63, uname)
+
+/* Extension */
 SC(1, 500, __exit)
 SC(1, 501, sbrk)
-SC(3, 502, fstat)
+SC(0, 503, fork)
+SC(3, 504, _execve)
+SC(2, 505, statvfs)
+SC(1, 506, nice)
+
 
 #include "../syscall.tbl.h"
 #endif
