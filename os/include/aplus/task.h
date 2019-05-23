@@ -76,9 +76,7 @@ typedef struct {
 
 typedef struct task {
     struct {
-        uintptr_t stack[128];
-        uintptr_t ip;
-        uintptr_t sp;
+        void* frame;
         uint8_t fpu[1024];
     } context;
 
@@ -166,8 +164,17 @@ typedef struct task {
 
 pid_t sched_nextpid();
 
+void sched_enqueue(task_t*);
+void sched_dequeue(task_t*);
+void sched_init(void);
+
+void* schedule(void*);
+void* schedule_yield(void*);
+
+void* arch_task_switch(void*, task_t*, task_t*);
+
 extern task_t* kernel_task;
-extern task_t* task_queue;
+extern task_t* sched_queue;
 
 #endif
 #endif

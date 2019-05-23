@@ -103,11 +103,11 @@ isr_stub:
 	push fs
 	push gs
 
-	mov ax, 0x10
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
+	mov cx, 0x10
+	mov ds, cx
+	mov es, cx
+	mov fs, cx
+	mov gs, cx
 
 	push esp
 	call x86_isr_handler

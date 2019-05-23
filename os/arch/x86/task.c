@@ -37,6 +37,29 @@
 
 static heap_t* heap_task;
 
+void* arch_task_switch(void* frame, task_t* from, task_t* to) {
+
+    from->context.frame = frame;
+
+    __asm__ __volatile__ (
+        "fsave [%0];"
+        "frstor [%1];"
+
+        :: "r"(from->context.fpu), "r"(to->context.fpu)
+    );
+
+
+    DEBUG_ASSERT(from->aspace);
+    DEBUG_ASSERT(to->aspace);
+    DEBUG_ASSERT(to->context.frame);
+
+
+    if(unlikely(from->aspace->vmmpd != to->aspace->vmmpd))
+        x86_set_cr3(to->aspace->vmmpd);
+
+
+    return to->context.frame;
+}
 
 void task_init(void) {    
     heap_create(&heap_task, sizeof(task_t), TASK_NPROC);

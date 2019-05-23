@@ -79,7 +79,7 @@ void apic_enable(void) {
     uint32_t ticks = 0xFFFFFFFF - mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
 
 
-    //mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 17) | 32);
+    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 17) | 32);
     mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
     mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, ticks);
 

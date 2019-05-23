@@ -25,6 +25,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
+#include <aplus/task.h>
 #include <aplus/mm.h>
 #include <aplus/syscall.h>
 #include <stdint.h>
@@ -43,6 +44,8 @@ void kmain(void) {
     syscall_init();
     vfs_init();
 
+
+    sched_init();
 
     kprintf("cpu: %s %d-%d MHz (Cores: %d, Threads: %d)\n",
         mbd->cpu.family,
@@ -64,4 +67,5 @@ void kmain(void) {
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
 
+    cmain();
 }

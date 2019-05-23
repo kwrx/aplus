@@ -34,6 +34,7 @@
 #define CPU_MAX                     16
 #define CPU_FLAGS_ENABLED           (1 << 0)
 #define CPU_FLAGS_BSP               (1 << 1)
+#define CPU_FLAGS_SCHED_ENABLED     (1 << 2)
 
 
 typedef struct {
@@ -54,9 +55,8 @@ cpu_t* get_cpu(int);
 
 
 #define foreach_cpu(cpu)                \
-    cpu_t* cpu;                         \
     for(int i = 0; i < CPU_MAX; i++)    \
-        if((cpu = get_cpu(i))
+        if((cpu = get_cpu(i)))
 
 #define current_cpu                     \
     get_current_cpu()

@@ -229,6 +229,8 @@ typedef struct x86_frame {
     uint64_t cs;
     uint64_t rflags;
     uint64_t userrsp;
+
+    char bottom[0];
 } __attribute__((packed)) x86_frame_t;
 
 

@@ -27,6 +27,7 @@
 #include <aplus/mm.h>
 #include <aplus/timer.h>
 #include <aplus/smp.h>
+#include <aplus/vfs.h>
 #include <arch/x86/mm.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
@@ -45,9 +46,12 @@ cpu_t* get_current_cpu(void) {
 
 cpu_t* get_cpu(int id) {   
     DEBUG_ASSERT(id < CPU_MAX);
-    DEBUG_WARNING(cpus[id].flags & CPU_FLAGS_ENABLED);
+    //DEBUG_WARNING(cpus[id].flags & CPU_FLAGS_ENABLED);
     
-    return &cpus[id];
+    if(cpus[id].flags & CPU_FLAGS_ENABLED)
+        return &cpus[id];
+    
+    return NULL;
 }
 
 
@@ -84,12 +88,11 @@ void smp_main(int bsp) {
     _.priority = TASK_PRIO_REG;
     _.affinity = ~(1 << apic_get_id());
 
-    _.context.ip = 0;
-    _.context.sp = 0;
+    _.context.frame = NULL;
 
     _.root =
     _.cwd =
-    _.exe = NULL;
+    _.exe = vfs_root;
 
     _.umask = 000;
 
@@ -107,8 +110,7 @@ void smp_main(int bsp) {
     _.next = NULL;
 
     spinlock_init(&_.lock);
-
-
+    
     if(bsp)
         return;
 
@@ -116,7 +118,7 @@ void smp_main(int bsp) {
 }
 
 void smp_init(void) {
-    
+
     ap_init();
 
 

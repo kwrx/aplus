@@ -243,7 +243,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
 
         case 0x20:
-            if(current_cpu->flags & CPU_FLAGS_ENABLED)
+            if(current_cpu)
                 frame = schedule(frame);
             
             apic_eoi();
