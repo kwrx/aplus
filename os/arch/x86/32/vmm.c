@@ -38,6 +38,9 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
     DEBUG_ASSERT(aspace != NULL);
     DEBUG_ASSERT((void*) aspace > (void*) CONFIG_KERNEL_BASE);    
 
+    /* Not supported */
+    flags &= ~X86_MMU_PG_NX;
+
 
     x86_page_t* d;
 

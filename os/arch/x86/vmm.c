@@ -58,7 +58,11 @@ void* arch_mmap(void* address, size_t length, int flags) {
         mf |= X86_MMU_PG_G;
 
 
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->aspace);
     
+
     __lock(&current_task->aspace->lock, {
     
         for(; s <= e; s += PAGE_SIZE)
@@ -77,6 +81,11 @@ void arch_munmap(void* address, size_t length) {
 
     uintptr_t s = ((uintptr_t) address) & ~(PAGE_SIZE - 1);
     uintptr_t e = ((uintptr_t) address + length + PAGE_SIZE) & ~(PAGE_SIZE - 1);
+
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->aspace);
+
 
     __lock(&current_task->aspace->lock, {
 

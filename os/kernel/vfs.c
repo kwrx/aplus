@@ -34,7 +34,6 @@
 inode_t _vfs_root;
 inode_t* vfs_root = &_vfs_root;
 
-static heap_t* vfs_heap;
 
 void vfs_init(void) {
     #define _ _vfs_root
@@ -54,11 +53,6 @@ void vfs_init(void) {
     spinlock_init(&_.lock);
     #undef _
 
-
-    heap_create(&vfs_heap, sizeof(inode_t), VFS_NINODES);
-
-    if(unlikely(!vfs_heap))
-        kpanic("heap_create(): could not create heap for vfs, size %d\n", VFS_NINODES * sizeof(inode_t));
 }
 
 int vfs_open(inode_t* inode) {

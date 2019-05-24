@@ -45,5 +45,4 @@ void arch_init(void) {
     __(apic_init);
     __(timer_init);
     __(smp_init);
-    __(task_init);
 }

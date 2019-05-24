@@ -154,7 +154,7 @@ void smp_init(void) {
         if(ap_check(i, 3000000))    /* 3 secs */
             continue;
 
-        kprintf("x86-smp: Failed to start CPU #%d\n", mbd->cpu.cores[i].id);
+        kpanic("x86-smp: Failed to start CPU #%d\n", mbd->cpu.cores[i].id);
     }
 
     smp_main(1);

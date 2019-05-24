@@ -40,16 +40,13 @@
 #define ARCH_MAP_NOEXEC                         16
 #define ARCH_MAP_SHARED                         32
 
+#define MM_INIT_PMM                             1
+#define MM_INIT_VMM                             2
+#define MM_INIT_SLAB                            4
 
-typedef struct {
-    size_t nsize;
-    size_t nmax;
-    size_t nused;
-    uintptr_t data;
-    uintptr_t end;
-    spinlock_t lock;
-    uint32_t bitmap[0];
-} __packed heap_t;
+#define GFP_KERNEL                              1
+#define GFP_USER                                2
+#define GFP_ATOMIC                              3
 
 
 typedef long block_t;
@@ -60,11 +57,14 @@ void arch_munmap(void*, size_t);
 int arch_ptr_access(void*, int);
 
 
-int heap_create(heap_t**, size_t, size_t);
-int heap_destroy(heap_t*);
-void* heap_alloc(heap_t*);
-void heap_free(heap_t*, void*);
+void mm_init(int);
+void slab_init(void);
 
+
+void* kmalloc(size_t, int);
+void* krealloc(void*, size_t, int);
+void* kcalloc(size_t, size_t, int);
+void kfree(void*);
 
 
 void pmm_init(void);

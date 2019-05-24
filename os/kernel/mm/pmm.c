@@ -106,8 +106,8 @@ block_t pmm_alloc_block(void) {
         }
     });
 
-    if(unlikely(block == -1))
-        return -1;
+
+    DEBUG_ASSERT(block != -1);
 
     mbd->memory.used += mbd->memory.pagesize;
     return block;
@@ -140,8 +140,8 @@ block_t pmm_alloc_block_from_end(void) {
         }
     });
 
-    if(unlikely(block == -1))
-        return -1;
+
+    DEBUG_ASSERT(block != -1);
 
     mbd->memory.used += mbd->memory.pagesize;
     return block;

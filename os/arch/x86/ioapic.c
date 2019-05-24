@@ -73,8 +73,7 @@ void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
         }
     }
 
-    kprintf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
-    DEBUG_ASSERT(0);
+    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
 }
 
 void ioapic_unmap_irq(uint8_t source) {
@@ -106,8 +105,7 @@ void ioapic_unmap_irq(uint8_t source) {
         }
     }
 
-    kprintf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
-    DEBUG_ASSERT(0);
+    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
 }
 
 
@@ -144,6 +142,7 @@ void ioapic_enable(void) {
         int j;
         for(j = ioapic[i].gsi_base; j < ioapic[i].gsi_max; j++)
             ioapic_unmap_irq(j);
+
 
         kprintf("x86-apic: I/O APIC #%d initialized [base(%p), gsi(%d-%d)]\n", i, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_max);
     }

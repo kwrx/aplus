@@ -38,14 +38,18 @@ void cmain(void) {
 void kmain(void) {
 
     core_init();
-    pmm_init();
+    
+    mm_init(MM_INIT_PMM);
+    
     arch_init();
+    
+    mm_init(MM_INIT_VMM | MM_INIT_SLAB);
 
+    task_init();
     syscall_init();
     vfs_init();
-
-
     sched_init();
+
 
     kprintf("cpu: %s %d-%d MHz (Cores: %d, Threads: %d)\n",
         mbd->cpu.family,
@@ -66,6 +70,7 @@ void kmain(void) {
         KERNEL_PLATFORM,
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
+
 
     cmain();
 }

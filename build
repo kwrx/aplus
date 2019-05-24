@@ -109,7 +109,7 @@ case $mode in
 
         pushd $builddir &> /dev/null
 
-            cmake -DCMAKE_BUILD_TYPE=$build -DTOOLCHAIN=$toolchain -DTOOLCHAIN_PREFIX=$toolchain/$target-aplus -DTARGET=$target -DCMAKE_TOOLCHAIN_FILE=$srcdir/extra/build/toolchain.cmake -G"$generator" $srcdir
+            cmake -DCMAKE_BUILD_TYPE=$build -DTOOLCHAIN=$toolchain -DTOOLCHAIN_PREFIX=$toolchain/$target-aplus -DTARGET=$target -DCMAKE_TOOLCHAIN_FILE=$srcdir/cmake/toolchain.cmake -G"$generator" $srcdir
             check
 
             if [ "$nobuild" = "yes" ]; then

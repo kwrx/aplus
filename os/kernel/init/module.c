@@ -23,43 +23,5 @@
 
 
 #include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/mm.h>
-#include <aplus/timer.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <arch/x86/apic.h>
-#include <arch/x86/cpu.h>
-#include <arch/x86/smp.h>
-#include <arch/x86/mm.h>
-#include <stdint.h>
-#include <string.h>
+#include <aplus/module.h>
 
-
-void* arch_task_switch(void* frame, task_t* from, task_t* to) {
-
-    from->context.frame = frame;
-
-    __asm__ __volatile__ (
-        "fsave [%0];"
-        "frstor [%1];"
-
-        :: "r"(from->context.fpu), "r"(to->context.fpu)
-    );
-
-
-    DEBUG_ASSERT(from->aspace);
-    DEBUG_ASSERT(to->aspace);
-    DEBUG_ASSERT(to->context.frame);
-
-
-    if(unlikely(from->aspace->vmmpd != to->aspace->vmmpd))
-        x86_set_cr3(to->aspace->vmmpd);
-
-
-    return to->context.frame;
-}
-
-void task_init(void) {    
-
-}

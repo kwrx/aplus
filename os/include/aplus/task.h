@@ -161,6 +161,7 @@ typedef struct task {
 } __packed task_t;
 
 
+void task_init(void);
 
 pid_t sched_nextpid();
 

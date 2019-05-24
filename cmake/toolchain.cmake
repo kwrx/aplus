@@ -24,5 +24,5 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY CACHE INTERNAL "")
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY CACHE INTERNAL "")
 
 if(NOT ${TARGET} STREQUAL "")
-    include("${CMAKE_SOURCE_DIR}/extra/build/toolchain-${TARGET}.cmake")
+    include("${CMAKE_SOURCE_DIR}/cmake/toolchain-${TARGET}.cmake")
 endif()

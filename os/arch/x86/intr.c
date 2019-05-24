@@ -226,6 +226,10 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
     };
 
 
+
+    DEBUG_ASSERT(frame);
+
+
     switch(frame->int_no) {
         case 0xFE:
 #ifdef ARCH_X86_64
@@ -239,7 +243,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
 
         case 0xFF:
-            kprintf("SPURIOUS INTERRUPT!\n");
+            kpanic("intr: Spourius Interrupt!");
             break;
 
         case 0x20:
@@ -329,6 +333,7 @@ void arch_intr_enable(long s) {
 
 int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*)) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
+    DEBUG_ASSERT(handler);
 
     if(!spinlock_trylock(&irqs[irq].lock)) {
         kprintf("x86-intr: irq #%d locked by another process\n", irq);

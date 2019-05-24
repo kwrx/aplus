@@ -68,7 +68,7 @@
 #    define CONFIG_KERNEL_BASE              0xC0000000L
 #    define CONFIG_HEAP_BASE                0xC8000000L
 #    define CONFIG_STACK_BASE               0xC7FFF000L
-#    define CONFIG_HEAP_SIZE                0x10000000L
+#    define CONFIG_HEAP_SIZE                0x04000000L
 #    define CONFIG_STACK_SIZE               0x00020000ULL
 #elif defined(__x86_64__)
 #    define CONFIG_BITS                     64

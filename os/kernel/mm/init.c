@@ -24,42 +24,29 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/ipc.h>
 #include <aplus/mm.h>
-#include <aplus/timer.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <arch/x86/apic.h>
-#include <arch/x86/cpu.h>
-#include <arch/x86/smp.h>
-#include <arch/x86/mm.h>
 #include <stdint.h>
-#include <string.h>
 
-
-void* arch_task_switch(void* frame, task_t* from, task_t* to) {
-
-    from->context.frame = frame;
-
-    __asm__ __volatile__ (
-        "fsave [%0];"
-        "frstor [%1];"
-
-        :: "r"(from->context.fpu), "r"(to->context.fpu)
+void vmm_init(void) {
+    arch_mmap (
+        (void*)  CONFIG_HEAP_BASE,
+        (size_t) CONFIG_HEAP_SIZE,
+        
+        ARCH_MAP_NOEXEC | ARCH_MAP_RDWR | ARCH_MAP_SHARED
     );
 
-
-    DEBUG_ASSERT(from->aspace);
-    DEBUG_ASSERT(to->aspace);
-    DEBUG_ASSERT(to->context.frame);
-
-
-    if(unlikely(from->aspace->vmmpd != to->aspace->vmmpd))
-        x86_set_cr3(to->aspace->vmmpd);
-
-
-    return to->context.frame;
+    kprintf("heap: initialized at %p-%p\n", CONFIG_HEAP_BASE, CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE);
 }
 
-void task_init(void) {    
 
+void mm_init(int flags) {
+    if(flags & MM_INIT_PMM)
+        pmm_init();
+
+    if(flags & MM_INIT_VMM)
+        vmm_init();
+
+    if(flags & MM_INIT_SLAB)
+        slab_init();
 }
