@@ -46,7 +46,6 @@ cpu_t* get_current_cpu(void) {
 
 cpu_t* get_cpu(int id) {   
     DEBUG_ASSERT(id < CPU_MAX);
-    //DEBUG_WARNING(cpus[id].flags & CPU_FLAGS_ENABLED);
     
     if(cpus[id].flags & CPU_FLAGS_ENABLED)
         return &cpus[id];
@@ -64,7 +63,8 @@ void smp_main(int bsp) {
     int i = apic_get_id();
     cpus[i].id = i;
     cpus[i].flags = CPU_FLAGS_ENABLED | (bsp ? CPU_FLAGS_BSP : 0);
-    cpus[i].ticks = 0;
+    cpus[i].ticks.tv_sec = 0;
+    cpus[i].ticks.tv_nsec = 0;
     cpus[i].task.current = &cpus[i].task.core;
 
 

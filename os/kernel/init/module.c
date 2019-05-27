@@ -23,5 +23,16 @@
 
 
 #include <aplus.h>
+#include <aplus/debug.h>
 #include <aplus/module.h>
 
+
+
+void module_init(void) {
+    int i;
+    for(i = 0; i < mbd->modules.count; i++) {
+        
+
+        mbd->modules.ptr[i].status = MODULE_STATUS_READY;
+    }
+}

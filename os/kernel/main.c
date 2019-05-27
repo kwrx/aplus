@@ -38,17 +38,15 @@ void cmain(void) {
 void kmain(void) {
 
     core_init();
-    
-    mm_init(MM_INIT_PMM);
-    
-    arch_init();
-    
-    mm_init(MM_INIT_VMM | MM_INIT_SLAB);
 
-    task_init();
-    syscall_init();
-    vfs_init();
-    sched_init();
+    __init(mm,      (MM_INIT_PMM));
+    __init(arch,    ());
+    __init(mm,      (MM_INIT_VMM | MM_INIT_SLAB));
+    __init(task,    ());
+    __init(syscall, ());
+    __init(vfs,     ());
+    __init(sched,   ());
+    __init(module,  ());
 
 
     kprintf("cpu: %s %d-%d MHz (Cores: %d, Threads: %d)\n",

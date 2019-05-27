@@ -2,8 +2,14 @@ cmake_minimum_required(VERSION 3.1)
 project(arch)
 
 file(GLOB SRCS
-    "${TARGET_ARCH}/*.c" "${TARGET_ARCH}/*.cpp" "${TARGET_ARCH}/*.asm"
-    "${TARGET_ARCH}/${TARGET_BITS}/*.c" "${TARGET_ARCH}/${TARGET_BITS}/*.cpp" "${TARGET_ARCH}/${TARGET_BITS}/*.asm"
+    "${TARGET_ARCH}/*.c"
+    "${TARGET_ARCH}/*.cpp"
+    "${TARGET_ARCH}/*.s"
+    "${TARGET_ARCH}/*.asm"
+    "${TARGET_ARCH}/${TARGET_BITS}/*.c"
+    "${TARGET_ARCH}/${TARGET_BITS}/*.cpp"
+    "${TARGET_ARCH}/${TARGET_BITS}/*.s"
+    "${TARGET_ARCH}/${TARGET_BITS}/*.asm"
 )
 
 add_library(arch ${SRCS})

@@ -1,13 +1,16 @@
 #!/bin/sh
 
+kargs='root=/dev/sda0 rootfs=ext2'
+margs=''
+
 echo -e "\
 menuentry \"aPlus\" { \n\
-    multiboot /aplus root=/dev/sda0 rootfs=ext2"
+    multiboot /aplus $kargs"
 
 for ko in root/usr/lib/modules/*.ko; do
     test -f "$ko" || continue
     echo -e "\
-    module /usr/lib/modules/$(basename $ko)"
+    module /usr/lib/modules/$(basename $ko) $margs"
 done
 
 echo -e "\
@@ -18,12 +21,12 @@ echo ""
 
 echo -e "\
 menuentry \"aPlus - Text Mode\" { \n\
-    multiboot /aplus root=/dev/sda0 rootfs=ext2 graphics=no"
+    multiboot /aplus $kargs graphics=no"
 
 for ko in root/usr/lib/modules/*.ko; do
     test -f "$ko" || continue
     echo -e "\
-    module /usr/lib/modules/$(basename $ko)"
+    module /usr/lib/modules/$(basename $ko) $margs graphics=no"
 done
 
 echo -e "\

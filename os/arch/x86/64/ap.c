@@ -39,7 +39,7 @@
 
 
 spinlock_t ap_interlock;
-uint32_t ap_cores;
+volatile uint32_t ap_cores;
 
 
 
@@ -51,8 +51,8 @@ void ap_main(void) {
         x86_sti();
         
         apic_enable();
-        ap_cores++;
 
+        __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
     });
 
     smp_main(0);
@@ -74,9 +74,11 @@ void ap_init(void) {
         AP_BOOTSTRAP_CODE + PAGE_SIZE - 1
     );
 
-    arch_mmap (
-        (void*) AP_BOOTSTRAP_CODE, PAGE_SIZE,
-        ARCH_MAP_FIXED | ARCH_MAP_RDWR
+    x86_map_page (
+        (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3()),
+        AP_BOOTSTRAP_CODE, 
+        AP_BOOTSTRAP_CODE >> 12,
+        X86_MMU_PG_P | X86_MMU_PG_RW
     );
 
     memcpy (
@@ -101,14 +103,15 @@ void ap_init(void) {
 int ap_check(int core, int timeout) {
     int us;
     for(us = 0; us < timeout; us += 200) {
-        __sync_synchronize();
-    
+        __atomic_thread_fence(__ATOMIC_SEQ_CST);
+
         if(!(ap_cores < core))
             return 1;
 
         arch_timer_delay(200);
     }
 
+    __atomic_thread_fence(__ATOMIC_SEQ_CST);
     return (!(ap_cores < core));
 }
 

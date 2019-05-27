@@ -22,48 +22,20 @@
  */
 
 
-#ifndef _APLUS_SMP_H
-#define _APLUS_SMP_H
-
-#if defined(KERNEL)
 #include <aplus.h>
-#include <aplus/ipc.h>
-#include <aplus/timer.h>
-#include <aplus/task.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
 
-#define CPU_MAX                     16
-#define CPU_FLAGS_ENABLED           (1 << 0)
-#define CPU_FLAGS_BSP               (1 << 1)
-#define CPU_FLAGS_SCHED_ENABLED     (1 << 2)
-
-
-typedef struct {
-    int id;
-    int flags;
-    spinlock_t lock;
-
-    struct {
-        task_t core;
-        task_t* current;
-    } task;
-    
-    struct timespec ticks;
-} cpu_t;
+MODULE_NAME("test");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
 
 
-cpu_t* get_current_cpu(void);
-cpu_t* get_cpu(int);
+void init(const char* args) {
+    kprintf("test: module running!\n");
+}
 
-
-#define foreach_cpu(cpu)                \
-    for(int i = 0; i < CPU_MAX; i++)    \
-        if((cpu = get_cpu(i)))
-
-#define current_cpu                     \
-    get_current_cpu()
-
-#define current_task                    \
-    (current_cpu->task.current)
-
-#endif
-#endif
+void dnit(void) {
+    kprintf("test: module removed!\n");
+}

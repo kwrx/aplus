@@ -21,34 +21,3 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define __init_ns "memory::"
-
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/ipc.h>
-#include <aplus/mm.h>
-#include <stdint.h>
-
-
-void vmm_init(void) {
-    arch_mmap (
-        (void*)  CONFIG_HEAP_BASE,
-        (size_t) CONFIG_HEAP_SIZE,
-        
-        ARCH_MAP_NOEXEC | ARCH_MAP_RDWR | ARCH_MAP_SHARED
-    );
-
-    kprintf("heap: initialized at %p-%p\n", CONFIG_HEAP_BASE, CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE);
-}
-
-
-void mm_init(int flags) {
-    if(flags & MM_INIT_PMM)
-        __init(pmm, ());
-
-    if(flags & MM_INIT_VMM)
-        __init(vmm, ());
-
-    if(flags & MM_INIT_SLAB)
-        __init(slab, ());
-}

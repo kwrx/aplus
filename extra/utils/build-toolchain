@@ -2,7 +2,7 @@
 
 
 rootdir=$(pwd)
-target=${TARGET:-"x86_64-aplus"}
+target=${TARGET:-"i686-aplus"}
 arch=$(echo $target | cut -d- -f1)
 version=${VERSION:-"0.3.0"}
 cpus=${CPUS:-"2"}

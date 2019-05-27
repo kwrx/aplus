@@ -247,9 +247,16 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
 
         case 0x20:
-            if(current_cpu)
+            if(current_cpu) {
+                if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
+                    current_cpu->ticks.tv_sec += 1;
+                    current_cpu->ticks.tv_nsec = 0;
+                } else
+                    current_cpu->ticks.tv_nsec += 1000000;
+
                 frame = schedule(frame);
-            
+            }
+
             apic_eoi();
             break;
 

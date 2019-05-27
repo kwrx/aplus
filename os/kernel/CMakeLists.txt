@@ -22,12 +22,14 @@ target_compile_options (kernel
         -std=gnu11
         -nostdlib
         -include ${CMAKE_BINARY_DIR}/os/arch/config.h
+        ${TARGET_KERN_COMPILE_OPTS}
 )
 
 target_link_options(kernel
     PRIVATE
         -Wl,-Map=${CMAKE_SOURCE_DIR}/kernel.map
         -Wl,-T${TARGET_LINK}
+        ${TARGET_KERN_LINK_OPTS}
         -nostdlib
 )
 

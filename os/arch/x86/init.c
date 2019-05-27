@@ -21,28 +21,31 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define __init_ns "arch::x86::"
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/mm.h>
 
 
-#define __(fn)              \
-    {                       \
-        extern void fn();   \
-        fn();               \
-    }
+extern void multiboot_init();
+extern void intr_init();
+extern void acpi_init();
+extern void apic_init();
+extern void timer_init();
+extern void smp_init();
 
 
 void arch_early_init(void) {
     __builtin_cpu_init();
     
-    __(multiboot_init);
+    multiboot_init();
 }
 
 void arch_init(void) {
-    __(intr_init);
-    __(acpi_init);
-    __(apic_init);
-    __(timer_init);
-    __(smp_init);
+    __init(intr,    ());
+    __init(acpi,    ());
+    __init(apic,    ());
+    __init(timer,   ());
+    __init(smp,     ());
 }

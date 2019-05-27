@@ -28,16 +28,11 @@
 #include <aplus/mm.h>
 #include <aplus/ipc.h>
 #include <arch/x86/mm.h>
+#include <arch/x86/cpu.h>
 #include <stdint.h>
-#include <string.h>
+#include <unistd.h>
 
 
-static inline block_t alloc_page() {
-    block_t p = pmm_alloc_block_safe();
-
-    memset((void*) ((p << 12) + CONFIG_KERNEL_BASE), 0, PAGE_SIZE);
-    return p;
-}
 
 
 void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t flags) {
@@ -55,7 +50,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
     /* PML4-L3 */
     {
         if(!(*d & X86_MMU_PG_P))
-            *d = ((uint64_t) alloc_page() << 12) | X86_MMU_PG_P;
+            *d = ((uint64_t) pmm_alloc_block_safe() << 12) | X86_MMU_PG_P;
 
         d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 30) & 0x1FF];
     }
@@ -65,7 +60,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
         DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PDP-L2 is 1GiB Page");
 
         if(!(*d & X86_MMU_PG_P))
-            *d = ((uint64_t) alloc_page() << 12) | X86_MMU_PG_P;
+            *d = ((uint64_t) pmm_alloc_block_safe() << 12) | X86_MMU_PG_P;
 
         d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
     }
@@ -75,7 +70,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
         DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 2Mib Page");
 
         if(!(*d & X86_MMU_PG_P))
-            *d = ((uint64_t) alloc_page() << 12) | flags;
+            *d = ((uint64_t) pmm_alloc_block_safe() << 12) | flags;
 
         d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
     }
@@ -85,7 +80,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
         DEBUG_ASSERT(!(*d & X86_MMU_PG_P) && "Page already used, unmap first");
 
         if(block == -1)
-            *d = ((uint64_t) alloc_page() << 12) | X86_MMU_PG_AP_PFB | flags;
+            *d = ((uint64_t) pmm_alloc_block_safe() << 12) | X86_MMU_PG_AP_PFB | flags;
         else
             *d = ((uint64_t) block << 12) | flags;
     }
@@ -139,4 +134,52 @@ void x86_unmap_page(x86_page_t* aspace, uintptr_t address) {
 
 
     __asm__ __volatile__ ("invlpg [%0]" :: "m"(address) : "memory");
+}
+
+
+int x86_ptr_access(uintptr_t address, int mode) {
+
+    x86_page_t* d;
+    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
+
+    /* CR3-L4 */ 
+    {
+        d = &aspace[(address >> 39) & 0x1FF];
+    }
+
+    /* PML4-L3 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 30) & 0x1FF];
+    }
+
+    /* PDP-L2 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
+    }
+
+    /* PD-L1 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
+    }
+
+    /* Page Table */
+    
+    if(mode & R_OK)
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+    if(mode & W_OK)
+        if(unlikely(!(*d & X86_MMU_PG_RW)))
+            return 0;
+
+    return 1;
 }

@@ -39,4 +39,13 @@
 #define MODULE_AUTHOR(x);
 #define MODULE_LICENSE(x);
 
+
+#define MODULE_STATUS_UNKNOWN                           0
+#define MODULE_STATUS_READY                             1
+#define MODULE_STATUS_LOADED                            2
+#define MODULE_STATUS_LOADING                           3
+#define MODULE_STATUS_FAILED                            4
+
+
+void module_init(void);
 #endif

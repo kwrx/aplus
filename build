@@ -78,7 +78,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             echo "  MODE:                run, rebuild, clean             (default: $mode)"
             echo ""
-            echo "    -t, --target       i386, x86-64, arm, aarch64      (default: $target)"
+            echo "    -t, --target       i686, x86-64, arm, aarch64      (default: $target)"
             echo "    -g, --generator    see cmake generators...         (default: $generator)"
             echo "    -p, --project      project to build                (default: all)"
             echo "    -b, --build        build (Release, Debug)          (default: $build)"

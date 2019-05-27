@@ -6,10 +6,15 @@ set(ARCH_BITS 64)
 set(TARGET_ARCH "x86")
 set(TARGET_BITS "64")
 set(TARGET_LINK "${CMAKE_SOURCE_DIR}/os/arch/${TARGET_ARCH}/${TARGET_BITS}/link.ld")
-set(TARGET_ARCH_COMPILE_OPTS "-mcmodel=kernel -mno-red-zone -masm=intel")
-set(TARGET_ARCH_LINK_OPTS "-z max-page-size=0x1000")
+
+set(TARGET_ARCH_COMPILE_OPTS -mcmodel=kernel -mno-red-zone -masm=intel)
+set(TARGET_ARCH_LINK_OPTS -z max-page-size=0x1000)
+
+set(TARGET_KERN_COMPILE_OPTS -mcmodel=kernel -mno-red-zone)
+set(TARGET_KERN_LINK_OPTS -z max-page-size=0x1000)
 
 set(PAGE_SIZE 4096)
+
 
 
 message(STATUS "Configure os/arch ...")

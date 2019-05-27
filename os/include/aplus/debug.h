@@ -40,6 +40,7 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 #define WARN            "[ WARN  ] "
 
 
+#if DEBUG
 #define DEBUG_ASSERT(x) {                                                                           \
     if(unlikely(!(x))) {                                                                            \
         kprintf(ERROR "Assert failed \'%s\' in %s:%d <%s>\n", #x, __FILE__, __LINE__, __func__);    \
@@ -59,6 +60,15 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
         kprintf(WARN "Assert warning \'%s\' in %s:%d <%s>\n", #x, __FILE__, __LINE__, __func__);    \
     }                                                                                               \
 }
+
+#else
+
+#define DEBUG_ASSERT(x);
+#define DEBUG_BREAKPOINT();
+#define DEBUG_WARNING(x);
+
+#endif
+
 
 
 int kprintf(const char*, ...);

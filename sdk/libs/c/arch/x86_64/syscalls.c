@@ -45,7 +45,7 @@
 
 #define __SC_1(x, y)                    \
     __attribute__((weak))               \
-    long y (p0) {                       \
+    long y (long p0) {                  \
         long r;                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -59,7 +59,7 @@
 
 #define __SC_2(x, y)                    \
     __attribute__((weak))               \
-    long y (p0, p1) {                   \
+    long y (long p0, long p1) {         \
         long r;                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -74,7 +74,7 @@
 
 #define __SC_3(x, y)                    \
     __attribute__((weak))               \
-    long y (p0, p1, p2) {               \
+    long y (long p0, long p1, long p2) {\
         long r;                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -89,7 +89,8 @@
 
 #define __SC_4(x, y)                    \
     __attribute__((weak))               \
-    long y (p0, p1, p2, p3) {           \
+    long y (long p0, long p1, long p2,  \
+            long p3) {                  \
         long r;                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -105,7 +106,8 @@
 
 #define __SC_5(x, y)                    \
     __attribute__((weak))               \
-    long y (p0, p1, p2, p3, p4) {       \
+    long y (long p0, long p1, long p2,  \
+            long p3, long p4) {         \
         long r;                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -121,12 +123,10 @@
         
 #define __SC_6(x, y)                    \
     __attribute__((weak))               \
-    long y (p0, p1, p2, p3, p4, p5) {   \
+    long y (long p0, long p1, long p2,  \
+            long p3, long p4, long p5) {\
         int r, e;                       \
-        __asm__ __volatile__ (          \
-            "mov %0, %%r8"              \
-            :: "r"(p5)                  \
-        );                              \
+        register long r8 asm("r8") = p5;\
                                         \
         __asm__ __volatile__ (          \
             SYSCALL                     \
@@ -134,6 +134,7 @@
             : "a"(x), "b"(p0),          \
               "c"(p1), "d"(p2),         \
               "S"(p3), "D"(p4),         \
+              "r"(r8)                   \
         );                              \
         if(r < 0)                       \
             return errno = -r, -1;      \

@@ -87,9 +87,8 @@ void* schedule(void* frame) {
             current_task->parent->clock.tms_cutime += t;
 
 
-        //if(likely(((int) current_task->clock.tms_utime / 1000) % ((int) (20 - current_task->priority))))
-        //    break;
-
+        if(likely(((int) current_task->clock.tms_utime / 1000) % ((int) (20 - current_task->priority))))
+            break;
 
         
         current_task->rusage.ru_nivcsw++;

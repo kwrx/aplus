@@ -35,6 +35,7 @@
 #include <string.h>
 
 spinlock_t delay_lock;
+spinlock_t rtc_lock;
 
 
 void arch_timer_delay(ktime_t us) {
@@ -61,17 +62,61 @@ void arch_timer_delay(ktime_t us) {
 }
 
 ktime_t arch_timer_getticks(void) {
-    return current_cpu->ticks;
+    return (ktime_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
+           (ktime_t) (current_cpu->ticks.tv_nsec / (1000000000 / CONFIG_CLOCKS_PER_SEC));
 }
 
 ktime_t arch_timer_getus(void) {
-    return current_cpu->ticks;
+    return (ktime_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
+           (ktime_t) (current_cpu->ticks.tv_nsec / 1000);
 }
 
 ktime_t arch_timer_gettime(void) {
-    return 0;
+    inline uint8_t RTC(uint8_t x)
+        { outb(0x70, x); return inb(0x71); }
+        
+    #define BCD2BIN(bcd)                        \
+        ((((bcd) & 0x0F) + ((bcd) / 16) * 10))
+        
+    #define BCD2BIN2(bcd)                       \
+        (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
+        
+
+    struct tm t;
+    
+    __lock(&rtc_lock, {
+        t.tm_sec = BCD2BIN(RTC(0));
+        t.tm_min = BCD2BIN(RTC(2));
+        t.tm_hour = BCD2BIN2(RTC(4));
+        t.tm_mday = BCD2BIN(RTC(7));
+        t.tm_mon = BCD2BIN(RTC(8));
+        t.tm_year = BCD2BIN(RTC(9)) + 2000;
+        t.tm_wday = 0;
+        t.tm_yday = 0;
+        t.tm_isdst = 0;
+    });
+
+    
+    const int m[] =
+        {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        
+    ktime_t ty = t.tm_year - 1970;
+    ktime_t lp = (ty + 2) / 4;
+    ktime_t td = 0;
+    
+    int i;
+    for(i = 0; i < t.tm_mon - 1; i++)
+        td += m[i];
+        
+    td += t.tm_mday - 1;
+    td = td + (ty * 365) + lp;
+
+
+    return (ktime_t) ((td * 86400) + (t.tm_hour * 3600) +
+            (t.tm_min * 60) + t.tm_sec) + 3600;
 }
 
 void timer_init(void) {
     spinlock_init(&delay_lock);
+    spinlock_init(&rtc_lock);
 }

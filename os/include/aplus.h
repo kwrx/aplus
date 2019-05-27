@@ -117,7 +117,7 @@ typedef struct {
             uintptr_t ptr;
             size_t size;
             uintptr_t cmdline;
-            uintptr_t reserved;
+            uintptr_t status;
         } __packed *ptr;
         size_t count;
     } modules;
@@ -188,6 +188,16 @@ void cmain(void);
         (void*) &f              \
     };
 
+
+
+#ifndef __init_ns
+#define __init_ns
+#endif
+
+#define __init(x, y) {                                      \
+    kprintf("[+] Initializing '" __init_ns #x "'\n");       \
+    x##_init y;                                             \
+}
 
 #define __user
 
