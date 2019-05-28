@@ -28,6 +28,8 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_compile_options(-Og)
 endif()
 
+find_program(OBJCOPY objcopy)
+
 
 add_subdirectory(sdk/libs)
 add_subdirectory(os/arch)

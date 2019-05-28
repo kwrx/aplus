@@ -53,3 +53,10 @@ install (
     TARGETS kernel
     RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/root
 )
+
+add_custom_command (
+    TARGET kernel
+    POST_BUILD
+    COMMAND ${OBJCOPY} --only-keep-debug $<TARGET_FILE:kernel> ${CMAKE_SOURCE_DIR}/kernel.debug
+    COMMAND ${OBJCOPY} --strip-debug $<TARGET_FILE:kernel>
+)

@@ -24,32 +24,11 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/elf.h>
-#include <aplus/ipc.h>
-#include <aplus/mm.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-
-spinlock_t debug_lock;
+#include <aplus/module.h>
 
 
-static void* kmalloc_std(size_t size) {
-    return kmalloc(size, GFP_KERNEL);
-}
+#include <errno.h>
+#undef errno
+int errno;
 
-static void* kcalloc_std(size_t nm, size_t cc) {
-    return kcalloc(nm, cc, GFP_KERNEL);
-}
-
-
-void core_init(void) {
-    spinlock_init(&debug_lock);
-    
-    if(!mbd->quiet)
-        arch_debug_init();
-
-
-    libaplus_init(kmalloc_std, kcalloc_std, kfree);    
-}
+EXPORT(errno);

@@ -54,3 +54,6 @@ int kprintf(const char *fmt, ...) {
     va_end(args);
     return out;
 }
+
+
+EXPORT(kprintf);

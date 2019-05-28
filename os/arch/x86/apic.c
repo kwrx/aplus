@@ -108,11 +108,11 @@ void apic_init(void) {
     x86_cpuid(1, &a, &d);
 
     if(!(d & (1 << 9)))
-        kpanic("x86-apic: APIC not supported!\n");
+        kpanic("x86-apic: APIC not supported!");
 
     acpi_sdt_t* sdt;
     if(acpi_find(&sdt, "APIC") != 0)
-        kpanic("x86-apic: APIC not found in ACPI tables\n");
+        kpanic("x86-apic: APIC not found in ACPI tables");
 
 
     acpi_madt_t* madt = (acpi_madt_t*) &sdt->tables;

@@ -135,10 +135,6 @@ case $mode in
                     ;;
             esac
 
-            if [ "$norun" = "yes" ]; then
-                exit
-            fi
-
         popd &> /dev/null
 
 
@@ -147,6 +143,11 @@ case $mode in
 
         ./extra/utils/gen-image
         check
+
+        
+        if [ "$norun" = "yes" ]; then
+            exit
+        fi
         
         
         if [ "$gdb" = "yes" ]; then

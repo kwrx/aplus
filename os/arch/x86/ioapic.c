@@ -73,7 +73,7 @@ void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
         }
     }
 
-    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC", source);
 }
 
 void ioapic_unmap_irq(uint8_t source) {
@@ -105,7 +105,7 @@ void ioapic_unmap_irq(uint8_t source) {
         }
     }
 
-    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+    kpanic("x86-apic: Source Interrupt #%d not managed by any I/O APIC", source);
 }
 
 

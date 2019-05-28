@@ -56,10 +56,10 @@ spinlock_t memlock;
     __morecore
 
 #define ABORT                               \
-    kpanic("dlmalloc: abort() at %s:%d!\n", __FILE__, __LINE__)
+    kpanic("dlmalloc: abort() at %s:%d!", __FILE__, __LINE__)
 
 #define MALLOC_FAILURE_ACTION               \
-    kpanic("dlmalloc: nomem() at %s:%d\n", __FILE__, __LINE__)
+    kpanic("dlmalloc: nomem() at %s:%d", __FILE__, __LINE__)
 
 
 

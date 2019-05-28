@@ -45,3 +45,6 @@ void kpanic(const char* fmt, ...) {
     va_end(args);
     for(;;);
 }
+
+
+EXPORT(kpanic);

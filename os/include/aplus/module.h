@@ -28,6 +28,7 @@
 #include <aplus.h>
 #include <aplus/elf.h>
 
+
 #define MODULE_NAME(x)                                  \
     __attribute__((section(".module_name")))            \
     const char __module_name__[] = x "\0"
@@ -35,6 +36,7 @@
 #define MODULE_DEPS(x)                                  \
     __attribute__((section(".module_deps")))            \
     const char __module_deps__[] = x "\0"
+
 
 #define MODULE_AUTHOR(x);
 #define MODULE_LICENSE(x);
@@ -45,6 +47,33 @@
 #define MODULE_STATUS_LOADED                            2
 #define MODULE_STATUS_LOADING                           3
 #define MODULE_STATUS_FAILED                            4
+
+
+typedef struct {
+    struct {
+        Elf_Ehdr* header;
+        Elf_Shdr* section;
+        Elf_Shdr* symtab;
+        Elf_Shdr* strtab;
+        Elf_Shdr* shstrtab;
+    } exe;
+
+    struct {
+        void* ptr;
+        size_t size;
+    } core;
+
+
+    void (*init) (const char*);
+    void (*dnit) ();
+
+    const char* name;
+    const char* deps;
+    const char* args;
+
+    int status;
+    int refcount;
+} module_t;
 
 
 void module_init(void);

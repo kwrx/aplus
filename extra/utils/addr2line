@@ -1,0 +1,4 @@
+#!/bin/sh
+
+addr2line -p -e root/aplus -a $1
+exit

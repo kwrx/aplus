@@ -102,3 +102,6 @@ void core_stacktrace(void) {
         kprintf("[%d] %8p <%s>\n", i, frames[i], s ? s : "unknown");
     }
 }
+
+
+EXPORT(core_stacktrace);

@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# usage: convert-png-to-webp image.png
+#
+
+dir="$(dirname "$1")"
+pushd $dir &> /dev/null
+
+    base="$(basename "$1" .png)"
+
+    cwebp -preset icon "$base".png -o "$base".webp -quiet
+    rm -f "$base.png"
+    
+popd $dir &> /dev/null
