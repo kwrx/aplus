@@ -1,8 +1,21 @@
 #!/bin/sh
 
 
+# Requirements:
+#  nodejs -> npm install
+#  cmake
+#  ninja
+#  nasm
+#  grub
+#  qemu
+#  qemu-arch-extra
+#  mkfs
+#  fdisk
+#  bash
+
+
 target="i686"
-toolchain="$(pwd)/sdk/toolchain"
+toolchain=${TOOLCHAIN:-"$(pwd)/sdk/toolchain"}
 generator="Ninja"
 mode="run"
 build="Debug"
@@ -72,6 +85,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
 
+        libc++)
+            mode="libc++"
+            shift
+            ;;
+
 
         -h|--help)
             echo " Usage: ./build MODE [-t TARGET] [-g GENERATOR] [-p PROJECT] [-b BUILD] [-nrd]"
@@ -88,6 +106,7 @@ while [[ $# -gt 0 ]]; do
             echo ""
             exit
             ;;
+
         *)
             echo "build: unknown argument $1"
             exit
@@ -157,8 +176,13 @@ case $mode in
         fi
 
         ;;
+    
     clean)
         rm -rf $builddir
+        ;;
+
+    libc++)
+        echo "TODO..."
         ;;
 esac
 

@@ -4,12 +4,9 @@ A hobby operating system built mostly from scratch with a unix-like, hybrid and 
 The project started in September 2013 as an educational and personal project, it's written mainly in C/C++ and Assembly.
 
 <p align="center">
-    <img src="/extra/images/v0.4-os.png" alt="aPlus v0.4 - CLI interface running on Qemu"></img>
+    <img src="./extra/images/v0.4-os.png" alt="aPlus v0.4 - CLI interface running on Qemu"></img>
 </p>
 
-## Build Instructions
-To compile this project you need aPlus Toolchain which includes GCC, Binutils and System Libraries.
-So... I'm sure one day you'll be able to compile it by yourself but this is not the day ...
 
 
 
@@ -18,7 +15,7 @@ The kernel provides a basic Unix/Posix environment.
 It uses a hybrid modular architecture with support for various platforms like x86, x86_64, ARM, etc... and loadable modules.
 
 * [x] Multitasking
-* [ ] SMP
+* [x] SMP
 * [x] Multi-User
 * [x] TCP/IP Network Stack
 * [x] Signals, Pipes, IPC, Shared Memory, Unix Sockets
@@ -37,37 +34,55 @@ Userspace has Multi-User implementation with Unix permission support and superus
 ## Drivers
 Modules provides various core platform features, basic TTY/Console, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
 
-#### Storage:
-* [x] IDE
-* [ ] ACHI
-* [x] Virtio-block
+---
 
-#### Network:
-* [x] E1000
-* [x] PCNET
-* [x] Rtl8139
-* [x] Virtio-network
+## Building / Installation
+Clone the repository and change working directory.
+```bash
+$ git clone https://github.com/kwrx/aplus
+$ cd aplus
+```
 
-#### Video:
-* [x] Vesa
-* [x] Bochs VGA Adepter
-* [ ] VMWare SVGA
+To build this project from source, you have basically two options.
 
-#### Audio:
-* [ ] AC97
-* [ ] Intel HDA
+### Building with Docker (Recommended):
+You can use my pre-built toolchain through Docker:
 
-#### I/O:
-* [x] PS/2 Keybord/Mouse
-* [x] UART
-* [ ] USB
+```console
+# docker pull alpine
+# docker run -v $(pwd):/opt/aplus -w /opt/aplus -t alpine ./extra/utils/build-with-docker TARGET
+```
 
-#### Filesystems:
-* [x] Iso9660
-* [x] Ext2 (Read-only)
-* [x] ProcFS
-* [x] TmpFs
-* [x] Devfs
+Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
+
+### Building with Toolchain:
+It's recommended you use a recent Linux host environment with this method.
+
+Some packages are required for the build system:
+* `gcc`, `binutils` (or `build-essential` on Ubuntu/Debian)
+* `g++` to compile gcc sources
+* `nasm` to compile .asm sources
+* `cmake`, `ninja` to compile project
+* `nodejs` to run some build scripts
+* `qemu` or `VirtualBox` to run Virtual Machine
+
+```bash
+# Install dependencies
+$ npm install
+
+# Build Toolchain
+$ cd sdk
+$ ../extra/utils/build-toolchain TARGET
+
+# Install C++ Support
+$ ../extra/utils/build-libc++ TARGET ..
+$ ../extra/utils/build-toolchain TARGET
+
+# Build Project
+$ cd ..
+$ ./build --target TARGET
+```
+Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
 
 ---
 
