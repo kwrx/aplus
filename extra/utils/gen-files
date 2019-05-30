@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #touch root/etc/motd
 #sed -i "s/https:\/\/github.com\/kwrx\/aplus.*/https:\/\/github.com\/kwrx\/aplus\/commit\/git rev-parse --short HEAD)/" ./root/etc/motd

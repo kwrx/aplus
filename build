@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 
 # Requirements:
@@ -9,8 +9,7 @@
 #  grub
 #  qemu
 #  qemu-arch-extra
-#  mkfs
-#  fdisk
+#  e2fsprogs
 #  bash
 
 
@@ -22,6 +21,8 @@ build="Debug"
 project=""
 nobuild="no"
 norun="no"
+novm="no"
+noinstall="no"
 gdb="no"
 builddir="/tmp/aplus-build"
 
@@ -59,6 +60,11 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
 
+        -i|--noinstall)
+            noinstall="yes"
+            shift
+            ;;
+
         -r|--norun)
             norun="yes"
             shift
@@ -67,6 +73,11 @@ while [[ $# -gt 0 ]]; do
         -b|--build)
             build="$2"
             shift
+            shift
+            ;;
+        
+        -v|--novm)
+            novm="yes"
             shift
             ;;
 
@@ -101,7 +112,9 @@ while [[ $# -gt 0 ]]; do
             echo "    -p, --project      project to build                (default: all)"
             echo "    -b, --build        build (Release, Debug)          (default: $build)"
             echo "    -n, --nobuild      configure only"
-            echo "    -r, --norun        configure and build only"
+            echo "    -i, --noinstall    configure and build only"
+            echo "    -r, --norun        configure, build and install only"
+            echo "    -v, --novm         configure, build, install and gen image only"
             echo "    -d, --gdb          run vm with gdb support"
             echo ""
             exit
@@ -139,14 +152,22 @@ case $mode in
                 Ninja)
                     ninja $project
                     check
-                    ninja install
-                    check
+                    
+                    if [ "$noinstall" = "no" ]; then
+                        ninja install
+                        check
+                    fi
+            
                     ;;
                 "Unix Makefiles")
                     make $project
                     check
-                    make install
-                    check
+
+                    if [ "$noinstall" = "no" ]; then
+                        make install
+                        check
+                    fi
+
                     ;;
                 *)
                     echo "Sorry, I have no idea what i'm doing :("
@@ -157,6 +178,10 @@ case $mode in
         popd &> /dev/null
 
 
+        if [ "$norun" = "yes" ]; then
+            exit
+        fi
+
         ./extra/utils/gen-grubcfg > $(pwd)/root/boot/grub/grub.cfg
         check
 
@@ -164,7 +189,7 @@ case $mode in
         check
 
         
-        if [ "$norun" = "yes" ]; then
+        if [ "$novm" = "yes" ]; then
             exit
         fi
         
@@ -182,7 +207,23 @@ case $mode in
         ;;
 
     libc++)
-        echo "TODO..."
+    
+        $0 -i -r -g $generator -t $target -p libc.a
+        $0 -i -r -g $generator -t $target -p libm.a
+        $0 -i -r -g $generator -t $target -p crt0
+        $0 -i -r -g $generator -t $target -p crti
+        $0 -i -r -g $generator -t $target -p crtn
+        $0 -i -r -g $generator -t $target -p rcrt1
+        $0 -i -r -g $generator -t $target -p Scrt1
+
+        echo " -- Installing libc" && cp /tmp/aplus-build/sdk/libs/c/libc.a $toolchain/$target-aplus/lib
+        echo " -- Installing libm" && cp /tmp/aplus-build/sdk/libs/m/libm.a $toolchain/$target-aplus/lib
+        echo " -- Installing crt0" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crt0.dir/crt0.c.obj $toolchain/$target-aplus/lib/crt0.o
+        echo " -- Installing crti" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crti.dir/crti.s.obj $toolchain/$target-aplus/lib/crti.o
+        echo " -- Installing crtn" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crtn.dir/crtn.s.obj $toolchain/$target-aplus/lib/crtn.o
+        echo " -- Installing rcrt1" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/rcrt1.dir/rcrt1.c.obj $toolchain/$target-aplus/lib/rcrt1.o
+        echo " -- Installing Scrt1" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/Scrt1.dir/Scrt1.c.obj $toolchain/$target-aplus/lib/Scrt1.o
+        
         ;;
 esac
 

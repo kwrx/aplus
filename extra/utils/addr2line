@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 addr2line -p -e root/aplus -a $1
 exit

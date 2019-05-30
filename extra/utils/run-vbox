@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 qemu-img convert -f raw -O vmdk hdd.img hdd.vmdk
 

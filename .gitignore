@@ -15,8 +15,6 @@
 *.1
 *.debug
 
-./package-lock.json
-
 .vscode
 node_modules
 

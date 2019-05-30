@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [ ! -f hdd.img ]; then
     dd status=none if=/dev/zero of=hdd.img bs=4M count=30

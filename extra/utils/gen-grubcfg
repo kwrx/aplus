@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 kargs='root=/dev/sda0 rootfs=ext2'
 margs=''

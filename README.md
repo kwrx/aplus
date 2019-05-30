@@ -50,7 +50,13 @@ You can use my pre-built toolchain through Docker:
 
 ```console
 # docker pull alpine
-# docker run -v $(pwd):/opt/aplus -w /opt/aplus -t alpine ./extra/utils/build-with-docker TARGET
+# docker run -v $(pwd):/opt/aplus -w /opt/aplus -t alpine \
+    ./extra/utils/build-with-docker TARGET
+```
+
+And run with:
+```
+$ ./extra/utils/run-qemu TARGET
 ```
 
 Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
@@ -78,7 +84,7 @@ $ ../extra/utils/build-toolchain TARGET
 $ ../extra/utils/build-libc++ TARGET ..
 $ ../extra/utils/build-toolchain TARGET
 
-# Build Project
+# Build and run Project
 $ cd ..
 $ ./build --target TARGET
 ```

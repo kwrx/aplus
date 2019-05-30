@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 
 /*
  * Usage: ./gen-syscalls.js syscalls.json outputPath outputTable
