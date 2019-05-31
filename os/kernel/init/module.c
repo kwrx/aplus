@@ -221,6 +221,10 @@ void module_run(module_t* m) {
     }
 
 
+#if DEBUG
+    kprintf("module: running %s\n", m->name);
+#endif
+
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;
 }
