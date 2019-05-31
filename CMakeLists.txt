@@ -16,6 +16,7 @@ if(TARGET_ARCH MATCHES "x86")
         set(CMAKE_ASM_NASM_COMPILE_OBJECT 
             "<CMAKE_ASM_NASM_COMPILER> -felf64 -o <OBJECT> <SOURCE>")
     endif()
+
 endif()
 
 
@@ -27,8 +28,6 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
     add_compile_options(-Og)
 endif()
-
-find_program(OBJCOPY objcopy)
 
 
 add_subdirectory(sdk/libs)

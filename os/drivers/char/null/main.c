@@ -22,11 +22,37 @@
  */
 
 
-#include <stdio.h>
-#include <unistd.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/vfs.h>
+#include <stdint.h>
+#include <errno.h>
+
+MODULE_NAME("char/null");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
+
+
+static int null_read_write(struct inode* inode, void* buf, off_t pos, size_t size) {
+    return size;
+}
+
+
+void init(const char* args) {
+    /*inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("null", -1, S_IFCHR | 0666)) == NULL))
+        kpanic("null: could not create device");
+
+    ino->ops.read =
+    ino->ops.write = null_read_write;
+
+    return 0;*/
+}
 
 
 
-int main(int argc, char** argv) {
-    return execlp("shutdown", "shutdown", "--halt", "now", NULL);
+void dnit(void) {
+    //sys_unlink("/dev/null");
 }

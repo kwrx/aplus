@@ -29,8 +29,6 @@
 #include <getopt.h>
 #include <libgen.h>
 
-#define COMMIT "null"
-
 
 static void show_usage(int argc, char** argv) {
     printf(

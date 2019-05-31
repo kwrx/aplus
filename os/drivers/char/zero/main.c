@@ -22,11 +22,34 @@
  */
 
 
-#include <stdio.h>
-#include <unistd.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/vfs.h>
+#include <stdint.h>
+#include <errno.h>
+
+MODULE_NAME("char/zero");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
 
 
 
-int main(int argc, char** argv) {
-    return execlp("shutdown", "shutdown", "--halt", "now", NULL);
+static int zero_read(inode_t* inode, void __user * buf, off_t pos, size_t size) {
+    
+}
+
+void init(const char* args) {
+    /*inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
+        kpanic("zero: could not create device");
+
+    ino->ops.read = zero_read;*/
+}
+
+
+
+void dnit(void) {
+    //sys_unlink("/dev/zero");
 }

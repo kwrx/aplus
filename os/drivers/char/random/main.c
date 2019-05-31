@@ -22,11 +22,44 @@
  */
 
 
-#include <stdio.h>
-#include <unistd.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/vfs.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <errno.h>
+
+MODULE_NAME("char/random");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
 
 
 
-int main(int argc, char** argv) {
-    return execlp("shutdown", "shutdown", "--halt", "now", NULL);
+static int random_read(inode_t* inode, void __user * buf, off_t pos, size_t size) {
+
+    srand(sys_times(NULL));
+
+    char* bc = (char*) buf;
+    size_t i;
+    for(i = 0; i < size; i++)
+        *bc++ = rand() % 256;
+
+    return size;
+
+}
+
+void init(const char* args) {
+    /*inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("random", -1, S_IFCHR | 0444)) == NULL))
+        kpanic("random: could not create device");
+
+    ino->ops.read = random_read;*/
+}
+
+
+
+void dnit(void) {
+    //sys_unlink("/dev/random");
 }

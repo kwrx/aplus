@@ -22,11 +22,34 @@
  */
 
 
-#include <stdio.h>
-#include <unistd.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/vfs.h>
+#include <stdint.h>
+#include <errno.h>
+
+MODULE_NAME("char/full");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
+
+
+static int full_write(inode_t* inode, void __user * buf, off_t pos, size_t size) {
+    errno = ENOSPC;
+    return 0;
+}
+
+void init(const char* args) {
+    /*inode_t* ino;
+    if(unlikely((ino = vfs_mkdev("full", -1, S_IFCHR | 0222)) == NULL))
+        kpanic("full: could not create device");
+
+    ino->ops.write = full_write;*/
+}
 
 
 
-int main(int argc, char** argv) {
-    return execlp("shutdown", "shutdown", "--halt", "now", NULL);
+void dnit(void) {
+    //sys_unlink("/dev/full");
 }

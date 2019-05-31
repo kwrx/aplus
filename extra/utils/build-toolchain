@@ -2,8 +2,7 @@
 
 
 rootdir=$(pwd)
-target=${TARGET:-"i686-aplus"}
-arch=$(echo $target | cut -d- -f1)
+target=${TARGET:-"i686"}
 cpus=${CPUS:-"2"}
 
 
@@ -71,8 +70,8 @@ done
 echo "[2] Make toolchain environment"
 mkdir -p toolchain
 mkdir -p toolchain/bin
-mkdir -p toolchain/$target
-mkdir -p toolchain/$target/include
+mkdir -p toolchain/$target-aplus
+mkdir -p toolchain/$target-aplus/include
 mkdir -p toolchain/src
 mkdir -p toolchain/src/binutils
 mkdir -p toolchain/src/gcc
@@ -116,8 +115,8 @@ if [ ! -f toolchain/src/gcc/gcc-headers.patch ]; then
     wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/generic/patches/gcc-headers.patch
 fi
 
-if [ ! -f toolchain/src/gcc/$target-headers.tar.xz ]; then
-    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/$arch/$target-headers.tar.xz
+if [ ! -f toolchain/src/gcc/$target-aplus-headers.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/$target/$target-aplus-headers.tar.xz
 fi
 
 
@@ -192,7 +191,7 @@ fi
 
 
 echo "[7] Build binutils-$binutils"
-if ! (which $target-ld | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
+if ! (which $target-aplus-ld | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
     echo " > Prepare"
     mkdir -p toolchain/src/binutils/build-binutils
 
@@ -206,7 +205,7 @@ if ! (which $target-ld | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; 
         popd
 
         echo " > Configure"
-        if ! ../binutils-$binutils/configure --target=$target --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
+        if ! ../binutils-$binutils/configure --target=$target-aplus --prefix=$rootdir/toolchain &>> $rootdir/output.log; then error; fi
 
         echo " > Compile"
         if ! make -j$cpus &>> $rootdir/output.log; then error; fi
@@ -242,7 +241,7 @@ fi
 
 
 echo "[9] Build gcc-$gcc"
-if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
+if ! (which $target-aplus-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log; then
     echo " > Prepare"
     mkdir -p toolchain/src/gcc/build-gcc
 
@@ -255,7 +254,7 @@ if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log;
                 if ! autoconf &>> $rootdir/output.log; then error; fi
             popd
 
-            pushd $rootdir/toolchain/$target/include
+            pushd $rootdir/toolchain/$target-aplus/include
                 patch -p1 < $rootdir/toolchain/src/gcc/gcc-headers.patch &>> $rootdir/output.log
             popd
         popd
@@ -266,7 +265,7 @@ if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log;
         popd
 
         echo " > Configure"
-        if ! ../gcc-$gcc/configure --target=$target --prefix=$rootdir/toolchain --enable-languages=c,c++ &>> $rootdir/output.log; then error; fi
+        if ! ../gcc-$gcc/configure --target=$target-aplus --prefix=$rootdir/toolchain --enable-languages=c,c++ &>> $rootdir/output.log; then error; fi
 
         echo " > Compile (gcc)"
         if ! make -j$cpus all-gcc &>> $rootdir/output.log; then error; fi
@@ -281,20 +280,20 @@ if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log;
         if ! make install-target-libgcc &>> $rootdir/output.log; then error; fi
 
         echo " > Clean"
-        pushd $rootdir/toolchain/$target/include
+        pushd $rootdir/toolchain/$target-aplus/include
             rm -rf *
         popd
 
         echo " > Install (headers)"
-        if ! tar --overwrite -xJf $rootdir/toolchain/src/gcc/$target-headers.tar.xz -C $rootdir/toolchain &>> $rootdir/output.log; then error; fi
+        if ! tar --overwrite -xJf $rootdir/toolchain/src/gcc/$target-aplus-headers.tar.xz -C $rootdir/toolchain &>> $rootdir/output.log; then error; fi
     popd
 fi
 
 
 
 echo "[10] Build libstdc++-v3"
-if [ -f $($target-gcc --print-file-name crt0.o) ]; then
-    if [ ! -f $($target-gcc --print-file-name libstdc++.a) ]; then
+if [ -f $($target-aplus-gcc --print-file-name crt0.o) ]; then
+    if [ ! -f $($target-aplus-gcc --print-file-name libstdc++.a) ]; then
         echo " > Prepare"
         pushd toolchain/src/gcc/build-gcc
             echo " > Compile (libstdc++-v3)"
@@ -319,15 +318,15 @@ echo ""
 echo "  Prefix:             $rootdir/toolchain"
 echo "  Binaries:           $rootdir/toolchain/bin"
 
-if [ ! -f $($target-gcc --print-file-name libstdc++.a) ]; then
+if [ ! -f $($target-aplus-gcc --print-file-name libstdc++.a) ]; then
     echo "  C++ Support:        no"
 else
     echo "  C++ Support:        yes"
 fi
 
-if [ ! -f $($target-gcc --print-file-name crt0.o) ]; then
+if [ ! -f $($target-aplus-gcc --print-file-name crt0.o) ]; then
     echo ""
-    echo "Note: Run './build -t $arch core' on aplus directory and re-run 'build-toolchain' for C++ support"
+    echo "Note: Run './build -t $target core' on aplus directory and re-run 'build-toolchain' for C++ support"
 fi
 
 exit 0

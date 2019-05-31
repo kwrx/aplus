@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.1)
 project(libssp)
 
-file(GLOB_RECURSE SRCS "*.c" "*.cpp" "*.s")
+file (
+    GLOB_RECURSE 
+    SRCS 
+        "*.c" 
+        "*.cpp" 
+        "*.s"
+)
+
 add_library(ssp STATIC ${SRCS})
 
 target_compile_options (ssp

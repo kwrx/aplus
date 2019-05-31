@@ -1,7 +1,14 @@
 cmake_minimum_required(VERSION 3.1)
 project(libcrypt)
 
-file(GLOB_RECURSE SRCS "*.c" "*.cpp" "*.s")
+file (
+    GLOB_RECURSE 
+    SRCS 
+        "*.c" 
+        "*.cpp" 
+        "*.s"
+)
+
 add_library(crypt STATIC ${SRCS})
 
 target_compile_options (crypt

@@ -20,8 +20,10 @@ node_modules
 
 root/usr/bin/*
 root/usr/sbin/*
-sdk/toolchain
 usr/apps/wip
+
+sdk/toolchain
+sdk/output.log
 
 os/arch/x86/32/ap.h
 os/arch/x86/64/ap.h

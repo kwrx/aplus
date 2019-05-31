@@ -6,9 +6,6 @@
 
       none         /proc           proc             nodev,nosuid,rw
       none         /tmp            tmpfs            nodev,nosuid,rw
-      /usr/bin     /bin            none             bind
-      /usr/sbin    /sbin           none             bind
-      /usr/lib     /lib            none             bind
 #     /dev/cda     /mnt/cdrom      iso9660          readonly
       /fat.img     /mnt            vfat             rw
 

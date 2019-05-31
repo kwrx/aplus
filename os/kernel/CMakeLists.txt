@@ -1,7 +1,15 @@
 cmake_minimum_required(VERSION 3.1)
 project(kernel)
 
-file(GLOB_RECURSE SRCS "*.c" "*.cpp" "*.s")
+
+file (
+    GLOB_RECURSE
+    SRCS 
+        "*.c" 
+        "*.cpp"
+        "*.s"
+)
+
 add_executable(kernel ${ARCH} ${SRCS})
 
 

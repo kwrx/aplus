@@ -209,13 +209,13 @@ case $mode in
         $0 -i -r -g $generator -t $target -p rcrt1
         $0 -i -r -g $generator -t $target -p Scrt1
 
-        echo "-- Installing libc" && cp $builddir/sdk/libs/c/libc.a $toolchain/$target-aplus/lib
-        echo "-- Installing libm" && cp $builddir/sdk/libs/m/libm.a $toolchain/$target-aplus/lib
-        echo "-- Installing crt0" && cp $builddir/sdk/libs/crt/CMakeFiles/crt0.dir/crt0.c.obj $toolchain/$target-aplus/lib/crt0.o
-        echo "-- Installing crti" && cp $builddir/sdk/libs/crt/CMakeFiles/crti.dir/crti.s.obj $toolchain/$target-aplus/lib/crti.o
-        echo "-- Installing crtn" && cp $builddir/sdk/libs/crt/CMakeFiles/crtn.dir/crtn.s.obj $toolchain/$target-aplus/lib/crtn.o
-        echo "-- Installing rcrt1" && cp $builddir/sdk/libs/crt/CMakeFiles/rcrt1.dir/rcrt1.c.obj $toolchain/$target-aplus/lib/rcrt1.o
-        echo "-- Installing Scrt1" && cp $builddir/sdk/libs/crt/CMakeFiles/Scrt1.dir/Scrt1.c.obj $toolchain/$target-aplus/lib/Scrt1.o
+        echo "-- Installing: $toolchain/$target-aplus/lib/libc.a"  && cp $builddir/sdk/libs/c/libc.a $toolchain/$target-aplus/lib
+        echo "-- Installing: $toolchain/$target-aplus/lib/libm.a"  && cp $builddir/sdk/libs/m/libm.a $toolchain/$target-aplus/lib
+        echo "-- Installing: $toolchain/$target-aplus/lib/crt0.o"  && cp $builddir/sdk/libs/crt/CMakeFiles/crt0.dir/crt0.c.obj $toolchain/$target-aplus/lib/crt0.o
+        echo "-- Installing: $toolchain/$target-aplus/lib/crti.o"  && cp $builddir/sdk/libs/crt/CMakeFiles/crti.dir/crti.s.obj $toolchain/$target-aplus/lib/crti.o
+        echo "-- Installing: $toolchain/$target-aplus/lib/crtn.o"  && cp $builddir/sdk/libs/crt/CMakeFiles/crtn.dir/crtn.s.obj $toolchain/$target-aplus/lib/crtn.o
+        echo "-- Installing: $toolchain/$target-aplus/lib/rcrt1.o" && cp $builddir/sdk/libs/crt/CMakeFiles/rcrt1.dir/rcrt1.c.obj $toolchain/$target-aplus/lib/rcrt1.o
+        echo "-- Installing: $toolchain/$target-aplus/lib/Scrt1.o" && cp $builddir/sdk/libs/crt/CMakeFiles/Scrt1.dir/Scrt1.c.obj $toolchain/$target-aplus/lib/Scrt1.o
         
         ;;
 esac
