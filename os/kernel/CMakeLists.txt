@@ -41,7 +41,6 @@ target_include_directories(kernel
 
 target_link_libraries(kernel
     arch
-    vterm 
     aplus
     c
     m

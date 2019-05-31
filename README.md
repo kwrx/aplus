@@ -65,11 +65,12 @@ Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
 It's recommended you use a recent Linux host environment with this method.
 
 Some packages are required for the build system:
-* `gcc`, `binutils` (or `build-essential` on Ubuntu/Debian)
+* `gcc`, `binutils`, `make`, `autotools` (or `build-essential` on Ubuntu/Debian)
 * `g++` to compile gcc sources
 * `nasm` to compile .asm sources
 * `cmake`, `ninja` to compile project
-* `nodejs` to run some build scripts
+* `nodejs`, `npm` to run some build scripts
+* `e2fsprogs`, `grub` to generate hdd image
 * `qemu` or `VirtualBox` to run Virtual Machine
 
 ```bash
@@ -80,8 +81,12 @@ $ npm install
 $ cd sdk
 $ ../extra/utils/build-toolchain TARGET
 
-# Install C++ Support
-$ ../extra/utils/build-libc++ TARGET ..
+# Install CRT Files
+$ cd ..
+$ ./build -t TARGET core
+
+# Install C++ Support (Optional)
+$ cd sdk
 $ ../extra/utils/build-toolchain TARGET
 
 # Build and run Project

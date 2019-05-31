@@ -4,7 +4,6 @@
 rootdir=$(pwd)
 target=${TARGET:-"i686-aplus"}
 arch=$(echo $target | cut -d- -f1)
-version=${VERSION:-"0.3.0"}
 cpus=${CPUS:-"2"}
 
 
@@ -117,8 +116,8 @@ if [ ! -f toolchain/src/gcc/gcc-headers.patch ]; then
     wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/generic/patches/gcc-headers.patch
 fi
 
-if [ ! -f toolchain/src/gcc/$target-headers-$version.tar.xz ]; then
-    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/$arch/$target-headers-$version.tar.xz
+if [ ! -f toolchain/src/gcc/$target-headers.tar.xz ]; then
+    wget -q --show-progress -P toolchain/src/gcc https://github.com/kwrx/aplus-packages/raw/master/$arch/$target-headers.tar.xz
 fi
 
 
@@ -287,7 +286,7 @@ if ! (which $target-gcc | grep $rootdir/toolchain/bin/) &>> $rootdir/output.log;
         popd
 
         echo " > Install (headers)"
-        if ! tar --overwrite -xJf $rootdir/toolchain/src/gcc/$target-headers-$version.tar.xz -C $rootdir/toolchain &>> $rootdir/output.log; then error; fi
+        if ! tar --overwrite -xJf $rootdir/toolchain/src/gcc/$target-headers.tar.xz -C $rootdir/toolchain &>> $rootdir/output.log; then error; fi
     popd
 fi
 
@@ -314,29 +313,21 @@ fi
 
 
 
-echo "[11] Generate toolchain-config.mk"
-echo "TOOLCHAIN_PATH := $rootdir/toolchain" > toolchain-config.mk
-echo "PATH := $rootdir/toolchain/bin:\$(PATH)" >> toolchain-config.mk
 
-
-echo "[12] Toolchain build has done"
+echo "[11] Toolchain build has done"
 echo ""
 echo "  Prefix:             $rootdir/toolchain"
 echo "  Binaries:           $rootdir/toolchain/bin"
-echo "  Toolchain-config:   $rootdir/toolchain-config.mk"
+
 if [ ! -f $($target-gcc --print-file-name libstdc++.a) ]; then
     echo "  C++ Support:        no"
 else
     echo "  C++ Support:        yes"
 fi
-echo ""
-echo "Remember to copy 'toolchain-config.mk' file:"
-echo "  toolchain-config.mk -> aplus/build/toolchain-config.mk"
-echo ""
 
 if [ ! -f $($target-gcc --print-file-name crt0.o) ]; then
     echo ""
-    echo "Note: Run './build libc.a' on aplus directory and re-run 'build-toolchain' for C++ support"
+    echo "Note: Run './build -t $arch core' on aplus directory and re-run 'build-toolchain' for C++ support"
 fi
 
 exit 0

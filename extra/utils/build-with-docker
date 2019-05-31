@@ -15,6 +15,7 @@ echo " -- Extract files"
 tar xJ -f /tmp/tc.tar.xz -C sdk
 
 echo " -- Build Project"
+./build -r -t $target core
 ./build -r -t $target
 
 echo " -- Done!"

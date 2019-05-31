@@ -201,6 +201,12 @@ void cmain(void);
 
 #define __user
 
+
+#define PTR_REF(p) ({       \
+    (p)->refcount++;        \
+    (p);                    \
+})
+
 #endif
 
 #endif

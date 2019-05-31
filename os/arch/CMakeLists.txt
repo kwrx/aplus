@@ -40,7 +40,6 @@ target_include_directories(arch
 )
 
 target_link_libraries(arch
-    vterm 
     aplus
     c
     m

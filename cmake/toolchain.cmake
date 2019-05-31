@@ -14,6 +14,7 @@ set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
 set(CMAKE_C_COMPILER   ${TOOLCHAIN}/bin/${TARGET}-aplus-gcc)
 set(CMAKE_CXX_COMPILER ${TOOLCHAIN}/bin/${TARGET}-aplus-g++)
 set(CMAKE_ASM_COMPILER ${TOOLCHAIN}/bin/${TARGET}-aplus-gcc)
+set(OBJCOPY            ${TOOLCHAIN}/bin/${TARGET}-aplus-objcopy)
 
 
 

@@ -1,17 +1,6 @@
 #!/bin/bash
 
 
-# Requirements:
-#  nodejs -> npm install
-#  cmake
-#  ninja
-#  nasm
-#  grub
-#  qemu
-#  qemu-arch-extra
-#  e2fsprogs
-#  bash
-
 
 target="i686"
 toolchain=${TOOLCHAIN:-"$(pwd)/sdk/toolchain"}
@@ -96,8 +85,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
 
-        libc++)
-            mode="libc++"
+        core)
+            mode="core"
             shift
             ;;
 
@@ -105,7 +94,7 @@ while [[ $# -gt 0 ]]; do
         -h|--help)
             echo " Usage: ./build MODE [-t TARGET] [-g GENERATOR] [-p PROJECT] [-b BUILD] [-nrd]"
             echo ""
-            echo "  MODE:                run, rebuild, clean             (default: $mode)"
+            echo "  MODE:                run, rebuild, clean, core       (default: $mode)"
             echo ""
             echo "    -t, --target       i686, x86-64, arm, aarch64      (default: $target)"
             echo "    -g, --generator    see cmake generators...         (default: $generator)"
@@ -206,7 +195,7 @@ case $mode in
         rm -rf $builddir
         ;;
 
-    libc++)
+    core)
     
         $0 -i -r -g $generator -t $target -p libc.a
         $0 -i -r -g $generator -t $target -p libm.a
@@ -216,13 +205,13 @@ case $mode in
         $0 -i -r -g $generator -t $target -p rcrt1
         $0 -i -r -g $generator -t $target -p Scrt1
 
-        echo " -- Installing libc" && cp /tmp/aplus-build/sdk/libs/c/libc.a $toolchain/$target-aplus/lib
-        echo " -- Installing libm" && cp /tmp/aplus-build/sdk/libs/m/libm.a $toolchain/$target-aplus/lib
-        echo " -- Installing crt0" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crt0.dir/crt0.c.obj $toolchain/$target-aplus/lib/crt0.o
-        echo " -- Installing crti" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crti.dir/crti.s.obj $toolchain/$target-aplus/lib/crti.o
-        echo " -- Installing crtn" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/crtn.dir/crtn.s.obj $toolchain/$target-aplus/lib/crtn.o
-        echo " -- Installing rcrt1" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/rcrt1.dir/rcrt1.c.obj $toolchain/$target-aplus/lib/rcrt1.o
-        echo " -- Installing Scrt1" && cp /tmp/aplus-build/sdk/libs/crt/CMakeFiles/Scrt1.dir/Scrt1.c.obj $toolchain/$target-aplus/lib/Scrt1.o
+        echo " -- Installing libc" && cp $builddir/sdk/libs/c/libc.a $toolchain/$target-aplus/lib
+        echo " -- Installing libm" && cp $builddir/sdk/libs/m/libm.a $toolchain/$target-aplus/lib
+        echo " -- Installing crt0" && cp $builddir/sdk/libs/crt/CMakeFiles/crt0.dir/crt0.c.obj $toolchain/$target-aplus/lib/crt0.o
+        echo " -- Installing crti" && cp $builddir/sdk/libs/crt/CMakeFiles/crti.dir/crti.s.obj $toolchain/$target-aplus/lib/crti.o
+        echo " -- Installing crtn" && cp $builddir/sdk/libs/crt/CMakeFiles/crtn.dir/crtn.s.obj $toolchain/$target-aplus/lib/crtn.o
+        echo " -- Installing rcrt1" && cp $builddir/sdk/libs/crt/CMakeFiles/rcrt1.dir/rcrt1.c.obj $toolchain/$target-aplus/lib/rcrt1.o
+        echo " -- Installing Scrt1" && cp $builddir/sdk/libs/crt/CMakeFiles/Scrt1.dir/Scrt1.c.obj $toolchain/$target-aplus/lib/Scrt1.o
         
         ;;
 esac
