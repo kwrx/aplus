@@ -3,19 +3,19 @@
 target=${TARGET:-"i686"}
 target=${1:-$target}
 
-echo " -- Installing dependencies"
-apk -q --no-cache add nodejs npm cmake ninja nasm grub e2fsprogs bash wget ca-certificates
+echo "-- Installing dependencies"
+apk -q --no-cache add nodejs npm cmake ninja nasm grub grub-bios e2fsprogs bash wget ca-certificates sudo util-linux
 npm i --silent -g npm
 npm i --silent
 
-echo " -- Download Toolchain ($target)"
+echo "-- Download Toolchain ($target)"
 wget -q --show-progress https://github.com/kwrx/aplus-packages/raw/master/$target/$target-aplus-toolchain.tar.xz -O /tmp/tc.tar.xz
 
-echo " -- Extract files"
+echo "-- Extract files"
 tar xJ -f /tmp/tc.tar.xz -C sdk
 
-echo " -- Build Project"
+echo "-- Build Project"
 ./build -r -t $target core
-./build -r -t $target
+./build -v -t $target
 
-echo " -- Done!"
+echo "-- Done!"

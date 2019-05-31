@@ -50,7 +50,7 @@ You can use my pre-built toolchain through Docker:
 
 ```console
 # docker pull alpine
-# docker run -v $(pwd):/opt/aplus -w /opt/aplus -t alpine \
+# docker run --privileged=true -v $(pwd):/opt/aplus -w /opt/aplus -t alpine \
     ./extra/utils/build-with-docker TARGET
 ```
 
