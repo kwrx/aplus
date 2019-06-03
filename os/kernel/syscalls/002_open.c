@@ -25,12 +25,23 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/vfs.h>
+#include <aplus/smp.h>
+#include <aplus/mm.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifndef PATH_MAX
+#define PATH_MAX        4096
+#endif
+
+#define __MIN(a, b)     ((a) < (b) ? (a) : (b))
+#define MIN(a, b)       __MIN((uintptr_t) (a), (uintptr_t) (b))
+
 
 
 /***
@@ -49,5 +60,142 @@
 
 SYSCALL(2, open,
 long sys_open (const char __user * filename, int flags, int mode) {
-    return -ENOSYS;
+    if(unlikely(!filename))
+        return -EINVAL;
+    
+    if(unlikely(!ptr_check(filename, R_OK)))
+        return -EFAULT;
+
+
+    char b[PATH_MAX];
+    char* s = (char*) filename;
+    char* p = NULL;
+    inode_t* r = NULL;
+
+    if(s[0] == '/')
+        { r = current_task->root; s++; }
+    else
+        r = current_task->cwd;
+    
+    DEBUG_ASSERT(r);
+
+
+    do {
+        if((p = strchr(s, '/')))
+            strncpy(b, s, MIN(p++ - s, PATH_MAX));
+        else
+            break;
+        
+        if(unlikely(!(r = vfs_finddir(r, b))))
+            return -ENOENT;
+
+        if(S_ISLNK(r->st.st_mode)) {
+            DEBUG_ASSERT(r->link);
+            DEBUG_ASSERT(r->link != r);
+            
+            r = r->link;
+        }
+
+        s = p;
+    } while(*p);
+
+    DEBUG_ASSERT(s && *s);
+
+
+    if(unlikely(!(r = vfs_finddir(r, s)))) {
+        if(flags & O_CREAT) {
+            r = vfs_mknod(r, s, mode);
+
+            if(unlikely(!r))
+                return -EROFS;
+        }
+        else
+            return -ENOENT;
+    } else
+        if((flags & O_EXCL) && (flags & O_CREAT))
+            return -EEXIST;
+    
+
+
+    if (
+#ifdef O_NOFOLLOW
+        !(flags & O_NOFOLLOW) &&
+#endif
+        S_ISLNK(r->st.st_mode)
+    ) {
+        DEBUG_ASSERT(r->link);
+        DEBUG_ASSERT(r->link != r);
+
+        r = r->link;
+    }
+
+#ifdef O_DIRECTORY
+    if(flags & O_DIRECTORY)
+        if(!(S_ISDIR(r->st.st_mode)))
+            return -ENOTDIR;
+#endif
+
+
+
+    if(current_task->uid != 0) {
+
+        if(r->st.st_uid == current_task->uid)
+            if(!(
+                (flags & O_RDONLY ? mode & S_IRUSR : 1) &&
+                (flags & O_WRONLY ? mode & S_IWUSR : 1) &&
+                (flags & O_RDWR   ? mode & S_IRUSR && mode & S_IWUSR : 1)
+            )) return -EACCES;
+
+        else if(r->st.st_gid == current_task->gid)
+            if(!(
+                (flags & O_RDONLY ? mode & S_IRGRP : 1) &&
+                (flags & O_WRONLY ? mode & S_IWGRP : 1) &&
+                (flags & O_RDWR   ? mode & S_IRGRP && mode & S_IWGRP : 1)
+            )) return -EACCES;
+        
+        else
+            if(!(
+                (flags & O_RDONLY ? mode & S_IROTH : 1) &&
+                (flags & O_WRONLY ? mode & S_IWOTH : 1) &&
+                (flags & O_RDWR   ? mode & S_IROTH && mode & S_IWOTH : 1)
+            )) return -EACCES;
+    
+    }
+
+
+    if(vfs_open(r) != 0)
+        return -EIO;
+
+
+
+    int fd;
+
+    __lock(&current_task->lock, {
+
+        for(fd = 0; fd < TASK_NFD; fd++)
+            if(!current_task->fd[fd].inode)
+                break;
+
+        if(fd == TASK_NFD)
+            return -EMFILE;
+
+        
+        if(flags & O_APPEND)
+            current_task->fd[fd].position = r->st.st_size;
+        else
+            current_task->fd[fd].position = 0;
+
+        
+        current_task->fd[fd].inode = r;
+        current_task->fd[fd].flags = flags;
+
+    });
+    
+
+
+    DEBUG_ASSERT(fd < 0);
+    DEBUG_ASSERT(fd > TASK_NFD - 1);
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+
+    return fd;
 });

@@ -27,29 +27,53 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <stdint.h>
+#include <string.h>
 #include <errno.h>
 
+#include <sdi/driver.h>
+#include <sdi/chardev.h>
+
+
 MODULE_NAME("char/zero");
-MODULE_DEPS("");
+MODULE_DEPS("sdi");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
+ 
 
 
+static int zero_read(chardev_t* device, void* buf, size_t size) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
 
-static int zero_read(inode_t* inode, void __user * buf, off_t pos, size_t size) {
-    
+    memset(buf, 0, size);
 }
+
 
 void init(const char* args) {
-    /*inode_t* ino;
-    if(unlikely((ino = vfs_mkdev("zero", -1, S_IFCHR | 0444)) == NULL))
-        kpanic("zero: could not create device");
-
-    ino->ops.read = zero_read;*/
+    //chardev_add(&device, 0444);
 }
-
 
 
 void dnit(void) {
-    //sys_unlink("/dev/zero");
+    //chardev_remove(&device);
 }
+
+
+chardev_t device = {
+    .name = "zero",
+    .description = "Read zeroes from device",
+
+    .deviceid = 0,
+    .vendorid = 0,
+    .intno = 0,
+
+    .status = DRIVER_STATUS_READY,
+    .io = CHARDEV_IO_NBF,
+
+    .ops.init = NULL,
+    .ops.dnit = NULL,
+    .ops.reset = NULL,
+
+    .ops.write = NULL,
+    .ops.read = &zero_read,
+};

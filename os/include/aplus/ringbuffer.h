@@ -22,20 +22,33 @@
  */
 
 
+#ifndef _APLUS_RINGBUFFER_H
+#define _APLUS_RINGBUFFER_H
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
+#include <aplus/ipc.h>
+#include <stdint.h>
 
-MODULE_NAME("test");
-MODULE_DEPS("");
-MODULE_AUTHOR("Antonino Natale");
-MODULE_LICENSE("GPL");
+typedef struct {
+    uint8_t* buffer;
+    size_t head;
+    size_t tail;
+    size_t size;
+    uint8_t full;
+
+    spinlock_t lock;
+} ringbuffer_t;
 
 
-void init(const char* args) {
-    kprintf("test: module running!\n");
-}
+void ringbuffer_create(ringbuffer_t* rb, size_t size);
+void ringbuffer_destroy(ringbuffer_t* rb);
+void ringbuffer_reset(ringbuffer_t* rb);
+int ringbuffer_is_full(ringbuffer_t* rb);
+int ringbuffer_is_empty(ringbuffer_t* rb);
+size_t ringbuffer_available(ringbuffer_t* rb);
+int ringbuffer_write(ringbuffer_t* rb, void* buf, size_t size);
+int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
 
-void dnit(void) {
-    kprintf("test: module removed!\n");
-}
+
+#endif

@@ -21,17 +21,18 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _SDI_DRIVER_H
+#define _SDI_DRIVER_H
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
+#include <stdint.h>
 
+#define DRIVER_STATUS_UNKNOWN       0
+#define DRIVER_STATUS_LOADING       1
+#define DRIVER_STATUS_READY         2
+#define DRIVER_STATUS_FAILED        3
+#define DRIVER_STATUS_UNLOADING     4
+#define DRIVER_STATUS_UNLOADED      5
 
-#include <errno.h>
-#undef errno
-int errno;
-
-EXPORT(errno);
-
-#include <string.h>
-EXPORT(memset);
+#endif

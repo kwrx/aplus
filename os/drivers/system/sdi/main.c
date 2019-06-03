@@ -25,13 +25,20 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
-
-
+#include <stdint.h>
 #include <errno.h>
-#undef errno
-int errno;
 
-EXPORT(errno);
 
-#include <string.h>
-EXPORT(memset);
+MODULE_NAME("sdi");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
+
+
+void init(const char* args) {
+
+}
+
+void dnit(void) {
+    
+}
