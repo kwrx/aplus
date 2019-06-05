@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Usage: gen-exports TARGET
+#
+
+target=$1
+
+for i in root/usr/lib/modules/*.ko; do
+    d="$d $($target-aplus-nm -uP $i)"
+done
+
+echo $d | awk -v RS="[ \n]+" '!n[$0]++' | sed "s/U//g" | sed '/^$/d' | sort

@@ -22,33 +22,55 @@
  */
 
 
-#ifndef _APLUS_RINGBUFFER_H
-#define _APLUS_RINGBUFFER_H
-
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/smp.h>
 #include <aplus/ipc.h>
+#include <aplus/vfs.h>
+#include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-typedef struct {
-    uint8_t* buffer;
-    size_t head;
-    size_t tail;
-    size_t size;
-    uint8_t full;
+#include <aplus/utils/list.h>
 
-    spinlock_t lock;
-} ringbuffer_t;
+#include "tmpfs.h"
 
 
-void ringbuffer_create(ringbuffer_t* rb, size_t size);
-void ringbuffer_destroy(ringbuffer_t* rb);
-void ringbuffer_reset(ringbuffer_t* rb);
-int ringbuffer_is_full(ringbuffer_t* rb);
-int ringbuffer_is_empty(ringbuffer_t* rb);
-size_t ringbuffer_available(ringbuffer_t* rb);
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
+
+int tmpfs_unlink(inode_t* inode, const char __user * name) {
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(name);
+
+    if(unlikely(!ptr_check(name, R_OK)))
+        return -EFAULT;
+    
+
+    inode_t* d = NULL;
+
+    list_each(TMPFS(inode)->children, i) {
+        if(likely(i->parent != inode))
+            continue;
+
+        if(likely(strcmp(i->name, name) != 0))
+            continue;
+
+        d = i;
+        break;
+    }
+
+    if(!d)
+        return -ENOENT;
 
 
-#endif
+    d->mount.st.f_bavail += d->st.st_size;
+    d->mount.st.f_bfree += d->st.st_size;
+    d->mount.st.f_ffree++;
+    d->mount.st.f_favail++;
+
+    list_remove(TMPFS(inode)->children, d);
+
+    kfree(d->userdata);
+    kfree(d);
+
+    return 0;
+}

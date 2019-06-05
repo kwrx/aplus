@@ -22,33 +22,53 @@
  */
 
 
-#ifndef _APLUS_RINGBUFFER_H
-#define _APLUS_RINGBUFFER_H
-
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/smp.h>
 #include <aplus/ipc.h>
+#include <aplus/vfs.h>
+#include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-typedef struct {
-    uint8_t* buffer;
-    size_t head;
-    size_t tail;
-    size_t size;
-    uint8_t full;
+#include <aplus/utils/list.h>
 
-    spinlock_t lock;
-} ringbuffer_t;
+#include "tmpfs.h"
 
 
-void ringbuffer_create(ringbuffer_t* rb, size_t size);
-void ringbuffer_destroy(ringbuffer_t* rb);
-void ringbuffer_reset(ringbuffer_t* rb);
-int ringbuffer_is_full(ringbuffer_t* rb);
-int ringbuffer_is_empty(ringbuffer_t* rb);
-size_t ringbuffer_available(ringbuffer_t* rb);
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
 
+int tmpfs_getdents(inode_t* inode, struct dirent __user * e, off_t pos, size_t len) {
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(e);
 
-#endif
+    if(unlikely(!ptr_check(e, R_OK | W_OK)))
+        return -EFAULT;
+        
+        
+    
+    
+    int s = len / sizeof(struct dirent);
+    int i;
+
+    for(i = 0; i < s; i++) {
+
+        int p = pos;
+
+        list_each(TMPFS(inode)->children, d) {
+
+            if(p--)
+                continue;
+
+            e[i].d_ino = d->st.st_ino;
+            e[i].d_off = pos;
+            e[i].d_reclen = sizeof(struct dirent);
+            e[i].d_type = d->st.st_mode;
+            strncpy(e[i].d_name, d->name, MAXNAMLEN);
+
+        }
+
+        pos++;
+    }
+
+    return i * sizeof(struct dirent);
+}

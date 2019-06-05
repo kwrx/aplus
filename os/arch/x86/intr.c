@@ -274,14 +274,16 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
         
         case 0x0E:
-            kprintf ("x86-pfe: [%04p] %s at %p (%p)\n", 
+            kprintf ("x86-pfe: [%04p] %s at %p (%p <%s>)\n", 
                 frame->err_code, 
                 pfe_messages[frame->err_code], 
                 x86_get_cr2(),
 #if defined(ARCH_X86_64)
-                frame->rip
+                frame->rip,
+                core_get_name(frame->rip)
 #else
-                frame->eip
+                frame->eip,
+                core_get_name(frame->eip)
 #endif
             );
 

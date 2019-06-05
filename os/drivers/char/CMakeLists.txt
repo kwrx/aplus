@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(chardev)
+project(chrdev)
 
 file (
     GLOB devs
@@ -68,8 +68,10 @@ foreach(dev ${devs})
         add_custom_command (
             TARGET ${dev}
             POST_BUILD
+            COMMAND ${OBJCOPY} --only-keep-debug $<TARGET_FILE:${dev}> $<TARGET_FILE:${dev}>.debug
             COMMAND ${OBJCOPY} --strip-debug $<TARGET_FILE:${dev}>
         )
+
     
     endif()
 endforeach(dev ${devs})

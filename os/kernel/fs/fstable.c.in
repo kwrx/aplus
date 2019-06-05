@@ -1,0 +1,13 @@
+#define FSENTRY(a, b, c) {                                              \
+    extern int c##_mount(inode_t*, inode_t*, int, const char*);         \
+    extern int c##_umount(inode_t*);                                    \
+                                                                        \
+    vfs_table[i].id = a;                                                \
+    vfs_table[i].name = b;                                              \
+    vfs_table[i].mount = c##_mount;                                     \
+    vfs_table[i].umount = c##_umount;                                   \
+    i++;                                                                \
+}
+
+
+FSENTRY(TMPFS_MAGIC, "tmpfs", tmpfs);

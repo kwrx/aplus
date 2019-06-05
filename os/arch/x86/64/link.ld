@@ -39,15 +39,6 @@ SECTIONS {
 	}
 
 
-	.exports : AT(ADDR(.exports) - KERNEL_HIGH) ALIGN(0x1000) {
-		export_start = .;
-
-		*(.exports)
-		*(.exports.*)
-
-		export_end = .;
-	}
-
 	.stack : AT(ADDR(.stack) - KERNEL_HIGH) ALIGN(0x1000) {
 		*(.stack)
 	}

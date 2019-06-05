@@ -25,6 +25,9 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/mm.h>
+#include <aplus/vfs.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -51,5 +54,36 @@
 
 SYSCALL(165, mount,
 long sys_mount (char __user * dev_name, char __user * dir_name, char __user * type, unsigned long flags, void __user * data) {
-    return -ENOSYS;
+    
+    if(unlikely(!dir_name))
+        return -EINVAL;
+
+    if(unlikely(!type))
+        return -EINVAL;
+
+
+    if(unlikely(!ptr_check(dir_name, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(type, R_OK)))
+        return -EFAULT;
+
+    if(likely(dev_name))
+        if(unlikely(!ptr_check(dev_name, R_OK)))
+            return -EFAULT;
+
+    
+    int fd;
+    if((fd = sys_open(dir_name, O_RDONLY, 0)) < 0)
+        return fd;
+
+
+    inode_t* d = current_task->fd[fd].inode;
+    DEBUG_ASSERT(d);
+
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+    return vfs_mount(NULL, d, type, flags, (const char*) data);
 });

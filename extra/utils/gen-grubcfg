@@ -7,6 +7,10 @@ echo -e "\
 menuentry \"aPlus\" { \n\
     multiboot /aplus $kargs"
 
+echo -e "\
+    module /usr/lib/modules/exports"
+
+
 for ko in root/usr/lib/modules/*.ko; do
     test -f "$ko" || continue
     echo -e "\
@@ -22,6 +26,9 @@ echo ""
 echo -e "\
 menuentry \"aPlus - Text Mode\" { \n\
     multiboot /aplus $kargs graphics=no"
+
+echo -e "\
+    module /usr/lib/modules/exports"
 
 for ko in root/usr/lib/modules/*.ko; do
     test -f "$ko" || continue

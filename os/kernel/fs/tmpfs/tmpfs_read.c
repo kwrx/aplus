@@ -22,33 +22,36 @@
  */
 
 
-#ifndef _APLUS_RINGBUFFER_H
-#define _APLUS_RINGBUFFER_H
-
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/smp.h>
 #include <aplus/ipc.h>
+#include <aplus/vfs.h>
+#include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-typedef struct {
-    uint8_t* buffer;
-    size_t head;
-    size_t tail;
-    size_t size;
-    uint8_t full;
+#include "tmpfs.h"
 
-    spinlock_t lock;
-} ringbuffer_t;
+int tmpfs_read(inode_t* inode, void __user * buf, off_t pos, size_t len) {
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(len);
 
+    if(unlikely(!ptr_check(buf, R_OK | W_OK)))
+        return -EFAULT;
 
-void ringbuffer_create(ringbuffer_t* rb, size_t size);
-void ringbuffer_destroy(ringbuffer_t* rb);
-void ringbuffer_reset(ringbuffer_t* rb);
-int ringbuffer_is_full(ringbuffer_t* rb);
-int ringbuffer_is_empty(ringbuffer_t* rb);
-size_t ringbuffer_available(ringbuffer_t* rb);
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
+    if(!inode->userdata)
+        return 0;
+
+    if(pos + len > inode->st.st_size)
+        len = inode->st.st_size - pos;
 
 
-#endif
+    DEBUG_ASSERT(len >= 0);
+
+    if(likely(len > 0))
+        memcpy(buf, (void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), len);
+    
+    return len;
+}

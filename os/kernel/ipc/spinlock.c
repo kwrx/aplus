@@ -44,4 +44,3 @@ spinlock_t spinlock_trylock(spinlock_t* lock) {
 void spinlock_unlock(spinlock_t* lock) {
     __atomic_clear(lock, __ATOMIC_RELEASE);
 }
-

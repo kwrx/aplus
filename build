@@ -173,6 +173,10 @@ case $mode in
             exit
         fi
 
+        echo "-- Generate Exports"
+        ./extra/utils/gen-exports $toolchain/bin/$target > $(pwd)/root/usr/lib/modules/exports
+        check
+        
         echo "-- Generate Grub"
         ./extra/utils/gen-grubcfg > $(pwd)/root/boot/grub/grub.cfg
         check

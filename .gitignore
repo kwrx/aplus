@@ -20,6 +20,7 @@ node_modules
 
 root/usr/bin/*
 root/usr/sbin/*
+root/usr/lib/modules/exports
 usr/apps/wip
 
 sdk/toolchain

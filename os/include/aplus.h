@@ -168,7 +168,11 @@ typedef struct {
 } mbd_t;
 
 extern mbd_t* mbd;
+
 extern void core_init(void);
+extern void core_stacktrace(void);
+extern uintptr_t core_get_address(const char*);
+extern const char* core_get_name(uintptr_t);
 
 
 /* Hardware Abstraction Layer */

@@ -68,6 +68,7 @@ foreach(dev ${devs})
         add_custom_command (
             TARGET ${dev}
             POST_BUILD
+            COMMAND ${OBJCOPY} $<TARGET_FILE:${dev}> $<TARGET_FILE:${dev}>.debug
             COMMAND ${OBJCOPY} --strip-debug $<TARGET_FILE:${dev}>
         )
     

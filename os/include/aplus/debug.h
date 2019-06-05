@@ -74,7 +74,6 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 int kprintf(const char*, ...);
 void kpanic(const char*, ...);
 
-void core_stacktrace(void);
 #endif
 
 #endif

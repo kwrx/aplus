@@ -21,34 +21,37 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#ifndef _APLUS_RINGBUFFER_H
-#define _APLUS_RINGBUFFER_H
+#ifndef _SDI_DEVICE_H
+#define _SDI_DEVICE_H
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/ipc.h>
 #include <stdint.h>
 
+#include <sdi/chrdev.h>
+
+#define DEVICE_MAGIC                0xFFDE71C3
+#define DEVICE_MAX                  64
+
+
+#define DEVICE_STATUS_UNKNOWN       0
+#define DEVICE_STATUS_LOADING       1
+#define DEVICE_STATUS_READY         2
+#define DEVICE_STATUS_FAILED        3
+#define DEVICE_STATUS_UNLOADING     4
+#define DEVICE_STATUS_UNLOADED      5
+
+#define DEVICE_TYPE_UNKNOWN         0
+#define DEVICE_TYPE_CHRDEV          1
+
+
 typedef struct {
-    uint8_t* buffer;
-    size_t head;
-    size_t tail;
-    size_t size;
-    uint8_t full;
+    int magic;
+    int type;
 
-    spinlock_t lock;
-} ringbuffer_t;
-
-
-void ringbuffer_create(ringbuffer_t* rb, size_t size);
-void ringbuffer_destroy(ringbuffer_t* rb);
-void ringbuffer_reset(ringbuffer_t* rb);
-int ringbuffer_is_full(ringbuffer_t* rb);
-int ringbuffer_is_empty(ringbuffer_t* rb);
-size_t ringbuffer_available(ringbuffer_t* rb);
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
-
+    union {
+        chrdev_t chrdev;
+    };
+} device_t;
 
 #endif

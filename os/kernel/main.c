@@ -28,6 +28,7 @@
 #include <aplus/task.h>
 #include <aplus/mm.h>
 #include <aplus/syscall.h>
+#include <aplus/module.h>
 #include <stdint.h>
 
 
@@ -46,7 +47,13 @@ void kmain(void) {
     __init(syscall, ());
     __init(vfs,     ());
     __init(sched,   ());
+
+
+    if(sys_mount(NULL, "/", "tmpfs", 0, NULL) != 0)
+        kpanic("mount: could not mount temporary root");
+
     __init(module,  ());
+
 
 
     kprintf("cpu: %s %d-%d MHz (Cores: %d, Threads: %d)\n",

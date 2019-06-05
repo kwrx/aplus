@@ -98,7 +98,7 @@ size_t ringbuffer_available(ringbuffer_t* rb) {
     return rb->head - rb->tail + rb->size;
 }
 
-int ringbuffer_write(ringbuffer_t* rb, void* buf, size_t size) {
+int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
@@ -147,13 +147,3 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     return i;
 }
-
-
-EXPORT(ringbuffer_create);
-EXPORT(ringbuffer_destroy);
-EXPORT(ringbuffer_reset);
-EXPORT(ringbuffer_is_full);
-EXPORT(ringbuffer_is_empty);
-EXPORT(ringbuffer_available);
-EXPORT(ringbuffer_write);
-EXPORT(ringbuffer_read);

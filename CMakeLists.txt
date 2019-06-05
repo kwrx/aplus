@@ -31,7 +31,7 @@ endif()
 
 
 add_subdirectory(sdk/libs)
+add_subdirectory(usr/apps)
+add_subdirectory(os/drivers)
 add_subdirectory(os/arch)
 add_subdirectory(os/kernel)
-add_subdirectory(os/drivers)
-add_subdirectory(usr/apps)

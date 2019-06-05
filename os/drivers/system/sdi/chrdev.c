@@ -29,19 +29,50 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <sdi/driver.h>
-#include <sdi/chardev.h>
+#include <sdi/device.h>
+#include <sdi/chrdev.h>
 
 
-int chardev_write(chardev_t* device, void __user * buf, size_t size) {
+
+void chrdev_add(chrdev_t* device, mode_t mode) {
+    DEBUG_ASSERT(device);
+
+
+    device->status = DEVICE_STATUS_LOADING;
+
+    if(likely(device->ops.init))
+        device->ops.init(device);
+
+    if(likely(device->ops.reset))
+        device->ops.reset(device);
+
+    if(unlikely(device->status == DEVICE_STATUS_FAILED))
+        kpanic("chrdev: fail on loading %s: %s\n", device->name, device->description);
+
+    device->status = DEVICE_STATUS_READY;
+
+}
+
+
+void chrdev_remove(chrdev_t* device) {
+    DEBUG_ASSERT(device);
+    
+
+    device->status = DEVICE_STATUS_UNLOADING;
+
+    if(likely(device->ops.init))
+        device->ops.dnit(device);
+
+    device->status = DEVICE_STATUS_UNLOADED;
+}
+
+int chrdev_write(chrdev_t* device, const void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    if(unlikely(!ptr_check(buf, R_OK)))
-        return -EFAULT;
 
-    if(device->status != DRIVER_STATUS_READY)
+    if(device->status != DEVICE_STATUS_READY)
         return -EBUSY;
 
 
@@ -49,13 +80,13 @@ int chardev_write(chardev_t* device, void __user * buf, size_t size) {
     int e;
 
     switch(device->io) {
-        case CHARDEV_IO_NBF:
+        case CHRDEV_IO_NBF:
             if(likely(device->ops.write))
                 return device->ops.write(device, buf, size);
 
             return -ENOSYS;
 
-        case CHARDEV_IO_LBF:
+        case CHRDEV_IO_LBF:
             DEBUG_ASSERT(device->buffer.buffer);
             DEBUG_ASSERT(device->buffer.size);
 
@@ -67,7 +98,7 @@ int chardev_write(chardev_t* device, void __user * buf, size_t size) {
 
             return e;
         
-        case CHARDEV_IO_FBF:
+        case CHRDEV_IO_FBF:
             DEBUG_ASSERT(device->buffer.buffer);
             DEBUG_ASSERT(device->buffer.size);
 
@@ -87,15 +118,13 @@ int chardev_write(chardev_t* device, void __user * buf, size_t size) {
 }
 
 
-int chardev_read(chardev_t* device, void __user * buf, size_t size) {
+int chrdev_read(chrdev_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    if(unlikely(!ptr_check(buf, R_OK | W_OK)))
-        return -EFAULT;
 
-    if(device->status != DRIVER_STATUS_READY)
+    if(device->status != DEVICE_STATUS_READY)
         return -EBUSY;
 
 
@@ -103,19 +132,51 @@ int chardev_read(chardev_t* device, void __user * buf, size_t size) {
     int e;
 
     switch(device->io) {
-        case CHARDEV_IO_NBF:
+        case CHRDEV_IO_NBF:
             if(likely(device->ops.read))
                 return device->ops.read(device, buf, size);
 
             return -ENOSYS;
 
-        case CHARDEV_IO_LBF:
-        case CHARDEV_IO_FBF:
+        case CHRDEV_IO_LBF:
+        case CHRDEV_IO_FBF:
             DEBUG_ASSERT(device->buffer.buffer);
             DEBUG_ASSERT(device->buffer.size);
 
             return ringbuffer_read(&device->buffer, buf, size);
             
+        default:
+            break;
+    }
+
+    DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
+}
+
+
+int chrdev_flush(chrdev_t* device) {
+    DEBUG_ASSERT(device);
+
+    if(device->status != DEVICE_STATUS_READY)
+        return -EBUSY;
+
+
+
+    int e;
+
+    switch(device->io) {
+        case CHRDEV_IO_NBF:
+            return 0;
+
+        case CHRDEV_IO_LBF:
+        case CHRDEV_IO_FBF:
+            DEBUG_ASSERT(device->buffer.buffer);
+            DEBUG_ASSERT(device->buffer.size);
+
+            if(likely(device->ops.flush))
+                device->ops.flush(device);    
+
+            return 0;
+                    
         default:
             break;
     }

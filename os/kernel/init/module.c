@@ -78,9 +78,17 @@ static void module_export(module_t* mod, const char* name, void* address) {
 
 
 static void* module_resolve(const char* name) {
+
     list_each(m_symtab, v)
         if(strcmp(v->name, name) == 0)
             return v->address;
+
+
+    void* p;
+    if((p = (void*) core_get_address(name)))
+        return module_export(NULL, name, p)
+             , p;
+    
     
     kpanic("module: undefined reference for \'%s\'", name);
 }
@@ -107,7 +115,7 @@ void module_run(module_t* m) {
 
 
     int i;
-    for(i = 1; i < m->exe.symtab->sh_size / sizeof(Elf_Sym); i++) {
+    for(i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
 
         #define syname(p) \
             ((const char*) ((uintptr_t) m->exe.header + m->exe.strtab->sh_offset + p))
@@ -116,8 +124,6 @@ void module_run(module_t* m) {
         Elf_Sym* s = &((Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.symtab->sh_offset)) [i];
 
         switch(s->st_shndx) {
-            case SHN_COMMON:
-                break;
 
             case SHN_ABS:
                 break;
@@ -141,20 +147,22 @@ void module_run(module_t* m) {
     }
 
 
+
     DEBUG_ASSERT(m->init);
     DEBUG_ASSERT(m->dnit);
 
 
-    for(int i = 0; i < m->exe.header->e_shnum; i++) {
+    for(int i = 1; i < m->exe.header->e_shnum; i++) {
 
         if(m->exe.section[i].sh_type != SHT_REL)
             continue;
 
         Elf_Rel* r = (Elf_Rel*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
-        Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.symtab->sh_offset);
+        Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
+
         int j;
-        for(j = 0; j < m->exe.section[i].sh_size / sizeof(Elf_Sym); j++) {
+        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
             Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
             Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
@@ -167,6 +175,9 @@ void module_run(module_t* m) {
 
             switch(ELF_R_TYPE(r[j].r_info)) {
                 
+                case R_386_NONE:
+                    break;
+
                 case R_386_32:
                     *obj = S + A;
                     break;
@@ -208,7 +219,7 @@ void module_run(module_t* m) {
 #endif
 
                 default:
-                    kpanic("module: invalid relocation type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanic("module: unknown relocation type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -222,11 +233,12 @@ void module_run(module_t* m) {
 
 
 #if DEBUG
-    kprintf("module: running %s\n", m->name);
+    kprintf("module: running %-16s [addr(%8p), size(%04x)]\n", m->name, m->core.ptr, m->core.size);
 #endif
 
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;
+
 }
 
 
@@ -237,23 +249,11 @@ void module_init(void) {
     memset(&m_symtab, 0, sizeof(m_symtab));
 
 
-    extern int export_start;
-    extern int export_end;
-
-    struct {
-        char* name;
-        void* address;
-    } *exports = NULL;
-
-    for(exports = (void*) &export_start; (void*) exports < (void*) &export_end; exports++)
-        module_export(NULL, exports->name, exports->address);
-
-
 
     int i;
-    for(i = 0; i < mbd->modules.count; i++) {
+    for(i = 1; i < mbd->modules.count; i++) {
 
-        module_t* m = (module_t*) kcalloc(sizeof(module_t), 1, GFP_KERNEL);
+        module_t* m = (module_t*) kcalloc(1, sizeof(module_t), GFP_KERNEL);
         DEBUG_ASSERT(m);
 
 
@@ -264,6 +264,7 @@ void module_init(void) {
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG1] == ELFMAG1);
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG2] == ELFMAG2);
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG3] == ELFMAG3);
+        DEBUG_ASSERT(m->exe.header->e_type == ET_REL);
         //DEBUG_ASSERT(elf_check_machine(m->exe.header) == 0);
 
 
@@ -296,6 +297,10 @@ void module_init(void) {
 
 
         for(int j = 1; j < m->exe.header->e_shnum; j++) {
+
+            DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_RELA);
+            DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNAMIC);
+            DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNSYM);
 
             if(!(m->exe.section[j].sh_flags & SHF_ALLOC))
                 continue;

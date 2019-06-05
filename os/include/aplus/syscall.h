@@ -38,7 +38,7 @@
         (int) x,                                \
         (void*) sys_##y,                        \
         (char*) #y                              \
-    }; EXPORT(sys_##y) 
+    } 
 
 
 void syscall_init(void);

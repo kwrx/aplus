@@ -28,32 +28,89 @@
 #include <string.h>
 #include <errno.h>
 
-#define VFS_NINODES                 (64 * 1024)
+
+struct {
+    int id;
+    const char* name;
+    int (*mount)(inode_t*, inode_t*, int, const char*);
+    int (*umount) (inode_t*);
+} vfs_table[32];
 
 
 inode_t _vfs_root;
 inode_t* vfs_root = &_vfs_root;
 
+inode_t* vfs_dev = NULL;
+
 
 void vfs_init(void) {
-    #define _ _vfs_root
-    memset(&_, 0, sizeof(_));
+    
+    memset(&_vfs_root, 0, sizeof(_vfs_root));
+    memset(&vfs_table, 0, sizeof(vfs_table));
 
-    _.name[0] = '/';
-    _.name[1] = '\0';
+    int i = 0;
+    #include "fs/fstable.c.in"
 
-    _.st.st_ino = 0;
-    _.st.st_mode = S_IFDIR;
-    _.st.st_nlink = 1;
 
-    //_.st.st_atime = arch_timer_now();
-    //_.st.st_ctime = arch_timer_now();
-    //_.st.st_mtime = arch_timer_now();
+    _vfs_root.name[0] = '/';
+    _vfs_root.name[1] = '\0';
 
-    spinlock_init(&_.lock);
-    #undef _
+    _vfs_root.st.st_ino = 1;
+    _vfs_root.st.st_mode = S_IFDIR;
+    _vfs_root.st.st_nlink = 1;
+
+    //_vfs_root.st.st_atime = arch_timer_now();
+    //_vfs_root.st.st_ctime = arch_timer_now();
+    //_vfs_root.st.st_mtime = arch_timer_now();
+
+    spinlock_init(&_vfs_root.lock);
 
 }
+
+
+
+int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, const char __user * args) {
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(fs);
+
+    if(unlikely(!ptr_check(fs, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(args, R_OK)))
+        return -EFAULT;
+
+    
+    int i;
+    for(i = 0; vfs_table[i].id; i++) {
+        if(strcmp(vfs_table[i].name, fs) != 0)
+            continue;
+
+
+        DEBUG_ASSERT(vfs_table[i].mount);
+        DEBUG_ASSERT(vfs_table[i].umount);
+
+
+        int e;
+        if((e = vfs_table[i].mount(dev, dir, flags, args) != 0))
+            return e;
+
+        __lock(&dir->lock, {
+
+            struct inode_ops ops;
+            memcpy(&ops, &dir->ops, sizeof(ops));
+            memcpy(&dir->ops, &dir->mount.ops, sizeof(ops));
+            memcpy(&dir->mount.ops, &ops, sizeof(ops));
+
+        });
+
+
+        kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
+        return 0;
+    }
+
+    return -EINVAL;
+}
+
 
 int vfs_open(inode_t* inode) {
     DEBUG_ASSERT(inode);

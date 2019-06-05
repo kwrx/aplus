@@ -30,36 +30,21 @@
 #include <string.h>
 #include <errno.h>
 
-#include <sdi/driver.h>
-#include <sdi/chardev.h>
+#include <sdi/device.h>
+#include <sdi/chrdev.h>
 
 
 MODULE_NAME("char/zero");
 MODULE_DEPS("sdi");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
- 
 
 
-static int zero_read(chardev_t* device, void* buf, size_t size) {
-    DEBUG_ASSERT(device);
-    DEBUG_ASSERT(buf);
 
-    memset(buf, 0, size);
-}
+static int zero_read(chrdev_t*, void*, size_t);
 
 
-void init(const char* args) {
-    //chardev_add(&device, 0444);
-}
-
-
-void dnit(void) {
-    //chardev_remove(&device);
-}
-
-
-chardev_t device = {
+chrdev_t device = {
     .name = "zero",
     .description = "Read zeroes from device",
 
@@ -67,8 +52,8 @@ chardev_t device = {
     .vendorid = 0,
     .intno = 0,
 
-    .status = DRIVER_STATUS_READY,
-    .io = CHARDEV_IO_NBF,
+    .status = DEVICE_STATUS_UNKNOWN,
+    .io = CHRDEV_IO_NBF,
 
     .ops.init = NULL,
     .ops.dnit = NULL,
@@ -77,3 +62,23 @@ chardev_t device = {
     .ops.write = NULL,
     .ops.read = &zero_read,
 };
+
+
+
+
+static int zero_read(chrdev_t* device, void* buf, size_t size) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+    memset(buf, 0, size);
+}
+
+
+void init(const char* args) {
+    //sdi_device_add(DEVICE_TYPE_CHRDEV, &device, 0444);
+}
+
+
+void dnit(void) {
+    //sdi_device_remove(&device);
+}
