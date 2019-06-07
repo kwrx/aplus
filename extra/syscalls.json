@@ -47,7 +47,7 @@
       [
          2,
          "sys_open",
-         "(const char __user * filename,int flags,umode_t mode)",
+         "(const char __user * filename,int flags,mode_t mode)",
          "0x02",
          {
             "type": "const char __user * filename",
@@ -58,7 +58,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -343,7 +343,7 @@
       [
          17,
          "sys_pread64",
-         "(unsigned int fd,char __user * buf,size_t count,loff_t pos)",
+         "(unsigned int fd,char __user * buf,size_t count,off_t pos)",
          "0x11",
          {
             "type": "unsigned int fd",
@@ -358,7 +358,7 @@
             "def": null
          },
          {
-            "type": "loff_t pos",
+            "type": "off_t pos",
             "def": null
          },
          "",
@@ -368,7 +368,7 @@
       [
          18,
          "sys_pwrite64",
-         "(unsigned int fd,const char __user * buf,size_t count,loff_t pos)",
+         "(unsigned int fd,const char __user * buf,size_t count,off_t pos)",
          "0x12",
          {
             "type": "unsigned int fd",
@@ -383,7 +383,7 @@
             "def": null
          },
          {
-            "type": "loff_t pos",
+            "type": "off_t pos",
             "def": null
          },
          "",
@@ -825,7 +825,7 @@
       [
          40,
          "sys_sendfile64",
-         "(int out_fd,int in_fd,loff_t __user * offset,size_t count)",
+         "(int out_fd,int in_fd,off_t __user * offset,size_t count)",
          "0x28",
          {
             "type": "int out_fd",
@@ -836,7 +836,7 @@
             "def": null
          },
          {
-            "type": "loff_t __user * offset",
+            "type": "off_t __user * offset",
             "def": null
          },
          {
@@ -1570,14 +1570,14 @@
       [
          78,
          "sys_getdents",
-         "(unsigned int fd,struct linux_dirent __user * dirent,unsigned int count)",
+         "(unsigned int fd,struct dirent __user * dirent,unsigned int count)",
          "0x4e",
          {
             "type": "unsigned int fd",
             "def": null
          },
          {
-            "type": "struct linux_dirent __user * dirent",
+            "type": "struct dirent __user * dirent",
             "def": {
                "line": 150,
                "file": "fs/readdir.c"
@@ -1665,14 +1665,14 @@
       [
          83,
          "sys_mkdir",
-         "(const char __user * pathname,umode_t mode)",
+         "(const char __user * pathname,mode_t mode)",
          "0x53",
          {
             "type": "const char __user * pathname",
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -1700,14 +1700,14 @@
       [
          85,
          "sys_creat",
-         "(const char __user * pathname,umode_t mode)",
+         "(const char __user * pathname,mode_t mode)",
          "0x55",
          {
             "type": "const char __user * pathname",
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -1795,14 +1795,14 @@
       [
          90,
          "sys_chmod",
-         "(const char __user * filename,umode_t mode)",
+         "(const char __user * filename,mode_t mode)",
          "0x5a",
          {
             "type": "const char __user * filename",
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -1814,14 +1814,14 @@
       [
          91,
          "sys_fchmod",
-         "(unsigned int fd,umode_t mode)",
+         "(unsigned int fd,mode_t mode)",
          "0x5b",
          {
             "type": "unsigned int fd",
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -2597,14 +2597,14 @@
       [
          133,
          "sys_mknod",
-         "(const char __user * filename,umode_t mode,unsigned dev)",
+         "(const char __user * filename,mode_t mode,unsigned dev)",
          "0x85",
          {
             "type": "const char __user * filename",
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          {
@@ -2632,10 +2632,10 @@
       [
          135,
          "sys_personality",
-         "(p)",
+         "(int p)",
          "0x87",
          {
-            "type": "p",
+            "type": "int p",
             "def": null
          },
          "",
@@ -3568,14 +3568,14 @@
       [
          187,
          "sys_readahead",
-         "(int fd,loff_t offset,size_t count)",
+         "(int fd,off_t offset,size_t count)",
          "0xbb",
          {
             "type": "int fd",
             "def": null
          },
          {
-            "type": "loff_t offset",
+            "type": "off_t offset",
             "def": null
          },
          {
@@ -3907,7 +3907,7 @@
       [
          202,
          "sys_futex",
-         "(u32 __user * uaddr,int op,u32 val,struct timespec __user * utime,u32 __user * uaddr2,u32 val3)",
+         "(uint32_t __user * uaddr,int op,uint32_t val,struct timespec __user * utime,uint32_t __user * uaddr2,uint32_t val3)",
          "0xca",
          "param addr*",
          "",
@@ -4103,10 +4103,10 @@
       [
          212,
          "sys_lookup_dcookie",
-         "(u64 cookie64,char __user * buf,size_t len)",
+         "(uint64_t cookie64,char __user * buf,size_t len)",
          "0xd4",
          {
-            "type": "u64 cookie64",
+            "type": "uint64_t cookie64",
             "def": null
          },
          {
@@ -4195,14 +4195,14 @@
       [
          217,
          "sys_getdents64",
-         "(unsigned int fd,struct linux_dirent64 __user * dirent,unsigned int count)",
+         "(unsigned int fd,struct dirent __user * dirent,unsigned int count)",
          "0xd9",
          {
             "type": "unsigned int fd",
             "def": null
          },
          {
-            "type": "struct linux_dirent64 __user * dirent",
+            "type": "struct dirent __user * dirent",
             "def": {
                "line": 4,
                "file": "include/linux/dirent.h"
@@ -4277,14 +4277,14 @@
       [
          221,
          "sys_fadvise64",
-         "(int fd,loff_t offset,size_t len,int advice)",
+         "(int fd,off_t offset,size_t len,int advice)",
          "0xdd",
          {
             "type": "int fd",
             "def": null
          },
          {
-            "type": "loff_t offset",
+            "type": "off_t offset",
             "def": null
          },
          {
@@ -4686,7 +4686,7 @@
       [
          240,
          "sys_mq_open",
-         "(const char __user * name,int oflag,umode_t mode,struct mq_attr __user * attr)",
+         "(const char __user * name,int oflag,mode_t mode,struct mq_attr __user * attr)",
          "0xf0",
          {
             "type": "const char __user * name",
@@ -4697,7 +4697,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          {
@@ -5033,7 +5033,7 @@
       [
          254,
          "sys_inotify_add_watch",
-         "(int fd,const char __user * path,u32 mask)",
+         "(int fd,const char __user * path,uint32_t mask)",
          "0xfe",
          {
             "type": "int fd",
@@ -5044,7 +5044,7 @@
             "def": null
          },
          {
-            "type": "u32 mask",
+            "type": "uint32_t mask",
             "def": null
          },
          "",
@@ -5055,14 +5055,14 @@
       [
          255,
          "sys_inotify_rm_watch",
-         "(int fd,__s32 wd)",
+         "(int fd,int wd)",
          "0xff",
          {
             "type": "int fd",
             "def": null
          },
          {
-            "type": "__s32 wd",
+            "type": "int wd",
             "def": null
          },
          "",
@@ -5099,7 +5099,7 @@
       [
          257,
          "sys_openat",
-         "(int dfd,const char __user * filename,int flags,umode_t mode)",
+         "(int dfd,const char __user * filename,int flags,mode_t mode)",
          "0x101",
          {
             "type": "int dfd",
@@ -5114,7 +5114,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -5124,7 +5124,7 @@
       [
          258,
          "sys_mkdirat",
-         "(int dfd,const char __user * pathname,umode_t mode)",
+         "(int dfd,const char __user * pathname,mode_t mode)",
          "0x102",
          {
             "type": "int dfd",
@@ -5135,7 +5135,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -5146,7 +5146,7 @@
       [
          259,
          "sys_mknodat",
-         "(int dfd,const char __user * filename,umode_t mode,unsigned dev)",
+         "(int dfd,const char __user * filename,mode_t mode,unsigned dev)",
          "0x103",
          {
             "type": "int dfd",
@@ -5157,7 +5157,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          {
@@ -5374,7 +5374,7 @@
       [
          268,
          "sys_fchmodat",
-         "(int dfd,const char __user * filename,umode_t mode)",
+         "(int dfd,const char __user * filename,mode_t mode)",
          "0x10c",
          {
             "type": "int dfd",
@@ -5385,7 +5385,7 @@
             "def": null
          },
          {
-            "type": "umode_t mode",
+            "type": "mode_t mode",
             "def": null
          },
          "",
@@ -5522,7 +5522,7 @@
       [
          275,
          "sys_splice",
-         "(int fd_in,loff_t __user * off_in,int fd_out,loff_t __user * off_out,size_t len,unsigned int flags)",
+         "(int fd_in,off_t __user * off_in,int fd_out,off_t __user * off_out,size_t len,unsigned int flags)",
          "0x113",
          "param addr*",
          "",
@@ -5560,18 +5560,18 @@
       [
          277,
          "sys_sync_file_range",
-         "(int fd,loff_t offset,loff_t nbytes,unsigned int flags)",
+         "(int fd,off_t offset,off_t nbytes,unsigned int flags)",
          "0x115",
          {
             "type": "int fd",
             "def": null
          },
          {
-            "type": "loff_t offset",
+            "type": "off_t offset",
             "def": null
          },
          {
-            "type": "loff_t nbytes",
+            "type": "off_t nbytes",
             "def": null
          },
          {
@@ -5718,7 +5718,7 @@
       [
          285,
          "sys_fallocate",
-         "(int fd,int mode,loff_t offset,loff_t len)",
+         "(int fd,int mode,off_t offset,off_t len)",
          "0x11d",
          {
             "type": "int fd",
@@ -5729,11 +5729,11 @@
             "def": null
          },
          {
-            "type": "loff_t offset",
+            "type": "off_t offset",
             "def": null
          },
          {
-            "type": "loff_t len",
+            "type": "off_t len",
             "def": null
          },
          "",
@@ -6103,7 +6103,7 @@
       [
          301,
          "sys_fanotify_mark",
-         "(int fanotify_fd,unsigned int flags,u64 mask,int fd,const char __user * pathname)",
+         "(int fanotify_fd,unsigned int flags,uint64_t mask,int fd,const char __user * pathname)",
          "0x12d",
          {
             "type": "int fanotify_fd",
@@ -6114,7 +6114,7 @@
             "def": null
          },
          {
-            "type": "u64 mask",
+            "type": "uint64_t mask",
             "def": null
          },
          {
@@ -6131,7 +6131,7 @@
       [
          302,
          "sys_prlimit64",
-         "(pid_t pid,unsigned int resource,const struct rlimit64 __user * new_rlim,struct rlimit64 __user * old_rlim)",
+         "(pid_t pid,unsigned int resource,const struct rlimit __user * new_rlim,struct rlimit __user * old_rlim)",
          "0x12e",
          {
             "type": "pid_t pid",
@@ -6142,14 +6142,14 @@
             "def": null
          },
          {
-            "type": "const struct rlimit64 __user * new_rlim",
+            "type": "const struct rlimit __user * new_rlim",
             "def": {
                "line": 49,
                "file": "include/uapi/linux/resource.h"
             }
          },
          {
-            "type": "struct rlimit64 __user * old_rlim",
+            "type": "struct rlimit __user * old_rlim",
             "def": {
                "line": 49,
                "file": "include/uapi/linux/resource.h"
@@ -6649,7 +6649,7 @@
       [
          326,
          "sys_copy_file_range",
-         "(int fd_in,loff_t __user * off_in,int fd_out,loff_t __user * off_out,size_t len,unsigned int flags)",
+         "(int fd_in,off_t __user * off_in,int fd_out,off_t __user * off_out,size_t len,unsigned int flags)",
          "0x146",
          "param addr*",
          "",
@@ -7286,7 +7286,7 @@
       [
          358,
          "compat_sys_move_pages",
-         "(pid_t pid,compat_ulong_t nr_pages,__u32 __user * pages,const int __user * nodes,int __user * status,int flags)",
+         "(pid_t pid,compat_ulong_t nr_pages,__uint32_t __user * pages,const int __user * nodes,int __user * status,int flags)",
          "0x166",
          "param addr*",
          "",
@@ -7299,7 +7299,7 @@
       [
          359,
          "compat_sys_preadv64",
-         "(unsigned long fd,const struct compat_iovec __user * vec,unsigned long vlen,loff_t pos)",
+         "(unsigned long fd,const struct compat_iovec __user * vec,unsigned long vlen,off_t pos)",
          "0x167",
          {
             "type": "unsigned long fd",
@@ -7317,7 +7317,7 @@
             "def": null
          },
          {
-            "type": "loff_t pos",
+            "type": "off_t pos",
             "def": null
          },
          "",
@@ -7327,7 +7327,7 @@
       [
          360,
          "compat_sys_pwritev64",
-         "(unsigned long fd,const struct compat_iovec __user * vec,unsigned long vlen,loff_t pos)",
+         "(unsigned long fd,const struct compat_iovec __user * vec,unsigned long vlen,off_t pos)",
          "0x168",
          {
             "type": "unsigned long fd",
@@ -7345,7 +7345,7 @@
             "def": null
          },
          {
-            "type": "loff_t pos",
+            "type": "off_t pos",
             "def": null
          },
          "",
@@ -7521,14 +7521,14 @@
       [
          368,
          "compat_sys_io_setup",
-         "(unsigned nr_reqs,u32 __user * ctx32p)",
+         "(unsigned nr_reqs,uint32_t __user * ctx32p)",
          "0x170",
          {
             "type": "unsigned nr_reqs",
             "def": null
          },
          {
-            "type": "u32 __user * ctx32p",
+            "type": "uint32_t __user * ctx32p",
             "def": null
          },
          "",
@@ -7540,7 +7540,7 @@
       [
          369,
          "compat_sys_io_submit",
-         "(compat_aio_context_t ctx_id,int nr,u32 __user * iocb)",
+         "(compat_aio_context_t ctx_id,int nr,uint32_t __user * iocb)",
          "0x171",
          {
             "type": "compat_aio_context_t ctx_id",
@@ -7551,7 +7551,7 @@
             "def": null
          },
          {
-            "type": "u32 __user * iocb",
+            "type": "uint32_t __user * iocb",
             "def": null
          },
          "",

@@ -81,14 +81,15 @@ struct inode {
 
 void vfs_init(void);
 
+int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, const char __user * args);
 int vfs_open(inode_t* inode);
 int vfs_close(inode_t* inode);
 int vfs_read(inode_t* inode, void* buf, off_t off, size_t size);
 int vfs_write(inode_t* inode, const void* buf, off_t off, size_t size);
-inode_t* vfs_finddir(inode_t* inode, char* name);
-inode_t* vfs_mknod(inode_t* inode, char* name, mode_t mode);
+inode_t* vfs_finddir(inode_t* inode, const char* name);
+inode_t* vfs_mknod(inode_t* inode, const char* name, mode_t mode);
 int vfs_getdents(inode_t* inode, struct dirent* ent, off_t off, size_t size);
-int vfs_unlink(inode_t* inode, char* name);
+int vfs_unlink(inode_t* inode, const char* name);
 int vfs_ioctl(inode_t* inode, int req, void* arg);
 int vfs_fsync(inode_t* inode);
 

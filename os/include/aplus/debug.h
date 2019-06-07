@@ -61,6 +61,9 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
     }                                                                                               \
 }
 
+
+void unittest_init(void);
+
 #else
 
 #define DEBUG_ASSERT(x);
@@ -69,6 +72,21 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 
 #endif
 
+
+#define TESTCASE(x, y...)           \
+    __section(".unittest")          \
+    struct {                        \
+        const char* name;           \
+        const char* desc;           \
+        const char* file;           \
+        int (*run)(void);           \
+    } __test_##x = y
+
+#define __TESTCASE_FAIL(x, y)       \
+    if(x) return y
+
+#define TESTCASE_FAIL(x)            \
+    __TESTCASE_FAIL(x, __LINE__)
 
 
 int kprintf(const char*, ...);

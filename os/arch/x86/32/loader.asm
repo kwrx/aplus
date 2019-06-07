@@ -2,6 +2,7 @@
 
 
 %define CONFIG_KERNEL_BASE			0xC0000000
+%define CONFIG_STACK_SIZE			0x00100000
 %define V2P(x)						((x) - CONFIG_KERNEL_BASE)
 
 
@@ -175,6 +176,6 @@ early_pd:
 section .stack
 align 0x1000
 early_stack_bottom:
-	times 0x10000 db 0
+	times CONFIG_STACK_SIZE db 0
 early_stack:
 

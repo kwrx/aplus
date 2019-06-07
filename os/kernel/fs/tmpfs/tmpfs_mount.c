@@ -39,8 +39,8 @@
 
 
 
-
-int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char __user * args) {
+__thread_safe
+int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev == NULL);
 

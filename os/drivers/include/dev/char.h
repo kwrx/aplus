@@ -21,37 +21,27 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _SDI_DEVICE_H
-#define _SDI_DEVICE_H
+#ifndef _DEV_CHAR_H
+#define _DEV_CHAR_H
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/syscall.h>
 #include <stdint.h>
 
-#include <sdi/chrdev.h>
+#include <dev/interface.h>
 
-#define DEVICE_MAGIC                0xFFDE71C3
-#define DEVICE_MAX                  64
-
-
-#define DEVICE_STATUS_UNKNOWN       0
-#define DEVICE_STATUS_LOADING       1
-#define DEVICE_STATUS_READY         2
-#define DEVICE_STATUS_FAILED        3
-#define DEVICE_STATUS_UNLOADING     4
-#define DEVICE_STATUS_UNLOADED      5
-
-#define DEVICE_TYPE_UNKNOWN         0
-#define DEVICE_TYPE_CHRDEV          1
+#define CHAR_IO_NBF             0   // No Buffering
+#define CHAR_IO_LBF             1   // Line Buffered
+#define CHAR_IO_FBF             2   // Full Buffered
 
 
-typedef struct {
-    int magic;
-    int type;
+int char_write(device_t*, const void*, size_t);
+int char_read(device_t*, void*, size_t);
+int char_flush(device_t*);
+void char_init(device_t*);
+void char_dnit(device_t*);
 
-    union {
-        chrdev_t chrdev;
-    };
-} device_t;
+
 
 #endif

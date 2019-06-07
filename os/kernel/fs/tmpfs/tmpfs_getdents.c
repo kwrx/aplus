@@ -37,14 +37,11 @@
 
 
 
-int tmpfs_getdents(inode_t* inode, struct dirent __user * e, off_t pos, size_t len) {
+__thread_safe
+int tmpfs_getdents(inode_t* inode, struct dirent* e, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(e);
 
-    if(unlikely(!ptr_check(e, R_OK | W_OK)))
-        return -EFAULT;
-        
-        
     
     
     int s = len / sizeof(struct dirent);
@@ -65,7 +62,12 @@ int tmpfs_getdents(inode_t* inode, struct dirent __user * e, off_t pos, size_t l
             e[i].d_type = d->st.st_mode;
             strncpy(e[i].d_name, d->name, MAXNAMLEN);
 
+            p = 1;
+            break;
         }
+
+        if(p == 0)
+            break;
 
         pos++;
     }

@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -47,5 +49,24 @@
 
 SYSCALL(3, close,
 long sys_close (unsigned int fd) {
-    return -ENOSYS;
+
+    if(unlikely(fd < 0))
+        return -EBADF;
+
+    if(unlikely(fd > TASK_NFD))
+        return -EBADF;
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+
+
+    __lock(&current_task->lock, {
+        
+        vfs_close(current_task->fd[fd].inode);
+
+        current_task->fd[fd].inode = NULL;
+        current_task->fd[fd].flags = 0;
+    
+    });
+    
+    return 0;
 });

@@ -48,5 +48,5 @@
 
 SYSCALL(85, creat,
 long sys_creat (const char __user * pathname, mode_t mode) {
-    return -ENOSYS;
+    return sys_open(pathname, O_CREAT | O_EXCL | O_WRONLY, mode);
 });

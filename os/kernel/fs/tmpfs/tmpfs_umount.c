@@ -39,11 +39,11 @@
 
 
 
-
+__thread_safe
 int tmpfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
-    DEBUG_ASSERT((dir->st.st_mode & ~S_IFMT) == S_IFMT);
+    DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
 
 
     __lock(&dir->lock, {

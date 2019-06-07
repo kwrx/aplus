@@ -12,6 +12,7 @@ file(GLOB SRCS
     "${TARGET_ARCH}/${TARGET_BITS}/*.asm"
 )
 
+
 add_library(arch ${SRCS})
 
 target_compile_definitions(arch

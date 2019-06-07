@@ -62,7 +62,7 @@ foreach(dev ${devs})
 
         install (
             TARGETS ${dev}
-            RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/root/usr/lib/modules
+            RUNTIME DESTINATION ${CMAKE_SOURCE_DIR}/root/usr/lib/modules/system
         )
 
         add_custom_command (

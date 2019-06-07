@@ -11,10 +11,10 @@ echo -e "\
     module /usr/lib/modules/exports"
 
 
-for ko in root/usr/lib/modules/*.ko; do
+for ko in $(find root/usr/lib/modules -type f -name *.ko); do
     test -f "$ko" || continue
     echo -e "\
-    module /usr/lib/modules/$(basename $ko) $margs"
+    module $(echo $ko | cut -c 5-) $margs"
 done
 
 echo -e "\
@@ -30,10 +30,10 @@ menuentry \"aPlus - Text Mode\" { \n\
 echo -e "\
     module /usr/lib/modules/exports"
 
-for ko in root/usr/lib/modules/*.ko; do
+for ko in $(find root/usr/lib/modules -type f -name *.ko); do
     test -f "$ko" || continue
     echo -e "\
-    module /usr/lib/modules/$(basename $ko) $margs graphics=no"
+    module $(echo $ko | cut -c 5-) $margs"
 done
 
 echo -e "\

@@ -28,18 +28,56 @@
 #include <aplus/vfs.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 
+#include <dev/interface.h>
+#include <dev/char.h>
+
+
 MODULE_NAME("char/random");
-MODULE_DEPS("");
+MODULE_DEPS("dev/interface,dev/char");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
 
-static int random_read(inode_t* inode, void __user * buf, off_t pos, size_t size) {
+static int random_read(device_t*, void*, size_t);
 
-    srand(sys_times(NULL));
+
+device_t device = {
+
+    .type = DEVICE_TYPE_CHAR,
+
+    .name = "random",
+    .description = "Read random values from device",
+
+    .deviceid = 3,
+    .vendorid = S_IFCHR,
+    .intno = 0,
+
+    .status = DEVICE_STATUS_UNKNOWN,
+
+
+    .init =  NULL,
+    .dnit =  NULL,
+    .reset = NULL,
+
+    .chr.io =    CHAR_IO_NBF,
+    .chr.write = NULL,
+    .chr.read =  &random_read,
+
+};
+
+
+
+__thread_safe
+static int random_read(device_t* device, void* buf, size_t size) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+
+    srand((int) arch_timer_getus());
 
     char* bc = (char*) buf;
     size_t i;
@@ -47,19 +85,14 @@ static int random_read(inode_t* inode, void __user * buf, off_t pos, size_t size
         *bc++ = rand() % 256;
 
     return size;
-
 }
+
 
 void init(const char* args) {
-    /*inode_t* ino;
-    if(unlikely((ino = vfs_mkdev("random", -1, S_IFCHR | 0444)) == NULL))
-        kpanic("random: could not create device");
-
-    ino->ops.read = random_read;*/
+    device_mkdev(&device, 0666);
 }
-
 
 
 void dnit(void) {
-    //sys_unlink("/dev/random");
+    device_unlink(&device);
 }

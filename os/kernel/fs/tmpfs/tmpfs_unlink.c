@@ -36,14 +36,11 @@
 #include "tmpfs.h"
 
 
-
-int tmpfs_unlink(inode_t* inode, const char __user * name) {
+__thread_safe
+int tmpfs_unlink(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-    if(unlikely(!ptr_check(name, R_OK)))
-        return -EFAULT;
-    
 
     inode_t* d = NULL;
 
@@ -59,7 +56,7 @@ int tmpfs_unlink(inode_t* inode, const char __user * name) {
     }
 
     if(!d)
-        return -ENOENT;
+        return errno = ENOENT, -1;
 
 
     d->mount.st.f_bavail += d->st.st_size;

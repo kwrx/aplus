@@ -12,6 +12,7 @@ SECTIONS {
 		*(.multiboot.*)
 	}
 
+
 	. += KERNEL_HIGH;
 	
 	.text : AT(ADDR(.text) - KERNEL_HIGH) ALIGN(0x1000) {
@@ -20,6 +21,7 @@ SECTIONS {
 		*(.text.*)
 		*(.rodata*)
 	}
+
 
 	.data : AT(ADDR(.data) - KERNEL_HIGH) ALIGN(0x1000) {
 		data = .;
@@ -39,9 +41,20 @@ SECTIONS {
 	}
 
 
+	.unittest : AT(ADDR(.unittest) - KERNEL_HIGH) ALIGN(0x1000) {
+		unittest_start = .;
+
+		*(.unittest)
+		*(.unittest.*)
+
+		unittest_end = .;
+	}
+
+
 	.stack : AT(ADDR(.stack) - KERNEL_HIGH) ALIGN(0x1000) {
 		*(.stack)
 	}
+
 
 	.bss : AT(ADDR(.bss) - KERNEL_HIGH) ALIGN(0x1000) {
 		__bss_start = .;
@@ -50,9 +63,11 @@ SECTIONS {
 		__bss_end = .;
 	}
 
+
 	. = ALIGN(0x1000);
 	. += 0x1000;
 	end = .;
+
 
 	/DISCARD/ : {
 		*(.comment)

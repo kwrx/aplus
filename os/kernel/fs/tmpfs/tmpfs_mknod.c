@@ -35,12 +35,11 @@
 
 
 
-inode_t* tmpfs_mknod(inode_t* inode, const char __user * name, mode_t mode) {
+__thread_safe
+inode_t* tmpfs_mknod(inode_t* inode, const char * name, mode_t mode) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-    if(unlikely(!ptr_check(name, R_OK)))
-        return -EFAULT;
 
     static ino_t next_ino = 1;
     
@@ -56,7 +55,7 @@ inode_t* tmpfs_mknod(inode_t* inode, const char __user * name, mode_t mode) {
 
 
     
-    if((inode->st.st_mode & ~S_IFMT) == S_IFMT)
+    if((inode->st.st_mode & S_IFMT) == S_IFMT)
         i->root = inode;
     else
         i->root = inode->root;

@@ -69,14 +69,14 @@
 #    define CONFIG_HEAP_BASE                0xC8000000L
 #    define CONFIG_STACK_BASE               0xC7FFF000L
 #    define CONFIG_HEAP_SIZE                0x04000000L
-#    define CONFIG_STACK_SIZE               0x00020000ULL
+#    define CONFIG_STACK_SIZE               0x00100000L
 #elif defined(__x86_64__)
 #    define CONFIG_BITS                     64
 #    define CONFIG_KERNEL_BASE              0xFFFFFFFF80000000L
 #    define CONFIG_HEAP_BASE                0xFFFFFFFF00000000L
 #    define CONFIG_STACK_BASE               0xFFFFFFFFFFC00000L
 #    define CONFIG_HEAP_SIZE                0x0000000080000000L
-#    define CONFIG_STACK_SIZE               0x00020000ULL
+#    define CONFIG_STACK_SIZE               0x0000000000100000L
 #elif defined(__arm__)
 #    define CONFIG_BITS                     32
 #    if defined (__rpi__)
@@ -203,7 +203,9 @@ void cmain(void);
     x##_init y;                                             \
 }
 
+
 #define __user
+#define __thread_safe
 
 
 #define PTR_REF(p) ({       \

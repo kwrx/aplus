@@ -344,10 +344,9 @@ int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*)) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);
 
-    if(!spinlock_trylock(&irqs[irq].lock)) {
-        kprintf("x86-intr: irq #%d locked by another process\n", irq);
-        return -1;
-    }
+    if(!spinlock_trylock(&irqs[irq].lock))
+        kpanic("x86-intr: irq #%d locked by another process", irq);
+
 
     irqs[irq].handler = handler;
     ioapic_map_irq(irq, irq, apic_get_id());
@@ -358,10 +357,9 @@ int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*)) {
 int arch_intr_unmap_irq(uint8_t irq) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
 
-    if(!spinlock_trylock(&irqs[irq].lock)) {
-        kprintf("x86-intr: irq #%d locked by another process\n");
-        return -1;
-    }
+    if(!spinlock_trylock(&irqs[irq].lock))
+        kpanic("x86-intr: irq #%d locked by another process");
+
 
     irqs[irq].handler = NULL;
     ioapic_map_irq(irq, irq, apic_get_id());

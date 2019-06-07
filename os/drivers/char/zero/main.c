@@ -30,43 +30,48 @@
 #include <string.h>
 #include <errno.h>
 
-#include <sdi/device.h>
-#include <sdi/chrdev.h>
+#include <dev/interface.h>
+#include <dev/char.h>
 
 
 MODULE_NAME("char/zero");
-MODULE_DEPS("sdi");
+MODULE_DEPS("dev/interface,dev/char");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
 
-static int zero_read(chrdev_t*, void*, size_t);
+static int zero_read(device_t*, void*, size_t);
 
 
-chrdev_t device = {
+device_t device = {
+
+    .type = DEVICE_TYPE_CHAR,
+
     .name = "zero",
     .description = "Read zeroes from device",
 
-    .deviceid = 0,
-    .vendorid = 0,
+    .deviceid = 1,
+    .vendorid = S_IFCHR,
     .intno = 0,
 
     .status = DEVICE_STATUS_UNKNOWN,
-    .io = CHRDEV_IO_NBF,
 
-    .ops.init = NULL,
-    .ops.dnit = NULL,
-    .ops.reset = NULL,
 
-    .ops.write = NULL,
-    .ops.read = &zero_read,
+    .init =  NULL,
+    .dnit =  NULL,
+    .reset = NULL,
+
+    .chr.io =    CHAR_IO_NBF,
+    .chr.write = NULL,
+    .chr.read =  &zero_read,
+
 };
 
 
 
-
-static int zero_read(chrdev_t* device, void* buf, size_t size) {
+__thread_safe
+static int zero_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 
@@ -75,10 +80,10 @@ static int zero_read(chrdev_t* device, void* buf, size_t size) {
 
 
 void init(const char* args) {
-    //sdi_device_add(DEVICE_TYPE_CHRDEV, &device, 0444);
+    device_mkdev(&device, 0666);
 }
 
 
 void dnit(void) {
-    //sdi_device_remove(&device);
+    device_unlink(&device);
 }

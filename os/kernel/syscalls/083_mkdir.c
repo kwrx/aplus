@@ -48,5 +48,13 @@
 
 SYSCALL(83, mkdir,
 long sys_mkdir (const char __user * pathname, mode_t mode) {
-    return -ENOSYS;
+    
+    int fd = sys_open(pathname, O_CREAT | O_EXCL | O_RDONLY, S_IFDIR | 0666);
+    if(fd < 0)
+        return fd;
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+    return 0;
 });

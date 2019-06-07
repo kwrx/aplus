@@ -49,12 +49,16 @@ void kmain(void) {
     __init(sched,   ());
 
 
-    if(sys_mount(NULL, "/", "tmpfs", 0, NULL) != 0)
-        kpanic("mount: could not mount temporary root");
+    int e;
+    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
+        kpanic("mount: could not mount fake root: %s", strerror(-e));
 
     __init(module,  ());
 
 
+#if defined(DEBUG)
+    //__init(unittest, ());
+#endif
 
     kprintf("cpu: %s %d-%d MHz (Cores: %d, Threads: %d)\n",
         mbd->cpu.family,

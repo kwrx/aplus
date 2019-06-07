@@ -36,16 +36,12 @@
 #include "tmpfs.h"
 
 
-
-inode_t* tmpfs_finddir(inode_t* inode, const char __user * name) {
+__thread_safe
+inode_t* tmpfs_finddir(inode_t* inode, const char * name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-    if(unlikely(!ptr_check(name, R_OK)))
-        return -EFAULT;
         
-        
-    
     list_each(TMPFS(inode)->children, i)
         if(unlikely(i->parent == inode))
             if(strcmp(i->name, name) == 0)

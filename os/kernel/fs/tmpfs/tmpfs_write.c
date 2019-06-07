@@ -33,13 +33,12 @@
 
 #include "tmpfs.h"
 
-int tmpfs_write(inode_t* inode, const void __user * buf, off_t pos, size_t len) {
+
+__thread_safe
+int tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
-
-    if(unlikely(!ptr_check(buf, R_OK)))
-        return -EFAULT;
 
 
     if(pos + len > inode->st.st_size) {
@@ -52,7 +51,7 @@ int tmpfs_write(inode_t* inode, const void __user * buf, off_t pos, size_t len) 
             ) <= 0L)
             
         )
-            return -ENOSPC;
+            return errno = ENOSPC, -1;
 
 
         inode->userdata = krealloc(inode->userdata, pos + len, GFP_USER);
@@ -60,6 +59,7 @@ int tmpfs_write(inode_t* inode, const void __user * buf, off_t pos, size_t len) 
         inode->root->mount.st.f_bavail -= (pos + len) - inode->st.st_size;
         inode->st.st_size = pos + len;
     }
+    
     
     memcpy((void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), buf, len);
     return len;

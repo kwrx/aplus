@@ -33,13 +33,12 @@
 
 #include "tmpfs.h"
 
-int tmpfs_read(inode_t* inode, void __user * buf, off_t pos, size_t len) {
+
+__thread_safe
+int tmpfs_read(inode_t* inode, void * buf, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
-
-    if(unlikely(!ptr_check(buf, R_OK | W_OK)))
-        return -EFAULT;
 
     if(!inode->userdata)
         return 0;

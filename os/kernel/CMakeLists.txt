@@ -10,7 +10,7 @@ file (
         "*.s"
 )
 
-add_executable(kernel ${ARCH} ${SRCS})
+add_executable(kernel ${SRCS})
 
 
 
@@ -55,6 +55,13 @@ target_link_libraries(kernel
     ssp
     gcc
 )
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    target_link_libraries(kernel
+        -Wl,--whole-archive unittest
+        -Wl,--no-whole-archive
+    )
+endif()
 
 install (
     TARGETS kernel

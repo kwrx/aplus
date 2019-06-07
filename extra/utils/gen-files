@@ -4,4 +4,4 @@ touch root/etc/motd
 sed -i "s/https:\/\/github.com\/kwrx\/aplus.*/https:\/\/github.com\/kwrx\/aplus\/commit\/git rev-parse --short HEAD)/" ./root/etc/motd
 
 mkdir -p os/kernel/syscalls
-extra/utils/gen-syscalls.js extra/syscalls.json os/kernel/syscalls sdk/libs/c/arch/syscall.tbl.h
+extra/utils/gen-syscalls.js extra/syscalls.json os/kernel/syscalls sdk/libs/c/arch/syscall.tbl.h extra/syscalls.h

@@ -37,7 +37,7 @@
 
 #define TMPFS(i)                            \
     ((tmpfs_t*)                             \
-    (((i->st.st_mode & ~S_IFMT) == S_IFMT)  \
+    (((i->st.st_mode & S_IFMT) == S_IFMT)   \
         ? i->mount.userdata                 \
         : i->root->mount.userdata)          \
     )

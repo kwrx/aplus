@@ -59,7 +59,7 @@
  */
 
 SYSCALL(2, open,
-long sys_open (const char __user * filename, int flags, int mode) {
+long sys_open (const char __user * filename, int flags, mode_t mode) {
     if(unlikely(!filename))
         return -EINVAL;
     
@@ -67,47 +67,59 @@ long sys_open (const char __user * filename, int flags, int mode) {
         return -EFAULT;
 
 
-    char b[PATH_MAX];
+    char b[PATH_MAX] = { 0 };
+    
     char* s = (char*) filename;
     char* p = NULL;
+
     inode_t* r = NULL;
+    inode_t* c = NULL;
+
 
     if(s[0] == '/')
-        { r = current_task->root; s++; }
+        { c = current_task->root; s++; }
     else
-        r = current_task->cwd;
+        c = current_task->cwd;
     
-    DEBUG_ASSERT(r);
+    DEBUG_ASSERT(c);
 
 
     do {
         if((p = strchr(s, '/')))
-            strncpy(b, s, MIN(p++ - s, PATH_MAX));
+            strncpy(b, s, MIN(p - s, PATH_MAX));
         else
             break;
         
-        if(unlikely(!(r = vfs_finddir(r, b))))
-            return -ENOENT;
+        if(unlikely(!(c = vfs_finddir(c, b))))
+            return -errno;
 
-        if(S_ISLNK(r->st.st_mode)) {
-            DEBUG_ASSERT(r->link);
-            DEBUG_ASSERT(r->link != r);
+        if(S_ISLNK(c->st.st_mode)) {
+            DEBUG_ASSERT(c->link);
+            DEBUG_ASSERT(c->link != c);
             
-            r = r->link;
+            c = c->link;
         }
 
         s = p;
+        s++;
     } while(*p);
 
-    DEBUG_ASSERT(s && *s);
+    DEBUG_ASSERT(s);
+    DEBUG_ASSERT(c);
 
 
-    if(unlikely(!(r = vfs_finddir(r, s)))) {
+    if(*s)
+        r = vfs_finddir(c, s);
+    else
+        r = c;
+
+
+    if(unlikely(!r)) {
         if(flags & O_CREAT) {
-            r = vfs_mknod(r, s, mode);
+            r = vfs_mknod(c, s, mode);
 
             if(unlikely(!r))
-                return -EROFS;
+                return -errno;
         }
         else
             return -ENOENT;
@@ -163,8 +175,9 @@ long sys_open (const char __user * filename, int flags, int mode) {
     }
 
 
-    if(vfs_open(r) != 0)
-        return -EIO;
+    if(vfs_open(r) < 0)
+        if(errno != ENOSYS)
+            return -errno;
 
 
 
@@ -177,7 +190,7 @@ long sys_open (const char __user * filename, int flags, int mode) {
                 break;
 
         if(fd == TASK_NFD)
-            return -EMFILE;
+            break;
 
         
         if(flags & O_APPEND)
@@ -192,9 +205,12 @@ long sys_open (const char __user * filename, int flags, int mode) {
     });
     
 
+    if(fd == TASK_NFD)
+        return -EMFILE;
 
-    DEBUG_ASSERT(fd < 0);
-    DEBUG_ASSERT(fd > TASK_NFD - 1);
+
+    DEBUG_ASSERT(fd >= 0);
+    DEBUG_ASSERT(fd <= TASK_NFD - 1);
     DEBUG_ASSERT(current_task->fd[fd].inode);
 
     return fd;

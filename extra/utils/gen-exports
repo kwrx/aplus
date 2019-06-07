@@ -5,7 +5,7 @@
 
 target=$1
 
-for i in root/usr/lib/modules/*.ko; do
+for i in $(find root/usr/lib/modules -type f -name *.ko); do
     d="$d $($target-aplus-nm -uP $i)"
 done
 

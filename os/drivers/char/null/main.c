@@ -27,32 +27,50 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <stdint.h>
+#include <string.h>
 #include <errno.h>
 
+#include <dev/interface.h>
+#include <dev/char.h>
+
+
 MODULE_NAME("char/null");
-MODULE_DEPS("");
+MODULE_DEPS("dev/interface,dev/char");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static int null_read_write(struct inode* inode, void* buf, off_t pos, size_t size) {
-    return size;
-}
+
+device_t device = {
+
+    .type = DEVICE_TYPE_CHAR,
+
+    .name = "null",
+    .description = "Redirect I/O to null device",
+
+    .deviceid = 0,
+    .vendorid = S_IFCHR,
+    .intno = 0,
+
+    .status = DEVICE_STATUS_UNKNOWN,
+
+
+    .init =  NULL,
+    .dnit =  NULL,
+    .reset = NULL,
+
+    .chr.io =    CHAR_IO_NBF,
+    .chr.write = NULL,
+    .chr.read =  NULL,
+
+};
 
 
 void init(const char* args) {
-    /*inode_t* ino;
-    if(unlikely((ino = vfs_mkdev("null", -1, S_IFCHR | 0666)) == NULL))
-        kpanic("null: could not create device");
-
-    ino->ops.read =
-    ino->ops.write = null_read_write;
-
-    return 0;*/
+    device_mkdev(&device, 0666);
 }
 
 
-
 void dnit(void) {
-    //sys_unlink("/dev/null");
+    device_unlink(&device);
 }

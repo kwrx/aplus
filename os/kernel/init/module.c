@@ -106,7 +106,7 @@ void module_run(module_t* m) {
 
     m->status = MODULE_STATUS_LOADING;
 
-    for(char* p = strtok((char*) m->deps, ","); p; p = strtok(NULL, ",")) {
+    for(char* p = strtok((char*) m->deps, ","); p; p = strtok(NULL, ",")) { /* FIXME */
         list_each(m_queue, d)
             if(strcmp(d->name, p) == 0)
                 module_run(d);

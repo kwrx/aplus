@@ -23,6 +23,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/smp.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <string.h>
@@ -74,10 +75,10 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, con
     DEBUG_ASSERT(fs);
 
     if(unlikely(!ptr_check(fs, R_OK)))
-        return -EFAULT;
+        return errno = EFAULT, -1;
 
-    if(unlikely(!ptr_check(args, R_OK)))
-        return -EFAULT;
+    if(unlikely(args && !ptr_check(args, R_OK)))
+        return errno = EFAULT, -1;
 
     
     int i;
@@ -91,7 +92,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, con
 
 
         int e;
-        if((e = vfs_table[i].mount(dev, dir, flags, args) != 0))
+        if((e = vfs_table[i].mount(dev, dir, flags, args) < 0))
             return e;
 
         __lock(&dir->lock, {
@@ -108,7 +109,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, con
         return 0;
     }
 
-    return -EINVAL;
+    return errno = EINVAL, -1;
 }
 
 
@@ -118,8 +119,7 @@ int vfs_open(inode_t* inode) {
     if(likely(inode->ops.open))
         __lock_return(&inode->lock, int, inode->ops.open(inode));
 
-    errno = ENOSYS;
-    return 0;
+    return errno = ENOSYS, -1;
 }
 
 int vfs_close(inode_t* inode) {
@@ -128,115 +128,142 @@ int vfs_close(inode_t* inode) {
     if(likely(inode->ops.close))
         __lock_return(&inode->lock, int, inode->ops.close(inode));
 
-    errno = ENOSYS;
-    return 0;
+    return errno = ENOSYS, -1;
 }
 
-int vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
+int vfs_read(inode_t* inode, void __user * buf, off_t off, size_t size) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
 
     if(unlikely(size == 0))
         return 0;
+
+    if(unlikely(!ptr_check(buf, R_OK | W_OK)))
+        return errno = EFAULT, -1;
+
 
     if(likely(inode->ops.read))
         __lock_return(&inode->lock, int, inode->ops.read(inode, buf, off, size));
     
-    errno = ENOSYS;
-    return 0;
+    return errno = ENOSYS, -1;
 }
 
-int vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
+int vfs_write(inode_t* inode, const void __user * buf, off_t off, size_t size) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
 
     if(unlikely(size == 0))
         return 0;
 
+    if(unlikely(!ptr_check(buf, R_OK)))
+        return errno = EFAULT, -1;
+
+
     if(likely(inode->ops.write))
         __lock_return(&inode->lock, int, inode->ops.write(inode, buf, off, size));
     
-    errno = ENOSYS;
-    return 0;
+    return errno = ENOSYS, -1;
 }
 
-inode_t* vfs_finddir(inode_t* inode, char* name) {
+inode_t* vfs_finddir(inode_t* inode, const char __user * name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
+
+    if(unlikely(!ptr_check(name, R_OK)))
+        return errno = EFAULT, NULL;
+
 
     if(name[0] == '.' && name[1] == '\0')
         return inode;
 
-    if(name[0] == '.' && name[1] == '.' && name[2] == '\0')
-        return inode->parent;
+
+    if(name[0] == '.' && name[1] == '.' && name[2] == '\0') {
+       
+        if(current_task->root != inode || inode->parent)
+            return inode->parent;
+        else
+            return errno = ENOENT, NULL;
+
+    }
 
 
     if(likely(inode->ops.finddir))
         __lock_return(&inode->lock, inode_t*, inode->ops.finddir(inode, name));
     
-    errno = ENOSYS;
-    return NULL;
+    return errno = ENOSYS, NULL;
 }
 
 
-inode_t* vfs_mknod(inode_t* inode, char* name, mode_t mode) {
+inode_t* vfs_mknod(inode_t* inode, const char* name, mode_t mode) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
+    if(unlikely(!ptr_check(name, R_OK)))
+        return errno = EFAULT, NULL;
+
+
     if(name[0] == '.' && name[1] == '\0')
-        return NULL;
+        return errno = EEXIST, NULL;
 
     if(name[0] == '.' && name[1] == '.' && name[2] == '\0')
-        return NULL;
+        return errno = EEXIST, NULL;
 
 
     if(likely(inode->ops.mknod))
         __lock_return(&inode->lock, inode_t*, inode->ops.mknod(inode, name, mode));
     
-    errno = ENOSYS;
-    return NULL;
+    return errno = ENOSYS, NULL;
 }
 
-int vfs_getdents(inode_t* inode, struct dirent* ent, off_t off, size_t size) {
+int vfs_getdents(inode_t* inode, struct dirent __user * ent, off_t off, size_t size) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(ent);
 
     if(unlikely(size == 0))
         return 0;
 
+    if(unlikely(!ptr_check(ent, R_OK | W_OK)))
+        return errno = EFAULT, -1;
+
+
     if(likely(inode->ops.getdents))
         __lock_return(&inode->lock, int, inode->ops.getdents(inode, ent, off, size));
     
-    errno = ENOSYS;
-    return 0;
+    return errno = ENOSYS, -1;
 }
 
-int vfs_unlink(inode_t* inode, char* name) {
+int vfs_unlink(inode_t* inode, const char __user * name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
+    if(unlikely(!ptr_check(name, R_OK)))
+        return errno = EFAULT, -1;
+
+
     if(name[0] == '.' && name[1] == '\0')
-        return -1;
+        return errno = ENOTEMPTY, -1;
 
     if(name[0] == '.' && name[1] == '.' && name[2] == '\0')
-        return -1;
+        return errno = ENOTEMPTY, -1;
 
 
     if(likely(inode->ops.unlink))
         __lock_return(&inode->lock, int, inode->ops.unlink(inode, name));
     
-    errno = EROFS;
-    return -1;
+    return errno = EROFS, -1;
 }
 
-int vfs_ioctl(inode_t* inode, int req, void* arg) {
+int vfs_ioctl(inode_t* inode, int req, void __user * arg) {
     DEBUG_ASSERT(inode);
+
+    if(unlikely(!ptr_check(arg, R_OK | W_OK)))
+        return errno = EFAULT, -1;
+
 
     if(likely(inode->ops.ioctl))
         __lock_return(&inode->lock, int, inode->ops.ioctl(inode, req, arg));
     
-    errno = ENOSYS;
-    return -1;
+    return errno = ENOSYS, -1;
 }
 
 int vfs_fsync(inode_t* inode) {
@@ -245,6 +272,5 @@ int vfs_fsync(inode_t* inode) {
     if(likely(inode->ops.fsync))
         __lock_return(&inode->lock, int, inode->ops.fsync(inode));
     
-    errno = ENOSYS;
-    return -1;
+    return errno = ENOSYS, -1;
 }

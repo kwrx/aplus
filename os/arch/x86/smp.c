@@ -127,7 +127,7 @@ void smp_init(void) {
         if(mbd->cpu.cores[i].id == apic_get_id())
             continue;
 
-        ap_stack(((uintptr_t) &early_stack) - (i * PAGE_SIZE));
+        ap_stack(((uintptr_t) &early_stack) - (i * (CONFIG_STACK_SIZE / CPU_MAX)));
 
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));

@@ -122,16 +122,14 @@ void acpi_init(void) {
     RSDT = NULL;
     extended = 0;
 
-    if(find_rsdt(&RSDT, &extended) != 0) {
-        kprintf("x86-acpi: Root System Descriptor not found, ACPI not supported!\n");
-        return;
-    }
+    if(find_rsdt(&RSDT, &extended) != 0)
+        kpanic("x86-acpi: Root System Descriptor not found, ACPI not supported!");
     
     acpi_sdt_t* facp;
-    if(acpi_find(&facp, "FACP") != 0) {
-        kprintf("x86-acpi: Fixed ACPI Descriptor not found, fallback to APM\n");
-        return;
-    }
+    if(acpi_find(&facp, "FACP") != 0)
+        kpanic("x86-acpi: Fixed ACPI Descriptor not found, fallback to APM");
+
+
 
     acpi_fadt_t* fadt = (acpi_fadt_t*) &facp->tables;
     DEBUG_ASSERT(fadt);
