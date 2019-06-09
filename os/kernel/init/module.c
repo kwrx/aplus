@@ -63,7 +63,7 @@ static void module_export(module_t* mod, const char* name, void* address) {
 
     list_each(m_symtab, v)
         if(strcmp(v->name, name) == 0)
-            kpanic("module: \'%s\' already defined at %p", name, v->address);
+            kpanic("module: \'%s\' already defined at %p (%s)", name, v->address, mod ? mod->name : "undefined");
     
 
     symbol_t* s = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
@@ -95,6 +95,7 @@ static void* module_resolve(const char* name) {
 
 
 
+
 void module_run(module_t* m) {
     
     if(m->status == MODULE_STATUS_LOADED)
@@ -106,11 +107,59 @@ void module_run(module_t* m) {
 
     m->status = MODULE_STATUS_LOADING;
 
-    for(char* p = strtok((char*) m->deps, ","); p; p = strtok(NULL, ",")) { /* FIXME */
-        list_each(m_queue, d)
-            if(strcmp(d->name, p) == 0)
-                module_run(d);
-    }
+
+#if defined(DEBUG)
+    kprintf("module: running %-16s [addr(%8p), size(%04x)]\n", m->name, m->core.ptr, m->core.size);
+#endif
+
+
+
+    #define find(s) ({                                          \
+                                                                \
+        module_t* r = NULL;                                     \
+        list_each(m_queue, m) {                                 \
+            if(strcmp(m->name, s) != 0)                         \
+                continue;                                       \
+                                                                \
+            r = m;                                              \
+            break;                                              \
+        }                                                       \
+                                                                \
+        if(!r)                                                  \
+            kpanic("module: unresolved dependency' %s'\n", s);  \
+        r;                                                      \
+    })
+
+
+    do {
+
+        if(m->deps[0] == '\0')
+            break;
+
+
+        if(strchr(m->deps, ',') == NULL)
+            module_run(find(m->deps));
+
+        else {
+
+            int i = 0;
+            for(char* s = strchr(m->deps, ','); s; s = strchr(++s, ','))
+                i++;
+
+            module_t* deps[i];
+
+
+            i = 0;
+            for(char* s = strtok((char*) m->deps, ","); s; s = strtok(NULL, ","))
+                deps[i++] = find(s);
+
+            while(i)
+                module_run(deps[--i]);
+            
+        }
+
+    } while(0);
+
 
 
 
@@ -232,9 +281,6 @@ void module_run(module_t* m) {
     }
 
 
-#if DEBUG
-    kprintf("module: running %-16s [addr(%8p), size(%04x)]\n", m->name, m->core.ptr, m->core.size);
-#endif
 
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;

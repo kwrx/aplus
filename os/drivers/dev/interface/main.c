@@ -39,11 +39,12 @@
 #include <dev/interface.h>
 #include <dev/char.h>
 #include <dev/block.h>
+#include <dev/video.h>
 
 
 
 MODULE_NAME("dev/interface");
-MODULE_DEPS("dev/char,dev/block");
+MODULE_DEPS("dev/char,dev/block,dev/video");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -76,6 +77,9 @@ static int device_read(inode_t* inode, void* buf, off_t off, size_t size) {
         case DEVICE_TYPE_BLOCK:
             return block_read(device, buf, off, size);
 
+        case DEVICE_TYPE_VIDEO:
+            return errno = ENOSYS, -1;
+
     }
 
 
@@ -107,6 +111,9 @@ static int device_write(inode_t* inode, const void* buf, off_t off, size_t size)
         case DEVICE_TYPE_BLOCK:
             return block_write(device, buf, off, size);
 
+        case DEVICE_TYPE_VIDEO:
+            return errno = ENOSYS, -1;
+
     }
 
 
@@ -137,6 +144,8 @@ static int device_ioctl(inode_t* inode, int req, void* arg) {
         case DEVICE_TYPE_BLOCK:
             return errno = ENOSYS, -1; /* TODO */
 
+        case DEVICE_TYPE_VIDEO:
+            return video_ioctl(device, req, arg);
     }
 
 
@@ -163,6 +172,9 @@ static int device_fsync(inode_t* inode) {
 
         case DEVICE_TYPE_BLOCK:
             return 0;
+
+        case DEVICE_TYPE_VIDEO:
+            return errno = ENOSYS, -1;
 
     }
 
@@ -195,6 +207,11 @@ void device_mkdev(device_t* device, mode_t mode) {
             block_init(device);
             break;
 
+        case DEVICE_TYPE_VIDEO:
+
+            video_init(device);
+            break;
+
         default:
             kpanic("device::create: failed, unknown device %s type %d", device->name, device->type);
     }
@@ -213,13 +230,12 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 
-
     char buf[MAXNAMLEN] = { 0 };
     strcpy(buf, "/dev/");
     strcpy(buf, device->name);
 
 
-    int fd = sys_creat(buf, device->type | mode);
+    int fd = sys_creat(buf, mode | (device->type == DEVICE_TYPE_BLOCK ? S_IFBLK : S_IFCHR));
 
     if(unlikely(fd < 0))
         kpanic("device::create: failed, device already exists: %s", buf);
@@ -240,13 +256,16 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.ioctl = device_ioctl;
     i->ops.fsync = device_fsync;
 
-
-    kprintf("device::create: initialized '%s' maj(%x) min(%x) int(%d): '%s'\n",
+#if defined(DEBUG)
+    kprintf("device::create: initialized '%s' dev(%x:%x) int(%d) ptr(%p) size(%p): '%s'\n",
         device->name, 
         device->vendorid, 
         device->deviceid, 
-        device->intno, 
+        device->intno,
+        device->address,
+        device->size,
         device->description);
+#endif
 
     list_push(devices, device);
 }
@@ -270,6 +289,11 @@ void device_unlink(device_t* device) {
         case DEVICE_TYPE_BLOCK:
 
             block_dnit(device);
+            break;
+
+        case DEVICE_TYPE_VIDEO:
+
+            video_dnit(device);
             break;
 
         default:

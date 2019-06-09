@@ -56,4 +56,7 @@
 #define mmio_w16(x, y)          { mmio_r16(x) = (uint16_t) (y); }
 #define mmio_w32(x, y)          { mmio_r32(x) = (uint32_t) (y); }
 #define mmio_w64(x, y)          { mmio_r64(x) = (uint64_t) (y); }
+
+
+#define IA32_PAT                0x00000277
 #endif

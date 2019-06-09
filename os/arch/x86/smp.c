@@ -57,6 +57,16 @@ cpu_t* get_cpu(int id) {
 void smp_main(int bsp) {
     DEBUG_ASSERT(!(cpus[apic_get_id()].flags & CPU_FLAGS_ENABLED));
 
+
+    uint64_t PAT = x86_rdmsr(IA32_PAT);
+    
+    PAT &= 0xFFFFFF00FFFFFFFF;
+    PAT |= 0x0000000100000000;
+
+    x86_wrmsr(IA32_PAT, PAT);
+
+
+
     static char* __argv[] = { "[core]", NULL };
     static char* __envp[] = { NULL };
 
@@ -79,28 +89,17 @@ void smp_main(int bsp) {
     _.pgid =
     _.tgid = sched_nextpid();
 
-    _.uid =
-    _.gid =
-    _.euid =
-    _.egid = 0;
-
     _.status = TASK_STATUS_READY;
     _.priority = TASK_PRIO_REG;
     _.affinity = ~(1 << apic_get_id());
-
-    _.context.frame = NULL;
 
     _.root =
     _.cwd =
     _.exe = vfs_root;
 
-    _.umask = 000;
-
-
     _.aspace = PTR_REF(&_.__aspace);
     _.aspace->start = CONFIG_KERNEL_BASE;
     _.aspace->end = mbd->memory.start;
-    _.aspace->used = 0;
     _.aspace->vmmpd = x86_get_cr3();
 
     spinlock_init(&_.aspace->lock);

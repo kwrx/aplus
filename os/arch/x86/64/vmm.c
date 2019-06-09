@@ -79,6 +79,9 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
     {
         DEBUG_ASSERT(!(*d & X86_MMU_PG_P) && "Page already used, unmap first");
 
+        if(flags & X86_MMU_PG_AP_PAT) /* WC */
+            flags |= X86_MMU_PT_PAT;
+
         if(block == -1)
             *d = ((uint64_t) pmm_alloc_block_safe() << 12) | X86_MMU_PG_AP_PFB | flags;
         else

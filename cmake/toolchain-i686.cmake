@@ -5,6 +5,7 @@ set(ARCH_BITS 32)
 
 set(TARGET_ARCH "x86")
 set(TARGET_BITS "32")
+set(TARGET_PLATFORM "pc")
 set(TARGET_LINK "${CMAKE_SOURCE_DIR}/os/arch/${TARGET_ARCH}/${TARGET_BITS}/link.ld")
 
 set(TARGET_ARCH_COMPILE_OPTS "-masm=intel")

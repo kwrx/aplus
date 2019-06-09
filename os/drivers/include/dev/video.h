@@ -21,58 +21,19 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _DEV_VIDEO_H
+#define _DEV_VIDEO_H
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
-#include <aplus/vfs.h>
+#include <aplus/syscall.h>
 #include <stdint.h>
-#include <string.h>
-#include <errno.h>
 
 #include <dev/interface.h>
-#include <dev/char.h>
 
 
-MODULE_NAME("char/null");
-MODULE_DEPS("dev/interface,dev/char");
-MODULE_AUTHOR("Antonino Natale");
-MODULE_LICENSE("GPL");
+int video_ioctl(device_t*, int, void*);
+void video_init(device_t*);
+void video_dnit(device_t*);
 
-
-
-device_t device = {
-
-    .type = DEVICE_TYPE_CHAR,
-
-    .name = "null",
-    .description = "Redirect I/O to null device",
-
-    .deviceid = 0,
-    .vendorid = S_IFCHR,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
-
-    .status = DEVICE_STATUS_UNKNOWN,
-
-
-    .init =  NULL,
-    .dnit =  NULL,
-    .reset = NULL,
-
-    .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
-    .chr.read =  NULL,
-
-};
-
-
-void init(const char* args) {
-    device_mkdev(&device, 0666);
-}
-
-
-void dnit(void) {
-    device_unlink(&device);
-}
+#endif

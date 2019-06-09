@@ -42,8 +42,13 @@
 #define X86_MMU_PG_G                        (1ULL << 8)
 #define X86_MMU_PG_NX                       (1ULL << 63)
 
+#define X86_MMU_PT_PAT                      (1ULL << 7)
+
+
 /* System defined 11-9 */
 #define X86_MMU_PG_AP_PFB                   (1ULL << 9)
+#define X86_MMU_PG_AP_PAT                   (1ULL << 10)
+
 
 #define X86_MMU_CLEAR                       0x000
 #define X86_DIRTY_ACCESS_MASK               0xF9F

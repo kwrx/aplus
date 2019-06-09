@@ -28,6 +28,7 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/ringbuffer.h>
+#include <aplus/fb.h>
 #include <stdint.h>
 
 
@@ -40,8 +41,9 @@
 #define DEVICE_STATUS_UNLOADED      5
 
 #define DEVICE_TYPE_UNKNOWN         0
-#define DEVICE_TYPE_CHAR            S_IFCHR
-#define DEVICE_TYPE_BLOCK           S_IFBLK
+#define DEVICE_TYPE_CHAR            1
+#define DEVICE_TYPE_BLOCK           2
+#define DEVICE_TYPE_VIDEO           3
 
 
 
@@ -54,6 +56,9 @@ typedef struct device {
     uint16_t vendorid;
     uint16_t deviceid;
     uint16_t intno;
+    
+    uintptr_t address;
+    uintptr_t size;
 
     int status;
     
@@ -97,6 +102,13 @@ typedef struct device {
             int (*read) (struct device*, void*, off_t, size_t);
 
         } blk;
+
+        struct {
+            struct fb_var_screeninfo vs;
+            struct fb_fix_screeninfo fs;
+
+            void (*update) (struct device*);
+        } vid;
     };
 } device_t;
 

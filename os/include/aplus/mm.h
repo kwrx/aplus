@@ -39,6 +39,7 @@
 #define ARCH_MAP_RDWR                           8
 #define ARCH_MAP_NOEXEC                         16
 #define ARCH_MAP_SHARED                         32
+#define ARCH_MAP_VIDEO_MEMORY                   64
 
 #define MM_INIT_PMM                             1
 #define MM_INIT_VMM                             2

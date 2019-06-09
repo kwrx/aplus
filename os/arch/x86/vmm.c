@@ -57,6 +57,9 @@ void* arch_mmap(void* address, size_t length, int flags) {
     if(flags & ARCH_MAP_SHARED)
         mf |= X86_MMU_PG_G;
 
+    if(flags & ARCH_MAP_VIDEO_MEMORY)
+        mf |= X86_MMU_PG_AP_PAT;
+
 
 
     DEBUG_ASSERT(current_task);

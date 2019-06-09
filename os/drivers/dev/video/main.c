@@ -25,78 +25,73 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
-#include <aplus/vfs.h>
+#include <aplus/mm.h>
 #include <stdint.h>
-#include <string.h>
+#include <stdio.h>
 #include <errno.h>
 
 #include <dev/interface.h>
-#include <dev/char.h>
+#include <dev/video.h>
+
+#include <aplus/fb.h>
 
 
-MODULE_NAME("system/log");
-MODULE_DEPS("dev/interface,dev/char");
+MODULE_NAME("dev/video");
+MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
 
-static int log_write(device_t*, const void*, size_t);
-
-
-device_t device = {
-
-    .type = DEVICE_TYPE_CHAR,
-
-    .name = "log",
-    .description = "Write to syslog device",
-
-    .deviceid = 0,
-    .vendorid = 0xCAFE,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
-
-    .status = DEVICE_STATUS_UNKNOWN,
-
-
-    .init =  NULL,
-    .dnit =  NULL,
-    .reset = NULL,
-
-    .chr.io =    CHAR_IO_NBF,
-    .chr.write = log_write,
-    .chr.read =  NULL,
-
-};
-
-
-
-
-static int log_write(device_t* device, const void* buf, size_t size) {
+__thread_safe
+int video_ioctl(device_t* device, int req, void* arg) {
     DEBUG_ASSERT(device);
-    DEBUG_ASSERT(buf);
 
 
-    const char* p = buf;
+    switch (req) {
+        case FBIOGET_VSCREENINFO:
 
-    int i;
-    for(i = 0; i < size; i++) {
-        if(*p == '\0')
+            memcpy(arg, &device->vid.vs, sizeof(struct fb_var_screeninfo));
             break;
 
-        kprintf("%c", *p++);
+        case FBIOPUT_VSCREENINFO:
+        
+            memcpy(&device->vid.vs, arg, sizeof(struct fb_var_screeninfo));
+
+            if(likely(device->vid.update))
+                device->vid.update(device);
+
+            break;
+
+        case FBIOGET_FSCREENINFO:
+
+            memcpy(arg, &device->vid.fs, sizeof(struct fb_fix_screeninfo));
+            break;
+
+        default:
+            return errno = ENOSYS, -1;
     }
 
-    return i;
+    return 0;
+}
+
+
+void video_init(device_t* device) {
+    DEBUG_ASSERT(device);
+
+}
+
+
+void video_dnit(device_t* device) {
+    DEBUG_ASSERT(device);
+
 }
 
 
 void init(const char* args) {
-    device_mkdev(&device, 0666);
+    (void) args;
 }
 
-
 void dnit(void) {
-    device_unlink(&device);
+
 }

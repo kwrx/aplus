@@ -54,6 +54,8 @@ device_t device = {
     .deviceid = 1,
     .vendorid = S_IFCHR,
     .intno = 0,
+    .address = 0,
+    .size = 0,
 
     .status = DEVICE_STATUS_UNKNOWN,
 
