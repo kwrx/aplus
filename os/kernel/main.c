@@ -27,6 +27,7 @@
 #include <aplus/smp.h>
 #include <aplus/task.h>
 #include <aplus/mm.h>
+#include <aplus/ipc.h>
 #include <aplus/syscall.h>
 #include <aplus/module.h>
 #include <stdint.h>

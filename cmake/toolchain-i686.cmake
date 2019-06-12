@@ -8,10 +8,10 @@ set(TARGET_BITS "32")
 set(TARGET_PLATFORM "pc")
 set(TARGET_LINK "${CMAKE_SOURCE_DIR}/os/arch/${TARGET_ARCH}/${TARGET_BITS}/link.ld")
 
-set(TARGET_ARCH_COMPILE_OPTS "-masm=intel")
+set(TARGET_ARCH_COMPILE_OPTS -masm=intel)
 set(TARGET_ARCH_LINK_OPTS -z max-page-size=0x1000)
 
-set(TARGET_KERN_COMPILE_OPTS "")
+set(TARGET_KERN_COMPILE_OPTS )
 set(TARGET_KERN_LINK_OPTS -z max-page-size=0x1000)
 
 set(PAGE_SIZE 4096)

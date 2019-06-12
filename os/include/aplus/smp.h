@@ -57,13 +57,15 @@ cpu_t* get_cpu(int);
 
 #define foreach_cpu(cpu)                \
     for(int i = 0; i < CPU_MAX; i++)    \
-        if((cpu = get_cpu(i)))
+        if((cpu = get_cpu(i)) == NULL)  \
+            {} else
 
 #define current_cpu                     \
     get_current_cpu()
 
 #define current_task                    \
     (current_cpu->task.current)
+
 
 #endif
 #endif

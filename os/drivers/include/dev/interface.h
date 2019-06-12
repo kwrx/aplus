@@ -110,6 +110,8 @@ typedef struct device {
             void (*update) (struct device*);
         } vid;
     };
+
+    void* userdata;
 } device_t;
 
 

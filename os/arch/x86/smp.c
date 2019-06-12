@@ -58,15 +58,6 @@ void smp_main(int bsp) {
     DEBUG_ASSERT(!(cpus[apic_get_id()].flags & CPU_FLAGS_ENABLED));
 
 
-    uint64_t PAT = x86_rdmsr(IA32_PAT);
-    
-    PAT &= 0xFFFFFF00FFFFFFFF;
-    PAT |= 0x0000000100000000;
-
-    x86_wrmsr(IA32_PAT, PAT);
-
-
-
     static char* __argv[] = { "[core]", NULL };
     static char* __envp[] = { NULL };
 

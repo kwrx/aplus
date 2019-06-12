@@ -67,6 +67,16 @@ ap_pstart:
     and eax, ~(1 << 30)         ; CD 
 	mov cr0, eax
 
+.enable_pat:
+	mov ecx, 0x277
+	rdmsr
+
+	and edx, 0xFFFFFF00
+	or edx, 0x00000001
+
+	mov ecx, 0x277
+	wrmsr    
+
 
 jmp_high:
     mov esp, [ap_stack]
