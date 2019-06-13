@@ -55,7 +55,7 @@ void pci_write(pcidev_t device, int field, size_t size, uint32_t value) {
 }
 
 
-uint32_t pci_read(pcidev_t device, int field, size_t size) {
+uintptr_t pci_read(pcidev_t device, int field, size_t size) {
     outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
 
     switch(size) {

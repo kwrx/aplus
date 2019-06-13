@@ -162,6 +162,7 @@ void pmm_free_block(block_t p) {
 }
 
 void pmm_init(void) {
+
     spinlock_init(&bitmap_lock);
     pmm_init_bitmap(mbd->memory.start);
     

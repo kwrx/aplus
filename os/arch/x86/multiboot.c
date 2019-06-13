@@ -23,6 +23,7 @@
 
 
 #include <aplus.h>
+#include <aplus/debug.h>
 #include <arch/x86/multiboot.h>
 #include <stdint.h>
 #include <string.h>
@@ -62,14 +63,26 @@ void multiboot_init(void) {
     }
 
     if(__HAS(MULTIBOOT_INFO_MODS)) {
-        mbd->modules.ptr = (void*) (CONFIG_KERNEL_BASE + mbd_raw->mods_addr);
+        
+        struct {
+            uint32_t ptr;
+            uint32_t size;
+            uint32_t cmdline;
+            uint32_t reserved;
+        } *raw = (void*) (CONFIG_KERNEL_BASE + mbd_raw->mods_addr);
+
         mbd->modules.count = mbd_raw->mods_count;
+
+
+        DEBUG_ASSERT(raw);
+        DEBUG_ASSERT(mbd->modules.count);
+        DEBUG_ASSERT(mbd->modules.count < MBD_MODULES_MAX);
 
         int i;
         for(i = 0; i < mbd->modules.count; i++) {
-            mbd->modules.ptr[i].size -= mbd->modules.ptr[i].ptr;
-            mbd->modules.ptr[i].ptr += CONFIG_KERNEL_BASE;
-            mbd->modules.ptr[i].cmdline += CONFIG_KERNEL_BASE;
+            mbd->modules.ptr[i].ptr = CONFIG_KERNEL_BASE + raw[i].ptr;
+            mbd->modules.ptr[i].size = raw[i].size - raw[i].ptr;
+            mbd->modules.ptr[i].cmdline = CONFIG_KERNEL_BASE + raw[i].cmdline;
         }
 
         mbd->memory.start = (

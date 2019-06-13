@@ -95,6 +95,15 @@ ap_pstart:
     
     lgdt [ap_gdt64.ptr]
 
+.enable_pat:
+	mov ecx, 0x277
+	rdmsr
+
+	and edx, 0xFFFFFF00
+	or edx, 0x00000001
+
+	mov ecx, 0x277
+	wrmsr
 
 [BITS 64]
 jmp_high:

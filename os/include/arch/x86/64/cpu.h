@@ -162,22 +162,26 @@ static inline void x86_set_eflags(uint64_t val) {
 
 
 static inline void x86_wrmsr(uint64_t i, uint64_t v) {
+
+    uint64_t vl = v & 0xFFFFFFFF;
+    uint64_t vh = v >> 32;
+
     __asm__ __volatile__ (
         "wrmsr" 
         : 
-        : "c"(i), "A"(v)
+        : "c"(i), "a"(vl), "d"(vh)
     );
 }
 
 static inline uint64_t x86_rdmsr(uint64_t i) {
-    uint64_t v;
+    uint64_t vl, vh;
     __asm__ __volatile__ (
         "rdmsr" 
-        : "=A"(v) 
+        : "=a"(vl), "=d"(vh) 
         : "c"(i)
     );
 
-    return v;
+    return (vh << 32) | vl;
 }
 
 

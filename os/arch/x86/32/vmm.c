@@ -125,7 +125,7 @@ int x86_ptr_access(uintptr_t address, int mode) {
         if(unlikely(!(*d & X86_MMU_PG_P)))
             return 0;
 
-        if(likely(!(*d & X86_MMU_PG_PS)))   /* Check 4Mib Page */
+        if(likely(!(*d & X86_MMU_PG_PS)))   /* Check 4MiB Page */
             d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x3FF];
     }
 

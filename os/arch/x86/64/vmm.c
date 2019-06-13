@@ -82,6 +82,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
         if(flags & X86_MMU_PG_AP_PAT) /* WC */
             flags |= X86_MMU_PT_PAT;
 
+
         if(block == -1)
             *d = ((uint64_t) pmm_alloc_block_safe() << 12) | X86_MMU_PG_AP_PFB | flags;
         else
@@ -163,6 +164,9 @@ int x86_ptr_access(uintptr_t address, int mode) {
         if(unlikely(!(*d & X86_MMU_PG_P)))
             return 0;
 
+        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 1GiB Page */
+            goto check;
+            
         d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
     }
 
@@ -171,11 +175,14 @@ int x86_ptr_access(uintptr_t address, int mode) {
         if(unlikely(!(*d & X86_MMU_PG_P)))
             return 0;
 
+        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 2MiB Page */
+            goto check;
+
         d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
     }
 
     /* Page Table */
-    
+check:
     if(mode & R_OK)
         if(unlikely(!(*d & X86_MMU_PG_P)))
             return 0;

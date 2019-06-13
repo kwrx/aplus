@@ -24,6 +24,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <stdint.h>
 
 
 void unittest_init(void) {

@@ -3,6 +3,7 @@
 
 rootdir=$(pwd)
 target=${TARGET:-"i686"}
+target=${1:-$target}
 cpus=${CPUS:-"2"}
 
 

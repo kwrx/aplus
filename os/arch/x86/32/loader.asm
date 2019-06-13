@@ -87,7 +87,7 @@ init_paging_1_1:
 
 
 	mov ecx, X86_MAP_ENTRIES
-	mov esi, 0x183				; Global, 2/4MiB, R/W, Present
+	mov esi, 0x183				; Global, 4MiB, R/W, Present
 	mov edi, V2P(early_pd)
 .L0:
 	mov [edi], esi

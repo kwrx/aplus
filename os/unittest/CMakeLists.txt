@@ -52,5 +52,12 @@ if(CMAKE_BUILD_TYPE MATCHES Debug)
         gcc
     )
 
+    add_custom_command (
+        TARGET unittest
+        POST_BUILD
+        COMMAND ${OBJCOPY} --only-keep-debug $<TARGET_FILE:unittest> $<TARGET_FILE:unittest>.debug
+        COMMAND ${OBJCOPY} --strip-debug $<TARGET_FILE:unittest>
+    )
+
 
 endif()

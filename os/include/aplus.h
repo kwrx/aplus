@@ -99,6 +99,8 @@
 #define MBD_VIDEO_RGB               1
 #define MBD_VIDEO_TEXT              2
 
+#define MBD_MODULES_MAX             1024
+
 
 #include <stdint.h>
 #include <sys/types.h>
@@ -118,7 +120,7 @@ typedef struct {
             size_t size;
             uintptr_t cmdline;
             uintptr_t status;
-        } __packed *ptr;
+        } __packed ptr[MBD_MODULES_MAX];
         size_t count;
     } modules;
 

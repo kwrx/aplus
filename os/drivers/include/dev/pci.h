@@ -113,7 +113,7 @@ typedef uint32_t pcidev_t;
 
 typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra);
 
-uint32_t pci_read(pcidev_t, int, size_t);
+uintptr_t pci_read(pcidev_t, int, size_t);
 void pci_write(pcidev_t, int, size_t, uint32_t);
 void pci_scan(pci_func_t fn, int, void*);
 

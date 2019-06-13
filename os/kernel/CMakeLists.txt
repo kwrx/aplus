@@ -56,12 +56,12 @@ target_link_libraries(kernel
     gcc
 )
 
-if(CMAKE_BUILD_TYPE MATCHES Debug)
-    target_link_libraries(kernel
-        -Wl,--whole-archive unittest
-        -Wl,--no-whole-archive
-    )
-endif()
+#if(CMAKE_BUILD_TYPE MATCHES Debug)
+#    target_link_libraries(kernel
+#        -Wl,--whole-archive unittest
+#        -Wl,--no-whole-archive
+#    )
+#endif()
 
 install (
     TARGETS kernel

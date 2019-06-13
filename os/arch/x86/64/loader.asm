@@ -1,6 +1,7 @@
 [BITS 64]
 
 %define CONFIG_KERNEL_BASE              0xFFFFFFFF80000000
+%define CONFIG_STACK_SIZE			    0x0000000000100000
 %define V2P(x)                          ((x) - CONFIG_KERNEL_BASE)
 
 
@@ -167,6 +168,17 @@ high_start:
     or rax, (1 << 7)                        ; PGE
     mov cr4, rax
 
+.enable_pat:
+	mov ecx, 0x277
+	rdmsr
+
+	and edx, 0xFFFFFF00
+	or edx, 0x00000001
+
+	mov ecx, 0x277
+	wrmsr
+
+
 .init:
     call arch_early_init
     call kmain
@@ -202,5 +214,5 @@ early_gdtp:
 section .stack
 align 0x1000
 early_stack_bottom:
-	times 0x10000 db 0
+	times CONFIG_STACK_SIZE db 0
 early_stack:
