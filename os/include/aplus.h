@@ -42,7 +42,6 @@
 #define KERNEL_VERSION_MINOR                "5"
 #define KERNEL_DATE                         __DATE__
 #define KERNEL_TIME                         __TIME__
-#define KERNEL_PLATFORM                     "unknown"
 
 #ifdef DEBUG
 #define KERNEL_CODENAME                     COMMIT "-debug"
@@ -64,6 +63,7 @@
 
 
 #if defined(__i386__)
+#    define KERNEL_PLATFORM                 "i386"
 #    define CONFIG_BITS                     32
 #    define CONFIG_KERNEL_BASE              0xC0000000L
 #    define CONFIG_HEAP_BASE                0xC8000000L
@@ -71,13 +71,15 @@
 #    define CONFIG_HEAP_SIZE                0x04000000L
 #    define CONFIG_STACK_SIZE               0x00100000L
 #elif defined(__x86_64__)
+#    define KERNEL_PLATFORM                 "x86-64"
 #    define CONFIG_BITS                     64
 #    define CONFIG_KERNEL_BASE              0xFFFFFFFF80000000L
 #    define CONFIG_HEAP_BASE                0xFFFFFFFF00000000L
 #    define CONFIG_STACK_BASE               0xFFFFFFFFFFC00000L
-#    define CONFIG_HEAP_SIZE                0x0000000080000000L
+#    define CONFIG_HEAP_SIZE                0x0000000004000000L
 #    define CONFIG_STACK_SIZE               0x0000000000100000L
 #elif defined(__arm__)
+#    define KERNEL_PLATFORM                 "arm"
 #    define CONFIG_BITS                     32
 #    if defined (__rpi__)
         /* TODO */
@@ -88,6 +90,10 @@
 #        define CONFIG_HEAP_SIZE            0x00100000ULL
 #        define CONFIG_STACK_SIZE           0x00004000ULL
 #    endif
+#endif
+
+#ifndef KERNEL_PLATFORM
+#define KERNEL_PLATFORM                     "unknown"
 #endif
 
 

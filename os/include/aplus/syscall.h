@@ -38,10 +38,10 @@
     z                                           \
     __attribute__((section(".syscalls")))       \
     struct {                                    \
-        int a;                                  \
+        uint32_t a;                             \
         void* b;                                \
         char* name;                             \
-    } __sc_##y = {                              \
+    } __packed __sc_##y = {                     \
         (int) x,                                \
         (void*) sys_##y,                        \
         (char*) #y                              \

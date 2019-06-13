@@ -138,15 +138,28 @@ void apic_init(void) {
                 break;
 
             case X86_MADT_ENTRY_INTERRUPT:
+#if defined(DEBUG)
+                    kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%x)\n",
+                        p[2],
+                        p[3],
+                        *(uint32_t*) &p[4],
+                        *(uint16_t*) &p[8]
+                    );
+#endif
                 break;
 
             case X86_MADT_ENTRY_NMI:
+#if defined(DEBUG)
+                    kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%x) lint(%d)\n",
+                        p[2],
+                        *(uint16_t*) &p[3],
+                        p[5]
+                    );
+#endif
                 break;
 
             case X86_MADT_ENTRY_LAPIC64:
-#if defined(ARCH_X86_64)
-                DEBUG_ASSERT(0 && "Not yet supported in x86-64");
-#endif
+                    kpanic("x86-apic: X86_MADT_ENTRY_LAPIC64 not yet supported in x86-64");
                 break;
             
             default:

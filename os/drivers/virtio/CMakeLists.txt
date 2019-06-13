@@ -40,13 +40,13 @@ foreach(dev ${devs})
                     -std=gnu11
                     -nostdlib
                     -include ${CMAKE_BINARY_DIR}/os/arch/config.h
-                    ${TARGET_KERN_COMPILE_OPTS}
+                    ${TARGET_MODS_COMPILE_OPTS}
         )
 
         target_link_options (
             ${dev}
                 PRIVATE
-                    ${TARGET_KERN_LINK_OPTS}
+                    ${TARGET_MODS_LINK_OPTS}
                     -nostdlib
                     -r
         )

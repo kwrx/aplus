@@ -77,10 +77,11 @@ void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
 }
 
 void ioapic_unmap_irq(uint8_t source) {
-    if(unlikely(source == 0))   /* LVT0, APIC TIMER */
-        return;
 
-    
+    if(unlikely(source == 0))   /* LVT0, APIC TIMER */
+        return; //kpanic("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");
+
+
     int i;
     for(i = 0; i < X86_IOAPIC_MAX; i++) {
         if(!ioapic[i].address)

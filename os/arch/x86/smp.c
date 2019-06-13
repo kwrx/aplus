@@ -109,6 +109,10 @@ void smp_main(int bsp) {
 
 void smp_init(void) {
 
+#if defined(__x86_64__) /* FIXME: Fix AP Bootstrap */
+    goto bsp;
+#endif
+
     ap_init();
 
 
@@ -147,5 +151,8 @@ void smp_init(void) {
         kpanic("x86-smp: Failed to start CPU #%d", mbd->cpu.cores[i].id);
     }
 
+
+bsp:
     smp_main(1);
+
 }

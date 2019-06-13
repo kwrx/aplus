@@ -61,7 +61,7 @@
 
 
 
-#ifdef ARCH_X86_64
+#if defined(__x86_64__)
 typedef uint64_t x86_page_t;
 #else
 typedef uint32_t x86_page_t;

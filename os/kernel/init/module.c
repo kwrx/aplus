@@ -201,6 +201,8 @@ void module_run(module_t* m) {
     DEBUG_ASSERT(m->dnit);
 
 
+
+    /* SHT_REL */
     for(int i = 1; i < m->exe.header->e_shnum; i++) {
 
         if(m->exe.section[i].sh_type != SHT_REL)
@@ -221,54 +223,65 @@ void module_run(module_t* m) {
             #define P ((Elf_Addr) obj)
             #define S ((Elf_Addr) sym->st_value)
             #define B ((Elf_Addr) m->core.ptr)
+            
+            #define _(x, y) \
+                case x: { *obj = y; } break;
+
+
 
             switch(ELF_R_TYPE(r[j].r_info)) {
-                
+
+ #if defined(__i386__)
+
                 case R_386_NONE:
-                    break;
-
-                case R_386_32:
-                    *obj = S + A;
-                    break;
-
-                case R_386_PC32:
-                    *obj = S + A - P;
-                    break;
-
-#if 0
-                case R_386_GOT32:
-                    *obj = G + A - P;
-                    break;
-                
-                case R_386_PLT32:
-                    *obj = L + A - P;
-                    break;
-#endif
-
                 case R_386_COPY:
                     break;
 
-                case R_386_GLOB_DAT:
-                case R_386_JMP_SLOT:
-                    *obj = S;
-                    break;             
+                _(R_386_32,         S + A       )
+                _(R_386_PC32,       S + A - P   )
+                _(R_386_GLOB_DAT,   S           )
+                _(R_386_JMP_SLOT,   S           )            
+                _(R_386_RELATIVE,   B + A       )
+/*
+                _(R_386_GOT32,      G + A - P   )
+                _(R_386_PLT32,      L + A - P   )
+                _(R_386_GOTOFF,     S + A - GOT )
+                _(R_386_GOTPC,      GOT + A - P )
+                _(R_386_SIZE32,     Z + A       )
+*/
+#endif
 
-                case R_386_RELATIVE:
-                    *obj = B + A;
+#if defined(__x86_64__)
+
+                case R_X86_64_NONE:
+                case R_X86_64_COPY:
                     break;
 
-#if 0
-                case R_386_GOTOFF:
-                    *obj = S + A - GOT;
-                    break;
-
-                case R_386_GOTPC:
-                    *obj = GOT + A - P;
-                    break;
+                _(R_X86_64_64,          S + A       )
+                _(R_X86_64_PC32,        S + A - P   )
+                _(R_X86_64_GLOB_DAT,    S           )
+                _(R_X86_64_JUMP_SLOT,   S           )             
+                _(R_X86_64_RELATIVE,    B + A       )
+                _(R_X86_64_32,          S + A       )
+                _(R_X86_64_32S,         S + A       )
+                _(R_X86_64_16,          S + A       )
+                _(R_X86_64_PC16,        S + A - P   )
+                _(R_X86_64_8,           S + A       )
+                _(R_X86_64_PC8,         S + A - P   )
+                _(R_X86_64_PC64,        S + A - P   )
+/*
+                _(R_X86_64_GOT32,       G + A       )
+                _(R_X86_64_PLT32,       L + A - P   )
+                _(R_X86_64_GOTOFF64,    S + A - GOT )
+                _(R_X86_64_GOTPC32,     GOT + A + P )             
+                _(R_X86_64_SIZE32,      Z + A       )             
+                _(R_X86_64_SIZE64,      Z + A       )             
+                _(R_X86_64_GOTPCREL,    G + GOT + A - P)
+*/
 #endif
 
                 default:
-                    kpanic("module: unknown relocation type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanic("module: unknown relocation SHT_REL type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -277,6 +290,101 @@ void module_run(module_t* m) {
             #undef B
             #undef P
             #undef S
+            #undef _
+        }
+    }
+
+
+
+    /* SHT_RELA */
+    for(int i = 1; i < m->exe.header->e_shnum; i++) {
+
+        if(m->exe.section[i].sh_type != SHT_RELA)
+            continue;
+
+        Elf_Rela* r = (Elf_Rel*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
+    
+
+        int j;
+        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+
+            Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
+            Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
+
+
+            #define A ((Elf_Addr) r[j].r_addend)
+            #define P ((Elf_Addr) obj)
+            #define S ((Elf_Addr) sym->st_value)
+            #define B ((Elf_Addr) m->core.ptr)
+            
+            #define _(x, y) \
+                case x: { *obj = y; } break;
+
+
+
+            switch(ELF_R_TYPE(r[j].r_info)) {
+
+ #if defined(__i386__)
+
+                case R_386_NONE:
+                case R_386_COPY:
+                    break;
+
+                _(R_386_32,         S + A       )
+                _(R_386_PC32,       S + A - P   )
+                _(R_386_GLOB_DAT,   S           )
+                _(R_386_JMP_SLOT,   S           )            
+                _(R_386_RELATIVE,   B + A       )
+/*
+                _(R_386_GOT32,      G + A - P   )
+                _(R_386_PLT32,      L + A - P   )
+                _(R_386_GOTOFF,     S + A - GOT )
+                _(R_386_GOTPC,      GOT + A - P )
+                _(R_386_SIZE32,     Z + A       )
+*/
+#endif
+
+#if defined(__x86_64__)
+
+                case R_X86_64_NONE:
+                case R_X86_64_COPY:
+                    break;
+
+                _(R_X86_64_64,          S + A       )
+                _(R_X86_64_PC32,        S + A - P   )
+                _(R_X86_64_GLOB_DAT,    S           )
+                _(R_X86_64_JUMP_SLOT,   S           )             
+                _(R_X86_64_RELATIVE,    B + A       )
+                _(R_X86_64_32,          S + A       )
+                _(R_X86_64_32S,         S + A       )
+                _(R_X86_64_16,          S + A       )
+                _(R_X86_64_PC16,        S + A - P   )
+                _(R_X86_64_8,           S + A       )
+                _(R_X86_64_PC8,         S + A - P   )
+                _(R_X86_64_PC64,        S + A - P   )
+/*
+                _(R_X86_64_GOT32,       G + A       )
+                _(R_X86_64_PLT32,       L + A - P   )
+                _(R_X86_64_GOTOFF64,    S + A - GOT )
+                _(R_X86_64_GOTPC32,     GOT + A + P )             
+                _(R_X86_64_SIZE32,      Z + A       )             
+                _(R_X86_64_SIZE64,      Z + A       )             
+                _(R_X86_64_GOTPCREL,    G + GOT + A - P)
+*/
+#endif
+
+                default:
+                    kpanic("module: unknown relocation SHT_RELA type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
+                    break;
+
+            }
+
+            #undef A
+            #undef B
+            #undef P
+            #undef S
+            #undef _
         }
     }
 
@@ -344,7 +452,6 @@ void module_init(void) {
 
         for(int j = 1; j < m->exe.header->e_shnum; j++) {
 
-            DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_RELA);
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNAMIC);
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNSYM);
 
@@ -404,7 +511,7 @@ void module_init(void) {
 
 
     list_each(m_queue, m)
-        module_run(m);
+        module_run(m); // FIXME: Check list_each() on x86-64
 
 }
 

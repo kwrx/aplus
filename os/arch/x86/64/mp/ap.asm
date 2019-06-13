@@ -93,8 +93,6 @@ ap_pstart:
     and eax, ~(1 << 30)         ; CD 
 	mov cr0, eax
     
-    lgdt [ap_gdt64.ptr]
-
 .enable_pat:
 	mov ecx, 0x277
 	rdmsr
@@ -104,6 +102,11 @@ ap_pstart:
 
 	mov ecx, 0x277
 	wrmsr
+
+.enable_gdt:
+    lgdt [ap_gdt64.ptr]
+    jmp 0x08:jmp_high
+
 
 [BITS 64]
 jmp_high:

@@ -32,7 +32,7 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         uintptr_t ip;
     } *frame;
 
-#ifdef ARCH_X86_64
+#if defined(__x86_64__)
     __asm__ __volatile__ ("mov rax, rbp" : "=a"(frame));
 #else
     __asm__ __volatile__ ("mov eax, ebp" : "=a"(frame));
@@ -41,6 +41,10 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
     int i;
     for(i = 0; frame && i < count; i++) {
         frames[i] = 0;
+
+#if defined(__x86_64__)
+        return; /* TODO: Add support for stacktrace in x86-64 */
+#endif
         
         if(unlikely(!ptr_check(frame, R_OK)))
             break;

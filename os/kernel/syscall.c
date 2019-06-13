@@ -44,7 +44,12 @@ void syscall_init(void) {
         uint32_t no;
         void* ptr;
         char* name;
+
+#if defined (__x86_64__)
+        char __padding[12];
+#endif
     } __packed *e = (void*) &syscalls_start;
+
 
     for(; (uintptr_t) e < (uintptr_t) &syscalls_end; e++) {
         DEBUG_ASSERT(e->no < SYSMAX);
