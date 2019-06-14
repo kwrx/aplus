@@ -261,7 +261,8 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
 
         case 0x21 ... 0xFC:
-            __lock(&irqs[frame->int_no - 0x20].lock, {
+
+            __trylock(&irqs[frame->int_no - 0x20].lock, {
 
                 if(likely(irqs[frame->int_no - 0x20].handler))
                     frame = (x86_frame_t*) irqs[frame->int_no - 0x20].handler((void*) frame);
@@ -269,6 +270,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                     kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->int_no - 0x20);
         
             });
+
 
             apic_eoi();
             break;
@@ -344,25 +346,26 @@ int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*)) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);
 
-    if(!spinlock_trylock(&irqs[irq].lock))
-        kpanic("x86-intr: irq #%d locked by another process", irq);
 
+    __trylock(&irqs[irq].lock, {
 
-    irqs[irq].handler = handler;
-    ioapic_map_irq(irq, irq, apic_get_id());
+        irqs[irq].handler = handler;
+        ioapic_map_irq(irq, irq, apic_get_id());
     
+    });
+
     return 0;
 }
 
 int arch_intr_unmap_irq(uint8_t irq) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
 
-    if(!spinlock_trylock(&irqs[irq].lock))
-        kpanic("x86-intr: irq #%d locked by another process");
+    __trylock(&irqs[irq].lock, {
+        
+        irqs[irq].handler = NULL;
+        ioapic_map_irq(irq, irq, apic_get_id());
 
-
-    irqs[irq].handler = NULL;
-    ioapic_map_irq(irq, irq, apic_get_id());
+    });
 
     return 0;
 }

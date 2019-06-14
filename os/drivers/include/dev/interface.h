@@ -28,6 +28,7 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/ringbuffer.h>
+#include <aplus/vfs.h>
 #include <aplus/fb.h>
 #include <stdint.h>
 

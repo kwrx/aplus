@@ -97,6 +97,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
     __asm__ __volatile__ ("invlpg [%0]" :: "m"(address) : "memory");
 }
 
+
 void x86_unmap_page(x86_page_t* aspace, uintptr_t address) {
     DEBUG_ASSERT(aspace != NULL);
     DEBUG_ASSERT((void*) aspace > (void*) CONFIG_KERNEL_BASE);    
@@ -196,4 +197,56 @@ check:
             return 0;
 
     return 1;
+}
+
+
+uintptr_t x86_ptr_phys(uintptr_t address) {
+
+    x86_page_t* d;
+    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
+
+    uintptr_t addend = address & (PAGE_SIZE - 1);
+    
+
+    /* CR3-L4 */ 
+    {
+        d = &aspace[(address >> 39) & 0x1FF];
+    }
+
+    /* PML4-L3 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 30) & 0x1FF];
+    }
+
+    /* PDP-L2 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 1GiB Page */
+            { addend = address & 0x3FFFFFFF; goto check; }
+            
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
+    }
+
+    /* PD-L1 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 2MiB Page */
+            { addend = address & 0x1FFFFF; goto check; }
+
+        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
+    }
+
+    /* Page Table */
+check:    
+    if(unlikely(!(*d & X86_MMU_PG_P)))
+        return 0;
+
+    return ((*d >> 12) << 12) + addend;
 }

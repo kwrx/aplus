@@ -132,6 +132,8 @@ MODULE_LICENSE("GPL");
 #define IDE_TYPE_MASTER                 0
 #define IDE_TYPE_SLAVE                  1
 
+#define IDE_DMA_SIZE                    127             
+
 
 
 struct disk {
@@ -139,6 +141,18 @@ struct disk {
     uint16_t cp;
     uint8_t intno;
     uint8_t type;
+
+    struct {
+        struct {
+            uintptr_t offset;
+            uint16_t bytes;
+            uint16_t last;
+        } __packed *prdt;
+
+        uint8_t* start;
+        uintptr_t prdt_phys;
+        uintptr_t start_phys;
+    } dma;
 };
 
 struct ide_identify {
@@ -217,7 +231,7 @@ static inline void __wait(struct disk* d) {
 
     DEBUG_ASSERT(!(e & IDE_SR_ERR));
     DEBUG_ASSERT(!(e & IDE_SR_DF));
-    DEBUG_ASSERT(!(e & IDE_SR_DRQ));
+    DEBUG_ASSERT( (e & IDE_SR_DRQ));
 #endif
 }
 
@@ -272,6 +286,15 @@ static void ide_init(device_t* device) {
     for(i = 0; i < 256; i++)
         buf[i] = inw(d->io);
 
+    
+
+    if(device->blk.blkcount == 0)
+        device->blk.blkcount = identify.sectors_48
+                                 ? identify.sectors_48
+                                 : identify.sectors_28
+                                 ;
+
+
 #if defined(DEBUG)
 
     for(i = 0; i < 39; i += 2) {
@@ -289,56 +312,183 @@ static void ide_init(device_t* device) {
             "   Model:      %s\n"
             "   Serial:     %s\n"
             "   Firmware:   %s\n"
-            "   Size:       %6.3f GB\n",
+            "   Size:       %d.%02d GB\n",
         
         identify.model,
         identify.serial,
         identify.firmware,
-        0
+        (device->blk.blkcount * device->blk.blksize) / (1024 * 1024 * 1024),
+        (device->blk.blkcount * device->blk.blksize) % (1024 * 1024 * 1024) / 10000000
     );
 
 #endif
+
+
+    d->dma.prdt = (void*) kvalloc(8, GFP_KERNEL);
+    d->dma.start = (void*) kvalloc(device->blk.blksize * IDE_DMA_SIZE, GFP_KERNEL);
+
+    d->dma.prdt_phys = (uintptr_t) V2P(d->dma.prdt);
+    d->dma.start_phys = (uintptr_t) V2P(d->dma.start);
+
+    d->dma.prdt[0].offset = d->dma.start_phys;
+    d->dma.prdt[0].bytes = device->blk.blksize * IDE_DMA_SIZE;
+    d->dma.prdt[0].last = 0x8000;
+
 }
 
 
 static void ide_dnit(device_t* device) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    
+    struct disk* d = (struct disk*) device->userdata;
 
+    kfree(d->dma.prdt);
+    kfree(d->dma.start);
 }
 
 static void ide_reset(device_t* device) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
 
+    struct disk* d = (struct disk*) device->userdata;
+
+    __reset(d);
+    __iowait(d);
+
+    outb(d->io + IDE_REG_HDDEVSEL, 0xA0 | d->type << 4);
+
+    __iowait(d);
+    __stwait(d, 10000);
 }
 
 
+__thread_safe
 static int ide_write(device_t* device, const void* buf, off_t offset, size_t count) {
-
+    return 0;
 }
 
 
+__thread_safe
 static int ide_read(device_t* device, void* buf, off_t offset, size_t count) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(count);
 
+    struct disk* d = (struct disk*) device->userdata;
+
+
+    if(likely(count > IDE_DMA_SIZE)) {
+        
+        int i;
+        for(i = 0; i + IDE_DMA_SIZE < count; i += IDE_DMA_SIZE)
+            ide_read(device, (void*) ((uintptr_t) buf + (i * device->blk.blksize)), offset + i, IDE_DMA_SIZE);
+
+        if(unlikely(!(count - i)))
+            return count;
+
+        offset += i;
+        count -= i;
+
+        buf = (void*) ((uintptr_t) buf + (i * device->blk.blksize));  
+    }
+
+
+    __wait(d);
+    outb(ide.dma + 0x00, 0x00);
+    outb(ide.dma + 0x04, d->dma.prdt_phys);
+    outb(ide.dma + 0x02, inb(ide.dma + 0x02) | 4 | 2);
+    outb(ide.dma + 0x00, 0x08);
+
+    do {
+        
+        if(!(inb(d->io + IDE_REG_STATUS) & IDE_SR_BSY))
+            break;
+
+    } while(1);
+
+
+    outb(d->io + IDE_REG_CONTROL, 0x00);
+    outb(d->io + IDE_REG_HDDEVSEL, 0x40 | (d->type << 4));
+    __iowait(d);
+
+    outb(d->io + IDE_REG_SECCOUNT0, (count >> 8) & 0xFF);
+    outb(d->io + IDE_REG_LBA0, (offset & 0xFF00000) >> 24);
+    outb(d->io + IDE_REG_LBA1, (offset & 0xFF0000000) >> 32);
+    outb(d->io + IDE_REG_LBA2, 0);
+    outb(d->io + IDE_REG_SECCOUNT0, count & 0xFF);
+    outb(d->io + IDE_REG_LBA0, (offset & 0xFF));
+    outb(d->io + IDE_REG_LBA1, (offset & 0xFF00) >> 8);
+    outb(d->io + IDE_REG_LBA2, (offset & 0xFF0000) >> 16);
+
+    do {
+
+        uint8_t s = inb(d->io + IDE_REG_STATUS);
+
+        if(!(s & IDE_SR_BSY) && (s & IDE_SR_DRDY))
+            break;
+
+    } while(1);
+
+
+    outb(d->io + IDE_REG_COMMAND, IDE_CMD_READ_DMA_EXT);
+    __iowait(d);
+
+    outb(ide.dma, 0x08 | 0x01);
+
+
+    do {
+
+        int s1 = inb(ide.dma + 0x02);
+        int s2 = inb(d->io + IDE_REG_STATUS);
+
+        if(!(s1 & 0x04))
+            continue;
+
+        if(!(s2 & IDE_SR_BSY))
+            break;
+
+    } while(1);
+
+
+    memcpy (
+        buf, 
+        d->dma.start, 
+        device->blk.blksize * count
+    );
+
+    outb(ide.dma + 0x02, inb(ide.dma + 0x02) | 4 | 2);
+
+    return count;
 }
 
+
+__thread_safe
+static int ide_atapi_read(device_t* device, void* buf, off_t offset, size_t count) {
+    return 0;
+}
 
 
 static void disk_device(struct disk* disk, int cdrom) {
     
-    static const char* device_name[2][4] = {
-        { "sda", "sdb", "sdc", "sdd" },
-        { "cda", "cdb", "cdc", "cdd" },
+    static const char* device_name[8] = {
+        "sda", "sdb", "sdc", "sdd",
+        "cda", "cdb", "cdc", "cdd",
     };
 
     static int device_id[] = {
-        0,
-        0
+        0, 0
     };
 
 
     device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
     
     d->type = DEVICE_TYPE_BLOCK;
-    d->name = device_name[cdrom][device_id[cdrom]];
     d->description = "IDE Storage Device";
+
+    d->name = device_name[(4 * cdrom) + device_id[cdrom]];
+    DEBUG_ASSERT(d->name);
 
     d->vendorid = S_IFBLK;
     d->deviceid = (device_id[cdrom]++ * 2) + cdrom;
@@ -361,13 +511,13 @@ static void disk_device(struct disk* disk, int cdrom) {
                         ;
 
 
-    d->blk.write = ide_write;    
-    d->blk.read = ide_read;    
+    d->blk.write = cdrom ? NULL : ide_write;    
+    d->blk.read = cdrom ? ide_atapi_read : ide_read;    
 
     d->userdata = (void*) disk;
 
 
-   device_mkdev(d, 0660);
+    device_mkdev(d, 0660);
 }
 
 

@@ -74,6 +74,13 @@ void spinlock_unlock(spinlock_t*);
         return __r;                         \
     }
 
+#define __trylock(lk, fn)                       \
+    {                                           \
+        if(unlikely(!spinlock_trylock((lk))))   \
+            kpanic("spinlock: DEADLOCK! %s in %s:%d <%s>", #lk, __FILE__, __LINE__, __func__); \
+        do { fn; } while(0);                    \
+        spinlock_unlock((lk));                  \
+    }
 
 
 #define atomic_load(ptr)                    \

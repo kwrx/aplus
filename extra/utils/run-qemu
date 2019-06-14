@@ -28,4 +28,4 @@ if [ ! -z $2 ]; then
     debug="-S"
 fi
 
-qemu-system-$arch -d page,guest_errors,int -serial stdio -s $debug $flags
+qemu-system-$arch -d page,guest_errors -serial stdio -s $debug $flags

@@ -70,6 +70,7 @@ typedef uint32_t x86_page_t;
 void x86_map_page(x86_page_t*, uintptr_t, block_t, uint64_t);
 void x86_unmap_page(x86_page_t*, uintptr_t);
 int x86_ptr_access(uintptr_t, int);
+uintptr_t x86_ptr_phys(uintptr_t);
 
 
 #endif

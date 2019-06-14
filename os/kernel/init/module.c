@@ -302,7 +302,7 @@ void module_run(module_t* m) {
         if(m->exe.section[i].sh_type != SHT_RELA)
             continue;
 
-        Elf_Rela* r = (Elf_Rel*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Rela* r = (Elf_Rela*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
         Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
 
@@ -485,11 +485,30 @@ void module_init(void) {
                 continue;
 
             
-            memcpy (
-                (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
-                (void*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset),
-                m->exe.section[j].sh_size
-            );
+            switch(m->exe.section[j].sh_type) {
+                
+                case SHT_PROGBITS:
+                    memcpy (
+                        (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
+                        (void*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset),
+                        m->exe.section[j].sh_size
+                    );
+                    
+                    break;
+
+                case SHT_NOBITS:
+                    memset (
+                        (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
+                        0,
+                        m->exe.section[j].sh_size
+                    );
+
+                    break;
+
+                default:
+                    kpanic("module: invalid section type: %d\n", m->exe.section[j].sh_type);
+
+            }
 
         }
 

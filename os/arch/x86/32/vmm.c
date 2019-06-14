@@ -77,6 +77,7 @@ void x86_map_page(x86_page_t* aspace, uintptr_t address, block_t block, uint64_t
     __asm__ __volatile__ ("invlpg [%0]" :: "m"(address) : "memory");
 }
 
+
 void x86_unmap_page(x86_page_t* aspace, uintptr_t address) {
     DEBUG_ASSERT(aspace != NULL);
     DEBUG_ASSERT((void*) aspace > (void*) CONFIG_KERNEL_BASE);    
@@ -110,6 +111,7 @@ void x86_unmap_page(x86_page_t* aspace, uintptr_t address) {
     __asm__ __volatile__ ("invlpg [%0]" :: "m"(address) : "memory");
 }
 
+
 int x86_ptr_access(uintptr_t address, int mode) {
 
     x86_page_t* d;
@@ -140,4 +142,38 @@ int x86_ptr_access(uintptr_t address, int mode) {
             return 0;
 
     return 1;
+}
+
+
+uintptr_t x86_ptr_phys(uintptr_t address) {
+
+    x86_page_t* d;
+    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
+
+    uintptr_t addend = address & (PAGE_SIZE - 1);
+    
+
+    /* CR3-L2 */ 
+    {
+        d = &aspace[(address >> 22) & 0x3FF];
+    }
+
+    /* PD-L1 */
+    {
+        if(unlikely(!(*d & X86_MMU_PG_P)))
+            return 0;
+
+        if(likely(!(*d & X86_MMU_PG_PS)))   /* Check 4MiB Page */
+            d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x3FF];
+        else
+            addend = address & 0x3FFFFF;
+        
+    }
+
+    /* Page Table */
+    
+    if(unlikely(!(*d & X86_MMU_PG_P)))
+        return 0;
+
+    return ((*d >> 12) << 12) + addend;
 }

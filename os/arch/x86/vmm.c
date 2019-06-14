@@ -103,3 +103,9 @@ int arch_ptr_access(void* ptr, int mode) {
     
     return x86_ptr_access((uintptr_t) ptr, mode);
 }
+
+void* arch_ptr_phys(void* ptr) {
+    DEBUG_ASSERT(ptr);
+
+    return (void*) x86_ptr_phys((uintptr_t) ptr);
+}

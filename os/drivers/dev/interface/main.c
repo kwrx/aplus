@@ -189,6 +189,7 @@ static int device_fsync(inode_t* inode) {
 void device_mkdev(device_t* device, mode_t mode) {
 
     DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->name);
 
 
     device->status = DEVICE_STATUS_LOADING;
@@ -255,6 +256,18 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.read = device_read;
     i->ops.ioctl = device_ioctl;
     i->ops.fsync = device_fsync;
+
+    
+    if(device->type == DEVICE_TYPE_BLOCK) {
+
+        i->st.st_blksize = device->blk.blksize;
+        
+        i->st.st_size = device->blk.blkcount *
+                        device->blk.blksize  ;
+
+    }
+
+
 
 #if defined(DEBUG)
     kprintf("device::create: initialized '%s' dev(%x:%x) int(%d) ptr(%p) size(%p): '%s'\n",

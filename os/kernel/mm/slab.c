@@ -100,6 +100,18 @@ void* kcalloc(size_t nm, size_t cc, int gfp) {
     __lock_return(&memlock, void*, dlcalloc(nm, cc));
 }
 
+void* kvalloc(size_t size, int gfp) {
+    (void) gfp;
+
+    __lock_return(&memlock, void*, dlpvalloc(size));
+}
+
+void* kmemalign(size_t align, size_t size, int gfp) {
+    (void) gfp;
+
+    __lock_return(&memlock, void*, dlmemalign(align, size));
+}
+
 void kfree(void* ptr) {
     __lock(&memlock, dlfree(ptr));
 }

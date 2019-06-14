@@ -56,6 +56,7 @@ typedef long block_t;
 void* arch_mmap(void*, size_t, int);
 void arch_munmap(void*, size_t);
 int arch_ptr_access(void*, int);
+void* arch_ptr_phys(void*);
 
 
 void mm_init(int);
@@ -65,6 +66,8 @@ void slab_init(void);
 void* kmalloc(size_t, int);
 void* krealloc(void*, size_t, int);
 void* kcalloc(size_t, size_t, int);
+void* kvalloc(size_t, int);
+void* kmemalign(size_t, size_t, int);
 void kfree(void*);
 
 
@@ -85,7 +88,10 @@ void pmm_free_block(block_t);
 })
 
 #define ptr_check(p, m) \
-    arch_ptr_access((void*) p, m)
+    arch_ptr_access((void*) (p), (m))
+
+#define V2P(p)          \
+    arch_ptr_phys((void*) (p))
 
 
 #endif
