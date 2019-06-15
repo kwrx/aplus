@@ -121,9 +121,10 @@ MODULE_LICENSE("GPL");
 #define IDE_REG_LBA3                    0x09
 #define IDE_REG_LBA4                    0x0A
 #define IDE_REG_LBA5                    0x0B
-#define IDE_REG_CONTROL                 0x0C
-#define IDE_REG_ALTSTATUS               0x0C
-#define IDE_REG_DEVADDRESS              0x0D
+
+#define IDE_REG_CONTROL                 0x00
+#define IDE_REG_ALTSTATUS               0x00
+#define IDE_REG_DEVADDRESS              0x01
 
 #define IDE_READ                        0x00
 #define IDE_WRITE                       0x01
@@ -132,7 +133,7 @@ MODULE_LICENSE("GPL");
 #define IDE_TYPE_MASTER                 0
 #define IDE_TYPE_SLAVE                  1
 
-#define IDE_DMA_SIZE                    127             
+#define IDE_DMA_SIZE                    (64 * 1024)            
 
 
 
@@ -152,7 +153,11 @@ struct disk {
         uint8_t* start;
         uintptr_t prdt_phys;
         uintptr_t start_phys;
+
+        uintptr_t io;
     } dma;
+
+    spinlock_t lock;
 };
 
 struct ide_identify {
@@ -187,17 +192,15 @@ struct {
     struct disk secondary_master;    
     struct disk secondary_slave;    
 
-    uintptr_t dma;
-    spinlock_t lock;
 } ide = { };
 
 
 
 #define __iowait(d) {                       \
-    inb(d->io + IDE_REG_ALTSTATUS);         \
-    inb(d->io + IDE_REG_ALTSTATUS);         \
-    inb(d->io + IDE_REG_ALTSTATUS);         \
-    inb(d->io + IDE_REG_ALTSTATUS);         \
+    inb(d->cp + IDE_REG_ALTSTATUS);         \
+    inb(d->cp + IDE_REG_ALTSTATUS);         \
+    inb(d->cp + IDE_REG_ALTSTATUS);         \
+    inb(d->cp + IDE_REG_ALTSTATUS);         \
 }
 
 #define __reset(d) {                        \
@@ -211,10 +214,10 @@ static inline int __stwait(struct disk* d, int tm) {
     int e;
 
     if(unlikely(tm > 0))
-        while((e = inb(d->io + IDE_REG_STATUS)) & IDE_SR_BSY && (tm > 0))
+        while((e = inb(d->cp + IDE_REG_ALTSTATUS)) & IDE_SR_BSY && (tm > 0))
             tm--;
     else
-        while((e = inb(d->io + IDE_REG_STATUS)) & IDE_SR_BSY)
+        while((e = inb(d->cp + IDE_REG_ALTSTATUS)) & IDE_SR_BSY)
             ;
 
     return e;
@@ -223,15 +226,15 @@ static inline int __stwait(struct disk* d, int tm) {
 
 static inline void __wait(struct disk* d) {
     __iowait(d);
-    __stwait(d, 10000);
-
+    __stwait(d, 0);
+    __iowait(d);
 
 #if defined(DEBUG)
-    int e = inb(d->io + IDE_REG_STATUS);
+    int e = inb(d->cp + IDE_REG_ALTSTATUS);
 
     DEBUG_ASSERT(!(e & IDE_SR_ERR));
     DEBUG_ASSERT(!(e & IDE_SR_DF));
-    DEBUG_ASSERT( (e & IDE_SR_DRQ));
+    //DEBUG_ASSERT( (e & IDE_SR_DRQ));
 #endif
 }
 
@@ -242,7 +245,7 @@ static inline void __wait(struct disk* d) {
 static void* irq_1(void* frame) {
     DEBUG_ASSERT(frame);
 
-    inb(ide.primary_master.io + IDE_REG_STATUS);
+    inb(ide.primary_master.cp + IDE_REG_ALTSTATUS);
 
     return frame;
 }
@@ -250,7 +253,7 @@ static void* irq_1(void* frame) {
 static void* irq_2(void* frame) {
     DEBUG_ASSERT(frame);
 
-    inb(ide.secondary_master.io + IDE_REG_STATUS);
+    inb(ide.secondary_master.cp + IDE_REG_ALTSTATUS);
 
     return frame;
 }
@@ -324,16 +327,21 @@ static void ide_init(device_t* device) {
 #endif
 
 
-    d->dma.prdt = (void*) kvalloc(8, GFP_KERNEL);
-    d->dma.start = (void*) kvalloc(device->blk.blksize * IDE_DMA_SIZE, GFP_KERNEL);
+    /* See arch/x86/dma.c */
+    extern uint8_t dma_memory_prd;
+    extern uint8_t dma_memory_area;
 
-    d->dma.prdt_phys = (uintptr_t) V2P(d->dma.prdt);
-    d->dma.start_phys = (uintptr_t) V2P(d->dma.start);
+
+    d->dma.prdt = &dma_memory_prd;
+    d->dma.start = &dma_memory_area;
+
+    d->dma.prdt_phys = (uintptr_t) &dma_memory_prd - CONFIG_KERNEL_BASE;
+    d->dma.start_phys = (uintptr_t) &dma_memory_area - CONFIG_KERNEL_BASE;
 
     d->dma.prdt[0].offset = d->dma.start_phys;
-    d->dma.prdt[0].bytes = device->blk.blksize * IDE_DMA_SIZE;
+    d->dma.prdt[0].bytes = 0;
     d->dma.prdt[0].last = 0x8000;
-
+    
 }
 
 
@@ -356,16 +364,124 @@ static void ide_reset(device_t* device) {
     __reset(d);
     __iowait(d);
 
-    outb(d->io + IDE_REG_HDDEVSEL, 0xA0 | d->type << 4);
-
-    __iowait(d);
-    __stwait(d, 10000);
 }
 
 
 __thread_safe
 static int ide_write(device_t* device, const void* buf, off_t offset, size_t count) {
-    return 0;
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(count);
+
+    struct disk* d = (struct disk*) device->userdata;
+
+
+    /*if(likely(count > (IDE_DMA_SIZE / device->blk.blksize))) {
+        
+        int i;
+        for (
+            i = 0;
+            i + (IDE_DMA_SIZE / device->blk.blksize) < count;
+            i += (IDE_DMA_SIZE / device->blk.blksize)
+        )
+            ide_write(device, (void*) ((uintptr_t) buf + (i * device->blk.blksize)), offset + i, IDE_DMA_SIZE);
+
+
+        if(unlikely(!(count - i)))
+            return count;
+
+        offset += i;
+        count -= i;
+
+        buf = (void*) ((uintptr_t) buf + (i * device->blk.blksize));  
+    }*/
+
+
+    __lock(&d->lock, {
+
+        memcpy ( 
+            d->dma.start,
+            buf,
+            device->blk.blksize * count
+        );
+
+        __wait(d);
+        outb(d->dma.io + 0x00, 0x00);
+        outb(d->dma.io + 0x04, d->dma.prdt_phys);
+        outb(d->dma.io + 0x02, inb(d->dma.io + 0x02) | 4 | 2);
+        outb(d->dma.io + 0x00, 0x00);
+
+        do {
+            
+            if(!(inb(d->cp + IDE_REG_ALTSTATUS) & IDE_SR_BSY))
+                break;
+
+        } while(1);
+
+
+        outb(d->cp + IDE_REG_CONTROL, 0x00);
+        outb(d->io + IDE_REG_HDDEVSEL, 0xE0 | (d->type << 4));
+        __iowait(d);
+
+        outb(d->io + IDE_REG_SECCOUNT0, (count >> 8) & 0xFF);
+        outb(d->io + IDE_REG_LBA0, (offset & 0xFF00000) >> 24);
+        outb(d->io + IDE_REG_LBA1, (offset & 0xFF0000000) >> 32);
+        outb(d->io + IDE_REG_LBA2, 0);
+        outb(d->io + IDE_REG_SECCOUNT0, count & 0xFF);
+        outb(d->io + IDE_REG_LBA0, (offset & 0xFF));
+        outb(d->io + IDE_REG_LBA1, (offset & 0xFF00) >> 8);
+        outb(d->io + IDE_REG_LBA2, (offset & 0xFF0000) >> 16);
+
+        do {
+
+            uint8_t s = inb(d->cp + IDE_REG_ALTSTATUS);
+
+            if(!(s & IDE_SR_BSY) && (s & IDE_SR_DRDY))
+                break;
+
+        } while(1);
+
+
+
+        outb(d->io + IDE_REG_COMMAND, IDE_CMD_WRITE_DMA_EXT);
+        __iowait(d);
+
+        outb(d->dma.io, 0x00 | 0x01);
+
+
+        do {
+
+            int s1 = inb(d->dma.io + 0x02);
+            int s2 = inb(d->cp + IDE_REG_ALTSTATUS);
+
+            if(!(s1 & 0x04))
+                continue;
+
+            if(!(s2 & IDE_SR_BSY))
+                break;
+
+        } while(1);
+
+
+        outb(d->dma.io + 0x02, inb(d->dma.io + 0x02) | 4 | 2);
+        outb(d->dma.io, 0x00);
+
+
+        
+        outb(d->io + IDE_REG_COMMAND, IDE_CMD_CACHE_FLUSH);
+        __iowait(d);
+
+        do {
+            
+            if(!(inb(d->cp + IDE_REG_ALTSTATUS) & IDE_SR_BSY))
+                break;
+
+        } while(1);
+
+    });
+
+    return count;
 }
 
 
@@ -379,11 +495,16 @@ static int ide_read(device_t* device, void* buf, off_t offset, size_t count) {
     struct disk* d = (struct disk*) device->userdata;
 
 
-    if(likely(count > IDE_DMA_SIZE)) {
+    /*if(likely(count > (IDE_DMA_SIZE / device->blk.blksize))) {
         
         int i;
-        for(i = 0; i + IDE_DMA_SIZE < count; i += IDE_DMA_SIZE)
+        for (
+            i = 0;
+            i + (IDE_DMA_SIZE / device->blk.blksize) < count;
+            i += (IDE_DMA_SIZE / device->blk.blksize)
+        )
             ide_read(device, (void*) ((uintptr_t) buf + (i * device->blk.blksize)), offset + i, IDE_DMA_SIZE);
+
 
         if(unlikely(!(count - i)))
             return count;
@@ -392,73 +513,95 @@ static int ide_read(device_t* device, void* buf, off_t offset, size_t count) {
         count -= i;
 
         buf = (void*) ((uintptr_t) buf + (i * device->blk.blksize));  
-    }
+    }*/
 
 
-    __wait(d);
-    outb(ide.dma + 0x00, 0x00);
-    outb(ide.dma + 0x04, d->dma.prdt_phys);
-    outb(ide.dma + 0x02, inb(ide.dma + 0x02) | 4 | 2);
-    outb(ide.dma + 0x00, 0x08);
+    __lock(&d->lock, {
 
-    do {
-        
-        if(!(inb(d->io + IDE_REG_STATUS) & IDE_SR_BSY))
-            break;
+        __wait(d);
+        outb(d->dma.io + 0x00, 0x00);
+        outb(d->dma.io + 0x04, d->dma.prdt_phys);
+        outb(d->dma.io + 0x02, inb(d->dma.io + 0x02) | 4 | 2);
+        outb(d->dma.io + 0x00, 0x08);
 
-    } while(1);
+        do {
+            
+            if(!(inb(d->cp + IDE_REG_ALTSTATUS) & IDE_SR_BSY))
+                break;
 
-
-    outb(d->io + IDE_REG_CONTROL, 0x00);
-    outb(d->io + IDE_REG_HDDEVSEL, 0x40 | (d->type << 4));
-    __iowait(d);
-
-    outb(d->io + IDE_REG_SECCOUNT0, (count >> 8) & 0xFF);
-    outb(d->io + IDE_REG_LBA0, (offset & 0xFF00000) >> 24);
-    outb(d->io + IDE_REG_LBA1, (offset & 0xFF0000000) >> 32);
-    outb(d->io + IDE_REG_LBA2, 0);
-    outb(d->io + IDE_REG_SECCOUNT0, count & 0xFF);
-    outb(d->io + IDE_REG_LBA0, (offset & 0xFF));
-    outb(d->io + IDE_REG_LBA1, (offset & 0xFF00) >> 8);
-    outb(d->io + IDE_REG_LBA2, (offset & 0xFF0000) >> 16);
-
-    do {
-
-        uint8_t s = inb(d->io + IDE_REG_STATUS);
-
-        if(!(s & IDE_SR_BSY) && (s & IDE_SR_DRDY))
-            break;
-
-    } while(1);
+        } while(1);
 
 
-    outb(d->io + IDE_REG_COMMAND, IDE_CMD_READ_DMA_EXT);
-    __iowait(d);
+        outb(d->cp + IDE_REG_CONTROL, 0x00);
+        outb(d->io + IDE_REG_HDDEVSEL, 0xE0 | (d->type << 4));
+        __iowait(d);
 
-    outb(ide.dma, 0x08 | 0x01);
+        outb(d->io + IDE_REG_SECCOUNT0, (count >> 8) & 0xFF);
+        outb(d->io + IDE_REG_LBA0, (offset & 0xFF000000) >> 24);
+        outb(d->io + IDE_REG_LBA1, (offset & 0xFF00000000) >> 32);
+        outb(d->io + IDE_REG_LBA2, 0);
+        outb(d->io + IDE_REG_SECCOUNT0, count & 0xFF);
+        outb(d->io + IDE_REG_LBA0, (offset & 0xFF));
+        outb(d->io + IDE_REG_LBA1, (offset & 0xFF00) >> 8);
+        outb(d->io + IDE_REG_LBA2, (offset & 0xFF0000) >> 16);
+
+        do {
+
+            uint8_t s = inb(d->cp + IDE_REG_ALTSTATUS);
+
+            if(!(s & IDE_SR_BSY) && (s & IDE_SR_DRDY))
+                break;
+
+        } while(1);
 
 
-    do {
 
-        int s1 = inb(ide.dma + 0x02);
-        int s2 = inb(d->io + IDE_REG_STATUS);
+        outb(d->io + IDE_REG_COMMAND, IDE_CMD_READ_DMA_EXT);
+        __iowait(d);
 
-        if(!(s1 & 0x04))
-            continue;
-
-        if(!(s2 & IDE_SR_BSY))
-            break;
-
-    } while(1);
+        outb(d->dma.io, 0x08 | 0x01);
 
 
-    memcpy (
-        buf, 
-        d->dma.start, 
-        device->blk.blksize * count
-    );
+        do {
 
-    outb(ide.dma + 0x02, inb(ide.dma + 0x02) | 4 | 2);
+            int s1 = inb(d->dma.io + 0x02);
+            int s2 = inb(d->cp + IDE_REG_ALTSTATUS);
+
+            if(!(s1 & 0x04))
+                continue;
+
+            if(!(s2 & IDE_SR_BSY))
+                break;
+
+        } while(1);
+
+
+        memcpy (
+            buf, 
+            d->dma.start, 
+            device->blk.blksize * count
+        );
+
+        outb(d->dma.io + 0x02, inb(d->dma.io + 0x02) | 4 | 2);
+        outb(d->dma.io, 0x00);
+
+
+#if defined(DEBUG)
+
+        int e = inw(d->io + IDE_REG_ERROR);
+
+        DEBUG_ASSERT(!(e & IDE_ER_AMNF));
+        DEBUG_ASSERT(!(e & IDE_ER_TK0NF));
+        DEBUG_ASSERT(!(e & IDE_ER_ABRT));
+        DEBUG_ASSERT(!(e & IDE_ER_MCR));
+        DEBUG_ASSERT(!(e & IDE_ER_IDNF));
+        DEBUG_ASSERT(!(e & IDE_ER_MC));
+        DEBUG_ASSERT(!(e & IDE_ER_UNC));
+        DEBUG_ASSERT(!(e & IDE_ER_BBK));
+
+#endif
+
+    });
 
     return count;
 }
@@ -511,13 +654,14 @@ static void disk_device(struct disk* disk, int cdrom) {
                         ;
 
 
-    d->blk.write = cdrom ? NULL : ide_write;    
-    d->blk.read = cdrom ? ide_atapi_read : ide_read;    
+    d->blk.write = ide_write;    
+    d->blk.read = ide_read;    
 
     d->userdata = (void*) disk;
 
 
     device_mkdev(d, 0660);
+    
 }
 
 
@@ -536,6 +680,7 @@ static void disk_detect(struct disk* disk) {
          (inb(disk->io + IDE_REG_LBA2) << 8);
 
 
+
     switch(cx) {
     
         case 0xFFFF:
@@ -548,7 +693,7 @@ static void disk_detect(struct disk* disk) {
 
         case 0xEB14:
         case 0x9669:    /* ATAPI, SATAPI */
-            disk_device(disk, 1);
+            //disk_device(disk, 1); /* TODO */
             break;
 
         default:
@@ -608,27 +753,37 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     ide.secondary_slave.cp = ide.primary_master.cp;
 
 
-    ide.dma = pci_read(device, PCI_BAR4, 4) & PCI_BAR_IO_MASK;
+    /* DMA */
+    uintptr_t dma = pci_read(device, PCI_BAR4, 4) & PCI_BAR_IO_MASK;
+
+    ide.primary_master.dma.io =
+    ide.primary_slave.dma.io = dma;
+
+    ide.secondary_master.dma.io =
+    ide.secondary_slave.dma.io = dma + 0x08;
+
 
 
     /* Bus Mastering */
-    uint32_t c = pci_read(device, PCI_COMMAND, 4);
+    uint16_t c = pci_read(device, PCI_COMMAND, 4);
     if(!(c & (1 << 2)))
         pci_write(device, PCI_COMMAND, 4, c | (1 << 2));
 
+
+    spinlock_init(&ide.primary_master.lock);
+    spinlock_init(&ide.primary_slave.lock);
+    spinlock_init(&ide.secondary_master.lock);
+    spinlock_init(&ide.secondary_slave.lock);
 }
 
 
 
 void init(const char* args) {
-
+    return;
     pci_scan(&pci_find, 0x0101, NULL);
 
     if(!ide.vendorid)
         return;
-
-
-    spinlock_init(&ide.lock);
 
 
     arch_intr_map_irq(IDE_IRQ_PRIMARY, irq_1);
@@ -636,9 +791,9 @@ void init(const char* args) {
 
 
     disk_detect(&ide.primary_master);
-    //disk_detect(&ide.primary_slave);
-    //disk_detect(&ide.secondary_master);
-    //disk_detect(&ide.secondary_slave);
+    disk_detect(&ide.primary_slave);
+    disk_detect(&ide.secondary_master);
+    disk_detect(&ide.secondary_slave);
 }
 
 

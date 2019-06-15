@@ -181,7 +181,6 @@ align 0x1000
 early_pd:
 	times 4096 db 0
 
-
 section .stack
 align 0x1000
 early_stack_bottom:

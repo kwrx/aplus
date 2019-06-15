@@ -42,7 +42,7 @@ int tmpfs_getdents(inode_t* inode, struct dirent* e, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(e);
 
-    
+
     
     int s = len / sizeof(struct dirent);
     int i;
@@ -53,6 +53,9 @@ int tmpfs_getdents(inode_t* inode, struct dirent* e, off_t pos, size_t len) {
 
         list_each(TMPFS(inode)->children, d) {
 
+            if(likely(d->parent != inode))
+                continue;
+            
             if(p--)
                 continue;
 

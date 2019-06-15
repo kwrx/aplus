@@ -30,3 +30,10 @@
 
 
 EXPORT(rand);
+EXPORT(strcat);
+
+
+#if defined(__i386__) || defined(__x86_64__)
+EXPORT(dma_memory_prd);
+EXPORT(dma_memory_area);
+#endif

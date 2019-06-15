@@ -233,7 +233,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
     char buf[MAXNAMLEN] = { 0 };
     strcpy(buf, "/dev/");
-    strcpy(buf, device->name);
+    strcat(buf, device->name);
 
 
     int fd = sys_creat(buf, mode | (device->type == DEVICE_TYPE_BLOCK ? S_IFBLK : S_IFCHR));
@@ -367,6 +367,11 @@ void device_error(device_t* device, const char* errstr) {
 
 void init(const char* args) {
     memset(&devices, 0, sizeof(devices));
+
+    int e;
+    if((e = sys_mkdir("/dev", S_IFDIR | 0666)) < 0)
+        kpanic("dev: could not create /dev directory: %s", strerror(-e));
+
 }
 
 void dnit(void) {
