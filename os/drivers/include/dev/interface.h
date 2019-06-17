@@ -46,17 +46,17 @@
 #define DEVICE_TYPE_BLOCK           2
 #define DEVICE_TYPE_VIDEO           3
 
-
+#define DEVICE_MAXNAMELEN           32
+#define DEVICE_MAXDESCLEN           256
 
 typedef struct device {
     int type;
 
-    const char* name;
-    const char* description;
+    char name[DEVICE_MAXNAMELEN];
+    char description[DEVICE_MAXDESCLEN];
 
-    uint16_t vendorid;
-    uint16_t deviceid;
-    uint16_t intno;
+    uint16_t major;
+    uint16_t minor;
     
     uintptr_t address;
     uintptr_t size;

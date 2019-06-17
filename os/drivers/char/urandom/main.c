@@ -50,16 +50,12 @@ device_t device = {
     .type = DEVICE_TYPE_CHAR,
 
     .name = "urandom",
-    .description = "Read random values from device",
+    .description = "Faster, less secure random number gen",
 
-    .deviceid = 4,
-    .vendorid = S_IFCHR,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
+    .major = 1,
+    .minor = 9,
 
     .status = DEVICE_STATUS_UNKNOWN,
-
 
     .init =  NULL,
     .dnit =  NULL,

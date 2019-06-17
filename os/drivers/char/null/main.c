@@ -46,16 +46,12 @@ device_t device = {
     .type = DEVICE_TYPE_CHAR,
 
     .name = "null",
-    .description = "Redirect I/O to null device",
+    .description = "Null device",
 
-    .deviceid = 0,
-    .vendorid = S_IFCHR,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
+    .major = 1,
+    .minor = 3,
 
     .status = DEVICE_STATUS_UNKNOWN,
-
 
     .init =  NULL,
     .dnit =  NULL,

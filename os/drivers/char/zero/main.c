@@ -49,16 +49,12 @@ device_t device = {
     .type = DEVICE_TYPE_CHAR,
 
     .name = "zero",
-    .description = "Read zeroes from device",
+    .description = "Null byte source",
 
-    .deviceid = 1,
-    .vendorid = S_IFCHR,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
+    .major = 1,
+    .minor = 5,
 
     .status = DEVICE_STATUS_UNKNOWN,
-
 
     .init =  NULL,
     .dnit =  NULL,

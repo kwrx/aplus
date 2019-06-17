@@ -87,12 +87,12 @@ static void bga_update(device_t*);
 device_t device = {
     .type = DEVICE_TYPE_VIDEO,
 
-    .name = "BGA",
+    .name = "bga",
     .description = BGA_ID,
 
-    .vendorid = 0,
-    .deviceid = 0,
-    .intno = 0,
+    .major = 10,
+    .minor = 242,
+
     .address = 0,
     .size = 0,
 
@@ -220,9 +220,6 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         ((did == 0x1111) || (did == 0xBEEF))
     ))) return;
 
-    ((device_t*) arg)->vendorid = vid;
-    ((device_t*) arg)->deviceid = did;
-    ((device_t*) arg)->intno = pci_read(device, PCI_INTERRUPT_LINE, 1);
     ((device_t*) arg)->address = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
     ((device_t*) arg)->size = pci_bar_size(device, PCI_BAR0, PCI_BAR_MM_MASK);
 
@@ -250,9 +247,8 @@ void init(const char* args) {
 
     pci_scan(&pci_find, BGA_DEVICE_TYPE, &device);
     
-    DEBUG_ASSERT(device.vendorid);
-    DEBUG_ASSERT(device.deviceid);
     DEBUG_ASSERT(device.address);
+    DEBUG_ASSERT(device.size);
 
 
     device_mkdev(&device, 0644);

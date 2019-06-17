@@ -270,11 +270,10 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 #if defined(DEBUG)
-    kprintf("device::create: initialized '%s' dev(%x:%x) int(%d) ptr(%p) size(%p): '%s'\n",
+    kprintf("device::create: initialized '%s' dev(%x:%x) addr(%p) size(%p): '%s'\n",
         device->name, 
-        device->vendorid, 
-        device->deviceid, 
-        device->intno,
+        device->major, 
+        device->minor, 
         device->address,
         device->size,
         device->description);

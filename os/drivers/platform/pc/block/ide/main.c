@@ -613,29 +613,20 @@ static int ide_atapi_read(device_t* device, void* buf, off_t offset, size_t coun
 }
 
 
-static void disk_device(struct disk* disk, int cdrom) {
+static void disk_device(struct disk* disk, int cdrom, int id) {
     
-    static const char* device_name[8] = {
-        "sda", "sdb", "sdc", "sdd",
-        "cda", "cdb", "cdc", "cdd",
-    };
-
-    static int device_id[] = {
-        0, 0
-    };
-
 
     device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
     
     d->type = DEVICE_TYPE_BLOCK;
-    d->description = "IDE Storage Device";
 
-    d->name = device_name[(4 * cdrom) + device_id[cdrom]];
-    DEBUG_ASSERT(d->name);
+    strncpy(d->name, "hda", DEVICE_MAXNAMELEN);
+    strncpy(d->description, "IDE disk device", DEVICE_MAXDESCLEN);
 
-    d->vendorid = S_IFBLK;
-    d->deviceid = (device_id[cdrom]++ * 2) + cdrom;
-    d->intno = disk->intno;
+    d->name[3] += id;
+
+    d->major = 3;
+    d->minor = id << 5;
 
     d->status = DEVICE_STATUS_UNKNOWN;
 
@@ -666,7 +657,7 @@ static void disk_device(struct disk* disk, int cdrom) {
 
 
 
-static void disk_detect(struct disk* disk) {
+static void disk_detect(struct disk* disk, int secondary) {
     __reset(disk);
     __iowait(disk);
 
@@ -688,7 +679,7 @@ static void disk_detect(struct disk* disk) {
 
         case 0x0000:
         case 0xC33C:    /* ATA, SATA */
-            disk_device(disk, 0);
+            disk_device(disk, 0, secondary * 2 + disk->type);
             break;
 
         case 0xEB14:
@@ -790,10 +781,10 @@ void init(const char* args) {
     arch_intr_map_irq(IDE_IRQ_SECONDARY, irq_2);
 
 
-    disk_detect(&ide.primary_master);
-    disk_detect(&ide.primary_slave);
-    disk_detect(&ide.secondary_master);
-    disk_detect(&ide.secondary_slave);
+    disk_detect(&ide.primary_master, 0);
+    disk_detect(&ide.primary_slave, 0);
+    disk_detect(&ide.secondary_master, 1);
+    disk_detect(&ide.secondary_slave, 1);
 }
 
 

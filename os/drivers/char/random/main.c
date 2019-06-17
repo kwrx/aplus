@@ -50,16 +50,12 @@ device_t device = {
     .type = DEVICE_TYPE_CHAR,
 
     .name = "random",
-    .description = "Read random values from device",
+    .description = "Nondeterministic random number gen",
 
-    .deviceid = 3,
-    .vendorid = S_IFCHR,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
+    .major = 1,
+    .minor = 8,
 
     .status = DEVICE_STATUS_UNKNOWN,
-
 
     .init =  NULL,
     .dnit =  NULL,

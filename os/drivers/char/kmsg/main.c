@@ -34,7 +34,7 @@
 #include <dev/char.h>
 
 
-MODULE_NAME("system/log");
+MODULE_NAME("char/kmsg");
 MODULE_DEPS("dev/interface,dev/char");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
@@ -48,17 +48,13 @@ device_t device = {
 
     .type = DEVICE_TYPE_CHAR,
 
-    .name = "log",
-    .description = "Write to syslog device",
+    .name = "kmsg",
+    .description = "Writes to this come out as kprintf's, reads export the buffered kprintf records",
 
-    .deviceid = 0,
-    .vendorid = 0xCAFE,
-    .intno = 0,
-    .address = 0,
-    .size = 0,
+    .major = 1,
+    .minor = 11,
 
     .status = DEVICE_STATUS_UNKNOWN,
-
 
     .init =  NULL,
     .dnit =  NULL,
