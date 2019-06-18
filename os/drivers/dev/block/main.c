@@ -139,8 +139,21 @@ int block_write(device_t* device, const void* buf, off_t offset, size_t size) {
     long i = eb - sb + 1;
     if(likely(i > 0)) {
        
-        if(unlikely(device->blk.write(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i)) <= 0)
-            return errno = EIO, xoff;
+        if(device->blk.blkmax) {
+         
+            for(; sb + device->blk.blkmax < i; sb += device->blk.blkmax, xoff += device->blk.blksize * device->blk.blkmax)
+                if(unlikely(device->blk.write(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, device->blk.blkmax)) <= 0)
+                    return errno = EIO, xoff;
+        
+            if(unlikely(device->blk.write(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i - sb)) <= 0)
+                return errno = EIO, xoff;
+
+        } else {
+
+            if(unlikely(device->blk.write(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i)) <= 0)
+                return errno = EIO, xoff;
+
+        }
     
     }
 
@@ -227,9 +240,26 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
     long i = eb - sb + 1;
     if(likely(i > 0)) {
        
-        if(unlikely(device->blk.read(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i)) <= 0)
-            return errno = EIO, xoff;
-    
+        if(device->blk.blkmax) {
+         
+            int max = (int) device->blk.blkmax;
+
+            for (;
+                i - max >= 0;
+                i -= max,
+                sb += max,
+                xoff += device->blk.blksize * max
+            )
+                if(unlikely(device->blk.read(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, device->blk.blkmax)) <= 0)
+                    return errno = EIO, xoff;
+
+        }        
+        
+
+        if(likely(i > 0))
+            if(unlikely(device->blk.read(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i)) <= 0)
+                return errno = EIO, xoff;
+
     }
 
     return size;

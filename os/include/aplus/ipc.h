@@ -26,6 +26,7 @@
 #define _APLUS_IPC_H
 
 typedef volatile int spinlock_t;
+typedef volatile int semaphore_t;
 
 
 #if defined(KERNEL)
@@ -34,8 +35,12 @@ typedef volatile int spinlock_t;
 
 void spinlock_init(spinlock_t*);
 void spinlock_lock(spinlock_t*);
-spinlock_t spinlock_trylock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
+spinlock_t spinlock_trylock(spinlock_t*);
+
+void sem_init(semaphore_t*, int);
+void sem_wait(semaphore_t*);
+void sem_post(semaphore_t*);
 
 
 #define spinlock_irq_lock(lk)               \

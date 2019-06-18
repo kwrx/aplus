@@ -92,6 +92,7 @@ typedef struct device {
 
             size_t blksize;
             size_t blkcount;
+            size_t blkmax;
 
             struct {
                 uint8_t c_data[4096];

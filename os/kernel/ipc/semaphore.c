@@ -28,30 +28,26 @@
 #include <stdint.h>
 
 
-void spinlock_init(spinlock_t* lock) {
-    DEBUG_ASSERT(lock);
+void sem_init(semaphore_t* s, int value) {
+    DEBUG_ASSERT(s);
 
-    __atomic_clear(lock, __ATOMIC_RELAXED);
+    __atomic_store(s, &value, __ATOMIC_RELAXED);
 }
 
-void spinlock_lock(spinlock_t* lock) {
-    DEBUG_ASSERT(lock);
+void sem_wait(semaphore_t* s) {
+    DEBUG_ASSERT(s);
 
-    while(__atomic_test_and_set(lock, __ATOMIC_ACQUIRE))
+    while(__atomic_load_n(s, __ATOMIC_CONSUME) > 0)
 #if defined(__i386__) || defined(__x86_64__)
         __builtin_ia32_pause();
 #endif
         ;
+
+    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
 }
 
-spinlock_t spinlock_trylock(spinlock_t* lock) {
-    DEBUG_ASSERT(lock);
+void sem_post(semaphore_t* s) {
+    DEBUG_ASSERT(s);
 
-    return !__atomic_test_and_set(lock, __ATOMIC_ACQUIRE);
-}
-
-void spinlock_unlock(spinlock_t* lock) {
-    DEBUG_ASSERT(lock);
-
-    __atomic_clear(lock, __ATOMIC_RELEASE);
+    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
 }

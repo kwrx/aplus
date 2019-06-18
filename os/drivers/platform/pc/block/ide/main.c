@@ -644,6 +644,8 @@ static void disk_device(struct disk* disk, int cdrom, int id) {
                         : 0
                         ;
 
+    d->blk.blkmax = 0;
+
 
     d->blk.write = ide_write;    
     d->blk.read = ide_read;    
