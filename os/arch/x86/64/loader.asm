@@ -163,6 +163,12 @@ high_start:
     mov cr3, rax
 
 
+.enable_avx:
+    ;xor rcx, rcx
+    ;xgetbv
+    ;or eax, 7                               ; X87, SSE, AVX
+    ;xsetbv
+
 .enable_global_pages:
     mov rax, cr4
     or rax, (1 << 7)                        ; PGE

@@ -77,6 +77,10 @@ ap_pstart:
 	mov ecx, 0x277
 	wrmsr    
 
+.enable_global_pages:
+    mov eax, cr4
+    or eax, (1 << 7)            ; PGE
+    mov cr4, eax
 
 jmp_high:
     mov esp, [ap_stack]

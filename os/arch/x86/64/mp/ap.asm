@@ -66,6 +66,7 @@ ap_pstart:
 	mov cr4, ecx
 	xor ecx, ecx
 
+
 .enable_paging:
     mov eax, [ap_cr3]
     mov cr3, eax
@@ -92,6 +93,7 @@ ap_pstart:
     and eax, ~(1 << 29)         ; NW
     and eax, ~(1 << 30)         ; CD 
 	mov cr0, eax
+
     
 .enable_pat:
 	mov ecx, 0x277
@@ -110,6 +112,20 @@ ap_pstart:
 
 [BITS 64]
 jmp_high:
+
+.enable_avx:
+    ;xor rcx, rcx
+    ;xgetbv
+    ;or eax, 7                   ; X87, SSE, AVX
+    ;xsetbv
+
+.enable_global_pages:
+    mov rax, cr4
+    or rax, (1 << 7)            ; PGE
+    mov cr4, rax
+
+
+.init:
     mov rsp, [ap_stack]
     mov rcx, [ap_main]
     jmp rcx
