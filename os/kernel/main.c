@@ -84,39 +84,5 @@ void kmain(void) {
         mbd->memory.size / 1024 / 1024);
 
 
-    
-
-    int fd = sys_open("/dev/sda", 2, 0);
-    if(fd < 0)
-        kpanic("error: %s", strerror(-fd));
-
-    ktime_t tm = arch_timer_gettime();
-
-    char bf[512] = { 0 };
-    int r = sys_read(fd, bf, 512);
-
-    DEBUG_ASSERT(r > 0);
-
-    int i;
-    for(i = 0; i < 512; i++)
-        kprintf("%x ", bf[i] & 0xFF);
-
-    char* buf = kmalloc(64 * 1024, GFP_KERNEL);
-    int bs;
-    kprintf("%p\n", buf);
-    while((e = sys_read(fd, buf,  16 * 1024)) > 0) {
-        bs += e;
-
-        if(arch_timer_gettime() != tm) {
-            kprintf("sda: reading %d KB/s (%d)\n", bs / 1024, current_task->fd[fd].position >> 9);
-        
-            tm = arch_timer_gettime();
-            bs = 0;
-        }
-    }
-
-    sys_close(fd);
-    kprintf("DONE!\n");
-
     cmain();
 }

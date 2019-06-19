@@ -536,19 +536,29 @@ static void sata_init(device_t* device) {
 
 
     device->blk.blkcount = identify.sectors_28
-                            ? identify.sectors_28 - 1
-                            : identify.sectors_48 - 1
+                            ? identify.sectors_28
+                            : identify.sectors_48
                             ;
 
 }
 
 
 static void sata_dnit(device_t* device) {
+    
+    sata.hba->ghc &= ~AHCI_HBA_GHC_AE;
 
+    /* TODO */
 }
 
 
 static void sata_reset(device_t* device) {
+
+    sata.hba->ghc &= ~AHCI_HBA_GHC_IE;
+    sata.hba->is = ~0;
+    sata.hba->ghc |= AHCI_HBA_GHC_IE;
+
+
+
     /* TODO: See AHCI 1.3.1 - pg 114, 10.4.1 */
 }
 
@@ -608,7 +618,7 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     }
 
     h2d->countl = (count) & 0xFF;
-    h2d->countl = (count >> 8) & 0xFF;
+    h2d->counth = (count >> 8) & 0xFF;
 
 
     while(sata.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
@@ -617,16 +627,17 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
     sata.hba->ports[d].ci |= (1 << b);
 
-    sem_wait(&sata.io);
-
 
     // Polling
     //while(sata.hba->ports[d].ci & (1 << b))
     //    __builtin_ia32_pause();
 
+    sem_wait(&sata.io);
+
+
     if(sata.hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::read -> tfd(%p) buf(%p) offset(%d) count(%d)\n",  device->name,  sata.hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, sata.hba->ports[d].tfd,  buf, offset, count);
 
         sata.hba->ports[d].is |= AHCI_PORT_IS_TFES;
         return errno = EIO, 0;
@@ -645,8 +656,95 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
 __thread_safe
 static int sata_write(device_t* device, const void* buf, off_t offset, size_t count) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(count);
+
+    int d = (int) device->userdata - 1;
+
+    DEBUG_ASSERT(d >= 0 && d < 32);
+
+
+    uint32_t s = sata.hba->ports[d].sact |
+                 sata.hba->ports[d].ci   ;
+
+    int b = __builtin_ffs(~s) - 1;
+
+    if(b == -1)
+        kpanic("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
+
+
+
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + sata.hba->ports[d].clb);
+    cmd += b;
+
+    cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
+    cmd->w = 1;
+    cmd->prdtl = 1;
+
+
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (CONFIG_KERNEL_BASE + cmd->ctba);
+
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
+    tbl->prdt[0].dbc = (count << 9) - 1;
+    tbl->prdt[0].i = 1;
+
     
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
+
+    h2d->type = FIS_TYPE_H2D;
+    h2d->c = 1;
+    h2d->command = ATA_CMD_WRITE_DMA_EXT;
+    h2d->device = (1 << 6);
+
+    h2d->lba0 = (offset >>  0) & 0xFF;
+    h2d->lba1 = (offset >>  8) & 0xFF;
+    h2d->lba2 = (offset >> 16) & 0xFF;
+    h2d->lba3 = (offset >> 24) & 0xFF;
+
+    if(sizeof(offset) > 4) {
+        h2d->lba4 = ((uint64_t) offset >> 32) & 0xFF;
+        h2d->lba5 = ((uint64_t) offset >> 40) & 0xFF;
+    }
+
+    h2d->countl = (count) & 0xFF;
+    h2d->counth = (count >> 8) & 0xFF;
+
+
+    memcpy ( 
+        (void*) (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        buf,
+        count << 9
+    );
+
+
+    while(sata.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+        __builtin_ia32_pause();
+
+
+    sata.hba->ports[d].ci |= (1 << b);
+
+
+    // Polling
+    //while(sata.hba->ports[d].ci & (1 << b))
+    //    __builtin_ia32_pause();
+
+    sem_wait(&sata.io);
+
+
+    if(sata.hba->ports[d].is & AHCI_PORT_IS_TFES) {
+
+        kprintf("ahci: FAULT! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, sata.hba->ports[d].tfd,  buf, offset, count);
+
+        sata.hba->ports[d].is |= AHCI_PORT_IS_TFES;
+        return errno = EIO, 0;
+    }
+
+
+    return count;
 }
+
 
 
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
@@ -751,15 +849,10 @@ void init(const char* args) {
         }
 
         sata.hba->ports[i].is = 0;
+        sata.hba->ports[i].ie = AHCI_PORT_IS_MASK;
         sata.hba->ports[i].serr |= AHCI_PORT_SERR_DIAG;
         sata.hba->ports[i].serr |= AHCI_PORT_SERR_ERR;
 
-#if defined(DEBUG)
-        sata.hba->ports[i].ie = AHCI_PORT_IS_MASK;
-#else
-        sata.hba->ports[i].ie = 0;
-#endif
-        
 
         while(sata.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
             __builtin_ia32_pause();
@@ -780,6 +873,7 @@ void init(const char* args) {
         if(!(q & (1 << i)))
             continue;
 
+
         device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
 
         d->type = DEVICE_TYPE_BLOCK;
@@ -787,7 +881,7 @@ void init(const char* args) {
         strncpy(d->name, "sda", DEVICE_MAXNAMELEN);
         strncpy(d->description, "SATA disk device", DEVICE_MAXDESCLEN);
 
-        d->name[3] += i;
+        d->name[2] += i;
 
         d->major = 8;
         d->minor = i << 3;
@@ -799,6 +893,7 @@ void init(const char* args) {
         d->blk.blksize = 512; /* FIXME */
         d->blk.blkcount = 0;
         d->blk.blkmax = (16 * 1024) / d->blk.blksize;
+        d->blk.blkoff = 0;
 
         d->blk.read = sata_read;
         d->blk.write = sata_write;

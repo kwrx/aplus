@@ -257,14 +257,24 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.ioctl = device_ioctl;
     i->ops.fsync = device_fsync;
 
-    
-    if(device->type == DEVICE_TYPE_BLOCK) {
 
-        i->st.st_blksize = device->blk.blksize;
-        
-        i->st.st_size = device->blk.blkcount *
-                        device->blk.blksize  ;
 
+    switch(device->type) {
+        case DEVICE_TYPE_CHAR:
+                        
+            break;
+
+        case DEVICE_TYPE_BLOCK:
+
+            block_inode(device, i, device_mkdev /* FIXME */);
+            break;
+
+        case DEVICE_TYPE_VIDEO:
+
+            break;
+
+        default:
+            kpanic("device::create: failed, unknown device %s type %d", device->name, device->type);
     }
 
 
@@ -280,6 +290,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 #endif
 
     list_push(devices, device);
+
 }
 
 

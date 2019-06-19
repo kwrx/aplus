@@ -62,6 +62,10 @@ int block_write(device_t* device, const void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(buf);
 
 
+    offset += device->blk.blkoff * device->blk.blksize;
+
+
+
     if(!device->blk.write || !device->blk.read)
         return 0;
 
@@ -169,6 +173,10 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(device->blk.blksize < sizeof(device->blk.cache.c_data));
     DEBUG_ASSERT(buf);
 
+   
+    offset += device->blk.blkoff * device->blk.blksize;
+
+
 
     if(!device->blk.read)
         return 0;
@@ -254,7 +262,7 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
                     return errno = EIO, xoff;
 
         }        
-        
+
 
         if(likely(i > 0))
             if(unlikely(device->blk.read(device, (void*) ((uintptr_t) buf + (uintptr_t) xoff), sb, i)) <= 0)
@@ -263,6 +271,95 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
     }
 
     return size;
+}
+
+
+
+
+void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_t*, mode_t)) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device_mkdev);
+    DEBUG_ASSERT(inode);
+
+    inode->st.st_size = device->blk.blkcount *
+                        device->blk.blksize  ;
+
+    inode->st.st_blksize = device->blk.blksize;
+
+
+
+    /* Check Partition Table */
+
+    char efi[8];
+
+    if(block_read(device, &efi, device->blk.blksize * 1, 8) <= 0) {
+        kprintf("device::block: ERROR! Read Error at lba(1) offset(0)");
+        return;
+    }
+
+    if(strncmp(efi, "EFI PART", 8) == 0)
+        kpanic("device::block: unsupported partition type GPT for /dev/%s", device->name);
+
+
+
+    struct {
+        uint8_t flags;
+        uint8_t h;
+        uint16_t s:6;
+        uint16_t c:10;
+        uint8_t id;
+        uint8_t eh;
+        uint16_t es:6;
+        uint16_t ec:10;
+        uint32_t lba;
+        uint32_t size;
+    } __packed mbr[4] = { };
+
+    if(block_read(device, &mbr, 0x1BE, sizeof(mbr[0]) * 4) <= 0)
+        kprintf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)");
+
+
+
+    int i;
+    for(i = 0; i < 4; i++) {
+
+        if(mbr[i].size == 0)
+            continue;
+
+        
+        device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+
+        d->type = DEVICE_TYPE_BLOCK;
+        
+        strncpy(d->name, device->name, DEVICE_MAXNAMELEN);
+        strncpy(d->description, device->description, DEVICE_MAXDESCLEN);
+
+        d->name[strlen(device->name)] += '1' + i;
+        d->name[strlen(device->name) + 1] += '\0';
+
+        d->major = device->major;
+        d->minor = device->minor + i + 1;
+
+        d->init = NULL;
+        d->dnit = NULL;
+        d->reset = NULL;
+
+
+        d->blk.blkmax = device->blk.blkmax;
+        d->blk.blksize = device->blk.blksize;
+        d->blk.blkoff = mbr[i].lba;
+        d->blk.blkcount = d->blk.blkoff + mbr[i].size;
+
+        d->blk.read = device->blk.read;
+        d->blk.write = device->blk.write;
+
+        d->userdata = device->userdata;
+
+
+        device_mkdev(d, inode->st.st_mode & 0777);
+
+    }
+
 }
 
 

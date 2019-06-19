@@ -25,6 +25,9 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/mm.h>
+#include <aplus/vfs.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -49,5 +52,44 @@
 
 SYSCALL(8, lseek,
 long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
-    return -ENOSYS;
+
+    if(unlikely(fd < 0))
+        return -EBADF;
+
+    if(unlikely(fd > TASK_NFD)) /* TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].inode))
+        return -EBADF;
+
+    if(S_ISFIFO(current_task->fd[fd].inode->st.st_mode))
+        return -ESPIPE;
+
+
+
+    __lock(&current_task->fd[fd].lock, {
+        
+        switch(whence) {
+
+            case SEEK_SET:
+                current_task->fd[fd].position = offset;
+                break;
+
+            case SEEK_CUR:
+                current_task->fd[fd].position += offset;
+                break;
+
+            case SEEK_END:
+                current_task->fd[fd].position = current_task->fd[fd].inode->st.st_size + offset;
+                break;
+
+            default:
+                DEBUG_ASSERT(0 && "sys_lseek() invalid whence!");
+                break;
+
+        }
+
+    });
+
+    return current_task->fd[fd].position;
 });
