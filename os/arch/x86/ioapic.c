@@ -117,7 +117,7 @@ void ioapic_enable(void) {
         if(!ioapic[i].address)
             continue;
 
-    
+
         x86_map_page (
             (x86_page_t*) (x86_get_cr3() + CONFIG_KERNEL_BASE),
             (ioapic[i].address & ~(PAGE_SIZE - 1)), 
