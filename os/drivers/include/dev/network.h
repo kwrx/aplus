@@ -21,39 +21,20 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef _DEV_NETWORK_H
+#define _DEV_NETWORK_H
 
-#ifndef _APLUS_NETWORK_H
-#define _APLUS_NETWORK_H
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/syscall.h>
+#include <aplus/network.h>
+#include <stdint.h>
 
-#include "lwipopts.h"
-#include "lwip/opt.h"
-
-#include "lwip/init.h"
-#include "lwip/stats.h"
-#include "lwip/sys.h"
-#include "lwip/mem.h"
-#include "lwip/memp.h"
-#include "lwip/pbuf.h"
-#include "lwip/netif.h"
-#include "lwip/sockets.h"
-#include "lwip/ip.h"
-#include "lwip/raw.h"
-#include "lwip/udp.h"
-#include "lwip/autoip.h"
-#include "lwip/igmp.h"
-#include "lwip/dns.h"
-#include "lwip/tcpip.h"
-#include "lwip/snmp.h"
-#include "lwip/ip_addr.h"
-#include "netif/etharp.h"
+#include <dev/interface.h>
 
 
-
-
-void network_init(void);
-
-void ethif_input(struct netif* netif);
-err_t ethif_init(struct netif* netif);
+void network_init(device_t*);
+void network_dnit(device_t*);
 
 
 #endif

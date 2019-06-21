@@ -29,6 +29,7 @@
 #include <aplus/syscall.h>
 #include <aplus/ringbuffer.h>
 #include <aplus/vfs.h>
+#include <aplus/network.h>
 #include <aplus/fb.h>
 #include <stdint.h>
 
@@ -114,6 +115,31 @@ typedef struct device {
 
             void (*update) (struct device*);
         } vid;
+
+        
+        struct {
+
+            void (*low_level_init) (void*, uint8_t*, void*);
+            int  (*low_level_startoutput) (void*);
+            void (*low_level_output) (void*, void*, uint16_t);
+            void (*low_level_endoutput) (void*, uint16_t);
+            int  (*low_level_startinput) (void*);
+            void (*low_level_input) (void*, void*, uint16_t);
+            void (*low_level_endinput) (void*);
+            void (*low_level_input_nomem) (void*, uint16_t);
+
+            void* internals;
+            uint8_t address[6];
+
+            ip_addr_t ip;
+            ip_addr_t nm;
+            ip_addr_t gw;
+
+            struct netif interface;
+
+        } netif;
+        
+
     };
 
     void* userdata;

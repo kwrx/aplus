@@ -62,6 +62,10 @@ int block_write(device_t* device, const void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(buf);
 
 
+    if(device->status != DEVICE_STATUS_READY)
+        return errno = EBUSY, -1;
+
+
     offset += device->blk.blkoff * device->blk.blksize;
 
 
@@ -172,6 +176,11 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(device->blk.blkcount);
     DEBUG_ASSERT(device->blk.blksize < sizeof(device->blk.cache.c_data));
     DEBUG_ASSERT(buf);
+
+
+    if(device->status != DEVICE_STATUS_READY)
+        return errno = EBUSY, -1;
+
 
    
     offset += device->blk.blkoff * device->blk.blksize;

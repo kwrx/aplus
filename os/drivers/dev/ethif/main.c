@@ -22,38 +22,46 @@
  */
 
 
-#ifndef _APLUS_NETWORK_H
-#define _APLUS_NETWORK_H
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/mm.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <errno.h>
 
-#include "lwipopts.h"
-#include "lwip/opt.h"
+#include <dev/interface.h>
+#include <dev/ethif.h>
 
-#include "lwip/init.h"
-#include "lwip/stats.h"
-#include "lwip/sys.h"
-#include "lwip/mem.h"
-#include "lwip/memp.h"
-#include "lwip/pbuf.h"
-#include "lwip/netif.h"
-#include "lwip/sockets.h"
-#include "lwip/ip.h"
-#include "lwip/raw.h"
-#include "lwip/udp.h"
-#include "lwip/autoip.h"
-#include "lwip/igmp.h"
-#include "lwip/dns.h"
-#include "lwip/tcpip.h"
-#include "lwip/snmp.h"
-#include "lwip/ip_addr.h"
-#include "netif/etharp.h"
-
-
-
-
-void network_init(void);
-
-void ethif_input(struct netif* netif);
-err_t ethif_init(struct netif* netif);
-
-
+#ifndef ETHERNETIF_MAXFRAMES
+#define ETHERNETIF_MAXFRAMES            1
 #endif
+
+
+
+MODULE_NAME("dev/ethif");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
+
+
+
+void ethif_init(device_t* device) {
+    DEBUG_ASSERT(device);
+    
+}
+
+
+void ethif_dnit(device_t* device) {
+    DEBUG_ASSERT(device);
+   
+}
+
+
+void init(const char* args) {
+    (void) args;
+}
+
+void dnit(void) {
+
+}
