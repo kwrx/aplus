@@ -40,10 +40,11 @@ void apic_enable(void) {
     uint64_t msr = x86_rdmsr (
         X86_APIC_BASE_MSR
     );
-   
+
+
     x86_wrmsr (
         X86_APIC_BASE_MSR, 
-        X86_APIC_BASE_ADDR | X86_APIC_BASE_MSR_ENABLE | (msr & 0xFFF)
+        X86_APIC_BASE_ADDR | X86_APIC_BASE_MSR_ENABLE | (msr & 0x7FF)
     );
 
     
@@ -184,6 +185,7 @@ void apic_init(void) {
         X86_APIC_BASE_ADDR, 
         X86_APIC_BASE_ADDR + PAGE_SIZE - 1
     );
+
 
     ioapic_enable();
     apic_enable();

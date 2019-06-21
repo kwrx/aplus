@@ -457,7 +457,7 @@ static void sata_init(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    int i = (int) device->userdata - 1;
+    long i = (long) device->userdata - 1;
 
 
     hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[i].clb);
@@ -622,7 +622,7 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
 
-    int d = (int) device->userdata - 1;
+    long d = (long) device->userdata - 1;
 
     DEBUG_ASSERT(d >= 0 && d < 32);
 
@@ -713,7 +713,7 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
 
-    int d = (int) device->userdata - 1;
+    long d = (long) device->userdata - 1;
 
     DEBUG_ASSERT(d >= 0 && d < 32);
 
@@ -841,7 +841,7 @@ void init(const char* args) {
     int p = ahci.hba->pi;
     int q = 0;
 
-    int i;
+    long i;
     for(i = 0; i < 32; i++) {
         if(!(p & (1 << i)))
             continue;
