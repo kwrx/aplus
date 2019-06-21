@@ -820,7 +820,7 @@ void init(const char* args) {
         return;
 
 
-    sem_init(&ahci.io, 1);
+    sem_init(&ahci.io, 0);
     
 
     arch_mmap (

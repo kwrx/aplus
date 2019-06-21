@@ -61,12 +61,14 @@
 
 
 
+#define LWIP_IPV6                           1
 #define LWIP_IGMP                           1
 #define LWIP_ICMP                           1
 #define LWIP_BROADCAST_PING                 1
 #define LWIP_MULTICAST_PING                 1
 #define LWIP_RAW                            1
 #define LWIP_ARP                            1
+#define LWIP_UDP                            1
 #define LWIP_UDPLITE                        1
 #define LWIP_DNS                            1
 #define LWIP_DHCP                           1
@@ -94,7 +96,8 @@
 
 #define LWIP_HAVE_LOOPIF                    1
 #define LWIP_NETIF_LOOPBACK                 1
-//#define LWIP_PROVIDE_ERRNO                1
+//#define LWIP_PROVIDE_ERRNO                0
+#define LWIP_ERRNO_STDINCLUDE               1
 #define LWIP_TCP_KEEPALIVE                  1
 
 
@@ -133,12 +136,14 @@
 
 #define DEFAULT_ACCEPTMBOX_SIZE             256
 
-
 #define IP_REASSEMBLY                       1
 #define IP_FORWARD                          1
 
 #define SO_REUSE                            1
 
+#define SSIZE_MAX                           1
+#define SA_FAMILY_T_DEFINED                 1
+#define iovec iovec
 
 
 #define mem_clib_malloc                     sys_kmalloc

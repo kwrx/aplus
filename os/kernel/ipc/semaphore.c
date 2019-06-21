@@ -30,6 +30,7 @@
 
 void sem_init(semaphore_t* s, int value) {
     DEBUG_ASSERT(s);
+    DEBUG_ASSERT(value >= 0);
 
     __atomic_store(s, &value, __ATOMIC_RELAXED);
 }
@@ -37,27 +38,27 @@ void sem_init(semaphore_t* s, int value) {
 void sem_wait(semaphore_t* s) {
     DEBUG_ASSERT(s);
 
-    while(__atomic_load_n(s, __ATOMIC_CONSUME) > 0)
+    while(__atomic_load_n(s, __ATOMIC_CONSUME) == 0)
 #if defined(__i386__) || defined(__x86_64__)
         __builtin_ia32_pause()
 #endif
         ;
 
-    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
+    __atomic_sub_fetch(s, 1, __ATOMIC_RELEASE);
 }
 
 int sem_trywait(semaphore_t* s) {
     DEBUG_ASSERT(s);
 
-    if(__atomic_load_n(s, __ATOMIC_CONSUME) > 0)
+    if(__atomic_load_n(s, __ATOMIC_CONSUME) == 0)
         return 0;
 
-    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
+    __atomic_sub_fetch(s, 1, __ATOMIC_RELEASE);
     return 1;
 }
 
 void sem_post(semaphore_t* s) {
     DEBUG_ASSERT(s);
 
-    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
+    __atomic_add_fetch(s, 1, __ATOMIC_ACQUIRE);
 }

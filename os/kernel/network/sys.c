@@ -193,6 +193,22 @@ err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
     return ERR_OK;
 }
 
+
+
+err_t sys_mbox_trypost_fromisr(struct sys_mbox** mbox, void* msg) {
+    DEBUG_ASSERT(mbox);
+    DEBUG_ASSERT(*mbox);
+
+    if((*mbox)->count > (*mbox)->size)
+        return ERR_MEM;
+
+
+    (*mbox)->msg[(*mbox)->count++] = msg;
+    return ERR_OK;
+}
+
+
+
 void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);

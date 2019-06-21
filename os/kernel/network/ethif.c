@@ -41,8 +41,12 @@
 /* See os/kernel/init/hostname.c */
 extern char* hostname;
 
-/* TODO */
+
 void ethif_input(struct netif* netif) {
+    DEBUG_ASSERT(netif);
+    DEBUG_ASSERT(netif->state);
+
+
     struct eth_hdr* hdr;
     struct pbuf* p, *q;
 
@@ -103,6 +107,7 @@ void ethif_input(struct netif* netif) {
                     p = NULL;
                 }
                 break;
+
             default:
                 pbuf_free(p);
                 p = NULL;
@@ -114,6 +119,15 @@ void ethif_input(struct netif* netif) {
 
 
 static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
+    
+    DEBUG_ASSERT(netif);
+    DEBUG_ASSERT(netif->state);
+
+    DEBUG_ASSERT(p);
+    DEBUG_ASSERT(p->payload);
+    DEBUG_ASSERT(p->len);
+
+
     struct ethif* ethif = netif->state;
     struct pbuf* q;
 
@@ -161,7 +175,9 @@ err_t ethif_init(struct netif* netif) {
     netif->mtu = 1500;
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
+
     ethif->low_level_init(ethif->internals, ethif->address, NULL);
+
     return ERR_OK;
 }
 

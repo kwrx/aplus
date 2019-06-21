@@ -92,23 +92,23 @@ static void tcpip_init_done(void* arg) {
 
 void network_init() {
 
-    sem_init(&tcpip_done, 1);
+    sem_init(&tcpip_done, 0);
 
     ip_addr_t dns[2];
-    IP4_ADDR(&dns[0], 8, 8, 8, 8);
-    IP4_ADDR(&dns[1], 8, 8, 4, 4);
+    IP_ADDR4(&dns[0], 8, 8, 8, 8);
+    IP_ADDR4(&dns[1], 8, 8, 4, 4);
 
 
     kprintf("network: initialize and setup local network...\n");
     kprintf(" -> dns: %d.%d.%d.%d - %d.%d.%d.%d\n", 
-        (dns[0].addr >>  0) & 0xFF,
-        (dns[0].addr >>  8) & 0xFF,
-        (dns[0].addr >> 16) & 0xFF,
-        (dns[0].addr >> 24) & 0xFF,
-        (dns[1].addr >>  0) & 0xFF,
-        (dns[1].addr >>  8) & 0xFF,
-        (dns[1].addr >> 16) & 0xFF,
-        (dns[1].addr >> 24) & 0xFF);
+        (dns[0].u_addr.ip4.addr >>  0) & 0xFF,
+        (dns[0].u_addr.ip4.addr >>  8) & 0xFF,
+        (dns[0].u_addr.ip4.addr >> 16) & 0xFF,
+        (dns[0].u_addr.ip4.addr >> 24) & 0xFF,
+        (dns[1].u_addr.ip4.addr >>  0) & 0xFF,
+        (dns[1].u_addr.ip4.addr >>  8) & 0xFF,
+        (dns[1].u_addr.ip4.addr >> 16) & 0xFF,
+        (dns[1].u_addr.ip4.addr >> 24) & 0xFF);
 
     
     tcpip_init(&tcpip_init_done, &dns);
