@@ -221,9 +221,6 @@ void device_mkdev(device_t* device, mode_t mode) {
     if(likely(device->init))
         device->init(device);
 
-    if(likely(device->reset))
-        device->reset(device); 
-
     if(unlikely(device->status == DEVICE_STATUS_FAILED))
         kpanic("device::create: fail on loading %s", device->name);
 

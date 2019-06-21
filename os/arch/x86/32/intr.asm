@@ -97,7 +97,7 @@ isrs:
 
 
 isr_stub:
-	pusha
+	pushad
 	push ds
 	push es
 	push fs
@@ -117,7 +117,7 @@ isr_stub:
 	pop fs
 	pop es
 	pop ds
-	popa
+	popad
 	add esp, 8
 iretd
 

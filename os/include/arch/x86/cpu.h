@@ -47,16 +47,5 @@
     __asm__ __volatile__ ("fxrstor [a]" :: "a"(r))
 
 
-#define mmio_r8(x)              (*(uint8_t volatile*) (x))
-#define mmio_r16(x)             (*(uint16_t volatile*) (x))
-#define mmio_r32(x)             (*(uint32_t volatile*) (x))
-#define mmio_r64(x)             (*(uint64_t volatile*) (x))
-
-#define mmio_w8(x, y)           { mmio_r8(x) = (uint8_t) (y); }
-#define mmio_w16(x, y)          { mmio_r16(x) = (uint16_t) (y); }
-#define mmio_w32(x, y)          { mmio_r32(x) = (uint32_t) (y); }
-#define mmio_w64(x, y)          { mmio_r64(x) = (uint64_t) (y); }
-
-
 #define IA32_PAT                0x00000277
 #endif

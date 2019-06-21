@@ -197,6 +197,9 @@ extern uint32_t x86_get_eip(void);
 
 
 typedef struct x86_frame {
+    
+    char top[0];
+
     uint32_t gs;
     uint32_t fs;
     uint32_t es;
@@ -217,6 +220,7 @@ typedef struct x86_frame {
     uint32_t useresp;
 
     char bottom[0];
+    
 } __attribute__((packed)) x86_frame_t;
 
 

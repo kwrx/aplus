@@ -122,6 +122,8 @@ static void bga_init(device_t* device) {
         ARCH_MAP_NOEXEC |
         ARCH_MAP_VIDEO_MEMORY
     );
+
+    bga_reset(device);
 }
 
 

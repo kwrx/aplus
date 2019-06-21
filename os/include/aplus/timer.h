@@ -34,6 +34,7 @@ typedef uint64_t ktime_t;
 void arch_timer_delay(ktime_t);
 ktime_t arch_timer_getticks(void);
 ktime_t arch_timer_getus(void);
+ktime_t arch_timer_getms(void);
 ktime_t arch_timer_gettime(void);
 
 #endif

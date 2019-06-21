@@ -27,7 +27,8 @@
 
 #include <aplus.h>
 #include <aplus/ipc.h>
-#include <libc.h>
+#include <stdint.h>
+#include <errno.h>
 #include "arch/cc.h"
 
 typedef uintptr_t sys_mutex_t;

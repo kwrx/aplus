@@ -71,6 +71,11 @@ ktime_t arch_timer_getus(void) {
            (ktime_t) (current_cpu->ticks.tv_nsec / 1000);
 }
 
+ktime_t arch_timer_getms(void) {
+    return (ktime_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
+           (ktime_t) (current_cpu->ticks.tv_nsec / 1000000);
+}
+
 ktime_t arch_timer_gettime(void) {
     inline uint8_t RTC(uint8_t x)
         { outb(0x70, x); return inb(0x71); }

@@ -39,11 +39,21 @@ void sem_wait(semaphore_t* s) {
 
     while(__atomic_load_n(s, __ATOMIC_CONSUME) > 0)
 #if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
+        __builtin_ia32_pause()
 #endif
         ;
 
     __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
+}
+
+int sem_trywait(semaphore_t* s) {
+    DEBUG_ASSERT(s);
+
+    if(__atomic_load_n(s, __ATOMIC_CONSUME) > 0)
+        return 0;
+
+    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
+    return 1;
 }
 
 void sem_post(semaphore_t* s) {

@@ -75,7 +75,7 @@ void smp_main(int bsp) {
     _.argv = (char**) __argv;
     _.environ = (char**) __envp;
 
-    _.pid =
+    _.tid =
     _.sid =
     _.pgid =
     _.tgid = sched_nextpid();

@@ -239,7 +239,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 #endif
             break;
         case 0xFD:
-
+            
             break;
 
         case 0xFF:

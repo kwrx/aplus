@@ -27,8 +27,8 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/intr.h>
-#include <libc.h>
+#include <aplus/ipc.h>
+#include <stdint.h>
 
 typedef int8_t s8_t;
 typedef int16_t s16_t;
@@ -61,20 +61,20 @@ typedef uintptr_t mem_ptr_t;
 #define LWIP_PLATFORM_DIAG(x)    do { kprintf x; } while(0)
 #define LWIP_PLATFORM_ASSERT(x)                                     \
     do {                                                            \
-        kprintf (ERROR "tcpip: ASSERT! (%s, %d) %s\n",              \
+        kprintf ("tcpip: ASSERT! (%s, %d) %s\n",                    \
             __FILE__,                                               \
             __LINE__,                                               \
             x                                                       \
         );                                                          \
-        sys_exit(-1);                                               \
+        for(;;);                                                    \
     } while(0)
 
 #define LWIP_RAND() ((u32_t)rand())
 
 
-#define SYS_ARCH_DECL_PROTECT(x) 
-#define SYS_ARCH_PROTECT(x)                 INTR_OFF
-#define SYS_ARCH_UNPROTECT(x)               INTR_ON
+#define SYS_ARCH_DECL_PROTECT(x)            extern spinlock_t network_lock;
+#define SYS_ARCH_PROTECT(x)                 spinlock_lock(&network_lock);
+#define SYS_ARCH_UNPROTECT(x)               spinlock_unlock(&network_lock);
 
 #ifndef BYTE_ORDER
 #define BYTE_ORDER                          LITTLE_ENDIAN

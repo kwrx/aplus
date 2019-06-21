@@ -41,6 +41,7 @@ spinlock_t spinlock_trylock(spinlock_t*);
 void sem_init(semaphore_t*, int);
 void sem_wait(semaphore_t*);
 void sem_post(semaphore_t*);
+int sem_trywait(semaphore_t* s);
 
 
 #define spinlock_irq_lock(lk)               \

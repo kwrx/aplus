@@ -30,6 +30,7 @@
 #include <aplus/ipc.h>
 #include <aplus/syscall.h>
 #include <aplus/module.h>
+#include <aplus/network.h>
 #include <stdint.h>
 #include <dirent.h>
 
@@ -50,6 +51,7 @@ void kmain(void) {
     __init(syscall, ());
     __init(vfs,     ());
     __init(sched,   ());
+    __init(network, ());
 
 
     int e;
@@ -83,6 +85,6 @@ void kmain(void) {
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
 
-
+    
     cmain();
 }

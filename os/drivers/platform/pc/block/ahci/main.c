@@ -93,7 +93,7 @@ MODULE_LICENSE("GPL");
 #define FIS_TYPE_DEV_BITS               0xA1
 
 
-#define ACHI_HBA_SIZE                   (0x1100)
+#define AHCI_HBA_SIZE                   (0x1100)
 
 #define AHCI_HBA_GHC_AE                 (1 << 31)
 #define AHCI_HBA_GHC_MRSM               (1 << 2)
@@ -408,15 +408,15 @@ struct {
     semaphore_t io;
 
     hba_t volatile* hba;
-} sata = { };
+} ahci = { };
 
 
 
 
 static void* irq(void* frame) {
 
-    int p = sata.hba->is - 1;
-    int s = sata.hba->ports[p].is;
+    int p = ahci.hba->is - 1;
+    int s = ahci.hba->ports[p].is;
 
     //DEBUG_ASSERT(!(s & AHCI_PORT_IS_TFES));
     DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBFE));
@@ -438,15 +438,15 @@ static void* irq(void* frame) {
 
 
     if(s & AHCI_PORT_IS_DHRE)
-        sem_post(&sata.io);
+        sem_post(&ahci.io);
 
     
     if(s & AHCI_PORT_IS_TFES)
         s &= ~AHCI_PORT_IS_TFES;
     
    
-    sata.hba->ports[p].is = s;
-    sata.hba->is = p + 1;
+    ahci.hba->ports[p].is = s;
+    ahci.hba->is = p + 1;
 
     return frame;
 }
@@ -460,7 +460,7 @@ static void sata_init(device_t* device) {
     int i = (int) device->userdata - 1;
 
 
-    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + sata.hba->ports[i].clb);
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[i].clb);
 
     cmd->cfl = sizeof(fis_h2d_t*) / sizeof(uint32_t);
     cmd->w = 0;
@@ -481,16 +481,16 @@ static void sata_init(device_t* device) {
     h2d->command = ATA_CMD_IDENTIFY;
     h2d->device = 0;
 
-    while(sata.hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+    while(ahci.hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
         __builtin_ia32_pause();
 
 
-    sata.hba->ports[i].ci |= (1 << 0);
+    ahci.hba->ports[i].ci |= (1 << 0);
 
-    sem_wait(&sata.io);
+    sem_wait(&ahci.io);
 
 
-    if(sata.hba->ports[i].is & AHCI_PORT_IS_TFES)
+    if(ahci.hba->ports[i].is & AHCI_PORT_IS_TFES)
         kpanic("ahci: device %d I/O Error on ATA_CMD_IDENTIFY");
 
 
@@ -544,19 +544,71 @@ static void sata_init(device_t* device) {
 
 
 static void sata_dnit(device_t* device) {
-    
-    sata.hba->ghc &= ~AHCI_HBA_GHC_AE;
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    int i = (int) device->userdata - 1;
+
+
+    ahci.hba->ports[i].ie = 0;
+    ahci.hba->ports[i].serr = 0;
+
+    ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_ST;
+    ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_FRE;
 
     /* TODO */
+
 }
 
 
 static void sata_reset(device_t* device) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
 
-    sata.hba->ghc &= ~AHCI_HBA_GHC_IE;
-    sata.hba->is = ~0;
-    sata.hba->ghc |= AHCI_HBA_GHC_IE;
+    int i = (int) device->userdata - 1;
 
+
+
+    int c = ahci.hba->ports[i].cmd;
+
+    if (
+        (c & AHCI_PORT_CMD_ST)  ||
+        (c & AHCI_PORT_CMD_CR)  ||
+        (c & AHCI_PORT_CMD_FRE) ||
+        (c & AHCI_PORT_CMD_FR)
+    ) {
+
+        ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_ST;
+
+        while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
+            __builtin_ia32_pause();
+
+
+        if(c & AHCI_PORT_CMD_FRE) {
+
+            ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_FRE;
+
+            while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_FR)
+                __builtin_ia32_pause();
+
+        }
+    }
+
+        
+    ahci.hba->ports[i].is = 0;
+    ahci.hba->ports[i].ie = AHCI_PORT_IS_MASK;
+
+    ahci.hba->ports[i].serr = 0;
+    ahci.hba->ports[i].serr |= AHCI_PORT_SERR_DIAG;
+    ahci.hba->ports[i].serr |= AHCI_PORT_SERR_ERR;
+
+
+    while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
+        __builtin_ia32_pause();
+
+
+    ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_FRE;
+    ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
 
     /* TODO: See AHCI 1.3.1 - pg 114, 10.4.1 */
@@ -575,8 +627,8 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(d >= 0 && d < 32);
 
 
-    uint32_t s = sata.hba->ports[d].sact |
-                 sata.hba->ports[d].ci   ;
+    uint32_t s = ahci.hba->ports[d].sact |
+                 ahci.hba->ports[d].ci   ;
 
     int b = __builtin_ffs(~s) - 1;
 
@@ -585,7 +637,7 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
 
 
-    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + sata.hba->ports[d].clb);
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[d].clb);
     cmd += b;
 
     cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
@@ -621,25 +673,25 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     h2d->counth = (count >> 8) & 0xFF;
 
 
-    while(sata.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+    while(ahci.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
         __builtin_ia32_pause();
 
 
-    sata.hba->ports[d].ci |= (1 << b);
+    ahci.hba->ports[d].ci |= (1 << b);
 
 
     // Polling
-    //while(sata.hba->ports[d].ci & (1 << b))
+    //while(ahci.hba->ports[d].ci & (1 << b))
     //    __builtin_ia32_pause();
 
-    sem_wait(&sata.io);
+    sem_wait(&ahci.io);
 
 
-    if(sata.hba->ports[d].is & AHCI_PORT_IS_TFES) {
+    if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, sata.hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci.hba->ports[d].tfd,  buf, offset, count);
 
-        sata.hba->ports[d].is |= AHCI_PORT_IS_TFES;
+        ahci.hba->ports[d].is |= AHCI_PORT_IS_TFES;
         return errno = EIO, 0;
     }
 
@@ -666,8 +718,8 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
     DEBUG_ASSERT(d >= 0 && d < 32);
 
 
-    uint32_t s = sata.hba->ports[d].sact |
-                 sata.hba->ports[d].ci   ;
+    uint32_t s = ahci.hba->ports[d].sact |
+                 ahci.hba->ports[d].ci   ;
 
     int b = __builtin_ffs(~s) - 1;
 
@@ -676,7 +728,7 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
 
 
 
-    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + sata.hba->ports[d].clb);
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[d].clb);
     cmd += b;
 
     cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
@@ -719,25 +771,25 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
     );
 
 
-    while(sata.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+    while(ahci.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
         __builtin_ia32_pause();
 
 
-    sata.hba->ports[d].ci |= (1 << b);
+    ahci.hba->ports[d].ci |= (1 << b);
 
 
     // Polling
-    //while(sata.hba->ports[d].ci & (1 << b))
+    //while(ahci.hba->ports[d].ci & (1 << b))
     //    __builtin_ia32_pause();
 
-    sem_wait(&sata.io);
+    sem_wait(&ahci.io);
 
 
-    if(sata.hba->ports[d].is & AHCI_PORT_IS_TFES) {
+    if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, sata.hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: FAULT! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci.hba->ports[d].tfd,  buf, offset, count);
 
-        sata.hba->ports[d].is |= AHCI_PORT_IS_TFES;
+        ahci.hba->ports[d].is |= AHCI_PORT_IS_TFES;
         return errno = EIO, 0;
     }
 
@@ -752,11 +804,11 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     if((vid != 0x8086) || (did != 0x2922))
         return;
 
-    sata.deviceid = did;
-    sata.vendorid = vid;
-    sata.irq = pci_read(device, PCI_INTERRUPT_LINE, 1);
+    ahci.deviceid = did;
+    ahci.vendorid = vid;
+    ahci.irq = pci_read(device, PCI_INTERRUPT_LINE, 1);
 
-    sata.hba = (hba_t volatile*) (pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
+    ahci.hba = (hba_t volatile*) (pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
 }
 
 
@@ -764,29 +816,29 @@ void init(const char* args) {
     
     pci_scan(&pci_find, 0x0106, NULL);
 
-    if(!sata.deviceid)
+    if(!ahci.deviceid)
         return;
 
 
-    sem_init(&sata.io, 1);
+    sem_init(&ahci.io, 1);
     
 
     arch_mmap (
-        (void*) sata.hba, ACHI_HBA_SIZE,
+        (void*) ahci.hba, AHCI_HBA_SIZE,
         ARCH_MAP_NOEXEC |
         ARCH_MAP_FIXED  |
         ARCH_MAP_RDWR   |
         ARCH_MAP_UNCACHED
     );
 
-    arch_intr_map_irq(sata.irq, &irq);
+    arch_intr_map_irq(ahci.irq, &irq);
 
 
-    sata.hba->ghc |= AHCI_HBA_GHC_AE;
-    sata.hba->ghc &= ~AHCI_HBA_GHC_IE;
+    ahci.hba->ghc |= AHCI_HBA_GHC_AE;
+    ahci.hba->ghc &= ~AHCI_HBA_GHC_IE;
 
 
-    int p = sata.hba->pi;
+    int p = ahci.hba->pi;
     int q = 0;
 
     int i;
@@ -795,8 +847,8 @@ void init(const char* args) {
             continue;
 
 
-        int s = sata.hba->ports[i].ssts;
-        int c = sata.hba->ports[i].cmd;
+        int s = ahci.hba->ports[i].ssts;
+        int c = ahci.hba->ports[i].cmd;
 
         if((s & AHCI_PORT_STSS_DET) != 3)
             continue;
@@ -812,32 +864,32 @@ void init(const char* args) {
             (c & AHCI_PORT_CMD_FR)
         ) {
 
-            sata.hba->ports[i].cmd &= ~AHCI_PORT_CMD_ST;
+            ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_ST;
 
-            while(sata.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
+            while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
                 __builtin_ia32_pause();
 
 
             if(c & AHCI_PORT_CMD_FRE) {
 
-                sata.hba->ports[i].cmd &= ~AHCI_PORT_CMD_FRE;
+                ahci.hba->ports[i].cmd &= ~AHCI_PORT_CMD_FRE;
 
-                while(sata.hba->ports[i].cmd & AHCI_PORT_CMD_FR)
+                while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_FR)
                     __builtin_ia32_pause();
 
             }
         }
 
     
-        sata.hba->ports[i].clb = AHCI_MEMORY_AREA + (i << 10);
-        sata.hba->ports[i].clbu = 0;
+        ahci.hba->ports[i].clb = AHCI_MEMORY_AREA + (i << 10);
+        ahci.hba->ports[i].clbu = 0;
 
-        sata.hba->ports[i].fb = AHCI_MEMORY_AREA + (32 << 10) + (i << 8);
-        sata.hba->ports[i].fbu = 0;
+        ahci.hba->ports[i].fb = AHCI_MEMORY_AREA + (32 << 10) + (i << 8);
+        ahci.hba->ports[i].fbu = 0;
 
 
 
-        hba_cmd_t volatile* clbp = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + sata.hba->ports[i].clb);
+        hba_cmd_t volatile* clbp = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[i].clb);
 
         int j;
         for(j = 0; j < 32; j++) {
@@ -848,25 +900,28 @@ void init(const char* args) {
 
         }
 
-        sata.hba->ports[i].is = 0;
-        sata.hba->ports[i].ie = AHCI_PORT_IS_MASK;
-        sata.hba->ports[i].serr |= AHCI_PORT_SERR_DIAG;
-        sata.hba->ports[i].serr |= AHCI_PORT_SERR_ERR;
+        ahci.hba->ports[i].is = 0;
+        ahci.hba->ports[i].ie = AHCI_PORT_IS_MASK;
+        
+        ahci.hba->ports[i].serr = 0;
+        ahci.hba->ports[i].serr |= AHCI_PORT_SERR_DIAG;
+        ahci.hba->ports[i].serr |= AHCI_PORT_SERR_ERR;
 
 
-        while(sata.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
+        while(ahci.hba->ports[i].cmd & AHCI_PORT_CMD_CR)
             __builtin_ia32_pause();
 
-        sata.hba->ports[i].cmd |= AHCI_PORT_CMD_FRE;
-        sata.hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
+
+        ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_FRE;
+        ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
 
         q |= (1 << i);
     }
 
 
-    sata.hba->is = 0;
-    sata.hba->ghc |= AHCI_HBA_GHC_IE;
+    ahci.hba->is = 0;
+    ahci.hba->ghc |= AHCI_HBA_GHC_IE;
 
 
     for(i = 0; i < 32; i++) {
@@ -906,5 +961,18 @@ void init(const char* args) {
 }
 
 void dnit(void) {
+    
+    if(!ahci.deviceid)
+        return;
+
+
+    ahci.hba->ghc &= ~AHCI_HBA_GHC_IE;
+    ahci.hba->ghc &= ~AHCI_HBA_GHC_AE;
+    ahci.hba->is = ~0;
+
+
+    arch_intr_unmap_irq(ahci.irq);
+    arch_munmap ((void*) ahci.hba, AHCI_HBA_SIZE);
+
     /* TODO */
 }

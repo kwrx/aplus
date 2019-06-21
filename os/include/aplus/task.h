@@ -25,6 +25,9 @@
 #ifndef _APLUS_TASK_H
 #define _APLUS_TASK_H
 
+#define _GNU_SOURCE
+#include <sched.h>
+
 #include <aplus.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
@@ -83,8 +86,8 @@ typedef struct task {
     char** argv;
     char** environ;
 
-    pid_t pid;
-    pid_t tgid;
+    pid_t tid;
+    pid_t tgid; /* pid */
     pid_t pgid;
     uid_t uid, euid;
     gid_t gid, egid;
@@ -173,9 +176,11 @@ void* schedule(void*);
 void* schedule_yield(void*);
 
 void* arch_task_switch(void*, task_t*, task_t*);
+void* arch_task_init_frame(void*, void*, void*);
 
 extern task_t* kernel_task;
 extern task_t* sched_queue;
+
 
 #endif
 #endif
