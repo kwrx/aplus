@@ -85,6 +85,6 @@ void kmain(void) {
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
 
-    
+
     cmain();
 }

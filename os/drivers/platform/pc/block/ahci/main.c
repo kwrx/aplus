@@ -100,6 +100,12 @@ MODULE_LICENSE("GPL");
 #define AHCI_HBA_GHC_IE                 (1 << 1)
 #define AHCI_HBA_GHC_HR                 (1 << 0)
 
+#define AHCI_HBA_CAPS_EXT_BOH           (1 << 0)
+
+#define AHCI_HBA_BOHC_BOS               (1 << 0)
+#define AHCI_HBA_BOHC_OOS               (1 << 1)
+
+
 #define AHCI_PORT_IS_MASK               0x7DC000FF
 #define AHCI_PORT_IS_TFES               (1 << 30)
 #define AHCI_PORT_IS_HBFE               (1 << 29)
@@ -129,6 +135,13 @@ MODULE_LICENSE("GPL");
 
 #define AHCI_PORT_SERR_DIAG             (0x07FF << 16)
 #define AHCI_PORT_SERR_ERR              (0x0F03)
+
+
+#define AHCI_SIG_NULL                   (0xFFFFFFFF)
+#define AHCI_SIG_ATA                    (0x00000101)
+#define AHCI_SIG_ATAPI                  (0xEB140101)
+#define AHCI_SIG_SEMB                   (0xC33C0101)
+#define AHCI_SIG_PM                     (0x96690101)
 
 
 #define AHCI_MEMORY_SIZE                (1024 * 1024)
@@ -436,7 +449,6 @@ static void* irq(void* frame) {
     //DEBUG_ASSERT(!(s & AHCI_PORT_IS_DHRE));
 
 
-
     if(s & AHCI_PORT_IS_DHRE)
         sem_post(&ahci.io);
 
@@ -453,7 +465,8 @@ static void* irq(void* frame) {
 
 
 
-static void sata_init(device_t* device) {
+
+static void satapi_init(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
@@ -462,8 +475,9 @@ static void sata_init(device_t* device) {
 
     hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[i].clb);
 
-    cmd->cfl = sizeof(fis_h2d_t*) / sizeof(uint32_t);
+    cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
     cmd->w = 0;
+    cmd->a = 0;
     cmd->prdtl = 1;
 
 
@@ -474,15 +488,28 @@ static void sata_init(device_t* device) {
     tbl->prdt[0].i = 1;
 
     
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4)),
+        (0),
+        512
+    );
+
+
+    
     fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
 
     h2d->type = FIS_TYPE_H2D;
     h2d->c = 1;
-    h2d->command = ATA_CMD_IDENTIFY;
+    h2d->command = ATA_CMD_IDENTIFY_PACKET;
     h2d->device = 0;
+
 
     while(ahci.hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
         __builtin_ia32_pause();
+
 
 
     ahci.hba->ports[i].ci |= (1 << 0);
@@ -491,7 +518,7 @@ static void sata_init(device_t* device) {
 
 
     if(ahci.hba->ports[i].is & AHCI_PORT_IS_TFES)
-        kpanic("ahci: device %d I/O Error on ATA_CMD_IDENTIFY");
+        kpanic("ahci: device %d I/O Error on ATA_CMD_IDENTIFY_PACKET");
 
 
     ata_identify_t identify;
@@ -501,6 +528,74 @@ static void sata_init(device_t* device) {
         (void*) (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4)),
         sizeof(identify)
     );
+
+
+
+
+    /* Read Capacity */
+
+    cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
+    cmd->w = 0;
+    cmd->a = 1;
+    cmd->prdtl = 1;
+
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4);
+    tbl->prdt[0].dbc = 2048 - 1;
+    tbl->prdt[0].i = 1;
+
+    
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4)),
+        (0),
+        2048
+    );
+
+
+
+    h2d->type = FIS_TYPE_H2D;
+    h2d->c = 1;
+    h2d->command = ATA_CMD_PACKET;
+    h2d->device = 0;
+
+    h2d->lba0 = (2048) & 0xFF;
+    h2d->lba1 = (2048 >> 8) & 0xFF;
+
+
+    uint8_t* command = (uint8_t*) (&tbl->acmd);
+
+    command[0] = 0x25; /* 25h: SCSI_READ_CAPACITY */
+    command[1] = 0x00;
+    command[2] = 0x00;
+
+
+    while(ahci.hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+        __builtin_ia32_pause();
+
+
+
+    ahci.hba->ports[i].ci |= (1 << 0);
+
+    sem_wait(&ahci.io);
+
+
+    if(ahci.hba->ports[i].is & AHCI_PORT_IS_TFES)
+        kpanic("ahci: device %d I/O Error on ATA_CMD_PACKET (SCSI::ReadCapacity)", i);
+
+
+
+    /* Update info */
+    device->blk.blkcount = __builtin_bswap32(mmio_r32(CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0));
+    device->blk.blksize  = __builtin_bswap32(mmio_r32(CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4));
+
+    DEBUG_ASSERT(device->blk.blkcount);
+    DEBUG_ASSERT(device->blk.blksize == 2048);
+
+
+    device->blk.blkmax = (16 * 1024) / device->blk.blksize;
+
 
 
 #if defined(DEBUG)
@@ -518,6 +613,225 @@ static void sata_init(device_t* device) {
 
 
     kprintf("ahci: initialize device %d:\n"
+            "   Type:       ATAPI\n"           
+            "   Model:      %s\n"
+            "   Serial:     %s\n"
+            "   Firmware:   %s\n"
+            "   Sectors:    %d\n"
+            "   Block:      %d\n",
+        
+        i,
+        identify.model,
+        identify.serial,
+        identify.firmware,
+        __builtin_bswap32(mmio_r32(CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0)),
+        __builtin_bswap32(mmio_r32(CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4))
+    );
+#endif
+
+}
+
+
+__thread_safe
+static int satapi_read(device_t* device, void* buf, off_t offset, size_t count) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(count);
+
+    long d = (long) device->userdata - 1;
+
+    DEBUG_ASSERT(d >= 0 && d < 32);
+
+
+    uint32_t s = ahci.hba->ports[d].sact |
+                 ahci.hba->ports[d].ci   ;
+
+    int b = __builtin_ffs(~s) - 1;
+
+    if(b == -1)
+        kpanic("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
+
+
+
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[d].clb);
+    cmd += b;
+
+    cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
+    cmd->w = 0;
+    cmd->a = 1;
+    cmd->prdtl = 1;
+
+
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (CONFIG_KERNEL_BASE + cmd->ctba);
+
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
+    tbl->prdt[0].dbc = (count << 11) - 1;
+    tbl->prdt[0].i = 1;
+
+
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        (0),
+        (count << 11)
+    );
+    
+
+
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
+
+    h2d->type = FIS_TYPE_H2D;
+    h2d->c = 1;
+    h2d->command = ATA_CMD_PACKET;
+    h2d->device = 0;
+
+    h2d->lba0 = ((count << 11) >> 0) & 0xFF;
+    h2d->lba1 = ((count << 11) >> 8) & 0xFF;
+
+
+
+    uint8_t* command = (uint8_t*) (&tbl->acmd);
+
+    command[0] = 0x28; /* 28h: SCSI_READ (10) */
+    command[1] = 0x00;
+    command[2] = (offset >> 24) & 0xFF;
+    command[3] = (offset >> 16) & 0XFF;
+    command[4] = (offset >>  8) & 0XFF;
+    command[5] = (offset >>  0) & 0XFF;
+    command[6] = 0x0000;
+    command[7] = (count >> 8) & 0xFF;
+    command[8] = (count >> 0) & 0xFF;
+    command[9] = 0x00;
+
+
+
+
+    while(ahci.hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+        __builtin_ia32_pause();
+
+
+    ahci.hba->ports[d].ci |= (1 << b);
+
+
+    // Polling
+    //while(ahci.hba->ports[d].ci & (1 << b))
+    //    __builtin_ia32_pause();
+
+    sem_wait(&ahci.io);
+
+
+    if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {
+
+        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci.hba->ports[d].tfd,  buf, offset, count);
+
+        ahci.hba->ports[d].is |= AHCI_PORT_IS_TFES;
+        return errno = EIO, 0;
+    }
+
+
+    memcpy (
+        buf, 
+        (void*) (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        count << 11
+    );
+
+
+    DEBUG_ASSERT(cmd->prdbc == (count << 11));
+    return count;
+}
+
+
+
+static void sata_init(device_t* device) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    long i = (long) device->userdata - 1;
+
+
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (CONFIG_KERNEL_BASE + ahci.hba->ports[i].clb);
+
+    cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
+    cmd->w = 0;
+    cmd->a = 0;
+    cmd->prdtl = 1;
+
+
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (CONFIG_KERNEL_BASE + cmd->ctba);
+
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4);
+    tbl->prdt[0].dbc = 512 - 1;
+    tbl->prdt[0].i = 1;
+
+
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4)),
+        (0),
+        512
+    );
+
+    
+
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
+
+    h2d->type = FIS_TYPE_H2D;
+    h2d->c = 1;
+    h2d->command = ATA_CMD_IDENTIFY;
+    h2d->device = 0;
+
+
+    while(ahci.hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
+        __builtin_ia32_pause();
+
+
+
+    ahci.hba->ports[i].ci |= (1 << 0);
+
+    sem_wait(&ahci.io);
+
+
+    if(ahci.hba->ports[i].is & AHCI_PORT_IS_TFES)
+        kpanic("ahci: device %d I/O Error on ATA_CMD_IDENTIFY", i);
+
+
+
+    ata_identify_t identify;
+
+    memcpy (
+        &identify, 
+        (void*) (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4)),
+        sizeof(identify)
+    );
+
+
+    device->blk.blkcount = identify.sectors_28
+                            ? identify.sectors_28
+                            : identify.sectors_48
+                            ;
+
+
+#if defined(DEBUG)
+
+    int j;
+    for(j = 0; j < 39; j += 2) {
+        identify.model[j] ^= identify.model[j + 1];
+        identify.model[j + 1] ^= identify.model[j];
+        identify.model[j] ^= identify.model[j + 1];
+    }
+
+    identify.model[39] = '\0';
+    identify.serial[19] = '\0';
+    identify.firmware[7] = '\0';
+
+
+    kprintf("ahci: initialize device %d:\n"
+            "   Type:       ATA\n"
             "   Model:      %s\n"
             "   Serial:     %s\n"
             "   Firmware:   %s\n"
@@ -533,12 +847,6 @@ static void sata_init(device_t* device) {
     );
 
 #endif
-
-
-    device->blk.blkcount = identify.sectors_28
-                            ? identify.sectors_28
-                            : identify.sectors_48
-                            ;
 
 }
 
@@ -642,6 +950,7 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
     cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
     cmd->w = 0;
+    cmd->a = 0;
     cmd->prdtl = 1;
 
 
@@ -651,7 +960,18 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i = 1;
 
+
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        (0),
+        (count << 9)
+    );
     
+
+
     fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
 
     h2d->type = FIS_TYPE_H2D;
@@ -702,6 +1022,8 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
         count << 9
     );
 
+
+    DEBUG_ASSERT(cmd->prdbc == (count << 9));
     return count;
 }
 
@@ -733,16 +1055,28 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
 
     cmd->cfl = sizeof(fis_h2d_t) / sizeof(uint32_t);
     cmd->w = 1;
+    cmd->a = 0;
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (CONFIG_KERNEL_BASE + cmd->ctba);
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (CONFIG_KERNEL_BASE + cmd->ctba);    
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i = 1;
 
+
+    memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
+
+    memset ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        (0),
+        (count << 9)
+    );
+
     
+
     fis_h2d_t volatile* h2d = (fis_h2d_t volatile*) &tbl->cfis;
 
     h2d->type = FIS_TYPE_H2D;
@@ -764,10 +1098,10 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
     h2d->counth = (count >> 8) & 0xFF;
 
 
-    memcpy ( 
-        (void*) (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
-        buf,
-        count << 9
+    memcpy ( (void*)
+        (CONFIG_KERNEL_BASE + AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4)),
+        (buf),
+        (count << 9)
     );
 
 
@@ -794,6 +1128,7 @@ static int sata_write(device_t* device, const void* buf, off_t offset, size_t co
     }
 
 
+    DEBUG_ASSERT(cmd->prdbc == (count << 9));
     return count;
 }
 
@@ -834,12 +1169,28 @@ void init(const char* args) {
     arch_intr_map_irq(ahci.irq, &irq);
 
 
+
+    // BIOS/OS Handoff Control
+    if(ahci.hba->caps_ext & AHCI_HBA_CAPS_EXT_BOH) {
+        
+        ahci.hba->bohc |= AHCI_HBA_BOHC_OOS;
+
+        while(
+            !(ahci.hba->bohc & AHCI_HBA_BOHC_OOS) ||
+             (ahci.hba->bohc & AHCI_HBA_BOHC_BOS)
+        )
+            __builtin_ia32_pause();
+
+    }
+
+
     ahci.hba->ghc |= AHCI_HBA_GHC_AE;
     ahci.hba->ghc &= ~AHCI_HBA_GHC_IE;
 
-
     int p = ahci.hba->pi;
     int q = 0;
+    int w = 0;
+
 
     long i;
     for(i = 0; i < 32; i++) {
@@ -849,12 +1200,35 @@ void init(const char* args) {
 
         int s = ahci.hba->ports[i].ssts;
         int c = ahci.hba->ports[i].cmd;
+        int m = ahci.hba->ports[i].sig;
 
-        if((s & AHCI_PORT_STSS_DET) != 3)
+        if((s & AHCI_PORT_STSS_DET) != (3 << 0))    /* Device detected and connected */
             continue;
 
-        if((s & AHCI_PORT_STSS_IPM) != 256)
+        if((s & AHCI_PORT_STSS_IPM) != (1 << 8))    /* Interface active */
             continue;
+
+        if((s & AHCI_PORT_STSS_SPD) != (3 << 4))    /* 6 Gbps */
+            kprintf("ahci: WARN! device %d has a slow interface speed: %s Gbps\n", i,
+                         &("0\0  "
+                           "1.5\0"
+                           "3\0  "
+                           "6\0  ")[((s & AHCI_PORT_STSS_SPD) >> 4) * 4]);
+
+
+        switch(m) {
+            case AHCI_SIG_NULL:
+            case AHCI_SIG_SEMB:
+            case AHCI_SIG_PM:
+                continue;
+
+            case AHCI_SIG_ATA:
+            case AHCI_SIG_ATAPI:
+                break;
+
+            default:
+                kpanic("ahci: invalid device %d signature: %p\n", i, m);
+        }
 
         
         if (
@@ -915,8 +1289,11 @@ void init(const char* args) {
         ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_FRE;
         ahci.hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
-
-        q |= (1 << i);
+ 
+        if(m == AHCI_SIG_ATA)
+            q |= (1 << i);
+        else
+            w |= (1 << i);
     }
 
 
@@ -924,20 +1301,22 @@ void init(const char* args) {
     ahci.hba->ghc |= AHCI_HBA_GHC_IE;
 
 
+
+    /* ATA Devices */
     for(i = 0; i < 32; i++) {
         if(!(q & (1 << i)))
             continue;
 
 
         device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
-
-        d->type = DEVICE_TYPE_BLOCK;
         
         strncpy(d->name, "sda", DEVICE_MAXNAMELEN);
         strncpy(d->description, "SATA disk device", DEVICE_MAXDESCLEN);
 
         d->name[2] += i;
 
+
+        d->type = DEVICE_TYPE_BLOCK;
         d->major = 8;
         d->minor = i << 3;
 
@@ -945,7 +1324,7 @@ void init(const char* args) {
         d->dnit = sata_dnit;
         d->reset = sata_reset;
 
-        d->blk.blksize = 512; /* FIXME */
+        d->blk.blksize = 512;
         d->blk.blkcount = 0;
         d->blk.blkmax = (16 * 1024) / d->blk.blksize;
         d->blk.blkoff = 0;
@@ -958,7 +1337,46 @@ void init(const char* args) {
         device_mkdev(d, 0660);
     }
 
+
+
+    /* ATAPI Devices */
+    for(i = 0; i < 32; i++) {
+        if(!(w & (1 << i)))
+            continue;
+
+
+        device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+        
+        strncpy(d->name, "scd0", DEVICE_MAXNAMELEN);
+        strncpy(d->description, "SATA CD-ROM device", DEVICE_MAXDESCLEN);
+
+        d->name[3] += i;
+
+
+        d->type = DEVICE_TYPE_BLOCK;
+        d->major = 11;
+        d->minor = i << 3;
+
+        d->init = satapi_init;
+        d->dnit = sata_dnit;
+        d->reset = sata_reset;
+
+        d->blk.blksize = 2048;
+        d->blk.blkcount = 0;
+        d->blk.blkmax = (16 * 1024) / d->blk.blksize;
+        d->blk.blkoff = 0;
+
+        d->blk.read = satapi_read;
+        d->blk.write = NULL;
+
+        d->userdata = (void*) (i + 1);
+
+        device_mkdev(d, 0660);
+    }
+
 }
+
+
 
 void dnit(void) {
     

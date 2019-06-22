@@ -31,7 +31,7 @@
 #include <aplus/network.h>
 #include <aplus/intr.h>
 #include <stdint.h>
-
+#if 0
 
 #ifndef ETHERNETIF_MAXFRAMES
 #define ETHERNETIF_MAXFRAMES            1
@@ -181,3 +181,4 @@ err_t ethif_init(struct netif* netif) {
     return ERR_OK;
 }
 
+#endif

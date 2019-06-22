@@ -302,7 +302,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
     char efi[8];
 
     if(block_read(device, &efi, device->blk.blksize * 1, 8) <= 0) {
-        kprintf("device::block: ERROR! Read Error at lba(1) offset(0)");
+        kprintf("device::block: ERROR! Read Error at lba(1) offset(0)\n");
         return;
     }
 
@@ -325,7 +325,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
     } __packed mbr[4] = { };
 
     if(block_read(device, &mbr, 0x1BE, sizeof(mbr[0]) * 4) <= 0)
-        kprintf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)");
+        kprintf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)\n");
 
 
 

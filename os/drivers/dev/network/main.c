@@ -31,7 +31,7 @@
 #include <errno.h>
 
 #include <dev/interface.h>
-#include <dev/ethif.h>
+#include <dev/network.h>
 
 #ifndef ETHERNETIF_MAXFRAMES
 #define ETHERNETIF_MAXFRAMES            1
@@ -39,13 +39,13 @@
 
 
 
-MODULE_NAME("dev/ethif");
+MODULE_NAME("dev/network");
 MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-
+#if 0
 void ethif_init(device_t* device) {
     DEBUG_ASSERT(device);
     
@@ -57,7 +57,7 @@ void ethif_dnit(device_t* device) {
    
 }
 
-
+#endif
 void init(const char* args) {
     (void) args;
 }

@@ -33,7 +33,7 @@
 #include <dev/interface.h>
 
 
-void network_init(device_t*);
+//void network_init(device_t*);
 void network_dnit(device_t*);
 
 
