@@ -13,18 +13,18 @@ global isrs
 extern x86_isr_handler
 
 %macro ISRNC 1
-	global isr%1
-	isr%1:
-		push dword 0
-		push dword %1
-		jmp isr_stub
+    global isr%1
+    isr%1:
+        push dword 0
+        push dword %1
+        jmp isr_stub
 %endmacro
 
 %macro ISREC 1
-	global isr%1
-	isr%1:
-		push dword %1
-		jmp isr_stub
+    global isr%1
+    isr%1:
+        push dword %1
+        jmp isr_stub
 %endmacro
 
 
@@ -68,11 +68,11 @@ ISRNC 0xFE
 
 %assign i 0
 %rep 224
-	global irq%[i]
-	irq%[i]:
-		push dword 0
-		push dword (i + 32)
-		jmp isr_stub
+    global irq%[i]
+    irq%[i]:
+        push dword 0
+        push dword (i + 32)
+        jmp isr_stub
 %assign i i + 1
 %endrep
 
@@ -80,87 +80,87 @@ ISRNC 0xFE
 isrs:
 %assign i 0
 %rep 32
-	dd isr%[i]
+    dd isr%[i]
 %assign i i + 1
 %endrep
 
 %assign i 0
 %rep 221
-	dd irq%[i]
+    dd irq%[i]
 %assign i i + 1
 %endrep
 
-	dd isr0xFD
-	dd isr0xFE
-	dd irq223
-	dq 0
+    dd isr0xFD
+    dd isr0xFE
+    dd irq223
+    dq 0
 
 
 isr_stub:
-	pushad
-	push ds
-	push es
-	push fs
-	push gs
+    pushad
+    push ds
+    push es
+    push fs
+    push gs
 
-	mov cx, 0x10
-	mov ds, cx
-	mov es, cx
-	mov fs, cx
-	mov gs, cx
+    mov cx, 0x10
+    mov ds, cx
+    mov es, cx
+    mov fs, cx
+    mov gs, cx
 
-	push esp
-	call x86_isr_handler
-	mov esp, eax
+    push esp
+    call x86_isr_handler
+    mov esp, eax
 
-	pop gs
-	pop fs
-	pop es
-	pop ds
-	popad
-	add esp, 8
+    pop gs
+    pop fs
+    pop es
+    pop ds
+    popad
+    add esp, 8
 iretd
 
 
 
 x86_lgdt:
-	lgdt [gdtp.ptr]
-	jmp 0x08:.L0
+    lgdt [gdtp.ptr]
+    jmp 0x08:.L0
 .L0:
-	mov cx, 0x10
-	mov ds, cx
-	mov es, cx
-	mov fs, cx
-	mov gs, cx
-	mov ss, cx
+    mov cx, 0x10
+    mov ds, cx
+    mov es, cx
+    mov fs, cx
+    mov gs, cx
+    mov ss, cx
 ret
 
 x86_ltr:
-	mov ax, 0x28
-	ltr ax
+    mov ax, 0x28
+    ltr ax
 ret
 
 x86_lidt:
-	lidt [idtp.ptr]
+    lidt [idtp.ptr]
 ret
 
 x86_sti:
-	sti
+    sti
 ret
 
 x86_cli:
-	cli
+    cli
 ret
 
 section .data
 gdtp:
-	times 32 dq 0
+    times 32 dq 0
 .ptr:
-	dw $ - gdtp - 1
-	dd gdtp
+    dw $ - gdtp - 1
+    dd gdtp
 
 idtp:
-	times 256 dq 0
+    times 256 dq 0
 .ptr:
-	dw $ - idtp - 1
-	dd idtp
+    dw $ - idtp - 1
+    dd idtp

@@ -41,41 +41,41 @@ ap_pstart:
 
 .enable_sse:
     mov ecx, cr0
-	and cx, 0xFFFB
-	or cx, 2
-	mov cr0, ecx
-	mov ecx, cr4
-	or cx, 3 << 9
-	mov cr4, ecx
-	xor ecx, ecx
+    and cx, 0xFFFB
+    or cx, 2
+    mov cr0, ecx
+    mov ecx, cr4
+    or cx, 3 << 9
+    mov cr4, ecx
+    xor ecx, ecx
 
 .enable_paging:
     mov eax, [ap_cr3]
     mov cr3, eax
 
 
-	mov eax, cr4
-	or eax, (1 << 4)			; PSE
-	and eax, ~(1 << 5)			; PAE
-	and eax, ~(1 << 17)			; PCID
-	mov cr4, eax
+    mov eax, cr4
+    or eax, (1 << 4)			; PSE
+    and eax, ~(1 << 5)			; PAE
+    and eax, ~(1 << 17)			; PCID
+    mov cr4, eax
 
-	mov eax, cr0
-	or eax, (1 << 31) 			; PG
-	or eax, (1 << 0)			; PE
+    mov eax, cr0
+    or eax, (1 << 31) 			; PG
+    or eax, (1 << 0)			; PE
     and eax, ~(1 << 29)         ; NW
     and eax, ~(1 << 30)         ; CD 
-	mov cr0, eax
+    mov cr0, eax
 
 .enable_pat:
-	mov ecx, 0x277
-	rdmsr
+    mov ecx, 0x277
+    rdmsr
 
-	and edx, 0xFFFFFF00
-	or edx, 0x00000001
+    and edx, 0xFFFFFF00
+    or edx, 0x00000001
 
-	mov ecx, 0x277
-	wrmsr    
+    mov ecx, 0x277
+    wrmsr    
 
 .enable_global_pages:
     mov eax, cr4

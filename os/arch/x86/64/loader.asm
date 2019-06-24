@@ -31,24 +31,24 @@ CHECKSUM 	equ		-(MAGIC + FLAGS)
 section .multiboot
 multiboot:
 align 4
-	dd MAGIC
-	dd FLAGS
-	dd CHECKSUM
-	dd 0
-	dd 0
-	dd 0
-	dd 0
-	dd 0
+    dd MAGIC
+    dd FLAGS
+    dd CHECKSUM
+    dd 0
+    dd 0
+    dd 0
+    dd 0
+    dd 0
 %ifdef X86_BUILTIN_VIDEOMODE
-	dd 0
-	dd 1024
-	dd 768
-	dd 32
+    dd 0
+    dd 1024
+    dd 768
+    dd 32
 %else
-	dd 1
-	dd 0
-	dd 0
-	dd 0
+    dd 1
+    dd 0
+    dd 0
+    dd 0
 %endif
 
 
@@ -62,14 +62,14 @@ _start:
     finit
 
 enable_sse:
-	mov ecx, cr0
-	and cx, 0xFFFB
-	or cx, 2
-	mov cr0, ecx
-	mov ecx, cr4
-	or cx, 3 << 9
-	mov cr4, ecx
-	xor ecx, ecx
+    mov ecx, cr0
+    and cx, 0xFFFB
+    or cx, 2
+    mov cr0, ecx
+    mov ecx, cr4
+    or cx, 3 << 9
+    mov cr4, ecx
+    xor ecx, ecx
 
 
 init_paging_1_1:
@@ -106,11 +106,11 @@ init_paging_1_1:
     and eax, ~(1 << 17)                     ; PCID
     mov cr4, eax
 
-	
-	mov ecx, 0xC0000080
-	rdmsr
-	or eax, 1 << 11				            ; NX
-	wrmsr
+    
+    mov ecx, 0xC0000080
+    rdmsr
+    or eax, 1 << 11				            ; NX
+    wrmsr
 
     mov ecx, 0xC0000080
     rdmsr
@@ -175,14 +175,14 @@ high_start:
     mov cr4, rax
 
 .enable_pat:
-	mov ecx, 0x277
-	rdmsr
+    mov ecx, 0x277
+    rdmsr
 
-	and edx, 0xFFFFFF00
-	or edx, 0x00000001
+    and edx, 0xFFFFFF00
+    or edx, 0x00000001
 
-	mov ecx, 0x277
-	wrmsr
+    mov ecx, 0x277
+    wrmsr
 
 
 .init:
@@ -202,7 +202,7 @@ high_start:
 section .data
 align 0x1000
 early_pml4:
-	times 4096 db 0
+    times 4096 db 0
 early_pdp_low:
     times 4096 db 0
 early_pdp_high:
@@ -220,5 +220,5 @@ early_gdtp:
 section .stack
 align 0x1000
 early_stack_bottom:
-	times CONFIG_STACK_SIZE db 0
+    times CONFIG_STACK_SIZE db 0
 early_stack:
