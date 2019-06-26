@@ -33,6 +33,7 @@
 #include <arch/x86/cpu.h>
 #include <arch/x86/smp.h>
 #include <string.h>
+#include <time.h>
 
 spinlock_t delay_lock;
 spinlock_t rtc_lock;
@@ -77,6 +78,7 @@ ktime_t arch_timer_getms(void) {
 }
 
 ktime_t arch_timer_gettime(void) {
+    
     inline uint8_t RTC(uint8_t x)
         { outb(0x70, x); return inb(0x71); }
         

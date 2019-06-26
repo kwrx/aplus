@@ -1,7 +1,7 @@
 [BITS 64]
 
 %define CONFIG_KERNEL_BASE              0xFFFFFFFF80000000
-%define CONFIG_STACK_SIZE			    0x0000000000100000
+%define CONFIG_STACK_SIZE			    0x0000000000400000
 %define V2P(x)                          ((x) - CONFIG_KERNEL_BASE)
 
 
@@ -217,8 +217,8 @@ early_gdtp:
     dq V2P(early_gdtp)
 
 
-section .stack
+section .bss
 align 0x1000
 early_stack_bottom:
-    times CONFIG_STACK_SIZE db 0
+    resb CONFIG_STACK_SIZE
 early_stack:

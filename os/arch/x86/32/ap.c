@@ -55,7 +55,7 @@ void ap_main(void) {
         __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
     });
 
-    smp_main(0);
+    smp_setup(0);
 }
 
 void ap_init(void) {

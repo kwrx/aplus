@@ -31,11 +31,15 @@
 #include <aplus/syscall.h>
 #include <aplus/module.h>
 #include <aplus/network.h>
+#include <aplus/reboot.h>
 #include <stdint.h>
 #include <dirent.h>
 
 
 void cmain(void) {
+
+    current_task->priority = TASK_PRIO_MIN;
+
     for(;;);
 }
 
@@ -84,6 +88,22 @@ void kmain(void) {
         KERNEL_PLATFORM,
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
+
+
+
+
+    static const char* argv[] = { "/sbin/init", NULL };
+    static const char* envp[] = { NULL };
+
+
+    e = sys_fork();
+
+    if(e < 0)
+        kpanic("init: fork() %s", strerror(-e));
+    
+    if(e == 0)
+        if((e = sys_execve(argv[0], argv, envp)) < 0)
+            kpanic("init: execve() %s", strerror(-e));
 
 
     cmain();

@@ -74,5 +74,9 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
     
     DEBUG_ASSERT(current_task->fd[fd].inode);
 
-    return vfs_getdents(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count);
+
+    __lock_return(&current_task->fd[fd].lock, long,
+        vfs_getdents(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count)
+    );
+
 });

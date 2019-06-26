@@ -46,6 +46,6 @@ int ap_check(int, int);
 void ap_stack(uintptr_t);
 void ap_init(void);
 void smp_init(void);
-void smp_main(int);
+void smp_setup(int);
 
 #endif

@@ -47,7 +47,7 @@ int tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
 
         if(unlikely(
             (
-                (long) inode->root->mount.st.f_bavail - (long) ((pos + len) -  inode->st.st_size)
+                (long) inode->root->mount.st.f_bavail - (long) ((pos + len) - inode->st.st_size)
             ) <= 0L)
             
         )

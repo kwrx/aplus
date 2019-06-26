@@ -31,7 +31,7 @@
 #include <aplus/timer.h>
 #include <aplus/task.h>
 
-#define CPU_MAX                     16
+#define CPU_MAX                     64
 #define CPU_FLAGS_ENABLED           (1 << 0)
 #define CPU_FLAGS_BSP               (1 << 1)
 #define CPU_FLAGS_SCHED_ENABLED     (1 << 2)

@@ -119,7 +119,7 @@
 #define MEMP_NUM_TCPIP_MSG_INPKT            256
 
 
-#define DNS_TABLE_SIZE                      16
+#define DNS_TABLE_SIZE                      64
 
 #define TCP_MSS                             1460
 #define TCP_SND_BUF                         (32 * TCP_MSS)

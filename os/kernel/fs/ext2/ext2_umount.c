@@ -35,38 +35,16 @@
 
 #include <aplus/utils/list.h>
 
-#include "tmpfs.h"
+#include "ext2.h"
 
 
 
 __thread_safe
-int tmpfs_umount(inode_t* dir) {
+int ext2_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
 
-
-    __lock(&dir->lock, {
-        
-        list_each(TMPFS(dir)->children, i) {
-            if(likely(i->userdata))
-                kfree(i->userdata);
-
-            kfree(i);
-        }
-
-        list_clear(TMPFS(dir)->children);
-
-
-
-        kfree(dir->mount.userdata);
-        
-        dir->st.st_mode &= ~S_IFMT;
-        dir->st.st_mode |=  S_IFDIR;
-
-        memset(&dir->mount, 0, sizeof(dir->mount));
-
-    });
 
     
     return 0;

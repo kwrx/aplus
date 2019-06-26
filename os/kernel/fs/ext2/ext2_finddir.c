@@ -33,19 +33,15 @@
 
 #include <aplus/utils/list.h>
 
-#include "tmpfs.h"
+#include "ext2.h"
 
 
 __thread_safe
-inode_t* tmpfs_finddir(inode_t* inode, const char * name) {
+inode_t* ext2_finddir(inode_t* inode, const char * name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-        
-    list_each(TMPFS(inode)->children, i)
-        if(unlikely(i->parent == inode))
-            if(strcmp(i->name, name) == 0)
-                return i;
+    
 
     return NULL;
 }

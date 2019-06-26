@@ -31,36 +31,15 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include "tmpfs.h"
+#include "ext2.h"
 
 
 __thread_safe
-int tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
+int ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    if(pos + len > inode->st.st_size) {
-        
-        DEBUG_ASSERT(inode->root);
-
-        if(unlikely(
-            (
-                (long) inode->root->mount.st.f_bavail - (long) ((pos + len) -  inode->st.st_size)
-            ) <= 0L)
-            
-        )
-            return errno = ENOSPC, -1;
-
-
-        inode->userdata = krealloc(inode->userdata, pos + len, GFP_USER);
-        inode->root->mount.st.f_bfree -= (pos + len) - inode->st.st_size;
-        inode->root->mount.st.f_bavail -= (pos + len) - inode->st.st_size;
-        inode->st.st_size = pos + len;
-    }
-    
-    
-    memcpy((void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), buf, len);
     return len;
 }

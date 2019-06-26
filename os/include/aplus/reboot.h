@@ -22,26 +22,17 @@
  */
 
 
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/smp.h>
-#include <aplus/ipc.h>
-#include <aplus/vfs.h>
-#include <aplus/mm.h>
-#include <stdint.h>
-#include <errno.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
+#ifndef _APLUS_REBOOT_H
+#define _APLUS_REBOOT_H
 
 
-__thread_safe
-int ext2_unlink(inode_t* inode, const char* name) {
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(name);
+#define ARCH_REBOOT_HALT            0
+#define ARCH_REBOOT_SUSPEND         1
+#define ARCH_REBOOT_POWEROFF        2
+#define ARCH_REBOOT_RESTART         3
 
 
 
-    return 0;
-}
+void arch_reboot(int);
+
+#endif

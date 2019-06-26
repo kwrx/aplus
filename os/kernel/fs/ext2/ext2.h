@@ -22,8 +22,8 @@
  */
 
 
-#ifndef _TMPFS_H
-#define _TMPFS_H
+#ifndef _EXT2_H
+#define _EXT2_H
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -59,8 +59,8 @@ typedef struct {
     uint32_t inodes;
     uint32_t blocks;
     uint32_t reserved_for_root;
-    uint32_t unallocatedblocks;
-    uint32_t unallocatedinodes;
+    uint32_t unallocated_blocks;
+    uint32_t unallocated_inodes;
     uint32_t superblock_id;
     uint32_t blocksize_hint;
     uint32_t fragmentsize_hint;
@@ -84,6 +84,84 @@ typedef struct {
     uint8_t unused[940];
 } __packed superblock_t;
 
+
+
+typedef struct {
+    uint32_t block_of_block_usage_bitmap;
+    uint32_t block_of_inode_usage_bitmap;
+    uint32_t block_of_inode_table;
+    uint16_t num_of_unalloc_block;
+    uint16_t num_of_unalloc_inode;
+    uint16_t num_of_dirs;
+    uint8_t unused[14];
+} __packed block_group_desc_t;
+
+
+typedef struct {
+    uint16_t type;
+    uint16_t uid;
+    uint32_t size;
+    uint32_t last_access;
+    uint32_t create_time;
+    uint32_t last_modif;
+    uint32_t delete_time;
+    uint16_t gid;
+    uint16_t hardlinks;
+    uint32_t disk_sectors;
+    uint32_t flags;
+    uint32_t ossv1;
+    uint32_t dbp[12];
+    uint32_t singly_block;
+    uint32_t doubly_block;
+    uint32_t triply_block;
+    uint32_t gen_no;
+    uint32_t reserved1;
+    uint32_t reserved2;
+    uint32_t fragment_block;
+    uint8_t ossv2[12];
+} __packed ext2_inode_t;
+
+
+typedef struct {
+    uint32_t inode;
+    uint16_t size;
+    uint8_t namelength;
+    uint8_t reserved;
+    char name[1];
+} __packed ext2_dir_t;
+
+
+typedef struct {
+    superblock_t sb;
+    uint32_t first_bgd;
+    uint32_t number_of_bgs;
+    uint32_t blocksize;
+    uint32_t sectors_per_block;
+    uint32_t inodes_per_block;
+    ext2_inode_t root_inode;
+
+    struct {
+        void* ptr;
+        spinlock_t lock;
+    } cache;
+
+    inode_t* dev;
+
+} __packed ext2_t;
+
+typedef struct {
+    ext2_inode_t inode;
+    ext2_t* ext2;
+    uint32_t* blockchain;
+} ext2_priv_t;
+
+
+
+#define ext2_read_block(priv, buf, block)                                           \
+        vfs_read (priv->dev, buf, (block) * (priv->sectors_per_block << 9), priv->sectors_per_block << 9);
+
+#define ext2_write_block(priv, buf, block)                                          \
+        vfs_write(priv->dev, buf, (block) * (priv->sectors_per_block << 9), priv->sectors_per_block << 9);
 
 
 

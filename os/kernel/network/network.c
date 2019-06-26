@@ -51,6 +51,8 @@
 #include "lwip/tcpip.h"
 #include "netif/etharp.h"
 
+/* See os/kernel/init/hostname.c */
+extern char* hostname;
 
 semaphore_t tcpip_done;
 
@@ -99,8 +101,9 @@ void network_init() {
     IP_ADDR4(&dns[1], 8, 8, 4, 4);
 
 
-    kprintf("network: initialize and setup local network...\n");
-    kprintf(" -> dns: %d.%d.%d.%d - %d.%d.%d.%d\n", 
+    kprintf("network: host(%s) lwip(%s) dns1(%d.%d.%d.%d) dns2(%d.%d.%d.%d)\n", 
+        hostname,
+        LWIP_VERSION_STRING,
         (dns[0].u_addr.ip4.addr >>  0) & 0xFF,
         (dns[0].u_addr.ip4.addr >>  8) & 0xFF,
         (dns[0].u_addr.ip4.addr >> 16) & 0xFF,
@@ -108,7 +111,8 @@ void network_init() {
         (dns[1].u_addr.ip4.addr >>  0) & 0xFF,
         (dns[1].u_addr.ip4.addr >>  8) & 0xFF,
         (dns[1].u_addr.ip4.addr >> 16) & 0xFF,
-        (dns[1].u_addr.ip4.addr >> 24) & 0xFF);
+        (dns[1].u_addr.ip4.addr >> 24) & 0xFF
+    );
 
     
     tcpip_init(&tcpip_init_done, &dns);

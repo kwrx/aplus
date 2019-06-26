@@ -11,4 +11,4 @@
 
 
 FSENTRY(TMPFS_MAGIC, "tmpfs", tmpfs);
-FSENTRY(EXT2_MAGIC, "ext2", ext2);
+FSENTRY(EXT2_SUPER_MAGIC, "ext2", ext2);

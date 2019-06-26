@@ -23,5 +23,5 @@
 
 
 #include <aplus.h>
-static const char* __hostname = "localhost";
-const char* hostname = &__hostname;
+static const char __hostname[] = "localhost";
+const char* hostname = (const char*) &__hostname;

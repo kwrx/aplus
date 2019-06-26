@@ -68,24 +68,42 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     if(unlikely(!ptr_check(type, R_OK)))
         return -EFAULT;
 
-    //if(likely(dev_name))
-    //    if(unlikely(!ptr_check(dev_name, R_OK)))
-    //        return -EFAULT;
+    if(likely(dev_name))
+        if(unlikely(!ptr_check(dev_name, R_OK)))
+            return -EFAULT;
 
+
+    inode_t* s = NULL;
+    inode_t* d = NULL;
 
     int fd;
+    int e;
+
+
+
     if((fd = sys_open(dir_name, O_RDONLY, 0)) < 0)
         return fd;
 
+    d = current_task->fd[fd].inode;
 
-
-    inode_t* d = current_task->fd[fd].inode;
-    DEBUG_ASSERT(d);
-
-
-    int e;
     if((e = sys_close(fd)) < 0)
         return e;
 
-    return vfs_mount(NULL, d, type, flags, (const char*) data);
+
+    
+    if(likely(dev_name)) {
+        if((fd = sys_open(dev_name, O_RDONLY, 0)) < 0)
+            return fd;
+
+        s = current_task->fd[fd].inode;
+
+        if((e = sys_close(fd)) < 0)
+            return e;
+    }
+   
+   
+   
+    DEBUG_ASSERT(d);
+
+    return vfs_mount(s, d, type, flags, (const char*) data);
 });

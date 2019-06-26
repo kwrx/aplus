@@ -54,7 +54,7 @@ cpu_t* get_cpu(int id) {
 }
 
 
-void smp_main(int bsp) {
+void smp_setup(int bsp) {
     DEBUG_ASSERT(!(cpus[apic_get_id()].flags & CPU_FLAGS_ENABLED));
 
 
@@ -118,8 +118,10 @@ void smp_init(void) {
 
     int i;
     for(i = 0; i < mbd->cpu.max_cores; i++) {
+
         if(mbd->cpu.cores[i].id == apic_get_id())
             continue;
+
 
         ap_stack(((uintptr_t) &early_stack) - (i * (CONFIG_STACK_SIZE / CPU_MAX)));
 
@@ -153,6 +155,6 @@ void smp_init(void) {
 
 
 bsp:
-    smp_main(1);
+    smp_setup(1);
 
 }

@@ -31,26 +31,15 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include "tmpfs.h"
+#include "ext2.h"
 
 
 __thread_safe
-int tmpfs_read(inode_t* inode, void * buf, off_t pos, size_t len) {
+int ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
-    if(!inode->userdata)
-        return 0;
-
-    if(pos + len > inode->st.st_size)
-        len = inode->st.st_size - pos;
-
-
-    DEBUG_ASSERT(len >= 0);
-
-    if(likely(len > 0))
-        memcpy(buf, (void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), len);
     
     return len;
 }

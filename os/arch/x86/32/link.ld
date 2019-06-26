@@ -51,15 +51,12 @@ SECTIONS {
 	}
 
 
-	.stack : AT(ADDR(.stack) - KERNEL_HIGH) ALIGN(0x1000) {
-		*(.stack)
-	}
-
-
 	.bss : AT(ADDR(.bss) - KERNEL_HIGH) ALIGN(0x1000) {
 		__bss_start = .;
+
 		*(.bss)
 		*(.bss.*)
+		
 		__bss_end = .;
 	}
 
