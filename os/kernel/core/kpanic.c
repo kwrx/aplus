@@ -30,7 +30,7 @@
 #include <sys/types.h>
 
 void kpanic(const char* fmt, ...) {
-    //arch_intr_disable();
+    arch_intr_disable();
 
 
     char buf[BUFSIZ] = {0};
