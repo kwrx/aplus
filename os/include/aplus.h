@@ -67,9 +67,9 @@
 #    define CONFIG_BITS                     32
 #    define CONFIG_KERNEL_BASE              0xC0000000L
 #    define CONFIG_HEAP_BASE                0xC8000000L
-#    define CONFIG_STACK_BASE               0xC7FFF000L
+#    define CONFIG_STACK_BASE               0xCC000000L
 #    define CONFIG_HEAP_SIZE                0x04000000L
-#    define CONFIG_STACK_SIZE               0x00400000L
+#    define CONFIG_STACK_SIZE               0x00010000L
 #elif defined(__x86_64__)
 #    define KERNEL_PLATFORM                 "x86-64"
 #    define CONFIG_BITS                     64
@@ -77,7 +77,7 @@
 #    define CONFIG_HEAP_BASE                0xFFFFFFFFC0000000L
 #    define CONFIG_STACK_BASE               0xFFFFFFFFFFC00000L
 #    define CONFIG_HEAP_SIZE                0x0000000004000000L
-#    define CONFIG_STACK_SIZE               0x0000000000400000L
+#    define CONFIG_STACK_SIZE               0x0000000000010000L
 #elif defined(__arm__)
 #    define KERNEL_PLATFORM                 "arm"
 #    define CONFIG_BITS                     32

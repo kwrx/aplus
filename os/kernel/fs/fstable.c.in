@@ -10,5 +10,7 @@
 }
 
 
-FSENTRY(TMPFS_MAGIC, "tmpfs", tmpfs);
-FSENTRY(EXT2_SUPER_MAGIC, "ext2", ext2);
+FSENTRY(TMPFS_ID, "tmpfs", tmpfs);
+FSENTRY(EXT2_ID, "ext2", ext2);
+FSENTRY(VFAT_ID, "vfat", vfat);
+

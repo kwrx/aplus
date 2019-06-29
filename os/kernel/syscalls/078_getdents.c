@@ -68,15 +68,22 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
     if(unlikely(!ptr_check(dirent, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(!count))
-        return 0;
+    if(unlikely(count < sizeof(struct dirent)))
+        return -EINVAL;
 
+    
     
     DEBUG_ASSERT(current_task->fd[fd].inode);
 
 
-    __lock_return(&current_task->fd[fd].lock, long,
-        vfs_getdents(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count)
+    long e;
+
+    __lock(&current_task->fd[fd].lock,
+
+        if((e = vfs_readdir(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count / sizeof(struct dirent))) > 0)
+            e *= sizeof(struct dirent);
+    
     );
 
+    return e;
 });

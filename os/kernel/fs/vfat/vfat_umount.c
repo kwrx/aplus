@@ -29,51 +29,21 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
-#include <errno.h>
 
-#include <aplus/utils/list.h>
+#include <sys/types.h>
+#include <sys/mount.h>
 
-#include "tmpfs.h"
+#include "vfat.h"
 
 
 
 __thread_safe
-int tmpfs_getdents(inode_t* inode, struct dirent* e, off_t pos, size_t len) {
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(e);
+int vfat_umount(inode_t* dir) {
+
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
 
 
     
-    int s = len / sizeof(struct dirent);
-    int i;
-
-    for(i = 0; i < s; i++) {
-
-        int p = pos;
-
-        list_each(TMPFS(inode)->children, d) {
-
-            if(likely(d->parent != inode))
-                continue;
-            
-            if(p--)
-                continue;
-
-            e[i].d_ino = d->st.st_ino;
-            e[i].d_off = pos;
-            e[i].d_reclen = sizeof(struct dirent);
-            e[i].d_type = d->st.st_mode;
-            strncpy(e[i].d_name, d->name, MAXNAMLEN);
-
-            p = 1;
-            break;
-        }
-
-        if(p == 0)
-            break;
-
-        pos++;
-    }
-
-    return i * sizeof(struct dirent);
+    return 0;
 }

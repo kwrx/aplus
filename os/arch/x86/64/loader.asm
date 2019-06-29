@@ -1,7 +1,8 @@
 [BITS 64]
 
 %define CONFIG_KERNEL_BASE              0xFFFFFFFF80000000
-%define CONFIG_STACK_SIZE			    0x0000000000400000
+%define CONFIG_STACK_SIZE			    0x0000000000010000
+%define CPU_MAX                         64
 %define V2P(x)                          ((x) - CONFIG_KERNEL_BASE)
 
 
@@ -220,5 +221,5 @@ early_gdtp:
 section .bss
 align 0x1000
 early_stack_bottom:
-    resb CONFIG_STACK_SIZE
+    resb CONFIG_STACK_SIZE * CPU_MAX
 early_stack:

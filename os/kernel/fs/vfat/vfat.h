@@ -22,26 +22,17 @@
  */
 
 
+#pragma once
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/smp.h>
-#include <aplus/ipc.h>
 #include <aplus/vfs.h>
-#include <aplus/mm.h>
-#include <stdint.h>
-#include <errno.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
 
 
+#define FAT_ATTR_RDONLY         0x01
+#define FAT_ATTR_HIDDEN         0x02
+#define FAT_ATTR_SYSTEM         0x04
+#define FAT_ATTR_VOLUME_ID      0x08
+#define FAT_ATTR_DIRECTORY      0x10
+#define FAT_ATTR_ARCHIVE        0x20
 
-__thread_safe
-int ext2_getdents(inode_t* inode, struct dirent* e, off_t pos, size_t len) {
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->userdata);
-    DEBUG_ASSERT(e);
-
-    
-}

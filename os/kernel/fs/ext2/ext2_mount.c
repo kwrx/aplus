@@ -35,8 +35,6 @@
 #include <sys/types.h>
 #include <sys/mount.h>
 
-#include <aplus/utils/list.h>
-
 #include "ext2.h"
 
 
@@ -70,83 +68,25 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    superblock_t sb;
-    if(vfs_read(dev, &sb, 1024, sizeof(superblock_t)) != sizeof(superblock_t))
+    struct ext2_super_block sb;
+    if(vfs_read(dev, &sb, 1024, sizeof(struct ext2_super_block)) != sizeof(struct ext2_super_block))
         return kprintf("ext2: ERROR! vfs_read() error: %s\n", strerror(errno)), -1;
 
 
-    if(sb.ext2_sig != EXT2_SIGNATURE)
-        return kprintf("ext2: ERROR! invalid signature, no ext2 filesystem\n"),
-               errno = EINVAL, -1;
+    if(sb.s_magic != EXT2_SIGNATURE)
+        return kprintf("ext2: ERROR! invalid signature, no ext2 filesystem: %p\n", sb.s_magic),
+            errno = EINVAL, -1;
 
 
-    
 
-#if 0
+    DEBUG_ASSERT((1024 << sb.s_log_block_size) <= EXT2_MAX_BLOCK_SIZE);
+    DEBUG_ASSERT((1024 << sb.s_log_block_size) >= EXT2_MIN_BLOCK_SIZE);
+    DEBUG_ASSERT((1024 << sb.s_log_frag_size)  <= EXT2_MAX_FRAG_SIZE);
+    DEBUG_ASSERT((1024 << sb.s_log_frag_size)  >= EXT2_MIN_FRAG_SIZE);
 
-    kprintf(
-        "ext2: superblock\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n"
-        "       .%-28s: %p\n",
-
-        #define _(p) \
-            #p, sb.p
-
-        _(inodes),
-        _(blocks),
-        _(reserved_for_root),
-        _(unallocated_blocks),
-        _(unallocated_inodes),
-        _(superblock_id),
-        _(blocksize_hint),
-        _(fragmentsize_hint),
-        _(blocks_in_blockgroup),
-        _(frags_in_blockgroup),
-        _(inodes_in_blockgroup),
-        _(last_mount),
-        _(last_write),
-        _(mounts_since_last_check),
-        _(max_mounts_since_last_check),
-        _(ext2_sig),
-        _(state),
-        _(op_on_err),
-        _(minor_version),
-        _(last_check),
-        _(max_time_in_checks),
-        _(os_id),
-        _(major_version),
-        _(uuid),
-        _(gid)
-
-        #undef _
-    );
-
-#endif
-    
-
+    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT2_FEATURE_INCOMPAT_COMPRESSION));
+    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_RECOVER));
+    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_JOURNAL_DEV));
 
 
 
@@ -156,33 +96,48 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         dir->mount.dev = dev;
         dir->mount.flags = flags;
         
-        //dir->mount.userdata = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
+        ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
+        ext2->cache = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);        
+        ext2->first_block_group = sb.s_first_data_block + 1;
+        ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
+        ext2->blocksize = (1024) << sb.s_log_block_size;
+        ext2->inodesize = sb.s_inode_size;
+        ext2->dev = dev;
+
+        memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
+        spinlock_init(&ext2->lock);
+
+
+
+        dir->fsinfo = (void*) ext2;
         
-        dir->mount.st.f_bsize = 1024 << sb.blocksize_hint;
-        dir->mount.st.f_frsize = 1024 << sb.fragmentsize_hint;
-        dir->mount.st.f_blocks = sb.blocks;
-        dir->mount.st.f_bfree = sb.unallocated_blocks;
-        dir->mount.st.f_bavail = sb.unallocated_blocks;
-        dir->mount.st.f_files = sb.inodes;
-        dir->mount.st.f_ffree = sb.unallocated_inodes;
-        dir->mount.st.f_favail = sb.unallocated_inodes;
+        dir->mount.st.f_bsize = 1024 << sb.s_log_block_size;
+        dir->mount.st.f_frsize = 1024 << sb.s_log_frag_size;
+        dir->mount.st.f_blocks = sb.s_blocks_count;
+        dir->mount.st.f_bfree = sb.s_free_blocks_count;
+        dir->mount.st.f_bavail = sb.s_free_blocks_count;
+        dir->mount.st.f_files = sb.s_inodes_count;
+        dir->mount.st.f_ffree = sb.s_free_inodes_count;
+        dir->mount.st.f_favail = sb.s_free_inodes_count;
         dir->mount.st.f_flag = stflags;
-        dir->mount.st.f_fsid = EXT2_SUPER_MAGIC;
+        dir->mount.st.f_fsid = EXT2_ID;
         dir->mount.st.f_namemax = MAXNAMLEN;
 
 
 
         dir->mount.ops.finddir = ext2_finddir;
-        dir->mount.ops.getdents = ext2_getdents;
+        dir->mount.ops.readdir = ext2_readdir;
         dir->mount.ops.mknod = ext2_mknod;
         dir->mount.ops.unlink = ext2_unlink;
 
-
+        dir->st.st_ino = EXT2_ROOT_INO;
         dir->st.st_mode &= ~S_IFMT;
         dir->st.st_mode |=  S_IFMT;
 
+
     });
+
 
     return 0;
 }

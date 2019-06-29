@@ -90,21 +90,27 @@ void kmain(void) {
         mbd->memory.size / 1024 / 1024);
 
 
+    sys_mkdir("/root", 0666);
+    sys_mount("/dev/sda1", "/root", "ext2", 0, NULL);
 
 
-    static const char* argv[] = { "/sbin/init", NULL };
-    static const char* envp[] = { NULL };
-
-
-    e = sys_fork();
-
-    if(e < 0)
-        kpanic("init: fork() %s", strerror(-e));
     
-    if(e == 0)
-        if((e = sys_execve(argv[0], argv, envp)) < 0)
-            kpanic("init: execve() %s", strerror(-e));
+    int fd = sys_open("/root", 0, 0);
+    if(fd < 0)
+        kpanic("fd < 0");
+
+    
+    struct dirent d;
+    while(sys_getdents(fd, &d, sizeof(struct dirent)) > 0)
+        kprintf("<%d> {%d}: %s\n", (int) d.d_ino, (int) d.d_type, d.d_name);
 
 
-    cmain();
+    const char* argv[] = { "/sbin/init", NULL };
+    const char* envp[] = { NULL };
+
+    if((e = sys_execve(argv[0], argv, envp)) < 0)
+        kpanic("init: execve() %s", strerror(-e));
+
+
+    arch_reboot(ARCH_REBOOT_HALT);
 }

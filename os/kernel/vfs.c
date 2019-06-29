@@ -194,7 +194,7 @@ inode_t* vfs_finddir(inode_t* inode, const char __user * name) {
 }
 
 
-inode_t* vfs_mknod(inode_t* inode, const char* name, mode_t mode) {
+inode_t* vfs_mknod(inode_t* inode, const char __user * name, mode_t mode) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
@@ -215,7 +215,7 @@ inode_t* vfs_mknod(inode_t* inode, const char* name, mode_t mode) {
     return errno = ENOSYS, NULL;
 }
 
-int vfs_getdents(inode_t* inode, struct dirent __user * ent, off_t off, size_t size) {
+int vfs_readdir(inode_t* inode, struct dirent __user * ent, off_t off, size_t size) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(ent);
 
@@ -226,8 +226,8 @@ int vfs_getdents(inode_t* inode, struct dirent __user * ent, off_t off, size_t s
         return errno = EFAULT, -1;
 
 
-    if(likely(inode->ops.getdents))
-        __lock_return(&inode->lock, int, inode->ops.getdents(inode, ent, off, size));
+    if(likely(inode->ops.readdir))
+        __lock_return(&inode->lock, int, inode->ops.readdir(inode, ent, off, size));
     
     return errno = ENOSYS, -1;
 }

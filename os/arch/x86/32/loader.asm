@@ -2,7 +2,8 @@
 
 
 %define CONFIG_KERNEL_BASE			0xC0000000
-%define CONFIG_STACK_SIZE			0x00400000
+%define CONFIG_STACK_SIZE			0x00010000
+%define CPU_MAX                     64
 %define V2P(x)						((x) - CONFIG_KERNEL_BASE)
 
 
@@ -96,6 +97,7 @@ init_paging_1_1:
     add edi, X86_MAP_ENTRYSZ
 loop .L0
 
+
     mov edi, V2P(early_pd)
 
 .enable_paging:
@@ -184,6 +186,6 @@ early_pd:
 section .bss
 align 0x1000
 early_stack_bottom:
-    resb CONFIG_STACK_SIZE
+    resb CONFIG_STACK_SIZE * CPU_MAX
 early_stack:
 

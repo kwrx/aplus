@@ -39,12 +39,13 @@
 __thread_safe
 int tmpfs_unlink(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->fsinfo);
     DEBUG_ASSERT(name);
 
-
+    tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;
     inode_t* d = NULL;
 
-    list_each(TMPFS(inode)->children, i) {
+    list_each(tmpfs->children, i) {
         if(likely(i->parent != inode))
             continue;
 
@@ -64,7 +65,7 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
     d->mount.st.f_ffree++;
     d->mount.st.f_favail++;
 
-    list_remove(TMPFS(inode)->children, d);
+    list_remove(tmpfs->children, d);
 
     kfree(d->userdata);
     kfree(d);

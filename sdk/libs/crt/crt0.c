@@ -104,6 +104,7 @@ done:
 }
 
 void _start(char** argv, char** env) {
+    
     long i;
     for(i = (long) &__bss_start; i < (long) &end; i++)
         *(unsigned char*) i = 0;
@@ -112,6 +113,26 @@ void _start(char** argv, char** env) {
     __libc_init_array();
     __init_traps();
 
+    /* TODO: reloc from stack: argv, envp */
+
+
+#if defined(__i386__) || defined(__x86_64__)
+
+    #define STACKSIZE (64 * 1024)
+    uintptr_t stack = (uintptr_t) malloc(STACKSIZE);
+
+    do {
+        if(__builtin_expect(!stack, 0))
+            break;
+
+        #if defined(__i386__)
+            __asm__ __volatile__ ("mov %0, %%esp" :: "r"(stack + STACKSIZE));
+        #else
+            __asm__ __volatile__ ("mov %0, %%rsp" :: "r"(stack + STACKSIZE));
+        #endif
+    } while(0);
+
+#endif
 
     char* p;
     if(__builtin_expect(argv && argv[0], 1))

@@ -36,7 +36,7 @@ int kprintf(const char *fmt, ...) {
         return 0;
 
 
-    char buf[BUFSIZ] = {0};
+    char buf[16 * BUFSIZ] = { 0 };
 
     va_list args;
     va_start(args, fmt);

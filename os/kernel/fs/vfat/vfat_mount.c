@@ -29,25 +29,22 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
+#include <string.h>
+#include <errno.h>
 
 #include <sys/types.h>
 #include <sys/mount.h>
 
-#include <aplus/utils/list.h>
-
-#include "tmpfs.h"
-
+#include "vfat.h"
 
 
 __thread_safe
-int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
+int vfat_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     DEBUG_ASSERT(dir);
-    DEBUG_ASSERT(dev == NULL);
+    DEBUG_ASSERT(dev);
+    DEBUG_ASSERT(S_ISDIR(dir->st.st_mode));
 
     (void) args;
-    (void) dev;
-
-    DEBUG_ASSERT(S_ISDIR(dir->st.st_mode));
 
 
 
@@ -70,33 +67,36 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
 
 
+
+
+
     __lock(&dir->lock, {
 
-        dir->mount.type = "tmpfs";
-        dir->mount.dev = NULL;
+        dir->mount.type = "vfat";
+        dir->mount.dev = dev;
         dir->mount.flags = flags;
         
-        dir->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
+        //dir->mount.userdata = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
         
-        dir->mount.st.f_bsize = 1;
-        dir->mount.st.f_frsize = 1;
-        dir->mount.st.f_blocks = TMPFS_SIZE_MAX;
-        dir->mount.st.f_bfree = TMPFS_SIZE_MAX;
-        dir->mount.st.f_bavail = TMPFS_SIZE_MAX;
+        dir->mount.st.f_bsize = 0;
+        dir->mount.st.f_frsize = 0;
+        dir->mount.st.f_blocks = 0;
+        dir->mount.st.f_bfree = 0;
+        dir->mount.st.f_bavail = 0;
         dir->mount.st.f_files = 0;
-        dir->mount.st.f_ffree = TMPFS_NODES_MAX;
-        dir->mount.st.f_favail = TMPFS_NODES_MAX;
-        dir->mount.st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
-        dir->mount.st.f_fsid = TMPFS_ID;
+        dir->mount.st.f_ffree = 0;
+        dir->mount.st.f_favail = 0;
+        dir->mount.st.f_flag = stflags;
+        dir->mount.st.f_fsid = VFAT_ID;
         dir->mount.st.f_namemax = MAXNAMLEN;
 
 
 
-        dir->mount.ops.finddir = tmpfs_finddir;
-        dir->mount.ops.readdir = tmpfs_readdir;
-        dir->mount.ops.mknod = tmpfs_mknod;
-        dir->mount.ops.unlink = tmpfs_unlink;
+        //dir->mount.ops.finddir = vfat_finddir;
+        //dir->mount.ops.getdents = vfat_getdents;
+        //dir->mount.ops.mknod = vfat_mknod;
+        //dir->mount.ops.unlink = vfat_unlink;
 
 
         dir->st.st_mode &= ~S_IFMT;

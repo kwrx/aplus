@@ -123,7 +123,7 @@ void smp_init(void) {
             continue;
 
 
-        ap_stack(((uintptr_t) &early_stack) - (i * (CONFIG_STACK_SIZE / CPU_MAX)));
+        ap_stack(((uintptr_t) &early_stack) - (i * CONFIG_STACK_SIZE));
 
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));

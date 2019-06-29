@@ -35,12 +35,6 @@
 #define TMPFS_SIZE_MAX          (4 * 1024 * 1024)
 #define TMPFS_NODES_MAX         (4096)
 
-#define TMPFS(i)                            \
-    ((tmpfs_t*)                             \
-    (((i->st.st_mode & S_IFMT) == S_IFMT)   \
-        ? i->mount.userdata                 \
-        : i->root->mount.userdata)          \
-    )
 
 typedef struct {
     list(inode_t*, children);
@@ -49,7 +43,7 @@ typedef struct {
 
 inode_t* tmpfs_finddir (inode_t*, const char*);
 inode_t* tmpfs_mknod (inode_t*, const char* name, mode_t mode);
-int tmpfs_getdents (inode_t*, struct dirent*, off_t, size_t);
+int tmpfs_readdir (inode_t*, struct dirent*, off_t, size_t);
 int tmpfs_unlink (inode_t*, const char* name);
 int tmpfs_read(inode_t*, void __user *, off_t, size_t);
 int tmpfs_write(inode_t*, const void __user *, off_t, size_t);

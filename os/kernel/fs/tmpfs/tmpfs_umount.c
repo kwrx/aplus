@@ -43,23 +43,26 @@ __thread_safe
 int tmpfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(dir->fsinfo);
     DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
 
 
+    tmpfs_t* tmpfs = (tmpfs_t*) dir->fsinfo;
+
     __lock(&dir->lock, {
         
-        list_each(TMPFS(dir)->children, i) {
+        list_each(tmpfs->children, i) {
             if(likely(i->userdata))
                 kfree(i->userdata);
 
             kfree(i);
         }
 
-        list_clear(TMPFS(dir)->children);
+        list_clear(tmpfs->children);
 
 
 
-        kfree(dir->mount.userdata);
+        kfree(dir->fsinfo);
         
         dir->st.st_mode &= ~S_IFMT;
         dir->st.st_mode |=  S_IFDIR;

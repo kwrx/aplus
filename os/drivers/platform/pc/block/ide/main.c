@@ -332,8 +332,8 @@ static void ide_init(device_t* device) {
     extern uint8_t dma_memory_area;
 
 
-    d->dma.prdt = &dma_memory_prd;
-    d->dma.start = &dma_memory_area;
+    d->dma.prdt = (void*) &dma_memory_prd;
+    d->dma.start = (void*) &dma_memory_area;
 
     d->dma.prdt_phys = (uintptr_t) &dma_memory_prd - CONFIG_KERNEL_BASE;
     d->dma.start_phys = (uintptr_t) &dma_memory_area - CONFIG_KERNEL_BASE;
