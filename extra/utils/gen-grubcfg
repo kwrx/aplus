@@ -1,6 +1,6 @@
 #!/bin/bash
 
-kargs='root=/dev/sda0 rootfs=ext2'
+kargs='root=/dev/sda1 rootfs=ext2'
 margs=''
 
 echo -e "\

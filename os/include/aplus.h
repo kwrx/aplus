@@ -177,14 +177,15 @@ typedef struct {
 
 extern mbd_t* mbd;
 
-extern void core_init(void);
 extern void core_stacktrace(void);
 extern uintptr_t core_get_address(const char*);
 extern const char* core_get_name(uintptr_t);
 
 
-/* Hardware Abstraction Layer */
-void arch_init(void);
+extern void arch_init(void);
+extern void core_init(void);
+extern void root_init(void);
+
 
 void kmain(void);
 void cmain(void);

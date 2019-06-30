@@ -25,6 +25,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -47,5 +48,24 @@
 
 SYSCALL(161, chroot,
 long sys_chroot (const char __user * filename) {
-    return -ENOSYS;
+
+    int fd;
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+        return fd;
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+    
+
+    __lock(&current_task->lock, {
+
+        current_task->cwd = current_task->fd[fd].inode;
+        current_task->root = current_task->fd[fd].inode;
+
+    });
+
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+    return 0;
 });

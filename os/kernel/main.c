@@ -63,6 +63,7 @@ void kmain(void) {
         kpanic("mount: could not mount fake root: %s", strerror(-e));
 
     __init(module,  ());
+    __init(root,    ());
 
 
 #if defined(DEBUG)
@@ -90,18 +91,9 @@ void kmain(void) {
         mbd->memory.size / 1024 / 1024);
 
 
-    sys_mkdir("/root", 0666);
-    sys_mount("/dev/sda1", "/root", "ext2", 0, NULL);
 
 
     
-    int fd = sys_open("/root/etc/environment", 0, 0);
-
-    char buf[512] = { 0 };
-    e = sys_read(fd, buf, 511);
-    kprintf("data: %d -> '%s'\n", e, buf);
-
-
     const char* argv[] = { "/sbin/init", NULL };
     const char* envp[] = { NULL };
 

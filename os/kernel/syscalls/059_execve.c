@@ -56,5 +56,30 @@
 
 SYSCALL(59, execve,
 long sys_execve (const char __user * filename, const char __user ** argv, const char __user ** envp) {
+    
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!argv))
+        return -EINVAL;
+
+    if(unlikely(!envp))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(filename, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(argv, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(envp, R_OK)))
+        return -EFAULT;
+
+
+    
+    /* TODO: Free data  */
+    /* TODO: Add binfmt */
+
+
     return -ENOSYS;
 });
