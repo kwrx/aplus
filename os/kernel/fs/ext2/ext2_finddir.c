@@ -31,100 +31,109 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <aplus/utils/list.h>
-
 #include "ext2.h"
 
 
 __thread_safe
 inode_t* ext2_finddir(inode_t* inode, const char * name) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->fsinfo);
     DEBUG_ASSERT(name);
 
-
     ext2_t* ext2 = (ext2_t*) inode->fsinfo;
+    inode_t* child = NULL;
 
 
+    struct ext2_inode node;
+    ext2_utils_read_inode(ext2, inode->st.st_ino, &node);
 
-    struct ext2_inode e;
-    ext2_utils_read_inode(ext2, inode->st.st_ino, &e);
-
-
-
-    char entry[MAXNAMLEN];
 
     int q;
-    for(q = 0; q < e.i_size; q++) {
-
-        struct ext2_dir_entry_2 d;
-        ext2_utils_read_inode_data(ext2, e.i_block, (q / ext2->blocksize), 
-                                                    (q % ext2->blocksize), &d, sizeof(d));
-
-        ext2_utils_read_inode_data(ext2, e.i_block, (q / ext2->blocksize), 
-                                                    (q % ext2->blocksize) + 8, entry, d.name_len);
-
-        entry[d.name_len] = '\0';
+    for(q = 0; q < node.i_size; q += ext2->blocksize) {
 
 
-
-        if(strcmp(entry, name) == 0) {
-            
-            inode_t* i = (inode_t*) kcalloc(1, sizeof(inode_t), GFP_USER);  /* Add Caching */
-
-            i->parent = inode;
-            i->st.st_ino = d.inode;
-            i->st.st_mode = e.i_mode;
-            i->st.st_size = e.i_size;
-            i->st.st_nlink = e.i_links_count;
-            i->st.st_atim.tv_sec = e.i_atime;
-            i->st.st_ctim.tv_sec = e.i_ctime;
-            i->st.st_mtim.tv_sec = e.i_mtime;
-            i->st.st_uid = e.i_uid;
-            i->st.st_gid = e.i_gid;
-
-            strncpy(i->name, name, sizeof(i->name));
+        __lock(&ext2->lock, {
+        
+            ext2_utils_read_inode_data(ext2, node.i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
 
 
-            
-            if((inode->st.st_mode & S_IFMT) == S_IFMT)
-                i->root = inode;
-            else
-                i->root = inode->root;
+            int i;
+            for(i = 0; i < ext2->blocksize; ) {
 
-            DEBUG_ASSERT(i->root);
+                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
 
-            if(S_ISDIR(mode)) {
+                /* Found? */
+                if(strncmp(name, d->name, d->name_len) == 0) {
 
-                i->ops.finddir = tmpfs_finddir;
-                i->ops.readdir = tmpfs_readdir;
-                i->ops.unlink = tmpfs_unlink;
-                i->ops.mknod = tmpfs_mknod;
+                    struct ext2_inode node;
+                    ext2_utils_read_inode(ext2, d->inode, &node);
 
+
+                    child = vfs_cache_get_inode(ext2->root->mount.cache, d->inode);
+
+                    child->st.st_dev = 0;
+                    child->st.st_mode = node.i_mode;
+                    child->st.st_nlink = node.i_links_count;
+                    child->st.st_uid = node.i_uid;
+                    child->st.st_gid = node.i_gid;
+                    child->st.st_rdev = 0;
+                    child->st.st_size = node.i_size;
+                    child->st.st_blksize = 512;
+                    child->st.st_blocks = node.i_blocks;
+                    child->st.st_atime = node.i_atime;
+                    child->st.st_ctime = node.i_ctime;
+                    child->st.st_mtime = node.i_mtime;
+
+#if CONFIG_BITS == 64
+                    child->st.st_size |= ((off_t) node.i_size_high) << 32;
+#endif
+
+                    //child->ops.fsync = ext2_fsync;
+
+                    if(S_ISDIR(node.i_mode)) {
+
+                        child->ops.finddir = ext2_finddir;
+                        child->ops.readdir = ext2_readdir;
+                        child->ops.mknod = ext2_mknod;
+                        child->ops.unlink = ext2_unlink;
+
+                    }
+
+                    if(S_ISREG(node.i_mode)) {
+
+                        child->ops.read = ext2_read;
+                        child->ops.write = ext2_write;
+
+                    }
+
+                    strncpy(child->name, name, MAXNAMLEN);
+
+
+                    child->fsinfo = inode->fsinfo;
+                    child->userdata = NULL;
+                    child->parent = inode->parent;
+                    child->root = ext2->root;
+                    
+                    spinlock_init(&child->lock);
+
+
+                    break;
+                }
+                    
+                
+                
+                i += d->rec_len;
             }
 
-            if(S_ISREG(mode)) {
-
-                i->ops.read = tmpfs_read;     
-                i->ops.write = tmpfs_write;     
-
-            }
-
-            spinlock_init(&i->lock);
+        });
 
 
-            i->root->mount.st.f_ffree--;
-            i->root->mount.st.f_favail--;
+        if(child != NULL)
+            break;
 
-            i->fsinfo = i->root->fsinfo;
-
-            
-        }
-
-        q += d.rec_len;                                            
     }
 
-
-    return NULL;
+    return child;
 }

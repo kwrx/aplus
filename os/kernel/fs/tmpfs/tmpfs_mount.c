@@ -75,6 +75,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
         dir->mount.type = "tmpfs";
         dir->mount.dev = NULL;
         dir->mount.flags = flags;
+        dir->mount.cache = NULL;
         
         dir->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 

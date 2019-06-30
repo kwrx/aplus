@@ -31,8 +31,6 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <aplus/utils/list.h>
-
 #include "ext2.h"
 
 
@@ -41,7 +39,6 @@ int ext2_unlink(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-
-
-    return 0;
+    errno = EROFS;
+    return -1;
 }

@@ -95,6 +95,9 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         dir->mount.type = "ext2";
         dir->mount.dev = dev;
         dir->mount.flags = flags;
+
+        vfs_cache_create(&dir->mount.cache, 1024);
+
         
         ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
@@ -104,6 +107,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         ext2->blocksize = (1024) << sb.s_log_block_size;
         ext2->inodesize = sb.s_inode_size;
         ext2->dev = dev;
+        ext2->root = dir;
 
         memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
         spinlock_init(&ext2->lock);

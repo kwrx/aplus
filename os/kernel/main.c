@@ -95,14 +95,11 @@ void kmain(void) {
 
 
     
-    int fd = sys_open("/root", 0, 0);
-    if(fd < 0)
-        kpanic("fd < 0");
+    int fd = sys_open("/root/etc/environment", 0, 0);
 
-    
-    struct dirent d;
-    while(sys_getdents(fd, &d, sizeof(struct dirent)) > 0)
-        kprintf("<%d> {%d}: %s\n", (int) d.d_ino, (int) d.d_type, d.d_name);
+    char buf[512] = { 0 };
+    e = sys_read(fd, buf, 511);
+    kprintf("data: %d -> '%s'\n", e, buf);
 
 
     const char* argv[] = { "/sbin/init", NULL };

@@ -85,10 +85,12 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
 
     do {
-        if((p = strchr(s, '/')))
-            strncpy(b, s, MIN(p - s, PATH_MAX));
-        else
+        if((p = strchr(s, '/')) == NULL)
             break;
+
+        b[MIN(p - s, PATH_MAX)] = '\0';
+        strncpy(b, s, MIN(p - s, PATH_MAX));
+        
         
         if(unlikely(!(c = vfs_finddir(c, b))))
             return -errno;

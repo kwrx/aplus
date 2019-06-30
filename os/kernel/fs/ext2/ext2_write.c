@@ -41,5 +41,6 @@ int ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    return len;
+    errno = EROFS;
+    return -1;
 }

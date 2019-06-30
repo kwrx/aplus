@@ -34,8 +34,25 @@
 #include <sys/dirent.h>
 
 typedef struct inode inode_t;
+typedef struct vfs_cache vfs_cache_t;
+
+
+
+struct vfs_cache {
+
+    size_t capacity;
+    size_t count;
+
+    spinlock_t lock;
+
+    inode_t** inodes;
+    ktime_t* times;
+
+};
+
 
 struct inode_ops {
+
     int (*open)(inode_t*);
     int (*close)(inode_t*);
     int (*read)(inode_t*, void*, off_t, size_t);
@@ -48,7 +65,9 @@ struct inode_ops {
 
     int (*ioctl) (inode_t*, int, void*);
     int (*fsync) (inode_t*);
+
 };
+
 
 struct inode {
     char name[MAXNAMLEN];
@@ -66,6 +85,7 @@ struct inode {
 
             struct statvfs st;
             struct inode_ops ops;
+            struct vfs_cache* cache;
         } mount;
 
         struct inode* link;
@@ -81,8 +101,10 @@ struct inode {
 };
 
 
+
 void vfs_init(void);
 
+// os/kernel/fs/vfs.c
 int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, const char __user * args);
 int vfs_open(inode_t* inode);
 int vfs_close(inode_t* inode);
@@ -95,6 +117,12 @@ int vfs_fsync(inode_t* inode);
 
 inode_t* vfs_finddir(inode_t* inode, const char __user * name);
 inode_t* vfs_mknod(inode_t* inode, const char __user * name, mode_t mode);
+
+
+// os/kernel/fs/cache.c
+void vfs_cache_create(vfs_cache_t**, int capacity);
+void vfs_cache_destroy(vfs_cache_t**);
+inode_t* vfs_cache_get_inode(vfs_cache_t*, ino_t);
 
 
 

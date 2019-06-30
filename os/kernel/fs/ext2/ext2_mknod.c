@@ -40,4 +40,6 @@ inode_t* ext2_mknod(inode_t* inode, const char * name, mode_t mode) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
+    errno = EROFS;
+    return NULL;
 }

@@ -31,73 +31,77 @@
 #include <stdint.h>
 #include <errno.h>
 
-#include <aplus/utils/list.h>
-
 #include "ext2.h"
 
 
 
 __thread_safe
 int ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->fsinfo);
     DEBUG_ASSERT(e);
-
+    DEBUG_ASSERT(count);
 
     ext2_t* ext2 = (ext2_t*) inode->fsinfo;
-    uint32_t off = 0;
 
 
-
-    struct ext2_inode i;
-    ext2_utils_read_inode(ext2, inode->st.st_ino, &i);
-
+    struct ext2_inode node;
+    ext2_utils_read_inode(ext2, inode->st.st_ino, &node);
 
 
+    int entries = 0;
     int q;
-    for(q = 0; q < pos; q++) {
 
-        if(off >= i.i_size)
-            return 0;
+    for(q = 0; q < node.i_size; q += ext2->blocksize) {
+
+        __lock(&ext2->lock, {
+        
+
+            ext2_utils_read_inode_data(ext2, node.i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+
+            int i;
+            for(i = 0; i < ext2->blocksize; ) {
+
+                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
+
+                if(pos > 0)
+                    pos--;
+
+                else {
+
+                    if(count == 0)
+                        break;
 
 
-        struct ext2_dir_entry_2 d;
-        ext2_utils_read_inode_data(ext2, i.i_block, (off / ext2->blocksize), 
-                                                    (off % ext2->blocksize), &d, sizeof(d));                          
+                    e->d_ino = d->inode;
+                    e->d_off = i;
+                    e->d_reclen = sizeof(struct dirent);
+                    e->d_type = 0;
+                    e->d_name[d->name_len] = '\0';
+                    
+                    strncpy(e->d_name, d->name, d->name_len);
 
-        off += d.rec_len;                                            
-    }
+
+                    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+                        e->d_type = d->file_type;
 
 
+                    e++;
+                    entries++;
+                    count--;
+                }
+                
+                i += d->rec_len;
+            }
 
-    for(q = 0; q < count; q++) {
+        });
 
-        if(off >= i.i_size)
+
+        if(count == 0)
             break;
 
-
-        struct ext2_dir_entry_2 d;
-        ext2_utils_read_inode_data(ext2, i.i_block, (off / ext2->blocksize), 
-                                                    (off % ext2->blocksize), &d, sizeof(d));            
-
-        ext2_utils_read_inode_data(ext2, i.i_block, (off / ext2->blocksize), 
-                                                    (off % ext2->blocksize) + 8, e->d_name, d.name_len);
-
-
-        e->d_ino = d.inode;
-        e->d_off = sizeof(struct dirent) * (pos + q);
-        e->d_reclen = sizeof(struct dirent);
-        e->d_type = 0;
-        e->d_name[d.name_len] = '\0';
-
-
-        if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
-            e->d_type = d.file_type;
-
-
-        off += d.rec_len;
     }
 
-
-    return q;
+    return entries;
 }

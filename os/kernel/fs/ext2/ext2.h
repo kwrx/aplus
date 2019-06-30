@@ -428,7 +428,8 @@ typedef struct {
     void* cache; 
     spinlock_t lock;  
 
-    inode_t* dev; 
+    inode_t* dev;
+    inode_t* root;
 } __packed ext2_t;
 
 

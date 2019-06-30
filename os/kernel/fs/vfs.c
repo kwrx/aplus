@@ -50,7 +50,7 @@ void vfs_init(void) {
     memset(&vfs_table, 0, sizeof(vfs_table));
 
     int i = 0;
-    #include "fs/fstable.c.in"
+    #include "fstable.c.in"
 
 
     _vfs_root.name[0] = '/';
