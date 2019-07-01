@@ -31,6 +31,7 @@
 #include <aplus/smp.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
+#include <aplus/elf.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -76,9 +77,113 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
+
+    int e;
+    struct stat st;
+    if((e = sys_stat(filename, &st)) < 0)
+        return e;
+
+
+    if(st.st_uid == current_task->uid && !(st.st_mode & S_IXUSR))
+        return -EPERM;
+
+    else if(st.st_gid == current_task->gid && !(st.st_mode & S_IXGRP))
+        return -EPERM;
+    
+    else if(!(st.st_mode & S_IXOTH))
+        return -EPERM;
+
+
+
+    int fd;
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+        return fd;
+
+
+    Elf_Ehdr head;
+    if((e = sys_read(fd, &head, sizeof(head))) < 0)
+        return e;
+
+
+    if(head.e_ident[0] == '#' &&
+       head.e_ident[1] == '!')
+        return -ENOEXEC; /* TODO: Read Scripts */
+
+
+    
+    if(
+        (head.e_ident[EI_MAG0] != ELFMAG0) ||
+        (head.e_ident[EI_MAG1] != ELFMAG1) ||
+        (head.e_ident[EI_MAG2] != ELFMAG2) ||
+        (head.e_ident[EI_MAG3] != ELFMAG3) ||
+        (head.e_type != ET_EXEC)
+    ) return -ENOEXEC;
+
+
+
     
     /* TODO: Free data  */
-    /* TODO: Add binfmt */
+
+
+    uintptr_t i_base = ~0L;
+    uintptr_t i_end = 0L;
+    size_t size;
+
+
+    int i;
+    for(i = 1; i < head.e_phnum; i++) {
+
+        Elf_Phdr phdr;
+        RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
+
+
+        switch(phdr.p_type) {
+
+            case PT_LOAD:
+
+                size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
+
+                if(phdr.p_vaddr < i_base)
+                    i_base = phdr.p_vaddr;
+
+                if((size + phdr.p_vaddr > i_end))
+                    i_end = size + phdr.p_vaddr;
+
+                
+                arch_mmap (
+                    (void*) phdr.p_vaddr, size, ARCH_MAP_USER | ARCH_MAP_RDWR
+                );
+
+
+                RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
+                break;
+
+            case PT_TLS:
+
+                kprintf("execve: WARN! PT_TLS not yet supported\n");
+                break;
+
+            case PT_GNU_EH_FRAME:
+                
+                kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
+                break;
+
+            case PT_DYNAMIC:
+
+                kpanic("execve: FAIL! PT_DYNAMIC not supported");
+                break;
+
+            default:
+                continue;
+
+        }
+    }
+
+
+
+    sys_close(fd);
+
+
 
 
     return -ENOSYS;
