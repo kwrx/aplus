@@ -62,6 +62,4 @@ void root_init(void) {
     if((e = sys_chroot("/root")) < 0)
         kpanic("root: FAIL! chroot() failed: %s", strerror(-e));
     
-
-    /* TODO: parse /etc/fstab */
 }

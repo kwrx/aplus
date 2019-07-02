@@ -51,7 +51,7 @@
  */
 
 SYSCALL(0, read,
-long sys_read (unsigned int fd, char __user * buf, size_t size) {
+long sys_read (unsigned int fd, void __user * buf, size_t size) {
     if(unlikely(!ptr_check(buf, R_OK | W_OK)))
         return -EFAULT;
 

@@ -80,7 +80,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     int e;
     struct stat st;
-    if((e = sys_stat(filename, &st)) < 0)
+    if((e = sys_newstat(filename, &st)) < 0)
         return e;
 
 
@@ -122,7 +122,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     
-    /* TODO: Free data  */
 
 
     uintptr_t i_base = ~0L;
@@ -130,61 +129,112 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     size_t size;
 
 
-    int i;
-    for(i = 1; i < head.e_phnum; i++) {
 
-        Elf_Phdr phdr;
-        RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
-
-
-        switch(phdr.p_type) {
-
-            case PT_LOAD:
-
-                size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
-
-                if(phdr.p_vaddr < i_base)
-                    i_base = phdr.p_vaddr;
-
-                if((size + phdr.p_vaddr > i_end))
-                    i_end = size + phdr.p_vaddr;
-
-                
-                arch_mmap (
-                    (void*) phdr.p_vaddr, size, ARCH_MAP_USER | ARCH_MAP_RDWR
-                );
-
-
-                RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
-                break;
-
-            case PT_TLS:
-
-                kprintf("execve: WARN! PT_TLS not yet supported\n");
-                break;
-
-            case PT_GNU_EH_FRAME:
-                
-                kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
-                break;
-
-            case PT_DYNAMIC:
-
-                kpanic("execve: FAIL! PT_DYNAMIC not supported");
-                break;
-
-            default:
-                continue;
-
-        }
+    #define RXX(a, b, c) {                                                  \
+        if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
+            return e;                                                       \
+                                                                            \
+        if((e = sys_read(fd, (void*)(a), (size_t)(c))) != (size_t)(c)) {    \
+            if(e < 0)                                                       \
+                return e;                                                   \
+            else                                                            \
+                return -EIO;                                                \
+        }                                                                   \
     }
 
 
 
-    sys_close(fd);
+    __lock(&current_task->lock, {
 
 
+        /* TODO: Free data  */
 
 
+        int i;
+        for(i = 0; i < head.e_phnum; i++) {
+
+            Elf_Phdr phdr;
+            RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
+
+
+            switch(phdr.p_type) {
+
+                case PT_LOAD:
+
+                    size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
+
+                    if(phdr.p_vaddr < i_base)
+                        i_base = phdr.p_vaddr;
+
+                    if((size + phdr.p_vaddr > i_end))
+                        i_end = size + phdr.p_vaddr;
+
+                    
+                    arch_mmap (
+                        (void*) phdr.p_vaddr, size, ARCH_MAP_USER | ARCH_MAP_RDWR
+                    );
+
+
+                    RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
+                    break;
+
+                case PT_TLS:
+
+                    kprintf("execve: WARN! PT_TLS not yet supported\n");
+                    break;
+
+                case PT_GNU_EH_FRAME:
+                    
+                    kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
+                    break;
+
+                case PT_DYNAMIC:
+
+                    kpanic("execve: FAIL! PT_DYNAMIC not supported");
+                    break;
+
+                default:
+                    continue;
+
+            }
+        }
+
+
+        current_task->aspace->start = i_base;
+        current_task->aspace->end = i_end;
+        current_task->aspace->refcount = 1;
+        current_task->exe = current_task->fd[fd].inode;
+
+
+#if 0
+        long offset = sys_brk(NULL);
+
+        #define PUSH(x, y) {                                        \
+            long p;                                                 \
+            if((p = sys_brk(offset + y)) != (offset + y))           \
+                kpanic("execve: no memory left for %d bytes", y);   \
+                                                                    \
+            memcpy((void*) offset, (void*) x, y);                   \
+            offset += y;                                            \
+        }
+        
+
+        int i;
+        for(i = 0; argv[i]; i++)
+            PUSH(argv[i], strlen(argv[i]) + 1);
+
+        PUSH("\0", 1);
+
+        for(i = 0; envp[i]; i++)
+            PUSH(envp[i], strlen(envp[i]) + 1);
+        
+        PUSH("\0", 1);
+#endif
+
+    });
+
+
+    
     return -ENOSYS;
+
 });

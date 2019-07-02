@@ -54,9 +54,9 @@ long syscall_invoke(long, long, long, long, long, long, long);
 
 /* Syscalls */
 
-extern long sys_read (unsigned int fd, char __user * buf, size_t count);
+extern long sys_read (unsigned int fd, void __user * buf, size_t count);
 
-extern long sys_write (unsigned int fd, const char __user * buf, size_t count);
+extern long sys_write (unsigned int fd, const void __user * buf, size_t count);
 
 extern long sys_open (const char __user * filename, int flags, mode_t mode);
 

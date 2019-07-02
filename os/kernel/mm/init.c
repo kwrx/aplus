@@ -33,7 +33,7 @@
 void vmm_init(void) {
     arch_mmap (
         (void*)  CONFIG_HEAP_BASE,
-        (size_t) CONFIG_HEAP_SIZE,
+        (size_t) CONFIG_HEAP_SIZE - 1,
         
         ARCH_MAP_NOEXEC | ARCH_MAP_RDWR | ARCH_MAP_SHARED
     );

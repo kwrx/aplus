@@ -43,13 +43,24 @@ __thread_safe
 int ext2_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
-    DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
-
     DEBUG_ASSERT(dir->fsinfo);
     DEBUG_ASSERT(dir->mount.cache);
+    DEBUG_ASSERT((dir->st.st_mode & S_IFMT) == S_IFMT);
 
-    vfs_cache_destroy(&dir->mount.cache);
 
-    kfree(dir->fsinfo);
+    __lock(&dir->lock, {
+
+        vfs_cache_destroy(&dir->mount.cache);
+
+
+        memset(&dir->mount, 0, sizeof(dir->mount));
+
+        dir->st.st_mode &= ~S_IFMT;
+        dir->st.st_mode |=  S_IFDIR;
+
+        kfree(dir->fsinfo);
+
+    });
+
     return 0;
 }

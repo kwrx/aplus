@@ -51,7 +51,7 @@
  */
 
 SYSCALL(1, write,
-long sys_write (unsigned int fd, const char __user * buf, size_t size) {
+long sys_write (unsigned int fd, const void __user * buf, size_t size) {
     if(unlikely(!ptr_check(buf, R_OK)))
         return -EFAULT;
 

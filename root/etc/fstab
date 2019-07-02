@@ -6,6 +6,5 @@
 
       none         /proc           proc             nodev,nosuid,rw
       none         /tmp            tmpfs            nodev,nosuid,rw
-#     /dev/cda     /mnt/cdrom      iso9660          readonly
-      /fat.img     /mnt            vfat             rw
+#     /dev/scd1    /mnt/cdrom      iso9660          readonly
 
