@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -48,5 +50,37 @@
 
 SYSCALL(4, newstat,
 long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
-    return -ENOSYS;
+
+    if(!filename)
+        return -EINVAL;
+
+    if(!statbuf)
+        return -EINVAL;
+
+    if(!ptr_check(filename, R_OK))
+        return -EFAULT;
+
+    if(!ptr_check(statbuf, R_OK | W_OK))
+        return -EFAULT;
+
+    
+    int fd;
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+        return fd;
+    
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
+
+    __lock(&current_task->fd[fd].inode->ino, {
+
+        memcpy(statbuf, &current_task->fd[fd].inode->ino->st, sizeof(struct stat));
+
+    });
+
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+    return 0;
 });

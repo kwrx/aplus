@@ -59,10 +59,14 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
     if(unlikely(fd > TASK_NFD)) /* TODO: Add Network Support */
         return -EBADF;
 
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
+
     if(unlikely(!current_task->fd[fd].inode))
         return -EBADF;
 
-    if(S_ISFIFO(current_task->fd[fd].inode->st.st_mode))
+    if(S_ISFIFO(current_task->fd[fd].inode->ino->st.st_mode))
         return -ESPIPE;
 
 
@@ -80,7 +84,7 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
                 break;
 
             case SEEK_END:
-                current_task->fd[fd].position = current_task->fd[fd].inode->st.st_size + offset;
+                current_task->fd[fd].position = current_task->fd[fd].inode->ino->st.st_size + offset;
                 break;
 
             default:

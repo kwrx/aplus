@@ -3,14 +3,14 @@
       [
          0,
          "sys_read",
-         "(unsigned int fd,char __user * buf,size_t count)",
+         "(unsigned int fd,void __user * buf,size_t count)",
          "0x00",
          {
             "type": "unsigned int fd",
             "def": null
          },
          {
-            "type": "char __user * buf",
+            "type": "void __user * buf",
             "def": null
          },
          {
@@ -25,14 +25,14 @@
       [
          1,
          "sys_write",
-         "(unsigned int fd,const char __user * buf,size_t count)",
+         "(unsigned int fd,const void __user * buf,size_t count)",
          "0x01",
          {
             "type": "unsigned int fd",
             "def": null
          },
          {
-            "type": "const char __user * buf",
+            "type": "const void __user * buf",
             "def": null
          },
          {

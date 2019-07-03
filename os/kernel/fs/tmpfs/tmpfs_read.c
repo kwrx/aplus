@@ -36,21 +36,27 @@
 
 __thread_safe
 int tmpfs_read(inode_t* inode, void * buf, off_t pos, size_t len) {
+   
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->ino);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
-    if(!inode->userdata)
+
+    if(!inode->ino->userdata)
         return 0;
 
-    if(pos + len > inode->st.st_size)
-        len = inode->st.st_size - pos;
+    if(pos + len > inode->ino->st.st_size)
+        len = inode->ino->st.st_size - pos;
 
 
     DEBUG_ASSERT(len >= 0);
 
     if(likely(len > 0))
-        memcpy(buf, (void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), len);
+        memcpy(buf, (void*) ((uintptr_t) inode->ino->userdata + (uintptr_t) pos), len);
     
     return len;
 }

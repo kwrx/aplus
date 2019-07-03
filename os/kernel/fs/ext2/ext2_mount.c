@@ -41,8 +41,10 @@
 __thread_safe
 int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(dir->ino);
     DEBUG_ASSERT(dev);
-    DEBUG_ASSERT(S_ISDIR(dir->st.st_mode));
+    DEBUG_ASSERT(dev->ino);
+    DEBUG_ASSERT(S_ISDIR(dir->ino->st.st_mode));
 
     (void) args;
 
@@ -92,11 +94,13 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     __lock(&dir->lock, {
 
-        dir->mount.type = "ext2";
-        dir->mount.dev = dev;
-        dir->mount.flags = flags;
+        dir->sb = PTR_REF(&dir->__sb);
+        dir->sb->fsid = EXT2_ID;
+        dir->sb->dev = dev;
+        dir->sb->root = dir;
+        dir->sb->flags = flags;
 
-        vfs_cache_create(&dir->mount.cache, 1024);
+        vfs_cache_create(&dir->sb->cache, 1024);
 
         
         ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
@@ -114,30 +118,30 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-        dir->fsinfo = (void*) ext2;
+        dir->sb->fsinfo = (void*) ext2;
         
-        dir->mount.st.f_bsize = 1024 << sb.s_log_block_size;
-        dir->mount.st.f_frsize = 1024 << sb.s_log_frag_size;
-        dir->mount.st.f_blocks = sb.s_blocks_count;
-        dir->mount.st.f_bfree = sb.s_free_blocks_count;
-        dir->mount.st.f_bavail = sb.s_free_blocks_count;
-        dir->mount.st.f_files = sb.s_inodes_count;
-        dir->mount.st.f_ffree = sb.s_free_inodes_count;
-        dir->mount.st.f_favail = sb.s_free_inodes_count;
-        dir->mount.st.f_flag = stflags;
-        dir->mount.st.f_fsid = EXT2_ID;
-        dir->mount.st.f_namemax = MAXNAMLEN;
+        dir->sb->st.f_bsize = 1024 << sb.s_log_block_size;
+        dir->sb->st.f_frsize = 1024 << sb.s_log_frag_size;
+        dir->sb->st.f_blocks = sb.s_blocks_count;
+        dir->sb->st.f_bfree = sb.s_free_blocks_count;
+        dir->sb->st.f_bavail = sb.s_free_blocks_count;
+        dir->sb->st.f_files = sb.s_inodes_count;
+        dir->sb->st.f_ffree = sb.s_free_inodes_count;
+        dir->sb->st.f_favail = sb.s_free_inodes_count;
+        dir->sb->st.f_flag = stflags;
+        dir->sb->st.f_fsid = EXT2_ID;
+        dir->sb->st.f_namemax = MAXNAMLEN;
 
 
 
-        dir->mount.ops.finddir = ext2_finddir;
-        dir->mount.ops.readdir = ext2_readdir;
-        dir->mount.ops.mknod = ext2_mknod;
-        dir->mount.ops.unlink = ext2_unlink;
+        dir->sb->ops.finddir = ext2_finddir;
+        dir->sb->ops.readdir = ext2_readdir;
+        dir->sb->ops.mknod = ext2_mknod;
+        dir->sb->ops.unlink = ext2_unlink;
 
-        dir->st.st_ino = EXT2_ROOT_INO;
-        dir->st.st_mode &= ~S_IFMT;
-        dir->st.st_mode |=  S_IFMT;
+        dir->ino->st.st_ino = EXT2_ROOT_INO;
+        dir->ino->st.st_mode &= ~S_IFMT;
+        dir->ino->st.st_mode |=  S_IFMT;
 
 
     });

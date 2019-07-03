@@ -38,12 +38,16 @@
 
 __thread_safe
 inode_t* tmpfs_finddir(inode_t* inode, const char * name) {
+    
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->fsinfo);
+    DEBUG_ASSERT(inode->ino);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsinfo);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
     DEBUG_ASSERT(name);
 
 
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;
+    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
         
     list_each(tmpfs->children, i)
         if(unlikely(i->parent == inode))

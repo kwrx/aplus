@@ -95,12 +95,14 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
         if(unlikely(!(c = vfs_finddir(c, b))))
             return -errno;
 
+#if 0   /* TODO: Follow symlinks */
         if(S_ISLNK(c->st.st_mode)) {
             DEBUG_ASSERT(c->link);
             DEBUG_ASSERT(c->link != c);
             
             c = c->link;
         }
+#endif
 
         s = p;
         s++;
@@ -114,6 +116,10 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
         r = vfs_finddir(c, s);
     else
         r = c;
+
+
+    DEBUG_ASSERT(r);
+    DEBUG_ASSERT(r->ino);
 
 
     if(unlikely(!r)) {
@@ -130,22 +136,24 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
             return -EEXIST;
     
 
-
+#if 0 /* TODO: Follow symlinks */
     if (
 #ifdef O_NOFOLLOW
         !(flags & O_NOFOLLOW) &&
 #endif
-        S_ISLNK(r->st.st_mode)
+        S_ISLNK(r->ino->st.st_mode)
     ) {
         DEBUG_ASSERT(r->link);
         DEBUG_ASSERT(r->link != r);
 
         r = r->link;
     }
+#endif
+
 
 #ifdef O_DIRECTORY
     if(flags & O_DIRECTORY)
-        if(!(S_ISDIR(r->st.st_mode)))
+        if(!(S_ISDIR(r->ino->st.st_mode)))
             return -ENOTDIR;
 #endif
 
@@ -153,14 +161,14 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
     if(current_task->uid != 0) {
 
-        if(r->st.st_uid == current_task->uid)
+        if(r->ino->st.st_uid == current_task->uid)
             if(!(
                 (flags & O_RDONLY ? mode & S_IRUSR : 1) &&
                 (flags & O_WRONLY ? mode & S_IWUSR : 1) &&
                 (flags & O_RDWR   ? mode & S_IRUSR && mode & S_IWUSR : 1)
             )) return -EACCES;
 
-        else if(r->st.st_gid == current_task->gid)
+        else if(r->ino->st.st_gid == current_task->gid)
             if(!(
                 (flags & O_RDONLY ? mode & S_IRGRP : 1) &&
                 (flags & O_WRONLY ? mode & S_IWGRP : 1) &&
@@ -177,7 +185,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
     }
 
 
-    if(vfs_open(r) < 0)
+    if(vfs_open(r, flags) < 0)
         if(errno != ENOSYS)
             return -errno;
 
@@ -196,7 +204,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
         
         if(flags & O_APPEND)
-            current_task->fd[fd].position = r->st.st_size;
+            current_task->fd[fd].position = r->ino->st.st_size;
         else
             current_task->fd[fd].position = 0;
 

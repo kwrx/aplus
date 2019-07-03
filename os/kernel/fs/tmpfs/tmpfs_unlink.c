@@ -38,9 +38,13 @@
 
 __thread_safe
 int tmpfs_unlink(inode_t* inode, const char* name) {
+
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->fsinfo);
+    DEBUG_ASSERT(inode->ino);
+    DEBUG_ASSERT(inode->sb->fsinfo);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
     DEBUG_ASSERT(name);
+
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;
     inode_t* d = NULL;
@@ -59,15 +63,26 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
     if(!d)
         return errno = ENOENT, -1;
 
-
-    d->mount.st.f_bavail += d->st.st_size;
-    d->mount.st.f_bfree += d->st.st_size;
-    d->mount.st.f_ffree++;
-    d->mount.st.f_favail++;
-
     list_remove(tmpfs->children, d);
 
-    kfree(d->userdata);
+
+
+    DEBUG_ASSERT(d->ino);
+    DEBUG_ASSERT(d->sb);
+
+    d->sb->st.f_ffree++;
+    d->sb->st.f_favail++;
+
+
+    if(--d->ino->refcount == 0) {
+
+        d->sb->st.f_bavail += d->ino->st.st_size;
+        d->sb->st.f_bfree += d->ino->st.st_size;
+     
+        kfree(d->ino->userdata);
+
+    }
+
     kfree(d);
 
     return 0;

@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -48,5 +50,33 @@
 
 SYSCALL(5, newfstat,
 long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
-    return -ENOSYS;
+
+    if(fd < 0)
+        return -EBADF;
+
+    if(fd > TASK_NFD)
+        return -EBADF;
+
+    if(!statbuf)
+        return -EINVAL;
+
+    if(!ptr_check(statbuf, R_OK | W_OK))
+        return -EFAULT;
+
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
+
+    if(unlikely(!current_task->fd[fd].inode))
+        return -EBADF;
+
+
+
+    __lock(&current_task->fd[fd].inode->ino, {
+
+        memcpy(statbuf, &current_task->fd[fd].inode->ino->st, sizeof(struct stat));
+
+    });
+
+    return 0;
 });

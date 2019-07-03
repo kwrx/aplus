@@ -42,7 +42,10 @@ static inode_t* __unsafe_vfs_get_inode(vfs_cache_t* cache, ino_t ino) {
         if(!cache->inodes[i])
             continue;
 
-        if(cache->inodes[i]->st.st_ino == ino)
+
+        DEBUG_ASSERT(cache->inodes[i]->ino);
+
+        if(cache->inodes[i]->ino->st.st_ino == ino)
             return cache->inodes[i];
 
     }
@@ -70,7 +73,8 @@ alloc:
         cache->inodes[j] = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
         cache->times[j]  = arch_timer_getticks();
 
-        return cache->inodes[j]->st.st_ino = ino
+        return cache->inodes[j]->ino = PTR_REF(&cache->inodes[j]->__ino)
+             , cache->inodes[j]->ino->st.st_ino = ino
              , cache->inodes[j];
     
     } else {
@@ -87,8 +91,9 @@ alloc:
             cache->inodes[i] = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
             cache->times[i]  = arch_timer_getticks();
 
-            return cache->inodes[i]->st.st_ino = ino
-                , cache->inodes[i];
+            return cache->inodes[j]->ino = PTR_REF(&cache->inodes[j]->__ino)
+                 , cache->inodes[i]->ino->st.st_ino = ino
+                 , cache->inodes[i];
     
         }
 
@@ -141,8 +146,9 @@ void vfs_cache_destroy(vfs_cache_t** cache) {
         if(!(*cache)->inodes[i])
             continue;
 
-        if((*cache)->inodes[i]->userdata)
-            kfree((*cache)->inodes[i]->userdata);
+        if(--(*cache)->inodes[i]->ino->refcount == 0)
+            if((*cache)->inodes[i]->userdata)
+                kfree((*cache)->inodes[i]->userdata);
 
         kfree((*cache)->inodes[i]);
     }

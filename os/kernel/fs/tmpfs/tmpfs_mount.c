@@ -41,13 +41,15 @@
 
 __thread_safe
 int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
+    
     DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(dir->ino);
     DEBUG_ASSERT(dev == NULL);
 
     (void) args;
     (void) dev;
 
-    DEBUG_ASSERT(S_ISDIR(dir->st.st_mode));
+    DEBUG_ASSERT(S_ISDIR(dir->ino->st.st_mode));
 
 
 
@@ -72,36 +74,38 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
     __lock(&dir->lock, {
 
-        dir->mount.type = "tmpfs";
-        dir->mount.dev = NULL;
-        dir->mount.flags = flags;
-        dir->mount.cache = NULL;
+        dir->sb = PTR_REF(&dir->__sb);
+        dir->sb->fsid = TMPFS_ID;
+        dir->sb->dev = dev;
+        dir->sb->root = dir;
+        dir->sb->flags = flags;
+        dir->sb->cache = NULL;
         
-        dir->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
+        dir->sb->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
         
-        dir->mount.st.f_bsize = 1;
-        dir->mount.st.f_frsize = 1;
-        dir->mount.st.f_blocks = TMPFS_SIZE_MAX;
-        dir->mount.st.f_bfree = TMPFS_SIZE_MAX;
-        dir->mount.st.f_bavail = TMPFS_SIZE_MAX;
-        dir->mount.st.f_files = 0;
-        dir->mount.st.f_ffree = TMPFS_NODES_MAX;
-        dir->mount.st.f_favail = TMPFS_NODES_MAX;
-        dir->mount.st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
-        dir->mount.st.f_fsid = TMPFS_ID;
-        dir->mount.st.f_namemax = MAXNAMLEN;
+        dir->sb->st.f_bsize = 1;
+        dir->sb->st.f_frsize = 1;
+        dir->sb->st.f_blocks = TMPFS_SIZE_MAX;
+        dir->sb->st.f_bfree = TMPFS_SIZE_MAX;
+        dir->sb->st.f_bavail = TMPFS_SIZE_MAX;
+        dir->sb->st.f_files = 0;
+        dir->sb->st.f_ffree = TMPFS_NODES_MAX;
+        dir->sb->st.f_favail = TMPFS_NODES_MAX;
+        dir->sb->st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
+        dir->sb->st.f_fsid = TMPFS_ID;
+        dir->sb->st.f_namemax = MAXNAMLEN;
 
 
 
-        dir->mount.ops.finddir = tmpfs_finddir;
-        dir->mount.ops.readdir = tmpfs_readdir;
-        dir->mount.ops.mknod = tmpfs_mknod;
-        dir->mount.ops.unlink = tmpfs_unlink;
+        dir->sb->ops.finddir = tmpfs_finddir;
+        dir->sb->ops.readdir = tmpfs_readdir;
+        dir->sb->ops.mknod = tmpfs_mknod;
+        dir->sb->ops.unlink = tmpfs_unlink;
 
 
-        dir->st.st_mode &= ~S_IFMT;
-        dir->st.st_mode |=  S_IFMT;
+        dir->ino->st.st_mode &= ~S_IFMT;
+        dir->ino->st.st_mode |=  S_IFMT;
 
     });
 

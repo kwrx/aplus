@@ -37,8 +37,12 @@
 
 __thread_safe
 inode_t* tmpfs_mknod(inode_t* inode, const char * name, mode_t mode) {
+    
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->fsinfo);
+    DEBUG_ASSERT(inode->ino);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsinfo);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
     DEBUG_ASSERT(name);
 
 
@@ -48,45 +52,38 @@ inode_t* tmpfs_mknod(inode_t* inode, const char * name, mode_t mode) {
     inode_t* i = (inode_t*) kcalloc(1, sizeof(inode_t), GFP_USER);
 
     i->parent = inode;
-    i->st.st_ino = ++next_ino;
-    i->st.st_mode = mode & ~current_task->umask;
-    i->st.st_nlink = 1;
+    i->sb = PTR_REF(inode->sb);
+
+    i->ino = PTR_REF(&i->__ino);
+    i->ino->st.st_ino = ++next_ino;
+    i->ino->st.st_mode = mode & ~current_task->umask;
+    i->ino->st.st_nlink = 1;
 
     strncpy(i->name, name, sizeof(i->name));
 
 
-    
-    if((inode->st.st_mode & S_IFMT) == S_IFMT)
-        i->root = inode;
-    else
-        i->root = inode->root;
-
-    DEBUG_ASSERT(i->root);
-
 
     if(S_ISDIR(mode)) {
 
-        i->ops.finddir = tmpfs_finddir;
-        i->ops.readdir = tmpfs_readdir;
-        i->ops.unlink = tmpfs_unlink;
-        i->ops.mknod = tmpfs_mknod;
+        i->ino->ops.finddir = tmpfs_finddir;
+        i->ino->ops.readdir = tmpfs_readdir;
+        i->ino->ops.unlink = tmpfs_unlink;
+        i->ino->ops.mknod = tmpfs_mknod;
 
     }
 
     if(S_ISREG(mode)) {
 
-        i->ops.read = tmpfs_read;     
-        i->ops.write = tmpfs_write;     
+        i->ino->ops.read = tmpfs_read;     
+        i->ino->ops.write = tmpfs_write;     
 
     }
 
-    spinlock_init(&i->lock);
+    spinlock_init(&i->ino->lock);
 
 
-    i->root->mount.st.f_ffree--;
-    i->root->mount.st.f_favail--;
-
-    i->fsinfo = i->root->fsinfo;
+    i->sb->st.f_ffree--;
+    i->sb->st.f_favail--;
 
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;

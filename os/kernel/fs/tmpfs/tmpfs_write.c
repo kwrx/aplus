@@ -36,31 +36,34 @@
 
 __thread_safe
 int tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
+    
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->ino);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    if(pos + len > inode->st.st_size) {
+    if(pos + len > inode->ino->st.st_size) {
         
-        DEBUG_ASSERT(inode->root);
-
         if(unlikely(
             (
-                (long) inode->root->mount.st.f_bavail - (long) ((pos + len) - inode->st.st_size)
+                (long) inode->sb->st.f_bavail - (long) ((pos + len) - inode->ino->st.st_size)
             ) <= 0L)
             
         )
             return errno = ENOSPC, -1;
 
 
-        inode->userdata = krealloc(inode->userdata, pos + len, GFP_USER);
-        inode->root->mount.st.f_bfree -= (pos + len) - inode->st.st_size;
-        inode->root->mount.st.f_bavail -= (pos + len) - inode->st.st_size;
-        inode->st.st_size = pos + len;
+        inode->ino->userdata = krealloc(inode->ino->userdata, pos + len, GFP_USER);
+        inode->sb->st.f_bfree -= (pos + len) - inode->ino->st.st_size;
+        inode->sb->st.f_bavail -= (pos + len) - inode->ino->st.st_size;
+        inode->sb->st.st_size = pos + len;
     }
     
     
-    memcpy((void*) ((uintptr_t) inode->userdata + (uintptr_t) pos), buf, len);
+    memcpy((void*) ((uintptr_t) inode->ino->userdata + (uintptr_t) pos), buf, len);
     return len;
 }
