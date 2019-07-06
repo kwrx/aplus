@@ -54,7 +54,7 @@ MODULE_LICENSE("GPL");
 
 
 __thread_safe
-int block_write(device_t* device, const void* buf, off_t offset, size_t size) {
+ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
     DEBUG_ASSERT(device->blk.blkcount);
@@ -170,7 +170,7 @@ int block_write(device_t* device, const void* buf, off_t offset, size_t size) {
 
 
 __thread_safe
-int block_read(device_t* device, void* buf, off_t offset, size_t size) {
+ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
     DEBUG_ASSERT(device->blk.blkcount);
@@ -286,15 +286,20 @@ int block_read(device_t* device, void* buf, off_t offset, size_t size) {
 
 
 void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_t*, mode_t)) {
+
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device_mkdev);
     DEBUG_ASSERT(inode);
 
-    inode->st.st_size = device->blk.blkcount *
-                        device->blk.blksize  ;
 
-    inode->st.st_blksize = device->blk.blksize;
+    smartptr_get_ext(inode->ino, ino, {
 
+        ino->st.st_size = device->blk.blkcount *
+                          device->blk.blksize  ;
+
+        ino->st.st_blksize = device->blk.blksize;
+
+    });
 
 
     /* Check Partition Table */
@@ -365,7 +370,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
         d->userdata = device->userdata;
 
 
-        device_mkdev(d, inode->st.st_mode & 0777);
+        device_mkdev(d, smartptr_get(inode->ino)->st.st_mode & 0777);
 
     }
 

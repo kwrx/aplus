@@ -118,10 +118,6 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
         r = c;
 
 
-    DEBUG_ASSERT(r);
-    DEBUG_ASSERT(r->ino);
-
-
     if(unlikely(!r)) {
         if(flags & O_CREAT) {
             r = vfs_mknod(c, s, mode);
@@ -134,8 +130,13 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
     } else
         if((flags & O_EXCL) && (flags & O_CREAT))
             return -EEXIST;
-    
 
+
+    DEBUG_ASSERT(r);
+    DEBUG_ASSERT(r->ino);
+
+
+    
 #if 0 /* TODO: Follow symlinks */
     if (
 #ifdef O_NOFOLLOW

@@ -40,11 +40,9 @@
 
 __thread_safe
 int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
+
     DEBUG_ASSERT(dir);
-    DEBUG_ASSERT(dir->ino);
     DEBUG_ASSERT(dev);
-    DEBUG_ASSERT(dev->ino);
-    DEBUG_ASSERT(S_ISDIR(dir->ino->st.st_mode));
 
     (void) args;
 
@@ -92,16 +90,9 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    __lock(&dir->lock, {
+    struct ientry* ino = smartptr_get(dir->ino);
 
-        dir->sb = PTR_REF(&dir->__sb);
-        dir->sb->fsid = EXT2_ID;
-        dir->sb->dev = dev;
-        dir->sb->root = dir;
-        dir->sb->flags = flags;
-
-        vfs_cache_create(&dir->sb->cache, 1024);
-
+    __lock(&ino->lock, {
         
         ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
@@ -114,35 +105,52 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         ext2->root = dir;
 
         memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
+
+
         spinlock_init(&ext2->lock);
 
 
 
-        dir->sb->fsinfo = (void*) ext2;
+        smartptr_init_ext(dir->sb, sb, {
+         
+            sb->fsid = EXT2_ID;
+            sb->dev = dev;
+            sb->root = dir;
+            sb->flags = flags;
+
+            vfs_cache_create(&sb->cache, 1024);
         
-        dir->sb->st.f_bsize = 1024 << sb.s_log_block_size;
-        dir->sb->st.f_frsize = 1024 << sb.s_log_frag_size;
-        dir->sb->st.f_blocks = sb.s_blocks_count;
-        dir->sb->st.f_bfree = sb.s_free_blocks_count;
-        dir->sb->st.f_bavail = sb.s_free_blocks_count;
-        dir->sb->st.f_files = sb.s_inodes_count;
-        dir->sb->st.f_ffree = sb.s_free_inodes_count;
-        dir->sb->st.f_favail = sb.s_free_inodes_count;
-        dir->sb->st.f_flag = stflags;
-        dir->sb->st.f_fsid = EXT2_ID;
-        dir->sb->st.f_namemax = MAXNAMLEN;
+
+            sb->fsinfo = (void*) ext2;
+        
+            sb->st.f_bsize = 1024 << sb.s_log_block_size;
+            sb->st.f_frsize = 1024 << sb.s_log_frag_size;
+            sb->st.f_blocks = sb.s_blocks_count;
+            sb->st.f_bfree = sb.s_free_blocks_count;
+            sb->st.f_bavail = sb.s_free_blocks_count;
+            sb->st.f_files = sb.s_inodes_count;
+            sb->st.f_ffree = sb.s_free_inodes_count;
+            sb->st.f_favail = sb.s_free_inodes_count;
+            sb->st.f_flag = stflags;
+            sb->st.f_fsid = EXT2_ID;
+            sb->st.f_namemax = MAXNAMLEN;
 
 
+            sb->ops.finddir = ext2_finddir;
+            sb->ops.readdir = ext2_readdir;
+            sb->ops.mknod = ext2_mknod;
+            sb->ops.unlink = ext2_unlink;
+            
+        });
+        
 
-        dir->sb->ops.finddir = ext2_finddir;
-        dir->sb->ops.readdir = ext2_readdir;
-        dir->sb->ops.mknod = ext2_mknod;
-        dir->sb->ops.unlink = ext2_unlink;
+        smartptr_get_ext(dir->ino, ino, {
 
-        dir->ino->st.st_ino = EXT2_ROOT_INO;
-        dir->ino->st.st_mode &= ~S_IFMT;
-        dir->ino->st.st_mode |=  S_IFMT;
+            ino->st.st_ino = EXT2_ROOT_INO;
+            ino->st.st_mode &= ~S_IFMT;
+            ino->st.st_mode |=  S_IFMT;
 
+        });
 
     });
 

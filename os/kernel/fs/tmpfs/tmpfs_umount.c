@@ -43,44 +43,21 @@ __thread_safe
 int tmpfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
-    DEBUG_ASSERT(dir->ino);
     DEBUG_ASSERT(dir->sb);
-    DEBUG_ASSERT(dir->sb->fsinfo);
     DEBUG_ASSERT(dir->sb->fsid == TMPFS_ID);
-
-    DEBUG_ASSERT((dir->ino->st.st_mode & S_IFMT) == S_IFMT);
-
-
-    tmpfs_t* tmpfs = (tmpfs_t*) dir->fsinfo;
-
-    __lock(&dir->lock, {
-        
-        list_each(tmpfs->children, i) {
-
-            DEBUG_ASSERT(i->ino);
-
-            if(likely(i->ino->userdata))
-                kfree(i->ino->userdata);
-
-            kfree(i);
-        }
-
-        list_clear(tmpfs->children);
+    DEBUG_ASSERT(dir->sb->root == dir);
 
 
+    tmpfs_t* tmpfs = (tmpfs_t*) dir->sb->fsinfo;
 
-        kfree(dir->sb->fsinfo);
-        
-        dir->ino->st.st_mode &= ~S_IFMT;
-        dir->ino->st.st_mode |=  S_IFDIR;
-        
-        if(--dir->sb->refcount == 0)
-            kfree(dir->sb->fsinfo);
-            
-        dir->sb = NULL;
+    list_each(tmpfs->children, i)
+        kfree(i);
 
-    });
+    list_clear(tmpfs->children);
+    kfree(tmpfs);
+    
 
+    vfs_cache_destroy(&dir->sb->cache);
     
     return 0;
 }

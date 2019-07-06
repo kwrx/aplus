@@ -29,43 +29,31 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-#include <sys/types.h>
-#include <sys/mount.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
-
+#include "tmpfs.h"
 
 
 __thread_safe
-int ext2_umount(inode_t* dir) {
+ssize_t tmpfs_readlink(inode_t* inode, void * buf, size_t len) {
+   
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
 
-    DEBUG_ASSERT(dir);
-
-
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
-
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(len);
 
 
-    __lock(&ino->lock, {
+    tmpfs_inode_t* i = vfs_cache_get(&inode->sb->cache, inode->ino);
 
-        vfs_cache_destroy(&sb->cache);
+    if(!i->data)
+        return 0;
+
+    if(len > i->st.st_size)
+        len = i->st.st_size;
 
 
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
-
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
-
-    });
-
-    return 0;
+    memcpy(buf, i->data, len);    
+    return len;
 }

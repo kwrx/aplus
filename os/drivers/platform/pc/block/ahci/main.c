@@ -633,7 +633,7 @@ static void satapi_init(device_t* device) {
 
 
 __thread_safe
-static int satapi_read(device_t* device, void* buf, off_t offset, size_t count) {
+static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
@@ -924,7 +924,7 @@ static void sata_reset(device_t* device) {
 
 
 __thread_safe
-static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
+static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
@@ -1029,7 +1029,7 @@ static int sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
 
 __thread_safe
-static int sata_write(device_t* device, const void* buf, off_t offset, size_t count) {
+static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);

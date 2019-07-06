@@ -87,12 +87,19 @@ void pmm_free_block(block_t);
     b;                                                                              \
 })
 
-#define ptr_check(p, m) \
+
+
+#define ptr_check(p, m)     \
     arch_ptr_access((void*) (p), (m))
 
-#define V2P(p)          \
-    arch_ptr_phys((void*) (p))
+#define ptr_ref(p) ({       \
+    (p)->refcount++;        \
+    (p);                    \
+})
 
+
+#define V2P(p)              \
+    arch_ptr_phys((void*) (p))
 
 
 #define mmio_r8(x)              (*(uint8_t volatile*) (x))

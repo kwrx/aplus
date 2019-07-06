@@ -38,15 +38,15 @@
 
 
 __thread_safe
-int tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
+ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
     
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->ino);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsinfo);
     DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    
     DEBUG_ASSERT(e);
 
+ 
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
 
@@ -66,12 +66,12 @@ int tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
                 continue;
 
 
-            DEBUG_ASSERT(d->ino);
+            tmpfs_inode_t* c = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
 
-            e[i].d_ino = d->ino->st.st_ino;
+            e[i].d_ino = c->st.st_ino;
             e[i].d_off = pos;
             e[i].d_reclen = sizeof(struct dirent);
-            e[i].d_type = d->ino->st.st_mode;
+            e[i].d_type = c->st.st_mode >> 12;
             strncpy(e[i].d_name, d->name, MAXNAMLEN);
 
             p = 1;

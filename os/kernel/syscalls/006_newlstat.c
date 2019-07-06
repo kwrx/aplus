@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/mm.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -78,7 +79,7 @@ long sys_newlstat (const char __user * filename, struct stat __user * statbuf) {
     DEBUG_ASSERT(current_task->fd[fd].inode);
     DEBUG_ASSERT(current_task->fd[fd].inode->ino);
 
-    __lock(&current_task->fd[fd].inode->ino, {
+    __lock(&current_task->fd[fd].inode->ino->lock, {
 
         memcpy(statbuf, &current_task->fd[fd].inode->ino->st, sizeof(struct stat));
 

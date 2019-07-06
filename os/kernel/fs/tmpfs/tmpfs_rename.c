@@ -29,43 +29,44 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
-
-#include <sys/types.h>
-#include <sys/mount.h>
+#include <errno.h>
 
 #include <aplus/utils/list.h>
 
-#include "ext2.h"
-
+#include "tmpfs.h"
 
 
 __thread_safe
-int ext2_umount(inode_t* dir) {
+int tmpfs_rename (inode_t* inode, const char* name, const char* newname) {
 
-    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
 
-
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
-
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
+    DEBUG_ASSERT(name);
+    DEBUG_ASSERT(newname);
 
 
-    __lock(&ino->lock, {
 
-        vfs_cache_destroy(&sb->cache);
+    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
+    inode_t* d = NULL;
 
 
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
+    list_each(tmpfs->children, i) {
+        if(likely(i->parent != inode))
+            continue;
 
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
+        if(likely(strcmp(i->name, name) != 0))
+            continue;
 
-    });
+        d = i;
+        break;
+    }
 
+    if(!d)
+        return errno = ENOENT, -1;
+
+   
+    strncpy(d->name, newname, MAXNAMLEN);
     return 0;
 }

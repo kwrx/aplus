@@ -36,8 +36,8 @@
 #define CHAR_IO_FBF             2   // Full Buffered
 
 
-int char_write(device_t*, const void*, size_t);
-int char_read(device_t*, void*, size_t);
+ssize_t char_write(device_t*, const void*, size_t);
+ssize_t char_read(device_t*, void*, size_t);
 int char_flush(device_t*);
 void char_init(device_t*);
 void char_dnit(device_t*);

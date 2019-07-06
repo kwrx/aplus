@@ -88,7 +88,7 @@ void smp_setup(int bsp) {
     _.cwd =
     _.exe = vfs_root;
 
-    _.aspace = PTR_REF(&_.__aspace);
+    _.aspace = ptr_ref(&_.__aspace);
     _.aspace->start = CONFIG_KERNEL_BASE;
     _.aspace->end = mbd->memory.start;
     _.aspace->vmmpd = x86_get_cr3();

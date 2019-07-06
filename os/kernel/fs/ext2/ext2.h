@@ -435,10 +435,10 @@ typedef struct {
 
 inode_t* ext2_finddir (inode_t*, const char*);
 inode_t* ext2_mknod (inode_t*, const char* name, mode_t mode);
-int ext2_readdir (inode_t*, struct dirent*, off_t, size_t);
 int ext2_unlink (inode_t*, const char* name);
-int ext2_read(inode_t*, void __user *, off_t, size_t);
-int ext2_write(inode_t*, const void __user *, off_t, size_t);
+ssize_t ext2_readdir (inode_t*, struct dirent*, off_t, size_t);
+ssize_t ext2_read(inode_t*, void __user *, off_t, size_t);
+ssize_t ext2_write(inode_t*, const void __user *, off_t, size_t);
 
 
 void ext2_utils_read_inode(ext2_t*, ino_t, void*);

@@ -40,12 +40,10 @@ __thread_safe
 inode_t* tmpfs_finddir(inode_t* inode, const char * name) {
     
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->ino);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsinfo);
     DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
     DEBUG_ASSERT(name);
-
+        
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
         

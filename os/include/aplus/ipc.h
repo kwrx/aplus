@@ -57,21 +57,21 @@ int sem_trywait(semaphore_t* s);
         arch_intr_enable((fl));             \
     }
 
-#define __lock(lk, fn)                      \
+#define __lock(lk, fn...)                   \
     {                                       \
         spinlock_lock((lk));                \
         do { fn; } while(0);                \
         spinlock_unlock((lk));              \
     }
 
-#define __lock_irq(lk, fn)                  \
+#define __lock_irq(lk, fn...)               \
     {                                       \
         long __f = spinlock_irq_lock((lk)); \
         do { fn; } while(0);                \
         spinlock_irq_unlock((lk), __f);     \
     }
 
-#define __lock_return(lk, type, fn)         \
+#define __lock_return(lk, type, fn...)      \
     {                                       \
         type __r;                           \
         spinlock_lock(lk);                  \
@@ -80,7 +80,7 @@ int sem_trywait(semaphore_t* s);
         return __r;                         \
     }
 
-#define __trylock(lk, fn)                       \
+#define __trylock(lk, fn...)                    \
     {                                           \
         if(unlikely(!spinlock_trylock((lk))))   \
             kpanic("spinlock: DEADLOCK! %s in %s:%d <%s>", #lk, __FILE__, __LINE__, __func__); \

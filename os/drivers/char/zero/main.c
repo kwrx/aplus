@@ -41,7 +41,7 @@ MODULE_LICENSE("GPL");
 
 
 
-static int zero_read(device_t*, void*, size_t);
+static ssize_t zero_read(device_t*, void*, size_t);
 
 
 device_t device = {
@@ -69,7 +69,7 @@ device_t device = {
 
 
 __thread_safe
-static int zero_read(device_t* device, void* buf, size_t size) {
+static ssize_t zero_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 

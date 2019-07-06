@@ -24,48 +24,10 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/smp.h>
 #include <aplus/ipc.h>
-#include <aplus/vfs.h>
 #include <aplus/mm.h>
-#include <stdint.h>
-
 #include <sys/types.h>
-#include <sys/mount.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
 
 
 
-__thread_safe
-int ext2_umount(inode_t* dir) {
 
-    DEBUG_ASSERT(dir);
-
-
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
-
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
-
-
-    __lock(&ino->lock, {
-
-        vfs_cache_destroy(&sb->cache);
-
-
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
-
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
-
-    });
-
-    return 0;
-}

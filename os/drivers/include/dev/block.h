@@ -32,8 +32,8 @@
 #include <dev/interface.h>
 
 
-int block_write(device_t*, const void*, off_t, size_t);
-int block_read(device_t*, void*, off_t, size_t);
+ssize_t block_write(device_t*, const void*, off_t, size_t);
+ssize_t block_read(device_t*, void*, off_t, size_t);
 void block_inode(device_t*, inode_t*, void (*) (device_t*, mode_t));
 void block_init(device_t*);
 void block_dnit(device_t*);

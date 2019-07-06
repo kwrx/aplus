@@ -82,8 +82,8 @@ typedef struct device {
                 };
                 
                 struct {
-                    int (*write) (struct device*, const void*, size_t);
-                    int (*read) (struct device*, void*, size_t);
+                    ssize_t (*write) (struct device*, const void*, size_t);
+                    ssize_t (*read) (struct device*, void*, size_t);
                 };
             };
 
@@ -104,8 +104,8 @@ typedef struct device {
                 uint32_t c_blkno;
             } cache;
 
-            int (*write) (struct device*, const void*, off_t, size_t);
-            int (*read) (struct device*, void*, off_t, size_t);
+            ssize_t (*write) (struct device*, const void*, off_t, size_t);
+            ssize_t (*read) (struct device*, void*, off_t, size_t);
 
         } blk;
 

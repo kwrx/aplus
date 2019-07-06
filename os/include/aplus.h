@@ -217,10 +217,6 @@ void cmain(void);
 #define __thread_safe
 
 
-#define PTR_REF(p) ({       \
-    (p)->refcount++;        \
-    (p);                    \
-})
 
 #endif
 

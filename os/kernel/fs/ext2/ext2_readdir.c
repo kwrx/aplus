@@ -36,18 +36,24 @@
 
 
 __thread_safe
-int ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
+ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->fsinfo);
     DEBUG_ASSERT(e);
     DEBUG_ASSERT(count);
 
-    ext2_t* ext2 = (ext2_t*) inode->fsinfo;
+    struct vfs_sb* sb = smartptr_get(inode->sb);
+    struct ientry* ino = smartptr_get(inode->ino);
+
+    DEBUG_ASSERT(sb->fsinfo);
+    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+
+
+    ext2_t* ext2 = (ext2_t*) sb->fsinfo;
 
 
     struct ext2_inode node;
-    ext2_utils_read_inode(ext2, inode->st.st_ino, &node);
+    ext2_utils_read_inode(ext2, ino->st.st_ino, &node);
 
 
     int entries = 0;

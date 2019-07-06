@@ -41,7 +41,7 @@ MODULE_LICENSE("GPL");
 
 
 __thread_safe
-int char_write(device_t* device, const void* buf, size_t size) {
+ssize_t char_write(device_t* device, const void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
@@ -90,7 +90,7 @@ int char_write(device_t* device, const void* buf, size_t size) {
 
 
 __thread_safe
-int char_read(device_t* device, void* buf, size_t size) {
+ssize_t char_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);

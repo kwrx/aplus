@@ -29,43 +29,36 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-#include <sys/types.h>
-#include <sys/mount.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
+#include "tmpfs.h"
 
 
 
 __thread_safe
-int ext2_umount(inode_t* dir) {
+int tmpfs_symlink(inode_t* inode, const char * name, const char* target) {
+    
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->ops.creat);
+    
+    DEBUG_ASSERT(name);
+    DEBUG_ASSERT(target);
+    
 
-    DEBUG_ASSERT(dir);
+    inode_t* d;
+    if((d = tmpfs_creat(inode, name, S_IFLNK | 0666)) == NULL)
+        return -1;
 
+    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
 
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
+    i->st.st_size = strlen(target) + 1;
+    i->capacity = i->st.st_size;
+    i->data = kmalloc(i->capacity, GFP_KERNEL);
 
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+    strncpy(i->data, target, i->capacity);
 
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
-
-
-    __lock(&ino->lock, {
-
-        vfs_cache_destroy(&sb->cache);
-
-
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
-
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
-
-    });
 
     return 0;
 }

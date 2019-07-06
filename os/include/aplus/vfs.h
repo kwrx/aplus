@@ -33,22 +33,32 @@
 #include <sys/statvfs.h>
 #include <sys/dirent.h>
 
-typedef struct inode inode_t;
-typedef struct ientry ientry_t;
+#include <aplus/utils/list.h>
+
+
 typedef struct vfs_cache vfs_cache_t;
+typedef struct inode inode_t;
 
 
+struct vfs_cache_item {
+    ino_t ino;
+    void* data;
+};
+
+struct vfs_cache_ops {
+    void* (*load) (struct vfs_cache*, ino_t);
+    void (*flush) (struct vfs_cache*, ino_t, void*);
+};
 
 struct vfs_cache {
 
     size_t capacity;
     size_t count;
 
+    struct vfs_cache_ops ops;
+
+    list(struct vfs_cache_item*, items);    
     spinlock_t lock;
-
-    inode_t** inodes;
-    ktime_t* times;
-
 };
 
 
@@ -56,38 +66,56 @@ struct inode_ops {
 
     int (*open)  (inode_t*, int);
     int (*close) (inode_t*);
+    int (*ioctl) (inode_t*, long, void*);
 
-    // File
-    size_t (*read)  (inode_t*, void*, off_t, size_t);
-    size_t (*write) (inode_t*, const void*, off_t, size_t);
-    int (*ioctl) (inode_t*, int, void*);
-    int (*fsync) (inode_t*);
+    /* Inode */
+    int (*getattr) (inode_t*, struct stat*);
+    int (*setattr) (inode_t*, struct stat*);
 
-    // Directory
+    int (*setxattr) (inode_t*, const char*, const void*, size_t, int);
+    int (*getxattr) (inode_t*, const char*, void*, size_t);
+    int (*listxattr) (inode_t*, char*, size_t);
+    int (*removexattr) (inode_t*, const char*);
+
+    int (*truncate) (inode_t*, off_t);
+    int (*fsync) (inode_t*, int);
+    
+    ssize_t (*read) (inode_t*, void*, off_t, size_t);
+    ssize_t (*write) (inode_t*, const void*, off_t, size_t);
+    ssize_t (*readlink) (inode_t*, char*, size_t);
+
+
+    /* Directory */
+    inode_t* (*creat) (inode_t*, const char*, mode_t);
     inode_t* (*finddir) (inode_t*, const char*);
-    inode_t* (*mknod) (inode_t*, const char*, mode_t);
-    size_t (*readdir) (inode_t*, struct dirent*, off_t, size_t);
+    ssize_t (*readdir) (inode_t*, struct dirent*, off_t, size_t);
+
+    int (*rename) (inode_t*, const char*, const char*);
+    int (*symlink) (inode_t*, const char*, const char*);
     int (*unlink) (inode_t*, const char*);
 
-    //int (*iput) (inode_t*, inode_t*);
-
 };
 
 
-struct ientry {
+struct inode {
 
-    struct stat st;
+    char name[MAXNAMLEN];
+    ino_t ino;
+
+    struct superblock* sb;
     struct inode_ops ops;
-    
-    spinlock_t lock;
+    struct inode* parent;
+
 
     void* userdata;
-    int refcount;
+    spinlock_t lock;
+
 };
 
 
-struct vfs_sb {
-    int fsid;
+struct superblock {
+
+    id_t fsid;
     int flags;
 
     inode_t* dev;
@@ -95,23 +123,10 @@ struct vfs_sb {
 
     struct statvfs st;
     struct inode_ops ops;
-    struct vfs_cache* cache;
+    struct vfs_cache cache;
 
     void* fsinfo;
-    int refcount;
-};
 
-
-struct inode {
-    char name[MAXNAMLEN];
-
-    struct ientry __ino;
-    struct ientry* ino;
-
-    struct vfs_sb __sb;
-    struct vfs_sb* sb;
-
-    struct inode* parent;
 };
 
 
@@ -119,29 +134,47 @@ void vfs_init(void);
 
 // os/kernel/fs/vfs.c
 int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, const char __user * args);
-int vfs_open(inode_t* inode, int flags);
-int vfs_close(inode_t* inode);
-int vfs_unlink(inode_t* inode, const char* name);
-int vfs_ioctl(inode_t* inode, int req, void* arg);
-int vfs_fsync(inode_t* inode);
-size_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size);
-size_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size);
-size_t vfs_readdir(inode_t* inode, struct dirent* ent, off_t off, size_t count);
 
+int vfs_open (inode_t*, int);
+int vfs_close (inode_t*);
+int vfs_ioctl (inode_t*, long, void*);
 
-inode_t* vfs_finddir(inode_t* inode, const char __user * name);
-inode_t* vfs_mknod(inode_t* inode, const char __user * name, mode_t mode);
+int vfs_getattr (inode_t*, struct stat*);
+int vfs_setattr (inode_t*, struct stat*);
+
+int vfs_setxattr (inode_t*, const char*, const void*, size_t, int);
+int vfs_getxattr (inode_t*, const char*, void*, size_t);
+int vfs_listxattr (inode_t*, char*, size_t);
+int vfs_removexattr (inode_t*, const char*);
+
+int vfs_truncate (inode_t*, off_t);
+int vfs_fsync (inode_t*, int);
+
+ssize_t vfs_read (inode_t*, void*, off_t, size_t);
+ssize_t vfs_write (inode_t*, const void*, off_t, size_t);
+ssize_t vfs_readlink (inode_t*, char*, size_t);
+
+inode_t* vfs_creat (inode_t*, const char*, mode_t);
+inode_t* vfs_finddir (inode_t*, const char*);
+ssize_t vfs_readdir (inode_t*, struct dirent*, off_t, size_t);
+
+int vfs_rename (inode_t*, const char*, const char*);
+int vfs_symlink (inode_t*, const char*, const char*);
+int vfs_unlink (inode_t*, const char*);
+
 
 
 // os/kernel/fs/cache.c
-void vfs_cache_create(vfs_cache_t**, int capacity);
-void vfs_cache_destroy(vfs_cache_t**);
-inode_t* vfs_cache_get_inode(vfs_cache_t*, ino_t);
+void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int);
+void vfs_cache_destroy(vfs_cache_t*);
+void* vfs_cache_get(vfs_cache_t*, ino_t);
+void vfs_cache_flush(vfs_cache_t*, ino_t);
 
 
-
+// os/kernel/fs/rootfs.c
 extern inode_t* vfs_root;
-extern inode_t* vfs_dev;
+void rootfs_init(void);
+
 
 
 #define TMPFS_ID                    0xDEAD1000

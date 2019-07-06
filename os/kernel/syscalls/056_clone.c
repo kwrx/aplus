@@ -181,7 +181,7 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
         if(__is(CLONE_VM))
             ; // TODO: arch_task_clone_vm(child, current_task);
         else
-            child->aspace = PTR_REF(current_task->aspace);
+            child->aspace = ptr_ref(current_task->aspace);
 
 
 

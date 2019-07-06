@@ -29,135 +29,108 @@
 #include <aplus/vfs.h>
 #include <stdint.h>
 
+#include <aplus/utils/list.h>
 
-static inode_t* __unsafe_vfs_get_inode(vfs_cache_t* cache, ino_t ino) {
+
+static void* __unsafe_vfs_get_inode(vfs_cache_t* cache, ino_t ino) {
     
     if(!cache->count)
         goto alloc;
 
 
-    int i;
-    for(i = 0; i < cache->capacity; i++) {
-
-        if(!cache->inodes[i])
+    list_each(cache->items, i) {
+        
+        if(likely(i->ino != ino))
             continue;
 
-
-        DEBUG_ASSERT(cache->inodes[i]->ino);
-
-        if(cache->inodes[i]->ino->st.st_ino == ino)
-            return cache->inodes[i];
-
+        return i->data;
     }
+
 
 alloc:
 
-    if(cache->count == cache->capacity) {
-
-        ktime_t oldest = (ktime_t) ~0;
-
-        int i, j;
-        for(i = 0, j = 0; i < cache->capacity; i++) {
-
-            if(oldest < cache->times[i])
-                continue;
-
-            oldest = cache->times[i];
-            j = i;
-        }
-
-        if(cache->inodes[j])
-            kfree(cache->inodes[j]);
-
-        
-        cache->inodes[j] = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
-        cache->times[j]  = arch_timer_getticks();
-
-        return cache->inodes[j]->ino = PTR_REF(&cache->inodes[j]->__ino)
-             , cache->inodes[j]->ino->st.st_ino = ino
-             , cache->inodes[j];
-    
-    } else {
-
-        int i;
-        for(i = 0; i < cache->capacity; i++) {
-
-            if(cache->inodes[i])
-                continue;
+    if(cache->count == cache->capacity)
+        kpanic("vfs::cache: FAIL! Cache Overflow!\n");
 
 
-            cache->count++;
-            
-            cache->inodes[i] = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
-            cache->times[i]  = arch_timer_getticks();
+    struct vfs_cache_item* i = (struct vfs_cache_item*) kcalloc(sizeof(struct vfs_cache_item), 1, GFP_KERNEL);
 
-            return cache->inodes[j]->ino = PTR_REF(&cache->inodes[j]->__ino)
-                 , cache->inodes[i]->ino->st.st_ino = ino
-                 , cache->inodes[i];
-    
-        }
+    i->ino = ino;
+    i->data = cache->ops.load(cache, ino);
 
-    }
+    list_push(cache->items, i);
 
 
-    kpanic("%s(): BUG! %s:%d", __func__, __FILE__, __LINE__);
+    return cache->count++
+         , i->data;
 }
 
 
-inode_t* vfs_cache_get_inode(vfs_cache_t* cache, ino_t ino) {
+void* vfs_cache_get(vfs_cache_t* cache, ino_t ino) {
 
-    __lock_return(&cache->lock, inode_t*,
+    __lock_return(&cache->lock, void*,
         __unsafe_vfs_get_inode(cache, ino);
     );
 
 }
 
 
+void vfs_cache_flush(vfs_cache_t* cache, ino_t ino) {
 
-void vfs_cache_create(vfs_cache_t** cache, int capacity) {
+    if(!cache->count)
+        return;
+
+
+    list_each(cache->items, i) {
+        
+        if(likely(i->ino != ino))
+            continue;
+
+        __lock(&cache->lock, cache->flush(cache, i->ino, i->data));
+        break;
+    }
+    
+}
+
+
+void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacity) {
    
     DEBUG_ASSERT(cache);
-    DEBUG_ASSERT((*cache) == NULL);
-
+    DEBUG_ASSERT(ops);
+    DEBUG_ASSERT(ops->load);
+    DEBUG_ASSERT(ops->flush);
     DEBUG_ASSERT(capacity);
-    DEBUG_WARNING(capacity < 4096 && "capacity is too high!");
 
 
-    (*cache) = kcalloc(sizeof(vfs_cache_t), 1, GFP_KERNEL);
-    (*cache)->inodes = kcalloc(sizeof(inode_t*), capacity, GFP_KERNEL);
-    (*cache)->times = kcalloc(sizeof(ktime_t), capacity, GFP_KERNEL);
+    memset(cache, 0, sizeof(vfs_cache_t));
+    memcpy(&cache->ops, ops, sizeof(struct vfs_cache_ops));
 
-    (*cache)->capacity = capacity;
-    (*cache)->count = 0;
+    cache->capacity = capacity;
+    cache->count = 0;
 
-    spinlock_init(&(*cache)->lock);
+    spinlock_init(&cache->lock);
 
 }
 
 
-void vfs_cache_destroy(vfs_cache_t** cache) {
+void vfs_cache_destroy(vfs_cache_t* cache) {
 
     DEBUG_ASSERT(cache);
-    DEBUG_ASSERT((*cache) != NULL);
 
     
-    int i;
-    for(i = 0; i < (*cache)->capacity; i++) {
-        if(!(*cache)->inodes[i])
+    list_each(cache->items, i) {
+
+        if(unlikely(!i->data))
             continue;
 
-        if(--(*cache)->inodes[i]->ino->refcount == 0)
-            if((*cache)->inodes[i]->userdata)
-                kfree((*cache)->inodes[i]->userdata);
 
-        kfree((*cache)->inodes[i]);
+        cache->flush(cache, i->ino, i->data);
+
+        kfree(i->data);
     }
 
+    list_clear(cache->items);
 
-    kfree((*cache)->inodes);
-    kfree((*cache)->times);
-    kfree((*cache));
 
-    (*cache) = NULL;
-
+    cache->count = 0;
 }

@@ -35,45 +35,47 @@
 
 
 __thread_safe
-int ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
+ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->ino);
-    DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsinfo);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
-
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
+    struct vfs_sb* sb = smartptr_get(inode->sb);
+    struct ientry* ino = smartptr_get(inode->ino);
+
+    DEBUG_ASSERT(sb->fsinfo);
+    DEBUG_ASSERT(sb->fsid == EXT2_ID);
 
 
-    if(pos + len > inode->ino->st.st_size)
-        len = inode->ino->st.st_size - pos;
+    ext2_t* ext2 = (ext2_t*) sb->fsinfo;
+
+
+    if(pos + len > ino->st.st_size)
+        len = ino->st.st_size - pos;
 
     DEBUG_ASSERT(len >= 0);
 
 
 
     // Cache Blocks
-    if(inode->ino->userdata == NULL) {
+    if(ino->userdata == NULL) {
 
         struct ext2_inode node;
-        ext2_utils_read_inode(ext2, inode->ino->st.st_ino, &node);
+        ext2_utils_read_inode(ext2, ino->st.st_ino, &node);
 
-        inode->ino->userdata = kcalloc(EXT2_N_BLOCKS, sizeof(uint32_t), GFP_KERNEL);
-        memcpy(inode->ino->userdata, node.i_block, EXT2_N_BLOCKS * sizeof(uint32_t));
+        ino->userdata = kcalloc(EXT2_N_BLOCKS, sizeof(uint32_t), GFP_KERNEL);
+        memcpy(ino->userdata, node.i_block, EXT2_N_BLOCKS * sizeof(uint32_t));
 
     }
 
-    DEBUG_ASSERT(inode->ino->userdata);
+    DEBUG_ASSERT(ino->userdata);
 
-    uint32_t* blocks = (uint32_t*) inode->ino->userdata;
+    uint32_t* blocks = (uint32_t*) ino->userdata;
 
 
-    uint32_t sb = pos / ext2->blocksize;
+    uint32_t ib = pos / ext2->blocksize;
     uint32_t eb = (pos + len - 1) / ext2->blocksize;
     uint32_t off = 0;
 
@@ -85,14 +87,14 @@ int ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
         p = p > len ? len : p;
 
 
-        ext2_utils_read_inode_data(ext2, blocks, sb, pos % ext2->blocksize, buf, p);
+        ext2_utils_read_inode_data(ext2, blocks, ib, pos % ext2->blocksize, buf, p);
 
         off += p;
-        sb++;
+        ib++;
     }
 
 
-    if((pos + len) % ext2->blocksize && (sb <= eb)) {
+    if((pos + len) % ext2->blocksize && (ib <= eb)) {
         long p;
         p = (pos + len) % ext2->blocksize;
 
@@ -104,10 +106,10 @@ int ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
 
 
-    long i = eb - sb + 1;
+    long i = eb - ib + 1;
 
-    for(; i > 0; i--, sb++, off += ext2->blocksize)
-        ext2_utils_read_inode_data(ext2, blocks, sb, 0, (void*) ((uintptr_t) buf + off), ext2->blocksize);
+    for(; i > 0; i--, ib++, off += ext2->blocksize)
+        ext2_utils_read_inode_data(ext2, blocks, ib, 0, (void*) ((uintptr_t) buf + off), ext2->blocksize);
 
     
     return len;

@@ -368,7 +368,7 @@ static void ide_reset(device_t* device) {
 
 
 __thread_safe
-static int ide_write(device_t* device, const void* buf, off_t offset, size_t count) {
+static ssize_t ide_write(device_t* device, const void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
@@ -376,26 +376,6 @@ static int ide_write(device_t* device, const void* buf, off_t offset, size_t cou
 
     struct disk* d = (struct disk*) device->userdata;
 
-
-    /*if(likely(count > (IDE_DMA_SIZE / device->blk.blksize))) {
-        
-        int i;
-        for (
-            i = 0;
-            i + (IDE_DMA_SIZE / device->blk.blksize) < count;
-            i += (IDE_DMA_SIZE / device->blk.blksize)
-        )
-            ide_write(device, (void*) ((uintptr_t) buf + (i * device->blk.blksize)), offset + i, IDE_DMA_SIZE);
-
-
-        if(unlikely(!(count - i)))
-            return count;
-
-        offset += i;
-        count -= i;
-
-        buf = (void*) ((uintptr_t) buf + (i * device->blk.blksize));  
-    }*/
 
 
     __lock(&d->lock, {
@@ -486,34 +466,13 @@ static int ide_write(device_t* device, const void* buf, off_t offset, size_t cou
 
 
 __thread_safe
-static int ide_read(device_t* device, void* buf, off_t offset, size_t count) {
+static ssize_t ide_read(device_t* device, void* buf, off_t offset, size_t count) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
 
     struct disk* d = (struct disk*) device->userdata;
-
-
-    /*if(likely(count > (IDE_DMA_SIZE / device->blk.blksize))) {
-        
-        int i;
-        for (
-            i = 0;
-            i + (IDE_DMA_SIZE / device->blk.blksize) < count;
-            i += (IDE_DMA_SIZE / device->blk.blksize)
-        )
-            ide_read(device, (void*) ((uintptr_t) buf + (i * device->blk.blksize)), offset + i, IDE_DMA_SIZE);
-
-
-        if(unlikely(!(count - i)))
-            return count;
-
-        offset += i;
-        count -= i;
-
-        buf = (void*) ((uintptr_t) buf + (i * device->blk.blksize));  
-    }*/
 
 
     __lock(&d->lock, {

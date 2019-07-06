@@ -54,16 +54,15 @@ static list(device_t*, devices);
 
 
 __thread_safe
-static int device_read(inode_t* inode, void* buf, off_t off, size_t size) {
+static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
     
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
 
 
-    device_t* device = (device_t*) inode->userdata;
+    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -88,16 +87,14 @@ static int device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
 
 __thread_safe
-static int device_write(inode_t* inode, const void* buf, off_t off, size_t size) {
+static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t size) {
     
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
 
-
-    device_t* device = (device_t*) inode->userdata;
+    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -124,13 +121,12 @@ static int device_write(inode_t* inode, const void* buf, off_t off, size_t size)
 
 __thread_safe
 static int device_ioctl(inode_t* inode, int req, void* arg) {
+
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(arg);
 
 
-
-    device_t* device = (device_t*) inode->userdata;
+    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -155,11 +151,11 @@ static int device_ioctl(inode_t* inode, int req, void* arg) {
 
 __thread_safe
 static int device_fsync(inode_t* inode) {
+
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->userdata);
 
 
-    device_t* device = (device_t*) inode->userdata;
+    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -240,20 +236,24 @@ void device_mkdev(device_t* device, mode_t mode) {
 
     
     inode_t* i = current_task->fd[fd].inode;
+
     DEBUG_ASSERT(i);
+
 
     if(unlikely(sys_close(fd) < 0))
         kpanic("device::create: failed, could not close device descriptor: %s", buf);
 
 
+    smartptr_get_ext(i->ino, ino, {
+       
+        ino->userdata = (void*) device;
 
-    i->userdata = (void*) device;
-
-    i->ops.write = device_write;
-    i->ops.read = device_read;
-    i->ops.ioctl = device_ioctl;
-    i->ops.fsync = device_fsync;
-
+        ino->ops.write = device_write;
+        ino->ops.read  = device_read;
+        ino->ops.ioctl = device_ioctl;
+        ino->ops.fsync = device_fsync;
+    
+    });
 
 
     switch(device->type) {

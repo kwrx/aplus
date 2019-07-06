@@ -40,12 +40,37 @@ typedef struct {
     list(inode_t*, children);
 } tmpfs_t;
 
+typedef struct {
 
+    struct stat st;
+
+    size_t capacity;
+    void* data;
+
+} tmpfs_inode_t;
+
+
+
+
+int tmpfs_getattr (inode_t*, struct stat*);
+int tmpfs_setattr (inode_t*, struct stat*);
+
+int tmpfs_truncate (inode_t*, off_t);
+
+ssize_t tmpfs_read (inode_t*, void*, off_t, size_t);
+ssize_t tmpfs_write (inode_t*, const void*, off_t, size_t);
+ssize_t tmpfs_readlink (inode_t*, char*, size_t);
+
+inode_t* tmpfs_creat (inode_t*, const char*, mode_t);
 inode_t* tmpfs_finddir (inode_t*, const char*);
-inode_t* tmpfs_mknod (inode_t*, const char* name, mode_t mode);
-int tmpfs_readdir (inode_t*, struct dirent*, off_t, size_t);
-int tmpfs_unlink (inode_t*, const char* name);
-int tmpfs_read(inode_t*, void __user *, off_t, size_t);
-int tmpfs_write(inode_t*, const void __user *, off_t, size_t);
+ssize_t tmpfs_readdir (inode_t*, struct dirent*, off_t, size_t);
+
+int tmpfs_rename (inode_t*, const char*, const char*);
+int tmpfs_symlink (inode_t*, const char*, const char*);
+int tmpfs_unlink (inode_t*, const char*);
+
+
+void* tmpfs_cache_load (vfs_cache_t*, ino_t);
+void tmpfs_cache_flush (vfs_cache_t*, ino_t, void*);
 
 #endif

@@ -40,14 +40,16 @@ __thread_safe
 int tmpfs_unlink(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->ino);
-    DEBUG_ASSERT(inode->sb->fsinfo);
+    DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+
     DEBUG_ASSERT(name);
 
 
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;
+
+    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
     inode_t* d = NULL;
+
 
     list_each(tmpfs->children, i) {
         if(likely(i->parent != inode))
@@ -67,23 +69,19 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
 
 
-    DEBUG_ASSERT(d->ino);
-    DEBUG_ASSERT(d->sb);
-
-    d->sb->st.f_ffree++;
-    d->sb->st.f_favail++;
+    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
 
 
-    if(--d->ino->refcount == 0) {
-
-        d->sb->st.f_bavail += d->ino->st.st_size;
-        d->sb->st.f_bfree += d->ino->st.st_size;
-     
-        kfree(d->ino->userdata);
-
-    }
-
+    inode->sb->st.f_ffree++;
+    inode->sb->st.f_favail++;
+    inode->sb->st.f_bavail += i->st.st_size;
+    inode->sb->st.f_bfree += i->st.st_size;
+            
+    if(i->data)
+        kfree(i->data);
+    
     kfree(d);
+
 
     return 0;
 }

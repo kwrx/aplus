@@ -29,43 +29,37 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
+#include <errno.h>
 
-#include <sys/types.h>
-#include <sys/mount.h>
-
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
-
+#include "tmpfs.h"
 
 
 __thread_safe
-int ext2_umount(inode_t* dir) {
+void* tmpfs_cache_load(vfs_cache_t* cache, ino_t ino) {
 
-    DEBUG_ASSERT(dir);
+    tmpfs_inode_t* i = (tmpfs_inode_t*) kcalloc(sizeof(tmpfs_inode_t), 1, GFP_KERNEL);
 
-
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
-
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
+    i->capacity = 0;
+    i->data = NULL;
 
 
-    __lock(&ino->lock, {
+    i->st.st_uid = current_task->uid;
+    i->st.st_gid = current_task->gid;
 
-        vfs_cache_destroy(&sb->cache);
+    i->st.st_ino = ino;
+    i->st.st_nlink = 1;
+    i->st.st_blocks = 1;
+
+    i->st.st_atime = arch_timer_gettime();
+    i->st.st_mtime = arch_timer_gettime();
+    i->st.st_ctime = arch_timer_gettime();
 
 
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
+    return (void*) i;
+}
 
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
 
-    });
-
-    return 0;
+__thread_safe
+void tmpfs_cache_flush(vfs_cache_t* cache, ino_t ino, void* data) {
+    return;
 }

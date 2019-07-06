@@ -21,51 +21,51 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
-#include <aplus/ipc.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
-#include <stdint.h>
+#include <string.h>
+#include <errno.h>
 
-#include <sys/types.h>
-#include <sys/mount.h>
 
-#include <aplus/utils/list.h>
-
-#include "ext2.h"
+inode_t _vfs_root;
+inode_t* vfs_root = &_vfs_root;
 
 
 
-__thread_safe
-int ext2_umount(inode_t* dir) {
+static int rootfs_getattr (inode_t* inode, struct stat* st) {
+    
+    st->st_dev = 0;
+    st->st_ino = 1;
+    st->st_mode = S_IFDIR | 0666;
+    st->st_nlink = 1;
+    st->st_uid = 0;
+    st->st_gid = 0;
+    st->st_rdev = 0;
+    st->st_blksize = 1;
+    st->st_blocks = 0;
+    st->st_size = 0;
 
-    DEBUG_ASSERT(dir);
-
-
-    struct vfs_sb* sb = smartptr_get(dir->sb);
-    struct ientry* ino = smartptr_get(dir->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->cache);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
-
-    DEBUG_ASSERT((ino->st.st_mode & S_IFMT) == S_IFMT);
-
-
-    __lock(&ino->lock, {
-
-        vfs_cache_destroy(&sb->cache);
-
-
-        ino->st.st_mode &= ~S_IFMT;
-        ino->st.st_mode |=  S_IFDIR;
-
-        smartptr_free_ext(dir->sb, sb, kfree(sb->fsinfo));
-
-    });
+    st->st_atime = arch_timer_gettime();
+    st->st_mtime = arch_timer_gettime();
+    st->st_ctime = arch_timer_gettime();
 
     return 0;
+}
+
+
+void rootfs_init(void) {
+
+    memset(&_vfs_root, 0, sizeof(_vfs_root));
+
+
+    _vfs_root.name[0] = '/';
+    _vfs_root.name[1] = '\0';
+    _vfs_root.ino = 1;
+    _vfs_root.ops.getattr = rootfs_getattr;
+
+    spinlock_init(&_vfs_root.lock);
+
 }

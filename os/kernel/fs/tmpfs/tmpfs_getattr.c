@@ -34,60 +34,18 @@
 #include "tmpfs.h"
 
 
-
 __thread_safe
-inode_t* tmpfs_mknod(inode_t* inode, const char * name, mode_t mode) {
+int tmpfs_getattr(inode_t* inode, struct stat* st) {
     
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->ino);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsinfo);
     DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
-    DEBUG_ASSERT(name);
+
+    DEBUG_ASSERT(st);
 
 
-    static ino_t next_ino = 1;
-    
+    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, inode->ino);
+    memcpy(st, &i->st, sizeof(struct stat));
 
-    inode_t* i = (inode_t*) kcalloc(1, sizeof(inode_t), GFP_USER);
-
-    i->parent = inode;
-    i->sb = PTR_REF(inode->sb);
-
-    i->ino = PTR_REF(&i->__ino);
-    i->ino->st.st_ino = ++next_ino;
-    i->ino->st.st_mode = mode & ~current_task->umask;
-    i->ino->st.st_nlink = 1;
-
-    strncpy(i->name, name, sizeof(i->name));
-
-
-
-    if(S_ISDIR(mode)) {
-
-        i->ino->ops.finddir = tmpfs_finddir;
-        i->ino->ops.readdir = tmpfs_readdir;
-        i->ino->ops.unlink = tmpfs_unlink;
-        i->ino->ops.mknod = tmpfs_mknod;
-
-    }
-
-    if(S_ISREG(mode)) {
-
-        i->ino->ops.read = tmpfs_read;     
-        i->ino->ops.write = tmpfs_write;     
-
-    }
-
-    spinlock_init(&i->ino->lock);
-
-
-    i->sb->st.f_ffree--;
-    i->sb->st.f_favail--;
-
-
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->fsinfo;
-    list_push(tmpfs->children, i);
-
-    return i;
+    return 0;
 }

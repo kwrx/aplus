@@ -35,10 +35,19 @@
 
 
 __thread_safe
-int ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
+ssize_t ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
+
+
+    struct vfs_sb* sb = smartptr_get(inode->sb);
+    struct ientry* ino = smartptr_get(inode->ino);
+
+    DEBUG_ASSERT(sb->fsinfo);
+    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+
 
 
     errno = EROFS;
