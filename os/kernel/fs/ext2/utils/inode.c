@@ -36,7 +36,9 @@
 #include <sys/types.h>
 #include <sys/mount.h>
 
-#include "ext2.h"
+#include "../ext2.h"
+
+
 
 
 __thread_safe
@@ -53,20 +55,15 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
 
 
 __thread_safe
-void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_write_inode(ext2_t* ext2, ino_t ino, void* data) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
-    DEBUG_ASSERT(size);
+    DEBUG_ASSERT(ino != EXT2_BAD_INO);
+    DEBUG_ASSERT(ino != 0);
 
-    if(block > ext2->sb.s_blocks_count)
-        kpanic("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
-
-    if(block < ext2->first_block_group - 1)
-        kpanic("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
-
-    if(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
-        kpanic("%s() FAIL! vfs_read() %s", __func__, strerror(errno));
-        
+    struct ext2_group_desc d;
+    ext2_utils_read_block(ext2, ext2->first_block_group, ((ino - 1) / ext2->sb.s_inodes_per_group) * sizeof(d), &d, sizeof(d));
+    ext2_utils_write_block(ext2, d.bg_inode_table,       ((ino - 1) % ext2->sb.s_inodes_per_group) * ext2->inodesize, data, ext2->inodesize);
 }
 
 
@@ -86,7 +83,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
     // Direct Blocks
     if(block < a) {
     
-        ext2_utils_read_block(ext2, blocks[block], offset, data, size);
+        ext2_utils_read_block(ext2, &blocks[block], offset, data, size);
         return;    
     
     }
@@ -127,6 +124,74 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
         ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, offset, data, size);
+        return;
+
+    }
+
+
+    kpanic("%s() FAIL! block is too high!");
+}
+
+
+
+
+__thread_safe
+void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, void* data, size_t size) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(blocks);
+    DEBUG_ASSERT(size);
+    DEBUG_ASSERT(size <= ext2->blocksize);
+
+
+    uint32_t a = EXT2_NDIR_BLOCKS
+           , b = (ext2->blocksize / sizeof(uint32_t))
+           ;
+
+
+    // Direct Blocks
+    if(block < a) {
+        
+        ext2_utils_write_block(ext2, blocks[block], offset, data, size);
+        return;    
+    
+    }
+
+
+    // Indirect Blocks
+    block -= a;
+    
+    if(block < b) {
+
+        ext2_utils_read_block(ext2, blocks[EXT2_IND_BLOCK], sizeof(uint32_t) * block, &block, sizeof(uint32_t));
+        ext2_utils_write_block(ext2, block, offset, data, size);
+        return;
+
+    }
+
+
+    // Double Indirect Blocks
+    block -= b;
+
+    if(block < (b * b)) {
+
+        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (block % b), &block, sizeof(uint32_t));
+        ext2_utils_write_block(ext2, block, offset, data, size);
+
+        return;
+
+    }
+
+
+    // Triply Indirect Blocks
+    block -= b * b;
+
+    if(block < (b * b * b)) {
+
+        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (block / (b * b)), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &block, sizeof(uint32_t));
+        ext2_utils_write_block(ext2, block, offset, data, size);
         return;
 
     }

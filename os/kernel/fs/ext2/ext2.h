@@ -460,4 +460,7 @@ void ext2_utils_read_inode(ext2_t*, ino_t, void*);
 void ext2_utils_read_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, size_t);
 void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
 
+void ext2_utils_alloc_block(ext2_t*, uint32_t*);
+void ext2_utils_free_block(ext2_t*, uint32_t);
+
 #endif

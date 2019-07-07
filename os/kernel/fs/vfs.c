@@ -67,6 +67,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, con
     
     int i;
     for(i = 0; vfs_table[i].id; i++) {
+
         if(strcmp(vfs_table[i].name, fs) != 0)
             continue;
 
@@ -317,7 +318,7 @@ inode_t* vfs_creat (inode_t* inode, const char __user * name, mode_t mode) {
 
 
     if(likely(inode->ops.creat))
-        __lock_return(&inode->lock, inode_t*, inode->ops.creat(inode, name, mode));
+        __lock_return(&inode->lock, inode_t*, inode->ops.creat(inode, name, mode)); /* TODO: Add Cache */
 
     return errno = ENOSYS, NULL;
 }
@@ -346,7 +347,7 @@ inode_t* vfs_finddir (inode_t* inode, const char __user * name) {
 
 
     if(likely(inode->ops.finddir))
-        __lock_return(&inode->lock, inode_t*, inode->ops.finddir(inode, name));
+        __lock_return(&inode->lock, inode_t*, inode->ops.finddir(inode, name));     /* TODO: Add Cache */
     
     return errno = ENOSYS, NULL;
 }
