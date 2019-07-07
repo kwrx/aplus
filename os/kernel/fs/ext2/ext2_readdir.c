@@ -39,32 +39,28 @@ __thread_safe
 ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+
     DEBUG_ASSERT(e);
     DEBUG_ASSERT(count);
 
-    struct vfs_sb* sb = smartptr_get(inode->sb);
-    struct ientry* ino = smartptr_get(inode->ino);
 
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
-    ext2_t* ext2 = (ext2_t*) sb->fsinfo;
 
-
-    struct ext2_inode node;
-    ext2_utils_read_inode(ext2, ino->st.st_ino, &node);
-
+    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
 
     int entries = 0;
     int q;
 
-    for(q = 0; q < node.i_size; q += ext2->blocksize) {
+    for(q = 0; q < n->i_size; q += ext2->blocksize) {
 
         __lock(&ext2->lock, {
         
 
-            ext2_utils_read_inode_data(ext2, node.i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
 
             int i;
             for(i = 0; i < ext2->blocksize; ) {

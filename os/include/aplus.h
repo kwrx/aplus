@@ -191,17 +191,6 @@ void kmain(void);
 void cmain(void);
 
 
-#define EXPORT(f)               \
-    __section(".exports")       \
-    struct {                    \
-        char* name;             \
-        void* addr;             \
-    } __export_##f = {          \
-        (char*) #f,             \
-        (void*) &f              \
-    };
-
-
 
 #ifndef __init_ns
 #define __init_ns

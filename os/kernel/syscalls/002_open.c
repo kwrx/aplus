@@ -120,7 +120,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
     if(unlikely(!r)) {
         if(flags & O_CREAT) {
-            r = vfs_mknod(c, s, mode);
+            r = vfs_creat(c, s, mode);
 
             if(unlikely(!r))
                 return -errno;
@@ -133,16 +133,18 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
 
     DEBUG_ASSERT(r);
-    DEBUG_ASSERT(r->ino);
+
+    struct stat st;
+    if(vfs_getattr(r, &st) < 0)
+        return (errno = ENOSYS) ? -EACCES : -errno;
 
 
-    
 #if 0 /* TODO: Follow symlinks */
     if (
 #ifdef O_NOFOLLOW
         !(flags & O_NOFOLLOW) &&
 #endif
-        S_ISLNK(r->ino->st.st_mode)
+        S_ISLNK(st.st_mode)
     ) {
         DEBUG_ASSERT(r->link);
         DEBUG_ASSERT(r->link != r);
@@ -154,7 +156,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
 #ifdef O_DIRECTORY
     if(flags & O_DIRECTORY)
-        if(!(S_ISDIR(r->ino->st.st_mode)))
+        if(!(S_ISDIR(st.st_mode)))
             return -ENOTDIR;
 #endif
 
@@ -162,14 +164,14 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
     if(current_task->uid != 0) {
 
-        if(r->ino->st.st_uid == current_task->uid)
+        if(st.st_uid == current_task->uid)
             if(!(
                 (flags & O_RDONLY ? mode & S_IRUSR : 1) &&
                 (flags & O_WRONLY ? mode & S_IWUSR : 1) &&
                 (flags & O_RDWR   ? mode & S_IRUSR && mode & S_IWUSR : 1)
             )) return -EACCES;
 
-        else if(r->ino->st.st_gid == current_task->gid)
+        else if(st.st_gid == current_task->gid)
             if(!(
                 (flags & O_RDONLY ? mode & S_IRGRP : 1) &&
                 (flags & O_WRONLY ? mode & S_IWGRP : 1) &&
@@ -205,7 +207,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
         
         if(flags & O_APPEND)
-            current_task->fd[fd].position = r->ino->st.st_size;
+            current_task->fd[fd].position = st.st_size;
         else
             current_task->fd[fd].position = 0;
 

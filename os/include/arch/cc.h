@@ -28,6 +28,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
+#include <stdlib.h>
 #include <stdint.h>
 
 typedef int8_t s8_t;

@@ -28,6 +28,7 @@
 #include <aplus/mm.h>
 #include <aplus/task.h>
 #include <aplus/timer.h>
+#include <aplus/syscall.h>
 #include <stdint.h>
 
 

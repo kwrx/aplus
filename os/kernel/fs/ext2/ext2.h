@@ -433,12 +433,27 @@ typedef struct {
 } __packed ext2_t;
 
 
+
+int ext2_getattr (inode_t*, struct stat*);
+//int ext2_setattr (inode_t*, struct stat*);
+
+//int ext2_truncate (inode_t*, off_t);
+
+ssize_t ext2_read (inode_t*, void*, off_t, size_t);
+//ssize_t ext2_write (inode_t*, const void*, off_t, size_t);
+ssize_t ext2_readlink (inode_t*, char*, size_t);
+
+//inode_t* ext2_creat (inode_t*, const char*, mode_t);
 inode_t* ext2_finddir (inode_t*, const char*);
-inode_t* ext2_mknod (inode_t*, const char* name, mode_t mode);
-int ext2_unlink (inode_t*, const char* name);
 ssize_t ext2_readdir (inode_t*, struct dirent*, off_t, size_t);
-ssize_t ext2_read(inode_t*, void __user *, off_t, size_t);
-ssize_t ext2_write(inode_t*, const void __user *, off_t, size_t);
+
+//int ext2_rename (inode_t*, const char*, const char*);
+//int ext2_symlink (inode_t*, const char*, const char*);
+//int ext2_unlink (inode_t*, const char*);
+
+
+void* ext2_cache_load (vfs_cache_t*, ino_t);
+void ext2_cache_flush (vfs_cache_t*, ino_t, void*);
 
 
 void ext2_utils_read_inode(ext2_t*, ino_t, void*);

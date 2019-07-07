@@ -66,18 +66,24 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
 
 
     DEBUG_ASSERT(current_task->fd[fd].inode);
-    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
+
 
     if(unlikely(!current_task->fd[fd].inode))
         return -EBADF;
 
 
 
-    __lock(&current_task->fd[fd].inode->ino->lock, {
+    int e;
 
-        memcpy(statbuf, &current_task->fd[fd].inode->ino->st, sizeof(struct stat));
+    __lock(&current_task->fd[fd].inode->lock, {
+
+        e = vfs_getattr(current_task->fd[fd].inode, statbuf);
 
     });
+
+
+    if(e < 0)
+        return -errno;
 
     return 0;
 });

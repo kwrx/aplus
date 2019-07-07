@@ -61,12 +61,19 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
 
 
     DEBUG_ASSERT(current_task->fd[fd].inode);
-    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
+
 
     if(unlikely(!current_task->fd[fd].inode))
         return -EBADF;
 
-    if(S_ISFIFO(current_task->fd[fd].inode->ino->st.st_mode))
+
+
+    struct stat st;
+    if(vfs_getattr(current_task->fd[fd].inode, &st) < 0)
+        return -errno;
+
+
+    if(S_ISFIFO(st.st_mode))
         return -ESPIPE;
 
 
@@ -84,7 +91,7 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
                 break;
 
             case SEEK_END:
-                current_task->fd[fd].position = current_task->fd[fd].inode->ino->st.st_size + offset;
+                current_task->fd[fd].position = st.st_size + offset;
                 break;
 
             default:

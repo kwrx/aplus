@@ -71,14 +71,19 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
     
 
     DEBUG_ASSERT(current_task->fd[fd].inode);
-    DEBUG_ASSERT(current_task->fd[fd].inode->ino);
 
-    __lock(&current_task->fd[fd].inode->ino->lock, {
 
-        memcpy(statbuf, &current_task->fd[fd].inode->ino->st, sizeof(struct stat));
+    int e;
+
+    __lock(&current_task->fd[fd].inode->lock, {
+
+        e = vfs_getattr(current_task->fd[fd].inode, statbuf);
 
     });
 
+
+    if(e < 0)
+        return -errno;
 
     if((fd = sys_close(fd)) < 0)
         return fd;

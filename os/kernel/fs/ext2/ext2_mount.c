@@ -88,71 +88,76 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_RECOVER));
     DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_JOURNAL_DEV));
 
+    DEBUG_WARNING(sb.s_rev_level == EXT2_DYNAMIC_REV);
 
 
-    struct ientry* ino = smartptr_get(dir->ino);
 
-    __lock(&ino->lock, {
         
-        ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
+    ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
-        ext2->cache = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);        
-        ext2->first_block_group = sb.s_first_data_block + 1;
-        ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
-        ext2->blocksize = (1024) << sb.s_log_block_size;
-        ext2->inodesize = sb.s_inode_size;
-        ext2->dev = dev;
-        ext2->root = dir;
+    ext2->cache = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);        
+    ext2->first_block_group = sb.s_first_data_block + 1;
+    ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
+    ext2->blocksize = (1024) << sb.s_log_block_size;
+    ext2->inodesize = sb.s_inode_size;
+    ext2->dev = dev;
+    ext2->root = dir;
 
-        memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
-
-
-        spinlock_init(&ext2->lock);
+    memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
 
 
+    spinlock_init(&ext2->lock);
 
-        smartptr_init_ext(dir->sb, sb, {
-         
-            sb->fsid = EXT2_ID;
-            sb->dev = dev;
-            sb->root = dir;
-            sb->flags = flags;
 
-            vfs_cache_create(&sb->cache, 1024);
+
+    dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    
+    dir->sb->fsid = EXT2_ID;
+    dir->sb->dev = dev;
+    dir->sb->root = dir;
+    dir->sb->flags = flags;
+
+
+    dir->sb->fsinfo = (void*) ext2;
         
+    dir->sb->st.f_bsize = 1024 << sb.s_log_block_size;
+    dir->sb->st.f_frsize = 1024 << sb.s_log_frag_size;
+    dir->sb->st.f_blocks = sb.s_blocks_count;
+    dir->sb->st.f_bfree = sb.s_free_blocks_count;
+    dir->sb->st.f_bavail = sb.s_free_blocks_count;
+    dir->sb->st.f_files = sb.s_inodes_count;
+    dir->sb->st.f_ffree = sb.s_free_inodes_count;
+    dir->sb->st.f_favail = sb.s_free_inodes_count;
+    dir->sb->st.f_flag = stflags;
+    dir->sb->st.f_fsid = EXT2_ID;
+    dir->sb->st.f_namemax = MAXNAMLEN;
 
-            sb->fsinfo = (void*) ext2;
-        
-            sb->st.f_bsize = 1024 << sb.s_log_block_size;
-            sb->st.f_frsize = 1024 << sb.s_log_frag_size;
-            sb->st.f_blocks = sb.s_blocks_count;
-            sb->st.f_bfree = sb.s_free_blocks_count;
-            sb->st.f_bavail = sb.s_free_blocks_count;
-            sb->st.f_files = sb.s_inodes_count;
-            sb->st.f_ffree = sb.s_free_inodes_count;
-            sb->st.f_favail = sb.s_free_inodes_count;
-            sb->st.f_flag = stflags;
-            sb->st.f_fsid = EXT2_ID;
-            sb->st.f_namemax = MAXNAMLEN;
-
-
-            sb->ops.finddir = ext2_finddir;
-            sb->ops.readdir = ext2_readdir;
-            sb->ops.mknod = ext2_mknod;
-            sb->ops.unlink = ext2_unlink;
+    dir->sb->ops.getattr = ext2_getattr;
+    //dir->sb->ops.setattr = ext2_setattr;
+    //dir->sb->ops.creat = ext2_creat;
+    dir->sb->ops.finddir = ext2_finddir;
+    dir->sb->ops.readdir = ext2_readdir;
+    //dir->sb->ops.rename = ext2_rename;
+    //dir->sb->ops.symlink = ext2_symlink;
+    //dir->sb->ops.unlink = ext2_unlink;
             
-        });
-        
 
-        smartptr_get_ext(dir->ino, ino, {
+    
+    struct vfs_cache_ops ops;
+    ops.flush = ext2_cache_flush;
+    ops.load  = ext2_cache_load;
 
-            ino->st.st_ino = EXT2_ROOT_INO;
-            ino->st.st_mode &= ~S_IFMT;
-            ino->st.st_mode |=  S_IFMT;
+    vfs_cache_create(&dir->sb->cache, &ops, -1, (void*) ext2);
 
-        });
 
-    });
+
+
+    struct ext2_inode* i = (struct ext2_inode*) vfs_cache_get(&dir->sb->cache, EXT2_ROOT_INO);
+
+    i->i_mode &= ~S_IFMT;
+    i->i_mode |=  S_IFMT;
+
+    dir->ino = EXT2_ROOT_INO;
 
 
     return 0;

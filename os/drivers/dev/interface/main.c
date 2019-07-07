@@ -62,7 +62,7 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
 
 
-    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
+    device_t* device = (device_t*) inode->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -94,7 +94,7 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
     DEBUG_ASSERT(size);
 
 
-    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
+    device_t* device = (device_t*) inode->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -120,13 +120,13 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
 
 
 __thread_safe
-static int device_ioctl(inode_t* inode, int req, void* arg) {
+static int device_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(arg);
 
 
-    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
+    device_t* device = (device_t*) inode->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -150,12 +150,12 @@ static int device_ioctl(inode_t* inode, int req, void* arg) {
 
 
 __thread_safe
-static int device_fsync(inode_t* inode) {
+static int device_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
 
 
-    device_t* device = (device_t*) smartptr_get(inode->ino)->userdata;
+    device_t* device = (device_t*) inode->userdata;
 
     if(device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -244,16 +244,14 @@ void device_mkdev(device_t* device, mode_t mode) {
         kpanic("device::create: failed, could not close device descriptor: %s", buf);
 
 
-    smartptr_get_ext(i->ino, ino, {
        
-        ino->userdata = (void*) device;
+    i->userdata = (void*) device;
 
-        ino->ops.write = device_write;
-        ino->ops.read  = device_read;
-        ino->ops.ioctl = device_ioctl;
-        ino->ops.fsync = device_fsync;
+    i->ops.write = device_write;
+    i->ops.read  = device_read;
+    i->ops.ioctl = device_ioctl;
+    i->ops.fsync = device_fsync;
     
-    });
 
 
     switch(device->type) {

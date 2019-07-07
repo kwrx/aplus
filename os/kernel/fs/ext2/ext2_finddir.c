@@ -47,7 +47,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
 
     struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
- 
+    struct inode* d = NULL;
 
 
     int q;
@@ -65,24 +65,31 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
                 struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
 
+                mode_t mode;
+                if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+                    mode = e->file_type << 12;
+                else
+                    mode = ((struct ext2_inode*) vfs_cache_get(&inode->sb->cache, e->inode))->i_mode;
+
+
                 /* Found? */
                 if(strncmp(name, e->name, e->name_len) == 0) {
 
-                    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, e->inode);
+
+                    d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL); /* FIXME: Add Cache */
+
+                    d->ino = e->inode;
+                    d->sb = inode->sb;
+                    d->parent = inode;
+                    
+                    strncpy(d->name, e->name, MAXNAMLEN);
 
 
-                    inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL); /* FIXME: Add Cache */
-
-                    d->
-
-                    strncpy(d->name, n->name, MAXNAMLEN);
-
-
-                    d->ops.getaddr = ext2_getattr;
+                    d->ops.getattr = ext2_getattr;
                     //d->ops.setattr = ext2_setattr;
                     //d->ops.fsync = ext2_fsync;
 
-                    if(S_ISDIR(n->i_mode)) {
+                    if(S_ISDIR(mode)) {
 
                         //d->ops.creat   = ext2_creat;
                         d->ops.finddir = ext2_finddir;
@@ -93,7 +100,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
                     }
 
-                    if(S_ISREG(n->i_mode)) {
+                    if(S_ISREG(mode)) {
 
                         //d->ops.truncate = ext2_truncate;
                         d->ops.read = ext2_read;
@@ -101,7 +108,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
                     }
 
-                    if(S_ISLNK(n->i_mode)) {
+                    if(S_ISLNK(mode)) {
 
                         d->ops.readlink = ext2_readlink;
 
@@ -109,31 +116,21 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
                 
 
                     spinlock_init(&d->lock);
-                
-
-
-                    strncpy(child->name, name, MAXNAMLEN);
-
-
-                    if(smartptr_is_null(child->sb))
-                        child->sb = smartptr_ref(inode->sb);
-
-                    child->parent = inode->parent;
                     break;
                 }
                     
                 
                 
-                i += d->rec_len;
+                i += e->rec_len;
             }
 
         });
 
 
-        if(child != NULL)
+        if(d != NULL)
             break;
 
     }
 
-    return child;
+    return d;
 }

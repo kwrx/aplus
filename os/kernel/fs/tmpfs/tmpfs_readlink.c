@@ -35,7 +35,7 @@
 
 
 __thread_safe
-ssize_t tmpfs_readlink(inode_t* inode, void * buf, size_t len) {
+ssize_t tmpfs_readlink(inode_t* inode, char * buf, size_t len) {
    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);

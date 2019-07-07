@@ -29,6 +29,7 @@
 #include <aplus/debug.h>
 
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
 
@@ -61,6 +62,12 @@ extern long sys_write (unsigned int fd, const void __user * buf, size_t count);
 extern long sys_open (const char __user * filename, int flags, mode_t mode);
 
 extern long sys_close (unsigned int fd);
+
+extern long sys_newstat (const char __user * filename, struct stat __user * statbuf);
+
+extern long sys_newfstat (unsigned int fd, struct stat __user * statbuf);
+
+extern long sys_newlstat (const char __user * filename, struct stat __user * statbuf);
 
 extern long sys_lseek (unsigned int fd, off_t offset, unsigned int whence);
 
@@ -106,11 +113,15 @@ extern long sys_umount (char __user * name, int flags);
 
 //extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp);
 
-long sys_fork (void);
+extern long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void* arg);
 
-long sys_vfork (void);
+extern long sys_fork (void);
 
-long sys_execve (const char __user * filename, const char __user ** argv, const char __user ** envp);
+extern long sys_vfork (void);
+
+extern long sys_execve (const char __user * filename, const char __user ** argv, const char __user ** envp);
+
+extern long sys_chroot(const char __user * pathname);
 
 
 

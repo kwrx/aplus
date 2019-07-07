@@ -35,21 +35,27 @@
 
 
 __thread_safe
-ssize_t ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
+ssize_t ext2_readlink(inode_t* inode, char * buf, size_t len) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    struct vfs_sb* sb = smartptr_get(inode->sb);
-    struct ientry* ino = smartptr_get(inode->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
 
-    errno = EROFS;
-    return -1;
+    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+
+    if(len > n->i_size)
+        len = n->i_size;
+    
+
+    ext2_utils_read_inode_data(ext2, n->i_block, 0, 0, buf, len);
+
+    return len;
 }

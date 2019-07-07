@@ -146,6 +146,10 @@
 #define iovec iovec
 
 
+
+extern void* sys_kmalloc(size_t);
+extern void* sys_kcalloc(size_t, size_t);
+
 #define mem_clib_malloc                     sys_kmalloc
 #define mem_clib_free                       kfree
 #define mem_clib_calloc                     sys_kcalloc

@@ -21,6 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <aplus.h>
 
 #define EXPORT(s)               \
     extern int s;               \
@@ -36,3 +37,5 @@ EXPORT(strcat);
 #if defined(__i386__) || defined(__x86_64__)
 EXPORT(contiguous_memory_area);
 #endif
+
+WARNING("-Wbuiltin-declaration-mismatch")

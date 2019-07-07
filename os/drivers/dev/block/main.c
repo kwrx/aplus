@@ -292,15 +292,6 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
     DEBUG_ASSERT(inode);
 
 
-    smartptr_get_ext(inode->ino, ino, {
-
-        ino->st.st_size = device->blk.blkcount *
-                          device->blk.blksize  ;
-
-        ino->st.st_blksize = device->blk.blksize;
-
-    });
-
 
     /* Check Partition Table */
 
@@ -370,7 +361,17 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
         d->userdata = device->userdata;
 
 
-        device_mkdev(d, smartptr_get(inode->ino)->st.st_mode & 0777);
+
+        mode_t mode;
+
+        struct stat st;
+        if(vfs_getattr(inode, &st) < 0)
+            mode = 0666;
+        else
+            mode = st.st_mode;
+
+
+        device_mkdev(d, mode & 0777);
 
     }
 

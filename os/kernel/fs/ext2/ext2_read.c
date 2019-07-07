@@ -38,42 +38,37 @@ __thread_safe
 ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    struct vfs_sb* sb = smartptr_get(inode->sb);
-    struct ientry* ino = smartptr_get(inode->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
-    ext2_t* ext2 = (ext2_t*) sb->fsinfo;
+
+    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
 
 
-    if(pos + len > ino->st.st_size)
-        len = ino->st.st_size - pos;
+
+    off_t size;
+    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+        size = (off_t) (((uint64_t) n->i_size_high << 32) | n->i_size);
+    else
+        size = n->i_size;
+
+
+    if(pos + len > size)
+        len = size - pos;
+    
 
     DEBUG_ASSERT(len >= 0);
 
 
 
-    // Cache Blocks
-    if(ino->userdata == NULL) {
-
-        struct ext2_inode node;
-        ext2_utils_read_inode(ext2, ino->st.st_ino, &node);
-
-        ino->userdata = kcalloc(EXT2_N_BLOCKS, sizeof(uint32_t), GFP_KERNEL);
-        memcpy(ino->userdata, node.i_block, EXT2_N_BLOCKS * sizeof(uint32_t));
-
-    }
-
-    DEBUG_ASSERT(ino->userdata);
-
-    uint32_t* blocks = (uint32_t*) ino->userdata;
-
+    uint32_t* blocks = &n->i_block[0];
 
     uint32_t ib = pos / ext2->blocksize;
     uint32_t eb = (pos + len - 1) / ext2->blocksize;

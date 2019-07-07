@@ -86,7 +86,7 @@ void vfs_cache_flush(vfs_cache_t* cache, ino_t ino) {
         if(likely(i->ino != ino))
             continue;
 
-        __lock(&cache->lock, cache->flush(cache, i->ino, i->data));
+        __lock(&cache->lock, cache->ops.flush(cache, i->ino, i->data));
         break;
     }
 
@@ -125,7 +125,7 @@ void vfs_cache_destroy(vfs_cache_t* cache) {
             continue;
 
 
-        cache->flush(cache, i->ino, i->data);
+        cache->ops.flush(cache, i->ino, i->data);
 
         kfree(i->data);
     }
