@@ -54,6 +54,7 @@ struct vfs_cache {
 
     size_t capacity;
     size_t count;
+    void* userdata;
 
     struct vfs_cache_ops ops;
 
@@ -165,7 +166,7 @@ int vfs_unlink (inode_t*, const char*);
 
 
 // os/kernel/fs/cache.c
-void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int);
+void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
 void vfs_cache_destroy(vfs_cache_t*);
 void* vfs_cache_get(vfs_cache_t*, ino_t);
 void vfs_cache_flush(vfs_cache_t*, ino_t);

@@ -81,9 +81,9 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
         d->ops.creat   = tmpfs_creat;
         d->ops.finddir = tmpfs_finddir;
         d->ops.readdir = tmpfs_readdir;
-        d->ops.rename = tmpfs_rename;
+        d->ops.rename  = tmpfs_rename;
         d->ops.symlink = tmpfs_symlink;
-        d->ops.unlink = tmpfs_unlink;
+        d->ops.unlink  = tmpfs_unlink;
     
     }
 

@@ -89,11 +89,11 @@ void vfs_cache_flush(vfs_cache_t* cache, ino_t ino) {
         __lock(&cache->lock, cache->flush(cache, i->ino, i->data));
         break;
     }
-    
+
 }
 
 
-void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacity) {
+void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacity, void* userdata) {
    
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(ops);
@@ -107,6 +107,7 @@ void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacit
 
     cache->capacity = capacity;
     cache->count = 0;
+    cache->userdata = userdata;
 
     spinlock_init(&cache->lock);
 

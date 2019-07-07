@@ -106,7 +106,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     ops.flush = tmpfs_cache_flush;
     ops.load  = tmpfs_cache_load;
 
-    vfs_cache_create(&dir->sb->cache, &ops, TMPFS_NODES_MAX);
+    vfs_cache_create(&dir->sb->cache, &ops, TMPFS_NODES_MAX, NULL);
 
 
     tmpfs_inode_t* r = (tmpfs_inode_t*) vfs_cache_get(&dir->sb->cache, dir->ino);

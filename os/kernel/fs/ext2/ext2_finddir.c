@@ -38,92 +38,78 @@ __thread_safe
 inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
     DEBUG_ASSERT(name);
 
-
-    struct vfs_sb* sb = smartptr_get(inode->sb);
-    struct ientry* ino = smartptr_get(inode->ino);
-
-    DEBUG_ASSERT(sb->fsinfo);
-    DEBUG_ASSERT(sb->fsid == EXT2_ID);
+    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
 
-    ext2_t* ext2 = (ext2_t*) sb->fsinfo;
-    inode_t* child = NULL;
-
-
-    struct ext2_inode node;
-    ext2_utils_read_inode(ext2, ino->st.st_ino, &node);
+    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+ 
 
 
     int q;
-    for(q = 0; q < node.i_size; q += ext2->blocksize) {
+    for(q = 0; q < n->i_size; q += ext2->blocksize) {
 
 
         __lock(&ext2->lock, {
         
-            ext2_utils_read_inode_data(ext2, node.i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
 
 
             int i;
             for(i = 0; i < ext2->blocksize; ) {
 
-                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
+                struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
 
                 /* Found? */
-                if(strncmp(name, d->name, d->name_len) == 0) {
+                if(strncmp(name, e->name, e->name_len) == 0) {
 
-                    struct ext2_inode node;
-                    ext2_utils_read_inode(ext2, d->inode, &node);
-
-
-                    child = vfs_cache_get_inode(sb->cache, d->inode);
-
-                    smartptr_get_ext(child->ino, ino, {
-
-                        ino->st.st_mode = node.i_mode;
-                        ino->st.st_dev = 0;
-                        ino->st.st_nlink = node.i_links_count;
-                        ino->st.st_uid = node.i_uid;
-                        ino->st.st_gid = node.i_gid;
-                        ino->st.st_rdev = 0;
-                        ino->st.st_size = node.i_size;
-                        ino->st.st_blksize = 512;
-                        ino->st.st_blocks = node.i_blocks;
-                        ino->st.st_atime = node.i_atime;
-                        ino->st.st_ctime = node.i_ctime;
-                        ino->st.st_mtime = node.i_mtime;
+                    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, e->inode);
 
 
+                    inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL); /* FIXME: Add Cache */
 
-#if CONFIG_BITS == 64
-                        ino->st.st_size |= ((off_t) node.i_size_high) << 32;
-#endif
+                    d->
 
-                        //ino->ops.fsync = ext2_fsync;
+                    strncpy(d->name, n->name, MAXNAMLEN);
 
-                        if(S_ISDIR(node.i_mode)) {
 
-                            ino->ops.finddir = ext2_finddir;
-                            ino->ops.readdir = ext2_readdir;
-                            ino->ops.mknod = ext2_mknod;
-                            ino->ops.unlink = ext2_unlink;
+                    d->ops.getaddr = ext2_getattr;
+                    //d->ops.setattr = ext2_setattr;
+                    //d->ops.fsync = ext2_fsync;
 
-                        }
+                    if(S_ISDIR(n->i_mode)) {
 
-                        if(S_ISREG(node.i_mode)) {
+                        //d->ops.creat   = ext2_creat;
+                        d->ops.finddir = ext2_finddir;
+                        d->ops.readdir = ext2_readdir;
+                        //d->ops.rename  = ext2_rename;
+                        //d->ops.symlink = ext2_symlink;
+                        //d->ops.unlink  = ext2_unlink;
 
-                            ino->ops.read = ext2_read;
-                            ino->ops.write = ext2_write;
+                    }
 
-                        }
-                    
+                    if(S_ISREG(n->i_mode)) {
 
-                        spinlock_init(&ino->lock);
-                    
-                    });
+                        //d->ops.truncate = ext2_truncate;
+                        d->ops.read = ext2_read;
+                        //d->ops.write = ext2_write;
+
+                    }
+
+                    if(S_ISLNK(n->i_mode)) {
+
+                        d->ops.readlink = ext2_readlink;
+
+                    }
+                
+
+                    spinlock_init(&d->lock);
+                
 
 
                     strncpy(child->name, name, MAXNAMLEN);
