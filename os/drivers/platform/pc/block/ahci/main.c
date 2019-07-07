@@ -855,7 +855,7 @@ static void sata_dnit(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    int i = (int) device->userdata - 1;
+    long i = (long) device->userdata - 1;
 
 
     ahci.hba->ports[i].ie = 0;
@@ -873,7 +873,7 @@ static void sata_reset(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    int i = (int) device->userdata - 1;
+    long i = (long) device->userdata - 1;
 
 
 

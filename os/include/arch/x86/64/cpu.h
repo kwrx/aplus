@@ -211,6 +211,9 @@ extern uint64_t x86_get_rip(void);
 
 
 typedef struct x86_frame {
+
+    char top[0];
+
     uint64_t mxcsr;
     uint64_t rax;
     uint64_t rbx;
@@ -235,6 +238,7 @@ typedef struct x86_frame {
     uint64_t userrsp;
 
     char bottom[0];
+    
 } __attribute__((packed)) x86_frame_t;
 
 
