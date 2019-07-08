@@ -140,6 +140,10 @@ typedef struct {
     uint8_t entries[0];
 } __packed acpi_madt_t;
 
+
+
 void acpi_init(void);
 int acpi_find(acpi_sdt_t** sdt, const char name[4]);
+int acpi_is_extended(void);
+
 #endif

@@ -125,6 +125,7 @@ void smp_init(void) {
 
         ap_stack(((uintptr_t) &early_stack) - (i * CONFIG_STACK_SIZE));
 
+        /* INIT */
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));
 
@@ -134,6 +135,7 @@ void smp_init(void) {
 
         arch_timer_delay(10000);
         
+        /* SIPI */
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOTSTRAP_CODE >> 12) & 0xFF) | (6 << 8) | (1 << 14));
         
@@ -142,6 +144,7 @@ void smp_init(void) {
         if(ap_check(i, 500000))     /* 500 ms */
             continue;
 
+        /* SIPI */
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOTSTRAP_CODE >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 

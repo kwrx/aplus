@@ -114,10 +114,11 @@ void ioapic_enable(void) {
     
     int i;
     for(i = 0; i < X86_IOAPIC_MAX; i++) {
+        
         if(!ioapic[i].address)
             continue;
 
-
+            
         x86_map_page (
             (x86_page_t*) (x86_get_cr3() + CONFIG_KERNEL_BASE),
             (ioapic[i].address & ~(PAGE_SIZE - 1)), 
@@ -129,6 +130,7 @@ void ioapic_enable(void) {
             ioapic[i].address,
             ioapic[i].address + PAGE_SIZE - 1
         );
+
 
         ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
             ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24

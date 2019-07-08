@@ -90,6 +90,7 @@ void apic_enable(void) {
 
 
 void apic_init(void) {
+
     memset(ioapic, 0, sizeof(ioapic_t) * X86_IOAPIC_MAX);
 
 
@@ -116,7 +117,14 @@ void apic_init(void) {
         kpanic("x86-apic: APIC not found in ACPI tables");
 
 
-    acpi_madt_t* madt = (acpi_madt_t*) &sdt->tables;
+
+    acpi_madt_t* madt;
+
+    if(acpi_is_extended())
+        madt = (acpi_madt_t*) &sdt->xtables;
+    else
+        madt = (acpi_madt_t*) &sdt->tables;
+
     DEBUG_ASSERT(madt);
     DEBUG_ASSERT(madt->lapic_address == X86_APIC_BASE_ADDR);
 
@@ -128,45 +136,83 @@ void apic_init(void) {
         switch(*p) {
 
             case X86_MADT_ENTRY_LAPIC:
-                    mbd->cpu.max_cores++;
-                    mbd->cpu.cores[p[2]].id = p[3];
-                    mbd->cpu.cores[p[2]].flags = *(uint32_t*) &p[4];
+
+                mbd->cpu.max_cores++;
+                mbd->cpu.cores[p[2]].id = p[3];
+                mbd->cpu.cores[p[2]].flags = *(uint32_t*) &p[4];
                 break;
 
             case X86_MADT_ENTRY_IOAPIC:
-                    ioapic[p[2]].address = *(uint32_t*) &p[4];
-                    ioapic[p[2]].gsi_base = *(uint32_t*) &p[8];
+
+                ioapic[p[2]].address = *(uint32_t*) &p[4];
+                ioapic[p[2]].gsi_base = *(uint32_t*) &p[8];
                 break;
 
             case X86_MADT_ENTRY_INTERRUPT:
-#if defined(DEBUG)
-                    kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%x)\n",
-                        p[2],
-                        p[3],
-                        *(uint32_t*) &p[4],
-                        *(uint16_t*) &p[8]
-                    );
-#endif
                 break;
 
             case X86_MADT_ENTRY_NMI:
-#if defined(DEBUG)
-                    kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%x) lint(%d)\n",
-                        p[2],
-                        *(uint16_t*) &p[3],
-                        p[5]
-                    );
-#endif
                 break;
 
             case X86_MADT_ENTRY_LAPIC64:
-                    kpanic("x86-apic: X86_MADT_ENTRY_LAPIC64 not yet supported in x86-64");
+
+                kpanic("x86-apic: X86_MADT_ENTRY_LAPIC64 not yet supported in x86-64");
                 break;
             
             default:
                 break;
 
         }
+
+
+#if defined(DEBUG)
+
+        switch(*p) {
+
+            case X86_MADT_ENTRY_LAPIC:
+                    
+                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC: id(%d) flags(%d)\n",
+                    p[3],
+                    *(uint32_t*) &p[4]
+                );
+                break;
+
+            case X86_MADT_ENTRY_IOAPIC:
+
+                kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: address(%p) gsi(%d)\n",
+                    *(uint32_t*) &p[4],
+                    *(uint32_t*) &p[8],
+                );
+                break;
+
+            case X86_MADT_ENTRY_INTERRUPT:
+
+                kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%x)\n",
+                    p[2],
+                    p[3],
+                    *(uint32_t*) &p[4],
+                    *(uint16_t*) &p[8]
+                );
+                break;
+
+            case X86_MADT_ENTRY_NMI:
+
+                kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%x) lint(%d)\n",
+                    p[2],
+                    *(uint16_t*) &p[3],
+                    p[5]
+                );
+                break;
+
+            //case X86_MADT_ENTRY_LAPIC64:
+            //    break;
+            
+            default:
+                break;
+
+        }
+
+#endif
 
         i += p[1];
         p += p[1];
