@@ -122,6 +122,7 @@ struct superblock {
     inode_t* dev;
     inode_t* root;
 
+    ino_t ino;
     struct statvfs st;
     struct inode_ops ops;
     struct vfs_cache cache;
@@ -170,6 +171,13 @@ void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
 void vfs_cache_destroy(vfs_cache_t*);
 void* vfs_cache_get(vfs_cache_t*, ino_t);
 void vfs_cache_flush(vfs_cache_t*, ino_t);
+
+
+// os/kernel/fs/dcache.c
+void dcache_init(void);
+void vfs_dcache_add(inode_t*);
+void vfs_dcache_remove(inode_t*);
+inode_t* vfs_dcache_find(inode_t*, const char*);
 
 
 // os/kernel/fs/rootfs.c

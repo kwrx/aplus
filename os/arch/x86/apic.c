@@ -181,7 +181,7 @@ void apic_init(void) {
 
                 kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: address(%p) gsi(%d)\n",
                     *(uint32_t*) &p[4],
-                    *(uint32_t*) &p[8],
+                    *(uint32_t*) &p[8]
                 );
                 break;
 

@@ -105,5 +105,8 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
    
     DEBUG_ASSERT(d);
 
-    return vfs_mount(s, d, type, flags, (const char*) data);
+    if(vfs_mount(s, d, type, flags, (const char*) data) < 0)
+        return -errno;
+
+    return 0;
 });

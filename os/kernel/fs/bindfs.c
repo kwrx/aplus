@@ -21,65 +21,43 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
-#include <aplus/ipc.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
-#include <stdint.h>
+#include <string.h>
 #include <errno.h>
 
-#include <aplus/utils/list.h>
 
-#include "tmpfs.h"
 
 
 __thread_safe
-int tmpfs_unlink(inode_t* inode, const char* name) {
+int bindfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(dev);
+    DEBUG_ASSERT(dev->sb);
+    DEBUG_ASSERT(dir);
 
-    DEBUG_ASSERT(name);
-
-
-
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
-    inode_t* d = NULL;
+    (void) args;
 
 
-    list_each(tmpfs->children, i) {
-        if(likely(i->parent != inode))
-            continue;
+    dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
-        if(likely(strcmp(i->name, name) != 0))
-            continue;
+    memcpy(dir->sb, dev->sb, sizeof(struct superblock));
+    memcpy(&dir->sb->ops, &dev->ops, sizeof(struct inode_ops));
+    memcpy(&dir->sb->ino, &dev->ino, sizeof(ino_t));
 
-        d = i;
-        break;
-    }
-
-    if(!d)
-        return errno = ENOENT, -1;
-
-    list_remove(tmpfs->children, d);
+    return 0;
+}
 
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
+__thread_safe
+int bindfs_umount(inode_t* dir) {
 
-
-    inode->sb->st.f_ffree++;
-    inode->sb->st.f_favail++;
-    inode->sb->st.f_bavail += i->st.st_size;
-    inode->sb->st.f_bfree += i->st.st_size;
-            
-    if(i->data)
-        kfree(i->data);
-    
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(dir->sb);
 
     return 0;
 }

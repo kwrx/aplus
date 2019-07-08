@@ -43,6 +43,110 @@
 #define MIN(a, b)       __MIN((uintptr_t) (a), (uintptr_t) (b))
 
 
+static inode_t* __follow_symlink(inode_t*);
+
+
+static int __lookup(inode_t** parent, inode_t** inode, const char* path, int flags, mode_t mode) {
+
+    DEBUG_ASSERT(path);
+
+
+    char b[PATH_MAX] = { 0 };
+    
+    char* s = (char*) path;
+    char* p = NULL;
+
+    inode_t* r = NULL;
+    inode_t* c = NULL;
+
+
+    if(s[0] == '/')
+        { c = current_task->root; s++; }
+    else
+        c = current_task->cwd;
+    
+    DEBUG_ASSERT(c);
+
+
+    do {
+        if((p = strchr(s, '/')) == NULL)
+            break;
+
+        b[MIN(p - s, PATH_MAX)] = '\0';
+        strncpy(b, s, MIN(p - s, PATH_MAX));
+        
+        
+        if(unlikely(!(c = vfs_finddir(c, b))))
+            return -1;
+
+
+        struct stat st;
+        if(vfs_getattr(c, &st) < 0)
+            return -1;
+
+        if(S_ISLNK(st.st_mode))
+            if((c = __follow_symlink(c)) == NULL)
+                return -1;
+        
+
+        s = p;
+        s++;
+    } while(*p);
+
+    DEBUG_ASSERT(s);
+    DEBUG_ASSERT(c);
+
+
+    if(*s)
+        r = vfs_finddir(c, s);
+    else
+        r = c;
+
+
+
+    if(unlikely(!r)) {
+        if(flags & O_CREAT) {
+            r = vfs_creat(c, s, mode);
+
+            if(unlikely(!r))
+                return -1;
+        }
+        else
+            return errno = ENOENT, -1;
+    } else
+        if((flags & O_EXCL) && (flags & O_CREAT))
+            return errno = EEXIST, -1;
+
+
+
+
+    if(parent)
+        *parent = c;
+   
+    if(inode)
+        *inode = r;
+
+    return 0;
+}
+
+
+static inode_t* __follow_symlink(inode_t* inode) {
+
+    char path[PATH_MAX];
+    if(vfs_readlink(inode, path, sizeof(path)) <= 0)
+        return errno = ENOENT, NULL;
+
+
+    inode_t* r;
+    if(__lookup(NULL, &r, path, O_RDONLY, 0) != 0)
+        return errno = ENOENT, NULL;
+
+    return r;
+}
+
+
+
+
 
 /***
  * Name:        open
@@ -67,69 +171,12 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
         return -EFAULT;
 
 
-    char b[PATH_MAX] = { 0 };
-    
-    char* s = (char*) filename;
-    char* p = NULL;
+    inode_t* r;
+    inode_t* c;
 
-    inode_t* r = NULL;
-    inode_t* c = NULL;
+    if(__lookup(&c, &r, filename, flags, mode) != 0)
+        return -errno;
 
-
-    if(s[0] == '/')
-        { c = current_task->root; s++; }
-    else
-        c = current_task->cwd;
-    
-    DEBUG_ASSERT(c);
-
-
-    do {
-        if((p = strchr(s, '/')) == NULL)
-            break;
-
-        b[MIN(p - s, PATH_MAX)] = '\0';
-        strncpy(b, s, MIN(p - s, PATH_MAX));
-        
-        
-        if(unlikely(!(c = vfs_finddir(c, b))))
-            return -errno;
-
-#if 0   /* TODO: Follow symlinks */
-        if(S_ISLNK(c->st.st_mode)) {
-            DEBUG_ASSERT(c->link);
-            DEBUG_ASSERT(c->link != c);
-            
-            c = c->link;
-        }
-#endif
-
-        s = p;
-        s++;
-    } while(*p);
-
-    DEBUG_ASSERT(s);
-    DEBUG_ASSERT(c);
-
-
-    if(*s)
-        r = vfs_finddir(c, s);
-    else
-        r = c;
-
-
-    if(unlikely(!r)) {
-        if(flags & O_CREAT) {
-            r = vfs_creat(c, s, mode);
-
-            if(unlikely(!r))
-                return -errno;
-        }
-        else
-            return -ENOENT;
-    } else
-        if((flags & O_EXCL) && (flags & O_CREAT))
-            return -EEXIST;
 
 
     DEBUG_ASSERT(r);
@@ -139,19 +186,17 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
         return (errno = ENOSYS) ? -EACCES : -errno;
 
 
-#if 0 /* TODO: Follow symlinks */
+
     if (
 #ifdef O_NOFOLLOW
         !(flags & O_NOFOLLOW) &&
 #endif
         S_ISLNK(st.st_mode)
     ) {
-        DEBUG_ASSERT(r->link);
-        DEBUG_ASSERT(r->link != r);
-
-        r = r->link;
+        if((c = __follow_symlink(c)) == NULL)
+            return -errno;
     }
-#endif
+
 
 
 #ifdef O_DIRECTORY

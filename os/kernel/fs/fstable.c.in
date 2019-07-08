@@ -10,6 +10,7 @@
 }
 
 
-FSENTRY(TMPFS_ID, "tmpfs", tmpfs);
-FSENTRY(EXT2_ID, "ext2", ext2);
+FSENTRY (1           ,   "bind"      ,   bindfs      );
+FSENTRY (TMPFS_ID    ,   "tmpfs"     ,   tmpfs       );
+FSENTRY (EXT2_ID     ,   "ext2"      ,   ext2        );
 

@@ -114,6 +114,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     r->st.st_mode &= ~S_IFMT;
     r->st.st_mode |=  S_IFMT;
 
+    dir->sb->ino = dir->ino;
 
     return 0;
 }

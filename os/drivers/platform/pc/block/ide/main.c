@@ -44,6 +44,7 @@ MODULE_DEPS("dev/interface,dev/block,dev/pci");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
+/* NOTE: It doesn't work, see ahci driver instead */
 
 
 #define IDE_ATA_SECTOR_SIZE             512

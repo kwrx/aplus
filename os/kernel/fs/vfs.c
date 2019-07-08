@@ -21,7 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define __init_ns "vfs"
+#define __init_ns "vfs::"
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -48,7 +48,17 @@ void vfs_init(void) {
     int i = 0;
     #include "fstable.c.in"
 
+
+#if defined(DEBUG)
+    
+    for(i = 0; vfs_table[i].id; i++)
+        kprintf("vfs: registered '%s'\n", vfs_table[i].name);
+        
+#endif
+
+
     __init(rootfs, ());
+    __init(dcache, ());
 }
 
 
@@ -89,9 +99,15 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, con
         memcpy(&dir->sb->ops, &ops, sizeof(ops));
 
 
+        dir->ino ^= dir->sb->ino;
+        dir->sb->ino ^= dir->ino;
+        dir->ino ^= dir->sb->ino;
+
+
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
         return 0;
     }
+
 
     return errno = EINVAL, -1;
 }
@@ -317,8 +333,22 @@ inode_t* vfs_creat (inode_t* inode, const char __user * name, mode_t mode) {
         return errno = EEXIST, NULL;
 
 
-    if(likely(inode->ops.creat))
-        __lock_return(&inode->lock, inode_t*, inode->ops.creat(inode, name, mode)); /* TODO: Add Cache */
+
+    if(likely(inode->ops.creat)) {
+
+        inode_t* r = NULL;
+
+        __lock(&inode->lock, {
+            
+            if((r = inode->ops.creat(inode, name, mode)) != NULL)
+                vfs_dcache_add(r);
+        
+        });
+
+        return r;
+
+    }
+
 
     return errno = ENOSYS, NULL;
 }
@@ -346,8 +376,25 @@ inode_t* vfs_finddir (inode_t* inode, const char __user * name) {
     }
 
 
-    if(likely(inode->ops.finddir))
-        __lock_return(&inode->lock, inode_t*, inode->ops.finddir(inode, name));     /* TODO: Add Cache */
+    
+    inode_t* r = NULL;
+
+    if((r = vfs_dcache_find(inode, name)) != NULL)
+        return r;
+
+
+    if(likely(inode->ops.finddir)) {
+
+        __lock(&inode->lock, {
+            
+            if((r = inode->ops.finddir(inode, name)) != NULL)
+                vfs_dcache_add(r);
+        
+        });
+
+        return r;
+
+    }
     
     return errno = ENOSYS, NULL;
 }
@@ -418,7 +465,6 @@ int vfs_symlink (inode_t* inode, const char __user * name, const char __user * t
         return errno = EFAULT, -1;
 
 
-
     if(name[0] == '.' && name[1] == '\0')
         return errno = EEXIST, -1;
 
@@ -426,8 +472,9 @@ int vfs_symlink (inode_t* inode, const char __user * name, const char __user * t
         return errno = EEXIST, -1;
 
 
+
     if(likely(inode->ops.symlink))
-        __lock_return(&inode->lock, int, inode->ops.symlink(inode, name, target));    
+        __lock_return(&inode->lock, int, inode->ops.symlink(inode, name, target));
 
     return errno = EROFS, -1;
 }
@@ -449,8 +496,20 @@ int vfs_unlink (inode_t* inode, const char __user * name) {
 
 
 
-    if(likely(inode->ops.unlink))
-        __lock_return(&inode->lock, int, inode->ops.unlink(inode, name));
+    if(likely(inode->ops.unlink)) {
+
+        int r = -1;
+
+        __lock(&inode->lock, {
+            
+            if((r = inode->ops.unlink(inode, name)) == 0)
+                vfs_dcache_remove(vfs_dcache_find(inode, name));
+        
+        });
+
+        return r;
+    
+    }
     
     return errno = EROFS, -1;
 }

@@ -27,13 +27,10 @@
 #include <aplus/intr.h>
 #include <aplus/reboot.h>
 #include <arch/x86/cpu.h>
+#include <arch/x86/acpi.h>
 #include <stdint.h>
 #include <string.h>
 
-
-#define X86_REBOOT_ACPI         1
-#define X86_REBOOT_KBD          2
-#define X86_REBOOT_TRIPLE       3
 
 
 
@@ -48,7 +45,7 @@ void arch_reboot(int mode) {
         case ARCH_REBOOT_RESTART: {
             
             /* ACPI */
-            //acpi_reboot();  TODO!
+
 
             DEBUG_WARNING(0 && "ACPI Reboot Failed");
 
@@ -94,8 +91,22 @@ void arch_reboot(int mode) {
             DEBUG_WARNING(0 && "ARCH_REBOOT_SUSPEND not yet supported");
             break;
 
-        case ARCH_REBOOT_POWEROFF:
-            DEBUG_WARNING(0 && "ARCH_REBOOT_POWEROFF not yet supported");
+        case ARCH_REBOOT_POWEROFF: {
+
+            /* ACPI */
+        
+
+            DEBUG_WARNING(0 && "ACPI Poweroff Failed");
+
+
+            /* Virtual Machine */
+            outw(0xB004, 0x2000);   /* Bochs */
+            outw(0x0604, 0x2000);   /* Qemu  */
+            outw(0x4004, 0x3400);   /* Vbox  */
+
+            DEBUG_WARNING(0 && "VM Poweroff Failed");
+
+        }
             break;
 
         case ARCH_REBOOT_HALT:

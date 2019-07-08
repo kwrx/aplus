@@ -59,8 +59,8 @@ void root_init(void) {
     if((e = sys_mount(root, "/root", rootfs, 0, NULL)) < 0)
         kpanic("root: FAIL! mount() failed: %s", strerror(-e));
 
-    //if((e = sys_mount("/dev", "/root/dev", "bind", 0, NULL)))
-    //    kpanic("root: FAIL! mount() failed: %s", strerror(-e));
+    if((e = sys_mount("/dev", "/root/dev", "bind", 0, NULL)))
+        kpanic("root: FAIL! mount() failed: %s", strerror(-e));
 
     if((e = sys_chroot("/root")) < 0)
         kpanic("root: FAIL! chroot() failed: %s", strerror(-e));

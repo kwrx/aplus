@@ -83,7 +83,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
     // Direct Blocks
     if(block < a) {
     
-        ext2_utils_read_block(ext2, &blocks[block], offset, data, size);
+        ext2_utils_read_block(ext2, blocks[block], offset, data, size);
         return;    
     
     }

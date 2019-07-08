@@ -92,7 +92,6 @@ void kmain(void) {
 
 
 
-
     
     const char* argv[] = { "/sbin/init", NULL };
     const char* envp[] = { NULL };

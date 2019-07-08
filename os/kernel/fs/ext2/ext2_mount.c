@@ -157,7 +157,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     i->i_mode &= ~S_IFMT;
     i->i_mode |=  S_IFMT;
 
-    dir->ino = EXT2_ROOT_INO;
+    dir->sb->ino = EXT2_ROOT_INO;
 
 
     return 0;
