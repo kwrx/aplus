@@ -56,7 +56,7 @@ typedef struct {
     uint32_t gs;
     uint32_t ldtr;
     uint32_t iopb;
-} tss32_t;
+} __attribute__((packed)) tss32_t;
 
 typedef struct {
     uint32_t null;
@@ -73,12 +73,12 @@ typedef struct {
     uint64_t ist7;
     uint64_t reserved_1;
     uint32_t iopb;
-} tss64_t;
+} __attribute__((packed)) tss64_t;
 
 
-#if defined(ARCH_X86_32)
+#if defined(__i386__)
 typedef tss32_t tss_t;
-#elif defined(ARCH_X86_64)
+#elif defined(__x86_64__)
 typedef tss64_t tss_t;
 #endif
 

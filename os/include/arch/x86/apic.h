@@ -76,7 +76,7 @@ typedef struct {
     uint32_t gsi_base;
     uint32_t gsi_max;
     spinlock_t lock;
-} ioapic_t;
+} __packed ioapic_t;
 
 
 void apic_init(void);

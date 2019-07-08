@@ -73,7 +73,7 @@ typedef struct {
     uint8_t bit_offset;
     uint8_t size;
     uint64_t address;
-} acpi_generic_address_t;
+} __packed acpi_generic_address_t;
 
 typedef struct {
     uint32_t fwctrl;
