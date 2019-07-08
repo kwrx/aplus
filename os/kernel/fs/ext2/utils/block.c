@@ -41,40 +41,50 @@
 
 
 __thread_safe
-void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_read_block(ext2_t* ext2, uint32_t* block, uint32_t offset, void* data, size_t size) {
     DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(size);
 
-    // TODO: Alloc block
 
-    if(block > ext2->sb.s_blocks_count)
-        kpanic("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
+    if(*block == 0)
+        ext2_utils_alloc_block(ext2, block);
 
-    if(block < ext2->first_block_group - 1)
-        kpanic("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
 
-    if(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
+    if(*block > ext2->sb.s_blocks_count)
+        kpanic("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, *block, ext2->sb.s_blocks_count);
+
+    if(*block < ext2->first_block_group - 1)
+        kpanic("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, *block, ext2->first_block_group);
+
+    if(vfs_read(ext2->dev, data, ((*block) * ext2->blocksize) + offset, size) != size)
         kpanic("%s() FAIL! vfs_read() %s", __func__, strerror(errno));
         
 }
 
 
 __thread_safe
-void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_write_block(ext2_t* ext2, uint32_t* block, uint32_t offset, void* data, size_t size) {
     DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(size);
 
-    if(block > ext2->sb.s_blocks_count)
-        kpanic("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
 
-    if(block < ext2->first_block_group - 1)
-        kpanic("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
+    if(*block == 0)
+        ext2_utils_alloc_block(ext2, block);
 
-    if(vfs_write(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
+
+    if(*block > ext2->sb.s_blocks_count)
+        kpanic("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, *block, ext2->sb.s_blocks_count);
+
+    if(*block < ext2->first_block_group - 1)
+        kpanic("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, *block, ext2->first_block_group);
+
+    if(vfs_write(ext2->dev, data, ((*block) * ext2->blocksize) + offset, size) != size)
         kpanic("%s() FAIL! vfs_read() %s", __func__, strerror(errno));
-        
+
 }
 
 
@@ -146,7 +156,8 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
     });
 
 
-    return;
+    DEBUG_ASSERT(*block != 0);
+
 }
 
 
