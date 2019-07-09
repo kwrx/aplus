@@ -64,10 +64,13 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
                 struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
+                DEBUG_ASSERT(e->rec_len);
+
+
 
                 mode_t mode;
                 if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
-                    mode = e->file_type << 12;
+                    mode = ext2_utils_file_type(e->file_type);
                 else
                     mode = ((struct ext2_inode*) vfs_cache_get(&inode->sb->cache, e->inode))->i_mode;
 
@@ -76,13 +79,13 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
                 if(strncmp(name, e->name, e->name_len) == 0) {
 
 
-                    d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL); /* FIXME: Add Cache */
+                    d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
                     d->ino = e->inode;
                     d->sb = inode->sb;
                     d->parent = inode;
                     
-                    strncpy(d->name, e->name, MAXNAMLEN);
+                    strncpy(d->name, e->name, e->name_len);
 
 
                     d->ops.getattr = ext2_getattr;
@@ -104,7 +107,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
                         //d->ops.truncate = ext2_truncate;
                         d->ops.read = ext2_read;
-                        //d->ops.write = ext2_write;
+                        d->ops.write = ext2_write;
 
                     }
 
@@ -119,8 +122,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
                     break;
                 }
                     
-                
-                
+                                
                 i += e->rec_len;
             }
 

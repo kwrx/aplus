@@ -51,7 +51,7 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
     st->st_nlink = n->i_links_count;
     st->st_uid = n->i_uid;
     st->st_gid = n->i_gid;
-    st->st_rdev = 0;
+    st->st_rdev = 0; /* FIXME */
     st->st_size = n->i_size;
     st->st_blksize = 512;
     st->st_blocks = n->i_blocks;

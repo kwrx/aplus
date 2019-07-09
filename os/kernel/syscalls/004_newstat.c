@@ -75,7 +75,7 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
 
     int e;
 
-    __lock(&current_task->fd[fd].inode->lock, {
+    __lock(&current_task->fd[fd].lock, {
 
         e = vfs_getattr(current_task->fd[fd].inode, statbuf);
 

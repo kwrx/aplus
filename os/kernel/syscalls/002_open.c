@@ -42,106 +42,112 @@
 #define __MIN(a, b)     ((a) < (b) ? (a) : (b))
 #define MIN(a, b)       __MIN((uintptr_t) (a), (uintptr_t) (b))
 
+#define ZERO(p)         memset(p, 0, sizeof(p))
 
-static inode_t* __follow_symlink(inode_t*);
 
 
-static int __lookup(inode_t** parent, inode_t** inode, const char* path, int flags, mode_t mode) {
+static inode_t* path_symlink(inode_t*, size_t);
+static inode_t* path_find(inode_t*, const char*, size_t);
+static inode_t* path_lookup(inode_t*, const char*, int, mode_t);
 
+
+
+
+
+static inode_t* path_symlink(inode_t* inode, size_t size) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(size);
+
+
+    char s[size + 1];
+    ZERO(s);
+
+    if(vfs_readlink(inode, s, size) <= 0)
+        return NULL;
+
+    return path_lookup(inode->parent, s, O_RDONLY, 0);
+}
+
+
+static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
+
+    DEBUG_ASSERT(inode);
     DEBUG_ASSERT(path);
+    DEBUG_ASSERT(size);
 
 
-    char b[PATH_MAX] = { 0 };
+    char s[size + 1]; 
+    ZERO(s);
+
+    strncpy(s, path, size);
+
+
+    if((inode = vfs_finddir(inode, s)) == NULL)
+        return NULL;
+
+    struct stat st;
+    if(vfs_getattr(inode, &st) < 0)
+        return NULL;
+
+
     
-    char* s = (char*) path;
-    char* p = NULL;
+    if(S_ISLNK(st.st_mode))
+        inode = path_symlink(inode, st.st_size);
 
-    inode_t* r = NULL;
-    inode_t* c = NULL;
+    return inode;
+}
 
 
-    if(s[0] == '/')
-        { c = current_task->root; s++; }
+static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
+
+
+    inode_t* c;
+
+    if(path[0] == '/')
+        { c = current_task->root; path++; }
     else
-        c = current_task->cwd;
+        c = cwd;
+
+    DEBUG_ASSERT(c);
+
+
+
+    while(strchr(path, '/') && c) {
+         
+        c = path_find(c, path, strcspn(path, "/")); 
+        path = strchr(path, '/') + 1;
     
-    DEBUG_ASSERT(c);
+    }
 
 
-    do {
-        if((p = strchr(s, '/')) == NULL)
-            break;
+    if(unlikely(!c))
+        return errno = ENOENT, NULL;
 
-        b[MIN(p - s, PATH_MAX)] = '\0';
-        strncpy(b, s, MIN(p - s, PATH_MAX));
-        
-        
-        if(unlikely(!(c = vfs_finddir(c, b))))
-            return -1;
+    
+    inode_t* r;
 
-
-        struct stat st;
-        if(vfs_getattr(c, &st) < 0)
-            return -1;
-
-        if(S_ISLNK(st.st_mode))
-            if((c = __follow_symlink(c)) == NULL)
-                return -1;
-        
-
-        s = p;
-        s++;
-    } while(*p);
-
-    DEBUG_ASSERT(s);
-    DEBUG_ASSERT(c);
-
-
-    if(*s)
-        r = vfs_finddir(c, s);
+    if(path[0] != '\0')
+        r = path_find(c, path, strlen(path));
     else
         r = c;
 
 
-
     if(unlikely(!r)) {
         if(flags & O_CREAT) {
-            r = vfs_creat(c, s, mode);
+            r = vfs_creat(c, path, mode);
 
             if(unlikely(!r))
-                return -1;
+                return NULL;
         }
         else
-            return errno = ENOENT, -1;
+            return errno = ENOENT, NULL;
     } else
         if((flags & O_EXCL) && (flags & O_CREAT))
-            return errno = EEXIST, -1;
+            return errno = EEXIST, NULL;
 
 
-
-
-    if(parent)
-        *parent = c;
-   
-    if(inode)
-        *inode = r;
-
-    return 0;
-}
-
-
-static inode_t* __follow_symlink(inode_t* inode) {
-
-    char path[PATH_MAX];
-    if(vfs_readlink(inode, path, sizeof(path)) <= 0)
-        return errno = ENOENT, NULL;
-
-
-    inode_t* r;
-    if(__lookup(NULL, &r, path, O_RDONLY, 0) != 0)
-        return errno = ENOENT, NULL;
-
-    return r;
+    return r;   
 }
 
 
@@ -172,14 +178,11 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
 
     inode_t* r;
-    inode_t* c;
 
-    if(__lookup(&c, &r, filename, flags, mode) != 0)
+    if((r = path_lookup(current_task->cwd, filename, flags, mode)) == NULL)
         return -errno;
 
 
-
-    DEBUG_ASSERT(r);
 
     struct stat st;
     if(vfs_getattr(r, &st) < 0)
@@ -193,7 +196,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 #endif
         S_ISLNK(st.st_mode)
     ) {
-        if((c = __follow_symlink(c)) == NULL)
+        if((r = path_symlink(r, st.st_size)) == NULL)
             return -errno;
     }
 

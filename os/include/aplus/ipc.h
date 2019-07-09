@@ -88,6 +88,16 @@ int sem_trywait(semaphore_t* s);
         spinlock_unlock((lk));                  \
     }
 
+#define __trylock_return(lk, type, fn...)       \
+    {                                           \
+        type __r;                               \
+        if(unlikely(!spinlock_trylock((lk))))   \
+            kpanic("spinlock: DEADLOCK! %s in %s:%d <%s>", #lk, __FILE__, __LINE__, __func__); \
+        __r = fn;                               \
+        spinlock_unlock((lk));                  \
+        return __r;                             \
+    }
+
 
 #define atomic_load(ptr)                    \
     __atomic_load_n(ptr, __ATOMIC_ACQUIRE)

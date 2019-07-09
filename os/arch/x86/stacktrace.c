@@ -27,16 +27,19 @@
 #include <aplus/mm.h>
 
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
+    
     struct stack {
         struct stack* bp;
         uintptr_t ip;
-    } *frame;
+    } __packed *frame;
 
 #if defined(__x86_64__)
     __asm__ __volatile__ ("mov rax, rbp" : "=a"(frame));
 #else
     __asm__ __volatile__ ("mov eax, ebp" : "=a"(frame));
 #endif
+
+
 
     int i;
     for(i = 0; frame && i < count; i++) {

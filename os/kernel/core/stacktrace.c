@@ -52,4 +52,5 @@ void core_stacktrace(void) {
             kprintf("[%d] %8p <%s>\n", i, frames[i], "unknown");
 
     }
+
 }

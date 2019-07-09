@@ -35,7 +35,7 @@
 
 
 __thread_safe
-ssize_t ext2_readlink(inode_t* inode, char * buf, size_t len) {
+ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -51,16 +51,61 @@ ssize_t ext2_readlink(inode_t* inode, char * buf, size_t len) {
 
     struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
 
-    if(len > n->i_size)
-        len = n->i_size;
-    
-    DEBUG_WARNING(n->i_size <= ext2->blocksize);
 
 
-    if(len < 60)
-        strncpy(buf, (const char*) n->i_block, len);
+    off_t size;
+    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+        size = (off_t) (((uint64_t) n->i_size_high << 32) | n->i_size);
     else
-        ext2_utils_read_inode_data(ext2, n->i_block, 0, 0, buf, len);
+        size = n->i_size;
+
+
+    if(pos + len > size)
+        len = size - pos;
+    
+
+    DEBUG_ASSERT(len >= 0);
+
+
+
+    uint32_t* blocks = &n->i_block[0];
+
+    uint32_t ib = pos / ext2->blocksize;
+    uint32_t eb = (pos + len - 1) / ext2->blocksize;
+    uint32_t off = 0;
+
+
+
+    if(pos % ext2->blocksize) {
+        long p;
+        p = ext2->blocksize - (pos % ext2->blocksize);
+        p = p > len ? len : p;
+
+
+        ext2_utils_write_inode_data(ext2, blocks, ib, pos % ext2->blocksize, buf, p);
+
+        off += p;
+        ib++;
+    }
+
+
+    if((pos + len) % ext2->blocksize && (ib <= eb)) {
+        long p;
+        p = (pos + len) % ext2->blocksize;
+
+
+        ext2_utils_write_inode_data(ext2, blocks, eb, 0, (void*) ((uintptr_t) buf + len - p), p);
+
+        eb--;
+    }
+
+
+
+    long i = eb - ib + 1;
+
+    for(; i > 0; i--, ib++, off += ext2->blocksize)
+        ext2_utils_write_inode_data(ext2, blocks, ib, 0, (void*) ((uintptr_t) buf + off), ext2->blocksize);
+
     
     return len;
 }

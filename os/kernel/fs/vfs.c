@@ -154,7 +154,7 @@ int vfs_getattr (inode_t* inode, struct stat __user * st) {
 
 
     if(likely(inode->ops.getattr))
-        __lock_return(&inode->lock, int, inode->ops.getattr(inode, st));
+        __trylock_return(&inode->lock, int, inode->ops.getattr(inode, st));
 
     return errno = ENOSYS, -1;
 }

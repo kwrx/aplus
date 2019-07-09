@@ -47,6 +47,10 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(ino != EXT2_BAD_INO);
     DEBUG_ASSERT(ino != 0);
+    
+    if(ino > ext2->sb.s_inodes_count)
+        kpanic("%s() FAIL! ino(%d) > s_inodes_count(%d)", __func__, ino, ext2->sb.s_inodes_count);
+
 
     struct ext2_group_desc d;
     ext2_utils_read_block(ext2, ext2->first_block_group, ((ino - 1) / ext2->sb.s_inodes_per_group) * sizeof(d), &d, sizeof(d));
@@ -136,7 +140,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
 
 
 __thread_safe
-void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, const void* data, size_t size) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(blocks);
     DEBUG_ASSERT(size);

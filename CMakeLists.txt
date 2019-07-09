@@ -26,7 +26,7 @@ endif(NOT CMAKE_BUILD_TYPE)
 
 if(CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
-    add_compile_options(-Og)
+    add_compile_options(-Og -fno-omit-frame-pointer -fno-inline)
 endif()
 
 

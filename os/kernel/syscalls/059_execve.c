@@ -171,7 +171,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
                     
                     arch_mmap (
-                        (void*) phdr.p_vaddr, size, ARCH_MAP_USER | ARCH_MAP_RDWR
+                        (void*) phdr.p_vaddr, size - 1, ARCH_MAP_USER | ARCH_MAP_RDWR
                     );
 
 
@@ -234,7 +234,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     });
 
 
-    
     return -ENOSYS;
 
 });

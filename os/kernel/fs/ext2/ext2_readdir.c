@@ -67,6 +67,9 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
                 struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
+                DEBUG_ASSERT(d->rec_len);
+
+
                 if(pos > 0)
                     pos--;
 

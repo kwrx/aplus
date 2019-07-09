@@ -415,6 +415,15 @@ struct ext2_dir_entry_2 {
 #define EXT2_MAX_REC_LEN                ((1 << 16) - 1)
 
 
+#define EXT2_FT_UNKNOWN                 0
+#define EXT2_FT_REG_FILE                1
+#define EXT2_FT_DIR                     2
+#define EXT2_FT_CHRDEV                  3
+#define EXT2_FT_BLKDEV                  4
+#define EXT2_FT_FIFO                    5
+#define EXT2_FT_SOCK                    6
+#define EXT2_FT_SYMLINK                 7
+
 
 
 typedef struct {
@@ -440,7 +449,7 @@ int ext2_getattr (inode_t*, struct stat*);
 //int ext2_truncate (inode_t*, off_t);
 
 ssize_t ext2_read (inode_t*, void*, off_t, size_t);
-//ssize_t ext2_write (inode_t*, const void*, off_t, size_t);
+ssize_t ext2_write (inode_t*, const void*, off_t, size_t);
 ssize_t ext2_readlink (inode_t*, char*, size_t);
 
 //inode_t* ext2_creat (inode_t*, const char*, mode_t);
@@ -460,10 +469,12 @@ void ext2_utils_read_inode(ext2_t*, ino_t, void*);
 void ext2_utils_read_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, size_t);
 void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
 void ext2_utils_write_inode(ext2_t*, ino_t, void*);
-void ext2_utils_write_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, size_t);
+void ext2_utils_write_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, const void*, size_t);
 void ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
 
 void ext2_utils_alloc_block(ext2_t*, uint32_t*);
 void ext2_utils_free_block(ext2_t*, uint32_t);
+
+mode_t ext2_utils_file_type(uint8_t);
 
 #endif

@@ -29,38 +29,45 @@
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
 #include <stdint.h>
+#include <string.h>
 #include <errno.h>
 
-#include "ext2.h"
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/mount.h>
+
+#include "../ext2.h"
 
 
-__thread_safe
-ssize_t ext2_readlink(inode_t* inode, char * buf, size_t len) {
+mode_t ext2_utils_file_type(uint8_t type) {
 
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    switch(type) {
+        
+        case EXT2_FT_REG_FILE:
+            return S_IFREG;
 
-    DEBUG_ASSERT(buf);
-    DEBUG_ASSERT(len);
+        case EXT2_FT_DIR:
+            return S_IFDIR;
 
+        case EXT2_FT_CHRDEV:
+            return S_IFCHR;
 
-    ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
+        case EXT2_FT_BLKDEV:
+            return S_IFBLK;
 
+        case EXT2_FT_FIFO:
+            return S_IFIFO;
 
+        case EXT2_FT_SOCK:
+            return S_IFSOCK;
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+        case EXT2_FT_SYMLINK:
+            return S_IFLNK;
 
-    if(len > n->i_size)
-        len = n->i_size;
-    
-    DEBUG_WARNING(n->i_size <= ext2->blocksize);
+        default:
+            break;
 
+    }
 
-    if(len < 60)
-        strncpy(buf, (const char*) n->i_block, len);
-    else
-        ext2_utils_read_inode_data(ext2, n->i_block, 0, 0, buf, len);
-    
-    return len;
+    kpanic("ext2: invalid file_type: %d\n", type);
 }

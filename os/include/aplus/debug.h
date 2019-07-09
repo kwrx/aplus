@@ -52,6 +52,7 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 
 #define DEBUG_BREAKPOINT() {                                                                        \
     kprintf(INFO "Breakpoint! in %s:%d <%s>\n", __FILE__, __LINE__, __func__);                      \
+    core_stacktrace();                                                                              \
     for(;;);                                                                                        \
 }
 
