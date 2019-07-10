@@ -10,29 +10,39 @@ The project started in September 2013 as an educational and personal project, it
 
 
 
+## Features
+
+* **Cross-platform**: `os/arch/*`, designed for cross-platform environment targets
+* **Multitasking**: Thread and Process support with SMP
+* **Network**: `os/kernel/network/`, Almost full TCP/IP Network Stack by LWIP
+* **Unix-like**: VFS, Signals, Pipes, IPC, Shared Memory, Unix Sockets
+* **ELF**: Dynamic and static executables 
+* **Linux Framebuffer**: Linux-like framebuffer support
+* **Linux Syscalls**: Linux-like syscall layer
+* **GUI**: coming soon...
+
 ## Kernel
 The kernel provides a basic Unix/Posix environment.
 It uses a hybrid modular architecture with support for various platforms like x86, x86_64, ARM, etc... and loadable modules.
 
-* [x] Multitasking
-* [x] SMP
-* [x] Multi-User
-* [x] TCP/IP Network Stack
-* [x] Signals, Pipes, IPC, Shared Memory, Unix Sockets
-* [x] Virtual Filesystem
-* [x] ELF Binary
-* [x] Linux Framebuffer
-* [ ] GUI
-
 
 ## Userspace
-aPlus's userspace is still under development, it provides several GNU/Linux core tools, development tools like gcc or binutils, a very basic Java Virtual Machine, GUI, Windows Manager, services like NTP, I/O Cache Sync, other tools, etc...
+aPlus's userspace is still under development, it provides several GNU/Linux core tools, development tools like gcc or binutils, a very simple Java Virtual Machine, GUI, Windows Manager, services like NTP, I/O Cache Sync, other tools, etc...
 
-Userspace has Multi-User implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
+Userspace has **multi-user** implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
 
+### Notable applications/libraries
+* libc: `libs/c`, standard c libraries forked from newlib
+* init: `apps/system/init`, where all begins
+* avm: `apps/extra/avm`, very simple java virtual machine 
 
 ## Drivers
 Modules provides various core platform features, basic TTY/Console, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
+
+### Notable modules
+* Device Interface: `dev/*`, provides a standard interface for drivers
+* AHCI: `platform/pc/block/ahci`, almost full SATA/SATAPI driver
+
 
 ---
 
