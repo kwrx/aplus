@@ -32,16 +32,16 @@ aPlus's userspace is still under development, it provides several GNU/Linux core
 Userspace has **multi-user** implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
 
 ### Notable applications/libraries
-* **libc**: [libs/c](sdk/libs/c), standard c libraries forked from newlib
-* **init**: [apps/system/init](usr/apps/system/init/main.c), where all begins
-* **avm**: [apps/extra/avm](usr/apps/extra/avm), very simple java virtual machine 
+* **C Library**, [libs/c](sdk/libs/c), standard c libraries forked from newlib
+* **Startup**, [apps/system/init](usr/apps/system/init/main.c), where all begins
+* **Java VM**, [apps/extra/avm](https://www.github.com/kwrx/avm), very simple java virtual machine 
 
 ## Drivers
 Modules provides various core platform features, basic TTY/Console, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
 
 ### Notable modules
-* **Device Interface**: [dev/*](os/drivers/dev), provides a standard interface for drivers
-* **AHCI**: [platform/pc/block/ahci](os/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
+* **Device Interface**, [dev/*](os/drivers/dev), provides a standard interface for drivers
+* **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](os/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
 
 
 ---
