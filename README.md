@@ -12,9 +12,9 @@ The project started in September 2013 as an educational and personal project, it
 
 ## Features
 
-* **Cross-platform**: `os/arch/*`, designed for cross-platform environment targets
+* **Cross-platform**: [os/arch/*](os/arch), designed for cross-platform environment targets
 * **Multitasking**: Thread and Process support with SMP
-* **Network**: `os/kernel/network/`, Almost full TCP/IP Network Stack by LWIP
+* **Network**: [os/kernel/network/](os/kernel/network), Almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
 * **Unix-like**: VFS, Signals, Pipes, IPC, Shared Memory, Unix Sockets
 * **ELF**: Dynamic and static executables 
 * **Linux Framebuffer**: Linux-like framebuffer support
@@ -32,16 +32,16 @@ aPlus's userspace is still under development, it provides several GNU/Linux core
 Userspace has **multi-user** implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
 
 ### Notable applications/libraries
-* libc: `libs/c`, standard c libraries forked from newlib
-* init: `apps/system/init`, where all begins
-* avm: `apps/extra/avm`, very simple java virtual machine 
+* libc: [libs/c](sdk/libs/c), standard c libraries forked from newlib
+* init: [apps/system/init](usr/apps/system/init/main.c), where all begins
+* avm: [apps/extra/avm](usr/apps/extra/avm), very simple java virtual machine 
 
 ## Drivers
 Modules provides various core platform features, basic TTY/Console, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
 
 ### Notable modules
-* Device Interface: `dev/*`, provides a standard interface for drivers
-* AHCI: `platform/pc/block/ahci`, almost full SATA/SATAPI driver
+* Device Interface: [dev/*](os/drivers/dev), provides a standard interface for drivers
+* AHCI: [platform/pc/block/ahci](os/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
 
 
 ---
