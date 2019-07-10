@@ -147,7 +147,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     __lock(&current_task->lock, {
 
 
-        /* TODO: Free data  */
+        aspace_free(current_task->aspace);
 
 
         int i;
@@ -169,9 +169,16 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     if((size + phdr.p_vaddr > i_end))
                         i_end = size + phdr.p_vaddr;
 
-                    
-                    arch_mmap (
-                        (void*) phdr.p_vaddr, size - 1, ARCH_MAP_USER | ARCH_MAP_RDWR
+
+
+                    aspace_mmap (
+                        current_task->aspace, (void*) phdr.p_vaddr, size - 1,
+
+                        //((phdr.p_flags & PF_R) ? ARCH_MAP_USER : 0) |
+                        //((phdr.p_flags & PF_W) ? ARCH_MAP_RDWR : 0) |
+                        //((phdr.p_flags & PF_X) ? 0 : ARCH_MAP_NOEXEC)
+
+                        ARCH_MAP_USER | ARCH_MAP_RDWR   /* FIXME: Add protection */
                     );
 
 
@@ -200,38 +207,37 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         }
 
 
-        current_task->aspace->start = i_base;
-        current_task->aspace->end = i_end;
+
+        current_task->aspace->start = (i_base & ~(PAGE_SIZE - 1));
+        current_task->aspace->end   = (i_end  & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
         current_task->aspace->refcount = 1;
         current_task->exe = current_task->fd[fd].inode;
 
-
-#if 0
-        long offset = sys_brk(NULL);
-
-        #define PUSH(x, y) {                                        \
-            long p;                                                 \
-            if((p = sys_brk(offset + y)) != (offset + y))           \
-                kpanic("execve: no memory left for %d bytes", y);   \
-                                                                    \
-            memcpy((void*) offset, (void*) x, y);                   \
-            offset += y;                                            \
-        }
-        
-
-        int i;
-        for(i = 0; argv[i]; i++)
-            PUSH(argv[i], strlen(argv[i]) + 1);
-
-        PUSH("\0", 1);
-
-        for(i = 0; envp[i]; i++)
-            PUSH(envp[i], strlen(envp[i]) + 1);
-        
-        PUSH("\0", 1);
-#endif
-
     });
+
+
+    sys_close(fd);
+
+
+
+    int i;
+    for(i = 0; i < TASK_NFD; i++) {
+
+        if(!current_task->fd[i].inode)
+            continue;
+
+        if(!current_task->fd[i].close_on_exec)
+            continue;
+
+        
+        sys_close(i);
+
+    }
+
+
+
+
+
 
 
     return -ENOSYS;

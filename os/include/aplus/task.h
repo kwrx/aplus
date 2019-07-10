@@ -61,21 +61,58 @@
 #include <aplus.h>
 
 
-typedef struct {
-    inode_t* inode;
-    off_t position;
-    spinlock_t lock;
-    int flags;
-} fd_t;
+typedef struct address_space address_space_t;
 
 typedef struct {
+
+    uintptr_t start;
+    uintptr_t end;
+    uintptr_t flags;
+    
+} address_space_map_t;
+
+
+typedef struct {
+
+    void (*open)   (address_space_t*);
+    void (*close)  (address_space_t*);
+    void (*nopage) (address_space_t*, uintptr_t);
+
+} address_space_ops_t;
+
+
+struct address_space {
+
     uintptr_t vmmpd;
     uintptr_t start;
     uintptr_t end;
-    uintptr_t used;
+    uintptr_t size;
+    address_space_ops_t ops;
+
+    list(address_space_map_t*, mappings);
+
     spinlock_t lock;
     int refcount;
-} address_space_t;
+    
+};
+
+
+
+
+
+typedef struct {
+
+    inode_t* inode;
+    off_t position;
+    
+    struct {
+        int flags:30;
+        int close_on_exec:1;
+    };
+
+    spinlock_t lock;
+} fd_t;
+
 
 typedef struct task {
     struct {
@@ -141,6 +178,7 @@ typedef struct task {
 
     address_space_t * aspace;
     address_space_t __aspace;
+
 
     struct {
         uint64_t rchar;

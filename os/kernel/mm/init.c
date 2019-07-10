@@ -27,18 +27,23 @@
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
 #include <aplus/mm.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 
 
 void vmm_init(void) {
+
+
     arch_mmap (
+        current_task->aspace,
         (void*)  CONFIG_HEAP_BASE,
-        (size_t) CONFIG_HEAP_SIZE - 1,
+        (size_t) CONFIG_HEAP_PREALLOC_SIZE - 1,
         
         ARCH_MAP_NOEXEC | ARCH_MAP_RDWR | ARCH_MAP_SHARED
     );
 
-    kprintf("heap: initialized at %p-%p\n", CONFIG_HEAP_BASE, CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE);
+
+    kprintf("heap: initialized at %p-%p, pre-allocated: %p\n", CONFIG_HEAP_BASE, CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE, CONFIG_HEAP_PREALLOC_SIZE);
 }
 
 

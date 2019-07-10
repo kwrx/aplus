@@ -64,11 +64,27 @@ spinlock_t memlock;
 
 
 static void* __morecore(intptr_t incr) {
+
     static uintptr_t base = CONFIG_HEAP_BASE;
+    static uintptr_t page = CONFIG_HEAP_BASE + CONFIG_HEAP_PREALLOC_SIZE;
+
     uintptr_t ptr = base;
 
     DEBUG_ASSERT(incr >= 0);
     DEBUG_ASSERT(base <= CONFIG_HEAP_BASE + CONFIG_HEAP_SIZE);
+
+    
+    if(base + incr > page) {
+
+        uintptr_t pb = page;
+        uintptr_t pe = (incr & ~(PAGE_SIZE - 1) + (PAGE_SIZE * !!(incr % PAGE_SIZE)));
+
+        arch_mmap(current_task->aspace, (void*) pb, pe - 1, ARCH_MAP_NOEXEC | ARCH_MAP_RDWR | ARCH_MAP_SHARED);
+
+        page += pe;
+
+    }
+
 
     base += incr;
     return (void*) ptr;

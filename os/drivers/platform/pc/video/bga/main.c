@@ -27,6 +27,7 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <aplus/mm.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
@@ -114,6 +115,7 @@ static void bga_init(device_t* device) {
     DEBUG_ASSERT(device->size);    
 
     arch_mmap (
+        current_task->aspace,
         (void*) device->address, device->size - 1,
 
         ARCH_MAP_FIXED  | 
@@ -132,7 +134,7 @@ static void bga_dnit(device_t* device) {
     DEBUG_ASSERT(device->address);    
     DEBUG_ASSERT(device->size);    
 
-    arch_munmap((void*) device->address, device->size - 1);
+    arch_munmap(current_task->aspace, (void*) device->address, device->size - 1);
 }
 
 

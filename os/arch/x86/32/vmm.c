@@ -112,11 +112,13 @@ void x86_unmap_page(x86_page_t* aspace, uintptr_t address) {
 }
 
 
-int x86_ptr_access(uintptr_t address, int mode) {
+int x86_ptr_access(x86_page_t* aspace, uintptr_t address, int mode) {
+
+    DEBUG_ASSERT(aspace);
+
 
     x86_page_t* d;
-    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
-    
+
     /* CR3-L2 */ 
     {
         d = &aspace[(address >> 22) & 0x3FF];
@@ -145,10 +147,12 @@ int x86_ptr_access(uintptr_t address, int mode) {
 }
 
 
-uintptr_t x86_ptr_phys(uintptr_t address) {
+uintptr_t x86_ptr_phys(x86_page_t* aspace, uintptr_t address) {
+
+    DEBUG_ASSERT(aspace);
+
 
     x86_page_t* d;
-    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
 
     uintptr_t addend = address & (PAGE_SIZE - 1);
     

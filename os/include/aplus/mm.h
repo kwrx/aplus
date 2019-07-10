@@ -29,6 +29,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
@@ -53,10 +55,18 @@
 typedef long block_t;
 
 
-void* arch_mmap(void*, size_t, int);
-void arch_munmap(void*, size_t);
-int arch_ptr_access(void*, int);
-void* arch_ptr_phys(void*);
+void  aspace_create(address_space_t**, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
+void  aspace_create_from(address_space_t**, address_space_t*, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
+void  aspace_free(address_space_t* aspace);
+void  aspace_destroy(address_space_t**);
+void* aspace_mmap(address_space_t*, void*, size_t, int );
+void  aspace_munmap(address_space_t*, address_space_map_t*);
+
+
+void* arch_mmap(address_space_t*, void*, size_t, int);
+void arch_munmap(address_space_t*, void*, size_t);
+int arch_ptr_access(address_space_t*, void*, int);
+void* arch_ptr_phys(address_space_t*, void*);
 
 
 void mm_init(int);
@@ -90,7 +100,7 @@ void pmm_free_block(block_t);
 
 
 #define ptr_check(p, m)     \
-    arch_ptr_access((void*) (p), (m))
+    arch_ptr_access(current_task->aspace, (void*) (p), (m))
 
 #define ptr_ref(p) ({       \
     (p)->refcount++;        \
@@ -99,7 +109,7 @@ void pmm_free_block(block_t);
 
 
 #define V2P(p)              \
-    arch_ptr_phys((void*) (p))
+    arch_ptr_phys(current_task->aspace, (void*) (p))
 
 
 #define mmio_r8(x)              (*(uint8_t volatile*) (x))

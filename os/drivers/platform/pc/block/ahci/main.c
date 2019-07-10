@@ -29,6 +29,7 @@
 #include <aplus/intr.h>
 #include <aplus/mm.h>
 #include <aplus/ipc.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <string.h>
 #include <errno.h>
@@ -1159,6 +1160,7 @@ void init(const char* args) {
     
 
     arch_mmap (
+        current_task->aspace,
         (void*) ahci.hba, AHCI_HBA_SIZE,
         ARCH_MAP_NOEXEC |
         ARCH_MAP_FIXED  |
@@ -1390,7 +1392,7 @@ void dnit(void) {
 
 
     arch_intr_unmap_irq(ahci.irq);
-    arch_munmap ((void*) ahci.hba, AHCI_HBA_SIZE);
+    arch_munmap (current_task->aspace, (void*) ahci.hba, AHCI_HBA_SIZE);
 
     /* TODO */
 }

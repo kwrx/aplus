@@ -33,8 +33,11 @@
 #include <sys/types.h>
 
 
-void* arch_mmap(void* address, size_t length, int flags) {
+void* arch_mmap(address_space_t* aspace, void* address, size_t length, int flags) {
+    
     DEBUG_ASSERT(length);
+    DEBUG_ASSERT(aspace);
+
 
     uintptr_t s = ((uintptr_t) address) & ~(PAGE_SIZE - 1);
     uintptr_t e = ((uintptr_t) address + length) & ~(PAGE_SIZE - 1);
@@ -61,51 +64,62 @@ void* arch_mmap(void* address, size_t length, int flags) {
         mf |= X86_MMU_PG_AP_PAT;
 
 
-
-    DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->aspace);
     
 
-    __lock(&current_task->aspace->lock, {
+    __lock(&aspace->lock, {
     
-        for(; s <= e; s += PAGE_SIZE)
+        for(; s <= e; s += PAGE_SIZE) {
+
             if(flags & ARCH_MAP_FIXED)
-                x86_map_page((x86_page_t*) (current_task->aspace->vmmpd + CONFIG_KERNEL_BASE), s, s >> 12, mf);
+                x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, s >> 12, mf);
             else
-                x86_map_page((x86_page_t*) (current_task->aspace->vmmpd + CONFIG_KERNEL_BASE), s, -1, mf);
+                x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, -1, mf);
     
+
+            aspace->size += PAGE_SIZE;
+
+        }
+
     });
+
 
     return address;
 }
 
-void arch_munmap(void* address, size_t length) {
+void arch_munmap(address_space_t* aspace, void* address, size_t length) {
+    
     DEBUG_ASSERT(length);
+    DEBUG_ASSERT(aspace);
+
 
     uintptr_t s = ((uintptr_t) address) & ~(PAGE_SIZE - 1);
     uintptr_t e = ((uintptr_t) address + length + PAGE_SIZE) & ~(PAGE_SIZE - 1);
 
 
-    DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->aspace);
+    __lock(&aspace->lock, {
 
+        for(; s < e; s += PAGE_SIZE) {
 
-    __lock(&current_task->aspace->lock, {
+            x86_unmap_page
+                ((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s);
+            
+            aspace->size -= PAGE_SIZE; 
 
-        for(; s < e; s += PAGE_SIZE)
-            x86_unmap_page((x86_page_t*) (current_task->aspace->vmmpd + CONFIG_KERNEL_BASE), s);
-    
+        }
+
     });
 }
 
-int arch_ptr_access(void* ptr, int mode) {
+int arch_ptr_access(address_space_t* aspace, void* ptr, int mode) {
+    DEBUG_ASSERT(aspace);
     DEBUG_ASSERT(ptr);
     
-    return x86_ptr_access((uintptr_t) ptr, mode);
+    return x86_ptr_access((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), (uintptr_t) ptr, mode);
 }
 
-void* arch_ptr_phys(void* ptr) {
+void* arch_ptr_phys(address_space_t* aspace, void* ptr) {
+    DEBUG_ASSERT(aspace);
     DEBUG_ASSERT(ptr);
 
-    return (void*) x86_ptr_phys((uintptr_t) ptr);
+    return (void*) x86_ptr_phys((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), (uintptr_t) ptr);
 }

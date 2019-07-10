@@ -88,12 +88,14 @@ void smp_setup(int bsp) {
     _.cwd =
     _.exe = vfs_root;
 
-    _.aspace = ptr_ref(&_.__aspace);
-    _.aspace->start = CONFIG_KERNEL_BASE;
-    _.aspace->end = mbd->memory.start;
-    _.aspace->vmmpd = x86_get_cr3();
+    
+    address_space_ops_t ops;
+    ops.open   = NULL;
+    ops.close  = NULL;
+    ops.nopage = NULL;
 
-    spinlock_init(&_.aspace->lock);
+    aspace_create_from(&_.aspace, &_.__aspace, x86_get_cr3(), &ops, 0UL, ~0UL);
+
 
 
     _.parent = NULL;
