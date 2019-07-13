@@ -179,9 +179,9 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
         }
 
         if(__is(CLONE_VM))
-            ; // TODO: arch_task_clone_vm(child, current_task);
+            ; // TODO: aspace_fork(&child->aspace, current_task->aspace);
         else
-            child->aspace = ptr_ref(current_task->aspace);
+            aspace_clone(&child->aspace, current_task->aspace);
 
 
 

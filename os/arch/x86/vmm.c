@@ -66,21 +66,18 @@ void* arch_mmap(address_space_t* aspace, void* address, size_t length, int flags
 
     
 
-    __lock(&aspace->lock, {
     
-        for(; s <= e; s += PAGE_SIZE) {
+    for(; s <= e; s += PAGE_SIZE) {
 
-            if(flags & ARCH_MAP_FIXED)
-                x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, s >> 12, mf);
-            else
-                x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, -1, mf);
-    
+        if(flags & ARCH_MAP_FIXED)
+            x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, s >> 12, mf);
+        else
+            x86_map_page((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s, -1, mf);
 
-            aspace->size += PAGE_SIZE;
 
-        }
+        aspace->size += PAGE_SIZE;
 
-    });
+    }
 
 
     return address;
@@ -96,21 +93,20 @@ void arch_munmap(address_space_t* aspace, void* address, size_t length) {
     uintptr_t e = ((uintptr_t) address + length + PAGE_SIZE) & ~(PAGE_SIZE - 1);
 
 
-    __lock(&aspace->lock, {
 
-        for(; s < e; s += PAGE_SIZE) {
+    for(; s < e; s += PAGE_SIZE) {
 
-            x86_unmap_page
-                ((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s);
-            
-            aspace->size -= PAGE_SIZE; 
+        x86_unmap_page
+            ((x86_page_t*) (aspace->vmmpd + CONFIG_KERNEL_BASE), s);
+        
+        aspace->size -= PAGE_SIZE; 
 
-        }
+    }
 
-    });
 }
 
 int arch_ptr_access(address_space_t* aspace, void* ptr, int mode) {
+
     DEBUG_ASSERT(aspace);
     DEBUG_ASSERT(ptr);
     
@@ -118,6 +114,7 @@ int arch_ptr_access(address_space_t* aspace, void* ptr, int mode) {
 }
 
 void* arch_ptr_phys(address_space_t* aspace, void* ptr) {
+    
     DEBUG_ASSERT(aspace);
     DEBUG_ASSERT(ptr);
 

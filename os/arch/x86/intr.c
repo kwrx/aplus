@@ -230,6 +230,8 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
     DEBUG_ASSERT(frame);
 
 
+    arch_intr_begin();
+
     switch(frame->int_no) {
         case 0xFE:
 #ifdef ARCH_X86_64
@@ -257,7 +259,6 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                 frame = schedule(frame);
             }
 
-            apic_eoi();
             break;
 
         case 0x21 ... 0xFC:
@@ -272,7 +273,6 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             });
 
 
-            apic_eoi();
             break;
         
         case 0x0E:
@@ -314,6 +314,9 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
     }
 
+
+
+    arch_intr_end();
 
     return frame;
 }
@@ -368,4 +371,26 @@ int arch_intr_unmap_irq(uint8_t irq) {
     });
 
     return 0;
+}
+
+
+void arch_intr_begin(void) {
+
+    DEBUG_ASSERT(current_cpu ? !(current_cpu->flags & CPU_FLAGS_INTERRUPT) : 1);
+
+    if(likely(current_cpu))
+        current_cpu->flags |= CPU_FLAGS_INTERRUPT;
+
+}
+
+
+void arch_intr_end(void) {
+
+    DEBUG_ASSERT(current_cpu ? current_cpu->flags & CPU_FLAGS_INTERRUPT : 1);
+
+    if(likely(current_cpu))
+        current_cpu->flags &= ~CPU_FLAGS_INTERRUPT;
+
+    apic_eoi();
+
 }

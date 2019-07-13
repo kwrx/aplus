@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <argz.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -54,13 +55,16 @@ extern int main(int, char**, char**);
 
 
 static void __init_traps() {
+
     int i;
     for(i = 0; i < NSIG; i++)
         signal(i, SIG_DFL);
+
 }
 
 
 static void tzinit() {
+
     int fd = open("/etc/localtime", O_RDONLY);
     if(fd < 0)
         return;
@@ -81,78 +85,108 @@ static void tzinit() {
 
 
     lseek(fd, -2, SEEK_END);
+
     do {
+
         char ch;
         if(read(fd, &ch, 1) != 1)
             break;
 
+
         if(ch == '\n') {
+
             char buf[64];
             memset(buf, 0, sizeof(buf));
 
             if(read(fd, buf, sizeof(buf)) <= 0)
                 break;
+
             
             buf[strlen(buf) - 1] = '\0';
             setenv("TZ", buf, 1);
+
             break;
         }
+
     } while(lseek(fd, -2, SEEK_CUR) > 44);
 
 done:
     close(fd);
+
 }
 
-void _start(char** argv, char** env) {
+
+
+static void __arg_add(char*** argv, int* argc, const char* s) {
+
+    if(*argv == NULL)
+        *argv = calloc(1, sizeof(char*)),
+        *argc = 0;
+
+
+    (*argc)++;
+    (*argv) = realloc(*argv, *argc * sizeof(char*));
+
+    *argv[*argc - 1] = calloc(strlen(s) + 1, 1);
+    *argv[*argc] = NULL; 
+
+    strcpy(*argv[*argc - 1], s);
+
+}
+
+
+void _start(unsigned long brk, unsigned long stack) {
+
+#if defined(__i386__)
+    __asm__ __volatile__ ("movl %0, %%esp" :: "r"(stack));
+#elif defined(__x86_64__)
+    __asm__ __volatile__ ("movl %0, %%rsp" :: "r"(stack));
+#endif
+
     
     long i;
     for(i = (long) &__bss_start; i < (long) &end; i++)
         *(unsigned char*) i = 0;
-
     
     __libc_init_array();
     __init_traps();
 
-    /* TODO: reloc from stack: argv, envp */
 
-
-#if defined(__i386__) || defined(__x86_64__)
-
-    #define STACKSIZE (64 * 1024)
-    uintptr_t stack = (uintptr_t) malloc(STACKSIZE);
-
-    do {
-        if(__builtin_expect(!stack, 0))
-            break;
-
-        #if defined(__i386__)
-            __asm__ __volatile__ ("mov %0, %%esp" :: "r"(stack + STACKSIZE));
-        #else
-            __asm__ __volatile__ ("mov %0, %%rsp" :: "r"(stack + STACKSIZE));
-        #endif
-    } while(0);
-
-#endif
-
-    char* p;
-    if(__builtin_expect(argv && argv[0], 1))
-        strncpy((char*) &__progname[0], (p = strrchr(argv[0], '/'))
-                                ? p + 1
-                                : argv[0], BUFSIZ);
 
     int argc = 0;
-    if(__builtin_expect((uintptr_t) argv, 1))
-        while(argv[argc])
-            argc++;
+    char** argv = NULL;
+        
 
-    if(__builtin_expect((uintptr_t) env, 1))
-        while(*env)
-            putenv(*env++);
+    char* s;
+    for(s = strtok((char*) brk, " "); s; s = strtok(NULL, " "))
+        strcpy(__progname, s);
 
 
-    tzinit();
-    tzset();
+    for(; s; s = strtok(NULL, " ")) {
+
+        if(strcmp(s, "\e$$$") == 0)
+            break;
+
+        __arg_add(&argv, &argc, s);
+
+    }
+
+
+    for(; s; s = strtok(NULL, " ")) {
+
+        if(strcmp(s, "\e$$$") == 0)
+            break;
+        
+        putenv(s);
+
+    }
+
+
+
+    //tzinit();
+    //tzset();
 
     atexit(__libc_fini_array);
     exit(main(argc, argv, environ));
+
 }

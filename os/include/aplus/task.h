@@ -56,6 +56,14 @@
 #define TASK_NPROC                          2048
 
 
+#define ASPACE_TYPE_UNKNOWN                 0
+#define ASPACE_TYPE_CODE                    1
+#define ASPACE_TYPE_DATA                    2
+#define ASPACE_TYPE_TLS                     3
+#define ASPACE_TYPE_BRK                     4
+#define ASPACE_TYPE_SHARED                  5
+#define ASPACE_TYPE_SWAP                    6
+
 
 #if defined(KERNEL)
 #include <aplus.h>
@@ -65,9 +73,16 @@ typedef struct address_space address_space_t;
 
 typedef struct {
 
+    struct {
+        uintptr_t type:4;
+        uintptr_t flags:28;
+    };
+
     uintptr_t start;
     uintptr_t end;
-    uintptr_t flags;
+
+    spinlock_t lock;
+    int refcount;
     
 } address_space_map_t;
 
@@ -90,9 +105,6 @@ struct address_space {
     address_space_ops_t ops;
 
     list(address_space_map_t*, mappings);
-
-    spinlock_t lock;
-    int refcount;
     
 };
 
@@ -215,6 +227,22 @@ void* schedule_yield(void*);
 
 void* arch_task_switch(void*, task_t*, task_t*);
 void* arch_task_init_frame(void*, void*, void*);
+
+
+
+void aspace_create(address_space_t**, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
+void aspace_create_nomem(address_space_t**, address_space_t*, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
+void aspace_free(address_space_t*);
+void aspace_destroy(address_space_t**);
+void aspace_clone(address_space_t**, address_space_t*);
+void aspace_fork(address_space_t**, address_space_t*);
+void aspace_ref_map(address_space_t*, address_space_map_t*);
+void aspace_enlarge_map(address_space_t*, address_space_map_t*, size_t);
+void aspace_shrink_map(address_space_t*, address_space_map_t*, size_t);
+void aspace_add_map(address_space_t*, uint8_t, uintptr_t, uintptr_t, uint32_t);
+void aspace_remove_map(address_space_t*, address_space_map_t*);
+void aspace_get_maps(address_space_t*, address_space_map_t**, uint8_t, size_t);
+
 
 extern task_t* kernel_task;
 extern task_t* sched_queue;

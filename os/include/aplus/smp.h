@@ -35,6 +35,7 @@
 #define CPU_FLAGS_ENABLED           (1 << 0)
 #define CPU_FLAGS_BSP               (1 << 1)
 #define CPU_FLAGS_SCHED_ENABLED     (1 << 2)
+#define CPU_FLAGS_INTERRUPT         (1 << 3)
 
 
 typedef struct {

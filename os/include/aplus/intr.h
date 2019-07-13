@@ -31,6 +31,9 @@ void arch_intr_enable(long);
 
 int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*));
 int arch_intr_unmap_irq(uint8_t irq);
+
+void arch_intr_begin(void);
+void arch_intr_end(void);
 #endif
 
 #endif

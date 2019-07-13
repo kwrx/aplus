@@ -147,18 +147,7 @@
 
 
 
-SC(2, 4, stat)
-SC(2, 5, fstat)
-SC(2, 6, lstat)
-SC(1, 63, uname)
-
-/* Extension */
-SC(1, 500, __exit)
-SC(1, 501, sbrk)
-SC(0, 503, fork)
-SC(3, 504, _execve)
-SC(2, 505, statvfs)
-SC(1, 506, nice)
 
 #include "../syscall.tbl.h"
+#include "../syscall.fix.h"
 #endif

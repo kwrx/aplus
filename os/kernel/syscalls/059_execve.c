@@ -77,7 +77,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
-
     int e;
     struct stat st;
     if((e = sys_newstat(filename, &st)) < 0)
@@ -150,6 +149,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         aspace_free(current_task->aspace);
 
 
+        current_task->aspace->start =  0UL;
+        current_task->aspace->end   = ~0UL;
+
+
         int i;
         for(i = 0; i < head.e_phnum; i++) {
 
@@ -171,14 +174,22 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-                    aspace_mmap (
-                        current_task->aspace, (void*) phdr.p_vaddr, size - 1,
+                    aspace_add_map (
+                        current_task->aspace,
+                        
+                        (phdr.p_flags & PF_X)
+                            ? ASPACE_TYPE_CODE
+                            : ASPACE_TYPE_DATA
+                            ,
+                        
+                        phdr.p_vaddr, 
+                        phdr.p_vaddr + size - 1,
 
                         //((phdr.p_flags & PF_R) ? ARCH_MAP_USER : 0) |
-                        //((phdr.p_flags & PF_W) ? ARCH_MAP_RDWR : 0) |
+                        //((phdr.p_flags & PF_W) ? ARCH_MAP_RDWR : 0) |  /* FIXME: Add protection */
                         //((phdr.p_flags & PF_X) ? 0 : ARCH_MAP_NOEXEC)
 
-                        ARCH_MAP_USER | ARCH_MAP_RDWR   /* FIXME: Add protection */
+                        ARCH_MAP_USER | ARCH_MAP_RDWR
                     );
 
 
@@ -207,11 +218,21 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         }
 
 
-
         current_task->aspace->start = (i_base & ~(PAGE_SIZE - 1));
         current_task->aspace->end   = (i_end  & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-        current_task->aspace->refcount = 1;
         current_task->exe = current_task->fd[fd].inode;
+
+
+        aspace_add_map (
+            current_task->aspace, ASPACE_TYPE_BRK, 
+            current_task->aspace->end, 
+            current_task->aspace->end, 
+            ARCH_MAP_RDWR | ARCH_MAP_NOEXEC | ARCH_MAP_USER
+        );
+
+        //current_task->aspace->end += current_task->rlimits[RLIMIT_RSS].rlim_cur;  TODO: Add rlimits
+        current_task->aspace->end += (1024 * 1024 * 1024);
+
 
     });
 
@@ -235,11 +256,51 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     }
 
 
+    sys_open("/dev/kmsg", O_RDWR, 0);
+    sys_open("/dev/kmsg", O_RDWR, 0);
+    sys_open("/dev/kmsg", O_RDWR, 0);
 
 
 
+#if defined(DEBUG)
+
+    for(i = 0; argv[i]; i++)
+        DEBUG_ASSERT(ptr_check(argv[i], R_OK));
+
+    for(i = 0; envp[i]; i++)
+        DEBUG_ASSERT(ptr_check(envp[i], R_OK));
+
+#endif
 
 
-    return -ENOSYS;
 
+    uintptr_t brk = sys_brk(0);
+    //sys_brk(brk + current_task->rlimits[RLIMIT_STACK].rlim_cur);  // TODO: Add rlimits
+    uintptr_t top = sys_brk(brk + (1024 * 1024));
+
+
+    strcat((char*) brk, filename);
+    strcat((char*) brk, " ");
+
+    for(i = 0; argv[i]; i++) {
+        strcat((char*) brk, argv[i]);
+        strcat((char*) brk, " ");
+    }
+
+    strcat((char*) brk, "\e$$$ ");
+        
+    for(i = 0; envp[i]; i++) {
+        strcat((char*) brk, envp[i]);
+        strcat((char*) brk, " ");
+    }
+
+
+
+    if(current_cpu->flags & CPU_FLAGS_INTERRUPT)
+        arch_intr_end();
+    
+    ((void (*)(unsigned long, unsigned long)) head.e_entry) (brk, top);
+
+
+    DEBUG_ASSERT(0);
 });

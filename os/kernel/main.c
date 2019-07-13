@@ -91,12 +91,7 @@ void kmain(void) {
         mbd->memory.size / 1024 / 1024);
 
 
-    int fd = sys_open("/test.txt", O_RDWR, 0);
-    sys_write(fd, "World Hello", 11);
-    sys_close(fd);
-
-    
-    const char* argv[] = { "/sbin/init", NULL };
+    const char* argv[] = { "/test", NULL };
     const char* envp[] = { NULL };
 
     if((e = sys_execve(argv[0], argv, envp)) < 0)

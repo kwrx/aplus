@@ -55,13 +55,6 @@
 typedef long block_t;
 
 
-void  aspace_create(address_space_t**, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
-void  aspace_create_from(address_space_t**, address_space_t*, uintptr_t, address_space_ops_t*, uintptr_t, uintptr_t);
-void  aspace_free(address_space_t* aspace);
-void  aspace_destroy(address_space_t**);
-void* aspace_mmap(address_space_t*, void*, size_t, int );
-void  aspace_munmap(address_space_t*, address_space_map_t*);
-
 
 void* arch_mmap(address_space_t*, void*, size_t, int);
 void arch_munmap(address_space_t*, void*, size_t);

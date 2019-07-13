@@ -64,6 +64,9 @@ void syscall_init(void) {
 }
 
 long syscall_invoke(long idx, long p0, long p1, long p2, long p3, long p4, long p5) {
+
+    kprintf("call syscall(%d)\n", idx);
+
     DEBUG_ASSERT(idx < SYSMAX);
     DEBUG_ASSERT(syscalls[idx]);
 

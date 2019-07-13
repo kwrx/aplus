@@ -94,7 +94,7 @@ void smp_setup(int bsp) {
     ops.close  = NULL;
     ops.nopage = NULL;
 
-    aspace_create_from(&_.aspace, &_.__aspace, x86_get_cr3(), &ops, 0UL, ~0UL);
+    aspace_create_nomem(&_.aspace, &_.__aspace, x86_get_cr3(), &ops, 0UL, ~0UL);
 
 
 

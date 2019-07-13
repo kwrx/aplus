@@ -61,7 +61,7 @@ void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
 
 
 __thread_safe
-void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
