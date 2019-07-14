@@ -35,7 +35,7 @@ int rmdir(const char* path) {
 	closedir(d);
 
 	if(ent) {
-		errno = ENOTEMPTY;
+		_REENT->_errno = ENOTEMPTY;
 		return -1;
 	}
 

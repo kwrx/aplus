@@ -29,7 +29,7 @@
 
 int _system(const char* s) {
     char* argv[4];
-    argv[0] = "/usr/bin/sh";
+    argv[0] = "/bin/sh";
     argv[1] = "-c";
     argv[2] = (char*) s;
     argv[3] = NULL;

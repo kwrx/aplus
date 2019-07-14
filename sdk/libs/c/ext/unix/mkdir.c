@@ -31,6 +31,8 @@ int mkdir(const char* path, mode_t mode) {
 	if(fd < 0)
 		return -1;
 
-	close(fd);
+	if(close(fd) < 0)
+		return -1;
+		
 	return 0;
 }

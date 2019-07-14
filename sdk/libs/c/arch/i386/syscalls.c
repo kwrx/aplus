@@ -23,7 +23,7 @@
 
 #if defined(__i386__)
 #include <stdint.h>
-#include <errno.h>
+#include <reent.h>
 
 #pragma GCC diagnostic ignored      "-Wimplicit-int"
 #define SYSCALL                     "int $0xFE"
@@ -38,7 +38,8 @@
             : "a"(x)                    \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
 
@@ -52,7 +53,8 @@
             : "a"(x), "b"(p0)           \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
 
@@ -67,7 +69,8 @@
               "c"(p1)                   \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
 
@@ -82,7 +85,8 @@
               "c"(p1), "d"(p2)          \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
 
@@ -98,7 +102,8 @@
               "S"(p3)                   \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
 
@@ -114,7 +119,8 @@
               "S"(p3), "D"(p4)          \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }
         
@@ -128,7 +134,8 @@
             : "a"(x), "b"(p0)           \
         );                              \
         if(r < 0)                       \
-            return errno = -r, -1;      \
+            return _REENT->_errno = -r, \
+                                    -1; \
         return r;                       \
     }                                   \
     __attribute__((weak))               \

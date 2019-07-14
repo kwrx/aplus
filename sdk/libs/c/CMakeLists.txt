@@ -17,10 +17,12 @@ target_compile_definitions (c
         _NO_POSIX_SPAWN
         _GNU_SOURCE
         _I386MACH_NEED_SOTYPE_FUNCTION
-        MISSING_SYSCALL_NAMES
-        INTERNAL_NEWLIB
-        HAVE_FCNTL
-        HAVE_SYSTEM
+        MISSING_SYSCALL_NAMES=1
+        REENTRANT_SYSCALLS_PROVIDED=1
+        MALLOC_PROVIDED=1
+        INTERNAL_NEWLIB=1
+        HAVE_FCNTL=1
+        HAVE_SYSTEM=1
 )
 
 target_compile_options (c

@@ -44,7 +44,7 @@ gethostname (char *name, size_t len)
 
 	if (nodelen > len)
 	{
-		errno = ENAMETOOLONG;
+		_REENT->_errno = ENAMETOOLONG;
 		return -1;
 	}
 	return 0;

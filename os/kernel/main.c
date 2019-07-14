@@ -89,6 +89,7 @@ void kmain(void) {
         KERNEL_PLATFORM,
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
+        
 
 
     const char* argv[] = { "/test", NULL };

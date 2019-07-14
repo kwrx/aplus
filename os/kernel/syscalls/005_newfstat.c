@@ -64,10 +64,6 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
     if(!ptr_check(statbuf, R_OK | W_OK))
         return -EFAULT;
 
-
-    DEBUG_ASSERT(current_task->fd[fd].inode);
-
-
     if(unlikely(!current_task->fd[fd].inode))
         return -EBADF;
 

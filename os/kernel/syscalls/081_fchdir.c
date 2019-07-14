@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -47,5 +49,24 @@
 
 SYSCALL(81, fchdir,
 long sys_fchdir (unsigned int fd) {
-    return -ENOSYS;
+    
+    if(fd < 0)
+        return -EBADF;
+
+    if(fd > TASK_NFD)
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].inode))
+        return -EBADF;
+
+
+    __lock(&current_task->lock, {
+
+        current_task->cwd = current_task->fd[fd].inode;
+
+    });
+
+
+    return 0;
+
 });

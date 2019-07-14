@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -48,5 +50,33 @@
 
 SYSCALL(76, truncate,
 long sys_truncate (const char __user * path, long length) {
-    return -ENOSYS;
+    
+    if(!ptr_check(path, R_OK))
+        return -EFAULT;
+
+    
+    int fd;
+    if((fd = sys_open(path, O_RDONLY, 0)) < 0)
+        return fd;
+    
+
+    DEBUG_ASSERT(current_task->fd[fd].inode);
+
+
+    int e = 0;
+
+    __lock(&current_task->fd[fd].lock, {
+        e = vfs_truncate(current_task->fd[fd].inode, length);
+    });
+
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+        
+
+    if(e < 0)
+        return -errno;
+    
+    return e;
+
 });

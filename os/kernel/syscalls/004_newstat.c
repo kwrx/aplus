@@ -82,11 +82,13 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
     });
 
 
-    if(e < 0)
-        return -errno;
-
     if((fd = sys_close(fd)) < 0)
         return fd;
 
+
+    if(e < 0)
+        return -errno;
+
     return 0;
+    
 });

@@ -80,10 +80,17 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
 
     __lock(&current_task->fd[fd].lock,
 
-        if((e = vfs_readdir(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count / sizeof(struct dirent))) > 0)
-            e *= sizeof(struct dirent);
-    
+        if((e = vfs_readdir(current_task->fd[fd].inode, dirent, current_task->fd[fd].position++, count / sizeof(struct dirent))) < 0)
+            break;
+
+        e *= sizeof(struct dirent);
+
     );
 
+
+    if(e < 0)
+        return -errno;
+
     return e;
+    
 });

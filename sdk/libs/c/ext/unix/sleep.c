@@ -36,7 +36,7 @@ unsigned int sleep(unsigned int seconds) {
     if(nanosleep(&tq, &tr) == 0)
         return 0;
         
-    if(errno == EINTR)
+    if(_REENT->_errno == EINTR)
         return tr.tv_sec;
         
     return -1;

@@ -38,7 +38,7 @@ int gettimeofday(struct timeval* tv, struct timeval* tz) {
 
 	struct timespec ts;
 	if(clock_gettime(CLOCK_REALTIME, &ts) != 0) {
-		errno = EINVAL;
+		_REENT->_errno = EINVAL;
 		return -1;
 	}
 

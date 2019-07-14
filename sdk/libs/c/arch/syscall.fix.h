@@ -6,9 +6,9 @@ SC(0, 57, fork);
 SC(0, 58, vfork);
 //SC(3, 59, execve);        // newlib-fix
 SC(3, 59, _execve);
+SC(1, 60, _exit);
 SC(1, 63, uname)
 
 /* Extension */
-SC(1, 500, __exit)
 SC(2, 501, statvfs)
 SC(1, 502, nice)

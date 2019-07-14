@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -46,5 +48,5 @@
 
 SYSCALL(39, getpid,
 long sys_getpid (void) {
-    return -ENOSYS;
+    return current_task->tid;
 });

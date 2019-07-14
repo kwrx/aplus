@@ -44,6 +44,7 @@ void dcache_init(void) {
 void vfs_dcache_add(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(list_find(dcache, inode) == NULL);
     
     list_push(dcache, inode);
 }
@@ -52,6 +53,7 @@ void vfs_dcache_add(inode_t* inode) {
 void vfs_dcache_remove(inode_t* inode) {
     
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(list_find(dcache, inode) != NULL);
 
     list_remove(dcache, inode);
     kfree(inode);

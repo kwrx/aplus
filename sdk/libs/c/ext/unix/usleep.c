@@ -30,7 +30,7 @@
 
 int usleep(useconds_t usec) {
     if(usec >= 1000000) {
-        errno = EINVAL;
+        _REENT->_errno = EINVAL;
         return -1;
     }
     

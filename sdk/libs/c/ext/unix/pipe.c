@@ -32,7 +32,7 @@
 
 int pipe(int fd[2]) {
     if(!fd) {
-        errno = EINVAL;
+        _REENT->_errno = EINVAL;
         return -1;
     }
     

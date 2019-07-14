@@ -35,6 +35,6 @@ void* sbrk(intptr_t incr) {
     if(now != cur)
         return (void*) cur;
 
-    errno = ENOMEM;
+    _REENT->_errno = ENOMEM;
     return (void*) -1;
 }

@@ -25,6 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -49,5 +51,26 @@
 
 SYSCALL(16, ioctl,
 long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
-    return -ENOSYS;
+
+    if(unlikely(fd < 0))
+        return -EBADF;
+
+    if(unlikely(fd > TASK_NFD)) /* TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].inode))
+        return -EBADF;
+
+
+    int e = 0;
+
+    __lock(&current_task->fd[fd].lock, {
+        e = vfs_ioctl(current_task->fd[fd].inode, cmd, arg);
+    });
+
+
+    if(e < 0)
+        return -errno;
+    
+    return e;
 });

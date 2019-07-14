@@ -100,5 +100,9 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
         current_task->iostat.read_bytes += (uint64_t) e;
     });
 
+
+    if(e < 0)
+        return -errno;
+
     return e;
 });

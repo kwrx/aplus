@@ -100,5 +100,9 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
         current_task->iostat.write_bytes += (uint64_t) e;
     });
 
+
+    if(e < 0)
+        return -errno;
+
     return e;
 });

@@ -341,7 +341,8 @@ inode_t* vfs_creat (inode_t* inode, const char __user * name, mode_t mode) {
         __lock(&inode->lock, {
             
             if((r = inode->ops.creat(inode, name, mode)) != NULL)
-                vfs_dcache_add(r);
+                if(likely(r->parent == inode))
+                    vfs_dcache_add(r);
         
         });
 
@@ -388,7 +389,8 @@ inode_t* vfs_finddir (inode_t* inode, const char __user * name) {
         __lock(&inode->lock, {
             
             if((r = inode->ops.finddir(inode, name)) != NULL)
-                vfs_dcache_add(r);
+                if(likely(r->parent == inode))
+                    vfs_dcache_add(r);
         
         });
 

@@ -30,7 +30,7 @@
 
 int utime(const char* filename, const struct utimbuf* times) {
 	if(!times)
-		return errno = EINVAL, -1;
+		return _REENT->_errno = EINVAL, -1;
 	
 
 	struct timeval tv[2];
