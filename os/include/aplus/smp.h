@@ -40,6 +40,7 @@
 
 typedef struct {
     int id;
+    int node;
     int flags;
     spinlock_t lock;
 

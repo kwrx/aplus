@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/mm.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
@@ -49,5 +50,19 @@
 
 SYSCALL(201, time,
 long sys_time (time_t __user * tloc) {
-    return -ENOSYS;
+
+    ktime_t tm = arch_timer_gettime();
+
+
+    if(likely(tloc)) {
+
+        if(unlikely(!ptr_check(tloc, R_OK | W_OK)))
+            return -EFAULT;
+
+        *tloc = (time_t) tm;
+
+    }
+
+
+    return (long) tm;
 });

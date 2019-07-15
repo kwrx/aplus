@@ -63,6 +63,7 @@ void smp_setup(int bsp) {
 
     int i = apic_get_id();
     cpus[i].id = i;
+    cpus[i].node = 0;
     cpus[i].flags = CPU_FLAGS_ENABLED | (bsp ? CPU_FLAGS_BSP : 0);
     cpus[i].ticks.tv_sec = 0;
     cpus[i].ticks.tv_nsec = 0;

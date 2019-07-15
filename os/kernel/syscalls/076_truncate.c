@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/mm.h>
 #include <stdint.h>
 #include <errno.h>
 #include <fcntl.h>
