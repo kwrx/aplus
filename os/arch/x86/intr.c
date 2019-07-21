@@ -51,6 +51,8 @@
 #define IDT_ISR_TRAP            0x8F
 #define IDT_ISR_INTERRUPT       0x8E
 
+#define IDT_ISR_DPL(x)          (x << 5)
+
 
 extern struct {
     uint16_t base_low;
@@ -72,6 +74,7 @@ static struct {
 extern uintptr_t isrs[X86_IDT_MAX];
 extern uint64_t gdtp[X86_GDT_MAX];
 extern uintptr_t early_stack;
+extern uintptr_t interrupt_stack;
 
 static tss_t sys_tss;
 
@@ -113,7 +116,7 @@ static void id_set(int index, uintptr_t isr, uint8_t type) {
 #else
     idtp[index].base_low = (isr) & 0xFFFF;
     idtp[index].base_high = (isr >> 16) & 0xFFFF;
-    idtp[index].selector = 0x08;
+    idtp[index].selector = 0x8;
     idtp[index].unused = 0;
     idtp[index].flags = type;
 #endif
@@ -135,16 +138,20 @@ void intr_init(void) {
 #else
 
     memset(&sys_tss, 0, sizeof(tss_t));
-    sys_tss.esp = (uintptr_t) &early_stack;
-    sys_tss.ss = 0x10;
-    sys_tss.cs = 0x08;
-    sys_tss.iopb = sizeof(sys_tss);
+    sys_tss.esp0 = (uintptr_t) &interrupt_stack;
+    sys_tss.ss0  = 0x10;
+    sys_tss.cs   = 0x0B;
+    sys_tss.ds   = 0x13;
+    sys_tss.es   = 0x13;
+    sys_tss.fs   = 0x13;
+    sys_tss.gs   = 0x13;
+    sys_tss.iomap_base = sizeof(sys_tss);
 
     gd_set(1, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_CODE_EXRD);
     gd_set(2, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_DATA_RDWR);
     gd_set(3, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_CODE_EXRD);
     gd_set(4, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_DATA_RDWR);
-    gd_set(5, (uintptr_t) &sys_tss, sizeof(tss_t), 0x89);
+    gd_set(5, (uintptr_t) &sys_tss, sizeof(tss_t), 0xE9);
 
 #endif
 
@@ -156,10 +163,19 @@ void intr_init(void) {
 
     int i;
     for(i = 0; i < 32; i++)
-        id_set(i, isrs[i], IDT_ISR_TRAP);
+        id_set(i, isrs[i], IDT_ISR_TRAP | IDT_ISR_DPL(0));
 
-    for(i = 32; i < X86_IDT_MAX; i++)
-        id_set(i, isrs[i], IDT_ISR_INTERRUPT);
+    for(i = 32; i < X86_IDT_MAX - 3; i++)
+        id_set(i, isrs[i], IDT_ISR_INTERRUPT | IDT_ISR_DPL(0));
+
+
+    /* Syscalls */
+    id_set(0xFD, isrs[0xFD], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
+    id_set(0xFE, isrs[0xFE], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
+
+    /* NMI */
+    id_set(0xFF, isrs[0xFF], IDT_ISR_INTERRUPT | IDT_ISR_DPL(0));
+
 
 
     for(i = 32; i < X86_IDT_MAX; i++) {
@@ -290,7 +306,6 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             );
 
             core_stacktrace();
-            x86_cli();
             for(;;);
 
         default:
@@ -307,7 +322,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                 );
 
 
-            //core_stacktrace();
+            core_stacktrace();
             x86_cli();
             for(;;);
 

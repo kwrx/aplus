@@ -227,6 +227,7 @@ void* schedule_yield(void*);
 
 void* arch_task_switch(void*, task_t*, task_t*);
 void* arch_task_init_frame(void*, void*, void*);
+void  arch_task_enter_on_userspace(uintptr_t, uintptr_t, uintptr_t);
 
 
 

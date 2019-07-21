@@ -38,7 +38,11 @@
 
 int __aplus_crt__ = 1;
 int __last_signo = -1;
-char* __progname[BUFSIZ];
+char __progname[BUFSIZ];
+
+unsigned long __tls_start = 0;
+unsigned long __tls_end = 0;
+
 
 extern char** environ;
 extern int __bss_start;
@@ -52,6 +56,7 @@ extern void __exit(int);
 
 extern void exit(int);
 extern int main(int, char**, char**);
+
 
 
 static void __init_traps() {
@@ -135,21 +140,43 @@ static void __arg_add(char*** argv, int* argc, const char* s) {
 }
 
 
-void _start(unsigned long brk, unsigned long stack) {
+static void __init_tls() {
 
-#if defined(__i386__)
-    __asm__ __volatile__ ("movl %0, %%esp" :: "r"(stack));
-#elif defined(__x86_64__)
-    __asm__ __volatile__ ("movl %0, %%rsp" :: "r"(stack));
+#if 0
+    if(!__tls_start || __tls_end)
+        return;
+
+    if((__tls_end - __tls_start) == 0)
+        return;
+
+
+    struct {
+        uintptr_t ptr;
+        uintptr_t top;
+        uintptr_t base;
+    } __attribute__((packed)) *tls = (void*) malloc(sizeof(uintptr_t) * 3);
+
+
+    tls->base = (uintptr_t) malloc(__tls_end - __tls_start);
+    tls->top  = tls->base + (__tls_end - __tls_start);
+    tls->ptr  = tls->top;
+
+
+    //set_thread_address(tls);
 #endif
+}
 
-    
+
+static void __init(uintptr_t* brk) {
+
     long i;
     for(i = (long) &__bss_start; i < (long) &end; i++)
         *(unsigned char*) i = 0;
-    
+
+
     __libc_init_array();
     __init_traps();
+    __init_tls();
 
 
 
@@ -183,10 +210,20 @@ void _start(unsigned long brk, unsigned long stack) {
 
 
 
-    //tzinit();
-    //tzset();
+    tzinit();
+    tzset();
 
     atexit(__libc_fini_array);
     exit(main(argc, argv, environ));
+
+}
+
+
+void _start(uintptr_t* brk) {
+
+    __tls_start = *brk++;
+    __tls_end   = *brk++;
+
+    __init(brk);
 
 }

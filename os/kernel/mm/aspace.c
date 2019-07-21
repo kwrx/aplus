@@ -179,8 +179,21 @@ void aspace_add_map(address_space_t* aspace, uint8_t type, uintptr_t start, uint
     spinlock_init(&map->lock);
 
 
-    if(end > start)
-        aspace_enlarge_map(aspace, map, end - start);
+    switch(type) {
+        
+        case ASPACE_TYPE_TLS:
+        case ASPACE_TYPE_SWAP:
+
+            map->end = end;
+            break;
+        
+        default:
+            if(end > start)
+                aspace_enlarge_map(aspace, map, end - start);
+
+            break;
+    
+    }
 
 
 #if defined(DEBUG)

@@ -17,6 +17,7 @@ extern __bss_end
 global _start
 global early_stack
 global early_pd
+global interrupt_stack
 
 
 %define X86_MAP_ENTRIES		(31)
@@ -183,8 +184,15 @@ align 0x1000
 early_pd:
     times 4096 db 0
 
+
+
 section .bss
 align 0x1000
+
+interrupt_stack_bottom:
+    resb CONFIG_STACK_SIZE
+interrupt_stack:
+
 early_stack_bottom:
     resb CONFIG_STACK_SIZE * CPU_MAX
 early_stack:

@@ -31,7 +31,8 @@
 #define X86_IDT_MAX         256
 
 typedef struct {
-    uint32_t next;
+
+    uint32_t prev_tss;
     uint32_t esp0;
     uint32_t ss0;
     uint32_t esp1;
@@ -43,6 +44,7 @@ typedef struct {
     uint32_t eflags;
     uint32_t eax;
     uint32_t ecx;
+    uint32_t edx;
     uint32_t ebx;
     uint32_t esp;
     uint32_t ebp;
@@ -54,8 +56,10 @@ typedef struct {
     uint32_t ds;
     uint32_t fs;
     uint32_t gs;
-    uint32_t ldtr;
-    uint32_t iopb;
+    uint32_t ldt;
+    uint16_t trap;
+    uint16_t iomap_base;
+
 } __attribute__((packed)) tss32_t;
 
 typedef struct {

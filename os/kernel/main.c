@@ -91,7 +91,6 @@ void kmain(void) {
         mbd->memory.size / 1024 / 1024);
         
 
-
     const char* argv[] = { "/test", NULL };
     const char* envp[] = { NULL };
 

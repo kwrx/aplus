@@ -19,6 +19,7 @@
 .vscode
 node_modules
 
+root/test
 root/usr/bin/*
 root/usr/sbin/*
 root/usr/lib/modules/exports

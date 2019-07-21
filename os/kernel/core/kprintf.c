@@ -43,7 +43,7 @@ int kprintf(const char *fmt, ...) {
     int out = vsprintf(buf, fmt, args);
         
 
-    __lock(&debug_lock, {
+    __lock_irq(&debug_lock, {
         
         int i;
         for(i = 0; i < out; i++)

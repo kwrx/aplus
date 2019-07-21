@@ -99,6 +99,16 @@ void smp_setup(int bsp) {
 
 
 
+    int j;
+    for(j = 0; j < RLIM_NLIMITS; j++)
+        _.rlimits[j].rlim_cur =
+        _.rlimits[j].rlim_max = RLIM_INFINITY;
+
+    /* Stack: 1 MiB  */
+    _.rlimits[RLIMIT_STACK].rlim_cur = 0x100000;
+    
+
+
     _.parent = NULL;
     _.next = NULL;
 

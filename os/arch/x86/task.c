@@ -37,6 +37,7 @@
 
 /* See arch/x86/BITS/ops.asm */
 extern void x86_enter_on_clone(void);
+extern void x86_enter_on_userspace(uintptr_t, uintptr_t, uintptr_t);
 
 
 void* arch_task_init_frame(void* stack, void* ip, void* arg) {
@@ -107,6 +108,11 @@ void* arch_task_switch(void* frame, task_t* from, task_t* to) {
 
 
     return to->context.frame;
+}
+
+
+void arch_task_enter_on_userspace(uintptr_t ip, uintptr_t stack, uintptr_t arg) {
+    x86_enter_on_userspace(ip, stack, arg);
 }
 
 void task_init(void) {    

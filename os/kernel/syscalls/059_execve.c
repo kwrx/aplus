@@ -198,7 +198,15 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
                 case PT_TLS:
 
-                    kprintf("execve: WARN! PT_TLS not yet supported\n");
+                    size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
+
+                    aspace_add_map ( 
+                        current_task->aspace, ASPACE_TYPE_TLS, 
+                        phdr.p_vaddr, 
+                        phdr.p_vaddr + size, 
+                        ARCH_MAP_USER | ARCH_MAP_RDWR | ARCH_MAP_NOEXEC
+                    );
+
                     break;
 
                 case PT_GNU_EH_FRAME:
@@ -230,8 +238,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
             ARCH_MAP_RDWR | ARCH_MAP_NOEXEC | ARCH_MAP_USER
         );
 
-        //current_task->aspace->end += current_task->rlimits[RLIMIT_RSS].rlim_cur;  TODO: Add rlimits
-        current_task->aspace->end += (1024 * 1024 * 1024);
+        current_task->aspace->end = current_task->rlimits[RLIMIT_RSS].rlim_cur;
 
 
     });
@@ -256,11 +263,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     }
 
 
-    sys_open("/dev/kmsg", O_RDWR, 0);
-    sys_open("/dev/kmsg", O_RDWR, 0);
-    sys_open("/dev/kmsg", O_RDWR, 0);
-
-
 
 #if defined(DEBUG)
 
@@ -273,11 +275,12 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 #endif
 
 
-
     uintptr_t brk = sys_brk(0);
-    //sys_brk(brk + current_task->rlimits[RLIMIT_STACK].rlim_cur);  // TODO: Add rlimits
-    uintptr_t top = sys_brk(brk + (1024 * 1024));
+    uintptr_t top = sys_brk(brk + current_task->rlimits[RLIMIT_STACK].rlim_cur);
 
+
+    brk += sizeof(uintptr_t);
+    brk += sizeof(uintptr_t);
 
     strcat((char*) brk, filename);
     strcat((char*) brk, " ");
@@ -294,13 +297,50 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         strcat((char*) brk, " ");
     }
 
+    strcat((char*) brk, "\e$$$ ");
+
+
+    uintptr_t tls_start = 0;
+    uintptr_t tls_end   = 0;
+
+    address_space_map_t* tls;
+    aspace_get_maps(current_task->aspace, &tls, ASPACE_TYPE_TLS, 1);
+
+
+    if(tls)
+        tls_start = tls->start,
+        tls_end   = tls->end;
+
+
+
+    brk -= sizeof(uintptr_t);
+    brk -= sizeof(uintptr_t);
+
+    ((uintptr_t*) brk) [0] = tls_start;
+    ((uintptr_t*) brk) [1] = tls_end;
+
+
+
+    /* BRK Layout
+     * 
+     * 0-4:     tls_start
+     * 4-8:     tls_end
+     * 8-n:     argv
+     * n-m:     envp
+     * ...:     auxv  // TODO...
+     */
 
 
     if(current_cpu->flags & CPU_FLAGS_INTERRUPT)
         arch_intr_end();
-    
-    ((void (*)(unsigned long, unsigned long)) head.e_entry) (brk, top);
 
+
+
+    sys_open("/dev/kmsg", O_RDWR, 0);
+    sys_open("/dev/kmsg", O_RDWR, 0);
+    sys_open("/dev/kmsg", O_RDWR, 0);
+
+    arch_task_enter_on_userspace(head.e_entry, top, brk);
 
     DEBUG_ASSERT(0);
 });

@@ -107,7 +107,7 @@ isr_stub:
     mov ds, cx
     mov es, cx
     mov fs, cx
-    mov gs, cx
+.    mov gs, cx
 
     push esp
     call x86_isr_handler
@@ -130,13 +130,18 @@ x86_lgdt:
     mov cx, 0x10
     mov ds, cx
     mov es, cx
+    mov ss, cx
     mov fs, cx
     mov gs, cx
-    mov ss, cx
+
+    ;mov ecx, 0xC0000102     ; IA32_KERNEL_GS_BASE
+    ;mov eax, 0x10
+    ;wrmsr
+
 ret
 
 x86_ltr:
-    mov ax, 0x28
+    mov ax, 0x2B
     ltr ax
 ret
 
