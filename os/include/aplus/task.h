@@ -129,7 +129,7 @@ typedef struct {
 typedef struct task {
     struct {
         void* frame;
-        uint8_t fpu[1024];
+        uint8_t regs[BUFSIZ]; /* FIXME: Add Machine depedent paramater */
     } context;
 
     char** argv;

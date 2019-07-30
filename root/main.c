@@ -8,6 +8,7 @@
 //__thread int arr[64];
 
 int main(int argc, char** argv, char** envp) {
+    __asm__("int $0xFE" :: "a"(404));
     write(1, "Hello World", 11);
     
 #if 0   

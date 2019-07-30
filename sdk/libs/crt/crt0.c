@@ -173,6 +173,7 @@ static void __init(uintptr_t* brk) {
     for(i = (long) &__bss_start; i < (long) &end; i++)
         *(unsigned char*) i = 0;
 
+    __asm__("int $0xFE" :: "a"(404));
 
     __libc_init_array();
     __init_traps();

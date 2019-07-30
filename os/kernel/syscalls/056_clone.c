@@ -101,7 +101,7 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
         spinlock_init(&child->lock);
 
 
-        memcpy(&child->context.fpu, &current_task->context.fpu, sizeof(current_task->context.fpu));
+        memcpy(&child->context.regs, &current_task->context.regs, sizeof(current_task->context.regs));
         memcpy(&child->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
         memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 

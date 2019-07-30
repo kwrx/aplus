@@ -85,7 +85,7 @@ void* arch_task_init_frame(void* stack, void* ip, void* arg) {
     return &frame->top;
 }
 
-
+    
 void* arch_task_switch(void* frame, task_t* from, task_t* to) {
 
     from->context.frame = frame;
@@ -94,7 +94,7 @@ void* arch_task_switch(void* frame, task_t* from, task_t* to) {
         "fsave [%0];"
         "frstor [%1];"
 
-        :: "r"(from->context.fpu), "r"(to->context.fpu)
+        :: "r"(&from->context.regs[128]), "r"(&to->context.regs[128])
     );
 
 

@@ -107,7 +107,7 @@ isr_stub:
     mov ds, cx
     mov es, cx
     mov fs, cx
-.    mov gs, cx
+    mov gs, cx
 
     push esp
     call x86_isr_handler

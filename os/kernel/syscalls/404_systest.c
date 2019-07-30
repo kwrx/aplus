@@ -35,6 +35,19 @@
 
 SYSCALL(404, systest,
 long sys_systest (void) {
+
+#if defined(__i386__)
+    uintptr_t esp;
+    uintptr_t ebp;
+
+    __asm__ __volatile__ ("movl %%esp, %0" : "=r"(esp));
+    __asm__ __volatile__ ("movl %%ebp, %0" : "=r"(ebp));
+
+    extern int interrupt_stack;
+    kprintf("kernel-space: esp: %p, ebp: %p, intr: %p\n", esp, ebp, &interrupt_stack);
+
+#endif
+
     kpanic("SYSCALL TEST WORK!");
 });
 
