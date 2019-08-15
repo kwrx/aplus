@@ -71,6 +71,7 @@
 #    define CONFIG_HEAP_SIZE                0x10000000L
 #    define CONFIG_HEAP_PREALLOC_SIZE       0x00100000L
 #    define CONFIG_STACK_SIZE               0x00010000L
+#    define CONFIG_FRAME_SIZE               0x00000100L
 #elif defined(__x86_64__)
 #    define KERNEL_PLATFORM                 "x86-64"
 #    define CONFIG_BITS                     64

@@ -26,6 +26,7 @@
 #define _APLUS_INTR_H
 
 #if defined(KERNEL)
+
 long arch_intr_disable();
 void arch_intr_enable(long);
 
@@ -34,6 +35,9 @@ int arch_intr_unmap_irq(uint8_t irq);
 
 void arch_intr_begin(void);
 void arch_intr_end(void);
+
+void arch_intr_set_stack(uintptr_t);
+
 #endif
 
 #endif

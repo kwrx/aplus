@@ -31,6 +31,12 @@
 #include <arch/x86/64/cpu.h>
 #endif
 
+
+#define IA32_PAT                0x00000277
+
+
+
+
 #define x86_pause() \
     __asm__ __volatile__ ("pause")
 
@@ -47,5 +53,49 @@
     __asm__ __volatile__ ("fxrstor [a]" :: "a"(r))
 
 
-#define IA32_PAT                0x00000277
+
+
+extern uintptr_t x86_get_ip(void);
+
+typedef struct x86_frame {
+    
+    char top[0];
+
+    uintptr_t gs;
+    uintptr_t fs;
+    uintptr_t es;
+    uintptr_t ds;
+    
+    uintptr_t di;
+    uintptr_t si;
+    uintptr_t bp;
+    uintptr_t sp;
+    uintptr_t bx;
+    uintptr_t dx;
+    uintptr_t cx;
+    uintptr_t ax;
+
+#if defined(__x86_64__)
+    uintptr_t r8;
+    uintptr_t r9;
+    uintptr_t r10;
+    uintptr_t r11;
+    uintptr_t r12;
+    uintptr_t r13;
+    uintptr_t r14;
+    uintptr_t r15;
+    uintptr_t mxcsr;
+#endif
+
+    uintptr_t int_no;
+    uintptr_t err_code;
+    uintptr_t ip;
+    uintptr_t cs;
+    uintptr_t flags;
+    uintptr_t usersp;
+    uintptr_t userss;
+
+    char bottom[0];
+    
+} __attribute__((packed)) x86_frame_t;
 #endif

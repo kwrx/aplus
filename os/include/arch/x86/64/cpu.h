@@ -205,41 +205,4 @@ static inline void x86_cpuid(long r, long* a, long* d) {
 }
 
 
-
-
-extern uint64_t x86_get_rip(void);
-
-
-typedef struct x86_frame {
-
-    char top[0];
-
-    uint64_t mxcsr;
-    uint64_t rax;
-    uint64_t rbx;
-    uint64_t rcx;
-    uint64_t rdx;
-    uint64_t rsi;
-    uint64_t rdi;
-    uint64_t rbp;
-    uint64_t r8;
-    uint64_t r9;
-    uint64_t r10;
-    uint64_t r11;
-    uint64_t r12;
-    uint64_t r13;
-    uint64_t r14;
-    uint64_t r15;
-    uint64_t int_no;
-    uint64_t err_code;
-    uint64_t rip;
-    uint64_t cs;
-    uint64_t rflags;
-    uint64_t userrsp;
-
-    char bottom[0];
-    
-} __attribute__((packed)) x86_frame_t;
-
-
 #endif

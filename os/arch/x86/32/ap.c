@@ -45,9 +45,9 @@ volatile uint32_t ap_cores;
 
 void ap_main(void) {
     __lock(&ap_interlock, {
-    
-        x86_lgdt();
-        x86_lidt();
+       
+        x86_gdt_init_percpu(apic_get_id());
+        x86_idt_init_percpu(apic_get_id());
         x86_sti();
         
         apic_enable();
@@ -98,6 +98,7 @@ void ap_init(void) {
     header->ap_main = (uintptr_t) &ap_main;
     header->ap_cr3 = x86_get_cr3();
     header->ap_stack = 0;
+    
 }
 
 int ap_check(int core, int timeout) {

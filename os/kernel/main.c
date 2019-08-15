@@ -55,7 +55,7 @@ void kmain(void) {
     __init(syscall, ());
     __init(vfs,     ());
     __init(sched,   ());
-    __init(network, ());
+    //__init(network, ());
 
 
     int e;
@@ -89,10 +89,11 @@ void kmain(void) {
         KERNEL_PLATFORM,
         mbd->memory.start, 
         mbd->memory.size / 1024 / 1024);
-        
+
 
     const char* argv[] = { "/test", NULL };
     const char* envp[] = { NULL };
+
 
     if((e = sys_execve(argv[0], argv, envp)) < 0)
         kpanic("init: execve() %s", strerror(-e));

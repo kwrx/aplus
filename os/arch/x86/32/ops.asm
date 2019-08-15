@@ -1,12 +1,12 @@
 [BITS 32]
 section .text
 
-global x86_get_eip
+global x86_get_ip
 global x86_enter_on_clone
 global x86_enter_on_userspace
 
 
-x86_get_eip:
+x86_get_ip:
     pop edx
     jmp edx
 

@@ -12,8 +12,8 @@ case $1 in
         flags="$flags -drive id=cdrom,file=cdrom.iso,if=none,format=raw -device ide-cd,drive=cdrom,bus=ahci.1"
         flags="$flags -boot c"
         flags="$flags -m 512"
-        flags="$flags -M accel=kvm"
-        flags="$flags -smp 4"
+        flags="$flags -M accel=tcg"
+        flags="$flags -smp 1"
         flags="$flags -vga std"
         flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"
@@ -51,4 +51,4 @@ if [ ! -z $2 ]; then
     debug="-S"
 fi
 
-qemu-system-$arch -d page,guest_errors -serial stdio -s $debug $flags
+qemu-system-$arch -d page,guest_errors,pcall,int -serial stdio -s $debug $flags 2> qemu.log

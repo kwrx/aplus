@@ -179,7 +179,7 @@ gdtp:
     times 32 dq 0
 .ptr:
     dw $ - gdtp - 1
-                      dq gdtp
+    dq gdtp
 
 align 16
 idtp:

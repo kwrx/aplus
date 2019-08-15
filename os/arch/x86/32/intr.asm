@@ -1,16 +1,12 @@
 [BITS 32]
 section .text
 
-global x86_lgdt
-global x86_ltr
-global x86_lidt
-global x86_cli
-global x86_sti
-global gdtp
-global idtp
+
 global isrs
+global isr_stub
 
 extern x86_isr_handler
+
 
 %macro ISRNC 1
     global isr%1
@@ -97,12 +93,13 @@ isrs:
 
 
 isr_stub:
+    ;cli /* FIXME */
     pushad
     push ds
     push es
     push fs
     push gs
-
+    
     mov cx, 0x10
     mov ds, cx
     mov es, cx
@@ -119,53 +116,6 @@ isr_stub:
     pop ds
     popad
     add esp, 8
+    ;sti
 iretd
 
-
-
-x86_lgdt:
-    lgdt [gdtp.ptr]
-    jmp 0x08:.L0
-.L0:
-    mov cx, 0x10
-    mov ds, cx
-    mov es, cx
-    mov ss, cx
-    mov fs, cx
-    mov gs, cx
-
-    ;mov ecx, 0xC0000102     ; IA32_KERNEL_GS_BASE
-    ;mov eax, 0x10
-    ;wrmsr
-
-ret
-
-x86_ltr:
-    mov ax, 0x2B
-    ltr ax
-ret
-
-x86_lidt:
-    lidt [idtp.ptr]
-ret
-
-x86_sti:
-    sti
-ret
-
-x86_cli:
-    cli
-ret
-
-section .data
-gdtp:
-    times 32 dq 0
-.ptr:
-    dw $ - gdtp - 1
-    dd gdtp
-
-idtp:
-    times 256 dq 0
-.ptr:
-    dw $ - idtp - 1
-    dd idtp

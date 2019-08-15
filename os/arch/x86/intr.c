@@ -24,171 +24,246 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/intr.h>
 #include <aplus/ipc.h>
-#include <aplus/smp.h>
+#include <aplus/mm.h>
 #include <aplus/syscall.h>
+
 #include <arch/x86/cpu.h>
 #include <arch/x86/intr.h>
 #include <arch/x86/apic.h>
 #include <stdint.h>
-#include <string.h>
-#include <signal.h>
-#include <sys/types.h>
 
 
-#define SEG_DESCTYPE(x)         ((x) << 0x04)
-#define SEG_PRES(x)             ((x) << 0x07)
-#define SEG_SAVL(x)             ((x) << 0x0C)
-#define SEG_LONG(x)             ((x) << 0x0D)
-#define SEG_SIZE(x)             ((x) << 0x0E)
-#define SEG_GRAN(x)             ((x) << 0x0F)
-#define SEG_PRIV(x)             (((x) & 0x03) << 0x05)
- 
-#define SEG_DATA_RDWR           0x02
-#define SEG_CODE_EXRD           0x0A
-
-
-#define IDT_ISR_TRAP            0x8F
-#define IDT_ISR_INTERRUPT       0x8E
-
-#define IDT_ISR_DPL(x)          (x << 5)
-
-
-extern struct {
-    uint16_t base_low;
-    uint16_t selector;
-    uint8_t unused;
-    uint8_t flags;
-    uint16_t base_high;
-#if defined(ARCH_X86_64)
-    uint32_t base_xhigh;
-    uint32_t padding;
-#endif
-} __packed idtp[X86_IDT_MAX];
 
 static struct {
+    
+    struct {
+
+        uint16_t base_low;
+        uint16_t selector;
+        uint8_t zero;
+        uint8_t flags;
+        uint16_t base_high;
+
+    #if defined(__x86_64__)
+        uint32_t base_xhigh;
+        uint32_t padding;
+    #endif
+
+    } __packed e[X86_IDT_MAX];
+
+
+    struct {
+        
+        uint16_t size;
+        uintptr_t addr;
+
+    } __packed ptr;
+
+} __packed idtp;
+
+
+static struct {
+
     void* (*handler) (void*);
     spinlock_t lock;
-} irqs[X86_IDT_MAX - 32];
+
+} __packed irqs[X86_IDT_MAX - 32];
+
+
+static struct {
+    
+    struct {
+        
+        union {
+            uint8_t b[8];
+            uint64_t d;
+        };
+
+    } __packed e[X86_GDT_MAX];
+
+    struct {
+        
+        uint16_t size;
+        uintptr_t addr;
+
+    } __packed ptr;
+
+} __packed gdtp[CPU_MAX];
+
+
+static tss_t tss[CPU_MAX];
 
 extern uintptr_t isrs[X86_IDT_MAX];
-extern uint64_t gdtp[X86_GDT_MAX];
-extern uintptr_t early_stack;
-extern uintptr_t interrupt_stack;
-
-static tss_t sys_tss;
+extern uintptr_t core_stack_area;
 
 
 
-static void gd_set(int index, uintptr_t base, uintptr_t limit, uint16_t type) {
-    DEBUG_ASSERT(index < X86_GDT_MAX);
-    DEBUG_ASSERT(index != 0);
+void x86_gdt_init_percpu(uint16_t cpu) {
 
-    uint8_t* d = (uint8_t*) &gdtp[index];
-
-    if(limit > 0xFFFF)
-        limit >>= 12;
+    DEBUG_ASSERT(cpu < CPU_MAX);
 
 
-    d[0] = limit & 0xFF;
-    d[1] = (limit >> 8) & 0xFF;
-    d[6] = ((type >> 8) & 0xFF) | ((limit >> 16) & 0x0F);
+    inline void __set(int index, uintptr_t base, uintptr_t limit, uint16_t type) {
+                
+        if(limit > 0xFFFF)
+            limit >= 12;
+
+        gdtp[cpu].e[index].b[0] = (limit >> 0) & 0xFF;
+        gdtp[cpu].e[index].b[1] = (limit >> 8) & 0xFF;
+        gdtp[cpu].e[index].b[6] = (limit >> 16) & 0x0F;
+        
+        gdtp[cpu].e[index].b[2] = (base >> 0) & 0xFF;
+        gdtp[cpu].e[index].b[3] = (base >> 8) & 0xFF;
+        gdtp[cpu].e[index].b[4] = (base >> 16) & 0xFF;
+        gdtp[cpu].e[index].b[7] = (base >> 24) & 0xFF;
+
+        gdtp[cpu].e[index].b[6] |= (type >> 8) & 0xF0;
+        gdtp[cpu].e[index].b[5] =  (type >> 0) & 0xFF;
+
+    }
+
+
+
+
+#if defined(__x86_64__)
+
+    __set(0, 0, 0, 0);
+    __set(1, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(0) | SEG_LONG(1) | SEG_CODE_EXRD);
+    __set(2, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(0) | SEG_LONG(1) | SEG_DATA_RDWR);
+    __set(3, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(3) | SEG_LONG(1) | SEG_CODE_EXRD);
+    __set(4, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(3) | SEG_LONG(1) | SEG_DATA_RDWR);
+    __set(5, (uintptr_t) &tss[cpu] & 0xFFFFFFFF, sizeof(tss_t), 0xE9);
     
-    d[2] = base & 0xFF;
-    d[3] = (base >> 8) & 0xFF;
-    d[4] = (base >> 16) & 0xFF;
-    d[7] = (base >> 24) & 0xFF;
-    
-    d[5] = type & 0xFF;
-}
+    gdtp[cpu].e[6].d = (((uintptr_t) &tss[cpu]) >> 32) & 0xFFFFFFFF;
 
 
+#elif defined(__i386__)
 
-static void id_set(int index, uintptr_t isr, uint8_t type) {
-#if defined(ARCH_X86_64)
-    idtp[index].base_low = (isr) & 0xFFFF;
-    idtp[index].base_high = (isr >> 16) & 0xFFFF;
-    idtp[index].base_xhigh = (isr >> 32) & 0xFFFFFFFF;
-    idtp[index].selector = 0x08;
-    idtp[index].unused = 0;
-    idtp[index].padding = 0;
-    idtp[index].flags = type;
-#else
-    idtp[index].base_low = (isr) & 0xFFFF;
-    idtp[index].base_high = (isr >> 16) & 0xFFFF;
-    idtp[index].selector = 0x8;
-    idtp[index].unused = 0;
-    idtp[index].flags = type;
+    tss[cpu].esp0 = 0x00;
+    tss[cpu].ss0  = 0x10;
+    tss[cpu].cs   = 0x0B;
+    tss[cpu].ds   = 0x13;
+    tss[cpu].ss   = 0x13;
+    tss[cpu].es   = 0x13;
+    tss[cpu].fs   = 0x13;
+    tss[cpu].gs   = 0x13;
+    tss[cpu].iomap_base = sizeof(tss_t);
+
+
+    __set(0, 0, 0, 0);
+    __set(1, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_CODE_EXRD);
+    __set(2, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_DATA_RDWR);
+    __set(3, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_CODE_EXRD);
+    __set(4, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_DATA_RDWR);
+    __set(5, (uintptr_t) &tss[cpu], sizeof(tss_t), 0xE9);
+
 #endif
+
+
+    gdtp[cpu].ptr.size = sizeof(gdtp[cpu].e) - 1;
+    gdtp[cpu].ptr.addr = (uintptr_t) &gdtp[cpu].e[0];
+
+
+    __asm__ __volatile__("lgdt [%0]" :: "r"(&gdtp[cpu].ptr));
+    __asm__ __volatile__("ltr ax"    :: "a"(0x2B));
+
+
+
+#if defined(__i386__)
+    __asm__ __volatile__ (
+        "jmp 0x08:L1    \n"
+        "L1:            \n"
+        "mov cx, 0x10   \n"
+        "mov ds, cx     \n"
+        "mov es, cx     \n"
+        "mov fs, cx     \n"
+        "mov gs, cx     \n"
+        "mov ss, cx     \n"
+    
+        ::: "ecx"
+    );
+#endif
+
 }
 
+
+void x86_idt_init_percpu(uint16_t cpu) {
+
+
+    inline void __set(int index, uintptr_t isr, uint8_t type) {
+#if defined(__x86_64__)
+        idtp.e[index].base_low = (isr) & 0xFFFF;
+        idtp.e[index].base_high = (isr >> 16) & 0xFFFF;
+        idtp.e[index].base_xhigh = (isr >> 32) & 0xFFFFFFFF;
+        idtp.e[index].selector = 0x08;
+        idtp.e[index].padding = 0;
+        idtp.e[index].flags = type;
+#else
+        idtp.e[index].base_low = (isr) & 0xFFFF;
+        idtp.e[index].base_high = (isr >> 16) & 0xFFFF;
+        idtp.e[index].selector = 0x08;
+        idtp.e[index].zero = 0;
+        idtp.e[index].flags = type;
+#endif
+    }
+
+
+    if(cpu == 0) {
+
+        int i;
+        for(i = 0; i < 32; i++)
+            __set(i, isrs[i], IDT_ISR_TRAP        | IDT_ISR_DPL(0));
+
+        for(i = 32; i < X86_IDT_MAX - 32; i++)
+            __set(i, isrs[i], IDT_ISR_INTERRUPT   | IDT_ISR_DPL(0));
+
+        
+        /* Syscalls */
+        __set(0xFD, isrs[0xFD], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
+        __set(0xFE, isrs[0xFE], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
+
+        /* NMI */
+        __set(0xFF, isrs[0xFF], IDT_ISR_INTERRUPT | IDT_ISR_DPL(0));
+
+
+
+        for(i = 32; i < X86_IDT_MAX; i++) {
+
+            irqs[i - 32].handler = NULL;
+            spinlock_init(&irqs[i - 32].lock);
+        
+        }
+
+
+        idtp.ptr.size = sizeof(idtp.e) - 1;
+        idtp.ptr.addr = (uintptr_t) &idtp;
+
+    }
+
+
+    __asm__ __volatile__("lidt [%0]" :: "r"(&(idtp.ptr)));
+
+}
 
 
 void intr_init(void) {
 
-#if defined(ARCH_X86_64)
+    memset(&gdtp, 0, sizeof(idtp));
+    memset(&idtp, 0, sizeof(idtp));
+    memset(&irqs, 0, sizeof(irqs));
+    memset(&tss,  0, sizeof(tss));
 
-    gd_set(1, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(0) | SEG_LONG(1) | SEG_CODE_EXRD);
-    gd_set(2, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(0) | SEG_LONG(1) | SEG_DATA_RDWR);
-    gd_set(3, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(3) | SEG_LONG(1) | SEG_CODE_EXRD);
-    gd_set(4, 0, 0, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_PRIV(3) | SEG_LONG(1) | SEG_DATA_RDWR);
-    gd_set(5, (uintptr_t) &sys_tss & 0xFFFFFFFF, sizeof(tss_t), 0x89);
-    gdtp[6] = ((uintptr_t) &sys_tss >> 32) & 0xFFFFFFFF;
-    
-#else
+    x86_gdt_init_percpu(0);
+    x86_idt_init_percpu(0);
 
-    memset(&sys_tss, 0, sizeof(tss_t));
-    sys_tss.esp0 = (uintptr_t) &interrupt_stack;
-    sys_tss.ss0  = 0x10;
-    sys_tss.cs   = 0x0B;
-    sys_tss.ds   = 0x13;
-    sys_tss.es   = 0x13;
-    sys_tss.fs   = 0x13;
-    sys_tss.gs   = 0x13;
-    sys_tss.iomap_base = sizeof(sys_tss);
-
-    gd_set(1, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_CODE_EXRD);
-    gd_set(2, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(0) | SEG_DATA_RDWR);
-    gd_set(3, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_CODE_EXRD);
-    gd_set(4, 0, 0xFFFFFFFF, SEG_DESCTYPE(1) | SEG_PRES(1) | SEG_SAVL(0) | SEG_LONG(0) | SEG_SIZE(1) | SEG_GRAN(1) | SEG_PRIV(3) | SEG_DATA_RDWR);
-    gd_set(5, (uintptr_t) &sys_tss, sizeof(tss_t), 0xE9);
-
-#endif
-
-    
-    x86_lgdt();
-    x86_ltr();
-
-
-
-    int i;
-    for(i = 0; i < 32; i++)
-        id_set(i, isrs[i], IDT_ISR_TRAP | IDT_ISR_DPL(0));
-
-    for(i = 32; i < X86_IDT_MAX - 3; i++)
-        id_set(i, isrs[i], IDT_ISR_INTERRUPT | IDT_ISR_DPL(0));
-
-
-    /* Syscalls */
-    id_set(0xFD, isrs[0xFD], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
-    id_set(0xFE, isrs[0xFE], IDT_ISR_INTERRUPT | IDT_ISR_DPL(3));
-
-    /* NMI */
-    id_set(0xFF, isrs[0xFF], IDT_ISR_INTERRUPT | IDT_ISR_DPL(0));
-
-
-
-    for(i = 32; i < X86_IDT_MAX; i++) {
-        irqs[i - 32].handler = NULL;
-        spinlock_init(&irqs[i - 32].lock);
-    }
-    
-    x86_lidt();
 }
 
 
 
 x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
+
     static char *exception_messages[] = {
         "Division By Zero",
         "Debug",
@@ -247,15 +322,21 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 
 
     arch_intr_begin();
+    
 
     switch(frame->int_no) {
         case 0xFE:
-#ifdef ARCH_X86_64
-            frame->rax = syscall_invoke(frame->rax, frame->rbx, frame->rcx, frame->rdx, frame->rsi, frame->rdi, frame->r8);
-#else
-            frame->eax = syscall_invoke(frame->eax, frame->ebx, frame->ecx, frame->edx, frame->esi, frame->edi, 0);
+
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 
+#if defined(__x86_64__)
+                frame->r8
+#elif defined(__i386__)
+                0
 #endif
+            );
+
             break;
+
         case 0xFD:
             
             break;
@@ -288,27 +369,27 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
         
             });
 
-
             break;
         
         case 0x0E:
+
+            x86_cli();
+
             kprintf ("x86-pfe: [%04p] %s at %p (%p <%s>)\n", 
                 frame->err_code, 
                 pfe_messages[frame->err_code], 
                 x86_get_cr2(),
-#if defined(ARCH_X86_64)
-                frame->rip,
-                core_get_name(frame->rip)
-#else
-                frame->eip,
-                core_get_name(frame->eip)
-#endif
+                frame->ip,
+                core_get_name(frame->ip)
             );
 
             core_stacktrace();
             for(;;);
 
         default:
+
+            x86_cli();
+
             if(frame->int_no < 32)
                 kprintf ("x86-intr: exception %d '%s' (%p)\n", 
                     frame->int_no,
@@ -321,9 +402,7 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                     frame->err_code
                 );
 
-
             core_stacktrace();
-            x86_cli();
             for(;;);
 
             break;
@@ -332,6 +411,13 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 
 
     arch_intr_end();
+
+
+    /* IRQ */
+    if(frame->int_no >= 0x20 && frame->int_no <= 0xFC)
+        apic_eoi();
+
+    kprintf("frame: %p, gs: %p, cs: %p\n", frame, frame->gs, frame->cs);
 
     return frame;
 }
@@ -342,9 +428,9 @@ long arch_intr_disable(void) {
     
     __asm__ __volatile__ (
         "pushf;"
-#if defined(ARCH_X86_64)
+#if defined(__x86_64__)
         "pop rax;"
-#else
+#elif defined(__i386__)
         "pop eax;"
 #endif
         "cli;"
@@ -355,10 +441,14 @@ long arch_intr_disable(void) {
     return !!(s & (1 << 9));
 }
 
+
 void arch_intr_enable(long s) {
+
     if(likely(s))
         __asm__ __volatile__ ("sti");
+
 }
+
 
 int arch_intr_map_irq(uint8_t irq, void* (*handler) (void*)) {
     DEBUG_ASSERT(irq < (0xFF - 0x20));
@@ -406,6 +496,9 @@ void arch_intr_end(void) {
     if(likely(current_cpu))
         current_cpu->flags &= ~CPU_FLAGS_INTERRUPT;
 
-    apic_eoi();
+}
 
+
+void arch_intr_set_stack(uintptr_t stack) {
+    tss[apic_get_id()].esp0 = stack;
 }

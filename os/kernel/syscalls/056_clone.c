@@ -58,6 +58,7 @@
 SYSCALL(56, clone,
 long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void* arg) {
 
+#if 0
     if(unlikely(!fn))
         return -EINVAL;
 
@@ -101,15 +102,15 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
         spinlock_init(&child->lock);
 
 
-        memcpy(&child->context.regs, &current_task->context.regs, sizeof(current_task->context.regs));
+        memcpy(&child->frame, &current_task->frame, sizeof(current_task->frame));
         memcpy(&child->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
         memcpy(&child->exit, &current_task->exit, sizeof(current_task->exit));
 
 
-        if(likely(stack))
-            child->context.frame = arch_task_init_frame(stack, fn, arg);
+        if(likely(stack)) /* FIXME */
+            arch_task_init_frame(child->frame->regs, fn, arg);
         else
-            child->context.frame = current_task->context.frame;
+            ;//child->context.frame = current_task->context.frame;
 
 
         #define __is(bit) \
@@ -198,4 +199,6 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
 
 
     return child->tid;
+#endif
+    return -ENOSYS;
 });

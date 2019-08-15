@@ -15,9 +15,9 @@ extern __bss_start
 extern __bss_end
 
 global _start
-global early_stack
-global early_pd
-global interrupt_stack
+global interrupt_stack_area
+global core_stack_area
+global core_pd
 
 
 %define X86_MAP_ENTRIES		(31)
@@ -66,7 +66,7 @@ section .text
 
 ; Low Memory
 _start:
-    mov esp, V2P(early_stack)
+    mov esp, V2P(core_stack_area)
     mov [V2P(mbd_raw)], ebx
 
     cli
@@ -90,7 +90,7 @@ init_paging_1_1:
 
     mov ecx, X86_MAP_ENTRIES
     mov esi, 0x183				; Global, 4MiB, R/W, Present
-    mov edi, V2P(early_pd)
+    mov edi, V2P(core_pd)
 .L0:
     mov [edi], esi
     mov [edi + (768 * 4)], esi
@@ -99,7 +99,7 @@ init_paging_1_1:
 loop .L0
 
 
-    mov edi, V2P(early_pd)
+    mov edi, V2P(core_pd)
 
 .enable_paging:
     mov eax, edi
@@ -126,7 +126,7 @@ jmp_high:
 
 ; High Memory
 high_start:
-    mov esp, early_stack
+    mov esp, core_stack_area
     mov ebx, [mbd_raw]
     add ebx, CONFIG_KERNEL_BASE
     mov [mbd_raw], ebx
@@ -140,7 +140,7 @@ high_start:
 
 
 .unmap_low:
-    mov edi, early_pd
+    mov edi, core_pd
     mov ecx, X86_MAP_ENTRIES
     xor eax, eax
     rep stosd
@@ -181,7 +181,7 @@ high_start:
 
 section .data
 align 0x1000
-early_pd:
+core_pd:
     times 4096 db 0
 
 
@@ -189,11 +189,6 @@ early_pd:
 section .bss
 align 0x1000
 
-interrupt_stack_bottom:
-    resb CONFIG_STACK_SIZE
-interrupt_stack:
-
-early_stack_bottom:
+core_stack_area_bottom:
     resb CONFIG_STACK_SIZE * CPU_MAX
-early_stack:
-
+core_stack_area:

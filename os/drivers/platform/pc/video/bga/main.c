@@ -251,8 +251,8 @@ void init(const char* args) {
 
     pci_scan(&pci_find, BGA_DEVICE_TYPE, &device);
     
-    DEBUG_ASSERT(device.address);
-    DEBUG_ASSERT(device.size);
+    //DEBUG_ASSERT(device.address);
+    //DEBUG_ASSERT(device.size);
 
 
     device_mkdev(&device, 0644);

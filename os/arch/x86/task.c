@@ -51,69 +51,70 @@ void* arch_task_init_frame(void* stack, void* ip, void* arg) {
     frame = (x86_frame_t*) ((uintptr_t) frame - sizeof(uintptr_t) * 5);
 
 
-#if defined(__i386__)
 
-    frame->gs =
-    frame->fs =
-    frame->es =
-    frame->ds = 0x10;
+    frame->di = 0;
+    frame->si = 0;
+    frame->bp = (uintptr_t) &frame->int_no;
+    frame->sp = (uintptr_t) &frame->int_no;
 
-    frame->edi = 0;
-    frame->esi = 0;
-    frame->ebp = (uintptr_t) &frame->int_no;
-    frame->esp = (uintptr_t) &frame->int_no;
+    frame->dx =
+    frame->ax = 0;
 
-    frame->edx =
-    frame->eax = 0;
-
-    frame->ecx = (uintptr_t) ip;
-    frame->ebx = (uintptr_t) arg;
+    frame->cx = (uintptr_t) ip;
+    frame->bx = (uintptr_t) arg;
     
     frame->int_no = 0;
     frame->err_code = 0;
 
-    frame->eip = (uintptr_t) &x86_enter_on_clone;
+    frame->ip = (uintptr_t) &x86_enter_on_clone;
     frame->cs = 0x08;
-    frame->eflags = 0x202;
-    frame->useresp = 0;
+    frame->flags = 0x202;
+    frame->usersp = 0;
 
-
-#elif defined(__x86_64__)
-
-#endif
 
     return &frame->top;
 }
 
     
-void* arch_task_switch(void* frame, task_t* from, task_t* to) {
+void* arch_task_switch(void* context, task_t* from, task_t* to) {
 
-    from->context.frame = frame;
+    DEBUG_ASSERT(to);
+    DEBUG_ASSERT(from);
+    DEBUG_ASSERT(context);
+
+
+    from->frame.context = context;
 
     __asm__ __volatile__ (
         "fsave [%0];"
         "frstor [%1];"
 
-        :: "r"(&from->context.regs[128]), "r"(&to->context.regs[128])
+        :: "r"(&from->frame.fpu), "r"(&to->frame.fpu)
     );
 
 
     DEBUG_ASSERT(from->aspace);
+    DEBUG_ASSERT(from->frame.context);
+
     DEBUG_ASSERT(to->aspace);
-    DEBUG_ASSERT(to->context.frame);
+    DEBUG_ASSERT(to->frame.context);
 
 
     if(unlikely(from->aspace->vmmpd != to->aspace->vmmpd))
         x86_set_cr3(to->aspace->vmmpd);
 
 
-    return to->context.frame;
+
+    arch_intr_set_stack((uintptr_t) &to->frame.top);
+
+    return to->frame.context;
 }
 
 
 void arch_task_enter_on_userspace(uintptr_t ip, uintptr_t stack, uintptr_t arg) {
     x86_enter_on_userspace(ip, stack, arg);
 }
+
 
 void task_init(void) {    
 

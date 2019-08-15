@@ -27,8 +27,28 @@
 
 #include <stdint.h>
 
-#define X86_GDT_MAX         32
-#define X86_IDT_MAX         256
+
+
+#define X86_GDT_MAX             (6)
+#define X86_IDT_MAX             (256)
+
+
+#define SEG_DESCTYPE(x)         ((x) << 0x04)
+#define SEG_PRES(x)             ((x) << 0x07)
+#define SEG_SAVL(x)             ((x) << 0x0C)
+#define SEG_LONG(x)             ((x) << 0x0D)
+#define SEG_SIZE(x)             ((x) << 0x0E)
+#define SEG_GRAN(x)             ((x) << 0x0F)
+#define SEG_PRIV(x)             (((x) & 0x03) << 0x05)
+ 
+#define SEG_DATA_RDWR           0x02
+#define SEG_CODE_EXRD           0x0A
+
+
+#define IDT_ISR_TRAP            0x8F
+#define IDT_ISR_INTERRUPT       0x8E
+#define IDT_ISR_DPL(x)          ((x) << 5)
+
 
 typedef struct {
 
@@ -91,5 +111,9 @@ extern void x86_lgdt(void);
 extern void x86_ltr(void);
 extern void x86_lidt(void);
 
+extern void x86_gdt_init_percpu(uint16_t);
+extern void x86_idt_init_percpu(uint16_t);
+
 void intr_init();
+
 #endif

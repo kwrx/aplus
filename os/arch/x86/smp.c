@@ -36,8 +36,11 @@
 #include <string.h>
 
 
-extern uintptr_t early_stack;
+extern uintptr_t core_stack_area;
+extern uintptr_t interrupt_stack_area;
+
 static cpu_t cpus[CPU_MAX];
+
 
 
 cpu_t* get_current_cpu(void) {
@@ -55,6 +58,7 @@ cpu_t* get_cpu(int id) {
 
 
 void smp_setup(int bsp) {
+    
     DEBUG_ASSERT(!(cpus[apic_get_id()].flags & CPU_FLAGS_ENABLED));
 
 
@@ -113,6 +117,10 @@ void smp_setup(int bsp) {
     _.next = NULL;
 
     spinlock_init(&_.lock);
+
+
+    /* Set Kernel Stack */
+    arch_intr_set_stack((uintptr_t) &_.frame.top);
     
     if(bsp)
         return;
@@ -136,7 +144,7 @@ void smp_init(void) {
             continue;
 
 
-        ap_stack(((uintptr_t) &early_stack) - (i * CONFIG_STACK_SIZE));
+        ap_stack(((uintptr_t) &core_stack_area) - (i * CONFIG_STACK_SIZE));
 
         /* INIT */
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, mbd->cpu.cores[i].id << 24);
