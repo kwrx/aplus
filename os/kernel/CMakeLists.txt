@@ -71,6 +71,7 @@ install (
 add_custom_command (
     TARGET kernel
     POST_BUILD
+    COMMAND ${OBJDUMP} -S $<TARGET_FILE:kernel> > ${CMAKE_SOURCE_DIR}/kernel.asm
     COMMAND ${OBJCOPY} --only-keep-debug $<TARGET_FILE:kernel> ${CMAKE_SOURCE_DIR}/kernel.debug
     COMMAND ${OBJCOPY} --strip-debug $<TARGET_FILE:kernel>
 )

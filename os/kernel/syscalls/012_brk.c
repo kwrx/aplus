@@ -54,7 +54,6 @@ long sys_brk (unsigned long new_brk) {
     if(unlikely(!brk))
         kpanic("brk: Current Process(%d) doesn't have BRK Address Space", current_task->tid);
 
-
     
     if(unlikely(new_brk == 0))
         return brk->end;
@@ -65,7 +64,6 @@ long sys_brk (unsigned long new_brk) {
     if(unlikely(new_brk == brk->end))
         return brk->end;
 
-    
     if(new_brk > brk->end)
         aspace_enlarge_map(current_task->aspace, brk, new_brk - brk->end);
     else

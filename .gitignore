@@ -21,6 +21,8 @@
 .vscode
 node_modules
 
+kernel.asm
+
 root/test
 root/usr/bin/*
 root/usr/sbin/*

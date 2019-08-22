@@ -7,9 +7,14 @@
 //__thread int obj = 32;
 //__thread int arr[64];
 
-int _start(void* unused) {
-    __asm__("movl $404, %eax; int $0xFE"); 
-    __asm__("movl $404, %eax; int $0xFE");
-   
+int main(int argc, char** argv) {
+for(;;);
+    FILE* fp = fopen("/dev/kmsg", "w+");
+    if(!fp)
+        for(;;);
+
+    fprintf(fp, "Hello World!\n");
+    fclose(fp);
+
     for(;;);
 }

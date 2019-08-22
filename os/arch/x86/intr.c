@@ -79,7 +79,7 @@ static struct {
         union {
             uint8_t b[8];
             uint64_t d;
-        };
+        } __packed;
 
     } __packed e[X86_GDT_MAX];
 
@@ -108,7 +108,7 @@ void x86_gdt_init_percpu(uint16_t cpu) {
     inline void __set(int index, uintptr_t base, uintptr_t limit, uint16_t type) {
                 
         if(limit > 0xFFFF)
-            limit >= 12;
+            limit >>= 12;
 
         gdtp[cpu].e[index].b[0] = (limit >> 0) & 0xFF;
         gdtp[cpu].e[index].b[1] = (limit >> 8) & 0xFF;
@@ -250,7 +250,7 @@ void x86_idt_init_percpu(uint16_t cpu) {
 
 void intr_init(void) {
 
-    memset(&gdtp, 0, sizeof(idtp));
+    memset(&gdtp, 0, sizeof(gdtp));
     memset(&idtp, 0, sizeof(idtp));
     memset(&irqs, 0, sizeof(irqs));
     memset(&tss,  0, sizeof(tss));
@@ -263,6 +263,9 @@ void intr_init(void) {
 
 
 x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
+
+    DEBUG_ASSERT(frame);
+
 
     static char *exception_messages[] = {
         "Division By Zero",
@@ -318,22 +321,61 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 
 
 
-    DEBUG_ASSERT(frame);
-
-
-    arch_intr_begin();
-    
 
     switch(frame->int_no) {
+
+        case 0x20 ... 0xFF:
+            break;
+
+
+        case 0x0E:
+            
+            kpanic ("x86-pfe: [%04p] %s at %p (%p <%s>)", 
+                frame->err_code, 
+                pfe_messages[frame->err_code], 
+                x86_get_cr2(),
+                frame->ip,
+                core_get_name(frame->ip)
+            );
+
+        default:
+
+            if(frame->int_no < 32)
+                kpanic ("x86-intr: exception %d '%s' (%p)", 
+                    frame->int_no,
+                    exception_messages[frame->int_no], 
+                    frame->err_code
+                );
+            else
+                kpanic ("x86-intr: unknown exception %d (%p)", 
+                    frame->int_no, 
+                    frame->err_code
+                );
+
+    }
+
+
+
+    if(unlikely(!current_cpu))
+        return frame;
+
+
+
+    DEBUG_ASSERT(!(current_cpu->flags & CPU_FLAGS_INTERRUPT));
+
+    current_cpu->flags |= CPU_FLAGS_INTERRUPT;
+    current_task->frame.context = frame;
+
+    
+    switch(frame->int_no) {
+        
         case 0xFE:
 
-            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 
 #if defined(__x86_64__)
-                frame->r8
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, frame->r8);
 #elif defined(__i386__)
-                0
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
 #endif
-            );
 
             break;
 
@@ -342,19 +384,22 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
             break;
 
         case 0xFF:
-            kpanic("intr: Spourius Interrupt!");
+            kpanic("intr: Spourius Interrupt on cpu #%d!", current_cpu->id);
             break;
 
         case 0x20:
-            if(current_cpu) {
-                if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
-                    current_cpu->ticks.tv_sec += 1;
-                    current_cpu->ticks.tv_nsec = 0;
-                } else
-                    current_cpu->ticks.tv_nsec += 1000000;
+            
+            if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
+                current_cpu->ticks.tv_sec += 1;
+                current_cpu->ticks.tv_nsec = 0;
+            } else
+                current_cpu->ticks.tv_nsec += 1000000;
 
-                frame = schedule(frame);
-            }
+            
+            if(likely(current_cpu->flags & CPU_FLAGS_SCHED_ENABLED))
+                frame = schedule();
+            
+            apic_eoi();
 
             break;
 
@@ -366,58 +411,26 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                     frame = (x86_frame_t*) irqs[frame->int_no - 0x20].handler((void*) frame);
                 else
                     kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->int_no - 0x20);
-        
+                        
             });
 
+            apic_eoi();
             break;
         
-        case 0x0E:
-
-            x86_cli();
-
-            kprintf ("x86-pfe: [%04p] %s at %p (%p <%s>)\n", 
-                frame->err_code, 
-                pfe_messages[frame->err_code], 
-                x86_get_cr2(),
-                frame->ip,
-                core_get_name(frame->ip)
-            );
-
-            core_stacktrace();
-            for(;;);
 
         default:
 
-            x86_cli();
-
-            if(frame->int_no < 32)
-                kprintf ("x86-intr: exception %d '%s' (%p)\n", 
-                    frame->int_no,
-                    exception_messages[frame->int_no], 
-                    frame->err_code
-                );
-            else
-                kprintf ("x86-intr: unknown exception %d (%p)\n", 
-                    frame->int_no, 
-                    frame->err_code
-                );
-
-            core_stacktrace();
-            for(;;);
-
+            kpanic("x86-intr: ERROR! invalid interrupt #%d\n", frame->int_no);
             break;
+
     }
 
 
 
-    arch_intr_end();
+    DEBUG_ASSERT(current_cpu->flags & CPU_FLAGS_INTERRUPT);
 
+    current_cpu->flags &= ~CPU_FLAGS_INTERRUPT;
 
-    /* IRQ */
-    if(frame->int_no >= 0x20 && frame->int_no <= 0xFC)
-        apic_eoi();
-
-    kprintf("frame: %p, gs: %p, cs: %p\n", frame, frame->gs, frame->cs);
 
     return frame;
 }
@@ -476,26 +489,6 @@ int arch_intr_unmap_irq(uint8_t irq) {
     });
 
     return 0;
-}
-
-
-void arch_intr_begin(void) {
-
-    DEBUG_ASSERT(current_cpu ? !(current_cpu->flags & CPU_FLAGS_INTERRUPT) : 1);
-
-    if(likely(current_cpu))
-        current_cpu->flags |= CPU_FLAGS_INTERRUPT;
-
-}
-
-
-void arch_intr_end(void) {
-
-    DEBUG_ASSERT(current_cpu ? current_cpu->flags & CPU_FLAGS_INTERRUPT : 1);
-
-    if(likely(current_cpu))
-        current_cpu->flags &= ~CPU_FLAGS_INTERRUPT;
-
 }
 
 

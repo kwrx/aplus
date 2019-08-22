@@ -50,6 +50,12 @@
 #define TASK_PRIO_MIN                       19
 #define TASK_PRIO_REG                       0
 
+#define TASK_CAPS_SYSTEM                    1
+#define TASK_CAPS_IO                        2
+#define TASK_CAPS_NETWORK                   4
+/* TODO: add more capabilities */
+
+
 #define TASK_NSIG                           NSIG
 #define TASK_NARGS                          4096
 #define TASK_NFD                            32
@@ -130,8 +136,8 @@ typedef struct task {
 
     struct {
 
-        uint8_t regs[CONFIG_FRAME_SIZE];
-        uint8_t top[0];
+        uint8_t regs[CONFIG_STACK_SIZE];
+        uint8_t bottom[0];
         uint8_t fpu[512];
 
         void* context;
@@ -152,7 +158,8 @@ typedef struct task {
     int status;
     int priority;
     int affinity;
-    
+    int caps;
+
     struct tms clock;
     struct timespec sleep;
     
@@ -229,12 +236,11 @@ void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 void sched_init(void);
 
-void* schedule(void*);
-void* schedule_yield(void*);
+void* schedule();
+void* schedule_yield();
 
-void* arch_task_switch(void*, task_t*, task_t*);
-void* arch_task_init_frame(void*, void*, void*);
-void  arch_task_enter_on_userspace(uintptr_t, uintptr_t, uintptr_t);
+void* arch_task_switch(task_t*, task_t*);
+void  arch_task_set_context(void*, void*, void*, void*, int);
 
 
 

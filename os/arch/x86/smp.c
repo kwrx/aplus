@@ -120,7 +120,7 @@ void smp_setup(int bsp) {
 
 
     /* Set Kernel Stack */
-    arch_intr_set_stack((uintptr_t) &_.frame.top);
+    arch_intr_set_stack((uintptr_t) &_.frame.bottom);
     
     if(bsp)
         return;
@@ -142,6 +142,9 @@ void smp_init(void) {
 
         if(mbd->cpu.cores[i].id == apic_get_id())
             continue;
+
+
+        kprintf("smp: starting up core #%d\n", i);
 
 
         ap_stack(((uintptr_t) &core_stack_area) - (i * CONFIG_STACK_SIZE));

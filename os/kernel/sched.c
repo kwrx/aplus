@@ -72,11 +72,11 @@ next:
 
 
 
-void* schedule(void* frame) {
+void* schedule() {
 
-    if(unlikely(!(current_cpu->flags & CPU_FLAGS_SCHED_ENABLED)))
-        return frame;
-
+    void* frame = current_task->frame.context;
+    DEBUG_ASSERT(frame);
+    
 
     __lock_irq(&sched_lock, {
 
@@ -101,7 +101,7 @@ void* schedule(void* frame) {
         __sched_next();
         
         current_task->status = TASK_STATUS_RUNNING;
-        frame = arch_task_switch(frame, prev_task, current_task);
+        frame = arch_task_switch(prev_task, current_task);
 
     });
 
@@ -110,11 +110,7 @@ void* schedule(void* frame) {
 
 
 
-void* schedule_yield(void* frame) {
-
-    if(unlikely(!(current_cpu->flags & CPU_FLAGS_SCHED_ENABLED)))
-        return frame;
-
+void* schedule_yield() {
 
 
     __lock_irq(&sched_lock, {
@@ -138,7 +134,7 @@ void* schedule_yield(void* frame) {
 
         
         current_task->status = TASK_STATUS_RUNNING;
-        arch_task_switch(frame, prev_task, current_task);
+        arch_task_switch(prev_task, current_task); /* FIXME */
 
     });
 }

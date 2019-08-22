@@ -275,6 +275,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 #endif
 
 
+
     uintptr_t brk = sys_brk(0);
     uintptr_t top = sys_brk(brk + current_task->rlimits[RLIMIT_STACK].rlim_cur);
 
@@ -303,7 +304,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     uintptr_t tls_start = 0;
     uintptr_t tls_end   = 0;
 
-    address_space_map_t* tls;
+    address_space_map_t* tls = NULL;
     aspace_get_maps(current_task->aspace, &tls, ASPACE_TYPE_TLS, 1);
 
 
@@ -331,16 +332,12 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
      */
 
 
-    if(current_cpu->flags & CPU_FLAGS_INTERRUPT)
-        arch_intr_end();
+    DEBUG_ASSERT(current_task->frame.context);
 
 
+    arch_task_set_context(current_task->frame.context, head.e_entry, brk, top, 0);
 
-    sys_open("/dev/kmsg", O_RDWR, 0);
-    sys_open("/dev/kmsg", O_RDWR, 0);
-    sys_open("/dev/kmsg", O_RDWR, 0);
+    if(!(current_cpu->flags & CPU_FLAGS_INTERRUPT))
+        arch_task_return_to_context(current_task->frame.context);
 
-    arch_task_enter_on_userspace(head.e_entry, top, brk);
-
-    DEBUG_ASSERT(0);
 });

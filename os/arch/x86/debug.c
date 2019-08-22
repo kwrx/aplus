@@ -60,7 +60,7 @@ void arch_debug_putc(int ch) {
 
     int i;
     for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-        x86_pause();
+        __builtin_ia32_pause();
 
     outb(com_address, ch);
 }

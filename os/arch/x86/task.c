@@ -37,53 +37,88 @@
 
 /* See arch/x86/BITS/ops.asm */
 extern void x86_enter_on_clone(void);
-extern void x86_enter_on_userspace(uintptr_t, uintptr_t, uintptr_t);
 
 
-void* arch_task_init_frame(void* stack, void* ip, void* arg) {
 
+void arch_task_set_context(void* context, void* ip, void* arg, void* stack, int caps) {
+
+    DEBUG_ASSERT(context);
     DEBUG_ASSERT(ip);
     DEBUG_ASSERT(stack);
 
+
     x86_frame_t* frame;
-    frame = (x86_frame_t*) ((uintptr_t) stack);
-    frame = (x86_frame_t*) ((uintptr_t) frame - sizeof(x86_frame_t));
-    frame = (x86_frame_t*) ((uintptr_t) frame - sizeof(uintptr_t) * 5);
-
-
+    frame = (x86_frame_t*) ((uintptr_t) context);
 
     frame->di = 0;
     frame->si = 0;
-    frame->bp = (uintptr_t) &frame->int_no;
-    frame->sp = (uintptr_t) &frame->int_no;
-
-    frame->dx =
-    frame->ax = 0;
-
-    frame->cx = (uintptr_t) ip;
-    frame->bx = (uintptr_t) arg;
+    frame->bp = (uintptr_t) stack;
     
+    frame->ax = (uintptr_t) arg;
+    frame->bx = 0;
+    frame->cx = 0;
+    frame->dx = 0;
+
     frame->int_no = 0;
     frame->err_code = 0;
 
-    frame->ip = (uintptr_t) &x86_enter_on_clone;
-    frame->cs = 0x08;
+    frame->ip = (uintptr_t) ip;
+    frame->sp = (uintptr_t) stack;
     frame->flags = 0x202;
-    frame->usersp = 0;
-
-
-    return &frame->top;
-}
 
     
-void* arch_task_switch(void* context, task_t* from, task_t* to) {
+    if(caps & TASK_CAPS_SYSTEM) {
+        
+        frame->gs = 0x10;
+        frame->fs = 0x10;
+        frame->es = 0x10;
+        frame->ds = 0x10;
+        frame->ss = 0x10;
+        frame->cs = 0x08;
+
+    } else {
+
+        frame->gs = 0x23;
+        frame->fs = 0x23;
+        frame->es = 0x23;
+        frame->ds = 0x23;
+        frame->ss = 0x23;
+        frame->cs = 0x1B;
+
+    }
+
+}
+
+
+void arch_task_return_to_context(void* context) {
+
+#if defined(__i386__)
+
+    __asm__ __volatile__ (
+        "mov esp, eax       \n"
+        "pop gs             \n"
+        "pop fs             \n"
+        "pop es             \n"
+        "pop ds             \n"
+        "popad              \n"
+        "add esp, 8         \n"
+        "iretd              \n"
+    
+        :: "a"(context)
+    );
+
+#elif defined(__x86_64__)
+
+#endif
+
+}
+
+
+void* arch_task_switch(task_t* from, task_t* to) {
 
     DEBUG_ASSERT(to);
     DEBUG_ASSERT(from);
-    DEBUG_ASSERT(context);
 
-
-    from->frame.context = context;
 
     __asm__ __volatile__ (
         "fsave [%0];"
@@ -105,14 +140,9 @@ void* arch_task_switch(void* context, task_t* from, task_t* to) {
 
 
 
-    arch_intr_set_stack((uintptr_t) &to->frame.top);
+    arch_intr_set_stack((uintptr_t) &to->frame.bottom);
 
     return to->frame.context;
-}
-
-
-void arch_task_enter_on_userspace(uintptr_t ip, uintptr_t stack, uintptr_t arg) {
-    x86_enter_on_userspace(ip, stack, arg);
 }
 
 

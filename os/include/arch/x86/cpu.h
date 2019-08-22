@@ -69,7 +69,7 @@ typedef struct x86_frame {
     uintptr_t di;
     uintptr_t si;
     uintptr_t bp;
-    uintptr_t sp;
+    uintptr_t unused;   /* sp */
     uintptr_t bx;
     uintptr_t dx;
     uintptr_t cx;
@@ -92,8 +92,8 @@ typedef struct x86_frame {
     uintptr_t ip;
     uintptr_t cs;
     uintptr_t flags;
-    uintptr_t usersp;
-    uintptr_t userss;
+    uintptr_t sp;
+    uintptr_t ss;
 
     char bottom[0];
     

@@ -219,7 +219,10 @@ static void __init(uintptr_t* brk) {
 }
 
 
-void _start(uintptr_t* brk) {
+void _start(void) {
+
+    uintptr_t* brk;
+    __asm__ __volatile__("" : "=a"(brk));
 
     __tls_start = *brk++;
     __tls_end   = *brk++;

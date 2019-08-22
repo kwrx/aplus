@@ -93,8 +93,9 @@ isrs:
 
 
 isr_stub:
-    ;cli /* FIXME */
+    cli
     pushad
+
     push ds
     push es
     push fs
@@ -114,6 +115,7 @@ isr_stub:
     pop fs
     pop es
     pop ds
+
     popad
     add esp, 8
     ;sti
