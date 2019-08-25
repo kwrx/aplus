@@ -92,6 +92,13 @@ void arch_task_set_context(void* context, void* ip, void* arg, void* stack, int 
 
 void arch_task_return_to_context(void* context) {
 
+    x86_frame_t* frame;
+    frame = (x86_frame_t*) ((uintptr_t) context);
+
+    DEBUG_ASSERT(frame);
+    DEBUG_ASSERT(frame->ip);
+
+
 #if defined(__i386__)
 
     __asm__ __volatile__ (

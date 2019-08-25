@@ -45,10 +45,10 @@ _sbrk_r (struct _reent *ptr,
      ptrdiff_t incr)
 {
   char *ret;
-  void *_sbrk(ptrdiff_t);
+  void *sbrk(ptrdiff_t);
 
   errno = 0;
-  if ((ret = (char *)(_sbrk (incr))) == (void *) -1 && errno != 0)
+  if ((ret = (char *)(sbrk (incr))) == (void *) -1 && errno != 0)
     ptr->_errno = errno;
   return ret;
 }

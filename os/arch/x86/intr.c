@@ -171,10 +171,11 @@ void x86_gdt_init_percpu(uint16_t cpu) {
 
 
 
-#if defined(__i386__)
     __asm__ __volatile__ (
+#if defined(__i386__)
         "jmp 0x08:L1    \n"
         "L1:            \n"
+#endif
         "mov cx, 0x10   \n"
         "mov ds, cx     \n"
         "mov es, cx     \n"
@@ -184,8 +185,6 @@ void x86_gdt_init_percpu(uint16_t cpu) {
     
         ::: "ecx"
     );
-#endif
-
 }
 
 
@@ -330,10 +329,11 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 
         case 0x0E:
             
-            kpanic ("x86-pfe: [%04p] %s at %p (%p <%s>)", 
+            kpanic ("x86-pfe: [%04p] %s at %p (%p:%p <%s>)", 
                 frame->err_code, 
                 pfe_messages[frame->err_code], 
                 x86_get_cr2(),
+                frame->cs,
                 frame->ip,
                 core_get_name(frame->ip)
             );
@@ -400,7 +400,6 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
                 frame = schedule();
             
             apic_eoi();
-
             break;
 
         case 0x21 ... 0xFC:
@@ -431,6 +430,9 @@ x86_frame_t* x86_isr_handler(x86_frame_t* frame) {
 
     current_cpu->flags &= ~CPU_FLAGS_INTERRUPT;
 
+
+    DEBUG_ASSERT(frame);
+    DEBUG_ASSERT(frame->ip);
 
     return frame;
 }

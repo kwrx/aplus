@@ -170,6 +170,7 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
 
 SYSCALL(2, open,
 long sys_open (const char __user * filename, int flags, mode_t mode) {
+
     if(unlikely(!filename))
         return -EINVAL;
     
@@ -186,7 +187,7 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
 
     struct stat st;
     if(vfs_getattr(r, &st) < 0)
-        return (errno = ENOSYS) ? -EACCES : -errno;
+        return (errno == ENOSYS) ? -EACCES : -errno;
 
 
 

@@ -30,10 +30,16 @@ extern unsigned long brk(unsigned long);
 void* sbrk(intptr_t incr) {
 
     uintptr_t cur = brk(0UL);
+
+    if(incr == 0)
+        return (void*) cur;
+
+
     uintptr_t now = brk(cur + incr);
 
     if(now != cur)
         return (void*) cur;
+
 
     _REENT->_errno = ENOMEM;
     return (void*) -1;

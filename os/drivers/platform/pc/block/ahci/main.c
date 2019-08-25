@@ -717,11 +717,15 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     ahci.hba->ports[d].ci |= (1 << b);
 
 
-    // Polling
-    //while(ahci.hba->ports[d].ci & (1 << b))
-    //    __builtin_ia32_pause();
 
-    sem_wait(&ahci.io);
+    if(current_cpu->flags & CPU_FLAGS_INTERRUPT) {
+
+        while(ahci.hba->ports[d].ci & (1 << b))     /* Polling */
+            __builtin_ia32_pause();
+    
+    } else
+        sem_wait(&ahci.io);
+
 
 
     if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {
@@ -1001,11 +1005,15 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     ahci.hba->ports[d].ci |= (1 << b);
 
 
-    // Polling
-    //while(ahci.hba->ports[d].ci & (1 << b))
-    //    __builtin_ia32_pause();
 
-    sem_wait(&ahci.io);
+    if(current_cpu->flags & CPU_FLAGS_INTERRUPT) {
+
+        while(ahci.hba->ports[d].ci & (1 << b))     /* Polling */
+            __builtin_ia32_pause();
+    
+    } else
+        sem_wait(&ahci.io);
+
 
 
     if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {
@@ -1113,11 +1121,15 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     ahci.hba->ports[d].ci |= (1 << b);
 
 
-    // Polling
-    //while(ahci.hba->ports[d].ci & (1 << b))
-    //    __builtin_ia32_pause();
 
-    sem_wait(&ahci.io);
+    if(current_cpu->flags & CPU_FLAGS_INTERRUPT) {
+
+        while(ahci.hba->ports[d].ci & (1 << b))     /* Polling */
+            __builtin_ia32_pause();
+    
+    } else
+        sem_wait(&ahci.io);
+
 
 
     if(ahci.hba->ports[d].is & AHCI_PORT_IS_TFES) {

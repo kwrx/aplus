@@ -48,5 +48,8 @@
 
 SYSCALL(39, getpid,
 long sys_getpid (void) {
+    
+    DEBUG_ASSERT(current_task);
+
     return current_task->tid;
 });

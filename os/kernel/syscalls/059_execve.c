@@ -333,8 +333,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     DEBUG_ASSERT(current_task->frame.context);
+    DEBUG_ASSERT(head.e_entry);
 
 
+    arch_intr_disable();
     arch_task_set_context(current_task->frame.context, head.e_entry, brk, top, 0);
 
     if(!(current_cpu->flags & CPU_FLAGS_INTERRUPT))

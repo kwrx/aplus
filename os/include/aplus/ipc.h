@@ -28,6 +28,9 @@
 typedef volatile int spinlock_t;
 typedef volatile int semaphore_t;
 
+#define IPC_DEFAULT_TIMEOUT                 10
+
+
 
 #if defined(KERNEL)
 #include <aplus.h>

@@ -69,11 +69,12 @@ long syscall_invoke(long idx, long p0, long p1, long p2, long p3, long p4, long 
     DEBUG_ASSERT(syscalls[idx]);
 
 
-    errno = 0;
 
     long r;
     if((r = syscalls[idx] (p0, p1, p2, p3, p4, p5)) < 0)
         errno = -r;
+    else
+        errno = 0;
 
 
 
