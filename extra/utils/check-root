@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Usage: check-root [sysroot] [timezone]
+
+mkdir -p $1
+mkdir -p $1/boot
+mkdir -p $1/boot/grub
+mkdir -p $1/dev
+mkdir -p $1/etc
+mkdir -p $1/etc/fonts
+mkdir -p $1/etc/init.d
+mkdir -p $1/home
+mkdir -p $1/home/root
+mkdir -p $1/home/antonio
+mkdir -p $1/mnt
+mkdir -p $1/opt
+mkdir -p $1/proc
+mkdir -p $1/srv
+mkdir -p $1/srv/http
+mkdir -p $1/sys
+mkdir -p $1/tmp
+mkdir -p $1/usr
+mkdir -p $1/usr/include
+mkdir -p $1/usr/sbin
+mkdir -p $1/usr/share
+mkdir -p $1/usr/lib
+mkdir -p $1/usr/lib/modules
+mkdir -p $1/usr/bin
+mkdir -p $1/var
+mkdir -p $1/var/cache
+
+ln -sf usr/sbin root
+ln -sf usr/bin root
+ln -sf usr/lib root
+ln -sf usr/lib root
+ln -sf xsh root/bin/sh
+ln -sf ../usr/share/zoneinfo/$2 root/etc/localtime

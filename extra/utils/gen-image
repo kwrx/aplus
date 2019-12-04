@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# Usage
+#   gen-image [SOURCE] [DEST]
+
+tmp="/tmp/aplus-hdd"
+sysroot="$1"
+output="$2"
+
+
+losetup -D
+sync
+
+
+if [ ! -f $output ]; then
+
+    # Create the actual disk image - 128MiB
+    dd status=none if=/dev/zero of=$output bs=4M count=32
+    
+    # Make partition table, partition and set it bootable
+    echo -e "n\np\n\n\n\nw\n" | fdisk $output &> /dev/null
+    sync
+
+    # Map the partitions from the image file
+    sudo losetup /dev/loop1 $output
+    sudo losetup /dev/loop2 $output -o 1048576
+
+    # Make an ext2 filesystem on the first partition
+    sudo mkfs.ext2 /dev/loop2 &> /dev/null
+
+    # Mount the filesystem via loopback
+    mkdir -p $tmp/p1
+    sudo mount /dev/loop2 $tmp/p1
+
+    # Install Grub
+    sudo grub-install --no-floppy                                                           \
+                --target=i386-pc                                                            \
+                --force                                                                     \
+                 --modules="normal part_msdos fat ext2 multiboot2 biosdisk"                 \
+                 --root-directory=$tmp/p1                                                   \
+                 /dev/loop1 &> /dev/null
+
+    # Unmount the loopback
+    sudo umount $tmp/p1
+
+    # Unmap the image
+    sudo losetup -d /dev/loop1
+    sudo losetup -d /dev/loop2
+    sync
+
+fi
+
+
+# Map the partitions from the image file
+sudo losetup /dev/loop2 $output -o 1048576
+
+# Mount the filesystem via loopback
+mkdir -p $tmp/p1
+sudo mount /dev/loop2 $tmp/p1
+
+# Copy files
+sudo rm -rf $tmp/p1/*
+sudo cp -rf $sysroot/* $tmp/p1
+
+# Unmount the loopback
+sudo umount $tmp/p1
+
+# Unmap the image
+sudo losetup -d /dev/loop2
+sync
+
+# Fix permissions
+#LOGNAME=`whoami | awk '{print $1}'`
+#LOGGROUP=`groups $LOGNAME | awk '{print $3}'`
+#sudo chown $LOGNAME:$LOGGROUP $output

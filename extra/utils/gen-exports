@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Usage: gen-exports SYSROOT TARGET
+#
+
+
+for i in $(find $1/usr/lib/modules -type f -name *.ko); do
+    d="$d $($2-aplus-nm -uP $i)"
+done
+
+echo $d | awk -v RS="[ \n]+" '!n[$0]++' | sed "s/U//g" | sed '/^$/d' | sort

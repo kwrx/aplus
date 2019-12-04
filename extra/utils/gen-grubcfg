@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Usage
+#   gen-grubcfg [SYSROOT] [EXTRA_KARGS] [EXTRA_MARGS]
+
+sysroot=$1
+extra_kargs=$2
+extra_margs=$3
+core="/boot/core"
+
+
+header() {
+    echo -e "default 0"
+    echo -e "timeout 5"
+    echo -e ""
+}
+
+entry() {
+
+    # Usage entry [ENTRY] [KARGS] [MARGS]
+    echo -e "menuentry \"$1\" {"
+    echo -e "   multiboot2 $core $2"
+    
+    if [ -e $sysroot/usr/lib/modules/exports ]; then
+        echo -e "   module2 /usr/lib/modules/exports"
+    fi
+
+    for ko in $(find $sysroot/usr/lib/modules -type f -name *.ko); do
+        test -f "$ko" || continue
+        echo -e "   module2 $(echo $ko | cut -c 5-) $3"
+    done
+
+    echo -e "   boot"
+    echo -e "}"
+    echo -e ""
+
+}
+
+
+header                                                                                     >  $sysroot/boot/grub/grub.cfg
+entry "aplus"       "root=/dev/sda1 rootfs=ext2 $extra_kargs"               "$extra_margs" >> $sysroot/boot/grub/grub.cfg
+entry "aplus-nogui" "root=/dev/sda1 rootfs=ext2 graphics=no $extra_kargs"   "$extra_margs" >> $sysroot/boot/grub/grub.cfg

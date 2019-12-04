@@ -1,0 +1,175 @@
+
+mainmenu "Configure aplus build"
+
+
+
+
+menu "System environment"
+
+    config SYSTEM_NAME
+        string "Project Name"
+        default "aplus"
+
+    config SYSTEM_VERSION
+        string "Project Version"
+        default "0.6"
+
+    config SYSTEM_CODENAME
+        string "Project Codename"
+        default "zeta"
+
+
+    comment "All paths are relative to the current working directory"
+
+    config SYSTEM_PATH_SYSROOT
+        string "Sysroot path"
+        default "root"
+
+    config SYSTEM_PATH_TOOLCHAIN
+        string "Toolchain path"
+        default "sdk/toolchain"
+
+
+    config SYSTEM_LOCALE
+        string "Locale"
+        default "it-IT"
+
+    config SYSTEM_TIMEZONE
+        string "Timezone"
+        default "Europe/Rome"
+
+endmenu
+
+
+menu "Compiler"
+
+    config COMPILER_HOST
+        string "Host Machine"
+        default "x86_64"
+        help 
+            It specifies the platform on which whatever we are building is going to be run.
+            Supported platforms: x86_64, armv7, aarch64
+
+    config COMPILER_STRIP_BINARIES
+        bool "Strip all binary files"
+        default y
+        depends on !HAVE_DEBUG
+        help
+            Removes symbols and sections from files to reduce file size.
+
+    config COMPILER_OMIT_FRAME_POINTER
+        bool "Omit frame pointer"
+        default y
+        depends on !HAVE_DEBUG
+        help
+            Instructs the compiler to not store stack frame pointers if the function
+            does not need it. You can use this option to reduce the code image size.
+
+    config COMPILER_OPTIMIZATION_LEVEL
+        int "Compiler optimization level -O{n}"
+        default 3
+        range 0 3
+        depends on !HAVE_DEBUG
+        help
+            Turning on optimization makes the compiler attempt to improve the performance
+            and/or code size at the expense of compilation time and possibly the ability
+            to debug the program.
+
+    config COMPILER_EXTRA_CFLAGS
+        string "Extra CFLAGS"
+        default ""
+
+    config COMPILER_EXTRA_CXXFLAGS
+        string "Extra CXXFLAGS"
+        default ""
+
+    config COMPILER_EXTRA_ASFLAGS
+        string "Extra ASFLAGS"
+        default ""
+
+    config COMPILER_EXTRA_LDFLAGS
+        string "Extra LDFLAGS"
+        default ""
+
+endmenu
+
+
+
+menu "Features"
+
+    config HAVE_SMP
+        bool "Enable Symmetric Multiprocessing"
+        default y
+
+    config HAVE_NETWORK
+        bool "Enable Networking"
+        default y
+
+    config HAVE_GUI
+        bool "Enable GUI support"
+        default y
+
+    config HAVE_DAEMON_SYNCD
+        bool "Enable [syncd] daemon support"
+        default y
+
+    config HAVE_DAEMON_NTPD
+        bool "Enable [ntpd] daemon support"
+        depends on HAVE_NETWORK
+        default y
+
+endmenu
+
+
+menu "Userspace"
+
+    config HAVE_COREUTILS
+        bool "Coreutils"
+        default y
+
+    config HAVE_SYSUTILS
+        bool "Sysutils"
+        default y
+
+    config HAVE_TASKMAN
+        bool "Task Manager"
+        default y
+
+    config HAVE_DASH
+        bool "Dash"
+        default y
+    
+    config HAVE_JAVAVM
+        bool "Java Virtual Machine"
+        default n
+
+    config HAVE_JS
+        bool "Javascript interpreter"
+        default n
+
+endmenu
+
+
+
+source "src/core/arch/x86_64/Kconfig"
+
+
+config HAVE_DEBUG
+    bool "Enable Debugging"
+    default y
+
+    config DEBUG_LEVEL
+        int "Debugging Level"
+        range 0 4
+        default 0
+        depends on HAVE_DEBUG
+
+    config DEBUG_SERIAL_OUTPUT
+        bool "Debugging output on serial port /dev/sr0"
+        default y
+        depends on HAVE_DEBUG
+
+    config DEBUG_PRINT_TIMESTAMP
+        bool "Print timestamp on each line output"
+        default y
+        depends on HAVE_DEBUG

@@ -1,0 +1,54 @@
+#!/bin/bash
+
+arch=""
+flags=""
+
+case $1 in
+    i[3-7]86)
+        arch="i386"
+
+        flags=""
+        flags="$flags -drive id=disk,file=hdd.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-drive,drive=disk,bus=ahci.0"
+        flags="$flags -drive id=cdrom,file=cdrom.iso,if=none,format=raw -device ide-cd,drive=cdrom,bus=ahci.1"
+        flags="$flags -boot c"
+        flags="$flags -m 512"
+        flags="$flags -M accel=tcg"
+        flags="$flags -smp 1"
+        flags="$flags -vga std"
+        flags="$flags -soundhw ac97"
+        flags="$flags -device pcnet,netdev=net0"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        ;;
+    
+    x86_64)
+        arch="x86_64"
+
+        flags=""
+        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-drive,drive=disk,bus=ahci.0"
+        flags="$flags -boot c"
+        flags="$flags -m 512"
+        flags="$flags -machine type=q35,accel=tcg"
+        flags="$flags -smp 4"
+        flags="$flags -vga std"
+        flags="$flags -soundhw ac97"
+        flags="$flags -device pcnet,netdev=net0"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        ;;
+
+    *)
+        echo "run-vm: unknown ARCH \"$1\""
+        exit 1
+        ;;
+esac
+
+#if ! which qemu-system-$arch.exe &> /dev/null; then
+#    echo "run-vm: qemu-system-$arch not found, you should try to install \"qemu-arch-extra\" package"
+#    exit 1
+#fi
+
+debug=""
+if [ ! -z $2 ]; then
+    debug="-S"
+fi
+
+qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
