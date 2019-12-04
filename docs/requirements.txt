@@ -1,6 +1,5 @@
 asn1crypto==0.24.0
 cryptography==2.3
-entrypoints==0.3
 idna==2.6
 keyring==17.1.1
 keyrings.alt==3.1.1
