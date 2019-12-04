@@ -1,6 +1,7 @@
 language: c
 os: linux
 dist: bionic
+sudo: required
 
 jobs:
   include:
