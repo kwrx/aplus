@@ -38,12 +38,14 @@ before_deploy:
 deploy:
   provider: releases
   token:
-    secure: "U0ygZxIaeFBdEeSj5i9rB3C2VMhtPNcwkpr/kN7jR6GcMgFH14RP653cuq6asF8hLZWWIYg2dgjzv0giVDxqdYZBfNhGIiPQkjr7sF+CT/YK8RJaLs4d/pRtzjAutSj9KzeUTKT7bkVI238plzcZwNymoKFRwTKhDJl0hTbGiyBqqob3iBy/rHrHXsc9mlD3iKBv60i2THEoFZ4onooZXXKDZntuoVAdK09ZhRoYeqsYySxa3GNdB5CgpEK7VPAfnZLYm3Tw85HDFW8be4VSk9HX2LDve0QUGKNuhmVoKrgtY/njSVN7i8C1/MD9kHpjEL64uQ8dm4Yd0E7FFKLo0dmC4I5uCye1Vy42dqIMNdILXk6ycaL7ivKXWNgHspBX9YYuaGytJE+nOKjq1MisJFrTYURXMrp24EZyr1AIZ7bFJk2dSScUsJC/R2hljIRrgvgS+T9jyno1DYtJkyyTfccdvr+hMurlFQ6i08cppslliw7fbONFuKWPmlKCmsJ9Dl4P0ruwWkmmxiLI9nhHPRl1rMBjV4Ul/40Adog6X4xNpH/dE7h9B1HU/HDQO2CwypOVzRAWQy2XJPGVT8c+wdzZe7VocmWtqL2I0VR+I87y5ny6PWgq7q2AVMKBV8uftysW1qN7I+/N6wsAE4JFZkXF0X2eO6QS/xXxknHSFm4="    
-  file:
-    aplus-release-${SETUP}.tar.xz
+    "$GH_TOKEN"
+    
+  file: 
+    - aplus-release-${SETUP}.tar.xz
 
   overwrite: true
   draft: false
+  file_glob: true
   edge: true
 
   on:
