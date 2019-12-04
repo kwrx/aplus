@@ -41,6 +41,7 @@ def step1():
             run ('git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib %s' % (paths['kconfiglib']), shell=True, stdout=PIPE, stderr=PIPE)
 
 
+    # Add setup shortcut
     run ('KCONFIG_CONFIG=%s %s/menuconfig.py %s' % (paths['setup'], paths['kconfiglib'], paths['kconfig']), shell=True)
 
     if not os.path.exists(paths['setup']):

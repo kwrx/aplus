@@ -6,11 +6,14 @@ CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall
 ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall
 DEFINES     += DEBUG=1
 else
-CFLAGS      += -O3
-CXXFLAGS    += -O3
-ASFLAGS     += -O3
-LDFLAGS     += -s
+CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+CXXFLAGS    += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 DEFINES     += NDEBUG=1
+
+ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
+LDFLAGS     += -s
+endif
 endif
 
 
