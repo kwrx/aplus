@@ -47,5 +47,5 @@ deploy:
   edge: true
 
   on:
-    repo: kwrx/aplus-newlib
+    repo: kwrx/aplus-beta
     tags: false
