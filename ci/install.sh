@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo pip3 install wget
+pip3 install -r docs/requirements.txt

@@ -15,6 +15,7 @@ from subprocess import PIPE
 paths = {
     'setup'     : 'config.mk',
     'header'    : 'config.h',
+    'gconfig'   : 'extra/build/setup',
     'kconfig'   : 'Kconfig',
     'kconfiglib': 'extra/third-party/kconfiglib',
 }
@@ -41,8 +42,16 @@ def step1():
             run ('git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib %s' % (paths['kconfiglib']), shell=True, stdout=PIPE, stderr=PIPE)
 
 
-    # Add setup shortcut
-    run ('KCONFIG_CONFIG=%s %s/menuconfig.py %s' % (paths['setup'], paths['kconfiglib'], paths['kconfig']), shell=True)
+
+    if len(sys.argv) > 1:
+        if os.path.exists('%s/%s.config' % (paths['gconfig'], sys.argv[1])):
+            run ('KCONFIG_CONFIG=%s %s/defconfig.py %s/%s.config' % (paths['setup'], paths['kconfiglib'], paths['gconfig'], sys.argv[1]), shell=True)
+        else:
+            print ('setup.py: error: configuration \"%s\" not found, see ./%s for available setups' % (sys.argv[1], paths['gconfig']))
+            sys.exit(1)
+    else:
+        run ('KCONFIG_CONFIG=%s %s/menuconfig.py %s' % (paths['setup'], paths['kconfiglib'], paths['kconfig']), shell=True)
+
 
     if not os.path.exists(paths['setup']):
         sys.exit(1)

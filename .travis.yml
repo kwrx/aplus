@@ -11,6 +11,13 @@ jobs:
       env:
         - SETUP="x86_64"
 
+addons:
+  apt:
+    packages:
+      - "python3"
+      - "python3-pip"
+
+
 script:
   ci/build.sh ${SETUP}
 
