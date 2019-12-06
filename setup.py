@@ -155,6 +155,7 @@ def step5():
     e += required('automake')
     e += required('autoconf')
     e += required('fc-scan')
+    e += required('grub-install')
 
     if e > 0:
         sys.exit(1)

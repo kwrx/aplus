@@ -1,4 +1,4 @@
-TARGET	 := core
+
 SRCDIRS	 := arch/$(PLATFORM) kernel
 INCLUDES := ../include
 DESTDIR  := $(SYSROOT)/boot

@@ -24,7 +24,7 @@
 
 #include <aplus/core/linkage.h>
 #include <aplus/core/multiboot.h>
-#include <arch/x86_64/asm.h>
+#include <arch/x86/asm.h>
 
 
 

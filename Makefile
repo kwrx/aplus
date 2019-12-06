@@ -34,4 +34,11 @@ run: install
 clean: CLEANALL
 distclean: clean DISTCLEANALL
 	$(QUIET)$(RM) $(TARGET) config.mk config.h makew 
+	$(QUIET)$(RM) -r docs/html docs/man
 
+
+.PHONY: docs distdocs
+docs:
+	@doxygen docs/Doxyfile
+distdocs: docs
+	@tar cJf aplus-docs.tar.xz docs/man docs/html

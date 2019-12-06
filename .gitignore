@@ -10,6 +10,7 @@
 *.class
 *.a
 *.so
+*.bin
 *.jar
 *.tar.gz
 *.vdi
@@ -30,7 +31,11 @@
 /extra/third-party
 
 # Sysroot
-/root/
+/root
+
+# Generate by Doxygen
+/docs/html
+/docs/man
 
 # Build toolchain
 /sdk/toolchain/

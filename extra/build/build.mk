@@ -1,6 +1,6 @@
 .SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d
 
-TARGET      ?= $(notdir $(shell pwd))
+TARGET      ?= $(notdir $(shell pwd)).bin
 
 CFLAGS	    ?=
 CXXFLAGS    ?=
