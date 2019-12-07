@@ -29,9 +29,9 @@ mkdir -p $1/usr/bin
 mkdir -p $1/var
 mkdir -p $1/var/cache
 
-ln -sf usr/sbin root
-ln -sf usr/bin root
-ln -sf usr/lib root
-ln -sf usr/lib root
-ln -sf xsh root/bin/sh
-ln -sf ../usr/share/zoneinfo/$2 root/etc/localtime
+ln -sf usr/sbin $1
+ln -sf usr/bin $1
+ln -sf usr/lib $1
+ln -sf usr/lib $1
+ln -sf xsh $1/bin/sh
+ln -sf ../usr/share/zoneinfo/$2 $1/etc/localtime

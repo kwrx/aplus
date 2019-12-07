@@ -39,5 +39,4 @@
 /docs/man
 
 # Build toolchain
-/sdk/toolchain/
-/sdk/output.log
+/sdk/
