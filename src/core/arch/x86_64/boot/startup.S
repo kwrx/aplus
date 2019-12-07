@@ -242,20 +242,14 @@ _start_high64:
         leaq    __raw_args, %rcx
         movq    0(%rcx), %rdi
         movq    8(%rcx), %rsi
-        addq    $KERNEL_HIGH_AREA, %rbx
+        addq    $KERNEL_HIGH_AREA, %rsi
 
         # Reset RFLAGS
         pushq   $0
         popfq
 
+        # Call Boot Main()
         .extern bmain
-
-        movq $1, %rdi
-        movq $2, %rsi
-        movq $3, %rdx
-        movq $4, %rcx
-        movq $5, %r8
-        movq $6, %r9
         call    bmain
 
         jmp .

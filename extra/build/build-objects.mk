@@ -4,7 +4,7 @@
 all: $(TARGET)
 
 install: $(TARGET)
-	$(QUIET)echo "    INSTALL $(TARGET) -> $(DESTDIR)$(DESTDIR)/$(patsubst %.bin,%,$(TARGET))"
+	$(QUIET)echo "    INSTALL $(TARGET) -> $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))"
 	$(QUIET)install $(TARGET) $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))
 
 clean:

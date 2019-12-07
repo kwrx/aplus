@@ -1,8 +1,19 @@
 #include <stdint.h>
 #include <aplus/core/base.h>
 #include <aplus/core/multiboot.h>
+#include <aplus/core/debug.h>
 
 
-void bmain(long p1, long p2, long p3, long p4, long p5, long p6) {
-    for(;;);
+
+/*!
+ * @brief bmain().
+ *        Boot Entrypoint.
+ * 
+ * Initialize Hardware and boot services.
+ */
+void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
+    
+    arch_debug_init();
+
+
 }

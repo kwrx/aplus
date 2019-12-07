@@ -46,7 +46,7 @@ void arch_debug_init(void) {
  * 
  * Wait and write a character on Serial Port.
  */
-void arch_debug_putc(int ch) {
+void arch_debug_putc(char ch) {
     if(unlikely(!com_address))
         return;
 
