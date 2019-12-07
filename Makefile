@@ -1,5 +1,10 @@
 include config.mk
 
+ifneq ($(MAKE_WRAPPER),y)
+$(error Run ./configure to generate wrapper and ./makew to use Makefile)
+endif
+
+
 export QUIET	:= @
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR	:= $(shell pwd)

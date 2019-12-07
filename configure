@@ -1,0 +1,156 @@
+#!/bin/bash
+# Usage: configure [PRESET]
+
+
+gconfig="extra/build/setup"
+kconfig="extra/third-party/kconfiglib"
+
+
+
+echo "## Checking dependencies"
+
+    required() {
+        echo -n "Checking for $1..."
+
+        if ! command -v "$1"; then
+            echo "not found, dependency not satisfied, please install $1 and try again."
+        fi
+    }
+
+
+    required git
+    required gcc
+    required ld
+    required parted
+    required mkfs.ext2
+    required dd
+    required sudo
+    required sync
+    required make
+    required find
+    required awk
+    required automake
+    required autoconf
+    required fc-scan
+    required grub-install
+
+
+
+echo "## Preparing environment"
+
+    if [ ! -d $kconfig ]; then
+        git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib $kconfig
+    fi
+
+
+
+echo "## Generate configuration"
+
+    if [ -d $gconfig/$1.config ]; then
+        KCONFIG_CONFIG=config.mk $kconfig/defconfig.py $gconfig/$1.config
+        KCONFIG_CONFIG=config.mk $kconfig/genconfig.py $gconfig/$1.config
+    else
+        KCONFIG_CONFIG=config.mk $kconfig/menuconfig.py .config
+        KCONFIG_CONFIG=config.mk $kconfig/genconfig.py  .config
+    fi
+
+    if [ ! -f config.mk ]; then
+        echo "config.mk: no such file or directory"
+        exit 1
+    fi
+
+    if [ ! -f config.h ]; then
+        echo "config.h: no such file or directory"
+        exit 1
+    fi
+
+
+
+echo "## Configure environment"
+
+    . config.mk
+    PATH="$PATH:$CONFIG_SYSTEM_PATH_TOOLCHAIN/bin"
+
+
+    case $CONFIG_COMPILER_HOST in
+        x86_64)
+            required nasm
+            ;;
+        i[3-7]86)
+            required nasm
+            ;;
+    esac
+
+echo "## Get Packages"
+
+    ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+    ./extra/utils/get-pkg.py --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i system-base system-cursors system-fonts system-images system-keymaps
+
+
+echo "## Generate Wrapper"
+
+    echo '#!/bin/sh'                                                        > makew
+    echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"'   >> makew
+    echo 'make --no-print-directory MAKE_WRAPPER=y $@'                      >> makew
+
+    chmod +x makew
+
+
+
+
+
+
+
+if [ "$CONFIG_HAVE_DEBUG" == "y" ]; then
+    buildtype="Debug"
+else
+    buildtype="Release"
+fi
+
+if [ "$CONFIG_HAVE_GUI" == "y" ]; then
+    gui="True"
+else
+    gui="False"
+fi
+
+if [ "$CONFIG_HAVE_NETWORK" == "y" ]; then
+    networking="True"
+else
+    networking="False"
+fi
+
+if [ "$CONFIG_HAVE_SMP" == "y" ]; then
+    smp="True"
+else
+    smp="False"
+fi
+
+
+
+echo -e "\
+                                                                                                        \n\
+Setup completed!                                                                                        \n\
+                                                                                                        \n\
+        Your configuration is:                                                                          \n\
+                                                                                                        \n\
+            Project:        $CONFIG_SYSTEM_NAME-$CONFIG_SYSTEM_CODENAME v$CONFIG_SYSTEM_VERSION         \n\
+            BuildType:      $buildtype                                                                  \n\
+                                                                                                        \n\
+            Host:           $CONFIG_COMPILER_HOST                                                       \n\
+            Sysroot:        $CONFIG_SYSTEM_PATH_SYSROOT                                                 \n\
+            Toolchain:      $CONFIG_SYSTEM_PATH_TOOLCHAIN                                               \n\
+            Locale:         $CONFIG_SYSTEM_LOCALE                                                       \n\
+            Timezone:       $CONFIG_SYSTEM_TIMEZONE                                                     \n\
+                                                                                                        \n\
+            GUI:            $gui                                                                        \n\
+            SMP:            $smp                                                                        \n\
+            Networking:     $networking                                                                 \n\
+                                                                                                        \n\
+        Run:                                                                                            \n\
+            $ ./makew [MAKEARGS]                                                                        \n\
+                                                                                                        \n\
+        See config.h to more detals.                                                                    \n\
+                                                                                                        \n"
+
+
+
