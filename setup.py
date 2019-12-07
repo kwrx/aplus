@@ -16,7 +16,7 @@ paths = {
     'setup'     : 'config.mk',
     'header'    : 'config.h',
     'gconfig'   : 'extra/build/setup',
-    'kconfig'   : 'Kconfig',
+    'kconfig'   : '.config',
     'kconfiglib': 'extra/third-party/kconfiglib',
 }
 
