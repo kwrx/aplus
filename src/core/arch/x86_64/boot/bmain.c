@@ -40,5 +40,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     
     arch_debug_init();
 
+    DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
+    DEBUG_ASSERT(btags);
+
+    // TODO: Parse boot arguments
 
 }

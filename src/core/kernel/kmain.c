@@ -26,5 +26,5 @@
 #include <aplus/core/base.h>
 
 void kmain() {
-    
+    kprintf("Hello World\n");
 }

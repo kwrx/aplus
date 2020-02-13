@@ -252,4 +252,8 @@ _start_high64:
         .extern bmain
         call    bmain
 
+        # Call Kernel Main()
+        .extern kmain
+        call    kmain
+
         jmp .
