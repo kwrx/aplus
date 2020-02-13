@@ -33,15 +33,15 @@
 
 static void dec(unsigned long v, int w, char* buf, int* p) {
 
-    int n = 1;
-    int i = 9;
+    long n = 1;
+    long i = 9;
 
     while(v > i) {
         n++;
         i = (i * 10) + 9;
     }
 
-    int o = 0;
+    long o = 0;
     while(n + o < w)
         { buf[*p] = '0'; *p += 1; o++; }
 
@@ -60,15 +60,15 @@ static void dec(unsigned long v, int w, char* buf, int* p) {
 
 static void hex(unsigned long v, int w, char* buf, int* p, int upper) {
     
-    int n = 1;
-    int i = 0xF;
+    long n = 1;
+    long i = 0xF;
 
     while(v > i) {
         n++;
         i = (i * 0x10) + 0xF;
     }
 
-    int o = 0;
+    long o = 0;
     while(n + o < w)
         { buf[*p] = '0'; *p += 1; o++; }
 
@@ -95,7 +95,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
-    DEBUG_ASSERT(fmt);
+    //DEBUG_ASSERT(fmt);
 
 
     int p = 0;

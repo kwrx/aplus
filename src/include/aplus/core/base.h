@@ -1,6 +1,10 @@
 #ifndef _APLUS_BASE_H
 #define _APLUS_BASE_H
 
+#include <stdint.h>
+
+
+
 #define __KERNEL__      1
 
 
@@ -98,5 +102,50 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 
 #endif
 
+
+
+#define CORE_BUFSIZ                     1024
+
+struct syscore {
+
+    struct {
+        uintptr_t phys_upper;
+        uintptr_t phys_lower;
+    } memory;
+
+    struct {
+        char cmdline[CORE_BUFSIZ];
+        char bootloader[CORE_BUFSIZ];
+    } boot;
+
+    struct {
+
+        uint16_t width;
+        uint16_t height;
+        uint16_t depth;
+        uint32_t pitch;
+        uintptr_t address;
+
+        uint8_t red_field_position;
+        uint8_t green_field_position;
+        uint8_t blue_field_position;
+
+        uint8_t red_mask_size;
+        uint8_t green_mask_size;
+        uint8_t blue_mask_size;
+
+    } framebuffer;
+
+
+    struct {
+        uintptr_t load_base_address;
+    } exe; 
+
+};
+
+//?
+//? See src/core/kmain.c
+//?
+extern struct syscore* core;
 
 #endif

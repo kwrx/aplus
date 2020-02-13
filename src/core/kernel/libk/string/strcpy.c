@@ -23,23 +23,21 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
                                                                         
+#include <stdint.h>
+#include <stdarg.h>
+#include <sys/types.h>
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 
-static struct syscore __core;
-struct syscore* core = &__core;
 
+char* strcpy(char* dest, const char* src) {
 
-void kmain() {
+    //DEBUG_ASSERT(dest);
+    //DEBUG_ASSERT(src);
 
-    kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
-                                      CONFIG_SYSTEM_VERSION,
-                                      CONFIG_SYSTEM_CODENAME,
-                                      CONFIG_COMPILER_HOST);
-        
-    kprintf("core: built with gcc %s (%s)\n", __VERSION__,
-                                              __TIMESTAMP__);
+    char* p = dest;
+    while(*src)
+        *dest++ = *src++;
 
-
-
+    return p;
 }

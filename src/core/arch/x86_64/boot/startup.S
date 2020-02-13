@@ -42,6 +42,33 @@ multiboot_header:
     .long multiboot_header_end - multiboot_header
     .long -(MULTIBOOT2_HEADER_MAGIC + MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
 
+
+  # Information Request (Optional)
+    .short MULTIBOOT_HEADER_TAG_INFORMATION_REQUEST
+    .short MULTIBOOT_HEADER_TAG_OPTIONAL
+    .long 48
+    .long MULTIBOOT_TAG_TYPE_CMDLINE
+    .long MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME
+    .long MULTIBOOT_TAG_TYPE_MODULE
+    .long MULTIBOOT_TAG_TYPE_BOOTDEV
+    .long MULTIBOOT_TAG_TYPE_VBE
+    .long MULTIBOOT_TAG_TYPE_FRAMEBUFFER
+    .long MULTIBOOT_TAG_TYPE_APM
+    .long MULTIBOOT_TAG_TYPE_SMBIOS
+    .long MULTIBOOT_TAG_TYPE_ACPI_OLD
+    .long MULTIBOOT_TAG_TYPE_ACPI_NEW
+
+
+  # Information Request (Required)
+    .short MULTIBOOT_HEADER_TAG_INFORMATION_REQUEST
+    .short 0
+    .long 24
+    .long MULTIBOOT_TAG_TYPE_BASIC_MEMINFO
+    .long MULTIBOOT_TAG_TYPE_MMAP
+    .long MULTIBOOT_TAG_TYPE_ELF_SECTIONS
+    .long MULTIBOOT_TAG_TYPE_LOAD_BASE_ADDR
+
+
   # Framebuffer
     .short MULTIBOOT_HEADER_TAG_FRAMEBUFFER
     .short MULTIBOOT_HEADER_TAG_OPTIONAL
@@ -49,14 +76,19 @@ multiboot_header:
     .long 1280
     .long 720
     .long 32
+    .align MULTIBOOT_INFO_ALIGN
+
 
   # Module Alignment
     .short MULTIBOOT_HEADER_TAG_MODULE_ALIGN
     .short 0
-    
+    .long 8
+
+
   # End
     .short MULTIBOOT_HEADER_TAG_END
     .short 0
+    .long 8
 
 multiboot_header_end:
    
@@ -109,6 +141,12 @@ _start:
         cli
         cld
 
+        # Save boot arguments
+        movl    $V2P(__raw_args), %edi
+        movl    %eax, 0(%edi)
+        movl    %ebx, 8(%edi)
+
+
         # Clear Screen
         movl    $0xB8000, %edi
         movl    $0, %eax
@@ -127,11 +165,7 @@ _start:
         cld
         rep stosb
     
-        
-        # Save boot arguments
-        movl    $V2P(__raw_args), %edi
-        movl    %eax, 0(%edi)
-        movl    %ebx, 8(%edi)
+    
 
         # PML4
         movl    $V2P(startup_pml4), %edi
@@ -242,7 +276,8 @@ _start_high64:
         leaq    __raw_args, %rcx
         movq    0(%rcx), %rdi
         movq    8(%rcx), %rsi
-        addq    $KERNEL_HIGH_AREA, %rsi
+        addq    $KERNEL_HIGH_AREA, %rsi     // High Area
+        addq    $8,   %rsi                  // Skip reserved bytes
 
         # Reset RFLAGS
         pushq   $0

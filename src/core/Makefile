@@ -3,6 +3,8 @@ SRCDIRS	 := arch/$(PLATFORM) kernel
 INCLUDES := ../include
 LIBS	 := gcc
 
+CFLAGS   := -include $(ROOTDIR)/config.h
+ASFLAGS  := -include $(ROOTDIR)/config.h
 DESTDIR  := $(SYSROOT)/boot
 
 

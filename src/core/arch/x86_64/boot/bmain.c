@@ -24,9 +24,11 @@
  */                                                                     
                                                                         
 #include <stdint.h>
+#include <string.h>
 #include <aplus/core/base.h>
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
+
 
 
 
@@ -43,6 +45,112 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
     DEBUG_ASSERT(btags);
 
-    // TODO: Parse boot arguments
+
+    do {
+        
+        if(btags->type == MULTIBOOT_TAG_TYPE_END) {
+            DEBUG_ASSERT(btags->size == 8);
+            break;
+        }
+
+        switch(btags->type) {
+
+            case MULTIBOOT_TAG_TYPE_CMDLINE:
+                strcpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string);
+                break;
+
+            case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
+                strcpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string);
+                break;
+
+            case MULTIBOOT_TAG_TYPE_MODULE:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO:
+                core->memory.phys_upper = ((struct multiboot_tag_basic_meminfo*) btags)->mem_upper;
+                core->memory.phys_lower = ((struct multiboot_tag_basic_meminfo*) btags)->mem_lower;
+                break;
+
+            case MULTIBOOT_TAG_TYPE_BOOTDEV:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_MMAP:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_VBE:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_FRAMEBUFFER:
+
+                if(((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_type != MULTIBOOT_FRAMEBUFFER_TYPE_RGB)
+                    break;
+
+                core->framebuffer.width   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_width;
+                core->framebuffer.height  = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_height;
+                core->framebuffer.depth   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_bpp;
+                core->framebuffer.pitch   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_pitch;
+                core->framebuffer.address = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_addr;
+
+                core->framebuffer.red_field_position   = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_red_field_position;
+                core->framebuffer.red_mask_size        = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_red_mask_size;
+                core->framebuffer.green_field_position = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_green_field_position;
+                core->framebuffer.green_mask_size      = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_green_mask_size;
+                core->framebuffer.blue_field_position  = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_blue_field_position;
+                core->framebuffer.blue_mask_size       = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_blue_mask_size;
+            
+                break;
+
+            case MULTIBOOT_TAG_TYPE_ELF_SECTIONS:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_APM:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_EFI32:
+            case MULTIBOOT_TAG_TYPE_EFI64:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_SMBIOS:
+                break;
+            
+            case MULTIBOOT_TAG_TYPE_ACPI_OLD:
+            case MULTIBOOT_TAG_TYPE_ACPI_NEW:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_NETWORK:
+                break;
+            
+            case MULTIBOOT_TAG_TYPE_EFI_MMAP:
+            case MULTIBOOT_TAG_TYPE_EFI_BS:
+            case MULTIBOOT_TAG_TYPE_EFI32_IH:
+            case MULTIBOOT_TAG_TYPE_EFI64_IH:
+                break;
+
+            case MULTIBOOT_TAG_TYPE_LOAD_BASE_ADDR:
+                core->exe.load_base_address = ((struct multiboot_tag_load_base_addr*) btags)->load_base_addr;
+                break;
+
+            default:
+                kpanicf("bmain(): PANIC! invalid MULTIBOOT_TAG_TYPE_*: %d\n", btags->type);
+
+        }
+
+
+        if(btags->size & 7)
+            btags->size = (btags->size & ~7) + 8;
+
+        btags = (struct multiboot_tag*) ((uintptr_t) btags + btags->size);
+        
+
+    } while(btags);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    kprintf("boot: %s '%s'\n", core->boot.bootloader, 
+                               core->boot.cmdline);
+#endif
+
+
+    // TODO: 
 
 }
