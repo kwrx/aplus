@@ -84,12 +84,12 @@ echo "## Configure environment"
 echo "## Get Packages"
 
     ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
-    ./extra/utils/get-pkg.py --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i system-base system-cursors system-fonts system-images system-keymaps
+    ./extra/utils/get-pkg.py --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i system-base system-cursors system-fonts system-images system-keymaps
 
 
 echo "## Generate Wrapper"
 
-    echo '#!/bin/sh'                                                        > makew
+    echo '#!/bin/sh'                                                         > makew
     echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"'   >> makew
     echo 'make --no-print-directory MAKE_WRAPPER=y $@'                      >> makew
 

@@ -248,6 +248,17 @@ _start_high64:
         movq    $startup_pml4, %rdi
         movq    $0,   (%rdi)
 
+        # Map Heap Area
+        movq    $startup_pml3_high_area, %rdi
+        movq    $0x183, %rsi                            // Global, 1GiB, R/W, Present
+
+        movq    $(KERNEL_HEAP_SIZE >> 30), %rcx         // See include/arch/x86_64/asm.h
+    .L0:
+        movq    %rsi, (%rdi)
+        addq    $8,   %rdi
+        addq    $0x40000000, %rsi
+        loop    .L0
+
         # Invalidate TLB
         movq    %cr3, %rcx
         movq    %ecx, %cr3

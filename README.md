@@ -86,7 +86,7 @@ Some packages are required for the build system:
 
 ```bash
 # Install dependencies
-$ npm install
+$ pip3 install -r docs/requirements.txt
 
 # Build Toolchain
 $ cd sdk
