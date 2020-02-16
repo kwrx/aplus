@@ -27,8 +27,77 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/endian.h>
+#include <aplus/core/hal.h>
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
 
 
+
+/*!
+ * @brief arch_vmm_getpagesize().
+ *        Get page size.
+ */
+uintptr_t arch_vmm_getpagesize() {
+    return 4096;
+}
+
+
+/*!
+ * @brief arch_vmm_gethugepagesize().
+ *        Get huge page size.
+ */
+uintptr_t arch_vmm_gethugepagesize() {
+    return 2 * 1024 * 1024;
+}
+
+
+
+/*!
+ * @brief arch_vmm_p2v().
+ *        Convert a physical address to virtual one.
+ * 
+ * @param physaddr: physical address.
+ * @param type: type of memory area.
+ */
+uintptr_t arch_vmm_p2v(uintptr_t physaddr, int type) {
+
+    switch(type) {
+
+        case ARCH_VMM_AREA_HEAP:
+            return physaddr + KERNEL_HEAP_AREA;
+        
+        case ARCH_VMM_AREA_KERNEL:
+            return physaddr + KERNEL_HIGH_AREA;
+
+    }
+
+    BUG_ON(0);
+    return -1;
+
+}
+
+
+/*!
+ * @brief arch_vmm_v2p().
+ *        Convert a virtual address to physical one.
+ * 
+ * @param virtaddr: virtual address.
+ * @param type: type of memory area.
+ */
+uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
+
+    switch(type) {
+
+        case ARCH_VMM_AREA_HEAP:
+            return virtaddr - KERNEL_HEAP_AREA;
+        
+        case ARCH_VMM_AREA_KERNEL:
+            return virtaddr - KERNEL_HIGH_AREA;
+
+    }
+
+    BUG_ON(0);
+    return -1;
+
+}

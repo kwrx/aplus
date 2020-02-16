@@ -1,5 +1,5 @@
-#ifndef _APLUS_CORE_MM_PMM_H
-#define _APLUS_CORE_MM_PMM_H
+#ifndef _APLUS_CORE_MEMORY_H
+#define _APLUS_CORE_MEMORY_H
 
 #ifndef __ASSEMBLY__
 #include <sys/cdefs.h>

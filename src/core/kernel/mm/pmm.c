@@ -27,7 +27,8 @@
 #include <aplus/core/debug.h>
 #include <aplus/core/ipc.h>
 #include <aplus/core/multiboot.h>
-#include <aplus/core/mm/pmm.h>
+#include <aplus/core/memory.h>
+#include <aplus/core/hal.h>
 
 
 #define PML2_PAGESIZE               (128 * 1024 * 1024)     //? 128MiB
@@ -40,8 +41,6 @@
 /*!
  * @brief pml2_bitmap[].
  *        Physical Page Map Level 2.
- * 
- * // TODO: Insert description
  */
 static uintptr_t pml2_bitmap[PML2_MAX_ENTRIES];
 
@@ -112,6 +111,11 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
     }
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+        kprintf("pmm: claim physical memory area %p-%p\n", physaddr,
+                                                           physaddr + size);
+#endif
+
 }
 
 
@@ -156,10 +160,20 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
     }
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+        kprintf("pmm: unclaim physical memory area %p-%p\n", physaddr,
+                                                             physaddr + size);
+#endif
+
 }
 
 
-
+/*!
+ * @brief pmm_init().
+ *        Initialize Physical Memory Manager.
+ * 
+ * @param max_memory: Max amount of physical memory.
+ */
 void pmm_init(uintptr_t max_memory) {
 
     DEBUG_ASSERT(max_memory);
@@ -190,11 +204,6 @@ void pmm_init(uintptr_t max_memory) {
             continue;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
-        kprintf("pmm: claim physical memory area %p-%p\n", core->mmap.ptr[i].address,
-                                                           core->mmap.ptr[i].address + core->mmap.ptr[i].length);
-#endif
-
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
 
     }
@@ -202,7 +211,7 @@ void pmm_init(uintptr_t max_memory) {
 
     //! Claim lower memory
     extern int end;
-    pmm_claim_area(0, arch_kernel_v2p((uintptr_t) &end));
+    pmm_claim_area(0, arch_vmm_v2p((uintptr_t) &end, ARCH_VMM_AREA_KERNEL));
 
 
     //! Claim other page map memory blocks
@@ -211,12 +220,13 @@ void pmm_init(uintptr_t max_memory) {
         if((i * PML2_PAGESIZE) >= pmm_max_memory)
             break;
 
-        //pml2_bitmap[i] = arch_heap_p2v(pmm_alloc_block());
+        //pml2_bitmap[i] = arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
         spinlock_init(&pml2_lock[i]);
 
     }
 
-
+#if defined(DEBUG)
     kprintf("pmm: physical memory: %d KB\n", pmm_max_memory / 1024);
+#endif
 
 }

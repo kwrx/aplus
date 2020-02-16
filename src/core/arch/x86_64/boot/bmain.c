@@ -28,7 +28,7 @@
 #include <aplus/core/base.h>
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
-#include <aplus/core/mm/pmm.h>
+#include <aplus/core/memory.h>
 
 
 

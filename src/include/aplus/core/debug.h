@@ -2,7 +2,7 @@
 #define _APLUS_CORE_DEBUG_H
 
 #include <sys/cdefs.h>
-
+#include <aplus/core/hal.h>
 
 #ifndef __ASSEMBLY__
 
@@ -26,10 +26,6 @@
 
 
 __BEGIN_DECLS
-
-void arch_debug_init(void);
-void arch_debug_putc(char);
-
 
 void kprintf(const char*, ...);
 void kpanicf(const char*, ...);
