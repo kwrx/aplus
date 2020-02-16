@@ -28,6 +28,7 @@
 #include <aplus/core/base.h>
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
+#include <aplus/core/mm/pmm.h>
 
 
 
@@ -75,6 +76,23 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                 break;
 
             case MULTIBOOT_TAG_TYPE_MMAP:
+
+                {
+
+                    struct multiboot_tag_mmap* mmap = (struct multiboot_tag_mmap*) btags;
+
+                    for(size_t i = 0; i < (mmap->size - 16) / mmap->entry_size; i++) {
+
+                        core->mmap.ptr[core->mmap.count].address = mmap->entries[i].addr;
+                        core->mmap.ptr[core->mmap.count].length  = mmap->entries[i].len;
+                        core->mmap.ptr[core->mmap.count].type    = mmap->entries[i].type;
+
+                        core->mmap.count += 1;
+
+                    }
+
+                }
+
                 break;
 
             case MULTIBOOT_TAG_TYPE_VBE:
@@ -150,6 +168,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                                core->boot.cmdline);
 #endif
 
+
+    //* Initialize Physical Memory Manager
+    pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
     // TODO: 
 

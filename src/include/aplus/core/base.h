@@ -2,7 +2,7 @@
 #define _APLUS_BASE_H
 
 #include <stdint.h>
-
+#include <stddef.h>
 
 
 #define __KERNEL__      1
@@ -60,6 +60,7 @@
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
 
+#if 0 //! FIXME !!
 #define __user          __attribute__((noderef, address_space(1)))
 #define __kernel        __attribute__((address_space(0)))
 #define __safe          __attribute__((safe))
@@ -67,6 +68,15 @@
 #define __nocast        __attribute__((nocast))
 #define __iomem         __attribute__((noderef, address_space(2)))
 #define __percpu        __attribute__((noderef, address_space(3)))
+#endif 
+
+#define __user
+#define __kernel
+#define __safe
+#define __force
+#define __nocast
+#define __iomem
+#define __percpu
 
 #define __must_hold(x)  __attribute__((context(x,1,1)))
 #define __acquires(x)   __attribute__((context(x,0,1)))
@@ -109,13 +119,29 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 struct syscore {
 
     struct {
+
         uintptr_t phys_upper;
         uintptr_t phys_lower;
+
     } memory;
 
     struct {
+
+        struct {
+            uintptr_t address;
+            uintptr_t length;
+            uintptr_t type;
+        } ptr[256];
+
+        size_t count;
+
+    } mmap;
+
+    struct {
+        
         char cmdline[CORE_BUFSIZ];
         char bootloader[CORE_BUFSIZ];
+
     } boot;
 
     struct {

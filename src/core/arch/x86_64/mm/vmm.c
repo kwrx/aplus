@@ -39,3 +39,6 @@ uintptr_t arch_getpagesize() {
 uintptr_t arch_gethugepagesize() {
     return 2 * 1024 * 1024;
 }
+
+uintptr_t arch_heap_p2v(uintptr_t physaddr) { return physaddr - KERNEL_HEAP_AREA; }
+uintptr_t arch_kernel_v2p(uintptr_t physaddr) { return physaddr - KERNEL_HIGH_AREA; }
