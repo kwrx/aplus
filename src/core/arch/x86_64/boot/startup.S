@@ -22,13 +22,14 @@
  */
 
 
+#include <aplus/core/base.h>
 #include <aplus/core/linkage.h>
 #include <aplus/core/multiboot.h>
 #include <arch/x86/asm.h>
 
 
 
-    .code32
+    .code64
     .section .multiboot
 
 multiboot_header: 
@@ -110,26 +111,108 @@ multiboot_header_end:
         .align KERNEL_STACK_SIZE
     startup_stack:
         .skip  KERNEL_STACK_SIZE
+    startup_exception_stack:
+        .skip 4096
+    startup_interrupt_stack:
+        .skip 4096
 
 
 .data
 .align 4096
 
+        .global startup_gdtp
+        .global startup_idtp
+        .global startup_idtp_ptr
+        .global startup_tss
+        .global startup_isr
+
     startup_gdtp:
-        .quad 0x000100000000FFFF
-        .quad 0x00AF9A0000000000
-        .quad 0x0000920000000000
+        .quad 0x0000000000000000    //?
+        .quad 0x00A09A0000000000    //? 0x08 Kernel Code
+        .quad 0x0080920000000000    //? 0x10 Kernel Data
+        .quad 0x00A0FA0000000000    //? 0x1B User Code
+        .quad 0x0080F20000000000    //? 0x23 User Data
+      
+      .rept 256
+        .quad 0x0000E90000000068    //? 0x28 + (n * 16), where n is a cpu id
+        .quad 0x0000000000000000    //? TSS 64 (Available)
+      .endr
+
     startup_gdtp_ptr:
         .word . - startup_gdtp - 1
         .quad V2P(startup_gdtp)
 
+.align 16
+
+    startup_tss:
+        .long 0
+        .quad startup_interrupt_stack + 4096  //? RSP0: Kernel Stack
+        .quad 0                               //  TODO: Map interrupt stack
+        .quad 0
+        .quad 0
+        .quad startup_exception_stack + 4096  //? IST1: Exception Stack
+        .quad 0
+        .quad 0
+        .quad 0
+        .quad 0
+        .quad 0
+        .quad 0
+        .quad 0
+        .long 104
+
+.align 16
+
+    startup_idtp:
+      .rept 32
+        .word 0
+        .word KERNEL_CS
+        .byte 0x01    // IST1
+        .byte 0x8F    // Trap Gate;       DPL=0
+        .quad 0
+        .word 0
+      .endr
+
+      .rept 224
+        .word 0
+        .word KERNEL_CS
+        .byte 0x00    // RSP0
+        .byte 0x8E    // Interrupt Gate;  DPL=0
+        .quad 0
+        .word 0
+      .endr
+   
+    startup_idtp_ptr:
+        .word . - startup_idtp - 1
+        .quad startup_idtp
+
+.align 16
+
+    startup_isr:
+      .set i, 0
+      .rept 256
+        .align 16
+        
+        .if (i == 8) || (i >= 10 && i <= 14) || (i == 17)   // With error code
+          nop
+          nop
+          pushq $i
+          jmp   interrupt_common
+        .else                                               // Without error code
+          pushq $0
+          pushq $i
+          jmp   interrupt_common
+        .endif
+
+        .set i, i + 1
+        .align 16
+      .endr
+
+.align 16
+
     __raw_args:
         .quad 0, 0
 
-
-
-
-
+.align 16
 
         .text
         .code32
@@ -279,6 +362,51 @@ _start_high64:
         orw     $0x0600, %cx
         movq    %rcx, %cr4
 
+        # Load High GDT
+        movq    $startup_gdtp_ptr, %rcx
+        movq    $startup_gdtp, 2(%rcx)
+        lgdt    (startup_gdtp_ptr)
+
+        # Load TSS
+        movq    $startup_tss, %rax
+        movq    $startup_gdtp, %rdi
+        addq    $KERNEL_TSS, %rdi
+
+        movw    %ax,  2(%rdi)     // Base 00:16
+
+        shrq    $16,  %rax
+        movb    %al,  4(%rdi)     // Base 16:24
+
+        shrq    $8,   %rax
+        movb    %al,  7(%rdi)     // Base 24:32
+        
+        shrq    $8,   %rax
+        movl    %eax, 8(%rdi)     // Base 32:64
+
+        movq    $(KERNEL_TSS | 3), %rax
+        ltrw    %ax
+
+        # Load IDT
+        movq    $startup_idtp, %rdi
+        movq    $startup_isr, %rsi
+        movq    $256, %rcx
+    .L1:
+        movq    %rsi, %rax
+        movw    %ax,  0(%rdi)     // Offset 00:16
+
+        shrq    $16,  %rax
+        movw    %ax,  6(%rdi)     // Offset 16:32
+
+        shrq    $16,  %rax
+        movl    %eax, 8(%rdi)     // Offset 32:64
+
+        addq    $16,  %rdi
+        addq    $16,  %rsi
+        loop    .L1
+
+        movq    $startup_idtp_ptr, %rax
+        lidt    (%rax)
+
         # Stack unwinding
         pushq   $0
         pushq   $0
@@ -302,4 +430,64 @@ _start_high64:
         .extern kmain
         call    kmain
 
+halt:
         jmp .
+
+
+
+
+
+        .text
+        .align 16, 0x90
+        .code64
+
+        .global interrupt_common
+        .type interrupt_common, @function
+interrupt_common:
+
+        cld
+
+        # Save Registers
+        pushq   %r15
+        pushq   %r14
+        pushq   %r13
+        pushq   %r12
+        pushq   %r11
+        pushq   %r10
+        pushq   %r9
+        pushq   %r8
+        pushq   %rax
+        pushq   %rcx
+        pushq   %rdx
+        pushq   %rbx
+        pushq   %rbp
+        pushq   %rsi
+        pushq   %rdi
+
+        movq    %rsp, %rdi
+
+        # Call Exception Handler
+        .extern x86_exception_handler
+        callq   x86_exception_handler
+
+        # Restore Registers
+        popq    %rdi
+        popq    %rsi
+        popq    %rbp
+        popq    %rbx
+        popq    %rdx
+        popq    %rcx
+        popq    %rax
+        popq    %r8
+        popq    %r9
+        popq    %r10
+        popq    %r11
+        popq    %r12
+        popq    %r13
+        popq    %r14
+        popq    %r15
+
+        addq    $16, %rsp
+        iretq
+
+END(interrupt_common)

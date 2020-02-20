@@ -2,6 +2,8 @@
 #define _APLUS_BYTEORDER_H
 
 
+#ifndef __ASSEMBLY__
+
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 
 #define be16_to_cpu(i)  __builtin_bswap16(i)
@@ -43,5 +45,5 @@
 #error "__BYTE_ORDER__ not supported or not defined"
 #endif
 
-
+#endif
 #endif

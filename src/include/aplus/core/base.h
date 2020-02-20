@@ -1,9 +1,6 @@
 #ifndef _APLUS_BASE_H
 #define _APLUS_BASE_H
 
-#include <stdint.h>
-#include <stddef.h>
-
 
 #define __KERNEL__      1
 
@@ -18,6 +15,10 @@
 #endif
 
 
+#ifndef __ASSEMBLY__
+
+#include <stdint.h>
+#include <stddef.h>
 
 #ifndef likely
 #define likely(cond)    __builtin_expect(!!(cond), 1)
@@ -174,4 +175,5 @@ struct syscore {
 //?
 extern struct syscore* core;
 
+#endif
 #endif

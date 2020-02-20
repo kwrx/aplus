@@ -47,6 +47,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     DEBUG_ASSERT(btags);
 
 
+
     do {
         
         if(btags->type == MULTIBOOT_TAG_TYPE_END) {

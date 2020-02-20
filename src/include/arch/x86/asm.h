@@ -4,6 +4,7 @@
 
 #define KERNEL_CS               0x08
 #define KERNEL_DS               0x10
+#define KERNEL_TSS              0x28
 
 
 #if defined(__x86_64__)

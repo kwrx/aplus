@@ -25,12 +25,14 @@
                                                                         
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
+#include <aplus/core/memory.h>
 
 static struct syscore __core;
 struct syscore* core = &__core;
 
 
 void kmain() {
+
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
                                       CONFIG_SYSTEM_VERSION,

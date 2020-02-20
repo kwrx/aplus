@@ -24,83 +24,53 @@
  */                                                                     
                                                                         
 #include <stdint.h>
+#include <string.h>
 #include <aplus/core/base.h>
+#include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
-#include <aplus/core/endian.h>
-#include <aplus/core/hal.h>
+#include <aplus/core/memory.h>
 
-#include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
+#include <arch/x86/intr.h>
 
 
-
-/*!
- * @brief arch_vmm_getpagesize().
- *        Get page size.
- */
-uintptr_t arch_vmm_getpagesize() {
-    return 4096;
-}
+void x86_exception_handler(interrupt_frame_t* frame) {
+    
+    DEBUG_ASSERT(frame);
 
 
-/*!
- * @brief arch_vmm_gethugepagesize().
- *        Get huge page size.
- */
-uintptr_t arch_vmm_gethugepagesize() {
-    return 2 * 1024 * 1024;
-}
+    switch(frame->intno) {
 
+        case 0x20 ... 0xFF:
+            break;
 
+        case 0x0E:
 
-/*!
- * @brief arch_vmm_p2v().
- *        Convert a physical address to virtual one.
- * 
- * @param physaddr: physical address.
- * @param type: type of memory area.
- */
-uintptr_t arch_vmm_p2v(uintptr_t physaddr, int type) {
+            // TODO: Handle Page Fault (Copy on Write, Swap, ecc...)
 
-    switch(type) {
+            kpanicf("x86-pfe: errno(%p), cs(%p), ip(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, x86_get_cr2());
+            break;
 
-        case ARCH_VMM_AREA_HEAP:
-            return physaddr + KERNEL_HEAP_AREA;
-        
-        case ARCH_VMM_AREA_KERNEL:
-            return physaddr + KERNEL_HIGH_AREA;
+        default:
+
+            // TODO: Handle User Exception
+
+            kpanicf("x86-intr: exception(%p), errno(%p)\n", frame->intno, frame->errno);
+            break;
 
     }
 
-    BUG_ON(0);
-    return -1;
 
-}
+    switch(frame->intno) {
 
+        case 0xFF:
+            kpanicf("x86-intr: Spourius Interrupt on cpu #%d\n", 0 /* TODO: SMP */);
+            break;
 
-/*!
- * @brief arch_vmm_v2p().
- *        Convert a virtual address to physical one.
- * 
- * @param virtaddr: virtual address.
- * @param type: type of memory area.
- */
-uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
-
-    switch(type) {
-
-        case ARCH_VMM_AREA_HEAP:
-            return virtaddr - KERNEL_HEAP_AREA;
-        
-        case ARCH_VMM_AREA_KERNEL:
-            return virtaddr - KERNEL_HIGH_AREA;
-
-        //case ARCH_VMM_AREA_USER:
-            //return __x86_ptr_phys(virtaddr);
+        case 0x20 ... 0xFE:
+            kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+            break;
 
     }
-
-    BUG_ON(0);
-    return -1;
 
 }

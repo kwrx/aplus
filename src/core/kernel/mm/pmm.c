@@ -31,12 +31,6 @@
 #include <aplus/core/hal.h>
 
 
-#define PML2_PAGESIZE               (128 * 1024 * 1024)     //? 128MiB
-#define PML1_PAGESIZE               (4096)                  //? 4KiB
-
-#define PML2_MAX_ENTRIES            (4096)
-#define PML1_MAX_ENTRIES            (4096)
-
 
 /*!
  * @brief pml2_bitmap[].
@@ -60,7 +54,7 @@ static spinlock_t pml2_lock[PML2_MAX_ENTRIES];
  * @brief pml1_first_bitmap[].
  *        First Page Map Bitmap (0-128Mib)
  */
-static uint64_t pml1_first_bitmap[PML1_MAX_ENTRIES / sizeof(uint64_t)];
+static uint64_t pml1_first_bitmap[PML1_MAX_ENTRIES];
 
 /*!
  * @brief pmm_max_memory.
@@ -80,10 +74,10 @@ static uintptr_t pmm_max_memory = 0;
  */
 void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
-    if(physaddr & PML1_PAGESIZE)
+    if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
 
-    if(size & PML1_PAGESIZE)
+    if(size & (PML1_PAGESIZE - 1))
         size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
 
@@ -92,11 +86,13 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
 
 
-    for(uint64_t p = physaddr; p < (physaddr + size); p += PML1_PAGESIZE) {
+    for(uintptr_t p = physaddr; p < (physaddr + size); p += PML1_PAGESIZE) {
 
-        int pml2_index = p >> 27;
+        uint64_t pml2_index = (p >> 27);
+        uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
 
         BUG_ON(pml2_index < PML2_MAX_ENTRIES);
+        BUG_ON(pml1_index < PML1_MAX_ENTRIES * 64);
         BUG_ON(pml2_bitmap[pml2_index] != 0);
 
 
@@ -104,7 +100,7 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
         __lock(&pml2_lock[pml2_index], {
 
-            pml1_bitmap[p / 64] |= (1 << (p % 64));
+            pml1_bitmap[pml1_index / 64] |= (1ULL << (pml1_index % 64));
             pml2_pusage[pml2_index]++;
 
         });
@@ -129,10 +125,10 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
  */
 void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
-    if(physaddr & PML1_PAGESIZE)
+    if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
 
-    if(size & PML1_PAGESIZE)
+    if(size & (PML1_PAGESIZE - 1))
         size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
 
@@ -143,9 +139,11 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
     for(uint64_t p = physaddr; p < (physaddr + size); p += PML1_PAGESIZE) {
 
-        int pml2_index = p >> 27;
+        uint64_t pml2_index = (p >> 27);
+        uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
 
         BUG_ON(pml2_index < PML2_MAX_ENTRIES);
+        BUG_ON(pml1_index < PML1_MAX_ENTRIES * 64);
         BUG_ON(pml2_bitmap[pml2_index] != 0);
 
 
@@ -153,7 +151,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
         __lock(&pml2_lock[pml2_index], {
 
-            pml1_bitmap[p / 64] &= ~(1 << (p % 64));
+            pml1_bitmap[pml1_index / 64] &= ~(1ULL << (pml1_index % 64));
             pml2_pusage[pml2_index]--;
 
         });
@@ -166,6 +164,170 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 #endif
 
 }
+
+
+
+/*!
+ * @brief pmm_alloc_block().
+ *        Allocate a physical block of PML1_PAGESIZE bytes.
+ */
+uintptr_t pmm_alloc_block() {
+
+    uint64_t r = -1;
+    uint64_t i, j, q;
+
+    for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+
+        if(pml2_bitmap[i] == 0)
+            break;
+
+        if(pml2_pusage[i] == PML2_MAX_ENTRIES << 3)
+            continue;
+
+
+        uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[i];
+
+
+        for(q = 0; q < PML1_MAX_ENTRIES; q++) {
+
+            if(unlikely(pml1_bitmap[q] == 0xFFFFFFFFFFFFFFFFULL))
+                continue;
+
+
+            __lock(&pml2_lock[q], {
+                
+                for(j = 0; j < 64; j++) {
+
+                    if(unlikely(pml1_bitmap[q] & (1ULL << j)))
+                        continue;
+
+                        
+                    pml1_bitmap[q] |= (1ULL << j);
+                    pml2_pusage[q]++;
+
+                    r = (i * PML2_PAGESIZE) + (((q << 6ULL) + j) * PML1_PAGESIZE);
+                    break;
+
+                }
+
+            });
+
+            if(unlikely(r != -1))
+                goto end;
+
+        }
+    
+    }
+
+
+end:
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("pmm: pmm_alloc_block() at %p\n", r);
+#endif
+
+    return r;
+
+}
+
+
+
+/*!
+ * @brief pmm_alloc_blocks().
+ *        Allocate physical blocks of (n * PML1_PAGESIZE) bytes.
+ * 
+ * @param blkno: Number of blocks to allocate.
+ */
+uintptr_t pmm_alloc_blocks(size_t blkno) {
+
+    uint64_t r = -1;
+    uint64_t c = 0;
+    uint64_t i, j, q;
+
+    for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+
+        if(pml2_bitmap[i] == 0)
+            break;
+
+        if(pml2_pusage[i] >= (PML2_MAX_ENTRIES << 3) - blkno)
+            continue;
+
+
+        uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[i];
+
+
+        for(q = 0; q < PML1_MAX_ENTRIES; q++) {
+
+            if(unlikely(pml1_bitmap[q] == 0xFFFFFFFFFFFFFFFFULL))
+                { c = 0; continue; }
+
+
+            __lock(&pml2_lock[q], {
+                
+                for(j = 0; j < 64; j++) {
+
+                    if(unlikely(pml1_bitmap[q] & (1ULL << j)))
+                        { c = 0; continue; }
+
+                    if(c == 0)
+                        r = (i * PML2_PAGESIZE) + (((q << 6ULL) + j) * PML1_PAGESIZE);
+
+                    if(++c == blkno)
+                        break;
+
+                }
+
+            });
+
+            if(unlikely(c == blkno))
+                goto end;
+
+        }
+    
+    }
+
+
+end:
+
+    pmm_claim_area(r, blkno * PML1_PAGESIZE);
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("pmm: pmm_alloc_blocks(%d) at %p-%p\n", blkno, r, r + (blkno * PML1_PAGESIZE));
+#endif
+
+    return r;
+
+}
+
+
+
+
+
+/*!
+ * @brief pmm_free_block().
+ *        Frees a physical block of PML1_PAGESIZE bytes.
+ * 
+ * @param address: Physical address of block.
+ */
+void pmm_free_block(uintptr_t address) {
+    pmm_unclaim_area(address, PML1_PAGESIZE);
+}
+
+
+
+/*!
+ * @brief pmm_free_blocks().
+ *        Frees physical blocks of (n * PML1_PAGESIZE) bytes.
+ * 
+ * @param address: Physical address of block.
+ * @param blkno: Number of blocks to free.
+ */
+void pmm_free_blocks(uintptr_t address, size_t blkno) {
+    pmm_unclaim_area(address, PML1_PAGESIZE * blkno);
+}
+
+
+
 
 
 /*!
@@ -188,7 +350,12 @@ void pmm_init(uintptr_t max_memory) {
         pml2_pusage[i] = 0;
     }
 
+
+    for(i = 0; i < PML1_MAX_ENTRIES; i++)
+        pml1_first_bitmap[i] = 0;
+
     pml2_bitmap[0] = (uintptr_t) &pml1_first_bitmap;
+
 
 
     //! Claim Boot Memory Map areas
@@ -208,6 +375,8 @@ void pmm_init(uintptr_t max_memory) {
 
     }
 
+    // TODO: Claim Modules
+
 
     //! Claim lower memory
     extern int end;
@@ -215,15 +384,23 @@ void pmm_init(uintptr_t max_memory) {
 
 
     //! Claim other page map memory blocks
-    for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+    for(i = 1; i < PML2_MAX_ENTRIES; i++) {
 
-        if((i * PML2_PAGESIZE) >= pmm_max_memory)
+        if(((uintptr_t) i * PML2_PAGESIZE) >= pmm_max_memory)
             break;
 
-        //pml2_bitmap[i] = arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
+
+        uint64_t* b = (uint64_t*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
+
+        int j;
+        for(j = 0; j < PML1_MAX_ENTRIES; j++)
+            b[j] = 0;
+
         spinlock_init(&pml2_lock[i]);
+        pml2_bitmap[i] = (uintptr_t) b;
 
     }
+
 
 #if defined(DEBUG)
     kprintf("pmm: physical memory: %d KB\n", pmm_max_memory / 1024);

@@ -1,10 +1,11 @@
 #ifndef _APLUS_CORE_DEBUG_H
 #define _APLUS_CORE_DEBUG_H
 
+#ifndef __ASSEMBLY__
+
 #include <sys/cdefs.h>
 #include <aplus/core/hal.h>
 
-#ifndef __ASSEMBLY__
 
 #if defined(DEBUG)
 #define DEBUG_ASSERT(i)     \

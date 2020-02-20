@@ -51,4 +51,4 @@ if [ ! -z $2 ]; then
     debug="-S"
 fi
 
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
+qemu-system-$arch -d int -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags

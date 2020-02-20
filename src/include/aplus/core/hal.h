@@ -9,6 +9,7 @@
 
 #define ARCH_VMM_AREA_HEAP          1
 #define ARCH_VMM_AREA_KERNEL        2
+#define ARCH_VMM_AREA_USER          3
 
 
 __BEGIN_DECLS
