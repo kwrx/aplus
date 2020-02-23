@@ -74,6 +74,9 @@ static uintptr_t pmm_max_memory = 0;
  */
 void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
+    DEBUG_ASSERT(size);
+
+
     if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
 
@@ -124,6 +127,9 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
  * @param size:     Size of Memory Area in bytes.
  */
 void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
+
+    DEBUG_ASSERT(size);
+
 
     if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
@@ -240,6 +246,9 @@ end:
  */
 uintptr_t pmm_alloc_blocks(size_t blkno) {
 
+    DEBUG_ASSERT(blkno);
+
+
     uint64_t r = -1;
     uint64_t c = 0;
     uint64_t i, j, q;
@@ -302,6 +311,83 @@ end:
 
 
 
+/*!
+ * @brief pmm_alloc_blocks_aligned().
+ *        Allocate physical blocks of (n * PML1_PAGESIZE) bytes at aligned address.
+ * 
+ * @param blkno: Number of blocks to allocate.
+ * @param align: Address alignment.
+ */
+uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
+
+    DEBUG_ASSERT(blkno);
+    DEBUG_ASSERT(align);
+    DEBUG_ASSERT((align & (PML1_PAGESIZE - 1)) == 0);
+
+
+    uint64_t r = -1;
+    uint64_t c = 0;
+    uint64_t i, j, q;
+
+    for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+
+        if(pml2_bitmap[i] == 0)
+            break;
+
+        if(pml2_pusage[i] >= (PML2_MAX_ENTRIES << 3) - blkno)
+            continue;
+
+
+        uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[i];
+
+
+        for(q = 0; q < PML1_MAX_ENTRIES; q++) {
+
+            if(unlikely(pml1_bitmap[q] == 0xFFFFFFFFFFFFFFFFULL))
+                { c = 0; continue; }
+
+
+            __lock(&pml2_lock[q], {
+                
+                for(j = 0; j < 64; j++) {
+
+                    if(unlikely(pml1_bitmap[q] & (1ULL << j)))
+                        { c = 0; continue; }
+
+                    if(c == 0)
+                        if((r = (i * PML2_PAGESIZE) + (((q << 6ULL) + j) * PML1_PAGESIZE)) & (align - 1))
+                            continue;
+
+                    if(++c == blkno)
+                        break;
+
+                }
+
+            });
+
+            if(unlikely(c == blkno))
+                goto end;
+
+        }
+    
+    }
+
+
+end:
+
+    pmm_claim_area(r, blkno * PML1_PAGESIZE);
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("pmm: pmm_alloc_blocks_aligned(%d, %p) at %p-%p\n", blkno, align, r, r + (blkno * PML1_PAGESIZE));
+#endif
+
+    return r;
+
+}
+
+
+
+
 
 /*!
  * @brief pmm_free_block().
@@ -323,7 +409,11 @@ void pmm_free_block(uintptr_t address) {
  * @param blkno: Number of blocks to free.
  */
 void pmm_free_blocks(uintptr_t address, size_t blkno) {
+
+    DEBUG_ASSERT(blkno);
+
     pmm_unclaim_area(address, PML1_PAGESIZE * blkno);
+
 }
 
 

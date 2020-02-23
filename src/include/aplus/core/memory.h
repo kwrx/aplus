@@ -5,17 +5,52 @@
 #include <sys/cdefs.h>
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
+#include <aplus/core/ipc.h>
 
-#define PML2_PAGESIZE               (128 * 1024 * 1024)     //? 128MiB
-#define PML1_PAGESIZE               (4096)                  //? 4KiB
 
-#define PML2_MAX_ENTRIES            (4096)
+//* PMM */
+#define PML2_PAGESIZE               (128 * 1024 * 1024)         //? 128MiB
+#define PML1_PAGESIZE               (4096)                      //? 4KiB
+
+#define PML2_MAX_ENTRIES            (16384)                     //? 2TiB
 #define PML1_MAX_ENTRIES            (4096 / sizeof(uint64_t))
 
 
+//* Heap */
 #define GFP_KERNEL                  0
 #define GFP_ATOMIC                  1
 #define GFP_USER                    2
+
+
+//* MMIO */
+#define mmio_r8(p)                  (*(uint8_t volatile*) (p))
+#define mmio_r16(p)                 (*(uint16_t volatile*) (p))
+#define mmio_r32(p)                 (*(uint32_t volatile*) (p))
+#define mmio_r64(p)                 (*(uint64_t volatile*) (p))
+
+#define mmio_w8(p, v)               { mmio_r8(p) = (uint8_t) (v); }
+#define mmio_w16(p, v)              { mmio_r16(p) = (uint16_t) (v); }
+#define mmio_w32(p, v)              { mmio_r32(p) = (uint32_t) (v); }
+#define mmio_w64(p, v)              { mmio_r64(p) = (uint64_t) (v); }
+
+
+//* Virtual Memory */
+#define ARCH_VMM_MAP_RDWR           (1 << 0)
+#define ARCH_VMM_MAP_NOEXEC         (1 << 1)
+#define ARCH_VMM_MAP_USER           (1 << 2)
+#define ARCH_VMM_MAP_UNCACHED       (1 << 3)
+#define ARCH_VMM_MAP_SHARED         (1 << 4)
+#define ARCH_VMM_MAP_FIXED          (1 << 5)
+#define ARCH_VMM_MAP_VIDEO_MEMORY   (1 << 6)
+
+typedef struct vmm_address_space {
+    
+    uintptr_t pm;
+    size_t size;
+    int refcount;
+    spinlock_t lock;
+
+} vmm_address_space_t;
 
 
 
@@ -25,6 +60,7 @@ void pmm_claim_area(uintptr_t, size_t);
 void pmm_unclaim_area(uintptr_t, size_t);
 uintptr_t pmm_alloc_block();
 uintptr_t pmm_alloc_blocks(size_t);
+uintptr_t pmm_alloc_blocks_aligned(size_t, uintptr_t);
 void pmm_free_block(uintptr_t);
 void pmm_free_blocks(uintptr_t, size_t);
 void pmm_init(uintptr_t);

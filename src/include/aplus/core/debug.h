@@ -4,7 +4,6 @@
 #ifndef __ASSEMBLY__
 
 #include <sys/cdefs.h>
-#include <aplus/core/hal.h>
 
 
 #if defined(DEBUG)

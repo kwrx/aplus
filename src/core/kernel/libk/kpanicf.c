@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
+#include <aplus/core/hal.h>
 #include <aplus/core/ipc.h>
 
 

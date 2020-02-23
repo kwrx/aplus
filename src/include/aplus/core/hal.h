@@ -5,6 +5,7 @@
 #include <sys/cdefs.h>
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
+#include <aplus/core/memory.h>
 
 
 #define ARCH_VMM_AREA_HEAP          1
@@ -19,7 +20,8 @@ uintptr_t arch_vmm_getpagesize();
 uintptr_t arch_vmm_gethugepagesize();
 uintptr_t arch_vmm_p2v(uintptr_t, int);
 uintptr_t arch_vmm_v2p(uintptr_t, int);
-
+uintptr_t arch_vmm_map(vmm_address_space_t*, uintptr_t, uintptr_t, size_t, int);
+uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t);
 
 //* Debug
 void arch_debug_init(void);

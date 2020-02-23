@@ -106,9 +106,13 @@ multiboot_header_end:
         .skip 4096
     startup_pml3_high_area: 
         .skip 4096
+    startup_pml3_heap_area:
+        .skip ((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 27)
     startup_pml2_stack_area:
         .skip 4096
-        .align KERNEL_STACK_SIZE
+
+.align KERNEL_STACK_SIZE
+
     startup_stack:
         .skip  KERNEL_STACK_SIZE
     startup_exception_stack:
@@ -212,7 +216,7 @@ multiboot_header_end:
     __raw_args:
         .quad 0, 0
 
-.align 16
+.align 16, 0x90
 
         .text
         .code32
@@ -260,6 +264,16 @@ _start:
         btsl    $0,   %esi                              // Present
         movl    %esi, (511 * 8)(%edi)
 
+        movl    $V2P(startup_pml3_heap_area), %esi
+        addl    $((KERNEL_HEAP_AREA & 0x0000FFFFFFFFFFFF) >> 36), %edi
+        movl    $((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 39), %ecx
+    .L0:
+        btsl    $0,   %esi                              // Present
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L0
+
         # PML3
         movl    $V2P(startup_pml3_low_area), %edi
         movl    $0x183, %esi                            // Global, 1GiB, R/W, Present
@@ -294,7 +308,6 @@ _start:
         movl    $0xC0000080, %ecx
         rdmsr
         btsl    $8,   %eax      # LME
-        btsl    $11,  %eax      # NX
         wrmsr
 
         # Enable Paging
@@ -332,15 +345,15 @@ _start_high64:
         movq    $0,   (%rdi)
 
         # Map Heap Area
-        movq    $startup_pml3_high_area, %rdi
+        movq    $startup_pml3_heap_area, %rdi
         movq    $0x183, %rsi                            // Global, 1GiB, R/W, Present
 
         movq    $(KERNEL_HEAP_SIZE >> 30), %rcx         // See include/arch/x86_64/asm.h
-    .L0:
+    .L1:
         movq    %rsi, (%rdi)
         addq    $8,   %rdi
         addq    $0x40000000, %rsi
-        loop    .L0
+        loop    .L1
 
         # Invalidate TLB
         movq    %cr3, %rcx
@@ -390,7 +403,7 @@ _start_high64:
         movq    $startup_idtp, %rdi
         movq    $startup_isr, %rsi
         movq    $256, %rcx
-    .L1:
+    .L2:
         movq    %rsi, %rax
         movw    %ax,  0(%rdi)     // Offset 00:16
 
@@ -402,7 +415,7 @@ _start_high64:
 
         addq    $16,  %rdi
         addq    $16,  %rsi
-        loop    .L1
+        loop    .L2
 
         movq    $startup_idtp_ptr, %rax
         lidt    (%rax)
@@ -433,7 +446,7 @@ _start_high64:
 halt:
         jmp .
 
-
+END(_start)
 
 
 

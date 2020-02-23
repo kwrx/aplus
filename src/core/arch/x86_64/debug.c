@@ -33,74 +33,52 @@
 #include <arch/x86/cpu.h>
 
 
+#define BIOS_COM_ADDRESS            0x400
 
-/*!
- * @brief arch_vmm_getpagesize().
- *        Get page size.
- */
-uintptr_t arch_vmm_getpagesize() {
-    return 4096;
-}
+
+static uint16_t com_address = 0;
 
 
 /*!
- * @brief arch_vmm_gethugepagesize().
- *        Get huge page size.
- */
-uintptr_t arch_vmm_gethugepagesize() {
-    return 2 * 1024 * 1024;
-}
-
-
-
-/*!
- * @brief arch_vmm_p2v().
- *        Convert a physical address to virtual one.
+ * @brief Initialize Debugger on UART0.
  * 
- * @param physaddr: physical address.
- * @param type: type of memory area.
+ * Read COM Address from SMBios Area and configure Serial Port.
  */
-uintptr_t arch_vmm_p2v(uintptr_t physaddr, int type) {
+void arch_debug_init(void) {
 
-    switch(type) {
+    uint16_t* p = (uint16_t*) (KERNEL_HIGH_AREA + BIOS_COM_ADDRESS);
+    
+    for(int i = 0; i < 4; i++) {
+        if(p[i] == 0)
+            continue;
 
-        case ARCH_VMM_AREA_HEAP:
-            return physaddr + KERNEL_HEAP_AREA;
-        
-        case ARCH_VMM_AREA_KERNEL:
-            return physaddr + KERNEL_HIGH_AREA;
+        com_address = p[i];
 
+        outb(com_address + 1, 0x00);
+        outb(com_address + 3, 0x80);
+        outb(com_address + 0, 0x03);
+        outb(com_address + 1, 0x00);
+        outb(com_address + 3, 0x03);
+        outb(com_address + 2, 0xC7);
+        outb(com_address + 4, 0x0B);
+
+        break;
     }
-
-    BUG_ON(0);
-    return -1;
-
 }
 
 
 /*!
- * @brief arch_vmm_v2p().
- *        Convert a virtual address to physical one.
+ * @brief Write to Debugger.
  * 
- * @param virtaddr: virtual address.
- * @param type: type of memory area.
+ * Wait and write a character on Serial Port.
  */
-uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
+void arch_debug_putc(char ch) {
+    if(unlikely(!com_address))
+        return;
 
-    switch(type) {
+    int i;
+    for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
+        __builtin_ia32_pause();
 
-        case ARCH_VMM_AREA_HEAP:
-            return virtaddr - KERNEL_HEAP_AREA;
-        
-        case ARCH_VMM_AREA_KERNEL:
-            return virtaddr - KERNEL_HIGH_AREA;
-
-        //case ARCH_VMM_AREA_USER:
-            //return __x86_ptr_phys(virtaddr);
-
-    }
-
-    BUG_ON(0);
-    return -1;
-
+    outb(com_address, ch);
 }

@@ -2,8 +2,6 @@
 #define _APLUS_BASE_H
 
 
-#define __KERNEL__      1
-
 
 #ifdef DEBUG
 #undef DEBUG
@@ -58,7 +56,7 @@
 #define __alias(s)      __attribute__((alias(#s)))
 #endif
 
-
+#if defined(KERNEL)
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
 
 #if 0 //! FIXME !!
@@ -114,6 +112,7 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #endif
 
 
+#include <aplus/core/memory.h>
 
 #define CORE_BUFSIZ                     1024
 
@@ -168,6 +167,24 @@ struct syscore {
         uintptr_t load_base_address;
     } exe; 
 
+
+    struct {
+
+        uint16_t max_cores;
+        uint16_t max_threads;
+
+        struct {
+            uint64_t id;
+            uint64_t flags;
+            uint64_t features;
+            uint64_t xfeatures;
+            vmm_address_space_t address_space;
+        } cores[256];
+
+    } cpu;
+
+    #define bsp cpu.cores[0]
+
 };
 
 //?
@@ -175,5 +192,6 @@ struct syscore {
 //?
 extern struct syscore* core;
 
+#endif
 #endif
 #endif

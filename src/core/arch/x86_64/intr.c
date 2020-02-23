@@ -55,7 +55,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
             // TODO: Handle User Exception
 
-            kpanicf("x86-intr: exception(%p), errno(%p)\n", frame->intno, frame->errno);
+            kpanicf("x86-intr: exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
             break;
 
     }

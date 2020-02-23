@@ -1,6 +1,7 @@
 
 SRCDIRS	 := arch/$(PLATFORM) kernel
 INCLUDES := ../include
+DEFINES	 := KERNEL=1
 LIBS	 := gcc
 
 CFLAGS   := -include $(ROOTDIR)/config.h

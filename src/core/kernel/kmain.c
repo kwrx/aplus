@@ -42,6 +42,4 @@ void kmain() {
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
 
-
-
 }

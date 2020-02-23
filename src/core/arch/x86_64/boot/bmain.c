@@ -29,8 +29,11 @@
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
+#include <aplus/core/hal.h>
 
-
+#include <arch/x86/cpu.h>
+#include <arch/x86/acpi.h>
+#include <arch/x86/apic.h>
 
 
 /*!
@@ -42,6 +45,7 @@
 void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     
     arch_debug_init();
+    arch_cpu_init(0);
 
     DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
     DEBUG_ASSERT(btags);
@@ -173,6 +177,13 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
-    // TODO: 
+    //* Initialize ACPI
+    acpi_init();
+
+    //* Initialize APIC
+    apic_init();
+
+    // TODO: VMM, Timer, ACPI, APIC, IOAPIC
+
 
 }
