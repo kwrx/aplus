@@ -294,10 +294,10 @@ _start:
         movl    %esi, (%edi)
         
 
-        # Enable PAE, PGE
+        # Enable PAE
         movl    %cr4, %eax
         btsl    $5,   %eax      # PAE
-        btsl    $7,   %eax      # PGE
+        btrl    $17,  %eax      # ~PCID
         movl    %eax, %cr4
 
         # Setup startup boot page tables
@@ -314,6 +314,8 @@ _start:
         movl    %cr0, %eax
         btsl    $31,  %eax      # PG
         btsl    $0,   %eax      # PE
+        btrl    $29,  %eax      # ~NW
+        btrl    $30,  %eax      # ~CD
         movl    %eax, %cr0
 
         # Load GDT and Code Segment
@@ -354,6 +356,11 @@ _start_high64:
         addq    $8,   %rdi
         addq    $0x40000000, %rsi
         loop    .L1
+
+        # Enable PGE
+        movq    %cr4, %rcx
+        btsq    $7,   %rcx      # PGE
+        movq    %rcx, %cr4
 
         # Invalidate TLB
         movq    %cr3, %rcx

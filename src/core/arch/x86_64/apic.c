@@ -51,9 +51,8 @@ void apic_enable(void) {
 
     x86_wrmsr (
         X86_APIC_BASE_MSR, 
-        X86_APIC_BASE_ADDR | X86_APIC_MSR_EN | (msr & 0x7FF)
+        X86_APIC_BASE_ADDR | X86_APIC_MSR_EN | (msr & 0x3FF)
     );
-
 
 
     mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 16));
@@ -258,15 +257,15 @@ void apic_init(void) {
         PML1_PAGESIZE,
         
         ARCH_VMM_MAP_RDWR       |
-        ARCH_VMM_MAP_NOEXEC     |
         ARCH_VMM_MAP_UNCACHED   |
-        ARCH_VMM_MAP_SHARED     |
         ARCH_VMM_MAP_FIXED
     );
 
 
+
     ioapic_enable();
     apic_enable();
+
 
     __asm__ __volatile__("sti");
 

@@ -6,6 +6,7 @@ endif
 
 
 export QUIET	:= @
+export VM		:= qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR	:= $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
@@ -34,7 +35,7 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 run: install
-	$(QUIET)./extra/utils/run-qemu $(PLATFORM)
+	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM)
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL

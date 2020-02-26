@@ -7,6 +7,8 @@
 #include <aplus/core/debug.h>
 
 
+#define X86_ACPI_AREA_SIZE              0x8000  // 32KiB
+
 #define X86_MADT_ENTRY_LAPIC            0
 #define X86_MADT_ENTRY_IOAPIC           1
 #define X86_MADT_ENTRY_INTERRUPT        2

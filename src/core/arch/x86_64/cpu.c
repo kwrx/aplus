@@ -236,19 +236,45 @@ void arch_cpu_init(int index) {
 
 
 
-    //* Enable NX bit
-    if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_XD)
-        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_NXE);
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+
+    #define check_and_enable(type, feature, func)                   \
+        if(core->cpu.cores[index].type & feature) {                 \
+            func;                                                   \
+            kprintf("cpu: #%d -> %s\n", index, #feature);           \
+        }
+
+#else
+
+    #define check_and_enable(type, feature, func)       \
+        if(core->cpu.cores[index].type & feature) {     \
+            func;                                       \
+        }
+
+#endif
 
 
-    //* Enable Syscall bit
-    if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_SYSCALL) 
-        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_SCE);
 
 
-    //* Enable Fast FXSAVE, FXRSTOR
-    //if(core->cpu.cores[index].features & X86_CPU_FEATURES_XSAVE)
-    //    x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_FFXSR);
+    //! Enable NX bit
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_XD,
+        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_NXE));
+
+
+    //! Enable Syscall bit
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_SYSCALL,
+        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_SCE));
+
+
+    //! Enable FXSAVE, FXRSTOR
+    check_and_enable(features, X86_CPU_FEATURES_FXSR,
+        x86_set_cr4(x86_get_cr4() | (1 << 9)));
+
+
+    //! Enable XSAVE and Extended states
+    check_and_enable(features, X86_CPU_FEATURES_XSAVE,
+        x86_set_cr4(x86_get_cr4() | (1 << 18)));
 
 
 }

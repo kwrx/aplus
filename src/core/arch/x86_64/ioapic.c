@@ -42,12 +42,12 @@
 ioapic_t ioapic[X86_IOAPIC_MAX];
 
 
-static inline void ioapic_write(uintptr_t address, uint32_t offset, uint32_t value) {
+static inline void ioapic_write(uintptr_t address, const uint32_t offset, const uint32_t value) {
     mmio_w32(address, offset & 0xFF);
     mmio_w32(address + 0x10, value);
 }
 
-static inline uint32_t ioapic_read(uintptr_t address, uint32_t offset) {
+static inline uint32_t ioapic_read(uintptr_t address, const uint32_t offset) {
     mmio_w32(address, offset & 0xFF);
     return mmio_r32(address + 0x10);
 }
@@ -142,16 +142,16 @@ void ioapic_enable(void) {
             PML1_PAGESIZE,
             
             ARCH_VMM_MAP_RDWR       |
-            ARCH_VMM_MAP_NOEXEC     |
+            //ARCH_VMM_MAP_NOEXEC     |
             ARCH_VMM_MAP_UNCACHED   |
-            ARCH_VMM_MAP_SHARED     |
+            //ARCH_VMM_MAP_SHARED     |
             ARCH_VMM_MAP_FIXED
         );
 
 
-        ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
-            ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24
-        );
+        //ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
+        //    ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24
+        //);
 
         ioapic[i].gsi_max = ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16;
         ioapic[i].gsi_max &= 0xFF;

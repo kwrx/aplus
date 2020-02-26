@@ -79,33 +79,24 @@ static int acpi_find_rsdt() {
 
         DEBUG_ASSERT(address);
 
-        RSDT = (acpi_sdt_t*) address;
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+        kprintf("x86-acpi: RSDT found at %p\n", address);
+#endif
+
+        RSDT = (acpi_sdt_t*) arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
 
 
-        //? Map ACPI address space
+        //? Claim Physical ACPI address space
         address &= ~(PML1_PAGESIZE - 1);
 
         if(address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
             pmm_claim_area (
                 address,
-                address + PML1_PAGESIZE
+                address + X86_ACPI_AREA_SIZE
             );
 
-        arch_vmm_map (
-            &core->bsp.address_space,
-            address, address,
-            PML1_PAGESIZE,
-            
-            ARCH_VMM_MAP_RDWR       |
-            ARCH_VMM_MAP_NOEXEC     |
-            ARCH_VMM_MAP_UNCACHED   |
-            ARCH_VMM_MAP_SHARED     |
-            ARCH_VMM_MAP_FIXED
-        );
-
-
-        BUG_ON((address + RSDT->length) < (address + PML1_PAGESIZE));
-
+        
         return rsdp->revision;
     }
 
@@ -126,21 +117,31 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
     DEBUG_ASSERT(name);
 
     
-    int i;
+    long i;
     for(i = 0; i < ((RSDT->length - sizeof(RSDT)) / (extended ? 8 : 4)); i++) {
 
-        acpi_sdt_t* tmp;
+        uintptr_t address;
         if(unlikely(extended))
-            tmp = (acpi_sdt_t*) (uintptr_t) RSDT->xtables[i];
+            address = (uintptr_t) RSDT->xtables[i];
         else
-            tmp = (acpi_sdt_t*) (uintptr_t) RSDT->tables[i];
+            address = (uintptr_t) RSDT->tables[i];
+
+        DEBUG_ASSERT(address);
 
 
-        BUG_ON(tmp);
+        acpi_sdt_t* tmp = (acpi_sdt_t*) arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
+
+        //! Check if it's a valid ACPI table
         BUG_ON(acpi_cksum((const char*) tmp, tmp->length));
+        
 
         if(memcmp(tmp->magic, name, 4) != 0)
             continue;
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+        kprintf("x86-acpi: %s found at %p\n", name, address);
+#endif
 
         *sdt = tmp;
         return 0;
@@ -163,6 +164,7 @@ void acpi_init(void) {
     if(acpi_find(&facp, "FACP") != 0)
         kpanicf("x86-acpi: Fixed ACPI Descriptor not found, ACPI not supported!");
 
+    
     
     acpi_fadt_t* fadt;
     if(extended)
