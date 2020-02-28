@@ -12,6 +12,11 @@
 #define ARCH_VMM_AREA_KERNEL        2
 #define ARCH_VMM_AREA_USER          3
 
+#define ARCH_REBOOT_RESTART         0
+#define ARCH_REBOOT_SUSPEND         1
+#define ARCH_REBOOT_POWEROFF        2
+#define ARCH_REBOOT_HALT            3
+
 
 __BEGIN_DECLS
 
@@ -27,6 +32,15 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t);
 void arch_debug_init(void);
 void arch_debug_putc(char);
 
+//* Timer
+void arch_timer_delay(uint64_t);
+uint64_t arch_timer_getticks(void);
+uint64_t arch_timer_getus(void);
+uint64_t arch_timer_getms(void);
+uint64_t arch_timer_gettime(void);
+
+//* Reboot
+void arch_reboot(int);
 
 __END_DECLS
 

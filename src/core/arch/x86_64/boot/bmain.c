@@ -32,6 +32,7 @@
 #include <aplus/core/hal.h>
 
 #include <arch/x86/cpu.h>
+#include <arch/x86/asm.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
 
@@ -177,11 +178,20 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
+    //* Claim AP Startup physical area
+    pmm_claim_area(AP_BOOT_OFFSET, AP_BOOT_OFFSET + PML1_PAGESIZE);
+
+    //* Initialize Timer
+    timer_init();
+
     //* Initialize ACPI
     acpi_init();
 
     //* Initialize APIC
     apic_init();
+
+    //* Initialize SMP
+    //ap_init();
 
     // TODO: VMM, Timer, ACPI, APIC, IOAPIC
 

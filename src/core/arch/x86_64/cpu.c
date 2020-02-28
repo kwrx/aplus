@@ -231,7 +231,7 @@ void arch_cpu_init(int index) {
     //! Requirements
     BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_MSR);
     BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_SSE);
-    //BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_1GB_PAGE);     // FIXME
+    BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_1GB_PAGE);
     BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_64_BIT);
 
 

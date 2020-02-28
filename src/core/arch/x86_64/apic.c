@@ -40,7 +40,7 @@
 
 
 extern ioapic_t ioapic[];
-
+static int x2apic;
 
 __percpu
 void apic_enable(void) {
@@ -51,28 +51,53 @@ void apic_enable(void) {
 
     x86_wrmsr (
         X86_APIC_BASE_MSR, 
-        X86_APIC_BASE_ADDR | X86_APIC_MSR_EN | (msr & 0x3FF)
+        X86_APIC_BASE_ADDR | X86_APIC_MSR_EN | (x2apic ? X86_APIC_MSR_EXTD : 0) | (msr & 0x3FF)
     );
 
 
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 16));
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_THERMAL, (1 << 16));
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_PERFMON, (1 << 16));
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_LINT0, (1 << 16));
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_LINT1, (1 << 16));
-    
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_DFR, 0xFFFFFFFF);
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TASK_PRIO, 0);
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_SPURIOUS, 0x1FF);
+    if (x2apic) {
 
+        x86_wrmsr(X86_X2APIC_REG_LVT_TIMER, (1 << 16));
+        x86_wrmsr(X86_X2APIC_REG_LVT_THERMAL, (1 << 16));
+        x86_wrmsr(X86_X2APIC_REG_LVT_PERFMON, (1 << 16));
+        x86_wrmsr(X86_X2APIC_REG_LVT_LINT0, (1 << 16));
+        x86_wrmsr(X86_X2APIC_REG_LVT_LINT1, (1 << 16));
+        
+        x86_wrmsr(X86_X2APIC_REG_TASK_PRIO, 0);
+        x86_wrmsr(X86_X2APIC_REG_SPURIOUS, 0x1FF);
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 16));
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_THERMAL, (1 << 16));
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_PERFMON, (1 << 16));
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_LINT0, (1 << 16));
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_LINT1, (1 << 16));
+        
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_DFR, 0xFFFFFFFF);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TASK_PRIO, 0);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_SPURIOUS, 0x1FF);
+
+    }
 
     
     uint32_t sd = 1193180 / (1000000 / 10000);
     outb(0x61, inb(0x61) & ~2);
     outb(0x43, 0x80 | 0x30);
 
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
+
+    if (x2apic) {
+
+        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
+        x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, 0xFFFFFFFF);
+
+    } else {
+        
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
+    
+    }
+
 
     outb(0x42, sd & 0xFF);
     outb(0x42, (sd >> 8) & 0xFF);
@@ -84,24 +109,51 @@ void apic_enable(void) {
     while(!(inb(0x61) & 0x20))
         ;
     
-    uint32_t ticks = 0xFFFFFFFF - mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
+
+    uint32_t ticks = 0xFFFFFFFF;
+    
+    if(x2apic)
+        ticks -= x86_rdmsr(X86_X2APIC_REG_TMR_CCNT);
+    else
+        ticks -= mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
 
 
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 17) | 32);
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, ticks);
 
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p)]\n", apic_get_id(), X86_APIC_BASE_ADDR);
+    if (x2apic) {
+        
+        x86_wrmsr(X86_X2APIC_REG_LVT_TIMER, (1 << 17) | 32);
+        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
+        x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, ticks);
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 17) | 32);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, ticks);
+
+    }
+
+    kprintf("x86-apic: Local APIC #%d initialized [base(%p), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, x2apic);
 
 }
 
 
 void apic_eoi(void) {
-    mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_EOI, 0);
+
+    if (x2apic)
+        x86_wrmsr(X86_X2APIC_REG_EOI, 0);
+    else
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_EOI, 0);
+
 }
 
-uint8_t apic_get_id(void) {
-    return (mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_ID) >> 24);
+uint32_t apic_get_id(void) {
+
+    if (x2apic)
+        return (x86_rdmsr(X86_X2APIC_REG_ID) & 0xFFFFFFFF);
+    else
+        return (mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_ID) >> 24);
+
 }
 
 
@@ -190,7 +242,8 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_LAPIC:
                     
-                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC: id(%d) flags(%d)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC: cpu (%d) id(%d) flags(%p)\n",
+                    p[2],
                     p[3],
                     *(uint32_t*) &p[4]
                 );
@@ -198,7 +251,8 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_IOAPIC:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: address(%p) gsi(%d)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: id(%d) address(%p) gsi(%d)\n",
+                    p[2],
                     *(uint32_t*) &p[4],
                     *(uint32_t*) &p[8]
                 );
@@ -206,7 +260,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_INTERRUPT:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%x)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%p)\n",
                     p[2],
                     p[3],
                     *(uint32_t*) &p[4],
@@ -216,7 +270,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_NMI:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%x) lint(%d)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%p) lint(%d)\n",
                     p[2],
                     *(uint16_t*) &p[3],
                     p[5]
@@ -243,6 +297,16 @@ void apic_init(void) {
     }
 
 
+
+    x2apic = 0;
+
+#if !defined(CONFIG_X86_X2APIC_FORCE_DISABLED)
+    if(core->bsp.features & X86_CPU_FEATURES_X2APIC)
+        x2apic = 1;
+#endif
+
+
+
     if(X86_APIC_BASE_ADDR < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
         pmm_claim_area (
             X86_APIC_BASE_ADDR,
@@ -250,17 +314,21 @@ void apic_init(void) {
         );
 
 
-    arch_vmm_map (
-        &core->bsp.address_space,
-        X86_APIC_BASE_ADDR,
-        X86_APIC_BASE_ADDR,
-        PML1_PAGESIZE,
+    if(!x2apic) {
         
-        ARCH_VMM_MAP_RDWR       |
-        ARCH_VMM_MAP_UNCACHED   |
-        ARCH_VMM_MAP_FIXED
-    );
+        arch_vmm_map (
+            &core->bsp.address_space,
+            X86_APIC_BASE_ADDR,
+            X86_APIC_BASE_ADDR,
+            PML1_PAGESIZE,
+            
+            ARCH_VMM_MAP_RDWR       |
+            ARCH_VMM_MAP_UNCACHED   |
+            ARCH_VMM_MAP_NOEXEC     |
+            ARCH_VMM_MAP_FIXED
+        );
 
+    }
 
 
     ioapic_enable();

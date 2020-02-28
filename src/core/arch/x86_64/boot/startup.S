@@ -374,6 +374,7 @@ _start_high64:
         wrmsr
 
         # Enable SSE
+        finit
         movq    %cr0, %rcx
         andw    $0xFFFB, %cx
         orl     $2,   %ecx

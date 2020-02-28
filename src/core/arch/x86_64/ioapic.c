@@ -142,16 +142,15 @@ void ioapic_enable(void) {
             PML1_PAGESIZE,
             
             ARCH_VMM_MAP_RDWR       |
-            //ARCH_VMM_MAP_NOEXEC     |
             ARCH_VMM_MAP_UNCACHED   |
-            //ARCH_VMM_MAP_SHARED     |
+            ARCH_VMM_MAP_NOEXEC     |
             ARCH_VMM_MAP_FIXED
         );
 
 
-        //ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
-        //    ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24
-        //);
+        ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
+            ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24
+        );
 
         ioapic[i].gsi_max = ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16;
         ioapic[i].gsi_max &= 0xFF;

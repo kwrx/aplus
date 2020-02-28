@@ -15,8 +15,6 @@
 #define X86_APIC_MSR_BSP                        (1 << 8)
 
 
-#define X86_X2APIC_REG(r) \
-    (r >> 4)
 
 #define X86_APIC_REG_ID                         0x0020
 #define X86_APIC_REG_VERSION                    0x0030
@@ -41,7 +39,28 @@
 #define X86_APIC_REG_TMR_CCNT                   0x0390
 #define X86_APIC_REG_TMR_DIV                    0x03E0
 
-#define X86_X2APIC_REG_SELF_IPI                 0x3F
+
+#define X86_X2APIC_REG_ID                       0x0802
+#define X86_X2APIC_REG_VERSION                  0x0803
+#define X86_X2APIC_REG_TASK_PRIO                0x0808
+#define X86_X2APIC_REG_PROC_PRIO                0x080A
+#define X86_X2APIC_REG_EOI                      0x080B
+#define X86_X2APIC_REG_LDR                      0x080D
+#define X86_X2APIC_REG_SPURIOUS                 0x080F
+
+#define X86_X2APIC_REG_ICR                      0x0830
+
+#define X86_X2APIC_REG_LVT_TIMER                0x0832
+#define X86_X2APIC_REG_LVT_THERMAL              0x0833
+#define X86_X2APIC_REG_LVT_PERFMON              0x0834
+#define X86_X2APIC_REG_LVT_LINT0                0x0835
+#define X86_X2APIC_REG_LVT_LINT1                0x0836
+#define X86_X2APIC_REG_LVT_ERR                  0x0837
+
+#define X86_X2APIC_REG_TMR_ICNT                 0x0838
+#define X86_X2APIC_REG_TMR_CCNT                 0x0839
+#define X86_X2APIC_REG_TMR_DIV                  0x083E
+#define X86_X2APIC_REG_SELF_IPI                 0x083F
 
 
 
@@ -65,7 +84,7 @@ __BEGIN_DECLS
 void apic_init(void);
 void apic_enable(void);
 void apic_eoi(void);
-uint8_t apic_get_id(void);
+uint32_t apic_get_id(void);
 
 
 void ioapic_enable(void);

@@ -39,7 +39,7 @@ run: install
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL
-	$(QUIET)$(RM) $(TARGET) config.mk config.h makew 
+	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew 
 	$(QUIET)$(RM) -r docs/html docs/man
 
 
