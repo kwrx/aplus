@@ -68,7 +68,9 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             break;
 
         case 0x20 ... 0xFE:
-            kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+            //kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+            
+            apic_eoi();
             break;
 
     }

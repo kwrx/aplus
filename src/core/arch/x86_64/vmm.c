@@ -439,3 +439,63 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
     return virtaddr;
 
 }
+
+
+void arch_vmm_clone(vmm_address_space_t* src, vmm_address_space_t* dest) {
+
+    DEBUG_ASSERT(src);
+    DEBUG_ASSERT(src->pm);
+    DEBUG_ASSERT(dest);
+
+    if(dest->pm == 0ULL)
+        dest->pm = pmm_alloc_block();
+
+    
+
+
+    void __clone_pt(uintptr_t __s, uintptr_t __d, int level) {
+
+        DEBUG_ASSERT(__s);
+        DEBUG_ASSERT(__d);
+
+
+        uint64_t* s = (uint64_t*) arch_vmm_p2v(__s, ARCH_VMM_AREA_HEAP);
+        uint64_t* d = (uint64_t*) arch_vmm_p2v(__d, ARCH_VMM_AREA_HEAP);
+
+        int i;
+        for(i = 0; i < X86_MMU_PT_ENTRIES; i++) {
+
+            if(s[i] == X86_MMU_CLEAR)
+                continue;
+
+            if(!(s[i] & X86_MMU_PG_P)) /* FIXME */
+                continue;
+
+
+            if((s[i] & X86_MMU_PG_PS) || (level == 1))
+                d[i] = s[i];
+
+            else {
+
+                d[i] = alloc_page() | (s[i] & 0x8000000000000FFFULL) | X86_MMU_PG_AP_PFB;
+
+                __clone_pt(((uintptr_t) s[i]) & ~0x8000000000000FFFULL, ((uintptr_t) d[i]) & ~0x8000000000000FFFULL, level - 1);
+
+            }
+
+        }
+
+    }
+
+
+    __lock(&src->lock,
+        __clone_pt(src->pm, dest->pm, 4));
+
+
+    src->refcount++;
+    dest->size = 0;
+    dest->refcount = 1;
+    
+    spinlock_init(&dest->lock);
+
+}

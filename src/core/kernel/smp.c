@@ -26,22 +26,55 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
-
-static struct syscore __core;
-struct syscore* core = &__core;
-
-
-void kmain() {
-
-    smp_init();
+#include <aplus/core/hal.h>
+#include <aplus/core/smp.h>
 
 
-    kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
-                                      CONFIG_SYSTEM_VERSION,
-                                      CONFIG_SYSTEM_CODENAME,
-                                      CONFIG_COMPILER_HOST);
-        
-    kprintf("core: built with gcc %s (%s)\n", __VERSION__,
-                                              __TIMESTAMP__);
+cpu_t* smp_get_current_cpu(void) {
+
+    uint64_t id;
+    
+    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
+        return &core->bsp;
+    
+
+    int i;
+    for(i = 0; i < SMP_CPU_MAX; i++) {
+
+        if(id == core->cpu.cores[i].id)
+            return &core->cpu.cores[i];
+
+    }
+
+
+    kpanicf("smp_get_current_cpu(): PANIC! cpu id(%d) not found!\n", id);
+
+}
+
+
+cpu_t* smp_get_cpu(int index) {
+    
+    DEBUG_ASSERT(index >= 0);
+    DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);
+
+    return &core->cpu.cores[index];
+}
+
+
+void smp_init() {
+
+    int i;
+    for(i = 1; i < SMP_CPU_MAX; i++) {
+
+        if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
+            continue;
+
+        if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
+            continue;
+
+
+        arch_cpu_startup(i);
+
+    }
 
 }

@@ -63,9 +63,14 @@
 .global __ap16_start
 .global __ap32_start
 .global __ap64_start
+.global __ap_gdt32_start
+.global __ap_header_start
+
 .global __ap16_end
 .global __ap32_end
 .global __ap64_end
+.global __ap_gdt32_end
+.global __ap_header_end
 
 
 
@@ -76,8 +81,6 @@ __ap16_start:
 
         cli
         cld
-
-        jmp .
 
         # Load GDT
         xorw    %ax, %ax
@@ -94,10 +97,10 @@ __ap16_start:
 __ap16_end:     
 
 
-
+        .org AP_BOOT_OFFSET + AP32_OFFSET
         .code32
 __ap32_start:
-        
+
         # Set Kernel Descriptor
         movw    $KERNEL_DS, %ax
         movw    %ax,  %ds
@@ -105,9 +108,9 @@ __ap32_start:
         movw    %ax,  %fs
         movw    %ax,  %gs
         movw    %ax,  %ss
-
+        
         # Load PML4
-        movl    $(AP_BOOT_OFFSET + AP_BOOT_DATA_CR3), %eax
+        movl    (AP_BOOT_OFFSET + AP_BOOT_DATA_CR3), %eax
         movl    %eax, %cr3
 
         # Enable PAE
@@ -137,27 +140,29 @@ __ap32_start:
 __ap32_end:
 
 
-
+        .org AP_BOOT_OFFSET + AP64_OFFSET
         .code64
 __ap64_start:
+
+        movq    $(AP_BOOT_OFFSET + AP64_OFFSET), %rcx
+        jmp     *%rcx
 
 __ap64_end:
 
 
 
-
-
+        .org AP_BOOT_OFFSET + GDT32_OFFSET
 __ap_gdt32_start:
         .quad 0x0000000000000000    //?
-        .quad 0x00009A0000000000    //? 0x08 Kernel Code
-        .quad 0x0000920000000000    //? 0x10 Kernel Data
+        .quad 0x00CF98000000FFFF    //? 0x08 Kernel Code
+        .quad 0x00CF92000000FFFF    //? 0x10 Kernel Data
 __ap_gdt32_ptr:
         .word GDT32_PTR_OFFSET - GDT32_OFFSET - 1
         .long AP_BOOT_OFFSET + GDT32_OFFSET
 __ap_gdt32_end:
 
 
-
+        .org AP_BOOT_OFFSET + AP_BOOT_DATA_MAGIC
 __ap_header_start:
         .quad   AP_BOOT_HEADER_MAGIC
         .quad   0

@@ -29,7 +29,7 @@ case $1 in
         flags="$flags -m 512"
         flags="$flags -M q35,accel=tcg"
         flags="$flags -cpu kvm64,+x2apic,+pdpe1gb"
-        flags="$flags -smp 4"
+        flags="$flags -smp 2"
         flags="$flags -vga std"
         flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"

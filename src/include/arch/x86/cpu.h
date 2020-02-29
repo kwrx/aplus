@@ -336,8 +336,6 @@ static inline void x86_cpuid(long r, long* a, long* b, long* c, long* d) {
 
 __BEGIN_DECLS
 
-void arch_cpu_init(int);
-
 __END_DECLS
 
 #endif

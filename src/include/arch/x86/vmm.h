@@ -17,6 +17,7 @@
 
 #define X86_MMU_PT_PAT              (1ULL << 7)
 #define X86_MMU_PT_NX               (1ULL << 63)
+#define X86_MMU_PT_ENTRIES          (512)
 
 
 /* System defined 11-9 */

@@ -42,6 +42,11 @@ uint64_t arch_timer_gettime(void);
 //* Reboot
 void arch_reboot(int);
 
+//* CPU
+void arch_cpu_init(int);
+void arch_cpu_startup(int);
+uint64_t arch_cpu_get_current_id(void);
+
 __END_DECLS
 
 #endif

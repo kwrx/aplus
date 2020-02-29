@@ -37,6 +37,7 @@
 #include <arch/x86/apic.h>
 
 
+
 /*!
  * @brief bmain().
  *        Boot Entrypoint.
@@ -50,6 +51,14 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
     DEBUG_ASSERT(btags);
+
+
+    //* AP Startup memory area
+    core->mmap.ptr[core->mmap.count].address = AP_BOOT_OFFSET;
+    core->mmap.ptr[core->mmap.count].length  = PML1_PAGESIZE;
+    core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
+
+    core->mmap.count += 1;
 
 
 
@@ -169,17 +178,19 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     } while(btags);
 
 
+
+
+
+
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
     kprintf("boot: %s '%s'\n", core->boot.bootloader, 
                                core->boot.cmdline);
 #endif
 
 
+
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
-
-    //* Claim AP Startup physical area
-    pmm_claim_area(AP_BOOT_OFFSET, AP_BOOT_OFFSET + PML1_PAGESIZE);
 
     //* Initialize Timer
     timer_init();

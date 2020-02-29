@@ -156,6 +156,9 @@ uint32_t apic_get_id(void) {
 
 }
 
+int apic_is_x2apic(void) {
+    return x2apic;
+}
 
 
 void apic_init(void) {
@@ -209,7 +212,11 @@ void apic_init(void) {
 
                 core->cpu.max_cores++;
                 core->cpu.cores[p[2]].id = p[3];
-                core->cpu.cores[p[2]].flags = *(uint32_t*) &p[4];
+                core->cpu.cores[p[2]].flags = 0ULL;
+                
+                if(*(uint32_t*) &p[4] & (1 << 0))
+                    core->cpu.cores[p[2]].flags |= SMP_CPU_FLAGS_AVAILABLE;
+                    
                 break;
 
             case X86_MADT_ENTRY_IOAPIC:

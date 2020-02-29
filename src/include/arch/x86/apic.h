@@ -62,6 +62,9 @@
 #define X86_X2APIC_REG_TMR_DIV                  0x083E
 #define X86_X2APIC_REG_SELF_IPI                 0x083F
 
+#define X86_X2APIC_LOGICAL_ID(id)               \
+    (((id & 0xFFFF0) << 16) | (1 << (id & 0x0000F)))
+
 
 
 #define X86_IOAPIC_IOAPICID                     0x00
@@ -85,6 +88,7 @@ void apic_init(void);
 void apic_enable(void);
 void apic_eoi(void);
 uint32_t apic_get_id(void);
+int apic_is_x2apic(void);
 
 
 void ioapic_enable(void);

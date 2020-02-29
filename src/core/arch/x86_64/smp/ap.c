@@ -1,4 +1,3 @@
-#if 0
 /*                                                                      
  * GPL3 License                                                         
  *                                                                      
@@ -49,7 +48,18 @@ volatile uint32_t ap_cores;
 void ap_main(void) {
 
     __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
+    __asm__ __volatile__("cli; monitor; mwait");
+}
 
+
+ap_header_t* ap_get_header(void) {
+
+    ap_header_t* ap = (ap_header_t*) arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_HEADER_OFFSET, ARCH_VMM_AREA_HEAP);
+
+    DEBUG_ASSERT(ap);
+    DEBUG_ASSERT(ap->magic == AP_BOOT_HEADER_MAGIC);
+
+    return ap;
 }
 
 
@@ -57,6 +67,28 @@ void ap_init() {
 
     spinlock_init(&ap_interlock);
     ap_cores = 0;
+
+
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    #define cpy(offset, s, e)                                                       \
+        kprintf("x86-ap: copy %s to %p (%d bytes)\n", #s, offset,                   \
+                        (size_t) ((uintptr_t) (e) - (uintptr_t) (s)));              \
+        memcpy (                                                                    \
+            (void*) arch_vmm_p2v(offset, ARCH_VMM_AREA_HEAP),                       \
+            (void*) (s),                                                            \
+            (size_t) ((uintptr_t) (e) - (uintptr_t) (s))                            \
+        )
+#else
+    #define cpy(offset, s, e)                                                       \
+        memcpy (                                                                    \
+            (void*) arch_vmm_p2v(offset, ARCH_VMM_AREA_HEAP),                       \
+            (void*) (s),                                                            \
+            (size_t) ((uintptr_t) (e) - (uintptr_t) (s))                            \
+        )
+#endif
+
 
 
 
@@ -68,17 +100,16 @@ void ap_init() {
     extern int __ap64_end;
 
     //* Copy AP Startup Code
-    memcpy(arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_AP16_OFFSET, ARCH_VMM_AREA_HEAP), &__ap16_start, &__ap16_end - &__ap16_start);
-    memcpy(arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_AP32_OFFSET, ARCH_VMM_AREA_HEAP), &__ap32_start, &__ap32_end - &__ap32_start);
-    memcpy(arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_AP64_OFFSET, ARCH_VMM_AREA_HEAP), &__ap64_start, &__ap64_end - &__ap64_start);
-
+    cpy(AP_BOOT_OFFSET + AP_BOOT_AP16_OFFSET, &__ap16_start, &__ap16_end);
+    cpy(AP_BOOT_OFFSET + AP_BOOT_AP32_OFFSET, &__ap32_start, &__ap32_end);
+    cpy(AP_BOOT_OFFSET + AP_BOOT_AP64_OFFSET, &__ap64_start, &__ap64_end);
 
 
     extern int __ap_gdt32_start;
     extern int __ap_gdt32_end;
 
     //* Copy AP Startup Data
-    memcpy(arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_GDT32_OFFSET, ARCH_VMM_AREA_HEAP), &__ap16_gdt32, &__ap_gdt32_end - &__ap_gdt32_start);
+    cpy(AP_BOOT_OFFSET + AP_BOOT_GDT32_OFFSET, &__ap_gdt32_start, &__ap_gdt32_end);
 
 
     
@@ -86,7 +117,7 @@ void ap_init() {
     extern int __ap_header_end;
     
     //* Copy AP Header Data
-    memcpy(arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_HEADER_OFFSET, ARCH_VMM_AREA_HEAP), &__ap_header_start, &__ap_header_end - &__ap_header_start);
+    cpy(AP_BOOT_OFFSET + AP_BOOT_HEADER_OFFSET, &__ap_header_start, &__ap_header_end);
 
 
 }
@@ -109,5 +140,3 @@ int ap_check(int core, int timeout) {
     __atomic_thread_fence(__ATOMIC_SEQ_CST);
     return (!(ap_cores < core));
 }
-
-#endif

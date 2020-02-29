@@ -31,10 +31,13 @@
 #include <aplus/core/memory.h>
 #include <aplus/core/ipc.h>
 #include <aplus/core/hal.h>
+#include <aplus/core/smp.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/intr.h>
+#include <arch/x86/apic.h>
+#include <arch/x86/smp.h>
 
 
 __percpu
@@ -43,7 +46,7 @@ void arch_cpu_init(int index) {
     __builtin_cpu_init();
 
 
-    core->cpu.cores[index].id = index;
+    core->cpu.cores[index].id = arch_cpu_get_current_id();
     core->cpu.cores[index].features = 0ULL;
     core->cpu.cores[index].xfeatures = 0ULL;
 
@@ -280,5 +283,94 @@ void arch_cpu_init(int index) {
 }
 
 
+__percpu
+uint64_t arch_cpu_get_current_id(void) {
 
+    if(x86_rdmsr(X86_APIC_BASE_MSR) & X86_APIC_MSR_BSP)
+        return SMP_CPU_BOOTSTRAP_ID;
+
+    return apic_get_id();
+
+}
+
+
+void arch_cpu_startup(int index) {
+
+    BUG_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    BUG_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+
+    kprintf("x86-cpu: starting up core #%d\n", index);
+
+
+    //* Clone Address Space
+    arch_vmm_clone(&core->bsp.address_space, &core->cpu.cores[index].address_space);
+
+    // TODO: Setup AP Header data
+
+    ap_init();
     
+    //ap_get_header()->entry = &ap_main;
+    ap_get_header()->cr3   = core->cpu.cores[index].address_space.pm;
+
+
+
+    /* INIT */
+    if(apic_is_x2apic()) {
+
+        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | (5 << 8) | (1 << 14));
+
+        while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 32 >> 12) & 1))
+            __builtin_ia32_pause();
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));
+
+        while (((mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI) >> 12) & 1))
+            __builtin_ia32_pause();
+
+    }
+
+    arch_timer_delay(10000);
+
+
+    /* SIPI */
+    if(apic_is_x2apic()) {
+
+        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+
+    }
+
+    arch_timer_delay(200);
+
+    if(ap_check(index, 500000))     /* 500 ms */
+        return;
+return;
+
+    /* SIPI (x2) */
+    if(apic_is_x2apic()) {
+
+        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+
+    }
+
+    arch_timer_delay(200);
+
+    if(ap_check(index, 3000000))    /* 3 secs */
+        return;
+
+
+    kpanicf("x86-cpu: Failed to start CPU #%d: id(%d) flags(%d)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
+
+}
