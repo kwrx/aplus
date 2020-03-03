@@ -48,15 +48,6 @@ SECTIONS {
 	}
 
 
-	.ap BLOCK(4K) : AT(ADDR(.bss) - KERNEL_VMA) ALIGN(4K) {
-		__ap_begin = .;
-
-		*(.ap)
-		*(.ap.*)
-
-		__ap_end = .;
-	}
-
 
 	. = ALIGN(4K);
 	. += 0x1000;

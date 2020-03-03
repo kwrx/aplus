@@ -115,16 +115,13 @@ multiboot_header_end:
 
     startup_stack:
         .skip  KERNEL_STACK_SIZE
-    startup_exception_stack:
-        .skip 4096
-    startup_interrupt_stack:
-        .skip 4096
 
 
 .data
 .align 4096
 
         .global startup_gdtp
+        .global startup_gdtp_ptr
         .global startup_idtp
         .global startup_idtp_ptr
         .global startup_tss
@@ -137,7 +134,7 @@ multiboot_header_end:
         .quad 0x00A0FA0000000000    //? 0x1B User Code
         .quad 0x0080F20000000000    //? 0x23 User Data
       
-      .rept 256
+      .rept KERNEL_TSS_MAX
         .quad 0x0000E90000000068    //? 0x28 + (n * 16), where n is a cpu id
         .quad 0x0000000000000000    //? TSS 64 (Available)
       .endr
@@ -150,11 +147,11 @@ multiboot_header_end:
 
     startup_tss:
         .long 0
-        .quad startup_interrupt_stack + 4096  //? RSP0: Kernel Stack
-        .quad 0                               //  TODO: Map interrupt stack
+        .quad KERNEL_INTERRUPT_STACK + 4096   //? RSP0: Kernel Stack
         .quad 0
         .quad 0
-        .quad startup_exception_stack + 4096  //? IST1: Exception Stack
+        .quad 0
+        .quad KERNEL_EXCEPTION_STACK + 4096   //? IST1: Exception Stack
         .quad 0
         .quad 0
         .quad 0
@@ -290,7 +287,8 @@ _start:
         # PML2
         movl    $V2P(startup_pml2_stack_area), %edi
         movl    $V2P(startup_stack), %esi
-        orl     $0x83, %esi                             // 2MiB, R/W, Present
+        orl     $0x083, %esi                            // 2MiB, R/W, Present
+        orl     $0x400, %esi                            // X86_MMU_PG_AP_TP_STACK
         movl    %esi, (%edi)
         
 
@@ -391,8 +389,10 @@ _start_high64:
         # Load TSS
         movq    $startup_tss, %rax
         movq    $startup_gdtp, %rdi
+        movq    $KERNEL_TSS_MAX, %rcx
         addq    $KERNEL_TSS, %rdi
 
+    .L2:
         movw    %ax,  2(%rdi)     // Base 00:16
 
         shrq    $16,  %rax
@@ -404,6 +404,9 @@ _start_high64:
         shrq    $8,   %rax
         movl    %eax, 8(%rdi)     // Base 32:64
 
+        addq    $16,  %rdi
+        loop    .L2
+
         movq    $(KERNEL_TSS | 3), %rax
         ltrw    %ax
 
@@ -411,7 +414,7 @@ _start_high64:
         movq    $startup_idtp, %rdi
         movq    $startup_isr, %rsi
         movq    $256, %rcx
-    .L2:
+    .L3:
         movq    %rsi, %rax
         movw    %ax,  0(%rdi)     // Offset 00:16
 
@@ -423,7 +426,7 @@ _start_high64:
 
         addq    $16,  %rdi
         addq    $16,  %rsi
-        loop    .L2
+        loop    .L3
 
         movq    $startup_idtp_ptr, %rax
         lidt    (%rax)

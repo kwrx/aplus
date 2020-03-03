@@ -31,9 +31,17 @@ static struct syscore __core;
 struct syscore* core = &__core;
 
 
+
+void cmain() {
+    
+}
+
 void kmain() {
 
+
+#if defined(CONFIG_HAVE_SMP)
     smp_init();
+#endif
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
@@ -43,5 +51,7 @@ void kmain() {
         
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
+
+
 
 }

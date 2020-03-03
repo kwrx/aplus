@@ -12,7 +12,7 @@ export ROOTDIR	:= $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
-PROJECTS := src/core
+PROJECTS := src/core src/initrd
 TARGET	 := aplus.img
 
 
@@ -24,7 +24,7 @@ INSTALLALL: $(PROJECTS)
 CLEANALL:   $(PROJECTS)
 	$(QUIET)for i in $^; do $(MAKE) -C $$i clean; done
 DISTCLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i clean; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean; done
 
 
 all: $(TARGET)

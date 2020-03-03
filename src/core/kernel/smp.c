@@ -48,7 +48,8 @@ cpu_t* smp_get_current_cpu(void) {
 
 
     kpanicf("smp_get_current_cpu(): PANIC! cpu id(%d) not found!\n", id);
-
+    
+    return NULL;
 }
 
 

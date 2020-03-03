@@ -38,6 +38,7 @@
 #include <arch/x86/intr.h>
 #include <arch/x86/apic.h>
 #include <arch/x86/smp.h>
+#include <arch/x86/vmm.h>
 
 
 __percpu
@@ -46,7 +47,6 @@ void arch_cpu_init(int index) {
     __builtin_cpu_init();
 
 
-    core->cpu.cores[index].id = arch_cpu_get_current_id();
     core->cpu.cores[index].features = 0ULL;
     core->cpu.cores[index].xfeatures = 0ULL;
 
@@ -296,21 +296,41 @@ uint64_t arch_cpu_get_current_id(void) {
 
 void arch_cpu_startup(int index) {
 
+    DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
+
     BUG_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
     BUG_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+
 
     kprintf("x86-cpu: starting up core #%d\n", index);
 
 
     //* Clone Address Space
-    arch_vmm_clone(&core->bsp.address_space, &core->cpu.cores[index].address_space);
+    arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space);
 
-    // TODO: Setup AP Header data
+
+    //* Map AP Startup Area
+    arch_vmm_map (&core->cpu.cores[index].address_space, AP_BOOT_OFFSET, AP_BOOT_OFFSET, X86_MMU_PAGESIZE, 
+        ARCH_VMM_MAP_FIXED | 
+        ARCH_VMM_MAP_RDWR
+    );
+
+    //* Map AP Stack Area
+    arch_vmm_map (&core->cpu.cores[index].address_space, KERNEL_STACK_AREA, -1, X86_MMU_HUGE_2MB_PAGESIZE,
+        ARCH_VMM_MAP_HUGETLB    | 
+        ARCH_VMM_MAP_HUGE_2MB   |
+        ARCH_VMM_MAP_TYPE_STACK |
+        ARCH_VMM_MAP_RDWR);
+
+
+
+
 
     ap_init();
-    
-    //ap_get_header()->entry = &ap_main;
-    ap_get_header()->cr3   = core->cpu.cores[index].address_space.pm;
+
+    ap_get_header()->cpu = (uint64_t) index;
+    ap_get_header()->cr3 = (uint64_t) core->cpu.cores[index].address_space.pm;
+
 
 
 
@@ -351,7 +371,7 @@ void arch_cpu_startup(int index) {
 
     if(ap_check(index, 500000))     /* 500 ms */
         return;
-return;
+
 
     /* SIPI (x2) */
     if(apic_is_x2apic()) {

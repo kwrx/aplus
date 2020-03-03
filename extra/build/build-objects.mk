@@ -5,6 +5,7 @@ all: $(TARGET)
 
 install: $(TARGET)
 	$(QUIET)echo "    INSTALL $(TARGET) -> $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))"
+	$(QUIET)mkdir -p $(DESTDIR)
 	$(QUIET)install $(TARGET) $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))
 
 clean:

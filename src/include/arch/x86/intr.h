@@ -40,6 +40,9 @@ typedef struct {
 } interrupt_frame_t;
 
 __BEGIN_DECLS
+
+void timer_init();
+
 __END_DECLS
 
 #endif

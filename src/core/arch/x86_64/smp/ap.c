@@ -41,20 +41,42 @@
 
 
 
-spinlock_t ap_interlock;
-volatile uint32_t ap_cores;
+spinlock_t ap_interlock = 0;
+volatile uint32_t ap_cores = 0;
 
 
-void ap_main(void) {
+__percpu
+void ap_bmain(uint64_t magic, uint64_t cpu) {
+
+    DEBUG_ASSERT(magic == AP_BOOT_HEADER_MAGIC);
+    DEBUG_ASSERT(cpu != SMP_CPU_BOOTSTRAP_ID);
+
+
+    __lock(&ap_interlock, {
+
+        //* Initialize AP CPU
+        arch_cpu_init(cpu);
+
+        //* Enable Local APIC
+        apic_enable();
+
+        //* Enable Interrupts
+        __asm__ __volatile__("sti");
+
+    });
 
     __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
-    __asm__ __volatile__("cli; monitor; mwait");
+
 }
 
 
 ap_header_t* ap_get_header(void) {
 
-    ap_header_t* ap = (ap_header_t*) arch_vmm_p2v(AP_BOOT_OFFSET + AP_BOOT_HEADER_OFFSET, ARCH_VMM_AREA_HEAP);
+    extern int __ap_begin;
+    extern int __ap_end;
+
+
+    ap_header_t* ap = (ap_header_t*) arch_vmm_p2v(AP_BOOT_OFFSET + (size_t) ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)) - sizeof(ap_header_t), ARCH_VMM_AREA_HEAP);
 
     DEBUG_ASSERT(ap);
     DEBUG_ASSERT(ap->magic == AP_BOOT_HEADER_MAGIC);
@@ -65,60 +87,20 @@ ap_header_t* ap_get_header(void) {
 
 void ap_init() {
 
-    spinlock_init(&ap_interlock);
-    ap_cores = 0;
 
+    extern int __ap_begin;
+    extern int __ap_end;
 
+    memcpy (
+        (void*) arch_vmm_p2v(AP_BOOT_OFFSET, ARCH_VMM_AREA_HEAP),
+        (void*) (&__ap_begin),
+        (size_t) ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin))
+    );
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    #define cpy(offset, s, e)                                                       \
-        kprintf("x86-ap: copy %s to %p (%d bytes)\n", #s, offset,                   \
-                        (size_t) ((uintptr_t) (e) - (uintptr_t) (s)));              \
-        memcpy (                                                                    \
-            (void*) arch_vmm_p2v(offset, ARCH_VMM_AREA_HEAP),                       \
-            (void*) (s),                                                            \
-            (size_t) ((uintptr_t) (e) - (uintptr_t) (s))                            \
-        )
-#else
-    #define cpy(offset, s, e)                                                       \
-        memcpy (                                                                    \
-            (void*) arch_vmm_p2v(offset, ARCH_VMM_AREA_HEAP),                       \
-            (void*) (s),                                                            \
-            (size_t) ((uintptr_t) (e) - (uintptr_t) (s))                            \
-        )
+    kprintf("ap: copied AP Startup code at %p (%d bytes)\n", AP_BOOT_OFFSET, (size_t) ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)));
 #endif
-
-
-
-
-    extern int __ap16_start;
-    extern int __ap32_start;
-    extern int __ap64_start;
-    extern int __ap16_end;
-    extern int __ap32_end;
-    extern int __ap64_end;
-
-    //* Copy AP Startup Code
-    cpy(AP_BOOT_OFFSET + AP_BOOT_AP16_OFFSET, &__ap16_start, &__ap16_end);
-    cpy(AP_BOOT_OFFSET + AP_BOOT_AP32_OFFSET, &__ap32_start, &__ap32_end);
-    cpy(AP_BOOT_OFFSET + AP_BOOT_AP64_OFFSET, &__ap64_start, &__ap64_end);
-
-
-    extern int __ap_gdt32_start;
-    extern int __ap_gdt32_end;
-
-    //* Copy AP Startup Data
-    cpy(AP_BOOT_OFFSET + AP_BOOT_GDT32_OFFSET, &__ap_gdt32_start, &__ap_gdt32_end);
-
-
-    
-    extern int __ap_header_start;
-    extern int __ap_header_end;
-    
-    //* Copy AP Header Data
-    cpy(AP_BOOT_OFFSET + AP_BOOT_HEADER_OFFSET, &__ap_header_start, &__ap_header_end);
-
 
 }
 

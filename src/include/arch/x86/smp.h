@@ -9,11 +9,9 @@
 
 typedef struct {
     uint64_t magic;
-    uint64_t entry;
+    uint64_t cpu;
     uint64_t cr3;
-    uint64_t stack;
-    uint64_t gdt64;
-} ap_header_t;
+} __packed ap_header_t;
 
 
 __BEGIN_DECLS

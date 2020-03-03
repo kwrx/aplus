@@ -43,6 +43,18 @@
 #define ARCH_VMM_MAP_FIXED          (1 << 5)
 #define ARCH_VMM_MAP_VIDEO_MEMORY   (1 << 6)
 
+#define ARCH_VMM_MAP_HUGETLB        (1 << 7)
+#define ARCH_VMM_MAP_HUGE_2MB       (0 << 8)
+#define ARCH_VMM_MAP_HUGE_1GB       (1 << 8)
+
+#define ARCH_VMM_MAP_TYPE_MASK      (3 << 9)
+#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 9)
+#define ARCH_VMM_MAP_TYPE_STACK     (1 << 9)
+#define ARCH_VMM_MAP_TYPE_MMAP      (2 << 9)
+#define ARCH_VMM_MAP_TYPE_SWAP      (3 << 9)
+
+
+
 typedef struct vmm_address_space {
     
     uintptr_t pm;

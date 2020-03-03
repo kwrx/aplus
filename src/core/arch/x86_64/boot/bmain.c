@@ -35,6 +35,7 @@
 #include <arch/x86/asm.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
+#include <arch/x86/intr.h>
 
 
 
@@ -47,7 +48,6 @@
 void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     
     arch_debug_init();
-    arch_cpu_init(0);
 
     DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
     DEBUG_ASSERT(btags);
@@ -60,6 +60,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     core->mmap.count += 1;
 
+
+    //* Initialize Bootstrap CPU
+    arch_cpu_init(SMP_CPU_BOOTSTRAP_ID);
 
 
     do {
@@ -201,8 +204,6 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize APIC
     apic_init();
 
-    //* Initialize SMP
-    //ap_init();
 
     // TODO: VMM, Timer, ACPI, APIC, IOAPIC
 

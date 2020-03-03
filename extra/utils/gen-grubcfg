@@ -25,10 +25,14 @@ entry() {
         echo -e "   module2 /usr/lib/modules/exports"
     fi
 
-    for ko in $(find $sysroot/usr/lib/modules -type f -name *.ko); do
-        test -f "$ko" || continue
-        echo -e "   module2 $(echo $ko | cut -c 5-) $3"
-    done
+    pushd $sysroot &> /dev/null
+
+        for ko in $(find usr/lib/modules -type f -iname "*.ko"); do
+            test -f "$ko" || continue
+            echo -e "   module2 /$ko $3"
+        done
+
+    popd &> /dev/null
 
     echo -e "   boot"
     echo -e "}"

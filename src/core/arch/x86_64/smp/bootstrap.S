@@ -29,55 +29,24 @@
 
 
 
-/*!
- * @brief AP Startup Layout
- * 
- *    AP_BOOT_OFFSET:     16bit Entrypoint
- *    +0x100:             32bit Entrypoint
- *    +0x200:             64bit Entrypoint
- *    +0xF00:             GDT32
- *    +0xF18:             GDT32 Pointer
- *
- *    +0xF20:     AP Startup Header
- *                  - 0x00: MAGIC
- *                  - 0x08: Core Entrypoint
- *                  - 0x10: CR3
- *                  - 0x18: Stack Pointer
- *                  
- */
 
 
-#define AP16_OFFSET           0x000
-#define AP32_OFFSET           0x100
-#define AP64_OFFSET           0x200
-#define GDT32_OFFSET          0xF00
-#define GDT32_PTR_OFFSET      0xF18
+.global __ap_begin
+.global __ap_end
 
-#define AP_BOOT_DATA_MAGIC    0xF20
-#define AP_BOOT_DATA_MAIN     0xF28
-#define AP_BOOT_DATA_CR3      0xF30
-#define AP_BOOT_DATA_STACK    0xF38
-#define AP_BOOT_DATA_GDT64    0xF40
+.extern startup_gdtp_ptr
+.extern startup_idtp_ptr
 
 
-.global __ap16_start
-.global __ap32_start
-.global __ap64_start
-.global __ap_gdt32_start
-.global __ap_header_start
-
-.global __ap16_end
-.global __ap32_end
-.global __ap64_end
-.global __ap_gdt32_end
-.global __ap_header_end
+#define AP_RELOC(p)     \
+    (AP_BOOT_OFFSET + (p - __ap_begin))
 
 
 
         .org AP_BOOT_OFFSET
         .text
         .code16
-__ap16_start:
+__ap_begin:
 
         cli
         cld
@@ -85,21 +54,18 @@ __ap16_start:
         # Load GDT
         xorw    %ax, %ax
         movw    %ax, %ds
-        lgdt    (AP_BOOT_OFFSET + GDT32_PTR_OFFSET)
+        lgdt    AP_RELOC(ap_gdt32p)
 
         # Enable Protected Mode
         movl    %cr0, %eax
         btsl    $0, %eax        # PE
         movl    %eax, %cr0
 
-        ljmp    $KERNEL_CS, $(AP_BOOT_OFFSET + AP32_OFFSET)
-
-__ap16_end:     
+        ljmp    $KERNEL_CS, $AP_RELOC(ap32_start)
 
 
-        .org AP_BOOT_OFFSET + AP32_OFFSET
         .code32
-__ap32_start:
+ap32_start:
 
         # Set Kernel Descriptor
         movw    $KERNEL_DS, %ax
@@ -109,15 +75,16 @@ __ap32_start:
         movw    %ax,  %gs
         movw    %ax,  %ss
         
-        # Load PML4
-        movl    (AP_BOOT_OFFSET + AP_BOOT_DATA_CR3), %eax
-        movl    %eax, %cr3
 
         # Enable PAE
         movl    %cr4, %eax
         btsl    $5,   %eax      # PAE
         btrl    $17,  %eax      # ~PCID
         movl    %eax, %cr4
+
+        # Load PML4
+        movl    AP_RELOC(ap_header_cr3), %eax
+        movl    %eax, %cr3
 
         # Enable Long Mode
         movl    $0xC0000080, %ecx
@@ -134,40 +101,125 @@ __ap32_start:
         movl    %eax, %cr0
 
         # Load GDT and Code Segment
-        lgdt    AP_BOOT_OFFSET + AP_BOOT_DATA_GDT64
-        ljmp    $KERNEL_CS, $(AP_BOOT_OFFSET + AP64_OFFSET)
+        lgdt    AP_RELOC(ap_gdt64p)
 
-__ap32_end:
+        ljmp    $KERNEL_CS, $AP_RELOC(ap64_start)
 
 
-        .org AP_BOOT_OFFSET + AP64_OFFSET
         .code64
-__ap64_start:
+ap64_start:
 
-        movq    $(AP_BOOT_OFFSET + AP64_OFFSET), %rcx
-        jmp     *%rcx
+         # Set data-segments
+        movl    $KERNEL_DS, %eax
+        movl    %eax, %ds
+        movl    %eax, %es
+        movl    %eax, %ss
 
-__ap64_end:
+        # Jump to High Area
+        lea     ap64_highstart, %rax
+        jmp     *%rax
+
+ap64_highstart:
+
+        # Set Stack
+        movq    $KERNEL_STACK_AREA, %rsp
+        addq    $KERNEL_STACK_SIZE, %rsp
+
+        # Enable PGE
+        movq    %cr4, %rcx
+        btsq    $7,   %rcx      # PGE
+        movq    %rcx, %cr4
+
+        # Invalidate TLB
+        movq    %cr3, %rcx
+        movq    %ecx, %cr3
+
+        # Enable PAT
+        movq    $0x277, %rcx
+        rdmsr
+        andl    $0xFFFFFF00, %edx
+        orl     $0x00000001, %edx
+        wrmsr
+
+        # Enable SSE
+        finit
+        movq    %cr0, %rcx
+        andw    $0xFFFB, %cx
+        orl     $2,   %ecx
+        movq    %rcx, %cr0
+        movq    %cr4, %rcx
+        orw     $0x0600, %cx
+        movq    %rcx, %cr4
+
+        # Load High GDT
+        lgdt    (startup_gdtp_ptr)
+
+        # Load TSS
+        movq    AP_RELOC(ap_header_cpu), %rax
+        shlq    $4, %rax
+        addq    $(KERNEL_TSS | 3), %rax
+        ltrw    %ax
+
+        # Load IDT
+        movq    $startup_idtp_ptr, %rax
+        lidt    (%rax)
+
+        # Stack unwinding
+        pushq   $0
+        pushq   $0
+
+        # Reset RFLAGS
+        pushq   $0
+        popfq
+
+        # Load Boot Arguments
+        movq    AP_RELOC(ap_header), %rdi
+        movq    AP_RELOC(ap_header_cpu), %rsi
+
+        # Call AP Boot Main()
+        .extern ap_bmain
+        call    ap_bmain
+
+        # Call Kernel AP Main()
+        .extern cmain
+        call    cmain
+
+halt:
+        jmp .
 
 
 
-        .org AP_BOOT_OFFSET + GDT32_OFFSET
-__ap_gdt32_start:
+
+.align 0x100, 0x90
+
+    ap_gdt32:
         .quad 0x0000000000000000    //?
         .quad 0x00CF98000000FFFF    //? 0x08 Kernel Code
         .quad 0x00CF92000000FFFF    //? 0x10 Kernel Data
-__ap_gdt32_ptr:
-        .word GDT32_PTR_OFFSET - GDT32_OFFSET - 1
-        .long AP_BOOT_OFFSET + GDT32_OFFSET
-__ap_gdt32_end:
+    ap_gdt32p:
+        .word AP_RELOC(.) - AP_RELOC(ap_gdt32) - 1
+        .long AP_RELOC(ap_gdt32)
+    
+
+.align 0x100, 0x90
+
+    ap_gdt64:
+        .quad 0x0000000000000000    //?
+        .quad 0x00A09A0000000000    //? 0x08 Kernel Code
+        .quad 0x0080920000000000    //? 0x10 Kernel Data
+    ap_gdt64p:
+        .word AP_RELOC(.) - AP_RELOC(ap_gdt64) - 1
+        .quad AP_RELOC(ap_gdt64)
 
 
-        .org AP_BOOT_OFFSET + AP_BOOT_DATA_MAGIC
-__ap_header_start:
+.align 0x100, 0x90
+
+    ap_header:
         .quad   AP_BOOT_HEADER_MAGIC
+    ap_header_cpu:
         .quad   0
+    ap_header_cr3:
         .quad   0
-        .quad   0
-        .quad   0
-        .quad   0
-__ap_header_end:
+  
+
+__ap_end:

@@ -29,9 +29,11 @@
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
+#include <aplus/core/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/intr.h>
+#include <arch/x86/apic.h>
 
 
 void x86_exception_handler(interrupt_frame_t* frame) {
@@ -64,11 +66,15 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     switch(frame->intno) {
 
         case 0xFF:
-            kpanicf("x86-intr: Spourius Interrupt on cpu #%d\n", 0 /* TODO: SMP */);
+            kpanicf("x86-intr: Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
             break;
 
-        case 0x20 ... 0xFE:
-            //kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+        case 0x20:
+            apic_eoi();
+            break;
+
+        case 0x21 ... 0xFE:
+            kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
             
             apic_eoi();
             break;

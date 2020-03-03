@@ -12,7 +12,7 @@ INCLUDES    ?= include
 LIBS        ?=
 
 SRCDIRS     ?= .
-DESTDIR     ?= $(SYSROOT)/usr/lib/modules
+DESTDIR     ?= $(SYSROOT)/usr/lib/modules/$(shell realpath --relative-base=$(ROOTDIR)/src/initrd ..)
 
 
 
@@ -20,6 +20,7 @@ include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS)
-	$(LD) -r $(LDFLAGS) -o $@ $(OBJS)
+	$(QUIET)echo "    LD      $@"
+	$(QUIET)$(LD) -r $(LDFLAGS) -o $@ $(OBJS)
 
 include $(ROOTDIR)/extra/build/build-objects.mk
