@@ -36,14 +36,32 @@
 #include <arch/x86/apic.h>
 
 
+extern struct {
+    void (*handler) (void*);
+    spinlock_t lock;
+} startup_irq[224];
+
+
 void x86_exception_handler(interrupt_frame_t* frame) {
     
-    DEBUG_ASSERT(frame);
+    DEBUG_ASSERT( (frame));
+    DEBUG_ASSERT(!(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT));
+
+
+
+    current_cpu->flags |= SMP_CPU_FLAGS_INTERRUPT;
 
 
     switch(frame->intno) {
 
         case 0x20 ... 0xFF:
+            break;
+
+        
+        case 0x02:
+
+            // TODO: Handle NMI Interrupts
+            kpanicf("x86-nmi: exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
             break;
 
         case 0x0E:
@@ -70,6 +88,17 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             break;
 
         case 0x20:
+
+            if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
+                current_cpu->ticks.tv_sec += 1;
+                current_cpu->ticks.tv_nsec = 0;
+            } else
+                current_cpu->ticks.tv_nsec += 1000000;
+
+            
+            //if(likely(current_cpu->flags & SMP_CPU_FLAGS_SCHED_ENABLED))
+            //    schedule();
+
             apic_eoi();
             break;
 
@@ -79,6 +108,93 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
+
     }
+
+
+    current_cpu->flags &= ~SMP_CPU_FLAGS_INTERRUPT;
+
+}
+
+
+
+void arch_intr_enable(long s) {
+    
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("x86-intr: sti(%p)\n", s);
+#endif
+
+    if(likely(s))
+        __asm__ __volatile__ ("sti");
+
+}
+
+
+
+long arch_intr_disable(void) {
+    
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("x86-intr: cli()\n");
+#endif
+
+
+    long s;
+
+    __asm__ __volatile__ (
+#if defined(__x86_64__)
+        "pushfq         \n"
+        "pop %%rax      \n"
+#elif defined(__i386__)
+        "pushf          \n"
+        "pop %%eax      \n"
+#endif
+        "cli            \n"
+
+        : "=a" (s)
+        :: "memory"
+    );
+
+    return !!(s & (1 << 9));
+
+}
+
+
+
+void arch_intr_map_irq(uint8_t irq, void (*handler) (void*)) {
+    
+    DEBUG_ASSERT(irq < (0xFF - 0x20));
+    DEBUG_ASSERT(handler);
+
+
+    __lock(&startup_irq[irq].lock, {
+
+        startup_irq[irq].handler = handler;
+        ioapic_map_irq(irq, irq, current_cpu->id);
+    
+    });
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    kprintf("x86-intr: map irq(%p) at %p\n", irq, handler);
+#endif
+
+}
+
+
+void arch_intr_unmap_irq(uint8_t irq) {
+
+    DEBUG_ASSERT(irq < (0xFF - 0x20));
+
+    __lock(&startup_irq[irq].lock, {
+        
+        startup_irq[irq].handler = NULL;
+        ioapic_map_irq(irq, irq, current_cpu->id);
+
+    });
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    kprintf("x86-intr: unmap irq(%p)\n", irq);
+#endif
 
 }

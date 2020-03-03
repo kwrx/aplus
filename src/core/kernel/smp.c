@@ -38,17 +38,11 @@ cpu_t* smp_get_current_cpu(void) {
         return &core->bsp;
     
 
-    int i;
-    for(i = 0; i < SMP_CPU_MAX; i++) {
-
-        if(id == core->cpu.cores[i].id)
-            return &core->cpu.cores[i];
-
-    }
+    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
+        return &core->cpu.cores[id];
 
 
-    kpanicf("smp_get_current_cpu(): PANIC! cpu id(%d) not found!\n", id);
-    
+    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%d)\n", id);
     return NULL;
 }
 

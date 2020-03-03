@@ -56,6 +56,8 @@ void arch_cpu_init(int index) {
     spinlock_init(&core->cpu.cores[index].address_space.lock);
 
 
+
+
     long ax, bx, cx, dx;
     long ex;
 
@@ -77,7 +79,7 @@ void arch_cpu_init(int index) {
 
         x86_cpuid(1, &ax, &bx, &cx, &dx);
 
-        core->cpu.cores[index].features = (dx << 32) | cx;
+        core->cpu.cores[index].features |= (dx << 32) | cx;
 
 
 #if defined(DEBUG)
@@ -157,6 +159,18 @@ void arch_cpu_init(int index) {
     }
 
 
+
+    if(ex >= 7) {
+        
+        x86_cpuid(7, &ax, &bx, &cx, &dx);
+        
+        core->cpu.cores[index].xfeatures |= bx;
+
+    }
+
+
+
+
     x86_cpuid(0x80000000, &ex, &bx, &cx, &dx);
 
 
@@ -164,7 +178,7 @@ void arch_cpu_init(int index) {
 
         x86_cpuid(0x80000001, &ax, &bx, &cx, &dx);
 
-        core->cpu.cores[index].xfeatures = (dx << 32) | cx;
+        core->cpu.cores[index].xfeatures |= (dx << 32);
 
 
 #if defined(DEBUG)
@@ -179,6 +193,10 @@ void arch_cpu_init(int index) {
         _F(X86_CPU_XFEATURES_1GB_PAGE);
         _F(X86_CPU_XFEATURES_RDTSCP);
         _F(X86_CPU_XFEATURES_64_BIT);
+        _F(X86_CPU_XFEATURES_FSGSBASE);
+        _F(X86_CPU_XFEATURES_AVX2);
+        _F(X86_CPU_XFEATURES_SMEP);
+        _F(X86_CPU_XFEATURES_SMAP);
 
         #undef _F
 
@@ -280,17 +298,54 @@ void arch_cpu_init(int index) {
         x86_set_cr4(x86_get_cr4() | (1 << 18)));
 
 
+    //! Enable FSGSBASE instructions
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_FSGSBASE,
+        x86_set_cr4(x86_get_cr4() | (1 << 16)));
+
+
+    //! Enable SMEP
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_SMEP,
+        x86_set_cr4(x86_get_cr4() | (1 << 20)));
+
+
+    //! Enable SMAP
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_SMAP,
+        x86_set_cr4(x86_get_cr4() | (1 << 21)));
+        
+
+
+
+#if defined(__x86_64__)
+
+    // FIXME: Invalid Opcode
+    //if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
+    //    x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
+    //else
+
+    x86_wrmsr(X86_MSR_KERNEL_GSBASE, (uint64_t) &core->cpu.cores[index]);
+
+#endif
+
+
+    core->cpu.cores[index].flags |= SMP_CPU_FLAGS_ENABLED;
+
 }
 
 
 __percpu
 uint64_t arch_cpu_get_current_id(void) {
 
-    if(x86_rdmsr(X86_APIC_BASE_MSR) & X86_APIC_MSR_BSP)
-        return SMP_CPU_BOOTSTRAP_ID;
+    uint64_t id;
 
-    return apic_get_id();
+    __asm__ __volatile__ (
+        "swapgs                 \n"
+        "movq %%gs:0, %0        \n"
+        "swapgs                 \n"
+        
+        : "=r"(id)
+    );
 
+    return id;
 }
 
 
@@ -337,7 +392,7 @@ void arch_cpu_startup(int index) {
     /* INIT */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | (5 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | (5 << 8) | (1 << 14));
 
         while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 32 >> 12) & 1))
             __builtin_ia32_pause();
@@ -358,7 +413,7 @@ void arch_cpu_startup(int index) {
     /* SIPI */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     } else {
 
@@ -376,7 +431,7 @@ void arch_cpu_startup(int index) {
     /* SIPI (x2) */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (X86_X2APIC_LOGICAL_ID(core->cpu.cores[index].id) << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     } else {
 
@@ -391,6 +446,6 @@ void arch_cpu_startup(int index) {
         return;
 
 
-    kpanicf("x86-cpu: Failed to start CPU #%d: id(%d) flags(%d)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
+    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
 
 }

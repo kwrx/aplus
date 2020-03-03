@@ -126,6 +126,7 @@ multiboot_header_end:
         .global startup_idtp_ptr
         .global startup_tss
         .global startup_isr
+        .global startup_irq
 
     startup_gdtp:
         .quad 0x0000000000000000    //?
@@ -206,6 +207,14 @@ multiboot_header_end:
 
         .set i, i + 1
         .align 16
+      .endr
+
+.align 16
+
+    startup_irq:
+      .rept 224
+        .quad 0
+        .quad 0
       .endr
 
 .align 16
@@ -325,10 +334,15 @@ _start:
 _start64:
         
         # Set data-segments
-        movl    $KERNEL_DS, %eax
-        movl    %eax, %ds
-        movl    %eax, %es
-        movl    %eax, %ss
+        movq    $KERNEL_DS, %rax
+        movq    %rax, %ds
+        movq    %rax, %es
+        movq    %rax, %ss
+
+        xorq    %rax, %rax
+        movq    %rax, %fs
+        movq    %rax, %gs
+
 
         # Jump to High Area
         lea     _start_high64, %rax
@@ -387,12 +401,13 @@ _start_high64:
         lgdt    (startup_gdtp_ptr)
 
         # Load TSS
-        movq    $startup_tss, %rax
+        movq    $startup_tss, %rsi
         movq    $startup_gdtp, %rdi
         movq    $KERNEL_TSS_MAX, %rcx
         addq    $KERNEL_TSS, %rdi
 
     .L2:
+        movq    %rsi, %rax
         movw    %ax,  2(%rdi)     // Base 00:16
 
         shrq    $16,  %rax
@@ -455,7 +470,8 @@ _start_high64:
         call    kmain
 
 halt:
-        jmp .
+        hlt
+        jmp halt
 
 END(_start)
 

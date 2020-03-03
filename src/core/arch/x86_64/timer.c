@@ -67,22 +67,22 @@ void arch_timer_delay(uint64_t us) {
     });
 }
 
-#if 0
+
 uint64_t arch_timer_getticks(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
-           (uint64_t) (current_cpu->ticks.tv_nsec / (1000000000 / CONFIG_CLOCKS_PER_SEC));
+    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
+           (uint64_t) (current_cpu->ticks.tv_nsec / (1000000000 / CLOCKS_PER_SEC));
 }
 
 uint64_t arch_timer_getus(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
+    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
            (uint64_t) (current_cpu->ticks.tv_nsec / 1000);
 }
 
 uint64_t arch_timer_getms(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CONFIG_CLOCKS_PER_SEC) +
+    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
            (uint64_t) (current_cpu->ticks.tv_nsec / 1000000);
 }
-#endif
+
 
 uint64_t arch_timer_gettime(void) {
     

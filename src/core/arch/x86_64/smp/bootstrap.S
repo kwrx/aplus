@@ -110,10 +110,15 @@ ap32_start:
 ap64_start:
 
          # Set data-segments
-        movl    $KERNEL_DS, %eax
-        movl    %eax, %ds
-        movl    %eax, %es
-        movl    %eax, %ss
+        movq    $KERNEL_DS, %rax
+        movq    %rax, %ds
+        movq    %rax, %es
+        movq    %rax, %ss
+
+        xorq    %rax, %rax
+        movq    %rax, %fs
+        movq    %rax, %gs
+
 
         # Jump to High Area
         lea     ap64_highstart, %rax
@@ -161,8 +166,7 @@ ap64_highstart:
         ltrw    %ax
 
         # Load IDT
-        movq    $startup_idtp_ptr, %rax
-        lidt    (%rax)
+        lidt    (startup_idtp_ptr)
 
         # Stack unwinding
         pushq   $0
@@ -185,7 +189,8 @@ ap64_highstart:
         call    cmain
 
 halt:
-        jmp .
+        hlt
+        jmp halt
 
 
 

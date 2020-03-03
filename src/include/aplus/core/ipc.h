@@ -6,7 +6,9 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 
-typedef volatile long spinlock_t;
+
+typedef volatile long __aligned(128) spinlock_t;
+
 
 __BEGIN_DECLS
 

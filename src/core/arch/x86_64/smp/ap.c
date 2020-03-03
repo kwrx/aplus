@@ -38,6 +38,7 @@
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
 #include <arch/x86/smp.h>
+#include <arch/x86/vmm.h>
 
 
 
@@ -57,6 +58,9 @@ void ap_bmain(uint64_t magic, uint64_t cpu) {
         //* Initialize AP CPU
         arch_cpu_init(cpu);
 
+        //* Unmap AP Area
+        arch_vmm_unmap(&core->cpu.cores[cpu].address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
+
         //* Enable Local APIC
         apic_enable();
 
@@ -64,6 +68,7 @@ void ap_bmain(uint64_t magic, uint64_t cpu) {
         __asm__ __volatile__("sti");
 
     });
+
 
     __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
 

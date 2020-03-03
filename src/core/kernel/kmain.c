@@ -26,6 +26,17 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
+#include <aplus/core/smp.h>
+#include <aplus/core/hal.h>
+
+
+#include <arch/x86/cpu.h>
+#include <arch/x86/asm.h>
+#include <arch/x86/intr.h>
+#include <arch/x86/apic.h>
+#include <arch/x86/smp.h>
+#include <arch/x86/vmm.h>
+
 
 static struct syscore __core;
 struct syscore* core = &__core;
@@ -33,7 +44,7 @@ struct syscore* core = &__core;
 
 
 void cmain() {
-    
+
 }
 
 void kmain() {

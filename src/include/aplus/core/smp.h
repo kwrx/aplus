@@ -2,6 +2,7 @@
 #define _APLUS_CORE_SMP_H
 
 #ifndef __ASSEMBLY__
+#include <time.h>
 #include <sys/cdefs.h>
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
@@ -12,6 +13,13 @@
 
 #define SMP_CPU_FLAGS_AVAILABLE         (1 << 0)
 #define SMP_CPU_FLAGS_ENABLED           (1 << 1)
+#define SMP_CPU_FLAGS_WAIT              (1 << 2)
+#define SMP_CPU_FLAGS_SLEEP             (1 << 3)
+#define SMP_CPU_FLAGS_INTERRUPT         (1 << 4)
+
+
+#define current_cpu \
+    (smp_get_current_cpu())
 
 
 typedef struct {
@@ -21,6 +29,8 @@ typedef struct {
     uint64_t features;
     uint64_t xfeatures;
     vmm_address_space_t address_space;
+
+    struct timespec ticks;
 
 } cpu_t;
 

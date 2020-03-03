@@ -18,6 +18,8 @@
 #define ARCH_REBOOT_HALT            3
 
 
+typedef void (*irq_t) (void*);
+
 __BEGIN_DECLS
 
 //* Virtual Memory

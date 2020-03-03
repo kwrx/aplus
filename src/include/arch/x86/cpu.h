@@ -18,7 +18,7 @@
 #define X86_MSR_FEATURES_TCE                         (1 << 15)
 
 
-// ECX
+// 0x00000001:ECX
 #define X86_CPU_FEATURES_SSE3                        (1ULL << 0)    // Streaming SIMD Extensions 3
 #define X86_CPU_FEATURES_PCLMULQDQ                   (1ULL << 1)    // PCLMULQDQ Instruction
 #define X86_CPU_FEATURES_DTES64                      (1ULL << 2)    // 64-Bit Debug Store Area
@@ -49,7 +49,7 @@
 #define X86_CPU_FEATURES_F16C                        (1ULL << 29)   // 16-bit Floating Point Instructions
 #define X86_CPU_FEATURES_RDRAND                      (1ULL << 30)   // RDRAND Instruction
 
-// EDX
+// 0x00000001:EDX
 #define X86_CPU_FEATURES_FPU                         (1ULL << 32)   // Floating-Point Unit On-Chip
 #define X86_CPU_FEATURES_VME                         (1ULL << 33)   // Virtual 8086 Mode Extensions
 #define X86_CPU_FEATURES_DE                          (1ULL << 34)   // Debugging Extensions
@@ -80,7 +80,15 @@
 #define X86_CPU_FEATURES_TM                          (1ULL << 61)   // Thermal Monitor
 #define X86_CPU_FEATURES_PBE                         (1ULL << 63)   // Pending Break Enable
 
-// EDX (Extended)
+
+// 0x00000007:EBX (Extended)
+#define X86_CPU_XFEATURES_FSGSBASE                   (1ULL << 0)    // Supports RDFSBASE/RDGSBASE/WRFSBASE/WRGSBASE
+#define X86_CPU_XFEATURES_AVX2                       (1ULL << 5)    // AVX Extensions 2
+#define X86_CPU_XFEATURES_SMEP                       (1ULL << 7)    // Supports Supervisor-Mode Execution Prevention
+#define X86_CPU_XFEATURES_SMAP                       (1ULL << 20)   // Supports Supervisor-Mode Access Prevention (and the CLAC/STAC instructions)
+
+
+// 0x80000000:EDX (Extended)
 #define X86_CPU_XFEATURES_SYSCALL                    (1ULL << 43)   // SYSCALL/SYSRET
 #define X86_CPU_XFEATURES_XD                         (1ULL << 52)   // Execute Disable Bit
 #define X86_CPU_XFEATURES_1GB_PAGE                   (1ULL << 58)   // 1 GB Pages
@@ -329,9 +337,77 @@ static inline unsigned long long x86_rdtsc(void) {
 static inline void x86_cpuid(long r, long* a, long* b, long* c, long* d) {
     __asm__ __volatile__ (
         "cpuid"
-        : "=a"(*a), "=b"(*b), "=c"(*c), "=d"(*d) : "a"(r) 
+        : "=a"(*a), "=b"(*b), "=c"(*c), "=d"(*d) : "a"(r), "c"(0)
     );
 }
+
+
+
+
+
+#if defined(__x86_64__)
+
+/*!
+ * @brief Write GS Base Register.
+ */
+static inline void x86_wrgsbase(unsigned long long base) {
+    __asm__ __volatile__ (
+        "wrgsbase %0"
+        :
+        : "r"(base)
+    );
+}
+
+/*!
+ * @brief Write FS Base Register.
+ */
+static inline void x86_wrfsbase(unsigned long long base) {
+    __asm__ __volatile__ (
+        "wrfsbase %0"
+        :
+        : "r"(base)
+    );
+}
+
+/*!
+ * @brief Read GS Base Register.
+ */
+static inline unsigned long long x86_rdgsbase() {
+    unsigned long long r;
+    __asm__ __volatile__ (
+        "rdgsbase %0"
+        :
+        : "m"(r)
+    );
+    
+    return r;
+}
+
+/*!
+ * @brief Read FS Base Register.
+ */
+static inline unsigned long long x86_rdfsbase() {
+    unsigned long long r;
+    __asm__ __volatile__ (
+        "rdfsbase %0"
+        :
+        : "m"(r)
+    );
+
+    return r;
+}
+
+/*!
+ * @brief Swap GS/KernelGS Base Register.
+ */
+static inline void x86_swapgs() {
+    __asm__ __volatile__ (
+        "swapgs"
+    );
+}
+
+
+#endif
 
 
 __BEGIN_DECLS

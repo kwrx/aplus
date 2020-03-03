@@ -37,7 +37,7 @@
 #include <arch/x86/vmm.h>
 
 
-static uintptr_t alloc_page(uintptr_t pagesize) {
+static uintptr_t alloc_page(uintptr_t pagesize, int zero) {
 
     DEBUG_ASSERT(pagesize);
     DEBUG_ASSERT(X86_MMU_PAGESIZE == PML1_PAGESIZE);
@@ -51,7 +51,8 @@ static uintptr_t alloc_page(uintptr_t pagesize) {
         p = pmm_alloc_blocks_aligned(pagesize >> 12, pagesize);
 
     
-    memset((void*) arch_vmm_p2v(p, ARCH_VMM_AREA_HEAP), 0, pagesize);
+    if(likely(zero))
+        memset((void*) arch_vmm_p2v(p, ARCH_VMM_AREA_HEAP), 0, pagesize);
 
     return p;
 }
@@ -322,7 +323,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         /* PML4-L3 */
         {
             if(!(*d & X86_MMU_PG_P))
-                *d = alloc_page(X86_MMU_PAGESIZE) | X86_MMU_PG_P;
+                *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_P;
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -335,7 +336,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PDP-L2 is 1GiB Page");
 
                 if(!(*d & X86_MMU_PG_P))
-                    *d = alloc_page(X86_MMU_PAGESIZE) | X86_MMU_PG_P;
+                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_P;
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
 
@@ -348,7 +349,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                     DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 2Mib Page");
 
                     if(!(*d & X86_MMU_PG_P))
-                        *d = alloc_page(X86_MMU_PAGESIZE) | b;
+                        *d = alloc_page(X86_MMU_PAGESIZE, 1) | b;
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -412,7 +413,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             if(flags & ARCH_VMM_MAP_FIXED)
                 *d = p | b;
             else
-                *d = alloc_page(pagesize) | X86_MMU_PG_AP_PFB | b;
+                *d = alloc_page(pagesize, 0) | X86_MMU_PG_AP_PFB | b;
 
 
 
@@ -476,7 +477,7 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
 
         /* CR3-L4 */ 
         {
-            d = &((x86_page_t*) space->pm) [(s >> 39) & 0x1FF];
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 39) & 0x1FF];
         }
 
         /* PML4-L3 */
@@ -551,7 +552,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src) {
     DEBUG_ASSERT(dest);
 
     if(dest->pm == 0ULL)
-        dest->pm = alloc_page(X86_MMU_PAGESIZE);
+        dest->pm = alloc_page(X86_MMU_PAGESIZE, 1);
 
     
 
@@ -582,9 +583,9 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src) {
 
             else {
 
-                d[i] = alloc_page(X86_MMU_PAGESIZE) | (s[i] & 0x8000000000000FFFULL) | X86_MMU_PG_AP_PFB;
+                d[i] = alloc_page(X86_MMU_PAGESIZE, 1) | (s[i] & ~X86_MMU_ADDRESS_MASK) | X86_MMU_PG_AP_PFB;
 
-                __clone_pt(((uintptr_t) s[i]) & ~0x8000000000000FFFULL, ((uintptr_t) d[i]) & ~0x8000000000000FFFULL, level - 1);
+                __clone_pt(((uintptr_t) s[i]) & X86_MMU_ADDRESS_MASK, ((uintptr_t) d[i]) & X86_MMU_ADDRESS_MASK, level - 1);
 
             }
 
