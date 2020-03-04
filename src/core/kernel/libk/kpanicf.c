@@ -37,24 +37,20 @@
  */
 void kpanicf(const char* fmt, ...) {
 
-    static char buf[8192];
-    static spinlock_t buflock = 0;
+    char buf[8192];
 
-    __lock(&buflock, {
-
-        va_list v;
-        va_start(v, fmt);
-        vsnprintf(buf, sizeof(buf), fmt, v);
-        va_end(v);
+    va_list v;
+    va_start(v, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, v);
+    va_end(v);
 
 
-        int i;
-        for(i = 0; buf[i]; i++)
-            arch_debug_putc(buf[i]);
-
-    });
+    int i;
+    for(i = 0; buf[i]; i++)
+        arch_debug_putc(buf[i]);
 
 
+    // TODO: arch_cpu_halt()
     for(;;);
 
 }

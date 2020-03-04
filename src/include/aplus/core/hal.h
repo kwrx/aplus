@@ -6,6 +6,7 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
+#include <aplus/core/task.h>
 
 
 #define ARCH_VMM_AREA_HEAP          1
@@ -49,6 +50,10 @@ void arch_reboot(int);
 void arch_cpu_init(int);
 void arch_cpu_startup(int);
 uint64_t arch_cpu_get_current_id(void);
+
+//* Task
+void arch_task_switch(void*, task_t*, task_t*);
+void arch_task_spawn_init(void);
 
 __END_DECLS
 

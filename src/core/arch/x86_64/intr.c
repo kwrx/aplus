@@ -37,8 +37,14 @@
 
 
 extern struct {
-    void (*handler) (void*);
-    spinlock_t lock;
+    union {
+        struct {
+            void (*handler) (void*);
+            spinlock_t lock;
+        };
+
+        long __padding[4];
+    };
 } startup_irq[224];
 
 
@@ -47,6 +53,21 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     DEBUG_ASSERT( (frame));
     DEBUG_ASSERT(!(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT));
 
+
+
+// #if defined(DEBUG) && DEBUG_LEVEL >= 4
+
+//     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) user_sp(%p) user_ss(%p)\n",
+//         frame->intno,
+//         frame->errno,
+//         frame->ip,
+//         frame->cs,
+//         frame->flags,
+//         frame->user_sp,
+//         frame->user_ss
+//     );
+
+// #endif
 
 
     current_cpu->flags |= SMP_CPU_FLAGS_INTERRUPT;
@@ -61,21 +82,21 @@ void x86_exception_handler(interrupt_frame_t* frame) {
         case 0x02:
 
             // TODO: Handle NMI Interrupts
-            kpanicf("x86-nmi: exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
+            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
             break;
 
         case 0x0E:
 
             // TODO: Handle Page Fault (Copy on Write, Swap, ecc...)
 
-            kpanicf("x86-pfe: errno(%p), cs(%p), ip(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, x86_get_cr2());
+            kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, x86_get_cr2());
             break;
 
         default:
 
             // TODO: Handle User Exception
 
-            kpanicf("x86-intr: exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
+            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
             break;
 
     }
@@ -84,7 +105,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     switch(frame->intno) {
 
         case 0xFF:
-            kpanicf("x86-intr: Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
+            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
             break;
 
         case 0x20:
@@ -96,14 +117,21 @@ void x86_exception_handler(interrupt_frame_t* frame) {
                 current_cpu->ticks.tv_nsec += 1000000;
 
             
-            //if(likely(current_cpu->flags & SMP_CPU_FLAGS_SCHED_ENABLED))
-            //    schedule();
-
+            schedule(frame);
+            
             apic_eoi();
             break;
 
         case 0x21 ... 0xFE:
-            kprintf("x86-intr: Unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+
+            __lock(&startup_irq[frame->intno - 0x20].lock, {
+
+                if(likely(startup_irq[frame->intno - 0x20].handler))
+                    startup_irq[frame->intno - 0x20].handler((void*) frame);
+                else
+                    kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+
+            });
             
             apic_eoi();
             break;
@@ -119,10 +147,6 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
 
 void arch_intr_enable(long s) {
-    
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: sti(%p)\n", s);
-#endif
 
     if(likely(s))
         __asm__ __volatile__ ("sti");
@@ -133,10 +157,6 @@ void arch_intr_enable(long s) {
 
 long arch_intr_disable(void) {
     
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: cli()\n");
-#endif
-
 
     long s;
 
@@ -154,7 +174,7 @@ long arch_intr_disable(void) {
         :: "memory"
     );
 
-    return !!(s & (1 << 9));
+    return (s & (1 << 9));
 
 }
 

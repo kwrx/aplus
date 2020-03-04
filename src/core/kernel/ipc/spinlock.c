@@ -27,6 +27,7 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/ipc.h>
+#include <aplus/core/hal.h>
 
 
 /*!
@@ -35,7 +36,8 @@
 void spinlock_init(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
-    __atomic_clear(lock, __ATOMIC_RELAXED);
+    __atomic_clear(&lock->value, __ATOMIC_RELAXED);
+    __atomic_clear(&lock->flags, __ATOMIC_RELAXED);
 }
 
 /*!
@@ -44,21 +46,27 @@ void spinlock_init(spinlock_t* lock) {
 void spinlock_lock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
-    while(__atomic_test_and_set(lock, __ATOMIC_ACQUIRE))
+    while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))
 #if defined(__i386__) || defined(__x86_64__)
         __builtin_ia32_pause();
 #endif
         ;
+
+    lock->flags = arch_intr_disable();
 }
 
 
 /*!
  * @brief Try to lock a Spinlock.
  */
-spinlock_t spinlock_trylock(spinlock_t* lock) {
+int spinlock_trylock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
-    return !__atomic_test_and_set(lock, __ATOMIC_ACQUIRE);
+    int e; 
+    if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)))
+        lock->flags = arch_intr_disable();
+
+    return e;
 }
 
 
@@ -68,5 +76,11 @@ spinlock_t spinlock_trylock(spinlock_t* lock) {
 void spinlock_unlock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
-    __atomic_clear(lock, __ATOMIC_RELEASE);
+    long e = lock->flags;
+
+    __atomic_clear(&lock->value, __ATOMIC_RELEASE);
+    __atomic_clear(&lock->flags, __ATOMIC_RELEASE);
+
+    arch_intr_enable(e);
+    
 }

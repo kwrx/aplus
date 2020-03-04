@@ -195,6 +195,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
+    //* Spawn BSP INIT Process
+    arch_task_spawn_init();
+
     //* Initialize Timer
     timer_init();
 
@@ -203,9 +206,5 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     //* Initialize APIC
     apic_init();
-
-
-    // TODO: VMM, Timer, ACPI, APIC, IOAPIC
-
-
+    
 }

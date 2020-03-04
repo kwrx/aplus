@@ -38,7 +38,7 @@
 void kprintf(const char* fmt, ...) {
 
     static char buf[8192];
-    static spinlock_t buflock = 0;
+    static spinlock_t buflock = SPINLOCK_INIT;
 
     __lock(&buflock, {
 
@@ -49,9 +49,14 @@ void kprintf(const char* fmt, ...) {
 
 
         int i;
-        for(i = 0; buf[i]; i++)
+        for(i = 0; buf[i]; i++) {
+    
             arch_debug_putc(buf[i]);
 
+            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
+            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
+
+        }
     });
 
 }

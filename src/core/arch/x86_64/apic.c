@@ -25,6 +25,7 @@
                                                                       
 #include <stdint.h>
 #include <string.h>
+#include <time.h>
 #include <aplus/core/base.h>
 #include <aplus/core/multiboot.h>
 #include <aplus/core/debug.h>
@@ -81,7 +82,7 @@ void apic_enable(void) {
     }
 
     
-    uint32_t sd = 1193180 / (1000000 / 10000);
+    uint32_t sd = 1193180 / CLOCKS_PER_SEC;
     outb(0x61, inb(0x61) & ~2);
     outb(0x43, 0x80 | 0x30);
 

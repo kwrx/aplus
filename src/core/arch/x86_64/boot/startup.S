@@ -215,12 +215,19 @@ multiboot_header_end:
       .rept 224
         .quad 0
         .quad 0
+        .quad 0
+        .quad 0
       .endr
 
 .align 16
 
     __raw_args:
         .quad 0, 0
+
+    __fpu_save_regs:
+        .quad 0
+    __fpu_restore_regs:
+        .quad 0
 
 .align 16, 0x90
 
@@ -444,7 +451,7 @@ _start_high64:
         loop    .L3
 
         movq    $startup_idtp_ptr, %rax
-        lidt    (%rax)
+        lidt    (%rax)        
 
         # Stack unwinding
         pushq   $0
@@ -485,6 +492,7 @@ END(_start)
         .type interrupt_common, @function
 interrupt_common:
 
+        cli
         cld
 
         # Save Registers
@@ -504,11 +512,13 @@ interrupt_common:
         pushq   %rsi
         pushq   %rdi
 
+
         movq    %rsp, %rdi
 
         # Call Exception Handler
         .extern x86_exception_handler
         callq   x86_exception_handler
+
 
         # Restore Registers
         popq    %rdi
@@ -526,6 +536,7 @@ interrupt_common:
         popq    %r13
         popq    %r14
         popq    %r15
+
 
         addq    $16, %rsp
         iretq

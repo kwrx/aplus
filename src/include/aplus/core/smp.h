@@ -7,6 +7,7 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 #include <aplus/core/memory.h>
+#include <aplus/core/task.h>
 
 #define SMP_CPU_MAX                     256
 #define SMP_CPU_BOOTSTRAP_ID            0
@@ -18,8 +19,11 @@
 #define SMP_CPU_FLAGS_INTERRUPT         (1 << 4)
 
 
-#define current_cpu \
+#define current_cpu     \
     (smp_get_current_cpu())
+
+#define current_task    \
+    (smp_get_current_cpu())->running_task
 
 
 typedef struct {
@@ -30,7 +34,10 @@ typedef struct {
     uint64_t xfeatures;
     vmm_address_space_t address_space;
 
+    task_t* running_task;
     struct timespec ticks;
+
+    int errno;
 
 } cpu_t;
 

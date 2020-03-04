@@ -6,8 +6,14 @@
 #include <aplus/core/base.h>
 #include <aplus/core/debug.h>
 
+#define SPINLOCK_INIT       { 0L, 0L }
 
-typedef volatile long __aligned(128) spinlock_t;
+typedef volatile struct {
+    volatile long value;
+    volatile long flags;
+} spinlock_t;
+
+
 
 
 __BEGIN_DECLS
@@ -15,7 +21,7 @@ __BEGIN_DECLS
 void spinlock_init(spinlock_t*);
 void spinlock_lock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
-spinlock_t spinlock_trylock(spinlock_t*);
+int spinlock_trylock(spinlock_t*);
 
 __END_DECLS
 

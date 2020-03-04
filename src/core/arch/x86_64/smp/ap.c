@@ -42,7 +42,7 @@
 
 
 
-spinlock_t ap_interlock = 0;
+spinlock_t ap_interlock = SPINLOCK_INIT;
 volatile uint32_t ap_cores = 0;
 
 
@@ -60,6 +60,9 @@ void ap_bmain(uint64_t magic, uint64_t cpu) {
 
         //* Unmap AP Area
         arch_vmm_unmap(&core->cpu.cores[cpu].address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
+
+        //* Spawn AP INIT Process
+        arch_task_spawn_init();
 
         //* Enable Local APIC
         apic_enable();
