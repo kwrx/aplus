@@ -3,8 +3,8 @@
 
 #ifndef __ASSEMBLY__
 #include <sys/cdefs.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 #define X86_APIC_BASE_MSR                       0x01B

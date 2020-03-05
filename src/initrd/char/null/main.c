@@ -24,9 +24,9 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 // MODULE_NAME("char/null");
 // MODULE_DEPS("dev/interface,dev/char");

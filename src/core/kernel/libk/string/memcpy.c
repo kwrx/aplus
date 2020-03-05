@@ -26,8 +26,8 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <sys/types.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 

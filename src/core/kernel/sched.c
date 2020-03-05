@@ -24,12 +24,15 @@
  */                                                                     
 
 #include <stdint.h>                                                        
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/smp.h>
-#include <aplus/core/hal.h>
-#include <aplus/core/task.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+#include <aplus/smp.h>
+#include <aplus/task.h>
+
+#include <hal/cpu.h>
+#include <hal/interrupt.h>
+#include <hal/task.h>
 
 
 task_t* sched_queue = NULL;

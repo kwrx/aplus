@@ -23,12 +23,15 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
                                                                         
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/ipc.h>
-#include <aplus/core/multiboot.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/ipc.h>
+#include <aplus/multiboot.h>
+#include <aplus/memory.h>
+
+#include <hal/cpu.h>
+#include <hal/interrupt.h>
+#include <hal/vmm.h>
 
 #include <string.h>
 

@@ -1,5 +1,5 @@
-#ifndef _APLUS_CORE_VFS_H
-#define _APLUS_CORE_VFS_H
+#ifndef _APLUS_VFS_H
+#define _APLUS_VFS_H
 
 #ifndef __ASSEMBLY__
 
@@ -9,15 +9,19 @@
 #include <stdint.h>
 #include <signal.h>
 #include <time.h>
+#include <dirent.h>
 #include <sys/cdefs.h>
-#include <sys/times.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/syslimits.h>
-#include <sys/types.h>
+#include <sys/statvfs.h>
 
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/ipc.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/ipc.h>
+
+#include <aplus/utils/list.h>
 
 
 
@@ -29,7 +33,30 @@
 
 
 typedef struct inode inode_t;
+typedef struct vfs_cache vfs_cache_t;
 
+
+struct vfs_cache_item {
+    ino_t ino;
+    void* data;
+};
+
+struct vfs_cache_ops {
+    void* (*load) (struct vfs_cache*, ino_t);
+    void (*flush) (struct vfs_cache*, ino_t, void*);
+};
+
+struct vfs_cache {
+
+    size_t capacity;
+    size_t count;
+    void* userdata;
+
+    struct vfs_cache_ops ops;
+
+    list(struct vfs_cache_item*, items);    
+    spinlock_t lock;
+};
 
 
 struct inode_ops {
@@ -107,7 +134,7 @@ __BEGIN_DECLS
 void vfs_init(void);
 
 //* os/kernel/fs/vfs.c
-int vfs_mount(inode_t* dev, inode_t* dir, const char __user * fs, int flags, const char __user * args);
+int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
 
 int vfs_open (inode_t*, int);
 int vfs_close (inode_t*);
@@ -135,6 +162,13 @@ ssize_t vfs_readdir (inode_t*, struct dirent*, off_t, size_t);
 int vfs_rename (inode_t*, const char*, const char*);
 int vfs_symlink (inode_t*, const char*, const char*);
 int vfs_unlink (inode_t*, const char*);
+
+
+// os/kernel/fs/cache.c
+void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
+void vfs_cache_destroy(vfs_cache_t*);
+void* vfs_cache_get(vfs_cache_t*, ino_t);
+void vfs_cache_flush(vfs_cache_t*, ino_t);
 
 
 // os/kernel/fs/dcache.c

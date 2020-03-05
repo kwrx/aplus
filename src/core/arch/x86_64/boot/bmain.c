@@ -25,11 +25,16 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
-#include <aplus/core/base.h>
-#include <aplus/core/multiboot.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/multiboot.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+
+#include <hal/cpu.h>
+#include <hal/task.h>
+#include <hal/debug.h>
+#include <hal/interrupt.h>
+
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>

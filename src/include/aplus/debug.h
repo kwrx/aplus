@@ -1,5 +1,5 @@
-#ifndef _APLUS_CORE_DEBUG_H
-#define _APLUS_CORE_DEBUG_H
+#ifndef _APLUS_DEBUG_H
+#define _APLUS_DEBUG_H
 
 #ifndef __ASSEMBLY__
 

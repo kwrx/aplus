@@ -1,5 +1,5 @@
-#ifndef _APLUS_BYTEORDER_H
-#define _APLUS_BYTEORDER_H
+#ifndef _APLUS_ENDIAN_H
+#define _APLUS_ENDIAN_H
 
 
 #ifndef __ASSEMBLY__

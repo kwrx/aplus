@@ -24,9 +24,13 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+
+#include <hal/cpu.h>
+#include <hal/interrupt.h>
+#include <hal/reboot.h>
+#include <hal/timer.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/acpi.h>

@@ -25,12 +25,15 @@
                                                                       
 #include <stdint.h>
 #include <string.h>
-#include <aplus/core/base.h>
-#include <aplus/core/multiboot.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/ipc.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/multiboot.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+#include <aplus/ipc.h>
+
+#include <hal/cpu.h>
+#include <hal/interrupt.h>
+#include <hal/vmm.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
@@ -87,7 +90,7 @@ void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
 void ioapic_unmap_irq(uint8_t source) {
 
     if(unlikely(source == 0))   /* LVT0, APIC TIMER */
-        return; //kpanic("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");
+        return; //kpanicf("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");
 
 
     int i;

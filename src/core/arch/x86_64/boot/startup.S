@@ -22,10 +22,11 @@
  */
 
 
-#include <aplus/core/base.h>
-#include <aplus/core/linkage.h>
-#include <aplus/core/multiboot.h>
+#include <aplus.h>
+#include <aplus/multiboot.h>
 #include <arch/x86/asm.h>
+#include <asm/linkage.h>
+
 
 
 
@@ -153,7 +154,7 @@ multiboot_header_end:
         .quad 0
         .quad 0
         .quad KERNEL_EXCEPTION_STACK + 4096   //? IST1: Exception Stack
-        .quad 0
+        .quad KERNEL_SYSCALL_STACK   + 4096   //? IST2: Syscall Stack
         .quad 0
         .quad 0
         .quad 0
@@ -174,7 +175,7 @@ multiboot_header_end:
         .word 0
       .endr
 
-      .rept 224
+      .rept 222
         .word 0
         .word KERNEL_CS
         .byte 0x00    // RSP0
@@ -182,6 +183,22 @@ multiboot_header_end:
         .quad 0
         .word 0
       .endr
+
+      # SYSCALL Handler       idx: 0xFE
+        .word 0
+        .word KERNEL_CS
+        .byte 0x02    // IST2
+        .byte 0xEE    // Interrupt Gate;  DPL=3
+        .quad 0
+        .word 0
+
+      # Spourious Interrupt   idx: 0xFF
+        .word 0
+        .word KERNEL_CS
+        .byte 0x01    // IST1
+        .byte 0x8E    // Interrupt Gate;  DPL=0
+        .quad 0
+        .word 0
    
     startup_idtp_ptr:
         .word . - startup_idtp - 1

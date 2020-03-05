@@ -1,10 +1,10 @@
-#ifndef _APLUS_CORE_IPC_H
-#define _APLUS_CORE_IPC_H
+#ifndef _APLUS_IPC_H
+#define _APLUS_IPC_H
 
 #ifndef __ASSEMBLY__
 #include <sys/cdefs.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
+#include <aplus.h>
+#include <aplus/debug.h>
 
 #define SPINLOCK_INIT       { 0L, 0L }
 

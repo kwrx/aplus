@@ -24,10 +24,12 @@
  */                                                                     
                                                                         
 #include <stdint.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/endian.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/endian.h>
+
+#include <hal/cpu.h>
+#include <hal/debug.h>
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
@@ -81,4 +83,14 @@ void arch_debug_putc(char ch) {
         __builtin_ia32_pause();
 
     outb(com_address, ch);
+}
+
+
+
+char* arch_debug_get_name(void* address) {
+    return "unkown";
+}
+
+void arch_debug_get_stacktrace() {
+
 }

@@ -23,11 +23,12 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
                                                                         
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/smp.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+#include <aplus/smp.h>
+#include <aplus/syscall.h>
+
 
 
 static struct syscore __core;
@@ -43,8 +44,17 @@ void kmain() {
 
 
 #if defined(CONFIG_HAVE_SMP)
+    //* Initialize SMP (Symmetric Multiprocessing)
     smp_init();
 #endif
+
+
+    //* Initialize Syscalls
+    syscall_init();
+
+    //* Initialize VFS (Virtual File System)
+    vfs_init();
+
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
@@ -54,7 +64,5 @@ void kmain() {
         
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
-
-
 
 }

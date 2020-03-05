@@ -25,11 +25,15 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
-#include <aplus/core/base.h>
-#include <aplus/core/multiboot.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/hal.h>
+#include <aplus.h>
+#include <aplus/multiboot.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+#include <aplus/syscall.h>
+
+#include <hal/cpu.h>
+#include <hal/interrupt.h>
+#include <hal/vmm.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/intr.h>
@@ -108,6 +112,16 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
             break;
 
+        case 0xFE:
+
+#if defined(__x86_64__)
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, frame->r8);
+#elif defined(__i386__)
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
+#endif
+
+            break;
+
         case 0x20:
 
             if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
@@ -122,7 +136,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
-        case 0x21 ... 0xFE:
+        case 0x21 ... 0xFD:
 
             __lock(&startup_irq[frame->intno - 0x20].lock, {
 

@@ -1,5 +1,5 @@
-#ifndef _APLUS_CORE_TASK_H
-#define _APLUS_CORE_TASK_H
+#ifndef _APLUS_TASK_H
+#define _APLUS_TASK_H
 
 #ifndef __ASSEMBLY__
 
@@ -15,9 +15,10 @@
 #include <sys/syslimits.h>
 #include <sys/types.h>
 
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/ipc.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/ipc.h>
+#include <aplus/vfs.h>
 
 
 
@@ -47,7 +48,7 @@
 
 struct fd {
 
-    //inode_t* inode;
+    inode_t* inode;
     off_t position;
 
     struct {
@@ -93,10 +94,9 @@ typedef struct task {
     } signal;
 
 
-    // TODO: VFS Support
-    //inode_t* root;
-    //inode_t* cwd;
-    //inode_t* exe;
+    inode_t* root;
+    inode_t* cwd;
+    inode_t* exe;
 
     mode_t umask;
 

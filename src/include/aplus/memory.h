@@ -1,11 +1,11 @@
-#ifndef _APLUS_CORE_MEMORY_H
-#define _APLUS_CORE_MEMORY_H
+#ifndef _APLUS_MEMORY_H
+#define _APLUS_MEMORY_H
 
 #ifndef __ASSEMBLY__
 #include <sys/cdefs.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/ipc.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/ipc.h>
 
 
 //* PMM */

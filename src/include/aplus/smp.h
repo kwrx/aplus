@@ -1,13 +1,13 @@
-#ifndef _APLUS_CORE_SMP_H
-#define _APLUS_CORE_SMP_H
+#ifndef _APLUS_SMP_H
+#define _APLUS_SMP_H
 
 #ifndef __ASSEMBLY__
 #include <time.h>
 #include <sys/cdefs.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/memory.h>
-#include <aplus/core/task.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/memory.h>
+#include <aplus/task.h>
 
 #define SMP_CPU_MAX                     256
 #define SMP_CPU_BOOTSTRAP_ID            0

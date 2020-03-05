@@ -22,12 +22,10 @@
  */
 
 
-#include <aplus/core/base.h>
-#include <aplus/core/linkage.h>
-#include <aplus/core/multiboot.h>
+#include <aplus.h>
+#include <aplus/multiboot.h>
 #include <arch/x86/asm.h>
-
-
+#include <asm/linkage.h>
 
 
 

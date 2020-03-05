@@ -26,10 +26,12 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <aplus/core/base.h>
-#include <aplus/core/debug.h>
-#include <aplus/core/hal.h>
-#include <aplus/core/ipc.h>
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/ipc.h>
+
+#include <hal/debug.h>
+
 
 
 /*!

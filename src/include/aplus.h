@@ -112,8 +112,8 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #endif
 
 
-#include <aplus/core/memory.h>
-#include <aplus/core/smp.h>
+#include <aplus/memory.h>
+#include <aplus/smp.h>
 
 #define CORE_BUFSIZ                     1024
 
