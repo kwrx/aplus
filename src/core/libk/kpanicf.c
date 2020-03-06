@@ -24,103 +24,51 @@
  */                                                                     
                                                                         
 #include <stdint.h>
+#include <stdarg.h>
+#include <stdio.h>
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/endian.h>
+#include <aplus/ipc.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
 #include <hal/debug.h>
-
-#include <arch/x86/asm.h>
-#include <arch/x86/cpu.h>
-
-
-#define BIOS_COM_ADDRESS            0x400
-
-
-static uint16_t com_address = 0;
+#include <hal/interrupt.h>
 
 
 /*!
- * @brief Initialize Debugger on UART0.
- * 
- * Read COM Address from SMBios Area and configure Serial Port.
+ * @brief Print formatted output to the debugger and halt.
  */
-void arch_debug_init(void) {
+__attribute__((noreturn))
+void kpanicf(const char* fmt, ...) {
 
-    uint16_t* p = (uint16_t*) (KERNEL_HIGH_AREA + BIOS_COM_ADDRESS);
+    arch_intr_disable();
+
+
+    static char buf[8192];
+    static spinlock_t buflock = SPINLOCK_INIT;
+
+    __lock(&buflock, {
+
+        va_list v;
+        va_start(v, fmt);
+        vsnprintf(buf, sizeof(buf), fmt, v);
+        va_end(v);
+
+
+        int i;
+        for(i = 0; buf[i]; i++) {
     
-    for(int i = 0; i < 4; i++) {
-        if(p[i] == 0)
-            continue;
+            arch_debug_putc(buf[i]);
 
-        com_address = p[i];
+            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
+            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
 
-        outb(com_address + 1, 0x00);
-        outb(com_address + 3, 0x80);
-        outb(com_address + 0, 0x03);
-        outb(com_address + 1, 0x00);
-        outb(com_address + 3, 0x03);
-        outb(com_address + 2, 0xC7);
-        outb(com_address + 4, 0x0B);
+        }
 
-        break;
-    }
-}
+    });
 
+    core_stacktrace();
 
-/*!
- * @brief Write to Debugger.
- * 
- * Wait and write a character on Serial Port.
- */
-void arch_debug_putc(char ch) {
-    if(unlikely(!com_address))
-        return;
+    // TODO: arch_cpu_halt()
+    for(;;);
 
-    int i;
-    for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-        __builtin_ia32_pause();
-
-    outb(com_address, ch);
-}
-
-
-
-
-/*!
- * @brief Stacktrace.
- * 
- * ...
- */
-void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
-    
-
-
-    struct stack {
-        struct stack* bp;
-        uintptr_t ip;
-    } __packed *frame;
-
-
-#if defined(__x86_64__)
-    __asm__ __volatile__ ("movq %%rbp, %%rax" : "=a"(frame));
-#else
-    __asm__ __volatile__ ("movl %%ebp, %%rax" : "=a"(frame));
-#endif
-
-
-    int i;
-    for(i = 0; frame && i < count; i++) {
-        
-        frames[i] = 0;
-
-        if(unlikely(!ptr_check(frame, R_OK)))
-            break;
-
-        frames[i] = frame->ip;
-        frame = frame->bp;
-
-    }
 }

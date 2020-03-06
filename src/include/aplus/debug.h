@@ -28,6 +28,8 @@
 __BEGIN_DECLS
 
 void kprintf(const char*, ...);
+
+__attribute__((noreturn))
 void kpanicf(const char*, ...);
 
 __END_DECLS

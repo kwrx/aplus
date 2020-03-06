@@ -97,7 +97,7 @@ long syscall_invoke(long idx, long p0, long p1, long p2, long p3, long p4, long 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
 
     if(unlikely(errno == ENOSYS))
-        kprintf("syscall: <%s> ENOSYS! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", arch_debug_get_name(syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
+        kprintf("syscall: <%s> ENOSYS! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", core_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 
 #endif
 

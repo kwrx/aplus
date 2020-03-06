@@ -43,7 +43,7 @@ x86_syscall_handler:
 
   # Load Kernel Stack
     movq    $KERNEL_SYSCALL_STACK, %rsp
-    addq    $0x1000, %rsp
+    addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
 
   # Save User Registers
     pushq   %rsi

@@ -22,46 +22,36 @@
  */
 
 
-#ifndef _APLUS_NETWORK_H
-#define _APLUS_NETWORK_H
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/elf.h>
+#include <aplus/ipc.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+
+#include <hal/debug.h>
 
 
-#ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
+void core_stacktrace(void) {
+
+    uintptr_t frames[10] = { 0 };
+    arch_debug_stacktrace((uintptr_t*) &frames, sizeof(frames) / sizeof(uintptr_t));
 
 
-#include "lwipopts.h"
-#include "lwip/opt.h"
+    int i;
+    for(i = 1; i < sizeof(frames) / sizeof(uintptr_t); i++) {
+        
+        if(!frames[i])
+            break;
 
-#include "lwip/init.h"
-#include "lwip/stats.h"
-#include "lwip/sys.h"
-#include "lwip/mem.h"
-#include "lwip/memp.h"
-#include "lwip/pbuf.h"
-#include "lwip/netif.h"
-#include "lwip/sockets.h"
-#include "lwip/ip.h"
-#include "lwip/raw.h"
-#include "lwip/udp.h"
-#include "lwip/autoip.h"
-#include "lwip/igmp.h"
-#include "lwip/dns.h"
-#include "lwip/tcpip.h"
-#include "lwip/snmp.h"
-#include "lwip/ip_addr.h"
-#include "netif/etharp.h"
+        const char* s;
+        if((s = core_get_name(frames[i])))
+            kprintf("[%d] %8p <%s>\n", i, frames[i], s);
+        else
+            kprintf("[%d] %8p <%s>\n", i, frames[i], "unknown");
 
+    }
 
-
-__BEGIN_DECLS
-
-void network_init(void);
-
-void ethif_input(struct netif* netif);
-err_t ethif_init(struct netif* netif);
-
-__END_DECLS
-
-#endif
-#endif
+}

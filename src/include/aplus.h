@@ -118,10 +118,13 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #endif
 
 
+#if defined(KERNEL)
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 
 #define CORE_BUFSIZ                     1024
+#define CORE_MODULE_MAX                 1024
+
 
 struct syscore {
 
@@ -171,8 +174,33 @@ struct syscore {
 
 
     struct {
+
         uintptr_t load_base_address;
-    } exe; 
+    
+        uintptr_t sh_num;
+        uintptr_t sh_entsize;
+        uintptr_t sh_shndx;
+        
+        char sections[CORE_BUFSIZ << 2];
+
+    } exe;
+
+
+    struct {
+
+        struct {
+
+            uintptr_t ptr;
+            uintptr_t size;
+            uintptr_t status;
+
+            char cmdline[CORE_BUFSIZ];
+
+        } __packed ko[CORE_MODULE_MAX];
+
+        size_t count;
+
+    } modules;
 
 
     struct {
@@ -190,10 +218,21 @@ struct syscore {
 
 };
 
-//?
-//? See src/core/kmain.c
-//?
+
+__BEGIN_DECLS 
+
+
+//? See src/core/kernel/kmain.c
 extern struct syscore* core;
+
+//? See src/core/kernel/core/dl.c
+uintptr_t core_get_address(const char*);
+const char* core_get_name(uintptr_t);
+void core_stacktrace(void);
+
+__END_DECLS
+
+#endif
 
 #endif
 #endif

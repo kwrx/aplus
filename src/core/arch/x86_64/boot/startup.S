@@ -152,12 +152,12 @@ multiboot_header_end:
 
     startup_tss:
         .long 0
-        .quad KERNEL_INTERRUPT_STACK + 4096   //? RSP0: Kernel Stack
+        .quad KERNEL_INTERRUPT_STACK + KERNEL_INTERRUPT_STACKSIZE     //? RSP0: Kernel Stack
         .quad 0
         .quad 0
         .quad 0
-        .quad KERNEL_EXCEPTION_STACK + 4096   //? IST1: Exception Stack
-        .quad KERNEL_SYSCALL_STACK   + 4096   //? IST2: Syscall Stack
+        .quad KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE     //? IST1: Exception Stack
+        .quad KERNEL_SYSCALL_STACK   + KERNEL_SYSCALL_STACKSIZE       //? IST2: Syscall Stack
         .quad 0
         .quad 0
         .quad 0

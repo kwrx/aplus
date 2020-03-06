@@ -51,7 +51,7 @@
 #define ARCH_VMM_MAP_TYPE_PAGE      (0 << 9)
 #define ARCH_VMM_MAP_TYPE_STACK     (1 << 9)
 #define ARCH_VMM_MAP_TYPE_MMAP      (2 << 9)
-#define ARCH_VMM_MAP_TYPE_SWAP      (3 << 9)
+#define ARCH_VMM_MAP_TYPE_COW       (3 << 9)
 
 
 

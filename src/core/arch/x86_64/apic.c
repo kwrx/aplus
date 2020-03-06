@@ -121,6 +121,7 @@ void apic_enable(void) {
     else
         ticks -= mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
 
+    
 
 
     if (x2apic) {

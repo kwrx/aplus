@@ -28,6 +28,8 @@
 #include <aplus/smp.h>
 #include <stdint.h>
 
+#include <hal/timer.h>
+
 
 void sem_init(semaphore_t* s, long value) {
     

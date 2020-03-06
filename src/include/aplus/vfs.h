@@ -103,7 +103,6 @@ struct inode {
     struct inode_ops ops;
     struct inode* parent;
 
-
     void* userdata;
     spinlock_t lock;
 

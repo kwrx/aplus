@@ -134,9 +134,8 @@ typedef struct task {
         uint64_t cancelled_write_bytes;     
     } iostat;
 
-#ifdef RLIM_NLIMITS
+
     struct rlimit rlimits[RLIM_NLIMITS];
-#endif
     struct rusage rusage;
 
     spinlock_t lock;

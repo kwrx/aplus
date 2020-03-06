@@ -10,6 +10,7 @@ __BEGIN_DECLS
 
 void arch_timer_delay(uint64_t);
 uint64_t arch_timer_getticks(void);
+uint64_t arch_timer_getns(void);
 uint64_t arch_timer_getus(void);
 uint64_t arch_timer_getms(void);
 uint64_t arch_timer_gettime(void);

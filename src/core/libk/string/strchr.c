@@ -25,47 +25,41 @@
                                                                         
 #include <stdint.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <limits.h>
+#include <sys/types.h>
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/ipc.h>
-
-#include <hal/debug.h>
-#include <hal/interrupt.h>
 
 
-/*!
- * @brief Print formatted output to the debugger and halt.
- */
-void kpanicf(const char* fmt, ...) {
 
-    arch_intr_disable();
+#define ALIGN (sizeof(size_t))
+#define ONES ((size_t)-1/UCHAR_MAX)
+#define HIGHS (ONES * (UCHAR_MAX/2+1))
+#define HASZERO(x) (((x)-ONES) & (~(x) & HIGHS))
 
-
-    static char buf[8192];
-    static spinlock_t buflock = SPINLOCK_INIT;
-
-    __lock(&buflock, {
-
-        va_list v;
-        va_start(v, fmt);
-        vsnprintf(buf, sizeof(buf), fmt, v);
-        va_end(v);
-
-
-        int i;
-        for(i = 0; buf[i]; i++) {
+char* strchrnul(const char *s, int c) {
     
-            arch_debug_putc(buf[i]);
+    size_t *w, k;
 
-            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
-            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
+	c = (unsigned char)c;
+	if (!c) return (char *)s + strlen(s);
 
-        }
+	for (; (uintptr_t)s % ALIGN; s++)
+		if (!*s || *(unsigned char *)s == c) return (char *)s;
+	k = ONES * c;
+	for (w = (void *)s; !HASZERO(*w) && !HASZERO(*w^k); w++);
+	for (s = (void *)w; *s && *(unsigned char *)s != c; s++);
+	return (char *)s;
 
-    });
+}
 
-    // TODO: arch_cpu_halt()
-    for(;;);
+char* strchr(const char *s, int c) {
+
+    //?
+    //? from musl libc sources
+    //?
+	
+    char *r = strchrnul(s, c);
+	return *(unsigned char *)r == (unsigned char)c ? r : 0;
 
 }

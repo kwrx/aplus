@@ -96,7 +96,16 @@ pid_t arch_task_spawn_init() {
     task->frame         = (void*) kmalloc(sizeof(interrupt_frame_t), GFP_KERNEL);
     task->address_space = (void*) &current_cpu->address_space;
 
+
+    extern inode_t __vfs_root;
+
+    task->cwd  =
+    task->root = &__vfs_root;
+    task->exe  = NULL;
+
     task->umask = 0;
+
+
 
     memset(&task->clock , 0, sizeof(struct tms));
     memset(&task->sleep , 0, sizeof(struct timespec));
@@ -107,9 +116,9 @@ pid_t arch_task_spawn_init() {
 
     spinlock_init(&task->lock);
 
-    // TODO: Signal, VFS, RLIMIT
+    // TODO: Signal, RLIMIT
 
-    
+
     task->next   = NULL;
     task->parent = NULL;
 
@@ -168,20 +177,26 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->frame         = (void*) kmalloc(sizeof(interrupt_frame_t), GFP_KERNEL);
     task->address_space = (void*) &current_cpu->address_space;
 
+    task->cwd  = current_task->cwd;
+    task->root = current_task->root;
+    task->exe  = current_task->exe;
+
     task->umask = 0;
 
-    memset(&task->clock , 0, sizeof(struct tms));
-    memset(&task->sleep , 0, sizeof(struct timespec));
-    memset(&task->rusage, 0, sizeof(struct rusage));
-    memset(&task->exit  , 0, sizeof(task->exit));
-    memset(&task->iostat, 0, sizeof(task->iostat));
 
-    spinlock_init(&task->lock);
+    memset(&task->clock  , 0, sizeof(struct tms));
+    memset(&task->sleep  , 0, sizeof(struct timespec));
+    memset(&task->rusage , 0, sizeof(struct rusage));
+    memset(&task->exit   , 0, sizeof(task->exit));
+    memset(&task->iostat , 0, sizeof(task->iostat));
+
+    memcpy(&task->fd, &current_task->fd, sizeof(struct fd) * OPEN_MAX);
+    memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
 
 
-    memcpy(&task->fd, current_task->fd, sizeof(struct fd) * OPEN_MAX);
+    // TODO: Signal, RLIMIT
 
-    // TODO: Signal, VFS, RLIMIT
+
 
 
     FRAME(task)->di = (uintptr_t) arg;
@@ -191,6 +206,8 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     FRAME(task)->user_sp = (uintptr_t) kmalloc(stacksize, GFP_KERNEL) + stacksize;
     FRAME(task)->user_ss = KERNEL_DS;
 
+
+    spinlock_init(&task->lock);
     
     task->next   = NULL;
     task->parent = current_task;

@@ -67,7 +67,7 @@ void arch_timer_delay(uint64_t us) {
 
         while(!(inb(0x61) & 0x20))
             ;
-
+            
     });
 }
 
@@ -77,13 +77,18 @@ uint64_t arch_timer_getticks(void) {
            (uint64_t) (current_cpu->ticks.tv_nsec / (1000000000 / CLOCKS_PER_SEC));
 }
 
+uint64_t arch_timer_getns(void) {
+    return (uint64_t) (current_cpu->ticks.tv_sec * 1000000000) +
+           (uint64_t) (current_cpu->ticks.tv_nsec);
+}
+
 uint64_t arch_timer_getus(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
+    return (uint64_t) (current_cpu->ticks.tv_sec * 1000000) +
            (uint64_t) (current_cpu->ticks.tv_nsec / 1000);
 }
 
 uint64_t arch_timer_getms(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
+    return (uint64_t) (current_cpu->ticks.tv_sec * 1000) +
            (uint64_t) (current_cpu->ticks.tv_nsec / 1000000);
 }
 
@@ -138,6 +143,7 @@ void timer_init(void) {
 
     spinlock_init(&delay_lock);
     spinlock_init(&rtc_lock);
+
 
     kprintf("x86-timer: now(%d) CLOCKS_PER_SEC(%d)\n", arch_timer_gettime(), CLOCKS_PER_SEC);
 

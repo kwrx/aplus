@@ -43,7 +43,7 @@
 - [ ] User API
 - [ ] Wait Queue
 - [ ] Signal Handling
-- [ ] Module Loading
+- [x] Module Loading
 - [ ] ELF Loading
 - [ ] Fstab
 - [ ] Unix Permissions

@@ -80,17 +80,31 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
         switch(btags->type) {
 
             case MULTIBOOT_TAG_TYPE_CMDLINE:
-                strcpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string);
+                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string, CORE_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
-                strcpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string);
+                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string, CORE_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_MODULE:
+
+                {
+
+                    int i = core->modules.count++;
+
+                    core->modules.ko[i].ptr       = ((struct multiboot_tag_module*) btags)->mod_start;
+                    core->modules.ko[i].size      = ((struct multiboot_tag_module*) btags)->mod_end -
+                                                    ((struct multiboot_tag_module*) btags)->mod_start;
+
+                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CORE_BUFSIZ);
+
+                }
+                
                 break;
 
             case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO:
+
                 core->memory.phys_upper = ((struct multiboot_tag_basic_meminfo*) btags)->mem_upper;
                 core->memory.phys_lower = ((struct multiboot_tag_basic_meminfo*) btags)->mem_lower;
                 break;
@@ -142,6 +156,12 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                 break;
 
             case MULTIBOOT_TAG_TYPE_ELF_SECTIONS:
+
+                core->exe.sh_num        = ((struct multiboot_tag_elf_sections*) btags)->num;
+                core->exe.sh_entsize    = ((struct multiboot_tag_elf_sections*) btags)->entsize;
+                core->exe.sh_shndx      = ((struct multiboot_tag_elf_sections*) btags)->shndx;
+
+                memcpy(&core->exe.sections[0], &((struct multiboot_tag_elf_sections*) btags)->sections[0], core->exe.sh_entsize * core->exe.sh_num);
                 break;
 
             case MULTIBOOT_TAG_TYPE_APM:

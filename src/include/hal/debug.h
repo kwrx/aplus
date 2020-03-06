@@ -10,8 +10,7 @@ __BEGIN_DECLS
 
 void arch_debug_init(void);
 void arch_debug_putc(char);
-void arch_debug_get_stacktrace();
-char* arch_debug_get_name(void*);
+void arch_debug_stacktrace(uintptr_t*, size_t);
 
 __END_DECLS
 

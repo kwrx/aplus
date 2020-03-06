@@ -28,7 +28,10 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/module.h>
 #include <aplus/network.h>
+
+#include <hal/timer.h>
 
 #define __init(fn, p)   \
     fn##_init p 
@@ -68,11 +71,11 @@ void kmain() {
 
 
 
-    //int e;
-    //if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
-    //    kpanicf("mount: could not mount fake root: errno(%d)", -e);
+    int e;
+    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
+        kpanicf("mount: could not mount fake root: errno(%d)", -e);
 
-    //__init(module,  ());
+    __init(module,  ());
     //__init(root,    ());
 
 

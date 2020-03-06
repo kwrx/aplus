@@ -1,5 +1,5 @@
 
-SRCDIRS	 := arch/$(PLATFORM) kernel
+SRCDIRS	 := arch/$(PLATFORM) kernel libk
 INCLUDES := ../include
 DEFINES	 := KERNEL=1
 LIBS	 := gcc
