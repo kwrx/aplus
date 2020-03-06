@@ -31,6 +31,7 @@
 #include <aplus/ipc.h>
 
 #include <hal/debug.h>
+#include <hal/interrupt.h>
 
 
 /*!
@@ -38,18 +39,31 @@
  */
 void kpanicf(const char* fmt, ...) {
 
-    char buf[8192];
-
-    va_list v;
-    va_start(v, fmt);
-    vsnprintf(buf, sizeof(buf), fmt, v);
-    va_end(v);
+    arch_intr_disable();
 
 
-    int i;
-    for(i = 0; buf[i]; i++)
-        arch_debug_putc(buf[i]);
+    static char buf[8192];
+    static spinlock_t buflock = SPINLOCK_INIT;
 
+    __lock(&buflock, {
+
+        va_list v;
+        va_start(v, fmt);
+        vsnprintf(buf, sizeof(buf), fmt, v);
+        va_end(v);
+
+
+        int i;
+        for(i = 0; buf[i]; i++) {
+    
+            arch_debug_putc(buf[i]);
+
+            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
+            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
+
+        }
+
+    });
 
     // TODO: arch_cpu_halt()
     for(;;);

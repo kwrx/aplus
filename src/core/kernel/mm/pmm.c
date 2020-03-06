@@ -113,7 +113,7 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
         kprintf("pmm: claim physical memory area %p-%p\n", physaddr,
                                                            physaddr + size);
 #endif
@@ -167,7 +167,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
         kprintf("pmm: unclaim physical memory area %p-%p\n", physaddr,
                                                              physaddr + size);
 #endif
@@ -231,7 +231,7 @@ uintptr_t pmm_alloc_block() {
 
 end:
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_block() at %p\n", r);
 #endif
 
@@ -303,7 +303,7 @@ end:
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_blocks(%d) at %p-%p\n", blkno, r, r + (blkno * PML1_PAGESIZE));
 #endif
 
@@ -380,7 +380,7 @@ end:
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_blocks_aligned(%d, %p) at %p-%p\n", blkno, align, r, r + (blkno * PML1_PAGESIZE));
 #endif
 

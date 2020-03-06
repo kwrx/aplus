@@ -1,0 +1,58 @@
+/*
+ * Author:
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ * 
+ * Copyright (c) 2013-2019 Antonino Natale
+ * 
+ * 
+ * This file is part of aPlus.
+ * 
+ * aPlus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * aPlus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+#ifndef _SYS_ARCH_H
+#define _SYS_ARCH_H
+
+#include <aplus.h>
+#include <aplus/ipc.h>
+#include <stdint.h>
+#include <aplus/errno.h>
+#include "arch/cc.h"
+
+typedef uintptr_t sys_mutex_t;
+typedef pid_t sys_thread_t;
+typedef int sys_prot_t;
+
+
+struct sys_sem;
+typedef struct sys_sem* sys_sem_t;
+
+struct sys_mbox;
+typedef struct sys_mbox* sys_mbox_t;
+
+
+#define LWIP_COMPAT_MUTEX               1
+
+#define SYS_MBOX_NULL                   NULL
+#define SYS_SEM_NULL                    NULL
+
+
+#define sys_sem_valid(s)                (((s) != NULL) && (*(s) != NULL))
+#define sys_sem_set_invalid(s)          do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
+
+#define sys_mbox_valid(s)               (((s) != NULL) && (*(s) != NULL))
+#define sys_mbox_set_invalid(s)         do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
+
+#endif

@@ -6,13 +6,25 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 
-#define SPINLOCK_INIT       { 0L, 0L }
+
+#if defined(DEBUG)
+#define IPC_DEFAULT_TIMEOUT     10000   //? 10sec
+#endif
+
+
+
+#define SPINLOCK_INIT           { 0L, 0L }
 
 typedef volatile struct {
     volatile long value;
     volatile long flags;
 } spinlock_t;
 
+
+
+#define SEMAPHORE_INIT          0L
+
+typedef volatile long semaphore_t;
 
 
 
@@ -22,6 +34,11 @@ void spinlock_init(spinlock_t*);
 void spinlock_lock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
 int spinlock_trylock(spinlock_t*);
+
+void sem_init(semaphore_t*, long);
+void sem_wait(semaphore_t*);
+void sem_post(semaphore_t*);
+int sem_trywait(semaphore_t* s);
 
 __END_DECLS
 

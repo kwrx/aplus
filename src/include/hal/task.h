@@ -10,7 +10,8 @@
 __BEGIN_DECLS
 
 void arch_task_switch(void*, task_t*, task_t*);
-void arch_task_spawn_init(void);
+pid_t arch_task_spawn_init(void);
+pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
 
 __END_DECLS
 

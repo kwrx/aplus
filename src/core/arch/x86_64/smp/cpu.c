@@ -331,6 +331,20 @@ void arch_cpu_init(int index) {
 #endif
 
 
+#if defined(__x86_64__)
+
+    if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_SYSCALL) {
+
+        extern void x86_syscall_handler();
+
+        x86_wrmsr(X86_MSR_STAR, ((uint64_t) KERNEL_CS << 32ULL) | ((uint64_t) ((USER_CS - 8) | 3) << 48ULL));
+        x86_wrmsr(X86_MSR_LSTAR, (uint64_t) &x86_syscall_handler);
+        x86_wrmsr(X86_MSR_SFMASK, 0x200ULL);
+
+    }
+
+#endif
+
     core->cpu.cores[index].flags |= SMP_CPU_FLAGS_ENABLED;
 
 }

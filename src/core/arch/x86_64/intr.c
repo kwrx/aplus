@@ -115,7 +115,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
         case 0xFE:
 
 #if defined(__x86_64__)
-            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, frame->r8);
+            frame->ax = syscall_invoke(frame->ax, frame->di, frame->si, frame->dx, frame->r10, frame->r8, frame->r9);
 #elif defined(__i386__)
             frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
 #endif

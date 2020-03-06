@@ -44,6 +44,10 @@
 #include <arch/x86/apic.h>
 
 
+#define FRAME(p)    \
+    ((interrupt_frame_t*) p->frame)
+
+
 
 void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 
@@ -62,12 +66,17 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 }
 
 
-void arch_task_spawn_init() {
+pid_t arch_task_spawn_init() {
 
     task_t* task = (task_t*) kmalloc(sizeof(task_t), GFP_KERNEL);
 
-    task->argv = NULL;
-    task->environ = NULL;
+
+    static char* __argv[2] = { "init", NULL };
+    static char* __envp[1] = { NULL };
+
+    task->argv = __argv;
+    task->environ = __envp;
+
 
     task->tid   = 
     task->tgid  = sched_nextpid();
@@ -116,4 +125,82 @@ void arch_task_spawn_init() {
 
     sched_enqueue(task);
 
+    return task->tid;
 }
+
+
+pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t stacksize, void* arg) {
+
+    DEBUG_ASSERT(name);
+    DEBUG_ASSERT(entry);
+    DEBUG_ASSERT(stacksize);
+    
+
+
+    task_t* task = (task_t*) kmalloc(sizeof(task_t), GFP_KERNEL);
+
+
+    task->argv = (char**) kmalloc((sizeof(char*) * 2) + strlen(name) + 1, GFP_KERNEL);
+
+    task->argv[0] = (char*) &task->argv[2];
+    task->argv[1] = (char*) NULL;
+
+    strcpy(task->argv[0], name);
+
+
+    task->environ = current_task->environ;
+
+    task->tid   = sched_nextpid();
+    task->tgid  = current_task->tid;
+    task->pgid  = current_task->pgid;
+    task->uid   = current_task->uid;
+    task->euid  = current_task->euid;
+    task->gid   = current_task->gid;
+    task->egid  = current_task->egid;
+    task->sid   = current_task->sid;
+
+    task->status    = TASK_STATUS_READY;
+    task->policy    = current_task->policy;
+    task->priority  = current_task->priority;
+    task->caps      = current_task->caps;
+    task->affinity  = 0;
+    
+    task->frame         = (void*) kmalloc(sizeof(interrupt_frame_t), GFP_KERNEL);
+    task->address_space = (void*) &current_cpu->address_space;
+
+    task->umask = 0;
+
+    memset(&task->clock , 0, sizeof(struct tms));
+    memset(&task->sleep , 0, sizeof(struct timespec));
+    memset(&task->rusage, 0, sizeof(struct rusage));
+    memset(&task->exit  , 0, sizeof(task->exit));
+    memset(&task->iostat, 0, sizeof(task->iostat));
+
+    spinlock_init(&task->lock);
+
+
+    memcpy(&task->fd, current_task->fd, sizeof(struct fd) * OPEN_MAX);
+
+    // TODO: Signal, VFS, RLIMIT
+
+
+    FRAME(task)->di = (uintptr_t) arg;
+    FRAME(task)->ip = (uintptr_t) entry;
+    FRAME(task)->cs = KERNEL_CS;
+    FRAME(task)->flags = 0x200;
+    FRAME(task)->user_sp = (uintptr_t) kmalloc(stacksize, GFP_KERNEL) + stacksize;
+    FRAME(task)->user_ss = KERNEL_DS;
+
+    
+    task->next   = NULL;
+    task->parent = current_task;
+    
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    kprintf("task: spawn kthread %s pid(%d) stacksize(%p)\n", task->argv[0], task->tid, stacksize);
+#endif
+
+    sched_enqueue(task);
+
+    return task->tid;
+} 

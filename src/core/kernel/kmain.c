@@ -28,6 +28,10 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/network.h>
+
+#define __init(fn, p)   \
+    fn##_init p 
 
 
 
@@ -35,25 +39,41 @@ static struct syscore __core;
 struct syscore* core = &__core;
 
 
+
+
 void cmain() {
+
+    current_task->priority = TASK_PRIO_MIN;
+
+    for(;;)
+#if defined(__i386__) || defined(__x86_64__)
+        __builtin_ia32_pause()
+#endif
+    ;
 
 }
 
 
+
+
 void kmain() {
 
-
 #if defined(CONFIG_HAVE_SMP)
-    //* Initialize SMP (Symmetric Multiprocessing)
-    smp_init();
+    __init(smp,     ());
 #endif
 
+    __init(syscall, ());
+    __init(vfs,     ());
+    __init(network, ());
 
-    //* Initialize Syscalls
-    syscall_init();
 
-    //* Initialize VFS (Virtual File System)
-    vfs_init();
+
+    //int e;
+    //if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
+    //    kpanicf("mount: could not mount fake root: errno(%d)", -e);
+
+    //__init(module,  ());
+    //__init(root,    ());
 
 
 
@@ -64,5 +84,12 @@ void kmain() {
         
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
+
+
+
+    //static char* __argv[2] = { "/sbin/init", NULL };
+    //static char* __envp[1] = { NULL };
+
+    // TODO: ...
 
 }

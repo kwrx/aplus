@@ -56,6 +56,12 @@
 #define __alias(s)      __attribute__((alias(#s)))
 #endif
 
+
+#define __PRAGMA(x)     _Pragma(#x)
+#define WARNING(x)      __PRAGMA(GCC diagnostic ignored x)
+
+
+
 #if defined(KERNEL)
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
 

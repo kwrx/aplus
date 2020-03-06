@@ -7,6 +7,9 @@
 #define X86_MSR_GSBASE                               (0xC0000101)
 #define X86_MSR_KERNEL_GSBASE                        (0xC0000102)
 
+#define X86_MSR_STAR                                 (0xC0000081)
+#define X86_MSR_LSTAR                                (0xC0000082)
+#define X86_MSR_SFMASK                               (0xC0000084)
 
 #define X86_MSR_FEATURES_SCE                         (1 << 0)
 #define X86_MSR_FEATURES_LME                         (1 << 8)
@@ -16,6 +19,8 @@
 #define X86_MSR_FEATURES_LMSLE                       (1 << 13)
 #define X86_MSR_FEATURES_FFXSR                       (1 << 14)
 #define X86_MSR_FEATURES_TCE                         (1 << 15)
+
+
 
 
 // 0x00000001:ECX
