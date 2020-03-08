@@ -21,17 +21,16 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
-#include <stdint.h>
-#include <string.h>
 #include <aplus/errno.h>
 
+#include <stdint.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/mount.h>

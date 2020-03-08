@@ -21,7 +21,6 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>

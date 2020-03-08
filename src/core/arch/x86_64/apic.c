@@ -43,8 +43,10 @@
 #include <arch/x86/apic.h>
 
 
+
 extern ioapic_t ioapic[];
 static int x2apic;
+
 
 __percpu
 void apic_enable(void) {

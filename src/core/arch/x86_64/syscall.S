@@ -39,6 +39,7 @@
 x86_syscall_handler:
 
   # Save User Stack
+    pushq   %r15
     movq    %rsp, %r15
 
   # Load Kernel Stack
@@ -46,9 +47,14 @@ x86_syscall_handler:
     addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
 
   # Save User Registers
-    pushq   %rsi
+    pushq   %r15
+    pushq   %r14
+    pushq   %r13
+    pushq   %r12
     pushq   %r11
     pushq   %rcx
+    pushq   %rbx
+    pushq   %rbp
     
   # Load Parameters
     pushq   %r9             # p5
@@ -66,12 +72,18 @@ x86_syscall_handler:
 
 
   # Restore User Registers
+    popq    %rbp
+    popq    %rbx
     popq    %rcx
     popq    %r11
+    popq    %r12
+    popq    %r13
+    popq    %r14
     popq    %r15
 
   # Restore User Stack
     movq    %r15, %rsp
+    popq    %r15
 
     sysretq
     

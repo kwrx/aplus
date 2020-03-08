@@ -21,7 +21,6 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -77,6 +76,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
 
     if(pos % ext2->blocksize) {
+
         long p;
         p = ext2->blocksize - (pos % ext2->blocksize);
         p = p > len ? len : p;
@@ -86,10 +86,12 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
         off += p;
         ib++;
+
     }
 
 
     if((pos + len) % ext2->blocksize && (ib <= eb)) {
+
         long p;
         p = (pos + len) % ext2->blocksize;
 
@@ -97,6 +99,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
         ext2_utils_write_inode_data(ext2, blocks, eb, 0, (void*) ((uintptr_t) buf + len - p), p);
 
         eb--;
+        
     }
 
 

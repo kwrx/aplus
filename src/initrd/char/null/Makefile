@@ -1,7 +1,7 @@
 
 SRCDIRS	 := .
 INCLUDES := $(ROOTDIR)/src/include
-DEFINES	 := MODULE=1
+DEFINES	 := KERNEL=1 MODULE=1
 LIBS	 := 
 
 CFLAGS   := -include $(ROOTDIR)/config.h

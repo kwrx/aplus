@@ -225,10 +225,13 @@ __BEGIN_DECLS
 //? See src/core/kernel/kmain.c
 extern struct syscore* core;
 
-//? See src/core/kernel/core/dl.c
-uintptr_t core_get_address(const char*);
-const char* core_get_name(uintptr_t);
-void core_stacktrace(void);
+//? See src/core/kernel/runtime/dl.c
+uintptr_t runtime_get_address(const char*);
+const char* runtime_get_name(uintptr_t);
+
+//? See src/core/kernel/runtime/stacktrace.c
+void runtime_stacktrace(void);
+
 
 __END_DECLS
 

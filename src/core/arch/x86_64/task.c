@@ -22,11 +22,7 @@
  */
 
 
-#include <stdint.h>
-#include <string.h>
-#include <time.h>
 #include <aplus.h>
-#include <aplus/multiboot.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
@@ -42,6 +38,11 @@
 #include <arch/x86/intr.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
+
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
 
 
 #define FRAME(p)    \
@@ -62,6 +63,8 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 
     memcpy(prev->frame, __frame, sizeof(interrupt_frame_t));
     memcpy(__frame, next->frame, sizeof(interrupt_frame_t));
+
+    // TODO: Switch FPU Registers
 
 }
 
@@ -197,14 +200,18 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     // TODO: Signal, RLIMIT
 
 
-
-
-    FRAME(task)->di = (uintptr_t) arg;
     FRAME(task)->ip = (uintptr_t) entry;
     FRAME(task)->cs = KERNEL_CS;
     FRAME(task)->flags = 0x200;
     FRAME(task)->user_sp = (uintptr_t) kmalloc(stacksize, GFP_KERNEL) + stacksize;
     FRAME(task)->user_ss = KERNEL_DS;
+
+#if defined(__x86_64__)
+    FRAME(task)->di = (uintptr_t) arg;
+#else
+    (*(uintptr_t*) FRAME(task)->user_sp)-- = (uintptr_t) NULL;
+    (*(uintptr_t*) FRAME(task)->user_sp)-- = (uintptr_t) arg;
+#endif
 
 
     spinlock_init(&task->lock);

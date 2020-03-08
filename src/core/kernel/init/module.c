@@ -95,7 +95,7 @@ static void* module_resolve(const char* name) {
 
 
     void* p;
-    if((p = (void*) core_get_address(name)))
+    if((p = (void*) runtime_get_address(name)))
         return module_export(NULL, name, p)
              , p;
     

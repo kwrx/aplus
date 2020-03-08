@@ -21,40 +21,47 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/smp.h>
-#include <aplus/ipc.h>
-#include <aplus/vfs.h>
-#include <aplus/memory.h>
-
+#include <aplus/module.h>
+#include <aplus/mm.h>
 #include <stdint.h>
-#include <sys/types.h>
-#include <sys/mount.h>
+#include <stdio.h>
+#include <errno.h>
 
-#include <aplus/utils/list.h>
+#include <dev/interface.h>
+#include <dev/network.h>
 
-#include "ext2.h"
-
-
-
-
-int ext2_umount(inode_t* dir) {
-
-    DEBUG_ASSERT(dir);
-    DEBUG_ASSERT(dir->sb);
-    DEBUG_ASSERT(dir->sb->fsid == EXT2_ID);
-    DEBUG_ASSERT(dir->sb->root == dir);
-
-
-    vfs_cache_destroy(&dir->sb->cache);
+#ifndef ETHERNETIF_MAXFRAMES
+#define ETHERNETIF_MAXFRAMES            1
+#endif
 
 
 
-    ext2_t* ext2 = (ext2_t*) dir->sb->fsinfo;
+MODULE_NAME("dev/network");
+MODULE_DEPS("");
+MODULE_AUTHOR("Antonino Natale");
+MODULE_LICENSE("GPL");
 
-    kfree(ext2->cache);
-    kfree(ext2);
 
-    return 0;
+#if 0
+void ethif_init(device_t* device) {
+    DEBUG_ASSERT(device);
+    
+}
+
+
+void ethif_dnit(device_t* device) {
+    DEBUG_ASSERT(device);
+   
+}
+
+#endif
+void init(const char* args) {
+    (void) args;
+}
+
+void dnit(void) {
+
 }

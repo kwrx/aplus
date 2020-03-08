@@ -34,7 +34,7 @@
 #include <hal/debug.h>
 
 
-void core_stacktrace(void) {
+void runtime_stacktrace(void) {
 
     uintptr_t frames[10] = { 0 };
     arch_debug_stacktrace((uintptr_t*) &frames, sizeof(frames) / sizeof(uintptr_t));
@@ -47,7 +47,7 @@ void core_stacktrace(void) {
             break;
 
         const char* s;
-        if((s = core_get_name(frames[i])))
+        if((s = runtime_get_name(frames[i])))
             kprintf("[%d] %8p <%s>\n", i, frames[i], s);
         else
             kprintf("[%d] %8p <%s>\n", i, frames[i], "unknown");

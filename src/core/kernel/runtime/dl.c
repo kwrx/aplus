@@ -36,7 +36,7 @@
 #include <sys/types.h>
 
 
-uintptr_t core_get_address(const char* name) {
+uintptr_t runtime_get_address(const char* name) {
     
     Elf_Shdr* strtab = NULL;
     Elf_Shdr* symtab = NULL;
@@ -85,7 +85,7 @@ uintptr_t core_get_address(const char* name) {
     return 0;  
 }
 
-const char* core_get_name(uintptr_t address) {
+const char* runtime_get_name(uintptr_t address) {
 
     Elf_Shdr* strtab = NULL;
     Elf_Shdr* symtab = NULL;
