@@ -9,7 +9,7 @@
 | Debug         | yes    | yes     | no      |
 | Multiboot     | yes[^1]| yes[^1] | no      |
 | CPU           | yes    | yes     | no      |
-| Paging        | yes    | no      | no      |
+| Paging        | yes    | yes     | no      |
 | Interrupts    | yes    | no      | no      |
 | APIC          | yes    | yes     |         |
 | IO APIC       | yes    | yes     |         |
@@ -57,7 +57,7 @@
 - [ ] ProcFS
 - [ ] Iso9660 (CDFS)
 - [x] Ext2 (Read-only)
-- [ ] FAT32
+- [ ] exFAT
 
 ------------------------------------------
 ## Drivers

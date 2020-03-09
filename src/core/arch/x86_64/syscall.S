@@ -86,4 +86,6 @@ x86_syscall_handler:
     popq    %r15
 
     sysretq
+
+END(x86_syscall_handler)
     

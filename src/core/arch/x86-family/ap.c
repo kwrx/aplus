@@ -89,7 +89,7 @@ ap_header_t* ap_get_header(void) {
     extern int __ap_end;
 
 
-    ap_header_t* ap = (ap_header_t*) arch_vmm_p2v(AP_BOOT_OFFSET + (size_t) ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)) - sizeof(ap_header_t), ARCH_VMM_AREA_HEAP);
+    ap_header_t* ap = (ap_header_t*) arch_vmm_p2v (AP_BOOT_OFFSET + ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)) - sizeof(ap_header_t), ARCH_VMM_AREA_HEAP);
 
     DEBUG_ASSERT(ap);
     DEBUG_ASSERT(ap->magic == AP_BOOT_HEADER_MAGIC);
@@ -112,7 +112,7 @@ void ap_init() {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("ap: copied AP Startup code at %p (%d bytes)\n", AP_BOOT_OFFSET, (size_t) ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)));
+    kprintf("ap: copied AP Startup code at %p (%d bytes)\n", AP_BOOT_OFFSET, ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)));
 #endif
 
 }

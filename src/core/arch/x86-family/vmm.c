@@ -64,117 +64,6 @@ static uintptr_t alloc_page(uintptr_t pagesize, int zero) {
 
 
 
-#if 0
-int x86_ptr_access(uintptr_t address, int mode) {
-
-    x86_page_t* d;
-    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
-
-    /* CR3-L4 */ 
-    {
-        d = &aspace[(address >> 39) & 0x1FF];
-    }
-
-    /* PML4-L3 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 30) & 0x1FF];
-    }
-
-    /* PDP-L2 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 1GiB Page */
-            goto check;
-            
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
-    }
-
-    /* PD-L1 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 2MiB Page */
-            goto check;
-
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
-    }
-
-    /* Page Table */
-check:
-    if(mode & R_OK)
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-    if(mode & W_OK)
-        if(unlikely(!(*d & X86_MMU_PG_RW)))
-            return 0;
-
-    return 1;
-}
-
-
-uintptr_t x86_ptr_phys(uintptr_t address) {
-
-    x86_page_t* d;
-    x86_page_t* aspace = (x86_page_t*) (CONFIG_KERNEL_BASE + x86_get_cr3());
-
-    uintptr_t addend = address & (PAGE_SIZE - 1);
-    
-
-    /* CR3-L4 */ 
-    {
-        d = &aspace[(address >> 39) & 0x1FF];
-    }
-
-    /* PML4-L3 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 30) & 0x1FF];
-    }
-
-    /* PDP-L2 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 1GiB Page */
-            { addend = address & 0x3FFFFFFF; goto check; }
-            
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 21) & 0x1FF];
-    }
-
-    /* PD-L1 */
-    {
-        if(unlikely(!(*d & X86_MMU_PG_P)))
-            return 0;
-
-        if(unlikely(*d & X86_MMU_PG_PS)) /* Check 2MiB Page */
-            { addend = address & 0x1FFFFF; goto check; }
-
-        d = &((x86_page_t*) ((uintptr_t) (*d & ~0xFFF) + CONFIG_KERNEL_BASE)) [(address >> 12) & 0x1FF];
-    }
-
-    /* Page Table */
-check:    
-    if(unlikely(!(*d & X86_MMU_PG_P)))
-        return 0;
-
-    return ((*d >> 12) << 12) + addend;
-}
-#endif
-
-
-
-
-
 /*!
  * @brief arch_vmm_getpagesize().
  *        Get page size.
@@ -272,9 +161,11 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
     if(flags & ARCH_VMM_MAP_HUGETLB) {
 
+#if defined(__x86_64__)
         if(flags & ARCH_VMM_MAP_HUGE_1GB)
             pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
         else
+#endif
             pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
     
     } else
@@ -317,6 +208,9 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
     for(; s < e; s += pagesize, p += pagesize) {
 
         x86_page_t* d;
+
+
+#if defined(__x86_64__)
 
         /* CR3-L4 */
         {
@@ -361,6 +255,29 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
         }
 
+#elif defined(__i386__)
+
+        /* CR3-L2 */
+        {
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 22) & 0x3FF];
+        }
+
+
+        if(pagesize != X86_MMU_HUGE_2MB_PAGESIZE) {
+
+            /* PD-L1 */
+            {
+                DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 4Mib Page");
+
+                if(!(*d & X86_MMU_PG_P))
+                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | b;
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
+            }
+
+        }
+
+#endif
 
         /* Page Table */
         {
@@ -389,11 +306,15 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             }
 
 
+
+#if defined(__x86_64__)
+
             //* Set No-Execute Bit
             if(flags & ARCH_VMM_MAP_NOEXEC)
                 if(core->bsp.xfeatures & X86_CPU_XFEATURES_XD)
                     b |= X86_MMU_PT_NX;             /* XD */
 
+#endif
 
 
             if(flags & ARCH_VMM_MAP_HUGETLB) {
@@ -475,8 +396,10 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
 
     for(; s < e; s += X86_MMU_PAGESIZE) {
 
-
         x86_page_t* d;
+
+
+#if defined(__x86_64__)
 
         /* CR3-L4 */ 
         {
@@ -517,6 +440,29 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
         } else
             pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
 
+
+#elif defined(__i386__)
+
+        /* CR3-L2 */
+        {
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 22) & 0x3FF];
+        }
+
+
+        /* HUGE_4MB */
+        if(!(*d & X86_MMU_PG_PS)) {
+
+            /* PD-L1 */
+            {
+                DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PDT-L1 not exist");
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
+            }
+
+        } else
+            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+
+#endif
 
         /* Page Table */
         {
@@ -578,6 +524,9 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
         x86_page_t* d;
 
+
+#if defined(__x86_64__)
+
         /* CR3-L4 */ 
         {
             d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 39) & 0x1FF];
@@ -615,6 +564,27 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
         }
 
+#elif defined(__i386__)
+
+        /* CR3-L2 */
+        {
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 22) & 0x3FF];
+        }
+
+
+        /* HUGE_4MB */
+        if(!(*d & X86_MMU_PG_PS)) {
+
+            /* PD-L1 */
+            {
+                DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PDT-L1 not exist");
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
+            }
+
+        }
+
+#endif
 
         /* Page Table */
         {
@@ -649,7 +619,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src) {
     DEBUG_ASSERT(src->pm);
     DEBUG_ASSERT(dest);
 
-    if(dest->pm == 0ULL)
+    if(dest->pm == 0UL)
         dest->pm = alloc_page(X86_MMU_PAGESIZE, 1);
 
     
@@ -661,8 +631,8 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src) {
         DEBUG_ASSERT(__d);
 
 
-        uint64_t* s = (uint64_t*) arch_vmm_p2v(__s, ARCH_VMM_AREA_HEAP);
-        uint64_t* d = (uint64_t*) arch_vmm_p2v(__d, ARCH_VMM_AREA_HEAP);
+        x86_page_t* s = (x86_page_t*) arch_vmm_p2v(__s, ARCH_VMM_AREA_HEAP);
+        x86_page_t* d = (x86_page_t*) arch_vmm_p2v(__d, ARCH_VMM_AREA_HEAP);
 
         int i;
         for(i = 0; i < X86_MMU_PT_ENTRIES; i++) {
@@ -691,9 +661,17 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src) {
 
     }
 
+#if defined(__x86_64__)
 
     __lock(&src->lock,
         __clone_pt(src->pm, dest->pm, 4));
+
+#elif defined(__i386__)
+
+    __lock(&src->lock,
+        __clone_pt(src->pm, dest->pm, 2));
+
+#endif
 
 
     src->refcount++;

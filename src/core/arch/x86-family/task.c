@@ -50,6 +50,7 @@
 
 
 
+
 void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 
     DEBUG_ASSERT(prev);
@@ -66,12 +67,20 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 
     // TODO: Switch FPU Registers
 
+
+    if(prev->address_space->pm != next->address_space->pm)
+        x86_set_cr3(next->address_space->pm);
+
 }
 
 
 pid_t arch_task_spawn_init() {
 
-    task_t* task = (task_t*) kmalloc(sizeof(task_t), GFP_KERNEL);
+    task_t* task = (task_t*) kmalloc (
+        sizeof(task_t)                                      // TCB
+         + (sizeof(interrupt_frame_t))                      // Registers
+    , GFP_KERNEL);
+
 
 
     static char* __argv[2] = { "init", NULL };
@@ -95,9 +104,12 @@ pid_t arch_task_spawn_init() {
     task->priority  = TASK_PRIO_REG;
     task->caps      = TASK_CAPS_SYSTEM;
     task->affinity  = ~(1 << current_cpu->id);
+
     
-    task->frame         = (void*) kmalloc(sizeof(interrupt_frame_t), GFP_KERNEL);
+    task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
     task->address_space = (void*) &current_cpu->address_space;
+
+    current_cpu->address_space.refcount++;
 
 
     extern inode_t __vfs_root;
@@ -149,10 +161,21 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 
-    task_t* task = (task_t*) kmalloc(sizeof(task_t), GFP_KERNEL);
+    task_t* task = (task_t*) kmalloc (
+        sizeof(task_t)                                      // TCB
+         + (sizeof(char*) * 2) + strlen(name) + 1           // Arguments & Environment
+         + (sizeof(interrupt_frame_t))                      // Registers
+         + (stacksize)                                      // Stack
+    , GFP_KERNEL);
 
 
-    task->argv = (char**) kmalloc((sizeof(char*) * 2) + strlen(name) + 1, GFP_KERNEL);
+    uintptr_t offset_of_argv  = ((uintptr_t) task + sizeof(task_t));
+    uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1);
+    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t));
+
+
+
+    task->argv = (char**) offset_of_argv;
 
     task->argv[0] = (char*) &task->argv[2];
     task->argv[1] = (char*) NULL;
@@ -177,14 +200,18 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->caps      = current_task->caps;
     task->affinity  = 0;
     
-    task->frame         = (void*) kmalloc(sizeof(interrupt_frame_t), GFP_KERNEL);
+
+    task->frame         = (void*) offset_of_frame;
     task->address_space = (void*) &current_cpu->address_space;
+
+    current_cpu->address_space.refcount++;
+
 
     task->cwd  = current_task->cwd;
     task->root = current_task->root;
     task->exe  = current_task->exe;
 
-    task->umask = 0;
+    task->umask = current_task->umask;
 
 
     memset(&task->clock  , 0, sizeof(struct tms));
@@ -203,7 +230,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     FRAME(task)->ip = (uintptr_t) entry;
     FRAME(task)->cs = KERNEL_CS;
     FRAME(task)->flags = 0x200;
-    FRAME(task)->user_sp = (uintptr_t) kmalloc(stacksize, GFP_KERNEL) + stacksize;
+    FRAME(task)->user_sp = offset_of_stack + stacksize;
     FRAME(task)->user_ss = KERNEL_DS;
 
 #if defined(__x86_64__)
