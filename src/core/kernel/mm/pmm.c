@@ -421,6 +421,21 @@ void pmm_free_blocks(uintptr_t address, size_t blkno) {
 
 
 
+/*!
+ * @brief pmm_get_used_memory().
+ *        Get Physical Memory used by system.
+ */
+uint64_t pmm_get_used_memory() {
+
+    uint64_t sum = 0;
+
+    for(int i = 0; i < PML2_MAX_ENTRIES; i++)
+        sum += pml2_pusage[i];
+
+    return sum * PML1_PAGESIZE;
+
+}
+
 
 
 /*!

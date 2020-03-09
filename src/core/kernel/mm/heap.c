@@ -42,8 +42,16 @@
 
 
 struct kmalloc_header {
-    char magic[4];
-    uint32_t size;
+
+    union {
+        struct {
+            char magic[4];
+            uint32_t size;
+        };
+
+        uint64_t __padding[2];
+    };
+
     char ptr[0];
 } __packed;
 
@@ -67,6 +75,8 @@ void* kmalloc(size_t size, int gfp) {
     else
         h = (struct kmalloc_header*) arch_vmm_p2v(pmm_alloc_blocks(size / PML1_PAGESIZE), ARCH_VMM_AREA_HEAP);
 
+
+    DEBUG_ASSERT(memcmp(h->magic, "USED", 4) != 0);
 
     h->magic[0] = 'U';
     h->magic[1] = 'S';
@@ -121,7 +131,7 @@ void* krealloc(void* address, size_t size, int gfp) {
     }
      
      
-   return kmalloc(size, gfp);
+    return kmalloc(size, gfp);
 
 }
 

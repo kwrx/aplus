@@ -71,6 +71,9 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
     if(prev->address_space->pm != next->address_space->pm)
         x86_set_cr3(next->address_space->pm);
 
+    
+    __asm__ ("" ::: "memory", "cc");
+
 }
 
 

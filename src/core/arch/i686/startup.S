@@ -101,15 +101,9 @@ multiboot_header_end:
 .bss
 .align 4096
 
-    startup_pml4:
+    startup_pml2:
         .skip 4096
-    startup_pml3_low_area: 
-        .skip 4096
-    startup_pml3_high_area: 
-        .skip 4096
-    startup_pml3_heap_area:
-        .skip ((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 27)
-    startup_pml2_stack_area:
+    startup_pml1_stack_area:
         .skip 4096
 
 .align KERNEL_STACK_SIZE
@@ -131,17 +125,14 @@ multiboot_header_end:
 
     startup_gdtp:
         .quad 0x0000000000000000    //?
-        .quad 0x00A09A0000000000    //? 0x08 Kernel Code
-        .quad 0x0080920000000000    //? 0x10 Kernel Data
-        .quad 0x0000000000000000    //?
-        .quad 0x0000000000000000    //?
-        .quad 0x0080F20000000000    //? 0x2B User Data
-        .quad 0x00A0FA0000000000    //? 0x33 User Code
+        .quad 0x00CF980000000000    //? 0x08 Kernel Code
+        .quad 0x00CF920000000000    //? 0x10 Kernel Data
+        .quad 0x00CF980000000000    //? 0x18 User Code
+        .quad 0x00CF920000000000    //? 0x20 User Data
 
       
       .rept KERNEL_TSS_MAX
-        .quad 0x0000E90000000068    //? 0x38 + (n * 16), where n is a cpu id
-        .quad 0x0000000000000000    //? TSS 64 (Available)
+        .quad 0x0000E90000000068    //? 0x28 + (n * 8), where n is a cpu id
       .endr
 
     startup_gdtp_ptr:
@@ -217,11 +208,11 @@ multiboot_header_end:
         .if (i == 8) || (i >= 10 && i <= 14) || (i == 17)   // With error code
           nop
           nop
-          pushq $i
+          pushl $i
           jmp   interrupt_common
         .else                                               // Without error code
-          pushq $0
-          pushq $i
+          pushl $0
+          pushl $i
           jmp   interrupt_common
         .endif
 

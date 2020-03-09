@@ -75,6 +75,7 @@ uintptr_t pmm_alloc_blocks(size_t);
 uintptr_t pmm_alloc_blocks_aligned(size_t, uintptr_t);
 void pmm_free_block(uintptr_t);
 void pmm_free_blocks(uintptr_t, size_t);
+uint64_t pmm_get_used_memory();
 void pmm_init(uintptr_t);
 
 
