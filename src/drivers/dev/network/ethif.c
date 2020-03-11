@@ -2,7 +2,7 @@
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
  * 
- * Copyright (c) 2013-2018 Antonino Natale
+ * Copyright (c) 2013-2019 Antonino Natale
  * 
  * 
  * This file is part of aPlus.
@@ -21,15 +21,18 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if 0
+
 #include <aplus.h>
+#include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/memory.h>
-#include <aplus/vfs.h>
-#include <aplus/debug.h>
-#include <aplus/network.h>
-#include <aplus/intr.h>
 #include <stdint.h>
+#include <stdio.h>
+#include <errno.h>
+
+#include <dev/interface.h>
+#include <dev/network.h>
+
 
 
 #ifndef ETHERNETIF_MAXFRAMES
@@ -37,11 +40,12 @@
 #endif
 
 
-/* See os/kernel/init/hostname.c */
+/* See src/core/kernel/init/hostname.c */
 extern char* hostname;
 
 
 void ethif_input(struct netif* netif) {
+    
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
@@ -49,13 +53,14 @@ void ethif_input(struct netif* netif) {
     struct eth_hdr* hdr;
     struct pbuf* p, *q;
 
-    int len;
-    int frames = 0;
+    long len;
+    long frames = 0;
 
 
-    struct ethif* ethif = netif->state;
+    struct device* dev = netif->state;
+
     do {
-        if((len = ethif->low_level_startinput(ethif->internals)) == 0)
+        if((len = dev->ethif.low_level_startinput(dev->ethif.internals)) == 0)
             break;
             
 #if ETH_PAD_SIZE
@@ -69,20 +74,23 @@ void ethif_input(struct netif* netif) {
             len -= ETH_PAD_SIZE;
 #endif 
 
-            ethif->low_level_input_nomem(ethif->internals, len);
+            dev->ethif.low_level_input_nomem(dev->ethif.internals, len);
+
             LINK_STATS_INC(link.memerr);
             LINK_STATS_INC(link.drop);
             return;
+
         }
+
 
 #if ETH_PAD_SIZE
         pbuf_header(p, -ETH_PAD_SIZE);
 #endif
 
         for(q = p; q; q = q->next)
-            ethif->low_level_input(ethif->internals, q->payload, q->len);
+            dev->ethif.low_level_input(dev->ethif.internals, q->payload, q->len);
 
-        ethif->low_level_endinput(ethif->internals);
+        dev->ethif.low_level_endinput(dev->ethif.internals);
 
 #if ETH_PAD_SIZE
         pbuf_header(p, ETH_PAD_SIZE);
@@ -93,6 +101,7 @@ void ethif_input(struct netif* netif) {
 
         hdr = p->payload;
         switch(lwip_htons(hdr->type)) {
+
             case ETHTYPE_IP:
             case ETHTYPE_ARP:
 #if PPPOE_SUPPORT
@@ -107,13 +116,16 @@ void ethif_input(struct netif* netif) {
                 }
                 break;
 
+
             default:
+
                 pbuf_free(p);
                 p = NULL;
                 break;
         }
 
     } while((!ETHERNETIF_MAXFRAMES) || (++frames < ETHERNETIF_MAXFRAMES));
+
 }
 
 
@@ -127,34 +139,40 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
     DEBUG_ASSERT(p->len);
 
 
-    struct ethif* ethif = netif->state;
+    struct device* dev = netif->state;
     struct pbuf* q;
 
-    if(!ethif->low_level_startoutput(ethif->internals))
+
+    if(!dev->ethif.low_level_startoutput(dev->ethif.internals))
         return ERR_IF;
+
 
 #if ETH_PAD_SIZE
     pbuf_header(p, -ETH_PAD_SIZE);
 #endif
-    
-    for(q = p; q; q = q->next)
-        ethif->low_level_output(ethif->internals, p->payload, p->len);
 
-    ethif->low_level_endoutput(ethif->internals, p->tot_len);
+    for(q = p; q; q = q->next)
+        dev->ethif.low_level_output(dev->ethif.internals, p->payload, p->len);
+
+    dev->ethif.low_level_endoutput(dev->ethif.internals, p->tot_len);
 
 #if ETH_PAD_SIZE
     pbuf_header(p, ETH_PAD_SIZE);
 #endif
 
+
     LINK_STATS_INC(link.xmit);
     return ERR_OK;
+
 }
 
 err_t ethif_init(struct netif* netif) {
-    LWIP_ASSERT("netif != NULL", (netif != NULL));
-    LWIP_ASSERT("state != NULL", (netif->state != NULL));
 
-    struct ethif* ethif = netif->state;
+    DEBUG_ASSERT(netif);
+    DEBUG_ASSERT(netif->state);
+
+
+    struct device* dev = netif->state;
 
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = hostname;
@@ -169,15 +187,13 @@ err_t ethif_init(struct netif* netif) {
     netif->linkoutput = ethif_linkoutput;
 
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
-    memcpy(netif->hwaddr, ethif->address, ETHARP_HWADDR_LEN);
+    memcpy(netif->hwaddr, dev->ethif.address, ETHARP_HWADDR_LEN);
 
     netif->mtu = 1500;
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
 
-    ethif->low_level_init(ethif->internals, ethif->address, NULL);
+    dev->ethif.low_level_init(dev->ethif.internals, dev->ethif.address, NULL);
 
     return ERR_OK;
 }
-
-#endif

@@ -141,7 +141,7 @@ typedef struct device {
 
             struct netif interface;
 
-        } netif;
+        } ethif;
         
 
     };

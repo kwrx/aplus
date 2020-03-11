@@ -36,11 +36,13 @@
 
 
 
-
 __BEGIN_DECLS
 
 //void network_init(device_t*);
 //void network_dnit(device_t*);
+
+void ethif_input(struct netif* netif);
+err_t ethif_init(struct netif* netif);
 
 __END_DECLS
 

@@ -25,26 +25,55 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
-#include <aplus/memory.h>
+#include <aplus/vfs.h>
+#include <aplus/errno.h>
 #include <stdint.h>
-#include <stdio.h>
-#include <errno.h>
+#include <string.h>
 
 #include <dev/interface.h>
 #include <dev/network.h>
 
 
-MODULE_NAME("dev/network");
-MODULE_DEPS("");
+MODULE_NAME("pc/network/pcnet");
+MODULE_DEPS("dev/interface,dev/network");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
 
+device_t device = {
+
+    .type = DEVICE_TYPE_NETWORK,
+
+    .name = "pcnet",
+    .description = "PCNET Network Adapter",
+
+    .major = 144,
+    .minor = 0,
+
+    .status = DEVICE_STATUS_UNKNOWN,
+
+    .init  = NULL,
+    .dnit  = NULL,
+    .reset = NULL,
+
+    .netif.low_level_init           = NULL,
+    .netif.low_level_startoutput    = NULL,
+    .netif.low_level_output         = NULL,
+    .netif.low_level_endoutput      = NULL,
+    .netif.low_level_startinput     = NULL,
+    .netif.low_level_input          = NULL,
+    .netif.low_level_endinput       = NULL,
+    .netif.low_level_input_nomem    = NULL,
+
+};
+
+
 void init(const char* args) {
-    (void) args;
+    device_mkdev(&device, 0666);
 }
 
-void dnit(void) {
 
+void dnit(void) {
+    device_unlink(&device);
 }

@@ -2,7 +2,7 @@
 
 
 DRIVERS := block char dev virtio
-DRIVERS += platform/$(PLATFORM)
+DRIVERS += platform/pc
 
 TARGETS	:= $(shell find $(DRIVERS) -type f -iname "Makefile" -exec dirname {} \;)
 
