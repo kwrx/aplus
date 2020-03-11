@@ -53,12 +53,15 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
     switch(device->chr.io) {
         
         case CHAR_IO_NBF:
+
             if(likely(device->chr.write))
                 return device->chr.write(device, buf, size);
 
             return errno = ENOSYS, -1;
 
+
         case CHAR_IO_LBF:
+
             DEBUG_ASSERT(device->chr.buffer.buffer);
             DEBUG_ASSERT(device->chr.buffer.size);
 
@@ -70,7 +73,9 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
             return e;
         
+
         case CHAR_IO_FBF:
+
             DEBUG_ASSERT(device->chr.buffer.buffer);
             DEBUG_ASSERT(device->chr.buffer.size);
 
@@ -81,6 +86,7 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
                     device->chr.flush(device);
 
             return e;
+
 
         default:
             break;
@@ -106,18 +112,22 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
     switch(device->chr.io) {
 
         case CHAR_IO_NBF:
+
             if(likely(device->chr.read))
                 return device->chr.read(device, buf, size);
 
             return errno = ENOSYS, -1;
 
+
         case CHAR_IO_LBF:
         case CHAR_IO_FBF:
+
             DEBUG_ASSERT(device->chr.buffer.buffer);
             DEBUG_ASSERT(device->chr.buffer.size);
 
             return ringbuffer_read(&device->chr.buffer, buf, size);
             
+
         default:
             break;
 
@@ -143,8 +153,10 @@ int char_flush(device_t* device) {
         case CHAR_IO_NBF:
             return 0;
 
+
         case CHAR_IO_LBF:
         case CHAR_IO_FBF:
+
             DEBUG_ASSERT(device->chr.buffer.buffer);
             DEBUG_ASSERT(device->chr.buffer.size);
 
@@ -152,7 +164,8 @@ int char_flush(device_t* device) {
                 device->chr.flush(device);    
 
             return 0;
-                    
+
+
         default:
             break;
     }
@@ -173,6 +186,7 @@ void char_init(device_t* device) {
 
             ringbuffer_create(&device->chr.buffer, BUFSIZ);
         
+
         default:
             break;
     }
@@ -190,6 +204,7 @@ void char_dnit(device_t* device) {
         case CHAR_IO_LBF:
 
             ringbuffer_destroy(&device->chr.buffer);
+        
         
         default:
             break;

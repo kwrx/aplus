@@ -33,8 +33,9 @@
 #include <aplus/ipc.h>
 
 #include <hal/cpu.h>
-#include <hal/interrupt.h>
 #include <hal/vmm.h>
+#include <hal/timer.h>
+#include <hal/interrupt.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>

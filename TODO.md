@@ -40,7 +40,7 @@
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)
-- [ ] User API
+- [X] User API
 - [ ] Wait Queue
 - [ ] Signal Handling
 - [x] Module Loading

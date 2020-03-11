@@ -34,6 +34,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+struct iovec;
+
 
 /***
  * Name:        process_vm_writev

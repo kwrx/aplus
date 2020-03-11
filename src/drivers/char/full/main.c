@@ -34,22 +34,25 @@
 #include <dev/char.h>
 
 
-MODULE_NAME("char/null");
+MODULE_NAME("char/full");
 MODULE_DEPS("dev/interface,dev/char");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
 
+static ssize_t full_write(device_t*, const void*, size_t);
+
+
 device_t device = {
 
     .type = DEVICE_TYPE_CHAR,
 
-    .name = "null",
-    .description = "Null device",
+    .name = "full",
+    .description = "Returns ENOSPC on write",
 
     .major = 1,
-    .minor = 3,
+    .minor = 7,
 
     .status = DEVICE_STATUS_UNKNOWN,
 
@@ -58,10 +61,23 @@ device_t device = {
     .reset = NULL,
 
     .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
+    .chr.write = full_write,
     .chr.read =  NULL,
 
 };
+
+
+
+
+static ssize_t full_write(device_t* device, const void* buf, size_t size) {
+    
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+    errno = ENOSPC;
+    return -1;
+    
+}
 
 
 void init(const char* args) {
