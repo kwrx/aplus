@@ -42,7 +42,7 @@ static struct syscore __core;
 struct syscore* core = &__core;
 
 
-
+int n = 0;
 
 void cmain() {
 

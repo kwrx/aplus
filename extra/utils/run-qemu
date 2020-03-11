@@ -27,9 +27,9 @@ case $1 in
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
         flags="$flags -boot c"
         flags="$flags -m 128"
-        flags="$flags -M q35,accel=tcg"
-        flags="$flags -cpu kvm64,+x2apic,+pdpe1gb,+fsgsbase"
-        flags="$flags -smp 32"
+        flags="$flags -M q35,accel=kvm"
+        flags="$flags -cpu kvm64,+x2apic,+pdpe1gb,+fsgsbase,+rdtscp"
+        flags="$flags -smp 4,maxcpus=4"
         flags="$flags -vga std"
         flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"
@@ -56,4 +56,4 @@ fi
 #sudo trace-cmd report > trace.log
 #rm -f trace.dat
 
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
+qemu-system-$arch -nographic -serial stdio -monitor none -no-reboot -no-shutdown -s $debug $flags

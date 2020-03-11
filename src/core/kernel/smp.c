@@ -73,6 +73,9 @@ void smp_init() {
 
         arch_cpu_startup(i);
 
+        kprintf("smp: cpu #%d is online\n", i);
+
+
     }
 
 }

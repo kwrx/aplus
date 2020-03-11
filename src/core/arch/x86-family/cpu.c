@@ -256,8 +256,15 @@ void arch_cpu_init(int index) {
     //! Requirements
     BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_MSR);
     BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_SSE);
+
+#if defined(__x86_64__)
     BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_1GB_PAGE);
     BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_64_BIT);
+#endif
+
+#if defined(CONFIG_HAVE_SMP)
+    BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_RDTSCP);
+#endif
 
 
 
@@ -317,14 +324,18 @@ void arch_cpu_init(int index) {
         x86_set_cr4(x86_get_cr4() | (1 << 21)));
         
 
+    //! Write Processor ID
+    check_and_enable(xfeatures, X86_CPU_XFEATURES_RDTSCP,
+        x86_wrmsr(X86_MSR_TSC_AUX, index));
+
 
 
 #if defined(__x86_64__)
 
-    // FIXME: Invalid Opcode
-    //if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
-    //    x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
-    //else
+    // * FIXME: Invalid Opcode
+    // if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
+    //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
+    // else
 
     x86_wrmsr(X86_MSR_KERNEL_GSBASE, (uint64_t) &core->cpu.cores[index]);
 
@@ -355,13 +366,17 @@ uint64_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
 
+#if defined(CONFIG_X86_HAVE_RDPID)
     __asm__ __volatile__ (
-        "swapgs                 \n"
-        "movq %%gs:0, %0        \n"
-        "swapgs                 \n"
-        
-        : "=r"(id)
+        "rdpid %0"
+        : "=0"(id)
     );
+#else
+    __asm__ __volatile__ (
+        "rdtscp"
+        : "=c"(id)
+    );
+#endif
 
     return id;
 }
@@ -374,9 +389,9 @@ void arch_cpu_startup(int index) {
     BUG_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
     BUG_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
     kprintf("x86-cpu: starting up core #%d\n", index);
-
+#endif
 
     //* Clone Address Space
     arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space);

@@ -27,8 +27,6 @@
 #include <stdarg.h>
 #include <string.h>
 #include <sys/types.h>
-#include <aplus.h>
-#include <aplus/debug.h>
 
 
 char *strtok(char *restrict s, const char *restrict sep) {

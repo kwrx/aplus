@@ -78,6 +78,7 @@ struct sys_sem {
 } __packed;
 
 struct sys_mbox {
+    spinlock_t lock;
     uint16_t size;
     uint16_t count;
     void** msg;
@@ -95,7 +96,7 @@ void sys_init(void) {
 err_t sys_sem_new(struct sys_sem** s, u8_t count) {
     
     DEBUG_ASSERT(s);
-    DEBUG_ASSERT(count);
+    //DEBUG_ASSERT(count);
     
     (*s) = (struct sys_sem*) kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
 
@@ -172,6 +173,9 @@ err_t sys_mbox_new(struct sys_mbox** mbox, int size) {
     mb->count = 0;
     mb->msg = kcalloc(sizeof(void*), size, GFP_KERNEL);
 
+    spinlock_init(&mb->lock);
+
+
     SYS_STATS_INC_USED(mbox);
     *mbox = mb;
 
@@ -200,11 +204,14 @@ err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
     
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
+    DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
 
     if((*mbox)->count > (*mbox)->size)
         return ERR_MEM;
 
-    (*mbox)->msg[(*mbox)->count++] = msg;
+    __lock(&(*mbox)->lock,
+        (*mbox)->msg[(*mbox)->count++] = msg);
+
     return ERR_OK;
 
 }
@@ -215,11 +222,14 @@ err_t sys_mbox_trypost_fromisr(struct sys_mbox** mbox, void* msg) {
     
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
+    DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
 
     if((*mbox)->count > (*mbox)->size)
         return ERR_MEM;
 
-    (*mbox)->msg[(*mbox)->count++] = msg;
+    __lock(&(*mbox)->lock,
+        (*mbox)->msg[(*mbox)->count++] = msg);
+
     return ERR_OK;
 
 }
@@ -269,11 +279,14 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
             ;
 
 
+    __lock(&(*mbox)->lock, {
+    
+        void* mx = (*mbox)->msg[--(*mbox)->count];
 
-    void* mx = (*mbox)->msg[--(*mbox)->count];
+        if(msg)
+            *msg = mx;
 
-    if(msg)
-        *msg = mx;
+    });
 
 
     if(__timeout == 0)
@@ -292,10 +305,15 @@ u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
         return SYS_MBOX_EMPTY;
 
 
-    void* mx = (*mbox)->msg[--(*mbox)->count];
+    __lock(&(*mbox)->lock, {
 
-    if(msg)
-        *msg = mx;
+        void* mx = (*mbox)->msg[--(*mbox)->count];
+
+        if(msg)
+            *msg = mx;
+
+    });
+
 
     return 0;
 

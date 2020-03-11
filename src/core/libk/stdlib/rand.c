@@ -27,8 +27,6 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <aplus.h>
-#include <aplus/debug.h>
 
 
 static uint64_t seed;

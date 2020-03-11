@@ -55,4 +55,5 @@ typedef struct sys_mbox* sys_mbox_t;
 #define sys_mbox_valid(s)               (((s) != NULL) && (*(s) != NULL))
 #define sys_mbox_set_invalid(s)         do { if(*(s) != NULL) { *(s) = NULL; } } while(0)
 
+
 #endif

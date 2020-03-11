@@ -247,8 +247,9 @@ void acpi_init(void) {
 
     }
 
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
     kprintf("x86-acpi: Switching to ACPI complete [base(%p), intr(%d), pwr(%d), ext(%d)]\n", RSDT, fadt->sci_interrupt, fadt->pwrmode, extended);
+#endif
 
 }
 

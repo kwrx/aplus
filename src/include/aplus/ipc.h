@@ -13,10 +13,13 @@
 
 
 
-#define SPINLOCK_INIT           { 0L, 0L }
+#define SPINLOCK_INIT           { { 0L }, 0L }
 
 typedef volatile struct {
-    volatile long value;
+    union {
+        volatile char value;
+        volatile long __padding;
+    };
     volatile long flags;
 } spinlock_t;
 

@@ -87,10 +87,18 @@ void apic_enable(void) {
     }
 
     
-    uint32_t sd = 1193180 / CLOCKS_PER_SEC;
-    outb(0x61, inb(0x61) & ~2);
-    outb(0x43, 0x80 | 0x30);
 
+    //? Synchronize timer clock
+
+    uint64_t ts, t0;
+    
+    ts =
+    t0 = arch_timer_getms();
+
+    while((t0 = arch_timer_getms()) == ts)
+        ;
+
+    
 
     if (x2apic) {
 
@@ -105,16 +113,12 @@ void apic_enable(void) {
     }
 
 
-    outb(0x42, sd & 0xFF);
-    outb(0x42, (sd >> 8) & 0xFF);
-    
-    uint8_t cb = inb(0x61);
-    outb(0x61, cb & ~1);
-    outb(0x61, cb | 1);
+    //? 0.010s every interrupt
 
-    while(!(inb(0x61) & 0x20))
+    while((arch_timer_getms() - t0) < 10)
         ;
     
+
 
     uint32_t ticks = 0xFFFFFFFF;
     
@@ -140,7 +144,9 @@ void apic_enable(void) {
 
     }
 
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, x2apic);
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+    kprintf("x86-apic: Local APIC #%d initialized [base(%p), tmr(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, x2apic);
+#endif
 
 }
 

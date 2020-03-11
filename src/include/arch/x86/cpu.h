@@ -11,6 +11,9 @@
 #define X86_MSR_LSTAR                                (0xC0000082)
 #define X86_MSR_SFMASK                               (0xC0000084)
 
+#define X86_MSR_TSC_AUX                              (0xC0000103)
+
+
 #define X86_MSR_FEATURES_SCE                         (1 << 0)
 #define X86_MSR_FEATURES_LME                         (1 << 8)
 #define X86_MSR_FEATURES_LMA                         (1 << 10)
@@ -308,7 +311,10 @@ static inline void x86_wrmsr(unsigned long long i, unsigned long long v) {
  * @brief Read from Model Specific Register.
  */
 static inline unsigned long long x86_rdmsr(unsigned long long i) {
-    unsigned long long vl, vh;
+
+    unsigned long long vl;
+    unsigned long long vh;
+
     __asm__ __volatile__ (
         "rdmsr" 
         : "=a"(vl), "=d"(vh) 
@@ -323,13 +329,16 @@ static inline unsigned long long x86_rdmsr(unsigned long long i) {
  * @brief Read Time-Stamp Counter.
  */
 static inline unsigned long long x86_rdtsc(void) {
-    unsigned long long r;
+
+    unsigned long long vl;
+    unsigned long long vh;
+
     __asm__ __volatile__ (
         "lfence; rdtsc; lfence\n" 
-        : "=A"(r)
+        : "=a"(vl), "=d"(vh) 
     );
 
-    return r;
+    return (vh << 32) | vl;
 }
 
 

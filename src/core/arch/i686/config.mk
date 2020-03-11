@@ -1,4 +1,4 @@
-SRCDIRS  += arch/x86_64/x86-family
+SRCDIRS  += arch/x86-family
 
 CFLAGS   += 
 ASFLAGS  += 

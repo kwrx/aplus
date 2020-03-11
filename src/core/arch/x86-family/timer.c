@@ -46,6 +46,8 @@
 spinlock_t delay_lock;
 spinlock_t rtc_lock;
 
+uint64_t clocks_per_ms;
+
 
 void arch_timer_delay(uint64_t us) {
     
@@ -73,23 +75,23 @@ void arch_timer_delay(uint64_t us) {
 
 
 uint64_t arch_timer_getticks(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * CLOCKS_PER_SEC) +
-           (uint64_t) (current_cpu->ticks.tv_nsec / (1000000000 / CLOCKS_PER_SEC));
+    return x86_rdtsc();
 }
 
 uint64_t arch_timer_getns(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * 1000000000) +
-           (uint64_t) (current_cpu->ticks.tv_nsec);
+    return x86_rdtsc() / clocks_per_ms / 1000000;
 }
 
 uint64_t arch_timer_getus(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * 1000000) +
-           (uint64_t) (current_cpu->ticks.tv_nsec / 1000);
+    return x86_rdtsc() / clocks_per_ms / 1000;
 }
 
 uint64_t arch_timer_getms(void) {
-    return (uint64_t) (current_cpu->ticks.tv_sec * 1000) +
-           (uint64_t) (current_cpu->ticks.tv_nsec / 1000000);
+    return x86_rdtsc() / clocks_per_ms;
+}
+
+uint64_t arch_timer_getres(void) {
+    return clocks_per_ms * 1000;
 }
 
 
@@ -145,6 +147,36 @@ void timer_init(void) {
     spinlock_init(&rtc_lock);
 
 
-    kprintf("x86-timer: now(%d) CLOCKS_PER_SEC(%d)\n", arch_timer_gettime(), CLOCKS_PER_SEC);
+    // Calibrate TSC Timer
+    clocks_per_ms = 0ULL;
+
+    
+    // Prepare PIT
+    uint32_t sd = 1193180 / 1000;
+        
+    outb(0x43, 0x80 | 0x30);
+    outb(0x42, sd & 0xFF);
+    outb(0x42, (sd >> 8) & 0xFF);
+        
+    
+
+
+    // Perfom delay
+    uint64_t t0 = x86_rdtsc();
+
+    while(!(inb(0x61) & 0x20))
+        ;
+
+    uint64_t t1 = x86_rdtsc();
+    
+
+
+    clocks_per_ms = (t1 - t0);
+    DEBUG_ASSERT(clocks_per_ms);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+    kprintf("x86-timer: now(%d) resolution(%d) mHZ(%d)\n", arch_timer_gettime(), arch_timer_getres(), arch_timer_getres() / 1000000);
+#endif
 
 }

@@ -26,9 +26,6 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <sys/types.h>
-#include <aplus.h>
-#include <aplus/debug.h>
-
 #include <string.h>
 
 int strncmp(const char *_l, const char *_r, size_t n) {

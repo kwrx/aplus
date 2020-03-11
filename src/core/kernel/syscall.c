@@ -70,9 +70,9 @@ void syscall_init(void) {
 
     }
 
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
     kprintf("syscall: registered %d entries\n", ((uintptr_t) &syscalls_end - (uintptr_t) &syscalls_start) / sizeof(*e));
-
+#endif
 }
 
 

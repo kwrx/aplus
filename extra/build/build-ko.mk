@@ -12,7 +12,7 @@ INCLUDES    ?= include
 LIBS        ?=
 
 SRCDIRS     ?= .
-DESTDIR     ?= $(SYSROOT)/usr/lib/modules/$(shell realpath --relative-base=$(ROOTDIR)/src/initrd ..)
+DESTDIR     ?= $(SYSROOT)/usr/lib/modules/$(shell realpath --relative-base=$(ROOTDIR)/src/drivers ..)
 
 
 

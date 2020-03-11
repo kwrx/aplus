@@ -26,8 +26,6 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <sys/types.h>
-#include <aplus.h>
-#include <aplus/debug.h>
 
 
 char* strcpy(char* dest, const char* src) {

@@ -12,7 +12,7 @@ export ROOTDIR	:= $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
-PROJECTS := src/core src/initrd
+PROJECTS := src/core src/drivers
 TARGET	 := aplus.img
 
 

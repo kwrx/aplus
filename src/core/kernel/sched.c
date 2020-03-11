@@ -75,10 +75,10 @@ void schedule(void* frame) {
 
         // TODO: Calculate timing
 
-        current_task->clock.tms_utime += 1000;
+        current_task->clock.tms_utime += 10000;
 
         if(likely(current_task->parent))
-            current_task->parent->clock.tms_cutime += 1000;
+            current_task->parent->clock.tms_cutime += current_task->clock.tms_utime;
 
         
     

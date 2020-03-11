@@ -71,7 +71,7 @@ static void module_export(module_t* mod, const char* name, void* address) {
     list_each(m_symtab, v) {
         
         if(strcmp(v->name, name) == 0)
-            kpanicf("module: PANIC! \'%s\' already defined at %p (%s)", name, v->address, mod ? mod->name : "undefined");
+            kpanicf("module: PANIC! \'%s\' already defined at %p (%s)\n", name, v->address, mod ? mod->name : "undefined");
     
     }
     
@@ -87,7 +87,7 @@ static void module_export(module_t* mod, const char* name, void* address) {
 
 
 
-static void* module_resolve(const char* name) {
+static void* module_resolve(module_t* m, const char* name) {
 
     list_each(m_symtab, v)
         if(strcmp(v->name, name) == 0)
@@ -100,7 +100,7 @@ static void* module_resolve(const char* name) {
              , p;
     
     
-    kpanicf("module: PANIC! undefined reference for \'%s\'", name);
+    kpanicf("module: PANIC! undefined reference for \'%s\' in %s\n", name, m->name);
     return NULL;
 }
 
@@ -108,19 +108,20 @@ static void* module_resolve(const char* name) {
 
 
 void module_run(module_t* m) {
-    
+
     if(m->status == MODULE_STATUS_LOADED)
         return;
 
     if(m->status == MODULE_STATUS_LOADING)
-        kpanicf("module: PANIC! dependency loop for '%s'", m->name);
+        kpanicf("module: PANIC! dependency loop for '%s'\n", m->name);
 
 
     m->status = MODULE_STATUS_LOADING;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("module: running %s [addr(%p), size(%p)]\n", m->name, m->core.ptr, m->core.size);
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+    kprintf("module: loading %s [addr(%p), size(%p)]\n", m->name, m->core.ptr, m->core.size);
 #endif
 
 
@@ -189,7 +190,7 @@ void module_run(module_t* m) {
                 break;
 
             case SHN_UNDEF:
-                s->st_value = (Elf_Addr) module_resolve(syname(s->st_name));
+                s->st_value = (Elf_Addr) module_resolve(m, syname(s->st_name));
                 break;
 
             default:
@@ -292,7 +293,7 @@ void module_run(module_t* m) {
 #endif
 
                 default:
-                    kpanicf("module: PANIC! unknown relocation SHT_REL type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanicf("module: PANIC! unknown relocation SHT_REL type %d for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -386,7 +387,7 @@ void module_run(module_t* m) {
 #endif
 
                 default:
-                    kpanicf("module: PANIC! unknown relocation SHT_RELA type %d for %s", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanicf("module: PANIC! unknown relocation SHT_RELA type %d for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -400,6 +401,9 @@ void module_run(module_t* m) {
     }
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    kprintf("module: running %s [init(%p) args(%p)]\n", m->name, m->init, m->args);
+#endif
 
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;
@@ -459,19 +463,18 @@ void module_init(void) {
         DEBUG_ASSERT(m->deps);
 
 
+
         for(int j = 1; j < m->exe.header->e_shnum; j++) {
 
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNAMIC);
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNSYM);
-
-            if(!(m->exe.section[j].sh_flags & SHF_ALLOC))
-                continue;
 
             
             m->exe.section[j].sh_addr = m->exe.section[j].sh_addralign
                 ? (m->core.size + m->exe.section[j].sh_addralign - 1) & ~(m->exe.section[j].sh_addralign - 1)
                 : (m->core.size)
                 ;
+
 
             m->core.size = m->exe.section[j].sh_addr + m->exe.section[j].sh_size;
 
@@ -488,10 +491,11 @@ void module_init(void) {
                 m->exe.strtab = &m->exe.section[m->exe.section[j].sh_link];
             }
 
+    
             if(!(m->exe.section[j].sh_flags & SHF_ALLOC))
                 continue;
 
-            
+
             switch(m->exe.section[j].sh_type) {
                 
                 case SHT_PROGBITS:
@@ -515,7 +519,7 @@ void module_init(void) {
                     break;
 
                 default:
-                    kpanicf("module: PANIC! invalid section type: %d\n", m->exe.section[j].sh_type);
+                    kpanicf("module: PANIC! invalid section type for %s: %d\n", m->name, m->exe.section[j].sh_type);
 
             }
 
@@ -532,7 +536,7 @@ void module_init(void) {
 
         list_each(m_queue, v)
             if(strcmp(m->name, v->name) == 0)
-                kpanicf("module: PANIC! duplicate name '%s'", m->name);
+                kpanicf("module: PANIC! duplicate name '%s'\n", m->name);
 
         list_push(m_queue, m);
 

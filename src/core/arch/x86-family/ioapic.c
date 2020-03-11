@@ -166,6 +166,9 @@ void ioapic_enable(void) {
             ioapic_unmap_irq(j);
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
         kprintf("x86-apic: I/O APIC #%d initialized [base(%p), gsi(%d-%d)]\n", i, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_max);
+#endif
+
     }
 }

@@ -30,7 +30,6 @@
 #include <aplus/debug.h>
 
 
-
 static void dec(unsigned long v, int w, char* buf, int* p) {
 
     long n = 1;
@@ -97,7 +96,6 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
     DEBUG_ASSERT(size);
     //DEBUG_ASSERT(fmt);
 
-
     int p = 0;
 
     for(; *fmt; fmt++) {
@@ -145,6 +143,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 break;
 
             case 'd':
+            case 'u':
                 dec((unsigned int) va_arg(v, unsigned int), w, buf, &p);
                 break;
 
@@ -153,6 +152,9 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 break;
 
             default:
+
+                kprintf("%s (): WARN! invalid format %c\n", *fmt);
+
                 buf[p++] = *fmt;
                 break;
 

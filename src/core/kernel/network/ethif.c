@@ -24,7 +24,7 @@
 #if 0
 #include <aplus.h>
 #include <aplus/module.h>
-#include <aplus/mm.h>
+#include <aplus/memory.h>
 #include <aplus/vfs.h>
 #include <aplus/debug.h>
 #include <aplus/network.h>

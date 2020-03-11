@@ -76,6 +76,7 @@ void arch_debug_init(void) {
  * Wait and write a character on Serial Port.
  */
 void arch_debug_putc(char ch) {
+    
     if(unlikely(!com_address))
         return;
 
@@ -83,7 +84,12 @@ void arch_debug_putc(char ch) {
     for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
         __builtin_ia32_pause();
 
+
+    if(ch == '\n')
+        outb(com_address, '\r');
+
     outb(com_address, ch);
+
 }
 
 
