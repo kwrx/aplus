@@ -195,7 +195,8 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
     );
 
 
-    *((uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x03;
+    *((uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x02;
+    *((uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x01;
 
 
     uint16_t b = (uint16_t) (-len);
@@ -205,12 +206,12 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
     *(uint16_t*) (arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 4)) = b;
     *(uint8_t*)  (arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x80;
 
-    uint32_t x = r_csr32(dev, 0) | (1 << 3);
-    w_csr32(dev, 0, x);
+    
+    w_csr32(dev, 0, r_csr32(dev, 0) | (1 << 3));
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("pcnet: INFO! sending %d bytes from %d\n", len, dev->txid);
+    kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_getms(), len, dev->txid);
 #endif
 
 
@@ -230,7 +231,7 @@ static int pcnet_startinput(void* internals) {
     uint16_t size = *(uint16_t*) (arch_vmm_p2v(dev->rxdes, ARCH_VMM_AREA_HEAP) + (dev->rxid * PCNET_DE_SIZE + 8));
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("pcnet: INFO! received %d bytes from %d\n", size, dev->rxid);
+    kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_getms(), size, dev->rxid);
 #endif
 
 
@@ -246,20 +247,19 @@ static int pcnet_startinput(void* internals) {
 
 static void pcnet_input(void* internals, void* buf, uint16_t len) {
 
-    DEBUG_ASSERT(internals);
 
     struct pcnet* dev = (struct pcnet*) internals;
 
+    DEBUG_ASSERT(dev);
+    DEBUG_ASSERT(dev->offset < dev->size);
+        
 
-    if(!(dev->offset < dev->size))
-        return;
 
-
-    if(dev->size - dev->offset < len)
+    if(dev->offset + len > dev->size)
         len = dev->size - dev->offset;
 
-    if(dev->offset < dev->size)
-        memcpy(buf, &dev->cache[dev->offset], len);
+    memcpy(buf, &dev->cache[dev->offset], len);
+
 
     int i;
     for(i = 0; i < len; i++)
@@ -295,6 +295,8 @@ static void pcnet_input_nomem(void* internals, uint16_t len) {
 }
 
 
+
+
 static void pcnet_irq(void* frame, int irq) {
     
     struct pcnet* dev;
@@ -303,13 +305,12 @@ static void pcnet_irq(void* frame, int irq) {
         if(dev->irq != irq)
             continue;
 
-
-        uint32_t x = r_csr32(dev, 0) | 0x0400;
-        w_csr32(dev, 0, x);
-
+        
         // FIXME: Use semaphore
         while(d_owns(dev->rxdes, dev->rxid))
             ethif_input(&dev->device.net.interface);
+
+        w_csr32(dev, 0, r_csr32(dev, 0) | 0x0400);
 
     }
 
