@@ -94,6 +94,36 @@ void kmain() {
     );
 
 
+    int fd = lwip_socket(AF_INET, SOCK_STREAM, 0);
+    DEBUG_ASSERT(fd >= 0);
+
+    struct sockaddr_in in;
+    in.sin_family = AF_INET;
+    in.sin_addr.s_addr = INADDR_ANY;
+    in.sin_port = __builtin_bswap16(8888);
+
+    lwip_bind(fd, &in, sizeof(in));
+    lwip_listen(fd, 3);
+        kprintf("LISTEN!\n");
+
+    do {
+
+        int len = sizeof(in);
+        int p = lwip_accept(fd, &in, &len);
+        kprintf("NEW CLIENT!\n");
+
+        DEBUG_ASSERT(p >= 0);
+
+        char buf[32];
+        
+        lwip_read(p, buf, 32);
+        //lwip_close(p);
+
+        buf[31] = 0;
+
+        kprintf("Received %s\n", buf);
+
+    } while(0);
 
     //static char* __argv[2] = { "/sbin/init", NULL };
     //static char* __envp[1] = { NULL };

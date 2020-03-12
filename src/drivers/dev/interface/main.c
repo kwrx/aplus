@@ -78,6 +78,9 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
         case DEVICE_TYPE_VIDEO:
             return errno = ENOSYS, -1;
 
+        case DEVICE_TYPE_NETWORK:
+            return errno = ENOSYS, -1;
+
     }
 
 
@@ -108,6 +111,9 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
             return block_write(device, buf, off, size);
 
         case DEVICE_TYPE_VIDEO:
+            return errno = ENOSYS, -1;
+
+        case DEVICE_TYPE_NETWORK:
             return errno = ENOSYS, -1;
 
     }
@@ -141,6 +147,9 @@ static int device_ioctl(inode_t* inode, long req, void* arg) {
 
         case DEVICE_TYPE_VIDEO:
             return video_ioctl(device, req, arg);
+
+        case DEVICE_TYPE_NETWORK:
+            return errno = ENOSYS, -1;
     }
 
 
@@ -171,6 +180,9 @@ static int device_fsync(inode_t* inode, int datasync) {
         case DEVICE_TYPE_VIDEO:
             return errno = ENOSYS, -1;
 
+        case DEVICE_TYPE_NETWORK:
+            return errno = ENOSYS, -1;
+
     }
 
 
@@ -193,6 +205,7 @@ void device_mkdev(device_t* device, mode_t mode) {
     spinlock_init(&device->lock);
 
     switch(device->type) {
+
         case DEVICE_TYPE_CHAR:
 
             char_init(device);            
@@ -208,8 +221,14 @@ void device_mkdev(device_t* device, mode_t mode) {
             video_init(device);
             break;
 
+        case DEVICE_TYPE_NETWORK:
+            
+            //network_init(device);
+            break;
+
         default:
             kpanicf("device::create: failed, unknown device %s type %d\n", device->name, device->type);
+    
     }
 
 
@@ -265,6 +284,10 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         case DEVICE_TYPE_VIDEO:
 
+            break;
+
+        case DEVICE_TYPE_NETWORK:
+            
             break;
 
         default:

@@ -43,7 +43,7 @@
 extern struct {
     union {
         struct {
-            void (*handler) (void*);
+            void (*handler) (void*, int);
             spinlock_t lock;
         };
 
@@ -141,7 +141,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             __lock(&startup_irq[frame->intno - 0x20].lock, {
 
                 if(likely(startup_irq[frame->intno - 0x20].handler))
-                    startup_irq[frame->intno - 0x20].handler((void*) frame);
+                    startup_irq[frame->intno - 0x20].handler((void*) frame, frame->intno - 0x20);
                 else
                     kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
 
@@ -194,7 +194,7 @@ long arch_intr_disable(void) {
 
 
 
-void arch_intr_map_irq(uint8_t irq, void (*handler) (void*)) {
+void arch_intr_map_irq(uint8_t irq, void (*handler) (void*, int)) {
     
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);

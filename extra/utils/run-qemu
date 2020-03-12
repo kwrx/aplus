@@ -33,7 +33,7 @@ case $1 in
         flags="$flags -vga std"
         flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        flags="$flags -netdev user,id=net0,hostfwd=udp::8888-:8888"
         ;;
 
     *)

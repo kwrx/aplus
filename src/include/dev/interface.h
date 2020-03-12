@@ -49,6 +49,7 @@
 #define DEVICE_TYPE_CHAR            1
 #define DEVICE_TYPE_BLOCK           2
 #define DEVICE_TYPE_VIDEO           3
+#define DEVICE_TYPE_NETWORK         4
 
 #define DEVICE_MAXNAMELEN           32
 #define DEVICE_MAXDESCLEN           256
@@ -135,13 +136,13 @@ typedef struct device {
             void* internals;
             uint8_t address[6];
 
-            ip_addr_t ip;
-            ip_addr_t nm;
-            ip_addr_t gw;
+            ip4_addr_t ip;
+            ip4_addr_t nm;
+            ip4_addr_t gw;
 
             struct netif interface;
 
-        } ethif;
+        } net;
         
 
     };

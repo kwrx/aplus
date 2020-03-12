@@ -81,7 +81,7 @@
 #define ARP_QUEUEING                        1
 #define ARP_QUEUE_LEN                       (3  << NUM_SHIFT)
 #define ETHARP_SUPPORT_VLAN                 0 // FIXME
-#define ETH_PAD_SIZE                        2
+#define ETH_PAD_SIZE                        0
 #define ETHARP_SUPPORT_STATIC_ENTRIES       0
 
 // * IP Options *

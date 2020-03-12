@@ -60,7 +60,7 @@ void ethif_input(struct netif* netif) {
     struct device* dev = netif->state;
 
     do {
-        if((len = dev->ethif.low_level_startinput(dev->ethif.internals)) == 0)
+        if((len = dev->net.low_level_startinput(dev->net.internals)) == 0)
             break;
             
 #if ETH_PAD_SIZE
@@ -74,7 +74,7 @@ void ethif_input(struct netif* netif) {
             len -= ETH_PAD_SIZE;
 #endif 
 
-            dev->ethif.low_level_input_nomem(dev->ethif.internals, len);
+            dev->net.low_level_input_nomem(dev->net.internals, len);
 
             LINK_STATS_INC(link.memerr);
             LINK_STATS_INC(link.drop);
@@ -88,9 +88,9 @@ void ethif_input(struct netif* netif) {
 #endif
 
         for(q = p; q; q = q->next)
-            dev->ethif.low_level_input(dev->ethif.internals, q->payload, q->len);
+            dev->net.low_level_input(dev->net.internals, q->payload, q->len);
 
-        dev->ethif.low_level_endinput(dev->ethif.internals);
+        dev->net.low_level_endinput(dev->net.internals);
 
 #if ETH_PAD_SIZE
         pbuf_header(p, ETH_PAD_SIZE);
@@ -143,7 +143,7 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
     struct pbuf* q;
 
 
-    if(!dev->ethif.low_level_startoutput(dev->ethif.internals))
+    if(!dev->net.low_level_startoutput(dev->net.internals))
         return ERR_IF;
 
 
@@ -152,9 +152,9 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
 #endif
 
     for(q = p; q; q = q->next)
-        dev->ethif.low_level_output(dev->ethif.internals, p->payload, p->len);
+        dev->net.low_level_output(dev->net.internals, p->payload, p->len);
 
-    dev->ethif.low_level_endoutput(dev->ethif.internals, p->tot_len);
+    dev->net.low_level_endoutput(dev->net.internals, p->tot_len);
 
 #if ETH_PAD_SIZE
     pbuf_header(p, ETH_PAD_SIZE);
@@ -187,13 +187,13 @@ err_t ethif_init(struct netif* netif) {
     netif->linkoutput = ethif_linkoutput;
 
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
-    memcpy(netif->hwaddr, dev->ethif.address, ETHARP_HWADDR_LEN);
+    memcpy(netif->hwaddr, dev->net.address, ETHARP_HWADDR_LEN);
 
     netif->mtu = 1500;
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
 
-    dev->ethif.low_level_init(dev->ethif.internals, dev->ethif.address, NULL);
+    dev->net.low_level_init(dev->net.internals, dev->net.address, NULL);
 
     return ERR_OK;
 }
