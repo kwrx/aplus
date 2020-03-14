@@ -342,7 +342,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            kprintf("arch_vmm_map(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
+            //kprintf("arch_vmm_map(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
 #endif
 
         }

@@ -223,7 +223,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         case DEVICE_TYPE_NETWORK:
             
-            //network_init(device);
+            //netdev_init(device);
             break;
 
         default:

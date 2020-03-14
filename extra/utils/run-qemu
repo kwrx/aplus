@@ -32,7 +32,7 @@ case $1 in
         flags="$flags -smp 4,maxcpus=4"
         flags="$flags -vga std"
         flags="$flags -soundhw ac97"
-        flags="$flags -device i82559er,netdev=net0"
+        flags="$flags -device e1000,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
         ;;
 

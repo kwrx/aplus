@@ -54,8 +54,7 @@ extern struct {
 
 void x86_exception_handler(interrupt_frame_t* frame) {
     
-    DEBUG_ASSERT( (frame));
-    DEBUG_ASSERT(!(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT));
+    DEBUG_ASSERT((frame));
 
 
 
@@ -74,7 +73,6 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 // #endif
 
 
-    current_cpu->flags |= SMP_CPU_FLAGS_INTERRUPT;
 
 
     switch(frame->intno) {
@@ -104,6 +102,15 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             break;
 
     }
+
+
+
+    DEBUG_ASSERT(!(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT));
+
+
+
+
+    current_cpu->flags |= SMP_CPU_FLAGS_INTERRUPT;
 
 
     switch(frame->intno) {
