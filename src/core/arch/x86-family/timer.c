@@ -53,9 +53,19 @@ void arch_timer_delay(uint64_t us) {
     
     DEBUG_ASSERT(us > 0);
     DEBUG_ASSERT(us < 1000000);
+    DEBUG_ASSERT(clocks_per_ms);
+
 
     __lock(&delay_lock, {
 
+#if defined(CONFIG_X86_HAVE_TSC_TIMER)
+
+        uint64_t t0 = arch_timer_getus();
+
+        while(arch_timer_getus() < (t0 + us))
+            __builtin_ia32_pause();
+
+#else
         uint32_t sd = 1193180 / (1000000 / us);
         
         outb(0x61, inb(0x61) & ~2);
@@ -69,6 +79,8 @@ void arch_timer_delay(uint64_t us) {
 
         while(!(inb(0x61) & 0x20))
             ;
+
+#endif
             
     });
 }
@@ -79,15 +91,15 @@ uint64_t arch_timer_getticks(void) {
 }
 
 uint64_t arch_timer_getns(void) {
-    return x86_rdtsc() / clocks_per_ms / 1000000;
+    return x86_rdtsc() / (clocks_per_ms / 1000000);
 }
 
 uint64_t arch_timer_getus(void) {
-    return x86_rdtsc() / clocks_per_ms / 1000;
+    return x86_rdtsc() / (clocks_per_ms / 1000);
 }
 
 uint64_t arch_timer_getms(void) {
-    return x86_rdtsc() / clocks_per_ms;
+    return x86_rdtsc() / (clocks_per_ms);
 }
 
 uint64_t arch_timer_getres(void) {

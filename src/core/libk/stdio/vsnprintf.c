@@ -144,7 +144,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             case 'd':
             case 'u':
-                dec((unsigned int) va_arg(v, unsigned int), w, buf, &p);
+                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p);
                 break;
 
             case '%':

@@ -34,8 +34,8 @@ if [ ! -f $output ]; then
 
     # Install Grub
     sudo grub-install --no-floppy                                                           \
-                --target=i386-pc                                                            \
-                --force                                                                     \
+                 --target=i386-pc                                                           \
+                 --force                                                                    \
                  --modules="normal part_msdos fat ext2 multiboot2 biosdisk"                 \
                  --root-directory=$tmp/p1                                                   \
                  /dev/loop6 &> /dev/null

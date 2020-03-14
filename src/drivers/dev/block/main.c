@@ -91,8 +91,8 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
     current_task->rusage.ru_oublock++; 
 
 
-    uint32_t sb = offset / device->blk.blksize;   
-    uint32_t eb = (offset + size - 1) / device->blk.blksize;   
+    long sb = offset / device->blk.blksize;   
+    long eb = (offset + size - 1) / device->blk.blksize;   
     off_t xoff = 0;
 
 
@@ -215,8 +215,8 @@ ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
     current_task->rusage.ru_inblock++; 
 
 
-    uint32_t sb = offset / device->blk.blksize;   
-    uint32_t eb = (offset + size - 1) / device->blk.blksize;   
+    long sb = (offset) / device->blk.blksize;   
+    long eb = (offset + size - 1) / device->blk.blksize;   
     off_t xoff = 0;
 
 
@@ -270,7 +270,7 @@ ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
        
         if(device->blk.blkmax) {
          
-            int max = (int) device->blk.blkmax;
+            long max = (long) device->blk.blkmax;
 
             for (;
                 i - max >= 0;
@@ -305,17 +305,35 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
 
 
 
-    /* Check Partition Table */
+    // * Check Partition Table EFI
 
     char efi[8];
 
-    if(block_read(device, &efi, device->blk.blksize * 1, 8) <= 0) {
-        kprintf("device::block: ERROR! Read Error at lba(1) offset(0)\n");
-        return;
-    }
+    if(block_read(device, &efi, device->blk.blksize * 1, 8) <= 0)
+        kpanicf("device::block: ERROR! Read Error at lba(1) offset(0)\n");
+        
 
     if(strncmp(efi, "EFI PART", 8) == 0)
-        kpanicf("device::block: unsupported partition type GPT for /dev/%s", device->name);
+        kpanicf("device::block: unsupported partition table GPT for /dev/%s\n", device->name);
+
+
+
+    // * Check Partition Table MBR
+
+    uint32_t sig;
+    if(block_read(device, &sig, 0x1FE, 2) <= 0)
+        kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(0x1FE)\n");
+
+
+    if(unlikely(sig != 0xAA55)) {
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 3
+        kprintf("device::block: WARN! unknown partition table for /dev/%s\n", device->name);
+#endif
+
+        return;
+
+    }
 
 
 
@@ -332,9 +350,10 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
         uint32_t size;
     } __packed mbr[4] = { };
 
-    if(block_read(device, &mbr, 0x1BE, sizeof(mbr[0]) * 4) <= 0)
-        kprintf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)\n");
 
+    
+    if(block_read(device, &mbr, 0x1BE, sizeof(mbr[0]) * 4) <= 0)
+        kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)\n");
 
 
     int i;

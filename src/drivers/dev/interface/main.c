@@ -273,6 +273,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
     switch(device->type) {
+
         case DEVICE_TYPE_CHAR:
                         
             break;
@@ -292,11 +293,12 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         default:
             kpanicf("device::create: failed, unknown device %s type %d\n", device->name, device->type);
+
     }
 
 
 
-#if defined(DEBUG)
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
     kprintf("device::create: initialized '%s' dev(%x:%x) addr(%p) size(%p): '%s'\n",
         device->name, 
         device->major, 

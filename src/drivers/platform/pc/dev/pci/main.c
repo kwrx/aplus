@@ -78,6 +78,36 @@ uintptr_t pci_read(pcidev_t device, int field, size_t size) {
 }
 
 
+uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
+        
+    uintptr_t p = pci_read(device, field, size);
+    
+    switch(size) {
+        case 4:
+            pci_write(device, field, 4, 0xFFFFFFFF);
+            break;
+
+        case 2:
+            pci_write(device, field, 2, 0xFFFF);
+            break;
+
+        case 1:
+            pci_write(device, field, 1, 0xFF);
+            break;
+
+        default:
+            DEBUG_ASSERT(0 && "Bug: Invalid Size!");
+    }
+
+    uintptr_t s = (~(pci_read(device, field, size)) + 1);
+
+
+    pci_write(device, field, size, p);
+
+    return s & (((1ULL << (size << 3)) - 1));
+}
+
+
 static uint16_t pci_find_type(uint32_t device) {
     
     return (

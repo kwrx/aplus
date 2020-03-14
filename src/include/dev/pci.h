@@ -106,15 +106,6 @@ typedef uint32_t pcidev_t;
     ((uint32_t) ((x << 16) | (y << 8) | z))
 
 
-#define pci_bar_size(x, y, z) ({            \
-    uint32_t s, d;                          \
-    d = pci_read(x, y, 4);                  \
-    pci_write(x, y, 4, ~0);                 \
-    s = pci_read(x, y, 4) & z;              \
-    pci_write(x, y, 4, d);                  \
-    s = ~s + 1;                             \
-    s;                                      \
-})
 
 
 typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra);
@@ -124,7 +115,8 @@ __BEGIN_DECLS
 
 uintptr_t pci_read(pcidev_t, int, size_t);
 void pci_write(pcidev_t, int, size_t, uint32_t);
-void pci_scan(pci_func_t fn, int, void*);
+uintptr_t pci_bar_size(pcidev_t, int, size_t);
+void pci_scan(pci_func_t, int, void*);
 
 __END_DECLS
 
