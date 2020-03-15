@@ -30,16 +30,16 @@
 
 
 
-char *strncpy(char *restrict dest, const char *restrict src, size_t n) {
 
-	size_t i;
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[i] = src[i];
+char* strchrnul(const char *str, int uc) {
 
-	for (; i < n; i++)
-		dest[i] = '\0';
+	const unsigned char* ustr = (const unsigned char*) str;
 
-	return dest;
+	for (size_t i = 0; 1; i++)
+		if (ustr[i] == (unsigned char) uc || !ustr[i])
+			return (char*) str + i;
+
+
+    __builtin_unreachable();
 
 }
-

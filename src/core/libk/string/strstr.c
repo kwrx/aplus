@@ -26,20 +26,34 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
-#include <sys/types.h>
 
 
 
-char *strncpy(char *restrict dest, const char *restrict src, size_t n) {
+char* strstr(const char* haystack, const char* needle) {
 
-	size_t i;
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[i] = src[i];
+    if(!needle[0])
+        return (char*) haystack;
 
-	for (; i < n; i++)
-		dest[i] = '\0';
 
-	return dest;
+	for (size_t i = 0; haystack[i]; i++) {
 
+        int diff = 0;
+        
+        for(size_t j = 0; needle[j]; j++) {
+
+            if(haystack[i + j] == needle[j])
+                continue;
+
+            diff = 1;
+            break;
+
+        }
+
+        if(diff)
+            continue;
+		
+		return (char*) haystack + i;
+	}
+
+	return NULL;
 }
-

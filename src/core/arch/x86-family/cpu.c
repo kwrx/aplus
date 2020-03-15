@@ -258,6 +258,7 @@ void arch_cpu_init(int index) {
     BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_SSE);
 
 #if defined(__x86_64__)
+    BUG_ON(core->cpu.cores[index].features  & X86_CPU_FEATURES_FXSR);
     BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_1GB_PAGE);
     BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_64_BIT);
 #endif

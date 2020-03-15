@@ -84,21 +84,21 @@ void x86_exception_handler(interrupt_frame_t* frame) {
         case 0x02:
 
             // TODO: Handle NMI Interrupts
-            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
+            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->user_sp);
             break;
 
         case 0x0E:
 
             // TODO: Handle Page Fault (Copy on Write, Swap, ecc...)
 
-            kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, x86_get_cr2());
+            kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, frame->user_sp, x86_get_cr2());
             break;
 
         default:
 
             // TODO: Handle User Exception
 
-            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip);
+            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->user_sp);
             break;
 
     }

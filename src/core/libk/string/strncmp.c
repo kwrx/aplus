@@ -28,14 +28,25 @@
 #include <sys/types.h>
 #include <string.h>
 
-int strncmp(const char *_l, const char *_r, size_t n) {
+int strncmp(const char* a, const char* b, size_t n) {
 
-    //?
-    //? from musl libc sources
-    //?
 
-	const unsigned char *l=(void *)_l, *r=(void *)_r;
-	if (!n--) return 0;
-	for (; *l && *r && n && *l == *r ; l++, r++, n--);
-	return *l - *r;
+	for (size_t i = 0; i < n; i++) {
+
+		unsigned char ac = (unsigned char) a[i];
+		unsigned char bc = (unsigned char) b[i];
+
+		if (ac == '\0' && bc == '\0')
+			return 0;
+
+		if (ac < bc)
+			return -1;
+
+		if (ac > bc)
+			return 1;
+
+	}
+
+	return 0;
+
 }

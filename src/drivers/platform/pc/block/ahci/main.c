@@ -755,13 +755,13 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
 
 
-    if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    } else
-        sem_wait(&ahci->io);
+    // } else
+        // sem_wait(&ahci->io);
 
 
 
@@ -1065,13 +1065,13 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
 
 
-    if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    } else
-        sem_wait(&ahci->io);
+    // } else
+    //     sem_wait(&ahci->io);
 
 
 
@@ -1185,13 +1185,13 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
 
 
-    if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    } else
-        sem_wait(&ahci->io);
+    // } else
+    //     sem_wait(&ahci->io);
 
 
 

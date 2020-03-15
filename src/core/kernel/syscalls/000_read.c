@@ -69,6 +69,7 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
     if(unlikely(!current_task->fd[fd].inode))
         return -EBADF;
 
+
     if(unlikely(!(
         !(current_task->fd[fd].flags & O_WRONLY) ||
          (current_task->fd[fd].flags & O_RDONLY)

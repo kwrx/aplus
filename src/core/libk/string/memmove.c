@@ -25,41 +25,30 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
-#include <stdarg.h>
+#include <string.h>
 #include <sys/types.h>
 
 
 
-#define WT size_t
-#define WS (sizeof(WT))
 
-void *memmove(void *dest, const void *src, size_t n)
-{
-	char *d = dest;
-	const char *s = src;
+void *memmove(void* dest, const void* src, size_t n) {
 
-	if (d==s) return d;
-	if (s+n <= d || d+n <= s) return memcpy(d, s, n);
+	unsigned char* d = (unsigned char*) dest;
+	unsigned char* s = (unsigned char*) src;
 
-	if (d<s) {
-		if ((uintptr_t)s % WS == (uintptr_t)d % WS) {
-			while ((uintptr_t)d % WS) {
-				if (!n--) return dest;
-				*d++ = *s++;
-			}
-			for (; n>=WS; n-=WS, d+=WS, s+=WS) *(WT *)d = *(WT *)s;
-		}
-		for (; n; n--) *d++ = *s++;
+
+	if((uintptr_t) dest < (uintptr_t) src) {
+
+		for(size_t i = 0; i < n; i++)
+			d[i] = s[i];
+
 	} else {
-		if ((uintptr_t)s % WS == (uintptr_t)d % WS) {
-			while ((uintptr_t)(d+n) % WS) {
-				if (!n--) return dest;
-				d[n] = s[n];
-			}
-			while (n>=WS) n-=WS, *(WT *)(d+n) = *(WT *)(s+n);
-		}
-		while (n) n--, d[n] = s[n];
+
+		for(size_t i = 0; i < n; i++)
+			d[n - (i + 1)] = s[n - (i + 1)];
+
 	}
 
 	return dest;
+
 }

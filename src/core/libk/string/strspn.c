@@ -30,21 +30,34 @@
 
 
 
-#define BITOP(a,b,op) \
- ((a)[(size_t)(b)/(8*sizeof *(a))] op (size_t)1<<((size_t)(b)%(8*sizeof *(a))))
+size_t strspn(const char *str, const char* accept) {
 
-size_t strspn(const char *s, const char *c)
-{
-	const char *a = s;
-	size_t byteset[32/sizeof(size_t)] = { 0 };
+	size_t accept_length = 0;
 
-	if (!c[0]) return 0;
-	if (!c[1]) {
-		for (; *s == *c; s++);
-		return s-a;
+	while (accept[accept_length])
+		accept_length++;
+
+
+	for (size_t result = 0; 1; result++) {
+
+		char c = str[result];
+		if (!c)
+			return result;
+
+
+		int matches = 0;
+		for (size_t i = 0; i < accept_length; i++) {
+		
+			if (str[result] != accept[i])
+				continue;
+
+			matches = 1;
+			break;
+		}
+
+		if (!matches)
+			return result;
+
 	}
 
-	for (; *c && BITOP(byteset, *(unsigned char *)c, |=); c++);
-	for (; *s && BITOP(byteset, *(unsigned char *)s, &); s++);
-	return s-a;
 }

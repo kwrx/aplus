@@ -25,40 +25,16 @@
                                                                         
 #include <stdint.h>
 #include <stdarg.h>
-#include <limits.h>
-#include <sys/types.h>
 #include <string.h>
+#include <sys/types.h>
 
 
+char* strchrnul(const char*, int);
 
-#define ALIGN (sizeof(size_t))
-#define ONES ((size_t)-1/UCHAR_MAX)
-#define HIGHS (ONES * (UCHAR_MAX/2+1))
-#define HASZERO(x) (((x)-ONES) & (~(x) & HIGHS))
-
-char* strchrnul(const char *s, int c) {
-    
-    size_t *w, k;
-
-	c = (unsigned char)c;
-	if (!c) return (char *)s + strlen(s);
-
-	for (; (uintptr_t)s % ALIGN; s++)
-		if (!*s || *(unsigned char *)s == c) return (char *)s;
-	k = ONES * c;
-	for (w = (void *)s; !HASZERO(*w) && !HASZERO(*w^k); w++);
-	for (s = (void *)w; *s && *(unsigned char *)s != c; s++);
-	return (char *)s;
-
-}
 
 char* strchr(const char *s, int c) {
 
-    //?
-    //? from musl libc sources
-    //?
-	
     char *r = strchrnul(s, c);
-	return *(unsigned char *)r == (unsigned char)c ? r : 0;
+	return *(unsigned char *) r == (unsigned char) c ? r : 0;
 
 }

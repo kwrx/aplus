@@ -33,9 +33,16 @@ int memcmp(const void* va, const void* vb, size_t size) {
     const unsigned char* a = va;
     const unsigned char* b = vb;
 
-    for(; size && *a == *b; size--, a++, b++)
-        ;
+    for(int i = 0; i < size; i++) {
 
-    return size ? *a - *b : 0;
+        if(*a != *b)
+            return *a - *b;
+
+        a++;
+        b++;
+
+    }
+
+    return 0;
 
 }

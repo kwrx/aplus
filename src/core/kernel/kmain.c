@@ -33,26 +33,25 @@
 
 #include <hal/timer.h>
 
-#define __init(fn, p)   \
+#define __init(fn, p)           \
+    extern void fn##_init();    \
     fn##_init p 
 
 
 
-static struct syscore __core;
-struct syscore* core = &__core;
-
-
-int n = 0;
 
 void cmain() {
 
     current_task->priority = TASK_PRIO_MIN;
 
-    for(;;)
+    for(;;) {
+
+        // TODO: ...
+
 #if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause()
+        __builtin_ia32_pause();
 #endif
-    ;
+    }
 
 }
 
@@ -76,7 +75,7 @@ void kmain() {
         kpanicf("mount: could not mount fake root: errno(%d)", -e);
 
     __init(module,  ());
-    //__init(root,    ());
+    __init(root,    ());
 
 
 
@@ -88,10 +87,11 @@ void kmain() {
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
 
-    kprintf("core: initialization completed in %d ms, %d KiB of memory used\n", 
+    kprintf("core: boot completed in %d ms, %d KiB of memory used\n", 
             arch_timer_getms(), 
             pmm_get_used_memory() >> 10
     );
+
 
 
 

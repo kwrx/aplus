@@ -79,8 +79,8 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
 
 pid_t arch_task_spawn_init() {
 
-    task_t* task = (task_t*) kmalloc (
-        sizeof(task_t)                                      // TCB
+    task_t* task = (task_t*) kcalloc (
+        1, (sizeof(task_t))                                 // TCB
          + (sizeof(interrupt_frame_t))                      // Registers
     , GFP_KERNEL);
 
@@ -164,8 +164,8 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 
-    task_t* task = (task_t*) kmalloc (
-        sizeof(task_t)                                      // TCB
+    task_t* task = (task_t*) kcalloc (
+        1, (sizeof(task_t))                                 // TCB
          + (sizeof(char*) * 2) + strlen(name) + 1           // Arguments & Environment
          + (sizeof(interrupt_frame_t))                      // Registers
          + (stacksize)                                      // Stack

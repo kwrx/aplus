@@ -29,13 +29,35 @@
 #include <sys/types.h>
 
 
-char *strtok(char *restrict s, const char *restrict sep) {
-	static char *p;
-	if (!s && !(s = p)) return NULL;
-	s += strspn(s, sep);
-	if (!*s) return p = 0;
-	p = s + strcspn(s, sep);
-	if (*p) *p++ = 0;
-	else p = 0;
-	return s;
+char *strtok(char *restrict str, const char *restrict delim) {
+	
+
+	static char* lasttokensaveptr = NULL;
+	char** saveptr = &lasttokensaveptr;
+
+
+	if (!str && !*saveptr)
+		return NULL;
+
+	if (!str)
+		str = *saveptr;
+
+
+	str += strspn(str, delim);
+
+	if (!*str)
+		return *saveptr = NULL;
+
+
+	size_t amount = strcspn(str, delim);
+
+	if (str[amount])
+		*saveptr = str + amount + 1;
+	else
+		*saveptr = NULL;
+
+
+	str[amount] = '\0';
+	return str;
+
 }

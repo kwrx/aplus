@@ -30,22 +30,34 @@
 #include <string.h>
 
 
+size_t strcspn(const char *str, const char* reject) {
 
-#define BITOP(a,b,op) \
- ((a)[(size_t)(b)/(8*sizeof *(a))] op (size_t)1<<((size_t)(b)%(8*sizeof *(a))))
+	size_t reject_length = 0;
+
+	while (reject[reject_length])
+		reject_length++;
 
 
-char *strchrnul(const char *, int);
+	for (size_t result = 0; 1; result++) {
 
-size_t strcspn(const char *s, const char *c)
-{
-	const char *a = s;
-	size_t byteset[32/sizeof(size_t)];
+		char c = str[result];
+		if (!c)
+			return result;
+	
+	
+		int matches = 0;
+		for (size_t i = 0; i < reject_length; i++) {
+			
+			if (str[result] != reject[i])
+				continue;
 
-	if (!c[0] || !c[1]) return strchrnul(s, *c)-a;
+			matches = 1;
+			break;
+		}
 
-	memset(byteset, 0, sizeof byteset);
-	for (; *c && BITOP(byteset, *(unsigned char *)c, |=); c++);
-	for (; *s && !BITOP(byteset, *(unsigned char *)s, &); s++);
-	return s-a;
+		if (matches)
+			return result;
+
+	}
+
 }

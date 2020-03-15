@@ -129,6 +129,9 @@ multiboot_header_end:
         .global startup_isr
         .global startup_irq
 
+        .extern interrupt_common
+        
+
     startup_gdtp:
         .quad 0x0000000000000000    //?
         .quad 0x00A09A0000000000    //? 0x08 Kernel Code
@@ -504,61 +507,3 @@ END(_start)
 
 
 
-        .text
-        .align 16, 0x90
-        .code64
-
-        .global interrupt_common
-        .type interrupt_common, @function
-interrupt_common:
-
-        cli
-        cld
-
-        # Save Registers
-        pushq   %r15
-        pushq   %r14
-        pushq   %r13
-        pushq   %r12
-        pushq   %r11
-        pushq   %r10
-        pushq   %r9
-        pushq   %r8
-        pushq   %rax
-        pushq   %rcx
-        pushq   %rdx
-        pushq   %rbx
-        pushq   %rbp
-        pushq   %rsi
-        pushq   %rdi
-
-
-        movq    %rsp, %rdi
-
-        # Call Exception Handler
-        .extern x86_exception_handler
-        callq   x86_exception_handler
-
-
-        # Restore Registers
-        popq    %rdi
-        popq    %rsi
-        popq    %rbp
-        popq    %rbx
-        popq    %rdx
-        popq    %rcx
-        popq    %rax
-        popq    %r8
-        popq    %r9
-        popq    %r10
-        popq    %r11
-        popq    %r12
-        popq    %r13
-        popq    %r14
-        popq    %r15
-
-
-        addq    $16, %rsp
-        iretq
-
-END(interrupt_common)
