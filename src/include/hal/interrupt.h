@@ -13,7 +13,8 @@ __BEGIN_DECLS
 
 void arch_intr_enable(long);
 long arch_intr_disable(void);
-
+void arch_intr_map_irq(uint8_t, void (*) (void*, uint8_t));
+void arch_intr_unmap_irq(uint8_t);
 __END_DECLS
 
 #endif

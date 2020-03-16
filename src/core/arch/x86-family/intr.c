@@ -43,7 +43,7 @@
 extern struct {
     union {
         struct {
-            void (*handler) (void*, int);
+            void (*handler) (void*, uint8_t);
             spinlock_t lock;
         };
 
@@ -131,11 +131,11 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x20:
 
-            if(unlikely(current_cpu->ticks.tv_nsec + 1000000 > 999999999)) {
-                current_cpu->ticks.tv_sec += 1;
-                current_cpu->ticks.tv_nsec = 0;
+            if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
+                current_cpu->uptime.tv_sec += 1;
+                current_cpu->uptime.tv_nsec = 0;
             } else
-                current_cpu->ticks.tv_nsec += 1000000;
+                current_cpu->uptime.tv_nsec += 10000000;
 
             
             schedule(frame);
@@ -201,7 +201,7 @@ long arch_intr_disable(void) {
 
 
 
-void arch_intr_map_irq(uint8_t irq, void (*handler) (void*, int)) {
+void arch_intr_map_irq(uint8_t irq, void (*handler) (void*, uint8_t)) {
     
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);

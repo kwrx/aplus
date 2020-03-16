@@ -151,7 +151,7 @@ void ioapic_enable(void) {
         );
 
 
-        ioapic_write ( /* FIXME: KVM Internal error on x86_64 */
+        ioapic_write (
             ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24
         );
 

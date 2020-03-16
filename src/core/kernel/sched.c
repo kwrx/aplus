@@ -31,8 +31,9 @@
 #include <aplus/task.h>
 
 #include <hal/cpu.h>
-#include <hal/interrupt.h>
 #include <hal/task.h>
+#include <hal/timer.h>
+#include <hal/interrupt.h>
 
 
 task_t* sched_queue = NULL;
@@ -73,37 +74,56 @@ void schedule(void* frame) {
 
     __lock(&sched_lock, {
 
-        // TODO: Calculate timing
 
-        current_task->clock.tms_utime += 10000;
+        DEBUG_ASSERT(CLOCKS_PER_SEC >= 0);
+        DEBUG_ASSERT(CLOCKS_PER_SEC <= 1000000000);
+
+
+#if   CLOCKS_PER_SEC == 1000
+        uint64_t elapsed = arch_timer_getms();
+#elif CLOCKS_PER_SEC == 1000000
+        uint64_t elapsed = arch_timer_getus();
+#elif CLOCKS_PER_SEC == 1000000000
+        uint64_t elapsed = arch_timer_getns();
+#else
+        uint64_t elapsed = arch_timer_getns() / (1000000000 / CLOCKS_PER_SEC)
+#endif
+
+
+
+        current_task->clock.tms_utime += elapsed - current_cpu->running_ticks;
 
         if(likely(current_task->parent))
-            current_task->parent->clock.tms_cutime += current_task->clock.tms_utime;
+            current_task->parent->clock.tms_cutime += elapsed - current_cpu->running_ticks;
+        
+        current_cpu->running_ticks = elapsed;
 
         
-    
+
+
+
+        current_task->rusage.ru_nivcsw++;
+
         int e;
         switch(current_task->policy) {
 
             case TASK_POLICY_RR:
-                e = current_task->clock.tms_utime % ((20 - current_task->priority) * 1000);
+                e = current_task->rusage.ru_nivcsw % ((20 - current_task->priority));
                 break;
 
 
             // TODO: Scheduling policy
 
             default:
-                e = 1;
+                e = 0;
                 break;
 
         }
 
 
-        if(likely(!e))
+        if(likely(e))
             break;
 
-
-        //current_task->rusage.ru_nivcsw++:
 
         if(likely(current_task->status == TASK_STATUS_RUNNING))
             current_task->status = TASK_STATUS_READY;

@@ -10,6 +10,7 @@
 #include <aplus/task.h>
 
 #define SMP_CPU_MAX                     256
+#define SMP_CPU_MAX_FEATURES            64
 #define SMP_CPU_BOOTSTRAP_ID            0
 
 #define SMP_CPU_FLAGS_AVAILABLE         (1 << 0)
@@ -26,20 +27,25 @@
     (smp_get_current_cpu())->running_task
 
 
+
+
 typedef struct {
 
     uint64_t id;
     uint64_t flags;
-    uint64_t features;
-    uint64_t xfeatures;
+    uint64_t features[SMP_CPU_MAX_FEATURES];
+    
     vmm_address_space_t address_space;
 
-    task_t* running_task;
-    struct timespec ticks;
+    task_t*  running_task;
+    uint64_t running_ticks;
 
+    struct timespec uptime;
     int errno;
 
 } cpu_t;
+
+
 
 __BEGIN_DECLS
 

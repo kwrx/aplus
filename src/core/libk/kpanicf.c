@@ -59,14 +59,16 @@ void kpanicf(const char* fmt, ...) {
     
             arch_debug_putc(buf[i]);
 
-            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
-            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
+            // //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
+            // //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
 
         }
 
     });
 
-    runtime_stacktrace();
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    // runtime_stacktrace();
+#endif
 
     // TODO: arch_cpu_halt()
     for(;;);

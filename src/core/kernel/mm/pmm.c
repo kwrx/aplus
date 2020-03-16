@@ -483,7 +483,10 @@ void pmm_init(uintptr_t max_memory) {
 
     }
 
-    // TODO: Claim Modules
+
+    //! Claim Modules
+    for(i = 0; i < core->modules.count; i++)
+        pmm_claim_area(core->modules.ko[i].ptr, core->modules.ko[i].size);
 
 
     //! Claim lower memory

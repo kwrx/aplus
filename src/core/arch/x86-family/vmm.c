@@ -311,7 +311,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
             //* Set No-Execute Bit
             if(flags & ARCH_VMM_MAP_NOEXEC)
-                if(core->bsp.xfeatures & X86_CPU_XFEATURES_XD)
+                if(core->bsp.features[FEAT_8000_0001_EDX] & X86_CPUID_EXT2_NX)
                     b |= X86_MMU_PT_NX;             /* XD */
 
 #endif
@@ -322,13 +322,13 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 b |= X86_MMU_PG_PS;
 
                 if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(core->bsp.features & X86_CPU_FEATURES_PAT)
+                    if(core->bsp.features[FEAT_1_EDX] & X86_CPUID_PAT)
                         b |= X86_MMU_PG_PAT;        /* WC */
 
             } else {
 
                 if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(core->bsp.features & X86_CPU_FEATURES_PAT)
+                    if(core->bsp.features[FEAT_1_EDX] & X86_CPUID_PAT)
                         b |= X86_MMU_PT_PAT;        /* WC */
 
             }

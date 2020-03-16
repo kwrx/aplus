@@ -4,6 +4,7 @@ arch=""
 flags=""
 
 case $1 in
+
     i[3-7]86)
         arch="i386"
 
@@ -40,6 +41,7 @@ case $1 in
         echo "run-vm: unknown ARCH \"$1\""
         exit 1
         ;;
+
 esac
 
 #if ! which qemu-system-$arch.exe &> /dev/null; then

@@ -65,8 +65,6 @@ void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
     memcpy(prev->frame, __frame, sizeof(interrupt_frame_t));
     memcpy(__frame, next->frame, sizeof(interrupt_frame_t));
 
-    // TODO: Switch FPU Registers
-
 
     if(prev->address_space->pm != next->address_space->pm)
         x86_set_cr3(next->address_space->pm);
@@ -134,7 +132,17 @@ pid_t arch_task_spawn_init() {
 
     spinlock_init(&task->lock);
 
-    // TODO: Signal, RLIMIT
+
+    int j;
+    for(j = 0; j < RLIM_NLIMITS; j++)
+        task->rlimits[j].rlim_cur =
+        task->rlimits[j].rlim_max = RLIM_INFINITY;
+
+    task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
+
+
+
+    // TODO: Signal
 
 
     task->next   = NULL;
@@ -201,7 +209,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->policy    = current_task->policy;
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
-    task->affinity  = 0;
+    task->affinity  = ~(1 << current_cpu->id);
     
 
     task->frame         = (void*) offset_of_frame;
@@ -227,7 +235,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
 
 
-    // TODO: Signal, RLIMIT
+    // TODO: Signal
 
 
     FRAME(task)->ip = (uintptr_t) entry;

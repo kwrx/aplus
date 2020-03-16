@@ -33,6 +33,8 @@
 
 #include <hal/timer.h>
 
+
+
 #define __init(fn, p)           \
     extern void fn##_init();    \
     fn##_init p 
@@ -91,7 +93,6 @@ void kmain() {
             arch_timer_getms(), 
             pmm_get_used_memory() >> 10
     );
-
 
 
 

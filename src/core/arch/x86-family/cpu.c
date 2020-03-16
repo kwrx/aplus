@@ -51,13 +51,16 @@ void arch_cpu_init(int index) {
     __builtin_cpu_init();
 
 
-    core->cpu.cores[index].features = 0ULL;
-    core->cpu.cores[index].xfeatures = 0ULL;
-
     core->cpu.cores[index].address_space.pm = x86_get_cr3();
     core->cpu.cores[index].address_space.size = 0;
     core->cpu.cores[index].address_space.refcount = 0;
     spinlock_init(&core->cpu.cores[index].address_space.lock);
+
+
+    int i;
+    for(i = 0; i < SMP_CPU_MAX_FEATURES; i++)
+        core->cpu.cores[index].features[i] = 0ULL;
+        
 
 
 
@@ -83,7 +86,8 @@ void arch_cpu_init(int index) {
 
         x86_cpuid(1, &ax, &bx, &cx, &dx);
 
-        core->cpu.cores[index].features |= (dx << 32) | cx;
+        core->cpu.cores[index].features[FEAT_1_EDX] = dx;
+        core->cpu.cores[index].features[FEAT_1_ECX] = cx;
 
 
 #if defined(DEBUG)
@@ -93,71 +97,78 @@ void arch_cpu_init(int index) {
         kprintf("     features:   ");
         
         #define _F(p)   \
-            if(core->cpu.cores[index].features & p) kprintf("%s ", &(#p)[17])
+            if(core->cpu.cores[index].features[FEAT_1_ECX] & p) kprintf("%s ", &(#p)[14])
 
-        _F(X86_CPU_FEATURES_SSE3);
-        _F(X86_CPU_FEATURES_PCLMULQDQ);
-        _F(X86_CPU_FEATURES_DTES64);
-        _F(X86_CPU_FEATURES_MONITOR);
-        _F(X86_CPU_FEATURES_DS_CPL);
-        _F(X86_CPU_FEATURES_VMX);
-        _F(X86_CPU_FEATURES_SMX);
-        _F(X86_CPU_FEATURES_EST);
-        _F(X86_CPU_FEATURES_TM2);
-        _F(X86_CPU_FEATURES_SSSE3);
-        _F(X86_CPU_FEATURES_CNXT_ID);
-        _F(X86_CPU_FEATURES_FMA);
-        _F(X86_CPU_FEATURES_CX16);
-        _F(X86_CPU_FEATURES_XTPR);
-        _F(X86_CPU_FEATURES_PDCM);
-        _F(X86_CPU_FEATURES_PCID);
-        _F(X86_CPU_FEATURES_DCA);
-        _F(X86_CPU_FEATURES_SSE41);
-        _F(X86_CPU_FEATURES_SSE42);
-        _F(X86_CPU_FEATURES_X2APIC);
-        _F(X86_CPU_FEATURES_MOVBE);
-        _F(X86_CPU_FEATURES_POPCNT);
-        _F(X86_CPU_FEATURES_TSC);
-        _F(X86_CPU_FEATURES_AESNI);
-        _F(X86_CPU_FEATURES_XSAVE);
-        _F(X86_CPU_FEATURES_OSXSAVE);
-        _F(X86_CPU_FEATURES_AVX);
-        _F(X86_CPU_FEATURES_F16C);
-        _F(X86_CPU_FEATURES_RDRAND);
+        _F(X86_CPUID_EXT_SSE3);
+        _F(X86_CPUID_EXT_PCLMULQDQ);
+        _F(X86_CPUID_EXT_DTES64);
+        _F(X86_CPUID_EXT_MONITOR);
+        _F(X86_CPUID_EXT_DSCPL);
+        _F(X86_CPUID_EXT_VMX);
+        _F(X86_CPUID_EXT_SMX);
+        _F(X86_CPUID_EXT_EST);
+        _F(X86_CPUID_EXT_TM2);
+        _F(X86_CPUID_EXT_SSSE3);
+        _F(X86_CPUID_EXT_CID);
+        _F(X86_CPUID_EXT_FMA);
+        _F(X86_CPUID_EXT_CX16);
+        _F(X86_CPUID_EXT_XTPR);
+        _F(X86_CPUID_EXT_PDCM);
+        _F(X86_CPUID_EXT_PCID);
+        _F(X86_CPUID_EXT_DCA);
+        _F(X86_CPUID_EXT_SSE41);
+        _F(X86_CPUID_EXT_SSE42);
+        _F(X86_CPUID_EXT_X2APIC);
+        _F(X86_CPUID_EXT_MOVBE);
+        _F(X86_CPUID_EXT_POPCNT);
+        _F(X86_CPUID_EXT_TSC_DEADLINE_TIMER);
+        _F(X86_CPUID_EXT_AES);
+        _F(X86_CPUID_EXT_XSAVE);
+        _F(X86_CPUID_EXT_OSXSAVE);
+        _F(X86_CPUID_EXT_AVX);
+        _F(X86_CPUID_EXT_F16C);
+        _F(X86_CPUID_EXT_RDRAND);
+        _F(X86_CPUID_EXT_HYPERVISOR);
 
-        _F(X86_CPU_FEATURES_FPU);
-        _F(X86_CPU_FEATURES_VME);
-        _F(X86_CPU_FEATURES_DE);
-        _F(X86_CPU_FEATURES_PSE);
-        _F(X86_CPU_FEATURES_TSC);
-        _F(X86_CPU_FEATURES_MSR);
-        _F(X86_CPU_FEATURES_PAE);
-        _F(X86_CPU_FEATURES_MCE);
-        _F(X86_CPU_FEATURES_CX8);
-        _F(X86_CPU_FEATURES_APIC);
-        _F(X86_CPU_FEATURES_SEP);
-        _F(X86_CPU_FEATURES_MTRR);
-        _F(X86_CPU_FEATURES_PGE);
-        _F(X86_CPU_FEATURES_MCA);
-        _F(X86_CPU_FEATURES_CMOV);
-        _F(X86_CPU_FEATURES_PAT);
-        _F(X86_CPU_FEATURES_PSE36);
-        _F(X86_CPU_FEATURES_PSN);
-        _F(X86_CPU_FEATURES_CLFLUSH);
-        _F(X86_CPU_FEATURES_DS);
-        _F(X86_CPU_FEATURES_ACPI);
-        _F(X86_CPU_FEATURES_MMX);
-        _F(X86_CPU_FEATURES_FXSR);
-        _F(X86_CPU_FEATURES_SSE);
-        _F(X86_CPU_FEATURES_SSE2);
-        _F(X86_CPU_FEATURES_SS);
-        _F(X86_CPU_FEATURES_HTT);
-        _F(X86_CPU_FEATURES_TM);
-        _F(X86_CPU_FEATURES_PBE);
+
+        #undef _F
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_1_EDX] & p) kprintf("%s ", &(#p)[10])
+
+
+        _F(X86_CPUID_FP87);
+        _F(X86_CPUID_VME);
+        _F(X86_CPUID_DE);
+        _F(X86_CPUID_PSE);
+        _F(X86_CPUID_TSC);
+        _F(X86_CPUID_MSR);
+        _F(X86_CPUID_PAE);
+        _F(X86_CPUID_MCE);
+        _F(X86_CPUID_CX8);
+        _F(X86_CPUID_APIC);
+        _F(X86_CPUID_SEP);
+        _F(X86_CPUID_MTRR);
+        _F(X86_CPUID_PGE);
+        _F(X86_CPUID_MCA);
+        _F(X86_CPUID_CMOV);
+        _F(X86_CPUID_PAT);
+        _F(X86_CPUID_PSE36);
+        _F(X86_CPUID_PN);
+        _F(X86_CPUID_CLFLUSH);
+        _F(X86_CPUID_DTS);
+        _F(X86_CPUID_ACPI);
+        _F(X86_CPUID_MMX);
+        _F(X86_CPUID_FXSR);
+        _F(X86_CPUID_SSE);
+        _F(X86_CPUID_SSE2);
+        _F(X86_CPUID_SS);
+        _F(X86_CPUID_HT);
+        _F(X86_CPUID_TM);
+        _F(X86_CPUID_IA64);
+        _F(X86_CPUID_PBE);
 
         #undef _F
 
-        kprintf("\n");
 #endif
 
     }
@@ -166,9 +177,107 @@ void arch_cpu_init(int index) {
 
     if(ex >= 7) {
         
-        x86_cpuid(7, &ax, &bx, &cx, &dx);
+        cx = 0;
+        x86_cpuid_extended(7, &ax, &bx, &cx, &dx);
         
-        core->cpu.cores[index].xfeatures |= bx;
+        core->cpu.cores[index].features[FEAT_7_0_EBX] = bx;
+        core->cpu.cores[index].features[FEAT_7_0_ECX] = cx;
+        core->cpu.cores[index].features[FEAT_7_0_EDX] = dx;
+
+#if defined(DEBUG)
+
+        
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_7_0_EBX] & p) kprintf("%s ", &(#p)[18])
+
+
+        _F(X86_CPUID_7_0_EBX_FSGSBASE);
+        _F(X86_CPUID_7_0_EBX_BMI1);
+        _F(X86_CPUID_7_0_EBX_HLE);
+        _F(X86_CPUID_7_0_EBX_AVX2);
+        _F(X86_CPUID_7_0_EBX_SMEP);
+        _F(X86_CPUID_7_0_EBX_BMI2);
+        _F(X86_CPUID_7_0_EBX_ERMS);
+        _F(X86_CPUID_7_0_EBX_INVPCID);
+        _F(X86_CPUID_7_0_EBX_RTM);
+        _F(X86_CPUID_7_0_EBX_MPX);
+        _F(X86_CPUID_7_0_EBX_AVX512F);
+        _F(X86_CPUID_7_0_EBX_AVX512DQ);
+        _F(X86_CPUID_7_0_EBX_RDSEED);
+        _F(X86_CPUID_7_0_EBX_ADX);
+        _F(X86_CPUID_7_0_EBX_SMAP);
+        _F(X86_CPUID_7_0_EBX_AVX512IFMA);
+        _F(X86_CPUID_7_0_EBX_PCOMMIT);
+        _F(X86_CPUID_7_0_EBX_CLFLUSHOPT);
+        _F(X86_CPUID_7_0_EBX_CLWB);
+        _F(X86_CPUID_7_0_EBX_INTEL_PT);
+        _F(X86_CPUID_7_0_EBX_AVX512PF);
+        _F(X86_CPUID_7_0_EBX_AVX512ER);
+        _F(X86_CPUID_7_0_EBX_AVX512CD);
+        _F(X86_CPUID_7_0_EBX_SHA_NI);
+        _F(X86_CPUID_7_0_EBX_AVX512BW);
+        _F(X86_CPUID_7_0_EBX_AVX512VL);
+
+
+        #undef _F
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_7_0_ECX] & p) kprintf("%s ", &(#p)[18])
+
+        _F(X86_CPUID_7_0_ECX_AVX512_VBMI);
+        _F(X86_CPUID_7_0_ECX_UMIP);
+        _F(X86_CPUID_7_0_ECX_PKU);
+        _F(X86_CPUID_7_0_ECX_OSPKE);
+        _F(X86_CPUID_7_0_ECX_WAITPKG);
+        _F(X86_CPUID_7_0_ECX_AVX512_VBMI2);
+        _F(X86_CPUID_7_0_ECX_GFNI);
+        _F(X86_CPUID_7_0_ECX_VAES);
+        _F(X86_CPUID_7_0_ECX_VPCLMULQDQ);
+        _F(X86_CPUID_7_0_ECX_AVX512VNNI);
+        _F(X86_CPUID_7_0_ECX_AVX512BITALG);
+        _F(X86_CPUID_7_0_ECX_AVX512_VPOPCNTDQ);
+        _F(X86_CPUID_7_0_ECX_LA57);
+        _F(X86_CPUID_7_0_ECX_RDPID);
+        _F(X86_CPUID_7_0_ECX_CLDEMOTE);
+        _F(X86_CPUID_7_0_ECX_MOVDIRI);
+        _F(X86_CPUID_7_0_ECX_MOVDIR64B);
+
+
+        #undef _F
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_7_0_EDX] & p) kprintf("%s ", &(#p)[18])
+
+        _F(X86_CPUID_7_0_EDX_AVX512_4VNNIW);
+        _F(X86_CPUID_7_0_EDX_AVX512_4FMAPS);
+        _F(X86_CPUID_7_0_EDX_SPEC_CTRL);
+        _F(X86_CPUID_7_0_EDX_STIBP);
+        _F(X86_CPUID_7_0_EDX_ARCH_CAPABILITIES);
+        _F(X86_CPUID_7_0_EDX_CORE_CAPABILITY);
+        _F(X86_CPUID_7_0_EDX_SPEC_CTRL_SSBD);
+        
+
+        #undef _F
+
+#endif
+
+
+
+        cx = 1;
+        x86_cpuid_extended(7, &ax, &bx, &cx, &dx);
+
+        core->cpu.cores[index].features[FEAT_7_1_EAX] = ax;
+
+
+#if defined(DEBUG)
+
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_7_1_EAX] & p) kprintf("%s ", &(#p)[18])
+ 
+        _F(X86_CPUID_7_1_EAX_AVX512_BF16);
+
+
+        #undef _F
+
+#endif
 
     }
 
@@ -182,52 +291,70 @@ void arch_cpu_init(int index) {
 
         x86_cpuid(0x80000001, &ax, &bx, &cx, &dx);
 
-        core->cpu.cores[index].xfeatures |= (dx << 32);
+        core->cpu.cores[index].features[FEAT_8000_0001_EDX] = dx;
+        core->cpu.cores[index].features[FEAT_8000_0001_ECX] = cx;
 
 
 #if defined(DEBUG)
         
-        kprintf("     xfeatures:  ");
-
         #define _F(p)   \
-            if(core->cpu.cores[index].xfeatures & p) kprintf("%s ", &(#p)[18])
+            if(core->cpu.cores[index].features[FEAT_8000_0001_EDX] & p) kprintf("%s ", &(#p)[15])
 
-        _F(X86_CPU_XFEATURES_SYSCALL);
-        _F(X86_CPU_XFEATURES_XD);
-        _F(X86_CPU_XFEATURES_1GB_PAGE);
-        _F(X86_CPU_XFEATURES_RDTSCP);
-        _F(X86_CPU_XFEATURES_64_BIT);
-        _F(X86_CPU_XFEATURES_FSGSBASE);
-        _F(X86_CPU_XFEATURES_AVX2);
-        _F(X86_CPU_XFEATURES_SMEP);
-        _F(X86_CPU_XFEATURES_SMAP);
+        _F(X86_CPUID_EXT2_SYSCALL);
+        _F(X86_CPUID_EXT2_NX);
+        _F(X86_CPUID_EXT2_FFXSR);
+        _F(X86_CPUID_EXT2_PDPE1GB);
+        _F(X86_CPUID_EXT2_RDTSCP);
+        _F(X86_CPUID_EXT2_LM);
 
         #undef _F
-
-        kprintf("\n");
+        
 #endif
 
     }
 
+
+    if(ex >= 0x80000007) {
+
+        x86_cpuid(0x80000007, &ax, &bx, &cx, &dx);
+
+        core->cpu.cores[index].features[FEAT_8000_0007_EDX] = dx;
+
+
+#if defined(DEBUG)
+        
+        #define _F(p)   \
+            if(core->cpu.cores[index].features[FEAT_8000_0007_EDX] & p) kprintf("%s ", &(#p)[10])
+
+        _F(X86_CPUID_APM_INVTSC);
+
+        #undef _F
+
+#endif
+    }
+
+
+
+
 #if defined(DEBUG)
 
-
+        kprintf("\n");
         kprintf("     msr-efer:   ");
 
         uint64_t efer = x86_rdmsr(X86_MSR_EFER);
 
 
         #define _F(p)   \
-            if(efer & p) kprintf("%s ", &(#p)[17])
+            if(efer & p) kprintf("%s ", &(#p)[13])
 
-        _F(X86_MSR_FEATURES_SCE);
-        _F(X86_MSR_FEATURES_LME);
-        _F(X86_MSR_FEATURES_LMA);
-        _F(X86_MSR_FEATURES_NXE);
-        _F(X86_MSR_FEATURES_SVME);
-        _F(X86_MSR_FEATURES_LMSLE);
-        _F(X86_MSR_FEATURES_FFXSR);
-        _F(X86_MSR_FEATURES_TCE);
+        _F(X86_MSR_EFER_SCE);
+        _F(X86_MSR_EFER_LME);
+        _F(X86_MSR_EFER_LMA);
+        _F(X86_MSR_EFER_NXE);
+        _F(X86_MSR_EFER_SVME);
+        _F(X86_MSR_EFER_LMSLE);
+        _F(X86_MSR_EFER_FFXSR);
+        _F(X86_MSR_EFER_TCE);
 
         #undef _F
 
@@ -254,18 +381,25 @@ void arch_cpu_init(int index) {
 
 
     //! Requirements
-    BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_MSR);
-    BUG_ON(core->cpu.cores[index].features & X86_CPU_FEATURES_SSE);
+    BUG_ON(core->cpu.cores[index].features[FEAT_1_EDX] & X86_CPUID_MSR);
+    BUG_ON(core->cpu.cores[index].features[FEAT_1_EDX] & X86_CPUID_SSE);
+
 
 #if defined(__x86_64__)
-    BUG_ON(core->cpu.cores[index].features  & X86_CPU_FEATURES_FXSR);
-    BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_1GB_PAGE);
-    BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_64_BIT);
+    BUG_ON(core->cpu.cores[index].features[FEAT_1_EDX] & X86_CPUID_FXSR);
+    BUG_ON(core->cpu.cores[index].features[FEAT_8000_0001_EDX] & X86_CPUID_EXT2_PDPE1GB);
+    BUG_ON(core->cpu.cores[index].features[FEAT_8000_0001_EDX] & X86_CPUID_EXT2_LM);
 #endif
 
+
 #if defined(CONFIG_HAVE_SMP)
-    BUG_ON(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_RDTSCP);
+    BUG_ON(core->cpu.cores[index].features[FEAT_8000_0001_EDX] & X86_CPUID_EXT2_RDTSCP);
 #endif
+
+
+
+
+
 
 
 
@@ -289,44 +423,48 @@ void arch_cpu_init(int index) {
 
 
 
+    //! Enable TSC Timer
+    check_and_enable(features[FEAT_1_EDX], X86_CPUID_TSC,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_TSD_MASK));
+
 
     //! Enable NX bit
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_XD,
-        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_NXE));
+    check_and_enable(features[FEAT_8000_0001_EDX], X86_CPUID_EXT2_NX,
+        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_NXE));
 
 
     //! Enable Syscall bit
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_SYSCALL,
-        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_FEATURES_SCE));
+    check_and_enable(features[FEAT_8000_0001_EDX], X86_CPUID_EXT2_SYSCALL,
+        x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_SCE));
 
 
     //! Enable FXSAVE, FXRSTOR
-    check_and_enable(features, X86_CPU_FEATURES_FXSR,
-        x86_set_cr4(x86_get_cr4() | (1 << 9)));
+    check_and_enable(features[FEAT_8000_0001_EDX], X86_CPUID_EXT2_FXSR,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_OSFXSR_MASK));
 
 
     //! Enable XSAVE and Extended states
-    check_and_enable(features, X86_CPU_FEATURES_XSAVE,
-        x86_set_cr4(x86_get_cr4() | (1 << 18)));
+    check_and_enable(features[FEAT_1_ECX], X86_CPUID_EXT_XSAVE,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK));
 
 
     //! Enable FSGSBASE instructions
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_FSGSBASE,
-        x86_set_cr4(x86_get_cr4() | (1 << 16)));
+    check_and_enable(features[FEAT_7_0_EBX], X86_CPUID_7_0_EBX_FSGSBASE,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_FSGSBASE_MASK));
 
 
     //! Enable SMEP
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_SMEP,
-        x86_set_cr4(x86_get_cr4() | (1 << 20)));
+    check_and_enable(features[FEAT_7_0_EBX], X86_CPUID_7_0_EBX_SMEP,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_SMEP_MASK));
 
 
     //! Enable SMAP
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_SMAP,
-        x86_set_cr4(x86_get_cr4() | (1 << 21)));
+    check_and_enable(features[FEAT_7_0_EBX], X86_CPUID_7_0_EBX_SMAP,
+        x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK));
         
 
     //! Write Processor ID
-    check_and_enable(xfeatures, X86_CPU_XFEATURES_RDTSCP,
+    check_and_enable(features[FEAT_8000_0001_EDX], X86_CPUID_EXT2_RDTSCP,
         x86_wrmsr(X86_MSR_TSC_AUX, index));
 
 
@@ -338,20 +476,20 @@ void arch_cpu_init(int index) {
     //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
     // else
 
-    x86_wrmsr(X86_MSR_KERNEL_GSBASE, (uint64_t) &core->cpu.cores[index]);
+    x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
 
 #endif
 
 
 #if defined(__x86_64__)
 
-    if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_SYSCALL) {
+    if(core->cpu.cores[index].features[FEAT_8000_0001_EDX] & X86_CPUID_EXT2_SYSCALL) {
 
         extern void x86_syscall_handler();
 
         x86_wrmsr(X86_MSR_STAR, ((uint64_t) KERNEL_CS << 32ULL) | ((uint64_t) ((USER_CS - 8) | 3) << 48ULL));
         x86_wrmsr(X86_MSR_LSTAR, (uint64_t) &x86_syscall_handler);
-        x86_wrmsr(X86_MSR_SFMASK, 0x200ULL);
+        x86_wrmsr(X86_MSR_FMASK, (uint64_t) 0x200ULL);
 
     }
 
@@ -389,6 +527,7 @@ void arch_cpu_startup(int index) {
 
     BUG_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
     BUG_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
     kprintf("x86-cpu: starting up core #%d\n", index);
