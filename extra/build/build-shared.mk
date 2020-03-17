@@ -20,6 +20,6 @@ include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS)
-	$(LD) -r $(LDFLAGS) -o $@ $(OBJS) $(addprefix -l,$(LIBS))
+	$(QUIET)$(LD) -r $(LDFLAGS) -o $@ $(OBJS) $(addprefix -l,$(LIBS))
 
 include $(ROOTDIR)/extra/build/build-objects.mk

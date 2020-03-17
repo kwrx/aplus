@@ -20,6 +20,6 @@ include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS)
-	$(AR) $(ARFLAGS) $@ $(OBJS)
+	$(QUIET)$(AR) $(ARFLAGS) $@ $(OBJS)
 
 include $(ROOTDIR)/extra/build/build-objects.mk

@@ -14,7 +14,7 @@ clean:
 	$(QUIET)$(RM) *.o *.d $(TARGET)
 
 distclean: clean
-	$(RM) $(DESTDIR)/$(TARGET)
+	$(QUIET)$(RM) $(DESTDIR)/$(TARGET)
 
 
 

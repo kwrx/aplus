@@ -26,34 +26,16 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
+#include <sys/types.h>
 
 
 
-char* strstr(const char* haystack, const char* needle) {
+size_t strlen(const char* src) {
 
-    if(!needle[0]) {
-        return (char*) haystack;
-    }
+    size_t n = 0;
+    while(*src++)
+        n++;
+    
+    return n;
 
-	for (size_t i = 0; haystack[i]; i++) {
-
-        int diff = 0;
-        
-        for(size_t j = 0; needle[j]; j++) {
-
-            if(haystack[i + j] == needle[j])
-                continue;
-
-            diff = 1;
-            break;
-
-        }
-
-        if(diff)
-            continue;
-		
-		return (char*) haystack + i;
-	}
-
-	return NULL;
 }

@@ -211,7 +211,6 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
 
-
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
     kprintf("boot: %s '%s'\n", core->boot.bootloader, 
                                core->boot.cmdline);
@@ -233,6 +232,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     }
 
 
+
     //* Map ELF Sections
 
     Elf_Shdr* shdr = (Elf_Shdr*) &core->exe.sections[0];
@@ -243,7 +243,6 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             case SHT_STRTAB:
             case SHT_SYMTAB:
-            case SHT_PROGBITS:
             
                 core->mmap.ptr[core->mmap.count].address = shdr[i].sh_addr;
                 core->mmap.ptr[core->mmap.count].length  = shdr[i].sh_size;
@@ -251,11 +250,12 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
                 core->mmap.count += 1;
 
-                break;
-
         }
 
     }
+
+
+    DEBUG_ASSERT(core->mmap.count < (CORE_BUFSIZ << 2));
 
 
 
@@ -274,5 +274,4 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize APIC
     apic_init();
 
-    
 }

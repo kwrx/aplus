@@ -33,9 +33,12 @@
 
 void *memchr(const void *src, int c, size_t n) {
 
-	for(int i = 0; i < n; i++)
+	for(int i = 0; i < n; i++) {
+	
 		if(((const char*) src) [i] == (char) c)
-			return &((const char*) src) [i];
+			return &((void*) src) [i];
+
+	}
 
 	return NULL;
 	

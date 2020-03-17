@@ -59,7 +59,7 @@ interrupt_common:
         pushq   %rdi
 
         # Save FPU Registers
-        subq    $512, %rsp
+        subq    $1024, %rsp
         fxsave64 (%rsp)         // TODO: Implement xsave, xrstor
 
 
@@ -78,7 +78,7 @@ interrupt_return:
 
         # Restore FPU Registers
         fxrstor64 (%rsp)
-        addq    $512, %rsp
+        addq    $1024, %rsp
 
         # Restore CPU Registers
         popq    %rdi

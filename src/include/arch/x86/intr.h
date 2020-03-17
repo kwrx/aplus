@@ -10,7 +10,7 @@
 
 typedef struct {
 
-    uint8_t fpu[512];
+    uint8_t fpu[1024];
 
     uintptr_t di;
     uintptr_t si;

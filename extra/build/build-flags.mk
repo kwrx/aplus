@@ -12,7 +12,7 @@ ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 DEFINES     += NDEBUG=1
 
 ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
-LDFLAGS     += -s
+LDFLAGS     += -Wl,--strip-debug
 endif
 endif
 

@@ -72,14 +72,14 @@ echo "## Configure environment"
     PATH="$PATH:$CONFIG_SYSTEM_PATH_TOOLCHAIN/bin"
 
 
-    case $CONFIG_COMPILER_HOST in
-        x86_64)
-            required nasm
-            ;;
-        i[3-7]86)
-            required nasm
-            ;;
-    esac
+    # case $CONFIG_COMPILER_HOST in
+    #     x86_64)
+    #         required nasm
+    #         ;;
+    #     i[3-7]86)
+    #         required nasm
+    #         ;;
+    # esac
 
 echo "## Get Packages"
 

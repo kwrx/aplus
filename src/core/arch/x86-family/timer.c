@@ -58,7 +58,7 @@ void arch_timer_delay(uint64_t us) {
 
     __lock(&delay_lock, {
 
-#if defined(CONFIG_X86_HAVE_TSC_TIMER)
+#if defined(CONFIG_X86_HAVE_TSC_DELAY)
 
         uint64_t t0 = arch_timer_getus();
 

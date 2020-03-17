@@ -75,24 +75,26 @@ static uintptr_t pmm_max_memory = 0;
  * @param physaddr: Physical Address of Memory Area.
  * @param size:     Size of Memory Area in bytes.
  */
-void pmm_claim_area(uintptr_t physaddr, size_t size) {
+void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
     DEBUG_ASSERT(size);
 
 
+    uintptr_t end = physaddr + size;
+
     if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
 
-    if(size & (PML1_PAGESIZE - 1))
-        size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
+    if(end & (PML1_PAGESIZE - 1))
+        end = (end & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
 
-    if(physaddr + size > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, physaddr + size, pmm_max_memory);
+    if(end > pmm_max_memory)
+        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
 
 
 
-    for(uintptr_t p = physaddr; p < (physaddr + size); p += PML1_PAGESIZE) {
+    for(uintptr_t p = physaddr; p < end; p += PML1_PAGESIZE) {
 
         uint64_t pml2_index = (p >> 27);
         uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
@@ -114,8 +116,7 @@ void pmm_claim_area(uintptr_t physaddr, size_t size) {
     }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 5
-        kprintf("pmm: claim physical memory area %p-%p\n", physaddr,
-                                                           physaddr + size);
+        kprintf("pmm: claim physical memory area %p-%p\n", physaddr, end);
 #endif
 
 }
@@ -134,19 +135,21 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
     DEBUG_ASSERT(size);
 
 
+    uintptr_t end = physaddr + size;
+
     if(physaddr & (PML1_PAGESIZE - 1))
         physaddr &= ~(PML1_PAGESIZE - 1);
 
-    if(size & (PML1_PAGESIZE - 1))
-        size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
+    if(end & (PML1_PAGESIZE - 1))
+        end = (end & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
 
-    if(physaddr + size > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, physaddr + size, pmm_max_memory);
+    if(end > pmm_max_memory)
+        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
 
 
 
-    for(uint64_t p = physaddr; p < (physaddr + size); p += PML1_PAGESIZE) {
+    for(uint64_t p = physaddr; p < end; p += PML1_PAGESIZE) {
 
         uint64_t pml2_index = (p >> 27);
         uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
@@ -168,8 +171,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
     }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 5
-        kprintf("pmm: unclaim physical memory area %p-%p\n", physaddr,
-                                                             physaddr + size);
+        kprintf("pmm: unclaim physical memory area %p-%p\n", physaddr, end);
 #endif
 
 }
