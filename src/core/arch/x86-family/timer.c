@@ -43,6 +43,10 @@
 #include <arch/x86/apic.h>
 
 
+#define LOOP_SANITY_CHECK       32
+
+
+
 spinlock_t delay_lock;
 spinlock_t rtc_lock;
 
@@ -167,10 +171,10 @@ void timer_init(void) {
     uint64_t d, s, e;
 
 
+
     clocks_per_ms = 0ULL;
 
-    int i;
-    for(i = 0; i < 30; i++) {
+    for(int j = 0; j < LOOP_SANITY_CHECK; j++) {
         
         d = 1193180 / 1000;
             
@@ -191,7 +195,8 @@ void timer_init(void) {
 
     }
 
-    clocks_per_ms /= 30ULL;
+    clocks_per_ms /= LOOP_SANITY_CHECK;
+
 
 
 

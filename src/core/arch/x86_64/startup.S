@@ -25,6 +25,7 @@
 #include <aplus.h>
 #include <aplus/multiboot.h>
 #include <arch/x86/asm.h>
+#include <arch/x86/cpu.h>
 #include <asm/linkage.h>
 
 
@@ -342,7 +343,7 @@ _start:
         movl    %eax, %cr3
 
         # Enable Long Mode
-        movl    $0xC0000080, %ecx
+        movl    $X86_MSR_EFER, %ecx
         rdmsr
         btsl    $8,   %eax      # LME
         wrmsr
@@ -409,7 +410,7 @@ _start_high64:
         movq    %ecx, %cr3
 
         # Enable PAT
-        movq    $0x277, %rcx
+        movq    $X86_MSR_PAT, %rcx
         rdmsr
         andl    $0xFFFFFF00, %edx
         orl     $0x00000001, %edx

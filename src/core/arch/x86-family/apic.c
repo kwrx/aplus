@@ -31,6 +31,7 @@
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
+#include <aplus/smp.h>
 
 #include <hal/cpu.h>
 #include <hal/vmm.h>
@@ -194,7 +195,7 @@ void apic_init(void) {
 
 
 
-    if(!(core->bsp.features[FEAT_1_EDX] & X86_CPUID_APIC))
+    if(!boot_cpu_has(X86_FEATURE_APIC))
         kpanicf("x86-apic: APIC not supported!\n");
 
 
@@ -322,7 +323,7 @@ void apic_init(void) {
     x2apic = 0;
 
 #if !defined(CONFIG_X86_X2APIC_FORCE_DISABLED)
-    if(core->bsp.features[FEAT_1_ECX] & X86_CPUID_EXT_X2APIC)
+    if(boot_cpu_has(X86_FEATURE_X2APIC))
         x2apic = 1;
 #endif
 

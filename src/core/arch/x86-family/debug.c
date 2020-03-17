@@ -103,6 +103,9 @@ void arch_debug_putc(char ch) {
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
     
 
+    if(!current_task)
+        return;
+        
 
     struct stack {
         struct stack* bp;

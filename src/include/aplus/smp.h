@@ -10,7 +10,7 @@
 #include <aplus/task.h>
 
 #define SMP_CPU_MAX                     256
-#define SMP_CPU_MAX_FEATURES            64
+#define SMP_CPU_MAX_FEATURES            32
 #define SMP_CPU_BOOTSTRAP_ID            0
 
 #define SMP_CPU_FLAGS_AVAILABLE         (1 << 0)
@@ -26,6 +26,16 @@
 #define current_task    \
     (smp_get_current_cpu())->running_task
 
+
+
+#define cpu_has(index, feature)     \
+    (core->cpu.cores[index].features[feature >> 5] & (1 << (feature & 0x1F)))
+
+#define boot_cpu_has(feature)       \
+    cpu_has(SMP_CPU_BOOTSTRAP_ID, feature)
+
+#define current_cpu_has(feature)    \
+    (current_cpu->features[feature >> 5] & (1 << (feature & 0x1F)))
 
 
 
