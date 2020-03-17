@@ -141,7 +141,7 @@ struct syscore {
             uintptr_t address;
             uintptr_t length;
             uintptr_t type;
-        } ptr[256];
+        } ptr[CORE_BUFSIZ << 2];
 
         size_t count;
 

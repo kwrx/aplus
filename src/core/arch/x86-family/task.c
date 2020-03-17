@@ -51,19 +51,20 @@
 
 
 
-void arch_task_switch(void* __frame, task_t* prev, task_t* next) {
+void arch_task_switch(task_t* prev, task_t* next) {
 
     DEBUG_ASSERT(prev);
     DEBUG_ASSERT(prev->frame);
 
     DEBUG_ASSERT(next);
     DEBUG_ASSERT(next->frame);
+    DEBUG_ASSERT(next->address_space->pm);
 
-    DEBUG_ASSERT(__frame);
+    DEBUG_ASSERT(current_cpu->frame);
 
 
-    memcpy(prev->frame, __frame, sizeof(interrupt_frame_t));
-    memcpy(__frame, next->frame, sizeof(interrupt_frame_t));
+    memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
+    memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
 
     if(prev->address_space->pm != next->address_space->pm)
@@ -209,7 +210,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->policy    = current_task->policy;
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
-    task->affinity  = ~(1 << current_cpu->id);
+    task->affinity  = 0;
     
 
     task->frame         = (void*) offset_of_frame;

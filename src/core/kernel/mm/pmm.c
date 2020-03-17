@@ -479,14 +479,15 @@ void pmm_init(uintptr_t max_memory) {
             continue;
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+        kprintf("mmap: address(%p) size(%p) type(%p)\n", core->mmap.ptr[i].address,
+                                                         core->mmap.ptr[i].length,
+                                                         core->mmap.ptr[i].type);
+#endif
+
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
 
     }
-
-
-    //! Claim Modules
-    for(i = 0; i < core->modules.count; i++)
-        pmm_claim_area(core->modules.ko[i].ptr, core->modules.ko[i].size);
 
 
     //! Claim lower memory

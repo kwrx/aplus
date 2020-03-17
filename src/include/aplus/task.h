@@ -157,8 +157,7 @@ pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 
-void schedule();
-void schedule_yield();
+void schedule(int);
 
 
 extern task_t* sched_queue;

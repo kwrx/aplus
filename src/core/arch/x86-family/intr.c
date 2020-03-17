@@ -73,6 +73,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 // #endif
 
 
+    current_cpu->frame = frame;
 
 
     switch(frame->intno) {
@@ -129,21 +130,30 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
             break;
 
+
+        case 0xFD:
+
+            schedule(1);
+            break;
+
+
         case 0x20:
 
-            if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
-                current_cpu->uptime.tv_sec += 1;
-                current_cpu->uptime.tv_nsec = 0;
-            } else
-                current_cpu->uptime.tv_nsec += 10000000;
+            {
+                if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
+                    current_cpu->uptime.tv_sec += 1;
+                    current_cpu->uptime.tv_nsec = 0;
+                } else
+                    current_cpu->uptime.tv_nsec += 10000000;
 
-            
-            schedule(frame);
-            
+                schedule(0);
+
+            }
+
             apic_eoi();
             break;
 
-        case 0x21 ... 0xFD:
+        case 0x21 ... 0xFC:
 
             __lock(&startup_irq[frame->intno - 0x20].lock, {
 

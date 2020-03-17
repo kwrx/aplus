@@ -36,12 +36,14 @@ typedef struct {
     uint64_t features[SMP_CPU_MAX_FEATURES];
     
     vmm_address_space_t address_space;
+    
+    void* frame;
+    int errno;
 
     task_t*  running_task;
     uint64_t running_ticks;
 
     struct timespec uptime;
-    int errno;
 
 } cpu_t;
 

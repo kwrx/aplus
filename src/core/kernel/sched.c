@@ -70,7 +70,10 @@ static void __sched_next(void) {
 
 
 
-void schedule(void* frame) {
+void schedule(int yield) {
+
+    task_t* prev_task = current_task;
+
 
     __lock(&sched_lock, {
 
@@ -90,7 +93,7 @@ void schedule(void* frame) {
 #endif
 
 
-
+        // FIXME
         current_task->clock.tms_utime += elapsed - current_cpu->running_ticks;
 
         if(likely(current_task->parent))
@@ -98,43 +101,62 @@ void schedule(void* frame) {
         
         current_cpu->running_ticks = elapsed;
 
+
+
+        if(current_task->rusage.ru_utime.tv_usec + 10000000 > 999999999) {
+
+            current_task->rusage.ru_utime.tv_usec = 0;
+            current_task->rusage.ru_utime.tv_sec += 1;
+
+        } else
+            current_task->rusage.ru_utime.tv_usec += 10000000;
         
 
 
+        if(!yield) {
 
-        current_task->rusage.ru_nivcsw++;
+            int e;
+            switch(current_task->policy) {
 
-        int e;
-        switch(current_task->policy) {
+                case TASK_POLICY_RR:
+                   
+                    e = ((uint64_t) current_task->rusage.ru_utime.tv_sec * 1000000ULL +
+                         (uint64_t) current_task->rusage.ru_utime.tv_usec             ) % ((20 - current_task->priority) * 1000);
+                    
+                    break;
 
-            case TASK_POLICY_RR:
-                e = current_task->rusage.ru_nivcsw % ((20 - current_task->priority));
+
+                // TODO: Scheduling policy
+
+                default:
+                    e = 0;
+                    break;
+
+            }
+
+
+            current_task->rusage.ru_nivcsw++;
+
+            if(likely(e))
                 break;
 
 
-            // TODO: Scheduling policy
-
-            default:
-                e = 0;
-                break;
-
-        }
+        } else
+            current_task->rusage.ru_nvcsw++;
 
 
-        if(likely(e))
-            break;
 
 
         if(likely(current_task->status == TASK_STATUS_RUNNING))
             current_task->status = TASK_STATUS_READY;
 
-
-        task_t* p = current_task;
         __sched_next();
 
-
         current_task->status = TASK_STATUS_RUNNING;
-        arch_task_switch(frame, p, current_task);
+        
+
+        if(likely(prev_task != current_task))
+            arch_task_switch(prev_task, current_task);
 
     });
 

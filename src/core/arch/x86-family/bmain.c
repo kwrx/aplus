@@ -29,6 +29,7 @@
 #include <aplus/multiboot.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
+#include <aplus/elf.h>
 
 #include <hal/cpu.h>
 #include <hal/task.h>
@@ -64,6 +65,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
 
     core->mmap.count += 1;
+
 
 
     //* Initialize Bootstrap CPU
@@ -214,6 +216,46 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     kprintf("boot: %s '%s'\n", core->boot.bootloader, 
                                core->boot.cmdline);
 #endif
+
+
+
+    //* Map Modules
+
+    int i;
+    for(i = 0; i < core->modules.count; i++) {
+
+        core->mmap.ptr[core->mmap.count].address = core->modules.ko[i].ptr;
+        core->mmap.ptr[core->mmap.count].length  = core->modules.ko[i].size;
+        core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
+
+        core->mmap.count += 1;
+
+    }
+
+
+    //* Map ELF Sections
+
+    Elf_Shdr* shdr = (Elf_Shdr*) &core->exe.sections[0];
+
+    for(i = 1; i < core->exe.sh_num; i++) {
+
+        switch(shdr[i].sh_type) {
+
+            case SHT_STRTAB:
+            case SHT_SYMTAB:
+            case SHT_PROGBITS:
+            
+                core->mmap.ptr[core->mmap.count].address = shdr[i].sh_addr;
+                core->mmap.ptr[core->mmap.count].length  = shdr[i].sh_size;
+                core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
+
+                core->mmap.count += 1;
+
+                break;
+
+        }
+
+    }
 
 
 

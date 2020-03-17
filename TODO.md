@@ -16,14 +16,16 @@
 | Tasking       | yes    | no      | no      |
 | Fork          | no     | no      | no      |
 | Timer         | yes    | yes     | no      |
+| Random Gen    | no[^2] | no[^2]  | no      |
 | ACPI          | yes    | yes     | no      |
 | Multiprocessing| yes   | no      | no      |
-| Syscalls      | yes[^2]| no      | no      |
+| Syscalls      | yes[^3]| no      | no      |
 | Reboot        | yes    | yes     | no      |
 | Power off     | no     | no      | no      |
 
-[^1]: Multiboot 2.0 Specification
-[^2]: Interrupt and SYSCALL/SYSRET
+[^1]: Multiboot 2.0 Specification<br>
+[^2]: RDRAND support<br>
+[^3]: Interrupt and SYSCALL/SYSRET<br>
 
 
 ------------------------------------------
@@ -63,6 +65,8 @@
 ## Drivers
 - [x] Device Interface
 - [x] Char Devices
+- [x] Block Devices
+- [x] Network Devices
 - [ ] PTY Devices
 - [ ] Framebuffer Video
 
@@ -73,7 +77,7 @@
 ### Platform (PC)
 - [x] PCI Support
 - [x] AHCI Controller (SATA)
-- [x] IDE Controller (ATA)
+- [x] IDE Controller (PATA)
 - [x] Bochs VGA Controller
 - [ ] VMWare VGA Controller
 - [ ] AC97 Audio Adepter

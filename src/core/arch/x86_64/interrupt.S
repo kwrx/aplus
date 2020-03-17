@@ -72,6 +72,10 @@ interrupt_common:
 
 
 
+        .global interrupt_return
+        .type interrupt_return, @function
+interrupt_return:
+
         # Restore FPU Registers
         fxrstor64 (%rsp)
         addq    $512, %rsp
@@ -97,4 +101,5 @@ interrupt_common:
         addq    $16, %rsp
         iretq
 
+END(interrupt_return)
 END(interrupt_common)
