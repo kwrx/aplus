@@ -102,6 +102,16 @@ typedef struct task {
 
 
     struct {
+
+        uintptr_t stack;
+        uintptr_t sigstack;
+        uintptr_t start;
+        uintptr_t end;
+
+    } userspace;
+
+
+    struct {
         union {
             struct {
                 int16_t o177:8;

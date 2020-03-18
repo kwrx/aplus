@@ -22,90 +22,15 @@
  * You should have received a copy of the GNU General Public License    
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
-                                                                        
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/syscall.h>
-#include <aplus/module.h>
-#include <aplus/network.h>
-
-#include <hal/cpu.h>
-#include <hal/timer.h>
-#include <hal/reboot.h>
 
 
+int main(int argc, char** argv, char** envp) {
+    
+    long r10 __asm__("r10") = 4;
+    long r8  __asm__("r8")  = 5;
+    long r9  __asm__("r9")  = 6;
 
-#define __init(fn, p)           \
-    extern void fn##_init();    \
-    fn##_init p 
+    __asm__ ("syscall" :: "a"(404), "D"(1), "S"(2), "d"(3), "r"(r10), "r"(r8), "r"(r9));
 
-
-
-
-void cmain() {
-
-    current_task->priority = TASK_PRIO_MIN;
-
-    for(;;) {
-
-        // TODO: ...
-
-#if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
-#endif
-    }
-
-}
-
-
-
-
-void kmain() {
-
-#if defined(CONFIG_HAVE_SMP)
-    __init(smp,     ());
-#endif
-
-    __init(syscall, ());
-    __init(vfs,     ());
-    __init(network, ());
-
-
-
-    int e;
-    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
-        kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));
-
-    __init(module,  ());
-    __init(root,    ());
-
-
-
-    kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
-                                      CONFIG_SYSTEM_VERSION,
-                                      CONFIG_SYSTEM_CODENAME,
-                                      CONFIG_COMPILER_HOST);
-        
-    kprintf("core: built with gcc %s (%s)\n", __VERSION__,
-                                              __TIMESTAMP__);
-
-    kprintf("core: boot completed in %d ms, %d KiB of memory used\n", 
-            arch_timer_getms(), 
-            pmm_get_used_memory() >> 10
-    );
-
-
-
-
-    const char* __argv[2] = { "/sbin/init", NULL };
-    const char* __envp[1] = { NULL };
-
-    if((e = sys_execve(__argv[0], __argv, __envp)) < 0)
-        kpanicf("init: PANIC! execve() failed with errno(%s)\n", strerror(-e));
-
-
-    arch_reboot(ARCH_REBOOT_HALT);
-
+    return 0;
 }

@@ -185,6 +185,8 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 
+
+
     uint64_t b = X86_MMU_PG_P;
 
     if(flags & ARCH_VMM_MAP_RDWR)
@@ -199,6 +201,37 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
     if(flags & ARCH_VMM_MAP_SHARED)
         b |= X86_MMU_PG_G;
 
+
+    //* Set Page Type
+    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+        case ARCH_VMM_MAP_TYPE_PAGE:
+            b |= X86_MMU_PG_AP_TP_PAGE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_STACK:
+            b |= X86_MMU_PG_AP_TP_STACK;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_MMAP:
+            b |= X86_MMU_PG_AP_TP_MMAP;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_COW:
+            b |= X86_MMU_PG_AP_TP_COW;
+            break;
+
+    }
+
+
+#if defined(__x86_64__)
+
+    //* Set No-Execute Bit
+    if(flags & ARCH_VMM_MAP_NOEXEC)
+        if(boot_cpu_has(X86_FEATURE_NX))
+            b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
 
 
 
@@ -284,38 +317,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             DEBUG_ASSERT(!(*d & X86_MMU_PG_P) && "Page already used, unmap first");
 
 
-            //* Set Page Type
-            switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-                case ARCH_VMM_MAP_TYPE_PAGE:
-                    b |= X86_MMU_PG_AP_TP_PAGE;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_STACK:
-                    b |= X86_MMU_PG_AP_TP_STACK;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_MMAP:
-                    b |= X86_MMU_PG_AP_TP_MMAP;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_COW:
-                    b |= X86_MMU_PG_AP_TP_COW;
-                    break;
-
-            }
-
-
-
-#if defined(__x86_64__)
-
-            //* Set No-Execute Bit
-            if(flags & ARCH_VMM_MAP_NOEXEC)
-                if(boot_cpu_has(X86_FEATURE_NX))
-                    b |= X86_MMU_PT_NX;             /* XD */
-
-#endif
-
 
             if(flags & ARCH_VMM_MAP_HUGETLB) {
 
@@ -368,9 +369,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
  * 
  * @param space: address space.
  * @param virtaddr: virtual address.
- * @param physaddr: physical address.
  * @param length: size of virtual space.
- * @param flags: @see include/arch/x86/vmm.h
  */
 uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t length) {
 
@@ -492,6 +491,222 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
     return virtaddr;
 
 }
+
+
+
+
+
+
+/*!
+ * @brief arch_vmm_mprotect().
+ *        Protect virtual memory.
+ * 
+ * @param space: address space.
+ * @param virtaddr: virtual address.
+ * @param length: size of virtual space.
+ * @param flags: @see include/arch/x86/vmm.h
+ */
+uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size_t length, int flags) {
+
+    DEBUG_ASSERT(space);
+    DEBUG_ASSERT(length);
+
+
+    uintptr_t pagesize;
+
+    uintptr_t s = virtaddr;
+    uintptr_t e = virtaddr + length;
+
+
+    if(flags & ARCH_VMM_MAP_HUGETLB) {
+
+#if defined(__x86_64__)
+        if(flags & ARCH_VMM_MAP_HUGE_1GB)
+            pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
+        else
+#endif
+            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+    
+    } else
+        pagesize = X86_MMU_PAGESIZE; 
+
+
+
+
+    if(s & (pagesize - 1))
+        s = (s & ~(pagesize - 1));
+
+    if(e & (pagesize - 1))
+        e = (e & ~(pagesize - 1)) + pagesize;
+
+
+
+
+    uint64_t b = X86_MMU_PG_P;
+
+    if(flags & ARCH_VMM_MAP_RDWR)
+        b |= X86_MMU_PG_RW;
+
+    if(flags & ARCH_VMM_MAP_USER)
+        b |= X86_MMU_PG_U;
+
+    if(flags & ARCH_VMM_MAP_UNCACHED)
+        b |= X86_MMU_PG_CD;
+
+    if(flags & ARCH_VMM_MAP_SHARED)
+        b |= X86_MMU_PG_G;
+
+
+    //* Set Page Type
+    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+        case ARCH_VMM_MAP_TYPE_PAGE:
+            b |= X86_MMU_PG_AP_TP_PAGE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_STACK:
+            b |= X86_MMU_PG_AP_TP_STACK;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_MMAP:
+            b |= X86_MMU_PG_AP_TP_MMAP;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_COW:
+            b |= X86_MMU_PG_AP_TP_COW;
+            break;
+
+    }
+
+
+
+#if defined(__x86_64__)
+
+    //* Set No-Execute Bit
+    if(flags & ARCH_VMM_MAP_NOEXEC)
+        if(boot_cpu_has(X86_FEATURE_NX))
+            b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
+
+
+
+    spinlock_lock(&space->lock);
+
+    for(; s < e; s += X86_MMU_PAGESIZE) {
+
+        x86_page_t* d;
+
+#if defined(__x86_64__)
+
+        /* CR3-L4 */ 
+        {
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 39) & 0x1FF];
+        }
+
+        /* PML4-L3 */
+        {
+            DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PML4-L3 not exist");
+
+            d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
+        }
+
+
+        /* HUGE_1GB */
+        if(!(*d & X86_MMU_PG_PS)) {
+
+            /* PDP-L2 */
+            {
+                DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PDP-L2 not exist");
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
+            }
+
+            /* HUGE_2MB */
+            if(!(*d & X86_MMU_PG_PS)) {
+
+                /* PD-L1 */
+                {
+                    DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PDT-L1 not exist");
+
+                    d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
+                }
+
+            } else
+                pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+
+        } else
+            pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
+
+
+#elif defined(__i386__)
+
+        /* CR3-L2 */
+        {
+            d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 22) & 0x3FF];
+        }
+
+
+        /* HUGE_4MB */
+        if(!(*d & X86_MMU_PG_PS)) {
+
+            /* PD-L1 */
+            {
+                DEBUG_ASSERT((*d & X86_MMU_PG_P) && "PDT-L1 not exist");
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
+            }
+
+        } else
+            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+
+#endif
+
+        /* Page Table */
+        {
+            DEBUG_ASSERT((*d & X86_MMU_PG_P) && "Page unmapped");
+
+
+
+            if(flags & ARCH_VMM_MAP_HUGETLB) {
+
+                b |= X86_MMU_PG_PS;
+
+                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+                    if(boot_cpu_has(X86_FEATURE_PAT))
+                        b |= X86_MMU_PG_PAT;        /* WC */
+
+            } else {
+
+                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+                    if(boot_cpu_has(X86_FEATURE_PAT))
+                        b |= X86_MMU_PT_PAT;        /* WC */
+
+            }
+
+
+            *d = (*d & X86_MMU_ADDRESS_MASK) | b;
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+            //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
+#endif
+
+        }
+
+
+        __asm__ __volatile__ ("invlpg (%0)" :: "r"(s) : "memory");
+        
+    }
+
+    spinlock_unlock(&space->lock);
+
+    return virtaddr;
+
+}
+
+
+
 
 
 

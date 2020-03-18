@@ -9,10 +9,10 @@ LDFLAGS	    ?=
 
 DEFINES     ?=
 INCLUDES    ?= include
-LIBS        ?= c m
+LIBS        ?= c m gcc
 
 SRCDIRS     ?= .
-DESTDIR     ?= $(SYSROOT)/usr/bin
+DESTDIR     ?= $(SYSROOT)/usr/$(shell realpath --relative-base=$(ROOTDIR)/src/apps ..)
 
 
 

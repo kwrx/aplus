@@ -26,9 +26,9 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/memory.h>
-#include <aplus/smp.h>
 #include <aplus/task.h>
 #include <aplus/ipc.h>
 #include <aplus/elf.h>
@@ -38,6 +38,26 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <hal/cpu.h>
+#include <hal/vmm.h>
+#include <hal/timer.h>
+#include <hal/userspace.h>
+
+
+
+static inline uintptr_t __sbrk(uintptr_t incr) {
+
+    uintptr_t brk = sys_brk(0);
+    uintptr_t new = sys_brk(brk + incr);
+
+    if(new == brk && incr)
+         kpanicf("sys_execve(): out of memory!\n");
+
+    return brk;
+
+}
+
 
 
 /***
@@ -57,289 +77,276 @@
 
 SYSCALL(59, execve,
 long sys_execve (const char __user * filename, const char __user ** argv, const char __user ** envp) {
-    return -ENOSYS;
-//     if(unlikely(!filename))
-//         return -EINVAL;
-
-//     if(unlikely(!argv))
-//         return -EINVAL;
-
-//     if(unlikely(!envp))
-//         return -EINVAL;
-
-//     if(unlikely(!ptr_check(filename, R_OK)))
-//         return -EFAULT;
-
-//     if(unlikely(!ptr_check(argv, R_OK)))
-//         return -EFAULT;
-
-//     if(unlikely(!ptr_check(envp, R_OK)))
-//         return -EFAULT;
-
-
-//     int e;
-//     struct stat st;
-//     if((e = sys_newstat(filename, &st)) < 0)
-//         return e;
-
-
-//     if(st.st_uid == current_task->uid && !(st.st_mode & S_IXUSR))
-//         return -EPERM;
-
-//     else if(st.st_gid == current_task->gid && !(st.st_mode & S_IXGRP))
-//         return -EPERM;
     
-//     else if(!(st.st_mode & S_IXOTH))
-//         return -EPERM;
+    
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!argv))
+        return -EINVAL;
+
+    if(unlikely(!envp))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(filename, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(argv, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(!ptr_check(envp, R_OK)))
+        return -EFAULT;
+
+
+    int e;
+
+    struct stat st;
+    if((e = sys_newstat(filename, &st)) < 0)
+        return e;
 
 
 
-//     int fd;
-//     if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
-//         return fd;
+    e = 0;
+
+    if(st.st_mode & S_IXUSR)
+        e = (st.st_uid == current_task->uid);
+
+    else if(st.st_mode & S_IXGRP)
+        e = (st.st_gid == current_task->gid);
+    
+    else if(st.st_mode & S_IXOTH)
+        e = 1;
 
 
-//     Elf_Ehdr head;
-//     if((e = sys_read(fd, &head, sizeof(head))) < 0)
-//         return e;
+    if(!e)
+        return -EPERM;
 
 
-//     if(head.e_ident[0] == '#' &&
-//        head.e_ident[1] == '!')
-//         return -ENOEXEC; /* TODO: Read Scripts */
+
+
+    int fd;
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+        return fd;
+
+
+    Elf_Ehdr head;
+    if((e = sys_read(fd, &head, sizeof(head))) < 0)
+        return e;
+
+
+
+    if(head.e_ident[0] == '#' &&
+       head.e_ident[1] == '!')
+        return -ENOEXEC; // TODO: Read Scripts
+
+
+    if(
+        (head.e_ident[EI_MAG0] != ELFMAG0) ||
+        (head.e_ident[EI_MAG1] != ELFMAG1) ||
+        (head.e_ident[EI_MAG2] != ELFMAG2) ||
+        (head.e_ident[EI_MAG3] != ELFMAG3) ||
+        (head.e_type != ET_EXEC)           ||
+        (head.e_entry == 0)
+    ) return -ENOEXEC;
+
 
 
     
-//     if(
-//         (head.e_ident[EI_MAG0] != ELFMAG0) ||
-//         (head.e_ident[EI_MAG1] != ELFMAG1) ||
-//         (head.e_ident[EI_MAG2] != ELFMAG2) ||
-//         (head.e_ident[EI_MAG3] != ELFMAG3) ||
-//         (head.e_type != ET_EXEC)
-//     ) return -ENOEXEC;
 
 
 
-    
-
-
-//     uintptr_t i_base = ~0L;
-//     uintptr_t i_end = 0L;
-//     size_t size;
-
-
-
-//     #define RXX(a, b, c) {                                                  \
-//         if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
-//             return e;                                                       \
-//                                                                             \
-//         if((e = sys_read(fd, (void*)(a), (size_t)(c))) != (size_t)(c)) {    \
-//             if(e < 0)                                                       \
-//                 return e;                                                   \
-//             else                                                            \
-//                 return -EIO;                                                \
-//         }                                                                   \
-//     }
+    #define RXX(a, b, c) {                                                  \
+        if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
+            return e;                                                       \
+                                                                            \
+        if((e = sys_read(fd, (void*)(a), (size_t)(c))) != (size_t)(c)) {    \
+            if(e < 0)                                                       \
+                return e;                                                   \
+            else                                                            \
+                return -EIO;                                                \
+        }                                                                   \
+    }
 
 
 
-//     __lock(&current_task->lock, {
+    uintptr_t end;
+    uintptr_t flags;
+
+    __lock(&current_task->lock, {
 
 
-//         aspace_free(current_task->aspace);
+        //arch_userspace_release(); // TODO
+
+        current_task->userspace.start = ~0UL;
+        current_task->userspace.end   =  0UL;
 
 
-//         current_task->aspace->start =  0UL;
-//         current_task->aspace->end   = ~0UL;
+        int i;
+        for(i = 0; i < head.e_phnum; i++) {
+
+            Elf_Phdr phdr;
+            RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
 
 
-//         int i;
-//         for(i = 0; i < head.e_phnum; i++) {
+            switch(phdr.p_type) {
 
-//             Elf_Phdr phdr;
-//             RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
+                case PT_LOAD:                    
+                case PT_TLS:
 
-
-//             switch(phdr.p_type) {
-
-//                 case PT_LOAD:
-
-//                     size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
-
-//                     if(phdr.p_vaddr < i_base)
-//                         i_base = phdr.p_vaddr;
-
-//                     if((size + phdr.p_vaddr > i_end))
-//                         i_end = size + phdr.p_vaddr;
+                    end = phdr.p_vaddr + phdr.p_memsz;
+                    end = (end & ~(phdr.p_align - 1)) + phdr.p_align;
 
 
+                    if(phdr.p_vaddr < current_task->userspace.start)
+                        current_task->userspace.start = phdr.p_vaddr;
 
-//                     aspace_add_map (
-//                         current_task->aspace,
-                        
-//                         (phdr.p_flags & PF_X)
-//                             ? ASPACE_TYPE_CODE
-//                             : ASPACE_TYPE_DATA
-//                             ,
-                        
-//                         phdr.p_vaddr, 
-//                         phdr.p_vaddr + size - 1,
-
-//                         //((phdr.p_flags & PF_R) ? ARCH_MAP_USER : 0) |
-//                         //((phdr.p_flags & PF_W) ? ARCH_MAP_RDWR : 0) |  /* FIXME: Add protection */
-//                         //((phdr.p_flags & PF_X) ? 0 : ARCH_MAP_NOEXEC)
-
-//                         ARCH_MAP_USER | ARCH_MAP_RDWR
-//                     );
+                    if(end > current_task->userspace.end)
+                        current_task->userspace.end = end;
 
 
-//                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
-//                     break;
-
-//                 case PT_TLS:
-
-//                     size = (phdr.p_memsz + phdr.p_align - 1) & ~(phdr.p_align - 1);
-
-//                     aspace_add_map ( 
-//                         current_task->aspace, ASPACE_TYPE_TLS, 
-//                         phdr.p_vaddr, 
-//                         phdr.p_vaddr + size, 
-//                         ARCH_MAP_USER | ARCH_MAP_RDWR | ARCH_MAP_NOEXEC
-//                     );
-
-//                     break;
-
-//                 case PT_GNU_EH_FRAME:
+                    flags = 0;
                     
-//                     kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
-//                     break;
-
-//                 case PT_DYNAMIC:
-
-//                     kpanic("execve: FAIL! PT_DYNAMIC not supported");
-//                     break;
-
-//                 default:
-//                     continue;
-
-//             }
-//         }
+                    if(!(phdr.p_flags & PF_X))
+                        flags |= ARCH_VMM_MAP_NOEXEC;
+                    
+                    if( (phdr.p_flags & PF_W))
+                        flags |= ARCH_VMM_MAP_RDWR;
 
 
-//         current_task->aspace->start = (i_base & ~(PAGE_SIZE - 1));
-//         current_task->aspace->end   = (i_end  & ~(PAGE_SIZE - 1)) + PAGE_SIZE;
-//         current_task->exe = current_task->fd[fd].inode;
+                    arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, end - phdr.p_vaddr,
+                                    ARCH_VMM_MAP_RDWR      |
+                                    ARCH_VMM_MAP_USER      |
+                                    ARCH_VMM_MAP_TYPE_PAGE);
 
 
-//         aspace_add_map (
-//             current_task->aspace, ASPACE_TYPE_BRK, 
-//             current_task->aspace->end, 
-//             current_task->aspace->end, 
-//             ARCH_MAP_RDWR | ARCH_MAP_NOEXEC | ARCH_MAP_USER
-//         );
-
-//         current_task->aspace->end = current_task->rlimits[RLIMIT_RSS].rlim_cur;
+                    RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
 
 
-//     });
+                    arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, end - phdr.p_vaddr,
+                                    flags                  |
+                                    ARCH_VMM_MAP_USER      |
+                                    ARCH_VMM_MAP_TYPE_PAGE);
+
+                    break;
 
 
-//     sys_close(fd);
+                case PT_GNU_EH_FRAME:
+                    
+                    kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
+                    break;
+
+                case PT_DYNAMIC:
+
+                    kpanicf("execve: PANIC! PT_DYNAMIC not supported at kernel-level");
+                    break;
+
+                default:
+                    continue;
+
+            }
+        }
+
+        current_task->userspace.end = (current_task->userspace.end & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
+
+    });
+
+
+    DEBUG_ASSERT(current_task->userspace.start);
+    DEBUG_ASSERT(current_task->userspace.end);
+    DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
+
+
+    current_task->exe = (current_task->fd[fd].inode);
+
+    sys_close(fd);
 
 
 
-//     int i;
-//     for(i = 0; i < OPEN_MAX; i++) {
+    int i;
+    for(i = 0; i < OPEN_MAX; i++) {
 
-//         if(!current_task->fd[i].inode)
-//             continue;
+        if(!current_task->fd[i].inode)
+            continue;
 
-//         if(!current_task->fd[i].close_on_exec)
-//             continue;
+        if(!current_task->fd[i].close_on_exec)
+            continue;
 
         
-//         sys_close(i);
+        sys_close(i);
 
-//     }
-
-
-
-// #if defined(DEBUG)
-
-//     for(i = 0; argv[i]; i++)
-//         DEBUG_ASSERT(ptr_check(argv[i], R_OK));
-
-//     for(i = 0; envp[i]; i++)
-//         DEBUG_ASSERT(ptr_check(envp[i], R_OK));
-
-// #endif
+    }
 
 
 
-//     uintptr_t brk = sys_brk(0);
-//     uintptr_t top = sys_brk(brk + current_task->rlimits[RLIMIT_STACK].rlim_cur);
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+
+    for(i = 0; argv[i]; i++)
+        DEBUG_ASSERT(ptr_check(argv[i], R_OK));
+
+    for(i = 0; envp[i]; i++)
+        DEBUG_ASSERT(ptr_check(envp[i], R_OK));
+
+#endif
 
 
-//     brk += sizeof(uintptr_t);
-//     brk += sizeof(uintptr_t);
+    size_t argc;
+    for(argc = 0; argv[argc]; argc++)
+        ;
 
-//     strcat((char*) brk, filename);
-//     strcat((char*) brk, " ");
+    size_t envc;
+    for(envc = 0; envp[envc]; envc++)
+        ;
+    
 
-//     for(i = 0; argv[i]; i++) {
-//         strcat((char*) brk, argv[i]);
-//         strcat((char*) brk, " ");
-//     }
+    __sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur);
+    uintptr_t stack    = __sbrk(0);
 
-//     strcat((char*) brk, "\e$$$ ");
-        
-//     for(i = 0; envp[i]; i++) {
-//         strcat((char*) brk, envp[i]);
-//         strcat((char*) brk, " ");
-//     }
+    __sbrk(4096);
+    uintptr_t sigstack = __sbrk(0);
 
-//     strcat((char*) brk, "\e$$$ ");
+    
 
+    char** argq = (char**) __sbrk(sizeof(char*) * (argc + 1));
+    char** envq = (char**) __sbrk(sizeof(char*) * (envc + 1));
 
-//     uintptr_t tls_start = 0;
-//     uintptr_t tls_end   = 0;
+    for(i = 0; argv[i]; i++) {
+     
+        char* p = (char*) __sbrk(strlen(argv[i]));
+        strcpy(p, argv[i]);
 
-//     address_space_map_t* tls = NULL;
-//     aspace_get_maps(current_task->aspace, &tls, ASPACE_TYPE_TLS, 1);
+        *argq++ = p;
+        *argq   = NULL;
+    }
 
+    for(i = 0; envp[i]; i++) {
+     
+        char* p = (char*) __sbrk(strlen(envp[i]));
+        strcpy(p, envp[i]);
 
-//     if(tls)
-//         tls_start = tls->start,
-//         tls_end   = tls->end;
+        *envq++ = p;
+        *envq   = NULL;
+    
+    }
 
-
-
-//     brk -= sizeof(uintptr_t);
-//     brk -= sizeof(uintptr_t);
-
-//     ((uintptr_t*) brk) [0] = tls_start;
-//     ((uintptr_t*) brk) [1] = tls_end;
-
-
-
-//     /* BRK Layout
-//      * 
-//      * 0-4:     tls_start
-//      * 4-8:     tls_end
-//      * 8-n:     argv
-//      * n-m:     envp
-//      * ...:     auxv  // TODO...
-//      */
+    // TODO: implement AUXV
 
 
-//     DEBUG_ASSERT(current_task->frame.context);
-//     DEBUG_ASSERT(head.e_entry);
+    uintptr_t* args = (uintptr_t*) __sbrk(sizeof(uintptr_t) * 4);
+
+    *args++ = (uintptr_t) argc;
+    *args++ = (uintptr_t) argq;
+    *args++ = (uintptr_t) envq;
+    //*args++ = (uintptr_t) auxv;
 
 
-//     arch_intr_disable();
-//     arch_task_set_context(current_task->frame.context, head.e_entry, brk, top, 0);
 
-//     if(!(current_cpu->flags & CPU_FLAGS_INTERRUPT))
-//         arch_task_return_to_context(current_task->frame.context);
 
+
+    current_task->userspace.stack    = stack;
+    current_task->userspace.sigstack = sigstack;
+
+
+    arch_userspace_enter(head.e_entry, stack, args);
+
+    return -EINVAL;
 });

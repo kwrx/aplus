@@ -402,7 +402,7 @@ void init(const char* args) {
 
     int e;
     if((e = sys_mkdir("/dev", S_IFDIR | 0666)) < 0)
-        kpanicf("dev: could not create /dev directory: errno(%d)\n", -e);
+        kpanicf("dev: could not create /dev directory: errno(%s)\n", strerror(-e));
 
 }
 

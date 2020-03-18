@@ -54,5 +54,48 @@
 
 SYSCALL(12, brk,
 long sys_brk (unsigned long new_brk) {
-    return -ENOSYS;
+    
+    DEBUG_ASSERT(current_task->userspace.start);
+    DEBUG_ASSERT(current_task->userspace.end);
+
+
+    if(new_brk == 0)
+        return current_task->userspace.end;
+
+    if(new_brk < current_task->userspace.start)
+        return current_task->userspace.end;
+
+
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("sys_brk: pid(%d) brk(%p) new(%p)\n", current_task->tid, current_task->userspace.end, new_brk);
+#endif
+
+    // TODO: Use less memory
+
+    if(new_brk & (arch_vmm_getpagesize() - 1))
+        new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
+
+
+
+    if(new_brk > current_task->userspace.end) {
+
+        arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
+                        ARCH_VMM_MAP_RDWR   |
+                        ARCH_VMM_MAP_USER   |
+                        ARCH_VMM_MAP_NOEXEC |
+                        ARCH_VMM_MAP_TYPE_PAGE);
+
+        
+    } else if(new_brk < current_task->userspace.end) {
+
+        arch_vmm_unmap(current_task->address_space, new_brk, current_task->userspace.end - new_brk);
+
+    }
+
+
+    current_task->userspace.end = new_brk;
+    return new_brk;
+
 });

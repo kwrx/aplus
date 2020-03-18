@@ -78,7 +78,25 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
     switch(frame->intno) {
 
-        case 0x20 ... 0xFF:
+        case 0xFF:
+        case 0x20 ... 0xFC:
+            break;
+
+
+        case 0xFE:
+
+#if defined(__x86_64__)
+            frame->ax = syscall_invoke(frame->ax, frame->di, frame->si, frame->dx, frame->r10, frame->r8, frame->r9);
+#elif defined(__i386__)
+            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
+#endif
+
+            break;
+
+
+        case 0xFD:
+
+            schedule(1);
             break;
 
         
@@ -120,22 +138,6 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
             break;
 
-        case 0xFE:
-
-#if defined(__x86_64__)
-            frame->ax = syscall_invoke(frame->ax, frame->di, frame->si, frame->dx, frame->r10, frame->r8, frame->r9);
-#elif defined(__i386__)
-            frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
-#endif
-
-            break;
-
-
-        case 0xFD:
-
-            schedule(1);
-            break;
-
 
         case 0x20:
 
@@ -167,6 +169,9 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
+
+        default:
+            break;
 
     }
 

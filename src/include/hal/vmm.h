@@ -39,6 +39,7 @@ uintptr_t arch_vmm_p2v(uintptr_t, int);
 uintptr_t arch_vmm_v2p(uintptr_t, int);
 uintptr_t arch_vmm_map(vmm_address_space_t*, uintptr_t, uintptr_t, size_t, int);
 uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t);
+uintptr_t arch_vmm_mprotect(vmm_address_space_t*, uintptr_t, size_t, int);
 int arch_vmm_access(vmm_address_space_t*, uintptr_t, int);
 void arch_vmm_clone(vmm_address_space_t*, vmm_address_space_t*);
 

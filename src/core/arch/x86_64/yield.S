@@ -30,24 +30,6 @@
 
 
 
-
-        .text
-        .align 16, 0x90
-        .code64
-
-        .global arch_task_enter_to_context
-        .type arch_task_enter_to_context, @function
-arch_task_enter_to_context:
-
-        movq    %rsi, %rsp
-
-        .extern interrupt_return
-        jmp     interrupt_return
-
-END(arch_task_enter_to_context)
-
-
-
         .text
         .align 16, 0x90
         .code64

@@ -123,7 +123,7 @@ extern long sys_execve (const char __user * filename, const char __user ** argv,
 
 extern long sys_chroot(const char __user * pathname);
 
-
+extern long sys_brk (unsigned long new_brk);
 
 
 #endif
