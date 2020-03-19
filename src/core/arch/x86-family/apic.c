@@ -95,9 +95,9 @@ void apic_enable(void) {
     uint64_t ts, t0;
     
     ts =
-    t0 = arch_timer_getms();
+    t0 = arch_timer_generic_getms();
 
-    while((t0 = arch_timer_getms()) == ts)
+    while((t0 = arch_timer_generic_getms()) == ts)
         ;
 
     
@@ -117,7 +117,7 @@ void apic_enable(void) {
 
     //? 0.010s every interrupt
 
-    while((arch_timer_getms() - t0) < 10)
+    while((arch_timer_generic_getms() - t0) < 10)
         ;
     
 

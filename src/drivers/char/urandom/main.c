@@ -78,7 +78,7 @@ static ssize_t urandom_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(buf);
 
 
-    srand((int) arch_timer_getus());
+    srand((int) arch_timer_generic_getms());
 
     char* bc = (char*) buf;
     size_t i;

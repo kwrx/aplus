@@ -80,6 +80,11 @@ interrupt_return:
         fxrstor64 (%rsp)
         addq    $1024, %rsp
 
+
+        .global interrupt_return_skip_fpu
+        .type interrupt_return_skip_fpu, @function
+interrupt_return_skip_fpu:
+
         # Restore CPU Registers
         popq    %rdi
         popq    %rsi

@@ -202,38 +202,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         b |= X86_MMU_PG_G;
 
 
-    //* Set Page Type
-    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-        case ARCH_VMM_MAP_TYPE_PAGE:
-            b |= X86_MMU_PG_AP_TP_PAGE;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_STACK:
-            b |= X86_MMU_PG_AP_TP_STACK;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_MMAP:
-            b |= X86_MMU_PG_AP_TP_MMAP;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_COW:
-            b |= X86_MMU_PG_AP_TP_COW;
-            break;
-
-    }
-
-
-#if defined(__x86_64__)
-
-    //* Set No-Execute Bit
-    if(flags & ARCH_VMM_MAP_NOEXEC)
-        if(boot_cpu_has(X86_FEATURE_NX))
-            b |= X86_MMU_PT_NX;             /* NX */
-
-#endif
-
-
 
 
     spinlock_lock(&space->lock);
@@ -317,6 +285,36 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             DEBUG_ASSERT(!(*d & X86_MMU_PG_P) && "Page already used, unmap first");
 
 
+            //* Set Page Type
+            switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+                case ARCH_VMM_MAP_TYPE_PAGE:
+                    b |= X86_MMU_PG_AP_TP_PAGE;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_STACK:
+                    b |= X86_MMU_PG_AP_TP_STACK;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_MMAP:
+                    b |= X86_MMU_PG_AP_TP_MMAP;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_COW:
+                    b |= X86_MMU_PG_AP_TP_COW;
+                    break;
+
+            }
+
+
+#if defined(__x86_64__)
+
+            //* Set No-Execute Bit
+            if(flags & ARCH_VMM_MAP_NOEXEC)
+                if(boot_cpu_has(X86_FEATURE_NX))
+                    b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
 
             if(flags & ARCH_VMM_MAP_HUGETLB) {
 
@@ -472,7 +470,7 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            kprintf("arch_vmm_unmap(): virtaddr(%p) physaddr(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, pagesize);
+            //kprintf("arch_vmm_unmap(): virtaddr(%p) physaddr(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, pagesize);
 #endif
 
             *d = X86_MMU_CLEAR;
@@ -557,38 +555,6 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
         b |= X86_MMU_PG_G;
 
 
-    //* Set Page Type
-    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-        case ARCH_VMM_MAP_TYPE_PAGE:
-            b |= X86_MMU_PG_AP_TP_PAGE;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_STACK:
-            b |= X86_MMU_PG_AP_TP_STACK;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_MMAP:
-            b |= X86_MMU_PG_AP_TP_MMAP;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_COW:
-            b |= X86_MMU_PG_AP_TP_COW;
-            break;
-
-    }
-
-
-
-#if defined(__x86_64__)
-
-    //* Set No-Execute Bit
-    if(flags & ARCH_VMM_MAP_NOEXEC)
-        if(boot_cpu_has(X86_FEATURE_NX))
-            b |= X86_MMU_PT_NX;             /* NX */
-
-#endif
-
 
 
     spinlock_lock(&space->lock);
@@ -667,6 +633,36 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
             DEBUG_ASSERT((*d & X86_MMU_PG_P) && "Page unmapped");
 
 
+            //* Set Page Type
+            switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+                case ARCH_VMM_MAP_TYPE_PAGE:
+                    b |= X86_MMU_PG_AP_TP_PAGE;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_STACK:
+                    b |= X86_MMU_PG_AP_TP_STACK;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_MMAP:
+                    b |= X86_MMU_PG_AP_TP_MMAP;
+                    break;
+
+                case ARCH_VMM_MAP_TYPE_COW:
+                    b |= X86_MMU_PG_AP_TP_COW;
+                    break;
+
+            }
+
+
+#if defined(__x86_64__)
+
+            //* Set No-Execute Bit
+            if(flags & ARCH_VMM_MAP_NOEXEC)
+                if(boot_cpu_has(X86_FEATURE_NX))
+                    b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
 
             if(flags & ARCH_VMM_MAP_HUGETLB) {
 
@@ -689,7 +685,7 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
+            //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b);
 #endif
 
         }

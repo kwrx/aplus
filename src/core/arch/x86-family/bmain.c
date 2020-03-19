@@ -265,11 +265,11 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Spawn BSP INIT Process
     arch_task_spawn_init();
 
-    //* Initialize Timer
-    timer_init();
-
     //* Initialize ACPI
     acpi_init();
+
+    //* Initialize Timer
+    timer_init();
 
     //* Initialize APIC
     apic_init();

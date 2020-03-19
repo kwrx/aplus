@@ -24,13 +24,16 @@
  */                                                                     
 
 
-int main(int argc, char** argv, char** envp) {
-    
-    long r10 __asm__("r10") = 4;
-    long r8  __asm__("r8")  = 5;
-    long r9  __asm__("r9")  = 6;
+// int main(int argc, char** argv, char** envp) {
 
-    __asm__ ("syscall" :: "a"(404), "D"(1), "S"(2), "d"(3), "r"(r10), "r"(r8), "r"(r9));
+void _start(void* args) {
 
-    return 0;
+    for(;;); 
+    // long r10 __asm__("r10") = 4;
+    // long r8  __asm__("r8")  = 5;
+    // long r9  __asm__("r9")  = 6;
+
+    // __asm__ ("syscall" :: "a"(404), "D"(1), "S"(2), "d"(3), "r"(r10), "r"(r8), "r"(r9));
+
+    // return 0;
 }

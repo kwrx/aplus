@@ -38,12 +38,14 @@
         .type arch_userspace_enter, @function
 arch_userspace_enter:
 
-        pushq   $0
-        pushq   $USER_DS
+        movq    %cr3, %rax
+        movq    %rax, %cr3
+
+        pushq   $USER_DS | 3
         pushq   %rsi
 
         pushq   $0x200
-        pushq   $USER_CS
+        pushq   $USER_CS | 3
         pushq   %rdi
 
         pushq   $0
@@ -66,12 +68,8 @@ arch_userspace_enter:
         pushq   $0
         pushq   %rdx
 
-        # Set FPU Registers
-        subq    $1024, %rsp
-        fxsave64 (%rsp)
-
-        .extern interrupt_return
-        jmp     interrupt_return
+        .extern interrupt_return_skip_fpu
+        jmp     interrupt_return_skip_fpu
 
 
 END(arch_userspace_enter)

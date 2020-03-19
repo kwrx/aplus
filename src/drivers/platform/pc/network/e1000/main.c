@@ -298,7 +298,7 @@ static int e1000_startinput(void* internals) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("e1000: INFO! [%d] received %d bytes from %d\n", arch_timer_getms(), size, dev->rx_cur);
+    kprintf("e1000: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rx_cur);
 #endif
 
 

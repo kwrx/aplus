@@ -3,7 +3,7 @@
 
 ## Architecture
 
-| Feature       | x86_64 | i686    | aarch64 |
+| Features      | x86_64 | i686    | aarch64 |
 |---------------|--------|---------|---------|
 | Startup       | yes    | no      | no      |
 | Debug         | yes    | yes     | no      |
@@ -11,17 +11,22 @@
 | CPU           | yes    | yes     | no      |
 | Paging        | yes    | yes     | no      |
 | Interrupts    | yes    | no      | no      |
-| APIC          | yes    | yes     |         |
-| IO APIC       | yes    | yes     |         |
 | Tasking       | yes    | no      | no      |
 | Fork          | no     | no      | no      |
 | Timer         | yes    | yes     | no      |
-| Random Gen    | no[^2] | no[^2]  | no      |
+| Random        | no[^2] | no[^2]  | no      |
 | ACPI          | yes    | yes     | no      |
 | Multiprocessing| yes   | no      | no      |
 | Syscalls      | yes[^3]| no      | no      |
 | Reboot        | yes    | yes     | no      |
 | Power off     | no     | no      | no      |
+| APIC          | yes    | yes     |         |
+| I/O APIC      | yes    | yes     |         |
+| HPET          | yes    | yes     |         |
+| APIC TIMER    | yes    | yes     |         |
+| TSC           | yes    | yes     |         |
+| SYSCALL/SYSRET| yes    | no      |         |
+| RDRAND        | yes    | yes     |         |
 
 [^1]: Multiboot 2.0 Specification<br>
 [^2]: RDRAND support<br>
@@ -29,6 +34,13 @@
 
 
 ------------------------------------------
+
+## x86_64/i686
+| Feature       | x86_64 | i686    |
+
+
+
+
 ## Kernel
 
 - [x] Physical Memory Manager

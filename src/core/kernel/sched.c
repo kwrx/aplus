@@ -83,13 +83,13 @@ void schedule(int yield) {
 
 
 #if   CLOCKS_PER_SEC == 1000
-        uint64_t elapsed = arch_timer_getms();
+        uint64_t elapsed = arch_timer_percpu_getms();
 #elif CLOCKS_PER_SEC == 1000000
-        uint64_t elapsed = arch_timer_getus();
+        uint64_t elapsed = arch_timer_percpu_getus();
 #elif CLOCKS_PER_SEC == 1000000000
-        uint64_t elapsed = arch_timer_getns();
+        uint64_t elapsed = arch_timer_percpu_getns();
 #else
-        uint64_t elapsed = arch_timer_getns() / (1000000000 / CLOCKS_PER_SEC)
+        uint64_t elapsed = arch_timer_percpu_getns() / (1000000000 / CLOCKS_PER_SEC)
 #endif
 
 

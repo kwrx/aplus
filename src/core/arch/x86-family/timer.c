@@ -43,73 +43,52 @@
 #include <arch/x86/apic.h>
 
 
-#define LOOP_SANITY_CHECK       32
+
+
+#define LOOP_SANITY_CHECK               32
+
+
+#define HPET_TICK                       1000000000000000
+
+#define HPET_GENERAL_GCID               hpet_address + 0x00
+#define HPET_GENERAL_CR                 hpet_address + 0x10
+#define HPET_GENERAL_ISR                hpet_address + 0x20
+#define HPET_GENERAL_COUNTER            hpet_address + 0xF0
+
+#define HPET_TIMER_CCR(i)               hpet_address + 0x100 + (0x20 * i)
+#define HPET_TIMER_CVR(i)               hpet_address + 0x108 + (0x20 * i)
+#define HPET_TIMER_FSB(i)               hpet_address + 0x110 + (0x20 * i)
 
 
 
-spinlock_t delay_lock;
-spinlock_t rtc_lock;
 
-uint64_t clocks_per_ms;
+
+static spinlock_t delay_lock;
+static spinlock_t rtc_lock;
+
+static uint64_t tsc_frequency;
+static uint64_t hpet_frequency;
+static uintptr_t hpet_address;
+
+
+
 
 
 void arch_timer_delay(uint64_t us) {
     
     DEBUG_ASSERT(us > 0);
-    DEBUG_ASSERT(us < 1000000);
-    DEBUG_ASSERT(clocks_per_ms);
+    DEBUG_ASSERT(us < 100000000);   // 10sec max
 
 
     __lock(&delay_lock, {
 
-#if defined(CONFIG_X86_HAVE_TSC_DELAY)
+        uint64_t t0 = arch_timer_generic_getus();
 
-        uint64_t t0 = arch_timer_getus();
-
-        while(arch_timer_getus() < (t0 + us))
+        while(arch_timer_generic_getus() < (t0 + us))
             __builtin_ia32_pause();
-
-#else
-
-        uint32_t sd = 1193180 / (1000000 / us);
-        
-        outb(0x61, inb(0x61) & ~2);
-        outb(0x43, 0x80 | 0x30);
-        outb(0x42, sd & 0xFF);
-        outb(0x42, (sd >> 8) & 0xFF);
-        
-        uint8_t cb = inb(0x61);
-        outb(0x61, cb & ~1);
-        outb(0x61, cb | 1);
-
-        while(!(inb(0x61) & 0x20))
-            ;
-
-#endif
             
     });
 
-}
-
-
-uint64_t arch_timer_getticks(void) {
-    return x86_rdtsc();
-}
-
-uint64_t arch_timer_getns(void) {
-    return x86_rdtsc() / (clocks_per_ms / 1000000);
-}
-
-uint64_t arch_timer_getus(void) {
-    return x86_rdtsc() / (clocks_per_ms / 1000);
-}
-
-uint64_t arch_timer_getms(void) {
-    return x86_rdtsc() / (clocks_per_ms);
-}
-
-uint64_t arch_timer_getres(void) {
-    return clocks_per_ms * 1000;
 }
 
 
@@ -163,48 +142,210 @@ uint64_t arch_timer_gettime(void) {
 
 
 
+uint64_t arch_timer_percpu_getticks(void) {
+    return x86_rdtsc();
+}
+
+uint64_t arch_timer_percpu_getns(void) {
+    return x86_rdtsc() * 1000000 / tsc_frequency;
+}
+
+uint64_t arch_timer_percpu_getus(void) {
+    return x86_rdtsc() * 1000 / tsc_frequency;
+}
+
+uint64_t arch_timer_percpu_getms(void) {
+    return x86_rdtsc() / tsc_frequency;
+}
+
+uint64_t arch_timer_percpu_getres(void) {
+    return tsc_frequency * 1000;
+}
+
+
+
+uint64_t arch_timer_generic_getticks(void) {
+    return mmio_r64(HPET_GENERAL_COUNTER);
+}
+
+uint64_t arch_timer_generic_getns(void) {
+    return mmio_r64(HPET_GENERAL_COUNTER) * 1000000000 / hpet_frequency;
+}
+
+uint64_t arch_timer_generic_getus(void) {
+    return mmio_r64(HPET_GENERAL_COUNTER) * 1000000 / hpet_frequency;
+}
+
+uint64_t arch_timer_generic_getms(void) {
+    return mmio_r64(HPET_GENERAL_COUNTER) * 1000 / hpet_frequency;
+}
+
+uint64_t arch_timer_generic_getres(void) {
+    return hpet_frequency;
+}
+
+
+
 void timer_init(void) {
 
     spinlock_init(&delay_lock);
     spinlock_init(&rtc_lock);
 
-    uint64_t d, s, e;
+
+
+    acpi_sdt_t* sdt;
+    if(acpi_find(&sdt, "HPET") != 0) {
+
+        kpanicf("x86-timer: PANIC! HPET not found in ACPI tables, required!\n");
 
 
 
-    clocks_per_ms = 0ULL;
+        // *
+        // * PIT Fallback (Disabled)
+        // *
 
-    for(int j = 0; j < LOOP_SANITY_CHECK; j++) {
+        // // uint64_t d, s, e;
+
+
+        // // tsc_frequency = 0ULL;
+
+        // // for(int j = 0; j < LOOP_SANITY_CHECK; j++) {
+
+
+        // //     d = 1193180 / 1000;
+                
+        // //     outb(0x43, (0x80 | 0x30));
+        // //     outb(0x42, (d & 0xFF));
+        // //     outb(0x42, (d >> 8) & 0xFF);
+
+
+        // //     s = x86_rdtsc();
+
+        // //         while(!(inb(0x61) & 0x20))
+        // //             ;
+
+        // //     e = x86_rdtsc();
         
-        d = 1193180 / 1000;
+        // //     tsc_frequency += (e - s);
+
+        // // }
+
+        // // tsc_frequency /= LOOP_SANITY_CHECK;
+
+
+
+
+    } else {
+
+        acpi_hpet_t* hpet;
+
+        if(acpi_is_extended())
+            hpet = (acpi_hpet_t*) &sdt->xtables;
+        else
+            hpet = (acpi_hpet_t*) &sdt->tables;
+
+        DEBUG_ASSERT(hpet);
+        DEBUG_ASSERT(hpet->address.type == 0);
+        DEBUG_ASSERT(hpet->address.address != 0);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+        kprintf("hpet: rev(%d) count(%d) counter(%d) nr(%d) mintick(%d) address(%p)\n",
+            hpet->hardware_rev_id,
+            hpet->comparator_count,
+            hpet->counter_size,
+            hpet->hpet_number,
+            hpet->minimum_tick,
+            hpet->address.address
+        );
+#endif
+
+
+        arch_vmm_map (
+            &core->bsp.address_space,
+            hpet->address.address,
+            hpet->address.address,
+            PML1_PAGESIZE,
             
-        outb(0x43, (0x80 | 0x30));
-        outb(0x42, (d & 0xFF));
-        outb(0x42, (d >> 8) & 0xFF);
-            
+            ARCH_VMM_MAP_RDWR       |
+            ARCH_VMM_MAP_UNCACHED   |
+            ARCH_VMM_MAP_NOEXEC     |
+            ARCH_VMM_MAP_FIXED
+        );
 
-        s = x86_rdtsc();
 
-            while(!(inb(0x61) & 0x20))
-                ;
+        hpet_address = hpet->address.address;
 
-        e = x86_rdtsc();
-    
 
-        clocks_per_ms += (e - s);
+        uint16_t timers = (mmio_r64(HPET_GENERAL_GCID) >>  7) & 0xF;
+        uint64_t period = (mmio_r64(HPET_GENERAL_GCID) >> 32) & 0xFFFFFFFF;
+        uint64_t freq   = (HPET_TICK / period);
+
+
+        DEBUG_ASSERT(period);
+        DEBUG_ASSERT(freq);
+        DEBUG_ASSERT(timers);
+        DEBUG_ASSERT(timers < 32);
+
+
+        hpet_frequency = freq;
+
+
+        // uint16_t i;
+        // for(i = 0; i < timers - 1; i++)
+        //     mmio_w64(mmio_w64()) // TODO: Initialize HPET Timers
+
+
+        mmio_w64(HPET_GENERAL_ISR, mmio_r64(HPET_GENERAL_ISR) & 0xFFFFFFFF00000000);
+        mmio_w64(HPET_GENERAL_CR, mmio_r64(HPET_GENERAL_CR) | 1);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+        kprintf("hpet: started! mHZ(%d) period(%d) timers(%d)\n", freq / 1000000, period, timers);
+#endif
+
+
+
+
+        uint64_t d, s, e;
+
+
+        tsc_frequency = 0ULL;
+
+        for(int j = 0; j < LOOP_SANITY_CHECK; j++) {
+
+            d = mmio_r64(HPET_GENERAL_COUNTER) + (freq / 1000);
+
+
+            s = x86_rdtsc();
+
+                while(mmio_r64(HPET_GENERAL_COUNTER) < d)
+                    ;
+
+            e = x86_rdtsc();
+
+
+            tsc_frequency += (e - s);
+
+        }
+
+        tsc_frequency /= LOOP_SANITY_CHECK;
+
 
     }
 
-    clocks_per_ms /= LOOP_SANITY_CHECK;
 
 
 
-
-    DEBUG_ASSERT(clocks_per_ms);
+    DEBUG_ASSERT(tsc_frequency);
+    DEBUG_ASSERT(hpet_frequency);
+    DEBUG_ASSERT(hpet_address);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-timer: now(%d) resolution(%d) mHZ(%d)\n", arch_timer_gettime(), arch_timer_getres(), arch_timer_getres() / 1000000ULL);
+    kprintf("x86-timer: now(%d) percpu[mHZ(%d)] generic[mHZ(%d)]\n", arch_timer_gettime(),
+                                                                     arch_timer_percpu_getres()  / 1000000ULL,
+                                                                     arch_timer_generic_getres() / 1000000ULL);
 #endif
 
 }

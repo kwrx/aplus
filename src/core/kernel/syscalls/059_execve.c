@@ -333,12 +333,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     uintptr_t* args = (uintptr_t*) __sbrk(sizeof(uintptr_t) * 4);
 
-    *args++ = (uintptr_t) argc;
-    *args++ = (uintptr_t) argq;
-    *args++ = (uintptr_t) envq;
+    args[0] = (uintptr_t) argc;
+    args[1] = (uintptr_t) argq;
+    args[2] = (uintptr_t) envq;
     //*args++ = (uintptr_t) auxv;
-
-
 
 
 

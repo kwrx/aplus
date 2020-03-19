@@ -141,7 +141,6 @@ multiboot_header_end:
         .quad 0x0000000000000000    //?
         .quad 0x0080F20000000000    //? 0x2B User Data
         .quad 0x00A0FA0000000000    //? 0x33 User Code
-
       
       .rept KERNEL_TSS_MAX
         .quad 0x0000E90000000068    //? 0x38 + (n * 16), where n is a cpu id

@@ -92,7 +92,7 @@ void kmain() {
                                               __TIMESTAMP__);
 
     kprintf("core: boot completed in %d ms, %d KiB of memory used\n", 
-            arch_timer_getms(), 
+            arch_timer_percpu_getms(), 
             pmm_get_used_memory() >> 10
     );
 

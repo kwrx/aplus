@@ -17,6 +17,7 @@
 
 
 typedef struct {
+
     char magic[8];
     uint8_t cksum;
     char id[6];
@@ -28,9 +29,11 @@ typedef struct {
     uint64_t xaddress;
     uint8_t xcksum;
     uint8_t padding[3];
+
 } __packed acpi_rsdp_t;
 
 typedef struct {
+
     char magic[4];
     uint32_t length;
     uint8_t revision;
@@ -45,18 +48,22 @@ typedef struct {
         uint32_t tables[0];
         uint64_t xtables[0];
     };
+
 } __packed acpi_sdt_t;
 
 
 typedef struct {
+
     uint8_t type;
     uint8_t bit_width;
     uint8_t bit_offset;
     uint8_t size;
     uint64_t address;
+
 } __packed acpi_generic_address_t;
 
 typedef struct {
+
     uint32_t fwctrl;
     uint32_t dsdt;
     uint8_t reserved;
@@ -112,14 +119,35 @@ typedef struct {
     acpi_generic_address_t x_pm_timer_block;
     acpi_generic_address_t x_gpe0_block;
     acpi_generic_address_t x_gpe1_block;
+
 } __packed acpi_fadt_t;
 
 
 typedef struct {
+
     uint32_t lapic_address;
     uint32_t flags;
     uint8_t entries[0];
+
 } __packed acpi_madt_t;
+
+
+typedef struct {
+
+    uint8_t hardware_rev_id;
+    uint8_t comparator_count:5;
+    uint8_t counter_size:1;
+    uint8_t reserved:1;
+    uint8_t legacy_replacement:1;
+    uint16_t pci_vendor_id;
+    
+    acpi_generic_address_t address;
+
+    uint8_t hpet_number;
+    uint16_t minimum_tick;
+    uint8_t page_protection;
+
+} __packed acpi_hpet_t;
 
 
 

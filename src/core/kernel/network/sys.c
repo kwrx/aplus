@@ -138,21 +138,21 @@ u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t __timeout) {
     
     else {
 
-        uint64_t t0 = arch_timer_getms();
+        uint64_t t0 = arch_timer_generic_getms();
         t0 += __timeout;
 
-        while(!sem_trywait(&(*s)->sem) && t0 > arch_timer_getms())
+        while(!sem_trywait(&(*s)->sem) && t0 > arch_timer_generic_getms())
 #if defined(__i386__) || defined(__x86_64__)
             __builtin_ia32_pause()
 #endif
             ;
 
 
-        if(t0 <= arch_timer_getms())
+        if(t0 <= arch_timer_generic_getms())
             return SYS_ARCH_TIMEOUT;
 
 
-        return t0 - arch_timer_getms();
+        return t0 - arch_timer_generic_getms();
     }
 
     
@@ -253,21 +253,21 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
     DEBUG_ASSERT(*mbox);
 
 
-    uint64_t t0 = arch_timer_getms();
+    uint64_t t0 = arch_timer_generic_getms();
 
 
     if(__timeout) {
 
         t0 += __timeout;
 
-        while(((*mbox)->count == 0) && t0 > arch_timer_getms())
+        while(((*mbox)->count == 0) && t0 > arch_timer_generic_getms())
 #if defined(__i386__) || defined(__x86_64__)
             __builtin_ia32_pause()
 #endif
             ;
 
 
-        if(t0 <= arch_timer_getms())
+        if(t0 <= arch_timer_generic_getms())
             return SYS_ARCH_TIMEOUT;
 
     }
@@ -292,7 +292,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
     if(__timeout == 0)
         return 1;
 
-    return (u32_t) (t0 - arch_timer_getms());
+    return (u32_t) (t0 - arch_timer_generic_getms());
 
 }
 
@@ -340,6 +340,6 @@ void sys_arch_unprotect(sys_prot_t pval) {
 }
 
 u32_t sys_now() {
-    return arch_timer_getms();
+    return arch_timer_generic_getms();
 }
 

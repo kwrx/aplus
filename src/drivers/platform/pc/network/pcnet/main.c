@@ -211,7 +211,7 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_getms(), len, dev->txid);
+    kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_generic_getms(), len, dev->txid);
 #endif
 
 
@@ -231,7 +231,7 @@ static int pcnet_startinput(void* internals) {
     uint16_t size = *(uint16_t*) (arch_vmm_p2v(dev->rxdes, ARCH_VMM_AREA_HEAP) + (dev->rxid * PCNET_DE_SIZE + 8));
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_getms(), size, dev->rxid);
+    kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rxid);
 #endif
 
 

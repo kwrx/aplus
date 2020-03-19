@@ -58,4 +58,4 @@ fi
 #sudo trace-cmd report > trace.log
 #rm -f trace.dat
 
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
+qemu-system-$arch -d int -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
