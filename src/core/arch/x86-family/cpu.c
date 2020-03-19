@@ -462,7 +462,7 @@ void arch_cpu_init(int index) {
 
         extern void x86_syscall_handler();
 
-        x86_wrmsr(X86_MSR_STAR, ((uint64_t) KERNEL_CS << 32ULL) | ((uint64_t) ((USER_CS - 8) | 3) << 48ULL));
+        x86_wrmsr(X86_MSR_STAR, ((uint64_t) KERNEL_CS << 32ULL) | ((uint64_t) ((USER_CS - 16) | 3) << 48ULL));
         x86_wrmsr(X86_MSR_LSTAR, (uint64_t) &x86_syscall_handler);
         x86_wrmsr(X86_MSR_FMASK, (uint64_t) 0x200ULL);
 

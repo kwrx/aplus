@@ -67,6 +67,24 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     core->mmap.count += 1;
 
 
+    //* ISA Memory Hole 15-16MB // FIXME: Actually 1-16MB
+    core->mmap.ptr[core->mmap.count].address = 0x00100000;
+    core->mmap.ptr[core->mmap.count].length  = 0x00F00000;
+    core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
+
+    core->mmap.count += 1;
+
+
+    //* PCI Devices Memory Area
+    core->mmap.ptr[core->mmap.count].address = 0xC0000000;
+    core->mmap.ptr[core->mmap.count].length  = 0x40000000;
+    core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
+
+    core->mmap.count += 1;
+
+
+
+
 
     //* Initialize Bootstrap CPU
     arch_cpu_init(SMP_CPU_BOOTSTRAP_ID);

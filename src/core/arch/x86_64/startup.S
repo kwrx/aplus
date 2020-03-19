@@ -137,13 +137,11 @@ multiboot_header_end:
         .quad 0x0000000000000000    //?
         .quad 0x00A09A0000000000    //? 0x08 Kernel Code
         .quad 0x0080920000000000    //? 0x10 Kernel Data
-        .quad 0x0000000000000000    //?
-        .quad 0x0000000000000000    //?
-        .quad 0x0080F20000000000    //? 0x2B User Data
-        .quad 0x00A0FA0000000000    //? 0x33 User Code
-      
+        .quad 0x0080F20000000000    //? 0x1B User Data
+        .quad 0x00A0FA0000000000    //? 0x23 User Code
+        
       .rept KERNEL_TSS_MAX
-        .quad 0x0000E90000000068    //? 0x38 + (n * 16), where n is a cpu id
+        .quad 0x0000E90000000068    //? 0x28 + (n * 16), where n is a cpu id
         .quad 0x0000000000000000    //? TSS 64 (Available)
       .endr
 

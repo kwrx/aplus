@@ -41,6 +41,12 @@ arch_userspace_enter:
         movq    %cr3, %rax
         movq    %rax, %cr3
 
+        // movq    $USER_DS | 3, %rax
+        // movq    %rax, %ds
+        // movq    %rax, %es
+        // movq    %rax, %fs
+        // movq    %rax, %gs
+
         pushq   $USER_DS | 3
         pushq   %rsi
 
@@ -70,6 +76,5 @@ arch_userspace_enter:
 
         .extern interrupt_return_skip_fpu
         jmp     interrupt_return_skip_fpu
-
 
 END(arch_userspace_enter)

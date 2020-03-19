@@ -247,7 +247,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                     DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 2Mib Page");
 
                     if(!(*d & X86_MMU_PG_P))
-                        *d = alloc_page(X86_MMU_PAGESIZE, 1) | b;
+                        *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_P;
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }

@@ -4,10 +4,10 @@
 
 #define KERNEL_CS                   0x08
 #define KERNEL_DS                   0x10
-#define KERNEL_TSS                  0x38
+#define KERNEL_TSS                  0x28
 
-#define USER_CS                     0x30
-#define USER_DS                     0x28
+#define USER_CS                     0x20
+#define USER_DS                     0x18
 
 #define KERNEL_TSS_MAX              256
 
