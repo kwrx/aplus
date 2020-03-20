@@ -1,6 +1,7 @@
 
 # Development Roadmap
 
+// TODO: Update TODO.md
 ## Architecture
 
 | Features      | x86_64 | i686    | aarch64 |
@@ -9,15 +10,15 @@
 | Debug         | yes    | yes     | no      |
 | Multiboot     | yes[^1]| yes[^1] | no      |
 | CPU           | yes    | yes     | no      |
-| Paging        | yes    | yes     | no      |
+| Paging        | yes[^2]| yes[^2] | no      |
 | Interrupts    | yes    | no      | no      |
 | Tasking       | yes    | no      | no      |
-| Fork          | no     | no      | no      |
 | Timer         | yes    | yes     | no      |
-| Random        | no[^2] | no[^2]  | no      |
+| Fork          | no     | no      | no      |
+| Random        | no[^3] | no[^3]  | no      |
 | ACPI          | yes    | yes     | no      |
 | Multiprocessing| yes   | no      | no      |
-| Syscalls      | yes[^3]| no      | no      |
+| Syscalls      | yes[^4]| no      | no      |
 | Reboot        | yes    | yes     | no      |
 | Power off     | no     | no      | no      |
 | APIC          | yes    | yes     |         |
@@ -26,11 +27,12 @@
 | APIC TIMER    | yes    | yes     |         |
 | TSC           | yes    | yes     |         |
 | SYSCALL/SYSRET| yes    | no      |         |
-| RDRAND        | yes    | yes     |         |
+| RDRAND        | no     | no      |         |
 
 [^1]: Multiboot 2.0 Specification<br>
-[^2]: RDRAND support<br>
-[^3]: Interrupt and SYSCALL/SYSRET<br>
+[^2]: On-demand paging provided<br>
+[^3]: RDRAND support<br>
+[^4]: Interrupt and SYSCALL/SYSRET<br>
 
 
 ------------------------------------------

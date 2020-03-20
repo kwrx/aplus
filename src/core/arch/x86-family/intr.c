@@ -36,6 +36,7 @@
 #include <hal/vmm.h>
 
 #include <arch/x86/cpu.h>
+#include <arch/x86/vmm.h>
 #include <arch/x86/intr.h>
 #include <arch/x86/apic.h>
 
@@ -108,9 +109,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x0E:
 
-            // TODO: Handle Page Fault (Copy on Write, Swap, ecc...)
-
-            kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, frame->user_sp, x86_get_cr2());
+            pagefault_handle(frame);
             break;
 
         default:

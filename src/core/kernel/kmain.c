@@ -32,6 +32,7 @@
 #include <aplus/network.h>
 
 #include <hal/cpu.h>
+#include <hal/vmm.h>
 #include <hal/timer.h>
 #include <hal/reboot.h>
 
@@ -70,7 +71,10 @@ void kmain() {
 
     __init(syscall, ());
     __init(vfs,     ());
+
+#if defined(CONFIG_HAVE_NETWORK)
     __init(network, ());
+#endif
 
 
 
@@ -95,7 +99,6 @@ void kmain() {
             arch_timer_percpu_getms(), 
             pmm_get_used_memory() >> 10
     );
-
 
 
 

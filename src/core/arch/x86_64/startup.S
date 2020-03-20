@@ -292,10 +292,12 @@ _start:
         movl    $V2P(startup_pml4), %edi
         movl    $V2P(startup_pml3_low_area), %esi
         btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
         movl    %esi, (%edi)
 
         movl    $V2P(startup_pml3_high_area), %esi
         btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
         movl    %esi, (511 * 8)(%edi)
 
         movl    $V2P(startup_pml3_heap_area), %esi
@@ -303,6 +305,7 @@ _start:
         movl    $((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 39), %ecx
     .L0:
         btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
         movl    %esi, (%edi)
         addl    $8,   %edi
         addl    $4096, %esi
@@ -319,13 +322,14 @@ _start:
 
         movl    $V2P(startup_pml2_stack_area), %esi
         btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
         movl    %esi, (511 * 8)(%edi)
 
         # PML2
         movl    $V2P(startup_pml2_stack_area), %edi
         movl    $V2P(startup_stack), %esi
         orl     $0x083, %esi                            // 2MiB, R/W, Present
-        orl     $0x400, %esi                            // X86_MMU_PG_AP_TP_STACK
+        orl     $0x400, %esi                            // X86_MMU_PG_AP_TP_UNIQUE
         movl    %esi, (%edi)
         
 
@@ -347,6 +351,7 @@ _start:
 
         # Enable Paging
         movl    %cr0, %eax
+        btsl    $16,  %eax      # WP
         btsl    $31,  %eax      # PG
         btsl    $0,   %eax      # PE
         btrl    $29,  %eax      # ~NW

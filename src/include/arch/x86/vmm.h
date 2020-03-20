@@ -5,6 +5,7 @@
 #include <sys/cdefs.h>
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <arch/x86/intr.h>
 
 
 
@@ -25,7 +26,7 @@
 #define X86_MMU_PG_AP_PFB           (1ULL << 9)
 
 #define X86_MMU_PG_AP_TP_PAGE       (0ULL << 10)
-#define X86_MMU_PG_AP_TP_STACK      (1ULL << 10)
+#define X86_MMU_PG_AP_TP_UNIQUE     (1ULL << 10)
 #define X86_MMU_PG_AP_TP_MMAP       (2ULL << 10)
 #define X86_MMU_PG_AP_TP_COW        (3ULL << 10)
 
@@ -59,6 +60,9 @@ typedef uint32_t x86_page_t;
 #endif
 
 __BEGIN_DECLS
+
+void pagefault_handle(interrupt_frame_t*);
+
 __END_DECLS
 
 #endif

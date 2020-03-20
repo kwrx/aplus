@@ -93,6 +93,7 @@ ap32_start:
 
         # Enable Paging
         movl    %cr0, %eax
+        btsl    $16,  %eax      # WP
         btsl    $31,  %eax      # PG
         btsl    $0,   %eax      # PE
         btrl    $29,  %eax      # ~NW

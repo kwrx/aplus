@@ -396,8 +396,6 @@ void arch_cpu_init(int index) {
 
 
 
-
-
     //! Enable TSC Timer
     if(cpu_has(index, X86_FEATURE_TSC))
         x86_set_cr4(x86_get_cr4() | X86_CR4_TSD_MASK);
@@ -520,9 +518,9 @@ void arch_cpu_startup(int index) {
 
     //* Map AP Stack Area
     arch_vmm_map (&core->cpu.cores[index].address_space, KERNEL_STACK_AREA, -1, X86_MMU_HUGE_2MB_PAGESIZE,
-        ARCH_VMM_MAP_HUGETLB    | 
-        ARCH_VMM_MAP_HUGE_2MB   |
-        ARCH_VMM_MAP_TYPE_STACK |
+        ARCH_VMM_MAP_HUGETLB     | 
+        ARCH_VMM_MAP_HUGE_2MB    |
+        ARCH_VMM_MAP_TYPE_UNIQUE |
         ARCH_VMM_MAP_RDWR);
 
 
