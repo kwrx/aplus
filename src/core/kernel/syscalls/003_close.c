@@ -55,20 +55,17 @@
 SYSCALL(3, close,
 long sys_close (unsigned int fd) {
 
-    if(unlikely(fd < 0))
-        return -EBADF;
-
     if(unlikely(fd > OPEN_MAX))
         return -EBADF;
 
-    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
 
 
     __lock(&current_task->lock, {
         
-        vfs_close(current_task->fd[fd].inode);
+        fd_remove(current_task->fd[fd].ref, 1);
 
-        current_task->fd[fd].inode = NULL;
+        current_task->fd[fd].ref = NULL;
         current_task->fd[fd].flags = 0;
     
     });

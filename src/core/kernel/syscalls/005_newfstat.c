@@ -68,16 +68,16 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
     if(!ptr_check(statbuf, R_OK | W_OK))
         return -EFAULT;
 
-    if(unlikely(!current_task->fd[fd].inode))
+    if(unlikely(!current_task->fd[fd].ref))
         return -EBADF;
 
 
 
     int e;
 
-    __lock(&current_task->fd[fd].lock, {
+    __lock(&current_task->fd[fd].ref->lock, {
 
-        e = vfs_getattr(current_task->fd[fd].inode, statbuf);
+        e = vfs_getattr(current_task->fd[fd].ref->inode, statbuf);
 
     });
 

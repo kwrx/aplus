@@ -253,9 +253,10 @@ void device_mkdev(device_t* device, mode_t mode) {
         kpanicf("device::create: failed, device already exists: %s\n", buf);
 
     
-    inode_t* i = current_task->fd[fd].inode;
+    DEBUG_ASSERT(current_task->fd[fd].ref);
+    DEBUG_ASSERT(current_task->fd[fd].ref->inode);
 
-    DEBUG_ASSERT(i);
+    inode_t* i = current_task->fd[fd].ref->inode;
 
 
     if(unlikely(sys_close(fd) < 0))

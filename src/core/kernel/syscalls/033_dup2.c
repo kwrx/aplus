@@ -49,6 +49,42 @@
  */
 
 SYSCALL(33, dup2,
-long sys_dup2 (unsigned int oldfd, unsigned int newfd) {
-    return -ENOSYS;
+long sys_dup2 (unsigned int fd, unsigned int newfd) {
+
+    if(unlikely(fd > OPEN_MAX))    // TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(newfd > OPEN_MAX)) // TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].ref))
+        return -EBADF;
+
+
+    if(fd == newfd)
+        return newfd;
+
+
+    if(current_task->fd[newfd].ref)
+        sys_close(newfd);
+
+    DEBUG_ASSERT(!current_task->fd[newfd].ref);
+
+
+    __lock(&current_task->lock, {
+
+        __lock(&current_task->fd[fd].ref->lock, {
+        
+            current_task->fd[newfd].ref = current_task->fd[fd].ref;
+            current_task->fd[newfd].flags = current_task->fd[fd].flags;
+
+            current_task->fd[fd].ref->refcount++;
+
+        });
+
+    });
+    
+
+    return newfd;
+
 });

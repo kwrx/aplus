@@ -214,6 +214,9 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
     // * Prepare FLAGS for the Page Table
 
+    if(flags & ARCH_VMM_MAP_DISABLED)
+        b &= ~X86_MMU_PG_P;
+
     if(flags & ARCH_VMM_MAP_RDWR)
         b |= X86_MMU_PG_RW;
 
@@ -581,6 +584,10 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
     uint64_t b = X86_MMU_PG_P;
 
+
+    if(flags & ARCH_VMM_MAP_DISABLED)
+        b &= ~X86_MMU_PG_P;
+
     if(flags & ARCH_VMM_MAP_RDWR)
         b |= X86_MMU_PG_RW;
 
@@ -592,6 +599,55 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
     if(flags & ARCH_VMM_MAP_SHARED)
         b |= X86_MMU_PG_G;
+
+
+
+    //* Set Page Type
+    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+        case ARCH_VMM_MAP_TYPE_PAGE:
+            b |= X86_MMU_PG_AP_TP_PAGE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_UNIQUE:
+            b |= X86_MMU_PG_AP_TP_UNIQUE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_MMAP:
+            b |= X86_MMU_PG_AP_TP_MMAP;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_COW:
+            b |= X86_MMU_PG_AP_TP_COW;
+            break;
+
+    }
+
+
+#if defined(__x86_64__)
+
+    //* Set No-Execute Bit
+    if(flags & ARCH_VMM_MAP_NOEXEC)
+        if(boot_cpu_has(X86_FEATURE_NX))
+            b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
+
+    if(flags & ARCH_VMM_MAP_HUGETLB) {
+
+        b |= X86_MMU_PG_PS;
+
+        if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+            if(boot_cpu_has(X86_FEATURE_PAT))
+                b |= X86_MMU_PG_PAT;        /* WC */
+
+    } else {
+
+        if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+            if(boot_cpu_has(X86_FEATURE_PAT))
+                b |= X86_MMU_PT_PAT;        /* WC */
+
+    }
 
 
 
@@ -670,54 +726,6 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
         /* Page Table */
         {
             DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
-
-
-            //* Set Page Type
-            switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-                case ARCH_VMM_MAP_TYPE_PAGE:
-                    b |= X86_MMU_PG_AP_TP_PAGE;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_UNIQUE:
-                    b |= X86_MMU_PG_AP_TP_UNIQUE;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_MMAP:
-                    b |= X86_MMU_PG_AP_TP_MMAP;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_COW:
-                    b |= X86_MMU_PG_AP_TP_COW;
-                    break;
-
-            }
-
-
-#if defined(__x86_64__)
-
-            //* Set No-Execute Bit
-            if(flags & ARCH_VMM_MAP_NOEXEC)
-                if(boot_cpu_has(X86_FEATURE_NX))
-                    b |= X86_MMU_PT_NX;             /* NX */
-
-#endif
-
-            if(flags & ARCH_VMM_MAP_HUGETLB) {
-
-                b |= X86_MMU_PG_PS;
-
-                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(boot_cpu_has(X86_FEATURE_PAT))
-                        b |= X86_MMU_PG_PAT;        /* WC */
-
-            } else {
-
-                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(boot_cpu_has(X86_FEATURE_PAT))
-                        b |= X86_MMU_PT_PAT;        /* WC */
-
-            }
 
 
             *d = (*d & X86_MMU_ADDRESS_MASK) | b;

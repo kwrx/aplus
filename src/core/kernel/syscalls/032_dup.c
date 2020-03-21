@@ -48,6 +48,42 @@
  */
 
 SYSCALL(32, dup,
-long sys_dup (unsigned int fildes) {
-    return -ENOSYS;
+long sys_dup (unsigned int fd) {
+
+    if(unlikely(fd > OPEN_MAX)) // TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].ref))
+        return -EBADF;
+
+
+    int i;
+
+    __lock(&current_task->lock, {
+
+        for(i = 0; i < OPEN_MAX; i++)
+            if(!current_task->fd[i].ref)
+                break;
+
+        if(i == OPEN_MAX)
+            break;
+
+
+        __lock(&current_task->fd[fd].ref->lock, {
+        
+            current_task->fd[i].ref = current_task->fd[fd].ref;
+            current_task->fd[i].flags = current_task->fd[fd].flags;
+
+            current_task->fd[i].ref->refcount++;
+
+        });
+
+    });
+    
+
+    if(i == OPEN_MAX)
+        return -EMFILE;
+
+    return i;
+
 });

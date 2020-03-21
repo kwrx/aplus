@@ -263,9 +263,9 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     DEBUG_ASSERT(current_task->userspace.start);
     DEBUG_ASSERT(current_task->userspace.end);
     DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
 
-
-    current_task->exe = (current_task->fd[fd].inode);
+    current_task->exe = (current_task->fd[fd].ref->inode);
 
     sys_close(fd);
 
@@ -274,7 +274,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     int i;
     for(i = 0; i < OPEN_MAX; i++) {
 
-        if(!current_task->fd[i].inode)
+        if(!current_task->fd[i].ref)
             continue;
 
         if(!current_task->fd[i].close_on_exec)

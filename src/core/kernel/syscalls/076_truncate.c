@@ -65,13 +65,13 @@ long sys_truncate (const char __user * path, long length) {
         return fd;
     
 
-    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
 
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].lock, {
-        e = vfs_truncate(current_task->fd[fd].inode, length);
+    __lock(&current_task->fd[fd].ref->lock, {
+        e = vfs_truncate(current_task->fd[fd].ref->inode, length);
     });
 
 

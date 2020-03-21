@@ -74,14 +74,14 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
         return fd;
     
 
-    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
 
 
     int e;
 
-    __lock(&current_task->fd[fd].lock, {
+    __lock(&current_task->fd[fd].ref->lock, {
 
-        e = vfs_getattr(current_task->fd[fd].inode, statbuf);
+        e = vfs_getattr(current_task->fd[fd].ref->inode, statbuf);
 
     });
 

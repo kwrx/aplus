@@ -56,13 +56,13 @@ long sys_fchdir (unsigned int fd) {
     if(fd > OPEN_MAX)
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].inode))
+    if(unlikely(!current_task->fd[fd].ref))
         return -EBADF;
 
 
     __lock(&current_task->lock, {
 
-        current_task->cwd = current_task->fd[fd].inode;
+        current_task->cwd = current_task->fd[fd].ref->inode;
 
     });
 

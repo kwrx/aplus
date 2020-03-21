@@ -53,13 +53,13 @@ long sys_chroot (const char __user * filename) {
     if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
         return fd;
 
-    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
     
 
     __lock(&current_task->lock, {
 
-        current_task->cwd = current_task->fd[fd].inode;
-        current_task->root = current_task->fd[fd].inode;
+        current_task->cwd = current_task->fd[fd].ref->inode;
+        current_task->root = current_task->fd[fd].ref->inode;
 
     });
 

@@ -64,6 +64,7 @@ void vfs_init(void) {
 
     rootfs_init();
     dcache_init();
+    fd_init();
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
     kprintf("vfs: ready!\n");

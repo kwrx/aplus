@@ -48,15 +48,12 @@
 
 struct fd {
 
-    inode_t* inode;
-    off_t position;
+    struct file* ref;
 
     struct {
         int flags:30;
         int close_on_exec:1;
     };
-
-    spinlock_t lock;
 
 };
 

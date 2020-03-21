@@ -34,6 +34,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <hal/cpu.h>
+
 
 /***
  * Name:        sched_yield

@@ -51,20 +51,17 @@
 SYSCALL(77, ftruncate,
 long sys_ftruncate (unsigned int fd, unsigned long length) {
 
-    if(unlikely(fd < 0))
-        return -EBADF;
-
     if(unlikely(fd > OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].inode))
+    if(unlikely(!current_task->fd[fd].ref))
         return -EBADF;
 
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].lock, {
-        e = vfs_truncate(current_task->fd[fd].inode, length);
+    __lock(&current_task->fd[fd].ref->lock, {
+        e = vfs_truncate(current_task->fd[fd].ref->inode, length);
     });
 
 

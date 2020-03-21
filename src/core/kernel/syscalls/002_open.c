@@ -257,21 +257,30 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
     __lock(&current_task->lock, {
 
         for(fd = 0; fd < OPEN_MAX; fd++)
-            if(!current_task->fd[fd].inode)
+            if(!current_task->fd[fd].ref)
                 break;
 
         if(fd == OPEN_MAX)
             break;
 
         
-        if(flags & O_APPEND)
-            current_task->fd[fd].position = st.st_size;
-        else
-            current_task->fd[fd].position = 0;
+        struct file* ref;
+        
+        if((ref = fd_append(r, 0, 0)) == NULL)
+            fd = FILE_MAX;
+
+        else {
+
+            if(flags & O_APPEND)
+                ref->position = st.st_size;
+            else
+                ref->position = 0;
 
         
-        current_task->fd[fd].inode = r;
-        current_task->fd[fd].flags = flags;
+            current_task->fd[fd].ref = ref;
+            current_task->fd[fd].flags = flags;
+        
+        }
 
     });
     
@@ -279,10 +288,14 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
     if(fd == OPEN_MAX)
         return -EMFILE;
 
+    if(fd == FILE_MAX)
+        return -ENFILE;
+
 
     DEBUG_ASSERT(fd >= 0);
     DEBUG_ASSERT(fd <= OPEN_MAX - 1);
-    DEBUG_ASSERT(current_task->fd[fd].inode);
+    DEBUG_ASSERT(current_task->fd[fd].ref);
+    DEBUG_ASSERT(current_task->fd[fd].ref->inode);
 
     return fd;
 });

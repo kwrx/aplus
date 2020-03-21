@@ -320,7 +320,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
 
     // * Check Partition Table MBR
 
-    uint32_t sig;
+    uint16_t sig;
     if(block_read(device, &sig, 0x1FE, 2) <= 0)
         kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(0x1FE)\n");
 
@@ -328,7 +328,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
     if(unlikely(sig != 0xAA55)) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-        kprintf("device::block: WARN! unknown partition table for /dev/%s\n", device->name);
+        kprintf("device::block: WARN! unknown partition table for /dev/%s (sig: %p)\n", device->name, sig);
 #endif
 
         return;

@@ -1261,6 +1261,10 @@ void init(const char* args) {
 
         ahci->contiguous_memory_area = pmm_alloc_blocks(AHCI_MEMORY_SIZE >> 12);
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
+#endif
+
         arch_intr_map_irq(ahci->irq, &irq);
 
 

@@ -29,7 +29,7 @@
 #define EXT2_ID                     0xDEAD1001
 #define VFAT_ID                     0xDEAD1002
 
-
+#define FILE_MAX                    32768
 
 
 typedef struct inode inode_t;
@@ -127,6 +127,19 @@ struct superblock {
 };
 
 
+struct file {
+
+    inode_t* inode;
+    off_t position;
+
+    int status;
+    int refcount;
+
+    spinlock_t lock;
+
+};
+
+
 __BEGIN_DECLS
 
 
@@ -180,6 +193,12 @@ inode_t* vfs_dcache_find(inode_t*, const char*);
 // os/kernel/fs/rootfs.c
 extern inode_t* vfs_root;
 void rootfs_init(void);
+
+
+// fs/fd.c
+void fd_init(void);
+void fd_remove(struct file*, int);
+struct file* fd_append(inode_t*, off_t, int);
 
 __END_DECLS
 

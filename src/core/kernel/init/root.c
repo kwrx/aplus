@@ -68,10 +68,10 @@ void root_init(void) {
         kpanicf("root: PANIC! mkdir() failed: errno(%s)", strerror(-e));
 
     if((e = sys_mount(root, "/root", rootfs, 0, NULL)) < 0)
-        kpanicf("root: PANIC! mount() failed: errno(%s)", strerror(-e));
+        kpanicf("root: PANIC! mount %s in %s failed: errno(%s)", "/root", root, strerror(-e));
 
     if((e = sys_mount("/dev", "/root/dev", "bind", 0, NULL)))
-        kpanicf("root: PANIC! mount() failed: errno(%s)", strerror(-e));
+        kpanicf("root: PANIC! mount %s in %s failed: errno(%s)", "/root/dev", "/dev", strerror(-e));
 
     if((e = sys_chroot("/root")) < 0)
         kpanicf("root: PANIC! chroot() failed: errno(%s)", strerror(-e));

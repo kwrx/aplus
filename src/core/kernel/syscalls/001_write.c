@@ -60,13 +60,10 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
     if(unlikely(!ptr_check(buf, R_OK)))
         return -EFAULT;
 
-    if(unlikely(fd < 0))
-        return -EBADF;
-
     if(unlikely(fd > OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].inode))
+    if(unlikely(!current_task->fd[fd].ref))
         return -EBADF;
 
     if(unlikely(!(
@@ -97,12 +94,14 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].lock, {
-        if((e = vfs_write(current_task->fd[fd].inode, buf, current_task->fd[fd].position, size)) <= 0)
+    __lock(&current_task->fd[fd].ref->lock, {
+
+        if((e = vfs_write(current_task->fd[fd].ref->inode, buf, current_task->fd[fd].ref->position, size)) <= 0)
             break;
 
-        current_task->fd[fd].position += e;
+        current_task->fd[fd].ref->position += e;
         current_task->iostat.write_bytes += (uint64_t) e;
+        
     });
 
 
