@@ -50,5 +50,44 @@
 
 SYSCALL(229, clock_getres,
 long sys_clock_getres (clockid_t which_clock, struct timespec __user * tp) {
-    return -ENOSYS;
+    
+    if(unlikely(!tp))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(tp, R_OK | W_OK)))
+        return -EFAULT;
+
+
+    switch(which_clock) {
+
+        case CLOCK_REALTIME:
+
+            tp->tv_sec  = 1;
+            tp->tv_nsec = 0;
+            break;
+
+        case CLOCK_MONOTONIC:
+
+            tp->tv_sec  = 0;
+            tp->tv_nsec = 1000000000 / arch_timer_global_getres();
+            break;
+
+        case CLOCK_THREAD_CPUTIME_ID:
+        case CLOCK_PROCESS_CPUTIME_ID:
+
+            tp->tv_sec  = 0;
+            tp->tv_nsec = 1000000000 / arch_timer_percpu_getres();
+            break;
+
+        default:
+            return -EINVAL;
+
+    }
+
+
+    if(tp->tv_sec == 0 && tp->tv_nsec == 0)
+        tp->tv_nsec = 1;
+
+    return 0;
+
 });

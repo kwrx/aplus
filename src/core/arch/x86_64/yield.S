@@ -39,15 +39,17 @@
 arch_task_yield:
 
         pushq   $0
-        pushq   $0x10
+        pushq   $KERNEL_DS
         pushq   %rsp
 
         pushfq
-        pushq   $0x08
+        pushq   $KERNEL_CS
         pushq   $.L0
 
         pushq   $0
-        pushq   $0xFD
+        pushq   $0xFE
+
+        movq    $24, %rax       # sched_yield
 
         .extern interrupt_common
         jmp     interrupt_common

@@ -30,6 +30,7 @@
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -50,5 +51,45 @@
 
 SYSCALL(228, clock_gettime,
 long sys_clock_gettime (clockid_t which_clock, struct timespec __user * tp) {
-    return -ENOSYS;
+    
+    if(unlikely(!tp))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(tp, R_OK | W_OK)))
+        return -EFAULT;
+
+
+    switch(which_clock) {
+
+        case CLOCK_REALTIME:
+
+            tp->tv_sec  = arch_timer_gettime();
+            tp->tv_nsec = 0;
+            break;
+
+        case CLOCK_MONOTONIC:
+
+            tp->tv_sec  = arch_timer_global_getms() / 1000;
+            tp->tv_nsec = arch_timer_global_getns() % 1000000000;
+            break;
+
+        case CLOCK_THREAD_CPUTIME_ID:
+
+            tp->tv_sec  = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_sec;
+            tp->tv_nsec = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_nsec;
+            break;
+
+         case CLOCK_PROCESS_CPUTIME_ID:
+
+            tp->tv_sec  = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_sec;
+            tp->tv_nsec = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_nsec;
+            break;
+
+        default:
+            return -EINVAL;
+
+    }
+
+    return 0;
+    
 });

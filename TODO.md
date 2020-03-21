@@ -85,7 +85,7 @@
 - [ ] sys_fork
 - [ ] sys_vfork
 - [ ] sys_vfork
-- [ ] sys_exit
+- [x] sys_exit
 - [ ] sys_wait4
 - [ ] sys_kill
 

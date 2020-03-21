@@ -78,39 +78,35 @@ void schedule(int yield) {
     __lock(&sched_lock, {
 
 
-        DEBUG_ASSERT(CLOCKS_PER_SEC >= 0);
-        DEBUG_ASSERT(CLOCKS_PER_SEC <= 1000000000);
+        #define __update_clock(task, type, delta) {                             \
+            if(task->clock[type].tv_nsec + delta > 999999999) {                 \
+                task->clock[type].tv_nsec  = delta;                             \
+                task->clock[type].tv_nsec -= 1000000000;                        \
+                task->clock[type].tv_sec  += 1;                                 \
+            } else {                                                            \
+                task->clock[type].tv_nsec += delta;                             \
+            }                                                                   \
+        }
 
 
-#if   CLOCKS_PER_SEC == 1000
-        uint64_t elapsed = arch_timer_percpu_getms();
-#elif CLOCKS_PER_SEC == 1000000
-        uint64_t elapsed = arch_timer_percpu_getus();
-#elif CLOCKS_PER_SEC == 1000000000
+
         uint64_t elapsed = arch_timer_percpu_getns();
-#else
-        uint64_t elapsed = arch_timer_percpu_getns() / (1000000000 / CLOCKS_PER_SEC)
-#endif
+        uint64_t delta   = elapsed - current_cpu->running_ticks;
 
 
-        // FIXME
-        current_task->clock.tms_utime += elapsed - current_cpu->running_ticks;
+        __update_clock(current_task, TASK_CLOCK_SCHEDULER, 10000000ULL);
+        __update_clock(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
+        __update_clock(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
 
         if(likely(current_task->parent))
-            current_task->parent->clock.tms_cutime += elapsed - current_cpu->running_ticks;
+            __update_clock(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
         
+
         current_cpu->running_ticks = elapsed;
 
 
 
-        if(current_task->rusage.ru_utime.tv_usec + 10000000 > 999999999) {
-
-            current_task->rusage.ru_utime.tv_usec = 0;
-            current_task->rusage.ru_utime.tv_sec += 1;
-
-        } else
-            current_task->rusage.ru_utime.tv_usec += 10000000;
-        
+       
 
 
         if(!yield) {
@@ -120,8 +116,8 @@ void schedule(int yield) {
 
                 case TASK_POLICY_RR:
                    
-                    e = ((uint64_t) current_task->rusage.ru_utime.tv_sec * 1000000ULL +
-                         (uint64_t) current_task->rusage.ru_utime.tv_usec             ) % ((20 - current_task->priority) * 1000);
+                    e = ((uint64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_sec  * 1000ULL +
+                         (uint64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_nsec / 1000000ULL) % (20 - current_task->priority);
                     
                     break;
 
@@ -135,11 +131,10 @@ void schedule(int yield) {
             }
 
 
-            current_task->rusage.ru_nivcsw++;
-
             if(likely(e))
-                break;
+                __lock_break;
 
+            current_task->rusage.ru_nivcsw++;
 
         } else
             current_task->rusage.ru_nvcsw++;

@@ -50,5 +50,6 @@
 
 SYSCALL(24, sched_yield,
 long sys_sched_yield (void) {
-    return -ENOSYS;
+    schedule(1);
+    return 0;
 });

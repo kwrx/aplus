@@ -44,6 +44,10 @@
 #define TASK_CAPS_NETWORK                       4
 
 
+#define TASK_CLOCK_MAX                          3
+#define TASK_CLOCK_SCHEDULER                    0
+#define TASK_CLOCK_THREAD_CPUTIME               1
+#define TASK_CLOCK_PROCESS_CPUTIME              2
 
 
 struct fd {
@@ -81,7 +85,7 @@ typedef struct task {
     vmm_address_space_t* address_space;
 
 
-    struct tms clock;
+    struct timespec clock[TASK_CLOCK_MAX];
     struct timespec sleep;
     struct fd fd[OPEN_MAX];
 

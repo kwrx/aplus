@@ -38,6 +38,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/signal.h>
 
 #include <hal/cpu.h>
 #include <hal/vmm.h>
@@ -310,7 +311,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     __sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur);
     uintptr_t stack    = __sbrk(0);
 
-    __sbrk(4096);
+    __sbrk(SIGSTKSZ);
     uintptr_t sigstack = __sbrk(0);
 
     

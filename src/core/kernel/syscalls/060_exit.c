@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 
 
 /***
@@ -48,6 +49,62 @@
  */
 
 SYSCALL(60, exit,
-long sys_exit (int error_code) {
+long sys_exit (int status) {
+
+    BUG_ON(current_task->tid != 1);
+
+    if(status & (1 << 31))
+        current_task->exit.value = status & 0x7FFF;
+    else
+        current_task->exit.value = (status & 0377) << 8;
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+    kprintf("exit: task %d (%s) %s with %X\n", 
+        current_task->tid, 
+        current_task->argv[0],
+        WIFSTOPPED(current_task->exit.value) ? "stopped" : "exited",
+        current_task->exit.value & 0xFFFF
+    );   
+#endif
+
+
+    current_task->status = (WIFSTOPPED(current_task->exit.value))
+        ? TASK_STATUS_STOP
+        : TASK_STATUS_ZOMBIE;
+
+
+    // TODO: implement signal     
+    // if(current_task->parent) {
+    //     siginfo_t si;
+    //     si.si_code = SI_KERNEL;
+    //     si.si_pid = current_task->pid;
+    //     si.si_uid = current_task->uid;
+    //     si.si_value.sival_int = current_task->exit.value;
+
+    //     sched_sigqueueinfo(current_task->parent, SIGCHLD, &si);
+    // }
+
+
+    if(current_task->status != TASK_STATUS_STOP) {
+
+        sched_dequeue(current_task);
+
+        int i;
+        for(i = 0; i < OPEN_MAX; i++)
+            sys_close(i);
+
+        //task_release();
+
+        // TODO: implement wait queue
+
+
+    }
+
+
+    schedule(1);
+    BUG_ON(0 && "Unreachable");
+
     return -ENOSYS;
+
 });

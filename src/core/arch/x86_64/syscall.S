@@ -32,6 +32,7 @@
 #
 
     .code64
+    .align 16, 0x90
     .section .text
 
     .global x86_syscall_handler
@@ -45,41 +46,26 @@ x86_syscall_handler:
   # Load Kernel Stack
     movq    $KERNEL_SYSCALL_STACK, %rsp
     addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
+  
+  # Save Context
+    pushq   $0  
+    pushq   $KERNEL_DS  
+    pushq   %rsp
 
-  # Save User Registers
-    pushq   %r15
-    pushq   %r14
-    pushq   %r13
-    pushq   %r12
-    pushq   %r11
-    pushq   %rcx
-    pushq   %rbx
-    pushq   %rbp
-    
-  # Load Parameters
-    pushq   %r9             # p5
-    movq    %r8,  %r9       # p4
-    movq    %r10, %r8       # p3
-    movq    %rdx, %rcx      # p2
-    movq    %rsi, %rdx      # p1
-    movq    %rdi, %rsi      # p0
-    movq    %rax, %rdi      # idx
+    pushfq
+    pushq   $KERNEL_CS
+    pushq   $.L0
+
+    pushq   $0
+    pushq   $0xFE
+
+    .extern interrupt_common
+    jmp     interrupt_common
 
 
-  # Invoke Syscall
-    callq   syscall_invoke
-    addq    $8, %rsp
+.L0:
 
-
-  # Restore User Registers
-    popq    %rbp
-    popq    %rbx
-    popq    %rcx
-    popq    %r11
-    popq    %r12
-    popq    %r13
-    popq    %r14
-    popq    %r15
+    addq    $16, %rsp
 
   # Restore User Stack
     movq    %r15, %rsp
@@ -88,4 +74,4 @@ x86_syscall_handler:
     sysretq
 
 END(x86_syscall_handler)
-    
+  

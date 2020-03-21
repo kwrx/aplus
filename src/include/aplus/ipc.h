@@ -46,6 +46,10 @@ int sem_trywait(semaphore_t* s);
 __END_DECLS
 
 
+#define __lock_break    \
+    break
+
+
 #define __lock(lk, fn...)                   \
     {                                       \
         spinlock_lock((lk));                \
