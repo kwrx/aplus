@@ -188,7 +188,31 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 
-    uint64_t b = X86_MMU_PG_P;
+    uint64_t b = X86_MMU_PG_P;      // flags for Page Table
+    uint64_t q = X86_MMU_PG_P;      // flags for Page Directory
+
+
+
+    // * Prepare FLAGS for the Page Directory
+
+#if defined(__x86_64__)
+
+    if(virtaddr < 800000000000)     // Low Address (userspace)
+        q |= X86_MMU_PG_U;
+
+#elif defined(__i386__)
+
+    if(virtaddr < 0xC0000000)       // Low Address (userspace)
+        q |= X86_MMU_PG_U;
+
+#endif
+
+    q |= X86_MMU_PG_RW;
+
+
+
+
+    // * Prepare FLAGS for the Page Table
 
     if(flags & ARCH_VMM_MAP_RDWR)
         b |= X86_MMU_PG_RW;
@@ -201,6 +225,62 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
     if(flags & ARCH_VMM_MAP_SHARED)
         b |= X86_MMU_PG_G;
+
+
+
+#if defined(DEBUG)
+    if(flags & ARCH_VMM_MAP_DEMAND)
+        DEBUG_ASSERT((flags & ARCH_VMM_MAP_TYPE_MASK) == ARCH_VMM_MAP_TYPE_PAGE && "Only TYPE_PAGE can be no-prefault");
+#endif
+
+    //* Set Page Type
+    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
+
+        case ARCH_VMM_MAP_TYPE_PAGE:
+            b |= X86_MMU_PG_AP_TP_PAGE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_UNIQUE:
+            b |= X86_MMU_PG_AP_TP_UNIQUE;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_MMAP:
+            b |= X86_MMU_PG_AP_TP_MMAP;
+            break;
+
+        case ARCH_VMM_MAP_TYPE_COW:
+            b |= X86_MMU_PG_AP_TP_COW;
+            break;
+
+    }
+
+
+#if defined(__x86_64__)
+
+    //* Set No-Execute Bit
+    if(flags & ARCH_VMM_MAP_NOEXEC)
+        if(boot_cpu_has(X86_FEATURE_NX))
+            b |= X86_MMU_PT_NX;             /* NX */
+
+#endif
+
+    if(flags & ARCH_VMM_MAP_HUGETLB) {
+
+        b |= X86_MMU_PG_PS;
+
+        if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+            if(boot_cpu_has(X86_FEATURE_PAT))
+                b |= X86_MMU_PG_PAT;        /* WC */
+
+    } else {
+
+        if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
+            if(boot_cpu_has(X86_FEATURE_PAT))
+                b |= X86_MMU_PT_PAT;        /* WC */
+
+    }
+
+
 
 
 
@@ -222,7 +302,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         /* PML4-L3 */
         {
             if(*d == X86_MMU_CLEAR)
-                *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_RW | X86_MMU_PG_P;
+                *d = alloc_page(X86_MMU_PAGESIZE, 1) | q;
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -235,7 +315,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PDP-L2 is 1GiB Page");
 
                 if(*d == X86_MMU_CLEAR)
-                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_RW | X86_MMU_PG_P;
+                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | q;
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
 
@@ -248,7 +328,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                     DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 2Mib Page");
 
                     if(*d == X86_MMU_CLEAR)
-                        *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_RW | X86_MMU_PG_P;
+                        *d = alloc_page(X86_MMU_PAGESIZE, 1) | q;
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -272,7 +352,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 4Mib Page");
 
                 if(*d == X86_MMU_CLEAR)
-                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | X86_MMU_PG_RW | X86_MMU_PG_P;
+                    *d = alloc_page(X86_MMU_PAGESIZE, 1) | q;
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
             }
@@ -284,59 +364,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         /* Page Table */
         {
             DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
-
-
-#if defined(DEBUG)
-            if(flags & ARCH_VMM_MAP_DEMAND)
-                DEBUG_ASSERT((flags & ARCH_VMM_MAP_TYPE_MASK) == ARCH_VMM_MAP_TYPE_PAGE && "Only TYPE_PAGE can be no-prefault");
-#endif
-
-            //* Set Page Type
-            switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-                case ARCH_VMM_MAP_TYPE_PAGE:
-                    b |= X86_MMU_PG_AP_TP_PAGE;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_UNIQUE:
-                    b |= X86_MMU_PG_AP_TP_UNIQUE;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_MMAP:
-                    b |= X86_MMU_PG_AP_TP_MMAP;
-                    break;
-
-                case ARCH_VMM_MAP_TYPE_COW:
-                    b |= X86_MMU_PG_AP_TP_COW;
-                    break;
-
-            }
-
-
-#if defined(__x86_64__)
-
-            //* Set No-Execute Bit
-            if(flags & ARCH_VMM_MAP_NOEXEC)
-                if(boot_cpu_has(X86_FEATURE_NX))
-                    b |= X86_MMU_PT_NX;             /* NX */
-
-#endif
-
-            if(flags & ARCH_VMM_MAP_HUGETLB) {
-
-                b |= X86_MMU_PG_PS;
-
-                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(boot_cpu_has(X86_FEATURE_PAT))
-                        b |= X86_MMU_PG_PAT;        /* WC */
-
-            } else {
-
-                if(flags & ARCH_VMM_MAP_VIDEO_MEMORY)  
-                    if(boot_cpu_has(X86_FEATURE_PAT))
-                        b |= X86_MMU_PT_PAT;        /* WC */
-
-            }
 
 
             if(flags & ARCH_VMM_MAP_FIXED)
@@ -1036,6 +1063,9 @@ void pagefault_handle(interrupt_frame_t* frame) {
         }
 
     }
+
+
+    current_task->rusage.ru_majflt++;
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4

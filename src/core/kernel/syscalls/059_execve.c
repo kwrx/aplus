@@ -193,6 +193,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                 case PT_LOAD:                    
                 case PT_TLS:
 
+                    DEBUG_ASSERT(phdr.p_vaddr);
+                    DEBUG_ASSERT(phdr.p_memsz);
+                    DEBUG_ASSERT(phdr.p_filesz <= phdr.p_memsz);
+
+
                     end = phdr.p_vaddr + phdr.p_memsz;
                     end = (end & ~(phdr.p_align - 1)) + phdr.p_align;
 
@@ -213,16 +218,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                         flags |= ARCH_VMM_MAP_RDWR;
 
 
-                    arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, end - phdr.p_vaddr,
+                    arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
                                     ARCH_VMM_MAP_RDWR      |
                                     ARCH_VMM_MAP_USER      |
                                     ARCH_VMM_MAP_TYPE_PAGE);
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+                    kprintf("sys_execve: PT_LOAD at address(%p) size(%p) alignsize(%p)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr);
+#endif
+
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
 
 
-                    arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, end - phdr.p_vaddr,
+                    arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz,
                                     flags                  |
                                     ARCH_VMM_MAP_USER      |
                                     ARCH_VMM_MAP_TYPE_PAGE);

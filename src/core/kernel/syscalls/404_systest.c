@@ -36,7 +36,7 @@
 SYSCALL(404, systest,
 long sys_systest (long p0, long p1, long p2, long p3, long p4, long p5) {
 
-    kprintf("SYSCALL TEST WORK %p %p %p %p %p %p!", p0, p1, p2, p3, p4, p5);
+    kprintf("SYSCALL 404 TEST WORK %p %p %p %p %p %p!\n", p0, p1, p2, p3, p4, p5);
     return 0;
 });
 

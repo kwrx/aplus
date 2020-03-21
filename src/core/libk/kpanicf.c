@@ -67,7 +67,7 @@ void kpanicf(const char* fmt, ...) {
     });
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    runtime_stacktrace();
+    //runtime_stacktrace();
 #endif
 
     // TODO: arch_cpu_halt()
