@@ -21,6 +21,11 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// TODO: Update <sys/features.h>
+#define _POSIX_CPUTIME
+#define _POSIX_THREAD_CPUTIME
+#define _POSIX_MONOTONIC_CLOCK
+#include <time.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -30,10 +35,14 @@
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
-#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <hal/cpu.h>
+#include <hal/vmm.h>
+#include <hal/timer.h>
+#include <hal/userspace.h>
 
 
 /***
@@ -69,8 +78,8 @@ long sys_clock_gettime (clockid_t which_clock, struct timespec __user * tp) {
 
         case CLOCK_MONOTONIC:
 
-            tp->tv_sec  = arch_timer_global_getms() / 1000;
-            tp->tv_nsec = arch_timer_global_getns() % 1000000000;
+            tp->tv_sec  = arch_timer_generic_getms() / 1000;
+            tp->tv_nsec = arch_timer_generic_getns() % 1000000000;
             break;
 
         case CLOCK_THREAD_CPUTIME_ID:

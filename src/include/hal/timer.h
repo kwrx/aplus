@@ -15,11 +15,13 @@ uint64_t arch_timer_percpu_getticks(void);
 uint64_t arch_timer_percpu_getns(void);
 uint64_t arch_timer_percpu_getus(void);
 uint64_t arch_timer_percpu_getms(void);
+uint64_t arch_timer_percpu_getres(void);
 
 uint64_t arch_timer_generic_getticks(void);
 uint64_t arch_timer_generic_getns(void);
 uint64_t arch_timer_generic_getus(void);
 uint64_t arch_timer_generic_getms(void);
+uint64_t arch_timer_generic_getres(void);
 
 __END_DECLS
 

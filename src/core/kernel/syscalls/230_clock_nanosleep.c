@@ -51,6 +51,6 @@
  */
 
 SYSCALL(230, clock_nanosleep,
-long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __userbar * rqtp, struct timespec __user * rmtp) {
+long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp) {
     return -ENOSYS;
 });
