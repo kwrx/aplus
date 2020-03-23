@@ -112,6 +112,7 @@
 - [ ] ELF Loading
 - [ ] Fstab
 - [ ] Unix Permissions
+- [x] Futex
 
 ------------------------------------------
 ## Filesystems

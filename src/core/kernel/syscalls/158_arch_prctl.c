@@ -34,6 +34,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <hal/cpu.h>
+#include <hal/vmm.h>
+#include <hal/task.h>
+
 
 /***
  * Name:        arch_prctl
@@ -50,5 +54,49 @@
 
 SYSCALL(158, arch_prctl,
 long sys_arch_prctl (int code, unsigned long addr) {
+
+    if(unlikely(!addr))
+        return -EINVAL;
+
+
+#if defined(__x86_64__)
+
+    #define ARCH_SET_GS		0x1001
+    #define ARCH_SET_FS		0x1002
+    #define ARCH_GET_FS		0x1003
+    #define ARCH_GET_GS		0x1004
+
+    switch(code) {
+
+        case ARCH_SET_GS:
+            current_task->userspace.cpu_area = (uintptr_t) addr;
+            break;
+
+        case ARCH_SET_FS:
+            current_task->userspace.thread_area = (uintptr_t) addr;
+            break;
+
+        case ARCH_GET_GS:
+            *(uintptr_t*) addr = current_task->userspace.cpu_area;
+            break;
+
+        case ARCH_GET_FS:
+            *(uintptr_t*) addr = current_task->userspace.thread_area;
+            break;
+
+        default:
+            return -ENOSYS;
+        
+    }
+
+
+    // Update stats
+    arch_task_switch(current_task, current_task);
+
+    return 0;
+
+#endif
+
     return -ENOSYS;
+
 });

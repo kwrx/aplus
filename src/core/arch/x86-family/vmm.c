@@ -126,8 +126,8 @@ uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
         case ARCH_VMM_AREA_KERNEL:
             return virtaddr - KERNEL_HIGH_AREA;
 
-        //case ARCH_VMM_AREA_USER:
-            //return __x86_ptr_phys(virtaddr);
+        case ARCH_VMM_AREA_USER:
+            return arch_vmm_getphysaddr(current_task->address_space, virtaddr);
 
     }
 
@@ -872,6 +872,118 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
     return e;
 
 }
+
+
+
+
+
+uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
+
+    DEBUG_ASSERT(space);
+
+
+    uintptr_t pagesize = X86_MMU_PAGESIZE;
+
+
+    uintptr_t s = virtaddr;
+    uintptr_t e = 0ULL;
+
+
+    if(s & (X86_MMU_PAGESIZE - 1))
+        s = (s & ~(X86_MMU_PAGESIZE - 1));
+
+    if(e & (X86_MMU_PAGESIZE - 1))
+        e = (e & ~(X86_MMU_PAGESIZE - 1)) + X86_MMU_PAGESIZE;
+
+
+
+    spinlock_lock(&space->lock);
+
+
+    x86_page_t* d;
+
+
+#if defined(__x86_64__)
+
+    /* CR3-L4 */ 
+    {
+        d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 39) & 0x1FF];
+    }
+
+    /* PML4-L3 */
+    {
+        DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PML4-L3 not exist");
+
+        d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
+    }
+
+
+    /* HUGE_1GB */
+    if(!(*d & X86_MMU_PG_PS)) {
+
+        /* PDP-L2 */
+        {
+            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDP-L2 not exist");
+
+            d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
+        }
+
+        /* HUGE_2MB */
+        if(!(*d & X86_MMU_PG_PS)) {
+
+            /* PD-L1 */
+            {
+                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
+
+                d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
+            }
+
+        } else
+            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+
+    } else
+        pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
+
+
+#elif defined(__i386__)
+
+    /* CR3-L2 */
+    {
+        d = &((x86_page_t*) arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP)) [(s >> 22) & 0x3FF];
+    }
+
+
+    /* HUGE_4MB */
+    if(!(*d & X86_MMU_PG_PS)) {
+
+        /* PD-L1 */
+        {
+            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
+
+            d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
+        }
+
+    } else
+        pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
+
+#endif
+
+    /* Page Table */
+    {
+        DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
+
+        e = *d & X86_MMU_ADDRESS_MASK;
+        e += virtaddr & (pagesize - 1);
+
+    }
+
+
+    spinlock_unlock(&space->lock);
+
+    return e;
+
+}
+
 
 
 

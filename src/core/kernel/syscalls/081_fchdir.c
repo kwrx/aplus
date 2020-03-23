@@ -50,9 +50,6 @@
 SYSCALL(81, fchdir,
 long sys_fchdir (unsigned int fd) {
     
-    if(fd < 0)
-        return -EBADF;
-
     if(fd > OPEN_MAX)
         return -EBADF;
 

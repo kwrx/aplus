@@ -40,7 +40,8 @@ run: install
 clean: CLEANALL
 distclean: clean DISTCLEANALL
 	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew 
-	$(QUIET)$(RM) -r docs/html docs/man
+	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
+	$(QUIET)$(ROOTDIR)/extra/utils/get-pkg.py --clean 
 
 
 .PHONY: docs distdocs

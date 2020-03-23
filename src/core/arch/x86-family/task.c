@@ -53,26 +53,45 @@
 
 void arch_task_switch(task_t* prev, task_t* next) {
 
+    DEBUG_ASSERT(current_cpu->frame);
+
     DEBUG_ASSERT(prev);
     DEBUG_ASSERT(prev->frame);
+    DEBUG_ASSERT(prev->address_space->pm);
 
     DEBUG_ASSERT(next);
     DEBUG_ASSERT(next->frame);
     DEBUG_ASSERT(next->address_space->pm);
 
-    DEBUG_ASSERT(current_cpu->frame);
 
 
-    memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
-    memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
+    if(likely(prev != next)) {
+        
+        memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
+        memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
 
-    if(prev->address_space->pm != next->address_space->pm)
-        x86_set_cr3(next->address_space->pm);
+        if(unlikely(prev->address_space->pm != next->address_space->pm))
+            x86_set_cr3(next->address_space->pm);
+
+    }
+
+    x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
+    x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
 
     
     __asm__ ("" ::: "memory", "cc");
 
+}
+
+
+void arch_task_return_yield(long ret) {
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_cpu->frame);
+
+    ((interrupt_frame_t*) current_cpu->frame)->ax = ret;
+    schedule(1);
 }
 
 

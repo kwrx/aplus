@@ -59,6 +59,25 @@ static void __sched_next(void) {
         if(unlikely(current_task->affinity & (1 << current_cpu->id)))
             continue;
 
+        if(unlikely(current_task->status == TASK_STATUS_STOP))
+            continue;
+
+        if(unlikely(current_task->status == TASK_STATUS_ZOMBIE))
+            continue;
+
+
+
+        // * Check Futexes
+
+        list_each(current_task->futexes, i) {
+            
+            if(futex_expired(i))
+                futex_wakeup_thread(current_task, i);
+        }
+
+
+        // TODO: Check...
+
         if(unlikely(current_task->status != TASK_STATUS_READY))
             continue;
 
@@ -150,8 +169,7 @@ void schedule(int yield) {
         current_task->status = TASK_STATUS_RUNNING;
         
 
-        if(likely(prev_task != current_task))
-            arch_task_switch(prev_task, current_task);
+        arch_task_switch(prev_task, current_task);
 
     });
 

@@ -32,6 +32,7 @@
 #include <sys/types.h>
 
 #include <hal/debug.h>
+#include <hal/vmm.h>
 
 
 void runtime_stacktrace(void) {
@@ -44,6 +45,9 @@ void runtime_stacktrace(void) {
     for(i = 1; i < sizeof(frames) / sizeof(uintptr_t); i++) {
         
         if(!frames[i])
+            break;
+
+        if(!ptr_check(frames[i], R_OK))
             break;
 
         const char* s;

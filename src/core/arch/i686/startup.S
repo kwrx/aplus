@@ -169,7 +169,7 @@ multiboot_header_end:
         .word 0
       .endr
 
-      .rept 222
+      .rept 96
         .word 0
         .word KERNEL_CS
         .byte 0x00    // RSP0
@@ -178,7 +178,7 @@ multiboot_header_end:
         .word 0
       .endr
 
-      # SYSCALL Handler       idx: 0xFE
+      # SYSCALL User Handler          idx: 0x80
         .word 0
         .word KERNEL_CS
         .byte 0x02    // IST2
@@ -186,7 +186,24 @@ multiboot_header_end:
         .quad 0
         .word 0
 
-      # Spourious Interrupt   idx: 0xFF
+      .rept 126
+        .word 0
+        .word KERNEL_CS
+        .byte 0x00    // RSP0
+        .byte 0x8E    // Interrupt Gate;  DPL=0
+        .quad 0
+        .word 0
+      .endr
+
+      # SYSCALL Kernel Handler        idx: 0xFE
+        .word 0
+        .word KERNEL_CS
+        .byte 0x02    // IST2
+        .byte 0xEE    // Interrupt Gate;  DPL=3
+        .quad 0
+        .word 0
+
+      # Spourious Interrupt           idx: 0xFF
         .word 0
         .word KERNEL_CS
         .byte 0x01    // IST1

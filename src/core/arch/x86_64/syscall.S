@@ -48,7 +48,6 @@ x86_syscall_handler:
     addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
   
   # Save Context
-    pushq   $0  
     pushq   $KERNEL_DS  
     pushq   %rsp
 
@@ -65,7 +64,7 @@ x86_syscall_handler:
 
 .L0:
 
-    addq    $16, %rsp
+    addq    $8, %rsp
 
   # Restore User Stack
     movq    %r15, %rsp

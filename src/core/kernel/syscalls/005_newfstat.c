@@ -56,9 +56,6 @@
 SYSCALL(5, newfstat,
 long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
 
-    if(fd < 0)
-        return -EBADF;
-
     if(fd > OPEN_MAX)
         return -EBADF;
 

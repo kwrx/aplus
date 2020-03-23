@@ -29,9 +29,17 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
 
 
 
 int main(int argc, char** argv, char** envp) {
-    for(;;);
+    
+    int a;
+    scanf("%d", &a);
+    printf("%d\n", a);
+
+    return a;
+
 }

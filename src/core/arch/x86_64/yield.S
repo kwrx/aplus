@@ -38,26 +38,37 @@
         .type arch_task_yield, @function
 arch_task_yield:
 
-        pushq   $0
-        pushq   $KERNEL_DS
-        pushq   %rsp
+  # Save Caller Stack
+    pushq   %r15
+    movq    %rsp, %r15
 
-        pushfq
-        pushq   $KERNEL_CS
-        pushq   $.L0
+  # Load Kernel Stack
+    movq    $KERNEL_SYSCALL_STACK, %rsp
+    addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
+  
+  # Save Context
+    pushq   $KERNEL_DS  
+    pushq   %rsp
 
-        pushq   $0
-        pushq   $0xFE
+    pushfq
+    pushq   $KERNEL_CS
+    pushq   $.L0
 
-        movq    $24, %rax       # sched_yield
+    pushq   $0
+    pushq   $0xFE
 
-        .extern interrupt_common
-        jmp     interrupt_common
+    movq    $24, %rax       # sched_yield
+
+    .extern interrupt_common
+    jmp     interrupt_common
 
 .L0:
-        addq    $16, %rsp
-        ret
 
+    addq    $8, %rsp
+
+  # Restore Caller Stack
+    movq    %r15, %rsp
+    popq    %r15
 
 
 END(arch_task_yield)

@@ -49,5 +49,9 @@
 
 SYSCALL(218, set_tid_address,
 long sys_set_tid_address (int __user * tidptr) {
-    return -ENOSYS;
+    
+    // TODO: see docs...
+    
+    return current_task->tid;
+
 });

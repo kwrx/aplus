@@ -80,10 +80,12 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     switch(frame->intno) {
 
         case 0xFF:
-        case 0x20 ... 0xFC:
+        case 0x20 ... 0x7F:
+        case 0x81 ... 0xFD:
             break;
 
 
+        case 0x80:
         case 0xFE:
 
 #if defined(__x86_64__)
@@ -93,13 +95,6 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 #endif
 
             break;
-
-
-        case 0xFD:
-
-            schedule(1);
-            break;
-
         
         case 0x02:
 
@@ -154,7 +149,8 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
-        case 0x21 ... 0xFC:
+        case 0x21 ... 0x7F:
+        case 0x81 ... 0xFD:
 
             __lock(&startup_irq[frame->intno - 0x20].lock, {
 
@@ -174,7 +170,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
     }
 
-
+    
     current_cpu->flags &= ~SMP_CPU_FLAGS_INTERRUPT;
 
 }

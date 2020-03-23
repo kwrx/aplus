@@ -17,8 +17,11 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/memory.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
+
+#include <aplus/utils/list.h>
 
 
 
@@ -95,6 +98,9 @@ typedef struct task {
     } signal;
 
 
+    list(futex_t*, futexes);
+
+
     inode_t* root;
     inode_t* cwd;
     inode_t* exe;
@@ -108,6 +114,9 @@ typedef struct task {
         uintptr_t sigstack;
         uintptr_t start;
         uintptr_t end;
+
+        uintptr_t thread_area;
+        uintptr_t cpu_area;
 
     } userspace;
 

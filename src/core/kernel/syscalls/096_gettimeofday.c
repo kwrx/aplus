@@ -34,6 +34,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <hal/cpu.h>
+#include <hal/vmm.h>
+#include <hal/timer.h>
+#include <hal/userspace.h>
+
 
 /***
  * Name:        gettimeofday
@@ -52,5 +57,17 @@ struct timezone;
 
 SYSCALL(96, gettimeofday,
 long sys_gettimeofday (struct timeval __user * tv, struct timezone __user * tz) {
-    return -ENOSYS;
+    
+    if(unlikely(!tv))
+        return -EINVAL;
+    
+    if(!ptr_check(tv, R_OK | W_OK))
+        return -EINVAL;
+
+
+    tv->tv_sec = arch_timer_gettime();
+    tv->tv_usec = 0; 
+
+    return 0;
+    
 });

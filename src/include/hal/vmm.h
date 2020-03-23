@@ -41,6 +41,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t*, uintptr_t, uintptr_t, size_t, int);
 uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t);
 uintptr_t arch_vmm_mprotect(vmm_address_space_t*, uintptr_t, size_t, int);
 int arch_vmm_access(vmm_address_space_t*, uintptr_t, int);
+uintptr_t arch_vmm_getphysaddr(vmm_address_space_t*, uintptr_t);
 void arch_vmm_clone(vmm_address_space_t*, vmm_address_space_t*);
 
 __END_DECLS

@@ -63,7 +63,6 @@ interrupt_common:
         fxsave64 (%rsp)         // TODO: Implement xsave, xrstor
 
 
-
         movq    %rsp, %rdi
 
         # Call Exception Handler

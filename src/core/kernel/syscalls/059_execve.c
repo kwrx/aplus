@@ -47,6 +47,38 @@
 
 
 
+
+
+#define AT_NULL                 0	/* end of vector */
+#define AT_IGNORE               1	/* entry should be ignored */
+#define AT_EXECFD               2	/* file descriptor of program */
+#define AT_PHDR                 3	/* program headers for program */
+#define AT_PHENT                4	/* size of program header entry */
+#define AT_PHNUM                5	/* number of program headers */
+#define AT_PAGESZ               6	/* system page size */
+#define AT_BASE                 7	/* base address of interpreter */
+#define AT_FLAGS                8	/* flags */
+#define AT_ENTRY                9	/* entry point of program */
+#define AT_NOTELF               10	/* program is not ELF */
+#define AT_UID                  11	/* real uid */
+#define AT_EUID                 12	/* effective uid */
+#define AT_GID                  13	/* real gid */
+#define AT_EGID                 14	/* effective gid */
+#define AT_PLATFORM             15  /* string identifying CPU for optimizations */
+#define AT_HWCAP                16    /* arch dependent hints at CPU capabilities */
+#define AT_CLKTCK               17	/* frequency at which times() increments */
+/* AT_* values 18 through 22 are reserved */
+#define AT_SECURE               23   /* secure mode boolean */
+#define AT_BASE_PLATFORM        24	/* string identifying real platform, may
+				 * differ from AT_PLATFORM. */
+#define AT_RANDOM               25	/* address of 16 random bytes */
+#define AT_HWCAP2               26	/* extension of AT_HWCAP */
+
+#define AT_EXECFN               31	/* filename of program */
+
+
+
+
 static inline uintptr_t __sbrk(uintptr_t incr) {
 
     uintptr_t brk = sys_brk(0);
@@ -306,18 +338,18 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     size_t envc;
     for(envc = 0; envp[envc]; envc++)
         ;
+        
+
+        
+
+
+    // * Prepare data for _start()
     
+    char** argq = (char**) __builtin_alloca(sizeof(char*) * (argc + 1));
+    char** envq = (char**) __builtin_alloca(sizeof(char*) * (envc + 1));
 
-    __sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur);
-    uintptr_t stack    = __sbrk(0);
 
-    __sbrk(SIGSTKSZ);
-    uintptr_t sigstack = __sbrk(0);
-
-    
-
-    char** argq = (char**) __sbrk(sizeof(char*) * (argc + 1));
-    char** envq = (char**) __sbrk(sizeof(char*) * (envc + 1));
+    // * Allocate ARGV e ENVP Strings
 
     for(i = 0; argv[i]; i++) {
      
@@ -338,15 +370,61 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     
     }
 
-    // TODO: implement AUXV
 
 
-    uintptr_t* args = (uintptr_t*) __sbrk(sizeof(uintptr_t) * 4);
+    // * Allocate Signal Stack
 
-    args[0] = (uintptr_t) argc;
-    args[1] = (uintptr_t) argq;
-    args[2] = (uintptr_t) envq;
-    //*args++ = (uintptr_t) auxv;
+    __sbrk(SIGSTKSZ);
+    uintptr_t sigstack = __sbrk(0);
+
+
+    // * Allocate User Stack
+
+    uintptr_t bottom = __sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur);
+    uintptr_t stack  = __sbrk(0);
+
+
+    uintptr_t* sp = (uintptr_t*) bottom;
+
+
+    // * AUX vector
+
+    #define AUX_ENT(id, value)      \
+        *sp++ = id;                 \
+        *sp++ = value
+
+
+    AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
+    AUX_ENT(AT_FLAGS, 0);
+    AUX_ENT(AT_ENTRY, head.e_entry);
+    AUX_ENT(AT_UID, current_task->uid);
+    AUX_ENT(AT_GID, current_task->gid);
+    AUX_ENT(AT_EUID, current_task->euid);
+    AUX_ENT(AT_EGID, current_task->egid);
+    AUX_ENT(AT_CLKTCK, arch_timer_generic_getres());
+    AUX_ENT(AT_RANDOM, rand());
+    AUX_ENT(AT_HWCAP, 0);
+    AUX_ENT(AT_NULL, 0);
+
+
+
+    // * Environment
+
+    *sp++ = 0UL;
+    
+    for(i = envc - 1; i >= 0; i--)
+        *sp++ = (uintptr_t) envp[i];
+
+    *sp++ = 0UL;
+
+
+    // * Arguments
+
+    for(i = argc - 1; i >= 0; i--)
+        *sp++ = (uintptr_t) argv[i];
+
+    *sp = argc;
+
 
 
 
@@ -354,7 +432,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.sigstack = sigstack;
 
 
-    arch_userspace_enter(head.e_entry, stack, args);
+    arch_userspace_enter(head.e_entry, stack, sp);
 
     return -EINVAL;
 });

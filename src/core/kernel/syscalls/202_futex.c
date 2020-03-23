@@ -27,12 +27,18 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/ipc.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <hal/cpu.h>
+#include <hal/vmm.h>
+#include <hal/debug.h>
 
 
 /***
@@ -49,6 +55,166 @@
 
 
 SYSCALL(202, futex,
-long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, struct timespec __user * utime, uint32_t __user * uaddr2, uint32_t val3) {
-    return -ENOSYS;
+long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint32_t __user * uaddr2, uint32_t val3) {
+    
+    if(unlikely(!uaddr))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(uaddr, R_OK)))
+        return -EACCES;
+
+    uint32_t* kaddr = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+
+
+
+    switch(op & FUTEX_CMD_MASK) {
+
+        case FUTEX_WAIT:
+
+            {
+
+                const struct timespec* utime = (const struct timespec*) __val2;
+
+                if(unlikely(utime && !ptr_check(utime, R_OK)))
+                    return -EFAULT;
+
+                if(atomic_load(kaddr) != val)
+                    return -EAGAIN;
+
+
+                futex_wait(current_task, kaddr, val, utime);
+
+                arch_task_return_yield(0);
+                break;
+
+            }
+           
+
+
+        case FUTEX_WAKE:
+            return (long) futex_wakeup(kaddr, val);
+
+
+        case FUTEX_FD:
+            return -ENOSYS;
+
+
+        case FUTEX_CMP_REQUEUE:
+
+            if(atomic_load(kaddr) != val3)
+                return -EAGAIN;
+
+
+        case FUTEX_REQUEUE:
+
+            {
+
+                futex_wakeup(kaddr, val);
+
+
+                if(unlikely(!uaddr2))
+                    return -EINVAL;
+
+                if(unlikely(!ptr_check(uaddr2, R_OK)))
+                    return -EACCES;
+
+                uint32_t* kaddr2 = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr2, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+
+                return futex_requeue(kaddr, kaddr2, (uint32_t) __val2);
+
+            }
+
+
+        case FUTEX_WAKE_OP:
+            return -ENOSYS;
+
+        
+        case FUTEX_LOCK_PI:
+            
+            {
+                
+                long e = 0L;
+                futex_rt_lock();
+
+
+                if(*kaddr == 0) 
+                    *kaddr = (uint32_t) current_task->tid;
+                
+                else {
+
+                    if(*kaddr == current_task->tid)
+                        e = -EDEADLK;
+                    
+                    else {
+                        
+                        *kaddr |= FUTEX_WAITERS;
+
+
+                        futex_wait(current_task, kaddr, *kaddr, NULL);
+
+                        arch_task_return_yield(0);
+
+                    }
+                }
+
+
+                futex_rt_unlock();
+                return e;
+            }
+
+         
+        case FUTEX_TRYLOCK_PI:
+
+            {
+                
+                long e = 0L;
+                futex_rt_lock();
+
+
+                if(*kaddr == 0) 
+                    *kaddr = (uint32_t) current_task->tid;
+                
+                else {
+
+                    if(*kaddr == current_task->tid)
+                        e = -EDEADLK;
+                    
+                    e = -1; // FIXME: Return valid error
+
+                }
+
+
+                futex_rt_unlock();
+                return e;
+            }
+
+
+        case FUTEX_UNLOCK_PI:
+
+            {
+                
+                futex_rt_lock();
+
+                if(*kaddr != 0) 
+                    *kaddr = (uint32_t) 0;
+
+                futex_wakeup(kaddr, 1);
+                futex_rt_unlock();
+                break;
+
+            }
+            
+
+
+        case FUTEX_WAIT_BITSET:
+            return -ENOSYS;
+
+        default:
+            return -ENOSYS;
+
+    }
+
+
+    return 0L;
+
 });
