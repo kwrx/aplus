@@ -21,6 +21,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -28,7 +30,6 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-#include <stdint.h>
 
 #include <aplus/utils/list.h>
 
@@ -66,6 +67,6 @@ int tmpfs_rename (inode_t* inode, const char* name, const char* newname) {
         return errno = ENOENT, -1;
 
    
-    strncpy(d->name, newname, MAXNAMLEN);
+    strncpy(d->name, newname, CONFIG_MAXNAMLEN);
     return 0;
 }

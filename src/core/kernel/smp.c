@@ -27,10 +27,8 @@
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/task.h>
 
 
 cpu_t* smp_get_current_cpu(void) {

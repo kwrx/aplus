@@ -51,10 +51,10 @@
 SYSCALL(33, dup2,
 long sys_dup2 (unsigned int fd, unsigned int newfd) {
 
-    if(unlikely(fd > OPEN_MAX))    // TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX))    // TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(newfd > OPEN_MAX)) // TODO: Add Network Support */
+    if(unlikely(newfd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
         return -EBADF;
 
     if(unlikely(!current_task->fd[fd].ref))

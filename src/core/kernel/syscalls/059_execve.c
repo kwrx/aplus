@@ -36,14 +36,14 @@
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <sys/signal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
-#include <hal/userspace.h>
+#include <aplus/hal.h>
+
+
+
 
 
 
@@ -252,9 +252,9 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
                     arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
-                                    ARCH_VMM_MAP_RDWR      |
-                                    ARCH_VMM_MAP_USER      |
-                                    ARCH_VMM_MAP_TYPE_PAGE);
+                                    ARCH_VMM_MAP_RDWR       |
+                                    ARCH_VMM_MAP_USER       |
+                                    ARCH_VMM_MAP_TYPE_PUBLIC);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
@@ -265,9 +265,9 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
                     arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz,
-                                    flags                  |
-                                    ARCH_VMM_MAP_USER      |
-                                    ARCH_VMM_MAP_TYPE_PAGE);
+                                    flags                   |
+                                    ARCH_VMM_MAP_USER       |
+                                    ARCH_VMM_MAP_TYPE_PUBLIC);
 
                     break;
 
@@ -305,7 +305,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     int i;
-    for(i = 0; i < OPEN_MAX; i++) {
+    for(i = 0; i < CONFIG_OPEN_MAX; i++) {
 
         if(!current_task->fd[i].ref)
             continue;

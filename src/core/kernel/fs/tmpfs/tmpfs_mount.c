@@ -21,6 +21,10 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <sys/types.h>
+#include <sys/mount.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -28,10 +32,6 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-
-#include <stdint.h>
-#include <sys/types.h>
-#include <sys/mount.h>
 
 #include <aplus/utils/list.h>
 
@@ -88,7 +88,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     dir->sb->st.f_favail = TMPFS_NODES_MAX;
     dir->sb->st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
     dir->sb->st.f_fsid = TMPFS_ID;
-    dir->sb->st.f_namemax = MAXNAMLEN;
+    dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
 
     dir->sb->ops.getattr = tmpfs_getattr;

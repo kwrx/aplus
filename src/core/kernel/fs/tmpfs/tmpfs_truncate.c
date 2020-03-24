@@ -21,6 +21,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -28,9 +30,6 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <stdio.h>
-
 
 #include "tmpfs.h"
 
@@ -51,7 +50,7 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
     
 
 
-    i->capacity = BUFSIZ + len;
+    i->capacity = CONFIG_BUFSIZ + len;
     i->st.st_size = len;
 
     i->data = krealloc(i->data, i->capacity, GFP_KERNEL);

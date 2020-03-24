@@ -35,15 +35,13 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/uio.h>
+#include <limits.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+#include <aplus/hal.h>
 
-struct iovec {
-               void  *iov_base;    /* Starting address */
-               size_t iov_len;     /* Number of bytes to transfer */
-           };
+
+
+
 
 
 /***
@@ -63,5 +61,39 @@ struct iovec {
 
 SYSCALL(20, writev,
 long sys_writev (unsigned long fd, const struct iovec __user * vec, unsigned long vlen) {
-    return -ENOSYS;
+
+    if(unlikely(!vec))
+        return -EINVAL;
+
+    if(unlikely(!ptr_check(vec, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(vlen > INT_MAX))
+        return -EINVAL;
+
+    if(unlikely(vlen == 0))
+        return 0;
+
+
+    long i, tot;
+
+    for(i = tot = 0; i < vlen; i++) {
+
+        if(unlikely(!vec[i].iov_base))
+            continue;
+
+        if(unlikely(!vec[i].iov_len))
+            continue;
+
+        ssize_t e;
+        if((e = sys_write(fd, vec[i].iov_base, vec[i].iov_len)) < 0)
+            return e;
+
+        tot += e;
+
+    }
+
+
+    return tot;
+    
 });

@@ -25,17 +25,13 @@
                                                                       
 #include <stdint.h>
 #include <string.h>
+
 #include <aplus.h>
-#include <aplus/multiboot.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
 #include <aplus/smp.h>
-
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
+#include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
@@ -43,6 +39,7 @@
 #include <arch/x86/apic.h>
 #include <arch/x86/smp.h>
 #include <arch/x86/vmm.h>
+
 
 
 __percpu
@@ -507,7 +504,7 @@ void arch_cpu_startup(int index) {
 #endif
 
     //* Clone Address Space
-    arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space);
+    arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space, ARCH_VMM_CLONE_VM);
 
 
     //* Map AP Startup Area
@@ -515,14 +512,6 @@ void arch_cpu_startup(int index) {
         ARCH_VMM_MAP_FIXED | 
         ARCH_VMM_MAP_RDWR
     );
-
-    //* Map AP Stack Area
-    arch_vmm_map (&core->cpu.cores[index].address_space, KERNEL_STACK_AREA, -1, X86_MMU_HUGE_2MB_PAGESIZE,
-        ARCH_VMM_MAP_HUGETLB     | 
-        ARCH_VMM_MAP_HUGE_2MB    |
-        ARCH_VMM_MAP_TYPE_UNIQUE |
-        ARCH_VMM_MAP_RDWR);
-
 
 
 

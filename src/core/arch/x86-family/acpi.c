@@ -31,10 +31,7 @@
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
-
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/vmm.h>
+#include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>

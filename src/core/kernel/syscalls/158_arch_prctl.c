@@ -34,9 +34,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/task.h>
+#include <aplus/hal.h>
+
+
 
 
 /***

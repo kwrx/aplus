@@ -3,8 +3,6 @@
 
 #ifndef __ASSEMBLY__
 
-#include <sys/cdefs.h>
-
 
 #if defined(DEBUG)
 #define DEBUG_ASSERT(i)     \

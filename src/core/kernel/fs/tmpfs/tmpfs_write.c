@@ -21,6 +21,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -28,10 +30,6 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-
-#include <stdint.h>
-#include <stdio.h>
-
 
 #include "tmpfs.h"
 
@@ -63,7 +61,7 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
 
         if(pos + len > i->capacity) {
 
-            i->capacity = BUFSIZ + pos + len;
+            i->capacity = CONFIG_BUFSIZ + pos + len;
             i->data = krealloc(i->data, i->capacity, GFP_USER);
         
         }

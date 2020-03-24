@@ -36,9 +36,9 @@
 #include <sys/stat.h>
 #include <dirent.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+#include <aplus/hal.h>
+
+
 
 
 /***
@@ -62,7 +62,7 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
     if(unlikely(!dirent))
         return -EINVAL;
 
-    if(unlikely(fd > OPEN_MAX - 1))
+    if(unlikely(fd > CONFIG_OPEN_MAX - 1))
         return -EBADF;
 
     if(unlikely(!ptr_check(dirent, R_OK | W_OK)))

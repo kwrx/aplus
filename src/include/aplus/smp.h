@@ -3,7 +3,7 @@
 
 #ifndef __ASSEMBLY__
 #include <time.h>
-#include <sys/cdefs.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>

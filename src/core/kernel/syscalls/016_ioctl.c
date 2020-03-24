@@ -22,6 +22,12 @@
  */
 
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/ioctl.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
@@ -29,15 +35,9 @@
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+
 
 
 /***
@@ -57,7 +57,7 @@
 SYSCALL(16, ioctl,
 long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
 
-    if(unlikely(fd > OPEN_MAX)) /* TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
     if(unlikely(!current_task->fd[fd].ref))

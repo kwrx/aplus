@@ -26,12 +26,11 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
-#include <aplus/multiboot.h>
 #include <aplus/memory.h>
+#include <aplus/multiboot.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/vmm.h>
+
 
 
 

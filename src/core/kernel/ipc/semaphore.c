@@ -21,14 +21,15 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
 #include <aplus/smp.h>
-#include <stdint.h>
+#include <aplus/hal.h>
 
-#include <hal/timer.h>
+
 
 
 void sem_init(semaphore_t* s, long value) {

@@ -22,18 +22,19 @@
  */
 
 
+#include <stdint.h>
+#include <dirent.h>
+#include <sys/types.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/smp.h>
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
-#include <aplus/utils/list.h>
+#include <aplus/errno.h>
 
-#include <stdint.h>
-#include <dirent.h>
-#include <errno.h>
-#include <sys/types.h>
+#include <aplus/utils/list.h>
 
 #include <dev/interface.h>
 #include <dev/char.h>
@@ -242,7 +243,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 
-    char buf[MAXNAMLEN] = { 0 };
+    char buf[CONFIG_MAXNAMLEN] = { 0 };
     strcpy(buf, "/dev/");
     strcat(buf, device->name);
 
@@ -347,7 +348,7 @@ void device_unlink(device_t* device) {
 
 
 
-    char buf[MAXNAMLEN] = { 0 };
+    char buf[CONFIG_MAXNAMLEN] = { 0 };
     strcpy(buf, "/dev/");
     strcpy(buf, device->name);
 

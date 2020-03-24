@@ -21,6 +21,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
@@ -28,8 +30,6 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-
 
 #include "tmpfs.h"
 
@@ -62,7 +62,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
 
     inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
-    strncpy(d->name, name, MAXNAMLEN);
+    strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
     d->ino = i->st.st_ino;
     d->sb = inode->sb;

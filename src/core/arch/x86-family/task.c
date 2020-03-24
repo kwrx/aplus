@@ -22,26 +22,22 @@
  */
 
 
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
 #include <aplus/task.h>
-
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/vmm.h>
-#include <hal/task.h>
+#include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/intr.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
-
-#include <stdint.h>
-#include <string.h>
-#include <time.h>
 
 
 
@@ -146,7 +142,7 @@ pid_t arch_task_spawn_init() {
     memset(&task->clock , 0, sizeof(struct tms));
     memset(&task->sleep , 0, sizeof(struct timespec));
     memset(&task->rusage, 0, sizeof(struct rusage));
-    memset(&task->fd    , 0, sizeof(struct fd) * OPEN_MAX);
+    memset(&task->fd    , 0, sizeof(struct fd) * CONFIG_OPEN_MAX);
     memset(&task->exit  , 0, sizeof(task->exit));
     memset(&task->iostat, 0, sizeof(task->iostat));
 
@@ -251,7 +247,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     memset(&task->exit   , 0, sizeof(task->exit));
     memset(&task->iostat , 0, sizeof(task->iostat));
 
-    memcpy(&task->fd, &current_task->fd, sizeof(struct fd) * OPEN_MAX);
+    memcpy(&task->fd, &current_task->fd, sizeof(struct fd) * CONFIG_OPEN_MAX);
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
 
 

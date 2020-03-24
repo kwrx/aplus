@@ -30,11 +30,8 @@
 #include <aplus/syscall.h>
 #include <aplus/module.h>
 #include <aplus/network.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
-#include <hal/reboot.h>
 
 
 

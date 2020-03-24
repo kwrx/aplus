@@ -21,6 +21,10 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -29,15 +33,8 @@
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
 
 
 /***
@@ -87,13 +84,13 @@ long sys_brk (unsigned long new_brk) {
                         ARCH_VMM_MAP_USER        |
                         ARCH_VMM_MAP_NOEXEC      |
                         ARCH_VMM_MAP_DEMAND      |
-                        ARCH_VMM_MAP_TYPE_PAGE  );
+                        ARCH_VMM_MAP_TYPE_PUBLIC );
 #else
         arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
                         ARCH_VMM_MAP_RDWR        |
                         ARCH_VMM_MAP_USER        |
                         ARCH_VMM_MAP_NOEXEC      |
-                        ARCH_VMM_MAP_TYPE_PAGE  );
+                        ARCH_VMM_MAP_TYPE_PUBLIC );
 #endif
         
     } else if(new_brk < current_task->userspace.end) {

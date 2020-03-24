@@ -27,8 +27,8 @@
 #include <aplus/elf.h>
 #include <aplus/ipc.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
+#include <aplus/hal.h>
+
 
 #include <stdarg.h>
 #include <stdio.h>

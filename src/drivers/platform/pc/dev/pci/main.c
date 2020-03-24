@@ -21,19 +21,21 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
-#include <stdint.h>
-#include <string.h>
-#include <errno.h>
+#include <aplus/errno.h>
 
 #include <dev/interface.h>
 #include <dev/pci.h>
 
 #include <arch/x86/cpu.h>
+
+
 
 
 MODULE_NAME("dev/pci");

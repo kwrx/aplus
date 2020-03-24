@@ -2,7 +2,7 @@
 #define _APLUS_X86_VMM_H
 
 #ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <arch/x86/intr.h>
@@ -25,8 +25,8 @@
 /* System defined 11-9 */
 #define X86_MMU_PG_AP_PFB           (1ULL << 9)
 
-#define X86_MMU_PG_AP_TP_PAGE       (0ULL << 10)
-#define X86_MMU_PG_AP_TP_UNIQUE     (1ULL << 10)
+#define X86_MMU_PG_AP_TP_PUBLIC     (0ULL << 10)
+#define X86_MMU_PG_AP_TP_PRIVATE    (1ULL << 10)
 #define X86_MMU_PG_AP_TP_MMAP       (2ULL << 10)
 #define X86_MMU_PG_AP_TP_COW        (3ULL << 10)
 
@@ -60,6 +60,29 @@ typedef uint32_t x86_page_t;
 #endif
 
 __BEGIN_DECLS
+
+
+static inline uintptr_t __alloc_page(uintptr_t pagesize, int zero) {
+
+    DEBUG_ASSERT(pagesize);
+    DEBUG_ASSERT(X86_MMU_PAGESIZE == PML1_PAGESIZE);
+
+
+    uintptr_t p;
+
+    if(likely(pagesize == X86_MMU_PAGESIZE))
+        p = pmm_alloc_block();
+    else
+        p = pmm_alloc_blocks_aligned(pagesize >> 12, pagesize);
+
+    
+    if(likely(zero))
+        memset((void*) arch_vmm_p2v(p, ARCH_VMM_AREA_HEAP), 0, pagesize);
+
+    return p;
+}
+
+
 
 void pagefault_handle(interrupt_frame_t*);
 

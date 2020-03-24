@@ -21,20 +21,21 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
-#include <stdint.h>
+
 
 
 void root_init(void) {
 
 
-    char cmd[CORE_BUFSIZ]  = { 0 };
-    char root[MAXNAMLEN]   = { 0 };
-    char rootfs[MAXNAMLEN] = { 0 };
+    char cmd[CONFIG_BUFSIZ]  = { 0 };
+    char root[CONFIG_MAXNAMLEN]   = { 0 };
+    char rootfs[CONFIG_MAXNAMLEN] = { 0 };
 
 
     strncpy(cmd, core->boot.cmdline, sizeof(cmd));
@@ -44,10 +45,10 @@ void root_init(void) {
 
         char* p;
         if((p = strstr(s, "root=")))
-            strncpy(root, &s[5], MAXNAMLEN);
+            strncpy(root, &s[5], CONFIG_MAXNAMLEN);
 
         if((p = strstr(s, "rootfs=")))
-            strncpy(rootfs, &s[7], MAXNAMLEN);
+            strncpy(rootfs, &s[7], CONFIG_MAXNAMLEN);
 
         // TODO: Add Kernel Arguments
     

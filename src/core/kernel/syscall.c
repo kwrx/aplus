@@ -25,12 +25,10 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <stdint.h>
 #include <string.h>
 
-#include <hal/cpu.h>
-#include <hal/debug.h>
-#include <hal/interrupt.h>
 
 
 #define SYSMAX 512
@@ -90,12 +88,14 @@ long syscall_invoke(long idx, long p0, long p1, long p2, long p3, long p4, long 
         errno = 0;
 
 
-
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-
     if(unlikely(errno == ENOSYS))
         kprintf("syscall: <%s> ENOSYS! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
+#endif
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 2
+    if(unlikely(errno == EFAULT))
+        kprintf("syscall: <%s> EFAULT! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 #endif
 
     return r;

@@ -29,11 +29,7 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
-
-#include <hal/cpu.h>
-#include <hal/task.h>
-#include <hal/timer.h>
-#include <hal/interrupt.h>
+#include <aplus/hal.h>
 
 
 extern task_t* sched_queue;

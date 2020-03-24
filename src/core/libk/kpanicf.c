@@ -26,12 +26,14 @@
 #include <stdint.h>
 #include <stdarg.h>
 #include <stdio.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
+#include <aplus/hal.h>
 
-#include <hal/debug.h>
-#include <hal/interrupt.h>
+
+
 
 
 /*!

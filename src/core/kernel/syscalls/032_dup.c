@@ -50,7 +50,7 @@
 SYSCALL(32, dup,
 long sys_dup (unsigned int fd) {
 
-    if(unlikely(fd > OPEN_MAX)) // TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
         return -EBADF;
 
     if(unlikely(!current_task->fd[fd].ref))
@@ -61,11 +61,11 @@ long sys_dup (unsigned int fd) {
 
     __lock(&current_task->lock, {
 
-        for(i = 0; i < OPEN_MAX; i++)
+        for(i = 0; i < CONFIG_OPEN_MAX; i++)
             if(!current_task->fd[i].ref)
                 break;
 
-        if(i == OPEN_MAX)
+        if(i == CONFIG_OPEN_MAX)
             break;
 
 
@@ -81,7 +81,7 @@ long sys_dup (unsigned int fd) {
     });
     
 
-    if(i == OPEN_MAX)
+    if(i == CONFIG_OPEN_MAX)
         return -EMFILE;
 
     return i;

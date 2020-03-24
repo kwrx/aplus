@@ -26,8 +26,6 @@
 #define _APLUS_FB_H
 
 #ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
-
 
 #include <sys/ioctl.h>
 #include <stdint.h>

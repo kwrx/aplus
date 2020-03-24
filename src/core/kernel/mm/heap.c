@@ -23,17 +23,15 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
                                                                         
+#include <string.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
-#include <aplus/multiboot.h>
 #include <aplus/memory.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
-#include <hal/vmm.h>
 
-#include <string.h>
 
 
 #define PTR_TO_HEADER(p)    \

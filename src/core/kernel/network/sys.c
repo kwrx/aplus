@@ -21,6 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -28,12 +29,8 @@
 #include <aplus/memory.h>
 #include <aplus/task.h>
 #include <aplus/syscall.h>
-#include <stdint.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/task.h>
-#include <hal/timer.h>
-#include <hal/interrupt.h>
 
 
 #include "lwip/opt.h"
@@ -70,6 +67,7 @@
 #include "lwip/tcp.h"
 #include "lwip/tcpip.h"
 #include "lwip/udp.h"
+
 
 
 

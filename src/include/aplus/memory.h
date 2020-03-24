@@ -2,7 +2,7 @@
 #define _APLUS_MEMORY_H
 
 #ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
@@ -50,10 +50,14 @@
 #define ARCH_VMM_MAP_HUGE_1GB       (1 << 10)
 
 #define ARCH_VMM_MAP_TYPE_MASK      (3 << 11)
-#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 11)
-#define ARCH_VMM_MAP_TYPE_UNIQUE    (1 << 11)
+#define ARCH_VMM_MAP_TYPE_PUBLIC    (0 << 11)
+#define ARCH_VMM_MAP_TYPE_PRIVATE   (1 << 11)
 #define ARCH_VMM_MAP_TYPE_MMAP      (2 << 11)
 #define ARCH_VMM_MAP_TYPE_COW       (3 << 11)
+
+#define ARCH_VMM_CLONE_VM           (1 << 0)
+#define ARCH_VMM_CLONE_PRIVATE      (1 << 1)
+#define ARCH_VMM_CLONE_DEMAND       (1 << 2)
 
 
 

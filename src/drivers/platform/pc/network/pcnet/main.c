@@ -35,9 +35,9 @@
 #include <dev/network.h>
 #include <dev/pci.h>
 
-#include <hal/timer.h>
-#include <hal/vmm.h>
-#include <hal/interrupt.h>
+
+
+
 
 #include <arch/x86/cpu.h>
 

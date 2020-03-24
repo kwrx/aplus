@@ -21,18 +21,16 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/elf.h>
 #include <aplus/ipc.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
+#include <aplus/hal.h>
 
-#include <hal/debug.h>
-#include <hal/vmm.h>
+
+
 
 
 void runtime_stacktrace(void) {

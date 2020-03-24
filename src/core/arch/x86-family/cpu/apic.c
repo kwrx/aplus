@@ -26,17 +26,13 @@
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
+
 #include <aplus.h>
-#include <aplus/multiboot.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
 #include <aplus/smp.h>
-
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
-#include <hal/interrupt.h>
+#include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>

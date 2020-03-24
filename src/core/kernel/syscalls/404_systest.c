@@ -21,14 +21,15 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
-#include <stdint.h>
-#include <errno.h>
+#include <aplus/errno.h>
+
 
 
 #if defined(DEBUG)

@@ -2,7 +2,7 @@
 #define _APLUS_X86_SMP_H
 
 #ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 

@@ -21,6 +21,11 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -29,15 +34,9 @@
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+
 
 
 /***
@@ -55,7 +54,7 @@
 SYSCALL(3, close,
 long sys_close (unsigned int fd) {
 
-    if(unlikely(fd > OPEN_MAX))
+    if(unlikely(fd > CONFIG_OPEN_MAX))
         return -EBADF;
 
     DEBUG_ASSERT(current_task->fd[fd].ref);

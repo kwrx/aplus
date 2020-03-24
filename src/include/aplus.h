@@ -62,6 +62,24 @@
 
 
 
+#ifndef __BEGIN_DECLS
+ #ifdef __cplusplus
+  #define __BEGIN_DECLS extern "C" {
+ #else
+  #define __BEGIN_DECLS
+ #endif
+#endif
+
+#ifndef __END_DECLS
+ #ifdef __cplusplus
+  #define __END_DECLS }
+ #else
+  #define __END_DECLS
+ #endif
+#endif
+
+
+
 #if defined(KERNEL)
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
 
@@ -122,7 +140,7 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 
-#define CORE_BUFSIZ                     1024
+
 #define CORE_MODULE_MAX                 1024
 
 
@@ -141,7 +159,7 @@ struct syscore {
             uintptr_t address;
             uintptr_t length;
             uintptr_t type;
-        } ptr[CORE_BUFSIZ << 2];
+        } ptr[CONFIG_BUFSIZ << 2];
 
         size_t count;
 
@@ -149,8 +167,8 @@ struct syscore {
 
     struct {
         
-        char cmdline[CORE_BUFSIZ];
-        char bootloader[CORE_BUFSIZ];
+        char cmdline[CONFIG_BUFSIZ];
+        char bootloader[CONFIG_BUFSIZ];
 
     } boot;
 
@@ -181,7 +199,7 @@ struct syscore {
         uintptr_t sh_entsize;
         uintptr_t sh_shndx;
         
-        char sections[CORE_BUFSIZ << 2];
+        char sections[CONFIG_BUFSIZ << 2];
 
     } exe;
 
@@ -194,7 +212,7 @@ struct syscore {
             uintptr_t size;
             uintptr_t status;
 
-            char cmdline[CORE_BUFSIZ];
+            char cmdline[CONFIG_BUFSIZ];
 
         } __packed ko[CORE_MODULE_MAX];
 

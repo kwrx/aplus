@@ -130,7 +130,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_favail = sb.s_free_inodes_count;
     dir->sb->st.f_flag = stflags;
     dir->sb->st.f_fsid = EXT2_ID;
-    dir->sb->st.f_namemax = MAXNAMLEN;
+    dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
     dir->sb->ops.getattr = ext2_getattr;
     //dir->sb->ops.setattr = ext2_setattr;

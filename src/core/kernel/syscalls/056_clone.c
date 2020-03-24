@@ -167,7 +167,7 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
             child->parent = current_task->parent;
 
         if(__is(CLONE_FILES))
-            memcpy(&child->fd, &current_task->fd, sizeof(fd_t) * OPEN_MAX);
+            memcpy(&child->fd, &current_task->fd, sizeof(fd_t) * CONFIG_OPEN_MAX);
             
         if(__is(CLONE_FS)) {
             child->root = current_task->root;

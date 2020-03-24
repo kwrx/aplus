@@ -21,20 +21,21 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
+#include <aplus/hal.h>
+#include <aplus/errno.h>
 
 #include <dev/interface.h>
 #include <dev/char.h>
 
-#include <hal/timer.h>
+
 
 
 MODULE_NAME("char/random");

@@ -34,7 +34,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <hal/cpu.h>
+#include <aplus/hal.h>
 
 
 /***

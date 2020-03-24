@@ -50,7 +50,7 @@
 SYSCALL(81, fchdir,
 long sys_fchdir (unsigned int fd) {
     
-    if(fd > OPEN_MAX)
+    if(fd > CONFIG_OPEN_MAX)
         return -EBADF;
 
     if(unlikely(!current_task->fd[fd].ref))

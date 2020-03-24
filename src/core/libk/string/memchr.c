@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <limits.h>
 #include <stdarg.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 

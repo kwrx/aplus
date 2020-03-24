@@ -21,17 +21,18 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <stdio.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/memory.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <errno.h>
+#include <aplus/errno.h>
 
 #include <dev/interface.h>
 #include <dev/char.h>
+
 
 
 MODULE_NAME("dev/char");

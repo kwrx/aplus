@@ -24,16 +24,14 @@
  */                                                                     
                                                                         
 #include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/endian.h>
-
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+#include <aplus/hal.h>
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
+
 
 
 #define BIOS_COM_ADDRESS            0x400

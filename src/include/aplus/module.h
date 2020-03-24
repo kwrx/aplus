@@ -27,7 +27,7 @@
 
 
 #ifndef __ASSEMBLY__
-#include <sys/cdefs.h>
+
 
 #include <aplus.h>
 #include <aplus/elf.h>

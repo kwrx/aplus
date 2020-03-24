@@ -35,9 +35,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+#include <aplus/hal.h>
+
+
 
 
 
@@ -181,7 +181,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     
     } else {
 
-        if(dfd > OPEN_MAX)
+        if(dfd > CONFIG_OPEN_MAX)
             return -EBADF;
 
         if(unlikely(!current_task->fd[dfd].ref))
@@ -277,11 +277,11 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     __lock(&current_task->lock, {
 
-        for(fd = 0; fd < OPEN_MAX; fd++)
+        for(fd = 0; fd < CONFIG_OPEN_MAX; fd++)
             if(!current_task->fd[fd].ref)
                 break;
 
-        if(fd == OPEN_MAX)
+        if(fd == CONFIG_OPEN_MAX)
             break;
 
         
@@ -306,7 +306,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     });
     
 
-    if(fd == OPEN_MAX)
+    if(fd == CONFIG_OPEN_MAX)
         return -EMFILE;
 
     if(fd == FILE_MAX)
@@ -314,7 +314,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
 
     DEBUG_ASSERT(fd >= 0);
-    DEBUG_ASSERT(fd <= OPEN_MAX - 1);
+    DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
     DEBUG_ASSERT(current_task->fd[fd].ref);
     DEBUG_ASSERT(current_task->fd[fd].ref->inode);
 

@@ -22,18 +22,20 @@
  */
 
 
+#include <string.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/elf.h>
 #include <aplus/memory.h>
+#include <aplus/hal.h>
+
 #include <aplus/utils/list.h>
 
-#include <string.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
+
+
 
 
 list(module_t*, m_queue);

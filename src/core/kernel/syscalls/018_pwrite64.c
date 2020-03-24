@@ -35,9 +35,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
+#include <aplus/hal.h>
+
+
 
 
 /***
@@ -58,5 +58,56 @@
 
 SYSCALL(18, pwrite64,
 long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos) {
-    return -ENOSYS;
+        
+    if(unlikely(!ptr_check(buf, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
+        return -EBADF;
+
+    if(unlikely(!current_task->fd[fd].ref))
+        return -EBADF;
+
+    if(unlikely(!(
+        (current_task->fd[fd].flags & O_WRONLY) ||
+        (current_task->fd[fd].flags & O_RDWR)
+    )))
+        return -EPERM;
+
+
+    // TODO */
+    // // if(unlikely(current_task->fd[fd].flags & O_NONBLOCK)) {
+    // //     struct pollfd p;
+    // //     p.fd = fd;
+    // //     p.events = POLLOUT;
+    // //     p.revents = 0;
+
+    // //     if(sys_poll(&p, 1, 0) < 0)
+    // //         return -EIO;
+
+    // //     if(!(p.revents & POLLOUT))
+    // //         return -EAGAIN;
+    // // }
+
+
+    current_task->iostat.wchar += (uint64_t) count;
+    current_task->iostat.syscw += 1;
+
+
+    int e = 0;
+
+    __lock(&current_task->fd[fd].ref->lock, {
+
+        if((e = vfs_write(current_task->fd[fd].ref->inode, buf, pos, count)) <= 0)
+            break;
+
+        current_task->iostat.write_bytes += (uint64_t) e;
+                
+    });
+
+
+    if(e < 0)
+        return -errno;
+
+    return e;
 });

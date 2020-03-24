@@ -24,12 +24,12 @@
  */                                                                     
                                                                         
 #include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/ipc.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/interrupt.h>
 
 
 

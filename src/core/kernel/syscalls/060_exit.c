@@ -91,7 +91,7 @@ long sys_exit (int status) {
         sched_dequeue(current_task);
 
         int i;
-        for(i = 0; i < OPEN_MAX; i++)
+        for(i = 0; i < CONFIG_OPEN_MAX; i++)
             sys_close(i);
 
         //task_release();

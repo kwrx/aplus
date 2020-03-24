@@ -10,11 +10,11 @@
 #include <signal.h>
 #include <time.h>
 #include <dirent.h>
-#include <sys/cdefs.h>
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
-#include <sys/syslimits.h>
+
 #include <sys/statvfs.h>
 
 #include <aplus.h>
@@ -96,7 +96,7 @@ struct inode_ops {
 
 struct inode {
 
-    char name[MAXNAMLEN];
+    char name[CONFIG_MAXNAMLEN];
     ino_t ino;
 
     struct superblock* sb;

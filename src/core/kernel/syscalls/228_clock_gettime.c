@@ -39,10 +39,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/timer.h>
-#include <hal/userspace.h>
+#include <aplus/hal.h>
+
+
+
 
 
 /***

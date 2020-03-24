@@ -25,17 +25,13 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
+
 #include <aplus.h>
 #include <aplus/multiboot.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
 #include <aplus/elf.h>
-
-#include <hal/cpu.h>
-#include <hal/task.h>
-#include <hal/debug.h>
-#include <hal/interrupt.h>
-
+#include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
@@ -100,11 +96,11 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
         switch(btags->type) {
 
             case MULTIBOOT_TAG_TYPE_CMDLINE:
-                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string, CORE_BUFSIZ);
+                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
-                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string, CORE_BUFSIZ);
+                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_MODULE:
@@ -117,7 +113,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                     core->modules.ko[i].size      = ((struct multiboot_tag_module*) btags)->mod_end -
                                                     ((struct multiboot_tag_module*) btags)->mod_start;
 
-                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CORE_BUFSIZ);
+                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CONFIG_BUFSIZ);
 
                 }
                 
@@ -273,7 +269,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     }
 
 
-    DEBUG_ASSERT(core->mmap.count < (CORE_BUFSIZ << 2));
+    DEBUG_ASSERT(core->mmap.count < (CONFIG_BUFSIZ << 2));
 
 
 

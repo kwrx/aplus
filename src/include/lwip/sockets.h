@@ -118,10 +118,10 @@ typedef u32_t socklen_t;
 #endif /* IOV_MAX */
 
 #if !defined(iovec)
-struct iovec {
-  void  *iov_base;
-  size_t iov_len;
-};
+// struct iovec {
+//   void  *iov_base;
+//   size_t iov_len;
+// };
 #endif
 
 struct msghdr {

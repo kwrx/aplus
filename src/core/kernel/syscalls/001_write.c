@@ -21,6 +21,11 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -29,15 +34,8 @@
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <aplus/hal.h>
 
-#include <hal/cpu.h>
-#include <hal/vmm.h>
-#include <hal/debug.h>
 
 
 /***
@@ -56,11 +54,11 @@
 
 SYSCALL(1, write,
 long sys_write (unsigned int fd, const void __user * buf, size_t size) {
-    
+
     if(unlikely(!ptr_check(buf, R_OK)))
         return -EFAULT;
 
-    if(unlikely(fd > OPEN_MAX)) /* TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
     if(unlikely(!current_task->fd[fd].ref))
@@ -90,6 +88,10 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
     current_task->iostat.wchar += (uint64_t) size;
     current_task->iostat.syscw += 1;
+
+
+    if(unlikely(size == 0))
+        return 0;
 
 
     int e = 0;

@@ -9,10 +9,10 @@
 #include <stdint.h>
 #include <signal.h>
 #include <time.h>
-#include <sys/cdefs.h>
+
 #include <sys/times.h>
 #include <sys/resource.h>
-#include <sys/syslimits.h>
+
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -90,7 +90,7 @@ typedef struct task {
 
     struct timespec clock[TASK_CLOCK_MAX];
     struct timespec sleep;
-    struct fd fd[OPEN_MAX];
+    struct fd fd[CONFIG_OPEN_MAX];
 
     struct {
         // TODO: Signal Handlers

@@ -25,10 +25,12 @@
 #ifndef _LWIPOPTS_H
 #define _LWIPOPTS_H
 
+
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/memory.h>
 #include <aplus/debug.h>
-#include <stdint.h>
 
 
 #define NUM_SHIFT                           4
