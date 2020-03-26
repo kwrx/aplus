@@ -123,7 +123,7 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         
         frames[i] = 0;
 
-        if(unlikely(!ptr_check(frame, R_OK)))
+        if(unlikely(!uio_check(frame, R_OK)))
             break;
 
         frames[i] = frame->ip;

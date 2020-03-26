@@ -41,9 +41,11 @@
 
 
 
-#define FRAME(p)    \
+#define FRAME(p)            \
     ((interrupt_frame_t*) p->frame)
 
+#define WRITE_SP0(p, v)     \
+    ((tss_t*) (p))->sp0 = ((uintptr_t) (v) & ~511UL)
 
 
 
@@ -61,16 +63,29 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 
+    if(unlikely(next->flags & TASK_FLAGS_NO_FRAME)) {
+
+        memcpy(next->frame, current_cpu->frame, sizeof(interrupt_frame_t));
+        next->flags &= ~TASK_FLAGS_NO_FRAME;
+    
+    }
+
+
+
     if(likely(prev != next)) {
         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
+        // TODO: Save FPU Registers
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
             x86_set_cr3(next->address_space->pm);
 
     }
+
+
+    WRITE_SP0(current_cpu->tss, next->sp0);
 
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
     x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
@@ -81,21 +96,13 @@ void arch_task_switch(task_t* prev, task_t* next) {
 }
 
 
-void arch_task_return_yield(long ret) {
-
-    DEBUG_ASSERT(current_cpu);
-    DEBUG_ASSERT(current_cpu->frame);
-
-    ((interrupt_frame_t*) current_cpu->frame)->ax = ret;
-    schedule(1);
-}
-
 
 pid_t arch_task_spawn_init() {
 
     task_t* task = (task_t*) kcalloc (
         1, (sizeof(task_t))                                 // TCB
          + (sizeof(interrupt_frame_t))                      // Registers
+         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
     , GFP_KERNEL);
 
 
@@ -120,10 +127,12 @@ pid_t arch_task_spawn_init() {
     task->policy    = TASK_POLICY_RR;
     task->priority  = TASK_PRIO_REG;
     task->caps      = TASK_CAPS_SYSTEM;
+    task->flags     = TASK_FLAGS_NO_FRAME;
     task->affinity  = ~(1 << current_cpu->id);
 
     
     task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
+    task->sp0           = (void*) ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + KERNEL_SYSCALL_STACKSIZE);
     task->address_space = (void*) &current_cpu->address_space;
 
     current_cpu->address_space.refcount++;
@@ -164,14 +173,18 @@ pid_t arch_task_spawn_init() {
     task->next   = NULL;
     task->parent = NULL;
 
+
     if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID)
         task->parent = core->bsp.running_task;
     
     current_cpu->running_task = task;
 
+    WRITE_SP0(current_cpu->tss, task->sp0);
+
+
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn init process pid(%d) cpu(%d)\n", task->tid, arch_cpu_get_current_id());
+    kprintf("task: spawn init process pid(%d) cpu(%d) sp0(%p)\n", task->tid, arch_cpu_get_current_id(), task->sp0);
 #endif
 
     sched_enqueue(task);
@@ -193,12 +206,14 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
          + (sizeof(char*) * 2) + strlen(name) + 1           // Arguments & Environment
          + (sizeof(interrupt_frame_t))                      // Registers
          + (stacksize)                                      // Stack
+         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
     , GFP_KERNEL);
 
 
     uintptr_t offset_of_argv  = ((uintptr_t) task + sizeof(task_t));
     uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1);
     uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t));
+    uintptr_t offset_of_sp0   = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t) + stacksize + KERNEL_SYSCALL_STACKSIZE);
 
 
 
@@ -225,13 +240,15 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->policy    = current_task->policy;
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
+    task->flags     = 0;
     task->affinity  = 0;
     
 
     task->frame         = (void*) offset_of_frame;
-    task->address_space = (void*) &current_cpu->address_space;
+    task->sp0           = (void*) offset_of_sp0;
+    task->address_space = (void*) current_task->address_space;
 
-    current_cpu->address_space.refcount++;
+    current_task->address_space->refcount++;
 
 
     task->cwd  = current_task->cwd;
@@ -256,15 +273,15 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
     FRAME(task)->ip = (uintptr_t) entry;
     FRAME(task)->cs = KERNEL_CS;
-    FRAME(task)->flags = 0x200;
-    FRAME(task)->user_sp = offset_of_stack + stacksize;
-    FRAME(task)->user_ss = KERNEL_DS;
+    FRAME(task)->flags = 0x202;
+    FRAME(task)->sp = offset_of_stack + stacksize;
+    FRAME(task)->ss = KERNEL_DS;
 
 #if defined(__x86_64__)
     FRAME(task)->di = (uintptr_t) arg;
 #else
-    (*(uintptr_t*) FRAME(task)->user_sp)-- = (uintptr_t) NULL;
-    (*(uintptr_t*) FRAME(task)->user_sp)-- = (uintptr_t) arg;
+    (*(uintptr_t*) FRAME(task)->sp)-- = (uintptr_t) NULL;
+    (*(uintptr_t*) FRAME(task)->sp)-- = (uintptr_t) arg;
 #endif
 
 
@@ -275,10 +292,11 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn kthread %s pid(%d) stacksize(%p)\n", task->argv[0], task->tid, stacksize);
+    kprintf("task: spawn kthread %s pid(%d) ip(%p) sp0(%p) stacksize(%p)\n", task->argv[0], task->tid, entry, task->sp0, stacksize);
 #endif
 
     sched_enqueue(task);
 
     return task->tid;
-} 
+}
+

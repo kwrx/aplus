@@ -65,7 +65,7 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
     if(unlikely(fd > CONFIG_OPEN_MAX - 1))
         return -EBADF;
 
-    if(unlikely(!ptr_check(dirent, R_OK | W_OK)))
+    if(unlikely(!uio_check(dirent, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(count < sizeof(struct dirent)))

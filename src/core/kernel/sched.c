@@ -39,22 +39,57 @@ spinlock_t sched_lock = SPINLOCK_INIT;
 
 
 
+static inline void __check_futex(void) {
+
+    list_each(current_task->futexes, i) {
+            
+        if(futex_expired(i))
+            futex_wakeup_thread(current_task, i);
+
+    }
+
+}
+
+
+static inline void __check_sleep(void) {
+
+    if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
+
+        uint64_t tss = current_task->sleep.timeout.tv_sec;
+        uint64_t tsn = current_task->sleep.timeout.tv_nsec;
+
+        struct timespec t0;
+        sys_clock_gettime(current_task->sleep.clockid, &t0);
+
+
+        if((tss * 1000000000ULL) + tsn < ((uint64_t) t0.tv_sec * 1000000000ULL) + (uint64_t) t0.tv_nsec)
+            current_task->status = TASK_STATUS_READY;
+            
+    }
+
+}
+
+
+
 static void __sched_next(void) {
 
     do {
 
-        current_task = current_task->next;
+        do {
 
-        if(unlikely(!current_task))
-            current_task = sched_queue;
+            current_task = current_task->next;
 
-
-        DEBUG_ASSERT(current_task);
-        DEBUG_ASSERT(current_task->frame);
+            if(unlikely(!current_task))
+                current_task = sched_queue;
 
 
-        if(unlikely(current_task->affinity & (1 << current_cpu->id)))
-            continue;
+            DEBUG_ASSERT(current_task);
+            DEBUG_ASSERT(current_task->frame);
+
+        } while(current_task->affinity & (1 << current_cpu->id));
+
+
+
 
         if(unlikely(current_task->status == TASK_STATUS_STOP))
             continue;
@@ -62,25 +97,21 @@ static void __sched_next(void) {
         if(unlikely(current_task->status == TASK_STATUS_ZOMBIE))
             continue;
 
+        
+
+        //__check_timers();
 
 
-        // * Check Futexes
-
-        list_each(current_task->futexes, i) {
-            
-            if(futex_expired(i))
-                futex_wakeup_thread(current_task, i);
-        }
-
-
-        // TODO: Check...
-
-        if(unlikely(current_task->status != TASK_STATUS_READY))
+        if(unlikely(current_task->status != TASK_STATUS_SLEEP))
             continue;
 
-        break;
 
-    } while(1);
+        __check_futex();
+        //__check_waiters();
+        __check_sleep();
+
+
+    } while(current_task->status != TASK_STATUS_READY);
 
 }
 
@@ -88,10 +119,12 @@ static void __sched_next(void) {
 
 void schedule(int yield) {
 
-    task_t* prev_task = current_task;
-
 
     __lock(&sched_lock, {
+
+
+        task_t* prev_task = current_task;
+
 
 
         #define __update_clock(task, type, delta) {                             \
@@ -169,6 +202,8 @@ void schedule(int yield) {
         arch_task_switch(prev_task, current_task);
 
     });
+
+
 
 }
 

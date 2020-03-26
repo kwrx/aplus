@@ -193,7 +193,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     if(unlikely(!filename))
         return -EINVAL;
     
-    if(unlikely(!ptr_check(filename, R_OK)))
+    if(unlikely(!uio_check(filename, R_OK)))
         return -EFAULT;
 
 

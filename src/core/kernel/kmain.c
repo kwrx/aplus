@@ -42,7 +42,8 @@
 
 
 
-void cmain() {
+void cmain(void* arg) {
+    (void) arg;
 
     current_task->priority = TASK_PRIO_MIN;
 
@@ -82,6 +83,8 @@ void kmain() {
     __init(module,  ());
     __init(root,    ());
 
+
+    arch_task_spawn_kthread("init", &cmain, 256, NULL);
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,

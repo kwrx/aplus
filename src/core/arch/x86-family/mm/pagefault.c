@@ -184,13 +184,13 @@ void pagefault_handle(interrupt_frame_t* frame) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-pfe: handled page fault! cs(%p), ip(%p), sp(%p), cr2(%p)\n", frame->cs, frame->ip, frame->user_sp, x86_get_cr2());
+    kprintf("x86-pfe: handled page fault! cs(%p), ip(%p), sp(%p), cr2(%p) cpu(%d) pid(%d)\n", frame->cs, frame->ip, frame->sp, x86_get_cr2(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
     return;
 
 
 pfe:
-    kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p)\n", frame->errno, frame->cs, frame->ip, frame->user_sp, x86_get_cr2());
+    kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p) cpu(%d) pid(%d)\n", frame->errno, frame->cs, frame->ip, frame->sp, x86_get_cr2(), current_cpu->id, current_task ? current_task->tid : 0);
 
 }

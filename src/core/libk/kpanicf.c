@@ -46,9 +46,9 @@ void kpanicf(const char* fmt, ...) {
 
 
     static char buf[8192];
-    static spinlock_t buflock = SPINLOCK_INIT;
+    //static spinlock_t buflock = SPINLOCK_INIT;
 
-    __lock(&buflock, {
+    //__lock(&buflock, {
 
         va_list v;
         va_start(v, fmt);
@@ -66,7 +66,7 @@ void kpanicf(const char* fmt, ...) {
 
         }
 
-    });
+    //});
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
     //runtime_stacktrace();

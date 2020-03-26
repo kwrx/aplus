@@ -57,7 +57,8 @@ long sys_close (unsigned int fd) {
     if(unlikely(fd > CONFIG_OPEN_MAX))
         return -EBADF;
 
-    DEBUG_ASSERT(current_task->fd[fd].ref);
+    if(unlikely(!current_task->fd[fd].ref))
+        return -EBADF;
 
 
     __lock(&current_task->lock, {

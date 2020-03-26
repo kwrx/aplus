@@ -38,6 +38,9 @@
         .type arch_userspace_enter, @function
 arch_userspace_enter:
 
+        cli
+        cld
+
         movq    %cr3, %rax
         movq    %rax, %cr3
 
@@ -50,7 +53,7 @@ arch_userspace_enter:
         pushq   $USER_DS | 3
         pushq   %rsi
 
-        pushq   $0x200
+        pushq   $0x202
         pushq   $USER_CS | 3
         pushq   %rdi
 
@@ -74,7 +77,7 @@ arch_userspace_enter:
         pushq   $0
         pushq   %rdx
 
-        .extern interrupt_return_skip_fpu
-        jmp     interrupt_return_skip_fpu
+        .extern interrupt_return
+        jmp     interrupt_return
 
 END(arch_userspace_enter)

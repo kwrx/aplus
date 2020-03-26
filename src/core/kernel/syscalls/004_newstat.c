@@ -61,10 +61,10 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
     if(!statbuf)
         return -EINVAL;
 
-    if(!ptr_check(filename, R_OK))
+    if(!uio_check(filename, R_OK))
         return -EFAULT;
 
-    if(!ptr_check(statbuf, R_OK | W_OK))
+    if(!uio_check(statbuf, R_OK | W_OK))
         return -EFAULT;
 
     

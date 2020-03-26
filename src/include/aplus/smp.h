@@ -48,6 +48,8 @@ typedef struct {
     vmm_address_space_t address_space;
     
     void* frame;
+    void* tss;
+    
     int errno;
 
     task_t*  running_task;

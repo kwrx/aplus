@@ -45,7 +45,7 @@ void runtime_stacktrace(void) {
         if(!frames[i])
             break;
 
-        if(!ptr_check(frames[i], R_OK))
+        if(!uio_check(frames[i], R_OK))
             break;
 
         const char* s;

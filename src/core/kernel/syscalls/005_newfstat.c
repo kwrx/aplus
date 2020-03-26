@@ -61,7 +61,7 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
     if(!statbuf)
         return -EINVAL;
 
-    if(!ptr_check(statbuf, R_OK | W_OK))
+    if(!uio_check(statbuf, R_OK | W_OK))
         return -EFAULT;
 
     if(unlikely(!current_task->fd[fd].ref))

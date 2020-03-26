@@ -64,7 +64,7 @@ long sys_clock_getres (clockid_t which_clock, struct timespec __user * tp) {
     if(unlikely(!tp))
         return -EINVAL;
 
-    if(unlikely(!ptr_check(tp, R_OK | W_OK)))
+    if(unlikely(!uio_check(tp, R_OK | W_OK)))
         return -EFAULT;
 
 

@@ -56,7 +56,7 @@
 SYSCALL(0, read,
 long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
-    if(unlikely(!ptr_check(buf, R_OK | W_OK)))
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */

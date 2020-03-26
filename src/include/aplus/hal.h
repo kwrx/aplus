@@ -59,8 +59,25 @@
 
 #ifndef __ASSEMBLY__
 
-#define ptr_check(p, m)    \
+#define uio_check(p, m)    \
     (arch_vmm_access(current_task->address_space, (uintptr_t) (p), (int) (m)) == 0 ? 1 : 0)
+
+
+#define __U(p)              \
+    arch_vmm_p2v(arch_vmm_v2p((uintptr_t) (p), ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP)
+
+#define uio_r8(p)                  (*(uint8_t volatile*) (__U(p)))
+#define uio_r16(p)                 (*(uint16_t volatile*) (__U(p)))
+#define uio_r32(p)                 (*(uint32_t volatile*) (__U(p)))
+#define uio_r64(p)                 (*(uint64_t volatile*) (__U(p)))
+
+#define uio_w8(p, v)               { uio_r8(p) = (uint8_t) (v); }
+#define uio_w16(p, v)              { uio_r16(p) = (uint16_t) (v); }
+#define uio_w32(p, v)              { uio_r32(p) = (uint32_t) (v); }
+#define uio_w64(p, v)              { uio_r64(p) = (uint64_t) (v); }
+
+#undef __U
+
 
 
 __BEGIN_DECLS
@@ -82,7 +99,7 @@ void arch_intr_unmap_irq(uint8_t);
 
 
 void arch_task_switch(task_t*, task_t*);
-void arch_task_return_yield(long);
+void arch_task_yield(void);
 pid_t arch_task_spawn_init(void);
 pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
 
@@ -107,6 +124,7 @@ uint64_t arch_timer_generic_getres(void);
 
 
 void arch_userspace_enter(uintptr_t, uintptr_t, void*);
+void arch_userspace_return_yield(long);
 
 
 uintptr_t arch_vmm_getpagesize();

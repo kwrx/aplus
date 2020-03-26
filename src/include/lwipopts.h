@@ -278,7 +278,7 @@
 
 // * Sys Options *
 #define LWIP_COMPAT_MUTEX                  1
-#define LWIP_COMPAT_MUTEX_ALLOWED         1
+#define LWIP_COMPAT_MUTEX_ALLOWED          1
 
 
 

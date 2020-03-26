@@ -121,13 +121,13 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     if(unlikely(!envp))
         return -EINVAL;
 
-    if(unlikely(!ptr_check(filename, R_OK)))
+    if(unlikely(!uio_check(filename, R_OK)))
         return -EFAULT;
 
-    if(unlikely(!ptr_check(argv, R_OK)))
+    if(unlikely(!uio_check(argv, R_OK)))
         return -EFAULT;
 
-    if(unlikely(!ptr_check(envp, R_OK)))
+    if(unlikely(!uio_check(envp, R_OK)))
         return -EFAULT;
 
 
@@ -323,10 +323,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
 
     for(i = 0; argv[i]; i++)
-        DEBUG_ASSERT(ptr_check(argv[i], R_OK));
+        DEBUG_ASSERT(uio_check(argv[i], R_OK));
 
     for(i = 0; envp[i]; i++)
-        DEBUG_ASSERT(ptr_check(envp[i], R_OK));
+        DEBUG_ASSERT(uio_check(envp[i], R_OK));
 
 #endif
 

@@ -31,7 +31,7 @@
 
 void *memcpy(void *restrict dest, const void *restrict src, size_t n) {
 
-	for(int i = 0; i < n; i++)
+	for(size_t i = 0; i < n; i++)
 		((char*) dest) [i] = ((const char*) src) [i];
 
 	return dest;

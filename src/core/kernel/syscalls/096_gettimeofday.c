@@ -61,7 +61,7 @@ long sys_gettimeofday (struct timeval __user * tv, struct timezone __user * tz) 
     if(unlikely(!tv))
         return -EINVAL;
     
-    if(!ptr_check(tv, R_OK | W_OK))
+    if(!uio_check(tv, R_OK | W_OK))
         return -EINVAL;
 
 

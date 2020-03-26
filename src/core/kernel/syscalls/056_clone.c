@@ -59,11 +59,11 @@ long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void
     if(unlikely(!fn))
         return -EINVAL;
 
-    if(unlikely(!ptr_check(fn, R_OK | W_OK | X_OK)))
+    if(unlikely(!uio_check(fn, R_OK | W_OK | X_OK)))
         return -EFAULT;
 
     if(stack)
-        if(unlikely(!ptr_check(stack, R_OK | W_OK)))
+        if(unlikely(!uio_check(stack, R_OK | W_OK)))
             return -EFAULT;
 
 

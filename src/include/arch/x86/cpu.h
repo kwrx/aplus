@@ -354,6 +354,56 @@
 
 
 
+typedef struct tss {
+
+    union {
+        uint32_t __rsv0;
+        uint16_t link;
+    };
+
+    uintptr_t sp0;
+
+#if defined(__x86_64__)
+    uintptr_t sp1;
+    uintptr_t sp2;
+    uintptr_t __rsv1;
+    uintptr_t ist[7];
+    uintptr_t __rsv2;
+#else
+    uintptr_t ss0;
+    uintptr_t sp1;
+    uintptr_t ss1;
+    uintptr_t sp2;
+    uintptr_t ss2;
+    uintptr_t cr3;
+    uintptr_t ip;
+    uintptr_t flags;
+    uintptr_t ax;
+    uintptr_t cx;
+    uintptr_t dx;
+    uintptr_t bx;
+    uintptr_t sp;
+    uintptr_t bp;
+    uintptr_t si;
+    uintptr_t di;
+    uintptr_t es;
+    uintptr_t cs;
+    uintptr_t ss;
+    uintptr_t ds;
+    uintptr_t fs;
+    uintptr_t gs;
+    uintptr_t ldtr;
+#endif
+
+    uint32_t iopb;
+
+
+    uint64_t __padding[3];
+
+} __packed tss_t;
+
+
+
 /*!
  * @brief Get x86 Register value.
  */

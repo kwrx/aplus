@@ -58,14 +58,14 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
 // #if defined(DEBUG) && DEBUG_LEVEL >= 4
 
-//     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) user_sp(%p) user_ss(%p)\n",
+//     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) sp(%p) ss(%p)\n",
 //         frame->intno,
 //         frame->errno,
 //         frame->ip,
 //         frame->cs,
 //         frame->flags,
-//         frame->user_sp,
-//         frame->user_ss
+//         frame->sp,
+//         frame->ss
 //     );
 
 // #endif
@@ -77,12 +77,10 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     switch(frame->intno) {
 
         case 0xFF:
-        case 0x20 ... 0x7F:
-        case 0x81 ... 0xFD:
+        case 0x20 ... 0xFD:
             break;
 
 
-        case 0x80:
         case 0xFE:
 
 #if defined(__x86_64__)
@@ -96,7 +94,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
         case 0x02:
 
             // TODO: Handle NMI Interrupts
-            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->user_sp);
+            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p), cpu(%d)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
             break;
 
         case 0x0E:
@@ -108,7 +106,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
             // TODO: Handle User Exception
 
-            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->user_sp);
+            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p) cpu(%d)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
             break;
 
     }
@@ -146,8 +144,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
             apic_eoi();
             break;
 
-        case 0x21 ... 0x7F:
-        case 0x81 ... 0xFD:
+        case 0x21 ... 0xFD:
 
             __lock(&startup_irq[frame->intno - 0x20].lock, {
 
@@ -205,6 +202,7 @@ long arch_intr_disable(void) {
     return (s & (1 << 9));
 
 }
+
 
 
 

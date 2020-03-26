@@ -182,11 +182,11 @@ ap64_highstart:
 
         # Call AP Boot Main()
         .extern ap_bmain
-        call    ap_bmain
+        STDCALL(ap_bmain)
 
         # Call Kernel AP Main()
         .extern cmain
-        call    cmain
+        STDCALL(cmain)
 
 halt:
         hlt

@@ -145,6 +145,7 @@ tcpip_thread(void *arg)
       LWIP_ASSERT("tcpip_thread: invalid message", 0);
       continue;
     }
+
     tcpip_thread_handle_msg(msg);
   }
 }

@@ -58,31 +58,17 @@ interrupt_common:
         pushq   %rsi
         pushq   %rdi
 
-        # Save FPU Registers
-        subq    $1024, %rsp
-        fxsave64 (%rsp)         // TODO: Implement xsave, xrstor
-
-
         movq    %rsp, %rdi
 
         # Call Exception Handler
         .extern x86_exception_handler
-        callq   x86_exception_handler
-
+        STDCALL(x86_exception_handler)
+        
 
 
         .global interrupt_return
         .type interrupt_return, @function
 interrupt_return:
-
-        # Restore FPU Registers
-        fxrstor64 (%rsp)
-        addq    $1024, %rsp
-
-
-        .global interrupt_return_skip_fpu
-        .type interrupt_return_skip_fpu, @function
-interrupt_return_skip_fpu:
 
         # Restore CPU Registers
         popq    %rdi

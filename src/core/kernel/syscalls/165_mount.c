@@ -66,14 +66,14 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
         return -EINVAL;
 
 
-    if(unlikely(!ptr_check(dir_name, R_OK)))
+    if(unlikely(!uio_check(dir_name, R_OK)))
         return -EFAULT;
 
-    if(unlikely(!ptr_check(type, R_OK)))
+    if(unlikely(!uio_check(type, R_OK)))
         return -EFAULT;
 
     if(likely(dev_name))
-        if(unlikely(!ptr_check(dev_name, R_OK)))
+        if(unlikely(!uio_check(dev_name, R_OK)))
             return -EFAULT;
 
 

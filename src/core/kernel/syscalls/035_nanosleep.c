@@ -21,18 +21,17 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <time.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+
+
+extern long sys_clock_nanosleep(clockid_t, int, struct timespec*, struct timespec*);
 
 
 /***
@@ -50,5 +49,6 @@
 
 SYSCALL(35, nanosleep,
 long sys_nanosleep (struct timespec __user * rqtp, struct timespec __user * rmtp) {
-    return -ENOSYS;
+    
+    return sys_clock_nanosleep(CLOCK_MONOTONIC, 0, rqtp, rmtp);
 });

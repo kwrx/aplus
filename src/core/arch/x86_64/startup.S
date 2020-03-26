@@ -119,6 +119,7 @@ multiboot_header_end:
         .skip  KERNEL_STACK_SIZE
 
 
+
 .data
 .align 4096
 
@@ -152,13 +153,14 @@ multiboot_header_end:
 .align 16
 
     startup_tss:
+      .rept KERNEL_TSS_MAX
         .long 0
-        .quad KERNEL_INTERRUPT_STACK + KERNEL_INTERRUPT_STACKSIZE     //? RSP0: Kernel Stack
+        .quad 0                                                      // RSP0: Syscall Stack
         .quad 0
         .quad 0
         .quad 0
-        .quad KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE     //? IST1: Exception Stack
-        .quad KERNEL_SYSCALL_STACK   + KERNEL_SYSCALL_STACKSIZE       //? IST2: Syscall Stack
+        .quad KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE    // IST1: Exception Stack
+        .quad KERNEL_INTERRUPT_STACK + KERNEL_INTERRUPT_STACKSIZE    // IST2: Interrupt Stack
         .quad 0
         .quad 0
         .quad 0
@@ -166,6 +168,10 @@ multiboot_header_end:
         .quad 0
         .quad 0
         .long 104
+        .quad 0                                                      // Padding
+        .quad 0
+        .quad 0
+      .endr
 
 .align 16
 
@@ -179,10 +185,18 @@ multiboot_header_end:
         .word 0
       .endr
 
-      .rept 222
+      # Timer Handler         idx: 0x20
         .word 0
         .word KERNEL_CS
         .byte 0x00    // RSP0
+        .byte 0x8E    // Interrupt Gate;  DPL=0
+        .quad 0
+        .word 0
+
+      .rept 221
+        .word 0
+        .word KERNEL_CS
+        .byte 0x02    // IST2
         .byte 0x8E    // Interrupt Gate;  DPL=0
         .quad 0
         .word 0
@@ -191,7 +205,7 @@ multiboot_header_end:
       # SYSCALL Handler       idx: 0xFE
         .word 0
         .word KERNEL_CS
-        .byte 0x02    // IST2
+        .byte 0x00    // RSP0
         .byte 0xEE    // Interrupt Gate;  DPL=3
         .quad 0
         .word 0
@@ -245,10 +259,6 @@ multiboot_header_end:
     __raw_args:
         .quad 0, 0
 
-    __fpu_save_regs:
-        .quad 0
-    __fpu_restore_regs:
-        .quad 0
 
 .align 16, 0x90
 
@@ -453,6 +463,7 @@ _start_high64:
         movl    %eax, 8(%rdi)     // Base 32:64
 
         addq    $16,  %rdi
+        addq    $128, %rsi
         loop    .L2
 
         movq    $(KERNEL_TSS | 3), %rax
@@ -496,11 +507,11 @@ _start_high64:
 
         # Call Boot Main()
         .extern bmain
-        call    bmain
+        STDCALL(bmain)
 
         # Call Kernel Main()
         .extern kmain
-        call    kmain
+        STDCALL(kmain)
 
 halt:
         hlt

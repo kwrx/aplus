@@ -47,7 +47,9 @@ void spinlock_init(spinlock_t* lock) {
  * @brief Lock a Spinlock.
  */
 void spinlock_lock(spinlock_t* lock) {
+    
     DEBUG_ASSERT(lock);
+
 
     while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))
 #if defined(__i386__) || defined(__x86_64__)
@@ -56,6 +58,7 @@ void spinlock_lock(spinlock_t* lock) {
         ;
 
     lock->flags = arch_intr_disable();
+
 }
 
 
@@ -63,6 +66,7 @@ void spinlock_lock(spinlock_t* lock) {
  * @brief Try to lock a Spinlock.
  */
 int spinlock_trylock(spinlock_t* lock) {
+
     DEBUG_ASSERT(lock);
 
     int e; 
@@ -77,6 +81,7 @@ int spinlock_trylock(spinlock_t* lock) {
  * @brief Release a Spinlock.
  */
 void spinlock_unlock(spinlock_t* lock) {
+
     DEBUG_ASSERT(lock);
 
     long e = lock->flags;

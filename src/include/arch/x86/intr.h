@@ -10,8 +10,6 @@
 
 typedef struct {
 
-    uint8_t fpu[1024];
-
     uintptr_t di;
     uintptr_t si;
     uintptr_t bp;
@@ -38,8 +36,8 @@ typedef struct {
     uintptr_t cs;
     uintptr_t flags;
 
-    uintptr_t user_sp;
-    uintptr_t user_ss;
+    uintptr_t sp;
+    uintptr_t ss;
     
 } interrupt_frame_t;
 

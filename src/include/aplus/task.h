@@ -42,7 +42,11 @@
 #define TASK_POLICY_IDLE                        2
 
 
-#define TASK_CAPS_SYSTEM                        1
+#define TASK_FLAGS_NO_FRAME                     1
+#define TASK_FLAGS_NO_FPU                       2
+
+
+#define TASK_CAPS_SYSTEM                        255
 #define TASK_CAPS_IO                            2
 #define TASK_CAPS_NETWORK                       4
 
@@ -65,6 +69,21 @@ struct fd {
 };
 
 
+struct ksigaction {
+	
+    union {
+        void (*handler) (int);
+        void (*sigaction) (int, siginfo_t*, void*);
+    };
+
+	long flags;
+	void (*sa_restorer)(void);
+	
+    int mask[2];
+
+};
+
+
 
 typedef struct task {
 
@@ -81,25 +100,33 @@ typedef struct task {
     int policy;
     int priority;
     int affinity;
+    int flags;
     int caps;
 
 
     void* frame;
+    void* sp0;
     vmm_address_space_t* address_space;
 
 
-    struct timespec clock[TASK_CLOCK_MAX];
-    struct timespec sleep;
-    struct fd fd[CONFIG_OPEN_MAX];
-
+    
     struct {
-        // TODO: Signal Handlers
-        sigset_t mask;
-    } signal;
+
+        clockid_t clockid;
+        struct timespec timeout;
+    
+    } sleep;
+
+
+    struct timespec clock[TASK_CLOCK_MAX];
+    struct ksigaction signals[128];
+    sigset_t sigmask;
 
 
     list(futex_t*, futexes);
 
+
+    struct fd fd[CONFIG_OPEN_MAX];
 
     inode_t* root;
     inode_t* cwd;
@@ -117,6 +144,8 @@ typedef struct task {
 
         uintptr_t thread_area;
         uintptr_t cpu_area;
+
+        uintptr_t tid_address;
 
     } userspace;
 

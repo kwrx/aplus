@@ -188,7 +188,7 @@ int main(int argc, char** argv, char** envp) {
 
     int fd = open("/dev/kmsg", O_RDWR);
     if(fd < 0)
-        return 1;
+        return 2;
 
     dup2(fd, STDIN_FILENO);
     dup2(fd, STDOUT_FILENO);
@@ -199,8 +199,19 @@ int main(int argc, char** argv, char** envp) {
     tcsetpgrp(STDIN_FILENO, getpgrp());
 
 
+    for(long i = 0; i<10; i++) {
+
+        struct timespec t0, t1;
+        t0.tv_sec = 1;
+        t0.tv_nsec = 0;
+
+        nanosleep(&t0, &t1);
+
+        fprintf(stderr, "One more second: %ld\n", i);
+    }
+
     // for(; errno != ECHILD; )
     //     waitpid(-1, NULL, 0);
 
-    return 1;
+    return 3;
 }

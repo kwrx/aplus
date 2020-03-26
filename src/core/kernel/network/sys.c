@@ -140,10 +140,8 @@ u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t __timeout) {
         t0 += __timeout;
 
         while(!sem_trywait(&(*s)->sem) && t0 > arch_timer_generic_getms())
-#if defined(__i386__) || defined(__x86_64__)
-            __builtin_ia32_pause()
-#endif
-            ;
+            arch_task_yield();
+
 
 
         if(t0 <= arch_timer_generic_getms())
@@ -202,7 +200,7 @@ err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
     
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
-    DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
+    //DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
 
     if((*mbox)->count > (*mbox)->size)
         return ERR_MEM;
@@ -220,7 +218,7 @@ err_t sys_mbox_trypost_fromisr(struct sys_mbox** mbox, void* msg) {
     
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
-    DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
+    //DEBUG_ASSERT((*mbox)->count <= (*mbox)->size);
 
     if((*mbox)->count > (*mbox)->size)
         return ERR_MEM;
@@ -251,18 +249,18 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
     DEBUG_ASSERT(*mbox);
 
 
-    uint64_t t0 = arch_timer_generic_getms();
+    if(msg)
+        *msg = NULL;
 
+
+    uint64_t t0 = arch_timer_generic_getms();
 
     if(__timeout) {
 
         t0 += __timeout;
 
         while(((*mbox)->count == 0) && t0 > arch_timer_generic_getms())
-#if defined(__i386__) || defined(__x86_64__)
-            __builtin_ia32_pause()
-#endif
-            ;
+            arch_task_yield();
 
 
         if(t0 <= arch_timer_generic_getms())
@@ -271,10 +269,8 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
     }
     else
         while(((*mbox)->count == 0))
-#if defined(__i386__) || defined(__x86_64__)
-            __builtin_ia32_pause()
-#endif
-            ;
+            arch_task_yield();
+
 
 
     __lock(&(*mbox)->lock, {
@@ -298,6 +294,9 @@ u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
     
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
+
+    if(msg)
+        *msg = NULL;
 
     if((*mbox)->count == 0)
         return SYS_MBOX_EMPTY;
@@ -338,6 +337,6 @@ void sys_arch_unprotect(sys_prot_t pval) {
 }
 
 u32_t sys_now() {
-    return arch_timer_generic_getms();
+    return (u32_t) arch_timer_generic_getms();
 }
 

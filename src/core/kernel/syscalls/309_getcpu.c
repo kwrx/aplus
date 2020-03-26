@@ -60,7 +60,7 @@ long sys_getcpu (unsigned __user * cpu, unsigned __user * node, struct getcpu_ca
 
     // if(likely(cpu)) {
 
-    //     if(unlikely(!ptr_check(cpu, R_OK | W_OK)))
+    //     if(unlikely(!uio_check(cpu, R_OK | W_OK)))
     //         return -EFAULT;
 
     //     *(cpu) = current_cpu->id;
@@ -70,7 +70,7 @@ long sys_getcpu (unsigned __user * cpu, unsigned __user * node, struct getcpu_ca
 
     // if(likely(node)) {
 
-    //     if(unlikely(!ptr_check(node, R_OK | W_OK)))
+    //     if(unlikely(!uio_check(node, R_OK | W_OK)))
     //         return -EFAULT;
 
     //     *(node) = current_cpu->node;

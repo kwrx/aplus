@@ -60,7 +60,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
     if(unlikely(!uaddr))
         return -EINVAL;
 
-    if(unlikely(!ptr_check(uaddr, R_OK)))
+    if(unlikely(!uio_check(uaddr, R_OK)))
         return -EACCES;
 
     uint32_t* kaddr = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
@@ -75,7 +75,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
                 const struct timespec* utime = (const struct timespec*) __val2;
 
-                if(unlikely(utime && !ptr_check(utime, R_OK)))
+                if(unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
 
                 if(atomic_load(kaddr) != val)
@@ -84,7 +84,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
                 futex_wait(current_task, kaddr, val, utime);
 
-                arch_task_return_yield(0);
+                arch_userspace_return_yield(0);
                 break;
 
             }
@@ -115,7 +115,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
                 if(unlikely(!uaddr2))
                     return -EINVAL;
 
-                if(unlikely(!ptr_check(uaddr2, R_OK)))
+                if(unlikely(!uio_check(uaddr2, R_OK)))
                     return -EACCES;
 
                 uint32_t* kaddr2 = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr2, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
@@ -152,7 +152,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
                         futex_wait(current_task, kaddr, *kaddr, NULL);
 
-                        arch_task_return_yield(0);
+                        arch_userspace_return_yield(0);
 
                     }
                 }

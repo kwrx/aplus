@@ -62,7 +62,7 @@ typedef volatile struct {
         volatile long __padding;
     };
     volatile long flags;
-} spinlock_t;
+} __packed spinlock_t;
 
 
 typedef struct {

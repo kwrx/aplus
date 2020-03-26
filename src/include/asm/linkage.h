@@ -23,5 +23,14 @@
     END(proc)
 
 
+#if defined(__x86_64__)
+#define STDCALL(func)           \
+    pushq   %rbp;               \
+    movq    %rsp, %rbp;         \
+    callq   func;               \
+    popq    %rbp;
+#endif
+
+
 #endif
 #endif

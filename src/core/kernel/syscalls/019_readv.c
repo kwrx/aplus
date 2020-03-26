@@ -65,7 +65,7 @@ long sys_readv (unsigned long fd, const struct iovec __user * vec, unsigned long
     if(unlikely(!vec))
         return -EINVAL;
 
-    if(unlikely(!ptr_check(vec, R_OK)))
+    if(unlikely(!uio_check(vec, R_OK)))
         return -EFAULT;
 
     if(unlikely(vlen > INT_MAX))

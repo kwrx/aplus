@@ -55,7 +55,7 @@
 SYSCALL(1, write,
 long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
-    if(unlikely(!ptr_check(buf, R_OK)))
+    if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
 
     if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */

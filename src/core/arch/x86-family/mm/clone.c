@@ -132,6 +132,10 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
                 else 
                     {} // Skip private pages
 
+
+            } else if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+                *__d = *__s;
+
             } else
                 *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
 

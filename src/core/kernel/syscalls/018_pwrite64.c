@@ -59,7 +59,7 @@
 SYSCALL(18, pwrite64,
 long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos) {
         
-    if(unlikely(!ptr_check(buf, R_OK)))
+    if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
 
     if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */

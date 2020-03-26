@@ -41,6 +41,10 @@
 #include <arch/x86/vmm.h>
 
 
+// see startup.S
+extern int startup_tss;
+
+
 
 __percpu
 void arch_cpu_init(int index) {
@@ -48,16 +52,21 @@ void arch_cpu_init(int index) {
     __builtin_cpu_init();
 
 
-    core->cpu.cores[index].address_space.pm = x86_get_cr3();
-    core->cpu.cores[index].address_space.size = 0;
-    core->cpu.cores[index].address_space.refcount = 0;
-    spinlock_init(&core->cpu.cores[index].address_space.lock);
+    if(index == SMP_CPU_BOOTSTRAP_ID) {
+        
+        core->cpu.cores[index].address_space.pm = x86_get_cr3();
+        core->cpu.cores[index].address_space.size = 0;
+        core->cpu.cores[index].address_space.refcount = 1;
+        spinlock_init(&core->cpu.cores[index].address_space.lock);
+
+    }
 
 
     int i;
     for(i = 0; i < SMP_CPU_MAX_FEATURES; i++)
         core->cpu.cores[index].features[i] = 0ULL;
         
+    core->cpu.cores[index].tss = (void*) (&startup_tss + (index * sizeof(tss_t)));
 
 
 
@@ -431,12 +440,13 @@ void arch_cpu_init(int index) {
     //! Enable SMAP
     if(cpu_has(index, X86_FEATURE_SMAP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
-        
 
+
+#if defined(CONFIG_HAVE_SMP)
     //! Write Processor ID
     if(cpu_has(index, X86_FEATURE_RDTSCP))
         x86_wrmsr(X86_MSR_TSC_AUX, index);
-
+#endif
 
 
 #if defined(__x86_64__)

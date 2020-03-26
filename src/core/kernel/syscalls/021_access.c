@@ -56,7 +56,7 @@
 SYSCALL(21, access,
 long sys_access (const char __user * filename, int mode) {
     
-    if(unlikely(!ptr_check(filename, R_OK)))
+    if(unlikely(!uio_check(filename, R_OK)))
         return -EFAULT;
 
 

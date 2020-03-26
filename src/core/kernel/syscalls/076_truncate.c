@@ -56,7 +56,7 @@
 SYSCALL(76, truncate,
 long sys_truncate (const char __user * path, long length) {
     
-    if(!ptr_check(path, R_OK))
+    if(!uio_check(path, R_OK))
         return -EFAULT;
 
     

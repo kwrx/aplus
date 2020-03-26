@@ -20,20 +20,22 @@
  * You should have received a copy of the GNU General Public License
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/syscall.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/errno.h>
+ 
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
+#include <aplus/hal.h>
+#include <aplus/errno.h>
+
 
 
 /***
@@ -51,7 +53,7 @@
 SYSCALL(60, exit,
 long sys_exit (int status) {
 
-    BUG_ON(current_task->tid != 1);
+    //BUG_ON(current_task->tid != 1);
 
     if(status & (1 << 31))
         current_task->exit.value = status & 0x7FFF;
@@ -94,17 +96,21 @@ long sys_exit (int status) {
         for(i = 0; i < CONFIG_OPEN_MAX; i++)
             sys_close(i);
 
-        //task_release();
+        //arch_userspace_release();
 
         // TODO: implement wait queue
 
 
     }
 
+    kprintf("EXIT\n");
+    long sp;
+    __asm__ __volatile__("movq %%rsp, %0\n" : "=r"(sp));
+    kprintf("FRAME: %p, STACK: %p\n", current_cpu->frame, sp);
+    arch_userspace_return_yield(-ENOSYS);
+    //return -ENOSYS;
 
-    schedule(1);
-    BUG_ON(0 && "Unreachable");
-
+    kprintf("EXIT NOSYS\n");
     return -ENOSYS;
 
 });
