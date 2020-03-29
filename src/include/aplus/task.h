@@ -57,6 +57,9 @@
 #define TASK_CLOCK_PROCESS_CPUTIME              2
 
 
+#define TASK_SCHEDULER_PERIOD_NS                1000000ULL
+
+
 struct fd {
 
     struct file* ref;
@@ -106,6 +109,7 @@ typedef struct task {
 
     void* frame;
     void* sp0;
+    void* fpu;
     vmm_address_space_t* address_space;
 
 
@@ -187,9 +191,9 @@ typedef struct task {
     struct rlimit rlimits[RLIM_NLIMITS];
     struct rusage rusage;
 
+
     spinlock_t lock;
-
-
+    spinlock_t sched_lock;
 
     struct task* parent;
     struct task* next;

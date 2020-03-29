@@ -87,13 +87,24 @@ __BEGIN_DECLS
 struct task;
 
 
-void spinlock_init(spinlock_t*);
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __spinlock_lock(spinlock_t*, const char*, const char*, int);
+void __sem_wait(semaphore_t*, const char*, const char*, int);
+
+#define spinlock_lock(spin) \
+     __spinlock_lock(spin, __func__, __FILE__, __LINE__);
+#define sem_wait(sem)       \
+    __sem_wait(sem, __func__, __FILE__, __LINE__);
+#else
 void spinlock_lock(spinlock_t*);
+void sem_wait(semaphore_t*);
+#endif
+
+void spinlock_init(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
 int spinlock_trylock(spinlock_t*);
 
 void sem_init(semaphore_t*, long);
-void sem_wait(semaphore_t*);
 void sem_post(semaphore_t*);
 int sem_trywait(semaphore_t* s);
 

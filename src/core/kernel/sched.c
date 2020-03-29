@@ -23,7 +23,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
 
-#include <stdint.h>                                                        
+#include <stdint.h>
+#include <time.h>                
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
@@ -31,6 +32,8 @@
 #include <aplus/task.h>
 #include <aplus/hal.h>
 
+
+extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
 task_t* sched_queue = NULL;
@@ -90,13 +93,15 @@ static void __sched_next(void) {
 
 
 
-
         if(unlikely(current_task->status == TASK_STATUS_STOP))
             continue;
 
         if(unlikely(current_task->status == TASK_STATUS_ZOMBIE))
             continue;
 
+        
+        if(unlikely(!spinlock_trylock(&current_task->sched_lock)))
+            continue;
         
 
         //__check_timers();
@@ -111,6 +116,10 @@ static void __sched_next(void) {
         __check_sleep();
 
 
+        if(unlikely(current_task->status != TASK_STATUS_READY))
+            spinlock_unlock(&current_task->sched_lock);
+
+
     } while(current_task->status != TASK_STATUS_READY);
 
 }
@@ -120,79 +129,75 @@ static void __sched_next(void) {
 void schedule(int yield) {
 
 
-    __lock(&sched_lock, {
+    task_t* prev_task = current_task;
 
 
-        task_t* prev_task = current_task;
+    #define __update_clock(task, type, delta) {                             \
+        if(task->clock[type].tv_nsec + delta > 999999999) {                 \
+            task->clock[type].tv_nsec  = delta;                             \
+            task->clock[type].tv_nsec -= 1000000000;                        \
+            task->clock[type].tv_sec  += 1;                                 \
+        } else {                                                            \
+            task->clock[type].tv_nsec += delta;                             \
+        }                                                                   \
+    }
 
 
 
-        #define __update_clock(task, type, delta) {                             \
-            if(task->clock[type].tv_nsec + delta > 999999999) {                 \
-                task->clock[type].tv_nsec  = delta;                             \
-                task->clock[type].tv_nsec -= 1000000000;                        \
-                task->clock[type].tv_sec  += 1;                                 \
-            } else {                                                            \
-                task->clock[type].tv_nsec += delta;                             \
-            }                                                                   \
+    uint64_t elapsed = arch_timer_percpu_getns();
+    uint64_t delta   = elapsed - current_cpu->running_ticks;
+
+
+    __update_clock(current_task, TASK_CLOCK_SCHEDULER, TASK_SCHEDULER_PERIOD_NS);
+    __update_clock(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
+    __update_clock(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
+
+    if(likely(current_task->parent))
+        __update_clock(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
+    
+
+    current_cpu->running_ticks = elapsed;
+
+
+
+    if(!yield) {
+
+        int64_t e;
+        switch(current_task->policy) {
+
+            case TASK_POLICY_RR:
+                
+                e = ((int64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_sec  * 1000LL +
+                     (int64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_nsec / 1000000LL) % (20LL - current_task->priority);
+                
+                break;
+
+
+            // TODO: Scheduling policy
+
+            default:
+                e = 0;
+                break;
+
         }
 
 
+        if(likely(e))
+            return;
 
-        uint64_t elapsed = arch_timer_percpu_getns();
-        uint64_t delta   = elapsed - current_cpu->running_ticks;
+        current_task->rusage.ru_nivcsw++;
 
-
-        __update_clock(current_task, TASK_CLOCK_SCHEDULER, 10000000ULL);
-        __update_clock(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
-        __update_clock(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
-
-        if(likely(current_task->parent))
-            __update_clock(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
-        
-
-        current_cpu->running_ticks = elapsed;
+    } else
+        current_task->rusage.ru_nvcsw++;
 
 
 
-       
-
-
-        if(!yield) {
-
-            int e;
-            switch(current_task->policy) {
-
-                case TASK_POLICY_RR:
-                   
-                    e = ((uint64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_sec  * 1000ULL +
-                         (uint64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_nsec / 1000000ULL) % (20 - current_task->priority);
-                    
-                    break;
-
-
-                // TODO: Scheduling policy
-
-                default:
-                    e = 0;
-                    break;
-
-            }
-
-
-            if(likely(e))
-                __lock_break;
-
-            current_task->rusage.ru_nivcsw++;
-
-        } else
-            current_task->rusage.ru_nvcsw++;
-
-
+    __lock(&current_cpu->lock, {
 
 
         if(likely(current_task->status == TASK_STATUS_RUNNING))
             current_task->status = TASK_STATUS_READY;
+
 
         __sched_next();
 
@@ -201,9 +206,10 @@ void schedule(int yield) {
 
         arch_task_switch(prev_task, current_task);
 
+        spinlock_unlock(&prev_task->lock);
+
+
     });
-
-
 
 }
 

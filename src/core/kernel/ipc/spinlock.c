@@ -46,16 +46,34 @@ void spinlock_init(spinlock_t* lock) {
 /*!
  * @brief Lock a Spinlock.
  */
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __spinlock_lock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
+#else
 void spinlock_lock(spinlock_t* lock) {
-    
+#endif
+
     DEBUG_ASSERT(lock);
 
 
-    while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    uint64_t deadlock_detector = 0ULL;
+#endif
+
+    while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)) {
 #if defined(__i386__) || defined(__x86_64__)
         __builtin_ia32_pause();
 #endif
-        ;
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 10000ULL)) {
+            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, lock, current_cpu->id, current_task->tid);
+            spinlock_unlock(lock);
+            deadlock_detector = 0ULL;
+        }
+#endif
+
+    }
+
 
     lock->flags = arch_intr_disable();
 

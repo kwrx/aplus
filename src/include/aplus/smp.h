@@ -42,22 +42,27 @@
 typedef struct {
 
     uint64_t id;
+
+    void* frame;
+    void* tss;
+    void* sp0;
+    void* sp3;
+
+    int errno;
+
     uint64_t flags;
     uint64_t features[SMP_CPU_MAX_FEATURES];
     
     vmm_address_space_t address_space;
     
-    void* frame;
-    void* tss;
-    
-    int errno;
-
     task_t*  running_task;
     uint64_t running_ticks;
 
     struct timespec uptime;
 
-} cpu_t;
+    spinlock_t lock;
+
+} __packed cpu_t;
 
 
 

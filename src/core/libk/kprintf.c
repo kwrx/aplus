@@ -41,10 +41,10 @@
  */
 void kprintf(const char* fmt, ...) {
 
-    static char buf[8192];
-    static spinlock_t buflock = SPINLOCK_INIT;
+    char buf[CONFIG_BUFSIZ];
+    //static spinlock_t buflock = SPINLOCK_INIT;
 
-    __lock(&buflock, {
+    //__lock(&buflock, {
 
         va_list v;
         va_start(v, fmt);
@@ -61,6 +61,6 @@ void kprintf(const char* fmt, ...) {
             //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
 
         }
-    });
+    //});
 
 }

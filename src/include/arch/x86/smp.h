@@ -11,6 +11,7 @@ typedef struct {
     uint64_t magic;
     uint64_t cpu;
     uint64_t cr3;
+    uint64_t stack;
 } __packed ap_header_t;
 
 

@@ -45,7 +45,7 @@ void kpanicf(const char* fmt, ...) {
     arch_intr_disable();
 
 
-    static char buf[8192];
+    char buf[CONFIG_BUFSIZ] = { 0 };
     //static spinlock_t buflock = SPINLOCK_INIT;
 
     //__lock(&buflock, {

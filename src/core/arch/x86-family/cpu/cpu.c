@@ -69,6 +69,9 @@ void arch_cpu_init(int index) {
     core->cpu.cores[index].tss = (void*) (&startup_tss + (index * sizeof(tss_t)));
 
 
+    spinlock_init(&core->cpu.cores[index].lock);
+
+
 
 
     long ax, bx, cx, dx;
@@ -456,7 +459,8 @@ void arch_cpu_init(int index) {
     //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
     // else
 
-    x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
+    //x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
+    x86_wrmsr(X86_MSR_GSBASE, (uint64_t) &core->cpu.cores[index]);
 
 #endif
 
@@ -485,6 +489,8 @@ uint64_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
 
+
+#if defined(CONFIG_HAVE_SMP)
 #if defined(CONFIG_X86_HAVE_RDPID)
     __asm__ __volatile__ (
         "rdpid %0"
@@ -495,6 +501,9 @@ uint64_t arch_cpu_get_current_id(void) {
         "rdtscp"
         : "=c"(id)
     );
+#endif
+#else
+    id = 0ULL;
 #endif
 
     return id;
@@ -514,12 +523,19 @@ void arch_cpu_startup(int index) {
 #endif
 
     //* Clone Address Space
-    arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space, ARCH_VMM_CLONE_VM);
-
+    //arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space, ARCH_VMM_CLONE_VM | ARCH_VMM_CLONE_PRIVATE);
+    memcpy(&core->cpu.cores[index].address_space, &core->bsp.address_space, sizeof(vmm_address_space_t));
 
     //* Map AP Startup Area
     arch_vmm_map (&core->cpu.cores[index].address_space, AP_BOOT_OFFSET, AP_BOOT_OFFSET, X86_MMU_PAGESIZE, 
         ARCH_VMM_MAP_FIXED | 
+        ARCH_VMM_MAP_RDWR
+    );
+
+    // //* Map AP Stack Area
+    arch_vmm_map (&core->cpu.cores[index].address_space, KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index), -1, X86_MMU_HUGE_2MB_PAGESIZE, 
+        ARCH_VMM_MAP_HUGETLB  |
+        ARCH_VMM_MAP_HUGE_2MB |
         ARCH_VMM_MAP_RDWR
     );
 
@@ -528,8 +544,9 @@ void arch_cpu_startup(int index) {
 
     ap_init();
 
-    ap_get_header()->cpu = (uint64_t) index;
-    ap_get_header()->cr3 = (uint64_t) core->cpu.cores[index].address_space.pm;
+    ap_get_header()->cpu   = (uint64_t) index;
+    ap_get_header()->cr3   = (uint64_t) core->cpu.cores[index].address_space.pm;
+    ap_get_header()->stack = (uint64_t) KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index);
 
 
 
@@ -591,6 +608,6 @@ void arch_cpu_startup(int index) {
         return;
 
 
-    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
+    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d) stack(%p)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
 
 }

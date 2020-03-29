@@ -103,11 +103,11 @@ uint64_t arch_timer_gettime(void) {
     struct tm t;
     
     __lock(&rtc_lock, {
-        t.tm_sec = BCD2BIN(RTC(0));
-        t.tm_min = BCD2BIN(RTC(2));
+        t.tm_sec  = BCD2BIN(RTC(0));
+        t.tm_min  = BCD2BIN(RTC(2));
         t.tm_hour = BCD2BIN2(RTC(4));
         t.tm_mday = BCD2BIN(RTC(7));
-        t.tm_mon = BCD2BIN(RTC(8));
+        t.tm_mon  = BCD2BIN(RTC(8));
         t.tm_year = BCD2BIN(RTC(9)) + 2000;
         t.tm_wday = 0;
         t.tm_yday = 0;

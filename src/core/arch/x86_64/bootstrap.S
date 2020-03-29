@@ -127,7 +127,7 @@ ap64_start:
 ap64_highstart:
 
         # Set Stack
-        movq    $KERNEL_STACK_AREA, %rsp
+        movq    AP_RELOC(ap_header_stack), %rsp
         addq    $KERNEL_STACK_SIZE, %rsp
 
         # Enable PGE
@@ -224,6 +224,8 @@ halt:
     ap_header_cpu:
         .quad   0
     ap_header_cr3:
+        .quad   0
+    ap_header_stack:
         .quad   0
   
 

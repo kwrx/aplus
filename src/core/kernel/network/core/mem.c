@@ -104,9 +104,9 @@ mem_overflow_check_raw(void *p, size_t size, const char *descr1, const char *des
   m = (u8_t *)p + size;
   for (k = 0; k < MEM_SANITY_REGION_AFTER_ALIGNED; k++) {
     if (m[k] != 0xcd) {
-      char errstr[128];
-      snprintf(errstr, sizeof(errstr), "detected mem overflow in %s%s", descr1, descr2);
-      LWIP_ASSERT(errstr, 0);
+      //char errstr[128];
+      kprintf("detected mem overflow in %s%s", descr1, descr2);
+      LWIP_ASSERT("detected mem overflow", 0);
     }
   }
 #endif /* MEM_SANITY_REGION_AFTER_ALIGNED > 0 */
@@ -116,8 +116,8 @@ mem_overflow_check_raw(void *p, size_t size, const char *descr1, const char *des
   for (k = 0; k < MEM_SANITY_REGION_BEFORE_ALIGNED; k++) {
     if (m[k] != 0xcd) {
       char errstr[128];
-      snprintf(errstr, sizeof(errstr), "detected mem underflow in %s%s", descr1, descr2);
-      LWIP_ASSERT(errstr, 0);
+      kprintf("detected mem underflow in %s%s", descr1, descr2);
+      LWIP_ASSERT("detected mem underflow", 0);
     }
   }
 #endif /* MEM_SANITY_REGION_BEFORE_ALIGNED > 0 */

@@ -199,7 +199,7 @@ long arch_intr_disable(void) {
         :: "memory"
     );
 
-    return (s & (1 << 9));
+    return !!(s & (1 << 9));
 
 }
 

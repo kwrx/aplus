@@ -63,7 +63,6 @@ interrupt_common:
         # Call Exception Handler
         .extern x86_exception_handler
         STDCALL(x86_exception_handler)
-        
 
 
         .global interrupt_return

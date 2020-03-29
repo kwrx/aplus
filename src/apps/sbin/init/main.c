@@ -180,7 +180,7 @@
 int main(int argc, char** argv, char** envp) {
 
     if(getpid() != 1)
-        return 1;
+        return getpid();
 
     signal(SIGTERM, SIG_IGN);
     signal(SIGQUIT, SIG_IGN);
@@ -188,7 +188,7 @@ int main(int argc, char** argv, char** envp) {
 
     int fd = open("/dev/kmsg", O_RDWR);
     if(fd < 0)
-        return 2;
+        return 1;
 
     dup2(fd, STDIN_FILENO);
     dup2(fd, STDOUT_FILENO);
@@ -213,5 +213,5 @@ int main(int argc, char** argv, char** envp) {
     // for(; errno != ECHILD; )
     //     waitpid(-1, NULL, 0);
 
-    return 3;
+   for(;;);
 }

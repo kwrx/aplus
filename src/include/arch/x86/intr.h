@@ -39,7 +39,7 @@ typedef struct {
     uintptr_t sp;
     uintptr_t ss;
     
-} interrupt_frame_t;
+} __packed interrupt_frame_t;
 
 
 __BEGIN_DECLS

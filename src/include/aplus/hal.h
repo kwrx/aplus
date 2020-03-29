@@ -99,7 +99,6 @@ void arch_intr_unmap_irq(uint8_t);
 
 
 void arch_task_switch(task_t*, task_t*);
-void arch_task_yield(void);
 pid_t arch_task_spawn_init(void);
 pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
 

@@ -39,21 +39,20 @@
     .type x86_syscall_handler, @function
 x86_syscall_handler:
 
+    cli
     cld
 
   # Save User Stack
-    pushq   %r15
-    movq    %rsp, %r15
+    movq    %rsp, %gs:32
 
   # Load Kernel Stack
-    movq    $KERNEL_SYSCALL_STACK, %rsp       // FIXME: Load current_task->sp0
-    addq    $KERNEL_SYSCALL_STACKSIZE, %rsp
+    movq    %gs:24, %rsp
   
   # Save Context
     pushq   $KERNEL_DS  
     pushq   %rsp
 
-    pushq   $0x202
+    pushq   %r11
     pushq   $KERNEL_CS
     pushq   $.L0
 
@@ -64,13 +63,13 @@ x86_syscall_handler:
     jmp     interrupt_common
 
 
+    .align 16, 0x90
 .L0:
 
     addq    $8, %rsp
 
   # Restore User Stack
-    movq    %r15, %rsp
-    popq    %r15
+    movq    %gs:32, %rsp
 
     sysretq
 

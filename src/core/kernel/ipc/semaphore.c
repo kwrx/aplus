@@ -41,12 +41,16 @@ void sem_init(semaphore_t* s, long value) {
 
 }
 
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __sem_wait(semaphore_t* s, const char* FUNC, const char* FILE, int LINE) {
+#else
 void sem_wait(semaphore_t* s) {
+#endif
+
     DEBUG_ASSERT(s);
 
-#if defined(DEBUG)
-    uint64_t t0 = arch_timer_gettime() + IPC_DEFAULT_TIMEOUT;
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    uint64_t t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
 #endif
 
     while(__atomic_load_n(s, __ATOMIC_CONSUME) == 0) {
@@ -54,26 +58,28 @@ void sem_wait(semaphore_t* s) {
         __builtin_ia32_pause();
 #endif
 
-#if defined(DEBUG)
-        if(arch_timer_gettime() > t0) {
-            t0 = arch_timer_gettime() + IPC_DEFAULT_TIMEOUT;
-            kprintf("ipc: WARN! Timeout expired for %s(%p), cpu(%d), tid(%d)\n", __func__, s, current_cpu->id, current_task->tid);
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        if(arch_timer_generic_getms() > t0) {
+            t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
+            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
         }
 #endif
     }
 
-    __atomic_sub_fetch(s, 1, __ATOMIC_RELEASE);
+
+    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
 }
 
 
+
 int sem_trywait(semaphore_t* s) {
-    
+
     DEBUG_ASSERT(s);
 
     if(__atomic_load_n(s, __ATOMIC_CONSUME) == 0)
         return 0;
 
-    __atomic_sub_fetch(s, 1, __ATOMIC_RELEASE);
+    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
     return 1;
 }
 
@@ -82,6 +88,6 @@ void sem_post(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 
-    __atomic_add_fetch(s, 1, __ATOMIC_ACQUIRE);
+    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
 
 }

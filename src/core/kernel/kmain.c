@@ -58,6 +58,11 @@ void cmain(void* arg) {
 
 }
 
+void ccmain(void* arg) {
+    for(;;)
+        sched_yield();
+}
+
 
 
 
@@ -71,7 +76,7 @@ void kmain() {
     __init(vfs,     ());
 
 #if defined(CONFIG_HAVE_NETWORK)
-    __init(network, ());
+    //__init(network, ());  // TODO: Rewrite network/sys.c
 #endif
 
 
@@ -84,7 +89,11 @@ void kmain() {
     __init(root,    ());
 
 
-    arch_task_spawn_kthread("init", &cmain, 256, NULL);
+    arch_task_spawn_kthread("[bsp]", ccmain, 51200, NULL);
+    arch_task_spawn_kthread("[bsp2]", ccmain, 51002, NULL);
+    arch_task_spawn_kthread("[bsp3]", ccmain, 51020, NULL);
+    arch_task_spawn_kthread("[bsp4]", ccmain, 51020, NULL);
+    arch_task_spawn_kthread("[bsp5]", ccmain, 51020, NULL);
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,

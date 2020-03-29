@@ -73,6 +73,7 @@
 
 struct sys_sem {
     semaphore_t sem;
+    volatile long flags;
 } __packed;
 
 struct sys_mbox {
@@ -84,17 +85,19 @@ struct sys_mbox {
 
 
 spinlock_t network_lock;
+spinlock_t tcpip_core_locking;
 
 
 void sys_init(void) {
     spinlock_init(&network_lock);
+    spinlock_init(&tcpip_core_locking);
 }
 
 
 err_t sys_sem_new(struct sys_sem** s, u8_t count) {
     
     DEBUG_ASSERT(s);
-    //DEBUG_ASSERT(count);
+    DEBUG_ASSERT(count == 1);
     
     (*s) = (struct sys_sem*) kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
 
@@ -123,6 +126,7 @@ void sys_sem_signal(struct sys_sem** s) {
     DEBUG_ASSERT(*s);
 
     sem_post(&(*s)->sem);
+    arch_intr_enable((*s)->flags);
 
 }
 
@@ -131,17 +135,19 @@ u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t __timeout) {
     DEBUG_ASSERT(s);
     DEBUG_ASSERT(*s);
     
-    if(!__timeout)
+    if(!__timeout) {
         sem_wait(&(*s)->sem);
-    
-    else {
+        (*s)->flags = arch_intr_disable();    
+
+    } else {
 
         uint64_t t0 = arch_timer_generic_getms();
         t0 += __timeout;
 
         while(!sem_trywait(&(*s)->sem) && t0 > arch_timer_generic_getms())
-            arch_task_yield();
+            sched_yield();
 
+        (*s)->flags = arch_intr_disable();    
 
 
         if(t0 <= arch_timer_generic_getms())
@@ -151,7 +157,6 @@ u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t __timeout) {
         return t0 - arch_timer_generic_getms();
     }
 
-    
     return 1;
 
 }
@@ -260,7 +265,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
         t0 += __timeout;
 
         while(((*mbox)->count == 0) && t0 > arch_timer_generic_getms())
-            arch_task_yield();
+            sched_yield();
 
 
         if(t0 <= arch_timer_generic_getms())
@@ -269,7 +274,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
     }
     else
         while(((*mbox)->count == 0))
-            arch_task_yield();
+            sched_yield();
 
 
 

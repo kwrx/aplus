@@ -91,9 +91,9 @@ void apic_enable(void) {
     uint64_t ts, t0;
     
     ts =
-    t0 = arch_timer_generic_getms();
+    t0 = arch_timer_generic_getns();
 
-    while((t0 = arch_timer_generic_getms()) == ts)
+    while((t0 = arch_timer_generic_getns()) == ts)
         ;
 
     
@@ -111,9 +111,9 @@ void apic_enable(void) {
     }
 
 
-    //? 0.010s every interrupt
+    //? 0.001s every interrupt
 
-    while((arch_timer_generic_getms() - t0) < 10)
+    while((arch_timer_generic_getns() - t0) < TASK_SCHEDULER_PERIOD_NS)
         ;
     
 

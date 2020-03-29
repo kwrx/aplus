@@ -49,10 +49,10 @@
 #define MEMP_MEM_INIT                       1
 #define MEM_ALIGNMENT                       16 // FIXME
 #define MEM_SIZE                            (1 << 30)
-#define MEMP_OVERFLOW_CHECK                 0
-#define MEMP_SANITY_CHECK                   0
-#define MEM_OVERFLOW_CHECK                  0
-#define MEM_SANITY_CHECK                    0
+#define MEMP_OVERFLOW_CHECK                 2
+#define MEMP_SANITY_CHECK                   1
+#define MEM_OVERFLOW_CHECK                  2
+#define MEM_SANITY_CHECK                    1
 #define MEM_USE_POOLS                       0
 #define MEM_USE_POOLS_TRY_BIGGER_POOL       0
 #define MEMP_USE_CUSTOM_POOLS               0
@@ -177,11 +177,11 @@
 
 // * Thread Options *
 #define TCPIP_THREAD_NAME                   "[tcpip]"
-#define TCPIP_THREAD_STACKSIZE              (64 << 10)
+#define TCPIP_THREAD_STACKSIZE              (1024 << 10)
 #define TCPIP_THREAD_PRIO                   (0)
 #define TCPIP_MBOX_SIZE                     (64 << NUM_SHIFT)
 #define DEFAULT_THREAD_NAME                 "[networkd]"
-#define DEFAULT_THREAD_STACKSIZE            (4 << 10)
+#define DEFAULT_THREAD_STACKSIZE            (1024 << 10)
 #define DEFAULT_THREAD_PRIO                 (0)
 #define DEFAULT_RAW_RECVMBOX_SIZE           (64 << NUM_SHIFT)
 #define DEFAULT_UDP_RECVMBOX_SIZE           (64 << NUM_SHIFT)
@@ -281,6 +281,13 @@
 #define LWIP_COMPAT_MUTEX_ALLOWED          1
 
 
+extern spinlock_t tcpip_core_locking;
+
+#define LOCK_TCPIP_CORE()                   \
+    spinlock_lock(&tcpip_core_locking);
+
+#define UNLOCK_TCPIP_CORE()                 \
+    spinlock_unlock(&tcpip_core_locking);
 
 
 static inline void* __kmalloc(size_t s) {

@@ -57,7 +57,7 @@ void arch_debug_init(void) {
 
         outb(com_address + 1, 0x00);
         outb(com_address + 3, 0x80);
-        outb(com_address + 0, 0x03);
+        outb(com_address + 0, 0x01);
         outb(com_address + 1, 0x00);
         outb(com_address + 3, 0x03);
         outb(com_address + 2, 0xC7);

@@ -44,8 +44,9 @@
 #define FRAME(p)            \
     ((interrupt_frame_t*) p->frame)
 
-#define WRITE_SP0(p, v)     \
-    ((tss_t*) (p))->sp0 = ((uintptr_t) (v) & ~511UL)
+#define WRITE_SP0(cpu, ptr)                         \
+    cpu->sp0 = (void*) ((uintptr_t) (ptr) & ~15);   \
+    ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->sp0
 
 
 
@@ -67,17 +68,17 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         memcpy(next->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         next->flags &= ~TASK_FLAGS_NO_FRAME;
-    
+
     }
 
 
 
     if(likely(prev != next)) {
+
+        //kprintf("%s(%d) %p -> %s(%d) %p\n", prev->argv[0], prev->tid, FRAME(prev)->ip, next->argv[0], next->tid, FRAME(next)->ip);
         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
-
-        // TODO: Save FPU Registers
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
             x86_set_cr3(next->address_space->pm);
@@ -85,14 +86,17 @@ void arch_task_switch(task_t* prev, task_t* next) {
     }
 
 
-    WRITE_SP0(current_cpu->tss, next->sp0);
+
+    WRITE_SP0(current_cpu, next->sp0);
+
 
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
-    x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
+    //x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
+
+    __asm__ __volatile__ ("fxsave (%0)" :: "r"(prev->fpu));
+    __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
 
     
-    __asm__ ("" ::: "memory", "cc");
-
 }
 
 
@@ -133,6 +137,7 @@ pid_t arch_task_spawn_init() {
     
     task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
     task->sp0           = (void*) ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + KERNEL_SYSCALL_STACKSIZE);
+    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
     task->address_space = (void*) &current_cpu->address_space;
 
     current_cpu->address_space.refcount++;
@@ -156,6 +161,8 @@ pid_t arch_task_spawn_init() {
     memset(&task->iostat, 0, sizeof(task->iostat));
 
     spinlock_init(&task->lock);
+    spinlock_init(&task->sched_lock);
+
 
 
     int j;
@@ -179,13 +186,16 @@ pid_t arch_task_spawn_init() {
     
     current_cpu->running_task = task;
 
-    WRITE_SP0(current_cpu->tss, task->sp0);
+    WRITE_SP0(current_cpu, task->sp0);
 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
     kprintf("task: spawn init process pid(%d) cpu(%d) sp0(%p)\n", task->tid, arch_cpu_get_current_id(), task->sp0);
 #endif
+
+
+    spinlock_lock(&task->sched_lock);
 
     sched_enqueue(task);
 
@@ -212,7 +222,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
     uintptr_t offset_of_argv  = ((uintptr_t) task + sizeof(task_t));
     uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1);
-    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t));
+    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t) + stacksize);
     uintptr_t offset_of_sp0   = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t) + stacksize + KERNEL_SYSCALL_STACKSIZE);
 
 
@@ -228,7 +238,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->environ = current_task->environ;
 
     task->tid   = sched_nextpid();
-    task->tgid  = current_task->tid;
+    task->tgid  = current_task->tgid;
     task->pgid  = current_task->pgid;
     task->uid   = current_task->uid;
     task->euid  = current_task->euid;
@@ -246,6 +256,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
     task->frame         = (void*) offset_of_frame;
     task->sp0           = (void*) offset_of_sp0;
+    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
     task->address_space = (void*) current_task->address_space;
 
     current_task->address_space->refcount++;
@@ -274,7 +285,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     FRAME(task)->ip = (uintptr_t) entry;
     FRAME(task)->cs = KERNEL_CS;
     FRAME(task)->flags = 0x202;
-    FRAME(task)->sp = offset_of_stack + stacksize;
+    FRAME(task)->sp = offset_of_stack;
     FRAME(task)->ss = KERNEL_DS;
 
 #if defined(__x86_64__)
@@ -286,7 +297,9 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
 
     spinlock_init(&task->lock);
+    spinlock_init(&task->sched_lock);
     
+
     task->next   = NULL;
     task->parent = current_task;
     

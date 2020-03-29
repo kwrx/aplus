@@ -36,17 +36,20 @@
     .align 16, 0x90
     .section .text
 
-    .global arch_task_yield
-    .type arch_task_yield, @function
-arch_task_yield:
+    .global sched_yield
+    .type sched_yield, @function
+sched_yield:
 
-    cli
-    cld
+  # Save User Stack
+    movq    %rsp, %rax
+
+  # Load Kernel Stack
+    movq    %gs:24, %rsp
 
     pushq   $KERNEL_DS  
-    pushq   %rsp
+    pushq   %rax
 
-    pushq   $0x202
+    pushfq
     pushq   $KERNEL_CS
     pushq   $.L0
 
@@ -59,9 +62,11 @@ arch_task_yield:
     jmp     interrupt_common
 
 
+    .align 16, 0x90
 .L0:
-    addq    $8,   %rsp
+    
+    xorq    %rax, %rax
     ret
 
-END(arch_task_yield)
+END(sched_yield)
   
