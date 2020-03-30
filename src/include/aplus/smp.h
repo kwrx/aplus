@@ -24,7 +24,7 @@
     (smp_get_current_cpu())
 
 #define current_task    \
-    (smp_get_current_cpu())->running_task
+    (smp_get_current_cpu())->sched_running
 
 
 
@@ -38,8 +38,24 @@
     (current_cpu->features[feature >> 5] & (1 << (feature & 0x1F)))
 
 
+#define cpu_foreach(e)                                                              \
+        for(cpu_t* e = &core->cpu.cores[0]; e; e = NULL)                            \
+            for(int __i = 0; __i < SMP_CPU_MAX; __i++)                              \
+                if(!((e = &core->cpu.cores[__i])->flags & SMP_CPU_FLAGS_ENABLED))   \
+                    continue;                                                       \
+                else
 
-typedef struct {
+#define cpu_foreach_if(e, cond)                                                     \
+        for(cpu_t* e = &core->cpu.cores[0]; e; e = NULL)                            \
+            for(int __i = 0; __i < SMP_CPU_MAX && (cond); __i++)                    \
+                if(!((e = &core->cpu.cores[__i])->flags & SMP_CPU_FLAGS_ENABLED))   \
+                    continue;                                                       \
+                else
+
+
+
+
+typedef struct cpu {
 
     uint64_t id;
 
@@ -55,12 +71,15 @@ typedef struct {
     
     vmm_address_space_t address_space;
     
-    task_t*  running_task;
-    uint64_t running_ticks;
+    task_t*  sched_running;
+    task_t*  sched_queue;
+    size_t   sched_count;
 
+    uint64_t ticks;
     struct timespec uptime;
 
-    spinlock_t lock;
+    spinlock_t global_lock;
+    spinlock_t sched_lock;
 
 } __packed cpu_t;
 

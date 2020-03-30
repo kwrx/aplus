@@ -58,30 +58,6 @@ void cmain(void* arg) {
 
 }
 
-void ccmain(void* arg) {
-    uint64_t t0 = arch_timer_percpu_getms() + 1000;
-    for(;; sched_yield()) {
-
-        if(arch_timer_percpu_getms() < t0)
-            continue;
-
-        if(current_task->tid == 4) {
-            kprintf("TID 4 CHANGE CPU FROM %d (sp0: %p)\n", ~current_task->affinity, current_task->sp0);
-
-            dump_frame();
-
-            if(current_task->affinity == ~(1 << 0))
-                current_task->affinity = ~(1 << 1);
-            else
-                current_task->affinity = ~(1 << 0);
-            
-        }
-
-        //kprintf("Task %s %d lived! (memory: %d KiB, timer: %d)\n", current_task->argv[0], current_task->tid, pmm_get_used_memory() >> 10, arch_timer_percpu_getms());
-        t0 = arch_timer_percpu_getms() + 1000;
-    }
-}
-
 
 
 
@@ -95,7 +71,7 @@ void kmain() {
     __init(vfs,     ());
 
 #if defined(CONFIG_HAVE_NETWORK)
-    //__init(network, ());  // TODO: Rewrite network/sys.c
+    __init(network, ());  // TODO: Rewrite network/sys.c
 #endif
 
 
@@ -107,27 +83,6 @@ void kmain() {
     __init(module,  ());
     __init(root,    ());
 
-
-    arch_task_spawn_kthread("[bsp]", ccmain, 51200, NULL);
-    arch_task_spawn_kthread("[bsp2]", ccmain, 51002, NULL);
-    arch_task_spawn_kthread("[bsp3]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp4]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp5]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp6]", ccmain, 51200, NULL);
-    arch_task_spawn_kthread("[bsp7]", ccmain, 51002, NULL);
-    arch_task_spawn_kthread("[bsp8]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp9]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp10]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp11]", ccmain, 51200, NULL);
-    arch_task_spawn_kthread("[bsp12]", ccmain, 51002, NULL);
-    arch_task_spawn_kthread("[bsp13]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp14]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp15]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp16]", ccmain, 51200, NULL);
-    arch_task_spawn_kthread("[bsp17]", ccmain, 51002, NULL);
-    arch_task_spawn_kthread("[bsp18]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp19]", ccmain, 51020, NULL);
-    arch_task_spawn_kthread("[bsp20]", ccmain, 51020, NULL);
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,

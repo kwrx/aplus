@@ -71,23 +71,20 @@ void arch_task_switch(task_t* prev, task_t* next) {
     }
 
 
-
     if(likely(prev != next)) {
-
-        //kprintf("%s(%d) %p -> %s(%d) %p\n", prev->argv[0], prev->tid, FRAME(prev)->ip, next->argv[0], next->tid, FRAME(next)->ip);
         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
-
-        if(unlikely(prev->address_space->pm != next->address_space->pm))
-            x86_set_cr3(next->address_space->pm);
-
 
         prev->sp0 = current_cpu->sp0;
         prev->sp3 = current_cpu->sp3;
 
         current_cpu->sp0 = next->sp0;
         current_cpu->sp3 = next->sp3;
+
+
+        if(unlikely(prev->address_space->pm != next->address_space->pm))
+            x86_set_cr3(next->address_space->pm);
 
     }
 
@@ -102,7 +99,6 @@ void arch_task_switch(task_t* prev, task_t* next) {
     __asm__ __volatile__ ("fxsave (%0)" :: "r"(prev->fpu));
     __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
 
-    
 }
 
 
@@ -188,9 +184,9 @@ pid_t arch_task_spawn_init() {
 
 
     if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID)
-        task->parent = core->bsp.running_task;
+        task->parent = core->bsp.sched_running;
     
-    current_cpu->running_task = task;
+    current_cpu->sched_running = task;
     current_cpu->sp0 = task->sp0;
 
     WRITE_SP0(current_cpu, task->sp0);
@@ -257,7 +253,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
     task->flags     = 0;
-    task->affinity  = ~(1 << 1);
+    task->affinity  = 0;
     
 
     task->frame         = (void*) offset_of_frame;
@@ -319,26 +315,3 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     return task->tid;
 }
 
-
-void dump_frame() {
-    kprintf("di: %p, si: %p, bp: %p, bx, %p, dx: %p, cx: %p, ax: %p\n"
-            "intno: %p, errno: %p, ip: %p, cs: %p, flags: %p, sp: %p, ss: %p\n"
-
-                                                        , FRAME(current_task)->di,
-                                                        FRAME(current_task)->si,
-                                                        FRAME(current_task)->bp,
-                                                        FRAME(current_task)->bx,
-                                                        FRAME(current_task)->dx,
-                                                        FRAME(current_task)->cx,
-                                                        FRAME(current_task)->ax,
-
-                                                        FRAME(current_task)->intno,
-                                                        FRAME(current_task)->errno,
-                                                        FRAME(current_task)->ip,
-                                                        FRAME(current_task)->cs,
-                                                        FRAME(current_task)->flags,
-                                                        FRAME(current_task)->sp,
-                                                        FRAME(current_task)->ss);
-    
-    
-}

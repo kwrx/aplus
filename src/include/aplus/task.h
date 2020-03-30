@@ -20,6 +20,7 @@
 #include <aplus/memory.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
+#include <aplus/smp.h>
 
 #include <aplus/utils/list.h>
 
@@ -57,7 +58,7 @@
 #define TASK_CLOCK_PROCESS_CPUTIME              2
 
 
-#define TASK_SCHEDULER_PERIOD_NS                1000000ULL
+#define TASK_SCHEDULER_PERIOD_NS                5000000ULL
 
 
 struct fd {
@@ -208,13 +209,13 @@ __BEGIN_DECLS
 
 pid_t sched_nextpid();
 
+
+struct cpu;
+
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 
 void schedule(int);
-
-
-extern task_t* sched_queue;
 
 __END_DECLS
 

@@ -32,7 +32,7 @@
 #include <aplus/hal.h>
 
 
-extern task_t* sched_queue;
+
 static spinlock_t rt_lock = SPINLOCK_INIT;
 
 
@@ -91,7 +91,7 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     size_t wok = 0;
 
     task_t* tmp;
-    for(tmp = sched_queue; tmp && max; tmp = tmp->next) {
+    for(tmp = current_cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
         __lock(&tmp->lock, {
 
@@ -135,7 +135,7 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
     size_t req = 0;
 
     task_t* tmp;
-    for(tmp = sched_queue; tmp && max; tmp = tmp->next) {
+    for(tmp = current_cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
         __lock(&tmp->lock, {
 

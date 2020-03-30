@@ -85,7 +85,18 @@ void apic_enable(void) {
     }
 
 
-    
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 1
+    {
+        long a, b, c, d;
+        x86_cpuid(6, &a, &b, &c, &d);
+
+        if(!(a & (1 << 2)))
+            kprintf("x86-apic: WARN! APIC timer may temporarily stop while the processor is in deep C-states\n", a);
+    }
+#endif
+
+
 
     //? Synchronize timer clock
 
@@ -101,18 +112,18 @@ void apic_enable(void) {
 
     if (x2apic) {
 
-        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 11);
+        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
         x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, 0xFFFFFFFF);
 
     } else {
         
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 11);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
     
     }
 
 
-    //? 0.001s every interrupt
+    //? 0.005s every interrupt
 
     while((arch_timer_generic_getns() - t0) < TASK_SCHEDULER_PERIOD_NS)
         ;
@@ -143,8 +154,10 @@ void apic_enable(void) {
 
     }
 
+
+
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), bus(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, (ticks * 1) / 1000, x2apic);
+    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, x2apic);
 #endif
 
 }
@@ -158,6 +171,7 @@ void apic_eoi(void) {
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_EOI, 0);
 
 }
+
 
 uint32_t apic_get_id(void) {
 
@@ -224,7 +238,9 @@ void apic_init(void) {
 
                 core->cpu.max_cores++;
                 core->cpu.cores[p[2]].id = p[3];
-                core->cpu.cores[p[2]].flags = 0ULL;
+                
+                if(p[2] != SMP_CPU_BOOTSTRAP_ID)
+                    core->cpu.cores[p[2]].flags = 0ULL;
                 
                 if(*(uint32_t*) &p[4] & (1 << 0))
                     core->cpu.cores[p[2]].flags |= SMP_CPU_FLAGS_AVAILABLE;

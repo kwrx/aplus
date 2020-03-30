@@ -69,7 +69,10 @@ void arch_cpu_init(int index) {
     core->cpu.cores[index].tss = (void*) (&startup_tss + (index * sizeof(tss_t)));
 
 
-    spinlock_init(&core->cpu.cores[index].lock);
+    spinlock_init(&core->cpu.cores[index].global_lock);
+    spinlock_init(&core->cpu.cores[index].sched_lock);
+
+    core->cpu.cores[index].sched_count = 0;
 
 
 

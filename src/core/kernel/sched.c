@@ -36,7 +36,6 @@
 extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
-task_t* sched_queue = NULL;
 spinlock_t sched_lock = SPINLOCK_INIT;
 
 
@@ -83,7 +82,7 @@ static void __sched_next(void) {
             current_task = current_task->next;
 
             if(unlikely(!current_task))
-                current_task = sched_queue;
+                current_task = current_cpu->sched_queue;
 
 
             DEBUG_ASSERT(current_task);
@@ -145,7 +144,7 @@ void schedule(int yield) {
 
 
     uint64_t elapsed = arch_timer_percpu_getns();
-    uint64_t delta   = elapsed - current_cpu->running_ticks;
+    uint64_t delta   = elapsed - current_cpu->ticks;
 
 
     __update_clock(current_task, TASK_CLOCK_SCHEDULER, TASK_SCHEDULER_PERIOD_NS);
@@ -156,7 +155,7 @@ void schedule(int yield) {
         __update_clock(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
     
 
-    current_cpu->running_ticks = elapsed;
+    current_cpu->ticks = elapsed;
 
 
 
@@ -192,13 +191,8 @@ void schedule(int yield) {
 
 
 
-    static int sched_count = 0;
 
-    // Check change CPU Task
-
-    
-    
-        sched_count++;
+    __lock(&current_cpu->sched_lock, {
 
 
         if(likely(current_task->status == TASK_STATUS_RUNNING))
@@ -212,10 +206,7 @@ void schedule(int yield) {
 
         arch_task_switch(prev_task, current_task);
 
-        //spinlock_unlock(&prev_task->lock);
-
-        sched_count--;
-        
+    }); 
 
 }
 
@@ -223,38 +214,75 @@ void schedule(int yield) {
 
 void sched_enqueue(task_t* task) {
 
-    __lock(&sched_lock, {
-        
-        task->next = sched_queue;
-        sched_queue = task;
+    cpu_t* cpu = NULL;
+    size_t min = ~0UL;
+
+
+    cpu_foreach(i) {
+
+        if(task->affinity & (1 << i->id))
+            continue;
+
+        if(i->sched_count > min)
+            continue;
+
+        cpu = i;
+        min = i->sched_count;
+
+    }
+
+
+    DEBUG_ASSERT(cpu);
+
+    __lock(&cpu->sched_lock, {
+
+        task->next = cpu->sched_queue;
+        cpu->sched_queue = task;
+        cpu->sched_count++;
 
     });
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("sched: enqueued task(%d) %s in cpu(%d) count(%d)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
+#endif
 
 }
 
 
 void sched_dequeue(task_t* task) {
 
-    __lock(&sched_lock, {
-        
-        if(task == sched_queue)
-            sched_queue = task->next;
+    int found = 0;
 
-        else {
+    cpu_foreach_if(cpu, !found) {
 
-            task_t* tmp;
-            for(tmp = sched_queue; tmp->next; tmp = tmp->next)
-                if(tmp->next == task)
-                    break;
+        found = 1;
 
-            DEBUG_ASSERT(tmp->next);
-            DEBUG_ASSERT(tmp->next == task);
+        __lock(&cpu->sched_lock, {
+            
+            if(task == cpu->sched_queue)
+                cpu->sched_queue = task->next;
 
-            tmp->next = task->next;
+            else {
 
-        }
+                task_t* tmp;
+                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next)
+                    if(tmp->next == task)
+                        break;
 
-    });
+                if(unlikely(!tmp->next))
+                    found = 0;
+                else 
+                    tmp->next = task->next;
+                
+            }
+
+        });
+
+        if(found)
+            cpu->sched_count--;
+
+    }
 
 }
 
