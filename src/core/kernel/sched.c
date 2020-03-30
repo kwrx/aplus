@@ -100,8 +100,8 @@ static void __sched_next(void) {
             continue;
 
         
-        if(unlikely(!spinlock_trylock(&current_task->sched_lock)))
-            continue;
+        //if(unlikely(!spinlock_trylock(&current_task->sched_lock)))
+        //    continue;
         
 
         //__check_timers();
@@ -116,8 +116,8 @@ static void __sched_next(void) {
         __check_sleep();
 
 
-        if(unlikely(current_task->status != TASK_STATUS_READY))
-            spinlock_unlock(&current_task->sched_lock);
+        // if(unlikely(current_task->status != TASK_STATUS_READY))
+        //     spinlock_unlock(&current_task->sched_lock);
 
 
     } while(current_task->status != TASK_STATUS_READY);
@@ -192,7 +192,13 @@ void schedule(int yield) {
 
 
 
-    __lock(&current_cpu->lock, {
+    static int sched_count = 0;
+
+    // Check change CPU Task
+
+    
+    
+        sched_count++;
 
 
         if(likely(current_task->status == TASK_STATUS_RUNNING))
@@ -206,10 +212,10 @@ void schedule(int yield) {
 
         arch_task_switch(prev_task, current_task);
 
-        spinlock_unlock(&prev_task->lock);
+        //spinlock_unlock(&prev_task->lock);
 
-
-    });
+        sched_count--;
+        
 
 }
 

@@ -84,6 +84,7 @@ void apic_enable(void) {
 
     }
 
+
     
 
     //? Synchronize timer clock
@@ -100,12 +101,12 @@ void apic_enable(void) {
 
     if (x2apic) {
 
-        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
+        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 11);
         x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, 0xFFFFFFFF);
 
     } else {
         
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 11);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
     
     }
@@ -143,7 +144,7 @@ void apic_enable(void) {
     }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p), tmr(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, x2apic);
+    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), bus(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, (ticks * 1) / 1000, x2apic);
 #endif
 
 }

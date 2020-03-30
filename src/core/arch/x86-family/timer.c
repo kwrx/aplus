@@ -75,14 +75,11 @@ void arch_timer_delay(uint64_t us) {
     DEBUG_ASSERT(us < 100000000);   // 10sec max
 
 
-    __lock(&delay_lock, {
+    uint64_t t0 = arch_timer_generic_getus();
 
-        uint64_t t0 = arch_timer_generic_getus();
-
-        while(arch_timer_generic_getus() < (t0 + us))
-            __builtin_ia32_pause();
-            
-    });
+    while(arch_timer_generic_getus() < (t0 + us))
+        __builtin_ia32_pause();
+        
 
 }
 

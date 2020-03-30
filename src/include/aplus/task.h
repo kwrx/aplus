@@ -109,6 +109,7 @@ typedef struct task {
 
     void* frame;
     void* sp0;
+    void* sp3;
     void* fpu;
     vmm_address_space_t* address_space;
 

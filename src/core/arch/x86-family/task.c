@@ -45,7 +45,6 @@
     ((interrupt_frame_t*) p->frame)
 
 #define WRITE_SP0(cpu, ptr)                         \
-    cpu->sp0 = (void*) ((uintptr_t) (ptr) & ~15);   \
     ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->sp0
 
 
@@ -82,6 +81,13 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
             x86_set_cr3(next->address_space->pm);
+
+
+        prev->sp0 = current_cpu->sp0;
+        prev->sp3 = current_cpu->sp3;
+
+        current_cpu->sp0 = next->sp0;
+        current_cpu->sp3 = next->sp3;
 
     }
 
@@ -185,6 +191,7 @@ pid_t arch_task_spawn_init() {
         task->parent = core->bsp.running_task;
     
     current_cpu->running_task = task;
+    current_cpu->sp0 = task->sp0;
 
     WRITE_SP0(current_cpu, task->sp0);
 
@@ -195,7 +202,6 @@ pid_t arch_task_spawn_init() {
 #endif
 
 
-    spinlock_lock(&task->sched_lock);
 
     sched_enqueue(task);
 
@@ -251,7 +257,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
     task->flags     = 0;
-    task->affinity  = 0;
+    task->affinity  = ~(1 << 1);
     
 
     task->frame         = (void*) offset_of_frame;
@@ -313,3 +319,26 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     return task->tid;
 }
 
+
+void dump_frame() {
+    kprintf("di: %p, si: %p, bp: %p, bx, %p, dx: %p, cx: %p, ax: %p\n"
+            "intno: %p, errno: %p, ip: %p, cs: %p, flags: %p, sp: %p, ss: %p\n"
+
+                                                        , FRAME(current_task)->di,
+                                                        FRAME(current_task)->si,
+                                                        FRAME(current_task)->bp,
+                                                        FRAME(current_task)->bx,
+                                                        FRAME(current_task)->dx,
+                                                        FRAME(current_task)->cx,
+                                                        FRAME(current_task)->ax,
+
+                                                        FRAME(current_task)->intno,
+                                                        FRAME(current_task)->errno,
+                                                        FRAME(current_task)->ip,
+                                                        FRAME(current_task)->cs,
+                                                        FRAME(current_task)->flags,
+                                                        FRAME(current_task)->sp,
+                                                        FRAME(current_task)->ss);
+    
+    
+}

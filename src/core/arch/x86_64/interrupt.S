@@ -86,7 +86,6 @@ interrupt_return:
         popq    %r14
         popq    %r15
 
-
         addq    $16, %rsp
         iretq
 

@@ -35,7 +35,7 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 run: install
-	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM)
+	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL
