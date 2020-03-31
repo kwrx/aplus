@@ -6,13 +6,13 @@ endif
 
 
 export QUIET	:= @
-export VM		:= qemu
+export VM	:= qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR	:= $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
-PROJECTS := src/core src/drivers src/apps
+PROJECTS := kernel drivers apps
 TARGET	 := aplus.img
 
 

@@ -12,7 +12,7 @@ INCLUDES    ?= include
 LIBS        ?= c m gcc
 
 SRCDIRS     ?= .
-DESTDIR     ?= $(SYSROOT)/usr/$(shell realpath --relative-base=$(ROOTDIR)/src/apps ..)
+DESTDIR     ?= $(SYSROOT)/usr/$(shell realpath --relative-base=$(ROOTDIR)/apps ..)
 
 
 
