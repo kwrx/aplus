@@ -31,7 +31,7 @@
 
 
 
-void ringbuffer_create(ringbuffer_t* rb, size_t size) {
+void ringbuffer_init(ringbuffer_t* rb, size_t size) {
     
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(size);

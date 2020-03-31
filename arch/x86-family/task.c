@@ -315,3 +315,59 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     return task->tid;
 }
 
+
+
+
+void arch_task_context_set(task_t* task, int options, long value) {
+
+    DEBUG_ASSERT(task);
+    DEBUG_ASSERT(task->frame);
+
+
+    switch(options) {
+
+        case ARCH_TASK_CONTEXT_PC:
+            FRAME(task)->ip = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_STACK:
+            FRAME(task)->sp = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_RETVAL:
+            FRAME(task)->ax = value;
+            break;
+
+        default:
+            kpanicf("x86-task: PANIC! invalid ARCH_TASK_CONTEXT_* %d\n", options);
+
+    }
+
+}
+
+
+long arch_task_context_get(task_t* task, int options) {
+
+    DEBUG_ASSERT(task);
+    DEBUG_ASSERT(task->frame);
+
+
+    switch(options) {
+
+        case ARCH_TASK_CONTEXT_PC:
+            return FRAME(task)->ip;
+
+        case ARCH_TASK_CONTEXT_STACK:
+            return FRAME(task)->sp;
+
+        case ARCH_TASK_CONTEXT_RETVAL:
+            return FRAME(task)->ax;
+
+        default:
+            kpanicf("x86-task: PANIC! invalid ARCH_TASK_CONTEXT_* %d\n", options);
+
+    }
+
+    return -1;
+    
+}

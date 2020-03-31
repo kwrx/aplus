@@ -50,6 +50,9 @@
 
 SYSCALL(24, sched_yield,
 long sys_sched_yield (void) {
-    arch_userspace_return_yield(0);
+
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0);
+    schedule(1);
+    
     return 0;
 });

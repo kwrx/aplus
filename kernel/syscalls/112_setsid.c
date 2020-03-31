@@ -48,5 +48,16 @@
 
 SYSCALL(112, setsid,
 long sys_setsid (void) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_task);
+
+    if(current_task->pgid == current_task->tid)
+        return -EPERM;
+
+
+    current_task->sid  = current_task->tid;
+    current_task->pgid = current_task->tid;
+
+    return 0;
+
 });

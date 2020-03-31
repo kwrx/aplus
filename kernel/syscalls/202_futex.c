@@ -83,8 +83,8 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                 futex_wait(current_task, kaddr, val, utime);
-
-                arch_userspace_return_yield(0);
+                schedule(1);
+                
                 break;
 
             }
@@ -151,8 +151,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                         futex_wait(current_task, kaddr, *kaddr, NULL);
-
-                        arch_userspace_return_yield(0);
+                        schedule(1);
 
                     }
                 }

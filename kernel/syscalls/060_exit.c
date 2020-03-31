@@ -53,7 +53,8 @@
 SYSCALL(60, exit,
 long sys_exit (int status) {
 
-    //BUG_ON(current_task->tid != 1);
+    BUG_ON(current_task->tid != 1);
+
 
     if(status & (1 << 31))
         current_task->exit.value = status & 0x7FFF;
@@ -88,6 +89,24 @@ long sys_exit (int status) {
     // }
 
 
+
+    list_each(current_task->wait_queue, q) {
+
+        if(current_task->status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
+            continue;
+            
+        if(q->wait_status)
+            *q->wait_status = current_task->exit.value;
+
+        if(q->wait_rusage)
+            memcpy(q->wait_rusage, &current_task->rusage, sizeof(struct rusage));
+
+
+        thread_wake_and_return(q, current_task->tid);
+
+    }
+
+
     if(current_task->status != TASK_STATUS_STOP) {
 
         sched_dequeue(current_task);
@@ -103,14 +122,8 @@ long sys_exit (int status) {
 
     }
 
-    kprintf("EXIT\n");
-    long sp;
-    __asm__ __volatile__("movq %%rsp, %0\n" : "=r"(sp));
-    kprintf("FRAME: %p, STACK: %p\n", current_cpu->frame, sp);
-    arch_userspace_return_yield(-ENOSYS);
-    //return -ENOSYS;
 
-    kprintf("EXIT NOSYS\n");
+    schedule(1);
     return -ENOSYS;
 
 });

@@ -107,10 +107,10 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
 
     kprintf("sleep for %p: %d (%d:%d) + (%d:%d)\n", rqtp, arch_timer_generic_getms(), tss, tsn, rqtp->tv_sec, rqtp->tv_nsec);
 
-    current_task->status = TASK_STATUS_SLEEP;
+    thread_suspend(current_task);
 
 
-    arch_userspace_return_yield(0);
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0);
     
     return -EINTR;
 

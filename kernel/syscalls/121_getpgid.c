@@ -49,5 +49,27 @@
 
 SYSCALL(121, getpgid,
 long sys_getpgid (pid_t pid) {
-    return -ENOSYS;
+    
+    DEBUG_ASSERT(current_task);
+
+
+    if(pid == 0)
+        return current_task->pgid;
+
+
+    cpu_foreach(cpu) {
+
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+            if(tmp->tid == pid)
+                return tmp->pgid;
+
+        }
+
+    }
+
+
+    return -ESRCH;
+
 });

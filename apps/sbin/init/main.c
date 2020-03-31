@@ -128,8 +128,8 @@ int main(int argc, char** argv, char** envp) {
     init_initd();
 
 
-    //for(; errno != ECHILD;)
-    //    waitpid(-1, NULL, 0);
+    for(; errno != ECHILD;)
+        waitpid(-1, NULL, 0);
     
 
     fprintf(stderr, "init: unreachable point! system halted!\n");

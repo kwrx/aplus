@@ -185,7 +185,7 @@ void char_init(device_t* device) {
         case CHAR_IO_FBF:
         case CHAR_IO_LBF:
 
-            ringbuffer_create(&device->chr.buffer, BUFSIZ);
+            ringbuffer_init(&device->chr.buffer, BUFSIZ);
         
 
         default:

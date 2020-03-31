@@ -42,6 +42,11 @@
 #define ARCH_VMM_AREA_USER          3
 
 
+#define ARCH_TASK_CONTEXT_PC        1
+#define ARCH_TASK_CONTEXT_STACK     2
+#define ARCH_TASK_CONTEXT_RETVAL    3
+
+
 #ifndef R_OK
 #define R_OK                        4
 #endif
@@ -101,6 +106,8 @@ void arch_intr_unmap_irq(uint8_t);
 void arch_task_switch(task_t*, task_t*);
 pid_t arch_task_spawn_init(void);
 pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
+void arch_task_context_set(task_t*, int, long);
+long arch_task_context_get(task_t*, int);
 
 
 void arch_reboot(int);
@@ -123,8 +130,6 @@ uint64_t arch_timer_generic_getres(void);
 
 
 void arch_userspace_enter(uintptr_t, uintptr_t, void*);
-void arch_userspace_return_yield(long);
-
 
 uintptr_t arch_vmm_getpagesize();
 uintptr_t arch_vmm_gethugepagesize();

@@ -1,6 +1,12 @@
 
 # Development Roadmap
 
+- [ ] Use Tree data structure in vfs_cache
+- [ ] Implement Sleep queue
+- [ ] Implement Wait queue
+
+
+
 // TODO: Update TODO.md
 ## Architecture
 

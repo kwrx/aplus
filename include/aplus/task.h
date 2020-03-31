@@ -130,6 +130,11 @@ typedef struct task {
 
 
     list(futex_t*, futexes);
+    list(struct task*, wait_queue);
+
+    int  wait_options;
+    int* wait_status;
+    struct rusage* wait_rusage;
 
 
     struct fd fd[CONFIG_OPEN_MAX];
@@ -204,8 +209,21 @@ typedef struct task {
 
 
 
-__BEGIN_DECLS
+#define thread_suspend(task)                \
+    task->status = TASK_STATUS_SLEEP
 
+#define thread_wake(task)                   \
+    task->status = TASK_STATUS_READY
+
+#define thread_wake_and_return(task, ret)                               \
+    {                                                                   \
+        arch_task_context_set(task, ARCH_TASK_CONTEXT_RETVAL, ret);     \
+        thread_wake(task);                                              \
+    }
+
+
+
+__BEGIN_DECLS
 
 pid_t sched_nextpid();
 

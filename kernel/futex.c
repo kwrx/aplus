@@ -74,7 +74,10 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
     __lock(&task->lock,
         list_push(task->futexes, futex));
 
-    task->status = TASK_STATUS_SLEEP;
+    thread_suspend(task);
+
+
+    arch_task_context_set(task, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
 }
 
@@ -187,6 +190,6 @@ void futex_wakeup_thread(task_t* task, futex_t* futex) {
     futex->address =  0;
     futex->value   = ~0;
 
-    task->status = TASK_STATUS_READY;
+    thread_wake(task);
 
 }

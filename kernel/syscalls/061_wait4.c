@@ -27,12 +27,29 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+
+
+static inline int __is_my_child(task_t* task) {
+
+    DEBUG_ASSERT(task);
+
+    task_t* tmp;
+    for(tmp = task->parent; tmp; tmp = tmp->parent)
+        if(tmp == current_task)
+            return 1;
+
+    return 0;
+
+}
+
 
 
 /***
@@ -53,6 +70,63 @@
 struct rusage;
 
 SYSCALL(61, wait4,
-long sys_wait4 (pid_t pid, int __user * stat_addr, int options, struct rusage __user * ru) {
+long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __user * rusage) {
+    
+    if(status)
+        if(unlikely(!uio_check(status, W_OK | R_OK)))
+            return -EFAULT;
+
+    if(rusage)
+        if(unlikely(!uio_check(rusage, W_OK | R_OK)))
+            return -EFAULT;
+
+
+
+    size_t count = 0;
+
+    current_task->wait_options = options;
+    current_task->wait_rusage = !rusage ? NULL : (void*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) rusage, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+    current_task->wait_status = !status ? NULL : (void*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) status, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+
+
+    cpu_foreach(cpu) {
+
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+            if(!__is_my_child(tmp))
+                continue;
+
+
+            #define continue_if(pid, cond)  \
+                if(pid) { if(cond) continue; }
+
+
+            continue_if(pid < -1, tmp->pgid != -pid);
+            continue_if(pid == 0, tmp->pgid != current_task->pgid);
+            continue_if(pid >  0, tmp->tid != pid);
+            //continue_if(pid == -1, 0);
+           
+            if(!(options & WNOHANG))
+                list_push(tmp->wait_queue, current_task);
+
+            count++;
+
+        }
+
+    }
+
+
+    if(count == 0)
+        return -ECHILD;
+
+    if(options & WNOHANG)
+        return 0;
+
+
+    thread_suspend(current_task);    
+    schedule(1);
+    
     return -ENOSYS;
+
 });

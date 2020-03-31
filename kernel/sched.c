@@ -65,7 +65,7 @@ static inline void __check_sleep(void) {
 
 
         if((tss * 1000000000ULL) + tsn < ((uint64_t) t0.tv_sec * 1000000000ULL) + (uint64_t) t0.tv_nsec)
-            current_task->status = TASK_STATUS_READY;
+            thread_wake(current_task);
             
     }
 
@@ -99,9 +99,6 @@ static void __sched_next(void) {
             continue;
 
         
-        //if(unlikely(!spinlock_trylock(&current_task->sched_lock)))
-        //    continue;
-        
 
         //__check_timers();
 
@@ -111,12 +108,7 @@ static void __sched_next(void) {
 
 
         __check_futex();
-        //__check_waiters();
         __check_sleep();
-
-
-        // if(unlikely(current_task->status != TASK_STATUS_READY))
-        //     spinlock_unlock(&current_task->sched_lock);
 
 
     } while(current_task->status != TASK_STATUS_READY);
@@ -125,7 +117,7 @@ static void __sched_next(void) {
 
 
 
-void schedule(int yield) {
+void schedule(int resched) {
 
 
     task_t* prev_task = current_task;
@@ -159,7 +151,7 @@ void schedule(int yield) {
 
 
 
-    if(!yield) {
+    if(!resched) {
 
         int64_t e;
         switch(current_task->policy) {
@@ -291,5 +283,3 @@ pid_t sched_nextpid(void) {
     static pid_t p = 0;
     return ++p;
 }
-
-
