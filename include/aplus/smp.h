@@ -66,6 +66,8 @@ typedef struct cpu {
 
     int errno;
 
+    uint64_t node;
+    uint64_t archid;
     uint64_t flags;
     uint64_t features[SMP_CPU_MAX_FEATURES];
     

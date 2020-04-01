@@ -7,7 +7,7 @@ LIBS	 := gcc
 CFLAGS   := -include $(ROOTDIR)/config.h -fno-builtin
 ASFLAGS  := -include $(ROOTDIR)/config.h
 DESTDIR  := $(SYSROOT)/boot
-TARGET	 := aplus
+TARGET	 := aplus.bin
 
 
 include $(ROOTDIR)/arch/$(PLATFORM)/config.mk

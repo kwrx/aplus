@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -54,28 +55,27 @@ struct getcpu_cache;
 
 SYSCALL(309, getcpu,
 long sys_getcpu (unsigned __user * cpu, unsigned __user * node, struct getcpu_cache __user * cache) {
-    return -ENOSYS;
-    // DEBUG_ASSERT(cache == NULL);
+
+    DEBUG_ASSERT(cache == NULL);
 
 
-    // if(likely(cpu)) {
+    if(likely(cpu)) {
 
-    //     if(unlikely(!uio_check(cpu, R_OK | W_OK)))
-    //         return -EFAULT;
+        if(unlikely(!uio_check(cpu, R_OK | W_OK)))
+            return -EFAULT;
 
-    //     *(cpu) = current_cpu->id;
+        *(cpu) = current_cpu->id;
 
-    // }
+    }
         
+    if(likely(node)) {
 
-    // if(likely(node)) {
+        if(unlikely(!uio_check(node, R_OK | W_OK)))
+            return -EFAULT;
 
-    //     if(unlikely(!uio_check(node, R_OK | W_OK)))
-    //         return -EFAULT;
-
-    //     *(node) = current_cpu->node;
+        *(node) = current_cpu->node;
     
-    // }
+    }
 
-    // return 0;
+    return 0;
 });

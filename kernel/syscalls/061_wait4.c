@@ -37,20 +37,6 @@
 
 
 
-static inline int __is_my_child(task_t* task) {
-
-    DEBUG_ASSERT(task);
-
-    task_t* tmp;
-    for(tmp = task->parent; tmp; tmp = tmp->parent)
-        if(tmp == current_task)
-            return 1;
-
-    return 0;
-
-}
-
-
 
 /***
  * Name:        wait4
@@ -94,7 +80,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
         task_t* tmp;
         for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-            if(!__is_my_child(tmp))
+            if(tmp->parent != current_task)
                 continue;
 
 
@@ -106,11 +92,41 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
             continue_if(pid == 0, tmp->pgid != current_task->pgid);
             continue_if(pid >  0, tmp->tid != pid);
             //continue_if(pid == -1, 0);
-           
-            if(!(options & WNOHANG))
-                list_push(tmp->wait_queue, current_task);
 
-            count++;
+            if(tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
+                continue;
+
+
+
+
+            if( tmp->status == TASK_STATUS_STOP ||
+                tmp->status == TASK_STATUS_ZOMBIE ) {
+
+
+                if(status)
+                    *status = tmp->exit.value;
+
+                if(rusage)
+                    memcpy(rusage, &tmp->rusage, sizeof(struct rusage));
+
+                
+                pid_t tid = tmp->tid;
+
+                if(tmp->status == TASK_STATUS_ZOMBIE)
+                    sched_dequeue(tmp);
+
+                return tid;
+
+
+            } else {
+
+                if(!(options & WNOHANG))
+                    list_push(tmp->wait_queue, current_task);
+
+                count++;
+
+            }
+
 
         }
 

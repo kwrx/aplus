@@ -276,6 +276,9 @@ void sched_dequeue(task_t* task) {
 
     }
 
+
+    kfree(task);
+
 }
 
 

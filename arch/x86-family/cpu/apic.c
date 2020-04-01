@@ -237,7 +237,9 @@ void apic_init(void) {
             case X86_MADT_ENTRY_LAPIC:
 
                 core->cpu.max_cores++;
-                core->cpu.cores[p[2]].id = p[3];
+                core->cpu.cores[p[2]].id = p[2];
+                core->cpu.cores[p[2]].node = 0ULL;
+                core->cpu.cores[p[2]].archid = p[3];
                 
                 if(p[2] != SMP_CPU_BOOTSTRAP_ID)
                     core->cpu.cores[p[2]].flags = 0ULL;

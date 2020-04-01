@@ -557,14 +557,14 @@ void arch_cpu_startup(int index) {
     /* INIT */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | (5 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | (5 << 8) | (1 << 14));
 
         while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 32 >> 12) & 1))
             __builtin_ia32_pause();
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));
 
         while (((mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI) >> 12) & 1))
@@ -578,11 +578,11 @@ void arch_cpu_startup(int index) {
     /* SIPI */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     }
@@ -596,11 +596,11 @@ void arch_cpu_startup(int index) {
     /* SIPI (x2) */
     if(apic_is_x2apic()) {
 
-        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].id << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].id << 24);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
         mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
 
     }
@@ -611,6 +611,6 @@ void arch_cpu_startup(int index) {
         return;
 
 
-    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d) stack(%p)\n", index, core->cpu.cores[index].id, core->cpu.cores[index].flags);
+    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d) stack(%p)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
 
 }
