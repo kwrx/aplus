@@ -2,8 +2,8 @@
 # Development Roadmap
 
 - [ ] Use Tree data structure in vfs_cache
-- [ ] Implement Sleep queue
-- [ ] Implement Wait queue
+- [x] Implement Sleep queue
+- [x] Implement Wait queue
 
 
 

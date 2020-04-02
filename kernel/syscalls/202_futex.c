@@ -21,14 +21,6 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/syscall.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/ipc.h>
-#include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <time.h>
@@ -36,7 +28,14 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/smp.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
+#include <aplus/errno.h>
 
 
 
@@ -63,7 +62,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
     if(unlikely(!uio_check(uaddr, R_OK)))
         return -EACCES;
 
-    uint32_t* kaddr = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+    uint32_t* kaddr = (uint32_t*) uio_get_ptr(uaddr);
 
 
 
@@ -118,7 +117,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
                 if(unlikely(!uio_check(uaddr2, R_OK)))
                     return -EACCES;
 
-                uint32_t* kaddr2 = (uint32_t*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) uaddr2, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+                uint32_t* kaddr2 = (uint32_t*) uio_get_ptr(uaddr2);
 
                 return futex_requeue(kaddr, kaddr2, (uint32_t) __val2);
 

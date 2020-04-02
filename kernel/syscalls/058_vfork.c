@@ -51,5 +51,11 @@
 
 SYSCALL(58, vfork,
 long sys_vfork (void) {
-    return -ENOSYS;
+
+    struct kclone_args args = {
+        .flags          = CLONE_VM | CLONE_VFORK,
+        .exit_signal    = SIGCHLD
+    };
+
+    return do_fork(&args, sizeof(args));
 });

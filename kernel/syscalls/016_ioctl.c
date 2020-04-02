@@ -60,14 +60,14 @@ long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
     if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].ref->lock, {
-        e = vfs_ioctl(current_task->fd[fd].ref->inode, cmd, (void*) arg);
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+        e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void*) arg);
     });
 
 

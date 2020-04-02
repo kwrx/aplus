@@ -56,7 +56,7 @@ long sys_set_tid_address (int __user * tidptr) {
     DEBUG_ASSERT(tidptr);
     DEBUG_ASSERT(uio_check(tidptr, R_OK | W_OK));
 
-    current_task->userspace.tid_address = arch_vmm_p2v(arch_vmm_v2p((uintptr_t) tidptr, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+    current_task->userspace.tid_address = uio_get_ptr(tidptr);
 
     return current_task->tid;
 

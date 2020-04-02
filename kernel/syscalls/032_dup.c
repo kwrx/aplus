@@ -53,7 +53,7 @@ long sys_dup (unsigned int fd) {
     if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
@@ -62,19 +62,19 @@ long sys_dup (unsigned int fd) {
     __lock(&current_task->lock, {
 
         for(i = 0; i < CONFIG_OPEN_MAX; i++)
-            if(!current_task->fd[i].ref)
+            if(!current_task->fd->descriptors[i].ref)
                 break;
 
         if(i == CONFIG_OPEN_MAX)
             break;
 
 
-        __lock(&current_task->fd[fd].ref->lock, {
+        __lock(&current_task->fd->descriptors[fd].ref->lock, {
         
-            current_task->fd[i].ref = current_task->fd[fd].ref;
-            current_task->fd[i].flags = current_task->fd[fd].flags;
+            current_task->fd->descriptors[i].ref = current_task->fd->descriptors[fd].ref;
+            current_task->fd->descriptors[i].flags = current_task->fd->descriptors[fd].flags;
 
-            current_task->fd[i].ref->refcount++;
+            current_task->fd->descriptors[i].ref->refcount++;
 
         });
 

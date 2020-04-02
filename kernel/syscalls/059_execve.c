@@ -289,21 +289,23 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     DEBUG_ASSERT(current_task->userspace.start);
     DEBUG_ASSERT(current_task->userspace.end);
     DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
-    DEBUG_ASSERT(current_task->fd[fd].ref);
-
-    current_task->exe = (current_task->fd[fd].ref->inode);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
 
     sys_close(fd);
 
+
+    do_unshare(CLONE_FS);
+    do_unshare(CLONE_FILES);
+    do_unshare(CLONE_SIGHAND);
 
 
     int i;
     for(i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-        if(!current_task->fd[i].ref)
+        if(!current_task->fd->descriptors[i].ref)
             continue;
 
-        if(!current_task->fd[i].close_on_exec)
+        if(!current_task->fd->descriptors[i].close_on_exec)
             continue;
 
         

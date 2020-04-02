@@ -40,12 +40,17 @@
 #include <arch/x86/apic.h>
 
 
+extern inode_t __vfs_root;
+
 
 #define FRAME(p)            \
     ((interrupt_frame_t*) p->frame)
 
 #define WRITE_SP0(cpu, ptr)                         \
     ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->sp0
+
+
+
 
 
 
@@ -103,6 +108,65 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 
+task_t* arch_task_get_empty_thread(size_t stacksize) {
+    
+
+    task_t* task = (task_t*) kcalloc (
+        1, (sizeof(task_t))                                 // TCB
+         + (sizeof(interrupt_frame_t))                      // Registers
+         + (stacksize)                                      // Stack
+         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
+    , GFP_KERNEL);
+
+
+    uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t));
+    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + stacksize);
+    uintptr_t offset_of_sp0   = ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + stacksize + KERNEL_SYSCALL_STACKSIZE);
+
+
+    task->argv = current_task->argv;
+    task->environ = current_task->environ;
+
+    task->tid   = sched_nextpid();
+    task->tgid  = current_task->tid;
+    task->pgid  = current_task->pgid;
+    task->uid   = current_task->uid;
+    task->euid  = current_task->euid;
+    task->gid   = current_task->gid;
+    task->egid  = current_task->egid;
+    task->sid   = current_task->sid;
+
+    task->status    = TASK_STATUS_READY;
+    task->policy    = current_task->policy;
+    task->priority  = current_task->priority;
+    task->caps      = current_task->caps;
+    task->flags     = 0;
+    task->affinity  = current_task->affinity;
+    
+
+    task->frame         = (void*) offset_of_frame;
+    task->sp0           = (void*) offset_of_sp0;
+    task->sp3           = (void*) NULL;
+    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
+
+
+    FRAME(task)->cs     = KERNEL_CS;
+    FRAME(task)->flags  = 0x202;
+    FRAME(task)->sp     = offset_of_stack;
+    FRAME(task)->ss     = KERNEL_DS;
+
+
+    spinlock_init(&task->lock);
+    spinlock_init(&task->sched_lock);
+    
+
+    task->next   = NULL;
+    task->parent = current_task;
+    
+    return task;
+}
+
+
 pid_t arch_task_spawn_init() {
 
     task_t* task = (task_t*) kcalloc (
@@ -116,8 +180,8 @@ pid_t arch_task_spawn_init() {
     static char* __argv[2] = { "init", NULL };
     static char* __envp[1] = { NULL };
 
-    task->argv = __argv;
-    task->environ = __envp;
+    task->argv     = __argv;
+    task->environ  = __envp;
 
 
     task->tid   = 
@@ -145,25 +209,24 @@ pid_t arch_task_spawn_init() {
     current_cpu->address_space.refcount++;
 
 
-    extern inode_t __vfs_root;
 
-    task->cwd  =
-    task->root = &__vfs_root;
-    task->exe  = NULL;
+    task->fs = (struct fs*) kcalloc(1, sizeof(struct fs), GFP_KERNEL);
 
-    task->umask = 0;
+    task->fs->cwd   =
+    task->fs->root  = &__vfs_root;
+    task->fs->exe   = NULL;
+    task->fs->umask = 0;
+
+    task->fs->refcount = 1;
 
 
 
-    memset(&task->clock , 0, sizeof(struct tms));
-    memset(&task->sleep , 0, sizeof(struct timespec));
-    memset(&task->rusage, 0, sizeof(struct rusage));
-    memset(&task->fd    , 0, sizeof(struct fd) * CONFIG_OPEN_MAX);
-    memset(&task->exit  , 0, sizeof(task->exit));
-    memset(&task->iostat, 0, sizeof(task->iostat));
+    task->fd = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
+    task->fd->refcount = 1;
 
-    spinlock_init(&task->lock);
-    spinlock_init(&task->sched_lock);
+    task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
+    task->sighand->refcount = 1;
+
 
 
 
@@ -176,16 +239,18 @@ pid_t arch_task_spawn_init() {
 
 
 
-    // TODO: Signal
-
-
     task->next   = NULL;
     task->parent = NULL;
+
+    spinlock_init(&task->lock);
+    spinlock_init(&task->sched_lock);
+
 
 
     if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID)
         task->parent = core->bsp.sched_running;
     
+
     current_cpu->sched_running = task;
     current_cpu->sp0 = task->sp0;
 
@@ -212,24 +277,10 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     DEBUG_ASSERT(stacksize);
     
 
-
-    task_t* task = (task_t*) kcalloc (
-        1, (sizeof(task_t))                                 // TCB
-         + (sizeof(char*) * 2) + strlen(name) + 1           // Arguments & Environment
-         + (sizeof(interrupt_frame_t))                      // Registers
-         + (stacksize)                                      // Stack
-         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
-    , GFP_KERNEL);
+    task_t* task = arch_task_get_empty_thread(stacksize);
 
 
-    uintptr_t offset_of_argv  = ((uintptr_t) task + sizeof(task_t));
-    uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1);
-    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t) + stacksize);
-    uintptr_t offset_of_sp0   = ((uintptr_t) task + sizeof(task_t) + (sizeof(char*) * 2) + strlen(name) + 1 + sizeof(interrupt_frame_t) + stacksize + KERNEL_SYSCALL_STACKSIZE);
-
-
-
-    task->argv = (char**) offset_of_argv;
+    task->argv = (char**) kcalloc(1, (sizeof(char*) << 1) + strlen(name) + 1, GFP_KERNEL);
 
     task->argv[0] = (char*) &task->argv[2];
     task->argv[1] = (char*) NULL;
@@ -237,47 +288,30 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     strcpy(task->argv[0], name);
 
 
-    task->environ = current_task->environ;
-
-    task->tid   = sched_nextpid();
-    task->tgid  = current_task->tgid;
-    task->pgid  = current_task->pgid;
-    task->uid   = current_task->uid;
-    task->euid  = current_task->euid;
-    task->gid   = current_task->gid;
-    task->egid  = current_task->egid;
-    task->sid   = current_task->sid;
-
-    task->status    = TASK_STATUS_READY;
-    task->policy    = current_task->policy;
-    task->priority  = current_task->priority;
-    task->caps      = current_task->caps;
-    task->flags     = 0;
     task->affinity  = 0;
     
 
-    task->frame         = (void*) offset_of_frame;
-    task->sp0           = (void*) offset_of_sp0;
-    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
     task->address_space = (void*) current_task->address_space;
-
     current_task->address_space->refcount++;
 
 
-    task->cwd  = current_task->cwd;
-    task->root = current_task->root;
-    task->exe  = current_task->exe;
+    task->fs = (struct fs*) kcalloc(1, sizeof(struct fs), GFP_KERNEL);
 
-    task->umask = current_task->umask;
+    task->fs->cwd   = current_task->fs->cwd;
+    task->fs->exe   = current_task->fs->exe;
+    task->fs->root  = current_task->fs->root;
+    task->fs->umask = current_task->fs->umask;
+    task->fs->refcount = 1;
 
 
-    memset(&task->clock  , 0, sizeof(struct tms));
-    memset(&task->sleep  , 0, sizeof(struct timespec));
-    memset(&task->rusage , 0, sizeof(struct rusage));
-    memset(&task->exit   , 0, sizeof(task->exit));
-    memset(&task->iostat , 0, sizeof(task->iostat));
+    task->fd = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
+    task->fd->refcount = 1;
 
-    memcpy(&task->fd, &current_task->fd, sizeof(struct fd) * CONFIG_OPEN_MAX);
+    task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
+    task->sighand->refcount = 1;
+    
+    
+    
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
 
 
@@ -285,10 +319,6 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
 
     FRAME(task)->ip = (uintptr_t) entry;
-    FRAME(task)->cs = KERNEL_CS;
-    FRAME(task)->flags = 0x202;
-    FRAME(task)->sp = offset_of_stack;
-    FRAME(task)->ss = KERNEL_DS;
 
 #if defined(__x86_64__)
     FRAME(task)->di = (uintptr_t) arg;
@@ -318,6 +348,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
 
 
+
 void arch_task_context_set(task_t* task, int options, long value) {
 
     DEBUG_ASSERT(task);
@@ -325,6 +356,10 @@ void arch_task_context_set(task_t* task, int options, long value) {
 
 
     switch(options) {
+
+        case ARCH_TASK_CONTEXT_COPY:
+            memcpy(task->frame, (interrupt_frame_t*) value, sizeof(interrupt_frame_t));
+            break;
 
         case ARCH_TASK_CONTEXT_PC:
             FRAME(task)->ip = value;
@@ -337,6 +372,51 @@ void arch_task_context_set(task_t* task, int options, long value) {
         case ARCH_TASK_CONTEXT_RETVAL:
             FRAME(task)->ax = value;
             break;
+
+
+#if defined(__i386__)
+
+        case ARCH_TASK_CONTEXT_PARAM0:
+        case ARCH_TASK_CONTEXT_PARAM1:
+        case ARCH_TASK_CONTEXT_PARAM2:
+        case ARCH_TASK_CONTEXT_PARAM3:
+        case ARCH_TASK_CONTEXT_PARAM4:
+        case ARCH_TASK_CONTEXT_PARAM5:
+
+            FRAME(task)->sp -= sizeof(long);
+            uio_w32(FRAME(task)->sp, value);
+            break;
+
+#endif
+
+
+#if defined(__x86_64__)
+
+        case ARCH_TASK_CONTEXT_PARAM0:
+            FRAME(task)->di = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_PARAM1:
+            FRAME(task)->si = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_PARAM2:
+            FRAME(task)->dx = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_PARAM3:
+            FRAME(task)->cx = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_PARAM4:
+            FRAME(task)->r8 = value;
+            break;
+
+        case ARCH_TASK_CONTEXT_PARAM5:
+            FRAME(task)->r9 = value;
+            break;
+
+#endif
 
         default:
             kpanicf("x86-task: PANIC! invalid ARCH_TASK_CONTEXT_* %d\n", options);

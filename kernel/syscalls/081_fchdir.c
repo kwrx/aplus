@@ -53,13 +53,13 @@ long sys_fchdir (unsigned int fd) {
     if(fd > CONFIG_OPEN_MAX)
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
     __lock(&current_task->lock, {
 
-        current_task->cwd = current_task->fd[fd].ref->inode;
+        current_task->fs->cwd = current_task->fd->descriptors[fd].ref->inode;
 
     });
 

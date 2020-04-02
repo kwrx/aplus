@@ -336,7 +336,7 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
 
     if(name[0] == '.' && name[1] == '.' && name[2] == '\0') {
        
-        if(current_task->root != inode || inode->parent)
+        if(current_task->fs->root != inode || inode->parent)
             return inode->parent;
         else
             return errno = ENOENT, NULL;

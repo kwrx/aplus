@@ -108,7 +108,7 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
     inode_t* c;
 
     if(path[0] == '/')
-        { c = current_task->root; path++; }
+        { c = current_task->fs->root; path++; }
     else
         c = cwd;
 
@@ -184,7 +184,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         if(dfd > CONFIG_OPEN_MAX)
             return -EBADF;
 
-        if(unlikely(!current_task->fd[dfd].ref))
+        if(unlikely(!current_task->fd->descriptors[dfd].ref))
             return -EBADF;
 
     }
@@ -200,9 +200,9 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     inode_t* cwd;
     if(dfd == AT_FDCWD)
-        cwd = current_task->cwd;
+        cwd = current_task->fs->cwd;
     else
-        cwd = current_task->fd[dfd].ref->inode;
+        cwd = current_task->fd->descriptors[dfd].ref->inode;
 
 
 
@@ -278,7 +278,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     __lock(&current_task->lock, {
 
         for(fd = 0; fd < CONFIG_OPEN_MAX; fd++)
-            if(!current_task->fd[fd].ref)
+            if(!current_task->fd->descriptors[fd].ref)
                 break;
 
         if(fd == CONFIG_OPEN_MAX)
@@ -298,8 +298,8 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
                 ref->position = 0;
 
         
-            current_task->fd[fd].ref = ref;
-            current_task->fd[fd].flags = flags;
+            current_task->fd->descriptors[fd].ref = ref;
+            current_task->fd->descriptors[fd].flags = flags;
         
         }
 
@@ -315,8 +315,8 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     DEBUG_ASSERT(fd >= 0);
     DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
-    DEBUG_ASSERT(current_task->fd[fd].ref);
-    DEBUG_ASSERT(current_task->fd[fd].ref->inode);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
     return fd;
 

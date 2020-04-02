@@ -51,5 +51,11 @@
 
 SYSCALL(57, fork,
 long sys_fork (void) {
-    return -ENOSYS;
+    
+    struct kclone_args args = {
+        .exit_signal = SIGCHLD
+    };
+
+    return do_fork(&args, sizeof(args));
+
 });

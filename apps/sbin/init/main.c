@@ -96,6 +96,11 @@ static void init_environment(void) {
 static void init_initd(void) {
     return;
 }
+
+static void* start_thread(void* arg) {
+    for(;;);
+    return NULL;
+}
     
 
 int main(int argc, char** argv, char** envp) {
@@ -126,6 +131,17 @@ int main(int argc, char** argv, char** envp) {
     init_welcome();
     init_environment();
     init_initd();
+
+
+    int e;
+    __asm__ __volatile__("syscall" : "=a"(e) : "a"(57));
+    if(e == -1)
+        perror("fork()");
+    
+    if(e == 0)
+        _exit(fprintf(stderr, "Hello World from child! %d\n", getpid()));
+    else
+        fprintf(stderr, "Hello World from father! %d (child: %d)\n", getpid(), e);
 
 
     for(; errno != ECHILD;)

@@ -59,13 +59,13 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
     if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
 
     struct stat st;
-    if(vfs_getattr(current_task->fd[fd].ref->inode, &st) < 0)
+    if(vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &st) < 0)
         return -errno;
 
 
@@ -74,20 +74,20 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
 
 
 
-    __lock(&current_task->fd[fd].ref->lock, {
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
         
         switch(whence) {
 
             case SEEK_SET:
-                current_task->fd[fd].ref->position = offset;
+                current_task->fd->descriptors[fd].ref->position = offset;
                 break;
 
             case SEEK_CUR:
-                current_task->fd[fd].ref->position += offset;
+                current_task->fd->descriptors[fd].ref->position += offset;
                 break;
 
             case SEEK_END:
-                current_task->fd[fd].ref->position = st.st_size + offset;
+                current_task->fd->descriptors[fd].ref->position = st.st_size + offset;
                 break;
 
             default:
@@ -98,5 +98,5 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
 
     });
 
-    return current_task->fd[fd].ref->position;
+    return current_task->fd->descriptors[fd].ref->position;
 });

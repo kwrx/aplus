@@ -80,8 +80,8 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 #if defined(CONFIG_DEMAND_PAGING)
         if(on_demand) {
             
-            return (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW;
-
+            return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
+            
         } else
 #endif
         {
@@ -111,33 +111,40 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
             (flags & flag)
 
 
-        if(has(ARCH_VMM_CLONE_VM)) {
+        if((*__s & X86_MMU_PG_U) == 0)
+            *__d = *__s;
 
-            if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
+        else {
 
-                if(has(ARCH_VMM_CLONE_PRIVATE))
+            if(has(ARCH_VMM_CLONE_VM)) {
+
+                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
+
+                    if(has(ARCH_VMM_CLONE_PRIVATE))
+                        *__d = *__s;
+                    else
+                        *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
+
+                } else
                     *__d = *__s;
-                else
+
+            } else {
+
+                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
+
+                    if(has(ARCH_VMM_CLONE_PRIVATE))
+                        *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
+                    else 
+                        {} // Skip private pages
+
+
+                } else if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+                    *__d = *__s;
+
+                } else
                     *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
 
-            } else
-                *__d = *__s;
-
-        } else {
-
-            if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
-
-                if(has(ARCH_VMM_CLONE_PRIVATE))
-                    *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
-                else 
-                    {} // Skip private pages
-
-
-            } else if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
-                *__d = *__s;
-
-            } else
-                *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
+            }
 
         }
 

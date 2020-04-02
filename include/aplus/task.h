@@ -60,15 +60,37 @@
 
 #define TASK_SCHEDULER_PERIOD_NS                5000000ULL
 
+#define TASK_STACK_MAX                          (0x100000000ULL)    // 4GiB
+#define TASK_STACK_MIN                          (0x1000ULL)         // 4KiB
+
+
 
 struct fd {
 
-    struct file* ref;
-
     struct {
-        int flags:30;
-        int close_on_exec:1;
-    };
+        
+        struct file* ref;
+
+        struct {
+            int flags:30;
+            int close_on_exec:1;
+        };
+
+    } descriptors[CONFIG_OPEN_MAX];
+
+    size_t refcount;
+
+};
+
+
+struct fs {
+
+    inode_t* root;
+    inode_t* cwd;
+    inode_t* exe;
+
+    mode_t umask;
+    size_t refcount;
 
 };
 
@@ -84,6 +106,31 @@ struct ksigaction {
 	void (*sa_restorer)(void);
 	
     int mask[2];
+
+};
+
+
+struct kclone_args {
+    
+    uint64_t flags;         /* Flags bit mask                                           */
+    uint64_t pidfd;         /* Where to store PID file descriptor (pid_t *)             */
+    uint64_t child_tid;     /* Where to store child TID, in child's memory (pid_t *)    */
+    uint64_t parent_tid;    /* Where to store child TID, in parent's memory (int *)     */
+    uint64_t exit_signal;   /* Signal to deliver to parent on child termination         */
+    uint64_t stack;         /* Pointer to lowest byte of stack                          */
+    uint64_t stack_size;    /* Size of stack                                            */
+    uint64_t tls;           /* Location of new TLS                                      */
+    uint64_t set_tid;       /* Pointer to a pid_t array                                 */
+    uint64_t set_tid_size;  /* Number of elements in set_tid                            */
+
+};
+
+
+struct sighand {
+
+    struct ksigaction action[128];
+    sigset_t sigmask;
+    size_t refcount;
 
 };
 
@@ -125,8 +172,6 @@ typedef struct task {
 
 
     struct timespec clock[TASK_CLOCK_MAX];
-    struct ksigaction signals[128];
-    sigset_t sigmask;
 
 
     list(futex_t*, futexes);
@@ -137,13 +182,9 @@ typedef struct task {
     struct rusage* wait_rusage;
 
 
-    struct fd fd[CONFIG_OPEN_MAX];
-
-    inode_t* root;
-    inode_t* cwd;
-    inode_t* exe;
-
-    mode_t umask;
+    struct fd* fd;
+    struct fs* fs;
+    struct sighand* sighand;
 
 
     struct {
@@ -225,11 +266,12 @@ typedef struct task {
 
 __BEGIN_DECLS
 
-pid_t sched_nextpid();
-
-
 struct cpu;
 
+void do_unshare(int);
+pid_t do_fork(struct kclone_args*, size_t);
+
+pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 

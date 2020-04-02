@@ -88,10 +88,10 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     if((fd = sys_open(dir_name, O_RDONLY, 0)) < 0)
         return fd;
 
-    DEBUG_ASSERT(current_task->fd[fd].ref);
-    DEBUG_ASSERT(current_task->fd[fd].ref->inode);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
-    d = current_task->fd[fd].ref->inode;
+    d = current_task->fd->descriptors[fd].ref->inode;
 
     if((e = sys_close(fd)) < 0)
         return e;
@@ -102,10 +102,10 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
         if((fd = sys_open(dev_name, O_RDONLY, 0)) < 0)
             return fd;
 
-        DEBUG_ASSERT(current_task->fd[fd].ref);
-        DEBUG_ASSERT(current_task->fd[fd].ref->inode);
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
-        s = current_task->fd[fd].ref->inode;
+        s = current_task->fd->descriptors[fd].ref->inode;
 
         if((e = sys_close(fd)) < 0)
             return e;

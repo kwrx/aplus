@@ -71,8 +71,8 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
     size_t count = 0;
 
     current_task->wait_options = options;
-    current_task->wait_rusage = !rusage ? NULL : (void*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) rusage, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
-    current_task->wait_status = !status ? NULL : (void*) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) status, ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP);
+    current_task->wait_rusage = !rusage ? NULL : (void*) uio_get_ptr(rusage);
+    current_task->wait_status = !status ? NULL : (void*) uio_get_ptr(status);
 
 
     cpu_foreach(cpu) {

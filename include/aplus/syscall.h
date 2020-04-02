@@ -113,8 +113,6 @@ extern long sys_umount (char __user * name, int flags);
 
 //extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp);
 
-extern long sys_clone (int (*fn)(void*), void __user * stack, unsigned long flags, void* arg);
-
 extern long sys_fork (void);
 
 extern long sys_vfork (void);

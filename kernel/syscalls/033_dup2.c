@@ -57,7 +57,7 @@ long sys_dup2 (unsigned int fd, unsigned int newfd) {
     if(unlikely(newfd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
@@ -65,20 +65,20 @@ long sys_dup2 (unsigned int fd, unsigned int newfd) {
         return newfd;
 
 
-    if(current_task->fd[newfd].ref)
+    if(current_task->fd->descriptors[newfd].ref)
         sys_close(newfd);
 
-    DEBUG_ASSERT(!current_task->fd[newfd].ref);
+    DEBUG_ASSERT(!current_task->fd->descriptors[newfd].ref);
 
 
     __lock(&current_task->lock, {
 
-        __lock(&current_task->fd[fd].ref->lock, {
+        __lock(&current_task->fd->descriptors[fd].ref->lock, {
         
-            current_task->fd[newfd].ref = current_task->fd[fd].ref;
-            current_task->fd[newfd].flags = current_task->fd[fd].flags;
+            current_task->fd->descriptors[newfd].ref = current_task->fd->descriptors[fd].ref;
+            current_task->fd->descriptors[newfd].flags = current_task->fd->descriptors[fd].flags;
 
-            current_task->fd[fd].ref->refcount++;
+            current_task->fd->descriptors[fd].ref->refcount++;
 
         });
 

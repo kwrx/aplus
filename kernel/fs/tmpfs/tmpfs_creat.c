@@ -56,7 +56,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
 
     i->capacity = 0;
     i->data = NULL;
-    i->st.st_mode = mode & ~current_task->umask;
+    i->st.st_mode = mode & ~current_task->fs->umask;
     
 
 

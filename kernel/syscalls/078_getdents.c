@@ -73,14 +73,14 @@ long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int 
 
     
     
-    DEBUG_ASSERT(current_task->fd[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
 
 
     long e;
 
-    __lock(&current_task->fd[fd].ref->lock,
+    __lock(&current_task->fd->descriptors[fd].ref->lock,
 
-        if((e = vfs_readdir(current_task->fd[fd].ref->inode, dirent, current_task->fd[fd].ref->position++, count / sizeof(struct dirent))) < 0)
+        if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, dirent, current_task->fd->descriptors[fd].ref->position++, count / sizeof(struct dirent))) < 0)
             break;
 
         e *= sizeof(struct dirent);

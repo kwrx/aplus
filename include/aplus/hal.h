@@ -42,9 +42,16 @@
 #define ARCH_VMM_AREA_USER          3
 
 
+#define ARCH_TASK_CONTEXT_COPY      0
 #define ARCH_TASK_CONTEXT_PC        1
 #define ARCH_TASK_CONTEXT_STACK     2
 #define ARCH_TASK_CONTEXT_RETVAL    3
+#define ARCH_TASK_CONTEXT_PARAM0    4
+#define ARCH_TASK_CONTEXT_PARAM1    5
+#define ARCH_TASK_CONTEXT_PARAM2    6
+#define ARCH_TASK_CONTEXT_PARAM3    7
+#define ARCH_TASK_CONTEXT_PARAM4    8
+#define ARCH_TASK_CONTEXT_PARAM5    9
 
 
 #ifndef R_OK
@@ -68,20 +75,18 @@
     (arch_vmm_access(current_task->address_space, (uintptr_t) (p), (int) (m)) == 0 ? 1 : 0)
 
 
-#define __U(p)              \
-    arch_vmm_p2v(arch_vmm_v2p((uintptr_t) (p), ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP)
+#define uio_get_ptr(p)              \
+    ((uintptr_t) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) (p), ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP))
 
-#define uio_r8(p)                  (*(uint8_t volatile*) (__U(p)))
-#define uio_r16(p)                 (*(uint16_t volatile*) (__U(p)))
-#define uio_r32(p)                 (*(uint32_t volatile*) (__U(p)))
-#define uio_r64(p)                 (*(uint64_t volatile*) (__U(p)))
+#define uio_r8(p)                  (*(uint8_t  volatile*) (uio_get_ptr(p)))
+#define uio_r16(p)                 (*(uint16_t volatile*) (uio_get_ptr(p)))
+#define uio_r32(p)                 (*(uint32_t volatile*) (uio_get_ptr(p)))
+#define uio_r64(p)                 (*(uint64_t volatile*) (uio_get_ptr(p)))
 
-#define uio_w8(p, v)               { uio_r8(p) = (uint8_t) (v); }
+#define uio_w8(p, v)               { uio_r8(p)  = (uint8_t)  (v); }
 #define uio_w16(p, v)              { uio_r16(p) = (uint16_t) (v); }
 #define uio_w32(p, v)              { uio_r32(p) = (uint32_t) (v); }
 #define uio_w64(p, v)              { uio_r64(p) = (uint64_t) (v); }
-
-#undef __U
 
 
 
@@ -106,6 +111,7 @@ void arch_intr_unmap_irq(uint8_t);
 void arch_task_switch(task_t*, task_t*);
 pid_t arch_task_spawn_init(void);
 pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
+task_t* arch_task_get_empty_thread(size_t);
 void arch_task_context_set(task_t*, int, long);
 long arch_task_context_get(task_t*, int);
 

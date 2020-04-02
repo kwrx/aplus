@@ -167,6 +167,8 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     
     current_cpu->flags &= ~SMP_CPU_FLAGS_INTERRUPT;
 
+    __atomic_thread_fence(__ATOMIC_SEQ_CST);
+
 }
 
 

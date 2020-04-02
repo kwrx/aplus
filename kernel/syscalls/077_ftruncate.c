@@ -54,14 +54,14 @@ long sys_ftruncate (unsigned int fd, unsigned long length) {
     if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].ref->lock, {
-        e = vfs_truncate(current_task->fd[fd].ref->inode, length);
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+        e = vfs_truncate(current_task->fd->descriptors[fd].ref->inode, length);
     });
 
 

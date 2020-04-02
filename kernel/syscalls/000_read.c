@@ -62,19 +62,19 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
     if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
         return -EBADF;
 
-    if(unlikely(!current_task->fd[fd].ref))
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
         return -EBADF;
 
 
     if(unlikely(!(
-        !(current_task->fd[fd].flags & O_WRONLY) ||
-         (current_task->fd[fd].flags & O_RDONLY)
+        !(current_task->fd->descriptors[fd].flags & O_WRONLY) ||
+         (current_task->fd->descriptors[fd].flags & O_RDONLY)
     )))
         return -EPERM;
 
 
     // TODO */
-    // // if(unlikely(current_task->fd[fd].flags & O_NONBLOCK)) {
+    // // if(unlikely(current_task->fd->descriptors[fd].flags & O_NONBLOCK)) {
     // //     struct pollfd p;
     // //     p.fd = fd;
     // //     p.events = POLLIN;
@@ -98,12 +98,12 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
     int e = 0;
 
-    __lock(&current_task->fd[fd].ref->lock, {
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        if((e = vfs_read(current_task->fd[fd].ref->inode, buf, current_task->fd[fd].ref->position, size)) <= 0)
+        if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
             break;
 
-        current_task->fd[fd].ref->position += e;
+        current_task->fd->descriptors[fd].ref->position += e;
         current_task->iostat.read_bytes += (uint64_t) e;
         
     });
