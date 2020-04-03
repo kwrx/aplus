@@ -21,27 +21,25 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/memory.h>
 #include <aplus/vfs.h>
+#include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <string.h>
+#include <aplus/utils/list.h>
 
 #include <dev/interface.h>
 #include <dev/network.h>
 #include <dev/pci.h>
 
-
-
-
-
 #include <arch/x86/cpu.h>
 
-#include <aplus/utils/list.h>
 
 
 
@@ -356,13 +354,14 @@ static void e1000_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void e1000_irq(void* frame, int irq) {
-    
+static void e1000_irq(void* frame, uint8_t irq) {
+
     struct e1000* dev;
     for(int i = 0; (dev = devices[i]); i++) {
     
         if(dev->irq != irq)
             continue;
+
 
         uint32_t s;
 

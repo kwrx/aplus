@@ -97,7 +97,7 @@ void sys_init(void) {
 err_t sys_sem_new(struct sys_sem** s, u8_t count) {
     
     DEBUG_ASSERT(s);
-    DEBUG_ASSERT(count == 1);
+    //DEBUG_ASSERT(count == 1);
     
     (*s) = (struct sys_sem*) kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
 

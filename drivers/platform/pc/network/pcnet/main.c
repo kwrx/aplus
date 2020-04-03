@@ -22,26 +22,24 @@
  */
 
 
+#include <stdint.h>
+#include <string.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/memory.h>
 #include <aplus/vfs.h>
+#include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <string.h>
+#include <aplus/utils/list.h>
 
 #include <dev/interface.h>
 #include <dev/network.h>
 #include <dev/pci.h>
 
-
-
-
-
 #include <arch/x86/cpu.h>
-
-#include <aplus/utils/list.h>
 
 
 

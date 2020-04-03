@@ -1246,7 +1246,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 
 void init(const char* args) {
-    
+
     pci_scan(&pci_find, 0x0106, NULL);
 
 
