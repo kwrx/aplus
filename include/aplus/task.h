@@ -31,6 +31,7 @@
 #define TASK_STATUS_SLEEP                       2
 #define TASK_STATUS_STOP                        3
 #define TASK_STATUS_ZOMBIE                      4
+#define TASK_STATUS_DEAD                        5
 
 
 #define TASK_PRIO_MAX                           -20
@@ -45,6 +46,7 @@
 
 #define TASK_FLAGS_NO_FRAME                     1
 #define TASK_FLAGS_NO_FPU                       2
+#define TASK_FLAGS_NEED_RESCHED                 4
 
 
 #define TASK_CAPS_SYSTEM                        255
@@ -249,6 +251,9 @@ typedef struct task {
 } task_t;
 
 
+
+#define thread_postpone_resched(task)       \
+    task->flags |= TASK_FLAGS_NEED_RESCHED
 
 #define thread_suspend(task)                \
     task->status = TASK_STATUS_SLEEP

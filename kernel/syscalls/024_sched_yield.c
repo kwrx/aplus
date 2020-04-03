@@ -51,8 +51,6 @@
 SYSCALL(24, sched_yield,
 long sys_sched_yield (void) {
 
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0);
-    schedule(1);
-    
+    thread_postpone_resched(current_task);
     return 0;
 });

@@ -17,7 +17,6 @@
 #define SMP_CPU_FLAGS_ENABLED           (1 << 1)
 #define SMP_CPU_FLAGS_WAIT              (1 << 2)
 #define SMP_CPU_FLAGS_SLEEP             (1 << 3)
-#define SMP_CPU_FLAGS_INTERRUPT         (1 << 4)
 
 
 #define current_cpu     \

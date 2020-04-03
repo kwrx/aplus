@@ -49,13 +49,41 @@
 
 
 __dup(fs, struct fs*)
-__dup(fd, struct fd*)
 __dup(sighand, struct sighand*)
 
+
+
+
+static void* __dup_fd(struct fd* c) {
+
+    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd*), GFP_KERNEL);
+
+    memcpy(r, c, sizeof(*c));
+
+
+    int i;
+    for(i = 0; i < CONFIG_OPEN_MAX; i++) {
+        
+        if(!r->descriptors[i].ref)
+            continue;
+    
+
+        r->descriptors[i].ref->refcount++;
+
+    }
+
+
+    r->refcount = 1;
+    return r;
+
+}
 
 static void* __dup_address_space(vmm_address_space_t* space) {
 
     vmm_address_space_t* r = (vmm_address_space_t*) kcalloc(1, sizeof(vmm_address_space_t), GFP_KERNEL);
+
+    spinlock_init(&r->lock);
+
 
 #if defined(CONFIG_DEMAND_PAGING)
     arch_vmm_clone(r, space, ARCH_VMM_CLONE_DEMAND);
@@ -84,8 +112,13 @@ void do_unshare(int flags) {
     __clone_property(CLONE_FILES, fd);
     __clone_property(CLONE_FS, fs);
     __clone_property(CLONE_SIGHAND, sighand);
+    __clone_property(CLONE_VM, address_space);
 
     #undef __clone_property
+
+
+    if(flags & CLONE_VM)
+        arch_task_switch_address_space(current_task->address_space);
 
 }
 
@@ -140,9 +173,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     if(args->flags & CLONE_SETTLS)
         child->userspace.thread_area = args->tls;
 
-    // if(args->flags & CLONE_STOPPED)
-    //     child->status = TASK_STATUS_STOP;
-
     if(args->flags & CLONE_THREAD)
         child->tgid = current_task->tgid;
 
@@ -165,8 +195,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
 
-    child->sp3 = current_cpu->sp3;
-    
+    child->sp3 = current_cpu->sp3;    
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long) current_cpu->frame);
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);

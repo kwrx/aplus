@@ -58,11 +58,14 @@ interrupt_common:
         pushq   %rsi
         pushq   %rdi
 
+
         movq    %rsp, %rdi
 
         # Call Exception Handler
         .extern x86_exception_handler
         STDCALL(x86_exception_handler)
+
+        movq    %rax, %rsp
 
 
         .global interrupt_return

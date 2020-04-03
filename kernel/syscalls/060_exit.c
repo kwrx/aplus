@@ -102,6 +102,8 @@ long sys_exit (int status) {
             memcpy(q->wait_rusage, &current_task->rusage, sizeof(struct rusage));
 
 
+        current_task->status = TASK_STATUS_DEAD;
+
         thread_wake_and_return(q, current_task->tid);
 
     }
@@ -109,21 +111,14 @@ long sys_exit (int status) {
 
     if(current_task->status != TASK_STATUS_STOP) {
 
-        sched_dequeue(current_task);
-
-        int i;
-        for(i = 0; i < CONFIG_OPEN_MAX; i++)
-            sys_close(i);
+        // TODO: Remove references from fs, fd, sighand, ecc...
 
         //arch_userspace_release();
-
-        // TODO: implement wait queue
-
 
     }
 
 
-    schedule(1);
-    return -ENOSYS;
+    thread_postpone_resched(current_task);
+    return 0;
 
 });

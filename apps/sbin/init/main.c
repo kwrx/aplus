@@ -26,16 +26,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <ctype.h>
 #include <unistd.h>
 #include <errno.h>
+#include <dirent.h>
 
 #include <sys/wait.h>
+#include <sys/mount.h>
 #include <sys/ioctl.h>
+#include <sys/times.h>
+#include <sys/syscall.h>
 #include <termios.h>
 
-#include <pthread.h>
+
+
+#define __trim(str)         \
+    while(isblank(*str))    \
+        str++
+
 
 
 
@@ -69,8 +80,12 @@ static void init_environment(void) {
         if(line[strlen(line) - 1] == '\n')
             line[strlen(line) - 1] = '\0';
 
+
+        char* p = &line[0];
+        __trim(p);
+
         
-        switch(line[0]) {
+        switch(*p) {
 
             case '\0':
             case  '#':
@@ -78,8 +93,8 @@ static void init_environment(void) {
 
             default:
             
-                if(strchr(line, '='))
-                    putenv(line);
+                if(strchr(p, '='))
+                    putenv(p);
 
                 break;
 
@@ -93,15 +108,113 @@ static void init_environment(void) {
 }
 
 
+static void init_fstab() {
+
+    FILE* fp = fopen("/etc/fstab", "r");
+    if(!fp)
+        return;
+
+
+    char line[BUFSIZ];
+    while(fgets(line, sizeof(line), fp) > 0) {
+
+        if(line[strlen(line) - 1] == '\n')
+            line[strlen(line) - 1] = '\0';
+
+
+        char* p = &line[0];
+        __trim(p);
+
+        
+        switch(*p) {
+
+            case '\0':
+            case  '#':
+                continue;
+
+            default:
+                {
+
+                    int flags = 0;
+
+                    char dev[128];
+                    char dir[128];
+                    char fs [32];
+                    char fl [128];
+
+                    if(sscanf(p, "%s %s %s %s", dev, dir, fs, fl) <= 0)
+                        break;
+
+                    
+                    for(char* k = strtok(fl, ","); k; k = strtok(NULL, ",")) {
+
+                        #define has(str, flag)          \
+                            if(strcmp(k, str) == 0) {   \
+                                flags |= flag;          \
+                                continue;               \
+                            }
+                        
+
+                        has("defaults",     MS_NOATIME | MS_SHARED | MS_NOSUID)
+                        has("nodev",        MS_NODEV)
+                        has("nodiratime",   MS_NODIRATIME)
+                        has("dirsync",      MS_DIRSYNC)
+                        has("noexec",       MS_NOEXEC)
+                        has("iversion",     MS_I_VERSION)
+                        has("mand",         MS_MANDLOCK)
+                        has("relatime",     MS_RELATIME)
+                        has("lazytime",     MS_LAZYTIME)
+                        has("nosuid",       MS_NOSUID)
+                        has("remount",      MS_REMOUNT)
+                        has("ro",           MS_RDONLY)
+                        has("sync",         MS_SYNCHRONOUS)
+                        has("nouser",       MS_NOUSER)
+                        has("silent",       MS_SILENT)
+
+
+                    }
+
+
+                    if(mount(dev, dir, fs, flags, NULL) < 0)
+                        ;//perror("mount()");
+
+                    
+                }
+                break;
+
+        }
+
+    }
+
+    fclose(fp);
+    
+}
+
+
+static void init_hostname() {
+
+    FILE* fp = fopen("/etc/hostname", "r");
+    if(!fp)
+        return;
+
+    char hostname[BUFSIZ];
+    fgets(hostname, BUFSIZ, fp);
+
+
+    if(strlen(hostname) > 0)
+        syscall(SYS_sethostname, hostname, strlen(hostname));
+
+
+    fclose(fp);
+
+}
+
+
 static void init_initd(void) {
     return;
 }
 
-static void* start_thread(void* arg) {
-    for(;;);
-    return NULL;
-}
-    
+
 
 int main(int argc, char** argv, char** envp) {
 
@@ -130,23 +243,17 @@ int main(int argc, char** argv, char** envp) {
 
     init_welcome();
     init_environment();
+    init_fstab();
+    init_hostname();
     init_initd();
 
 
-    int e;
-    __asm__ __volatile__("syscall" : "=a"(e) : "a"(57));
-    if(e == -1)
-        perror("fork()");
-    
-    if(e == 0)
-        _exit(fprintf(stderr, "Hello World from child! %d\n", getpid()));
-    else
-        fprintf(stderr, "Hello World from father! %d (child: %d)\n", getpid(), e);
 
+    fprintf(stderr, "init: system up!\n");
 
     for(; errno != ECHILD;)
         waitpid(-1, NULL, 0);
-    
+        
 
     fprintf(stderr, "init: unreachable point! system halted!\n");
 

@@ -108,12 +108,8 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
     //* Set Page Type
     switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
 
-        case ARCH_VMM_MAP_TYPE_PUBLIC:
-            b |= X86_MMU_PG_AP_TP_PUBLIC;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_PRIVATE:
-            b |= X86_MMU_PG_AP_TP_PRIVATE;
+        case ARCH_VMM_MAP_TYPE_PAGE:
+            b |= X86_MMU_PG_AP_TP_PAGE;
             break;
 
         case ARCH_VMM_MAP_TYPE_MMAP:

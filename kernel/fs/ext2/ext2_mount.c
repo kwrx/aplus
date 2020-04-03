@@ -150,15 +150,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     vfs_cache_create(&dir->sb->cache, &ops, -1, (void*) ext2);
 
 
-
-
-    struct ext2_inode* i = (struct ext2_inode*) vfs_cache_get(&dir->sb->cache, EXT2_ROOT_INO);
-
-    i->i_mode &= ~S_IFMT;
-    i->i_mode |=  S_IFMT;
-
     dir->sb->ino = EXT2_ROOT_INO;
-
-
+    
     return 0;
 }

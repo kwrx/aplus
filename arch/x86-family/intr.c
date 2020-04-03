@@ -50,7 +50,7 @@ extern struct {
 } startup_irq[224];
 
 
-void x86_exception_handler(interrupt_frame_t* frame) {
+void* x86_exception_handler(interrupt_frame_t* frame) {
     
     DEBUG_ASSERT((frame));
 
@@ -77,7 +77,7 @@ void x86_exception_handler(interrupt_frame_t* frame) {
     switch(frame->intno) {
 
         case 0xFF:
-        case 0x20 ... 0xFD:
+            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
             break;
 
 
@@ -90,7 +90,40 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 #endif
 
             break;
+
+                  
+        case 0x21 ... 0xFD:
+
+            __lock(&startup_irq[frame->intno - 0x20].lock, {
+
+                if(likely(startup_irq[frame->intno - 0x20].handler))
+                    startup_irq[frame->intno - 0x20].handler((void*) frame, frame->intno - 0x20);
+                else
+                    kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+
+            });
+            
+            apic_eoi();
+            break;
         
+
+        case 0x20:
+
+            {
+                if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
+                    current_cpu->uptime.tv_sec += 1;
+                    current_cpu->uptime.tv_nsec = 0;
+                } else
+                    current_cpu->uptime.tv_nsec += 10000000;
+
+                schedule(0);
+
+            }
+
+            apic_eoi();
+            break;
+
+
         case 0x02:
 
             // TODO: Handle NMI Interrupts
@@ -113,61 +146,14 @@ void x86_exception_handler(interrupt_frame_t* frame) {
 
 
 
-    DEBUG_ASSERT(!(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT));
+    if(current_task->flags & TASK_FLAGS_NEED_RESCHED) {
 
-
-
-
-    current_cpu->flags |= SMP_CPU_FLAGS_INTERRUPT;
-
-
-    switch(frame->intno) {
-
-        case 0xFF:
-            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
-            break;
-
-
-        case 0x20:
-
-            {
-                if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
-                    current_cpu->uptime.tv_sec += 1;
-                    current_cpu->uptime.tv_nsec = 0;
-                } else
-                    current_cpu->uptime.tv_nsec += 10000000;
-
-                schedule(0);
-
-            }
-
-            apic_eoi();
-            break;
-
-        case 0x21 ... 0xFD:
-
-            __lock(&startup_irq[frame->intno - 0x20].lock, {
-
-                if(likely(startup_irq[frame->intno - 0x20].handler))
-                    startup_irq[frame->intno - 0x20].handler((void*) frame, frame->intno - 0x20);
-                else
-                    kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
-
-            });
-            
-            apic_eoi();
-            break;
-
-
-        default:
-            break;
-
+        current_task->flags &= ~TASK_FLAGS_NEED_RESCHED;
+        schedule(1);
+        
     }
-
     
-    current_cpu->flags &= ~SMP_CPU_FLAGS_INTERRUPT;
-
-    __atomic_thread_fence(__ATOMIC_SEQ_CST);
+    return frame;
 
 }
 

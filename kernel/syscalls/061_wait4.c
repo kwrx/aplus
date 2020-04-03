@@ -91,7 +91,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
             continue_if(pid < -1, tmp->pgid != -pid);
             continue_if(pid == 0, tmp->pgid != current_task->pgid);
             continue_if(pid >  0, tmp->tid != pid);
-            //continue_if(pid == -1, 0);
+            continue_if(pid == -1, 0);
 
             if(tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
                 continue;
@@ -118,6 +118,10 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
                 return tid;
 
 
+            } else if(tmp->status == TASK_STATUS_DEAD) {
+
+                sched_dequeue(tmp);
+
             } else {
 
                 if(!(options & WNOHANG))
@@ -141,8 +145,8 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
 
     thread_suspend(current_task);    
-    schedule(1);
+    thread_postpone_resched(current_task);
     
-    return -ENOSYS;
+    return -EINTR;
 
 });

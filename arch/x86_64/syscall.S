@@ -66,8 +66,6 @@ x86_syscall_handler:
     .align 16, 0x90
 .L0:
 
-    addq    $8, %rsp
-
   # Restore User Stack
     movq    %gs:32, %rsp
 

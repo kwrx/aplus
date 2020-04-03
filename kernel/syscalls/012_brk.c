@@ -84,13 +84,13 @@ long sys_brk (unsigned long new_brk) {
                         ARCH_VMM_MAP_USER        |
                         ARCH_VMM_MAP_NOEXEC      |
                         ARCH_VMM_MAP_DEMAND      |
-                        ARCH_VMM_MAP_TYPE_PUBLIC );
+                        ARCH_VMM_MAP_TYPE_PAGE );
 #else
         arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
                         ARCH_VMM_MAP_RDWR        |
                         ARCH_VMM_MAP_USER        |
                         ARCH_VMM_MAP_NOEXEC      |
-                        ARCH_VMM_MAP_TYPE_PUBLIC );
+                        ARCH_VMM_MAP_TYPE_PAGE );
 #endif
         
     } else if(new_brk < current_task->userspace.end) {

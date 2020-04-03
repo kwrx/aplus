@@ -109,11 +109,6 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     vfs_cache_create(&dir->sb->cache, &ops, TMPFS_NODES_MAX, NULL);
 
 
-    tmpfs_inode_t* r = (tmpfs_inode_t*) vfs_cache_get(&dir->sb->cache, dir->ino);
- 
-    r->st.st_mode &= ~S_IFMT;
-    r->st.st_mode |=  S_IFMT;
-
     dir->sb->ino = dir->ino;
 
     return 0;

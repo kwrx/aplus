@@ -177,8 +177,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    
-
+  
+    do_unshare(CLONE_FS);
+    do_unshare(CLONE_FILES);
+    do_unshare(CLONE_SIGHAND);
+    do_unshare(CLONE_VM);
 
 
     #define RXX(a, b, c) {                                                  \
@@ -247,7 +250,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
                                     ARCH_VMM_MAP_RDWR       |
                                     ARCH_VMM_MAP_USER       |
-                                    ARCH_VMM_MAP_TYPE_PUBLIC);
+                                    ARCH_VMM_MAP_TYPE_PAGE);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
@@ -260,7 +263,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz,
                                     flags                   |
                                     ARCH_VMM_MAP_USER       |
-                                    ARCH_VMM_MAP_TYPE_PUBLIC);
+                                    ARCH_VMM_MAP_TYPE_PAGE);
 
                     break;
 
@@ -293,10 +296,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     sys_close(fd);
 
-
-    do_unshare(CLONE_FS);
-    do_unshare(CLONE_FILES);
-    do_unshare(CLONE_SIGHAND);
 
 
     int i;
@@ -428,6 +427,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     arch_userspace_enter(head.e_entry, stack, sp);
-
-    return -EINVAL;
+    return -EINTR;
+    
 });

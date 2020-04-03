@@ -54,7 +54,6 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
         dest->pm = __alloc_page(X86_MMU_PAGESIZE, 1);
 
 
-
     x86_page_t __fork_data(x86_page_t* __s, int on_demand, int level) {
 
         DEBUG_ASSERT(__s);
@@ -74,7 +73,6 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
         }
 
         size += pagesize >> 12;
-
 
 
 #if defined(CONFIG_DEMAND_PAGING)
@@ -112,33 +110,19 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 
 
         if((*__s & X86_MMU_PG_U) == 0)
+           
             *__d = *__s;
 
         else {
 
             if(has(ARCH_VMM_CLONE_VM)) {
 
-                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
-
-                    if(has(ARCH_VMM_CLONE_PRIVATE))
-                        *__d = *__s;
-                    else
-                        *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
-
-                } else
                     *__d = *__s;
 
             } else {
 
-                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PRIVATE) {
-
-                    if(has(ARCH_VMM_CLONE_PRIVATE))
-                        *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
-                    else 
-                        {} // Skip private pages
-
-
-                } else if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+                    
                     *__d = *__s;
 
                 } else
@@ -196,7 +180,6 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 #endif
 
 
-    src->refcount++;
     dest->size = size;
     dest->refcount = 1;
     

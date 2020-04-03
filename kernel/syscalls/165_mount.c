@@ -21,6 +21,12 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mount.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -29,12 +35,6 @@
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <aplus/hal.h>
 
 
@@ -84,8 +84,7 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     int e;
 
 
-
-    if((fd = sys_open(dir_name, O_RDONLY, 0)) < 0)
+    if((fd = sys_open(dir_name, O_RDONLY | O_DIRECTORY, 0)) < 0)
         return fd;
 
     DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
@@ -98,7 +97,8 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
 
 
     
-    if(likely(dev_name)) {
+    if(likely(dev_name) && !(flags & MS_NODEV)) {
+
         if((fd = sys_open(dev_name, O_RDONLY, 0)) < 0)
             return fd;
 
@@ -109,8 +109,8 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
 
         if((e = sys_close(fd)) < 0)
             return e;
+            
     }
-   
    
    
     DEBUG_ASSERT(d);

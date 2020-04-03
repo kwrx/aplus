@@ -457,7 +457,7 @@ typedef struct tss {
     static inline long x86_get_flags() {
         long r;
         __asm__ __volatile__ (
-            "pushf; pop rax"
+            "pushfq; popq %%rax"
             : "=a"(r)
         );
         return r;
@@ -474,7 +474,7 @@ typedef struct tss {
  */
 #define x86_set_reg(p, e)                                                       \
     static inline void x86_set_##e(long r) {                                    \
-        __asm__ __volatile__ ("mov" #p " %%" #e ", %0" :: "r"(r));              \
+        __asm__ __volatile__ ("mov" #p " %0, %%" #e :: "r"(r));                 \
     }
 
 

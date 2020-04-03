@@ -85,25 +85,24 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
     if(unlikely(idx != 24))
-        kprintf("syscall: (%s) <%s> nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
+        kprintf("syscall: (%s#%d) <%s> nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 #endif
 
 
     long r;
-    if((r = syscalls[idx] (p0, p1, p2, p3, p4, p5)) < 0)
+    if((r = syscalls[idx] (p0, p1, p2, p3, p4, p5)) < 0L)
         errno = -r;
     else
         errno = 0;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-    if(unlikely(errno == ENOSYS))
-        kprintf("syscall: (%s) <%s> ENOSYS! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
-#endif
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
-    if(unlikely(errno == EFAULT))
-        kprintf("syscall: (%s) <%s> EFAULT! nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    if(unlikely(idx != 24)) {
+        if(unlikely(errno == 0))
+            kprintf("syscall: (%s#%d) <%s> return %d\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), r);
+        else
+            kprintf("syscall: (%s#%d) <%s> ERROR! %s\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), strerror(errno));
+    }
 #endif
 
     return r;

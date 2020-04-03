@@ -56,7 +56,7 @@ void arch_cpu_init(int index) {
         
         core->cpu.cores[index].address_space.pm = x86_get_cr3();
         core->cpu.cores[index].address_space.size = 0;
-        core->cpu.cores[index].address_space.refcount = 1;
+        core->cpu.cores[index].address_space.refcount = 0;
         spinlock_init(&core->cpu.cores[index].address_space.lock);
 
     }
@@ -526,7 +526,6 @@ void arch_cpu_startup(int index) {
 #endif
 
     //* Clone Address Space
-    //arch_vmm_clone(&core->cpu.cores[index].address_space, &core->bsp.address_space, ARCH_VMM_CLONE_VM | ARCH_VMM_CLONE_PRIVATE);
     memcpy(&core->cpu.cores[index].address_space, &core->bsp.address_space, sizeof(vmm_address_space_t));
 
     //* Map AP Startup Area

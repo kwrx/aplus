@@ -52,6 +52,9 @@ extern inode_t __vfs_root;
 
 
 
+void arch_task_switch_address_space(vmm_address_space_t* address_space) {
+    x86_set_cr3(address_space->pm);
+}
 
 
 void arch_task_switch(task_t* prev, task_t* next) {
@@ -89,7 +92,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
-            x86_set_cr3(next->address_space->pm);
+            arch_task_switch_address_space(next->address_space);
 
     }
 
@@ -204,9 +207,9 @@ pid_t arch_task_spawn_init() {
     task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
     task->sp0           = (void*) ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + KERNEL_SYSCALL_STACKSIZE);
     task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
-    task->address_space = (void*) &current_cpu->address_space;
+    task->address_space = (void*) &core->bsp.address_space;
 
-    current_cpu->address_space.refcount++;
+    core->bsp.address_space.refcount++;
 
 
 

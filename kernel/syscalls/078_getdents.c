@@ -58,39 +58,5 @@
 
 SYSCALL(78, getdents,
 long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int count) {
-    
-    if(unlikely(!dirent))
-        return -EINVAL;
-
-    if(unlikely(fd > CONFIG_OPEN_MAX - 1))
-        return -EBADF;
-
-    if(unlikely(!uio_check(dirent, R_OK | W_OK)))
-        return -EFAULT;
-
-    if(unlikely(count < sizeof(struct dirent)))
-        return -EINVAL;
-
-    
-    
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
-
-    long e;
-
-    __lock(&current_task->fd->descriptors[fd].ref->lock,
-
-        if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, dirent, current_task->fd->descriptors[fd].ref->position++, count / sizeof(struct dirent))) < 0)
-            break;
-
-        e *= sizeof(struct dirent);
-        // FIXME
-    );
-
-
-    if(e < 0)
-        return -errno;
-
-    return e;
-    
+    return -ENOSYS;    
 });

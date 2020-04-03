@@ -50,14 +50,12 @@
 #define ARCH_VMM_MAP_HUGE_1GB       (1 << 10)
 
 #define ARCH_VMM_MAP_TYPE_MASK      (3 << 11)
-#define ARCH_VMM_MAP_TYPE_PUBLIC    (0 << 11)
-#define ARCH_VMM_MAP_TYPE_PRIVATE   (1 << 11)
-#define ARCH_VMM_MAP_TYPE_MMAP      (2 << 11)
-#define ARCH_VMM_MAP_TYPE_COW       (3 << 11)
+#define ARCH_VMM_MAP_TYPE_PAGE    (0 << 11)
+#define ARCH_VMM_MAP_TYPE_MMAP      (1 << 11)
+#define ARCH_VMM_MAP_TYPE_COW       (2 << 11)
 
 #define ARCH_VMM_CLONE_VM           (1 << 0)
-#define ARCH_VMM_CLONE_PRIVATE      (1 << 1)
-#define ARCH_VMM_CLONE_DEMAND       (1 << 2)
+#define ARCH_VMM_CLONE_DEMAND       (1 << 1)
 
 
 

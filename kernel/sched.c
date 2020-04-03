@@ -276,6 +276,9 @@ void sched_dequeue(task_t* task) {
 
     }
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
+#endif
 
     kfree(task);
 

@@ -25,10 +25,9 @@
 /* System defined 11-9 */
 #define X86_MMU_PG_AP_PFB           (1ULL << 9)
 
-#define X86_MMU_PG_AP_TP_PUBLIC     (0ULL << 10)
-#define X86_MMU_PG_AP_TP_PRIVATE    (1ULL << 10)
-#define X86_MMU_PG_AP_TP_MMAP       (2ULL << 10)
-#define X86_MMU_PG_AP_TP_COW        (3ULL << 10)
+#define X86_MMU_PG_AP_TP_PAGE       (0ULL << 10)
+#define X86_MMU_PG_AP_TP_MMAP       (1ULL << 10)
+#define X86_MMU_PG_AP_TP_COW        (2ULL << 10)
 
 #define X86_MMU_PG_AP_TP_MASK       (3ULL << 10)
 

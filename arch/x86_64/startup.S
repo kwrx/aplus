@@ -339,7 +339,6 @@ _start:
         movl    $V2P(startup_pml2_stack_area), %edi
         movl    $V2P(startup_stack), %esi
         orl     $0x083, %esi                            // 2MiB, R/W, Present
-        orl     $0x400, %esi                            // X86_MMU_PG_AP_TP_PRIVATE
         movl    %esi, (%edi)
         
 

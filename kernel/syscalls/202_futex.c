@@ -82,7 +82,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                 futex_wait(current_task, kaddr, val, utime);
-                schedule(1);
+                thread_postpone_resched(current_task);
                 
                 break;
 
@@ -150,7 +150,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                         futex_wait(current_task, kaddr, *kaddr, NULL);
-                        schedule(1);
+                        thread_postpone_resched(current_task);
 
                     }
                 }
