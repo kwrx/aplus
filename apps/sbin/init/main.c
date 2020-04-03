@@ -21,6 +21,8 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
+#include <sched.h>
 
 #include <stddef.h>
 #include <stdio.h>
@@ -211,7 +213,17 @@ static void init_hostname() {
 
 
 static void init_initd(void) {
-    return;
+
+    cpu_set_t cpus;
+    CPU_ZERO(&cpus);
+
+    for(int cpu = 0; cpu < CPU_SETSIZE; cpu++)
+        CPU_SET(cpu, &cpus);
+
+    sched_setaffinity(0, sizeof(cpu_set_t), &cpus);
+
+
+    // TODO: run /etc/init.d scripts...
 }
 
 
@@ -247,7 +259,9 @@ int main(int argc, char** argv, char** envp) {
     init_hostname();
     init_initd();
 
+    setpriority(0, PRIO_PROCESS, PRIO_MIN);
 
+    
 
     fprintf(stderr, "init: system up!\n");
 
