@@ -45,14 +45,16 @@ MODULE_LICENSE("GPL");
 
 
 int video_ioctl(device_t* device, int req, void* arg) {
+
     DEBUG_ASSERT(device);
 
-
     switch (req) {
+
         case FBIOGET_VSCREENINFO:
 
             memcpy(arg, &device->vid.vs, sizeof(struct fb_var_screeninfo));
             break;
+
 
         case FBIOPUT_VSCREENINFO:
         
@@ -63,10 +65,12 @@ int video_ioctl(device_t* device, int req, void* arg) {
 
             break;
 
+
         case FBIOGET_FSCREENINFO:
 
             memcpy(arg, &device->vid.fs, sizeof(struct fb_fix_screeninfo));
             break;
+            
 
         default:
             return errno = ENOSYS, -1;
@@ -78,13 +82,11 @@ int video_ioctl(device_t* device, int req, void* arg) {
 
 void video_init(device_t* device) {
     DEBUG_ASSERT(device);
-
 }
 
 
 void video_dnit(device_t* device) {
     DEBUG_ASSERT(device);
-
 }
 
 

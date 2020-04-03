@@ -144,7 +144,9 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->priority  = current_task->priority;
     task->caps      = current_task->caps;
     task->flags     = 0;
-    task->affinity  = current_task->affinity;
+
+    CPU_ZERO(&task->affinity);
+    CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
     
 
     task->frame         = (void*) offset_of_frame;
@@ -201,7 +203,9 @@ pid_t arch_task_spawn_init() {
     task->priority  = TASK_PRIO_REG;
     task->caps      = TASK_CAPS_SYSTEM;
     task->flags     = TASK_FLAGS_NO_FRAME;
-    task->affinity  = ~(1 << current_cpu->id);
+
+    CPU_ZERO(&task->affinity);
+    CPU_SET(current_cpu->id, &task->affinity);
 
     
     task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
@@ -291,8 +295,13 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     strcpy(task->argv[0], name);
 
 
-    task->affinity  = 0;
+    CPU_ZERO(&task->affinity);
     
+    int i;
+    for(i = 0; i < (CPU_SETSIZE << 3); i++)
+        CPU_SET(i, &task->affinity);
+    
+
 
     task->address_space = (void*) current_task->address_space;
     current_task->address_space->refcount++;

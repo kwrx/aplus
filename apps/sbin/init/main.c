@@ -40,8 +40,11 @@
 #include <sys/mount.h>
 #include <sys/ioctl.h>
 #include <sys/times.h>
+#include <sys/mman.h>
 #include <sys/syscall.h>
 #include <termios.h>
+
+#include <aplus/fb.h>
 
 
 
@@ -50,6 +53,26 @@
         str++
 
 
+
+
+static void init_framebuffer(void) {
+
+
+    int fd = open("/dev/fb0", O_RDONLY);
+    if(fd < 0)
+        return;
+
+    
+    struct fb_fix_screeninfo fix;
+    struct fb_var_screeninfo var;
+
+    ioctl(fd, FBIOGET_VSCREENINFO, &var);
+    ioctl(fd, FBIOPUT_VSCREENINFO, &var);
+    ioctl(fd, FBIOGET_FSCREENINFO, &fix);
+
+    close(fd);
+
+}
 
 
 static void init_welcome(void) {
@@ -73,7 +96,7 @@ static void init_environment(void) {
 
     FILE* fp = fopen("/etc/environment", "r");
     if(!fp)
-        return perror("/etc/environment");
+        return;
 
 
     char line[BUFSIZ];
@@ -217,7 +240,7 @@ static void init_initd(void) {
     cpu_set_t cpus;
     CPU_ZERO(&cpus);
 
-    for(int cpu = 0; cpu < CPU_SETSIZE; cpu++)
+    for(int cpu = 0; cpu < (CPU_SETSIZE << 3); cpu++)
         CPU_SET(cpu, &cpus);
 
     sched_setaffinity(0, sizeof(cpu_set_t), &cpus);
@@ -253,13 +276,14 @@ int main(int argc, char** argv, char** envp) {
     tcsetpgrp(STDIN_FILENO, getpgrp());
 
 
-    init_welcome();
     init_environment();
+    init_framebuffer();
     init_fstab();
     init_hostname();
+    init_welcome();
     init_initd();
 
-    setpriority(0, PRIO_PROCESS, PRIO_MIN);
+    setpriority(0, PRIO_PROCESS, 19);
 
     
 

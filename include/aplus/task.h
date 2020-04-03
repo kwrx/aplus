@@ -152,9 +152,10 @@ typedef struct task {
     int status;
     int policy;
     int priority;
-    int affinity;
     int flags;
     int caps;
+
+    cpu_set_t affinity;
 
 
     void* frame;
@@ -169,6 +170,7 @@ typedef struct task {
 
         clockid_t clockid;
         struct timespec timeout;
+        struct timespec* remaining;
     
     } sleep;
 

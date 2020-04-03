@@ -21,18 +21,19 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 
 /***
@@ -50,5 +51,71 @@
 
 SYSCALL(140, getpriority,
 long sys_getpriority (int which, int who) {
-    return -ENOSYS;
+
+
+    switch(which) {
+
+        case PRIO_PROCESS:
+            if(who == 0)
+                who = current_task->tid;
+            break;
+        
+        case PRIO_PGRP:
+            if(who == 0)
+                who = current_task->pgid;
+            break;
+
+        case PRIO_USER:
+            if(who == 0)
+                who = current_task->uid;
+            break;
+
+        default:
+            return -EINVAL;
+
+    }
+
+
+
+    cpu_foreach(cpu) {
+
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+            switch(which) {
+
+                case PRIO_PROCESS:
+                    if(tmp->tid != who)
+                        continue;
+                    break;
+                
+                case PRIO_PGRP:
+                    if(tmp->pgid != who)
+                        continue;
+                    break;
+
+                case PRIO_USER:
+                    if(tmp->uid != who)
+                        continue;
+                    break;
+
+                default:
+                    return -EINVAL;
+
+            }
+
+
+            if(!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
+                return -EPERM;
+
+
+            return 20 + tmp->priority;
+
+        }
+
+    }
+
+
+    return -ESRCH;
+
 });

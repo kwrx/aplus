@@ -105,12 +105,16 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
     current_task->sleep.timeout.tv_sec =  (tss + rqtp->tv_sec);
     current_task->sleep.timeout.tv_nsec = (tsn + rqtp->tv_nsec) % 1000000000ULL;
 
-    kprintf("sleep for %p: %d (%d:%d) + (%d:%d)\n", rqtp, arch_timer_generic_getms(), tss, tsn, rqtp->tv_sec, rqtp->tv_nsec);
+    if(rmtp)
+        current_task->sleep.remaining = (struct timespec*) uio_get_ptr(rmtp);
+
 
     thread_suspend(current_task);
+    thread_postpone_resched(current_task);
 
+    // TODO: Fill rmtp on interrupt
 
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0);
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
     
     return -EINTR;
 

@@ -85,6 +85,7 @@ void kmain() {
 
 
 
+
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
                                       CONFIG_SYSTEM_VERSION,
                                       CONFIG_SYSTEM_CODENAME,
@@ -93,10 +94,8 @@ void kmain() {
     kprintf("core: built with gcc %s (%s)\n", __VERSION__,
                                               __TIMESTAMP__);
 
-    kprintf("core: boot completed in %d ms, %d KiB of memory used\n", 
-            arch_timer_generic_getms(), 
-            pmm_get_used_memory() >> 10
-    );
+    kprintf("core: boot completed in %d ms, %d KiB of memory used\n", arch_timer_generic_getms(), pmm_get_used_memory() >> 10);
+
 
 
 

@@ -21,18 +21,19 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 
 
 /***
@@ -52,5 +53,46 @@
 
 SYSCALL(204, sched_getaffinity,
 long sys_sched_getaffinity (pid_t pid, unsigned int len, unsigned long __user * user_mask_ptr) {
-    return -ENOSYS;
+    
+    if(unlikely(len != CPU_SETSIZE))
+        return -EINVAL;
+
+    if(unlikely(!user_mask_ptr))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(user_mask_ptr, R_OK | W_OK)))
+        return -EFAULT;
+
+            
+
+
+    if(pid == 0)
+        pid = current_task->tid;
+
+
+
+    cpu_foreach(cpu) {
+
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+            if(tmp->tid != pid)
+                continue;
+
+            if(!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
+                return -EPERM;
+
+            
+            CPU_ZERO((cpu_set_t*) user_mask_ptr);
+            CPU_OR((cpu_set_t*) user_mask_ptr, (cpu_set_t*) user_mask_ptr, &tmp->affinity);
+            
+            return CPU_SETSIZE;
+
+        }
+
+    }
+
+
+    return -ESRCH;
+
 });

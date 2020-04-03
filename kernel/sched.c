@@ -64,8 +64,15 @@ static inline void __check_sleep(void) {
         sys_clock_gettime(current_task->sleep.clockid, &t0);
 
 
-        if((tss * 1000000000ULL) + tsn < ((uint64_t) t0.tv_sec * 1000000000ULL) + (uint64_t) t0.tv_nsec)
+        if((tss * 1000000000ULL) + tsn < ((uint64_t) t0.tv_sec * 1000000000ULL) + (uint64_t) t0.tv_nsec) {
+            
+            current_task->sleep.timeout.tv_sec  = 0L;
+            current_task->sleep.timeout.tv_nsec = 0L;
+            current_task->sleep.remaining = NULL;
+
             thread_wake(current_task);
+
+        }
             
     }
 
@@ -88,7 +95,7 @@ static void __sched_next(void) {
             DEBUG_ASSERT(current_task);
             DEBUG_ASSERT(current_task->frame);
 
-        } while(current_task->affinity & (1 << current_cpu->id));
+        } while(!CPU_ISSET(current_cpu->id, &current_task->affinity));
 
 
 
@@ -212,7 +219,7 @@ void sched_enqueue(task_t* task) {
 
     cpu_foreach(i) {
 
-        if(task->affinity & (1 << i->id))
+        if(!(CPU_ISSET(i->id, &task->affinity)))
             continue;
 
         if(i->sched_count > min)
