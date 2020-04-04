@@ -57,5 +57,7 @@
 
 SYSCALL(14, rt_sigprocmask,
 long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset, size_t sigsetsize) {
-    return -ENOSYS;
+    
+    
+    
 });

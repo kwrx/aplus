@@ -111,18 +111,20 @@ uint64_t arch_timer_gettime(void) {
         t.tm_isdst = 0;
     });
 
-    
-    const int m[] =
+
+    static int m[] =
         {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-        
+
     uint64_t ty = t.tm_year - 1970;
     uint64_t lp = (ty + 2) / 4;
     uint64_t td = 0;
-    
+
+
     int i;
     for(i = 0; i < t.tm_mon - 1; i++)
         td += m[i];
-        
+
+
     td += t.tm_mday - 1;
     td = td + (ty * 365) + lp;
 

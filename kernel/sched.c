@@ -158,36 +158,10 @@ void schedule(int resched) {
 
 
 
-    if(!resched) {
-
-        int64_t e;
-        switch(current_task->policy) {
-
-            case TASK_POLICY_RR:
-                
-                e = ((int64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_sec  * 1000LL +
-                     (int64_t) current_task->clock[TASK_CLOCK_SCHEDULER].tv_nsec / 1000000LL) % (20LL - current_task->priority);
-                
-                break;
-
-
-            // TODO: Scheduling policy
-
-            default:
-                e = 0;
-                break;
-
-        }
-
-
-        if(likely(e))
-            return;
-
+    if(!resched)
         current_task->rusage.ru_nivcsw++;
-
-    } else
+    else
         current_task->rusage.ru_nvcsw++;
-
 
 
 

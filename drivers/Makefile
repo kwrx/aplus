@@ -1,7 +1,7 @@
 .PHONY: all install clean distclean
 
 
-DRIVERS := block char dev virtio
+DRIVERS := block char dev video virtio
 DRIVERS += platform/pc
 
 TARGETS	:= $(shell find $(DRIVERS) -type f -iname "Makefile" -exec dirname {} \;)

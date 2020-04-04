@@ -76,6 +76,8 @@ void arch_task_switch(task_t* prev, task_t* next) {
         memcpy(next->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         next->flags &= ~TASK_FLAGS_NO_FRAME;
 
+        __asm__ __volatile__ ("fxsave (%0)" :: "r"(next->fpu));
+
     }
 
 
@@ -91,6 +93,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
         current_cpu->sp3 = next->sp3;
 
 
+        __asm__ __volatile__ ("fxsave (%0)" :: "r"(prev->fpu));
+        __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
+
         if(unlikely(prev->address_space->pm != next->address_space->pm))
             arch_task_switch_address_space(next->address_space);
 
@@ -100,12 +105,22 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
     WRITE_SP0(current_cpu, next->sp0);
 
-
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
     //x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
 
-    __asm__ __volatile__ ("fxsave (%0)" :: "r"(prev->fpu));
-    __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
+
+
+    uint32_t m;
+
+#if TASK_SCHEDULER_PERIOD_NS != 1000000
+    m = (20LL - next->priority) / (TASK_SCHEDULER_PERIOD_NS / 1000000);
+    m = m ? m : 1;
+#else
+    m = (20LL - next->priority);
+#endif
+
+
+    apic_timer_reset(m);
 
 }
 

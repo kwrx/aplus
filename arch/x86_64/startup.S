@@ -493,6 +493,13 @@ _start_high64:
         pushq   $0
         pushq   $0
 
+        # Align Stack
+        andq    $-16, %rsp
+
+#if defined(__OPTIMIZE__) && !defined(CONFIG_HAVE_DEBUG)
+        addq    $8, %rsp  // FIXME
+#endif
+
         # Restore boot arguments
         leaq    __raw_args, %rcx
         movq    0(%rcx), %rdi

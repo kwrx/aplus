@@ -21,21 +21,19 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
-#include <aplus/memory.h>
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
-#include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <aplus/hal.h>
+#include <aplus/task.h>
+#include <aplus/errno.h>
 
 
 
@@ -58,6 +56,38 @@
 struct sigaction;
 
 SYSCALL(13, rt_sigaction,
-long sys_rt_sigaction (int signo, const struct sigaction __user * act, struct sigaction __user * oldact, size_t size) {
-    return -ENOSYS;
+long sys_rt_sigaction (int signo, const struct ksigaction __user * act, struct ksigaction __user * oldact, size_t size) {
+    
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->sighand);
+
+
+    if(unlikely(signo < 0))
+        return -EINVAL;
+
+    if(unlikely(signo > _NSIG - 1))
+        return -EINVAL;
+
+    if(unlikely(signo == SIGKILL))
+        return -EINVAL;
+
+    if(unlikely(signo == SIGSTOP))
+        return -EINVAL;
+
+    if(unlikely(act && !uio_check(act, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(oldact && !uio_check(oldact, R_OK | W_OK)))
+        return -EFAULT;
+
+
+    if(oldact)
+        memcpy(oldact, &current_task->sighand->action[signo], sizeof(struct ksigaction));
+
+    if(act)
+        memcpy(&current_task->sighand->action[signo], act, sizeof(struct sigaction));
+
+
+    return 0;
+
 });

@@ -89,6 +89,7 @@ void apic_enable(void);
 void apic_eoi(void);
 uint32_t apic_get_id(void);
 int apic_is_x2apic(void);
+void apic_timer_reset(uint32_t);
 
 
 void ioapic_enable(void);

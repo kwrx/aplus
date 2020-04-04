@@ -33,7 +33,7 @@
 #include <aplus/errno.h>
 
 
-struct {
+static struct {
 
     int id;
     const char* name;
@@ -90,7 +90,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 
 
         int e;
-        if((e = fs_table[i].mount(dev, dir, flags, args) < 0))
+        if((e = fs_table[i].mount(dev, dir, flags, args) < 0)) // BUG: on -O3
             return e;
 
         DEBUG_ASSERT(dir->sb);

@@ -43,6 +43,7 @@
 
 
 extern ioapic_t ioapic[];
+static uint32_t timer_ticks;
 static int x2apic;
 
 
@@ -98,67 +99,87 @@ void apic_enable(void) {
 
 
 
-    //? Synchronize timer clock
+    if(current_cpu->id == SMP_CPU_BOOTSTRAP_ID) {
 
-    uint64_t ts, t0;
-    
-    ts =
-    t0 = arch_timer_generic_getns();
 
-    while((t0 = arch_timer_generic_getns()) == ts)
-        ;
+        //? Synchronize timer clock
 
-    
-
-    if (x2apic) {
-
-        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
-        x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, 0xFFFFFFFF);
-
-    } else {
+        uint64_t ts, t0;
         
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
-    
+        ts =
+        t0 = arch_timer_generic_getns();
+
+        while((t0 = arch_timer_generic_getns()) == ts)
+            ;
+
+        
+
+        if (x2apic) {
+
+            x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
+            x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, 0xFFFFFFFF);
+
+        } else {
+            
+            mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
+            mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, 0xFFFFFFFF);
+        
+        }
+
+
+        //? 0.001s every interrupt
+
+        while((arch_timer_generic_getns() - t0) < (TASK_SCHEDULER_PERIOD_NS << 4))
+            ;
+        
+
+
+        uint32_t ticks = 0xFFFFFFFF;
+        
+        if(x2apic)
+            ticks -= x86_rdmsr(X86_X2APIC_REG_TMR_CCNT);
+        else
+            ticks -= mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
+
+        
+        timer_ticks = ticks >> 4;
+
     }
 
 
-    //? 0.005s every interrupt
-
-    while((arch_timer_generic_getns() - t0) < TASK_SCHEDULER_PERIOD_NS)
-        ;
-    
+    DEBUG_ASSERT(timer_ticks);
 
 
-    uint32_t ticks = 0xFFFFFFFF;
-    
-    if(x2apic)
-        ticks -= x86_rdmsr(X86_X2APIC_REG_TMR_CCNT);
-    else
-        ticks -= mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_CCNT);
-
-    
-
-
-    if (x2apic) {
-        
-        x86_wrmsr(X86_X2APIC_REG_LVT_TIMER, (1 << 17) | 32);
-        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
-        x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, ticks);
-
-    } else {
-
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (1 << 17) | 32);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, ticks);
-
-    }
-
+    apic_timer_reset(1);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, ticks, x2apic);
+    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, timer_ticks, x2apic);
 #endif
+
+}
+
+
+
+void apic_timer_reset(uint32_t multiplier) {
+
+    DEBUG_ASSERT(timer_ticks);
+    DEBUG_ASSERT(multiplier);
+
+
+    if (x2apic) {
+        
+        x86_wrmsr(X86_X2APIC_REG_LVT_TIMER, (0 << 17) | 32);
+        x86_wrmsr(X86_X2APIC_REG_TMR_DIV, 3);
+        x86_wrmsr(X86_X2APIC_REG_TMR_ICNT, timer_ticks * multiplier);
+
+    } else {
+
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_LVT_TIMER, (0 << 17) | 32);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_DIV, 3);
+        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_TMR_ICNT, timer_ticks * multiplier);
+
+    }
 
 }
 

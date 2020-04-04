@@ -60,7 +60,7 @@
 #define TASK_CLOCK_PROCESS_CPUTIME              2
 
 
-#define TASK_SCHEDULER_PERIOD_NS                5000000ULL
+#define TASK_SCHEDULER_PERIOD_NS                1000000ULL
 
 #define TASK_STACK_MAX                          (0x100000000ULL)    // 4GiB
 #define TASK_STACK_MIN                          (0x1000ULL)         // 4KiB
@@ -130,7 +130,7 @@ struct kclone_args {
 
 struct sighand {
 
-    struct ksigaction action[128];
+    struct ksigaction action[_NSIG];
     sigset_t sigmask;
     size_t refcount;
 
