@@ -60,8 +60,8 @@ typedef struct cpu {
 
     void* frame;
     void* tss;
-    void* sp0;
-    void* sp3;
+    void* kstack;
+    void* ustack;
 
     int errno;
 

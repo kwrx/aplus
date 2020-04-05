@@ -285,7 +285,7 @@ int main(int argc, char** argv, char** envp) {
 
     setpriority(0, PRIO_PROCESS, 19);
 
-    
+    raise(SIGQUIT);
 
     fprintf(stderr, "init: system up!\n");
 

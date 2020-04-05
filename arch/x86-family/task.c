@@ -35,6 +35,7 @@
 
 #include <arch/x86/cpu.h>
 #include <arch/x86/asm.h>
+#include <arch/x86/vmm.h>
 #include <arch/x86/intr.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
@@ -43,11 +44,12 @@
 extern inode_t __vfs_root;
 
 
-#define FRAME(p)            \
+#define FRAME(p)                                    \
     ((interrupt_frame_t*) p->frame)
 
 #define WRITE_SP0(cpu, ptr)                         \
-    ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->sp0
+    ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->kstack
+
 
 
 
@@ -55,6 +57,46 @@ extern inode_t __vfs_root;
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
     x86_set_cr3(address_space->pm);
 }
+
+
+void arch_task_prepare_to_signal(siginfo_t* siginfo) {
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(siginfo);
+    DEBUG_ASSERT(siginfo->si_code >= 0);
+    DEBUG_ASSERT(siginfo->si_code <= _NSIG);
+
+    DEBUG_ASSERT(current_task->userspace.sigstack);
+    DEBUG_ASSERT(current_task->userspace.siginfo);
+
+
+    memcpy( ((interrupt_frame_t*) current_task->sstack), current_task->frame, sizeof(interrupt_frame_t));
+    memcpy(&((interrupt_frame_t*) current_task->sstack)->__fpuregs, current_task->fpu, 512); // FIXME
+
+
+    struct ksigaction* action = &current_task->sighand->action[siginfo->si_code];
+
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PC,     (long) action->sigaction);
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_STACK,  (long) current_task->userspace.sigstack);
+
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM0, (long) siginfo->si_code);
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM1, (long) current_task->userspace.siginfo);
+    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM2, (long) NULL);
+
+
+    memcpy(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
+
+}
+
+
+void arch_task_return_from_signal(void) {
+
+    memcpy(current_task->frame, ((interrupt_frame_t*) current_task->sstack), sizeof(interrupt_frame_t));
+    memcpy(current_task->fpu,  &((interrupt_frame_t*) current_task->sstack)->__fpuregs, 512); // FIXME
+
+}
+
+
 
 
 void arch_task_switch(task_t* prev, task_t* next) {
@@ -81,19 +123,21 @@ void arch_task_switch(task_t* prev, task_t* next) {
     }
 
 
+
+
     if(likely(prev != next)) {
         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
-        prev->sp0 = current_cpu->sp0;
-        prev->sp3 = current_cpu->sp3;
+        prev->kstack = current_cpu->kstack;
+        prev->ustack = current_cpu->ustack;
 
-        current_cpu->sp0 = next->sp0;
-        current_cpu->sp3 = next->sp3;
+        current_cpu->kstack = next->kstack;
+        current_cpu->ustack = next->ustack;
 
 
-        __asm__ __volatile__ ("fxsave (%0)" :: "r"(prev->fpu));
+        __asm__ __volatile__ ("fxsave (%0)"  :: "r"(prev->fpu));
         __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
@@ -103,11 +147,10 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 
-    WRITE_SP0(current_cpu, next->sp0);
+
+    WRITE_SP0(current_cpu, next->kstack);
 
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
-    //x86_wrmsr(X86_MSR_GSBASE, next->userspace.cpu_area);
-
 
 
     uint32_t m;
@@ -129,17 +172,8 @@ void arch_task_switch(task_t* prev, task_t* next) {
 task_t* arch_task_get_empty_thread(size_t stacksize) {
     
 
-    task_t* task = (task_t*) kcalloc (
-        1, (sizeof(task_t))                                 // TCB
-         + (sizeof(interrupt_frame_t))                      // Registers
-         + (stacksize)                                      // Stack
-         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
-    , GFP_KERNEL);
+    task_t* task = (task_t*) kcalloc (1, (sizeof(task_t)) + stacksize, GFP_KERNEL);
 
-
-    uintptr_t offset_of_frame = ((uintptr_t) task + sizeof(task_t));
-    uintptr_t offset_of_stack = ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + stacksize);
-    uintptr_t offset_of_sp0   = ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + stacksize + KERNEL_SYSCALL_STACKSIZE);
 
 
     task->argv = current_task->argv;
@@ -164,15 +198,24 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
     
 
-    task->frame         = (void*) offset_of_frame;
-    task->sp0           = (void*) offset_of_sp0;
-    task->sp3           = (void*) NULL;
-    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
+
+
+    #define _(size, offset)     \
+        (void*) ((uintptr_t) kmalloc(size, GFP_KERNEL) + offset)
+
+
+    task->frame         = _(sizeof(interrupt_frame_t), 0);
+    task->sstack        = _(sizeof(interrupt_frame_t) + 512, 0); // FIXME
+    task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack        = NULL;
+    task->fpu           = _(512, 0); // FIXME
+
+    #undef _
 
 
     FRAME(task)->cs     = KERNEL_CS;
     FRAME(task)->flags  = 0x202;
-    FRAME(task)->sp     = offset_of_stack;
+    FRAME(task)->sp     = (uintptr_t) task + sizeof(task_t) + stacksize;
     FRAME(task)->ss     = KERNEL_DS;
 
 
@@ -189,12 +232,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 pid_t arch_task_spawn_init() {
 
-    task_t* task = (task_t*) kcalloc (
-        1, (sizeof(task_t))                                 // TCB
-         + (sizeof(interrupt_frame_t))                      // Registers
-         + (KERNEL_SYSCALL_STACKSIZE)                       // Kernel Stack
-    , GFP_KERNEL);
-
+    task_t* task = (task_t*) kcalloc (1, (sizeof(task_t)), GFP_KERNEL);
 
 
     static char* __argv[2] = { "init", NULL };
@@ -223,11 +261,20 @@ pid_t arch_task_spawn_init() {
     CPU_SET(current_cpu->id, &task->affinity);
 
     
-    task->frame         = (void*) ((uintptr_t) task + sizeof(task_t));
-    task->sp0           = (void*) ((uintptr_t) task + sizeof(task_t) + sizeof(interrupt_frame_t) + KERNEL_SYSCALL_STACKSIZE);
-    task->fpu           = (void*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
-    task->address_space = (void*) &core->bsp.address_space;
+   #define _(size, offset)     \
+        (void*) ((uintptr_t) kmalloc(size, GFP_KERNEL) + offset)
 
+
+    task->frame         = _(sizeof(interrupt_frame_t), 0);
+    task->sstack        = _(sizeof(interrupt_frame_t) + 512, 0); // FIXME
+    task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack        = NULL;
+    task->fpu           = _(512, 0); // FIXME
+
+    #undef _
+
+
+    task->address_space = &core->bsp.address_space;
     core->bsp.address_space.refcount++;
 
 
@@ -274,14 +321,14 @@ pid_t arch_task_spawn_init() {
     
 
     current_cpu->sched_running = task;
-    current_cpu->sp0 = task->sp0;
+    current_cpu->kstack = task->kstack;
 
-    WRITE_SP0(current_cpu, task->sp0);
+    WRITE_SP0(current_cpu, task->kstack);
 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn init process pid(%d) cpu(%d) sp0(%p)\n", task->tid, arch_cpu_get_current_id(), task->sp0);
+    kprintf("task: spawn init process pid(%d) cpu(%d) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
 #endif
 
 
@@ -364,7 +411,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn kthread %s pid(%d) ip(%p) sp0(%p) stacksize(%p)\n", task->argv[0], task->tid, entry, task->sp0, stacksize);
+    kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%p)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
 #endif
 
     sched_enqueue(task);

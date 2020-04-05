@@ -23,6 +23,7 @@
 #include <aplus/smp.h>
 
 #include <aplus/utils/list.h>
+#include <aplus/utils/queue.h>
 
 
 
@@ -47,6 +48,7 @@
 #define TASK_FLAGS_NO_FRAME                     1
 #define TASK_FLAGS_NO_FPU                       2
 #define TASK_FLAGS_NEED_RESCHED                 4
+#define TASK_FLAGS_SIGNALED                     8
 
 
 #define TASK_CAPS_SYSTEM                        255
@@ -144,10 +146,16 @@ typedef struct task {
     char** environ;
 
     pid_t tid;
-    gid_t tgid, pgid;
-    uid_t uid, euid;
-    gid_t gid, egid;
+    gid_t tgid;
+    gid_t pgid;
+
+    uid_t uid;
+    uid_t euid;
+    gid_t gid;
+    gid_t egid;
+
     uid_t sid;
+
 
     int status;
     int policy;
@@ -159,9 +167,10 @@ typedef struct task {
 
 
     void* frame;
-    void* sp0;
-    void* sp3;
     void* fpu;
+    void* sstack;
+    void* kstack;
+    void* ustack;
     vmm_address_space_t* address_space;
 
 
@@ -190,11 +199,12 @@ typedef struct task {
     struct fs* fs;
     struct sighand* sighand;
 
+    queue_t sigqueue;
+
 
     struct {
 
         uintptr_t stack;
-        uintptr_t sigstack;
         uintptr_t start;
         uintptr_t end;
 
@@ -202,6 +212,9 @@ typedef struct task {
         uintptr_t cpu_area;
 
         uintptr_t tid_address;
+
+        uintptr_t sigstack;
+        siginfo_t* siginfo;
 
     } userspace;
 

@@ -29,12 +29,10 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
-#include <aplus/memory.h>
-#include <aplus/vfs.h>
 #include <aplus/smp.h>
-#include <aplus/errno.h>
 #include <aplus/hal.h>
-
+#include <aplus/task.h>
+#include <aplus/errno.h>
 
 
 /***
@@ -50,5 +48,8 @@
 
 SYSCALL(15, rt_sigreturn,
 long sys_rt_sigreturn (void) {
-    return -ENOSYS;
+
+    arch_task_return_from_signal();
+    thread_postpone_resched(current_task);
+
 });

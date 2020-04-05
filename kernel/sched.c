@@ -79,6 +79,20 @@ static inline void __check_sleep(void) {
 }
 
 
+static inline void __check_signals(void) {
+
+    if(queue_is_empty(&current_task->sigqueue))
+        return;
+
+    
+    siginfo_t* siginfo;
+    
+    if((siginfo = (siginfo_t*) queue_pop(&current_task->sigqueue)))
+        arch_task_prepare_to_signal(siginfo);
+
+}
+
+
 
 static void __sched_next(void) {
 
@@ -112,6 +126,11 @@ static void __sched_next(void) {
 
         if(unlikely(current_task->status != TASK_STATUS_SLEEP))
             continue;
+
+
+        // Wakeup if a signal is pending
+        if(!queue_is_empty(&current_task->sigqueue))
+            current_task->status = TASK_STATUS_READY;
 
 
         __check_futex();
@@ -180,6 +199,9 @@ void schedule(int resched) {
         arch_task_switch(prev_task, current_task);
 
     }); 
+
+
+    __check_signals();
 
 }
 

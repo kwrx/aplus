@@ -370,6 +370,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     __sbrk(SIGSTKSZ);
     uintptr_t sigstack = __sbrk(0);
+    uintptr_t siginfo  = __sbrk(sizeof(siginfo_t));
 
 
     // * Allocate User Stack
@@ -424,6 +425,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     current_task->userspace.stack    = stack;
     current_task->userspace.sigstack = sigstack;
+    current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
 
     arch_userspace_enter(head.e_entry, stack, sp);

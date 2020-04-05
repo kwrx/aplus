@@ -38,6 +38,8 @@ typedef struct {
 
     uintptr_t sp;
     uintptr_t ss;
+
+    char __fpuregs[0];
     
 } __packed interrupt_frame_t;
 

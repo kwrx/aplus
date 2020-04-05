@@ -508,7 +508,7 @@ _start_high64:
         addq    $8,   %rsi                  // Skip reserved bytes
 
         # Reset RFLAGS
-        pushq   $0
+        pushq   $2
         popfq
 
         # Call Boot Main()

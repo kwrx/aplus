@@ -195,7 +195,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
 
-    child->sp3 = current_cpu->sp3;    
+    child->ustack = current_cpu->ustack;    
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long) current_cpu->frame);
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
