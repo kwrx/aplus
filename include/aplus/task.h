@@ -106,10 +106,10 @@ struct ksigaction {
         void (*sigaction) (int, siginfo_t*, void*);
     };
 
-	long flags;
+	long sa_flags;
 	void (*sa_restorer)(void);
 	
-    int mask[2];
+    int sa_mask[2];
 
 };
 

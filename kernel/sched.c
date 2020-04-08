@@ -24,7 +24,10 @@
  */                                                                     
 
 #include <stdint.h>
-#include <time.h>                
+#include <time.h>
+#include <signal.h>
+#include <sys/wait.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
@@ -41,7 +44,7 @@ spinlock_t sched_lock = SPINLOCK_INIT;
 
 
 
-static inline void __check_futex(void) {
+static inline void __do_futex(void) {
 
     list_each(current_task->futexes, i) {
             
@@ -53,7 +56,7 @@ static inline void __check_futex(void) {
 }
 
 
-static inline void __check_sleep(void) {
+static inline void __do_sleep(void) {
 
     if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
 
@@ -79,7 +82,76 @@ static inline void __check_sleep(void) {
 }
 
 
-static inline void __check_signals(void) {
+static inline void __do_signals(void) {
+
+
+    void __do(struct ksigaction* action, siginfo_t* siginfo) {
+
+        DEBUG_ASSERT(action);
+        DEBUG_ASSERT(siginfo);
+
+        if(unlikely(action->handler == SIG_ERR))
+            return;
+
+        if(unlikely(action->handler == SIG_IGN))
+            return;
+
+
+        if(likely(action->handler == SIG_DFL)) {
+
+            switch(siginfo->si_signo) {
+
+                /* TERM */
+                case SIGHUP:
+                case SIGINT:
+                case SIGPIPE:
+                case SIGALRM:
+                case SIGTERM:
+                case SIGUSR1:
+                case SIGUSR2:
+                case SIGPOLL:
+                case SIGPROF:
+                case SIGVTALRM:
+                    sys_exit((1 << 31) | siginfo->si_signo);
+                    break;
+
+
+                /* CORE */
+                case SIGQUIT:
+                case SIGILL:
+                case SIGABRT:
+                case SIGFPE:
+                case SIGSEGV:
+                case SIGBUS:
+                case SIGSYS:
+                case SIGXCPU:
+                case SIGXFSZ:
+                    sys_exit((1 << 31) | siginfo->si_signo | 0x80);
+                    break;
+
+
+                /* STOP */
+                case SIGTSTP:
+                case SIGTTIN:
+                case SIGTTOU:
+                    sys_exit((1 << 31) | (siginfo->si_signo << 8) | 0x7F);
+                    break;                
+
+
+            }
+
+        } else {
+
+            arch_task_prepare_to_signal(siginfo);
+
+            if(action->sa_flags & SA_RESETHAND)
+                action->handler = SIG_DFL;
+
+        }
+
+
+    }
+
 
     if(queue_is_empty(&current_task->sigqueue))
         return;
@@ -87,8 +159,42 @@ static inline void __check_signals(void) {
     
     siginfo_t* siginfo;
     
-    if((siginfo = (siginfo_t*) queue_pop(&current_task->sigqueue)))
-        arch_task_prepare_to_signal(siginfo);
+    if((siginfo = (siginfo_t*) queue_pop(&current_task->sigqueue)) != NULL) {
+    
+        DEBUG_ASSERT(siginfo->si_signo >= 0);
+        DEBUG_ASSERT(siginfo->si_signo <= _NSIG);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        kprintf("sched: received signal(%d) from tid(%d) to tid(%d)\n", siginfo->si_signo, siginfo->si_pid, current_task->tid);
+#endif
+
+
+        siginfo_t tmp;
+        memcpy(&tmp, siginfo, sizeof(siginfo_t));
+
+        kfree(siginfo);
+
+
+        current_task->rusage.ru_nsignals += 1;
+
+        switch(siginfo->si_signo) {
+
+            case SIGKILL:
+                sys_exit((1 << 31) | SIGKILL);
+                break;
+
+            case SIGSTOP:
+                sys_exit((1 << 31) | (SIGSTOP << 8) | 0x7F);
+                break;
+
+            default:
+                __do(&current_task->sighand->action[tmp.si_signo], &tmp);
+                break;
+                
+        }
+
+    }
 
 }
 
@@ -128,13 +234,13 @@ static void __sched_next(void) {
             continue;
 
 
-        // Wakeup if a signal is pending
+        // Wake up if a signal is pending
         if(!queue_is_empty(&current_task->sigqueue))
-            current_task->status = TASK_STATUS_READY;
+            thread_wake(current_task);
 
 
-        __check_futex();
-        __check_sleep();
+        __do_futex();
+        __do_sleep();
 
 
     } while(current_task->status != TASK_STATUS_READY);
@@ -201,7 +307,8 @@ void schedule(int resched) {
     }); 
 
 
-    __check_signals();
+    __do_signals();
+
 
 }
 

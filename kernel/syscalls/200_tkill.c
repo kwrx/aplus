@@ -21,6 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
 #include <stdint.h>
 #include <signal.h>
 #include <unistd.h>
@@ -50,59 +51,12 @@
 
 SYSCALL(200, tkill,
 long sys_tkill (pid_t tid, int sig) {
-
-    if(unlikely(tid == 1 && current_task->tid != 1))
-        return -EINVAL;
-
-    if(unlikely(sig < 0))
-        return -EINVAL;
-
-    if(unlikely(sig > _NSIG - 1))
-        return -EINVAL;
-
-
     
-    cpu_foreach(cpu) {
+    siginfo_t info;
+    info.si_signo = sig;
+    info.si_code  = SI_TKILL;
+    info.si_errno = 0;
 
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-
-            if(tmp->tid != tid)
-                continue;
-
-            if(tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur)
-                return -EAGAIN;
-
-            if(!(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
-                return -EPERM;      
-
-            if(sig == 0)
-                return 0;
-
-            // TODO: Check sigmask
-
-            if(tmp->sighand->action[sig].handler == SIG_IGN)
-                return 0;
-
-            if(tmp->sighand->action[sig].handler == SIG_DFL)
-                return 0; // FIXME
-
-            
-            siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
-
-            siginfo->si_signo = sig;
-            siginfo->si_code  = 0;
-            siginfo->si_errno = 0;
-
-            queue_enqueue(&current_task->sigqueue, siginfo, 0);
-
-            return 0;
-
-        }
-
-    }
-
-
-    return -ESRCH;
+    return sys_rt_tgsigqueueinfo(current_task->tgid, tid, sig, &info);
 
 });

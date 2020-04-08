@@ -48,8 +48,6 @@
 
 SYSCALL(15, rt_sigreturn,
 long sys_rt_sigreturn (void) {
-
     arch_task_return_from_signal();
-    thread_postpone_resched(current_task);
-
+    return -EINTR;
 });

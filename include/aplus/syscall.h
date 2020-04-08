@@ -31,6 +31,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <signal.h>
 #include <dirent.h>
 
 
@@ -123,5 +124,6 @@ extern long sys_chroot(const char __user * pathname);
 
 extern long sys_brk (unsigned long new_brk);
 
+extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * uinfo);
 
 #endif

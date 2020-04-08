@@ -71,7 +71,9 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 // #endif
 
 
-    current_cpu->frame = frame;
+    if(likely(frame->intno >= 0x20))
+        current_cpu->frame = frame;
+
 
 
     switch(frame->intno) {

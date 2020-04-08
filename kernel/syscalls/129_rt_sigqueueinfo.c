@@ -52,6 +52,6 @@
 
 
 SYSCALL(129, rt_sigqueueinfo,
-long sys_rt_sigqueueinfo (pid_t pid, int sig, siginfo_t __user * uinfo) {
-    return -ENOSYS;
+long sys_rt_sigqueueinfo (pid_t tgid, int sig, siginfo_t __user * uinfo) {
+    return sys_rt_tgsigqueueinfo(tgid, -1, sig, uinfo);
 });

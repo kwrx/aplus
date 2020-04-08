@@ -38,10 +38,22 @@ typedef struct {
 
     uintptr_t sp;
     uintptr_t ss;
-
-    char __fpuregs[0];
     
 } __packed interrupt_frame_t;
+
+
+typedef struct {
+
+    void* ustack;
+    void* kstack;
+
+    sigset_t mask;
+    interrupt_frame_t regs;
+
+    char fpuregs[0];
+
+} __packed sigcontext_frame_t;
+
 
 
 __BEGIN_DECLS

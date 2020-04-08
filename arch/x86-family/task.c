@@ -45,10 +45,10 @@ extern inode_t __vfs_root;
 
 
 #define FRAME(p)                                    \
-    ((interrupt_frame_t*) p->frame)
+    ((interrupt_frame_t*) (p)->frame)
 
 #define WRITE_SP0(cpu, ptr)                         \
-    ((tss_t*) cpu->tss)->sp0 = (uintptr_t) cpu->kstack
+    ((tss_t*) (cpu)->tss)->sp0 = (uintptr_t) (cpu)->kstack
 
 
 
@@ -62,26 +62,72 @@ void arch_task_switch_address_space(vmm_address_space_t* address_space) {
 void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->sstack);
+    DEBUG_ASSERT(current_task->sighand);
+
     DEBUG_ASSERT(siginfo);
-    DEBUG_ASSERT(siginfo->si_code >= 0);
-    DEBUG_ASSERT(siginfo->si_code <= _NSIG);
+    DEBUG_ASSERT(siginfo->si_signo >= 0);
+    DEBUG_ASSERT(siginfo->si_signo <= _NSIG);
 
     DEBUG_ASSERT(current_task->userspace.sigstack);
     DEBUG_ASSERT(current_task->userspace.siginfo);
 
 
-    memcpy( ((interrupt_frame_t*) current_task->sstack), current_task->frame, sizeof(interrupt_frame_t));
-    memcpy(&((interrupt_frame_t*) current_task->sstack)->__fpuregs, current_task->fpu, 512); // FIXME
+
+    sigcontext_frame_t* sigcontext = (sigcontext_frame_t*) current_task->sstack;
 
 
-    struct ksigaction* action = &current_task->sighand->action[siginfo->si_code];
 
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PC,     (long) action->sigaction);
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_STACK,  (long) current_task->userspace.sigstack);
+    memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
+    memcpy(&sigcontext->mask, &current_task->sighand->sigmask, sizeof(sigset_t));
 
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM0, (long) siginfo->si_code);
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM1, (long) current_task->userspace.siginfo);
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_PARAM2, (long) NULL);
+
+    __asm__ __volatile__ (
+        "fxsave (%0)"
+        :
+        : "r"(&sigcontext->fpuregs[0])
+    );
+
+    sigcontext->ustack = current_cpu->ustack;
+    sigcontext->kstack = current_cpu->kstack;
+    
+
+
+
+    struct ksigaction* action = &current_task->sighand->action[siginfo->si_signo];
+
+    FRAME(current_cpu)->ip = (uintptr_t) action->sigaction;
+    FRAME(current_cpu)->sp = current_task->userspace.sigstack;
+    FRAME(current_cpu)->cs = USER_CS | 3;
+    FRAME(current_cpu)->ss = USER_DS | 3;
+    FRAME(current_cpu)->flags = 0x202;
+
+    memcpy(&current_task->sighand->sigmask, &action->sa_mask, sizeof(sigset_t));
+
+
+#if defined(__x86_64__)
+
+    FRAME(current_cpu)->di = siginfo->si_signo;                                 // movq  $signo, %rdi
+    FRAME(current_cpu)->si = (uintptr_t) current_task->userspace.siginfo;       // movq  $siginfo, %rsi
+    FRAME(current_cpu)->dx = 0L;                                                // movq  $ucontext, %rdx
+
+
+    mmio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                               // pushq $0
+    mmio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                               // pushq $0
+    mmio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer);               // callq $handler
+
+    FRAME(current_cpu)->sp -= 0x18;
+
+#else
+
+    uio_w32(FRAME(current_cpu)->sp - 0x04, siginfo->si_signo);                  // pushl $signo
+    uio_w32(FRAME(current_cpu)->sp - 0x08, current_task->userspace.siginfo);    // pushl $siginfo
+    uio_w32(FRAME(current_cpu)->sp - 0x0C, 0UL);                                // pushl $ucontext
+    uio_w32(FRAME(current_cpu)->sp - 0x10, action->sa_restorer);                // call  $handler
+
+    FRAME(current_cpu)->sp -= 0x10;
+
+#endif
 
 
     memcpy(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
@@ -91,8 +137,20 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
 void arch_task_return_from_signal(void) {
 
-    memcpy(current_task->frame, ((interrupt_frame_t*) current_task->sstack), sizeof(interrupt_frame_t));
-    memcpy(current_task->fpu,  &((interrupt_frame_t*) current_task->sstack)->__fpuregs, 512); // FIXME
+    sigcontext_frame_t* sigcontext = (sigcontext_frame_t*) current_task->sstack;
+
+
+    memcpy(FRAME(current_cpu), &sigcontext->regs, sizeof(interrupt_frame_t));
+    memcpy(&current_task->sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
+
+    __asm__ __volatile__ (
+        "fxrstor (%0)"
+        :
+        : "r"(&sigcontext->fpuregs[0])
+    );
+
+    current_cpu->ustack = sigcontext->ustack;
+    current_cpu->kstack = sigcontext->kstack;
 
 }
 
