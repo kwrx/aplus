@@ -354,6 +354,7 @@ pid_t arch_task_spawn_init() {
     task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
     task->sighand->refcount = 1;
 
+    memset(&task->sighand->sigmask, 0xFF, sizeof(sigset_t));
 
 
 
@@ -442,12 +443,12 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
     task->sighand->refcount = 1;
     
+    memset(&task->sighand->sigmask, 0xFF, sizeof(sigset_t));
     
+
     
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
 
-
-    // TODO: Signal
 
 
     FRAME(task)->ip = (uintptr_t) entry;

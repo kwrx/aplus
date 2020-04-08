@@ -60,14 +60,25 @@ static inline void __do_sleep(void) {
 
     if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
 
-        uint64_t tss = current_task->sleep.timeout.tv_sec;
-        uint64_t tsn = current_task->sleep.timeout.tv_nsec;
 
         struct timespec t0;
         sys_clock_gettime(current_task->sleep.clockid, &t0);
 
+        uint64_t tss = (current_task->sleep.timeout.tv_sec * 1000000000ULL) + current_task->sleep.timeout.tv_nsec;
+        uint64_t tsc = (t0.tv_sec                          * 1000000000ULL) + t0.tv_nsec;
+        
 
-        if((tss * 1000000000ULL) + tsn < ((uint64_t) t0.tv_sec * 1000000000ULL) + (uint64_t) t0.tv_nsec) {
+        if(current_task->sleep.remaining) {
+
+            uint64_t d = tss - tsc;
+
+            current_task->sleep.remaining->tv_sec  = d / 1000000000ULL;
+            current_task->sleep.remaining->tv_nsec = d % 1000000000ULL;
+
+        }
+
+
+        if(tss < tsc) {
             
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
