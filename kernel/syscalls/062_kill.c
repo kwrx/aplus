@@ -21,6 +21,10 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <signal.h>
+#include <unistd.h>
+#include <sys/types.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -28,11 +32,7 @@
 #include <aplus/task.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+
 
 
 /***
@@ -50,5 +50,11 @@
 
 SYSCALL(62, kill,
 long sys_kill (pid_t pid, int sig) {
-    return -ENOSYS;
+
+    siginfo_t siginfo;
+    siginfo.si_signo = sig;
+    siginfo.si_code  = SI_USER;
+    siginfo.si_errno = 0;
+
+    return sys_rt_tgsigqueueinfo(pid, -1, sig, &siginfo);
 });

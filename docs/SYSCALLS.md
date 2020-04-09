@@ -1,0 +1,319 @@
+# Syscall list
+
+
+- [x] sys_read
+- [x] sys_write
+- [x] sys_open
+- [x] sys_close
+- [x] sys_newstat
+- [x] sys_newfstat
+- [x] sys_newlstat
+- [ ] sys_poll
+- [x] sys_lseek
+- [ ] sys_mmap
+- [ ] sys_mprotect
+- [ ] sys_munmap
+- [x] sys_brk
+- [x] sys_rt_sigaction
+- [x] sys_rt_sigprocmask
+- [x] sys_rt_sigreturn
+- [x] sys_ioctl
+- [x] sys_pread64
+- [x] sys_pwrite64
+- [x] sys_readv
+- [x] sys_writev
+- [x] sys_access
+- [ ] sys_pipe
+- [ ] sys_select
+- [x] sys_sched_yield
+- [ ] sys_mremap
+- [ ] sys_msync
+- [ ] sys_mincore
+- [ ] sys_madvise
+- [ ] sys_shmget
+- [ ] sys_shmat
+- [ ] sys_shmctl
+- [x] sys_dup
+- [x] sys_dup2
+- [ ] sys_pause
+- [x] sys_nanosleep
+- [ ] sys_getitimer
+- [ ] sys_alarm
+- [ ] sys_setitimer
+- [x] sys_getpid
+- [ ] sys_sendfile64
+- [ ] sys_socket
+- [ ] sys_connect
+- [ ] sys_accept
+- [ ] sys_sendto
+- [ ] sys_recvfrom
+- [ ] sys_sendmsg
+- [ ] sys_recvmsg
+- [ ] sys_shutdown
+- [ ] sys_bind
+- [ ] sys_listen
+- [ ] sys_getsockname
+- [ ] sys_getpeername
+- [ ] sys_socketpair
+- [ ] sys_setsockopt
+- [ ] sys_getsockopt
+- [x] sys_clone
+- [x] sys_fork
+- [x] sys_vfork
+- [x] sys_execve
+- [x] sys_exit
+- [x] sys_wait4
+- [x] sys_kill
+- [ ] sys_newuname
+- [ ] sys_semget
+- [ ] sys_semop
+- [ ] sys_semctl
+- [ ] sys_shmdt
+- [ ] sys_msgget
+- [ ] sys_msgsnd
+- [ ] sys_msgrcv
+- [ ] sys_msgctl
+- [ ] sys_fcntl
+- [ ] sys_flock
+- [ ] sys_fsync
+- [ ] sys_fdatasync
+- [ ] sys_truncate
+- [ ] sys_ftruncate
+- [ ] sys_getdents
+- [ ] sys_getcwd
+- [x] sys_chdir
+- [x] sys_fchdir
+- [ ] sys_rename
+- [x] sys_mkdir
+- [ ] sys_rmdir
+- [x] sys_creat
+- [ ] sys_link
+- [ ] sys_unlink
+- [ ] sys_symlink
+- [ ] sys_readlink
+- [ ] sys_chmod
+- [ ] sys_fchmod
+- [ ] sys_chown
+- [ ] sys_fchown
+- [ ] sys_lchown
+- [ ] sys_umask
+- [x] sys_gettimeofday
+- [ ] sys_getrlimit
+- [ ] sys_getrusage
+- [ ] sys_sysinfo
+- [ ] sys_times
+- [ ] sys_ptrace
+- [ ] sys_getuid
+- [ ] sys_syslog
+- [ ] sys_getgid
+- [ ] sys_setuid
+- [ ] sys_setgid
+- [ ] sys_geteuid
+- [ ] sys_getegid
+- [ ] sys_setpgid
+- [ ] sys_getppid
+- [ ] sys_getpgrp
+- [x] sys_setsid
+- [ ] sys_setreuid
+- [ ] sys_setregid
+- [ ] sys_getgroups
+- [ ] sys_setgroups
+- [ ] sys_setresuid
+- [ ] sys_getresuid
+- [ ] sys_setresgid
+- [ ] sys_getresgid
+- [x] sys_getpgid
+- [ ] sys_setfsuid
+- [ ] sys_setfsgid
+- [ ] sys_getsid
+- [ ] sys_capget
+- [ ] sys_capset
+- [ ] sys_rt_sigpending
+- [ ] sys_rt_sigtimedwait
+- [x] sys_rt_sigqueueinfo
+- [ ] sys_rt_sigsuspend
+- [ ] sys_sigaltstack
+- [ ] sys_utime
+- [ ] sys_mknod
+- [ ] sys_personality
+- [ ] sys_ustat
+- [ ] sys_statfs
+- [ ] sys_fstatfs
+- [ ] sys_sysfs
+- [x] sys_getpriority
+- [x] sys_setpriority
+- [ ] sys_sched_setparam
+- [ ] sys_sched_getparam
+- [ ] sys_sched_setscheduler
+- [ ] sys_sched_getscheduler
+- [ ] sys_sched_get_priority_max
+- [ ] sys_sched_get_priority_min
+- [ ] sys_sched_rr_get_interval
+- [ ] sys_mlock
+- [ ] sys_munlock
+- [ ] sys_mlockall
+- [ ] sys_munlockall
+- [ ] sys_vhangup
+- [ ] sys_modify_ldt
+- [ ] sys_pivot_root
+- [ ] sys_sysctl
+- [ ] sys_prctl
+- [x] sys_arch_prctl
+- [ ] sys_adjtimex
+- [ ] sys_setrlimit
+- [x] sys_chroot
+- [ ] sys_sync
+- [ ] sys_acct
+- [ ] sys_settimeofday
+- [x] sys_mount
+- [ ] sys_umount
+- [ ] sys_swapon
+- [ ] sys_swapoff
+- [ ] sys_reboot
+- [ ] sys_sethostname
+- [ ] sys_setdomainname
+- [ ] sys_ioperm
+- [ ] sys_init_module
+- [ ] sys_delete_module
+- [ ] sys_quotactl
+- [ ] sys_gettid
+- [ ] sys_readahead
+- [ ] sys_setxattr
+- [ ] sys_lsetxattr
+- [ ] sys_fsetxattr
+- [ ] sys_getxattr
+- [ ] sys_lgetxattr
+- [ ] sys_fgetxattr
+- [ ] sys_listxattr
+- [ ] sys_llistxattr
+- [ ] sys_flistxattr
+- [ ] sys_removexattr
+- [ ] sys_lremovexattr
+- [ ] sys_fremovexattr
+- [x] sys_tkill
+- [x] sys_time
+- [x] sys_futex
+- [x] sys_sched_setaffinity
+- [x] sys_sched_getaffinity
+- [ ] sys_io_setup
+- [ ] sys_io_destroy
+- [ ] sys_io_getevents
+- [ ] sys_io_submit
+- [ ] sys_io_cancel
+- [ ] sys_lookup_dcookie
+- [ ] sys_epoll_create
+- [ ] sys_remap_file_pages
+- [x] sys_getdents64
+- [x] sys_set_tid_address
+- [ ] sys_restart_syscall
+- [ ] sys_semtimedop
+- [ ] sys_fadvise64
+- [ ] sys_timer_create
+- [ ] sys_timer_settime
+- [ ] sys_timer_gettime
+- [ ] sys_timer_getoverrun
+- [ ] sys_timer_delete
+- [ ] sys_clock_settime
+- [x] sys_clock_gettime
+- [x] sys_clock_getres
+- [x] sys_clock_nanosleep
+- [ ] sys_exit_group
+- [ ] sys_epoll_wait
+- [ ] sys_epoll_ctl
+- [x] sys_tgkill
+- [ ] sys_utimes
+- [ ] sys_mbind
+- [ ] sys_set_mempolicy
+- [ ] sys_get_mempolicy
+- [ ] sys_mq_open
+- [ ] sys_mq_unlink
+- [ ] sys_mq_timedsend
+- [ ] sys_mq_timedreceive
+- [ ] sys_mq_notify
+- [ ] sys_mq_getsetattr
+- [ ] sys_kexec_load
+- [ ] sys_waitid
+- [ ] sys_add_key
+- [ ] sys_request_key
+- [ ] sys_keyctl
+- [ ] sys_ioprio_set
+- [ ] sys_ioprio_get
+- [ ] sys_inotify_init
+- [ ] sys_inotify_add_watch
+- [ ] sys_inotify_rm_watch
+- [ ] sys_migrate_pages
+- [x] sys_openat
+- [ ] sys_mkdirat
+- [ ] sys_mknodat
+- [ ] sys_fchownat
+- [ ] sys_futimesat
+- [ ] sys_newfstatat
+- [ ] sys_unlinkat
+- [ ] sys_renameat
+- [ ] sys_linkat
+- [ ] sys_symlinkat
+- [ ] sys_readlinkat
+- [ ] sys_fchmodat
+- [ ] sys_faccessat
+- [ ] sys_pselect6
+- [ ] sys_ppoll
+- [ ] sys_unshare
+- [ ] sys_set_robust_list
+- [ ] sys_get_robust_list
+- [ ] sys_splice
+- [ ] sys_tee
+- [ ] sys_sync_file_range
+- [ ] sys_vmsplice
+- [ ] sys_move_pages
+- [ ] sys_utimensat
+- [ ] sys_epoll_pwait
+- [ ] sys_signalfd
+- [ ] sys_timerfd_create
+- [ ] sys_eventfd
+- [ ] sys_fallocate
+- [ ] sys_timerfd_settime
+- [ ] sys_timerfd_gettime
+- [ ] sys_accept4
+- [ ] sys_signalfd4
+- [ ] sys_eventfd2
+- [ ] sys_epoll_create1
+- [ ] sys_dup3
+- [ ] sys_pipe2
+- [ ] sys_inotify_init1
+- [ ] sys_preadv
+- [ ] sys_pwritev
+- [x] sys_rt_tgsigqueueinfo
+- [ ] sys_perf_event_open
+- [ ] sys_recvmmsg
+- [ ] sys_fanotify_init
+- [ ] sys_fanotify_mark
+- [ ] sys_prlimit64
+- [ ] sys_name_to_handle_at
+- [ ] sys_open_by_handle_at
+- [ ] sys_clock_adjtime
+- [ ] sys_syncfs
+- [ ] sys_sendmmsg
+- [ ] sys_setns
+- [x] sys_getcpu
+- [ ] sys_process_vm_readv
+- [ ] sys_process_vm_writev
+- [ ] sys_kcmp
+- [ ] sys_finit_module
+- [ ] sys_sched_setattr
+- [ ] sys_sched_getattr
+- [ ] sys_renameat2
+- [ ] sys_seccomp
+- [ ] sys_getrandom
+- [ ] sys_memfd_create
+- [ ] sys_kexec_file_load
+- [ ] sys_bpf
+- [ ] sys_userfaultfd
+- [ ] sys_membarrier
+- [ ] sys_mlock2
+- [ ] sys_copy_file_range
+- [ ] sys_preadv2
+- [ ] sys_pwritev2
+- [ ] sys_pkey_mprotect
+- [ ] sys_pkey_alloc
+- [ ] sys_pkey_free
+- [x] sys_systest

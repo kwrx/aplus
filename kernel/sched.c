@@ -35,6 +35,10 @@
 #include <aplus/task.h>
 #include <aplus/hal.h>
 
+#include <aplus/utils/list.h>
+#include <aplus/utils/queue.h>
+
+
 
 extern long sys_clock_gettime(clockid_t, struct timespec*);
 
