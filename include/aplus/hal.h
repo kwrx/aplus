@@ -117,6 +117,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo);
 void arch_task_return_from_signal(void);
 void arch_task_context_set(task_t*, int, long);
 long arch_task_context_get(task_t*, int);
+void arch_task_switch_address_space(vmm_address_space_t*);
 
 
 void arch_reboot(int);

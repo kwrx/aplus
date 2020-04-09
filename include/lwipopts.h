@@ -49,10 +49,10 @@
 #define MEMP_MEM_INIT                       1
 #define MEM_ALIGNMENT                       16 // FIXME
 #define MEM_SIZE                            (1 << 30)
-#define MEMP_OVERFLOW_CHECK                 2
-#define MEMP_SANITY_CHECK                   1
-#define MEM_OVERFLOW_CHECK                  2
-#define MEM_SANITY_CHECK                    1
+#define MEMP_OVERFLOW_CHECK                 0
+#define MEMP_SANITY_CHECK                   0
+#define MEM_OVERFLOW_CHECK                  0
+#define MEM_SANITY_CHECK                    0
 #define MEM_USE_POOLS                       0
 #define MEM_USE_POOLS_TRY_BIGGER_POOL       0
 #define MEMP_USE_CUSTOM_POOLS               0

@@ -33,6 +33,7 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
+#include <aplus/syscall.h>
 #include <aplus/hal.h>
 
 #include <aplus/utils/list.h>

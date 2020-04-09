@@ -5,10 +5,10 @@ $(error Run ./configure to generate wrapper and ./makew to use Makefile)
 endif
 
 
-export QUIET	:= @
-export VM	:= qemu
+export QUIET    := @
+export VM       := qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
-export ROOTDIR	:= $(shell pwd)
+export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
@@ -18,13 +18,13 @@ TARGET	 := aplus.img
 
 
 BUILDALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i           || break; done
 INSTALLALL: $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i install; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || break; done
 CLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i clean; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i clean     || break; done
 DISTCLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean || break; done
 
 
 all: $(TARGET)

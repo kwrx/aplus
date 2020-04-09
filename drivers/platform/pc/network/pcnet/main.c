@@ -295,7 +295,7 @@ static void pcnet_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void pcnet_irq(void* frame, int irq) {
+static void pcnet_irq(void* frame, uint8_t irq) {
     
     struct pcnet* dev;
     for(int i = 0; (dev = devices[i]); i++) {

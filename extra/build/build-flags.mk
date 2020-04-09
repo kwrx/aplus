@@ -1,9 +1,9 @@
 include $(ROOTDIR)/config.mk
 
 ifeq ($(CONFIG_HAVE_DEBUG),y)
-CFLAGS      += -g -Og -fno-omit-frame-pointer -Wall
-CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall
-ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall
+CFLAGS      += -g -Og -fno-omit-frame-pointer -Wall -Werror
+CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall -Werror
+ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall -Werror
 DEFINES     += DEBUG=1
 else
 CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
