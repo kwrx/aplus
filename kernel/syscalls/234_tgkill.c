@@ -54,7 +54,7 @@ long sys_tgkill (pid_t tgid, pid_t tid, int sig) {
     
     siginfo_t siginfo;
     siginfo.si_signo = sig;
-    siginfo.si_code  = SI_USER;
+    siginfo.si_code  = SI_TKILL;
     siginfo.si_errno = 0;
 
     return sys_rt_tgsigqueueinfo(tgid, tid, sig, &siginfo);

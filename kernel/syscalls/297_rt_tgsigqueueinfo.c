@@ -106,11 +106,7 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
             if(unlikely(tmp->sighand->action[sig].handler == SIG_ERR))
                 continue;
 
-            if(unlikely(tmp->sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3)))))
-                if(!(tmp->sighand->action[sig].sa_flags & SA_NODEFER))
-                    continue;
-
-            
+        
 
             siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
 
@@ -118,7 +114,17 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
             siginfo->si_signo = sig;
            
 
-            queue_enqueue(&current_task->sigqueue, siginfo, 0);
+            //? Check if the signal is blocked
+            if(unlikely(tmp->sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
+
+                if(tmp->sighand->action[sig].sa_flags & SA_NODEFER)
+                    queue_enqueue(&current_task->sigqueue, siginfo, 0);
+                else
+                    queue_enqueue(&current_task->sigpending, siginfo, 0);
+                    
+            } else
+                queue_enqueue(&current_task->sigqueue, siginfo, 0);
+
 
         }
 

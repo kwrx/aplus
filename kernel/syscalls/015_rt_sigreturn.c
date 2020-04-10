@@ -48,6 +48,5 @@
 
 SYSCALL(15, rt_sigreturn,
 long sys_rt_sigreturn (void) {
-    arch_task_return_from_signal();
-    return -EINTR;
+    return arch_task_return_from_signal();
 });

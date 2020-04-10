@@ -273,10 +273,8 @@ int main(int argc, char** argv, char** envp) {
 
 
     sigset_t mask;
-
     sigfillset(&mask);
     sigprocmask(SIG_SETMASK, &mask, NULL);
-
 
     setsid();
     tcsetpgrp(STDIN_FILENO, getpgrp());

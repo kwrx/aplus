@@ -49,5 +49,5 @@
 
 SYSCALL(219, restart_syscall,
 long sys_restart_syscall (void) {
-    return -ENOSYS;
+    return syscall_restart();
 });

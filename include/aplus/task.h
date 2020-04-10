@@ -200,6 +200,7 @@ typedef struct task {
     struct sighand* sighand;
 
     queue_t sigqueue;
+    queue_t sigpending;
 
 
     struct {
@@ -251,6 +252,19 @@ typedef struct task {
         uint64_t write_bytes;
         uint64_t cancelled_write_bytes;     
     } iostat;
+
+
+    struct {
+
+        long index;
+        long param0;
+        long param1;
+        long param2;
+        long param3;
+        long param4;
+        long param5;
+
+    } syscall;
 
 
     struct rlimit rlimits[RLIM_NLIMITS];

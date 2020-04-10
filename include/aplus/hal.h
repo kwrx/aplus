@@ -114,7 +114,7 @@ pid_t arch_task_spawn_init(void);
 pid_t arch_task_spawn_kthread(const char*, void (*) (void*), size_t, void*);
 task_t* arch_task_get_empty_thread(size_t);
 void arch_task_prepare_to_signal(siginfo_t* siginfo);
-void arch_task_return_from_signal(void);
+long arch_task_return_from_signal(void);
 void arch_task_context_set(task_t*, int, long);
 long arch_task_context_get(task_t*, int);
 void arch_task_switch_address_space(vmm_address_space_t*);

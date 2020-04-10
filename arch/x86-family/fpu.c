@@ -34,6 +34,8 @@
 #include <arch/x86/fpu.h>
 
 
+// FIXME: fpu_restore() #GP on sigreturn()
+#define CONFIG_X86_XSAVE_FORCE_DISABLED 1
 
 //!
 //! pmm_block(0) 
@@ -53,6 +55,8 @@ static uint16_t __fpu_size = 0;
 
 
 
+
+#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
 static void xsaveopt_switch(void* prev, void* next) {
 
@@ -125,9 +129,12 @@ static void xsave_restore(void* fpu_area) {
     
 }
 
+#endif
 
 
 
+
+#if !defined(CONFIG_X86_FXSAVE_FORCE_DISABLED)
 
 static void fxsave_switch(void* prev, void* next) {
 
@@ -173,7 +180,7 @@ static void fxsave_restore(void* fpu_area) {
     
 }
 
-
+#endif
 
 
 
@@ -232,7 +239,7 @@ void fpu_init(uint64_t cpu) {
     if(!(boot_cpu_has(X86_FEATURE_FPU)))
         kpanicf("x86-fpu: FPU not supported by cpu, required!\n");
 
-    DEBUG_ASSERT(((uintptr_t) &__fpu_inital_state[0] & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t) &__fpu_inital_state[0] & 63) == 0);
 
 
 
@@ -252,18 +259,22 @@ void fpu_init(uint64_t cpu) {
     }
 
 
+#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
+
     if(cpu_has(cpu, X86_FEATURE_XSAVE)) {
 
         x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK);
 
     }
 
-
+#endif
 
 
 
     if(cpu == SMP_CPU_BOOTSTRAP_ID) {
 
+
+#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
         if(boot_cpu_has(X86_FEATURE_XSAVE)) {
             
@@ -318,7 +329,13 @@ void fpu_init(uint64_t cpu) {
 
         }
 
-        else if(boot_cpu_has(X86_FEATURE_FXSR)) {
+        else
+#endif
+
+
+#if !defined(CONFIG_X86_FXSAVE_FORCE_DISABLED)
+
+        if(boot_cpu_has(X86_FEATURE_FXSR)) {
             
             __fpu_switch  = &fxsave_switch;
             __fpu_save    = &fxsave_save;
@@ -332,8 +349,9 @@ void fpu_init(uint64_t cpu) {
        
         }
 
-        else {
-
+        else 
+#endif
+        {
             __fpu_switch  = &fsave_switch;
             __fpu_save    = &fsave_save;
             __fpu_restore = &fsave_restore;

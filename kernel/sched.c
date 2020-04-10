@@ -53,9 +53,13 @@ static inline void __do_futex(void) {
 
     list_each(current_task->futexes, i) {
             
-        if(futex_expired(i))
-            futex_wakeup_thread(current_task, i);
+        if(!futex_expired(i))
+            continue;
 
+
+        futex_wakeup_thread(current_task, i);
+        list_remove(current_task->futexes, i);
+    
     }
 
 }

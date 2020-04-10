@@ -70,6 +70,10 @@ long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset,
     DEBUG_ASSERT(current_task->sighand);
     
 
+    if(oset)
+        memcpy(oset, &current_task->sighand->sigmask, sigsetsize);
+
+
     if(set) {
 
         int i;
@@ -105,8 +109,22 @@ long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset,
     }
 
 
-    if(oset)
-        memcpy(oset, &current_task->sighand->sigmask, sigsetsize);
+
+
+    size_t i;
+    for(i = current_task->sigpending.size; i > 0; i--) {
+
+        siginfo_t* info;
+        if((info = queue_pop(&current_task->sigpending))) {
+
+            if(unlikely(current_task->sighand->sigmask.__bits[info->si_signo / (sizeof(long) << 3)] & (1 << (info->si_signo % (sizeof(long) << 3)))))
+                queue_enqueue(&current_task->sigpending, info, 0);
+            else
+                queue_enqueue(&current_task->sigqueue, info, 0);
+
+        }
+
+    }
 
 
     return 0;

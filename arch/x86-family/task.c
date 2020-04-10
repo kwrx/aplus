@@ -29,6 +29,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
+#include <aplus/syscall.h>
 #include <aplus/ipc.h>
 #include <aplus/task.h>
 #include <aplus/hal.h>
@@ -127,17 +128,19 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 #endif
 
 
+    sigcontext->flags = action->sa_flags;
+
     memcpy(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
 
 }
 
 
-void arch_task_return_from_signal(void) {
+long arch_task_return_from_signal(void) {
 
     sigcontext_frame_t* sigcontext = (sigcontext_frame_t*) current_task->sstack;
 
 
-    memcpy(FRAME(current_cpu), &sigcontext->regs, sizeof(interrupt_frame_t));
+    memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
     memcpy(&current_task->sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
 
 
@@ -146,6 +149,11 @@ void arch_task_return_from_signal(void) {
     current_cpu->ustack = sigcontext->ustack;
     current_cpu->kstack = sigcontext->kstack;
 
+
+    if(sigcontext->flags & SA_RESTART)
+        return syscall_restart();
+
+    return -4; /* EINTR */
 }
 
 

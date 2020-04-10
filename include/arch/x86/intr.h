@@ -44,11 +44,21 @@ typedef struct {
 
 typedef struct {
 
-    void* ustack;
-    void* kstack;
+    union {
+        
+        struct {
+            
+            void* ustack;
+            void* kstack;
 
-    sigset_t mask;
-    interrupt_frame_t regs;
+            long flags;
+            sigset_t mask;
+            interrupt_frame_t regs;
+
+        };
+
+        char __padding[512 - 16];
+    };
 
     char fpuregs[0];
 

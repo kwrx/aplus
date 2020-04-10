@@ -112,7 +112,6 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
     thread_suspend(current_task);
     thread_postpone_resched(current_task);
 
-    // TODO: Fill rmtp on interrupt
 
     arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
     

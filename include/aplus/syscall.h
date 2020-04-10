@@ -52,6 +52,7 @@
 
 void syscall_init(void);
 long syscall_invoke(unsigned long, long, long, long, long, long, long);
+long syscall_restart(void);
 
 
 /* Syscalls */

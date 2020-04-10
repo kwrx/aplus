@@ -205,7 +205,7 @@
 - [ ] sys_remap_file_pages
 - [x] sys_getdents64
 - [x] sys_set_tid_address
-- [ ] sys_restart_syscall
+- [x] sys_restart_syscall
 - [ ] sys_semtimedop
 - [ ] sys_fadvise64
 - [ ] sys_timer_create
