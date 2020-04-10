@@ -250,10 +250,6 @@ static void init_initd(void) {
 }
 
 
-void sighand(int s) {
-    fprintf(stderr, "SIGQUIT\n");
-}
-
 
 int main(int argc, char** argv, char** envp) {
 
@@ -275,6 +271,7 @@ int main(int argc, char** argv, char** envp) {
     sigset_t mask;
     sigfillset(&mask);
     sigprocmask(SIG_SETMASK, &mask, NULL);
+
 
     setsid();
     tcsetpgrp(STDIN_FILENO, getpgrp());

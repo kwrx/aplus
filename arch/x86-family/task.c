@@ -85,7 +85,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
 
     fpu_save(&sigcontext->fpuregs[0]);
-
+    
     sigcontext->ustack = current_cpu->ustack;
     sigcontext->kstack = current_cpu->kstack;
     
@@ -259,7 +259,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
     #define _(size, offset)     \
-        (void*) ((uintptr_t) kmalloc(size, GFP_KERNEL) + offset)
+        (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
 
 
     task->frame         = _(sizeof(interrupt_frame_t), 0);
@@ -320,7 +320,7 @@ pid_t arch_task_spawn_init() {
 
     
    #define _(size, offset)     \
-        (void*) ((uintptr_t) kmalloc(size, GFP_KERNEL) + offset)
+        (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
 
 
     task->frame         = _(sizeof(interrupt_frame_t), 0);

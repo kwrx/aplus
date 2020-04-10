@@ -34,9 +34,6 @@
 #include <arch/x86/fpu.h>
 
 
-// FIXME: fpu_restore() #GP on sigreturn()
-#define CONFIG_X86_XSAVE_FORCE_DISABLED 1
-
 //!
 //! pmm_block(0) 
 //!     + kmalloc(16) 
@@ -120,6 +117,7 @@ static void xsave_save(void* fpu_area) {
 static void xsave_restore(void* fpu_area) {
 
     DEBUG_ASSERT(((uintptr_t) fpu_area & 63) == 0);
+    
 
     __asm__ __volatile__ (
         "xrstor (%0)"
