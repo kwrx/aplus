@@ -34,6 +34,7 @@
 #include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
+#include <arch/x86/fpu.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
@@ -63,9 +64,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     core->mmap.count += 1;
 
 
-    //* ISA Memory Hole 15-16MB // FIXME: Actually 1-16MB
-    core->mmap.ptr[core->mmap.count].address = 0x00100000;
-    core->mmap.ptr[core->mmap.count].length  = 0x00F00000;
+    //* ISA Memory Hole 15-16MB
+    core->mmap.ptr[core->mmap.count].address = 0x00E00000;
+    core->mmap.ptr[core->mmap.count].length  = 0x00100000;
     core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
 
     core->mmap.count += 1;
@@ -77,7 +78,6 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
 
     core->mmap.count += 1;
-
 
 
 
@@ -270,7 +270,6 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
     DEBUG_ASSERT(core->mmap.count < (CONFIG_BUFSIZ << 2));
-
 
 
     //* Initialize Physical Memory Manager

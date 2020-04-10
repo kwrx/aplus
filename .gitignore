@@ -1,4 +1,5 @@
 .vscode
+.idea
 
 *.o
 *.d
@@ -24,6 +25,7 @@
 *.old
 *.out
 *.generated.h
+*.iml
 
 # Generate by Makefile
 /kernel/aplus

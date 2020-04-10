@@ -734,6 +734,40 @@ static inline void x86_swapgs() {
 }
 
 
+/*!
+ * @brief Write to Extended Control Register.
+ */
+static inline void x86_xsetbv(unsigned long long i, unsigned long long v) {
+
+    unsigned long long vl = v & 0xFFFFFFFF;
+    unsigned long long vh = v >> 32;
+
+    __asm__ __volatile__ (
+        "xsetbv" 
+        : 
+        : "c"(i), "a"(vl), "d"(vh)
+    );
+}
+
+
+/*!
+ * @brief Read from Extended Control Register.
+ */
+static inline unsigned long long x86_xgetbv(unsigned long long i) {
+
+    unsigned long long vl;
+    unsigned long long vh;
+
+    __asm__ __volatile__ (
+        "xgetbv" 
+        : "=a"(vl), "=d"(vh) 
+        : "c"(i)
+    );
+
+    return (vh << 32) | vl;
+}
+
+
 #endif
 
 

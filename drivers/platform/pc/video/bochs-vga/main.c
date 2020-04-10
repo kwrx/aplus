@@ -146,11 +146,25 @@ static void bga_reset(device_t* device) {
     memset(&device->vid.fs, 0, sizeof(struct fb_fix_screeninfo));
     memset(&device->vid.vs, 0, sizeof(struct fb_var_screeninfo));
 
-    device->vid.vs.xres = 800;
-    device->vid.vs.yres = 600;
-    device->vid.vs.xres_virtual = 800;
-    device->vid.vs.yres_virtual = 600;
-    device->vid.vs.bits_per_pixel = 32;
+    if(!core->framebuffer.address) {
+
+        device->vid.vs.xres = 800;
+        device->vid.vs.yres = 600;
+        device->vid.vs.xres_virtual = 800;
+        device->vid.vs.yres_virtual = 600;
+        device->vid.vs.bits_per_pixel = 32;
+
+    } else {
+
+        device->vid.vs.xres = core->framebuffer.width;
+        device->vid.vs.yres = core->framebuffer.height;
+        device->vid.vs.xres_virtual = core->framebuffer.width;
+        device->vid.vs.yres_virtual = core->framebuffer.height;
+        device->vid.vs.bits_per_pixel = core->framebuffer.depth;
+
+    }
+
+
     device->vid.vs.activate = FB_ACTIVATE_NOW;
     
     outw(VBE_DISPI_IOPORT_INDEX, VBE_DISPI_INDEX_ENABLE);

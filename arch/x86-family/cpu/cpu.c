@@ -34,6 +34,7 @@
 #include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
+#include <arch/x86/fpu.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/intr.h>
 #include <arch/x86/apic.h>
@@ -389,16 +390,11 @@ void arch_cpu_init(int index) {
 
     //! Requirements
     BUG_ON(cpu_has(index, X86_FEATURE_MSR));
-    BUG_ON(cpu_has(index, X86_FEATURE_FPU));
-    BUG_ON(cpu_has(index, X86_FEATURE_XMM));
-    BUG_ON(cpu_has(index, X86_FEATURE_XMM2));
-
 
 #if defined(__x86_64__)
     BUG_ON(cpu_has(index, X86_FEATURE_LM));
     BUG_ON(cpu_has(index, X86_FEATURE_PAE));
     BUG_ON(cpu_has(index, X86_FEATURE_GBPAGES));
-    BUG_ON(cpu_has(index, X86_FEATURE_FXSR));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)
@@ -421,16 +417,6 @@ void arch_cpu_init(int index) {
     //! Enable Syscall bit
     if(cpu_has(index, X86_FEATURE_SYSCALL))
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_SCE);
-
-
-    //! Enable FXSAVE, FXRSTOR
-    if(cpu_has(index, X86_FEATURE_FXSR))
-        x86_set_cr4(x86_get_cr4() | X86_CR4_OSFXSR_MASK);
-
-
-    //! Enable XSAVE and Extended states
-    if(cpu_has(index, X86_FEATURE_XSAVE))
-        x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK);
 
 
     //! Enable FSGSBASE instructions
@@ -481,6 +467,10 @@ void arch_cpu_init(int index) {
     }
 
 #endif
+
+
+    //* Initialize FPU
+    fpu_init(index);
 
     core->cpu.cores[index].flags |= SMP_CPU_FLAGS_ENABLED;
 

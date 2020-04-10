@@ -34,6 +34,7 @@
 #include <aplus/hal.h>
 
 #include <arch/x86/cpu.h>
+#include <arch/x86/fpu.h>
 #include <arch/x86/asm.h>
 #include <arch/x86/vmm.h>
 #include <arch/x86/intr.h>
@@ -82,11 +83,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     memcpy(&sigcontext->mask, &current_task->sighand->sigmask, sizeof(sigset_t));
 
 
-    __asm__ __volatile__ (
-        "fxsave (%0)"
-        :
-        : "r"(&sigcontext->fpuregs[0])
-    );
+    fpu_save(&sigcontext->fpuregs[0]);
 
     sigcontext->ustack = current_cpu->ustack;
     sigcontext->kstack = current_cpu->kstack;
@@ -143,11 +140,8 @@ void arch_task_return_from_signal(void) {
     memcpy(FRAME(current_cpu), &sigcontext->regs, sizeof(interrupt_frame_t));
     memcpy(&current_task->sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
 
-    __asm__ __volatile__ (
-        "fxrstor (%0)"
-        :
-        : "r"(&sigcontext->fpuregs[0])
-    );
+
+    fpu_restore(&sigcontext->fpuregs[0]);
 
     current_cpu->ustack = sigcontext->ustack;
     current_cpu->kstack = sigcontext->kstack;
@@ -176,7 +170,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
         memcpy(next->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         next->flags &= ~TASK_FLAGS_NO_FRAME;
 
-        __asm__ __volatile__ ("fxsave (%0)" :: "r"(next->fpu));
+        fpu_save(next->fpu);
 
     }
 
@@ -194,9 +188,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
         current_cpu->kstack = next->kstack;
         current_cpu->ustack = next->ustack;
 
-
-        __asm__ __volatile__ ("fxsave (%0)"  :: "r"(prev->fpu));
-        __asm__ __volatile__ ("fxrstor (%0)" :: "r"(next->fpu));
+        fpu_switch(prev->fpu, next->fpu);
 
         if(unlikely(prev->address_space->pm != next->address_space->pm))
             arch_task_switch_address_space(next->address_space);
@@ -263,10 +255,10 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
     task->frame         = _(sizeof(interrupt_frame_t), 0);
-    task->sstack        = _(sizeof(interrupt_frame_t) + 512, 0); // FIXME
+    task->sstack        = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
     task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
     task->ustack        = NULL;
-    task->fpu           = _(512, 0); // FIXME
+    task->fpu           = fpu_new_state();
 
     #undef _
 
@@ -324,10 +316,10 @@ pid_t arch_task_spawn_init() {
 
 
     task->frame         = _(sizeof(interrupt_frame_t), 0);
-    task->sstack        = _(sizeof(interrupt_frame_t) + 512, 0); // FIXME
+    task->sstack        = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
     task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
     task->ustack        = NULL;
-    task->fpu           = _(512, 0); // FIXME
+    task->fpu           = fpu_new_state();
 
     #undef _
 

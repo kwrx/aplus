@@ -35,6 +35,8 @@
 #include <aplus/utils/list.h>
 
 
+// TODO: use binary-tree data structure or hashmap
+
 
 static list(inode_t*, dcache);
 

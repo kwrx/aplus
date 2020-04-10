@@ -427,16 +427,6 @@ _start_high64:
         orl     $0x00000001, %edx
         wrmsr
 
-        # Enable SSE
-        finit
-        movq    %cr0, %rcx
-        andw    $0xFFFB, %cx
-        orl     $2,   %ecx
-        movq    %rcx, %cr0
-        movq    %cr4, %rcx
-        orw     $0x0600, %cx
-        movq    %rcx, %cr4
-
         # Load High GDT
         movq    $startup_gdtp_ptr, %rcx
         movq    $startup_gdtp, 2(%rcx)

@@ -84,7 +84,6 @@ void kmain() {
     __init(root,    ());
 
 
-
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
                                       CONFIG_SYSTEM_VERSION,
                                       CONFIG_SYSTEM_CODENAME,
