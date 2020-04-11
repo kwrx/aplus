@@ -132,7 +132,13 @@ uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
     /* Page Table */
     {
         DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
-        DEBUG_ASSERT(((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PAGE) && "Page bad type"); // FIXME: Handle page-fault
+
+
+        if(unlikely((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_PAGE))
+            pagefault_handle(current_cpu->frame, virtaddr);
+
+        
+        DEBUG_ASSERT(((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PAGE) && "Page bad type");
 
         e = *d & X86_MMU_ADDRESS_MASK;
         e += virtaddr & (pagesize - 1);

@@ -138,8 +138,8 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     } else {
 
-        if(unlikely(args->stack_size == 0ULL))
-            return -EINVAL;
+        // if(unlikely(args->stack_size == 0ULL))
+        //     return -EINVAL;
 
         if(unlikely(!uio_check(args->stack, R_OK | W_OK)))
             return -EFAULT;
@@ -147,10 +147,10 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
 
-    if(unlikely(args->flags & (CLONE_DETACHED | CSIGNAL)))
+    if(unlikely((args->flags & (CLONE_DETACHED | CSIGNAL)) == (CLONE_DETACHED | CSIGNAL)))
         return -EINVAL;
 
-    if(unlikely((args->flags & (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal))
+    if(unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal))
         return -EINVAL;
 
 
@@ -195,11 +195,16 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
 
-    child->ustack = current_cpu->ustack;    
+    child->ustack = args->stack 
+                        ? (void*) args->stack 
+                        : (void*) current_cpu->ustack
+                        ;
+
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long) current_cpu->frame);
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
+    
 
     sched_enqueue(child);
 

@@ -77,6 +77,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
     cpu_foreach(cpu) {
 
+
         task_t* tmp;
         for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
@@ -114,6 +115,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
                 if(tmp->status == TASK_STATUS_ZOMBIE)
                     sched_dequeue(tmp);
+
 
                 return tid;
 

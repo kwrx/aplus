@@ -134,7 +134,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x0E:
 
-            pagefault_handle(frame);
+            pagefault_handle(frame, x86_get_cr2());
             break;
 
         default:

@@ -55,5 +55,48 @@
 
 SYSCALL(10, mprotect,
 long sys_mprotect (unsigned long start, size_t len, unsigned long prot) {
-    return -ENOSYS;
+    
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->address_space);
+    DEBUG_ASSERT(current_task->address_space->mmap.heap_start);
+    DEBUG_ASSERT(current_task->address_space->mmap.heap_end);
+
+
+    if(unlikely(!len))
+        return -EINVAL;
+
+    if(unlikely(start & (arch_vmm_getpagesize() - 1)))
+        return -EINVAL;
+
+    if(unlikely(len & (arch_vmm_getpagesize() - 1)))
+        return -EINVAL;
+
+    if(unlikely((prot & (PROT_GROWSDOWN | PROT_GROWSUP)) == (PROT_GROWSDOWN | PROT_GROWSUP)))
+        return -EINVAL;
+
+    if(unlikely(start > current_task->address_space->mmap.heap_end))
+        return -ENOMEM;
+
+
+
+    int arch_flags = 0;
+
+    if(prot != PROT_NONE)
+        arch_flags |= ARCH_VMM_MAP_USER;
+
+    // if(!(prot & PROT_READ))
+    //     arch_flags |= ARCH_VMM_MAP_USER;
+
+    if(!(prot & PROT_EXEC))
+        arch_flags |= ARCH_VMM_MAP_NOEXEC;
+
+    if( (prot & PROT_WRITE))
+        arch_flags |= ARCH_VMM_MAP_RDWR;
+
+
+    if(arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) != start)
+        return -ENOMEM;
+
+    return 0;
+
 });

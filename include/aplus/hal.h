@@ -142,7 +142,7 @@ uint64_t arch_timer_generic_getres(void);
 void arch_userspace_enter(uintptr_t, uintptr_t, void*);
 
 uintptr_t arch_vmm_getpagesize();
-uintptr_t arch_vmm_gethugepagesize();
+uintptr_t arch_vmm_gethugepagesize(uint64_t);
 uintptr_t arch_vmm_p2v(uintptr_t, int);
 uintptr_t arch_vmm_v2p(uintptr_t, int);
 uintptr_t arch_vmm_map(vmm_address_space_t*, uintptr_t, uintptr_t, size_t, int);

@@ -65,7 +65,7 @@ void spinlock_lock(spinlock_t* lock) {
 #endif
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-        if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 10000ULL)) {
+        if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 100000ULL)) {
             kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, lock, current_cpu->id, current_task->tid);
             spinlock_unlock(lock);
             deadlock_detector = 0ULL;

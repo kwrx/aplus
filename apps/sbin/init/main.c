@@ -46,6 +46,7 @@
 
 #include <aplus/fb.h>
 
+#include <pthread.h>
 
 
 #define __trim(str)         \
@@ -249,7 +250,10 @@ static void init_initd(void) {
     // TODO: run /etc/init.d scripts...
 }
 
-
+void* start_thread(void* arg) {
+    fprintf(stderr, "Hello World from a new thread: %d %p\n", getpid(), pthread_self());
+    return NULL;
+}
 
 int main(int argc, char** argv, char** envp) {
 
@@ -287,11 +291,17 @@ int main(int argc, char** argv, char** envp) {
     setpriority(0, PRIO_PROCESS, 19);
 
 
+    pthread_t thread;
+    if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
+        fprintf(stderr, "failed to start a thread\n");
+
 
     fprintf(stderr, "init: system up!\n");
 
-    for(; errno != ECHILD;)
-        waitpid(-1, NULL, 0);
+    for(; errno != ECHILD;) {
+        pid_t e = waitpid(-1, NULL, 0);
+        fprintf(stderr, "child %d has exited\n", e);
+    }
         
 
     fprintf(stderr, "init: unreachable point! system halted!\n");

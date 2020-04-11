@@ -243,7 +243,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     if(!(phdr.p_flags & PF_X))
                         flags |= ARCH_VMM_MAP_NOEXEC;
                     
-                    if( (phdr.p_flags & PF_W))
+                    //if( (phdr.p_flags & PF_W))  // FIXME: musl write on non-writable segment on pthread_create();
                         flags |= ARCH_VMM_MAP_RDWR;
 
 
@@ -262,8 +262,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
                     arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz,
                                     flags                   |
-                                    ARCH_VMM_MAP_USER       |
-                                    ARCH_VMM_MAP_TYPE_PAGE);
+                                    ARCH_VMM_MAP_USER);
 
                     break;
 

@@ -105,24 +105,6 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
 
 
-    //* Set Page Type
-    switch((flags & ARCH_VMM_MAP_TYPE_MASK)) {
-
-        case ARCH_VMM_MAP_TYPE_PAGE:
-            b |= X86_MMU_PG_AP_TP_PAGE;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_MMAP:
-            b |= X86_MMU_PG_AP_TP_MMAP;
-            break;
-
-        case ARCH_VMM_MAP_TYPE_COW:
-            b |= X86_MMU_PG_AP_TP_COW;
-            break;
-
-    }
-
-
 #if defined(__x86_64__)
 
     //* Set No-Execute Bit
@@ -227,11 +209,15 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
             DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
 
 
-            *d = (*d & X86_MMU_ADDRESS_MASK) | b;
+            if(!(*d & X86_MMU_PG_P))
+                b &= ~X86_MMU_PG_P;
+
+            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | b;
+
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b);
+            //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, *d & ~X86_MMU_ADDRESS_MASK);
 #endif
 
         }

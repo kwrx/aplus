@@ -53,8 +53,17 @@ uintptr_t arch_vmm_getpagesize() {
  * @brief arch_vmm_gethugepagesize().
  *        Get huge page size.
  */
-uintptr_t arch_vmm_gethugepagesize() {
-    return X86_MMU_HUGE_2MB_PAGESIZE;
+uintptr_t arch_vmm_gethugepagesize(uint64_t huge_type) {
+    
+    switch(huge_type) {
+
+        case ARCH_VMM_MAP_HUGE_2MB: return X86_MMU_HUGE_2MB_PAGESIZE;
+        case ARCH_VMM_MAP_HUGE_1GB: return X86_MMU_HUGE_1GB_PAGESIZE;
+        
+    }
+    
+    kpanicf("arch_vmm_gethugepagesize(): PANIC! unsupported huge_type: %p\n", huge_type);
+    return 0UL;
 }
 
 

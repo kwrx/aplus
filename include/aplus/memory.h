@@ -60,11 +60,31 @@
 
 
 
+typedef struct {
+
+    uintptr_t start;
+    uintptr_t end;
+    uintptr_t fd;
+    uintptr_t offset;
+
+} mmap_mapping_t;
+
+
 typedef struct vmm_address_space {
     
     uintptr_t pm;
     size_t size;
     int refcount;
+
+    struct {
+
+        uintptr_t heap_start;
+        uintptr_t heap_end;
+
+        mmap_mapping_t mappings[CONFIG_MMAP_MAX];
+
+    } mmap;
+
     spinlock_t lock;
 
 } vmm_address_space_t;

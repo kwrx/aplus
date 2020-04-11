@@ -337,6 +337,13 @@ pid_t arch_task_spawn_init() {
 
 
 
+    task->address_space->mmap.heap_start = KERNEL_MMAP_AREA;
+    task->address_space->mmap.heap_end   = KERNEL_MMAP_AREA;
+
+    memset(&task->address_space->mmap.mappings, 0, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
+
+
+
     task->fs = (struct fs*) kcalloc(1, sizeof(struct fs), GFP_KERNEL);
 
     task->fs->cwd   =

@@ -83,7 +83,7 @@ static inline uintptr_t __alloc_page(uintptr_t pagesize, int zero) {
 
 
 
-void pagefault_handle(interrupt_frame_t*);
+void pagefault_handle(interrupt_frame_t*, uintptr_t);
 
 __END_DECLS
 

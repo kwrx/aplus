@@ -10,8 +10,8 @@
 - [x] sys_newlstat
 - [ ] sys_poll
 - [x] sys_lseek
-- [ ] sys_mmap
-- [ ] sys_mprotect
+- [x] sys_mmap
+- [x] sys_mprotect
 - [ ] sys_munmap
 - [x] sys_brk
 - [x] sys_rt_sigaction

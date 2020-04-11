@@ -180,9 +180,16 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 #endif
 
 
+
     dest->size = size;
     dest->refcount = 1;
+
+    dest->mmap.heap_start = src->mmap.heap_start;
+    dest->mmap.heap_end   = src->mmap.heap_end;
     
+    memcpy(&dest->mmap.mappings, &src->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
+
+
     spinlock_init(&dest->lock);
 
 }

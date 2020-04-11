@@ -40,13 +40,13 @@
 
 
 
-void pagefault_handle(interrupt_frame_t* frame) {
+void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
 
     #define PFE(reason)     \
-        { kprintf("x86-pfe: FAULT! address(%p): %s\n", x86_get_cr2(), reason); goto pfe; }
+        { kprintf("x86-pfe: FAULT! address(%p): %s\n", cr2, reason); goto pfe; }
 
 #else
 
@@ -64,7 +64,7 @@ void pagefault_handle(interrupt_frame_t* frame) {
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;
-    uintptr_t s = x86_get_cr2();
+    uintptr_t s = cr2;
 
 
 
@@ -184,13 +184,13 @@ void pagefault_handle(interrupt_frame_t* frame) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-pfe: handled page fault! cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->cs, frame->ip, frame->sp, x86_get_cr2(), x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+    kprintf("x86-pfe: handled page fault! cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->cs, frame->ip, frame->sp, cr2, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
     return;
 
 
 pfe:
-    kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->errno, frame->cs, frame->ip, frame->sp, x86_get_cr2(), x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+    kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->errno, frame->cs, frame->ip, frame->sp, cr2, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 
 }

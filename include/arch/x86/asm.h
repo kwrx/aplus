@@ -31,6 +31,8 @@
 #   define KERNEL_STACK_SIZE        0x0000000000200000   //? 2Mib
 #   define KERNEL_HEAP_AREA         0xFFFF800000000000
 #   define KERNEL_HEAP_SIZE         0x0000020000000000   //? 2TiB
+#   define KERNEL_MMAP_AREA         0x000000A000000000
+#   define KERNEL_MMAP_SIZE         0x0000002000000000   //? 128GiB
 
 #elif defined(__i386__)
 #   error "i386: not supported"
