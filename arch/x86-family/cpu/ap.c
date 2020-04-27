@@ -41,7 +41,6 @@
 
 
 
-spinlock_t ap_interlock = SPINLOCK_INIT;
 volatile uint32_t ap_cores = 0;
 
 
@@ -52,24 +51,21 @@ void ap_bmain(uint64_t magic, uint64_t cpu) {
     DEBUG_ASSERT(cpu != SMP_CPU_BOOTSTRAP_ID);
 
 
-    __lock(&ap_interlock, {
+    //* Initialize AP CPU
+    arch_cpu_init(cpu);
 
-        //* Initialize AP CPU
-        arch_cpu_init(cpu);
+    //* Unmap AP Area
+    arch_vmm_unmap(&core->cpu.cores[cpu].address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
 
-        //* Unmap AP Area
-        arch_vmm_unmap(&core->cpu.cores[cpu].address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
+    //* Spawn AP INIT Process
+    arch_task_spawn_init();
 
-        //* Spawn AP INIT Process
-        arch_task_spawn_init();
+    //* Enable Local APIC
+    apic_enable();
 
-        //* Enable Local APIC
-        apic_enable();
+    //* Enable Interrupts
+    __asm__ __volatile__("sti");
 
-        //* Enable Interrupts
-        __asm__ __volatile__("sti");
-
-    });
 
 
     __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);

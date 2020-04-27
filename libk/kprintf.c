@@ -33,6 +33,7 @@
 #include <aplus/hal.h>
 
 
+static spinlock_t buflock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
 
 
@@ -42,25 +43,22 @@
 void kprintf(const char* fmt, ...) {
 
     char buf[CONFIG_BUFSIZ];
-    //static spinlock_t buflock = SPINLOCK_INIT;
 
-    //__lock(&buflock, {
+    va_list v;
+    va_start(v, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, v);
+    va_end(v);
 
-        va_list v;
-        va_start(v, fmt);
-        vsnprintf(buf, sizeof(buf), fmt, v);
-        va_end(v);
 
+    __lock(&buflock, {
 
         int i;
         for(i = 0; buf[i]; i++) {
     
             arch_debug_putc(buf[i]);
 
-            //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
-            //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
-
         }
-    //});
+
+    });
 
 }

@@ -182,8 +182,8 @@ uint64_t arch_timer_generic_getres(void) {
 
 void timer_init(void) {
 
-    spinlock_init(&delay_lock);
-    spinlock_init(&rtc_lock);
+    spinlock_init_with_flags(&delay_lock, SPINLOCK_FLAGS_CPU_OWNER);
+    spinlock_init_with_flags(&rtc_lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 
 

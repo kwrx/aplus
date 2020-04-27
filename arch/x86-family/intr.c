@@ -96,14 +96,14 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                   
         case 0x21 ... 0xFD:
 
-            __lock(&startup_irq[frame->intno - 0x20].lock, {
+            // __lock(&startup_irq[frame->intno - 0x20].lock, {
 
                 if(likely(startup_irq[frame->intno - 0x20].handler))
                     startup_irq[frame->intno - 0x20].handler((void*) frame, frame->intno - 0x20);
                 else
                     kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
 
-            });
+            // });
             
             apic_eoi();
             break;
@@ -202,12 +202,12 @@ void arch_intr_map_irq(uint8_t irq, void (*handler) (void*, uint8_t)) {
     DEBUG_ASSERT(handler);
 
 
-    __lock(&startup_irq[irq].lock, {
+    // __lock(&startup_irq[irq].lock, {
 
         startup_irq[irq].handler = handler;
         ioapic_map_irq(irq, irq, current_cpu->id);
     
-    });
+    // });
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
@@ -221,12 +221,12 @@ void arch_intr_unmap_irq(uint8_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
 
-    __lock(&startup_irq[irq].lock, {
+    // __lock(&startup_irq[irq].lock, {
         
         startup_irq[irq].handler = NULL;
         ioapic_map_irq(irq, irq, current_cpu->id);
 
-    });
+    // });
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1

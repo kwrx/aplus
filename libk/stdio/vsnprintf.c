@@ -30,7 +30,23 @@
 #include <aplus/debug.h>
 
 
-static void dec(unsigned long v, int w, char* buf, int* p) {
+static void dec(unsigned long v, int w, char* buf, int* p, int sign) {
+
+    if(sign) {
+
+        if((long) v < 0L) {
+
+            v = -((long) v);
+
+            buf[*p + 0] = '-';
+            buf[*p + 1] = '\0';
+
+            *p += 1;
+
+        }
+
+    }
+
 
     long n = 1;
     long i = 9;
@@ -129,11 +145,8 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 break;
 
             case 'x':
-                hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, 0);
-                break;
-
             case 'X':
-                hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, 1);
+                hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'X');
                 break;
 
             case 'p':
@@ -144,7 +157,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             case 'd':
             case 'u':
-                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p);
+                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'd');
                 break;
 
             case '%':

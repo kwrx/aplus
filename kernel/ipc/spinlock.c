@@ -31,17 +31,44 @@
 #include <aplus/hal.h>
 
 
+static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
+
+    DEBUG_ASSERT(lock);
+
+    return (lock->flags & SPINLOCK_FLAGS_CPU_OWNER)
+                    ? (current_cpu ? current_cpu->id : 0)
+                    : (current_task ? current_task->tid : 0);
+
+}
+
+
+
+/*!
+ * @brief Initialize Spinlock with flags.
+ */
+void spinlock_init_with_flags(spinlock_t* lock, int flags) {
+
+    DEBUG_ASSERT(lock);
+
+
+    lock->flags    = flags;
+    lock->owner    = -1ULL;
+    lock->refcount = 0;
+    lock->irqsave  = 0;
+
+    __atomic_clear(&lock->value, __ATOMIC_RELAXED);
+
+}
 
 
 /*!
  * @brief Initialize Spinlock.
  */
 void spinlock_init(spinlock_t* lock) {
-    DEBUG_ASSERT(lock);
-
-    __atomic_clear(&lock->value, __ATOMIC_RELAXED);
-    __atomic_clear(&lock->flags, __ATOMIC_RELAXED);
+    return spinlock_init_with_flags(lock, 0);
 }
+
+
 
 /*!
  * @brief Lock a Spinlock.
@@ -54,34 +81,63 @@ void spinlock_lock(spinlock_t* lock) {
 
     DEBUG_ASSERT(lock);
 
+        
+    volatile uint64_t own;
+    if((own = __atomic_load_n(&lock->owner, __ATOMIC_RELAXED)) == spinlock_get_new_owner(lock)) {
 
+        if(lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
+
+            lock->refcount++;
+
+        } else {
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    uint64_t deadlock_detector = 0ULL;
+            kpanicf("ipc: PANIC! DEADLOCK! %s:%d %s(%p) owner(%d) flags(%p) current_owner(%d)\n", FILE, LINE, FUNC, lock, own, lock->flags, spinlock_get_new_owner(lock));
+#else
+            kpanicf("ipc: PANIC! DEADLOCK! owner(%d) flags(%p)\n", own, lock->flags);
 #endif
-
-    while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)) {
-#if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
-#endif
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-        if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 100000ULL)) {
-            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, lock, current_cpu->id, current_task->tid);
-            spinlock_unlock(lock);
-            deadlock_detector = 0ULL;
         }
+
+    
+
+    } else {
+
+
+// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// //         uint64_t deadlock_detector = 0ULL;
+// // #endif
+
+        while(__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)) {
+
+#if defined(__i386__) || defined(__x86_64__)
+            __builtin_ia32_pause();
 #endif
+
+// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// //             if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 100000ULL)) {
+// //                 kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, lock, current_cpu->id, current_task->tid);
+// //                 spinlock_unlock(lock);
+// //                 deadlock_detector = 0ULL;
+// //             }
+// // #endif
+
+        }
+
+        DEBUG_ASSERT(lock->owner == -1ULL);
+
+        lock->owner = spinlock_get_new_owner(lock);
+        lock->irqsave = arch_intr_disable();
+        lock->refcount = 1;
 
     }
 
 
-    lock->flags = arch_intr_disable();
 
 }
 
 
 /*!
  * @brief Try to lock a Spinlock.
+ * @deprecated
  */
 int spinlock_trylock(spinlock_t* lock) {
 
@@ -89,7 +145,7 @@ int spinlock_trylock(spinlock_t* lock) {
 
     int e; 
     if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)))
-        lock->flags = arch_intr_disable();
+        lock->irqsave = arch_intr_disable();
 
     return e;
 }
@@ -98,15 +154,41 @@ int spinlock_trylock(spinlock_t* lock) {
 /*!
  * @brief Release a Spinlock.
  */
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __spinlock_unlock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
+#else
 void spinlock_unlock(spinlock_t* lock) {
+#endif
+
 
     DEBUG_ASSERT(lock);
 
-    long e = lock->flags;
 
-    __atomic_clear(&lock->value, __ATOMIC_RELEASE);
-    __atomic_clear(&lock->flags, __ATOMIC_RELEASE);
+    if(__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) != spinlock_get_new_owner(lock)) {
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        kpanicf("ipc: PANIC! EPERM! spinlock(%p) at %s:%d %s() not owned, owner(%d) flags(%p) current_owner(%d)\n", lock, FILE, LINE, FUNC, lock->owner, lock->flags, spinlock_get_new_owner(lock));
+#else
+        kpanicf("ipc: PANIC! EPERM! spinlock(%p) not owned, owner(%d) flags(%p)\n", lock, lock->owner, lock->flags);
+#endif
 
-    arch_intr_enable(e);
+    } else {
+
+
+        if(--lock->refcount > 0)
+            return;
+
+
+        long e = lock->irqsave;
+
+        lock->owner    = -1ULL;
+        lock->refcount = 0;
+        lock->irqsave  = 0;
+
+        __atomic_clear(&lock->value, __ATOMIC_RELEASE);
+
+
+        arch_intr_enable(e);
+
+    }
     
 }

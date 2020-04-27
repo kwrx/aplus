@@ -455,8 +455,12 @@ void pmm_init(uintptr_t max_memory) {
 
     int i;
     for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+
         pml2_bitmap[i] = 0;
         pml2_pusage[i] = 0;
+
+        spinlock_init_with_flags(&pml2_lock[i], SPINLOCK_FLAGS_CPU_OWNER);
+
     }
 
 
@@ -464,6 +468,7 @@ void pmm_init(uintptr_t max_memory) {
         pml1_first_bitmap[i] = 0;
 
     pml2_bitmap[0] = (uintptr_t) &pml1_first_bitmap;
+
 
 
 
@@ -509,10 +514,11 @@ void pmm_init(uintptr_t max_memory) {
         for(j = 0; j < PML1_MAX_ENTRIES; j++)
             b[j] = 0;
 
-        spinlock_init(&pml2_lock[i]);
+
         pml2_bitmap[i] = (uintptr_t) b;
 
     }
+
 
 
 #if defined(DEBUG)

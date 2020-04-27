@@ -155,7 +155,8 @@ void ioapic_enable(void) {
         ioapic[i].gsi_max = ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16;
         ioapic[i].gsi_max &= 0xFF;
 
-        spinlock_init(&ioapic[i].lock);
+
+        spinlock_init_with_flags(&ioapic[i].lock, SPINLOCK_FLAGS_CPU_OWNER);
         
 
         int j;

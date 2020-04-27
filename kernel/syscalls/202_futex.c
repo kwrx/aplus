@@ -77,7 +77,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
                 if(unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
 
-                if(atomic_load(kaddr) != val)
+                if(__atomic_load_n(kaddr, __ATOMIC_RELAXED) != val)
                     return -EAGAIN;
 
 
@@ -100,7 +100,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
         case FUTEX_CMP_REQUEUE:
 
-            if(atomic_load(kaddr) != val3)
+            if(__atomic_load_n(kaddr, __ATOMIC_RELAXED) != val3)
                 return -EAGAIN;
 
 

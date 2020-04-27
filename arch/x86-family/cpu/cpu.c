@@ -58,7 +58,7 @@ void arch_cpu_init(int index) {
         core->cpu.cores[index].address_space.pm = x86_get_cr3();
         core->cpu.cores[index].address_space.size = 0;
         core->cpu.cores[index].address_space.refcount = 0;
-        spinlock_init(&core->cpu.cores[index].address_space.lock);
+        spinlock_init_with_flags(&core->cpu.cores[index].address_space.lock, SPINLOCK_FLAGS_CPU_OWNER);
 
     }
 
@@ -70,8 +70,8 @@ void arch_cpu_init(int index) {
     core->cpu.cores[index].tss = (void*) (&startup_tss + (index * sizeof(tss_t)));
 
 
-    spinlock_init(&core->cpu.cores[index].global_lock);
-    spinlock_init(&core->cpu.cores[index].sched_lock);
+    spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER);
+    spinlock_init_with_flags(&core->cpu.cores[index].sched_lock, SPINLOCK_FLAGS_CPU_OWNER);
 
     core->cpu.cores[index].sched_count = 0;
 

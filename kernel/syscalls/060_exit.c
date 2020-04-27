@@ -104,6 +104,7 @@ long sys_exit (int status) {
 
         current_task->status = TASK_STATUS_DEAD;
 
+
         thread_wake_and_return(q, current_task->tid);
 
     }

@@ -75,7 +75,6 @@ void kmain() {
 #endif
 
 
-
     int e;
     if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
         kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));

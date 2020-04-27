@@ -13,27 +13,27 @@
 #endif
 
 
-#define FUTEX_WAIT		            0
-#define FUTEX_WAKE		            1
-#define FUTEX_FD		            2
-#define FUTEX_REQUEUE		        3
-#define FUTEX_CMP_REQUEUE	        4
-#define FUTEX_WAKE_OP		        5
-#define FUTEX_LOCK_PI		        6
-#define FUTEX_UNLOCK_PI		        7
-#define FUTEX_TRYLOCK_PI	        8
-#define FUTEX_WAIT_BITSET	        9
-#define FUTEX_WAKE_BITSET	        10
-#define FUTEX_WAIT_REQUEUE_PI	    11
-#define FUTEX_CMP_REQUEUE_PI	    12
+#define FUTEX_WAIT		                0
+#define FUTEX_WAKE		                1
+#define FUTEX_FD		                2
+#define FUTEX_REQUEUE		            3
+#define FUTEX_CMP_REQUEUE	            4
+#define FUTEX_WAKE_OP		            5
+#define FUTEX_LOCK_PI		            6
+#define FUTEX_UNLOCK_PI		            7
+#define FUTEX_TRYLOCK_PI	            8
+#define FUTEX_WAIT_BITSET	            9
+#define FUTEX_WAKE_BITSET	            10
+#define FUTEX_WAIT_REQUEUE_PI	        11
+#define FUTEX_CMP_REQUEUE_PI	        12
 
-#define FUTEX_PRIVATE_FLAG	        128
-#define FUTEX_CLOCK_REALTIME	    256
-#define FUTEX_CMD_MASK		        ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
+#define FUTEX_PRIVATE_FLAG	            128
+#define FUTEX_CLOCK_REALTIME	        256
+#define FUTEX_CMD_MASK		            ~(FUTEX_PRIVATE_FLAG | FUTEX_CLOCK_REALTIME)
 
-#define FUTEX_WAITERS		        0x80000000
-#define FUTEX_OWNER_DIED	        0x40000000
-#define FUTEX_TID_MASK		        0x3FFFFFFF
+#define FUTEX_WAITERS		            0x80000000
+#define FUTEX_OWNER_DIED	            0x40000000
+#define FUTEX_TID_MASK		            0x3FFFFFFF
 
 
 #define FUTEX_WAIT_PRIVATE	            (FUTEX_WAIT | FUTEX_PRIVATE_FLAG)
@@ -50,20 +50,32 @@
 #define FUTEX_CMP_REQUEUE_PI_PRIVATE	(FUTEX_CMP_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
 
 
+#define SPINLOCK_INIT                   { { 0L }, 0ULL, -1ULL, 0, 0 }
+#define SPINLOCK_INIT_WITH_FLAGS(p)     { { 0L }, 0ULL, -1ULL, 0 | (p), 0 }
+#define SPINLOCK_FLAGS_CPU_OWNER        (1 << 30)
+#define SPINLOCK_FLAGS_RECURSIVE        (1 << 31)
+
+
+#define SEMAPHORE_INIT                  0L
 
 
 
 
-#define SPINLOCK_INIT           { { 0L }, 0L }
+typedef volatile long semaphore_t;
 
 typedef volatile struct {
     union {
         volatile char value;
-        volatile long __padding;
+        volatile uint64_t __padding;
     };
-    volatile long flags;
-} __packed spinlock_t;
 
+    volatile uint64_t irqsave;
+    volatile uint64_t owner;
+
+    volatile int flags;
+    volatile int refcount;
+
+} __packed spinlock_t;
 
 typedef struct {
 
@@ -76,9 +88,7 @@ typedef struct {
 
 
 
-#define SEMAPHORE_INIT          0L
 
-typedef volatile long semaphore_t;
 
 
 
@@ -88,20 +98,29 @@ struct task;
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
+
 void __spinlock_lock(spinlock_t*, const char*, const char*, int);
+void __spinlock_unlock(spinlock_t*, const char*, const char*, int);
 void __sem_wait(semaphore_t*, const char*, const char*, int);
 
 #define spinlock_lock(spin) \
      __spinlock_lock(spin, __func__, __FILE__, __LINE__);
+#define spinlock_unlock(spin) \
+     __spinlock_unlock(spin, __func__, __FILE__, __LINE__);
+
 #define sem_wait(sem)       \
     __sem_wait(sem, __func__, __FILE__, __LINE__);
+
 #else
+
 void spinlock_lock(spinlock_t*);
+void spinlock_unlock(spinlock_t*);
 void sem_wait(semaphore_t*);
+
 #endif
 
 void spinlock_init(spinlock_t*);
-void spinlock_unlock(spinlock_t*);
+void spinlock_init_with_flags(spinlock_t*, int);
 int spinlock_trylock(spinlock_t*);
 
 void sem_init(semaphore_t*, long);
@@ -156,22 +175,6 @@ __END_DECLS
         spinlock_unlock((lk));                  \
         return __r;                             \
     }
-
-
-#define atomic_load(ptr)                    \
-    __atomic_load_n(ptr, __ATOMIC_ACQUIRE)
-
-#define atomic_store(ptr, val)              \
-    __atomic_load_n(ptr, val, __ATOMIC_RELEASE)
-
-#define atomic_exchange(ptr, val)           \
-    __atomic_exchange(ptr, val, __ATOMIC_ACQ_REL)
-
-#define atomic_thread_fence()               \
-    __atomic_thread_fence(__ATOMIC_SEQ_CST)
-
-#define atomic_signal_fence()               \
-    __atomic_signal_fence(__ATOMIC_SEQ_CST)
 
 
 #endif
