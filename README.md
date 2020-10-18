@@ -12,9 +12,9 @@ The project started in September 2013 as an educational and personal project, it
 
 ## Features
 
-* **Cross-platform**: [os/arch/*](os/arch), designed for cross-platform environment targets
+* **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets
 * **Multitasking**: Thread and Process support with SMP
-* **Network**: [os/kernel/network/](os/kernel/network), Almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
+* **Network**: [kernel/network/](/kernel/network), Almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
 * **Unix-like**: VFS, Signals, Pipes, IPC, Shared Memory, Unix Sockets
 * **ELF**: Dynamic and static executables 
 * **Linux Framebuffer**: Linux-like framebuffer support
@@ -40,10 +40,10 @@ Userspace has **multi-user** implementation with Unix permission support and sup
 Modules provides various core platform features, caching, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
 
 ### Notable modules
-* **Device Interface**, [dev/*](os/drivers/dev), provides a standard interface for drivers
-* **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](os/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
-* **BGA** (Bochs Video Card), [platform/pc/video/bga](os/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
-* **Intel e1000** (Network device), [platform/pc/network/e1000](os/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
+* **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers
+* **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
+* **BGA** (Bochs Video Card), [platform/pc/video/bga](/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
+* **Intel e1000** (Network device), [platform/pc/network/e1000](/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
 
 ---
 
