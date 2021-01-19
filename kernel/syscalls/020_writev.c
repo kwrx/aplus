@@ -79,14 +79,22 @@ long sys_writev (unsigned long fd, const struct iovec __user * vec, unsigned lon
 
     for(i = tot = 0; i < vlen; i++) {
 
-        if(unlikely(!vec[i].iov_base))
+        struct iovec iovec;
+        uio_memcpy_u2s(&iovec, &vec[i], sizeof(struct iovec));
+
+
+        if(unlikely(!iovec.iov_base))
             continue;
 
-        if(unlikely(!vec[i].iov_len))
+        if(unlikely(!iovec.iov_len))
             continue;
+
+        if(unlikely(!uio_check(iovec.iov_base, R_OK)))
+            return -EFAULT;
+
 
         ssize_t e;
-        if((e = sys_write(fd, vec[i].iov_base, vec[i].iov_len)) < 0)
+        if((e = sys_write(fd, iovec.iov_base, iovec.iov_len)) < 0)
             return e;
 
         tot += e;

@@ -56,7 +56,7 @@ long sys_set_tid_address (int __user * tidptr) {
     DEBUG_ASSERT(tidptr);
     DEBUG_ASSERT(uio_check(tidptr, R_OK | W_OK));
 
-    current_task->userspace.tid_address = uio_get_ptr(tidptr);
+    current_task->userspace.tid_address = (uintptr_t) uio_get_ptr(tidptr);
 
     return current_task->tid;
 

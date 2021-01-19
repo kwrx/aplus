@@ -106,7 +106,7 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
     current_task->sleep.timeout.tv_nsec = (tsn + rqtp->tv_nsec) % 1000000000ULL;
 
     if(rmtp)
-        current_task->sleep.remaining = (struct timespec*) uio_get_ptr(rmtp);
+        current_task->sleep.remaining = uio_get_ptr(rmtp);
 
 
     thread_suspend(current_task);

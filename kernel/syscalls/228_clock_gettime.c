@@ -54,45 +54,50 @@
  */
 
 SYSCALL(228, clock_gettime,
-long sys_clock_gettime (clockid_t which_clock, struct timespec __user * tp) {
+long sys_clock_gettime (clockid_t which_clock, struct timespec __user * user_tp) {
     
-    if(unlikely(!tp))
+    if(unlikely(!user_tp))
         return -EINVAL;
 
-    if(unlikely(!uio_check(tp, R_OK | W_OK)))
+    if(unlikely(!uio_check(user_tp, R_OK | W_OK)))
         return -EFAULT;
 
 
+    struct timespec tp;
+    
     switch(which_clock) {
 
         case CLOCK_REALTIME:
 
-            tp->tv_sec  = arch_timer_gettime();
-            tp->tv_nsec = 0;
+            tp.tv_sec  = arch_timer_gettime();
+            tp.tv_nsec = 0;
             break;
 
         case CLOCK_MONOTONIC:
 
-            tp->tv_sec  = arch_timer_generic_getms() / 1000ULL;
-            tp->tv_nsec = arch_timer_generic_getns() % 1000000000ULL;
+            tp.tv_sec  = arch_timer_generic_getms() / 1000ULL;
+            tp.tv_nsec = arch_timer_generic_getns() % 1000000000ULL;
             break;
 
         case CLOCK_THREAD_CPUTIME_ID:
 
-            tp->tv_sec  = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_sec;
-            tp->tv_nsec = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_nsec;
+            tp.tv_sec  = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_sec;
+            tp.tv_nsec = current_task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_nsec;
             break;
 
          case CLOCK_PROCESS_CPUTIME_ID:
 
-            tp->tv_sec  = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_sec;
-            tp->tv_nsec = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_nsec;
+            tp.tv_sec  = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_sec;
+            tp.tv_nsec = current_task->clock[TASK_CLOCK_PROCESS_CPUTIME].tv_nsec;
             break;
 
         default:
             return -EINVAL;
 
     }
+
+
+    uio_memcpy_s2u(user_tp, &tp, sizeof(struct timespec));
 
     return 0;
     

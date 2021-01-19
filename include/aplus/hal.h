@@ -72,22 +72,37 @@
 
 #ifndef __ASSEMBLY__
 
-#define uio_check(p, m)    \
+#define uio_check(p, m)                 \
     (arch_vmm_access(current_task->address_space, (uintptr_t) (p), (int) (m)) == 0 ? 1 : 0)
 
+#define uio_get_ptr(p)                  \
+    ((typeof((p))) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) (p), ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP))
 
-#define uio_get_ptr(p)              \
-    ((uintptr_t) arch_vmm_p2v(arch_vmm_v2p((uintptr_t) (p), ARCH_VMM_AREA_USER), ARCH_VMM_AREA_HEAP))
 
-#define uio_r8(p)                  (*(uint8_t  volatile*) (uio_get_ptr(p)))
-#define uio_r16(p)                 (*(uint16_t volatile*) (uio_get_ptr(p)))
-#define uio_r32(p)                 (*(uint32_t volatile*) (uio_get_ptr(p)))
-#define uio_r64(p)                 (*(uint64_t volatile*) (uio_get_ptr(p)))
 
-#define uio_w8(p, v)               { uio_r8(p)  = (uint8_t)  (v); }
-#define uio_w16(p, v)              { uio_r16(p) = (uint16_t) (v); }
-#define uio_w32(p, v)              { uio_r32(p) = (uint32_t) (v); }
-#define uio_w64(p, v)              { uio_r64(p) = (uint64_t) (v); }
+#define uio_memcpy_u2s(d, s, l)     memcpy(d, uio_get_ptr(s), l)
+#define uio_memcpy_s2u(d, s, l)     memcpy(uio_get_ptr(d), s, l)
+#define uio_memcpy_u2u(d, s, l)     memcpy(uio_get_ptr(d), uio_get_ptr(s), l)
+
+#define uio_strcpy_u2s(d, s)        strcpy(d, uio_get_ptr(s))
+#define uio_strcpy_s2u(d, s)        strcpy(uio_get_ptr(d), s)
+#define uio_strcpy_u2u(d, s)        strcpy(uio_get_ptr(d), uio_get_ptr(s))
+
+#define uio_strlen(s)               strlen(uio_get_ptr(s))
+
+
+#define uio_r8(p)                   (*(uint8_t  volatile*)  (uio_get_ptr(p)))
+#define uio_r16(p)                  (*(uint16_t volatile*)  (uio_get_ptr(p)))
+#define uio_r32(p)                  (*(uint32_t volatile*)  (uio_get_ptr(p)))
+#define uio_r64(p)                  (*(uint64_t volatile*)  (uio_get_ptr(p)))
+#define uio_rptr(p)                 (*(uintptr_t volatile*) (uio_get_ptr(p)))
+
+#define uio_w8(p, v)                { uio_r8(p)   = (uint8_t)  (v);  }
+#define uio_w16(p, v)               { uio_r16(p)  = (uint16_t) (v);  }
+#define uio_w32(p, v)               { uio_r32(p)  = (uint32_t) (v);  }
+#define uio_w64(p, v)               { uio_r64(p)  = (uint64_t) (v);  }
+#define uio_wptr(p, v)              { uio_rptr(p) = (uintptr_t) (v); }
+
 
 
 

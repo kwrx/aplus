@@ -71,10 +71,14 @@ long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset,
     
 
     if(oset)
-        memcpy(oset, &current_task->sighand->sigmask, sigsetsize);
+        uio_memcpy_s2u(oset, &current_task->sighand->sigmask, sigsetsize);
 
 
     if(set) {
+
+        sigset_t __safe_set;
+        uio_memcpy_u2s(&__safe_set, set, sizeof(sigset_t));
+
 
         int i;
      
@@ -83,21 +87,21 @@ long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset,
             case SIG_BLOCK:
                 
                 for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] |= set->__bits[i];
+                    current_task->sighand->sigmask.__bits[i] |= __safe_set.__bits[i];
 
                 break;
 
             case SIG_UNBLOCK:
 
                 for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] &= ~set->__bits[i];
+                    current_task->sighand->sigmask.__bits[i] &= ~__safe_set.__bits[i];
 
                 break;
 
             case SIG_SETMASK:
                 
                 for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] = set->__bits[i];
+                    current_task->sighand->sigmask.__bits[i] = __safe_set.__bits[i];
 
                 break;
 

@@ -249,7 +249,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
                     arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
                                     ARCH_VMM_MAP_RDWR       |
-                                    ARCH_VMM_MAP_USER       |
                                     ARCH_VMM_MAP_TYPE_PAGE);
 
 
@@ -313,23 +312,28 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
+
+    const char** __safe_argv = uio_get_ptr(argv);
+    const char** __safe_envp = uio_get_ptr(envp);
+
+
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
 
-    for(i = 0; argv[i]; i++)
-        DEBUG_ASSERT(uio_check(argv[i], R_OK));
+    for(i = 0; __safe_argv[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
 
-    for(i = 0; envp[i]; i++)
-        DEBUG_ASSERT(uio_check(envp[i], R_OK));
+    for(i = 0; __safe_envp[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_envp[i], R_OK));
 
 #endif
 
 
     size_t argc;
-    for(argc = 0; argv[argc]; argc++)
+    for(argc = 0; __safe_argv[argc]; argc++)
         ;
 
     size_t envc;
-    for(envc = 0; envp[envc]; envc++)
+    for(envc = 0; __safe_envp[envc]; envc++)
         ;
         
 
@@ -344,19 +348,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     // * Allocate ARGV e ENVP Strings
 
-    for(i = 0; argv[i]; i++) {
+    for(i = 0; __safe_argv[i]; i++) {
      
-        char* p = (char*) __sbrk(strlen(argv[i]));
-        strcpy(p, argv[i]);
+        char* p = (char*) __sbrk(uio_strlen(__safe_argv[i]) + 1);
+        uio_strcpy_u2u(p, __safe_argv[i]);
 
         *argq++ = p;
         *argq   = NULL;
+
     }
 
-    for(i = 0; envp[i]; i++) {
+    for(i = 0; __safe_envp[i]; i++) {
      
-        char* p = (char*) __sbrk(strlen(envp[i]));
-        strcpy(p, envp[i]);
+        char* p = (char*) __sbrk(uio_strlen(__safe_envp[i]) + 1);
+        uio_strcpy_u2u(p, __safe_envp[i]);
 
         *envq++ = p;
         *envq   = NULL;
@@ -366,7 +371,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     // * Allocate Signal Stack
-
+    
     __sbrk(SIGSTKSZ);
     uintptr_t sigstack = __sbrk(0);
     uintptr_t siginfo  = __sbrk(sizeof(siginfo_t));
@@ -383,9 +388,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     // * AUX vector
 
-    #define AUX_ENT(id, value)      \
-        *sp++ = id;                 \
-        *sp++ = value
+    #define AUX_ENT(id, value) {    \
+        uio_wptr(sp++, id);         \
+        uio_wptr(sp++, value);      \
+    }
 
 
     AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
@@ -404,20 +410,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     // * Environment
 
-    *sp++ = 0UL;
+    uio_wptr(sp++, 0UL);
     
     for(i = envc - 1; i >= 0; i--)
-        *sp++ = (uintptr_t) envp[i];
+        uio_wptr(sp++, (uintptr_t) envp[i]);
 
-    *sp++ = 0UL;
+    uio_wptr(sp++, 0UL);
 
 
     // * Arguments
 
     for(i = argc - 1; i >= 0; i--)
-        *sp++ = (uintptr_t) argv[i];
+        uio_wptr(sp++, (uintptr_t) argv[i]);
 
-    *sp = argc;
+    uio_wptr(sp, argc);
 
 
 

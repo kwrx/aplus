@@ -98,7 +98,7 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
+        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, uio_get_ptr(buf), current_task->fd->descriptors[fd].ref->position, size)) <= 0)
             break;
 
         current_task->fd->descriptors[fd].ref->position += e;

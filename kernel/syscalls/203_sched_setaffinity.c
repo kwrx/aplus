@@ -68,7 +68,7 @@ long sys_sched_setaffinity (pid_t pid, unsigned int len, unsigned long __user * 
     cpu_set_t empty_mask;
     CPU_ZERO(&empty_mask);
 
-    if(unlikely(CPU_EQUAL((cpu_set_t*) user_mask_ptr, &empty_mask)))
+    if(unlikely(CPU_EQUAL((cpu_set_t*) uio_get_ptr(user_mask_ptr), &empty_mask)))
         return -EINVAL;
 
 
@@ -91,7 +91,7 @@ long sys_sched_setaffinity (pid_t pid, unsigned int len, unsigned long __user * 
 
             
             CPU_ZERO(&tmp->affinity);
-            CPU_OR(&tmp->affinity, &tmp->affinity, (cpu_set_t*) user_mask_ptr);
+            CPU_OR(&tmp->affinity, &tmp->affinity, (cpu_set_t*) uio_get_ptr(user_mask_ptr));
             
             return CPU_SETSIZE;
 

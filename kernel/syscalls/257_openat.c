@@ -208,7 +208,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     inode_t* r;
 
-    if((r = path_lookup(cwd, filename, flags, mode)) == NULL)
+    if((r = path_lookup(cwd, uio_get_ptr(filename), flags, mode)) == NULL)
         return -errno;
 
 

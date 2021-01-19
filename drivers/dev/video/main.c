@@ -27,6 +27,7 @@
 #include <aplus/debug.h>
 #include <aplus/module.h>
 #include <aplus/memory.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 
 #include <dev/interface.h>
@@ -44,7 +45,7 @@ MODULE_LICENSE("GPL");
 
 
 
-int video_ioctl(device_t* device, int req, void* arg) {
+int video_ioctl(device_t* device, int req, void __user* arg) {
 
     DEBUG_ASSERT(device);
 
@@ -52,13 +53,13 @@ int video_ioctl(device_t* device, int req, void* arg) {
 
         case FBIOGET_VSCREENINFO:
 
-            memcpy(arg, &device->vid.vs, sizeof(struct fb_var_screeninfo));
+            uio_memcpy_s2u(arg, &device->vid.vs, sizeof(struct fb_var_screeninfo));
             break;
 
 
         case FBIOPUT_VSCREENINFO:
         
-            memcpy(&device->vid.vs, arg, sizeof(struct fb_var_screeninfo));
+            uio_memcpy_u2s(&device->vid.vs, arg, sizeof(struct fb_var_screeninfo));
 
             if(likely(device->vid.update))
                 device->vid.update(device);
@@ -68,7 +69,7 @@ int video_ioctl(device_t* device, int req, void* arg) {
 
         case FBIOGET_FSCREENINFO:
 
-            memcpy(arg, &device->vid.fs, sizeof(struct fb_fix_screeninfo));
+            uio_memcpy_s2u(arg, &device->vid.fs, sizeof(struct fb_fix_screeninfo));
             break;
             
 

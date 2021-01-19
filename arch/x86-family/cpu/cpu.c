@@ -424,14 +424,17 @@ void arch_cpu_init(int index) {
         x86_set_cr4(x86_get_cr4() | X86_CR4_FSGSBASE_MASK);
 
 
+#if defined(CONFIG_X86_ENABLE_SMEP)
     //! Enable SMEP
     if(cpu_has(index, X86_FEATURE_SMEP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMEP_MASK);
+#endif
 
-
-    //! Enable SMAP
+#if defined(CONFIG_X86_ENABLE_SMAP)
+    // //! Enable SMAP
     if(cpu_has(index, X86_FEATURE_SMAP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
+#endif
 
 
 #if defined(CONFIG_HAVE_SMP)

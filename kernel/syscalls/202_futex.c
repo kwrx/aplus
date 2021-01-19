@@ -62,8 +62,8 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
     if(unlikely(!uio_check(uaddr, R_OK)))
         return -EACCES;
 
-    uint32_t* kaddr = (uint32_t*) uio_get_ptr(uaddr);
 
+    uint32_t* kaddr = uio_get_ptr(uaddr);
 
 
     switch(op & FUTEX_CMD_MASK) {
@@ -117,7 +117,8 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
                 if(unlikely(!uio_check(uaddr2, R_OK)))
                     return -EACCES;
 
-                uint32_t* kaddr2 = (uint32_t*) uio_get_ptr(uaddr2);
+
+                uint32_t* kaddr2 =  uio_get_ptr(uaddr2);
 
                 return futex_requeue(kaddr, kaddr2, (uint32_t) __val2);
 

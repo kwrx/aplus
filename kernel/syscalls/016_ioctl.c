@@ -67,7 +67,7 @@ long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
     int e = 0;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void*) arg);
+        e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void __user*) arg);
     });
 
 

@@ -150,7 +150,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 
 int vfs_open (inode_t*, int);
 int vfs_close (inode_t*);
-int vfs_ioctl (inode_t*, long, void*);
+int vfs_ioctl (inode_t*, long, void __user*);
 
 int vfs_getattr (inode_t*, struct stat*);
 int vfs_setattr (inode_t*, struct stat*);
