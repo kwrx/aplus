@@ -490,7 +490,7 @@ uint64_t arch_cpu_get_current_id(void) {
 #if defined(CONFIG_X86_HAVE_RDPID)
     __asm__ __volatile__ (
         "rdpid %0"
-        : "=0"(id)
+        : "=r"(id)
     );
 #else
     __asm__ __volatile__ (
