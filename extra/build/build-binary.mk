@@ -20,7 +20,7 @@ include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS)
-	$(QUIET)echo "    LD      $@"
+	$(QUIET)echo "    LD      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(LD) $(LDFLAGS) -o $@ $(OBJS) $(addprefix -l,$(LIBS))
 
 include $(ROOTDIR)/extra/build/build-objects.mk

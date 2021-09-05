@@ -26,6 +26,8 @@
 __BEGIN_DECLS
 
 void kprintf(const char*, ...);
+void kprintf_pause();
+void kprintf_resume();
 
 __attribute__((noreturn))
 void kpanicf(const char*, ...);

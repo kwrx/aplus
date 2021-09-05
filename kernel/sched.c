@@ -56,10 +56,9 @@ static inline void __do_futex(void) {
         if(!futex_expired(i))
             continue;
 
-
-        futex_wakeup_thread(current_task, i);
         list_remove(current_task->futexes, i);
-    
+        thread_wake(current_task);
+
     }
 
 }
@@ -100,6 +99,7 @@ static inline void __do_sleep(void) {
     }
 
 }
+
 
 
 static inline void __do_signals(void) {

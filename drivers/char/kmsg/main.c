@@ -90,6 +90,8 @@ static ssize_t kmsg_write(device_t* device, const void* buf, size_t size) {
     DEBUG_ASSERT(buf);
 
 
+    kprintf_pause();
+
     arch_debug_putc('\e');
     arch_debug_putc('[');
     arch_debug_putc('1');
@@ -106,6 +108,8 @@ static ssize_t kmsg_write(device_t* device, const void* buf, size_t size) {
     arch_debug_putc('[');
     arch_debug_putc('0');
     arch_debug_putc('m');
+
+    kprintf_resume();
 
 
     return size;

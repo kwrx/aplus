@@ -94,18 +94,9 @@ long sys_exit (int status) {
 
         if(current_task->status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
             continue;
-            
-        if(q->wait_status)
-            *q->wait_status = current_task->exit.value;
-
-        if(q->wait_rusage)
-            memcpy(q->wait_rusage, &current_task->rusage, sizeof(struct rusage));
 
 
-        current_task->status = TASK_STATUS_DEAD;
-
-
-        thread_wake_and_return(q, current_task->tid);
+        thread_wake(q);
 
     }
 

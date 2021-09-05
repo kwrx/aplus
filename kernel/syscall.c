@@ -140,12 +140,27 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
+
     if(unlikely(idx != 24)) {
+
+        if(current_task->flags & TASK_FLAGS_NEED_RESCHED) {
+
+            kprintf("syscall: (%s#%d) <%s> requested reschedule, with possible return value (%p)\n", 
+                current_task->argv[0], 
+                current_task->tid, 
+                runtime_get_name((uintptr_t) syscalls[idx]), 
+                arch_task_context_get(current_task, ARCH_TASK_CONTEXT_RETVAL));
+
+        }
+
+
         if(unlikely(errno == 0))
             kprintf("syscall: (%s#%d) <%s> return %d\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), r);
         else
             kprintf("syscall: (%s#%d) <%s> ERROR! %s\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), strerror(errno));
+    
     }
+
 #endif
 
     return r;

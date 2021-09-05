@@ -60,6 +60,7 @@ static void init_framebuffer(void) {
 
 
     int fd = open("/dev/fb0", O_RDONLY);
+    
     if(fd < 0)
         return;
 
@@ -182,6 +183,7 @@ static void init_fstab() {
                         
 
                         has("defaults",     MS_NOATIME | MS_SHARED | MS_NOSUID)
+                        has("noatime",      MS_NOATIME)
                         has("nodev",        MS_NODEV)
                         has("nodiratime",   MS_NODIRATIME)
                         has("dirsync",      MS_DIRSYNC)
@@ -250,14 +252,12 @@ static void init_initd(void) {
     // TODO: run /etc/init.d scripts...
 }
 
-void* start_thread(void* arg) {
-    fprintf(stderr, "Hello World from a new thread: %d %p\n", getpid(), pthread_self());
-    return NULL;
-}
+
 
 int main(int argc, char** argv, char** envp) {
 
     int fd = open("/dev/kmsg", O_RDWR);
+
     if(fd < 0)
         return 1;
 
@@ -291,22 +291,17 @@ int main(int argc, char** argv, char** envp) {
     setpriority(0, PRIO_PROCESS, 19);
 
 
-    pthread_t thread;
-    if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
-        fprintf(stderr, "failed to start a thread\n");
 
+    fprintf(stderr, "init: going to sleep...\n");
 
-    fprintf(stderr, "init: system up!\n");
-
-    for(; errno != ECHILD;) {
-        pid_t e = waitpid(-1, NULL, 0);
-        fprintf(stderr, "child %d has exited\n", e);
-    }
+    do {
+        waitpid(-1, NULL, 0);
+    } while(errno == EINTR);
         
 
     fprintf(stderr, "init: unreachable point! system halted!\n");
 
     for(;;)
-        ;//pause();
+        ;
 
 }

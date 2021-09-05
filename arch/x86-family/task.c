@@ -495,6 +495,11 @@ void arch_task_context_set(task_t* task, int options, long value) {
     DEBUG_ASSERT(task->frame);
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("task: set context tid(%d) options(%d) value(%p)\n", task->tid, options, value);
+#endif
+
+
     switch(options) {
 
         case ARCH_TASK_CONTEXT_COPY:

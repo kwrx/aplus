@@ -133,7 +133,6 @@ void futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*);
 size_t futex_wakeup(uint32_t*, size_t);
 size_t futex_requeue(uint32_t*, uint32_t*, size_t);
 int futex_expired(futex_t*);
-void futex_wakeup_thread(struct task*, futex_t*);
 
 __END_DECLS
 

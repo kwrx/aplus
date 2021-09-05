@@ -81,7 +81,10 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
         task_t* tmp;
         for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-            if(tmp->parent != current_task)
+            if(unlikely(tmp == current_task))
+                continue;
+
+            if(unlikely(tmp->parent != current_task))
                 continue;
 
 
@@ -144,6 +147,12 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
     if(options & WNOHANG)
         return 0;
+
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("wait: task %d waiting for %d tasks\n", current_task->tid, count);
+#endif
 
 
     thread_suspend(current_task);    

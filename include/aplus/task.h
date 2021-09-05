@@ -280,7 +280,6 @@ typedef struct task {
 } task_t;
 
 
-
 #define thread_postpone_resched(task)       \
     task->flags |= TASK_FLAGS_NEED_RESCHED
 
@@ -290,11 +289,6 @@ typedef struct task {
 #define thread_wake(task)                   \
     task->status = TASK_STATUS_READY
 
-#define thread_wake_and_return(task, ret)                               \
-    {                                                                   \
-        arch_task_context_set(task, ARCH_TASK_CONTEXT_RETVAL, ret);     \
-        thread_wake(task);                                              \
-    }
 
 
 

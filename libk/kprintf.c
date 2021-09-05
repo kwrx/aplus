@@ -62,3 +62,12 @@ void kprintf(const char* fmt, ...) {
     });
 
 }
+
+
+void kprintf_pause(void) {
+    spinlock_lock(&buflock);
+}
+
+void kprintf_resume(void) {
+    spinlock_unlock(&buflock);
+}

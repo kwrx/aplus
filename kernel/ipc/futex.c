@@ -52,7 +52,7 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-    kprintf("futex: futex_wait() pid(%d) kaddr(%p) value(%p)\n", task->tid, kaddr, value);
+    kprintf("futex: futex_wait() pid(%d) kaddr(%p) *kaddr(%p) value(%p)\n", task->tid, kaddr, *kaddr, value);
 #endif
 
 
@@ -74,9 +74,6 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
     __lock(&task->lock,
         list_push(task->futexes, futex));
 
-    thread_suspend(task);
-
-
     arch_task_context_set(task, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
 }
@@ -87,36 +84,42 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     DEBUG_ASSERT(kaddr);
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-    kprintf("futex: futex_wakeup() pid(%d) kaddr(%p) max(%p)\n", current_task->tid, kaddr, max);
+    kprintf("futex: futex_wakeup() pid(%d) kaddr(%p) *kaddr(%p), max(%p)\n", current_task->tid, kaddr, *kaddr, max);
 #endif
 
 
     size_t wok = 0;
 
-    task_t* tmp;
-    for(tmp = current_cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-        __lock(&tmp->lock, {
+    cpu_foreach(cpu) {
 
-            list_each(tmp->futexes, i) {
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-                if(likely(i->address != kaddr))
-                    continue;
+            __lock(&tmp->lock, {
+
+                list_each(tmp->futexes, i) {
+
+                    if(likely(i->address != kaddr))
+                        continue;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-                kprintf("futex: woke up pid(%d) kaddr(%p)\n", tmp->tid, kaddr);
-#endif
+    #if defined(DEBUG) && DEBUG_LEVEL >= 4
+                    kprintf("futex: woke up pid(%d) kaddr(%p)\n", tmp->tid, kaddr);
+    #endif
 
-                list_remove(tmp->futexes, i);
-                futex_wakeup_thread(tmp, i);
 
-                max--; wok++;
-                break;
+                    i->address =  0;
+                    i->value   = ~0;
 
-            }
+                    max--; wok++;
+                    break;
 
-        });
+                }
+
+            });
+
+        }
 
     }
 
@@ -137,29 +140,34 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
     size_t req = 0;
 
-    task_t* tmp;
-    for(tmp = current_cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-        __lock(&tmp->lock, {
+    cpu_foreach(cpu) {
 
-            list_each(tmp->futexes, i) {
+        task_t* tmp;
+        for(tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-                if(likely(i->address != kaddr))
-                    continue;
+            __lock(&tmp->lock, {
+
+                list_each(tmp->futexes, i) {
+
+                    if(likely(i->address != kaddr))
+                        continue;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-                kprintf("futex: requeue pid(%d) from kaddr(%p) to kaddr2(%p)\n", tmp->tid, kaddr, kaddr2);
-#endif
+    #if defined(DEBUG) && DEBUG_LEVEL >= 4
+                    kprintf("futex: requeue pid(%d) from kaddr(%p) to kaddr2(%p)\n", tmp->tid, kaddr, kaddr2);
+    #endif
 
-                i->address = kaddr2;
+                    i->address = kaddr2;
 
-                max--; req++;
-                break;
+                    max--; req++;
+                    break;
 
-            }
+                }
 
-        });
+            });
+
+        }
 
     }
 
@@ -172,7 +180,9 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 int futex_expired(futex_t* futex) {
 
     DEBUG_ASSERT(futex);
-    DEBUG_ASSERT(futex->address);
+
+    if(futex->address == NULL)
+        return 1;
 
     if(*futex->address == futex->value)
         return 0;
@@ -184,12 +194,3 @@ int futex_expired(futex_t* futex) {
 
 }
 
-
-void futex_wakeup_thread(task_t* task, futex_t* futex) {
-
-    futex->address =  0;
-    futex->value   = ~0;
-
-    thread_wake(task);
-
-}
