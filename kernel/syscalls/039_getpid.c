@@ -48,5 +48,5 @@
 
 SYSCALL(39, getpid,
 long sys_getpid (void) {
-    return current_task->tid;
+    return current_task->tgid;
 });

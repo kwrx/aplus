@@ -87,10 +87,11 @@ static inline void __do_sleep(void) {
 
 
         if(tss < tsc) {
-            
+
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
             current_task->sleep.remaining = NULL;
+            current_task->sleep.expired = 1;
 
             thread_wake(current_task);
 

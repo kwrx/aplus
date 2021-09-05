@@ -34,7 +34,8 @@
 
 
 
-#define SYSMAX 512
+#define SYSMAX          512
+#define SYSATTEMPTS     3
 
 long (*syscalls[SYSMAX])
     (long, long, long, long, long, long);
@@ -91,52 +92,23 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 #endif
 
 
-
-    //* Restartable syscalls
-
-    switch(idx) {
-
-        // TODO
-        // case SYS_read:
-        // case SYS_readv:
-        // case SYS_write:
-        // case SYS_writev:
-        // case SYS_ioctl:
-
-        //     current_task->syscall.param0 = p0;
-        //     current_task->syscall.param1 = p1;
-        //     current_task->syscall.param2 = p2;
-        //     current_task->syscall.param3 = p3;
-        //     current_task->syscall.param4 = p4;
-        //     current_task->syscall.param5 = p5;
+    current_task->syscall.index  = idx + 1;
+    current_task->syscall.param0 = p0;
+    current_task->syscall.param1 = p1;
+    current_task->syscall.param2 = p2;
+    current_task->syscall.param3 = p3;
+    current_task->syscall.param4 = p4;
+    current_task->syscall.param5 = p5;
 
 
-        case SYS_nanosleep:
-        case SYS_clock_nanosleep:
-        case SYS_futex:
-        case SYS_poll:
-        case SYS_flock:
-        case SYS_wait4:
-        case SYS_waitid:
+    long r = syscalls[idx] (p0, p1, p2, p3, p4, p5);
 
-            current_task->syscall.index = idx + 1;
-            break;
-
-
-        default:
-            break;
-
-    }
-
-
-
-    long r;
-    if((r = syscalls[idx] (p0, p1, p2, p3, p4, p5)) < 0L)
+    if(r < 0L)
         errno = -r;
     else
         errno = 0;
-
-
+    
+   
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
@@ -145,7 +117,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
         if(current_task->flags & TASK_FLAGS_NEED_RESCHED) {
 
-            kprintf("syscall: (%s#%d) <%s> requested reschedule, with possible return value (%p)\n", 
+            kprintf("syscall: (%s#%d) <%s> requested rescheduling, with possible return value (%p)\n", 
                 current_task->argv[0], 
                 current_task->tid, 
                 runtime_get_name((uintptr_t) syscalls[idx]), 
@@ -157,7 +129,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
         if(unlikely(errno == 0))
             kprintf("syscall: (%s#%d) <%s> return %d\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), r);
         else
-            kprintf("syscall: (%s#%d) <%s> ERROR! %s\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), strerror(errno));
+            kprintf("syscall: (%s#%d) <%s> ERROR! (%d) %s\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), errno, strerror(errno));
     
     }
 
@@ -167,63 +139,30 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 }
 
 
-
 long syscall_restart(void) {
 
-    if(unlikely(current_task->syscall.index-- == 0))
+    if(unlikely(current_task->syscall.index == 0))
         return -ENOSYS;
 
 
-    long e = 0;
-
-    switch(current_task->syscall.index) {
-
-        case SYS_read:
-        case SYS_readv:
-        case SYS_write:
-        case SYS_writev:
-        case SYS_ioctl:
-
-            e = syscall_invoke(current_task->syscall.index, current_task->syscall.param0,
-                                                            current_task->syscall.param1,
-                                                            current_task->syscall.param2,
-                                                            current_task->syscall.param3,
-                                                            current_task->syscall.param4,
-                                                            current_task->syscall.param5);
-            
-            break;
-
-
-        case SYS_nanosleep:
-        case SYS_clock_nanosleep:
-        case SYS_futex:
-        case SYS_poll:
-        case SYS_flock:
-        case SYS_wait4:
-        case SYS_waitid:
-
-            thread_suspend(current_task);
-            thread_postpone_resched(current_task);
-
-            arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
-            break;
-
-        default:
-            e = -EINTR;
-
-    }
-
-
-
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    if(likely(e != -EINTR))
-        kprintf("syscall: (%s#%d) <%s> restarted!\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[current_task->syscall.index]));
+    kprintf("syscall: (%s#%d) <%s> restarting with p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[current_task->syscall.index - 1]),
+        current_task->syscall.param0,
+        current_task->syscall.param1,
+        current_task->syscall.param2,
+        current_task->syscall.param3,
+        current_task->syscall.param4,
+        current_task->syscall.param5
+    );
 #endif
 
 
-
-    current_task->syscall.index = 0;
-
-    return e;
+    return syscall_invoke(current_task->syscall.index - 1,
+                          current_task->syscall.param0,
+                          current_task->syscall.param1,
+                          current_task->syscall.param2,
+                          current_task->syscall.param3,
+                          current_task->syscall.param4,
+                          current_task->syscall.param5);
 
 }

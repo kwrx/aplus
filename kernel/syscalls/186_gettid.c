@@ -48,5 +48,5 @@
 
 SYSCALL(186, gettid,
 long sys_gettid (void) {
-    return -ENOSYS;
+    return current_task->tid;
 });

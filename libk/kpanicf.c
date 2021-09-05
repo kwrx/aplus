@@ -46,27 +46,20 @@ void kpanicf(const char* fmt, ...) {
 
 
     char buf[CONFIG_BUFSIZ] = { 0 };
-    //static spinlock_t buflock = SPINLOCK_INIT;
 
-    //__lock(&buflock, {
-
-        va_list v;
-        va_start(v, fmt);
-        vsnprintf(buf, sizeof(buf), fmt, v);
-        va_end(v);
+    va_list v;
+    va_start(v, fmt);
+    vsnprintf(buf, sizeof(buf), fmt, v);
+    va_end(v);
 
 
-        int i;
-        for(i = 0; buf[i]; i++) {
-    
-            arch_debug_putc(buf[i]);
+    kprintf_disable();
 
-            // //if(unlikely(buf[i] == '\n')) // FIXME: DEADLOCK
-            // //    kprintf("[%d.%d] ", core->bsp.ticks.tv_sec, (core->bsp.ticks.tv_nsec / 1000000));
+    int i;
+    for(i = 0; buf[i]; i++)
+        arch_debug_putc(buf[i]);
 
-        }
 
-    //});
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
     //runtime_stacktrace();

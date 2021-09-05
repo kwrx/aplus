@@ -148,12 +148,22 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
 
 
-    if(current_task->flags & TASK_FLAGS_NEED_RESCHED) {
+
+
+    if(unlikely(current_task->flags & TASK_FLAGS_NEED_RESCHED)) {
 
         current_task->flags &= ~TASK_FLAGS_NEED_RESCHED;
         schedule(1);
         
     }
+
+    if(unlikely(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)) {
+
+        current_task->flags &= ~TASK_FLAGS_NEED_SYSCALL_RESTART;
+        frame->ax = syscall_restart();
+
+    }
+
     
     return frame;
 

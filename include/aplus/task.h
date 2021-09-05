@@ -49,6 +49,7 @@
 #define TASK_FLAGS_NO_FPU                       2
 #define TASK_FLAGS_NEED_RESCHED                 4
 #define TASK_FLAGS_SIGNALED                     8
+#define TASK_FLAGS_NEED_SYSCALL_RESTART         16
 
 
 #define TASK_CAPS_SYSTEM                        255
@@ -180,6 +181,8 @@ typedef struct task {
         clockid_t clockid;
         struct timespec timeout;
         struct timespec* remaining;
+
+        int expired;
     
     } sleep;
 
@@ -282,6 +285,9 @@ typedef struct task {
 
 #define thread_postpone_resched(task)       \
     task->flags |= TASK_FLAGS_NEED_RESCHED
+
+#define thread_postpone_syscall(task)       \
+    task->flags |= TASK_FLAGS_NEED_SYSCALL_RESTART
 
 #define thread_suspend(task)                \
     task->status = TASK_STATUS_SLEEP

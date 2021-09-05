@@ -252,7 +252,10 @@ static void init_initd(void) {
     // TODO: run /etc/init.d scripts...
 }
 
-
+void* start_thread(void* arg) {
+    fprintf(stderr, "init: Hello World from a new thread: %d %p\n", getpid(), pthread_self());
+    return NULL;
+}
 
 int main(int argc, char** argv, char** envp) {
 
@@ -290,13 +293,25 @@ int main(int argc, char** argv, char** envp) {
 
     setpriority(0, PRIO_PROCESS, 19);
 
+    // pid_t p = fork();
+    
+    // if(p == 0) {
+    //     fprintf(stderr, "Hello from child process %d\n", getpid());
+    //     _exit(0);
+    // } else {
+    //     fprintf(stderr, "Hello from father process %d\n", p);
+    // }
+
+    pthread_t thread;
+    if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
+        fprintf(stderr, "init: failed to start a thread\n");
 
 
     fprintf(stderr, "init: going to sleep...\n");
-
+    
     do {
         waitpid(-1, NULL, 0);
-    } while(errno == EINTR);
+    } while(errno != ECHILD);
         
 
     fprintf(stderr, "init: unreachable point! system halted!\n");

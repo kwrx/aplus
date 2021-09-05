@@ -31,7 +31,7 @@ case $1 in
         flags="$flags -M q35,accel=kvm"
         flags="$flags -rtc clock=host"
         flags="$flags -cpu host,+x2apic,+pdpe1gb,+rdtscp,+fxsr"
-        flags="$flags -smp 1"
+        flags="$flags -smp 4"
         flags="$flags -vga std"
         #flags="$flags -soundhw ac97"
         flags="$flags -device e1000,netdev=net0"

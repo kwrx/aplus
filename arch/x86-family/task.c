@@ -237,8 +237,8 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->argv = current_task->argv;
     task->environ = current_task->environ;
 
-    task->tid   = sched_nextpid();
-    task->tgid  = current_task->tid;
+    task->tid   = 
+    task->tgid  = sched_nextpid();
     task->pgid  = current_task->pgid;
     task->uid   = current_task->uid;
     task->euid  = current_task->euid;
@@ -413,7 +413,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
     task_t* task = arch_task_get_empty_thread(stacksize);
-
+    
 
     task->argv = (char**) kcalloc(1, (sizeof(char*) << 1) + strlen(name) + 1, GFP_KERNEL);
 
@@ -429,6 +429,9 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     for(i = 0; i < (CPU_SETSIZE << 3); i++)
         CPU_SET(i, &task->affinity);
     
+
+    task->tgid = current_task->tid;
+
 
 
     task->address_space = (void*) current_task->address_space;

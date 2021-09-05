@@ -52,20 +52,45 @@ extern long sys_clock_gettime(clockid_t, struct timespec*);
  */
 
 SYSCALL(230, clock_nanosleep,
-long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp) {
+long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * __rqtp, struct timespec __user * __rmtp) {
     
-    if(unlikely(!rqtp))
+    if(unlikely(!__rqtp))
         return -EINVAL;
 
-    if(unlikely(!uio_check(rqtp, R_OK)))
+    if(unlikely(!uio_check(__rqtp, R_OK)))
         return -EFAULT;
 
-    if(unlikely(rmtp))
-        if(unlikely(!uio_check(rmtp, R_OK | W_OK)))
+    if(unlikely(__rmtp))
+        if(unlikely(!uio_check(__rmtp, R_OK | W_OK)))
             return -EFAULT;
 
-    if(rqtp->tv_nsec < 0 || rqtp->tv_nsec > 999999999)
+
+    struct timespec rqtp;
+    uio_memcpy_u2s(&rqtp, __rqtp, sizeof(struct timespec));
+
+
+
+    if(rqtp.tv_nsec < 0 || rqtp.tv_nsec > 999999999)
         return -EINVAL;
+
+
+
+    if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec || current_task->sleep.expired)) {
+
+        int expired = current_task->sleep.expired;
+
+        current_task->sleep.timeout.tv_sec  = 0L;
+        current_task->sleep.timeout.tv_nsec = 0L;
+        current_task->sleep.remaining = NULL;
+        current_task->sleep.expired = 0;
+        
+        if(expired)
+            return 0;
+        else
+            return -EINTR;
+
+    }
+
 
 
     switch(which_clock) {
@@ -95,25 +120,27 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
         tss = t0.tv_sec;
         tsn = t0.tv_nsec;
 
-        if(tsn + rqtp->tv_nsec > 1000000000ULL)
+        if(tsn + rqtp.tv_nsec > 1000000000ULL)
             tss++;
 
     }
 
 
-    current_task->sleep.clockid = which_clock;
-    current_task->sleep.timeout.tv_sec =  (tss + rqtp->tv_sec);
-    current_task->sleep.timeout.tv_nsec = (tsn + rqtp->tv_nsec) % 1000000000ULL;
 
-    if(rmtp)
-        current_task->sleep.remaining = uio_get_ptr(rmtp);
+    current_task->sleep.clockid = which_clock;
+    current_task->sleep.timeout.tv_sec =  (tss + rqtp.tv_sec);
+    current_task->sleep.timeout.tv_nsec = (tsn + rqtp.tv_nsec) % 1000000000ULL;
+
+    if(__rmtp)
+        current_task->sleep.remaining = uio_get_ptr(__rmtp);
+
+    current_task->sleep.expired = 0;
 
 
     thread_suspend(current_task);
     thread_postpone_resched(current_task);
+    thread_postpone_syscall(current_task);
 
-
-    arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
     
     return -EINTR;
 
