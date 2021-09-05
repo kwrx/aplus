@@ -21,7 +21,7 @@
  * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// TODO: Update <sys/features.h>
+// TODO: update <sys/features.h>
 #define _POSIX_CPUTIME
 #define _POSIX_THREAD_CPUTIME
 #define _POSIX_MONOTONIC_CLOCK

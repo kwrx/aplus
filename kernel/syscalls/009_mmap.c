@@ -61,13 +61,13 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
 
     // not supported    
-    BUG_ON((flags & MAP_TYPE) != MAP_SHARED);
-    BUG_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
-    BUG_ON((flags & MAP_TYPE) == MAP_PRIVATE);
+    HALT_ON((flags & MAP_TYPE) != MAP_SHARED);
+    HALT_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
+    HALT_ON((flags & MAP_TYPE) == MAP_PRIVATE);
 
-    BUG_ON(!(flags & MAP_FIXED));
-    BUG_ON(!(flags & MAP_FIXED_NOREPLACE));
-    BUG_ON(!(flags & MAP_GROWSDOWN));
+    HALT_ON(!(flags & MAP_FIXED));
+    HALT_ON(!(flags & MAP_FIXED_NOREPLACE));
+    HALT_ON(!(flags & MAP_GROWSDOWN));
 
 
     // Silenty ignored

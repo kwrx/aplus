@@ -74,14 +74,14 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 
         size += pagesize >> 12;
 
-
-#if defined(CONFIG_DEMAND_PAGING)
-        if(on_demand) {
+// FIXME: broken DEMAND_PAGING implementation
+// #if defined(CONFIG_DEMAND_PAGING)
+//         if(on_demand) {
             
-            return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
+//             return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
             
-        } else
-#endif
+//         } else
+// #endif
         {
             
 
@@ -117,7 +117,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 
             if(has(ARCH_VMM_CLONE_VM)) {
 
-                    *__d = *__s;
+                *__d = *__s;
 
             } else {
 
@@ -125,8 +125,11 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
                     
                     *__d = *__s;
 
-                } else
+                } else {
+                
                     *__d = __fork_data(__s, has(ARCH_VMM_CLONE_DEMAND), level);
+                
+                }
 
             }
 

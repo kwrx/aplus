@@ -57,7 +57,12 @@ extern inode_t __vfs_root;
 
 
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
-    x86_set_cr3(address_space->pm);
+
+    if(unlikely(!address_space))
+        x86_set_cr3(x86_get_cr3());
+    else
+        x86_set_cr3(address_space->pm);
+        
 }
 
 

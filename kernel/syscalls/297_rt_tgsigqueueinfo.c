@@ -85,7 +85,7 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
             if(tmp->tgid != tgid)
                 continue;
 
-            if(tid != -1 && tmp->tid != tid)    // FIXME: not sure...
+            if(tid != -1 && tmp->tid != tid)    // HACK: not sure...
                 continue;
 
             if(tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur)

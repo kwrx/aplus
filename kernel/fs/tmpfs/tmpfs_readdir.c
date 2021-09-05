@@ -70,7 +70,7 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
             e[i].d_ino = c->st.st_ino;
             e[i].d_off = pos;
             e[i].d_reclen = sizeof(struct dirent);
-            e[i].d_type = c->st.st_mode >> 12; /* FIXME */
+            e[i].d_type = c->st.st_mode >> 12; /* FIXME: find a better way */
             strncpy(e[i].d_name, d->name, CONFIG_MAXNAMLEN);
 
             p = 1;

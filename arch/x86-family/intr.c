@@ -140,7 +140,6 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
         default:
 
             // TODO: Handle User Exception
-
             kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p) cpu(%d)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
             break;
 

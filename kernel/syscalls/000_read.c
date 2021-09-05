@@ -59,7 +59,7 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
     if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))
@@ -73,7 +73,7 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
         return -EPERM;
 
 
-    // TODO */
+    // TODO: add poll support
     // // if(unlikely(current_task->fd->descriptors[fd].flags & O_NONBLOCK)) {
     // //     struct pollfd p;
     // //     p.fd = fd;

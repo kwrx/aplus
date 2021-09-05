@@ -46,7 +46,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
 
     #define PFE(reason)     \
-        { kprintf("x86-pfe: FAULT! address(%p): %s\n", cr2, reason); goto pfe; }
+        { kprintf("x86-pfe: FAULT! address(%p) cpu(%d) pid(%d): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, reason); goto pfe; }
 
 #else
 
@@ -150,11 +150,11 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
             // TODO: implement X86_MMU_PG_AP_TP_MMAP
             if(!(*d & X86_MMU_PG_AP_TP_COW))
-                PFE("page fault cannot be handled");
+                PFE("page fault cannot be handled, no copy on write flags found");
 
 
 
-            // * Handle Copy on Write
+            //! Handle Copy on Write
 
             uintptr_t page = __alloc_page(pagesize, 0);
 

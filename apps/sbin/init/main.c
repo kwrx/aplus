@@ -293,18 +293,18 @@ int main(int argc, char** argv, char** envp) {
 
     setpriority(0, PRIO_PROCESS, 19);
 
-    // pid_t p = fork();
+    pid_t p = fork();
     
-    // if(p == 0) {
-    //     fprintf(stderr, "Hello from child process %d\n", getpid());
-    //     _exit(0);
-    // } else {
-    //     fprintf(stderr, "Hello from father process %d\n", p);
-    // }
+    if(p == 0) {
+        fprintf(stderr, "Hello from child process %d\n", getpid());
+        _exit(0);
+    } else {
+        fprintf(stderr, "Hello from father process %d\n", p);
+    }
 
-    pthread_t thread;
-    if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
-        fprintf(stderr, "init: failed to start a thread\n");
+    // pthread_t thread;
+    // if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
+    //     fprintf(stderr, "init: failed to start a thread\n");
 
 
     fprintf(stderr, "init: going to sleep...\n");

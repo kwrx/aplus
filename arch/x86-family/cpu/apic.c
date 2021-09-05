@@ -288,7 +288,7 @@ void apic_init(void) {
                 break;
 
             default:
-                BUG_ON(0);
+                HALT_ON(0);
                 break;
 
         }

@@ -91,6 +91,8 @@ static void* __dup_address_space(vmm_address_space_t* space) {
     arch_vmm_clone(r, space, 0);
 #endif
 
+    arch_task_switch_address_space(NULL);
+
     r->refcount = 1;
     return r;
 
@@ -154,7 +156,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
         return -EINVAL;
 
 
-    // TODO: implement CLONE_VFORK
+    // TODO: implements CLONE_VFORK
     if((unlikely(args->flags & CLONE_VFORK)))
         return -ENOSYS;
 

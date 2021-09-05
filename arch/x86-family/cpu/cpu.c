@@ -389,16 +389,16 @@ void arch_cpu_init(int index) {
 
 
     //! Requirements
-    BUG_ON(cpu_has(index, X86_FEATURE_MSR));
+    HALT_ON(cpu_has(index, X86_FEATURE_MSR));
 
 #if defined(__x86_64__)
-    BUG_ON(cpu_has(index, X86_FEATURE_LM));
-    BUG_ON(cpu_has(index, X86_FEATURE_PAE));
-    BUG_ON(cpu_has(index, X86_FEATURE_GBPAGES));
+    HALT_ON(cpu_has(index, X86_FEATURE_LM));
+    HALT_ON(cpu_has(index, X86_FEATURE_PAE));
+    HALT_ON(cpu_has(index, X86_FEATURE_GBPAGES));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)
-    BUG_ON(cpu_has(index, X86_FEATURE_RDTSCP));
+    HALT_ON(cpu_has(index, X86_FEATURE_RDTSCP));
 #endif
 
 
@@ -510,8 +510,8 @@ void arch_cpu_startup(int index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
 
-    BUG_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
-    BUG_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+    HALT_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    HALT_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0

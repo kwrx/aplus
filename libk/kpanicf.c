@@ -65,7 +65,7 @@ void kpanicf(const char* fmt, ...) {
     //runtime_stacktrace();
 #endif
 
-    // TODO: arch_cpu_halt()
+    // TODO: implements arch_cpu_halt()
     for(;;);
 
 }

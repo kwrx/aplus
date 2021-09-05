@@ -917,7 +917,7 @@ static void sata_dnit(device_t* device) {
     ahci->hba->ports[i].cmd &= ~AHCI_PORT_CMD_ST;
     ahci->hba->ports[i].cmd &= ~AHCI_PORT_CMD_FRE;
 
-    /* TODO */
+    /* TODO: implements sata device de-initialitiation */
 
 }
 
@@ -978,7 +978,7 @@ static void sata_reset(device_t* device) {
     ahci->hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
 
-    /* TODO: See AHCI 1.3.1 - pg 114, 10.4.1 */
+    /* HACK: see AHCI 1.3.1 - pg 114, 10.4.1 */
 }
 
 
@@ -1505,7 +1505,7 @@ void dnit(void) {
         arch_intr_unmap_irq(ahci->irq);
         arch_vmm_unmap (&core->bsp.address_space, (uintptr_t) ahci->hba, AHCI_HBA_SIZE);
 
-        /* TODO */
+        /* TODO: implements ahci de-initialitation */
 
     }
 

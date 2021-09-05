@@ -98,9 +98,9 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
         uint64_t pml2_index = (p >> 27);
         uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
 
-        BUG_ON(pml2_index < PML2_MAX_ENTRIES);
-        BUG_ON(pml1_index < PML1_MAX_ENTRIES * 64);
-        BUG_ON(pml2_bitmap[pml2_index] != 0);
+        HALT_ON(pml2_index < PML2_MAX_ENTRIES);
+        HALT_ON(pml1_index < PML1_MAX_ENTRIES * 64);
+        HALT_ON(pml2_bitmap[pml2_index] != 0);
 
 
         uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[pml2_index];
@@ -153,9 +153,9 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
         uint64_t pml2_index = (p >> 27);
         uint64_t pml1_index = (p & 0x07FFFFFF) / PML1_PAGESIZE;
 
-        BUG_ON(pml2_index < PML2_MAX_ENTRIES);
-        BUG_ON(pml1_index < PML1_MAX_ENTRIES * 64);
-        BUG_ON(pml2_bitmap[pml2_index] != 0);
+        HALT_ON(pml2_index < PML2_MAX_ENTRIES);
+        HALT_ON(pml1_index < PML1_MAX_ENTRIES * 64);
+        HALT_ON(pml2_bitmap[pml2_index] != 0);
 
 
         uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[pml2_index];

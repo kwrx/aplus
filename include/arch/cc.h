@@ -77,9 +77,12 @@ typedef uintptr_t mem_ptr_t;
 #define SYS_ARCH_PROTECT(x)                 spinlock_lock(&network_lock);
 #define SYS_ARCH_UNPROTECT(x)               spinlock_unlock(&network_lock);
 
-// TODO: Fix
 #ifndef BYTE_ORDER
+#if __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__
 #define BYTE_ORDER                          LITTLE_ENDIAN
+#else
+#define BYTE_ORDER                          BIG_ENDIAN
+#endif
 #endif
 
 #define LWIP_CHKSUM_ALGORITHM               2

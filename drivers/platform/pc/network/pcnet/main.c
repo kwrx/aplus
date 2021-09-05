@@ -304,7 +304,7 @@ static void pcnet_irq(void* frame, uint8_t irq) {
             continue;
 
         
-        // FIXME: Use semaphore
+        // FIXME: Use semaphore for pcnet rx ownership
         while(d_owns(dev->rxdes, dev->rxid))
             ethif_input(&dev->device.net.interface);
 

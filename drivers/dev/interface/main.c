@@ -141,10 +141,10 @@ static int device_ioctl(inode_t* inode, long req, void* arg) {
     switch(device->type) {
         
         case DEVICE_TYPE_CHAR:
-            return errno = ENOSYS, -1; /* TODO */
+            return errno = ENOSYS, -1; /* TODO: char_ioctl(): need implementation */
 
         case DEVICE_TYPE_BLOCK:
-            return errno = ENOSYS, -1; /* TODO */
+            return errno = ENOSYS, -1; /* TODO: block_ioctl(): need implementation */
 
         case DEVICE_TYPE_VIDEO:
             return video_ioctl(device, req, arg);
@@ -282,7 +282,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         case DEVICE_TYPE_BLOCK:
 
-            block_inode(device, i, device_mkdev /* FIXME */);
+            block_inode(device, i, device_mkdev);
             break;
 
         case DEVICE_TYPE_VIDEO:

@@ -16,9 +16,9 @@
 #endif
 
 
-#define BUG_ON(i)           \
+#define HALT_ON(i)          \
     if(unlikely(!(i)))      \
-        kpanicf("BUG! Found a bug on %s() in %s:%d: '%s'\n", \
+        kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n", \
             __func__, __FILE__, __LINE__, #i)
 
 

@@ -180,7 +180,7 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
                     if(*kaddr == current_task->tid)
                         e = -EDEADLK;
                     
-                    e = -1; // FIXME: Return valid error
+                    e = -1; // FIXME: return a valid error
 
                 }
 

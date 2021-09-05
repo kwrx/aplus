@@ -56,7 +56,7 @@
 SYSCALL(8, lseek,
 long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) /* TODO: Add Network Support */
+    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))

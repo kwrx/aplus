@@ -163,7 +163,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     if(head.e_ident[0] == '#' &&
        head.e_ident[1] == '!')
-        return -ENOEXEC; // TODO: Read Scripts
+        return -ENOEXEC; // TODO: read and execute command scripts
 
 
     if(
@@ -204,7 +204,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     __lock(&current_task->lock, {
 
 
-        //arch_userspace_release(); // TODO
+        //arch_userspace_release(); // TODO: release userspace resources
 
         current_task->userspace.start = ~0UL;
         current_task->userspace.end   =  0UL;
@@ -243,7 +243,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     if(!(phdr.p_flags & PF_X))
                         flags |= ARCH_VMM_MAP_NOEXEC;
                     
-                    //if( (phdr.p_flags & PF_W))  // FIXME: musl write on non-writable segment on pthread_create();
+                    //if( (phdr.p_flags & PF_W))  // BUG: musl write on non-writable segment on pthread_create()
                         flags |= ARCH_VMM_MAP_RDWR;
 
 

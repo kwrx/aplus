@@ -53,7 +53,7 @@
 SYSCALL(60, exit,
 long sys_exit (int status) {
 
-    BUG_ON(current_task->tid != 1);
+    HALT_ON(current_task->tid != 1);
 
 
     if(status & (1 << 31))
@@ -77,7 +77,7 @@ long sys_exit (int status) {
         : TASK_STATUS_ZOMBIE;
 
 
-    // TODO: implement signal     
+    // TODO: implements signal     
     // if(current_task->parent) {
     //     siginfo_t si;
     //     si.si_code = SI_KERNEL;
@@ -103,7 +103,7 @@ long sys_exit (int status) {
 
     if(current_task->status != TASK_STATUS_STOP) {
 
-        // TODO: Remove references from fs, fd, sighand, ecc...
+        // TODO: remove references from fs, fd, sighand, ecc...
 
         //arch_userspace_release();
 

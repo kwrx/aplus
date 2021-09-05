@@ -50,7 +50,7 @@ void root_init(void) {
         if((p = strstr(s, "rootfs=")))
             strncpy(rootfs, &s[7], CONFIG_MAXNAMLEN);
 
-        // TODO: Add Kernel Arguments
+        // TODO: add other Kernel Arguments
     
     }
 
