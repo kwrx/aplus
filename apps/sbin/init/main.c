@@ -58,11 +58,10 @@
 
 static void init_framebuffer(void) {
 
-
     int fd = open("/dev/fb0", O_RDONLY);
     
     if(fd < 0)
-        return;
+        return (void) fprintf(stderr, "fb0: no framebuffer device found\n");
 
     
     struct fb_fix_screeninfo fix;
@@ -74,14 +73,31 @@ static void init_framebuffer(void) {
 
     close(fd);
 
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    memset(fix.smem_start, 0xFF, fix.smem_len);
+#endif
+
+#if defined(DEBUG)
+    fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", 
+        var.xres, 
+        var.yres, 
+        var.bits_per_pixel, 
+        (void*) ((uintptr_t) fix.smem_start), 
+        (void*) ((uintptr_t) fix.smem_len)
+    );
+#endif
+
 }
 
 
 static void init_welcome(void) {
 
     FILE* fp = fopen("/etc/motd", "r");
+
     if(!fp)
         return;
+
 
     char line[BUFSIZ];
     while(fgets(line, sizeof(line), fp) > 0)
@@ -97,8 +113,9 @@ static void init_welcome(void) {
 static void init_environment(void) {
 
     FILE* fp = fopen("/etc/environment", "r");
+
     if(!fp)
-        return;
+        return (void) fprintf(stderr, "env: no environment file found\n");
 
 
     char line[BUFSIZ];
@@ -138,8 +155,9 @@ static void init_environment(void) {
 static void init_fstab() {
 
     FILE* fp = fopen("/etc/fstab", "r");
+
     if(!fp)
-        return;
+        return (void) fprintf(stderr, "fstab: no fstab config file found");
 
 
     char line[BUFSIZ];
@@ -171,6 +189,10 @@ static void init_fstab() {
 
                     if(sscanf(p, "%s %s %s %s", dev, dir, fs, fl) <= 0)
                         break;
+
+#if defined(DEBUG)
+                    fprintf(stderr, "fstab: mount device %s in %s [fstype(%s), flags(%s)]\n", dev, dir, fs, fl);
+#endif
 
                     
                     for(char* k = strtok(fl, ","); k; k = strtok(NULL, ",")) {
@@ -222,18 +244,32 @@ static void init_fstab() {
 static void init_hostname() {
 
     FILE* fp = fopen("/etc/hostname", "r");
+
     if(!fp)
         return;
 
-    char hostname[BUFSIZ];
+
+    char hostname[BUFSIZ] = { 0 };
+
     fgets(hostname, BUFSIZ, fp);
+    fclose(fp);
 
 
-    if(strlen(hostname) > 0)
+  
+    if(strlen(hostname) > 0) {
+
+        if(hostname[strlen(hostname) - 1] == '\n')
+            hostname[strlen(hostname) - 1] = '\0';
+
         syscall(SYS_sethostname, hostname, strlen(hostname));
 
+    }
 
-    fclose(fp);
+
+
+#if defined(DEBUG)
+    fprintf(stderr, "hostname: set hostname '%s'\n", hostname);
+#endif
 
 }
 
@@ -252,10 +288,7 @@ static void init_initd(void) {
     // TODO: run /etc/init.d scripts...
 }
 
-void* start_thread(void* arg) {
-    fprintf(stderr, "init: Hello World from a new thread: %d %p\n", getpid(), pthread_self());
-    return NULL;
-}
+
 
 int main(int argc, char** argv, char** envp) {
 
@@ -293,19 +326,7 @@ int main(int argc, char** argv, char** envp) {
 
     setpriority(0, PRIO_PROCESS, 19);
 
-    pid_t p = fork();
     
-    if(p == 0) {
-        fprintf(stderr, "Hello from child process %d\n", getpid());
-        _exit(0);
-    } else {
-        fprintf(stderr, "Hello from father process %d\n", p);
-    }
-
-    // pthread_t thread;
-    // if(pthread_create(&thread, NULL, start_thread, NULL) != 0)
-    //     fprintf(stderr, "init: failed to start a thread\n");
-
 
     fprintf(stderr, "init: going to sleep...\n");
     
