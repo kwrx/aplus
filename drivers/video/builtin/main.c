@@ -175,9 +175,6 @@ void init(const char* args) {
     device.address = core->framebuffer.address;
     device.size = core->framebuffer.pitch * core->framebuffer.height;
 
-
-    builtin_reset(&device);
-
     device_mkdev(&device, 0644);
 
 }

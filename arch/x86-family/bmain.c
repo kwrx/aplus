@@ -113,7 +113,16 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                     core->modules.ko[i].size      = ((struct multiboot_tag_module*) btags)->mod_end -
                                                     ((struct multiboot_tag_module*) btags)->mod_start;
 
-                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CONFIG_BUFSIZ);
+
+                    if(strlen(((struct multiboot_tag_module*) btags)->cmdline) > 0) {
+                    
+                        strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CONFIG_BUFSIZ);
+                    
+                    } else {
+                    
+                        strncpy(&core->modules.ko[i].cmdline[0], &core->boot.cmdline[0], CONFIG_BUFSIZ);
+                    
+                    }
 
                 }
                 

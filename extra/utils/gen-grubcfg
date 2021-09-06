@@ -41,6 +41,7 @@ entry() {
 }
 
 
-header                                                                                     >  $sysroot/boot/grub/grub.cfg
-entry "aplus"       "root=/dev/sda1 rootfs=ext2 $extra_kargs"               "$extra_margs" >> $sysroot/boot/grub/grub.cfg
-entry "aplus-nogui" "root=/dev/sda1 rootfs=ext2 graphics=no $extra_kargs"   "$extra_margs" >> $sysroot/boot/grub/grub.cfg
+header                                                                                                     >  $sysroot/boot/grub/grub.cfg
+entry "aplus"                  "root=/dev/sda1 rootfs=ext2 $extra_kargs"                    "$extra_margs" >> $sysroot/boot/grub/grub.cfg
+entry "aplus-nographics"       "root=/dev/sda1 rootfs=ext2 graphics=no $extra_kargs"        "$extra_margs" >> $sysroot/boot/grub/grub.cfg
+entry "aplus-builtin-graphics" "root=/dev/sda1 rootfs=ext2 graphics=builtin $extra_kargs"   "$extra_margs" >> $sysroot/boot/grub/grub.cfg

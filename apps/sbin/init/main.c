@@ -70,13 +70,9 @@ static void init_framebuffer(void) {
     ioctl(fd, FBIOGET_VSCREENINFO, &var);
     ioctl(fd, FBIOPUT_VSCREENINFO, &var);
     ioctl(fd, FBIOGET_FSCREENINFO, &fix);
-
+    
     close(fd);
 
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    memset(fix.smem_start, 0xFF, fix.smem_len);
-#endif
 
 #if defined(DEBUG)
     fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", 
@@ -86,6 +82,13 @@ static void init_framebuffer(void) {
         (void*) ((uintptr_t) fix.smem_start), 
         (void*) ((uintptr_t) fix.smem_len)
     );
+#endif
+
+#if defined(DEBUG)
+    //memset((void*) fix.smem_start, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
+    uint32_t* p = (uint32_t*) ((uintptr_t) fix.smem_start);
+    for(int i = 0; i < var.xres * var.yres * (var.bits_per_pixel >> 3) - 1000; i += sizeof(uint32_t))
+        p[i] = 0x00FFFFFF;
 #endif
 
 }

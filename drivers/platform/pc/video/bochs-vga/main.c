@@ -125,6 +125,7 @@ static void bga_init(device_t* device) {
     );
 
     bga_reset(device);
+
 }
 
 
@@ -261,6 +262,9 @@ void init(const char* args) {
     if(args && strstr(args, "graphics=no"))
         return;
 
+    if(args && strstr(args, "graphics=builtin"))
+        return;
+
     
     outw(VBE_DISPI_IOPORT_INDEX, 0);
 
@@ -271,6 +275,8 @@ void init(const char* args) {
 
     pci_scan(&pci_find, BGA_DEVICE_TYPE, &device);
 
+    if(!device.address)
+        return;
 
     device_mkdev(&device, 0644);
 
