@@ -505,9 +505,9 @@ void init(const char* args) {
         eth->pci = pci_devices[i];
         
         
-        uint32_t cmd;
-        if(!((cmd = pci_read(eth->pci, PCI_COMMAND, 4)) & (1 << 2)))
-            pci_write(eth->pci, PCI_COMMAND, 4, cmd | (1 << 2));
+        pci_enable_pio(eth->pci);
+        pci_enable_mmio(eth->pci);
+        pci_enable_bus_mastering(eth->pci);
 
         eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
         eth->io  = pci_read(eth->pci, PCI_BAR0, 4);

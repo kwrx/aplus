@@ -131,16 +131,16 @@ void module_run(module_t* m) {
     #define find(s) ({                                                  \
                                                                         \
         module_t* r = NULL;                                             \
-        list_each(m_queue, m) {                                         \
-            if(strcmp(m->name, s) != 0)                                 \
+        list_each(m_queue, i) {                                         \
+            if(strcmp(i->name, s) != 0)                                 \
                 continue;                                               \
                                                                         \
-            r = m;                                                      \
+            r = i;                                                      \
             break;                                                      \
         }                                                               \
                                                                         \
         if(!r)                                                          \
-            kpanicf("module: PANIC! unresolved dependency' %s'\n", s);  \
+            kpanicf("module: PANIC! unresolved dependency '%s'\n", s);  \
         r;                                                              \
     })
 

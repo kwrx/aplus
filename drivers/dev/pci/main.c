@@ -29,17 +29,16 @@
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 #include <aplus/errno.h>
+#include <aplus/endian.h>
 
 #include <dev/interface.h>
 #include <dev/pci.h>
-
-#include <arch/x86/cpu.h>
 
 
 
 
 MODULE_NAME("dev/pci");
-MODULE_DEPS("");
+MODULE_DEPS("arch/pci");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -50,34 +49,6 @@ static void pci_scan_func(pci_func_t, int, int, int, int, void*);
 static void pci_scan_slot(pci_func_t, int, int, int, void*);
 static void pci_scan_bus(pci_func_t, int, int, void*);
 
-
-
-void pci_write(pcidev_t device, int field, size_t size, uint32_t value) {
-
-    outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
-    outl(PCI_VALUE_PORT, value);
-
-}
-
-
-uintptr_t pci_read(pcidev_t device, int field, size_t size) {
-    
-    outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
-
-    switch(size) {
-        case 4:
-            return inl(PCI_VALUE_PORT);
-        case 2:
-            return inw(PCI_VALUE_PORT + (field & 2));
-        case 1:
-            return inb(PCI_VALUE_PORT + (field & 3));
-        default:
-            DEBUG_ASSERT(0 && "Bug: Invalid Size!");
-    }
-
-    return PCI_NONE;
-
-}
 
 
 uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
@@ -199,6 +170,64 @@ void pci_scan(pci_func_t fn, int type, void* arg) {
     }
 
 }
+
+
+void pci_enable_bus_mastering(pcidev_t device) {
+
+    DEBUG_ASSERT(device);
+
+    uint32_t cmd;
+    if(!((cmd = pci_read(device, PCI_COMMAND, 4)) & PCI_COMMAND_REG_BUS_MASTERING))
+        pci_write(device, PCI_COMMAND, 4, cmd | PCI_COMMAND_REG_BUS_MASTERING);
+
+}
+
+void pci_enable_pio(pcidev_t device) {
+
+    DEBUG_ASSERT(device);
+
+    uint32_t cmd;
+    if(!((cmd = pci_read(device, PCI_COMMAND, 4)) & PCI_COMMAND_REG_PIO))
+        pci_write(device, PCI_COMMAND, 4, cmd | PCI_COMMAND_REG_PIO);
+
+}
+
+void pci_enable_mmio(pcidev_t device) {
+
+    DEBUG_ASSERT(device);
+
+    uint32_t cmd;
+    if(!((cmd = pci_read(device, PCI_COMMAND, 4)) & PCI_COMMAND_REG_MMIO))
+        pci_write(device, PCI_COMMAND, 4, cmd | PCI_COMMAND_REG_MMIO);
+
+}
+
+
+uintptr_t pci_find_capabilities(pcidev_t device) {
+
+    DEBUG_ASSERT(device);
+
+    if((pci_read(device, PCI_STATUS, 2) & PCI_STATUS_REG_CAPABILITIES) == 0)
+        return PCI_NONE;
+
+    return pci_read(device, PCI_CAPABILITIES, 1);
+
+}
+
+
+void pci_memcpy(pcidev_t device, void* dest, uintptr_t offset, size_t size) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(dest);
+    DEBUG_ASSERT(size);
+
+    char* p = (char*) dest;
+
+    for(size_t i = 0; i < size; i++)
+        p[i] = pci_read(device, offset + i, 1);
+
+}
+
 
 
 

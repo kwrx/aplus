@@ -73,7 +73,6 @@ MODULE_LICENSE("GPL");
 #define CHECK_BGA(n)                        (n >= 0xB0C0 || n <= 0xB0C5)
 
 #define BGA_VIDEORAM_SIZE                   0x1000000
-#define BGA_DEVICE_TYPE                     (0x0300)    /* Display : VGA Compatible */
 #define BGA_ID                              "Bochs VBE"
 
 
@@ -273,7 +272,7 @@ void init(const char* args) {
         return;
 
 
-    pci_scan(&pci_find, BGA_DEVICE_TYPE, &device);
+    pci_scan(&pci_find, PCI_TYPE_VGA, &device);
 
     if(!device.address)
         return;

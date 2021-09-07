@@ -71,18 +71,37 @@ typedef uint32_t pcidev_t;
 #define PCI_INTERRUPT_LINE              0x3C
 #define PCI_SECONDARY_BUS               0x09
 
+#define PCI_CAPABILITIES                0x34
+
 
 #define PCI_HEADER_TYPE_DEVICE          0
 #define PCI_HEADER_TYPE_BRIDGE          1
 #define PCI_HEADER_TYPE_CARDBUS         2
 
+#define PCI_TYPE_ALL                    -1
 #define PCI_TYPE_BRIDGE                 0x0604
 #define PCI_TYPE_SATA                   0x0106
+#define PCI_TYPE_VGA                    0x0300
 
 #define PCI_ADDRESS_PORT                0xCF8
 #define PCI_VALUE_PORT                  0xCFC
 
 #define PCI_NONE                        0xFFFF
+
+
+#define PCI_COMMAND_REG_PIO             (1 << 0)
+#define PCI_COMMAND_REG_MMIO            (1 << 1)
+#define PCI_COMMAND_REG_BUS_MASTERING   (1 << 2)
+#define PCI_COMMAND_REG_SPECIAL_CYCLES  (1 << 3)
+#define PCI_COMMAND_REG_RDWR_INVL       (1 << 4)
+#define PCI_COMMAND_REG_INTR_DISABLE    (1 << 10)
+
+
+#define PCI_STATUS_REG_INTERRUPT        (1 << 3)
+#define PCI_STATUS_REG_CAPABILITIES     (1 << 4)
+
+
+
 
 
 
@@ -113,10 +132,21 @@ typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_
 __BEGIN_DECLS
 
 
+/* Platform dependents */
 uintptr_t pci_read(pcidev_t, int, size_t);
 void pci_write(pcidev_t, int, size_t, uint32_t);
-uintptr_t pci_bar_size(pcidev_t, int, size_t);
+
+/* Common */
 void pci_scan(pci_func_t, int, void*);
+void pci_enable_bus_mastering(pcidev_t);
+void pci_enable_pio(pcidev_t);
+void pci_enable_mmio(pcidev_t);
+
+uintptr_t pci_find_capabilities(pcidev_t);
+uintptr_t pci_bar_size(pcidev_t, int, size_t);
+
+void pci_memcpy(pcidev_t, void*, uintptr_t, size_t);
+
 
 __END_DECLS
 

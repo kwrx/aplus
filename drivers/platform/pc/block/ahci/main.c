@@ -1218,6 +1218,10 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct ahci* ahci = &devices[devices_count++];
 
+    pci_enable_pio(device);
+    pci_enable_mmio(device);
+    pci_enable_bus_mastering(device);
+
     ahci->deviceid = did;
     ahci->vendorid = vid;
     ahci->irq = pci_read(device, PCI_INTERRUPT_LINE, 1);
