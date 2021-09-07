@@ -249,7 +249,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     ((device_t*) arg)->size    = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
 
 #if defined(__x86_64__)
-    if(pci_read(device, PCI_BAR0, 4) & 4)
+    if(pci_is_64bit(device, PCI_BAR0))
         ((device_t*) arg)->address |= (pci_read(device, PCI_BAR1, 4) << 32);
 #endif
 

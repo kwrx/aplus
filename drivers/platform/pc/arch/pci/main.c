@@ -45,11 +45,15 @@ MODULE_LICENSE("GPL");
 
 
 
-void pci_write(pcidev_t device, int field, size_t size, uint32_t value) {
+void pci_write(pcidev_t device, int field, size_t size, uint64_t value) {
 
     outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
 
     switch(size) {
+        case 8:
+            outl(PCI_VALUE_PORT + 0, cpu_to_le64(value) & 0xFFFFFFFF);
+            outl(PCI_VALUE_PORT + 4, cpu_to_le64(value) >> 32);
+            return;
         case 4:
             return outl(PCI_VALUE_PORT, cpu_to_le32(value));
         case 2:
@@ -63,11 +67,13 @@ void pci_write(pcidev_t device, int field, size_t size, uint32_t value) {
 }
 
 
-uintptr_t pci_read(pcidev_t device, int field, size_t size) {
+uint64_t pci_read(pcidev_t device, int field, size_t size) {
     
     outl(PCI_ADDRESS_PORT, pci_get_addr(device, field));
 
     switch(size) {
+        case 8:
+            return le64_to_cpu(((uint64_t) inl(PCI_VALUE_PORT) << 32) | inl(PCI_VALUE_PORT + 4));
         case 4:
             return le32_to_cpu(inl(PCI_VALUE_PORT));
         case 2:

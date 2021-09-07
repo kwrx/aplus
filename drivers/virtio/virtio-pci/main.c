@@ -87,7 +87,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
         default:
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-            kprintf("virtio-pci: FAIL! unknown bar #%d for device %d\n", bar, driver->device);
+            kprintf("virtio-pci: FAIL! unknown pci bar #%d for device %d\n", bar, driver->device);
 #endif
             return -EINVAL;
 
@@ -108,9 +108,10 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     struct virtio_pci_common_cfg volatile* cfg = (struct virtio_pci_common_cfg volatile*) (mmio);
 
 
+    //
     // Device initialization
     // @see https://docs.oasis-open.org/virtio/virtio/v1.1/virtio-v1.1.pdf (chap.3)
-
+    //
 
     cfg->device_status = VIRTIO_DEVICE_STATUS_RESET;
 
@@ -122,7 +123,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
-    kprintf("virtio-pci: device %d initialization successful [features(%X), queues(%d)]\n", driver->device, cfg->device_feature, cfg->num_queues);
+    kprintf("virtio-pci: device %d initialization successful [cfg(%p), queues(%d)]\n", driver->device, cfg, cfg->num_queues);
 #endif
 
 
@@ -136,7 +137,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
         if(cfg->device_feature != features) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-            kprintf("virtio-pci: FAIL! device %d failed features negotation [requested(%X), supported(%X)]\n", cfg->device_feature, features);
+            kprintf("virtio-pci: FAIL! device %d failed features negotation [requested(%X), supported(%X)]\n", driver->device, cfg->device_feature, features);
 #endif
 
             return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
@@ -152,7 +153,35 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 #endif
 
 
-    /* TODO: Initialize queues */
+
+    //
+    // MSI-X Interrupts
+    //
+
+    pci_msix_t msix;
+
+    if(pci_find_msix(driver->device, &msix) == PCI_NONE) {
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+            kprintf("virtio-pci: FAIL! device %d failed, missing MSI-X interrupts capabilities\n", driver->device);
+#endif 
+
+        return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+
+    }
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("virtio-pci: device %d, MSI-X capabilities found [caps(%p), rows(%p), count(%d)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size);
+#endif
+
+
+    //
+    // Queue intialization
+    //
+
+
+
+
 
     return 0;
 

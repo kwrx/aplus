@@ -100,7 +100,9 @@ typedef uint32_t pcidev_t;
 #define PCI_STATUS_REG_INTERRUPT        (1 << 3)
 #define PCI_STATUS_REG_CAPABILITIES     (1 << 4)
 
-
+#define PCI_MSIX_CAPID                  (0x11)
+#define PCI_MSIX_ENABLE                 (1 << 15)
+#define PCI_MSIX_INTR_MASK              (1 << 0)
 
 
 
@@ -125,6 +127,10 @@ typedef uint32_t pcidev_t;
     ((uint32_t) ((x << 16) | (y << 8) | z))
 
 
+#define pci_is_64bit(d, f)              \
+    (pci_read(d, f, 4) & 4)
+
+
 
 
 typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra);
@@ -132,20 +138,76 @@ typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_
 __BEGIN_DECLS
 
 
-/* Platform dependents */
-uintptr_t pci_read(pcidev_t, int, size_t);
-void pci_write(pcidev_t, int, size_t, uint32_t);
 
-/* Common */
+typedef struct pci_msix_row {
+
+    volatile uint64_t pr_address;
+    volatile uint32_t pr_data;
+    volatile uint32_t pr_ctl;
+
+} __packed pci_msix_row_t;
+
+typedef struct pci_msix {
+    
+    struct {
+
+        uint8_t pci_capid;
+        uint8_t pci_capnext;
+
+        union {
+            struct {
+                uint16_t pci_msgctl_table_size : 10;
+                uint16_t pci_msgctl_reserved : 3;
+                uint16_t pci_msgctl_mask : 1;
+                uint16_t pci_msgctl_enable : 1;
+            };
+            uint16_t pci_msgctl;
+        };
+
+        struct {
+            uint32_t pci_bir : 3;
+            uint32_t pci_offset : 28;
+        };
+
+        struct {
+            uint32_t pci_pending_bir : 3;
+            uint32_t pci_pending_offset : 28;
+        };
+
+    } msix_pci;
+
+    uintptr_t msix_cap;
+    pci_msix_row_t volatile* msix_rows;
+
+} __packed pci_msix_t;
+
+
+
+
+
+
+/* Platform dependents */
+uint64_t pci_read(pcidev_t, int, size_t);
+void pci_write(pcidev_t, int, size_t, uint64_t);
+
+/* Scan */
 void pci_scan(pci_func_t, int, void*);
 void pci_enable_bus_mastering(pcidev_t);
 void pci_enable_pio(pcidev_t);
 void pci_enable_mmio(pcidev_t);
 
+/* Utils */
 uintptr_t pci_find_capabilities(pcidev_t);
 uintptr_t pci_bar_size(pcidev_t, int, size_t);
-
 void pci_memcpy(pcidev_t, void*, uintptr_t, size_t);
+
+/* MSI-X */
+int pci_find_msix(pcidev_t, pci_msix_t*);
+void pci_msix_enable(pcidev_t, pci_msix_t*);
+void pci_msix_disable(pcidev_t, pci_msix_t*);
+void pci_msix_mask(pcidev_t, pci_msix_t*, uint32_t);
+void pci_msix_unmask(pcidev_t, pci_msix_t*, uint32_t);
+void pci_msix_map(pcidev_t, pci_msix_t*, uint32_t, void*, void*);
 
 
 __END_DECLS
