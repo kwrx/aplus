@@ -59,39 +59,14 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     uintptr_t mmio = 0UL;
 
-    switch(bar) {
 
-        case 0:
-            mmio = pci_read(driver->device, PCI_BAR0, 4);
-            break;
-
-        case 1:
-            mmio = pci_read(driver->device, PCI_BAR1, 4);
-            break;
-
-        case 2:
-            mmio = pci_read(driver->device, PCI_BAR2, 4);
-            break;
-
-        case 3:
-            mmio = pci_read(driver->device, PCI_BAR3, 4);
-            break;
-
-        case 4:
-            mmio = pci_read(driver->device, PCI_BAR4, 4);
-            break;
-
-        case 5:
-            mmio = pci_read(driver->device, PCI_BAR5, 4);
-            break;
-
-        default:
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-            kprintf("virtio-pci: FAIL! unknown pci bar #%d for device %d\n", bar, driver->device);
+#if defined(__x86_64__) || defined(__aarch64__)
+    if(pci_is_64bit(driver->device, PCI_BAR(bar)))
+        mmio = pci_read(driver->device, PCI_BAR(bar), 8) & PCI_BAR_MM_MASK;
+    else
 #endif
-            return -EINVAL;
+        mmio = pci_read(driver->device, PCI_BAR(bar), 4) & PCI_BAR_MM_MASK;
 
-    }
 
     DEBUG_ASSERT(mmio);
 
@@ -122,7 +97,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     cfg->device_status |= VIRTIO_DEVICE_STATUS_DRIVER;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
     kprintf("virtio-pci: device %d initialization successful [cfg(%p), queues(%d)]\n", driver->device, cfg, cfg->num_queues);
 #endif
 
@@ -171,7 +146,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("virtio-pci: device %d, MSI-X capabilities found [caps(%p), rows(%p), count(%d)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size);
+    kprintf("virtio-pci: device %d, MSI-X capabilities found [caps(%p), rows(%p), count(%d), queue_msix_vector(%d)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size, cfg->queue_msix_vector);
 #endif
 
 

@@ -55,6 +55,7 @@ typedef uint32_t pcidev_t;
 #define PCI_HEADER_TYPE                 0x0E
 #define PCI_BIST                        0x0F
 
+#define PCI_BAR(i)                      (PCI_BAR0 + (i * 4))
 #define PCI_BAR0                        0x10
 #define PCI_BAR1                        0x14
 #define PCI_BAR2                        0x18
@@ -63,6 +64,7 @@ typedef uint32_t pcidev_t;
 #define PCI_BAR5                        0x24
 #define PCI_BAR_MM_MASK                 (0xFFFFFFF0)
 #define PCI_BAR_IO_MASK                 (0xFFFFFFFC)
+
 
 #define PCI_SUBSYSID                    0x2C
 #define PCI_SUBVENID                    0x2E
@@ -128,7 +130,7 @@ typedef uint32_t pcidev_t;
 
 
 #define pci_is_64bit(d, f)              \
-    (pci_read(d, f, 4) & 4)
+    (pci_read((d), (f), 4) & 4)
 
 
 

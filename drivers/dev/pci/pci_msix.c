@@ -56,43 +56,28 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
         if(msix.msix_pci.pci_capid != PCI_MSIX_CAPID)
             continue;
-                
-        
-        uintptr_t mmio = 0UL;
 
-        switch(msix.msix_pci.pci_bir) {
 
-            case 0:
-                mmio = pci_read(device, PCI_BAR0, 4);
-                break;
 
-            case 1:
-                mmio = pci_read(device, PCI_BAR1, 4);
-                break;
-
-            case 2:
-                mmio = pci_read(device, PCI_BAR2, 4);
-                break;
-
-            case 3:
-                mmio = pci_read(device, PCI_BAR3, 4);
-                break;
-
-            case 4:
-                mmio = pci_read(device, PCI_BAR4, 4);
-                break;
-
-            case 5:
-                mmio = pci_read(device, PCI_BAR5, 4);
-                break;
-
-            default:
+        if(msix.msix_pci.pci_bir > 5) {
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
                 kprintf("pci-msix: FAIL! unknown pci bar #%d for device %d\n", msix.msix_pci.pci_bir, device);
 #endif
                 return PCI_NONE;
-
         }
+
+
+        
+        uintptr_t mmio = 0UL;
+
+
+#if defined(__x86_64__) || defined(__aarch64__)
+        if(pci_is_64bit(device, PCI_BAR(msix.msix_pci.pci_bir)))
+            mmio = pci_read(device, PCI_BAR(msix.msix_pci.pci_bir), 8) & PCI_BAR_MM_MASK;
+        else
+#endif
+            mmio = pci_read(device, PCI_BAR(msix.msix_pci.pci_bir), 4) & PCI_BAR_MM_MASK;
+
 
         DEBUG_ASSERT(mmio);
 
@@ -114,7 +99,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         // Mask all interrupts
 
         uint32_t i;
-        for(i = 0; i < msix.msix_pci.pci_msgctl_table_size; i++)
+        for(i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
             pci_msix_mask(device, &msix, i);
 
 
@@ -125,7 +110,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         return 0;
 
 
-    } while((caps = pci_read(device, msix.msix_pci.pci_capnext, 1)) != 0);
+    } while((caps = msix.msix_pci.pci_capnext) != 0);
 
 
     return PCI_NONE;
