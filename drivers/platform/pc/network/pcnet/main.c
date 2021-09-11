@@ -295,7 +295,10 @@ static void pcnet_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void pcnet_irq(void* frame, uint8_t irq) {
+static void pcnet_irq(void* frame, uint8_t irq, void* arg) {
+
+    (void) arg;
+    
     
     struct pcnet* dev;
     for(int i = 0; (dev = devices[i]); i++) {
@@ -568,7 +571,7 @@ void init(const char* args) {
         }
 
 
-        arch_intr_map_irq(eth->irq, pcnet_irq);
+        arch_intr_map_irq(eth->irq, pcnet_irq, NULL);
 
         netif_set_default(&eth->device.net.interface);
         netif_set_up(&eth->device.net.interface);

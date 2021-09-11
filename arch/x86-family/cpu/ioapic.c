@@ -53,7 +53,7 @@ static inline uint32_t ioapic_read(uintptr_t address, const uint32_t offset) {
 }
 
 
-void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
+void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
     
     int i;
     for(i = 0; i < X86_IOAPIC_MAX; i++) {
@@ -84,7 +84,7 @@ void ioapic_map_irq(uint8_t source, uint8_t irq, uint8_t cpu) {
     kpanicf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
 }
 
-void ioapic_unmap_irq(uint8_t source) {
+void ioapic_unmap_irq(irq_t source) {
 
     if(unlikely(source == 0))   /* LVT0, APIC TIMER */
         return; //kpanicf("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");

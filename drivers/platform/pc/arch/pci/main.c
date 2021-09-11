@@ -73,7 +73,7 @@ uint64_t pci_read(pcidev_t device, int field, size_t size) {
 
     switch(size) {
         case 8:
-            return le64_to_cpu(((uint64_t) inl(PCI_VALUE_PORT) << 32) | inl(PCI_VALUE_PORT + 4));
+            return le64_to_cpu(((uint64_t) inl(PCI_VALUE_PORT + 4) << 32) | inl(PCI_VALUE_PORT));
         case 4:
             return le32_to_cpu(inl(PCI_VALUE_PORT));
         case 2:

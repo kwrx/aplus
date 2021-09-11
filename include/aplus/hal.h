@@ -27,6 +27,7 @@
 
 
 #if defined(KERNEL)
+#include <stdint.h>
 #include <signal.h>
 #include <aplus.h>
 #include <aplus/task.h>
@@ -120,8 +121,10 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 
 void arch_intr_enable(long);
 long arch_intr_disable(void);
-void arch_intr_map_irq(uint8_t, void (*) (void*, uint8_t));
-void arch_intr_unmap_irq(uint8_t);
+void arch_intr_map_irq(irq_t, void (*) (void*, irq_t, void*), void*);
+void arch_intr_map_irq_percpu(irq_t, void (*) (void*, irq_t, void*), void*, cpuid_t);
+void arch_intr_unmap_irq(irq_t);
+int arch_intr_next_msix_irq(void);
 
 
 void arch_task_switch(task_t*, task_t*);

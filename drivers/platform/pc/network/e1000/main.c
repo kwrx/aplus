@@ -354,7 +354,10 @@ static void e1000_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void e1000_irq(void* frame, uint8_t irq) {
+static void e1000_irq(void* frame, uint8_t irq, void* arg) {
+
+    (void) arg;
+    
 
     struct e1000* dev;
     for(int i = 0; (dev = devices[i]); i++) {
@@ -547,7 +550,7 @@ void init(const char* args) {
         eth->device.net.low_level_input_nomem  = e1000_input_nomem;
 
 
-        arch_intr_map_irq(eth->irq, e1000_irq);
+        arch_intr_map_irq(eth->irq, e1000_irq, NULL);
 
 
 

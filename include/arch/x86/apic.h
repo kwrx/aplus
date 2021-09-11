@@ -93,8 +93,8 @@ void apic_timer_reset(uint32_t);
 
 
 void ioapic_enable(void);
-void ioapic_map_irq(uint8_t, uint8_t, uint8_t);
-void ioapic_unmap_irq(uint8_t);
+void ioapic_map_irq(irq_t, irq_t, cpuid_t);
+void ioapic_unmap_irq(irq_t);
 
 __END_DECLS
 

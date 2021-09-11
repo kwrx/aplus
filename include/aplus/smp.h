@@ -54,9 +54,13 @@
 
 
 
+typedef uint8_t irq_t;
+typedef uint64_t cpuid_t;
+
+
 typedef struct cpu {
 
-    uint64_t id;
+    cpuid_t id;
 
     void* frame;
     void* tss;

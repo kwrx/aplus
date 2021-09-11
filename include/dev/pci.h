@@ -130,7 +130,7 @@ typedef uint32_t pcidev_t;
 
 
 #define pci_is_64bit(d, f)              \
-    (pci_read((d), (f), 4) & 4)
+    !!(pci_read((d), (f), 4) & 4)
 
 
 
@@ -209,8 +209,7 @@ void pci_msix_enable(pcidev_t, pci_msix_t*);
 void pci_msix_disable(pcidev_t, pci_msix_t*);
 void pci_msix_mask(pcidev_t, pci_msix_t*, uint32_t);
 void pci_msix_unmask(pcidev_t, pci_msix_t*, uint32_t);
-void pci_msix_map(pcidev_t, pci_msix_t*, uint32_t, void*, void*);
-
+void pci_msix_map(pcidev_t, pci_msix_t*, uint32_t, irq_t, cpuid_t);
 
 __END_DECLS
 

@@ -34,8 +34,10 @@ case $1 in
         flags="$flags -smp 4"
         flags="$flags -vga virtio"
         #flags="$flags -soundhw ac97"
-        flags="$flags -device e1000,netdev=net0"
+        #flags="$flags -device e1000,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        flags="$flags -device virtio-serial -chardev pipe,path=/tmp/kmsg.log,id=aplus" 
+        flags="$flags -device virtserialport,chardev=aplus,name=org.aplus.kernel" 
         ;;
 
     *)

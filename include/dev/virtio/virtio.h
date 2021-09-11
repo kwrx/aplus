@@ -25,14 +25,28 @@
 #define _DEV_VIRTIO_VIRTIO_H
 
 
+// Device PCI
 #define VIRTIO_PCI_VENDOR                           0x1AF4
 #define VIRTIO_PCI_DEVICE_MIN                       0x1040
 #define VIRTIO_PCI_DEVICE_MAX                       0x107F
 #define VIRTIO_PCI_DEVICE(d)                        (VIRTIO_PCI_DEVICE_MIN + d)
+#define VIRTIO_PCI_DEVICE_TRANSITIONAL(d)           (VIRTIO_PCI_DEVICE_MIN - 0x40 + d)
 
+
+// Device PCI Capabilities
 #define VIRTIO_PCI_CAP_VENDOR                       0x09
+#define VIRTIO_PCI_CAP_COMMON_CFG                   1
+#define VIRTIO_PCI_CAP_NOTIFY_CFG                   2
+#define VIRTIO_PCI_CAP_ISR_CFG                      3
+#define VIRTIO_PCI_CAP_DEVICE_CFG                   4
+#define VIRTIO_PCI_CAP_PCI_CFG                      5
 
 
+// Device MSI-X
+#define VIRTIO_MSI_NO_VECTOR                        0xFFFF
+
+
+// Device Type
 #define VIRTIO_DEVICE_TYPE_INVALID                  0
 #define VIRTIO_DEVICE_TYPE_NETWORK                  1
 #define VIRTIO_DEVICE_TYPE_BLOCK                    2
@@ -47,6 +61,7 @@
 #define VIRTIO_DEVICE_TYPE_MEMDEV                   24
 
 
+// Device Status
 #define VIRTIO_DEVICE_STATUS_RESET                  0
 #define VIRTIO_DEVICE_STATUS_ACKNOWNLEDGE           1
 #define VIRTIO_DEVICE_STATUS_DRIVER                 2
@@ -56,11 +71,27 @@
 #define VIRTIO_DEVICE_STATUS_FAILED                 128
 
 
-#define VIRTIO_PCI_CAP_COMMON_CFG                   1
-#define VIRTIO_PCI_CAP_NOTIFY_CFG                   2
-#define VIRTIO_PCI_CAP_ISR_CFG                      3
-#define VIRTIO_PCI_CAP_DEVICE_CFG                   4
-#define VIRTIO_PCI_CAP_PCI_CFG                      5
+// Reserved feature bits
+// Select (1)
+#define VIRTIO_F_IN_ORDER                           (1 << 6)
+
+
+// Queue Descriptors
+#define VIRTQ_DESC_F_NEXT                           1
+#define VIRTQ_DESC_F_WRITE                          2
+#define VIRTQ_DESC_F_INDIRECT                       4
+
+// Queue Available
+#define VIRTQ_AVAIL_F_NO_INTERRUPT                  1
+
+// Queue Used
+#define VIRTQ_USED_F_NO_NOTIFY                      1
+
+
+// Queue driver configuration
+#define VIRTQ_MAX_QUEUES                            64
+#define VIRTQ_MAX_DESCRIPTORS                       65535
+
 
 
 #ifndef __ASSEMBLY__
@@ -72,7 +103,40 @@ struct virtio_driver {
     uint16_t type;
     pcidev_t device;
 
-    uint32_t (*negotiate) (struct virtio_driver*, uint32_t features);
+    size_t send_window_size;
+    size_t recv_window_size;
+
+    int (*negotiate) (struct virtio_driver*, uint32_t*, size_t);
+    int (*setup)     (struct virtio_driver*, uintptr_t);
+    int (*interrupt) (void*, uint8_t, struct virtio_driver*);
+
+    struct {
+
+        irq_t irq;
+        uint32_t volatile* isr_status;
+        uint16_t bars;
+        uint32_t notify_off_multiplier;
+        uintptr_t notify_offset;
+        size_t num_queues;
+        
+        struct {
+
+            struct virtq_descriptor volatile* descriptors;
+            struct virtq_available volatile* available;
+            struct virtq_used volatile* used;
+            struct virtq_notify volatile* notify;
+
+            struct {
+                uintptr_t sendbuf;
+                uintptr_t recvbuf;
+            } buffers;
+
+            size_t size;
+            
+        } queues[VIRTQ_MAX_QUEUES];
+
+    } internals;
+
 };
 
 
@@ -87,7 +151,7 @@ struct virtio_pci_cap {
     uint32_t offset;
     uint32_t length;
 
-};
+} __packed;
 
 
 struct virtio_pci_common_cfg {
@@ -96,7 +160,7 @@ struct virtio_pci_common_cfg {
     volatile uint32_t device_feature;
     volatile uint32_t driver_feature_select;
     volatile uint32_t driver_feature;
-    volatile uint16_t msix_config;
+    volatile uint16_t config_msix_vector;
     volatile uint16_t num_queues;
     volatile uint8_t device_status;
     volatile uint8_t config_generation;
@@ -106,23 +170,65 @@ struct virtio_pci_common_cfg {
     volatile uint16_t queue_msix_vector;
     volatile uint16_t queue_enable;
     volatile uint16_t queue_notify_off;
-    volatile uint16_t queue_desc;
-    volatile uint16_t queue_driver;
-    volatile uint16_t queue_device;
+    volatile uint64_t queue_desc;
+    volatile uint64_t queue_driver;
+    volatile uint64_t queue_device;
 
-};
+} __packed;
 
-
-struct virtio_pci_notify_cap {
-    struct virtio_pci_cap cap;
+struct virtio_pci_notify_cfg {
     uint32_t notify_off_multiplier;
-};
+} __packed;
+
+
+struct virtq_descriptor {
+    volatile uint64_t q_address;
+    volatile uint32_t q_length;
+    volatile uint16_t q_flags;
+    volatile uint16_t q_next;
+} __packed;
+
+struct virtq_available {
+    volatile uint16_t q_flags;
+    volatile uint16_t q_idx;
+    volatile uint16_t q_ring[];
+    // uint16_t q_used_event;
+} __packed;
+
+struct virtq_used {
+    
+    volatile uint16_t q_flags;
+    volatile uint16_t q_idx;
+
+    struct {
+        volatile uint32_t e_id;
+        volatile uint32_t e_length;
+    } volatile q_elements[];
+
+    // uint16_t q_avail_event;
+
+} __packed;
+
+struct virtq_notify {
+    union {
+        struct {
+            uint32_t n_vqn : 16;
+            uint32_t n_offset : 15;
+            uint32_t n_wrap : 1;
+        };
+        uint32_t n_idx;
+    };
+} __packed;
 
 
 
-
-
+// PCI
 int virtio_pci_init(struct virtio_driver*);
+
+// Queue
+int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
+ssize_t virtq_send(struct virtio_driver*, uint16_t, void*, size_t);
+ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
 
 __END_DECLS
 

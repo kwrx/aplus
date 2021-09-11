@@ -441,8 +441,10 @@ static uint8_t devices_count = 0;
 
 
 
-static void irq(void* frame, uint8_t irq) {
+static void irq(void* frame, uint8_t irq, void* arg) {
 
+    (void) arg;
+    
 
     struct ahci* ahci;
     for(int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
@@ -1268,7 +1270,7 @@ void init(const char* args) {
     kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
 #endif
 
-        arch_intr_map_irq(ahci->irq, &irq);
+        arch_intr_map_irq(ahci->irq, &irq, NULL);
 
 
 

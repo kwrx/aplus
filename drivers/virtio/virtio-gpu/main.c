@@ -182,9 +182,25 @@ static void virtgpu_update(device_t* device) {
 }
 
 
+static struct {
+    volatile uint32_t e_read;
+    volatile uint32_t e_clear;
+    volatile uint32_t num_scanouts;
+    volatile uint32_t reserved;
+} volatile* gpu_config = NULL;
 
-static uint32_t negotiate_features(struct virtio_driver* driver, uint32_t features) {
-    return features;
+
+static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
+    return 0;
+}
+
+static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
+    gpu_config = (void*) device_config;
+    return 0;
+}
+
+static int interrupt_handler(void* frame, uint8_t irq, struct virtio_driver* driver) {
+    return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
 }
 
 
@@ -197,14 +213,79 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         return;
 
 
-    struct virtio_driver driver;
+    struct virtio_driver driver = { 0 };
 
     driver.type = VIRTIO_DEVICE_TYPE_GPU;
     driver.device = device;
+    driver.send_window_size = 65535;
+    driver.recv_window_size = 4096;
+
     driver.negotiate = &negotiate_features;
+    driver.setup = &setup_config;
+    driver.interrupt = &interrupt_handler;
 
 
-    virtio_pci_init(&driver);
+    if(virtio_pci_init(&driver) < 0) {
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+        kprintf("virtio-gpu: device %d (%X:%X) initialization failed\n", device, vid, did);
+#endif
+
+        return;
+
+    }
+
+
+    kprintf("e: %d %d, scan: %d\n", gpu_config->e_read, gpu_config->e_clear, gpu_config->num_scanouts);
+
+    uint32_t r1[] = {
+        0x101,
+        0,
+        0, 0,
+        0,
+        0,
+
+        1,
+        3,
+        800,
+        600
+    };
+
+    uint32_t r2[] = {
+        0x106,
+        0,
+        0, 0,
+        0,
+        0,
+
+        1,
+        1,
+        0,
+        0
+    };
+
+    uint32_t r3[] = {
+        0x103,
+        0,
+        0, 0,
+        0,
+        0,
+
+        0,
+        0,
+        800,
+        600,
+
+        1,
+        1
+    };
+
+    virtq_send(&driver, 0, &r1, sizeof(r1));
+    virtq_send(&driver, 0, &r2, sizeof(r2));
+    virtq_send(&driver, 0, &r3, sizeof(r3));
+
+    kprintf("e: %d %d, scan: %d\n", gpu_config->e_read, gpu_config->e_clear, gpu_config->num_scanouts);
+
 
 }
 

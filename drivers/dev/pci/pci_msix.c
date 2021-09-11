@@ -85,8 +85,9 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         mmio += msix.msix_pci.pci_offset;
 
         arch_vmm_map(&core->bsp.address_space, mmio, mmio, msix.msix_pci.pci_msgctl_table_size * sizeof(pci_msix_row_t),
-                ARCH_VMM_MAP_FIXED  | 
-                ARCH_VMM_MAP_RDWR   |
+                ARCH_VMM_MAP_FIXED      | 
+                ARCH_VMM_MAP_RDWR       |
+                ARCH_VMM_MAP_UNCACHED   |
                 ARCH_VMM_MAP_NOEXEC
         );
 
@@ -168,14 +169,19 @@ void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
 
 }
 
-void pci_msix_map(pcidev_t device, pci_msix_t* msix, uint32_t index, void* address, void* data) {
+void pci_msix_map(pcidev_t device, pci_msix_t* msix, uint32_t index, irq_t irq, cpuid_t cpu) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_rows);
+    DEBUG_ASSERT(index <= msix->msix_pci.pci_msgctl_table_size);
 
-    msix->msix_rows[index].pr_address = (uintptr_t) address;
-    msix->msix_rows[index].pr_data = (uintptr_t) data;
+#if defined(__i386__) || defined(__x86_64__)
+    DEBUG_ASSERT(irq >= 0x10);
+#endif
+
+    msix->msix_rows[index].pr_address = cpu_to_le64((0xFEE << 20) | (cpu << 12));
+    msix->msix_rows[index].pr_data = cpu_to_le32(irq);
     msix->msix_rows[index].pr_ctl |= PCI_MSIX_INTR_MASK;
 
 }

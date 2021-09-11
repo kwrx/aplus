@@ -7,6 +7,10 @@
 #include <aplus/debug.h>
 
 
+//? NOTE: IRQs allocatable from drivers (see MSI-X)
+//? @see 10.11.2 - Message Data Register Format
+#define IRQ_MSIX_ALLOCATABLE_OFFSET             (0x10)  // 16 or higher
+
 
 typedef struct {
 

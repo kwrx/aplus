@@ -41,6 +41,7 @@ uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
     uintptr_t p = pci_read(device, field, size);
     
     switch(size) {
+        case 8:
         case 4:
             pci_write(device, field, 4, 0xFFFFFFFF);
             break;
@@ -62,7 +63,7 @@ uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
 
     pci_write(device, field, size, p);
 
-    return s & (((1ULL << (size << 3)) - 1));
+    return (s & (((1ULL << (size << 3)) - 1)));
 }
 
 
