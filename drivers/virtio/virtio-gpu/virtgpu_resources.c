@@ -43,42 +43,44 @@
 // #include <stdint.h>
 
 
+// int virtgpu_create_resource_2d(struct virtgpu* gpu, uint64_t* resource, uint32_t width, uint32_t height, uint32_t format, uintptr_t framebuffer) {
 
-// static uint64_t resource_ids = 0;
+//     DEBUG_ASSERT(gpu);
+//     DEBUG_ASSERT(gpu->driver);
+//     DEBUG_ASSERT(resource);
+
+//     int e;
+//     uint64_t resource_id = ++gpu->resource_ids;
 
 
-// void virtgpu_update_buffers(device_t* device) {
+//     if((e = virtgpu_cmd_resource_create_2d(gpu, resource_id, format, width, height)) < 0)
+//         return e;
+
+//     if((e = virtgpu_cmd_resource_attach_backing(gpu, resource_id, framebuffer, width * height * virtgpu_get_bytes_per_pixel(format))) < 0)
+//         return e;
+    
+//     return *resource = resource_id, 0;
     
 // }
 
+// int virtgpu_update_resource_2d(struct virtgpu* gpu, uint64_t resource, struct virtio_gpu_rect* rect, uint64_t offset) {
 
-// void virtgpu_free_buffers(device_t* device) {
+//     DEBUG_ASSERT(gpu);
+//     DEBUG_ASSERT(gpu->driver);
+//     DEBUG_ASSERT(rect);
 
-//     DEBUG_ASSERT(device);
-
-//     if(unlikely(!device->address))
-//         return;
-
-
-//     DEBUG_ASSERT(device->address);
-//     DEBUG_ASSERT(device->size);
-
-
-//     pmm_free_blocks(device->address, device->size / PML1_PAGESIZE + 1);
+//     return virtgpu_cmd_transfer_to_host_2d(gpu, resource, rect, offset);
 
 // }
 
+// void virtgpu_free_resources(struct virtgpu* gpu) {
 
-// void virtgpu_free_resources(struct virtio_driver* driver) {
-
-//     for(size_t i = 0; i < resource_ids; i++) {
+//     for(size_t i = 0; i < gpu->resource_ids; i++) {
         
-//         virtgpu_cmd_resource_detach_backing(driver, i);
-//         virtgpu_cmd_resource_unref(driver, i);
+//         virtgpu_cmd_resource_detach_backing(gpu, i);
+//         virtgpu_cmd_resource_unref(gpu, i);
 
 //     }
-
-//     virtq_flush(driver);
 
 // }
 

@@ -156,7 +156,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
             cfg->device_feature_select = i;
             cfg->driver_feature_select = i;
 
-            __atomic_thread_fence(__ATOMIC_SEQ_CST);
+            __atomic_membarrier();
 
 
             uint32_t features = le32_to_cpu(cfg->device_feature);
@@ -167,7 +167,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
             cfg->driver_feature = cpu_to_le32(features);
 
-            __atomic_thread_fence(__ATOMIC_SEQ_CST);
+            __atomic_membarrier();
 
 
             if(cfg->driver_feature != features) {
@@ -285,18 +285,23 @@ static int virtio_pci_init_device_cfg(struct virtio_driver* driver, uintptr_t ca
     DEBUG_ASSERT(bar >= 0 && bar <= 5);
 
 
+    driver->internals.device_config = virtio_pci_find_bar(driver, bar, offset);
+
+
+    int e = 0;
+
     if(unlikely(!driver->setup))
-        return 0;
-
-
-    int e;
-    if((e = driver->setup(driver, virtio_pci_find_bar(driver, bar, offset))) < 0)
         return e;
+
+    if((e = driver->setup(driver, driver->internals.device_config)) < 0)
+        return e;
+
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
     kprintf("virtio-pci: device %d obtaining device config successful [caps(%d), bar(%d), offset(%p)]\n", driver->device, caps, bar, offset);
 #endif
+
 
     return 0;
 

@@ -67,8 +67,6 @@
 #define VIRTIO_GPU_RESP_ERR_INVALID_CONTEXT_ID      0x1204
 #define VIRTIO_GPU_RESP_ERR_INVALID_PARAMETER       0x1205
 
-
-
 // Formats
 #define VIRTIO_GPU_FORMAT_B8G8R8A8_UNORM            1
 #define VIRTIO_GPU_FORMAT_B8G8R8X8_UNORM            2
@@ -78,6 +76,11 @@
 #define VIRTIO_GPU_FORMAT_X8B8G8R8_UNORM            68
 #define VIRTIO_GPU_FORMAT_A8B8G8R8_UNORM            121
 #define VIRTIO_GPU_FORMAT_R8G8B8X8_UNORM            134
+
+
+// Queues
+#define VIRTIO_GPU_QUEUE_CONTROL                    0
+#define VIRTIO_GPU_QUEUE_CURSOR                     1
 
 
 #ifndef __ASSEMBLY__
@@ -211,6 +214,20 @@ struct virtio_gpu_response {
         struct virtio_gpu_resp_edid edid;
     };
 } __packed;
+
+
+struct virtgpu {
+    struct virtio_driver* driver;
+    uint64_t resource_ids;
+} __packed;
+
+
+int virtgpu_scanout_get_primary_info(struct virtgpu*, uint8_t*, uint16_t*, uint16_t*);
+int virtgpu_cmd_resource_detach_backing(struct virtgpu*, uint64_t);
+int virtgpu_cmd_resource_unref(struct virtgpu*, uint64_t);
+int virtgpu_cmd_resource_create_2d(struct virtgpu*, uint64_t*, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_resource_attach_backing(struct virtgpu*, uint64_t, uint64_t, size_t);
+int virtgpu_cmd_set_scanout(struct virtgpu*, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 __END_DECLS
 

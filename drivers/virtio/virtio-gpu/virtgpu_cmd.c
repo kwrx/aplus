@@ -1,0 +1,168 @@
+/*
+ * Author:
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ * 
+ * Copyright (c) 2013-2019 Antonino Natale
+ * 
+ * 
+ * This file is part of aPlus.
+ * 
+ * aPlus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * aPlus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with aPlus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <stdint.h>
+#include <string.h>
+
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/module.h>
+#include <aplus/memory.h>
+#include <aplus/smp.h>
+#include <aplus/hal.h>
+#include <aplus/fb.h>
+#include <aplus/errno.h>
+
+#include <dev/interface.h>
+#include <dev/video.h>
+#include <dev/pci.h>
+
+#include <dev/virtio/virtio.h>
+#include <dev/virtio/virtio-gpu.h>
+
+#include <stdint.h>
+
+
+
+
+int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+
+    
+    struct virtio_gpu_resource_detach_backing cmd;
+    struct virtio_gpu_response resp;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_RESOURCE_DETACH_BACKING;
+    cmd.resource_id = resource;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}
+
+
+int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_resource_unref cmd;
+    struct virtio_gpu_response resp;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_RESOURCE_UNREF;
+    cmd.resource_id = resource;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}
+
+
+int virtgpu_cmd_resource_create_2d(struct virtgpu* gpu, uint64_t* resource, uint32_t format, uint32_t width, uint32_t height) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_resource_create_2d cmd;
+    struct virtio_gpu_response resp;
+    
+
+    uint64_t resource_id = ++gpu->resource_ids;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_RESOURCE_CREATE_2D;
+    cmd.resource_id = resource_id;
+    cmd.format = format;
+    cmd.width = width;
+    cmd.height = height;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    if(resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return -EINVAL;
+
+
+    return *resource = resource_id, 0;
+
+}
+
+
+int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, uint64_t framebuffer, size_t size) { 
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_resource_attach_backing cmd;
+    struct virtio_gpu_response resp;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_RESOURCE_ATTACH_BACKING;
+    cmd.resource_id = resource;
+    cmd.nr_entries = 1;
+    cmd.entries[0].address = framebuffer;
+    cmd.entries[0].length = size;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}
+
+
+int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_set_scanout cmd;
+    struct virtio_gpu_response resp;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_SET_SCANOUT;
+    cmd.scanout_id = scanout_id;
+    cmd.resource_id = resource;
+    cmd.r.x = x;
+    cmd.r.y = y;
+    cmd.r.width = width;
+    cmd.r.height = height;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}

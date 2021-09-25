@@ -33,6 +33,24 @@
 #include <aplus/task.h>
 
 
+
+#if defined(__i386__) || defined(__x86_64__)
+#   define __atomic_membarrier()    __asm__ __volatile__("mfence" : : : "memory")
+#   define __cpu_pause()            __asm__ __volatile__("pause"  : : : "memory")
+#   define __cpu_halt()             __asm__ __volatile__("hlt"    : : : "memory")
+#elif defined(__arm__) || defined(__aarch64__)
+#   define __atomic_membarrier()    __builtin_arm_dmb(15)
+#   define __cpu_pause()            __builtin_arm_wfe()
+#   define __cpu_halt()             __builtin_arm_wfi()
+#else
+#   warning "Unknown architecture"
+#   define __atomic_membarrier()    __asm__ __volatile__ ("" : : : "memory")
+#   define __cpu_pause()            __asm__ __volatile__ ("" : : : "memory")
+#   define __cpu_halt()             __asm__ __volatile__ ("" : : : "memory")
+#endif
+
+
+
 #define ARCH_REBOOT_RESTART         0
 #define ARCH_REBOOT_SUSPEND         1
 #define ARCH_REBOOT_POWEROFF        2

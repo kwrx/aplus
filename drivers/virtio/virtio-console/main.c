@@ -155,7 +155,6 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     }
 
 
-    virtq_send(&driver, 0, "Hello World!", 13);
 
 }
 

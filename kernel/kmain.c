@@ -47,10 +47,12 @@ void cmain(void* arg) {
 
     current_task->priority = TASK_PRIO_MIN;
 
+
     for(;;) {
-#if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
-#endif
+
+        __cpu_pause();
+        __cpu_halt();
+
     }
 
 }

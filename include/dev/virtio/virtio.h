@@ -120,11 +120,15 @@ struct virtio_driver {
     struct {
 
         irq_t irq;
-        uint32_t volatile* isr_status;
         uint16_t bars;
-        uint32_t notify_off_multiplier;
+        uint16_t num_queues;
+    
+        uint16_t notify_off_multiplier;
         uintptr_t notify_offset;
-        size_t num_queues;
+        uintptr_t device_config;
+
+        uint32_t volatile* isr_status;
+
         
         struct {
 
