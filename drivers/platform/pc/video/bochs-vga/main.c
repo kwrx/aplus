@@ -205,8 +205,6 @@ static void bga_update(device_t* device) {
         wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
     
 
-
-
     static int rgba[] = {
         0, 0, 0, 0, 0, 0, 0, 0,     /* NULL             */
         3, 5, 3, 2, 2, 0, 0, 0,     /* 8bpp RRRGGGBB    */

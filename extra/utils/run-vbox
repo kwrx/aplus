@@ -1,11 +1,11 @@
 #!/bin/bash
 
-qemu-img convert -f raw -O vmdk hdd.img hdd.vmdk
+qemu-img convert -f raw -O vmdk aplus.img aplus.vmdk
 
 touch vbox.log
 tail -f vbox.log &
 
-VBoxManage internalcommands sethduuid hdd.vmdk 2d9f25fb-3313-40b9-9052-6da1d8fb19d8
+VBoxManage internalcommands sethduuid aplus.vmdk 2d9f25fb-3313-40b9-9052-6da1d8fb19d8
 VBoxManage startvm aplus
 
 while VBoxManage list runningvms | grep aplus &> /dev/null; do
@@ -13,4 +13,4 @@ while VBoxManage list runningvms | grep aplus &> /dev/null; do
 done
 
 kill %1 &> /dev/null
-rm hdd.vmdk
+rm aplus.vmdk

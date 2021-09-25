@@ -213,7 +213,7 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t, void*), void* d
     DEBUG_ASSERT(handler);
 
 
-    if(unlikely(startup_irq[irq].handler))
+    if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
         kpanicf("x86-intr: PANIC! can not map irq(%p), already owned by %p\n", irq, startup_irq[irq].handler);
 
 

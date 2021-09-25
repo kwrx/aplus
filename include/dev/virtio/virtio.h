@@ -96,6 +96,13 @@
 
 #ifndef __ASSEMBLY__
 
+
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/syscall.h>
+#include <stdint.h>
+
+
 __BEGIN_DECLS
 
 struct virtio_driver {
@@ -216,7 +223,7 @@ struct virtq_notify {
             uint32_t n_offset : 15;
             uint32_t n_wrap : 1;
         };
-        uint32_t n_idx;
+        uint16_t n_idx;
     };
 } __packed;
 
@@ -228,6 +235,7 @@ int virtio_pci_init(struct virtio_driver*);
 // Queue
 int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
 ssize_t virtq_send(struct virtio_driver*, uint16_t, void*, size_t);
+ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
 
 __END_DECLS

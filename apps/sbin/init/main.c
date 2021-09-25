@@ -85,10 +85,7 @@ static void init_framebuffer(void) {
 #endif
 
 #if defined(DEBUG)
-    //memset((void*) fix.smem_start, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
-    uint32_t* p = (uint32_t*) ((uintptr_t) fix.smem_start);
-    for(int i = 0; i < var.xres * var.yres * (var.bits_per_pixel >> 3) - 1000; i += sizeof(uint32_t))
-        p[i] = 0x00FFFFFF;
+    memset((void*) fix.smem_start, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
 #endif
 
 }

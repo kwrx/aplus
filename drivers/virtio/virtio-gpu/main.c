@@ -38,6 +38,7 @@
 #include <dev/pci.h>
 
 #include <dev/virtio/virtio.h>
+#include <dev/virtio/virtio-gpu.h>
 
 
 MODULE_NAME("virtio/virtio-gpu");
@@ -88,8 +89,8 @@ device_t device = {
 static void virtgpu_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->address == 0);    
+    DEBUG_ASSERT(device->size == 0);    
 
     
     virtgpu_reset(device);
@@ -100,8 +101,9 @@ static void virtgpu_init(device_t* device) {
 static void virtgpu_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+
+    // virtgpu_free_buffers();
+    // virtgpu_free_resources();
 
 }
 
@@ -134,7 +136,9 @@ static void virtgpu_reset(device_t* device) {
 
     device->vid.vs.activate = FB_ACTIVATE_NOW;
     
-    /* TODO: Reset device */
+
+    // virtgpu_free_buffers();
+    // virtgpu_free_resources();
 
 }
 
@@ -142,13 +146,12 @@ static void virtgpu_reset(device_t* device) {
 static void virtgpu_update(device_t* device) {
 
     DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->address);
     DEBUG_ASSERT(device->vid.vs.xres);
     DEBUG_ASSERT(device->vid.vs.yres);
     DEBUG_ASSERT(device->vid.vs.bits_per_pixel);
 
 
-    /* TODO: Update device */
+    // virtgpu_update_buffers();
     
 
 
@@ -182,22 +185,42 @@ static void virtgpu_update(device_t* device) {
 }
 
 
-static struct {
-    volatile uint32_t e_read;
-    volatile uint32_t e_clear;
-    volatile uint32_t num_scanouts;
-    volatile uint32_t reserved;
-} volatile* gpu_config = NULL;
 
 
-static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
+
+
+static int setup_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
+    
+    if(index == 0) {
+
+        *features |= VIRTIO_GPU_F_VIRGL;
+        *features |= VIRTIO_GPU_F_EDID;
+
+    }
+
+    if(index == 1) {
+
+        //*features |= VIRTIO_F_IN_ORDER;
+
+    }
+
     return 0;
+    
 }
+
+
 
 static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
-    gpu_config = (void*) device_config;
+    
+    struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*) device_config;
+
+    __atomic_store_n(&cfg->events_clear, cfg->events_read, __ATOMIC_SEQ_CST);
+
     return 0;
+
 }
+
+
 
 static int interrupt_handler(void* frame, uint8_t irq, struct virtio_driver* driver) {
     return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
@@ -213,19 +236,26 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         return;
 
 
-    struct virtio_driver driver = { 0 };
-
-    driver.type = VIRTIO_DEVICE_TYPE_GPU;
-    driver.device = device;
-    driver.send_window_size = 65535;
-    driver.recv_window_size = 4096;
-
-    driver.negotiate = &negotiate_features;
-    driver.setup = &setup_config;
-    driver.interrupt = &interrupt_handler;
+    //DEBUG_ASSERT(((device_t*) arg)->userdata);
 
 
-    if(virtio_pci_init(&driver) < 0) {
+
+    struct virtio_driver* driver = kmalloc(sizeof(struct virtio_driver), GFP_KERNEL);
+
+    memset(driver, 0, sizeof(struct virtio_driver));
+
+
+    driver->type = VIRTIO_DEVICE_TYPE_GPU;
+    driver->device = device;
+    driver->send_window_size = 512;
+    driver->recv_window_size = 512;
+
+    driver->negotiate = &setup_features;
+    driver->setup = &setup_config;
+    driver->interrupt = &interrupt_handler;
+
+
+    if(virtio_pci_init(driver) < 0) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
         kprintf("virtio-gpu: device %d (%X:%X) initialization failed\n", device, vid, did);
@@ -236,56 +266,23 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     }
 
 
-    kprintf("e: %d %d, scan: %d\n", gpu_config->e_read, gpu_config->e_clear, gpu_config->num_scanouts);
+    struct virtio_gpu_resp_display_info info = { 0 };
+    struct virtio_gpu_ctrl_hdr cmd = { 0 };
 
-    uint32_t r1[] = {
-        0x101,
-        0,
-        0, 0,
-        0,
-        0,
 
-        1,
-        3,
-        800,
-        600
-    };
+    cmd.type = VIRTIO_GPU_CMD_GET_DISPLAY_INFO;
+    
+    virtq_sendrecv(driver, 0, &cmd, sizeof(cmd), &info, sizeof(info) + 100);
+    
 
-    uint32_t r2[] = {
-        0x106,
-        0,
-        0, 0,
-        0,
-        0,
+    kprintf("GPU: type: %p, enabled: %p, flags: %p, x: %d, y: %d, w: %d, h: %d\n", info.hdr.type, info.pmodes[0].enabled, info.pmodes[0].flags,
+        info.pmodes[0].r.x, 
+        info.pmodes[0].r.y, 
+        info.pmodes[0].r.width, 
+        info.pmodes[0].r.height); 
 
-        1,
-        1,
-        0,
-        0
-    };
-
-    uint32_t r3[] = {
-        0x103,
-        0,
-        0, 0,
-        0,
-        0,
-
-        0,
-        0,
-        800,
-        600,
-
-        1,
-        1
-    };
-
-    virtq_send(&driver, 0, &r1, sizeof(r1));
-    virtq_send(&driver, 0, &r2, sizeof(r2));
-    virtq_send(&driver, 0, &r3, sizeof(r3));
-
-    kprintf("e: %d %d, scan: %d\n", gpu_config->e_read, gpu_config->e_clear, gpu_config->num_scanouts);
-
+    for(;;);
+    //((device_t*) arg)->userdata = driver;
 
 }
 
@@ -295,7 +292,7 @@ void init(const char* args) {
     if(args && strstr(args, "virtio=disable"))
         return;
 
-    pci_scan(&pci_find, PCI_TYPE_VGA, NULL);
+    pci_scan(&pci_find, PCI_TYPE_VGA, &device);
 
 }
 
