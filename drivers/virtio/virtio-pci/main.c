@@ -194,24 +194,61 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
 
     //
-    // MSI-X Interrupts
+    // Interrupts Handler
     //
 
-    pci_msix_t msix;
+    if(likely(driver->interrupt)) {
 
-    if(pci_find_msix(driver->device, &msix) == PCI_NONE) {
+#if defined(CONFIG_HAVE_PCI_MSIX)
+
+        pci_msix_t msix;
+
+        if(pci_find_msix(driver->device, &msix) == PCI_NONE) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-            kprintf("virtio-pci: FAIL! device %d failed, missing MSI-X interrupts capabilities\n", driver->device);
-#endif 
+            kprintf("virtio-pci: ERROR! device %d MSI-X capabilities not found!\n", driver->device);
+#endif
 
-        return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+            return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+
+        }
+
+
+        int i;
+        for(i = 0; i < cfg->num_queues; i++) {
+
+            pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t) driver->interrupt, (pci_irq_data_t) driver, i);
+            pci_msix_unmask(driver->device, &msix, i);
+
+        }
+
+        cfg->config_msix_vector = i;
+
+        pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t) driver->interrupt, (pci_irq_data_t) driver, i);
+        pci_msix_unmask(driver->device, &msix, i);
+        pci_msix_enable(driver->device, &msix);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        kprintf("virtio-pci: device %d MSI-X capabilities found [caps(%p), rows(%p), count(%d), config_msix_vector(%p)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size, cfg->config_msix_vector);
+#endif
+
+#else
+
+        driver->internals.irq = pci_read(driver->device, PCI_INTERRUPT_LINE, 1);
+
+        if(driver->internals.irq != PCI_INTERRUPT_LINE_NONE) {
+
+            pci_intx_map_irq(driver->internals.irq, driver->device, (pci_irq_handler_t) driver->interrupt, (pci_irq_data_t) driver);
+            pci_intx_unmask(driver->device);
+        
+        }
+
+#endif
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("virtio-pci: device %d MSI-X capabilities found [caps(%p), rows(%p), count(%d), config_msix_vector(%p)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size, cfg->config_msix_vector);
-#endif
+
 
 
     //
@@ -234,34 +271,6 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     driver->internals.num_queues = cfg->num_queues;
 
-
-
-    // Interrupt Handlers
-
-    if(driver->interrupt) {
-
-        driver->internals.irq = arch_intr_next_msix_irq();
-
-        arch_intr_map_irq_percpu(driver->internals.irq, (void (*)(void*, irq_t, void*)) driver->interrupt, driver, current_cpu->id);
-
-
-        int i;
-        for(i = 0; i < cfg->num_queues; i++) {
-
-            pci_msix_map(driver->device, &msix, i, driver->internals.irq, current_cpu->id);
-            pci_msix_unmask(driver->device, &msix, i);
-
-        }
-
-        cfg->config_msix_vector = i;
-
-        pci_msix_map(driver->device, &msix, i, driver->internals.irq, current_cpu->id);
-        pci_msix_unmask(driver->device, &msix, i);
-    
-
-        pci_msix_enable(driver->device, &msix);
-
-    }
 
 
     cfg_set_status_and_check(VIRTIO_DEVICE_STATUS_DRIVER_OK);

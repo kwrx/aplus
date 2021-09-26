@@ -422,8 +422,7 @@ struct ahci {
 
     uintptr_t contiguous_memory_area;
 
-    uint32_t vendorid;
-    uint32_t deviceid;
+    pcidev_t deviceid;
     uint8_t irq;
 
     semaphore_t io;
@@ -441,52 +440,45 @@ static uint8_t devices_count = 0;
 
 
 
-static void irq(void* frame, uint8_t irq, void* arg) {
+static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
+    
+    DEBUG_ASSERT(ahci);
+    DEBUG_ASSERT(ahci->irq == irq);
 
-    (void) arg;
+
+    int p = ahci->hba->is - 1;
+    int s = ahci->hba->ports[p].is;
+
+    //DEBUG_ASSERT(!(s & AHCI_PORT_IS_TFES));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBFE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBDE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_IFE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_INFE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_OFE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_IPME));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_PRCE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPME));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_PCE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPIE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_UFE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_SDBE));
+    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DSE));
+    //DEBUG_ASSERT(!(s & AHCI_PORT_IS_PSE));
+    //DEBUG_ASSERT(!(s & AHCI_PORT_IS_DHRE));
+
+
+    if(s & AHCI_PORT_IS_DHRE)
+        sem_post(&ahci->io);
+
+    
+    if(s & AHCI_PORT_IS_TFES)
+        s &= ~AHCI_PORT_IS_TFES;
     
 
-    struct ahci* ahci;
-    for(int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
+    ahci->hba->ports[p].is = s;
+    ahci->hba->is = p + 1;
 
-        if(ahci->irq != irq)
-            continue;
-
-
-
-        int p = ahci->hba->is - 1;
-        int s = ahci->hba->ports[p].is;
-
-        //DEBUG_ASSERT(!(s & AHCI_PORT_IS_TFES));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBFE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBDE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_IFE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_INFE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_OFE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_IPME));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_PRCE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPME));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_PCE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPIE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_UFE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_SDBE));
-        DEBUG_ASSERT(!(s & AHCI_PORT_IS_DSE));
-        //DEBUG_ASSERT(!(s & AHCI_PORT_IS_PSE));
-        //DEBUG_ASSERT(!(s & AHCI_PORT_IS_DHRE));
-
-
-        if(s & AHCI_PORT_IS_DHRE)
-            sem_post(&ahci->io);
-
-        
-        if(s & AHCI_PORT_IS_TFES)
-            s &= ~AHCI_PORT_IS_TFES;
-        
     
-        ahci->hba->ports[p].is = s;
-        ahci->hba->is = p + 1;
-
-    }
 
 }
 
@@ -1224,8 +1216,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     pci_enable_mmio(device);
     pci_enable_bus_mastering(device);
 
-    ahci->deviceid = did;
-    ahci->vendorid = vid;
+    ahci->deviceid = device;
     ahci->irq = pci_read(device, PCI_INTERRUPT_LINE, 1);
 
     ahci->hba = (hba_t volatile*) (pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
@@ -1270,7 +1261,13 @@ void init(const char* args) {
     kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
 #endif
 
-        arch_intr_map_irq(ahci->irq, &irq, NULL);
+        
+        if(ahci->irq != PCI_INTERRUPT_LINE_NONE) {
+
+            pci_intx_map_irq(ahci->irq, ahci->deviceid, (pci_irq_handler_t) &irq, (pci_irq_data_t) ahci);
+            pci_intx_unmask(ahci->deviceid);
+
+        }
 
 
 

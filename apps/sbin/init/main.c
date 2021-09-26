@@ -71,7 +71,6 @@ static void init_framebuffer(void) {
     ioctl(fd, FBIOPUT_VSCREENINFO, &var);
     ioctl(fd, FBIOGET_FSCREENINFO, &fix);
     
-    close(fd);
 
 
 #if defined(DEBUG)
@@ -84,9 +83,15 @@ static void init_framebuffer(void) {
     );
 #endif
 
+
+    //void* frame = mmap((void*) fix.smem_start, fix.smem_len, PROT_READ | PROT_WRITE, MAP_PRIVATE, -1, 0);
+
 #if defined(DEBUG)
-    memset((void*) fix.smem_start, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
+    //memset(frame, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
 #endif
+
+    ioctl(fd, FBIO_WAITFORVSYNC, 1);
+    close(fd);
 
 }
 

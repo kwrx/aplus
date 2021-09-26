@@ -295,25 +295,17 @@ static void pcnet_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void pcnet_irq(void* frame, uint8_t irq, void* arg) {
-
-    (void) arg;
+static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
     
+    DEBUG_ASSERT(dev);
+    DEBUG_ASSERT(dev->irq == irq);
+
     
-    struct pcnet* dev;
-    for(int i = 0; (dev = devices[i]); i++) {
-    
-        if(dev->irq != irq)
-            continue;
+    // FIXME: Use semaphore for pcnet rx ownership
+    while(d_owns(dev->rxdes, dev->rxid))
+        ethif_input(&dev->device.net.interface);
 
-        
-        // FIXME: Use semaphore for pcnet rx ownership
-        while(d_owns(dev->rxdes, dev->rxid))
-            ethif_input(&dev->device.net.interface);
-
-        w_csr32(dev, 0, r_csr32(dev, 0) | 0x0400);
-
-    }
+    w_csr32(dev, 0, r_csr32(dev, 0) | 0x0400);
 
 }
 
@@ -571,7 +563,15 @@ void init(const char* args) {
         }
 
 
-        arch_intr_map_irq(eth->irq, pcnet_irq, NULL);
+
+
+        if(eth->irq != PCI_INTERRUPT_LINE_NONE) {
+
+            pci_intx_map_irq(eth->pci, eth->irq, (pci_irq_handler_t) pcnet_irq, (pci_irq_data_t) eth);
+            pci_intx_unmask(eth->pci);
+
+        }
+
 
         netif_set_default(&eth->device.net.interface);
         netif_set_up(&eth->device.net.interface);

@@ -115,7 +115,7 @@ struct virtio_driver {
 
     int (*negotiate) (struct virtio_driver*, uint32_t*, size_t);
     int (*setup)     (struct virtio_driver*, uintptr_t);
-    int (*interrupt) (void*, uint8_t, struct virtio_driver*);
+    int (*interrupt) (pcidev_t, irq_t, struct virtio_driver*);
 
     struct {
 

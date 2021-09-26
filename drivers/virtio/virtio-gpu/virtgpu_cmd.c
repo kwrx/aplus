@@ -166,3 +166,29 @@ int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t r
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
 }
+
+
+int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint64_t offset, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_transfer_to_host_2d cmd;
+    struct virtio_gpu_response resp;
+
+    cmd.hdr.type = VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D;
+    cmd.offset = offset;
+    cmd.r.x = x;
+    cmd.r.y = y;
+    cmd.r.width = width;
+    cmd.r.height = height;
+    cmd.resource_id = resource;
+
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return -EIO;
+
+    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}

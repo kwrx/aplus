@@ -354,31 +354,24 @@ static void e1000_input_nomem(void* internals, uint16_t len) {
 
 
 
-static void e1000_irq(void* frame, uint8_t irq, void* arg) {
+static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000* dev) {    
 
-    (void) arg;
-    
-
-    struct e1000* dev;
-    for(int i = 0; (dev = devices[i]); i++) {
-    
-        if(dev->irq != irq)
-            continue;
+    DEBUG_ASSERT(dev);
+    DEBUG_ASSERT(dev->irq == irq);
 
 
-        uint32_t s;
+    uint32_t s;
 
-        wrcmd(dev, REG_IMASK, 0x01);
-        s = rdcmd(dev, 0xC0);
+    wrcmd(dev, REG_IMASK, 0x01);
+    s = rdcmd(dev, 0xC0);
 
-        if(s & 0x04)
-            kprintf("e1000: netif up!");
-        else if(s & 0x10)
-            kprintf("e1000: good treshold");
-        else if(s & 0x80)
-            ethif_input(&dev->device.net.interface);
+    if(s & 0x04)
+        kprintf("e1000: netif up!");
+    else if(s & 0x10)
+        kprintf("e1000: good treshold");
+    else if(s & 0x80)
+        ethif_input(&dev->device.net.interface);
 
-    }
 
 }
 
@@ -550,7 +543,12 @@ void init(const char* args) {
         eth->device.net.low_level_input_nomem  = e1000_input_nomem;
 
 
-        arch_intr_map_irq(eth->irq, e1000_irq, NULL);
+        if(eth->irq != PCI_INTERRUPT_LINE_NONE) {
+
+            pci_intx_map_irq(eth->pci, eth->irq, (pci_irq_handler_t) e1000_irq, (pci_irq_data_t) eth);
+            pci_intx_unmask(eth->pci);
+
+        }
 
 
 

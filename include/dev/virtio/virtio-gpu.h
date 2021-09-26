@@ -228,6 +228,7 @@ int virtgpu_cmd_resource_unref(struct virtgpu*, uint64_t);
 int virtgpu_cmd_resource_create_2d(struct virtgpu*, uint64_t*, uint32_t, uint32_t, uint32_t);
 int virtgpu_cmd_resource_attach_backing(struct virtgpu*, uint64_t, uint64_t, size_t);
 int virtgpu_cmd_set_scanout(struct virtgpu*, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_transfer_to_host_2d(struct virtgpu*, uint64_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
 
 __END_DECLS
 

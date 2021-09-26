@@ -91,10 +91,15 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     driver->internals.queues[index].size        = qsize;
 
 
+#if defined(CONFIG_HAVE_PCI_MSIX)
+    cfg->queue_msix_vector  = cpu_to_le16(index);
+#else
+    cfg->queue_msix_vector  = cpu_to_le16(VIRTIO_MSI_NO_VECTOR);
+#endif
+
     cfg->queue_desc         = cpu_to_le64(pbuf + (0));
     cfg->queue_driver       = cpu_to_le64(pbuf + (qsize * 16));
     cfg->queue_device       = cpu_to_le64(pbuf + (qsize * 16) + (qsize * 2 + 6));
-    cfg->queue_msix_vector  = cpu_to_le16(index);
     cfg->queue_enable       = cpu_to_le16(1);
 
     __atomic_membarrier();
@@ -244,6 +249,8 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
     while(used_idx == le16_to_cpu(driver->internals.queues[queue].used->q_idx))
         __atomic_membarrier();
+
+    __atomic_membarrier();
         
 
     memcpy (

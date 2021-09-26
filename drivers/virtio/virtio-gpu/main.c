@@ -62,6 +62,7 @@ static void virtgpu_init(device_t*);
 static void virtgpu_dnit(device_t*);
 static void virtgpu_reset(device_t*);
 static void virtgpu_update(device_t*);
+static void virtgpu_wait_vsync(device_t*);
 
 
 device_t device = {
@@ -85,6 +86,7 @@ device_t device = {
     .reset = virtgpu_reset,
 
     .vid.update = virtgpu_update,
+    .vid.wait_vsync = virtgpu_wait_vsync,
 
 };
 
@@ -237,6 +239,15 @@ static void virtgpu_update(device_t* device) {
 }
 
 
+static void virtgpu_wait_vsync(device_t* device) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    virtgpu_cmd_transfer_to_host_2d(device->userdata, VIRTGPU_FB_RESID, 0, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+
+}
+
 
 
 
@@ -269,8 +280,8 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
 
 
-static int interrupt_handler(void* frame, uint8_t irq, struct virtio_driver* driver) {
-    return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
+static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
+    return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p %p %p\n", *driver->internals.isr_status, vector, device), 0;
 }
 
 
@@ -343,6 +354,8 @@ void init(const char* args) {
         return;
 
     device_mkdev(&device, 0644);
+
+    for(;;);
 
 }
 

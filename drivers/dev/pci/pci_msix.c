@@ -37,6 +37,40 @@
 
 
 
+#define PCI_MSIX_DEVICES_MAX                128
+#define PCI_MSIX_INTR_BASE                  65
+
+
+static struct {
+    pcidev_t device;
+    pci_irq_handler_t handler;
+    pci_irq_data_t data;
+    uint16_t index;
+} pci_msix_devices[PCI_MSIX_DEVICES_MAX] = { 0 };
+
+
+
+static void pci_msix_interrupt_handler(void* frame, irq_t irq) {
+
+    DEBUG_ASSERT(irq > PCI_MSIX_INTR_BASE - 1);
+    DEBUG_ASSERT(irq < PCI_MSIX_INTR_BASE + PCI_MSIX_DEVICES_MAX);
+
+    
+    irq -= PCI_MSIX_INTR_BASE;
+
+    if(!pci_msix_devices[irq].device)
+        return;
+
+    if(!pci_msix_devices[irq].handler)
+        return;
+
+
+    pci_msix_devices[irq].handler(pci_msix_devices[irq].device, pci_msix_devices[irq].index, pci_msix_devices[irq].data);
+
+}
+
+
+
 
 int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
@@ -157,6 +191,8 @@ void pci_msix_mask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
 
     msix->msix_rows[index].pr_ctl |= PCI_MSIX_INTR_MASK;
 
+    __atomic_membarrier();
+
 }
 
 void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
@@ -167,24 +203,96 @@ void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
 
     msix->msix_rows[index].pr_ctl &= ~PCI_MSIX_INTR_MASK;
 
+    __atomic_membarrier();
+
 }
 
-void pci_msix_map(pcidev_t device, pci_msix_t* msix, uint32_t index, irq_t irq, cpuid_t cpu) {
+
+
+int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handler, pci_irq_data_t data, uint16_t index) {
 
     DEBUG_ASSERT(device);
+    DEBUG_ASSERT(handler);
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_rows);
-    DEBUG_ASSERT(index <= msix->msix_pci.pci_msgctl_table_size);
+    DEBUG_ASSERT(msix->msix_pci.pci_msgctl_table_size >= index);
 
-#if defined(__i386__) || defined(__x86_64__)
-    DEBUG_ASSERT(irq >= 0x10);
+
+    size_t i;
+    for(i = 0; i < PCI_MSIX_DEVICES_MAX; i++) {
+
+        if(pci_msix_devices[i].device)
+            continue;
+
+        if(pci_msix_devices[i].handler)
+            continue;
+        
+
+        pci_msix_devices[i].device = device;
+        pci_msix_devices[i].handler = handler;
+        pci_msix_devices[i].data = data;
+        pci_msix_devices[i].index = index;
+
+        arch_intr_map_intr(i + PCI_MSIX_INTR_BASE, pci_msix_interrupt_handler);
+
+
+        msix->msix_rows[index].pr_address   = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12));
+        msix->msix_rows[index].pr_data      = cpu_to_le32(i + PCI_MSIX_INTR_BASE);
+        msix->msix_rows[index].pr_ctl       = cpu_to_le32(le32_to_cpu(msix->msix_rows[index].pr_ctl) | PCI_MSIX_INTR_MASK);
+
+        __atomic_membarrier();
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+        kprintf("pci-msix: slot %d mapped for device %d [index(%p), handler(%p), data(%p)]\n", i, device, index, handler, data);
 #endif
 
-    msix->msix_rows[index].pr_address = cpu_to_le64((0xFEE << 20) | (cpu << 12));
-    msix->msix_rows[index].pr_data = cpu_to_le32(irq);
-    msix->msix_rows[index].pr_ctl |= PCI_MSIX_INTR_MASK;
+        return 0;
+    }
+
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+    kprintf("pci-msix: ERROR! No more device slots available for device %d [index(%p), handler(%p), data(%p)]\n", device, index, handler, data);
+#endif
+
+    return -ENOSPC;
 
 }
 
+
+int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
+
+    size_t i;
+    for(i = 0; i < PCI_MSIX_DEVICES_MAX; i++) {
+
+        if(pci_msix_devices[i].device != device)
+            continue;
+
+
+        msix->msix_rows[pci_msix_devices[i].index].pr_address   = 0;
+        msix->msix_rows[pci_msix_devices[i].index].pr_data      = 0;
+        msix->msix_rows[pci_msix_devices[i].index].pr_ctl       = cpu_to_le32(le32_to_cpu(msix->msix_rows[pci_msix_devices[i].index].pr_ctl) | PCI_MSIX_INTR_MASK);
+
+        __atomic_membarrier();
+
+
+        pci_msix_devices[i].device = 0;
+        pci_msix_devices[i].handler = NULL;
+        pci_msix_devices[i].data = NULL;
+        pci_msix_devices[i].index = 0;
+
+        return 0;
+
+    }
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+    kprintf("pci-msix: ERROR! No device slot found for device %d\n", device);
+#endif
+
+    return -ESRCH;
+
+}
 
 

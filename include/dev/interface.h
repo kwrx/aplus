@@ -115,10 +115,13 @@ typedef struct device {
         } blk;
 
         struct {
+            
             struct fb_var_screeninfo vs;
             struct fb_fix_screeninfo fs;
 
             void (*update) (struct device*);
+            void (*wait_vsync) (struct device*);
+
         } vid;
 
         

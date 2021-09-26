@@ -56,8 +56,13 @@ if [ ! -z $2 ]; then
     debug="-S"
 fi
 
+trace=""
+if [ ! -z $TRACE ]; then
+    trace="-trace $TRACE"
+fi
+
 #sudo trace-cmd record -e kvm/* qemu-system-$arch -d int -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
 #sudo trace-cmd report > trace.log
 #rm -f trace.dat
 
-qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags
+qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace

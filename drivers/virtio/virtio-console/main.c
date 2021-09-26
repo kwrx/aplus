@@ -118,7 +118,7 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-static int interrupt_handler(void* frame, uint8_t irq, struct virtio_driver* driver) {
+static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
     return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
 }
 

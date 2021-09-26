@@ -71,6 +71,8 @@ typedef uint32_t pcidev_t;
 
 #define PCI_INTERRUPT_PIN               0x3D
 #define PCI_INTERRUPT_LINE              0x3C
+#define PCI_INTERRUPT_LINE_NONE         0xFF
+
 #define PCI_SECONDARY_BUS               0x09
 
 #define PCI_CAPABILITIES                0x34
@@ -186,6 +188,10 @@ typedef struct pci_msix {
 
 
 
+typedef void* pci_irq_data_t;
+typedef void(*pci_irq_handler_t) (pcidev_t, irq_t, pci_irq_data_t);
+
+
 
 
 /* Platform dependents */
@@ -209,7 +215,14 @@ void pci_msix_enable(pcidev_t, pci_msix_t*);
 void pci_msix_disable(pcidev_t, pci_msix_t*);
 void pci_msix_mask(pcidev_t, pci_msix_t*, uint32_t);
 void pci_msix_unmask(pcidev_t, pci_msix_t*, uint32_t);
-void pci_msix_map(pcidev_t, pci_msix_t*, uint32_t, irq_t, cpuid_t);
+int pci_msix_map_irq(pcidev_t, pci_msix_t*, pci_irq_handler_t, pci_irq_data_t, uint16_t);
+int pci_msix_unmap_irq(pcidev_t, pci_msix_t*);
+
+/* INTx */
+int pci_intx_map_irq(irq_t, pcidev_t, pci_irq_handler_t, pci_irq_data_t);
+int pci_intx_unmap_irq(pcidev_t);
+void pci_intx_mask(pcidev_t);
+void pci_intx_unmask(pcidev_t);
 
 __END_DECLS
 

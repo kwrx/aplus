@@ -71,10 +71,18 @@ int video_ioctl(device_t* device, int req, void __user* arg) {
 
             uio_memcpy_s2u(arg, &device->vid.fs, sizeof(struct fb_fix_screeninfo));
             break;
+
+        case FBIO_WAITFORVSYNC:
+
+            if(likely(device->vid.wait_vsync))
+                device->vid.wait_vsync(device);
             
+            break;
+
 
         default:
             return errno = ENOSYS, -1;
+
     }
 
     return 0;
