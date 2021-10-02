@@ -157,7 +157,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
         }                                                                           \
     }
 #else
-    #define cfg_set_status_and_check(cfg, status) {                                 \
+    #define cfg_set_status_and_check(status) {                                      \
         __atomic_or_fetch(&cfg->device_status, status, __ATOMIC_SEQ_CST);           \
         if((cfg->device_status & status) == 0)                                      \
             return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;       \
