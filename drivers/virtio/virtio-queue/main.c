@@ -90,6 +90,9 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     driver->internals.queues[index].notify      = (struct virtq_notify volatile*) driver->internals.notify_offset + (cfg->queue_notify_off * driver->internals.notify_off_multiplier);
     driver->internals.queues[index].size        = qsize;
 
+    sem_init(&driver->internals.queues[index].iosem, 0);
+
+
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
     cfg->queue_msix_vector  = cpu_to_le16(index);
@@ -135,7 +138,7 @@ int virtq_get_free_descriptor(struct virtio_driver* driver, uint16_t queue) {
     for(uint16_t d = 1; d < driver->internals.queues[queue].size; d++) {
 
 
-        if(driver->internals.queues[queue].descriptors[d].q_address == 0xFFFFFFFFFFFFFFFF)
+        if(driver->internals.queues[queue].descriptors[d].q_address)
             continue;
 
 
@@ -187,11 +190,15 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     DEBUG_ASSERT(size < driver->send_window_size);
     DEBUG_ASSERT(outsize < driver->recv_window_size);
 
-    
 
 
     ssize_t inp = virtq_get_free_descriptor(driver, queue);
     ssize_t out = virtq_get_free_descriptor(driver, queue);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("virtio-queue: device %d is sendrecv on queue %d [inp(%d), out(%d), message(%p), size(%p), output(%p), outsize(%p)]\n", driver->device, queue, inp, out, message, size, output, outsize);
+#endif
 
 
     if(unlikely(inp < 0 || out < 0)) {
@@ -230,39 +237,59 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     __atomic_membarrier();
 
 
+
+    uint16_t seen = le16_to_cpu(driver->internals.queues[queue].used->q_idx);
     uint16_t next = le16_to_cpu(driver->internals.queues[queue].available->q_idx) % driver->internals.queues[queue].size;
 
-    driver->internals.queues[queue].available->q_ring[next++] = cpu_to_le16(inp);
-    driver->internals.queues[queue].available->q_ring[next++] = cpu_to_le16(out);
-    driver->internals.queues[queue].available->q_idx          = cpu_to_le16(driver->internals.queues[queue].available->q_idx + 2);
+    driver->internals.queues[queue].available->q_ring[next]   = cpu_to_le16(inp);
+    driver->internals.queues[queue].available->q_flags        = cpu_to_le16(0);
+    driver->internals.queues[queue].available->q_idx          = cpu_to_le16(le16_to_cpu(driver->internals.queues[queue].available->q_idx) + 1);
 
-    uint16_t used_idx = le16_to_cpu(driver->internals.queues[queue].used->q_idx);
+
+    driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
 
     __atomic_membarrier();
-
-    driver->internals.queues[queue].notify->n_idx = queue;
-
-    __atomic_membarrier();
-
-
-
-    while(used_idx == le16_to_cpu(driver->internals.queues[queue].used->q_idx))
-        __atomic_membarrier();
-
-    __atomic_membarrier();
-        
-
-    memcpy (
-        output,
-        (void*) arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), 
-        outsize
-    );
 
 
     
+    sem_wait(&driver->internals.queues[queue].iosem);
+
+
+    do {
+
+        size_t i;
+        for(i = seen; i < le16_to_cpu(driver->internals.queues[queue].used->q_idx); i++) {
+
+            if(le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_id) != inp)
+                continue;
+
+    
+            memcpy (
+                output,
+                (void*) arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), 
+                outsize
+            );
+
+
+            seen = 0xFFFF;
+            break;
+
+        }
+
+        __atomic_membarrier();
+
+    } while(seen != 0xFFFF);
+
+        
     return outsize;
 
+}
+
+
+
+void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
+    sem_post(&driver->internals.queues[queue].iosem);
 }
 
 

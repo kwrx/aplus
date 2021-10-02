@@ -5,7 +5,7 @@ $(error Run ./configure to generate wrapper and ./makew to use Makefile)
 endif
 
 
-export QUIET    := @
+export QUIET    := @ 
 export VM       := qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
@@ -35,6 +35,9 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 run: install
+	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+
+run-fast:
 	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 clean: CLEANALL

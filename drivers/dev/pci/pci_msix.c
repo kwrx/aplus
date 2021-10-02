@@ -48,6 +48,8 @@ static struct {
     uint16_t index;
 } pci_msix_devices[PCI_MSIX_DEVICES_MAX] = { 0 };
 
+static spinlock_t pci_msix_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);
+
 
 
 static void pci_msix_interrupt_handler(void* frame, irq_t irq) {
@@ -218,6 +220,8 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
     DEBUG_ASSERT(msix->msix_pci.pci_msgctl_table_size >= index);
 
 
+    spinlock_lock(&pci_msix_lock);
+
     size_t i;
     for(i = 0; i < PCI_MSIX_DEVICES_MAX; i++) {
 
@@ -236,7 +240,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         arch_intr_map_intr(i + PCI_MSIX_INTR_BASE, pci_msix_interrupt_handler);
 
 
-        msix->msix_rows[index].pr_address   = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12));
+        msix->msix_rows[index].pr_address   = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12) | (1 << 14));
         msix->msix_rows[index].pr_data      = cpu_to_le32(i + PCI_MSIX_INTR_BASE);
         msix->msix_rows[index].pr_ctl       = cpu_to_le32(le32_to_cpu(msix->msix_rows[index].pr_ctl) | PCI_MSIX_INTR_MASK);
 
@@ -247,9 +251,12 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         kprintf("pci-msix: slot %d mapped for device %d [index(%p), handler(%p), data(%p)]\n", i, device, index, handler, data);
 #endif
 
+        spinlock_unlock(&pci_msix_lock);
         return 0;
     }
 
+
+    spinlock_unlock(&pci_msix_lock);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
@@ -262,6 +269,9 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
 
 
 int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
+
+    spinlock_lock(&pci_msix_lock);
+
 
     size_t i;
     for(i = 0; i < PCI_MSIX_DEVICES_MAX; i++) {
@@ -282,9 +292,14 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         pci_msix_devices[i].data = NULL;
         pci_msix_devices[i].index = 0;
 
+
+        spinlock_unlock(&pci_msix_lock);
         return 0;
 
     }
+
+
+    spinlock_unlock(&pci_msix_lock);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0

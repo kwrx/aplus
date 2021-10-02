@@ -235,7 +235,7 @@ static void fsave_restore(void* fpu_area) {
 void fpu_init(uint64_t cpu) {
 
     if(!(boot_cpu_has(X86_FEATURE_FPU)))
-        kpanicf("x86-fpu: FPU not supported by cpu, required!\n");
+        kpanicf("x86-fpu: PANIC! FPU not supported by current cpu, required!\n");
 
     DEBUG_ASSERT(((uintptr_t) &__fpu_inital_state[0] & 63) == 0);
 

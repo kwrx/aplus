@@ -45,6 +45,10 @@ static struct {
     pci_irq_data_t data;
 } pci_intx_devices[PCI_INTX_DEVICES_MAX] = { 0 };
 
+static spinlock_t pci_intx_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);
+
+
+
 
 static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
@@ -76,6 +80,9 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
 int pci_intx_map_irq(irq_t irq, pcidev_t device, pci_irq_handler_t handler, pci_irq_data_t data) {
 
+    spinlock_lock(&pci_intx_lock);
+
+
     size_t i;
     for(i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
 
@@ -83,9 +90,9 @@ int pci_intx_map_irq(irq_t irq, pcidev_t device, pci_irq_handler_t handler, pci_
             continue;
 
 
+        pci_intx_devices[i].data = data;
         pci_intx_devices[i].device = device;
         pci_intx_devices[i].handler = handler;
-        pci_intx_devices[i].data = data;
 
         arch_intr_map_irq(irq, pci_intx_interrupt_handler);
 
@@ -94,9 +101,13 @@ int pci_intx_map_irq(irq_t irq, pcidev_t device, pci_irq_handler_t handler, pci_
         kprintf("pci-intx: slot %d mapped for device %d [irq(%p), handler(%p), data(%p)]\n", i, device, irq, handler, data);
 #endif
 
+        spinlock_unlock(&pci_intx_lock);
         return 0;
 
     }
+
+
+    spinlock_unlock(&pci_intx_lock);
     
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
@@ -110,6 +121,9 @@ int pci_intx_map_irq(irq_t irq, pcidev_t device, pci_irq_handler_t handler, pci_
 
 int pci_intx_unmap_irq(pcidev_t device) {
 
+    spinlock_lock(&pci_intx_lock);
+
+
     size_t i;
     for(i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
 
@@ -121,9 +135,13 @@ int pci_intx_unmap_irq(pcidev_t device) {
         pci_intx_devices[i].handler = NULL;
         pci_intx_devices[i].data = NULL;
 
+        spinlock_unlock(&pci_intx_lock);
         return 0;
 
     }
+
+
+    spinlock_unlock(&pci_intx_lock);
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0

@@ -57,7 +57,7 @@
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)
-- [X] User API
+- [x] User API
 - [ ] Wait Queue
 - [ ] Signal Handling
 - [x] Module Loading
@@ -85,25 +85,32 @@
 - [x] Network Devices
 - [ ] PTY Devices
 - [ ] Framebuffer Video
-
-### VirtIO
-- [ ] Block
-- [ ] Network
-
-### Platform (PC)
-- [x] PCI Support
-- [x] AHCI Controller (SATA)
-- [x] IDE Controller (PATA)
+- [ ] Full Video Interface
+- [x] Virtio PCI
+- [x] Virtio Queues
+- [ ] Virtio GPU
+- [ ] Virtio Block
+- [ ] Virtio Network
+- [ ] Virtio Crypto
+- [ ] Virtio Console
 - [x] Bochs VGA Controller
 - [ ] VMWare VGA Controller
-- [ ] AC97 Audio Adepter
-- [ ] Intel HD Audio Adepter
-- [x] Serial Port
+
+### Platform (PC)
+- [x] PCI
+- [x] PCI INTx
+- [ ] PCI MSI
+- [ ] PCI MSIX
+- [x] AHCI Controller (SATA)
+- [x] IDE Controller (PATA)
+- [ ] AC97 Audio Adapter
+- [ ] Intel HD Audio Adapter
+- [x] Serial Port UARTx
 - [x] PS/2 Keyboard/Mouse
 - [ ] USB Support
-- [x] Intel E1000 Network Adepter
-- [x] PCNET Network Adepter
-- [x] Realter RTL8139 Network Adepter
+- [x] Intel E1000 Network Adapter
+- [x] PCNET Network Adapter
+- [x] Realter RTL8139 Network Adapter
 
 ------------------------------------------
 ## Userspace

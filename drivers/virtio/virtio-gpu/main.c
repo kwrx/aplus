@@ -261,6 +261,12 @@ static int setup_features(struct virtio_driver* driver, uint32_t* features, size
 
     }
 
+    if(index == 1) {
+
+        *features |= VIRTIO_F_IN_ORDER;
+
+    }
+
     return 0;
     
 }
@@ -274,6 +280,11 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     __atomic_store_n(&cfg->events_clear, cfg->events_read, __ATOMIC_SEQ_CST);
     __atomic_membarrier();
 
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("virtio-gpu: setup device configuration [scanouts(%d)]\n", cfg->num_scanouts);
+#endif
+
     return 0;
 
 }
@@ -281,7 +292,15 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
 
 static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
-    return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p %p %p\n", *driver->internals.isr_status, vector, device), 0;
+    
+    struct virtio_gpu_config* cfg = (struct virtio_gpu_config*) driver->internals.device_config;
+
+    kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p %p\n", cfg->events_read, device);
+
+    cfg->events_clear |= cfg->events_read;
+
+    return 0;
+
 }
 
 

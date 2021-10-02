@@ -70,6 +70,10 @@
 #define VIRTIO_DEVICE_STATUS_NEED_RESET             64
 #define VIRTIO_DEVICE_STATUS_FAILED                 128
 
+// ISR Status
+#define VIRTIO_ISR_STATUS_QUEUE                     (1 << 0)
+#define VIRTIO_ISR_STATUS_CONFIG                    (1 << 1)
+
 
 // Reserved feature bits
 // Select (1)
@@ -131,6 +135,8 @@ struct virtio_driver {
 
         
         struct {
+
+            semaphore_t iosem;
 
             struct virtq_descriptor volatile* descriptors;
             struct virtq_available volatile* available;
@@ -222,12 +228,12 @@ struct virtq_used {
 
 struct virtq_notify {
     union {
-        struct {
-            uint32_t n_vqn : 16;
-            uint32_t n_offset : 15;
-            uint32_t n_wrap : 1;
+        volatile struct {
+            volatile uint32_t n_vqn : 16;
+            volatile uint32_t n_offset : 15;
+            volatile uint32_t n_wrap : 1;
         };
-        uint16_t n_idx;
+        volatile uint16_t n_idx;
     };
 } __packed;
 
@@ -241,6 +247,7 @@ int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, ui
 ssize_t virtq_send(struct virtio_driver*, uint16_t, void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
+void virtq_flush(struct virtio_driver*, uint16_t);
 
 __END_DECLS
 

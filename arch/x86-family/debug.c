@@ -36,20 +36,31 @@
 
 #define BIOS_COM_ADDRESS            0x400
 
+#define COM1_DEFAULT_PORT           0x3F8
+#define COM2_DEFAULT_PORT           0x2F8
+#define COM3_DEFAULT_PORT           0x3E8
+#define COM4_DEFAULT_PORT           0x2E8
+
 
 static uint16_t com_address = 0;
 
 
 /*!
- * @brief Initialize Debugger on UART0.
+ * @brief Initialize Debugger on UARTx.
  * 
- * Read COM Address from SMBios Area and configure Serial Port.
+ * Read COM Address from SMBios Area or default ports collection and configure Serial Ports.
  */
 void arch_debug_init(void) {
 
+#if defined(CONFIG_X86_HAVE_SMBIOS)
     uint16_t* p = (uint16_t*) (KERNEL_HIGH_AREA + BIOS_COM_ADDRESS);
-    
+#else
+    uint16_t p[] = { COM1_DEFAULT_PORT, COM2_DEFAULT_PORT, COM3_DEFAULT_PORT, COM4_DEFAULT_PORT };
+#endif
+
+
     for(int i = 0; i < 4; i++) {
+
         if(p[i] == 0)
             continue;
 
@@ -83,7 +94,7 @@ void arch_debug_putc(char ch) {
         __builtin_ia32_pause();
 
 
-    if(ch == '\n')
+    if(unlikely(ch == '\n'))
         outb(com_address, '\r');
 
     outb(com_address, ch);
