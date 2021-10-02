@@ -1,12 +1,12 @@
 
 # aplus `#os`
-[![build](https://github.com/kwrx/aplus/actions/workflows/deploy.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/deploy.yml)
+[![deploy](https://github.com/kwrx/aplus/actions/workflows/deploy.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/deploy.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
 *A hobbyist operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.*
 
-## :computer: Features
+## :fire: Features
 
 * **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets
 * **Multitasking**: Thread and Process support with SMP
@@ -48,7 +48,7 @@ Modules provides various core platform features: caching, char/block devices, fi
 
 ---
 
-## :checkered_flag: Getting Started
+## :zap: Getting Started
 0. Clone this repository and change working directory.
 ```bash
 $ git clone https://github.com/kwrx/aplus
@@ -71,7 +71,7 @@ Now you have basically two options to build image from sources.
 $ ./extra/utils/run-qemu TARGET
 ```
 
-**NOTE:** Replace `TARGET` with your desired target output: `i686`, `x86_64`, etc.
+**NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
 
 ### Building with Toolchain:
 It's recommended you use a recent Linux host environment with this method.

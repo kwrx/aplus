@@ -35,9 +35,9 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 dist: install
-	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz $(TARGET)
-	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz $(TARGET)
-	$(QUIET)zip aplus-$(PLATFORM).zip $(TARGET)
+	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz $(SYSROOT) $(ROOTDIR)/docs/README.txt $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
+	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz $(SYSROOT) $(ROOTDIR)/docs/README.txt $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
+	$(QUIET)zip     aplus-$(PLATFORM).zip    $(SYSROOT) $(ROOTDIR)/docs/README.txt $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
 
 
 run: install
