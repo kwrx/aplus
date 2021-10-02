@@ -71,7 +71,7 @@ Now you have basically two options to build image from sources.
 $ ./extra/utils/run-qemu TARGET
 ```
 
-**NOTE:** Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
+**NOTE:** Replace `TARGET` with your desired target output: `i686`, `x86_64`, etc.
 
 ### Building with Toolchain:
 It's recommended you use a recent Linux host environment with this method.
