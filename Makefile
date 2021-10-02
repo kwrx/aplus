@@ -35,9 +35,17 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 dist: $(TARGET) INSTALLALL
-	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz $(SYSROOT) $(ROOTDIR)/docs/README.md $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
-	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz $(SYSROOT) $(ROOTDIR)/docs/README.md $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
-	$(QUIET)zip     aplus-$(PLATFORM).zip    $(SYSROOT) $(ROOTDIR)/docs/README.md $(ROOTDIR)/extra/utils/gen-image $(ROOTDIR)/extra/utils/gen-grubcfg $(ROOTDIR)/extra/utils/run-qemu
+	$(QUIET)mkdir -p                         aplus-$(PLATFORM)
+	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)
+	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
+	$(QUIET)cp -r extra/utils/run-qemu       aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r extra/utils/gen-grubcfg    aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r extra/utils/gen-image      aplus-$(PLATFORM)/utils
+	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM) 
+	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM) 
+	$(QUIET)zip     aplus-$(PLATFORM).zip    aplus-$(PLATFORM)
+	$(QUIET)$(RM) -rf                        aplus-$(PLATFORM)
 
 
 run: install

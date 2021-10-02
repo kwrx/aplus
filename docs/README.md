@@ -9,17 +9,19 @@
 1. Open your terminal and type:
 
 ```bash
-$ ./extra/utils/gen-grubcfg root
+$ ./utils/gen-grubcfg root
 ```
 
 2. Generate .img file
+
 ```bash
-$ ./extra/utils/gen-image root aplus.img
+$ ./utils/gen-image root aplus.img
 ```
 
 3. Run it
+
 ```bash
-$ ./extra/utils/run-qemu TARGET
+$ ./utils/run-qemu TARGET
 ```
 
 **NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
