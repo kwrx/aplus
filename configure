@@ -33,7 +33,8 @@ echo "## Checking dependencies"
     required autoconf
     required fc-scan
     required grub-install
-
+    required python3
+    required pip3
 
 
 echo "## Preparing environment"
@@ -42,16 +43,17 @@ echo "## Preparing environment"
         git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib $kconfig
     fi
 
+    pip3 install -r docs/requirements.txt
 
 
 echo "## Generate configuration"
 
     if [ -d $gconfig/$1.config ]; then
-        KCONFIG_CONFIG=config.mk $kconfig/defconfig.py $gconfig/$1.config
-        KCONFIG_CONFIG=config.mk $kconfig/genconfig.py $gconfig/$1.config
+        KCONFIG_CONFIG=config.mk python3 $kconfig/defconfig.py $gconfig/$1.config
+        KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py $gconfig/$1.config
     else
-        KCONFIG_CONFIG=config.mk $kconfig/menuconfig.py .config
-        KCONFIG_CONFIG=config.mk $kconfig/genconfig.py  .config
+        KCONFIG_CONFIG=config.mk python3 $kconfig/menuconfig.py .config
+        KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py  .config
     fi
 
     if [ ! -f config.mk ]; then
@@ -83,8 +85,8 @@ echo "## Configure environment"
 
 echo "## Get Packages"
 
-    ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
-    ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i system-base system-cursors system-fonts system-images system-keymaps
+    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i system-base system-cursors system-fonts system-images system-keymaps
 
 
 echo "## Generate Wrapper"

@@ -1,6 +1,6 @@
 
 # aplus `#os`
-[![build](https://github.com/kwrx/aplus/actions/workflows/build-image.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/build-image.yml)
+[![build](https://github.com/kwrx/aplus/actions/workflows/deploy.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/deploy.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
