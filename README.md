@@ -66,7 +66,7 @@ Now you have basically two options to build image from sources.
     ./extra/utils/build-with-docker TARGET
 ```
 
-2. Run with (Linux):
+2. Run it (Linux):
 ```
 $ ./extra/utils/run-qemu TARGET
 ```
