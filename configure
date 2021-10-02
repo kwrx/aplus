@@ -35,6 +35,7 @@ echo "## Checking dependencies"
     required grub-install
     required python3
     required pip3
+    required zip
 
 
 echo "## Preparing environment"

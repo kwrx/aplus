@@ -17,7 +17,7 @@ jobs:
     - name: Install Dependencies
       working-directory: ${{github.workspace}}
       shell: bash
-      run: sudo apt update && sudo apt upgrade && sudo apt install -y build-essential gcc g++ nasm parted e2fsprogs automake autoconf grub-pc python3 python3-pip
+      run: sudo apt update && sudo apt upgrade && sudo apt install -y build-essential gcc g++ nasm parted e2fsprogs automake autoconf grub-pc python3 python3-pip sudo fontconfig zip
 
     - name: Setup environement
       working-directory: ${{github.workspace}}

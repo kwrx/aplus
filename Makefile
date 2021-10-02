@@ -34,6 +34,12 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
+dist: install
+	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz $(TARGET)
+	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz $(TARGET)
+	$(QUIET)zip aplus-$(PLATFORM).zip $(TARGET)
+
+
 run: install
 	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
@@ -42,7 +48,7 @@ run-fast:
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL
-	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew 
+	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip
 	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
 	$(QUIET)$(ROOTDIR)/extra/utils/get-pkg.py --clean 
 
