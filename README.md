@@ -1,16 +1,12 @@
 
-# aPlus
-A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.
-The project started in September 2013 as an educational and personal project, it's written mainly in C/C++ and Assembly.
+# aplus `#os`
+[![build](https://github.com/kwrx/aplus/actions/workflows/build-image.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/build-image.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
+[![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
-<p align="center">
-    <img src="./extra/images/v0.4-os.png" alt="aPlus v0.4 - CLI interface running on Qemu"></img>
-</p>
+*A hobbyist operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.*
 
-
-
-
-## Features
+## :computer: Features
 
 * **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets
 * **Multitasking**: Thread and Process support with SMP
@@ -19,45 +15,50 @@ The project started in September 2013 as an educational and personal project, it
 * **ELF**: Dynamic and static executables 
 * **Linux Framebuffer**: Linux-like framebuffer support
 * **Linux Syscalls**: Linux-like syscall layer
+* **Virtio**: Virtio devices (gpu, block, network, crypto)
 * **GUI**: coming soon...
+  
+See [FEATURES.md](/docs/FEATURES.md) for more information about features. 
+  
+<br>
+<p align="center" width="100%">
+    <img src="./extra/images/v0.4-os.png" alt="aPlus v0.4 - CLI interface running on Qemu" width="100%"></img>
+</p>
 
-## Kernel
-The kernel provides a basic Unix/Posix environment.
-It uses a hybrid modular architecture with support for various platforms like x86, x86_64, ARM, etc... and loadable modules.
+
+## :electron: Kernel
+The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
+Futhermore, it uses a modular architecture with loadables kernel objects and run on different platforms like x86, x86_64, ARM, etc.
 
 
-## Userspace
-aPlus's userspace is still under development, it provides several GNU/Linux core tools, development tools like gcc or binutils, a very simple Java Virtual Machine, GUI, Windows Manager, services like NTP, I/O Cache Sync, other tools, etc...
+## :robot: Userspace
+aplus userspace is still under development. It provides several GNU/Linux core tools, devtools like `gcc` or `binutils`, a very simple Java Virtual Machine, graphical interface, windows manager, services like NTP, I/O Cache Sync and so on.
 
-Userspace has **multi-user** implementation with Unix permission support and superuser (root), unix-like filesystem with `/proc` and `/dev` supports
+Userspace has **multi-user** environment with unix permission support, superuser (root), unix-like filesystem with `/proc` and `/dev` implementation
 
-### Notable applications/libraries
-* **C/C++**, [libs/c](sdk/libs/c), [libs/m](sdk/libs/m), [libs/crt](sdk/libs/crt) standard c11, math and runtime libraries forked from newlib; C++ support provided by gcc
-* **Startup**, [apps/system/init](usr/apps/system/init/main.c), where it all begins
-* **Java VM**, [apps/extra/jvm](https://www.github.com/kwrx/aplus-jvm), very simple java virtual machine 
-
-## Drivers
-Modules provides various core platform features, caching, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
+## :electric_plug: Drivers
+Modules provides various core platform features: caching, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
 
 ### Notable modules
 * **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers
 * **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
-* **BGA** (Bochs Video Card), [platform/pc/video/bga](/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
+* **BGA** (Bochs Video), [platform/pc/video/bga](/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
 * **Intel e1000** (Network device), [platform/pc/network/e1000](/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
+* **Virtio**, [virtio/*](/drivers/virtio), Virtio devices interfaces
 
 ---
 
-## Building / Installation
-Clone the repository and change working directory.
+## :checkered_flag: Getting Started
+0. Clone this repository and change working directory.
 ```bash
 $ git clone https://github.com/kwrx/aplus
 $ cd aplus
 ```
 
-To build this project from source, you have basically two options.
+Now you have basically two options to build image from sources.
 
 ### Building with Docker (Recommended):
-You can use my pre-built toolchain through Docker:
+1. Pull and run the build system in a docker image environment
 
 ```console
 # docker pull alpine
@@ -65,51 +66,45 @@ You can use my pre-built toolchain through Docker:
     ./extra/utils/build-with-docker TARGET
 ```
 
-And run with:
+2. Run with (Linux):
 ```
 $ ./extra/utils/run-qemu TARGET
 ```
 
-Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
+**NOTE:** Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
 
 ### Building with Toolchain:
 It's recommended you use a recent Linux host environment with this method.
 
 Some packages are required for the build system:
-* `gcc`, `binutils`, `make`, `autotools` (or `build-essential` on Ubuntu/Debian)
-* `g++` to compile gcc sources
-* `nasm` to compile .asm sources
-* `cmake`, `ninja` to compile project
-* `nodejs`, `npm` to run some build scripts
-* `e2fsprogs`, `grub` to generate hdd image
-* `qemu` or `VirtualBox` to run Virtual Machine
+* `binutils`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
+* `gcc`, `g++`, `libisl.19` to compile c/c++ sources
+* `nasm` to compile asm sources
+* `python3` to run some build scripts
+* `e2fsprogs`, `grub`, `parted`, `dd`, `fc-scan` to generate hdd image
+* `qemu` or `VirtualBox` to run Virtual Machine  
 
+<br>
+
+1. Install dependencies
 ```bash
-# Install dependencies
 $ pip3 install -r docs/requirements.txt
-
-# Build Toolchain
-$ cd sdk
-$ ../extra/utils/build-toolchain TARGET
-
-# Install CRT Files
-$ cd ..
-$ ./build -t TARGET core
-
-# Install C++ Support (Optional)
-$ cd sdk
-$ ../extra/utils/build-toolchain TARGET
-
-# Build and run Project
-$ cd ..
-$ ./build --target TARGET
 ```
-Replace `TARGET` with your desired target output: `i686`, `x86_64`, ecc...
+
+2. Configure and check environment
+```bash
+$ ./configure
+```
+
+3. Run it
+```bash
+$ ./makew run
+```
 
 ---
 
-## Third-Party Software:
-aPlus uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
+## :globe_with_meridians: Third-Party Software:
+`aplus` uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
 Licenses for the included third-party tools and libraries can be found [here](/extra/licenses), and for project [here](/LICENSE)
 
