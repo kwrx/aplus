@@ -44,13 +44,13 @@ Modules provides various core platform features: caching, char/block devices, fi
 * **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
 * **BGA** (Bochs Video), [platform/pc/video/bga](/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
 * **Intel e1000** (Network device), [platform/pc/network/e1000](/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
-* **Virtio**, [virtio/*](/drivers/virtio), Virtio devices interfaces
+* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO devices interfaces
 
 ---
 
 ## :zap: Getting Started
 0. Clone this repository and change working directory.
-```bash
+```console
 $ git clone https://github.com/kwrx/aplus
 $ cd aplus
 ```
@@ -61,16 +61,16 @@ Now you have basically two options to build image from sources.
 1. Pull and run the build system in a docker image environment
 
 ```console
-# docker run --privileged=true -v $(pwd):/opt/aplus -w /opt/aplus -t ubuntu:bionic \
-    ./extra/utils/build-with-docker PRESET
+# docker run -it --privileged=true      \
+    -v $(pwd):/opt/prj/aplus            \
+    -w /opt/prj/aplus -t ubuntu:bionic  \
+    ./extra/utils/build-with-docker
 ```
 
 2. Run it (Linux):
-```
+```console
 $ ./extra/utils/run-qemu TARGET
 ```
-
-**NOTE:** replace `PRESET` with empty string for setup wizard or choose available config presets: `x86_64`, `x86_64-nogui`, etc. (see `extra/build/setup/*.config`)
 
 **NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
 
@@ -88,17 +88,17 @@ Some packages are required for the build system:
 <br>
 
 1. Install dependencies
-```bash
+```console
 $ pip3 install -r docs/requirements.txt
 ```
 
 2. Configure and check environment
-```bash
+```console
 $ ./configure
 ```
 
 3. Run it
-```bash
+```console
 $ ./makew run
 ```
 
