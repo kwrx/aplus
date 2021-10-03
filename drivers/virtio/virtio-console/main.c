@@ -38,6 +38,7 @@
 #include <dev/pci.h>
 
 #include <dev/virtio/virtio.h>
+#include <dev/virtio/virtio-console.h>
 
 
 MODULE_NAME("virtio/virtio-console");
@@ -104,14 +105,22 @@ static void virtconsole_dnit(device_t* device) {
 static void virtconsole_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
-    
-    
 
 
 }
 
 static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
+    
+    if(index == 0) {
+
+        *features &= ~VIRTIO_CONSOLE_F_SIZE;
+        *features &= ~VIRTIO_CONSOLE_F_MULTIPORT;
+        *features &= ~VIRTIO_CONSOLE_F_EMERG_WRITE;
+
+    }
+
     return 0;
+
 }
 
 static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
@@ -128,7 +137,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     if(vid != VIRTIO_PCI_VENDOR)
         return;
 
-    if(did != VIRTIO_PCI_DEVICE_TRANSITIONAL(VIRTIO_DEVICE_TYPE_CONSOLE))
+    if(did != VIRTIO_PCI_DEVICE(VIRTIO_DEVICE_TYPE_CONSOLE))
         return;
 
 
@@ -154,6 +163,8 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     }
 
+
+    virtq_send(&driver, VIRTIO_CONSOLE_PORT_TX(0), "Hello World!", 13);
 
 
 }

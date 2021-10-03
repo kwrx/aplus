@@ -1,0 +1,33 @@
+#!/bin/sh
+
+
+apt update
+apt upgrade
+apt install -y      \
+    build-essential \
+    gcc             \
+    g++             \
+    nasm            \
+    automake        \
+    autoconf        \
+    parted          \
+    e2fsprogs       \
+    grub-pc         \
+    zip             \
+    sudo            \
+    fontconfig      \
+    python3         \
+    python3-pip     \
+    python3-setuptools
+
+pip3 install -r docs/requirements.txt
+
+
+./configure $1
+./makew install
+
+
+
+
+
+

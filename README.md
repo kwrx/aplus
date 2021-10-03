@@ -61,15 +61,16 @@ Now you have basically two options to build image from sources.
 1. Pull and run the build system in a docker image environment
 
 ```console
-# docker pull alpine
-# docker run --privileged=true -v $(pwd):/opt/aplus -w /opt/aplus -t alpine \
-    ./extra/utils/build-with-docker TARGET
+# docker run --privileged=true -v $(pwd):/opt/aplus -w /opt/aplus -t ubuntu:bionic \
+    ./extra/utils/build-with-docker PRESET
 ```
 
 2. Run it (Linux):
 ```
 $ ./extra/utils/run-qemu TARGET
 ```
+
+**NOTE:** replace `PRESET` with empty string for setup wizard or choose available config presets: `x86_64`, `x86_64-nogui`, etc. (see `extra/build/setup/*.config`)
 
 **NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
 

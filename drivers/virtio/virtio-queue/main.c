@@ -287,6 +287,75 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 }
 
 
+ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, size_t size) {
+
+    DEBUG_ASSERT(driver);
+    DEBUG_ASSERT(driver->device);
+    DEBUG_ASSERT(message);
+    DEBUG_ASSERT(size);
+
+    DEBUG_ASSERT(queue < driver->internals.num_queues);
+    DEBUG_ASSERT(size < driver->send_window_size);
+
+
+
+    ssize_t inp = virtq_get_free_descriptor(driver, queue);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("virtio-queue: device %d send on queue %d [inp(%d), message(%p), size(%p)]\n", driver->device, queue, inp, message, size);
+#endif
+
+
+    if(unlikely(inp < 0)) {
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+        kprintf("virtio-queue: FAIL! device %d has no free descriptor in queue %d\n", driver->device, queue);
+#endif
+
+        return -ENOSPC;
+
+    }
+
+
+
+
+    memcpy (
+        (void*) arch_vmm_p2v(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size), ARCH_VMM_AREA_HEAP),
+        message,
+        size
+    );
+
+
+
+    __atomic_membarrier();
+
+    driver->internals.queues[queue].descriptors[inp].q_address = cpu_to_le64(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size));
+    driver->internals.queues[queue].descriptors[inp].q_length  = cpu_to_le32(size);
+    driver->internals.queues[queue].descriptors[inp].q_flags   = cpu_to_le16(0);
+    driver->internals.queues[queue].descriptors[inp].q_next    = cpu_to_le16(0);
+
+    __atomic_membarrier();
+
+
+    uint16_t next = le16_to_cpu(driver->internals.queues[queue].available->q_idx) % driver->internals.queues[queue].size;
+
+    driver->internals.queues[queue].available->q_ring[next]   = cpu_to_le16(inp);
+    driver->internals.queues[queue].available->q_flags        = cpu_to_le16(0);
+    driver->internals.queues[queue].available->q_idx          = cpu_to_le16(le16_to_cpu(driver->internals.queues[queue].available->q_idx) + 1);
+
+
+    driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
+
+
+    __atomic_membarrier();
+
+        
+    return size;
+
+}
+
+
 
 void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
     sem_post(&driver->internals.queues[queue].iosem);

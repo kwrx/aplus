@@ -141,7 +141,6 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
-    DEBUG_ASSERT(offset);
     DEBUG_ASSERT(bar >= 0 && bar <= 5);
 
 
