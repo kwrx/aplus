@@ -22,19 +22,19 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
   
 <br>
 <p align="center" width="100%">
-    <img src="./extra/images/v0.4-os.png" alt="aPlus v0.4 - CLI interface running on Qemu" width="100%"></img>
+    <img src="./extra/images/v0.4-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
 </p>
 
 
 ## :electron: Kernel
 The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
-Futhermore, it uses a modular architecture with loadables kernel objects and run on different platforms like x86, x86_64, ARM, etc.
+Moreover, it uses a modular architecture with loadables kernel objects and run on different platforms like x86, x86_64, ARM, etc.
 
 
 ## :robot: Userspace
-aplus userspace is still under development. It provides several GNU/Linux core tools, devtools like `gcc` or `binutils`, a very simple Java Virtual Machine, graphical interface, windows manager, services like NTP, I/O Cache Sync and so on.
+Userspace is still under development. It provides several GNU/Linux core tools, devtools like `gcc` or `binutils`, a very simple Java Virtual Machine, graphical interface, windows manager, services like NTP, I/O Cache Sync and so on.
 
-Userspace has **multi-user** environment with unix permission support, superuser (root), unix-like filesystem with `/proc` and `/dev` implementation
+Furthermore, userspace has **multi-user** environment with unix permission support, superuser (root), unix-like filesystem with `/proc` and `/dev` implementation
 
 ## :electric_plug: Drivers
 Modules provides various core platform features: caching, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
