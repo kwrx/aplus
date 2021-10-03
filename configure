@@ -51,11 +51,12 @@ echo "## Generate configuration"
 
     if [ -f $gconfig/$1.config ]; then
         KCONFIG_CONFIG=config.mk python3 $kconfig/defconfig.py --kconfig .config $gconfig/$1.config
-        KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py $gconfig/$1.config
     else
         KCONFIG_CONFIG=config.mk python3 $kconfig/menuconfig.py .config
-        KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py  .config
     fi
+
+    KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py  .config
+
 
     if [ ! -f config.mk ]; then
         echo "config.mk: no such file or directory"
