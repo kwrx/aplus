@@ -39,7 +39,6 @@
 
 
 
-
 /*!
  * @brief arch_vmm_map().
  *        Map virtual memory.
@@ -54,6 +53,9 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
     DEBUG_ASSERT(space);
     DEBUG_ASSERT(length);
+
+    kprintf("MMAP(%p, %p, %p, %p)\n", virtaddr, physaddr, length, flags);
+
 
 
     uintptr_t pagesize;
@@ -268,10 +270,11 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
 
 
-            if(flags & ARCH_VMM_MAP_FIXED)
+            if(flags & ARCH_VMM_MAP_FIXED) {
+              
                 *d = p | b;
 
-            else {
+            } else {
 
                 if(flags & ARCH_VMM_MAP_DEMAND)
                     *d = X86_MMU_PG_AP_TP_COW | (b & ~X86_MMU_PG_P);
@@ -282,7 +285,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            //kprintf("arch_vmm_map(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
+            // kprintf("arch_vmm_map(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
 #endif
 
         }

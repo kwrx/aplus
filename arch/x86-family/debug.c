@@ -45,6 +45,11 @@
 static uint16_t com_address = 0;
 
 
+#if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+static uint16_t vga_offset = 0;
+#endif
+
+
 /*!
  * @brief Initialize Debugger on UARTx.
  * 
@@ -76,6 +81,16 @@ void arch_debug_init(void) {
 
         break;
     }
+
+
+#if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+
+    vga_offset = 0;
+
+    memset((void*) (0xB8000), 0x00, 80 * 25 * sizeof(uint16_t));
+    
+#endif
+
 }
 
 
@@ -86,22 +101,58 @@ void arch_debug_init(void) {
  */
 void arch_debug_putc(char ch) {
     
-    if(unlikely(!com_address))
-        return;
+    if(likely(com_address)) {
 
-    int i;
-    for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-        __builtin_ia32_pause();
-
-
-    if(unlikely(ch == '\n'))
-        outb(com_address, '\r');
-
-    outb(com_address, ch);
+        int i;
+        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
+            __builtin_ia32_pause();
 
 
-    for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-        __builtin_ia32_pause();
+        if(unlikely(ch == '\n'))
+            outb(com_address, '\r');
+
+        outb(com_address, ch);
+
+
+        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
+            __builtin_ia32_pause();
+
+    }
+
+
+#if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+
+    if(unlikely(vga_offset >= 80 * 25)) {
+
+        memmove((void*) (0xB8000), (void*) (0xB8000 + 80), (80 * 24) * sizeof(uint16_t));
+        memset((void*) (0xB8000 + 80 * 24), 0x00, 80 * sizeof(uint16_t));
+
+        vga_offset -= 80;
+
+    }
+
+    switch(ch) {
+        case '\r':
+            vga_offset -= vga_offset % 80;
+            break;
+        case '\n':
+            vga_offset += 80 - (vga_offset % 80);
+            break;
+        case '\v':
+            vga_offset += 80;
+            break;
+        case '\b':
+            vga_offset -= 1;
+            break;
+        case '\t':
+            vga_offset += 8 - (vga_offset % 8);
+            break;
+        default:
+            ((volatile uint16_t*) (0xB8000))[vga_offset++] = (0x07 << 8) | ch;
+            break;
+    }
+    
+#endif
 
 }
 
@@ -128,8 +179,10 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
 
 #if defined(__x86_64__)
     __asm__ __volatile__ ("movq %%rbp, %%rax" : "=a"(frame));
-#else
+#elif defined(__i386__)
     __asm__ __volatile__ ("movl %%ebp, %%rax" : "=a"(frame));
+#else
+#error "Unsupported Architecture"
 #endif
 
 
@@ -145,4 +198,5 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         frame = frame->bp;
 
     }
+
 }

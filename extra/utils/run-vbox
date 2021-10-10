@@ -5,7 +5,7 @@ qemu-img convert -f raw -O vmdk aplus.img aplus.vmdk
 touch vbox.log
 tail -f vbox.log &
 
-VBoxManage internalcommands sethduuid aplus.vmdk 2d9f25fb-3313-40b9-9052-6da1d8fb19d8
+VBoxManage internalcommands sethduuid aplus.vmdk 71d69b7c-03d7-4926-ac3d-2fa3e61d45ad
 VBoxManage startvm aplus
 
 while VBoxManage list runningvms | grep aplus &> /dev/null; do

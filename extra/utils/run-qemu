@@ -32,11 +32,11 @@ case $1 in
         flags="$flags -rtc clock=host"
         flags="$flags -cpu host,+x2apic,+pdpe1gb,+rdtscp,+fxsr"
         flags="$flags -smp 4"
-        flags="$flags -device virtio-vga-gl"
+        #flags="$flags -device virtio-vga-gl"
         flags="$flags -soundhw ac97"
         #flags="$flags -device e1000,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
-        flags="$flags -device virtio-serial-pci-non-transitional -chardev file,path=/tmp/kmsg.log,id=aplus -device virtconsole,name=jobsaplus,chardev=aplus,name=org.fedoraproject.console.aplus"
+        #flags="$flags -device virtio-serial-pci-non-transitional -chardev file,path=/tmp/kmsg.log,id=aplus -device virtconsole,name=jobsaplus,chardev=aplus,name=org.fedoraproject.console.aplus"
         ;;
 
     *)

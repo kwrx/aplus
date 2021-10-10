@@ -115,13 +115,14 @@ static void bga_init(device_t* device) {
     DEBUG_ASSERT(device->address);    
     DEBUG_ASSERT(device->size);    
 
-    arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
-            ARCH_VMM_MAP_FIXED  | 
-            ARCH_VMM_MAP_RDWR   |
-            ARCH_VMM_MAP_USER   |
-            ARCH_VMM_MAP_NOEXEC |
-            ARCH_VMM_MAP_VIDEO_MEMORY
-    );
+
+    // arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
+    //         ARCH_VMM_MAP_FIXED  | 
+    //         ARCH_VMM_MAP_RDWR   |
+    //         ARCH_VMM_MAP_USER   |
+    //         ARCH_VMM_MAP_NOEXEC |
+    //         ARCH_VMM_MAP_VIDEO_MEMORY
+    // );
 
     bga_reset(device);
 
