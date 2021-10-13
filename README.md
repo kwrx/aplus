@@ -63,7 +63,7 @@ Now you have basically two options to build image from sources.
 ```console
 # docker run -it --privileged=true      \
     -v $(pwd):/opt/prj/aplus            \
-    -w /opt/prj/aplus -t ubuntu:bionic  \
+    -w /opt/prj/aplus -t ubuntu:focal   \
     ./extra/utils/build-with-docker
 ```
 
@@ -79,7 +79,7 @@ It's recommended you use a recent Linux host environment with this method.
 
 Some packages are required for the build system:
 * `binutils`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
-* `gcc`, `g++`, `libisl.19` to compile c/c++ sources
+* `gcc`, `g++` to compile c/c++ sources
 * `nasm` to compile asm sources
 * `python3` to run some build scripts
 * `e2fsprogs`, `grub`, `parted`, `dd`, `fc-scan` to generate hdd image
