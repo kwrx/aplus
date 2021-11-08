@@ -41,6 +41,9 @@
 #include <dev/virtio/virtio-gpu.h>
 
 
+// TODO: Rewrite all virtio-gpu code to use a new video interface driver
+
+
 MODULE_NAME("virtio/virtio-gpu");
 MODULE_DEPS("dev/interface,dev/pci,virtio/virtio-pci,virtio/virtio-queue");
 MODULE_AUTHOR("Antonino Natale");
@@ -357,7 +360,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    if(args && !strstr(args, "graphics=no"))
+    if(args && strstr(args, "graphics=no"))
         return;
 
     if(args && strstr(args, "graphics=builtin"))
@@ -373,8 +376,6 @@ void init(const char* args) {
         return;
 
     device_mkdev(&device, 0644);
-
-    for(;;);
 
 }
 

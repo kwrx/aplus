@@ -68,6 +68,9 @@ typedef struct device {
     uintptr_t address;
     uintptr_t size;
 
+    uintptr_t iobase;
+    uintptr_t mmiobase;
+
     int status;
     
     spinlock_t lock;

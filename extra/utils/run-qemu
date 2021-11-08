@@ -32,7 +32,8 @@ case $1 in
         flags="$flags -rtc clock=host"
         flags="$flags -cpu host,+x2apic,+pdpe1gb,+rdtscp,+fxsr"
         flags="$flags -smp 4"
-        #flags="$flags -device virtio-vga-gl"
+        #flags="$flags -device virtio-vga"
+        flags="$flags -vga vmware"
         flags="$flags -soundhw ac97"
         #flags="$flags -device e1000,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
@@ -65,4 +66,5 @@ fi
 #sudo trace-cmd report > trace.log
 #rm -f trace.dat
 
-qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+#qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+qemu-system-$arch -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace

@@ -54,9 +54,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
     DEBUG_ASSERT(space);
     DEBUG_ASSERT(length);
 
-    kprintf("MMAP(%p, %p, %p, %p)\n", virtaddr, physaddr, length, flags);
-
-
 
     uintptr_t pagesize;
 

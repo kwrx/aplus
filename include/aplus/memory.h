@@ -50,7 +50,7 @@
 #define ARCH_VMM_MAP_HUGE_1GB       (1 << 10)
 
 #define ARCH_VMM_MAP_TYPE_MASK      (3 << 11)
-#define ARCH_VMM_MAP_TYPE_PAGE    (0 << 11)
+#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 11)
 #define ARCH_VMM_MAP_TYPE_MMAP      (1 << 11)
 #define ARCH_VMM_MAP_TYPE_COW       (2 << 11)
 

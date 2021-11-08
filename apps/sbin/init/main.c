@@ -85,13 +85,14 @@ static void init_framebuffer(void) {
 
 
 
-    void* frame = mmap((void*) fix.smem_start, fix.smem_len & ~0xFFF, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_POPULATE | MAP_LOCKED | MAP_ANONYMOUS, -1, 0);
+    void* frame = (void*) fix.smem_start;
 
 #if defined(DEBUG)
-    memset(frame, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
+    for(size_t i = 0; i < var.xres * var.yres; i++) {
+        ((unsigned int*) frame)[i] = (unsigned int) (((double) i / (double) (var.xres * var.yres)) * 16777215.0) & 0x00FFFFFF;
+    }
 #endif
 
-    ioctl(fd, FBIO_WAITFORVSYNC, 1);
     close(fd);
 
 }

@@ -42,49 +42,66 @@
 
 
 
-MODULE_NAME("video/bga");
+MODULE_NAME("video/vmware");
 MODULE_DEPS("dev/interface,dev/video,dev/pci");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-#define VBE_DISPI_MAX_XRES                  1024
-#define VBE_DISPI_MAX_YRES                  768
-
-#define VBE_DISPI_IOPORT_INDEX              0x01CE
-#define VBE_DISPI_IOPORT_DATA               0x01CF
-
-#define VBE_DISPI_INDEX_ID                  0x0000
-#define VBE_DISPI_INDEX_XRES                0x0001
-#define VBE_DISPI_INDEX_YRES                0x0002
-#define VBE_DISPI_INDEX_BPP                 0x0003
-#define VBE_DISPI_INDEX_ENABLE              0x0004
-#define VBE_DISPI_INDEX_BANK                0x0005
-#define VBE_DISPI_INDEX_VIRT_WIDTH          0x0006
-#define VBE_DISPI_INDEX_VIRT_HEIGHT         0x0007
-#define VBE_DISPI_INDEX_X_OFFSET            0x0008
-#define VBE_DISPI_INDEX_Y_OFFSET            0x0009
-#define VBE_DISPI_INDEX_VBOX_VIDEO          0x000A
-#define VBE_DISPI_INDEX_FB_BASE_HI          0x000B
-
-#define VBE_DISPI_DISABLED                  0x00
-#define VBE_DISPI_ENABLED                   0x01
-#define VBE_DISPI_GETCAPS                   0x02
-#define VBE_DISPI_8BIT_DAC                  0x20
-#define VBE_DISPI_LFB_ENABLED               0x40
-#define VBE_DISPI_NOCLEARMEM                0x80
-
-#define CHECK_BGA(n)                        (n >= 0xB0C0 || n <= 0xB0C5)
-
-#define BGA_VIDEORAM_SIZE                   0x1000000
-#define BGA_ID                              "Bochs VBE"
 
 
+#define SVGA_INDEX_PORT                         0x00
+#define SVGA_VALUE_PORT                         0x01
 
-static void bga_init(device_t*);
-static void bga_dnit(device_t*);
-static void bga_reset(device_t*);
-static void bga_update(device_t*);
+#define SVGA_REG_ID                             0x00
+#define SVGA_REG_ENABLE                         0x01
+#define SVGA_REG_WIDTH                          0x02
+#define SVGA_REG_HEIGHT                         0x03
+#define SVGA_REG_MAX_WIDTH                      0x04
+#define SVGA_REG_MAX_HEIGHT                     0x05
+#define SVGA_REG_DEPTH                          0x06
+#define SVGA_REG_BITS_PER_PIXEL                 0x07
+#define SVGA_REG_PSEUDOCOLOR                    0x08
+#define SVGA_REG_RED_MASK                       0x09
+#define SVGA_REG_GREEN_MASK                     0x0A
+#define SVGA_REG_BLUE_MASK                      0x0B
+#define SVGA_REG_BYTES_PER_LINE                 0x0C
+#define SVGA_REG_FB_START                       0x0D
+#define SVGA_REG_FB_OFFSET                      0x0E
+#define SVGA_REG_FB_PAGE                        0x10
+#define SVGA_REG_VRAM_SIZE                      0x11
+#define SVGA_REG_FB_SIZE                        0x12
+#define SVGA_REG_FB_MAX_SIZE                    0x13
+#define SVGA_REG_LOGICAL_WIDTH                  0x14
+#define SVGA_REG_LOGICAL_HEIGHT                 0x15
+#define SVGA_REG_COMMAND_TYPE                   0x16
+#define SVGA_REG_COMMAND                        0x17
+#define SVGA_REG_COMMAND_RESULT                 0x18
+#define SVGA_REG_SYNC                           0x6F
+#define SVGA_REG_BUSY                           0x3E
+
+#define SVGA_FALLBACK_XRES                      1280
+#define SVGA_FALLBACK_YRES                      720
+#define SVGA_FALLBACK_BPP                       32
+
+
+
+
+#define VMWARE_WR(d, a, b) {                                    \
+    outl(SVGA_INDEX_PORT + d->iobase, a);                       \
+    outl(SVGA_VALUE_PORT + d->iobase, b);                       \
+}
+
+#define VMWARE_RD(d, a) ({                                      \
+    outl(SVGA_INDEX_PORT + d->iobase, a);                       \
+    inl(SVGA_VALUE_PORT + d->iobase);                           \
+})
+
+
+static void vmware_init(device_t*);
+static void vmware_dnit(device_t*);
+static void vmware_reset(device_t*);
+static void vmware_update(device_t*);
 
 
 device_t device = {
@@ -92,7 +109,7 @@ device_t device = {
     .type = DEVICE_TYPE_VIDEO,
 
     .name = "fb0",
-    .description = "Bochs VBE Extensions",
+    .description = "Vmware VGA Extensions",
 
     .major = 10,
     .minor = 243,
@@ -102,49 +119,51 @@ device_t device = {
 
     .status = DEVICE_STATUS_UNKNOWN,
 
-    .init = bga_init,
-    .dnit = bga_dnit,
-    .reset = bga_reset,
+    .init = vmware_init,
+    .dnit = vmware_dnit,
+    .reset = vmware_reset,
 
-    .vid.update = bga_update,
+    .vid.update = vmware_update,
 
 };
 
 
 
 
-static void bga_init(device_t* device) {
+static void vmware_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->iobase);    
 
+
+    device->address = VMWARE_RD(device, SVGA_REG_FB_START);
+    device->size    = VMWARE_RD(device, SVGA_REG_FB_SIZE) - device->address;
 
     arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
             ARCH_VMM_MAP_FIXED  | 
             ARCH_VMM_MAP_RDWR   |
             ARCH_VMM_MAP_USER   |
             ARCH_VMM_MAP_NOEXEC |
+            ARCH_VMM_MAP_SHARED |
             ARCH_VMM_MAP_VIDEO_MEMORY
     );
 
-    bga_reset(device);
+    vmware_reset(device);
 
 }
 
 
-static void bga_dnit(device_t* device) {
+static void vmware_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->iobase);    
 
     arch_vmm_unmap(&core->bsp.address_space, device->address, device->size);
 
 }
 
 
-static void bga_reset(device_t* device) {
+static void vmware_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
     
@@ -154,11 +173,11 @@ static void bga_reset(device_t* device) {
 
     if(!core->framebuffer.address) {
 
-        device->vid.vs.xres = VBE_DISPI_MAX_XRES;
-        device->vid.vs.yres = VBE_DISPI_MAX_YRES;
-        device->vid.vs.xres_virtual = VBE_DISPI_MAX_XRES;
-        device->vid.vs.yres_virtual = VBE_DISPI_MAX_YRES;
-        device->vid.vs.bits_per_pixel = 32;
+        device->vid.vs.xres = SVGA_FALLBACK_XRES;
+        device->vid.vs.yres = SVGA_FALLBACK_XRES;
+        device->vid.vs.xres_virtual = SVGA_FALLBACK_XRES;
+        device->vid.vs.yres_virtual = SVGA_FALLBACK_YRES;
+        device->vid.vs.bits_per_pixel = SVGA_FALLBACK_BPP;
 
     } else {
 
@@ -172,45 +191,29 @@ static void bga_reset(device_t* device) {
 
 
     device->vid.vs.activate = FB_ACTIVATE_NOW;
-    
-    outw(VBE_DISPI_IOPORT_INDEX, VBE_DISPI_INDEX_ENABLE);
-    outw(VBE_DISPI_IOPORT_DATA, VBE_DISPI_DISABLED);
 
 }
 
 
-static void bga_update(device_t* device) {
+static void vmware_update(device_t* device) {
 
     DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->address);
+    DEBUG_ASSERT(device->iobase);    
     DEBUG_ASSERT(device->vid.vs.xres);
     DEBUG_ASSERT(device->vid.vs.yres);
     DEBUG_ASSERT(device->vid.vs.bits_per_pixel);
 
 
 
-    #define wr(i, v) {                                      \
-        outw(VBE_DISPI_IOPORT_INDEX, i);                    \
-        outw(VBE_DISPI_IOPORT_DATA, v);                     \
-    }
 
-
-
-    wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
-    wr(VBE_DISPI_INDEX_BANK,   VBE_DISPI_DISABLED);
-
-    wr(VBE_DISPI_INDEX_XRES,        device->vid.vs.xres);
-    wr(VBE_DISPI_INDEX_YRES,        device->vid.vs.yres);
-    wr(VBE_DISPI_INDEX_BPP,         device->vid.vs.bits_per_pixel);
-    wr(VBE_DISPI_INDEX_X_OFFSET,    device->vid.vs.xoffset);
-    wr(VBE_DISPI_INDEX_Y_OFFSET,    device->vid.vs.yoffset);
-    wr(VBE_DISPI_INDEX_VIRT_WIDTH,  device->vid.vs.xres_virtual);
-    wr(VBE_DISPI_INDEX_VIRT_HEIGHT, device->vid.vs.yres_virtual);
-
+    VMWARE_WR(device, SVGA_REG_ENABLE, 0);
+    VMWARE_WR(device, SVGA_REG_ID, 0);
+    VMWARE_WR(device, SVGA_REG_WIDTH, device->vid.vs.xres);
+    VMWARE_WR(device, SVGA_REG_HEIGHT, device->vid.vs.yres);
+    VMWARE_WR(device, SVGA_REG_BITS_PER_PIXEL, device->vid.vs.bits_per_pixel);
 
     if((device->vid.vs.activate & FB_ACTIVATE_MASK) == 0)
-        wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
-
+        VMWARE_WR(device, SVGA_REG_ENABLE, 1);
 
     
 
@@ -232,7 +235,7 @@ static void bga_update(device_t* device) {
     device->vid.vs.transp.offset =  rgba[device->vid.vs.bits_per_pixel + 7];
 
     
-    strncpy(device->vid.fs.id, BGA_ID, 16);
+    strncpy(device->vid.fs.id, "VMWARE", 16);
 
     device->vid.fs.smem_start = device->address;
     device->vid.fs.smem_len = device->size;
@@ -246,20 +249,11 @@ static void bga_update(device_t* device) {
 
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     
-    if(likely(!(
-        ((vid == 0x1234) || (vid == 0x80EE)) &&
-        ((did == 0x1111) || (did == 0xBEEF))
-    ))) return;
+    if(likely(!(vid == 0x15AD && did == 0x0405)))
+        return;
 
 
-    ((device_t*) arg)->address = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-    ((device_t*) arg)->size    = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-
-#if defined(__x86_64__)
-    if(pci_is_64bit(device, PCI_BAR0))
-        ((device_t*) arg)->address |= (pci_read(device, PCI_BAR1, 4) << 32);
-#endif
-
+    ((device_t*) arg)->iobase  = pci_read(device, PCI_BAR0, 4) & PCI_BAR_IO_MASK;
 
     pci_enable_bus_mastering(device);
     pci_enable_mmio(device);
@@ -276,17 +270,10 @@ void init(const char* args) {
     if(args && strstr(args, "graphics=builtin"))
         return;
 
-    
-    outw(VBE_DISPI_IOPORT_INDEX, 0);
-
-    int n = inw(VBE_DISPI_IOPORT_DATA);
-    if(!(CHECK_BGA(n)))
-        return;
-
 
     pci_scan(&pci_find, PCI_TYPE_VGA, &device);
 
-    if(!device.address)
+    if(!device.iobase)
         return;
 
     device_mkdev(&device, 0644);

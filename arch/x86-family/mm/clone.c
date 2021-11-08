@@ -121,7 +121,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 
             } else {
 
-                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+                if((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW || (*__s & X86_MMU_PG_G)) {
                     
                     *__d = *__s;
 
