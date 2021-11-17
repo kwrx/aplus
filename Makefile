@@ -31,7 +31,9 @@ all: $(TARGET)
 $(TARGET): BUILDALL
 
 install: $(TARGET) INSTALLALL
+	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
+	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
 
 dist: $(TARGET) INSTALLALL

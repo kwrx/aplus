@@ -73,8 +73,8 @@ int video_resource_create_2d(device_video_context_t* context, uint16_t x, uint16
 }
 
 
-int video_resource_create_2d(device_video_context_t* context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
-    return kpanic("not yet implemented");
+int video_resource_create_3d(device_video_context_t* context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+    return kpanicf("not yet implemented"), 0;
 }
 
 

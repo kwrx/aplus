@@ -1,5 +1,13 @@
 #!/bin/sh
 
+if [ -z $1 ]; then
+    echo "Usage: $0 <setup>"
+    exit 1
+fi
+
+setup=$1
+
+
 
 apt update
 apt upgrade
@@ -23,7 +31,7 @@ apt install -y      \
 pip3 install -r docs/requirements.txt
 
 
-./configure $1
+./configure $setup
 ./makew install
 
 

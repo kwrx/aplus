@@ -121,7 +121,7 @@ device_t device = {
     .reset = vmware_reset,
 
     .vid.update = vmware_update,
-    .vid.context = NULL;
+    // .vid.context = NULL
 
 };
 
