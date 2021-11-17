@@ -84,8 +84,7 @@ device_t device = {
 static void virtconsole_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->mmiobase);    
 
     
     virtconsole_reset(device);
@@ -96,8 +95,7 @@ static void virtconsole_init(device_t* device) {
 static void virtconsole_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->mmiobase);    
 
 }
 

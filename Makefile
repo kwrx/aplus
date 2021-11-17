@@ -5,6 +5,7 @@ $(error Run ./configure to generate wrapper and ./makew to use Makefile)
 endif
 
 
+
 export QUIET    := @ 
 export VM       := qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
@@ -16,15 +17,14 @@ PROJECTS := kernel drivers apps
 TARGET	 := aplus.img
 
 
-
 BUILDALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i           || break; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i           || exit 1; done
 INSTALLALL: $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || break; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i install   || exit 1; done
 CLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i clean     || break; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i clean     || exit 1; done
 DISTCLEANALL:   $(PROJECTS)
-	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean || break; done
+	$(QUIET)for i in $^; do $(MAKE) -C $$i distclean || exit 1; done
 
 
 all: $(TARGET)

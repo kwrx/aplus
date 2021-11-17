@@ -114,9 +114,6 @@ device_t device = {
     .major = 10,
     .minor = 243,
 
-    .address = 0,
-    .size = 0,
-
     .status = DEVICE_STATUS_UNKNOWN,
 
     .init = vmware_init,
@@ -124,6 +121,7 @@ device_t device = {
     .reset = vmware_reset,
 
     .vid.update = vmware_update,
+    .vid.context = NULL;
 
 };
 
@@ -136,10 +134,10 @@ static void vmware_init(device_t* device) {
     DEBUG_ASSERT(device->iobase);    
 
 
-    device->address = VMWARE_RD(device, SVGA_REG_FB_START);
-    device->size    = VMWARE_RD(device, SVGA_REG_FB_SIZE) - device->address;
+    device->vid.fb_base = VMWARE_RD(device, SVGA_REG_FB_START);
+    device->vid.fb_size = VMWARE_RD(device, SVGA_REG_FB_SIZE) - device->vid.fb_base;
 
-    arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
+    arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size,
             ARCH_VMM_MAP_FIXED  | 
             ARCH_VMM_MAP_RDWR   |
             ARCH_VMM_MAP_USER   |
@@ -158,7 +156,7 @@ static void vmware_dnit(device_t* device) {
     DEBUG_ASSERT(device);    
     DEBUG_ASSERT(device->iobase);    
 
-    arch_vmm_unmap(&core->bsp.address_space, device->address, device->size);
+    arch_vmm_unmap(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_size);
 
 }
 
@@ -237,8 +235,8 @@ static void vmware_update(device_t* device) {
     
     strncpy(device->vid.fs.id, "VMWARE", 16);
 
-    device->vid.fs.smem_start = device->address;
-    device->vid.fs.smem_len = device->size;
+    device->vid.fs.smem_start = device->vid.fb_base;
+    device->vid.fs.smem_len = device->vid.fb_size;
     device->vid.fs.type = FB_TYPE_PLANES;
     device->vid.fs.visual = FB_VISUAL_TRUECOLOR;
     device->vid.fs.line_length = device->vid.vs.xres_virtual * (device->vid.vs.bits_per_pixel / 8);

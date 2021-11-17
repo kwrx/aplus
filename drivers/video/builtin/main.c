@@ -66,9 +66,6 @@ device_t device = {
     .major = 10,
     .minor = 242,
 
-    .address = 0,
-    .size = 0,
-
     .status = DEVICE_STATUS_UNKNOWN,
 
     .init = builtin_init,
@@ -83,14 +80,15 @@ device_t device = {
 static void builtin_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->vid.fb_base);    
+    DEBUG_ASSERT(device->vid.fb_size);    
 
-    arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
+    arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size,
             ARCH_VMM_MAP_FIXED  | 
             ARCH_VMM_MAP_RDWR   |
             ARCH_VMM_MAP_USER   |
             ARCH_VMM_MAP_NOEXEC |
+            ARCH_VMM_MAP_SHARED |
             ARCH_VMM_MAP_VIDEO_MEMORY
     );
 
@@ -101,10 +99,10 @@ static void builtin_init(device_t* device) {
 static void builtin_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->vid.fb_base);    
+    DEBUG_ASSERT(device->vid.fb_size);    
 
-    arch_vmm_unmap(&core->bsp.address_space, device->address, device->size);
+    arch_vmm_unmap(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_size);
 
 }
 
@@ -145,8 +143,8 @@ static void builtin_reset(device_t* device) {
     
     strncpy(device->vid.fs.id, "Builtin Video", 16);
 
-    device->vid.fs.smem_start = device->address;
-    device->vid.fs.smem_len = device->size;
+    device->vid.fs.smem_start = device->vid.fb_base;
+    device->vid.fs.smem_len = device->vid.fb_size;
     device->vid.fs.type = FB_TYPE_PLANES;
     device->vid.fs.visual = FB_VISUAL_TRUECOLOR;
     device->vid.fs.line_length = device->vid.vs.xres_virtual * (device->vid.vs.bits_per_pixel / 8);
@@ -172,8 +170,8 @@ void init(const char* args) {
         return;
 
 
-    device.address = core->framebuffer.address;
-    device.size = core->framebuffer.pitch * core->framebuffer.height;
+    device.vid.fb_base = core->framebuffer.address;
+    device.vid.fb_size = core->framebuffer.pitch * core->framebuffer.height;
 
     device_mkdev(&device, 0644);
 

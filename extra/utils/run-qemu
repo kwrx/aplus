@@ -67,4 +67,5 @@ fi
 #rm -f trace.dat
 
 #qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-qemu-system-$arch -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+#qemu-system-$arch -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+qemu-system-$arch -nographic -serial mon:stdio -no-reboot -no-shutdown -s $debug $flags $trace
