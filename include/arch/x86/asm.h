@@ -50,6 +50,7 @@
 
 #if defined(__x86_64__)
 #   define KERNEL_HIGH_AREA         0xFFFFFFFF80000000
+#   define KERNEL_HIGH_SIZE         0x0000000040000000   //? 1GiB
 #   define KERNEL_STACK_AREA        0xFFFFFFFFC0000000
 #   define KERNEL_STACK_SIZE        0x0000000000200000   //? 2Mib
 #   define KERNEL_HEAP_AREA         0xFFFF800000000000

@@ -28,11 +28,11 @@
 
 
 #if defined(DEBUG)
-#define DEBUG_ASSERT(i)     \
-        if(unlikely(!(i)))  \
-            kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'
-", \
-                __func__, __FILE__, __LINE__, #i)
+#define DEBUG_ASSERT(i) {                                               \
+        if(unlikely(!(i)))                                              \
+            kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'\n",    \
+                __func__, __FILE__, __LINE__, #i);                      \
+        }
 
 #else
 #define DEBUG_ASSERT(i)     \
@@ -40,11 +40,11 @@
 #endif
 
 
-#define HALT_ON(i)          \
-    if(unlikely(!(i)))      \
-        kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'
-", \
-            __func__, __FILE__, __LINE__, #i)
+#define PANIC_ON(i)                                                     \
+    if(unlikely(!(i))) {                                                \
+        kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n",           \
+            __func__, __FILE__, __LINE__, #i);                          \
+    }
 
 
 

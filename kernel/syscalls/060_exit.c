@@ -53,7 +53,7 @@
 SYSCALL(60, exit,
 long sys_exit (int status) {
 
-    HALT_ON(current_task->tid != 1);
+    PANIC_ON(current_task->tid != 1);
 
 
     if(status & (1 << 31))

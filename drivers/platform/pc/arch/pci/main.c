@@ -61,7 +61,7 @@ void pci_write(pcidev_t device, int field, size_t size, uint64_t value) {
         case 1:
             return outb(PCI_VALUE_PORT, value);
         default:
-            HALT_ON(0 && "Bug: Invalid Size!");
+            PANIC_ON(0 && "Bug: Invalid Size!");
     }
 
 }
@@ -81,7 +81,7 @@ uint64_t pci_read(pcidev_t device, int field, size_t size) {
         case 1:
             return inb(PCI_VALUE_PORT + (field & 3));
         default:
-            HALT_ON(0 && "Bug: Invalid Size!");
+            PANIC_ON(0 && "Bug: Invalid Size!");
     }
 
     return PCI_NONE;
