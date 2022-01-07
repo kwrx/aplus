@@ -46,6 +46,9 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     (void) args;
 
 
+    // TODO: ext2: include support for fsync and atime
+    flags |= MS_SYNCHRONOUS;
+    flags |= MS_NOATIME;
 
     #define __(a, b)                        \
         if(flags & a)                       \
@@ -91,7 +94,6 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     DEBUG_ASSERT(sb.s_rev_level == EXT2_DYNAMIC_REV);
 
 
-
         
     ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
@@ -133,7 +135,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
     dir->sb->ops.getattr = ext2_getattr;
-    //dir->sb->ops.setattr = ext2_setattr;
+    dir->sb->ops.setattr = ext2_setattr;
     //dir->sb->ops.creat = ext2_creat;
     dir->sb->ops.finddir = ext2_finddir;
     dir->sb->ops.readdir = ext2_readdir;

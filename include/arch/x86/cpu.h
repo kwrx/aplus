@@ -705,6 +705,7 @@ static inline void x86_wrgsbase(unsigned long long base) {
         "wrgsbase %0"
         :
         : "r"(base)
+        : "memory"
     );
 }
 
@@ -716,6 +717,7 @@ static inline void x86_wrfsbase(unsigned long long base) {
         "wrfsbase %0"
         :
         : "r"(base)
+        : "memory"
     );
 }
 
@@ -723,11 +725,12 @@ static inline void x86_wrfsbase(unsigned long long base) {
  * @brief Read GS Base Register.
  */
 static inline unsigned long long x86_rdgsbase() {
-    unsigned long long r;
+    unsigned long long r = 0;
     __asm__ __volatile__ (
         "rdgsbase %0"
+        : "=r"(r)
         :
-        : "m"(r)
+        : "memory"
     );
     
     return r;
@@ -737,11 +740,12 @@ static inline unsigned long long x86_rdgsbase() {
  * @brief Read FS Base Register.
  */
 static inline unsigned long long x86_rdfsbase() {
-    unsigned long long r;
+    unsigned long long r = 0;
     __asm__ __volatile__ (
         "rdfsbase %0"
+        : "=r"(r)
         :
-        : "m"(r)
+        : "memory"
     );
 
     return r;

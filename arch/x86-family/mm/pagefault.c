@@ -190,7 +190,29 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     return;
 
 
+
 pfe:
-    kpanicf("x86-pfe: PANIC! errno(%p), cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->errno, frame->cs, frame->ip, frame->sp, cr2, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+
+    kpanicf("x86-pfe: PANIC! cr2(%p) cr3(%p) gs(%p) fs(%p) cpu(%d) pid(%d), cs(%p), ip(%p), sp(%p), errno(%p) [%s %s %s %s %s %s %s %s]\n",
+        cr2, 
+        x86_get_cr3(), 
+        x86_rdgsbase(),
+        x86_rdfsbase(),
+        current_cpu->id, 
+        current_task ? current_task->tid : 0,
+        frame->cs, 
+        frame->ip, 
+        frame->sp, 
+        frame->errno,
+        frame->errno & X86_PF_P   ? "P"   : "NP",
+        frame->errno & X86_PF_W   ? "W"   : "R",
+        frame->errno & X86_PF_U   ? "U"   : "-",
+        frame->errno & X86_PF_R   ? "R"   : "-",
+        frame->errno & X86_PF_I   ? "I"   : "-",
+        frame->errno & X86_PF_PK  ? "PK"  : "-",
+        frame->errno & X86_PF_SS  ? "SS"  : "-",
+        frame->errno & X86_PF_SGX ? "SGX" : "-"
+    );
+
 
 }

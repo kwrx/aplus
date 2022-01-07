@@ -45,8 +45,8 @@ long (*syscalls[SYSMAX])
 void syscall_init(void) {
 
 
-    extern int syscalls_start;
-    extern int syscalls_end;
+    extern uint8_t syscalls_start;
+    extern uint8_t syscalls_end;
 
     memset(syscalls, 0, sizeof(syscalls));
 

@@ -31,28 +31,18 @@
 #include <aplus/memory.h>
 #include <aplus/errno.h>
 
-#include <aplus/utils/list.h>
-
-#include "tmpfs.h"
+#include "ext2.h"
 
 
 
+int ext2_fsync(inode_t* inode, int datasync) {
 
-
-inode_t* tmpfs_finddir(inode_t* inode, const char* name) {
-    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
-    DEBUG_ASSERT(name);
-        
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
 
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
-        
-    list_each(tmpfs->children, i)
-        if(unlikely(i->parent == inode))
-            if(strcmp(i->name, name) == 0)
-                return i;
+    vfs_cache_flush_all(&inode->sb->cache);
 
-    return NULL;
+    return 0;
+
 }

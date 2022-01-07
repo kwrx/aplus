@@ -30,29 +30,31 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <sys/mount.h>
 
-#include <aplus/utils/list.h>
-
-#include "tmpfs.h"
-
+#include "ext2.h"
 
 
 
+int ext2_setattr(inode_t* inode, struct stat* st) {
 
-inode_t* tmpfs_finddir(inode_t* inode, const char* name) {
-    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
-    DEBUG_ASSERT(name);
-        
+    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(st);
 
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
-        
-    list_each(tmpfs->children, i)
-        if(unlikely(i->parent == inode))
-            if(strcmp(i->name, name) == 0)
-                return i;
+    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
 
-    return NULL;
+    n->i_mode  = st->st_mode;
+    n->i_uid   = st->st_uid;
+    n->i_gid   = st->st_gid;
+    n->i_atime = st->st_atime;
+    n->i_ctime = st->st_ctime;
+    n->i_mtime = st->st_mtime;
+
+    if(inode->sb->flags & MS_SYNCHRONOUS)
+        ext2_cache_flush(&inode->sb->cache, inode->ino, n);
+
+    return 0;
+
 }

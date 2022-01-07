@@ -30,8 +30,10 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <sys/mount.h>
 
 #include "ext2.h"
+
 
 
 
@@ -52,28 +54,35 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
     struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
 
 
-
-    off_t size;
-    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
-        size = (off_t) (((uint64_t) n->i_size_high << 32) | n->i_size);
-    else
-        size = n->i_size;
-
-
-    if(pos + len > size)
-        len = size - pos;
-    
-
-    DEBUG_ASSERT(len >= 0);
-
-
-
     uint32_t* blocks = &n->i_block[0];
-
     uint32_t ib = pos / ext2->blocksize;
     uint32_t eb = (pos + len - 1) / ext2->blocksize;
     uint32_t off = 0;
 
+
+
+    if(n->i_blocks < (pos + len) / ext2->blocksize + 1) {
+
+        while(n->i_blocks < (pos + len) / ext2->blocksize + 1) {
+
+            if(unlikely(inode->sb->st.f_bavail == 0))
+                return -ENOSPC;
+
+
+            ext2_utils_alloc_inode_data(ext2, blocks, n->i_blocks++);
+
+            inode->sb->st.f_bavail--;
+            inode->sb->st.f_bfree--;
+
+            ext2->sb.s_free_blocks_count--;
+        
+        }
+
+        ext2_inode_set_size(ext2, n, pos + len);
+        ext2_cache_flush(&inode->sb->cache, inode->ino, n);
+
+    }
+    
 
 
     if(pos % ext2->blocksize) {

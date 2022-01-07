@@ -48,7 +48,7 @@ void* ext2_cache_load(vfs_cache_t* cache, ino_t ino) {
 
 void ext2_cache_flush(vfs_cache_t* cache, ino_t ino, void* data) {
 
-    //ext2_utils_write_inode((ext2_t*) cache->userdata, ino, data);
-
+    ext2_utils_write_inode((ext2_t*) cache->userdata, ino, data);
     return;
+    
 }

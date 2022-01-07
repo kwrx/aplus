@@ -62,7 +62,6 @@ void vfs_init(void) {
 
 
     rootfs_init();
-    dcache_init();
     fd_init();
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
@@ -309,9 +308,12 @@ inode_t* vfs_creat (inode_t* inode, const char* name, mode_t mode) {
 
         __lock(&inode->lock, {
             
-            if((r = inode->ops.creat(inode, name, mode)) != NULL)
+            if((r = inode->ops.creat(inode, name, mode)) != NULL) {
+
                 if(likely(r->parent == inode))
-                    vfs_dcache_add(r);
+                    vfs_dcache_add(inode, r);
+
+            }
         
         });
 
@@ -355,10 +357,13 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
 
         __lock(&inode->lock, {
             
-            if((r = inode->ops.finddir(inode, name)) != NULL)
+            if((r = inode->ops.finddir(inode, name)) != NULL) {
+
                 if(likely(r->parent == inode))
-                    vfs_dcache_add(r);
+                    vfs_dcache_add(inode, r);
         
+            }
+
         });
 
         return r;
@@ -457,7 +462,7 @@ int vfs_unlink (inode_t* inode, const char* name) {
         __lock(&inode->lock, {
             
             if((r = inode->ops.unlink(inode, name)) == 0)
-                vfs_dcache_remove(vfs_dcache_find(inode, name));
+                vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
         
         });
 

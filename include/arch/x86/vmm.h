@@ -55,6 +55,16 @@
 #define X86_MMU_PG_AP_TP_MASK       (3ULL << 10)
 
 
+#define X86_PF_P                    (1ULL << 0)
+#define X86_PF_W                    (1ULL << 1)
+#define X86_PF_U                    (1ULL << 2)
+#define X86_PF_R                    (1ULL << 3)
+#define X86_PF_I                    (1ULL << 4)
+#define X86_PF_PK                   (1ULL << 5)
+#define X86_PF_SS                   (1ULL << 6)
+#define X86_PF_SGX                  (1ULL << 15)
+
+
 
 #define X86_MMU_PAGESIZE            0x1000
 #define X86_MMU_HUGE_2MB_PAGESIZE   0x200000

@@ -60,7 +60,7 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
 
 
 
-void ext2_utils_write_inode(ext2_t* ext2, ino_t ino, void* data) {
+void ext2_utils_write_inode(ext2_t* ext2, ino_t ino, const void* data) {
     
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -137,7 +137,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
     }
 
 
-    kpanicf("%s() FAIL! block is too high!");
+    kpanicf("%s() FAIL! block is too high!", __func__);
 
 }
 
@@ -146,7 +146,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
 
 
 void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, const void* data, size_t size) {
-   
+      
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(blocks);
     DEBUG_ASSERT(size);
@@ -160,7 +160,7 @@ void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block,
 
     // Direct Blocks
     if(block < a) {
-        
+    
         ext2_utils_write_block(ext2, blocks[block], offset, data, size);
         return;    
     
@@ -207,6 +207,143 @@ void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block,
     }
 
 
-    kpanicf("%s() FAIL! block is too high!");
+    kpanicf("%s() FAIL! block is too high!", __func__);
 
 }
+
+
+
+void ext2_utils_alloc_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block) {
+
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(blocks);
+    
+    uint32_t a = EXT2_NDIR_BLOCKS
+           , b = (ext2->blocksize / sizeof(uint32_t))
+           , c = 0
+           ;
+
+
+    // Direct Blocks
+    if(block < a) {
+    
+        if(__block_is_free(blocks[block]))
+            ext2_utils_alloc_block(ext2, &blocks[block]);
+        
+        return;    
+    
+    }
+
+
+
+    // Indirect Blocks
+    block -= a;
+    
+    if(block < b) {
+
+        if(__block_is_free(blocks[EXT2_IND_BLOCK]))
+            ext2_utils_alloc_block(ext2, &blocks[EXT2_IND_BLOCK]);
+        
+
+        ext2_utils_read_block(ext2, blocks[EXT2_IND_BLOCK], sizeof(uint32_t) * block, &c, sizeof(uint32_t));
+
+        if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, blocks[EXT2_IND_BLOCK], sizeof(uint32_t) * block, &c, sizeof(uint32_t));
+
+        }
+
+        return;
+
+    }
+
+
+
+    // Double Indirect Blocks
+    block -= b;
+
+    if(block < (b * b)) {
+
+        if(__block_is_free(blocks[EXT2_DIND_BLOCK]))
+            ext2_utils_alloc_block(ext2, &blocks[EXT2_DIND_BLOCK]);
+
+
+        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / b), &c, sizeof(uint32_t));
+
+        if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / b), &c, sizeof(uint32_t));
+
+        }
+
+        block = c;
+
+
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (block % b), &c, sizeof(uint32_t));
+
+         if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, block, sizeof(uint32_t) * (block % b), &c, sizeof(uint32_t));
+
+        }
+
+        return;
+
+    }
+
+
+
+    // Triply Indirect Blocks
+    block -= b * b;
+
+    if(block < (b * b * b)) {
+
+        if(__block_is_free(blocks[EXT2_TIND_BLOCK]))
+            ext2_utils_alloc_block(ext2, &blocks[EXT2_TIND_BLOCK]);
+
+
+        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (block / (b * b)), &c, sizeof(uint32_t));
+
+        if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / (b * b)), &c, sizeof(uint32_t));
+
+        }
+
+        block = c;
+
+
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &c, sizeof(uint32_t));
+
+        if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &c, sizeof(uint32_t));
+
+        }
+
+        block = c;
+
+
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &c, sizeof(uint32_t));
+
+        if(__block_is_free(c)) {
+
+            ext2_utils_alloc_block(ext2, &c);
+            ext2_utils_write_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &c, sizeof(uint32_t));
+
+        }
+
+        return;
+
+    }
+    
+
+    kpanicf("%s() FAIL! block is too high!", __func__); 
+
+}
+
