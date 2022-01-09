@@ -97,18 +97,20 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
                 break;
 
 
-            dirent->d_ino = ent.d_ino;
-            dirent->d_off = i;
-            dirent->d_reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
-            dirent->d_type = ent.d_type;
+            size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
 
-            strcpy(dirent->d_name, ent.d_name);
+            uio_w64(&dirent->d_ino, ent.d_ino);
+            uio_w64(&dirent->d_off, i);
+            uio_w16(&dirent->d_reclen, reclen);
+            uio_w8 (&dirent->d_type, ent.d_type);
+
+            uio_strcpy_s2u(&dirent->d_name[0], ent.d_name);
             
 
-            r += dirent->d_reclen;
-            i += dirent->d_reclen;
+            r += reclen;
+            i += reclen;
 
-            dirent = (struct linux_dirent64*) ((uintptr_t) dirent + dirent->d_reclen);
+            dirent = (struct linux_dirent64*) ((uintptr_t) dirent + reclen);
 
         }
         
@@ -119,4 +121,5 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
         return -errno;
 
     return r;
+    
 });

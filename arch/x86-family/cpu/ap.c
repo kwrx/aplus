@@ -75,8 +75,8 @@ void ap_bmain(uint64_t magic, uint64_t cpu) {
 
 ap_header_t* ap_get_header(void) {
 
-    extern int __ap_begin;
-    extern int __ap_end;
+    extern uint8_t __ap_begin;
+    extern uint8_t __ap_end;
 
 
     ap_header_t* ap = (ap_header_t*) arch_vmm_p2v (AP_BOOT_OFFSET + ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)) - sizeof(ap_header_t), ARCH_VMM_AREA_HEAP);
@@ -91,8 +91,8 @@ ap_header_t* ap_get_header(void) {
 void ap_init() {
 
 
-    extern int __ap_begin;
-    extern int __ap_end;
+    extern uint8_t __ap_begin;
+    extern uint8_t __ap_end;
 
     memcpy (
         (void*) arch_vmm_p2v(AP_BOOT_OFFSET, ARCH_VMM_AREA_HEAP),

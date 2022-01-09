@@ -42,6 +42,7 @@
 #include <sys/times.h>
 #include <sys/mman.h>
 #include <sys/syscall.h>
+#include <sys/auxv.h>
 #include <termios.h>
 
 #include <aplus/fb.h>
@@ -85,13 +86,14 @@ static void init_framebuffer(void) {
 
 
 
-    void* frame = mmap((void*) fix.smem_start, fix.smem_len & ~0xFFF, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_POPULATE | MAP_LOCKED | MAP_ANONYMOUS, -1, 0);
+    void* frame = (void*) fix.smem_start;
 
 #if defined(DEBUG)
-    memset(frame, 0xFF, var.xres * var.yres * (var.bits_per_pixel >> 3));
+    for(size_t i = 0; i < var.xres * var.yres; i++) {
+        ((unsigned int*) frame)[i] = (unsigned int) (((double) i / (double) (var.xres * var.yres)) * 16777215.0) & 0x00FFFFFF;
+    }
 #endif
 
-    ioctl(fd, FBIO_WAITFORVSYNC, 1);
     close(fd);
 
 }
@@ -291,7 +293,18 @@ static void init_initd(void) {
     sched_setaffinity(0, sizeof(cpu_set_t), &cpus);
 
 
-    // TODO: run /etc/init.d scripts...
+    if(fork() == 0) {
+    
+
+        execle("/bin/date", "/bin/date", NULL, environ);
+        exit(EXIT_FAILURE);
+
+    } else {
+
+        waitpid(-1, NULL, 0);
+
+    }
+    
 }
 
 
@@ -309,8 +322,32 @@ int main(int argc, char** argv, char** envp) {
 
 
 #if defined(DEBUG)
+
     if(getpid() != 1)
         fprintf(stderr, "init: WARN! getpid() != 1\n");
+
+
+    fprintf(stderr, "init: pid(%d) ppid(%d) gid(%d) uid(%d)\n", getpid(), getppid(), getgid(), getuid());
+    fprintf(stderr, "init: argc(%d) argv(%p) envp(%p)\n", argc, argv, envp);
+
+    for(size_t i = 0; i < argc; i++)
+        fprintf(stderr, "init: argv[%zu] = %s (%p)\n", i, argv[i], argv[i]);
+
+    
+    fprintf(stderr, "init: auxval(AT_RANDOM)        = %zu\n", getauxval(AT_RANDOM));
+    fprintf(stderr, "init: auxval(AT_PAGESZ)        = %zu\n", getauxval(AT_PAGESZ));
+    fprintf(stderr, "init: auxval(AT_HWCAP)         = %zu\n", getauxval(AT_HWCAP));
+    fprintf(stderr, "init: auxval(AT_HWCAP2)        = %zu\n", getauxval(AT_HWCAP2));
+    fprintf(stderr, "init: auxval(AT_CLKTCK)        = %zu\n", getauxval(AT_CLKTCK));
+    fprintf(stderr, "init: auxval(AT_UID)           = %zu\n", getauxval(AT_UID));
+    fprintf(stderr, "init: auxval(AT_GID)           = %zu\n", getauxval(AT_GID));
+    fprintf(stderr, "init: auxval(AT_EUID)          = %zu\n", getauxval(AT_EUID));    
+    fprintf(stderr, "init: auxval(AT_EGID)          = %zu\n", getauxval(AT_EGID));   
+    fprintf(stderr, "init: auxval(AT_ENTRY)         = %zu\n", getauxval(AT_ENTRY));
+    fprintf(stderr, "init: auxval(AT_FLAGS)         = %zu\n", getauxval(AT_FLAGS));
+    fprintf(stderr, "init: auxval(AT_NULL)          = %zu\n", getauxval(AT_NULL));
+
+
 #endif
 
 

@@ -35,22 +35,25 @@
 
 
 
-inode_t* ext2_finddir(inode_t* inode, const char * name) {
+inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
     DEBUG_ASSERT(name);
+    DEBUG_ASSERT(name[0] != '\0');
 
     ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
-
 
 
     struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
     struct inode* d = NULL;
 
 
-    int q;
+    size_t name_len = strlen(name);
+
+
+    size_t q;
     for(q = 0; q < n->i_size; q += ext2->blocksize) {
 
 
@@ -59,7 +62,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
             ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
 
 
-            int i;
+            size_t i;
             for(i = 0; i < ext2->blocksize; ) {
 
                 struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
@@ -76,7 +79,7 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
 
                 /* Found? */
-                if(strncmp(name, e->name, e->name_len) == 0) {
+                if(name_len == e->name_len && strncmp(name, e->name, e->name_len) == 0) {
 
 
                     d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
@@ -89,29 +92,31 @@ inode_t* ext2_finddir(inode_t* inode, const char * name) {
 
 
                     d->ops.getattr = ext2_getattr;
-                    //d->ops.setattr = ext2_setattr;
-                    //d->ops.fsync = ext2_fsync;
+                    d->ops.setattr = ext2_setattr;
+                    d->ops.fsync = ext2_fsync;
 
                     if(S_ISDIR(mode)) {
 
-                        //d->ops.creat   = ext2_creat;
+                        // d->ops.creat   = ext2_creat;
                         d->ops.finddir = ext2_finddir;
                         d->ops.readdir = ext2_readdir;
-                        //d->ops.rename  = ext2_rename;
-                        //d->ops.symlink = ext2_symlink;
-                        //d->ops.unlink  = ext2_unlink;
+                        // d->ops.rename  = ext2_rename;
+                        // d->ops.symlink = ext2_symlink;
+                        // d->ops.unlink  = ext2_unlink;
+
+                        vfs_dcache_init(d);
 
                     }
 
-                    if(S_ISREG(mode)) {
+                    else if(S_ISREG(mode)) {
 
-                        //d->ops.truncate = ext2_truncate;
+                        // d->ops.truncate = ext2_truncate;
                         d->ops.read = ext2_read;
                         d->ops.write = ext2_write;
 
                     }
 
-                    if(S_ISLNK(mode)) {
+                    else if(S_ISLNK(mode)) {
 
                         d->ops.readlink = ext2_readlink;
 

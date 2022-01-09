@@ -60,4 +60,5 @@ long sys_open (const char __user * filename, int flags, mode_t mode) {
     extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
     
     return sys_openat(AT_FDCWD, filename, flags, mode);
+    
 });

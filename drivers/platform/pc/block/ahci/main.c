@@ -983,6 +983,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
+    DEBUG_ASSERT(count <= 32);
 
     struct ahci* ahci = (struct ahci*) device->userdata;
 
@@ -1096,6 +1097,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
+    DEBUG_ASSERT(count <= 32);
 
     struct ahci* ahci = (struct ahci*) device->userdata;
 

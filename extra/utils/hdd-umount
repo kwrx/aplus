@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Usage
+#   hdd-mount [SOURCE]
+
+tmp="/tmp/aplus-hdd"
+output="$1"
+
+
+# Unmount the loopback
+sudo umount $tmp/p1
+
+# Unmap the image
+sudo losetup -D
+sync

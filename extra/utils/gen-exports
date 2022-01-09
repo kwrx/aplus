@@ -3,6 +3,10 @@
 # Usage: gen-exports SYSROOT TARGET
 #
 
+if [ -z $1 ] || [ -z $2 ]; then
+    echo "Usage: $0 <SYSROOT> <TARGET>"
+    exit 1
+fi
 
 for i in $(find $1/usr/lib/modules -type f -name *.ko); do
     d="$d $($2-aplus-nm -uP $i)"

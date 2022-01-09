@@ -83,10 +83,11 @@ long sys_newlstat (const char __user * filename, struct stat __user * statbuf) {
 
 
     int e;
+    struct stat __statbuf;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, statbuf);
+        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
 
     });
 
@@ -97,6 +98,9 @@ long sys_newlstat (const char __user * filename, struct stat __user * statbuf) {
 
     if(e < 0)
         return -errno;
+
+
+    uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
 
     return 0;
 

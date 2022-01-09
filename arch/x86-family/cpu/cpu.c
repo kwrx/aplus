@@ -43,7 +43,7 @@
 
 
 // see startup.S
-extern int startup_tss;
+extern uint8_t startup_tss;
 
 
 
@@ -67,7 +67,7 @@ void arch_cpu_init(int index) {
     for(i = 0; i < SMP_CPU_MAX_FEATURES; i++)
         core->cpu.cores[index].features[i] = 0ULL;
         
-    core->cpu.cores[index].tss = (void*) (&startup_tss + (index * sizeof(tss_t)));
+    core->cpu.cores[index].tss = (void*) (((uintptr_t) &startup_tss) + (index * sizeof(tss_t)));
 
 
     spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER);
@@ -389,56 +389,56 @@ void arch_cpu_init(int index) {
 
 
     //! Requirements
-    HALT_ON(cpu_has(index, X86_FEATURE_MSR));
+    PANIC_ON(cpu_has(index, X86_FEATURE_MSR));
 
 #if defined(__x86_64__)
-    HALT_ON(cpu_has(index, X86_FEATURE_LM));
-    HALT_ON(cpu_has(index, X86_FEATURE_PAE));
-    HALT_ON(cpu_has(index, X86_FEATURE_GBPAGES));
+    PANIC_ON(cpu_has(index, X86_FEATURE_LM));
+    PANIC_ON(cpu_has(index, X86_FEATURE_PAE));
+    PANIC_ON(cpu_has(index, X86_FEATURE_GBPAGES));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)
-    HALT_ON(cpu_has(index, X86_FEATURE_RDTSCP));
+    PANIC_ON(cpu_has(index, X86_FEATURE_RDTSCP));
 #endif
 
 
 
 
-    //! Enable TSC Timer
+    //? Enable TSC Timer
     if(cpu_has(index, X86_FEATURE_TSC))
         x86_set_cr4(x86_get_cr4() | X86_CR4_TSD_MASK);
 
 
-    //! Enable NX bit
+    //? Enable NX bit
     if(cpu_has(index, X86_FEATURE_NX))
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_NXE);
 
 
-    //! Enable Syscall bit
+    //? Enable Syscall bit
     if(cpu_has(index, X86_FEATURE_SYSCALL))
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_SCE);
 
 
-    //! Enable FSGSBASE instructions
+    //? Enable FSGSBASE instructions
     if(cpu_has(index, X86_FEATURE_FSGSBASE))
         x86_set_cr4(x86_get_cr4() | X86_CR4_FSGSBASE_MASK);
 
 
 #if defined(CONFIG_X86_ENABLE_SMEP)
-    //! Enable SMEP
+    //? Enable SMEP
     if(cpu_has(index, X86_FEATURE_SMEP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMEP_MASK);
 #endif
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
-    // //! Enable SMAP
+    //? Enable SMAP
     if(cpu_has(index, X86_FEATURE_SMAP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
 #endif
 
 
 #if defined(CONFIG_HAVE_SMP)
-    //! Write Processor ID
+    //? Write Processor ID
     if(cpu_has(index, X86_FEATURE_RDTSCP))
         x86_wrmsr(X86_MSR_TSC_AUX, index);
 #endif
@@ -510,8 +510,8 @@ void arch_cpu_startup(int index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
 
-    HALT_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
-    HALT_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+    PANIC_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    PANIC_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0

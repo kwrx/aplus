@@ -41,6 +41,9 @@
 #include <dev/virtio/virtio-gpu.h>
 
 
+// TODO: Rewrite all virtio-gpu code to use a new video interface driver
+
+
 MODULE_NAME("virtio/virtio-gpu");
 MODULE_DEPS("dev/interface,dev/pci,virtio/virtio-pci,virtio/virtio-queue");
 MODULE_AUTHOR("Antonino Natale");
@@ -75,9 +78,6 @@ device_t device = {
     .major = 10,
     .minor = 243,
 
-    .address = 0,
-    .size = 0,
-
     .status = DEVICE_STATUS_UNKNOWN,
     .userdata = NULL,
 
@@ -97,8 +97,8 @@ device_t device = {
 static void virtgpu_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address == 0);    
-    DEBUG_ASSERT(device->size == 0);
+    DEBUG_ASSERT(device->vid.fb_base == 0);    
+    DEBUG_ASSERT(device->vid.fb_size == 0);
    
     
     virtgpu_reset(device);
@@ -145,7 +145,7 @@ static void virtgpu_reset_framebuffer(device_t* device) {
     uint64_t resource;
 
     __(virtgpu_cmd_resource_create_2d,         device->userdata, &resource, VIRTIO_GPU_FORMAT_A8R8G8B8_UNORM, device->vid.vs.xres_virtual, device->vid.vs.yres_virtual);
-    __(virtgpu_cmd_resource_attach_backing,    device->userdata, resource, device->address, device->size);
+    __(virtgpu_cmd_resource_attach_backing,    device->userdata, resource, device->vid.fb_base, device->vid.fb_size);
     __(virtgpu_cmd_set_scanout,                device->userdata, VIRTGPU_DISPLAY_PRIMARY, resource, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
 
     #undef __
@@ -189,8 +189,8 @@ static void virtgpu_reset(device_t* device) {
     device->vid.vs.activate = FB_ACTIVATE_NOW;
 
 
-    device->address = pmm_alloc_blocks(device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8 / PML1_PAGESIZE + 1);
-    device->size = device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8;
+    device->vid.fb_base = pmm_alloc_blocks(device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8 / PML1_PAGESIZE + 1);
+    device->vid.fb_size = device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8;
 
     
     virtgpu_reset_framebuffer(device);
@@ -228,8 +228,8 @@ static void virtgpu_update(device_t* device) {
     
     strncpy(device->vid.fs.id, VIRTGPU_ID, 16);
 
-    device->vid.fs.smem_start = device->address;
-    device->vid.fs.smem_len = device->size;
+    device->vid.fs.smem_start = device->vid.fb_base;
+    device->vid.fs.smem_len = device->vid.fb_size;
     device->vid.fs.type = FB_TYPE_PLANES;
     device->vid.fs.visual = FB_VISUAL_TRUECOLOR;
     device->vid.fs.accel = FB_ACCEL_NONE;
@@ -357,7 +357,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    if(args && !strstr(args, "graphics=no"))
+    if(args && strstr(args, "graphics=no"))
         return;
 
     if(args && strstr(args, "graphics=builtin"))
@@ -373,8 +373,6 @@ void init(const char* args) {
         return;
 
     device_mkdev(&device, 0644);
-
-    for(;;);
 
 }
 

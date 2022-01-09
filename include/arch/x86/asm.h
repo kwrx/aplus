@@ -1,3 +1,26 @@
+/*                                                                      
+ * Author(s):                                                           
+ *      Antonino Natale <antonio.natale97@hotmail.com>                  
+ *                                                                      
+ * Copyright (c) 2013-2019 Antonino Natale                              
+ *                                                                      
+ *                                                                      
+ * This file is part of aplus.                                          
+ *                                                                      
+ * aplus is free software: you can redistribute it and/or modify        
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, either version 3 of the License, or    
+ * (at your option) any later version.                                  
+ *                                                                      
+ * aplus is distributed in the hope that it will be useful,             
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
+ * GNU General Public License for more details.                         
+ *                                                                      
+ * You should have received a copy of the GNU General Public License    
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
+ */                                                                     
+                                                                        
 #ifndef _APLUS_X86_ASM_H
 #define _APLUS_X86_ASM_H
 
@@ -27,6 +50,7 @@
 
 #if defined(__x86_64__)
 #   define KERNEL_HIGH_AREA         0xFFFFFFFF80000000
+#   define KERNEL_HIGH_SIZE         0x0000000040000000   //? 1GiB
 #   define KERNEL_STACK_AREA        0xFFFFFFFFC0000000
 #   define KERNEL_STACK_SIZE        0x0000000000200000   //? 2Mib
 #   define KERNEL_HEAP_AREA         0xFFFF800000000000

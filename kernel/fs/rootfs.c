@@ -64,11 +64,13 @@ void rootfs_init(void) {
     memset(&__vfs_root, 0, sizeof(__vfs_root));
 
 
+    spinlock_init(&__vfs_root.lock);
+
     __vfs_root.name[0] = '/';
     __vfs_root.name[1] = '\0';
     __vfs_root.ino = 1;
     __vfs_root.ops.getattr = rootfs_getattr;
 
-    spinlock_init(&__vfs_root.lock);
+    vfs_dcache_init(&__vfs_root);
 
 }

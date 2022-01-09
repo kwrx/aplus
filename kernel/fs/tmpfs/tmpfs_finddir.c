@@ -39,7 +39,7 @@
 
 
 
-inode_t* tmpfs_finddir(inode_t* inode, const char * name) {
+inode_t* tmpfs_finddir(inode_t* inode, const char* name) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);

@@ -32,36 +32,42 @@
 #include <aplus/vfs.h>
 #include <aplus/errno.h>
 
-#include <aplus/utils/list.h>
+#include <aplus/utils/hashmap.h>
 
 
-// TODO: use binary-tree data structure or hashmap
 
+void vfs_dcache_init(inode_t* inode) {
+    hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
+}
 
-static list(inode_t*, dcache);
-
-
-void dcache_init(void) {
-    memset(&dcache, 0, sizeof(dcache));
+void vfs_dcache_free(inode_t* inode) {
+    hashmap_cleanup(&inode->dcache);
 }
 
 
-void vfs_dcache_add(inode_t* inode) {
+void vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
+    DEBUG_ASSERT(parent);
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(list_find(dcache, inode) == NULL);
+    DEBUG_ASSERT(inode->name);
+    DEBUG_ASSERT(inode->name[0] != '\0');
+    DEBUG_ASSERT(hashmap_get(&parent->dcache, inode->name) == NULL);
     
-    list_push(dcache, inode);
+    hashmap_put(&parent->dcache, inode->name, inode);
+
 }
 
 
-void vfs_dcache_remove(inode_t* inode) {
+void vfs_dcache_remove(inode_t* parent, inode_t* inode) {
     
+    DEBUG_ASSERT(parent);
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(list_find(dcache, inode) != NULL);
+    DEBUG_ASSERT(inode->name);
+    DEBUG_ASSERT(inode->name[0] != '\0');
+    DEBUG_ASSERT(hashmap_get(&parent->dcache, inode->name) != NULL);
 
-    list_remove(dcache, inode);
-    kfree(inode);
+    kfree(hashmap_remove(&parent->dcache, inode->name));
+
 }
 
 
@@ -69,18 +75,8 @@ inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(name);
+    DEBUG_ASSERT(name[0] != '\0');
 
-    list_each(dcache, e) {
-
-        if(likely(e->parent != parent))
-            continue;
-
-        if(strcmp(e->name, name) != 0)
-            continue;
-
-        return e;
-    }
-
-    return NULL;
+    return hashmap_get(&parent->dcache, name);
 
 }

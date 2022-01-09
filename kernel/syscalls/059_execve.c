@@ -177,6 +177,71 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
+
+    // * Save the given arguments and environment
+
+    const char** __safe_argv = uio_get_ptr(argv);
+    const char** __safe_envp = uio_get_ptr(envp);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+
+    for(size_t i = 0; __safe_argv[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
+
+    for(size_t i = 0; __safe_envp[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_envp[i], R_OK));
+
+#endif
+
+
+    size_t argc;
+    for(argc = 0; __safe_argv[argc]; argc++)
+        ;
+
+    size_t envc;
+    for(envc = 0; __safe_envp[envc]; envc++)
+        ;
+
+
+    
+    // * Backup into stack the data for _start()
+    
+    char** argq = (char**) __builtin_alloca(sizeof(char*) * (argc + 1));
+    char** envq = (char**) __builtin_alloca(sizeof(char*) * (envc + 1));
+
+    DEBUG_ASSERT(argq);
+    DEBUG_ASSERT(envq);
+
+
+
+    // * Allocate ARGV e ENVP Strings
+
+    for(size_t i = 0; __safe_argv[i]; i++) {
+     
+        char* p = (char*) __builtin_alloca(uio_strlen(__safe_argv[i]) + 1);
+        uio_strcpy_u2s(p, __safe_argv[i]);
+
+        argq[i + 0] = p;
+        argq[i + 1] = NULL;
+
+    }
+
+    for(size_t i = 0; __safe_envp[i]; i++) {
+     
+        char* p = (char*) __builtin_alloca(uio_strlen(__safe_envp[i]) + 1);
+        uio_strcpy_u2s(p, __safe_envp[i]);
+
+        envq[i + 0] = p;
+        envq[i + 1] = NULL;
+    
+    }
+        
+
+    
+
+
+
   
     do_unshare(CLONE_FS);
     do_unshare(CLONE_FILES);
@@ -253,15 +318,13 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-                    kprintf("sys_execve: PT_LOAD at address(%p) size(%p) alignsize(%p)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr);
+                    kprintf("sys_execve: PT_LOAD/PT_TLS at address(%p) size(%p) alignsize(%p) type(%d)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
 
 
-                    arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz,
-                                    flags                   |
-                                    ARCH_VMM_MAP_USER);
+                    arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz, flags | ARCH_VMM_MAP_USER);
 
                     break;
 
@@ -296,8 +359,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    int i;
-    for(i = 0; i < CONFIG_OPEN_MAX; i++) {
+    for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
         if(!current_task->fd->descriptors[i].ref)
             continue;
@@ -313,61 +375,28 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    const char** __safe_argv = uio_get_ptr(argv);
-    const char** __safe_envp = uio_get_ptr(envp);
-
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-
-    for(i = 0; __safe_argv[i]; i++)
-        DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
-
-    for(i = 0; __safe_envp[i]; i++)
-        DEBUG_ASSERT(uio_check(__safe_envp[i], R_OK));
-
-#endif
-
-
-    size_t argc;
-    for(argc = 0; __safe_argv[argc]; argc++)
-        ;
-
-    size_t envc;
-    for(envc = 0; __safe_envp[envc]; envc++)
-        ;
-        
-
-        
-
-
     // * Prepare data for _start()
     
-    char** argq = (char**) __builtin_alloca(sizeof(char*) * (argc + 1));
-    char** envq = (char**) __builtin_alloca(sizeof(char*) * (envc + 1));
-
-
-    // * Allocate ARGV e ENVP Strings
-
-    for(i = 0; __safe_argv[i]; i++) {
+    for(size_t i = 0; argq[i]; i++) {
      
-        char* p = (char*) __sbrk(uio_strlen(__safe_argv[i]) + 1);
-        uio_strcpy_u2u(p, __safe_argv[i]);
+        char* p = (char*) __sbrk(uio_strlen(argq[i]) + 1);
+        uio_strcpy_s2u(p, argq[i]);
 
-        *argq++ = p;
-        *argq   = NULL;
+        argq[i] = p;
 
     }
 
-    for(i = 0; __safe_envp[i]; i++) {
+    for(size_t i = 0; __safe_envp[i]; i++) {
      
-        char* p = (char*) __sbrk(uio_strlen(__safe_envp[i]) + 1);
-        uio_strcpy_u2u(p, __safe_envp[i]);
+        char* p = (char*) __sbrk(uio_strlen(envq[i]) + 1);
+        uio_strcpy_s2u(p, envq[i]);
 
-        *envq++ = p;
-        *envq   = NULL;
+        envq[i] = p;
     
     }
 
+
+    
 
 
     // * Allocate Signal Stack
@@ -386,6 +415,29 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     uintptr_t* sp = (uintptr_t*) bottom;
 
 
+
+    // * Arguments
+
+    uio_wptr(sp++, argc);
+
+    for(size_t i = 0; i < argc; i++)
+        uio_wptr(sp++, (uintptr_t) argq[i]);
+
+    uio_wptr(sp++, 0UL);
+
+
+
+    // * Environment
+
+    for(size_t i = 0; i < envc; i++)
+        uio_wptr(sp++, (uintptr_t) envq[i]);
+
+    uio_wptr(sp++, 0UL);
+
+
+
+
+
     // * AUX vector
 
     #define AUX_ENT(id, value) {    \
@@ -394,36 +446,18 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     }
 
 
+    AUX_ENT(AT_RANDOM, rand());
     AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
-    AUX_ENT(AT_FLAGS, 0);
-    AUX_ENT(AT_ENTRY, head.e_entry);
+    AUX_ENT(AT_HWCAP, 0);
+    AUX_ENT(AT_HWCAP2, 0);
+    AUX_ENT(AT_CLKTCK, arch_timer_generic_getres());
     AUX_ENT(AT_UID, current_task->uid);
     AUX_ENT(AT_GID, current_task->gid);
     AUX_ENT(AT_EUID, current_task->euid);
     AUX_ENT(AT_EGID, current_task->egid);
-    AUX_ENT(AT_CLKTCK, arch_timer_generic_getres());
-    AUX_ENT(AT_RANDOM, rand());
-    AUX_ENT(AT_HWCAP, 0);
+    AUX_ENT(AT_ENTRY, head.e_entry);
+    AUX_ENT(AT_FLAGS, 0);
     AUX_ENT(AT_NULL, 0);
-
-
-
-    // * Environment
-
-    uio_wptr(sp++, 0UL);
-    
-    for(i = envc - 1; i >= 0; i--)
-        uio_wptr(sp++, (uintptr_t) envp[i]);
-
-    uio_wptr(sp++, 0UL);
-
-
-    // * Arguments
-
-    for(i = argc - 1; i >= 0; i--)
-        uio_wptr(sp++, (uintptr_t) argv[i]);
-
-    uio_wptr(sp, argc);
 
 
 
@@ -433,7 +467,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
 
-    arch_userspace_enter(head.e_entry, stack, sp);
+    kprintf("sys_execve: entering on userspace at address(%p) task(%d) sigstack(%p) stack(%p) bottom(%p)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
+
+    arch_userspace_enter(head.e_entry, stack, (void*) bottom);
+
+
     return -EINTR;
     
 });

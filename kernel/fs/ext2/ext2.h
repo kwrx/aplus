@@ -425,8 +425,14 @@ struct ext2_dir_entry_2 {
 #define EXT2_FT_SYMLINK                 7
 
 
+#define __block_is_free(block) \
+    ((block) == 0)
+
+
+
 
 typedef struct {
+
     struct ext2_super_block sb;
 
     uint32_t first_block_group;
@@ -439,12 +445,22 @@ typedef struct {
 
     inode_t* dev;
     inode_t* root;
+    
 } __packed ext2_t;
 
 
 
+
+#define ext2_inode_set_size(ext2, inode, size) {    \
+    inode->i_size = ((size) & 0xFFFFFFFF);          \
+    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)    \
+        inode->i_size_high = ((size) << 32);        \
+}
+
+
+int ext2_fsync (inode_t*, int);
 int ext2_getattr (inode_t*, struct stat*);
-//int ext2_setattr (inode_t*, struct stat*);
+int ext2_setattr (inode_t*, struct stat*);
 
 //int ext2_truncate (inode_t*, off_t);
 
@@ -466,10 +482,14 @@ void ext2_cache_flush (vfs_cache_t*, ino_t, void*);
 
 
 void ext2_utils_read_inode(ext2_t*, ino_t, void*);
+void ext2_utils_write_inode(ext2_t*, ino_t, const void*);
+void ext2_utils_zero_block(ext2_t*, uint32_t);
+
 void ext2_utils_read_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, size_t);
-void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
-void ext2_utils_write_inode(ext2_t*, ino_t, void*);
 void ext2_utils_write_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, const void*, size_t);
+void ext2_utils_alloc_inode_data(ext2_t*, uint32_t*, uint32_t);
+
+void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
 void ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
 
 void ext2_utils_alloc_block(ext2_t*, uint32_t*);

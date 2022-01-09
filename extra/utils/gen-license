@@ -3,13 +3,11 @@
 
 LICENSE="\
 /*                                                                      \n\
- * GPL3 License                                                         \n\
- *                                                                      \n\
  * Author(s):                                                           \n\
  *      Antonino Natale <antonio.natale97@hotmail.com>                  \n\
  *                                                                      \n\
- *                                                                      \n\
  * Copyright (c) 2013-2019 Antonino Natale                              \n\
+ *                                                                      \n\
  *                                                                      \n\
  * This file is part of aplus.                                          \n\
  *                                                                      \n\
@@ -30,7 +28,7 @@ LICENSE="\
 
 
 for i in $@; do
-    if ! cat $i | grep "GPL3 License" &> /dev/null; then
+    if ! cat $i | grep "Copyright (c)" &> /dev/null; then
         echo -e "$LICENSE$(cat $i)" > $i
     fi
 done

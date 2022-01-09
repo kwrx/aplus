@@ -48,8 +48,12 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
+#define VBE_DISPI_MAX_XRES                  1024
+#define VBE_DISPI_MAX_YRES                  768
+
 #define VBE_DISPI_IOPORT_INDEX              0x01CE
 #define VBE_DISPI_IOPORT_DATA               0x01CF
+
 #define VBE_DISPI_INDEX_ID                  0x0000
 #define VBE_DISPI_INDEX_XRES                0x0001
 #define VBE_DISPI_INDEX_YRES                0x0002
@@ -93,9 +97,6 @@ device_t device = {
     .major = 10,
     .minor = 243,
 
-    .address = 0,
-    .size = 0,
-
     .status = DEVICE_STATUS_UNKNOWN,
 
     .init = bga_init,
@@ -112,17 +113,17 @@ device_t device = {
 static void bga_init(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->vid.fb_base);    
+    DEBUG_ASSERT(device->vid.fb_size);    
 
 
-    // arch_vmm_map(&core->bsp.address_space, device->address, device->address, device->size,
-    //         ARCH_VMM_MAP_FIXED  | 
-    //         ARCH_VMM_MAP_RDWR   |
-    //         ARCH_VMM_MAP_USER   |
-    //         ARCH_VMM_MAP_NOEXEC |
-    //         ARCH_VMM_MAP_VIDEO_MEMORY
-    // );
+    arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size,
+            ARCH_VMM_MAP_FIXED  | 
+            ARCH_VMM_MAP_RDWR   |
+            ARCH_VMM_MAP_USER   |
+            ARCH_VMM_MAP_NOEXEC |
+            ARCH_VMM_MAP_VIDEO_MEMORY
+    );
 
     bga_reset(device);
 
@@ -132,10 +133,10 @@ static void bga_init(device_t* device) {
 static void bga_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);    
-    DEBUG_ASSERT(device->address);    
-    DEBUG_ASSERT(device->size);    
+    DEBUG_ASSERT(device->vid.fb_base);    
+    DEBUG_ASSERT(device->vid.fb_size);    
 
-    arch_vmm_unmap(&core->bsp.address_space, device->address, device->size);
+    arch_vmm_unmap(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_size);
 
 }
 
@@ -147,12 +148,13 @@ static void bga_reset(device_t* device) {
     memset(&device->vid.fs, 0, sizeof(struct fb_fix_screeninfo));
     memset(&device->vid.vs, 0, sizeof(struct fb_var_screeninfo));
 
+
     if(!core->framebuffer.address) {
 
-        device->vid.vs.xres = 800;
-        device->vid.vs.yres = 600;
-        device->vid.vs.xres_virtual = 800;
-        device->vid.vs.yres_virtual = 600;
+        device->vid.vs.xres = VBE_DISPI_MAX_XRES;
+        device->vid.vs.yres = VBE_DISPI_MAX_YRES;
+        device->vid.vs.xres_virtual = VBE_DISPI_MAX_XRES;
+        device->vid.vs.yres_virtual = VBE_DISPI_MAX_YRES;
         device->vid.vs.bits_per_pixel = 32;
 
     } else {
@@ -177,7 +179,8 @@ static void bga_reset(device_t* device) {
 static void bga_update(device_t* device) {
 
     DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->address);
+    DEBUG_ASSERT(device->vid.fb_base);
+    DEBUG_ASSERT(device->vid.fb_size);
     DEBUG_ASSERT(device->vid.vs.xres);
     DEBUG_ASSERT(device->vid.vs.yres);
     DEBUG_ASSERT(device->vid.vs.bits_per_pixel);
@@ -192,6 +195,7 @@ static void bga_update(device_t* device) {
 
 
     wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
+    wr(VBE_DISPI_INDEX_BANK,   VBE_DISPI_DISABLED);
 
     wr(VBE_DISPI_INDEX_XRES,        device->vid.vs.xres);
     wr(VBE_DISPI_INDEX_YRES,        device->vid.vs.yres);
@@ -204,6 +208,8 @@ static void bga_update(device_t* device) {
 
     if((device->vid.vs.activate & FB_ACTIVATE_MASK) == 0)
         wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
+
+
     
 
     static int rgba[] = {
@@ -226,8 +232,8 @@ static void bga_update(device_t* device) {
     
     strncpy(device->vid.fs.id, BGA_ID, 16);
 
-    device->vid.fs.smem_start = device->address;
-    device->vid.fs.smem_len = device->size;
+    device->vid.fs.smem_start = device->vid.fb_base;
+    device->vid.fs.smem_len = device->vid.fb_size;
     device->vid.fs.type = FB_TYPE_PLANES;
     device->vid.fs.visual = FB_VISUAL_TRUECOLOR;
     device->vid.fs.line_length = device->vid.vs.xres_virtual * (device->vid.vs.bits_per_pixel / 8);
@@ -244,13 +250,18 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     ))) return;
 
 
-    ((device_t*) arg)->address = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-    ((device_t*) arg)->size    = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
+    ((device_t*) arg)->vid.fb_base = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
+    ((device_t*) arg)->vid.fb_size = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
 
 #if defined(__x86_64__)
     if(pci_is_64bit(device, PCI_BAR0))
-        ((device_t*) arg)->address |= (pci_read(device, PCI_BAR1, 4) << 32);
+        ((device_t*) arg)->vid.fb_base |= (pci_read(device, PCI_BAR1, 4) << 32);
 #endif
+
+
+    pci_enable_bus_mastering(device);
+    pci_enable_mmio(device);
+    pci_enable_pio(device);
 
 }
 
@@ -273,7 +284,7 @@ void init(const char* args) {
 
     pci_scan(&pci_find, PCI_TYPE_VGA, &device);
 
-    if(!device.address)
+    if(!device.vid.fb_base)
         return;
 
     device_mkdev(&device, 0644);

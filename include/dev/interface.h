@@ -57,18 +57,19 @@
 
 
 typedef struct device {
+
     int type;
+    int status;
 
     char name[DEVICE_MAXNAMELEN];
     char description[DEVICE_MAXDESCLEN];
 
     uint16_t major;
     uint16_t minor;
-    
-    uintptr_t address;
-    uintptr_t size;
 
-    int status;
+    uintptr_t iobase;
+    uintptr_t mmiobase;
+
     
     spinlock_t lock;
 
@@ -119,6 +120,9 @@ typedef struct device {
             struct fb_var_screeninfo vs;
             struct fb_fix_screeninfo fs;
 
+            uintptr_t fb_base;
+            uintptr_t fb_size;
+
             void (*update) (struct device*);
             void (*wait_vsync) (struct device*);
 
@@ -150,7 +154,9 @@ typedef struct device {
 
     };
 
+
     void* userdata;
+
 } device_t;
 
 

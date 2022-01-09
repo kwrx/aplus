@@ -81,6 +81,16 @@ void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const
 }
 
 
+void ext2_utils_zero_block(ext2_t* ext2, uint32_t block) {
+
+    uint8_t zero[ext2->blocksize];
+    memset(zero, 0, sizeof(zero));
+
+    ext2_utils_write_block(ext2, block, 0, zero, sizeof(zero));
+
+}
+
+
 
 void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
 
@@ -95,48 +105,53 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
         return;
 
 
-
     __lock(&ext2->lock, {
 
-        
-        int i;
+        size_t i;
+        size_t j;
+
         for(i = 0; i < (ext2->sb.s_blocks_count / ext2->sb.s_blocks_per_group); i++) {
 
             struct ext2_group_desc d;
             ext2_utils_read_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
 
-                    
             if(d.bg_free_blocks_count == 0)
                 continue;
             
-
-
-            uint32_t* bitmap = ext2->cache;
 
             ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize);
 
 
                 
-            for(int j = 0; j < (ext2->blocksize / sizeof(uint32_t)); j++, bitmap++) {
+            uint32_t* bitmap = ext2->cache;
+
+            for(j = 0; j < (ext2->blocksize / sizeof(*bitmap)); j++, bitmap++) {
                 
                 if(*bitmap == 0xFFFFFFFF)
                     continue;
             
                 
-                uint32_t b;
-                b = __builtin_ffs(~(*bitmap)) - 1;
-                b += j * 32;
+                uint32_t b, q;
+                b = q = __builtin_ffs(~(*bitmap)) - 1;
+                b += j * (sizeof(*bitmap) << 3);
                 b += i * ext2->sb.s_blocks_per_group;
 
+                *bitmap |= (1LL << q);
                 *block = b;
+
                 break;
+
             }
 
 
+            DEBUG_ASSERT(block); 
+            DEBUG_ASSERT(*block); 
 
             ext2->sb.s_free_blocks_count--;
             d.bg_free_blocks_count--;
             
+
+            ext2_utils_zero_block(ext2, *block);
                 
             ext2_utils_write_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize);
             ext2_utils_write_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
@@ -160,6 +175,10 @@ void ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
     DEBUG_ASSERT(block > 1);
 
 
+    /* TODO: free block */
 
 
 }
+
+
+

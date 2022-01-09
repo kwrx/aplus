@@ -61,13 +61,13 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
 
     // not supported    
-    HALT_ON((flags & MAP_TYPE) != MAP_SHARED);
-    HALT_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
-    HALT_ON((flags & MAP_TYPE) == MAP_PRIVATE);
+    PANIC_ON((flags & MAP_TYPE) != MAP_SHARED);
+    PANIC_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
+    PANIC_ON((flags & MAP_TYPE) == MAP_PRIVATE);
 
-    HALT_ON(!(flags & MAP_FIXED));
-    HALT_ON(!(flags & MAP_FIXED_NOREPLACE));
-    HALT_ON(!(flags & MAP_GROWSDOWN));
+    PANIC_ON(!(flags & MAP_FIXED));
+    PANIC_ON(!(flags & MAP_FIXED_NOREPLACE));
+    PANIC_ON(!(flags & MAP_GROWSDOWN));
 
 
     // Silenty ignored

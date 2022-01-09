@@ -33,7 +33,7 @@
 void root_init(void) {
 
 
-    char cmd[CONFIG_BUFSIZ]  = { 0 };
+    char cmd[CONFIG_BUFSIZ]       = { 0 };
     char root[CONFIG_MAXNAMLEN]   = { 0 };
     char rootfs[CONFIG_MAXNAMLEN] = { 0 };
 

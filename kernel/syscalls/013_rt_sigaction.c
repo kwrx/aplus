@@ -82,10 +82,10 @@ long sys_rt_sigaction (int signo, const struct ksigaction __user * act, struct k
 
 
     if(oldact)
-        memcpy(oldact, &current_task->sighand->action[signo], sizeof(struct ksigaction));
+        uio_memcpy_s2u(oldact, &current_task->sighand->action[signo], sizeof(struct ksigaction));
 
     if(act)
-        memcpy(&current_task->sighand->action[signo], act, sizeof(struct sigaction));
+        uio_memcpy_u2s(&current_task->sighand->action[signo], act, sizeof(struct sigaction));
 
 
     return 0;

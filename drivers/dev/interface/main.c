@@ -301,12 +301,12 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("device::create: initialized '%s' dev(%x:%x) addr(%p) size(%p): '%s'\n",
+    kprintf("device::create: initialized '%s' dev(%x:%x) iobase(%p) mmiobase(%p): '%s'\n",
         device->name, 
         device->major, 
         device->minor, 
-        device->address,
-        device->size,
+        device->iobase,
+        device->mmiobase,
         device->description);
 #endif
 

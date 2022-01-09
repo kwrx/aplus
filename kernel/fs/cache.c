@@ -96,6 +96,17 @@ void vfs_cache_flush(vfs_cache_t* cache, ino_t ino) {
 }
 
 
+void vfs_cache_flush_all(vfs_cache_t* cache) {
+
+    list_each(cache->items, i) {  
+
+        __lock(&cache->lock, cache->ops.flush(cache, i->ino, i->data));
+        
+    }
+
+}
+
+
 void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacity, void* userdata) {
    
     DEBUG_ASSERT(cache);

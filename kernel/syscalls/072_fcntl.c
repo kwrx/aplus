@@ -34,6 +34,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+extern long sys_dup(unsigned int);
+
 
 /***
  * Name:        fcntl
@@ -51,5 +53,53 @@
 
 SYSCALL(72, fcntl,
 long sys_fcntl (unsigned int fd, unsigned int cmd, unsigned long arg) {
-    return -ENOSYS;
+    
+    if(unlikely(fd > CONFIG_OPEN_MAX))
+        return -EBADF;
+
+    if(unlikely(!current_task->fd->descriptors[fd].ref))
+        return -EBADF;
+
+
+    long e1, e2;
+
+    switch(cmd) {
+
+        case F_DUPFD:
+            return sys_dup(fd);
+
+        case F_DUPFD_CLOEXEC:
+
+            if((e1 = sys_dup(fd) < 0))
+                return e1;
+
+            if((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC) < 0))
+                return e2;
+
+            return e1;
+
+        case F_GETFD:
+            return current_task->fd->descriptors[fd].close_on_exec;
+
+        case F_SETFD:
+            current_task->fd->descriptors[fd].close_on_exec = arg;
+            return 0;
+
+        case F_GETFL:
+            return current_task->fd->descriptors[fd].flags;
+
+        case F_SETFL:
+            current_task->fd->descriptors[fd].flags = arg;
+            return 0;
+
+        case F_SETPIPE_SZ:
+        case F_GETPIPE_SZ:
+            /* TODO: Implements pipe size routines for fcntl */
+            return -ENOSYS;
+
+    }
+
+
+    return -EINVAL;
+
 });

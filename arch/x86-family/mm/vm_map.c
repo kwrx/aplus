@@ -54,9 +54,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
     DEBUG_ASSERT(space);
     DEBUG_ASSERT(length);
 
-    kprintf("MMAP(%p, %p, %p, %p)\n", virtaddr, physaddr, length, flags);
-
-
 
     uintptr_t pagesize;
 
@@ -267,7 +264,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
         /* Page Table */
         {
-            DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
+            //DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
 
 
             if(flags & ARCH_VMM_MAP_FIXED) {

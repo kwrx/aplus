@@ -50,7 +50,7 @@ void kprintf(const char* fmt, ...) {
     va_end(v);
 
 
-    __lock(&buflock, {
+   __lock(&buflock, {
 
         int i;
         for(i = 0; buf[i] && __atomic_load_n(&active, __ATOMIC_CONSUME); i++) {
@@ -59,7 +59,7 @@ void kprintf(const char* fmt, ...) {
 
         }
 
-    });
+   });
 
 }
 

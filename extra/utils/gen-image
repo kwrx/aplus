@@ -8,29 +8,71 @@ sysroot="$1"
 output="$2"
 
 
-losetup -D
-sync
+
+
+function losetup_new_device {
+
+    local output=$1
+    local offset=$2
+
+    if [ -z $output ]; then
+        echo "losetup_new_device: output is empty"
+        exit 1
+    fi
+
+    if [ -z $offset ]; then
+        offset=0
+    fi
+
+
+    local device=$(sudo losetup -f)
+
+    if [ -z $device ]; then
+        echo "losetup_new_device: no free device found"
+        exit 1
+    fi
+
+
+    sudo losetup $device $output -o $offset
+
+    if [ $? -ne 0 ]; then
+        echo "losetup_new_device: losetup failed"
+        exit 1
+    fi
+
+
+    echo $device
+
+}
+
+
 
 
 if [ ! -f $output ]; then
 
     # Create the actual disk image - 128MiB
     dd status=none if=/dev/zero of=$output bs=4M count=32
+
+    if [ $? -ne 0 ]; then
+        echo "gen-image: failed to create the disk image"
+        exit 1
+    fi
+    
     
     # Make partition table, partition and set it bootable
     echo -e "n\np\n\n\n\nw\n" | fdisk $output &> /dev/null
     sync
 
     # Map the partitions from the image file
-    sudo losetup /dev/loop6 $output
-    sudo losetup /dev/loop7 $output -o 1048576
+    disk=$(losetup_new_device $output 0)
+    part=$(losetup_new_device $output 1048576)
 
     # Make an ext2 filesystem on the first partition
-    sudo mkfs.ext2 /dev/loop7 &> /dev/null
+    sudo mkfs.ext2 $part &> /dev/null
 
     # Mount the filesystem via loopback
     mkdir -p $tmp/p1
-    sudo mount /dev/loop7 $tmp/p1
+    sudo mount $part $tmp/p1
 
     # Install Grub
     sudo grub-install --no-floppy                                                           \
@@ -38,25 +80,25 @@ if [ ! -f $output ]; then
                  --force                                                                    \
                  --modules="normal part_msdos fat ext2 multiboot2 biosdisk"                 \
                  --root-directory=$tmp/p1                                                   \
-                 /dev/loop6 &> /dev/null
+                 $disk &> /dev/null
 
     # Unmount the loopback
     sudo umount $tmp/p1
 
     # Unmap the image
-    sudo losetup -d /dev/loop6
-    sudo losetup -d /dev/loop7
+    sudo losetup -d $disk
+    sudo losetup -d $part
     sync
 
 fi
 
 
 # Map the partitions from the image file
-sudo losetup /dev/loop7 $output -o 1048576
+part=$(losetup_new_device $output 1048576)
 
 # Mount the filesystem via loopback
 mkdir -p $tmp/p1
-sudo mount /dev/loop7 $tmp/p1
+sudo mount $part $tmp/p1
 
 # Copy files
 sudo rm -rf $tmp/p1/*
@@ -66,7 +108,7 @@ sudo cp -rf $sysroot/* $tmp/p1
 sudo umount $tmp/p1
 
 # Unmap the image
-sudo losetup -d /dev/loop7
+sudo losetup -d $part
 sync
 
 # Fix permissions

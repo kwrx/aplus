@@ -1,3 +1,26 @@
+/*                                                                      
+ * Author(s):                                                           
+ *      Antonino Natale <antonio.natale97@hotmail.com>                  
+ *                                                                      
+ * Copyright (c) 2013-2019 Antonino Natale                              
+ *                                                                      
+ *                                                                      
+ * This file is part of aplus.                                          
+ *                                                                      
+ * aplus is free software: you can redistribute it and/or modify        
+ * it under the terms of the GNU General Public License as published by 
+ * the Free Software Foundation, either version 3 of the License, or    
+ * (at your option) any later version.                                  
+ *                                                                      
+ * aplus is distributed in the hope that it will be useful,             
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of       
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
+ * GNU General Public License for more details.                         
+ *                                                                      
+ * You should have received a copy of the GNU General Public License    
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
+ */                                                                     
+                                                                        
 #ifndef _APLUS_DEBUG_H
 #define _APLUS_DEBUG_H
 
@@ -5,10 +28,11 @@
 
 
 #if defined(DEBUG)
-#define DEBUG_ASSERT(i)     \
-        if(unlikely(!(i)))  \
-            kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'\n", \
-                __func__, __FILE__, __LINE__, #i)
+#define DEBUG_ASSERT(i) {                                               \
+        if(unlikely(!(i)))                                              \
+            kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'\n",    \
+                __func__, __FILE__, __LINE__, #i);                      \
+        }
 
 #else
 #define DEBUG_ASSERT(i)     \
@@ -16,10 +40,11 @@
 #endif
 
 
-#define HALT_ON(i)          \
-    if(unlikely(!(i)))      \
-        kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n", \
-            __func__, __FILE__, __LINE__, #i)
+#define PANIC_ON(i)                                                     \
+    if(unlikely(!(i))) {                                                \
+        kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n",           \
+            __func__, __FILE__, __LINE__, #i);                          \
+    }
 
 
 
