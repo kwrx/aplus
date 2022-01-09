@@ -77,19 +77,19 @@ echo "## Configure environment"
     PATH="$PATH:$CONFIG_SYSTEM_PATH_TOOLCHAIN/bin"
 
 
-    # case $CONFIG_COMPILER_HOST in
-    #     x86_64)
-    #         required nasm
-    #         ;;
-    #     i[3-7]86)
-    #         required nasm
-    #         ;;
-    # esac
-
 echo "## Get Packages"
 
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i system-base system-cursors system-fonts system-images system-keymaps
+    
+
+    if [ "$CONFIG_HAVE_BUSYBOX" == "y" ]; then
+        python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i busybox
+    fi
+    
+    if [ "$CONFIG_HAVE_DASH" == "y" ]; then
+        python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i dash
+    fi
 
 
 echo "## Generate Wrapper"

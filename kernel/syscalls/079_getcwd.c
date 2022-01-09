@@ -28,11 +28,35 @@
 #include <aplus/task.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <stdint.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
+
+
+static int __append(char* buf, size_t size, const char* name) {
+
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(name);
+    DEBUG_ASSERT(strlen(name));
+
+    if(strlen(buf) + strlen(name) + 1 > size)
+        return -ERANGE;
+
+    memmove(buf + strlen(name), buf, strlen(buf) + 1);
+    memcpy(buf, name, strlen(name));
+
+    return 0;
+
+}
 
 
 /***
@@ -49,6 +73,52 @@
  */
 
 SYSCALL(79, getcwd,
-long sys_getcwd (char __user * buf, unsigned long size) {
-    return -ENOSYS;
+long sys_getcwd (char __user * ubuf, unsigned long size) {
+    
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->fs);
+    DEBUG_ASSERT(current_task->fs->root);
+
+
+    if(unlikely(!ubuf))
+        return -EINVAL;
+
+    if(unlikely(!size))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(ubuf, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(size > PATH_MAX))
+        size = PATH_MAX;
+
+
+    struct inode* inode = current_task->fs->cwd;
+
+    if(unlikely(!inode))
+        inode = current_task->fs->root;
+
+
+    char buf[size];
+    memset(buf, 0, size);
+
+    for(; inode != current_task->fs->root && inode->parent != NULL; inode = inode->parent) {
+
+        if(__append(buf, size, inode->name) < 0)
+            return -ERANGE;
+
+        if(__append(buf, size, "/") < 0)
+            return -ERANGE;
+
+    }
+
+    if(__append(buf, size, "/") < 0)
+        return -ERANGE;
+
+
+
+    uio_memcpy_s2u(ubuf, buf, size);
+
+    return (long) ubuf;
+
 });

@@ -177,6 +177,71 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
+
+    // * Save the given arguments and environment
+
+    const char** __safe_argv = uio_get_ptr(argv);
+    const char** __safe_envp = uio_get_ptr(envp);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 0
+
+    for(size_t i = 0; __safe_argv[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
+
+    for(size_t i = 0; __safe_envp[i]; i++)
+        DEBUG_ASSERT(uio_check(__safe_envp[i], R_OK));
+
+#endif
+
+
+    size_t argc;
+    for(argc = 0; __safe_argv[argc]; argc++)
+        ;
+
+    size_t envc;
+    for(envc = 0; __safe_envp[envc]; envc++)
+        ;
+
+
+    
+    // * Backup into stack the data for _start()
+    
+    char** argq = (char**) __builtin_alloca(sizeof(char*) * (argc + 1));
+    char** envq = (char**) __builtin_alloca(sizeof(char*) * (envc + 1));
+
+    DEBUG_ASSERT(argq);
+    DEBUG_ASSERT(envq);
+
+
+
+    // * Allocate ARGV e ENVP Strings
+
+    for(size_t i = 0; __safe_argv[i]; i++) {
+     
+        char* p = (char*) __builtin_alloca(uio_strlen(__safe_argv[i]) + 1);
+        uio_strcpy_u2s(p, __safe_argv[i]);
+
+        argq[i + 0] = p;
+        argq[i + 1] = NULL;
+
+    }
+
+    for(size_t i = 0; __safe_envp[i]; i++) {
+     
+        char* p = (char*) __builtin_alloca(uio_strlen(__safe_envp[i]) + 1);
+        uio_strcpy_u2s(p, __safe_envp[i]);
+
+        envq[i + 0] = p;
+        envq[i + 1] = NULL;
+    
+    }
+        
+
+    
+
+
+
   
     do_unshare(CLONE_FS);
     do_unshare(CLONE_FILES);
@@ -294,8 +359,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    int i;
-    for(i = 0; i < CONFIG_OPEN_MAX; i++) {
+    for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
         if(!current_task->fd->descriptors[i].ref)
             continue;
@@ -311,58 +375,23 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    const char** __safe_argv = uio_get_ptr(argv);
-    const char** __safe_envp = uio_get_ptr(envp);
-
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-
-    for(i = 0; __safe_argv[i]; i++)
-        DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
-
-    for(i = 0; __safe_envp[i]; i++)
-        DEBUG_ASSERT(uio_check(__safe_envp[i], R_OK));
-
-#endif
-
-
-    size_t argc;
-    for(argc = 0; __safe_argv[argc]; argc++)
-        ;
-
-    size_t envc;
-    for(envc = 0; __safe_envp[envc]; envc++)
-        ;
-        
-
-        
-
-
     // * Prepare data for _start()
     
-    char** argq = (char**) __builtin_alloca(sizeof(char*) * (argc + 1));
-    char** envq = (char**) __builtin_alloca(sizeof(char*) * (envc + 1));
-
-
-    // * Allocate ARGV e ENVP Strings
-
-    for(i = 0; __safe_argv[i]; i++) {
+    for(size_t i = 0; argq[i]; i++) {
      
-        char* p = (char*) __sbrk(uio_strlen(__safe_argv[i]) + 1);
-        uio_strcpy_u2u(p, __safe_argv[i]);
+        char* p = (char*) __sbrk(uio_strlen(argq[i]) + 1);
+        uio_strcpy_s2u(p, argq[i]);
 
-        argq[i + 0] = p;
-        argq[i + 1] = NULL;
+        argq[i] = p;
 
     }
 
-    for(i = 0; __safe_envp[i]; i++) {
+    for(size_t i = 0; __safe_envp[i]; i++) {
      
-        char* p = (char*) __sbrk(uio_strlen(__safe_envp[i]) + 1);
-        uio_strcpy_u2u(p, __safe_envp[i]);
+        char* p = (char*) __sbrk(uio_strlen(envq[i]) + 1);
+        uio_strcpy_s2u(p, envq[i]);
 
-        envq[i + 0] = p;
-        envq[i + 1] = NULL;
+        envq[i] = p;
     
     }
 
@@ -391,7 +420,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     uio_wptr(sp++, argc);
 
-    for(i = 0; i < argc; i++)
+    for(size_t i = 0; i < argc; i++)
         uio_wptr(sp++, (uintptr_t) argq[i]);
 
     uio_wptr(sp++, 0UL);
@@ -400,7 +429,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     // * Environment
 
-    for(i = 0; i < envc; i++)
+    for(size_t i = 0; i < envc; i++)
         uio_wptr(sp++, (uintptr_t) envq[i]);
 
     uio_wptr(sp++, 0UL);

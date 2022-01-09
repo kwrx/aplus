@@ -295,9 +295,8 @@ static void init_initd(void) {
 
     if(fork() == 0) {
     
-        char* argv[] = { "/bin/bash", "--version", NULL };
 
-        execve("/bin/bash", argv, environ);
+        execle("/bin/date", "/bin/date", NULL, environ);
         exit(EXIT_FAILURE);
 
     } else {
