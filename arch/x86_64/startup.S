@@ -487,7 +487,7 @@ _start_high64:
         andq    $-16, %rsp
 
 #if defined(__OPTIMIZE__) && !defined(CONFIG_HAVE_DEBUG)
-        addq    $8, %rsp  // FIXME
+        addq    $8, %rsp  // FIXME: stack not aligned when code is optimized by compiler
 #endif
 
         # Restore boot arguments

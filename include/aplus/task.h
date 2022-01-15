@@ -320,7 +320,6 @@ typedef struct task {
 
 
 
-
 __BEGIN_DECLS
 
 struct cpu;

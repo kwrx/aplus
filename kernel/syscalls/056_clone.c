@@ -72,6 +72,12 @@ long sys_clone(unsigned long flags, void *stack,
         .tls            = (uint64_t) tls,
     };
 
-    return do_fork(&args, sizeof(args));
+    
+    pid_t pid;
+
+    if((pid = do_fork(&args, sizeof(args))) < 0)
+        return -errno;
+
+    return pid;
     
 });

@@ -121,3 +121,14 @@ void fd_remove(struct file* fd, int close) {
     });
 
 }
+
+
+void fd_ref(struct file* file) {
+
+    DEBUG_ASSERT(file);
+
+    __lock(&filetable_lock, {
+        file->refcount++;
+    });
+
+}

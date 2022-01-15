@@ -37,6 +37,7 @@
 #include <aplus/errno.h>
 
 
+// BUG: 2022-01-15: ls /dev raises page fault at 0x0
 
 
 struct linux_dirent64 {
@@ -78,8 +79,8 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
         return -EINVAL;
 
     
-    
     DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
 
     ssize_t e = 0;
@@ -93,11 +94,15 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
 
             struct dirent ent;
 
-            if((e = vfs_readdir (current_task->fd->descriptors[fd].ref->inode, &ent, current_task->fd->descriptors[fd].ref->position++, 1)) <= 0)
+            if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, &ent, current_task->fd->descriptors[fd].ref->position++, 1)) <= 0)
                 break;
 
+    
 
             size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
+
+
+            DEBUG_ASSERT(dirent);
 
             uio_w64(&dirent->d_ino, ent.d_ino);
             uio_w64(&dirent->d_off, i);

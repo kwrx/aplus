@@ -66,9 +66,8 @@ static void* __dup_fd(struct fd* c) {
         
         if(!r->descriptors[i].ref)
             continue;
-    
 
-        r->descriptors[i].ref->refcount++;
+        fd_ref(r->descriptors[i].ref);
 
     }
 
@@ -136,29 +135,29 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     if(args->stack == 0ULL) {
 
         if(unlikely(args->stack_size > 0ULL))
-            return -EINVAL;
+            return errno = EINVAL, -1;
 
     } else {
 
         // if(unlikely(args->stack_size == 0ULL))
-        //     return -EINVAL;
+        //     return errno = EINVAL, -1;
 
         if(unlikely(!uio_check(args->stack, R_OK | W_OK)))
-            return -EFAULT;
+            return errno = EFAULT, -1;
 
     }
 
 
     if(unlikely((args->flags & (CLONE_DETACHED | CSIGNAL)) == (CLONE_DETACHED | CSIGNAL)))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     if(unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
 
     // TODO: implements CLONE_VFORK
     if((unlikely(args->flags & CLONE_VFORK)))
-        return -ENOSYS;
+        return errno = ENOSYS, -1;
 
     
 
@@ -207,7 +206,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
     
-
+    child->affinity.__bits[0] &= ~(1<<0); // HACK: wrong smp_get_current_cpu_id() on cpu #0
     sched_enqueue(child);
 
     return child->tid;

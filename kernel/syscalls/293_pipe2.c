@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -50,5 +51,74 @@
 
 SYSCALL(293, pipe2,
 long sys_pipe2 (int __user * fildes, int flags) {
-    return -ENOSYS;
+    
+    if(unlikely(!fildes))
+        return -EFAULT;
+
+    if(!uio_check(fildes, R_OK | W_OK))
+        return -EFAULT;
+
+    if(unlikely(flags & ~(O_CLOEXEC | O_NONBLOCK)))
+        return -EINVAL;
+
+
+    inode_t* inode;
+    
+    if((inode = vfs_mkfifo(CONFIG_BUFSIZ, flags)) == NULL)
+        return -ENOMEM;
+
+
+    for(size_t i = 0; i < 2; i++) {
+
+        int fd;
+
+        __lock(&current_task->lock, {
+
+            for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+
+                if(!current_task->fd->descriptors[fd].ref)
+                    break;
+
+            }
+
+            if(fd == CONFIG_OPEN_MAX)
+                break;
+
+            
+            struct file* ref;
+            
+            if((ref = fd_append(inode, 0, 0)) == NULL) {
+                
+                fd = FILE_MAX;
+
+            } else {
+            
+                current_task->fd->descriptors[fd].ref = ref;
+                current_task->fd->descriptors[fd].flags = i ? O_WRONLY : O_RDONLY;
+            
+            }
+
+        });
+        
+
+        if(fd == CONFIG_OPEN_MAX)
+            return -EMFILE;
+
+        if(fd == FILE_MAX)
+            return -ENFILE;
+
+
+        DEBUG_ASSERT(fd >= 0);
+        DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+
+
+        uio_w32(&fildes[i], fd);
+
+    }
+
+
+    return 0;
+
 });

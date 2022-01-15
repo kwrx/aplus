@@ -38,7 +38,7 @@ cpu_t* smp_get_current_cpu(void) {
     if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
         return &core->bsp;
     
-
+    
     DEBUG_ASSERT(id >= 0);
     DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
 

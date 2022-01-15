@@ -110,7 +110,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
-    //DEBUG_ASSERT(fmt);
+    DEBUG_ASSERT(fmt);
 
     int p = 0;
 

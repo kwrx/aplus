@@ -3,7 +3,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
-*A hobbyist operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.*
+*A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.*
 
 ## :zap: Running
 1. Open your terminal and type:

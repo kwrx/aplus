@@ -485,6 +485,7 @@ uint64_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
 
+    // BUG: 2022-01-15 `arch_cpu_get_current_id > SMP_CPU_MAX -1` on cpu #0 when schedule a new userspace task after fork()
 
 #if defined(CONFIG_HAVE_SMP)
 #if defined(CONFIG_X86_HAVE_RDPID)

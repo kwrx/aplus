@@ -39,6 +39,10 @@ typedef struct {
     size_t tail;
     size_t size;
     uint8_t full;
+    int flags;
+
+    uint32_t futex_wr_cond;
+    uint32_t futex_rd_cond;
 
     spinlock_t lock;
 
@@ -47,7 +51,7 @@ typedef struct {
 
 __BEGIN_DECLS
 
-void ringbuffer_init(ringbuffer_t* rb, size_t size);
+void ringbuffer_init(ringbuffer_t* rb, size_t size, int flags);
 void ringbuffer_destroy(ringbuffer_t* rb);
 void ringbuffer_reset(ringbuffer_t* rb);
 int ringbuffer_is_full(ringbuffer_t* rb);

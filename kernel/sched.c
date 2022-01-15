@@ -44,9 +44,6 @@
 extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
-spinlock_t sched_lock = SPINLOCK_INIT;
-
-
 
 
 static inline void __do_futex(void) {
@@ -311,17 +308,19 @@ void schedule(int resched) {
 
 
 
-    __lock(&current_cpu->sched_lock, {
 
 
-        if(likely(current_task->status == TASK_STATUS_RUNNING))
-            current_task->status = TASK_STATUS_READY;
+    if(likely(current_task->status == TASK_STATUS_RUNNING))
+        current_task->status = TASK_STATUS_READY;
 
 
-        __sched_next();
+    __sched_next();
 
-        current_task->status = TASK_STATUS_RUNNING;
-        
+    current_task->status = TASK_STATUS_RUNNING;
+
+
+
+    __lock(&current_cpu->sched_lock, {   
 
         arch_task_switch(prev_task, current_task);
 

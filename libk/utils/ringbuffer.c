@@ -25,22 +25,25 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
+#include <aplus/errno.h>
 #include <stdint.h>
+#include <fcntl.h>
 
 #include <aplus/utils/ringbuffer.h>
 
 
 
-void ringbuffer_init(ringbuffer_t* rb, size_t size) {
+void ringbuffer_init(ringbuffer_t* rb, size_t size, int flags) {
     
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(size);
 
     rb->buffer = (uint8_t*) kmalloc(size, GFP_KERNEL);
-    rb->size = size;
-    rb->head = 0;
-    rb->tail = 0;
-    rb->full = 0;
+    rb->size   = size;
+    rb->head   = 0;
+    rb->tail   = 0;
+    rb->full   = 0;
+    rb->flags  = flags;
 
     spinlock_init(&rb->lock);
 
@@ -123,6 +126,7 @@ int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
+    kprintf("ringbuffer: writing %d bytes from %p\n", size, buf);
 
     __lock(&rb->lock, {
 
@@ -130,13 +134,28 @@ int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
             rb->buffer[rb->head] = ((uint8_t*) buf) [i];
 
-            if(rb->full)
+            if(ringbuffer_is_full(rb)) {
                 rb->tail = (rb->tail + 1) % rb->size;
+
+                // if(rb->flags & O_NONBLOCK)
+                    //break;
+
+
+                // rb->futex_rd_cond = 1;
+                // futex_wait(current_task, &rb->futex_rd_cond, 0, NULL);
+
+                // thread_suspend(current_task);
+                // thread_postpone_resched(current_task);
+                // for(;;);//schedule(1);
+
+            }
 
             rb->head = (rb->head + 1) % rb->size;
             rb->full = (rb->head == rb->tail);
 
         }
+
+        rb->futex_wr_cond = 0;
 
     });
 
@@ -157,8 +176,23 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
         for(i = 0; i < size; i++) {
 
-            if(ringbuffer_is_empty(rb))
-                break;
+            if(ringbuffer_is_empty(rb)) {
+
+                // if(rb->flags & O_NONBLOCK)
+                    break;
+
+
+                // i = -EINTR;
+                // break;
+                // rb->futex_wr_cond = 1;
+                // futex_wait(current_task, &rb->futex_wr_cond, 0, NULL);
+                
+                // thread_suspend(current_task);
+                // thread_postpone_resched(current_task);
+
+                // for(;;);//schedule(1);
+
+            }
 
 
             ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
@@ -166,6 +200,8 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
             rb->full = 0;
             rb->tail = (rb->tail + 1) % rb->size;
         }
+
+        rb->futex_rd_cond = 0;
 
     });
 
