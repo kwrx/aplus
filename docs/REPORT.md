@@ -13,26 +13,26 @@
 |FIXME|`arch/x86-family/mm/clone.c`|broken DEMAND_PAGING implementation|
 |FIXME|`drivers/platform/pc/network/pcnet/main.c`|Use semaphore for pcnet rx ownership|
 |FIXME|`drivers/virtio/virtio-console/main.c`|change values|
-|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
-|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
-|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
+|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
+|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
+|FIXME|`include/netif/ppp/pppol2tp.h`|make it configurable */|
 |FIXME|`kernel/fs/tmpfs/tmpfs_readdir.c`|find a better way */|
-|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if BSD compress is available|
-|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if deflate is available|
-|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if predictor is available,|
-|FIXME|`kernel/network/netif/ppp/demand.c`|find a way to die() here */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
-|FIXME|`kernel/network/netif/ppp/mppe.c`|add PFC support */|
-|FIXME|`kernel/network/netif/ppp/mppe.c`|use PUT* macros */|
-|FIXME|`kernel/network/netif/ppp/ppp.c`|add idle time support and make it optional */|
-|FIXME|`kernel/network/netif/ppp/ppp.c`|add stats per PPP session */|
-|FIXME|`kernel/network/netif/ppp/ppp.c`|should we add an IPv6 static neighbor using his_eui64 ? */|
-|FIXME|`kernel/network/netif/ppp/upap.c`|require ppp_pcb struct as printpkt() argument */|
+|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if BSD compress is available|
+|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if deflate is available|
+|FIXME|`kernel/network/netif/ppp/ccp.c`|we don't need to test if predictor is available,|
+|FIXME|`kernel/network/netif/ppp/demand.c`|find a way to die() here */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/eap.c`|if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */|
+|FIXME|`kernel/network/netif/ppp/mppe.c`|add PFC support */|
+|FIXME|`kernel/network/netif/ppp/mppe.c`|use PUT* macros */|
+|FIXME|`kernel/network/netif/ppp/ppp.c`|add idle time support and make it optional */|
+|FIXME|`kernel/network/netif/ppp/ppp.c`|add stats per PPP session */|
+|FIXME|`kernel/network/netif/ppp/ppp.c`|should we add an IPv6 static neighbor using his_eui64 ? */|
+|FIXME|`kernel/network/netif/ppp/upap.c`|require ppp_pcb struct as printpkt() argument */|
 |FIXME|`kernel/syscalls/202_futex.c`|return a valid error|
 |TODO|`arch/x86-family/intr.c`|Handle NMI Interrupts|
 |TODO|`arch/x86-family/intr.c`|Handle User Exception|
@@ -55,8 +55,8 @@
 |TODO|`kernel/init/root.c`|add other Kernel Arguments|
 |TODO|`kernel/kmain.c`|Rewrite network/sys.c|
 |TODO|`kernel/network/core/ipv6/dhcp6.c`||
-|TODO|`kernel/network/core/ipv6/ip6.c`|process routing by the type */|
-|TODO|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received */|
+|TODO|`kernel/network/core/ipv6/ip6.c`|process routing by the type */|
+|TODO|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received */|
 |TODO|`kernel/syscalls/000_read.c`|add network support|
 |TODO|`kernel/syscalls/000_read.c`|add poll support|
 |TODO|`kernel/syscalls/001_write.c`|add network support|
