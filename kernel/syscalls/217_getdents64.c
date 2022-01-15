@@ -37,7 +37,7 @@
 #include <aplus/errno.h>
 
 
-// BUG: 2022-01-15: ls /dev raises page fault at 0x0
+// BUG: `ls /dev` raises page fault at 0x0
 
 
 struct linux_dirent64 {
