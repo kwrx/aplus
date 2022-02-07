@@ -21,61 +21,77 @@
  *                                                                      
  * You should have received a copy of the GNU General Public License    
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
+ */  
 
+#ifndef __UBSAN_H__
+#define __UBSAN_H__
 
-cpu_t* smp_get_current_cpu(void) {
+#include <stdint.h>
 
-    uint64_t id;
-    
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
-        return &core->bsp;
-    
-    
-    DEBUG_ASSERT(id >= 0);
-    DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
+struct source_location {
+    const char* file;
+    uint32_t line;
+    uint32_t column;
+};
 
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
-        return &core->cpu.cores[id];
+struct type_descriptor {
+    uint16_t kind;
+    uint16_t info;
+    const char name[0];
+};
 
+struct type_mismatch_data {
+    struct source_location location;
+    struct type_descriptor* type;
+    uint8_t alignment;
+    uint8_t type_check_kind;
+};
 
-    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
-    return NULL;
-}
+struct invalid_builtin_data {
+    struct source_location location;
+    uint8_t kind;
+};
 
+struct pointer_overflow_data {
+    struct source_location location;
+};
 
-cpu_t* smp_get_cpu(int index) {
-    
-    DEBUG_ASSERT(index >= 0);
-    DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);
+struct overflow_data {
+    struct source_location location;
+    struct type_descriptor* type;
+};
 
-    return &core->cpu.cores[index];
-}
+struct out_of_bounds_data {
+    struct source_location location;
+    struct type_descriptor* array_type;
+    struct type_descriptor* index_type;
+};
 
+struct shift_out_of_bounds_data {
+    struct source_location location;
+    struct type_descriptor* lhs_type;
+    struct type_descriptor* rhs_type;
+};
 
-void smp_init() {
+struct nonnull_arg_data {
+    struct source_location location;
+    struct source_location attribute;
+    int arg_index;
+};
 
-    int i;
-    for(i = 1; i < SMP_CPU_MAX; i++) {
+#if defined(__WITH_KINDS)
+static const char* __kinds[] = {
+    "load of",
+    "store to",
+    "reference binding to",
+    "member access within",
+    "member call on",
+    "constructor call on",
+    "downcast of",
+    "downcast of",
+    "upcast of",
+    "cast to virtual base of",
+};
+#endif
 
-        if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
-            continue;
-
-        if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
-            continue;
-
-
-        arch_cpu_startup(i);
-
-        kprintf("smp: cpu #%d is online\n", i);
-
-
-    }
-
-}
+#endif

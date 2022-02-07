@@ -89,7 +89,7 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
 
     if(end > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
+        kpanicf("pmm: PANIC! Memory Area (0x%lX-0x%lX) is greater than max memory available (%ld)\n", physaddr, end, pmm_max_memory);
 
 
 
@@ -144,7 +144,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
 
     if(end > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
+        kpanicf("pmm: PANIC! Memory Area (0x%lX-0x%lX) is greater than max memory available (%ld)\n", physaddr, end, pmm_max_memory);
 
 
 
@@ -232,6 +232,8 @@ uintptr_t pmm_alloc_block() {
 
 end:
 
+    DEBUG_ASSERT(r >= 0);
+
 #if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_block() at %p\n", r);
 #endif
@@ -301,6 +303,8 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
 
 
 end:
+
+    DEBUG_ASSERT(r >= 0);
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
@@ -378,6 +382,8 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
 
 
 end:
+
+    DEBUG_ASSERT(r >= 0);
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
@@ -486,9 +492,9 @@ void pmm_init(uintptr_t max_memory) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
-        kprintf("mmap: address(%p) size(%p) type(%p)\n", core->mmap.ptr[i].address,
-                                                         core->mmap.ptr[i].length,
-                                                         core->mmap.ptr[i].type);
+        kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
+                                                              core->mmap.ptr[i].length,
+                                                              core->mmap.ptr[i].type);
 #endif
 
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
@@ -522,7 +528,7 @@ void pmm_init(uintptr_t max_memory) {
 
 
 #if defined(DEBUG)
-    kprintf("pmm: physical memory: %d KB\n", pmm_max_memory / 1024);
+    kprintf("pmm: physical memory: %ld KB\n", pmm_max_memory / 1024);
 #endif
 
 }

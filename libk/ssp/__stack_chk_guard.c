@@ -21,61 +21,14 @@
  *                                                                      
  * You should have received a copy of the GNU General Public License    
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
+ */  
 
+#include <stdint.h>
 
-cpu_t* smp_get_current_cpu(void) {
+#if UINT32_MAX == UINTPTR_MAX
+#define STACK_CHK_GUARD 0xe2dee396
+#else
+#define STACK_CHK_GUARD 0x595e9fbd94fda766
+#endif
 
-    uint64_t id;
-    
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
-        return &core->bsp;
-    
-    
-    DEBUG_ASSERT(id >= 0);
-    DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
-
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
-        return &core->cpu.cores[id];
-
-
-    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
-    return NULL;
-}
-
-
-cpu_t* smp_get_cpu(int index) {
-    
-    DEBUG_ASSERT(index >= 0);
-    DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);
-
-    return &core->cpu.cores[index];
-}
-
-
-void smp_init() {
-
-    int i;
-    for(i = 1; i < SMP_CPU_MAX; i++) {
-
-        if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
-            continue;
-
-        if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
-            continue;
-
-
-        arch_cpu_startup(i);
-
-        kprintf("smp: cpu #%d is online\n", i);
-
-
-    }
-
-}
+uintptr_t __stack_chk_guard = STACK_CHK_GUARD;

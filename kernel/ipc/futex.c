@@ -52,7 +52,7 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-    kprintf("futex: futex_wait() pid(%d) kaddr(%p) *kaddr(%p) value(%p)\n", task->tid, kaddr, *kaddr, value);
+    kprintf("futex: futex_wait() pid(%d) kaddr(%p) *kaddr(%d) value(%d)\n", task->tid, kaddr, *kaddr, value);
 #endif
 
 
@@ -84,7 +84,7 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     DEBUG_ASSERT(kaddr);
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-    kprintf("futex: futex_wakeup() pid(%d) kaddr(%p) *kaddr(%p), max(%p)\n", current_task->tid, kaddr, *kaddr, max);
+    kprintf("futex: futex_wakeup() pid(%d) kaddr(%p) *kaddr(%d), max(%ld)\n", current_task->tid, kaddr, *kaddr, max);
 #endif
 
 
@@ -134,7 +134,7 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
     DEBUG_ASSERT(kaddr2);
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 3
-    kprintf("futex: futex_requeue() pid(%d) kaddr(%p) kaddr2(%p) max(%p)\n", current_task->tid, kaddr, kaddr2, max);
+    kprintf("futex: futex_requeue() pid(%d) kaddr(%p) kaddr2(%p) max(%ld)\n", current_task->tid, kaddr, kaddr2, max);
 #endif
 
 

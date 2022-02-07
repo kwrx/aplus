@@ -47,7 +47,7 @@ static void (*__fpu_switch) (void*, void*) = NULL;
 static void (*__fpu_save) (void*) = NULL;
 static void (*__fpu_restore) (void*) = NULL;
 
-static uint8_t  __fpu_inital_state[8192] __attribute__((aligned(64))) = { 0 };
+static uint8_t  __fpu_inital_state[8192] __aligned(64) = { 0 };
 static uint16_t __fpu_size = 0;
 
 

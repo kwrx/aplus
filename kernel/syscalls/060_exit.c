@@ -56,7 +56,7 @@ long sys_exit (int status) {
     PANIC_ON(current_task->tid != 1);
 
 
-    if(status & (1 << 31))
+    if(status & (1U << 31))
         current_task->exit.value = status & 0x7FFF;
     else
         current_task->exit.value = (status & 0377) << 8;

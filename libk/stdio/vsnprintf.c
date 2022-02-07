@@ -30,6 +30,7 @@
 #include <aplus/debug.h>
 
 
+__nosanitize("undefined")
 static void dec(unsigned long v, int w, char* buf, int* p, int sign) {
 
     if(sign) {
@@ -73,6 +74,7 @@ static void dec(unsigned long v, int w, char* buf, int* p, int sign) {
 
 }
 
+__nosanitize("undefined")
 static void hex(unsigned long v, int w, char* buf, int* p, int upper) {
     
     long n = 1;
@@ -105,7 +107,7 @@ static void hex(unsigned long v, int w, char* buf, int* p, int upper) {
 
 }
 
-
+__nosanitize("undefined")
 int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
     DEBUG_ASSERT(buf);
@@ -130,7 +132,8 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
         while(*fmt >= '0' && *fmt <= '9')
             { w = (w * 10) + (*fmt - '0'); fmt++; }
 
-
+        while(*fmt == 'l')
+            fmt++;
 
         switch(*fmt) {
 
@@ -166,7 +169,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             default:
 
-                kprintf("%s (): WARN! invalid format %c\n", *fmt);
+                kprintf("%s(): WARN! invalid format %c\n", __func__, *fmt);
 
                 buf[p++] = *fmt;
                 break;

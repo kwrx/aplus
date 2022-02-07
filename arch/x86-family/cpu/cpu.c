@@ -173,7 +173,7 @@ void arch_cpu_init(int index) {
 
         kprintf("cpu: id:         #%d\n", index);
         kprintf("     vendor:     %s\n", vendor);
-        kprintf("     cpuid:      %p (extended: %p)\n", ex, eex);
+        kprintf("     cpuid:      0x%lX (extended: 0x%lX)\n", ex, eex);
         kprintf("     features:   ");
         
 
@@ -604,6 +604,6 @@ void arch_cpu_startup(int index) {
         return;
 
 
-    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%d) flags(%d) stack(%p)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
+    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%ld) flags(%ld)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
 
 }

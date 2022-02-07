@@ -86,6 +86,10 @@
 #define X_OK                        1
 #endif
 
+#ifndef S_OK
+#define S_OK                        64
+#endif
+
 
 
 

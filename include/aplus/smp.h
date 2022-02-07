@@ -51,13 +51,13 @@
 
 
 #define cpu_has(index, feature)     \
-    (core->cpu.cores[index].features[feature >> 5] & (1 << (feature & 0x1F)))
+    (core->cpu.cores[index].features[feature >> 5U] & (1U << (feature & 0x1FU)))
 
 #define boot_cpu_has(feature)       \
     cpu_has(SMP_CPU_BOOTSTRAP_ID, feature)
 
 #define current_cpu_has(feature)    \
-    (current_cpu->features[feature >> 5] & (1 << (feature & 0x1F)))
+    (current_cpu->features[feature >> 5U] & (1U << (feature & 0x1FU)))
 
 
 #define cpu_foreach(e)                                                              \

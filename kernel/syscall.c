@@ -40,6 +40,18 @@
 long (*syscalls[SYSMAX])
     (long, long, long, long, long, long);
 
+struct syscall_hook {
+    
+    uint32_t no;
+    const void* ptr;
+    const char* name;
+
+#if defined (__x86_64__)
+        char __padding[12];
+#endif
+
+} __packed;
+
 
 
 void syscall_init(void) {
@@ -50,19 +62,13 @@ void syscall_init(void) {
 
     memset(syscalls, 0, sizeof(syscalls));
 
-    struct {
-
-        uint32_t no;
-        void* ptr;
-        char* name;
-
-#if defined (__x86_64__)
-        char __padding[12];
-#endif
-    } __packed *e = (void*) &syscalls_start;
+    uintptr_t hook_start = (uintptr_t) &syscalls_start;
+    uintptr_t hook_end   = (uintptr_t) &syscalls_end;
 
 
-    for(; (uintptr_t) e < (uintptr_t) &syscalls_end; e++) {
+    for(; hook_start < hook_end; hook_start += sizeof(struct syscall_hook)) {
+
+        struct syscall_hook* e = (struct syscall_hook*) (hook_start);
 
         DEBUG_ASSERT(e->no < SYSMAX);
         DEBUG_ASSERT(e->ptr);
@@ -74,7 +80,7 @@ void syscall_init(void) {
     }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("syscall: registered %d entries\n", ((uintptr_t) &syscalls_end - (uintptr_t) &syscalls_start) / sizeof(*e));
+    kprintf("syscall: registered %ld entries\n", ((uintptr_t) &syscalls_end - (uintptr_t) &syscalls_start) / sizeof(struct syscall_hook));
 #endif
 }
 
@@ -88,7 +94,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
     if(unlikely(idx != 24))
-        kprintf("syscall: (%s#%d) <%s> nr(%d), p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
+        kprintf("syscall: (%s#%d) <%s> nr(%ld), p0(0x%lX), p1(0x%lX), p2(0x%lX), p3(0x%lX), p4(0x%lX), p5(0x%lX)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 #endif
 
 
@@ -117,7 +123,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
         if(current_task->flags & TASK_FLAGS_NEED_RESCHED) {
 
-            kprintf("syscall: (%s#%d) <%s> requested rescheduling, with possible return value (%p)\n", 
+            kprintf("syscall: (%s#%d) <%s> requested rescheduling, with possible return value (0x%lX)\n", 
                 current_task->argv[0], 
                 current_task->tid, 
                 runtime_get_name((uintptr_t) syscalls[idx]), 
@@ -127,7 +133,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
 
         if(unlikely(errno == 0))
-            kprintf("syscall: (%s#%d) <%s> return %d\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), r);
+            kprintf("syscall: (%s#%d) <%s> return %ld\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), r);
         else
             kprintf("syscall: (%s#%d) <%s> ERROR! (%d) %s\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), errno, strerror(errno));
     
@@ -146,7 +152,7 @@ long syscall_restart(void) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("syscall: (%s#%d) <%s> restarting with p0(%p), p1(%p), p2(%p), p3(%p), p4(%p), p5(%p)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[current_task->syscall.index - 1]),
+    kprintf("syscall: (%s#%d) <%s> restarting with p0(0x%lX), p1(0x%lX), p2(0x%lX), p3(0x%lX), p4(0x%lX), p5(0x%lX)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[current_task->syscall.index - 1]),
         current_task->syscall.param0,
         current_task->syscall.param1,
         current_task->syscall.param2,

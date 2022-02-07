@@ -194,6 +194,9 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         if(unlikely(!uio_check(frame, R_OK)))
             break;
 
+        if(unlikely(!uio_check(frame, S_OK)))
+            frame = uio_get_ptr(frame);            
+
         frames[i] = frame->ip;
         frame = frame->bp;
 

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 report() {
-    git ls-files | xargs grep "\s$1:\s*" | sed "s/^\(.*\):.*\s$1:\s*\(.*\)*$/\|$1\|\`\1\`\|\2\|/" | sort
+    git ls-files | xargs grep "\s$1:\s*" | sed "s/^\(.*\):.*\s$1:\s*\(.*\)*$/\|\*\*$1\*\*\|\`\1\`\|\2\|/" | sort
 }
 
 

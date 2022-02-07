@@ -75,8 +75,8 @@
 
 #define SPINLOCK_INIT                   { { 0L }, 0ULL, -1ULL, 0, 0 }
 #define SPINLOCK_INIT_WITH_FLAGS(p)     { { 0L }, 0ULL, -1ULL, 0 | (p), 0 }
-#define SPINLOCK_FLAGS_CPU_OWNER        (1 << 30)
-#define SPINLOCK_FLAGS_RECURSIVE        (1 << 31)
+#define SPINLOCK_FLAGS_CPU_OWNER        (1U << 30)
+#define SPINLOCK_FLAGS_RECURSIVE        (1U << 31)
 
 
 #define SEMAPHORE_INIT                  0L

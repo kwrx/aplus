@@ -61,7 +61,7 @@ void sem_wait(semaphore_t* s) {
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
         if(arch_timer_generic_getms() > t0) {
             t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
-            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
+            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%ld), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
         }
 #endif
     }

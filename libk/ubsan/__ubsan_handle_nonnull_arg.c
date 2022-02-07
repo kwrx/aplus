@@ -21,61 +21,35 @@
  *                                                                      
  * You should have received a copy of the GNU General Public License    
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+ */  
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
+#include <stdint.h>
+
+#include "__ubsan.h"
 
 
-cpu_t* smp_get_current_cpu(void) {
 
-    uint64_t id;
-    
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
-        return &core->bsp;
-    
-    
-    DEBUG_ASSERT(id >= 0);
-    DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
+__noreturn
+__nosanitize("undefined")
+void __ubsan_handle_nonnull_arg(struct nonnull_arg_data* data) {
 
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
-        return &core->cpu.cores[id];
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("ubsan: caught " __FILE__ " exception!\n");
+#endif
 
+    DEBUG_ASSERT(data);
+    DEBUG_ASSERT(data->location.file);
+    DEBUG_ASSERT(data->attribute.file);
 
-    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
-    return NULL;
-}
-
-
-cpu_t* smp_get_cpu(int index) {
-    
-    DEBUG_ASSERT(index >= 0);
-    DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);
-
-    return &core->cpu.cores[index];
-}
-
-
-void smp_init() {
-
-    int i;
-    for(i = 1; i < SMP_CPU_MAX; i++) {
-
-        if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
-            continue;
-
-        if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
-            continue;
-
-
-        arch_cpu_startup(i);
-
-        kprintf("smp: cpu #%d is online\n", i);
-
-
-    }
-
+    kpanicf("PANIC! UBSAN: null pointer passed as argument %d specified in %s:%d:%d as __attribute__((nonnull)) on %s:%d:%d\n",
+        data->arg_index,
+        data->attribute.file,
+        data->attribute.line,
+        data->attribute.column,
+        data->location.file,
+        data->location.line,
+        data->location.column);
+        
 }

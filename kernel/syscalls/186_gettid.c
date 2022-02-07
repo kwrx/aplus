@@ -48,5 +48,10 @@
 
 SYSCALL(186, gettid,
 long sys_gettid (void) {
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
     return current_task->tid;
+    
 });

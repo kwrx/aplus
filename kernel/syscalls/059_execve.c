@@ -318,7 +318,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-                    kprintf("sys_execve: PT_LOAD/PT_TLS at address(%p) size(%p) alignsize(%p) type(%d)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+                    kprintf("sys_execve: PT_LOAD/PT_TLS at address(0x%lX) size(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
@@ -467,7 +467,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
 
-    kprintf("sys_execve: entering on userspace at address(%p) task(%d) sigstack(%p) stack(%p) bottom(%p)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
+    kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
 
     arch_userspace_enter(head.e_entry, stack, (void*) bottom);
 

@@ -126,7 +126,7 @@ int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
-    kprintf("ringbuffer: writing %d bytes from %p\n", size, buf);
+    kprintf("ringbuffer: writing %ld bytes from %p\n", size, buf);
 
     __lock(&rb->lock, {
 
@@ -178,17 +178,20 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
             if(ringbuffer_is_empty(rb)) {
 
-                // if(rb->flags & O_NONBLOCK)
+                if(rb->flags & O_NONBLOCK)
                     break;
 
 
-                // i = -EINTR;
-                // break;
                 // rb->futex_wr_cond = 1;
                 // futex_wait(current_task, &rb->futex_wr_cond, 0, NULL);
                 
                 // thread_suspend(current_task);
                 // thread_postpone_resched(current_task);
+
+                // errno = EINTR;
+                // i = -1;
+                break;
+                
 
                 // for(;;);//schedule(1);
 

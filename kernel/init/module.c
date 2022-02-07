@@ -123,7 +123,7 @@ void module_run(module_t* m) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
-    kprintf("module: loading %s [addr(%p), size(%p)]\n", m->name, m->core.ptr, m->core.size);
+    kprintf("module: loading %s [addr(%p), size(0x%lX)]\n", m->name, m->core.ptr, m->core.size);
 #endif
 
 
@@ -160,8 +160,7 @@ void module_run(module_t* m) {
             for(char* s = strchr(m->deps, ','); s; s = strchr(++s, ','))
                 i++;
 
-            module_t* deps[i];
-
+            module_t* deps[i + 1];
 
             i = 0;
             for(char* s = strtok((char*) m->deps, ","); s; s = strtok(NULL, ","))
@@ -295,7 +294,7 @@ void module_run(module_t* m) {
 #endif
 
                 default:
-                    kpanicf("module: PANIC! unknown relocation SHT_REL type %d for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanicf("module: PANIC! unknown relocation SHT_REL type %ld for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -389,7 +388,7 @@ void module_run(module_t* m) {
 #endif
 
                 default:
-                    kpanicf("module: PANIC! unknown relocation SHT_RELA type %d for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
+                    kpanicf("module: PANIC! unknown relocation SHT_RELA type %ld for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
 
             }
@@ -553,8 +552,10 @@ void module_init(void) {
 
 void module_dnit(void) {
   
-    list_each(m_queue, mod)
-        if(mod->status == MODULE_STATUS_LOADED)
+    list_each(m_queue, mod) {
+        if(mod->status == MODULE_STATUS_LOADED) {
             mod->dnit();
+        }
+    }
 
 }

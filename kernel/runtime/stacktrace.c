@@ -30,30 +30,28 @@
 #include <aplus/hal.h>
 
 
-
-
-
-void runtime_stacktrace(void) {
+void runtime_stacktrace() {
 
     uintptr_t frames[10] = { 0 };
     arch_debug_stacktrace((uintptr_t*) &frames, sizeof(frames) / sizeof(uintptr_t));
 
 
+    kprintf("Stacktrace for cpu(%ld), pid(%d)\n", current_cpu->id, current_task ? current_task->tid : -1);
+
     int i;
-    for(i = 1; i < sizeof(frames) / sizeof(uintptr_t); i++) {
+    for(i = 0; i < sizeof(frames) / sizeof(uintptr_t); i++) {
         
         if(!frames[i])
             break;
 
-        if(!uio_check(frames[i], R_OK))
-            break;
-
         const char* s;
         if((s = runtime_get_name(frames[i])))
-            kprintf("[%d] %8p <%s>\n", i, frames[i], s);
+            kprintf("[%d] 0x%8lX <%s>\n", i, frames[i], s);
         else
-            kprintf("[%d] %8p <%s>\n", i, frames[i], "unknown");
+            kprintf("[%d] 0x%8lX <%s>\n", i, frames[i], "unknown");
 
     }
+
+    kprintf("--- End of stacktrace ---\n");
 
 }

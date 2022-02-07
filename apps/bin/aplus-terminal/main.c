@@ -311,6 +311,11 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+
+    // Set Line Mode LNM
+    tsm_vte_input(context.vte, "\e[20h", 5);
+
+    // Draw first frame
     tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
 
@@ -391,7 +396,7 @@ int main(int argc, char** argv) {
 
                 }
 
-                usleep(100000);
+                sleep(10);
 
             }
 

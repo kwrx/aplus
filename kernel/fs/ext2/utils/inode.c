@@ -49,7 +49,7 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
     DEBUG_ASSERT(ino != 0);
     
     if(ino > ext2->sb.s_inodes_count)
-        kpanicf("%s() FAIL! ino(%d) > s_inodes_count(%d)", __func__, ino, ext2->sb.s_inodes_count);
+        kpanicf("%s() FAIL! ino(%ld) > s_inodes_count(%d)", __func__, ino, ext2->sb.s_inodes_count);
 
 
     struct ext2_group_desc d;

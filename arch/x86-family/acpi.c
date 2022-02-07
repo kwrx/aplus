@@ -110,7 +110,7 @@ static int acpi_find_rsdp() {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-        kprintf("x86-acpi: RSDT found at %p\n", address);
+        kprintf("x86-acpi: RSDT found at 0x%lX\n", address);
 #endif
 
         RSDT = (acpi_sdt_t*) arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
@@ -181,7 +181,7 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-        kprintf("x86-acpi: %s found at %p\n", name, address);
+        kprintf("x86-acpi: %s found at 0x%lX\n", name, address);
 #endif
 
         *sdt = tmp;

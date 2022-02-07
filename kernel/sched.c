@@ -102,6 +102,7 @@ static inline void __do_sleep(void) {
 
 static inline void __do_signals(void) {
 
+    DEBUG_ASSERT(current_task);
 
     void __do(struct ksigaction* action, siginfo_t* siginfo) {
 
@@ -366,7 +367,7 @@ void sched_enqueue(task_t* task) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sched: enqueued task(%d) %s in cpu(%d) count(%d)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
+    kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
 #endif
 
 }

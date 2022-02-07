@@ -162,7 +162,7 @@ struct e1000_rx_desc {
         volatile uint8_t status;
         volatile uint8_t errors;
         volatile uint16_t special;
-} __attribute__((packed));
+} __packed;
  
 struct e1000_tx_desc {
         volatile uint64_t addr;
@@ -172,7 +172,7 @@ struct e1000_tx_desc {
         volatile uint8_t status;
         volatile uint8_t css;
         volatile uint16_t special;
-} __attribute__((packed));
+} __packed;
 
 
 

@@ -76,7 +76,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
     if(sb.s_magic != EXT2_SIGNATURE)
-        return kprintf("ext2: ERROR! invalid signature, no ext2 filesystem: %p\n", sb.s_magic),
+        return kprintf("ext2: ERROR! invalid signature, no ext2 filesystem: %X\n", sb.s_magic),
             errno = EINVAL, -1;
 
 

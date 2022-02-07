@@ -341,7 +341,6 @@ pid_t arch_task_spawn_init() {
     core->bsp.address_space.refcount++;
 
 
-
     task->address_space->mmap.heap_start = KERNEL_MMAP_AREA;
     task->address_space->mmap.heap_end   = KERNEL_MMAP_AREA;
 
@@ -371,9 +370,10 @@ pid_t arch_task_spawn_init() {
 
 
     int j;
-    for(j = 0; j < RLIM_NLIMITS; j++)
+    for(j = 0; j < RLIM_NLIMITS; j++) {
         task->rlimits[j].rlim_cur =
         task->rlimits[j].rlim_max = RLIM_INFINITY;
+    }
 
     task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
 
@@ -399,7 +399,7 @@ pid_t arch_task_spawn_init() {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn init process pid(%d) cpu(%d) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
+    kprintf("task: spawn init process pid(%d) cpu(%ld) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
 #endif
 
 
@@ -485,7 +485,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%p)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
+    kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%lX)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
 #endif
 
     sched_enqueue(task);
@@ -504,7 +504,7 @@ void arch_task_context_set(task_t* task, int options, long value) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("task: set context tid(%d) options(%d) value(%p)\n", task->tid, options, value);
+    kprintf("task: set context tid(%d) options(%d) value(0x%lX)\n", task->tid, options, value);
 #endif
 
 

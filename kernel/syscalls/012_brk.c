@@ -66,7 +66,7 @@ long sys_brk (unsigned long new_brk) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sys_brk: pid(%d) brk(%p) new(%p)\n", current_task->tid, current_task->userspace.end, new_brk);
+    kprintf("sys_brk: pid(%d) brk(0x%lX) new(0x%lX)\n", current_task->tid, current_task->userspace.end, new_brk);
 #endif
 
     // TODO: Use less memory

@@ -56,7 +56,7 @@ __dup(sighand, struct sighand*)
 
 static void* __dup_fd(struct fd* c) {
 
-    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd*), GFP_KERNEL);
+    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
 
     memcpy(r, c, sizeof(*c));
 
@@ -197,16 +197,15 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
     child->ustack = args->stack 
-                        ? (void*) args->stack 
-                        : (void*) current_cpu->ustack
-                        ;
+        ? (void*) args->stack 
+        : (void*) current_cpu->ustack
+        ;
 
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long) current_cpu->frame);
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
     
-    child->affinity.__bits[0] &= ~(1<<0); // HACK: wrong smp_get_current_cpu_id() on cpu #0
     sched_enqueue(child);
 
     return child->tid;

@@ -38,7 +38,7 @@
 
 #define SYSCALL(x, y, z...)                     \
     z                                           \
-    __attribute__((section(".syscalls")))       \
+    __section(".syscalls")                      \
     struct {                                    \
         uint32_t a;                             \
         void* b;                                \

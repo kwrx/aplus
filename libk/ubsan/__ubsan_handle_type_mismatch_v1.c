@@ -21,60 +21,58 @@
  *                                                                      
  * You should have received a copy of the GNU General Public License    
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+ */  
+
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
+#include <stdint.h>
+
+#define __WITH_KINDS
+#include "__ubsan.h"
 
 
-cpu_t* smp_get_current_cpu(void) {
 
-    uint64_t id;
-    
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
-        return &core->bsp;
-    
-    
-    DEBUG_ASSERT(id >= 0);
-    DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
+__noreturn
+__nosanitize("undefined")
+void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data* data, void* ptr) {
 
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
-        return &core->cpu.cores[id];
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("ubsan: caught " __FILE__ " exception!\n");
+#endif
 
-
-    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
-    return NULL;
-}
+    DEBUG_ASSERT(data);
+    DEBUG_ASSERT(data->location.file);
+    DEBUG_ASSERT(data->type);
+    DEBUG_ASSERT(data->type->name);
 
 
-cpu_t* smp_get_cpu(int index) {
-    
-    DEBUG_ASSERT(index >= 0);
-    DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);
+    if(ptr == NULL) {
 
-    return &core->cpu.cores[index];
-}
+        kpanicf("PANIC! UBSAN: null pointer access on object of type %s on %s:%d:%d\n",
+            data->type->name,
+            data->location.file,
+            data->location.line,
+            data->location.column);
 
+    } else if(data->alignment != 0 && ((uintptr_t) ptr & ((1L << data->alignment) - 1L))) {
 
-void smp_init() {
+        kpanicf("PANIC! UBSAN: type mismatch: misaligned %s on address %p with align 2^%d for object of type %s on %s:%d:%d\n", __kinds[data->type_check_kind], ptr,
+            data->alignment,
+            data->type->name,
+            data->location.file,
+            data->location.line,
+            data->location.column);
 
-    int i;
-    for(i = 1; i < SMP_CPU_MAX; i++) {
+    } else {
 
-        if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
-            continue;
+        DEBUG_ASSERT(ptr);
+        DEBUG_ASSERT(data->type_check_kind < sizeof(__kinds) / sizeof(__kinds[0]));
 
-        if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
-            continue;
-
-
-        arch_cpu_startup(i);
-
-        kprintf("smp: cpu #%d is online\n", i);
-
+        kpanicf("PANIC! UBSAN: type mismatch: %s address %p with insufficent space for object of type %s on %s:%d:%d\n", __kinds[data->type_check_kind], ptr, 
+            data->type->name,
+            data->location.file,
+            data->location.line,
+            data->location.column);
 
     }
 

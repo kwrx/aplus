@@ -1,19 +1,52 @@
 include $(ROOTDIR)/config.mk
 
 ifeq ($(CONFIG_HAVE_DEBUG),y)
-CFLAGS      += -g -Og -fno-omit-frame-pointer -Wall -Werror
-CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall -Werror
-ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall -Werror
-DEFINES     += DEBUG=1
-else
-CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-CXXFLAGS    += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-DEFINES     += NDEBUG=1
 
-ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
-LDFLAGS     += -Wl,--strip-debug
-endif
+	CFLAGS      += -g -Og -fno-omit-frame-pointer -Wall -Werror
+	CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall -Werror
+	ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall -Werror
+	DEFINES     += DEBUG=1
+
+	ifneq (,$(findstring KERNEL=1,$(DEFINES)))
+
+		SANITIZERS := 					\
+			shift						\
+			shift-exponent  			\
+			shift-base					\
+			integer-divide-by-zero		\
+			unreachable					\
+			null						\
+			return						\
+			signed-integer-overflow		\
+			bounds						\
+			bounds-strict				\
+			object-size					\
+			float-divide-by-zero		\
+			float-cast-overflow			\
+			nonnull-attribute			\
+			returns-nonnull-attribute	\
+			bool						\
+			enum						\
+			vptr				    	\
+			pointer-overflow			\
+			builtin
+
+		CFLAGS   	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+		CXXFLAGS 	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+
+	endif
+
+else
+
+	CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	CXXFLAGS    += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
+	DEFINES     += NDEBUG=1
+
+	ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
+		LDFLAGS     += -Wl,--strip-debug
+	endif
+
 endif
 
 
