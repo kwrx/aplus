@@ -39,7 +39,6 @@
 
 
 
-
 uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
 
     DEBUG_ASSERT(space);

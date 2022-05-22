@@ -23,84 +23,33 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
  */  
 
-#ifndef __UBSAN_H__
-#define __UBSAN_H__
-
+#include <aplus.h>
+#include <aplus/debug.h>
 #include <stdint.h>
 
-struct source_location {
-    const char* file;
-    uint32_t line;
-    uint32_t column;
-};
+#include "__ubsan.h"
 
-struct type_descriptor {
-    uint16_t kind;
-    uint16_t info;
-    const char name[0];
-};
 
-struct type_mismatch_data {
-    struct source_location location;
-    struct type_descriptor* type;
-    uint8_t alignment;
-    uint8_t type_check_kind;
-};
 
-struct invalid_builtin_data {
-    struct source_location location;
-    uint8_t kind;
-};
+__noreturn
+__nosanitize("undefined")
+void __ubsan_handle_nonnull_return_v1(struct nonnull_return_data* data, struct source_location* location) {
 
-struct invalid_value_data {
-    struct source_location location;
-    struct type_descriptor* type;
-};
-
-struct pointer_overflow_data {
-    struct source_location location;
-};
-
-struct overflow_data {
-    struct source_location location;
-    struct type_descriptor* type;
-};
-
-struct out_of_bounds_data {
-    struct source_location location;
-    struct type_descriptor* array_type;
-    struct type_descriptor* index_type;
-};
-
-struct shift_out_of_bounds_data {
-    struct source_location location;
-    struct type_descriptor* lhs_type;
-    struct type_descriptor* rhs_type;
-};
-
-struct nonnull_arg_data {
-    struct source_location location;
-    struct source_location attribute;
-    int arg_index;
-};
-
-struct nonnull_return_data {
-    struct source_location attribute;
-};
-
-#if defined(__WITH_KINDS)
-static const char* __kinds[] = {
-    "load of",
-    "store to",
-    "reference binding to",
-    "member access within",
-    "member call on",
-    "constructor call on",
-    "downcast of",
-    "downcast of",
-    "upcast of",
-    "cast to virtual base of",
-};
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("ubsan: caught " __FILE__ " exception!\n");
 #endif
 
-#endif
+    DEBUG_ASSERT(data);
+    DEBUG_ASSERT(location);
+    DEBUG_ASSERT(location->file);
+    DEBUG_ASSERT(data->attribute.file);
+
+    kpanicf("PANIC! UBSAN: null pointer returned from a function 'nonnull' specified in %s:%d:%d as __attribute__((returns_nonnull)) on %s:%d:%d\n",
+        data->attribute.file,
+        data->attribute.line,
+        data->attribute.column,
+        location->file,
+        location->line,
+        location->column);
+        
+}

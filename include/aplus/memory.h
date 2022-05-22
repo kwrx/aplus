@@ -94,10 +94,11 @@ typedef struct {
 
 
 typedef struct vmm_address_space {
-    
+
     uintptr_t pm;
     size_t size;
     size_t refcount;
+
     
     struct {
 

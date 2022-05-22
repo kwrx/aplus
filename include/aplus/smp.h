@@ -116,8 +116,8 @@ typedef struct cpu {
 __BEGIN_DECLS
 
 
-cpu_t* smp_get_current_cpu(void);
-cpu_t* smp_get_cpu(int);
+cpu_t* smp_get_current_cpu(void) __returns_nonnull;
+cpu_t* smp_get_cpu(int) __returns_nonnull;
 
 void smp_init();
 

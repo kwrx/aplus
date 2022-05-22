@@ -259,7 +259,6 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     CPU_ZERO(&task->affinity);
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
-    
 
 
 

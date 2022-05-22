@@ -88,7 +88,7 @@ static inline void __do_sleep(void) {
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
             current_task->sleep.remaining = NULL;
-            current_task->sleep.expired = 1;
+            current_task->sleep.expired = true;
 
             thread_wake(current_task);
 
@@ -97,7 +97,6 @@ static inline void __do_sleep(void) {
     }
 
 }
-
 
 
 static inline void __do_signals(void) {
@@ -171,7 +170,7 @@ static inline void __do_signals(void) {
 
     }
 
-
+    
     if(queue_is_empty(&current_task->sigqueue))
         return;
 
@@ -270,6 +269,8 @@ static void __sched_next(void) {
 
 void schedule(int resched) {
 
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
 
     task_t* prev_task = current_task;
 

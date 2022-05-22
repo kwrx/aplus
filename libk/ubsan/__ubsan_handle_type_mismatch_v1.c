@@ -31,7 +31,6 @@
 #include "__ubsan.h"
 
 
-
 __noreturn
 __nosanitize("undefined")
 void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data* data, void* ptr) {
@@ -56,7 +55,7 @@ void __ubsan_handle_type_mismatch_v1(struct type_mismatch_data* data, void* ptr)
 
     } else if(data->alignment != 0 && ((uintptr_t) ptr & ((1L << data->alignment) - 1L))) {
 
-        kpanicf("PANIC! UBSAN: type mismatch: misaligned %s on address %p with align 2^%d for object of type %s on %s:%d:%d\n", __kinds[data->type_check_kind], ptr,
+        kpanicf("WARN! UBSAN: type mismatch: misaligned %s on address %p with align 2^%d for object of type %s on %s:%d:%d\n", __kinds[data->type_check_kind], ptr,
             data->alignment,
             data->type->name,
             data->location.file,

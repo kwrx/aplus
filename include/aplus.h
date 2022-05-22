@@ -102,6 +102,10 @@
 #define __format(a, b, c)       __attribute__((format(a, b, c)))
 #endif
 
+#ifndef __returns_nonnull
+#define __returns_nonnull       __attribute__((returns_nonnull))
+#endif
+
 #define __PRAGMA(x)             _Pragma(#x)
 #define WARNING(x)              __PRAGMA(GCC diagnostic ignored x)
 

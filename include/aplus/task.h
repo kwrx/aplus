@@ -181,11 +181,11 @@ typedef struct task {
     uid_t sid;
 
 
-    int status;
-    int policy;
-    int priority;
-    int flags;
-    int caps;
+    ssize_t status;
+    ssize_t policy;
+    ssize_t priority;
+    ssize_t flags;
+    ssize_t caps;
 
     cpu_set_t affinity;
 
@@ -205,7 +205,7 @@ typedef struct task {
         struct timespec timeout;
         struct timespec* remaining;
 
-        int expired;
+        bool expired;
     
     } sleep;
 

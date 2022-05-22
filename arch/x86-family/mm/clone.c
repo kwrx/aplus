@@ -39,7 +39,6 @@
 
 
 
-
 void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int flags) {
 
     DEBUG_ASSERT(src);

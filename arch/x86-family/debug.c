@@ -31,6 +31,7 @@
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
+#include <arch/x86/intr.h>
 
 
 
@@ -158,11 +159,10 @@ void arch_debug_putc(char ch) {
 
 
 
-
 /*!
  * @brief Stacktrace.
  * 
- * ...
+ * Print stacktrace on Serial Port.
  */
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
     

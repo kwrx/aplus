@@ -38,7 +38,6 @@
 #include <arch/x86/intr.h>
 
 
-
 void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 

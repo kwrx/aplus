@@ -36,7 +36,7 @@ void runtime_stacktrace() {
     arch_debug_stacktrace((uintptr_t*) &frames, sizeof(frames) / sizeof(uintptr_t));
 
 
-    kprintf("Stacktrace for cpu(%ld), pid(%d)\n", current_cpu->id, current_task ? current_task->tid : -1);
+    kprintf("--- Stacktrace for cpu(%ld), pid(%d) ---\n", current_cpu->id, current_task ? current_task->tid : -1);
 
     int i;
     for(i = 0; i < sizeof(frames) / sizeof(uintptr_t); i++) {
