@@ -333,7 +333,7 @@ int main(int argc, char** argv) {
 
 
 
-
+    
     //* 4. Child initialization
 
     pid_t pid = fork();
@@ -396,7 +396,7 @@ int main(int argc, char** argv) {
 
                 }
 
-                sleep(10);
+                usleep(500000);
 
             }
 

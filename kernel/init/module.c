@@ -42,7 +42,7 @@ list(module_t*, m_queue);
 list(symbol_t*, m_symtab);
 
 
-static void module_export(module_t* mod, const char* name, void* address) {
+static void module_export(module_t* mod, const char* name, void* address, size_t size) {
     
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(address);
@@ -81,6 +81,8 @@ static void module_export(module_t* mod, const char* name, void* address) {
     symbol_t* s = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
 
     s->address = address;
+    s->size    = size;
+
     strcpy(s->name, name);
 
     list_push(m_symtab, s);
@@ -91,15 +93,21 @@ static void module_export(module_t* mod, const char* name, void* address) {
 
 static void* module_resolve(module_t* m, const char* name) {
 
-    list_each(m_symtab, v)
+    list_each(m_symtab, v) {
+     
         if(strcmp(v->name, name) == 0)
             return v->address;
+    
+    }
 
 
     void* p;
-    if((p = (void*) runtime_get_address(name)))
-        return module_export(NULL, name, p)
+    if((p = (void*) runtime_get_address(name))) {
+     
+        return module_export(NULL, name, p, 0)
              , p;
+    
+    }
     
     
     kpanicf("module: PANIC! undefined reference for \'%s\' in %s\n", name, m->name);
@@ -197,10 +205,12 @@ void module_run(module_t* m) {
             default:
                 s->st_value += (Elf_Addr) ((uintptr_t) m->core.ptr + m->exe.section[s->st_shndx].sh_addr);
         
-                if(ELF_ST_TYPE(s->st_info) == STT_FUNC)
-                    if(ELF_ST_BIND(s->st_info) == STB_GLOBAL)
-                        module_export(m, syname(s->st_name), (void*) s->st_value);
-        
+                if(ELF_ST_TYPE(s->st_info) == STT_FUNC) {
+                    if(ELF_ST_BIND(s->st_info) == STB_GLOBAL) {
+                        module_export(m, syname(s->st_name), (void*) s->st_value, s->st_size);
+                    }
+                }
+                
                 break;
         }
 

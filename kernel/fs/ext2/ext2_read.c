@@ -76,7 +76,6 @@ ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
     uint32_t off = 0;
 
 
-
     if(pos % ext2->blocksize) {
 
         long p;

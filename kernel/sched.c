@@ -349,6 +349,7 @@ void sched_enqueue(task_t* task) {
 
         if(i->sched_count > min)
             continue;
+            
 
         cpu = i;
         min = i->sched_count;

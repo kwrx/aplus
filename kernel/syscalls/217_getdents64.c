@@ -37,8 +37,6 @@
 #include <aplus/errno.h>
 
 
-// BUG: `ls /dev` raises page fault at 0x0
-
 
 struct linux_dirent64 {
     uint64_t d_ino;
@@ -92,7 +90,9 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
         int i;
         for(i = 0; i + sizeof(struct linux_dirent64) < count; ) {
 
-            struct dirent ent;
+            /* BUG: stack overflow on vfs_readdir() when dirent is on the stack */
+            static struct dirent ent;
+            memset(&ent, 0, sizeof(struct dirent));
 
             if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, &ent, current_task->fd->descriptors[fd].ref->position++, 1)) <= 0)
                 break;

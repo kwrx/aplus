@@ -145,8 +145,8 @@ void arch_intr_enable(long);
 long arch_intr_disable(void);
 void arch_intr_map_irq(irq_t, void (*) (void*, irq_t));
 void arch_intr_unmap_irq(irq_t);
-void arch_intr_map_intr(irq_t, void (*) (void*, irq_t));
-void arch_intr_unmap_intr(irq_t);
+void arch_intr_map_irq_without_ioapic(irq_t, void (*) (void*, irq_t));
+void arch_intr_unmap_irq_without_ioapic(irq_t);
 
 
 void arch_task_switch(task_t*, task_t*);

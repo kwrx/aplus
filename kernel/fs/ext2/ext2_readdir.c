@@ -22,6 +22,7 @@
  */
 
 #include <stdint.h>
+#include <stddef.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -68,6 +69,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                 struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
                 DEBUG_ASSERT(d->rec_len);
+                DEBUG_ASSERT(d->name_len < sizeof(e->d_name));
 
 
                 if(pos > 0)
@@ -95,6 +97,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                     e++;
                     entries++;
                     count--;
+                    
                 }
                 
                 i += d->rec_len;

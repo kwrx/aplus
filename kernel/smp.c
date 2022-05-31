@@ -37,12 +37,14 @@ cpu_t* smp_get_current_cpu(void) {
     if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
         return &core->bsp;
     
+
     
     DEBUG_ASSERT(id >= 0);
     DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
 
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
+    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED) {
         return &core->cpu.cores[id];
+    }
 
 
     kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);

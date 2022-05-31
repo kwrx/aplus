@@ -191,7 +191,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
     if(likely(prev != next)) {
-        
+         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
@@ -239,23 +239,23 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
 
-    task->argv = current_task->argv;
+    task->argv    = current_task->argv;
     task->environ = current_task->environ;
 
-    task->tid   = 
-    task->tgid  = sched_nextpid();
-    task->pgid  = current_task->pgid;
-    task->uid   = current_task->uid;
-    task->euid  = current_task->euid;
-    task->gid   = current_task->gid;
-    task->egid  = current_task->egid;
-    task->sid   = current_task->sid;
+    task->tid  = 
+    task->tgid = sched_nextpid();
+    task->pgid = current_task->pgid;
+    task->uid  = current_task->uid;
+    task->euid = current_task->euid;
+    task->gid  = current_task->gid;
+    task->egid = current_task->egid;
+    task->sid  = current_task->sid;
 
-    task->status    = TASK_STATUS_READY;
-    task->policy    = current_task->policy;
-    task->priority  = current_task->priority;
-    task->caps      = current_task->caps;
-    task->flags     = 0;
+    task->status   = TASK_STATUS_READY;
+    task->policy   = current_task->policy;
+    task->priority = current_task->priority;
+    task->caps     = current_task->caps;
+    task->flags    = 0;
 
     CPU_ZERO(&task->affinity);
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
@@ -266,19 +266,19 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
         (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
 
 
-    task->frame         = _(sizeof(interrupt_frame_t), 0);
-    task->sstack        = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
-    task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
-    task->ustack        = NULL;
-    task->fpu           = fpu_new_state();
+    task->frame  = _(sizeof(interrupt_frame_t), 0);
+    task->sstack = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
+    task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack = NULL;
+    task->fpu    = fpu_new_state();
 
     #undef _
 
 
-    FRAME(task)->cs     = KERNEL_CS;
-    FRAME(task)->flags  = 0x202;
-    FRAME(task)->sp     = (uintptr_t) task + sizeof(task_t) + stacksize;
-    FRAME(task)->ss     = KERNEL_DS;
+    FRAME(task)->cs    = KERNEL_CS;
+    FRAME(task)->flags = 0x202;
+    FRAME(task)->sp    = (uintptr_t) task + sizeof(task_t) + stacksize;
+    FRAME(task)->ss    = KERNEL_DS;
 
 
     spinlock_init(&task->lock);

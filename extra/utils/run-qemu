@@ -30,7 +30,7 @@ case $1 in
         flags=""
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
         flags="$flags -boot c"
-        flags="$flags -m 256"
+        flags="$flags -m 512"
         flags="$flags -M q35,accel=kvm"
         flags="$flags -rtc clock=host"
         flags="$flags -cpu host,+x2apic,+pdpe1gb,+rdtscp,+fxsr"

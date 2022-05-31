@@ -204,7 +204,6 @@ ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
     offset += device->blk.blkoff * device->blk.blksize;
 
 
-
     if(!device->blk.read)
         return 0;
 

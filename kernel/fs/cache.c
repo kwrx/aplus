@@ -34,7 +34,7 @@
 #include <aplus/utils/list.h>
 
 
-
+__returns_nonnull
 static void* __unsafe_vfs_get_inode(vfs_cache_t* cache, ino_t ino) {
     
     if(!cache->count)
@@ -69,6 +69,7 @@ alloc:
 }
 
 
+__returns_nonnull
 void* vfs_cache_get(vfs_cache_t* cache, ino_t ino) {
 
     __lock_return(&cache->lock, void*,
@@ -120,7 +121,7 @@ void vfs_cache_create(vfs_cache_t* cache, struct vfs_cache_ops* ops, int capacit
     memcpy(&cache->ops, ops, sizeof(struct vfs_cache_ops));
 
     cache->capacity = capacity;
-    cache->count = 0;
+    cache->count    = 0;
     cache->userdata = userdata;
 
     spinlock_init(&cache->lock);

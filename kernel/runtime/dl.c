@@ -87,6 +87,8 @@ uintptr_t runtime_get_address(const char* name) {
 
 const char* runtime_get_name(uintptr_t address) {
 
+    extern list(symbol_t*, m_symtab);
+
     Elf_Shdr* strtab = NULL;
     Elf_Shdr* symtab = NULL;
     Elf_Shdr* shdr = (Elf_Shdr*) &core->exe.sections[0];
@@ -101,7 +103,7 @@ const char* runtime_get_name(uintptr_t address) {
         ((Elf_Sym*)     (arch_vmm_p2v(symtab->sh_addr + (symtab->sh_entsize * index), ARCH_VMM_AREA_HEAP)))
     
     #define in(x, a, b)     \
-        (x >= a && x < (a + b))
+        (((uintptr_t) (x)) >= (uintptr_t) (a) && ((uintptr_t) (x)) < ((uintptr_t) (a) + (uintptr_t) (b)))
 
 
 
@@ -129,15 +131,25 @@ const char* runtime_get_name(uintptr_t address) {
     DEBUG_ASSERT(symtab);
 
 
-    const char* s = NULL;
     for(j = 1; j < (symtab->sh_size / symtab->sh_entsize); j++) {
 
         if(!in(address, sypobj(j)->st_value, sypobj(j)->st_size))
             continue;
 
-        s = syname(sypobj(j)->st_name);
-        break;
+        return syname(sypobj(j)->st_name);
+
     }
 
-    return s;
+
+    list_each(m_symtab, e) {
+
+        if(!in(address, e->address, e->size))
+            continue;
+
+        return e->name;
+
+    }
+
+
+    return NULL;
 }

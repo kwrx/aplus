@@ -7,33 +7,36 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 	ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall -Werror
 	DEFINES     += DEBUG=1
 
-	ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 
-		SANITIZERS := 					\
-			shift						\
-			shift-exponent  			\
-			shift-base					\
-			integer-divide-by-zero		\
-			unreachable					\
-			null						\
-			return						\
-			signed-integer-overflow		\
-			bounds						\
-			bounds-strict				\
-			object-size					\
-			float-divide-by-zero		\
-			float-cast-overflow			\
-			nonnull-attribute			\
-			returns-nonnull-attribute	\
-			bool						\
-			enum						\
-			vptr				    	\
-			pointer-overflow			\
-			builtin
+	ifeq ($(CONFIG_HAVE_SANITIZERS),y)
+		ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 
-		CFLAGS   	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
-		CXXFLAGS 	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+			SANITIZERS := 					\
+				shift						\
+				shift-exponent  			\
+				shift-base					\
+				integer-divide-by-zero		\
+				unreachable					\
+				null						\
+				return						\
+				signed-integer-overflow		\
+				bounds						\
+				bounds-strict				\
+				object-size					\
+				float-divide-by-zero		\
+				float-cast-overflow			\
+				nonnull-attribute			\
+				returns-nonnull-attribute	\
+				bool						\
+				enum						\
+				vptr				    	\
+				pointer-overflow			\
+				builtin
 
+			CFLAGS   	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+			CXXFLAGS 	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
+
+		endif
 	endif
 
 else
@@ -46,6 +49,14 @@ else
 	ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
 		LDFLAGS     += -Wl,--strip-debug
 	endif
+
+endif
+
+ifneq (,$(findstring KERNEL=1,$(DEFINES)))
+
+	CFLAGS   += -fno-builtin -mgeneral-regs-only
+	CXXFLAGS += -fno-builtin -mgeneral-regs-only
+	ASFLAGS  += -fno-builtin -mgeneral-regs-only
 
 endif
 

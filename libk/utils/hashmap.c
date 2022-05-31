@@ -511,16 +511,16 @@ int hashmap_base_iter_set_data(struct hashmap_entry *iter, void *data)
     return 0;
 }
 
-/*
- * Return the load factor.
- */
-double hashmap_base_load_factor(const struct hashmap_base *hb)
-{
-    if (!hb->table_size) {
-        return 0;
-    }
-    return (double)hb->size / hb->table_size;
-}
+// /*
+//  * Return the load factor.
+//  */
+// double hashmap_base_load_factor(const struct hashmap_base *hb)
+// {
+//     if (!hb->table_size) {
+//         return 0;
+//     }
+//     return (double)hb->size / hb->table_size;
+// }
 
 /*
  * Return the number of collisions for this key.
@@ -556,51 +556,51 @@ size_t hashmap_base_collisions(const struct hashmap_base *hb, const void *key)
     return i;
 }
 
-/*
- * Return the average number of collisions per entry.
- */
-double hashmap_base_collisions_mean(const struct hashmap_base *hb)
-{
-    struct hashmap_entry *entry;
-    size_t total_collisions = 0;
+// // /*
+// //  * Return the average number of collisions per entry.
+// //  */
+// // double hashmap_base_collisions_mean(const struct hashmap_base *hb)
+// // {
+// //     struct hashmap_entry *entry;
+// //     size_t total_collisions = 0;
 
-    if (!hb->size) {
-        return 0;
-    }
-    for (entry = hb->table; entry < &hb->table[hb->table_size]; ++entry) {
-        if (!entry->key) {
-            continue;
-        }
+// //     if (!hb->size) {
+// //         return 0;
+// //     }
+// //     for (entry = hb->table; entry < &hb->table[hb->table_size]; ++entry) {
+// //         if (!entry->key) {
+// //             continue;
+// //         }
 
-        total_collisions += hashmap_base_collisions(hb, entry->key);
-    }
-    return (double)total_collisions / hb->size;
-}
+// //         total_collisions += hashmap_base_collisions(hb, entry->key);
+// //     }
+// //     return (double)total_collisions / hb->size;
+// // }
 
-/*
- * Return the variance between entry collisions. The higher the variance,
- * the more likely the hash function is poor and is resulting in clustering.
- */
-double hashmap_base_collisions_variance(const struct hashmap_base *hb)
-{
-    struct hashmap_entry *entry;
-    double mean_collisions;
-    double variance;
-    double total_variance = 0;
+// // /*
+// //  * Return the variance between entry collisions. The higher the variance,
+// //  * the more likely the hash function is poor and is resulting in clustering.
+// //  */
+// // double hashmap_base_collisions_variance(const struct hashmap_base *hb)
+// // {
+// //     struct hashmap_entry *entry;
+// //     double mean_collisions;
+// //     double variance;
+// //     double total_variance = 0;
 
-    if (!hb->size) {
-        return 0;
-    }
-    mean_collisions = hashmap_base_collisions_mean(hb);
-    for (entry = hb->table; entry < &hb->table[hb->table_size]; ++entry) {
-        if (!entry->key) {
-            continue;
-        }
-        variance = (double)hashmap_base_collisions(hb, entry->key) - mean_collisions;
-        total_variance += variance * variance;
-    }
-    return total_variance / hb->size;
-}
+// //     if (!hb->size) {
+// //         return 0;
+// //     }
+// //     mean_collisions = hashmap_base_collisions_mean(hb);
+// //     for (entry = hb->table; entry < &hb->table[hb->table_size]; ++entry) {
+// //         if (!entry->key) {
+// //             continue;
+// //         }
+// //         variance = (double)hashmap_base_collisions(hb, entry->key) - mean_collisions;
+// //         total_variance += variance * variance;
+// //     }
+// //     return total_variance / hb->size;
+// // }
 
 /*
  * Recommended hash function for data keys.
