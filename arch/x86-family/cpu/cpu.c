@@ -58,7 +58,7 @@ void arch_cpu_init(int index) {
         core->cpu.cores[index].address_space.pm = x86_get_cr3();
         core->cpu.cores[index].address_space.size = 0;
         core->cpu.cores[index].address_space.refcount = 0;
-        spinlock_init_with_flags(&core->cpu.cores[index].address_space.lock, SPINLOCK_FLAGS_CPU_OWNER);
+        spinlock_init_with_flags(&core->cpu.cores[index].address_space.lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
     }
 
@@ -446,12 +446,12 @@ void arch_cpu_init(int index) {
 
 #if defined(__x86_64__)
 
-    // * FIXME: Invalid Opcode
-    // if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
-    //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
-    // else
+    // * BUG: Invalid Opcode even if supported by cpu
+    // // if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
+    // //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
+    // // else
 
-    //x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
+    // //x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
     x86_wrmsr(X86_MSR_GSBASE, (uint64_t) &core->cpu.cores[index]);
 
 #endif

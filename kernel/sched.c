@@ -24,6 +24,7 @@
  */                                                                     
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <time.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -248,17 +249,17 @@ static void __sched_next(void) {
         //__check_timers();
 
 
-        if(unlikely(current_task->status != TASK_STATUS_SLEEP))
-            continue;
+        if(current_task->status == TASK_STATUS_SLEEP) {
+
+            // Wake up if a signal is pending
+            if(!queue_is_empty(&current_task->sigqueue))
+                thread_wake(current_task);
 
 
-        // Wake up if a signal is pending
-        if(!queue_is_empty(&current_task->sigqueue))
-            thread_wake(current_task);
+            __do_futex();
+            __do_sleep();
 
-
-        __do_futex();
-        __do_sleep();
+        }
 
 
     } while(current_task->status != TASK_STATUS_READY);

@@ -151,14 +151,13 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
     if(unlikely(addr & (pagesize - 1)))
         return -EINVAL;
 
-    if(unlikely(len & (pagesize - 1)))
-        return -EINVAL;
-
     if(unlikely(offset & (pagesize - 1)))
         return -EINVAL;
 
 
-
+    if(unlikely(len & (pagesize - 1))) {
+        len = (len & ~(pagesize - 1)) + pagesize;
+    }
     
 
     spinlock_lock(&current_task->address_space->lock);

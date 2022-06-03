@@ -646,7 +646,7 @@ static void ccp_resetci(fsm *f) {
      * compression methods we might request.
      */
 #if BSDCOMPRESS_SUPPORT
-    /* FIXME: we don't need to test if BSD compress is available
+    /* XXX: we don't need to test if BSD compress is available
      * if BSDCOMPRESS_SUPPORT is set, it is.
      */
     if (go->bsd_compress) {
@@ -670,7 +670,7 @@ static void ccp_resetci(fsm *f) {
     }
 #endif /* BSDCOMPRESS_SUPPORT */
 #if DEFLATE_SUPPORT
-    /* FIXME: we don't need to test if deflate is available
+    /* XXX: we don't need to test if deflate is available
      * if DEFLATE_SUPPORT is set, it is.
      */
     if (go->deflate) {
@@ -719,7 +719,7 @@ static void ccp_resetci(fsm *f) {
     }
 #endif /* DEFLATE_SUPPORT */
 #if PREDICTOR_SUPPORT
-    /* FIXME: we don't need to test if predictor is available,
+    /* XXX: we don't need to test if predictor is available,
      * if PREDICTOR_SUPPORT is set, it is.
      */
     if (go->predictor_1) {

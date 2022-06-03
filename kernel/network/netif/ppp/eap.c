@@ -329,7 +329,7 @@ pncrypt_setkey(int timeoffs)
 	strftime(tbuf, sizeof (tbuf), "%Y%m%d", tp);
 	SHA1Update(&ctxt, tbuf, strlen(tbuf));
 	SHA1Final(dig, &ctxt);
-	/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+	/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 	return (DesSetkey(dig));
 }
 
@@ -469,7 +469,7 @@ static void eap_figure_next_state(ppp_pcb *pcb, int status) {
 			for (i = 0; i < 5; i++) {
 				pncrypt_setkey(toffs);
 				toffs -= 86400;
-				/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+				/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 				if (!DesDecrypt(secbuf, clear)) {
 					ppp_dbglog("no DES here; cannot decode "
 					    "pseudonym");
@@ -494,7 +494,7 @@ static void eap_figure_next_state(ppp_pcb *pcb, int status) {
 				dp += i;
 				sp = secbuf + 8;
 				while (plen > 0) {
-					/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+					/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 					(void) DesDecrypt(sp, dp);
 					sp += 8;
 					dp += 8;
@@ -784,7 +784,7 @@ static void eap_send_request(ppp_pcb *pcb) {
 			MEMCPY(clear + 1, cp, j);
 			i -= j;
 			cp += j;
-			/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+			/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 			if (!DesEncrypt(clear, cipher)) {
 				ppp_dbglog("no DES here; not generating pseudonym");
 				break;
@@ -793,7 +793,7 @@ static void eap_send_request(ppp_pcb *pcb) {
 			outp++;		/* space for pseudonym length */
 			outp += b64enc(&b64, cipher, 8, outp);
 			while (i >= 8) {
-				/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+				/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 				(void) DesEncrypt(cp, cipher);
 				outp += b64enc(&b64, cipher, 8, outp);
 				cp += 8;
@@ -803,7 +803,7 @@ static void eap_send_request(ppp_pcb *pcb) {
 				MEMCPY(clear, cp, i);
 				cp += i;
 				magic_random_bytes(cp, 8-i);
-				/* FIXME: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
+				/* XXX: if we want to do SRP, we need to find a way to pass the PolarSSL des_context instead of using static memory */
 				(void) DesEncrypt(clear, cipher);
 				outp += b64enc(&b64, cipher, 8, outp);
 			}

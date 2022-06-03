@@ -36,8 +36,8 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
     return (lock->flags & SPINLOCK_FLAGS_CPU_OWNER)
-                    ? (current_cpu ? current_cpu->id : 0)
-                    : (current_task ? current_task->tid : 0);
+        ? (current_cpu  ? current_cpu->id   : 0)
+        : (current_task ? current_task->tid : 0);
 
 }
 
@@ -46,7 +46,11 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
 /*!
  * @brief Initialize Spinlock with flags.
  */
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __spinlock_init_with_flags(spinlock_t* lock, int flags, const char* FUNC, const char* FILE, int LINE) {
+#else
 void spinlock_init_with_flags(spinlock_t* lock, int flags) {
+#endif
 
     DEBUG_ASSERT(lock);
 
@@ -56,6 +60,10 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
     lock->refcount = 0;
     lock->irqsave  = 0;
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("ipc: spinlock_init_with_flags(%p, %d, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
+#endif
+
     __atomic_clear(&lock->value, __ATOMIC_RELAXED);
 
 }
@@ -64,8 +72,18 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
 /*!
  * @brief Initialize Spinlock.
  */
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __spinlock_init(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
+#else
 void spinlock_init(spinlock_t* lock) {
+#endif
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    return __spinlock_init_with_flags(lock, 0, FUNC, FILE, LINE);
+#else
     return spinlock_init_with_flags(lock, 0);
+#endif
+
 }
 
 
@@ -83,7 +101,7 @@ void spinlock_lock(spinlock_t* lock) {
 
         
     volatile uint64_t own;
-    if((own = __atomic_load_n(&lock->owner, __ATOMIC_RELAXED)) == spinlock_get_new_owner(lock)) {
+    if((own = __atomic_load_n(&lock->owner, __ATOMIC_CONSUME)) == spinlock_get_new_owner(lock)) {
 
         if(lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
 

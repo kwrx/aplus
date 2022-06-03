@@ -81,8 +81,6 @@ static void* __dup_address_space(vmm_address_space_t* space) {
 
     vmm_address_space_t* r = (vmm_address_space_t*) kcalloc(1, sizeof(vmm_address_space_t), GFP_KERNEL);
 
-    spinlock_init_with_flags(&r->lock, SPINLOCK_FLAGS_CPU_OWNER);
-
 
 #if defined(CONFIG_DEMAND_PAGING)
     arch_vmm_clone(r, space, ARCH_VMM_CLONE_DEMAND);

@@ -222,7 +222,7 @@ mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t proto
 
 	state->ccount = (state->ccount + 1) % MPPE_CCOUNT_SPACE;
 	PPPDEBUG(LOG_DEBUG, ("mppe_compress[%d]: ccount %d\n", pcb->netif->num, state->ccount));
-	/* FIXME: use PUT* macros */
+	/* XXX: use PUT* macros */
 	pl[0] = state->ccount>>8;
 	pl[1] = state->ccount;
 
@@ -241,7 +241,7 @@ mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t proto
 	pl += MPPE_OVHD;
 
 	/* Add protocol */
-	/* FIXME: add PFC support */
+	/* XXX: add PFC support */
 	pl[0] = protocol >> 8;
 	pl[1] = protocol;
 

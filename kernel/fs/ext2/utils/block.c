@@ -41,8 +41,6 @@
 
 
 void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
-
-    // BUG: block is null, assert fails
     
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);

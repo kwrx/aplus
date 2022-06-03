@@ -37,6 +37,11 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 			CXXFLAGS 	+= -fstack-protector-explicit $(addprefix -fsanitize=,$(SANITIZERS))
 
 		endif
+	else
+		ifneq (,$(findstring KERNEL=1,$(DEFINES)))
+			CFLAGS   	+= -fno-stack-protector
+			CXXFLAGS 	+= -fno-stack-protector
+		endif
 	endif
 
 else

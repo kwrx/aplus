@@ -53,7 +53,7 @@
 #define EXT2_ID                     0xDEAD1001
 #define VFAT_ID                     0xDEAD1002
 
-#define FILE_MAX                    32768
+#define FILE_MAX                    8192
 
 
 typedef struct inode inode_t;
@@ -160,6 +160,12 @@ struct file {
 
     int status;
     int refcount;
+    
+    struct {
+        short events;
+        short revents;
+        uint32_t futex;
+    } ev;
 
     spinlock_t lock;
 

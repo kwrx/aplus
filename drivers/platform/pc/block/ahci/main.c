@@ -972,7 +972,8 @@ static void sata_reset(device_t* device) {
     ahci->hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
 
-    /* HACK: see AHCI 1.3.1 - pg 114, 10.4.1 */
+    /* TODO: see AHCI 1.3.1 - pg 114, 10.4.1 */
+
 }
 
 

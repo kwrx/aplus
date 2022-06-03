@@ -68,7 +68,9 @@ void* kmalloc(size_t size, int gfp) {
     if(size & (PML1_PAGESIZE - 1))
         size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
+
     struct kmalloc_header* h;
+
     if(size == PML1_PAGESIZE)
         h = (struct kmalloc_header*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
     else

@@ -90,14 +90,12 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
         int i;
         for(i = 0; i + sizeof(struct linux_dirent64) < count; ) {
 
-            /* BUG: stack overflow on vfs_readdir() when dirent is on the stack */
-            static struct dirent ent;
-            memset(&ent, 0, sizeof(struct dirent));
+            struct dirent ent = { 0 };
 
             if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, &ent, current_task->fd->descriptors[fd].ref->position++, 1)) <= 0)
                 break;
 
-    
+        
 
             size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
 
@@ -120,6 +118,7 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
         }
         
     );
+    
 
 
     if(e < 0)

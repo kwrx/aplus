@@ -124,6 +124,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("sys_execve: filename=%s\n", uio_get_ptr(filename));
+#endif
+
+
     int e;
 
     struct stat st;
@@ -249,7 +254,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     do_unshare(CLONE_VM);
 
 
-    #define RXX(a, b, c) {                                                  \
+    #define RXX(a, b, c, d) {                                               \
         if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
             return e;                                                       \
                                                                             \
@@ -259,13 +264,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
             else                                                            \
                 return -EIO;                                                \
         }                                                                   \
+        if((size_t) (d) - (size_t) (c)) {                                   \
+            memset((void*)((size_t) (a) + (size_t) (c)), 0,                 \
+                   (size_t) (d) - (size_t) (c));                            \
+        }                                                                   \
     }
 
 
 
-    uintptr_t end;
-    uintptr_t flags;
 
+
+    uintptr_t end   = 0;
+    uintptr_t flags = 0;
+
+        
     __lock(&current_task->lock, {
 
 
@@ -279,13 +291,13 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         for(i = 0; i < head.e_phnum; i++) {
 
             Elf_Phdr phdr;
-            RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize);
+            RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize, head.e_phentsize);
 
 
             switch(phdr.p_type) {
 
-                case PT_LOAD:                    
                 case PT_TLS:
+                case PT_LOAD:                    
 
                     DEBUG_ASSERT(phdr.p_vaddr);
                     DEBUG_ASSERT(phdr.p_memsz);
@@ -321,7 +333,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     kprintf("sys_execve: PT_LOAD/PT_TLS at address(0x%lX) size(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
-                    RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz);
+                    RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz);
 
 
                     arch_vmm_mprotect (current_task->address_space, phdr.p_vaddr, phdr.p_memsz, flags | ARCH_VMM_MAP_USER);
@@ -394,9 +406,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         envq[i] = p;
     
     }
-
-
-    
 
 
     // * Allocate Signal Stack

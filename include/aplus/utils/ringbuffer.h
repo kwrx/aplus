@@ -41,9 +41,6 @@ typedef struct {
     uint8_t full;
     int flags;
 
-    uint32_t futex_wr_cond;
-    uint32_t futex_rd_cond;
-
     spinlock_t lock;
 
 } ringbuffer_t;

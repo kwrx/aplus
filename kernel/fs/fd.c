@@ -75,15 +75,17 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 
 
     if(i == FILE_MAX) {
-        errno = ENFILE;
-        return NULL;
+        return errno = ENFILE, NULL;
     }
 
 
 
-    filetable[i].inode = inode;
-    filetable[i].position = position;
-    filetable[i].status = status;
+    filetable[i].inode      = inode;
+    filetable[i].position   = position;
+    filetable[i].status     = status;
+    filetable[i].ev.events  = 0;
+    filetable[i].ev.revents = 0;
+    filetable[i].ev.futex   = 0;
     
     spinlock_init(&filetable[i].lock);
 
@@ -95,6 +97,10 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 
 void fd_remove(struct file* fd, int close) {
 
+    DEBUG_ASSERT(fd);
+    DEBUG_ASSERT(filetable);
+
+
     __lock(&filetable_lock, {
 
         if(--fd->refcount == 0) {
@@ -103,9 +109,9 @@ void fd_remove(struct file* fd, int close) {
                 vfs_close(fd->inode);
 
 
-            fd->inode = NULL;
+            fd->inode    = NULL;
             fd->position = 0;
-            fd->status = 0;
+            fd->status   = 0;
 
 
             int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
@@ -126,6 +132,7 @@ void fd_remove(struct file* fd, int close) {
 void fd_ref(struct file* file) {
 
     DEBUG_ASSERT(file);
+    DEBUG_ASSERT(filetable);
 
     __lock(&filetable_lock, {
         file->refcount++;

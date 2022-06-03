@@ -23,7 +23,9 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
  */                                                                     
 
-#include <stdint.h>                                                        
+#include <stdint.h> 
+#include <stdbool.h>
+                                                      
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
@@ -59,7 +61,7 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
     futex_t* futex = (futex_t*) kcalloc(1, sizeof(futex_t), GFP_KERNEL);
 
     futex->address = kaddr;
-    futex->value = value;
+    futex->value   = value;
     
     if(utime) {
 
@@ -71,10 +73,12 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
     }
 
 
-    __lock(&task->lock,
-        list_push(task->futexes, futex));
+    __lock(&task->lock, {
 
-    arch_task_context_set(task, ARCH_TASK_CONTEXT_RETVAL, 0L);
+        list_push(task->futexes, futex);
+
+    });
+
 
 }
 
@@ -177,18 +181,18 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
 
 
-int futex_expired(futex_t* futex) {
+bool futex_expired(futex_t* futex) {
 
     DEBUG_ASSERT(futex);
 
     if(futex->address == NULL)
-        return 1;
+        return true;
 
-    if(*futex->address == futex->value)
-        return 0;
+    if(*futex->address != futex->value)
+        return true;
 
     if(futex->timeout.tv_sec + futex->timeout.tv_nsec == 0)
-        return 0;
+        return false;
 
     return (arch_timer_generic_getns() > (futex->timeout.tv_sec * 1000000000ULL + futex->timeout.tv_nsec));
 

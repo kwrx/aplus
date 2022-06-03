@@ -68,6 +68,15 @@ long sys_pipe2 (int __user * fildes, int flags) {
         return -ENOMEM;
 
 
+
+    struct file* ref;
+
+    if((ref = fd_append(inode, 0, 0)) == NULL)
+        return -ENFILE;
+
+    fd_ref(ref);
+
+
     for(size_t i = 0; i < 2; i++) {
 
         int fd;
@@ -85,28 +94,15 @@ long sys_pipe2 (int __user * fildes, int flags) {
                 break;
 
             
-            struct file* ref;
-            
-            if((ref = fd_append(inode, 0, 0)) == NULL) {
-                
-                fd = FILE_MAX;
-
-            } else {
-            
-                current_task->fd->descriptors[fd].ref = ref;
-                current_task->fd->descriptors[fd].flags = i ? O_WRONLY : O_RDONLY;
-            
-            }
+            current_task->fd->descriptors[fd].ref = ref;
+            current_task->fd->descriptors[fd].flags = i ? O_WRONLY : O_RDONLY;            
 
         });
         
 
         if(fd == CONFIG_OPEN_MAX)
             return -EMFILE;
-
-        if(fd == FILE_MAX)
-            return -ENFILE;
-
+            
 
         DEBUG_ASSERT(fd >= 0);
         DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);

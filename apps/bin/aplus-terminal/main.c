@@ -31,6 +31,7 @@
 #include <errno.h>
 #include <assert.h>
 #include <libtsm.h>
+#include <poll.h>
 #include <sched.h>
 
 #include <aplus/fb.h>
@@ -322,14 +323,13 @@ int main(int argc, char** argv) {
 
     //* 3. I/O initialization
 
-    if(pipe(context.pipefd) < 0) {
+    if(pipe2(context.pipefd, O_NONBLOCK) < 0) {
         fprintf(stderr, "aplus-terminal: pipe() failed\n");
         exit(1);
     }
 
     assert(context.pipefd[0] >= 0);
     assert(context.pipefd[1] >= 0);
-
 
 
 
@@ -385,22 +385,38 @@ int main(int argc, char** argv) {
         char buf[BUFSIZ];
         size_t size;
 
+
         do {
-        
-            while((size = read(context.pipefd[0], buf, sizeof(buf))) >= 0) {
 
-                if(size > 0) {
-                
-                    tsm_vte_input(context.vte, buf, size);
-                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+            struct pollfd pfd;
 
-                }
+            pfd.fd = context.pipefd[0];
+            pfd.events = POLLIN;
 
-                usleep(500000);
+            if(poll(&pfd, 1, -1) < 0) {
+                break;
+            }
+            
+            if(pfd.revents & POLLERR || pfd.revents & POLLHUP || pfd.revents & POLLNVAL) {
+                break;
+            }
+
+            if(pfd.revents & POLLIN) {
+
+                do {
+
+                    while((size = read(context.pipefd[0], buf, sizeof(buf))) > 0) {
+
+                        tsm_vte_input(context.vte, buf, size);
+                        tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                    }
+
+                } while(errno == EINTR);
 
             }
 
-        } while(errno == EINTR);
+        } while(true);
 
         
         if(close(context.pipefd[0]) < 0) {

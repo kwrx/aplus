@@ -114,7 +114,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
 
     if(block < (b * b)) {
         
-        register uint32_t p = block;
+        uint32_t p = block;
 
         ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (p / b), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (p % b), &block, sizeof(uint32_t));
@@ -129,7 +129,7 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
 
     if(block < (b * b * b)) {
 
-        register uint32_t p = block;
+        uint32_t p = block;
 
         ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (p / (b * b)), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((p % (b * b)) / b), &block, sizeof(uint32_t));

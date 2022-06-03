@@ -637,7 +637,7 @@ static int upap_printpkt(const u_char *p, int plen, void (*printer) (void *, con
 	printer(arg, " user=");
 	ppp_print_string(user, ulen, printer, arg);
 	printer(arg, " password=");
-/* FIXME: require ppp_pcb struct as printpkt() argument */
+/* XXX: require ppp_pcb struct as printpkt() argument */
 #if 0
 	if (!pcb->settings.hide_password)
 #endif
