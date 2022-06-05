@@ -95,6 +95,8 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
 
+    return errno = EIO, -1;
+
 }
 
 
@@ -136,6 +138,8 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
 
+    return errno = EIO, -1;
+
 }
 
 
@@ -172,6 +176,8 @@ int char_flush(device_t* device) {
     }
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
+
+    return errno = EIO, -1;
 
 }
 

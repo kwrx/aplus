@@ -285,10 +285,13 @@ void timer_init(void) {
         hpet_frequency = freq;
 
 
+#if 0
         // uint16_t i;
         // for(i = 0; i < timers - 1; i++)
         //     mmio_w64(mmio_w64()) // TODO: Initialize HPET Timers
-
+#else
+        (void) timers;
+#endif
 
         mmio_w64(HPET_GENERAL_ISR, mmio_r64(HPET_GENERAL_ISR) & 0xFFFFFFFF00000000);
         mmio_w64(HPET_GENERAL_CR, mmio_r64(HPET_GENERAL_CR) | 1);

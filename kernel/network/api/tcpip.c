@@ -156,6 +156,7 @@ tcpip_thread(void *arg)
 static void
 tcpip_thread_handle_msg(struct tcpip_msg *msg)
 {
+  DEBUG_ASSERT(msg);
   switch (msg->type) {
 #if !LWIP_TCPIP_CORE_LOCKING
     case TCPIP_MSG_API:

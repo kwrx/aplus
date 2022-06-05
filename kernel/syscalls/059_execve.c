@@ -476,7 +476,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
     kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
+#endif
+
 
     arch_userspace_enter(head.e_entry, stack, (void*) bottom);
 

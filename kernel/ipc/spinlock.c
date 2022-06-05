@@ -111,7 +111,7 @@ void spinlock_lock(spinlock_t* lock) {
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
             kpanicf("ipc: PANIC! DEADLOCK! %s:%d %s(%p) owner(%ld) flags(%X) current_owner(%ld)\n", FILE, LINE, FUNC, lock, own, lock->flags, spinlock_get_new_owner(lock));
 #else
-            kpanicf("ipc: PANIC! DEADLOCK! owner(%d) flags(%p)\n", own, lock->flags);
+            kpanicf("ipc: PANIC! DEADLOCK! owner(%ld) flags(%X)\n", own, lock->flags);
 #endif
         }
 
@@ -186,7 +186,7 @@ void spinlock_unlock(spinlock_t* lock) {
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
         kpanicf("ipc: PANIC! EPERM! spinlock(%p) at %s:%d %s() not owned, owner(%ld) flags(%X) current_owner(%ld)\n", lock, FILE, LINE, FUNC, lock->owner, lock->flags, spinlock_get_new_owner(lock));
 #else
-        kpanicf("ipc: PANIC! EPERM! spinlock(%p) not owned, owner(%d) flags(%p)\n", lock, lock->owner, lock->flags);
+        kpanicf("ipc: PANIC! EPERM! spinlock(%p) not owned, owner(%ld) flags(%X)\n", lock, lock->owner, lock->flags);
 #endif
 
     } else {
