@@ -306,10 +306,10 @@ typedef struct task {
 } task_t;
 
 
-#define thread_postpone_resched(task)       \
+#define thread_restart_sched(task)          \
     task->flags |= TASK_FLAGS_NEED_RESCHED
 
-#define thread_postpone_syscall(task)       \
+#define thread_restart_syscall(task)        \
     task->flags |= TASK_FLAGS_NEED_SYSCALL_RESTART
 
 #define thread_suspend(task)                \

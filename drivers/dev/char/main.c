@@ -23,6 +23,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -82,9 +83,14 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
             e = ringbuffer_write(&device->chr.buffer, buf, size);
 
-            if(ringbuffer_is_full(&device->chr.buffer))
-                if(likely(device->chr.flush))
+
+            if(ringbuffer_is_full(&device->chr.buffer)) {
+
+                if(likely(device->chr.flush)) {
                     device->chr.flush(device);
+                }
+
+            }
 
             return e;
 

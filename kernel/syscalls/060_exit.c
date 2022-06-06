@@ -110,7 +110,7 @@ long sys_exit (int status) {
     }
 
 
-    thread_postpone_resched(current_task);
+    thread_restart_sched(current_task);
     return 0;
 
 });

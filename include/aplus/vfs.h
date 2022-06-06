@@ -130,6 +130,12 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
+    struct {
+        short events;
+        short revents;
+        uint32_t futex;
+    } ev;
+
     HASHMAP(char, inode_t) dcache;
 
 };
@@ -160,12 +166,6 @@ struct file {
 
     int status;
     int refcount;
-    
-    struct {
-        short events;
-        short revents;
-        uint32_t futex;
-    } ev;
 
     spinlock_t lock;
 

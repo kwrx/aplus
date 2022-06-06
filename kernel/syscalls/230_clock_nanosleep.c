@@ -138,8 +138,8 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
 
 
     thread_suspend(current_task);
-    thread_postpone_resched(current_task);
-    thread_postpone_syscall(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
 
     
     return -EINTR;

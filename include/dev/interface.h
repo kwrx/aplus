@@ -79,6 +79,9 @@ typedef struct device {
     void (*reset) (struct device*);
 
 
+    inode_t* inode;
+
+
     union {
         struct {
             union {

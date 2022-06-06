@@ -35,6 +35,7 @@
 #include <sched.h>
 
 #include <aplus/fb.h>
+#include <aplus/events.h>
 
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
 #include "lib/builtin_font.h"
@@ -332,6 +333,14 @@ int main(int argc, char** argv) {
     assert(context.pipefd[1] >= 0);
 
 
+    //* 4. Input initialization
+
+    int kbd = open("/dev/kbd", O_RDONLY);
+
+    if(kbd < 0) {
+        fprintf(stderr, "aplus-terminal: open() failed: cannot open /dev/kbd: %s\n", strerror(errno));
+        exit(1);
+    }
 
     
     //* 4. Child initialization
@@ -382,37 +391,70 @@ int main(int argc, char** argv) {
 
     } else {
 
-        char buf[BUFSIZ];
-        size_t size;
-
 
         do {
 
-            struct pollfd pfd;
+            struct pollfd pfd[2] = {
+                { .fd = kbd,               .events = POLLIN },
+                { .fd = context.pipefd[0], .events = POLLIN }
+            };
 
-            pfd.fd = context.pipefd[0];
-            pfd.events = POLLIN;
-
-            if(poll(&pfd, 1, -1) < 0) {
-                break;
-            }
-            
-            if(pfd.revents & POLLERR || pfd.revents & POLLHUP || pfd.revents & POLLNVAL) {
+            if(poll(pfd, 2, -1) < 0) {
                 break;
             }
 
-            if(pfd.revents & POLLIN) {
 
-                do {
+            for(size_t i = 0; i < (sizeof(pfd) / sizeof(pfd[0])); i++) {
+                
+                if(pfd[i].revents & POLLERR || pfd[i].revents & POLLHUP || pfd[i].revents & POLLNVAL) {
+                    break;
+                }
 
-                    while((size = read(context.pipefd[0], buf, sizeof(buf))) > 0) {
+                if(pfd[i].revents & POLLIN) {
 
-                        tsm_vte_input(context.vte, buf, size);
-                        tsm_screen_draw(context.con, fb_draw_cb, NULL);
+                    if(pfd[i].fd == context.pipefd[0]) {
+
+                        char buf[BUFSIZ];
+                        size_t size;
+
+                        do {
+
+                            while((size = read(context.pipefd[0], buf, sizeof(buf))) > 0) {
+
+                                tsm_vte_input(context.vte, buf, size);
+                                tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                            }
+
+                        } while(errno == EINTR);
+
+                    } 
+                    
+                    if(pfd[i].fd == kbd) {
+
+                        event_t ev;
+
+                        do {
+
+                            if(read(kbd, &ev, sizeof(ev)) > 0) {
+
+                                if(ev.ev_type == EV_KEY) {
+
+                                    if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
+                                        tsm_screen_sb_reset(context.con);
+                                    }
+
+                                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                                }
+
+                            }
+
+                        } while(errno == EINTR);
 
                     }
 
-                } while(errno == EINTR);
+                }
 
             }
 

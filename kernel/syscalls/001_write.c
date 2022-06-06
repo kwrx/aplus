@@ -105,14 +105,6 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
         current_task->fd->descriptors[fd].ref->position += e;
         current_task->iostat.write_bytes += (uint64_t) e;
 
-
-        if(current_task->fd->descriptors[fd].ref->ev.events & POLLIN) {
-
-            current_task->fd->descriptors[fd].ref->ev.revents |= POLLIN;
-            current_task->fd->descriptors[fd].ref->ev.futex   |= 1;
-
-        }
-        
     });
 
 

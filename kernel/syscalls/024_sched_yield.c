@@ -51,7 +51,7 @@
 SYSCALL(24, sched_yield,
 long sys_sched_yield (void) {
 
-    thread_postpone_resched(current_task);
+    thread_restart_sched(current_task);
     return 0;
     
 });

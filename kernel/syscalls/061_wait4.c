@@ -157,8 +157,8 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
 
     thread_suspend(current_task);    
-    thread_postpone_resched(current_task);
-    thread_postpone_syscall(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
     
     return -EINTR;
 

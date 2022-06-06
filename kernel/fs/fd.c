@@ -83,9 +83,6 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
     filetable[i].inode      = inode;
     filetable[i].position   = position;
     filetable[i].status     = status;
-    filetable[i].ev.events  = 0;
-    filetable[i].ev.revents = 0;
-    filetable[i].ev.futex   = 0;
     
     spinlock_init(&filetable[i].lock);
 

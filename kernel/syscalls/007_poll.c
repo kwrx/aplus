@@ -93,13 +93,17 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
         if(current_task->fd->descriptors[pfd->fd].ref == NULL)
             return -EBADF;
 
+        if(current_task->fd->descriptors[pfd->fd].ref->inode == NULL)
+            return -EBADF;
 
-        if(current_task->fd->descriptors[pfd->fd].ref->ev.revents & pfd->events) {
 
-            pfd->revents = current_task->fd->descriptors[pfd->fd].ref->ev.revents & pfd->events;
 
-            current_task->fd->descriptors[pfd->fd].ref->ev.revents &= ~pfd->events;
-            current_task->fd->descriptors[pfd->fd].ref->ev.events  &= ~pfd->events;
+        if(current_task->fd->descriptors[pfd->fd].ref->inode->ev.revents & pfd->events) {
+
+            pfd->revents = current_task->fd->descriptors[pfd->fd].ref->inode->ev.revents & pfd->events;
+
+            current_task->fd->descriptors[pfd->fd].ref->inode->ev.revents &= ~pfd->events;
+            current_task->fd->descriptors[pfd->fd].ref->inode->ev.events  &= ~pfd->events;
 
             e++;
 
@@ -122,11 +126,11 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
             struct pollfd* pfd = (struct pollfd*) uio_get_ptr(&ufds[i]);
 
-            current_task->fd->descriptors[pfd->fd].ref->ev.revents &= ~pfd->events;
-            current_task->fd->descriptors[pfd->fd].ref->ev.events  |=  pfd->events;
-            current_task->fd->descriptors[pfd->fd].ref->ev.futex    = 0;
+            current_task->fd->descriptors[pfd->fd].ref->inode->ev.revents &= ~pfd->events;
+            current_task->fd->descriptors[pfd->fd].ref->inode->ev.events  |=  pfd->events;
+            current_task->fd->descriptors[pfd->fd].ref->inode->ev.futex    = 0;
 
-            futex_wait(current_task, &current_task->fd->descriptors[pfd->fd].ref->ev.futex, 0, timeout > 0 ? &tm : NULL);
+            futex_wait(current_task, &current_task->fd->descriptors[pfd->fd].ref->inode->ev.futex, 0, timeout > 0 ? &tm : NULL);
 
         }
 
@@ -136,8 +140,8 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 #endif
 
         thread_suspend(current_task);
-        thread_postpone_resched(current_task);
-        thread_postpone_syscall(current_task);
+        thread_restart_sched(current_task);
+        thread_restart_syscall(current_task);
 
         return -EINTR;
 

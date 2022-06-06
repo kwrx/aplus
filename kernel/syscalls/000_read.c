@@ -106,14 +106,6 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
         current_task->fd->descriptors[fd].ref->position += e;
         current_task->iostat.read_bytes += (uint64_t) e;
-
-
-        if(current_task->fd->descriptors[fd].ref->ev.events & POLLOUT) {
-
-            current_task->fd->descriptors[fd].ref->ev.revents |= POLLOUT;
-            current_task->fd->descriptors[fd].ref->ev.futex   |= 1;
-
-        }
         
     });
 
