@@ -173,6 +173,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
                       | X86_MMU_PG_AP_TP_PAGE
                       | ((*d & ~X86_MMU_ADDRESS_MASK) & ~(X86_MMU_PG_AP_TP_MASK));
 
+
         }
 
     }
@@ -182,7 +183,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-pfe: handled page fault! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr2(0x%lX) cr3(0x%lX) cpu(%ld) pid(%d)\n", frame->cs, frame->ip, frame->sp, cr2, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+    kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
     return;

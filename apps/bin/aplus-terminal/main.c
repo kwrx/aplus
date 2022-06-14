@@ -42,11 +42,20 @@
 #endif
 
 
+
 static struct {
 
     void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 
     int pipefd[2];
+
+    int kbd;
+    int mouse;
+
+    struct {
+        uint16_t x;
+        uint16_t y;
+    } cursor;
 
     struct tsm_screen* con;
     struct tsm_vte* vte;
@@ -55,8 +64,6 @@ static struct {
     struct fb_fix_screeninfo fix;
 
 } context;
-
-
 
 
 
@@ -185,6 +192,19 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 #error "Truetype not implemented yet"
 #endif
 
+
+
+    uint16_t x = context.cursor.x;
+    uint16_t y = context.cursor.y;
+    uint16_t w = context.var.xres_virtual > context.cursor.x + 16 ? context.cursor.x + 16 : context.var.xres_virtual;
+    uint16_t h = context.var.yres_virtual > context.cursor.y + 16 ? context.cursor.y + 16 : context.var.yres_virtual;
+
+    for(; x < w; x++) {
+        for(; y < h; y++) {
+            context.plot(x, y, fr, fg, fb);
+        }
+    }
+
     return 0;
 
 }
@@ -192,7 +212,7 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 
 static void term_write_cb(struct tsm_vte* vte, const char* bytes, size_t len, void* data) {
-    fprintf(stderr, "aplus-terminal: term_write_cb(): vte(%p), bytes(%s), size(%ld)\n", vte, bytes, len);
+    fprintf(stderr, "aplus-terminal: term_write_cb(): vte(%p), bytes('%s' - %p - %d), size(%ld)\n", vte, bytes, (void*) bytes, bytes ? bytes[0] : -1, len);
 }
 
 
@@ -209,7 +229,7 @@ int main(int argc, char** argv) {
         { NULL, 0, NULL, 0 }
     };
     
-    
+
     
     char* cmd = NULL;
     char* pwd = NULL;
@@ -335,12 +355,22 @@ int main(int argc, char** argv) {
 
     //* 4. Input initialization
 
-    int kbd = open("/dev/kbd", O_RDONLY);
+    context.kbd = open("/dev/kbd", O_RDONLY);
 
-    if(kbd < 0) {
+    if(context.kbd < 0) {
         fprintf(stderr, "aplus-terminal: open() failed: cannot open /dev/kbd: %s\n", strerror(errno));
         exit(1);
     }
+
+
+    context.mouse = open("/dev/mouse", O_RDONLY);
+
+    if(context.mouse < 0) {
+        fprintf(stderr, "aplus-terminal: open() failed: cannot open /dev/mouse: %s\n", strerror(errno));
+        exit(1);
+    }
+
+
 
     
     //* 4. Child initialization
@@ -394,12 +424,13 @@ int main(int argc, char** argv) {
 
         do {
 
-            struct pollfd pfd[2] = {
-                { .fd = kbd,               .events = POLLIN },
+            struct pollfd pfd[3] = {
+                { .fd = context.kbd,       .events = POLLIN },
+                { .fd = context.mouse,     .events = POLLIN },
                 { .fd = context.pipefd[0], .events = POLLIN }
             };
 
-            if(poll(pfd, 2, -1) < 0) {
+            if(poll(pfd, 3, -1) < 0) {
                 break;
             }
 
@@ -415,7 +446,7 @@ int main(int argc, char** argv) {
                     if(pfd[i].fd == context.pipefd[0]) {
 
                         char buf[BUFSIZ];
-                        size_t size;
+                        ssize_t size;
 
                         do {
 
@@ -426,22 +457,54 @@ int main(int argc, char** argv) {
 
                             }
 
+
                         } while(errno == EINTR);
 
-                    } 
+                    }
                     
-                    if(pfd[i].fd == kbd) {
+                    if(pfd[i].fd == context.kbd) {
 
                         event_t ev;
 
                         do {
 
-                            if(read(kbd, &ev, sizeof(ev)) > 0) {
+                            if(read(context.kbd, &ev, sizeof(ev)) > 0) {
 
                                 if(ev.ev_type == EV_KEY) {
 
                                     if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
                                         tsm_screen_sb_reset(context.con);
+                                    }
+
+                                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                                }
+
+                            }
+
+                        } while(errno == EINTR);
+
+                    }
+
+                    if(pfd[i].fd == context.mouse) {
+
+                        event_t ev;
+
+                        do {
+
+                            while(read(context.mouse, &ev, sizeof(ev)) == sizeof(ev)) {
+
+                                if(ev.ev_type == EV_REL) {
+
+                                    context.cursor.x += ev.ev_rel.x * 3;
+                                    context.cursor.y -= ev.ev_rel.y * 3;
+
+                                    if(context.cursor.x > context.var.xres_virtual) {
+                                        context.cursor.x = context.var.xres_virtual;
+                                    }
+
+                                    if(context.cursor.y > context.var.yres_virtual) {
+                                        context.cursor.y = context.var.yres_virtual;
                                     }
 
                                     tsm_screen_draw(context.con, fb_draw_cb, NULL);

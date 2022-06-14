@@ -95,7 +95,7 @@ long sys_pipe2 (int __user * fildes, int flags) {
 
             
             current_task->fd->descriptors[fd].ref = ref;
-            current_task->fd->descriptors[fd].flags = i ? O_WRONLY : O_RDONLY;            
+            current_task->fd->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);            
 
         });
         

@@ -72,20 +72,6 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
         return -EPERM;
 
 
-    // TODO: add poll support
-    // // if(unlikely(current_task->fd->descriptors[fd].flags & O_NONBLOCK)) {
-    // //     struct pollfd p;
-    // //     p.fd = fd;
-    // //     p.events = POLLOUT;
-    // //     p.revents = 0;
-
-    // //     if(sys_poll(&p, 1, 0) < 0)
-    // //         return -EIO;
-
-    // //     if(!(p.revents & POLLOUT))
-    // //         return -EAGAIN;
-    // // }
-
 
     current_task->iostat.wchar += (uint64_t) size;
     current_task->iostat.syscw += 1;
@@ -108,8 +94,39 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
     });
 
 
+    if(errno == EINTR) {
+
+        if(current_task->fd->descriptors[fd].flags & O_NONBLOCK) {
+
+            return -EAGAIN;
+
+        } else {
+
+            current_task->fd->descriptors[fd].ref->inode->ev.revents &= ~POLLOUT;
+            current_task->fd->descriptors[fd].ref->inode->ev.events  |=  POLLOUT;
+            current_task->fd->descriptors[fd].ref->inode->ev.futex    = 0;
+
+            futex_wait(current_task, &current_task->fd->descriptors[fd].ref->inode->ev.futex, 0, NULL);
+
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+            kprintf("write: task %d waiting for POLLOUT event\n", current_task->tid);
+#endif
+
+            thread_suspend(current_task);
+            thread_restart_sched(current_task);
+            thread_restart_syscall(current_task);
+
+            return -EINTR;
+
+        }
+
+    }
+
+
     if(e < 0)
         return -errno;
 
     return e;
+
 });

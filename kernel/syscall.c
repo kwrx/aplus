@@ -107,6 +107,10 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
     current_task->syscall.param5 = p5;
 
 
+
+    errno = 0;
+
+
     long r = syscalls[idx] (p0, p1, p2, p3, p4, p5);
 
     if(r < 0L)

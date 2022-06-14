@@ -93,6 +93,30 @@ echo "## Get Packages"
         packages="$packages libtsm"
     fi
 
+    if [ "$CONFIG_HAVE_ZLIB" == "y" ]; then
+        packages="$packages zlib"
+    fi
+
+    if [ "$CONFIG_HAVE_LIBPNG" == "y" ]; then
+        packages="$packages libpng"
+    fi
+
+    if [ "$CONFIG_HAVE_FREETYPE" == "y" ]; then
+        packages="$packages freetype"
+    fi
+
+    if [ "$CONFIG_HAVE_PIXMAN" == "y" ]; then
+        packages="$packages pixman"
+    fi
+
+    if [ "$CONFIG_HAVE_CAIRO" == "y" ]; then
+        packages="$packages cairo"
+    fi
+
+    if [ "$CONFIG_HAVE_BINUTILS" == "y" ]; then
+        packages="$packages binutils"
+    fi
+
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
 

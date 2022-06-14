@@ -296,7 +296,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
             switch(phdr.p_type) {
 
-                case PT_TLS:
                 case PT_LOAD:                    
 
                     DEBUG_ASSERT(phdr.p_vaddr);
@@ -330,7 +329,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-                    kprintf("sys_execve: PT_LOAD/PT_TLS at address(0x%lX) size(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+                    kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz);
@@ -340,6 +339,9 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
                     break;
 
+
+                case PT_TLS:
+                    continue;
 
                 case PT_GNU_EH_FRAME:
                     

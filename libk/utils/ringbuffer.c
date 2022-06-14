@@ -33,7 +33,7 @@
 
 
 
-void ringbuffer_init(ringbuffer_t* rb, size_t size, int flags) {
+void ringbuffer_init(ringbuffer_t* rb, size_t size) {
     
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(size);
@@ -43,7 +43,6 @@ void ringbuffer_init(ringbuffer_t* rb, size_t size, int flags) {
     rb->head   = 0;
     rb->tail   = 0;
     rb->full   = 0;
-    rb->flags  = flags;
 
     spinlock_init(&rb->lock);
 
@@ -121,11 +120,30 @@ size_t ringbuffer_available(ringbuffer_t* rb) {
 }
 
 
+size_t ringbuffer_writeable(ringbuffer_t* rb) {
+
+    DEBUG_ASSERT(rb);
+    DEBUG_ASSERT(rb->buffer);
+
+    if(rb->full)
+        return 0;
+
+    if(rb->head < rb->tail)
+        return rb->tail - rb->head;
+        
+    return rb->size - (rb->head - rb->tail);
+
+}
+
+
 int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
-    DEBUG_ASSERT(rb->flags & O_NONBLOCK);
+
+
+    if(ringbuffer_writeable(rb) < size)
+        return errno = EINTR, -1;
 
 
     size_t i;
@@ -157,8 +175,11 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
-    DEBUG_ASSERT(rb->flags & O_NONBLOCK);
 
+
+    if(ringbuffer_is_empty(rb))
+        return errno = EINTR, -1;
+    
 
     size_t i;
 
@@ -167,7 +188,7 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
         if(ringbuffer_is_empty(rb))
             break;
 
-
+    
         __lock(&rb->lock, {
 
             ((uint8_t*) buf) [i] = rb->buffer[rb->tail];

@@ -36,16 +36,12 @@
 |**TODO**|`kernel/network/core/ipv6/ip6.c`|process routing by the type|
 |**TODO**|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received|
 |**TODO**|`kernel/syscalls/000_read.c`|add network support|
-|**TODO**|`kernel/syscalls/000_read.c`|add poll support|
 |**TODO**|`kernel/syscalls/001_write.c`|add network support|
-|**TODO**|`kernel/syscalls/001_write.c`|add poll support|
 |**TODO**|`kernel/syscalls/008_lseek.c`|add network support|
 |**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|
 |**TODO**|`kernel/syscalls/016_ioctl.c`|add network support|
 |**TODO**|`kernel/syscalls/017_pread64.c`|add network support|
-|**TODO**|`kernel/syscalls/017_pread64.c`|add poll support|
 |**TODO**|`kernel/syscalls/018_pwrite64.c`|add network support|
-|**TODO**|`kernel/syscalls/018_pwrite64.c`|add poll support|
 |**TODO**|`kernel/syscalls/032_dup.c`|add network support|
 |**TODO**|`kernel/syscalls/033_dup2.c`|add network support|
 |**TODO**|`kernel/syscalls/033_dup2.c`|add network support|

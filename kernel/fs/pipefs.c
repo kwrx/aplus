@@ -129,7 +129,7 @@ inode_t* vfs_mkfifo(size_t bufsize, int flags) {
         return errno = ENOMEM, NULL;
 
 
-    ringbuffer_init(rb, bufsize, flags);
+    ringbuffer_init(rb, bufsize);
 
     inode->name[0]      = '\0';
     inode->ino          = __pipefs_next_ino++;

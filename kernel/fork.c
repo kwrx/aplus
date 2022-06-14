@@ -116,9 +116,10 @@ void do_unshare(int flags) {
     #undef __clone_property
 
 
-    if(flags & CLONE_VM)
+    if(flags & CLONE_VM) {
         arch_task_switch_address_space(current_task->address_space);
-
+    }
+    
 }
 
 
