@@ -81,7 +81,7 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
         return 0;
 
 
-    int e = 0;
+    ssize_t e = 0;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 

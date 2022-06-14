@@ -80,7 +80,7 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
     current_task->iostat.syscr += 1;
 
 
-    int e = 0;
+    ssize_t e = 0;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 

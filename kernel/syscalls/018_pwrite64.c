@@ -80,7 +80,7 @@ long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t
     current_task->iostat.syscw += 1;
 
 
-    int e = 0;
+    ssize_t e = 0;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
