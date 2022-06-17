@@ -194,11 +194,22 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         if(unlikely(!uio_check(frame, R_OK)))
             break;
 
-        if(unlikely(!uio_check(frame, S_OK)))
-            frame = uio_get_ptr(frame);            
+        if(unlikely(!uio_check(frame, S_OK))) {
 
-        frames[i] = frame->ip;
-        frame = frame->bp;
+#if defined(__x86_64__)
+            frames[i] = uio_r64((uintptr_t) frame + offsetof(struct stack, ip));
+            frame     = (struct stack*) uio_r64((uintptr_t) frame + offsetof(struct stack, bp));
+#else
+            frames[i] = uio_r32((uintptr_t) frame + offsetof(struct stack, ip));
+            frame     = (struct stack*) uio_r32((uintptr_t) frame + offsetof(struct stack, bp));
+#endif
+
+        } else {
+
+            frames[i] = frame->ip;
+            frame     = frame->bp;
+
+        }    
 
     }
 

@@ -264,7 +264,8 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
         /* Page Table */
         {
-            //DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
+            // TODO: add support for releasing pages when process is killed
+            // DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
 
 
             if(flags & ARCH_VMM_MAP_FIXED) {
@@ -282,7 +283,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-            // kprintf("arch_vmm_map(): virtaddr(%p) physaddr(%p) flags(%p) pagesize(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
+            // // kprintf("arch_vmm_map(): virtaddr(0x%lX) physaddr(0x%llX) flags(0x%lX) pagesize(0x%lX)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
 #endif
 
         }

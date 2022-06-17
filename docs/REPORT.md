@@ -11,9 +11,11 @@
 |**FIXME**|`drivers/virtio/virtio-console/main.c`|change values|
 |**FIXME**|`kernel/fs/tmpfs/tmpfs_readdir.c`|find a better way|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|
+|**FIXME**|`kernel/syscalls/257_openat.c`|normalize path from // to /|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|
 |**TODO**|`arch/x86-family/intr.c`|Handle User Exception|
 |**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|
+|**TODO**|`arch/x86-family/mm/vm_map.c`|add support for releasing pages when process is killed|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|
 |**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|

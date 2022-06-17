@@ -103,17 +103,6 @@
 
 
 
-#define uio_memcpy_u2s(d, s, l)     memcpy(d, uio_get_ptr(s), l)
-#define uio_memcpy_s2u(d, s, l)     memcpy(uio_get_ptr(d), s, l)
-#define uio_memcpy_u2u(d, s, l)     memcpy(uio_get_ptr(d), uio_get_ptr(s), l)
-
-#define uio_strcpy_u2s(d, s)        strcpy(d, uio_get_ptr(s))
-#define uio_strcpy_s2u(d, s)        strcpy(uio_get_ptr(d), s)
-#define uio_strcpy_u2u(d, s)        strcpy(uio_get_ptr(d), uio_get_ptr(s))
-
-#define uio_strlen(s)               strlen(uio_get_ptr(s))
-
-
 #define uio_r8(p)                   (*(uint8_t  volatile*)  (uio_get_ptr(p)))
 #define uio_r16(p)                  (*(uint16_t volatile*)  (uio_get_ptr(p)))
 #define uio_r32(p)                  (*(uint32_t volatile*)  (uio_get_ptr(p)))
@@ -126,10 +115,11 @@
 #define uio_w64(p, v)               { uio_r64(p)  = (uint64_t) (v);  }
 #define uio_wptr(p, v)              { uio_rptr(p) = (uintptr_t) (v); }
 
-
-
+#define uio_lock(ptr, size)         { arch_vmm_lock(current_task->address_space, (uintptr_t) (ptr), (size_t) (size)); }
+#define uio_unlock(ptr, size)       { arch_vmm_unlock(current_task->address_space, (uintptr_t) (ptr), (size_t) (size)); }
 
 __BEGIN_DECLS
+
 
 void arch_cpu_init(int);
 void arch_cpu_startup(int);
@@ -190,7 +180,166 @@ uintptr_t arch_vmm_unmap(vmm_address_space_t*, uintptr_t, size_t);
 uintptr_t arch_vmm_mprotect(vmm_address_space_t*, uintptr_t, size_t, int);
 int arch_vmm_access(vmm_address_space_t*, uintptr_t, int);
 uintptr_t arch_vmm_getphysaddr(vmm_address_space_t*, uintptr_t);
+void arch_vmm_lock(vmm_address_space_t*, uintptr_t, size_t);
+void arch_vmm_unlock(vmm_address_space_t*, uintptr_t, size_t);
 void arch_vmm_clone(vmm_address_space_t*, vmm_address_space_t*, int);
+
+
+
+
+
+
+static inline void uio_memcpy_u2s(void* dst, const void* __user src, size_t n) {
+    
+    size_t i = 0;
+
+    uintptr_t d = (uintptr_t) dst;
+    uintptr_t s = (uintptr_t) src;
+
+
+    // for(; i + 8 < n; i += 8) {
+    //     *(uint64_t*) (d + i) = uio_r64(s + i);
+    // }
+
+    // for(; i + 4 < n; i += 4) {
+    //     *(uint32_t*) (d + i) = uio_r32(s + i);
+    // }
+
+    // for(; i + 2 < n; i += 2) {
+    //     *(uint16_t*) (d + i) = uio_r16(s + i);
+    // }
+
+    for(; i < n; i++) {
+        *(uint8_t*)  (d + i) = uio_r8(s + i);
+    }
+
+}
+
+static inline void uio_memcpy_s2u(void* __user dst, const void* src, size_t n) {
+    
+    size_t i = 0;
+
+    uintptr_t d = (uintptr_t) dst;
+    uintptr_t s = (uintptr_t) src;
+
+
+    // for(; i + 8 < n; i += 8) {
+    //     uio_w64(d + i, *(uint64_t*) (s + i));
+    // }
+
+    // for(; i + 4 < n; i += 4) {
+    //     uio_w32(d + i, *(uint32_t*) (s + i));
+    // }
+
+    // for(; i + 2 < n; i += 2) {
+    //     uio_w16(d + i, *(uint16_t*) (s + i));
+    // }
+
+    for(; i < n; i++) {
+        uio_w8(d + i, *(uint8_t*) (s + i));
+    }
+
+}
+
+static inline void uio_memcpy_u2u(void* __user dst, const void* __user src, size_t n) {
+    
+    size_t i = 0;
+
+    uintptr_t d = (uintptr_t) dst;
+    uintptr_t s = (uintptr_t) src;
+
+
+    // for(; i + 8 < n; i += 8) {
+    //     uio_w64(d + i, uio_r64(s + i));
+    // }
+
+    // for(; i + 4 < n; i += 4) {
+    //     uio_w32(d + i, uio_r32(s + i));
+    // }
+
+    // for(; i + 2 < n; i += 2) {
+    //     uio_w16(d + i, uio_r16(s + i));
+    // }
+
+    for(; i < n; i++) {
+        uio_w8(d + i, uio_r8(s + i));
+    }
+
+}
+
+
+static inline void uio_strcpy_u2s(char* dst, const char* __user src) {
+
+    for(; uio_r8(src); src++, dst++) {
+        *dst = uio_r8(src);
+    }
+
+    *dst = '\0';
+
+}
+
+static inline void uio_strcpy_s2u(char* __user dst, const char* src) {
+
+    for(; *src; src++, dst++) {
+        uio_w8(dst, *src);
+    }
+
+    uio_w8(dst, '\0');
+
+}
+
+static inline void uio_strcpy_u2u(char* __user dst, const char* __user src) {
+
+    for(; uio_r8(src); src++) {
+        uio_w8(dst, uio_r8(src));
+    }
+
+    uio_w8(dst, '\0');
+
+}
+
+static inline void uio_strncpy_u2s(char* dst, const char* __user src, size_t size) {
+
+    for(; uio_r8(src) && --size; src++, dst++) {
+        *dst = uio_r8(src);
+    }
+
+    *dst = '\0';
+
+}
+
+static inline void uio_strncpy_s2u(char* __user dst, const char* src, size_t size) {
+
+    for(; *src && --size; src++, dst++) {
+        uio_w8(dst, *src);
+    }
+
+    uio_w8(dst, '\0');
+
+}
+
+static inline void uio_strncpy_u2u(char* __user dst, const char* __user src, size_t size) {
+
+    for(; uio_r8(src) && --size; src++, dst++) {
+        uio_w8(dst, uio_r8(src));
+    }
+
+    uio_w8(dst, '\0');
+
+}
+
+static inline size_t uio_strlen(const char* __user s) {
+
+    size_t k = 0;
+
+    for(; uio_r8(s); s++) {
+        k++;
+    }
+
+    return k;
+
+}
+
 
 
 __END_DECLS

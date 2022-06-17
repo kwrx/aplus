@@ -43,12 +43,12 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
 
-    #define PFE(reason)     \
-        { kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, reason); goto pfe; }
+    #define PFE(reason, entry)  \
+        { kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d) entry(0x%lX): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, entry, reason); goto pfe; }
 
 #else
 
-    #define PFE(reason)     \
+    #define PFE(reason)         \
         { goto pfe; }
 
 #endif
@@ -58,7 +58,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     uintptr_t pm = x86_get_cr3();
     
     if(unlikely(!pm))
-        PFE("no memory mapping");
+        PFE("no memory mapping", 0L);
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;
@@ -81,7 +81,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
         /* PML4-L3 */
         {
             if(*d == X86_MMU_CLEAR)
-                PFE("PML4-L3 doesn't not exist");
+                PFE("PML4-L3 doesn't not exist", *d);
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -93,7 +93,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
             /* PDP-L2 */
             {
                 if(*d == X86_MMU_CLEAR)
-                    PFE("PDP-L2 doesn't not exist");
+                    PFE("PDP-L2 doesn't not exist", *d);
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
             }
@@ -104,7 +104,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
                 /* PD-L1 */
                 {
                     if(*d == X86_MMU_CLEAR)
-                        PFE("PD-L1 doesn't not exist");
+                        PFE("PD-L1 doesn't not exist", *d);
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -144,11 +144,11 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
         {
 
             if(*d == X86_MMU_CLEAR)
-                PFE("page not present");
+                PFE("page not present", *d);
 
             // TODO: implement X86_MMU_PG_AP_TP_MMAP
             if(!(*d & X86_MMU_PG_AP_TP_COW))
-                PFE("page fault cannot be handled, no copy on write flags found");
+                PFE("page fault cannot be handled, no copy on write flags found", *d);
 
 
 

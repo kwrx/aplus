@@ -124,10 +124,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sys_execve: filename=%s\n", uio_get_ptr(filename));
-#endif
-
 
     int e;
 

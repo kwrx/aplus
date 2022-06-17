@@ -110,6 +110,30 @@ ssize_t pipefs_write(inode_t* inode, const void* buf, off_t offset, size_t size)
 
 }
 
+int pipefs_getattr(inode_t* inode, struct stat* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+    DEBUG_ASSERT(st);
+
+    ringbuffer_t* rb = (ringbuffer_t*) inode->userdata;
+
+    st->st_ino = inode->ino;
+    st->st_mode = S_IFIFO | 0666;
+    st->st_rdev = 0;
+    st->st_nlink = 1;
+    st->st_size = rb->size;
+    st->st_blksize = CONFIG_BUFSIZ;
+    st->st_blocks = (st->st_size + CONFIG_BUFSIZ - 1) / CONFIG_BUFSIZ;
+
+    st->st_mtime = arch_timer_gettime();
+    st->st_atime = arch_timer_gettime();
+    st->st_ctime = arch_timer_gettime();
+
+    return 0;
+
+}
+
 
 
 
@@ -140,6 +164,7 @@ inode_t* vfs_mkfifo(size_t bufsize, int flags) {
     inode->ops.close    = pipefs_close;
     inode->ops.read     = pipefs_read;
     inode->ops.write    = pipefs_write;
+    inode->ops.getattr  = pipefs_getattr;
 
     spinlock_init(&inode->lock);
 

@@ -83,15 +83,20 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
     ssize_t e = 0;
 
+
+    uio_lock(buf, size);
+
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, uio_get_ptr(buf), current_task->fd->descriptors[fd].ref->position, size)) <= 0)
+        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
             break;
 
         current_task->fd->descriptors[fd].ref->position += e;
         current_task->iostat.write_bytes += (uint64_t) e;
 
     });
+
+    uio_unlock(buf, size);
 
 
     if(errno == EINTR) {

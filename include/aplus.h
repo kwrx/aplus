@@ -190,6 +190,20 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #include <aplus/smp.h>
 
 
+#ifndef MAX
+#define MAX(a, b)                       ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef MIN
+#define MIN(a, b)                       ((a) < (b) ? (a) : (b))
+#endif
+
+
+#ifndef PATH_MAX
+#define PATH_MAX                        4096
+#endif
+
+
 #define CORE_MODULE_MAX                 1024
 
 

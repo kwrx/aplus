@@ -74,7 +74,6 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
         return -EPERM;
 
 
-
     current_task->iostat.rchar += (uint64_t) size;
     current_task->iostat.syscr += 1;
 
@@ -86,15 +85,20 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
     ssize_t e = 0;
 
+
+    uio_lock(buf, size);
+
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, uio_get_ptr(buf), current_task->fd->descriptors[fd].ref->position, size)) <= 0)
+        if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
             break;
 
         current_task->fd->descriptors[fd].ref->position += e;
         current_task->iostat.read_bytes += (uint64_t) e;
         
     });
+
+    uio_unlock(buf, size);
 
 
     if(errno == EINTR) {

@@ -61,9 +61,9 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
 
     // not supported    
+    PANIC_ON((flags & MAP_TYPE) == MAP_PRIVATE);
     PANIC_ON((flags & MAP_TYPE) != MAP_SHARED);
     PANIC_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
-    PANIC_ON((flags & MAP_TYPE) == MAP_PRIVATE);
 
     PANIC_ON(!(flags & MAP_FIXED));
     PANIC_ON(!(flags & MAP_FIXED_NOREPLACE));

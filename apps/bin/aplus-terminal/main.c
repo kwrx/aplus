@@ -390,6 +390,11 @@ int main(int argc, char** argv) {
         setenv("COLORFGBG", "7;0", 1);
 
 
+        if(dup2(context.pipefd[0], STDIN_FILENO) < 0) {
+            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            exit(1);
+        }
+
         if(dup2(context.pipefd[1], STDOUT_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
@@ -410,9 +415,9 @@ int main(int argc, char** argv) {
 
 
         if(cmd) {
-            execl("/bin/sh", "/bin/sh", "-c", cmd, NULL);
+            execl("/bin/bash", "/bin/bash", "-c", cmd, NULL);
         } else {
-            execl("/bin/sh", "/bin/sh", NULL);
+            execl("/bin/bash", "/bin/bash", NULL);
         }
 
         fprintf(stderr, "aplus-terminal: execl() failed: %s\n", strerror(errno));

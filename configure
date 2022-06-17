@@ -89,6 +89,10 @@ echo "## Get Packages"
         packages="$packages dash"
     fi
 
+    if [ "$CONFIG_HAVE_BASH" == "y" ]; then
+        packages="$packages bash"
+    fi
+
     if [ "$CONFIG_HAVE_ATERM" == "y" ]; then
         packages="$packages libtsm"
     fi

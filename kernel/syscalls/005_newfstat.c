@@ -55,13 +55,13 @@
 SYSCALL(5, newfstat,
 long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
 
-    if(fd > CONFIG_OPEN_MAX)
+    if(unlikely(fd > CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(!statbuf)
+    if(unlikely(!statbuf))
         return -EINVAL;
 
-    if(!uio_check(statbuf, R_OK | W_OK))
+    if(unlikely(!uio_check(statbuf, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))
@@ -70,16 +70,20 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
 
 
     int e;
+    struct stat __statbuf;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, statbuf);
+        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
 
     });
 
 
     if(e < 0)
         return -errno;
+
+
+    uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
 
     return 0;
 });
