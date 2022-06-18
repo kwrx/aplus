@@ -62,7 +62,7 @@ uintptr_t arch_vmm_gethugepagesize(uint64_t huge_type) {
         
     }
     
-    kpanicf("arch_vmm_gethugepagesize(): PANIC! unsupported huge_type: %p\n", huge_type);
+    kpanicf("arch_vmm_gethugepagesize(): PANIC! unsupported huge_type: %ld\n", huge_type);
     return 0UL;
 }
 

@@ -79,7 +79,7 @@ static ssize_t kmsg_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 
-    return -ENOSYS;
+    return 0;
 
 }
 

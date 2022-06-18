@@ -39,7 +39,6 @@
 
 
 
-
 void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int flags) {
 
     DEBUG_ASSERT(src);
@@ -74,7 +73,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
 
         size += pagesize >> 12;
 
-// FIXME: broken DEMAND_PAGING implementation
+// BUG: broken DEMAND_PAGING implementation
 // // #if defined(CONFIG_DEMAND_PAGING)
 // //         if(on_demand) {
             
@@ -193,7 +192,7 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
     memcpy(&dest->mmap.mappings, &src->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
 
 
-    spinlock_init(&dest->lock);
+    spinlock_init_with_flags(&dest->lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
 }
 

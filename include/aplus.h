@@ -42,46 +42,72 @@
 #include <stddef.h>
 
 #ifndef likely
-#define likely(cond)    __builtin_expect(!!(cond), 1)
+#define likely(cond)            __builtin_expect(!!(cond), 1)
 #endif
 
 #ifndef unlikely
-#define unlikely(cond)  __builtin_expect(!!(cond), 0)
+#define unlikely(cond)          __builtin_expect(!!(cond), 0)
 #endif
 
 #ifndef barrier
-#define barrier()       __asm__ __volatile__("" ::: "memory")
+#define barrier()               __asm__ __volatile__("" ::: "memory")
 #endif
-
 
 
 #ifndef __packed
-#define __packed        __attribute__((packed))
+#define __packed                __attribute__((packed))
 #endif
 
 #ifndef __pure
-#define __pure          __attribute__((pure))
+#define __pure                  __attribute__((pure))
 #endif
 
 #ifndef __weak
-#define __weak          __attribute__((weak))
+#define __weak                  __attribute__((weak))
 #endif
 
 #ifndef __deprecated
-#define __deprecated    __attribute__((deprecated))
+#define __deprecated            __attribute__((deprecated))
 #endif
 
 #ifndef __noreturn
-#define __noreturn      __attribute__((noreturn))
+#define __noreturn              __attribute__((noreturn))
 #endif
 
 #ifndef __alias
-#define __alias(s)      __attribute__((alias(#s)))
+#define __alias(s)              __attribute__((alias(#s)))
 #endif
 
+#ifndef __nosanitize
+#define __nosanitize(x)         __attribute__((no_sanitize(x)))
+#endif
 
-#define __PRAGMA(x)     _Pragma(#x)
-#define WARNING(x)      __PRAGMA(GCC diagnostic ignored x)
+#ifndef __aligned
+#define __aligned(x)            __attribute__((aligned(x)))
+#endif
+
+#ifndef __malloc
+#define __malloc                __attribute__((malloc))
+#endif
+
+#ifndef __alloc_size
+#define __alloc_size(x...)      __attribute__((alloc_size(x)))
+#endif
+
+#ifndef __section
+#define __section(x)            __attribute__((section(x)))
+#endif
+
+#ifndef __format
+#define __format(a, b, c)       __attribute__((format(a, b, c)))
+#endif
+
+#ifndef __returns_nonnull
+#define __returns_nonnull       __attribute__((returns_nonnull))
+#endif
+
+#define __PRAGMA(x)             _Pragma(#x)
+#define WARNING(x)              __PRAGMA(GCC diagnostic ignored x)
 
 
 
@@ -162,6 +188,20 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #if defined(KERNEL)
 #include <aplus/memory.h>
 #include <aplus/smp.h>
+
+
+#ifndef MAX
+#define MAX(a, b)                       ((a) > (b) ? (a) : (b))
+#endif
+
+#ifndef MIN
+#define MIN(a, b)                       ((a) < (b) ? (a) : (b))
+#endif
+
+
+#ifndef PATH_MAX
+#define PATH_MAX                        4096
+#endif
 
 
 #define CORE_MODULE_MAX                 1024

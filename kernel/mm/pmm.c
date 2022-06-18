@@ -89,7 +89,7 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
 
     if(end > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
+        kpanicf("pmm: PANIC! Memory Area (0x%lX-0x%lX) is greater than max memory available (%ld)\n", physaddr, end, pmm_max_memory);
 
 
 
@@ -144,7 +144,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
 
     if(end > pmm_max_memory)
-        kpanicf("pmm: PANIC! Memory Area (%p-%p) is greater than max memory available (%p)\n", physaddr, end, pmm_max_memory);
+        kpanicf("pmm: PANIC! Memory Area (0x%lX-0x%lX) is greater than max memory available (%ld)\n", physaddr, end, pmm_max_memory);
 
 
 
@@ -204,7 +204,7 @@ uintptr_t pmm_alloc_block() {
                 continue;
 
 
-            __lock(&pml2_lock[q], {
+            __lock(&pml2_lock[i], {
                 
                 for(j = 0; j < 64; j++) {
 
@@ -213,7 +213,7 @@ uintptr_t pmm_alloc_block() {
 
                         
                     pml1_bitmap[q] |= (1ULL << j);
-                    pml2_pusage[q]++;
+                    pml2_pusage[i]++;
 
                     r = (i * PML2_PAGESIZE) + (((q << 6ULL) + j) * PML1_PAGESIZE);
                     break;
@@ -231,6 +231,8 @@ uintptr_t pmm_alloc_block() {
 
 
 end:
+
+    DEBUG_ASSERT(r >= 0);
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_block() at %p\n", r);
@@ -275,7 +277,7 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
                 { c = 0; continue; }
 
 
-            __lock(&pml2_lock[q], {
+            __lock(&pml2_lock[i], {
                 
                 for(j = 0; j < 64; j++) {
 
@@ -301,6 +303,8 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
 
 
 end:
+
+    DEBUG_ASSERT(r >= 0);
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
@@ -351,7 +355,7 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
                 { c = 0; continue; }
 
 
-            __lock(&pml2_lock[q], {
+            __lock(&pml2_lock[i], {
                 
                 for(j = 0; j < 64; j++) {
 
@@ -378,6 +382,8 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
 
 
 end:
+
+    DEBUG_ASSERT(r >= 0);
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
@@ -453,19 +459,22 @@ void pmm_init(uintptr_t max_memory) {
     pmm_max_memory = max_memory;
 
 
-    int i;
-    for(i = 0; i < PML2_MAX_ENTRIES; i++) {
+    
+    for(size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
 
         pml2_bitmap[i] = 0;
         pml2_pusage[i] = 0;
 
-        spinlock_init_with_flags(&pml2_lock[i], SPINLOCK_FLAGS_CPU_OWNER);
+        if(i <= (pmm_max_memory / PML2_PAGESIZE)) {
+            spinlock_init_with_flags(&pml2_lock[i], SPINLOCK_FLAGS_CPU_OWNER);
+        }
 
     }
 
 
-    for(i = 0; i < PML1_MAX_ENTRIES; i++)
+    for(size_t i = 0; i < PML1_MAX_ENTRIES; i++) {
         pml1_first_bitmap[i] = 0;
+    }
 
     pml2_bitmap[0] = (uintptr_t) &pml1_first_bitmap;
 
@@ -473,7 +482,7 @@ void pmm_init(uintptr_t max_memory) {
 
 
     //! Claim Boot Memory Map areas
-    for(i = 0; i < core->mmap.count; i++) {
+    for(size_t i = 0; i < core->mmap.count; i++) {
 
         if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE)
             continue;
@@ -486,9 +495,9 @@ void pmm_init(uintptr_t max_memory) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
-        kprintf("mmap: address(%p) size(%p) type(%p)\n", core->mmap.ptr[i].address,
-                                                         core->mmap.ptr[i].length,
-                                                         core->mmap.ptr[i].type);
+        kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
+                                                              core->mmap.ptr[i].length,
+                                                              core->mmap.ptr[i].type);
 #endif
 
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
@@ -502,17 +511,17 @@ void pmm_init(uintptr_t max_memory) {
 
 
     //! Claim other page map memory blocks
-    for(i = 1; i < PML2_MAX_ENTRIES; i++) {
+    for(size_t i = 1; i < PML2_MAX_ENTRIES; i++) {
 
-        if(((uintptr_t) i * PML2_PAGESIZE) >= pmm_max_memory)
+        if(i <= (pmm_max_memory / PML2_PAGESIZE))
             break;
 
 
         uint64_t* b = (uint64_t*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
 
-        int j;
-        for(j = 0; j < PML1_MAX_ENTRIES; j++)
+        for(size_t j = 0; j < PML1_MAX_ENTRIES; j++) {
             b[j] = 0;
+        }
 
 
         pml2_bitmap[i] = (uintptr_t) b;
@@ -522,7 +531,7 @@ void pmm_init(uintptr_t max_memory) {
 
 
 #if defined(DEBUG)
-    kprintf("pmm: physical memory: %d KB\n", pmm_max_memory / 1024);
+    kprintf("pmm: physical memory: %ld KB\n", pmm_max_memory / 1024);
 #endif
 
 }

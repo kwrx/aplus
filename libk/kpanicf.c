@@ -35,11 +35,11 @@
 
 
 
-
 /*!
  * @brief Print formatted output to the debugger and halt.
  */
-__attribute__((noreturn))
+__noreturn
+__nosanitize("undefined")
 void kpanicf(const char* fmt, ...) {
 
     arch_intr_disable();
@@ -53,16 +53,15 @@ void kpanicf(const char* fmt, ...) {
     va_end(v);
 
 
-    kprintf_disable();
+    kprintf_mask(~(1 << current_cpu->id));
 
     int i;
-    for(i = 0; buf[i]; i++)
+    for(i = 0; buf[i]; i++) {
         arch_debug_putc(buf[i]);
-
-
+    }
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    //runtime_stacktrace();
+    runtime_stacktrace();
 #endif
 
     // TODO: implements arch_cpu_halt()

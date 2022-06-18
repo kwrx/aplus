@@ -39,15 +39,6 @@
 
 
 
-
-
-#ifndef PATH_MAX
-#define PATH_MAX        4096
-#endif
-
-#define __MIN(a, b)     ((a) < (b) ? (a) : (b))
-#define MIN(a, b)       __MIN((uintptr_t) (a), (uintptr_t) (b))
-
 #define ZERO(p)         memset(p, 0, sizeof(p))
 
 
@@ -102,7 +93,11 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
 }
 
 
+
 static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
+
+    DEBUG_ASSERT(cwd);
+    DEBUG_ASSERT(path);
 
 
     inode_t* c;
@@ -115,8 +110,11 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
     DEBUG_ASSERT(c);
 
 
+    while(path[0] == '/')
+        path++;
 
-    while(strchr(path, '/') && c) {
+
+    while(strchr(path, '/') && c) { //! FIXME: normalize path from // to /
          
         c = path_find(c, path, strcspn(path, "/")); 
         path = strchr(path, '/') + 1;
@@ -197,6 +195,10 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         return -EFAULT;
 
 
+    char __safe_filename[PATH_MAX];
+    uio_strncpy_u2s(__safe_filename, filename, PATH_MAX);
+
+
 
     inode_t* cwd;
     if(dfd == AT_FDCWD)
@@ -208,7 +210,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     inode_t* r;
 
-    if((r = path_lookup(cwd, uio_get_ptr(filename), flags, mode)) == NULL)
+    if((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
         return -errno;
 
 

@@ -82,9 +82,12 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                 futex_wait(current_task, kaddr, val, utime);
+                
+
+                arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
                 thread_suspend(current_task);
-                thread_postpone_resched(current_task);
+                thread_restart_sched(current_task);
                 
                 break;
 
@@ -153,7 +156,9 @@ long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint
 
 
                         futex_wait(current_task, kaddr, *kaddr, NULL);
-                        thread_postpone_resched(current_task);
+
+                        arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
+                        thread_restart_sched(current_task);
 
                     }
                 }

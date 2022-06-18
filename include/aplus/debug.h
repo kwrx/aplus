@@ -50,13 +50,12 @@
 
 __BEGIN_DECLS
 
-void kprintf(const char*, ...);
+void kprintf(const char*, ...) __format(printf, 1, 2);
 void kprintf_pause();
 void kprintf_resume();
-void kprintf_disable();
+void kprintf_mask(int);
 
-__attribute__((noreturn))
-void kpanicf(const char*, ...);
+void kpanicf(const char*, ...) __format(printf, 1, 2) __noreturn;
 
 __END_DECLS
 

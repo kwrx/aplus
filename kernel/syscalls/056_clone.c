@@ -62,6 +62,17 @@ long sys_clone(unsigned long flags, void *stack,
 #endif
 {
 
+    DEBUG_ASSERT(parent_tid);
+    DEBUG_ASSERT(child_tid);
+    
+
+    if(unlikely(uio_check(parent_tid, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(uio_check(child_tid, R_OK | W_OK)))
+        return -EFAULT;
+
+
     struct kclone_args args = {
         .flags          = (uint64_t) (flags & ~CSIGNAL),
         .pidfd          = (uint64_t) uio_get_ptr(parent_tid),
@@ -72,6 +83,12 @@ long sys_clone(unsigned long flags, void *stack,
         .tls            = (uint64_t) tls,
     };
 
-    return do_fork(&args, sizeof(args));
+    
+    pid_t pid;
+
+    if((pid = do_fork(&args, sizeof(args))) < 0)
+        return -errno;
+
+    return pid;
     
 });

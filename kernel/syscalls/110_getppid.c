@@ -48,5 +48,14 @@
 
 SYSCALL(110, getppid,
 long sys_getppid (void) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
+    if (likely(current_task->parent)) {
+        return current_task->parent->tgid;
+    } else {
+        return current_task->tgid;
+    }
+
 });

@@ -23,6 +23,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <fcntl.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -82,9 +83,14 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
             e = ringbuffer_write(&device->chr.buffer, buf, size);
 
-            if(ringbuffer_is_full(&device->chr.buffer))
-                if(likely(device->chr.flush))
+
+            if(ringbuffer_is_full(&device->chr.buffer)) {
+
+                if(likely(device->chr.flush)) {
                     device->chr.flush(device);
+                }
+
+            }
 
             return e;
 
@@ -94,6 +100,8 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
     }
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
+
+    return errno = EIO, -1;
 
 }
 
@@ -136,6 +144,8 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
 
+    return errno = EIO, -1;
+
 }
 
 
@@ -172,6 +182,8 @@ int char_flush(device_t* device) {
     }
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
+
+    return errno = EIO, -1;
 
 }
 

@@ -56,7 +56,7 @@ __dup(sighand, struct sighand*)
 
 static void* __dup_fd(struct fd* c) {
 
-    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd*), GFP_KERNEL);
+    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
 
     memcpy(r, c, sizeof(*c));
 
@@ -66,9 +66,8 @@ static void* __dup_fd(struct fd* c) {
         
         if(!r->descriptors[i].ref)
             continue;
-    
 
-        r->descriptors[i].ref->refcount++;
+        fd_ref(r->descriptors[i].ref);
 
     }
 
@@ -81,8 +80,6 @@ static void* __dup_fd(struct fd* c) {
 static void* __dup_address_space(vmm_address_space_t* space) {
 
     vmm_address_space_t* r = (vmm_address_space_t*) kcalloc(1, sizeof(vmm_address_space_t), GFP_KERNEL);
-
-    spinlock_init(&r->lock);
 
 
 #if defined(CONFIG_DEMAND_PAGING)
@@ -119,9 +116,10 @@ void do_unshare(int flags) {
     #undef __clone_property
 
 
-    if(flags & CLONE_VM)
+    if(flags & CLONE_VM) {
         arch_task_switch_address_space(current_task->address_space);
-
+    }
+    
 }
 
 
@@ -136,29 +134,29 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     if(args->stack == 0ULL) {
 
         if(unlikely(args->stack_size > 0ULL))
-            return -EINVAL;
+            return errno = EINVAL, -1;
 
     } else {
 
         // if(unlikely(args->stack_size == 0ULL))
-        //     return -EINVAL;
+        //     return errno = EINVAL, -1;
 
         if(unlikely(!uio_check(args->stack, R_OK | W_OK)))
-            return -EFAULT;
+            return errno = EFAULT, -1;
 
     }
 
 
     if(unlikely((args->flags & (CLONE_DETACHED | CSIGNAL)) == (CLONE_DETACHED | CSIGNAL)))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     if(unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
 
     // TODO: implements CLONE_VFORK
     if((unlikely(args->flags & CLONE_VFORK)))
-        return -ENOSYS;
+        return errno = ENOSYS, -1;
 
     
 
@@ -198,16 +196,15 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
     child->ustack = args->stack 
-                        ? (void*) args->stack 
-                        : (void*) current_cpu->ustack
-                        ;
+        ? (void*) args->stack 
+        : (void*) current_cpu->ustack
+        ;
 
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long) current_cpu->frame);
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
     
-
     sched_enqueue(child);
 
     return child->tid;

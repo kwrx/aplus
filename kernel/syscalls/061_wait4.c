@@ -58,14 +58,15 @@ struct rusage;
 SYSCALL(61, wait4,
 long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __user * rusage) {
     
-    if(status)
+    if(status) {
         if(unlikely(!uio_check(status, W_OK | R_OK)))
             return -EFAULT;
+    }
 
-    if(rusage)
+    if(rusage) {
         if(unlikely(!uio_check(rusage, W_OK | R_OK)))
             return -EFAULT;
-
+    }
 
 
     size_t count = 0;
@@ -94,7 +95,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
             continue_if(pid < -1, tmp->pgid != -pid);
             continue_if(pid == 0, tmp->pgid != current_task->pgid);
-            continue_if(pid >  0, tmp->tid != pid);
+            continue_if(pid >  0, tmp->tid  != pid);
             continue_if(pid == -1, 0);
 
             if(tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
@@ -107,11 +108,11 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
                 tmp->status == TASK_STATUS_ZOMBIE ) {
 
 
-                if(status)
-                    *status = tmp->exit.value;
+                if(current_task->wait_status)
+                    *current_task->wait_status = tmp->exit.value;
 
-                if(rusage)
-                    memcpy(rusage, &tmp->rusage, sizeof(struct rusage));
+                if(current_task->wait_rusage)
+                    memcpy(current_task->wait_rusage, &tmp->rusage, sizeof(struct rusage));
 
                 
                 pid_t tid = tmp->tid;
@@ -151,13 +152,13 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("wait: task %d waiting for %d tasks\n", current_task->tid, count);
+    kprintf("wait: task %d waiting for %ld tasks\n", current_task->tid, count);
 #endif
 
 
     thread_suspend(current_task);    
-    thread_postpone_resched(current_task);
-    thread_postpone_syscall(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
     
     return -EINTR;
 

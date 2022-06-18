@@ -128,7 +128,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         );
 
 
-        msix.msix_cap = caps;
+        msix.msix_cap  = caps;
         msix.msix_rows = (pci_msix_row_t volatile*) mmio;
 
 
@@ -232,12 +232,12 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
             continue;
         
 
-        pci_msix_devices[i].device = device;
+        pci_msix_devices[i].index   = index;
+        pci_msix_devices[i].device  = device;
         pci_msix_devices[i].handler = handler;
-        pci_msix_devices[i].data = data;
-        pci_msix_devices[i].index = index;
+        pci_msix_devices[i].data    = data;
 
-        arch_intr_map_intr(i + PCI_MSIX_INTR_BASE, pci_msix_interrupt_handler);
+        arch_intr_map_irq_without_ioapic(i + PCI_MSIX_INTR_BASE, pci_msix_interrupt_handler);
 
 
         msix->msix_rows[index].pr_address   = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12) | (1 << 14));
@@ -287,10 +287,10 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         __atomic_membarrier();
 
 
-        pci_msix_devices[i].device = 0;
+        pci_msix_devices[i].index   = 0;
+        pci_msix_devices[i].device  = 0;
         pci_msix_devices[i].handler = NULL;
-        pci_msix_devices[i].data = NULL;
-        pci_msix_devices[i].index = 0;
+        pci_msix_devices[i].data    = NULL;
 
 
         spinlock_unlock(&pci_msix_lock);

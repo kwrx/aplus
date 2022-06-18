@@ -29,8 +29,7 @@
 #include <aplus/smp.h>
 #include <aplus/hal.h>
 
-
-
+__returns_nonnull
 cpu_t* smp_get_current_cpu(void) {
 
     uint64_t id;
@@ -39,18 +38,20 @@ cpu_t* smp_get_current_cpu(void) {
         return &core->bsp;
     
 
+    
     DEBUG_ASSERT(id >= 0);
     DEBUG_ASSERT(id <= SMP_CPU_MAX - 1);
 
-    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED)
+    if(core->cpu.cores[id].flags & SMP_CPU_FLAGS_ENABLED) {
         return &core->cpu.cores[id];
+    }
 
 
-    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%d)\n", id);
-    return NULL;
+    kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
+
 }
 
-
+__returns_nonnull
 cpu_t* smp_get_cpu(int index) {
     
     DEBUG_ASSERT(index >= 0);

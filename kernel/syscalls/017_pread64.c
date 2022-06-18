@@ -75,26 +75,12 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
         return -EPERM;
 
 
-    // TODO: add poll support
-    // // if(unlikely(current_task->fd->descriptors[fd].flags & O_NONBLOCK)) {
-    // //     struct pollfd p;
-    // //     p.fd = fd;
-    // //     p.events = POLLIN;
-    // //     p.revents = 0;
-
-    // //     if(sys_poll(&p, 1, 0) < 0)
-    // //         return -EIO;
-
-    // //     if(!(p.revents & POLLIN))
-    // //         return -EAGAIN;
-    // // }
-
 
     current_task->iostat.rchar += (uint64_t) count;
     current_task->iostat.syscr += 1;
 
 
-    int e = 0;
+    ssize_t e = 0;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 

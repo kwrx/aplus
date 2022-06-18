@@ -85,10 +85,8 @@ static void init_framebuffer(void) {
 #endif
 
 
-
-    void* frame = (void*) fix.smem_start;
-
 #if defined(DEBUG)
+    void* frame = (void*) fix.smem_start;
     for(size_t i = 0; i < var.xres * var.yres; i++) {
         ((unsigned int*) frame)[i] = (unsigned int) (((double) i / (double) (var.xres * var.yres)) * 16777215.0) & 0x00FFFFFF;
     }
@@ -296,7 +294,7 @@ static void init_initd(void) {
     if(fork() == 0) {
     
 
-        execle("/bin/date", "/bin/date", NULL, environ);
+        execle("/bin/dash", "/bin/dash", "/etc/init", NULL, environ);
         exit(EXIT_FAILURE);
 
     } else {

@@ -323,7 +323,7 @@ extern "C" {
   */
 #ifndef PACK_STRUCT_STRUCT
 #if defined(__GNUC__) || defined(__clang__)
-#define PACK_STRUCT_STRUCT __attribute__((packed))
+#define PACK_STRUCT_STRUCT __packed
 #else
 #define PACK_STRUCT_STRUCT
 #endif

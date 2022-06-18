@@ -56,6 +56,12 @@ long sys_fork (void) {
         .exit_signal = SIGCHLD
     };
 
-    return do_fork(&args, sizeof(args));
+    
+    pid_t pid;
 
+    if((pid = do_fork(&args, sizeof(args))) < 0)
+        return -errno;
+
+    return pid;
+    
 });

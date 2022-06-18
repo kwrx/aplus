@@ -34,6 +34,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+extern long sys_pipe2(int*, int);
+
 
 /***
  * Name:        pipe
@@ -49,5 +51,5 @@
 
 SYSCALL(22, pipe,
 long sys_pipe (int __user * fildes) {
-    return -ENOSYS;
+    return sys_pipe2(fildes, 0);
 });

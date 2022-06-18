@@ -53,7 +53,7 @@
 #define EXT2_ID                     0xDEAD1001
 #define VFAT_ID                     0xDEAD1002
 
-#define FILE_MAX                    32768
+#define FILE_MAX                    8192
 
 
 typedef struct inode inode_t;
@@ -130,6 +130,12 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
+    struct {
+        short events;
+        short revents;
+        uint32_t futex;
+    } ev;
+
     HASHMAP(char, inode_t) dcache;
 
 };
@@ -203,14 +209,18 @@ int vfs_symlink (inode_t*, const char*, const char*);
 int vfs_unlink (inode_t*, const char*);
 
 
-// os/kernel/fs/cache.c
+// kernel/fs/pipefs.c
+inode_t* vfs_mkfifo(size_t, int);
+
+
+// kernel/fs/cache.c
 void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
 void vfs_cache_destroy(vfs_cache_t*);
 void* vfs_cache_get(vfs_cache_t*, ino_t);
 void vfs_cache_flush(vfs_cache_t*, ino_t);
 void vfs_cache_flush_all(vfs_cache_t*);
 
-// os/kernel/fs/dcache.c
+// kernel/fs/dcache.c
 void vfs_dcache_init(inode_t*);
 void vfs_dcache_free(inode_t*);
 void vfs_dcache_add(inode_t*, inode_t*);
@@ -218,13 +228,14 @@ void vfs_dcache_remove(inode_t*, inode_t*);
 inode_t* vfs_dcache_find(inode_t*, const char*);
 
 
-// os/kernel/fs/rootfs.c
+// kernel/fs/rootfs.c
 extern inode_t* vfs_root;
 void rootfs_init(void);
 
 
-// fs/fd.c
+// kernel/fs/fd.c
 void fd_init(void);
+void fd_ref(struct file*);
 void fd_remove(struct file*, int);
 struct file* fd_append(inode_t*, off_t, int);
 

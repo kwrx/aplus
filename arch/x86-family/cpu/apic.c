@@ -93,7 +93,7 @@ void apic_enable(void) {
         x86_cpuid(6, &a, &b, &c, &d);
 
         if(!(a & (1 << 2)))
-            kprintf("x86-apic: WARN! APIC timer may temporarily stop while the processor is in deep C-states\n", a);
+            kprintf("x86-apic: WARN! APIC timer may temporarily stop while the processor is in deep C-states: %ld\n", a);
     }
 #endif
 
@@ -154,7 +154,7 @@ void apic_enable(void) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-apic: Local APIC #%d initialized [base(%p), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, timer_ticks, x2apic);
+    kprintf("x86-apic: Local APIC #%d initialized [base(0x%X), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, timer_ticks, x2apic);
 #endif
 
 }
@@ -300,7 +300,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_LAPIC:
                     
-                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC: cpu (%d) id(%d) flags(%p)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC: cpu (%d) id(%d) flags(%X)\n",
                     p[2],
                     p[3],
                     *(uint32_t*) &p[4]
@@ -309,7 +309,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_IOAPIC:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: id(%d) address(%p) gsi(%d)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_IOAPIC: id(%d) address(0x%X) gsi(%d)\n",
                     p[2],
                     *(uint32_t*) &p[4],
                     *(uint32_t*) &p[8]
@@ -318,7 +318,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_INTERRUPT:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%p)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_INTERRUPT: bus(%d) irq(%d) gsi(%d) flags(%X)\n",
                     p[2],
                     p[3],
                     *(uint32_t*) &p[4],
@@ -328,7 +328,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_NMI:
 
-                kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%p) lint(%d)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_NMI: id(%d) flags(%X) lint(%d)\n",
                     p[2],
                     *(uint16_t*) &p[3],
                     p[5]
@@ -337,7 +337,7 @@ void apic_init(void) {
 
             case X86_MADT_ENTRY_LAPIC64:
             
-                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC64: address(%p)\n",
+                kprintf("x86-apic: X86_MADT_ENTRY_LAPIC64: address(0x%lX)\n",
                     *(uint64_t*) &p[4]
                 );
                 break;

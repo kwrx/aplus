@@ -16,6 +16,8 @@ export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 PROJECTS := kernel drivers apps
 TARGET	 := aplus.img
 
+REPORT   := docs/REPORT.md
+
 
 BUILDALL:   $(PROJECTS)
 	$(QUIET)for i in $^; do $(MAKE) -C $$i           || exit 1; done
@@ -35,15 +37,21 @@ install: $(TARGET) INSTALLALL
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
+	$(QUIET)echo "    GEN     $(REPORT)"
+	$(QUIET)./extra/utils/gen-report > $(REPORT)
+
 
 dist: $(TARGET) INSTALLALL
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)
 	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
+	$(QUIET)cp -r docs/requirements.txt      aplus-$(PLATFORM)
 	$(QUIET)cp -r extra/utils/run-qemu       aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r extra/utils/gen-grubcfg    aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r extra/utils/gen-image      aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r extra/utils/gen-report     aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r extra/utils/gen-pkg.py     aplus-$(PLATFORM)/utils
 	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM) 
 	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM) 
 	$(QUIET)zip     aplus-$(PLATFORM).zip    aplus-$(PLATFORM)

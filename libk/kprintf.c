@@ -34,12 +34,13 @@
 
 
 static spinlock_t buflock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
-static volatile int active = 1;
+static volatile int accmask = 0;
 
 
 /*!
  * @brief Print formatted output to the debugger.
  */
+__nosanitize("undefined")
 void kprintf(const char* fmt, ...) {
 
     char buf[CONFIG_BUFSIZ];
@@ -53,7 +54,7 @@ void kprintf(const char* fmt, ...) {
    __lock(&buflock, {
 
         int i;
-        for(i = 0; buf[i] && __atomic_load_n(&active, __ATOMIC_CONSUME); i++) {
+        for(i = 0; buf[i] && !((1 << current_cpu->id) & __atomic_load_n(&accmask, __ATOMIC_CONSUME)); i++) {
     
             arch_debug_putc(buf[i]);
 
@@ -72,6 +73,6 @@ void kprintf_resume(void) {
     spinlock_unlock(&buflock);
 }
 
-void kprintf_disable(void) {
-    __atomic_store_n(&active, 0, __ATOMIC_SEQ_CST);
+void kprintf_mask(int mask) {
+    __atomic_store_n(&accmask, mask, __ATOMIC_SEQ_CST);
 }

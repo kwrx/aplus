@@ -66,7 +66,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
         while(n->i_blocks < (pos + len) / ext2->blocksize + 1) {
 
             if(unlikely(inode->sb->st.f_bavail == 0))
-                return -ENOSPC;
+                return errno = ENOSPC, -1;
 
 
             ext2_utils_alloc_inode_data(ext2, blocks, n->i_blocks++);

@@ -181,11 +181,11 @@ typedef struct task {
     uid_t sid;
 
 
-    int status;
-    int policy;
-    int priority;
-    int flags;
-    int caps;
+    ssize_t status;
+    ssize_t policy;
+    ssize_t priority;
+    ssize_t flags;
+    ssize_t caps;
 
     cpu_set_t affinity;
 
@@ -205,7 +205,7 @@ typedef struct task {
         struct timespec timeout;
         struct timespec* remaining;
 
-        int expired;
+        bool expired;
     
     } sleep;
 
@@ -306,10 +306,10 @@ typedef struct task {
 } task_t;
 
 
-#define thread_postpone_resched(task)       \
+#define thread_restart_sched(task)          \
     task->flags |= TASK_FLAGS_NEED_RESCHED
 
-#define thread_postpone_syscall(task)       \
+#define thread_restart_syscall(task)        \
     task->flags |= TASK_FLAGS_NEED_SYSCALL_RESTART
 
 #define thread_suspend(task)                \
@@ -317,7 +317,6 @@ typedef struct task {
 
 #define thread_wake(task)                   \
     task->status = TASK_STATUS_READY
-
 
 
 

@@ -54,7 +54,7 @@ typedef uintptr_t mem_ptr_t;
 #define SZT_F "u"
 
 #define PACK_STRUCT_FIELD(x)                x
-#define PACK_STRUCT_STRUCT                  __attribute__((packed))
+#define PACK_STRUCT_STRUCT                  __packed
 #define PACK_STRUCT_BEGIN
 #define PACK_STRUCT_END
 

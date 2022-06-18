@@ -49,7 +49,7 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
     DEBUG_ASSERT(ino != 0);
     
     if(ino > ext2->sb.s_inodes_count)
-        kpanicf("%s() FAIL! ino(%d) > s_inodes_count(%d)", __func__, ino, ext2->sb.s_inodes_count);
+        kpanicf("%s() FAIL! ino(%ld) > s_inodes_count(%d)", __func__, ino, ext2->sb.s_inodes_count);
 
 
     struct ext2_group_desc d;
@@ -113,11 +113,12 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
     block -= b;
 
     if(block < (b * b)) {
+        
+        uint32_t p = block;
 
-        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / b), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (block % b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (p / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (p % b), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, offset, data, size);
-
         return;
 
     }
@@ -128,9 +129,11 @@ void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, 
 
     if(block < (b * b * b)) {
 
-        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (block / (b * b)), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &block, sizeof(uint32_t));
+        uint32_t p = block;
+
+        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (p / (b * b)), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((p % (b * b)) / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((p % (b * b)) % b), &block, sizeof(uint32_t));
         ext2_utils_read_block(ext2, block, offset, data, size);
         return;
 
@@ -184,8 +187,10 @@ void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block,
 
     if(block < (b * b)) {
 
-        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (block / b), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (block % b), &block, sizeof(uint32_t));
+        register uint32_t p = block;
+
+        ext2_utils_read_block(ext2, blocks[EXT2_DIND_BLOCK], sizeof(uint32_t) * (p / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * (p % b), &block, sizeof(uint32_t));
         ext2_utils_write_block(ext2, block, offset, data, size);
 
         return;
@@ -198,9 +203,11 @@ void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block,
 
     if(block < (b * b * b)) {
 
-        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (block / (b * b)), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) / b), &block, sizeof(uint32_t));
-        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((block % (b * b)) % b), &block, sizeof(uint32_t));
+        register uint32_t p = block;
+
+        ext2_utils_read_block(ext2, blocks[EXT2_TIND_BLOCK], sizeof(uint32_t) * (p / (b * b)), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((p % (b * b)) / b), &block, sizeof(uint32_t));
+        ext2_utils_read_block(ext2, block, sizeof(uint32_t) * ((p % (b * b)) % b), &block, sizeof(uint32_t));
         ext2_utils_write_block(ext2, block, offset, data, size);
         return;
 

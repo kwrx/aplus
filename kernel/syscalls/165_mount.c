@@ -77,14 +77,22 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
             return -EFAULT;
 
 
+
+    char __safe_dirname[PATH_MAX];
+    uio_strncpy_u2s(__safe_dirname, dir_name, PATH_MAX);
+
+    char __safe_type[PATH_MAX];
+    uio_strncpy_u2s(__safe_type, type, PATH_MAX);
+    
+
+
     inode_t* s = NULL;
     inode_t* d = NULL;
 
     int fd;
     int e;
 
-
-    if((fd = sys_open(uio_get_ptr(dir_name), O_RDONLY | O_DIRECTORY, 0)) < 0)
+    if((fd = sys_open(__safe_dirname, O_RDONLY | O_DIRECTORY, 0)) < 0)
         return fd;
 
     DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
@@ -115,8 +123,9 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
    
     DEBUG_ASSERT(d);
 
-    if(vfs_mount(s, d, uio_get_ptr(type), flags, (const char*) data) < 0)
+    if(vfs_mount(s, d, __safe_type, flags, (const char*) data) < 0)
         return -errno;
+
 
     return 0;
 });

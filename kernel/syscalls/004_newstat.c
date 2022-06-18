@@ -72,15 +72,15 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
     if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
         return fd;
     
-
     DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
 
 
     int e;
+    struct stat __statbuf;
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, statbuf);
+        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
 
     });
 
@@ -91,6 +91,9 @@ long sys_newstat (const char __user * filename, struct stat __user * statbuf) {
 
     if(e < 0)
         return -errno;
+
+
+    uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
 
     return 0;
     

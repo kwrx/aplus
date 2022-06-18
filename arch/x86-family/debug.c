@@ -31,6 +31,7 @@
 
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
+#include <arch/x86/intr.h>
 
 
 
@@ -158,11 +159,10 @@ void arch_debug_putc(char ch) {
 
 
 
-
 /*!
  * @brief Stacktrace.
  * 
- * ...
+ * Print stacktrace on Serial Port.
  */
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
     
@@ -194,8 +194,22 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         if(unlikely(!uio_check(frame, R_OK)))
             break;
 
-        frames[i] = frame->ip;
-        frame = frame->bp;
+        if(unlikely(!uio_check(frame, S_OK))) {
+
+#if defined(__x86_64__)
+            frames[i] = uio_r64((uintptr_t) frame + offsetof(struct stack, ip));
+            frame     = (struct stack*) uio_r64((uintptr_t) frame + offsetof(struct stack, bp));
+#else
+            frames[i] = uio_r32((uintptr_t) frame + offsetof(struct stack, ip));
+            frame     = (struct stack*) uio_r32((uintptr_t) frame + offsetof(struct stack, bp));
+#endif
+
+        } else {
+
+            frames[i] = frame->ip;
+            frame     = frame->bp;
+
+        }    
 
     }
 

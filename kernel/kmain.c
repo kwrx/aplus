@@ -62,9 +62,6 @@ void cmain(void* arg) {
 
 void kmain() {
 
-#if defined(CONFIG_HAVE_SMP)
-    __init(smp,     ());
-#endif
 
     __init(syscall, ());
     __init(vfs,     ());
@@ -80,6 +77,11 @@ void kmain() {
 
     __init(module,  ());
     __init(root,    ());
+
+
+#if defined(CONFIG_HAVE_SMP)
+    __init(smp,     ());
+#endif
 
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,

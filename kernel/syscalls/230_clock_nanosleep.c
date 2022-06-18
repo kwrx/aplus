@@ -77,12 +77,12 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
 
     if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec || current_task->sleep.expired)) {
 
-        int expired = current_task->sleep.expired;
+        bool expired = current_task->sleep.expired;
 
         current_task->sleep.timeout.tv_sec  = 0L;
         current_task->sleep.timeout.tv_nsec = 0L;
         current_task->sleep.remaining = NULL;
-        current_task->sleep.expired = 0;
+        current_task->sleep.expired = false;
         
         if(expired)
             return 0;
@@ -131,15 +131,16 @@ long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespe
     current_task->sleep.timeout.tv_sec =  (tss + rqtp.tv_sec);
     current_task->sleep.timeout.tv_nsec = (tsn + rqtp.tv_nsec) % 1000000000ULL;
 
-    if(__rmtp)
+    if(__rmtp) {
         current_task->sleep.remaining = uio_get_ptr(__rmtp);
-
-    current_task->sleep.expired = 0;
+    }
+    
+    current_task->sleep.expired = false;
 
 
     thread_suspend(current_task);
-    thread_postpone_resched(current_task);
-    thread_postpone_syscall(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
 
     
     return -EINTR;

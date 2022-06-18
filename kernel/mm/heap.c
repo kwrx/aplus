@@ -56,7 +56,8 @@ struct kmalloc_header {
 
 
 
-__attribute__((malloc))
+__malloc
+__alloc_size(1)
 void* kmalloc(size_t size, int gfp) {
 
     DEBUG_ASSERT(size);
@@ -67,7 +68,9 @@ void* kmalloc(size_t size, int gfp) {
     if(size & (PML1_PAGESIZE - 1))
         size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
 
+
     struct kmalloc_header* h;
+
     if(size == PML1_PAGESIZE)
         h = (struct kmalloc_header*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
     else
@@ -89,7 +92,8 @@ void* kmalloc(size_t size, int gfp) {
 }
 
 
-__attribute__((malloc))
+__malloc
+__alloc_size(1, 2)
 void* kcalloc(size_t n, size_t m, int gfp) {
 
     DEBUG_ASSERT(n);
@@ -104,7 +108,8 @@ void* kcalloc(size_t n, size_t m, int gfp) {
 }
 
 
-__attribute__((malloc))
+__malloc
+__alloc_size(2)
 void* krealloc(void* address, size_t size, int gfp) {
 
     DEBUG_ASSERT(address || size);

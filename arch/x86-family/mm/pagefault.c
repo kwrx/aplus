@@ -38,19 +38,17 @@
 #include <arch/x86/intr.h>
 
 
-
-
 void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
 
-    #define PFE(reason)     \
-        { kprintf("x86-pfe: FAULT! address(%p) cpu(%d) pid(%d): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, reason); goto pfe; }
+    #define PFE(reason, entry)  \
+        { kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d) entry(0x%lX): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, entry, reason); goto pfe; }
 
 #else
 
-    #define PFE(reason)     \
+    #define PFE(reason)         \
         { goto pfe; }
 
 #endif
@@ -60,7 +58,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     uintptr_t pm = x86_get_cr3();
     
     if(unlikely(!pm))
-        PFE("no memory mapping");
+        PFE("no memory mapping", 0L);
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;
@@ -83,7 +81,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
         /* PML4-L3 */
         {
             if(*d == X86_MMU_CLEAR)
-                PFE("PML4-L3 doesn't not exist");
+                PFE("PML4-L3 doesn't not exist", *d);
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -95,7 +93,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
             /* PDP-L2 */
             {
                 if(*d == X86_MMU_CLEAR)
-                    PFE("PDP-L2 doesn't not exist");
+                    PFE("PDP-L2 doesn't not exist", *d);
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
             }
@@ -106,7 +104,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
                 /* PD-L1 */
                 {
                     if(*d == X86_MMU_CLEAR)
-                        PFE("PD-L1 doesn't not exist");
+                        PFE("PD-L1 doesn't not exist", *d);
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -146,11 +144,11 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
         {
 
             if(*d == X86_MMU_CLEAR)
-                PFE("page not present");
+                PFE("page not present", *d);
 
             // TODO: implement X86_MMU_PG_AP_TP_MMAP
             if(!(*d & X86_MMU_PG_AP_TP_COW))
-                PFE("page fault cannot be handled, no copy on write flags found");
+                PFE("page fault cannot be handled, no copy on write flags found", *d);
 
 
 
@@ -175,6 +173,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
                       | X86_MMU_PG_AP_TP_PAGE
                       | ((*d & ~X86_MMU_ADDRESS_MASK) & ~(X86_MMU_PG_AP_TP_MASK));
 
+
         }
 
     }
@@ -184,7 +183,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-pfe: handled page fault! cs(%p), ip(%p), sp(%p), cr2(%p) cr3(%p) cpu(%d) pid(%d)\n", frame->cs, frame->ip, frame->sp, cr2, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+    kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
     return;
@@ -193,7 +192,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 pfe:
 
-    kpanicf("x86-pfe: PANIC! cr2(%p) cr3(%p) gs(%p) fs(%p) cpu(%d) pid(%d), cs(%p), ip(%p), sp(%p), errno(%p) [%s %s %s %s %s %s %s %s]\n",
+    kpanicf("x86-pfe: PANIC! cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",
         cr2, 
         x86_get_cr3(), 
         x86_rdgsbase(),
@@ -202,7 +201,14 @@ pfe:
         current_task ? current_task->tid : 0,
         frame->cs, 
         frame->ip, 
-        frame->sp, 
+        frame->sp,
+        frame->bp,
+        frame->ax,
+        frame->bx,
+        frame->cx,
+        frame->dx,
+        frame->si,
+        frame->di,
         frame->errno,
         frame->errno & X86_PF_P   ? "P"   : "NP",
         frame->errno & X86_PF_W   ? "W"   : "R",

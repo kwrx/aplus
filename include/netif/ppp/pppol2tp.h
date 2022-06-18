@@ -115,18 +115,18 @@ extern "C" {
 
 /* -- AVP - Host name */
 #define PPPOL2TP_AVPTYPE_HOSTNAME     7 /* Host name */
-#define PPPOL2TP_HOSTNAME        "lwIP" /* FIXME: make it configurable */
+#define PPPOL2TP_HOSTNAME        "lwIP" /* XXX: make it configurable */
 
 /* -- AVP - Vendor name */
 #define PPPOL2TP_AVPTYPE_VENDORNAME   8 /* Vendor name */
-#define PPPOL2TP_VENDORNAME      "lwIP" /* FIXME: make it configurable */
+#define PPPOL2TP_VENDORNAME      "lwIP" /* XXX: make it configurable */
 
 /* -- AVP - Assign tunnel ID */
 #define PPPOL2TP_AVPTYPE_TUNNELID     9 /* Assign Tunnel ID */
 
 /* -- AVP - Receive window size */
 #define PPPOL2TP_AVPTYPE_RECEIVEWINDOWSIZE  10 /* Receive window size */
-#define PPPOL2TP_RECEIVEWINDOWSIZE           8 /* FIXME: make it configurable */
+#define PPPOL2TP_RECEIVEWINDOWSIZE           8 /* XXX: make it configurable */
 
 /* -- AVP - Challenge */
 #define PPPOL2TP_AVPTYPE_CHALLENGE   11 /* Challenge */

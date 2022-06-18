@@ -55,8 +55,6 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
     
     DEBUG_ASSERT((frame));
 
-
-
 // #if defined(DEBUG) && DEBUG_LEVEL >= 4
 
 //     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) sp(%p) ss(%p)\n",
@@ -72,15 +70,18 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 // #endif
 
 
-    if(likely(frame->intno >= 0x20))
+    if(likely(frame->intno >= 0x20)) {
+        
         current_cpu->frame = frame;
+    
+    }
 
 
 
     switch(frame->intno) {
 
         case 0xFF:
-            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%d\n", arch_cpu_get_current_id());
+            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%ld\n", arch_cpu_get_current_id());
             break;
 
 
@@ -102,7 +103,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
             else {
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
-                kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", frame->intno - 0x20);
+                kprintf("x86-intr: WARN! unhandled IRQ #%ld caught, ignoring\n", frame->intno - 0x20);
 #endif
             }  
 
@@ -131,7 +132,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
         case 0x02:
 
             // TODO: Handle NMI Interrupts
-            kpanicf("x86-nmi: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p), cpu(%d)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
+            kpanicf("x86-nmi: PANIC! exception(%ld), errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), cpu(%ld)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, frame->bp, current_cpu->id);
             break;
 
         case 0x0E:
@@ -142,7 +143,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
         default:
 
             // TODO: Handle User Exception
-            kpanicf("x86-intr: PANIC! exception(%p), errno(%p), cs(%p), ip(%p), sp(%p) cpu(%d)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
+            kpanicf("x86-intr: PANIC! exception(%ld), errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), cpu(%ld)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, frame->bp, current_cpu->id);
             break;
 
     }
@@ -174,11 +175,11 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
 void arch_intr_enable(long s) {
 
-    if(likely(s))
+    if(likely(s)) {
         __asm__ __volatile__ ("sti");
-
+    }
+    
 }
-
 
 
 long arch_intr_disable(void) {
@@ -214,7 +215,7 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
 
 
     if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%p), already owned by %p\n", irq, startup_irq[irq].handler);
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
 
 
     startup_irq[irq].handler = handler;
@@ -224,7 +225,7 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: map irq(%p) at %p\n", irq, handler);
+    kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
 #endif
 
 }
@@ -242,32 +243,32 @@ void arch_intr_unmap_irq(irq_t irq) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: unmap irq(%p)\n", irq);
+    kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 
 }
 
 
-void arch_intr_map_intr(irq_t irq, void (*handler) (void*, irq_t)) {
+void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t)) {
     
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);
 
 
     if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%p), already owned by %p\n", irq, startup_irq[irq].handler);
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
 
     
     startup_irq[irq].handler = handler;    
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: map intr(%p) at %p\n", irq, handler);
+    kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
 #endif
 
 }
 
-void arch_intr_unmap_intr(irq_t irq) {
+void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(startup_irq[irq].handler != NULL);
@@ -277,7 +278,7 @@ void arch_intr_unmap_intr(irq_t irq) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: unmap irq(%p)\n", irq);
+    kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 
 }

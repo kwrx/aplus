@@ -25,7 +25,9 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/memory.h>
+#include <aplus/errno.h>
 #include <stdint.h>
+#include <fcntl.h>
 
 #include <aplus/utils/ringbuffer.h>
 
@@ -37,10 +39,10 @@ void ringbuffer_init(ringbuffer_t* rb, size_t size) {
     DEBUG_ASSERT(size);
 
     rb->buffer = (uint8_t*) kmalloc(size, GFP_KERNEL);
-    rb->size = size;
-    rb->head = 0;
-    rb->tail = 0;
-    rb->full = 0;
+    rb->size   = size;
+    rb->head   = 0;
+    rb->tail   = 0;
+    rb->full   = 0;
 
     spinlock_init(&rb->lock);
 
@@ -118,29 +120,53 @@ size_t ringbuffer_available(ringbuffer_t* rb) {
 }
 
 
+size_t ringbuffer_writeable(ringbuffer_t* rb) {
+
+    DEBUG_ASSERT(rb);
+    DEBUG_ASSERT(rb->buffer);
+
+    if(rb->full)
+        return 0;
+
+    if(rb->head < rb->tail)
+        return rb->tail - rb->head;
+        
+    return rb->size - (rb->head - rb->tail);
+
+}
+
+
 int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
 
-    __lock(&rb->lock, {
+    if(ringbuffer_writeable(rb) < size)
+        return errno = EINTR, -1;
 
-        for(size_t i = 0; i < size; i++) {
 
+    size_t i;
+
+    for(i = 0; i < size; i++) {
+
+        if(ringbuffer_is_full(rb))
+            break;
+
+
+        __lock(&rb->lock, {
+        
             rb->buffer[rb->head] = ((uint8_t*) buf) [i];
-
-            if(rb->full)
-                rb->tail = (rb->tail + 1) % rb->size;
 
             rb->head = (rb->head + 1) % rb->size;
             rb->full = (rb->head == rb->tail);
 
-        }
+        });
 
-    });
+    }
 
-    return size;
+
+    return i;
 
 }
 
@@ -151,23 +177,29 @@ int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
     DEBUG_ASSERT(rb->buffer);
 
 
+    if(ringbuffer_is_empty(rb))
+        return errno = EINTR, -1;
+    
+
     size_t i;
 
-    __lock(&rb->lock, {
+    for(i = 0; i < size; i++) {
 
-        for(i = 0; i < size; i++) {
+        if(ringbuffer_is_empty(rb))
+            break;
 
-            if(ringbuffer_is_empty(rb))
-                break;
-
+    
+        __lock(&rb->lock, {
 
             ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
 
             rb->full = 0;
             rb->tail = (rb->tail + 1) % rb->size;
-        }
 
-    });
+        });
+
+    }
+
 
     return i;
 

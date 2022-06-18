@@ -154,7 +154,7 @@ LWIP_MEMPOOL_PROTOTYPE(PPPAPI_MSG);
 #endif
 LWIP_MEMPOOL_DECLARE(PPP_PCB, MEMP_NUM_PPP_PCB, sizeof(ppp_pcb), "PPP_PCB")
 
-/* FIXME: add stats per PPP session */
+/* XXX: add stats per PPP session */
 #if PPP_STATS_SUPPORT
 static struct timeval start_time; /* Time when link was started. */
 static struct pppd_stats old_link_stats;
@@ -1243,7 +1243,7 @@ int sif6addr(ppp_pcb *pcb, eui64_t our_eui64, eui64_t his_eui64) {
   IN6_LLADDR_FROM_EUI64(ip6, our_eui64);
   netif_ip6_addr_set(pcb->netif, 0, &ip6);
   netif_ip6_addr_set_state(pcb->netif, 0, IP6_ADDR_PREFERRED);
-  /* FIXME: should we add an IPv6 static neighbor using his_eui64 ? */
+  /* XXX: should we add an IPv6 static neighbor using his_eui64 ? */
   return 1;
 }
 
@@ -1405,7 +1405,7 @@ ccp_fatal_error(ppp_pcb *pcb)
  * get_idle_time - return how long the link has been idle.
  */
 int get_idle_time(ppp_pcb *pcb, struct ppp_idle *ip) {
-  /* FIXME: add idle time support and make it optional */
+  /* XXX: add idle time support and make it optional */
   LWIP_UNUSED_ARG(pcb);
   LWIP_UNUSED_ARG(ip);
   return 1;

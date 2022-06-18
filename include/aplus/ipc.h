@@ -28,6 +28,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <stdbool.h>
 #include <time.h>
 
 
@@ -75,8 +76,8 @@
 
 #define SPINLOCK_INIT                   { { 0L }, 0ULL, -1ULL, 0, 0 }
 #define SPINLOCK_INIT_WITH_FLAGS(p)     { { 0L }, 0ULL, -1ULL, 0 | (p), 0 }
-#define SPINLOCK_FLAGS_CPU_OWNER        (1 << 30)
-#define SPINLOCK_FLAGS_RECURSIVE        (1 << 31)
+#define SPINLOCK_FLAGS_CPU_OWNER        (1U << 30)
+#define SPINLOCK_FLAGS_RECURSIVE        (1U << 31)
 
 
 #define SEMAPHORE_INIT                  0L
@@ -87,6 +88,7 @@
 typedef volatile long semaphore_t;
 
 typedef volatile struct {
+
     union {
         volatile char value;
         volatile uint64_t __padding;
@@ -122,19 +124,33 @@ struct task;
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
 
+void __spinlock_init(spinlock_t*, const char*, const char*, int);
+void __spinlock_init_with_flags(spinlock_t*, int, const char*, const char*, int);
+
 void __spinlock_lock(spinlock_t*, const char*, const char*, int);
 void __spinlock_unlock(spinlock_t*, const char*, const char*, int);
 void __sem_wait(semaphore_t*, const char*, const char*, int);
 
-#define spinlock_lock(spin) \
+
+#define spinlock_init(spin)                                                     \
+     __spinlock_init(spin, __func__, __FILE__, __LINE__);
+     
+#define spinlock_init_with_flags(spin, flags)                                   \
+     __spinlock_init_with_flags(spin, flags, __func__, __FILE__, __LINE__);
+
+#define spinlock_lock(spin)                                                     \
      __spinlock_lock(spin, __func__, __FILE__, __LINE__);
-#define spinlock_unlock(spin) \
+
+#define spinlock_unlock(spin)                                                   \
      __spinlock_unlock(spin, __func__, __FILE__, __LINE__);
 
-#define sem_wait(sem)       \
+#define sem_wait(sem)                                                           \
     __sem_wait(sem, __func__, __FILE__, __LINE__);
 
 #else
+
+void spinlock_init(spinlock_t*);
+void spinlock_init_with_flags(spinlock_t*, int);
 
 void spinlock_lock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
@@ -142,8 +158,6 @@ void sem_wait(semaphore_t*);
 
 #endif
 
-void spinlock_init(spinlock_t*);
-void spinlock_init_with_flags(spinlock_t*, int);
 int spinlock_trylock(spinlock_t*);
 
 void sem_init(semaphore_t*, long);
@@ -155,7 +169,7 @@ void futex_rt_unlock(void);
 void futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*);
 size_t futex_wakeup(uint32_t*, size_t);
 size_t futex_requeue(uint32_t*, uint32_t*, size_t);
-int futex_expired(futex_t*);
+bool futex_expired(futex_t*);
 
 __END_DECLS
 

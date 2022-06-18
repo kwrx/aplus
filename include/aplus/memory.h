@@ -94,11 +94,12 @@ typedef struct {
 
 
 typedef struct vmm_address_space {
-    
+
     uintptr_t pm;
     size_t size;
-    int refcount;
+    size_t refcount;
 
+    
     struct {
 
         uintptr_t heap_start;
@@ -127,9 +128,10 @@ uint64_t pmm_get_used_memory();
 void pmm_init(uintptr_t);
 
 
-void* kmalloc(size_t, int);
-void* kcalloc(size_t, size_t, int);
-void* krealloc(void*, size_t, int);
+void* kmalloc(size_t, int)         __malloc __alloc_size(1);
+void* kcalloc(size_t, size_t, int) __malloc __alloc_size(1, 2);
+void* krealloc(void*, size_t, int) __malloc __alloc_size(2);
+
 void kfree(void*);
 
 __END_DECLS

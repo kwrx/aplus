@@ -53,6 +53,7 @@ void ringbuffer_reset(ringbuffer_t* rb);
 int ringbuffer_is_full(ringbuffer_t* rb);
 int ringbuffer_is_empty(ringbuffer_t* rb);
 size_t ringbuffer_available(ringbuffer_t* rb);
+size_t ringbuffer_writeable(ringbuffer_t* rb);
 int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
 int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
 

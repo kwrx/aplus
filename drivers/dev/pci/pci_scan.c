@@ -107,9 +107,9 @@ static void pci_scan_slot(pci_func_t fn, int type, int bus, int slot, void* arg)
 
 static void pci_scan_bus(pci_func_t fn, int type, int bus, void* arg) {
 
-    int i;
-    for(i = 0; i < 32; i++)
+    for(size_t i = 0; i < 32; i++) {
         pci_scan_slot(fn, type, bus, i, arg);
+    }
 
 }
 

@@ -272,6 +272,7 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.ioctl = device_ioctl;
     i->ops.fsync = device_fsync;
     
+    device->inode = i;
 
 
     switch(device->type) {

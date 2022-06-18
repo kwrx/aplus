@@ -99,10 +99,10 @@ MODULE_LICENSE("GPL");
 
 #define AHCI_HBA_SIZE                   (0x1100)
 
-#define AHCI_HBA_GHC_AE                 (1 << 31)
-#define AHCI_HBA_GHC_MRSM               (1 << 2)
-#define AHCI_HBA_GHC_IE                 (1 << 1)
-#define AHCI_HBA_GHC_HR                 (1 << 0)
+#define AHCI_HBA_GHC_AE                 (1U << 31)
+#define AHCI_HBA_GHC_MRSM               (1U << 2)
+#define AHCI_HBA_GHC_IE                 (1U << 1)
+#define AHCI_HBA_GHC_HR                 (1U << 0)
 
 #define AHCI_HBA_CAPS_EXT_BOH           (1 << 0)
 
@@ -972,7 +972,8 @@ static void sata_reset(device_t* device) {
     ahci->hba->ports[i].cmd |= AHCI_PORT_CMD_ST;
 
 
-    /* HACK: see AHCI 1.3.1 - pg 114, 10.4.1 */
+    /* TODO: see AHCI 1.3.1 - pg 114, 10.4.1 */
+
 }
 
 
@@ -1302,7 +1303,7 @@ void init(const char* args) {
         long i;
         for(i = 0; i < 32; i++) {
 
-            if(!(p & (1 << i)))
+            if(!(p & (1UL << i)))
                 continue;
 
 
@@ -1413,7 +1414,7 @@ void init(const char* args) {
         /* ATA Devices */
         for(i = 0; i < 32; i++) {
 
-            if(!(q & (1 << i)))
+            if(!(q & (1UL << i)))
                 continue;
 
 
@@ -1452,7 +1453,7 @@ void init(const char* args) {
         /* ATAPI Devices */
         for(i = 0; i < 32; i++) {
 
-            if(!(w & (1 << i)))
+            if(!(w & (1UL << i)))
                 continue;
 
 

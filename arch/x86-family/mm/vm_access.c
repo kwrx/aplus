@@ -149,6 +149,10 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
                 if(!(*d & X86_MMU_PG_RW))
                     if((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW)
                         e = -1;
+
+            if(mode & S_OK)
+                if( (*d & X86_MMU_PG_U))
+                    e = -1;
                     
         }
 

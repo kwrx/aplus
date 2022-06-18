@@ -25,6 +25,7 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
+#include <poll.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -253,9 +254,25 @@ ssize_t vfs_read (inode_t* inode, void* buf, off_t off, size_t size) {
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    if(likely(inode->ops.read))
-        __lock_return(&inode->lock, ssize_t, inode->ops.read(inode, buf, off, size));
-    
+    if(likely(inode->ops.read)) {
+
+        __lock_return(&inode->lock, ssize_t, ({
+
+            ssize_t e = inode->ops.read(inode, buf, off, size);
+
+            if(inode->ev.events & POLLOUT) {
+
+                inode->ev.revents |= POLLOUT;
+                inode->ev.futex   |= 1;
+
+            }
+
+            e;
+
+        }));
+
+    }
+
     return errno = ENOSYS, -1;
 
 }
@@ -267,8 +284,25 @@ ssize_t vfs_write (inode_t* inode, const void* buf, off_t off, size_t size) {
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    if(likely(inode->ops.write))
-        __lock_return(&inode->lock, ssize_t, inode->ops.write(inode, buf, off, size));
+
+    if(likely(inode->ops.write)) {
+
+        __lock_return(&inode->lock, ssize_t, ({
+
+            ssize_t e = inode->ops.write(inode, buf, off, size);
+
+            if(inode->ev.events & POLLIN) {
+
+                inode->ev.revents |= POLLIN;
+                inode->ev.futex   |= 1;
+
+            }
+
+            e;
+
+        }));
+
+    }
 
     return errno = ENOSYS, -1;
 
@@ -304,9 +338,9 @@ inode_t* vfs_creat (inode_t* inode, const char* name, mode_t mode) {
 
     if(likely(inode->ops.creat)) {
 
-        inode_t* r = NULL;
+        __lock_return(&inode->lock, inode_t*, ({
 
-        __lock(&inode->lock, {
+            inode_t* r = NULL;
             
             if((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
@@ -314,10 +348,10 @@ inode_t* vfs_creat (inode_t* inode, const char* name, mode_t mode) {
                     vfs_dcache_add(inode, r);
 
             }
-        
-        });
 
-        return r;
+            r;
+        
+        }));
 
     }
 

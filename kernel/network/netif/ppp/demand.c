@@ -113,7 +113,7 @@ demand_conf()
     for (i = 0; (protp = protocols[i]) != NULL; ++i)
 	if (protp->demand_conf != NULL)
 	    ((*protp->demand_conf)(pcb));
-/* FIXME: find a way to die() here */
+/* XXX: find a way to die() here */
 #if 0
 	    if (!((*protp->demand_conf)(pcb)))
 		die(1);

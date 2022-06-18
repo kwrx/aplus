@@ -63,7 +63,7 @@ interrupt_common:
 
         # Call Exception Handler
         .extern x86_exception_handler
-        STDCALL(x86_exception_handler)
+        callq   x86_exception_handler
 
         movq    %rax, %rsp
 

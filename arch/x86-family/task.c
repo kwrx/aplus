@@ -191,7 +191,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
     if(likely(prev != next)) {
-        
+         
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
@@ -239,27 +239,26 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
 
-    task->argv = current_task->argv;
+    task->argv    = current_task->argv;
     task->environ = current_task->environ;
 
-    task->tid   = 
-    task->tgid  = sched_nextpid();
-    task->pgid  = current_task->pgid;
-    task->uid   = current_task->uid;
-    task->euid  = current_task->euid;
-    task->gid   = current_task->gid;
-    task->egid  = current_task->egid;
-    task->sid   = current_task->sid;
+    task->tid  = 
+    task->tgid = sched_nextpid();
+    task->pgid = current_task->pgid;
+    task->uid  = current_task->uid;
+    task->euid = current_task->euid;
+    task->gid  = current_task->gid;
+    task->egid = current_task->egid;
+    task->sid  = current_task->sid;
 
-    task->status    = TASK_STATUS_READY;
-    task->policy    = current_task->policy;
-    task->priority  = current_task->priority;
-    task->caps      = current_task->caps;
-    task->flags     = 0;
+    task->status   = TASK_STATUS_READY;
+    task->policy   = current_task->policy;
+    task->priority = current_task->priority;
+    task->caps     = current_task->caps;
+    task->flags    = 0;
 
     CPU_ZERO(&task->affinity);
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
-    
 
 
 
@@ -267,19 +266,19 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
         (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
 
 
-    task->frame         = _(sizeof(interrupt_frame_t), 0);
-    task->sstack        = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
-    task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
-    task->ustack        = NULL;
-    task->fpu           = fpu_new_state();
+    task->frame  = _(sizeof(interrupt_frame_t), 0);
+    task->sstack = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
+    task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack = NULL;
+    task->fpu    = fpu_new_state();
 
     #undef _
 
 
-    FRAME(task)->cs     = KERNEL_CS;
-    FRAME(task)->flags  = 0x202;
-    FRAME(task)->sp     = (uintptr_t) task + sizeof(task_t) + stacksize;
-    FRAME(task)->ss     = KERNEL_DS;
+    FRAME(task)->cs    = KERNEL_CS;
+    FRAME(task)->flags = 0x202;
+    FRAME(task)->sp    = (uintptr_t) task + sizeof(task_t) + stacksize;
+    FRAME(task)->ss    = KERNEL_DS;
 
 
     spinlock_init(&task->lock);
@@ -341,7 +340,6 @@ pid_t arch_task_spawn_init() {
     core->bsp.address_space.refcount++;
 
 
-
     task->address_space->mmap.heap_start = KERNEL_MMAP_AREA;
     task->address_space->mmap.heap_end   = KERNEL_MMAP_AREA;
 
@@ -371,9 +369,10 @@ pid_t arch_task_spawn_init() {
 
 
     int j;
-    for(j = 0; j < RLIM_NLIMITS; j++)
+    for(j = 0; j < RLIM_NLIMITS; j++) {
         task->rlimits[j].rlim_cur =
         task->rlimits[j].rlim_max = RLIM_INFINITY;
+    }
 
     task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
 
@@ -399,7 +398,7 @@ pid_t arch_task_spawn_init() {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn init process pid(%d) cpu(%d) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
+    kprintf("task: spawn init process pid(%d) cpu(%ld) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
 #endif
 
 
@@ -485,7 +484,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 1
-    kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%p)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
+    kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%lX)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
 #endif
 
     sched_enqueue(task);
@@ -504,7 +503,7 @@ void arch_task_context_set(task_t* task, int options, long value) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("task: set context tid(%d) options(%d) value(%p)\n", task->tid, options, value);
+    kprintf("task: set context tid(%d) options(%d) value(0x%lX)\n", task->tid, options, value);
 #endif
 
 

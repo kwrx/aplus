@@ -41,47 +41,42 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsinfo);
     DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
     
     DEBUG_ASSERT(e);
 
+    if(unlikely(count == 0))
+        return 0;
  
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
 
 
-    
-    int i;
-    for(i = 0; i < count; i++) {
+    int i = 0;
 
-        int p = pos;
+    list_each(tmpfs->children, d) {
 
-        list_each(tmpfs->children, d) {
+        if(d->parent != inode)
+            continue;
 
-            if(likely(d->parent != inode))
-                continue;
-            
-            if(p--)
-                continue;
+        if(pos-- > 0)
+            continue;
 
 
-            tmpfs_inode_t* c = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
+        tmpfs_inode_t* c = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
 
-            e[i].d_ino = c->st.st_ino;
-            e[i].d_off = pos;
-            e[i].d_reclen = sizeof(struct dirent);
-            e[i].d_type = c->st.st_mode >> 12; /* FIXME: find a better way */
-            strncpy(e[i].d_name, d->name, CONFIG_MAXNAMLEN);
+        e[i].d_ino = c->st.st_ino;
+        e[i].d_off = pos;
+        e[i].d_reclen = sizeof(struct dirent);
+        e[i].d_type = c->st.st_mode >> 12; /* FIXME: find a better way */
+        strncpy(e[i].d_name, d->name, sizeof(e[i].d_name));
 
-            p = 1;
-            break;
-        }
-
-        if(p == 0)
+        if(++i == count)
             break;
 
-        pos++;
     }
 
     return i;
+    
 }

@@ -24,6 +24,7 @@
  */                                                                     
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <time.h>
 #include <signal.h>
 #include <sys/wait.h>
@@ -42,9 +43,6 @@
 
 
 extern long sys_clock_gettime(clockid_t, struct timespec*);
-
-
-spinlock_t sched_lock = SPINLOCK_INIT;
 
 
 
@@ -91,7 +89,7 @@ static inline void __do_sleep(void) {
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
             current_task->sleep.remaining = NULL;
-            current_task->sleep.expired = 1;
+            current_task->sleep.expired = true;
 
             thread_wake(current_task);
 
@@ -102,9 +100,9 @@ static inline void __do_sleep(void) {
 }
 
 
-
 static inline void __do_signals(void) {
 
+    DEBUG_ASSERT(current_task);
 
     void __do(struct ksigaction* action, siginfo_t* siginfo) {
 
@@ -173,7 +171,7 @@ static inline void __do_signals(void) {
 
     }
 
-
+    
     if(queue_is_empty(&current_task->sigqueue))
         return;
 
@@ -251,17 +249,17 @@ static void __sched_next(void) {
         //__check_timers();
 
 
-        if(unlikely(current_task->status != TASK_STATUS_SLEEP))
-            continue;
+        if(current_task->status == TASK_STATUS_SLEEP) {
+
+            // Wake up if a signal is pending
+            if(!queue_is_empty(&current_task->sigqueue))
+                thread_wake(current_task);
 
 
-        // Wake up if a signal is pending
-        if(!queue_is_empty(&current_task->sigqueue))
-            thread_wake(current_task);
+            __do_futex();
+            __do_sleep();
 
-
-        __do_futex();
-        __do_sleep();
+        }
 
 
     } while(current_task->status != TASK_STATUS_READY);
@@ -272,6 +270,8 @@ static void __sched_next(void) {
 
 void schedule(int resched) {
 
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
 
     task_t* prev_task = current_task;
 
@@ -311,17 +311,19 @@ void schedule(int resched) {
 
 
 
-    __lock(&current_cpu->sched_lock, {
 
 
-        if(likely(current_task->status == TASK_STATUS_RUNNING))
-            current_task->status = TASK_STATUS_READY;
+    if(likely(current_task->status == TASK_STATUS_RUNNING))
+        current_task->status = TASK_STATUS_READY;
 
 
-        __sched_next();
+    __sched_next();
 
-        current_task->status = TASK_STATUS_RUNNING;
-        
+    current_task->status = TASK_STATUS_RUNNING;
+
+
+
+    __lock(&current_cpu->sched_lock, {   
 
         arch_task_switch(prev_task, current_task);
 
@@ -348,6 +350,7 @@ void sched_enqueue(task_t* task) {
 
         if(i->sched_count > min)
             continue;
+            
 
         cpu = i;
         min = i->sched_count;
@@ -367,7 +370,7 @@ void sched_enqueue(task_t* task) {
 
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sched: enqueued task(%d) %s in cpu(%d) count(%d)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
+    kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
 #endif
 
 }
