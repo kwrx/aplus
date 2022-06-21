@@ -1267,7 +1267,7 @@ void init(const char* args) {
         
         if(ahci->irq != PCI_INTERRUPT_LINE_NONE) {
 
-            pci_intx_map_irq(ahci->irq, ahci->deviceid, (pci_irq_handler_t) &irq, (pci_irq_data_t) ahci);
+            pci_intx_map_irq(ahci->deviceid, ahci->irq, (pci_irq_handler_t) &irq, (pci_irq_data_t) ahci);
             pci_intx_unmask(ahci->deviceid);
 
         }

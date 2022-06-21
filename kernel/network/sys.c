@@ -68,6 +68,7 @@
 #include "lwip/tcpip.h"
 #include "lwip/udp.h"
 
+#define NR_tcpip_wait       500
 
 
 
@@ -78,21 +79,50 @@ struct sys_sem {
 
 struct sys_mbox {
     spinlock_t lock;
-    uint16_t size;
-    uint16_t count;
+    uint32_t size;
+    uint32_t count;
     void** msg;
 } __packed;
 
-
-spinlock_t network_lock;
+spinlock_t tcpip_lock;
 spinlock_t tcpip_core_locking;
 
 
+
+
+SYSCALL(NR_tcpip_wait, tcpip_wait,
+long sys_tcpip_wait(uint32_t* s, u32_t timeout) {
+
+    DEBUG_ASSERT(s);
+
+    if(!timeout) {
+
+        futex_wait(current_task, s, 0, NULL);
+
+    } else {
+
+        struct timespec ts;
+        ts.tv_sec  = timeout / 1000;
+        ts.tv_nsec = (timeout % 1000) * 1000000;
+
+        futex_wait(current_task, s, 0, &ts);
+
+    }
+
+    thread_suspend(current_task);
+    thread_restart_sched(current_task);
+
+    return 0;
+
+});
+
+
+
+
 void sys_init(void) {
-    spinlock_init(&network_lock);
+    spinlock_init(&tcpip_lock);
     spinlock_init(&tcpip_core_locking);
 }
-
 
 err_t sys_sem_new(struct sys_sem** s, u8_t count) {
     
@@ -126,38 +156,33 @@ void sys_sem_signal(struct sys_sem** s) {
     DEBUG_ASSERT(*s);
 
     sem_post(&(*s)->sem);
-    arch_intr_enable((*s)->flags);
 
 }
 
-u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t __timeout) {
-   
-    DEBUG_ASSERT(s);
-    DEBUG_ASSERT(*s);
-    
-    if(!__timeout) {
-        sem_wait(&(*s)->sem);
-        (*s)->flags = arch_intr_disable();    
+u32_t sys_arch_sem_wait(struct sys_sem** s, u32_t timeout) {
+
+    ssize_t e;
+
+    if(timeout) {
+
+        uint64_t t0 = arch_timer_generic_getms() + timeout;
+  
+        if((e = arch_syscall2(NR_tcpip_wait, &(*s)->sem, timeout)) < 0)
+            return e;
+
+        if(arch_timer_generic_getms() >= t0)
+            return SYS_ARCH_TIMEOUT;
+
+        return t0 - arch_timer_generic_getms();
 
     } else {
 
-        uint64_t t0 = arch_timer_generic_getms();
-        t0 += __timeout;
+        if((e = arch_syscall2(NR_tcpip_wait, &(*s)->sem, 0)) < 0)
+            return e;
 
-        while(!sem_trywait(&(*s)->sem) && t0 > arch_timer_generic_getms())
-            sched_yield();
+        return 1;
 
-        (*s)->flags = arch_intr_disable();    
-
-
-        if(t0 <= arch_timer_generic_getms())
-            return SYS_ARCH_TIMEOUT;
-
-
-        return t0 - arch_timer_generic_getms();
     }
-
-    return 1;
 
 }
 
@@ -248,50 +273,54 @@ void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 }
 
 
-u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t __timeout) {
+u32_t sys_arch_mbox_fetch(struct sys_mbox** m, void** msg, u32_t timeout) {
     
-    DEBUG_ASSERT(mbox);
-    DEBUG_ASSERT(*mbox);
+    DEBUG_ASSERT(m);
+    DEBUG_ASSERT(*m);
+
+    ssize_t e = 0;
+    ssize_t r = 1;
 
 
-    if(msg)
-        *msg = NULL;
+    if(__atomic_load_n(&(*m)->count, __ATOMIC_SEQ_CST) == 0) {
 
+        if(timeout) {
 
-    uint64_t t0 = arch_timer_generic_getms();
+            uint64_t t0 = arch_timer_generic_getms() + timeout;
 
-    if(__timeout) {
+            if((e = arch_syscall2(NR_tcpip_wait, &(*m)->count, timeout)) < 0)
+                return e;
 
-        t0 += __timeout;
+            if(arch_timer_generic_getms() >= t0)
+                return SYS_ARCH_TIMEOUT;
 
-        while(((*mbox)->count == 0) && t0 > arch_timer_generic_getms())
-            sched_yield();
+            r = t0 - arch_timer_generic_getms();
 
+        } else {
 
-        if(t0 <= arch_timer_generic_getms())
-            return SYS_ARCH_TIMEOUT;
+            if((e = arch_syscall2(NR_tcpip_wait, &(*m)->count, 0)) < 0)
+                return e;
 
+            r = 1;
+
+        }
+        
     }
-    else
-        while(((*mbox)->count == 0))
-            sched_yield();
 
+    __lock(&(*m)->lock, {
 
+        DEBUG_ASSERT((*m)->count > 0);
 
-    __lock(&(*mbox)->lock, {
-    
-        void* mx = (*mbox)->msg[--(*mbox)->count];
+        if(likely(msg)) {
+            *msg = (*m)->msg[(*m)->count - 1];
+        }
 
-        if(msg)
-            *msg = mx;
+        __atomic_sub_fetch(&(*m)->count, 1, __ATOMIC_SEQ_CST);
 
     });
 
 
-    if(__timeout == 0)
-        return 1;
-
-    return (u32_t) (t0 - arch_timer_generic_getms());
+    return r;
 
 }
 
@@ -331,14 +360,12 @@ sys_thread_t sys_thread_new(const char* name, lwip_thread_fn thread, void* arg, 
 
 
 sys_prot_t sys_arch_protect(void) {
-
-    spinlock_lock(&network_lock);
+    spinlock_lock(&tcpip_lock);
     return 0;
-
 }
 
 void sys_arch_unprotect(sys_prot_t pval) {
-    spinlock_unlock(&network_lock);
+    spinlock_unlock(&tcpip_lock);
 }
 
 u32_t sys_now() {

@@ -37,6 +37,11 @@
 #include <aplus/hal.h>
 
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
+
 
 
 /***
@@ -54,21 +59,41 @@
 SYSCALL(3, close,
 long sys_close (unsigned int fd) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX))
-        return -EBADF;
+#if defined(CONFIG_HAVE_NETWORK)
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-
-    __lock(&current_task->lock, {
+    if(unlikely(NETWORK_IS_SOCKFD(fd))) {
+    
+        ssize_t e;
         
-        fd_remove(current_task->fd->descriptors[fd].ref, 1);
+        if((e = lwip_close(NETWORK_SOCKFD(fd)) < 0))
+            return -errno;
 
-        current_task->fd->descriptors[fd].ref = NULL;
-        current_task->fd->descriptors[fd].flags = 0;
+        return e;
     
-    });
-    
-    return 0;
+    } else
+
+#endif
+
+    {
+
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
+            return -EBADF;
+
+        if(unlikely(!current_task->fd->descriptors[fd].ref))
+            return -EBADF;
+
+
+        __lock(&current_task->lock, {
+            
+            fd_remove(current_task->fd->descriptors[fd].ref, 1);
+
+            current_task->fd->descriptors[fd].ref = NULL;
+            current_task->fd->descriptors[fd].flags = 0;
+        
+        });
+        
+        return 0;
+
+    }
+
 });

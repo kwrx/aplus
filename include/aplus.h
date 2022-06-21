@@ -199,11 +199,6 @@ extern void __chk_io_ptr(const volatile void __iomem *);
 #endif
 
 
-#ifndef PATH_MAX
-#define PATH_MAX                        4096
-#endif
-
-
 #define CORE_MODULE_MAX                 1024
 
 

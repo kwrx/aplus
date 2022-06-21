@@ -37,7 +37,9 @@
 #include <aplus/errno.h>
 #include <aplus/hal.h>
 
-
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
 
 
 /***
@@ -57,22 +59,42 @@
 SYSCALL(16, ioctl,
 long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
+#if defined(CONFIG_HAVE_NETWORK)
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
+    if(unlikely(NETWORK_IS_SOCKFD(fd))) {
+
+        ssize_t e;
+
+        if((e = lwip_ioctl(NETWORK_SOCKFD(fd), cmd, (void*) arg)) < 0)
+            return -errno;
+
+        return e;
+
+    } else
+
+#endif
+
+    {
+
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
+            return -EBADF;
+
+        if(unlikely(!current_task->fd->descriptors[fd].ref))
+            return -EBADF;
 
 
-    int e = 0;
+        int e = 0;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void __user*) arg);
-    });
+        __lock(&current_task->fd->descriptors[fd].ref->lock, {
+            e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void __user*) arg);
+        });
 
 
-    if(e < 0)
-        return -errno;
-    
-    return e;
+        if(e < 0)
+            return -errno;
+        
+        return e;
+
+    }
+
 });

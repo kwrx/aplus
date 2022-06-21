@@ -67,7 +67,7 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
     if(unlikely(!dirent))
         return -EINVAL;
 
-    if(unlikely(fd > CONFIG_OPEN_MAX))
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!uio_check(dirent, R_OK | W_OK)))

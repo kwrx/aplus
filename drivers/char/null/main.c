@@ -41,6 +41,15 @@ MODULE_LICENSE("GPL");
 
 
 
+static ssize_t dummy_read(struct device* device, void* buf, size_t count) {
+    return 0;
+}
+
+static ssize_t dummy_write(struct device* device, const void* buf, size_t count) {
+    return count;
+}
+
+
 device_t device = {
 
     .type = DEVICE_TYPE_CHAR,
@@ -58,8 +67,8 @@ device_t device = {
     .reset = NULL,
 
     .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
-    .chr.read =  NULL,
+    .chr.write = dummy_write,
+    .chr.read =  dummy_read,
 
 };
 

@@ -55,7 +55,7 @@
 SYSCALL(5, newfstat,
 long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX))
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!statbuf))

@@ -121,9 +121,13 @@ echo "## Get Packages"
         packages="$packages binutils"
     fi
 
+
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
 
+    if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
+        python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-doom  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i doom
+    fi
 
 echo "## Generate Wrapper"
 

@@ -51,10 +51,10 @@
 SYSCALL(33, dup2,
 long sys_dup2 (unsigned int fd, unsigned int newfd) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX))    // TODO: add network support
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(unlikely(newfd > CONFIG_OPEN_MAX)) // TODO: add network support
+    if(unlikely(newfd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))

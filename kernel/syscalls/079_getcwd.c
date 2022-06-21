@@ -37,11 +37,6 @@
 #include <sys/stat.h>
 
 
-#ifndef PATH_MAX
-#define PATH_MAX 1024
-#endif
-
-
 static int __append(char* buf, size_t size, const char* name) {
 
     DEBUG_ASSERT(buf);
@@ -89,8 +84,8 @@ long sys_getcwd (char __user * ubuf, unsigned long size) {
     if(unlikely(!uio_check(ubuf, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(size > PATH_MAX))
-        size = PATH_MAX;
+    if(unlikely(size > CONFIG_PATH_MAX))
+        size = CONFIG_PATH_MAX;
 
 
     struct inode* inode = current_task->fs->cwd;

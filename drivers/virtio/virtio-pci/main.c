@@ -276,7 +276,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     if(driver->internals.irq != PCI_INTERRUPT_LINE_NONE) {
 
-        pci_intx_map_irq(driver->internals.irq, driver->device, (pci_irq_handler_t) virtio_pci_interrupt, (pci_irq_data_t) driver);
+        pci_intx_map_irq(driver->device, driver->internals.irq, (pci_irq_handler_t) virtio_pci_interrupt, (pci_irq_data_t) driver);
         pci_intx_unmask(driver->device);
     
     }

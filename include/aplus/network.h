@@ -56,6 +56,11 @@
 
 __BEGIN_DECLS
 
+#define NETWORK_SOCKFD(fd)          ((fd) - CONFIG_OPEN_MAX)
+#define NETWORK_FD(fd)              ((fd) + CONFIG_OPEN_MAX)
+#define NETWORK_IS_SOCKFD(fd)       ((fd) >= CONFIG_OPEN_MAX)
+
+
 void network_init(void);
 
 void ethif_input(struct netif* netif);

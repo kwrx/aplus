@@ -32,7 +32,7 @@
 
 
 
-void sem_init(semaphore_t* s, long value) {
+void sem_init(semaphore_t* s, uint32_t value) {
     
     DEBUG_ASSERT(s);
     DEBUG_ASSERT(value >= 0);

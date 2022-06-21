@@ -438,6 +438,7 @@ tryget_socket_unconn(int fd)
   return ret;
 }
 
+#if LWIP_SOCKET_POLL || LWIP_SOCKET_SELECT
 /* Like tryget_socket_unconn(), but called under SYS_ARCH_PROTECT lock. */
 static struct lwip_sock *
 tryget_socket_unconn_locked(int fd)
@@ -450,6 +451,7 @@ tryget_socket_unconn_locked(int fd)
   }
   return ret;
 }
+#endif
 
 /**
  * Same as get_socket but doesn't set errno
@@ -840,7 +842,7 @@ lwip_connect(int s, const struct sockaddr *name, socklen_t namelen)
     LWIP_ERROR("lwip_connect: invalid address", IS_SOCK_ADDR_LEN_VALID(namelen) &&
                IS_SOCK_ADDR_TYPE_VALID_OR_UNSPEC(name) && IS_SOCK_ADDR_ALIGNED(name),
                sock_set_errno(sock, err_to_errno(ERR_ARG)); done_socket(sock); return -1;);
-
+    
     SOCKADDR_TO_IPADDR_PORT(name, &remote_addr, remote_port);
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_connect(%d, addr=", s));
     ip_addr_debug_print_val(SOCKETS_DEBUG, remote_addr);

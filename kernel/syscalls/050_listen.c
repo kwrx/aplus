@@ -34,6 +34,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
 
 /***
  * Name:        listen
@@ -50,5 +54,22 @@
 
 SYSCALL(50, listen,
 long sys_listen (int fd, int backlog) {
+
+#if defined(CONFIG_HAVE_NETWORK)
+
+    if(unlikely(!NETWORK_IS_SOCKFD(fd)))
+        return -ENOTSOCK;
+
+    
+    ssize_t e;
+
+    if((e = lwip_listen(NETWORK_SOCKFD(fd), backlog)) < 0)
+        return -errno;
+
+    return e;
+
+#else
     return -ENOSYS;
+#endif
+
 });

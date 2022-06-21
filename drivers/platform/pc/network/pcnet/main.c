@@ -253,16 +253,19 @@ static void pcnet_input(void* internals, void* buf, uint16_t len) {
         
 
 
-    if(dev->offset + len > dev->size)
+    if(dev->offset + len > dev->size) {
         len = dev->size - dev->offset;
+    }
 
     memcpy(buf, &dev->cache[dev->offset], len);
 
-
-    int i;
-    for(i = 0; i < len; i++)
-        kprintf("%c ", ((char*)buf)[i] & 0xFF);
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    kprintf("Dump: %d bytes\n", len);
+    for(size_t i = 0; i < len; i++) {
+        kprintf("%c", ((char*) buf)[i] & 0xFF);
+    }
+    kprintf("\n");
+#endif
 
     dev->offset += len;
 
@@ -302,8 +305,9 @@ static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
 
     
     // FIXME: Use semaphore for pcnet rx ownership
-    while(d_owns(dev->rxdes, dev->rxid))
+    while(d_owns(dev->rxdes, dev->rxid)) {
         ethif_input(&dev->device.net.interface);
+    }
 
     w_csr32(dev, 0, r_csr32(dev, 0) | 0x0400);
 

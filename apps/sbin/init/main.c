@@ -68,11 +68,15 @@ static void init_framebuffer(void) {
     struct fb_fix_screeninfo fix;
     struct fb_var_screeninfo var;
 
-    ioctl(fd, FBIOGET_VSCREENINFO, &var);
-    ioctl(fd, FBIOPUT_VSCREENINFO, &var);
-    ioctl(fd, FBIOGET_FSCREENINFO, &fix);
-    
+    if(ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0)
+        return (void) fprintf(stderr, "fb0: unable to get screen info\n");
 
+    if(ioctl(fd, FBIOPUT_VSCREENINFO, &var) < 0)
+        return (void) fprintf(stderr, "fb0: unable to set screen info\n");
+
+    if(ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0)
+        return (void) fprintf(stderr, "fb0: unable to get screen info\n");
+    
 
 #if defined(DEBUG)
     fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", 
@@ -82,14 +86,6 @@ static void init_framebuffer(void) {
         (void*) ((uintptr_t) fix.smem_start), 
         (void*) ((uintptr_t) fix.smem_len)
     );
-#endif
-
-
-#if defined(DEBUG)
-    void* frame = (void*) fix.smem_start;
-    for(size_t i = 0; i < var.xres * var.yres; i++) {
-        ((unsigned int*) frame)[i] = (unsigned int) (((double) i / (double) (var.xres * var.yres)) * 16777215.0) & 0x00FFFFFF;
-    }
 #endif
 
     close(fd);
@@ -127,8 +123,9 @@ static void init_environment(void) {
     char line[BUFSIZ];
     while(fgets(line, sizeof(line), fp) > 0) {
 
-        if(line[strlen(line) - 1] == '\n')
+        if(line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
+        }
 
 
         char* p = &line[0];
@@ -264,8 +261,14 @@ static void init_hostname() {
   
     if(strlen(hostname) > 0) {
 
-        if(hostname[strlen(hostname) - 1] == '\n')
-            hostname[strlen(hostname) - 1] = '\0';
+        for(size_t i = strlen(hostname) - 1; i > 0; i++) {
+            
+            if(!isalnum(hostname[i]) || isblank(hostname[i]))
+                hostname[i] = '\0';
+            else
+                break;
+
+        }
 
         syscall(SYS_sethostname, hostname, strlen(hostname));
 

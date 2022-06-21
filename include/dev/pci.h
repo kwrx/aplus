@@ -219,7 +219,7 @@ int pci_msix_map_irq(pcidev_t, pci_msix_t*, pci_irq_handler_t, pci_irq_data_t, u
 int pci_msix_unmap_irq(pcidev_t, pci_msix_t*);
 
 /* INTx */
-int pci_intx_map_irq(irq_t, pcidev_t, pci_irq_handler_t, pci_irq_data_t);
+int pci_intx_map_irq(pcidev_t, irq_t, pci_irq_handler_t, pci_irq_data_t);
 int pci_intx_unmap_irq(pcidev_t);
 void pci_intx_mask(pcidev_t);
 void pci_intx_unmask(pcidev_t);

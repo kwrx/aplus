@@ -207,9 +207,9 @@
 #define LWIP_SO_LINGER                      1
 #define SO_REUSE                            1
 #define SO_REUSE_RXTOALL                    0
-#define LWIP_FIONREAD_LINUXMODE             0
-#define LWIP_SOCKET_SELECT                  1
-#define LWIP_SOCKET_POLL                    1
+#define LWIP_FIONREAD_LINUXMODE             1
+#define LWIP_SOCKET_SELECT                  0
+#define LWIP_SOCKET_POLL                    0
 
 // * Stats Options *
 #define LWIP_STATS                          1
@@ -245,6 +245,7 @@
 
 
 #define NO_SYS                              0
+#define LWIP_DBG_MIN_LEVEL                  LWIP_DBG_LEVEL_ALL
 #define LWIP_DBG_TYPES_ON                   LWIP_DBG_OFF
 #define NETIF_DEBUG                         LWIP_DBG_OFF
 #define PBUF_DEBUG                          LWIP_DBG_OFF
@@ -272,7 +273,7 @@
 #define LWIP_ERRNO_INCLUDE                  <aplus/errno.h>
 #define LWIP_TIMEVAL_PRIVATE                0
 
-#define SSIZE_MAX                           INT_MAX
+#define SSIZE_MAX                           INTPTR_MAX
 //#define SA_FAMILY_T_DEFINED                 1
 
 
@@ -300,8 +301,8 @@ static inline void* __kcalloc(size_t n, size_t m) {
 
 
 #define mem_clib_malloc                     __kmalloc
-#define mem_clib_free                       kfree
 #define mem_clib_calloc                     __kcalloc
+#define mem_clib_free                       kfree
 
 
 WARNING("-Waddress")

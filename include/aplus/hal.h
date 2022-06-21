@@ -185,6 +185,22 @@ void arch_vmm_unlock(vmm_address_space_t*, uintptr_t, size_t);
 void arch_vmm_clone(vmm_address_space_t*, vmm_address_space_t*, int);
 
 
+long __arch_syscall0(unsigned long);
+long __arch_syscall1(unsigned long, long);
+long __arch_syscall2(unsigned long, long, long);
+long __arch_syscall3(unsigned long, long, long, long);
+long __arch_syscall4(unsigned long, long, long, long, long);
+long __arch_syscall5(unsigned long, long, long, long, long, long);
+long __arch_syscall6(unsigned long, long, long, long, long, long, long);
+
+#define arch_syscall0(n)                    __arch_syscall0((unsigned long) (n))
+#define arch_syscall1(n, a)                 __arch_syscall1((unsigned long) (n), (long) (a))
+#define arch_syscall2(n, a, b)              __arch_syscall2((unsigned long) (n), (long) (a), (long) (b))
+#define arch_syscall3(n, a, b, c)           __arch_syscall3((unsigned long) (n), (long) (a), (long) (b), (long) (c))
+#define arch_syscall4(n, a, b, c, d)        __arch_syscall4((unsigned long) (n), (long) (a), (long) (b), (long) (c), (long) (d))
+#define arch_syscall5(n, a, b, c, d, e)     __arch_syscall5((unsigned long) (n), (long) (a), (long) (b), (long) (c), (long) (d), (long) (e))
+#define arch_syscall6(n, a, b, c, d, e, f)  __arch_syscall6((unsigned long) (n), (long) (a), (long) (b), (long) (c), (long) (d), (long) (e), (long) (f))
+
 
 
 

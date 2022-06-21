@@ -11,7 +11,6 @@
 |**FIXME**|`drivers/virtio/virtio-console/main.c`|change values|
 |**FIXME**|`kernel/fs/tmpfs/tmpfs_readdir.c`|find a better way|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|
-|**FIXME**|`kernel/syscalls/257_openat.c`|normalize path from // to /|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|
 |**TODO**|`arch/x86-family/intr.c`|Handle User Exception|
 |**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|
@@ -37,22 +36,12 @@
 |**TODO**|`kernel/network/core/ipv6/dhcp6.c`||
 |**TODO**|`kernel/network/core/ipv6/ip6.c`|process routing by the type|
 |**TODO**|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received|
-|**TODO**|`kernel/syscalls/000_read.c`|add network support|
-|**TODO**|`kernel/syscalls/001_write.c`|add network support|
-|**TODO**|`kernel/syscalls/008_lseek.c`|add network support|
 |**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|
-|**TODO**|`kernel/syscalls/016_ioctl.c`|add network support|
-|**TODO**|`kernel/syscalls/017_pread64.c`|add network support|
-|**TODO**|`kernel/syscalls/018_pwrite64.c`|add network support|
-|**TODO**|`kernel/syscalls/032_dup.c`|add network support|
-|**TODO**|`kernel/syscalls/033_dup2.c`|add network support|
-|**TODO**|`kernel/syscalls/033_dup2.c`|add network support|
 |**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|
 |**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|
 |**TODO**|`kernel/syscalls/059_execve.c`|release userspace resources|
 |**TODO**|`kernel/syscalls/060_exit.c`|implements signal     |
 |**TODO**|`kernel/syscalls/060_exit.c`|remove references from fs, fd, sighand, ecc...|
 |**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|
-|**TODO**|`kernel/syscalls/077_ftruncate.c`|add network support|
 |**TODO**|`kernel/syscalls/229_clock_getres.c`|update <sys/features.h>|
 |**TODO**|`libk/kpanicf.c`|implements arch_cpu_halt()|

@@ -26,6 +26,7 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
 #include <stdint.h>
@@ -51,5 +52,41 @@
 
 SYSCALL(133, mknod,
 long sys_mknod (const char __user * filename, mode_t mode, unsigned dev) {
-    return -ENOSYS;
+    
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(filename, R_OK)))
+        return -EFAULT;
+
+
+    if(mode & S_IFBLK)
+        return -ENOSYS;
+
+    else if(mode & S_IFCHR)
+        return -ENOSYS;
+
+    else if(mode & S_IFSOCK)
+        return -ENOSYS;
+
+    else if(mode & S_IFIFO)
+        return -ENOSYS;
+
+    else if(mode & S_IFREG || mode & S_IFDIR || (mode & S_IFMT) == 0) {
+        
+        int fd;
+
+        if((fd = sys_creat(filename, mode)) < 0)
+            return fd;
+        
+        if(sys_close(fd) < 0)
+            return -EIO;
+
+        return 0;
+        
+    }
+
+    else
+        return -EINVAL;
+
 });

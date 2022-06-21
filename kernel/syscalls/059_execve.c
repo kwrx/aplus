@@ -32,6 +32,7 @@
 #include <aplus/task.h>
 #include <aplus/ipc.h>
 #include <aplus/elf.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -124,6 +125,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+    uio_lock(filename, CONFIG_PATH_MAX);
+    kprintf("execve(): filename: %s\n", filename);
+    uio_unlock(filename, CONFIG_PATH_MAX);
+#endif
 
     int e;
 

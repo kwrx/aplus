@@ -62,7 +62,7 @@ long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t
     if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))

@@ -38,8 +38,8 @@ case $1 in
         #flags="$flags -device virtio-vga"
         flags="$flags -vga vmware"
         flags="$flags -soundhw ac97"
-        #flags="$flags -device e1000,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
+        flags="$flags -device pcnet,netdev=net0"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080 -object filter-dump,id=f1,netdev=net0,file=network.dat"
         #flags="$flags -device virtio-serial-pci-non-transitional -chardev file,path=/tmp/kmsg.log,id=aplus -device virtconsole,name=jobsaplus,chardev=aplus,name=org.fedoraproject.console.aplus"
         ;;
 

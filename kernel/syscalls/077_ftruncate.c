@@ -51,7 +51,7 @@
 SYSCALL(77, ftruncate,
 long sys_ftruncate (unsigned int fd, unsigned long length) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))

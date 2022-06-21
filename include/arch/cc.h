@@ -73,9 +73,9 @@ typedef uintptr_t mem_ptr_t;
 #define LWIP_RAND() ((u32_t)rand())
 
 
-#define SYS_ARCH_DECL_PROTECT(x)            extern spinlock_t network_lock;
-#define SYS_ARCH_PROTECT(x)                 spinlock_lock(&network_lock);
-#define SYS_ARCH_UNPROTECT(x)               spinlock_unlock(&network_lock);
+#define SYS_ARCH_DECL_PROTECT(x)            extern spinlock_t tcpip_lock;
+#define SYS_ARCH_PROTECT(x)                 spinlock_lock(&tcpip_lock);
+#define SYS_ARCH_UNPROTECT(x)               spinlock_unlock(&tcpip_lock);
 
 #ifndef BYTE_ORDER
 #if __BYTE_ORDER__==__ORDER_LITTLE_ENDIAN__

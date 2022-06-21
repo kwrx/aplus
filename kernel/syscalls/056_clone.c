@@ -56,28 +56,25 @@ long sys_clone(unsigned long flags, void __user *stack,
 
 #else
 long sys_clone(unsigned long flags, void *stack,
-          int *parent_tid, unsigned long tls,
-          int *child_tid)
+          int __user *parent_tid, unsigned long tls,
+          int __user *child_tid)
 
 #endif
 {
 
-    DEBUG_ASSERT(parent_tid);
-    DEBUG_ASSERT(child_tid);
-    
 
-    if(unlikely(uio_check(parent_tid, R_OK | W_OK)))
+    if(unlikely(parent_tid && !uio_check(parent_tid, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(uio_check(child_tid, R_OK | W_OK)))
+    if(unlikely(child_tid && !uio_check(child_tid, R_OK | W_OK)))
         return -EFAULT;
 
 
     struct kclone_args args = {
         .flags          = (uint64_t) (flags & ~CSIGNAL),
-        .pidfd          = (uint64_t) uio_get_ptr(parent_tid),
-        .child_tid      = (uint64_t) uio_get_ptr(child_tid),
-        .parent_tid     = (uint64_t) uio_get_ptr(parent_tid),
+        .pidfd          = (uint64_t) (parent_tid ? uio_get_ptr(parent_tid) : 0),
+        .parent_tid     = (uint64_t) (parent_tid ? uio_get_ptr(parent_tid) : 0),
+        .child_tid      = (uint64_t) (child_tid  ? uio_get_ptr(child_tid)  : 0),
         .exit_signal    = (uint64_t) (flags & CSIGNAL),
         .stack          = (uint64_t) stack,
         .tls            = (uint64_t) tls,

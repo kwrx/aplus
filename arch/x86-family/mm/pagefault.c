@@ -48,7 +48,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 #else
 
-    #define PFE(reason)         \
+    #define PFE(reason, entry)  \
         { goto pfe; }
 
 #endif

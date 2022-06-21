@@ -61,7 +61,7 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
     if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
     if(unlikely(!current_task->fd->descriptors[fd].ref))

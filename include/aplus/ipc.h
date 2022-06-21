@@ -85,7 +85,7 @@
 
 
 
-typedef volatile long semaphore_t;
+typedef volatile uint32_t semaphore_t;
 
 typedef volatile struct {
 
@@ -160,7 +160,7 @@ void sem_wait(semaphore_t*);
 
 int spinlock_trylock(spinlock_t*);
 
-void sem_init(semaphore_t*, long);
+void sem_init(semaphore_t*, uint32_t);
 void sem_post(semaphore_t*);
 int sem_trywait(semaphore_t* s);
 

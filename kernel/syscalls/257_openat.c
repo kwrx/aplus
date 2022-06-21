@@ -114,10 +114,13 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
         path++;
 
 
-    while(strchr(path, '/') && c) { //! FIXME: normalize path from // to /
+    while(strchr(path, '/') && c) {
          
         c = path_find(c, path, strcspn(path, "/")); 
         path = strchr(path, '/') + 1;
+
+        while(path[0] == '/')
+            path++;
     
     }
 
@@ -179,7 +182,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     
     } else {
 
-        if(dfd > CONFIG_OPEN_MAX)
+        if(dfd >= CONFIG_OPEN_MAX)
             return -EBADF;
 
         if(unlikely(!current_task->fd->descriptors[dfd].ref))
@@ -195,8 +198,8 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         return -EFAULT;
 
 
-    char __safe_filename[PATH_MAX];
-    uio_strncpy_u2s(__safe_filename, filename, PATH_MAX);
+    char __safe_filename[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
 
 
 

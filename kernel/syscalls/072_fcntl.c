@@ -34,6 +34,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
+
 extern long sys_dup(unsigned int);
 
 
@@ -54,52 +59,71 @@ extern long sys_dup(unsigned int);
 SYSCALL(72, fcntl,
 long sys_fcntl (unsigned int fd, unsigned int cmd, unsigned long arg) {
     
-    if(unlikely(fd > CONFIG_OPEN_MAX))
-        return -EBADF;
+#if defined(CONFIG_HAVE_NETWORK)
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
+    if(unlikely(NETWORK_IS_SOCKFD(fd))) {
+
+        ssize_t e = lwip_fcntl(NETWORK_SOCKFD(fd), cmd, arg);
+
+        if(unlikely(e < 0))
+            return -errno;
+
+        return e;
+
+    } else
+
+#endif
+
+    {
+
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
+            return -EBADF;
+
+        if(unlikely(!current_task->fd->descriptors[fd].ref))
+            return -EBADF;
 
 
-    long e1, e2;
+        long e1, e2;
 
-    switch(cmd) {
+        switch(cmd) {
 
-        case F_DUPFD:
-            return sys_dup(fd);
+            case F_DUPFD:
+                return sys_dup(fd);
 
-        case F_DUPFD_CLOEXEC:
+            case F_DUPFD_CLOEXEC:
 
-            if((e1 = sys_dup(fd) < 0))
+                if((e1 = sys_dup(fd) < 0))
+                    return e1;
+
+                if((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC) < 0))
+                    return e2;
+
                 return e1;
 
-            if((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC) < 0))
-                return e2;
+            case F_GETFD:
+                return current_task->fd->descriptors[fd].close_on_exec;
 
-            return e1;
+            case F_SETFD:
+                current_task->fd->descriptors[fd].close_on_exec = arg;
+                return 0;
 
-        case F_GETFD:
-            return current_task->fd->descriptors[fd].close_on_exec;
+            case F_GETFL:
+                return current_task->fd->descriptors[fd].flags;
 
-        case F_SETFD:
-            current_task->fd->descriptors[fd].close_on_exec = arg;
-            return 0;
+            case F_SETFL:
+                current_task->fd->descriptors[fd].flags = arg;
+                return 0;
 
-        case F_GETFL:
-            return current_task->fd->descriptors[fd].flags;
+            case F_SETPIPE_SZ:
+            case F_GETPIPE_SZ:
+                /* TODO: Implements pipe size routines for fcntl */
+                return -ENOSYS;
 
-        case F_SETFL:
-            current_task->fd->descriptors[fd].flags = arg;
-            return 0;
+        }
 
-        case F_SETPIPE_SZ:
-        case F_GETPIPE_SZ:
-            /* TODO: Implements pipe size routines for fcntl */
-            return -ENOSYS;
+
+        return -EINVAL;
 
     }
-
-
-    return -EINVAL;
 
 });

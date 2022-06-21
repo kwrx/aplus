@@ -78,7 +78,7 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 }
 
 
-int pci_intx_map_irq(irq_t irq, pcidev_t device, pci_irq_handler_t handler, pci_irq_data_t data) {
+int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_irq_data_t data) {
 
     spinlock_lock(&pci_intx_lock);
 

@@ -95,7 +95,7 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
     if(!(flags & MAP_ANONYMOUS)) {
 
-        if(unlikely(fd > CONFIG_OPEN_MAX))
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
         if(unlikely(!current_task->fd->descriptors[fd].ref))

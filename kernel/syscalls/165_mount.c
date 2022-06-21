@@ -78,11 +78,11 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
 
 
 
-    char __safe_dirname[PATH_MAX];
-    uio_strncpy_u2s(__safe_dirname, dir_name, PATH_MAX);
+    char __safe_dirname[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_dirname, dir_name, CONFIG_PATH_MAX);
 
-    char __safe_type[PATH_MAX];
-    uio_strncpy_u2s(__safe_type, type, PATH_MAX);
+    char __safe_type[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_type, type, CONFIG_PATH_MAX);
     
 
 
