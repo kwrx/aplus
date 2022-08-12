@@ -95,10 +95,11 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 
     __lock(&queue->lock, {
 
-        if(queue->size == 0)
+        if(queue->size == 0) {
+
             queue->head = __queue_element(element, priority, NULL);
 
-        else {
+        } else {
 
 
             struct queue_element* tmp;
@@ -117,9 +118,9 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 
             DEBUG_ASSERT(last);
 
-            if(!tmp)
+            if(!tmp) {
                 last->next = __queue_element(element, priority, NULL);
-
+            }
 
         }
 

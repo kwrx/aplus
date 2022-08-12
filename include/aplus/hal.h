@@ -125,6 +125,8 @@ void arch_cpu_init(int);
 void arch_cpu_startup(int);
 uint64_t arch_cpu_get_current_id(void);
 
+uint64_t arch_random(void);
+
 
 void arch_debug_init(void);
 void arch_debug_putc(char);

@@ -131,21 +131,27 @@ void __spinlock_lock(spinlock_t*, const char*, const char*, int);
 void __spinlock_unlock(spinlock_t*, const char*, const char*, int);
 void __sem_wait(semaphore_t*, const char*, const char*, int);
 
+void __futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*, const char*, const char*, int);
+
 
 #define spinlock_init(spin)                                                     \
-     __spinlock_init(spin, __func__, __FILE__, __LINE__);
+     __spinlock_init(spin, __func__, __FILE__, __LINE__)
      
 #define spinlock_init_with_flags(spin, flags)                                   \
-     __spinlock_init_with_flags(spin, flags, __func__, __FILE__, __LINE__);
+     __spinlock_init_with_flags(spin, flags, __func__, __FILE__, __LINE__)
 
 #define spinlock_lock(spin)                                                     \
-     __spinlock_lock(spin, __func__, __FILE__, __LINE__);
+     __spinlock_lock(spin, __func__, __FILE__, __LINE__)
 
 #define spinlock_unlock(spin)                                                   \
-     __spinlock_unlock(spin, __func__, __FILE__, __LINE__);
+     __spinlock_unlock(spin, __func__, __FILE__, __LINE__)
 
 #define sem_wait(sem)                                                           \
-    __sem_wait(sem, __func__, __FILE__, __LINE__);
+    __sem_wait(sem, __func__, __FILE__, __LINE__)
+
+#define futex_wait(task, kaddr, value, timeout)                                 \
+    __futex_wait(task, kaddr, value, timeout, #kaddr, __FILE__, __LINE__)
+
 
 #else
 
@@ -156,7 +162,10 @@ void spinlock_lock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
 void sem_wait(semaphore_t*);
 
+void futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*);
+
 #endif
+
 
 int spinlock_trylock(spinlock_t*);
 
@@ -166,10 +175,10 @@ int sem_trywait(semaphore_t* s);
 
 void futex_rt_lock(void);
 void futex_rt_unlock(void);
-void futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*);
 size_t futex_wakeup(uint32_t*, size_t);
 size_t futex_requeue(uint32_t*, uint32_t*, size_t);
 bool futex_expired(futex_t*);
+
 
 __END_DECLS
 

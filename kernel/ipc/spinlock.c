@@ -140,7 +140,14 @@ void spinlock_lock(spinlock_t* lock) {
 
         }
 
-        DEBUG_ASSERT(lock->owner == -1ULL);
+
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+
+        if(unlikely(lock->owner != -1ULL)) {
+            kpanicf("ipc: FAIL! %s(): Lock already owned at %s:%d in %s(%p): owner(%ld) flags(%X) current_owner(%ld)\n", __func__, FILE, LINE, FUNC, lock, lock->owner, lock->flags, spinlock_get_new_owner(lock));
+        }
+
+#endif
 
         lock->owner = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();

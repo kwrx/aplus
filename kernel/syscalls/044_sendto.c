@@ -63,34 +63,42 @@ long sys_sendto (int fd, const void __user * buf, size_t size, unsigned flags, c
     if(unlikely(!NETWORK_IS_SOCKFD(fd)))
         return -ENOTSOCK;
 
-    if(unlikely(!sockaddr))
-        return -EINVAL;
-
     if(unlikely(!buf))
         return -EINVAL;
 
-    if(unlikely(!socklen))
-        return -EINVAL;
-
-    if(unlikely(!uio_check(sockaddr, R_OK)))
+    if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
 
-    if(unlikely(!uio_check(buf, R_OK)))
+    if(unlikely(sockaddr && !socklen))
+        return -EINVAL;
+
+    if(unlikely(sockaddr && !uio_check(sockaddr, R_OK)))
         return -EFAULT;
 
     if(unlikely(!size))
         return 0;
 
 
-    char __sockaddr[socklen];
-    uio_memcpy_u2s(__sockaddr, sockaddr, socklen);
+    ssize_t e;
 
 
     uio_lock(buf, size);
+    
+    if(likely(sockaddr)) {
 
-    ssize_t e = lwip_sendto(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*) __sockaddr, socklen);
+        char __sockaddr[socklen];
+        uio_memcpy_u2s(__sockaddr, sockaddr, socklen);
+
+        e = lwip_sendto(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*) __sockaddr, socklen);
+
+    } else {
+
+        e = lwip_send(NETWORK_SOCKFD(fd), buf, size, flags);
+
+    }
 
     uio_unlock(buf, size);
+
 
     
     if(unlikely(e < 0))

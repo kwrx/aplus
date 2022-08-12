@@ -459,7 +459,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     }
 
 
-    AUX_ENT(AT_RANDOM, rand());
+    AUX_ENT(AT_RANDOM, arch_random());
     AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
     AUX_ENT(AT_HWCAP, 0);
     AUX_ENT(AT_HWCAP2, 0);

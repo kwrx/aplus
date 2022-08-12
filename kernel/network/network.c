@@ -87,8 +87,8 @@ void network_init() {
     sem_init(&tcpip_done, 0);
 
     ip_addr_t dns[2];
-    IP_ADDR4(&dns[0], 8, 8, 8, 8);
-    IP_ADDR4(&dns[1], 8, 8, 4, 4);
+    IP_ADDR4(&dns[0], 1, 1, 1, 1);
+    IP_ADDR4(&dns[1], 1, 0, 0, 1);
 
 
     kprintf("network: host(%s) lwip(%s) dns1(%d.%d.%d.%d) dns2(%d.%d.%d.%d)\n", 

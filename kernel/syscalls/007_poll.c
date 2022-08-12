@@ -38,6 +38,11 @@
 #include <aplus/errno.h>
 #include <aplus/hal.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
+
 
 
 
@@ -88,27 +93,67 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
         uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
         
-        if(pfd.fd < 0 || pfd.fd >= CONFIG_OPEN_MAX)
-            return -EBADF;
-
-        if(current_task->fd->descriptors[pfd.fd].ref == NULL)
-            return -EBADF;
-
-        if(current_task->fd->descriptors[pfd.fd].ref->inode == NULL)
+        if(pfd.fd < 0)
             return -EBADF;
 
 
+#if defined(CONFIG_HAVE_NETWORK)
 
-        if(current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events) {
+        if(NETWORK_IS_SOCKFD(pfd.fd)) {
 
-            pfd.revents = current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events;
+            struct pollfd sfd;
 
-            current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
-            current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  &= ~pfd.events;
+            sfd.fd      = NETWORK_SOCKFD(pfd.fd);
+            sfd.events  = pfd.events;
+            sfd.revents = 0;
 
-            uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
 
-            e++;
+            if(lwip_poll_from_syscall(&sfd, 1, NULL, false) < 0)
+                return -errno;
+
+
+            if(sfd.revents & pfd.events) {
+
+                pfd.revents |= sfd.revents & pfd.events;
+
+                sfd.events  = 0;
+                sfd.revents = 0;
+
+                uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
+
+                e++;
+
+            }
+
+        } else 
+
+#endif
+
+        {
+
+            if(pfd.fd >= CONFIG_OPEN_MAX)
+                return -EBADF;
+
+            if(current_task->fd->descriptors[pfd.fd].ref == NULL)
+                return -EBADF;
+
+            if(current_task->fd->descriptors[pfd.fd].ref->inode == NULL)
+                return -EBADF;
+
+
+
+            if(current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events) {
+
+                pfd.revents = current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events;
+
+                current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
+                current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  &= ~pfd.events;
+
+                uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
+
+                e++;
+
+            }
 
         }
 
@@ -129,12 +174,30 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
             uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
 
-            current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
-            current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  |=  pfd.events;
-            current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex    = 0;
+#if defined(CONFIG_HAVE_NETWORK)
+            if(NETWORK_IS_SOCKFD(pfd.fd)) {
+                
+                struct pollfd sfd;
 
-            futex_wait(current_task, &current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex, 0, timeout > 0 ? &tm : NULL);
+                sfd.fd      = NETWORK_SOCKFD(pfd.fd);
+                sfd.events  = pfd.events;
+                sfd.revents = 0;
 
+
+                if(lwip_poll_from_syscall(&sfd, 1, timeout > 0 ? &tm : NULL, true) < 0)
+                    return -errno;
+
+            } else 
+#endif
+            {
+
+                current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
+                current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  |=  pfd.events;
+                current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex    = 0;
+
+                futex_wait(current_task, &current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex, 0, timeout > 0 ? &tm : NULL);
+
+            }
         }
 
 
@@ -148,7 +211,7 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
         return -EINTR;
 
-    } 
+    }
 
     return e;
 

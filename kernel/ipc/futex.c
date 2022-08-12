@@ -46,16 +46,53 @@ void futex_rt_unlock() {
     spinlock_unlock(&rt_lock);
 }
 
-
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
+void __futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
+#else
 void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct timespec* utime) {
+#endif
 
     DEBUG_ASSERT(task);
     DEBUG_ASSERT(kaddr);
 
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("futex: futex_wait() pid(%d) kaddr(%p) *kaddr(%d) value(%d)\n", task->tid, kaddr, *kaddr, value);
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
+    kprintf("futex: futex_wait() for '%s' at %s:%d - pid(%d) kaddr(%p) *kaddr(%d) value(%d) timeout(%p)\n", OBJ, FILE, LINE, task->tid, kaddr, *kaddr, value, utime);
 #endif
+
+
+
+
+    list_each(task->futexes, futex) {
+
+        if(likely(futex->address != kaddr))
+            continue;
+
+        
+        __lock(&task->lock, {
+
+            futex->address = kaddr;
+            futex->value = value;
+
+            if(utime) {
+
+                memcpy(&futex->timeout, utime, sizeof(struct timespec));
+
+                futex->timeout.tv_sec  += arch_timer_generic_getms() / 1000ULL;
+                futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL; 
+
+            } else {
+
+                futex->timeout.tv_sec  = 0;
+                futex->timeout.tv_nsec = 0;
+
+            }
+
+        });
+
+        return;
+
+    }
+
 
 
     futex_t* futex = (futex_t*) kcalloc(1, sizeof(futex_t), GFP_KERNEL);

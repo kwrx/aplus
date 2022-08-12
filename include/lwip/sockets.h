@@ -616,6 +616,9 @@ int lwip_select(int maxfdp1, fd_set *readset, fd_set *writeset, fd_set *exceptse
 #if LWIP_SOCKET_POLL
 int lwip_poll(struct pollfd *fds, nfds_t nfds, int timeout);
 #endif
+#if defined(__aplus__)
+ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec* ts, bool wait);
+#endif
 int lwip_ioctl(int s, long cmd, void *argp);
 int lwip_fcntl(int s, int cmd, int val);
 const char *lwip_inet_ntop(int af, const void *src, char *dst, socklen_t size);

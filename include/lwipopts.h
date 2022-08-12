@@ -209,7 +209,7 @@
 #define SO_REUSE_RXTOALL                    0
 #define LWIP_FIONREAD_LINUXMODE             1
 #define LWIP_SOCKET_SELECT                  0
-#define LWIP_SOCKET_POLL                    0
+#define LWIP_SOCKET_POLL                    1
 
 // * Stats Options *
 #define LWIP_STATS                          1

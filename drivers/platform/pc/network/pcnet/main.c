@@ -59,6 +59,9 @@ MODULE_LICENSE("GPL");
 
 #define PCNET_MAX_DEVICES       32
 
+#define PCNET_PCI_VENDOR_ID     0x1022
+#define PCNET_PCI_DEVICE_ID     0x2000
+
 
 
 struct pcnet {
@@ -74,6 +77,12 @@ struct pcnet {
     uintptr_t rxbuf;
     uintptr_t txbuf;
 
+    uintptr_t vbuf;
+    uintptr_t vrxdes;
+    uintptr_t vtxdes;
+    uintptr_t vrxbuf;
+    uintptr_t vtxbuf;
+
     int rxid;
     int txid;
 
@@ -86,7 +95,7 @@ struct pcnet {
 
 };
 
-static struct pcnet* devices[PCNET_MAX_DEVICES];
+static struct pcnet* devices[PCNET_MAX_DEVICES] = { 0 };
 
 
 
@@ -129,7 +138,7 @@ static inline uint32_t r_bcr32(struct pcnet* dev, uint32_t x) {
 }
 
 static inline int d_owns(uintptr_t data, int idx) {
-    return (((uint8_t*) arch_vmm_p2v(data, ARCH_VMM_AREA_HEAP)) [PCNET_DE_SIZE * idx + 7] & 0x80) == 0;
+    return (mmio_r8(data + PCNET_DE_SIZE * idx + 7) & 0x80) == 0;
 }
 
 
@@ -146,14 +155,15 @@ static int pcnet_startoutput(void* internals) {
 
     struct pcnet* dev = (struct pcnet*) internals;
 
-    while(!d_owns(dev->txdes, dev->txid)) {
+    while(!d_owns(dev->vtxdes, dev->txid)) {
 
 #if defined(DEBUG) && DEBUG_LEVEL >= 2
         kprintf("pcnet: ERROR! no tx %d descriptor available!\n", dev->txid);
 #endif
 
-        if(++dev->txid == PCNET_TX_COUNT)
+        if(++dev->txid == PCNET_TX_COUNT) {
             dev->txid = 0;
+        }
 
     }
 
@@ -187,34 +197,30 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
 
 
     memcpy (
-        (void*) (arch_vmm_p2v(dev->txbuf, ARCH_VMM_AREA_HEAP) + dev->txid * PCNET_BUFSIZE), 
+        (void*) (dev->vtxbuf + dev->txid * PCNET_BUFSIZE), 
         (void*) (dev->cache), 
         len
     );
 
 
-    *((uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x02;
-    *((uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x01;
+    mmio_w8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7), mmio_r8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7)) | 0x02);
+    mmio_w8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7), mmio_r8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7)) | 0x01);
 
-
-    uint16_t b = (uint16_t) (-len);
-    b &= 0x0FFF;
-    b |= 0xF000;
-
-    *(uint16_t*) (arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 4)) = b;
-    *(uint8_t*)  (arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP) + (dev->txid * PCNET_DE_SIZE + 7)) |= 0x80;
+    mmio_w16(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 4), (((-len) & 0x0FFF) | 0xF000));
+    mmio_w8 (dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7), mmio_r8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7)) | 0x80);
 
     
     w_csr32(dev, 0, r_csr32(dev, 0) | (1 << 3));
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_generic_getms(), len, dev->txid);
 #endif
 
 
-    if(++dev->txid == PCNET_TX_COUNT)
+    if(++dev->txid == PCNET_TX_COUNT) {
         dev->txid = 0;
+    }
 
 }
 
@@ -226,14 +232,11 @@ static int pcnet_startinput(void* internals) {
     struct pcnet* dev = (struct pcnet*) internals;
     
 
-    uint16_t size = *(uint16_t*) (arch_vmm_p2v(dev->rxdes, ARCH_VMM_AREA_HEAP) + (dev->rxid * PCNET_DE_SIZE + 8));
+    uint16_t size = mmio_r16(dev->vrxdes + (dev->rxid * PCNET_DE_SIZE + 8));
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if defined(DEBUG) && DEBUG_LEVEL >= 5
     kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rxid);
 #endif
-
-
-    memcpy(dev->cache, (void*) (arch_vmm_p2v(dev->rxbuf, ARCH_VMM_AREA_HEAP) + dev->rxid * PCNET_BUFSIZE), size);
 
     dev->size = size;
     dev->offset = 0;
@@ -252,20 +255,19 @@ static void pcnet_input(void* internals, void* buf, uint16_t len) {
     DEBUG_ASSERT(dev->offset < dev->size);
         
 
-
     if(dev->offset + len > dev->size) {
         len = dev->size - dev->offset;
     }
 
-    memcpy(buf, &dev->cache[dev->offset], len);
+    memcpy(buf, (const void*) (dev->vrxbuf + dev->rxid * PCNET_BUFSIZE + dev->offset), len);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("Dump: %d bytes\n", len);
-    for(size_t i = 0; i < len; i++) {
-        kprintf("%c", ((char*) buf)[i] & 0xFF);
-    }
-    kprintf("\n");
-#endif
+// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// //     kprintf("Dump: %d bytes\n", len);
+// //     for(size_t i = 0; i < len; i++) {
+// //         kprintf("%c", ((char*) buf)[i] & 0xFF);
+// //     }
+// //     kprintf("\n");
+// // #endif
 
     dev->offset += len;
 
@@ -279,13 +281,13 @@ static void pcnet_endinput(void* internals) {
     struct pcnet* dev = (struct pcnet*) internals;
     
 
-    ((uint8_t*) arch_vmm_p2v(dev->rxdes, ARCH_VMM_AREA_HEAP)) [dev->rxid * PCNET_DE_SIZE + 7] = 0x80;
+    mmio_w8(dev->vrxdes + dev->rxid * PCNET_DE_SIZE + 7, 0x80);
 
-
-    if(++dev->rxid == PCNET_RX_COUNT)
+    if(++dev->rxid == PCNET_RX_COUNT) {
         dev->rxid = 0;
+    }
 
-    dev->size =
+    dev->size   = 0;
     dev->offset = 0;
 
 }
@@ -296,16 +298,12 @@ static void pcnet_input_nomem(void* internals, uint16_t len) {
 }
 
 
-
-
 static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
     
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->irq == irq);
 
-    
-    // FIXME: Use semaphore for pcnet rx ownership
-    while(d_owns(dev->rxdes, dev->rxid)) {
+    while(d_owns(dev->vrxdes, dev->rxid)) {
         ethif_input(&dev->device.net.interface);
     }
 
@@ -315,199 +313,182 @@ static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
 
 
 static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
-    
+
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(address);
-    //DEBUG_ASSERT(mcast);
-    
-    
-    struct pcnet* dev = (struct pcnet*) internals;
 
-    inl(dev->io + 0x18);
-    inw(dev->io + 0x14);
+    struct pcnet* eth = (struct pcnet*) internals;
+
+    inl(eth->io + 0x18);
+    inw(eth->io + 0x14);
 
     arch_timer_delay(10000);
+
+    outl(eth->io + 0x10, 0);
+
+
+    uint32_t b;
+
+    b  = r_csr32(eth, 58);
+    b &= 0xFFF0;
+    b |= 2;
     
-    
-    outl(dev->io + 0x10, 0);
-    
-
-    uint32_t x;
-
-    x = r_csr32(dev, 58);
-    x &= 0xFFF0;
-    x |= 2;
-
-    w_csr32(dev, 58, x);
+    w_csr32(eth, 58, b);
 
 
-    x = r_bcr32(dev, 2);
-    x |= 2;
+    b  = r_bcr32(eth, 2);
+    b |= 2;
 
-    w_bcr32(dev, 2, x);
+    w_bcr32(eth, 2, b);
 
 
 
-    dev->rxdes = dev->buf + 28;
-    dev->txdes = dev->rxdes + PCNET_RX_COUNT * PCNET_DE_SIZE;
-    dev->rxbuf = dev->txdes + PCNET_TX_COUNT * PCNET_DE_SIZE;
-    dev->txbuf = dev->rxbuf + PCNET_RX_COUNT * PCNET_BUFSIZE;
+    eth->rxdes = eth->buf + 28;
+    eth->txdes = eth->buf + 28 + PCNET_RX_COUNT * PCNET_DE_SIZE;
+    eth->rxbuf = eth->buf + 28 + PCNET_RX_COUNT * PCNET_DE_SIZE + PCNET_TX_COUNT * PCNET_DE_SIZE;
+    eth->txbuf = eth->buf + 28 + PCNET_RX_COUNT * PCNET_DE_SIZE + PCNET_TX_COUNT * PCNET_DE_SIZE + PCNET_RX_COUNT * PCNET_BUFSIZE;
 
 
-    int i;
-    for(i = 0; i < PCNET_RX_COUNT; i++) {
+    eth->vbuf   = arch_vmm_p2v(eth->buf  , ARCH_VMM_AREA_HEAP);
+    eth->vrxdes = arch_vmm_p2v(eth->rxdes, ARCH_VMM_AREA_HEAP);
+    eth->vtxdes = arch_vmm_p2v(eth->txdes, ARCH_VMM_AREA_HEAP);
+    eth->vrxbuf = arch_vmm_p2v(eth->rxbuf, ARCH_VMM_AREA_HEAP);
+    eth->vtxbuf = arch_vmm_p2v(eth->txbuf, ARCH_VMM_AREA_HEAP);
 
-        uint8_t* d = (uint8_t*) arch_vmm_p2v(dev->rxdes, ARCH_VMM_AREA_HEAP);
 
-        memset(&d[i * PCNET_DE_SIZE], 0, PCNET_DE_SIZE);
+    for(size_t i = 0; i < PCNET_RX_COUNT; i++) {
 
+        memset((void*) (eth->vrxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
 
-        *(uint32_t*) &d[i * PCNET_DE_SIZE] = (uint32_t) (dev->rxbuf + i * PCNET_BUFSIZE);
-
-        uint16_t b = (uint16_t) (-PCNET_BUFSIZE);
-        b &= 0x0FFF;
-        b |= 0xF000;
-        *(uint16_t*) &d[i * PCNET_DE_SIZE + 4] = (uint16_t) b;
-
-        d[i * PCNET_DE_SIZE + 7] = 0x80;
+        mmio_w32(eth->vrxdes + i * PCNET_DE_SIZE + 0, eth->rxbuf + i * PCNET_BUFSIZE);
+        mmio_w16(eth->vrxdes + i * PCNET_DE_SIZE + 4, ((-PCNET_BUFSIZE) & 0x0FFF) | 0xF000);
+        mmio_w8 (eth->vrxdes + i * PCNET_DE_SIZE + 7, 0x80);
 
     }
 
 
+    for(size_t i = 0; i < PCNET_TX_COUNT; i++) {
 
-    for(i = 0; i < PCNET_TX_COUNT; i++) {
+        memset((void*) (eth->vtxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
 
-        uint8_t* d = (uint8_t*) arch_vmm_p2v(dev->txdes, ARCH_VMM_AREA_HEAP);
-
-        memset(&d[i * PCNET_DE_SIZE], 0, PCNET_DE_SIZE);
-
-
-        *(uint32_t*) &d[i * PCNET_DE_SIZE] = (uint32_t) (dev->txbuf + i * PCNET_BUFSIZE);
-
-        uint16_t b = (uint16_t) (-PCNET_BUFSIZE);
-        b &= 0x0FFF;
-        b |= 0xF000;
-        *(uint16_t*) &d[i * PCNET_DE_SIZE + 4] = (uint16_t) b;
+        mmio_w32(eth->vtxdes + i * PCNET_DE_SIZE + 0, eth->txbuf + i * PCNET_BUFSIZE);
+        mmio_w16(eth->vtxdes + i * PCNET_DE_SIZE + 4, ((-PCNET_BUFSIZE) & 0x0FFF) | 0xF000);
 
     }
 
 
-
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [0] = 0;
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [1] = 0;
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [2] = 5 << 4;
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [3] = 3 << 4;
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [4] = address[0];
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [5] = address[1];
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [6] = address[2];
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [7] = address[3];
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [8] = address[4];
-    ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [9] = address[5];
-
+    mmio_w8(eth->vbuf + 0, 0x00);
+    mmio_w8(eth->vbuf + 1, 0x00);
+    mmio_w8(eth->vbuf + 2, 5 << 4);
+    mmio_w8(eth->vbuf + 3, 3 << 4);
+    mmio_w8(eth->vbuf + 4, address[0]);
+    mmio_w8(eth->vbuf + 5, address[1]);
+    mmio_w8(eth->vbuf + 6, address[2]);
+    mmio_w8(eth->vbuf + 7, address[3]);
+    mmio_w8(eth->vbuf + 8, address[4]);
+    mmio_w8(eth->vbuf + 9, address[5]);
 
 
-    for(i = 10; i < 20; i++)
-        ((uint8_t*) arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP)) [i] = 0;
+    for(size_t i = 10; i < 20; i++) {
+        mmio_w8(eth->vbuf + i, 0);
+    }
+    
+
+    mmio_w32(eth->vbuf + 20, eth->rxdes);
+    mmio_w32(eth->vbuf + 24, eth->txdes);
 
 
+    w_csr32(eth, 1, (eth->buf) & 0xFFFF);
+    w_csr32(eth, 2, (eth->buf >> 16) & 0xFFFF);
 
-    ((uint32_t*) (arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP) + 20)) [0] = (uint32_t) dev->rxdes;
-    ((uint32_t*) (arch_vmm_p2v(dev->buf, ARCH_VMM_AREA_HEAP) + 24)) [0] = (uint32_t) dev->txdes;
-
-
-    w_csr32(dev, 1, (dev->buf) & 0xFFFF);
-    w_csr32(dev, 2, (dev->buf >> 16) & 0xFFFF);
-
-    r_csr32(dev, 1);
-    r_csr32(dev, 2);
+    r_csr32(eth, 1);
+    r_csr32(eth, 2);
 
 
-    uint16_t c = r_csr32(dev, 3);
+    uint16_t c = r_csr32(eth, 3);
 
-    if(c & (1 << 10))
+    if(c & (1 << 10)) {
         c ^= (1 << 10);
-    if(c & (1 << 2))
+    }
+
+    if(c & (1 << 2)) {
         c ^= (1 << 2);
+    }
 
     c |= (1 << 9);
     c |= (1 << 8);
 
-    w_csr32(dev, 3, c);
+    w_csr32(eth, 3, c);
 
 
-    c = r_csr32(dev, 4) | (1 << 1) | (1 << 12) | (1 << 14);
-    w_csr32(dev, 4, c);
+    c = r_csr32(eth, 4) | (1 << 1) | (1 << 12) | (1 << 14);
+    w_csr32(eth, 4, c);
+
+    c = r_csr32(eth, 0) | (1 << 0) | (1 << 6);
+    w_csr32(eth, 0, c);
 
 
-    c = r_csr32(dev, 0) | (1 << 0) | (1 << 6);
-    w_csr32(dev, 0, c);
-
-
-    uint32_t s;
-    while(((s = r_csr32(dev, 0)) & (1 << 8)) == 0)
+    while((r_csr32(eth, 0) & (1 << 8)) == 0)
         ;
 
 
-    c = r_csr32(dev, 0);
-    if(c & (1 << 0))
+    c = r_csr32(eth, 0);
+
+    if(c & (1 << 0)) {
         c ^= (1 << 0);
-    if(c & (1 << 2))
+    }
+
+    if(c & (1 << 2)) {
         c ^= (1 << 2);
-    
+    }
+
     c |= (1 << 1);
 
-    w_csr32(dev, 0, c);
-
+    w_csr32(eth, 0, c);
 
 }
 
 
 
-
-
-
 void init(const char* args) {
 
-    
-    int pci_devices[PCNET_MAX_DEVICES];
-    int pci_count = 0;
+    uint32_t pci_devices[PCNET_MAX_DEVICES];
+    uint32_t pci_count = 0;
 
+    void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
 
-    void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
-        
-        if((venid == 0x1022) && (devid == 0x2000))
+        if(pci_count >= PCNET_MAX_DEVICES)
+            return;
+
+        if((venid == PCNET_PCI_VENDOR_ID) && (devid == PCNET_PCI_DEVICE_ID)) {
             pci_devices[pci_count++] = device;
-
-        DEBUG_ASSERT(pci_count < PCNET_MAX_DEVICES);
+        }
 
     }
 
 
+    pci_scan(&pcnet_find_pci, -1, NULL);
 
-    pci_scan(&find_pci, -1, NULL);
 
-
-    if(!pci_count) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+    if(pci_count == 0) {
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
         kprintf("pcnet: ERROR! pci device not found!\n");
 #endif
         return;
     }
 
 
-    int i;
-    for(i = 0; i < pci_count; i++) {
+    for(size_t i = 0; i < pci_count; i++) {
 
-    
         struct pcnet* eth = (struct pcnet*) kcalloc(1, sizeof(struct pcnet), GFP_KERNEL);
 
         eth->pci = pci_devices[i];
         eth->buf = pmm_alloc_blocks(16);
 
-        
         pci_enable_pio(eth->pci);
         pci_enable_mmio(eth->pci);
         pci_enable_bus_mastering(eth->pci);
+
 
         eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
         eth->io  = pci_read(eth->pci, PCI_BAR0, 4) & 0xFFFFFFF0;
@@ -516,28 +497,21 @@ void init(const char* args) {
         spinlock_init(&eth->lock);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
-        kprintf("pcnet: index(%d) irq(%d) io(%p) mem(%p)\n", i, eth->irq, eth->io, eth->mem);
-#endif
 
-
-
+        DEBUG_ASSERT(sizeof(eth->device.name) > strlen("pcnet"));
+        DEBUG_ASSERT(sizeof(eth->device.description) > strlen("PCNET Network Adapter"));
 
         strcpy(eth->device.name, "pcnet");
         strcpy(eth->device.description, "PCNET Network Adapter");
 
-        eth->device.major = 144;
-        eth->device.minor = i;
-
+        eth->device.major  = 144;
+        eth->device.minor  = 1;
         eth->device.type   = DEVICE_TYPE_NETWORK;
         eth->device.status = DEVICE_STATUS_UNKNOWN;
 
-
-
-        int j;
-        for(j = 0; j < 6; j++)
+        for(size_t j = 0; j < 6; j++) {
             eth->device.net.address[j] = inb(eth->io + j);
-
+        }
 
         eth->device.net.low_level_init         = pcnet_init;
         eth->device.net.low_level_startoutput  = pcnet_startoutput;
@@ -547,7 +521,6 @@ void init(const char* args) {
         eth->device.net.low_level_input        = pcnet_input;
         eth->device.net.low_level_endinput     = pcnet_endinput;
         eth->device.net.low_level_input_nomem  = pcnet_input_nomem;
-
 
         IP4_ADDR(&eth->device.net.ip, 10, 0, 2, 15 + i);
         IP4_ADDR(&eth->device.net.nm, 255, 255, 255, 0);
@@ -565,8 +538,6 @@ void init(const char* args) {
             kpanicf("pcnet: PANIC! netif_add() failed\n");
 
         }
-
-
 
 
         if(eth->irq != PCI_INTERRUPT_LINE_NONE) {
@@ -587,11 +558,10 @@ void init(const char* args) {
         devices[i] = eth;
         devices[i + 1] = NULL;
 
+
     }
 
-    
 }
-
 
 void dnit(void) {
     

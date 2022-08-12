@@ -137,7 +137,7 @@ typedef uint32_t pcidev_t;
 
 
 
-typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra);
+typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* extra);
 
 __BEGIN_DECLS
 

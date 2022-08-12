@@ -43,6 +43,8 @@
 extern "C" {
 #endif
 
+#define SYSCALL_NR_TCPIP_WAIT                   500
+
 #if NO_SYS
 
 /* For a totally minimal and standalone system, we provide null

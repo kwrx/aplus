@@ -7,13 +7,14 @@
 |**BUG**|`arch/x86-family/mm/clone.c`|broken DEMAND_PAGING implementation|
 |**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|
 |**HACK**|`kernel/syscalls/297_rt_tgsigqueueinfo.c`|not sure, check later...|
-|**FIXME**|`drivers/platform/pc/network/pcnet/main.c`|Use semaphore for pcnet rx ownership|
 |**FIXME**|`drivers/virtio/virtio-console/main.c`|change values|
 |**FIXME**|`kernel/fs/tmpfs/tmpfs_readdir.c`|find a better way|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|
+|**FIXME**|`kernel/syscalls/318_getrandom.c`|implement getrandom() in a better way|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|
 |**TODO**|`arch/x86-family/intr.c`|Handle User Exception|
 |**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|
+|**TODO**|`arch/x86-family/mm/vm_lock.c`|implement a better way to lock a region of memory|
 |**TODO**|`arch/x86-family/mm/vm_map.c`|add support for releasing pages when process is killed|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|

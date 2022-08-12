@@ -293,6 +293,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize Timer
     timer_init();
 
+    //* Initialize Random Generator
+    random_init();
+
     //* Initialize APIC
     apic_init();
 

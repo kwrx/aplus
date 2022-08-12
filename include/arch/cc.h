@@ -27,6 +27,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/hal.h>
 #include <aplus/ipc.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -51,7 +52,7 @@ typedef uintptr_t mem_ptr_t;
 #define U32_F "u"
 #define S32_F "d"
 #define X32_F "x"
-#define SZT_F "u"
+#define SZT_F "lu"
 
 #define PACK_STRUCT_FIELD(x)                x
 #define PACK_STRUCT_STRUCT                  __packed
@@ -70,7 +71,7 @@ typedef uintptr_t mem_ptr_t;
         for(;;);                                                    \
     } while(0)
 
-#define LWIP_RAND() ((u32_t)rand())
+#define LWIP_RAND() ((u32_t) arch_random())
 
 
 #define SYS_ARCH_DECL_PROTECT(x)            extern spinlock_t tcpip_lock;

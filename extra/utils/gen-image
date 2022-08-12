@@ -51,7 +51,7 @@ function losetup_new_device {
 if [ ! -f $output ]; then
 
     # Create the actual disk image - 128MiB
-    dd status=none if=/dev/zero of=$output bs=4M count=32
+    dd status=none if=/dev/zero of=$output bs=4M count=64
 
     if [ $? -ne 0 ]; then
         echo "gen-image: failed to create the disk image"

@@ -261,6 +261,10 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
 
 
+    queue_init(&task->sigqueue);
+    queue_init(&task->sigpending);
+
+
 
     #define _(size, offset)     \
         (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
@@ -321,6 +325,11 @@ pid_t arch_task_spawn_init() {
 
     CPU_ZERO(&task->affinity);
     CPU_SET(current_cpu->id, &task->affinity);
+
+
+    queue_init(&task->sigqueue);
+    queue_init(&task->sigpending);
+
 
     
    #define _(size, offset)     \

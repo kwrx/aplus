@@ -65,47 +65,55 @@ long sys_recvfrom (int fd, void __user * buf, size_t size, unsigned flags, struc
     if(unlikely(!NETWORK_IS_SOCKFD(fd)))
         return -ENOTSOCK;
 
-    if(unlikely(!sockaddr))
-        return -EINVAL;
-
     if(unlikely(!buf))
         return -EINVAL;
 
-    if(unlikely(!socklen))
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(sockaddr && !socklen))
         return -EINVAL;
 
-    if(unlikely(!uio_check(sockaddr, R_OK | W_OK)))
+    if(unlikely(sockaddr && !uio_check(sockaddr, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(!uio_check(socklen, R_OK | W_OK)))
-        return -EFAULT;
-
-    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+    if(unlikely(sockaddr && !uio_check(socklen, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(!size))
         return 0;
 
 
-    socklen_t __socklen = uio_r32(socklen);
+    ssize_t e;
 
-    char __sockaddr[__socklen];
-    uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
 
 
     uio_lock(buf, size);
 
-    ssize_t e = lwip_recvfrom(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*) __sockaddr, &__socklen);
+    if(likely(sockaddr)) {
+
+        socklen_t __socklen = uio_r32(socklen);
+
+        char __sockaddr[__socklen];
+        uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
+
+        e = lwip_recvfrom(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*) __sockaddr, &__socklen);
+
+        uio_w32(socklen, __socklen);
+        uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
+
+    } else {
+
+        e = lwip_recv(NETWORK_SOCKFD(fd), buf, size, flags);
+
+    }
 
     uio_unlock(buf, size);
 
     
+
     if(unlikely(e < 0))
         return -errno;
-
-
-    uio_w32(socklen, __socklen);
-    uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
 
     return e;
 

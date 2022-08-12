@@ -347,7 +347,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     }
 
 
-    struct virtgpu* gpu = kmalloc(sizeof(struct virtgpu), GFP_KERNEL);
+    struct virtgpu* gpu = kcalloc(1, sizeof(struct virtgpu), GFP_KERNEL);
 
     gpu->driver = virtio;
     driver->userdata = gpu;

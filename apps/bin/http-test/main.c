@@ -24,9 +24,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <poll.h>
 #include <sys/stat.h>
+#include <time.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <errno.h>
@@ -41,85 +44,74 @@
 #include <netdb.h>
 
 
+
 int main(int argc, char** argv) {
        
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    // GET a web page from a server
 
-    if (sockfd == -1) {
+    struct sockaddr_in in;
+    in.sin_family = AF_INET;
+    in.sin_port = htons(80);
+    in.sin_addr.s_addr = inet_addr("80.249.99.148");
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+
+    if(sock < 0) {
         perror("socket");
-        return 1;
+        exit(1);
     }
 
-    struct sockaddr_in addr;
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(8080);
-    addr.sin_addr.s_addr = INADDR_ANY;
-
-
-    if (bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
-        perror("bind");
-        return 1;
+    if(connect(sock, (struct sockaddr*)&in, sizeof(in)) < 0) {
+        perror("connect");
+        exit(1);
     }
 
-    if (listen(sockfd, 5) == -1) {
-        perror("listen");
-        return 1;
+
+    char* request = "GET /512MB.zip HTTP/1.1\r\nHost: ipv4.download.thinkbroadband.com\r\n\r\n";
+
+    if(send(sock, request, strlen(request), 0) < 0) {
+        perror("send");
+        exit(1);
     }
+
+
+
+    size_t total = 0;
+    size_t speed = 0;
+    size_t curspeed = 0;
+    time_t last = time(NULL);
 
     do {
 
-        struct sockaddr_in client_addr;
-        socklen_t client_addr_len = sizeof(client_addr);
+        char buffer[1024];
+        int n = recv(sock, buffer, sizeof(buffer), 0);
 
-
-        fprintf(stderr, "waiting for connection...\n");
-
-        int client_fd = accept(sockfd, (struct sockaddr*)&client_addr, &client_addr_len);
-
-        if (client_fd == -1) {
-            perror("accept");
-            return 1;
+        if(n < 0) {
+            perror("recv");
+            exit(1);
         }
 
-        if(fcntl(client_fd, F_SETFL, O_NONBLOCK) < 0) {
-            perror("fcntl");
-            return 1;
+        if(n == 0) {
+            break;
         }
 
+        total += n;
+        speed += n;
+
+        if(last != time(NULL)) {
+            last = time(NULL);
+            curspeed = speed;
+            speed = 0;
+        }
+
+        fprintf(stderr, "\rReceived: %ld (%ld Kb/s)", total, curspeed / 1024);
         
-        char buf[1024];
-        ssize_t e;
-
-        
-        do {
-
-            if((e = read(client_fd, buf, sizeof(buf))) < 0) {
-
-                if(errno == EAGAIN)
-                    continue;
-
-                perror("read");
-                return 1;
-
-            }
-
-            write(1, buf, e);
-
-        } while(e > 0);
-        
-
-        fprintf(stderr, "send response...\n");
-        
-        write(client_fd, "HTTP/1.1 200 OK\r\n\r\n<h1>Hello World from aplus!</h1>", 52);
-        close(client_fd);
-
-        fprintf(stderr, "done\n");
-        
-
     } while(1);
 
+    fprintf(stderr, "\nDone!\n");
 
-    close(sockfd);
+    close(sock);
+
 
     return 0;
     

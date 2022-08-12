@@ -800,6 +800,9 @@ static inline unsigned long long x86_xgetbv(unsigned long long i) {
 
 __BEGIN_DECLS
 
+// @see arch/x86-family/random.c
+void random_init(void);
+
 __END_DECLS
 
 #endif

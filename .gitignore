@@ -26,6 +26,7 @@
 *.out
 *.generated.h
 *.iml
+*.dat
 
 # Generate by Makefile
 /kernel/aplus

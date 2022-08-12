@@ -122,9 +122,9 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
                 else
                     queue_enqueue(&current_task->sigpending, siginfo, 0);
                     
-            } else
+            } else {
                 queue_enqueue(&current_task->sigqueue, siginfo, 0);
-
+            }
 
         }
 
