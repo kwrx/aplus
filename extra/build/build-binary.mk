@@ -2,8 +2,8 @@
 
 TARGET      ?= $(notdir $(shell pwd)).bin
 
-CFLAGS	    ?= -include $(ROOTDIR)/config.h
-CXXFLAGS    ?=
+CFLAGS	    ?= -std=c11   -include $(ROOTDIR)/config.h
+CXXFLAGS    ?= -std=c++17 -include $(ROOTDIR)/config.h
 ASFLAGS	    ?=
 LDFLAGS	    ?=
 
@@ -12,7 +12,7 @@ INCLUDES    ?= include
 LIBS        ?= c m gcc
 
 SRCDIRS     ?= .
-DESTDIR     ?= $(SYSROOT)/usr/$(shell realpath --relative-base=$(ROOTDIR)/apps ..)
+DESTDIR     ?= $(SYSROOT)/usr/bin
 LIBDIR		?= $(SYSROOT)/usr/lib
 
 
