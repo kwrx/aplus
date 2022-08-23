@@ -2,7 +2,7 @@
 
 TARGET      ?= $(notdir $(shell pwd)).bin
 
-CFLAGS	    ?= -std=c11   -include $(ROOTDIR)/config.h
+CFLAGS	    ?= -std=c17   -include $(ROOTDIR)/config.h
 CXXFLAGS    ?= -std=c++17 -include $(ROOTDIR)/config.h
 ASFLAGS	    ?=
 LDFLAGS	    ?=
