@@ -92,7 +92,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
     DEBUG_ASSERT(syscalls[idx]);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
     if(unlikely(idx != 24))
         kprintf("syscall: (%s#%d) <%s> nr(%ld), p0(0x%lX), p1(0x%lX), p2(0x%lX), p3(0x%lX), p4(0x%lX), p5(0x%lX)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 #endif
@@ -121,7 +121,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
    
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if defined(DEBUG) && DEBUG_LEVEL >= 4
 
     if(unlikely(idx != 24)) {
 
