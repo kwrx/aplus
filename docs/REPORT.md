@@ -9,6 +9,7 @@
 |**HACK**|`kernel/syscalls/297_rt_tgsigqueueinfo.c`|not sure, check later...|
 |**FIXME**|`drivers/virtio/virtio-console/main.c`|change values|
 |**FIXME**|`kernel/fs/tmpfs/tmpfs_readdir.c`|find a better way|
+|**FIXME**|`kernel/syscalls/141_setpriority.c`|check for superuser|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|
 |**FIXME**|`kernel/syscalls/318_getrandom.c`|implement getrandom() in a better way|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|

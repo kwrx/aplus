@@ -35,16 +35,15 @@ endif
 %.d: %.s
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -MM -MT '$(patsubst %.s,%.o,$<)'   $< -MF $@
+%.d: %.cc
+	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cc,%.o,$<)'  $< -MF $@
 %.d: %.cpp
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cpp,%.o,$<)' $< -MF $@
 %.d: %.cxx
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cxx,%.o,$<)' $< -MF $@
-%.d: %.cc
-	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cc,%.o,$<)'  $< -MF $@
-
 
 
 %.o: %.c %.d
@@ -56,13 +55,13 @@ endif
 %.o: %.s %.d
 	$(QUIET)echo "    AS      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -c $< -o $@
+%.o: %.cc %.d
+	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.cpp %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.cxx %.d
-	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
-%.o: %.cc %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.asm

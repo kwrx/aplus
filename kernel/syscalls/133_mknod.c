@@ -69,8 +69,29 @@ long sys_mknod (const char __user * filename, mode_t mode, unsigned dev) {
     else if(mode & S_IFSOCK)
         return -ENOSYS;
 
-    else if(mode & S_IFIFO)
-        return -ENOSYS;
+    else if(mode & S_IFIFO) {
+
+        int fd;
+
+        if((fd = sys_creat(filename, mode)) < 0)
+            return fd;
+
+
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+
+        inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+
+        if((fd = sys_close(fd)) < 0)
+            return -EIO;
+
+        if((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, mode)) == NULL)
+            return -ENOMEM;
+    
+
+        return 0;
+
+    }
 
     else if(mode & S_IFREG || mode & S_IFDIR || (mode & S_IFMT) == 0) {
         

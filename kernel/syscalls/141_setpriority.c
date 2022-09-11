@@ -54,58 +54,73 @@ SYSCALL(141, setpriority,
 long sys_setpriority (int which, int who, int niceval) {
 
 
-    if(niceval > PRIO_MAX)
-        niceval = PRIO_MAX - 1;
+    if(unlikely(niceval < TASK_PRIO_MAX)) {
+        niceval = TASK_PRIO_MAX;
+    }
     
-    if(niceval < PRIO_MIN)
-        niceval = PRIO_MIN;
+    if(unlikely(niceval > TASK_PRIO_MIN)) {
+        niceval = TASK_PRIO_MIN;
+    }
 
 
+    if(who == 0) {
 
-    switch(which) {
+        switch(which) {
 
-        case PRIO_PROCESS:
-            if(who == 0)
+            case PRIO_PROCESS:
                 who = current_task->tid;
-            break;
-        
-        case PRIO_PGRP:
-            if(who == 0)
+                break;
+            
+            case PRIO_PGRP:
                 who = current_task->pgid;
-            break;
+                break;
 
-        case PRIO_USER:
-            if(who == 0)
+            case PRIO_USER:
                 who = current_task->uid;
-            break;
+                break;
 
-        default:
-            return -EINVAL;
+            default:
+                return -EINVAL;
+
+        }
 
     }
 
 
 
+    size_t found = 0;
+
+
     cpu_foreach(cpu) {
 
         task_t* tmp;
+
         for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             switch(which) {
 
                 case PRIO_PROCESS:
-                    if(tmp->tid != who)
+                    
+                    if(tmp->tid != who) {
                         continue;
+                    }
+
                     break;
                 
                 case PRIO_PGRP:
-                    if(tmp->pgid != who)
+                    
+                    if(tmp->pgid != who) {
                         continue;
+                    }
+
                     break;
 
                 case PRIO_USER:
-                    if(tmp->uid != who)
+                    
+                    if(tmp->uid != who) {
                         continue;
+                    }
+
                     break;
 
                 default:
@@ -113,19 +128,23 @@ long sys_setpriority (int which, int who, int niceval) {
 
             }
 
-
-            if(!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
+            // FIXME: check for superuser
+            if(unlikely(tmp->euid != current_task->euid && tmp->euid != current_task->uid))
                 return -EPERM;
 
 
             tmp->priority = niceval;
-            return 0;
+            found++;
             
         }
 
     }
 
 
-    return -ESRCH;
+    if(unlikely(found == 0))
+        return -ESRCH;
+
+
+    return 0;
 
 });

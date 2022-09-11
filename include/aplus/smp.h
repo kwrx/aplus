@@ -109,7 +109,7 @@ typedef struct cpu {
     spinlock_t global_lock;
     spinlock_t sched_lock;
 
-} __packed cpu_t;
+} cpu_t;
 
 
 

@@ -210,7 +210,8 @@ int vfs_unlink (inode_t*, const char*);
 
 
 // kernel/fs/pipefs.c
-inode_t* vfs_mkfifo(size_t, int);
+inode_t* pipefs_inode(void);
+inode_t* vfs_mkfifo(inode_t*, size_t, int);
 
 
 // kernel/fs/cache.c

@@ -62,9 +62,9 @@ long sys_pipe2 (int __user * fildes, int flags) {
         return -EINVAL;
 
 
-    inode_t* inode;
+    inode_t* inode = pipefs_inode();
     
-    if((inode = vfs_mkfifo(CONFIG_PIPESIZ, flags)) == NULL)
+    if((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, flags)) == NULL)
         return -ENOMEM;
 
 

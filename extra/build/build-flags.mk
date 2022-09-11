@@ -66,10 +66,24 @@ ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 endif
 
 
+#
+# Defines
+#
 CFLAGS	    += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES))
 CXXFLAGS    += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES))
 ASFLAGS     += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES)) -D__ASSEMBLY__
 
+
+#
+# Standard
+#
+CFLAGS	  	+= -std=gnu17
+CXXFLAGS 	+= -std=gnu++20
+
+
+#
+# Extra
+#
 CFLAGS	    += $(subst $\",,$(CONFIG_COMPILER_EXTRA_CFLAGS))
 CXXFLAGS    += $(subst $\",,$(CONFIG_COMPILER_EXTRA_CXXFLAGS))
 ASFLAGS     += $(subst $\",,$(CONFIG_COMPILER_EXTRA_ASFLAGS))

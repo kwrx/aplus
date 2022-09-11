@@ -23,5 +23,11 @@
 
 #pragma once
 
-#include "UIConfig.hpp"
-#include "displays/Display.hpp"
+
+#define APLUS_UI_CONFIG_MAX_SCREENS  16
+
+#define APLUS_UI_RESOURCES_PATH_CURSORS       "/usr/share/cursors"
+#define APLUS_UI_RESOURCES_PATH_FONTS         "/usr/share/fonts"
+#define APLUS_UI_RESOURCES_PATH_ICONS         "/usr/share/icons"
+#define APLUS_UI_RESOURCES_PATH_THEMES        "/usr/share/themes"
+#define APLUS_UI_RESOURCES_PATH_WALLPAPERS    "/usr/share/wallpapers"
