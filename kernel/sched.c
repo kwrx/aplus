@@ -184,7 +184,7 @@ static inline void __do_signals(void) {
         DEBUG_ASSERT(siginfo->si_signo <= _NSIG);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kprintf("sched: received signal(%d) from tid(%d) to tid(%d)\n", siginfo->si_signo, siginfo->si_pid, current_task->tid);
 #endif
 
@@ -369,7 +369,7 @@ void sched_enqueue(task_t* task) {
     });
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
 #endif
 
@@ -410,7 +410,7 @@ void sched_dequeue(task_t* task) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
 

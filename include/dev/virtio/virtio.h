@@ -77,6 +77,7 @@
 
 // Reserved feature bits
 // Select (1)
+#define VIRTIO_F_VERSION_1                          (1 << 0)
 #define VIRTIO_F_IN_ORDER                           (1 << 6)
 
 

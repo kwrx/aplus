@@ -406,7 +406,7 @@ pid_t arch_task_spawn_init() {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
     kprintf("task: spawn init process pid(%d) cpu(%ld) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
 #endif
 
@@ -439,10 +439,10 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     CPU_ZERO(&task->affinity);
     
     int i;
-    for(i = 0; i < (CPU_SETSIZE << 3); i++)
+    for(i = 0; i < (CPU_SETSIZE << 3); i++) {
         CPU_SET(i, &task->affinity);
+    }
     
-
     task->tgid = current_task->tid;
 
 
@@ -467,10 +467,10 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->sighand->refcount = 1;
     
     memset(&task->sighand->sigmask, 0xFF, sizeof(sigset_t));
-    
-
-    
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
+
+
+    task->priority = TASK_PRIO_MIN;
 
 
 
@@ -492,7 +492,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->parent = current_task;
     
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
     kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%lX)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
 #endif
 
@@ -511,7 +511,7 @@ void arch_task_context_set(task_t* task, int options, long value) {
     DEBUG_ASSERT(task->frame);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("task: set context tid(%d) options(%d) value(0x%lX)\n", task->tid, options, value);
 #endif
 

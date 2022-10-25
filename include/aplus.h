@@ -31,9 +31,21 @@
 #endif
 
 #ifdef CONFIG_HAVE_DEBUG
-#define DEBUG           1
-#define DEBUG_LEVEL     CONFIG_DEBUG_LEVEL
+#define DEBUG                   1
+#define DEBUG_LEVEL             CONFIG_DEBUG_LEVEL
+#define DEBUG_LEVEL_TRACE       (DEBUG_LEVEL >= 4)
+#define DEBUG_LEVEL_INFO        (DEBUG_LEVEL >= 3)
+#define DEBUG_LEVEL_WARN        (DEBUG_LEVEL >= 2)
+#define DEBUG_LEVEL_ERROR       (DEBUG_LEVEL >= 1)
+#define DEBUG_LEVEL_FATAL       (DEBUG_LEVEL >= 0)
+#else
+#define DEBUG_LEVEL_TRACE       0
+#define DEBUG_LEVEL_INFO        0
+#define DEBUG_LEVEL_WARN        0
+#define DEBUG_LEVEL_ERROR       0
+#define DEBUG_LEVEL_FATAL       0
 #endif
+
 
 
 #ifndef __ASSEMBLY__
@@ -130,17 +142,6 @@
 
 
 #if defined(KERNEL)
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
-
-#if 0 //! FIXME !!
-#define __user          __attribute__((noderef, address_space(1)))
-#define __kernel        __attribute__((address_space(0)))
-#define __safe          __attribute__((safe))
-#define __force         __attribute__((force))
-#define __nocast        __attribute__((nocast))
-#define __iomem         __attribute__((noderef, address_space(2)))
-#define __percpu        __attribute__((noderef, address_space(3)))
-#endif 
 
 #define __user
 #define __kernel
@@ -148,38 +149,6 @@
 #define __force
 #define __nocast
 #define __iomem
-#define __percpu
-
-#define __must_hold(x)  __attribute__((context(x,1,1)))
-#define __acquires(x)   __attribute__((context(x,0,1)))
-#define __releases(x)   __attribute__((context(x,1,0)))
-#define __acquire(x)    __context__(x,1)
-#define __release(x)    __context__(x,-1)
-
-#define __cond_lock(x, c)    \
-    ((c) ? ({ __acquire(x); 1; }) : 0)
-
-
-extern void __chk_user_ptr(const volatile void __user *);
-extern void __chk_io_ptr(const volatile void __iomem *);
-
-#else
-
-#define __user
-#define __kernel
-#define __safe
-#define __force
-#define __nocast
-#define __iomem
-#define __chk_user_ptr(x)               (void) 0
-#define __chk_io_ptr(x)                 (void) 0
-#define __builtin_warning(x, y...)      (1)
-#define __must_hold(x)
-#define __acquires(x)
-#define __releases(x)
-#define __acquire(x)                    (void) 0
-#define __release(x)                    (void) 0
-#define __cond_lock(x, c)               (c)
 #define __percpu
 
 #endif
@@ -313,6 +282,5 @@ __END_DECLS
 
 #endif
 
-#endif
 #endif
 #endif

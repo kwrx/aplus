@@ -624,7 +624,7 @@ static void satapi_init(device_t* device) {
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
 
     int j;
     for(j = 0; j < 39; j += 2) {
@@ -857,7 +857,7 @@ static void sata_init(device_t* device) {
                             ;
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
 
     int j;
     for(j = 0; j < 39; j += 2) {
@@ -1238,7 +1238,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         ARCH_VMM_MAP_UNCACHED
     );
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
     kprintf("ahci: pci device found: index(%d) device(%d) vendor(%d) irq(%d) hba(%p) size(%p)\n", devices_count - 1, did, vid, ahci->irq, ahci->hba, size);
 #endif
 
@@ -1260,7 +1260,7 @@ void init(const char* args) {
 
         ahci->contiguous_memory_area = pmm_alloc_blocks(AHCI_MEMORY_SIZE >> 12);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
 #endif
 
@@ -1317,12 +1317,14 @@ void init(const char* args) {
             if((s & AHCI_PORT_STSS_IPM) != (1 << 8))    /* Interface active */
                 continue;
 
+#if DEBUG_LEVEL_WARN
             if((s & AHCI_PORT_STSS_SPD) != (3 << 4))    /* 6 Gbps */
                 kprintf("ahci: WARN! device %d has a slow interface speed: %s Gbps\n", i,
                             &("0\0  "
                             "1.5\0"
                             "3\0  "
                             "6\0  ")[((s & AHCI_PORT_STSS_SPD) >> 4) * 4]);
+#endif
 
 
             switch(m) {

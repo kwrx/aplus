@@ -19,7 +19,6 @@ case $1 in
         flags="$flags -M accel=kvm"
         flags="$flags -smp $CPUS"
         flags="$flags -vga std"
-        flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8888-:8888"
         ;;
@@ -36,7 +35,6 @@ case $1 in
         flags="$flags -cpu host,+x2apic,+pdpe1gb,+rdtscp,+fxsr"
         flags="$flags -smp $CPUS,sockets=1,cores=$CPUS,threads=1"
         flags="$flags -vga vmware"
-        flags="$flags -soundhw ac97"
         flags="$flags -device pcnet,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
         flags="$flags -object filter-dump,id=f1,netdev=net0,file=network.dat"

@@ -146,7 +146,7 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
                 futex_wait(current_task, &current_task->fd->descriptors[fd].ref->inode->ev.futex, 0, NULL);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
                 kprintf("write: task %d waiting for POLLOUT event\n", current_task->tid);
 #endif
 

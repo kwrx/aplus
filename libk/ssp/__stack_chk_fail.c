@@ -29,7 +29,7 @@
 
 __noreturn
 void __stack_chk_fail(void) {
-#if defined(DEBUG)
+#if DEBUG_LEVEL_FATAL
     kpanicf("PANIC! stack smashing detected!\n");
 #endif
     __builtin_unreachable();

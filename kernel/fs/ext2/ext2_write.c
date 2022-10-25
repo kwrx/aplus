@@ -73,8 +73,6 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
             inode->sb->st.f_bavail--;
             inode->sb->st.f_bfree--;
-
-            ext2->sb.s_free_blocks_count--;
         
         }
 

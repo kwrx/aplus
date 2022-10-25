@@ -36,6 +36,7 @@
 #include <sched.h>
 
 #include <aplus/fb.h>
+#include <aplus/input.h>
 #include <aplus/events.h>
 
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
@@ -48,7 +49,8 @@ static struct {
 
     void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 
-    int pipefd[2];
+    int ipipefd[2];
+    int opipefd[2];
 
     int kbd;
     int mouse;
@@ -63,6 +65,13 @@ static struct {
 
     struct fb_var_screeninfo var;
     struct fb_fix_screeninfo fix;
+
+    struct {
+        uint8_t ctrl;
+        uint8_t alt;
+        uint8_t shift;
+        uint8_t meta;
+    } modifiers;
 
 } context;
 
@@ -172,8 +181,9 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
 
-    if(gidx > 255)
+    if(gidx > 255) {
         gidx = 0;
+    }
     
     const uint8_t* glyph = &builtin_fontdata[gidx * ATERM_FONT_PITCH];
 
@@ -195,16 +205,16 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 
 
-    uint16_t x = context.cursor.x;
-    uint16_t y = context.cursor.y;
-    uint16_t w = context.var.xres_virtual > context.cursor.x + 16 ? context.cursor.x + 16 : context.var.xres_virtual;
-    uint16_t h = context.var.yres_virtual > context.cursor.y + 16 ? context.cursor.y + 16 : context.var.yres_virtual;
+    // // uint16_t x = context.cursor.x;
+    // // uint16_t y = context.cursor.y;
+    // // uint16_t w = context.var.xres_virtual > context.cursor.x + 16 ? context.cursor.x + 16 : context.var.xres_virtual;
+    // // uint16_t h = context.var.yres_virtual > context.cursor.y + 16 ? context.cursor.y + 16 : context.var.yres_virtual;
 
-    for(; x < w; x++) {
-        for(; y < h; y++) {
-            context.plot(x, y, fr, fg, fb);
-        }
-    }
+    // // for(; x < w; x++) {
+    // //     for(; y < h; y++) {
+    // //         context.plot(x, y, fr, fg, fb);
+    // //     }
+    // // }
 
     return 0;
 
@@ -212,10 +222,360 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 
 
-static void term_write_cb(struct tsm_vte* vte, const char* bytes, size_t len, void* data) {
-    fprintf(stderr, "aplus-terminal: term_write_cb(): vte(%p), bytes('%s' - %p - %d), size(%ld)\n", vte, bytes, (void*) bytes, bytes ? bytes[0] : -1, len);
+static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
+
+    fprintf(stderr, "key: %d %d\n", keysym, down);
+
+    switch(keysym) {
+
+        case KEY_LEFTSHIFT:
+        case KEY_RIGHTSHIFT:
+            context.modifiers.shift = down;
+            break;
+
+        case KEY_LEFTCTRL:
+        case KEY_RIGHTCTRL:
+            context.modifiers.ctrl = down;
+            break;
+
+        case KEY_LEFTALT:
+        case KEY_RIGHTALT:
+            context.modifiers.alt = down;
+            break;
+
+        case KEY_LEFTMETA:
+        case KEY_RIGHTMETA:
+            context.modifiers.meta = down;
+            break;
+
+    }
+
+
+    if(down) {
+
+        switch(keysym) {
+
+            case KEY_ESC:
+                tsm_vte_input(context.vte, "\x1B", 1);
+                break;
+
+            case KEY_TAB:
+                tsm_vte_input(context.vte, "\t", 1);
+                break;
+
+            case KEY_BACKSPACE:
+                tsm_vte_input(context.vte, "\x7F", 1);
+                break;
+
+            case KEY_ENTER:
+                tsm_vte_input(context.vte, "\n", 1);
+                break;
+
+            case KEY_UP:
+                tsm_vte_input(context.vte, "\x1B[A", 3);
+                break;
+
+            case KEY_DOWN:
+                tsm_vte_input(context.vte, "\x1B[B", 3);
+                break;
+
+            case KEY_RIGHT:
+                tsm_vte_input(context.vte, "\x1B[C", 3);
+                break;
+
+            case KEY_LEFT:
+                tsm_vte_input(context.vte, "\x1B[D", 3);
+                break;
+
+            case KEY_HOME:
+                tsm_vte_input(context.vte, "\x1B[H", 3);
+                break;
+        
+            case KEY_END:
+                tsm_vte_input(context.vte, "\x1B[F", 3);
+                break;
+
+            case KEY_PAGEUP:
+                tsm_vte_input(context.vte, "\x1B[5~", 4);
+                break;
+
+            case KEY_PAGEDOWN:
+                tsm_vte_input(context.vte, "\x1B[6~", 4);
+                break;
+
+            case KEY_INSERT:
+                tsm_vte_input(context.vte, "\x1B[2~", 4);
+                break;
+
+            case KEY_DELETE:
+                tsm_vte_input(context.vte, "\x1B[3~", 4);
+                break;
+
+            case KEY_F1:
+                tsm_vte_input(context.vte, "\x1BOP", 3);
+                break;
+
+            case KEY_F2:
+                tsm_vte_input(context.vte, "\x1BOQ", 3);
+                break;
+
+            case KEY_F3:
+                tsm_vte_input(context.vte, "\x1BOR", 3);
+                break;
+
+            case KEY_F4:
+                tsm_vte_input(context.vte, "\x1BOS", 3);
+                break;
+
+            case KEY_F5:
+                tsm_vte_input(context.vte, "\x1B[15~", 5);
+                break;
+
+            case KEY_F6:
+                tsm_vte_input(context.vte, "\x1B[17~", 5);
+                break;
+
+            case KEY_F7:
+                tsm_vte_input(context.vte, "\x1B[18~", 5);
+                break;
+
+            case KEY_F8:
+                tsm_vte_input(context.vte, "\x1B[19~", 5);
+                break;
+
+            case KEY_F9:
+                tsm_vte_input(context.vte, "\x1B[20~", 5);
+                break;
+
+            case KEY_F10:
+                tsm_vte_input(context.vte, "\x1B[21~", 5);
+                break;
+
+            case KEY_F11:
+                tsm_vte_input(context.vte, "\x1B[23~", 5);
+                break;
+
+            case KEY_F12:
+                tsm_vte_input(context.vte, "\x1B[24~", 5);
+                break;
+
+
+            case KEY_0:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, ")", 1);
+                } else {
+                    tsm_vte_input(context.vte, "0", 1);
+                }
+                break;
+
+            case KEY_1:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "!", 1);
+                } else {
+                    tsm_vte_input(context.vte, "1", 1);
+                }
+                break;
+
+            case KEY_2:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "@", 1);
+                } else {
+                    tsm_vte_input(context.vte, "2", 1);
+                }
+                break;
+            
+            case KEY_3:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "#", 1);
+                } else {
+                    tsm_vte_input(context.vte, "3", 1);
+                }
+                break;
+            
+            case KEY_4:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "$", 1);
+                } else {
+                    tsm_vte_input(context.vte, "4", 1);
+                }
+                break;
+
+            case KEY_5:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "%", 1);
+                } else {
+                    tsm_vte_input(context.vte, "5", 1);
+                }
+                break;
+            
+            case KEY_6:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "^", 1);
+                } else {
+                    tsm_vte_input(context.vte, "6", 1);
+                }
+                break;
+
+            case KEY_7:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "&", 1);
+                } else {
+                    tsm_vte_input(context.vte, "7", 1);
+                }
+                break;
+
+            case KEY_8:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "*", 1);
+                } else {
+                    tsm_vte_input(context.vte, "8", 1);
+                }
+                break;
+
+            case KEY_9:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "(", 1);
+                } else {
+                    tsm_vte_input(context.vte, "9", 1);
+                }
+                break;
+
+            case KEY_Q ... KEY_P:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, &"QWERTYUIOP"[keysym - KEY_Q], 1);
+                } else {
+                    tsm_vte_input(context.vte, &"qwertyuiop"[keysym - KEY_Q], 1);
+                }
+                break;
+
+            case KEY_A ... KEY_L:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, &"ASDFGHJKL"[keysym - KEY_A], 1);
+                } else {
+                    tsm_vte_input(context.vte, &"asdfghjkl"[keysym - KEY_A], 1);
+                }
+                break;
+
+            case KEY_Z ... KEY_M:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, &"ZXCVBNM"[keysym - KEY_Z], 1);
+                } else {
+                    tsm_vte_input(context.vte, &"zxcvbnm"[keysym - KEY_Z], 1);
+                }
+                break;
+
+            case KEY_COMMA:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "<", 1);
+                } else {
+                    tsm_vte_input(context.vte, ",", 1);
+                }
+                break;
+
+            case KEY_DOT:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, ">", 1);
+                } else {
+                    tsm_vte_input(context.vte, ".", 1);
+                }
+                break;
+
+            case KEY_SLASH:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "?", 1);
+                } else {
+                    tsm_vte_input(context.vte, "/", 1);
+                }
+                break;
+
+            case KEY_SEMICOLON:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, ":", 1);
+                } else {
+                    tsm_vte_input(context.vte, ";", 1);
+                }
+                break;
+
+            case KEY_APOSTROPHE:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "\"", 1);
+                } else {
+                    tsm_vte_input(context.vte, "'", 1);
+                }
+                break;
+
+            case KEY_LEFTBRACE:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "{", 1);
+                } else {
+                    tsm_vte_input(context.vte, "[", 1);
+                }
+                break;
+
+            case KEY_RIGHTBRACE:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "}", 1);
+                } else {
+                    tsm_vte_input(context.vte, "]", 1);
+                }
+                break;
+            
+            case KEY_BACKSLASH:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "|", 1);
+                } else {
+                    tsm_vte_input(context.vte, "\\", 1);
+                }
+                break;
+
+            case KEY_MINUS:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "_", 1);
+                } else {
+                    tsm_vte_input(context.vte, "-", 1);
+                }
+                break;
+
+            case KEY_EQUAL:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "+", 1);
+                } else {
+                    tsm_vte_input(context.vte, "=", 1);
+                }
+                break;
+            
+            case KEY_GRAVE:
+                if(context.modifiers.shift) {
+                    tsm_vte_input(context.vte, "~", 1);
+                } else {
+                    tsm_vte_input(context.vte, "`", 1);
+                }
+                break;
+
+            case KEY_SPACE:
+                tsm_vte_input(context.vte, " ", 1);
+                break;
+
+            default:
+                break;
+
+        }
+
+    }
+
 }
 
+
+static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *data) {
+    
+    (void) vte;
+    (void) data;
+
+    fprintf(stderr, "tsm_write_cb: %ld bytes '%X'\n", len, *u8);
+
+    //write(context.ipipefd[1], u8, len);
+
+}
 
 
 
@@ -311,7 +671,30 @@ int main(int argc, char** argv) {
     }
 
 
-    //* 2. TSM initialization
+   
+    //* 2. I/O initialization
+
+    if(pipe2(context.ipipefd, 0) < 0) {
+        fprintf(stderr, "aplus-terminal: pipe() failed\n");
+        exit(1);
+    }
+
+    assert(context.ipipefd[0] >= 0);
+    assert(context.ipipefd[1] >= 0);
+
+
+    if(pipe2(context.opipefd, O_NONBLOCK) < 0) {
+        fprintf(stderr, "aplus-terminal: pipe() failed\n");
+        exit(1);
+    }
+
+    assert(context.opipefd[0] >= 0);
+    assert(context.opipefd[1] >= 0);
+
+
+
+
+    //* 3. TSM initialization
 
     if(tsm_screen_new(&context.con, NULL, NULL) < 0) {
         fprintf(stderr, "aplus-terminal: tsm_screen_new() failed\n");
@@ -321,7 +704,7 @@ int main(int argc, char** argv) {
     assert(context.con);
 
 
-    if(tsm_vte_new(&context.vte, context.con, &term_write_cb, NULL, NULL, NULL) < 0) {
+    if(tsm_vte_new(&context.vte, context.con, tsm_write_cb, NULL, NULL, NULL) < 0) {
         fprintf(stderr, "aplus-terminal: tsm_vte_new() failed\n");
         exit(1);
     }
@@ -343,16 +726,6 @@ int main(int argc, char** argv) {
 
 
 
-    //* 3. I/O initialization
-
-    if(pipe2(context.pipefd, O_NONBLOCK) < 0) {
-        fprintf(stderr, "aplus-terminal: pipe() failed\n");
-        exit(1);
-    }
-
-    assert(context.pipefd[0] >= 0);
-    assert(context.pipefd[1] >= 0);
-
 
     //* 4. Input initialization
 
@@ -360,6 +733,11 @@ int main(int argc, char** argv) {
 
     if(context.kbd < 0) {
         fprintf(stderr, "aplus-terminal: open() failed: cannot open /dev/kbd: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    if(fcntl(context.kbd, F_SETFL, O_NONBLOCK) < 0) {
+        fprintf(stderr, "aplus-terminal: fcntl() failed: %s\n", strerror(errno));
         exit(1);
     }
 
@@ -371,6 +749,10 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    if(fcntl(context.mouse, F_SETFL, O_NONBLOCK) < 0) {
+        fprintf(stderr, "aplus-terminal: fcntl() failed: %s\n", strerror(errno));
+        exit(1);
+    }
 
 
     
@@ -391,17 +773,17 @@ int main(int argc, char** argv) {
         setenv("COLORFGBG", "7;0", 1);
 
 
-        if(dup2(context.pipefd[0], STDIN_FILENO) < 0) {
+        if(dup2(context.ipipefd[0], STDIN_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
 
-        if(dup2(context.pipefd[1], STDOUT_FILENO) < 0) {
+        if(dup2(context.opipefd[1], STDOUT_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
 
-        if(dup2(context.pipefd[1], STDERR_FILENO) < 0) {
+        if(dup2(context.opipefd[1], STDERR_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
@@ -431,9 +813,9 @@ int main(int argc, char** argv) {
         do {
 
             struct pollfd pfd[3] = {
-                { .fd = context.kbd,       .events = POLLIN },
-                { .fd = context.mouse,     .events = POLLIN },
-                { .fd = context.pipefd[0], .events = POLLIN }
+                { .fd = context.kbd,        .events = POLLIN },
+                { .fd = context.mouse,      .events = POLLIN },
+                { .fd = context.opipefd[0], .events = POLLIN }
             };
 
             if(poll(pfd, 3, -1) < 0) {
@@ -449,14 +831,14 @@ int main(int argc, char** argv) {
 
                 if(pfd[i].revents & POLLIN) {
 
-                    if(pfd[i].fd == context.pipefd[0]) {
+                    if(pfd[i].fd == context.opipefd[0]) {
 
                         char buf[BUFSIZ];
                         ssize_t size;
 
                         do {
 
-                            while((size = read(context.pipefd[0], buf, sizeof(buf))) > 0) {
+                            while((size = read(context.opipefd[0], buf, sizeof(buf))) > 0) {
 
                                 tsm_vte_input(context.vte, buf, size);
                                 tsm_screen_draw(context.con, fb_draw_cb, NULL);
@@ -481,7 +863,8 @@ int main(int argc, char** argv) {
                                     if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
                                         tsm_screen_sb_reset(context.con);
                                     }
-
+                                    
+                                    tsm_handle_key(context.ipipefd[1], ev.ev_key.vkey, ev.ev_key.down);
                                     tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
                                 }
@@ -530,12 +913,22 @@ int main(int argc, char** argv) {
         } while(true);
 
         
-        if(close(context.pipefd[0]) < 0) {
+        if(close(context.ipipefd[0]) < 0) {
             fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
             exit(1);
         }
 
-        if(close(context.pipefd[1]) < 0) {
+        if(close(context.ipipefd[1]) < 0) {
+            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        if(close(context.opipefd[0]) < 0) {
+            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        if(close(context.opipefd[1]) < 0) {
             fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
             exit(1);
         }

@@ -343,7 +343,7 @@ void block_inode(device_t* device, inode_t* inode, void (*device_mkdev) (device_
 
     if(unlikely(sig != 0xAA55)) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 3
+#if DEBUG_LEVEL_WARN
         kprintf("device::block: WARN! unknown partition table for /dev/%s (sig: %p)\n", device->name, sig);
 #endif
 

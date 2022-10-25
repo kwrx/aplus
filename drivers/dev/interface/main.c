@@ -301,7 +301,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("device::create: initialized '%s' dev(%x:%x) iobase(%p) mmiobase(%p): '%s'\n",
         device->name, 
         device->major, 

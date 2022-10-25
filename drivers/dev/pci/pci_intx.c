@@ -97,7 +97,7 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
         arch_intr_map_irq(irq, pci_intx_interrupt_handler);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kprintf("pci-intx: slot %d mapped for device %d [irq(%p), handler(%p), data(%p)]\n", i, device, irq, handler, data);
 #endif
 
@@ -110,7 +110,7 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
     spinlock_unlock(&pci_intx_lock);
     
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
     kprintf("pci-intx: ERROR! No more device slots available for device %d [irq(%p), handler(%p), data(%p)]\n", device, irq, handler, data);
 #endif
 
@@ -144,7 +144,7 @@ int pci_intx_unmap_irq(pcidev_t device) {
     spinlock_unlock(&pci_intx_lock);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
     kprintf("pci-intx: ERROR! No device slot found for device %d\n", device);
 #endif
 

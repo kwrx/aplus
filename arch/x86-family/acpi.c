@@ -109,7 +109,7 @@ static int acpi_find_rsdp() {
         DEBUG_ASSERT(address);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
         kprintf("x86-acpi: RSDT found at 0x%lX\n", address);
 #endif
 
@@ -180,7 +180,7 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
             continue;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
         kprintf("x86-acpi: %s found at 0x%lX\n", name, address);
 #endif
 
@@ -244,7 +244,7 @@ void acpi_init(void) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("x86-acpi: Switching to ACPI complete [base(%p), intr(%d), pwr(%d), ext(%d)]\n", RSDT, fadt->sci_interrupt, fadt->pwrmode, extended);
 #endif
 

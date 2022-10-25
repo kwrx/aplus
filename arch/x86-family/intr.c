@@ -55,7 +55,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
     
     DEBUG_ASSERT((frame));
 
-// #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// #if DEBUG_LEVEL_TRACE
 
 //     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) sp(%p) ss(%p)\n",
 //         frame->intno,
@@ -102,7 +102,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                 startup_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
 
             else {
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_WARN
                 kprintf("x86-intr: WARN! unhandled IRQ #%ld caught, ignoring\n", frame->intno - 0x20);
 #endif
             }  
@@ -118,9 +118,10 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                 if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
                     current_cpu->uptime.tv_sec += 1;
                     current_cpu->uptime.tv_nsec = 0;
-                } else
+                } else {
                     current_cpu->uptime.tv_nsec += 10000000;
-
+                }
+                
                 schedule(0);
 
             }
@@ -224,7 +225,7 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
     
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
 #endif
 
@@ -242,7 +243,7 @@ void arch_intr_unmap_irq(irq_t irq) {
     ioapic_unmap_irq(irq);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 
@@ -262,8 +263,8 @@ void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t))
     startup_irq[irq].handler = handler;    
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-intr: map irq(%d) at %p without I/O APIC\n", irq, handler);
 #endif
 
 }
@@ -277,8 +278,8 @@ void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
     startup_irq[irq].handler = NULL;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: unmap irq(%d)\n", irq);
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-intr: unmap irq(%d) without I/O APIC\n", irq);
 #endif
 
 }

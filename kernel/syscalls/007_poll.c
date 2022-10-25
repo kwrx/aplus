@@ -201,7 +201,7 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
         }
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kprintf("poll: task %d waiting for %d events\n", current_task->tid, nfds);
 #endif
 

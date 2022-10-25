@@ -41,7 +41,7 @@ void sem_init(semaphore_t* s, uint32_t value) {
 
 }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 void __sem_wait(semaphore_t* s, const char* FUNC, const char* FILE, int LINE) {
 #else
 void sem_wait(semaphore_t* s) {
@@ -49,7 +49,7 @@ void sem_wait(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     uint64_t t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
 #endif
 
@@ -58,10 +58,10 @@ void sem_wait(semaphore_t* s) {
         __builtin_ia32_pause();
 #endif
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         if(arch_timer_generic_getms() > t0) {
             t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
-            kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%ld), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
+            kprintf("ipc: TRACE! %s(): Timeout expired for %s:%d %s(%p), cpu(%ld), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
         }
 #endif
     }

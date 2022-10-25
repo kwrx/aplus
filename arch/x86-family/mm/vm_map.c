@@ -133,7 +133,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
     if(flags & ARCH_VMM_MAP_DEMAND)
         DEBUG_ASSERT((flags & ARCH_VMM_MAP_TYPE_MASK) == ARCH_VMM_MAP_TYPE_PAGE && "Only TYPE_PAGE can be no-prefault");
 #endif
@@ -282,7 +282,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
             }
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
             // // kprintf("arch_vmm_map(): virtaddr(0x%lX) physaddr(0x%llX) flags(0x%lX) pagesize(0x%lX)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
 #endif
 

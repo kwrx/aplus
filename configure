@@ -120,6 +120,10 @@ else
         packages="$packages libpng"
     fi
 
+    if [ "$CONFIG_HAVE_LIBWEBP" == "y" ]; then
+        packages="$packages libwebp"
+    fi
+
     if [ "$CONFIG_HAVE_FREETYPE" == "y" ]; then
         packages="$packages freetype"
     fi

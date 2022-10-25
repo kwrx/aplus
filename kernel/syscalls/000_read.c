@@ -143,7 +143,7 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
                 futex_wait(current_task, &current_task->fd->descriptors[fd].ref->inode->ev.futex, 0, NULL);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
                 kprintf("read: task %d waiting for POLLIN event\n", current_task->tid);
 #endif
 

@@ -122,7 +122,7 @@ __BEGIN_DECLS
 struct task;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 
 void __spinlock_init(spinlock_t*, const char*, const char*, int);
 void __spinlock_init_with_flags(spinlock_t*, int, const char*, const char*, int);

@@ -54,7 +54,7 @@ void vfs_init(void) {
     #include "fstable.c.in"
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
 
     for(i = 0; fs_table[i].id; i++)
         kprintf("vfs: available filesystem '%s'\n", fs_table[i].name);
@@ -65,7 +65,7 @@ void vfs_init(void) {
     rootfs_init();
     fd_init();
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("vfs: ready!\n");
 #endif
 
@@ -107,7 +107,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
         dir->ino ^= dir->sb->ino;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
 #endif
 

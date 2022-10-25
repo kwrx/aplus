@@ -153,7 +153,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if(virtio_pci_init(&driver) < 0) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_ERROR
         kprintf("virtio-console: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
 

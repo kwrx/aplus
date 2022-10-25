@@ -151,7 +151,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("wait: task %d waiting for %ld tasks\n", current_task->tid, count);
 #endif
 

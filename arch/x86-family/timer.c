@@ -243,7 +243,7 @@ void timer_init(void) {
         DEBUG_ASSERT(hpet->address.address != 0);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_INFO
         kprintf("hpet: rev(%d) count(%d) counter(%d) nr(%d) mintick(%d) address(0x%lX)\n",
             hpet->hardware_rev_id,
             hpet->comparator_count,
@@ -297,7 +297,7 @@ void timer_init(void) {
         mmio_w64(HPET_GENERAL_CR, mmio_r64(HPET_GENERAL_CR) | 1);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_INFO
         kprintf("hpet: started! mHZ(%ld) period(%ld) timers(%d)\n", freq / 1000000, period, timers);
 #endif
 
@@ -339,7 +339,7 @@ void timer_init(void) {
     DEBUG_ASSERT(hpet_address);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("x86-timer: now(%ld) percpu[mHZ(%lld)] generic[mHZ(%lld)]\n", arch_timer_gettime(),
                                                                           arch_timer_percpu_getres()  / 1000000ULL,
                                                                           arch_timer_generic_getres() / 1000000ULL);

@@ -319,10 +319,10 @@ void fpu_init(uint64_t cpu) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-            kprintf("x86-fpu: %s/XRSTOR feature set with %d bytes\n", boot_cpu_has(X86_FEATURE_XSAVEOPT)
-                                                                        ? "XSAVEOPT"
-                                                                        : "XSAVE"   , __fpu_size);
+#if DEBUG_LEVEL_INFO
+            kprintf("x86-fpu: uses %s/XRSTOR feature set with %d bytes\n", boot_cpu_has(X86_FEATURE_XSAVEOPT)
+                                                                            ? "XSAVEOPT"
+                                                                            : "XSAVE"   , __fpu_size);
 #endif
 
         }
@@ -341,7 +341,7 @@ void fpu_init(uint64_t cpu) {
             __fpu_size    = 512;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_INFO
             kprintf("x86-fpu: uses FXSAVE/FXRSTOR feature set with %d bytes\n", __fpu_size);
 #endif
        
@@ -356,7 +356,7 @@ void fpu_init(uint64_t cpu) {
             __fpu_size    = 108;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_INFO
             kprintf("x86-fpu: uses FSAVE/FRSTOR feature set with %d bytes\n", __fpu_size);
 #endif
 

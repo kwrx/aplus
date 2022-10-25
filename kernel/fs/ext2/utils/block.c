@@ -148,6 +148,7 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
             DEBUG_ASSERT(*block); 
 
             ext2->sb.s_free_blocks_count--;
+
             d.bg_free_blocks_count--;
             
 
@@ -155,6 +156,11 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
                 
             ext2_utils_write_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize);
             ext2_utils_write_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
+
+
+#if DEBUG_LEVEL_TRACE
+            kprintf("ext2: alloc block %d (group %ld, bitmap %d, offset %ld)\n", *block, i, d.bg_block_bitmap, j);
+#endif
 
             break;
 

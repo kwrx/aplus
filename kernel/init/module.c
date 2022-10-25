@@ -130,7 +130,7 @@ void module_run(module_t* m) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
     kprintf("module: loading %s [addr(%p), size(0x%lX)]\n", m->name, m->core.ptr, m->core.size);
 #endif
 
@@ -412,7 +412,7 @@ void module_run(module_t* m) {
     }
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("module: running %s [init(%p) args(%p)]\n", m->name, m->init, m->args);
 #endif
 

@@ -62,7 +62,7 @@ long sys_exit (int status) {
         current_task->exit.value = (status & 0377) << 8;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
     kprintf("exit: task %d (%s) %s with %X\n", 
         current_task->tid, 
         current_task->argv[0],

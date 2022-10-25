@@ -81,9 +81,9 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t vector, struct virtio_dr
     }
 
 
-    if(likely(driver->interrupt))
+    if(likely(driver->interrupt)) {
         driver->interrupt(device, vector, driver);
-
+    }
 
 }
 
@@ -114,7 +114,7 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
 
     if((driver->internals.bars & (1 << bar)) == 0) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kprintf("virtio-pci: device %d is mapping bar %d [address(%p), size(%p)]\n", driver->device, bar, mmio, size);
 #endif
 
@@ -146,7 +146,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_ERROR
     #define cfg_set_status_and_check(status) {                                      \
         __atomic_or_fetch(&cfg->device_status, status, __ATOMIC_SEQ_CST);           \
         if((cfg->device_status & status) == 0) {                                    \
@@ -182,7 +182,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     cfg_set_status_and_check(VIRTIO_DEVICE_STATUS_DRIVER);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d reset successful [bar(%d), cfg(%p), queues(%d)]\n", driver->device, bar, cfg, cfg->num_queues);
 #endif
 
@@ -210,7 +210,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
             if(cfg->driver_feature != features) {
 
-    #if defined(DEBUG) && DEBUG_LEVEL >= 0
+    #if DEBUG_LEVEL_FATAL
                 kprintf("virtio-pci: FAIL! device %d failed features %d negotiation [user(%X), driver(%X), device(%X)]\n", driver->device, features, i, cfg->driver_feature, cfg->device_feature);
     #endif
 
@@ -218,16 +218,16 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
                 
             }
 
+#if DEBUG_LEVEL_TRACE
+            kprintf("virtio-pci: device %d negotiation %d successful [driver(%X), device(%X)]\n", driver->device, i, cfg->driver_feature, cfg->device_feature);
+#endif
+
+
         }
 
     }
 
     cfg_set_status_and_check(VIRTIO_DEVICE_STATUS_FEATURES_OK);
-
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("virtio-pci: device %d negotiation successful [driver(%X), device(%X)]\n", driver->device, cfg->driver_feature, cfg->device_feature);
-#endif
 
 
 
@@ -242,7 +242,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     if(pci_find_msix(driver->device, &msix) == PCI_NONE) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-pci: ERROR! device %d MSI-X capabilities not found!\n", driver->device);
 #endif
 
@@ -266,7 +266,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     pci_msix_enable(driver->device, &msix);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d MSI-X capabilities found [caps(%p), rows(%p), count(%d), config_msix_vector(%p)]\n", driver->device, msix.msix_cap, msix.msix_rows, msix.msix_pci.pci_msgctl_table_size, cfg->config_msix_vector);
 #endif
 
@@ -296,7 +296,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
         if(virtq_init(driver, cfg, i) < 0) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
             kprintf("virtio-pci: FAIL! device %d queue %d initialization failed\n", driver->device, i);
 #endif 
 
@@ -313,7 +313,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     cfg_set_status_and_check(VIRTIO_DEVICE_STATUS_DRIVER_OK);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d common initialization successful\n", driver->device);
 #endif
 
@@ -344,7 +344,7 @@ static int virtio_pci_init_device_cfg(struct virtio_driver* driver, uintptr_t ca
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d obtaining device config successful [caps(%d), bar(%d), offset(%p)]\n", driver->device, caps, bar, offset);
 #endif
 
@@ -366,7 +366,7 @@ static int virtio_pci_init_isr_status(struct virtio_driver* driver, uint8_t bar,
     driver->internals.isr_status = (uint32_t volatile*) virtio_pci_find_bar(driver, bar, offset);
 
     
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d obtaining isr status successful [bar(%d), offset(%d), isr(%p)]\n", driver->device, bar, offset, driver->internals.isr_status);
 #endif
 
@@ -390,7 +390,7 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, uintptr_t ca
 
 
     if(unlikely(cfg.notify_off_multiplier == 0)) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-pci: FAIL! device %d has null notify_off_multiplier [caps(%d)]", driver->device, caps);
 #endif
         return -EINVAL;
@@ -401,7 +401,7 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, uintptr_t ca
     driver->internals.notify_offset = virtio_pci_find_bar(driver, bar, offset);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d obtaining notify_off_multiplier successful [caps(%d), multiplier(%d)]\n", driver->device, caps, driver->internals.notify_off_multiplier);
 #endif
 
@@ -422,7 +422,7 @@ int virtio_pci_init(struct virtio_driver* driver) {
     uintptr_t caps;
     if((caps = pci_find_capabilities(driver->device)) == PCI_NONE) {
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-pci: FAIL! cannot find capabilities for pci device %d\n", driver->device);
 #endif
      
@@ -493,7 +493,7 @@ int virtio_pci_init(struct virtio_driver* driver) {
 
             default:
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_WARN
                 kprintf("virtio-pci: WARN! found unknown configuration type %d [offset(%p)]\n", cap.cfg_type, caps);
 #endif
                 break;
@@ -503,7 +503,7 @@ int virtio_pci_init(struct virtio_driver* driver) {
     } while((caps = cap.cap_next) != 0);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-pci: device %d pci initialization successful [irq(%d)]\n", driver->device, driver->internals.irq);
 #endif
 

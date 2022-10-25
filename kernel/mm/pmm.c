@@ -114,7 +114,7 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
         kprintf("pmm: claim physical memory area %p-%p\n", physaddr, end);
 #endif
 
@@ -169,7 +169,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
         kprintf("pmm: unclaim physical memory area %p-%p\n", physaddr, end);
 #endif
 
@@ -234,7 +234,7 @@ end:
 
     DEBUG_ASSERT(r >= 0);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_block() at %p\n", r);
 #endif
 
@@ -308,7 +308,7 @@ end:
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_blocks(%d) at %p-%p\n", blkno, r, r + (blkno * PML1_PAGESIZE));
 #endif
 
@@ -387,7 +387,7 @@ end:
 
     pmm_claim_area(r, blkno * PML1_PAGESIZE);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
     kprintf("pmm: pmm_alloc_blocks_aligned(%d, %p) at %p-%p\n", blkno, align, r, r + (blkno * PML1_PAGESIZE));
 #endif
 
@@ -494,7 +494,7 @@ void pmm_init(uintptr_t max_memory) {
             continue;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
         kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
                                                               core->mmap.ptr[i].length,
                                                               core->mmap.ptr[i].type);
@@ -530,7 +530,7 @@ void pmm_init(uintptr_t max_memory) {
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
     kprintf("pmm: physical memory: %ld KB\n", pmm_max_memory / 1024);
 #endif
 

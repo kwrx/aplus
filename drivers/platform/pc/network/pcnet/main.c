@@ -157,7 +157,7 @@ static int pcnet_startoutput(void* internals) {
 
     while(!d_owns(dev->vtxdes, dev->txid)) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_ERROR
         kprintf("pcnet: ERROR! no tx %d descriptor available!\n", dev->txid);
 #endif
 
@@ -213,7 +213,7 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
     w_csr32(dev, 0, r_csr32(dev, 0) | (1 << 3));
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
     kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_generic_getms(), len, dev->txid);
 #endif
 
@@ -234,7 +234,7 @@ static int pcnet_startinput(void* internals) {
 
     uint16_t size = mmio_r16(dev->vrxdes + (dev->rxid * PCNET_DE_SIZE + 8));
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 5
+#if DEBUG_LEVEL >= 5
     kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rxid);
 #endif
 
@@ -261,7 +261,7 @@ static void pcnet_input(void* internals, void* buf, uint16_t len) {
 
     memcpy(buf, (const void*) (dev->vrxbuf + dev->rxid * PCNET_BUFSIZE + dev->offset), len);
 
-// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// // #if DEBUG_LEVEL_TRACE
 // //     kprintf("Dump: %d bytes\n", len);
 // //     for(size_t i = 0; i < len; i++) {
 // //         kprintf("%c", ((char*) buf)[i] & 0xFF);
@@ -471,7 +471,7 @@ void init(const char* args) {
 
 
     if(pci_count == 0) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_ERROR
         kprintf("pcnet: ERROR! pci device not found!\n");
 #endif
         return;

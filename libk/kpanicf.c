@@ -60,7 +60,7 @@ void kpanicf(const char* fmt, ...) {
         arch_debug_putc(buf[i]);
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_ERROR
     runtime_stacktrace();
 #endif
 

@@ -234,7 +234,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("boot: %s '%s'\n", core->boot.bootloader, 
                                core->boot.cmdline);
 #endif

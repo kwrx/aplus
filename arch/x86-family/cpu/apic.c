@@ -87,13 +87,15 @@ void apic_enable(void) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_WARN
     {
+
         long a, b, c, d;
         x86_cpuid(6, &a, &b, &c, &d);
 
         if(!(a & (1 << 2)))
             kprintf("x86-apic: WARN! APIC timer may temporarily stop while the processor is in deep C-states: %ld\n", a);
+
     }
 #endif
 
@@ -153,7 +155,7 @@ void apic_enable(void) {
     apic_timer_reset(1);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("x86-apic: Local APIC #%d initialized [base(0x%X), ticks(%d), x2apic(%d)]\n", apic_get_id(), X86_APIC_BASE_ADDR, timer_ticks, x2apic);
 #endif
 
@@ -294,7 +296,7 @@ void apic_init(void) {
         }
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
 
         switch(*p) {
 

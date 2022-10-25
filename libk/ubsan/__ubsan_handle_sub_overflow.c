@@ -35,7 +35,7 @@ __noreturn
 __nosanitize("undefined")
 void __ubsan_handle_sub_overflow(struct overflow_data* data, uintptr_t lhs, uintptr_t rhs) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("ubsan: caught " __FILE__ " exception!\n");
 #endif
 

@@ -84,7 +84,7 @@ void arch_cpu_init(int index) {
     x86_cpuid(0, &ex, &bx, &cx, &dx);
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
     char vendor[13];
     vendor[12] = '\0';
@@ -169,7 +169,7 @@ void arch_cpu_init(int index) {
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
         kprintf("cpu: id:         #%d\n", index);
         kprintf("     vendor:     %s\n", vendor);
@@ -513,7 +513,7 @@ void arch_cpu_startup(int index) {
     PANIC_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("x86-cpu: starting up core #%d\n", index);
 #endif
 

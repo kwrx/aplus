@@ -32,6 +32,7 @@
 #include <aplus/hal.h>
 
 
+#define SYSCALL_VERBOSE 0
 
 
 #define SYSMAX          512
@@ -79,7 +80,7 @@ void syscall_init(void) {
 
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("syscall: registered %ld entries\n", ((uintptr_t) &syscalls_end - (uintptr_t) &syscalls_start) / sizeof(struct syscall_hook));
 #endif
 }
@@ -92,7 +93,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
     DEBUG_ASSERT(syscalls[idx]);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE && SYSCALL_VERBOSE
     if(unlikely(idx != 24 && idx < 500))
         kprintf("syscall: (%s#%d) <%s> nr(%ld), p0(0x%lX), p1(0x%lX), p2(0x%lX), p3(0x%lX), p4(0x%lX), p5(0x%lX)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[idx]), idx, p0, p1, p2, p3, p4, p5);
 #endif
@@ -121,7 +122,7 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
    
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE && SYSCALL_VERBOSE
 
     if(unlikely(idx != 24 && idx < 500)) {
 
@@ -155,7 +156,7 @@ long syscall_restart(void) {
         return -ENOSYS;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE && SYSCALL_VERBOSE
     kprintf("syscall: (%s#%d) <%s> restarting with p0(0x%lX), p1(0x%lX), p2(0x%lX), p3(0x%lX), p4(0x%lX), p5(0x%lX)\n", current_task->argv[0], current_task->tid, runtime_get_name((uintptr_t) syscalls[current_task->syscall.index - 1]),
         current_task->syscall.param0,
         current_task->syscall.param1,

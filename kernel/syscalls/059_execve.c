@@ -125,7 +125,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     uio_lock(filename, CONFIG_PATH_MAX);
     kprintf("execve(): filename: %s\n", filename);
     uio_unlock(filename, CONFIG_PATH_MAX);
@@ -191,7 +191,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     const char** __safe_envp = uio_get_ptr(envp);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_TRACE
 
     for(size_t i = 0; __safe_argv[i]; i++)
         DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
@@ -330,7 +330,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                                     ARCH_VMM_MAP_TYPE_PAGE);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
                     kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
@@ -480,7 +480,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
 #endif
 

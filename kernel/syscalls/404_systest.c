@@ -32,7 +32,7 @@
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
 SYSCALL(404, systest,
 long sys_systest (long p0, long p1, long p2, long p3, long p4, long p5) {

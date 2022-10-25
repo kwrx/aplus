@@ -292,8 +292,8 @@ static int e1000_startinput(void* internals) {
     uint16_t size = ((struct e1000_rx_desc*) arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->length;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("e1000: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rx_cur);
+#if DEBUG_LEVEL_TRACE
+    kprintf("e1000: device received %d bytes from %d at %ldms\n", size, dev->rx_cur, arch_timer_generic_getms());
 #endif
 
 
@@ -487,7 +487,7 @@ void init(const char* args) {
     pci_scan(&find_pci, -1, NULL);
 
     if(!pci_count) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_ERROR
         kprintf("e1000: ERROR! pci device not found!\n");
 #endif
         return;

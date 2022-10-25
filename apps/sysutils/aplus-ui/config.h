@@ -31,3 +31,9 @@
 #define APLUS_UI_RESOURCES_PATH_ICONS         "/usr/share/icons"
 #define APLUS_UI_RESOURCES_PATH_THEMES        "/usr/share/themes"
 #define APLUS_UI_RESOURCES_PATH_WALLPAPERS    "/usr/share/wallpapers"
+
+
+#include <stdio.h>
+
+#define LOG(a...)                                                                   \
+    fprintf(stderr, "aplus-ui::" __FILE__ ": " a)

@@ -279,9 +279,11 @@ void ps2_mouse_irq(void* context, irq_t irq) {
 
                 case 2:
 
+                    kprintf("ps2: mouse packet: %02X %02X %02X\n", packet[0], packet[1], packet[2]);
+
                     for(size_t button = 0; button < 3; button++) {
 
-                        if(packet[0] & (1 << button) && __button_is_up(button)) {
+                        if(__button_is_up(button) && (packet[0] & (1 << button))) {
 
                             event_t ev = {};
 
@@ -292,7 +294,7 @@ void ps2_mouse_irq(void* context, irq_t irq) {
 
                             vfs_write(mouse.inode, &ev, 0, sizeof(ev));
 
-                        } else if (__button_is_down(button)) {
+                        } else if (__button_is_down(button) && !(packet[0] & (1 << button))) {
 
                             event_t ev = {};
 
@@ -370,11 +372,12 @@ void init(const char* args) {
 
         ps2_ack();
 
+
         device_mkdev(&mouse, 0666);
 
     } else {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_WARN
         kprintf("ps2: WARN! PS/2 mouse device not found\n");
 #endif
 

@@ -41,7 +41,7 @@
 void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
 
     #define PFE(reason, entry)  \
         { kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d) entry(0x%lX): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, entry, reason); goto pfe; }
@@ -182,7 +182,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     current_task->rusage.ru_majflt++;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 

@@ -35,7 +35,7 @@ __noreturn
 __nosanitize("undefined")
 void __ubsan_handle_pointer_overflow(struct type_mismatch_data* data, void* base, void* result) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("ubsan: caught " __FILE__ " exception!\n");
 #endif
 

@@ -76,7 +76,6 @@ static void tcpip_init_done(void* arg) {
     dns_setserver(0, &dns[0]);
     dns_setserver(1, &dns[1]);
 
-
     sem_post(&tcpip_done);
 
 }
