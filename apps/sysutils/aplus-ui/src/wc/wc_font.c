@@ -18,7 +18,7 @@ static FT_Library ft = NULL;
 static wc_fontface_t* queue = NULL;
 
 
-int wc_font_initialize() {
+int wc_font_initialize(void) {
     
     if(FT_Init_FreeType(&ft) != 0)
         return errno = EIO, -1;

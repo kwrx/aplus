@@ -394,7 +394,7 @@ void arch_cpu_init(int index) {
 #if defined(__x86_64__)
     PANIC_ON(cpu_has(index, X86_FEATURE_LM));
     PANIC_ON(cpu_has(index, X86_FEATURE_PAE));
-    PANIC_ON(cpu_has(index, X86_FEATURE_GBPAGES));
+    // // PANIC_ON(cpu_has(index, X86_FEATURE_GBPAGES));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)

@@ -224,17 +224,11 @@ void wc_window_update(wc_window_t* window) {
         int x = wc_input_cursor_x();
         int y = wc_input_cursor_y();
 
-        if(x >= window->x && x < window->x + window->width &&
-           y >= window->y && y < window->y + window->height) {
+        if(wc_input_cursor_is_hover(window->x, window->y, window->width, window->height)) {
 
             wc_window_set_top(window);
 
-            if(window->flags & WC_WINDOW_FLAGS_DRAG) {
-
-                window->x = x - window->drag_x;
-                window->y = y - window->drag_y;
-
-            } else {
+            if(!(window->flags & WC_WINDOW_FLAGS_DRAG)) {
 
                 window->flags |= WC_WINDOW_FLAGS_DRAG;
                 window->drag_x = x - window->x;
@@ -247,6 +241,13 @@ void wc_window_update(wc_window_t* window) {
         } else {
 
             window->flags &= ~WC_WINDOW_FLAGS_FOCUSED;
+
+        }
+
+        if(window->flags & WC_WINDOW_FLAGS_DRAG) {
+
+            window->x = x - window->drag_x;
+            window->y = y - window->drag_y;
 
         }
 

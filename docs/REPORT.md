@@ -12,6 +12,12 @@
 |**FIXME**|`kernel/syscalls/141_setpriority.c`|check for superuser|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|
 |**FIXME**|`kernel/syscalls/318_getrandom.c`|implement getrandom() in a better way|
+|**TODO**|`apps/sysutils/aplus-ui/src/main.c`|cursor subsystem|
+|**TODO**|`apps/sysutils/aplus-ui/src/main.c`|message subsystem|
+|**TODO**|`apps/sysutils/aplus-ui/src/main.c`|renderer subsystem|
+|**TODO**|`apps/sysutils/aplus-ui/src/main.c`|window manager subsystem|
+|**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|
+|**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|
 |**TODO**|`arch/x86-family/intr.c`|Handle User Exception|
 |**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|

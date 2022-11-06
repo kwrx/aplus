@@ -39,9 +39,6 @@
 
 
 
-#define ZERO(p)         memset(p, 0, sizeof(p))
-
-
 
 static inode_t* path_symlink(inode_t*, size_t);
 static inode_t* path_find(inode_t*, const char*, size_t);
@@ -55,7 +52,7 @@ static inode_t* path_symlink(inode_t* inode, size_t size) {
 
 
     char s[size + 1];
-    ZERO(s);
+    memset(s, 0, size + 1);
 
     if(vfs_readlink(inode, s, size) <= 0)
         return NULL;
@@ -73,7 +70,7 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
 
 
     char s[size + 1]; 
-    ZERO(s);
+    memset(s, 0, size + 1);
 
     strncpy(s, path, size);
 
@@ -110,9 +107,9 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
     DEBUG_ASSERT(c);
 
 
-    while(path[0] == '/')
+    while(path[0] == '/') {
         path++;
-
+    }
 
     while(strchr(path, '/') && c) {
          
@@ -125,9 +122,9 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
     }
 
 
-    if(unlikely(!c))
+    if(unlikely(!c)) {
         return errno = ENOENT, NULL;
-
+    }
     
     inode_t* r;
 
@@ -138,18 +135,24 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
 
 
     if(unlikely(!r)) {
+        
         if(flags & O_CREAT) {
+        
             r = vfs_creat(c, path, mode);
 
             if(unlikely(!r))
                 return NULL;
-        }
-        else
+        
+        } else {
             return errno = ENOENT, NULL;
-    } else
+        }
+
+    } else {
+     
         if((flags & O_EXCL) && (flags & O_CREAT))
             return errno = EEXIST, NULL;
-
+    
+    }
 
     return r;   
 }
@@ -200,7 +203,6 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     char __safe_filename[CONFIG_PATH_MAX];
     uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
-
 
 
     inode_t* cwd;

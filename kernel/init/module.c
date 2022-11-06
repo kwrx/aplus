@@ -432,6 +432,18 @@ void module_init(void) {
 
     int i;
     for(i = 0; i < core->modules.count; i++) {
+        
+
+        if(unlikely(core->modules.ko[i].ptr == 0))
+            continue;
+
+        if(unlikely(core->modules.ko[i].size == 0))
+            continue;
+
+        if(unlikely(strstr(core->modules.ko[i].cmdline, "type=module") == NULL))
+            continue;
+        
+
 
         module_t* m = (module_t*) kcalloc(1, sizeof(module_t), GFP_KERNEL);
 
@@ -530,7 +542,10 @@ void module_init(void) {
                     break;
 
                 default:
+
                     kpanicf("module: PANIC! invalid section type for %s: %d\n", m->name, m->exe.section[j].sh_type);
+
+                    break;
 
             }
 
@@ -545,9 +560,13 @@ void module_init(void) {
         m->args = (const char*) &core->modules.ko[i].cmdline;
 
 
-        list_each(m_queue, v)
-            if(strcmp(m->name, v->name) == 0)
+        list_each(m_queue, v) {
+
+            if(strcmp(m->name, v->name) == 0) {
                 kpanicf("module: PANIC! duplicate name '%s'\n", m->name);
+            }
+
+        }
 
         list_push(m_queue, m);
 

@@ -105,13 +105,20 @@ multiboot_header_end:
     startup_pml4:
         .skip 4096
     startup_pml3_low_area: 
-        .skip 4096
+        .skip PAGE_COUNT(KERNEL_LOW_SIZE,   3) << 12
     startup_pml3_high_area: 
-        .skip 4096
+        .skip PAGE_COUNT(KERNEL_HIGH_SIZE,  3) << 12
     startup_pml3_heap_area:
-        .skip ((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 27)
+        .skip PAGE_COUNT(KERNEL_HEAP_SIZE,  3) << 12
+    startup_pml2_low_area:
+        .skip PAGE_COUNT(KERNEL_LOW_SIZE,   2) << 12
+    startup_pml2_high_area:
+        .skip PAGE_COUNT(KERNEL_HIGH_SIZE,  2) << 12
+    startup_pml2_heap_area:
+        .skip PAGE_COUNT(KERNEL_HEAP_SIZE,  2) << 12
     startup_pml2_stack_area:
-        .skip 4096
+        .skip PAGE_COUNT(KERNEL_STACK_SIZE, 2) << 12
+
 
 .align KERNEL_STACK_SIZE
 
@@ -185,7 +192,7 @@ multiboot_header_end:
         .word 0
       .endr
 
-      # Timer Handler         idx: 0x20
+      # Timer Handler - idx: 0x20
         .word 0
         .word KERNEL_CS
         .byte 0x00    // RSP0
@@ -202,7 +209,7 @@ multiboot_header_end:
         .word 0
       .endr
 
-      # SYSCALL Handler       idx: 0xFE
+      # SYSCALL Handler - idx: 0xFE
         .word 0
         .word KERNEL_CS
         .byte 0x00    // RSP0
@@ -210,7 +217,7 @@ multiboot_header_end:
         .quad 0
         .word 0
 
-      # Spourious Interrupt   idx: 0xFF
+      # Spourious Interrupt - idx: 0xFF
         .word 0
         .word KERNEL_CS
         .byte 0x01    // IST1
@@ -298,48 +305,163 @@ _start:
     
     
 
-        # PML4
+        # Setup Mapping
+        # 0x0000000000000000 - 0xFFFFFFFF80000000 - 1GiB (Kernel)
+        # XXXXXXXXXXXXXXXXXX - 0xFFFFFFFFC0000000 - 2MiB (Stack)
+        # 0x0000000000000000 - 0xFFFF800000000000 - 2TiB (Heap)
+        
+        # PML4 - Low Area
         movl    $V2P(startup_pml4), %edi
         movl    $V2P(startup_pml3_low_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 3) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 3) << 0), %ecx
         btsl    $0,   %esi                              // Present
         btsl    $1,   %esi                              // R/W
-        movl    %esi, (%edi)
-
-        movl    $V2P(startup_pml3_high_area), %esi
-        btsl    $0,   %esi                              // Present
-        btsl    $1,   %esi                              // R/W
-        movl    %esi, (511 * 8)(%edi)
-
-        movl    $V2P(startup_pml3_heap_area), %esi
-        addl    $((KERNEL_HEAP_AREA & 0x0000FFFFFFFFFFFF) >> 36), %edi
-        movl    $((KERNEL_HEAP_SIZE & 0x0000FFFFFFFFFFFF) >> 39), %ecx
     .L0:
-        btsl    $0,   %esi                              // Present
-        btsl    $1,   %esi                              // R/W
         movl    %esi, (%edi)
         addl    $8,   %edi
         addl    $4096, %esi
         loop    .L0
 
-        # PML3
-        movl    $V2P(startup_pml3_low_area), %edi
-        movl    $0x183, %esi                            // Global, 1GiB, R/W, Present
-        movl    %esi, (%edi)
-
-        movl    $V2P(startup_pml3_high_area), %edi
-        movl    $0x183, %esi                            // Global, 1GiB, R/W, Present
-        movl    %esi, (510 * 8)(%edi)
-
-        movl    $V2P(startup_pml2_stack_area), %esi
+        # PML4 - High Area
+        movl    $V2P(startup_pml4), %edi
+        movl    $V2P(startup_pml3_high_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 3) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 3) << 0), %ecx
         btsl    $0,   %esi                              // Present
         btsl    $1,   %esi                              // R/W
-        movl    %esi, (511 * 8)(%edi)
+    .L1:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L1
 
-        # PML2
+        # PML4 - Heap Area
+        movl    $V2P(startup_pml4), %edi
+        movl    $V2P(startup_pml3_heap_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 3) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 3) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+    .L2:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L2
+
+
+        # PML3 - Low Area
+        movl    $V2P(startup_pml3_low_area), %edi
+        movl    $V2P(startup_pml2_low_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 2) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 2) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+    .L3:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L3
+
+        # PML3 - High Area
+        movl    $V2P(startup_pml3_high_area), %edi
+        movl    $V2P(startup_pml2_high_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 2) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 2) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+    .L4:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L4
+
+        # PML3 - Heap Area
+        movl    $V2P(startup_pml3_heap_area), %edi
+        movl    $V2P(startup_pml2_heap_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 2) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 2) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+    .L5:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L5
+
+        # PML3 - Stack Area
+        movl    $V2P(startup_pml3_high_area), %edi
+        movl    $V2P(startup_pml2_stack_area), %esi
+        addl    $(PAGE_INDEX(KERNEL_STACK_AREA, 2) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_STACK_SIZE, 2) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+    .L6:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $4096, %esi
+        loop    .L6
+
+
+        # PML2 - Low Area
+        movl    $V2P(startup_pml2_low_area), %edi
+        movl    $0, %esi
+        addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 1) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 1) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+        btsl    $7,   %esi                              // 2MiB
+        btsl    $8,   %esi                              // Global
+    .L7:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $2097152, %esi
+        loop    .L7
+
+        # PML2 - High Area
+        movl    $V2P(startup_pml2_high_area), %edi
+        movl    $0, %esi
+        addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 1) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 1) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+        btsl    $7,   %esi                              // 2MiB
+        btsl    $8,   %esi                              // Global
+    .L8:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $2097152, %esi
+        loop    .L8
+
+        # PML2 - Heap Area
+        movl    $V2P(startup_pml2_heap_area), %edi
+        movl    $0, %esi
+        addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 1) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 1) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+        btsl    $7,   %esi                              // 2MiB
+        btsl    $8,   %esi                              // Global
+    .L9:
+        movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $2097152, %esi
+        loop    .L9
+
+        # PML2 - Stack Area
         movl    $V2P(startup_pml2_stack_area), %edi
         movl    $V2P(startup_stack), %esi
-        orl     $0x083, %esi                            // 2MiB, R/W, Present
+        addl    $(PAGE_INDEX(KERNEL_STACK_AREA, 1) << 3), %edi
+        movl    $(PAGE_COUNT(KERNEL_STACK_SIZE, 1) << 0), %ecx
+        btsl    $0,   %esi                              // Present
+        btsl    $1,   %esi                              // R/W
+        btsl    $7,   %esi                              // 2MiB
+    .L10:
         movl    %esi, (%edi)
+        addl    $8,   %edi
+        addl    $2097152, %esi
+        loop    .L10
+
         
 
         # Enable PAE
@@ -405,11 +527,11 @@ _start_high64:
         movq    $0x183, %rsi                            // Global, 1GiB, R/W, Present
 
         movq    $(KERNEL_HEAP_SIZE >> 30), %rcx         // See include/arch/x86/asm.h
-    .L1:
+    .L11:
         movq    %rsi, (%rdi)
         addq    $8,   %rdi
         addq    $0x40000000, %rsi
-        loop    .L1
+        loop    .L11
 
         # Enable PGE
         movq    %cr4, %rcx
@@ -438,7 +560,7 @@ _start_high64:
         movq    $KERNEL_TSS_MAX, %rcx
         addq    $KERNEL_TSS, %rdi
 
-    .L2:
+    .L12:
         movq    %rsi, %rax
         movw    %ax,  2(%rdi)     // Base 00:16
 
@@ -453,7 +575,7 @@ _start_high64:
 
         addq    $16,  %rdi
         addq    $128, %rsi
-        loop    .L2
+        loop    .L12
 
         movq    $(KERNEL_TSS | 3), %rax
         ltrw    %ax
@@ -462,7 +584,7 @@ _start_high64:
         movq    $startup_idtp, %rdi
         movq    $startup_isr, %rsi
         movq    $256, %rcx
-    .L3:
+    .L13:
         movq    %rsi, %rax
         movw    %ax,  0(%rdi)     // Offset 00:16
 
@@ -474,7 +596,7 @@ _start_high64:
 
         addq    $16,  %rdi
         addq    $16,  %rsi
-        loop    .L3
+        loop    .L13
 
         movq    $startup_idtp_ptr, %rax
         lidt    (%rax)

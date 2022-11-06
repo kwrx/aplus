@@ -49,6 +49,8 @@
 
 
 #if defined(__x86_64__)
+#   define KERNEL_LOW_AREA          0x0000000000000000
+#   define KERNEL_LOW_SIZE          0x0000000040000000   //? 1GiB
 #   define KERNEL_HIGH_AREA         0xFFFFFFFF80000000
 #   define KERNEL_HIGH_SIZE         0x0000000040000000   //? 1GiB
 #   define KERNEL_STACK_AREA        0xFFFFFFFFC0000000
@@ -65,6 +67,9 @@
 #define V2P(virt)      \
     ((virt) - KERNEL_HIGH_AREA)
 
+#define P2V(phys)      \
+    ((phys) + KERNEL_HIGH_AREA)
+
 
 
 #define KERNEL_INTERRUPT_STACK      KERNEL_STACK_AREA
@@ -73,5 +78,14 @@
 #define KERNEL_EXCEPTION_STACKSIZE  0x1000
 #define KERNEL_SYSCALL_STACK        KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE
 #define KERNEL_SYSCALL_STACKSIZE    0x8000
+
+
+#define PAGE_INDEX(addr, level)     \
+    (((addr) >> (12 + (level) * 9)) & 0x1FF)
+
+#define PAGE_COUNT(size, level)     \
+    (((size) + (1 << (12 + (level) * 9)) - 1) >> (12 + (level) * 9))
+
+
 
 #endif

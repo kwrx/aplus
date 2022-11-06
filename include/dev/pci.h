@@ -86,6 +86,12 @@ typedef uint32_t pcidev_t;
 #define PCI_TYPE_BRIDGE                 0x0604
 #define PCI_TYPE_SATA                   0x0106
 #define PCI_TYPE_VGA                    0x0300
+#define PCI_TYPE_ETHERNET               0x0200
+#define PCI_TYPE_USB                    0x0C03
+#define PCI_TYPE_SCSI                   0x0100
+#define PCI_TYPE_AUDIO                  0x0403
+
+
 
 #define PCI_ADDRESS_PORT                0xCF8
 #define PCI_VALUE_PORT                  0xCFC

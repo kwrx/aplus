@@ -113,9 +113,26 @@ int main(int argc, char** argv) {
         return fprintf(stderr, "wc_font_initialize() failed: %s\n", strerror(errno)), 1;
     }
 
+    if(wc_cursor_initialize() < 0) {
+        return fprintf(stderr, "wc_cursor_initialize() failed: %s\n", strerror(errno)), 1;
+    }
+
     if(wc_display_initialize() < 0) {
         return fprintf(stderr, "wc_display_initialize() failed: %s\n", strerror(errno)), 1;
     }
+
+
+
+
+    wc_cursor_load(WC_CURSOR_TYPE_POINTER, "/usr/share/cursors/arrow.webp");
+    wc_cursor_load(WC_CURSOR_TYPE_TEXT,    "/usr/share/cursors/text.webp");
+    wc_cursor_load(WC_CURSOR_TYPE_HAND,    "/usr/share/cursors/hand.webp");
+    wc_cursor_load(WC_CURSOR_TYPE_HELP,    "/usr/share/cursors/help.webp");
+    wc_cursor_load(WC_CURSOR_TYPE_MOVE,    "/usr/share/cursors/cross.webp");
+    wc_cursor_load(WC_CURSOR_TYPE_RESIZE,  "/usr/share/cursors/size_all.webp");
+
+    wc_cursor_set_fallback(WC_CURSOR_TYPE_POINTER);
+    wc_cursor_set_type(WC_CURSOR_TYPE_POINTER);
 
 
 
@@ -123,23 +140,6 @@ int main(int argc, char** argv) {
     if(wc_renderer_create(&renderer, wc_display_primary()) < 0) {
         return fprintf(stderr, "wc_renderer_create() failed: %s\n", strerror(errno)), 1;
     }
-
-
-    wc_cursor_t* cursor;
-    if(wc_cursor_create(&cursor) < 0) {
-        return fprintf(stderr, "wc_cursor_create() failed: %s\n", strerror(errno)), 1;
-    }
-
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_POINTER, "/usr/share/cursors/arrow.webp");
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_TEXT,    "/usr/share/cursors/text.webp");
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_HAND,    "/usr/share/cursors/hand.webp");
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_HELP,    "/usr/share/cursors/help.webp");
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_MOVE,    "/usr/share/cursors/cross.webp");
-    wc_cursor_add_type(cursor, WC_CURSOR_TYPE_RESIZE,  "/usr/share/cursors/size_all.webp");
-
-    wc_renderer_set_cursor(renderer, cursor);
-    wc_renderer_set_cursor_type(renderer, WC_CURSOR_TYPE_POINTER);
-    wc_renderer_set_cursor_position(renderer, 0, 0);
 
 
     wc_renderer_clear(renderer, 1.0, 1.0, 1.0);

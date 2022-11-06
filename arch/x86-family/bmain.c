@@ -120,7 +120,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                     
                     } else {
                     
-                        strncpy(&core->modules.ko[i].cmdline[0], &core->boot.cmdline[0], CONFIG_BUFSIZ);
+                        memset(&core->modules.ko[i].cmdline[0], 0, CONFIG_BUFSIZ);
                     
                     }
 
@@ -218,13 +218,15 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             default:
                 kpanicf("bmain(): PANIC! invalid MULTIBOOT_TAG_TYPE_*: %d\n", btags->type);
+                break;
 
         }
 
 
-        if(btags->size & 7)
+        if(btags->size & 7) {
             btags->size = (btags->size & ~7) + 8;
-
+        }
+        
         btags = (struct multiboot_tag*) ((uintptr_t) btags + btags->size);
         
 

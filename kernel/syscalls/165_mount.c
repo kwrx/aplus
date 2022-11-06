@@ -72,10 +72,8 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     if(unlikely(!uio_check(type, R_OK)))
         return -EFAULT;
 
-    if(likely(dev_name))
-        if(unlikely(!uio_check(dev_name, R_OK)))
-            return -EFAULT;
-
+    if(unlikely(dev_name && !uio_check(dev_name, R_OK)))
+        return -EFAULT;
 
 
     char __safe_dirname[CONFIG_PATH_MAX];

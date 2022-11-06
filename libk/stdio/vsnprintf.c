@@ -138,7 +138,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
         switch(*fmt) {
 
             case 's':
-                for(char* s = (char*) va_arg(v, char*); *s; s++)
+                for(char* s = (char*) va_arg(v, char*); s && *s; s++)
                     buf[p++] = *s;
 
                 break;

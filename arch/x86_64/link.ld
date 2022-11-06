@@ -43,6 +43,7 @@ SECTIONS {
 
 		*(.bss)
 		*(.bss.*)
+		*(.bss.startup*)
 		
 		__bss_end = .;
 	}

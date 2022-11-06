@@ -1209,8 +1209,63 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
-    if((vid != 0x8086) || (did != 0x2922))
+    static struct {
+        uint16_t vid;
+        uint16_t did;
+    } supported_devices[] = {
+        { 0x8086, 0x2652 },
+        { 0x8086, 0x2653 },
+        { 0x8086, 0x2681 },
+        { 0x8086, 0x2682 },
+        { 0x8086, 0x2683 },
+        { 0x8086, 0x27c1 },
+        { 0x8086, 0x27c3 },
+        { 0x8086, 0x27c5 },
+        { 0x8086, 0x27c6 },
+        { 0x8086, 0x2821 },
+        { 0x8086, 0x2822 },
+        { 0x8086, 0x2824 },
+        { 0x8086, 0x2829 },
+        { 0x8086, 0x282a },
+        { 0x8086, 0x2922 },
+        { 0x8086, 0x2923 },
+        { 0x8086, 0x2924 },
+        { 0x8086, 0x2925 },
+        { 0x8086, 0x2927 },
+        { 0x8086, 0x2929 },
+        { 0x8086, 0x292a },
+        { 0x8086, 0x292b },
+        { 0x8086, 0x292c },
+        { 0x8086, 0x292f },
+        { 0x8086, 0x294d },
+        { 0x8086, 0x294e },
+        { 0x8086, 0x3a05 },
+        { 0x8086, 0x3a22 },
+        { 0x8086, 0x3a25 },
+        { 0, 0 }
+    };
+
+
+    if(({
+
+        bool found = false;
+
+        for(size_t i = 0; supported_devices[i].vid; i++) {
+
+            if(vid != supported_devices[i].vid || did != supported_devices[i].did)
+                continue;
+
+            found = true;
+            break;
+
+        }
+
+        found;
+
+    }) == false) {
         return;
+    }
+
 
 
     struct ahci* ahci = &devices[devices_count++];
@@ -1239,7 +1294,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     );
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("ahci: pci device found: index(%d) device(%d) vendor(%d) irq(%d) hba(%p) size(%p)\n", devices_count - 1, did, vid, ahci->irq, ahci->hba, size);
+    kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%p)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
 #endif
 
 }
@@ -1247,7 +1302,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    pci_scan(&pci_find, 0x0106, NULL);
+    pci_scan(&pci_find, PCI_TYPE_SATA, NULL);
 
 
     struct ahci* ahci;

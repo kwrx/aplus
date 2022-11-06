@@ -158,8 +158,7 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
     DEBUG_ASSERT(name);
 
     
-    long i;
-    for(i = 0; i < ((RSDT->length - sizeof(RSDT)) / (extended ? 8 : 4)); i++) {
+    for(size_t i = 0; i < ((RSDT->length - sizeof(*RSDT)) / (extended ? 8 : 4)); i++) {
 
         uintptr_t address;
         if(unlikely(extended))
@@ -174,8 +173,7 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
 
         //! Check if it's a valid ACPI table
         PANIC_ON(acpi_cksum((const char*) tmp, tmp->length));
-        
-
+               
         if(memcmp(tmp->magic, name, 4) != 0)
             continue;
 

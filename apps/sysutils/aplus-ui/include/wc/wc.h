@@ -37,6 +37,11 @@ typedef struct wc_ref {
 #define wc_clamp(x, min, max)                       \
     ((x) < (min) ? (min) : (x) > (max) ? (max) : (x))
 
+#define wc_max(x, y)                                \
+    ((x) > (y) ? (x) : (y))
+
+#define wc_min(x, y)                                \
+    ((x) < (y) ? (x) : (y))
 
 
 static inline uint64_t wc_time() {

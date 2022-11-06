@@ -57,7 +57,7 @@ void vfs_init(void) {
 #if DEBUG_LEVEL_INFO
 
     for(i = 0; fs_table[i].id; i++)
-        kprintf("vfs: available filesystem '%s'\n", fs_table[i].name);
+        kprintf("vfs: found filesystem '%s'\n", fs_table[i].name);
 
 #endif
 

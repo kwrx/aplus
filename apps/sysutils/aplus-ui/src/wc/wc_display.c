@@ -90,6 +90,13 @@ static int wc_display_create(const char* device, size_t offset_x, size_t offset_
         goto fail;
     }
 
+    var.xres_virtual = var.xres = 1920;
+    var.yres_virtual = var.yres = 1080;
+
+    if(ioctl(fd, FBIOPUT_VSCREENINFO, &var) < 0) {
+        goto fail;
+    }
+
     if(ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0) {
         goto fail;
     }
@@ -230,5 +237,20 @@ struct wc_display* wc_display_primary() {
 
     return wc_ref_inc(&(queue->ref))
          , queue;
+
+}
+
+
+struct wc_display* wc_display_next(struct wc_display* display) {
+
+    if(!display)
+        return NULL;
+
+    if(display->next) {
+        return wc_ref_inc(&(display->next->ref))
+             , display->next;
+    }
+
+    return NULL;
 
 }

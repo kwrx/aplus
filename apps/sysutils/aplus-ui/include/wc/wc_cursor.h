@@ -6,8 +6,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <cairo/cairo.h>
 #include <wc/wc.h>
+#include <wc/wc_renderer.h>
 
 #define WC_CURSOR_TYPE_NONE     0
 #define WC_CURSOR_TYPE_POINTER  1
@@ -20,26 +20,12 @@ extern "C" {
 #define WC_CURSOR_TYPE_CUSTOM   8
 #define WC_CURSOR_TYPE_LENGTH   9
 
-typedef struct wc_cursor {
 
-    uint16_t x;
-    uint16_t y;
-    uint16_t type;
-
-    struct {
-        cairo_surface_t* surface;
-    } cursors[WC_CURSOR_TYPE_LENGTH];
-
-    
-    wc_ref_t ref;
-
-} wc_cursor_t;
-
-
-int wc_cursor_create(struct wc_cursor** cursor);
-int wc_cursor_destroy(struct wc_cursor* cursor);
-int wc_cursor_add_type(struct wc_cursor* cursor, uint16_t type, const char* path);
-int wc_cursor_set_type(struct wc_cursor* cursor, uint16_t type);
+int wc_cursor_initialize(void);
+int wc_cursor_set_type(uint16_t type);
+int wc_cursor_set_fallback(uint16_t type);
+int wc_cursor_load(uint16_t type, const char* path);
+int wc_cursor_render(wc_renderer_t* renderer);
 
 
 

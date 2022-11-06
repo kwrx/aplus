@@ -122,6 +122,7 @@ static void bga_init(device_t* device) {
             ARCH_VMM_MAP_RDWR   |
             ARCH_VMM_MAP_USER   |
             ARCH_VMM_MAP_NOEXEC |
+            ARCH_VMM_MAP_SHARED |
             ARCH_VMM_MAP_VIDEO_MEMORY
     );
 
@@ -206,9 +207,9 @@ static void bga_update(device_t* device) {
     wr(VBE_DISPI_INDEX_VIRT_HEIGHT, device->vid.vs.yres_virtual);
 
 
-    if((device->vid.vs.activate & FB_ACTIVATE_MASK) == 0)
-        wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
-
+    if((device->vid.vs.activate & FB_ACTIVATE_MASK) == 0) {
+        wr(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED | VBE_DISPI_NOCLEARMEM);
+    }
 
     
 
@@ -276,10 +277,15 @@ void init(const char* args) {
 
     
     outw(VBE_DISPI_IOPORT_INDEX, 0);
-
-    int n = inw(VBE_DISPI_IOPORT_DATA);
-    if(!(CHECK_BGA(n)))
+    uint16_t identifier = inw(VBE_DISPI_IOPORT_DATA);
+    
+    if(!(CHECK_BGA(identifier))) {
         return;
+    }
+
+#ifdef DEBUG_LEVEL_TRACE
+    kprintf("bochs-vga: found BGA device with identifier 0x%04X\n", identifier);
+#endif
 
 
     pci_scan(&pci_find, PCI_TYPE_VGA, &device);

@@ -36,6 +36,7 @@ typedef struct wc_display {
 int wc_display_initialize(void);
 
 struct wc_display* wc_display_primary();
+struct wc_display* wc_display_next(struct wc_display* display);
 struct wc_display* wc_display_at_position(uint16_t x, uint16_t y);
 
 

@@ -47,7 +47,14 @@ static uint16_t com_address = 0;
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+
+#define X86_VGA_WIDTH               (80)
+#define X86_VGA_HEIGHT              (25)
+#define X86_VGA_SIZE                (X86_VGA_WIDTH * X86_VGA_HEIGHT * 2)
+#define X86_VGA_ADDRESS             ((uint16_t*) (KERNEL_HIGH_AREA + 0xB8000))
+
 static uint16_t vga_offset = 0;
+
 #endif
 
 
@@ -59,7 +66,7 @@ static uint16_t vga_offset = 0;
 void arch_debug_init(void) {
 
 #if defined(CONFIG_X86_HAVE_SMBIOS)
-    uint16_t* p = (uint16_t*) (KERNEL_HIGH_AREA + BIOS_COM_ADDRESS);
+    uint16_t* p = (uint16_t*) (KERNEL_HEAP_AREA + BIOS_COM_ADDRESS);
 #else
     uint16_t p[] = { COM1_DEFAULT_PORT, COM2_DEFAULT_PORT, COM3_DEFAULT_PORT, COM4_DEFAULT_PORT };
 #endif
@@ -86,9 +93,9 @@ void arch_debug_init(void) {
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    vga_offset = 0;
+    vga_offset  = 0;
 
-    memset((void*) (0xB8000), 0x00, 80 * 25 * sizeof(uint16_t));
+    memset((void*) (X86_VGA_ADDRESS), 0x00, X86_VGA_SIZE);
     
 #endif
 
@@ -123,24 +130,34 @@ void arch_debug_putc(char ch) {
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    if(unlikely(vga_offset >= 80 * 25)) {
+    if(unlikely(vga_offset >= X86_VGA_WIDTH * X86_VGA_HEIGHT)) {
 
-        memmove((void*) (0xB8000), (void*) (0xB8000 + 80), (80 * 24) * sizeof(uint16_t));
-        memset((void*) (0xB8000 + 80 * 24), 0x00, 80 * sizeof(uint16_t));
+        memmove (
+            &(X86_VGA_ADDRESS)[0], 
+            &(X86_VGA_ADDRESS)[X86_VGA_WIDTH], 
+            X86_VGA_SIZE - (X86_VGA_WIDTH * 2)
+        );
 
-        vga_offset -= 80;
+        memset (
+            &(X86_VGA_ADDRESS)[X86_VGA_WIDTH * (X86_VGA_HEIGHT - 1)],
+            0x00, 
+            X86_VGA_WIDTH * 2
+        );
+
+        vga_offset -= X86_VGA_WIDTH;
 
     }
 
+
     switch(ch) {
         case '\r':
-            vga_offset -= vga_offset % 80;
+            vga_offset -= vga_offset % X86_VGA_WIDTH;
             break;
         case '\n':
-            vga_offset += 80 - (vga_offset % 80);
+            vga_offset += X86_VGA_WIDTH - (vga_offset % X86_VGA_WIDTH);
             break;
         case '\v':
-            vga_offset += 80;
+            vga_offset += X86_VGA_WIDTH;
             break;
         case '\b':
             vga_offset -= 1;
@@ -149,7 +166,7 @@ void arch_debug_putc(char ch) {
             vga_offset += 8 - (vga_offset % 8);
             break;
         default:
-            ((volatile uint16_t*) (0xB8000))[vga_offset++] = (0x07 << 8) | ch;
+            X86_VGA_ADDRESS[vga_offset++] = (0x07 << 8) | ch;
             break;
     }
     

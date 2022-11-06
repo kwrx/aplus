@@ -7,7 +7,7 @@ endif
 
 
 export QUIET    := @ 
-export VM       := qemu
+export VM       := vbox
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
@@ -33,6 +33,8 @@ all: $(TARGET)
 $(TARGET): BUILDALL
 
 install: $(TARGET) INSTALLALL
+	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
+	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
@@ -66,7 +68,7 @@ run-fast:
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL
-	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip
+	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip *.vmdk *.vdi *.vhd *.img
 	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
 	$(QUIET)$(ROOTDIR)/extra/utils/get-pkg.py --clean 
 
@@ -76,3 +78,6 @@ docs:
 	@doxygen docs/Doxyfile
 distdocs: docs
 	@tar cJf aplus-docs.tar.xz docs/man docs/html
+
+
+-include extra/build/build-utils.mk
