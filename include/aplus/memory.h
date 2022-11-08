@@ -67,15 +67,16 @@
 #define ARCH_VMM_MAP_DEMAND         (1 << 6)
 #define ARCH_VMM_MAP_DISABLED       (1 << 7)
 #define ARCH_VMM_MAP_VIDEO_MEMORY   (1 << 8)
+#define ARCH_VMM_MAP_WRITE_THROUGH  (1 << 9)
 
-#define ARCH_VMM_MAP_HUGETLB        (1 << 9)
-#define ARCH_VMM_MAP_HUGE_2MB       (0 << 10)
-#define ARCH_VMM_MAP_HUGE_1GB       (1 << 10)
+#define ARCH_VMM_MAP_HUGETLB        (1 << 10)
+#define ARCH_VMM_MAP_HUGE_2MB       (0 << 11)
+#define ARCH_VMM_MAP_HUGE_1GB       (1 << 11)
 
-#define ARCH_VMM_MAP_TYPE_MASK      (3 << 11)
-#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 11)
-#define ARCH_VMM_MAP_TYPE_MMAP      (1 << 11)
-#define ARCH_VMM_MAP_TYPE_COW       (2 << 11)
+#define ARCH_VMM_MAP_TYPE_MASK      (3 << 12)
+#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 12)
+#define ARCH_VMM_MAP_TYPE_MMAP      (1 << 12)
+#define ARCH_VMM_MAP_TYPE_COW       (2 << 12)
 
 #define ARCH_VMM_CLONE_VM           (1 << 0)
 #define ARCH_VMM_CLONE_DEMAND       (1 << 1)

@@ -69,11 +69,38 @@ void init(const char* args) {
         );
 
 
+        uintptr_t bar0 = pci_read(i, PCI_BAR0, 4);
+        uintptr_t bar1 = pci_read(i, PCI_BAR1, 4);
+        uintptr_t bar2 = pci_read(i, PCI_BAR2, 4);
+        uintptr_t bar3 = pci_read(i, PCI_BAR3, 4);
+        uintptr_t bar4 = pci_read(i, PCI_BAR4, 4);
+        uintptr_t bar5 = pci_read(i, PCI_BAR5, 4);
+
+        if(bar0)
+            kprintf("     BAR0: %x (%x)\n", bar0, pci_bar_size(i, PCI_BAR0, 4));
+
+        if(bar1)
+            kprintf("     BAR1: %x (%x)\n", bar1, pci_bar_size(i, PCI_BAR1, 4));
+        
+        if(bar2)
+            kprintf("     BAR2: %x (%x)\n", bar2, pci_bar_size(i, PCI_BAR2, 4));
+        
+        if(bar3)
+            kprintf("     BAR3: %x (%x)\n", bar3, pci_bar_size(i, PCI_BAR3, 4));
+        
+        if(bar4)
+            kprintf("     BAR4: %x (%x)\n", bar4, pci_bar_size(i, PCI_BAR4, 4));
+
+        if(bar5)
+            kprintf("     BAR5: %x (%x)\n", bar5, pci_bar_size(i, PCI_BAR5, 4));
+
+
     }
 
 #endif
 
     (void) args;
+    
 }
 
 

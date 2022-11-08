@@ -47,8 +47,8 @@ entry() {
     echo -e "menuentry \"$1\" {"
     echo -e "   multiboot2 /boot/aplus $2"
     
-    if [ -e $SYSROOT/boot/initrd ]; then
-        echo -e "   module2 /boot/initrd type=ramdisk"
+    if [ -e $SYSROOT/boot/initrd.gz ]; then
+        echo -e "   module2 /boot/initrd.gz type=ramdisk"
     fi
     
     if [ -e $SYSROOT/usr/lib/modules/exports ]; then

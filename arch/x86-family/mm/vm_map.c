@@ -125,6 +125,9 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
     if(flags & ARCH_VMM_MAP_USER)
         b |= X86_MMU_PG_U;
 
+    if(flags & ARCH_VMM_MAP_WRITE_THROUGH)
+        b |= X86_MMU_PG_WT;
+
     if(flags & ARCH_VMM_MAP_UNCACHED)
         b |= X86_MMU_PG_CD;
 

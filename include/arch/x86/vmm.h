@@ -35,6 +35,7 @@
 #define X86_MMU_PG_P                (1ULL << 0)
 #define X86_MMU_PG_RW               (1ULL << 1)
 #define X86_MMU_PG_U                (1ULL << 2)
+#define X86_MMU_PG_WT               (1ULL << 3)
 #define X86_MMU_PG_CD               (1ULL << 4)
 #define X86_MMU_PG_PS               (1ULL << 7)
 #define X86_MMU_PG_G                (1ULL << 8)

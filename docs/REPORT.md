@@ -16,6 +16,7 @@
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|message subsystem|
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|renderer subsystem|
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|window manager subsystem|
+|**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_renderer.c`|implement|
 |**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|
 |**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|

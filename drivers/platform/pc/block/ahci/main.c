@@ -680,9 +680,9 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
     int b = __builtin_ffs(~s) - 1;
 
-    if(b == -1)
+    if(b == -1) {
         kpanicf("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
-
+    }
 
 
     hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
@@ -748,13 +748,13 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
 
 
-    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    // } else
-        // sem_wait(&ahci->io);
+    // // } else
+    //     // sem_wait(&ahci->io);
 
 
 
@@ -999,9 +999,9 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
     int b = __builtin_ffs(~s) - 1;
 
-    if(b == -1)
+    if(b == -1) {
         kpanicf("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
-
+    }
 
 
     hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
@@ -1060,13 +1060,13 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
 
 
-    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    // } else
-    //     sem_wait(&ahci->io);
+    // // } else
+    // //     sem_wait(&ahci->io);
 
 
 
@@ -1181,13 +1181,13 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
 
 
-    // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
             __builtin_ia32_pause();
     
-    // } else
-    //     sem_wait(&ahci->io);
+    // // } else
+    // //     sem_wait(&ahci->io);
 
 
 
@@ -1287,11 +1287,13 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         &core->bsp.address_space,
         (uintptr_t) ahci->hba,
         (uintptr_t) ahci->hba, size,
-        ARCH_VMM_MAP_NOEXEC |
-        ARCH_VMM_MAP_FIXED  |
-        ARCH_VMM_MAP_RDWR   |
-        ARCH_VMM_MAP_UNCACHED
+        ARCH_VMM_MAP_NOEXEC     |
+        ARCH_VMM_MAP_FIXED      |
+        ARCH_VMM_MAP_RDWR       |
+        ARCH_VMM_MAP_UNCACHED   |
+        ARCH_VMM_MAP_WRITE_THROUGH
     );
+
 
 #if DEBUG_LEVEL_TRACE
     kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%p)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
@@ -1316,7 +1318,7 @@ void init(const char* args) {
         ahci->contiguous_memory_area = pmm_alloc_blocks(AHCI_MEMORY_SIZE >> 12);
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
+        kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
 #endif
 
         
@@ -1327,26 +1329,26 @@ void init(const char* args) {
 
         }
 
-
+        
 
         // BIOS/OS Handoff Control
         if(ahci->hba->caps_ext & AHCI_HBA_CAPS_EXT_BOH) {
-            
+
             ahci->hba->bohc |= AHCI_HBA_BOHC_OOS;
 
-            while(
+            while (
                 !(ahci->hba->bohc & AHCI_HBA_BOHC_OOS) ||
-                (ahci->hba->bohc & AHCI_HBA_BOHC_BOS)
-            )
+                 (ahci->hba->bohc & AHCI_HBA_BOHC_BOS)
+            ) {
                 __builtin_ia32_pause();
+            }
 
         }
-
 
         sem_init(&ahci->io, 0);
 
 
-        ahci->hba->ghc |= AHCI_HBA_GHC_AE;
+        ahci->hba->ghc |=  AHCI_HBA_GHC_AE;
         ahci->hba->ghc &= ~AHCI_HBA_GHC_IE;
 
         int p = ahci->hba->pi;
@@ -1355,8 +1357,7 @@ void init(const char* args) {
 
 
 
-        long i;
-        for(i = 0; i < 32; i++) {
+        for(size_t i = 0; i < 32; i++) {
 
             if(!(p & (1UL << i)))
                 continue;
@@ -1373,12 +1374,13 @@ void init(const char* args) {
                 continue;
 
 #if DEBUG_LEVEL_WARN
-            if((s & AHCI_PORT_STSS_SPD) != (3 << 4))    /* 6 Gbps */
+            if((s & AHCI_PORT_STSS_SPD) != (3 << 4)) {  /* 6 Gbps */
                 kprintf("ahci: WARN! device %d has a slow interface speed: %s Gbps\n", i,
                             &("0\0  "
-                            "1.5\0"
-                            "3\0  "
-                            "6\0  ")[((s & AHCI_PORT_STSS_SPD) >> 4) * 4]);
+                              "1.5\0"
+                              "3\0  "
+                              "6\0  ")[((s & AHCI_PORT_STSS_SPD) >> 4) * 4]);
+            }
 #endif
 
 
@@ -1460,6 +1462,7 @@ void init(const char* args) {
                 q |= (1 << i);
             else
                 w |= (1 << i);
+                
         }
 
 
@@ -1469,7 +1472,7 @@ void init(const char* args) {
 
 
         /* ATA Devices */
-        for(i = 0; i < 32; i++) {
+        for(size_t i = 0; i < 32; i++) {
 
             if(!(q & (1UL << i)))
                 continue;
@@ -1508,7 +1511,7 @@ void init(const char* args) {
 
 
         /* ATAPI Devices */
-        for(i = 0; i < 32; i++) {
+        for(size_t i = 0; i < 32; i++) {
 
             if(!(w & (1UL << i)))
                 continue;
