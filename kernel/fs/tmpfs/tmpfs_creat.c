@@ -52,7 +52,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
 
     
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, ++next_ino);
+    tmpfs_inode_t* i = (tmpfs_inode_t*) cache_get(&inode->sb->cache, ++next_ino);
 
     i->capacity = 0;
     i->data = NULL;

@@ -55,8 +55,8 @@ void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct time
     DEBUG_ASSERT(task);
     DEBUG_ASSERT(kaddr);
 
-#if DEBUG_LEVEL >= 5
-    kprintf("futex: futex_wait() for '%s' at %s:%d - pid(%d) kaddr(%p) *kaddr(%d) value(%d) timeout(%p)\n", OBJ, FILE, LINE, task->tid, kaddr, *kaddr, value, utime);
+#if DEBUG_LEVEL_TRACE
+    // // kprintf("futex: futex_wait() for '%s' at %s:%d - pid(%d) kaddr(%p) *kaddr(%d) value(%d) timeout(%p)\n", OBJ, FILE, LINE, task->tid, kaddr, *kaddr, value, utime);
 #endif
 
 

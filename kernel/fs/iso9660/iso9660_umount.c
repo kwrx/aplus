@@ -22,6 +22,8 @@
  */
 
 #include <stdint.h>
+#include <sys/types.h>
+#include <sys/mount.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -31,20 +33,27 @@
 #include <aplus/memory.h>
 #include <aplus/errno.h>
 
-#include "tmpfs.h"
+#include <aplus/utils/list.h>
+
+#include "iso9660.h"
 
 
-int tmpfs_getattr(inode_t* inode, struct stat* st) {
+
+
+int iso9660_umount(inode_t* dir) {
+
+    DEBUG_ASSERT(dir);
+    DEBUG_ASSERT(dir->sb);
+    DEBUG_ASSERT(dir->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(dir->sb->root == dir);
+
+
+    cache_destroy(&dir->sb->cache);
+
+    if(dir->sb->fsinfo) {
+        kfree(dir->sb->fsinfo);
+    }
     
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
-
-    DEBUG_ASSERT(st);
-
-
-    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
-    memcpy(st, &i->st, sizeof(struct stat));
-
     return 0;
+
 }

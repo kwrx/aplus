@@ -44,7 +44,7 @@ int tmpfs_setattr(inode_t* inode, struct stat* st) {
     DEBUG_ASSERT(st);
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
    
     i->st.st_mode = st->st_mode;
     i->st.st_uid = st->st_uid;

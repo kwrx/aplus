@@ -49,10 +49,16 @@ inode_t* tmpfs_finddir(inode_t* inode, const char* name) {
 
     tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
         
-    list_each(tmpfs->children, i)
-        if(unlikely(i->parent == inode))
+    list_each(tmpfs->children, i) {
+
+        if(unlikely(i->parent == inode)) {
+
             if(strcmp(i->name, name) == 0)
                 return i;
+
+        }
+
+    }
 
     return NULL;
 }

@@ -108,7 +108,7 @@ typedef struct device {
             size_t blkoff;
 
             struct {
-                uint8_t c_data[4096];
+                uint8_t c_data[8192];
                 uint8_t c_cached;
                 uint32_t c_blkno;
             } cache;

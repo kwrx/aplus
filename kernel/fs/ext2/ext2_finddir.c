@@ -41,12 +41,12 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
     DEBUG_ASSERT(name);
-    DEBUG_ASSERT(name[0] != '\0');
+
 
     ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
     struct inode* d = NULL;
 
 
@@ -75,7 +75,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
                 if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
                     mode = ext2_utils_file_type(e->file_type);
                 else
-                    mode = ((struct ext2_inode*) vfs_cache_get(&inode->sb->cache, e->inode))->i_mode;
+                    mode = ((struct ext2_inode*) cache_get(&inode->sb->cache, e->inode))->i_mode;
 
 
                 /* Found? */

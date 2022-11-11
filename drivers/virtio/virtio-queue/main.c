@@ -65,7 +65,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     uintptr_t pbuf = pmm_alloc_blocks(((qsize * 16) + (qsize * 2 + 6) + (qsize * 8 + 6) + (qsize * driver->send_window_size) + (qsize * driver->recv_window_size)) / PML1_PAGESIZE + 1);
 
     if(unlikely(!pbuf))
-        return -ENOMEM;
+        return errno = ENOMEM, -1;
 
 
     void* qdesc = (void*) arch_vmm_p2v(pbuf + (0),                            ARCH_VMM_AREA_HEAP);
@@ -73,7 +73,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     void* qused = (void*) arch_vmm_p2v(pbuf + (qsize * 16) + (qsize * 2 + 6), ARCH_VMM_AREA_HEAP);
 
     if(!qdesc || !qfree || !qused)
-        return -EFAULT;
+        return errno = EFAULT, -1;
 
 
     memset(qdesc, 0, qsize * 16);
@@ -207,7 +207,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
         kprintf("virtio-queue: FAIL! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
 
-        return -ENOSPC;
+        return errno = ENOSPC, -1;
 
     }
 
@@ -320,7 +320,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, 
         kprintf("virtio-queue: FAIL! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
 
-        return -ENOSPC;
+        return errno = ENOSPC, -1;
 
     }
 

@@ -64,7 +64,7 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
             continue;
 
 
-        tmpfs_inode_t* c = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
+        tmpfs_inode_t* c = cache_get(&inode->sb->cache, d->ino);
 
         e[i].d_ino = c->st.st_ino;
         e[i].d_off = pos;

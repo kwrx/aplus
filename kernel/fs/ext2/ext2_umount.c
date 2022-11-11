@@ -44,15 +44,14 @@ int ext2_umount(inode_t* dir) {
     DEBUG_ASSERT(dir->sb->fsid == EXT2_ID);
     DEBUG_ASSERT(dir->sb->root == dir);
 
-
-    vfs_cache_destroy(&dir->sb->cache);
-
-
-
     ext2_t* ext2 = (ext2_t*) dir->sb->fsinfo;
 
+
+    cache_destroy(&dir->sb->cache);
+    
     kfree(ext2->cache);
     kfree(ext2);
+
 
     return 0;
 }

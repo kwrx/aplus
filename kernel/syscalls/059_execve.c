@@ -131,29 +131,23 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     uio_unlock(filename, CONFIG_PATH_MAX);
 #endif
 
+
+
     int e;
 
     struct stat st;
-    if((e = sys_newstat(filename, &st)) < 0)
+
+    if(unlikely((e = sys_newstat(filename, &st)) < 0))
         return e;
 
+    if(unlikely(!S_ISREG(st.st_mode)))
+        return -ENOEXEC;
 
+    if(unlikely(st.st_size == 0))
+        return -ENOEXEC;
 
-    e = 0;
-
-    if(st.st_mode & S_IXUSR)
-        e = (st.st_uid == current_task->uid);
-
-    else if(st.st_mode & S_IXGRP)
-        e = (st.st_gid == current_task->gid);
-    
-    else if(st.st_mode & S_IXOTH)
-        e = 1;
-
-
-    if(!e)
-        return -EPERM;
-
+    if(unlikely(sys_access(filename, X_OK) < 0))
+        return -EACCES;
 
 
 

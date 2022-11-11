@@ -7,7 +7,7 @@ endif
 
 
 export QUIET    := @ 
-export VM       := vbox
+export VM       := qemu
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
@@ -35,6 +35,8 @@ $(TARGET): BUILDALL
 install: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
 	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
+	$(QUIET)echo "    GEN     $(SYSROOT)/boot/initrd.gz"
+	$(QUIET)./extra/utils/gen-initrd $(SYSROOT)
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"

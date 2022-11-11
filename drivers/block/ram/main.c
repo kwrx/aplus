@@ -63,10 +63,10 @@ static ssize_t ram_read(device_t* device, void* buf, off_t offset, size_t count)
 
 
     if(unlikely(index >= CORE_MODULE_MAX))
-        return -EIO;
+        return errno = EIO, -1;
 
     if(unlikely(core->modules.ko[index].status != MODULE_STATUS_LOADED))
-        return -EIO;
+        return errno = EIO, -1;
 
 
 
@@ -86,7 +86,7 @@ static ssize_t ram_read(device_t* device, void* buf, off_t offset, size_t count)
 
     memcpy (
         buf,
-        (void*) (ptr + RAMDISK_BLK2BYTES(offset)),
+        (void*) (arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)),
         RAMDISK_BLK2BYTES(count)
     );
     
@@ -103,7 +103,7 @@ static ssize_t ram_write(device_t* device, const void* buf, off_t offset, size_t
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
 
-    return -EROFS;
+    return errno = EROFS, -1;
 
 }
 
@@ -164,6 +164,8 @@ void init(const char* args) {
 
         device += 1;
 
+
+        core->modules.ko[index].status = MODULE_STATUS_LOADED;
 
 #if DEBUG_LEVEL_INFO
         kprintf("block/ram: added %s (%d blocks, %d bytes)\n", d->name, d->blk.blkcount, RAMDISK_BLK2BYTES(d->blk.blkcount));

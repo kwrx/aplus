@@ -59,7 +59,7 @@ int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) 
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -80,7 +80,7 @@ int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -107,10 +107,10 @@ int virtgpu_cmd_resource_create_2d(struct virtgpu* gpu, uint64_t* resource, uint
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     if(resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     // dump hdr
     kprintf("resp.hdr.type = %X\n", resp.hdr.type);
@@ -141,7 +141,7 @@ int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, 
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
      // dump hdr
     kprintf("resp.hdr.type = %X\n", resp.hdr.type);
@@ -174,7 +174,7 @@ int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t r
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
      // dump hdr
     kprintf("resp.hdr.type = %X\n", resp.hdr.type);
@@ -207,7 +207,7 @@ int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -226,10 +226,10 @@ int virtgpu_cmd_get_display_info(struct virtgpu* gpu, struct virtio_gpu_resp_dis
     cmd.type = VIRTIO_GPU_CMD_GET_DISPLAY_INFO;
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     if(resp.hdr.type != VIRTIO_GPU_RESP_OK_DISPLAY_INFO)
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
 
     kprintf("resp.hdr.type = %X\n", resp.hdr.type);

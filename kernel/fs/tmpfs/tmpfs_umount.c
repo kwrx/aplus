@@ -50,14 +50,24 @@ int tmpfs_umount(inode_t* dir) {
 
     tmpfs_t* tmpfs = (tmpfs_t*) dir->sb->fsinfo;
 
-    list_each(tmpfs->children, i)
+
+    cache_destroy(&dir->sb->cache);
+
+    list_each(tmpfs->children, i) {
+        
+        if(i->userdata) {
+            kfree(i->userdata);
+        }
+
         kfree(i);
 
+    }
+
     list_clear(tmpfs->children);
+
+
     kfree(tmpfs);
     
-
-    vfs_cache_destroy(&dir->sb->cache);
-    
     return 0;
+
 }

@@ -30,21 +30,58 @@
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <aplus/endian.h>
 
-#include "tmpfs.h"
+#include "iso9660.h"
 
 
-int tmpfs_getattr(inode_t* inode, struct stat* st) {
-    
+
+ssize_t iso9660_read(inode_t* inode, void* buf, off_t pos, size_t len) {
+   
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
 
-    DEBUG_ASSERT(st);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(len);
 
 
-    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
-    memcpy(st, &i->st, sizeof(struct stat));
+    iso9660_t* iso9660 = (iso9660_t*) inode->sb->fsinfo;
 
-    return 0;
+
+    iso9660_directory_record_t* record = NULL;
+    
+    if(unlikely(inode == inode->sb->root)) {
+
+        record = &iso9660->root;
+
+    } else {
+
+        iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
+
+        if(unlikely(!e))
+            return errno = EIO, -1;
+
+        record = &e->record;
+
+    }
+
+
+
+    size_t position = le32_to_cpu(record->extent_location.lsb) * iso9660->block_size;
+    size_t size     = le32_to_cpu(record->data_length.lsb);
+
+
+    if(unlikely(pos >= size))
+        return 0;
+
+    if(unlikely(pos + len > size))
+        len = size - pos;
+
+    if(unlikely(!len))
+        return 0;
+
+
+    return vfs_read(inode->sb->dev, buf, position + pos, len);
+    
 }

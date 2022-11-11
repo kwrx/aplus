@@ -51,7 +51,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
 
     uint32_t* blocks = &n->i_block[0];
@@ -77,7 +77,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
         }
 
         ext2_inode_set_size(ext2, n, pos + len);
-        ext2_cache_flush(&inode->sb->cache, inode->ino, n);
+        ext2_cache_sync(&inode->sb->cache, ext2, inode->ino, n);
 
     }
     

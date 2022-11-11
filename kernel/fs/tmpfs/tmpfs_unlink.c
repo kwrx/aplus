@@ -52,6 +52,7 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
 
     list_each(tmpfs->children, i) {
+
         if(likely(i->parent != inode))
             continue;
 
@@ -60,26 +61,29 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
         d = i;
         break;
+
     }
 
-    if(!d)
+    if(!d) {
         return errno = ENOENT, -1;
+    }
 
     list_remove(tmpfs->children, d);
 
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
-
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, d->ino);
 
     inode->sb->st.f_ffree++;
     inode->sb->st.f_favail++;
     inode->sb->st.f_bavail += i->st.st_size;
     inode->sb->st.f_bfree += i->st.st_size;
             
-    if(i->data)
+    if(i->data) {
         kfree(i->data);
-    
+    }
+
+    cache_remove(&inode->sb->cache, d->ino);
 
     return 0;
 }

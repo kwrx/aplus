@@ -114,7 +114,7 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
     kprintf("pci-intx: ERROR! No more device slots available for device %d [irq(%p), handler(%p), data(%p)]\n", device, irq, handler, data);
 #endif
 
-    return -ENOSPC;
+    return errno = ENOSPC, -1;
 
 }
 
@@ -148,7 +148,7 @@ int pci_intx_unmap_irq(pcidev_t device) {
     kprintf("pci-intx: ERROR! No device slot found for device %d\n", device);
 #endif
 
-    return -ESRCH;
+    return errno = ESRCH, -1;
 
 }
 

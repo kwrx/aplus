@@ -51,7 +51,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     int entries = 0;
     int q;

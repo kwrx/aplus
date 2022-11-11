@@ -102,27 +102,27 @@ multiboot_header_end:
 .bss
 .align 4096
 
-    startup_pml4:
+    bootstrap_pml4:
         .skip 4096
-    startup_pml3_low_area: 
+    bootstrap_pml3_low_area: 
         .skip PAGE_COUNT(KERNEL_LOW_SIZE,   3) << 12
-    startup_pml3_high_area: 
+    bootstrap_pml3_high_area: 
         .skip PAGE_COUNT(KERNEL_HIGH_SIZE,  3) << 12
-    startup_pml3_heap_area:
+    bootstrap_pml3_heap_area:
         .skip PAGE_COUNT(KERNEL_HEAP_SIZE,  3) << 12
-    startup_pml2_low_area:
+    bootstrap_pml2_low_area:
         .skip PAGE_COUNT(KERNEL_LOW_SIZE,   2) << 12
-    startup_pml2_high_area:
+    bootstrap_pml2_high_area:
         .skip PAGE_COUNT(KERNEL_HIGH_SIZE,  2) << 12
-    startup_pml2_heap_area:
+    bootstrap_pml2_heap_area:
         .skip PAGE_COUNT(KERNEL_HEAP_SIZE,  2) << 12
-    startup_pml2_stack_area:
+    bootstrap_pml2_stack_area:
         .skip PAGE_COUNT(KERNEL_STACK_SIZE, 2) << 12
 
 
 .align KERNEL_STACK_SIZE
 
-    startup_stack:
+    bootstrap_stack:
         .skip  KERNEL_STACK_SIZE
 
 
@@ -311,8 +311,8 @@ _start:
         # 0x0000000000000000 - 0xFFFF800000000000 - 2TiB (Heap)
         
         # PML4 - Low Area
-        movl    $V2P(startup_pml4), %edi
-        movl    $V2P(startup_pml3_low_area), %esi
+        movl    $V2P(bootstrap_pml4), %edi
+        movl    $V2P(bootstrap_pml3_low_area), %esi
         addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 3) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 3) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -324,8 +324,8 @@ _start:
         loop    .L0
 
         # PML4 - High Area
-        movl    $V2P(startup_pml4), %edi
-        movl    $V2P(startup_pml3_high_area), %esi
+        movl    $V2P(bootstrap_pml4), %edi
+        movl    $V2P(bootstrap_pml3_high_area), %esi
         addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 3) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 3) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -337,8 +337,8 @@ _start:
         loop    .L1
 
         # PML4 - Heap Area
-        movl    $V2P(startup_pml4), %edi
-        movl    $V2P(startup_pml3_heap_area), %esi
+        movl    $V2P(bootstrap_pml4), %edi
+        movl    $V2P(bootstrap_pml3_heap_area), %esi
         addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 3) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 3) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -351,8 +351,8 @@ _start:
 
 
         # PML3 - Low Area
-        movl    $V2P(startup_pml3_low_area), %edi
-        movl    $V2P(startup_pml2_low_area), %esi
+        movl    $V2P(bootstrap_pml3_low_area), %edi
+        movl    $V2P(bootstrap_pml2_low_area), %esi
         addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 2) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 2) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -364,8 +364,8 @@ _start:
         loop    .L3
 
         # PML3 - High Area
-        movl    $V2P(startup_pml3_high_area), %edi
-        movl    $V2P(startup_pml2_high_area), %esi
+        movl    $V2P(bootstrap_pml3_high_area), %edi
+        movl    $V2P(bootstrap_pml2_high_area), %esi
         addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 2) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 2) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -377,8 +377,8 @@ _start:
         loop    .L4
 
         # PML3 - Heap Area
-        movl    $V2P(startup_pml3_heap_area), %edi
-        movl    $V2P(startup_pml2_heap_area), %esi
+        movl    $V2P(bootstrap_pml3_heap_area), %edi
+        movl    $V2P(bootstrap_pml2_heap_area), %esi
         addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 2) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 2) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -390,8 +390,8 @@ _start:
         loop    .L5
 
         # PML3 - Stack Area
-        movl    $V2P(startup_pml3_high_area), %edi
-        movl    $V2P(startup_pml2_stack_area), %esi
+        movl    $V2P(bootstrap_pml3_high_area), %edi
+        movl    $V2P(bootstrap_pml2_stack_area), %esi
         addl    $(PAGE_INDEX(KERNEL_STACK_AREA, 2) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_STACK_SIZE, 2) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -404,7 +404,7 @@ _start:
 
 
         # PML2 - Low Area
-        movl    $V2P(startup_pml2_low_area), %edi
+        movl    $V2P(bootstrap_pml2_low_area), %edi
         movl    $0, %esi
         addl    $(PAGE_INDEX(KERNEL_LOW_AREA, 1) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_LOW_SIZE, 1) << 0), %ecx
@@ -419,7 +419,7 @@ _start:
         loop    .L7
 
         # PML2 - High Area
-        movl    $V2P(startup_pml2_high_area), %edi
+        movl    $V2P(bootstrap_pml2_high_area), %edi
         movl    $0, %esi
         addl    $(PAGE_INDEX(KERNEL_HIGH_AREA, 1) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HIGH_SIZE, 1) << 0), %ecx
@@ -434,7 +434,7 @@ _start:
         loop    .L8
 
         # PML2 - Heap Area
-        movl    $V2P(startup_pml2_heap_area), %edi
+        movl    $V2P(bootstrap_pml2_heap_area), %edi
         movl    $0, %esi
         addl    $(PAGE_INDEX(KERNEL_HEAP_AREA, 1) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_HEAP_SIZE, 1) << 0), %ecx
@@ -449,8 +449,8 @@ _start:
         loop    .L9
 
         # PML2 - Stack Area
-        movl    $V2P(startup_pml2_stack_area), %edi
-        movl    $V2P(startup_stack), %esi
+        movl    $V2P(bootstrap_pml2_stack_area), %edi
+        movl    $V2P(bootstrap_stack), %esi
         addl    $(PAGE_INDEX(KERNEL_STACK_AREA, 1) << 3), %edi
         movl    $(PAGE_COUNT(KERNEL_STACK_SIZE, 1) << 0), %ecx
         btsl    $0,   %esi                              // Present
@@ -471,7 +471,7 @@ _start:
         movl    %eax, %cr4
 
         # Setup startup boot page tables
-        movl    $V2P(startup_pml4), %eax
+        movl    $V2P(bootstrap_pml4), %eax
         movl    %eax, %cr3
 
         # Enable Long Mode
@@ -519,19 +519,8 @@ _start_high64:
         addq    $KERNEL_STACK_SIZE, %rsp
 
         # Unmap Low Area
-        movq    $startup_pml4, %rdi
+        movq    $bootstrap_pml4, %rdi
         movq    $0,   (%rdi)
-
-        # Map Heap Area
-        movq    $startup_pml3_heap_area, %rdi
-        movq    $0x183, %rsi                            // Global, 1GiB, R/W, Present
-
-        movq    $(KERNEL_HEAP_SIZE >> 30), %rcx         // See include/arch/x86/asm.h
-    .L11:
-        movq    %rsi, (%rdi)
-        addq    $8,   %rdi
-        addq    $0x40000000, %rsi
-        loop    .L11
 
         # Enable PGE
         movq    %cr4, %rcx

@@ -25,26 +25,51 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
 
-#include "tmpfs.h"
+#include "iso9660.h"
 
 
-int tmpfs_getattr(inode_t* inode, struct stat* st) {
+int iso9660_getattr(inode_t* inode, struct stat* st) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(inode->sb->dev);
 
     DEBUG_ASSERT(st);
 
 
-    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
-    memcpy(st, &i->st, sizeof(struct stat));
+    if(unlikely(inode == inode->sb->root)) {
+
+        st->st_dev = inode->sb->dev->ino;
+        st->st_ino = inode->ino;
+        st->st_mode = S_IFDIR | 0555;
+        st->st_nlink = 1;
+        st->st_uid = 0;
+        st->st_gid = 0;
+        st->st_rdev = 0;
+        st->st_size = 0;
+        st->st_blksize = ISO9660_BLOCK_SIZE;
+        st->st_blocks = 0;
+        st->st_atime = arch_timer_gettime();
+        st->st_mtime = arch_timer_gettime();
+        st->st_ctime = arch_timer_gettime();
+
+    } else {
+
+
+        iso9660_inode_t* i = cache_get(&inode->sb->cache, inode->userdata);
+
+        memcpy(st, &i->st, sizeof(struct stat));
+
+    }
 
     return 0;
+
 }

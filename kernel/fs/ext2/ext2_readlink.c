@@ -49,7 +49,7 @@ ssize_t ext2_readlink(inode_t* inode, char * buf, size_t len) {
 
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     if(len > n->i_size)
         len = n->i_size;

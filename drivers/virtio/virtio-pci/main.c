@@ -393,7 +393,7 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, uintptr_t ca
 #if DEBUG_LEVEL_FATAL
         kprintf("virtio-pci: FAIL! device %d has null notify_off_multiplier [caps(%d)]", driver->device, caps);
 #endif
-        return -EINVAL;
+        return errno = EINVAL, -1;
     }
 
 
@@ -426,7 +426,7 @@ int virtio_pci_init(struct virtio_driver* driver) {
         kprintf("virtio-pci: FAIL! cannot find capabilities for pci device %d\n", driver->device);
 #endif
      
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     }
 

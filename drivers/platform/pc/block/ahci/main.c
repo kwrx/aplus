@@ -484,6 +484,18 @@ static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
 
 
 
+static inline void ahci_wait_io(struct ahci* ahci, int port, int channel) {
+
+    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
+
+        while(ahci->hba->ports[port].ci & (1 << channel))     /* Polling */
+            __builtin_ia32_pause();
+    
+    // // } else
+    //     // sem_wait(&ahci->io);
+
+}
+
 
 static void satapi_init(device_t* device) {
     
@@ -540,7 +552,7 @@ static void satapi_init(device_t* device) {
 
     ahci->hba->ports[i].ci |= (1 << 0);
 
-    sem_wait(&ahci->io);
+    ahci_wait_io(ahci, i, 0);
 
 
     if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
@@ -604,7 +616,7 @@ static void satapi_init(device_t* device) {
 
     ahci->hba->ports[i].ci |= (1 << 0);
 
-    sem_wait(&ahci->io);
+    ahci_wait_io(ahci, i, 0);
 
 
     if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
@@ -746,24 +758,17 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
     ahci->hba->ports[d].ci |= (1 << b);
 
-
-
-    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
-
-        while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
-            __builtin_ia32_pause();
-    
-    // // } else
-    //     // sem_wait(&ahci->io);
-
+    ahci_wait_io(ahci, d, b);
 
 
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#if DEBUG_LEVEL_ERROR
+        kprintf("ahci: ERROR! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
-        return errno = EIO, 0;
+        return errno = EIO, -1;
     }
 
 
@@ -834,7 +839,7 @@ static void sata_init(device_t* device) {
 
     ahci->hba->ports[i].ci |= (1 << 0);
 
-    sem_wait(&ahci->io);
+    ahci_wait_io(ahci, i, 0);
 
 
     if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
@@ -842,7 +847,7 @@ static void sata_init(device_t* device) {
 
 
 
-    ata_identify_t identify;
+    ata_identify_t identify = { 0 };
 
     memcpy (
         &identify, 
@@ -859,8 +864,7 @@ static void sata_init(device_t* device) {
 
 #if DEBUG_LEVEL_TRACE
 
-    int j;
-    for(j = 0; j < 39; j += 2) {
+    for(int j = 0; j < 39; j += 2) {
         identify.model[j] ^= identify.model[j + 1];
         identify.model[j + 1] ^= identify.model[j];
         identify.model[j] ^= identify.model[j + 1];
@@ -1058,24 +1062,17 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
     ahci->hba->ports[d].ci |= (1 << b);
 
-
-
-    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
-
-        while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
-            __builtin_ia32_pause();
-    
-    // // } else
-    // //     sem_wait(&ahci->io);
-
+    ahci_wait_io(ahci, d, b);
 
 
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#if DEBUG_LEVEL_ERROR
+        kprintf("ahci: ERROR! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
-        return errno = EIO, 0;
+        return errno = EIO, -1;
     }
 
 
@@ -1179,24 +1176,17 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
     ahci->hba->ports[d].ci |= (1 << b);
 
-
-
-    // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
-
-        while(ahci->hba->ports[d].ci & (1 << b))     /* Polling */
-            __builtin_ia32_pause();
-    
-    // // } else
-    // //     sem_wait(&ahci->io);
-
+    ahci_wait_io(ahci, d, b);
 
 
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
-        kprintf("ahci: FAULT! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#if DEBUG_LEVEL_ERROR
+        kprintf("ahci: ERROR! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+#endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
-        return errno = EIO, 0;
+        return errno = EIO, -1;
     }
 
 
@@ -1329,7 +1319,6 @@ void init(const char* args) {
 
         }
 
-        
 
         // BIOS/OS Handoff Control
         if(ahci->hba->caps_ext & AHCI_HBA_CAPS_EXT_BOH) {

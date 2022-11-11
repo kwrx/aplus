@@ -49,7 +49,7 @@ ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
 
 

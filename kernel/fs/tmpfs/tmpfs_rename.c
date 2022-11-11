@@ -53,6 +53,7 @@ int tmpfs_rename (inode_t* inode, const char* name, const char* newname) {
 
 
     list_each(tmpfs->children, i) {
+
         if(likely(i->parent != inode))
             continue;
 
@@ -61,12 +62,16 @@ int tmpfs_rename (inode_t* inode, const char* name, const char* newname) {
 
         d = i;
         break;
+
     }
 
-    if(!d)
+    if(!d) {
         return errno = ENOENT, -1;
-
+    }
    
     strncpy(d->name, newname, CONFIG_MAXNAMLEN);
+
+
     return 0;
+    
 }

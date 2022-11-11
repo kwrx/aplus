@@ -213,8 +213,8 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
     w_csr32(dev, 0, r_csr32(dev, 0) | (1 << 3));
 
 
-#if DEBUG_LEVEL >= 5
-    kprintf("pcnet: INFO! [%d] sending %d bytes from %d\n", arch_timer_generic_getms(), len, dev->txid);
+#if DEBUG_LEVEL_TRACE
+    kprintf("pcnet: TRACE! [%d] sending %d bytes from %d\n", arch_timer_generic_getms(), len, dev->txid);
 #endif
 
 
@@ -234,8 +234,8 @@ static int pcnet_startinput(void* internals) {
 
     uint16_t size = mmio_r16(dev->vrxdes + (dev->rxid * PCNET_DE_SIZE + 8));
 
-#if DEBUG_LEVEL >= 5
-    kprintf("pcnet: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rxid);
+#if DEBUG_LEVEL_TRACE
+    kprintf("pcnet: TRACE! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rxid);
 #endif
 
     dev->size = size;

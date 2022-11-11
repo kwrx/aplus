@@ -244,8 +244,8 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
     char buf[CONFIG_MAXNAMLEN] = { 0 };
-    strcpy(buf, "/dev/");
-    strcat(buf, device->name);
+    strncpy(buf, "/dev/", CONFIG_MAXNAMLEN);
+    strlcat(buf, device->name, CONFIG_MAXNAMLEN);
 
 
     int fd = sys_creat(buf, mode | (device->type == DEVICE_TYPE_BLOCK ? S_IFBLK : S_IFCHR));

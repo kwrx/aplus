@@ -101,9 +101,9 @@ void kmain() {
     const char* __argv[2] = { "/sbin/init", NULL };
     const char* __envp[1] = { NULL };
 
-    if((e = sys_execve(__argv[0], __argv, __envp)) < 0)
-        kpanicf("init: PANIC! execve() failed with errno(%s)\n", strerror(-e));
-
+    if((e = sys_execve(__argv[0], __argv, __envp)) < 0) {
+        kpanicf("init: PANIC! execve(%s) failed with errno(%s)\n", __argv[0], strerror(-e));
+    }
 
     arch_reboot(ARCH_REBOOT_HALT);
 

@@ -34,21 +34,21 @@
 #include "ext2.h"
 
 
-
-void* ext2_cache_load(vfs_cache_t* cache, ino_t ino) {
+struct ext2_inode* ext2_cache_load(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
     struct ext2_inode* i = (struct ext2_inode*) kcalloc(sizeof(struct ext2_inode), 1, GFP_KERNEL);
 
-    ext2_utils_read_inode((ext2_t*) cache->userdata, ino, i);
+    ext2_utils_read_inode(ext2, ino, i);
 
-    return (void*) i;
+    return i;
+
 }
 
 
+struct ext2_inode* ext2_cache_sync(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
 
-void ext2_cache_flush(vfs_cache_t* cache, ino_t ino, void* data) {
+    return ext2_utils_write_inode(ext2, ino, inode)
+         , inode;
 
-    ext2_utils_write_inode((ext2_t*) cache->userdata, ino, data);
-    return;
-    
 }
+

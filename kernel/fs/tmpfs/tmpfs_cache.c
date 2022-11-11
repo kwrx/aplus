@@ -31,13 +31,16 @@
 #include <aplus/hal.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <aplus/utils/cache.h>
 
 #include "tmpfs.h"
 
 
 
-void* tmpfs_cache_load(vfs_cache_t* cache, ino_t ino) {
+tmpfs_inode_t* tmpfs_cache_load(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
+    DEBUG_ASSERT(tmpfs);
+    DEBUG_ASSERT(cache);
 
     tmpfs_inode_t* i = (tmpfs_inode_t*) kcalloc(sizeof(tmpfs_inode_t), 1, GFP_KERNEL);
 
@@ -56,12 +59,18 @@ void* tmpfs_cache_load(vfs_cache_t* cache, ino_t ino) {
     i->st.st_mtime = arch_timer_gettime();
     i->st.st_ctime = arch_timer_gettime();
 
-
-    return (void*) i;
+    return i;
+    
 }
 
 
 
-void tmpfs_cache_flush(vfs_cache_t* cache, ino_t ino, void* data) {
-    return;
+tmpfs_inode_t* tmpfs_cache_sync(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode) {
+    
+    DEBUG_ASSERT(tmpfs);
+    DEBUG_ASSERT(cache);
+    DEBUG_ASSERT(inode);
+
+    return inode;
+
 }

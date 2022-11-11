@@ -90,9 +90,6 @@ static int wc_display_create(const char* device, size_t offset_x, size_t offset_
         goto fail;
     }
 
-    var.xres_virtual = var.xres = 1920;
-    var.yres_virtual = var.yres = 1080;
-
     if(ioctl(fd, FBIOPUT_VSCREENINFO, &var) < 0) {
         goto fail;
     }

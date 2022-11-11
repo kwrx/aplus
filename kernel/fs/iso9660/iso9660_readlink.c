@@ -31,20 +31,37 @@
 #include <aplus/memory.h>
 #include <aplus/errno.h>
 
-#include "tmpfs.h"
+#include "iso9660.h"
 
 
-int tmpfs_getattr(inode_t* inode, struct stat* st) {
-    
+
+ssize_t iso9660_readlink(inode_t* inode, char* buf, size_t len) {
+   
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
-
-    DEBUG_ASSERT(st);
+    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
 
 
-    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
-    memcpy(st, &i->st, sizeof(struct stat));
 
-    return 0;
+    if(unlikely(len > ISO9660_MAX_SYMLINK))
+        len = ISO9660_MAX_SYMLINK;
+
+    if(unlikely(len == 0))
+        return 0;
+
+    if(unlikely(inode == inode->sb->root))
+        return errno = ENOLINK, -1;
+
+    
+    
+    iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
+
+    if(unlikely(!e))
+        return errno = EIO, -1;
+
+    
+    strncpy(buf, e->symlink, len);
+
+    return len;
+
 }

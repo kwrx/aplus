@@ -263,7 +263,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
     kprintf("pci-msix: ERROR! No more device slots available for device %d [index(%p), handler(%p), data(%p)]\n", device, index, handler, data);
 #endif
 
-    return -ENOSPC;
+    return errno = ENOSPC, -1;
 
 }
 
@@ -306,7 +306,7 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
     kprintf("pci-msix: ERROR! No device slot found for device %d\n", device);
 #endif
 
-    return -ESRCH;
+    return errno = ESRCH, -1;
 
 }
 

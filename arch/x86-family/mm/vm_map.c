@@ -284,11 +284,6 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
 
             }
 
-
-#if DEBUG_LEVEL_TRACE
-            // // kprintf("arch_vmm_map(): virtaddr(0x%lX) physaddr(0x%llX) flags(0x%lX) pagesize(0x%lX)\n", s, *d & X86_MMU_ADDRESS_MASK, b, pagesize);
-#endif
-
         }
 
 

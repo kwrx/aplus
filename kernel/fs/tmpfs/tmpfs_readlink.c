@@ -45,7 +45,7 @@ ssize_t tmpfs_readlink(inode_t* inode, char * buf, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    tmpfs_inode_t* i = vfs_cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
     if(!i->data)
         return 0;

@@ -47,8 +47,8 @@ entry() {
     echo -e "menuentry \"$1\" {"
     echo -e "   multiboot2 /boot/aplus $2"
     
-    if [ -e $SYSROOT/boot/initrd.gz ]; then
-        echo -e "   module2 /boot/initrd.gz type=ramdisk"
+    if [ -e $SYSROOT/boot/initrd.iso ]; then
+        echo -e "   module2 /boot/initrd.iso type=ramdisk"
     fi
     
     if [ -e $SYSROOT/usr/lib/modules/exports ]; then
@@ -75,4 +75,4 @@ header                                                                          
 entry "aplus"                  "root=/dev/sda1 rootfs=ext2 $EXTRA_KARGS"                    "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
 entry "aplus-nographics"       "root=/dev/sda1 rootfs=ext2 graphics=no $EXTRA_KARGS"        "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
 entry "aplus-builtin-graphics" "root=/dev/sda1 rootfs=ext2 graphics=builtin $EXTRA_KARGS"   "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
-entry "aplus-live"             "root=/dev/ram0 rootfs=ext2 $EXTRA_KARGS"                    "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+entry "aplus-live"             "root=/dev/ram0 rootfs=iso9660 $EXTRA_KARGS"                 "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg

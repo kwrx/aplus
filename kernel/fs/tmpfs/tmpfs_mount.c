@@ -102,11 +102,11 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
 
 
-    struct vfs_cache_ops ops;
-    ops.flush = tmpfs_cache_flush;
-    ops.load  = tmpfs_cache_load;
+    struct cache_ops ops;
+    ops.load = (cache_load_handler_t) tmpfs_cache_load;
+    ops.sync = (cache_sync_handler_t) tmpfs_cache_sync;
 
-    vfs_cache_create(&dir->sb->cache, &ops, TMPFS_NODES_MAX, NULL);
+    cache_init(&dir->sb->cache, &ops, dir->sb->fsinfo);
 
 
     dir->sb->ino = dir->ino;

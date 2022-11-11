@@ -45,6 +45,7 @@
 #include <aplus/ipc.h>
 
 #include <aplus/utils/list.h>
+#include <aplus/utils/cache.h>
 #include <aplus/utils/hashmap.h>
 
 
@@ -52,6 +53,7 @@
 #define TMPFS_ID                    0xDEAD1000
 #define EXT2_ID                     0xDEAD1001
 #define VFAT_ID                     0xDEAD1002
+#define ISO9660_ID                  0xDEAD1003
 
 #define FILE_MAX                    8192
 
@@ -152,7 +154,7 @@ struct superblock {
     ino_t ino;
     struct statvfs st;
     struct inode_ops ops;
-    struct vfs_cache cache;
+    struct cache cache;
 
     void* fsinfo;
 
@@ -213,13 +215,6 @@ int vfs_unlink (inode_t*, const char*);
 inode_t* pipefs_inode(void);
 inode_t* vfs_mkfifo(inode_t*, size_t, int);
 
-
-// kernel/fs/cache.c
-void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
-void vfs_cache_destroy(vfs_cache_t*);
-void* vfs_cache_get(vfs_cache_t*, ino_t);
-void vfs_cache_flush(vfs_cache_t*, ino_t);
-void vfs_cache_flush_all(vfs_cache_t*);
 
 // kernel/fs/dcache.c
 void vfs_dcache_init(inode_t*);

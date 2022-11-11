@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# Usage
+#   gen-initrd [SYSROOT]
+
+# This script generates an initrd for the given sysroot.
+
+
+if [ -z "$1" ]; then
+    echo "No sysroot specified."
+    exit 1
+else
+    SYSROOT="$1"
+fi
+
+
+if [ -e $SYSROOT/boot/initrd.iso ]; then
+    rm -f $SYSROOT/boot/initrd.iso
+fi
+
+
+pushd $SYSROOT &> /dev/null
+
+    mkisofs -R -l -o $SYSROOT/boot/initrd.iso -find . ! -path "./boot/*"
+
+popd &> /dev/null
+
+exit 0

@@ -42,22 +42,22 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
     DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
     DEBUG_ASSERT(st);
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
 
-    st->st_dev = 0; /* FIXME */
-    st->st_ino = inode->ino;
-    st->st_mode = n->i_mode;
-    st->st_nlink = n->i_links_count;
-    st->st_uid = n->i_uid;
-    st->st_gid = n->i_gid;
-    st->st_rdev = 0; /* FIXME */
-    st->st_size = n->i_size;
+    st->st_dev     = 0;                 /* FIXME */
+    st->st_ino     = inode->ino;
+    st->st_mode    = n->i_mode;
+    st->st_nlink   = n->i_links_count;
+    st->st_uid     = n->i_uid;
+    st->st_gid     = n->i_gid;
+    st->st_rdev    = 0;                 /* FIXME */
+    st->st_size    = n->i_size;
     st->st_blksize = 512;
-    st->st_blocks = n->i_blocks;
-    st->st_atime = n->i_atime;
-    st->st_ctime = n->i_mtime;
-    st->st_mtime = n->i_ctime;
+    st->st_blocks  = n->i_blocks;
+    st->st_atime   = n->i_atime;
+    st->st_ctime   = n->i_mtime;
+    st->st_mtime   = n->i_ctime;
     
 
     if(sizeof(off_t) == 8) {

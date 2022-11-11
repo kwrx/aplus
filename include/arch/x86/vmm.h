@@ -108,9 +108,12 @@ static inline uintptr_t __alloc_page(uintptr_t pagesize, int zero) {
     else
         p = pmm_alloc_blocks_aligned(pagesize >> 12, pagesize);
 
+    DEBUG_ASSERT(p != -1);
     
-    if(likely(zero))
+    
+    if(likely(zero)) {
         memset((void*) arch_vmm_p2v(p, ARCH_VMM_AREA_HEAP), 0, pagesize);
+    }
 
     return p;
 }
