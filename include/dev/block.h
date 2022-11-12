@@ -35,13 +35,13 @@
 #include <dev/interface.h>
 
 
-#define BLOCK_DOS_PARTITION_MAGIC           0xAA55
-#define BLOCK_DOS_PARTITION_MAGIC_OFFSET    510
-#define BLOCK_DOS_PARTITION_TABLE_OFFSET    446
-#define BLOCK_DOS_PARTITION_TABLE_ENTRIES   4
+#define BLOCK_MBR_PARTITION_MAGIC           0xAA55
+#define BLOCK_MBR_PARTITION_MAGIC_OFFSET    510
+#define BLOCK_MBR_PARTITION_TABLE_OFFSET    446
+#define BLOCK_MBR_PARTITION_TABLE_ENTRIES   4
 
-#define BLOCK_DOS_PARTITION_TYPE_EMPTY      0x00
-#define BLOCK_DOS_PARTITION_TYPE_EXTENDED   0x05
+#define BLOCK_MBR_PARTITION_TYPE_EMPTY      0x00
+#define BLOCK_MBR_PARTITION_TYPE_EXTENDED   0x05
 
 
 #define BLOCK_GPT_PARTITION_MAGIC           "EFI PART"
@@ -118,7 +118,7 @@ ssize_t block_write(device_t*, const void*, off_t, size_t);
 ssize_t block_read(device_t*, void*, off_t, size_t);
 void block_init(device_t*);
 void block_dnit(device_t*);
-void block_parse_partitions(device_t*, inode_t*, void (*) (device_t*, mode_t));
+void block_parse_partitions(device_t*, inode_t*, void (*mkdev)(device_t*, mode_t));
 
 __END_DECLS
 
