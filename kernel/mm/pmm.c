@@ -486,17 +486,25 @@ void pmm_init(uintptr_t max_memory) {
 
 
 
+    extern int end;
 
-    //! Claim Boot Memory Map areas
+
+    // Claim lower memory
+
+    pmm_claim_area(0, arch_vmm_v2p((uintptr_t) &end, ARCH_VMM_AREA_KERNEL));
+
+
+    // Claim Boot Memory Map areas in the first bitmap.
+
     for(size_t i = 0; i < core->mmap.count; i++) {
 
         if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE)
             continue;
 
-        if(core->mmap.ptr[i].address > pmm_max_memory)
+        if(core->mmap.ptr[i].address > MIN(PML2_PAGESIZE, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > pmm_max_memory)
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MIN(PML2_PAGESIZE, pmm_max_memory))
             continue;
 
 
@@ -511,28 +519,64 @@ void pmm_init(uintptr_t max_memory) {
     }
 
 
-    //! Claim lower memory
+    //  Alloc other page map memory bitmaps.
 
-    extern int end;
-    pmm_claim_area(0, arch_vmm_v2p((uintptr_t) &end, ARCH_VMM_AREA_KERNEL));
+    for(size_t i = 1; i < PML2_MAX_ENTRIES && (i * PML2_PAGESIZE) < pmm_max_memory; i++) {
 
 
-    //! Claim other page map memory blocks
-    for(size_t i = 1; i < PML2_MAX_ENTRIES; i++) {
+        uintptr_t phys = pmm_alloc_block();
 
-        if((i * PML2_PAGESIZE) > pmm_max_memory)
-            break;
-
-        uint64_t* b = (uint64_t*) arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
-
-        for(size_t j = 0; j < PML1_MAX_ENTRIES; j++) {
-            b[j] = 0;
+        if(unlikely(phys == -1ULL)) {
+            kpanicf("pmm: Failed to allocate bitmap for PML2 entry %ld\n", i);
         }
 
-        pml2_bitmap[i] = (uintptr_t) b;
+
+        uintptr_t virt = arch_vmm_p2v(phys, ARCH_VMM_AREA_HEAP);
+
+        if(unlikely(virt == -1ULL)) {
+            kpanicf("pmm: Failed to map bitmap for PML2 entry %ld\n", i);
+        }
+
+        memset((void*) virt, 0, PML1_MAX_ENTRIES * sizeof(uint64_t));
+
+
+        pml2_bitmap[i] = virt;
 
     }
 
+
+    // Claim other boot memory map areas.
+
+    for(size_t i = 0; i < core->mmap.count; i++) {
+
+        if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE)
+            continue;
+
+        if(core->mmap.ptr[i].address < MIN(PML2_PAGESIZE, pmm_max_memory))
+            continue;
+
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length < MIN(PML2_PAGESIZE, pmm_max_memory))
+            continue;
+
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE, pmm_max_memory))
+            continue;
+
+        if(core->mmap.ptr[i].address > MAX(PML2_PAGESIZE, pmm_max_memory))
+            continue;
+
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE, pmm_max_memory))
+            continue;
+
+
+#if DEBUG_LEVEL_TRACE
+        kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
+                                                              core->mmap.ptr[i].length,
+                                                              core->mmap.ptr[i].type);
+#endif
+
+        pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
+
+    }
 
     
 #if DEBUG_LEVEL_INFO

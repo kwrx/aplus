@@ -367,11 +367,13 @@ void apic_init(void) {
 
 
 
-    if(X86_APIC_BASE_ADDR < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
+    if(X86_APIC_BASE_ADDR < ((core->memory.phys_upper + core->memory.phys_lower) * 1024)) {
+     
         pmm_claim_area (
-            X86_APIC_BASE_ADDR,
-            X86_APIC_BASE_ADDR + PML1_PAGESIZE
+            X86_APIC_BASE_ADDR, PML1_PAGESIZE
         );
+    
+    }
 
 
     if(!x2apic) {

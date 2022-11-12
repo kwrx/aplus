@@ -128,11 +128,13 @@ void ioapic_enable(void) {
             continue;
 
 
-        if(ioapic[i].address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
+        if(ioapic[i].address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024)) {
+            
             pmm_claim_area (
-                ioapic[i].address,
-                ioapic[i].address + PML1_PAGESIZE
+                ioapic[i].address, PML1_PAGESIZE
             );
+            
+        }
 
 
         arch_vmm_map (

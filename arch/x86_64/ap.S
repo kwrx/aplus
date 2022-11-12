@@ -33,8 +33,8 @@
 .global __ap_begin
 .global __ap_end
 
-.extern startup_gdtp_ptr
-.extern startup_idtp_ptr
+.extern bootstrap_gdtp_ptr
+.extern bootstrap_idtp_ptr
 
 
 #define AP_RELOC(p)     \
@@ -147,7 +147,7 @@ ap64_highstart:
         wrmsr
 
         # Load High GDT
-        lgdt    (startup_gdtp_ptr)
+        lgdt    (bootstrap_gdtp_ptr)
 
         # Load TSS
         movq    AP_RELOC(ap_header_cpu), %rax
@@ -156,7 +156,7 @@ ap64_highstart:
         ltrw    %ax
 
         # Load IDT
-        lidt    (startup_idtp_ptr)
+        lidt    (bootstrap_idtp_ptr)
 
         # Stack unwinding
         pushq   $0

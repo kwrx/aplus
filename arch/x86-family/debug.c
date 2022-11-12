@@ -91,6 +91,16 @@ void arch_debug_init(void) {
     }
 
 
+    if(com_address == 0)
+        return;
+
+    arch_debug_putc('\e');
+    arch_debug_putc('[');
+    arch_debug_putc('0');
+    arch_debug_putc('m');
+
+
+
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
     vga_offset  = 0;

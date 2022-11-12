@@ -33,7 +33,8 @@ echo "## Checking dependencies"
     required git
     required gcc
     required ld
-    required parted
+    required gdisk
+    required mkfs.vfat
     required mkfs.ext2
     required dd
     required sudo
@@ -47,6 +48,7 @@ echo "## Checking dependencies"
     required grub-install
     required python3
     required pip3
+    required gzip
     required zip
 
 

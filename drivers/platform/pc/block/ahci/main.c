@@ -857,9 +857,9 @@ static void sata_init(device_t* device) {
 
 
     device->blk.blkcount = identify.sectors_28
-                            ? identify.sectors_28
-                            : identify.sectors_48
-                            ;
+        ? identify.sectors_28
+        : identify.sectors_48
+        ;
 
 
 #if DEBUG_LEVEL_TRACE
@@ -1294,6 +1294,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
+
     pci_scan(&pci_find, PCI_TYPE_SATA, NULL);
 
 
@@ -1483,10 +1484,10 @@ void init(const char* args) {
             d->dnit = sata_dnit;
             d->reset = sata_reset;
 
-            d->blk.blksize = 512;
+            d->blk.blksize  = 512;
             d->blk.blkcount = 0;
-            d->blk.blkmax = (16 * 1024) / d->blk.blksize;
-            d->blk.blkoff = 0;
+            d->blk.blkmax   = (16 * 1024) / d->blk.blksize;
+            d->blk.blkoff   = 0;
 
             d->blk.read = sata_read;
             d->blk.write = sata_write;
@@ -1522,10 +1523,10 @@ void init(const char* args) {
             d->dnit = sata_dnit;
             d->reset = sata_reset;
 
-            d->blk.blksize = 2048;
+            d->blk.blksize  = 2048;
             d->blk.blkcount = 0;
-            d->blk.blkmax = (16 * 1024) / d->blk.blksize;
-            d->blk.blkoff = 0;
+            d->blk.blkmax   = (16 * 1024) / d->blk.blksize;
+            d->blk.blkoff   = 0;
 
             d->blk.read = satapi_read;
             d->blk.write = NULL;

@@ -47,7 +47,7 @@ extern struct {
 
         long __padding[4];
     };
-} startup_irq[224];
+} bootstrap_irq[224];
 
 
 
@@ -98,8 +98,8 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                   
         case 0x21 ... 0xFD:
 
-            if(likely(startup_irq[frame->intno - 0x20].handler))
-                startup_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
+            if(likely(bootstrap_irq[frame->intno - 0x20].handler))
+                bootstrap_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
 
             else {
 #if DEBUG_LEVEL_WARN
@@ -215,11 +215,11 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
     DEBUG_ASSERT(handler);
 
 
-    if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
+    if(unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
 
 
-    startup_irq[irq].handler = handler;
+    bootstrap_irq[irq].handler = handler;
 
     ioapic_map_irq(irq, irq, current_cpu->id);
     
@@ -235,10 +235,10 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
 void arch_intr_unmap_irq(irq_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(startup_irq[irq].handler != NULL);
+    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
 
         
-    startup_irq[irq].handler = NULL;
+    bootstrap_irq[irq].handler = NULL;
 
     ioapic_unmap_irq(irq);
 
@@ -256,11 +256,11 @@ void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t))
     DEBUG_ASSERT(handler);
 
 
-    if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
+    if(unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
 
     
-    startup_irq[irq].handler = handler;    
+    bootstrap_irq[irq].handler = handler;    
 
 
 #if DEBUG_LEVEL_TRACE
@@ -272,10 +272,10 @@ void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t))
 void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(startup_irq[irq].handler != NULL);
+    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
 
         
-    startup_irq[irq].handler = NULL;
+    bootstrap_irq[irq].handler = NULL;
 
 
 #if DEBUG_LEVEL_TRACE

@@ -88,48 +88,81 @@ static int acpi_cksum(const char* p, size_t s) {
  */
 static int acpi_find_rsdp() {
 
-    uintptr_t p;
-    for(p = RSDT_LOCATION_START; p < RSDT_LOCATION_END; p += 16) {
 
-        if(memcmp((const void*) p, "RSD PTR ", 8) != 0)
-            continue;
-
-        if(!acpi_cksum((const char*) p, 20))
-            continue;
+    acpi_rsdp_t* rsdp = NULL;
 
 
-        acpi_rsdp_t* rsdp = (acpi_rsdp_t*) p;
+    if(core->acpi.rsdp_address) {
 
-        uintptr_t address;
-        if(!rsdp->revision)
-            address = (uintptr_t) rsdp->address;
-        else
-            address = (uintptr_t) rsdp->xaddress;
+        if(memcmp((const void*) core->acpi.rsdp_address, "RSD PTR ", 8) != 0)
+            goto search;
 
-        DEBUG_ASSERT(address);
+        if(!acpi_cksum((const char*) core->acpi.rsdp_address, 20))
+            goto search;
 
+        rsdp = (acpi_rsdp_t*) core->acpi.rsdp_address;
 
-#if DEBUG_LEVEL_TRACE
-        kprintf("x86-acpi: RSDT found at 0x%lX\n", address);
-#endif
-
-        RSDT = (acpi_sdt_t*) arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
-
-
-        //? Claim Physical ACPI address space
-        address &= ~(PML1_PAGESIZE - 1);
-
-        if(address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
-            pmm_claim_area (
-                address,
-                address + X86_ACPI_AREA_SIZE
-            );
-
-        
-        return rsdp->revision;
     }
 
-    return -1;
+
+search:
+
+    if(rsdp == NULL) {
+
+        for(uintptr_t p = RSDT_LOCATION_START; p < RSDT_LOCATION_END; p += 16) {
+
+            if(memcmp((const void*) p, "RSD PTR ", 8) != 0)
+                continue;
+
+            if(!acpi_cksum((const char*) p, 20))
+                continue;
+
+
+            rsdp = (acpi_rsdp_t*) p;
+            break;
+
+        }
+
+    }
+
+
+    if(rsdp == NULL) {
+        return -1;
+    }
+
+
+
+    uintptr_t address;
+
+    if(!rsdp->revision) {
+        address = (uintptr_t) rsdp->address;
+    } else {
+        address = (uintptr_t) rsdp->xaddress;
+    }
+
+    DEBUG_ASSERT(address);
+
+
+
+    RSDT = (acpi_sdt_t*) arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
+
+
+    address &= ~(PML1_PAGESIZE - 1);
+
+    if(address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024)) {
+        
+        pmm_claim_area (
+            address, X86_ACPI_AREA_SIZE
+        );
+
+    }
+    
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-acpi: RSDT found at %p\n", RSDT);
+#endif
+
+    return !!rsdp->revision;
 
 }
 
@@ -202,20 +235,22 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
  */
 void acpi_init(void) {
 
+
+    acpi_sdt_t* facp  = NULL;
+    acpi_fadt_t* fadt = NULL;
+
+    
     RSDT = NULL;
     extended = 0;
-
 
     if((extended = acpi_find_rsdp()) == -1)
         kpanicf("x86-acpi: Root System Descriptor Pointer not found, ACPI not supported!");
     
-    acpi_sdt_t* facp;
     if(acpi_find(&facp, "FACP") != 0)
         kpanicf("x86-acpi: Fixed ACPI Descriptor not found, ACPI not supported!");
 
     
     
-    acpi_fadt_t* fadt;
     if(extended)
         fadt = (acpi_fadt_t*) &facp->xtables;
     else
@@ -224,21 +259,31 @@ void acpi_init(void) {
     DEBUG_ASSERT(fadt);
 
 
-    if(
+    if (
         (fadt->smi_command)                         &&
         (fadt->acpi_enable & fadt->acpi_disable)    &&
        !(inw(fadt->pm1a_control_block) & 1)
     ) {
 
+
         outb(fadt->smi_command, fadt->acpi_enable);
 
+
+#if DEBUG_LEVEL_TRACE
         kprintf("x86-acpi: Starting ACPI-A...\n");
+#endif
+
         while((inw(fadt->pm1a_control_block) & 1) == 0)
             __builtin_ia32_pause();
 
+
+#if DEBUG_LEVEL_TRACE
         kprintf("x86-acpi: Starting ACPI-B...\n");
+#endif
+
         while((inw(fadt->pm1b_control_block) & 1) == 0)
             __builtin_ia32_pause();
+            
 
     }
 

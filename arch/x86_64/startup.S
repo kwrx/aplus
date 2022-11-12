@@ -130,18 +130,18 @@ multiboot_header_end:
 .data
 .align 4096
 
-        .global startup_gdtp
-        .global startup_gdtp_ptr
-        .global startup_idtp
-        .global startup_idtp_ptr
-        .global startup_tss
-        .global startup_isr
-        .global startup_irq
+        .global bootstrap_gdtp
+        .global bootstrap_gdtp_ptr
+        .global bootstrap_idtp
+        .global bootstrap_idtp_ptr
+        .global bootstrap_tss
+        .global bootstrap_isr
+        .global bootstrap_irq
 
         .extern interrupt_common
         
 
-    startup_gdtp:
+    bootstrap_gdtp:
         .quad 0x0000000000000000    //?
         .quad 0x00A09A0000000000    //? 0x08 Kernel Code
         .quad 0x0080920000000000    //? 0x10 Kernel Data
@@ -153,13 +153,13 @@ multiboot_header_end:
         .quad 0x0000000000000000    //? TSS 64 (Available)
       .endr
 
-    startup_gdtp_ptr:
-        .word . - startup_gdtp - 1
-        .quad V2P(startup_gdtp)
+    bootstrap_gdtp_ptr:
+        .word . - bootstrap_gdtp - 1
+        .quad V2P(bootstrap_gdtp)
 
 .align 16
 
-    startup_tss:
+    bootstrap_tss:
       .rept KERNEL_TSS_MAX
         .long 0
         .quad 0                                                      // RSP0: Syscall Stack
@@ -182,7 +182,7 @@ multiboot_header_end:
 
 .align 16
 
-    startup_idtp:
+    bootstrap_idtp:
       .rept 32
         .word 0
         .word KERNEL_CS
@@ -225,13 +225,13 @@ multiboot_header_end:
         .quad 0
         .word 0
    
-    startup_idtp_ptr:
-        .word . - startup_idtp - 1
-        .quad startup_idtp
+    bootstrap_idtp_ptr:
+        .word . - bootstrap_idtp - 1
+        .quad bootstrap_idtp
 
 .align 16
 
-    startup_isr:
+    bootstrap_isr:
       .set i, 0
       .rept 256
         .align 16
@@ -253,7 +253,7 @@ multiboot_header_end:
 
 .align 16
 
-    startup_irq:
+    bootstrap_irq:
       .rept 224
         .quad 0
         .quad 0
@@ -490,7 +490,7 @@ _start:
         movl    %eax, %cr0
 
         # Load GDT and Code Segment
-        lgdt    V2P(startup_gdtp_ptr)
+        lgdt    V2P(bootstrap_gdtp_ptr)
         ljmp    $KERNEL_CS, $V2P(_start64)
 
 
@@ -539,13 +539,13 @@ _start_high64:
         wrmsr
 
         # Load High GDT
-        movq    $startup_gdtp_ptr, %rcx
-        movq    $startup_gdtp, 2(%rcx)
-        lgdt    (startup_gdtp_ptr)
+        movq    $bootstrap_gdtp_ptr, %rcx
+        movq    $bootstrap_gdtp, 2(%rcx)
+        lgdt    (bootstrap_gdtp_ptr)
 
         # Load TSS
-        movq    $startup_tss, %rsi
-        movq    $startup_gdtp, %rdi
+        movq    $bootstrap_tss, %rsi
+        movq    $bootstrap_gdtp, %rdi
         movq    $KERNEL_TSS_MAX, %rcx
         addq    $KERNEL_TSS, %rdi
 
@@ -570,8 +570,8 @@ _start_high64:
         ltrw    %ax
 
         # Load IDT
-        movq    $startup_idtp, %rdi
-        movq    $startup_isr, %rsi
+        movq    $bootstrap_idtp, %rdi
+        movq    $bootstrap_isr, %rsi
         movq    $256, %rcx
     .L13:
         movq    %rsi, %rax
@@ -587,7 +587,7 @@ _start_high64:
         addq    $16,  %rsi
         loop    .L13
 
-        movq    $startup_idtp_ptr, %rax
+        movq    $bootstrap_idtp_ptr, %rax
         lidt    (%rax)
 
         # Stack unwinding

@@ -219,6 +219,12 @@ struct syscore {
 
 
     struct {
+        uintptr_t rsdp_address;
+        uintptr_t rsdp_size;
+    } acpi;
+
+
+    struct {
 
         uintptr_t load_base_address;
     

@@ -35,14 +35,20 @@ $(TARGET): BUILDALL
 install: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
 	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
-	$(QUIET)echo "    GEN     $(SYSROOT)/boot/initrd.gz"
-	$(QUIET)./extra/utils/gen-initrd $(SYSROOT)
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
 	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
 	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
-	$(QUIET)echo "    GEN     $(REPORT)"
-	$(QUIET)./extra/utils/gen-report > $(REPORT)
+
+install-live: $(TARGET) INSTALLALL
+	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
+	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
+	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
+	$(QUIET)./extra/utils/gen-grubcfg --live $(SYSROOT)
+	$(QUIET)echo "    GEN     initrd.img"
+	$(QUIET)./extra/utils/gen-initrd $(SYSROOT)
+	$(QUIET)echo "    GEN     $(TARGET)"
+	$(QUIET)./extra/utils/gen-image --live $(SYSROOT) $(TARGET)
 
 
 dist: $(TARGET) INSTALLALL
@@ -52,6 +58,7 @@ dist: $(TARGET) INSTALLALL
 	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
 	$(QUIET)cp -r docs/requirements.txt      aplus-$(PLATFORM)
 	$(QUIET)cp -r extra/utils/run-qemu       aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r extra/utils/gen-initrd     aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r extra/utils/gen-grubcfg    aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r extra/utils/gen-image      aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r extra/utils/gen-report     aplus-$(PLATFORM)/utils
@@ -65,6 +72,9 @@ dist: $(TARGET) INSTALLALL
 run: install
 	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
+run-live: install-live
+	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+
 run-fast:
 	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
@@ -75,11 +85,15 @@ distclean: clean DISTCLEANALL
 	$(QUIET)$(ROOTDIR)/extra/utils/get-pkg.py --clean 
 
 
-.PHONY: docs distdocs
+.PHONY: docs distdocs report
+
 docs:
 	@doxygen docs/Doxyfile
 distdocs: docs
 	@tar cJf aplus-docs.tar.xz docs/man docs/html
 
+report:
+	$(QUIET)echo "    GEN     $(REPORT)"
+	$(QUIET)./extra/utils/gen-report > $(REPORT)
 
 -include extra/build/build-utils.mk

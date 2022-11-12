@@ -43,7 +43,7 @@
 
 
 // see startup.S
-extern uint8_t startup_tss;
+extern uint8_t bootstrap_tss;
 
 
 
@@ -67,7 +67,7 @@ void arch_cpu_init(int index) {
     for(i = 0; i < SMP_CPU_MAX_FEATURES; i++)
         core->cpu.cores[index].features[i] = 0ULL;
         
-    core->cpu.cores[index].tss = (void*) (((uintptr_t) &startup_tss) + (index * sizeof(tss_t)));
+    core->cpu.cores[index].tss = (void*) (((uintptr_t) &bootstrap_tss) + (index * sizeof(tss_t)));
 
 
     spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER);

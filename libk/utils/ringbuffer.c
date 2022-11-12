@@ -136,71 +136,75 @@ size_t ringbuffer_writeable(ringbuffer_t* rb) {
 }
 
 
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
+ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
 
-    if(ringbuffer_writeable(rb) < size)
-        return errno = EINTR, -1;
+    ssize_t e = -1;
 
+    __lock(&rb->lock, {
 
-    size_t i;
-
-    for(i = 0; i < size; i++) {
-
-        if(ringbuffer_is_full(rb))
-            break;
-
-
-        __lock(&rb->lock, {
+        if(ringbuffer_writeable(rb) < size) {
+            
+            errno = EINTR;
         
-            rb->buffer[rb->head] = ((uint8_t*) buf) [i];
+        } else {
 
-            rb->head = (rb->head + 1) % rb->size;
-            rb->full = (rb->head == rb->tail);
+            for(size_t i = 0; i < size; i++) {
+                
+                rb->buffer[rb->head] = ((uint8_t*) buf) [i];
 
-        });
+                rb->head = (rb->head + 1) % rb->size;
+                rb->full = (rb->head == rb->tail);
 
-    }
+            }
 
+            e = size;
 
-    return i;
+        }
+
+    });
+
+    return e;
 
 }
 
 
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
+ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
 
-    if(ringbuffer_is_empty(rb))
-        return errno = EINTR, -1;
-    
+    ssize_t e = -1;
+        
+    __lock(&rb->lock, {
 
-    size_t i;
+        if(ringbuffer_is_empty(rb)) {
 
-    for(i = 0; i < size; i++) {
+            errno = EINTR;
+        
+        } else {
 
-        if(ringbuffer_is_empty(rb))
-            break;
+            size_t i = 0;
 
-    
-        __lock(&rb->lock, {
+            for(; i < size && !ringbuffer_is_empty(rb); i++) {        
 
-            ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
+                ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
 
-            rb->full = 0;
-            rb->tail = (rb->tail + 1) % rb->size;
+                rb->full = 0;
+                rb->tail = (rb->tail + 1) % rb->size;
 
-        });
+            }
 
-    }
+            e = i;
 
+        }
 
-    return i;
+    });
+
+    return e;
 
 }

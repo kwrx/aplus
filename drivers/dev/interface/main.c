@@ -283,7 +283,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         case DEVICE_TYPE_BLOCK:
 
-            block_inode(device, i, device_mkdev);
+            block_parse_partitions(device, i, device_mkdev);
             break;
 
         case DEVICE_TYPE_VIDEO:

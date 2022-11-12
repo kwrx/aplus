@@ -223,7 +223,6 @@ void arch_task_switch(task_t* prev, task_t* next) {
     m = m ? m : 1;
 #else
     m = (20LL - next->priority);
-    m = 1;
 #endif
 
 
