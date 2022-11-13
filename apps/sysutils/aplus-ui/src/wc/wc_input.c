@@ -7,11 +7,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+#include <math.h>
 
 #include <pthread.h>
 
@@ -24,10 +26,10 @@ static pthread_t thread_mouse;
 static pthread_t thread_keyboard;
 
 
-static uint64_t input_state[KEY_MAX];
-static uint16_t cursor_x = 0;
-static uint16_t cursor_y = 0;
-static uint16_t cursor_z = 0;
+static int64_t input_state[KEY_MAX];
+static int16_t cursor_x = 0;
+static int16_t cursor_y = 0;
+static int16_t cursor_z = 0;
 
 
 
@@ -52,6 +54,9 @@ static void* thread_event_fn(const char* device) {
         switch(ev.ev_type) {
 
             case EV_REL:
+
+                ev.ev_rel.x *= (log10(abs(ev.ev_rel.x) + abs(ev.ev_rel.y)) * 0.5) + 1;
+                ev.ev_rel.y *= (log10(abs(ev.ev_rel.x) + abs(ev.ev_rel.y)) * 0.5) + 1;
                 
                 if(wc_display_at_position(cursor_x + ev.ev_rel.x, cursor_y - ev.ev_rel.y) != NULL) {
 

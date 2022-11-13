@@ -180,12 +180,6 @@ size_t futex_requeue(uint32_t*, uint32_t*, size_t);
 bool futex_expired(futex_t*);
 
 
-__END_DECLS
-
-
-#define __lock_break    \
-    break
-
 
 #define __lock(lk, fn...)                   \
     {                                       \
@@ -221,6 +215,9 @@ __END_DECLS
         return __r;                             \
     }
 
+    
+
+__END_DECLS
 
 #endif
 #endif

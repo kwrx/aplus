@@ -32,6 +32,7 @@
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 
 #include <dev/interface.h>
 #include <dev/char.h>
@@ -99,7 +100,7 @@ device_t mouse = {
 
 
 static bool __mouse_buttons[16] = { 0 };
-
+static int __mouse_id = 0;
 
 
 #define PS2_IO_PORT_DATA                0x60
@@ -136,19 +137,21 @@ static bool __mouse_buttons[16] = { 0 };
 #define PS2_CTL_A20_GATE                0x02
 
 
-#define PS2_MOUSE_RESET                 0xFF
-#define PS2_MOUSE_RESEND                0xFE
-#define PS2_MOUSE_SET_DEFAULTS          0xF6
-#define PS2_MOUSE_SET_SAMPLE_RATE       0xF3
-#define PS2_MOUSE_SET_REMOTE            0xF0
-#define PS2_MOUSE_SET_STREAM            0xEA
-#define PS2_MOUSE_SET_WRAP              0xEE
-#define PS2_MOUSE_SET_RESOLUTION        0xE8
-#define PS2_MOUSE_SET_SCALING           0xE6
-#define PS2_MOUSE_SET_ACCELERATION      0xE7
-#define PS2_MOUSE_ENABLE_DATA_REPORTING 0xF4
-#define PS2_MOUSE_DISABLE_DATA_REPORTING 0xF4
-#define PS2_MOUSE_READ_DATA             0xEB
+#define PS2_MOUSE_RESET                     0xFF
+#define PS2_MOUSE_RESEND                    0xFE
+#define PS2_MOUSE_SET_DEFAULTS              0xF6
+#define PS2_MOUSE_SET_SAMPLE_RATE           0xF3
+#define PS2_MOUSE_SET_REMOTE                0xF0
+#define PS2_MOUSE_SET_STREAM                0xEA
+#define PS2_MOUSE_SET_WRAP                  0xEE
+#define PS2_MOUSE_SET_RESOLUTION            0xE8
+#define PS2_MOUSE_SET_SCALING               0xE6
+#define PS2_MOUSE_SET_ACCELERATION          0xE7
+#define PS2_MOUSE_REQUEST_SINGLE_PACKET     0xEB
+#define PS2_MOUSE_ENABLE_DATA_REPORTING     0xF4
+#define PS2_MOUSE_DISABLE_DATA_REPORTING    0xF5
+#define PS2_MOUSE_REQUEST_STATUS            0xE9
+#define PS2_MOUSE_REQUEST_ID                0xF2
 
 #define PS2_KBD_RESEND                  0xFE
 #define PS2_ACK                         0xFA
@@ -245,9 +248,10 @@ void ps2_keyboard_irq(void* context, irq_t irq) {
 
 }
 
+
 void ps2_mouse_irq(void* context, irq_t irq) {
 
-    static uint8_t packet[3] = {};
+    static uint8_t packet[5] = { 0 };
     static uint8_t cycle = 0;
 
 
@@ -278,8 +282,13 @@ void ps2_mouse_irq(void* context, irq_t irq) {
                     break;
 
                 case 2:
+                case 3:
 
-                    kprintf("ps2: mouse packet: %02X %02X %02X\n", packet[0], packet[1], packet[2]);
+                    if(__mouse_id > 0 && cycle == 2) {
+                        cycle++;
+                        break;
+                    }
+
 
                     for(size_t button = 0; button < 3; button++) {
 
@@ -311,18 +320,77 @@ void ps2_mouse_irq(void* context, irq_t irq) {
 
                     }
 
-                    event_t ev = {};
 
-                    ev.ev_devid    = (mouse.major << 16) | (mouse.minor & 0xFFFF);
-                    ev.ev_type     = EV_REL;
-                    ev.ev_rel.x    = (vaxis_t) packet[1] - (vaxis_t) (packet[0] & 0x10 ? 256 : 0);
-                    ev.ev_rel.y    = (vaxis_t) packet[2] - (vaxis_t) (packet[0] & 0x20 ? 256 : 0);
-                    ev.ev_rel.z    = 0;
+                    if(__mouse_id == 4) {
 
-                    vfs_write(mouse.inode, &ev, 0, sizeof(ev));
+                        for(size_t button = 4; button < 6; button++) {
+
+                            if(__button_is_up(button) && (packet[3] & (1 << button))) {
+
+                                event_t ev = {};
+
+                                ev.ev_devid    = (mouse.major << 16) | (mouse.minor & 0xFFFF);
+                                ev.ev_type     = EV_KEY;
+                                ev.ev_key.vkey = BTN_MOUSE + button;
+                                ev.ev_key.down = 1;
+
+                                vfs_write(mouse.inode, &ev, 0, sizeof(ev));
+
+                            } else if (__button_is_down(button) && !(packet[3] & (1 << button))) {
+
+                                event_t ev = {};
+
+                                ev.ev_devid    = (mouse.major << 16) | (mouse.minor & 0xFFFF);
+                                ev.ev_type     = EV_KEY;
+                                ev.ev_key.vkey = BTN_MOUSE + button;
+                                ev.ev_key.down = 0;
+
+                                vfs_write(mouse.inode, &ev, 0, sizeof(ev));
+
+                            }
+
+                            __button_set_state(button, packet[0] & (1 << button));
+
+                        }
+
+                    }
+
+
+                    if((packet[0] & 0x40) == 0 && (packet[0] & 0x80) == 0) {
+
+                        event_t ev = {};
+
+                        ev.ev_devid    = (mouse.major << 16) | (mouse.minor & 0xFFFF);
+                        ev.ev_type     = EV_REL;
+                        ev.ev_rel.x    = (vaxis_t) (packet[1] - ((packet[0] & 0x10) ? 256 : 0));
+                        ev.ev_rel.y    = (vaxis_t) (packet[2] - ((packet[0] & 0x20) ? 256 : 0));
+
+
+                        switch(__mouse_id) {
+
+                            case 3:
+                                ev.ev_rel.z    = (vaxis_t) (packet[3] - ((packet[3] & 0x80) ? 256 : 0));
+                                break;
+
+                            case 4:
+                                ev.ev_rel.z    = (vaxis_t) (packet[3] - ((packet[3] & 0x08) ? 16 : 0));                
+                                break;
+
+                            default:
+                                ev.ev_rel.z    = 0;
+                                break;
+
+                        }
+
+                        vfs_write(mouse.inode, &ev, 0, sizeof(ev));
+
+                    }
 
 
                     cycle = 0;
+
+                    break;
+
 
             }
 
@@ -363,9 +431,102 @@ void init(const char* args) {
     if((status & PS2_CFG_SECOND_CLOCK) == 0) {
 
         ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+        ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
+
+        ps2_ack();
+
+        __mouse_id = ps2_read(PS2_IO_PORT_DATA);
+
+
+        ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
         ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_DEFAULTS);
 
         ps2_ack();
+
+
+        if(__mouse_id == 0) {
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 200);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 100);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 80);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
+
+            ps2_ack();
+
+            __mouse_id = ps2_read(PS2_IO_PORT_DATA);
+
+        }
+
+
+        if(__mouse_id == 3) {
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 200);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 200);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_SET_SAMPLE_RATE);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, 80);
+
+            ps2_ack();
+
+            ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
+            ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_REQUEST_ID);
+
+            ps2_ack();
+
+            __mouse_id = ps2_read(PS2_IO_PORT_DATA);
+
+        }
+
 
         ps2_write(PS2_IO_PORT_COMMAND, PS2_COMMAND_WRITE_AUX);
         ps2_write(PS2_IO_PORT_DATA, PS2_MOUSE_ENABLE_DATA_REPORTING);

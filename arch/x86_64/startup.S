@@ -76,8 +76,8 @@ multiboot_header:
     .short MULTIBOOT_HEADER_TAG_FRAMEBUFFER
     .short MULTIBOOT_HEADER_TAG_OPTIONAL
     .long 20
-    .long 1024
-    .long 768
+    .long 1280
+    .long 720
     .long 32
     .align MULTIBOOT_INFO_ALIGN
 

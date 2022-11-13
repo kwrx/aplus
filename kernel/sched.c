@@ -336,7 +336,6 @@ void schedule(int resched) {
 }
 
 
-
 void sched_enqueue(task_t* task) {
 
     cpu_t* cpu = NULL;

@@ -70,8 +70,8 @@ void arch_cpu_init(int index) {
     core->cpu.cores[index].tss = (void*) (((uintptr_t) &bootstrap_tss) + (index * sizeof(tss_t)));
 
 
-    spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER);
-    spinlock_init_with_flags(&core->cpu.cores[index].sched_lock, SPINLOCK_FLAGS_CPU_OWNER);
+    spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+    spinlock_init_with_flags(&core->cpu.cores[index].sched_lock,  SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
     core->cpu.cores[index].sched_count = 0;
 

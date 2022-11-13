@@ -316,7 +316,7 @@ typedef struct task {
     task->status = TASK_STATUS_SLEEP
 
 #define thread_wake(task)                   \
-    task->status = TASK_STATUS_READY
+    task->status = TASK_STATUS_READY;
 
 
 
