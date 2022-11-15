@@ -48,5 +48,10 @@
 
 SYSCALL(104, getgid,
 long sys_getgid (void) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
+    return current_task->gid;
+
 });

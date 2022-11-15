@@ -212,6 +212,10 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         cwd = current_task->fd->descriptors[dfd].ref->inode;
 
 
+#if DEBUG_LEVEL_TRACE
+    kprintf("openat(%d, \"%s\", %d, %d)\n", dfd, __safe_filename, flags, mode);
+#endif
+
 
     inode_t* r;
 
@@ -274,9 +278,12 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     }
 
 
-    if(vfs_open(r, flags) < 0)
+    if(vfs_open(r, flags) < 0) {
+     
         if(errno != ENOSYS)
             return -errno;
+    
+    }
 
 
 

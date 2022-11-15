@@ -48,5 +48,10 @@
 
 SYSCALL(111, getpgrp,
 long sys_getpgrp (void) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
+    return current_task->pgid;
+
 });

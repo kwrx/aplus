@@ -189,6 +189,10 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev) (dev
                 continue;
 
 
+#if DEBUG_LEVEL_TRACE
+            kprintf("device::block: found GPT Partition %d in /dev/%s with GUID %.16phC\n", i, device->name, &entry.unique_guid);
+#endif
+
             device_mkpart(device, inode, mkdev, i, entry.lba_first, entry.lba_last);
 
         }
@@ -220,6 +224,10 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev) (dev
             if(part[i].type == BLOCK_MBR_PARTITION_TYPE_EMPTY)
                 continue;
 
+
+#if DEBUG_LEVEL_TRACE
+            kprintf("device::block: found MBR Partition %d in /dev/%s of type %X\n", i, device->name, part[i].type);
+#endif
 
             device_mkpart(device, inode, mkdev, i, part[i].lba_start, part[i].lba_start + part[i].lba_blocks - 1);
 

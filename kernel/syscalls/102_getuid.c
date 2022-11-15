@@ -48,5 +48,10 @@
 
 SYSCALL(102, getuid,
 long sys_getuid (void) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
+    return current_task->uid;
+    
 });

@@ -38,6 +38,7 @@
 #include <aplus/hal.h>
 
 
+extern long sys_faccessat (int dfd, const char __user * filename, int mode);
 
 
 /***
@@ -55,42 +56,5 @@
 
 SYSCALL(21, access,
 long sys_access (const char __user * filename, int mode) {
-    
-    if(unlikely(!uio_check(filename, R_OK)))
-        return -EFAULT;
-
-
-    int e;
-
-    struct stat st;
-    if((e = sys_newstat(filename, &st)) < 0)
-        return e;
-
-
-
-    if(st.st_uid == current_task->uid) {
-        if(!(
-            (mode & R_OK ? st.st_mode & S_IRUSR : 1) &&
-            (mode & W_OK ? st.st_mode & S_IWUSR : 1) &&
-            (mode & X_OK ? st.st_mode & S_IXUSR : 1)
-        )) return -EACCES;
-
-    } else if(st.st_gid == current_task->gid) {
-        if(!(
-            (mode & R_OK ? st.st_mode & S_IRGRP : 1) &&
-            (mode & W_OK ? st.st_mode & S_IWGRP : 1) &&
-            (mode & X_OK ? st.st_mode & S_IXGRP : 1)
-        )) return -EACCES;
-    
-    } else {
-        if(!(
-            (mode & R_OK ? st.st_mode & S_IROTH : 1) &&
-            (mode & W_OK ? st.st_mode & S_IWOTH : 1) &&
-            (mode & X_OK ? st.st_mode & S_IXOTH : 1)
-        )) return -EACCES;
-
-    }
-
-    return 0;
-
+    return sys_faccessat(AT_FDCWD, filename, mode);
 });

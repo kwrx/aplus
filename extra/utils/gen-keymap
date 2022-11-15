@@ -1,0 +1,115 @@
+#!/bin/sh
+
+# usage: gen-keymap <keymap> <output>
+# example: gen-keymap us /tmp/us.map
+
+
+CC="${CC:-gcc}"
+
+keymap=$1
+output=$2
+
+if [ -z "$keymap" -o -z "$output" ]; then
+    echo "usage: gen-keymap <keymap> <output>"
+    exit 1
+fi
+
+
+map=$(loadkeys -m $keymap)
+
+if [ -z "$map" ]; then
+    echo "error: could not load keymap $keymap"
+    exit 1
+fi
+
+
+header=$(cat <<-END
+#define NR_KEYS             256
+#define MAX_NR_KEYMAPS      256
+#define MAX_NR_FUNC         256
+#define MAX_DIACR           256
+END
+)
+
+
+main=$(cat <<-END
+#include <stdio.h>
+#include <stdint.h>
+
+int main(int argc, char** argv) {
+
+    FILE* fp = fopen("$output", "wb");
+
+    if (!fp) {
+        printf("error: could not open file %s\n", "$output");
+        return 1;
+    }
+
+    if(fwrite("KMAP\x00\x00\x00\x00", 1, 8, fp) != 8) {
+        printf("error: could not write to file %s\n", "$output");
+        return 1;
+    }
+
+    for(size_t i = 0; i < MAX_NR_KEYMAPS; i++) {
+
+        if(key_maps[i] == NULL || i > sizeof(key_maps) / sizeof(key_maps[0])) {
+
+            uint16_t empty[NR_KEYS] = { 0 };
+
+            if(fwrite(empty, sizeof(uint16_t), NR_KEYS, fp) != NR_KEYS) {
+                printf("error: could not write to file %s\n", "$output");
+                return 1;
+            }
+
+        } else {
+
+            for(size_t k = 0; k < NR_KEYS; k++) {
+                key_maps[i][k] -= 0xF000;
+            }
+
+            if(fwrite(key_maps[i], sizeof(uint16_t), NR_KEYS, fp) != NR_KEYS) {
+                printf("error: could not write to file %s\n", "$output");
+                return 1;
+            }
+
+        }
+
+    }
+
+    if(fwrite("\xFF\xFF\xFF\xFF", 1, 4, fp) != 4) {
+        printf("error: could not write to file %s\n", "$output");
+        return 1;
+    }
+
+    if(fclose(fp) != 0) {
+        printf("error: could not close file %s\n", "$output");
+        return 1;
+    }
+
+    return 0;
+
+}
+END
+)
+
+
+
+$CC -o /tmp/gen-keymap -x c - <<END
+$header
+$map
+$main
+END
+
+if [ $? -ne 0 ]; then
+    echo "error: could not compile gen-keymap"
+    exit 1
+fi
+
+err=$(/tmp/gen-keymap)
+
+if [ $? -ne 0 ]; then
+    echo "error: could not generate keymap: $err"
+    exit 1
+fi
+
+exit 0

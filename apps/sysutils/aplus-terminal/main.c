@@ -34,15 +34,20 @@
 #include <libtsm.h>
 #include <poll.h>
 #include <sched.h>
+#include <sys/stat.h>
 
 #include <aplus/fb.h>
 #include <aplus/input.h>
 #include <aplus/events.h>
 
+#include <pthread.h>
+
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
 #include "lib/builtin_font.h"
+#else
+#include <freetype2/ft2build.h>
+#include FT_FREETYPE_H
 #endif
-
 
 
 static struct {
@@ -67,13 +72,47 @@ static struct {
     struct fb_fix_screeninfo fix;
 
     struct {
-        uint8_t ctrl;
-        uint8_t alt;
-        uint8_t shift;
-        uint8_t meta;
-    } modifiers;
 
-} context;
+        struct {
+
+            struct {
+                union {
+                    struct {
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+                        uint8_t val;
+                        uint8_t typ;
+#else
+                        uint8_t typ;
+                        uint8_t val;
+#endif
+                    } __attribute__((packed));
+
+                    uint16_t raw;
+
+                };
+            } __attribute__((packed)) keys[NR_KEYS];
+
+        } __attribute__((packed)) maps[256];
+
+        uint8_t modifiers;
+
+    } keymap;
+
+    struct {
+        char* buffer;
+        size_t size;
+        size_t capacity;
+    } input;
+
+    pthread_t thr_kbd;
+    pthread_t thr_mouse;
+
+#if !defined(CONFIG_ATERM_BUILTIN_FONT)
+    FT_Library ft;
+    FT_Face face;
+#endif
+
+} context = { 0 };
 
 
 
@@ -141,17 +180,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     assert(len < 2);
 
 
-#if defined(CONFIG_ATERM_BUILTIN_FONT)
-
-    posx *= ATERM_FONT_WIDTH;
-    posy *= ATERM_FONT_HEIGHT;
-
-    if(posx + ATERM_FONT_WIDTH >= context.var.xres || posy + ATERM_FONT_HEIGHT >= context.var.yres)
-        return 0;
-
-#endif
-
-
     uint8_t fr;
     uint8_t fg;
     uint8_t fb;
@@ -181,6 +209,13 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
 
+    posx *= ATERM_FONT_WIDTH;
+    posy *= ATERM_FONT_HEIGHT;
+
+    if(posx + ATERM_FONT_WIDTH >= context.var.xres || posy + ATERM_FONT_HEIGHT >= context.var.yres)
+        return 0;
+
+
     if(gidx > 255) {
         gidx = 0;
     }
@@ -200,7 +235,58 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     }
 
 #else
-#error "Truetype not implemented yet"
+
+
+    gidx = FT_Get_Char_Index(context.face, gidx);
+
+    if(gidx == 0) {
+        return 0;
+    }
+
+    // draw with freetype
+    if(FT_Load_Glyph(context.face, gidx, FT_LOAD_DEFAULT)) {
+        return 0;
+    }
+
+    if(FT_Render_Glyph(context.face->glyph, FT_RENDER_MODE_MONO)) {
+        return 0;
+    }
+
+    int bbox_ymax = context.face->bbox.yMax / 64;
+    int glyph_width = context.face->glyph->metrics.width / 64;
+    int advance = context.face->glyph->metrics.horiAdvance / 64;
+    int x_off = (advance - glyph_width) / 2;
+    int y_off = bbox_ymax - (context.face->glyph->metrics.horiBearingY / 64);
+
+
+
+    posx *= 8;
+    posy *= 16;
+
+    if(posx + context.face->glyph->bitmap.width >= context.var.xres || posy + context.face->glyph->bitmap.rows >= context.var.yres)
+        return 0;
+        
+
+    for (size_t i = 0; i < 16; i++) {
+        for (size_t j = 0; j < 8; j++) {
+            context.plot(posx + j, posy + i, br, bg, bb);
+        }
+    }
+    
+    for (size_t i = 0; i < context.face->glyph->bitmap.rows; i++) {
+        for (size_t j = 0; j < context.face->glyph->bitmap.width; j++) {
+
+            char ch = context.face->glyph->bitmap.buffer[i * context.face->glyph->bitmap.pitch + j / 8];
+
+            if(ch & (1 << (7 - j % 8))) {
+                context.plot(posx + j + x_off, posy + i + y_off, fr, fg, fb);
+            }
+
+        }
+    }
+
+   
+
 #endif
 
 
@@ -221,345 +307,233 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 }
 
 
+static void tsm_input_flush(int out) {
 
-static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
-
-    fprintf(stderr, "key: %d %d\n", keysym, down);
-
-    switch(keysym) {
-
-        case KEY_LEFTSHIFT:
-        case KEY_RIGHTSHIFT:
-            context.modifiers.shift = down;
-            break;
-
-        case KEY_LEFTCTRL:
-        case KEY_RIGHTCTRL:
-            context.modifiers.ctrl = down;
-            break;
-
-        case KEY_LEFTALT:
-        case KEY_RIGHTALT:
-            context.modifiers.alt = down;
-            break;
-
-        case KEY_LEFTMETA:
-        case KEY_RIGHTMETA:
-            context.modifiers.meta = down;
-            break;
-
+    if(context.input.size > 0) {
+        write(out, context.input.buffer, context.input.size);
     }
 
+    if(context.input.buffer) {
+        free(context.input.buffer);
+    }
 
-    if(down) {
+    context.input.buffer = NULL;
+    context.input.size = 0;
+    context.input.capacity = 0;
 
-        switch(keysym) {
+}
 
-            case KEY_ESC:
-                tsm_vte_input(context.vte, "\x1B", 1);
-                break;
+static void tsm_input_append(char ch) {
 
-            case KEY_TAB:
-                tsm_vte_input(context.vte, "\t", 1);
-                break;
+    if(context.input.size == context.input.capacity) {
+        context.input.capacity += 256;
+        context.input.buffer = realloc(context.input.buffer, context.input.capacity);
+    }
 
-            case KEY_BACKSPACE:
-                tsm_vte_input(context.vte, "\x7F", 1);
-                break;
+    context.input.buffer[context.input.size + 0] = ch;
+    context.input.buffer[context.input.size + 1] = '\0';
 
-            case KEY_ENTER:
-                tsm_vte_input(context.vte, "\n", 1);
-                break;
+    context.input.size++;
 
-            case KEY_UP:
-                tsm_vte_input(context.vte, "\x1B[A", 3);
-                break;
+    tsm_vte_input(context.vte, &ch, 1);
 
-            case KEY_DOWN:
-                tsm_vte_input(context.vte, "\x1B[B", 3);
-                break;
+}
 
-            case KEY_RIGHT:
-                tsm_vte_input(context.vte, "\x1B[C", 3);
-                break;
+static void tsm_input_backspace() {
 
-            case KEY_LEFT:
-                tsm_vte_input(context.vte, "\x1B[D", 3);
-                break;
+    if(context.input.size == 0)
+        return;
 
-            case KEY_HOME:
-                tsm_vte_input(context.vte, "\x1B[H", 3);
-                break;
-        
-            case KEY_END:
-                tsm_vte_input(context.vte, "\x1B[F", 3);
-                break;
+    context.input.buffer[--context.input.size] = '\0';
 
-            case KEY_PAGEUP:
-                tsm_vte_input(context.vte, "\x1B[5~", 4);
-                break;
+    tsm_vte_input(context.vte, "\b", 1);
+    tsm_vte_input(context.vte, " ",  1);
+    tsm_vte_input(context.vte, "\b", 1);
 
-            case KEY_PAGEDOWN:
-                tsm_vte_input(context.vte, "\x1B[6~", 4);
-                break;
+}
 
-            case KEY_INSERT:
-                tsm_vte_input(context.vte, "\x1B[2~", 4);
+static void tsm_handle_input(int out, char* ascii, size_t size) {
+
+    assert(ascii);
+
+    for(size_t i = 0; i < size; i++) {
+
+        switch(ascii[i]) {
+
+            case '\b':
+            case '\x7F':
+
+                tsm_input_backspace();
                 break;
 
-            case KEY_DELETE:
-                tsm_vte_input(context.vte, "\x1B[3~", 4);
-                break;
+            case '\n':
 
-            case KEY_F1:
-                tsm_vte_input(context.vte, "\x1BOP", 3);
-                break;
-
-            case KEY_F2:
-                tsm_vte_input(context.vte, "\x1BOQ", 3);
-                break;
-
-            case KEY_F3:
-                tsm_vte_input(context.vte, "\x1BOR", 3);
-                break;
-
-            case KEY_F4:
-                tsm_vte_input(context.vte, "\x1BOS", 3);
-                break;
-
-            case KEY_F5:
-                tsm_vte_input(context.vte, "\x1B[15~", 5);
-                break;
-
-            case KEY_F6:
-                tsm_vte_input(context.vte, "\x1B[17~", 5);
-                break;
-
-            case KEY_F7:
-                tsm_vte_input(context.vte, "\x1B[18~", 5);
-                break;
-
-            case KEY_F8:
-                tsm_vte_input(context.vte, "\x1B[19~", 5);
-                break;
-
-            case KEY_F9:
-                tsm_vte_input(context.vte, "\x1B[20~", 5);
-                break;
-
-            case KEY_F10:
-                tsm_vte_input(context.vte, "\x1B[21~", 5);
-                break;
-
-            case KEY_F11:
-                tsm_vte_input(context.vte, "\x1B[23~", 5);
-                break;
-
-            case KEY_F12:
-                tsm_vte_input(context.vte, "\x1B[24~", 5);
-                break;
-
-
-            case KEY_0:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, ")", 1);
-                } else {
-                    tsm_vte_input(context.vte, "0", 1);
-                }
-                break;
-
-            case KEY_1:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "!", 1);
-                } else {
-                    tsm_vte_input(context.vte, "1", 1);
-                }
-                break;
-
-            case KEY_2:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "@", 1);
-                } else {
-                    tsm_vte_input(context.vte, "2", 1);
-                }
-                break;
-            
-            case KEY_3:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "#", 1);
-                } else {
-                    tsm_vte_input(context.vte, "3", 1);
-                }
-                break;
-            
-            case KEY_4:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "$", 1);
-                } else {
-                    tsm_vte_input(context.vte, "4", 1);
-                }
-                break;
-
-            case KEY_5:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "%", 1);
-                } else {
-                    tsm_vte_input(context.vte, "5", 1);
-                }
-                break;
-            
-            case KEY_6:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "^", 1);
-                } else {
-                    tsm_vte_input(context.vte, "6", 1);
-                }
-                break;
-
-            case KEY_7:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "&", 1);
-                } else {
-                    tsm_vte_input(context.vte, "7", 1);
-                }
-                break;
-
-            case KEY_8:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "*", 1);
-                } else {
-                    tsm_vte_input(context.vte, "8", 1);
-                }
-                break;
-
-            case KEY_9:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "(", 1);
-                } else {
-                    tsm_vte_input(context.vte, "9", 1);
-                }
-                break;
-
-            case KEY_Q ... KEY_P:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, &"QWERTYUIOP"[keysym - KEY_Q], 1);
-                } else {
-                    tsm_vte_input(context.vte, &"qwertyuiop"[keysym - KEY_Q], 1);
-                }
-                break;
-
-            case KEY_A ... KEY_L:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, &"ASDFGHJKL"[keysym - KEY_A], 1);
-                } else {
-                    tsm_vte_input(context.vte, &"asdfghjkl"[keysym - KEY_A], 1);
-                }
-                break;
-
-            case KEY_Z ... KEY_M:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, &"ZXCVBNM"[keysym - KEY_Z], 1);
-                } else {
-                    tsm_vte_input(context.vte, &"zxcvbnm"[keysym - KEY_Z], 1);
-                }
-                break;
-
-            case KEY_COMMA:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "<", 1);
-                } else {
-                    tsm_vte_input(context.vte, ",", 1);
-                }
-                break;
-
-            case KEY_DOT:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, ">", 1);
-                } else {
-                    tsm_vte_input(context.vte, ".", 1);
-                }
-                break;
-
-            case KEY_SLASH:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "?", 1);
-                } else {
-                    tsm_vte_input(context.vte, "/", 1);
-                }
-                break;
-
-            case KEY_SEMICOLON:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, ":", 1);
-                } else {
-                    tsm_vte_input(context.vte, ";", 1);
-                }
-                break;
-
-            case KEY_APOSTROPHE:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "\"", 1);
-                } else {
-                    tsm_vte_input(context.vte, "'", 1);
-                }
-                break;
-
-            case KEY_LEFTBRACE:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "{", 1);
-                } else {
-                    tsm_vte_input(context.vte, "[", 1);
-                }
-                break;
-
-            case KEY_RIGHTBRACE:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "}", 1);
-                } else {
-                    tsm_vte_input(context.vte, "]", 1);
-                }
-                break;
-            
-            case KEY_BACKSLASH:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "|", 1);
-                } else {
-                    tsm_vte_input(context.vte, "\\", 1);
-                }
-                break;
-
-            case KEY_MINUS:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "_", 1);
-                } else {
-                    tsm_vte_input(context.vte, "-", 1);
-                }
-                break;
-
-            case KEY_EQUAL:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "+", 1);
-                } else {
-                    tsm_vte_input(context.vte, "=", 1);
-                }
-                break;
-            
-            case KEY_GRAVE:
-                if(context.modifiers.shift) {
-                    tsm_vte_input(context.vte, "~", 1);
-                } else {
-                    tsm_vte_input(context.vte, "`", 1);
-                }
-                break;
-
-            case KEY_SPACE:
-                tsm_vte_input(context.vte, " ", 1);
+                tsm_input_append('\n');
+                tsm_input_flush(out);
                 break;
 
             default:
-                break;
 
+                tsm_input_append(ascii[i]);
+                break;
+                
         }
+
+    }
+
+}
+
+
+static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
+
+    assert(context.keymap.modifiers < NR_KEYS);
+    
+    if(keysym > NR_KEYS) {
+        return;
+    }
+
+
+    #define KEY     \
+        context.keymap.maps[context.keymap.modifiers].keys[keysym]
+
+
+    switch(KEY.typ) {
+
+        case KT_LATIN:
+
+            if(down) {
+                tsm_handle_input(out, (char*) &KEY.val, 1);
+            }
+
+            break;
+
+        case KT_FN:
+
+            break;
+
+        case KT_SPEC:
+
+            switch(KEY.raw) {
+
+                case K_ENTER:
+
+                    if(down) {
+                        tsm_handle_input(out, "\n", 1);
+                    }
+
+                    break;
+
+                default:
+
+                    break;
+
+            }
+
+            break;
+
+        case KT_PAD:
+
+            break;
+
+        case KT_DEAD:
+
+            break;
+
+        case KT_CONS:
+                
+            break;
+
+        case KT_CUR:
+
+            switch(KEY.raw) {
+
+                case K_UP:
+
+                    if(down) {
+                        tsm_handle_input(out, "\e[A", 3);
+                    }
+
+                    break;
+
+                case K_DOWN:
+
+                    if(down) {
+                        tsm_handle_input(out, "\e[B", 3);
+                    }
+
+                    break;
+
+                case K_RIGHT:
+
+                    if(down) {
+                        tsm_handle_input(out, "\e[C", 3);
+                    }
+
+                    break;
+
+                case K_LEFT:
+
+                    if(down) {
+                        tsm_handle_input(out, "\e[D", 3);
+                    }
+
+                    break;
+
+            }
+
+            break;
+
+        case KT_SHIFT:
+
+            if(down) {
+                context.keymap.modifiers |=  (1 << (KEY.val));
+            } else {
+                context.keymap.modifiers &= ~(1 << (KEY.val));
+            }
+
+            break;
+
+        case KT_LOCK:
+
+            if(down) {
+                context.keymap.modifiers ^= 1 << (KEY.val);
+            }
+
+            break;
+
+        case KT_ASCII:
+
+            if(down) {
+                tsm_handle_input(out, (char*) &KEY.val, 1);
+            }
+
+            break;
+
+        case KT_LETTER:
+
+            if(down) {
+                tsm_handle_input(out, (char*) &KEY.val, 1);
+            }
+
+            break;
+
+        case KT_META:
+
+            break;
+
+        case KT_SLOCK:
+
+            break;
+
+        case KT_BRL:
+
+            break;
+
+        default:
+
+            fprintf(stderr, "Unknown key type: %04X (%d)\n", KEY.raw, keysym);
+
+            break;
 
     }
 
@@ -576,6 +550,84 @@ static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *
     //write(context.ipipefd[1], u8, len);
 
 }
+
+static void* thr_kbd_handler(void* arg) {
+
+    (void) arg;
+
+
+    do {
+
+        event_t ev;
+
+        do {
+
+            if(read(context.kbd, &ev, sizeof(ev)) > 0) {
+
+                if(ev.ev_type == EV_KEY) {
+
+                    if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
+                        tsm_screen_sb_reset(context.con);
+                    }
+                    
+                    tsm_handle_key(context.ipipefd[1], ev.ev_key.vkey, ev.ev_key.down);
+                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                }
+
+            }
+
+        } while(errno == EINTR);
+
+    } while(true);
+
+
+    return NULL;
+
+}
+
+static void* thr_mouse_handler(void* arg) {
+
+    (void) arg;
+
+
+    do {
+
+        event_t ev;
+
+        do {
+
+            while(read(context.mouse, &ev, sizeof(ev)) == sizeof(ev)) {
+
+                if(ev.ev_type == EV_REL) {
+
+                    context.cursor.x += ev.ev_rel.x * 3;
+                    context.cursor.y -= ev.ev_rel.y * 3;
+
+                    if(context.cursor.x > context.var.xres_virtual) {
+                        context.cursor.x = context.var.xres_virtual;
+                    }
+
+                    if(context.cursor.y > context.var.yres_virtual) {
+                        context.cursor.y = context.var.yres_virtual;
+                    }
+
+                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+
+                }
+
+            }
+
+        } while(errno == EINTR);
+
+    } while(true);
+
+
+    return NULL;
+
+}
+
+
 
 
 
@@ -671,6 +723,58 @@ int main(int argc, char** argv) {
     }
 
 
+
+    //* Font initialization
+
+#if !defined(CONFIG_ATERM_BUILTIN_FONT)
+    
+    if(FT_Init_FreeType(&context.ft)) {
+        fprintf(stderr, "aplus-terminal: cannot initialize freetype library\n");
+        exit(1);
+    }
+
+
+    struct stat st;
+
+    if(stat("/usr/share/fonts/ttf/UbuntuMono-R.ttf", &st) < 0) {
+        fprintf(stderr, "aplus-terminal: cannot stat() font file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    void* font = malloc(st.st_size);
+
+    if(!font) {
+        fprintf(stderr, "aplus-terminal: cannot allocate memory for font file\n");
+        exit(1);
+    }
+
+    int ffd = open("/usr/share/fonts/ttf/UbuntuMono-R.ttf", O_RDONLY);
+
+    if(ffd < 0) {
+        fprintf(stderr, "aplus-terminal: cannot open font file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    if(read(ffd, font, st.st_size) != st.st_size) {
+        fprintf(stderr, "aplus-terminal: cannot read font file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    if(close(ffd) < 0) {
+        fprintf(stderr, "aplus-terminal: cannot close font file: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    if(FT_New_Memory_Face(context.ft, (const FT_Byte*) font, st.st_size, 0, &context.face)) {
+        fprintf(stderr, "aplus-terminal: cannot load font\n");
+        exit(1);
+    }
+
+    FT_Set_Pixel_Sizes(context.face, 0, 16);
+
+#endif
+
+
    
     //* 2. I/O initialization
 
@@ -683,7 +787,7 @@ int main(int argc, char** argv) {
     assert(context.ipipefd[1] >= 0);
 
 
-    if(pipe2(context.opipefd, O_NONBLOCK) < 0) {
+    if(pipe2(context.opipefd, 0) < 0) {
         fprintf(stderr, "aplus-terminal: pipe() failed\n");
         exit(1);
     }
@@ -712,7 +816,7 @@ int main(int argc, char** argv) {
     assert(context.vte);
 
 
-    if(tsm_screen_resize(context.con, context.var.xres_virtual / 8, context.var.yres_virtual / 16) < 0) {
+    if(tsm_screen_resize(context.con, context.var.xres_virtual / 8 - 1, context.var.yres_virtual / 16 - 1) < 0) {
         fprintf(stderr, "aplus-terminal: tsm_screen_resize() failed\n");
         exit(1);
     }
@@ -736,11 +840,6 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    if(fcntl(context.kbd, F_SETFL, O_NONBLOCK) < 0) {
-        fprintf(stderr, "aplus-terminal: fcntl() failed: %s\n", strerror(errno));
-        exit(1);
-    }
-
 
     context.mouse = open("/dev/mouse", O_RDONLY);
 
@@ -749,14 +848,64 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    if(fcntl(context.mouse, F_SETFL, O_NONBLOCK) < 0) {
-        fprintf(stderr, "aplus-terminal: fcntl() failed: %s\n", strerror(errno));
+
+    memset(&context.input, 0, sizeof(context.input));
+
+
+
+    //* Load Keymap
+
+    {
+
+        int fd = open("/usr/share/keymaps/it.map", O_RDONLY);
+
+        if(fd < 0) {
+            fprintf(stderr, "aplus-terminal: open() failed: cannot open /usr/share/keymaps/it.map: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        char magic[8];
+
+        if(read(fd, magic, 8) != 8) {
+            fprintf(stderr, "aplus-terminal: read() failed: cannot read /usr/share/keymaps/it.map: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        if(memcmp(magic, "KMAP\x00\x00\x00\x00", 8) != 0) {
+            fprintf(stderr, "aplus-terminal: wrong keymap format\n");
+            exit(1);
+        }
+
+        if(read(fd, &context.keymap.maps, sizeof(context.keymap.maps)) < 0) {
+            fprintf(stderr, "aplus-terminal: read() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        if(close(fd) < 0) {
+            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+
+    }
+
+    //* 4. Input initialization
+
+    if(pthread_create(&context.thr_kbd, NULL, thr_kbd_handler, NULL) < 0) {
+        fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(errno));
         exit(1);
     }
 
+    // if(pthread_create(&context.thr_mouse, NULL, thr_mouse_handler, NULL) < 0) {
+    //     fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(errno));
+    //     exit(1);
+    // }
+
+    (void) thr_mouse_handler;
+
+
 
     
-    //* 4. Child initialization
+    //* 5. Child initialization
 
     pid_t pid = fork();
 
@@ -812,105 +961,23 @@ int main(int argc, char** argv) {
 
         do {
 
-            struct pollfd pfd[3] = {
-                { .fd = context.kbd,        .events = POLLIN },
-                { .fd = context.mouse,      .events = POLLIN },
-                { .fd = context.opipefd[0], .events = POLLIN }
-            };
+            char buf[BUFSIZ];
+            ssize_t size;
 
-            if(poll(pfd, 3, -1) < 0) {
-                break;
-            }
+            do {
 
+                while((size = read(context.opipefd[0], buf, sizeof(buf))) > 0) {
 
-            for(size_t i = 0; i < (sizeof(pfd) / sizeof(pfd[0])); i++) {
-                
-                if(pfd[i].revents & POLLERR || pfd[i].revents & POLLHUP || pfd[i].revents & POLLNVAL) {
-                    break;
-                }
-
-                if(pfd[i].revents & POLLIN) {
-
-                    if(pfd[i].fd == context.opipefd[0]) {
-
-                        char buf[BUFSIZ];
-                        ssize_t size;
-
-                        do {
-
-                            while((size = read(context.opipefd[0], buf, sizeof(buf))) > 0) {
-
-                                tsm_vte_input(context.vte, buf, size);
-                                tsm_screen_draw(context.con, fb_draw_cb, NULL);
-
-                            }
-
-
-                        } while(errno == EINTR);
-
-                    }
-                    
-                    if(pfd[i].fd == context.kbd) {
-
-                        event_t ev;
-
-                        do {
-
-                            if(read(context.kbd, &ev, sizeof(ev)) > 0) {
-
-                                if(ev.ev_type == EV_KEY) {
-
-                                    if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
-                                        tsm_screen_sb_reset(context.con);
-                                    }
-                                    
-                                    tsm_handle_key(context.ipipefd[1], ev.ev_key.vkey, ev.ev_key.down);
-                                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
-
-                                }
-
-                            }
-
-                        } while(errno == EINTR);
-
-                    }
-
-                    if(pfd[i].fd == context.mouse) {
-
-                        event_t ev;
-
-                        do {
-
-                            while(read(context.mouse, &ev, sizeof(ev)) == sizeof(ev)) {
-
-                                if(ev.ev_type == EV_REL) {
-
-                                    context.cursor.x += ev.ev_rel.x * 3;
-                                    context.cursor.y -= ev.ev_rel.y * 3;
-
-                                    if(context.cursor.x > context.var.xres_virtual) {
-                                        context.cursor.x = context.var.xres_virtual;
-                                    }
-
-                                    if(context.cursor.y > context.var.yres_virtual) {
-                                        context.cursor.y = context.var.yres_virtual;
-                                    }
-
-                                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
-
-                                }
-
-                            }
-
-                        } while(errno == EINTR);
-
-                    }
+                    tsm_vte_input(context.vte, buf, size);
+                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
                 }
 
-            }
+
+            } while(errno == EINTR);
 
         } while(true);
+
 
         
         if(close(context.ipipefd[0]) < 0) {

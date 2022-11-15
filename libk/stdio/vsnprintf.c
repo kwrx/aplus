@@ -25,54 +25,88 @@
                                                                         
 #include <stdint.h>
 #include <stdarg.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <aplus.h>
 #include <aplus/debug.h>
 
 
+
 __nosanitize("undefined")
-static void dec(unsigned long v, int w, char* buf, int* p, int sign) {
+static void dec(int64_t v, size_t padding, char* buf, int* offset, bool negative, size_t size) {
 
-    if(sign) {
+    switch(size) {
 
-        if((long) v < 0L) {
+        case 0:
+            v = (int64_t) ((int) v);
+            break;
 
-            v = -((long) v);
+        case 1:
+            v = (int64_t) ((long) v);
+            break;
 
-            buf[*p + 0] = '-';
-            buf[*p + 1] = '\0';
+        case 2:
+            v = (int64_t) ((long long) v);
+            break;
 
-            *p += 1;
+        default:
+            break;
+
+    }
+
+
+    if(negative) {
+
+        if(v < 0LL) {
+
+            v = -v;
+
+            buf[*offset + 0] = '-';
+            buf[*offset + 1] = '\0';
+
+            *offset += 1;
 
         }
 
     }
 
 
-    long n = 1;
-    long i = 9;
+    size_t digits   = 1;
+    size_t radix_10 = 9;
 
-    while(v > i) {
-        n++;
-        i = (i * 10) + 9;
+    while(v > radix_10) {
+        digits++;
+        radix_10 = (radix_10 * 10) + 9;
     }
 
-    long o = 0;
-    while(n + o < w)
-        { buf[*p] = '0'; *p += 1; o++; }
+
+    if(padding > digits) {
+
+        size_t i;
+
+        for(i = 0; i < (padding - digits); i++) {
+            buf[*offset + i] = '0';
+        }
+
+        buf[*offset + i] = '\0';
+
+        *offset += i;
+
+    }
 
 
-    i = n;
-    while(i > 0) {
+    for(size_t i = digits; i > 0; i--) {
 
-        buf[*p + --i] = (v % 10) + '0';
+        buf[*offset + (i - 1)] = (v % 10) + '0';
         v /= 10;
 
     }
 
-    *p += n;
+    *offset += digits;
 
 }
+
+
 
 __nosanitize("undefined")
 static void hex(unsigned long v, int w, char* buf, int* p, int upper) {
@@ -115,6 +149,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
     DEBUG_ASSERT(fmt);
 
     int p = 0;
+    int l = 0;
 
     for(; *fmt; fmt++) {
 
@@ -128,17 +163,89 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
         DEBUG_ASSERT(*fmt);
 
         
-        int w = 0;
-        while(*fmt >= '0' && *fmt <= '9')
-            { w = (w * 10) + (*fmt - '0'); fmt++; }
+        long w = 0;
+        long m = LONG_MAX;
 
-        while(*fmt == 'l')
+
+        if(*fmt == '*') {
+
+            w = va_arg(v, long);
+
             fmt++;
+
+        } else if(*fmt >= '0' && *fmt <= '9') {
+
+            do {
+
+                w *= 10;
+                w += (*fmt - '0');
+
+                fmt++;
+
+            } while(*fmt >= '0' && *fmt <= '9');
+            
+        }
+
+
+        if(*fmt == '.') {
+
+            fmt++;
+
+            if(*fmt == '*') {
+
+                m = va_arg(v, long);
+
+                fmt++;
+            
+            } else if(*fmt >= '0' && *fmt <= '9') {
+
+                m = 0;
+
+                do {
+
+                    m *= 10;
+                    m += (*fmt - '0');
+
+                    fmt++;
+
+                } while(*fmt >= '0' && *fmt <= '9');
+                
+            }
+
+        } else {
+
+            if(*fmt == 'z') { // size_t
+                
+                l = 1;
+
+                fmt++;
+
+            } else {
+
+                if(*fmt == 'l') { // long
+                    
+                    l = 1;
+
+                    fmt++;
+
+                    if(*fmt == 'l') { // long long
+                    
+                        l = 2;
+                    
+                        fmt++;
+                    
+                    }
+
+                }
+
+            }
+
+        }
 
         switch(*fmt) {
 
             case 's':
-                for(char* s = (char*) va_arg(v, char*); s && *s; s++)
+                for(char* s = (char*) va_arg(v, char*); s && *s && m--; s++)
                     buf[p++] = *s;
 
                 break;
@@ -153,14 +260,43 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 break;
 
             case 'p':
-                buf[p++] = '0';
-                buf[p++] = 'x';
-                hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, 1);
+
+                fmt++;
+
+                if(*fmt == 'h') {
+
+                    fmt++;
+
+                    char space = ' ';
+
+                    if(*fmt == 'C') {
+                        space = ':';
+                    } else if(*fmt == 'D') {
+                        space = '-';
+                    } else {
+                        fmt--;
+                    }
+
+                    for(uint8_t* bytes = va_arg(v, void*); bytes && m--; bytes++) {
+                        hex(*bytes, 2, buf, &p, 1);
+                        buf[p++] = space;
+                    }
+
+                } else {
+
+                    fmt--;
+
+                    buf[p++] = '0';
+                    buf[p++] = 'x';
+                    hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, 1);
+
+                }
+
                 break;
 
             case 'd':
             case 'u':
-                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'd');
+                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'd', l);
                 break;
 
             case '%':
@@ -175,6 +311,8 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 break;
 
         }
+
+        l = 0;
 
     }
 

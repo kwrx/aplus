@@ -25,7 +25,8 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
-#include <aplus/task.h>
+#include <aplus/memory.h>
+#include <aplus/vfs.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
 #include <stdint.h>
@@ -33,6 +34,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <aplus/hal.h>
+
+
+extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
 
 
 /***
@@ -52,5 +58,47 @@
 
 SYSCALL(262, newfstatat,
 long sys_newfstatat (int dfd, const char __user * filename, struct stat __user * statbuf, int flag) {
-    return -ENOSYS;
+
+    if(!filename)
+        return -EINVAL;
+
+    if(!statbuf)
+        return -EINVAL;
+
+    if(!uio_check(filename, R_OK))
+        return -EFAULT;
+
+    if(!uio_check(statbuf, R_OK | W_OK))
+        return -EFAULT;
+
+    
+    int fd;
+    if((fd = sys_openat(dfd, filename, O_RDONLY, 0)) < 0)
+        return fd;
+    
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+
+
+    int e;
+    struct stat __statbuf;
+
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+
+        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
+
+    });
+
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+
+    if(e < 0)
+        return -errno;
+
+
+    uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
+
+    return 0;
+
 });
