@@ -44,7 +44,7 @@ int tmpfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);
-    DEBUG_ASSERT(dir->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(dir->sb->fsid == FSID_TMPFS);
     DEBUG_ASSERT(dir->sb->root == dir);
 
 

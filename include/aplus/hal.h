@@ -103,17 +103,21 @@
 
 
 
-#define uio_r8(p)                   (*(uint8_t  volatile*)  (uio_get_ptr(p)))
-#define uio_r16(p)                  (*(uint16_t volatile*)  (uio_get_ptr(p)))
-#define uio_r32(p)                  (*(uint32_t volatile*)  (uio_get_ptr(p)))
-#define uio_r64(p)                  (*(uint64_t volatile*)  (uio_get_ptr(p)))
-#define uio_rptr(p)                 (*(uintptr_t volatile*) (uio_get_ptr(p)))
+#define uio_r8(p)                   (*(uint8_t  volatile*)        (uio_get_ptr(p)))
+#define uio_r16(p)                  (*(uint16_t volatile*)        (uio_get_ptr(p)))
+#define uio_r32(p)                  (*(uint32_t volatile*)        (uio_get_ptr(p)))
+#define uio_r64(p)                  (*(uint64_t volatile*)        (uio_get_ptr(p)))
+#define uio_rptr(p)                 (*(uintptr_t volatile*)       (uio_get_ptr(p)))
+#define uio_read(p)                 (*(typeof(*(p)) volatile*)    (uio_get_ptr(p)))
+#define uio_rstruct(p, e)           (*(typeof((p)->e) volatile*)  (uio_get_ptr((uintptr_t)(p) + offsetof(typeof(*(p)), e))))
 
 #define uio_w8(p, v)                { uio_r8(p)   = (uint8_t)  (v);  }
 #define uio_w16(p, v)               { uio_r16(p)  = (uint16_t) (v);  }
 #define uio_w32(p, v)               { uio_r32(p)  = (uint32_t) (v);  }
 #define uio_w64(p, v)               { uio_r64(p)  = (uint64_t) (v);  }
 #define uio_wptr(p, v)              { uio_rptr(p) = (uintptr_t) (v); }
+#define uio_write(p, v)             { uio_read(p) = (typeof(*(p))) (v); }
+#define uio_wstruct(p, e, v)        { uio_rstruct(p, e) = (typeof((p)->e)) (v); }
 
 #define uio_lock(ptr, size)         { arch_vmm_lock(current_task->address_space, (uintptr_t) (ptr), (size_t) (size)); }
 #define uio_unlock(ptr, size)       { arch_vmm_unlock(current_task->address_space, (uintptr_t) (ptr), (size_t) (size)); }

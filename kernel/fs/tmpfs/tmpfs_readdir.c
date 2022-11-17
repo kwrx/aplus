@@ -42,7 +42,7 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsinfo);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
     
     DEBUG_ASSERT(e);
 

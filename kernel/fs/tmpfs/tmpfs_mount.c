@@ -70,7 +70,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
     dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
-    dir->sb->fsid = TMPFS_ID;
+    dir->sb->fsid = FSID_TMPFS;
     dir->sb->dev = dev;
     dir->sb->root = dir;
     dir->sb->flags = flags;
@@ -87,7 +87,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     dir->sb->st.f_ffree = TMPFS_NODES_MAX;
     dir->sb->st.f_favail = TMPFS_NODES_MAX;
     dir->sb->st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
-    dir->sb->st.f_fsid = TMPFS_ID;
+    dir->sb->st.f_fsid = FSID_TMPFS;
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
 

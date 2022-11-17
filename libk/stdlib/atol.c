@@ -24,68 +24,29 @@
  */                                                                     
                                                                         
 #include <stdint.h>
-#include <string.h>
-
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/vfs.h>
-#include <aplus/errno.h>
-
-#include <aplus/utils/hashmap.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <sys/types.h>
 
 
+long atol(const char *s) {
 
-void vfs_dcache_init(inode_t* inode) {
-    hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
-}
+    long val = 0;
+    bool neg = 0;
 
-void vfs_dcache_free(inode_t* inode) {
-    hashmap_cleanup(&inode->dcache);
-}
+    while ((*s) == ' ' || (*s) == '\t')
+        s++;
 
+    switch (*s) {
+        case '-': neg = true;
+        case '+': s++;
+    }
 
-void vfs_dcache_add(inode_t* parent, inode_t* inode) {
+    while ((*s) >= '0' && (*s) <= '9') {
+        val = 10 * val - (*s++ - '0');
+    }
 
-    if(inode->flags & INODE_FLAGS_DCACHE_DISABLED)
-        return;
+    return neg ? val : -val;
 
-    DEBUG_ASSERT(parent);
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->name);
-    DEBUG_ASSERT(inode->name[0] != '\0');
-    DEBUG_ASSERT(hashmap_get(&parent->dcache, inode->name) == NULL);
-
-    hashmap_put(&parent->dcache, inode->name, inode);
-
-}
-
-
-void vfs_dcache_remove(inode_t* parent, inode_t* inode) {
-    
-    if(inode->flags & INODE_FLAGS_DCACHE_DISABLED)
-        return;
-
-    DEBUG_ASSERT(parent);
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->name);
-    DEBUG_ASSERT(inode->name[0] != '\0');
-    DEBUG_ASSERT(hashmap_get(&parent->dcache, inode->name) != NULL);
-
-    kfree(hashmap_remove(&parent->dcache, inode->name));
-
-}
-
-
-inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
-
-    if(parent->flags & INODE_FLAGS_DCACHE_DISABLED)
-        return NULL;
-
-    DEBUG_ASSERT(parent);
-    DEBUG_ASSERT(name);
-    DEBUG_ASSERT(name[0] != '\0');
-
-    return hashmap_get(&parent->dcache, name);
 
 }

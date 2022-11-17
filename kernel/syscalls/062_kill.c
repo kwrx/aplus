@@ -33,6 +33,7 @@
 #include <aplus/smp.h>
 #include <aplus/errno.h>
 
+#include <signal.h>
 
 
 /***
@@ -57,4 +58,5 @@ long sys_kill (pid_t pid, int sig) {
     siginfo.si_errno = 0;
 
     return sys_rt_tgsigqueueinfo(pid, -1, sig, &siginfo);
+
 });

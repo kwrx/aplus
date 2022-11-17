@@ -40,7 +40,7 @@ int tmpfs_symlink(inode_t* inode, const char * name, const char* target) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
     DEBUG_ASSERT(inode->ops.creat);
     
     DEBUG_ASSERT(name);

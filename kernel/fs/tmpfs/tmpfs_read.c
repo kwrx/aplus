@@ -39,7 +39,7 @@ ssize_t tmpfs_read(inode_t* inode, void * buf, off_t pos, size_t len) {
    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);

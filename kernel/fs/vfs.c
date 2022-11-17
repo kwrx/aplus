@@ -119,37 +119,44 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 }
 
 
-int vfs_open(inode_t* inode, int flags) {
+inode_t* vfs_open(inode_t* inode, int flags) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.open))
-        __lock_return(&inode->lock, int, inode->ops.open(inode, flags));
+        __lock_return(&inode->lock, inode_t*, inode->ops.open(inode, flags));
 
-    return errno = ENOSYS, -1;
+    return errno = ENOSYS, NULL;
+
 }
 
 
 int vfs_close(inode_t* inode) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.close))
         __lock_return(&inode->lock, int, inode->ops.close(inode));
 
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_ioctl(inode_t* inode, long req, void* arg) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.ioctl))
         __lock_return(&inode->lock, int, inode->ops.ioctl(inode, req, arg));
     
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_getattr (inode_t* inode, struct stat* st) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
 
@@ -157,10 +164,12 @@ int vfs_getattr (inode_t* inode, struct stat* st) {
         __lock_return(&inode->lock, int, inode->ops.getattr(inode, st));
 
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_setattr (inode_t* inode, struct stat* st) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
 
@@ -168,6 +177,7 @@ int vfs_setattr (inode_t* inode, struct stat* st) {
         __lock_return(&inode->lock, int, inode->ops.setattr(inode, st));
 
     return errno = EROFS, -1;
+
 }
 
 
@@ -229,6 +239,7 @@ int vfs_removexattr (inode_t* inode, const char* name) {
 
 
 int vfs_truncate (inode_t* inode, off_t len) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.truncate))
@@ -239,12 +250,14 @@ int vfs_truncate (inode_t* inode, off_t len) {
 
 
 int vfs_fsync (inode_t* inode, int datasync) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.fsync))
         __lock_return(&inode->lock, int, inode->ops.fsync(inode, datasync));    
 
     return errno = ENOSYS, -1;
+    
 }
 
 
@@ -344,8 +357,9 @@ inode_t* vfs_creat (inode_t* inode, const char* name, mode_t mode) {
             
             if((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
-                if(likely(r->parent == inode))
+                if(likely(r->parent == inode)) {
                     vfs_dcache_add(inode, r);
+                }
 
             }
 
@@ -393,8 +407,9 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
             
             if((r = inode->ops.finddir(inode, name)) != NULL) {
 
-                if(likely(r->parent == inode))
+                if(likely(r->parent == inode)) {
                     vfs_dcache_add(inode, r);
+                }
         
             }
 

@@ -44,7 +44,7 @@ ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t coun
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->dev);
     DEBUG_ASSERT(inode->sb->fsinfo);
-    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_ISO9660);
     
     DEBUG_ASSERT(e);
 

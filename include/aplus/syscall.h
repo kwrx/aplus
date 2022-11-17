@@ -126,6 +126,8 @@ extern long sys_chroot(const char __user * pathname);
 
 extern long sys_brk (unsigned long new_brk);
 
+extern long sys_kill(pid_t pid, int sig);
+
 extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * uinfo);
 
 #endif

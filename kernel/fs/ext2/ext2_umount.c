@@ -41,7 +41,7 @@ int ext2_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);
-    DEBUG_ASSERT(dir->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(dir->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(dir->sb->root == dir);
 
     ext2_t* ext2 = (ext2_t*) dir->sb->fsinfo;

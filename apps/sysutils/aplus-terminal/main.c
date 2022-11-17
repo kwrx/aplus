@@ -35,6 +35,7 @@
 #include <poll.h>
 #include <sched.h>
 #include <sys/stat.h>
+#include <pty.h>
 
 #include <aplus/fb.h>
 #include <aplus/input.h>
@@ -54,8 +55,8 @@ static struct {
 
     void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 
-    int ipipefd[2];
-    int opipefd[2];
+    int masterfd;
+    int slavefd;
 
     int kbd;
     int mouse;
@@ -570,7 +571,7 @@ static void* thr_kbd_handler(void* arg) {
                         tsm_screen_sb_reset(context.con);
                     }
                     
-                    tsm_handle_key(context.ipipefd[1], ev.ev_key.vkey, ev.ev_key.down);
+                    tsm_handle_key(context.masterfd, ev.ev_key.vkey, ev.ev_key.down);
                     tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
                 }
@@ -778,22 +779,27 @@ int main(int argc, char** argv) {
    
     //* 2. I/O initialization
 
-    if(pipe2(context.ipipefd, 0) < 0) {
-        fprintf(stderr, "aplus-terminal: pipe() failed\n");
+    if(openpty(&context.masterfd, &context.slavefd, NULL, NULL, NULL) < 0) {
+        fprintf(stderr, "aplus-terminal: cannot open pseudo-terminal: %s\n", strerror(errno));
         exit(1);
     }
 
-    assert(context.ipipefd[0] >= 0);
-    assert(context.ipipefd[1] >= 0);
+    // if(pipe2(context.ipipefd, 0) < 0) {
+    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
+    //     exit(1);
+    // }
+
+    // assert(context.ipipefd[0] >= 0);
+    // assert(context.ipipefd[1] >= 0);
 
 
-    if(pipe2(context.opipefd, 0) < 0) {
-        fprintf(stderr, "aplus-terminal: pipe() failed\n");
-        exit(1);
-    }
+    // if(pipe2(context.opipefd, 0) < 0) {
+    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
+    //     exit(1);
+    // }
 
-    assert(context.opipefd[0] >= 0);
-    assert(context.opipefd[1] >= 0);
+    // assert(context.opipefd[0] >= 0);
+    // assert(context.opipefd[1] >= 0);
 
 
 
@@ -922,17 +928,17 @@ int main(int argc, char** argv) {
         setenv("COLORFGBG", "7;0", 1);
 
 
-        if(dup2(context.ipipefd[0], STDIN_FILENO) < 0) {
+        if(dup2(context.slavefd, STDIN_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
 
-        if(dup2(context.opipefd[1], STDOUT_FILENO) < 0) {
+        if(dup2(context.slavefd, STDOUT_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
 
-        if(dup2(context.opipefd[1], STDERR_FILENO) < 0) {
+        if(dup2(context.slavefd, STDERR_FILENO) < 0) {
             fprintf(stderr, "aplus-terminal: dup2() failed\n");
             exit(1);
         }
@@ -966,7 +972,7 @@ int main(int argc, char** argv) {
 
             do {
 
-                while((size = read(context.opipefd[0], buf, sizeof(buf))) > 0) {
+                while((size = read(context.slavefd, buf, sizeof(buf))) > 0) {
 
                     tsm_vte_input(context.vte, buf, size);
                     tsm_screen_draw(context.con, fb_draw_cb, NULL);
@@ -980,22 +986,12 @@ int main(int argc, char** argv) {
 
 
         
-        if(close(context.ipipefd[0]) < 0) {
+        if(close(context.slavefd) < 0) {
             fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
             exit(1);
         }
 
-        if(close(context.ipipefd[1]) < 0) {
-            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-            exit(1);
-        }
-
-        if(close(context.opipefd[0]) < 0) {
-            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-            exit(1);
-        }
-
-        if(close(context.opipefd[1]) < 0) {
+        if(close(context.masterfd) < 0) {
             fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
             exit(1);
         }

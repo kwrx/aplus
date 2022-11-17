@@ -243,9 +243,10 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
 
 #ifdef O_DIRECTORY
-    if(flags & O_DIRECTORY)
+    if(flags & O_DIRECTORY) {
         if(!(S_ISDIR(st.st_mode)))
             return -ENOTDIR;
+    }
 #endif
 
 
@@ -278,10 +279,15 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     }
 
 
-    if(vfs_open(r, flags) < 0) {
+
+    inode_t* inode;
+
+    if((inode = vfs_open(r, flags)) == NULL) {
      
         if(errno != ENOSYS)
             return -errno;
+
+        inode = r;
     
     }
 
@@ -291,9 +297,12 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
     __lock(&current_task->lock, {
 
-        for(fd = 0; fd < CONFIG_OPEN_MAX; fd++)
-            if(!current_task->fd->descriptors[fd].ref)
+        for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+
+            if(current_task->fd->descriptors[fd].ref == NULL)
                 break;
+
+        }
 
         if(fd == CONFIG_OPEN_MAX)
             break;
@@ -301,10 +310,11 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         
         struct file* ref;
         
-        if((ref = fd_append(r, 0, 0)) == NULL)
-            fd = FILE_MAX;
+        if((ref = fd_append(inode, 0, 0)) == NULL) {
 
-        else {
+            fd = CONFIG_FILE_MAX;
+
+        } else {
 
             if(flags & O_APPEND)
                 ref->position = st.st_size;
@@ -312,7 +322,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
                 ref->position = 0;
 
         
-            current_task->fd->descriptors[fd].ref = ref;
+            current_task->fd->descriptors[fd].ref   = ref;
             current_task->fd->descriptors[fd].flags = flags;
         
         }
@@ -323,7 +333,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     if(fd == CONFIG_OPEN_MAX)
         return -EMFILE;
 
-    if(fd == FILE_MAX)
+    if(fd == CONFIG_FILE_MAX)
         return -ENFILE;
 
 

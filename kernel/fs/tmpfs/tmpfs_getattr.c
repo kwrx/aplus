@@ -38,7 +38,7 @@ int tmpfs_getattr(inode_t* inode, struct stat* st) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(st);
 

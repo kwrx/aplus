@@ -39,7 +39,7 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
 
 

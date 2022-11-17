@@ -206,7 +206,7 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
     dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
-    dir->sb->fsid   = ISO9660_ID;
+    dir->sb->fsid   = FSID_ISO9660;
     dir->sb->dev    = dev;
     dir->sb->root   = dir;
     dir->sb->flags  = flags;
@@ -221,7 +221,7 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     dir->sb->st.f_ffree   = 0;
     dir->sb->st.f_favail  = 0;
     dir->sb->st.f_flag    = stflags;
-    dir->sb->st.f_fsid    = ISO9660_ID;
+    dir->sb->st.f_fsid    = FSID_ISO9660;
     dir->sb->st.f_namemax = ISO9660_MAX_NAME;
 
 

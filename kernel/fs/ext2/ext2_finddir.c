@@ -39,7 +39,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(name);
 
 
@@ -61,9 +61,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
         
             ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
 
-
-            size_t i;
-            for(i = 0; i < ext2->blocksize; ) {
+            for(size_t i = 0; i < ext2->blocksize; ) {
 
                 struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
 
@@ -72,11 +70,16 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
 
                 mode_t mode;
-                if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+
+                if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
+
                     mode = ext2_utils_file_type(e->file_type);
-                else
+
+                } else {
+
                     mode = ((struct ext2_inode*) cache_get(&inode->sb->cache, e->inode))->i_mode;
 
+                }
 
                 /* Found? */
                 if(name_len == e->name_len && strncmp(name, e->name, e->name_len) == 0) {
@@ -129,6 +132,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
                     
                                 
                 i += e->rec_len;
+                
             }
 
         });

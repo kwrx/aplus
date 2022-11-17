@@ -58,7 +58,7 @@ __BEGIN_DECLS
 
 #define NETWORK_SOCKFD(fd)          ((fd) - CONFIG_OPEN_MAX)
 #define NETWORK_FD(fd)              ((fd) + CONFIG_OPEN_MAX)
-#define NETWORK_IS_SOCKFD(fd)       ((fd) >= CONFIG_OPEN_MAX)
+#define NETWORK_IS_SOCKFD(fd)       ((fd) >= CONFIG_OPEN_MAX && fd < (CONFIG_OPEN_MAX + CONFIG_SOCKET_MAX))
 
 
 void network_init(void);

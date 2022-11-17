@@ -39,7 +39,7 @@ ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
@@ -54,16 +54,21 @@ ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
 
 
     off_t size;
-    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+
+    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
+
         size = (off_t) (((uint64_t) n->i_size_high << 32) | n->i_size);
-    else
+
+    } else {
+
         size = n->i_size;
 
+    }
 
-    if(pos + len > size)
+
+    if(unlikely(pos + len > size))
         len = size - pos;
     
-
     if(unlikely(len == 0))
         return 0;
 
@@ -104,12 +109,11 @@ ssize_t ext2_read(inode_t* inode, void * buf, off_t pos, size_t len) {
     }
 
 
-
-    long i = eb - ib + 1;
-
-    for(; i > 0; i--, ib++, off += ext2->blocksize)
+    for(off_t i = eb - ib + 1; i > 0; i--, ib++, off += ext2->blocksize) {
+     
         ext2_utils_read_inode_data(ext2, blocks, ib, 0, (void*) ((uintptr_t) buf + off), ext2->blocksize);
-
+   
+    }
     
     return len;
 }

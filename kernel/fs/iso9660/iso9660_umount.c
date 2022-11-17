@@ -44,7 +44,7 @@ int iso9660_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);
-    DEBUG_ASSERT(dir->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(dir->sb->fsid == FSID_ISO9660);
     DEBUG_ASSERT(dir->sb->root == dir);
 
 

@@ -24,116 +24,25 @@
  */                                                                     
                                                                         
 #include <stdint.h>
-#include <string.h>
-
+#include <stdarg.h>
+#include <stdio.h>
+#include <limits.h>
+#include <sys/types.h>
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/memory.h>
-#include <aplus/vfs.h>
-#include <aplus/errno.h>
-
-
-static struct file* filetable;
-static spinlock_t filetable_lock;
-static int lowestfree = 0;
-
-
-void fd_init(void) {
-
-    filetable = (struct file*) kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
-    lowestfree = 0;
-
-    spinlock_init(&filetable_lock);
-
-}
-
-
-struct file* fd_append(inode_t* inode, off_t position, int status) {
-
-    DEBUG_ASSERT(filetable);
-    DEBUG_ASSERT(inode);
-
-
-    int i = CONFIG_FILE_MAX;
-
-    __lock(&filetable_lock, {
-
-        for(i = lowestfree; i < CONFIG_FILE_MAX; i++) {
-
-            if(filetable[i].refcount > 0)
-                continue;
-
-
-            lowestfree = i + 1;
-
-            filetable[i].refcount = 1;
-            break;
-
-        }
-
-    });
-
-
-    if(i == CONFIG_FILE_MAX) {
-        return errno = ENFILE, NULL;
-    }
 
 
 
-    filetable[i].inode      = inode;
-    filetable[i].position   = position;
-    filetable[i].status     = status;
-    
-    spinlock_init(&filetable[i].lock);
+__nosanitize("undefined")
+int snprintf(char* buf, size_t size, const char* fmt, ...) {
 
+    int e;
 
-    return &filetable[i];
+    va_list v;
+    va_start(v, fmt);
+    e = vsnprintf(buf, size, fmt, v);
+    va_end(v);
 
-}
-
-
-void fd_remove(struct file* fd, int close) {
-
-    DEBUG_ASSERT(fd);
-    DEBUG_ASSERT(filetable);
-
-
-    __lock(&filetable_lock, {
-
-        if(--fd->refcount == 0) {
-
-            if (close) {
-                vfs_close(fd->inode);
-            }
-
-            fd->inode    = NULL;
-            fd->position = 0;
-            fd->status   = 0;
-
-
-            int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
-            
-            DEBUG_ASSERT(i <= CONFIG_FILE_MAX - 1);
-            DEBUG_ASSERT(i >= 0);
-
-            if (i < lowestfree) {
-                lowestfree = i;
-            }
-
-        }
-    
-    });
-
-}
-
-
-void fd_ref(struct file* file) {
-
-    DEBUG_ASSERT(file);
-    DEBUG_ASSERT(filetable);
-
-    __lock(&filetable_lock, {
-        file->refcount++;
-    });
+    return e;
 
 }

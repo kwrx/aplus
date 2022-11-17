@@ -50,44 +50,22 @@
 
 
 
-#define TMPFS_ID                    0xDEAD1000
-#define EXT2_ID                     0xDEAD1001
-#define VFAT_ID                     0xDEAD1002
-#define ISO9660_ID                  0xDEAD1003
+#define FSID_TMPFS                          0xDEAD1000
+#define FSID_EXT2                           0xDEAD1001
+#define FSID_VFAT                           0xDEAD1002
+#define FSID_ISO9660                        0xDEAD1003
 
-#define FILE_MAX                    8192
+
+#define INODE_FLAGS_DCACHE_DISABLED         0x00000001
+
 
 
 typedef struct inode inode_t;
-typedef struct vfs_cache vfs_cache_t;
-
-
-struct vfs_cache_item {
-    ino_t ino;
-    void* data;
-};
-
-struct vfs_cache_ops {
-    void* (*load) (struct vfs_cache*, ino_t);
-    void (*flush) (struct vfs_cache*, ino_t, void*);
-};
-
-struct vfs_cache {
-
-    size_t capacity;
-    size_t count;
-    void* userdata;
-
-    struct vfs_cache_ops ops;
-
-    list(struct vfs_cache_item*, items);    
-    spinlock_t lock;
-};
 
 
 struct inode_ops {
 
-    int (*open)  (inode_t*, int);
+    inode_t* (*open)  (inode_t*, int);
     int (*close) (inode_t*);
     int (*ioctl) (inode_t*, long, void*);
 
@@ -111,7 +89,7 @@ struct inode_ops {
     /* Directory */
     inode_t* (*creat) (inode_t*, const char*, mode_t);
     inode_t* (*finddir) (inode_t*, const char*);
-    ssize_t (*readdir) (inode_t*, struct dirent*, off_t, size_t);
+    ssize_t  (*readdir) (inode_t*, struct dirent*, off_t, size_t);
 
     int (*rename) (inode_t*, const char*, const char*);
     int (*symlink) (inode_t*, const char*, const char*);
@@ -123,7 +101,9 @@ struct inode_ops {
 struct inode {
 
     char name[CONFIG_MAXNAMLEN];
+
     ino_t ino;
+    int flags;
 
     struct superblock* sb;
     struct inode_ops ops;
@@ -183,7 +163,7 @@ void vfs_init(void);
 //* os/kernel/fs/vfs.c
 int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
 
-int vfs_open (inode_t*, int);
+inode_t* vfs_open (inode_t*, int);
 int vfs_close (inode_t*);
 int vfs_ioctl (inode_t*, long, void __user*);
 

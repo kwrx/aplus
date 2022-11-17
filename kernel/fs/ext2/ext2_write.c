@@ -41,7 +41,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
@@ -111,11 +111,11 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
     }
 
 
+    for(off_t i = eb - ib + 1; i > 0; i--, ib++, off += ext2->blocksize) {
 
-    long i = eb - ib + 1;
-
-    for(; i > 0; i--, ib++, off += ext2->blocksize)
         ext2_utils_write_inode_data(ext2, blocks, ib, 0, (void*) ((uintptr_t) buf + off), ext2->blocksize);
+
+    }
 
     
     return len;

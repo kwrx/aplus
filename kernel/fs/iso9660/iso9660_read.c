@@ -40,7 +40,7 @@ ssize_t iso9660_read(inode_t* inode, void* buf, off_t pos, size_t len) {
    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_ISO9660);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);

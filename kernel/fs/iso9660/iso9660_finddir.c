@@ -46,7 +46,7 @@ inode_t* iso9660_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->dev);
     DEBUG_ASSERT(inode->sb->fsinfo);
-    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_ISO9660);
     DEBUG_ASSERT(name);
 
     

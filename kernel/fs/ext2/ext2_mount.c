@@ -127,7 +127,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
     
-    dir->sb->fsid  = EXT2_ID;
+    dir->sb->fsid  = FSID_EXT2;
     dir->sb->dev   = dev;
     dir->sb->root  = dir;
     dir->sb->flags = flags;
@@ -144,7 +144,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_ffree   = sb.s_free_inodes_count;
     dir->sb->st.f_favail  = sb.s_free_inodes_count;
     dir->sb->st.f_flag    = stflags;
-    dir->sb->st.f_fsid    = EXT2_ID;
+    dir->sb->st.f_fsid    = FSID_EXT2;
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
     dir->sb->ops.getattr = ext2_getattr;

@@ -39,7 +39,7 @@ int iso9660_getattr(inode_t* inode, struct stat* st) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == ISO9660_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_ISO9660);
     DEBUG_ASSERT(inode->sb->dev);
 
     DEBUG_ASSERT(st);

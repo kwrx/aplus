@@ -39,7 +39,7 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(st);
 
     struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
@@ -64,8 +64,11 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
         
         ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
-        if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+        if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
+
             st->st_size |= (off_t) ((uint64_t) n->i_size_high << 32);
+
+        }
 
     }
 

@@ -40,7 +40,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
     DEBUG_ASSERT(name);
     
 

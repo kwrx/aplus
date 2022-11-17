@@ -41,7 +41,7 @@ int tmpfs_rename (inode_t* inode, const char* name, const char* newname) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(newname);
