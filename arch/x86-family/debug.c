@@ -48,10 +48,10 @@ static uint16_t com_address = 0;
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-#define X86_VGA_WIDTH               (80)
-#define X86_VGA_HEIGHT              (25)
-#define X86_VGA_SIZE                (X86_VGA_WIDTH * X86_VGA_HEIGHT * 2)
-#define X86_VGA_ADDRESS             ((uint16_t*) (KERNEL_HIGH_AREA + 0xB8000))
+#include "debug/font_8x16.c.in"
+
+#define X86_VGA_WIDTH               ( 8)
+#define X86_VGA_HEIGHT              (16)
 
 static uint16_t vga_offset = 0;
 
@@ -102,11 +102,7 @@ void arch_debug_init(void) {
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
-
     vga_offset  = 0;
-
-    memset((void*) (X86_VGA_ADDRESS), 0x00, X86_VGA_SIZE);
-    
 #endif
 
 }
@@ -140,44 +136,147 @@ void arch_debug_putc(char ch) {
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    if(unlikely(vga_offset >= X86_VGA_WIDTH * X86_VGA_HEIGHT)) {
-
-        memmove (
-            &(X86_VGA_ADDRESS)[0], 
-            &(X86_VGA_ADDRESS)[X86_VGA_WIDTH], 
-            X86_VGA_SIZE - (X86_VGA_WIDTH * 2)
-        );
-
-        memset (
-            &(X86_VGA_ADDRESS)[X86_VGA_WIDTH * (X86_VGA_HEIGHT - 1)],
-            0x00, 
-            X86_VGA_WIDTH * 2
-        );
-
-        vga_offset -= X86_VGA_WIDTH;
-
-    }
+    #define X86_VGA_ROWS                (core->framebuffer.height / X86_VGA_HEIGHT)
+    #define X86_VGA_COLS                (core->framebuffer.width  / X86_VGA_WIDTH)
+    #define X86_VGA_ADDRESS             (core->framebuffer.address + KERNEL_HEAP_AREA)
+    #define X86_VGA_ENABLED             (core->framebuffer.address != 0)
 
 
-    switch(ch) {
-        case '\r':
-            vga_offset -= vga_offset % X86_VGA_WIDTH;
-            break;
-        case '\n':
-            vga_offset += X86_VGA_WIDTH - (vga_offset % X86_VGA_WIDTH);
-            break;
-        case '\v':
-            vga_offset += X86_VGA_WIDTH;
-            break;
-        case '\b':
-            vga_offset -= 1;
-            break;
-        case '\t':
-            vga_offset += 8 - (vga_offset % 8);
-            break;
-        default:
-            X86_VGA_ADDRESS[vga_offset++] = (0x07 << 8) | ch;
-            break;
+    if(likely(X86_VGA_ENABLED)) {
+
+        if(unlikely(vga_offset > (X86_VGA_COLS * X86_VGA_ROWS) - 1)) {
+
+            memmove (
+                (void*)  (X86_VGA_ADDRESS),
+                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * X86_VGA_HEIGHT)), 
+                (size_t) (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)
+            );
+
+            memset (
+                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)),
+                0x00, 
+                (size_t) (core->framebuffer.pitch * X86_VGA_HEIGHT)
+            );
+
+            vga_offset -= X86_VGA_COLS;
+
+        }
+
+
+        switch(ch) {
+
+            case '\r':
+                vga_offset -= vga_offset % X86_VGA_COLS;
+                break;
+
+            case '\n':
+                vga_offset += X86_VGA_COLS - (vga_offset % X86_VGA_COLS);
+                break;
+
+            case '\v':
+                vga_offset += X86_VGA_COLS;
+                break;
+
+            case '\b':
+                vga_offset -= 1;
+                break;
+
+            case '\t':
+                vga_offset += 8 - (vga_offset % 8);
+                break;
+
+            default:
+                
+                for(int y = 0; y < X86_VGA_HEIGHT; y++) {
+
+                    uint8_t* ptr = (uint8_t*) (X86_VGA_ADDRESS);
+                    
+                    ptr += (vga_offset % X86_VGA_COLS) * X86_VGA_WIDTH * (core->framebuffer.depth / 8);
+                    ptr += (vga_offset / X86_VGA_COLS) * X86_VGA_HEIGHT * core->framebuffer.pitch;
+                    ptr += (y * core->framebuffer.pitch) ;
+
+                    for(int x = 0; x < X86_VGA_WIDTH; x++) {
+
+                        if(builtin_fontdata[(ch * X86_VGA_HEIGHT) + y] & (1 << (X86_VGA_WIDTH - x))) {
+
+                            switch(core->framebuffer.depth) {
+
+                                case 32:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    ptr[2] = 0xFF;
+                                    ptr[3] = 0xFF;
+                                    break;
+
+                                case 24:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    ptr[2] = 0xFF;
+                                    break;
+
+                                case 16:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    break;
+
+                                case 8:
+
+                                    ptr[0] = 0xFF;
+                                    break;
+
+                            }
+
+
+                        } else {
+
+                            switch(core->framebuffer.depth) {
+
+                                case 32:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    ptr[2] = 0x00;
+                                    ptr[3] = 0xFF;
+                                    break;
+
+                                case 24:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    ptr[2] = 0x00;
+                                    break;
+
+                                case 16:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    break;
+
+                                case 8:
+
+                                    ptr[0] = 0x00;
+                                    break;
+
+                            }
+
+
+                        }
+
+                        ptr += core->framebuffer.depth / 8;
+
+                    }
+
+                }
+
+                vga_offset += 1;
+
+                break;
+
+        }
+
     }
     
 #endif

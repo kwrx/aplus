@@ -449,6 +449,14 @@ uint64_t pmm_get_used_memory() {
 
 }
 
+/*!
+ * @brief pmm_get_total_memory().
+ *        Get Physical Memory size.
+ */
+uint64_t pmm_get_total_memory() {
+    return pmm_max_memory;
+}
+
 
 
 /*!

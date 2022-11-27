@@ -62,15 +62,15 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
     DEBUG_ASSERT(current_task);
 
-    if(unlikely(!uio_check(buf, R_OK | W_OK)))
-        return -EFAULT;
-
-
     current_task->iostat.rchar += (uint64_t) size;
     current_task->iostat.syscr += 1;
 
+
     if(unlikely(size == 0))
         return 0;
+
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+        return -EFAULT;
 
 
 

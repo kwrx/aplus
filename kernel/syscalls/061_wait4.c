@@ -59,12 +59,12 @@ SYSCALL(61, wait4,
 long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __user * rusage) {
     
     if(status) {
-        if(unlikely(!uio_check(status, W_OK | R_OK)))
+        if(unlikely(!uio_check(status, R_OK | W_OK)))
             return -EFAULT;
     }
 
     if(rusage) {
-        if(unlikely(!uio_check(rusage, W_OK | R_OK)))
+        if(unlikely(!uio_check(rusage, R_OK | W_OK)))
             return -EFAULT;
     }
 

@@ -61,15 +61,15 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
     DEBUG_ASSERT(current_task);
 
-    if(unlikely(!uio_check(buf, R_OK)))
-        return -EFAULT;
-
-
     current_task->iostat.wchar += (uint64_t) size;
     current_task->iostat.syscw += 1;
 
+
     if(unlikely(size == 0))
         return 0;
+
+    if(unlikely(!uio_check(buf, R_OK)))
+        return -EFAULT;
 
 
 

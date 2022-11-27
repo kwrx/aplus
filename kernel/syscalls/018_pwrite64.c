@@ -58,9 +58,21 @@
 
 SYSCALL(18, pwrite64,
 long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos) {
-        
+
+    DEBUG_ASSERT(current_task);
+
+    current_task->iostat.rchar += (uint64_t) count;
+    current_task->iostat.syscr += 1;
+
+
+    if(unlikely(count == 0))
+        return 0;
+
     if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
+        
+
+
 
     if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
@@ -76,11 +88,10 @@ long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t
 
 
 
-    current_task->iostat.wchar += (uint64_t) count;
-    current_task->iostat.syscw += 1;
-
-
     ssize_t e = 0;
+
+
+    uio_lock(buf, count);
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
@@ -90,6 +101,8 @@ long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t
         current_task->iostat.write_bytes += (uint64_t) e;
                 
     });
+
+    uio_unlock(buf, count);
 
 
     if(e < 0)

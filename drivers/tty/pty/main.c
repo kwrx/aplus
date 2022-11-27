@@ -131,6 +131,10 @@ static void pty_input_append(pty_t* pty, char ch, bool echo) {
 
         }
 
+
+        DEBUG_ASSERT(pty->input.buffer);
+        DEBUG_ASSERT(pty->input.capacity);
+
         pty->input.buffer[pty->input.size++] = ch;
 
         if(echo) {
@@ -356,7 +360,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!index))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(index, W_OK)))
+            if(unlikely(!uio_check(index, R_OK | W_OK)))
                 return -EFAULT;
 
             
@@ -397,7 +401,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!ws))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(ws, W_OK)))
+            if(unlikely(!uio_check(ws, R_OK | W_OK)))
                 return -EFAULT;
 
 
@@ -417,7 +421,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!pgrp))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(pgrp, W_OK)))
+            if(unlikely(!uio_check(pgrp, R_OK | W_OK)))
                 return -EFAULT;
 
 
@@ -449,7 +453,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!arg))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(arg, W_OK)))
+            if(unlikely(!uio_check(arg, R_OK | W_OK)))
                 return -EFAULT;
 
 
@@ -503,7 +507,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!count))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(count, W_OK)))
+            if(unlikely(!uio_check(count, R_OK | W_OK)))
                 return -EFAULT;
 
 
@@ -520,7 +524,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!count))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(count, W_OK)))
+            if(unlikely(!uio_check(count, R_OK | W_OK)))
                 return -EFAULT;
 
             
@@ -570,7 +574,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!sid))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(sid, W_OK)))
+            if(unlikely(!uio_check(sid, R_OK | W_OK)))
                 return -EFAULT;
 
             
@@ -595,7 +599,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!excl))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(excl, W_OK)))
+            if(unlikely(!uio_check(excl, R_OK | W_OK)))
                 return -EFAULT;
 
             
@@ -639,7 +643,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             if(unlikely(!lock))
                 return -EFAULT;
 
-            if(unlikely(!uio_check(lock, W_OK)))
+            if(unlikely(!uio_check(lock, R_OK | W_OK)))
                 return -EFAULT;
 
             
@@ -679,11 +683,12 @@ ssize_t pty_master_read(inode_t* inode, void* buf, off_t offset, size_t size) {
     if(unlikely(!buf))
         return -EFAULT;
 
-    if(unlikely(!uio_check(buf, W_OK)))
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(!size))
         return 0;
+
 
     return ringbuffer_read(&pty->r2, buf, size);
 
@@ -707,7 +712,8 @@ ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t s
         return 0;
 
 
-    return pty_process_input(pty, buf, size);
+    return ringbuffer_write(&pty->r1, buf, size);
+    //return pty_process_input(pty, buf, size);
 
 }
 
@@ -722,7 +728,7 @@ ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
     if(unlikely(!buf))
         return -EFAULT;
 
-    if(unlikely(!uio_check(buf, W_OK)))
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
     if(unlikely(!size))
@@ -767,7 +773,8 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
         return 0;
 
 
-    return pty_process_output(pty, buf, size);
+    return ringbuffer_write(&pty->r2, buf, size);
+    //return pty_process_output(pty, buf, size);
 
 }
 
@@ -845,9 +852,7 @@ void pty_queue_unlock() {
 
 
 void init(const char* args) {
-
     spinlock_init(&queue_lock);
-
 }
 
 void dnit(void) {

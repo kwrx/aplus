@@ -11,3 +11,6 @@ HDRS	    ?=  $(shell find $(SRCDIRS) -type f -name "*.h")                \
 
 OBJS        :=  $(addsuffix .o,$(basename $(SRCS)))
 DEPS        :=  $(addsuffix .d,$(basename $(SRCS)))
+
+
+RESOURCES   ?=

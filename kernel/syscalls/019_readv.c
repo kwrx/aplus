@@ -89,7 +89,7 @@ long sys_readv (unsigned long fd, const struct iovec __user * vec, unsigned long
         if(unlikely(!iovec.iov_len))
             continue;
 
-        if(unlikely(!uio_check(iovec.iov_base, W_OK)))
+        if(unlikely(!uio_check(iovec.iov_base, R_OK | W_OK)))
             return -EFAULT;
 
 

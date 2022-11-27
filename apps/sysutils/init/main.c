@@ -254,26 +254,28 @@ static void init_hostname() {
 
     char hostname[BUFSIZ] = { 0 };
 
-    fgets(hostname, BUFSIZ, fp);
-    fclose(fp);
+    if(fgets(hostname, BUFSIZ, fp) == NULL)
+        return;
 
+    if(fclose(fp) < 0)
+        return;
 
   
     if(strlen(hostname) > 0) {
 
-        for(size_t i = strlen(hostname) - 1; i > 0; i++) {
+        for(size_t i = 0; i < sizeof(hostname); i++) {
             
-            if(!isalnum(hostname[i]) || isblank(hostname[i]))
-                hostname[i] = '\0';
-            else
-                break;
+            if(isalnum(hostname[i]) && !isblank(hostname[i]) && !isspace(hostname[i]))
+                continue;
+
+            hostname[i] = '\0';
+            break;
 
         }
 
         syscall(SYS_sethostname, hostname, strlen(hostname));
 
     }
-
 
 
 #if defined(DEBUG)
@@ -297,7 +299,7 @@ static void init_initd(void) {
     if(fork() == 0) {
     
 
-        execle("/bin/dash", "/bin/dash", "/etc/init", NULL, environ);
+        execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
         exit(EXIT_FAILURE);
 
     } else {

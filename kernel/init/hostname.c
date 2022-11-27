@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
  */
 
+#include <aplus.h>
 
-char __hostname[] = "kwrx";
+char __hostname[CONFIG_NAME_MAX] = "kwrx\0";
 char * hostname = &__hostname[0];

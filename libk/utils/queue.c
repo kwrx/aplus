@@ -83,8 +83,9 @@ void queue_destroy(queue_t* queue) {
 
     DEBUG_ASSERT(queue);
 
-    while(queue->size > 0)
+    while(queue->size > 0) {
         queue_pop(queue);
+    }
 
 }
 
@@ -138,10 +139,11 @@ void queue_dequeue(queue_t* queue, void* element) {
     if(queue->size == 0)
         return;
 
-    if(queue_top(queue) == element)
+    if(queue_top(queue) == element) {
+      
         queue_pop(element);
 
-    else {
+    } else {
 
         __lock(&queue->lock, {
 

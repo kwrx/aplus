@@ -126,14 +126,16 @@ uintptr_t pmm_alloc_blocks_aligned(size_t, uintptr_t);
 void pmm_free_block(uintptr_t);
 void pmm_free_blocks(uintptr_t, size_t);
 uint64_t pmm_get_used_memory();
+uint64_t pmm_get_total_memory();
 void pmm_init(uintptr_t);
 
 
 void* kmalloc(size_t, int)         __malloc __alloc_size(1);
 void* kcalloc(size_t, size_t, int) __malloc __alloc_size(1, 2);
 void* krealloc(void*, size_t, int) __malloc __alloc_size(2);
-
 void kfree(void*);
+
+uint64_t kheap_get_used_memory();
 
 __END_DECLS
 

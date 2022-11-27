@@ -32,7 +32,7 @@
 #include <aplus/hal.h>
 
 
-#define SYSCALL_VERBOSE 1
+#define SYSCALL_VERBOSE 0
 
 
 #define SYSMAX          512

@@ -19,7 +19,7 @@ DESTDIR     ?= $(SYSROOT)/usr/lib/modules/$(shell realpath --relative-base=$(ROO
 include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
-$(TARGET): $(OBJS) $(HDRS)
+$(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
 	$(QUIET)echo "    LD      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(LD) -r $(LDFLAGS) -o $@ $(OBJS)
 

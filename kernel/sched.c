@@ -223,19 +223,10 @@ static void __sched_next(void) {
 
     do {
 
-        do {
+        current_task = current_task->next;
 
-            current_task = current_task->next;
-
-            if(unlikely(!current_task))
-                current_task = current_cpu->sched_queue;
-
-
-            DEBUG_ASSERT(current_task);
-            DEBUG_ASSERT(current_task->frame);
-
-        } while(!CPU_ISSET(current_cpu->id, &current_task->affinity));
-
+        if(unlikely(!current_task))
+            current_task = current_cpu->sched_queue;
 
 
         if(unlikely(current_task->status == TASK_STATUS_STOP))
@@ -312,7 +303,6 @@ void schedule(int resched) {
 
 
 
-
     if(likely(current_task->status == TASK_STATUS_RUNNING))
         current_task->status = TASK_STATUS_READY;
 
@@ -362,6 +352,7 @@ void sched_enqueue(task_t* task) {
     __lock(&cpu->sched_lock, {
 
         task->next = cpu->sched_queue;
+        
         cpu->sched_queue = task;
         cpu->sched_count++;
 
@@ -385,27 +376,35 @@ void sched_dequeue(task_t* task) {
 
         __lock(&cpu->sched_lock, {
             
-            if(task == cpu->sched_queue)
+            if(task == cpu->sched_queue) {
+              
                 cpu->sched_queue = task->next;
 
-            else {
+            } else {
 
                 task_t* tmp;
-                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next)
-                    if(tmp->next == task)
-                        break;
+              
+                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
 
-                if(unlikely(!tmp->next))
-                    found = 0;
-                else 
+                    if(tmp->next != task)
+                        continue;
+
                     tmp->next = task->next;
-                
+                    break;
+
+                }
+
+                if(unlikely(!tmp->next)) {
+                    found = 0;
+                }
+
             }
 
         });
 
-        if(found)
+        if(found) {
             cpu->sched_count--;
+        }
 
     }
 

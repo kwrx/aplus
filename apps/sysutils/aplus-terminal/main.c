@@ -314,13 +314,7 @@ static void tsm_input_flush(int out) {
         write(out, context.input.buffer, context.input.size);
     }
 
-    if(context.input.buffer) {
-        free(context.input.buffer);
-    }
-
-    context.input.buffer = NULL;
     context.input.size = 0;
-    context.input.capacity = 0;
 
 }
 
@@ -559,7 +553,7 @@ static void* thr_kbd_handler(void* arg) {
 
     do {
 
-        event_t ev;
+        event_t ev = { 0 };
 
         do {
 
@@ -594,7 +588,7 @@ static void* thr_mouse_handler(void* arg) {
 
     do {
 
-        event_t ev;
+        event_t ev = { 0 };
 
         do {
 
@@ -777,32 +771,6 @@ int main(int argc, char** argv) {
 
 
    
-    //* 2. I/O initialization
-
-    if(openpty(&context.masterfd, &context.slavefd, NULL, NULL, NULL) < 0) {
-        fprintf(stderr, "aplus-terminal: cannot open pseudo-terminal: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    // if(pipe2(context.ipipefd, 0) < 0) {
-    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
-    //     exit(1);
-    // }
-
-    // assert(context.ipipefd[0] >= 0);
-    // assert(context.ipipefd[1] >= 0);
-
-
-    // if(pipe2(context.opipefd, 0) < 0) {
-    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
-    //     exit(1);
-    // }
-
-    // assert(context.opipefd[0] >= 0);
-    // assert(context.opipefd[1] >= 0);
-
-
-
 
     //* 3. TSM initialization
 
@@ -835,6 +803,37 @@ int main(int argc, char** argv) {
     tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
 
+
+    //* 2. I/O initialization
+
+    struct winsize ws;
+    
+    ws.ws_col    = context.var.xres_virtual /  8 - 1;
+    ws.ws_row    = context.var.yres_virtual / 16 - 1;
+    ws.ws_xpixel = context.var.xres_virtual;
+    ws.ws_ypixel = context.var.yres_virtual;
+
+    if(openpty(&context.masterfd, &context.slavefd, NULL, NULL, &ws) < 0) {
+        fprintf(stderr, "aplus-terminal: cannot open pseudo-terminal: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    // if(pipe2(context.ipipefd, 0) < 0) {
+    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
+    //     exit(1);
+    // }
+
+    // assert(context.ipipefd[0] >= 0);
+    // assert(context.ipipefd[1] >= 0);
+
+
+    // if(pipe2(context.opipefd, 0) < 0) {
+    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
+    //     exit(1);
+    // }
+
+    // assert(context.opipefd[0] >= 0);
+    // assert(context.opipefd[1] >= 0);
 
 
     //* 4. Input initialization
@@ -967,18 +966,18 @@ int main(int argc, char** argv) {
 
         do {
 
-            char buf[BUFSIZ];
-            ssize_t size;
+            char buf[BUFSIZ] = { 0 };
 
             do {
 
-                while((size = read(context.slavefd, buf, sizeof(buf))) > 0) {
+                ssize_t size;
+                
+                while((size = read(context.masterfd, buf, sizeof(buf))) > 0) {
 
                     tsm_vte_input(context.vte, buf, size);
                     tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
                 }
-
 
             } while(errno == EINTR);
 

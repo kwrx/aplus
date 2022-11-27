@@ -19,7 +19,7 @@ LIBDIR		?= $(SYSROOT)/usr/lib
 include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
-$(TARGET): $(OBJS) $(HDRS)
+$(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
 	$(QUIET)echo "    LD      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(LD) $(LDFLAGS) -Wl,-Map,$(TARGET).map -o $@ $(OBJS) $(addprefix -L,$(LIBDIR)) $(addprefix -l,$(LIBS))
 	

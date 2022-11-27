@@ -58,8 +58,20 @@
 SYSCALL(17, pread64,
 long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
 
+    DEBUG_ASSERT(current_task);
+
+    current_task->iostat.rchar += (uint64_t) count;
+    current_task->iostat.syscr += 1;
+
+
+    if(unlikely(count == 0))
+        return 0;
+
     if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
+
+
+    
 
     if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
@@ -76,11 +88,10 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
 
 
 
-    current_task->iostat.rchar += (uint64_t) count;
-    current_task->iostat.syscr += 1;
-
-
     ssize_t e = 0;
+
+
+    uio_lock(buf, count);
 
     __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
@@ -91,9 +102,12 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
         
     });
 
+    uio_unlock(buf, count);
+
 
     if(e < 0)
         return -errno;
 
     return e;
+    
 });

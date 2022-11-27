@@ -54,6 +54,7 @@
 #define FSID_EXT2                           0xDEAD1001
 #define FSID_VFAT                           0xDEAD1002
 #define FSID_ISO9660                        0xDEAD1003
+#define FSID_PROCFS                         0xDEAD1004
 
 
 #define INODE_FLAGS_DCACHE_DISABLED         0x00000001
