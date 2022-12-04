@@ -22,8 +22,11 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
+#include <ctype.h>
 #include <sys/types.h>
 #include <sys/mount.h>
+
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -45,37 +48,40 @@ inode_t* procfs_root_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(name);
 
 
-    // if(strcmp(name, "cpuinfo") == 0)
-    //     return procfs_cpuinfo_inode();
+    if(isdigit(name[0])) {
+        
+        long pid = atol(name);
 
-    if(strcmp(name, "meminfo") == 0)
-        return procfs_service_meminfo_inode();
-
-    if(strcmp(name, "uptime") == 0)
-        return procfs_service_uptime_inode();
-
-    // if(strcmp(name, "version") == 0)
-    //     return procfs_version_inode();
-
-    if(strcmp(name, "filesystems") == 0)
-        return procfs_filesystems_inode();
-
-    if(strcmp(name, "cmdline") == 0)
-        return procfs_service_cmdline_inode(-1);
-
-    // if(strcmp(name, "self") == 0)
-    //     return procfs_pid_inode(0);
+        if(pid > 0) {
+            return procfs_service_pid_inode(inode, pid);
+        }
     
-    // if(isdigit(name[0])) {
+    } else {
 
-    //     long pid = atol(name);
+        if(strcmp(name, "self") == 0)
+            return procfs_service_pid_inode(inode, 0);
 
-    //     if(pid > 0) {
-    //         return procfs_pid_inode(pid);
-    //     }
+        // if(strcmp(name, "cpuinfo") == 0)
+        //     return procfs_cpuinfo_inode();
 
-    // }
+        if(strcmp(name, "meminfo") == 0)
+            return procfs_service_meminfo_inode(inode);
 
+        if(strcmp(name, "uptime") == 0)
+            return procfs_service_uptime_inode(inode);
+
+        // if(strcmp(name, "version") == 0)
+        //     return procfs_version_inode();
+
+        // if(strcmp(name, "filesystems") == 0)
+        //     return procfs_filesystems_inode();
+
+        if(strcmp(name, "cmdline") == 0)
+            return procfs_service_cmdline_inode(inode, -1);
+
+
+    }
+    
 
     return errno = ENOENT, NULL;
 

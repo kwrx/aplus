@@ -452,6 +452,10 @@ static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
 
 void init(const char* args) {
 
+    if(strstr(core->boot.cmdline, "network=off"))
+        return;
+
+
     uint32_t pci_devices[PCNET_MAX_DEVICES];
     uint32_t pci_count = 0;
 

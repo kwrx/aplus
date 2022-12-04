@@ -37,7 +37,7 @@
 
 
 
-tmpfs_inode_t* tmpfs_cache_load(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
+tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
     DEBUG_ASSERT(tmpfs);
     DEBUG_ASSERT(cache);
@@ -65,7 +65,7 @@ tmpfs_inode_t* tmpfs_cache_load(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
 
 
-tmpfs_inode_t* tmpfs_cache_sync(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode) {
+tmpfs_inode_t* tmpfs_cache_commit(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode) {
     
     DEBUG_ASSERT(tmpfs);
     DEBUG_ASSERT(cache);

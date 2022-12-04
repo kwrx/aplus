@@ -269,10 +269,10 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    if(args && strstr(args, "graphics=no"))
+    if(strstr(core->boot.cmdline, "graphics=off"))
         return;
 
-    if(args && strstr(args, "graphics=builtin"))
+    if(strstr(core->boot.cmdline, "graphics=builtin"))
         return;
 
     

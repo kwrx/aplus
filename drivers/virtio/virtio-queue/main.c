@@ -372,9 +372,6 @@ void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
 
 void init(const char* args) {
 
-    if(args && strstr(args, "virtio=disable"))
-        return;
-
 }
 
 void dnit(void) {

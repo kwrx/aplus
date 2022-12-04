@@ -61,7 +61,7 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
     lock->irqsave  = 0;
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("ipc: spinlock_init_with_flags(%p, %d, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
+    kprintf("ipc: spinlock_init_with_flags(%p, %x, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
 #endif
 
     __atomic_clear(&lock->value, __ATOMIC_RELAXED);

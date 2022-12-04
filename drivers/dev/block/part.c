@@ -35,31 +35,31 @@
 #include <dev/block.h>
 
 
-static bool detect_gpt_partition(device_t* device) {
+static bool detect_gpt_partition_table(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
     DEBUG_ASSERT(device->blk.blkcount);
 
     
-    char efi[8];
+    char efi[8] = { 0 };
 
     if(block_read(device, &efi, BLOCK_GPT_PARTITION_MAGIC_LBA * device->blk.blksize, sizeof(efi)) != sizeof(efi))
         kpanicf("device::block: ERROR! Read Error at lba(%ld) offset(0)\n", BLOCK_GPT_PARTITION_MAGIC_LBA);
         
 
-    return (strncmp(efi, BLOCK_GPT_PARTITION_MAGIC, sizeof(efi)) == 0);
+    return (memcmp(efi, BLOCK_GPT_PARTITION_MAGIC, sizeof(efi)) == 0);
 
 }
 
-static bool detect_mbr_partition(device_t* device) {
+static bool detect_mbr_partition_table(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
     DEBUG_ASSERT(device->blk.blkcount);
 
     
-    uint16_t sig;
+    uint16_t sig = 0;
 
     if(block_read(device, &sig, BLOCK_MBR_PARTITION_MAGIC_OFFSET, sizeof(sig)) <= 0)
         kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(%d)\n", BLOCK_MBR_PARTITION_MAGIC_OFFSET);
@@ -78,6 +78,7 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev) (devic
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(mkdev);
     DEBUG_ASSERT(end > first);
+    DEBUG_ASSERT(index < 1000);
 
 
     device_t* d = (device_t*) kcalloc(sizeof(device_t), 1, GFP_KERNEL);
@@ -154,7 +155,7 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev) (dev
 
 
 
-    if(detect_gpt_partition(device)) {
+    if(detect_gpt_partition_table(device)) {
 
 
 #if DEBUG_LEVEL_TRACE
@@ -198,7 +199,7 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev) (dev
         }
 
 
-    } else if(detect_mbr_partition(device)) {
+    } else if(detect_mbr_partition_table(device)) {
 
 
 #if DEBUG_LEVEL_TRACE
@@ -210,11 +211,9 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev) (dev
 
         block_dos_partition_t part[4] = { 0 };
 
-        if(block_read(device, &part, BLOCK_MBR_PARTITION_TABLE_OFFSET, sizeof(part)) != sizeof(part)) {
-         
+        if(block_read(device, &part, BLOCK_MBR_PARTITION_TABLE_OFFSET, sizeof(part)) != sizeof(part))
             kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)\n");
 
-        }
 
 
         // * Read Partitions

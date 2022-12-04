@@ -76,6 +76,38 @@ static ssize_t procfs_service_read(inode_t* inode, void* buf, off_t pos, size_t 
 
 }
 
+static ssize_t procfs_service_readlink(inode_t* inode, char* buf, size_t size) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
+    DEBUG_ASSERT(inode->userdata);
+
+    if(unlikely(size == 0))
+        return 0;
+
+
+    procfs_service_t* service = inode->userdata;
+
+    
+    size_t max = 0;
+    char* data = NULL;
+
+    if(service->fetch(inode, &data, &max, service->arg) < 0)
+        return errno = EIO, -1;
+
+
+    DEBUG_ASSERT(data);
+    DEBUG_ASSERT(max > 0);
+
+    if(unlikely(size > max))
+        size = max;
+
+    return memcpy(buf, data, size)
+         , size;
+
+}
+
 
 int procfs_service_getattr(inode_t* inode, struct stat* st) {
 
@@ -110,6 +142,12 @@ int procfs_service_getattr(inode_t* inode, struct stat* st) {
 }
 
 inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fetch) (inode_t*, char** buf, size_t*, void*), void* arg) {
+
+    DEBUG_ASSERT(parent);
+    DEBUG_ASSERT(parent->sb);
+    DEBUG_ASSERT(parent->sb->fsid == FSID_PROCFS);
+    DEBUG_ASSERT(name);
+
     
     inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
@@ -130,12 +168,48 @@ inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fe
     inode->userdata = service;
 
 
-    inode->ops.read    = procfs_service_read;
+    if(S_ISREG(mode)) {
+        inode->ops.read = procfs_service_read;
+    }
+
+    if(S_ISLNK(mode)) {
+        inode->ops.readlink = procfs_service_readlink;
+    }
+
     inode->ops.getattr = procfs_service_getattr;
 
     spinlock_init(&inode->lock);
 
 
     return inode;
+
+}
+
+
+task_t* procfs_service_pid_to_task(pid_t id) {
+
+    if(id < 0)
+        return NULL;
+
+    if(id == 0)
+        return current_task;
+
+    
+    cpu_foreach(cpu) {
+
+        task_t* task = cpu->sched_queue;
+
+        while(task) {
+
+            if(task->tid == id)
+                return task;
+
+            task = task->next;
+
+        }
+
+    }
+
+    return errno = ESRCH, NULL;
 
 }

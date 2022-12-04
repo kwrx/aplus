@@ -452,7 +452,11 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
 
 
 
-void init(const char* args) {
+void init(const char* args) {    
+
+    if(strstr(core->boot.cmdline, "network=off"))
+        return;
+
 
     uint32_t pci_devices[E1000_MAX_DEVICES];
     uint32_t pci_count = 0;

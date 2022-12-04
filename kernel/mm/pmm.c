@@ -473,6 +473,18 @@ void pmm_init(uintptr_t max_memory) {
     pmm_max_memory = max_memory;
 
 
+
+#if DEBUG_LEVEL_TRACE
+    for(size_t i = 0; i < core->mmap.count; i++) {
+
+        kprintf("pmm: area #%zd address(0x%16lX-0x%16lX) type(%ld)\n", i, core->mmap.ptr[i].address, 
+                                                                          core->mmap.ptr[i].address + core->mmap.ptr[i].length, 
+                                                                          core->mmap.ptr[i].type);
+
+    }
+#endif
+
+
     
     for(size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
 
@@ -516,12 +528,6 @@ void pmm_init(uintptr_t max_memory) {
             continue;
 
 
-#if DEBUG_LEVEL_TRACE
-        kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
-                                                              core->mmap.ptr[i].length,
-                                                              core->mmap.ptr[i].type);
-#endif
-
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
 
     }
@@ -535,14 +541,14 @@ void pmm_init(uintptr_t max_memory) {
         uintptr_t phys = pmm_alloc_block();
 
         if(unlikely(phys == -1ULL)) {
-            kpanicf("pmm: Failed to allocate bitmap for PML2 entry %ld\n", i);
+            kpanicf("pmm: failed to allocate bitmap for PML2 entry %ld\n", i);
         }
 
 
         uintptr_t virt = arch_vmm_p2v(phys, ARCH_VMM_AREA_HEAP);
 
         if(unlikely(virt == -1ULL)) {
-            kpanicf("pmm: Failed to map bitmap for PML2 entry %ld\n", i);
+            kpanicf("pmm: failed to map bitmap for PML2 entry %ld\n", i);
         }
 
         memset((void*) virt, 0, PML1_MAX_ENTRIES * sizeof(uint64_t));
@@ -575,12 +581,6 @@ void pmm_init(uintptr_t max_memory) {
         if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE, pmm_max_memory))
             continue;
 
-
-#if DEBUG_LEVEL_TRACE
-        kprintf("mmap: address(0x%lX) size(%ld) type(%ld)\n", core->mmap.ptr[i].address,
-                                                              core->mmap.ptr[i].length,
-                                                              core->mmap.ptr[i].type);
-#endif
 
         pmm_claim_area(core->mmap.ptr[i].address, core->mmap.ptr[i].length);
 

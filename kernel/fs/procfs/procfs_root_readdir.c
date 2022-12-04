@@ -22,6 +22,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/mount.h>
 
@@ -43,7 +44,67 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
     DEBUG_ASSERT(inode->sb->root == inode);
 
+    DEBUG_ASSERT(e);
 
-    return 0;
+    if(unlikely(count == 0))
+        return 0;
+
+
+    int i = 0;
+
+    cpu_foreach(cpu) {
+
+        task_t* task = cpu->sched_queue;
+
+        for(task_t* q = cpu->sched_queue; q; q = q->next) {
+
+            if(pos-- > 0)
+                continue;
+                
+
+            e[i].d_ino    = task->tid;
+            e[i].d_off    = pos;
+            e[i].d_reclen = sizeof(struct dirent);
+            e[i].d_type   = DT_DIR;
+
+            snprintf(e->d_name, sizeof(e->d_name), "%d", task->tid);
+
+            if(++i == count)
+                return i;
+
+        }
+
+    }
+
+
+    #define __readdir(ino, type, name) do {             \
+                                                        \
+        if(pos-- > 0)                                   \
+            break;                                      \
+                                                        \
+        e[i].d_ino    = ino;                            \
+        e[i].d_off    = pos;                            \
+        e[i].d_reclen = sizeof(struct dirent);          \
+        e[i].d_type   = type;                           \
+                                                        \
+        strncpy(e[i].d_name, name, sizeof(e[i].d_name));\
+                                                        \
+        if(++i == count)                                \
+            return i;                                   \
+                                                        \
+    } while(0)
+
+
+    __readdir(INT32_MAX - 1, DT_DIR, "self");
+    // __readdir(INT32_MAX - 2, DT_REG, "cpuinfo");
+    __readdir(INT32_MAX - 3, DT_REG, "meminfo");
+    __readdir(INT32_MAX - 4, DT_REG, "uptime");
+    __readdir(INT32_MAX - 5, DT_REG, "version");
+    // __readdir(INT32_MAX - 6, DT_REG, "modules");
+    // __readdir(INT32_MAX - 7, DT_REG, "mounts");
+    __readdir(INT32_MAX - 8, DT_REG, "filesystems");
+    __readdir(INT32_MAX - 9, DT_REG, "cmdline");
+
+    return i;
 
 }

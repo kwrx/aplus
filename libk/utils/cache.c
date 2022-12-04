@@ -62,8 +62,8 @@ void cache_init(cache_t* cache, cache_ops_t* ops, void* userdata) {
     
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(ops);
-    DEBUG_ASSERT(ops->load);
-    DEBUG_ASSERT(ops->sync);
+    DEBUG_ASSERT(ops->fetch);
+    DEBUG_ASSERT(ops->commit);
 
 
     memset(cache, 0, sizeof(cache_t));
@@ -86,13 +86,13 @@ void cache_destroy(cache_t* cache) {
 
     __lock(&cache->lock, {
         
-        if(cache->ops.sync) {
+        if(cache->ops.commit) {
 
             cache_key_t key;
             cache_value_t value;
 
             hashmap_foreach(key, value, &cache->map) {
-                cache->ops.sync(cache, cache->userdata, key, value);
+                cache->ops.commit(cache, cache->userdata, key, value);
             }
 
         }
@@ -107,7 +107,7 @@ void cache_destroy(cache_t* cache) {
 }
 
 
-void cache_sync_all(cache_t* cache) {
+void cache_commit_all(cache_t* cache) {
 
     DEBUG_ASSERT(cache);
 
@@ -115,7 +115,7 @@ void cache_sync_all(cache_t* cache) {
     cache_key_t key;
 
     hashmap_foreach_key(key, &cache->map) {
-        cache_sync(cache, key);
+        cache_commit(cache, key);
     }
 
 }
@@ -135,8 +135,8 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 
         if(value == NULL) {
 
-            if(cache->ops.load) {
-                value = cache->ops.load(cache, cache->userdata, key);
+            if(cache->ops.fetch) {
+                value = cache->ops.fetch(cache, cache->userdata, key);
             }
 
             if(value != NULL) {
@@ -151,7 +151,7 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
     });
 
 
-    PANIC_ON(value != NULL && "cache: failed to load key");
+    PANIC_ON(value != NULL && "cache: failed to fetch key");
 
     return value;
 
@@ -159,7 +159,7 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 
 
 __returns_nonnull
-cache_value_t __cache_sync(cache_t* cache, cache_key_t key) {
+cache_value_t __cache_commit(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(key);
@@ -173,8 +173,8 @@ cache_value_t __cache_sync(cache_t* cache, cache_key_t key) {
 
         if(v != NULL) {
 
-            if(cache->ops.sync) {
-                value = cache->ops.sync(cache, cache->userdata, key, value);
+            if(cache->ops.commit) {
+                value = cache->ops.commit(cache, cache->userdata, key, value);
             }
 
             if(v != value) {
@@ -191,7 +191,7 @@ cache_value_t __cache_sync(cache_t* cache, cache_key_t key) {
     });
 
 
-    PANIC_ON(value != NULL && "cache: failed to sync key");
+    PANIC_ON(value != NULL && "cache: failed to commit key");
 
     return value;
 

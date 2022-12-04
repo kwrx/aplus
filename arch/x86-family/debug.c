@@ -114,22 +114,34 @@ void arch_debug_init(void) {
  * Wait and write a character on Serial Port.
  */
 void arch_debug_putc(char ch) {
+
+
+    #define com_wait() {                                                                \
+        for(int i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++) {       \
+            __builtin_ia32_pause();                                                     \
+        }                                                                               \
+    }
     
+
     if(likely(com_address)) {
 
-        int i;
-        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-            __builtin_ia32_pause();
+        com_wait();
+
+        if(unlikely(ch == '\n')) {
+
+            outb(com_address, '\r'); com_wait();
+            outb(com_address, '\n'); com_wait();
 
 
-        if(unlikely(ch == '\n'))
-            outb(com_address, '\r');
+#if defined(CONFIG_DEBUG_PRINT_TIMESTAMP)
+            // TODO: Print Timestamp on Debug Output
+#endif
 
-        outb(com_address, ch);
-
-
-        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-            __builtin_ia32_pause();
+        } else {
+                
+            outb(com_address, ch); com_wait();
+    
+        }
 
     }
 

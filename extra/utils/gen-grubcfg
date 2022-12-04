@@ -42,6 +42,9 @@ else
     EXTRA_MARGS="$3"
 fi
 
+DEFAULT_KARGS="smp=auto network=off"
+
+
 
 header() {
     echo -e "default 0"
@@ -78,15 +81,15 @@ entry() {
 }
 
 
-header                                                                                                            >  $SYSROOT/boot/grub/grub.cfg
+header                                                                                                                            >  $SYSROOT/boot/grub/grub.cfg
 
 if [ $LIVE_MODE -eq 1 ]; then
-    entry "aplus"                  "root=/dev/ram0 rootfs=iso9660 $EXTRA_KARGS"                    "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
-    entry "aplus-nographics"       "root=/dev/ram0 rootfs=iso9660 graphics=no $EXTRA_KARGS"        "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
-    entry "aplus-builtin-graphics" "root=/dev/ram0 rootfs=iso9660 graphics=builtin $EXTRA_KARGS"   "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus"                  "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS $EXTRA_KARGS"                    "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-nographics"       "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS graphics=off $EXTRA_KARGS"       "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-builtin-graphics" "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS graphics=builtin $EXTRA_KARGS"   "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
 else
-    entry "aplus"                  "root=/dev/sda2 rootfs=ext2 $EXTRA_KARGS"                       "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
-    entry "aplus-nographics"       "root=/dev/sda2 rootfs=ext2 graphics=no $EXTRA_KARGS"           "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
-    entry "aplus-builtin-graphics" "root=/dev/sda2 rootfs=ext2 graphics=builtin $EXTRA_KARGS"      "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus"                  "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS $EXTRA_KARGS"                       "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-nographics"       "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS graphics=off $EXTRA_KARGS"          "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-builtin-graphics" "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS graphics=builtin $EXTRA_KARGS"      "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
 fi
 

@@ -38,13 +38,13 @@ typedef void* cache_value_t;
 typedef void* cache_key_t;
 typedef struct cache cache_t;
 
-typedef cache_value_t (*cache_load_handler_t)(cache_t*, void*, cache_key_t);
-typedef cache_value_t (*cache_sync_handler_t)(cache_t*, void*, cache_key_t, cache_value_t);
+typedef cache_value_t (*cache_fetch_handler_t)(cache_t*, void*, cache_key_t);
+typedef cache_value_t (*cache_commit_handler_t)(cache_t*, void*, cache_key_t, cache_value_t);
 
 typedef struct cache_ops {
 
-    cache_load_handler_t load;
-    cache_sync_handler_t sync;
+    cache_fetch_handler_t fetch;
+    cache_commit_handler_t commit;
 
 } cache_ops_t;
 
@@ -65,13 +65,13 @@ __BEGIN_DECLS
 
 void cache_init(cache_t* cache, cache_ops_t* ops, void* userdata);
 void cache_destroy(cache_t* cache);
-void cache_sync_all(cache_t* cache);
+void cache_commit_all(cache_t* cache);
 
 __returns_nonnull
 cache_value_t __cache_get(cache_t* cache, cache_key_t key);
 
 __returns_nonnull
-cache_value_t __cache_sync(cache_t* cache, cache_key_t key);
+cache_value_t __cache_commit(cache_t* cache, cache_key_t key);
 
 __returns_nonnull
 cache_value_t __cache_remove(cache_t* cache, cache_key_t key);
@@ -83,10 +83,10 @@ cache_value_t __cache_remove(cache_t* cache, cache_key_t key);
         __cache_get((cache), (cache_key_t) ((uintptr_t) (__key)));      \
     })
 
-#define cache_sync(cache, key)                                          \
+#define cache_commit(cache, key)                                        \
     ({                                                                  \
         typeof(key) __key = (key);                                      \
-        __cache_sync((cache), (cache_key_t) ((uintptr_t) (__key)));     \
+        __cache_commit((cache), (cache_key_t) ((uintptr_t) (__key)));   \
     })
 
 #define cache_remove(cache, key)                                        \

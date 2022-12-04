@@ -482,8 +482,8 @@ ssize_t ext2_readdir (inode_t*, struct dirent*, off_t, size_t);
 //int ext2_unlink (inode_t*, const char*);
 
 
-struct ext2_inode* ext2_cache_load(cache_t* cache, ext2_t* ext2, ino_t ino);
-struct ext2_inode* ext2_cache_sync(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode);
+struct ext2_inode* ext2_cache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino);
+struct ext2_inode* ext2_cache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode);
 
 
 void ext2_utils_read_inode(ext2_t*, ino_t, void*);

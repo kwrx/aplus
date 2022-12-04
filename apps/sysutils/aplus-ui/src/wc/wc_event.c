@@ -32,7 +32,7 @@ int wc_event_wait(wc_event_t* type) {
     assert(evpipe[1] != -1);
 
 
-    wc_event_t buf;
+    wc_event_t buf = { 0 };
 
     if(read(evpipe[0], &buf, sizeof(wc_event_t)) < 0) {
         return -1;

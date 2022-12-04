@@ -53,7 +53,7 @@ int ext2_setattr(inode_t* inode, struct stat* st) {
     n->i_mtime = st->st_mtime;
 
     if(inode->sb->flags & MS_SYNCHRONOUS) {
-        cache_sync(&inode->sb->cache, inode->ino);
+        cache_commit(&inode->sb->cache, inode->ino);
     }
 
     return 0;

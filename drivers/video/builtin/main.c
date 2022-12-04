@@ -157,13 +157,10 @@ static void builtin_reset(device_t* device) {
 
 void init(const char* args) {
 
-    if(unlikely(!args))
+    if(strstr(core->boot.cmdline, "graphics=off"))
         return;
 
-    if(strstr(args, "graphics=no"))
-        return;
-
-    if(strstr(args, "graphics=builtin") == NULL)
+    if(strstr(core->boot.cmdline, "graphics=builtin") == NULL)
         return;
 
     if(unlikely(!core->framebuffer.address))

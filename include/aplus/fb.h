@@ -324,38 +324,5 @@ struct fb_cursor {
 #endif
 
 
-
-#if defined(KERNEL) && defined(MODULE)
-#include <aplus.h>
-#include <aplus/fb.h>
-#include <aplus/vfs.h>
-
-
-typedef struct fbdev {
-    
-    inode_t* inode;
-    char* name;
-    
-    struct fb_fix_screeninfo fs;
-    struct fb_var_screeninfo vs;
-    struct fb_cursor cursor;
-	void* userdata;
-
-    int (*init) (struct fbdev*);
-	int (*dnit) (struct fbdev*);
-	int (*update) (struct fbdev*);
-
-} fbdev_t;
-
-
-
-__BEGIN_DECLS
-
-int fbdev_register_device(fbdev_t* fbdev, char* name);
-int fbdev_unregister_device(fbdev_t* fbdev);	
-
-__END_DECLS
-
-#endif
 #endif
 #endif

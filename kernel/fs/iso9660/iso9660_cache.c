@@ -37,7 +37,7 @@
 
 
 
-iso9660_inode_t* iso9660_cache_load(cache_t* cache, iso9660_t* iso9660, size_t position) {
+iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t position) {
 
     (void) cache;
 
@@ -259,7 +259,7 @@ iso9660_inode_t* iso9660_cache_load(cache_t* cache, iso9660_t* iso9660, size_t p
 }
 
 
-iso9660_inode_t* iso9660_cache_sync(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
+iso9660_inode_t* iso9660_cache_commit(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
 
     (void) cache;
 

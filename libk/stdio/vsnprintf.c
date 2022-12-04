@@ -33,33 +33,13 @@
 
 
 __nosanitize("undefined")
-static void dec(int64_t v, size_t padding, char* buf, int* offset, bool negative, size_t size) {
-
-    switch(size) {
-
-        case 0:
-            v = (int64_t) ((int) v);
-            break;
-
-        case 1:
-            v = (int64_t) ((long) v);
-            break;
-
-        case 2:
-            v = (int64_t) ((long long) v);
-            break;
-
-        default:
-            break;
-
-    }
-
+static void dec(intmax_t __v, ssize_t padding, char* buf, int* offset, bool negative) {
 
     if(negative) {
 
-        if(v < 0LL) {
+        if(__v < 0LL) {
 
-            v = -v;
+            __v = -__v;
 
             buf[*offset + 0] = '-';
             buf[*offset + 1] = '\0';
@@ -71,8 +51,10 @@ static void dec(int64_t v, size_t padding, char* buf, int* offset, bool negative
     }
 
 
-    size_t digits   = 1;
-    size_t radix_10 = 9;
+    uintmax_t v = (uintmax_t) __v;
+
+    ssize_t digits   = 1;
+    ssize_t radix_10 = 9;
 
     while(v > radix_10) {
         digits++;
@@ -82,7 +64,7 @@ static void dec(int64_t v, size_t padding, char* buf, int* offset, bool negative
 
     if(padding > digits) {
 
-        size_t i;
+        ssize_t i;
 
         for(i = 0; i < (padding - digits); i++) {
             buf[*offset + i] = '0';
@@ -109,35 +91,83 @@ static void dec(int64_t v, size_t padding, char* buf, int* offset, bool negative
 
 
 __nosanitize("undefined")
-static void hex(unsigned long v, int w, char* buf, int* p, int upper) {
+static void hex(uintmax_t v, ssize_t padding, char* buf, int* offset, bool upper) {
     
-    long n = 1;
-    long i = 0xF;
+    ssize_t digits   = 1;
+    ssize_t radix_16 = 15;
 
-    while(v > i) {
-        n++;
-        i = (i * 0x10) + 0xF;
+    while(v > radix_16) {
+        digits++;
+        radix_16 = (radix_16 * 16) + 15;
     }
 
-    long o = 0;
-    while(n + o < w)
-        { buf[*p] = '0'; *p += 1; o++; }
+    if(padding > digits) {
 
+        ssize_t i;
 
-    i = n;
-    while(i > 0) {
+        for(i = 0; i < (padding - digits); i++) {
+            buf[*offset + i] = '0';
+        }
 
-        char t = "0123456789abcdef"[(v % 0x10)];
+        buf[*offset + i] = '\0';
 
-        if(upper && (t >= 'a' && t <= 'f'))
-            t -= 32;
-
-        buf[*p + --i] = t;
-        v /= 0x10;
+        *offset += i;
 
     }
 
-    *p += n;
+    
+    for(size_t i = digits; i > 0; i--) {
+
+        uintmax_t digit = (v % 16);
+
+        if(digit < 10)
+            buf[*offset + (i - 1)] = digit + '0';
+        else
+            buf[*offset + (i - 1)] = (upper ? 'A' : 'a') + (digit - 10);
+
+        v /= 16;
+
+    }
+
+    *offset += digits;
+
+}
+
+
+__nosanitize("undefined")
+static void oct(uintmax_t v, ssize_t padding, char* buf, int* offset) {
+    
+    ssize_t digits  = 1;
+    ssize_t radix_8 = 7;
+
+    while(v > radix_8) {
+        digits++;
+        radix_8 = (radix_8 * 8) + 7;
+    }
+
+    if(padding > digits) {
+
+        ssize_t i;
+
+        for(i = 0; i < (padding - digits); i++) {
+            buf[*offset + i] = '0';
+        }
+
+        buf[*offset + i] = '\0';
+
+        *offset += i;
+
+    }
+
+    
+    for(size_t i = digits; i > 0; i--) {
+
+        buf[*offset + (i - 1)] = (v % 8) + '0';
+        v /= 8;
+
+    }
+
+    *offset += digits;
 
 }
 
@@ -149,27 +179,31 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
     DEBUG_ASSERT(fmt);
 
     int p = 0;
-    int l = 0;
 
     for(; *fmt; fmt++) {
 
         if(p > size - 1)
             break;
 
-        if(*fmt != '%')
-            { buf[p++] = *fmt; continue; }
+        if(*fmt != '%') {
+            buf[p++] = *fmt; 
+            continue; 
+        }
 
         fmt++;
-        DEBUG_ASSERT(*fmt);
-
         
+        if(*fmt == '\0') {
+            kpanicf("vsnprintf: invalid format string '%s'\n", fmt);
+        }
+        
+
         long w = 0;
         long m = LONG_MAX;
-
+        long l = sizeof(int);
 
         if(*fmt == '*') {
 
-            w = va_arg(v, long);
+            w = va_arg(v, int);
 
             fmt++;
 
@@ -193,7 +227,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             if(*fmt == '*') {
 
-                m = va_arg(v, long);
+                m = va_arg(v, int);
 
                 fmt++;
             
@@ -216,47 +250,95 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             if(*fmt == 'z') { // size_t
                 
-                l = 1;
+                l = sizeof(size_t);
 
                 fmt++;
 
-            } else {
+            } else if(*fmt == 'j') { // intmax_t
+                
+                l = sizeof(intmax_t);
 
-                if(*fmt == 'l') { // long
+                fmt++;
+
+            } else if(*fmt == 't') { // ptrdiff_t
                     
-                    l = 1;
+                l = sizeof(ptrdiff_t);
 
+                fmt++;
+
+            } else if(*fmt == 'h') { // short
+
+                l = sizeof(short);
+
+                fmt++;
+
+                if (*fmt == 'h') { // char
+
+                    l = sizeof(char);
                     fmt++;
 
-                    if(*fmt == 'l') { // long long
-                    
-                        l = 2;
-                    
-                        fmt++;
-                    
-                    }
+                }
+
+            } else if(*fmt == 'l') { // long
+
+                l = sizeof(long);
+
+                fmt++;
+
+                if (*fmt == 'l') { // long long
+
+                    l = sizeof(long long);
+                    fmt++;
 
                 }
+
+            } else if(*fmt == 'L') { // long double
+
+                kpanicf("vsnprintf: unsupported format specifier 'L'\n");
 
             }
 
         }
 
+
         switch(*fmt) {
 
             case 's':
-                for(char* s = (char*) va_arg(v, char*); s && *s && m--; s++)
+                
+                for(char* s = va_arg(v, char*); s && *s && m--; s++) {
                     buf[p++] = *s;
+                }
 
                 break;
 
             case 'c':
-                buf[p++] = (int) va_arg(v, int);
+
+                buf[p++] = ((int8_t) va_arg(v, int));
                 break;
 
             case 'x':
             case 'X':
-                hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'X');
+
+                switch(l) {
+                    case 1: hex((uintmax_t) ((uint8_t)  va_arg(v, int)), w, buf, &p, (*fmt == 'X')); break;
+                    case 2: hex((uintmax_t) ((uint16_t) va_arg(v, int)), w, buf, &p, (*fmt == 'X')); break;
+                    case 4: hex((uintmax_t) ((uint32_t) va_arg(v, int)), w, buf, &p, (*fmt == 'X')); break;
+                    case 8: hex((uintmax_t) ((uint64_t) va_arg(v, int64_t)), w, buf, &p, (*fmt == 'X')); break;
+                    default: DEBUG_ASSERT(0); break;
+                }
+
+                break;
+
+            case 'o':
+
+                switch(l) {
+                    case 1: oct((uintmax_t) ((uint8_t)  va_arg(v, int)), w, buf, &p); break;
+                    case 2: oct((uintmax_t) ((uint16_t) va_arg(v, int)), w, buf, &p); break;
+                    case 4: oct((uintmax_t) ((uint32_t) va_arg(v, int)), w, buf, &p); break;
+                    case 8: oct((uintmax_t) ((uint64_t) va_arg(v, int64_t)), w, buf, &p); break;
+                    default: DEBUG_ASSERT(0); break;
+                }
+
                 break;
 
             case 'p':
@@ -288,35 +370,58 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
                     buf[p++] = '0';
                     buf[p++] = 'x';
-                    hex((unsigned long) va_arg(v, unsigned long), w, buf, &p, 1);
+                    hex((intmax_t) va_arg(v, void*), w, buf, &p, 1);
 
                 }
 
                 break;
 
             case 'd':
+            case 'i':
             case 'u':
-                dec((unsigned long) va_arg(v, unsigned long), w, buf, &p, *fmt == 'd', l);
+
+                switch(l) {
+                    case 1: dec((intmax_t) ((int8_t)  va_arg(v, int)), w, buf, &p, *fmt != 'u'); break;
+                    case 2: dec((intmax_t) ((int16_t) va_arg(v, int)), w, buf, &p, *fmt != 'u'); break;
+                    case 4: dec((intmax_t) ((int32_t) va_arg(v, int)), w, buf, &p, *fmt != 'u'); break;
+                    case 8: dec((intmax_t) ((int64_t) va_arg(v, int64_t)), w, buf, &p, *fmt != 'u'); break;
+                    default: DEBUG_ASSERT(0); break;
+                }
+
+                break;
+
+
+            case 'n':
+
+                switch(l) {
+                    case 1: *((int8_t*)  va_arg(v, int*)) = p; break;
+                    case 2: *((int16_t*) va_arg(v, int*)) = p; break;
+                    case 4: *((int32_t*) va_arg(v, int*)) = p; break;
+                    case 8: *((int64_t*) va_arg(v, int64_t*)) = p; break;
+                    default: DEBUG_ASSERT(0); break;
+                }
+
                 break;
 
             case '%':
+
                 buf[p++] = '%';
                 break;
 
             default:
 
-                kprintf("%s(): WARN! invalid format %c\n", __func__, *fmt);
+                kpanicf("vsnprintf: unsupported format specifier '%c'\n", *fmt);
 
                 buf[p++] = *fmt;
                 break;
 
         }
 
-        l = 0;
-
     }
 
     buf[p++] = '\0';
+
+
     return p;
 
 }

@@ -71,9 +71,9 @@ long sys_brk (unsigned long new_brk) {
 
     // TODO: Use less memory
 
-    if(new_brk & (arch_vmm_getpagesize() - 1))
+    if(new_brk & (arch_vmm_getpagesize() - 1)) {
         new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
-
+    }
 
 
     if(new_brk > current_task->userspace.end) {

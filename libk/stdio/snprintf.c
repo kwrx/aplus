@@ -36,6 +36,9 @@
 __nosanitize("undefined")
 int snprintf(char* buf, size_t size, const char* fmt, ...) {
 
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(fmt);
+
     int e;
 
     va_list v;

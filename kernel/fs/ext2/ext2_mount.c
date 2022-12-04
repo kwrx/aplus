@@ -159,8 +159,8 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     
     struct cache_ops ops;
-    ops.load = (cache_load_handler_t) ext2_cache_load;
-    ops.sync = (cache_sync_handler_t) ext2_cache_sync;
+    ops.fetch  = (cache_fetch_handler_t) ext2_cache_fetch;
+    ops.commit = (cache_commit_handler_t) ext2_cache_commit;
 
     cache_init(&dir->sb->cache, &ops, ext2);
 

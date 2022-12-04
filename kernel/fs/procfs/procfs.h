@@ -51,4 +51,8 @@ inode_t* procfs_service_uptime_inode(inode_t* parent);
 
 inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fetch) (inode_t*, char** buf, size_t*, void*), void* arg);
 
+task_t* procfs_service_pid_to_task(pid_t id);
+inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid);
+void procfs_service_pid_init(inode_t* parent);
+
 #endif

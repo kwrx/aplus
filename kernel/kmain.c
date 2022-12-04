@@ -42,11 +42,9 @@
 
 
 
-void cmain(void* arg) {
-    (void) arg;
+void cmain(void) {
 
     current_task->priority = TASK_PRIO_MIN;
-
 
     for(;;) {
 
@@ -60,20 +58,21 @@ void cmain(void* arg) {
 
 
 
-void kmain() {
+void kmain(void) {
 
+    int e = 0;
 
     __init(syscall, ());
     __init(vfs,     ());
 
 #if defined(CONFIG_HAVE_NETWORK)
-    __init(network, ());  // TODO: Rewrite network/sys.c
+    __init(network, ());
 #endif
 
 
-    int e;
-    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
+    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0) {
         kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));
+    }
 
     __init(module,  ());
     __init(root,    ());
@@ -95,8 +94,6 @@ void kmain() {
     kprintf("core: boot completed in %d ms, %d KiB of memory used\n", arch_timer_generic_getms(), pmm_get_used_memory() >> 10);
 
 
-
-    
 
     const char* __argv[2] = { "/sbin/init", NULL };
     const char* __envp[1] = { NULL };

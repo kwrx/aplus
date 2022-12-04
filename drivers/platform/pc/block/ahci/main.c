@@ -32,6 +32,7 @@
 #include <aplus/ipc.h>
 #include <aplus/smp.h>
 #include <aplus/hal.h>
+#include <aplus/endian.h>
 #include <aplus/errno.h>
 
 #include <dev/interface.h>
@@ -110,7 +111,7 @@ MODULE_LICENSE("GPL");
 #define AHCI_HBA_BOHC_OOS               (1 << 1)
 
 
-#define AHCI_PORT_IS_MASK               0x7DC000FF
+#define AHCI_PORT_IS_MASK               (0x7DC000FF)
 #define AHCI_PORT_IS_TFES               (1 << 30)
 #define AHCI_PORT_IS_HBFE               (1 << 29)
 #define AHCI_PORT_IS_HBDE               (1 << 28)
@@ -187,6 +188,7 @@ typedef struct {
 
 
 typedef volatile struct {
+
     uint8_t type;
 
     uint8_t pmport:4;
@@ -217,6 +219,7 @@ typedef volatile struct {
 
 
 typedef volatile struct {
+
     uint8_t type;
 
     uint8_t pmport:4;
@@ -246,6 +249,7 @@ typedef volatile struct {
 
 
 typedef volatile struct {
+
     uint8_t type;
 
     uint8_t pmport:4;
@@ -258,6 +262,7 @@ typedef volatile struct {
 
 
 typedef volatile struct {
+
     uint8_t type;
 
     uint8_t pmport:4;
@@ -292,6 +297,7 @@ typedef volatile struct {
 
 
 typedef volatile struct {
+
     uint8_t type;
 
     uint8_t pmport:4;
@@ -313,9 +319,10 @@ typedef volatile struct {
 
 typedef volatile struct {
     union {
+
         uint32_t dw[8];
 
-        struct {
+        volatile struct {
             uint8_t cfl:5;
             uint8_t a:1;
             uint8_t w:1;
@@ -332,6 +339,7 @@ typedef volatile struct {
             uint32_t ctba;
             uint32_t ctbau;
         };
+
     };
 } __packed hba_cmd_t;
 
@@ -378,6 +386,7 @@ typedef volatile struct {
 
 
 typedef volatile struct hba {
+
     uint32_t caps;
     uint32_t ghc;
     uint32_t is;
@@ -392,7 +401,7 @@ typedef volatile struct hba {
 
     uint8_t __padding[212];  
 
-    struct {
+    volatile struct {
 
         uint32_t clb;
         uint32_t clbu;
@@ -486,6 +495,8 @@ static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
 
 static inline void ahci_wait_io(struct ahci* ahci, int port, int channel) {
 
+    DEBUG_ASSERT(ahci);
+
     // // if(current_cpu->flags & SMP_CPU_FLAGS_INTERRUPT) {
 
         while(ahci->hba->ports[port].ci & (1 << channel))     /* Polling */
@@ -555,11 +566,12 @@ static void satapi_init(device_t* device) {
     ahci_wait_io(ahci, i, 0);
 
 
-    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
-        kpanicf("ahci: PANIC! device %d I/O Error on ATA_CMD_IDENTIFY_PACKET");
+    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES) {
+        kpanicf("ahci: PANIC! device %ld I/O Error on ATA_CMD_IDENTIFY_PACKET", i);
+    }
 
 
-    ata_identify_t identify;
+    ata_identify_t identify = { 0 };
 
     memcpy (
         &identify, 
@@ -619,14 +631,14 @@ static void satapi_init(device_t* device) {
     ahci_wait_io(ahci, i, 0);
 
 
-    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
-        kpanicf("ahci: PANIC! device %d I/O Error on ATA_CMD_PACKET (SCSI::ReadCapacity)", i);
-
+    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES) {
+        kpanicf("ahci: PANIC! device %ld I/O Error on ATA_CMD_PACKET (SCSI::ReadCapacity)", i);
+    }
 
 
     /* Update info */
-    device->blk.blkcount = __builtin_bswap32(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP)));
-    device->blk.blksize  = __builtin_bswap32(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)));
+    device->blk.blkcount = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP)));
+    device->blk.blksize  = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)));
 
     DEBUG_ASSERT(device->blk.blkcount);
     DEBUG_ASSERT(device->blk.blksize == 2048);
@@ -638,23 +650,18 @@ static void satapi_init(device_t* device) {
 
 #if DEBUG_LEVEL_TRACE
 
-    int j;
-    for(j = 0; j < 39; j += 2) {
+    for(int j = 0; j < 39; j += 2) {
         identify.model[j] ^= identify.model[j + 1];
         identify.model[j + 1] ^= identify.model[j];
         identify.model[j] ^= identify.model[j + 1];
     }
 
-    identify.model[39] = '\0';
-    identify.serial[19] = '\0';
-    identify.firmware[7] = '\0';
 
-
-    kprintf("ahci: initialize device %d:\n"
-            "   Type:       ATAPI\n"           
-            "   Model:      %s\n"
-            "   Serial:     %s\n"
-            "   Firmware:   %s\n"
+    kprintf("ahci: initialize device %ld:\n"
+            "   Type:       SATAPI\n"           
+            "   Model:      %.40s\n"
+            "   Serial:     %.20s\n"
+            "   Firmware:   %.8s\n"
             "   Sectors:    %d\n"
             "   Block:      %d\n",
         
@@ -662,8 +669,8 @@ static void satapi_init(device_t* device) {
         identify.model,
         identify.serial,
         identify.firmware,
-        __builtin_bswap32(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP))),
-        __builtin_bswap32(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)))
+        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP))),
+        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)))
     );
 #endif
 
@@ -693,7 +700,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     int b = __builtin_ffs(~s) - 1;
 
     if(b == -1) {
-        kpanicf("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
+        kpanicf("ahci: FAULT! no free command slot %X available for /dev/%.32s", s, device->name);
     }
 
 
@@ -764,7 +771,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
 #if DEBUG_LEVEL_ERROR
-        kprintf("ahci: ERROR! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: ERROR! Task File Error: %.32s::read -> cmd(%d) tfd(%p) buf(%p) offset(%ld) count(%zd)\n", device->name, b, ahci->hba->ports[d].tfd, buf, offset, count);
 #endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
@@ -816,7 +823,7 @@ static void sata_init(device_t* device) {
     memset((void*) &tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset ( (void*)
+    memset((void*)
         (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
         (0),
         512
@@ -842,9 +849,9 @@ static void sata_init(device_t* device) {
     ahci_wait_io(ahci, i, 0);
 
 
-    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES)
-        kpanicf("ahci: PANIC! device %d I/O Error on ATA_CMD_IDENTIFY", i);
-
+    if(ahci->hba->ports[i].is & AHCI_PORT_IS_TFES) {
+        kpanicf("ahci: PANIC! device %ld I/O Error on ATA_CMD_IDENTIFY", i);
+    }
 
 
     ata_identify_t identify = { 0 };
@@ -870,18 +877,14 @@ static void sata_init(device_t* device) {
         identify.model[j] ^= identify.model[j + 1];
     }
 
-    identify.model[39] = '\0';
-    identify.serial[19] = '\0';
-    identify.firmware[7] = '\0';
 
-
-    kprintf("ahci: initialize device %d:\n"
-            "   Type:       ATA\n"
-            "   Model:      %s\n"
-            "   Serial:     %s\n"
-            "   Firmware:   %s\n"
+    kprintf("ahci: initialize device %ld:\n"
+            "   Type:       SATA\n"
+            "   Model:      %.40s\n"
+            "   Serial:     %.20s\n"
+            "   Firmware:   %.8s\n"
             "   Sector28:   %d\n"
-            "   Sector48:   %d\n",
+            "   Sector48:   %lld\n",
         
         i,
         identify.model,
@@ -1004,7 +1007,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     int b = __builtin_ffs(~s) - 1;
 
     if(b == -1) {
-        kpanicf("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
+        kpanicf("ahci: FAULT! no free command slot %X available for /dev/%.32s", s, device->name);
     }
 
 
@@ -1068,7 +1071,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
 #if DEBUG_LEVEL_ERROR
-        kprintf("ahci: ERROR! Task File Error: %s::read -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: ERROR! Task File Error: %.32s::read -> cmd(%d) tfd(%p) buf(%p) offset(%ld) count(%zd)\n", device->name, b, ahci->hba->ports[d].tfd, buf, offset, count);
 #endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
@@ -1110,9 +1113,9 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
     int b = __builtin_ffs(~s) - 1;
 
-    if(b == -1)
-        kpanicf("ahci: FAULT! no free command slot %p available for /dev/%s", s, device->name);
-
+    if(b == -1) {
+        kpanicf("ahci: FAULT! no free command slot %X available for /dev/%.32s", s, device->name);
+    }
 
 
     hba_cmd_t volatile* cmd = (hba_cmd_t volatile*) (arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
@@ -1182,7 +1185,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     if(ahci->hba->ports[d].is & AHCI_PORT_IS_TFES) {
 
 #if DEBUG_LEVEL_ERROR
-        kprintf("ahci: ERROR! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%d) count(%d)\n", b, device->name, ahci->hba->ports[d].tfd,  buf, offset, count);
+        kprintf("ahci: ERROR! Task File Error: %s::write -> cmd(%d) tfd(%p) buf(%p) offset(%ld) count(%zd)\n", device->name, b, ahci->hba->ports[d].tfd,  buf, offset, count);
 #endif
 
         ahci->hba->ports[d].is |= AHCI_PORT_IS_TFES;
@@ -1286,7 +1289,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%p)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
+    kprintf("ahci: pci device found: index(%d) vendor(%x) device(%x) irq(%d) hba(%p) size(%d)\n", devices_count - 1, vid, did, ahci->irq, ahci->hba, size);
 #endif
 
 }
@@ -1309,7 +1312,7 @@ void init(const char* args) {
         ahci->contiguous_memory_area = pmm_alloc_blocks(AHCI_MEMORY_SIZE >> 12);
 
 #if DEBUG_LEVEL_TRACE
-        kprintf("ahci: contiguous memory area: address(%p) size(%p)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
+        kprintf("ahci: contiguous memory area: address(0x%lX) size(0x%X)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
 #endif
 
         
@@ -1365,7 +1368,7 @@ void init(const char* args) {
 
 #if DEBUG_LEVEL_WARN
             if((s & AHCI_PORT_STSS_SPD) != (3 << 4)) {  /* 6 Gbps */
-                kprintf("ahci: WARN! device %d has a slow interface speed: %s Gbps\n", i,
+                kprintf("ahci: WARN! device %zd has a slow interface speed: %.4s Gbps\n", i,
                             &("0\0  "
                               "1.5\0"
                               "3\0  "
@@ -1375,6 +1378,7 @@ void init(const char* args) {
 
 
             switch(m) {
+
                 case AHCI_SIG_NULL:
                 case AHCI_SIG_SEMB:
                 case AHCI_SIG_PM:
@@ -1385,7 +1389,8 @@ void init(const char* args) {
                     break;
 
                 default:
-                    kpanicf("ahci: PANIC! invalid device %d signature: %p\n", i, m);
+                    kpanicf("ahci: PANIC! invalid device %zd signature: 0x%X\n", i, m);
+
             }
 
             
@@ -1423,8 +1428,7 @@ void init(const char* args) {
 
             hba_cmd_t volatile* clbp = (hba_cmd_t volatile*) (arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
 
-            int j;
-            for(j = 0; j < 32; j++) {
+            for(int j = 0; j < 32; j++) {
                 
                 clbp[j].prdtl = 8;
                 clbp[j].ctba = AHCI_MEMORY_AREA + (40 << 10) + (i << 13) + (j << 8);

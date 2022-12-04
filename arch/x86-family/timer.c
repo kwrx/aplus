@@ -61,9 +61,9 @@
 static spinlock_t delay_lock;
 static spinlock_t rtc_lock;
 
-static uint64_t tsc_frequency;
-static uint64_t hpet_frequency;
-static uintptr_t hpet_address;
+static uint64_t tsc_frequency  = 1;
+static uint64_t hpet_frequency = 1;
+static uintptr_t hpet_address  = 0;
 
 
 
@@ -97,40 +97,37 @@ uint64_t arch_timer_gettime(void) {
         (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
         
 
-    struct tm t;
+    struct tm tm = { 0 };
     
     __lock(&rtc_lock, {
-        t.tm_sec  = BCD2BIN(RTC(0));
-        t.tm_min  = BCD2BIN(RTC(2));
-        t.tm_hour = BCD2BIN2(RTC(4));
-        t.tm_mday = BCD2BIN(RTC(7));
-        t.tm_mon  = BCD2BIN(RTC(8));
-        t.tm_year = BCD2BIN(RTC(9)) + 2000;
-        t.tm_wday = 0;
-        t.tm_yday = 0;
-        t.tm_isdst = 0;
+        tm.tm_sec  = BCD2BIN(RTC(0));
+        tm.tm_min  = BCD2BIN(RTC(2));
+        tm.tm_hour = BCD2BIN2(RTC(4));
+        tm.tm_mday = BCD2BIN(RTC(7));
+        tm.tm_mon  = BCD2BIN(RTC(8));
+        tm.tm_year = BCD2BIN(RTC(9)) + 2000;
+        tm.tm_wday = 0;
+        tm.tm_yday = 0;
+        tm.tm_isdst = 0;
     });
 
 
-    static int m[] =
-        {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    static int m[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-    uint64_t ty = t.tm_year - 1970;
+    uint64_t ty = tm.tm_year - 1970;
     uint64_t lp = (ty + 2) / 4;
     uint64_t td = 0;
 
 
-    int i;
-    for(i = 0; i < t.tm_mon - 1; i++)
+    for(int i = 0; i < tm.tm_mon - 1; i++) {
         td += m[i];
+    }
 
 
-    td += t.tm_mday - 1;
+    td += tm.tm_mday - 1;
     td = td + (ty * 365) + lp;
 
-
-    return (uint64_t) ((td * 86400) + (t.tm_hour * 3600) +
-            (t.tm_min * 60) + t.tm_sec) + 3600;
+    return (uint64_t) ((td * 86400) + (tm.tm_hour * 3600) + (tm.tm_min * 60) + tm.tm_sec) + 3600;
 
 }
 
@@ -155,7 +152,6 @@ uint64_t arch_timer_percpu_getms(void) {
 uint64_t arch_timer_percpu_getres(void) {
     return tsc_frequency * 1000;
 }
-
 
 
 uint64_t arch_timer_generic_getticks(void) {

@@ -573,8 +573,9 @@ void module_init(void) {
     }
 
 
-    list_each(m_queue, m)
+    list_each(m_queue, m) {
         module_run(m);
+    }
 
 }
 

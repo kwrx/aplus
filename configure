@@ -142,6 +142,10 @@ else
         packages="$packages binutils"
     fi
 
+    if [ "$CONFIG_HAVE_MESA" == "y" ]; then
+        packages="$packages mesa"
+    fi
+
 
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages

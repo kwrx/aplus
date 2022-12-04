@@ -34,7 +34,7 @@
 #include "ext2.h"
 
 
-struct ext2_inode* ext2_cache_load(cache_t* cache, ext2_t* ext2, ino_t ino) {
+struct ext2_inode* ext2_cache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
     struct ext2_inode* i = (struct ext2_inode*) kcalloc(sizeof(struct ext2_inode), 1, GFP_KERNEL);
 
@@ -45,7 +45,7 @@ struct ext2_inode* ext2_cache_load(cache_t* cache, ext2_t* ext2, ino_t ino) {
 }
 
 
-struct ext2_inode* ext2_cache_sync(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
+struct ext2_inode* ext2_cache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
 
     return ext2_utils_write_inode(ext2, ino, inode)
          , inode;

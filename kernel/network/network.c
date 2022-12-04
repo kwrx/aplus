@@ -54,7 +54,7 @@
 extern char* hostname;
 
 
-semaphore_t tcpip_done;
+semaphore_t tcpip_done = { 0 };
 
 
 static void tcpip_init_done(void* arg) {
@@ -63,12 +63,15 @@ static void tcpip_init_done(void* arg) {
 
 
     struct netif* lo = netif_find("lo0");
+
     if(likely(lo)) {
+
         netif_set_up(lo);
         netif_set_default(lo);
-    } else
-        kprintf("netif: WARN! Loopback interface not found\n");
 
+    } else {
+        kpanicf("network: unable to find loopback interface\n");
+    }
 
 
     ip_addr_t* dns = (ip_addr_t*) arg;
@@ -105,6 +108,7 @@ void network_init() {
 
     
     tcpip_init(&tcpip_init_done, &dns);
+
     sem_wait(&tcpip_done);
 
     kprintf("network: up!\n");

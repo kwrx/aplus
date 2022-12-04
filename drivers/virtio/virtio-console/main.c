@@ -170,7 +170,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    if(args && strstr(args, "virtio=disable"))
+    if(strstr(core->boot.cmdline, "virtio=off"))
         return;
 
     pci_scan(&pci_find, PCI_TYPE_ALL, NULL);

@@ -516,9 +516,6 @@ int virtio_pci_init(struct virtio_driver* driver) {
 
 void init(const char* args) {
 
-    if(args && strstr(args, "virtio=disable"))
-        return;
-
 }
 
 void dnit(void) {

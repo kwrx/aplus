@@ -92,6 +92,9 @@ int procfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
     dir->sb->flags |= INODE_FLAGS_DCACHE_DISABLED;
 
+
+    procfs_service_pid_init(dir);
+
     return 0;
 
 }
