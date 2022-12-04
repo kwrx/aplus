@@ -4,6 +4,7 @@
 *.o
 *.d
 *.ko
+*.ko.gz
 *.map
 *.sym
 *.iso
