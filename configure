@@ -142,6 +142,26 @@ else
         packages="$packages binutils"
     fi
 
+    if [ "$CONFIG_HAVE_GCC" == "y" ]; then
+        packages="$packages gcc"
+    fi
+
+    if [ "$CONFIG_HAVE_MPC" == "y" ]; then
+        packages="$packages mpc"
+    fi
+
+    if [ "$CONFIG_HAVE_MPFR" == "y" ]; then
+        packages="$packages mpfr"
+    fi
+
+    if [ "$CONFIG_HAVE_GMP" == "y" ]; then
+        packages="$packages gmp"
+    fi
+
+    if [ "$CONFIG_HAVE_ISL" == "y" ]; then
+        packages="$packages isl"
+    fi
+
     if [ "$CONFIG_HAVE_MESA" == "y" ]; then
         packages="$packages mesa"
     fi

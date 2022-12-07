@@ -74,13 +74,13 @@ void arch_vmm_clone(vmm_address_space_t* dest, vmm_address_space_t* src, int fla
         size += pagesize >> 12;
 
 // BUG: broken DEMAND_PAGING implementation
-// // #if defined(CONFIG_DEMAND_PAGING)
-// //         if(on_demand) {
+#if defined(CONFIG_DEMAND_PAGING)
+        if(on_demand) {
             
-// //             return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
+            return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
             
-// //         } else
-// // #endif
+        } else
+#endif
         {
             
 

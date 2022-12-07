@@ -78,7 +78,7 @@ long sys_brk (unsigned long new_brk) {
 
     if(new_brk > current_task->userspace.end) {
 
-#if defined(CONFIG_DEMAND_PAGING)
+#if defined(CONFIG_DEMAND_PAGING) && 0 // TODO: Fix demand paging on brk
         arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
                         ARCH_VMM_MAP_RDWR        |
                         ARCH_VMM_MAP_USER        |

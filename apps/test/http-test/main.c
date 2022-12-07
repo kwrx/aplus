@@ -21,7 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#if CONFIG_HAVE_NETWORK
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -116,3 +116,12 @@ int main(int argc, char** argv) {
     return 0;
     
 }
+
+#else
+
+int main(int argc, char** argv) {
+    fprintf(stderr, "Network support not enabled\n");
+    return 1;
+}
+
+#endif
