@@ -146,22 +146,31 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     __lock(&rb->lock, {
 
-        if(ringbuffer_writeable(rb) < size) {
-            
-            errno = EINTR;
-        
+        if(unlikely(rb->buffer == NULL)) {
+
+            errno = EIO;
+
         } else {
 
-            for(size_t i = 0; i < size; i++) {
-                
-                rb->buffer[rb->head] = ((uint8_t*) buf) [i];
 
-                rb->head = (rb->head + 1) % rb->size;
-                rb->full = (rb->head == rb->tail);
+            if(ringbuffer_writeable(rb) < size) {
+                
+                errno = EINTR;
+            
+            } else {
+
+                for(size_t i = 0; i < size; i++) {
+                    
+                    rb->buffer[rb->head] = ((uint8_t*) buf) [i];
+
+                    rb->head = (rb->head + 1) % rb->size;
+                    rb->full = (rb->head == rb->tail);
+
+                }
+
+                e = size;
 
             }
-
-            e = size;
 
         }
 
@@ -182,24 +191,32 @@ ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
         
     __lock(&rb->lock, {
 
-        if(ringbuffer_is_empty(rb)) {
+        if(unlikely(rb->buffer == NULL)) {
 
-            errno = EINTR;
-        
+            errno = EIO;
+
         } else {
 
-            size_t i = 0;
+            if(ringbuffer_is_empty(rb)) {
 
-            for(; i < size && !ringbuffer_is_empty(rb); i++) {        
+                errno = EINTR;
+            
+            } else {
 
-                ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
+                size_t i = 0;
 
-                rb->full = 0;
-                rb->tail = (rb->tail + 1) % rb->size;
+                for(; i < size && !ringbuffer_is_empty(rb); i++) {        
+
+                    ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
+
+                    rb->full = 0;
+                    rb->tail = (rb->tail + 1) % rb->size;
+
+                }
+
+                e = i;
 
             }
-
-            e = i;
 
         }
 

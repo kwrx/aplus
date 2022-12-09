@@ -33,8 +33,7 @@
 #include <aplus/utils/cache.h>
 
 
-#define TMPFS_SIZE_MAX          (4 * 1024 * 1024)
-#define TMPFS_NODES_MAX         (4096)
+#define TMPFS_NODES_MAX         (8192)
 
 
 typedef struct {

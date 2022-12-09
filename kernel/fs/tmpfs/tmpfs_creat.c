@@ -46,11 +46,10 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
 
     static ino_t next_ino = 1;
 
-
-    if(inode->sb->st.f_ffree == 0)
+    if(unlikely(inode->sb->st.f_ffree == 0)) {
         return errno = ENOSPC, NULL;
+    }
 
-    
 
     tmpfs_inode_t* i = (tmpfs_inode_t*) cache_get(&inode->sb->cache, ++next_ino);
 

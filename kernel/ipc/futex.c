@@ -47,9 +47,9 @@ void futex_rt_unlock() {
 }
 
 #if DEBUG_LEVEL_TRACE
-void __futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
+void __futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
 #else
-void futex_wait(task_t* task, uint32_t* kaddr, uint32_t value, const struct timespec* utime) {
+void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime) {
 #endif
 
     DEBUG_ASSERT(task);

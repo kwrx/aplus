@@ -55,7 +55,7 @@ void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
         kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
 
     if(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
-        kpanicf("%s() FAIL! vfs_read() errno(%s)", __func__, strerror(errno));
+        kpanicf("%s() FAIL! vfs_read() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
         
 }
 
@@ -76,7 +76,7 @@ void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const
         kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
 
     if(vfs_write(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
-        kpanicf("%s() FAIL! vfs_read() errno(%s)", __func__, strerror(errno));
+        kpanicf("%s() FAIL! vfs_read() errno(%s) on writing %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
 
 }
 

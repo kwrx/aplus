@@ -135,8 +135,27 @@ int vfs_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
 
-    if(likely(inode->ops.close))
-        __lock_return(&inode->lock, int, inode->ops.close(inode));
+    if(likely(inode->ops.close)) {
+
+        __lock_return(&inode->lock, int, ({
+            
+            int e = inode->ops.close(inode); 
+
+    
+            if(inode->ev.events) {
+
+                inode->ev.events  = 0;
+                inode->ev.revents = POLLHUP;
+
+                __atomic_store_n(&inode->ev.futex, 1, __ATOMIC_SEQ_CST);
+
+            }
+
+            e;
+
+        }));
+
+    }
 
     return errno = ENOSYS, -1;
 
@@ -275,8 +294,8 @@ ssize_t vfs_read (inode_t* inode, void* buf, off_t off, size_t size) {
 
             if(inode->ev.events & POLLOUT) {
 
-                inode->ev.revents |= POLLOUT;
-                inode->ev.futex   |= 1;
+                __atomic_fetch_or(&inode->ev.revents, POLLOUT, __ATOMIC_SEQ_CST);
+                __atomic_fetch_or(&inode->ev.futex,         1, __ATOMIC_SEQ_CST);
 
             }
 
@@ -306,8 +325,8 @@ ssize_t vfs_write (inode_t* inode, const void* buf, off_t off, size_t size) {
 
             if(inode->ev.events & POLLIN) {
 
-                inode->ev.revents |= POLLIN;
-                inode->ev.futex   |= 1;
+                __atomic_fetch_or(&inode->ev.revents, POLLIN, __ATOMIC_SEQ_CST);
+                __atomic_fetch_or(&inode->ev.futex,        1, __ATOMIC_SEQ_CST);
 
             }
 
@@ -510,8 +529,14 @@ int vfs_unlink (inode_t* inode, const char* name) {
 
         __lock(&inode->lock, {
             
-            if((r = inode->ops.unlink(inode, name)) == 0)
-                vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
+            if((r = inode->ops.unlink(inode, name)) == 0) {
+
+                if(!(inode->flags & INODE_FLAGS_DCACHE_DISABLED)) {
+
+                    vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
+
+                }
+            }
         
         });
 

@@ -70,8 +70,14 @@ int pipefs_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
+
+
+    inode->ops.read  = NULL;
+    inode->ops.write = NULL;
+    inode->ops.close = NULL;
     
     ringbuffer_destroy((ringbuffer_t*) inode->userdata);
+
     return 0;
 
 }
@@ -142,7 +148,7 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(bufsize);
 
-    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, sizeof(ringbuffer_t));
+    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
    
     if(unlikely(!rb))
         return errno = ENOMEM, NULL;
@@ -164,7 +170,7 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 
 inode_t* pipefs_inode() {
 
-    inode_t* inode = kcalloc(sizeof(inode_t), 1, sizeof(inode_t));
+    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
     if(unlikely(!inode))
         return errno = ENOMEM, NULL;

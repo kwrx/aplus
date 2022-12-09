@@ -62,7 +62,9 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
 
         if(pos + len > i->capacity) {
 
-            i->capacity = CONFIG_BUFSIZ + pos + len;
+            i->capacity = pos + len;
+            i->capacity = i->capacity + (i->capacity / 2);
+
             i->data = krealloc(i->data, i->capacity, GFP_USER);
         
         }

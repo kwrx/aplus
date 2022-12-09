@@ -60,6 +60,8 @@
 #define INODE_FLAGS_DCACHE_DISABLED         0x00000001
 
 
+#define MODE_2_DIRENT_TYPE(mode)            ((mode & S_IFMT) >> 12)
+
 
 typedef struct inode inode_t;
 
@@ -116,7 +118,7 @@ struct inode {
     struct {
         short events;
         short revents;
-        uint32_t futex;
+        volatile uint32_t futex;
     } ev;
 
     HASHMAP(char, inode_t) dcache;
@@ -213,8 +215,14 @@ void rootfs_init(void);
 // kernel/fs/fd.c
 void fd_init(void);
 void fd_ref(struct file*);
-void fd_remove(struct file*, int);
+void fd_remove(struct file*, bool);
 struct file* fd_append(inode_t*, off_t, int);
+
+
+// kernel/fs/path.c
+inode_t* path_follows(inode_t*, size_t);
+inode_t* path_lookup(inode_t*, const char*, int, mode_t);
+
 
 __END_DECLS
 

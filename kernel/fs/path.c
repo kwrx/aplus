@@ -25,7 +25,10 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
-#include <poll.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -34,109 +37,122 @@
 #include <aplus/errno.h>
 
 
-static struct file* filetable = NULL;
-static spinlock_t filetable_lock;
 
-static int lowestfree = 0;
+static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(path);
+    DEBUG_ASSERT(size);
+
+
+    char s[size + 1]; 
+    memset(s, 0, size + 1);
+
+    strncpy(s, path, size);
+
+
+    if((inode = vfs_finddir(inode, s)) == NULL)
+        return NULL;
+
+    struct stat st;
+    if(vfs_getattr(inode, &st) < 0)
+        return NULL;
+
+
+    if(S_ISLNK(st.st_mode))
+        inode = path_follows(inode, st.st_size);
+
+    return inode;
+    
+}
 
 
 
-void fd_init(void) {
+inode_t* path_follows(inode_t* inode, size_t size) {
 
-    filetable = (struct file*) kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
-    lowestfree = 0;
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(size);
 
-    spinlock_init(&filetable_lock);
+
+    char s[size + 1];
+    memset(s, 0, size + 1);
+
+    if(vfs_readlink(inode, s, size) <= 0)
+        return NULL;
+
+    return path_lookup(inode->parent, s, O_RDONLY, 0);
 
 }
 
 
-struct file* fd_append(inode_t* inode, off_t position, int status) {
 
-    DEBUG_ASSERT(filetable);
-    DEBUG_ASSERT(inode);
+inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
-
-    int i = CONFIG_FILE_MAX;
-
-    __lock(&filetable_lock, {
-
-        for(i = lowestfree; i < CONFIG_FILE_MAX; i++) {
-
-            if(filetable[i].refcount > 0)
-                continue;
+    DEBUG_ASSERT(cwd);
+    DEBUG_ASSERT(path);
 
 
-            lowestfree = i + 1;
+    inode_t* c;
 
-            filetable[i].refcount = 1;
-            break;
+    if(path[0] == '/')
+        { c = current_task->fs->root; path++; }
+    else
+        c = cwd;
 
-        }
-
-    });
+    DEBUG_ASSERT(c);
 
 
-    if(i == CONFIG_FILE_MAX) {
-        return errno = ENFILE, NULL;
+    while(path[0] == '/') {
+        path++;
+    }
+
+    while(strchr(path, '/') && c) {
+         
+        c = path_find(c, path, strcspn(path, "/")); 
+        path = strchr(path, '/') + 1;
+
+        while(path[0] == '/')
+            path++;
+    
     }
 
 
-
-    filetable[i].inode      = inode;
-    filetable[i].position   = position;
-    filetable[i].status     = status;
+    if(unlikely(!c)) {
+        return errno = ENOENT, NULL;
+    }
     
-    spinlock_init(&filetable[i].lock);
+    inode_t* r;
+
+    if(path[0] != '\0')
+        r = path_find(c, path, strlen(path));
+    else
+        r = c;
 
 
-    return &filetable[i];
-
-}
-
-
-void fd_remove(struct file* fd, bool close) {
-
-    DEBUG_ASSERT(fd);
-    DEBUG_ASSERT(filetable);
-
-
-    __lock(&filetable_lock, {
-
-        if(--fd->refcount == 0) {
-
-            if (close) {
-                vfs_close(fd->inode);
+    if(unlikely(!r)) {
+        
+        if(flags & O_CREAT) {
+        
+            if((mode & S_IFMT) == 0) {
+                mode |= S_IFREG;
             }
 
-            fd->inode    = NULL;
-            fd->position = 0;
-            fd->status   = 0;
+            r = vfs_creat(c, path, mode);
 
-
-            int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
-            
-            DEBUG_ASSERT(i <= CONFIG_FILE_MAX - 1);
-            DEBUG_ASSERT(i >= 0);
-
-            if (i < lowestfree) {
-                lowestfree = i;
-            }
-
+            if(unlikely(!r))
+                return NULL;
+        
+        } else {
+            return errno = ENOENT, NULL;
         }
+
+    } else {
+     
+        if((flags & O_EXCL) && (flags & O_CREAT))
+            return errno = EEXIST, NULL;
     
-    });
+    }
 
-}
-
-
-void fd_ref(struct file* file) {
-
-    DEBUG_ASSERT(file);
-    DEBUG_ASSERT(filetable);
-
-    __lock(&filetable_lock, {
-        file->refcount++;
-    });
+    return r;
 
 }

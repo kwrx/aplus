@@ -85,7 +85,7 @@ long sys_close (unsigned int fd) {
 
         __lock(&current_task->lock, {
             
-            fd_remove(current_task->fd->descriptors[fd].ref, 1);
+            fd_remove(current_task->fd->descriptors[fd].ref, true);
 
             current_task->fd->descriptors[fd].ref = NULL;
             current_task->fd->descriptors[fd].flags = 0;

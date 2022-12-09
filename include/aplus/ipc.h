@@ -131,7 +131,7 @@ void __spinlock_lock(spinlock_t*, const char*, const char*, int);
 void __spinlock_unlock(spinlock_t*, const char*, const char*, int);
 void __sem_wait(semaphore_t*, const char*, const char*, int);
 
-void __futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*, const char*, const char*, int);
+void __futex_wait(struct task*, volatile uint32_t*, uint32_t, const struct timespec*, const char*, const char*, int);
 
 
 #define spinlock_init(spin)                                                     \

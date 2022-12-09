@@ -46,7 +46,8 @@ struct kmalloc_header {
     union {
         struct {
             char magic[4];
-            uint32_t size;
+            uint32_t blocks;
+            uint64_t size;
         };
 
         uint64_t __padding[2];
@@ -63,7 +64,10 @@ __alloc_size(1)
 void* kmalloc(size_t size, int gfp) {
 
     DEBUG_ASSERT(size);
+    DEBUG_ASSERT(gfp == GFP_KERNEL || gfp == GFP_ATOMIC || gfp == GFP_USER);
 
+
+    size_t data_size = size;
 
     size += sizeof(struct kmalloc_header);
 
@@ -88,7 +92,8 @@ void* kmalloc(size_t size, int gfp) {
     h->magic[2] = 'E';
     h->magic[3] = 'D';
 
-    h->size = (size / PML1_PAGESIZE);
+    h->blocks = (size / PML1_PAGESIZE);
+    h->size   = (data_size);
 
 
     return (void*) &h->ptr;
@@ -133,7 +138,7 @@ void* krealloc(void* address, size_t size, int gfp) {
         if(unlikely(!p))
             return NULL;
 
-        memcpy(p, address, PTR_TO_HEADER(address)->size);
+        memcpy(p, PTR_TO_HEADER(address)->ptr, PTR_TO_HEADER(address)->size);
         
         kfree(address);
 
@@ -152,14 +157,14 @@ void kfree(void* address) {
     DEBUG_ASSERT(memcmp(PTR_TO_HEADER(address)->magic, "USED", 4) == 0);
 
 
-    heap_used_memory -= PTR_TO_HEADER(address)->size;
+    heap_used_memory -= PTR_TO_HEADER(address)->blocks;
 
     PTR_TO_HEADER(address)->magic[0] = 'F';
     PTR_TO_HEADER(address)->magic[1] = 'R';
     PTR_TO_HEADER(address)->magic[2] = 'E';
     PTR_TO_HEADER(address)->magic[3] = 'E';
 
-    pmm_free_blocks(arch_vmm_v2p((uintptr_t) PTR_TO_HEADER(address), ARCH_VMM_AREA_HEAP), PTR_TO_HEADER(address)->size);
+    pmm_free_blocks(arch_vmm_v2p((uintptr_t) PTR_TO_HEADER(address), ARCH_VMM_AREA_HEAP), PTR_TO_HEADER(address)->blocks);
 
 }
 

@@ -68,6 +68,9 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
     if(unlikely(size == 0))
         return 0;
 
+    if(unlikely(!buf))
+        return -EINVAL;
+
     if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
 
@@ -111,8 +114,6 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
 
 
-
-
         ssize_t e = 0;
 
 
@@ -147,7 +148,7 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
 
 #if DEBUG_LEVEL_TRACE
-                kprintf("write: task %d waiting for POLLOUT event\n", current_task->tid);
+                kprintf("read: task %d waiting for POLLOUT event on fd %d (node->name: '%s')\n", current_task->tid, fd, current_task->fd->descriptors[fd].ref->inode->name);
 #endif
 
                 thread_suspend(current_task);

@@ -80,17 +80,17 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                         break;
 
 
-                    e->d_ino = d->inode;
-                    e->d_off = i;
+                    e->d_ino    = d->inode;
+                    e->d_off    = entries;
                     e->d_reclen = sizeof(struct dirent);
-                    e->d_type = 0;
-                    e->d_name[d->name_len] = '\0';
+                    e->d_type   = 0;
                     
                     strncpy(e->d_name, d->name, d->name_len);
 
 
-                    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+                    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
                         e->d_type = d->file_type;
+                    }
 
 
                     e++;

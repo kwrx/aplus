@@ -27,12 +27,16 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+
+extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
 
 
 /***
@@ -51,6 +55,78 @@
  */
 
 SYSCALL(267, readlinkat,
-long sys_readlinkat (int dfd, const char __user * path, char __user * buf, int bufsiz) {
-    return -ENOSYS;
+long sys_readlinkat (int dfd, const char __user * path, char __user * buf, int size) {
+   
+    DEBUG_ASSERT(current_task);
+
+    current_task->iostat.rchar += (uint64_t) size;
+    current_task->iostat.syscr += 1;
+
+    
+    if(unlikely(size == 0))
+        return 0;
+
+    if(unlikely(size < 0))
+        return -EINVAL;
+
+    if(unlikely(!buf))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(!path))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(path, R_OK)))
+        return -EFAULT;
+
+
+    int fd = -1;
+
+    if((fd = sys_openat(dfd, path, O_RDONLY | O_NOFOLLOW, 0)) < 0)
+        return fd;
+
+    
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+
+    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+
+    struct stat st;
+
+    if(unlikely(vfs_getattr(inode, &st) < 0))
+        return -EIO;
+    
+    if(unlikely(!S_ISLNK(st.st_mode)))
+        return -EINVAL;
+
+
+
+    ssize_t e = 0;
+
+
+    uio_lock(buf, size);
+
+    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+
+        if((e = vfs_readlink(current_task->fd->descriptors[fd].ref->inode, buf, size)) <= 0)
+            break;
+
+        current_task->iostat.read_bytes += (uint64_t) e;
+        
+    });
+
+    uio_unlock(buf, size);
+
+
+    if(e < 0)
+        return -errno;
+
+    return e; 
+
 });

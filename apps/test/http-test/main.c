@@ -119,6 +119,8 @@ int main(int argc, char** argv) {
 
 #else
 
+#include <stdio.h>
+
 int main(int argc, char** argv) {
     fprintf(stderr, "Network support not enabled\n");
     return 1;

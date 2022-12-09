@@ -126,9 +126,17 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 #if DEBUG_LEVEL_TRACE
-    uio_lock(filename, CONFIG_PATH_MAX);
-    kprintf("execve(): filename: %s\n", filename);
-    uio_unlock(filename, CONFIG_PATH_MAX);
+    uio_lock(filename, CONFIG_PATH_MAX); {
+    
+        kprintf("execve(): filename: '%s'\n", filename);
+
+        for(size_t i = 0; argv[i]; i++)
+            kprintf("execve(): argv[%zd]: '%s'\n", i, argv[i]);
+
+        for(size_t i = 0; envp[i]; i++)
+            kprintf("execve(): envp[%zd]: '%s'\n", i, envp[i]);
+
+    } uio_unlock(filename, CONFIG_PATH_MAX);
 #endif
 
 
@@ -155,9 +163,18 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
         return fd;
 
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
+    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+
+
+    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
 
     Elf_Ehdr head;
-    if((e = sys_read(fd, &head, sizeof(head))) < 0)
+    if((e = vfs_read(inode, &head, 0, sizeof(head))) < 0)
         return e;
 
 
@@ -250,20 +267,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     do_unshare(CLONE_VM);
 
 
-    #define RXX(a, b, c, d) {                                               \
-        if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
-            return e;                                                       \
-                                                                            \
-        if((e = sys_read(fd, (void*)(a), (size_t)(c))) != (size_t)(c)) {    \
-            if(e < 0)                                                       \
-                return e;                                                   \
-            else                                                            \
-                return -EIO;                                                \
-        }                                                                   \
-        if((size_t) (d) - (size_t) (c)) {                                   \
-            memset((void*)((size_t) (a) + (size_t) (c)), 0,                 \
-                   (size_t) (d) - (size_t) (c));                            \
-        }                                                                   \
+    #define RXX(a, b, c, d) {                                                               \
+                                                                                            \
+        if((e = vfs_read(inode, (void*)(a), (off_t) (b), (size_t)(c))) != (size_t)(c)) {    \
+            if(e < 0)                                                                       \
+                return -errno;                                                              \
+            else                                                                            \
+                return -EIO;                                                                \
+        }                                                                                   \
+                                                                                            \
+        if((size_t) (d) - (size_t) (c)) {                                                   \
+            memset((void*)((size_t) (a) + (size_t) (c)), 0,                                 \
+                   (size_t) (d) - (size_t) (c));                                            \
+        }                                                                                   \
+                                                                                            \
     }
 
 
@@ -283,10 +300,11 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         current_task->userspace.end   =  0UL;
 
 
-        int i;
-        for(i = 0; i < head.e_phnum; i++) {
+        DEBUG_ASSERT(head.e_phnum > 0);
 
-            Elf_Phdr phdr;
+        for(size_t i = 0; i < head.e_phnum; i++) {
+
+            Elf_Phdr phdr = { 0 };
             RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize, head.e_phentsize);
 
 
@@ -320,8 +338,8 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
                     arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
-                                    ARCH_VMM_MAP_RDWR       |
-                                    ARCH_VMM_MAP_TYPE_PAGE);
+                                  ARCH_VMM_MAP_RDWR       |
+                                  ARCH_VMM_MAP_TYPE_PAGE);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -340,8 +358,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     continue;
 
                 case PT_GNU_EH_FRAME:
-                    
+
+#if DEBUG_LEVEL_WARN               
                     kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
+#endif
                     break;
 
                 case PT_DYNAMIC:
@@ -350,6 +370,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     break;
 
                 default:
+
+#if DEBUG_LEVEL_WARN
+                    kprintf("sys_execve: WARN! unknown phdr.p_type at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+#endif
                     continue;
 
             }
@@ -363,9 +387,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     DEBUG_ASSERT(current_task->userspace.start);
     DEBUG_ASSERT(current_task->userspace.end);
     DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
-    sys_close(fd);
 
 
 
@@ -376,7 +397,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
         if(!current_task->fd->descriptors[i].close_on_exec)
             continue;
-
         
         sys_close(i);
 

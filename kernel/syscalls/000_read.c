@@ -69,6 +69,9 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
     if(unlikely(size == 0))
         return 0;
 
+    if(unlikely(!buf))
+        return -EINVAL;
+
     if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
@@ -144,7 +147,7 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
 
 #if DEBUG_LEVEL_TRACE
-                kprintf("read: task %d waiting for POLLIN event\n", current_task->tid);
+                kprintf("read: task %d waiting for POLLIN event on fd %d (node->name: '%s')\n", current_task->tid, fd, current_task->fd->descriptors[fd].ref->inode->name);
 #endif
 
                 thread_suspend(current_task);

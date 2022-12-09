@@ -101,10 +101,10 @@ ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t coun
                 goto next;
             
 
-            e[index].d_ino = child->st.st_ino;
-            e[index].d_off = pos;
+            e[index].d_ino    = child->st.st_ino;
+            e[index].d_off    = index;
             e[index].d_reclen = sizeof(struct dirent);
-            e[index].d_type = child->st.st_mode & S_IFMT;
+            e[index].d_type   = MODE_2_DIRENT_TYPE(child->st.st_mode);
 
             strncpy(e[index].d_name, child->name, sizeof(e[index].d_name));
 

@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -34,6 +35,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+
+extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
+extern long sys_fchmod (unsigned int fd, mode_t mode);
 
 /***
  * Name:        fchmodat
@@ -51,5 +55,29 @@
 
 SYSCALL(268, fchmodat,
 long sys_fchmodat (int dfd, const char __user * filename, mode_t mode) {
-    return -ENOSYS;
+    
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(filename, R_OK)))
+        return -EFAULT;
+
+
+    int fd = -1;
+    int e  = -1;
+
+    if((fd = sys_openat(dfd, filename, O_RDONLY, 0)) < 0)
+        return fd;
+
+    e = sys_fchmod(fd, mode);
+
+    if((fd = sys_close(fd)) < 0)
+        return fd;
+
+
+    if(e < 0)
+        return -errno;
+
+    return e;
+
 });

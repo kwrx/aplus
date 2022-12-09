@@ -69,12 +69,13 @@ long sys_pipe2 (int __user * fildes, int flags) {
 
 
 
-    struct file* ref;
+    struct file* refs[2];
 
-    if((ref = fd_append(inode, 0, 0)) == NULL)
+    if((refs[0] = fd_append(inode, 0, 0)) == NULL)
         return -ENFILE;
 
-    fd_ref(ref);
+    if((refs[1] = fd_append(inode, 0, 0)) == NULL)
+        return -ENFILE;
 
 
     for(size_t i = 0; i < 2; i++) {
@@ -94,7 +95,7 @@ long sys_pipe2 (int __user * fildes, int flags) {
                 break;
 
             
-            current_task->fd->descriptors[fd].ref = ref;
+            current_task->fd->descriptors[fd].ref = refs[i];
             current_task->fd->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);            
 
         });
@@ -108,6 +109,11 @@ long sys_pipe2 (int __user * fildes, int flags) {
         DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
         DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
         DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+
+
+#if DEBUG_LEVEL_TRACE
+        kprintf("pipe2: assign fd[%zd] = %d (flags: %o)\n", i, fd, flags);
+#endif
 
 
         uio_w32(&fildes[i], fd);

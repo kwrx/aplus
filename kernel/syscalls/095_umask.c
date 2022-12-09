@@ -49,5 +49,15 @@
 
 SYSCALL(95, umask,
 long sys_umask (int mask) {
-    return -ENOSYS;
+    
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->fs);
+
+
+    mode_t old = current_task->fs->umask;
+
+    current_task->fs->umask = mask & 0777;
+
+    return old;
+
 });

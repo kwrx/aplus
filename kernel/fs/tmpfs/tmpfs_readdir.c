@@ -35,6 +35,30 @@
 #include "tmpfs.h"
 
 
+static inode_t** __next_entry(list(inode_t*, children), inode_t* parent, inode_t** curr) {
+
+    if(curr == NULL) {
+
+        curr = list_elem_front(children);
+
+    } else {
+
+        curr = list_elem_next(curr);
+
+    }
+
+    while(curr && (*curr)->parent != parent) {
+
+        curr = list_elem_next(curr);
+
+        if(curr == NULL)
+            return NULL;
+
+    }
+
+    return curr;
+
+}
 
 
 ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
@@ -50,30 +74,94 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
         return 0;
  
 
-    tmpfs_t* tmpfs = (tmpfs_t*) inode->sb->fsinfo;
+    tmpfs_t*  tmpfs = (tmpfs_t*) inode->sb->fsinfo;
+    inode_t** entry = NULL;
 
 
-    int i = 0;
+    if(pos > 1) {
 
-    list_each(tmpfs->children, d) {
+        for(off_t i = 1; i < pos; i++) {
 
-        if(d->parent != inode)
-            continue;
+            entry = __next_entry(tmpfs->children, inode, entry);
 
-        if(pos-- > 0)
-            continue;
+            if(entry == NULL)
+                return 0;
+
+        }
+
+    }
 
 
-        tmpfs_inode_t* c = cache_get(&inode->sb->cache, d->ino);
+    off_t i = 0;
 
-        e[i].d_ino = c->st.st_ino;
-        e[i].d_off = pos;
-        e[i].d_reclen = sizeof(struct dirent);
-        e[i].d_type = c->st.st_mode >> 12; /* FIXME: find a better way */
-        strncpy(e[i].d_name, d->name, sizeof(e[i].d_name));
+    for(off_t j = pos; j < pos + count; j++, i++) {
 
-        if(++i == count)
-            break;
+        switch(j) {
+
+            case 0: {
+
+                struct stat st = { 0 };
+                
+                if(inode->ops.getattr) {
+                    inode->ops.getattr(inode, &st);
+                }
+
+                e[i].d_ino    = inode->ino;
+                e[i].d_off    = i;
+                e[i].d_reclen = sizeof(struct dirent);
+                e[i].d_type   = MODE_2_DIRENT_TYPE(st.st_mode);
+
+                strncpy(e[i].d_name, ".", sizeof(e[i].d_name));
+
+                break;
+
+            }
+
+            case 1: {    
+                
+                DEBUG_ASSERT(inode->parent);
+
+                struct stat st = { 0 };
+
+                if(inode->parent->ops.getattr) {
+                    inode->parent->ops.getattr(inode->parent, &st);
+                }
+
+                e[i].d_ino    = inode->parent->ino;
+                e[i].d_off    = i;
+                e[i].d_reclen = sizeof(struct dirent);
+                e[i].d_type   = MODE_2_DIRENT_TYPE(st.st_mode);
+
+                strncpy(e[i].d_name, "..", sizeof(e[i].d_name));
+
+                break;
+
+            }
+
+            default: {
+
+                if(unlikely(!entry))
+                    return i;
+
+
+                tmpfs_inode_t* c = cache_get(&inode->sb->cache, (*entry)->ino);
+
+                e[i].d_ino    = c->st.st_ino;
+                e[i].d_off    = i;
+                e[i].d_reclen = sizeof(struct dirent);
+                e[i].d_type   = MODE_2_DIRENT_TYPE(c->st.st_mode);
+
+                strncpy(e[i].d_name, (*entry)->name, sizeof(e[i].d_name));
+
+
+                entry = __next_entry(tmpfs->children, inode, entry);
+
+                break;
+
+            }
+
+
+        }
 
     }
 

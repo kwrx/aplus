@@ -35,6 +35,9 @@
 #include <sys/stat.h>
 
 
+extern long sys_fchmodat(int, const char __user *, mode_t);
+
+
 /***
  * Name:        chmod
  * Description: change permissions of a file
@@ -50,5 +53,5 @@
 
 SYSCALL(90, chmod,
 long sys_chmod (const char __user * filename, mode_t mode) {
-    return -ENOSYS;
+    return sys_fchmodat(AT_FDCWD, filename, mode);
 });
