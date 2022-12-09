@@ -149,8 +149,8 @@ MODULE_LICENSE("GPL");
 #define AHCI_SIG_PM                     (0x96690101)
 
 
-#define AHCI_MEMORY_SIZE                (1024 * 1024)
-#define AHCI_MEMORY_IOCACHE             ( 512 * 1024)   /* 16 KiB for each device */
+#define AHCI_MEMORY_SIZE                (1024 * 1024 * 5)
+#define AHCI_MEMORY_IOCACHE             ( 512 * 1024)   /* 128 KiB for each device (4MiB at <AHCI_MEMORY_AREA+512KiB>) */
 
 #define AHCI_MEMORY_AREA                (ahci->contiguous_memory_area)
 #define AHCI_MAX_DEVICES                (32)
@@ -532,7 +532,7 @@ static void satapi_init(device_t* device) {
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i = 1;
 
@@ -541,7 +541,7 @@ static void satapi_init(device_t* device) {
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         512
     );
@@ -575,7 +575,7 @@ static void satapi_init(device_t* device) {
 
     memcpy (
         &identify, 
-        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
+        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         sizeof(identify)
     );
 
@@ -589,7 +589,7 @@ static void satapi_init(device_t* device) {
     cmd->a = 1;
     cmd->prdtl = 1;
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 2048 - 1;
     tbl->prdt[0].i = 1;
 
@@ -598,7 +598,7 @@ static void satapi_init(device_t* device) {
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         2048
     );
@@ -637,14 +637,14 @@ static void satapi_init(device_t* device) {
 
 
     /* Update info */
-    device->blk.blkcount = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP)));
-    device->blk.blksize  = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)));
+    device->blk.blkcount = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP)));
+    device->blk.blksize  = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP)));
 
     DEBUG_ASSERT(device->blk.blkcount);
     DEBUG_ASSERT(device->blk.blksize == 2048);
 
 
-    device->blk.blkmax = (16 * 1024) / device->blk.blksize;
+    device->blk.blkmax = (1 << 17) / device->blk.blksize;   /* 128 KiB */
 
 
 
@@ -669,8 +669,8 @@ static void satapi_init(device_t* device) {
         identify.model,
         identify.serial,
         identify.firmware,
-        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 0, ARCH_VMM_AREA_HEAP))),
-        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4) + 4, ARCH_VMM_AREA_HEAP)))
+        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP))),
+        be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP)))
     );
 #endif
 
@@ -684,6 +684,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
+    DEBUG_ASSERT(count <= 64);
 
 
     struct ahci* ahci = (struct ahci*) device->userdata;
@@ -715,7 +716,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 11) - 1;
     tbl->prdt[0].i = 1;
 
@@ -724,7 +725,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         (count << 11)
     );
@@ -781,7 +782,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
     memcpy (
         buf, 
-        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         count << 11
     );
 
@@ -815,7 +816,7 @@ static void sata_init(device_t* device) {
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i = 1;
 
@@ -824,7 +825,7 @@ static void sata_init(device_t* device) {
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset((void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         512
     );
@@ -858,7 +859,7 @@ static void sata_init(device_t* device) {
 
     memcpy (
         &identify, 
-        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 4), ARCH_VMM_AREA_HEAP)),
+        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         sizeof(identify)
     );
 
@@ -991,7 +992,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
-    DEBUG_ASSERT(count <= 32);
+    DEBUG_ASSERT(count <= 256);
 
     struct ahci* ahci = (struct ahci*) device->userdata;
 
@@ -1022,7 +1023,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i = 1;
 
@@ -1031,7 +1032,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         (count << 9)
     );
@@ -1081,7 +1082,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
     memcpy (
         buf, 
-        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         count << 9
     );
 
@@ -1098,7 +1099,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
-    DEBUG_ASSERT(count <= 32);
+    DEBUG_ASSERT(count <= 256);
 
     struct ahci* ahci = (struct ahci*) device->userdata;
 
@@ -1129,7 +1130,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*) (arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));    
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4);
+    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i = 1;
 
@@ -1138,7 +1139,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     memset((void*) &tbl->acmd, 0, sizeof(tbl->acmd));
 
     memset ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         (0),
         (count << 9)
     );
@@ -1167,7 +1168,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
 
     memcpy ( (void*)
-        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 4), ARCH_VMM_AREA_HEAP)),
+        (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)),
         (buf),
         (count << 9)
     );
@@ -1490,7 +1491,7 @@ void init(const char* args) {
 
             d->blk.blksize  = 512;
             d->blk.blkcount = 0;
-            d->blk.blkmax   = (16 * 1024) / d->blk.blksize;
+            d->blk.blkmax   = (1 << 17) / d->blk.blksize;   /* 128 KiB */
             d->blk.blkoff   = 0;
 
             d->blk.read = sata_read;
@@ -1529,7 +1530,7 @@ void init(const char* args) {
 
             d->blk.blksize  = 2048;
             d->blk.blkcount = 0;
-            d->blk.blkmax   = (16 * 1024) / d->blk.blksize;
+            d->blk.blkmax   = (1 << 17) / d->blk.blksize;   /* 128 KiB */
             d->blk.blkoff   = 0;
 
             d->blk.read = satapi_read;

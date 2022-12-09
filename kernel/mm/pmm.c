@@ -54,9 +54,9 @@ static spinlock_t pml2_lock[PML2_MAX_ENTRIES];
 
 /*!
  * @brief pml1_first_bitmap[].
- *        First Page Map Bitmap (0-128Mib)
+ *        First preallocated Page Map Bitmap (0-2GiB)
  */
-static uint64_t pml1_first_bitmap[PML1_MAX_ENTRIES];
+static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOCATED_BITMAPS];
 
 /*!
  * @brief pmm_max_memory.
@@ -498,12 +498,13 @@ void pmm_init(uintptr_t max_memory) {
     }
 
 
-    for(size_t i = 0; i < PML1_MAX_ENTRIES; i++) {
-        pml1_first_bitmap[i] = 0;
+    for(size_t i = 0; i < PML1_MAX_ENTRIES * PML1_PREALLOCATED_BITMAPS; i++) {
+        pml1_first_preallocated_bitmaps[i] = 0;
     }
 
-    pml2_bitmap[0] = (uintptr_t) &pml1_first_bitmap;
-
+    for(size_t i = 0; i < PML1_PREALLOCATED_BITMAPS; i++) {
+        pml2_bitmap[i] = (uintptr_t) &pml1_first_preallocated_bitmaps[PML2_MAX_ENTRIES * i];
+    }
 
 
     extern int end;
@@ -521,10 +522,10 @@ void pmm_init(uintptr_t max_memory) {
         if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE)
             continue;
 
-        if(core->mmap.ptr[i].address > MIN(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address > MIN(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MIN(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MIN(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
 
@@ -535,7 +536,7 @@ void pmm_init(uintptr_t max_memory) {
 
     //  Alloc other page map memory bitmaps.
 
-    for(size_t i = 1; i < PML2_MAX_ENTRIES && (i * PML2_PAGESIZE) < pmm_max_memory; i++) {
+    for(size_t i = PML1_PREALLOCATED_BITMAPS; i < PML2_MAX_ENTRIES && (i * PML2_PAGESIZE) < pmm_max_memory; i++) {
 
 
         uintptr_t phys = pmm_alloc_block();
@@ -566,19 +567,19 @@ void pmm_init(uintptr_t max_memory) {
         if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE)
             continue;
 
-        if(core->mmap.ptr[i].address < MIN(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address < MIN(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length < MIN(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length < MIN(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address > MAX(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address > MAX(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
-        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE, pmm_max_memory))
+        if(core->mmap.ptr[i].address + core->mmap.ptr[i].length > MAX(PML2_PAGESIZE * PML1_PREALLOCATED_BITMAPS, pmm_max_memory))
             continue;
 
 

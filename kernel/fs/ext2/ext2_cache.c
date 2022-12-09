@@ -47,8 +47,10 @@ struct ext2_inode* ext2_cache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
 struct ext2_inode* ext2_cache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
 
-    return ext2_utils_write_inode(ext2, ino, inode)
-         , inode;
+    // return ext2_utils_write_inode(ext2, ino, inode)
+    //      , inode;
+
+    return inode;
 
 }
 

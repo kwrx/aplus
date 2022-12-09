@@ -32,11 +32,13 @@
 
 
 //* PMM */
-#define PML2_PAGESIZE               (128 * 1024 * 1024)         //? 128MiB
-#define PML1_PAGESIZE               (4096)                      //? 4KiB
+#define PML2_PAGESIZE               (134217728UL)               //? 128MiB
+#define PML1_PAGESIZE               (4096UL)                    //? 4KiB
 
-#define PML2_MAX_ENTRIES            (16384)                     //? 2TiB
-#define PML1_MAX_ENTRIES            (4096 / sizeof(uint64_t))
+#define PML2_MAX_ENTRIES            (16384UL)                   //? 2TiB
+#define PML1_MAX_ENTRIES            (4096UL / sizeof(uint64_t))
+
+#define PML1_PREALLOCATED_BITMAPS   (16UL)                      //? 2GiB
 
 
 //* Heap */

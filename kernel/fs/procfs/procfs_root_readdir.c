@@ -95,15 +95,17 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
     } while(0)
 
 
-    __readdir(INT32_MAX - 1, DT_DIR, "self");
-    // __readdir(INT32_MAX - 2, DT_REG, "cpuinfo");
-    __readdir(INT32_MAX - 3, DT_REG, "meminfo");
-    __readdir(INT32_MAX - 4, DT_REG, "uptime");
-    __readdir(INT32_MAX - 5, DT_REG, "version");
-    // __readdir(INT32_MAX - 6, DT_REG, "modules");
-    // __readdir(INT32_MAX - 7, DT_REG, "mounts");
-    __readdir(INT32_MAX - 8, DT_REG, "filesystems");
-    __readdir(INT32_MAX - 9, DT_REG, "cmdline");
+    __readdir( 1, DT_DIR, ".");
+    __readdir( 2, DT_DIR, "..");
+    __readdir( 3, DT_DIR, "self");
+    __readdir( 4, DT_REG, "cpuinfo");
+    __readdir( 4, DT_REG, "meminfo");
+    __readdir( 5, DT_REG, "uptime");
+    __readdir( 6, DT_REG, "version");
+    __readdir( 7, DT_REG, "modules");
+    __readdir( 8, DT_REG, "mounts");
+    __readdir( 9, DT_REG, "filesystems");
+    __readdir(10, DT_REG, "cmdline");
 
     return i;
 

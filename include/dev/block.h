@@ -114,6 +114,7 @@ typedef struct block_dos_partition {
 } __packed block_dos_partition_t;
 
 
+int block_getattr(device_t*, struct stat*);
 ssize_t block_write(device_t*, const void*, off_t, size_t);
 ssize_t block_read(device_t*, void*, off_t, size_t);
 void block_init(device_t*);

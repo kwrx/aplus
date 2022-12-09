@@ -40,13 +40,14 @@
 
 
 
-void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size) {
+void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size, bool cached) {
     
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(size);
 
+    (void) cached; // TODO: implement cached read for ext2 to speedup read operations
 
     if(block > ext2->sb.s_blocks_count)
         kpanicf("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
@@ -56,7 +57,7 @@ void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
 
     if(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
         kpanicf("%s() FAIL! vfs_read() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
-        
+
 }
 
 
@@ -113,13 +114,13 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
         for(i = 0; i < (ext2->sb.s_blocks_count / ext2->sb.s_blocks_per_group); i++) {
 
             struct ext2_group_desc d;
-            ext2_utils_read_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
+            ext2_utils_read_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d), false);
 
             if(d.bg_free_blocks_count == 0)
                 continue;
             
 
-            ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize, false);
 
 
                 

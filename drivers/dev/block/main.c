@@ -30,6 +30,7 @@
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/sysmacros.h>
 
 #include <dev/interface.h>
 #include <dev/block.h>
@@ -51,6 +52,31 @@ MODULE_LICENSE("GPL");
         x.c_cached = z;                         \
     }
 
+
+
+
+int block_getattr(device_t* device, struct stat* st) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(st);
+
+    st->st_dev     = makedev(device->major, device->minor);
+    st->st_ino     = device->inode->ino;
+    st->st_mode    = S_IFBLK | 0666;
+    st->st_nlink   = 1;
+    st->st_uid     = 0;
+    st->st_gid     = 0;
+    st->st_rdev    = makedev(device->major, device->minor);
+    st->st_size    = device->blk.blkcount * device->blk.blksize;
+    st->st_blksize = device->blk.blksize;
+    st->st_blocks  = device->blk.blkcount;
+    st->st_atime   = arch_timer_gettime();
+    st->st_mtime   = arch_timer_gettime();
+    st->st_ctime   = arch_timer_gettime();
+
+    return 0;
+
+}
 
 
 ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size) {

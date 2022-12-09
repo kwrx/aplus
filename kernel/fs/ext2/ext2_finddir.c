@@ -95,8 +95,8 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
 
                     d->ops.getattr = ext2_getattr;
-                    d->ops.setattr = ext2_setattr;
-                    d->ops.fsync = ext2_fsync;
+                    // d->ops.setattr = ext2_setattr;
+                    // d->ops.fsync = ext2_fsync;
 
                     if(S_ISDIR(mode)) {
 

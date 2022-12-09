@@ -135,7 +135,7 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
     spinlock_lock(&space->lock);
 
-    for(; s < e; s += X86_MMU_PAGESIZE) {
+    for(; s < e; s += pagesize) {
 
         x86_page_t* d;
 
@@ -174,6 +174,8 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
 
+                pagesize = X86_MMU_PAGESIZE;
+
             } else
                 pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
 
@@ -198,6 +200,8 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
             }
+
+            pagesize = X86_MMU_PAGESIZE;
 
         } else
             pagesize = X86_MMU_HUGE_2MB_PAGESIZE;

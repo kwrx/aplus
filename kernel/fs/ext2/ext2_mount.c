@@ -70,7 +70,8 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    struct ext2_super_block sb;
+    struct ext2_super_block sb = { 0 };
+
     if(vfs_read(dev, &sb, 1024, sizeof(struct ext2_super_block)) != sizeof(struct ext2_super_block)) {
      
 #if DEBUG_LEVEL_ERROR
@@ -148,7 +149,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
     dir->sb->ops.getattr = ext2_getattr;
-    dir->sb->ops.setattr = ext2_setattr;
+    // dir->sb->ops.setattr = ext2_setattr;
     //dir->sb->ops.creat = ext2_creat;
     dir->sb->ops.finddir = ext2_finddir;
     dir->sb->ops.readdir = ext2_readdir;

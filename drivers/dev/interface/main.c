@@ -192,6 +192,38 @@ static int device_fsync(inode_t* inode, int datasync) {
 }
 
 
+static int device_getattr(inode_t* inode, struct stat* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+    DEBUG_ASSERT(st);
+
+
+    device_t* device = (device_t*) inode->userdata;
+
+    if(device->status != DEVICE_STATUS_READY)
+        return errno = EBUSY, -1;
+
+
+    switch(device->type) {
+        
+        case DEVICE_TYPE_CHAR:
+            return char_getattr(device, st);
+
+        case DEVICE_TYPE_BLOCK:
+            return block_getattr(device, st);
+
+        case DEVICE_TYPE_VIDEO:
+            return video_getattr(device, st);
+
+        case DEVICE_TYPE_NETWORK:
+            return errno = ENOSYS, -1;
+
+    }
+
+    kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
+
+}
 
 
 
@@ -288,6 +320,7 @@ void device_mkdev(device_t* device, mode_t mode) {
        
     i->userdata = (void*) device;
 
+    i->ops.getattr  = device_getattr;
     i->ops.write    = device_write;
     i->ops.read     = device_read;
     i->ops.ioctl    = device_ioctl;

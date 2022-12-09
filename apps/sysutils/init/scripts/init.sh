@@ -5,12 +5,18 @@
 
 cd /tmp
 
-echo "#include <stdio.h>" > main.c
-echo "int main() {" >> main.c
-echo "printf(\"Hello World!\");" >> main.c
-echo "}" >> main.c
+echo "#include <iostream>" > main.cpp
+echo "int main() {" >> main.cpp
+echo "std::cout << \"Hello, World!\" << std::endl;" >> main.cpp
+echo "}" >> main.cpp
 
-/usr/bin/gcc main.c -o main -O3
+/usr/bin/g++ main.cpp -o main -O3
 
-ls -lah
+./main
+
+# iobench /usr/libexec/gcc/x86_64-aplus/12.2.0/cc1plus
+
+# iobench /dev/sda
+# iobench /dev/sda1
+# iobench /dev/sda2
 

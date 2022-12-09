@@ -343,7 +343,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 #if DEBUG_LEVEL_TRACE
-                    kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+                    kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(0x%lX) memsz(0x%lX) alignsize(0x%lX) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz);
@@ -372,7 +372,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                 default:
 
 #if DEBUG_LEVEL_WARN
-                    kprintf("sys_execve: WARN! unknown phdr.p_type at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+                    kprintf("sys_execve: WARN! unknown phdr.p_type at address(0x%lX) offset(0x%lX) filesz(0x%lX) memsz(0x%lX) alignsize(0x%lX) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
                     continue;
 
