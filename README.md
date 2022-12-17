@@ -4,7 +4,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
-*A hobby operating system built mostly from scratch with a unix-like, hybrid and cross-platform kernel.*
+An operating system built mostly from scratch with a hybrid and cross-platform kernel that resembles Unix. The project began in September 2013 as a way to improve my creator's low-level programming skills. It primarily uses C/C++ and Assembly programming languages.
 
 ## :fire: Features
 
