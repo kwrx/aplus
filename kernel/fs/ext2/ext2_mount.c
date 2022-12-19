@@ -111,7 +111,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         
     ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
-    ext2->cache             = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
+    ext2->iocache           = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
     ext2->first_block_group = sb.s_first_data_block + 1;
     ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
     ext2->blocksize         = (1024) << sb.s_log_block_size;
@@ -159,11 +159,22 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
             
 
     
-    struct cache_ops ops;
-    ops.fetch  = (cache_fetch_handler_t) ext2_cache_fetch;
-    ops.commit = (cache_commit_handler_t) ext2_cache_commit;
+    struct cache_ops iops;
+    iops.fetch   = (cache_fetch_handler_t) ext2_icache_fetch;
+    iops.commit  = (cache_commit_handler_t) ext2_icache_commit;
+    iops.release = (cache_release_handler_t) ext2_icache_release;
 
-    cache_init(&dir->sb->cache, &ops, ext2);
+    cache_init(&dir->sb->cache, &iops, SIZE_MAX, ext2);
+
+
+    struct cache_ops bops;
+    bops.fetch   = (cache_fetch_handler_t) ext2_bcache_fetch;
+    bops.commit  = (cache_commit_handler_t) ext2_bcache_commit;
+    bops.release = (cache_release_handler_t) ext2_bcache_release;
+
+    cache_init(&ext2->bcache, &bops, SIZE_MAX, ext2);
+
+
 
 
     dir->sb->ino = EXT2_ROOT_INO;

@@ -34,23 +34,51 @@
 #include "ext2.h"
 
 
-struct ext2_inode* ext2_cache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
+// TODO: rewrite all ext2 cache functions
+
+struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
     struct ext2_inode* i = (struct ext2_inode*) kcalloc(sizeof(struct ext2_inode), 1, GFP_KERNEL);
 
-    ext2_utils_read_inode(ext2, ino, i);
+    if(unlikely(!i))
+        return NULL;
 
-    return i;
+    return ext2_utils_read_inode(ext2, ino, i), i;
 
 }
 
 
-struct ext2_inode* ext2_cache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
+void ext2_icache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
+    //ext2_utils_write_inode(ext2, ino, inode);
+}
 
-    // return ext2_utils_write_inode(ext2, ino, inode)
-    //      , inode;
+void ext2_icache_release(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
+    kfree(inode);
+}
 
-    return inode;
 
+
+void* ext2_bcache_fetch(cache_t* cache, ext2_t* ext2, uint64_t block) {
+
+    void* buffer = kmalloc(ext2->blocksize, GFP_KERNEL);
+
+    if(unlikely(!buffer))
+        return NULL;
+
+    if(unlikely(vfs_read(ext2->dev, buffer, block * ext2->blocksize, ext2->blocksize) != ext2->blocksize)) {
+        return kfree(buffer), NULL;
+    }
+
+    return buffer;
+
+}
+
+
+void ext2_bcache_commit(cache_t* cache, ext2_t* ext2, uint64_t block, void* buffer) {
+    // vfs_write(ext2->dev, buffer, block * ext2->blocksize, ext2->blocksize);
+}
+
+void ext2_bcache_release(cache_t* cache, ext2_t* ext2, uint64_t block, void* buffer) {
+    kfree(buffer);
 }
 

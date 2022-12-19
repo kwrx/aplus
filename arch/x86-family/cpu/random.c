@@ -44,8 +44,15 @@ static uint64_t (*__random_hook) (void) = NULL;
 
 #if defined(CONFIG_X86_ENABLE_RDRAND)
 static uint64_t __rdrand(void) {
+
     unsigned long long int r;
-    return __builtin_ia32_rdrand64_step(&r), r;
+
+    do { 
+        __cpu_pause();
+    } while(!__builtin_ia32_rdrand64_step(&r));
+
+    return r;
+    
 }
 #endif
 

@@ -54,7 +54,7 @@ void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
 
     struct ext2_group_desc d;
     ext2_utils_read_block(ext2, ext2->first_block_group, ((ino - 1) / ext2->sb.s_inodes_per_group) * sizeof(d), &d, sizeof(d), true);
-    ext2_utils_read_block(ext2, d.bg_inode_table,        ((ino - 1) % ext2->sb.s_inodes_per_group) * ext2->inodesize, data, ext2->inodesize, true);
+    ext2_utils_read_block(ext2, d.bg_inode_table,        ((ino - 1) % ext2->sb.s_inodes_per_group) * ext2->inodesize, data, ext2->inodesize, false);
 
 }
 
@@ -219,7 +219,6 @@ void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block,
 }
 
 
-
 void ext2_utils_alloc_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block) {
 
     DEBUG_ASSERT(ext2);
@@ -240,6 +239,7 @@ void ext2_utils_alloc_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block)
         return;    
     
     }
+
 
 
 

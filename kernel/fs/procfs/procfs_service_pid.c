@@ -104,13 +104,21 @@ static inode_t* procfs_service_pid_cache_fetch(cache_t* cache, inode_t* parent, 
 
 }
 
-static inode_t* procfs_service_pid_cache_commit(cache_t* cache, inode_t* parent, cache_key_t key, inode_t* value) {
+static void procfs_service_pid_cache_commit(cache_t* cache, inode_t* parent, cache_key_t key, inode_t* value) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(value);
     DEBUG_ASSERT(parent);
 
-    return value;
+}
+
+static void procfs_service_pid_cache_release(cache_t* cache, inode_t* parent, cache_key_t key, inode_t* value) {
+
+    DEBUG_ASSERT(cache);
+    DEBUG_ASSERT(value);
+    DEBUG_ASSERT(parent);
+
+    kfree(value);
 
 }
 
@@ -130,10 +138,11 @@ inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid) {
 void procfs_service_pid_init(inode_t* parent) {
 
     cache_ops_t ops = {
-        .fetch  = (cache_fetch_handler_t) procfs_service_pid_cache_fetch,
-        .commit = (cache_commit_handler_t) procfs_service_pid_cache_commit,
+        .fetch   = (cache_fetch_handler_t) procfs_service_pid_cache_fetch,
+        .commit  = (cache_commit_handler_t) procfs_service_pid_cache_commit,
+        .release = (cache_release_handler_t) procfs_service_pid_cache_release,
     };
 
-    cache_init(&cache, &ops, parent);
+    cache_init(&cache, &ops, SIZE_MAX, parent);
 
 }

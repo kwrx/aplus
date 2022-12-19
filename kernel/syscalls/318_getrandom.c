@@ -53,8 +53,6 @@
 SYSCALL(318, getrandom,
 long sys_getrandom (char __user * buf, size_t count, unsigned int flags) {
 
-    // FIXME: implement getrandom() in a better way
-
     if(unlikely(!buf))
         return -EINVAL;
 

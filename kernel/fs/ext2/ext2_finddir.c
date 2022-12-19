@@ -46,24 +46,24 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
     ext2_t* ext2 = (ext2_t*) inode->sb->fsinfo;
 
 
+
     struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
     struct inode* d = NULL;
 
 
     size_t name_len = strlen(name);
+    
 
-
-    size_t q;
-    for(q = 0; q < n->i_size; q += ext2->blocksize) {
+    for(size_t q = 0; q < n->i_size; q += ext2->blocksize) {
 
 
         __lock(&ext2->lock, {
         
-            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
 
             for(size_t i = 0; i < ext2->blocksize; ) {
 
-                struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
+                struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->iocache + i);
 
                 DEBUG_ASSERT(e->rec_len);
 

@@ -77,7 +77,7 @@ ssize_t ext2_write(inode_t* inode, const void * buf, off_t pos, size_t len) {
         }
 
         ext2_inode_set_size(ext2, n, pos + len);
-        ext2_cache_commit(&inode->sb->cache, ext2, inode->ino, n);
+        ext2_icache_commit(&inode->sb->cache, ext2, inode->ino, n);
 
     }
     

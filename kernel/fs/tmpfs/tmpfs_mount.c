@@ -103,10 +103,11 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
 
     struct cache_ops ops;
-    ops.fetch  = (cache_fetch_handler_t) tmpfs_cache_fetch;
-    ops.commit = (cache_commit_handler_t) tmpfs_cache_commit;
+    ops.fetch   = (cache_fetch_handler_t) tmpfs_cache_fetch;
+    ops.commit  = (cache_commit_handler_t) tmpfs_cache_commit;
+    ops.release = (cache_release_handler_t) tmpfs_cache_release;
 
-    cache_init(&dir->sb->cache, &ops, dir->sb->fsinfo);
+    cache_init(&dir->sb->cache, &ops, SIZE_MAX, dir->sb->fsinfo);
 
 
     dir->sb->ino = dir->ino;

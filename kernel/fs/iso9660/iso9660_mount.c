@@ -231,10 +231,11 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
 
     struct cache_ops ops;
-    ops.fetch  = (cache_fetch_handler_t) iso9660_cache_fetch;
-    ops.commit = (cache_commit_handler_t) iso9660_cache_commit;
+    ops.fetch   = (cache_fetch_handler_t) iso9660_cache_fetch;
+    ops.commit  = (cache_commit_handler_t) iso9660_cache_commit;
+    ops.release = (cache_release_handler_t) iso9660_cache_release;
 
-    cache_init(&dir->sb->cache, &ops, iso9660);
+    cache_init(&dir->sb->cache, &ops, SIZE_MAX, iso9660);
 
 
     dir->sb->ino = dir->ino;

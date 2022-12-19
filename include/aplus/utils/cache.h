@@ -39,12 +39,15 @@ typedef void* cache_key_t;
 typedef struct cache cache_t;
 
 typedef cache_value_t (*cache_fetch_handler_t)(cache_t*, void*, cache_key_t);
-typedef cache_value_t (*cache_commit_handler_t)(cache_t*, void*, cache_key_t, cache_value_t);
+typedef void (*cache_commit_handler_t)(cache_t*, void*, cache_key_t, cache_value_t);
+typedef void (*cache_release_handler_t)(cache_t*, void*, cache_key_t, cache_value_t);
+
 
 typedef struct cache_ops {
 
     cache_fetch_handler_t fetch;
     cache_commit_handler_t commit;
+    cache_release_handler_t release;
 
 } cache_ops_t;
 
@@ -53,6 +56,8 @@ typedef struct cache {
     HASHMAP(cache_key_t, cache_value_t) map;
 
     size_t size;
+    size_t capacity;
+
     void* userdata;
 
     cache_ops_t ops;
@@ -63,18 +68,15 @@ typedef struct cache {
 
 __BEGIN_DECLS
 
-void cache_init(cache_t* cache, cache_ops_t* ops, void* userdata);
+void cache_init(cache_t* cache, cache_ops_t* ops, size_t capacity, void* userdata);
 void cache_destroy(cache_t* cache);
 void cache_commit_all(cache_t* cache);
 
 __returns_nonnull
 cache_value_t __cache_get(cache_t* cache, cache_key_t key);
 
-__returns_nonnull
-cache_value_t __cache_commit(cache_t* cache, cache_key_t key);
-
-__returns_nonnull
-cache_value_t __cache_remove(cache_t* cache, cache_key_t key);
+void __cache_commit(cache_t* cache, cache_key_t key);
+void __cache_remove(cache_t* cache, cache_key_t key);
 
 
 #define cache_get(cache, key)                                           \

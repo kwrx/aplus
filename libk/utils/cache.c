@@ -58,18 +58,20 @@ static size_t __cache_hash_default(void* const* data) {
 }
 
 
-void cache_init(cache_t* cache, cache_ops_t* ops, void* userdata) {
+void cache_init(cache_t* cache, cache_ops_t* ops, size_t capacity, void* userdata) {
     
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(ops);
     DEBUG_ASSERT(ops->fetch);
     DEBUG_ASSERT(ops->commit);
+    DEBUG_ASSERT(ops->release);
 
 
     memset(cache, 0, sizeof(cache_t));
     memcpy(&cache->ops, ops, sizeof(cache_ops_t));
 
     cache->size = 0;
+    cache->capacity = capacity;
     cache->userdata = userdata;
 
     hashmap_init(&cache->map, __cache_hash_default, __cache_key_cmp);
@@ -86,13 +88,24 @@ void cache_destroy(cache_t* cache) {
 
     __lock(&cache->lock, {
         
-        if(cache->ops.commit) {
+        if(likely(cache->ops.commit)) {
 
             cache_key_t key;
             cache_value_t value;
 
             hashmap_foreach(key, value, &cache->map) {
                 cache->ops.commit(cache, cache->userdata, key, value);
+            }
+
+        }
+
+        if(likely(cache->ops.release)) {
+
+            cache_key_t key;
+            cache_value_t value;
+
+            hashmap_foreach(key, value, &cache->map) {
+                cache->ops.release(cache, cache->userdata, key, value);
             }
 
         }
@@ -139,9 +152,39 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
                 value = cache->ops.fetch(cache, cache->userdata, key);
             }
 
-            if(value != NULL) {
+            if(value != NULL && cache->capacity > 0) {
 
-                hashmap_put(&cache->map, key, value);
+                if(cache->size < cache->capacity) {
+
+                    hashmap_put(&cache->map, key, value);
+
+                } else {
+
+                    cache_key_t k;
+                    cache_value_t v;
+
+                    hashmap_foreach(k, v, &cache->map) {
+
+                        hashmap_remove(&cache->map, k);
+
+                        if(cache->ops.commit) {
+                            cache->ops.commit(cache, cache->userdata, k, v);
+                        }
+
+                        if(cache->ops.release) {
+                            cache->ops.release(cache, cache->userdata, k, v);
+                        }
+
+                        cache->size--;
+
+                        break;
+
+                    }
+
+                    hashmap_put(&cache->map, key, value);
+
+                }
+
                 cache->size++;
 
             }
@@ -158,8 +201,7 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 }
 
 
-__returns_nonnull
-cache_value_t __cache_commit(cache_t* cache, cache_key_t key) {
+void __cache_commit(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(key);
@@ -174,17 +216,8 @@ cache_value_t __cache_commit(cache_t* cache, cache_key_t key) {
         if(v != NULL) {
 
             if(cache->ops.commit) {
-                value = cache->ops.commit(cache, cache->userdata, key, value);
+                cache->ops.commit(cache, cache->userdata, key, value);
             }
-
-            if(v != value) {
-
-                hashmap_remove(&cache->map, key);
-                hashmap_put(&cache->map, key, value);
-    
-            }
-
-            value = v;
 
         }
 
@@ -193,13 +226,10 @@ cache_value_t __cache_commit(cache_t* cache, cache_key_t key) {
 
     PANIC_ON(value != NULL && "cache: failed to commit key");
 
-    return value;
-
 }
 
 
-__returns_nonnull
-cache_value_t __cache_remove(cache_t* cache, cache_key_t key) {
+void __cache_remove(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(key);
@@ -213,11 +243,13 @@ cache_value_t __cache_remove(cache_t* cache, cache_key_t key) {
             cache->size--;
         }
 
+        if(cache->ops.release) {
+            cache->ops.release(cache, cache->userdata, key, value);
+        }
+
     });
 
 
     PANIC_ON(value != NULL && "cache: failed to remove key");
-
-    return value;
 
 }

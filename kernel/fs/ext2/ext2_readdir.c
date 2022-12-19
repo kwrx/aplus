@@ -60,11 +60,11 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
         __lock(&ext2->lock, {
         
-            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
 
             for(size_t i = 0; i < ext2->blocksize; ) {
 
-                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
+                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->iocache + i);
 
                 DEBUG_ASSERT(d->rec_len);
                 DEBUG_ASSERT(d->name_len < sizeof(e->d_name));

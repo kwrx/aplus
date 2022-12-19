@@ -172,7 +172,13 @@ static inline void ps2_wait(uint8_t mask, uint8_t status) {
         __cpu_pause();
     }
 
-    DEBUG_ASSERT(timeout);
+    if(unlikely(timeout == 0)) {
+        
+        DEBUG_ASSERT(0 && "ps2: timeout");
+
+        // TODO: implement module_reset and call it here
+        
+    }
 
 }
 
@@ -556,6 +562,11 @@ void init(const char* args) {
 
 
 void dnit(void) {
+
+    arch_intr_unmap_irq(1);
+    arch_intr_unmap_irq(12);
+
     device_unlink(&keyboard);
     device_unlink(&mouse);
+
 }

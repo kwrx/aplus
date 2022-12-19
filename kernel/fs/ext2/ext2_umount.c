@@ -49,7 +49,7 @@ int ext2_umount(inode_t* dir) {
 
     cache_destroy(&dir->sb->cache);
     
-    kfree(ext2->cache);
+    kfree(ext2->iocache);
     kfree(ext2);
 
 

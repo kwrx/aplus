@@ -53,7 +53,7 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 
 
     DEBUG_ASSERT(inode.record.length >= sizeof(iso9660_directory_record_t));
-    DEBUG_ASSERT(inode.record.length <= 2048);
+    DEBUG_ASSERT(inode.record.length <= ISO9660_BLOCK_SIZE);
 
 
 
@@ -259,13 +259,23 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 }
 
 
-iso9660_inode_t* iso9660_cache_commit(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
+void iso9660_cache_commit(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
 
     (void) cache;
 
     DEBUG_ASSERT(iso9660);
     DEBUG_ASSERT(inode);
 
-    return inode;
+}
+
+
+void iso9660_cache_release(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
+
+    (void) cache;
+
+    DEBUG_ASSERT(iso9660);
+    DEBUG_ASSERT(inode);
+
+    kfree(inode);
 
 }

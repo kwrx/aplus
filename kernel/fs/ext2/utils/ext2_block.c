@@ -47,16 +47,33 @@ void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(size);
 
-    (void) cached; // TODO: implement cached read for ext2 to speedup read operations
 
-    if(block > ext2->sb.s_blocks_count)
+    if(unlikely(block > ext2->sb.s_blocks_count))
         kpanicf("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
 
-    if(block < ext2->first_block_group - 1)
+    if(unlikely(block < ext2->first_block_group - 1))
         kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
 
-    if(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
-        kpanicf("%s() FAIL! vfs_read() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
+
+    if(cached) {
+
+        DEBUG_ASSERT(offset + size <= ext2->blocksize);
+
+
+        void* buffer = cache_get(&ext2->bcache, block);
+
+        if(unlikely(!buffer))
+            kpanicf("%s() FAIL! cache_get() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
+
+        memcpy(data, buffer + offset, size);
+
+
+    } else {
+
+        if(unlikely(vfs_read(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size))
+            kpanicf("%s() FAIL! vfs_read() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
+
+    }
 
 }
 
@@ -70,13 +87,13 @@ void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const
     DEBUG_ASSERT(size);
 
 
-    if(block > ext2->sb.s_blocks_count)
+    if(unlikely(block > ext2->sb.s_blocks_count))
         kpanicf("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
 
-    if(block < ext2->first_block_group - 1)
+    if(unlikely(block < ext2->first_block_group - 1))
         kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
 
-    if(vfs_write(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size)
+    if(unlikely(vfs_write(ext2->dev, data, ((block) * ext2->blocksize) + offset, size) != size))
         kpanicf("%s() FAIL! vfs_read() errno(%s) on writing %zd bytes at %d", __func__, strerror(errno), size, ((block) * ext2->blocksize) + offset);
 
 }
@@ -120,11 +137,11 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
                 continue;
             
 
-            ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize, false);
+            ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false);
 
 
                 
-            uint32_t* bitmap = ext2->cache;
+            uint32_t* bitmap = ext2->iocache;
 
             for(j = 0; j < (ext2->blocksize / sizeof(*bitmap)); j++, bitmap++) {
                 
@@ -155,7 +172,7 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
 
             ext2_utils_zero_block(ext2, *block);
                 
-            ext2_utils_write_block(ext2, d.bg_block_bitmap, 0, ext2->cache, ext2->blocksize);
+            ext2_utils_write_block(ext2, d.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize);
             ext2_utils_write_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
 
 

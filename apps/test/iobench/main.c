@@ -80,7 +80,7 @@ int main(int argc, char** argv) {
     int limit = 5;
     
     int c, idx;
-    while((c = getopt_long(argc, argv, "wbt", long_options, &idx)) != -1) {
+    while((c = getopt_long(argc, argv, "wb:t:", long_options, &idx)) != -1) {
         switch(c) {
             case 'w':
                 mode = 1;

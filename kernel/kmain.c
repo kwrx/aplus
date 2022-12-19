@@ -50,7 +50,7 @@ void cmain(void) {
 
         __cpu_pause();
         __cpu_halt();
-
+        
     }
 
 }
