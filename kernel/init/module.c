@@ -235,8 +235,7 @@ void module_run(module_t* m) {
         Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
 
-        int j;
-        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+        for(int j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
             Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
             Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
@@ -329,8 +328,7 @@ void module_run(module_t* m) {
         Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
 
-        int j;
-        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+        for(int j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
             Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
             Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
@@ -478,7 +476,8 @@ void module_init(void) {
             if(strcmp(syname(m->exe.section[j].sh_name), ".module_deps") == 0)
                 m->deps = (const char*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset);
 
-            #undef syname           
+
+            #undef syname
 
         }
 

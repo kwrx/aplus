@@ -37,6 +37,15 @@ SECTIONS {
 		syscalls_end = .;
 	}
 
+	.tests BLOCK(4K) : AT(ADDR(.tests) - KERNEL_VMA) ALIGN(4K) {
+		tests_start = .;
+
+		*(.tests)
+		*(.tests.*)
+
+		tests_end = .;
+	}
+
 
 	.bss BLOCK(4K) : AT(ADDR(.bss) - KERNEL_VMA) ALIGN(4K) {
 		__bss_start = .;

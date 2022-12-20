@@ -264,10 +264,10 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
     for(i = 0; i < PML2_MAX_ENTRIES; i++) {
 
         if(pml2_bitmap[i] == 0)
-            break;
+            { r= -1ULL; break; }
 
         if(pml2_pusage[i] >= (PML1_MAX_ENTRIES << 6) - blkno)
-            continue;
+            { c = 0; continue; }
 
 
         uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[i];
@@ -344,10 +344,11 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
     for(i = 0; i < PML2_MAX_ENTRIES; i++) {
 
         if(pml2_bitmap[i] == 0)
-            break;
+            { r= -1ULL; break; }
 
         if(pml2_pusage[i] >= (PML1_MAX_ENTRIES << 6) - blkno)
-            continue;
+            { c = 0; continue; }
+
 
 
         uint64_t* pml1_bitmap = (uint64_t*) pml2_bitmap[i];
@@ -503,7 +504,12 @@ void pmm_init(uintptr_t max_memory) {
     }
 
     for(size_t i = 0; i < PML1_PREALLOCATED_BITMAPS; i++) {
+        
+        if(i * PML2_PAGESIZE >= pmm_max_memory)
+            break;
+
         pml2_bitmap[i] = (uintptr_t) &pml1_first_preallocated_bitmaps[PML2_MAX_ENTRIES * i];
+
     }
 
 
@@ -593,3 +599,88 @@ void pmm_init(uintptr_t max_memory) {
 #endif
 
 }
+
+
+TEST(pmm_small_alloc_test, {
+
+    uintptr_t b1 = pmm_alloc_block();
+    uintptr_t b2 = pmm_alloc_block();
+    uintptr_t b3 = pmm_alloc_block();
+    uintptr_t b4 = pmm_alloc_block();
+
+
+    DEBUG_ASSERT(b1 != -1ULL);
+    DEBUG_ASSERT(b2 != -1ULL);
+    DEBUG_ASSERT(b3 != -1ULL);
+    DEBUG_ASSERT(b4 != -1ULL);
+
+    
+    pmm_free_block(b1);
+    pmm_free_block(b3);
+
+
+    uintptr_t b5 = pmm_alloc_block();
+    uintptr_t b6 = pmm_alloc_block();
+
+    DEBUG_ASSERT(b5 == b1);
+    DEBUG_ASSERT(b6 == b3);
+
+
+    pmm_free_block(b2);
+    pmm_free_block(b4);
+    pmm_free_block(b5);
+    pmm_free_block(b6);
+
+});
+
+
+TEST(pmm_big_alloc_test, { // FIXME: remove DEBUG_ASSERT on pmm_alloc_* fails and handle it.
+
+    uintptr_t big = 0;
+    uintptr_t max = (pmm_get_total_memory() - pmm_get_used_memory());
+
+
+    if(max > 1000 * PML1_PAGESIZE) {
+    
+        big = pmm_alloc_blocks(1000);
+
+        DEBUG_ASSERT(big != -1ULL);
+
+        pmm_free_blocks(big, 1000);
+
+
+        if(max > 100000 * PML1_PAGESIZE) {
+
+            big = pmm_alloc_blocks(100000);
+
+            DEBUG_ASSERT(big != -1ULL);
+
+            pmm_free_blocks(big, 100000);
+
+
+            // if(max > 1000000 * PML1_PAGESIZE) {
+
+            //     big = pmm_alloc_blocks(1000000);
+
+            //     DEBUG_ASSERT(big != -1ULL);
+
+            //     pmm_free_blocks(big, 1000000);
+
+
+            //     if(max > 10000000 * PML1_PAGESIZE) {    
+
+            //         big = pmm_alloc_blocks(10000000);
+
+            //         DEBUG_ASSERT(big != -1ULL);
+
+            //         pmm_free_blocks(big, 10000000);
+
+            //     }
+
+            // }
+
+        }
+
+    }
+
+});

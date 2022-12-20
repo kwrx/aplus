@@ -120,3 +120,14 @@ uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
 
 }
 
+
+
+TEST(x86_vmm_test, {
+
+    uintptr_t addr = 0x12345678;
+    uintptr_t phys = arch_vmm_v2p(addr, ARCH_VMM_AREA_KERNEL);
+    uintptr_t virt = arch_vmm_p2v(phys, ARCH_VMM_AREA_KERNEL);
+
+    DEBUG_ASSERT(addr == virt);
+
+});

@@ -33,9 +33,27 @@
             kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'\n",    \
                 __func__, __FILE__, __LINE__, #i);                      \
         }
-
 #else
 #define DEBUG_ASSERT(i)     \
+        (void) 0
+#endif
+
+
+#if defined(DEBUG) && defined(CONFIG_HAVE_TEST)
+#define TEST(x, y...)                                                   \
+    static void test_##x (void) {                                       \
+        y                                                               \
+    }                                                                   \
+    __section(".tests")                                                 \
+    struct {                                                            \
+        void* a;                                                        \
+        char* name;                                                     \
+    } __packed __test_##x = {                                           \
+        (void*) test_##x,                                               \
+        (char*) #x                                                      \
+    }
+#else
+#define TEST(x, y...)                                                   \
         (void) 0
 #endif
 

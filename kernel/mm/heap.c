@@ -172,3 +172,18 @@ void kfree(void* address) {
 uint64_t kheap_get_used_memory(void) {
     return heap_used_memory * PML1_PAGESIZE;
 }
+
+
+
+TEST(heap_test, {
+
+    void* p = kmalloc(1024, GFP_KERNEL);
+    DEBUG_ASSERT(p != NULL);
+
+    void* q = krealloc(p, 2048, GFP_KERNEL);
+    DEBUG_ASSERT(q != NULL);
+
+    void* r = krealloc(q, 0, GFP_KERNEL);
+    DEBUG_ASSERT(r == NULL);
+
+});

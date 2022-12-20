@@ -81,3 +81,17 @@ void init(const char* args) {
 void dnit(void) {
     device_unlink(&device);
 }
+
+
+TEST(dev_null_test, {
+
+    int fd = sys_open("/dev/null", O_RDWR, 0);
+    DEBUG_ASSERT(fd >= 0);
+
+    char buf[32];
+    DEBUG_ASSERT(sys_read(fd, buf, 32) == 0);
+    DEBUG_ASSERT(sys_write(fd, buf, 32) == 32);
+
+    DEBUG_ASSERT(sys_close(fd) == 0);
+
+});

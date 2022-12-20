@@ -154,3 +154,16 @@ const char* runtime_get_name(uintptr_t address) {
     return NULL;
     
 }
+
+
+TEST(dl_runtime_test, {
+
+    uintptr_t addr = runtime_get_address("runtime_get_address");
+    DEBUG_ASSERT(addr != 0);
+
+    const char* name = runtime_get_name(addr);
+    DEBUG_ASSERT(name != NULL);
+
+    DEBUG_ASSERT(strcmp(name, "runtime_get_address") == 0);
+
+});

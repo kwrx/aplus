@@ -88,3 +88,19 @@ void init(const char* args) {
 void dnit(void) {
     device_unlink(&device);
 }
+
+
+TEST(dev_zero_test, {
+
+    char buf[8];
+    memset(buf, 0xFF, sizeof(buf));
+
+    int fd = sys_open("/dev/zero", O_RDONLY, 0);
+    DEBUG_ASSERT(fd >= 0);
+
+    DEBUG_ASSERT(sys_read(fd, buf, sizeof(buf)) == sizeof(buf));
+    DEBUG_ASSERT(memcmp(buf, "\0\0\0\0\0\0\0\0", sizeof(buf)) == 0);
+
+    DEBUG_ASSERT(sys_close(fd) == 0);
+
+});

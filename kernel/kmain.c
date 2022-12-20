@@ -82,6 +82,10 @@ void kmain(void) {
     __init(smp,     ());
 #endif
 
+#if defined(CONFIG_HAVE_TEST)
+    __init(test,    ());
+#endif
+
 
     kprintf ("core: %s %s-%s (%s)\n", CONFIG_SYSTEM_NAME,
                                       CONFIG_SYSTEM_VERSION,

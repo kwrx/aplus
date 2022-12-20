@@ -342,3 +342,19 @@ void timer_init(void) {
 #endif
 
 }
+
+
+
+TEST(x86_timer_delay_test, {
+
+    uint64_t now = arch_timer_generic_getus();
+
+    arch_timer_delay(100);
+
+    uint64_t then = arch_timer_generic_getus();
+
+    DEBUG_ASSERT(then - now >= 100);
+
+});
+
+

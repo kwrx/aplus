@@ -96,3 +96,10 @@ long __arch_syscall5(unsigned long n, long a, long b, long c, long d, long e) {
 long __arch_syscall6(unsigned long n, long a, long b, long c, long d, long e, long f) {
     return __syscall(n, a, b, c, d, e, f);
 }
+
+
+TEST(x86_syscall_test, {
+
+    DEBUG_ASSERT(__arch_syscall6(404, 1, 2, 3, 4, 5, 6) == 0xDEADBEEF);
+
+});

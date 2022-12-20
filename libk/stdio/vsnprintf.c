@@ -304,10 +304,32 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
         switch(*fmt) {
 
             case 's':
-                
-                for(char* s = va_arg(v, char*); s && *s && m--; s++) {
-                    buf[p++] = *s;
+
+                if(w > m) {
+                    w = m;
                 }
+
+                if(w > 0) {
+
+                    size_t i = 0;
+
+                    for(char* s = va_arg(v, char*); s && *s && m--; s++, i++) {
+                        buf[p++] = *s;
+                    }
+
+                    for(; i < w; i++) {
+                        buf[p++] = ' ';
+                    }
+
+                } else {
+                    
+                    for(char* s = va_arg(v, char*); s && *s && m--; s++) {
+                        buf[p++] = *s;
+                    }
+                
+                }
+
+
 
                 break;
 

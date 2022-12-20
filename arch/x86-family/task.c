@@ -377,8 +377,7 @@ pid_t arch_task_spawn_init() {
 
 
 
-    int j;
-    for(j = 0; j < RLIM_NLIMITS; j++) {
+    for(size_t j = 0; j < RLIM_NLIMITS; j++) {
         task->rlimits[j].rlim_cur =
         task->rlimits[j].rlim_max = RLIM_INFINITY;
     }
@@ -438,8 +437,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
     CPU_ZERO(&task->affinity);
     
-    int i;
-    for(i = 0; i < (CPU_SETSIZE << 3); i++) {
+    for(size_t i = 0; i < (CPU_SETSIZE << 3); i++) {
         CPU_SET(i, &task->affinity);
     }
     

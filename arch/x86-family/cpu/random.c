@@ -86,3 +86,13 @@ void random_init() {
     }
 
 }
+
+
+TEST(x86_random_test, {
+
+    uint64_t a = arch_random();
+    uint64_t b = arch_random();
+
+    DEBUG_ASSERT(a != b);
+
+});
