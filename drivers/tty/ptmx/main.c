@@ -52,13 +52,13 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
     inode_t* ptmx = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_USER);
 
     if(unlikely(!ptmx))
-        goto fail1;
+        goto fail_1;
 
 
     pty_t* pty = pty_create(flags);
 
     if(unlikely(!pty))
-        goto fail2;
+        goto fail_2;
 
 
     memcpy(ptmx, inode, sizeof(inode_t));
@@ -77,12 +77,12 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
     return ptmx;
 
 
-fail2:
+fail_2:
 
     if(pty)
         kfree(pty);
 
-fail1:
+fail_1:
 
     if(ptmx)
         kfree(ptmx);

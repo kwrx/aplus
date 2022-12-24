@@ -28,6 +28,9 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 char *strtok(char *restrict str, const char *restrict delim) {
 	
@@ -61,3 +64,22 @@ char *strtok(char *restrict str, const char *restrict delim) {
 	return str;
 
 }
+
+
+TEST(libk_strtok_test, {
+
+	char str[] = "Hello World!";
+
+	char* token = strtok(str, " ");
+
+	DEBUG_ASSERT(token != NULL);
+	DEBUG_ASSERT(strcmp(token, "Hello") == 0);
+
+	token = strtok(NULL, " ");
+
+	DEBUG_ASSERT(token != NULL);
+	DEBUG_ASSERT(strcmp(token, "World!") == 0);
+
+	token = strtok(NULL, " ");
+
+});

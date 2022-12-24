@@ -27,6 +27,9 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 int strcmp(const char* a, const char* b) {
 
@@ -51,3 +54,13 @@ int strcmp(const char* a, const char* b) {
     __builtin_unreachable();
 
 }
+
+
+TEST(libk_strcmp_test, {
+
+	char a[] = "Hello World!";
+	char b[] = "Hello World!";
+
+	DEBUG_ASSERT(strcmp(a, b) == 0);
+
+});

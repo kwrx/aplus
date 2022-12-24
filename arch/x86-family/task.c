@@ -203,8 +203,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         fpu_switch(prev->fpu, next->fpu);
 
-        if(unlikely(prev->address_space->pm != next->address_space->pm))
+        if(unlikely(prev->address_space->pm != next->address_space->pm)) {
             arch_task_switch_address_space(next->address_space);
+        }
 
     }
 

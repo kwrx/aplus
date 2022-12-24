@@ -42,6 +42,7 @@ MODULE_LICENSE("GPL");
 
 
 static ssize_t zero_read(device_t*, void*, size_t);
+static ssize_t zero_write(device_t*, const void*, size_t);
 
 
 device_t device = {
@@ -61,7 +62,7 @@ device_t device = {
     .reset = NULL,
 
     .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
+    .chr.write = &zero_write,
     .chr.read =  &zero_read,
 
 };
@@ -79,6 +80,15 @@ static ssize_t zero_read(device_t* device, void* buf, size_t size) {
     
 }
 
+static ssize_t zero_write(device_t* device, const void* buf, size_t size) {
+    
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+    return size;
+    
+}
+
 
 void init(const char* args) {
     device_mkdev(&device, 0666);
@@ -89,18 +99,3 @@ void dnit(void) {
     device_unlink(&device);
 }
 
-
-TEST(dev_zero_test, {
-
-    char buf[8];
-    memset(buf, 0xFF, sizeof(buf));
-
-    int fd = sys_open("/dev/zero", O_RDONLY, 0);
-    DEBUG_ASSERT(fd >= 0);
-
-    DEBUG_ASSERT(sys_read(fd, buf, sizeof(buf)) == sizeof(buf));
-    DEBUG_ASSERT(memcmp(buf, "\0\0\0\0\0\0\0\0", sizeof(buf)) == 0);
-
-    DEBUG_ASSERT(sys_close(fd) == 0);
-
-});

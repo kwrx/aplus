@@ -28,6 +28,9 @@
 #include <stdlib.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 static uint64_t seed;
 
@@ -39,3 +42,14 @@ int rand(void) {
 	seed = 6364136223846793005ULL*seed + 1;
 	return seed>>33;
 }
+
+
+TEST(libk_rand_test, {
+
+	int a = rand();
+	int b = rand();
+
+	DEBUG_ASSERT(a != b);
+
+});
+

@@ -28,18 +28,48 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 char *strncpy(char *restrict dest, const char *restrict src, size_t n) {
 
-	size_t i;
-	for (i = 0; i < n && src[i] != '\0'; i++)
-		dest[i] = src[i];
+	if (n != 0) {
 
-	for (; i < n; i++)
-		dest[i] = '\0';
+		register char *d = dest;
+		register const char *s = src;
 
-	return dest;
+		do {
+			
+			if ((*d++ = *s++) == 0) {
+				
+				while (--n != 0) {
+					*d++ = 0;
+				}
+
+				break;
+			}
+
+		} while (--n != 0);
+	}
+
+	return (dest);
 
 }
 
+
+TEST(libk_strncpy_test, {
+
+	char buf[32];
+	memset(buf, 0, 32);
+
+	DEBUG_ASSERT(strncpy(buf, "Hello World!", 12) == buf);
+	DEBUG_ASSERT(strncmp(buf, "Hello World!", 12) == 0);
+
+	DEBUG_ASSERT(strncpy(buf, "Hello World!", 5) == buf);
+	DEBUG_ASSERT(strncmp(buf, "Hello", 5) == 0);
+
+	DEBUG_ASSERT(strncpy(buf, "Hello World!", 32) == buf);
+	DEBUG_ASSERT(strncmp(buf, "Hello World!", 32) == 0);
+
+});

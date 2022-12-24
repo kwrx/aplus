@@ -27,8 +27,11 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
-int atoi(const char *s)
-{
+#include <aplus.h>
+#include <aplus/debug.h>
+
+
+int atoi(const char *s) {
 	int n=0, neg=0;
 	while ((*s) == ' ' || (*s) == '\t') s++;
 	switch (*s) {
@@ -40,3 +43,17 @@ int atoi(const char *s)
 		n = 10*n - (*s++ - '0');
 	return neg ? n : -n;
 }
+
+
+TEST(libk_atoi_test, {
+
+	DEBUG_ASSERT(atoi("0") == 0);
+	DEBUG_ASSERT(atoi("1") == 1);
+	DEBUG_ASSERT(atoi("2") == 2);
+	DEBUG_ASSERT(atoi("33993") == 33993);
+	DEBUG_ASSERT(atoi("2147483647") == 2147483647);
+	DEBUG_ASSERT(atoi("-2147483648") == -2147483648);
+	DEBUG_ASSERT(atoi("-1") == -1);
+	DEBUG_ASSERT(atoi("ss") == 0);
+
+});

@@ -42,6 +42,7 @@ MODULE_LICENSE("GPL");
 
 
 static ssize_t full_write(device_t*, const void*, size_t);
+static ssize_t full_read(device_t*, void*, size_t);
 
 
 device_t device = {
@@ -62,7 +63,7 @@ device_t device = {
 
     .chr.io =    CHAR_IO_NBF,
     .chr.write = full_write,
-    .chr.read =  NULL,
+    .chr.read =  full_read,
 
 };
 
@@ -76,6 +77,16 @@ static ssize_t full_write(device_t* device, const void* buf, size_t size) {
 
     errno = ENOSPC;
     return -1;
+    
+}
+
+static ssize_t full_read(device_t* device, void* buf, size_t size) {
+    
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+    memset(buf, 0, size);
+    return size;
     
 }
 

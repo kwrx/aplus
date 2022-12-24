@@ -46,6 +46,7 @@ MODULE_LICENSE("GPL");
 
 
 static ssize_t urandom_read(device_t*, void*, size_t);
+static ssize_t urandom_write(device_t*, const void*, size_t);
 
 
 device_t device = {
@@ -65,7 +66,7 @@ device_t device = {
     .reset = NULL,
 
     .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
+    .chr.write = &urandom_write,
     .chr.read =  &urandom_read,
 
 };
@@ -95,6 +96,15 @@ static ssize_t urandom_read(device_t* device, void* buf, size_t size) {
 
     return size;
     
+}
+
+static ssize_t urandom_write(device_t* device, const void* buf, size_t size) {
+    
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
+
+    return size;
+
 }
 
 

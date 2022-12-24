@@ -27,6 +27,9 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 void* memset(void* dest, int c, size_t n) {
 
@@ -36,3 +39,16 @@ void* memset(void* dest, int c, size_t n) {
     return dest;
     
 }
+
+
+TEST(libk_memset_test, {
+
+	char a[] = "Hello World!";
+	char b[] = "Hello World!";
+
+	memset(a, 'A', 5);
+	memset(b, 'A', 5);
+
+	DEBUG_ASSERT(strcmp(a, b) == 0);
+
+});

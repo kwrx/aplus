@@ -364,7 +364,6 @@ static void tsm_handle_input(int out, char* ascii, size_t size) {
             case '\n':
 
                 tsm_input_append('\n');
-                tsm_input_flush(out);
                 break;
 
             default:
@@ -373,6 +372,8 @@ static void tsm_handle_input(int out, char* ascii, size_t size) {
                 break;
                 
         }
+
+        tsm_input_flush(out);
 
     }
 

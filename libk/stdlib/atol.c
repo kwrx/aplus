@@ -28,6 +28,9 @@
 #include <stdbool.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 long atol(const char *s) {
 
@@ -50,3 +53,17 @@ long atol(const char *s) {
 
 
 }
+
+
+TEST(libk_atol_test, {
+
+    DEBUG_ASSERT(atol("0") == 0);
+    DEBUG_ASSERT(atol("1") == 1);
+    DEBUG_ASSERT(atol("2") == 2);
+    DEBUG_ASSERT(atol("33993") == 33993);
+    DEBUG_ASSERT(atol("2147483647") == 2147483647);
+    DEBUG_ASSERT(atol("-2147483648") == -2147483648);
+    DEBUG_ASSERT(atol("-1") == -1);
+    DEBUG_ASSERT(atol("ss") == 0);
+
+});

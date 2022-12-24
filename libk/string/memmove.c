@@ -28,7 +28,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 void *memmove(void* dest, const void* src, size_t n) {
@@ -52,3 +53,14 @@ void *memmove(void* dest, const void* src, size_t n) {
 	return dest;
 
 }
+
+
+TEST(libk_memmove_test, {
+
+	char a[] = "Hello World!";
+	char b[13];
+
+	DEBUG_ASSERT(memmove(b, a, sizeof(a)) == b);
+	DEBUG_ASSERT(memcmp(a, b, sizeof(a)) == 0);
+
+});

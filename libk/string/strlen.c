@@ -28,14 +28,26 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 size_t strlen(const char* src) {
 
-    size_t n = 0;
-    while(*src++)
-        n++;
-    
-    return n;
+    size_t len = 0;
+
+    while(src[len] != '\0') {
+        len++;
+    }
+
+    return len;
 
 }
+
+
+TEST(libk_strlen_test, {
+
+    DEBUG_ASSERT(strlen("Hello World!") == 12);
+    DEBUG_ASSERT(strlen("H") == 1);
+
+});

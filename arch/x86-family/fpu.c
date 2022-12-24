@@ -412,6 +412,7 @@ void* fpu_new_state(void) {
     DEBUG_ASSERT( (uintptr_t) p);
     DEBUG_ASSERT(((uintptr_t) p & 63) == 0);
 
+    DEBUG_ASSERT(sizeof(__fpu_inital_state) >= fpu_size());
 
     memcpy(p, &__fpu_inital_state, fpu_size());
 

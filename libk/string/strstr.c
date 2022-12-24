@@ -27,6 +27,9 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 
 char* strstr(const char* haystack, const char* needle) {
@@ -57,3 +60,15 @@ char* strstr(const char* haystack, const char* needle) {
 
 	return NULL;
 }
+
+
+TEST(libk_strstr_test, {
+
+    char str[] = "Hello World!";
+
+    DEBUG_ASSERT(strstr(str, "Hello") == str);
+    DEBUG_ASSERT(strstr(str, "World") == str + 6);
+    DEBUG_ASSERT(strstr(str, "World!") == str + 6);
+    DEBUG_ASSERT(strstr(str, "World!!") == NULL);
+
+});

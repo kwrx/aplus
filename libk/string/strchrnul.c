@@ -28,7 +28,8 @@
 #include <string.h>
 #include <sys/types.h>
 
-
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 char* strchrnul(const char *str, int uc) {
@@ -43,3 +44,23 @@ char* strchrnul(const char *str, int uc) {
     __builtin_unreachable();
 
 }
+
+
+TEST(libk_strchrnul_test, {
+
+	char a[] = "Hello World!";
+	char b[] = "Hello World!";
+
+	DEBUG_ASSERT(strchrnul(a, 'o') - a == strchrnul(b, 'o') - b);
+	DEBUG_ASSERT(strchrnul(a, 'o') - a == 4);
+
+	DEBUG_ASSERT(strchrnul(a, 'z') - a == strchrnul(b, 'z') - b);
+	DEBUG_ASSERT(strchrnul(a, 'z') - a == 12);
+
+	DEBUG_ASSERT(strchrnul(a, '!') - a == strchrnul(b, '!') - b);
+	DEBUG_ASSERT(strchrnul(a, '!') - a == 11);
+
+	DEBUG_ASSERT(strchrnul(a, '\0') - a == strchrnul(b, '\0') - b);
+	DEBUG_ASSERT(strchrnul(a, '\0') - a == 12);
+
+});

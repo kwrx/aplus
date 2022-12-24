@@ -182,6 +182,8 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             case MULTIBOOT_TAG_TYPE_ELF_SECTIONS:
 
+                DEBUG_ASSERT(sizeof(core->exe.sections) >= ((struct multiboot_tag_elf_sections*) btags)->num * ((struct multiboot_tag_elf_sections*) btags)->entsize);
+
                 core->exe.sh_num        = ((struct multiboot_tag_elf_sections*) btags)->num;
                 core->exe.sh_entsize    = ((struct multiboot_tag_elf_sections*) btags)->entsize;
                 core->exe.sh_shndx      = ((struct multiboot_tag_elf_sections*) btags)->shndx;

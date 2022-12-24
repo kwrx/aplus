@@ -66,7 +66,7 @@ static void test_run(const char* context, uintptr_t hook_start, uintptr_t hook_e
 
 
 #if DEBUG_LEVEL_INFO
-        kprintf(" - <%s> (%zd/%zd) running \e[37m%32s\e[0m    ", context, ++cnt, max, e->name);
+        kprintf(" - <%s> (%2zd/%2zd) running \e[37m%32s\e[0m    ", context, ++cnt, max, e->name);
 #endif
 
         ((void (*)(void)) e->ptr) ();

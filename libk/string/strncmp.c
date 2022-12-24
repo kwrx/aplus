@@ -28,6 +28,10 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
+
 int strncmp(const char* a, const char* b, size_t n) {
 
 
@@ -50,3 +54,12 @@ int strncmp(const char* a, const char* b, size_t n) {
 	return 0;
 
 }
+
+
+TEST(libk_strncmp_test, {
+
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World!", 12) == 0);
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World?", 11) == 0);
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World?", 12) == -1);
+
+});

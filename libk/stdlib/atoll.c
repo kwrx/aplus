@@ -28,6 +28,9 @@
 #include <stdbool.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 long long atoll(const char *s) {
 
@@ -50,3 +53,16 @@ long long atoll(const char *s) {
 
 
 }
+
+
+TEST(libk_atoll_test, {
+
+    DEBUG_ASSERT(atoll("0") == 0);
+    DEBUG_ASSERT(atoll("1") == 1);
+    DEBUG_ASSERT(atoll("10") == 10);
+    DEBUG_ASSERT(atoll("100") == 100);
+    DEBUG_ASSERT(atoll("4294967295") == 4294967295LL);
+    DEBUG_ASSERT(atoll("-4294967295") == -4294967295LL);
+    DEBUG_ASSERT(atoll("abc") == 0);
+
+});

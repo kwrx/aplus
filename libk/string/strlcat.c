@@ -25,6 +25,8 @@
 
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 size_t strlcat(char *restrict dest, const char *restrict src, size_t n) {
@@ -43,3 +45,16 @@ size_t strlcat(char *restrict dest, const char *restrict src, size_t n) {
 
 }
 
+
+TEST(libk_strlcat_test, {
+
+    char a[32] = "Hello World!";
+    char b[32] = "Hello World!";
+
+    DEBUG_ASSERT(strlcat(a, "Hello World!", 12) == 12);
+    DEBUG_ASSERT(strlcat(b, "Hello World!", 24) == 24);
+
+    DEBUG_ASSERT(strcmp(a, "Hello World!") == 0);
+    DEBUG_ASSERT(strcmp(b, "Hello World!Hello World!") == 0);
+
+});
