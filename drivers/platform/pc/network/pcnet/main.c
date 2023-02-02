@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -97,6 +97,8 @@ struct pcnet {
 
 static struct pcnet* devices[PCNET_MAX_DEVICES] = { 0 };
 
+static uint32_t pci_devices[PCNET_MAX_DEVICES];
+static uint32_t pci_count = 0;
 
 
 
@@ -197,8 +199,8 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
 
 
     memcpy (
-        (void*) (dev->vtxbuf + dev->txid * PCNET_BUFSIZE), 
-        (void*) (dev->cache), 
+        (void*) (dev->vtxbuf + dev->txid * PCNET_BUFSIZE),
+        (void*) (dev->cache),
         len
     );
 
@@ -209,7 +211,7 @@ static void pcnet_endoutput(void* internals, uint16_t len) {
     mmio_w16(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 4), (((-len) & 0x0FFF) | 0xF000));
     mmio_w8 (dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7), mmio_r8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7)) | 0x80);
 
-    
+
     w_csr32(dev, 0, r_csr32(dev, 0) | (1 << 3));
 
 
@@ -230,7 +232,7 @@ static int pcnet_startinput(void* internals) {
     DEBUG_ASSERT(internals);
 
     struct pcnet* dev = (struct pcnet*) internals;
-    
+
 
     uint16_t size = mmio_r16(dev->vrxdes + (dev->rxid * PCNET_DE_SIZE + 8));
 
@@ -253,7 +255,6 @@ static void pcnet_input(void* internals, void* buf, uint16_t len) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->offset < dev->size);
-        
 
     if(dev->offset + len > dev->size) {
         len = dev->size - dev->offset;
@@ -275,11 +276,11 @@ static void pcnet_input(void* internals, void* buf, uint16_t len) {
 
 
 static void pcnet_endinput(void* internals) {
-    
+
     DEBUG_ASSERT(internals);
-    
+
     struct pcnet* dev = (struct pcnet*) internals;
-    
+
 
     mmio_w8(dev->vrxdes + dev->rxid * PCNET_DE_SIZE + 7, 0x80);
 
@@ -294,12 +295,12 @@ static void pcnet_endinput(void* internals) {
 
 
 static void pcnet_input_nomem(void* internals, uint16_t len) {
-    kpanicf("pcnet: PANIC! no memory left for %d bytes\n", len);   
+    kpanicf("pcnet: PANIC! no memory left for %d bytes\n", len);
 }
 
 
 static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
-    
+
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->irq == irq);
 
@@ -332,7 +333,7 @@ static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
     b  = r_csr32(eth, 58);
     b &= 0xFFF0;
     b |= 2;
-    
+
     w_csr32(eth, 58, b);
 
 
@@ -392,7 +393,7 @@ static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
     for(size_t i = 10; i < 20; i++) {
         mmio_w8(eth->vbuf + i, 0);
     }
-    
+
 
     mmio_w32(eth->vbuf + 20, eth->rxdes);
     mmio_w32(eth->vbuf + 24, eth->txdes);
@@ -450,25 +451,26 @@ static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
 
 
 
+
+
+static void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
+
+    if(pci_count >= PCNET_MAX_DEVICES)
+        return;
+
+    if((venid == PCNET_PCI_VENDOR_ID) && (devid == PCNET_PCI_DEVICE_ID)) {
+        pci_devices[pci_count++] = device;
+    }
+
+}
+
+
+
 void init(const char* args) {
 
     if(strstr(core->boot.cmdline, "network=off"))
         return;
 
-
-    uint32_t pci_devices[PCNET_MAX_DEVICES];
-    uint32_t pci_count = 0;
-
-    void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
-
-        if(pci_count >= PCNET_MAX_DEVICES)
-            return;
-
-        if((venid == PCNET_PCI_VENDOR_ID) && (devid == PCNET_PCI_DEVICE_ID)) {
-            pci_devices[pci_count++] = device;
-        }
-
-    }
 
 
     pci_scan(&pcnet_find_pci, -1, NULL);
@@ -534,7 +536,7 @@ void init(const char* args) {
         eth->device.net.internals = eth;
 
 
-        if(!netif_add( &eth->device.net.interface, 
+        if(!netif_add( &eth->device.net.interface,
                        &eth->device.net.ip,
                        &eth->device.net.nm,
                        &eth->device.net.gw, &eth->device, ethif_init, ethernet_input)) {
@@ -568,5 +570,5 @@ void init(const char* args) {
 }
 
 void dnit(void) {
-    
+
 }

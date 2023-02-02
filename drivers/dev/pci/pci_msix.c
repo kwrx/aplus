@@ -42,9 +42,9 @@
 
 
 static struct {
-    pcidev_t device;
     pci_irq_handler_t handler;
     pci_irq_data_t data;
+    pcidev_t device;
     uint16_t index;
 } pci_msix_devices[PCI_MSIX_DEVICES_MAX] = { 0 };
 
@@ -135,14 +135,12 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
         // Mask all interrupts
 
-        uint32_t i;
-        for(i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
+        for(size_t i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
             pci_msix_mask(device, &msix, i);
-
-
 
         if(mptr)
             memcpy(mptr, &msix, sizeof(pci_msix_t));
+        
 
         return 0;
 

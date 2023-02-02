@@ -58,11 +58,12 @@ extern inode_t __vfs_root;
 
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
 
-    if(unlikely(!address_space))
+    if(unlikely(!address_space)) {
         x86_set_cr3(x86_get_cr3());
-    else
+    } else {
         x86_set_cr3(address_space->pm);
-        
+    }
+    
 }
 
 
@@ -169,8 +170,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
     DEBUG_ASSERT(current_cpu->frame);
 
     DEBUG_ASSERT(prev);
-    DEBUG_ASSERT(prev->frame);
-    DEBUG_ASSERT(prev->address_space->pm);
+    DEBUG_ASSERT(prev->frame); // BUG: prev->frame is randomly NULL
 
     DEBUG_ASSERT(next);
     DEBUG_ASSERT(next->frame);

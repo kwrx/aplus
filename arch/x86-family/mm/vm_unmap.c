@@ -48,10 +48,10 @@
  * @param virtaddr: virtual address.
  * @param length: size of virtual space.
  */
+__nonnull(1)
 uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virtaddr, size_t length) {
 
-    DEBUG_ASSERT(space);
-    DEBUG_ASSERT(length);
+    DEBUG_ASSERT(length > 0);
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;

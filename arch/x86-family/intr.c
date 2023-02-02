@@ -42,13 +42,12 @@ extern struct {
     union {
         struct {
             void (*handler) (void*, uint8_t);
-            spinlock_t lock;
+            spinlock_t lock __packed;
         };
 
         long __padding[4];
     };
 } bootstrap_irq[224];
-
 
 
 void* x86_exception_handler(interrupt_frame_t* frame) {
@@ -208,7 +207,6 @@ long arch_intr_disable(void) {
 
 
 
-
 void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
     
     DEBUG_ASSERT(irq < (0xFF - 0x20));
@@ -268,6 +266,7 @@ void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t))
 #endif
 
 }
+
 
 void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
 

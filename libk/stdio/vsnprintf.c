@@ -31,9 +31,8 @@
 #include <aplus/debug.h>
 
 
-
 __nosanitize("undefined")
-static void dec(intmax_t __v, ssize_t padding, char* buf, int* offset, bool negative) {
+static void dec(intmax_t __v, ssize_t padding, char* buf, size_t* offset, bool negative) {
 
     if(negative) {
 
@@ -56,7 +55,7 @@ static void dec(intmax_t __v, ssize_t padding, char* buf, int* offset, bool nega
     ssize_t digits   = 1;
     ssize_t radix_10 = 9;
 
-    while(v > radix_10) {
+    while(v > (uintmax_t) radix_10) {
         digits++;
         radix_10 = (radix_10 * 10) + 9;
     }
@@ -91,12 +90,12 @@ static void dec(intmax_t __v, ssize_t padding, char* buf, int* offset, bool nega
 
 
 __nosanitize("undefined")
-static void hex(uintmax_t v, ssize_t padding, char* buf, int* offset, bool upper) {
+static void hex(uintmax_t v, ssize_t padding, char* buf, size_t* offset, bool upper) {
     
     ssize_t digits   = 1;
     ssize_t radix_16 = 15;
 
-    while(v > radix_16) {
+    while(v > (uintmax_t) radix_16) {
         digits++;
         radix_16 = (radix_16 * 16) + 15;
     }
@@ -135,12 +134,12 @@ static void hex(uintmax_t v, ssize_t padding, char* buf, int* offset, bool upper
 
 
 __nosanitize("undefined")
-static void oct(uintmax_t v, ssize_t padding, char* buf, int* offset) {
+static void oct(uintmax_t v, ssize_t padding, char* buf, size_t* offset) {
     
     ssize_t digits  = 1;
     ssize_t radix_8 = 7;
 
-    while(v > radix_8) {
+    while(v > (uintmax_t) radix_8) {
         digits++;
         radix_8 = (radix_8 * 8) + 7;
     }
@@ -178,7 +177,7 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
     DEBUG_ASSERT(size);
     DEBUG_ASSERT(fmt);
 
-    int p = 0;
+    size_t p = 0;
 
     for(; *fmt; fmt++) {
 
@@ -305,13 +304,21 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
             case 's':
 
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '3';
+                buf[p++] = '5';
+                buf[p++] = 'm';
+#endif
+
                 if(w > m) {
                     w = m;
                 }
 
                 if(w > 0) {
 
-                    size_t i = 0;
+                    ssize_t i = 0;
 
                     for(char* s = va_arg(v, char*); s && *s && m--; s++, i++) {
                         buf[p++] = *s;
@@ -329,7 +336,12 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                 
                 }
 
-
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '0';
+                buf[p++] = 'm';
+#endif
 
                 break;
 
@@ -341,6 +353,14 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
             case 'x':
             case 'X':
 
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '3';
+                buf[p++] = '3';
+                buf[p++] = 'm';
+#endif
+
                 switch(l) {
                     case 1: hex((uintmax_t) ((uint8_t)  va_arg(v, int)), w, buf, &p, (*fmt == 'X')); break;
                     case 2: hex((uintmax_t) ((uint16_t) va_arg(v, int)), w, buf, &p, (*fmt == 'X')); break;
@@ -349,9 +369,24 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                     default: DEBUG_ASSERT(0); break;
                 }
 
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '0';
+                buf[p++] = 'm';
+#endif
+
                 break;
 
             case 'o':
+
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '3';
+                buf[p++] = '3';
+                buf[p++] = 'm';
+#endif
 
                 switch(l) {
                     case 1: oct((uintmax_t) ((uint8_t)  va_arg(v, int)), w, buf, &p); break;
@@ -361,9 +396,24 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                     default: DEBUG_ASSERT(0); break;
                 }
 
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '0';
+                buf[p++] = 'm';
+#endif
+
                 break;
 
             case 'p':
+
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '3';
+                buf[p++] = '3';
+                buf[p++] = 'm';
+#endif
 
                 fmt++;
 
@@ -396,11 +446,26 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
 
                 }
 
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '0';
+                buf[p++] = 'm';
+#endif
+
                 break;
 
             case 'd':
             case 'i':
             case 'u':
+
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '3';
+                buf[p++] = '3';
+                buf[p++] = 'm';
+#endif
 
                 switch(l) {
                     case 1: dec((intmax_t) ((int8_t)  va_arg(v, int)), w, buf, &p, *fmt != 'u'); break;
@@ -409,6 +474,13 @@ int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
                     case 8: dec((intmax_t) ((int64_t) va_arg(v, int64_t)), w, buf, &p, *fmt != 'u'); break;
                     default: DEBUG_ASSERT(0); break;
                 }
+
+#if defined(CONFIG_DEBUG_PRETTY_PRINT)
+                buf[p++] = '\e';
+                buf[p++] = '[';
+                buf[p++] = '0';
+                buf[p++] = 'm';
+#endif
 
                 break;
 

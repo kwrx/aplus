@@ -34,6 +34,10 @@
 
 size_t strspn(const char *str, const char* accept) {
 
+	DEBUG_ASSERT(str);
+	DEBUG_ASSERT(accept);
+	
+
 	size_t accept_length = 0;
 
 	while (accept[accept_length])

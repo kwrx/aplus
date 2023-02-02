@@ -33,8 +33,79 @@
 
 void* memset(void* dest, int c, size_t n) {
 
-	for(int i = 0; i < n; i++)
-		((char*) dest) [i] = (char) c;
+	DEBUG_ASSERT(dest);
+
+	uintptr_t d = (uintptr_t) dest;
+
+
+	size_t i = 0;
+
+	for(; i + 64 < n; i += 64) {
+
+		*((uint64_t*) (d + 0))  = c;
+		*((uint64_t*) (d + 8))  = c;
+		*((uint64_t*) (d + 16)) = c;
+		*((uint64_t*) (d + 24)) = c;
+		*((uint64_t*) (d + 32)) = c;
+		*((uint64_t*) (d + 40)) = c;
+		*((uint64_t*) (d + 48)) = c;
+		*((uint64_t*) (d + 56)) = c;
+
+		d += 64;
+
+	}
+
+	for(; i + 32 < n; i += 32) {
+
+		*((uint64_t*) (d + 0))  = c;
+		*((uint64_t*) (d + 8))  = c;
+		*((uint64_t*) (d + 16)) = c;
+		*((uint64_t*) (d + 24)) = c;
+
+		d += 32;
+
+	}
+
+	for(; i + 16 < n; i += 16) {
+
+		*((uint64_t*) (d + 0)) = c;
+		*((uint64_t*) (d + 8)) = c;
+
+		d += 16;
+
+	}
+
+	for(; i + 8 < n; i += 8) {
+	
+		*((uint64_t*) (d)) = c;
+
+		d += 8;
+
+	}
+
+	for(; i + 4 < n; i += 4) {
+	
+		*((uint32_t*) (d)) = c;
+
+		d += 4;
+
+	}
+
+	for(; i + 2 < n; i += 2) {
+	
+		*((uint16_t*) (d)) = c;
+
+		d += 2;
+
+	}
+
+	for(; i < n; i += 1) {
+	
+		*((uint8_t*) (d)) = c;
+
+		d += 1;
+
+	}
 
     return dest;
     

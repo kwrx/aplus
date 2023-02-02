@@ -858,7 +858,7 @@ static void sata_init(device_t* device) {
     ata_identify_t identify = { 0 };
 
     memcpy (
-        &identify, 
+        &identify,
         (void*) (arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)),
         sizeof(identify)
     );

@@ -34,6 +34,8 @@
 
 long atol(const char *s) {
 
+    DEBUG_ASSERT(s);
+
     long val = 0;
     bool neg = 0;
 
@@ -41,8 +43,8 @@ long atol(const char *s) {
         s++;
 
     switch (*s) {
-        case '-': neg = true;
-        case '+': s++;
+        case '-': neg = true; s++; break;
+        case '+': s++; break;
     }
 
     while ((*s) >= '0' && (*s) <= '9') {

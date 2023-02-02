@@ -100,12 +100,12 @@ typedef volatile struct {
     volatile int flags;
     volatile int refcount;
 
-} __packed spinlock_t;
+} spinlock_t;
 
 typedef struct {
 
     volatile uint32_t* address;
-    uint32_t value;
+    volatile uint32_t  value;
 
     struct timespec timeout;
 

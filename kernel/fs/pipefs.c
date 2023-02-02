@@ -89,6 +89,9 @@ ssize_t pipefs_read(inode_t* inode, void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
 
+    __unused_param(offset);
+
+
     if(unlikely(size == 0))
         return 0;
 
@@ -105,6 +108,9 @@ ssize_t pipefs_write(inode_t* inode, const void* buf, off_t offset, size_t size)
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
+
+    __unused_param(offset);
+
 
     if(unlikely(size == 0))
         return 0;
@@ -147,6 +153,9 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(bufsize);
+
+    __unused_param(flags);
+    
 
     ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
    

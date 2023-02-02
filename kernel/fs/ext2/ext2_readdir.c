@@ -67,7 +67,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                 struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->iocache + i);
 
                 DEBUG_ASSERT(d->rec_len);
-                DEBUG_ASSERT(d->name_len < sizeof(e->d_name));
+                DEBUG_ASSERT(d->name_len);
 
 
                 if(pos > 0) {

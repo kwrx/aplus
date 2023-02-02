@@ -35,7 +35,10 @@
 
 void *memchr(const void *src, int c, size_t n) {
 
-	for(int i = 0; i < n; i++) {
+	DEBUG_ASSERT(src);
+	DEBUG_ASSERT(n > 0);
+
+	for(size_t i = 0; i < n; i++) {
 	
 		if(((const char*) src) [i] == (char) c)
 			return (void*) &((char*) src) [i];

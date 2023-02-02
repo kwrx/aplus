@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 aplus-terminal -c "cat /etc/motd && bash"
 #aplus-ui
@@ -20,4 +20,8 @@ aplus-terminal -c "cat /etc/motd && bash"
 # iobench /dev/sda
 # # iobench /dev/sda1
 # # iobench /dev/sda2
+
+# /usr/lib/ld-musl-x86_64.so.1 --library-path /usr/lib /test
+
+# gl-test-gears
 

@@ -33,7 +33,7 @@
 #include <arch/x86/acpi.h>
 
 
-
+__noreturn
 void arch_reboot(int mode) {
 
 
@@ -114,8 +114,10 @@ void arch_reboot(int mode) {
 
         case ARCH_REBOOT_HALT:
             break;
+            
     }
 
 
     kpanicf("System Halted!");
+
 }

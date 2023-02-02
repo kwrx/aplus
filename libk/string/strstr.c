@@ -34,6 +34,10 @@
 
 char* strstr(const char* haystack, const char* needle) {
 
+    DEBUG_ASSERT(haystack);
+    DEBUG_ASSERT(needle);
+    
+
     if(!needle[0]) {
         return (char*) haystack;
     }

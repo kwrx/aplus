@@ -34,6 +34,8 @@
 
 size_t strlen(const char* src) {
 
+    DEBUG_ASSERT(src);
+
     size_t len = 0;
 
     while(src[len] != '\0') {

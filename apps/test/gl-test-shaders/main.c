@@ -23,8 +23,6 @@
 
 #if defined(CONFIG_HAVE_MESA)
 
-#define _GNU_SOURCE
-
 #define GL_VERSION_3_0          1
 #define GL_GLEXT_PROTOTYPES     1
 

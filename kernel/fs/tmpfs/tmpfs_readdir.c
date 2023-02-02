@@ -94,7 +94,7 @@ ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count)
 
     off_t i = 0;
 
-    for(off_t j = pos; j < pos + count; j++, i++) {
+    for(off_t j = pos; j < pos + (off_t) count; j++, i++) {
 
         switch(j) {
 

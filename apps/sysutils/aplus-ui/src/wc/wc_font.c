@@ -64,10 +64,12 @@ int wc_font_initialize(void) {
         }
 
 
-        char* face   = strtok(buffer, ":");
-        char* family = strtok(NULL, ":");
-        char* weight = strtok(NULL, ":");
-        char* slant  = strtok(NULL, ":");
+        char* tok = buffer;
+
+        char* face   = strtok_r(buffer, ":", &tok);
+        char* family = strtok_r(NULL, ":", &tok);
+        char* weight = strtok_r(NULL, ":", &tok);
+        char* slant  = strtok_r(NULL, ":", &tok);
 
 
         if(!face || !family || !weight || !slant) {

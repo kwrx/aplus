@@ -78,20 +78,24 @@
 #define __weak                  __attribute__((weak))
 #endif
 
+#ifndef __noinline
+#define __noinline              __attribute__((noinline))
+#endif
+
+#ifndef __always_inline
+#define __always_inline         __attribute__((always_inline))
+#endif
+
+#ifndef __const
+#define __const                 __attribute__((const))
+#endif
+
 #ifndef __deprecated
 #define __deprecated            __attribute__((deprecated))
 #endif
 
-#ifndef __noreturn
-#define __noreturn              __attribute__((noreturn))
-#endif
-
 #ifndef __alias
 #define __alias(s)              __attribute__((alias(#s)))
-#endif
-
-#ifndef __nosanitize
-#define __nosanitize(x)         __attribute__((no_sanitize(x)))
 #endif
 
 #ifndef __aligned
@@ -114,12 +118,46 @@
 #define __format(a, b, c)       __attribute__((format(a, b, c)))
 #endif
 
+#ifndef __nosanitize
+#define __nosanitize(x)         __attribute__((no_sanitize(x)))
+#endif
+
+#ifndef __no_sanitize_address
+#define __no_sanitize_address   __nosanitize("address")
+#endif
+
+#ifndef __no_sanitize_thread
+#define __no_sanitize_thread    __nosanitize("thread")
+#endif
+
+#ifndef __no_sanitize_undefined
+#define __no_sanitize_undefined __nosanitize("undefined")
+#endif
+
 #ifndef __returns_nonnull
 #define __returns_nonnull       __attribute__((returns_nonnull))
 #endif
 
+#ifndef __noreturn
+#define __noreturn              __attribute__((noreturn))
+#endif
+
+#ifndef __nonnull
+#define __nonnull(x...)         __attribute__((nonnull(x)))
+#endif
+
+#ifndef __warn_unused_result
+#define __warn_unused_result    __attribute__((warn_unused_result))
+#endif
+
+#ifndef __unused_param
+#define __unused_param(x)       (void)(x)
+#endif
+
+
 #define __PRAGMA(x)             _Pragma(#x)
 #define WARNING(x)              __PRAGMA(GCC diagnostic ignored x)
+
 
 
 
@@ -277,7 +315,7 @@ __BEGIN_DECLS
 extern struct syscore* core;
 
 //? See kernel/runtime/dl.c
-uintptr_t   runtime_get_address(const char*);
+uintptr_t   runtime_get_address(const char*) __nonnull((1));
 const char* runtime_get_name(uintptr_t);
 
 //? See kernel/runtime/stacktrace.c

@@ -65,10 +65,10 @@ static ssize_t procfs_service_read(inode_t* inode, void* buf, off_t pos, size_t 
     DEBUG_ASSERT(data);
     DEBUG_ASSERT(max > 0);
 
-    if(unlikely(pos >= max))
+    if(unlikely((size_t) pos >= max))
         return 0;
 
-    if(unlikely(pos + size > max))
+    if(unlikely((size_t) pos + size > max))
         size = max - pos;
 
     return memcpy(buf, data + pos, size)

@@ -508,7 +508,7 @@ void pmm_init(uintptr_t max_memory) {
         if(i * PML2_PAGESIZE >= pmm_max_memory)
             break;
 
-        pml2_bitmap[i] = (uintptr_t) &pml1_first_preallocated_bitmaps[PML2_MAX_ENTRIES * i];
+        pml2_bitmap[i] = (uintptr_t) &pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * i];
 
     }
 

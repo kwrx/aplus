@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
 #include <stdint.h>
 #include <signal.h>
 #include <unistd.h>

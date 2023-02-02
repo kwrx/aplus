@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
 #include <sched.h>
 
 #include <aplus.h>
@@ -264,7 +263,6 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     do_unshare(CLONE_FS);
     do_unshare(CLONE_FILES);
     do_unshare(CLONE_SIGHAND);
-    do_unshare(CLONE_VM);
 
 
     #define RXX(a, b, c, d) {                                                               \
@@ -286,6 +284,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
+    vmm_address_space_t* current_space = current_task->address_space;
 
     uintptr_t end   = 0;
     uintptr_t flags = 0;
@@ -294,10 +293,13 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     __lock(&current_task->lock, {
 
 
-        //arch_userspace_release(); // TODO: release userspace resources
+        current_task->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_NEW_SPACE);
 
         current_task->userspace.start = ~0UL;
         current_task->userspace.end   =  0UL;
+
+        arch_task_switch_address_space(current_task->address_space);
+
 
 
         DEBUG_ASSERT(head.e_phnum > 0);
@@ -493,9 +495,19 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.sigstack = sigstack;
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
+    arch_vmm_free_address_space(current_space);
+
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
+    kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX) memory(%ld.%ld MB)\n", 
+        head.e_entry, 
+        current_task->tid, 
+        sigstack, 
+        stack, 
+        bottom,
+        (pmm_get_used_memory() / 1024) / 1024,
+        (pmm_get_used_memory() / 1024) % 1024
+    );
 #endif
 
 

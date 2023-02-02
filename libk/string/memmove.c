@@ -34,6 +34,10 @@
 
 void *memmove(void* dest, const void* src, size_t n) {
 
+	DEBUG_ASSERT(dest);
+	DEBUG_ASSERT(src);
+	DEBUG_ASSERT(n > 0);
+
 	unsigned char* d = (unsigned char*) dest;
 	unsigned char* s = (unsigned char*) src;
 

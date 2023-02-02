@@ -32,16 +32,25 @@
 
 
 int atoi(const char *s) {
-	int n=0, neg=0;
-	while ((*s) == ' ' || (*s) == '\t') s++;
-	switch (*s) {
-	case '-': neg=1;
-	case '+': s++;
-	}
-	/* Compute n as a negative number to avoid overflow on INT_MIN */
-	while ((*s) >= '0' && (*s) <= '9')
-		n = 10*n - (*s++ - '0');
-	return neg ? n : -n;
+
+	DEBUG_ASSERT(s);
+
+    int val = 0;
+    bool neg = 0;
+
+    while ((*s) == ' ' || (*s) == '\t')
+        s++;
+
+    switch (*s) {
+        case '-': neg = true; s++; break;
+        case '+': s++; break;
+    }
+
+    while ((*s) >= '0' && (*s) <= '9') {
+        val = 10 * val - (*s++ - '0');
+    }
+
+    return neg ? val : -val;
 }
 
 

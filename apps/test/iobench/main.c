@@ -53,7 +53,7 @@ static void show_version(int argc, char** argv) {
         "Copyright (c) %s Antonino Natale.\n"
         "Built with gcc %s (%s)\n",
         
-        argv[0], __DATE__ + 7, __VERSION__, __TIMESTAMP__
+        argv[0], &__DATE__[7], __VERSION__, __TIMESTAMP__
     );
     
     exit(0);
@@ -136,7 +136,7 @@ int main(int argc, char** argv) {
 
     if(fstat(fd, &st) < 0) {
         perror("fstat");
-        return -1;
+        goto fail;
     }
 
     printf("%s: %ld KiB\n", device, st.st_size >> 10);
@@ -157,7 +157,7 @@ int main(int argc, char** argv) {
 
         if(r < 0) {
             perror(mode ? "write" : "read");
-            return -1;
+            goto fail;
         }
 
         bytes += r;
@@ -178,8 +178,14 @@ int main(int argc, char** argv) {
 
     }
 
+    free(buf);
+
     fprintf(stderr, "%s: %s a total of %ld MiB in %ld seconds\n", mode ? "wrote" : "read", device, bytes >> 20, time(NULL) - start);
-    
+
     return 0;
+
+
+fail:
+    return free(buf), 1;
     
 }

@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
@@ -66,6 +65,10 @@ static uint64_t hpet_frequency = 1;
 static uintptr_t hpet_address  = 0;
 
 
+static inline uint8_t __RTC(uint8_t reg) {
+    return outb(0x70, reg)
+          , inb(0x71);
+}
 
 
 
@@ -84,12 +87,8 @@ void arch_timer_delay(uint64_t us) {
 }
 
 
-
 uint64_t arch_timer_gettime(void) {
-    
-    inline uint8_t RTC(uint8_t x)
-        { outb(0x70, x); return inb(0x71); }
-        
+            
     #define BCD2BIN(bcd)                        \
         ((((bcd) & 0x0F) + ((bcd) / 16) * 10))
         
@@ -100,19 +99,21 @@ uint64_t arch_timer_gettime(void) {
     struct tm tm = { 0 };
     
     __lock(&rtc_lock, {
-        tm.tm_sec  = BCD2BIN(RTC(0));
-        tm.tm_min  = BCD2BIN(RTC(2));
-        tm.tm_hour = BCD2BIN2(RTC(4));
-        tm.tm_mday = BCD2BIN(RTC(7));
-        tm.tm_mon  = BCD2BIN(RTC(8));
-        tm.tm_year = BCD2BIN(RTC(9)) + 2000;
+        tm.tm_sec  = BCD2BIN(__RTC(0));
+        tm.tm_min  = BCD2BIN(__RTC(2));
+        tm.tm_hour = BCD2BIN2(__RTC(4));
+        tm.tm_mday = BCD2BIN(__RTC(7));
+        tm.tm_mon  = BCD2BIN(__RTC(8));
+        tm.tm_year = BCD2BIN(__RTC(9)) + 2000;
         tm.tm_wday = 0;
         tm.tm_yday = 0;
         tm.tm_isdst = 0;
     });
 
 
-    static int m[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    static int m[] = { 
+        31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 
+    };
 
     uint64_t ty = tm.tm_year - 1970;
     uint64_t lp = (ty + 2) / 4;

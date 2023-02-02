@@ -29,9 +29,14 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/errno.h>
 
 
-void *memcpy(void *restrict dest, const void *restrict src, size_t n) {
+void* memcpy(void *restrict dest, const void *restrict src, size_t n) {
+
+	DEBUG_ASSERT(dest);
+	DEBUG_ASSERT(src);
+
 
 	uintptr_t d = (uintptr_t) dest;
 	uintptr_t s = (uintptr_t) src;
@@ -121,9 +126,9 @@ void *memcpy(void *restrict dest, const void *restrict src, size_t n) {
 TEST(libk_memcpy_test, {
 
 	char a[] = "Hello World!";
-	char b[12];
+	char b[13];
 
-	DEBUG_ASSERT(memcpy(b, a, sizeof(b)) == b);
-	DEBUG_ASSERT(memcmp(a, b, sizeof(b)) == 0);
+	DEBUG_ASSERT(memcpy(b, a, 12) == b);
+	DEBUG_ASSERT(strncmp(b, a, 12) == 0);
 
 });

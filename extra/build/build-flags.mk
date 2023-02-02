@@ -2,9 +2,9 @@ include $(ROOTDIR)/config.mk
 
 ifeq ($(CONFIG_HAVE_DEBUG),y)
 
-	CFLAGS      += -g -Og -fno-omit-frame-pointer -Wall -Werror
-	CXXFLAGS    += -g -Og -fno-omit-frame-pointer -Wall -Werror
-	ASFLAGS     += -g -Og -fno-omit-frame-pointer -Wall -Werror
+	CFLAGS      += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
+	CXXFLAGS    += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
+	ASFLAGS     += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
 	DEFINES     += DEBUG=1
 
 
@@ -66,6 +66,7 @@ ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 endif
 
 
+
 #
 # Defines
 #
@@ -77,8 +78,8 @@ ASFLAGS     += $(addprefix -I,$(INCLUDES)) $(addprefix -D,$(DEFINES)) -D__ASSEMB
 #
 # Standard
 #
-CFLAGS	  	+= -std=gnu17
-CXXFLAGS 	+= -std=gnu++20
+CFLAGS	  	+= -D_GNU_SOURCE -std=gnu17 
+CXXFLAGS 	+= -D_GNU_SOURCE -std=gnu++17
 
 
 #

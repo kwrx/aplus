@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
 #include <sched.h>
 
 #include <stddef.h>
@@ -102,8 +101,10 @@ static void init_welcome(void) {
 
 
     char line[BUFSIZ];
-    while(fgets(line, sizeof(line), fp) > 0)
-        fprintf(stdout, line);
+
+    while(fgets(line, sizeof(line), fp) > 0) {
+        fwrite(line, strlen(line), 1, stdout);
+    }
 
 
     fflush(stdout);
@@ -197,8 +198,10 @@ static void init_fstab() {
                     fprintf(stderr, "fstab: mount device %s in %s [fstype(%s), flags(%s)]\n", dev, dir, fs, fl);
 #endif
 
+
+                    char* tok = fl;
                     
-                    for(char* k = strtok(fl, ","); k; k = strtok(NULL, ",")) {
+                    for(char* k = strtok_r(fl, ",", &tok); k; k = strtok_r(NULL, ",", &tok)) {
 
                         #define has(str, flag)          \
                             if(strcmp(k, str) == 0) {   \

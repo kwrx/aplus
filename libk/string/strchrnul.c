@@ -34,6 +34,8 @@
 
 char* strchrnul(const char *str, int uc) {
 
+	DEBUG_ASSERT(str);
+
 	const unsigned char* ustr = (const unsigned char*) str;
 
 	for (size_t i = 0; 1; i++)

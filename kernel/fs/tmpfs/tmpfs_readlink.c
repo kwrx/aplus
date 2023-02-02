@@ -49,8 +49,8 @@ ssize_t tmpfs_readlink(inode_t* inode, char * buf, size_t len) {
 
     if(!i->data)
         return 0;
-
-    if(len > i->st.st_size)
+        
+    if(len > (size_t) i->st.st_size)
         len = i->st.st_size;
 
 

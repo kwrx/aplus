@@ -35,6 +35,10 @@
 
 size_t strcspn(const char *str, const char* reject) {
 
+	DEBUG_ASSERT(str);
+	DEBUG_ASSERT(reject);
+	
+
 	size_t reject_length = 0;
 
 	while (reject[reject_length])

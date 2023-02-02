@@ -37,6 +37,8 @@ char* strchrnul(const char*, int);
 
 char* strchr(const char *s, int c) {
 
+    DEBUG_ASSERT(s);
+
     char *r = strchrnul(s, c);
 	return *(unsigned char *) r == (unsigned char) c ? r : 0;
 

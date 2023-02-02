@@ -80,8 +80,11 @@
 #define ARCH_VMM_MAP_TYPE_MMAP      (1 << 12)
 #define ARCH_VMM_MAP_TYPE_COW       (2 << 12)
 
-#define ARCH_VMM_CLONE_VM           (1 << 0)
+
 #define ARCH_VMM_CLONE_DEMAND       (1 << 1)
+#define ARCH_VMM_CLONE_USERSPACE    (1 << 2)
+
+#define ARCH_VMM_CLONE_NEW_SPACE    (0)
 
 
 

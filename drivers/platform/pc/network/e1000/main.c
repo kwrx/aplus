@@ -197,6 +197,10 @@ struct e1000 {
 
 static struct e1000* devices[E1000_MAX_DEVICES];
 
+static uint32_t pci_devices[E1000_MAX_DEVICES];
+static uint32_t pci_count = 0;
+
+
 
 
 static inline void wrcmd(struct e1000* dev, uint16_t address, uint32_t value) {
@@ -449,43 +453,35 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
 
 
 
+static void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
+        
+    if(pci_count >= E1000_MAX_DEVICES) {
+        return;
+    }
 
+    if(venid != E1000_VENDOR_ID) {
+        return;
+    }
+
+    if (devid != E1000_DEVICE_ID             &&
+        devid != 0x1004                      &&
+        devid != 0x100F                      &&
+        devid != 0x10D3                      &&
+        devid != E1000_DEVICE_ID_82577LM     &&
+        devid != E1000_DEVICE_ID_I217) {
+        return;
+    }
+    
+    
+    pci_devices[pci_count++] = device;
+
+}
 
 
 void init(const char* args) {    
 
     if(strstr(core->boot.cmdline, "network=off"))
         return;
-
-
-    uint32_t pci_devices[E1000_MAX_DEVICES];
-    uint32_t pci_count = 0;
-
-
-    void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
-        
-        if(pci_count >= E1000_MAX_DEVICES) {
-            return;
-        }
-
-        if(venid != E1000_VENDOR_ID) {
-            return;
-        }
-
-        if(devid != E1000_DEVICE_ID             &&
-           devid != 0x1004                      &&
-           devid != 0x100F                      &&
-           devid != E1000_DEVICE_ID_82577LM     &&
-           devid != 0x10D3                      &&
-           devid != E1000_DEVICE_ID_I217) {
-            return;
-        }
-        
-        
-        pci_devices[pci_count++] = device;
-
-    }
-
 
 
     pci_scan(&find_pci, -1, NULL);

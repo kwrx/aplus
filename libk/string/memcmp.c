@@ -33,6 +33,10 @@
 
 int memcmp(const void* va, const void* vb, size_t size) {
 
+    DEBUG_ASSERT(va);
+    DEBUG_ASSERT(vb);
+    DEBUG_ASSERT(size > 0);
+
     const unsigned char* a = va;
     const unsigned char* b = vb;
 

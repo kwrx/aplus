@@ -30,8 +30,14 @@
 
 
 char *strcat(char *restrict dest, const char *restrict src) {
+
+	DEBUG_ASSERT(dest);
+	DEBUG_ASSERT(src);
+
 	strcpy(dest + strlen(dest), src);
+	
 	return dest;
+
 }
 
 

@@ -155,6 +155,9 @@ void _list_remove(list_element *elem) {
 }
 
 void _list_clear(list_head **list, size_t value_size) {
+
+  (void) value_size;
+  
   if (!*list)
     return;
 

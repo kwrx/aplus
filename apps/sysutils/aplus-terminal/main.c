@@ -22,7 +22,6 @@
  */
 
 
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -137,7 +136,7 @@ static void show_version(int argc, char** argv) {
         "Copyright (c) %s Antonino Natale.\n"
         "Built with gcc %s (%s)\n",
         
-        argv[0], __DATE__ + 7, __VERSION__, __TIMESTAMP__
+        argv[0], &__DATE__[7], __VERSION__, __TIMESTAMP__
     );
     
     exit(0);
@@ -381,8 +380,6 @@ static void tsm_handle_input(int out, char* ascii, size_t size) {
 
 
 static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
-
-    assert(context.keymap.modifiers < NR_KEYS);
     
     if(keysym > NR_KEYS) {
         return;

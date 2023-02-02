@@ -43,7 +43,7 @@ static volatile int accmask = 0;
 __nosanitize("undefined")
 void kprintf(const char* fmt, ...) {
 
-    char buf[CONFIG_BUFSIZ];
+    char buf[CONFIG_BUFSIZ] = { 0 };
 
     va_list v;
     va_start(v, fmt);
@@ -75,4 +75,5 @@ void kprintf_resume(void) {
 
 void kprintf_mask(int mask) {
     __atomic_store_n(&accmask, mask, __ATOMIC_SEQ_CST);
+    __atomic_thread_fence(__ATOMIC_SEQ_CST);
 }

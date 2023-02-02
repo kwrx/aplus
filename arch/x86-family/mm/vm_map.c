@@ -49,10 +49,10 @@
  * @param length: size of virtual space.
  * @param flags: @see include/arch/x86/vmm.h
  */
+__nonnull(1)
 uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t physaddr, size_t length, int flags) {
 
-    DEBUG_ASSERT(space);
-    DEBUG_ASSERT(length);
+    DEBUG_ASSERT(length > 0);
 
 
     uintptr_t pagesize;
@@ -206,7 +206,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         /* PML4-L3 */
         {
             if(*d == X86_MMU_CLEAR)
-                *d = __alloc_page(X86_MMU_PAGESIZE, 1) | q;
+                *d = __alloc_frame(X86_MMU_PAGESIZE, true) | X86_MMU_PT_AP_PFB | q;
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -219,7 +219,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PDP-L2 is 1GiB Page");
 
                 if(*d == X86_MMU_CLEAR)
-                    *d = __alloc_page(X86_MMU_PAGESIZE, 1) | q;
+                    *d = __alloc_frame(X86_MMU_PAGESIZE, true) | X86_MMU_PT_AP_PFB | q;
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
 
@@ -232,7 +232,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                     DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 2Mib Page");
 
                     if(*d == X86_MMU_CLEAR)
-                        *d = __alloc_page(X86_MMU_PAGESIZE, 1) | q;
+                        *d = __alloc_frame(X86_MMU_PAGESIZE, true) | X86_MMU_PT_AP_PFB | q;
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -256,7 +256,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 DEBUG_ASSERT(!(*d & X86_MMU_PG_PS) && "PD-L1 is 4Mib Page");
 
                 if(*d == X86_MMU_CLEAR)
-                    *d = __alloc_page(X86_MMU_PAGESIZE, 1) | q;
+                    *d = __alloc_frame(X86_MMU_PAGESIZE, true) | X86_MMU_PT_AP_PFB | q;
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
             }
@@ -268,7 +268,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
         /* Page Table */
         {
             // TODO: add support for releasing pages when process is killed
-            // DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
+            DEBUG_ASSERT((*d == X86_MMU_CLEAR) && "Page already used, unmap first");
 
 
             if(flags & ARCH_VMM_MAP_FIXED) {
@@ -280,7 +280,7 @@ uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtaddr, uintptr_t
                 if(flags & ARCH_VMM_MAP_DEMAND)
                     *d = X86_MMU_PG_AP_TP_COW | (b & ~X86_MMU_PG_P);
                 else
-                    *d = __alloc_page(pagesize, 0) | X86_MMU_PG_AP_PFB | b;
+                    *d = __alloc_frame(pagesize, false) | X86_MMU_PG_AP_PFB | b;
 
             }
 

@@ -101,7 +101,7 @@ static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, siz
             e[i].d_reclen = sizeof(struct dirent);
             e[i].d_type   = DT_CHR;
 
-            snprintf(e[i].d_name, sizeof(e[i].d_name), "%lld", queue->index);
+            snprintf(e[i].d_name, sizeof(e[i].d_name), "%lu", queue->index);
 
 
             if(++i == count)

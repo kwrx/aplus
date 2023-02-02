@@ -67,3 +67,9 @@ endif
 %.o: %.asm
 	$(QUIET)echo "    ASM     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)nasm -felf64          $< -o $@
+
+
+%.a: %.toml
+	$(QUIET)echo "   CARGO    $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)cargo build --release --manifest-path $<
+	$(QUIET)cp target/release/lib$(patsubst %.toml,%,$<).a $@

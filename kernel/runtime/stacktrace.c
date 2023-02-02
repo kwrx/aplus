@@ -33,7 +33,7 @@
 void runtime_stacktrace() {
 
     __aligned(16)
-    uintptr_t frames[10] = { 0 };
+    uintptr_t frames[64] = { 0 };
 
     arch_debug_stacktrace((uintptr_t*) &frames, sizeof(frames) / sizeof(uintptr_t));
 

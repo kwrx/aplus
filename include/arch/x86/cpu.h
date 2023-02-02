@@ -542,7 +542,7 @@ typedef struct tss {
 
     static inline void x86_set_flags(long r) {
         __asm__ __volatile__ (
-            "pushq %rax; popfq"
+            "pushq %%rax; popfq"
             :: "a"(r)
         );
     }

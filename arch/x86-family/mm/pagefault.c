@@ -38,6 +38,7 @@
 #include <arch/x86/intr.h>
 
 
+__nonnull(1)
 void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
@@ -154,7 +155,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
             //! Handle Copy on Write
 
-            uintptr_t page = __alloc_page(pagesize, 0);
+            uintptr_t page = __alloc_frame(pagesize, false);
 
             if((*d & X86_MMU_ADDRESS_MASK) != 0) {
 

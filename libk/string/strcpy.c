@@ -33,6 +33,9 @@
 
 char* strcpy(char* dest, const char* src) {
 
+    DEBUG_ASSERT(dest);
+    DEBUG_ASSERT(src);
+
     char* p = dest;
     while(*src)
         *dest++ = *src++;

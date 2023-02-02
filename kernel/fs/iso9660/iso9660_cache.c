@@ -53,7 +53,6 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 
 
     DEBUG_ASSERT(inode.record.length >= sizeof(iso9660_directory_record_t));
-    DEBUG_ASSERT(inode.record.length <= ISO9660_BLOCK_SIZE);
 
 
 

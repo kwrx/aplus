@@ -38,12 +38,11 @@
 #include <arch/x86/intr.h>
 
 
-
+__nonnull(1)
 void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
-    DEBUG_ASSERT(space);
     DEBUG_ASSERT(space->pm);
-    DEBUG_ASSERT(size);
+    DEBUG_ASSERT(size > 0);
 
     (void) space;
     (void) virtaddr;

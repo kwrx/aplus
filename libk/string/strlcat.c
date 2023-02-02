@@ -30,6 +30,10 @@
 
 
 size_t strlcat(char *restrict dest, const char *restrict src, size_t n) {
+
+    DEBUG_ASSERT(dest);
+    DEBUG_ASSERT(src);
+    DEBUG_ASSERT(n > 0);
     
     size_t i, j;
 

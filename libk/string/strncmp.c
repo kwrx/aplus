@@ -34,6 +34,10 @@
 
 int strncmp(const char* a, const char* b, size_t n) {
 
+	DEBUG_ASSERT(a);
+	DEBUG_ASSERT(b);
+	DEBUG_ASSERT(n > 0);
+
 
 	for (size_t i = 0; i < n; i++) {
 

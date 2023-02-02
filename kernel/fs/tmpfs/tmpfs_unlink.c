@@ -78,10 +78,6 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
     inode->sb->st.f_favail++;
     inode->sb->st.f_bavail += i->st.st_size;
     inode->sb->st.f_bfree += i->st.st_size;
-            
-    if(i->data) {
-        kfree(i->data);
-    }
 
     cache_remove(&inode->sb->cache, d->ino);
 

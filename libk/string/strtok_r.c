@@ -32,13 +32,12 @@
 #include <aplus/debug.h>
 
 
-char *strtok(char *restrict str, const char *restrict delim) {
+char *strtok_r(char *restrict str, const char *restrict delim, char **restrict saveptr) {
+
+	DEBUG_ASSERT(delim);
+	DEBUG_ASSERT(saveptr);
+
 	
-
-	static char* lasttokensaveptr = NULL;
-	char** saveptr = &lasttokensaveptr;
-
-
 	if (!str && !*saveptr)
 		return NULL;
 
@@ -69,17 +68,18 @@ char *strtok(char *restrict str, const char *restrict delim) {
 TEST(libk_strtok_test, {
 
 	char str[] = "Hello World!";
+	char* tok = str;
 
-	char* token = strtok(str, " ");
+	char* token = strtok_r(str, " ", &tok);
 
 	DEBUG_ASSERT(token != NULL);
 	DEBUG_ASSERT(strcmp(token, "Hello") == 0);
 
-	token = strtok(NULL, " ");
+	token = strtok_r(NULL, " ", &tok);
 
 	DEBUG_ASSERT(token != NULL);
 	DEBUG_ASSERT(strcmp(token, "World!") == 0);
 
-	token = strtok(NULL, " ");
+	token = strtok_r(NULL, " ", &tok);
 
 });

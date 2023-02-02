@@ -71,6 +71,8 @@ void tmpfs_cache_commit(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(inode);
 
+    __unused_param(ino);
+
 }
 
 
@@ -80,9 +82,12 @@ void tmpfs_cache_release(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(inode);
 
-    if(inode->data)
-        kfree(inode->data);
+    __unused_param(ino);
 
+    if(inode->data) {
+        kfree(inode->data);
+    }
+    
     kfree(inode);
     
 }

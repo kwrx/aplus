@@ -32,9 +32,9 @@
 __returns_nonnull
 cpu_t* smp_get_current_cpu(void) {
 
-    uint64_t id;
+    cpuid_t id = arch_cpu_get_current_id();
     
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
+    if(id == SMP_CPU_BOOTSTRAP_ID)
         return &core->bsp;
     
 

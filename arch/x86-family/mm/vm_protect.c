@@ -49,10 +49,10 @@
  * @param length: size of virtual space.
  * @param flags: @see include/arch/x86/vmm.h
  */
+__nonnull(1)
 uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size_t length, int flags) {
 
-    DEBUG_ASSERT(space);
-    DEBUG_ASSERT(length);
+    DEBUG_ASSERT(length > 0);
 
 
     uintptr_t pagesize;

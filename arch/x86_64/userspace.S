@@ -28,7 +28,17 @@
 #include <asm/linkage.h>
 
 
-
+/**
+ * arch_userspace_enter - Switch to usermode
+ * @entry:      Entry point
+ * @stack_ptr:  Stack pointer
+ * @stack_base: Stack base
+ *
+ * This function switches to usermode and calls the specified entry point.
+ * The entry point is called with the specified stack pointer.
+ *
+ * This function does not return.
+ */
 
         .text
         .align 16, 0x90

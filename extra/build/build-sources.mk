@@ -12,5 +12,7 @@ HDRS	    ?=  $(shell find $(SRCDIRS) -type f -name "*.h")                \
 OBJS        :=  $(addsuffix .o,$(basename $(SRCS)))
 DEPS        :=  $(addsuffix .d,$(basename $(SRCS)))
 
+CARGO_TOML  ?=  $(shell find $(SRCDIRS) -type f -name "*.toml")
+CARGO_OBJS  :=  $(addsuffix .a,$(basename $(CARGO_TOML)))
 
 RESOURCES   ?=

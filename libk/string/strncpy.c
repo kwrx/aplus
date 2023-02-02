@@ -34,6 +34,10 @@
 
 char *strncpy(char *restrict dest, const char *restrict src, size_t n) {
 
+	DEBUG_ASSERT(dest);
+	DEBUG_ASSERT(src);
+	DEBUG_ASSERT(n > 0);
+
 	if (n != 0) {
 
 		register char *d = dest;
