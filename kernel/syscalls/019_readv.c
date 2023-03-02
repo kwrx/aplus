@@ -40,10 +40,6 @@
 #include <aplus/hal.h>
 
 
-
-
-
-
 /***
  * Name:        readv
  * Description: read or write
@@ -94,8 +90,9 @@ long sys_readv (unsigned long fd, const struct iovec __user * vec, unsigned long
 
 
         ssize_t e;
-        if((e = sys_read(fd, iovec.iov_base, iovec.iov_len)) < 0)
+        if((e = sys_read(fd, iovec.iov_base, iovec.iov_len)) < 0) {
             return e;
+        }
 
         tot += e;
 

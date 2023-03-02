@@ -76,49 +76,50 @@ long sys_getdents64 (unsigned int fd, struct linux_dirent64 __user * dirent, uns
     if(unlikely(count < sizeof(struct dirent)))
         return -EINVAL;
 
-    
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
 
     ssize_t e = 0;
     ssize_t r = 0;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock,
+    shared_ptr_access(current_task->fd, fds, {
+    
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
+        __lock(&fds->descriptors[fd].ref->lock,
 
-        int i;
-        for(i = 0; i + sizeof(struct linux_dirent64) < count; ) {
+            for(unsigned int i = 0; i + sizeof(struct linux_dirent64) < count; ) {
 
-            struct dirent ent = { 0 };
+                struct dirent ent = { 0 };
 
-            if((e = vfs_readdir(current_task->fd->descriptors[fd].ref->inode, &ent, current_task->fd->descriptors[fd].ref->position++, 1)) <= 0)
-                break;
+                if((e = vfs_readdir(fds->descriptors[fd].ref->inode, &ent, fds->descriptors[fd].ref->position++, 1)) <= 0)
+                    break;
 
-        
-
-            size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
-
-
-            DEBUG_ASSERT(dirent);
-
-            uio_w64(&dirent->d_ino, ent.d_ino);
-            uio_w64(&dirent->d_off, i);
-            uio_w16(&dirent->d_reclen, reclen);
-            uio_w8 (&dirent->d_type, ent.d_type);
-
-            uio_strcpy_s2u(&dirent->d_name[0], ent.d_name);
             
 
-            r += reclen;
-            i += reclen;
+                size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
 
-            dirent = (struct linux_dirent64*) ((uintptr_t) dirent + reclen);
 
-        }
+                DEBUG_ASSERT(dirent);
+
+                uio_w64(&dirent->d_ino, ent.d_ino);
+                uio_w64(&dirent->d_off, i);
+                uio_w16(&dirent->d_reclen, reclen);
+                uio_w8 (&dirent->d_type, ent.d_type);
+
+                uio_strcpy_s2u(&dirent->d_name[0], ent.d_name);
+                
+
+                r += reclen;
+                i += reclen;
+
+                dirent = (struct linux_dirent64*) ((uintptr_t) dirent + reclen);
+
+            }
+            
+        );
         
-    );
-    
+    });
 
 
     if(e < 0)

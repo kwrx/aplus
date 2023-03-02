@@ -142,7 +142,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     int e;
 
-    struct stat st;
+    struct stat st = { 0 };
 
     if(unlikely((e = sys_newstat(filename, &st)) < 0))
         return e;
@@ -159,28 +159,40 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
     int fd;
-    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0) {
         return fd;
-
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+    }
 
 
-    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+    inode_t* inode = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        inode = fds->descriptors[fd].ref->inode;
+
+    });
+
+    DEBUG_ASSERT(inode);
 
     if((fd = sys_close(fd)) < 0)
         return fd;
 
 
-    Elf_Ehdr head;
-    if((e = vfs_read(inode, &head, 0, sizeof(head))) < 0)
-        return e;
+
+    Elf_Ehdr head = { 0 };
+
+    if((e = vfs_read(inode, &head, 0, sizeof(head))) < 0) {
+        return -errno;
+    }
 
 
 
     if(head.e_ident[0] == '#' &&
-       head.e_ident[1] == '!')
-        return -ENOEXEC; // TODO: read and execute command scripts
+       head.e_ident[1] == '!'
+    ) return -ENOEXEC; // TODO: read and execute command scripts
 
 
     if(
@@ -392,17 +404,23 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
 
-    for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+    // * Close all file descriptors marked as close-on-exec
 
-        if(!current_task->fd->descriptors[i].ref)
-            continue;
+    shared_ptr_access(current_task->fd, fds, {
 
-        if(!current_task->fd->descriptors[i].close_on_exec)
-            continue;
-        
-        sys_close(i);
+        for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-    }
+            if(!fds->descriptors[i].ref)
+                continue;
+
+            if(!fds->descriptors[i].close_on_exec)
+                continue;
+            
+            sys_close(i);
+
+        }
+
+    });
 
 
 

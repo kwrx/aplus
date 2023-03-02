@@ -33,7 +33,7 @@
 
 
 #if defined(DEBUG)
-#define IPC_DEFAULT_TIMEOUT     10000   //? 10sec
+#define IPC_DEFAULT_TIMEOUT             10000   //? 10sec
 #endif
 
 
@@ -87,7 +87,7 @@
 
 typedef volatile uint32_t semaphore_t;
 
-typedef volatile struct {
+typedef volatile struct spinlock {
 
     union {
         volatile char value;
@@ -102,7 +102,7 @@ typedef volatile struct {
 
 } spinlock_t;
 
-typedef struct {
+typedef struct futex {
 
     volatile uint32_t* address;
     volatile uint32_t  value;

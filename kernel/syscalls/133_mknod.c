@@ -77,10 +77,19 @@ long sys_mknod (const char __user * filename, mode_t mode, unsigned dev) {
             return fd;
 
 
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+        inode_t* inode = NULL;
 
-        inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+        shared_ptr_access(current_task->fd, fds, {
+            
+            DEBUG_ASSERT(fds->descriptors[fd].ref);
+            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+            inode = fds->descriptors[fd].ref->inode;
+
+        });
+
+        DEBUG_ASSERT(inode);
+
 
         if((fd = sys_close(fd)) < 0)
             return -EIO;

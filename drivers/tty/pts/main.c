@@ -140,7 +140,9 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             if(queue->index != index)
                 continue;
 
-            
+            DEBUG_ASSERT(queue->ptmx);
+
+
             inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_USER);
 
             strncpy(d->name, name, CONFIG_MAXNAMLEN);
@@ -158,8 +160,10 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             d->ops.read  = pty_slave_read;
             d->ops.write = pty_slave_write;
             d->ops.ioctl = pty_ioctl;
-
             d->userdata = queue;
+
+            d->ev = shared_ptr_ref(queue->ptmx->ev);
+
 
             return d;
 
@@ -185,10 +189,19 @@ void init(const char* args) {
     }
 
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+    inode_t* inode = NULL;
 
-    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        inode = fds->descriptors[fd].ref->inode;
+
+    });
+
+    DEBUG_ASSERT(inode);
+
 
     inode->ops.open     = NULL;
     inode->ops.read     = NULL;

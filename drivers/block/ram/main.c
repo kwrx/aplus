@@ -99,12 +99,44 @@ static ssize_t ram_read(device_t* device, void* buf, off_t offset, size_t count)
 static ssize_t ram_write(device_t* device, const void* buf, off_t offset, size_t count) {
     
     DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(count);
 
-    return errno = EROFS, -1;
 
+    uintptr_t index = (uintptr_t) device->userdata;
+
+
+    if(unlikely(index >= CORE_MODULE_MAX))
+        return errno = EIO, -1;
+
+    if(unlikely(core->modules.ko[index].status != MODULE_STATUS_LOADED))
+        return errno = EIO, -1;
+
+
+
+    uintptr_t ptr  = (uintptr_t) core->modules.ko[index].ptr;
+    uintptr_t size = (uintptr_t) core->modules.ko[index].size;
+
+        
+    if(unlikely(RAMDISK_BLK2BYTES(offset) >= size))
+        return 0;
+
+    if(unlikely(RAMDISK_BLK2BYTES(offset + count) > size))
+        count = RAMDISK_BYTES2BLK(size - RAMDISK_BLK2BYTES(offset));
+    
+    if(unlikely(count == 0))
+        return 0;
+
+
+    memcpy (
+        (void*) (arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)),
+        buf,
+        RAMDISK_BLK2BYTES(count)
+    );
+    
+
+    return count;
+    
 }
 
 

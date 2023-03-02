@@ -87,17 +87,26 @@ long sys_readlinkat (int dfd, const char __user * path, char __user * buf, int s
     if((fd = sys_openat(dfd, path, O_RDONLY | O_NOFOLLOW, 0)) < 0)
         return fd;
 
-    
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
-    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+    inode_t* inode = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        inode = fds->descriptors[fd].ref->inode;
+
+    });
+
+    DEBUG_ASSERT(inode);
+    
 
     if((fd = sys_close(fd)) < 0)
         return fd;
 
 
-    struct stat st;
+    struct stat st = { 0 };
 
     if(unlikely(vfs_getattr(inode, &st) < 0))
         return -EIO;
@@ -112,14 +121,13 @@ long sys_readlinkat (int dfd, const char __user * path, char __user * buf, int s
 
     uio_lock(buf, size);
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    {
 
-        if((e = vfs_readlink(current_task->fd->descriptors[fd].ref->inode, buf, size)) <= 0)
-            break;
+        if((e = vfs_readlink(inode, buf, size)) > 0) {
+            current_task->iostat.read_bytes += (uint64_t) e;
+        }
 
-        current_task->iostat.read_bytes += (uint64_t) e;
-        
-    });
+    }
 
     uio_unlock(buf, size);
 

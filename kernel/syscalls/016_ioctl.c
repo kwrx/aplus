@@ -79,14 +79,18 @@ long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
         if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
-
 
         int e = 0;
 
-        __lock(&current_task->fd->descriptors[fd].ref->lock, {
-            e = vfs_ioctl(current_task->fd->descriptors[fd].ref->inode, cmd, (void __user*) arg);
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+            __lock(&fds->descriptors[fd].ref->lock, {
+                e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void __user*) arg);
+            });
+
         });
 
 

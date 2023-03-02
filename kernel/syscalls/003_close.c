@@ -78,20 +78,25 @@ long sys_close (unsigned int fd) {
 
         if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
+        
+        shared_ptr_access(current_task->fd, fds, {
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
 
 
-        __lock(&current_task->lock, {
+            __lock(&current_task->lock, {
+                
+                fd_remove(fds->descriptors[fd].ref, true);
+
+                fds->descriptors[fd].ref = NULL;
+                fds->descriptors[fd].flags = 0;
             
-            fd_remove(current_task->fd->descriptors[fd].ref, true);
-
-            current_task->fd->descriptors[fd].ref = NULL;
-            current_task->fd->descriptors[fd].flags = 0;
-        
+            });
+            
         });
-        
+
+
         return 0;
 
     }

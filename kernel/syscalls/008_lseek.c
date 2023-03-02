@@ -59,44 +59,49 @@ long sys_lseek (unsigned int fd, off_t offset, unsigned int whence) {
     if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+
+        struct stat st = { 0 };
+
+        if(vfs_getattr(fds->descriptors[fd].ref->inode, &st) < 0)
+            return -errno;
+
+        if(S_ISFIFO(st.st_mode))
+            return -ESPIPE;
 
 
 
-    struct stat st;
-    if(vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &st) < 0)
-        return -errno;
+        __lock(&fds->descriptors[fd].ref->lock, {
+            
+            switch(whence) {
 
+                case SEEK_SET:
+                    fds->descriptors[fd].ref->position = offset;
+                    break;
 
-    if(S_ISFIFO(st.st_mode))
-        return -ESPIPE;
+                case SEEK_CUR:
+                    fds->descriptors[fd].ref->position += offset;
+                    break;
 
+                case SEEK_END:
+                    fds->descriptors[fd].ref->position = st.st_size + offset;
+                    break;
 
+                default:
+                    DEBUG_ASSERT(0 && "sys_lseek() invalid whence!");
+                    break;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        
-        switch(whence) {
+            }
 
-            case SEEK_SET:
-                current_task->fd->descriptors[fd].ref->position = offset;
-                break;
+        });
 
-            case SEEK_CUR:
-                current_task->fd->descriptors[fd].ref->position += offset;
-                break;
-
-            case SEEK_END:
-                current_task->fd->descriptors[fd].ref->position = st.st_size + offset;
-                break;
-
-            default:
-                DEBUG_ASSERT(0 && "sys_lseek() invalid whence!");
-                break;
-
-        }
+        return fds->descriptors[fd].ref->position;
 
     });
 
-    return current_task->fd->descriptors[fd].ref->position;
 });

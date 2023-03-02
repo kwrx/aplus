@@ -154,6 +154,9 @@
 #define __unused_param(x)       (void)(x)
 #endif
 
+#ifndef __scoped
+#define __scoped(x)             __attribute__((__cleanup__(x)))
+#endif
 
 #define __PRAGMA(x)             _Pragma(#x)
 #define WARNING(x)              __PRAGMA(GCC diagnostic ignored x)

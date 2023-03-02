@@ -79,15 +79,18 @@ long sys_newlstat (const char __user * filename, struct stat __user * statbuf) {
 #endif
 
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
-
     int e;
-    struct stat __statbuf;
+    struct stat __statbuf = { 0 };
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
+
+        });
 
     });
 

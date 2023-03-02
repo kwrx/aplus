@@ -33,61 +33,6 @@
 #include <aplus/errno.h>
 
 
-
-
-static struct fs* dup_fs(const struct fs* fs) {
-   
-    DEBUG_ASSERT(fs);
-    DEBUG_ASSERT(fs->refcount > 0);
-
-    struct fs* new_fs = kcalloc(1, sizeof(struct fs), GFP_KERNEL);
-
-    memcpy(new_fs, fs, sizeof(*fs));
-
-    return new_fs->refcount = 1
-         , new_fs;
-
-}
-
-static struct sighand* dup_sighand(const struct sighand* sighand) {
-   
-    DEBUG_ASSERT(sighand);
-    DEBUG_ASSERT(sighand->refcount > 0);
-
-    struct sighand* new_sighand = kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
-
-    memcpy(new_sighand, sighand, sizeof(*sighand));
-
-    return new_sighand->refcount = 1
-         , new_sighand;
-
-}
-
-
-static struct fd* dup_fd(const struct fd* fd) {
-
-    DEBUG_ASSERT(fd);
-    DEBUG_ASSERT(fd->refcount > 0);
-
-    struct fd* new_fd = kcalloc(1, sizeof(struct fd), GFP_KERNEL);
-
-    memcpy(new_fd, fd, sizeof(*fd));
-
-    for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
-        
-        if(!new_fd->descriptors[i].ref)
-            continue;
-
-        fd_ref(new_fd->descriptors[i].ref);
-
-    }
-
-    return new_fd->refcount = 1
-         , new_fd;
-
-}
-
-
 /**
  * Allows a process to stop sharing certain resources with other processes in its thread group.
  *
@@ -104,30 +49,30 @@ static struct fd* dup_fd(const struct fd* fd) {
 void do_unshare(int flags) {
 
     if(flags & CLONE_FILES) {
+        
+        current_task->fd = shared_ptr_unshare(current_task->fd, GFP_KERNEL);
 
-        if(--current_task->fd->refcount > 0) {
-            current_task->fd = dup_fd(current_task->fd);
-        } else {
-            current_task->fd->refcount = 1;
-        }
+        shared_ptr_access(current_task->fd, fds, {
+
+             for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        
+                if(!fds->descriptors[i].ref)
+                    continue;
+
+                fd_ref(fds->descriptors[i].ref);
+
+            }
+
+        });
+
     }
 
     if(flags & CLONE_FS) {
-
-        if(--current_task->fs->refcount > 0) {
-            current_task->fs = dup_fs(current_task->fs);
-        } else {
-            current_task->fs->refcount = 1;
-        }
+        current_task->fs = shared_ptr_unshare(current_task->fs, GFP_KERNEL);
     }
 
     if(flags & CLONE_SIGHAND) {
-
-        if(--current_task->sighand->refcount > 0) {
-            current_task->sighand = dup_sighand(current_task->sighand);
-        } else {
-            current_task->sighand->refcount = 1;
-        }
+        current_task->sighand = shared_ptr_unshare(current_task->sighand, GFP_KERNEL);
     }
 
     if(flags & CLONE_VM) {
@@ -230,27 +175,24 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
 
-
     if(args->flags & CLONE_FILES) {
-        child->fd = current_task->fd;
-        child->fd->refcount += 1;
+        child->fd = shared_ptr_ref(current_task->fd);
     } else {
-        child->fd = dup_fd(current_task->fd);
+        child->fd = shared_ptr_dup(current_task->fd, GFP_KERNEL);
     }
 
     if(args->flags & CLONE_FS) {
-        child->fs = current_task->fs;
-        child->fs->refcount += 1;
+        child->fs = shared_ptr_ref(current_task->fs);
     } else {
-        child->fs = dup_fs(current_task->fs);
+        child->fs = shared_ptr_dup(current_task->fs, GFP_KERNEL);
     }
 
     if(args->flags & CLONE_SIGHAND) {
-        child->sighand = current_task->sighand;
-        child->sighand->refcount += 1;
+        child->sighand = shared_ptr_ref(current_task->sighand);
     } else {
-        child->sighand = dup_sighand(current_task->sighand);
+        child->sighand = shared_ptr_dup(current_task->sighand, GFP_KERNEL);
     }
+    
 
     if(args->flags & CLONE_VM) {
         child->address_space = current_task->address_space;

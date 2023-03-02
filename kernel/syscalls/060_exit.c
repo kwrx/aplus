@@ -103,26 +103,23 @@ long sys_exit (int status) {
 
     if(current_task->status != TASK_STATUS_STOP) {
 
-        for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        shared_ptr_access(current_task->fd, fds, {
 
-            if(!current_task->fd->descriptors[i].ref)
-                continue;
+            for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-            fd_remove(current_task->fd->descriptors[i].ref, true);
+                if(!fds->descriptors[i].ref)
+                    continue;
 
-        }
+                fd_remove(fds->descriptors[i].ref, true);
 
-        if(--current_task->fd->refcount == 0) {
-            kfree(current_task->fd);
-        }
+            }
+
+        });
+
         
-        if(--current_task->fs->refcount == 0) {
-            kfree(current_task->fs);
-        }
-
-        if(--current_task->sighand->refcount == 0) {
-            kfree(current_task->sighand);
-        }
+        shared_ptr_free(current_task->fd);
+        shared_ptr_free(current_task->fs);
+        shared_ptr_free(current_task->sighand);
 
         arch_vmm_free_address_space(current_task->address_space);
 

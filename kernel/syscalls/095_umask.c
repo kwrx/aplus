@@ -51,12 +51,14 @@ SYSCALL(95, umask,
 long sys_umask (int mask) {
     
     DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->fs);
 
 
-    mode_t old = current_task->fs->umask;
-
-    current_task->fs->umask = mask & 0777;
+    mode_t old;
+    
+    shared_ptr_access(current_task->fs, fs, {
+        old = fs->umask;
+        fs->umask = mask & 0777;
+    });
 
     return old;
 

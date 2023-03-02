@@ -31,6 +31,7 @@ struct hashmap_base {
     spinlock_t lock;
 };
 
+
 void hashmap_base_init(struct hashmap_base *hb,
         size_t (*hash_func)(const void *), int (*compare_func)(const void *, const void *));
 void hashmap_base_cleanup(struct hashmap_base *hb);

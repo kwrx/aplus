@@ -71,42 +71,46 @@ long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t
     if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
         
-
-
-
     if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-    if(unlikely(!(
-        (current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-        (current_task->fd->descriptors[fd].flags & O_RDWR)
-    )))
-        return -EPERM;
 
 
 
     ssize_t e = 0;
 
+    shared_ptr_access(current_task->fd, fds, {
 
-    uio_lock(buf, count);
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+        if(unlikely(!(
+            (fds->descriptors[fd].flags & O_WRONLY) ||
+            (fds->descriptors[fd].flags & O_RDWR)
+        )))
+            return -EPERM;
 
-        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
-            break;
 
-        current_task->iostat.write_bytes += (uint64_t) e;
-                
+
+        uio_lock(buf, count);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            if((e = vfs_write(fds->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
+                break;
+
+            current_task->iostat.write_bytes += (uint64_t) e;
+                    
+        });
+
+        uio_unlock(buf, count);
+
     });
 
-    uio_unlock(buf, count);
 
 
     if(e < 0)
         return -errno;
 
     return e;
+    
 });

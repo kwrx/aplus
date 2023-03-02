@@ -61,15 +61,13 @@ endif
 %.o: %.cpp %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.cxx %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.asm
 	$(QUIET)echo "    ASM     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)nasm -felf64          $< -o $@
-
-
-%.a: %.toml
-	$(QUIET)echo "   CARGO    $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)cargo build --release --manifest-path $<
-	$(QUIET)cp target/release/lib$(patsubst %.toml,%,$<).a $@
+%.o: %.rs
+	$(QUIET)echo "    RUST    $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)rustc --crate-type=staticlib --emit=obj $(RUSTFLAGS) $< -o $@

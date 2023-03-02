@@ -53,8 +53,7 @@ void kprintf(const char* fmt, ...) {
 
    __lock(&buflock, {
 
-        int i;
-        for(i = 0; buf[i] && !((1 << current_cpu->id) & __atomic_load_n(&accmask, __ATOMIC_CONSUME)); i++) {
+        for(int i = 0; buf[i] && !((1 << current_cpu->id) & __atomic_load_n(&accmask, __ATOMIC_CONSUME)); i++) {
     
             arch_debug_putc(buf[i]);
 

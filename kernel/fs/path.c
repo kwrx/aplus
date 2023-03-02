@@ -92,12 +92,19 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
     DEBUG_ASSERT(path);
 
 
-    inode_t* c;
+    inode_t* c = NULL;
 
-    if(path[0] == '/')
-        { c = current_task->fs->root; path++; }
-    else
+    if(path[0] == '/') {
+
+        shared_ptr_access(current_task->fs, fs, {
+            c = fs->root;
+        });
+
+    } else {
+
         c = cwd;
+
+    }
 
     DEBUG_ASSERT(c);
 

@@ -57,22 +57,6 @@
 SYSCALL(257, openat,
 long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) {
     
-    if(dfd < 0) {
-       
-        if(dfd != AT_FDCWD)
-            return -EBADF;
-    
-    } else {
-
-        if(dfd >= CONFIG_OPEN_MAX)
-            return -EBADF;
-
-        if(unlikely(!current_task->fd->descriptors[dfd].ref))
-            return -EBADF;
-
-    }
-
-
     if(unlikely(!filename))
         return -EINVAL;
     
@@ -80,15 +64,49 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         return -EFAULT;
 
 
-    char __safe_filename[CONFIG_PATH_MAX];
+
+    inode_t* cwd = NULL;
+    
+    
+    if(dfd < 0) {
+       
+        if(dfd != AT_FDCWD)
+            return -EBADF;
+
+
+        shared_ptr_access(current_task->fs, fs, {
+
+            if(unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = fs->cwd;
+        
+        });
+
+    
+    } else {
+
+        if(dfd >= CONFIG_OPEN_MAX)
+            return -EBADF;
+
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[dfd].ref))
+                return -EBADF;
+
+            cwd = fds->descriptors[dfd].ref->inode;
+            
+        });
+
+    }
+
+    DEBUG_ASSERT(cwd);
+
+
+
+    char __safe_filename[CONFIG_PATH_MAX] = { 0 };
     uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
 
-
-    inode_t* cwd;
-    if(dfd == AT_FDCWD)
-        cwd = current_task->fs->cwd;
-    else
-        cwd = current_task->fd->descriptors[dfd].ref->inode;
 
 
 #if DEBUG_LEVEL_TRACE
@@ -96,7 +114,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 #endif
 
 
-    inode_t* r;
+    inode_t* r = NULL;
 
     if((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
         return -errno;
@@ -160,7 +178,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
 
 
-    inode_t* inode;
+    inode_t* inode = NULL;
 
     if((inode = vfs_open(r, flags)) == NULL) {
      
@@ -173,54 +191,59 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 
 
 
-    int fd;
+    int fd = -1;
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+        __lock(&current_task->lock, {
 
-            if(current_task->fd->descriptors[fd].ref == NULL)
+            for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+
+                if(fds->descriptors[fd].ref == NULL)
+                    break;
+
+            }
+
+            if(fd == CONFIG_OPEN_MAX)
                 break;
 
-        }
+            
+            struct file* ref = NULL;
+            
+            if((ref = fd_append(inode, 0, 0)) == NULL) {
+
+                fd = CONFIG_FILE_MAX;
+
+            } else {
+
+                if(flags & O_APPEND)
+                    ref->position = st.st_size;
+                else
+                    ref->position = 0;
+
+            
+                fds->descriptors[fd].ref   = ref;
+                fds->descriptors[fd].flags = flags;
+            
+            }
+
+        });
+        
 
         if(fd == CONFIG_OPEN_MAX)
-            break;
+            return -EMFILE;
 
-        
-        struct file* ref;
-        
-        if((ref = fd_append(inode, 0, 0)) == NULL) {
+        if(fd == CONFIG_FILE_MAX)
+            return -ENFILE;
 
-            fd = CONFIG_FILE_MAX;
 
-        } else {
-
-            if(flags & O_APPEND)
-                ref->position = st.st_size;
-            else
-                ref->position = 0;
-
-        
-            current_task->fd->descriptors[fd].ref   = ref;
-            current_task->fd->descriptors[fd].flags = flags;
-        
-        }
+        DEBUG_ASSERT(fd >= 0);
+        DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
     });
-    
 
-    if(fd == CONFIG_OPEN_MAX)
-        return -EMFILE;
-
-    if(fd == CONFIG_FILE_MAX)
-        return -ENFILE;
-
-
-    DEBUG_ASSERT(fd >= 0);
-    DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
     return fd;
 

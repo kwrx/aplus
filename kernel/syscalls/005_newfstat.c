@@ -64,26 +64,31 @@ long sys_newfstat (unsigned int fd, struct stat __user * statbuf) {
     if(unlikely(!uio_check(statbuf, R_OK | W_OK)))
         return -EFAULT;
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
 
 
     int e;
-    struct stat __statbuf;
+    struct stat __statbuf = { 0 };
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
+
+        });
 
     });
 
 
-    if(e < 0)
+    if (e < 0)
         return -errno;
-
 
     uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
 
     return 0;
+
 });

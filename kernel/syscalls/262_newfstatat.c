@@ -76,15 +76,19 @@ long sys_newfstatat (int dfd, const char __user * filename, struct stat __user *
     if((fd = sys_openat(dfd, filename, O_RDONLY, 0)) < 0)
         return fd;
     
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
 
     int e;
-    struct stat __statbuf;
+    struct stat __statbuf = { 0 };
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        e = vfs_getattr(current_task->fd->descriptors[fd].ref->inode, &__statbuf);
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
+
+        });
 
     });
 

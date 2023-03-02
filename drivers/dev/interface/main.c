@@ -306,12 +306,20 @@ void device_mkdev(device_t* device, mode_t mode) {
         kpanicf("device::create: failed, device already exists: %s\n", buf);
     }
 
+
+    inode_t* i = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        i = fds->descriptors[fd].ref->inode;
     
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+    });
 
-    inode_t* i = current_task->fd->descriptors[fd].ref->inode;
-
+    DEBUG_ASSERT(i);
+    
 
     if(unlikely(sys_close(fd) < 0))
         kpanicf("device::create: failed, could not close device descriptor: %s\n", buf);
@@ -325,6 +333,9 @@ void device_mkdev(device_t* device, mode_t mode) {
     i->ops.read     = device_read;
     i->ops.ioctl    = device_ioctl;
     i->ops.fsync    = device_fsync;
+
+    i->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
+    
     
     device->inode = i;
 

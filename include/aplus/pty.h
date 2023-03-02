@@ -67,6 +67,8 @@ typedef struct pty {
 
     bool locked;
 
+    inode_t* ptmx;
+
     struct pty* next;
 
 } pty_t;
@@ -81,7 +83,7 @@ ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t s
 ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size);
 ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t size);
 
-pty_t* pty_create(int flags);
+pty_t* pty_create(inode_t* ptmx, int flags);
 pty_t* pty_queue();
 void pty_queue_lock();
 void pty_queue_unlock();

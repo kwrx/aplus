@@ -48,5 +48,10 @@
 
 SYSCALL(34, pause,
 long sys_pause (void) {
-    return -ENOSYS;
+
+    thread_suspend(current_task);
+    thread_restart_sched(current_task);
+
+    return -EINTR;
+
 });

@@ -99,7 +99,7 @@ int ringbuffer_is_empty(ringbuffer_t* rb) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
-    return (!rb->full & (rb->head == rb->tail));
+    return (!rb->full && (rb->head == rb->tail));
 
 }
 

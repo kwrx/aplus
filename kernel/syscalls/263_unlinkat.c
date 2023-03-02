@@ -53,22 +53,6 @@
 SYSCALL(263, unlinkat,
 long sys_unlinkat (int dfd, const char __user * pathname, int flags) {
     
-    if(dfd < 0) {
-       
-        if(dfd != AT_FDCWD)
-            return -EBADF;
-    
-    } else {
-
-        if(dfd >= CONFIG_OPEN_MAX)
-            return -EBADF;
-
-        if(unlikely(!current_task->fd->descriptors[dfd].ref))
-            return -EBADF;
-
-    }
-
-
     if(unlikely(!pathname))
         return -EINVAL;
     
@@ -76,15 +60,48 @@ long sys_unlinkat (int dfd, const char __user * pathname, int flags) {
         return -EFAULT;
 
 
+
+    inode_t* cwd = NULL;
+
+
+    if(dfd < 0) {
+       
+        if(dfd != AT_FDCWD)
+            return -EBADF;
+
+        
+        shared_ptr_access(current_task->fs, fs, {
+
+            if(unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = fs->cwd;
+        
+        });
+
+    
+    } else {
+
+        if(dfd >= CONFIG_OPEN_MAX)
+            return -EBADF;
+
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[dfd].ref))
+                return -EBADF;
+
+            cwd = fds->descriptors[dfd].ref->inode;
+            
+        });
+
+    }
+
+    DEBUG_ASSERT(cwd);
+
+
+
     char __safe_pathname[CONFIG_PATH_MAX];
     uio_strncpy_u2s(__safe_pathname, pathname, CONFIG_PATH_MAX);
-
-
-    inode_t* cwd;
-    if(dfd == AT_FDCWD)
-        cwd = current_task->fs->cwd;
-    else
-        cwd = current_task->fd->descriptors[dfd].ref->inode;
 
 
 #if DEBUG_LEVEL_TRACE
@@ -92,7 +109,7 @@ long sys_unlinkat (int dfd, const char __user * pathname, int flags) {
 #endif
 
 
-    inode_t* r;
+    inode_t* r = NULL;
 
     if((r = path_lookup(cwd, __safe_pathname, 0, 0)) == NULL)
         return -errno;

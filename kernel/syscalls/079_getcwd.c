@@ -71,8 +71,6 @@ SYSCALL(79, getcwd,
 long sys_getcwd (char __user * ubuf, unsigned long size) {
     
     DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->fs);
-    DEBUG_ASSERT(current_task->fs->root);
 
 
     if(unlikely(!ubuf))
@@ -88,24 +86,38 @@ long sys_getcwd (char __user * ubuf, unsigned long size) {
         size = CONFIG_PATH_MAX;
 
 
-    struct inode* inode = current_task->fs->cwd;
+    inode_t* inode = NULL;
+    
+    shared_ptr_access(current_task->fs, fs, {
 
-    if(unlikely(!inode))
-        inode = current_task->fs->root;
+        inode = fs->cwd;
+            
+        if(unlikely(!inode)) {
+            inode = fs->root;
+        }
 
+    });
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(size <= CONFIG_PATH_MAX);
 
     char buf[size];
     memset(buf, 0, size);
 
-    for(; inode != current_task->fs->root && inode->parent != NULL; inode = inode->parent) {
+    shared_ptr_access(current_task->fs, fs, {
 
-        if(__append(buf, size, inode->name) < 0)
-            return -ERANGE;
+        for(; inode != fs->root && inode->parent != NULL; inode = inode->parent) {
 
-        if(__append(buf, size, "/") < 0)
-            return -ERANGE;
+            if(__append(buf, size, inode->name) < 0)
+                return -ERANGE;
 
-    }
+            if(__append(buf, size, "/") < 0)
+                return -ERANGE;
+
+        }
+
+    });
+
 
     if(__append(buf, size, "/") < 0)
         return -ERANGE;

@@ -59,7 +59,6 @@ SYSCALL(13, rt_sigaction,
 long sys_rt_sigaction (int signo, const struct ksigaction __user * act, struct ksigaction __user * oldact, size_t size) {
     
     DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->sighand);
 
 
     if(unlikely(signo < 0))
@@ -81,11 +80,15 @@ long sys_rt_sigaction (int signo, const struct ksigaction __user * act, struct k
         return -EFAULT;
 
 
-    if(oldact)
-        uio_memcpy_s2u(oldact, &current_task->sighand->action[signo], sizeof(struct ksigaction));
+    shared_ptr_access(current_task->sighand, sighand, {
 
-    if(act)
-        uio_memcpy_u2s(&current_task->sighand->action[signo], act, sizeof(struct sigaction));
+        if(oldact)
+            uio_memcpy_s2u(oldact, &sighand->action[signo], sizeof(struct ksigaction));
+
+        if(act)
+            uio_memcpy_u2s(&sighand->action[signo], act, sizeof(struct sigaction));
+
+    });
 
 
     return 0;

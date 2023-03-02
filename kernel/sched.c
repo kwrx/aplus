@@ -154,7 +154,12 @@ static void handle_user_signal(siginfo_t* siginfo, struct ksigaction* action) {
 
 static void handle_default_or_user_signal(siginfo_t* siginfo) {
 
-    struct ksigaction* action = &current_task->sighand->action[siginfo->si_signo];
+    struct ksigaction* action = NULL;
+    
+    shared_ptr_access(current_task->sighand, sighand, {
+        action = &sighand->action[siginfo->si_signo];
+    });
+
 
     if(unlikely(!action)) {
         return;
@@ -205,7 +210,6 @@ static void handle_signal(siginfo_t* siginfo) {
 static inline void do_signals(void) {
 
     DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->sighand);
 
     if(queue_is_empty(&current_task->sigqueue)) {
         return;
@@ -445,6 +449,7 @@ void sched_dequeue(task_t* task) {
 
         if(found) {
             cpu->sched_count--;
+            break;
         }
 
     }
@@ -455,6 +460,72 @@ void sched_dequeue(task_t* task) {
 
     // // kfree(task);
     // FIXME: unsafe to free here
+
+}
+
+
+void sched_requeue(task_t* task) {
+
+    int found = 0;
+
+    cpu_foreach_if(cpu, !found) {
+
+        found = 1;
+
+        __lock(&cpu->sched_lock, {
+
+            if(task == cpu->sched_queue) {
+
+                cpu->sched_queue = task->next;
+
+            } else {
+
+                task_t* tmp;
+
+                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
+
+                    if(tmp->next != task) {
+                        continue;
+                    }
+
+                    tmp->next = task->next;
+                    break;
+
+                }
+
+                if(unlikely(!tmp->next)) {
+                    found = 0;
+                }
+
+            }
+
+        });
+
+        if(found) {
+            
+            if(cpu->sched_running != task) {
+
+                task->next = cpu->sched_running->next;
+
+                cpu->sched_running->next = task;
+
+            } else {
+
+                task->next = cpu->sched_queue;
+
+                cpu->sched_queue = task;
+
+            }
+
+            break;
+            
+        }
+
+    }
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("sched: requeued task(%d) %s\n", task->tid, task->argv[0]);
+#endif
 
 }
 

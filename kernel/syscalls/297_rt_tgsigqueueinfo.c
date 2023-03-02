@@ -79,8 +79,7 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
     
     cpu_foreach(cpu) {
 
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             if(tmp->tgid != tgid)
                 continue;
@@ -100,31 +99,47 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
             if(unlikely(sig == 0))
                 continue;
 
-            if(unlikely(tmp->sighand->action[sig].handler == SIG_IGN))
+            
+            struct ksigaction* action = NULL;
+
+            shared_ptr_access(tmp->sighand, sighand, {
+                action = &sighand->action[sig];
+            });
+
+            DEBUG_ASSERT(action);
+
+
+            if(unlikely(action->handler == SIG_IGN))
                 continue;
 
-            if(unlikely(tmp->sighand->action[sig].handler == SIG_ERR))
+            if(unlikely(action->handler == SIG_ERR))
                 continue;
 
         
 
             siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
 
-            memcpy(siginfo, uinfo, sizeof(siginfo_t));
+            uio_memcpy_u2s(siginfo, uinfo, sizeof(siginfo_t));
+
             siginfo->si_signo = sig;
            
 
-            //? Check if the signal is blocked
-            if(unlikely(tmp->sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
+            shared_ptr_access(tmp->sighand, sighand, {
+            
+                //? Check if the signal is blocked
+                if(unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
 
-                if(tmp->sighand->action[sig].sa_flags & SA_NODEFER)
+                    if(sighand->action[sig].sa_flags & SA_NODEFER)
+                        queue_enqueue(&current_task->sigqueue, siginfo, 0);
+                    else
+                        queue_enqueue(&current_task->sigpending, siginfo, 0);
+                        
+                } else {
                     queue_enqueue(&current_task->sigqueue, siginfo, 0);
-                else
-                    queue_enqueue(&current_task->sigpending, siginfo, 0);
-                    
-            } else {
-                queue_enqueue(&current_task->sigqueue, siginfo, 0);
-            }
+                }
+            
+            });
+
 
         }
 

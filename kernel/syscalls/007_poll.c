@@ -64,10 +64,6 @@
 SYSCALL(7, poll,
 long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
-    DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->fd);
-
-
     if(unlikely(!ufds))
         return -EINVAL;
     
@@ -83,7 +79,7 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
 
     size_t e = 0;
-    struct pollfd pfd;
+    struct pollfd pfd = { 0 };
     
     for(size_t i = 0; i < nfds; i++) {
 
@@ -134,26 +130,36 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
             if(pfd.fd >= CONFIG_OPEN_MAX)
                 return -EBADF;
 
-            if(current_task->fd->descriptors[pfd.fd].ref == NULL)
-                return -EBADF;
 
-            if(current_task->fd->descriptors[pfd.fd].ref->inode == NULL)
-                return -EBADF;
+            shared_ptr_access(current_task->fd, fds, {
+
+                if(fds->descriptors[pfd.fd].ref == NULL)
+                    return -EBADF;
+
+                if(fds->descriptors[pfd.fd].ref->inode == NULL)
+                    return -EBADF;
 
 
+                shared_ptr_nullable_access(fds->descriptors[pfd.fd].ref->inode->ev, ev, {
 
-            if(current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events) {
+                    if(ev->revents & pfd.events) {
 
-                pfd.revents = current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents & pfd.events;
+                        pfd.revents = ev->revents & pfd.events;
 
-                current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
-                current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  &= ~pfd.events;
+                        ev->revents &= ~pfd.events;
+                        ev->events  &= ~pfd.events;
 
-                uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
+                        uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
 
-                e++;
+                        e++;
 
-            }
+                    }
+
+                });
+
+            });
+
+
 
         }
 
@@ -191,11 +197,20 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 #endif
             {
 
-                current_task->fd->descriptors[pfd.fd].ref->inode->ev.revents &= ~pfd.events;
-                current_task->fd->descriptors[pfd.fd].ref->inode->ev.events  |=  pfd.events;
-                current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex    = 0;
+                shared_ptr_access(current_task->fd, fds, {
 
-                futex_wait(current_task, &current_task->fd->descriptors[pfd.fd].ref->inode->ev.futex, 0, timeout > 0 ? &tm : NULL);
+                    shared_ptr_nullable_access(fds->descriptors[pfd.fd].ref->inode->ev, ev, {
+
+                        ev->revents &= ~pfd.events;
+                        ev->events  |=  pfd.events;
+                        ev->futex    = 0;
+
+                        futex_wait(current_task, &ev->futex, 0, timeout > 0 ? &tm : NULL);
+                    
+                    });
+
+                });
+
 
             }
         }

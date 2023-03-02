@@ -55,24 +55,26 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
         goto fail_1;
 
 
-    pty_t* pty = pty_create(flags);
-
-    if(unlikely(!pty))
-        goto fail_2;
-
-
     memcpy(ptmx, inode, sizeof(inode_t));
-
 
     ptmx->ops.open  = NULL;
     ptmx->ops.close = NULL;
     ptmx->ops.read  = pty_master_read;
     ptmx->ops.write = pty_master_write;
     ptmx->ops.ioctl = pty_ioctl;
-    ptmx->userdata  = pty;
+
+    ptmx->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
 
     spinlock_init(&ptmx->lock);
 
+
+
+    pty_t* pty = pty_create(ptmx, flags);
+
+    if(unlikely(!pty))
+        goto fail_2;
+
+    ptmx->userdata  = pty;
 
     return ptmx;
 
@@ -103,10 +105,19 @@ void init(const char* args) {
     }
 
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+    inode_t* inode = NULL;
 
-    inode_t* inode = current_task->fd->descriptors[fd].ref->inode;
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        inode = fds->descriptors[fd].ref->inode;
+        
+    });
+
+    DEBUG_ASSERT(inode);
+
 
     inode->ops.open  = ptmx_open;
     inode->ops.read  = NULL;

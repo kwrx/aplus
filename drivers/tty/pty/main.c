@@ -181,8 +181,9 @@ static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
         }
 
 
-        if(ringbuffer_write(&pty->r2, &ch, 1) < 0)
+        if(ringbuffer_write(&pty->r2, &ch, 1) < 0) {
             return -1;
+        }
 
     }
 
@@ -228,112 +229,112 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
 
-        // // c_lflag
+        // c_lflag
 
-        // if(pty->ios.c_lflag & ISIG) {
+        if(pty->ios.c_lflag & ISIG) {
 
-        //     sig_atomic_t sig = -1;
+            sig_atomic_t sig = -1;
 
-        //     if(ch == pty->ios.c_cc[VINTR]) {
-        //         sig = SIGINT;
-        //     } else if(ch == pty->ios.c_cc[VQUIT]) {
-        //         sig = SIGQUIT;
-        //     } else if(ch == pty->ios.c_cc[VSUSP]) {
-        //         sig = SIGTSTP;
-        //     } else if(ch == pty->ios.c_cc[VEOF]) {
-        //         sig = SIGTERM;
-        //     }
-
-
-        //     if(sig > 0) {
-
-        //         if(pty->ios.c_lflag & ECHO) {
-
-        //             char cb[2] = { 
-        //                 '^', ch + 0x40
-        //             };
-
-        //             pty_process_output(pty, cb, 2);
-
-        //         }
-
-        //         if(!(pty->ios.c_lflag & NOFLSH)) {
-        //             pty_input_discard(pty, false);
-        //         }
-
-        //         if(pty->s_pid > 0) {
-        //             sys_kill(-pty->s_pid, sig);
-        //         }
-
-        //     }
+            if(ch == pty->ios.c_cc[VINTR]) {
+                sig = SIGINT;
+            } else if(ch == pty->ios.c_cc[VQUIT]) {
+                sig = SIGQUIT;
+            } else if(ch == pty->ios.c_cc[VSUSP]) {
+                sig = SIGTSTP;
+            } else if(ch == pty->ios.c_cc[VEOF]) {
+                sig = SIGTERM;
+            }
 
 
-        //     continue;
+            if(sig > 0) {
 
-        // }
+                if(pty->ios.c_lflag & ECHO) {
 
+                    char cb[2] = { 
+                        '^', ch + 0x40
+                    };
 
-        // if(pty->ios.c_lflag & ICANON) {
+                    pty_process_output(pty, cb, 2);
 
-        //     if(ch == pty->ios.c_cc[VKILL]) {
+                }
 
-        //         while(pty->input.size > 0) {
-        //             pty_input_backspace(pty, pty->ios.c_lflag & ECHOK);
-        //         }
+                if(!(pty->ios.c_lflag & NOFLSH)) {
+                    pty_input_discard(pty, false);
+                }
 
-        //         if(!(pty->ios.c_lflag & ECHOK) && pty->ios.c_lflag & ECHO) {
+                if(pty->s_pid > 0) {
+                    sys_kill(-pty->s_pid, sig);
+                }
 
-        //             char cb[2] = { 
-        //                 '^', ch + 0x40
-        //             };
-
-        //             pty_process_output(pty, cb, 2);
-
-        //         }
-
-        //         continue;
-
-        //     }
+            }
 
 
-        //     if(ch == pty->ios.c_cc[VERASE]) {
+            continue;
 
-        //         pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
-
-        //         if(!(pty->ios.c_lflag & ECHOE) && pty->ios.c_lflag & ECHO) {
-
-        //             char cb[2] = { 
-        //                 '^', ch + 0x40
-        //             };
-
-        //             pty_process_output(pty, cb, 2);
-
-        //         }
-
-        //         continue;
-
-        //     }
+        }
 
 
-        //     if(ch == pty->ios.c_cc[VWERASE]) {
+        if(pty->ios.c_lflag & ICANON) {
 
-        //         // TODO: VWERASE: erase the word to the left of the cursor
+            if(ch == pty->ios.c_cc[VKILL]) {
 
-        //         continue;
+                while(pty->input.size > 0) {
+                    pty_input_backspace(pty, pty->ios.c_lflag & ECHOK);
+                }
 
-        //     }
+                if(!(pty->ios.c_lflag & ECHOK) && pty->ios.c_lflag & ECHO) {
+
+                    char cb[2] = { 
+                        '^', ch + 0x40
+                    };
+
+                    pty_process_output(pty, cb, 2);
+
+                }
+
+                continue;
+
+            }
 
 
-        //     if(ch == pty->ios.c_cc[VEOF]) {
+            if(ch == pty->ios.c_cc[VERASE]) {
+
+                pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
+
+                if(!(pty->ios.c_lflag & ECHOE) && pty->ios.c_lflag & ECHO) {
+
+                    char cb[2] = { 
+                        '^', ch + 0x40
+                    };
+
+                    pty_process_output(pty, cb, 2);
+
+                }
+
+                continue;
+
+            }
 
 
-        //         continue;
+            if(ch == pty->ios.c_cc[VWERASE]) {
 
-        //     }
+                // TODO: VWERASE: erase the word to the left of the cursor
 
-        //     (void) pty_input_append;
+                continue;
 
-        // }
+            }
+
+
+            if(ch == pty->ios.c_cc[VEOF]) {
+
+
+                continue;
+
+            }
+
+            (void) pty_input_append;
+
+        }
 
 
         if(ringbuffer_write(&pty->r1, &ch, 1) < 0)
@@ -716,8 +717,8 @@ ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t s
         return 0;
 
 
-    return ringbuffer_write(&pty->r1, buf, size);
-    //return pty_process_input(pty, buf, size);
+    // return ringbuffer_write(&pty->r1, buf, size);
+    return pty_process_input(pty, buf, size);
 
 }
 
@@ -777,13 +778,15 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
         return 0;
 
 
-    return ringbuffer_write(&pty->r2, buf, size);
-    //return pty_process_output(pty, buf, size);
+    //return ringbuffer_write(&pty->r2, buf, size);
+    return pty_process_output(pty, buf, size);
 
 }
 
 
-pty_t* pty_create(int flags) {
+pty_t* pty_create(inode_t* ptmx, int flags) {
+
+    DEBUG_ASSERT(ptmx);
 
 
     struct pty* pty = (struct pty*) kcalloc(sizeof(struct pty), 1, GFP_USER);
@@ -830,6 +833,7 @@ pty_t* pty_create(int flags) {
     ringbuffer_init(&pty->r2, CONFIG_BUFSIZ);
 
 
+    pty->ptmx = ptmx;
 
     __lock(&queue_lock, {
 

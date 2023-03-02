@@ -57,33 +57,39 @@ long sys_dup2 (unsigned int fd, unsigned int newfd) {
     if(unlikely(newfd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        if(fd == newfd)
+            return newfd;
 
 
-    if(fd == newfd)
-        return newfd;
+
+        if(fds->descriptors[newfd].ref) {
+            sys_close(newfd);
+        }
+
+        DEBUG_ASSERT(!fds->descriptors[newfd].ref);
 
 
-    if(current_task->fd->descriptors[newfd].ref)
-        sys_close(newfd);
+        __lock(&current_task->lock, {
 
-    DEBUG_ASSERT(!current_task->fd->descriptors[newfd].ref);
+            __lock(&fds->descriptors[fd].ref->lock, {
+            
+                fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
+                fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
+                fds->descriptors[fd].ref->refcount++;
 
-    __lock(&current_task->lock, {
-
-        __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        
-            current_task->fd->descriptors[newfd].ref = current_task->fd->descriptors[fd].ref;
-            current_task->fd->descriptors[newfd].flags = current_task->fd->descriptors[fd].flags;
-
-            current_task->fd->descriptors[fd].ref->refcount++;
+            });
 
         });
-
+        
     });
-    
+
 
     return newfd;
 

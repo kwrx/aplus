@@ -22,17 +22,21 @@
  */
 
 
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/syscall.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
+#include <poll.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/syscall.h>
+#include <aplus/memory.h>
+#include <aplus/vfs.h>
+#include <aplus/smp.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
 
 #if defined(CONFIG_HAVE_NETWORK)
 #include <aplus/network.h>
@@ -79,8 +83,13 @@ long sys_fcntl (unsigned int fd, unsigned int cmd, unsigned long arg) {
         if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
+
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+        });
 
 
         long e1, e2;
@@ -101,17 +110,31 @@ long sys_fcntl (unsigned int fd, unsigned int cmd, unsigned long arg) {
                 return e1;
 
             case F_GETFD:
-                return current_task->fd->descriptors[fd].close_on_exec;
+
+                shared_ptr_access(current_task->fd, fds, {
+                    return fds->descriptors[fd].close_on_exec;
+                });
 
             case F_SETFD:
-                current_task->fd->descriptors[fd].close_on_exec = arg;
+
+                shared_ptr_access(current_task->fd, fds, {
+                    fds->descriptors[fd].close_on_exec = arg;
+                });
+
                 return 0;
 
             case F_GETFL:
-                return current_task->fd->descriptors[fd].flags;
+
+                shared_ptr_access(current_task->fd, fds, {
+                    return fds->descriptors[fd].flags;
+                });
 
             case F_SETFL:
-                current_task->fd->descriptors[fd].flags = arg;
+
+                shared_ptr_access(current_task->fd, fds, {
+                    fds->descriptors[fd].flags = arg;
+                });
+
                 return 0;
 
             case F_SETPIPE_SZ:

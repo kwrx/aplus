@@ -12,6 +12,7 @@
 *.class
 *.a
 *.so
+*.rlib
 *.bin
 *.jar
 *.tar.gz

@@ -49,11 +49,11 @@ struct kmalloc_header {
             uint32_t blocks;
             uint64_t size;
         };
-
-        uint64_t __padding[2];
+        uint64_t __padding0[2];
     };
 
     char ptr[0];
+
 } __packed;
 
 
@@ -92,10 +92,9 @@ void* kmalloc(size_t size, int gfp) {
     h->magic[2] = 'E';
     h->magic[3] = 'D';
 
-    h->blocks = (size / PML1_PAGESIZE);
-    h->size   = (data_size);
-
-
+    h->size     = (data_size);
+    h->blocks   = (size / PML1_PAGESIZE);
+    
     return (void*) &h->ptr;
     
 }
@@ -172,7 +171,6 @@ void kfree(void* address) {
 uint64_t kheap_get_used_memory(void) {
     return heap_used_memory * PML1_PAGESIZE;
 }
-
 
 
 TEST(heap_test, {

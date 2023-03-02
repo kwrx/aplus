@@ -98,8 +98,12 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
         if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+        });
 
     }
 

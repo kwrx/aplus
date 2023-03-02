@@ -1,0 +1,8 @@
+[package]
+name = "rustk"
+version = "0.6.0"
+authors = ["Antonino Natale <antonio.natale97@hotmail.com>"]
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib", "rlib"]

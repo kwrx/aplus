@@ -172,6 +172,8 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
     inode->ops.write    = pipefs_write;
     inode->ops.getattr  = pipefs_getattr;
 
+    inode->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
+
 
     return inode;
 

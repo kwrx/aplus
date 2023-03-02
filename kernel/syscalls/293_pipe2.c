@@ -78,47 +78,51 @@ long sys_pipe2 (int __user * fildes, int flags) {
         return -ENFILE;
 
 
-    for(size_t i = 0; i < 2; i++) {
+    shared_ptr_access(current_task->fd, fds, {
 
-        int fd;
+        for(size_t i = 0; i < 2; i++) {
 
-        __lock(&current_task->lock, {
+            int fd = -1;
 
-            for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+            __lock(&current_task->lock, {
 
-                if(!current_task->fd->descriptors[fd].ref)
+                for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+
+                    if(!fds->descriptors[fd].ref)
+                        break;
+
+                }
+
+                if(fd == CONFIG_OPEN_MAX)
                     break;
 
-            }
+                
+                fds->descriptors[fd].ref   = refs[i];
+                fds->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);            
+
+            });
+            
 
             if(fd == CONFIG_OPEN_MAX)
-                break;
+                return -EMFILE;
+                
 
-            
-            current_task->fd->descriptors[fd].ref = refs[i];
-            current_task->fd->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);            
-
-        });
-        
-
-        if(fd == CONFIG_OPEN_MAX)
-            return -EMFILE;
-            
-
-        DEBUG_ASSERT(fd >= 0);
-        DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+            DEBUG_ASSERT(fd >= 0);
+            DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
+            DEBUG_ASSERT(fds->descriptors[fd].ref);
+            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
 
-#if DEBUG_LEVEL_TRACE
-        kprintf("pipe2: assign fd[%zd] = %d (flags: %o)\n", i, fd, flags);
-#endif
+    #if DEBUG_LEVEL_TRACE
+            kprintf("pipe2: assign fd[%zd] = %d (flags: %o)\n", i, fd, flags);
+    #endif
 
 
-        uio_w32(&fildes[i], fd);
+            uio_w32(&fildes[i], fd);
 
-    }
+        }
+
+    });
 
 
     return 0;

@@ -46,6 +46,7 @@
 #include <aplus/utils/list.h>
 #include <aplus/utils/cache.h>
 #include <aplus/utils/hashmap.h>
+#include <aplus/utils/ptr.h>
 
 
 
@@ -100,6 +101,12 @@ struct inode_ops {
 };
 
 
+struct inode_events {
+    uint16_t events;
+    uint16_t revents;
+    volatile uint32_t futex;
+};
+
 struct inode {
 
     char name[CONFIG_MAXNAMLEN];
@@ -114,11 +121,7 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
-    struct {
-        short events;
-        short revents;
-        volatile uint32_t futex;
-    } ev;
+    shared_ptr(struct inode_events) ev;
 
     HASHMAP(char, inode_t) dcache;
 

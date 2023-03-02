@@ -1,7 +1,7 @@
 #!/bin/sh
 
 aplus-terminal -c "cat /etc/motd && bash"
-#aplus-ui
+# aplus-ui
 
 # cd /tmp
 

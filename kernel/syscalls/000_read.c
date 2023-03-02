@@ -104,67 +104,76 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
         if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
+        
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+            if(unlikely(!(
+                !(fds->descriptors[fd].flags & O_WRONLY) ||
+                 (fds->descriptors[fd].flags & O_RDONLY)
+            )))
+                return -EPERM;
 
 
-        if(unlikely(!(
-            !(current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-             (current_task->fd->descriptors[fd].flags & O_RDONLY)
-        )))
-            return -EPERM;
+
+            uio_lock(buf, size);
+
+            __lock(&fds->descriptors[fd].ref->lock, {
+
+                if((e = vfs_read(fds->descriptors[fd].ref->inode, buf, fds->descriptors[fd].ref->position, size)) <= 0)
+                    break;
+
+                fds->descriptors[fd].ref->position += e;
+                current_task->iostat.read_bytes += (uint64_t) e;
+                
+            });
+
+            uio_unlock(buf, size);
 
 
+            if(errno == EINTR) {
 
-        uio_lock(buf, size);
+                if(fds->descriptors[fd].flags & O_NONBLOCK) {
 
-        __lock(&current_task->fd->descriptors[fd].ref->lock, {
+                    return -EAGAIN;
 
-            if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
-                break;
+                } else {
 
-            current_task->fd->descriptors[fd].ref->position += e;
-            current_task->iostat.read_bytes += (uint64_t) e;
-            
-        });
+                    shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
 
-        uio_unlock(buf, size);
+                        ev->revents &= ~POLLIN;
+                        ev->events  |=  POLLIN;
+                        ev->futex    = 0;
 
+                        futex_wait(current_task, &ev->futex, 0, NULL);
 
-        if(errno == EINTR) {
+                    });
 
-            if(current_task->fd->descriptors[fd].flags & O_NONBLOCK) {
+                    
 
-                return -EAGAIN;
+    #if DEBUG_LEVEL_TRACE
+                    kprintf("read: task %d waiting for POLLIN event on fd %d (node->name: '%s')\n", current_task->tid, fd, fds->descriptors[fd].ref->inode->name);
+    #endif
 
-            } else {
+                    thread_suspend(current_task);
+                    thread_restart_sched(current_task);
+                    thread_restart_syscall(current_task);
 
-                current_task->fd->descriptors[fd].ref->inode->ev.revents &= ~POLLIN;
-                current_task->fd->descriptors[fd].ref->inode->ev.events  |=  POLLIN;
-                current_task->fd->descriptors[fd].ref->inode->ev.futex    = 0;
+                    return -EINTR;
 
-                futex_wait(current_task, &current_task->fd->descriptors[fd].ref->inode->ev.futex, 0, NULL);
-
-
-#if DEBUG_LEVEL_TRACE
-                kprintf("read: task %d waiting for POLLIN event on fd %d (node->name: '%s')\n", current_task->tid, fd, current_task->fd->descriptors[fd].ref->inode->name);
-#endif
-
-                thread_suspend(current_task);
-                thread_restart_sched(current_task);
-                thread_restart_syscall(current_task);
-
-                return -EINTR;
+                }
 
             }
 
-        }
 
+            if(e < 0)
+                return -errno;
 
-        if(e < 0)
-            return -errno;
+            return e;
 
-        return e;
+        });
 
     }
 

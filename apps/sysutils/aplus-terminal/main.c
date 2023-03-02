@@ -42,6 +42,8 @@
 
 #include <pthread.h>
 
+#define CONFIG_ATERM_BUILTIN_FONT 1
+
 #if defined(CONFIG_ATERM_BUILTIN_FONT)
 #include "lib/builtin_font.h"
 #else
@@ -236,7 +238,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 #else
 
-
     gidx = FT_Get_Char_Index(context.face, gidx);
 
     if(gidx == 0) {
@@ -251,6 +252,12 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     if(FT_Render_Glyph(context.face->glyph, FT_RENDER_MODE_MONO)) {
         return 0;
     }
+
+
+    assert(context.face);
+    assert(context.face->glyph);
+    assert(context.face->glyph->bitmap.buffer);
+
 
     int bbox_ymax = context.face->bbox.yMax / 64;
     int glyph_width = context.face->glyph->metrics.width / 64;
@@ -307,74 +314,20 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 }
 
 
-static void tsm_input_flush(int out) {
-
-    if(context.input.size > 0) {
-        write(out, context.input.buffer, context.input.size);
-    }
-
-    context.input.size = 0;
-
-}
-
-static void tsm_input_append(char ch) {
-
-    if(context.input.size == context.input.capacity) {
-        context.input.capacity += 256;
-        context.input.buffer = realloc(context.input.buffer, context.input.capacity);
-    }
-
-    context.input.buffer[context.input.size + 0] = ch;
-    context.input.buffer[context.input.size + 1] = '\0';
-
-    context.input.size++;
-
-    tsm_vte_input(context.vte, &ch, 1);
-
-}
-
-static void tsm_input_backspace() {
-
-    if(context.input.size == 0)
-        return;
-
-    context.input.buffer[--context.input.size] = '\0';
-
-    tsm_vte_input(context.vte, "\b", 1);
-    tsm_vte_input(context.vte, " ",  1);
-    tsm_vte_input(context.vte, "\b", 1);
-
-}
 
 static void tsm_handle_input(int out, char* ascii, size_t size) {
 
     assert(ascii);
 
-    for(size_t i = 0; i < size; i++) {
-
-        switch(ascii[i]) {
-
-            case '\b':
-            case '\x7F':
-
-                tsm_input_backspace();
-                break;
-
-            case '\n':
-
-                tsm_input_append('\n');
-                break;
-
-            default:
-
-                tsm_input_append(ascii[i]);
-                break;
-                
-        }
-
-        tsm_input_flush(out);
-
+    if(size == 0) {
+        return;
     }
+
+    if(write(out, ascii, size) != size) {
+        perror("write");
+    }
+
+    tsm_vte_input(context.vte, ascii, size);
 
 }
 
@@ -547,7 +500,6 @@ static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *
 static void* thr_kbd_handler(void* arg) {
 
     (void) arg;
-
 
     do {
 
@@ -816,23 +768,6 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    // if(pipe2(context.ipipefd, 0) < 0) {
-    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
-    //     exit(1);
-    // }
-
-    // assert(context.ipipefd[0] >= 0);
-    // assert(context.ipipefd[1] >= 0);
-
-
-    // if(pipe2(context.opipefd, 0) < 0) {
-    //     fprintf(stderr, "aplus-terminal: pipe() failed\n");
-    //     exit(1);
-    // }
-
-    // assert(context.opipefd[0] >= 0);
-    // assert(context.opipefd[1] >= 0);
-
 
     //* 4. Input initialization
 
@@ -860,17 +795,19 @@ int main(int argc, char** argv) {
 
     {
 
-        int fd = open("/usr/share/keymaps/it.map", O_RDONLY);
+        #define KEYMAP_LANG "it"
+
+        int fd = open("/usr/share/keymaps/" KEYMAP_LANG ".map", O_RDONLY);
 
         if(fd < 0) {
-            fprintf(stderr, "aplus-terminal: open() failed: cannot open /usr/share/keymaps/it.map: %s\n", strerror(errno));
+            fprintf(stderr, "aplus-terminal: open() failed: cannot open /usr/share/keymaps/" KEYMAP_LANG ".map: %s\n", strerror(errno));
             exit(1);
         }
 
         char magic[8];
 
         if(read(fd, magic, 8) != 8) {
-            fprintf(stderr, "aplus-terminal: read() failed: cannot read /usr/share/keymaps/it.map: %s\n", strerror(errno));
+            fprintf(stderr, "aplus-terminal: read() failed: cannot read /usr/share/keymaps/" KEYMAP_LANG ".map: %s\n", strerror(errno));
             exit(1);
         }
 
@@ -892,7 +829,6 @@ int main(int argc, char** argv) {
     }
 
     //* 4. Input initialization
-
     if(pthread_create(&context.thr_kbd, NULL, thr_kbd_handler, NULL) < 0) {
         fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(errno));
         exit(1);

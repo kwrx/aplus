@@ -33,6 +33,8 @@
 #include <aplus/vfs.h>
 #include <aplus/errno.h>
 
+#include <aplus/utils/ptr.h>
+
 
 static struct {
 
@@ -141,15 +143,18 @@ int vfs_close(inode_t* inode) {
             
             int e = inode->ops.close(inode); 
 
+            shared_ptr_nullable_access(inode->ev, ev, {
     
-            if(inode->ev.events) {
+                if(ev->events) {
 
-                inode->ev.events  = 0;
-                inode->ev.revents = POLLHUP;
+                    ev->events  = 0;
+                    ev->revents = POLLHUP;
 
-                __atomic_store_n(&inode->ev.futex, 1, __ATOMIC_SEQ_CST);
+                    __atomic_store_n(&ev->futex, 1, __ATOMIC_SEQ_CST);
 
-            }
+                }
+
+            });
 
             e;
 
@@ -292,12 +297,17 @@ ssize_t vfs_read (inode_t* inode, void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.read(inode, buf, off, size);
 
-            if(inode->ev.events & POLLOUT) {
+            shared_ptr_nullable_access(inode->ev, ev, {
 
-                __atomic_fetch_or(&inode->ev.revents, POLLOUT, __ATOMIC_SEQ_CST);
-                __atomic_fetch_or(&inode->ev.futex,         1, __ATOMIC_SEQ_CST);
+                if(ev->events & POLLOUT) {
 
-            }
+                    __atomic_fetch_or(&ev->revents, POLLOUT, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_or(&ev->futex,         1, __ATOMIC_SEQ_CST);
+
+                }
+
+            });
+
 
             e;
 
@@ -323,12 +333,16 @@ ssize_t vfs_write (inode_t* inode, const void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.write(inode, buf, off, size);
 
-            if(inode->ev.events & POLLIN) {
+            shared_ptr_nullable_access(inode->ev, ev, {
 
-                __atomic_fetch_or(&inode->ev.revents, POLLIN, __ATOMIC_SEQ_CST);
-                __atomic_fetch_or(&inode->ev.futex,        1, __ATOMIC_SEQ_CST);
+                if(ev->events & POLLIN) {
 
-            }
+                    __atomic_fetch_or(&ev->revents, POLLIN, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_or(&ev->futex,        1, __ATOMIC_SEQ_CST);
+
+                }
+
+            });
 
             e;
 
@@ -404,11 +418,19 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
 
 
     if(name[0] == '.' && name[1] == '.' && name[2] == '\0') {
+
+        inode_t* parent = NULL;
        
-        if(current_task->fs->root != inode || inode->parent)
-            return inode->parent;
-        else
-            return errno = ENOENT, NULL;
+        shared_ptr_access(current_task->fs, fs, {
+            
+            if(fs->root != inode || inode->parent)
+                parent = inode->parent;
+            else
+                errno = ENOENT;
+
+        });
+
+        return parent;
 
     }
 

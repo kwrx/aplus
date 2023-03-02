@@ -70,39 +70,41 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
     if(unlikely(!uio_check(buf, R_OK | W_OK)))
         return -EFAULT;
 
-
-    
-
     if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-
-    if(unlikely(!(
-        !(current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-         (current_task->fd->descriptors[fd].flags & O_RDONLY)
-    )))
-        return -EPERM;
 
 
 
     ssize_t e = 0;
 
+    shared_ptr_access(current_task->fd, fds, {
 
-    uio_lock(buf, count);
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
 
-        if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
-            break;
+        if(unlikely(!(
+            !(fds->descriptors[fd].flags & O_WRONLY) ||
+             (fds->descriptors[fd].flags & O_RDONLY)
+        )))
+            return -EPERM;
 
-        current_task->iostat.read_bytes += (uint64_t) e;
-        
+
+
+        uio_lock(buf, count);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            if((e = vfs_read(fds->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
+                break;
+
+            current_task->iostat.read_bytes += (uint64_t) e;
+            
+        });
+
+        uio_unlock(buf, count);
+
     });
-
-    uio_unlock(buf, count);
 
 
     if(e < 0)
