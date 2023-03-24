@@ -44,7 +44,7 @@ struct test_hook {
 } __packed;
 
 
-
+#if defined(DEBUG) && defined(CONFIG_HAVE_TEST)
 static void test_run(const char* context, uintptr_t hook_start, uintptr_t hook_end) {
 
     DEBUG_ASSERT(context);
@@ -52,10 +52,10 @@ static void test_run(const char* context, uintptr_t hook_start, uintptr_t hook_e
     DEBUG_ASSERT(hook_end);
     DEBUG_ASSERT(hook_start < hook_end);
 
-
+#if DEBUG_LEVEL_INFO
     size_t max = (hook_end - hook_start) / sizeof(struct test_hook);
     size_t cnt = 0;
-
+#endif
 
     for(; hook_start < hook_end; hook_start += sizeof(struct test_hook)) {
 
@@ -77,9 +77,12 @@ static void test_run(const char* context, uintptr_t hook_start, uintptr_t hook_e
 
     }
 
+#if DEBUG_LEVEL_INFO
     kprintf("\n");
+#endif
 
 }
+#endif
 
 
 void test_init(void) {

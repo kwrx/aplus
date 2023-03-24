@@ -301,7 +301,6 @@ static void init_initd(void) {
 
     if(fork() == 0) {
     
-
         execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
         exit(EXIT_FAILURE);
 

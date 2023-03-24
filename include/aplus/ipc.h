@@ -162,7 +162,7 @@ void spinlock_lock(spinlock_t*);
 void spinlock_unlock(spinlock_t*);
 void sem_wait(semaphore_t*);
 
-void futex_wait(struct task*, uint32_t*, uint32_t, const struct timespec*);
+void futex_wait(struct task*, volatile uint32_t*, uint32_t, const struct timespec*);
 
 #endif
 

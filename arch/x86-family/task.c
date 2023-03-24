@@ -45,6 +45,8 @@
 
 extern inode_t __vfs_root;
 
+struct pty;
+
 
 #define FRAME(p)                                    \
     ((interrupt_frame_t*) (p)->frame)
@@ -103,7 +105,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     shared_ptr_access(current_task->sighand, sighand, {
 
         action = &sighand->action[siginfo->si_signo];
-
+        
         FRAME(current_cpu)->ip    = (uintptr_t) action->sigaction;
         FRAME(current_cpu)->sp    = current_task->userspace.sigstack;
         FRAME(current_cpu)->cs    = USER_CS | 3;
@@ -123,10 +125,9 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     FRAME(current_cpu)->si = (uintptr_t) current_task->userspace.siginfo;       // movq  $siginfo, %rsi
     FRAME(current_cpu)->dx = 0L;                                                // movq  $ucontext, %rdx
 
-
-    mmio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                               // pushq $0
-    mmio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                               // pushq $0
-    mmio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer);               // callq $handler
+    uio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                                // pushq $0
+    uio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                                // pushq $0
+    uio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer);                // callq $handler
 
     FRAME(current_cpu)->sp -= 0x18;
 
@@ -144,7 +145,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     sigcontext->flags = action->sa_flags;
 
-    memcpy(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
+    uio_memcpy_s2u(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
 
 }
 
@@ -255,8 +256,8 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->environ = current_task->environ;
 
     task->tid  = 
-    task->tgid = sched_nextpid();
-    task->pgid = current_task->pgid;
+    task->pid  = sched_nextpid();
+    task->pgrp = current_task->pgrp;
     task->uid  = current_task->uid;
     task->euid = current_task->euid;
     task->gid  = current_task->gid;
@@ -275,6 +276,9 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     queue_init(&task->sigqueue);
     queue_init(&task->sigpending);
+
+
+    task->ctty    = shared_ptr_new(struct pty*, GFP_KERNEL);
 
 
 
@@ -321,8 +325,8 @@ pid_t arch_task_spawn_init() {
 
 
     task->tid   = 
-    task->tgid  = sched_nextpid();
-    task->pgid  = 1;
+    task->pid   = sched_nextpid();
+    task->pgrp  = 1;
     task->uid   =
     task->euid  =
     task->gid   =
@@ -370,6 +374,7 @@ pid_t arch_task_spawn_init() {
     task->fs      = shared_ptr_new(struct fs, GFP_KERNEL);
     task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
     task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
+    task->ctty    = shared_ptr_new(struct pty*, GFP_KERNEL);
 
 
     shared_ptr_access(task->fs, fs, {
@@ -405,8 +410,9 @@ pid_t arch_task_spawn_init() {
 
 
 
-    if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID)
+    if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID) {
         task->parent = core->bsp.sched_running;
+    }
     
 
     current_cpu->sched_running = task;
@@ -425,6 +431,7 @@ pid_t arch_task_spawn_init() {
     sched_enqueue(task);
 
     return task->tid;
+    
 }
 
 
@@ -452,12 +459,13 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
         CPU_SET(i, &task->affinity);
     }
     
-    task->tgid = current_task->tid;
+    task->pid = current_task->tid;
 
 
 
     task->address_space = (void*) current_task->address_space;
-    current_task->address_space->refcount++;
+    
+    __atomic_add_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST);
 
 
     task->fs      = shared_ptr_dup(current_task->fs, GFP_KERNEL);

@@ -422,6 +422,28 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
     });
 
+    // * Reset signal handlers
+
+    shared_ptr_access(current_task->sighand, sighand, {
+
+        for(size_t i = 0; i < _NSIG; i++) {
+
+            sighand->action[i].handler     = SIG_DFL;
+            sighand->action[i].sa_flags    = 0;
+            sighand->action[i].sa_restorer = NULL;
+
+        }
+
+    });
+
+
+    // * Set new fs executable
+
+    shared_ptr_access(current_task->fs, fs, {
+
+        fs->exe = inode;
+
+    });
 
 
 

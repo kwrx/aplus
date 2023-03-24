@@ -66,8 +66,8 @@ void sem_wait(semaphore_t* s) {
 #endif
     }
 
-
     __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
+
 }
 
 

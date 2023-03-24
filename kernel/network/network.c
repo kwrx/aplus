@@ -92,7 +92,7 @@ void network_init() {
     IP_ADDR4(&dns[0], 1, 1, 1, 1);
     IP_ADDR4(&dns[1], 1, 0, 0, 1);
 
-
+#if DEBUG_LEVEL_INFO
     kprintf("network: host(%s) lwip(%s) dns1(%d.%d.%d.%d) dns2(%d.%d.%d.%d)\n", 
         hostname,
         LWIP_VERSION_STRING,
@@ -105,9 +105,11 @@ void network_init() {
         (dns[1].u_addr.ip4.addr >> 16) & 0xFF,
         (dns[1].u_addr.ip4.addr >> 24) & 0xFF
     );
+#endif
 
-    
+
     tcpip_init(&tcpip_init_done, &dns);
+
 
     sem_wait(&tcpip_done);
 

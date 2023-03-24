@@ -67,6 +67,7 @@ void kpanicf(const char* fmt, ...) {
 #if DEBUG_LEVEL_ERROR
     runtime_stacktrace();
 #endif
+    runtime_dump();
 
     arch_debug_putc('\e');
     arch_debug_putc('[');

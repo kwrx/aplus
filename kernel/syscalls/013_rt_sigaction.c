@@ -86,7 +86,7 @@ long sys_rt_sigaction (int signo, const struct ksigaction __user * act, struct k
             uio_memcpy_s2u(oldact, &sighand->action[signo], sizeof(struct ksigaction));
 
         if(act)
-            uio_memcpy_u2s(&sighand->action[signo], act, sizeof(struct sigaction));
+            uio_memcpy_u2s(&sighand->action[signo], act, sizeof(struct ksigaction));
 
     });
 

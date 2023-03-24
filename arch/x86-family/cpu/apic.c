@@ -290,7 +290,7 @@ void apic_init(void) {
                 break;
 
             default:
-                PANIC_ON(0);
+                PANIC_ASSERT(0);
                 break;
 
         }

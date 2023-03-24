@@ -150,7 +150,7 @@ int vfs_close(inode_t* inode) {
                     ev->events  = 0;
                     ev->revents = POLLHUP;
 
-                    __atomic_store_n(&ev->futex, 1, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_add(&ev->futex, 1, __ATOMIC_SEQ_CST);
 
                 }
 
@@ -302,7 +302,7 @@ ssize_t vfs_read (inode_t* inode, void* buf, off_t off, size_t size) {
                 if(ev->events & POLLOUT) {
 
                     __atomic_fetch_or(&ev->revents, POLLOUT, __ATOMIC_SEQ_CST);
-                    __atomic_fetch_or(&ev->futex,         1, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_add(&ev->futex,        1, __ATOMIC_SEQ_CST);
 
                 }
 
@@ -338,7 +338,7 @@ ssize_t vfs_write (inode_t* inode, const void* buf, off_t off, size_t size) {
                 if(ev->events & POLLIN) {
 
                     __atomic_fetch_or(&ev->revents, POLLIN, __ATOMIC_SEQ_CST);
-                    __atomic_fetch_or(&ev->futex,        1, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_add(&ev->futex,       1, __ATOMIC_SEQ_CST);
 
                 }
 

@@ -101,11 +101,12 @@ void spinlock_lock(spinlock_t* lock) {
 
         
     volatile uint64_t own;
+
     if((own = __atomic_load_n(&lock->owner, __ATOMIC_CONSUME)) == spinlock_get_new_owner(lock)) {
 
         if(lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
 
-            lock->refcount++;
+            __atomic_add_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST);
 
         } else {
 
@@ -153,7 +154,8 @@ void spinlock_lock(spinlock_t* lock) {
 
         lock->owner = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
-        lock->refcount = 1;
+        
+        __atomic_store_n(&lock->refcount, 1, __ATOMIC_RELAXED);
 
     }
 
@@ -171,8 +173,9 @@ int spinlock_trylock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
     int e; 
-    if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)))
+    if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))) {
         lock->irqsave = arch_intr_disable();
+    }
 
     return e;
 }
@@ -201,7 +204,7 @@ void spinlock_unlock(spinlock_t* lock) {
     } else {
 
 
-        if(--lock->refcount > 0)
+        if(__atomic_sub_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST) > 0)
             return;
 
 

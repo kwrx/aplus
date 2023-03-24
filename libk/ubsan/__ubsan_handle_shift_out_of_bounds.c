@@ -46,7 +46,7 @@ void __ubsan_handle_shift_out_of_bounds(struct shift_out_of_bounds_data* data, u
     DEBUG_ASSERT(data->rhs_type);
     DEBUG_ASSERT(data->rhs_type->name);
 
-    kpanicf("PANIC! UBSAN: shift out of bounds for operation '%ld >> %ld' of object types %s and %s on %s:%d:%d\n", lhs, rhs,
+    kpanicf("PANIC! UBSAN: shift out of bounds for operation '%ld <<>> %ld' of object types %s and %s on %s:%d:%d\n", lhs, rhs,
         data->lhs_type->name,
         data->rhs_type->name,
         data->location.file,

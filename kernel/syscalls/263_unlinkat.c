@@ -129,7 +129,7 @@ long sys_unlinkat (int dfd, const char __user * pathname, int flags) {
 #endif
         S_ISLNK(st.st_mode)
     ) {
-        if((r = path_follows(r, st.st_size)) == NULL)
+        if((r = path_follows(r)) == NULL)
             return -errno;
     }
 

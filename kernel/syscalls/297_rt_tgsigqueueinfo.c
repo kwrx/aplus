@@ -44,7 +44,7 @@
  * Input Parameters:
  *  0: 0x129
  *  1: pid_t tgid
- *  2: pid_t pid
+ *  2: pid_t tid
  *  3: int sig
  *  4: siginfo_t __user * uinfo
  *
@@ -70,86 +70,16 @@ long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * u
     if(unlikely(!uio_check(uinfo, R_OK)))
         return -EFAULT;
 
-    if(unlikely(tgid != current_task->tgid && uinfo->si_code >= 0))
+    if(unlikely(tgid != current_task->pid && uinfo->si_code >= 0))
         return -EPERM;
 
 
 
-    int found = 0;
-    
-    cpu_foreach(cpu) {
+    siginfo_t __uinfo;
+    uio_memcpy_u2s(&__uinfo, uinfo, sizeof(siginfo_t));
 
-        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-
-            if(tmp->tgid != tgid)
-                continue;
-
-            if(tid != -1 && tmp->tid != tid)    // HACK: not sure, check later...
-                continue;
-
-            if(tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur)
-                return -EAGAIN;
-
-            if(!(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
-                return -EPERM;      
-
-
-            found = 1;
-
-            if(unlikely(sig == 0))
-                continue;
-
-            
-            struct ksigaction* action = NULL;
-
-            shared_ptr_access(tmp->sighand, sighand, {
-                action = &sighand->action[sig];
-            });
-
-            DEBUG_ASSERT(action);
-
-
-            if(unlikely(action->handler == SIG_IGN))
-                continue;
-
-            if(unlikely(action->handler == SIG_ERR))
-                continue;
-
-        
-
-            siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
-
-            uio_memcpy_u2s(siginfo, uinfo, sizeof(siginfo_t));
-
-            siginfo->si_signo = sig;
-           
-
-            shared_ptr_access(tmp->sighand, sighand, {
-            
-                //? Check if the signal is blocked
-                if(unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
-
-                    if(sighand->action[sig].sa_flags & SA_NODEFER)
-                        queue_enqueue(&current_task->sigqueue, siginfo, 0);
-                    else
-                        queue_enqueue(&current_task->sigpending, siginfo, 0);
-                        
-                } else {
-                    queue_enqueue(&current_task->sigqueue, siginfo, 0);
-                }
-            
-            });
-
-
-        }
-
-    }
-
-
-
-    if(unlikely(!found))
-        return -ESRCH;
-    
+    if(unlikely(sched_sigqueueinfo(-1, tgid, tid, sig, &__uinfo)) < 0)
+        return -errno;
 
     return 0;
 

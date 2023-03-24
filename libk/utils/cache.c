@@ -194,7 +194,7 @@ cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
     });
 
 
-    PANIC_ON(value != NULL && "cache: failed to fetch key");
+    PANIC_ASSERT(value != NULL && "cache: failed to fetch key");
 
     return value;
 
@@ -224,7 +224,7 @@ void __cache_commit(cache_t* cache, cache_key_t key) {
     });
 
 
-    PANIC_ON(value != NULL && "cache: failed to commit key");
+    PANIC_ASSERT(value != NULL && "cache: failed to commit key");
 
 }
 
@@ -250,6 +250,6 @@ void __cache_remove(cache_t* cache, cache_key_t key) {
     });
 
 
-    PANIC_ON(value != NULL && "cache: failed to remove key");
+    PANIC_ASSERT(value != NULL && "cache: failed to remove key");
 
 }

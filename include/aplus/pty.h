@@ -56,7 +56,7 @@ typedef struct pty {
 
     pid_t m_sid;
     pid_t m_pid;
-    pid_t s_pid;
+    pid_t s_pgrp;
 
     struct {
         char* buffer;

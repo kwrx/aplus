@@ -52,6 +52,6 @@ long sys_getpgrp (void) {
     DEBUG_ASSERT(current_cpu);
     DEBUG_ASSERT(current_task);
 
-    return current_task->pgid;
+    return current_task->pgrp;
 
 });

@@ -72,7 +72,7 @@ long sys_setpriority (int which, int who, int niceval) {
                 break;
             
             case PRIO_PGRP:
-                who = current_task->pgid;
+                who = current_task->pgrp;
                 break;
 
             case PRIO_USER:
@@ -109,7 +109,7 @@ long sys_setpriority (int which, int who, int niceval) {
                 
                 case PRIO_PGRP:
                     
-                    if(tmp->pgid != who) {
+                    if(tmp->pgrp != who) {
                         continue;
                     }
 

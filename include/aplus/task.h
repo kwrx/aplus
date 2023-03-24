@@ -92,6 +92,7 @@
 
 
 
+struct pty;
 
 struct fd_descriptor {
 
@@ -167,8 +168,8 @@ typedef struct task {
     char** environ;
 
     pid_t tid;
-    gid_t tgid;
-    gid_t pgid;
+    gid_t pid;
+    gid_t pgrp;
 
     uid_t uid;
     uid_t euid;
@@ -221,6 +222,7 @@ typedef struct task {
     shared_ptr(struct fd) fd;
     shared_ptr(struct fs) fs;
     shared_ptr(struct sighand) sighand;
+    shared_ptr(struct pty*) ctty;
 
     queue_t sigqueue;
     queue_t sigpending;
@@ -328,6 +330,7 @@ pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 void sched_requeue(task_t*);
+int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 
 void schedule(int);
 

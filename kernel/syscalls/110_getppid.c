@@ -53,9 +53,9 @@ long sys_getppid (void) {
     DEBUG_ASSERT(current_task);
 
     if (likely(current_task->parent)) {
-        return current_task->parent->tgid;
+        return current_task->parent->pid;
     } else {
-        return current_task->tgid;
+        return current_task->pid;
     }
 
 });

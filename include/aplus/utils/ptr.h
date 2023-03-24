@@ -104,6 +104,15 @@ __BEGIN_DECLS
         }                                                                       \
     }
 
+#define shared_ptr_free_with_dtor(ptr, var, dtor)                               \
+    {                                                                           \
+        DEBUG_ASSERT((ptr));                                                    \
+        DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                         \
+        if(__atomic_sub_fetch(&(ptr)->refcount, 1, __ATOMIC_SEQ_CST) == 0) {    \
+            shared_ptr_access(ptr, var, { dtor; });                             \
+        }                                                                       \
+    }
+
 
 #define shared_ptr_access(ptr, var, fn)                                         \
     {                                                                           \

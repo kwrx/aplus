@@ -3,13 +3,17 @@
 | Type | Filename | Message | Link |
 | ---: | -------- | ------- | ---: |
 |**BUG**|`arch/x86_64/startup.S`|stack not aligned when code is optimized by compiler|[#](/arch/x86_64/startup.S#L601)|
-|**BUG**|`arch/x86-family/cpu/cpu.c`|Invalid Opcode even if supported by cpu|[#](/arch/x86-family/cpu/cpu.c#L449)|
-|**BUG**|`arch/x86-family/mm/clone.c`|broken DEMAND_PAGING implementation|[#](/arch/x86-family/mm/clone.c#L76)|
-|**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L336)|
+|**BUG**|`arch/x86-family/cpu/cpu.c`|Invalid Opcode even if supported by cpu|[#](/arch/x86-family/cpu/cpu.c#L445)|
+|**BUG**|`arch/x86-family/task.c`|prev->frame is randomly NULL|[#](/arch/x86-family/task.c#L185)|
+|**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L350)|
+|**FIXME**|`arch/x86-family/mm/address_space.c`|maybe unsafe|[#](/arch/x86-family/mm/address_space.c#L330)|
+|**FIXME**|`arch/x86-family/mm/address_space.c`|not safe to free frame here, as it may be used by system page tables|[#](/arch/x86-family/mm/address_space.c#L242)|
 |**FIXME**|`drivers/virtio/virtio-console/main.c`|change values|[#](/drivers/virtio/virtio-console/main.c#L65)|
+|**FIXME**|`kernel/fork.c`|not sure if this is correct, maybe we should use atomic operations|[#](/kernel/fork.c#L89)|
+|**FIXME**|`kernel/sched.c`|unsafe to free here. Moreover there are memory leaks of unfreed attributes|[#](/kernel/sched.c#L464)|
 |**FIXME**|`kernel/syscalls/141_setpriority.c`|check for superuser|[#](/kernel/syscalls/141_setpriority.c#L131)|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|[#](/kernel/syscalls/202_futex.c#L188)|
-|**HACK**|`kernel/syscalls/297_rt_tgsigqueueinfo.c`|not sure, check later...|[#](/kernel/syscalls/297_rt_tgsigqueueinfo.c#L88)|
+|**HACK**|`kernel/syscalls/297_rt_tgsigqueueinfo.c`|not sure, check later...|[#](/kernel/syscalls/297_rt_tgsigqueueinfo.c#L87)|
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|cursor subsystem|[#](/apps/sysutils/aplus-ui/src/main.c#L197)|
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|message subsystem|[#](/apps/sysutils/aplus-ui/src/main.c#L200)|
 |**TODO**|`apps/sysutils/aplus-ui/src/main.c`|renderer subsystem|[#](/apps/sysutils/aplus-ui/src/main.c#L198)|
@@ -18,46 +22,43 @@
 |**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|[#](/apps/sysutils/aplus-ui/src/wc/wc_window.c#L287)|
 |**TODO**|`apps/sysutils/aplus-ui/src/wc/wc_window.c`|Draw client area|[#](/apps/sysutils/aplus-ui/src/wc/wc_window.c#L319)|
 |**TODO**|`arch/x86-family/debug.c`|Print Timestamp on Debug Output|[#](/arch/x86-family/debug.c#L137)|
-|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L135)|
-|**TODO**|`arch/x86-family/intr.c`|Handle User Exception|[#](/arch/x86-family/intr.c#L146)|
-|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L149)|
-|**TODO**|`arch/x86-family/mm/vm_lock.c`|implement a better way to lock a region of memory|[#](/arch/x86-family/mm/vm_lock.c#L52)|
+|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L134)|
+|**TODO**|`arch/x86-family/intr.c`|Handle User Exception|[#](/arch/x86-family/intr.c#L145)|
+|**TODO**|`arch/x86-family/mm/address_space.c`|free all mappings|[#](/arch/x86-family/mm/address_space.c#L319)|
+|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L150)|
+|**TODO**|`arch/x86-family/mm/vm_lock.c`|implement a better way to lock a region of memory|[#](/arch/x86-family/mm/vm_lock.c#L51)|
 |**TODO**|`arch/x86-family/mm/vm_map.c`|add support for releasing pages when process is killed|[#](/arch/x86-family/mm/vm_map.c#L270)|
-|**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|[#](/arch/x86-family/reboot.c#L99)|
+|**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|[#](/arch/x86-family/reboot.c#L97)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|[#](/arch/x86-family/reboot.c#L48)|
-|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L287)|
+|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L289)|
 |**TODO**|`docs/FEATURES.md`|Update TODO.md|[#](/docs/FEATURES.md#L10)|
 |**TODO**|`drivers/dev/interface/main.c`|block_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L146)|
 |**TODO**|`drivers/dev/interface/main.c`|char_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L143)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|implements ahci de-initialitation|[#](/drivers/platform/pc/block/ahci/main.c#L1569)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|implements sata device de-initialitiation|[#](/drivers/platform/pc/block/ahci/main.c#L922)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|see AHCI 1.3.1 - pg 114, 10.4.1|[#](/drivers/platform/pc/block/ahci/main.c#L983)|
-|**TODO**|`drivers/tty/pty/main.c`|drain input buffer  |[#](/drivers/tty/pty/main.c#L76)|
-|**TODO**|`drivers/tty/pty/main.c`|TCFLSH: flush input/output buffer|[#](/drivers/tty/pty/main.c#L539)|
-|**TODO**|`drivers/tty/pty/main.c`|TIOCNOTTY: disassociate controlling terminal|[#](/drivers/tty/pty/main.c#L565)|
-|**TODO**|`drivers/tty/pty/main.c`|VWERASE: erase the word to the left of the cursor|[#](/drivers/tty/pty/main.c#L316)|
+|**TODO**|`drivers/platform/pc/input/ps2/main.c`|implement module_reset and call it here|[#](/drivers/platform/pc/input/ps2/main.c#L179)|
+|**TODO**|`drivers/tty/pty/main.c`|TCFLSH: flush input/output buffer|[#](/drivers/tty/pty/main.c#L565)|
+|**TODO**|`drivers/tty/pty/main.c`|VWERASE: erase the word to the left of the cursor|[#](/drivers/tty/pty/main.c#L324)|
 |**TODO**|`drivers/virtio/virtio-gpu/main.c`|Rewrite all virtio-gpu code to use a new video interface driver|[#](/drivers/virtio/virtio-gpu/main.c#L44)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L240)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L315)|
-|**TODO**|`kernel/fork.c`|implements CLONE_VFORK|[#](/kernel/fork.c#L157)|
+|**TODO**|`kernel/fork.c`|Implement CLONE_VFORK|[#](/kernel/fork.c#L153)|
 |**TODO**|`kernel/fs/ext2/ext2_cache.c`|rewrite all ext2 cache functions|[#](/kernel/fs/ext2/ext2_cache.c#L37)|
 |**TODO**|`kernel/fs/ext2/ext2.h`|rewrite all ext2 driver to support cache|[#](/kernel/fs/ext2/ext2.h#L37)|
 |**TODO**|`kernel/fs/ext2/ext2_mount.c`|ext2: include support for fsync and atime|[#](/kernel/fs/ext2/ext2_mount.c#L49)|
 |**TODO**|`kernel/fs/ext2/utils/ext2_block.c`|free block|[#](/kernel/fs/ext2/utils/ext2_block.c#L202)|
 |**TODO**|`kernel/fs/iosched.c`|implements I/O scheduler|[#](/kernel/fs/iosched.c#L24)|
 |**TODO**|`kernel/fs/procfs/procfs_service_cmdline.c`|/proc/[pid]/cmdline|[#](/kernel/fs/procfs/procfs_service_cmdline.c#L67)|
-|**TODO**|`kernel/init/root.c`|add other Kernel Arguments|[#](/kernel/init/root.c#L54)|
+|**TODO**|`kernel/init/root.c`|add other Kernel Arguments|[#](/kernel/init/root.c#L56)|
 |**TODO**|`kernel/network/core/ipv6/dhcp6.c`||[#](/kernel/network/core/ipv6/dhcp6.c#L12)|
 |**TODO**|`kernel/network/core/ipv6/ip6.c`|process routing by the type|[#](/kernel/network/core/ipv6/ip6.c#L940)|
 |**TODO**|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received|[#](/kernel/network/netif/lowpan6.c#L731)|
 |**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L81)|
 |**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|[#](/kernel/syscalls/012_brk.c#L72)|
-|**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|[#](/kernel/syscalls/058_vfork.c#L55)|
-|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L184)|
-|**TODO**|`kernel/syscalls/059_execve.c`|release userspace resources|[#](/kernel/syscalls/059_execve.c#L297)|
+|**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|[#](/kernel/syscalls/058_vfork.c#L54)|
+|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L195)|
 |**TODO**|`kernel/syscalls/060_exit.c`|implements signal     |[#](/kernel/syscalls/060_exit.c#L80)|
-|**TODO**|`kernel/syscalls/060_exit.c`|remove references from fs, fd, sighand, ecc...|[#](/kernel/syscalls/060_exit.c#L106)|
-|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L119)|
+|**TODO**|`kernel/syscalls/062_kill.c`|Handle process groups (pid < -1)|[#](/kernel/syscalls/062_kill.c#L60)|
+|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L142)|
 |**TODO**|`kernel/syscalls/229_clock_getres.c`|update <sys/features.h>|[#](/kernel/syscalls/229_clock_getres.c#L24)|
-|**TODO**|`libk/kpanicf.c`|implements arch_cpu_halt()|[#](/libk/kpanicf.c#L67)|
-|**TODO**|`libk/utils/cache.c`|add cache->ops.release handler|[#](/libk/utils/cache.c#L244)|

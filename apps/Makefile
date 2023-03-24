@@ -1,7 +1,7 @@
 .PHONY: all install clean distclean
 
 
-APPS    := coreutils sysutils extra test
+APPS    := sysutils extra test
 TARGETS	:= $(shell find $(APPS) -type f -iname "Makefile" -exec dirname {} \;)
 
 

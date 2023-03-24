@@ -82,7 +82,7 @@ long sys_dup2 (unsigned int fd, unsigned int newfd) {
                 fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
                 fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
-                fds->descriptors[fd].ref->refcount++;
+                __atomic_add_fetch(&fds->descriptors[fd].ref->refcount, 1, __ATOMIC_SEQ_CST);
 
             });
 

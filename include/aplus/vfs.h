@@ -222,7 +222,7 @@ struct file* fd_append(inode_t*, off_t, int);
 
 
 // kernel/fs/path.c
-inode_t* path_follows(inode_t*, size_t);
+inode_t* path_follows(inode_t*);
 inode_t* path_lookup(inode_t*, const char*, int, mode_t);
 
 

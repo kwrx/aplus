@@ -67,17 +67,17 @@ static void pty_input_discard(pty_t* pty, bool drain) {
         return;
 
 
+    kprintf("pty_input_discard(): discarding %zd bytes\n", pty->input.size);
+
     DEBUG_ASSERT(pty->input.buffer);
     DEBUG_ASSERT(pty->input.capacity);
+    DEBUG_ASSERT(pty->input.capacity >= pty->input.size);
 
     __lock(&pty->input.lock, {
 
         if(drain) {
-                
-            // TODO: drain input buffer  
-
+            ringbuffer_write(&pty->r1, pty->input.buffer, pty->input.size);
         }
-
 
         pty->input.size = 0;
 
@@ -103,14 +103,16 @@ static void pty_input_backspace(pty_t* pty, bool echo) {
 
         if(pty->input.buffer[pty->input.size - 1] < 0x20 || pty->input.buffer[pty->input.size - 1] == 0x7F) {
 
-            pty->input.buffer[--pty->input.size] = '\0';
-            pty->input.buffer[--pty->input.size] = '\0';
-
-        } else {
-
-            pty->input.buffer[--pty->input.size] = '\0';
+            if(pty->input.size > 0) {
+                pty->input.buffer[--pty->input.size] = '\0';
+            }
 
         }
+
+        if(pty->input.size > 0) {
+            pty->input.buffer[--pty->input.size] = '\0';
+        }
+    
 
         if(echo) {
             pty_process_output(pty, "\b \b", 3);
@@ -204,6 +206,7 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
         char ch = buf[i];
 
+        kprintf("pty_input_process(): processing char '%c' (0x%x), c_lflag: 0%o, c_iflag: 0%o, c_oflag: 0%o, c_cflag: 0%o\n", ch, ch, pty->ios.c_lflag, pty->ios.c_iflag, pty->ios.c_oflag, pty->ios.c_cflag);
 
         // c_iflag
     
@@ -248,6 +251,8 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
             if(sig > 0) {
 
+                kprintf("pty_input_process(): sending signal %d to process group %d\n", sig, pty->s_pgrp);
+
                 if(pty->ios.c_lflag & ECHO) {
 
                     char cb[2] = { 
@@ -262,21 +267,23 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
                     pty_input_discard(pty, false);
                 }
 
-                if(pty->s_pid > 0) {
-                    sys_kill(-pty->s_pid, sig);
+                if(pty->s_pgrp > 0) {
+                    int e = sys_kill(-pty->s_pgrp, sig);
+                    kprintf("pty_input_process(): sys_kill() returned %d (%d)\n", e, errno);
                 }
 
+                continue;
+            
             }
-
-
-            continue;
 
         }
 
 
-        if(pty->ios.c_lflag & ICANON) {
+        if(pty->ios.c_lflag & ICANON) { kprintf("pty_input_process(): canonical mode\n");
+            
+            // Canonical mode
 
-            if(ch == pty->ios.c_cc[VKILL]) {
+            if(ch == pty->ios.c_cc[VKILL]) { kprintf("pty_input_process(): VKILL\n");
 
                 while(pty->input.size > 0) {
                     pty_input_backspace(pty, pty->ios.c_lflag & ECHOK);
@@ -292,12 +299,10 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
                 }
 
-                continue;
-
             }
 
 
-            if(ch == pty->ios.c_cc[VERASE]) {
+            else if(ch == pty->ios.c_cc[VERASE]) { kprintf("pty_input_process(): VERASE\n");
 
                 pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
 
@@ -311,12 +316,10 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
                 }
 
-                continue;
-
             }
 
 
-            if(ch == pty->ios.c_cc[VWERASE]) {
+            else if(ch == pty->ios.c_cc[VWERASE]) { kprintf("pty_input_process(): VWERASE\n");
 
                 // TODO: VWERASE: erase the word to the left of the cursor
 
@@ -325,20 +328,38 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
             }
 
 
-            if(ch == pty->ios.c_cc[VEOF]) {
+            else if(ch == pty->ios.c_cc[VEOF]) { kprintf("pty_input_process(): VEOF\n");
 
-
-                continue;
+                pty_input_discard(pty, pty->ios.c_lflag & ECHO);
 
             }
 
-            (void) pty_input_append;
+            
+            else if(ch == pty->ios.c_cc[VEOL] || ch == '\n') { kprintf("pty_input_process(): VEOL or newline\n");
+
+                pty_input_append(pty, '\n', pty->ios.c_lflag & ECHONL);
+                pty_input_discard(pty, pty->ios.c_lflag & ECHO);
+
+            }
+
+
+            else { kprintf("pty_input_process(): appending char\n");
+
+                pty_input_append(pty, ch, pty->ios.c_lflag & ECHO);
+
+            }
+
+        } else { kprintf("pty_input_process(): non-canonical mode\n");
+
+            // Non-canonical mode (raw mode)
+
+            if(pty->ios.c_lflag & ECHO) {
+                pty_process_output(pty, &ch, 1);
+            }
+
+            ringbuffer_write(&pty->r1, &ch, 1);
 
         }
-
-
-        if(ringbuffer_write(&pty->r1, &ch, 1) < 0)
-            return -1;
 
     }
 
@@ -391,8 +412,8 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             pty->ws.ws_xpixel = uio_rstruct(ws, ws_xpixel);
             pty->ws.ws_ypixel = uio_rstruct(ws, ws_ypixel);
 
-            if(pty->s_pid > 0) {
-                sys_kill(-pty->s_pid, SIGWINCH);
+            if(pty->s_pgrp > 0) {
+                sys_kill(-pty->s_pgrp, SIGWINCH);
             }
 
             return 0;
@@ -430,7 +451,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return -EFAULT;
 
 
-            uio_write(pgrp, pty->s_pid);
+            uio_write(pgrp, pty->s_pgrp);
 
             return 0;
 
@@ -447,7 +468,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return -EFAULT;
 
             
-            pty->s_pid = uio_read(pgrp);
+            pty->s_pgrp = uio_read(pgrp);
 
             return 0;
 
@@ -565,9 +586,52 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             return -1;
         }
 
+
+        case TIOCSCTTY: {
+
+            if(unlikely(pty->m_pid > 0))
+                return -EPERM;
+
+            if(unlikely(current_task->sid != current_task->tid))
+                return -EPERM;
+
+
+            shared_ptr_access(current_task->ctty, ctty, {
+
+                if(unlikely(*ctty))
+                    return -EPERM;
+
+                pty->m_pid  = current_task->tid;
+                pty->m_sid  = current_task->sid;
+                pty->s_pgrp = 0;
+
+                *ctty = pty;
+
+            })
+
+            return 0;
+
+        }
+
         case TIOCNOTTY: {
 
-            // TODO: TIOCNOTTY: disassociate controlling terminal
+            if(pty->s_pgrp != 0) {
+                sys_kill(-pty->s_pgrp, SIGHUP);
+            }
+
+            shared_ptr_access(current_task->ctty, ctty, {
+
+                if(unlikely(*ctty != pty))
+                    return -EPERM;
+
+                pty->m_pid  = 0;
+                pty->m_sid  = 0;
+                pty->s_pgrp = 0;
+                
+                *ctty = NULL;
+
+            });
+
             return 0;
 
         }
@@ -583,7 +647,7 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return -EFAULT;
 
             
-            uio_write(sid, pty->s_pid);
+            uio_write(sid, pty->m_sid);
 
             return 0;
 
@@ -717,7 +781,6 @@ ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t s
         return 0;
 
 
-    // return ringbuffer_write(&pty->r1, buf, size);
     return pty_process_input(pty, buf, size);
 
 }
@@ -778,7 +841,6 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
         return 0;
 
 
-    //return ringbuffer_write(&pty->r2, buf, size);
     return pty_process_output(pty, buf, size);
 
 }
@@ -797,8 +859,8 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
 
     pty->index = __next_pty_index++;
 
-    pty->m_pid = current_task->tid;
-    pty->s_pid = 0;
+    pty->m_pid  = current_task->tid;
+    pty->s_pgrp = 0;
 
     pty->ios.c_cc[VINTR]    = 0x03;
     pty->ios.c_cc[VQUIT]    = 0x1C;
@@ -820,7 +882,7 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     pty->ios.c_iflag = ICRNL | IXON | IXOFF;
     pty->ios.c_oflag = OPOST | ONLCR;
     pty->ios.c_cflag = B38400 | CS8 | CREAD | HUPCL;
-    pty->ios.c_lflag = ISIG | ICANON | ECHO | ECHOE | ECHOK | ECHOCTL | ECHOKE | IEXTEN;
+    pty->ios.c_lflag = ISIG | ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOCTL | ECHOKE | IEXTEN;
 
 
     pty->ws.ws_row    = 25;
@@ -829,8 +891,16 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     pty->ws.ws_ypixel = 0;
     
 
-    ringbuffer_init(&pty->r1, CONFIG_BUFSIZ);
-    ringbuffer_init(&pty->r2, CONFIG_BUFSIZ);
+    pty->input.buffer   = NULL;
+    pty->input.size     = 0;
+    pty->input.capacity = 0;
+
+    spinlock_init_with_flags(&pty->input.lock, SPINLOCK_FLAGS_RECURSIVE);
+
+
+    ringbuffer_init(&pty->r1, CONFIG_BUFSIZ * 64);
+    ringbuffer_init(&pty->r2, CONFIG_BUFSIZ * 64);
+
 
 
     pty->ptmx = ptmx;

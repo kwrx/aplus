@@ -54,13 +54,16 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
     if((inode = vfs_finddir(inode, s)) == NULL)
         return NULL;
 
-    struct stat st;
-    if(vfs_getattr(inode, &st) < 0)
+
+    struct stat st = { 0 };
+
+    if(vfs_getattr(inode, &st) < 0) {
         return NULL;
+    }
 
-
-    if(S_ISLNK(st.st_mode))
-        inode = path_follows(inode, st.st_size);
+    if(S_ISLNK(st.st_mode)) {
+        inode = path_follows(inode);
+    }
 
     return inode;
     
@@ -68,16 +71,13 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
 
 
 
-inode_t* path_follows(inode_t* inode, size_t size) {
+inode_t* path_follows(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(size);
 
+    char s[CONFIG_PATH_MAX + 1] = { 0 };
 
-    char s[size + 1];
-    memset(s, 0, size + 1);
-
-    if(vfs_readlink(inode, s, size) <= 0)
+    if(vfs_readlink(inode, s, CONFIG_PATH_MAX) <= 0)
         return NULL;
 
     return path_lookup(inode->parent, s, O_RDONLY, 0);

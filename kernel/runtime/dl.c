@@ -53,8 +53,7 @@ uintptr_t runtime_get_address(const char* name) {
     
 
 
-    int j;
-    for(j = 1; j < core->exe.sh_num; j++) {
+    for(uintptr_t j = 1; j < core->exe.sh_num; j++) {
 
         switch(shdr[j].sh_type) {
 
@@ -77,12 +76,16 @@ uintptr_t runtime_get_address(const char* name) {
     DEBUG_ASSERT(symtab);
 
 
-    for(j = 1; j < (symtab->sh_size / symtab->sh_entsize); j++)
-        if(strcmp(syname(sypobj(j)->st_name), name) == 0)
+    for(Elf_Xword j = 1; j < (symtab->sh_size / symtab->sh_entsize); j++) {
+     
+        if(strcmp(syname(sypobj(j)->st_name), name) == 0) {
             return sypobj(j)->st_value;
-
+        }
+    
+    }
 
     return 0;  
+
 }
 
 const char* runtime_get_name(uintptr_t address) {
@@ -107,8 +110,7 @@ const char* runtime_get_name(uintptr_t address) {
 
 
 
-    int j;
-    for(j = 1; j < core->exe.sh_num; j++) {
+    for(uintptr_t j = 1; j < core->exe.sh_num; j++) {
 
         switch(shdr[j].sh_type) {
 
@@ -131,7 +133,7 @@ const char* runtime_get_name(uintptr_t address) {
     DEBUG_ASSERT(symtab);
 
 
-    for(j = 1; j < (symtab->sh_size / symtab->sh_entsize); j++) {
+    for(uintptr_t j = 1; j < (symtab->sh_size / symtab->sh_entsize); j++) {
 
         if(!in(address, sypobj(j)->st_value, sypobj(j)->st_size))
             continue;

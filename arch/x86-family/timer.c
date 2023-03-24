@@ -184,7 +184,8 @@ void timer_init(void) {
 
 
 
-    acpi_sdt_t* sdt;
+    acpi_sdt_t* sdt = NULL;
+
     if(acpi_find(&sdt, "HPET") != 0) {
 
         kpanicf("x86-timer: PANIC! HPET not found in ACPI tables, required!\n");

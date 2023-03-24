@@ -83,10 +83,10 @@ void do_unshare(int flags) {
         clone_flags |= ARCH_VMM_CLONE_DEMAND;
 #endif
 
-        if(--current_task->address_space->refcount > 0) {
+        if(__atomic_sub_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST) > 0) {
             current_task->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
         } else {
-            current_task->address_space->refcount = 1;
+            current_task->address_space->refcount = 1; // FIXME: not sure if this is correct, maybe we should use atomic operations
         }
 
         // Reload current address space
@@ -160,7 +160,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     memcpy(&child->userspace, &current_task->userspace, sizeof(child->userspace));
     memcpy(&child->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
-
+    
 
     if(args->flags & CLONE_PARENT) {
         child->parent = current_task->parent;
@@ -171,14 +171,30 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
     if(args->flags & CLONE_THREAD) {
-        child->tgid = current_task->tgid;
+        child->pid = current_task->pid;
+        child->parent = current_task->parent;
     }
 
 
     if(args->flags & CLONE_FILES) {
         child->fd = shared_ptr_ref(current_task->fd);
     } else {
+
         child->fd = shared_ptr_dup(current_task->fd, GFP_KERNEL);
+
+        shared_ptr_access(child->fd, fds, {
+
+            for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        
+                if(!fds->descriptors[i].ref)
+                    continue;
+
+                fd_ref(fds->descriptors[i].ref);
+
+            }
+
+        });
+        
     }
 
     if(args->flags & CLONE_FS) {
@@ -196,7 +212,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     if(args->flags & CLONE_VM) {
         child->address_space = current_task->address_space;
-        child->address_space->refcount += 1;
+        __atomic_add_fetch(&child->address_space->refcount, 1, __ATOMIC_SEQ_CST);
     } else {
 
         int clone_flags = ARCH_VMM_CLONE_USERSPACE;

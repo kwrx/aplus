@@ -239,9 +239,10 @@ static void __mm_free_table(uintptr_t __s, int level) {
 
             __mm_free_table(((uintptr_t) s[i]) & X86_MMU_ADDRESS_MASK, level - 1);
 
-            if(s[i] & X86_MMU_PT_AP_PFB) {
-                __free_frame(((uintptr_t) s[i]) & X86_MMU_ADDRESS_MASK, X86_MMU_PAGESIZE);
-            }
+            // FIXME: not safe to free frame here, as it may be used by system page tables
+            // // if(s[i] & X86_MMU_PT_AP_PFB) {
+            // //     __free_frame(((uintptr_t) s[i]) & X86_MMU_ADDRESS_MASK, X86_MMU_PAGESIZE);
+            // // }
 
         }
 
@@ -310,9 +311,9 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     DEBUG_ASSERT(space);
     DEBUG_ASSERT(space->pm);
 
-    
-    if(--space->refcount > 0)
+    if(__atomic_sub_fetch(&space->refcount, 1, __ATOMIC_SEQ_CST) > 0) {
         return;
+    }
 
 
     // TODO: free all mappings

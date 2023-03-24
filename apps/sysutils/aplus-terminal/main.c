@@ -34,6 +34,7 @@
 #include <poll.h>
 #include <sched.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <pty.h>
 
 #include <aplus/fb.h>
@@ -108,6 +109,7 @@ static struct {
 
     pthread_t thr_kbd;
     pthread_t thr_mouse;
+
 
 #if !defined(CONFIG_ATERM_BUILTIN_FONT)
     FT_Library ft;
@@ -314,8 +316,12 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 }
 
 
+static void tsm_update_screen() {
+    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+}
 
-static void tsm_handle_input(int out, char* ascii, size_t size) {
+
+static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_internally) {
 
     assert(ascii);
 
@@ -327,7 +333,9 @@ static void tsm_handle_input(int out, char* ascii, size_t size) {
         perror("write");
     }
 
-    tsm_vte_input(context.vte, ascii, size);
+    if(handle_internally) {
+        tsm_vte_input(context.vte, ascii, size);
+    }
 
 }
 
@@ -348,7 +356,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_LATIN:
 
             if(down) {
-                tsm_handle_input(out, (char*) &KEY.val, 1);
+                tsm_handle_input(out, (char*) &KEY.val, 1, false);
             }
 
             break;
@@ -364,7 +372,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
                 case K_ENTER:
 
                     if(down) {
-                        tsm_handle_input(out, "\n", 1);
+                        tsm_handle_input(out, "\n", 1, false);
                     }
 
                     break;
@@ -396,7 +404,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
                 case K_UP:
 
                     if(down) {
-                        tsm_handle_input(out, "\e[A", 3);
+                        tsm_handle_input(out, "\e[A", 3, true);
                     }
 
                     break;
@@ -404,7 +412,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
                 case K_DOWN:
 
                     if(down) {
-                        tsm_handle_input(out, "\e[B", 3);
+                        tsm_handle_input(out, "\e[B", 3, true);
                     }
 
                     break;
@@ -412,7 +420,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
                 case K_RIGHT:
 
                     if(down) {
-                        tsm_handle_input(out, "\e[C", 3);
+                        tsm_handle_input(out, "\e[C", 3, true);
                     }
 
                     break;
@@ -420,7 +428,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
                 case K_LEFT:
 
                     if(down) {
-                        tsm_handle_input(out, "\e[D", 3);
+                        tsm_handle_input(out, "\e[D", 3, true);
                     }
 
                     break;
@@ -450,7 +458,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_ASCII:
 
             if(down) {
-                tsm_handle_input(out, (char*) &KEY.val, 1);
+                tsm_handle_input(out, (char*) &KEY.val, 1, false);
             }
 
             break;
@@ -458,7 +466,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_LETTER:
 
             if(down) {
-                tsm_handle_input(out, (char*) &KEY.val, 1);
+                tsm_handle_input(out, (char*) &KEY.val, 1, false);
             }
 
             break;
@@ -491,7 +499,7 @@ static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *
     (void) vte;
     (void) data;
 
-    fprintf(stderr, "tsm_write_cb: %ld bytes '%X'\n", len, *u8);
+    //fprintf(stderr, "tsm_write_cb: %ld bytes '%X'\n", len, *u8);
 
     //write(context.ipipefd[1], u8, len);
 
@@ -516,7 +524,7 @@ static void* thr_kbd_handler(void* arg) {
                     }
                     
                     tsm_handle_key(context.masterfd, ev.ev_key.vkey, ev.ev_key.down);
-                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+                    tsm_update_screen();
 
                 }
 
@@ -557,7 +565,7 @@ static void* thr_mouse_handler(void* arg) {
                         context.cursor.y = context.var.yres_virtual;
                     }
 
-                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+                    tsm_update_screen();
 
                 }
 
@@ -571,6 +579,7 @@ static void* thr_mouse_handler(void* arg) {
     return NULL;
 
 }
+
 
 
 
@@ -613,6 +622,7 @@ int main(int argc, char** argv) {
                 abort();
         }
     }
+
 
 
 
@@ -750,7 +760,7 @@ int main(int argc, char** argv) {
     tsm_vte_input(context.vte, "\e[20h", 5);
 
     // Draw first frame
-    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+    tsm_update_screen();
 
 
 
@@ -843,62 +853,86 @@ int main(int argc, char** argv) {
 
 
 
+    //* 5. Session initialization
+
+    if(setsid() < 0) {
+        fprintf(stderr, "aplus-terminal: setsid() failed: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    if(ioctl(context.masterfd, TIOCSCTTY, 0) < 0) {
+        fprintf(stderr, "aplus-terminal: ioctl() failed: %s\n", strerror(errno));
+        exit(1);
+    }
+
+
     
     //* 5. Child initialization
 
-    pid_t pid = fork();
+    do {
 
-    if(pid < 0) {
+        pid_t pid = fork();
 
-        fprintf(stderr, "aplus-terminal: fork() failed\n");
-        exit(1);
-    
-    } else if(pid == 0) {
+        if(pid < 0) {
 
-        setenv("TERM", "xterm-256color", 1);
-        setenv("COLORTERM", "truecolor", 1);
-        setenv("TERMINFO", "/usr/share/terminfo/x/xterm-256color", 1);
-        setenv("COLORFGBG", "7;0", 1);
-
-
-        if(dup2(context.slavefd, STDIN_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            fprintf(stderr, "aplus-terminal: fork() failed\n");
             exit(1);
-        }
+        
+        } else if(pid == 0) {
 
-        if(dup2(context.slavefd, STDOUT_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
-            exit(1);
-        }
-
-        if(dup2(context.slavefd, STDERR_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
-            exit(1);
-        }
+            setenv("TERM", "xterm-256color", 1);
+            setenv("COLORTERM", "truecolor", 1);
+            setenv("TERMINFO", "/usr/share/terminfo/x/xterm-256color", 1);
+            setenv("COLORFGBG", "7;0", 1);
 
 
-        if(pwd) {
-            if(chdir(pwd) < 0) {
-                fprintf(stderr, "aplus-terminal: chdir() failed: %s\n", strerror(errno));
+            pid_t pgrp = getpid();
+
+            if(setpgrp() < 0) {
+                fprintf(stderr, "aplus-terminal: setpgrp() failed: %s\n", strerror(errno));
                 exit(1);
             }
-        }
+
+            if(ioctl(context.slavefd, TIOCSPGRP, &pgrp) < 0) {
+                fprintf(stderr, "aplus-terminal: ioctl() failed: %s\n", strerror(errno));
+                exit(1);
+            }
+
+            if(dup2(context.slavefd, STDIN_FILENO) < 0) {
+                fprintf(stderr, "aplus-terminal: dup2() failed\n");
+                exit(1);
+            }
+
+            if(dup2(context.slavefd, STDOUT_FILENO) < 0) {
+                fprintf(stderr, "aplus-terminal: dup2() failed\n");
+                exit(1);
+            }
+
+            if(dup2(context.slavefd, STDERR_FILENO) < 0) {
+                fprintf(stderr, "aplus-terminal: dup2() failed\n");
+                exit(1);
+            }
 
 
-        if(cmd) {
-            execl("/bin/bash", "/bin/bash", "-c", cmd, NULL);
+            if(pwd) {
+                if(chdir(pwd) < 0) {
+                    fprintf(stderr, "aplus-terminal: chdir() failed: %s\n", strerror(errno));
+                    exit(1);
+                }
+            }
+
+
+            if(cmd) {
+                execl("/bin/bash", "/bin/bash", "-c", cmd, NULL);
+            } else {
+                execl("/bin/bash", "/bin/bash", NULL);
+            }
+
+            fprintf(stderr, "aplus-terminal: execl() failed: %s\n", strerror(errno));
+            exit(1);
+
+
         } else {
-            execl("/bin/bash", "/bin/bash", NULL);
-        }
-
-        fprintf(stderr, "aplus-terminal: execl() failed: %s\n", strerror(errno));
-        exit(1);
-
-
-    } else {
-
-
-        do {
 
             char buf[BUFSIZ] = { 0 };
 
@@ -909,28 +943,33 @@ int main(int argc, char** argv) {
                 while((size = read(context.masterfd, buf, sizeof(buf))) > 0) {
 
                     tsm_vte_input(context.vte, buf, size);
-                    tsm_screen_draw(context.con, fb_draw_cb, NULL);
+                    tsm_update_screen();
 
                 }
 
             } while(errno == EINTR);
 
-        } while(true);
+            if(waitpid(pid, NULL, 0) < 0) {
+                fprintf(stderr, "aplus-terminal: waitpid() failed: %s\n", strerror(errno));
+                exit(1);
+            }
 
 
-        
-        if(close(context.slavefd) < 0) {
-            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-            exit(1);
         }
 
-        if(close(context.masterfd) < 0) {
-            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-            exit(1);
-        }
+    } while(true);
 
+
+
+    if(close(context.slavefd) < 0) {
+        fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+        exit(1);
     }
 
+    if(close(context.masterfd) < 0) {
+        fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+        exit(1);
+    }
 
     return 0;
     

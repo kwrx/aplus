@@ -324,6 +324,9 @@ const char* runtime_get_name(uintptr_t);
 //? See kernel/runtime/stacktrace.c
 void runtime_stacktrace(void);
 
+//? See kernel/runtime/dump.c
+void runtime_dump(void);
+
 
 __END_DECLS
 

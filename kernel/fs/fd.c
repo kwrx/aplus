@@ -37,7 +37,7 @@
 static struct file* filetable = NULL;
 static spinlock_t filetable_lock;
 
-static int lowestfree = 0;
+static unsigned int lowestfree = 0;
 
 
 
@@ -103,7 +103,7 @@ void fd_remove(struct file* fd, bool close) {
 
     __lock(&filetable_lock, {
 
-        if(--fd->refcount == 0) {
+        if(__atomic_sub_fetch(&fd->refcount, 1, __ATOMIC_SEQ_CST) == 0) {
 
             if (close) {
                 vfs_close(fd->inode);
@@ -114,7 +114,7 @@ void fd_remove(struct file* fd, bool close) {
             fd->status   = 0;
 
 
-            int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
+            unsigned int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
             
             DEBUG_ASSERT(i <= CONFIG_FILE_MAX - 1);
             DEBUG_ASSERT(i >= 0);
@@ -136,7 +136,7 @@ void fd_ref(struct file* file) {
     DEBUG_ASSERT(filetable);
 
     __lock(&filetable_lock, {
-        file->refcount++;
+        __atomic_add_fetch(&file->refcount, 1, __ATOMIC_SEQ_CST);
     });
 
 }

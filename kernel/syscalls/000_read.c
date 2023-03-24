@@ -145,9 +145,8 @@ long sys_read (unsigned int fd, void __user * buf, size_t size) {
 
                         ev->revents &= ~POLLIN;
                         ev->events  |=  POLLIN;
-                        ev->futex    = 0;
 
-                        futex_wait(current_task, &ev->futex, 0, NULL);
+                        futex_wait(current_task, &ev->futex, ev->futex, NULL);
 
                     });
 

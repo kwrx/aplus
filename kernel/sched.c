@@ -37,6 +37,7 @@
 #include <aplus/task.h>
 #include <aplus/syscall.h>
 #include <aplus/hal.h>
+#include <aplus/errno.h>
 
 #include <aplus/utils/list.h>
 #include <aplus/utils/queue.h>
@@ -113,7 +114,7 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGPOLL:
         case SIGPROF:
         case SIGVTALRM:
-            sys_exit((1 << 31) | siginfo->si_signo);
+            sys_exit((1U << 31) | siginfo->si_signo);
             break;
 
         // CORE signals
@@ -126,14 +127,14 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGSYS:
         case SIGXCPU:
         case SIGXFSZ:
-            sys_exit((1 << 31) | siginfo->si_signo | 0x80);
+            sys_exit((1U << 31) | siginfo->si_signo | 0x80);
             break;
 
         // STOP signals
         case SIGTSTP:
         case SIGTTIN:
         case SIGTTOU:
-            sys_exit((1 << 31) | (siginfo->si_signo << 8) | 0x7F);
+            sys_exit((1U << 31) | (siginfo->si_signo << 8) | 0x7F);
             break;
 
     }
@@ -337,8 +338,10 @@ void schedule(int resched) {
         current_task->status = TASK_STATUS_READY;
     }
 
+    if(likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
+        __sched_next();
+    }
 
-    __sched_next();
 
     current_task->status = TASK_STATUS_RUNNING;
 
@@ -459,7 +462,7 @@ void sched_dequeue(task_t* task) {
 #endif
 
     // // kfree(task);
-    // FIXME: unsafe to free here
+    // FIXME: unsafe to free here. Moreover there are memory leaks of unfreed attributes
 
 }
 
@@ -526,6 +529,112 @@ void sched_requeue(task_t* task) {
 #if DEBUG_LEVEL_TRACE
     kprintf("sched: requeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
+
+}
+
+
+
+int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
+
+    DEBUG_ASSERT(sig >= 0);
+    DEBUG_ASSERT(sig < NSIG - 1);
+    DEBUG_ASSERT(info);
+
+
+    size_t found = 0;
+
+    cpu_foreach(cpu) {
+
+        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+            if(pgrp > 0 && tmp->pgrp != pgrp) {
+                continue;
+            }
+
+            if(pid > 0 && tmp->pid != pid) {
+                continue;
+            }
+
+            if(tid > 0 && tmp->tid != tid) {
+                continue;
+            }
+
+            if(tmp->status == TASK_STATUS_ZOMBIE) {
+                continue;
+            }
+
+            if(!(current_task->euid == tmp->uid || current_task->uid == tmp->uid)) {
+                continue;
+            }
+
+
+            found++;
+
+            if(unlikely(sig == 0)) {
+                continue;
+            }
+
+            if(tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
+                return errno = EAGAIN, -1;
+            }
+
+
+            struct ksigaction* action = NULL;
+
+            shared_ptr_access(tmp->sighand, sighand, {
+                action = &sighand->action[sig];
+            });
+
+            DEBUG_ASSERT(action);
+
+
+            if(unlikely(action->handler == SIG_IGN)) {
+                continue;
+            }
+
+            if(unlikely(action->handler == SIG_ERR)) {
+                continue;
+            }
+
+
+            siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+
+            if(unlikely(!siginfo)) {
+                return errno = ENOMEM, -1;
+            }
+
+            memcpy(siginfo, info, sizeof(siginfo_t));
+
+            siginfo->si_signo = sig;
+
+
+            shared_ptr_access(tmp->sighand, sighand, {
+
+                //? Check if the signal is blocked
+                if(unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
+
+                    if(sighand->action[sig].sa_flags & SA_NODEFER)
+                        queue_enqueue(&tmp->sigqueue, siginfo, 0);
+                    else
+                        queue_enqueue(&tmp->sigpending, siginfo, 0);
+                        
+                } else {
+                    queue_enqueue(&tmp->sigqueue, siginfo, 0);
+                }
+
+            });
+
+
+        }
+
+    }
+
+
+    if(unlikely(found == 0)) {
+        return errno = ESRCH, -1;
+    }
+
+    return 0;
 
 }
 

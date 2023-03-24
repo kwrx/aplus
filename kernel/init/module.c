@@ -585,7 +585,7 @@ void module_init(void) {
         list_each(m_queue, v) {
 
             if(strcmp(m->name, v->name) == 0) {
-                kpanicf("module: PANIC! duplicate name '%s'\n", m->name);
+                kpanicf("module: PANIC! duplicated name '%s'\n", m->name);
             }
 
         }

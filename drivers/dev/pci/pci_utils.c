@@ -76,6 +76,9 @@ uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
             DEBUG_ASSERT(0 && "Bug: Invalid Size!");
     }
 
+
+    kpanicf("pci_bar_size: Bug: Invalid Size!");
+
 }
 
 

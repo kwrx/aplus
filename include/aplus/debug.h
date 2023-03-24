@@ -53,12 +53,11 @@
         (char*) #x                                                      \
     }
 #else
-#define TEST(x, y...)                                                   \
-        (void) 0
+#define TEST(x, y...)
 #endif
 
 
-#define PANIC_ON(i)                                                     \
+#define PANIC_ASSERT(i)                                                     \
     if(unlikely(!(i))) {                                                \
         kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n",           \
             __func__, __FILE__, __LINE__, #i);                          \

@@ -134,7 +134,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 #endif
         S_ISLNK(st.st_mode)
     ) {
-        if((r = path_follows(r, st.st_size)) == NULL)
+        if((r = path_follows(r)) == NULL)
             return -errno;
     }
 
@@ -189,6 +189,7 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     
     }
 
+    DEBUG_ASSERT(inode);
 
 
     int fd = -1;

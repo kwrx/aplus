@@ -203,9 +203,8 @@ long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
 
                         ev->revents &= ~pfd.events;
                         ev->events  |=  pfd.events;
-                        ev->futex    = 0;
 
-                        futex_wait(current_task, &ev->futex, 0, timeout > 0 ? &tm : NULL);
+                        futex_wait(current_task, &ev->futex, ev->futex, timeout > 0 ? &tm : NULL);
                     
                     });
 

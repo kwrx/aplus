@@ -193,6 +193,8 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 pfe:
 
+    // TODO: implement segmentation fault for user space processes
+
     kpanicf("x86-pfe: PANIC! cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",
         cr2, 
         x86_get_cr3(), 
@@ -211,14 +213,14 @@ pfe:
         frame->si,
         frame->di,
         frame->errno,
-        frame->errno & X86_PF_P   ? "P"   : "NP",
-        frame->errno & X86_PF_W   ? "W"   : "R",
-        frame->errno & X86_PF_U   ? "U"   : "-",
-        frame->errno & X86_PF_R   ? "R"   : "-",
-        frame->errno & X86_PF_I   ? "I"   : "-",
-        frame->errno & X86_PF_PK  ? "PK"  : "-",
-        frame->errno & X86_PF_SS  ? "SS"  : "-",
-        frame->errno & X86_PF_SGX ? "SGX" : "-"
+        frame->errno & X86_PF_P   ? "P"   : "NP",   // Page present/not present
+        frame->errno & X86_PF_W   ? "W"   : "R",    // Write/Read
+        frame->errno & X86_PF_U   ? "U"   : "-",    // User/Supervisor
+        frame->errno & X86_PF_R   ? "R"   : "-",    // Reserved bit
+        frame->errno & X86_PF_I   ? "I"   : "-",    // Instruction fetch
+        frame->errno & X86_PF_PK  ? "PK"  : "-",    // Protection key
+        frame->errno & X86_PF_SS  ? "SS"  : "-",    // Shadow stack
+        frame->errno & X86_PF_SGX ? "SGX" : "-"     // SGX
     );
 
 

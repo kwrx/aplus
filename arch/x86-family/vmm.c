@@ -87,7 +87,7 @@ uintptr_t arch_vmm_p2v(uintptr_t physaddr, int type) {
 
     }
 
-    PANIC_ON(0);
+    PANIC_ASSERT(0);
     return -1;
 
 }
@@ -115,7 +115,7 @@ uintptr_t arch_vmm_v2p(uintptr_t virtaddr, int type) {
 
     }
 
-    PANIC_ON(0);
+    PANIC_ASSERT(0);
     return -1;
 
 }

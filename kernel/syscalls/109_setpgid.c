@@ -50,5 +50,14 @@
 
 SYSCALL(109, setpgid,
 long sys_setpgid (pid_t pid, pid_t pgid) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(pid == 0);
+    DEBUG_ASSERT(pgid == 0);
+    
+    if(unlikely(pid != 0 || pgid != 0))
+        return -ENOSYS;
+
+    current_task->pgrp = current_task->pid;
+    return 0;
+
 });

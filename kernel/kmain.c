@@ -72,6 +72,7 @@ void kmain(void) {
 
     }
 
+
     // Initialize module
     extern void module_init(void);
     module_init();
