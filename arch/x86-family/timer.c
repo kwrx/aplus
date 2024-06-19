@@ -62,6 +62,9 @@ static spinlock_t rtc_lock;
 
 static uint64_t tsc_frequency  = 1;
 static uint64_t hpet_frequency = 1;
+static uint64_t hpet_frequency_ns = 1;
+static uint64_t hpet_frequency_us = 1;
+static uint64_t hpet_frequency_ms = 1;
 static uintptr_t hpet_address  = 0;
 
 
@@ -160,15 +163,15 @@ uint64_t arch_timer_generic_getticks(void) {
 }
 
 uint64_t arch_timer_generic_getns(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) * 1000000000 / hpet_frequency;
+    return mmio_r64(HPET_GENERAL_COUNTER) * hpet_frequency_ns;
 }
 
 uint64_t arch_timer_generic_getus(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) * 1000000 / hpet_frequency;
+    return mmio_r64(HPET_GENERAL_COUNTER) / hpet_frequency_us;
 }
 
 uint64_t arch_timer_generic_getms(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) * 1000 / hpet_frequency;
+    return mmio_r64(HPET_GENERAL_COUNTER) / hpet_frequency_ms;
 }
 
 uint64_t arch_timer_generic_getres(void) {
@@ -281,6 +284,9 @@ void timer_init(void) {
 
 
         hpet_frequency = freq;
+        hpet_frequency_ns = (1000000000 / hpet_frequency);
+        hpet_frequency_us = (hpet_frequency / 1000000);
+        hpet_frequency_ms = (hpet_frequency / 1000);
 
 
 #if 0
