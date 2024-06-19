@@ -54,20 +54,16 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t vector, struct virtio_dr
     DEBUG_ASSERT(driver->internals.isr_status);    
 
 
-    uint32_t isr = *driver->internals.isr_status;
+    uint32_t isr = mmio_r32(driver->internals.isr_status);
 
 
     if(isr & VIRTIO_ISR_STATUS_QUEUE) {
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
-
         virtq_flush(driver, vector);
-
 #else
-        size_t i;
-        for(i = 0; i < driver->internals.num_queues; i++)
+        for(size_t i = 0; i < driver->internals.num_queues; i++)
             virtq_flush(driver, i);
-
 #endif
 
     }
@@ -99,7 +95,7 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
 
 #if defined(__x86_64__) || defined(__aarch64__)
     if(pci_is_64bit(driver->device, PCI_BAR(bar)))
-        mmio = pci_read(driver->device, PCI_BAR(bar), 8) & PCI_BAR_MM_MASK;
+        mmio = pci_read(driver->device, PCI_BAR(bar), 8) & PCI_BAR_64_MM_MASK;
     else
 #endif
         mmio = pci_read(driver->device, PCI_BAR(bar), 4) & PCI_BAR_MM_MASK;
@@ -198,6 +194,14 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
 
             uint32_t features = le32_to_cpu(cfg->device_feature);
+
+            switch(i) {
+                case 0:
+                    features &= ~VIRTIO_F_EVENT_IDX;
+                    break;
+                case 1:
+                    break;
+            }
 
             int e;
             if((e = driver->negotiate(driver, &features, i)) < 0)
