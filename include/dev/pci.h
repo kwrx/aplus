@@ -64,6 +64,8 @@ typedef uint32_t pcidev_t;
 #define PCI_BAR5                        0x24
 #define PCI_BAR_MM_MASK                 (0xFFFFFFF0)
 #define PCI_BAR_IO_MASK                 (0xFFFFFFFC)
+#define PCI_BAR_64_MM_MASK              (0xFFFFFFFFFFFFFFF0)
+#define PCI_BAR_64_IO_MASK              (0xFFFFFFFFFFFFFFFC)
 
 
 #define PCI_SUBSYSID                    0x2C
@@ -130,7 +132,7 @@ typedef uint32_t pcidev_t;
     (pci_extract_bus(x) << 16)      |   \
     (pci_extract_slot(x) << 11)     |   \
     (pci_extract_func(x) << 8)      |   \
-    ((field) & 0xFC))
+    ((y) & 0xFC))
 
 
 #define pci_box_device(x, y, z)             \
