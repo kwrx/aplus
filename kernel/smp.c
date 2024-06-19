@@ -32,9 +32,9 @@
 __returns_nonnull
 cpu_t* smp_get_current_cpu(void) {
 
-    uint64_t id;
+    cpuid_t id = arch_cpu_get_current_id();
     
-    if((id = arch_cpu_get_current_id()) == SMP_CPU_BOOTSTRAP_ID)
+    if(id == SMP_CPU_BOOTSTRAP_ID)
         return &core->bsp;
     
 
@@ -63,8 +63,24 @@ cpu_t* smp_get_cpu(int index) {
 
 void smp_init() {
 
-    int i;
-    for(i = 1; i < SMP_CPU_MAX; i++) {
+
+    size_t max_cpus = SMP_CPU_MAX;
+
+    if(strstr(core->boot.cmdline, "smp=off"))
+        return;
+
+    if(strstr(core->boot.cmdline, "smp=")) {
+
+        max_cpus = atoll(strstr(core->boot.cmdline, "smp=") + 4);
+
+        if(max_cpus > SMP_CPU_MAX || max_cpus < 1) {
+            max_cpus = SMP_CPU_MAX;
+        }
+
+    }
+
+
+    for(size_t i = 1; i < SMP_CPU_MAX; i++) {
 
         if(!(core->cpu.cores[i].flags & SMP_CPU_FLAGS_AVAILABLE))
             continue;
@@ -72,11 +88,13 @@ void smp_init() {
         if( (core->cpu.cores[i].flags & SMP_CPU_FLAGS_ENABLED))
             continue;
 
+        if(--max_cpus == 0)
+            break;
+
 
         arch_cpu_startup(i);
 
-        kprintf("smp: cpu #%d is online\n", i);
-
+        kprintf("smp: cpu #%zd is online\n", i);
 
     }
 

@@ -65,7 +65,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     uintptr_t pbuf = pmm_alloc_blocks(((qsize * 16) + (qsize * 2 + 6) + (qsize * 8 + 6) + (qsize * driver->send_window_size) + (qsize * driver->recv_window_size)) / PML1_PAGESIZE + 1);
 
     if(unlikely(!pbuf))
-        return -ENOMEM;
+        return errno = ENOMEM, -1;
 
 
     void* qdesc = (void*) arch_vmm_p2v(pbuf + (0),                            ARCH_VMM_AREA_HEAP);
@@ -73,7 +73,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     void* qused = (void*) arch_vmm_p2v(pbuf + (qsize * 16) + (qsize * 2 + 6), ARCH_VMM_AREA_HEAP);
 
     if(!qdesc || !qfree || !qused)
-        return -EFAULT;
+        return errno = EFAULT, -1;
 
 
     memset(qdesc, 0, qsize * 16);
@@ -108,7 +108,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     __atomic_membarrier();
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: driver %d initialized queue %d successful [desc(%p), device(%p), driver(%p), enable(%d), msix(%p), notify(%p), size(%d)]\n",
         driver->device, index,
         cfg->queue_desc,
@@ -196,18 +196,18 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     ssize_t out = virtq_get_free_descriptor(driver, queue);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d is sendrecv on queue %d [inp(%d), out(%d), message(%p), size(%p), output(%p), outsize(%p)]\n", driver->device, queue, inp, out, message, size, output, outsize);
 #endif
 
 
     if(unlikely(inp < 0 || out < 0)) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-queue: FAIL! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
 
-        return -ENOSPC;
+        return errno = ENOSPC, -1;
 
     }
 
@@ -234,9 +234,9 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     driver->internals.queues[queue].descriptors[out].q_flags   = cpu_to_le16(VIRTQ_DESC_F_WRITE);
     driver->internals.queues[queue].descriptors[out].q_next    = cpu_to_le16(0);
 
+
+
     __atomic_membarrier();
-
-
 
     uint16_t seen = le16_to_cpu(driver->internals.queues[queue].used->q_idx);
     uint16_t next = le16_to_cpu(driver->internals.queues[queue].available->q_idx) % driver->internals.queues[queue].size;
@@ -247,7 +247,6 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
 
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
-
 
     __atomic_membarrier();
 
@@ -272,6 +271,10 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
             );
 
 
+#if DEBUG_LEVEL_TRACE
+            kprintf("virtio-queue: device %d has received %d bytes from idx: %d\n", driver->device, le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length), i);
+#endif
+
             seen = 0xFFFF;
             break;
 
@@ -281,6 +284,10 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
     } while(seen != 0xFFFF);
 
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("virtio-queue: device %d has sent and received %ld bytes of data on queue %d\n", driver->device, outsize, queue);
+#endif
         
     return outsize;
 
@@ -302,18 +309,18 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, 
     ssize_t inp = virtq_get_free_descriptor(driver, queue);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d send on queue %d [inp(%d), message(%p), size(%p)]\n", driver->device, queue, inp, message, size);
 #endif
 
 
     if(unlikely(inp < 0)) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-queue: FAIL! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
 
-        return -ENOSPC;
+        return errno = ENOSPC, -1;
 
     }
 
@@ -364,9 +371,6 @@ void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
 
 
 void init(const char* args) {
-
-    if(args && strstr(args, "virtio=disable"))
-        return;
 
 }
 

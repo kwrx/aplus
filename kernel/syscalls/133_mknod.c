@@ -26,6 +26,7 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/errno.h>
 #include <stdint.h>
@@ -51,5 +52,71 @@
 
 SYSCALL(133, mknod,
 long sys_mknod (const char __user * filename, mode_t mode, unsigned dev) {
-    return -ENOSYS;
+    
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(filename, R_OK)))
+        return -EFAULT;
+
+
+    if(mode & S_IFBLK)
+        return -ENOSYS;
+
+    else if(mode & S_IFCHR)
+        return -ENOSYS;
+
+    else if(mode & S_IFSOCK)
+        return -ENOSYS;
+
+    else if(mode & S_IFIFO) {
+
+        int fd;
+
+        if((fd = sys_creat(filename, mode)) < 0)
+            return fd;
+
+
+        inode_t* inode = NULL;
+
+        shared_ptr_access(current_task->fd, fds, {
+            
+            DEBUG_ASSERT(fds->descriptors[fd].ref);
+            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+            inode = fds->descriptors[fd].ref->inode;
+
+        });
+
+        DEBUG_ASSERT(inode);
+
+
+        if((fd = sys_close(fd)) < 0)
+            return -EIO;
+
+        if((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, mode)) == NULL)
+            return -ENOMEM;
+    
+
+        return 0;
+
+    }
+
+    else if(mode & S_IFREG || mode & S_IFDIR || (mode & S_IFMT) == 0) {
+        
+        int fd;
+
+        if((fd = sys_creat(filename, mode)) < 0)
+            return fd;
+        
+        if(sys_close(fd) < 0)
+            return -EIO;
+
+        return 0;
+        
+    }
+
+    else
+        return -EINVAL;
+
 });

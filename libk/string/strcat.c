@@ -25,9 +25,30 @@
 
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 char *strcat(char *restrict dest, const char *restrict src) {
+
+	DEBUG_ASSERT(dest);
+	DEBUG_ASSERT(src);
+
 	strcpy(dest + strlen(dest), src);
+	
 	return dest;
+
 }
+
+
+TEST(libk_strcat_test, {
+
+	char a[32] = "Hello World!";
+	char b[32] = "Hello World!";
+
+	strcat(a, " Hello World!");
+	strcat(b, " Hello World!");
+
+	DEBUG_ASSERT(strcmp(a, b) == 0);
+
+});

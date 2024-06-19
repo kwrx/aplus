@@ -50,36 +50,44 @@
 SYSCALL(32, dup,
 long sys_dup (unsigned int fd) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
 
     int i;
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        for(i = 0; i < CONFIG_OPEN_MAX; i++)
-            if(!current_task->fd->descriptors[i].ref)
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+
+        __lock(&current_task->lock, {
+
+            for(i = 0; i < CONFIG_OPEN_MAX; i++) {
+             
+                if(!fds->descriptors[i].ref)
+                    break;
+            
+            }
+
+            if(i == CONFIG_OPEN_MAX)
                 break;
 
-        if(i == CONFIG_OPEN_MAX)
-            break;
 
+            __lock(&fds->descriptors[fd].ref->lock, {
+            
+                fds->descriptors[i].ref   = fds->descriptors[fd].ref;
+                fds->descriptors[i].flags = fds->descriptors[fd].flags;
 
-        __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        
-            current_task->fd->descriptors[i].ref = current_task->fd->descriptors[fd].ref;
-            current_task->fd->descriptors[i].flags = current_task->fd->descriptors[fd].flags;
+                __atomic_add_fetch(&fds->descriptors[i].ref->refcount, 1, __ATOMIC_SEQ_CST);
 
-            current_task->fd->descriptors[i].ref->refcount++;
+            });
 
         });
-
+        
     });
-    
+
 
     if(i == CONFIG_OPEN_MAX)
         return -EMFILE;

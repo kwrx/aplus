@@ -67,68 +67,64 @@ long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset,
 
 
     DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->sighand);
     
+    shared_ptr_access(current_task->sighand, sighand, {
 
-    if(oset)
-        uio_memcpy_s2u(oset, &current_task->sighand->sigmask, sigsetsize);
+        if(oset) {
+            uio_memcpy_s2u(oset, &sighand->sigmask, sigsetsize);
+        }
 
+        if(set) {
 
-    if(set) {
+            sigset_t __safe_set;
+            uio_memcpy_u2s(&__safe_set, set, sizeof(sigset_t));
+        
+            switch(how) {
 
-        sigset_t __safe_set;
-        uio_memcpy_u2s(&__safe_set, set, sizeof(sigset_t));
+                case SIG_BLOCK:
+                    
+                    for(size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        sighand->sigmask.__bits[i] |= __safe_set.__bits[i];
 
+                    break;
 
-        int i;
-     
-        switch(how) {
+                case SIG_UNBLOCK:
 
-            case SIG_BLOCK:
-                
-                for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] |= __safe_set.__bits[i];
+                    for(size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        sighand->sigmask.__bits[i] &= ~__safe_set.__bits[i];
 
-                break;
+                    break;
 
-            case SIG_UNBLOCK:
+                case SIG_SETMASK:
+                    
+                    for(size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        sighand->sigmask.__bits[i] = __safe_set.__bits[i];
 
-                for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] &= ~__safe_set.__bits[i];
+                    break;
 
-                break;
+                default:
+                    return -EINVAL;
 
-            case SIG_SETMASK:
-                
-                for(i = 0; i < sigsetsize; i += sizeof(unsigned long))
-                    current_task->sighand->sigmask.__bits[i] = __safe_set.__bits[i];
-
-                break;
-
-            default:
-                return -EINVAL;
+            }
 
         }
 
-    }
 
+        for(size_t i = current_task->sigpending.size; i > 0; i--) {
 
+            siginfo_t* info;
+            if((info = queue_pop(&current_task->sigpending))) {
 
+                if(unlikely(sighand->sigmask.__bits[info->si_signo / (sizeof(long) << 3)] & (1 << (info->si_signo % (sizeof(long) << 3)))))
+                    queue_enqueue(&current_task->sigpending, info, 0);
+                else
+                    queue_enqueue(&current_task->sigqueue, info, 0);
 
-    size_t i;
-    for(i = current_task->sigpending.size; i > 0; i--) {
-
-        siginfo_t* info;
-        if((info = queue_pop(&current_task->sigpending))) {
-
-            if(unlikely(current_task->sighand->sigmask.__bits[info->si_signo / (sizeof(long) << 3)] & (1 << (info->si_signo % (sizeof(long) << 3)))))
-                queue_enqueue(&current_task->sigpending, info, 0);
-            else
-                queue_enqueue(&current_task->sigqueue, info, 0);
+            }
 
         }
 
-    }
+    });
 
 
     return 0;

@@ -41,7 +41,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
 
     DEBUG_ASSERT(e);
     DEBUG_ASSERT(count);
@@ -51,7 +51,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
 
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     int entries = 0;
     int q;
@@ -60,16 +60,14 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
         __lock(&ext2->lock, {
         
+            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
 
-            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->cache, ext2->blocksize);
+            for(size_t i = 0; i < ext2->blocksize; ) {
 
-            int i;
-            for(i = 0; i < ext2->blocksize; ) {
-
-                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->cache + i);
+                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*) ((uintptr_t) ext2->iocache + i);
 
                 DEBUG_ASSERT(d->rec_len);
-                DEBUG_ASSERT(d->name_len < sizeof(e->d_name));
+                DEBUG_ASSERT(d->name_len);
 
 
                 if(pos > 0) {
@@ -82,17 +80,17 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                         break;
 
 
-                    e->d_ino = d->inode;
-                    e->d_off = i;
+                    e->d_ino    = d->inode;
+                    e->d_off    = entries;
                     e->d_reclen = sizeof(struct dirent);
-                    e->d_type = 0;
-                    e->d_name[d->name_len] = '\0';
+                    e->d_type   = 0;
                     
                     strncpy(e->d_name, d->name, d->name_len);
 
 
-                    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)
+                    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
                         e->d_type = d->file_type;
+                    }
 
 
                     e++;
@@ -103,6 +101,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
                 }
                 
                 i += d->rec_len;
+                
             }
 
         });

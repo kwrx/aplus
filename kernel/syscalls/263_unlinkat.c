@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -50,6 +51,137 @@
  */
 
 SYSCALL(263, unlinkat,
-long sys_unlinkat (int dfd, const char __user * pathname, int flag) {
-    return -ENOSYS;
+long sys_unlinkat (int dfd, const char __user * pathname, int flags) {
+    
+    if(unlikely(!pathname))
+        return -EINVAL;
+    
+    if(unlikely(!uio_check(pathname, R_OK)))
+        return -EFAULT;
+
+
+
+    inode_t* cwd = NULL;
+
+
+    if(dfd < 0) {
+       
+        if(dfd != AT_FDCWD)
+            return -EBADF;
+
+        
+        shared_ptr_access(current_task->fs, fs, {
+
+            if(unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = fs->cwd;
+        
+        });
+
+    
+    } else {
+
+        if(dfd >= CONFIG_OPEN_MAX)
+            return -EBADF;
+
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[dfd].ref))
+                return -EBADF;
+
+            cwd = fds->descriptors[dfd].ref->inode;
+            
+        });
+
+    }
+
+    DEBUG_ASSERT(cwd);
+
+
+
+    char __safe_pathname[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_pathname, pathname, CONFIG_PATH_MAX);
+
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("unlinkat(%d, \"%s\", %d)\n", dfd, __safe_pathname, flags);
+#endif
+
+
+    inode_t* r = NULL;
+
+    if((r = path_lookup(cwd, __safe_pathname, 0, 0)) == NULL)
+        return -errno;
+
+
+
+    struct stat st = { 0 };
+
+    if(vfs_getattr(r, &st) < 0) {
+        return (errno == ENOSYS) ? -EACCES : -errno;
+    }
+
+
+    if (
+#ifdef O_NOFOLLOW
+        !(flags & O_NOFOLLOW) &&
+#endif
+        S_ISLNK(st.st_mode)
+    ) {
+        if((r = path_follows(r)) == NULL)
+            return -errno;
+    }
+
+
+
+#ifdef AT_REMOVEDIR
+
+    if(S_ISDIR(st.st_mode) && !(flags & AT_REMOVEDIR))
+        return -EISDIR;
+
+#endif
+
+
+
+    if(current_task->uid != 0) {
+
+        if(st.st_uid == current_task->uid) {
+            
+            if(!(st.st_mode & S_IWUSR)) {
+                return -EACCES;
+            }
+
+        } else if(st.st_gid == current_task->gid) {
+            
+            if(!(st.st_mode & S_IWGRP)) {
+                return -EACCES;
+            }
+
+        } else {
+            
+            if(!(st.st_mode & S_IWOTH)) {
+                return -EACCES;
+            }
+        
+        }
+    
+    }
+
+
+    DEBUG_ASSERT(r);
+    DEBUG_ASSERT(r->parent);
+
+    if((vfs_unlink(r->parent, r->name)) < 0) {
+     
+        if(errno != ENOSYS)
+            return -errno;
+
+        return -EPERM;
+    
+    }
+
+
+    return 0;
+
 });

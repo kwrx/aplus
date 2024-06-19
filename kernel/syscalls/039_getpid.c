@@ -52,6 +52,6 @@ long sys_getpid (void) {
     DEBUG_ASSERT(current_cpu);
     DEBUG_ASSERT(current_task);
 
-    return current_task->tgid;
+    return current_task->pid;
 
 });

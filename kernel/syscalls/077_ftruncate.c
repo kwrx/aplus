@@ -51,17 +51,21 @@
 SYSCALL(77, ftruncate,
 long sys_ftruncate (unsigned int fd, unsigned long length) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
 
     int e = 0;
+    
+    shared_ptr_access(current_task->fd, fds, {
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        e = vfs_truncate(current_task->fd->descriptors[fd].ref->inode, length);
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+            e = vfs_truncate(fds->descriptors[fd].ref->inode, length);
+        });
+
     });
 
 

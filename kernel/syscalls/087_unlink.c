@@ -35,6 +35,9 @@
 #include <sys/stat.h>
 
 
+extern long sys_unlinkat (int dfd, const char __user * pathname, int flag);
+
+
 /***
  * Name:        unlink
  * Description: delete a name and possibly the file it refers to
@@ -49,5 +52,5 @@
 
 SYSCALL(87, unlink,
 long sys_unlink (const char __user * pathname) {
-    return -ENOSYS;
+    return sys_unlinkat(AT_FDCWD, pathname, 0);
 });

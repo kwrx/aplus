@@ -116,7 +116,6 @@ struct virtio_gpu_rect {
 } __packed;
 
 struct virtio_gpu_resp_display_info {
-    struct virtio_gpu_ctrl_hdr hdr;
     struct virtio_gpu_display_one {
         struct virtio_gpu_rect r;
         uint32_t enabled;
@@ -124,18 +123,19 @@ struct virtio_gpu_resp_display_info {
     } __packed pmodes[VIRTIO_GPU_MAX_SCANOUTS];
 } __packed;
 
+struct virtio_gpu_resp_edid { 
+    uint32_t size; 
+    uint32_t padding; 
+    uint8_t edid[1024]; 
+} __packed;
+
+
+
 struct virtio_gpu_get_edid { 
     struct virtio_gpu_ctrl_hdr hdr; 
     uint32_t scanout; 
     uint32_t padding; 
 } __packed; 
- 
-struct virtio_gpu_resp_edid { 
-    struct virtio_gpu_ctrl_hdr hdr; 
-    uint32_t size; 
-    uint32_t padding; 
-    uint8_t edid[1024]; 
-} __packed;
 
 struct virtio_gpu_resource_create_2d {
     struct virtio_gpu_ctrl_hdr hdr;
@@ -229,6 +229,7 @@ int virtgpu_cmd_resource_create_2d(struct virtgpu*, uint64_t*, uint32_t, uint32_
 int virtgpu_cmd_resource_attach_backing(struct virtgpu*, uint64_t, uint64_t, size_t);
 int virtgpu_cmd_set_scanout(struct virtgpu*, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
 int virtgpu_cmd_transfer_to_host_2d(struct virtgpu*, uint64_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_get_display_info(struct virtgpu*, struct virtio_gpu_resp_display_info*);
 
 __END_DECLS
 

@@ -57,7 +57,7 @@
  */
 
 SYSCALL(165, mount,
-long sys_mount (char __user * dev_name, char __user * dir_name, char __user * type, unsigned long flags, void __user * data) {
+long sys_mount (char __user const* dev_name, char __user const* dir_name, char __user const* type, unsigned long flags, void __user * data) {
 
     if(unlikely(!dir_name))
         return -EINVAL;
@@ -72,17 +72,15 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     if(unlikely(!uio_check(type, R_OK)))
         return -EFAULT;
 
-    if(likely(dev_name))
-        if(unlikely(!uio_check(dev_name, R_OK)))
-            return -EFAULT;
+    if(unlikely(dev_name && !uio_check(dev_name, R_OK)))
+        return -EFAULT;
 
 
+    char __safe_dirname[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_dirname, dir_name, CONFIG_PATH_MAX);
 
-    char __safe_dirname[PATH_MAX];
-    uio_strncpy_u2s(__safe_dirname, dir_name, PATH_MAX);
-
-    char __safe_type[PATH_MAX];
-    uio_strncpy_u2s(__safe_type, type, PATH_MAX);
+    char __safe_type[CONFIG_PATH_MAX];
+    uio_strncpy_u2s(__safe_type, type, CONFIG_PATH_MAX);
     
 
 
@@ -95,10 +93,16 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
     if((fd = sys_open(__safe_dirname, O_RDONLY | O_DIRECTORY, 0)) < 0)
         return fd;
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
-    d = current_task->fd->descriptors[fd].ref->inode;
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        d = fds->descriptors[fd].ref->inode;
+        
+    });
+
 
     if((e = sys_close(fd)) < 0)
         return e;
@@ -110,10 +114,14 @@ long sys_mount (char __user * dev_name, char __user * dir_name, char __user * ty
         if((fd = sys_open(dev_name, O_RDONLY, 0)) < 0)
             return fd;
 
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-        DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+        shared_ptr_access(current_task->fd, fds, {
 
-        s = current_task->fd->descriptors[fd].ref->inode;
+            DEBUG_ASSERT(fds->descriptors[fd].ref);
+            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+            s = fds->descriptors[fd].ref->inode;
+            
+        });
 
         if((e = sys_close(fd)) < 0)
             return e;

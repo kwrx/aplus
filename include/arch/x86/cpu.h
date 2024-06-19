@@ -542,7 +542,7 @@ typedef struct tss {
 
     static inline void x86_set_flags(long r) {
         __asm__ __volatile__ (
-            "pushq %rax; popfq"
+            "pushq %%rax; popfq"
             :: "a"(r)
         );
     }
@@ -799,6 +799,9 @@ static inline unsigned long long x86_xgetbv(unsigned long long i) {
 
 
 __BEGIN_DECLS
+
+// @see arch/x86-family/random.c
+void random_init(void);
 
 __END_DECLS
 

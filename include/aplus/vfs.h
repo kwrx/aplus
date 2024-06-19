@@ -26,7 +26,6 @@
 
 #ifndef __ASSEMBLY__
 
-#define _GNU_SOURCE
 #include <sched.h>
 
 #include <stdint.h>
@@ -45,47 +44,31 @@
 #include <aplus/ipc.h>
 
 #include <aplus/utils/list.h>
+#include <aplus/utils/cache.h>
 #include <aplus/utils/hashmap.h>
+#include <aplus/utils/ptr.h>
 
 
 
-#define TMPFS_ID                    0xDEAD1000
-#define EXT2_ID                     0xDEAD1001
-#define VFAT_ID                     0xDEAD1002
+#define FSID_TMPFS                          0xDEAD1000
+#define FSID_EXT2                           0xDEAD1001
+#define FSID_VFAT                           0xDEAD1002
+#define FSID_ISO9660                        0xDEAD1003
+#define FSID_PROCFS                         0xDEAD1004
 
-#define FILE_MAX                    8192
+
+#define INODE_FLAGS_DCACHE_DISABLED         0x00000001
+
+
+#define MODE_2_DIRENT_TYPE(mode)            ((mode & S_IFMT) >> 12)
 
 
 typedef struct inode inode_t;
-typedef struct vfs_cache vfs_cache_t;
-
-
-struct vfs_cache_item {
-    ino_t ino;
-    void* data;
-};
-
-struct vfs_cache_ops {
-    void* (*load) (struct vfs_cache*, ino_t);
-    void (*flush) (struct vfs_cache*, ino_t, void*);
-};
-
-struct vfs_cache {
-
-    size_t capacity;
-    size_t count;
-    void* userdata;
-
-    struct vfs_cache_ops ops;
-
-    list(struct vfs_cache_item*, items);    
-    spinlock_t lock;
-};
 
 
 struct inode_ops {
 
-    int (*open)  (inode_t*, int);
+    inode_t* (*open)  (inode_t*, int);
     int (*close) (inode_t*);
     int (*ioctl) (inode_t*, long, void*);
 
@@ -109,7 +92,7 @@ struct inode_ops {
     /* Directory */
     inode_t* (*creat) (inode_t*, const char*, mode_t);
     inode_t* (*finddir) (inode_t*, const char*);
-    ssize_t (*readdir) (inode_t*, struct dirent*, off_t, size_t);
+    ssize_t  (*readdir) (inode_t*, struct dirent*, off_t, size_t);
 
     int (*rename) (inode_t*, const char*, const char*);
     int (*symlink) (inode_t*, const char*, const char*);
@@ -118,10 +101,18 @@ struct inode_ops {
 };
 
 
+struct inode_events {
+    uint16_t events;
+    uint16_t revents;
+    volatile uint32_t futex;
+};
+
 struct inode {
 
     char name[CONFIG_MAXNAMLEN];
+
     ino_t ino;
+    int flags;
 
     struct superblock* sb;
     struct inode_ops ops;
@@ -130,11 +121,7 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
-    struct {
-        short events;
-        short revents;
-        uint32_t futex;
-    } ev;
+    shared_ptr(struct inode_events) ev;
 
     HASHMAP(char, inode_t) dcache;
 
@@ -152,7 +139,7 @@ struct superblock {
     ino_t ino;
     struct statvfs st;
     struct inode_ops ops;
-    struct vfs_cache cache;
+    struct cache cache;
 
     void* fsinfo;
 
@@ -181,7 +168,7 @@ void vfs_init(void);
 //* os/kernel/fs/vfs.c
 int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
 
-int vfs_open (inode_t*, int);
+inode_t* vfs_open (inode_t*, int);
 int vfs_close (inode_t*);
 int vfs_ioctl (inode_t*, long, void __user*);
 
@@ -210,15 +197,9 @@ int vfs_unlink (inode_t*, const char*);
 
 
 // kernel/fs/pipefs.c
-inode_t* vfs_mkfifo(size_t, int);
+inode_t* pipefs_inode(void);
+inode_t* vfs_mkfifo(inode_t*, size_t, int);
 
-
-// kernel/fs/cache.c
-void vfs_cache_create(vfs_cache_t*, struct vfs_cache_ops*, int, void*);
-void vfs_cache_destroy(vfs_cache_t*);
-void* vfs_cache_get(vfs_cache_t*, ino_t);
-void vfs_cache_flush(vfs_cache_t*, ino_t);
-void vfs_cache_flush_all(vfs_cache_t*);
 
 // kernel/fs/dcache.c
 void vfs_dcache_init(inode_t*);
@@ -236,8 +217,14 @@ void rootfs_init(void);
 // kernel/fs/fd.c
 void fd_init(void);
 void fd_ref(struct file*);
-void fd_remove(struct file*, int);
+void fd_remove(struct file*, bool);
 struct file* fd_append(inode_t*, off_t, int);
+
+
+// kernel/fs/path.c
+inode_t* path_follows(inode_t*);
+inode_t* path_lookup(inode_t*, const char*, int, mode_t);
+
 
 __END_DECLS
 

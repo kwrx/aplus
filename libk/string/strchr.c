@@ -28,13 +28,36 @@
 #include <string.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 char* strchrnul(const char*, int);
 
 
 char* strchr(const char *s, int c) {
 
+    DEBUG_ASSERT(s);
+
     char *r = strchrnul(s, c);
 	return *(unsigned char *) r == (unsigned char) c ? r : 0;
 
 }
+
+
+TEST(libk_strchr_test, {
+
+    char a[] = "Hello World!";
+
+    DEBUG_ASSERT(strchr(a, 'H') == &a[0]);
+    DEBUG_ASSERT(strchr(a, 'e') == &a[1]);
+    DEBUG_ASSERT(strchr(a, 'l') == &a[2]);
+    DEBUG_ASSERT(strchr(a, 'o') == &a[4]);
+    DEBUG_ASSERT(strchr(a, ' ') == &a[5]);
+    DEBUG_ASSERT(strchr(a, 'W') == &a[6]);
+    DEBUG_ASSERT(strchr(a, 'r') == &a[8]);
+    DEBUG_ASSERT(strchr(a, 'd') == &a[10]);
+    DEBUG_ASSERT(strchr(a, '!') == &a[11]);
+    DEBUG_ASSERT(strchr(a, 'z') == NULL);
+
+});

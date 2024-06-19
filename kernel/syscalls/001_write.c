@@ -37,6 +37,9 @@
 #include <aplus/errno.h>
 #include <aplus/hal.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
 
 
 /***
@@ -56,22 +59,7 @@
 SYSCALL(1, write,
 long sys_write (unsigned int fd, const void __user * buf, size_t size) {
 
-    if(unlikely(!uio_check(buf, R_OK)))
-        return -EFAULT;
-
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-    if(unlikely(!(
-        (current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-        (current_task->fd->descriptors[fd].flags & O_RDWR)
-    )))
-        return -EPERM;
-
-
+    DEBUG_ASSERT(current_task);
 
     current_task->iostat.wchar += (uint64_t) size;
     current_task->iostat.syscw += 1;
@@ -80,58 +68,113 @@ long sys_write (unsigned int fd, const void __user * buf, size_t size) {
     if(unlikely(size == 0))
         return 0;
 
+    if(unlikely(!buf))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(buf, R_OK)))
+        return -EFAULT;
+
+
 
     ssize_t e = 0;
 
+#if defined(CONFIG_HAVE_NETWORK)
 
-    uio_lock(buf, size);
+    if(unlikely(NETWORK_IS_SOCKFD(fd))) {
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+        uio_lock(buf, size);
 
-        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, buf, current_task->fd->descriptors[fd].ref->position, size)) <= 0)
-            break;
+        e = lwip_write(NETWORK_SOCKFD(fd), buf, size);
 
-        current_task->fd->descriptors[fd].ref->position += e;
-        current_task->iostat.write_bytes += (uint64_t) e;
-
-    });
-
-    uio_unlock(buf, size);
+        uio_unlock(buf, size);
 
 
-    if(errno == EINTR) {
+        if(unlikely(e < 0))
+            return -errno;
 
-        if(current_task->fd->descriptors[fd].flags & O_NONBLOCK) {
+        return e;
 
-            return -EAGAIN;
-
-        } else {
-
-            current_task->fd->descriptors[fd].ref->inode->ev.revents &= ~POLLOUT;
-            current_task->fd->descriptors[fd].ref->inode->ev.events  |=  POLLOUT;
-            current_task->fd->descriptors[fd].ref->inode->ev.futex    = 0;
-
-            futex_wait(current_task, &current_task->fd->descriptors[fd].ref->inode->ev.futex, 0, NULL);
-
-
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-            kprintf("write: task %d waiting for POLLOUT event\n", current_task->tid);
+    } else
+    
 #endif
+    
+     {
 
-            thread_suspend(current_task);
-            thread_restart_sched(current_task);
-            thread_restart_syscall(current_task);
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
+            return -EBADF;
 
-            return -EINTR;
+        
+        shared_ptr_access(current_task->fd, fds, {
 
-        }
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+            if(unlikely(!(
+                (fds->descriptors[fd].flags & O_WRONLY) ||
+                (fds->descriptors[fd].flags & O_RDWR)
+            )))
+                return -EPERM;
+
+
+
+            ssize_t e = 0;
+
+
+            uio_lock(buf, size);
+
+            __lock(&fds->descriptors[fd].ref->lock, {
+
+                if((e = vfs_write(fds->descriptors[fd].ref->inode, buf, fds->descriptors[fd].ref->position, size)) <= 0)
+                    break;
+
+                fds->descriptors[fd].ref->position += e;
+                current_task->iostat.write_bytes += (uint64_t) e;
+
+            });
+
+            uio_unlock(buf, size);
+
+
+            if(errno == EINTR) {
+
+                if(fds->descriptors[fd].flags & O_NONBLOCK) {
+
+                    return -EAGAIN;
+
+                } else {
+
+                    shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
+
+                        ev->revents &= ~POLLOUT;
+                        ev->events  |=  POLLOUT;
+
+                        futex_wait(current_task, &ev->futex, ev->futex, NULL);
+
+                    });
+
+
+    #if DEBUG_LEVEL_TRACE
+                    kprintf("read: task %d waiting for POLLOUT event on fd %d (node->name: '%s')\n", current_task->tid, fd, fds->descriptors[fd].ref->inode->name);
+    #endif
+
+                    thread_suspend(current_task);
+                    thread_restart_sched(current_task);
+                    thread_restart_syscall(current_task);
+
+                    return -EINTR;
+
+                }
+
+            }
+
+
+            if(e < 0)
+                return -errno;
+
+            return e;
+
+        });
 
     }
-
-
-    if(e < 0)
-        return -errno;
-
-    return e;
 
 });

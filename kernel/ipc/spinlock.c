@@ -46,7 +46,7 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
 /*!
  * @brief Initialize Spinlock with flags.
  */
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 void __spinlock_init_with_flags(spinlock_t* lock, int flags, const char* FUNC, const char* FILE, int LINE) {
 #else
 void spinlock_init_with_flags(spinlock_t* lock, int flags) {
@@ -60,8 +60,8 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
     lock->refcount = 0;
     lock->irqsave  = 0;
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("ipc: spinlock_init_with_flags(%p, %d, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
+#if DEBUG_LEVEL_TRACE
+    kprintf("ipc: spinlock_init_with_flags(%p, %x, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
 #endif
 
     __atomic_clear(&lock->value, __ATOMIC_RELAXED);
@@ -72,13 +72,13 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
 /*!
  * @brief Initialize Spinlock.
  */
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 void __spinlock_init(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
 void spinlock_init(spinlock_t* lock) {
 #endif
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     return __spinlock_init_with_flags(lock, 0, FUNC, FILE, LINE);
 #else
     return spinlock_init_with_flags(lock, 0);
@@ -91,7 +91,7 @@ void spinlock_init(spinlock_t* lock) {
 /*!
  * @brief Lock a Spinlock.
  */
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 void __spinlock_lock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
 void spinlock_lock(spinlock_t* lock) {
@@ -101,18 +101,21 @@ void spinlock_lock(spinlock_t* lock) {
 
         
     volatile uint64_t own;
+
     if((own = __atomic_load_n(&lock->owner, __ATOMIC_CONSUME)) == spinlock_get_new_owner(lock)) {
 
         if(lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
 
-            lock->refcount++;
+            __atomic_add_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST);
 
         } else {
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+
+#if DEBUG_LEVEL_TRACE
             kpanicf("ipc: PANIC! DEADLOCK! %s:%d %s(%p) owner(%ld) flags(%X) current_owner(%ld)\n", FILE, LINE, FUNC, lock, own, lock->flags, spinlock_get_new_owner(lock));
 #else
             kpanicf("ipc: PANIC! DEADLOCK! owner(%ld) flags(%X)\n", own, lock->flags);
 #endif
+
         }
 
     
@@ -120,7 +123,7 @@ void spinlock_lock(spinlock_t* lock) {
     } else {
 
 
-// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// // #if DEBUG_LEVEL_TRACE
 // //         uint64_t deadlock_detector = 0ULL;
 // // #endif
 
@@ -130,7 +133,7 @@ void spinlock_lock(spinlock_t* lock) {
             __builtin_ia32_pause();
 #endif
 
-// // #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// // #if DEBUG_LEVEL_TRACE
 // //             if(deadlock_detector++ > (IPC_DEFAULT_TIMEOUT * 100000ULL)) {
 // //                 kprintf("ipc: WARN! %s(): Timeout expired for %s:%d %s(%p), cpu(%d), tid(%d)\n", __func__, FILE, LINE, FUNC, lock, current_cpu->id, current_task->tid);
 // //                 spinlock_unlock(lock);
@@ -140,11 +143,19 @@ void spinlock_lock(spinlock_t* lock) {
 
         }
 
-        DEBUG_ASSERT(lock->owner == -1ULL);
+
+#if DEBUG_LEVEL_TRACE
+
+        if(unlikely(lock->owner != -1ULL)) {
+            kpanicf("ipc: FAIL! %s(): Lock already owned at %s:%d in %s(%p): owner(%ld) flags(%X) current_owner(%ld)\n", __func__, FILE, LINE, FUNC, lock, lock->owner, lock->flags, spinlock_get_new_owner(lock));
+        }
+
+#endif
 
         lock->owner = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
-        lock->refcount = 1;
+        
+        __atomic_store_n(&lock->refcount, 1, __ATOMIC_RELAXED);
 
     }
 
@@ -162,8 +173,9 @@ int spinlock_trylock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
     int e; 
-    if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)))
+    if((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))) {
         lock->irqsave = arch_intr_disable();
+    }
 
     return e;
 }
@@ -172,7 +184,7 @@ int spinlock_trylock(spinlock_t* lock) {
 /*!
  * @brief Release a Spinlock.
  */
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
 void __spinlock_unlock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
 void spinlock_unlock(spinlock_t* lock) {
@@ -183,7 +195,7 @@ void spinlock_unlock(spinlock_t* lock) {
 
 
     if(__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) != spinlock_get_new_owner(lock)) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kpanicf("ipc: PANIC! EPERM! spinlock(%p) at %s:%d %s() not owned, owner(%ld) flags(%X) current_owner(%ld)\n", lock, FILE, LINE, FUNC, lock->owner, lock->flags, spinlock_get_new_owner(lock));
 #else
         kpanicf("ipc: PANIC! EPERM! spinlock(%p) not owned, owner(%ld) flags(%X)\n", lock, lock->owner, lock->flags);
@@ -192,7 +204,7 @@ void spinlock_unlock(spinlock_t* lock) {
     } else {
 
 
-        if(--lock->refcount > 0)
+        if(__atomic_sub_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST) > 0)
             return;
 
 

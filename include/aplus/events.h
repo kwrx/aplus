@@ -68,8 +68,8 @@
 extern "C" {
 #endif
 
-typedef uint16_t vkey_t;
 typedef int16_t vaxis_t;
+typedef uint16_t vkey_t;
 typedef uint16_t evid_t;
 
 typedef struct {

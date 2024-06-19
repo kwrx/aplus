@@ -25,6 +25,7 @@
                                                                         
 #include <stdint.h>
 #include <string.h>
+#include <poll.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -33,14 +34,16 @@
 #include <aplus/errno.h>
 
 
-static struct file* filetable;
+static struct file* filetable = NULL;
 static spinlock_t filetable_lock;
-static int lowestfree = 0;
+
+static unsigned int lowestfree = 0;
+
 
 
 void fd_init(void) {
 
-    filetable = (struct file*) kcalloc(sizeof(struct file), FILE_MAX, GFP_KERNEL);
+    filetable = (struct file*) kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
     lowestfree = 0;
 
     spinlock_init(&filetable_lock);
@@ -54,11 +57,11 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
     DEBUG_ASSERT(inode);
 
 
-    int i = FILE_MAX;
+    int i = CONFIG_FILE_MAX;
 
     __lock(&filetable_lock, {
 
-        for(i = lowestfree; i < FILE_MAX; i++) {
+        for(i = lowestfree; i < CONFIG_FILE_MAX; i++) {
 
             if(filetable[i].refcount > 0)
                 continue;
@@ -74,7 +77,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
     });
 
 
-    if(i == FILE_MAX) {
+    if(i == CONFIG_FILE_MAX) {
         return errno = ENFILE, NULL;
     }
 
@@ -92,7 +95,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 }
 
 
-void fd_remove(struct file* fd, int close) {
+void fd_remove(struct file* fd, bool close) {
 
     DEBUG_ASSERT(fd);
     DEBUG_ASSERT(filetable);
@@ -100,7 +103,7 @@ void fd_remove(struct file* fd, int close) {
 
     __lock(&filetable_lock, {
 
-        if(--fd->refcount == 0) {
+        if(__atomic_sub_fetch(&fd->refcount, 1, __ATOMIC_SEQ_CST) == 0) {
 
             if (close) {
                 vfs_close(fd->inode);
@@ -111,9 +114,9 @@ void fd_remove(struct file* fd, int close) {
             fd->status   = 0;
 
 
-            int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
+            unsigned int i = (int) ((uintptr_t) fd - (uintptr_t) filetable) / sizeof(struct file);
             
-            DEBUG_ASSERT(i <= FILE_MAX - 1);
+            DEBUG_ASSERT(i <= CONFIG_FILE_MAX - 1);
             DEBUG_ASSERT(i >= 0);
 
             if (i < lowestfree) {
@@ -133,7 +136,7 @@ void fd_ref(struct file* file) {
     DEBUG_ASSERT(filetable);
 
     __lock(&filetable_lock, {
-        file->refcount++;
+        __atomic_add_fetch(&file->refcount, 1, __ATOMIC_SEQ_CST);
     });
 
 }

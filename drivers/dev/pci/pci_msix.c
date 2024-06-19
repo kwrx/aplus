@@ -42,9 +42,9 @@
 
 
 static struct {
-    pcidev_t device;
     pci_irq_handler_t handler;
     pci_irq_data_t data;
+    pcidev_t device;
     uint16_t index;
 } pci_msix_devices[PCI_MSIX_DEVICES_MAX] = { 0 };
 
@@ -96,7 +96,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
 
         if(msix.msix_pci.pci_bir > 5) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
                 kprintf("pci-msix: FAIL! unknown pci bar #%d for device %d\n", msix.msix_pci.pci_bir, device);
 #endif
                 return PCI_NONE;
@@ -135,14 +135,12 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
         // Mask all interrupts
 
-        uint32_t i;
-        for(i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
+        for(size_t i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
             pci_msix_mask(device, &msix, i);
-
-
 
         if(mptr)
             memcpy(mptr, &msix, sizeof(pci_msix_t));
+        
 
         return 0;
 
@@ -162,7 +160,7 @@ void pci_msix_enable(pcidev_t device, pci_msix_t* msix) {
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_cap);
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
     DEBUG_ASSERT(pci_read(device, msix->msix_cap, 1) == PCI_MSIX_CAPID);
 #endif
 
@@ -176,7 +174,7 @@ void pci_msix_disable(pcidev_t device, pci_msix_t* msix) {
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_cap);
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_TRACE
     DEBUG_ASSERT(pci_read(device, msix->msix_cap, 1) == PCI_MSIX_CAPID);
 #endif
 
@@ -247,7 +245,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         __atomic_membarrier();
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
         kprintf("pci-msix: slot %d mapped for device %d [index(%p), handler(%p), data(%p)]\n", i, device, index, handler, data);
 #endif
 
@@ -259,11 +257,11 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
     spinlock_unlock(&pci_msix_lock);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
     kprintf("pci-msix: ERROR! No more device slots available for device %d [index(%p), handler(%p), data(%p)]\n", device, index, handler, data);
 #endif
 
-    return -ENOSPC;
+    return errno = ENOSPC, -1;
 
 }
 
@@ -302,11 +300,11 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
     spinlock_unlock(&pci_msix_lock);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
     kprintf("pci-msix: ERROR! No device slot found for device %d\n", device);
 #endif
 
-    return -ESRCH;
+    return errno = ESRCH, -1;
 
 }
 

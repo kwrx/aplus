@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -50,22 +51,34 @@
 SYSCALL(80, chdir,
 long sys_chdir (const char __user * filename) {
 
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(filename, R_OK)))
+        return -EFAULT;
+
+
+
     int fd;
-    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0) {
         return fd;
+    }
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
+        
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
 
-        current_task->fs->cwd = current_task->fd->descriptors[fd].ref->inode;
+        shared_ptr_access(current_task->fs, fs, {
+            fs->cwd = fds->descriptors[fd].ref->inode;
+        });
 
     });
+    
 
-
-    if((fd = sys_close(fd)) < 0)
+    if((fd = sys_close(fd)) < 0) {
         return fd;
+    }
 
     return 0;
 

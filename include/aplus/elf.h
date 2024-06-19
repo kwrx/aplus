@@ -44,6 +44,7 @@ typedef struct symbol {
 
 
 #if defined(__i386__) || defined(__arm__)
+#define Elf_Byte		uint8_t
 #define Elf_Half 		Elf32_Half
 #define Elf_Word 		Elf32_Word
 #define Elf_Sword		Elf32_Sword
@@ -79,6 +80,7 @@ typedef struct symbol {
 #define ELF_ST_INFO		ELF32_ST_INFO
 
 #elif defined(__x86_64__) || defined(__aarch64__)
+#define Elf_Byte		uint8_t
 #define Elf_Half 		Elf64_Half
 #define Elf_Word 		Elf64_Word
 #define Elf_Sword		Elf64_Sword

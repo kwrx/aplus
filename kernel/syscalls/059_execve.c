@@ -21,7 +21,6 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define _GNU_SOURCE
 #include <sched.h>
 
 #include <aplus.h>
@@ -32,6 +31,7 @@
 #include <aplus/task.h>
 #include <aplus/ipc.h>
 #include <aplus/elf.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -124,47 +124,75 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
         return -EFAULT;
 
 
+#if DEBUG_LEVEL_TRACE
+    uio_lock(filename, CONFIG_PATH_MAX); {
+    
+        kprintf("execve(): filename: '%s'\n", filename);
+
+        for(size_t i = 0; argv[i]; i++)
+            kprintf("execve(): argv[%zd]: '%s'\n", i, argv[i]);
+
+        for(size_t i = 0; envp[i]; i++)
+            kprintf("execve(): envp[%zd]: '%s'\n", i, envp[i]);
+
+    } uio_unlock(filename, CONFIG_PATH_MAX);
+#endif
+
+
 
     int e;
 
-    struct stat st;
-    if((e = sys_newstat(filename, &st)) < 0)
+    struct stat st = { 0 };
+
+    if(unlikely((e = sys_newstat(filename, &st)) < 0))
         return e;
 
+    if(unlikely(!S_ISREG(st.st_mode)))
+        return -ENOEXEC;
 
+    if(unlikely(st.st_size == 0))
+        return -ENOEXEC;
 
-    e = 0;
-
-    if(st.st_mode & S_IXUSR)
-        e = (st.st_uid == current_task->uid);
-
-    else if(st.st_mode & S_IXGRP)
-        e = (st.st_gid == current_task->gid);
-    
-    else if(st.st_mode & S_IXOTH)
-        e = 1;
-
-
-    if(!e)
-        return -EPERM;
-
+    if(unlikely(sys_access(filename, X_OK) < 0))
+        return -EACCES;
 
 
 
     int fd;
-    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
+    if((fd = sys_open(filename, O_RDONLY, 0)) < 0) {
+        return fd;
+    }
+
+
+    inode_t* inode = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        inode = fds->descriptors[fd].ref->inode;
+
+    });
+
+    DEBUG_ASSERT(inode);
+
+    if((fd = sys_close(fd)) < 0)
         return fd;
 
 
-    Elf_Ehdr head;
-    if((e = sys_read(fd, &head, sizeof(head))) < 0)
-        return e;
+
+    Elf_Ehdr head = { 0 };
+
+    if((e = vfs_read(inode, &head, 0, sizeof(head))) < 0) {
+        return -errno;
+    }
 
 
 
     if(head.e_ident[0] == '#' &&
-       head.e_ident[1] == '!')
-        return -ENOEXEC; // TODO: read and execute command scripts
+       head.e_ident[1] == '!'
+    ) return -ENOEXEC; // TODO: read and execute command scripts
 
 
     if(
@@ -185,7 +213,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     const char** __safe_envp = uio_get_ptr(envp);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_TRACE
 
     for(size_t i = 0; __safe_argv[i]; i++)
         DEBUG_ASSERT(uio_check(__safe_argv[i], R_OK));
@@ -247,28 +275,28 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     do_unshare(CLONE_FS);
     do_unshare(CLONE_FILES);
     do_unshare(CLONE_SIGHAND);
-    do_unshare(CLONE_VM);
 
 
-    #define RXX(a, b, c, d) {                                               \
-        if((e = sys_lseek(fd, (off_t) (b), SEEK_SET)) < 0)                  \
-            return e;                                                       \
-                                                                            \
-        if((e = sys_read(fd, (void*)(a), (size_t)(c))) != (size_t)(c)) {    \
-            if(e < 0)                                                       \
-                return e;                                                   \
-            else                                                            \
-                return -EIO;                                                \
-        }                                                                   \
-        if((size_t) (d) - (size_t) (c)) {                                   \
-            memset((void*)((size_t) (a) + (size_t) (c)), 0,                 \
-                   (size_t) (d) - (size_t) (c));                            \
-        }                                                                   \
+    #define RXX(a, b, c, d) {                                                               \
+                                                                                            \
+        if((e = vfs_read(inode, (void*)(a), (off_t) (b), (size_t)(c))) != (size_t)(c)) {    \
+            if(e < 0)                                                                       \
+                return -errno;                                                              \
+            else                                                                            \
+                return -EIO;                                                                \
+        }                                                                                   \
+                                                                                            \
+        if((size_t) (d) - (size_t) (c)) {                                                   \
+            memset((void*)((size_t) (a) + (size_t) (c)), 0,                                 \
+                   (size_t) (d) - (size_t) (c));                                            \
+        }                                                                                   \
+                                                                                            \
     }
 
 
 
 
+    vmm_address_space_t* current_space = current_task->address_space;
 
     uintptr_t end   = 0;
     uintptr_t flags = 0;
@@ -277,16 +305,20 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     __lock(&current_task->lock, {
 
 
-        //arch_userspace_release(); // TODO: release userspace resources
+        current_task->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_NEW_SPACE);
 
         current_task->userspace.start = ~0UL;
         current_task->userspace.end   =  0UL;
 
+        arch_task_switch_address_space(current_task->address_space);
 
-        int i;
-        for(i = 0; i < head.e_phnum; i++) {
 
-            Elf_Phdr phdr;
+
+        DEBUG_ASSERT(head.e_phnum > 0);
+
+        for(size_t i = 0; i < head.e_phnum; i++) {
+
+            Elf_Phdr phdr = { 0 };
             RXX(&phdr, head.e_phoff + (i * head.e_phentsize), head.e_phentsize, head.e_phentsize);
 
 
@@ -320,12 +352,12 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
 
 
                     arch_vmm_map (current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz,
-                                    ARCH_VMM_MAP_RDWR       |
-                                    ARCH_VMM_MAP_TYPE_PAGE);
+                                  ARCH_VMM_MAP_RDWR       |
+                                  ARCH_VMM_MAP_TYPE_PAGE);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-                    kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(%ld) memsz(%ld) alignsize(%ld) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+#if DEBUG_LEVEL_TRACE
+                    kprintf("sys_execve: PT_LOAD at address(0x%lX) offset(0x%lX) filesz(0x%lX) memsz(0x%lX) alignsize(0x%lX) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
 #endif
 
                     RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz);
@@ -340,8 +372,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     continue;
 
                 case PT_GNU_EH_FRAME:
-                    
+
+#if DEBUG_LEVEL_WARN               
                     kprintf("execve: WARN! PT_GNU_EH_FRAME not yet supported\n");
+#endif
                     break;
 
                 case PT_DYNAMIC:
@@ -350,6 +384,10 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
                     break;
 
                 default:
+
+#if DEBUG_LEVEL_WARN
+                    kprintf("sys_execve: WARN! unknown phdr.p_type at address(0x%lX) offset(0x%lX) filesz(0x%lX) memsz(0x%lX) alignsize(0x%lX) type(%d)\n", phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz, end - phdr.p_vaddr, phdr.p_type);
+#endif
                     continue;
 
             }
@@ -363,25 +401,49 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     DEBUG_ASSERT(current_task->userspace.start);
     DEBUG_ASSERT(current_task->userspace.end);
     DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
-    sys_close(fd);
 
 
 
-    for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+    // * Close all file descriptors marked as close-on-exec
 
-        if(!current_task->fd->descriptors[i].ref)
-            continue;
+    shared_ptr_access(current_task->fd, fds, {
 
-        if(!current_task->fd->descriptors[i].close_on_exec)
-            continue;
+        for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-        
-        sys_close(i);
+            if(!fds->descriptors[i].ref)
+                continue;
 
-    }
+            if(!fds->descriptors[i].close_on_exec)
+                continue;
+            
+            sys_close(i);
 
+        }
+
+    });
+
+    // * Reset signal handlers
+
+    shared_ptr_access(current_task->sighand, sighand, {
+
+        for(size_t i = 0; i < _NSIG; i++) {
+
+            sighand->action[i].handler     = SIG_DFL;
+            sighand->action[i].sa_flags    = 0;
+            sighand->action[i].sa_restorer = NULL;
+
+        }
+
+    });
+
+
+    // * Set new fs executable
+
+    shared_ptr_access(current_task->fs, fs, {
+
+        fs->exe = inode;
+
+    });
 
 
 
@@ -453,7 +515,7 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     }
 
 
-    AUX_ENT(AT_RANDOM, rand());
+    AUX_ENT(AT_RANDOM, arch_random());
     AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
     AUX_ENT(AT_HWCAP, 0);
     AUX_ENT(AT_HWCAP2, 0);
@@ -473,9 +535,19 @@ long sys_execve (const char __user * filename, const char __user ** argv, const 
     current_task->userspace.sigstack = sigstack;
     current_task->userspace.siginfo  = (siginfo_t*) siginfo;
 
+    arch_vmm_free_address_space(current_space);
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX)\n", head.e_entry, current_task->tid, sigstack, stack, bottom);
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX) memory(%ld.%ld MB)\n", 
+        head.e_entry, 
+        current_task->tid, 
+        sigstack, 
+        stack, 
+        bottom,
+        (pmm_get_used_memory() / 1024) / 1024,
+        (pmm_get_used_memory() / 1024) % 1024
+    );
 #endif
 
 

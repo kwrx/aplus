@@ -31,6 +31,7 @@ struct hashmap_base {
     spinlock_t lock;
 };
 
+
 void hashmap_base_init(struct hashmap_base *hb,
         size_t (*hash_func)(const void *), int (*compare_func)(const void *, const void *));
 void hashmap_base_cleanup(struct hashmap_base *hb);
@@ -139,7 +140,7 @@ size_t hashmap_hash_string_i(const char *key);
                 struct hashmap_base *iter_map;                          \
                 struct hashmap_entry *iter_pos;                         \
                 struct {                                                \
-                    const key_type *t_key;                              \
+                    key_type *t_key;                                    \
                     data_type *t_data;                                  \
                 } iter_types[0];                                        \
             } t_iterator;                                               \

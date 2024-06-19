@@ -54,7 +54,7 @@ long sys_getpgid (pid_t pid) {
 
 
     if(pid == 0)
-        return current_task->pgid;
+        return current_task->pgrp;
 
 
     cpu_foreach(cpu) {
@@ -63,7 +63,7 @@ long sys_getpgid (pid_t pid) {
         for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             if(tmp->tid == pid)
-                return tmp->pgid;
+                return tmp->pgrp;
 
         }
 

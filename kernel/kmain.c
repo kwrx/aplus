@@ -33,54 +33,64 @@
 #include <aplus/hal.h>
 
 
-
-
-#define __init(fn, p)           \
-    extern void fn##_init();    \
-    fn##_init p 
-
-
-
-
-void cmain(void* arg) {
-    (void) arg;
+void cmain(void) {
 
     current_task->priority = TASK_PRIO_MIN;
 
-
     for(;;) {
-
         __cpu_pause();
         __cpu_halt();
-
     }
 
 }
 
 
+void kmain(void) {
 
+    // Initialize syscall
+    extern void syscall_init(void);
+    syscall_init();
 
-void kmain() {
-
-
-    __init(syscall, ());
-    __init(vfs,     ());
+    // Initialize VFS
+    extern void vfs_init(void);
+    vfs_init();
 
 #if defined(CONFIG_HAVE_NETWORK)
-    __init(network, ());  // TODO: Rewrite network/sys.c
+    // Initialize network
+    extern void network_init(void);
+    network_init();
 #endif
 
 
-    int e;
-    if((e = sys_mount(NULL, "/", "tmpfs", 0, NULL)) < 0)
-        kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));
+    // Mount fake root
+    {
 
-    __init(module,  ());
-    __init(root,    ());
+        int e = sys_mount(NULL, "/", "tmpfs", 0, NULL);
+        if (e < 0) {
+            kpanicf("mount: could not mount fake root: errno(%s)", strerror(-e));
+        }
 
+    }
+
+
+    // Initialize module
+    extern void module_init(void);
+    module_init();
+
+    // Initialize root
+    extern void root_init(void);
+    root_init();
 
 #if defined(CONFIG_HAVE_SMP)
-    __init(smp,     ());
+    // Initialize SMP
+    extern void smp_init(void);
+    smp_init();
+#endif
+
+#if defined(CONFIG_HAVE_TEST)
+    // Initialize test
+    extern void test_init(void);
+    test_init();
 #endif
 
 
@@ -96,14 +106,18 @@ void kmain() {
 
 
 
-    
+    // Execute init
+    {
 
-    const char* __argv[2] = { "/sbin/init", NULL };
-    const char* __envp[1] = { NULL };
+        const char* __argv[2] = { "/sbin/init", NULL };
+        const char* __envp[1] = { NULL };
 
-    if((e = sys_execve(__argv[0], __argv, __envp)) < 0)
-        kpanicf("init: PANIC! execve() failed with errno(%s)\n", strerror(-e));
+        int e = sys_execve(__argv[0], __argv, __envp);
+        if(e < 0) {
+            kpanicf("init: PANIC! execve(%s) failed with errno(%s)\n", __argv[0], strerror(-e));
+        }
 
+    }
 
     arch_reboot(ARCH_REBOOT_HALT);
 

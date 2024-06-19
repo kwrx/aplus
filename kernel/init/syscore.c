@@ -26,5 +26,5 @@
 #include <aplus/debug.h>
 
 
-static struct syscore __core;
+static struct syscore __core = { 0 };
 struct syscore* core = &__core;

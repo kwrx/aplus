@@ -39,7 +39,9 @@ inode_t * vfs_root = &__vfs_root;
 
 
 static int rootfs_getattr (inode_t* inode, struct stat* st) {
-    
+
+    __unused_param(inode);
+
     st->st_dev = 0;
     st->st_ino = 1;
     st->st_mode = S_IFDIR | 0666;

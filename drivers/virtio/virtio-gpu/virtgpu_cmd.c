@@ -59,7 +59,7 @@ int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) 
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -80,7 +80,7 @@ int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -93,8 +93,8 @@ int virtgpu_cmd_resource_create_2d(struct virtgpu* gpu, uint64_t* resource, uint
     DEBUG_ASSERT(gpu->driver);
     
 
-    struct virtio_gpu_resource_create_2d cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_resource_create_2d cmd = { 0 };
+    struct virtio_gpu_response resp = { 0 };
     
 
     uint64_t resource_id = ++gpu->resource_ids;
@@ -107,11 +107,17 @@ int virtgpu_cmd_resource_create_2d(struct virtgpu* gpu, uint64_t* resource, uint
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     if(resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
+    // dump hdr
+    kprintf("resp.hdr.type = %X\n", resp.hdr.type);
+    kprintf("resp.hdr.flags = %d\n", resp.hdr.flags);
+    kprintf("resp.hdr.fence_id = %d\n", resp.hdr.fence_id);
+    kprintf("resp.hdr.ctx_id = %d\n", resp.hdr.ctx_id);
+    kprintf("resp.hdr.padding = %d\n", resp.hdr.padding);
 
     return *resource = resource_id, 0;
 
@@ -124,8 +130,8 @@ int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, 
     DEBUG_ASSERT(gpu->driver);
     
 
-    struct virtio_gpu_resource_attach_backing cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_resource_attach_backing cmd = { 0 };
+    struct virtio_gpu_response resp = { 0 };
 
     cmd.hdr.type = VIRTIO_GPU_CMD_RESOURCE_ATTACH_BACKING;
     cmd.resource_id = resource;
@@ -135,7 +141,14 @@ int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, 
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
+
+     // dump hdr
+    kprintf("resp.hdr.type = %X\n", resp.hdr.type);
+    kprintf("resp.hdr.flags = %d\n", resp.hdr.flags);
+    kprintf("resp.hdr.fence_id = %d\n", resp.hdr.fence_id);
+    kprintf("resp.hdr.ctx_id = %d\n", resp.hdr.ctx_id);
+    kprintf("resp.hdr.padding = %d\n", resp.hdr.padding);
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -148,8 +161,8 @@ int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t r
     DEBUG_ASSERT(gpu->driver);
     
 
-    struct virtio_gpu_set_scanout cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_set_scanout cmd = { 0 };
+    struct virtio_gpu_response resp = { 0 };
 
     cmd.hdr.type = VIRTIO_GPU_CMD_SET_SCANOUT;
     cmd.scanout_id = scanout_id;
@@ -161,7 +174,14 @@ int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t r
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
+
+     // dump hdr
+    kprintf("resp.hdr.type = %X\n", resp.hdr.type);
+    kprintf("resp.hdr.flags = %d\n", resp.hdr.flags);
+    kprintf("resp.hdr.fence_id = %d\n", resp.hdr.fence_id);
+    kprintf("resp.hdr.ctx_id = %d\n", resp.hdr.ctx_id);
+    kprintf("resp.hdr.padding = %d\n", resp.hdr.padding);
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 
@@ -174,8 +194,8 @@ int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint
     DEBUG_ASSERT(gpu->driver);
     
 
-    struct virtio_gpu_transfer_to_host_2d cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_transfer_to_host_2d cmd = { 0 };
+    struct virtio_gpu_response resp = { 0 };
 
     cmd.hdr.type = VIRTIO_GPU_CMD_TRANSFER_TO_HOST_2D;
     cmd.offset = offset;
@@ -187,8 +207,48 @@ int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint
 
 
     if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
-        return -EIO;
+        return errno = EIO, -1;
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+
+}
+
+
+int virtgpu_cmd_get_display_info(struct virtgpu* gpu, struct virtio_gpu_resp_display_info* display_info) {
+
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+    
+
+    struct virtio_gpu_ctrl_hdr cmd = { 0 };
+    struct virtio_gpu_response resp = { 0 };
+
+    cmd.type = VIRTIO_GPU_CMD_GET_DISPLAY_INFO;
+
+    if(virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return errno = EIO, -1;
+
+    if(resp.hdr.type != VIRTIO_GPU_RESP_OK_DISPLAY_INFO)
+        return errno = EINVAL, -1;
+
+
+    kprintf("resp.hdr.type = %X\n", resp.hdr.type);
+    kprintf("resp.hdr.flags = %d\n", resp.hdr.flags);
+    kprintf("resp.hdr.fence_id = %d\n", resp.hdr.fence_id);
+    kprintf("resp.hdr.ctx_id = %d\n", resp.hdr.ctx_id);
+    kprintf("resp.hdr.padding = %d\n", resp.hdr.padding);
+
+    for(int i = 0; i < 16; i++) {
+        kprintf("resp.display_info.pmodes[%d].enabled = %d\n", i, resp.display_info.pmodes[i].enabled);
+        kprintf("resp.display_info.pmodes[%d].flags = %d\n", i, resp.display_info.pmodes[i].flags);
+        kprintf("resp.display_info.pmodes[%d].r.width = %d\n", i, resp.display_info.pmodes[i].r.width);
+        kprintf("resp.display_info.pmodes[%d].r.height = %d\n", i, resp.display_info.pmodes[i].r.height);
+        kprintf("resp.display_info.pmodes[%d].r.x = %d\n", i, resp.display_info.pmodes[i].r.x);
+        kprintf("resp.display_info.pmodes[%d].r.y = %d\n", i, resp.display_info.pmodes[i].r.y);
+    }
+
+    memcpy(display_info, &resp.display_info, sizeof(*display_info));
+
+    return 0;
 
 }

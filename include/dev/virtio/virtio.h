@@ -77,6 +77,7 @@
 
 // Reserved feature bits
 // Select (1)
+#define VIRTIO_F_VERSION_1                          (1 << 0)
 #define VIRTIO_F_IN_ORDER                           (1 << 6)
 
 
@@ -159,14 +160,14 @@ struct virtio_driver {
 
 struct virtio_pci_cap {
 
-    uint8_t cap_vndr;
-    uint8_t cap_next;
-    uint8_t cap_len;
-    uint8_t cfg_type;
-    uint8_t bar;
-    uint8_t padding[3];
-    uint32_t offset;
-    uint32_t length;
+    volatile uint8_t cap_vndr;
+    volatile uint8_t cap_next;
+    volatile uint8_t cap_len;
+    volatile uint8_t cfg_type;
+    volatile uint8_t bar;
+    volatile uint8_t padding[3];
+    volatile uint32_t offset;
+    volatile uint32_t length;
 
 } __packed;
 
@@ -194,7 +195,7 @@ struct virtio_pci_common_cfg {
 } __packed;
 
 struct virtio_pci_notify_cfg {
-    uint32_t notify_off_multiplier;
+    volatile uint32_t notify_off_multiplier;
 } __packed;
 
 

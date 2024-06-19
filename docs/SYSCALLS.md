@@ -8,7 +8,7 @@
 - [x] sys_newstat
 - [x] sys_newfstat
 - [x] sys_newlstat
-- [ ] sys_poll
+- [x] sys_poll
 - [x] sys_lseek
 - [x] sys_mmap
 - [x] sys_mprotect
@@ -23,7 +23,7 @@
 - [x] sys_readv
 - [x] sys_writev
 - [x] sys_access
-- [ ] sys_pipe
+- [x] sys_pipe
 - [ ] sys_select
 - [x] sys_sched_yield
 - [ ] sys_mremap

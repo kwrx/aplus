@@ -57,7 +57,7 @@ int video_resource_create_2d(device_video_context_t* context, uint16_t x, uint16
 
         if(unlikely(!context->resources[i].buffer)) {
             context->resources[i].flags &= ~DEVICE_VIDEO_RESOURCE_FLAGS_ENABLED;
-            return -ENOMEM;
+            return errno = ENOMEM, -1;
         }
 
 
@@ -68,7 +68,7 @@ int video_resource_create_2d(device_video_context_t* context, uint16_t x, uint16
     }
 
 
-    return -ENOSPC;
+    return errno = ENOSPC, -1;
 
 }
 
@@ -81,10 +81,10 @@ int video_resource_create_3d(device_video_context_t* context, uint16_t x, uint16
 int video_resource_destroy(device_video_context_t* context, int id) {
 
     if(unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     if(unlikely(!(context->resources[id].flags & DEVICE_VIDEO_RESOURCE_FLAGS_ENABLED)))
-        return -ENOENT;
+        return errno = ENOENT, -1;
 
     if(unlikely(context->resources[id].flags & DEVICE_VIDEO_RESOURCE_FLAGS_2D))
         kfree((void*) context->resources[id].buffer);
@@ -101,10 +101,10 @@ int video_resource_destroy(device_video_context_t* context, int id) {
 int video_resource_lock(device_video_context_t* device, int id) {
 
     if(unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
-        return -EINVAL;
+        return errno = EINVAL, -1;
 
     if(unlikely(!(device->resources[id].flags & DEVICE_VIDEO_RESOURCE_FLAGS_ENABLED)))
-        return -ENOENT;
+        return errno = ENOENT, -1;
 
     
     spinlock_lock(&device->resources[id].lock);
@@ -117,10 +117,10 @@ int video_resource_lock(device_video_context_t* device, int id) {
 int video_resource_unlock(device_video_context_t* device, int id) {
     
     if(unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
-        return -EINVAL;
+        return errno = EINVAL, -1;
     
     if(unlikely(!(device->resources[id].flags & DEVICE_VIDEO_RESOURCE_FLAGS_ENABLED)))
-        return -ENOENT;
+        return errno = ENOENT, -1;
 
 
     spinlock_unlock(&device->resources[id].lock);

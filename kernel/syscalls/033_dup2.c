@@ -51,39 +51,45 @@
 SYSCALL(33, dup2,
 long sys_dup2 (unsigned int fd, unsigned int newfd) {
 
-    if(unlikely(fd > CONFIG_OPEN_MAX))    // TODO: add network support
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(unlikely(newfd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
+    if(unlikely(newfd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
 
-    if(fd == newfd)
-        return newfd;
+    shared_ptr_access(current_task->fd, fds, {
+
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        if(fd == newfd)
+            return newfd;
 
 
-    if(current_task->fd->descriptors[newfd].ref)
-        sys_close(newfd);
 
-    DEBUG_ASSERT(!current_task->fd->descriptors[newfd].ref);
+        if(fds->descriptors[newfd].ref) {
+            sys_close(newfd);
+        }
+
+        DEBUG_ASSERT(!fds->descriptors[newfd].ref);
 
 
-    __lock(&current_task->lock, {
+        __lock(&current_task->lock, {
 
-        __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        
-            current_task->fd->descriptors[newfd].ref = current_task->fd->descriptors[fd].ref;
-            current_task->fd->descriptors[newfd].flags = current_task->fd->descriptors[fd].flags;
+            __lock(&fds->descriptors[fd].ref->lock, {
+            
+                fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
+                fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
-            current_task->fd->descriptors[fd].ref->refcount++;
+                __atomic_add_fetch(&fds->descriptors[fd].ref->refcount, 1, __ATOMIC_SEQ_CST);
+
+            });
 
         });
-
+        
     });
-    
+
 
     return newfd;
 

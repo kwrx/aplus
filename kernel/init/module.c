@@ -130,7 +130,7 @@ void module_run(module_t* m) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
     kprintf("module: loading %s [addr(%p), size(0x%lX)]\n", m->name, m->core.ptr, m->core.size);
 #endif
 
@@ -159,24 +159,32 @@ void module_run(module_t* m) {
             break;
 
 
-        if(strchr(m->deps, ',') == NULL)
+        if(strchr(m->deps, ',') == NULL) {
+          
             module_run(find(m->deps));
 
-        else {
+        } else {
 
             int i = 0;
+
             for(char* s = strchr(m->deps, ','); s; s = strchr(++s, ','))
                 i++;
+
 
             module_t* deps[i + 1];
 
             i = 0;
-            for(char* s = strtok((char*) m->deps, ","); s; s = strtok(NULL, ","))
+
+
+            char* tok = (char*) m->deps;
+
+            for(char* s = strtok_r((char*) m->deps, ",", &tok); s; s = strtok_r(NULL, ",", &tok))
                 deps[i++] = find(s);
 
-            while(i)
+            while(i) {
                 module_run(deps[--i]);
-            
+            }
+
         }
 
     } while(0);
@@ -184,8 +192,7 @@ void module_run(module_t* m) {
 
 
 
-    int i;
-    for(i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
+    for(Elf_Xword i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
 
         #define syname(p) \
             ((const char*) ((uintptr_t) m->exe.header + m->exe.strtab->sh_offset + p))
@@ -226,7 +233,7 @@ void module_run(module_t* m) {
 
 
     /* SHT_REL */
-    for(int i = 1; i < m->exe.header->e_shnum; i++) {
+    for(Elf_Half i = 1; i < m->exe.header->e_shnum; i++) {
 
         if(m->exe.section[i].sh_type != SHT_REL)
             continue;
@@ -235,8 +242,7 @@ void module_run(module_t* m) {
         Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
 
-        int j;
-        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+        for(Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
             Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
             Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
@@ -245,10 +251,12 @@ void module_run(module_t* m) {
             #define A ((Elf_Addr) *obj)
             #define P ((Elf_Addr) obj)
             #define S ((Elf_Addr) sym->st_value)
+            #define L ((Elf_Addr) sym->st_value)
+            #define Z ((Elf_Addr) sym->st_size)
             #define B ((Elf_Addr) m->core.ptr)
             
-            #define _(x, y) \
-                case x: { *obj = y; } break;
+            #define _(x, y, z)  \
+                case x: { *(z*) (obj) = (z) (y); } break;
 
 
 
@@ -260,18 +268,22 @@ void module_run(module_t* m) {
                 case R_386_COPY:
                     break;
 
-                _(R_386_32,         S + A       )
-                _(R_386_PC32,       S + A - P   )
-                _(R_386_GLOB_DAT,   S           )
-                _(R_386_JMP_SLOT,   S           )            
-                _(R_386_RELATIVE,   B + A       )
-/*
-                _(R_386_GOT32,      G + A - P   )
-                _(R_386_PLT32,      L + A - P   )
-                _(R_386_GOTOFF,     S + A - GOT )
-                _(R_386_GOTPC,      GOT + A - P )
-                _(R_386_SIZE32,     Z + A       )
-*/
+                _(R_386_32,         S + A       , Elf_Word  )
+                _(R_386_PC32,       S + A - P   , Elf_Word  )
+                _(R_386_GLOB_DAT,   S           , Elf_Word  )
+                _(R_386_JMP_SLOT,   S           , Elf_Word  )            
+                _(R_386_RELATIVE,   B + A       , Elf_Word  )
+                // _(R_386_PLT32,      L + A - P   , Elf_Word  )
+                _(R_386_16,         S + A       , Elf_Half  )
+                _(R_386_PC16,       S + A - P   , Elf_Half  )
+                _(R_386_8,          S + A       , Elf_Byte  )
+                _(R_386_PC8,        S + A - P   , Elf_Byte  )
+                // _(R_386_32PLT,      L + A       , Elf_Word  )
+                _(R_386_SIZE32,     Z + A       , Elf_Word  )
+                // _(R_386_GOT32,      G + A - P   , Elf_Word  )
+                // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
+                // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
+
 #endif
 
 #if defined(__x86_64__)
@@ -280,27 +292,25 @@ void module_run(module_t* m) {
                 case R_X86_64_COPY:
                     break;
 
-                _(R_X86_64_64,          S + A       )
-                _(R_X86_64_PC32,        S + A - P   )
-                _(R_X86_64_GLOB_DAT,    S           )
-                _(R_X86_64_JUMP_SLOT,   S           )             
-                _(R_X86_64_RELATIVE,    B + A       )
-                _(R_X86_64_32,          S + A       )
-                _(R_X86_64_32S,         S + A       )
-                _(R_X86_64_16,          S + A       )
-                _(R_X86_64_PC16,        S + A - P   )
-                _(R_X86_64_8,           S + A       )
-                _(R_X86_64_PC8,         S + A - P   )
-                _(R_X86_64_PC64,        S + A - P   )
-/*
-                _(R_X86_64_GOT32,       G + A       )
-                _(R_X86_64_PLT32,       L + A - P   )
-                _(R_X86_64_GOTOFF64,    S + A - GOT )
-                _(R_X86_64_GOTPC32,     GOT + A + P )             
-                _(R_X86_64_SIZE32,      Z + A       )             
-                _(R_X86_64_SIZE64,      Z + A       )             
-                _(R_X86_64_GOTPCREL,    G + GOT + A - P)
-*/
+                _(R_X86_64_64,          S + A       , Elf_Xword )
+                _(R_X86_64_PC32,        S + A - P   , Elf_Word  )
+                _(R_X86_64_GLOB_DAT,    S           , Elf_Xword )
+                _(R_X86_64_JUMP_SLOT,   S           , Elf_Xword )             
+                _(R_X86_64_RELATIVE,    B + A       , Elf_Xword )
+                _(R_X86_64_32,          S + A       , Elf_Word  )
+                _(R_X86_64_32S,         S + A       , Elf_Sword )
+                _(R_X86_64_16,          S + A       , Elf_Half  )
+                _(R_X86_64_PC16,        S + A - P   , Elf_Half  )
+                _(R_X86_64_8,           S + A       , Elf_Byte  )
+                _(R_X86_64_PC8,         S + A - P   , Elf_Byte  )
+                _(R_X86_64_PC64,        S + A - P   , Elf_Xword )
+                // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
+                _(R_X86_64_SIZE32,      Z + A       , Elf_Word  )             
+                _(R_X86_64_SIZE64,      Z + A       , Elf_Xword )
+                // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
+                // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
+                // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  )             
+                // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
 #endif
 
                 default:
@@ -313,7 +323,10 @@ void module_run(module_t* m) {
             #undef B
             #undef P
             #undef S
+            #undef Z
+            #undef L
             #undef _
+
         }
     }
 
@@ -329,8 +342,7 @@ void module_run(module_t* m) {
         Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
     
 
-        int j;
-        for(j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+        for(Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
             Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
             Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
@@ -339,10 +351,12 @@ void module_run(module_t* m) {
             #define A ((Elf_Addr) r[j].r_addend)
             #define P ((Elf_Addr) obj)
             #define S ((Elf_Addr) sym->st_value)
+            #define L ((Elf_Addr) sym->st_value)
+            #define Z ((Elf_Addr) sym->st_size)
             #define B ((Elf_Addr) m->core.ptr)
             
-            #define _(x, y) \
-                case x: { *obj = y; } break;
+            #define _(x, y, z) \
+                case x: { *(z*) (obj) = (z) (y); } break;
 
 
 
@@ -354,18 +368,20 @@ void module_run(module_t* m) {
                 case R_386_COPY:
                     break;
 
-                _(R_386_32,         S + A       )
-                _(R_386_PC32,       S + A - P   )
-                _(R_386_GLOB_DAT,   S           )
-                _(R_386_JMP_SLOT,   S           )            
-                _(R_386_RELATIVE,   B + A       )
-/*
-                _(R_386_GOT32,      G + A - P   )
-                _(R_386_PLT32,      L + A - P   )
-                _(R_386_GOTOFF,     S + A - GOT )
-                _(R_386_GOTPC,      GOT + A - P )
-                _(R_386_SIZE32,     Z + A       )
-*/
+                _(R_386_32,         S + A       , Elf_Word  )
+                _(R_386_PC32,       S + A - P   , Elf_Word  )
+                _(R_386_GLOB_DAT,   S           , Elf_Word  )
+                _(R_386_JMP_SLOT,   S           , Elf_Word  )            
+                _(R_386_RELATIVE,   B + A       , Elf_Word  )
+                // _(R_386_PLT32,      L + A - P   , Elf_Word  )
+                _(R_386_16,         S + A       , Elf_Half  )
+                _(R_386_PC16,       S + A - P   , Elf_Half  )
+                _(R_386_8,          S + A       , Elf_Byte  )
+                _(R_386_PC8,        S + A - P   , Elf_Byte  )
+                _(R_386_SIZE32,     Z + A       , Elf_Word  )
+                // _(R_386_GOT32,      G + A - P   , Elf_Word  )
+                // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
+                // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
 #endif
 
 #if defined(__x86_64__)
@@ -374,27 +390,25 @@ void module_run(module_t* m) {
                 case R_X86_64_COPY:
                     break;
 
-                _(R_X86_64_64,          S + A       )
-                _(R_X86_64_PC32,        S + A - P   )
-                _(R_X86_64_GLOB_DAT,    S           )
-                _(R_X86_64_JUMP_SLOT,   S           )             
-                _(R_X86_64_RELATIVE,    B + A       )
-                _(R_X86_64_32,          S + A       )
-                _(R_X86_64_32S,         S + A       )
-                _(R_X86_64_16,          S + A       )
-                _(R_X86_64_PC16,        S + A - P   )
-                _(R_X86_64_8,           S + A       )
-                _(R_X86_64_PC8,         S + A - P   )
-                _(R_X86_64_PC64,        S + A - P   )
-/*
-                _(R_X86_64_GOT32,       G + A       )
-                _(R_X86_64_PLT32,       L + A - P   )
-                _(R_X86_64_GOTOFF64,    S + A - GOT )
-                _(R_X86_64_GOTPC32,     GOT + A + P )             
-                _(R_X86_64_SIZE32,      Z + A       )             
-                _(R_X86_64_SIZE64,      Z + A       )             
-                _(R_X86_64_GOTPCREL,    G + GOT + A - P)
-*/
+                _(R_X86_64_64,          S + A       , Elf_Xword )
+                _(R_X86_64_PC32,        S + A - P   , Elf_Word  )
+                _(R_X86_64_GLOB_DAT,    S           , Elf_Xword )
+                _(R_X86_64_JUMP_SLOT,   S           , Elf_Xword )             
+                _(R_X86_64_RELATIVE,    B + A       , Elf_Xword )
+                _(R_X86_64_32,          S + A       , Elf_Word  )
+                _(R_X86_64_32S,         S + A       , Elf_Sword )
+                _(R_X86_64_16,          S + A       , Elf_Half  )
+                _(R_X86_64_PC16,        S + A - P   , Elf_Half  )
+                _(R_X86_64_8,           S + A       , Elf_Byte  )
+                _(R_X86_64_PC8,         S + A - P   , Elf_Byte  )
+                _(R_X86_64_PC64,        S + A - P   , Elf_Xword )
+                // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
+                _(R_X86_64_SIZE32,      Z + A       , Elf_Word  )            
+                _(R_X86_64_SIZE64,      Z + A       , Elf_Xword ) 
+                // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
+                // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
+                // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  ) 
+                // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
 #endif
 
                 default:
@@ -407,12 +421,15 @@ void module_run(module_t* m) {
             #undef B
             #undef P
             #undef S
+            #undef Z
+            #undef L
             #undef _
+
         }
     }
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("module: running %s [init(%p) args(%p)]\n", m->name, m->init, m->args);
 #endif
 
@@ -430,8 +447,19 @@ void module_init(void) {
     memset(&m_symtab, 0, sizeof(m_symtab));
 
 
-    int i;
-    for(i = 0; i < core->modules.count; i++) {
+    for(size_t i = 0; i < core->modules.count; i++) {
+        
+
+        if(unlikely(core->modules.ko[i].ptr == 0))
+            continue;
+
+        if(unlikely(core->modules.ko[i].size == 0))
+            continue;
+
+        if(unlikely(strstr(core->modules.ko[i].cmdline, "type=module") == NULL))
+            continue;
+        
+
 
         module_t* m = (module_t*) kcalloc(1, sizeof(module_t), GFP_KERNEL);
 
@@ -453,8 +481,7 @@ void module_init(void) {
         DEBUG_ASSERT(m->exe.shstrtab);
 
 
-        int j;
-        for(j = 1; j < m->exe.header->e_shnum; j++) {
+        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
 
             #define syname(p) \
                 ((const char*) ((uintptr_t) m->exe.header + m->exe.shstrtab->sh_offset + p))
@@ -466,7 +493,8 @@ void module_init(void) {
             if(strcmp(syname(m->exe.section[j].sh_name), ".module_deps") == 0)
                 m->deps = (const char*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset);
 
-            #undef syname           
+
+            #undef syname
 
         }
 
@@ -475,7 +503,7 @@ void module_init(void) {
 
 
 
-        for(int j = 1; j < m->exe.header->e_shnum; j++) {
+        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
 
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNAMIC);
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNSYM);
@@ -495,7 +523,7 @@ void module_init(void) {
         m->core.ptr = (void*) kmalloc(m->core.size, GFP_KERNEL);
         
 
-        for(int j = 1; j < m->exe.header->e_shnum; j++) {
+        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
             
             if(m->exe.section[j].sh_type == SHT_SYMTAB) {
                 m->exe.symtab = &m->exe.section[j];
@@ -511,6 +539,9 @@ void module_init(void) {
                 
                 case SHT_PROGBITS:
 
+                    if(m->exe.section[j].sh_size == 0)
+                        break;
+
                     memcpy (
                         (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
                         (void*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset),
@@ -521,6 +552,9 @@ void module_init(void) {
 
                 case SHT_NOBITS:
 
+                    if(m->exe.section[j].sh_size == 0)
+                        break;
+
                     memset (
                         (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
                         0,
@@ -530,7 +564,10 @@ void module_init(void) {
                     break;
 
                 default:
+
                     kpanicf("module: PANIC! invalid section type for %s: %d\n", m->name, m->exe.section[j].sh_type);
+
+                    break;
 
             }
 
@@ -545,17 +582,22 @@ void module_init(void) {
         m->args = (const char*) &core->modules.ko[i].cmdline;
 
 
-        list_each(m_queue, v)
-            if(strcmp(m->name, v->name) == 0)
-                kpanicf("module: PANIC! duplicate name '%s'\n", m->name);
+        list_each(m_queue, v) {
+
+            if(strcmp(m->name, v->name) == 0) {
+                kpanicf("module: PANIC! duplicated name '%s'\n", m->name);
+            }
+
+        }
 
         list_push(m_queue, m);
 
     }
 
 
-    list_each(m_queue, m)
+    list_each(m_queue, m) {
         module_run(m);
+    }
 
 }
 

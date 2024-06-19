@@ -34,6 +34,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
 
 /***
  * Name:        socket
@@ -51,5 +55,18 @@
 
 SYSCALL(41, socket,
 long sys_socket (int domain, int type, int protocol) {
+    
+#if defined(CONFIG_HAVE_NETWORK)
+
+    ssize_t e;
+
+    if((e = lwip_socket(domain, type, protocol)) < 0)
+        return -errno;
+    
+    return NETWORK_FD(e);
+
+#else
     return -ENOSYS;
+#endif
+
 });

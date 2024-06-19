@@ -54,7 +54,7 @@
 extern char* hostname;
 
 
-semaphore_t tcpip_done;
+semaphore_t tcpip_done = { 0 };
 
 
 static void tcpip_init_done(void* arg) {
@@ -63,19 +63,21 @@ static void tcpip_init_done(void* arg) {
 
 
     struct netif* lo = netif_find("lo0");
+
     if(likely(lo)) {
+
         netif_set_up(lo);
         netif_set_default(lo);
-    } else
-        kprintf("netif: WARN! Loopback interface not found\n");
 
+    } else {
+        kpanicf("network: unable to find loopback interface\n");
+    }
 
 
     ip_addr_t* dns = (ip_addr_t*) arg;
 
     dns_setserver(0, &dns[0]);
     dns_setserver(1, &dns[1]);
-
 
     sem_post(&tcpip_done);
 
@@ -87,10 +89,10 @@ void network_init() {
     sem_init(&tcpip_done, 0);
 
     ip_addr_t dns[2];
-    IP_ADDR4(&dns[0], 8, 8, 8, 8);
-    IP_ADDR4(&dns[1], 8, 8, 4, 4);
+    IP_ADDR4(&dns[0], 1, 1, 1, 1);
+    IP_ADDR4(&dns[1], 1, 0, 0, 1);
 
-
+#if DEBUG_LEVEL_INFO
     kprintf("network: host(%s) lwip(%s) dns1(%d.%d.%d.%d) dns2(%d.%d.%d.%d)\n", 
         hostname,
         LWIP_VERSION_STRING,
@@ -103,9 +105,12 @@ void network_init() {
         (dns[1].u_addr.ip4.addr >> 16) & 0xFF,
         (dns[1].u_addr.ip4.addr >> 24) & 0xFF
     );
+#endif
 
-    
+
     tcpip_init(&tcpip_init_done, &dns);
+
+
     sem_wait(&tcpip_done);
 
     kprintf("network: up!\n");

@@ -49,5 +49,17 @@
 
 SYSCALL(95, umask,
 long sys_umask (int mask) {
-    return -ENOSYS;
+    
+    DEBUG_ASSERT(current_task);
+
+
+    mode_t old;
+    
+    shared_ptr_access(current_task->fs, fs, {
+        old = fs->umask;
+        fs->umask = mask & 0777;
+    });
+
+    return old;
+
 });

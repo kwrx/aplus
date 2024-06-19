@@ -70,7 +70,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
     dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
-    dir->sb->fsid = TMPFS_ID;
+    dir->sb->fsid = FSID_TMPFS;
     dir->sb->dev = dev;
     dir->sb->root = dir;
     dir->sb->flags = flags;
@@ -78,38 +78,40 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     dir->sb->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
 
-    dir->sb->st.f_bsize = 1;
-    dir->sb->st.f_frsize = 1;
-    dir->sb->st.f_blocks = TMPFS_SIZE_MAX;
-    dir->sb->st.f_bfree = TMPFS_SIZE_MAX;
-    dir->sb->st.f_bavail = TMPFS_SIZE_MAX;
-    dir->sb->st.f_files = 0;
-    dir->sb->st.f_ffree = TMPFS_NODES_MAX;
-    dir->sb->st.f_favail = TMPFS_NODES_MAX;
-    dir->sb->st.f_flag = ST_SYNCHRONOUS | ST_NODEV | stflags;
-    dir->sb->st.f_fsid = TMPFS_ID;
+    dir->sb->st.f_bsize   = 1;
+    dir->sb->st.f_frsize  = 1;
+    dir->sb->st.f_blocks  = pmm_get_total_memory();
+    dir->sb->st.f_bfree   = pmm_get_total_memory();
+    dir->sb->st.f_bavail  = pmm_get_total_memory();
+    dir->sb->st.f_files   = 0;
+    dir->sb->st.f_ffree   = TMPFS_NODES_MAX;
+    dir->sb->st.f_favail  = TMPFS_NODES_MAX;
+    dir->sb->st.f_flag    = ST_SYNCHRONOUS | ST_NODEV | stflags;
+    dir->sb->st.f_fsid    = FSID_TMPFS;
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
 
     dir->sb->ops.getattr = tmpfs_getattr;
     dir->sb->ops.setattr = tmpfs_setattr;
-    dir->sb->ops.creat = tmpfs_creat;
+    dir->sb->ops.creat   = tmpfs_creat;
     dir->sb->ops.finddir = tmpfs_finddir;
     dir->sb->ops.readdir = tmpfs_readdir;
-    dir->sb->ops.rename = tmpfs_rename;
+    dir->sb->ops.rename  = tmpfs_rename;
     dir->sb->ops.symlink = tmpfs_symlink;
-    dir->sb->ops.unlink = tmpfs_unlink;
+    dir->sb->ops.unlink  = tmpfs_unlink;
 
 
 
-    struct vfs_cache_ops ops;
-    ops.flush = tmpfs_cache_flush;
-    ops.load  = tmpfs_cache_load;
+    struct cache_ops ops;
+    ops.fetch   = (cache_fetch_handler_t) tmpfs_cache_fetch;
+    ops.commit  = (cache_commit_handler_t) tmpfs_cache_commit;
+    ops.release = (cache_release_handler_t) tmpfs_cache_release;
 
-    vfs_cache_create(&dir->sb->cache, &ops, TMPFS_NODES_MAX, NULL);
+    cache_init(&dir->sb->cache, &ops, SIZE_MAX, dir->sb->fsinfo);
 
 
     dir->sb->ino = dir->ino;
 
     return 0;
+    
 }

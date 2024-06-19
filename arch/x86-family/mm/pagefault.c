@@ -38,17 +38,18 @@
 #include <arch/x86/intr.h>
 
 
+__nonnull(1)
 void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
 
     #define PFE(reason, entry)  \
         { kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d) entry(0x%lX): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, entry, reason); goto pfe; }
 
 #else
 
-    #define PFE(reason)         \
+    #define PFE(reason, entry)  \
         { goto pfe; }
 
 #endif
@@ -154,7 +155,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
             //! Handle Copy on Write
 
-            uintptr_t page = __alloc_page(pagesize, 0);
+            uintptr_t page = __alloc_frame(pagesize, false);
 
             if((*d & X86_MMU_ADDRESS_MASK) != 0) {
 
@@ -182,7 +183,7 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     current_task->rusage.ru_majflt++;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
@@ -191,6 +192,8 @@ void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 pfe:
+
+    // TODO: implement segmentation fault for user space processes
 
     kpanicf("x86-pfe: PANIC! cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",
         cr2, 
@@ -210,14 +213,14 @@ pfe:
         frame->si,
         frame->di,
         frame->errno,
-        frame->errno & X86_PF_P   ? "P"   : "NP",
-        frame->errno & X86_PF_W   ? "W"   : "R",
-        frame->errno & X86_PF_U   ? "U"   : "-",
-        frame->errno & X86_PF_R   ? "R"   : "-",
-        frame->errno & X86_PF_I   ? "I"   : "-",
-        frame->errno & X86_PF_PK  ? "PK"  : "-",
-        frame->errno & X86_PF_SS  ? "SS"  : "-",
-        frame->errno & X86_PF_SGX ? "SGX" : "-"
+        frame->errno & X86_PF_P   ? "P"   : "NP",   // Page present/not present
+        frame->errno & X86_PF_W   ? "W"   : "R",    // Write/Read
+        frame->errno & X86_PF_U   ? "U"   : "-",    // User/Supervisor
+        frame->errno & X86_PF_R   ? "R"   : "-",    // Reserved bit
+        frame->errno & X86_PF_I   ? "I"   : "-",    // Instruction fetch
+        frame->errno & X86_PF_PK  ? "PK"  : "-",    // Protection key
+        frame->errno & X86_PF_SS  ? "SS"  : "-",    // Shadow stack
+        frame->errno & X86_PF_SGX ? "SGX" : "-"     // SGX
     );
 
 

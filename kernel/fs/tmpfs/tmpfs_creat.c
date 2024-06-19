@@ -40,25 +40,26 @@ inode_t* tmpfs_creat(inode_t* inode, const char * name, mode_t mode) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
     DEBUG_ASSERT(name);
     
 
     static ino_t next_ino = 1;
 
-
-    if(inode->sb->st.f_ffree == 0)
+    if(unlikely(inode->sb->st.f_ffree == 0)) {
         return errno = ENOSPC, NULL;
+    }
 
-    
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, ++next_ino);
+    tmpfs_inode_t* i = (tmpfs_inode_t*) cache_get(&inode->sb->cache, ++next_ino);
 
     i->capacity = 0;
     i->data = NULL;
-    i->st.st_mode = mode & ~current_task->fs->umask;
-    
 
+    shared_ptr_access(current_task->fs, fs, {
+        i->st.st_mode = mode & ~fs->umask;
+    });
+    
 
     inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 

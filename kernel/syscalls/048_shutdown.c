@@ -34,6 +34,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#if defined(CONFIG_HAVE_NETWORK)
+#include <aplus/network.h>
+#endif
+
 
 /***
  * Name:        shutdown
@@ -50,5 +54,22 @@
 
 SYSCALL(48, shutdown,
 long sys_shutdown (int fd, int flags) {
+
+#if defined(CONFIG_HAVE_NETWORK)
+
+    if(unlikely(!NETWORK_IS_SOCKFD(fd)))
+        return -ENOTSOCK;
+    
+
+    ssize_t e;
+
+    if((e = lwip_shutdown(NETWORK_SOCKFD(fd), flags)) < 0)
+        return -errno;
+
+    return e;
+
+#else
     return -ENOSYS;
+#endif
+
 });

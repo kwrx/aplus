@@ -99,7 +99,7 @@ int ringbuffer_is_empty(ringbuffer_t* rb) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
-    return (!rb->full & (rb->head == rb->tail));
+    return (!rb->full && (rb->head == rb->tail));
 
 }
 
@@ -136,71 +136,92 @@ size_t ringbuffer_writeable(ringbuffer_t* rb) {
 }
 
 
-int ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
+ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
 
-    if(ringbuffer_writeable(rb) < size)
-        return errno = EINTR, -1;
+    ssize_t e = -1;
+
+    __lock(&rb->lock, {
+
+        if(unlikely(rb->buffer == NULL)) {
+
+            errno = EIO;
+
+        } else {
 
 
-    size_t i;
+            if(ringbuffer_writeable(rb) < size) {
+                
+                errno = EINTR;
+            
+            } else {
 
-    for(i = 0; i < size; i++) {
+                for(size_t i = 0; i < size; i++) {
+                    
+                    rb->buffer[rb->head] = ((uint8_t*) buf) [i];
 
-        if(ringbuffer_is_full(rb))
-            break;
+                    rb->head = (rb->head + 1) % rb->size;
+                    rb->full = (rb->head == rb->tail);
 
+                }
 
-        __lock(&rb->lock, {
-        
-            rb->buffer[rb->head] = ((uint8_t*) buf) [i];
+                e = size;
 
-            rb->head = (rb->head + 1) % rb->size;
-            rb->full = (rb->head == rb->tail);
+            }
 
-        });
+        }
 
-    }
+    });
 
-
-    return i;
+    return e;
 
 }
 
 
-int ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
+ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
 
-    if(ringbuffer_is_empty(rb))
-        return errno = EINTR, -1;
-    
+    ssize_t e = -1;
+        
+    __lock(&rb->lock, {
 
-    size_t i;
+        if(unlikely(rb->buffer == NULL)) {
 
-    for(i = 0; i < size; i++) {
+            errno = EIO;
 
-        if(ringbuffer_is_empty(rb))
-            break;
+        } else {
 
-    
-        __lock(&rb->lock, {
+            if(ringbuffer_is_empty(rb)) {
 
-            ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
+                errno = EINTR;
+            
+            } else {
 
-            rb->full = 0;
-            rb->tail = (rb->tail + 1) % rb->size;
+                size_t i = 0;
 
-        });
+                for(; i < size && !ringbuffer_is_empty(rb); i++) {        
 
-    }
+                    ((uint8_t*) buf) [i] = rb->buffer[rb->tail];
 
+                    rb->full = 0;
+                    rb->tail = (rb->tail + 1) % rb->size;
 
-    return i;
+                }
+
+                e = i;
+
+            }
+
+        }
+
+    });
+
+    return e;
 
 }

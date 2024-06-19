@@ -23,6 +23,22 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
  */
 
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/hal.h>
 
-char __hostname[] = "kwrx";
+
+char __hostname[CONFIG_NAME_MAX] = "kwrx\0";
 char * hostname = &__hostname[0];
+
+
+TEST(hostname_test, {
+
+    long r = arch_syscall2(170, (long) "hostname-test", 13);
+
+    DEBUG_ASSERT(r == 0);
+    DEBUG_ASSERT(strcmp(hostname, "hostname-test") == 0);
+
+    strcpy(hostname, "kwrx");
+
+});

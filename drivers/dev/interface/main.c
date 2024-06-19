@@ -41,6 +41,8 @@
 #include <dev/block.h>
 #include <dev/video.h>
 
+#include <sys/sysmacros.h>
+
 
 
 MODULE_NAME("dev/interface");
@@ -53,13 +55,11 @@ MODULE_LICENSE("GPL");
 static list(device_t*, devices);
 
 
-
 static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
     
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
-    DEBUG_ASSERT(size);
-
 
 
     device_t* device = (device_t*) inode->userdata;
@@ -84,8 +84,8 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
     }
 
-
     kpanicf("device::read: unknown device type %d for /dev/%s\n", device->type, inode->name);
+
 }
 
 
@@ -93,8 +93,8 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t size) {
     
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
-    DEBUG_ASSERT(size);
 
 
     device_t* device = (device_t*) inode->userdata;
@@ -119,7 +119,6 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
 
     }
 
-
     kpanicf("device::write: unknown device type %d for /dev/%s\n", device->type, inode->name);
 
 }
@@ -129,7 +128,7 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
 static int device_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(arg);
+    DEBUG_ASSERT(inode->userdata);
 
 
     device_t* device = (device_t*) inode->userdata;
@@ -151,10 +150,11 @@ static int device_ioctl(inode_t* inode, long req, void* arg) {
 
         case DEVICE_TYPE_NETWORK:
             return errno = ENOSYS, -1;
+
     }
 
-
     kpanicf("device::ioctl: unknown device type %d for /dev/%s\n", device->type, inode->name);
+
 }
 
 
@@ -162,6 +162,7 @@ static int device_ioctl(inode_t* inode, long req, void* arg) {
 static int device_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
 
 
     device_t* device = (device_t*) inode->userdata;
@@ -186,11 +187,43 @@ static int device_fsync(inode_t* inode, int datasync) {
 
     }
 
-
     kpanicf("device::fsync: unknown device type %d for /dev/%s\n", device->type, inode->name);
+
 }
 
 
+static int device_getattr(inode_t* inode, struct stat* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+    DEBUG_ASSERT(st);
+
+
+    device_t* device = (device_t*) inode->userdata;
+
+    if(device->status != DEVICE_STATUS_READY)
+        return errno = EBUSY, -1;
+
+
+    switch(device->type) {
+        
+        case DEVICE_TYPE_CHAR:
+            return char_getattr(device, st);
+
+        case DEVICE_TYPE_BLOCK:
+            return block_getattr(device, st);
+
+        case DEVICE_TYPE_VIDEO:
+            return video_getattr(device, st);
+
+        case DEVICE_TYPE_NETWORK:
+            return errno = ENOSYS, -1;
+
+    }
+
+    kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
+
+}
 
 
 
@@ -233,32 +266,60 @@ void device_mkdev(device_t* device, mode_t mode) {
     }
 
 
-    if(likely(device->init))
+    if(likely(device->init)) {
         device->init(device);
+    }
 
-    if(unlikely(device->status == DEVICE_STATUS_FAILED))
+    if(unlikely(device->status == DEVICE_STATUS_FAILED)) {
         kpanicf("device::create: fail on loading %s\n", device->name);
+    }
 
     device->status = DEVICE_STATUS_READY;
 
 
 
     char buf[CONFIG_MAXNAMLEN] = { 0 };
-    strcpy(buf, "/dev/");
-    strcat(buf, device->name);
+    strlcat(buf, "/dev/", CONFIG_MAXNAMLEN);
+    strlcat(buf, device->name, CONFIG_MAXNAMLEN);
 
 
-    int fd = sys_creat(buf, mode | (device->type == DEVICE_TYPE_BLOCK ? S_IFBLK : S_IFCHR));
+    switch(device->type) {
 
-    if(unlikely(fd < 0))
+        case DEVICE_TYPE_CHAR:
+        case DEVICE_TYPE_VIDEO:
+        case DEVICE_TYPE_NETWORK:
+
+            mode |= S_IFCHR;
+            break;
+
+        case DEVICE_TYPE_BLOCK:
+
+            mode |= S_IFBLK;
+            break;
+
+    }
+
+
+    int fd = sys_creat(buf, mode);
+
+    if(unlikely(fd < 0)) {
         kpanicf("device::create: failed, device already exists: %s\n", buf);
+    }
 
+
+    inode_t* i = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+
+        i = fds->descriptors[fd].ref->inode;
     
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
+    });
 
-    inode_t* i = current_task->fd->descriptors[fd].ref->inode;
-
+    DEBUG_ASSERT(i);
+    
 
     if(unlikely(sys_close(fd) < 0))
         kpanicf("device::create: failed, could not close device descriptor: %s\n", buf);
@@ -267,12 +328,31 @@ void device_mkdev(device_t* device, mode_t mode) {
        
     i->userdata = (void*) device;
 
-    i->ops.write = device_write;
-    i->ops.read  = device_read;
-    i->ops.ioctl = device_ioctl;
-    i->ops.fsync = device_fsync;
+    i->ops.getattr  = device_getattr;
+    i->ops.write    = device_write;
+    i->ops.read     = device_read;
+    i->ops.ioctl    = device_ioctl;
+    i->ops.fsync    = device_fsync;
+
+    i->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
+    
     
     device->inode = i;
+
+
+
+    struct stat st;
+
+    if(vfs_getattr(i, &st) < 0)
+        kpanicf("device::create: failed, could not get device attributes: %s\n", buf);
+
+    st.st_dev  = makedev(device->major, device->minor);
+    st.st_rdev = st.st_dev;
+
+    if(vfs_setattr(i, &st) < 0)
+        kpanicf("device::create: failed, could not set device attributes: %s\n", buf);
+
+    
 
 
     switch(device->type) {
@@ -283,7 +363,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
         case DEVICE_TYPE_BLOCK:
 
-            block_inode(device, i, device_mkdev);
+            block_parse_partitions(device, i, device_mkdev);
             break;
 
         case DEVICE_TYPE_VIDEO:
@@ -301,7 +381,7 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
     kprintf("device::create: initialized '%s' dev(%x:%x) iobase(%p) mmiobase(%p): '%s'\n",
         device->name, 
         device->major, 
@@ -317,15 +397,19 @@ void device_mkdev(device_t* device, mode_t mode) {
 
 
 void device_unlink(device_t* device) {
+    
     DEBUG_ASSERT(device);
+
 
     device->status = DEVICE_STATUS_UNLOADING;
 
-    if(likely(device->dnit))
+    if(likely(device->dnit)) {
         device->dnit(device);
+    }
 
 
     switch(device->type) {
+
         case DEVICE_TYPE_CHAR:
             
             char_dnit(device);
@@ -341,6 +425,10 @@ void device_unlink(device_t* device) {
             video_dnit(device);
             break;
 
+        case DEVICE_TYPE_NETWORK:
+            
+            break;
+
         default:
             kpanicf("device::unlink: failed, unknown device %s type %d\n", device->name, device->type);
     }
@@ -350,12 +438,13 @@ void device_unlink(device_t* device) {
 
 
     char buf[CONFIG_MAXNAMLEN] = { 0 };
-    strcpy(buf, "/dev/");
-    strcpy(buf, device->name);
+    strlcat(buf, "/dev/", CONFIG_MAXNAMLEN);
+    strlcat(buf, device->name, CONFIG_MAXNAMLEN);
 
-    if(sys_unlink(buf) < 0)
+    if(sys_unlink(buf) < 0) {
         kpanicf("device::unlink: failed to remove device inode\n");
-
+    }
+    
     list_remove(devices, device);
 
 }
@@ -404,15 +493,17 @@ void init(const char* args) {
     memset(&devices, 0, sizeof(devices));
 
     int e;
-    if((e = sys_mkdir("/dev", S_IFDIR | 0666)) < 0)
+    if((e = sys_mkdir("/dev", S_IFDIR | 0666)) < 0) {
         kpanicf("dev: could not create /dev directory: errno(%s)\n", strerror(-e));
+    }
 
 }
 
 
 void dnit(void) {
 
-    list_each(devices, d)
+    list_each(devices, d) {
         device_unlink(d);
+    }
 
 }

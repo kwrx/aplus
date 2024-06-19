@@ -47,7 +47,14 @@ static uint16_t com_address = 0;
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
+
+#include "debug/font_8x16.c.in"
+
+#define X86_VGA_WIDTH               ( 8)
+#define X86_VGA_HEIGHT              (16)
+
 static uint16_t vga_offset = 0;
+
 #endif
 
 
@@ -59,7 +66,7 @@ static uint16_t vga_offset = 0;
 void arch_debug_init(void) {
 
 #if defined(CONFIG_X86_HAVE_SMBIOS)
-    uint16_t* p = (uint16_t*) (KERNEL_HIGH_AREA + BIOS_COM_ADDRESS);
+    uint16_t* p = (uint16_t*) (KERNEL_HEAP_AREA + BIOS_COM_ADDRESS);
 #else
     uint16_t p[] = { COM1_DEFAULT_PORT, COM2_DEFAULT_PORT, COM3_DEFAULT_PORT, COM4_DEFAULT_PORT };
 #endif
@@ -84,12 +91,18 @@ void arch_debug_init(void) {
     }
 
 
+    if(com_address == 0)
+        return;
+
+    arch_debug_putc('\e');
+    arch_debug_putc('[');
+    arch_debug_putc('0');
+    arch_debug_putc('m');
+
+
+
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
-
-    vga_offset = 0;
-
-    memset((void*) (0xB8000), 0x00, 80 * 25 * sizeof(uint16_t));
-    
+    vga_offset  = 0;
 #endif
 
 }
@@ -101,56 +114,181 @@ void arch_debug_init(void) {
  * Wait and write a character on Serial Port.
  */
 void arch_debug_putc(char ch) {
+
+
+    #define com_wait() {                                                                \
+        for(int i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++) {       \
+            __builtin_ia32_pause();                                                     \
+        }                                                                               \
+    }
     
+
     if(likely(com_address)) {
 
-        int i;
-        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-            __builtin_ia32_pause();
+        com_wait();
+
+        if(unlikely(ch == '\n')) {
+
+            outb(com_address, '\r'); com_wait();
+            outb(com_address, '\n'); com_wait();
 
 
-        if(unlikely(ch == '\n'))
-            outb(com_address, '\r');
+#if defined(CONFIG_DEBUG_PRINT_TIMESTAMP)
+            // TODO: Print Timestamp on Debug Output
+#endif
 
-        outb(com_address, ch);
-
-
-        for(i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++)
-            __builtin_ia32_pause();
+        } else {
+                
+            outb(com_address, ch); com_wait();
+    
+        }
 
     }
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    if(unlikely(vga_offset >= 80 * 25)) {
+    #define X86_VGA_ROWS                (core->framebuffer.height / X86_VGA_HEIGHT)
+    #define X86_VGA_COLS                (core->framebuffer.width  / X86_VGA_WIDTH)
+    #define X86_VGA_ADDRESS             (core->framebuffer.address + KERNEL_HEAP_AREA)
+    #define X86_VGA_ENABLED             (core->framebuffer.address != 0)
 
-        memmove((void*) (0xB8000), (void*) (0xB8000 + 80), (80 * 24) * sizeof(uint16_t));
-        memset((void*) (0xB8000 + 80 * 24), 0x00, 80 * sizeof(uint16_t));
 
-        vga_offset -= 80;
+    if(likely(X86_VGA_ENABLED)) {
 
-    }
+        if(unlikely(vga_offset > (X86_VGA_COLS * X86_VGA_ROWS) - 1)) {
 
-    switch(ch) {
-        case '\r':
-            vga_offset -= vga_offset % 80;
-            break;
-        case '\n':
-            vga_offset += 80 - (vga_offset % 80);
-            break;
-        case '\v':
-            vga_offset += 80;
-            break;
-        case '\b':
-            vga_offset -= 1;
-            break;
-        case '\t':
-            vga_offset += 8 - (vga_offset % 8);
-            break;
-        default:
-            ((volatile uint16_t*) (0xB8000))[vga_offset++] = (0x07 << 8) | ch;
-            break;
+            memmove (
+                (void*)  (X86_VGA_ADDRESS),
+                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * X86_VGA_HEIGHT)), 
+                (size_t) (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)
+            );
+
+            memset (
+                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)),
+                0x00, 
+                (size_t) (core->framebuffer.pitch * X86_VGA_HEIGHT)
+            );
+
+            vga_offset -= X86_VGA_COLS;
+
+        }
+
+
+        switch(ch) {
+
+            case '\r':
+                vga_offset -= vga_offset % X86_VGA_COLS;
+                break;
+
+            case '\n':
+                vga_offset += X86_VGA_COLS - (vga_offset % X86_VGA_COLS);
+                break;
+
+            case '\v':
+                vga_offset += X86_VGA_COLS;
+                break;
+
+            case '\b':
+                vga_offset -= 1;
+                break;
+
+            case '\t':
+                vga_offset += 8 - (vga_offset % 8);
+                break;
+
+            default:
+                
+                for(int y = 0; y < X86_VGA_HEIGHT; y++) {
+
+                    uint8_t* ptr = (uint8_t*) (X86_VGA_ADDRESS);
+                    
+                    ptr += (vga_offset % X86_VGA_COLS) * X86_VGA_WIDTH * (core->framebuffer.depth / 8);
+                    ptr += (vga_offset / X86_VGA_COLS) * X86_VGA_HEIGHT * core->framebuffer.pitch;
+                    ptr += (y * core->framebuffer.pitch) ;
+
+                    for(int x = 0; x < X86_VGA_WIDTH; x++) {
+
+                        if(builtin_fontdata[(ch * X86_VGA_HEIGHT) + y] & (1 << (X86_VGA_WIDTH - x))) {
+
+                            switch(core->framebuffer.depth) {
+
+                                case 32:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    ptr[2] = 0xFF;
+                                    ptr[3] = 0xFF;
+                                    break;
+
+                                case 24:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    ptr[2] = 0xFF;
+                                    break;
+
+                                case 16:
+
+                                    ptr[0] = 0xFF;
+                                    ptr[1] = 0xFF;
+                                    break;
+
+                                case 8:
+
+                                    ptr[0] = 0xFF;
+                                    break;
+
+                            }
+
+
+                        } else {
+
+                            switch(core->framebuffer.depth) {
+
+                                case 32:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    ptr[2] = 0x00;
+                                    ptr[3] = 0xFF;
+                                    break;
+
+                                case 24:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    ptr[2] = 0x00;
+                                    break;
+
+                                case 16:
+
+                                    ptr[0] = 0x00;
+                                    ptr[1] = 0x00;
+                                    break;
+
+                                case 8:
+
+                                    ptr[0] = 0x00;
+                                    break;
+
+                            }
+
+
+                        }
+
+                        ptr += core->framebuffer.depth / 8;
+
+                    }
+
+                }
+
+                vga_offset += 1;
+
+                break;
+
+        }
+
     }
     
 #endif

@@ -60,10 +60,25 @@ uintptr_t pci_bar_size(pcidev_t device, int field, size_t size) {
 
     uintptr_t s = (~(pci_read(device, field, size)) + 1);
 
-
     pci_write(device, field, size, p);
+    
 
-    return (s & (((1ULL << (size << 3)) - 1)));
+    switch(size) {
+        case 8:
+            return s & 0xFFFFFFFFFFFFFFFF;
+        case 4:
+            return s & 0xFFFFFFFF;
+        case 2:
+            return s & 0xFFFF;
+        case 1:
+            return s & 0xFF;
+        default:
+            DEBUG_ASSERT(0 && "Bug: Invalid Size!");
+    }
+
+
+    kpanicf("pci_bar_size: Bug: Invalid Size!");
+
 }
 
 

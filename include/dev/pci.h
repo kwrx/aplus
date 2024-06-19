@@ -86,6 +86,12 @@ typedef uint32_t pcidev_t;
 #define PCI_TYPE_BRIDGE                 0x0604
 #define PCI_TYPE_SATA                   0x0106
 #define PCI_TYPE_VGA                    0x0300
+#define PCI_TYPE_ETHERNET               0x0200
+#define PCI_TYPE_USB                    0x0C03
+#define PCI_TYPE_SCSI                   0x0100
+#define PCI_TYPE_AUDIO                  0x0403
+
+
 
 #define PCI_ADDRESS_PORT                0xCF8
 #define PCI_VALUE_PORT                  0xCFC
@@ -137,7 +143,7 @@ typedef uint32_t pcidev_t;
 
 
 
-typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void * extra);
+typedef void (*pci_func_t)(uint32_t device, uint16_t vendor_id, uint16_t device_id, void* extra);
 
 __BEGIN_DECLS
 
@@ -219,7 +225,7 @@ int pci_msix_map_irq(pcidev_t, pci_msix_t*, pci_irq_handler_t, pci_irq_data_t, u
 int pci_msix_unmap_irq(pcidev_t, pci_msix_t*);
 
 /* INTx */
-int pci_intx_map_irq(irq_t, pcidev_t, pci_irq_handler_t, pci_irq_data_t);
+int pci_intx_map_irq(pcidev_t, irq_t, pci_irq_handler_t, pci_irq_data_t);
 int pci_intx_unmap_irq(pcidev_t);
 void pci_intx_mask(pcidev_t);
 void pci_intx_unmask(pcidev_t);

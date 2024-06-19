@@ -123,8 +123,9 @@ static void virtgpu_reset_framebuffer(device_t* device) {
     DEBUG_ASSERT(device->userdata);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_ERROR
 #   define __(cmd, args...) {                                       \
+        kprintf("virtio-gpu: " #cmd "\n");                          \
         int e;                                                      \
         if((e = cmd(args)) < 0) {                                   \
             kprintf("virtio-gpu: ERROR! %s failed: %d\n", #cmd, -e);\
@@ -142,11 +143,22 @@ static void virtgpu_reset_framebuffer(device_t* device) {
 #endif
 
 
-    uint64_t resource;
+    // uint64_t resource;
 
-    __(virtgpu_cmd_resource_create_2d,         device->userdata, &resource, VIRTIO_GPU_FORMAT_A8R8G8B8_UNORM, device->vid.vs.xres_virtual, device->vid.vs.yres_virtual);
-    __(virtgpu_cmd_resource_attach_backing,    device->userdata, resource, device->vid.fb_base, device->vid.fb_size);
-    __(virtgpu_cmd_set_scanout,                device->userdata, VIRTGPU_DISPLAY_PRIMARY, resource, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+    // __(virtgpu_cmd_resource_create_2d,         device->userdata, &resource, VIRTIO_GPU_FORMAT_A8R8G8B8_UNORM, device->vid.vs.xres_virtual, device->vid.vs.yres_virtual);
+    // __(virtgpu_cmd_resource_attach_backing,    device->userdata, resource, device->vid.fb_base, device->vid.fb_size);
+    // __(virtgpu_cmd_set_scanout,                device->userdata, VIRTGPU_DISPLAY_PRIMARY, resource, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+
+
+    struct virtio_gpu_resp_display_info display_info;
+
+    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+
+    for(;;);
 
     #undef __
 
@@ -263,6 +275,7 @@ static int setup_features(struct virtio_driver* driver, uint32_t* features, size
 
     if(index == 1) {
 
+        *features |= VIRTIO_F_VERSION_1;
         *features |= VIRTIO_F_IN_ORDER;
 
     }
@@ -281,7 +294,7 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     __atomic_membarrier();
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("virtio-gpu: setup device configuration [scanouts(%d)]\n", cfg->num_scanouts);
 #endif
 
@@ -295,9 +308,10 @@ static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver
     
     struct virtio_gpu_config* cfg = (struct virtio_gpu_config*) driver->internals.device_config;
 
-    kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p %p\n", cfg->events_read, device);
+    cfg->events_clear = cfg->events_read;
 
-    cfg->events_clear |= cfg->events_read;
+    kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p\n", device);
+
 
     return 0;
 
@@ -338,7 +352,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if(virtio_pci_init(virtio) < 0) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_FATAL
         kprintf("virtio-gpu: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
 
@@ -347,7 +361,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     }
 
 
-    struct virtgpu* gpu = kmalloc(sizeof(struct virtgpu), GFP_KERNEL);
+    struct virtgpu* gpu = kcalloc(1, sizeof(struct virtgpu), GFP_KERNEL);
 
     gpu->driver = virtio;
     driver->userdata = gpu;
@@ -357,13 +371,13 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 void init(const char* args) {
 
-    if(args && strstr(args, "graphics=no"))
+    if(strstr(core->boot.cmdline, "virtio=off"))
         return;
 
-    if(args && strstr(args, "graphics=builtin"))
+    if(strstr(core->boot.cmdline, "graphics=off"))
         return;
 
-    if(args && strstr(args, "virtio=disable"))
+    if(strstr(core->boot.cmdline, "graphics=builtin"))
         return;
 
 

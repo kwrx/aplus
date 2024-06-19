@@ -28,7 +28,15 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
+
 int strncmp(const char* a, const char* b, size_t n) {
+
+	DEBUG_ASSERT(a);
+	DEBUG_ASSERT(b);
+	DEBUG_ASSERT(n > 0);
 
 
 	for (size_t i = 0; i < n; i++) {
@@ -50,3 +58,12 @@ int strncmp(const char* a, const char* b, size_t n) {
 	return 0;
 
 }
+
+
+TEST(libk_strncmp_test, {
+
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World!", 12) == 0);
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World?", 11) == 0);
+	DEBUG_ASSERT(strncmp("Hello World!", "Hello World?", 12) == -1);
+
+});

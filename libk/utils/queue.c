@@ -83,8 +83,9 @@ void queue_destroy(queue_t* queue) {
 
     DEBUG_ASSERT(queue);
 
-    while(queue->size > 0)
+    while(queue->size > 0) {
         queue_pop(queue);
+    }
 
 }
 
@@ -95,10 +96,11 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 
     __lock(&queue->lock, {
 
-        if(queue->size == 0)
+        if(queue->size == 0) {
+
             queue->head = __queue_element(element, priority, NULL);
 
-        else {
+        } else {
 
 
             struct queue_element* tmp;
@@ -117,9 +119,9 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 
             DEBUG_ASSERT(last);
 
-            if(!tmp)
+            if(!tmp) {
                 last->next = __queue_element(element, priority, NULL);
-
+            }
 
         }
 
@@ -137,10 +139,11 @@ void queue_dequeue(queue_t* queue, void* element) {
     if(queue->size == 0)
         return;
 
-    if(queue_top(queue) == element)
+    if(queue_top(queue) == element) {
+      
         queue_pop(element);
 
-    else {
+    } else {
 
         __lock(&queue->lock, {
 

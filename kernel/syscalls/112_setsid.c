@@ -51,12 +51,12 @@ long sys_setsid (void) {
 
     DEBUG_ASSERT(current_task);
 
-    if(current_task->pgid == current_task->tid)
+    if(current_task->pgrp == current_task->tid)
         return -EPERM;
 
 
     current_task->sid  = current_task->tid;
-    current_task->pgid = current_task->tid;
+    current_task->pgrp = current_task->tid;
 
     return 0;
 

@@ -45,6 +45,8 @@
 
 extern inode_t __vfs_root;
 
+struct pty;
+
 
 #define FRAME(p)                                    \
     ((interrupt_frame_t*) (p)->frame)
@@ -58,11 +60,12 @@ extern inode_t __vfs_root;
 
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
 
-    if(unlikely(!address_space))
+    if(unlikely(!address_space)) {
         x86_set_cr3(x86_get_cr3());
-    else
+    } else {
         x86_set_cr3(address_space->pm);
-        
+    }
+    
 }
 
 
@@ -70,7 +73,6 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     DEBUG_ASSERT(current_task);
     DEBUG_ASSERT(current_task->sstack);
-    DEBUG_ASSERT(current_task->sighand);
 
     DEBUG_ASSERT(siginfo);
     DEBUG_ASSERT(siginfo->si_signo >= 0);
@@ -84,9 +86,11 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     sigcontext_frame_t* sigcontext = (sigcontext_frame_t*) current_task->sstack;
 
 
+    shared_ptr_access(current_task->sighand, sighand, {
+        memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
+        memcpy(&sigcontext->mask, &sighand->sigmask, sizeof(sigset_t));
+    });
 
-    memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
-    memcpy(&sigcontext->mask, &current_task->sighand->sigmask, sizeof(sigset_t));
 
 
     fpu_save(&sigcontext->fpuregs[0]);
@@ -96,16 +100,23 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     
 
 
+    struct ksigaction* action = NULL;
 
-    struct ksigaction* action = &current_task->sighand->action[siginfo->si_signo];
+    shared_ptr_access(current_task->sighand, sighand, {
 
-    FRAME(current_cpu)->ip = (uintptr_t) action->sigaction;
-    FRAME(current_cpu)->sp = current_task->userspace.sigstack;
-    FRAME(current_cpu)->cs = USER_CS | 3;
-    FRAME(current_cpu)->ss = USER_DS | 3;
-    FRAME(current_cpu)->flags = 0x202;
+        action = &sighand->action[siginfo->si_signo];
+        
+        FRAME(current_cpu)->ip    = (uintptr_t) action->sigaction;
+        FRAME(current_cpu)->sp    = current_task->userspace.sigstack;
+        FRAME(current_cpu)->cs    = USER_CS | 3;
+        FRAME(current_cpu)->ss    = USER_DS | 3;
+        FRAME(current_cpu)->flags = 0x202;
 
-    memcpy(&current_task->sighand->sigmask, &action->sa_mask, sizeof(sigset_t));
+        memcpy(&sighand->sigmask, &action->sa_mask, sizeof(sigset_t));
+
+    });
+
+    DEBUG_ASSERT(action);
 
 
 #if defined(__x86_64__)
@@ -114,10 +125,9 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     FRAME(current_cpu)->si = (uintptr_t) current_task->userspace.siginfo;       // movq  $siginfo, %rsi
     FRAME(current_cpu)->dx = 0L;                                                // movq  $ucontext, %rdx
 
-
-    mmio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                               // pushq $0
-    mmio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                               // pushq $0
-    mmio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer);               // callq $handler
+    uio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                                // pushq $0
+    uio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                                // pushq $0
+    uio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer);                // callq $handler
 
     FRAME(current_cpu)->sp -= 0x18;
 
@@ -135,7 +145,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     sigcontext->flags = action->sa_flags;
 
-    memcpy(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
+    uio_memcpy_s2u(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
 
 }
 
@@ -144,10 +154,10 @@ long arch_task_return_from_signal(void) {
 
     sigcontext_frame_t* sigcontext = (sigcontext_frame_t*) current_task->sstack;
 
-
-    memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
-    memcpy(&current_task->sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
-
+    shared_ptr_access(current_task->sighand, sighand, {
+        memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
+        memcpy(&sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
+    });
 
     fpu_restore(&sigcontext->fpuregs[0]);
 
@@ -155,10 +165,12 @@ long arch_task_return_from_signal(void) {
     current_cpu->kstack = sigcontext->kstack;
 
 
-    if(sigcontext->flags & SA_RESTART)
+    if(sigcontext->flags & SA_RESTART) {
         return syscall_restart();
+    }
 
     return -4; /* EINTR */
+
 }
 
 
@@ -169,8 +181,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
     DEBUG_ASSERT(current_cpu->frame);
 
     DEBUG_ASSERT(prev);
-    DEBUG_ASSERT(prev->frame);
-    DEBUG_ASSERT(prev->address_space->pm);
+    DEBUG_ASSERT(prev->frame); // BUG: prev->frame is randomly NULL
 
     DEBUG_ASSERT(next);
     DEBUG_ASSERT(next->frame);
@@ -203,8 +214,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         fpu_switch(prev->fpu, next->fpu);
 
-        if(unlikely(prev->address_space->pm != next->address_space->pm))
+        if(unlikely(prev->address_space->pm != next->address_space->pm)) {
             arch_task_switch_address_space(next->address_space);
+        }
 
     }
 
@@ -216,15 +228,16 @@ void arch_task_switch(task_t* prev, task_t* next) {
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
 
 
-    uint32_t m;
+    // // uint32_t m;
 
-#if TASK_SCHEDULER_PERIOD_NS != 1000000
-    m = (20LL - next->priority) / (TASK_SCHEDULER_PERIOD_NS / 1000000);
-    m = m ? m : 1;
-#else
-    m = (20LL - next->priority);
-#endif
+// // #if TASK_SCHEDULER_PERIOD_NS != 1000000
+// //     m = (20LL - next->priority) / (TASK_SCHEDULER_PERIOD_NS / 1000000);
+// //     m = m ? m : 1;
+// // #else
+// //     m = (20LL - next->priority);
+// // #endif
 
+    uint32_t m = TASK_SCHEDULER_PERIOD_NS / 1000000;
 
     apic_timer_reset(m);
 
@@ -243,8 +256,8 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->environ = current_task->environ;
 
     task->tid  = 
-    task->tgid = sched_nextpid();
-    task->pgid = current_task->pgid;
+    task->pid  = sched_nextpid();
+    task->pgrp = current_task->pgrp;
     task->uid  = current_task->uid;
     task->euid = current_task->euid;
     task->gid  = current_task->gid;
@@ -259,6 +272,13 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     CPU_ZERO(&task->affinity);
     CPU_OR(&task->affinity, &task->affinity, &current_task->affinity);
+
+
+    queue_init(&task->sigqueue);
+    queue_init(&task->sigpending);
+
+
+    task->ctty    = shared_ptr_new(struct pty*, GFP_KERNEL);
 
 
 
@@ -305,8 +325,8 @@ pid_t arch_task_spawn_init() {
 
 
     task->tid   = 
-    task->tgid  = sched_nextpid();
-    task->pgid  = 1;
+    task->pid   = sched_nextpid();
+    task->pgrp  = 1;
     task->uid   =
     task->euid  =
     task->gid   =
@@ -322,16 +342,20 @@ pid_t arch_task_spawn_init() {
     CPU_ZERO(&task->affinity);
     CPU_SET(current_cpu->id, &task->affinity);
 
+
+    queue_init(&task->sigqueue);
+    queue_init(&task->sigpending);
+
+
     
    #define _(size, offset)     \
         (void*) ((uintptr_t) kcalloc(size, 1, GFP_KERNEL) + offset)
 
-
-    task->frame         = _(sizeof(interrupt_frame_t), 0);
-    task->sstack        = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
-    task->kstack        = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
-    task->ustack        = NULL;
-    task->fpu           = fpu_new_state();
+    task->frame  = _(sizeof(interrupt_frame_t), 0);
+    task->sstack = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);
+    task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack = NULL;
+    task->fpu    = fpu_new_state();
 
     #undef _
 
@@ -347,29 +371,29 @@ pid_t arch_task_spawn_init() {
 
 
 
-    task->fs = (struct fs*) kcalloc(1, sizeof(struct fs), GFP_KERNEL);
-
-    task->fs->cwd   =
-    task->fs->root  = &__vfs_root;
-    task->fs->exe   = NULL;
-    task->fs->umask = 0;
-
-    task->fs->refcount = 1;
+    task->fs      = shared_ptr_new(struct fs, GFP_KERNEL);
+    task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
+    task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
+    task->ctty    = shared_ptr_new(struct pty*, GFP_KERNEL);
 
 
+    shared_ptr_access(task->fs, fs, {
 
-    task->fd = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
-    task->fd->refcount = 1;
+        fs->cwd   =
+        fs->root  = &__vfs_root;
+        fs->exe   = NULL;
+        fs->umask = 0;
 
-    task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
-    task->sighand->refcount = 1;
+    });
 
-    memset(&task->sighand->sigmask, 0xFF, sizeof(sigset_t));
+    shared_ptr_access(task->sighand, sighand, {
+        memset(&sighand->sigmask, 0xFF, sizeof(sigset_t));
+    });
 
 
 
-    int j;
-    for(j = 0; j < RLIM_NLIMITS; j++) {
+
+    for(size_t j = 0; j < RLIM_NLIMITS; j++) {
         task->rlimits[j].rlim_cur =
         task->rlimits[j].rlim_max = RLIM_INFINITY;
     }
@@ -386,8 +410,9 @@ pid_t arch_task_spawn_init() {
 
 
 
-    if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID)
+    if(current_cpu->id != SMP_CPU_BOOTSTRAP_ID) {
         task->parent = core->bsp.sched_running;
+    }
     
 
     current_cpu->sched_running = task;
@@ -397,7 +422,7 @@ pid_t arch_task_spawn_init() {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
     kprintf("task: spawn init process pid(%d) cpu(%ld) kstack(%p)\n", task->tid, arch_cpu_get_current_id(), task->kstack);
 #endif
 
@@ -406,6 +431,7 @@ pid_t arch_task_spawn_init() {
     sched_enqueue(task);
 
     return task->tid;
+    
 }
 
 
@@ -429,39 +455,32 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
 
     CPU_ZERO(&task->affinity);
     
-    int i;
-    for(i = 0; i < (CPU_SETSIZE << 3); i++)
+    for(size_t i = 0; i < (CPU_SETSIZE << 3); i++) {
         CPU_SET(i, &task->affinity);
+    }
     
-
-    task->tgid = current_task->tid;
+    task->pid = current_task->tid;
 
 
 
     task->address_space = (void*) current_task->address_space;
-    current_task->address_space->refcount++;
-
-
-    task->fs = (struct fs*) kcalloc(1, sizeof(struct fs), GFP_KERNEL);
-
-    task->fs->cwd   = current_task->fs->cwd;
-    task->fs->exe   = current_task->fs->exe;
-    task->fs->root  = current_task->fs->root;
-    task->fs->umask = current_task->fs->umask;
-    task->fs->refcount = 1;
-
-
-    task->fd = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
-    task->fd->refcount = 1;
-
-    task->sighand = (struct sighand*) kcalloc(1, sizeof(struct sighand), GFP_KERNEL);
-    task->sighand->refcount = 1;
     
-    memset(&task->sighand->sigmask, 0xFF, sizeof(sigset_t));
-    
+    __atomic_add_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST);
+
+
+    task->fs      = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+    task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
+    task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
+
+    shared_ptr_access(task->sighand, sighand, {
+        memset(&sighand->sigmask, 0xFF, sizeof(sigset_t));
+    });
 
     
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
+
+
+    task->priority = TASK_PRIO_MIN;
 
 
 
@@ -483,7 +502,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry) (void*), size_t st
     task->parent = current_task;
     
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_TRACE
     kprintf("task: spawn kthread %s pid(%d) ip(%p) kstack(%p) stacksize(%lX)\n", task->argv[0], task->tid, entry, task->kstack, stacksize);
 #endif
 
@@ -502,7 +521,7 @@ void arch_task_context_set(task_t* task, int options, long value) {
     DEBUG_ASSERT(task->frame);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("task: set context tid(%d) options(%d) value(0x%lX)\n", task->tid, options, value);
 #endif
 

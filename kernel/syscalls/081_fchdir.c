@@ -50,19 +50,20 @@
 SYSCALL(81, fchdir,
 long sys_fchdir (unsigned int fd) {
     
-    if(fd > CONFIG_OPEN_MAX)
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
+    if(fd >= CONFIG_OPEN_MAX)
         return -EBADF;
 
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        current_task->fs->cwd = current_task->fd->descriptors[fd].ref->inode;
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        shared_ptr_access(current_task->fs, fs, {
+            fs->cwd = fds->descriptors[fd].ref->inode;
+        });
 
     });
-
 
     return 0;
 

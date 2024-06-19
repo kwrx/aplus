@@ -33,7 +33,7 @@
 #include <arch/x86/acpi.h>
 
 
-
+__noreturn
 void arch_reboot(int mode) {
 
 
@@ -52,11 +52,9 @@ void arch_reboot(int mode) {
 
             /* Keyboard Reset */
 
-            int i;
-            for(i = 0; i < 10; i++) {
+            for(int i = 0; i < 10; i++) {
 
-                int j;
-                for(j = 0; j < 0x10000; j++) {
+                for(int j = 0; j < 0x10000; j++) {
 
                     if((inb(0x64) & 0x02) == 0)
                         break;
@@ -114,8 +112,10 @@ void arch_reboot(int mode) {
 
         case ARCH_REBOOT_HALT:
             break;
+            
     }
 
 
     kpanicf("System Halted!");
+
 }

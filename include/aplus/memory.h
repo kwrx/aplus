@@ -32,11 +32,13 @@
 
 
 //* PMM */
-#define PML2_PAGESIZE               (128 * 1024 * 1024)         //? 128MiB
-#define PML1_PAGESIZE               (4096)                      //? 4KiB
+#define PML2_PAGESIZE               (134217728UL)               //? 128MiB
+#define PML1_PAGESIZE               (4096UL)                    //? 4KiB
 
-#define PML2_MAX_ENTRIES            (16384)                     //? 2TiB
-#define PML1_MAX_ENTRIES            (4096 / sizeof(uint64_t))
+#define PML2_MAX_ENTRIES            (16384UL)                   //? 2TiB
+#define PML1_MAX_ENTRIES            (4096UL / sizeof(uint64_t))
+
+#define PML1_PREALLOCATED_BITMAPS   (16UL)                      //? 2GiB
 
 
 //* Heap */
@@ -67,18 +69,22 @@
 #define ARCH_VMM_MAP_DEMAND         (1 << 6)
 #define ARCH_VMM_MAP_DISABLED       (1 << 7)
 #define ARCH_VMM_MAP_VIDEO_MEMORY   (1 << 8)
+#define ARCH_VMM_MAP_WRITE_THROUGH  (1 << 9)
 
-#define ARCH_VMM_MAP_HUGETLB        (1 << 9)
-#define ARCH_VMM_MAP_HUGE_2MB       (0 << 10)
-#define ARCH_VMM_MAP_HUGE_1GB       (1 << 10)
+#define ARCH_VMM_MAP_HUGETLB        (1 << 10)
+#define ARCH_VMM_MAP_HUGE_2MB       (0 << 11)
+#define ARCH_VMM_MAP_HUGE_1GB       (1 << 11)
 
-#define ARCH_VMM_MAP_TYPE_MASK      (3 << 11)
-#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 11)
-#define ARCH_VMM_MAP_TYPE_MMAP      (1 << 11)
-#define ARCH_VMM_MAP_TYPE_COW       (2 << 11)
+#define ARCH_VMM_MAP_TYPE_MASK      (3 << 12)
+#define ARCH_VMM_MAP_TYPE_PAGE      (0 << 12)
+#define ARCH_VMM_MAP_TYPE_MMAP      (1 << 12)
+#define ARCH_VMM_MAP_TYPE_COW       (2 << 12)
 
-#define ARCH_VMM_CLONE_VM           (1 << 0)
+
 #define ARCH_VMM_CLONE_DEMAND       (1 << 1)
+#define ARCH_VMM_CLONE_USERSPACE    (1 << 2)
+
+#define ARCH_VMM_CLONE_NEW_SPACE    (0)
 
 
 
@@ -98,7 +104,6 @@ typedef struct vmm_address_space {
     uintptr_t pm;
     size_t size;
     size_t refcount;
-
     
     struct {
 
@@ -125,14 +130,16 @@ uintptr_t pmm_alloc_blocks_aligned(size_t, uintptr_t);
 void pmm_free_block(uintptr_t);
 void pmm_free_blocks(uintptr_t, size_t);
 uint64_t pmm_get_used_memory();
+uint64_t pmm_get_total_memory();
 void pmm_init(uintptr_t);
 
 
 void* kmalloc(size_t, int)         __malloc __alloc_size(1);
 void* kcalloc(size_t, size_t, int) __malloc __alloc_size(1, 2);
 void* krealloc(void*, size_t, int) __malloc __alloc_size(2);
-
 void kfree(void*);
+
+uint64_t kheap_get_used_memory();
 
 __END_DECLS
 

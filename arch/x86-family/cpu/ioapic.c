@@ -39,7 +39,7 @@
 #include <arch/x86/apic.h>
 
 
-ioapic_t ioapic[X86_IOAPIC_MAX];
+ioapic_t ioapic[X86_IOAPIC_MAX] = { 0 };
 
 
 static inline void ioapic_write(uintptr_t address, const uint32_t offset, const uint32_t value) {
@@ -55,8 +55,7 @@ static inline uint32_t ioapic_read(uintptr_t address, const uint32_t offset) {
 
 void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
     
-    int i;
-    for(i = 0; i < X86_IOAPIC_MAX; i++) {
+    for(size_t i = 0; i < X86_IOAPIC_MAX; i++) {
        
         if(!ioapic[i].address)
             continue;
@@ -82,6 +81,7 @@ void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
     }
 
     kpanicf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+
 }
 
 void ioapic_unmap_irq(irq_t source) {
@@ -90,8 +90,7 @@ void ioapic_unmap_irq(irq_t source) {
         return; //kpanicf("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");
 
 
-    int i;
-    for(i = 0; i < X86_IOAPIC_MAX; i++) {
+    for(size_t i = 0; i < X86_IOAPIC_MAX; i++) {
         
         if(!ioapic[i].address)
             continue;
@@ -116,23 +115,25 @@ void ioapic_unmap_irq(irq_t source) {
     }
 
     kpanicf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+
 }
 
 
 void ioapic_enable(void) {
     
-    int i;
-    for(i = 0; i < X86_IOAPIC_MAX; i++) {
+    for(size_t i = 0; i < X86_IOAPIC_MAX; i++) {
         
         if(!ioapic[i].address)
             continue;
 
 
-        if(ioapic[i].address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024))
+        if(ioapic[i].address < ((core->memory.phys_upper + core->memory.phys_lower) * 1024)) {
+            
             pmm_claim_area (
-                ioapic[i].address,
-                ioapic[i].address + PML1_PAGESIZE
+                ioapic[i].address, PML1_PAGESIZE
             );
+            
+        }
 
 
         arch_vmm_map (
@@ -159,14 +160,15 @@ void ioapic_enable(void) {
         spinlock_init_with_flags(&ioapic[i].lock, SPINLOCK_FLAGS_CPU_OWNER);
         
 
-        int j;
-        for(j = ioapic[i].gsi_base; j < ioapic[i].gsi_max; j++)
+        for(size_t j = ioapic[i].gsi_base; j < ioapic[i].gsi_max; j++) {
             ioapic_unmap_irq(j);
+        }
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-        kprintf("x86-apic: I/O APIC #%d initialized [base(0x%lX), gsi(%d-%d)]\n", i, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_max);
+#if DEBUG_LEVEL_INFO
+        kprintf("x86-apic: I/O APIC #%zd initialized [base(0x%lX), gsi(%d-%d)]\n", i, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_max);
 #endif
 
     }
+
 }

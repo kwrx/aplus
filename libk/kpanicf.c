@@ -52,19 +52,32 @@ void kpanicf(const char* fmt, ...) {
     vsnprintf(buf, sizeof(buf), fmt, v);
     va_end(v);
 
-
     kprintf_mask(~(1 << current_cpu->id));
 
-    int i;
-    for(i = 0; buf[i]; i++) {
+    arch_debug_putc('\e');
+    arch_debug_putc('[');
+    arch_debug_putc('3');
+    arch_debug_putc('1');
+    arch_debug_putc('m');
+
+    for(size_t i = 0; buf[i]; i++) {
         arch_debug_putc(buf[i]);
     }
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_ERROR
     runtime_stacktrace();
 #endif
+    runtime_dump();
 
-    // TODO: implements arch_cpu_halt()
-    for(;;);
+    arch_debug_putc('\e');
+    arch_debug_putc('[');
+    arch_debug_putc('0');
+    arch_debug_putc('m');
+
+    
+    for(;;) {
+        __cpu_pause();
+        __cpu_halt();
+    }
 
 }

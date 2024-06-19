@@ -28,6 +28,9 @@
 #include <errno.h>
 
 #if defined(KERNEL)
+#include <aplus.h>
+#include <aplus/debug.h>
+#include <aplus/smp.h>
 #ifdef errno
 #undef errno
 #endif

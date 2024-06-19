@@ -58,14 +58,12 @@ struct rusage;
 SYSCALL(61, wait4,
 long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __user * rusage) {
     
-    if(status) {
-        if(unlikely(!uio_check(status, W_OK | R_OK)))
-            return -EFAULT;
+    if(unlikely(status && !uio_check(status, R_OK | W_OK))) {
+        return -EFAULT;
     }
 
-    if(rusage) {
-        if(unlikely(!uio_check(rusage, W_OK | R_OK)))
-            return -EFAULT;
+    if(unlikely(rusage && !uio_check(rusage, R_OK | W_OK))) {
+        return -EFAULT;
     }
 
 
@@ -78,9 +76,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
     cpu_foreach(cpu) {
 
-
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             if(unlikely(tmp == current_task))
                 continue;
@@ -93,8 +89,8 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
                 if(pid) { if(cond) continue; }
 
 
-            continue_if(pid < -1, tmp->pgid != -pid);
-            continue_if(pid == 0, tmp->pgid != current_task->pgid);
+            continue_if(pid < -1, tmp->pgrp != -pid);
+            continue_if(pid == 0, tmp->pgrp != current_task->pgrp);
             continue_if(pid >  0, tmp->tid  != pid);
             continue_if(pid == -1, 0);
 
@@ -117,9 +113,9 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
                 
                 pid_t tid = tmp->tid;
 
-                if(tmp->status == TASK_STATUS_ZOMBIE)
+                if(tmp->status == TASK_STATUS_ZOMBIE) {
                     sched_dequeue(tmp);
-
+                }
 
                 return tid;
 
@@ -130,8 +126,9 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
             } else {
 
-                if(!(options & WNOHANG))
+                if(!(options & WNOHANG)) {
                     list_push(tmp->wait_queue, current_task);
+                }
 
                 count++;
 
@@ -151,7 +148,7 @@ long sys_wait4 (pid_t pid, int __user * status, int options, struct rusage __use
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("wait: task %d waiting for %ld tasks\n", current_task->tid, count);
 #endif
 

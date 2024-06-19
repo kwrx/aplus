@@ -70,14 +70,28 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    struct ext2_super_block sb;
-    if(vfs_read(dev, &sb, 1024, sizeof(struct ext2_super_block)) != sizeof(struct ext2_super_block))
-        return kprintf("ext2: ERROR! vfs_read() error(%d)\n", errno), -1;
+    struct ext2_super_block sb = { 0 };
+
+    if(vfs_read(dev, &sb, 1024, sizeof(struct ext2_super_block)) != sizeof(struct ext2_super_block)) {
+     
+#if DEBUG_LEVEL_ERROR
+        kprintf("ext2: ERROR! vfs_read() error(%d)\n", errno);
+#endif
+
+        return -1;
+     
+    }
 
 
-    if(sb.s_magic != EXT2_SIGNATURE)
-        return kprintf("ext2: ERROR! invalid signature, no ext2 filesystem: %X\n", sb.s_magic),
-            errno = EINVAL, -1;
+    if(sb.s_magic != EXT2_SIGNATURE) {
+
+#if DEBUG_LEVEL_ERROR
+        kprintf("ext2: ERROR! invalid signature, no ext2 filesystem: %X\n", sb.s_magic);
+#endif
+
+        return errno = EINVAL, -1;
+     
+    }
 
 
 
@@ -97,13 +111,13 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
         
     ext2_t* ext2 = (void*) kcalloc(1, sizeof(ext2_t), GFP_USER);   
 
-    ext2->cache = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);        
+    ext2->iocache           = (void*) kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
     ext2->first_block_group = sb.s_first_data_block + 1;
     ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
-    ext2->blocksize = (1024) << sb.s_log_block_size;
-    ext2->inodesize = sb.s_inode_size;
-    ext2->dev = dev;
-    ext2->root = dir;
+    ext2->blocksize         = (1024) << sb.s_log_block_size;
+    ext2->inodesize         = sb.s_inode_size;
+    ext2->dev               = dev;
+    ext2->root              = dir;
 
     memcpy(&ext2->sb, &sb, sizeof(struct ext2_super_block));
 
@@ -114,28 +128,28 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
     
-    dir->sb->fsid = EXT2_ID;
-    dir->sb->dev = dev;
-    dir->sb->root = dir;
+    dir->sb->fsid  = FSID_EXT2;
+    dir->sb->dev   = dev;
+    dir->sb->root  = dir;
     dir->sb->flags = flags;
 
 
     dir->sb->fsinfo = (void*) ext2;
         
-    dir->sb->st.f_bsize = 1024 << sb.s_log_block_size;
-    dir->sb->st.f_frsize = 1024 << sb.s_log_frag_size;
-    dir->sb->st.f_blocks = sb.s_blocks_count;
-    dir->sb->st.f_bfree = sb.s_free_blocks_count;
-    dir->sb->st.f_bavail = sb.s_free_blocks_count;
-    dir->sb->st.f_files = sb.s_inodes_count;
-    dir->sb->st.f_ffree = sb.s_free_inodes_count;
-    dir->sb->st.f_favail = sb.s_free_inodes_count;
-    dir->sb->st.f_flag = stflags;
-    dir->sb->st.f_fsid = EXT2_ID;
+    dir->sb->st.f_bsize   = 1024 << sb.s_log_block_size;
+    dir->sb->st.f_frsize  = 1024 << sb.s_log_frag_size;
+    dir->sb->st.f_blocks  = sb.s_blocks_count;
+    dir->sb->st.f_bfree   = sb.s_free_blocks_count;
+    dir->sb->st.f_bavail  = sb.s_free_blocks_count;
+    dir->sb->st.f_files   = sb.s_inodes_count;
+    dir->sb->st.f_ffree   = sb.s_free_inodes_count;
+    dir->sb->st.f_favail  = sb.s_free_inodes_count;
+    dir->sb->st.f_flag    = stflags;
+    dir->sb->st.f_fsid    = FSID_EXT2;
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
     dir->sb->ops.getattr = ext2_getattr;
-    dir->sb->ops.setattr = ext2_setattr;
+    // dir->sb->ops.setattr = ext2_setattr;
     //dir->sb->ops.creat = ext2_creat;
     dir->sb->ops.finddir = ext2_finddir;
     dir->sb->ops.readdir = ext2_readdir;
@@ -145,11 +159,22 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
             
 
     
-    struct vfs_cache_ops ops;
-    ops.flush = ext2_cache_flush;
-    ops.load  = ext2_cache_load;
+    struct cache_ops iops;
+    iops.fetch   = (cache_fetch_handler_t) ext2_icache_fetch;
+    iops.commit  = (cache_commit_handler_t) ext2_icache_commit;
+    iops.release = (cache_release_handler_t) ext2_icache_release;
 
-    vfs_cache_create(&dir->sb->cache, &ops, -1, (void*) ext2);
+    cache_init(&dir->sb->cache, &iops, SIZE_MAX, ext2);
+
+
+    struct cache_ops bops;
+    bops.fetch   = (cache_fetch_handler_t) ext2_bcache_fetch;
+    bops.commit  = (cache_commit_handler_t) ext2_bcache_commit;
+    bops.release = (cache_release_handler_t) ext2_bcache_release;
+
+    cache_init(&ext2->bcache, &bops, SIZE_MAX, ext2);
+
+
 
 
     dir->sb->ino = EXT2_ROOT_INO;

@@ -27,8 +27,14 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 char* strcpy(char* dest, const char* src) {
+
+    DEBUG_ASSERT(dest);
+    DEBUG_ASSERT(src);
 
     char* p = dest;
     while(*src)
@@ -37,3 +43,16 @@ char* strcpy(char* dest, const char* src) {
     *dest = '\0';
     return p;
 }
+
+
+TEST(libk_strcpy_test, {
+
+    char a[] = "Hello World!";
+    char b[] = "Hello World!";
+
+    strcpy(a, "Hello World!");
+    strcpy(b, "Hello World!");
+
+    DEBUG_ASSERT(strcmp(a, b) == 0);
+
+});

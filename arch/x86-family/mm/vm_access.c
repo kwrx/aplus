@@ -48,10 +48,8 @@
  * @param virtaddr: virtual address.
  * @param mode: access mode.
  */
+__nonnull(1)
 int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
-
-    DEBUG_ASSERT(space);
-    //DEBUG_ASSERT(mode);
 
 
     uintptr_t s = virtaddr;
@@ -60,6 +58,14 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
     if(s & (X86_MMU_PAGESIZE - 1))
         s = (s & ~(X86_MMU_PAGESIZE - 1));
+
+
+
+    #define check_or_fail(x)        \
+        if(!(x)) {                  \
+            e = -1;                 \
+            goto out;               \
+        }
 
 
     spinlock_lock(&space->lock);
@@ -79,7 +85,7 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
         /* PML4-L3 */
         {
-            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PML4-L3 not exist");
+            check_or_fail(*d != X86_MMU_CLEAR);
 
             d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 30) & 0x1FF];
         }
@@ -90,7 +96,7 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
             /* PDP-L2 */
             {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDP-L2 not exist");
+                check_or_fail(*d != X86_MMU_CLEAR);
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 21) & 0x1FF];
             }
@@ -100,7 +106,7 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
                 /* PD-L1 */
                 {
-                    DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
+                    check_or_fail(*d != X86_MMU_CLEAR);
 
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
@@ -122,7 +128,7 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
             /* PD-L1 */
             {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
+                check_or_fail(*d != X86_MMU_CLEAR);
 
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
             }
@@ -134,29 +140,42 @@ int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
         /* Page Table */
         {
 
-            if(mode & R_OK)
-                if(!(*d & X86_MMU_PG_P))
-                    if((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW)
+            if(mode & R_OK) {
+                if(!(*d & X86_MMU_PG_P)) {
+                    if((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW) {
                         e = -1;
+                    }
+                }
+            }
 
 #if defined(__x86_64__)
-            if(mode & X_OK)
-                if( (*d & X86_MMU_PT_NX) && !(*d & (1ULL << 47)))
+            if(mode & X_OK) {
+                if( (*d & X86_MMU_PT_NX) && !(*d & (1ULL << 47))) {
                     e = -1;
+                }
+            }
 #endif
 
-            if(mode & W_OK)
-                if(!(*d & X86_MMU_PG_RW))
-                    if((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW)
+            if(mode & W_OK) {
+                if(!(*d & X86_MMU_PG_RW)) {
+                    if((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW) {
                         e = -1;
+                    }
+                }
+            }
 
-            if(mode & S_OK)
-                if( (*d & X86_MMU_PG_U))
+            if(mode & S_OK) {
+                if( (*d & X86_MMU_PG_U)) {
                     e = -1;
+                }
+            }
                     
         }
 
     }
+
+
+out:
 
     spinlock_unlock(&space->lock);
 

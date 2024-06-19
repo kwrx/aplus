@@ -39,39 +39,46 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
 
-    if(pos + len > i->st.st_size) {
+    if((size_t) pos + len > (size_t) i->st.st_size) {
         
         if(unlikely(
             (
                 (long) inode->sb->st.f_bavail - (long) ((pos + len) - i->st.st_size)
             ) <= 0L)
             
-        )
+        ) {
             return errno = ENOSPC, -1;
+        }
 
 
-        if(pos + len > i->capacity) {
+        if((size_t) pos + len > i->capacity) {
 
-            i->capacity = CONFIG_BUFSIZ + pos + len;
+            i->capacity = pos + len;
+            i->capacity = i->capacity + (i->capacity / 2);
+
             i->data = krealloc(i->data, i->capacity, GFP_USER);
         
         }
 
         inode->sb->st.f_bfree -= (pos + len) - i->st.st_size;
         inode->sb->st.f_bavail -= (pos + len) - i->st.st_size;
+
         i->st.st_size = pos + len;
+    
     }
     
     
     memcpy((void*) ((uintptr_t) i->data + (uintptr_t) pos), buf, len);
+    
     return len;
+
 }

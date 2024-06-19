@@ -38,17 +38,17 @@
 #include <arch/x86/intr.h>
 
 
-
+__nonnull(1)
 void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
-    DEBUG_ASSERT(space);
     DEBUG_ASSERT(space->pm);
-    DEBUG_ASSERT(size);
+    DEBUG_ASSERT(size > 0);
 
     (void) space;
     (void) virtaddr;
     (void) size;
 
+    // TODO: implement a better way to lock a region of memory
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
     if(cpu_has(current_cpu->id, X86_FEATURE_SMAP))

@@ -39,11 +39,11 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
     if(len >= i->st.st_size)
         return 0;
@@ -61,4 +61,5 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
     
     
     return 0;
+    
 }

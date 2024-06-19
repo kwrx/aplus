@@ -51,14 +51,12 @@ MODULE_LICENSE("GPL");
 
 
 
-#define INTEL_VEND     0x8086  // Vendor ID for Intel 
-#define E1000_DEV      0x100E  // Device ID for the e1000 Qemu, Bochs, and VirtualBox emmulated NICs
-#define E1000_I217     0x153A  // Device ID for Intel I217
-#define E1000_82577LM  0x10EA  // Device ID for Intel 82577LM
- 
- 
-// I have gathered those from different Hobby online operating systems instead of getting them one by one from the manual
- 
+#define E1000_VENDOR_ID             0x8086
+#define E1000_DEVICE_ID             0x100E
+#define E1000_DEVICE_ID_I217        0x153A
+#define E1000_DEVICE_ID_82577LM     0x10EA
+
+  
 #define REG_CTRL        0x0000
 #define REG_STATUS      0x0008
 #define REG_EEPROM      0x0014
@@ -156,22 +154,22 @@ MODULE_LICENSE("GPL");
 
  
 struct e1000_rx_desc {
-        volatile uint64_t addr;
-        volatile uint16_t length;
-        volatile uint16_t checksum;
-        volatile uint8_t status;
-        volatile uint8_t errors;
-        volatile uint16_t special;
+    volatile uint64_t addr;
+    volatile uint16_t length;
+    volatile uint16_t checksum;
+    volatile uint8_t status;
+    volatile uint8_t errors;
+    volatile uint16_t special;
 } __packed;
  
 struct e1000_tx_desc {
-        volatile uint64_t addr;
-        volatile uint16_t length;
-        volatile uint8_t cso;
-        volatile uint8_t cmd;
-        volatile uint8_t status;
-        volatile uint8_t css;
-        volatile uint16_t special;
+    volatile uint64_t addr;
+    volatile uint16_t length;
+    volatile uint8_t cso;
+    volatile uint8_t cmd;
+    volatile uint8_t status;
+    volatile uint8_t css;
+    volatile uint16_t special;
 } __packed;
 
 
@@ -179,10 +177,10 @@ struct e1000_tx_desc {
 struct e1000 {
 
     uint32_t pci;
+    uint8_t irq;
     uint16_t io;
     uintptr_t mem;
-    uint8_t irq;
-
+    uintptr_t vmem;
     
     uintptr_t rx_desc[E1000_NUM_RX_DESC];
     uintptr_t tx_desc[E1000_NUM_TX_DESC];
@@ -192,13 +190,16 @@ struct e1000 {
 
     uintptr_t cache;
 
-
     spinlock_t lock;
     device_t device;
 
 };
 
 static struct e1000* devices[E1000_MAX_DEVICES];
+
+static uint32_t pci_devices[E1000_MAX_DEVICES];
+static uint32_t pci_count = 0;
+
 
 
 
@@ -265,8 +266,8 @@ static void e1000_output(void* internals, void* buf, uint16_t len) {
 
     wrcmd(dev, REG_TXDESCTAIL, dev->tx_cur);
 
-    //while(!(((struct e1000_tx_desc*) arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF))
-     //   __builtin_ia32_pause();
+    while(!(((struct e1000_tx_desc*) arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF))
+       __builtin_ia32_pause();
 
 
 }
@@ -295,8 +296,8 @@ static int e1000_startinput(void* internals) {
     uint16_t size = ((struct e1000_rx_desc*) arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->length;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("e1000: INFO! [%d] received %d bytes from %d\n", arch_timer_generic_getms(), size, dev->rx_cur);
+#if DEBUG_LEVEL_TRACE
+    kprintf("e1000: device received %d bytes from %d at %ldms\n", size, dev->rx_cur, arch_timer_generic_getms());
 #endif
 
 
@@ -452,39 +453,41 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
 
 
 
-
-
-
-void init(const char* args) {
-
-    int pci_devices[E1000_MAX_DEVICES];
-    int pci_count = 0;
-
-
-    void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
+static void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
         
-        if(venid != INTEL_VEND)
-            return;
-
-        if(devid != E1000_DEV       &&
-           devid != E1000_I217      &&
-           devid != E1000_82577LM
-        )
-            return;
-        
-        
-        pci_devices[pci_count++] = device;
-
-        DEBUG_ASSERT(pci_count < E1000_MAX_DEVICES);
-
+    if(pci_count >= E1000_MAX_DEVICES) {
+        return;
     }
 
+    if(venid != E1000_VENDOR_ID) {
+        return;
+    }
+
+    if (devid != E1000_DEVICE_ID             &&
+        devid != 0x1004                      &&
+        devid != 0x100F                      &&
+        devid != 0x10D3                      &&
+        devid != E1000_DEVICE_ID_82577LM     &&
+        devid != E1000_DEVICE_ID_I217) {
+        return;
+    }
+    
+    
+    pci_devices[pci_count++] = device;
+
+}
+
+
+void init(const char* args) {    
+
+    if(strstr(core->boot.cmdline, "network=off"))
+        return;
 
 
     pci_scan(&find_pci, -1, NULL);
 
     if(!pci_count) {
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_ERROR
         kprintf("e1000: ERROR! pci device not found!\n");
 #endif
         return;
@@ -492,44 +495,44 @@ void init(const char* args) {
 
 
 
-    int i;
-    for(i = 0; i < pci_count; i++) {
+    for(size_t i = 0; i < pci_count; i++) {
 
-    
         struct e1000* eth = (struct e1000*) kcalloc(1, sizeof(struct e1000), GFP_KERNEL);
 
-        eth->pci = pci_devices[i];
-        
-        
+        eth->pci  = pci_devices[i];
+        eth->irq  = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
+        eth->io   = pci_read(eth->pci, PCI_BAR0, 4);
+        eth->mem  = pci_read(eth->pci, PCI_BAR1, 4);
+        eth->vmem = arch_vmm_p2v(eth->mem, ARCH_VMM_AREA_HEAP);
+
         pci_enable_pio(eth->pci);
         pci_enable_mmio(eth->pci);
         pci_enable_bus_mastering(eth->pci);
-
-        eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
-        eth->io  = pci_read(eth->pci, PCI_BAR0, 4);
-        eth->mem = pci_read(eth->pci, PCI_BAR1, 4);
 
         spinlock_init(&eth->lock);
 
 
 
+        DEBUG_ASSERT(sizeof("e1000") < sizeof(eth->device.name));
+        DEBUG_ASSERT(sizeof("Intel(R) PRO/1000 Network Connection") < sizeof(eth->device.description));
+
         strcpy(eth->device.name, "e1000");
-        strcpy(eth->device.description, "Intel E1000 Network Adapter");
+        strcpy(eth->device.description, "Intel(R) PRO/1000 Network Connection");
+
 
         eth->device.major = 144;
         eth->device.minor = i;
-
-        eth->device.type   = DEVICE_TYPE_NETWORK;
+        eth->device.type  = DEVICE_TYPE_NETWORK;
         eth->device.status = DEVICE_STATUS_UNKNOWN;
 
 
-
-        int j;
-        for(j = 0; j < 0x80; j++)
+        for(size_t j = 0; j < 128; j++) {
             wrcmd(eth, 0x5200 + (j * 4), 0);
+        }
 
-        for(j = 0; j < 6; j++)
-            eth->device.net.address[j] = *(uint8_t*) arch_vmm_p2v(eth->mem + 0x5400 + j, ARCH_VMM_AREA_HEAP);
+        for(size_t j = 0; j < 6; j++) {
+            eth->device.net.address[j] = mmio_r8(eth->vmem + 0x5400 + j);
+        }
 
 
 
@@ -541,6 +544,7 @@ void init(const char* args) {
         eth->device.net.low_level_input        = e1000_input;
         eth->device.net.low_level_endinput     = e1000_endinput;
         eth->device.net.low_level_input_nomem  = e1000_input_nomem;
+
 
 
         if(eth->irq != PCI_INTERRUPT_LINE_NONE) {
@@ -561,9 +565,9 @@ void init(const char* args) {
 
 
         if(!netif_add( &eth->device.net.interface, 
-                    &eth->device.net.ip,
-                    &eth->device.net.nm,
-                    &eth->device.net.gw, &eth->device, ethif_init, ethernet_input)) {
+                       &eth->device.net.ip,
+                       &eth->device.net.nm,
+                       &eth->device.net.gw, &eth->device, ethif_init, ethernet_input)) {
 
             kpanicf("e1000: PANIC! netif_add() failed\n");
 
@@ -576,7 +580,6 @@ void init(const char* args) {
         devices[i + 1] = NULL;
 
     }
-
 
 }
 

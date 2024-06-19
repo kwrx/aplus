@@ -60,6 +60,7 @@ void ethif_input(struct netif* netif) {
     struct device* dev = netif->state;
 
     do {
+
         if((len = dev->net.low_level_startinput(dev->net.internals)) == 0)
             break;
             
@@ -87,8 +88,9 @@ void ethif_input(struct netif* netif) {
         pbuf_header(p, -ETH_PAD_SIZE);
 #endif
 
-        for(q = p; q; q = q->next)
+        for(q = p; q; q = q->next) {
             dev->net.low_level_input(dev->net.internals, q->payload, q->len);
+        }
 
         dev->net.low_level_endinput(dev->net.internals);
 
@@ -100,6 +102,7 @@ void ethif_input(struct netif* netif) {
 
 
         hdr = p->payload;
+        
         switch(lwip_htons(hdr->type)) {
 
             case ETHTYPE_IP:

@@ -32,13 +32,23 @@
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
 SYSCALL(404, systest,
 long sys_systest (long p0, long p1, long p2, long p3, long p4, long p5) {
 
-    kprintf("SYSCALL 404 TEST WORK %lX %lX %lX %lX %lX %lX!\n", p0, p1, p2, p3, p4, p5);
-    return 0;
+    bool a = p0 == 0x01;
+    bool b = p1 == 0x02;
+    bool c = p2 == 0x03;
+    bool d = p3 == 0x04;
+    bool e = p4 == 0x05;
+    bool f = p5 == 0x06;
+
+    if(a && b && c && d && e && f)
+        return 0xDEADBEEF;
+
+    return -EINVAL;
+    
 });
 
 #endif

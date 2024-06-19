@@ -34,6 +34,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+extern long sys_readlinkat(int, const char __user *, char __user *, int);
 
 /***
  * Name:        readlink
@@ -51,5 +52,5 @@
 
 SYSCALL(89, readlink,
 long sys_readlink (const char __user * path, char __user * buf, int bufsiz) {
-    return -ENOSYS;
+    return sys_readlinkat(AT_FDCWD, path, buf, bufsiz);
 });

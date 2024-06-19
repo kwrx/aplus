@@ -29,12 +29,16 @@
 #include <stddef.h>
 #include <sys/types.h>
 
-
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 void *memchr(const void *src, int c, size_t n) {
 
-	for(int i = 0; i < n; i++) {
+	DEBUG_ASSERT(src);
+	DEBUG_ASSERT(n > 0);
+
+	for(size_t i = 0; i < n; i++) {
 	
 		if(((const char*) src) [i] == (char) c)
 			return (void*) &((char*) src) [i];
@@ -44,3 +48,20 @@ void *memchr(const void *src, int c, size_t n) {
 	return NULL;
 	
 }
+
+
+TEST(libk_memchr_test, {
+
+	char* s = "Hello World!";
+
+	DEBUG_ASSERT(memchr(s, 'H', 12) == s);
+	DEBUG_ASSERT(memchr(s, 'e', 12) == s + 1);
+	DEBUG_ASSERT(memchr(s, 'l', 12) == s + 2);
+	DEBUG_ASSERT(memchr(s, 'o', 12) == s + 4);
+	DEBUG_ASSERT(memchr(s, 'W', 12) == s + 6);
+	DEBUG_ASSERT(memchr(s, 'r', 12) == s + 8);
+	DEBUG_ASSERT(memchr(s, 'd', 12) == s + 10);
+	DEBUG_ASSERT(memchr(s, '!', 12) == s + 11);
+	DEBUG_ASSERT(memchr(s, 'x', 12) == NULL);
+
+});

@@ -22,12 +22,14 @@
  */
 
 #include <stdint.h>
+#include <sys/sysmacros.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/smp.h>
 #include <aplus/ipc.h>
 #include <aplus/vfs.h>
+#include <aplus/hal.h>
 #include <aplus/memory.h>
 #include <aplus/errno.h>
 
@@ -38,13 +40,40 @@ int tmpfs_getattr(inode_t* inode, struct stat* st) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(st);
 
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, inode->ino);
-    memcpy(st, &i->st, sizeof(struct stat));
+    if(inode == inode->sb->root) {
+
+        memset(st, 0, sizeof(struct stat));
+
+        st->st_ino     = inode->ino;
+        st->st_mode    = S_IFDIR | 0755;
+        st->st_dev     = makedev(0, 34);
+        st->st_nlink   = 2;
+        st->st_uid     = 0;
+        st->st_gid     = 0;
+        st->st_rdev    = 0;
+        st->st_size    = 0;
+        st->st_blksize = 0;
+        st->st_blocks  = 0;
+        st->st_atime   = arch_timer_gettime();
+        st->st_mtime   = arch_timer_gettime();
+        st->st_ctime   = arch_timer_gettime();
+
+    } else {
+
+        tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
+
+        if(unlikely(!i))
+            return -ENOENT;
+
+        memcpy(st, &i->st, sizeof(struct stat));
+
+    }
 
     return 0;
+
 }

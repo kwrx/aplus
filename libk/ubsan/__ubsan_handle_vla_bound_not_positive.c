@@ -35,7 +35,7 @@ __noreturn
 __nosanitize("undefined")
 void __ubsan_handle_vla_bound_not_positive(struct overflow_data* data, uintptr_t bound) {
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("ubsan: caught " __FILE__ " exception!\n");
 #endif
 

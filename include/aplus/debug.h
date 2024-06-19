@@ -33,14 +33,31 @@
             kpanicf("ERROR! Assert failed on %s() in %s:%d: '%s'\n",    \
                 __func__, __FILE__, __LINE__, #i);                      \
         }
-
 #else
 #define DEBUG_ASSERT(i)     \
         (void) 0
 #endif
 
 
-#define PANIC_ON(i)                                                     \
+#if defined(DEBUG) && defined(CONFIG_HAVE_TEST)
+#define TEST(x, y...)                                                   \
+    static void test_##x (void) {                                       \
+        y                                                               \
+    }                                                                   \
+    __section(".tests")                                                 \
+    struct {                                                            \
+        void* a;                                                        \
+        char* name;                                                     \
+    } __packed __test_##x = {                                           \
+        (void*) test_##x,                                               \
+        (char*) #x                                                      \
+    }
+#else
+#define TEST(x, y...)
+#endif
+
+
+#define PANIC_ASSERT(i)                                                     \
     if(unlikely(!(i))) {                                                \
         kpanicf("HALT! Found a bug on %s() in %s:%d: '%s'\n",           \
             __func__, __FILE__, __LINE__, #i);                          \

@@ -28,10 +28,13 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/vfs.h>
+#include <aplus/utils/cache.h>
 
 
 #define EXT2_SIGNATURE                          0xEF53
 
+
+// TODO: rewrite all ext2 driver to support cache
 
 
 /* See linux/fs/ext2/ext2.h */
@@ -440,22 +443,27 @@ typedef struct {
     uint32_t blocksize;
     uint32_t inodesize;
 
-    void* cache; 
-    spinlock_t lock;  
+    void* iocache;
+    cache_t bcache;
+    spinlock_t lock;
 
     inode_t* dev;
     inode_t* root;
     
-} __packed ext2_t;
+} ext2_t;
 
 
 
 
-#define ext2_inode_set_size(ext2, inode, size) {    \
-    inode->i_size = ((size) & 0xFFFFFFFF);          \
-    if(ext2->sb.s_rev_level == EXT2_DYNAMIC_REV)    \
-        inode->i_size_high = ((size) << 32);        \
-}
+#define ext2_inode_set_size(ext2, inode, size) {        \
+                                                        \
+    (inode)->i_size = (size) & 0xFFFFFFFF;              \
+                                                        \
+    if((ext2)->sb.s_rev_level == EXT2_DYNAMIC_REV) {    \
+        (inode)->i_size_high = ((size) << 32);          \
+    }                                                   \
+}                                                       \
+
 
 
 int ext2_fsync (inode_t*, int);
@@ -477,9 +485,13 @@ ssize_t ext2_readdir (inode_t*, struct dirent*, off_t, size_t);
 //int ext2_unlink (inode_t*, const char*);
 
 
-void* ext2_cache_load (vfs_cache_t*, ino_t);
-void ext2_cache_flush (vfs_cache_t*, ino_t, void*);
+struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino);
+void ext2_icache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode);
+void ext2_icache_release(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode);
 
+void* ext2_bcache_fetch(cache_t* cache, ext2_t* ext2, uint64_t block);
+void ext2_bcache_commit(cache_t* cache, ext2_t* ext2, uint64_t block, void*);
+void ext2_bcache_release(cache_t* cache, ext2_t* ext2, uint64_t block, void*);
 
 void ext2_utils_read_inode(ext2_t*, ino_t, void*);
 void ext2_utils_write_inode(ext2_t*, ino_t, const void*);
@@ -489,7 +501,7 @@ void ext2_utils_read_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, s
 void ext2_utils_write_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, const void*, size_t);
 void ext2_utils_alloc_inode_data(ext2_t*, uint32_t*, uint32_t);
 
-void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t);
+void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t, bool);
 void ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
 
 void ext2_utils_alloc_block(ext2_t*, uint32_t*);

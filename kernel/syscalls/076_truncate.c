@@ -65,13 +65,16 @@ long sys_truncate (const char __user * path, long length) {
         return fd;
     
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-
-
     int e = 0;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
-        e = vfs_truncate(current_task->fd->descriptors[fd].ref->inode, length);
+    shared_ptr_access(current_task->fd, fds, {
+
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+            e = vfs_truncate(fds->descriptors[fd].ref->inode, length);
+        });
+
     });
 
 

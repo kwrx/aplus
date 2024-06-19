@@ -42,20 +42,19 @@ extern struct {
     union {
         struct {
             void (*handler) (void*, uint8_t);
-            spinlock_t lock;
+            spinlock_t lock __packed;
         };
 
         long __padding[4];
     };
-} startup_irq[224];
-
+} bootstrap_irq[224];
 
 
 void* x86_exception_handler(interrupt_frame_t* frame) {
     
     DEBUG_ASSERT((frame));
 
-// #if defined(DEBUG) && DEBUG_LEVEL >= 4
+// #if DEBUG_LEVEL_TRACE
 
 //     kprintf("x86-intr: intno(%p) errno(%p) ip(%p) cs(%p) flags(%p) sp(%p) ss(%p)\n",
 //         frame->intno,
@@ -98,11 +97,11 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                   
         case 0x21 ... 0xFD:
 
-            if(likely(startup_irq[frame->intno - 0x20].handler))
-                startup_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
+            if(likely(bootstrap_irq[frame->intno - 0x20].handler))
+                bootstrap_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
 
             else {
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_WARN
                 kprintf("x86-intr: WARN! unhandled IRQ #%ld caught, ignoring\n", frame->intno - 0x20);
 #endif
             }  
@@ -118,9 +117,10 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                 if(unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
                     current_cpu->uptime.tv_sec += 1;
                     current_cpu->uptime.tv_nsec = 0;
-                } else
+                } else {
                     current_cpu->uptime.tv_nsec += 10000000;
-
+                }
+                
                 schedule(0);
 
             }
@@ -207,24 +207,23 @@ long arch_intr_disable(void) {
 
 
 
-
 void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
     
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);
 
 
-    if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
+    if(unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
 
 
-    startup_irq[irq].handler = handler;
+    bootstrap_irq[irq].handler = handler;
 
     ioapic_map_irq(irq, irq, current_cpu->id);
     
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
 #endif
 
@@ -234,15 +233,15 @@ void arch_intr_map_irq(irq_t irq, void (*handler) (void*, irq_t)) {
 void arch_intr_unmap_irq(irq_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(startup_irq[irq].handler != NULL);
+    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
 
         
-    startup_irq[irq].handler = NULL;
+    bootstrap_irq[irq].handler = NULL;
 
     ioapic_unmap_irq(irq);
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 
@@ -255,30 +254,31 @@ void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler) (void*, irq_t))
     DEBUG_ASSERT(handler);
 
 
-    if(unlikely(startup_irq[irq].handler && startup_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, startup_irq[irq].handler);
+    if(unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
+        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
 
     
-    startup_irq[irq].handler = handler;    
+    bootstrap_irq[irq].handler = handler;    
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-intr: map irq(%d) at %p without I/O APIC\n", irq, handler);
 #endif
 
 }
 
+
 void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(startup_irq[irq].handler != NULL);
+    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
 
         
-    startup_irq[irq].handler = NULL;
+    bootstrap_irq[irq].handler = NULL;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("x86-intr: unmap irq(%d)\n", irq);
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-intr: unmap irq(%d) without I/O APIC\n", irq);
 #endif
 
 }

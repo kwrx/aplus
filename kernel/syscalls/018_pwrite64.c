@@ -58,42 +58,59 @@
 
 SYSCALL(18, pwrite64,
 long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos) {
-        
+
+    DEBUG_ASSERT(current_task);
+
+    current_task->iostat.rchar += (uint64_t) count;
+    current_task->iostat.syscr += 1;
+
+
+    if(unlikely(count == 0))
+        return 0;
+
     if(unlikely(!uio_check(buf, R_OK)))
         return -EFAULT;
-
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
+        
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-    if(unlikely(!(
-        (current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-        (current_task->fd->descriptors[fd].flags & O_RDWR)
-    )))
-        return -EPERM;
-
-
-
-    current_task->iostat.wchar += (uint64_t) count;
-    current_task->iostat.syscw += 1;
 
 
     ssize_t e = 0;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        if((e = vfs_write(current_task->fd->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
-            break;
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
 
-        current_task->iostat.write_bytes += (uint64_t) e;
-                
+        if(unlikely(!(
+            (fds->descriptors[fd].flags & O_WRONLY) ||
+            (fds->descriptors[fd].flags & O_RDWR)
+        )))
+            return -EPERM;
+
+
+
+        uio_lock(buf, count);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            if((e = vfs_write(fds->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
+                break;
+
+            current_task->iostat.write_bytes += (uint64_t) e;
+                    
+        });
+
+        uio_unlock(buf, count);
+
     });
+
 
 
     if(e < 0)
         return -errno;
 
     return e;
+    
 });

@@ -26,7 +26,6 @@
 
 #ifndef __ASSEMBLY__
 
-#define _GNU_SOURCE
 #include <sched.h>
 
 #include <stdint.h>
@@ -93,21 +92,21 @@
 
 
 
-struct fd {
+struct pty;
+
+struct fd_descriptor {
+
+    struct file* ref;
 
     struct {
-        
-        struct file* ref;
+        int flags:30;
+        int close_on_exec:1;
+    };
 
-        struct {
-            int flags:30;
-            int close_on_exec:1;
-        };
+};
 
-    } descriptors[CONFIG_OPEN_MAX];
-
-    size_t refcount;
-
+struct fd {
+    struct fd_descriptor descriptors[CONFIG_OPEN_MAX];
 };
 
 
@@ -118,7 +117,6 @@ struct fs {
     inode_t* exe;
 
     mode_t umask;
-    size_t refcount;
 
 };
 
@@ -170,8 +168,8 @@ typedef struct task {
     char** environ;
 
     pid_t tid;
-    gid_t tgid;
-    gid_t pgid;
+    gid_t pid;
+    gid_t pgrp;
 
     uid_t uid;
     uid_t euid;
@@ -221,9 +219,10 @@ typedef struct task {
     struct rusage* wait_rusage;
 
 
-    struct fd* fd;
-    struct fs* fs;
-    struct sighand* sighand;
+    shared_ptr(struct fd) fd;
+    shared_ptr(struct fs) fs;
+    shared_ptr(struct sighand) sighand;
+    shared_ptr(struct pty*) ctty;
 
     queue_t sigqueue;
     queue_t sigpending;
@@ -316,7 +315,7 @@ typedef struct task {
     task->status = TASK_STATUS_SLEEP
 
 #define thread_wake(task)                   \
-    task->status = TASK_STATUS_READY
+    task->status = TASK_STATUS_READY;
 
 
 
@@ -330,6 +329,8 @@ pid_t do_fork(struct kclone_args*, size_t);
 pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
+void sched_requeue(task_t*);
+int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 
 void schedule(int);
 

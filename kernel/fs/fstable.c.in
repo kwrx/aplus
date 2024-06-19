@@ -13,10 +13,9 @@
 }
 
 
-FSENTRY (1           ,   "bind"      ,   bindfs      );
-FSENTRY (TMPFS_ID    ,   "tmpfs"     ,   tmpfs       );
-//FSENTRY (PROCFS_ID   ,   "procfs"    ,   procfs      );
-FSENTRY (EXT2_ID     ,   "ext2"      ,   ext2        );
-//FSENTRY (EXFAT_ID    ,   "exFAT"     ,   exFAT       );
-//FSENTRY (ISO9660_ID  ,   "iso9660"   ,   iso9660     );
+FSENTRY (1             ,   "bind"      ,   bindfs      );
+FSENTRY (FSID_TMPFS    ,   "tmpfs"     ,   tmpfs       );
+FSENTRY (FSID_EXT2     ,   "ext2"      ,   ext2        );
+FSENTRY (FSID_ISO9660  ,   "iso9660"   ,   iso9660     );
+FSENTRY (FSID_PROCFS   ,   "proc"      ,   procfs      );
 

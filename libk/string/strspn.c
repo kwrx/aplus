@@ -28,9 +28,15 @@
 #include <limits.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
 
 
 size_t strspn(const char *str, const char* accept) {
+
+	DEBUG_ASSERT(str);
+	DEBUG_ASSERT(accept);
+	
 
 	size_t accept_length = 0;
 
@@ -60,4 +66,17 @@ size_t strspn(const char *str, const char* accept) {
 
 	}
 
+	return 0;
+
 }
+
+
+TEST(libk_strspn_test, {
+
+	DEBUG_ASSERT(strspn("hello", "h") == 1);
+	DEBUG_ASSERT(strspn("hello", "he") == 2);
+	DEBUG_ASSERT(strspn("hello", "hel") == 4);
+	DEBUG_ASSERT(strspn("hello", "hell") == 4);
+	DEBUG_ASSERT(strspn("hello", "hello") == 5);
+
+});

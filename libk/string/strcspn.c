@@ -29,8 +29,15 @@
 #include <sys/types.h>
 #include <string.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 size_t strcspn(const char *str, const char* reject) {
+
+	DEBUG_ASSERT(str);
+	DEBUG_ASSERT(reject);
+	
 
 	size_t reject_length = 0;
 
@@ -61,3 +68,25 @@ size_t strcspn(const char *str, const char* reject) {
 	}
 
 }
+
+
+TEST(libk_strcspn_test, {
+
+	DEBUG_ASSERT(strcspn("Hello World!", " ") == 5);
+	DEBUG_ASSERT(strcspn("Hello World!", "o") == 4);
+	DEBUG_ASSERT(strcspn("Hello World!", "W") == 6);
+	DEBUG_ASSERT(strcspn("Hello World!", "d") == 10);
+	DEBUG_ASSERT(strcspn("Hello World!", "H") == 0);
+	DEBUG_ASSERT(strcspn("Hello World!", "l") == 2);
+	DEBUG_ASSERT(strcspn("Hello World!", "r") == 8);
+	DEBUG_ASSERT(strcspn("Hello World!", "e") == 1);
+	DEBUG_ASSERT(strcspn("Hello World!", "w") == 12);
+	DEBUG_ASSERT(strcspn("Hello World!", "oW") == 4);
+	DEBUG_ASSERT(strcspn("Hello World!", "Hl") == 0);
+	DEBUG_ASSERT(strcspn("Hello World!", "Wd") == 6);
+	DEBUG_ASSERT(strcspn("Hello World!", "HlW") == 0);
+	DEBUG_ASSERT(strcspn("Hello World!", "HlWd") == 0);
+
+	DEBUG_ASSERT(strcspn("Hello World!", "Helo Wrd!") == 0);
+
+});

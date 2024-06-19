@@ -46,6 +46,7 @@ MODULE_LICENSE("GPL");
 
 
 static ssize_t random_read(device_t*, void*, size_t);
+static ssize_t random_write(device_t*, const void*, size_t);
 
 
 device_t device = {
@@ -65,7 +66,7 @@ device_t device = {
     .reset = NULL,
 
     .chr.io =    CHAR_IO_NBF,
-    .chr.write = NULL,
+    .chr.write = &random_write,
     .chr.read =  &random_read,
 
 };
@@ -78,13 +79,29 @@ static ssize_t random_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 
+    size_t i = 0;
 
-    srand((int) arch_timer_generic_getms());
+    for(; i + 8 < size; i += 8)
+        *(uint64_t*) (((uintptr_t) buf) + i) = arch_random() & 0xFFFFFFFFFFFFFFFF;
 
-    char* bc = (char*) buf;
-    size_t i;
-    for(i = 0; i < size; i++)
-        *bc++ = rand() % 256;
+    for(; i + 4 < size; i += 4)
+        *(uint32_t*) (((uintptr_t) buf) + i) = arch_random() & 0xFFFFFFFF;
+
+    for(; i + 2 < size; i += 2)
+        *(uint16_t*) (((uintptr_t) buf) + i) = arch_random() & 0xFFFF;
+
+    for(; i < size; i += 1)
+        *(uint8_t*) (((uintptr_t) buf)  + i) = arch_random() & 0xFF;
+
+    return size;
+
+}
+
+
+static ssize_t random_write(device_t* device, const void* buf, size_t size) {
+    
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(buf);
 
     return size;
 

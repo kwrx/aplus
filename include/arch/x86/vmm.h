@@ -35,6 +35,7 @@
 #define X86_MMU_PG_P                (1ULL << 0)
 #define X86_MMU_PG_RW               (1ULL << 1)
 #define X86_MMU_PG_U                (1ULL << 2)
+#define X86_MMU_PG_WT               (1ULL << 3)
 #define X86_MMU_PG_CD               (1ULL << 4)
 #define X86_MMU_PG_PS               (1ULL << 7)
 #define X86_MMU_PG_G                (1ULL << 8)
@@ -47,6 +48,7 @@
 
 /* System defined 11-9 */
 #define X86_MMU_PG_AP_PFB           (1ULL << 9)
+#define X86_MMU_PT_AP_PFB           (1ULL << 9)
 
 #define X86_MMU_PG_AP_TP_PAGE       (0ULL << 10)
 #define X86_MMU_PG_AP_TP_MMAP       (1ULL << 10)
@@ -94,7 +96,7 @@ typedef uint32_t x86_page_t;
 __BEGIN_DECLS
 
 
-static inline uintptr_t __alloc_page(uintptr_t pagesize, int zero) {
+static inline uintptr_t __alloc_frame(uintptr_t pagesize, bool zero) {
 
     DEBUG_ASSERT(pagesize);
     DEBUG_ASSERT(X86_MMU_PAGESIZE == PML1_PAGESIZE);
@@ -102,16 +104,36 @@ static inline uintptr_t __alloc_page(uintptr_t pagesize, int zero) {
 
     uintptr_t p;
 
-    if(likely(pagesize == X86_MMU_PAGESIZE))
+    if(likely(pagesize == X86_MMU_PAGESIZE)) {
         p = pmm_alloc_block();
-    else
+    } else {
         p = pmm_alloc_blocks_aligned(pagesize >> 12, pagesize);
+    }
 
+    DEBUG_ASSERT(p != -1);
     
-    if(likely(zero))
+    
+    if(likely(zero)) {
         memset((void*) arch_vmm_p2v(p, ARCH_VMM_AREA_HEAP), 0, pagesize);
+    }
 
     return p;
+
+}
+
+
+static inline void __free_frame(uintptr_t p, uintptr_t pagesize) {
+
+    DEBUG_ASSERT(pagesize);
+    DEBUG_ASSERT(X86_MMU_PAGESIZE == PML1_PAGESIZE);
+
+
+    if(likely(pagesize == X86_MMU_PAGESIZE)) {
+        pmm_free_block(p);
+    } else {
+        pmm_free_blocks(p, pagesize >> 12);
+    }
+
 }
 
 

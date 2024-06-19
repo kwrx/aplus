@@ -101,7 +101,7 @@ void ap_init() {
     );
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
     kprintf("ap: copied AP Startup code at 0x%X (%ld bytes)\n", AP_BOOT_OFFSET, ((uintptr_t) (&__ap_end) - (uintptr_t) (&__ap_begin)));
 #endif
 

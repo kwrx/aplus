@@ -33,7 +33,10 @@
 #include <aplus/vfs.h>
 #include <aplus/network.h>
 #include <aplus/fb.h>
+#include <aplus/pty.h>
+
 #include <aplus/utils/ringbuffer.h>
+
 #include <stdint.h>
 
 
@@ -88,7 +91,6 @@ typedef struct device {
                 struct {
                     void (*flush) (struct device*);
                 };
-                
                 struct {
                     ssize_t (*write) (struct device*, const void*, size_t);
                     ssize_t (*read) (struct device*, void*, size_t);
@@ -108,7 +110,7 @@ typedef struct device {
             size_t blkoff;
 
             struct {
-                uint8_t c_data[4096];
+                uint8_t c_data[8192];
                 uint8_t c_cached;
                 uint32_t c_blkno;
             } cache;
@@ -131,7 +133,6 @@ typedef struct device {
 
         } vid;
 
-        
         struct {
 
             void (*low_level_init) (void*, uint8_t*, void*);
@@ -153,7 +154,6 @@ typedef struct device {
             struct netif interface;
 
         } net;
-        
 
     };
 

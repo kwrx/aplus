@@ -63,18 +63,20 @@ long sys_sched_getaffinity (pid_t pid, unsigned int len, unsigned long __user * 
     if(unlikely(!uio_check(user_mask_ptr, R_OK | W_OK)))
         return -EFAULT;
 
+    if(unlikely(pid < 0))
+        return -EINVAL;
             
 
-
-    if(pid == 0)
+    if(pid == 0) {
         pid = current_task->tid;
+    }
 
 
+    cpu_set_t __safe_mask_ptr;
 
     cpu_foreach(cpu) {
 
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             if(tmp->tid != pid)
                 continue;
@@ -82,9 +84,13 @@ long sys_sched_getaffinity (pid_t pid, unsigned int len, unsigned long __user * 
             if(!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
                 return -EPERM;
 
+
+            uio_memcpy_u2s(&__safe_mask_ptr, user_mask_ptr, sizeof(cpu_set_t));
             
-            CPU_ZERO((cpu_set_t*) user_mask_ptr);
-            CPU_OR((cpu_set_t*) user_mask_ptr, (cpu_set_t*) user_mask_ptr, &tmp->affinity);
+            CPU_ZERO(&__safe_mask_ptr);
+            CPU_OR(&__safe_mask_ptr, &__safe_mask_ptr, &tmp->affinity);
+
+            uio_memcpy_s2u(user_mask_ptr, &__safe_mask_ptr, sizeof(cpu_set_t));
             
             return CPU_SETSIZE;
 

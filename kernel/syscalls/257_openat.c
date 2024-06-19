@@ -21,6 +21,11 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -28,128 +33,8 @@
 #include <aplus/memory.h>
 #include <aplus/vfs.h>
 #include <aplus/smp.h>
-#include <aplus/errno.h>
-#include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
 #include <aplus/hal.h>
-
-
-
-#define ZERO(p)         memset(p, 0, sizeof(p))
-
-
-
-static inode_t* path_symlink(inode_t*, size_t);
-static inode_t* path_find(inode_t*, const char*, size_t);
-static inode_t* path_lookup(inode_t*, const char*, int, mode_t);
-
-
-static inode_t* path_symlink(inode_t* inode, size_t size) {
-
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(size);
-
-
-    char s[size + 1];
-    ZERO(s);
-
-    if(vfs_readlink(inode, s, size) <= 0)
-        return NULL;
-
-    return path_lookup(inode->parent, s, O_RDONLY, 0);
-
-}
-
-
-static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
-
-    DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(path);
-    DEBUG_ASSERT(size);
-
-
-    char s[size + 1]; 
-    ZERO(s);
-
-    strncpy(s, path, size);
-
-
-    if((inode = vfs_finddir(inode, s)) == NULL)
-        return NULL;
-
-    struct stat st;
-    if(vfs_getattr(inode, &st) < 0)
-        return NULL;
-
-
-    if(S_ISLNK(st.st_mode))
-        inode = path_symlink(inode, st.st_size);
-
-    return inode;
-}
-
-
-
-static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
-
-    DEBUG_ASSERT(cwd);
-    DEBUG_ASSERT(path);
-
-
-    inode_t* c;
-
-    if(path[0] == '/')
-        { c = current_task->fs->root; path++; }
-    else
-        c = cwd;
-
-    DEBUG_ASSERT(c);
-
-
-    while(path[0] == '/')
-        path++;
-
-
-    while(strchr(path, '/') && c) { //! FIXME: normalize path from // to /
-         
-        c = path_find(c, path, strcspn(path, "/")); 
-        path = strchr(path, '/') + 1;
-    
-    }
-
-
-    if(unlikely(!c))
-        return errno = ENOENT, NULL;
-
-    
-    inode_t* r;
-
-    if(path[0] != '\0')
-        r = path_find(c, path, strlen(path));
-    else
-        r = c;
-
-
-    if(unlikely(!r)) {
-        if(flags & O_CREAT) {
-            r = vfs_creat(c, path, mode);
-
-            if(unlikely(!r))
-                return NULL;
-        }
-        else
-            return errno = ENOENT, NULL;
-    } else
-        if((flags & O_EXCL) && (flags & O_CREAT))
-            return errno = EEXIST, NULL;
-
-
-    return r;   
-}
+#include <aplus/errno.h>
 
 
 
@@ -172,22 +57,6 @@ static inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mo
 SYSCALL(257, openat,
 long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) {
     
-    if(dfd < 0) {
-       
-        if(dfd != AT_FDCWD)
-            return -EBADF;
-    
-    } else {
-
-        if(dfd > CONFIG_OPEN_MAX)
-            return -EBADF;
-
-        if(unlikely(!current_task->fd->descriptors[dfd].ref))
-            return -EBADF;
-
-    }
-
-
     if(unlikely(!filename))
         return -EINVAL;
     
@@ -195,30 +64,68 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
         return -EFAULT;
 
 
-    char __safe_filename[PATH_MAX];
-    uio_strncpy_u2s(__safe_filename, filename, PATH_MAX);
+
+    inode_t* cwd = NULL;
+    
+    
+    if(dfd < 0) {
+       
+        if(dfd != AT_FDCWD)
+            return -EBADF;
+
+
+        shared_ptr_access(current_task->fs, fs, {
+
+            if(unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = fs->cwd;
+        
+        });
+
+    
+    } else {
+
+        if(dfd >= CONFIG_OPEN_MAX)
+            return -EBADF;
+
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[dfd].ref))
+                return -EBADF;
+
+            cwd = fds->descriptors[dfd].ref->inode;
+            
+        });
+
+    }
+
+    DEBUG_ASSERT(cwd);
 
 
 
-    inode_t* cwd;
-    if(dfd == AT_FDCWD)
-        cwd = current_task->fs->cwd;
-    else
-        cwd = current_task->fd->descriptors[dfd].ref->inode;
+    char __safe_filename[CONFIG_PATH_MAX] = { 0 };
+    uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
 
 
 
-    inode_t* r;
+#if DEBUG_LEVEL_TRACE
+    kprintf("openat(%d, \"%s\", %d, %d)\n", dfd, __safe_filename, flags, mode);
+#endif
+
+
+    inode_t* r = NULL;
 
     if((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
         return -errno;
 
 
 
-    struct stat st;
-    if(vfs_getattr(r, &st) < 0)
-        return (errno == ENOSYS) ? -EACCES : -errno;
+    struct stat st = { 0 };
 
+    if(vfs_getattr(r, &st) < 0) {
+        return (errno == ENOSYS) ? -EACCES : -errno;
+    }
 
 
     if (
@@ -227,16 +134,17 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
 #endif
         S_ISLNK(st.st_mode)
     ) {
-        if((r = path_symlink(r, st.st_size)) == NULL)
+        if((r = path_follows(r)) == NULL)
             return -errno;
     }
 
 
 
 #ifdef O_DIRECTORY
-    if(flags & O_DIRECTORY)
+    if(flags & O_DIRECTORY) {
         if(!(S_ISDIR(st.st_mode)))
             return -ENOTDIR;
+    }
 #endif
 
 
@@ -269,56 +177,74 @@ long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) 
     }
 
 
-    if(vfs_open(r, flags) < 0)
+
+    inode_t* inode = NULL;
+
+    if((inode = vfs_open(r, flags)) == NULL) {
+     
         if(errno != ENOSYS)
             return -errno;
 
+        inode = r;
+    
+    }
+
+    DEBUG_ASSERT(inode);
 
 
-    int fd;
+    int fd = -1;
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        for(fd = 0; fd < CONFIG_OPEN_MAX; fd++)
-            if(!current_task->fd->descriptors[fd].ref)
+        __lock(&current_task->lock, {
+
+            for(fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+
+                if(fds->descriptors[fd].ref == NULL)
+                    break;
+
+            }
+
+            if(fd == CONFIG_OPEN_MAX)
                 break;
 
+            
+            struct file* ref = NULL;
+            
+            if((ref = fd_append(inode, 0, 0)) == NULL) {
+
+                fd = CONFIG_FILE_MAX;
+
+            } else {
+
+                if(flags & O_APPEND)
+                    ref->position = st.st_size;
+                else
+                    ref->position = 0;
+
+            
+                fds->descriptors[fd].ref   = ref;
+                fds->descriptors[fd].flags = flags;
+            
+            }
+
+        });
+        
+
         if(fd == CONFIG_OPEN_MAX)
-            break;
+            return -EMFILE;
 
-        
-        struct file* ref;
-        
-        if((ref = fd_append(r, 0, 0)) == NULL)
-            fd = FILE_MAX;
+        if(fd == CONFIG_FILE_MAX)
+            return -ENFILE;
 
-        else {
 
-            if(flags & O_APPEND)
-                ref->position = st.st_size;
-            else
-                ref->position = 0;
-
-        
-            current_task->fd->descriptors[fd].ref = ref;
-            current_task->fd->descriptors[fd].flags = flags;
-        
-        }
+        DEBUG_ASSERT(fd >= 0);
+        DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
     });
-    
 
-    if(fd == CONFIG_OPEN_MAX)
-        return -EMFILE;
-
-    if(fd == FILE_MAX)
-        return -ENFILE;
-
-
-    DEBUG_ASSERT(fd >= 0);
-    DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref->inode);
 
     return fd;
 

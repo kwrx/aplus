@@ -38,10 +38,8 @@
 #include <arch/x86/intr.h>
 
 
-
+__nonnull(1)
 uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
-
-    DEBUG_ASSERT(space);
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;

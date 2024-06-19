@@ -27,6 +27,7 @@
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
 #include <fcntl.h>
@@ -51,5 +52,35 @@
 
 SYSCALL(318, getrandom,
 long sys_getrandom (char __user * buf, size_t count, unsigned int flags) {
-    return -ENOSYS;
+
+    if(unlikely(!buf))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(count == 0))
+        return 0;
+
+
+    size_t i = 0;
+
+    for(; i + 8 < count; i += 8) {
+        uio_w64((uintptr_t) buf + i, arch_random() & 0xFFFFFFFFFFFFFFFF);
+    }
+
+    for(; i + 4 < count; i += 4) {
+        uio_w32((uintptr_t) buf + i, arch_random() & 0xFFFFFFFF);
+    }
+
+    for(; i + 2 < count; i += 2) {
+        uio_w16((uintptr_t) buf + i, arch_random() & 0xFFFF);
+    }
+
+    for(; i < count; i += 1) {
+        uio_w8((uintptr_t) buf + i,  arch_random() & 0xFF);
+    }
+
+    return count;
+
 });

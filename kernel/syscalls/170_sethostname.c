@@ -25,14 +25,13 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
-#include <aplus/task.h>
-#include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 #include <stdint.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+
+
+// @see kernel/init/hostname.c
+extern char* hostname;
 
 
 /***
@@ -50,5 +49,24 @@
 
 SYSCALL(170, sethostname,
 long sys_sethostname (char __user * name, int len) {
-    return -ENOSYS;
+    
+    if(unlikely(!name))
+        return -EFAULT;
+
+    if(unlikely(!uio_check(name, R_OK)))
+        return -EFAULT;
+
+    if(unlikely(len < 0))
+        return -EINVAL;
+
+    if(unlikely(len > CONFIG_NAME_MAX))
+        return -EINVAL;
+
+
+    uio_memcpy_u2s(hostname, name, len);
+
+    hostname[len] = '\0';
+
+    return 0;
+
 });

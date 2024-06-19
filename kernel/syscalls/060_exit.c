@@ -53,7 +53,7 @@
 SYSCALL(60, exit,
 long sys_exit (int status) {
 
-    PANIC_ON(current_task->tid != 1);
+    PANIC_ASSERT(current_task->tid != 1);
 
 
     if(status & (1U << 31))
@@ -62,7 +62,7 @@ long sys_exit (int status) {
         current_task->exit.value = (status & 0377) << 8;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 2
+#if DEBUG_LEVEL_TRACE
     kprintf("exit: task %d (%s) %s with %X\n", 
         current_task->tid, 
         current_task->argv[0],
@@ -103,11 +103,30 @@ long sys_exit (int status) {
 
     if(current_task->status != TASK_STATUS_STOP) {
 
-        // TODO: remove references from fs, fd, sighand, ecc...
+        shared_ptr_free_with_dtor(current_task->fd, fds, {
 
-        //arch_userspace_release();
+            for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+
+                if(!fds->descriptors[i].ref)
+                    continue;
+
+                fd_remove(fds->descriptors[i].ref, true);
+
+                fds->descriptors[i].ref = NULL;
+                fds->descriptors[i].flags = 0;
+
+            }
+
+        });
+
+        
+        shared_ptr_free(current_task->fs);
+        shared_ptr_free(current_task->sighand);
+
+        arch_vmm_free_address_space(current_task->address_space);
 
     }
+
 
 
     thread_restart_sched(current_task);

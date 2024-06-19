@@ -43,12 +43,12 @@
 
 
 // see startup.S
-extern uint8_t startup_tss;
+extern uint8_t bootstrap_tss;
 
 
 
 __percpu
-void arch_cpu_init(int index) {
+void arch_cpu_init(cpuid_t index) {
 
     __builtin_cpu_init();
 
@@ -67,11 +67,11 @@ void arch_cpu_init(int index) {
     for(i = 0; i < SMP_CPU_MAX_FEATURES; i++)
         core->cpu.cores[index].features[i] = 0ULL;
         
-    core->cpu.cores[index].tss = (void*) (((uintptr_t) &startup_tss) + (index * sizeof(tss_t)));
+    core->cpu.cores[index].tss = (void*) (((uintptr_t) &bootstrap_tss) + (index * sizeof(tss_t)));
 
 
-    spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER);
-    spinlock_init_with_flags(&core->cpu.cores[index].sched_lock, SPINLOCK_FLAGS_CPU_OWNER);
+    spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+    spinlock_init_with_flags(&core->cpu.cores[index].sched_lock,  SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
     core->cpu.cores[index].sched_count = 0;
 
@@ -84,7 +84,7 @@ void arch_cpu_init(int index) {
     x86_cpuid(0, &ex, &bx, &cx, &dx);
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
     char vendor[13];
     vendor[12] = '\0';
@@ -169,9 +169,9 @@ void arch_cpu_init(int index) {
 
 
 
-#if defined(DEBUG)
+#if DEBUG_LEVEL_INFO
 
-        kprintf("cpu: id:         #%d\n", index);
+        kprintf("cpu: id:         #%zd\n", index);
         kprintf("     vendor:     %s\n", vendor);
         kprintf("     cpuid:      0x%lX (extended: 0x%lX)\n", ex, eex);
         kprintf("     features:   ");
@@ -375,11 +375,7 @@ void arch_cpu_init(int index) {
         x86_cpuid(0x80000003, (long *)(name + 16), (long *)(name + 20), (long *)(name + 24), (long *)(name + 28));
         x86_cpuid(0x80000004, (long *)(name + 32), (long *)(name + 36), (long *)(name + 40), (long *)(name + 44));
 
-        const char* p = name;
-        while(*p == ' ')
-            p++;
-
-        kprintf("     name:       %s\n", p);
+        kprintf("     name:       %.48s\n", name);
 
     }
 
@@ -389,16 +385,16 @@ void arch_cpu_init(int index) {
 
 
     //! Requirements
-    PANIC_ON(cpu_has(index, X86_FEATURE_MSR));
+    PANIC_ASSERT(cpu_has(index, X86_FEATURE_MSR));
 
 #if defined(__x86_64__)
-    PANIC_ON(cpu_has(index, X86_FEATURE_LM));
-    PANIC_ON(cpu_has(index, X86_FEATURE_PAE));
-    PANIC_ON(cpu_has(index, X86_FEATURE_GBPAGES));
+    PANIC_ASSERT(cpu_has(index, X86_FEATURE_LM));
+    PANIC_ASSERT(cpu_has(index, X86_FEATURE_PAE));
+    // // PANIC_ASSERT(cpu_has(index, X86_FEATURE_GBPAGES));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)
-    PANIC_ON(cpu_has(index, X86_FEATURE_RDTSCP));
+    PANIC_ASSERT(cpu_has(index, X86_FEATURE_RDTSCP));
 #endif
 
 
@@ -481,7 +477,7 @@ void arch_cpu_init(int index) {
 
 
 __percpu
-uint64_t arch_cpu_get_current_id(void) {
+cpuid_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
 
@@ -501,20 +497,20 @@ uint64_t arch_cpu_get_current_id(void) {
     id = 0ULL;
 #endif
 
-    return id;
+    return (cpuid_t) id;
 }
 
 
-void arch_cpu_startup(int index) {
+void arch_cpu_startup(cpuid_t index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
 
-    PANIC_ON(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
-    PANIC_ON( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
+    PANIC_ASSERT(!(core->cpu.cores[index].flags & SMP_CPU_FLAGS_ENABLED));
+    PANIC_ASSERT( (core->cpu.cores[index].flags & SMP_CPU_FLAGS_AVAILABLE));
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
-    kprintf("x86-cpu: starting up core #%d\n", index);
+#if DEBUG_LEVEL_INFO
+    kprintf("x86-cpu: starting up core #%zd\n", index);
 #endif
 
     //* Clone Address Space
@@ -602,6 +598,6 @@ void arch_cpu_startup(int index) {
         return;
 
 
-    kprintf("x86-cpu: FAIL! starting up CPU #%d: id(%ld) flags(%ld)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
+    kprintf("x86-cpu: FAIL! starting up CPU #%zd: id(%ld) flags(%ld)\n", index, core->cpu.cores[index].archid, core->cpu.cores[index].flags);
 
 }

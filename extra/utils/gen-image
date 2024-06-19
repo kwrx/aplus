@@ -1,19 +1,66 @@
 #!/bin/bash
 
 # Usage
-#   gen-image [SOURCE] [DEST]
+#   gen-image [OPTIONS] SOURCE OUTPUT
 
-tmp="/tmp/aplus-hdd"
-sysroot="$1"
-output="$2"
+# This script generates an image from the given source directory.
 
 
+TMPDIR="/tmp/aplus-hdd"
+LIVE_MODE=0
+
+case "$1" in
+    -h|--help)
+        echo "Usage: gen-image [OPTIONS] SOURCE OUTPUT"
+        echo "  SOURCE: The source directory to generate an image from."
+        echo "  OUTPUT: The destination file to generate the image to."
+        echo "  OPTIONS:"
+        echo "    -h, --help: Show this help message."
+        echo "        --live: Generate a live image."
+        exit 0
+        ;;
+    --live)
+        LIVE_MODE=1
+        shift
+        ;;
+    *)
+        ;;
+esac
+
+
+SOURCE="$1"
+OUTPUT="$2"
+
+if [ -z "$SOURCE" ]; then
+    echo "No source directory specified."
+    exit 1
+fi
+
+if [ -z "$OUTPUT" ]; then
+    echo "No destination file specified."
+    exit 1
+fi
+
+if [ -e $TMPDIR ]; then
+    sudo rm -rf $TMPDIR
+fi
+
+
+
+
+function compress {
+
+    echo "    GZIP    $(realpath --relative-base=$TMPDIR/p1 $1)"
+    sudo gzip $1
+
+}
 
 
 function losetup_new_device {
 
     local output=$1
     local offset=$2
+    local size=$3
 
     if [ -z $output ]; then
         echo "losetup_new_device: output is empty"
@@ -32,8 +79,11 @@ function losetup_new_device {
         exit 1
     fi
 
-
-    sudo losetup $device $output -o $offset
+    if [ -z $size ]; then
+        sudo losetup $device $output --offset $offset
+    else
+        sudo losetup $device $output --offset $offset --sizelimit $size
+    fi
 
     if [ $? -ne 0 ]; then
         echo "losetup_new_device: losetup failed"
@@ -48,10 +98,10 @@ function losetup_new_device {
 
 
 
-if [ ! -f $output ]; then
+if [ ! -f $OUTPUT ]; then
 
-    # Create the actual disk image - 128MiB
-    dd status=none if=/dev/zero of=$output bs=4M count=32
+    # Create the actual disk image - 2GiB
+    dd status=none if=/dev/zero of=$OUTPUT bs=4M count=512
 
     if [ $? -ne 0 ]; then
         echo "gen-image: failed to create the disk image"
@@ -60,33 +110,54 @@ if [ ! -f $output ]; then
     
     
     # Make partition table, partition and set it bootable
-    echo -e "n\np\n\n\n\nw\n" | fdisk $output &> /dev/null
+    echo -e "n\n\n\n93716\nef00\nn\n\n\n\n\nw\ny\n" | gdisk $OUTPUT &> /dev/null
     sync
 
     # Map the partitions from the image file
-    disk=$(losetup_new_device $output 0)
-    part=$(losetup_new_device $output 1048576)
+    disk=$(losetup_new_device $OUTPUT 0)
+    boot=$(losetup_new_device $OUTPUT 1048576 46934528)
+    part=$(losetup_new_device $OUTPUT 48234496)
 
-    # Make an ext2 filesystem on the first partition
-    sudo mkfs.ext2 $part &> /dev/null
+    # Make filesystem on the boot partition
+    sudo mkfs.vfat $boot -n "EFI" -F 32 &> /dev/null
+
+    # Make filesystem on the first partition
+    if [ $LIVE_MODE -eq 1 ]; then
+        sudo mkfs.vfat -F32 $part &> /dev/null
+    else
+        sudo mkfs.ext2 $part &> /dev/null
+    fi
 
     # Mount the filesystem via loopback
-    mkdir -p $tmp/p1
-    sudo mount $part $tmp/p1
+    mkdir -p $TMPDIR/boot
+    mkdir -p $TMPDIR/p1
+
+    sudo mount -t vfat $boot $TMPDIR/boot
+
+    if [ $LIVE_MODE -eq 1 ]; then
+        sudo mount -t vfat $part $TMPDIR/p1
+    else
+        sudo mount -t ext2 $part $TMPDIR/p1
+    fi
 
     # Install Grub
-    sudo grub-install --no-floppy                                                           \
-                 --target=i386-pc                                                           \
-                 --force                                                                    \
-                 --modules="normal part_msdos fat ext2 multiboot2 biosdisk"                 \
-                 --root-directory=$tmp/p1                                                   \
-                 $disk &> /dev/null
+    sudo grub-install --no-floppy                                                                       \
+                 --target=x86_64-efi                                                                    \
+                 --removable                                                                            \
+                 --no-nvram                                                                             \
+                 --force                                                                                \
+                 --modules="part_gpt part_msdos fat ext2 normal multiboot2 gzio progress all_video"     \
+                 --efi-directory=$TMPDIR/boot                                                           \
+                 --root-directory=$TMPDIR/p1                                                            \
+                 --boot-directory=$TMPDIR/p1/boot &> /dev/null                                         
 
     # Unmount the loopback
-    sudo umount $tmp/p1
+    sudo umount $TMPDIR/boot
+    sudo umount $TMPDIR/p1
 
     # Unmap the image
     sudo losetup -d $disk
+    sudo losetup -d $boot
     sudo losetup -d $part
     sync
 
@@ -94,24 +165,66 @@ fi
 
 
 # Map the partitions from the image file
-part=$(losetup_new_device $output 1048576)
+part=$(losetup_new_device $OUTPUT 48234496)
+
+# Make directories
+mkdir -p $TMPDIR/p1
 
 # Mount the filesystem via loopback
-mkdir -p $tmp/p1
-sudo mount $part $tmp/p1
+if [ $LIVE_MODE -eq 1 ]; then
+    sudo mount -t vfat $part $TMPDIR/p1
+else
+    sudo mount -t ext2 $part $TMPDIR/p1
+fi
 
-# Copy files
-sudo rm -rf $tmp/p1/*
-sudo cp -rf $sysroot/* $tmp/p1
+if [ $LIVE_MODE -eq 1 ]; then
+
+    # Clean
+    sudo rm -rf $TMPDIR/p1/*
+
+    # Make directories
+    sudo mkdir -p $TMPDIR/p1/boot
+    sudo mkdir -p $TMPDIR/p1/usr/lib/modules
+
+    # Copy files
+    sudo cp -rf $SOURCE/boot/* $TMPDIR/p1/boot/
+    sudo cp -rf $SOURCE/usr/lib/modules/* $TMPDIR/p1/usr/lib/modules/
+
+    # Copy initrd
+    sudo cp -f /tmp/aplus-initrd/initrd.img $TMPDIR/p1/boot/initrd.img
+
+else
+
+    # Clean
+    sudo rm -rf $TMPDIR/p1/*
+
+    # Copy files
+    sudo cp -rf $SOURCE/* $TMPDIR/p1
+
+fi
+
+
+# Compress boot files
+
+for ko in $(find $TMPDIR/p1/usr/lib/modules -name "*.ko"); do
+    compress $ko
+done
+
+compress $TMPDIR/p1/usr/lib/modules/exports
+compress $TMPDIR/p1/boot/aplus
+
+if [ $LIVE_MODE -eq 1 ]; then
+    compress $TMPDIR/p1/boot/initrd.img
+fi
+
+
 
 # Unmount the loopback
-sudo umount $tmp/p1
+sudo umount $TMPDIR/p1
 
 # Unmap the image
 sudo losetup -d $part
 sync
 
-# Fix permissions
-#LOGNAME=`whoami | awk '{print $1}'`
-#LOGGROUP=`groups $LOGNAME | awk '{print $3}'`
-#sudo chown $LOGNAME:$LOGGROUP $output
+# Clean
+sudo rm -rf $TMPDIR

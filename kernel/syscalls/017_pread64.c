@@ -58,37 +58,52 @@
 SYSCALL(17, pread64,
 long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
 
-    if(unlikely(!uio_check(buf, R_OK | W_OK)))
-        return -EFAULT;
-
-    if(unlikely(fd > CONFIG_OPEN_MAX)) // TODO: add network support
-        return -EBADF;
-
-    if(unlikely(!current_task->fd->descriptors[fd].ref))
-        return -EBADF;
-
-
-    if(unlikely(!(
-        !(current_task->fd->descriptors[fd].flags & O_WRONLY) ||
-         (current_task->fd->descriptors[fd].flags & O_RDONLY)
-    )))
-        return -EPERM;
-
-
+    DEBUG_ASSERT(current_task);
 
     current_task->iostat.rchar += (uint64_t) count;
     current_task->iostat.syscr += 1;
 
 
+    if(unlikely(count == 0))
+        return 0;
+
+    if(unlikely(!uio_check(buf, R_OK | W_OK)))
+        return -EFAULT;
+
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
+        return -EBADF;
+
+
+
     ssize_t e = 0;
 
-    __lock(&current_task->fd->descriptors[fd].ref->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        if((e = vfs_read(current_task->fd->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
-            break;
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
 
-        current_task->iostat.read_bytes += (uint64_t) e;
-        
+
+        if(unlikely(!(
+            !(fds->descriptors[fd].flags & O_WRONLY) ||
+             (fds->descriptors[fd].flags & O_RDONLY)
+        )))
+            return -EPERM;
+
+
+
+        uio_lock(buf, count);
+
+        __lock(&fds->descriptors[fd].ref->lock, {
+
+            if((e = vfs_read(fds->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
+                break;
+
+            current_task->iostat.read_bytes += (uint64_t) e;
+            
+        });
+
+        uio_unlock(buf, count);
+
     });
 
 
@@ -96,4 +111,5 @@ long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos) {
         return -errno;
 
     return e;
+    
 });

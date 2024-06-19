@@ -27,13 +27,20 @@
 #include <stdarg.h>
 #include <sys/types.h>
 
+#include <aplus.h>
+#include <aplus/debug.h>
+
 
 int memcmp(const void* va, const void* vb, size_t size) {
+
+    DEBUG_ASSERT(va);
+    DEBUG_ASSERT(vb);
+    DEBUG_ASSERT(size > 0);
 
     const unsigned char* a = va;
     const unsigned char* b = vb;
 
-    for(int i = 0; i < size; i++) {
+    for(size_t i = 0; i < size; i++) {
 
         if(*a != *b)
             return *a - *b;
@@ -46,3 +53,13 @@ int memcmp(const void* va, const void* vb, size_t size) {
     return 0;
 
 }
+
+
+TEST(libk_memcmp_test, {
+
+    char a[] = "Hello World!";
+    char b[] = "Hello World!";
+
+    DEBUG_ASSERT(memcmp(a, b, sizeof(a)) == 0);
+
+});

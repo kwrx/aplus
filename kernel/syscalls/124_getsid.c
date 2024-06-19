@@ -49,5 +49,10 @@
 
 SYSCALL(124, getsid,
 long sys_getsid (pid_t pid) {
-    return -ENOSYS;
+
+    DEBUG_ASSERT(current_cpu);
+    DEBUG_ASSERT(current_task);
+
+    return current_task->sid;
+
 });

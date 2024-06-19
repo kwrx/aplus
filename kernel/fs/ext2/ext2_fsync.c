@@ -39,9 +39,9 @@ int ext2_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
 
-    vfs_cache_flush_all(&inode->sb->cache);
+    cache_commit_all(&inode->sb->cache);
 
     return 0;
 

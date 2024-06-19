@@ -119,6 +119,7 @@ typedef struct {
 
 
 
+int video_getattr(device_t*, struct stat*);
 int video_ioctl(device_t*, int, void*);
 void video_init(device_t*);
 void video_dnit(device_t*);

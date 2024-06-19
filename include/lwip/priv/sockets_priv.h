@@ -70,6 +70,9 @@ struct lwip_sock {
   /** data that was left from the previous read */
   union lwip_sock_lastdata lastdata;
 #if LWIP_SOCKET_SELECT || LWIP_SOCKET_POLL
+#if defined(__aplus__)
+  u32_t evt;
+#endif
   /** number of times data was received, set by event_callback(),
       tested by the receive and select functions */
   s16_t rcvevent;

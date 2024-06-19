@@ -65,20 +65,20 @@ long sys_brk (unsigned long new_brk) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
-    kprintf("sys_brk: pid(%d) brk(0x%lX) new(0x%lX)\n", current_task->tid, current_task->userspace.end, new_brk);
+#if DEBUG_LEVEL_TRACE
+    //kprintf("sys_brk: pid(%d) brk(0x%lX) new(0x%lX)\n", current_task->tid, current_task->userspace.end, new_brk);
 #endif
 
     // TODO: Use less memory
 
-    if(new_brk & (arch_vmm_getpagesize() - 1))
+    if(new_brk & (arch_vmm_getpagesize() - 1)) {
         new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
-
+    }
 
 
     if(new_brk > current_task->userspace.end) {
 
-#if defined(CONFIG_DEMAND_PAGING)
+#if defined(CONFIG_DEMAND_PAGING) && 0 // TODO: Fix demand paging on brk
         arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
                         ARCH_VMM_MAP_RDWR        |
                         ARCH_VMM_MAP_USER        |

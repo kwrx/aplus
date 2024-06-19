@@ -50,6 +50,8 @@
     } 
 
 
+__BEGIN_DECLS
+
 void syscall_init(void);
 long syscall_invoke(unsigned long, long, long, long, long, long, long);
 long syscall_restart();
@@ -96,7 +98,7 @@ extern long sys_link (const char __user * oldname, const char __user * newname);
 
 extern long sys_unlink (const char __user * pathname);
 
-extern long sys_symlink (const char __user * old, const char __user * new);
+extern long sys_symlink (const char __user * oldf, const char __user * newf);
 
 extern long sys_readlink (const char __user * path, char __user * buf, int bufsiz);
 
@@ -108,7 +110,7 @@ extern long sys_chown (const char __user * filename, uid_t user, gid_t group);
 
 extern long sys_mknod (const char __user * filename, mode_t mode, unsigned dev);
 
-extern long sys_mount (char __user * dev_name, char __user * dir_name, char __user * type, unsigned long flags, void __user * data);
+extern long sys_mount (char __user const * dev_name, char __user const * dir_name, char __user const * type, unsigned long flags, void __user * data);
 
 extern long sys_umount (char __user * name, int flags);
 
@@ -126,6 +128,10 @@ extern long sys_chroot(const char __user * pathname);
 
 extern long sys_brk (unsigned long new_brk);
 
+extern long sys_kill(pid_t pid, int sig);
+
 extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * uinfo);
+
+__END_DECLS
 
 #endif

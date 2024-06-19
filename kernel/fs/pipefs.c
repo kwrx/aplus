@@ -70,8 +70,14 @@ int pipefs_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
+
+
+    inode->ops.read  = NULL;
+    inode->ops.write = NULL;
+    inode->ops.close = NULL;
     
     ringbuffer_destroy((ringbuffer_t*) inode->userdata);
+
     return 0;
 
 }
@@ -82,6 +88,9 @@ ssize_t pipefs_read(inode_t* inode, void* buf, off_t offset, size_t size) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
+
+    __unused_param(offset);
+
 
     if(unlikely(size == 0))
         return 0;
@@ -99,6 +108,9 @@ ssize_t pipefs_write(inode_t* inode, const void* buf, off_t offset, size_t size)
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
+
+    __unused_param(offset);
+
 
     if(unlikely(size == 0))
         return 0;
@@ -137,28 +149,22 @@ int pipefs_getattr(inode_t* inode, struct stat* st) {
 
 
 
-inode_t* vfs_mkfifo(size_t bufsize, int flags) {
+inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 
+    DEBUG_ASSERT(inode);
     DEBUG_ASSERT(bufsize);
 
-    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, sizeof(ringbuffer_t));
+    __unused_param(flags);
+    
+
+    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
    
     if(unlikely(!rb))
         return errno = ENOMEM, NULL;
 
-
-    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
-
-    if(unlikely(!inode))
-        return errno = ENOMEM, NULL;
-
-
     ringbuffer_init(rb, bufsize);
 
-    inode->name[0]      = '\0';
-    inode->ino          = __pipefs_next_ino++;
-    inode->sb           = &pipefs_superblock;
-    inode->parent       = NULL;
+
     inode->userdata     = rb;
     inode->ops.open     = NULL;
     inode->ops.close    = pipefs_close;
@@ -166,8 +172,27 @@ inode_t* vfs_mkfifo(size_t bufsize, int flags) {
     inode->ops.write    = pipefs_write;
     inode->ops.getattr  = pipefs_getattr;
 
-    spinlock_init(&inode->lock);
+    inode->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
 
+
+    return inode;
+
+}
+
+inode_t* pipefs_inode() {
+
+    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+
+    if(unlikely(!inode))
+        return errno = ENOMEM, NULL;
+
+    
+    inode->name[0]      = '\0';
+    inode->ino          = __pipefs_next_ino++;
+    inode->sb           = &pipefs_superblock;
+    inode->parent       = NULL;
+
+    spinlock_init(&inode->lock);
 
     return inode;
 

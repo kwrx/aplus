@@ -39,18 +39,18 @@ ssize_t tmpfs_readlink(inode_t* inode, char * buf, size_t len) {
    
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    tmpfs_inode_t* i = vfs_cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
     if(!i->data)
         return 0;
-
-    if(len > i->st.st_size)
+        
+    if(len > (size_t) i->st.st_size)
         len = i->st.st_size;
 
 

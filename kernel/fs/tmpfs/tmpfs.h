@@ -30,10 +30,10 @@
 #include <aplus/vfs.h>
 
 #include <aplus/utils/list.h>
+#include <aplus/utils/cache.h>
 
 
-#define TMPFS_SIZE_MAX          (4 * 1024 * 1024)
-#define TMPFS_NODES_MAX         (4096)
+#define TMPFS_NODES_MAX         (8192)
 
 
 typedef struct {
@@ -70,7 +70,8 @@ int tmpfs_symlink (inode_t*, const char*, const char*);
 int tmpfs_unlink (inode_t*, const char*);
 
 
-void* tmpfs_cache_load (vfs_cache_t*, ino_t);
-void tmpfs_cache_flush (vfs_cache_t*, ino_t, void*);
+tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino);
+void tmpfs_cache_commit(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode);
+void tmpfs_cache_release(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode);
 
 #endif

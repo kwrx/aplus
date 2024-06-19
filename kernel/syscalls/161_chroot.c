@@ -31,6 +31,7 @@
 #include <aplus/debug.h>
 #include <aplus/syscall.h>
 #include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/errno.h>
 
 
@@ -50,19 +51,31 @@
 SYSCALL(161, chroot,
 long sys_chroot (const char __user * filename) {
 
+    if(unlikely(!filename))
+        return -EINVAL;
+
+    if(unlikely(!uio_check(filename, R_OK)))
+        return -EFAULT;
+
+
     int fd;
     if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
         return fd;
 
-    DEBUG_ASSERT(current_task->fd->descriptors[fd].ref);
-    
 
-    __lock(&current_task->lock, {
+    shared_ptr_access(current_task->fd, fds, {
 
-        current_task->fs->cwd = current_task->fd->descriptors[fd].ref->inode;
-        current_task->fs->root = current_task->fd->descriptors[fd].ref->inode;
+        DEBUG_ASSERT(fds->descriptors[fd].ref);
+        
+        shared_ptr_access(current_task->fs, fs, {
+
+            fs->cwd  = fds->descriptors[fd].ref->inode;
+            fs->root = fds->descriptors[fd].ref->inode;
+
+        });
 
     });
+
 
 
     if((fd = sys_close(fd)) < 0)

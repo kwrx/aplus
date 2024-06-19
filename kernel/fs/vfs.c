@@ -33,6 +33,8 @@
 #include <aplus/vfs.h>
 #include <aplus/errno.h>
 
+#include <aplus/utils/ptr.h>
+
 
 static struct {
 
@@ -54,10 +56,10 @@ void vfs_init(void) {
     #include "fstable.c.in"
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
 
     for(i = 0; fs_table[i].id; i++)
-        kprintf("vfs: available filesystem '%s'\n", fs_table[i].name);
+        kprintf("vfs: found filesystem '%s'\n", fs_table[i].name);
 
 #endif
 
@@ -65,7 +67,7 @@ void vfs_init(void) {
     rootfs_init();
     fd_init();
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("vfs: ready!\n");
 #endif
 
@@ -107,7 +109,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
         dir->ino ^= dir->sb->ino;
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 0
+#if DEBUG_LEVEL_INFO
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
 #endif
 
@@ -119,37 +121,66 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 }
 
 
-int vfs_open(inode_t* inode, int flags) {
+inode_t* vfs_open(inode_t* inode, int flags) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.open))
-        __lock_return(&inode->lock, int, inode->ops.open(inode, flags));
+        __lock_return(&inode->lock, inode_t*, inode->ops.open(inode, flags));
 
-    return errno = ENOSYS, -1;
+    return errno = ENOSYS, NULL;
+
 }
 
 
 int vfs_close(inode_t* inode) {
+
     DEBUG_ASSERT(inode);
 
-    if(likely(inode->ops.close))
-        __lock_return(&inode->lock, int, inode->ops.close(inode));
+    if(likely(inode->ops.close)) {
+
+        __lock_return(&inode->lock, int, ({
+            
+            int e = inode->ops.close(inode); 
+
+            shared_ptr_nullable_access(inode->ev, ev, {
+    
+                if(ev->events) {
+
+                    ev->events  = 0;
+                    ev->revents = POLLHUP;
+
+                    __atomic_fetch_add(&ev->futex, 1, __ATOMIC_SEQ_CST);
+
+                }
+
+            });
+
+            e;
+
+        }));
+
+    }
 
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_ioctl(inode_t* inode, long req, void* arg) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.ioctl))
         __lock_return(&inode->lock, int, inode->ops.ioctl(inode, req, arg));
     
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_getattr (inode_t* inode, struct stat* st) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
 
@@ -157,10 +188,12 @@ int vfs_getattr (inode_t* inode, struct stat* st) {
         __lock_return(&inode->lock, int, inode->ops.getattr(inode, st));
 
     return errno = ENOSYS, -1;
+
 }
 
 
 int vfs_setattr (inode_t* inode, struct stat* st) {
+
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
 
@@ -168,6 +201,7 @@ int vfs_setattr (inode_t* inode, struct stat* st) {
         __lock_return(&inode->lock, int, inode->ops.setattr(inode, st));
 
     return errno = EROFS, -1;
+
 }
 
 
@@ -229,6 +263,7 @@ int vfs_removexattr (inode_t* inode, const char* name) {
 
 
 int vfs_truncate (inode_t* inode, off_t len) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.truncate))
@@ -239,12 +274,14 @@ int vfs_truncate (inode_t* inode, off_t len) {
 
 
 int vfs_fsync (inode_t* inode, int datasync) {
+
     DEBUG_ASSERT(inode);
 
     if(likely(inode->ops.fsync))
         __lock_return(&inode->lock, int, inode->ops.fsync(inode, datasync));    
 
     return errno = ENOSYS, -1;
+    
 }
 
 
@@ -260,12 +297,17 @@ ssize_t vfs_read (inode_t* inode, void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.read(inode, buf, off, size);
 
-            if(inode->ev.events & POLLOUT) {
+            shared_ptr_nullable_access(inode->ev, ev, {
 
-                inode->ev.revents |= POLLOUT;
-                inode->ev.futex   |= 1;
+                if(ev->events & POLLOUT) {
 
-            }
+                    __atomic_fetch_or(&ev->revents, POLLOUT, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_add(&ev->futex,        1, __ATOMIC_SEQ_CST);
+
+                }
+
+            });
+
 
             e;
 
@@ -291,12 +333,16 @@ ssize_t vfs_write (inode_t* inode, const void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.write(inode, buf, off, size);
 
-            if(inode->ev.events & POLLIN) {
+            shared_ptr_nullable_access(inode->ev, ev, {
 
-                inode->ev.revents |= POLLIN;
-                inode->ev.futex   |= 1;
+                if(ev->events & POLLIN) {
 
-            }
+                    __atomic_fetch_or(&ev->revents, POLLIN, __ATOMIC_SEQ_CST);
+                    __atomic_fetch_add(&ev->futex,       1, __ATOMIC_SEQ_CST);
+
+                }
+
+            });
 
             e;
 
@@ -344,8 +390,9 @@ inode_t* vfs_creat (inode_t* inode, const char* name, mode_t mode) {
             
             if((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
-                if(likely(r->parent == inode))
+                if(likely(r->parent == inode)) {
                     vfs_dcache_add(inode, r);
+                }
 
             }
 
@@ -371,11 +418,19 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
 
 
     if(name[0] == '.' && name[1] == '.' && name[2] == '\0') {
+
+        inode_t* parent = NULL;
        
-        if(current_task->fs->root != inode || inode->parent)
-            return inode->parent;
-        else
-            return errno = ENOENT, NULL;
+        shared_ptr_access(current_task->fs, fs, {
+            
+            if(fs->root != inode || inode->parent)
+                parent = inode->parent;
+            else
+                errno = ENOENT;
+
+        });
+
+        return parent;
 
     }
 
@@ -393,8 +448,9 @@ inode_t* vfs_finddir (inode_t* inode, const char * name) {
             
             if((r = inode->ops.finddir(inode, name)) != NULL) {
 
-                if(likely(r->parent == inode))
+                if(likely(r->parent == inode)) {
                     vfs_dcache_add(inode, r);
+                }
         
             }
 
@@ -495,8 +551,14 @@ int vfs_unlink (inode_t* inode, const char* name) {
 
         __lock(&inode->lock, {
             
-            if((r = inode->ops.unlink(inode, name)) == 0)
-                vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
+            if((r = inode->ops.unlink(inode, name)) == 0) {
+
+                if(!(inode->flags & INODE_FLAGS_DCACHE_DISABLED)) {
+
+                    vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
+
+                }
+            }
         
         });
 

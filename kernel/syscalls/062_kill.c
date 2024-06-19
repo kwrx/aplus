@@ -33,6 +33,7 @@
 #include <aplus/smp.h>
 #include <aplus/errno.h>
 
+#include <signal.h>
 
 
 /***
@@ -51,10 +52,38 @@
 SYSCALL(62, kill,
 long sys_kill (pid_t pid, int sig) {
 
-    siginfo_t siginfo;
+    siginfo_t siginfo = { 0 };
     siginfo.si_signo = sig;
     siginfo.si_code  = SI_USER;
     siginfo.si_errno = 0;
 
-    return sys_rt_tgsigqueueinfo(pid, -1, sig, &siginfo);
+
+    int e = 0;
+
+    if(pid > 0) {
+        e = sched_sigqueueinfo(-1, pid, -1, sig, &siginfo);
+    }
+
+    else if(pid == 0) {
+        e = sched_sigqueueinfo(current_task->pgrp, -1, -1, sig, &siginfo);
+    }
+
+    else if(pid == -1) {
+        e = sched_sigqueueinfo(-1, -1, -1, sig, &siginfo);
+    }
+
+    else if(pid < -1) {
+        e = sched_sigqueueinfo(-pid, -1, -1, sig, &siginfo);
+    }
+
+    else {
+        return -EINVAL;
+    }
+
+    
+    if(e < 0)
+        return -errno;
+
+    return 0;
+
 });

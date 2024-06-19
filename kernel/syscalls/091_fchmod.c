@@ -50,5 +50,32 @@
 
 SYSCALL(91, fchmod,
 long sys_fchmod (unsigned int fd, mode_t mode) {
-    return -ENOSYS;
+    
+    if(unlikely(fd >= CONFIG_OPEN_MAX))
+        return -EBADF;
+
+
+    shared_ptr_access(current_task->fd, fds, {
+
+        if(unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+
+        struct stat st = { 0 };
+
+        if(vfs_getattr(fds->descriptors[fd].ref->inode, &st) < 0)
+            return -errno;
+
+        shared_ptr_access(current_task->fs, fs, {
+            st.st_mode = ((st.st_mode & ~07777) | (mode & 07777)) & ~fs->umask;
+        });
+
+        if(vfs_setattr(fds->descriptors[fd].ref->inode, &st) < 0)
+            return -errno;
+
+    });
+
+
+    return 0;
+
 });

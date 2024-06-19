@@ -1,12 +1,49 @@
 #!/bin/bash
 
 # Usage
-#   gen-grubcfg [SYSROOT] [EXTRA_KARGS] [EXTRA_MARGS]
+#   gen-grubcfg [OPTIONS] SYSROOT [EXTRA_KARGS] [EXTRA_MARGS]
 
-sysroot=$1
-extra_kargs=$2
-extra_margs=$3
-core="/boot/aplus"
+# This script generates a grub.cfg file for the given sysroot.
+
+LIVE_MODE=0
+
+case "$1" in
+    -h|--help)
+        echo "Usage: gen-grubcfg [SYSROOT] [EXTRA_KARGS] [EXTRA_MARGS]"
+        echo "  SYSROOT: The sysroot to generate grub.cfg for."
+        echo "  EXTRA_KARGS: Extra kernel arguments to pass to the kernel."
+        echo "  EXTRA_MARGS: Extra arguments to pass to the modules."
+        exit 0
+        ;;
+    --live)
+        LIVE_MODE=1
+        shift
+        ;;
+    *)
+        ;;
+esac
+
+if [ -z "$1" ]; then
+    echo "No sysroot specified."
+    exit 1
+else
+    SYSROOT="$1"
+fi
+
+if [ -z "$2" ]; then
+    EXTRA_KARGS=""
+else
+    EXTRA_KARGS="$2"
+fi
+
+if [ -z "$3" ]; then
+    EXTRA_MARGS=""
+else
+    EXTRA_MARGS="$3"
+fi
+
+DEFAULT_KARGS="smp=auto network=off"
+
 
 
 header() {
@@ -17,19 +54,22 @@ header() {
 
 entry() {
 
-    # Usage entry [ENTRY] [KARGS] [MARGS]
     echo -e "menuentry \"$1\" {"
-    echo -e "   multiboot2 $core $2"
+    echo -e "   multiboot2 /boot/aplus.gz $2"
     
-    if [ -e $sysroot/usr/lib/modules/exports ]; then
-        echo -e "   module2 /usr/lib/modules/exports"
+    if [ $LIVE_MODE -eq 1 ]; then
+        echo -e "   module2 /boot/initrd.img.gz type=ramdisk"
     fi
 
-    pushd $sysroot &> /dev/null
+    if [ -e $SYSROOT/usr/lib/modules/exports.gz ]; then
+        echo -e "   module2 /usr/lib/modules/exports.gz type=exports"
+    fi
+
+    pushd $SYSROOT &> /dev/null
 
         for ko in $(find usr/lib/modules -type f -iname "*.ko"); do
             test -f "$ko" || continue
-            echo -e "   module2 /$ko $3"
+            echo -e "   module2 /$ko.gz type=module $3"
         done
 
     popd &> /dev/null
@@ -41,7 +81,15 @@ entry() {
 }
 
 
-header                                                                                                     >  $sysroot/boot/grub/grub.cfg
-entry "aplus"                  "root=/dev/sda1 rootfs=ext2 $extra_kargs"                    "$extra_margs" >> $sysroot/boot/grub/grub.cfg
-entry "aplus-nographics"       "root=/dev/sda1 rootfs=ext2 graphics=no $extra_kargs"        "$extra_margs" >> $sysroot/boot/grub/grub.cfg
-entry "aplus-builtin-graphics" "root=/dev/sda1 rootfs=ext2 graphics=builtin $extra_kargs"   "$extra_margs" >> $sysroot/boot/grub/grub.cfg
+header                                                                                                                            >  $SYSROOT/boot/grub/grub.cfg
+
+if [ $LIVE_MODE -eq 1 ]; then
+    entry "aplus"                  "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS $EXTRA_KARGS"                    "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-nographics"       "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS graphics=off $EXTRA_KARGS"       "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-builtin-graphics" "root=/dev/ram0 rootfs=iso9660 $DEFAULT_KARGS graphics=builtin $EXTRA_KARGS"   "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+else
+    entry "aplus"                  "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS $EXTRA_KARGS"                       "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-nographics"       "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS graphics=off $EXTRA_KARGS"          "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+    entry "aplus-builtin-graphics" "root=/dev/sda2 rootfs=ext2 $DEFAULT_KARGS graphics=builtin $EXTRA_KARGS"      "$EXTRA_MARGS" >> $SYSROOT/boot/grub/grub.cfg
+fi
+

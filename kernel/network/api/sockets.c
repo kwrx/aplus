@@ -438,6 +438,7 @@ tryget_socket_unconn(int fd)
   return ret;
 }
 
+#if LWIP_SOCKET_POLL || LWIP_SOCKET_SELECT
 /* Like tryget_socket_unconn(), but called under SYS_ARCH_PROTECT lock. */
 static struct lwip_sock *
 tryget_socket_unconn_locked(int fd)
@@ -450,6 +451,7 @@ tryget_socket_unconn_locked(int fd)
   }
   return ret;
 }
+#endif
 
 /**
  * Same as get_socket but doesn't set errno
@@ -840,7 +842,7 @@ lwip_connect(int s, const struct sockaddr *name, socklen_t namelen)
     LWIP_ERROR("lwip_connect: invalid address", IS_SOCK_ADDR_LEN_VALID(namelen) &&
                IS_SOCK_ADDR_TYPE_VALID_OR_UNSPEC(name) && IS_SOCK_ADDR_ALIGNED(name),
                sock_set_errno(sock, err_to_errno(ERR_ARG)); done_socket(sock); return -1;);
-
+    
     SOCKADDR_TO_IPADDR_PORT(name, &remote_addr, remote_port);
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_connect(%d, addr=", s));
     ip_addr_debug_print_val(SOCKETS_DEBUG, remote_addr);
@@ -2316,6 +2318,54 @@ lwip_poll_dec_sockets_used(struct pollfd *fds, nfds_t nfds)
 #define lwip_poll_dec_sockets_used(fds, nfds)
 #endif /* LWIP_NETCONN_FULLDUPLEX */
 
+
+#if defined(__aplus__)
+
+ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec* ts, bool wait) {
+
+  struct lwip_sock *sock;
+  SYS_ARCH_DECL_PROTECT(lev);
+
+  LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_poll_from_syscall: fds=%p nfds=%"S32_F"\n", fds, nfds));
+
+
+  ssize_t e;
+
+  if((e = lwip_pollscan(fds, nfds, LWIP_POLLSCAN_CLEAR)) < 0)
+    return -1;
+
+
+  if(wait) {
+
+    for(nfds_t i = 0; i < nfds; i++) {
+
+      LWIP_ASSERT("fds[i].fd >= 0", fds[i].fd >= 0);
+
+      sock = get_socket(fds[i].fd);
+
+      if(!sock)
+        return -1;
+
+
+      SYS_ARCH_PROTECT(lev);
+
+      sock->evt = 0;
+
+      futex_wait(current_task, &sock->evt, 0, ts);
+
+      SYS_ARCH_UNPROTECT(lev);
+
+    }
+
+
+  }
+
+  return e;
+
+}
+
+#endif
+
 int
 lwip_poll(struct pollfd *fds, nfds_t nfds, int timeout)
 {
@@ -2546,15 +2596,24 @@ event_callback(struct netconn *conn, enum netconn_evt evt, u16_t len)
       break;
   }
 
-  if (sock->select_waiting && check_waiters) {
-    /* Save which events are active */
-    int has_recvevent, has_sendevent, has_errevent;
-    has_recvevent = sock->rcvevent > 0;
-    has_sendevent = sock->sendevent != 0;
-    has_errevent = sock->errevent != 0;
-    SYS_ARCH_UNPROTECT(lev);
-    /* Check any select calls waiting on this socket */
-    select_check_waiters(s, has_recvevent, has_sendevent, has_errevent);
+  if (check_waiters) {
+
+#if defined(__aplus__)
+    sock->evt += 1;
+#endif
+
+    if(sock->select_waiting) {
+      /* Save which events are active */
+      int has_recvevent, has_sendevent, has_errevent;
+      has_recvevent = sock->rcvevent > 0;
+      has_sendevent = sock->sendevent != 0;
+      has_errevent = sock->errevent != 0;
+      SYS_ARCH_UNPROTECT(lev);
+      /* Check any select calls waiting on this socket */
+      select_check_waiters(s, has_recvevent, has_sendevent, has_errevent);
+    } else {
+      SYS_ARCH_UNPROTECT(lev);
+    }
   } else {
     SYS_ARCH_UNPROTECT(lev);
   }

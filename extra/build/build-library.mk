@@ -1,6 +1,6 @@
-.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d
+.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d .rs .toml
 
-TARGET      ?= $(notdir $(shell pwd)).a
+TARGET      ?= lib$(notdir $(shell pwd)).a
 
 CFLAGS	    ?=
 CXXFLAGS    ?=
@@ -19,7 +19,7 @@ DESTDIR     ?= $(SYSROOT)/usr/lib
 include $(ROOTDIR)/extra/build/build-sources.mk
 include $(ROOTDIR)/extra/build/build-flags.mk
 
-$(TARGET): $(OBJS) $(HDRS)
+$(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
 	$(QUIET)$(AR) $(ARFLAGS) $@ $(OBJS)
 
 include $(ROOTDIR)/extra/build/build-objects.mk

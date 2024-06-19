@@ -120,7 +120,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                     
                     } else {
                     
-                        strncpy(&core->modules.ko[i].cmdline[0], &core->boot.cmdline[0], CONFIG_BUFSIZ);
+                        memset(&core->modules.ko[i].cmdline[0], 0, CONFIG_BUFSIZ);
                     
                     }
 
@@ -182,6 +182,8 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             case MULTIBOOT_TAG_TYPE_ELF_SECTIONS:
 
+                DEBUG_ASSERT(sizeof(core->exe.sections) >= ((struct multiboot_tag_elf_sections*) btags)->num * ((struct multiboot_tag_elf_sections*) btags)->entsize);
+
                 core->exe.sh_num        = ((struct multiboot_tag_elf_sections*) btags)->num;
                 core->exe.sh_entsize    = ((struct multiboot_tag_elf_sections*) btags)->entsize;
                 core->exe.sh_shndx      = ((struct multiboot_tag_elf_sections*) btags)->shndx;
@@ -200,7 +202,17 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                 break;
             
             case MULTIBOOT_TAG_TYPE_ACPI_OLD:
+
+                core->acpi.rsdp_address = (uintptr_t) &((struct multiboot_tag_old_acpi*) btags)->rsdp[0];
+                core->acpi.rsdp_size    = (uintptr_t)  ((struct multiboot_tag_old_acpi*) btags)->size;
+
+                break;
+
             case MULTIBOOT_TAG_TYPE_ACPI_NEW:
+
+                core->acpi.rsdp_address = (uintptr_t) &((struct multiboot_tag_new_acpi*) btags)->rsdp[0];
+                core->acpi.rsdp_size    = (uintptr_t)  ((struct multiboot_tag_new_acpi*) btags)->size;
+
                 break;
 
             case MULTIBOOT_TAG_TYPE_NETWORK:
@@ -218,13 +230,15 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             default:
                 kpanicf("bmain(): PANIC! invalid MULTIBOOT_TAG_TYPE_*: %d\n", btags->type);
+                break;
 
         }
 
 
-        if(btags->size & 7)
+        if(btags->size & 7) {
             btags->size = (btags->size & ~7) + 8;
-
+        }
+        
         btags = (struct multiboot_tag*) ((uintptr_t) btags + btags->size);
         
 
@@ -234,17 +248,30 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 1
+#if DEBUG_LEVEL_INFO
     kprintf("boot: %s '%s'\n", core->boot.bootloader, 
                                core->boot.cmdline);
 #endif
 
 
 
+    //* Get total memory size
+    
+    for(size_t i = 0; i < core->mmap.count; i++) {
+
+        if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE) {
+
+            core->memory.phys_upper  = MAX(core->memory.phys_upper * 1024, core->mmap.ptr[i].address + core->mmap.ptr[i].length) / 1024;
+            core->memory.phys_upper -= core->memory.phys_lower;
+
+        }
+
+    }
+
+
     //* Map Modules
 
-    int i;
-    for(i = 0; i < core->modules.count; i++) {
+    for(size_t i = 0; i < core->modules.count; i++) {
 
         core->mmap.ptr[core->mmap.count].address = core->modules.ko[i].ptr;
         core->mmap.ptr[core->mmap.count].length  = core->modules.ko[i].size;
@@ -260,7 +287,7 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     Elf_Shdr* shdr = (Elf_Shdr*) &core->exe.sections[0];
 
-    for(i = 1; i < core->exe.sh_num; i++) {
+    for(size_t i = 1; i < core->exe.sh_num; i++) {
 
         switch(shdr[i].sh_type) {
 
@@ -281,6 +308,13 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     DEBUG_ASSERT(core->mmap.count < (CONFIG_BUFSIZ << 2));
 
 
+#if DEBUG_LEVEL_TRACE
+    kprintf("boot: %ld modules\n", core->modules.count);
+    kprintf("boot: %ld memory regions\n", core->mmap.count);
+    kprintf("boot: %ld ELF sections\n", core->exe.sh_num);
+#endif
+
+
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
@@ -292,6 +326,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     //* Initialize Timer
     timer_init();
+
+    //* Initialize Random Generator
+    random_init();
 
     //* Initialize APIC
     apic_init();

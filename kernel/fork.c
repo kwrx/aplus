@@ -33,165 +33,197 @@
 #include <aplus/errno.h>
 
 
-#define __refcount_get(p)   \
-    ({ p->refcount++; p; })
-
-
-
-
-#define __dup(property, param)                                      \
-    static void* __dup_##property (param c) {                       \
-        param r = (param) kcalloc(1, sizeof(*c), GFP_KERNEL);       \
-        memcpy(r, c, sizeof(*c));                                   \
-        r->refcount = 1;                                            \
-        return r;                                                   \
-    }
-
-
-__dup(fs, struct fs*)
-__dup(sighand, struct sighand*)
-
-
-
-
-static void* __dup_fd(struct fd* c) {
-
-    struct fd* r = (struct fd*) kcalloc(1, sizeof(struct fd), GFP_KERNEL);
-
-    memcpy(r, c, sizeof(*c));
-
-
-    int i;
-    for(i = 0; i < CONFIG_OPEN_MAX; i++) {
-        
-        if(!r->descriptors[i].ref)
-            continue;
-
-        fd_ref(r->descriptors[i].ref);
-
-    }
-
-
-    r->refcount = 1;
-    return r;
-
-}
-
-static void* __dup_address_space(vmm_address_space_t* space) {
-
-    vmm_address_space_t* r = (vmm_address_space_t*) kcalloc(1, sizeof(vmm_address_space_t), GFP_KERNEL);
-
-
-#if defined(CONFIG_DEMAND_PAGING)
-    arch_vmm_clone(r, space, ARCH_VMM_CLONE_DEMAND);
-#else
-    arch_vmm_clone(r, space, 0);
-#endif
-
-    arch_task_switch_address_space(NULL);
-
-    r->refcount = 1;
-    return r;
-
-}
-
-
-
+/**
+ * Allows a process to stop sharing certain resources with other processes in its thread group.
+ *
+ * @param flags an int that specifies which resources to stop sharing.
+ * The following flags are valid:
+ * <ul>
+ * <li>CLONE_FILES - stop sharing file descriptors</li>
+ * <li>CLONE_FS - stop sharing filesystem information</li>
+ * <li>CLONE_SIGHAND - stop sharing signal handlers</li>
+ * <li>CLONE_VM - stop sharing address space</li>
+ * </ul>
+ * 
+ */
 void do_unshare(int flags) {
 
-    #define __clone_property(flag, property) {                                      \
-        if(flags & flag) {                                                          \
-            if(--current_task->property->refcount > 0)                              \
-                current_task->property = __dup_##property (current_task->property); \
-            else                                                                    \
-                current_task->property->refcount = 1;                               \
-        }                                                                           \
+    if(flags & CLONE_FILES) {
+        
+        current_task->fd = shared_ptr_unshare(current_task->fd, GFP_KERNEL);
+
+        shared_ptr_access(current_task->fd, fds, {
+
+             for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        
+                if(!fds->descriptors[i].ref)
+                    continue;
+
+                fd_ref(fds->descriptors[i].ref);
+
+            }
+
+        });
+
     }
 
-    __clone_property(CLONE_FILES, fd);
-    __clone_property(CLONE_FS, fs);
-    __clone_property(CLONE_SIGHAND, sighand);
-    __clone_property(CLONE_VM, address_space);
+    if(flags & CLONE_FS) {
+        current_task->fs = shared_ptr_unshare(current_task->fs, GFP_KERNEL);
+    }
 
-    #undef __clone_property
-
+    if(flags & CLONE_SIGHAND) {
+        current_task->sighand = shared_ptr_unshare(current_task->sighand, GFP_KERNEL);
+    }
 
     if(flags & CLONE_VM) {
-        arch_task_switch_address_space(current_task->address_space);
+
+        int clone_flags = ARCH_VMM_CLONE_USERSPACE;
+
+#if defined(CONFIG_DEMAND_PAGING)
+        clone_flags |= ARCH_VMM_CLONE_DEMAND;
+#endif
+
+        if(__atomic_sub_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST) > 0) {
+            current_task->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
+        } else {
+            current_task->address_space->refcount = 1; // FIXME: not sure if this is correct, maybe we should use atomic operations
+        }
+
+        // Reload current address space
+        arch_task_switch_address_space(NULL);
+
     }
     
 }
+    
 
 
 
+/**
+ * Creates a new task (a copy of the current task) with certain properties inherited or 
+ * shared from the parent task based on the flags passed in the `kclone_args` struct.
+ *
+ * @param args  a pointer to a `kclone_args` struct containing the flags and 
+ *              arguments for the fork system call.
+ * @param size  the size of the `kclone_args` struct.
+ * @return      the new task's process ID (`pid_t`), or -1 if an error occurred. 
+ *              In case of error, `errno` is set to indicate the error.
+*/
 pid_t do_fork(struct kclone_args* args, size_t size) {
 
     DEBUG_ASSERT(args);
-    DEBUG_ASSERT(size);
     DEBUG_ASSERT(size == sizeof(struct kclone_args));
+ 
+
+    if(unlikely(!args)) {
+        return errno = EINVAL, -1;
+    }
+
+    if(unlikely(size != sizeof(struct kclone_args))) {
+        return errno = EINVAL, -1;
+    }
 
 
     if(args->stack == 0ULL) {
 
-        if(unlikely(args->stack_size > 0ULL))
+        if(unlikely(args->stack_size > 0ULL)) {
             return errno = EINVAL, -1;
+        }
 
     } else {
 
-        // if(unlikely(args->stack_size == 0ULL))
-        //     return errno = EINVAL, -1;
+        // // if(unlikely(args->stack_size == 0ULL))
+        // //     return errno = EINVAL, -1;
 
-        if(unlikely(!uio_check(args->stack, R_OK | W_OK)))
+        if(unlikely(!uio_check(args->stack, R_OK | W_OK))) {
             return errno = EFAULT, -1;
+        }
 
     }
 
-
-    if(unlikely((args->flags & (CLONE_DETACHED | CSIGNAL)) == (CLONE_DETACHED | CSIGNAL)))
+    if(unlikely((args->flags & (CLONE_DETACHED | CSIGNAL)) == (CLONE_DETACHED | CSIGNAL))) {
         return errno = EINVAL, -1;
+    }
 
-    if(unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal))
+    if(unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal)) {
         return errno = EINVAL, -1;
+    }
 
 
-    // TODO: implements CLONE_VFORK
-    if((unlikely(args->flags & CLONE_VFORK)))
+    // TODO: Implement CLONE_VFORK
+    if((unlikely(args->flags & CLONE_VFORK))) {
         return errno = ENOSYS, -1;
+    }
 
     
-
     task_t* child = arch_task_get_empty_thread(0);
 
     memcpy(&child->userspace, &current_task->userspace, sizeof(child->userspace));
     memcpy(&child->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
+    
 
-
-
-    if(args->flags & CLONE_PARENT)
+    if(args->flags & CLONE_PARENT) {
         child->parent = current_task->parent;
+    }
 
-    if(args->flags & CLONE_SETTLS)
+    if(args->flags & CLONE_SETTLS) {
         child->userspace.thread_area = args->tls;
+    }
 
-    if(args->flags & CLONE_THREAD)
-        child->tgid = current_task->tgid;
-
-
-
-    #define __clone_property(flag, property) {                          \
-        if(args->flags & flag)                                          \
-            child->property = __refcount_get(current_task->property);   \
-        else                                                            \
-            child->property = __dup_##property (current_task->property);\
+    if(args->flags & CLONE_THREAD) {
+        child->pid = current_task->pid;
+        child->parent = current_task->parent;
     }
 
 
-    __clone_property(CLONE_FILES, fd);
-    __clone_property(CLONE_FS, fs);
-    __clone_property(CLONE_SIGHAND, sighand);
-    __clone_property(CLONE_VM, address_space);
+    if(args->flags & CLONE_FILES) {
+        child->fd = shared_ptr_ref(current_task->fd);
+    } else {
 
-    #undef __clone_property
+        child->fd = shared_ptr_dup(current_task->fd, GFP_KERNEL);
+
+        shared_ptr_access(child->fd, fds, {
+
+            for(size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        
+                if(!fds->descriptors[i].ref)
+                    continue;
+
+                fd_ref(fds->descriptors[i].ref);
+
+            }
+
+        });
+        
+    }
+
+    if(args->flags & CLONE_FS) {
+        child->fs = shared_ptr_ref(current_task->fs);
+    } else {
+        child->fs = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+    }
+
+    if(args->flags & CLONE_SIGHAND) {
+        child->sighand = shared_ptr_ref(current_task->sighand);
+    } else {
+        child->sighand = shared_ptr_dup(current_task->sighand, GFP_KERNEL);
+    }
+    
+
+    if(args->flags & CLONE_VM) {
+        child->address_space = current_task->address_space;
+        __atomic_add_fetch(&child->address_space->refcount, 1, __ATOMIC_SEQ_CST);
+    } else {
+
+        int clone_flags = ARCH_VMM_CLONE_USERSPACE;
+
+#if defined(CONFIG_DEMAND_PAGING)
+        clone_flags |= ARCH_VMM_CLONE_DEMAND;
+#endif
+
+        child->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
+
+    }
 
 
 
@@ -206,6 +238,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     
     sched_enqueue(child);
+
 
     return child->tid;
 

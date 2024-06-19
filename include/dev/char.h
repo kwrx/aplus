@@ -41,6 +41,7 @@
 
 __BEGIN_DECLS
 
+int char_getattr(device_t*, struct stat*);
 ssize_t char_write(device_t*, const void*, size_t);
 ssize_t char_read(device_t*, void*, size_t);
 int char_flush(device_t*);

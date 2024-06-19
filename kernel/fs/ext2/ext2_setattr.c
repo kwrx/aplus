@@ -40,10 +40,10 @@ int ext2_setattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == EXT2_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(st);
 
-    struct ext2_inode* n = vfs_cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     n->i_mode  = st->st_mode;
     n->i_uid   = st->st_uid;
@@ -52,8 +52,9 @@ int ext2_setattr(inode_t* inode, struct stat* st) {
     n->i_ctime = st->st_ctime;
     n->i_mtime = st->st_mtime;
 
-    if(inode->sb->flags & MS_SYNCHRONOUS)
-        ext2_cache_flush(&inode->sb->cache, inode->ino, n);
+    if(inode->sb->flags & MS_SYNCHRONOUS) {
+        cache_commit(&inode->sb->cache, inode->ino);
+    }
 
     return 0;
 

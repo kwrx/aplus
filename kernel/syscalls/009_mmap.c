@@ -61,13 +61,13 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
 
     // not supported    
-    PANIC_ON((flags & MAP_TYPE) == MAP_PRIVATE);
-    PANIC_ON((flags & MAP_TYPE) != MAP_SHARED);
-    PANIC_ON((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
+    PANIC_ASSERT((flags & MAP_TYPE) == MAP_PRIVATE);
+    PANIC_ASSERT((flags & MAP_TYPE) != MAP_SHARED);
+    PANIC_ASSERT((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
 
-    PANIC_ON(!(flags & MAP_FIXED));
-    PANIC_ON(!(flags & MAP_FIXED_NOREPLACE));
-    PANIC_ON(!(flags & MAP_GROWSDOWN));
+    PANIC_ASSERT(!(flags & MAP_FIXED));
+    PANIC_ASSERT(!(flags & MAP_FIXED_NOREPLACE));
+    PANIC_ASSERT(!(flags & MAP_GROWSDOWN));
 
 
     // Silenty ignored
@@ -95,11 +95,15 @@ long sys_mmap (unsigned long addr, unsigned long len, int prot, int flags, int f
 
     if(!(flags & MAP_ANONYMOUS)) {
 
-        if(unlikely(fd > CONFIG_OPEN_MAX))
+        if(unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if(unlikely(!current_task->fd->descriptors[fd].ref))
-            return -EBADF;
+        shared_ptr_access(current_task->fd, fds, {
+
+            if(unlikely(!fds->descriptors[fd].ref))
+                return -EBADF;
+
+        });
 
     }
 

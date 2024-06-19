@@ -49,10 +49,10 @@
  * @param length: size of virtual space.
  * @param flags: @see include/arch/x86/vmm.h
  */
+__nonnull(1)
 uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size_t length, int flags) {
 
-    DEBUG_ASSERT(space);
-    DEBUG_ASSERT(length);
+    DEBUG_ASSERT(length > 0);
 
 
     uintptr_t pagesize;
@@ -135,7 +135,7 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
     spinlock_lock(&space->lock);
 
-    for(; s < e; s += X86_MMU_PAGESIZE) {
+    for(; s < e; s += pagesize) {
 
         x86_page_t* d;
 
@@ -174,6 +174,8 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
                     d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x1FF];
                 }
 
+                pagesize = X86_MMU_PAGESIZE;
+
             } else
                 pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
 
@@ -199,6 +201,8 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
                 d = &((x86_page_t*) arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP)) [(s >> 12) & 0x3FF];
             }
 
+            pagesize = X86_MMU_PAGESIZE;
+
         } else
             pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
 
@@ -216,7 +220,7 @@ uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size
 
 
 
-#if defined(DEBUG) && DEBUG_LEVEL >= 4
+#if DEBUG_LEVEL_TRACE
             //kprintf("arch_vmm_mprotect(): virtaddr(%p) physaddr(%p) flags(%p)\n", s, *d & X86_MMU_ADDRESS_MASK, *d & ~X86_MMU_ADDRESS_MASK);
 #endif
 

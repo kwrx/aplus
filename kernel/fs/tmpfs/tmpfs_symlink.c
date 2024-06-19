@@ -40,7 +40,7 @@ int tmpfs_symlink(inode_t* inode, const char * name, const char* target) {
     
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
-    DEBUG_ASSERT(inode->sb->fsid == TMPFS_ID);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
     DEBUG_ASSERT(inode->ops.creat);
     
     DEBUG_ASSERT(name);
@@ -51,11 +51,11 @@ int tmpfs_symlink(inode_t* inode, const char * name, const char* target) {
     if((d = tmpfs_creat(inode, name, S_IFLNK | 0666)) == NULL)
         return -1;
 
-    tmpfs_inode_t* i = (tmpfs_inode_t*) vfs_cache_get(&inode->sb->cache, d->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, d->ino);
 
     i->st.st_size = strlen(target) + 1;
-    i->capacity = i->st.st_size;
-    i->data = kmalloc(i->capacity, GFP_KERNEL);
+    i->capacity   = i->st.st_size;
+    i->data       = kmalloc(i->capacity, GFP_KERNEL);
 
     strncpy(i->data, target, i->capacity);
 
