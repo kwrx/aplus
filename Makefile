@@ -32,6 +32,9 @@ DISTCLEANALL:   $(PROJECTS)
 all: $(TARGET)
 $(TARGET): BUILDALL
 
+
+.NOTPARALLEL: install install-live dist distdocs report
+
 install: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
 	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
