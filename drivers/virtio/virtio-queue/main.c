@@ -245,6 +245,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     driver->internals.queues[queue].available->q_flags        = cpu_to_le16(0);
     driver->internals.queues[queue].available->q_idx          = cpu_to_le16(le16_to_cpu(driver->internals.queues[queue].available->q_idx) + 1);
 
+    __atomic_membarrier();
 
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
@@ -257,8 +258,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
     do {
 
-        size_t i;
-        for(i = seen; i < le16_to_cpu(driver->internals.queues[queue].used->q_idx); i++) {
+        for(size_t i = seen; i < le16_to_cpu(driver->internals.queues[queue].used->q_idx); i++) {
 
             if(le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_id) != inp)
                 continue;

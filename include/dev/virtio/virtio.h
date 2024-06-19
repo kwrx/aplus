@@ -74,11 +74,12 @@
 #define VIRTIO_ISR_STATUS_QUEUE                     (1 << 0)
 #define VIRTIO_ISR_STATUS_CONFIG                    (1 << 1)
 
-
-// Reserved feature bits
-// Select (1)
+// Features (1)
 #define VIRTIO_F_VERSION_1                          (1 << 0)
 #define VIRTIO_F_IN_ORDER                           (1 << 6)
+
+// Features (0)
+#define VIRTIO_F_EVENT_IDX   
 
 
 // Queue Descriptors
