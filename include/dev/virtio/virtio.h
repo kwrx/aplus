@@ -79,7 +79,7 @@
 #define VIRTIO_F_IN_ORDER                           (1 << 6)
 
 // Features (0)
-#define VIRTIO_F_EVENT_IDX   
+#define VIRTIO_F_EVENT_IDX                          (1 << 29)
 
 
 // Queue Descriptors
