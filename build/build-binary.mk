@@ -16,12 +16,12 @@ DESTDIR     ?= $(SYSROOT)/usr/bin
 LIBDIR		?= $(SYSROOT)/usr/lib
 
 
-include $(ROOTDIR)/extra/build/build-sources.mk
-include $(ROOTDIR)/extra/build/build-flags.mk
+include $(ROOTDIR)/build/build-sources.mk
+include $(ROOTDIR)/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
 	$(QUIET)echo "    LD      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(LD) $(LDFLAGS) -Wl,-Map,$(TARGET).map -o $@ $(OBJS) $(addprefix -L,$(LIBDIR)) $(addprefix -l,$(LIBS))
 	
 
-include $(ROOTDIR)/extra/build/build-objects.mk
+include $(ROOTDIR)/build/build-objects.mk

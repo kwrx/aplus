@@ -22,7 +22,7 @@ jobs:
     - name: Setup environment
       working-directory: ${{github.workspace}}
       shell: bash
-      run: pip3 install -r docs/requirements.txt && ./configure x86_64
+      run: pip3 install -r requirements.txt && ./configure x86_64
 
     - name: Build Image
       working-directory: ${{github.workspace}}

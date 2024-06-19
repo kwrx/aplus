@@ -14,5 +14,5 @@ TARGET	 := aplus.bin
 # LDFLAGS  := -Wl,--whole-archive $(ROOTDIR)/lib/rustk/librustk.a -Wl,--no-whole-archive
 
 include $(ROOTDIR)/arch/$(PLATFORM)/config.mk
-include $(ROOTDIR)/extra/build/cross.mk
-include $(ROOTDIR)/extra/build/build-binary.mk
+include $(ROOTDIR)/build/cross.mk
+include $(ROOTDIR)/build/build-binary.mk

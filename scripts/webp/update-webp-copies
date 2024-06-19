@@ -8,4 +8,4 @@ find $1 -regextype posix-egrep \
     -type f \
     -iregex '.*\.png$' \
     -exec test '{}'.webp -ot '{}' \; \
-    -execdir "extra/utils/webp/convert-png-to-webp" '{}' \;
+    -execdir "scripts/webp/convert-png-to-webp" '{}' \;

@@ -34,21 +34,21 @@ $(TARGET): BUILDALL
 
 install: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
-	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
+	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
-	$(QUIET)./extra/utils/gen-grubcfg $(SYSROOT)
+	$(QUIET)./scripts/gen-grubcfg $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
-	$(QUIET)./extra/utils/gen-image $(SYSROOT) $(TARGET)
+	$(QUIET)./scripts/gen-image $(SYSROOT) $(TARGET)
 
 install-live: $(TARGET) INSTALLALL
 	$(QUIET)echo "    GEN     $(SYSROOT)/usr/lib/modules/exports"
-	$(QUIET)./extra/utils/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
+	$(QUIET)./scripts/gen-exports $(SYSROOT) $(PLATFORM) > $(SYSROOT)/usr/lib/modules/exports
 	$(QUIET)echo "    GEN     $(SYSROOT)/boot/grub.cfg"
-	$(QUIET)./extra/utils/gen-grubcfg --live $(SYSROOT)
+	$(QUIET)./scripts/gen-grubcfg --live $(SYSROOT)
 	$(QUIET)echo "    GEN     initrd.img"
-	$(QUIET)./extra/utils/gen-initrd $(SYSROOT)
+	$(QUIET)./scripts/gen-initrd $(SYSROOT)
 	$(QUIET)echo "    GEN     $(TARGET)"
-	$(QUIET)./extra/utils/gen-image --live $(SYSROOT) $(TARGET)
+	$(QUIET)./scripts/gen-image --live $(SYSROOT) $(TARGET)
 
 
 dist: $(TARGET) INSTALLALL
@@ -56,13 +56,13 @@ dist: $(TARGET) INSTALLALL
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)
 	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
-	$(QUIET)cp -r docs/requirements.txt      aplus-$(PLATFORM)
-	$(QUIET)cp -r extra/utils/run-qemu       aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r extra/utils/gen-initrd     aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r extra/utils/gen-grubcfg    aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r extra/utils/gen-image      aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r extra/utils/gen-report     aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r extra/utils/gen-pkg.py     aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r requirements.txt      aplus-$(PLATFORM)
+	$(QUIET)cp -r scripts/run-qemu       aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-initrd     aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-grubcfg    aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-image      aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-report     aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-pkg.py     aplus-$(PLATFORM)/utils
 	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM) 
 	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM) 
 	$(QUIET)zip     aplus-$(PLATFORM).zip    aplus-$(PLATFORM)
@@ -70,19 +70,19 @@ dist: $(TARGET) INSTALLALL
 
 
 run: install
-	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 run-live: install-live
-	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 run-fast:
-	$(QUIET)./extra/utils/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL
 	$(QUIET)$(RM) $(TARGET) config.mk config.mk.old config.h makew aplus-*.tar.gz aplus-*.tar.xz aplus-*.zip *.vmdk *.vdi *.vhd *.img
 	$(QUIET)$(RM) -r docs/html docs/man sdk/toolchain
-	$(QUIET)$(ROOTDIR)/extra/utils/get-pkg.py --clean 
+	$(QUIET)$(ROOTDIR)/scripts/get-pkg.py --clean 
 
 
 .PHONY: docs distdocs report
@@ -94,6 +94,6 @@ distdocs: docs
 
 report:
 	$(QUIET)echo "    GEN     $(REPORT)"
-	$(QUIET)./extra/utils/gen-report > $(REPORT)
+	$(QUIET)./scripts/gen-report > $(REPORT)
 
--include extra/build/build-utils.mk
+-include build/build-utils.mk

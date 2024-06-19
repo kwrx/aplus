@@ -2,7 +2,7 @@
 # Usage: configure [PRESET]
 
 
-gconfig="extra/build/setup"
+gconfig="build/setup"
 kconfig="extra/third-party/kconfiglib"
 
 
@@ -58,7 +58,7 @@ echo "## Preparing environment"
         git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib $kconfig
     fi
 
-    pip3 install -r docs/requirements.txt
+    pip3 install -r requirements.txt
 
 
 echo "## Generate configuration"
@@ -167,11 +167,11 @@ else
     fi
 
 
-    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
-    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
+    python3 ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+    python3 ./scripts/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
 
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
-        python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-doom  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i doom
+        python3 ./scripts/get-pkg.py --repo kwrx/aplus-doom  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i doom
     fi
     
 fi
