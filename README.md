@@ -64,12 +64,12 @@ Now you have basically two options to build image from sources.
 # docker run -it --privileged=true      \
     -v $(pwd):/opt/prj/aplus            \
     -w /opt/prj/aplus -t ubuntu:focal   \
-    ./extra/utils/build-with-docker
+    ./scripts/build-with-docker
 ```
 
 2. Run it (Linux):
 ```console
-$ ./extra/utils/run-qemu TARGET
+$ ./scripts/run-qemu TARGET
 ```
 
 **NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
@@ -89,7 +89,7 @@ Some packages are required for the build system:
 
 1. Install dependencies
 ```console
-$ pip3 install -r docs/requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 2. Configure and check environment

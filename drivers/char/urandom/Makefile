@@ -9,5 +9,5 @@ ASFLAGS  := -include $(ROOTDIR)/config.h
 
 
 include $(ROOTDIR)/drivers/platform/$(PLATFORM)/config.mk
-include $(ROOTDIR)/extra/build/cross.mk
-include $(ROOTDIR)/extra/build/build-ko.mk
+include $(ROOTDIR)/build/cross.mk
+include $(ROOTDIR)/build/build-ko.mk

@@ -16,10 +16,10 @@ DESTDIR     ?= $(SYSROOT)/usr/lib
 
 
 
-include $(ROOTDIR)/extra/build/build-sources.mk
-include $(ROOTDIR)/extra/build/build-flags.mk
+include $(ROOTDIR)/build/build-sources.mk
+include $(ROOTDIR)/build/build-flags.mk
 
 $(TARGET): $(OBJS) $(HDRS) $(RESOURCES)
 	$(QUIET)$(AR) $(ARFLAGS) $@ $(OBJS)
 
-include $(ROOTDIR)/extra/build/build-objects.mk
+include $(ROOTDIR)/build/build-objects.mk

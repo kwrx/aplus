@@ -1,2 +1,2 @@
-include $(ROOTDIR)/extra/build/cross.mk
-include $(ROOTDIR)/extra/build/build-cargo.mk
+include $(ROOTDIR)/build/cross.mk
+include $(ROOTDIR)/build/build-cargo.mk

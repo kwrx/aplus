@@ -8,5 +8,5 @@ CFLAGS   := -include $(ROOTDIR)/config.h
 ASFLAGS  := -include $(ROOTDIR)/config.h
 RUSTFLAGS := --extern rustk=/opt/prj/aplus/lib/rustk/librustk.rlib --sysroot=/opt/prj/aplus/lib/rustk/target/sysroot
 
-include $(ROOTDIR)/extra/build/cross.mk
-include $(ROOTDIR)/extra/build/build-ko.mk
+include $(ROOTDIR)/build/cross.mk
+include $(ROOTDIR)/build/build-ko.mk
