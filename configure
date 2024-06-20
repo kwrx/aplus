@@ -15,7 +15,6 @@ case "$1" in
         shift
         ;;
 esac
-
         
 
 echo "## Checking dependencies"
@@ -50,6 +49,21 @@ echo "## Checking dependencies"
     required pip3
     required gzip
     required zip
+
+
+echo "## Checking architecture"
+
+    HOST=$(gcc -dumpmachine)
+    case $HOST in
+        x86_64-*)
+            ;;
+        aarch64-*)
+            ;;
+        *)
+            echo "Unsupported host architecture: $HOST"
+            exit 1
+            ;;
+    esac
 
 
 echo "## Preparing environment"
@@ -167,7 +181,7 @@ else
     fi
 
 
-    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+    python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$HOST
     python3 ./extra/utils/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
 
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
@@ -226,7 +240,8 @@ Setup completed!                                                                
             Project:        $CONFIG_SYSTEM_NAME-$CONFIG_SYSTEM_CODENAME v$CONFIG_SYSTEM_VERSION         \n\
             BuildType:      $buildtype                                                                  \n\
                                                                                                         \n\
-            Host:           $CONFIG_COMPILER_HOST                                                       \n\
+            Host:           $HOST                                                                       \n\
+            Target:         $CONFIG_COMPILER_HOST                                                       \n\
             Sysroot:        $CONFIG_SYSTEM_PATH_SYSROOT                                                 \n\
             Toolchain:      $CONFIG_SYSTEM_PATH_TOOLCHAIN                                               \n\
             Locale:         $CONFIG_SYSTEM_LOCALE                                                       \n\
