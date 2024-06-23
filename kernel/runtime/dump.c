@@ -55,22 +55,29 @@ void runtime_dump() {
 
     kprintf("--- Process Info for cpu(%ld), pid(%d) ---\n", current_cpu->id, current_task ? current_task->tid : -1);
 
-    shared_ptr_nullable_access(current_task->fs, fs, {
-        print_path(" Executable: ", fs->exe);
-        print_path(" Current Directory: ", fs->cwd);
-        print_path(" Root: ", fs->root);
-    });
+    if (likely(current_task)) {
 
-    kprintf(" Thread ID: %d\n", current_task->tid);
-    kprintf(" Process ID: %d\n", current_task->pid);
-    kprintf(" Parent Process ID: %d\n", current_task->parent ? current_task->parent->pid : -1);
-    kprintf(" Process Group ID: %d\n", current_task->pgrp);
-    kprintf(" Session ID: %d\n", current_task->sid);
-    kprintf(" User ID: %d\n", current_task->uid);
-    kprintf(" Group ID: %d\n", current_task->gid);
-    kprintf(" Effective User ID: %d\n", current_task->euid);
-    kprintf(" Effective Group ID: %d\n", current_task->egid);
-    kprintf(" Address Space PM: 0x%8lX\n", current_task->address_space ? current_task->address_space->pm : 0);
+        shared_ptr_nullable_access(current_task->fs, fs, {
+            print_path(" Executable: ", fs->exe);
+            print_path(" Current Directory: ", fs->cwd);
+            print_path(" Root: ", fs->root);
+        });
+
+        kprintf(" Thread ID: %d\n", current_task->tid);
+        kprintf(" Process ID: %d\n", current_task->pid);
+        kprintf(" Parent Process ID: %d\n", current_task->parent ? current_task->parent->pid : -1);
+        kprintf(" Process Group ID: %d\n", current_task->pgrp);
+        kprintf(" Session ID: %d\n", current_task->sid);
+        kprintf(" User ID: %d\n", current_task->uid);
+        kprintf(" Group ID: %d\n", current_task->gid);
+        kprintf(" Effective User ID: %d\n", current_task->euid);
+        kprintf(" Effective Group ID: %d\n", current_task->egid);
+        kprintf(" Address Space PM: 0x%8lX\n", current_task->address_space ? current_task->address_space->pm : 0);
+
+    } else {
+
+        kprintf(" No task is currently running\n");
+    }
 
     kprintf("--- End of Process Info ---\n");
 }
