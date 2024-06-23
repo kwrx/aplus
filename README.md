@@ -22,7 +22,7 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
   
 <br>
 <p align="center" width="100%">
-    <img src="./extra/images/v0.4-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
+    <img src="./docs/images/v0.4-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
 </p>
 
 
