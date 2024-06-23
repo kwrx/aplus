@@ -48,6 +48,6 @@
  */
 
 SYSCALL(275, splice,
-long sys_splice (int fd_in, off_t __user * off_in, int fd_out, off_t __user * off_out, size_t len, unsigned int flags) {
+long sys_splice (int fd_in, off_t  * off_in, int fd_out, off_t  * off_out, size_t len, unsigned int flags) {
     return -ENOSYS;
 });

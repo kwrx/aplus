@@ -68,7 +68,7 @@ int video_getattr(device_t* device, struct stat* st) {
 }
 
 
-int video_ioctl(device_t* device, int req, void __user* arg) {
+int video_ioctl(device_t* device, int req, void * arg) {
 
     DEBUG_ASSERT(device);
 

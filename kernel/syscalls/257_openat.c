@@ -47,7 +47,7 @@
  * Input Parameters:
  *  0: 0x101
  *  1: int dfd
- *  2: const char __user * filename
+ *  2: const char  * filename
  *  3: int flags
  *  4: umode_t mode
  *
@@ -55,7 +55,7 @@
  */
 
 SYSCALL(257, openat,
-long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode) {
+long sys_openat (int dfd, const char  * filename, int flags, mode_t mode) {
     
     if(unlikely(!filename))
         return -EINVAL;

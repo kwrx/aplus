@@ -43,7 +43,7 @@
  *
  * Input Parameters:
  *  0: 0x13e
- *  1: char __user * buf
+ *  1: char  * buf
  *  2: size_t count
  *  3: unsigned int flags
  *
@@ -51,7 +51,7 @@
  */
 
 SYSCALL(318, getrandom,
-long sys_getrandom (char __user * buf, size_t count, unsigned int flags) {
+long sys_getrandom (char  * buf, size_t count, unsigned int flags) {
 
     if(unlikely(!buf))
         return -EINVAL;

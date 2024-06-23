@@ -51,6 +51,6 @@
 struct epoll_event;
 
 SYSCALL(281, epoll_pwait,
-long sys_epoll_pwait (int epfd, struct epoll_event __user * events, int maxevents, int timeout, const sigset_t __user * sigmask, size_t sigsetsize) {
+long sys_epoll_pwait (int epfd, struct epoll_event  * events, int maxevents, int timeout, const sigset_t  * sigmask, size_t sigsetsize) {
     return -ENOSYS;
 });

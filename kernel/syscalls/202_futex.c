@@ -54,7 +54,7 @@
 
 
 SYSCALL(202, futex,
-long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, long __val2, uint32_t __user * uaddr2, uint32_t val3) {
+long sys_futex (uint32_t  * uaddr, int op, uint32_t val, long __val2, uint32_t  * uaddr2, uint32_t val3) {
     
     if(unlikely(!uaddr))
         return -EINVAL;

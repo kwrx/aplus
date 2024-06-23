@@ -10,28 +10,28 @@
 
 
 /* 000_read.c */
-extern long sys_read (unsigned int fd, char __user * buf, size_t count);
+extern long sys_read (unsigned int fd, char  * buf, size_t count);
 
 /* 001_write.c */
-extern long sys_write (unsigned int fd, const char __user * buf, size_t count);
+extern long sys_write (unsigned int fd, const char  * buf, size_t count);
 
 /* 002_open.c */
-extern long sys_open (const char __user * filename, int flags, mode_t mode);
+extern long sys_open (const char  * filename, int flags, mode_t mode);
 
 /* 003_close.c */
 extern long sys_close (unsigned int fd);
 
 /* 004_newstat.c */
-extern long sys_newstat (const char __user * filename, struct stat __user * statbuf);
+extern long sys_newstat (const char  * filename, struct stat  * statbuf);
 
 /* 005_newfstat.c */
-extern long sys_newfstat (unsigned int fd, struct stat __user * statbuf);
+extern long sys_newfstat (unsigned int fd, struct stat  * statbuf);
 
 /* 006_newlstat.c */
-extern long sys_newlstat (const char __user * filename, struct stat __user * statbuf);
+extern long sys_newlstat (const char  * filename, struct stat  * statbuf);
 
 /* 007_poll.c */
-extern long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout);
+extern long sys_poll (struct pollfd  * ufds, unsigned int nfds, int timeout);
 
 /* 008_lseek.c */
 extern long sys_lseek (unsigned int fd, off_t offset, unsigned int whence);
@@ -49,34 +49,34 @@ extern long sys_munmap (unsigned long addr, size_t len);
 extern long sys_brk (unsigned long brk);
 
 /* 013_rt_sigaction.c */
-extern long sys_rt_sigaction (int, const struct sigaction __user *, struct sigaction __user *, size_t);
+extern long sys_rt_sigaction (int, const struct sigaction  *, struct sigaction  *, size_t);
 
 /* 014_rt_sigprocmask.c */
-extern long sys_rt_sigprocmask (int how, sigset_t __user * set, sigset_t __user * oset, size_t sigsetsize);
+extern long sys_rt_sigprocmask (int how, sigset_t  * set, sigset_t  * oset, size_t sigsetsize);
 
 /* 016_ioctl.c */
 extern long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg);
 
 /* 017_pread64.c */
-extern long sys_pread64 (unsigned int fd, char __user * buf, size_t count, off_t pos);
+extern long sys_pread64 (unsigned int fd, char  * buf, size_t count, off_t pos);
 
 /* 018_pwrite64.c */
-extern long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos);
+extern long sys_pwrite64 (unsigned int fd, const char  * buf, size_t count, off_t pos);
 
 /* 019_readv.c */
-extern long sys_readv (unsigned long fd, const struct iovec __user * vec, unsigned long vlen);
+extern long sys_readv (unsigned long fd, const struct iovec  * vec, unsigned long vlen);
 
 /* 020_writev.c */
-extern long sys_writev (unsigned long fd, const struct iovec __user * vec, unsigned long vlen);
+extern long sys_writev (unsigned long fd, const struct iovec  * vec, unsigned long vlen);
 
 /* 021_access.c */
-extern long sys_access (const char __user * filename, int mode);
+extern long sys_access (const char  * filename, int mode);
 
 /* 022_pipe.c */
-extern long sys_pipe (int __user * fildes);
+extern long sys_pipe (int  * fildes);
 
 /* 023_select.c */
-extern long sys_select (int n, fd_set __user * inp, fd_set __user * outp, fd_set __user * exp, struct timeval __user * tvp);
+extern long sys_select (int n, fd_set  * inp, fd_set  * outp, fd_set  * exp, struct timeval  * tvp);
 
 /* 024_sched_yield.c */
 extern long sys_sched_yield (void);
@@ -88,7 +88,7 @@ extern long sys_mremap (unsigned long addr, unsigned long old_len, unsigned long
 extern long sys_msync (unsigned long start, size_t len, int flags);
 
 /* 027_mincore.c */
-extern long sys_mincore (unsigned long start, size_t len, unsigned char __user * vec);
+extern long sys_mincore (unsigned long start, size_t len, unsigned char  * vec);
 
 /* 028_madvise.c */
 extern long sys_madvise (unsigned long start, size_t len, int behavior);
@@ -97,10 +97,10 @@ extern long sys_madvise (unsigned long start, size_t len, int behavior);
 extern long sys_shmget (key_t key, size_t size, int flag);
 
 /* 030_shmat.c */
-extern long sys_shmat (int shmid, char __user * shmaddr, int shmflg);
+extern long sys_shmat (int shmid, char  * shmaddr, int shmflg);
 
 /* 031_shmctl.c */
-extern long sys_shmctl (int shmid, int cmd, struct shmid_ds __user * buf);
+extern long sys_shmctl (int shmid, int cmd, struct shmid_ds  * buf);
 
 /* 032_dup.c */
 extern long sys_dup (unsigned int fildes);
@@ -112,103 +112,103 @@ extern long sys_dup2 (unsigned int oldfd, unsigned int newfd);
 extern long sys_pause (void);
 
 /* 035_nanosleep.c */
-extern long sys_nanosleep (struct timespec __user * rqtp, struct timespec __user * rmtp);
+extern long sys_nanosleep (struct timespec  * rqtp, struct timespec  * rmtp);
 
 /* 036_getitimer.c */
-extern long sys_getitimer (int which, struct itimerval __user * value);
+extern long sys_getitimer (int which, struct itimerval  * value);
 
 /* 037_alarm.c */
 extern long sys_alarm (unsigned int seconds);
 
 /* 038_setitimer.c */
-extern long sys_setitimer (int which, struct itimerval __user * value, struct itimerval __user * ovalue);
+extern long sys_setitimer (int which, struct itimerval  * value, struct itimerval  * ovalue);
 
 /* 039_getpid.c */
 extern long sys_getpid (void);
 
 /* 040_sendfile64.c */
-extern long sys_sendfile64 (int out_fd, int in_fd, off_t __user * offset, size_t count);
+extern long sys_sendfile64 (int out_fd, int in_fd, off_t  * offset, size_t count);
 
 /* 041_socket.c */
 extern long sys_socket (int, int, int);
 
 /* 042_connect.c */
-extern long sys_connect (int, struct sockaddr __user *, int);
+extern long sys_connect (int, struct sockaddr  *, int);
 
 /* 043_accept.c */
-extern long sys_accept (int, struct sockaddr __user *, int __user *);
+extern long sys_accept (int, struct sockaddr  *, int  *);
 
 /* 044_sendto.c */
-extern long sys_sendto (int, void __user *, size_t, unsigned, struct sockaddr __user *, int);
+extern long sys_sendto (int, void  *, size_t, unsigned, struct sockaddr  *, int);
 
 /* 045_recvfrom.c */
-extern long sys_recvfrom (int, void __user *, size_t, unsigned, struct sockaddr __user *, int __user *);
+extern long sys_recvfrom (int, void  *, size_t, unsigned, struct sockaddr  *, int  *);
 
 /* 046_sendmsg.c */
-extern long sys_sendmsg (int fd, struct user_msghdr __user * msg, unsigned flags);
+extern long sys_sendmsg (int fd, struct user_msghdr  * msg, unsigned flags);
 
 /* 047_recvmsg.c */
-extern long sys_recvmsg (int fd, struct user_msghdr __user * msg, unsigned flags);
+extern long sys_recvmsg (int fd, struct user_msghdr  * msg, unsigned flags);
 
 /* 048_shutdown.c */
 extern long sys_shutdown (int, int);
 
 /* 049_bind.c */
-extern long sys_bind (int, struct sockaddr __user *, int);
+extern long sys_bind (int, struct sockaddr  *, int);
 
 /* 050_listen.c */
 extern long sys_listen (int, int);
 
 /* 051_getsockname.c */
-extern long sys_getsockname (int, struct sockaddr __user *, int __user *);
+extern long sys_getsockname (int, struct sockaddr  *, int  *);
 
 /* 052_getpeername.c */
-extern long sys_getpeername (int, struct sockaddr __user *, int __user *);
+extern long sys_getpeername (int, struct sockaddr  *, int  *);
 
 /* 053_socketpair.c */
-extern long sys_socketpair (int, int, int, int __user *);
+extern long sys_socketpair (int, int, int, int  *);
 
 /* 054_setsockopt.c */
-extern long sys_setsockopt (int fd, int level, int optname, char __user * optval, int optlen);
+extern long sys_setsockopt (int fd, int level, int optname, char  * optval, int optlen);
 
 /* 055_getsockopt.c */
-extern long sys_getsockopt (int fd, int level, int optname, char __user * optval, int __user * optlen);
+extern long sys_getsockopt (int fd, int level, int optname, char  * optval, int  * optlen);
 
 /* 060_exit.c */
 extern long sys_exit (int error_code);
 
 /* 061_wait4.c */
-extern long sys_wait4 (pid_t pid, int __user * stat_addr, int options, struct rusage __user * ru);
+extern long sys_wait4 (pid_t pid, int  * stat_addr, int options, struct rusage  * ru);
 
 /* 062_kill.c */
 extern long sys_kill (pid_t pid, int sig);
 
 /* 063_newuname.c */
-extern long sys_newuname (struct new_utsname __user * name);
+extern long sys_newuname (struct new_utsname  * name);
 
 /* 064_semget.c */
 extern long sys_semget (key_t key, int nsems, int semflg);
 
 /* 065_semop.c */
-extern long sys_semop (int semid, struct sembuf __user * sops, unsigned nsops);
+extern long sys_semop (int semid, struct sembuf  * sops, unsigned nsops);
 
 /* 066_semctl.c */
 extern long sys_semctl (int semid, int semnum, int cmd, unsigned long arg);
 
 /* 067_shmdt.c */
-extern long sys_shmdt (char __user * shmaddr);
+extern long sys_shmdt (char  * shmaddr);
 
 /* 068_msgget.c */
 extern long sys_msgget (key_t key, int msgflg);
 
 /* 069_msgsnd.c */
-extern long sys_msgsnd (int msqid, struct msgbuf __user * msgp, size_t msgsz, int msgflg);
+extern long sys_msgsnd (int msqid, struct msgbuf  * msgp, size_t msgsz, int msgflg);
 
 /* 070_msgrcv.c */
-extern long sys_msgrcv (int msqid, struct msgbuf __user * msgp, size_t msgsz, long msgtyp, int msgflg);
+extern long sys_msgrcv (int msqid, struct msgbuf  * msgp, size_t msgsz, long msgtyp, int msgflg);
 
 /* 071_msgctl.c */
-extern long sys_msgctl (int msqid, int cmd, struct msqid_ds __user * buf);
+extern long sys_msgctl (int msqid, int cmd, struct msqid_ds  * buf);
 
 /* 072_fcntl.c */
 extern long sys_fcntl (unsigned int fd, unsigned int cmd, unsigned long arg);
@@ -223,79 +223,79 @@ extern long sys_fsync (unsigned int fd);
 extern long sys_fdatasync (unsigned int fd);
 
 /* 076_truncate.c */
-extern long sys_truncate (const char __user * path, long length);
+extern long sys_truncate (const char  * path, long length);
 
 /* 077_ftruncate.c */
 extern long sys_ftruncate (unsigned int fd, unsigned long length);
 
 /* 078_getdents.c */
-extern long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int count);
+extern long sys_getdents (unsigned int fd, struct dirent  * dirent, unsigned int count);
 
 /* 079_getcwd.c */
-extern long sys_getcwd (char __user * buf, unsigned long size);
+extern long sys_getcwd (char  * buf, unsigned long size);
 
 /* 080_chdir.c */
-extern long sys_chdir (const char __user * filename);
+extern long sys_chdir (const char  * filename);
 
 /* 081_fchdir.c */
 extern long sys_fchdir (unsigned int fd);
 
 /* 082_rename.c */
-extern long sys_rename (const char __user * oldname, const char __user * newname);
+extern long sys_rename (const char  * oldname, const char  * newname);
 
 /* 083_mkdir.c */
-extern long sys_mkdir (const char __user * pathname, mode_t mode);
+extern long sys_mkdir (const char  * pathname, mode_t mode);
 
 /* 084_rmdir.c */
-extern long sys_rmdir (const char __user * pathname);
+extern long sys_rmdir (const char  * pathname);
 
 /* 085_creat.c */
-extern long sys_creat (const char __user * pathname, mode_t mode);
+extern long sys_creat (const char  * pathname, mode_t mode);
 
 /* 086_link.c */
-extern long sys_link (const char __user * oldname, const char __user * newname);
+extern long sys_link (const char  * oldname, const char  * newname);
 
 /* 087_unlink.c */
-extern long sys_unlink (const char __user * pathname);
+extern long sys_unlink (const char  * pathname);
 
 /* 088_symlink.c */
-extern long sys_symlink (const char __user * old, const char __user * new);
+extern long sys_symlink (const char  * old, const char  * new);
 
 /* 089_readlink.c */
-extern long sys_readlink (const char __user * path, char __user * buf, int bufsiz);
+extern long sys_readlink (const char  * path, char  * buf, int bufsiz);
 
 /* 090_chmod.c */
-extern long sys_chmod (const char __user * filename, mode_t mode);
+extern long sys_chmod (const char  * filename, mode_t mode);
 
 /* 091_fchmod.c */
 extern long sys_fchmod (unsigned int fd, mode_t mode);
 
 /* 092_chown.c */
-extern long sys_chown (const char __user * filename, uid_t user, gid_t group);
+extern long sys_chown (const char  * filename, uid_t user, gid_t group);
 
 /* 093_fchown.c */
 extern long sys_fchown (unsigned int fd, uid_t user, gid_t group);
 
 /* 094_lchown.c */
-extern long sys_lchown (const char __user * filename, uid_t user, gid_t group);
+extern long sys_lchown (const char  * filename, uid_t user, gid_t group);
 
 /* 095_umask.c */
 extern long sys_umask (int mask);
 
 /* 096_gettimeofday.c */
-extern long sys_gettimeofday (struct timeval __user * tv, struct timezone __user * tz);
+extern long sys_gettimeofday (struct timeval  * tv, struct timezone  * tz);
 
 /* 097_getrlimit.c */
-extern long sys_getrlimit (unsigned int resource, struct rlimit __user * rlim);
+extern long sys_getrlimit (unsigned int resource, struct rlimit  * rlim);
 
 /* 098_getrusage.c */
-extern long sys_getrusage (int who, struct rusage __user * ru);
+extern long sys_getrusage (int who, struct rusage  * ru);
 
 /* 099_sysinfo.c */
-extern long sys_sysinfo (struct sysinfo __user * info);
+extern long sys_sysinfo (struct sysinfo  * info);
 
 /* 100_times.c */
-extern long sys_times (struct tms __user * tbuf);
+extern long sys_times (struct tms  * tbuf);
 
 /* 101_ptrace.c */
 extern long sys_ptrace (long request, long pid, unsigned long addr, unsigned long data);
@@ -304,7 +304,7 @@ extern long sys_ptrace (long request, long pid, unsigned long addr, unsigned lon
 extern long sys_getuid (void);
 
 /* 103_syslog.c */
-extern long sys_syslog (int type, char __user * buf, int len);
+extern long sys_syslog (int type, char  * buf, int len);
 
 /* 104_getgid.c */
 extern long sys_getgid (void);
@@ -340,22 +340,22 @@ extern long sys_setreuid (uid_t ruid, uid_t euid);
 extern long sys_setregid (gid_t rgid, gid_t egid);
 
 /* 115_getgroups.c */
-extern long sys_getgroups (int gidsetsize, gid_t __user * grouplist);
+extern long sys_getgroups (int gidsetsize, gid_t  * grouplist);
 
 /* 116_setgroups.c */
-extern long sys_setgroups (int gidsetsize, gid_t __user * grouplist);
+extern long sys_setgroups (int gidsetsize, gid_t  * grouplist);
 
 /* 117_setresuid.c */
 extern long sys_setresuid (uid_t ruid, uid_t euid, uid_t suid);
 
 /* 118_getresuid.c */
-extern long sys_getresuid (uid_t __user * ruid, uid_t __user * euid, uid_t __user * suid);
+extern long sys_getresuid (uid_t  * ruid, uid_t  * euid, uid_t  * suid);
 
 /* 119_setresgid.c */
 extern long sys_setresgid (gid_t rgid, gid_t egid, gid_t sgid);
 
 /* 120_getresgid.c */
-extern long sys_getresgid (gid_t __user * rgid, gid_t __user * egid, gid_t __user * sgid);
+extern long sys_getresgid (gid_t  * rgid, gid_t  * egid, gid_t  * sgid);
 
 /* 121_getpgid.c */
 extern long sys_getpgid (pid_t pid);
@@ -376,37 +376,37 @@ extern long sys_capget (cap_user_header_t header, cap_user_data_t dataptr);
 extern long sys_capset (cap_user_header_t header, const cap_user_data_t data);
 
 /* 127_rt_sigpending.c */
-extern long sys_rt_sigpending (sigset_t __user * set, size_t sigsetsize);
+extern long sys_rt_sigpending (sigset_t  * set, size_t sigsetsize);
 
 /* 128_rt_sigtimedwait.c */
-extern long sys_rt_sigtimedwait (const sigset_t __user * uthese, siginfo_t __user * uinfo, const struct timespec __user * uts, size_t sigsetsize);
+extern long sys_rt_sigtimedwait (const sigset_t  * uthese, siginfo_t  * uinfo, const struct timespec  * uts, size_t sigsetsize);
 
 /* 129_rt_sigqueueinfo.c */
-extern long sys_rt_sigqueueinfo (pid_t pid, int sig, siginfo_t __user * uinfo);
+extern long sys_rt_sigqueueinfo (pid_t pid, int sig, siginfo_t  * uinfo);
 
 /* 130_rt_sigsuspend.c */
-extern long sys_rt_sigsuspend (sigset_t __user * unewset, size_t sigsetsize);
+extern long sys_rt_sigsuspend (sigset_t  * unewset, size_t sigsetsize);
 
 /* 131_sigaltstack.c */
-extern long sys_sigaltstack (const struct sigaltstack __user * uss, struct sigaltstack __user * uoss);
+extern long sys_sigaltstack (const struct sigaltstack  * uss, struct sigaltstack  * uoss);
 
 /* 132_utime.c */
-extern long sys_utime (char __user * filename, struct utimbuf __user * times);
+extern long sys_utime (char  * filename, struct utimbuf  * times);
 
 /* 133_mknod.c */
-extern long sys_mknod (const char __user * filename, mode_t mode, unsigned dev);
+extern long sys_mknod (const char  * filename, mode_t mode, unsigned dev);
 
 /* 135_personality.c */
 extern long sys_personality (int p);
 
 /* 136_ustat.c */
-extern long sys_ustat (unsigned dev, struct ustat __user * ubuf);
+extern long sys_ustat (unsigned dev, struct ustat  * ubuf);
 
 /* 137_statfs.c */
-extern long sys_statfs (const char __user * path, struct statfs __user * buf);
+extern long sys_statfs (const char  * path, struct statfs  * buf);
 
 /* 138_fstatfs.c */
-extern long sys_fstatfs (unsigned int fd, struct statfs __user * buf);
+extern long sys_fstatfs (unsigned int fd, struct statfs  * buf);
 
 /* 139_sysfs.c */
 extern long sys_sysfs (int option, unsigned long arg1, unsigned long arg2);
@@ -418,13 +418,13 @@ extern long sys_getpriority (int which, int who);
 extern long sys_setpriority (int which, int who, int niceval);
 
 /* 142_sched_setparam.c */
-extern long sys_sched_setparam (pid_t pid, struct sched_param __user * param);
+extern long sys_sched_setparam (pid_t pid, struct sched_param  * param);
 
 /* 143_sched_getparam.c */
-extern long sys_sched_getparam (pid_t pid, struct sched_param __user * param);
+extern long sys_sched_getparam (pid_t pid, struct sched_param  * param);
 
 /* 144_sched_setscheduler.c */
-extern long sys_sched_setscheduler (pid_t pid, int policy, struct sched_param __user * param);
+extern long sys_sched_setscheduler (pid_t pid, int policy, struct sched_param  * param);
 
 /* 145_sched_getscheduler.c */
 extern long sys_sched_getscheduler (pid_t pid);
@@ -436,7 +436,7 @@ extern long sys_sched_get_priority_max (int policy);
 extern long sys_sched_get_priority_min (int policy);
 
 /* 148_sched_rr_get_interval.c */
-extern long sys_sched_rr_get_interval (pid_t pid, struct timespec __user * interval);
+extern long sys_sched_rr_get_interval (pid_t pid, struct timespec  * interval);
 
 /* 149_mlock.c */
 extern long sys_mlock (unsigned long start, size_t len);
@@ -454,13 +454,13 @@ extern long sys_munlockall (void);
 extern long sys_vhangup (void);
 
 /* 154_modify_ldt.c */
-extern long sys_modify_ldt (int, void __user *, unsigned long);
+extern long sys_modify_ldt (int, void  *, unsigned long);
 
 /* 155_pivot_root.c */
-extern long sys_pivot_root (const char __user * new_root, const char __user * put_old);
+extern long sys_pivot_root (const char  * new_root, const char  * put_old);
 
 /* 156_sysctl.c */
-extern long sys_sysctl (struct __sysctl_args __user * args);
+extern long sys_sysctl (struct __sysctl_args  * args);
 
 /* 157_prctl.c */
 extern long sys_prctl (int option, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5);
@@ -469,55 +469,55 @@ extern long sys_prctl (int option, unsigned long arg2, unsigned long arg3, unsig
 extern long sys_arch_prctl (int, unsigned long);
 
 /* 159_adjtimex.c */
-extern long sys_adjtimex (struct timex __user * txc_p);
+extern long sys_adjtimex (struct timex  * txc_p);
 
 /* 160_setrlimit.c */
-extern long sys_setrlimit (unsigned int resource, struct rlimit __user * rlim);
+extern long sys_setrlimit (unsigned int resource, struct rlimit  * rlim);
 
 /* 161_chroot.c */
-extern long sys_chroot (const char __user * filename);
+extern long sys_chroot (const char  * filename);
 
 /* 162_sync.c */
 extern long sys_sync (void);
 
 /* 163_acct.c */
-extern long sys_acct (const char __user * name);
+extern long sys_acct (const char  * name);
 
 /* 164_settimeofday.c */
-extern long sys_settimeofday (struct timeval __user * tv, struct timezone __user * tz);
+extern long sys_settimeofday (struct timeval  * tv, struct timezone  * tz);
 
 /* 165_mount.c */
-extern long sys_mount (char __user * dev_name, char __user * dir_name, char __user * type, unsigned long flags, void __user * data);
+extern long sys_mount (char  * dev_name, char  * dir_name, char  * type, unsigned long flags, void  * data);
 
 /* 166_umount.c */
-extern long sys_umount (char __user * name, int flags);
+extern long sys_umount (char  * name, int flags);
 
 /* 167_swapon.c */
-extern long sys_swapon (const char __user * specialfile, int swap_flags);
+extern long sys_swapon (const char  * specialfile, int swap_flags);
 
 /* 168_swapoff.c */
-extern long sys_swapoff (const char __user * specialfile);
+extern long sys_swapoff (const char  * specialfile);
 
 /* 169_reboot.c */
-extern long sys_reboot (int magic1, int magic2, unsigned int cmd, void __user * arg);
+extern long sys_reboot (int magic1, int magic2, unsigned int cmd, void  * arg);
 
 /* 170_sethostname.c */
-extern long sys_sethostname (char __user * name, int len);
+extern long sys_sethostname (char  * name, int len);
 
 /* 171_setdomainname.c */
-extern long sys_setdomainname (char __user * name, int len);
+extern long sys_setdomainname (char  * name, int len);
 
 /* 173_ioperm.c */
 extern long sys_ioperm (unsigned long, unsigned long, int);
 
 /* 175_init_module.c */
-extern long sys_init_module (void __user * umod, unsigned long len, const char __user * uargs);
+extern long sys_init_module (void  * umod, unsigned long len, const char  * uargs);
 
 /* 176_delete_module.c */
-extern long sys_delete_module (const char __user * name_user, unsigned int flags);
+extern long sys_delete_module (const char  * name_user, unsigned int flags);
 
 /* 179_quotactl.c */
-extern long sys_quotactl (unsigned int cmd, const char __user * special, qid_t id, void __user * addr);
+extern long sys_quotactl (unsigned int cmd, const char  * special, qid_t id, void  * addr);
 
 /* 186_gettid.c */
 extern long sys_gettid (void);
@@ -526,73 +526,73 @@ extern long sys_gettid (void);
 extern long sys_readahead (int fd, off_t offset, size_t count);
 
 /* 188_setxattr.c */
-extern long sys_setxattr (const char __user * path, const char __user * name, const void __user * value, size_t size, int flags);
+extern long sys_setxattr (const char  * path, const char  * name, const void  * value, size_t size, int flags);
 
 /* 189_lsetxattr.c */
-extern long sys_lsetxattr (const char __user * path, const char __user * name, const void __user * value, size_t size, int flags);
+extern long sys_lsetxattr (const char  * path, const char  * name, const void  * value, size_t size, int flags);
 
 /* 190_fsetxattr.c */
-extern long sys_fsetxattr (int fd, const char __user * name, const void __user * value, size_t size, int flags);
+extern long sys_fsetxattr (int fd, const char  * name, const void  * value, size_t size, int flags);
 
 /* 191_getxattr.c */
-extern long sys_getxattr (const char __user * path, const char __user * name, void __user * value, size_t size);
+extern long sys_getxattr (const char  * path, const char  * name, void  * value, size_t size);
 
 /* 192_lgetxattr.c */
-extern long sys_lgetxattr (const char __user * path, const char __user * name, void __user * value, size_t size);
+extern long sys_lgetxattr (const char  * path, const char  * name, void  * value, size_t size);
 
 /* 193_fgetxattr.c */
-extern long sys_fgetxattr (int fd, const char __user * name, void __user * value, size_t size);
+extern long sys_fgetxattr (int fd, const char  * name, void  * value, size_t size);
 
 /* 194_listxattr.c */
-extern long sys_listxattr (const char __user * path, char __user * list, size_t size);
+extern long sys_listxattr (const char  * path, char  * list, size_t size);
 
 /* 195_llistxattr.c */
-extern long sys_llistxattr (const char __user * path, char __user * list, size_t size);
+extern long sys_llistxattr (const char  * path, char  * list, size_t size);
 
 /* 196_flistxattr.c */
-extern long sys_flistxattr (int fd, char __user * list, size_t size);
+extern long sys_flistxattr (int fd, char  * list, size_t size);
 
 /* 197_removexattr.c */
-extern long sys_removexattr (const char __user * path, const char __user * name);
+extern long sys_removexattr (const char  * path, const char  * name);
 
 /* 198_lremovexattr.c */
-extern long sys_lremovexattr (const char __user * path, const char __user * name);
+extern long sys_lremovexattr (const char  * path, const char  * name);
 
 /* 199_fremovexattr.c */
-extern long sys_fremovexattr (int fd, const char __user * name);
+extern long sys_fremovexattr (int fd, const char  * name);
 
 /* 200_tkill.c */
 extern long sys_tkill (pid_t pid, int sig);
 
 /* 201_time.c */
-extern long sys_time (time_t __user * tloc);
+extern long sys_time (time_t  * tloc);
 
 /* 202_futex.c */
-extern long sys_futex (uint32_t __user * uaddr, int op, uint32_t val, struct timespec __user * utime, uint32_t __user * uaddr2, uint32_t val3);
+extern long sys_futex (uint32_t  * uaddr, int op, uint32_t val, struct timespec  * utime, uint32_t  * uaddr2, uint32_t val3);
 
 /* 203_sched_setaffinity.c */
-extern long sys_sched_setaffinity (pid_t pid, unsigned int len, unsigned long __user * user_mask_ptr);
+extern long sys_sched_setaffinity (pid_t pid, unsigned int len, unsigned long  * user_mask_ptr);
 
 /* 204_sched_getaffinity.c */
-extern long sys_sched_getaffinity (pid_t pid, unsigned int len, unsigned long __user * user_mask_ptr);
+extern long sys_sched_getaffinity (pid_t pid, unsigned int len, unsigned long  * user_mask_ptr);
 
 /* 206_io_setup.c */
-extern long sys_io_setup (unsigned nr_reqs, aio_context_t __user * ctx);
+extern long sys_io_setup (unsigned nr_reqs, aio_context_t  * ctx);
 
 /* 207_io_destroy.c */
 extern long sys_io_destroy (aio_context_t ctx);
 
 /* 208_io_getevents.c */
-extern long sys_io_getevents (aio_context_t ctx_id, long min_nr, long nr, struct io_event __user * events, struct timespec __user * timeout);
+extern long sys_io_getevents (aio_context_t ctx_id, long min_nr, long nr, struct io_event  * events, struct timespec  * timeout);
 
 /* 209_io_submit.c */
-extern long sys_io_submit (aio_context_t, long, struct iocb __user * __user *);
+extern long sys_io_submit (aio_context_t, long, struct iocb  *  *);
 
 /* 210_io_cancel.c */
-extern long sys_io_cancel (aio_context_t ctx_id, struct iocb __user * iocb, struct io_event __user * result);
+extern long sys_io_cancel (aio_context_t ctx_id, struct iocb  * iocb, struct io_event  * result);
 
 /* 212_lookup_dcookie.c */
-extern long sys_lookup_dcookie (uint64_t cookie64, char __user * buf, size_t len);
+extern long sys_lookup_dcookie (uint64_t cookie64, char  * buf, size_t len);
 
 /* 213_epoll_create.c */
 extern long sys_epoll_create (int size);
@@ -601,28 +601,28 @@ extern long sys_epoll_create (int size);
 extern long sys_remap_file_pages (unsigned long start, unsigned long size, unsigned long prot, unsigned long pgoff, unsigned long flags);
 
 /* 217_getdents64.c */
-extern long sys_getdents64 (unsigned int fd, struct dirent __user * dirent, unsigned int count);
+extern long sys_getdents64 (unsigned int fd, struct dirent  * dirent, unsigned int count);
 
 /* 218_set_tid_address.c */
-extern long sys_set_tid_address (int __user * tidptr);
+extern long sys_set_tid_address (int  * tidptr);
 
 /* 219_restart_syscall.c */
 extern long sys_restart_syscall (void);
 
 /* 220_semtimedop.c */
-extern long sys_semtimedop (int semid, struct sembuf __user * sops, unsigned nsops, const struct timespec __user * timeout);
+extern long sys_semtimedop (int semid, struct sembuf  * sops, unsigned nsops, const struct timespec  * timeout);
 
 /* 221_fadvise64.c */
 extern long sys_fadvise64 (int fd, off_t offset, size_t len, int advice);
 
 /* 222_timer_create.c */
-extern long sys_timer_create (clockid_t which_clock, struct sigevent __user * timer_event_spec, timer_t __user * created_timer_id);
+extern long sys_timer_create (clockid_t which_clock, struct sigevent  * timer_event_spec, timer_t  * created_timer_id);
 
 /* 223_timer_settime.c */
-extern long sys_timer_settime (timer_t timer_id, int flags, const struct itimerspec __user * new_setting, struct itimerspec __user * old_setting);
+extern long sys_timer_settime (timer_t timer_id, int flags, const struct itimerspec  * new_setting, struct itimerspec  * old_setting);
 
 /* 224_timer_gettime.c */
-extern long sys_timer_gettime (timer_t timer_id, struct itimerspec __user * setting);
+extern long sys_timer_gettime (timer_t timer_id, struct itimerspec  * setting);
 
 /* 225_timer_getoverrun.c */
 extern long sys_timer_getoverrun (timer_t timer_id);
@@ -631,70 +631,70 @@ extern long sys_timer_getoverrun (timer_t timer_id);
 extern long sys_timer_delete (timer_t timer_id);
 
 /* 227_clock_settime.c */
-extern long sys_clock_settime (clockid_t which_clock, const struct timespec __user * tp);
+extern long sys_clock_settime (clockid_t which_clock, const struct timespec  * tp);
 
 /* 228_clock_gettime.c */
-extern long sys_clock_gettime (clockid_t which_clock, struct timespec __user * tp);
+extern long sys_clock_gettime (clockid_t which_clock, struct timespec  * tp);
 
 /* 229_clock_getres.c */
-extern long sys_clock_getres (clockid_t which_clock, struct timespec __user * tp);
+extern long sys_clock_getres (clockid_t which_clock, struct timespec  * tp);
 
 /* 230_clock_nanosleep.c */
-extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp);
+extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec  * rqtp, struct timespec  * rmtp);
 
 /* 231_exit_group.c */
 extern long sys_exit_group (int error_code);
 
 /* 232_epoll_wait.c */
-extern long sys_epoll_wait (int epfd, struct epoll_event __user * events, int maxevents, int timeout);
+extern long sys_epoll_wait (int epfd, struct epoll_event  * events, int maxevents, int timeout);
 
 /* 233_epoll_ctl.c */
-extern long sys_epoll_ctl (int epfd, int op, int fd, struct epoll_event __user * event);
+extern long sys_epoll_ctl (int epfd, int op, int fd, struct epoll_event  * event);
 
 /* 234_tgkill.c */
 extern long sys_tgkill (pid_t tgid, pid_t pid, int sig);
 
 /* 235_utimes.c */
-extern long sys_utimes (char __user * filename, struct timeval __user * utimes);
+extern long sys_utimes (char  * filename, struct timeval  * utimes);
 
 /* 237_mbind.c */
-extern long sys_mbind (unsigned long start, unsigned long len, unsigned long mode, const unsigned long __user * nmask, unsigned long maxnode, unsigned flags);
+extern long sys_mbind (unsigned long start, unsigned long len, unsigned long mode, const unsigned long  * nmask, unsigned long maxnode, unsigned flags);
 
 /* 238_set_mempolicy.c */
-extern long sys_set_mempolicy (int mode, const unsigned long __user * nmask, unsigned long maxnode);
+extern long sys_set_mempolicy (int mode, const unsigned long  * nmask, unsigned long maxnode);
 
 /* 239_get_mempolicy.c */
-extern long sys_get_mempolicy (int __user * policy, unsigned long __user * nmask, unsigned long maxnode, unsigned long addr, unsigned long flags);
+extern long sys_get_mempolicy (int  * policy, unsigned long  * nmask, unsigned long maxnode, unsigned long addr, unsigned long flags);
 
 /* 240_mq_open.c */
-extern long sys_mq_open (const char __user * name, int oflag, mode_t mode, struct mq_attr __user * attr);
+extern long sys_mq_open (const char  * name, int oflag, mode_t mode, struct mq_attr  * attr);
 
 /* 241_mq_unlink.c */
-extern long sys_mq_unlink (const char __user * name);
+extern long sys_mq_unlink (const char  * name);
 
 /* 242_mq_timedsend.c */
-extern long sys_mq_timedsend (mqd_t mqdes, const char __user * msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec __user * abs_timeout);
+extern long sys_mq_timedsend (mqd_t mqdes, const char  * msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec  * abs_timeout);
 
 /* 243_mq_timedreceive.c */
-extern long sys_mq_timedreceive (mqd_t mqdes, char __user * msg_ptr, size_t msg_len, unsigned int __user * msg_prio, const struct timespec __user * abs_timeout);
+extern long sys_mq_timedreceive (mqd_t mqdes, char  * msg_ptr, size_t msg_len, unsigned int  * msg_prio, const struct timespec  * abs_timeout);
 
 /* 244_mq_notify.c */
-extern long sys_mq_notify (mqd_t mqdes, const struct sigevent __user * notification);
+extern long sys_mq_notify (mqd_t mqdes, const struct sigevent  * notification);
 
 /* 245_mq_getsetattr.c */
-extern long sys_mq_getsetattr (mqd_t mqdes, const struct mq_attr __user * mqstat, struct mq_attr __user * omqstat);
+extern long sys_mq_getsetattr (mqd_t mqdes, const struct mq_attr  * mqstat, struct mq_attr  * omqstat);
 
 /* 246_kexec_load.c */
-extern long sys_kexec_load (unsigned long entry, unsigned long nr_segments, struct kexec_segment __user * segments, unsigned long flags);
+extern long sys_kexec_load (unsigned long entry, unsigned long nr_segments, struct kexec_segment  * segments, unsigned long flags);
 
 /* 247_waitid.c */
-extern long sys_waitid (int which, pid_t pid, struct siginfo __user * infop, int options, struct rusage __user * ru);
+extern long sys_waitid (int which, pid_t pid, struct siginfo  * infop, int options, struct rusage  * ru);
 
 /* 248_add_key.c */
-extern long sys_add_key (const char __user * _type, const char __user * _description, const void __user * _payload, size_t plen, key_serial_t destringid);
+extern long sys_add_key (const char  * _type, const char  * _description, const void  * _payload, size_t plen, key_serial_t destringid);
 
 /* 249_request_key.c */
-extern long sys_request_key (const char __user * _type, const char __user * _description, const char __user * _callout_info, key_serial_t destringid);
+extern long sys_request_key (const char  * _type, const char  * _description, const char  * _callout_info, key_serial_t destringid);
 
 /* 250_keyctl.c */
 extern long sys_keyctl (int cmd, unsigned long arg2, unsigned long arg3, unsigned long arg4, unsigned long arg5);
@@ -709,70 +709,70 @@ extern long sys_ioprio_get (int which, int who);
 extern long sys_inotify_init (void);
 
 /* 254_inotify_add_watch.c */
-extern long sys_inotify_add_watch (int fd, const char __user * path, uint32_t mask);
+extern long sys_inotify_add_watch (int fd, const char  * path, uint32_t mask);
 
 /* 255_inotify_rm_watch.c */
 extern long sys_inotify_rm_watch (int fd, int wd);
 
 /* 256_migrate_pages.c */
-extern long sys_migrate_pages (pid_t pid, unsigned long maxnode, const unsigned long __user * from, const unsigned long __user * to);
+extern long sys_migrate_pages (pid_t pid, unsigned long maxnode, const unsigned long  * from, const unsigned long  * to);
 
 /* 257_openat.c */
-extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
+extern long sys_openat (int dfd, const char  * filename, int flags, mode_t mode);
 
 /* 258_mkdirat.c */
-extern long sys_mkdirat (int dfd, const char __user * pathname, mode_t mode);
+extern long sys_mkdirat (int dfd, const char  * pathname, mode_t mode);
 
 /* 259_mknodat.c */
-extern long sys_mknodat (int dfd, const char __user * filename, mode_t mode, unsigned dev);
+extern long sys_mknodat (int dfd, const char  * filename, mode_t mode, unsigned dev);
 
 /* 260_fchownat.c */
-extern long sys_fchownat (int dfd, const char __user * filename, uid_t user, gid_t group, int flag);
+extern long sys_fchownat (int dfd, const char  * filename, uid_t user, gid_t group, int flag);
 
 /* 261_futimesat.c */
-extern long sys_futimesat (int dfd, const char __user * filename, struct timeval __user * utimes);
+extern long sys_futimesat (int dfd, const char  * filename, struct timeval  * utimes);
 
 /* 262_newfstatat.c */
-extern long sys_newfstatat (int dfd, const char __user * filename, struct stat __user * statbuf, int flag);
+extern long sys_newfstatat (int dfd, const char  * filename, struct stat  * statbuf, int flag);
 
 /* 263_unlinkat.c */
-extern long sys_unlinkat (int dfd, const char __user * pathname, int flag);
+extern long sys_unlinkat (int dfd, const char  * pathname, int flag);
 
 /* 264_renameat.c */
-extern long sys_renameat (int olddfd, const char __user * oldname, int newdfd, const char __user * newname);
+extern long sys_renameat (int olddfd, const char  * oldname, int newdfd, const char  * newname);
 
 /* 265_linkat.c */
-extern long sys_linkat (int olddfd, const char __user * oldname, int newdfd, const char __user * newname, int flags);
+extern long sys_linkat (int olddfd, const char  * oldname, int newdfd, const char  * newname, int flags);
 
 /* 266_symlinkat.c */
-extern long sys_symlinkat (const char __user * oldname, int newdfd, const char __user * newname);
+extern long sys_symlinkat (const char  * oldname, int newdfd, const char  * newname);
 
 /* 267_readlinkat.c */
-extern long sys_readlinkat (int dfd, const char __user * path, char __user * buf, int bufsiz);
+extern long sys_readlinkat (int dfd, const char  * path, char  * buf, int bufsiz);
 
 /* 268_fchmodat.c */
-extern long sys_fchmodat (int dfd, const char __user * filename, mode_t mode);
+extern long sys_fchmodat (int dfd, const char  * filename, mode_t mode);
 
 /* 269_faccessat.c */
-extern long sys_faccessat (int dfd, const char __user * filename, int mode);
+extern long sys_faccessat (int dfd, const char  * filename, int mode);
 
 /* 270_pselect6.c */
-extern long sys_pselect6 (int n, fd_set __user * inp, fd_set __user * outp, fd_set __user * exp, struct timespec __user * tsp, void __user * sig);
+extern long sys_pselect6 (int n, fd_set  * inp, fd_set  * outp, fd_set  * exp, struct timespec  * tsp, void  * sig);
 
 /* 271_ppoll.c */
-extern long sys_ppoll (struct pollfd __user * ufds, unsigned int nfds, struct timespec __user * tsp, const sigset_t __user * sigmask, size_t sigsetsize);
+extern long sys_ppoll (struct pollfd  * ufds, unsigned int nfds, struct timespec  * tsp, const sigset_t  * sigmask, size_t sigsetsize);
 
 /* 272_unshare.c */
 extern long sys_unshare (unsigned long unshare_flags);
 
 /* 273_set_robust_list.c */
-extern long sys_set_robust_list (struct robust_list_head __user * head, size_t len);
+extern long sys_set_robust_list (struct robust_list_head  * head, size_t len);
 
 /* 274_get_robust_list.c */
-extern long sys_get_robust_list (int pid, struct robust_list_head __user * __user * head_ptr, size_t __user * len_ptr);
+extern long sys_get_robust_list (int pid, struct robust_list_head  *  * head_ptr, size_t  * len_ptr);
 
 /* 275_splice.c */
-extern long sys_splice (int fd_in, off_t __user * off_in, int fd_out, off_t __user * off_out, size_t len, unsigned int flags);
+extern long sys_splice (int fd_in, off_t  * off_in, int fd_out, off_t  * off_out, size_t len, unsigned int flags);
 
 /* 276_tee.c */
 extern long sys_tee (int fdin, int fdout, size_t len, unsigned int flags);
@@ -781,19 +781,19 @@ extern long sys_tee (int fdin, int fdout, size_t len, unsigned int flags);
 extern long sys_sync_file_range (int fd, off_t offset, off_t nbytes, unsigned int flags);
 
 /* 278_vmsplice.c */
-extern long sys_vmsplice (int fd, const struct iovec __user * iov, unsigned long nr_segs, unsigned int flags);
+extern long sys_vmsplice (int fd, const struct iovec  * iov, unsigned long nr_segs, unsigned int flags);
 
 /* 279_move_pages.c */
-extern long sys_move_pages (pid_t pid, unsigned long nr_pages, const void __user * __user * pages, const int __user * nodes, int __user * status, int flags);
+extern long sys_move_pages (pid_t pid, unsigned long nr_pages, const void  *  * pages, const int  * nodes, int  * status, int flags);
 
 /* 280_utimensat.c */
-extern long sys_utimensat (int dfd, const char __user * filename, struct timespec __user * utimes, int flags);
+extern long sys_utimensat (int dfd, const char  * filename, struct timespec  * utimes, int flags);
 
 /* 281_epoll_pwait.c */
-extern long sys_epoll_pwait (int epfd, struct epoll_event __user * events, int maxevents, int timeout, const sigset_t __user * sigmask, size_t sigsetsize);
+extern long sys_epoll_pwait (int epfd, struct epoll_event  * events, int maxevents, int timeout, const sigset_t  * sigmask, size_t sigsetsize);
 
 /* 282_signalfd.c */
-extern long sys_signalfd (int ufd, sigset_t __user * user_mask, size_t sizemask);
+extern long sys_signalfd (int ufd, sigset_t  * user_mask, size_t sizemask);
 
 /* 283_timerfd_create.c */
 extern long sys_timerfd_create (int clockid, int flags);
@@ -805,16 +805,16 @@ extern long sys_eventfd (unsigned int count);
 extern long sys_fallocate (int fd, int mode, off_t offset, off_t len);
 
 /* 286_timerfd_settime.c */
-extern long sys_timerfd_settime (int ufd, int flags, const struct itimerspec __user * utmr, struct itimerspec __user * otmr);
+extern long sys_timerfd_settime (int ufd, int flags, const struct itimerspec  * utmr, struct itimerspec  * otmr);
 
 /* 287_timerfd_gettime.c */
-extern long sys_timerfd_gettime (int ufd, struct itimerspec __user * otmr);
+extern long sys_timerfd_gettime (int ufd, struct itimerspec  * otmr);
 
 /* 288_accept4.c */
-extern long sys_accept4 (int, struct sockaddr __user *, int __user *, int);
+extern long sys_accept4 (int, struct sockaddr  *, int  *, int);
 
 /* 289_signalfd4.c */
-extern long sys_signalfd4 (int ufd, sigset_t __user * user_mask, size_t sizemask, int flags);
+extern long sys_signalfd4 (int ufd, sigset_t  * user_mask, size_t sizemask, int flags);
 
 /* 290_eventfd2.c */
 extern long sys_eventfd2 (unsigned int count, int flags);
@@ -826,88 +826,88 @@ extern long sys_epoll_create1 (int flags);
 extern long sys_dup3 (unsigned int oldfd, unsigned int newfd, int flags);
 
 /* 293_pipe2.c */
-extern long sys_pipe2 (int __user * fildes, int flags);
+extern long sys_pipe2 (int  * fildes, int flags);
 
 /* 294_inotify_init1.c */
 extern long sys_inotify_init1 (int flags);
 
 /* 295_preadv.c */
-extern long sys_preadv (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
+extern long sys_preadv (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
 
 /* 296_pwritev.c */
-extern long sys_pwritev (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
+extern long sys_pwritev (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
 
 /* 297_rt_tgsigqueueinfo.c */
-extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t pid, int sig, siginfo_t __user * uinfo);
+extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t pid, int sig, siginfo_t  * uinfo);
 
 /* 298_perf_event_open.c */
-extern long sys_perf_event_open (struct perf_event_attr __user * attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags);
+extern long sys_perf_event_open (struct perf_event_attr  * attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags);
 
 /* 299_recvmmsg.c */
-extern long sys_recvmmsg (int fd, struct mmsghdr __user * msg, unsigned int vlen, unsigned flags, struct timespec __user * timeout);
+extern long sys_recvmmsg (int fd, struct mmsghdr  * msg, unsigned int vlen, unsigned flags, struct timespec  * timeout);
 
 /* 300_fanotify_init.c */
 extern long sys_fanotify_init (unsigned int flags, unsigned int event_f_flags);
 
 /* 301_fanotify_mark.c */
-extern long sys_fanotify_mark (int fanotify_fd, unsigned int flags, uint64_t mask, int fd, const char __user * pathname);
+extern long sys_fanotify_mark (int fanotify_fd, unsigned int flags, uint64_t mask, int fd, const char  * pathname);
 
 /* 302_prlimit64.c */
-extern long sys_prlimit64 (pid_t pid, unsigned int resource, const struct rlimit __user * new_rlim, struct rlimit __user * old_rlim);
+extern long sys_prlimit64 (pid_t pid, unsigned int resource, const struct rlimit  * new_rlim, struct rlimit  * old_rlim);
 
 /* 303_name_to_handle_at.c */
-extern long sys_name_to_handle_at (int dfd, const char __user * name, struct file_handle __user * handle, int __user * mnt_id, int flag);
+extern long sys_name_to_handle_at (int dfd, const char  * name, struct file_handle  * handle, int  * mnt_id, int flag);
 
 /* 304_open_by_handle_at.c */
-extern long sys_open_by_handle_at (int mountdirfd, struct file_handle __user * handle, int flags);
+extern long sys_open_by_handle_at (int mountdirfd, struct file_handle  * handle, int flags);
 
 /* 305_clock_adjtime.c */
-extern long sys_clock_adjtime (clockid_t which_clock, struct timex __user * tx);
+extern long sys_clock_adjtime (clockid_t which_clock, struct timex  * tx);
 
 /* 306_syncfs.c */
 extern long sys_syncfs (int fd);
 
 /* 307_sendmmsg.c */
-extern long sys_sendmmsg (int fd, struct mmsghdr __user * msg, unsigned int vlen, unsigned flags);
+extern long sys_sendmmsg (int fd, struct mmsghdr  * msg, unsigned int vlen, unsigned flags);
 
 /* 308_setns.c */
 extern long sys_setns (int fd, int nstype);
 
 /* 309_getcpu.c */
-extern long sys_getcpu (unsigned __user * cpu, unsigned __user * node, struct getcpu_cache __user * cache);
+extern long sys_getcpu (unsigned  * cpu, unsigned  * node, struct getcpu_cache  * cache);
 
 /* 310_process_vm_readv.c */
-extern long sys_process_vm_readv (pid_t pid, const struct iovec __user * lvec, unsigned long liovcnt, const struct iovec __user * rvec, unsigned long riovcnt, unsigned long flags);
+extern long sys_process_vm_readv (pid_t pid, const struct iovec  * lvec, unsigned long liovcnt, const struct iovec  * rvec, unsigned long riovcnt, unsigned long flags);
 
 /* 311_process_vm_writev.c */
-extern long sys_process_vm_writev (pid_t pid, const struct iovec __user * lvec, unsigned long liovcnt, const struct iovec __user * rvec, unsigned long riovcnt, unsigned long flags);
+extern long sys_process_vm_writev (pid_t pid, const struct iovec  * lvec, unsigned long liovcnt, const struct iovec  * rvec, unsigned long riovcnt, unsigned long flags);
 
 /* 312_kcmp.c */
 extern long sys_kcmp (pid_t pid1, pid_t pid2, int type, unsigned long idx1, unsigned long idx2);
 
 /* 313_finit_module.c */
-extern long sys_finit_module (int fd, const char __user * uargs, int flags);
+extern long sys_finit_module (int fd, const char  * uargs, int flags);
 
 /* 314_sched_setattr.c */
-extern long sys_sched_setattr (pid_t pid, struct sched_attr __user * attr, unsigned int flags);
+extern long sys_sched_setattr (pid_t pid, struct sched_attr  * attr, unsigned int flags);
 
 /* 315_sched_getattr.c */
-extern long sys_sched_getattr (pid_t pid, struct sched_attr __user * attr, unsigned int size, unsigned int flags);
+extern long sys_sched_getattr (pid_t pid, struct sched_attr  * attr, unsigned int size, unsigned int flags);
 
 /* 316_renameat2.c */
-extern long sys_renameat2 (int olddfd, const char __user * oldname, int newdfd, const char __user * newname, unsigned int flags);
+extern long sys_renameat2 (int olddfd, const char  * oldname, int newdfd, const char  * newname, unsigned int flags);
 
 /* 317_seccomp.c */
-extern long sys_seccomp (unsigned int op, unsigned int flags, const char __user * uargs);
+extern long sys_seccomp (unsigned int op, unsigned int flags, const char  * uargs);
 
 /* 318_getrandom.c */
-extern long sys_getrandom (char __user * buf, size_t count, unsigned int flags);
+extern long sys_getrandom (char  * buf, size_t count, unsigned int flags);
 
 /* 319_memfd_create.c */
-extern long sys_memfd_create (const char __user * uname_ptr, unsigned int flags);
+extern long sys_memfd_create (const char  * uname_ptr, unsigned int flags);
 
 /* 320_kexec_file_load.c */
-extern long sys_kexec_file_load (int kernel_fd, int initrd_fd, unsigned long cmdline_len, const char __user * cmdline_ptr, unsigned long flags);
+extern long sys_kexec_file_load (int kernel_fd, int initrd_fd, unsigned long cmdline_len, const char  * cmdline_ptr, unsigned long flags);
 
 /* 321_bpf.c */
 extern long sys_bpf (int cmd, union bpf_attr * attr, unsigned int size);
@@ -922,13 +922,13 @@ extern long sys_membarrier (int cmd, int flags);
 extern long sys_mlock2 (unsigned long start, size_t len, int flags);
 
 /* 326_copy_file_range.c */
-extern long sys_copy_file_range (int fd_in, off_t __user * off_in, int fd_out, off_t __user * off_out, size_t len, unsigned int flags);
+extern long sys_copy_file_range (int fd_in, off_t  * off_in, int fd_out, off_t  * off_out, size_t len, unsigned int flags);
 
 /* 327_preadv2.c */
-extern long sys_preadv2 (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags);
+extern long sys_preadv2 (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags);
 
 /* 328_pwritev2.c */
-extern long sys_pwritev2 (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags);
+extern long sys_pwritev2 (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags);
 
 /* 329_pkey_mprotect.c */
 extern long sys_pkey_mprotect (unsigned long start, size_t len, unsigned long prot, int pkey);

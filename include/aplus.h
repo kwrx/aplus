@@ -184,7 +184,6 @@
 
 #if defined(KERNEL)
 
-#define __user
 #define __kernel
 #define __safe
 #define __force

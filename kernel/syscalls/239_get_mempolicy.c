@@ -42,8 +42,8 @@
  *
  * Input Parameters:
  *  0: 0xef
- *  1: int __user * policy
- *  2: unsigned long __user * nmask
+ *  1: int  * policy
+ *  2: unsigned long  * nmask
  *  3: unsigned long maxnode
  *  4: unsigned long addr
  *  5: unsigned long flags
@@ -52,6 +52,6 @@
  */
 
 SYSCALL(239, get_mempolicy,
-long sys_get_mempolicy (int __user * policy, unsigned long __user * nmask, unsigned long maxnode, unsigned long addr, unsigned long flags) {
+long sys_get_mempolicy (int  * policy, unsigned long  * nmask, unsigned long maxnode, unsigned long addr, unsigned long flags) {
     return -ENOSYS;
 });

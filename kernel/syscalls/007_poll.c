@@ -53,7 +53,7 @@
  *
  * Input Parameters:
  *  0: 0x07
- *  1: struct pollfd __user * ufds
+ *  1: struct pollfd  * ufds
  *  2: unsigned int nfds
  *  3: int timeout
  *
@@ -62,7 +62,7 @@
 
 
 SYSCALL(7, poll,
-long sys_poll (struct pollfd __user * ufds, unsigned int nfds, int timeout) {
+long sys_poll (struct pollfd  * ufds, unsigned int nfds, int timeout) {
 
     if(unlikely(!ufds))
         return -EINVAL;

@@ -60,77 +60,77 @@ long syscall_restart();
 
 /* Syscalls */
 
-extern long sys_read (unsigned int fd, void __user * buf, size_t count);
+extern long sys_read (unsigned int fd, void  * buf, size_t count);
 
-extern long sys_write (unsigned int fd, const void __user * buf, size_t count);
+extern long sys_write (unsigned int fd, const void  * buf, size_t count);
 
-extern long sys_open (const char __user * filename, int flags, mode_t mode);
+extern long sys_open (const char  * filename, int flags, mode_t mode);
 
 extern long sys_close (unsigned int fd);
 
-extern long sys_newstat (const char __user * filename, struct stat __user * statbuf);
+extern long sys_newstat (const char  * filename, struct stat  * statbuf);
 
-extern long sys_newfstat (unsigned int fd, struct stat __user * statbuf);
+extern long sys_newfstat (unsigned int fd, struct stat  * statbuf);
 
-extern long sys_newlstat (const char __user * filename, struct stat __user * statbuf);
+extern long sys_newlstat (const char  * filename, struct stat  * statbuf);
 
 extern long sys_lseek (unsigned int fd, off_t offset, unsigned int whence);
 
 extern long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg);
 
-extern long sys_access (const char __user * filename, int mode);
+extern long sys_access (const char  * filename, int mode);
 
 extern long sys_exit (int error_code);
 
 extern long sys_fsync (unsigned int fd);
 
-extern long sys_getdents (unsigned int fd, struct dirent __user * dirent, unsigned int count);
+extern long sys_getdents (unsigned int fd, struct dirent  * dirent, unsigned int count);
 
-extern long sys_chdir (const char __user * filename);
+extern long sys_chdir (const char  * filename);
 
-extern long sys_mkdir (const char __user * pathname, mode_t mode);
+extern long sys_mkdir (const char  * pathname, mode_t mode);
 
-extern long sys_rmdir (const char __user * pathname);
+extern long sys_rmdir (const char  * pathname);
 
-extern long sys_creat (const char __user * pathname, mode_t mode);
+extern long sys_creat (const char  * pathname, mode_t mode);
 
-extern long sys_link (const char __user * oldname, const char __user * newname);
+extern long sys_link (const char  * oldname, const char  * newname);
 
-extern long sys_unlink (const char __user * pathname);
+extern long sys_unlink (const char  * pathname);
 
-extern long sys_symlink (const char __user * oldf, const char __user * newf);
+extern long sys_symlink (const char  * oldf, const char  * newf);
 
-extern long sys_readlink (const char __user * path, char __user * buf, int bufsiz);
+extern long sys_readlink (const char  * path, char  * buf, int bufsiz);
 
-extern long sys_chmod (const char __user * filename, mode_t mode);
+extern long sys_chmod (const char  * filename, mode_t mode);
 
-extern long sys_chown (const char __user * filename, uid_t user, gid_t group);
+extern long sys_chown (const char  * filename, uid_t user, gid_t group);
 
-//extern long sys_times (struct tms __user * tbuf);
+//extern long sys_times (struct tms  * tbuf);
 
-extern long sys_mknod (const char __user * filename, mode_t mode, unsigned dev);
+extern long sys_mknod (const char  * filename, mode_t mode, unsigned dev);
 
-extern long sys_mount (char __user const * dev_name, char __user const * dir_name, char __user const * type, unsigned long flags, void __user * data);
+extern long sys_mount (char  const * dev_name, char  const * dir_name, char  const * type, unsigned long flags, void  * data);
 
-extern long sys_umount (char __user * name, int flags);
+extern long sys_umount (char  * name, int flags);
 
-//extern long sys_clock_gettime (clockid_t which_clock, struct timespec __user * tp);
+//extern long sys_clock_gettime (clockid_t which_clock, struct timespec  * tp);
 
-//extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec __user * rqtp, struct timespec __user * rmtp);
+//extern long sys_clock_nanosleep (clockid_t which_clock, int flags, const struct timespec  * rqtp, struct timespec  * rmtp);
 
 extern long sys_fork (void);
 
 extern long sys_vfork (void);
 
-extern long sys_execve (const char __user * filename, const char __user ** argv, const char __user ** envp);
+extern long sys_execve (const char  * filename, const char  ** argv, const char  ** envp);
 
-extern long sys_chroot(const char __user * pathname);
+extern long sys_chroot(const char  * pathname);
 
 extern long sys_brk (unsigned long new_brk);
 
 extern long sys_kill(pid_t pid, int sig);
 
-extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t __user * uinfo);
+extern long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t  * uinfo);
 
 __END_DECLS
 

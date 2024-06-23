@@ -42,7 +42,7 @@
  *
  * Input Parameters:
  *  0: 0x12a
- *  1: struct perf_event_attr __user * attr_uptr
+ *  1: struct perf_event_attr  * attr_uptr
  *  2: pid_t pid
  *  3: int cpu
  *  4: int group_fd
@@ -54,6 +54,6 @@
 struct perf_event_attr;
 
 SYSCALL(298, perf_event_open,
-long sys_perf_event_open (struct perf_event_attr __user * attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) {
+long sys_perf_event_open (struct perf_event_attr  * attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) {
     return -ENOSYS;
 });

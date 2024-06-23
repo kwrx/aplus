@@ -43,7 +43,7 @@
  *
  * Input Parameters:
  *  0: 0x85
- *  1: const char __user * filename
+ *  1: const char  * filename
  *  2: umode_t mode
  *  3: unsigned dev
  *
@@ -51,7 +51,7 @@
  */
 
 SYSCALL(133, mknod,
-long sys_mknod (const char __user * filename, mode_t mode, unsigned dev) {
+long sys_mknod (const char  * filename, mode_t mode, unsigned dev) {
     
     if(unlikely(!filename))
         return -EINVAL;

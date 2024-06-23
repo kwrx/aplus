@@ -51,6 +51,6 @@ struct iovec;
  */
 
 SYSCALL(311, process_vm_writev,
-long sys_process_vm_writev (pid_t pid, const struct iovec __user * lvec, unsigned long liovcnt, const struct iovec __user * rvec, unsigned long riovcnt, unsigned long flags) {
+long sys_process_vm_writev (pid_t pid, const struct iovec  * lvec, unsigned long liovcnt, const struct iovec  * rvec, unsigned long riovcnt, unsigned long flags) {
     return -ENOSYS;
 });

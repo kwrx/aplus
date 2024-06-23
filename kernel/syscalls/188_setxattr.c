@@ -42,9 +42,9 @@
  *
  * Input Parameters:
  *  0: 0xbc
- *  1: const char __user * path
- *  2: const char __user * name
- *  3: const void __user * value
+ *  1: const char  * path
+ *  2: const char  * name
+ *  3: const void  * value
  *  4: size_t size
  *  5: int flags
  *
@@ -52,6 +52,6 @@
  */
 
 SYSCALL(188, setxattr,
-long sys_setxattr (const char __user * path, const char __user * name, const void __user * value, size_t size, int flags) {
+long sys_setxattr (const char  * path, const char  * name, const void  * value, size_t size, int flags) {
     return -ENOSYS;
 });

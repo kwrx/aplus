@@ -49,6 +49,6 @@
  */
 
 SYSCALL(270, pselect6,
-long sys_pselect6 (int n, fd_set __user * inp, fd_set __user * outp, fd_set __user * exp, struct timespec __user * tsp, void __user * sig) {
+long sys_pselect6 (int n, fd_set  * inp, fd_set  * outp, fd_set  * exp, struct timespec  * tsp, void  * sig) {
     return -ENOSYS;
 });

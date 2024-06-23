@@ -46,7 +46,7 @@ struct iovec;
  * Input Parameters:
  *  0: 0x127
  *  1: unsigned long fd
- *  2: const struct iovec __user * vec
+ *  2: const struct iovec  * vec
  *  3: unsigned long vlen
  *  4: unsigned long pos_l
  *  5: unsigned long pos_h
@@ -55,6 +55,6 @@ struct iovec;
  */
 
 SYSCALL(295, preadv,
-long sys_preadv (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h) {
+long sys_preadv (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h) {
     return -ENOSYS;
 });

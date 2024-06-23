@@ -49,7 +49,7 @@
  * Input Parameters:
  *  0: 0x12
  *  1: unsigned int fd
- *  2: const char __user * buf
+ *  2: const char  * buf
  *  3: size_t count
  *  4: loff_t pos
  *
@@ -57,7 +57,7 @@
  */
 
 SYSCALL(18, pwrite64,
-long sys_pwrite64 (unsigned int fd, const char __user * buf, size_t count, off_t pos) {
+long sys_pwrite64 (unsigned int fd, const char  * buf, size_t count, off_t pos) {
 
     DEBUG_ASSERT(current_task);
 
