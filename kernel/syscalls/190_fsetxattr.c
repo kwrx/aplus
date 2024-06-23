@@ -43,8 +43,8 @@
  * Input Parameters:
  *  0: 0xbe
  *  1: int fd
- *  2: const char __user * name
- *  3: const void __user * value
+ *  2: const char  * name
+ *  3: const void  * value
  *  4: size_t size
  *  5: int flags
  *
@@ -52,6 +52,6 @@
  */
 
 SYSCALL(190, fsetxattr,
-long sys_fsetxattr (int fd, const char __user * name, const void __user * value, size_t size, int flags) {
+long sys_fsetxattr (int fd, const char  * name, const void  * value, size_t size, int flags) {
     return -ENOSYS;
 });

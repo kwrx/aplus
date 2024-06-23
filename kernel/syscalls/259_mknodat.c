@@ -43,7 +43,7 @@
  * Input Parameters:
  *  0: 0x103
  *  1: int dfd
- *  2: const char __user * filename
+ *  2: const char  * filename
  *  3: umode_t mode
  *  4: unsigned dev
  *
@@ -51,6 +51,6 @@
  */
 
 SYSCALL(259, mknodat,
-long sys_mknodat (int dfd, const char __user * filename, mode_t mode, unsigned dev) {
+long sys_mknodat (int dfd, const char  * filename, mode_t mode, unsigned dev) {
     return -ENOSYS;
 });

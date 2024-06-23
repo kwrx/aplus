@@ -218,7 +218,7 @@ long __arch_syscall6(unsigned long, long, long, long, long, long, long);
 
 
 __nonnull(1, 2)
-static inline void uio_memcpy_u2s(void* dst, const void* __user src, size_t n) {
+static inline void uio_memcpy_u2s(void* dst, const void*  src, size_t n) {
     
     size_t i = 0;
 
@@ -245,7 +245,7 @@ static inline void uio_memcpy_u2s(void* dst, const void* __user src, size_t n) {
 }
 
 __nonnull(1, 2)
-static inline void uio_memcpy_s2u(void* __user dst, const void* src, size_t n) {
+static inline void uio_memcpy_s2u(void*  dst, const void* src, size_t n) {
     
     size_t i = 0;
 
@@ -272,7 +272,7 @@ static inline void uio_memcpy_s2u(void* __user dst, const void* src, size_t n) {
 }
 
 __nonnull(1, 2)
-static inline void uio_memcpy_u2u(void* __user dst, const void* __user src, size_t n) {
+static inline void uio_memcpy_u2u(void*  dst, const void*  src, size_t n) {
     
     size_t i = 0;
 
@@ -299,7 +299,7 @@ static inline void uio_memcpy_u2u(void* __user dst, const void* __user src, size
 }
 
 __nonnull(1, 2)
-static inline void uio_strcpy_u2s(char* dst, const char* __user src) {
+static inline void uio_strcpy_u2s(char* dst, const char*  src) {
 
     for(; uio_r8(src); src++, dst++) {
         *dst = uio_r8(src);
@@ -310,7 +310,7 @@ static inline void uio_strcpy_u2s(char* dst, const char* __user src) {
 }
 
 __nonnull(1, 2)
-static inline void uio_strcpy_s2u(char* __user dst, const char* src) {
+static inline void uio_strcpy_s2u(char*  dst, const char* src) {
 
     for(; *src; src++, dst++) {
         uio_w8(dst, *src);
@@ -321,7 +321,7 @@ static inline void uio_strcpy_s2u(char* __user dst, const char* src) {
 }
 
 __nonnull(1, 2)
-static inline void uio_strcpy_u2u(char* __user dst, const char* __user src) {
+static inline void uio_strcpy_u2u(char*  dst, const char*  src) {
 
     for(; uio_r8(src); src++) {
         uio_w8(dst, uio_r8(src));
@@ -332,7 +332,7 @@ static inline void uio_strcpy_u2u(char* __user dst, const char* __user src) {
 }
 
 __nonnull(1, 2)
-static inline void uio_strncpy_u2s(char* dst, const char* __user src, size_t size) {
+static inline void uio_strncpy_u2s(char* dst, const char*  src, size_t size) {
 
     for(; uio_r8(src) && --size; src++, dst++) {
         *dst = uio_r8(src);
@@ -343,7 +343,7 @@ static inline void uio_strncpy_u2s(char* dst, const char* __user src, size_t siz
 }
 
 __nonnull(1, 2)
-static inline void uio_strncpy_s2u(char* __user dst, const char* src, size_t size) {
+static inline void uio_strncpy_s2u(char*  dst, const char* src, size_t size) {
 
     for(; *src && --size; src++, dst++) {
         uio_w8(dst, *src);
@@ -354,7 +354,7 @@ static inline void uio_strncpy_s2u(char* __user dst, const char* src, size_t siz
 }
 
 __nonnull(1, 2)
-static inline void uio_strncpy_u2u(char* __user dst, const char* __user src, size_t size) {
+static inline void uio_strncpy_u2u(char*  dst, const char*  src, size_t size) {
 
     for(; uio_r8(src) && --size; src++, dst++) {
         uio_w8(dst, uio_r8(src));
@@ -365,7 +365,7 @@ static inline void uio_strncpy_u2u(char* __user dst, const char* __user src, siz
 }
 
 __nonnull(1)
-static inline size_t uio_strlen(const char* __user s) {
+static inline size_t uio_strlen(const char*  s) {
 
     size_t k = 0;
 

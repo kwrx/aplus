@@ -42,9 +42,9 @@
  *
  * Input Parameters:
  *  0: 0xf8
- *  1: const char __user * _type
- *  2: const char __user * _description
- *  3: const void __user * _payload
+ *  1: const char  * _type
+ *  2: const char  * _description
+ *  3: const void  * _payload
  *  4: size_t plen
  *  5: key_serial_t destringid
  *
@@ -54,6 +54,6 @@
 typedef long key_serial_t;
 
 SYSCALL(248, add_key,
-long sys_add_key (const char __user * _type, const char __user * _description, const void __user * _payload, size_t plen, key_serial_t destringid) {
+long sys_add_key (const char  * _type, const char  * _description, const void  * _payload, size_t plen, key_serial_t destringid) {
     return -ENOSYS;
 });

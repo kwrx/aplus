@@ -50,6 +50,6 @@ struct iovec;
  */
 
 SYSCALL(328, pwritev2,
-long sys_pwritev2 (unsigned long fd, const struct iovec __user * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags) {
+long sys_pwritev2 (unsigned long fd, const struct iovec  * vec, unsigned long vlen, unsigned long pos_l, unsigned long pos_h, int flags) {
     return -ENOSYS;
 });

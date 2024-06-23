@@ -47,7 +47,7 @@
  *
  * Input Parameters:
  *  0: 0x02
- *  1: const char __user * filename
+ *  1: const char  * filename
  *  2: int flags
  *  3: umode_t mode
  *
@@ -55,9 +55,9 @@
  */
 
 SYSCALL(2, open,
-long sys_open (const char __user * filename, int flags, mode_t mode) {
+long sys_open (const char  * filename, int flags, mode_t mode) {
     
-    extern long sys_openat (int dfd, const char __user * filename, int flags, mode_t mode);
+    extern long sys_openat (int dfd, const char  * filename, int flags, mode_t mode);
     
     return sys_openat(AT_FDCWD, filename, flags, mode);
     

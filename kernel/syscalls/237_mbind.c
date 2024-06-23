@@ -48,6 +48,6 @@
  */
 
 SYSCALL(237, mbind,
-long sys_mbind (unsigned long start, unsigned long len, unsigned long mode, const unsigned long __user * nmask, unsigned long maxnode, unsigned flags) {
+long sys_mbind (unsigned long start, unsigned long len, unsigned long mode, const unsigned long  * nmask, unsigned long maxnode, unsigned flags) {
     return -ENOSYS;
 });

@@ -44,7 +44,7 @@
  * Input Parameters:
  *  0: 0xe8
  *  1: int epfd
- *  2: struct epoll_event __user * events
+ *  2: struct epoll_event  * events
  *  3: int maxevents
  *  4: int timeout
  *
@@ -54,6 +54,6 @@
 struct epoll_event;
 
 SYSCALL(232, epoll_wait,
-long sys_epoll_wait (int epfd, struct epoll_event __user * events, int maxevents, int timeout) {
+long sys_epoll_wait (int epfd, struct epoll_event  * events, int maxevents, int timeout) {
     return -ENOSYS;
 });

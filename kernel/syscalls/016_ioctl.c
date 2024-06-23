@@ -88,7 +88,7 @@ long sys_ioctl (unsigned int fd, unsigned int cmd, unsigned long arg) {
                 return -EBADF;
 
             __lock(&fds->descriptors[fd].ref->lock, {
-                e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void __user*) arg);
+                e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void *) arg);
             });
 
         });

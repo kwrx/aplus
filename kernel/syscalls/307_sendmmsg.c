@@ -43,7 +43,7 @@
  * Input Parameters:
  *  0: 0x133
  *  1: int fd
- *  2: struct mmsghdr __user * msg
+ *  2: struct mmsghdr  * msg
  *  3: unsigned int vlen
  *  4: unsigned flags
  *
@@ -53,6 +53,6 @@
 struct mmsghdr;
 
 SYSCALL(307, sendmmsg,
-long sys_sendmmsg (int fd, struct mmsghdr __user * msg, unsigned int vlen, unsigned flags) {
+long sys_sendmmsg (int fd, struct mmsghdr  * msg, unsigned int vlen, unsigned flags) {
     return -ENOSYS;
 });

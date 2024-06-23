@@ -43,7 +43,7 @@
  * Input Parameters:
  *  0: 0x121
  *  1: int ufd
- *  2: sigset_t __user * user_mask
+ *  2: sigset_t  * user_mask
  *  3: size_t sizemask
  *  4: int flags
  *
@@ -51,6 +51,6 @@
  */
 
 SYSCALL(289, signalfd4,
-long sys_signalfd4 (int ufd, sigset_t __user * user_mask, size_t sizemask, int flags) {
+long sys_signalfd4 (int ufd, sigset_t  * user_mask, size_t sizemask, int flags) {
     return -ENOSYS;
 });

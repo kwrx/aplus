@@ -48,6 +48,6 @@
  */
 
 SYSCALL(279, move_pages,
-long sys_move_pages (pid_t pid, unsigned long nr_pages, const void __user * __user * pages, const int __user * nodes, int __user * status, int flags) {
+long sys_move_pages (pid_t pid, unsigned long nr_pages, const void  *  * pages, const int  * nodes, int  * status, int flags) {
     return -ENOSYS;
 });

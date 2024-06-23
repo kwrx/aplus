@@ -58,7 +58,7 @@ typedef uint32_t socklen_t;
 struct sockaddr;
 
 SYSCALL(45, recvfrom,
-long sys_recvfrom (int fd, void __user * buf, size_t size, unsigned flags, struct sockaddr __user * sockaddr, socklen_t __user * socklen) {
+long sys_recvfrom (int fd, void  * buf, size_t size, unsigned flags, struct sockaddr  * sockaddr, socklen_t  * socklen) {
 
 #if defined(CONFIG_HAVE_NETWORK)
 

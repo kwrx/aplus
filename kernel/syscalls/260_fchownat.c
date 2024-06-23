@@ -43,7 +43,7 @@
  * Input Parameters:
  *  0: 0x104
  *  1: int dfd
- *  2: const char __user * filename
+ *  2: const char  * filename
  *  3: uid_t user
  *  4: gid_t group
  *  5: int flag
@@ -52,6 +52,6 @@
  */
 
 SYSCALL(260, fchownat,
-long sys_fchownat (int dfd, const char __user * filename, uid_t user, gid_t group, int flag) {
+long sys_fchownat (int dfd, const char  * filename, uid_t user, gid_t group, int flag) {
     return -ENOSYS;
 });

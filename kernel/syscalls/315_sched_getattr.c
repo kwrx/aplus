@@ -44,7 +44,7 @@
  * Input Parameters:
  *  0: 0x13b
  *  1: pid_t pid
- *  2: struct sched_attr __user * attr
+ *  2: struct sched_attr  * attr
  *  3: unsigned int size
  *  4: unsigned int flags
  *
@@ -54,6 +54,6 @@
 struct sched_attr;
 
 SYSCALL(315, sched_getattr,
-long sys_sched_getattr (pid_t pid, struct sched_attr __user * attr, unsigned int size, unsigned int flags) {
+long sys_sched_getattr (pid_t pid, struct sched_attr  * attr, unsigned int size, unsigned int flags) {
     return -ENOSYS;
 });

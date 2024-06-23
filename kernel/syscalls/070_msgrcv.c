@@ -43,7 +43,7 @@
  * Input Parameters:
  *  0: 0x46
  *  1: int msqid
- *  2: struct msgbuf __user * msgp
+ *  2: struct msgbuf  * msgp
  *  3: size_t msgsz
  *  4: long msgtyp
  *  5: int msgflg
@@ -54,6 +54,6 @@
 struct msgbuf;
 
 SYSCALL(70, msgrcv,
-long sys_msgrcv (int msqid, struct msgbuf __user * msgp, size_t msgsz, long msgtyp, int msgflg) {
+long sys_msgrcv (int msqid, struct msgbuf  * msgp, size_t msgsz, long msgtyp, int msgflg) {
     return -ENOSYS;
 });

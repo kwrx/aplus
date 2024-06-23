@@ -56,7 +56,7 @@ typedef uint32_t socklen_t;
  */
 
 SYSCALL(44, sendto,
-long sys_sendto (int fd, const void __user * buf, size_t size, unsigned flags, const struct sockaddr __user * sockaddr, socklen_t socklen) {
+long sys_sendto (int fd, const void  * buf, size_t size, unsigned flags, const struct sockaddr  * sockaddr, socklen_t socklen) {
 
 #if defined(CONFIG_HAVE_NETWORK)
 

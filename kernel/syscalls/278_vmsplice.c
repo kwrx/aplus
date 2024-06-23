@@ -45,7 +45,7 @@ struct iovec;
  * Input Parameters:
  *  0: 0x116
  *  1: int fd
- *  2: const struct iovec __user * iov
+ *  2: const struct iovec  * iov
  *  3: unsigned long nr_segs
  *  4: unsigned int flags
  *
@@ -53,6 +53,6 @@ struct iovec;
  */
 
 SYSCALL(278, vmsplice,
-long sys_vmsplice (int fd, const struct iovec __user * iov, unsigned long nr_segs, unsigned int flags) {
+long sys_vmsplice (int fd, const struct iovec  * iov, unsigned long nr_segs, unsigned int flags) {
     return -ENOSYS;
 });

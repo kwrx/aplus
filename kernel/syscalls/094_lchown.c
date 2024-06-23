@@ -42,7 +42,7 @@
  *
  * Input Parameters:
  *  0: 0x5e
- *  1: const char __user * filename
+ *  1: const char  * filename
  *  2: uid_t user
  *  3: gid_t group
  *
@@ -50,6 +50,6 @@
  */
 
 SYSCALL(94, lchown,
-long sys_lchown (const char __user * filename, uid_t user, gid_t group) {
+long sys_lchown (const char  * filename, uid_t user, gid_t group) {
     return -ENOSYS;
 });
