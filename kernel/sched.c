@@ -23,27 +23,27 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
 #include <signal.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
 #include <sys/wait.h>
+#include <time.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
-#include <aplus/task.h>
 #include <aplus/syscall.h>
-#include <aplus/hal.h>
-#include <aplus/errno.h>
+#include <aplus/task.h>
 
 #include <aplus/utils/list.h>
 #include <aplus/utils/queue.h>
 
 
-extern long sys_clock_gettime(clockid_t, struct timespec*);
+extern long sys_clock_gettime(clockid_t, struct timespec *);
 
 
 
@@ -51,55 +51,49 @@ static inline void do_futex(void) {
 
     list_each(current_task->futexes, i) {
 
-        if(!futex_expired(i))
+        if (!futex_expired(i))
             continue;
 
 
         list_remove(current_task->futexes, i);
 
         thread_wake(current_task);
-
     }
-
 }
 
 static inline void do_sleep(void) {
 
-    if(unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
+    if (unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
 
         struct timespec t0;
         sys_clock_gettime(current_task->sleep.clockid, &t0);
 
         uint64_t tss = (current_task->sleep.timeout.tv_sec * 1000000000ULL) + current_task->sleep.timeout.tv_nsec;
-        uint64_t tsc = (t0.tv_sec                          * 1000000000ULL) + t0.tv_nsec;
+        uint64_t tsc = (t0.tv_sec * 1000000000ULL) + t0.tv_nsec;
 
 
-        if(current_task->sleep.remaining) {
+        if (current_task->sleep.remaining) {
 
             uint64_t time_remaining_ns = tss - tsc;
 
             current_task->sleep.remaining->tv_sec  = time_remaining_ns / 1000000000ULL;
             current_task->sleep.remaining->tv_nsec = time_remaining_ns % 1000000000ULL;
-
         }
 
-        if(tss < tsc) {
+        if (tss < tsc) {
 
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
-            current_task->sleep.remaining = NULL;
-            current_task->sleep.expired = true;
+            current_task->sleep.remaining       = NULL;
+            current_task->sleep.expired         = true;
 
             thread_wake(current_task);
-
         }
-
     }
-
 }
 
 
-static void handle_default_signal(const siginfo_t* siginfo) {
+static void handle_default_signal(const siginfo_t *siginfo) {
 
     switch (siginfo->si_signo) {
 
@@ -136,60 +130,55 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGTTOU:
             sys_exit((1U << 31) | (siginfo->si_signo << 8) | 0x7F);
             break;
-
     }
 }
 
 
 
-static void handle_user_signal(siginfo_t* siginfo, struct ksigaction* action) {
+static void handle_user_signal(siginfo_t *siginfo, struct ksigaction *action) {
 
     arch_task_prepare_to_signal(siginfo);
 
     if (action->sa_flags & SA_RESETHAND) {
         action->handler = SIG_DFL;
     }
-
 }
 
 
-static void handle_default_or_user_signal(siginfo_t* siginfo) {
+static void handle_default_or_user_signal(siginfo_t *siginfo) {
 
-    struct ksigaction* action = NULL;
-    
-    shared_ptr_access(current_task->sighand, sighand, {
-        action = &sighand->action[siginfo->si_signo];
-    });
+    struct ksigaction *action = NULL;
+
+    shared_ptr_access(current_task->sighand, sighand, { action = &sighand->action[siginfo->si_signo]; });
 
 
-    if(unlikely(!action)) {
+    if (unlikely(!action)) {
         return;
     }
 
-    if(unlikely(action->handler == SIG_ERR)) {
+    if (unlikely(action->handler == SIG_ERR)) {
         return;
     }
 
-    if(unlikely(action->handler == SIG_IGN)) {
+    if (unlikely(action->handler == SIG_IGN)) {
         return;
     }
 
-    if(unlikely(action->handler == SIG_DFL)) {
+    if (unlikely(action->handler == SIG_DFL)) {
         handle_default_signal(siginfo);
     } else {
         handle_user_signal(siginfo, action);
     }
-
 }
 
 
-static void handle_signal(siginfo_t* siginfo) {
+static void handle_signal(siginfo_t *siginfo) {
 
 #if DEBUG_LEVEL_TRACE
-        kprintf("sched: received signal(%d) from tid(%d) to tid(%d)\n", siginfo->si_signo, siginfo->si_pid, current_task->tid);
+    kprintf("sched: received signal(%d) from tid(%d) to tid(%d)\n", siginfo->si_signo, siginfo->si_pid, current_task->tid);
 #endif
 
-    switch(siginfo->si_signo) {
+    switch (siginfo->si_signo) {
 
         case SIGKILL:
             sys_exit((1 << 31) | SIGKILL);
@@ -202,9 +191,7 @@ static void handle_signal(siginfo_t* siginfo) {
         default:
             handle_default_or_user_signal(siginfo);
             break;
-
     }
-
 }
 
 
@@ -212,14 +199,14 @@ static inline void do_signals(void) {
 
     DEBUG_ASSERT(current_task);
 
-    if(queue_is_empty(&current_task->sigqueue)) {
+    if (queue_is_empty(&current_task->sigqueue)) {
         return;
     }
 
 
-    siginfo_t* siginfo;
+    siginfo_t *siginfo;
 
-    if((siginfo = (siginfo_t*) queue_pop(&current_task->sigqueue)) != NULL) {
+    if ((siginfo = (siginfo_t *)queue_pop(&current_task->sigqueue)) != NULL) {
 
         DEBUG_ASSERT(siginfo);
         DEBUG_ASSERT(siginfo->si_signo >= 0);
@@ -229,9 +216,7 @@ static inline void do_signals(void) {
 
         handle_signal(siginfo);
         kfree(siginfo);
-
     }
-
 }
 
 
@@ -242,15 +227,15 @@ static void __sched_next(void) {
 
         current_task = current_task->next;
 
-        if(unlikely(!current_task)) {
+        if (unlikely(!current_task)) {
             current_task = current_cpu->sched_queue;
         }
 
-        if(unlikely(current_task->status == TASK_STATUS_STOP)) {
+        if (unlikely(current_task->status == TASK_STATUS_STOP)) {
             continue;
         }
 
-        if(unlikely(current_task->status == TASK_STATUS_ZOMBIE)) {
+        if (unlikely(current_task->status == TASK_STATUS_ZOMBIE)) {
             continue;
         }
 
@@ -259,54 +244,53 @@ static void __sched_next(void) {
         // //__check_timers();
 
 
-        if(current_task->status == TASK_STATUS_SLEEP) {
+        if (current_task->status == TASK_STATUS_SLEEP) {
 
-            if(!queue_is_empty(&current_task->sigqueue)) {
+            if (!queue_is_empty(&current_task->sigqueue)) {
                 thread_wake(current_task);
             }
 
 
             do_futex();
             do_sleep();
-
         }
 
 
-    } while(current_task->status != TASK_STATUS_READY);
-
+    } while (current_task->status != TASK_STATUS_READY);
 }
 
 
 /**
-* @brief Schedules the next task to run
-*
-* This function updates the clocks of the current task and its parent, if it has one.
-* It also keeps track of the number of voluntary and involuntary context switches.
-* If resched is set to true, it marks the current task as TASK_STATUS_READY and selects the next task to run by calling __sched_next().
-* The selected task is then marked as TASK_STATUS_RUNNING and a task switch is performed using the arch_task_switch() function.
-* Finally, the function calls do_signals() to handle any pending signals.
-*
-* @param resched Specifies whether the current task is being voluntarily or involuntarily rescheduled
-*
-*/
+ * @brief Schedules the next task to run
+ *
+ * This function updates the clocks of the current task and its parent, if it has one.
+ * It also keeps track of the number of voluntary and involuntary context switches.
+ * If resched is set to true, it marks the current task as TASK_STATUS_READY and selects the next task to run by calling __sched_next().
+ * The selected task is then marked as TASK_STATUS_RUNNING and a task switch is performed using the arch_task_switch() function.
+ * Finally, the function calls do_signals() to handle any pending signals.
+ *
+ * @param resched Specifies whether the current task is being voluntarily or involuntarily rescheduled
+ *
+ */
 void schedule(int resched) {
 
     DEBUG_ASSERT(current_cpu);
     DEBUG_ASSERT(current_task);
 
-    #define UPDATE_CLOCK(task, type, delta) {                               \
-        if(task->clock[type].tv_nsec + delta > 999999999) {                 \
-            task->clock[type].tv_nsec  = delta;                             \
-            task->clock[type].tv_nsec -= 1000000000;                        \
-            task->clock[type].tv_sec  += 1;                                 \
-        } else {                                                            \
-            task->clock[type].tv_nsec += delta;                             \
-        }                                                                   \
+#define UPDATE_CLOCK(task, type, delta)                      \
+    {                                                        \
+        if (task->clock[type].tv_nsec + delta > 999999999) { \
+            task->clock[type].tv_nsec = delta;               \
+            task->clock[type].tv_nsec -= 1000000000;         \
+            task->clock[type].tv_sec += 1;                   \
+        } else {                                             \
+            task->clock[type].tv_nsec += delta;              \
+        }                                                    \
     }
 
 
 
-    task_t* prev_task = current_task;
+    task_t *prev_task = current_task;
 
 
     uint64_t elapsed = arch_timer_percpu_getns();
@@ -317,7 +301,7 @@ void schedule(int resched) {
     UPDATE_CLOCK(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
     UPDATE_CLOCK(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
 
-    if(likely(current_task->parent)) {
+    if (likely(current_task->parent)) {
         UPDATE_CLOCK(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
     }
 
@@ -326,7 +310,7 @@ void schedule(int resched) {
 
 
 
-    if(!resched) {
+    if (!resched) {
         current_task->rusage.ru_nivcsw++;
     } else {
         current_task->rusage.ru_nvcsw++;
@@ -334,11 +318,11 @@ void schedule(int resched) {
 
 
 
-    if(likely(current_task->status == TASK_STATUS_RUNNING)) {
+    if (likely(current_task->status == TASK_STATUS_RUNNING)) {
         current_task->status = TASK_STATUS_READY;
     }
 
-    if(likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
+    if (likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
         __sched_next();
     }
 
@@ -348,15 +332,11 @@ void schedule(int resched) {
 
 
     __lock(&current_cpu->sched_lock, {
-
         arch_task_switch(prev_task, current_task);
-
     });
 
 
     do_signals();
-
-
 }
 
 
@@ -367,43 +347,39 @@ void schedule(int resched) {
  *
  * @param task The task to be enqueued
  */
-void sched_enqueue(task_t* task) {
+void sched_enqueue(task_t *task) {
 
-    cpu_t* cpu = NULL;
+    cpu_t *cpu = NULL;
     size_t min = ~0UL;
 
 
     cpu_foreach(i) {
 
-        if(!(CPU_ISSET(i->id, &task->affinity))) {
+        if (!(CPU_ISSET(i->id, &task->affinity))) {
             continue;
         }
 
-        if(i->sched_count > min) {
+        if (i->sched_count > min) {
             continue;
         }
 
         cpu = i;
         min = i->sched_count;
-
     }
 
     DEBUG_ASSERT(cpu);
 
     __lock(&cpu->sched_lock, {
-
         task->next = cpu->sched_queue;
 
         cpu->sched_queue = task;
         cpu->sched_count++;
-
     });
 
 
 #if DEBUG_LEVEL_TRACE
     kprintf("sched: enqueued task(%d) %s in cpu(%ld) count(%ld)\n", task->tid, task->argv[0], cpu->id, cpu->sched_count);
 #endif
-
 }
 
 /**
@@ -413,7 +389,7 @@ void sched_enqueue(task_t* task) {
  *
  * @param task The task to be dequeued
  */
-void sched_dequeue(task_t* task) {
+void sched_dequeue(task_t *task) {
 
     int found = 0;
 
@@ -422,39 +398,34 @@ void sched_dequeue(task_t* task) {
         found = 1;
 
         __lock(&cpu->sched_lock, {
-
-            if(task == cpu->sched_queue) {
+            if (task == cpu->sched_queue) {
 
                 cpu->sched_queue = task->next;
 
             } else {
 
-                task_t* tmp;
+                task_t *tmp;
 
-                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
+                for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
 
-                    if(tmp->next != task) {
+                    if (tmp->next != task) {
                         continue;
                     }
 
                     tmp->next = task->next;
                     break;
-
                 }
 
-                if(unlikely(!tmp->next)) {
+                if (unlikely(!tmp->next)) {
                     found = 0;
                 }
-
             }
-
         });
 
-        if(found) {
+        if (found) {
             cpu->sched_count--;
             break;
         }
-
     }
 
 #if DEBUG_LEVEL_TRACE
@@ -463,11 +434,10 @@ void sched_dequeue(task_t* task) {
 
     // // kfree(task);
     // FIXME: unsafe to free here. Moreover there are memory leaks of unfreed attributes
-
 }
 
 
-void sched_requeue(task_t* task) {
+void sched_requeue(task_t *task) {
 
     int found = 0;
 
@@ -476,37 +446,33 @@ void sched_requeue(task_t* task) {
         found = 1;
 
         __lock(&cpu->sched_lock, {
-
-            if(task == cpu->sched_queue) {
+            if (task == cpu->sched_queue) {
 
                 cpu->sched_queue = task->next;
 
             } else {
 
-                task_t* tmp;
+                task_t *tmp;
 
-                for(tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
+                for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
 
-                    if(tmp->next != task) {
+                    if (tmp->next != task) {
                         continue;
                     }
 
                     tmp->next = task->next;
                     break;
-
                 }
 
-                if(unlikely(!tmp->next)) {
+                if (unlikely(!tmp->next)) {
                     found = 0;
                 }
-
             }
-
         });
 
-        if(found) {
-            
-            if(cpu->sched_running != task) {
+        if (found) {
+
+            if (cpu->sched_running != task) {
 
                 task->next = cpu->sched_running->next;
 
@@ -517,24 +483,20 @@ void sched_requeue(task_t* task) {
                 task->next = cpu->sched_queue;
 
                 cpu->sched_queue = task;
-
             }
 
             break;
-            
         }
-
     }
 
 #if DEBUG_LEVEL_TRACE
     kprintf("sched: requeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
-
 }
 
 
 
-int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
+int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t *info) {
 
     DEBUG_ASSERT(sig >= 0);
     DEBUG_ASSERT(sig < NSIG - 1);
@@ -545,61 +507,59 @@ int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
     cpu_foreach(cpu) {
 
-        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        for (task_t *tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-            if(pgrp > 0 && tmp->pgrp != pgrp) {
+            if (pgrp > 0 && tmp->pgrp != pgrp) {
                 continue;
             }
 
-            if(pid > 0 && tmp->pid != pid) {
+            if (pid > 0 && tmp->pid != pid) {
                 continue;
             }
 
-            if(tid > 0 && tmp->tid != tid) {
+            if (tid > 0 && tmp->tid != tid) {
                 continue;
             }
 
-            if(tmp->status == TASK_STATUS_ZOMBIE) {
+            if (tmp->status == TASK_STATUS_ZOMBIE) {
                 continue;
             }
 
-            if(!(current_task->euid == tmp->uid || current_task->uid == tmp->uid)) {
+            if (!(current_task->euid == tmp->uid || current_task->uid == tmp->uid)) {
                 continue;
             }
 
 
             found++;
 
-            if(unlikely(sig == 0)) {
+            if (unlikely(sig == 0)) {
                 continue;
             }
 
-            if(tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
+            if (tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
                 return errno = EAGAIN, -1;
             }
 
 
-            struct ksigaction* action = NULL;
+            struct ksigaction *action = NULL;
 
-            shared_ptr_access(tmp->sighand, sighand, {
-                action = &sighand->action[sig];
-            });
+            shared_ptr_access(tmp->sighand, sighand, { action = &sighand->action[sig]; });
 
             DEBUG_ASSERT(action);
 
 
-            if(unlikely(action->handler == SIG_IGN)) {
+            if (unlikely(action->handler == SIG_IGN)) {
                 continue;
             }
 
-            if(unlikely(action->handler == SIG_ERR)) {
+            if (unlikely(action->handler == SIG_ERR)) {
                 continue;
             }
 
 
-            siginfo_t* siginfo = (siginfo_t*) kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+            siginfo_t *siginfo = (siginfo_t *)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
 
-            if(unlikely(!siginfo)) {
+            if (unlikely(!siginfo)) {
                 return errno = ENOMEM, -1;
             }
 
@@ -609,33 +569,27 @@ int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
 
             shared_ptr_access(tmp->sighand, sighand, {
-
                 //? Check if the signal is blocked
-                if(unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
+                if (unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
 
-                    if(sighand->action[sig].sa_flags & SA_NODEFER)
+                    if (sighand->action[sig].sa_flags & SA_NODEFER)
                         queue_enqueue(&tmp->sigqueue, siginfo, 0);
                     else
                         queue_enqueue(&tmp->sigpending, siginfo, 0);
-                        
+
                 } else {
                     queue_enqueue(&tmp->sigqueue, siginfo, 0);
                 }
-
             });
-
-
         }
-
     }
 
 
-    if(unlikely(found == 0)) {
+    if (unlikely(found == 0)) {
         return errno = ESRCH, -1;
     }
 
     return 0;
-
 }
 
 

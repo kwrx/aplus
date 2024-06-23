@@ -43,8 +43,8 @@
 
 #if LWIP_IPV6 && LWIP_SOCKET /* don't build if not configured for use in lwipopts.h */
 
-#include "lwip/def.h"
-#include "lwip/inet.h"
+    #include "lwip/def.h"
+    #include "lwip/inet.h"
 
 /** This variable is initialized by the system to contain the wildcard IPv6 address.
  */

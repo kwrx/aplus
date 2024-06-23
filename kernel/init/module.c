@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,59 +26,54 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
 #include <aplus/elf.h>
-#include <aplus/memory.h>
 #include <aplus/hal.h>
+#include <aplus/memory.h>
+#include <aplus/module.h>
 
 #include <aplus/utils/list.h>
 
 
 
+list(module_t *, m_queue);
+list(symbol_t *, m_symtab);
 
 
+static void module_export(module_t *mod, const char *name, void *address, size_t size) {
 
-list(module_t*, m_queue);
-list(symbol_t*, m_symtab);
-
-
-static void module_export(module_t* mod, const char* name, void* address, size_t size) {
-    
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(address);
 
 
-    if(likely(mod)) {
+    if (likely(mod)) {
 
         do {
 
-            if(strcmp(name, "init") == 0)
+            if (strcmp(name, "init") == 0)
                 mod->init = address;
-            else if(strcmp(name, "dnit") == 0)
+            else if (strcmp(name, "dnit") == 0)
                 mod->dnit = address;
-            else if(strcmp(name, "__module_name__") == 0)
+            else if (strcmp(name, "__module_name__") == 0)
                 ;
-            else if(strcmp(name, "__module_deps__") == 0)
+            else if (strcmp(name, "__module_deps__") == 0)
                 ;
             else
                 break;
 
             return;
 
-        } while(0);
-
+        } while (0);
     }
-        
+
 
     list_each(m_symtab, v) {
-        
-        if(strcmp(v->name, name) == 0)
-            kpanicf("module: PANIC! \'%s\' already defined at %p (%s)\n", name, v->address, mod ? mod->name : "undefined");
-    
-    }
-    
 
-    symbol_t* s = (symbol_t*) kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
+        if (strcmp(v->name, name) == 0)
+            kpanicf("module: PANIC! \'%s\' already defined at %p (%s)\n", name, v->address, mod ? mod->name : "undefined");
+    }
+
+
+    symbol_t *s = (symbol_t *)kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
 
     s->address = address;
     s->size    = size;
@@ -86,43 +81,38 @@ static void module_export(module_t* mod, const char* name, void* address, size_t
     strcpy(s->name, name);
 
     list_push(m_symtab, s);
-
 }
 
 
 
-static void* module_resolve(module_t* m, const char* name) {
+static void *module_resolve(module_t *m, const char *name) {
 
     list_each(m_symtab, v) {
-     
-        if(strcmp(v->name, name) == 0)
+
+        if (strcmp(v->name, name) == 0)
             return v->address;
-    
     }
 
 
-    void* p;
-    if((p = (void*) runtime_get_address(name))) {
-     
-        return module_export(NULL, name, p, 0)
-             , p;
-    
+    void *p;
+    if ((p = (void *)runtime_get_address(name))) {
+
+        return module_export(NULL, name, p, 0), p;
     }
-    
-    
+
+
     kpanicf("module: PANIC! undefined reference for \'%s\' in %s\n", name, m->name);
     return NULL;
 }
 
 
 
+void module_run(module_t *m) {
 
-void module_run(module_t* m) {
-
-    if(m->status == MODULE_STATUS_LOADED)
+    if (m->status == MODULE_STATUS_LOADED)
         return;
 
-    if(m->status == MODULE_STATUS_LOADING)
+    if (m->status == MODULE_STATUS_LOADING)
         kpanicf("module: PANIC! dependency loop for '%s'\n", m->name);
 
 
@@ -136,93 +126,90 @@ void module_run(module_t* m) {
 
 
 
-    #define find(s) ({                                                  \
-                                                                        \
-        module_t* r = NULL;                                             \
-        list_each(m_queue, i) {                                         \
-            if(strcmp(i->name, s) != 0)                                 \
-                continue;                                               \
-                                                                        \
-            r = i;                                                      \
-            break;                                                      \
-        }                                                               \
-                                                                        \
-        if(!r)                                                          \
-            kpanicf("module: PANIC! unresolved dependency '%s'\n", s);  \
-        r;                                                              \
+#define find(s)                                                        \
+    ({                                                                 \
+        module_t *r = NULL;                                            \
+        list_each(m_queue, i) {                                        \
+            if (strcmp(i->name, s) != 0)                               \
+                continue;                                              \
+                                                                       \
+            r = i;                                                     \
+            break;                                                     \
+        }                                                              \
+                                                                       \
+        if (!r)                                                        \
+            kpanicf("module: PANIC! unresolved dependency '%s'\n", s); \
+        r;                                                             \
     })
 
 
     do {
 
-        if(m->deps[0] == '\0')
+        if (m->deps[0] == '\0')
             break;
 
 
-        if(strchr(m->deps, ',') == NULL) {
-          
+        if (strchr(m->deps, ',') == NULL) {
+
             module_run(find(m->deps));
 
         } else {
 
             int i = 0;
 
-            for(char* s = strchr(m->deps, ','); s; s = strchr(++s, ','))
+            for (char *s = strchr(m->deps, ','); s; s = strchr(++s, ','))
                 i++;
 
 
-            module_t* deps[i + 1];
+            module_t *deps[i + 1];
 
             i = 0;
 
 
-            char* tok = (char*) m->deps;
+            char *tok = (char *)m->deps;
 
-            for(char* s = strtok_r((char*) m->deps, ",", &tok); s; s = strtok_r(NULL, ",", &tok))
+            for (char *s = strtok_r((char *)m->deps, ",", &tok); s; s = strtok_r(NULL, ",", &tok))
                 deps[i++] = find(s);
 
-            while(i) {
+            while (i) {
                 module_run(deps[--i]);
             }
-
         }
 
-    } while(0);
+    } while (0);
 
 
 
+    for (Elf_Xword i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
 
-    for(Elf_Xword i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
-
-        #define syname(p) \
-            ((const char*) ((uintptr_t) m->exe.header + m->exe.strtab->sh_offset + p))
+#define syname(p) ((const char *)((uintptr_t)m->exe.header + m->exe.strtab->sh_offset + p))
 
 
-        Elf_Sym* s = &((Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.symtab->sh_offset)) [i];
+        Elf_Sym *s = &((Elf_Sym *)((uintptr_t)m->exe.header + m->exe.symtab->sh_offset))[i];
 
-        switch(s->st_shndx) {
+        switch (s->st_shndx) {
 
             case SHN_ABS:
                 break;
 
             case SHN_UNDEF:
-                s->st_value = (Elf_Addr) module_resolve(m, syname(s->st_name));
+                s->st_value = (Elf_Addr)module_resolve(m, syname(s->st_name));
                 break;
 
             default:
-                s->st_value += (Elf_Addr) ((uintptr_t) m->core.ptr + m->exe.section[s->st_shndx].sh_addr);
-        
-                if(ELF_ST_TYPE(s->st_info) == STT_FUNC) {
-                    if(ELF_ST_BIND(s->st_info) == STB_GLOBAL) {
-                        module_export(m, syname(s->st_name), (void*) s->st_value, s->st_size);
+                s->st_value += (Elf_Addr)((uintptr_t)m->core.ptr + m->exe.section[s->st_shndx].sh_addr);
+
+                if (ELF_ST_TYPE(s->st_info) == STT_FUNC) {
+                    if (ELF_ST_BIND(s->st_info) == STB_GLOBAL) {
+                        module_export(m, syname(s->st_name), (void *)s->st_value, s->st_size);
                     }
                 }
-                
+
                 break;
         }
 
 
-        #undef syname
+#undef syname
     }
 
 
@@ -233,56 +220,58 @@ void module_run(module_t* m) {
 
 
     /* SHT_REL */
-    for(Elf_Half i = 1; i < m->exe.header->e_shnum; i++) {
+    for (Elf_Half i = 1; i < m->exe.header->e_shnum; i++) {
 
-        if(m->exe.section[i].sh_type != SHT_REL)
+        if (m->exe.section[i].sh_type != SHT_REL)
             continue;
 
-        Elf_Rel* r = (Elf_Rel*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
-        Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
-    
-
-        for(Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
-
-            Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
-            Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
+        Elf_Rel *r = (Elf_Rel *)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Sym *s = (Elf_Sym *)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
 
 
-            #define A ((Elf_Addr) *obj)
-            #define P ((Elf_Addr) obj)
-            #define S ((Elf_Addr) sym->st_value)
-            #define L ((Elf_Addr) sym->st_value)
-            #define Z ((Elf_Addr) sym->st_size)
-            #define B ((Elf_Addr) m->core.ptr)
-            
-            #define _(x, y, z)  \
-                case x: { *(z*) (obj) = (z) (y); } break;
+        for (Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+
+            Elf_Addr *obj = (Elf_Addr *)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
+            Elf_Sym *sym  = &s[ELF_R_SYM(r[j].r_info)];
+
+
+#define A ((Elf_Addr) * obj)
+#define P ((Elf_Addr)obj)
+#define S ((Elf_Addr)sym->st_value)
+#define L ((Elf_Addr)sym->st_value)
+#define Z ((Elf_Addr)sym->st_size)
+#define B ((Elf_Addr)m->core.ptr)
+
+#define _(x, y, z)            \
+    case x: {                 \
+        *(z *)(obj) = (z)(y); \
+    } break;
 
 
 
-            switch(ELF_R_TYPE(r[j].r_info)) {
+            switch (ELF_R_TYPE(r[j].r_info)) {
 
- #if defined(__i386__)
+#if defined(__i386__)
 
                 case R_386_NONE:
                 case R_386_COPY:
                     break;
 
-                _(R_386_32,         S + A       , Elf_Word  )
-                _(R_386_PC32,       S + A - P   , Elf_Word  )
-                _(R_386_GLOB_DAT,   S           , Elf_Word  )
-                _(R_386_JMP_SLOT,   S           , Elf_Word  )            
-                _(R_386_RELATIVE,   B + A       , Elf_Word  )
-                // _(R_386_PLT32,      L + A - P   , Elf_Word  )
-                _(R_386_16,         S + A       , Elf_Half  )
-                _(R_386_PC16,       S + A - P   , Elf_Half  )
-                _(R_386_8,          S + A       , Elf_Byte  )
-                _(R_386_PC8,        S + A - P   , Elf_Byte  )
-                // _(R_386_32PLT,      L + A       , Elf_Word  )
-                _(R_386_SIZE32,     Z + A       , Elf_Word  )
-                // _(R_386_GOT32,      G + A - P   , Elf_Word  )
-                // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
-                // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
+                    _(R_386_32, S + A, Elf_Word)
+                    _(R_386_PC32, S + A - P, Elf_Word)
+                    _(R_386_GLOB_DAT, S, Elf_Word)
+                    _(R_386_JMP_SLOT, S, Elf_Word)
+                    _(R_386_RELATIVE, B + A, Elf_Word)
+                    // _(R_386_PLT32,      L + A - P   , Elf_Word  )
+                    _(R_386_16, S + A, Elf_Half)
+                    _(R_386_PC16, S + A - P, Elf_Half)
+                    _(R_386_8, S + A, Elf_Byte)
+                    _(R_386_PC8, S + A - P, Elf_Byte)
+                    // _(R_386_32PLT,      L + A       , Elf_Word  )
+                    _(R_386_SIZE32, Z + A, Elf_Word)
+                    // _(R_386_GOT32,      G + A - P   , Elf_Word  )
+                    // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
+                    // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
 
 #endif
 
@@ -292,96 +281,96 @@ void module_run(module_t* m) {
                 case R_X86_64_COPY:
                     break;
 
-                _(R_X86_64_64,          S + A       , Elf_Xword )
-                _(R_X86_64_PC32,        S + A - P   , Elf_Word  )
-                _(R_X86_64_GLOB_DAT,    S           , Elf_Xword )
-                _(R_X86_64_JUMP_SLOT,   S           , Elf_Xword )             
-                _(R_X86_64_RELATIVE,    B + A       , Elf_Xword )
-                _(R_X86_64_32,          S + A       , Elf_Word  )
-                _(R_X86_64_32S,         S + A       , Elf_Sword )
-                _(R_X86_64_16,          S + A       , Elf_Half  )
-                _(R_X86_64_PC16,        S + A - P   , Elf_Half  )
-                _(R_X86_64_8,           S + A       , Elf_Byte  )
-                _(R_X86_64_PC8,         S + A - P   , Elf_Byte  )
-                _(R_X86_64_PC64,        S + A - P   , Elf_Xword )
-                // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
-                _(R_X86_64_SIZE32,      Z + A       , Elf_Word  )             
-                _(R_X86_64_SIZE64,      Z + A       , Elf_Xword )
-                // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
-                // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
-                // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  )             
-                // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
+                    _(R_X86_64_64, S + A, Elf_Xword)
+                    _(R_X86_64_PC32, S + A - P, Elf_Word)
+                    _(R_X86_64_GLOB_DAT, S, Elf_Xword)
+                    _(R_X86_64_JUMP_SLOT, S, Elf_Xword)
+                    _(R_X86_64_RELATIVE, B + A, Elf_Xword)
+                    _(R_X86_64_32, S + A, Elf_Word)
+                    _(R_X86_64_32S, S + A, Elf_Sword)
+                    _(R_X86_64_16, S + A, Elf_Half)
+                    _(R_X86_64_PC16, S + A - P, Elf_Half)
+                    _(R_X86_64_8, S + A, Elf_Byte)
+                    _(R_X86_64_PC8, S + A - P, Elf_Byte)
+                    _(R_X86_64_PC64, S + A - P, Elf_Xword)
+                    // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
+                    _(R_X86_64_SIZE32, Z + A, Elf_Word)
+                    _(R_X86_64_SIZE64, Z + A, Elf_Xword)
+                    // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
+                    // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
+                    // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  )
+                    // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
 #endif
 
                 default:
                     kpanicf("module: PANIC! unknown relocation SHT_REL type %ld for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
-
             }
 
-            #undef A
-            #undef B
-            #undef P
-            #undef S
-            #undef Z
-            #undef L
-            #undef _
-
+#undef A
+#undef B
+#undef P
+#undef S
+#undef Z
+#undef L
+#undef _
         }
     }
 
 
 
     /* SHT_RELA */
-    for(int i = 1; i < m->exe.header->e_shnum; i++) {
+    for (int i = 1; i < m->exe.header->e_shnum; i++) {
 
-        if(m->exe.section[i].sh_type != SHT_RELA)
+        if (m->exe.section[i].sh_type != SHT_RELA)
             continue;
 
-        Elf_Rela* r = (Elf_Rela*) ((uintptr_t) m->exe.header + m->exe.section[i].sh_offset);
-        Elf_Sym* s = (Elf_Sym*) ((uintptr_t) m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
-    
-
-        for(Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
-
-            Elf_Addr* obj = (Elf_Addr*) ((uintptr_t) m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
-            Elf_Sym* sym = &s[ELF_R_SYM(r[j].r_info)];
+        Elf_Rela *r = (Elf_Rela *)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Sym *s  = (Elf_Sym *)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
 
 
-            #define A ((Elf_Addr) r[j].r_addend)
-            #define P ((Elf_Addr) obj)
-            #define S ((Elf_Addr) sym->st_value)
-            #define L ((Elf_Addr) sym->st_value)
-            #define Z ((Elf_Addr) sym->st_size)
-            #define B ((Elf_Addr) m->core.ptr)
-            
-            #define _(x, y, z) \
-                case x: { *(z*) (obj) = (z) (y); } break;
+        for (Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
+
+            Elf_Addr *obj = (Elf_Addr *)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
+            Elf_Sym *sym  = &s[ELF_R_SYM(r[j].r_info)];
+
+
+#define A ((Elf_Addr)r[j].r_addend)
+#define P ((Elf_Addr)obj)
+#define S ((Elf_Addr)sym->st_value)
+#define L ((Elf_Addr)sym->st_value)
+#define Z ((Elf_Addr)sym->st_size)
+#define B ((Elf_Addr)m->core.ptr)
+
+#define _(x, y, z)            \
+    case x: {                 \
+        *(z *)(obj) = (z)(y); \
+    } break;
 
 
 
-            switch(ELF_R_TYPE(r[j].r_info)) {
+            switch (ELF_R_TYPE(r[j].r_info)) {
 
- #if defined(__i386__)
+#if defined(__i386__)
 
                 case R_386_NONE:
                 case R_386_COPY:
                     break;
 
-                _(R_386_32,         S + A       , Elf_Word  )
-                _(R_386_PC32,       S + A - P   , Elf_Word  )
-                _(R_386_GLOB_DAT,   S           , Elf_Word  )
-                _(R_386_JMP_SLOT,   S           , Elf_Word  )            
-                _(R_386_RELATIVE,   B + A       , Elf_Word  )
-                // _(R_386_PLT32,      L + A - P   , Elf_Word  )
-                _(R_386_16,         S + A       , Elf_Half  )
-                _(R_386_PC16,       S + A - P   , Elf_Half  )
-                _(R_386_8,          S + A       , Elf_Byte  )
-                _(R_386_PC8,        S + A - P   , Elf_Byte  )
-                _(R_386_SIZE32,     Z + A       , Elf_Word  )
-                // _(R_386_GOT32,      G + A - P   , Elf_Word  )
-                // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
-                // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
+                    _(R_386_32, S + A, Elf_Word)
+                    _(R_386_PC32, S + A - P, Elf_Word)
+                    _(R_386_GLOB_DAT, S, Elf_Word)
+                    _(R_386_JMP_SLOT, S, Elf_Word)
+                    _(R_386_RELATIVE, B + A, Elf_Word)
+                    // _(R_386_PLT32,      L + A - P   , Elf_Word  )
+                    _(R_386_16, S + A, Elf_Half)
+                    _(R_386_PC16, S + A - P, Elf_Half)
+                    _(R_386_8, S + A, Elf_Byte)
+                    _(R_386_PC8, S + A - P, Elf_Byte)
+                    _(R_386_SIZE32, Z + A, Elf_Word)
+                    // _(R_386_GOT32,      G + A - P   , Elf_Word  )
+                    // _(R_386_GOTOFF,     S + A - GOT , Elf_Word  )
+                    // _(R_386_GOTPC,      GOT + A - P , Elf_Word  )
 #endif
 
 #if defined(__x86_64__)
@@ -390,41 +379,39 @@ void module_run(module_t* m) {
                 case R_X86_64_COPY:
                     break;
 
-                _(R_X86_64_64,          S + A       , Elf_Xword )
-                _(R_X86_64_PC32,        S + A - P   , Elf_Word  )
-                _(R_X86_64_GLOB_DAT,    S           , Elf_Xword )
-                _(R_X86_64_JUMP_SLOT,   S           , Elf_Xword )             
-                _(R_X86_64_RELATIVE,    B + A       , Elf_Xword )
-                _(R_X86_64_32,          S + A       , Elf_Word  )
-                _(R_X86_64_32S,         S + A       , Elf_Sword )
-                _(R_X86_64_16,          S + A       , Elf_Half  )
-                _(R_X86_64_PC16,        S + A - P   , Elf_Half  )
-                _(R_X86_64_8,           S + A       , Elf_Byte  )
-                _(R_X86_64_PC8,         S + A - P   , Elf_Byte  )
-                _(R_X86_64_PC64,        S + A - P   , Elf_Xword )
-                // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
-                _(R_X86_64_SIZE32,      Z + A       , Elf_Word  )            
-                _(R_X86_64_SIZE64,      Z + A       , Elf_Xword ) 
-                // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
-                // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
-                // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  ) 
-                // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
+                    _(R_X86_64_64, S + A, Elf_Xword)
+                    _(R_X86_64_PC32, S + A - P, Elf_Word)
+                    _(R_X86_64_GLOB_DAT, S, Elf_Xword)
+                    _(R_X86_64_JUMP_SLOT, S, Elf_Xword)
+                    _(R_X86_64_RELATIVE, B + A, Elf_Xword)
+                    _(R_X86_64_32, S + A, Elf_Word)
+                    _(R_X86_64_32S, S + A, Elf_Sword)
+                    _(R_X86_64_16, S + A, Elf_Half)
+                    _(R_X86_64_PC16, S + A - P, Elf_Half)
+                    _(R_X86_64_8, S + A, Elf_Byte)
+                    _(R_X86_64_PC8, S + A - P, Elf_Byte)
+                    _(R_X86_64_PC64, S + A - P, Elf_Xword)
+                    // _(R_X86_64_PLT32,       L + A - P   , Elf_Word  )
+                    _(R_X86_64_SIZE32, Z + A, Elf_Word)
+                    _(R_X86_64_SIZE64, Z + A, Elf_Xword)
+                    // _(R_X86_64_GOT32,       G + A       , Elf_Word  )
+                    // _(R_X86_64_GOTOFF64,    S + A - GOT , Elf_Xword )
+                    // _(R_X86_64_GOTPC32,     GOT + A + P , Elf_Word  )
+                    // _(R_X86_64_GOTPCREL,    G + GOT + A - P, Elf_Sword )
 #endif
 
                 default:
                     kpanicf("module: PANIC! unknown relocation SHT_RELA type %ld for %s\n", ELF_R_TYPE(r[j].r_info), m->name);
                     break;
-
             }
 
-            #undef A
-            #undef B
-            #undef P
-            #undef S
-            #undef Z
-            #undef L
-            #undef _
-
+#undef A
+#undef B
+#undef P
+#undef S
+#undef Z
+#undef L
+#undef _
         }
     }
 
@@ -435,9 +422,7 @@ void module_run(module_t* m) {
 
     m->init(m->args);
     m->status = MODULE_STATUS_LOADED;
-
 }
-
 
 
 
@@ -447,25 +432,25 @@ void module_init(void) {
     memset(&m_symtab, 0, sizeof(m_symtab));
 
 
-    for(size_t i = 0; i < core->modules.count; i++) {
-        
+    for (size_t i = 0; i < core->modules.count; i++) {
 
-        if(unlikely(core->modules.ko[i].ptr == 0))
+
+        if (unlikely(core->modules.ko[i].ptr == 0))
             continue;
 
-        if(unlikely(core->modules.ko[i].size == 0))
+        if (unlikely(core->modules.ko[i].size == 0))
             continue;
 
-        if(unlikely(strstr(core->modules.ko[i].cmdline, "type=module") == NULL))
+        if (unlikely(strstr(core->modules.ko[i].cmdline, "type=module") == NULL))
             continue;
-        
 
 
-        module_t* m = (module_t*) kcalloc(1, sizeof(module_t), GFP_KERNEL);
+
+        module_t *m = (module_t *)kcalloc(1, sizeof(module_t), GFP_KERNEL);
 
 
-        m->exe.header = (Elf_Ehdr*) arch_vmm_p2v(core->modules.ko[i].ptr, ARCH_VMM_AREA_HEAP);
-        
+        m->exe.header = (Elf_Ehdr *)arch_vmm_p2v(core->modules.ko[i].ptr, ARCH_VMM_AREA_HEAP);
+
         DEBUG_ASSERT(m->exe.header);
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG0] == ELFMAG0);
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG1] == ELFMAG1);
@@ -474,28 +459,26 @@ void module_init(void) {
         DEBUG_ASSERT(m->exe.header->e_type == ET_REL);
 
 
-        m->exe.section = (Elf_Shdr*) ((uintptr_t) m->exe.header + m->exe.header->e_shoff);
+        m->exe.section  = (Elf_Shdr *)((uintptr_t)m->exe.header + m->exe.header->e_shoff);
         m->exe.shstrtab = &m->exe.section[m->exe.header->e_shstrndx];
 
         DEBUG_ASSERT(m->exe.section);
         DEBUG_ASSERT(m->exe.shstrtab);
 
 
-        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
+        for (Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
 
-            #define syname(p) \
-                ((const char*) ((uintptr_t) m->exe.header + m->exe.shstrtab->sh_offset + p))
-
-
-            if(strcmp(syname(m->exe.section[j].sh_name), ".module_name") == 0)
-                m->name = (const char*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset);
-
-            if(strcmp(syname(m->exe.section[j].sh_name), ".module_deps") == 0)
-                m->deps = (const char*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset);
+#define syname(p) ((const char *)((uintptr_t)m->exe.header + m->exe.shstrtab->sh_offset + p))
 
 
-            #undef syname
+            if (strcmp(syname(m->exe.section[j].sh_name), ".module_name") == 0)
+                m->name = (const char *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
 
+            if (strcmp(syname(m->exe.section[j].sh_name), ".module_deps") == 0)
+                m->deps = (const char *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
+
+
+#undef syname
         }
 
         DEBUG_ASSERT(m->name);
@@ -503,63 +486,51 @@ void module_init(void) {
 
 
 
-        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
+        for (Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
 
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNAMIC);
             DEBUG_ASSERT(m->exe.section[i].sh_type != SHT_DYNSYM);
 
-            
-            m->exe.section[j].sh_addr = m->exe.section[j].sh_addralign
-                ? (m->core.size + m->exe.section[j].sh_addralign - 1) & ~(m->exe.section[j].sh_addralign - 1)
-                : (m->core.size)
-                ;
+
+            m->exe.section[j].sh_addr = m->exe.section[j].sh_addralign ? (m->core.size + m->exe.section[j].sh_addralign - 1) & ~(m->exe.section[j].sh_addralign - 1) : (m->core.size);
 
 
             m->core.size = m->exe.section[j].sh_addr + m->exe.section[j].sh_size;
-
         }
 
 
-        m->core.ptr = (void*) kmalloc(m->core.size, GFP_KERNEL);
-        
+        m->core.ptr = (void *)kmalloc(m->core.size, GFP_KERNEL);
 
-        for(Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
-            
-            if(m->exe.section[j].sh_type == SHT_SYMTAB) {
+
+        for (Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
+
+            if (m->exe.section[j].sh_type == SHT_SYMTAB) {
                 m->exe.symtab = &m->exe.section[j];
                 m->exe.strtab = &m->exe.section[m->exe.section[j].sh_link];
             }
 
-    
-            if(!(m->exe.section[j].sh_flags & SHF_ALLOC))
+
+            if (!(m->exe.section[j].sh_flags & SHF_ALLOC))
                 continue;
 
 
-            switch(m->exe.section[j].sh_type) {
-                
+            switch (m->exe.section[j].sh_type) {
+
                 case SHT_PROGBITS:
 
-                    if(m->exe.section[j].sh_size == 0)
+                    if (m->exe.section[j].sh_size == 0)
                         break;
 
-                    memcpy (
-                        (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
-                        (void*) ((uintptr_t) m->exe.header + m->exe.section[j].sh_offset),
-                        m->exe.section[j].sh_size
-                    );
-                    
+                    memcpy((void *)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), (void *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset), m->exe.section[j].sh_size);
+
                     break;
 
                 case SHT_NOBITS:
 
-                    if(m->exe.section[j].sh_size == 0)
+                    if (m->exe.section[j].sh_size == 0)
                         break;
 
-                    memset (
-                        (void*) ((uintptr_t) m->core.ptr + m->exe.section[j].sh_addr),
-                        0,
-                        m->exe.section[j].sh_size
-                    );
+                    memset((void *)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), 0, m->exe.section[j].sh_size);
 
                     break;
 
@@ -568,46 +539,40 @@ void module_init(void) {
                     kpanicf("module: PANIC! invalid section type for %s: %d\n", m->name, m->exe.section[j].sh_type);
 
                     break;
-
             }
-
         }
 
         DEBUG_ASSERT(m->exe.symtab);
         DEBUG_ASSERT(m->exe.strtab);
 
 
-        m->status = MODULE_STATUS_READY;
+        m->status   = MODULE_STATUS_READY;
         m->refcount = 1;
-        m->args = (const char*) &core->modules.ko[i].cmdline;
+        m->args     = (const char *)&core->modules.ko[i].cmdline;
 
 
         list_each(m_queue, v) {
 
-            if(strcmp(m->name, v->name) == 0) {
+            if (strcmp(m->name, v->name) == 0) {
                 kpanicf("module: PANIC! duplicated name '%s'\n", m->name);
             }
-
         }
 
         list_push(m_queue, m);
-
     }
 
 
     list_each(m_queue, m) {
         module_run(m);
     }
-
 }
 
 
 void module_dnit(void) {
-  
+
     list_each(m_queue, mod) {
-        if(mod->status == MODULE_STATUS_LOADED) {
+        if (mod->status == MODULE_STATUS_LOADED) {
             mod->dnit();
         }
     }
-
 }

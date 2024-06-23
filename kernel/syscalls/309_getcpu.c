@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,16 +24,16 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
-#include <aplus/errno.h>
-#include <stdint.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 /***
@@ -53,29 +53,26 @@
 
 struct getcpu_cache;
 
-SYSCALL(309, getcpu,
-long sys_getcpu (unsigned  * cpu, unsigned  * node, struct getcpu_cache  * cache) {
+SYSCALL(
+    309, getcpu, long sys_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *cache) {
+        DEBUG_ASSERT(cache == NULL);
 
-    DEBUG_ASSERT(cache == NULL);
 
+        if (likely(cpu)) {
 
-    if(likely(cpu)) {
+            if (unlikely(!uio_check(cpu, R_OK | W_OK)))
+                return -EFAULT;
 
-        if(unlikely(!uio_check(cpu, R_OK | W_OK)))
-            return -EFAULT;
+            *(cpu) = current_cpu->id;
+        }
 
-        *(cpu) = current_cpu->id;
+        if (likely(node)) {
 
-    }
-        
-    if(likely(node)) {
+            if (unlikely(!uio_check(node, R_OK | W_OK)))
+                return -EFAULT;
 
-        if(unlikely(!uio_check(node, R_OK | W_OK)))
-            return -EFAULT;
+            *(node) = current_cpu->node;
+        }
 
-        *(node) = current_cpu->node;
-    
-    }
-
-    return 0;
-});
+        return 0;
+    });

@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -26,9 +26,9 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
-#include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <aplus/memory.h>
+#include <aplus/module.h>
 
 #include <dev/interface.h>
 #include <dev/network.h>
@@ -36,51 +36,50 @@
 
 
 #ifndef ETHERNETIF_MAXFRAMES
-#define ETHERNETIF_MAXFRAMES            1
+    #define ETHERNETIF_MAXFRAMES 1
 #endif
 
 
 /* See kernel/init/hostname.c */
-extern char* hostname;
+extern char *hostname;
 
 
-void ethif_input(struct netif* netif) {
-    
+void ethif_input(struct netif *netif) {
+
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
 
-    struct eth_hdr* hdr;
-    struct pbuf* p, *q;
+    struct eth_hdr *hdr;
+    struct pbuf *p, *q;
 
     long len;
     long frames = 0;
 
 
-    struct device* dev = netif->state;
+    struct device *dev = netif->state;
 
     do {
 
-        if((len = dev->net.low_level_startinput(dev->net.internals)) == 0)
+        if ((len = dev->net.low_level_startinput(dev->net.internals)) == 0)
             break;
-            
+
 #if ETH_PAD_SIZE
         len += ETH_PAD_SIZE;
 #endif
 
 
         p = pbuf_alloc(PBUF_RAW, len, PBUF_POOL);
-        if(!p) {
+        if (!p) {
 #if ETH_PAD_SIZE
             len -= ETH_PAD_SIZE;
-#endif 
+#endif
 
             dev->net.low_level_input_nomem(dev->net.internals, len);
 
             LINK_STATS_INC(link.memerr);
             LINK_STATS_INC(link.drop);
             return;
-
         }
 
 
@@ -88,7 +87,7 @@ void ethif_input(struct netif* netif) {
         pbuf_header(p, -ETH_PAD_SIZE);
 #endif
 
-        for(q = p; q; q = q->next) {
+        for (q = p; q; q = q->next) {
             dev->net.low_level_input(dev->net.internals, q->payload, q->len);
         }
 
@@ -102,8 +101,8 @@ void ethif_input(struct netif* netif) {
 
 
         hdr = p->payload;
-        
-        switch(lwip_htons(hdr->type)) {
+
+        switch (lwip_htons(hdr->type)) {
 
             case ETHTYPE_IP:
             case ETHTYPE_ARP:
@@ -112,7 +111,7 @@ void ethif_input(struct netif* netif) {
             case ETHTYPE_PPPOE:
 #endif
 
-                if(netif->input(p, netif) != ERR_OK) {
+                if (netif->input(p, netif) != ERR_OK) {
                     LWIP_DEBUGF(NETIF_DEBUG, ("ethif_input(): IP input error\n"));
                     pbuf_free(p);
                     p = NULL;
@@ -127,13 +126,12 @@ void ethif_input(struct netif* netif) {
                 break;
         }
 
-    } while((!ETHERNETIF_MAXFRAMES) || (++frames < ETHERNETIF_MAXFRAMES));
-
+    } while ((!ETHERNETIF_MAXFRAMES) || (++frames < ETHERNETIF_MAXFRAMES));
 }
 
 
-static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
-    
+static err_t ethif_linkoutput(struct netif *netif, struct pbuf *p) {
+
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
@@ -142,11 +140,11 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
     DEBUG_ASSERT(p->len);
 
 
-    struct device* dev = netif->state;
-    struct pbuf* q;
+    struct device *dev = netif->state;
+    struct pbuf *q;
 
 
-    if(!dev->net.low_level_startoutput(dev->net.internals))
+    if (!dev->net.low_level_startoutput(dev->net.internals))
         return ERR_IF;
 
 
@@ -154,7 +152,7 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
     pbuf_header(p, -ETH_PAD_SIZE);
 #endif
 
-    for(q = p; q; q = q->next)
+    for (q = p; q; q = q->next)
         dev->net.low_level_output(dev->net.internals, p->payload, p->len);
 
     dev->net.low_level_endoutput(dev->net.internals, p->tot_len);
@@ -166,16 +164,15 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
 
     LINK_STATS_INC(link.xmit);
     return ERR_OK;
-
 }
 
-err_t ethif_init(struct netif* netif) {
+err_t ethif_init(struct netif *netif) {
 
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
 
-    struct device* dev = netif->state;
+    struct device *dev = netif->state;
 
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = hostname;
@@ -186,13 +183,13 @@ err_t ethif_init(struct netif* netif) {
     netif->name[0] = 'e';
     netif->name[1] = 'n';
 
-    netif->output = etharp_output;
+    netif->output     = etharp_output;
     netif->linkoutput = ethif_linkoutput;
 
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
     memcpy(netif->hwaddr, dev->net.address, ETHARP_HWADDR_LEN);
 
-    netif->mtu = 1500;
+    netif->mtu   = 1500;
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_LINK_UP;
 
 

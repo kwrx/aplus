@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,49 +29,48 @@
 #include <aplus/debug.h>
 #include <aplus/vfs.h>
 
-#include <aplus/utils/list.h>
 #include <aplus/utils/cache.h>
+#include <aplus/utils/list.h>
 
 
-#define TMPFS_NODES_MAX         (8192)
+#define TMPFS_NODES_MAX (8192)
 
 
 typedef struct {
-    list(inode_t*, children);
+        list(inode_t *, children);
 } tmpfs_t;
 
 typedef struct {
 
-    struct stat st;
+        struct stat st;
 
-    size_t capacity;
-    void* data;
+        size_t capacity;
+        void *data;
 
 } tmpfs_inode_t;
 
 
 
+int tmpfs_getattr(inode_t *, struct stat *);
+int tmpfs_setattr(inode_t *, struct stat *);
 
-int tmpfs_getattr (inode_t*, struct stat*);
-int tmpfs_setattr (inode_t*, struct stat*);
+int tmpfs_truncate(inode_t *, off_t);
 
-int tmpfs_truncate (inode_t*, off_t);
+ssize_t tmpfs_read(inode_t *, void *, off_t, size_t);
+ssize_t tmpfs_write(inode_t *, const void *, off_t, size_t);
+ssize_t tmpfs_readlink(inode_t *, char *, size_t);
 
-ssize_t tmpfs_read (inode_t*, void*, off_t, size_t);
-ssize_t tmpfs_write (inode_t*, const void*, off_t, size_t);
-ssize_t tmpfs_readlink (inode_t*, char*, size_t);
+inode_t *tmpfs_creat(inode_t *, const char *, mode_t);
+inode_t *tmpfs_finddir(inode_t *, const char *);
+ssize_t tmpfs_readdir(inode_t *, struct dirent *, off_t, size_t);
 
-inode_t* tmpfs_creat (inode_t*, const char*, mode_t);
-inode_t* tmpfs_finddir (inode_t*, const char*);
-ssize_t tmpfs_readdir (inode_t*, struct dirent*, off_t, size_t);
-
-int tmpfs_rename (inode_t*, const char*, const char*);
-int tmpfs_symlink (inode_t*, const char*, const char*);
-int tmpfs_unlink (inode_t*, const char*);
+int tmpfs_rename(inode_t *, const char *, const char *);
+int tmpfs_symlink(inode_t *, const char *, const char *);
+int tmpfs_unlink(inode_t *, const char *);
 
 
-tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino);
-void tmpfs_cache_commit(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode);
-void tmpfs_cache_release(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode);
+tmpfs_inode_t *tmpfs_cache_fetch(cache_t *cache, tmpfs_t *tmpfs, ino_t ino);
+void tmpfs_cache_commit(cache_t *cache, tmpfs_t *tmpfs, ino_t ino, tmpfs_inode_t *inode);
+void tmpfs_cache_release(cache_t *cache, tmpfs_t *tmpfs, ino_t ino, tmpfs_inode_t *inode);
 
 #endif

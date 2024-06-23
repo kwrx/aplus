@@ -1,37 +1,37 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdint.h>
-#include <sys/types.h>
 #include <sys/mount.h>
+#include <sys/types.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/smp.h>
-#include <aplus/ipc.h>
-#include <aplus/vfs.h>
-#include <aplus/memory.h>
 #include <aplus/errno.h>
+#include <aplus/ipc.h>
+#include <aplus/memory.h>
+#include <aplus/smp.h>
+#include <aplus/vfs.h>
 
 #include <aplus/utils/list.h>
 
@@ -39,43 +39,42 @@
 
 
 
+int tmpfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 
-int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
-    
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev == NULL);
 
-    (void) args;
-    (void) dev;
+    (void)args;
+    (void)dev;
 
 
-    #define __(a, b)                        \
-        if(flags & a)                       \
-            stflags |= b
+#define __(a, b)   \
+    if (flags & a) \
+    stflags |= b
 
-        int stflags = 0;
+    int stflags = 0;
 
-        __(MS_MANDLOCK, ST_MANDLOCK);
-        __(MS_NOATIME, ST_NOATIME);
-        __(MS_NODEV, ST_NODEV);
-        __(MS_NODIRATIME, ST_NODIRATIME);
-        __(MS_NOEXEC, ST_NOEXEC);
-        __(MS_NOSUID, ST_NOSUID);
-        __(MS_RDONLY, ST_RDONLY);
-        __(MS_SYNCHRONOUS, ST_SYNCHRONOUS);
+    __(MS_MANDLOCK, ST_MANDLOCK);
+    __(MS_NOATIME, ST_NOATIME);
+    __(MS_NODEV, ST_NODEV);
+    __(MS_NODIRATIME, ST_NODIRATIME);
+    __(MS_NOEXEC, ST_NOEXEC);
+    __(MS_NOSUID, ST_NOSUID);
+    __(MS_RDONLY, ST_RDONLY);
+    __(MS_SYNCHRONOUS, ST_SYNCHRONOUS);
 
-    #undef __
+#undef __
 
 
 
-    dir->sb = (struct superblock*) kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
-    dir->sb->fsid = FSID_TMPFS;
-    dir->sb->dev = dev;
-    dir->sb->root = dir;
+    dir->sb->fsid  = FSID_TMPFS;
+    dir->sb->dev   = dev;
+    dir->sb->root  = dir;
     dir->sb->flags = flags;
 
-    dir->sb->fsinfo = (void*) kcalloc(1, sizeof(tmpfs_t), GFP_USER);
+    dir->sb->fsinfo = (void *)kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
 
     dir->sb->st.f_bsize   = 1;
@@ -103,9 +102,9 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
 
 
     struct cache_ops ops;
-    ops.fetch   = (cache_fetch_handler_t) tmpfs_cache_fetch;
-    ops.commit  = (cache_commit_handler_t) tmpfs_cache_commit;
-    ops.release = (cache_release_handler_t) tmpfs_cache_release;
+    ops.fetch   = (cache_fetch_handler_t)tmpfs_cache_fetch;
+    ops.commit  = (cache_commit_handler_t)tmpfs_cache_commit;
+    ops.release = (cache_release_handler_t)tmpfs_cache_release;
 
     cache_init(&dir->sb->cache, &ops, SIZE_MAX, dir->sb->fsinfo);
 
@@ -113,5 +112,4 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char * args) {
     dir->sb->ino = dir->ino;
 
     return 0;
-    
 }
