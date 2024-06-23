@@ -34,8 +34,8 @@
 typedef struct list_head list_head;
 typedef struct list_element list_element;
 
-#include <stdlib.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 /* This file, along with list.c, implements a simple generic linked list with
@@ -52,7 +52,7 @@ typedef struct list_element list_element;
  *
  *  - The macros are intuitive and do not require any unnecessary parameters.
  *    In particular, the list type does not need to be passed to each operation.
- *   
+ *
  *  - The list macros expand to the head of a for loop, so the syntax for using
  *    them isn't buggered up.  This means that one can use break and continue
  *    normally.
@@ -81,12 +81,12 @@ typedef struct list_element list_element;
  *   list_elem_remove(elem)           Remove element elem
  *
  * Loops:
- * 
+ *
  *   list_each(list, elem) { ... }
  *
  *     Loops through each list element, front to back.  elem will be declared
  *     and set to the actual value of each element (not a pointer or iterator)
- *                      
+ *
  *   list_each_r(list, elem) { ... }
  *
  *     Loops through each list element, back to front.  elem will be declared
@@ -96,65 +96,52 @@ typedef struct list_element list_element;
  *
  *     Loops through each list element, front to back.  elem will be declared
  *     and set to a pointer to each element
- *                      
+ *
  *   list_each_r_elem(list, elem) { ... }
  *
  *     Loops through each list element, back to front.  elem will be declared
  *     and set to pointer to each element
  */
 
-#define list_type(type) \
-   type *
+#define list_type(type) type*
 
-#define list(type, name) \
-   list_type (type) name 
+#define list(type, name) list_type(type) name
 
-#define list_push(list, value) do {                                           \
-   typeof (*list) _v_copy = (typeof (*list)) value;                           \
-   _list_push ((list_head **) &list, sizeof (_v_copy), &_v_copy);             \
-} while (0)                                                                   \
+#define list_push(list, value)                                     \
+    do {                                                           \
+        typeof(*list) _v_copy = (typeof(*list))value;              \
+        _list_push((list_head**)&list, sizeof(_v_copy), &_v_copy); \
+    } while (0)
 
-#define list_push_front(list, value) do {                                     \
-   typeof (*list) _v_copy = (typeof (*list)) value;                           \
-   _list_push_front ((list_head **) &list, sizeof (_v_copy), &_v_copy);       \
-} while (0)                                                                   \
+#define list_push_front(list, value)                                     \
+    do {                                                                 \
+        typeof(*list) _v_copy = (typeof(*list))value;                    \
+        _list_push_front((list_head**)&list, sizeof(_v_copy), &_v_copy); \
+    } while (0)
 
-#define list_elem(list)                                                       \
-   typeof (list)
+#define list_elem(list) typeof(list)
 
-#define list_elem_front(list)                                                 \
-   ((typeof (list)) _list_front ((list_head *) list))                         \
+#define list_elem_front(list) ((typeof(list))_list_front((list_head*)list))
 
-#define list_elem_back(list)                                                  \
-   ((typeof (list)) _list_back ((list_head *) list))                          \
+#define list_elem_back(list) ((typeof(list))_list_back((list_head*)list))
 
-#define list_elem_next(elem)                                                  \
-   ((typeof (elem)) _list_next ((list_element *) elem))                       \
+#define list_elem_next(elem) ((typeof(elem))_list_next((list_element*)elem))
 
-#define list_elem_prev(elem)                                                  \
-   ((typeof (elem)) _list_prev ((list_element *) elem))                       \
+#define list_elem_prev(elem) ((typeof(elem))_list_prev((list_element*)elem))
 
-#define list_each_elem(list, e)                                               \
-   for (typeof (list) e = list_elem_front (list),                             \
-         e##_next = list_elem_next (e); e;                                    \
-          e = e##_next, e##_next = list_elem_next (e))                        \
+#define list_each_elem(list, e) for (typeof(list) e = list_elem_front(list), e##_next = list_elem_next(e); e; e = e##_next, e##_next = list_elem_next(e))
 
-#define list_each_r_elem(list, e)                                             \
-   for (typeof (list) e = list_elem_back (list),                              \
-         e##_prev = list_elem_prev (e); e;                                    \
-          e = e##_prev, e##_prev = list_elem_prev (e))                        \
+#define list_each_r_elem(list, e) for (typeof(list) e = list_elem_back(list), e##_prev = list_elem_prev(e); e; e = e##_prev, e##_prev = list_elem_prev(e))
 
-#define list_each(list, e)                                                    \
-   for (typeof (*list) e, * _##e = list_elem_front (list),                    \
-        * _##e##_next = list_elem_next (_##e); _##e;                          \
-          _##e = _##e##_next, _##e##_next = list_elem_next (_##e))            \
-             if (!memcpy (&e, _##e, sizeof (e))) {} else                      \
+#define list_each(list, e)                                                                                                                                  \
+    for (typeof(*list) e, *_##e = list_elem_front(list), *_##e##_next = list_elem_next(_##e); _##e; _##e = _##e##_next, _##e##_next = list_elem_next(_##e)) \
+        if (!memcpy(&e, _##e, sizeof(e))) {                                                                                                                 \
+        } else
 
-#define list_each_r(list, e)                                                  \
-   for (typeof (*list) e, * _##e = list_elem_back (list),                     \
-        * _##e##_prev = list_elem_prev (_##e); _##e;                          \
-          _##e = _##e##_prev, _##e##_prev = list_elem_prev (_##e))            \
-             if (!memcpy (&e, _##e, sizeof (e))) {} else                      \
+#define list_each_r(list, e)                                                                                                                               \
+    for (typeof(*list) e, *_##e = list_elem_back(list), *_##e##_prev = list_elem_prev(_##e); _##e; _##e = _##e##_prev, _##e##_prev = list_elem_prev(_##e)) \
+        if (!memcpy(&e, _##e, sizeof(e))) {                                                                                                                \
+        } else
 
 /* The only macro that has to use a statement expression.  As list_find has to
  * be able to create an l-value from value but also has to work as an
@@ -165,88 +152,78 @@ typedef struct list_element list_element;
  */
 
 #ifndef _MSC_VER
-   #define list_find(list, value) ({                                          \
-      list_elem (list) elem = list_elem_front (list);                         \
-      for (; elem; elem = list_elem_next (elem))                              \
-         if (*elem == value)                                                  \
-            break;                                                            \
-      elem;                                                                   \
-   })                                                                           
+    #define list_find(list, value)                        \
+        ({                                                \
+            list_elem(list) elem = list_elem_front(list); \
+            for (; elem; elem = list_elem_next(elem))     \
+                if (*elem == value)                       \
+                    break;                                \
+            elem;                                         \
+        })
 #else
-   template <class T> inline T * list_find (T * list, T value)
-   {
-      list_elem (list) elem = list_elem_front (list);
-      for (; elem; elem = list_elem_next (elem))    
-         if (*elem == value)                       
+template <class T> inline T* list_find(T* list, T value) {
+    list_elem(list) elem = list_elem_front(list);
+    for (; elem; elem = list_elem_next(elem))
+        if (*elem == value)
             return elem;
-      return 0;
-   }
+    return 0;
+}
 #endif
 
 #ifndef _MSC_VER
-   #define list_get_at(list, index) ({                                        \
-      list_elem (list) elem = list_elem_front (list);                         \
-      for (int i = 0; i <= index && elem; i++, elem = list_elem_next (elem))  \
-         if (i == index)                                                      \
-            break;                                                            \
-      *elem;                                                                   \
-   })
+    #define list_get_at(list, index)                                              \
+        ({                                                                        \
+            list_elem(list) elem = list_elem_front(list);                         \
+            for (int i = 0; i <= index && elem; i++, elem = list_elem_next(elem)) \
+                if (i == index)                                                   \
+                    break;                                                        \
+            *elem;                                                                \
+        })
 
-   #define list_remove_at(list, index) {                                      \
-      list_elem (list) elem = list_elem_front (list);                         \
-      for (int i = 0; i <= index && elem; i++, elem = list_elem_next (elem))  \
-         if (i == index)                                                      \
-            _list_remove ((list_element *) elem);                             \
-                                                                              \
-   }
+    #define list_remove_at(list, index)                                           \
+        {                                                                         \
+            list_elem(list) elem = list_elem_front(list);                         \
+            for (int i = 0; i <= index && elem; i++, elem = list_elem_next(elem)) \
+                if (i == index)                                                   \
+                    _list_remove((list_element*)elem);                            \
+        }
 #endif
 
-#define list_remove(list, value)                                              \
-   list_elem_remove (list_find (list, value))                                 \
+#define list_remove(list, value) list_elem_remove(list_find(list, value))
 
-#define list_elem_remove(elem)                                                \
-   _list_remove ((list_element *) elem)                                       \
+#define list_elem_remove(elem) _list_remove((list_element*)elem)
 
-#define list_length(list)                                                     \
-   _list_length ((list_head *) (list))                                        \
+#define list_length(list) _list_length((list_head*)(list))
 
-#define list_clear(list)                                                      \
-   _list_clear ((list_head **) &(list), sizeof (*list))                       \
+#define list_clear(list) _list_clear((list_head**)&(list), sizeof(*list))
 
-#define list_front(list)                                                      \
-   (*list_elem_front (list))                                                  \
+#define list_front(list) (*list_elem_front(list))
 
-#define list_back(list)                                                       \
-   (*list_elem_back (list))                                                   \
+#define list_back(list) (*list_elem_back(list))
 
-#define list_pop_front(list)                                                  \
-   list_elem_remove (list_elem_front (list))                                  \
+#define list_pop_front(list) list_elem_remove(list_elem_front(list))
 
-#define list_pop_back(list)                                                   \
-   list_elem_remove (list_elem_back (list))                                   \
+#define list_pop_back(list) list_elem_remove(list_elem_back(list))
 
-#define list_printf(list, fmt) {                                              \
-   list_each(list, v)                                                         \
-      printf(fmt, v);                                                         \
+#define list_printf(list, fmt) \
+    { list_each(list, v) printf(fmt, v); }
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void _list_push(list_head**, size_t value_size, void* value);
+void _list_push_front(list_head**, size_t value_size, void* value);
+list_element* _list_front(list_head*);
+list_element* _list_back(list_head*);
+list_element* _list_next(list_element*);
+list_element* _list_prev(list_element*);
+size_t _list_length(list_head*);
+void _list_remove(list_element*);
+void _list_clear(list_head**, size_t value_size);
+
+#ifdef __cplusplus
 }
-
-#ifdef __cplusplus
-   extern "C"
-   {
-#endif
-
-void          _list_push        (list_head **, size_t value_size, void * value);
-void          _list_push_front  (list_head **, size_t value_size, void * value);
-list_element* _list_front       (list_head *);
-list_element* _list_back        (list_head *);
-list_element* _list_next        (list_element *);
-list_element* _list_prev        (list_element *);
-size_t        _list_length      (list_head *);
-void          _list_remove      (list_element *);
-void          _list_clear       (list_head **, size_t value_size);
-
-#ifdef __cplusplus
-   }
 #endif
 
 #endif

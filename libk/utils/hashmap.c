@@ -7,9 +7,9 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/memory.h>
 #include <aplus/errno.h>
 #include <aplus/ipc.h>
+#include <aplus/memory.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -18,17 +18,17 @@
 
 
 /* Table sizes must be powers of 2 */
-#define HASHMAP_SIZE_MIN                32
-#define HASHMAP_SIZE_DEFAULT            128
-#define HASHMAP_SIZE_MOD(map, val)      ((val) & ((map)->table_size - 1))
+#define HASHMAP_SIZE_MIN           32
+#define HASHMAP_SIZE_DEFAULT       128
+#define HASHMAP_SIZE_MOD(map, val) ((val) & ((map)->table_size - 1))
 
 /* Return the next linear probe index */
-#define HASHMAP_PROBE_NEXT(map, index)  HASHMAP_SIZE_MOD(map, (index) + 1)
+#define HASHMAP_PROBE_NEXT(map, index) HASHMAP_SIZE_MOD(map, (index) + 1)
 
 
 struct hashmap_entry {
-    void *key;
-    void *data;
+        void* key;
+        void* data;
 };
 
 
@@ -36,8 +36,7 @@ struct hashmap_entry {
  * Calculate the optimal table size, given the specified max number
  * of elements.
  */
-static inline size_t hashmap_calc_table_size(const struct hashmap_base *hb, size_t size)
-{
+static inline size_t hashmap_calc_table_size(const struct hashmap_base* hb, size_t size) {
     size_t table_size;
 
     /* Enforce a maximum 0.75 load factor */
@@ -57,8 +56,7 @@ static inline size_t hashmap_calc_table_size(const struct hashmap_base *hb, size
 /*
  * Get a valid hash table index from a key.
  */
-static inline size_t hashmap_calc_index(const struct hashmap_base *hb, const void *key)
-{
+static inline size_t hashmap_calc_index(const struct hashmap_base* hb, const void* key) {
     size_t index = hb->hash(key);
 
     /*
@@ -75,13 +73,11 @@ static inline size_t hashmap_calc_index(const struct hashmap_base *hb, const voi
  * Return the next populated entry, starting with the specified one.
  * Returns NULL if there are no more valid entries.
  */
-static struct hashmap_entry *hashmap_entry_get_populated(const struct hashmap_base *hb,
-        const struct hashmap_entry *entry)
-{
+static struct hashmap_entry* hashmap_entry_get_populated(const struct hashmap_base* hb, const struct hashmap_entry* entry) {
     if (hb->size > 0) {
         for (; entry < &hb->table[hb->table_size]; ++entry) {
             if (entry->key) {
-                return (struct hashmap_entry *)entry;
+                return (struct hashmap_entry*)entry;
             }
         }
     }
@@ -92,12 +88,10 @@ static struct hashmap_entry *hashmap_entry_get_populated(const struct hashmap_ba
  * Find the hashmap entry with the specified key, or an empty slot.
  * Returns NULL if the entire table has been searched without finding a match.
  */
-static struct hashmap_entry *hashmap_entry_find(const struct hashmap_base *hb,
-    const void *key, bool find_empty)
-{
+static struct hashmap_entry* hashmap_entry_find(const struct hashmap_base* hb, const void* key, bool find_empty) {
     size_t i;
     size_t index;
-    struct hashmap_entry *entry;
+    struct hashmap_entry* entry;
 
     index = hashmap_calc_index(hb, key);
 
@@ -123,13 +117,12 @@ static struct hashmap_entry *hashmap_entry_find(const struct hashmap_base *hb,
  * keep the chain contiguous. This is a required step for hash maps
  * using linear probing.
  */
-static void hashmap_entry_remove(struct hashmap_base *hb, struct hashmap_entry *removed_entry)
-{
+static void hashmap_entry_remove(struct hashmap_base* hb, struct hashmap_entry* removed_entry) {
     size_t i;
     size_t index;
     size_t entry_index;
     size_t removed_index = (removed_entry - hb->table);
-    struct hashmap_entry *entry;
+    struct hashmap_entry* entry;
 
     /* Free the key */
     if (hb->key_free) {
@@ -147,11 +140,10 @@ static void hashmap_entry_remove(struct hashmap_base *hb, struct hashmap_entry *
         }
         entry_index = hashmap_calc_index(hb, entry->key);
         /* Shift in entries in the chain with an index at or before the removed slot */
-        if (HASHMAP_SIZE_MOD(hb, index - entry_index) >
-                HASHMAP_SIZE_MOD(hb, removed_index - entry_index)) {
+        if (HASHMAP_SIZE_MOD(hb, index - entry_index) > HASHMAP_SIZE_MOD(hb, removed_index - entry_index)) {
             *removed_entry = *entry;
-            removed_index = index;
-            removed_entry = entry;
+            removed_index  = index;
+            removed_entry  = entry;
         }
         index = HASHMAP_PROBE_NEXT(hb, index);
     }
@@ -164,25 +156,24 @@ static void hashmap_entry_remove(struct hashmap_base *hb, struct hashmap_entry *
  * new_size MUST be a power of 2.
  * Returns 0 on success and -errno on allocation or hash function failure.
  */
-static int hashmap_rehash(struct hashmap_base *hb, size_t table_size)
-{
+static int hashmap_rehash(struct hashmap_base* hb, size_t table_size) {
     size_t old_size;
-    struct hashmap_entry *old_table;
-    struct hashmap_entry *new_table;
-    struct hashmap_entry *entry;
-    struct hashmap_entry *new_entry;
+    struct hashmap_entry* old_table;
+    struct hashmap_entry* new_table;
+    struct hashmap_entry* entry;
+    struct hashmap_entry* new_entry;
 
     DEBUG_ASSERT((table_size & (table_size - 1)) == 0);
     DEBUG_ASSERT(table_size >= hb->size);
 
-    new_table = (struct hashmap_entry *)kcalloc(table_size, sizeof(struct hashmap_entry), GFP_KERNEL);
+    new_table = (struct hashmap_entry*)kcalloc(table_size, sizeof(struct hashmap_entry), GFP_KERNEL);
     if (!new_table) {
         return -ENOMEM;
     }
-    old_size = hb->table_size;
-    old_table = hb->table;
+    old_size       = hb->table_size;
+    old_table      = hb->table;
     hb->table_size = table_size;
-    hb->table = new_table;
+    hb->table      = new_table;
 
     /* Rehash */
     for (entry = old_table; entry < &old_table[old_size]; ++entry) {
@@ -198,7 +189,7 @@ static int hashmap_rehash(struct hashmap_base *hb, size_t table_size)
     }
 
 
-    if(likely(old_table))
+    if (likely(old_table))
         kfree(old_table);
 
     return 0;
@@ -207,9 +198,8 @@ static int hashmap_rehash(struct hashmap_base *hb, size_t table_size)
 /*
  * Iterate through all entries and free all keys.
  */
-static void hashmap_free_keys(struct hashmap_base *hb)
-{
-    struct hashmap_entry *entry;
+static void hashmap_free_keys(struct hashmap_base* hb) {
+    struct hashmap_entry* entry;
 
     if (!hb->key_free || hb->size == 0) {
         return;
@@ -229,27 +219,23 @@ static void hashmap_free_keys(struct hashmap_base *hb)
  *
  * compare_func should return 0 if the keys match, and non-zero otherwise.
  */
-void hashmap_base_init(struct hashmap_base *hb,
-        size_t (*hash_func)(const void *), int (*compare_func)(const void *, const void *))
-{
+void hashmap_base_init(struct hashmap_base* hb, size_t (*hash_func)(const void*), int (*compare_func)(const void*, const void*)) {
     DEBUG_ASSERT(hash_func != NULL);
     DEBUG_ASSERT(compare_func != NULL);
 
     memset(hb, 0, sizeof(*hb));
 
     hb->table_size_init = HASHMAP_SIZE_DEFAULT;
-    hb->hash = hash_func;
-    hb->compare = compare_func;
+    hb->hash            = hash_func;
+    hb->compare         = compare_func;
 
     spinlock_init(&hb->lock);
-
 }
 
 /*
  * Free the hashmap and all associated memory.
  */
-void hashmap_base_cleanup(struct hashmap_base *hb)
-{
+void hashmap_base_cleanup(struct hashmap_base* hb) {
     if (!hb) {
         return;
     }
@@ -264,11 +250,8 @@ void hashmap_base_cleanup(struct hashmap_base *hb)
 /*
  * Enable internal memory management of hash keys.
  */
-void hashmap_base_set_key_alloc_funcs(struct hashmap_base *hb,
-    void *(*key_dup_func)(const void *),
-    void (*key_free_func)(void *))
-{
-    hb->key_dup = key_dup_func;
+void hashmap_base_set_key_alloc_funcs(struct hashmap_base* hb, void* (*key_dup_func)(const void*), void (*key_free_func)(void*)) {
+    hb->key_dup  = key_dup_func;
     hb->key_free = key_free_func;
 }
 
@@ -277,8 +260,7 @@ void hashmap_base_set_key_alloc_funcs(struct hashmap_base *hb,
  * required to fit the specified number of entries.
  * Returns 0 on success, or -errno on failure.
  */
-int hashmap_base_reserve(struct hashmap_base *hb, size_t capacity)
-{
+int hashmap_base_reserve(struct hashmap_base* hb, size_t capacity) {
     size_t old_size_init;
     int r = 0;
 
@@ -303,9 +285,8 @@ int hashmap_base_reserve(struct hashmap_base *hb, size_t capacity)
  * already exists -EEXIST is returned.
  * Returns 0 on success, or -errno on failure.
  */
-int hashmap_base_put(struct hashmap_base *hb, const void *key, void *data)
-{
-    struct hashmap_entry *entry;
+int hashmap_base_put(struct hashmap_base* hb, const void* key, void* data) {
+    struct hashmap_entry* entry;
     size_t table_size;
     int r = 0;
 
@@ -345,7 +326,7 @@ int hashmap_base_put(struct hashmap_base *hb, const void *key, void *data)
             return -ENOMEM;
         }
     } else {
-        entry->key = (void *)key;
+        entry->key = (void*)key;
     }
     entry->data = data;
     ++hb->size;
@@ -355,9 +336,8 @@ int hashmap_base_put(struct hashmap_base *hb, const void *key, void *data)
 /*
  * Return the data pointer, or NULL if no entry exists.
  */
-void *hashmap_base_get(const struct hashmap_base *hb, const void *key)
-{
-    struct hashmap_entry *entry;
+void* hashmap_base_get(const struct hashmap_base* hb, const void* key) {
+    struct hashmap_entry* entry;
 
     if (!key) {
         return NULL;
@@ -374,10 +354,9 @@ void *hashmap_base_get(const struct hashmap_base *hb, const void *key)
  * Remove an entry with the specified key from the map.
  * Returns the data pointer, or NULL, if no entry was found.
  */
-void *hashmap_base_remove(struct hashmap_base *hb, const void *key)
-{
-    struct hashmap_entry *entry;
-    void *data;
+void* hashmap_base_remove(struct hashmap_base* hb, const void* key) {
+    struct hashmap_entry* entry;
+    void* data;
 
     if (!key) {
         return NULL;
@@ -396,8 +375,7 @@ void *hashmap_base_remove(struct hashmap_base *hb, const void *key)
 /*
  * Remove all entries.
  */
-void hashmap_base_clear(struct hashmap_base *hb)
-{
+void hashmap_base_clear(struct hashmap_base* hb) {
     hashmap_free_keys(hb);
     hb->size = 0;
     memset(hb->table, 0, sizeof(struct hashmap_entry) * hb->table_size);
@@ -406,16 +384,15 @@ void hashmap_base_clear(struct hashmap_base *hb)
 /*
  * Remove all entries and reset the hash table to its initial size.
  */
-void hashmap_base_reset(struct hashmap_base *hb)
-{
-    struct hashmap_entry *new_table;
+void hashmap_base_reset(struct hashmap_base* hb) {
+    struct hashmap_entry* new_table;
 
     hashmap_free_keys(hb);
     hb->size = 0;
     if (hb->table_size != hb->table_size_init) {
-        new_table = (struct hashmap_entry*) krealloc(hb->table, sizeof(struct hashmap_entry) * hb->table_size_init, GFP_KERNEL);
+        new_table = (struct hashmap_entry*)krealloc(hb->table, sizeof(struct hashmap_entry) * hb->table_size_init, GFP_KERNEL);
         if (new_table) {
-            hb->table = new_table;
+            hb->table      = new_table;
             hb->table_size = hb->table_size_init;
         }
     }
@@ -428,9 +405,7 @@ void hashmap_base_reset(struct hashmap_base *hb)
  * Hashmap iterators are INVALID after a put or remove operation is performed.
  * hashmap_iter_remove() allows safe removal during iteration.
  */
-struct hashmap_entry *hashmap_base_iter(const struct hashmap_base *hb,
-        const struct hashmap_entry *pos)
-{
+struct hashmap_entry* hashmap_base_iter(const struct hashmap_base* hb, const struct hashmap_entry* pos) {
     if (!pos) {
         pos = hb->table;
     }
@@ -440,8 +415,7 @@ struct hashmap_entry *hashmap_base_iter(const struct hashmap_base *hb,
 /*
  * Return true if an iterator is valid and safe to use.
  */
-bool hashmap_base_iter_valid(const struct hashmap_base *hb, const struct hashmap_entry *iter)
-{
+bool hashmap_base_iter_valid(const struct hashmap_base* hb, const struct hashmap_entry* iter) {
     return hb && iter && iter->key && iter >= hb->table && iter < &hb->table[hb->table_size];
 }
 
@@ -449,8 +423,7 @@ bool hashmap_base_iter_valid(const struct hashmap_base *hb, const struct hashmap
  * Advance an iterator to the next hashmap entry.
  * Returns false if there are no more entries.
  */
-bool hashmap_base_iter_next(const struct hashmap_base *hb, struct hashmap_entry **iter)
-{
+bool hashmap_base_iter_next(const struct hashmap_base* hb, struct hashmap_entry** iter) {
     if (!*iter) {
         return false;
     }
@@ -462,8 +435,7 @@ bool hashmap_base_iter_next(const struct hashmap_base *hb, struct hashmap_entry 
  * iterator to the next entry.
  * Returns true if the iterator is valid after the operation.
  */
-bool hashmap_base_iter_remove(struct hashmap_base *hb, struct hashmap_entry **iter)
-{
+bool hashmap_base_iter_remove(struct hashmap_base* hb, struct hashmap_entry** iter) {
     if (!*iter) {
         return false;
     }
@@ -477,19 +449,17 @@ bool hashmap_base_iter_remove(struct hashmap_base *hb, struct hashmap_entry **it
 /*
  * Return the key of the entry pointed to by the iterator.
  */
-const void *hashmap_base_iter_get_key(const struct hashmap_entry *iter)
-{
+const void* hashmap_base_iter_get_key(const struct hashmap_entry* iter) {
     if (!iter) {
         return NULL;
     }
-    return (const void *)iter->key;
+    return (const void*)iter->key;
 }
 
 /*
  * Return the data of the entry pointed to by the iterator.
  */
-void *hashmap_base_iter_get_data(const struct hashmap_entry *iter)
-{
+void* hashmap_base_iter_get_data(const struct hashmap_entry* iter) {
     if (!iter) {
         return NULL;
     }
@@ -499,8 +469,7 @@ void *hashmap_base_iter_get_data(const struct hashmap_entry *iter)
 /*
  * Set the data pointer of the entry pointed to by the iterator.
  */
-int hashmap_base_iter_set_data(struct hashmap_entry *iter, void *data)
-{
+int hashmap_base_iter_set_data(struct hashmap_entry* iter, void* data) {
     if (!iter) {
         return -EFAULT;
     }
@@ -528,11 +497,10 @@ int hashmap_base_iter_set_data(struct hashmap_entry *iter, void *data)
  * usage, there may be a few collisions, depending on the hash function and
  * load factor.
  */
-size_t hashmap_base_collisions(const struct hashmap_base *hb, const void *key)
-{
+size_t hashmap_base_collisions(const struct hashmap_base* hb, const void* key) {
     size_t i;
     size_t index;
-    struct hashmap_entry *entry;
+    struct hashmap_entry* entry;
 
     if (!key) {
         return 0;
@@ -608,10 +576,9 @@ size_t hashmap_base_collisions(const struct hashmap_base *hb, const void *key)
  * This is an implementation of the well-documented Jenkins one-at-a-time
  * hash function. See https://en.wikipedia.org/wiki/Jenkins_hash_function
  */
-size_t hashmap_hash_default(const void *data, size_t len)
-{
-    const uint8_t *byte = (const uint8_t *)data;
-    size_t hash = 0;
+size_t hashmap_hash_default(const void* data, size_t len) {
+    const uint8_t* byte = (const uint8_t*)data;
+    size_t hash         = 0;
 
     for (size_t i = 0; i < len; ++i) {
         hash += *byte++;
@@ -630,8 +597,7 @@ size_t hashmap_hash_default(const void *data, size_t len)
  * This is an implementation of the well-documented Jenkins one-at-a-time
  * hash function. See https://en.wikipedia.org/wiki/Jenkins_hash_function
  */
-size_t hashmap_hash_string(const char *key)
-{
+size_t hashmap_hash_string(const char* key) {
     size_t hash = 0;
 
     for (; *key; ++key) {
@@ -648,8 +614,7 @@ size_t hashmap_hash_string(const char *key)
 /*
  * Case insensitive hash function for string keys.
  */
-size_t hashmap_hash_string_i(const char *key)
-{
+size_t hashmap_hash_string_i(const char* key) {
     size_t hash = 0;
 
     for (; *key; ++key) {

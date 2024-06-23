@@ -1,43 +1,43 @@
-/*                                                                      
- * GPL3 License                                                         
- *                                                                      
- * Author(s):                                                              
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+/*
+ * GPL3 License
+ *
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <stdint.h>
 #include <string.h>
 
 #include <aplus.h>
-#include <aplus/multiboot.h>
 #include <aplus/debug.h>
-#include <aplus/memory.h>
 #include <aplus/elf.h>
 #include <aplus/hal.h>
+#include <aplus/memory.h>
+#include <aplus/multiboot.h>
 
-#include <arch/x86/cpu.h>
-#include <arch/x86/fpu.h>
-#include <arch/x86/asm.h>
 #include <arch/x86/acpi.h>
 #include <arch/x86/apic.h>
+#include <arch/x86/asm.h>
+#include <arch/x86/cpu.h>
+#include <arch/x86/fpu.h>
 #include <arch/x86/intr.h>
 
 
@@ -45,11 +45,11 @@
 /*!
  * @brief bmain().
  *        Boot Entrypoint.
- * 
+ *
  * Initialize Hardware and boot services.
  */
 void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
-    
+
     arch_debug_init();
 
     DEBUG_ASSERT(magic == MULTIBOOT2_BOOTLOADER_MAGIC);
@@ -81,57 +81,54 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
 
-
     //* Initialize Bootstrap CPU
     arch_cpu_init(SMP_CPU_BOOTSTRAP_ID);
 
 
     do {
-        
-        if(btags->type == MULTIBOOT_TAG_TYPE_END) {
+
+        if (btags->type == MULTIBOOT_TAG_TYPE_END) {
             DEBUG_ASSERT(btags->size == 8);
             break;
         }
 
-        switch(btags->type) {
+        switch (btags->type) {
 
             case MULTIBOOT_TAG_TYPE_CMDLINE:
-                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*) btags)->string, CONFIG_BUFSIZ);
+                strncpy(&core->boot.cmdline[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_BOOT_LOADER_NAME:
-                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*) btags)->string, CONFIG_BUFSIZ);
+                strncpy(&core->boot.bootloader[0], ((struct multiboot_tag_string*)btags)->string, CONFIG_BUFSIZ);
                 break;
 
             case MULTIBOOT_TAG_TYPE_MODULE:
 
-                {
+            {
 
-                    int i = core->modules.count++;
+                int i = core->modules.count++;
 
-                    core->modules.ko[i].ptr       = ((struct multiboot_tag_module*) btags)->mod_start;
-                    core->modules.ko[i].size      = ((struct multiboot_tag_module*) btags)->mod_end -
-                                                    ((struct multiboot_tag_module*) btags)->mod_start;
+                core->modules.ko[i].ptr  = ((struct multiboot_tag_module*)btags)->mod_start;
+                core->modules.ko[i].size = ((struct multiboot_tag_module*)btags)->mod_end - ((struct multiboot_tag_module*)btags)->mod_start;
 
 
-                    if(strlen(((struct multiboot_tag_module*) btags)->cmdline) > 0) {
-                    
-                        strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*) btags)->cmdline, CONFIG_BUFSIZ);
-                    
-                    } else {
-                    
-                        memset(&core->modules.ko[i].cmdline[0], 0, CONFIG_BUFSIZ);
-                    
-                    }
+                if (strlen(((struct multiboot_tag_module*)btags)->cmdline) > 0) {
 
+                    strncpy(&core->modules.ko[i].cmdline[0], ((struct multiboot_tag_module*)btags)->cmdline, CONFIG_BUFSIZ);
+
+                } else {
+
+                    memset(&core->modules.ko[i].cmdline[0], 0, CONFIG_BUFSIZ);
                 }
-                
-                break;
+
+            }
+
+            break;
 
             case MULTIBOOT_TAG_TYPE_BASIC_MEMINFO:
 
-                core->memory.phys_upper = ((struct multiboot_tag_basic_meminfo*) btags)->mem_upper;
-                core->memory.phys_lower = ((struct multiboot_tag_basic_meminfo*) btags)->mem_lower;
+                core->memory.phys_upper = ((struct multiboot_tag_basic_meminfo*)btags)->mem_upper;
+                core->memory.phys_lower = ((struct multiboot_tag_basic_meminfo*)btags)->mem_lower;
                 break;
 
             case MULTIBOOT_TAG_TYPE_BOOTDEV:
@@ -139,56 +136,55 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             case MULTIBOOT_TAG_TYPE_MMAP:
 
-                {
+            {
 
-                    struct multiboot_tag_mmap* mmap = (struct multiboot_tag_mmap*) btags;
+                struct multiboot_tag_mmap* mmap = (struct multiboot_tag_mmap*)btags;
 
-                    for(size_t i = 0; i < (mmap->size - 16) / mmap->entry_size; i++) {
+                for (size_t i = 0; i < (mmap->size - 16) / mmap->entry_size; i++) {
 
-                        core->mmap.ptr[core->mmap.count].address = mmap->entries[i].addr;
-                        core->mmap.ptr[core->mmap.count].length  = mmap->entries[i].len;
-                        core->mmap.ptr[core->mmap.count].type    = mmap->entries[i].type;
+                    core->mmap.ptr[core->mmap.count].address = mmap->entries[i].addr;
+                    core->mmap.ptr[core->mmap.count].length  = mmap->entries[i].len;
+                    core->mmap.ptr[core->mmap.count].type    = mmap->entries[i].type;
 
-                        core->mmap.count += 1;
-
-                    }
-
+                    core->mmap.count += 1;
                 }
 
-                break;
+            }
+
+            break;
 
             case MULTIBOOT_TAG_TYPE_VBE:
                 break;
 
             case MULTIBOOT_TAG_TYPE_FRAMEBUFFER:
 
-                if(((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_type != MULTIBOOT_FRAMEBUFFER_TYPE_RGB)
+                if (((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_type != MULTIBOOT_FRAMEBUFFER_TYPE_RGB)
                     break;
 
-                core->framebuffer.width   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_width;
-                core->framebuffer.height  = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_height;
-                core->framebuffer.depth   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_bpp;
-                core->framebuffer.pitch   = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_pitch;
-                core->framebuffer.address = ((struct multiboot_tag_framebuffer*) btags)->common.framebuffer_addr;
+                core->framebuffer.width   = ((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_width;
+                core->framebuffer.height  = ((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_height;
+                core->framebuffer.depth   = ((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_bpp;
+                core->framebuffer.pitch   = ((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_pitch;
+                core->framebuffer.address = ((struct multiboot_tag_framebuffer*)btags)->common.framebuffer_addr;
 
-                core->framebuffer.red_field_position   = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_red_field_position;
-                core->framebuffer.red_mask_size        = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_red_mask_size;
-                core->framebuffer.green_field_position = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_green_field_position;
-                core->framebuffer.green_mask_size      = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_green_mask_size;
-                core->framebuffer.blue_field_position  = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_blue_field_position;
-                core->framebuffer.blue_mask_size       = ((struct multiboot_tag_framebuffer*) btags)->framebuffer_blue_mask_size;
-            
+                core->framebuffer.red_field_position   = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_red_field_position;
+                core->framebuffer.red_mask_size        = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_red_mask_size;
+                core->framebuffer.green_field_position = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_green_field_position;
+                core->framebuffer.green_mask_size      = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_green_mask_size;
+                core->framebuffer.blue_field_position  = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_blue_field_position;
+                core->framebuffer.blue_mask_size       = ((struct multiboot_tag_framebuffer*)btags)->framebuffer_blue_mask_size;
+
                 break;
 
             case MULTIBOOT_TAG_TYPE_ELF_SECTIONS:
 
-                DEBUG_ASSERT(sizeof(core->exe.sections) >= ((struct multiboot_tag_elf_sections*) btags)->num * ((struct multiboot_tag_elf_sections*) btags)->entsize);
+                DEBUG_ASSERT(sizeof(core->exe.sections) >= ((struct multiboot_tag_elf_sections*)btags)->num * ((struct multiboot_tag_elf_sections*)btags)->entsize);
 
-                core->exe.sh_num        = ((struct multiboot_tag_elf_sections*) btags)->num;
-                core->exe.sh_entsize    = ((struct multiboot_tag_elf_sections*) btags)->entsize;
-                core->exe.sh_shndx      = ((struct multiboot_tag_elf_sections*) btags)->shndx;
+                core->exe.sh_num     = ((struct multiboot_tag_elf_sections*)btags)->num;
+                core->exe.sh_entsize = ((struct multiboot_tag_elf_sections*)btags)->entsize;
+                core->exe.sh_shndx   = ((struct multiboot_tag_elf_sections*)btags)->shndx;
 
-                memcpy(&core->exe.sections[0], &((struct multiboot_tag_elf_sections*) btags)->sections[0], core->exe.sh_entsize * core->exe.sh_num);
+                memcpy(&core->exe.sections[0], &((struct multiboot_tag_elf_sections*)btags)->sections[0], core->exe.sh_entsize * core->exe.sh_num);
                 break;
 
             case MULTIBOOT_TAG_TYPE_APM:
@@ -200,24 +196,24 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
             case MULTIBOOT_TAG_TYPE_SMBIOS:
                 break;
-            
+
             case MULTIBOOT_TAG_TYPE_ACPI_OLD:
 
-                core->acpi.rsdp_address = (uintptr_t) &((struct multiboot_tag_old_acpi*) btags)->rsdp[0];
-                core->acpi.rsdp_size    = (uintptr_t)  ((struct multiboot_tag_old_acpi*) btags)->size;
+                core->acpi.rsdp_address = (uintptr_t) & ((struct multiboot_tag_old_acpi*)btags)->rsdp[0];
+                core->acpi.rsdp_size    = (uintptr_t)((struct multiboot_tag_old_acpi*)btags)->size;
 
                 break;
 
             case MULTIBOOT_TAG_TYPE_ACPI_NEW:
 
-                core->acpi.rsdp_address = (uintptr_t) &((struct multiboot_tag_new_acpi*) btags)->rsdp[0];
-                core->acpi.rsdp_size    = (uintptr_t)  ((struct multiboot_tag_new_acpi*) btags)->size;
+                core->acpi.rsdp_address = (uintptr_t) & ((struct multiboot_tag_new_acpi*)btags)->rsdp[0];
+                core->acpi.rsdp_size    = (uintptr_t)((struct multiboot_tag_new_acpi*)btags)->size;
 
                 break;
 
             case MULTIBOOT_TAG_TYPE_NETWORK:
                 break;
-            
+
             case MULTIBOOT_TAG_TYPE_EFI_MMAP:
             case MULTIBOOT_TAG_TYPE_EFI_BS:
             case MULTIBOOT_TAG_TYPE_EFI32_IH:
@@ -225,83 +221,74 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
                 break;
 
             case MULTIBOOT_TAG_TYPE_LOAD_BASE_ADDR:
-                core->exe.load_base_address = ((struct multiboot_tag_load_base_addr*) btags)->load_base_addr;
+                core->exe.load_base_address = ((struct multiboot_tag_load_base_addr*)btags)->load_base_addr;
                 break;
 
             default:
                 kpanicf("bmain(): PANIC! invalid MULTIBOOT_TAG_TYPE_*: %d\n", btags->type);
                 break;
-
         }
 
 
-        if(btags->size & 7) {
+        if (btags->size & 7) {
             btags->size = (btags->size & ~7) + 8;
         }
-        
-        btags = (struct multiboot_tag*) ((uintptr_t) btags + btags->size);
-        
 
-    } while(btags);
+        btags = (struct multiboot_tag*)((uintptr_t)btags + btags->size);
 
 
+    } while (btags);
 
 
 
 #if DEBUG_LEVEL_INFO
-    kprintf("boot: %s '%s'\n", core->boot.bootloader, 
-                               core->boot.cmdline);
+    kprintf("boot: %s '%s'\n", core->boot.bootloader, core->boot.cmdline);
 #endif
 
 
 
     //* Get total memory size
-    
-    for(size_t i = 0; i < core->mmap.count; i++) {
 
-        if(core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE) {
+    for (size_t i = 0; i < core->mmap.count; i++) {
 
-            core->memory.phys_upper  = MAX(core->memory.phys_upper * 1024, core->mmap.ptr[i].address + core->mmap.ptr[i].length) / 1024;
+        if (core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE) {
+
+            core->memory.phys_upper = MAX(core->memory.phys_upper * 1024, core->mmap.ptr[i].address + core->mmap.ptr[i].length) / 1024;
             core->memory.phys_upper -= core->memory.phys_lower;
-
         }
-
     }
 
 
     //* Map Modules
 
-    for(size_t i = 0; i < core->modules.count; i++) {
+    for (size_t i = 0; i < core->modules.count; i++) {
 
         core->mmap.ptr[core->mmap.count].address = core->modules.ko[i].ptr;
         core->mmap.ptr[core->mmap.count].length  = core->modules.ko[i].size;
         core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
 
         core->mmap.count += 1;
-
     }
 
 
 
     //* Map ELF Sections
 
-    Elf_Shdr* shdr = (Elf_Shdr*) &core->exe.sections[0];
+    Elf_Shdr* shdr = (Elf_Shdr*)&core->exe.sections[0];
 
-    for(size_t i = 1; i < core->exe.sh_num; i++) {
+    for (size_t i = 1; i < core->exe.sh_num; i++) {
 
-        switch(shdr[i].sh_type) {
+        switch (shdr[i].sh_type) {
 
             case SHT_STRTAB:
             case SHT_SYMTAB:
-            
+
                 core->mmap.ptr[core->mmap.count].address = shdr[i].sh_addr;
                 core->mmap.ptr[core->mmap.count].length  = shdr[i].sh_size;
                 core->mmap.ptr[core->mmap.count].type    = MULTIBOOT_MEMORY_RESERVED;
 
                 core->mmap.count += 1;
-
         }
-
     }
 
 
@@ -332,5 +319,4 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
     //* Initialize APIC
     apic_init();
-
 }
