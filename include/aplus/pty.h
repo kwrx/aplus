@@ -1,26 +1,26 @@
-/*                                                                      
- * Author(s):                                                           
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+/*
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #ifndef _APLUS_PTY_H
 #define _APLUS_PTY_H
 
@@ -28,48 +28,48 @@
 
 
 
-#if defined(KERNEL) || defined(MODULE)
+    #if defined(KERNEL) || defined(MODULE)
 
-#include <aplus.h>
-#include <aplus/debug.h>
-#include <aplus/ipc.h>
-#include <aplus/hal.h>
-#include <aplus/errno.h>
-#include <aplus/utils/ringbuffer.h>
+        #include <aplus.h>
+        #include <aplus/debug.h>
+        #include <aplus/errno.h>
+        #include <aplus/hal.h>
+        #include <aplus/ipc.h>
+        #include <aplus/utils/ringbuffer.h>
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <termios.h>
+        #include <stdbool.h>
+        #include <stdint.h>
+        #include <sys/ioctl.h>
+        #include <sys/types.h>
+        #include <termios.h>
 
 
 typedef struct pty {
 
-    uint64_t index;
+        uint64_t index;
 
-    struct winsize ws;
-    struct termios ios;
+        struct winsize ws;
+        struct termios ios;
 
-    ringbuffer_t r1;
-    ringbuffer_t r2;
+        ringbuffer_t r1;
+        ringbuffer_t r2;
 
-    pid_t m_sid;
-    pid_t m_pid;
-    pid_t s_pgrp;
+        pid_t m_sid;
+        pid_t m_pid;
+        pid_t s_pgrp;
 
-    struct {
-        char* buffer;
-        size_t size;
-        size_t capacity;
-        spinlock_t lock;
-    } input;
+        struct {
+                char* buffer;
+                size_t size;
+                size_t capacity;
+                spinlock_t lock;
+        } input;
 
-    bool locked;
+        bool locked;
 
-    inode_t* ptmx;
+        inode_t* ptmx;
 
-    struct pty* next;
+        struct pty* next;
 
 } pty_t;
 
@@ -90,7 +90,7 @@ void pty_queue_unlock();
 
 __END_DECLS
 
-#endif
+    #endif
 
 #endif
 #endif

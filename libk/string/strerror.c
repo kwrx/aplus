@@ -1,30 +1,30 @@
-/*                                                                      
- * GPL3 License                                                         
- *                                                                      
- * Author(s):                                                              
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
-#include <stdint.h>
+/*
+ * GPL3 License
+ *
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <stdarg.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/types.h>
 
@@ -33,7 +33,7 @@
 
 
 static char* errmsg[] = {
-        
+
     "Illegal byte sequence",
     "Domain error",
     "Result not representable",
@@ -171,7 +171,7 @@ static int errid[] = {
     EPIPE,
     EIO,
     ENXIO,
-    //ENOTBLK,
+    // ENOTBLK,
     ENODEV,
     ENOTDIR,
     EISDIR,
@@ -206,14 +206,14 @@ static int errid[] = {
     ENOLINK,
     EPROTO,
     EBADMSG,
-    //EBADFD,
+    // EBADFD,
     ENOTSOCK,
     EDESTADDRREQ,
     EMSGSIZE,
     EPROTOTYPE,
     ENOPROTOOPT,
     EPROTONOSUPPORT,
-    //ESOCKTNOSUPPORT,
+    // ESOCKTNOSUPPORT,
     ENOTSUP,
     EPFNOSUPPORT,
     EAFNOSUPPORT,
@@ -225,14 +225,14 @@ static int errid[] = {
     ENOBUFS,
     EISCONN,
     ENOTCONN,
-    //ESHUTDOWN,
+    // ESHUTDOWN,
     EALREADY,
     EINPROGRESS,
     ESTALE,
-    //EREMOTEIO,
+    // EREMOTEIO,
     EDQUOT,
-    //ENOMEDIUM,
-    //EMEDIUMTYPE,
+    // ENOMEDIUM,
+    // EMEDIUMTYPE,
 
     0,
 
@@ -240,24 +240,21 @@ static int errid[] = {
 
 
 
-
 char* strerror(int err) {
 
-    if(err < 0)
+    if (err < 0)
         err = 0;
 
-    if(err > 4096)
+    if (err > 4096)
         err = 0;
-    
+
 
     int i;
-    for(i = 0; errid[i]; i++) {
+    for (i = 0; errid[i]; i++) {
 
-        if(errid[i] == err)
+        if (errid[i] == err)
             return errmsg[i];
-
     }
 
     return errmsg[i];
-
 }

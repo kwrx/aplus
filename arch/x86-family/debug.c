@@ -1,28 +1,28 @@
-/*                                                                      
- * GPL3 License                                                         
- *                                                                      
- * Author(s):                                                              
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+/*
+ * GPL3 License
+ *
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <stdint.h>
 
 #include <aplus.h>
@@ -35,12 +35,12 @@
 
 
 
-#define BIOS_COM_ADDRESS            0x400
+#define BIOS_COM_ADDRESS 0x400
 
-#define COM1_DEFAULT_PORT           0x3F8
-#define COM2_DEFAULT_PORT           0x2F8
-#define COM3_DEFAULT_PORT           0x3E8
-#define COM4_DEFAULT_PORT           0x2E8
+#define COM1_DEFAULT_PORT 0x3F8
+#define COM2_DEFAULT_PORT 0x2F8
+#define COM3_DEFAULT_PORT 0x3E8
+#define COM4_DEFAULT_PORT 0x2E8
 
 
 static uint16_t com_address = 0;
@@ -48,10 +48,10 @@ static uint16_t com_address = 0;
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-#include "debug/font_8x16.c.in"
+    #include "debug/font_8x16.c.in"
 
-#define X86_VGA_WIDTH               ( 8)
-#define X86_VGA_HEIGHT              (16)
+    #define X86_VGA_WIDTH  (8)
+    #define X86_VGA_HEIGHT (16)
 
 static uint16_t vga_offset = 0;
 
@@ -60,21 +60,21 @@ static uint16_t vga_offset = 0;
 
 /*!
  * @brief Initialize Debugger on UARTx.
- * 
+ *
  * Read COM Address from SMBios Area or default ports collection and configure Serial Ports.
  */
 void arch_debug_init(void) {
 
 #if defined(CONFIG_X86_HAVE_SMBIOS)
-    uint16_t* p = (uint16_t*) (KERNEL_HEAP_AREA + BIOS_COM_ADDRESS);
+    uint16_t* p = (uint16_t*)(KERNEL_HEAP_AREA + BIOS_COM_ADDRESS);
 #else
-    uint16_t p[] = { COM1_DEFAULT_PORT, COM2_DEFAULT_PORT, COM3_DEFAULT_PORT, COM4_DEFAULT_PORT };
+    uint16_t p[] = {COM1_DEFAULT_PORT, COM2_DEFAULT_PORT, COM3_DEFAULT_PORT, COM4_DEFAULT_PORT};
 #endif
 
 
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
 
-        if(p[i] == 0)
+        if (p[i] == 0)
             continue;
 
         com_address = p[i];
@@ -91,7 +91,7 @@ void arch_debug_init(void) {
     }
 
 
-    if(com_address == 0)
+    if (com_address == 0)
         return;
 
     arch_debug_putc('\e');
@@ -102,35 +102,37 @@ void arch_debug_init(void) {
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
-    vga_offset  = 0;
+    vga_offset = 0;
 #endif
-
 }
 
 
 /*!
  * @brief Write to Debugger.
- * 
+ *
  * Wait and write a character on Serial Port.
  */
 void arch_debug_putc(char ch) {
 
 
-    #define com_wait() {                                                                \
-        for(int i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++) {       \
-            __builtin_ia32_pause();                                                     \
-        }                                                                               \
+#define com_wait()                                                                 \
+    {                                                                              \
+        for (int i = 0; i < 100000 && ((inb(com_address + 5) & 0x20) == 0); i++) { \
+            __builtin_ia32_pause();                                                \
+        }                                                                          \
     }
-    
 
-    if(likely(com_address)) {
+
+    if (likely(com_address)) {
 
         com_wait();
 
-        if(unlikely(ch == '\n')) {
+        if (unlikely(ch == '\n')) {
 
-            outb(com_address, '\r'); com_wait();
-            outb(com_address, '\n'); com_wait();
+            outb(com_address, '\r');
+            com_wait();
+            outb(com_address, '\n');
+            com_wait();
 
 
 #if defined(CONFIG_DEBUG_PRINT_TIMESTAMP)
@@ -138,44 +140,34 @@ void arch_debug_putc(char ch) {
 #endif
 
         } else {
-                
-            outb(com_address, ch); com_wait();
-    
-        }
 
+            outb(com_address, ch);
+            com_wait();
+        }
     }
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    #define X86_VGA_ROWS                (core->framebuffer.height / X86_VGA_HEIGHT)
-    #define X86_VGA_COLS                (core->framebuffer.width  / X86_VGA_WIDTH)
-    #define X86_VGA_ADDRESS             (core->framebuffer.address + KERNEL_HEAP_AREA)
-    #define X86_VGA_ENABLED             (core->framebuffer.address != 0)
+    #define X86_VGA_ROWS    (core->framebuffer.height / X86_VGA_HEIGHT)
+    #define X86_VGA_COLS    (core->framebuffer.width / X86_VGA_WIDTH)
+    #define X86_VGA_ADDRESS (core->framebuffer.address + KERNEL_HEAP_AREA)
+    #define X86_VGA_ENABLED (core->framebuffer.address != 0)
 
 
-    if(likely(X86_VGA_ENABLED)) {
+    if (likely(X86_VGA_ENABLED)) {
 
-        if(unlikely(vga_offset > (X86_VGA_COLS * X86_VGA_ROWS) - 1)) {
+        if (unlikely(vga_offset > (X86_VGA_COLS * X86_VGA_ROWS) - 1)) {
 
-            memmove (
-                (void*)  (X86_VGA_ADDRESS),
-                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * X86_VGA_HEIGHT)), 
-                (size_t) (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)
-            );
+            memmove((void*)(X86_VGA_ADDRESS), (void*)(X86_VGA_ADDRESS + (core->framebuffer.pitch * X86_VGA_HEIGHT)), (size_t)(core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT));
 
-            memset (
-                (void*)  (X86_VGA_ADDRESS + (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)),
-                0x00, 
-                (size_t) (core->framebuffer.pitch * X86_VGA_HEIGHT)
-            );
+            memset((void*)(X86_VGA_ADDRESS + (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)), 0x00, (size_t)(core->framebuffer.pitch * X86_VGA_HEIGHT));
 
             vga_offset -= X86_VGA_COLS;
-
         }
 
 
-        switch(ch) {
+        switch (ch) {
 
             case '\r':
                 vga_offset -= vga_offset % X86_VGA_COLS;
@@ -198,20 +190,20 @@ void arch_debug_putc(char ch) {
                 break;
 
             default:
-                
-                for(int y = 0; y < X86_VGA_HEIGHT; y++) {
 
-                    uint8_t* ptr = (uint8_t*) (X86_VGA_ADDRESS);
-                    
+                for (int y = 0; y < X86_VGA_HEIGHT; y++) {
+
+                    uint8_t* ptr = (uint8_t*)(X86_VGA_ADDRESS);
+
                     ptr += (vga_offset % X86_VGA_COLS) * X86_VGA_WIDTH * (core->framebuffer.depth / 8);
                     ptr += (vga_offset / X86_VGA_COLS) * X86_VGA_HEIGHT * core->framebuffer.pitch;
-                    ptr += (y * core->framebuffer.pitch) ;
+                    ptr += (y * core->framebuffer.pitch);
 
-                    for(int x = 0; x < X86_VGA_WIDTH; x++) {
+                    for (int x = 0; x < X86_VGA_WIDTH; x++) {
 
-                        if(builtin_fontdata[(ch * X86_VGA_HEIGHT) + y] & (1 << (X86_VGA_WIDTH - x))) {
+                        if (builtin_fontdata[(ch * X86_VGA_HEIGHT) + y] & (1 << (X86_VGA_WIDTH - x))) {
 
-                            switch(core->framebuffer.depth) {
+                            switch (core->framebuffer.depth) {
 
                                 case 32:
 
@@ -238,13 +230,12 @@ void arch_debug_putc(char ch) {
 
                                     ptr[0] = 0xFF;
                                     break;
-
                             }
 
 
                         } else {
 
-                            switch(core->framebuffer.depth) {
+                            switch (core->framebuffer.depth) {
 
                                 case 32:
 
@@ -271,84 +262,73 @@ void arch_debug_putc(char ch) {
 
                                     ptr[0] = 0x00;
                                     break;
-
                             }
-
-
                         }
 
                         ptr += core->framebuffer.depth / 8;
-
                     }
-
                 }
 
                 vga_offset += 1;
 
                 break;
-
         }
-
     }
-    
-#endif
 
+#endif
 }
 
 
 
 /*!
  * @brief Stacktrace.
- * 
+ *
  * Print stacktrace on Serial Port.
  */
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
-    
 
-    if(!current_task)
+
+    if (!current_task)
         return;
-        
+
 
     struct stack {
-        struct stack* bp;
-        uintptr_t ip;
-    } __packed *frame;
+            struct stack* bp;
+            uintptr_t ip;
+    } __packed* frame;
 
 
 #if defined(__x86_64__)
-    __asm__ __volatile__ ("movq %%rbp, %%rax" : "=a"(frame));
+    __asm__ __volatile__("movq %%rbp, %%rax" : "=a"(frame));
 #elif defined(__i386__)
-    __asm__ __volatile__ ("movl %%ebp, %%rax" : "=a"(frame));
+    __asm__ __volatile__("movl %%ebp, %%rax" : "=a"(frame));
 #else
-#error "Unsupported Architecture"
+    #error "Unsupported Architecture"
 #endif
 
 
     int i;
-    for(i = 0; frame && i < count; i++) {
-        
+    for (i = 0; frame && i < count; i++) {
+
         frames[i] = 0;
 
-        if(unlikely(!uio_check(frame, R_OK)))
+        if (unlikely(!uio_check(frame, R_OK)))
             break;
 
-        if(unlikely(!uio_check(frame, S_OK))) {
+        if (unlikely(!uio_check(frame, S_OK))) {
 
 #if defined(__x86_64__)
-            frames[i] = uio_r64((uintptr_t) frame + offsetof(struct stack, ip));
-            frame     = (struct stack*) uio_r64((uintptr_t) frame + offsetof(struct stack, bp));
+            frames[i] = uio_r64((uintptr_t)frame + offsetof(struct stack, ip));
+            frame     = (struct stack*)uio_r64((uintptr_t)frame + offsetof(struct stack, bp));
 #else
-            frames[i] = uio_r32((uintptr_t) frame + offsetof(struct stack, ip));
-            frame     = (struct stack*) uio_r32((uintptr_t) frame + offsetof(struct stack, bp));
+            frames[i] = uio_r32((uintptr_t)frame + offsetof(struct stack, ip));
+            frame     = (struct stack*)uio_r32((uintptr_t)frame + offsetof(struct stack, bp));
 #endif
 
         } else {
 
             frames[i] = frame->ip;
             frame     = frame->bp;
-
-        }    
-
+        }
     }
-
 }

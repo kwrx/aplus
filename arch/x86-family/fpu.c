@@ -1,28 +1,28 @@
-/*                                                                      
- * GPL3 License                                                         
- *                                                                      
- * Author(s):                                                              
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
-                                                                        
+/*
+ * GPL3 License
+ *
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <stdint.h>
 
 #include <aplus.h>
@@ -35,21 +35,20 @@
 
 
 //!
-//! pmm_block(0) 
-//!     + kmalloc(16) 
+//! pmm_block(0)
+//!     + kmalloc(16)
 //!     + padding(48) = 64 bytes alignment
 //!
-#define FPU_PAD_SIZE        48
+#define FPU_PAD_SIZE 48
 
 
 
-static void (*__fpu_switch) (void*, void*) = NULL;
-static void (*__fpu_save) (void*) = NULL;
-static void (*__fpu_restore) (void*) = NULL;
+static void (*__fpu_switch)(void*, void*) = NULL;
+static void (*__fpu_save)(void*)          = NULL;
+static void (*__fpu_restore)(void*)       = NULL;
 
-static uint8_t  __fpu_inital_state[8192] __aligned(64) = { 0 };
-static uint16_t __fpu_size = 0;
-
+static uint8_t __fpu_inital_state[8192] __aligned(64) = {0};
+static uint16_t __fpu_size                            = 0;
 
 
 
@@ -59,22 +58,13 @@ static void xsaveopt_switch(void* prev, void* next) {
 
     DEBUG_ASSERT(prev);
     DEBUG_ASSERT(next);
-    DEBUG_ASSERT(((uintptr_t) prev & 63) == 0);
-    DEBUG_ASSERT(((uintptr_t) next & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)prev & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)next & 63) == 0);
 
 
-    __asm__ __volatile__ (
-        "xsaveopt (%0)"
-        :
-        : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
+    __asm__ __volatile__("xsaveopt (%0)" : : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 
-    __asm__ __volatile__ (
-        "xrstor (%0)"
-        :
-        : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
-
+    __asm__ __volatile__("xrstor (%0)" : : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 }
 
 
@@ -82,53 +72,33 @@ static void xsave_switch(void* prev, void* next) {
 
     DEBUG_ASSERT(prev);
     DEBUG_ASSERT(next);
-    DEBUG_ASSERT(((uintptr_t) prev & 63) == 0);
-    DEBUG_ASSERT(((uintptr_t) next & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)prev & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)next & 63) == 0);
 
 
-    __asm__ __volatile__ (
-        "xsave (%0)"
-        :
-        : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
+    __asm__ __volatile__("xsave (%0)" : : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 
-    __asm__ __volatile__ (
-        "xrstor (%0)"
-        :
-        : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
-
+    __asm__ __volatile__("xrstor (%0)" : : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 }
 
 
 static void xsave_save(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 63) == 0);
 
-    __asm__ __volatile__ (
-        "xsave (%0)"
-        :
-        : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
-
+    __asm__ __volatile__("xsave (%0)" : : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 }
 
 
 static void xsave_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 63) == 0);
-    
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 63) == 0);
 
-    __asm__ __volatile__ (
-        "xrstor (%0)"
-        :
-        : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF)
-    );
-    
+
+    __asm__ __volatile__("xrstor (%0)" : : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
 }
 
 #endif
-
 
 
 
@@ -136,46 +106,27 @@ static void xsave_restore(void* fpu_area) {
 
 static void fxsave_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(((uintptr_t) prev & 15) == 0);
-    DEBUG_ASSERT(((uintptr_t) next & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)prev & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)next & 15) == 0);
 
-    __asm__ __volatile__ (
-        "fxsave (%0)"
-        :
-        : "r"(prev)
-    );
+    __asm__ __volatile__("fxsave (%0)" : : "r"(prev));
 
-    __asm__ __volatile__ (
-        "fxrstor (%0)"
-        :
-        : "r"(next)
-    );
-
+    __asm__ __volatile__("fxrstor (%0)" : : "r"(next));
 }
 
 static void fxsave_save(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
 
-    __asm__ __volatile__ (
-        "fxsave (%0)"
-        :
-        : "r"(fpu_area)
-    );
-
+    __asm__ __volatile__("fxsave (%0)" : : "r"(fpu_area));
 }
 
 
 static void fxsave_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
 
-    __asm__ __volatile__ (
-        "fxrstor (%0)"
-        :
-        : "r"(fpu_area)
-    );
-    
+    __asm__ __volatile__("fxrstor (%0)" : : "r"(fpu_area));
 }
 
 #endif
@@ -184,115 +135,89 @@ static void fxsave_restore(void* fpu_area) {
 
 static void fsave_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(((uintptr_t) prev & 15) == 0);
-    DEBUG_ASSERT(((uintptr_t) next & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)prev & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)next & 15) == 0);
 
-    __asm__ __volatile__ (
-        "fsave (%0)"
-        :
-        : "r"(prev)
-    );
+    __asm__ __volatile__("fsave (%0)" : : "r"(prev));
 
-    __asm__ __volatile__ (
-        "frstor (%0)"
-        :
-        : "r"(next)
-    );
-
+    __asm__ __volatile__("frstor (%0)" : : "r"(next));
 }
 
 
 static void fsave_save(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
 
-    __asm__ __volatile__ (
-        "fsave (%0)"
-        :
-        : "r"(fpu_area)
-    );
-
+    __asm__ __volatile__("fsave (%0)" : : "r"(fpu_area));
 }
 
 
 static void fsave_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t) fpu_area & 15) == 0);
+    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
 
-    __asm__ __volatile__ (
-        "frstor (%0)"
-        :
-        : "r"(fpu_area)
-    );
-    
+    __asm__ __volatile__("frstor (%0)" : : "r"(fpu_area));
 }
-
-
-
 
 
 
 void fpu_init(uint64_t cpu) {
 
-    if(!(boot_cpu_has(X86_FEATURE_FPU)))
+    if (!(boot_cpu_has(X86_FEATURE_FPU)))
         kpanicf("x86-fpu: PANIC! FPU not supported by current cpu, required!\n");
 
-    DEBUG_ASSERT(((uintptr_t) &__fpu_inital_state[0] & 63) == 0);
+    DEBUG_ASSERT(((uintptr_t)&__fpu_inital_state[0] & 63) == 0);
 
 
 
-    __asm__ __volatile__ (
-        "fninit"
-    );
+    __asm__ __volatile__("fninit");
 
 
-    if(cpu_has(cpu, X86_FEATURE_XMM)) {
+    if (cpu_has(cpu, X86_FEATURE_XMM)) {
 
         x86_set_cr4(x86_get_cr4() | X86_CR4_OSFXSR_MASK);
         x86_set_cr4(x86_get_cr4() | X86_CR4_OSXMMEXCPT_MASK);
 
         x86_set_cr0(x86_get_cr0() & ~X86_CR0_EM_MASK);
-        x86_set_cr0(x86_get_cr0() |  X86_CR0_MP_MASK);
-
+        x86_set_cr0(x86_get_cr0() | X86_CR0_MP_MASK);
     }
 
 
 #if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
-    if(cpu_has(cpu, X86_FEATURE_XSAVE)) {
+    if (cpu_has(cpu, X86_FEATURE_XSAVE)) {
 
         x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK);
-
     }
 
 #endif
 
 
 
-    if(cpu == SMP_CPU_BOOTSTRAP_ID) {
+    if (cpu == SMP_CPU_BOOTSTRAP_ID) {
 
 
 #if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
-        if(boot_cpu_has(X86_FEATURE_XSAVE)) {
-            
+        if (boot_cpu_has(X86_FEATURE_XSAVE)) {
+
             uint64_t xcr0 = 0;
-            
-            #define XCR0_FPU        (1 << 0)
-            #define XCR0_SSE        (1 << 1)
-            #define XCR0_AVX        (1 << 2)
-            #define XCR0_OPMASK     (1 << 5)
-            #define XCR0_ZMM        (1 << 6)
-            #define XCR0_ZMM2       (1 << 7)
+
+    #define XCR0_FPU    (1 << 0)
+    #define XCR0_SSE    (1 << 1)
+    #define XCR0_AVX    (1 << 2)
+    #define XCR0_OPMASK (1 << 5)
+    #define XCR0_ZMM    (1 << 6)
+    #define XCR0_ZMM2   (1 << 7)
 
 
             xcr0 |= XCR0_FPU;
             xcr0 |= XCR0_SSE;
 
-            if(boot_cpu_has(X86_FEATURE_AVX))
+            if (boot_cpu_has(X86_FEATURE_AVX))
                 xcr0 |= XCR0_AVX;
 
-            if(boot_cpu_has(X86_FEATURE_AVX512F))
+            if (boot_cpu_has(X86_FEATURE_AVX512F))
                 xcr0 |= XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2;
 
 
@@ -302,15 +227,15 @@ void fpu_init(uint64_t cpu) {
             long a, b, c, d;
             x86_cpuid(0xD, &a, &b, &c, &d);
 
-            if(unlikely(!c))
+            if (unlikely(!c))
                 kpanicf("x86-fpu: cannot get size of FPU Extended Area\n");
-            
 
 
-            if(boot_cpu_has(X86_FEATURE_XSAVEOPT))
-                __fpu_switch  = &xsaveopt_switch;
+
+            if (boot_cpu_has(X86_FEATURE_XSAVEOPT))
+                __fpu_switch = &xsaveopt_switch;
             else
-                __fpu_switch  = &xsave_switch;
+                __fpu_switch = &xsave_switch;
 
 
             __fpu_save    = &xsave_save;
@@ -319,11 +244,9 @@ void fpu_init(uint64_t cpu) {
 
 
 
-#if DEBUG_LEVEL_INFO
-            kprintf("x86-fpu: uses %s/XRSTOR feature set with %d bytes\n", boot_cpu_has(X86_FEATURE_XSAVEOPT)
-                                                                            ? "XSAVEOPT"
-                                                                            : "XSAVE"   , __fpu_size);
-#endif
+    #if DEBUG_LEVEL_INFO
+            kprintf("x86-fpu: uses %s/XRSTOR feature set with %d bytes\n", boot_cpu_has(X86_FEATURE_XSAVEOPT) ? "XSAVEOPT" : "XSAVE", __fpu_size);
+    #endif
 
         }
 
@@ -333,21 +256,21 @@ void fpu_init(uint64_t cpu) {
 
 #if !defined(CONFIG_X86_FXSAVE_FORCE_DISABLED)
 
-        if(boot_cpu_has(X86_FEATURE_FXSR)) {
-            
+            if (boot_cpu_has(X86_FEATURE_FXSR)) {
+
             __fpu_switch  = &fxsave_switch;
             __fpu_save    = &fxsave_save;
             __fpu_restore = &fxsave_restore;
             __fpu_size    = 512;
 
 
-#if DEBUG_LEVEL_INFO
+    #if DEBUG_LEVEL_INFO
             kprintf("x86-fpu: uses FXSAVE/FXRSTOR feature set with %d bytes\n", __fpu_size);
-#endif
-       
+    #endif
+
         }
 
-        else 
+        else
 #endif
         {
             __fpu_switch  = &fsave_switch;
@@ -359,16 +282,12 @@ void fpu_init(uint64_t cpu) {
 #if DEBUG_LEVEL_INFO
             kprintf("x86-fpu: uses FSAVE/FRSTOR feature set with %d bytes\n", __fpu_size);
 #endif
-
         }
 
 
 
-
         fpu_save(&__fpu_inital_state[0]);
-
     }
-
 }
 
 
@@ -400,29 +319,28 @@ void fpu_restore(void* fpu_area) {
 size_t fpu_size(void) {
 
     DEBUG_ASSERT(__fpu_size);
-    
+
     return __fpu_size;
 }
 
 
 void* fpu_new_state(void) {
 
-    void* p = (void*) ((uintptr_t) kcalloc(fpu_size() + FPU_PAD_SIZE, 1, GFP_KERNEL) + FPU_PAD_SIZE);
-    
-    DEBUG_ASSERT( (uintptr_t) p);
-    DEBUG_ASSERT(((uintptr_t) p & 63) == 0);
+    void* p = (void*)((uintptr_t)kcalloc(fpu_size() + FPU_PAD_SIZE, 1, GFP_KERNEL) + FPU_PAD_SIZE);
+
+    DEBUG_ASSERT((uintptr_t)p);
+    DEBUG_ASSERT(((uintptr_t)p & 63) == 0);
 
     DEBUG_ASSERT(sizeof(__fpu_inital_state) >= fpu_size());
 
     memcpy(p, &__fpu_inital_state, fpu_size());
 
     return p;
-
 }
 
 void fpu_free_state(void* fpu_area) {
 
     DEBUG_ASSERT(fpu_area);
 
-    return kfree((void*) ((uintptr_t) fpu_area - FPU_PAD_SIZE));
+    return kfree((void*)((uintptr_t)fpu_area - FPU_PAD_SIZE));
 }

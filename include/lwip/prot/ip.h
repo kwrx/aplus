@@ -50,7 +50,7 @@ extern "C" {
 #define IP_PROTO_TCP     6
 
 /** This operates on a void* by loading the first byte */
-#define IP_HDR_GET_VERSION(ptr)   ((*(u8_t*)(ptr)) >> 4)
+#define IP_HDR_GET_VERSION(ptr) ((*(u8_t*)(ptr)) >> 4)
 
 #ifdef __cplusplus
 }
