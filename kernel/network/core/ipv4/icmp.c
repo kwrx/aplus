@@ -65,7 +65,7 @@
     /* The amount of data from the original packet to return in a dest-unreachable */
     #define ICMP_DEST_UNREACH_DATASIZE 8
 
-static void icmp_send_response(struct pbuf *p, u8_t type, u8_t code);
+static void icmp_send_response(struct pbuf* p, u8_t type, u8_t code);
 
 /**
  * Processes ICMP input packets, called from ip_input().
@@ -76,15 +76,15 @@ static void icmp_send_response(struct pbuf *p, u8_t type, u8_t code);
  * @param p the icmp echo request packet, p->payload pointing to the icmp header
  * @param inp the netif on which this packet was received
  */
-void icmp_input(struct pbuf *p, struct netif *inp) {
+void icmp_input(struct pbuf* p, struct netif* inp) {
     u8_t type;
     #ifdef LWIP_DEBUG
     u8_t code;
     #endif /* LWIP_DEBUG */
-    struct icmp_echo_hdr *iecho;
-    const struct ip_hdr *iphdr_in;
+    struct icmp_echo_hdr* iecho;
+    const struct ip_hdr* iphdr_in;
     u16_t hlen;
-    const ip4_addr_t *src;
+    const ip4_addr_t* src;
 
     ICMP_STATS_INC(icmp.recv);
     MIB2_STATS_INC(mib2.icmpinmsgs);
@@ -100,9 +100,9 @@ void icmp_input(struct pbuf *p, struct netif *inp) {
         goto lenerr;
     }
 
-    type = *((u8_t *)p->payload);
+    type = *((u8_t*)p->payload);
     #ifdef LWIP_DEBUG
-    code = *(((u8_t *)p->payload) + 1);
+    code = *(((u8_t*)p->payload) + 1);
     /* if debug is enabled but debug statement below is somehow disabled: */
     LWIP_UNUSED_ARG(code);
     #endif /* LWIP_DEBUG */
@@ -156,7 +156,7 @@ void icmp_input(struct pbuf *p, struct netif *inp) {
                 /* p is not big enough to contain link headers
                  * allocate a new one and copy p into it
                  */
-                struct pbuf *r;
+                struct pbuf* r;
                 u16_t alloc_len = (u16_t)(p->tot_len + hlen);
                 if (alloc_len < p->tot_len) {
                     LWIP_DEBUGF(ICMP_DEBUG, ("icmp_input: allocating new pbuf failed (tot_len overflow)\n"));
@@ -202,12 +202,12 @@ void icmp_input(struct pbuf *p, struct netif *inp) {
             /* At this point, all checks are OK. */
             /* We generate an answer by switching the dest and src ip addresses,
              * setting the icmp type to ECHO_RESPONSE and updating the checksum. */
-            iecho = (struct icmp_echo_hdr *)p->payload;
+            iecho = (struct icmp_echo_hdr*)p->payload;
             if (pbuf_add_header(p, hlen)) {
                 LWIP_DEBUGF(ICMP_DEBUG | LWIP_DBG_LEVEL_SERIOUS, ("Can't move over header in packet"));
             } else {
                 err_t ret;
-                struct ip_hdr *iphdr = (struct ip_hdr *)p->payload;
+                struct ip_hdr* iphdr = (struct ip_hdr*)p->payload;
                 ip4_addr_copy(iphdr->src, *src);
                 ip4_addr_copy(iphdr->dest, *ip4_current_src_addr());
                 ICMPH_TYPE_SET(iecho, ICMP_ER);
@@ -300,7 +300,7 @@ icmperr:
  *          p->payload pointing to the IP header
  * @param t type of the 'unreachable' packet
  */
-void icmp_dest_unreach(struct pbuf *p, enum icmp_dur_type t) {
+void icmp_dest_unreach(struct pbuf* p, enum icmp_dur_type t) {
     MIB2_STATS_INC(mib2.icmpoutdestunreachs);
     icmp_send_response(p, ICMP_DUR, t);
 }
@@ -313,7 +313,7 @@ void icmp_dest_unreach(struct pbuf *p, enum icmp_dur_type t) {
  *          p->payload pointing to the IP header
  * @param t type of the 'time exceeded' packet
  */
-void icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t) {
+void icmp_time_exceeded(struct pbuf* p, enum icmp_te_type t) {
     MIB2_STATS_INC(mib2.icmpouttimeexcds);
     icmp_send_response(p, ICMP_TE, t);
 }
@@ -328,13 +328,13 @@ void icmp_time_exceeded(struct pbuf *p, enum icmp_te_type t) {
  * @param type Type of the ICMP header
  * @param code Code of the ICMP header
  */
-static void icmp_send_response(struct pbuf *p, u8_t type, u8_t code) {
-    struct pbuf *q;
-    struct ip_hdr *iphdr;
+static void icmp_send_response(struct pbuf* p, u8_t type, u8_t code) {
+    struct pbuf* q;
+    struct ip_hdr* iphdr;
     /* we can use the echo header here */
-    struct icmp_echo_hdr *icmphdr;
+    struct icmp_echo_hdr* icmphdr;
     ip4_addr_t iphdr_src;
-    struct netif *netif;
+    struct netif* netif;
 
     /* increase number of messages attempted to send */
     MIB2_STATS_INC(mib2.icmpoutmsgs);
@@ -348,21 +348,21 @@ static void icmp_send_response(struct pbuf *p, u8_t type, u8_t code) {
     }
     LWIP_ASSERT("check that first pbuf can hold icmp message", (q->len >= (sizeof(struct icmp_echo_hdr) + IP_HLEN + ICMP_DEST_UNREACH_DATASIZE)));
 
-    iphdr = (struct ip_hdr *)p->payload;
+    iphdr = (struct ip_hdr*)p->payload;
     LWIP_DEBUGF(ICMP_DEBUG, ("icmp_time_exceeded from "));
     ip4_addr_debug_print_val(ICMP_DEBUG, iphdr->src);
     LWIP_DEBUGF(ICMP_DEBUG, (" to "));
     ip4_addr_debug_print_val(ICMP_DEBUG, iphdr->dest);
     LWIP_DEBUGF(ICMP_DEBUG, ("\n"));
 
-    icmphdr        = (struct icmp_echo_hdr *)q->payload;
+    icmphdr        = (struct icmp_echo_hdr*)q->payload;
     icmphdr->type  = type;
     icmphdr->code  = code;
     icmphdr->id    = 0;
     icmphdr->seqno = 0;
 
     /* copy fields from original packet */
-    SMEMCPY((u8_t *)q->payload + sizeof(struct icmp_echo_hdr), (u8_t *)p->payload, IP_HLEN + ICMP_DEST_UNREACH_DATASIZE);
+    SMEMCPY((u8_t*)q->payload + sizeof(struct icmp_echo_hdr), (u8_t*)p->payload, IP_HLEN + ICMP_DEST_UNREACH_DATASIZE);
 
     ip4_addr_copy(iphdr_src, iphdr->src);
     #ifdef LWIP_HOOK_IP4_ROUTE_SRC

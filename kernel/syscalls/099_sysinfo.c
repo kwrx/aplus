@@ -49,4 +49,4 @@
 
 struct sysinfo;
 
-SYSCALL(99, sysinfo, long sys_sysinfo(struct sysinfo *info) { return -ENOSYS; });
+SYSCALL(99, sysinfo, long sys_sysinfo(struct sysinfo* info) { return -ENOSYS; });

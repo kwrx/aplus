@@ -76,7 +76,7 @@ const ip_addr_t ip_addr_any_type = IPADDR_ANY_TYPE_INIT;
  * @return pointer to a global static (!) buffer that holds the ASCII
  *         representation of addr
  */
-char *ipaddr_ntoa(const ip_addr_t *addr) {
+char* ipaddr_ntoa(const ip_addr_t* addr) {
     if (addr == NULL) {
         return NULL;
     }
@@ -97,7 +97,7 @@ char *ipaddr_ntoa(const ip_addr_t *addr) {
  * @return either pointer to buf which now holds the ASCII
  *         representation of addr or NULL if buf was too small
  */
-char *ipaddr_ntoa_r(const ip_addr_t *addr, char *buf, int buflen) {
+char* ipaddr_ntoa_r(const ip_addr_t* addr, char* buf, int buflen) {
     if (addr == NULL) {
         return NULL;
     }
@@ -117,9 +117,9 @@ char *ipaddr_ntoa_r(const ip_addr_t *addr, char *buf, int buflen) {
  * @param addr conversion result is stored here
  * @return 1 on success, 0 on error
  */
-int ipaddr_aton(const char *cp, ip_addr_t *addr) {
+int ipaddr_aton(const char* cp, ip_addr_t* addr) {
     if (cp != NULL) {
-        const char *c;
+        const char* c;
         for (c = cp; *c != 0; c++) {
             if (*c == ':') {
                 /* contains a colon: IPv6 address */
@@ -146,7 +146,7 @@ int ipaddr_aton(const char *cp, ip_addr_t *addr) {
  * If both IP versions are enabled, this function can dispatch packets to the correct one.
  * Don't call directly, pass to netif_add() and call netif->input().
  */
-err_t ip_input(struct pbuf *p, struct netif *inp) {
+err_t ip_input(struct pbuf* p, struct netif* inp) {
     if (p != NULL) {
         if (IP_HDR_GET_VERSION(p->payload) == 6) {
             return ip6_input(p, inp);

@@ -50,4 +50,4 @@
 
 
 
-SYSCALL(129, rt_sigqueueinfo, long sys_rt_sigqueueinfo(pid_t tgid, int sig, siginfo_t *uinfo) { return sys_rt_tgsigqueueinfo(tgid, -1, sig, uinfo); });
+SYSCALL(129, rt_sigqueueinfo, long sys_rt_sigqueueinfo(pid_t tgid, int sig, siginfo_t* uinfo) { return sys_rt_tgsigqueueinfo(tgid, -1, sig, uinfo); });

@@ -78,7 +78,7 @@ static const unsigned char Rcon[30] = {
 
 
 
-static void AES_concert_key(aes_t *ctx) {
+static void AES_concert_key(aes_t* ctx) {
     int i;
     uint32_t *k, w, t1, t2, t3, t4;
 
@@ -92,7 +92,7 @@ static void AES_concert_key(aes_t *ctx) {
     }
 }
 
-static void AES_encrypt(const aes_t *ctx, uint32_t *data) {
+static void AES_encrypt(const aes_t* ctx, uint32_t* data) {
     /* To make this code smaller, generate the sbox entries on the fly.
      * This will have a really heavy effect upon performance.
      */
@@ -100,7 +100,7 @@ static void AES_encrypt(const aes_t *ctx, uint32_t *data) {
     uint32_t tmp1, old_a0, a0, a1, a2, a3, row;
     int curr_rnd;
     int rounds        = ctx->rounds;
-    const uint32_t *k = ctx->ks;
+    const uint32_t* k = ctx->ks;
 
     /* Pre-round key addition */
     for (row = 0; row < 4; row++)
@@ -136,13 +136,13 @@ static void AES_encrypt(const aes_t *ctx, uint32_t *data) {
 }
 
 
-static void AES_decrypt(const aes_t *ctx, uint32_t *data) {
+static void AES_decrypt(const aes_t* ctx, uint32_t* data) {
     uint32_t tmp[4];
     uint32_t xt0, xt1, xt2, xt3, xt4, xt5, xt6;
     uint32_t a0, a1, a2, a3, row;
     int curr_rnd;
     int rounds        = ctx->rounds;
-    const uint32_t *k = ctx->ks + ((rounds + 1) * 4);
+    const uint32_t* k = ctx->ks + ((rounds + 1) * 4);
 
     /* pre-round key addition */
     for (row = 4; row > 0; row--)
@@ -185,10 +185,10 @@ static void AES_decrypt(const aes_t *ctx, uint32_t *data) {
 }
 
 
-void aes_key(aes_t *ctx, const uint8_t *key, const uint8_t *iv, int mode) {
+void aes_key(aes_t* ctx, const uint8_t* key, const uint8_t* iv, int mode) {
     int i, ii;
     uint32_t *W, tmp, tmp2;
-    const unsigned char *ip;
+    const unsigned char* ip;
     int words;
 
     switch (mode) {
@@ -245,7 +245,7 @@ void aes_key(aes_t *ctx, const uint8_t *key, const uint8_t *iv, int mode) {
 }
 
 
-void aes_encrypt(aes_t *ctx, const uint8_t *msg, uint8_t *out, size_t length) {
+void aes_encrypt(aes_t* ctx, const uint8_t* msg, uint8_t* out, size_t length) {
     int i;
     uint32_t tin[4], tout[4], iv[4];
 
@@ -280,7 +280,7 @@ void aes_encrypt(aes_t *ctx, const uint8_t *msg, uint8_t *out, size_t length) {
 
 
 
-void aes_decrypt(aes_t *ctx, const uint8_t *msg, uint8_t *out, size_t length) {
+void aes_decrypt(aes_t* ctx, const uint8_t* msg, uint8_t* out, size_t length) {
     int i;
     uint32_t tin[4], xor[4], tout[4], data[4], iv[4];
 

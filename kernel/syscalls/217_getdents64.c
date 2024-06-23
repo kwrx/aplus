@@ -62,7 +62,7 @@ struct linux_dirent64 {
  */
 
 SYSCALL(
-    217, getdents64, long sys_getdents64(unsigned int fd, struct linux_dirent64 *dirent, unsigned int count) {
+    217, getdents64, long sys_getdents64(unsigned int fd, struct linux_dirent64* dirent, unsigned int count) {
         if (unlikely(!dirent))
             return -EINVAL;
 
@@ -111,7 +111,7 @@ SYSCALL(
                     r += reclen;
                     i += reclen;
 
-                    dirent = (struct linux_dirent64 *)((uintptr_t)dirent + reclen);
+                    dirent = (struct linux_dirent64*)((uintptr_t)dirent + reclen);
                 }
 
             );

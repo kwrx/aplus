@@ -38,7 +38,7 @@
 #include <aplus/hal.h>
 
 
-extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
+extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
 
 
 /***
@@ -57,7 +57,7 @@ extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
  */
 
 SYSCALL(
-    262, newfstatat, long sys_newfstatat(int dfd, const char *filename, struct stat *statbuf, int flag) {
+    262, newfstatat, long sys_newfstatat(int dfd, const char* filename, struct stat* statbuf, int flag) {
         if (!filename)
             return -EINVAL;
 
@@ -82,9 +82,7 @@ SYSCALL(
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
 
-            __lock(&fds->descriptors[fd].ref->lock, {
-                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
-            });
+            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf); });
         });
 
 

@@ -40,26 +40,26 @@
         DEBUG_ASSERT(inode->sb->fsid == 1);  \
         DEBUG_ASSERT(inode->sb->dev);        \
                                              \
-        inode_t *d = inode->sb->dev;         \
+        inode_t* d = inode->sb->dev;         \
         return vfs_##name params2;           \
     }
 
 
 
-bind_fn(getattr, int, (inode_t * inode, struct stat *st), (d, st)) bind_fn(setattr, int, (inode_t * inode, struct stat *st), (d, st)) bind_fn(truncate, int, (inode_t * inode, off_t off), (d, off))
+bind_fn(getattr, int, (inode_t * inode, struct stat* st), (d, st)) bind_fn(setattr, int, (inode_t * inode, struct stat* st), (d, st)) bind_fn(truncate, int, (inode_t * inode, off_t off), (d, off))
 
-    bind_fn(read, ssize_t, (inode_t * inode, void *buf, off_t off, size_t size), (d, buf, off, size)) bind_fn(write, ssize_t, (inode_t * inode, const void *buf, off_t off, size_t size), (d, buf, off, size))
-        bind_fn(readlink, ssize_t, (inode_t * inode, char *buf, size_t size), (d, buf, size))
+    bind_fn(read, ssize_t, (inode_t * inode, void* buf, off_t off, size_t size), (d, buf, off, size)) bind_fn(write, ssize_t, (inode_t * inode, const void* buf, off_t off, size_t size), (d, buf, off, size))
+        bind_fn(readlink, ssize_t, (inode_t * inode, char* buf, size_t size), (d, buf, size))
 
-            bind_fn(creat, inode_t *, (inode_t * inode, const char *name, mode_t mode), (d, name, mode)) bind_fn(finddir, inode_t *, (inode_t * inode, const char *name), (d, name))
-                bind_fn(readdir, ssize_t, (inode_t * inode, struct dirent *e, off_t off, size_t size), (d, e, off, size))
+            bind_fn(creat, inode_t*, (inode_t * inode, const char* name, mode_t mode), (d, name, mode)) bind_fn(finddir, inode_t*, (inode_t * inode, const char* name), (d, name))
+                bind_fn(readdir, ssize_t, (inode_t * inode, struct dirent* e, off_t off, size_t size), (d, e, off, size))
 
-                    bind_fn(rename, int, (inode_t * inode, const char *o, const char *n), (d, o, n)) bind_fn(symlink, int, (inode_t * inode, const char *o, const char *n), (d, o, n))
-                        bind_fn(unlink, int, (inode_t * inode, const char *o), (d, o))
+                    bind_fn(rename, int, (inode_t * inode, const char* o, const char* n), (d, o, n)) bind_fn(symlink, int, (inode_t * inode, const char* o, const char* n), (d, o, n))
+                        bind_fn(unlink, int, (inode_t * inode, const char* o), (d, o))
 
 
 
-                            int bindfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
+                            int bindfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->sb);
@@ -68,7 +68,7 @@ bind_fn(getattr, int, (inode_t * inode, struct stat *st), (d, st)) bind_fn(setat
     (void)args;
 
 
-    dir->sb         = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb         = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
     dir->sb->fsid   = 1;
     dir->sb->dev    = dev;
     dir->sb->root   = dir;
@@ -97,7 +97,7 @@ bind_fn(getattr, int, (inode_t * inode, struct stat *st), (d, st)) bind_fn(setat
 
 
 
-int bindfs_umount(inode_t *dir) {
+int bindfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);

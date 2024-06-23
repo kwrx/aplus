@@ -74,7 +74,7 @@ spinlock_t tcpip_core_locking;
 
 
 SYSCALL(
-    SYSCALL_NR_TCPIP_WAIT, tcpip_wait, long sys_tcpip_wait(uint32_t *s, u32_t value, u32_t timeout) {
+    SYSCALL_NR_TCPIP_WAIT, tcpip_wait, long sys_tcpip_wait(uint32_t* s, u32_t value, u32_t timeout) {
         DEBUG_ASSERT(s);
 
         if (!timeout) {
@@ -105,14 +105,14 @@ void sys_init(void) {
 
 
 
-sys_thread_t sys_thread_new(const char *name, lwip_thread_fn thread, void *arg, int stacksize, int prio) {
+sys_thread_t sys_thread_new(const char* name, lwip_thread_fn thread, void* arg, int stacksize, int prio) {
 
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(thread);
 
     LWIP_UNUSED_ARG(prio);
 
-    return (sys_thread_t)arch_task_spawn_kthread(name, (void (*)(void *))thread, stacksize, arg);
+    return (sys_thread_t)arch_task_spawn_kthread(name, (void (*)(void*))thread, stacksize, arg);
 }
 
 

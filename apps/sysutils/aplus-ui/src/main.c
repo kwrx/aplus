@@ -45,7 +45,7 @@
 #include <aplus/events.h>
 
 
-static void show_usage(int argc, char **argv) {
+static void show_usage(int argc, char** argv) {
     printf("Use: aplus-ui [options]...\n"
            "User Interface Server.\n\n"
            "Options:\n"
@@ -55,7 +55,7 @@ static void show_usage(int argc, char **argv) {
     exit(0);
 }
 
-static void show_version(int argc, char **argv) {
+static void show_version(int argc, char** argv) {
     printf("%s (aplus coreutils) 0.1\n"
            "Copyright (c) %s Antonino Natale.\n"
            "Built with gcc %s (%s)\n",
@@ -67,7 +67,7 @@ static void show_version(int argc, char **argv) {
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
     static struct option long_options[] = {
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 
 
 
-    wc_renderer_t *renderer;
+    wc_renderer_t* renderer;
     if (wc_renderer_create(&renderer, wc_display_primary()) < 0) {
         return fprintf(stderr, "wc_renderer_create() failed: %s\n", strerror(errno)), 1;
     }
@@ -140,7 +140,7 @@ int main(int argc, char **argv) {
 
 
 
-    wc_font_t *font;
+    wc_font_t* font;
     if (wc_font_from_family(&font, "Ubuntu") < 0) {
         return fprintf(stderr, "wc_font_from_family() failed: %s\n", strerror(errno)), 1;
     }
@@ -153,7 +153,7 @@ int main(int argc, char **argv) {
     int last_time = time(NULL);
 
 
-    wc_window_t *window1;
+    wc_window_t* window1;
     wc_window_create(&window1, NULL);
     wc_window_set_title(window1, "Window 1");
     wc_window_set_position(window1, 250, 250);
@@ -161,7 +161,7 @@ int main(int argc, char **argv) {
     wc_window_set_flags(window1, WC_WINDOW_FLAGS_RESIZABLE);
     wc_window_set_font(window1, font);
 
-    wc_window_t *window2;
+    wc_window_t* window2;
     wc_window_create(&window2, NULL);
     wc_window_set_title(window2, "Window 2");
     wc_window_set_position(window2, 200, 200);
@@ -169,7 +169,7 @@ int main(int argc, char **argv) {
     wc_window_set_flags(window2, WC_WINDOW_FLAGS_RESIZABLE);
     wc_window_set_font(window2, font);
 
-    wc_window_t *window3;
+    wc_window_t* window3;
     wc_window_create(&window3, NULL);
     wc_window_set_title(window3, "Window 3");
     wc_window_set_position(window3, 300, 300);

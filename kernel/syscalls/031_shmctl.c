@@ -51,4 +51,4 @@
 
 struct shmid_ds;
 
-SYSCALL(31, shmctl, long sys_shmctl(int shmid, int cmd, struct shmid_ds *buf) { return -ENOSYS; });
+SYSCALL(31, shmctl, long sys_shmctl(int shmid, int cmd, struct shmid_ds* buf) { return -ENOSYS; });

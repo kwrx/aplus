@@ -52,7 +52,7 @@ MODULE_LICENSE("GPL");
 #define RAMDISK_BYTES2BLK(blk) ((blk) / RAMDISK_BLKSIZE)
 
 
-static ssize_t ram_read(device_t *device, void *buf, off_t offset, size_t count) {
+static ssize_t ram_read(device_t* device, void* buf, off_t offset, size_t count) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -84,14 +84,14 @@ static ssize_t ram_read(device_t *device, void *buf, off_t offset, size_t count)
         return 0;
 
 
-    memcpy(buf, (void *)(arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)), RAMDISK_BLK2BYTES(count));
+    memcpy(buf, (void*)(arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)), RAMDISK_BLK2BYTES(count));
 
 
     return count;
 }
 
 
-static ssize_t ram_write(device_t *device, const void *buf, off_t offset, size_t count) {
+static ssize_t ram_write(device_t* device, const void* buf, off_t offset, size_t count) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -123,7 +123,7 @@ static ssize_t ram_write(device_t *device, const void *buf, off_t offset, size_t
         return 0;
 
 
-    memcpy((void *)(arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)), buf, RAMDISK_BLK2BYTES(count));
+    memcpy((void*)(arch_vmm_p2v(ptr, ARCH_VMM_AREA_HEAP) + RAMDISK_BLK2BYTES(offset)), buf, RAMDISK_BLK2BYTES(count));
 
 
     return count;
@@ -131,7 +131,7 @@ static ssize_t ram_write(device_t *device, const void *buf, off_t offset, size_t
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     DEBUG_ASSERT(core);
@@ -152,12 +152,12 @@ void init(const char *args) {
         if (core->modules.ko[index].size == 0)
             continue;
 
-        if (strstr((const void *)core->modules.ko[index].cmdline, "type=ramdisk") == NULL)
+        if (strstr((const void*)core->modules.ko[index].cmdline, "type=ramdisk") == NULL)
             continue;
 
 
 
-        device_t *d = (device_t *)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+        device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
 
         strncpy(d->name, "ram0", DEVICE_MAXNAMELEN);
         strncpy(d->description, "RAM disk device", DEVICE_MAXDESCLEN);
@@ -181,7 +181,7 @@ void init(const char *args) {
         d->blk.read  = ram_read;
         d->blk.write = ram_write;
 
-        d->userdata = (void *)index;
+        d->userdata = (void*)index;
 
         device += 1;
 

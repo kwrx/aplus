@@ -49,7 +49,7 @@
  */
 
 SYSCALL(
-    83, mkdir, long sys_mkdir(const char *pathname, mode_t mode) {
+    83, mkdir, long sys_mkdir(const char* pathname, mode_t mode) {
         int fd = sys_open(pathname, O_CREAT | O_EXCL | O_RDONLY, S_IFDIR | (mode & 0777));
         if (fd < 0)
             return fd;

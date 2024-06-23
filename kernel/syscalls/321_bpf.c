@@ -51,4 +51,4 @@
 
 union bpf_attr;
 
-SYSCALL(321, bpf, long sys_bpf(int cmd, union bpf_attr *attr, unsigned int size) { return -ENOSYS; });
+SYSCALL(321, bpf, long sys_bpf(int cmd, union bpf_attr* attr, unsigned int size) { return -ENOSYS; });

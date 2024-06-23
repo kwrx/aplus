@@ -92,7 +92,7 @@ struct pcnet {
         device_t device;
 };
 
-static struct pcnet *devices[PCNET_MAX_DEVICES] = {0};
+static struct pcnet* devices[PCNET_MAX_DEVICES] = {0};
 
 static uint32_t pci_devices[PCNET_MAX_DEVICES];
 static uint32_t pci_count = 0;
@@ -117,17 +117,17 @@ static uint32_t pci_count = 0;
 
 
 
-static inline uint32_t r_csr32(struct pcnet *dev, uint32_t x) {
+static inline uint32_t r_csr32(struct pcnet* dev, uint32_t x) {
     w_rap32(dev, x);
     return inl(dev->io + 0x10);
 }
 
-static inline uint16_t r_csr16(struct pcnet *dev, uint16_t x) {
+static inline uint16_t r_csr16(struct pcnet* dev, uint16_t x) {
     w_rap32(dev, x);
     return inw(dev->io + 0x10);
 }
 
-static inline uint32_t r_bcr32(struct pcnet *dev, uint32_t x) {
+static inline uint32_t r_bcr32(struct pcnet* dev, uint32_t x) {
     w_rap32(dev, x);
     return inl(dev->io + 0x1C);
 }
@@ -138,12 +138,12 @@ static inline int d_owns(uintptr_t data, int idx) {
 
 
 
-static int pcnet_startoutput(void *internals) {
+static int pcnet_startoutput(void* internals) {
 
     DEBUG_ASSERT(internals);
 
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
     while (!d_owns(dev->vtxdes, dev->txid)) {
 
@@ -163,27 +163,27 @@ static int pcnet_startoutput(void *internals) {
 }
 
 
-static void pcnet_output(void *internals, void *buf, uint16_t len) {
+static void pcnet_output(void* internals, void* buf, uint16_t len) {
 
     DEBUG_ASSERT(internals);
 
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
-    memcpy((void *)((uintptr_t)dev->cache + dev->offset), buf, len);
+    memcpy((void*)((uintptr_t)dev->cache + dev->offset), buf, len);
     dev->offset += len;
 }
 
 
-static void pcnet_endoutput(void *internals, uint16_t len) {
+static void pcnet_endoutput(void* internals, uint16_t len) {
 
     DEBUG_ASSERT(internals);
 
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
 
-    memcpy((void *)(dev->vtxbuf + dev->txid * PCNET_BUFSIZE), (void *)(dev->cache), len);
+    memcpy((void*)(dev->vtxbuf + dev->txid * PCNET_BUFSIZE), (void*)(dev->cache), len);
 
 
     mmio_w8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7), mmio_r8(dev->vtxdes + (dev->txid * PCNET_DE_SIZE + 7)) | 0x02);
@@ -207,11 +207,11 @@ static void pcnet_endoutput(void *internals, uint16_t len) {
 }
 
 
-static int pcnet_startinput(void *internals) {
+static int pcnet_startinput(void* internals) {
 
     DEBUG_ASSERT(internals);
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
 
     uint16_t size = mmio_r16(dev->vrxdes + (dev->rxid * PCNET_DE_SIZE + 8));
@@ -227,10 +227,10 @@ static int pcnet_startinput(void *internals) {
 }
 
 
-static void pcnet_input(void *internals, void *buf, uint16_t len) {
+static void pcnet_input(void* internals, void* buf, uint16_t len) {
 
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->offset < dev->size);
@@ -239,7 +239,7 @@ static void pcnet_input(void *internals, void *buf, uint16_t len) {
         len = dev->size - dev->offset;
     }
 
-    memcpy(buf, (const void *)(dev->vrxbuf + dev->rxid * PCNET_BUFSIZE + dev->offset), len);
+    memcpy(buf, (const void*)(dev->vrxbuf + dev->rxid * PCNET_BUFSIZE + dev->offset), len);
 
     // // #if DEBUG_LEVEL_TRACE
     // //     kprintf("Dump: %d bytes\n", len);
@@ -253,11 +253,11 @@ static void pcnet_input(void *internals, void *buf, uint16_t len) {
 }
 
 
-static void pcnet_endinput(void *internals) {
+static void pcnet_endinput(void* internals) {
 
     DEBUG_ASSERT(internals);
 
-    struct pcnet *dev = (struct pcnet *)internals;
+    struct pcnet* dev = (struct pcnet*)internals;
 
 
     mmio_w8(dev->vrxdes + dev->rxid * PCNET_DE_SIZE + 7, 0x80);
@@ -271,12 +271,12 @@ static void pcnet_endinput(void *internals) {
 }
 
 
-static void pcnet_input_nomem(void *internals, uint16_t len) {
+static void pcnet_input_nomem(void* internals, uint16_t len) {
     kpanicf("pcnet: PANIC! no memory left for %d bytes\n", len);
 }
 
 
-static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet *dev) {
+static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet* dev) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->irq == irq);
@@ -289,12 +289,12 @@ static void pcnet_irq(pcidev_t device, uint8_t irq, struct pcnet *dev) {
 }
 
 
-static void pcnet_init(void *internals, uint8_t *address, void *mcast) {
+static void pcnet_init(void* internals, uint8_t* address, void* mcast) {
 
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(address);
 
-    struct pcnet *eth = (struct pcnet *)internals;
+    struct pcnet* eth = (struct pcnet*)internals;
 
     inl(eth->io + 0x18);
     inw(eth->io + 0x14);
@@ -335,7 +335,7 @@ static void pcnet_init(void *internals, uint8_t *address, void *mcast) {
 
     for (size_t i = 0; i < PCNET_RX_COUNT; i++) {
 
-        memset((void *)(eth->vrxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
+        memset((void*)(eth->vrxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
 
         mmio_w32(eth->vrxdes + i * PCNET_DE_SIZE + 0, eth->rxbuf + i * PCNET_BUFSIZE);
         mmio_w16(eth->vrxdes + i * PCNET_DE_SIZE + 4, ((-PCNET_BUFSIZE) & 0x0FFF) | 0xF000);
@@ -345,7 +345,7 @@ static void pcnet_init(void *internals, uint8_t *address, void *mcast) {
 
     for (size_t i = 0; i < PCNET_TX_COUNT; i++) {
 
-        memset((void *)(eth->vtxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
+        memset((void*)(eth->vtxdes + i * PCNET_DE_SIZE), 0, PCNET_DE_SIZE);
 
         mmio_w32(eth->vtxdes + i * PCNET_DE_SIZE + 0, eth->txbuf + i * PCNET_BUFSIZE);
         mmio_w16(eth->vtxdes + i * PCNET_DE_SIZE + 4, ((-PCNET_BUFSIZE) & 0x0FFF) | 0xF000);
@@ -424,7 +424,7 @@ static void pcnet_init(void *internals, uint8_t *address, void *mcast) {
 
 
 
-static void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void *data) {
+static void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
 
     if (pci_count >= PCNET_MAX_DEVICES)
         return;
@@ -436,7 +436,7 @@ static void pcnet_find_pci(uint32_t device, uint16_t venid, uint16_t devid, void
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "network=off"))
         return;
@@ -456,7 +456,7 @@ void init(const char *args) {
 
     for (size_t i = 0; i < pci_count; i++) {
 
-        struct pcnet *eth = (struct pcnet *)kcalloc(1, sizeof(struct pcnet), GFP_KERNEL);
+        struct pcnet* eth = (struct pcnet*)kcalloc(1, sizeof(struct pcnet), GFP_KERNEL);
 
         eth->pci = pci_devices[i];
         eth->buf = pmm_alloc_blocks(16);

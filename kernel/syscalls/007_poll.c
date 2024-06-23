@@ -60,7 +60,7 @@
 
 
 SYSCALL(
-    7, poll, long sys_poll(struct pollfd *ufds, unsigned int nfds, int timeout) {
+    7, poll, long sys_poll(struct pollfd* ufds, unsigned int nfds, int timeout) {
         if (unlikely(!ufds))
             return -EINVAL;
 

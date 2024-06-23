@@ -15,7 +15,7 @@
 #include FT_FREETYPE_H
 
 static FT_Library ft        = NULL;
-static wc_fontface_t *queue = NULL;
+static wc_fontface_t* queue = NULL;
 
 
 int wc_font_initialize(void) {
@@ -35,7 +35,7 @@ int wc_font_initialize(void) {
 
 
 
-    FILE *fp = fopen("/etc/fonts/fonts.conf", "r");
+    FILE* fp = fopen("/etc/fonts/fonts.conf", "r");
 
     if (!fp) {
         return errno = EIO, -1;
@@ -64,12 +64,12 @@ int wc_font_initialize(void) {
         }
 
 
-        char *tok = buffer;
+        char* tok = buffer;
 
-        char *face   = strtok_r(buffer, ":", &tok);
-        char *family = strtok_r(NULL, ":", &tok);
-        char *weight = strtok_r(NULL, ":", &tok);
-        char *slant  = strtok_r(NULL, ":", &tok);
+        char* face   = strtok_r(buffer, ":", &tok);
+        char* family = strtok_r(NULL, ":", &tok);
+        char* weight = strtok_r(NULL, ":", &tok);
+        char* slant  = strtok_r(NULL, ":", &tok);
 
 
         if (!face || !family || !weight || !slant) {
@@ -77,7 +77,7 @@ int wc_font_initialize(void) {
         }
 
 
-        wc_fontface_t *e = calloc(1, sizeof(wc_fontface_t));
+        wc_fontface_t* e = calloc(1, sizeof(wc_fontface_t));
 
         if (!e) {
             return errno = ENOMEM, -1;
@@ -147,13 +147,13 @@ int wc_font_initialize(void) {
 }
 
 
-int wc_font_from_family(struct wc_font **font, const char *family) {
+int wc_font_from_family(struct wc_font** font, const char* family) {
 
     assert(font);
     assert(family);
 
 
-    for (wc_fontface_t *i = queue; i; i = i->next) {
+    for (wc_fontface_t* i = queue; i; i = i->next) {
 
         if (strcmp(i->family, family) == 0) {
 
@@ -187,13 +187,13 @@ int wc_font_from_family(struct wc_font **font, const char *family) {
 }
 
 
-int wc_font_from_family_and_style(struct wc_font **font, const char *family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
+int wc_font_from_family_and_style(struct wc_font** font, const char* family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
 
     assert(font);
     assert(family);
 
 
-    for (wc_fontface_t *i = queue; i; i = i->next) {
+    for (wc_fontface_t* i = queue; i; i = i->next) {
 
         if (strcmp(i->family, family) == 0 && i->slant == slant && i->weight == weight) {
 
@@ -227,7 +227,7 @@ int wc_font_from_family_and_style(struct wc_font **font, const char *family, cai
 }
 
 
-int wc_font_from_path(struct wc_font **font, const char *path) {
+int wc_font_from_path(struct wc_font** font, const char* path) {
 
     assert(font);
     assert(path);
@@ -260,7 +260,7 @@ int wc_font_from_path(struct wc_font **font, const char *path) {
 }
 
 
-int wc_font_destroy(struct wc_font *font) {
+int wc_font_destroy(struct wc_font* font) {
 
     assert(font);
 

@@ -58,7 +58,7 @@
     #include "netif/ppp/ipcp.h"
     #include "netif/ppp/lcp.h"
 
-char *frame;
+char* frame;
 int framelen;
 int framemax;
 int escape_flag;
@@ -67,21 +67,21 @@ int fcs;
 
 struct packet {
         int length;
-        struct packet *next;
+        struct packet* next;
         unsigned char data[1];
 };
 
-struct packet *pend_q;
-struct packet *pend_qtail;
+struct packet* pend_q;
+struct packet* pend_qtail;
 
-static int active_packet(unsigned char *, int);
+static int active_packet(unsigned char*, int);
 
 /*
  * demand_conf - configure the interface for doing dial-on-demand.
  */
 void demand_conf() {
     int i;
-    const struct protent *protp;
+    const struct protent* protp;
 
     /*    framemax = lcp_allowoptions[0].mru;
         if (framemax < PPP_MRU) */
@@ -123,7 +123,7 @@ void demand_conf() {
  */
 void demand_block() {
     int i;
-    const struct protent *protp;
+    const struct protent* protp;
 
     for (i = 0; (protp = protocols[i]) != NULL; ++i)
         if (protp->demand_conf != NULL)
@@ -138,7 +138,7 @@ void demand_block() {
 void demand_discard() {
     struct packet *pkt, *nextpkt;
     int i;
-    const struct protent *protp;
+    const struct protent* protp;
 
     for (i = 0; (protp = protocols[i]) != NULL; ++i)
         if (protp->demand_conf != NULL)
@@ -162,7 +162,7 @@ void demand_discard() {
  */
 void demand_unblock() {
     int i;
-    const struct protent *protp;
+    const struct protent* protp;
 
     for (i = 0; (protp = protocols[i]) != NULL; ++i)
         if (protp->demand_conf != NULL)
@@ -189,7 +189,7 @@ static u_short fcstab[256] = {0x0000, 0x1189, 0x2312, 0x329b, 0x4624, 0x57ad, 0x
  * Return value is 1 if we need to bring up the link, 0 otherwise.
  */
 int loop_chars(p, n)
-unsigned char *p;
+unsigned char* p;
 int n;
 {
     int c, rv;
@@ -208,7 +208,7 @@ int n;
         if (c == PPP_FLAG) {
             if (!escape_flag && !flush_flag && framelen > 2 && fcs == PPP_GOODFCS) {
                 framelen -= 2;
-                if (loop_frame((unsigned char *)frame, framelen))
+                if (loop_frame((unsigned char*)frame, framelen))
                     rv = 1;
             }
             framelen    = 0;
@@ -247,10 +247,10 @@ int n;
  * bring up the link.
  */
 int loop_frame(frame, len)
-unsigned char *frame;
+unsigned char* frame;
 int len;
 {
-    struct packet *pkt;
+    struct packet* pkt;
 
     /* dbglog("from loop: %P", frame, len); */
     if (len < PPP_HDRLEN)
@@ -260,7 +260,7 @@ int len;
     if (!active_packet(frame, len))
         return 0;
 
-    pkt = (struct packet *)malloc(sizeof(struct packet) + len);
+    pkt = (struct packet*)malloc(sizeof(struct packet) + len);
     if (pkt != NULL) {
         pkt->length = len;
         pkt->next   = NULL;
@@ -302,14 +302,14 @@ u32_t newip;
                 /* Get old checksum */
 
                 iphdr    = (pkt->data[4] & 15) << 2;
-                checksum = *((unsigned short *)(pkt->data + 14));
+                checksum = *((unsigned short*)(pkt->data + 14));
                 if (checksum == 0xFFFF) {
                     checksum = 0;
                 }
 
 
                 if (pkt->data[13] == 17) {
-                    pkt_checksum = *((unsigned short *)(pkt->data + 10 + iphdr));
+                    pkt_checksum = *((unsigned short*)(pkt->data + 10 + iphdr));
                     if (pkt_checksum) {
                         cv = 1;
                         if (pkt_checksum == 0xFFFF) {
@@ -321,7 +321,7 @@ u32_t newip;
                 }
 
                 if (pkt->data[13] == 6) {
-                    pkt_checksum = *((unsigned short *)(pkt->data + 20 + iphdr));
+                    pkt_checksum = *((unsigned short*)(pkt->data + 20 + iphdr));
                     cv           = 1;
                     if (pkt_checksum == 0xFFFF) {
                         pkt_checksum = 0;
@@ -329,41 +329,41 @@ u32_t newip;
                 }
 
                 /* Delete old Source-IP-Address */
-                checksum -= *((unsigned short *)(pkt->data + 16)) ^ 0xFFFF;
-                checksum -= *((unsigned short *)(pkt->data + 18)) ^ 0xFFFF;
+                checksum -= *((unsigned short*)(pkt->data + 16)) ^ 0xFFFF;
+                checksum -= *((unsigned short*)(pkt->data + 18)) ^ 0xFFFF;
 
-                pkt_checksum -= *((unsigned short *)(pkt->data + 16)) ^ 0xFFFF;
-                pkt_checksum -= *((unsigned short *)(pkt->data + 18)) ^ 0xFFFF;
+                pkt_checksum -= *((unsigned short*)(pkt->data + 16)) ^ 0xFFFF;
+                pkt_checksum -= *((unsigned short*)(pkt->data + 18)) ^ 0xFFFF;
 
                 /* Change Source-IP-Address */
-                *((u32_t *)(pkt->data + 16)) = newip;
+                *((u32_t*)(pkt->data + 16)) = newip;
 
                 /* Add new Source-IP-Address */
-                checksum += *((unsigned short *)(pkt->data + 16)) ^ 0xFFFF;
-                checksum += *((unsigned short *)(pkt->data + 18)) ^ 0xFFFF;
+                checksum += *((unsigned short*)(pkt->data + 16)) ^ 0xFFFF;
+                checksum += *((unsigned short*)(pkt->data + 18)) ^ 0xFFFF;
 
-                pkt_checksum += *((unsigned short *)(pkt->data + 16)) ^ 0xFFFF;
-                pkt_checksum += *((unsigned short *)(pkt->data + 18)) ^ 0xFFFF;
+                pkt_checksum += *((unsigned short*)(pkt->data + 16)) ^ 0xFFFF;
+                pkt_checksum += *((unsigned short*)(pkt->data + 18)) ^ 0xFFFF;
 
                 /* Write new checksum */
                 if (!checksum) {
                     checksum = 0xFFFF;
                 }
-                *((unsigned short *)(pkt->data + 14)) = checksum;
+                *((unsigned short*)(pkt->data + 14)) = checksum;
                 if (pkt->data[13] == 6) {
-                    *((unsigned short *)(pkt->data + 20 + iphdr)) = pkt_checksum;
+                    *((unsigned short*)(pkt->data + 20 + iphdr)) = pkt_checksum;
                 }
                 if (cv && (pkt->data[13] == 17)) {
-                    *((unsigned short *)(pkt->data + 10 + iphdr)) = pkt_checksum;
+                    *((unsigned short*)(pkt->data + 10 + iphdr)) = pkt_checksum;
                 }
 
                 /* Log Packet */
-                strcpy(ipstr, inet_ntoa(*((struct in_addr *)(pkt->data + 16))));
+                strcpy(ipstr, inet_ntoa(*((struct in_addr*)(pkt->data + 16))));
                 if (pkt->data[13] == 1) {
-                    syslog(LOG_INFO, "Open ICMP %s -> %s\n", ipstr, inet_ntoa(*((struct in_addr *)(pkt->data + 20))));
+                    syslog(LOG_INFO, "Open ICMP %s -> %s\n", ipstr, inet_ntoa(*((struct in_addr*)(pkt->data + 20))));
                 } else {
-                    syslog(LOG_INFO, "Open %s %s:%d -> %s:%d\n", pkt->data[13] == 6 ? "TCP" : "UDP", ipstr, ntohs(*((short *)(pkt->data + iphdr + 4))), inet_ntoa(*((struct in_addr *)(pkt->data + 20))),
-                           ntohs(*((short *)(pkt->data + iphdr + 6))));
+                    syslog(LOG_INFO, "Open %s %s:%d -> %s:%d\n", pkt->data[13] == 6 ? "TCP" : "UDP", ipstr, ntohs(*((short*)(pkt->data + iphdr + 4))), inet_ntoa(*((struct in_addr*)(pkt->data + 20))),
+                           ntohs(*((short*)(pkt->data + iphdr + 6))));
                 }
             }
             output(pcb, pkt->data, pkt->length);
@@ -386,11 +386,11 @@ u32_t newip;
  * that is, whether it is worth bringing up the link for.
  */
 static int active_packet(p, len)
-unsigned char *p;
+unsigned char* p;
 int len;
 {
     int proto, i;
-    const struct protent *protp;
+    const struct protent* protp;
 
     if (len < PPP_HDRLEN)
         return 0;

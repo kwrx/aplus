@@ -36,16 +36,16 @@
 
 
 
-void vfs_dcache_init(inode_t *inode) {
+void vfs_dcache_init(inode_t* inode) {
     hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
 }
 
-void vfs_dcache_free(inode_t *inode) {
+void vfs_dcache_free(inode_t* inode) {
     hashmap_cleanup(&inode->dcache);
 }
 
 
-void vfs_dcache_add(inode_t *parent, inode_t *inode) {
+void vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
     if (inode->flags & INODE_FLAGS_DCACHE_DISABLED)
         return;
@@ -60,7 +60,7 @@ void vfs_dcache_add(inode_t *parent, inode_t *inode) {
 }
 
 
-void vfs_dcache_remove(inode_t *parent, inode_t *inode) {
+void vfs_dcache_remove(inode_t* parent, inode_t* inode) {
 
     if (inode->flags & INODE_FLAGS_DCACHE_DISABLED)
         return;
@@ -75,7 +75,7 @@ void vfs_dcache_remove(inode_t *parent, inode_t *inode) {
 }
 
 
-inode_t *vfs_dcache_find(inode_t *parent, const char *name) {
+inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 
     if (parent->flags & INODE_FLAGS_DCACHE_DISABLED)
         return NULL;

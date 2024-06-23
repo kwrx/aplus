@@ -53,7 +53,7 @@
  */
 
 SYSCALL(
-    203, sched_setaffinity, long sys_sched_setaffinity(pid_t pid, unsigned int len, unsigned long *user_mask_ptr) {
+    203, sched_setaffinity, long sys_sched_setaffinity(pid_t pid, unsigned int len, unsigned long* user_mask_ptr) {
         if (unlikely(len != CPU_SETSIZE))
             return -EINVAL;
 
@@ -82,7 +82,7 @@ SYSCALL(
 
         cpu_foreach(cpu) {
 
-            task_t *tmp;
+            task_t* tmp;
             for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
                 if (tmp->tid != pid)

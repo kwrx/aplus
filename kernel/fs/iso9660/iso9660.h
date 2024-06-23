@@ -203,8 +203,8 @@ typedef struct iso9660 {
                 iso9660_directory_record_t root;
         };
 
-        inode_t *dev;
-        inode_t *dir;
+        inode_t* dev;
+        inode_t* dir;
 
         ino_t next_ino;
 
@@ -279,15 +279,15 @@ typedef struct iso9660_rockridge_entry {
 } __packed iso9660_rockridge_entry_t;
 
 
-int iso9660_getattr(inode_t *, struct stat *);
+int iso9660_getattr(inode_t*, struct stat*);
 
-ssize_t iso9660_read(inode_t *, void *, off_t, size_t);
-ssize_t iso9660_readlink(inode_t *, char *, size_t);
-ssize_t iso9660_readdir(inode_t *, struct dirent *, off_t, size_t);
-inode_t *iso9660_finddir(inode_t *, const char *);
+ssize_t iso9660_read(inode_t*, void*, off_t, size_t);
+ssize_t iso9660_readlink(inode_t*, char*, size_t);
+ssize_t iso9660_readdir(inode_t*, struct dirent*, off_t, size_t);
+inode_t* iso9660_finddir(inode_t*, const char*);
 
-iso9660_inode_t *iso9660_cache_fetch(cache_t *cache, iso9660_t *iso9660, size_t position);
-void iso9660_cache_commit(cache_t *cache, iso9660_t *iso9660, size_t position, iso9660_inode_t *inode);
-void iso9660_cache_release(cache_t *cache, iso9660_t *iso9660, size_t position, iso9660_inode_t *inode);
+iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t position);
+void iso9660_cache_commit(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode);
+void iso9660_cache_release(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode);
 
 #endif

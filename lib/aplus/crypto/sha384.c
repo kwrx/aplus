@@ -30,7 +30,7 @@
 #include <string.h>
 
 
-void sha384_init(sha384_t *ctx) {
+void sha384_init(sha384_t* ctx) {
     ctx->h_dig.h[0] = 0xCBBB9D5DC1059ED8LL;
     ctx->h_dig.h[1] = 0x629A292A367CD507LL;
     ctx->h_dig.h[2] = 0x9159015A3070DD17LL;
@@ -43,8 +43,8 @@ void sha384_init(sha384_t *ctx) {
     ctx->size = ctx->totalSize = 0;
 }
 
-char *sha384(const char *data) {
-    char *out = (char *)__libaplus_malloc(SHA384_DIGEST_SIZE * 2);
+char* sha384(const char* data) {
+    char* out = (char*)__libaplus_malloc(SHA384_DIGEST_SIZE * 2);
 
     sha384_t hash;
     char buf[SHA384_DIGEST_SIZE];
@@ -62,13 +62,13 @@ char *sha384(const char *data) {
 }
 
 
-void sha384_update(sha384_t *p, const unsigned char *data, size_t size) {
-    sha512_update((sha512_t *)p, data, size);
+void sha384_update(sha384_t* p, const unsigned char* data, size_t size) {
+    sha512_update((sha512_t*)p, data, size);
 }
 
 
-void sha384_final(sha384_t *p, unsigned char _digest[SHA384_DIGEST_SIZE]) {
+void sha384_final(sha384_t* p, unsigned char _digest[SHA384_DIGEST_SIZE]) {
     unsigned char d[SHA512_DIGEST_SIZE];
-    sha512_final((sha512_t *)p, d);
+    sha512_final((sha512_t*)p, d);
     memcpy(_digest, d, SHA384_DIGEST_SIZE);
 }

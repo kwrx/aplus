@@ -22,22 +22,22 @@ typedef struct wc_display {
         size_t width;
         size_t height;
 
-        cairo_surface_t *surface;
-        cairo_t *cr;
+        cairo_surface_t* surface;
+        cairo_t* cr;
 
         wc_ref_t ref;
 
 
-        struct wc_display *next;
+        struct wc_display* next;
 
 } wc_display_t;
 
 
 int wc_display_initialize(void);
 
-struct wc_display *wc_display_primary();
-struct wc_display *wc_display_next(struct wc_display *display);
-struct wc_display *wc_display_at_position(uint16_t x, uint16_t y);
+struct wc_display* wc_display_primary();
+struct wc_display* wc_display_next(struct wc_display* display);
+struct wc_display* wc_display_at_position(uint16_t x, uint16_t y);
 
 
 #ifdef __cplusplus

@@ -36,7 +36,7 @@
 
 
 
-ssize_t ext2_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
+ssize_t ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -46,14 +46,14 @@ ssize_t ext2_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    ext2_t *ext2 = (ext2_t *)inode->sb->fsinfo;
+    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
 
 
 
-    struct ext2_inode *n = cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
 
-    uint32_t *blocks = &n->i_block[0];
+    uint32_t* blocks = &n->i_block[0];
     uint32_t ib      = pos / ext2->blocksize;
     uint32_t eb      = (pos + len - 1) / ext2->blocksize;
     uint32_t off     = 0;
@@ -100,7 +100,7 @@ ssize_t ext2_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
         p = (pos + len) % ext2->blocksize;
 
 
-        ext2_utils_write_inode_data(ext2, blocks, eb, 0, (void *)((uintptr_t)buf + len - p), p);
+        ext2_utils_write_inode_data(ext2, blocks, eb, 0, (void*)((uintptr_t)buf + len - p), p);
 
         eb--;
     }
@@ -108,7 +108,7 @@ ssize_t ext2_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
 
     for (off_t i = eb - ib + 1; i > 0; i--, ib++, off += ext2->blocksize) {
 
-        ext2_utils_write_inode_data(ext2, blocks, ib, 0, (void *)((uintptr_t)buf + off), ext2->blocksize);
+        ext2_utils_write_inode_data(ext2, blocks, ib, 0, (void*)((uintptr_t)buf + off), ext2->blocksize);
     }
 
 

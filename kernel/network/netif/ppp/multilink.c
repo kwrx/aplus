@@ -56,20 +56,20 @@
     #include "netif/ppp/tdb.h"
 
 bool endpoint_specified; /* user gave explicit endpoint discriminator */
-char *bundle_id;         /* identifier for our bundle */
-char *blinks_id;         /* key for the list of links */
+char* bundle_id;         /* identifier for our bundle */
+char* blinks_id;         /* key for the list of links */
 bool doing_multilink;    /* multilink was enabled and agreed to */
 bool multilink_master;   /* we own the multilink bundle */
 
-extern TDB_CONTEXT *pppdb;
+extern TDB_CONTEXT* pppdb;
 extern char db_key[];
 
 static void make_bundle_links(int append);
 static void remove_bundle_link(void);
-static void iterate_bundle_links(void (*func)(char *));
+static void iterate_bundle_links(void (*func)(char*));
 
-static int get_default_epdisc(struct epdisc *);
-static int parse_num(char *str, const char *key, int *valp);
+static int get_default_epdisc(struct epdisc*);
+static int parse_num(char* str, const char* key, int* valp);
 static int owns_unit(TDB_DATA pid, int unit);
 
     #define set_ip_epdisc(ep, addr)    \
@@ -89,8 +89,8 @@ static int owns_unit(TDB_DATA pid, int unit);
     #define process_exists(n) (kill((n), 0) == 0 || errno != ESRCH)
 
 void mp_check_options() {
-    lcp_options *wo = &lcp_wantoptions[0];
-    lcp_options *ao = &lcp_allowoptions[0];
+    lcp_options* wo = &lcp_wantoptions[0];
+    lcp_options* ao = &lcp_allowoptions[0];
 
     doing_multilink = 0;
     if (!multilink)
@@ -115,12 +115,12 @@ void mp_check_options() {
  * if we are doing multilink.
  */
 int mp_join_bundle() {
-    lcp_options *go = &lcp_gotoptions[0];
-    lcp_options *ho = &lcp_hisoptions[0];
-    lcp_options *ao = &lcp_allowoptions[0];
+    lcp_options* go = &lcp_gotoptions[0];
+    lcp_options* ho = &lcp_hisoptions[0];
+    lcp_options* ao = &lcp_allowoptions[0];
     int unit, pppd_pid;
     int l, mtu;
-    char *p;
+    char* p;
     TDB_DATA key, pid, rec;
 
     if (doing_multilink) {
@@ -254,7 +254,7 @@ void mp_exit_bundle() {
     unlock_db();
 }
 
-static void sendhup(char *str) {
+static void sendhup(char* str) {
     int pid;
 
     if (parse_num(str, "PPPD_PID=", &pid) && pid != getpid()) {
@@ -294,7 +294,7 @@ void mp_bundle_terminated() {
 
 static void make_bundle_links(int append) {
     TDB_DATA key, rec;
-    char *p;
+    char* p;
     char entry[32];
     int l;
 
@@ -359,7 +359,7 @@ static void remove_bundle_link() {
     free(rec.dptr);
 }
 
-static void iterate_bundle_links(void (*func)(char *)) {
+static void iterate_bundle_links(void (*func)(char*)) {
     TDB_DATA key, rec, pp;
     char *p, *q;
 
@@ -391,9 +391,9 @@ static void iterate_bundle_links(void (*func)(char *)) {
 }
 
 static int parse_num(str, key, valp)
-char *str;
-const char *key;
-int *valp;
+char* str;
+const char* key;
+int* valp;
 {
     char *p, *endp;
     int i;
@@ -433,10 +433,10 @@ int unit;
 }
 
 static int get_default_epdisc(ep)
-struct epdisc *ep;
+struct epdisc* ep;
 {
-    char *p;
-    struct hostent *hp;
+    char* p;
+    struct hostent* hp;
     u32_t addr;
 
     /* First try for an ethernet MAC address */
@@ -450,7 +450,7 @@ struct epdisc *ep;
     /* see if our hostname corresponds to a reasonable IP address */
     hp = gethostbyname(hostname);
     if (hp != NULL) {
-        addr = *(u32_t *)hp->h_addr;
+        addr = *(u32_t*)hp->h_addr;
         if (!bad_ip_adrs(addr)) {
             addr = lwip_ntohl(addr);
             if (!LOCAL_IP_ADDR(addr)) {
@@ -468,13 +468,13 @@ struct epdisc *ep;
  * epdisc_to_str - make a printable string from an endpoint discriminator.
  */
 
-static char *endp_class_names[] = {"null", "local", "IP", "MAC", "magic", "phone"};
+static char* endp_class_names[] = {"null", "local", "IP", "MAC", "magic", "phone"};
 
-char *epdisc_to_str(ep)
-struct epdisc *ep;
+char* epdisc_to_str(ep)
+struct epdisc* ep;
 {
     static char str[MAX_ENDP_LEN * 3 + 8];
-    u_char *p = ep->value;
+    u_char* p = ep->value;
     int i, mask = 0;
     char *q, c, c2;
 
@@ -519,8 +519,8 @@ static int hexc_val(int c) {
 }
 
 int str_to_epdisc(ep, str)
-struct epdisc *ep;
-char *str;
+struct epdisc* ep;
+char* str;
 {
     int i, l;
     char *p, *endp;

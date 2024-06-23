@@ -52,4 +52,4 @@
 
 struct sembuf;
 
-SYSCALL(220, semtimedop, long sys_semtimedop(int semid, struct sembuf *sops, unsigned nsops, const struct timespec *timeout) { return -ENOSYS; });
+SYSCALL(220, semtimedop, long sys_semtimedop(int semid, struct sembuf* sops, unsigned nsops, const struct timespec* timeout) { return -ENOSYS; });

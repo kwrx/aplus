@@ -57,7 +57,7 @@
  */
 
 SYSCALL(
-    229, clock_getres, long sys_clock_getres(clockid_t which_clock, struct timespec *tp) {
+    229, clock_getres, long sys_clock_getres(clockid_t which_clock, struct timespec* tp) {
         if (unlikely(!tp))
             return -EINVAL;
 

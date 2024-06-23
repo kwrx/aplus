@@ -48,16 +48,16 @@ MODULE_LICENSE("GPL");
 
 static uint64_t __next_pty_index = 0;
 
-static pty_t *queue          = NULL;
+static pty_t* queue          = NULL;
 static spinlock_t queue_lock = SPINLOCK_INIT;
 
 
 
-static ssize_t pty_process_output(pty_t *pty, const char *buf, size_t size);
-static ssize_t pty_process_input(pty_t *pty, const char *buf, size_t size);
+static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size);
+static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size);
 
 
-__attribute__((used)) static void pty_input_discard(pty_t *pty, bool drain) {
+__attribute__((used)) static void pty_input_discard(pty_t* pty, bool drain) {
 
     DEBUG_ASSERT(pty);
 
@@ -81,7 +81,7 @@ __attribute__((used)) static void pty_input_discard(pty_t *pty, bool drain) {
 }
 
 
-__attribute__((used)) static void pty_input_backspace(pty_t *pty, bool echo) {
+__attribute__((used)) static void pty_input_backspace(pty_t* pty, bool echo) {
 
     DEBUG_ASSERT(pty);
 
@@ -112,7 +112,7 @@ __attribute__((used)) static void pty_input_backspace(pty_t *pty, bool echo) {
 }
 
 
-__attribute__((used)) static void pty_input_append(pty_t *pty, char ch, bool echo) {
+__attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool echo) {
 
     DEBUG_ASSERT(pty);
 
@@ -136,7 +136,7 @@ __attribute__((used)) static void pty_input_append(pty_t *pty, char ch, bool ech
 }
 
 
-static ssize_t pty_process_output(pty_t *pty, const char *buf, size_t size) {
+static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
 
     DEBUG_ASSERT(pty);
     DEBUG_ASSERT(buf);
@@ -175,7 +175,7 @@ static ssize_t pty_process_output(pty_t *pty, const char *buf, size_t size) {
     return size;
 }
 
-static ssize_t pty_process_input(pty_t *pty, const char *buf, size_t size) {
+static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
     DEBUG_ASSERT(pty);
     DEBUG_ASSERT(buf);
@@ -344,19 +344,19 @@ static ssize_t pty_process_input(pty_t *pty, const char *buf, size_t size) {
 
 
 
-int pty_ioctl(inode_t *inode, long req, void *arg) {
+int pty_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
-    struct pty *pty = (struct pty *)inode->userdata;
+    struct pty* pty = (struct pty*)inode->userdata;
 
 
     switch (req) {
 
         case TIOCGPTN: {
 
-            int *index = (int *)arg;
+            int* index = (int*)arg;
 
             if (unlikely(!index))
                 return -EFAULT;
@@ -372,7 +372,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCSWINSZ: {
 
-            struct winsize *ws = (struct winsize *)arg;
+            struct winsize* ws = (struct winsize*)arg;
 
             if (unlikely(!ws))
                 return -EFAULT;
@@ -395,7 +395,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCGWINSZ: {
 
-            struct winsize *ws = (struct winsize *)arg;
+            struct winsize* ws = (struct winsize*)arg;
 
             if (unlikely(!ws))
                 return -EFAULT;
@@ -414,7 +414,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCGPGRP: {
 
-            pid_t *pgrp = (pid_t *)arg;
+            pid_t* pgrp = (pid_t*)arg;
 
             if (unlikely(!pgrp))
                 return -EFAULT;
@@ -430,7 +430,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCSPGRP: {
 
-            pid_t *pgrp = (pid_t *)arg;
+            pid_t* pgrp = (pid_t*)arg;
 
             if (unlikely(!pgrp))
                 return -EFAULT;
@@ -493,7 +493,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCINQ: { // XXX: FIONREAD
 
-            int *count = (int *)arg;
+            int* count = (int*)arg;
 
             if (unlikely(!count))
                 return -EFAULT;
@@ -509,7 +509,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCOUTQ: {
 
-            int *count = (int *)arg;
+            int* count = (int*)arg;
 
             if (unlikely(!count))
                 return -EFAULT;
@@ -594,7 +594,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCGSID: {
 
-            pid_t *sid = (pid_t *)arg;
+            pid_t* sid = (pid_t*)arg;
 
             if (unlikely(!sid))
                 return -EFAULT;
@@ -617,7 +617,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCGEXCL: {
 
-            int *excl = (int *)arg;
+            int* excl = (int*)arg;
 
             if (unlikely(!excl))
                 return -EFAULT;
@@ -642,7 +642,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCSPTLCK: {
 
-            int *lock = (int *)arg;
+            int* lock = (int*)arg;
 
             if (unlikely(!lock))
                 return -EFAULT;
@@ -658,7 +658,7 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
         case TIOCGPTLCK: {
 
-            int *lock = (int *)arg;
+            int* lock = (int*)arg;
 
             if (unlikely(!lock))
                 return -EFAULT;
@@ -689,12 +689,12 @@ int pty_ioctl(inode_t *inode, long req, void *arg) {
 
 
 
-ssize_t pty_master_read(inode_t *inode, void *buf, off_t offset, size_t size) {
+ssize_t pty_master_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
-    struct pty *pty = (struct pty *)inode->userdata;
+    struct pty* pty = (struct pty*)inode->userdata;
 
     if (unlikely(!buf))
         return -EFAULT;
@@ -710,12 +710,12 @@ ssize_t pty_master_read(inode_t *inode, void *buf, off_t offset, size_t size) {
 }
 
 
-ssize_t pty_master_write(inode_t *inode, const void *buf, off_t offset, size_t size) {
+ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
-    struct pty *pty = (struct pty *)inode->userdata;
+    struct pty* pty = (struct pty*)inode->userdata;
 
     if (unlikely(!buf))
         return -EFAULT;
@@ -731,12 +731,12 @@ ssize_t pty_master_write(inode_t *inode, const void *buf, off_t offset, size_t s
 }
 
 
-ssize_t pty_slave_read(inode_t *inode, void *buf, off_t offset, size_t size) {
+ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
-    struct pty *pty = (struct pty *)inode->userdata;
+    struct pty* pty = (struct pty*)inode->userdata;
 
     if (unlikely(!buf))
         return -EFAULT;
@@ -766,12 +766,12 @@ ssize_t pty_slave_read(inode_t *inode, void *buf, off_t offset, size_t size) {
 }
 
 
-ssize_t pty_slave_write(inode_t *inode, const void *buf, off_t offset, size_t size) {
+ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
-    struct pty *pty = (struct pty *)inode->userdata;
+    struct pty* pty = (struct pty*)inode->userdata;
 
     if (unlikely(!buf))
         return -EFAULT;
@@ -787,12 +787,12 @@ ssize_t pty_slave_write(inode_t *inode, const void *buf, off_t offset, size_t si
 }
 
 
-pty_t *pty_create(inode_t *ptmx, int flags) {
+pty_t* pty_create(inode_t* ptmx, int flags) {
 
     DEBUG_ASSERT(ptmx);
 
 
-    struct pty *pty = (struct pty *)kcalloc(sizeof(struct pty), 1, GFP_USER);
+    struct pty* pty = (struct pty*)kcalloc(sizeof(struct pty), 1, GFP_USER);
 
     if (unlikely(!pty))
         return NULL;
@@ -854,7 +854,7 @@ pty_t *pty_create(inode_t *ptmx, int flags) {
     return pty;
 }
 
-pty_t *pty_queue() {
+pty_t* pty_queue() {
     return queue;
 }
 
@@ -867,7 +867,7 @@ void pty_queue_unlock() {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     spinlock_init(&queue_lock);
 }
 

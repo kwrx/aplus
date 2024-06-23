@@ -50,4 +50,4 @@
 
 struct utimbuf;
 
-SYSCALL(132, utime, long sys_utime(char *filename, struct utimbuf *times) { return -ENOSYS; });
+SYSCALL(132, utime, long sys_utime(char* filename, struct utimbuf* times) { return -ENOSYS; });

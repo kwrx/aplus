@@ -37,7 +37,7 @@
 
 
 
-int video_resource_create_2d(device_video_context_t *context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+int video_resource_create_2d(device_video_context_t* context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
 
     for (size_t i = 0; i < DEVICE_VIDEO_MAX_RESOURCES; i++) {
 
@@ -71,12 +71,12 @@ int video_resource_create_2d(device_video_context_t *context, uint16_t x, uint16
 }
 
 
-int video_resource_create_3d(device_video_context_t *context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+int video_resource_create_3d(device_video_context_t* context, uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
     return kpanicf("not yet implemented"), 0;
 }
 
 
-int video_resource_destroy(device_video_context_t *context, int id) {
+int video_resource_destroy(device_video_context_t* context, int id) {
 
     if (unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
         return errno = EINVAL, -1;
@@ -85,7 +85,7 @@ int video_resource_destroy(device_video_context_t *context, int id) {
         return errno = ENOENT, -1;
 
     if (unlikely(context->resources[id].flags & DEVICE_VIDEO_RESOURCE_FLAGS_2D))
-        kfree((void *)context->resources[id].buffer);
+        kfree((void*)context->resources[id].buffer);
 
 
     context->resources[id].flags &= ~DEVICE_VIDEO_RESOURCE_FLAGS_ENABLED;
@@ -95,7 +95,7 @@ int video_resource_destroy(device_video_context_t *context, int id) {
 }
 
 
-int video_resource_lock(device_video_context_t *device, int id) {
+int video_resource_lock(device_video_context_t* device, int id) {
 
     if (unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
         return errno = EINVAL, -1;
@@ -110,7 +110,7 @@ int video_resource_lock(device_video_context_t *device, int id) {
 }
 
 
-int video_resource_unlock(device_video_context_t *device, int id) {
+int video_resource_unlock(device_video_context_t* device, int id) {
 
     if (unlikely(id < 0 || id >= DEVICE_VIDEO_MAX_RESOURCES))
         return errno = EINVAL, -1;

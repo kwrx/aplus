@@ -35,7 +35,7 @@
 
 
 
-inode_t *ext2_finddir(inode_t *inode, const char *name) {
+inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -43,12 +43,12 @@ inode_t *ext2_finddir(inode_t *inode, const char *name) {
     DEBUG_ASSERT(name);
 
 
-    ext2_t *ext2 = (ext2_t *)inode->sb->fsinfo;
+    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
 
 
 
-    struct ext2_inode *n = cache_get(&inode->sb->cache, inode->ino);
-    struct inode *d      = NULL;
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
+    struct inode* d      = NULL;
 
 
     size_t name_len = strlen(name);
@@ -62,7 +62,7 @@ inode_t *ext2_finddir(inode_t *inode, const char *name) {
 
             for (size_t i = 0; i < ext2->blocksize;) {
 
-                struct ext2_dir_entry_2 *e = (struct ext2_dir_entry_2 *)((uintptr_t)ext2->iocache + i);
+                struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*)((uintptr_t)ext2->iocache + i);
 
                 DEBUG_ASSERT(e->rec_len);
 
@@ -76,14 +76,14 @@ inode_t *ext2_finddir(inode_t *inode, const char *name) {
 
                 } else {
 
-                    mode = ((struct ext2_inode *)cache_get(&inode->sb->cache, e->inode))->i_mode;
+                    mode = ((struct ext2_inode*)cache_get(&inode->sb->cache, e->inode))->i_mode;
                 }
 
                 /* Found? */
                 if (name_len == e->name_len && strncmp(name, e->name, e->name_len) == 0) {
 
 
-                    d = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+                    d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
                     d->ino    = e->inode;
                     d->sb     = inode->sb;

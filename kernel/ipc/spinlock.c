@@ -31,7 +31,7 @@
 #include <aplus/ipc.h>
 
 
-static inline uint64_t spinlock_get_new_owner(spinlock_t *lock) {
+static inline uint64_t spinlock_get_new_owner(spinlock_t* lock) {
 
     DEBUG_ASSERT(lock);
 
@@ -44,9 +44,9 @@ static inline uint64_t spinlock_get_new_owner(spinlock_t *lock) {
  * @brief Initialize Spinlock with flags.
  */
 #if DEBUG_LEVEL_TRACE
-void __spinlock_init_with_flags(spinlock_t *lock, int flags, const char *FUNC, const char *FILE, int LINE) {
+void __spinlock_init_with_flags(spinlock_t* lock, int flags, const char* FUNC, const char* FILE, int LINE) {
 #else
-void spinlock_init_with_flags(spinlock_t *lock, int flags) {
+void spinlock_init_with_flags(spinlock_t* lock, int flags) {
 #endif
 
     DEBUG_ASSERT(lock);
@@ -69,9 +69,9 @@ void spinlock_init_with_flags(spinlock_t *lock, int flags) {
  * @brief Initialize Spinlock.
  */
 #if DEBUG_LEVEL_TRACE
-void __spinlock_init(spinlock_t *lock, const char *FUNC, const char *FILE, int LINE) {
+void __spinlock_init(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
-void spinlock_init(spinlock_t *lock) {
+void spinlock_init(spinlock_t* lock) {
 #endif
 
 #if DEBUG_LEVEL_TRACE
@@ -87,9 +87,9 @@ void spinlock_init(spinlock_t *lock) {
  * @brief Lock a Spinlock.
  */
 #if DEBUG_LEVEL_TRACE
-void __spinlock_lock(spinlock_t *lock, const char *FUNC, const char *FILE, int LINE) {
+void __spinlock_lock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
-void spinlock_lock(spinlock_t *lock) {
+void spinlock_lock(spinlock_t* lock) {
 #endif
 
     DEBUG_ASSERT(lock);
@@ -157,7 +157,7 @@ void spinlock_lock(spinlock_t *lock) {
  * @brief Try to lock a Spinlock.
  * @deprecated
  */
-int spinlock_trylock(spinlock_t *lock) {
+int spinlock_trylock(spinlock_t* lock) {
 
     DEBUG_ASSERT(lock);
 
@@ -174,9 +174,9 @@ int spinlock_trylock(spinlock_t *lock) {
  * @brief Release a Spinlock.
  */
 #if DEBUG_LEVEL_TRACE
-void __spinlock_unlock(spinlock_t *lock, const char *FUNC, const char *FILE, int LINE) {
+void __spinlock_unlock(spinlock_t* lock, const char* FUNC, const char* FILE, int LINE) {
 #else
-void spinlock_unlock(spinlock_t *lock) {
+void spinlock_unlock(spinlock_t* lock) {
 #endif
 
 

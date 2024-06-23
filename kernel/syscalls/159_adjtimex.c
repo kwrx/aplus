@@ -49,4 +49,4 @@
 
 struct timex;
 
-SYSCALL(159, adjtimex, long sys_adjtimex(struct timex *txc_p) { return -ENOSYS; });
+SYSCALL(159, adjtimex, long sys_adjtimex(struct timex* txc_p) { return -ENOSYS; });

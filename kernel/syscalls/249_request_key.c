@@ -52,4 +52,4 @@
 
 typedef long key_serial_t;
 
-SYSCALL(249, request_key, long sys_request_key(const char *_type, const char *_description, const char *_callout_info, key_serial_t destringid) { return -ENOSYS; });
+SYSCALL(249, request_key, long sys_request_key(const char* _type, const char* _description, const char* _callout_info, key_serial_t destringid) { return -ENOSYS; });

@@ -58,11 +58,11 @@ MODULE_LICENSE("GPL");
 
 
 
-static void virtgpu_init(device_t *);
-static void virtgpu_dnit(device_t *);
-static void virtgpu_reset(device_t *);
-static void virtgpu_update(device_t *);
-static void virtgpu_wait_vsync(device_t *);
+static void virtgpu_init(device_t*);
+static void virtgpu_dnit(device_t*);
+static void virtgpu_reset(device_t*);
+static void virtgpu_update(device_t*);
+static void virtgpu_wait_vsync(device_t*);
 
 
 device_t device = {
@@ -89,7 +89,7 @@ device_t device = {
 
 
 
-static void virtgpu_init(device_t *device) {
+static void virtgpu_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base == 0);
@@ -100,7 +100,7 @@ static void virtgpu_init(device_t *device) {
 }
 
 
-static void virtgpu_dnit(device_t *device) {
+static void virtgpu_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -110,7 +110,7 @@ static void virtgpu_dnit(device_t *device) {
 
 
 
-static void virtgpu_reset_framebuffer(device_t *device) {
+static void virtgpu_reset_framebuffer(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -161,7 +161,7 @@ static void virtgpu_reset_framebuffer(device_t *device) {
 
 
 
-static void virtgpu_reset(device_t *device) {
+static void virtgpu_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -202,7 +202,7 @@ static void virtgpu_reset(device_t *device) {
 }
 
 
-static void virtgpu_update(device_t *device) {
+static void virtgpu_update(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -241,7 +241,7 @@ static void virtgpu_update(device_t *device) {
 }
 
 
-static void virtgpu_wait_vsync(device_t *device) {
+static void virtgpu_wait_vsync(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -251,7 +251,7 @@ static void virtgpu_wait_vsync(device_t *device) {
 
 
 
-static int setup_features(struct virtio_driver *driver, uint32_t *features, size_t index) {
+static int setup_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 
     if (index == 0) {
 
@@ -270,9 +270,9 @@ static int setup_features(struct virtio_driver *driver, uint32_t *features, size
 
 
 
-static int setup_config(struct virtio_driver *driver, uintptr_t device_config) {
+static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
-    struct virtio_gpu_config volatile *cfg = (struct virtio_gpu_config volatile *)device_config;
+    struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)device_config;
 
     __atomic_store_n(&cfg->events_clear, cfg->events_read, __ATOMIC_SEQ_CST);
     __atomic_membarrier();
@@ -287,9 +287,9 @@ static int setup_config(struct virtio_driver *driver, uintptr_t device_config) {
 
 
 
-static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver *driver) {
+static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
 
-    struct virtio_gpu_config *cfg = (struct virtio_gpu_config *)driver->internals.device_config;
+    struct virtio_gpu_config* cfg = (struct virtio_gpu_config*)driver->internals.device_config;
 
     cfg->events_clear = cfg->events_read;
 
@@ -300,10 +300,10 @@ static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver
 }
 
 
-static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
+static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 
-    device_t *driver = (device_t *)arg;
+    device_t* driver = (device_t*)arg;
 
     if (driver->userdata != NULL)
         return;
@@ -317,7 +317,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 
 
 
-    struct virtio_driver *virtio = kmalloc(sizeof(struct virtio_driver), GFP_KERNEL);
+    struct virtio_driver* virtio = kmalloc(sizeof(struct virtio_driver), GFP_KERNEL);
 
     memset(virtio, 0, sizeof(struct virtio_driver));
 
@@ -342,14 +342,14 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
     }
 
 
-    struct virtgpu *gpu = kcalloc(1, sizeof(struct virtgpu), GFP_KERNEL);
+    struct virtgpu* gpu = kcalloc(1, sizeof(struct virtgpu), GFP_KERNEL);
 
     gpu->driver      = virtio;
     driver->userdata = gpu;
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "virtio=off"))
         return;

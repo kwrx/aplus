@@ -42,7 +42,7 @@ MODULE_LICENSE("GPL");
 
 
 
-void init(const char *args) {
+void init(const char* args) {
     (void)args;
 }
 

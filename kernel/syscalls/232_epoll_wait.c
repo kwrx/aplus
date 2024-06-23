@@ -53,4 +53,4 @@
 
 struct epoll_event;
 
-SYSCALL(232, epoll_wait, long sys_epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout) { return -ENOSYS; });
+SYSCALL(232, epoll_wait, long sys_epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout) { return -ENOSYS; });

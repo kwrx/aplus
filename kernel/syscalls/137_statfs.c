@@ -50,4 +50,4 @@
 
 struct statfs;
 
-SYSCALL(137, statfs, long sys_statfs(const char *path, struct statfs *buf) { return -ENOSYS; });
+SYSCALL(137, statfs, long sys_statfs(const char* path, struct statfs* buf) { return -ENOSYS; });

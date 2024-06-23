@@ -37,7 +37,7 @@
 #include "procfs.h"
 
 
-static int procfs_service_cmdline_fetch(inode_t *inode, char **buf, size_t *size, void *arg) {
+static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -58,7 +58,7 @@ static int procfs_service_cmdline_fetch(inode_t *inode, char **buf, size_t *size
 
     } else {
 
-        task_t *k = procfs_service_pid_to_task(pid);
+        task_t* k = procfs_service_pid_to_task(pid);
 
         if (!k) {
             return errno = ESRCH, -1;
@@ -71,12 +71,12 @@ static int procfs_service_cmdline_fetch(inode_t *inode, char **buf, size_t *size
     return 0;
 }
 
-inode_t *procfs_service_cmdline_inode(inode_t *parent, pid_t pid) {
+inode_t* procfs_service_cmdline_inode(inode_t* parent, pid_t pid) {
 
-    static inode_t *inode = NULL;
+    static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "cmdline", S_IFREG | 0666, procfs_service_cmdline_fetch, (void *)((uintptr_t)pid));
+        inode = procfs_service_inode(parent, "cmdline", S_IFREG | 0666, procfs_service_cmdline_fetch, (void*)((uintptr_t)pid));
     }
 
     return inode;

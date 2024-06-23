@@ -39,7 +39,7 @@
 
 
 
-int tmpfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
+int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev == NULL);
@@ -67,14 +67,14 @@ int tmpfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 
 
 
-    dir->sb = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
     dir->sb->fsid  = FSID_TMPFS;
     dir->sb->dev   = dev;
     dir->sb->root  = dir;
     dir->sb->flags = flags;
 
-    dir->sb->fsinfo = (void *)kcalloc(1, sizeof(tmpfs_t), GFP_USER);
+    dir->sb->fsinfo = (void*)kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
 
     dir->sb->st.f_bsize   = 1;

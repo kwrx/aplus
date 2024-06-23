@@ -77,7 +77,7 @@ static void init_framebuffer(void) {
 
 
 #if defined(DEBUG)
-    fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", var.xres, var.yres, var.bits_per_pixel, (void *)((uintptr_t)fix.smem_start), (void *)((uintptr_t)fix.smem_len));
+    fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", var.xres, var.yres, var.bits_per_pixel, (void*)((uintptr_t)fix.smem_start), (void*)((uintptr_t)fix.smem_len));
 #endif
 
     close(fd);
@@ -86,7 +86,7 @@ static void init_framebuffer(void) {
 
 static void init_welcome(void) {
 
-    FILE *fp = fopen("/etc/motd", "r");
+    FILE* fp = fopen("/etc/motd", "r");
 
     if (!fp)
         return;
@@ -106,7 +106,7 @@ static void init_welcome(void) {
 
 static void init_environment(void) {
 
-    FILE *fp = fopen("/etc/environment", "r");
+    FILE* fp = fopen("/etc/environment", "r");
 
     if (!fp)
         return (void)fprintf(stderr, "env: no environment file found\n");
@@ -120,7 +120,7 @@ static void init_environment(void) {
         }
 
 
-        char *p = &line[0];
+        char* p = &line[0];
         __trim(p);
 
 
@@ -146,7 +146,7 @@ static void init_environment(void) {
 
 static void init_fstab() {
 
-    FILE *fp = fopen("/etc/fstab", "r");
+    FILE* fp = fopen("/etc/fstab", "r");
 
     if (!fp)
         return (void)fprintf(stderr, "fstab: no fstab config file found");
@@ -159,7 +159,7 @@ static void init_fstab() {
             line[strlen(line) - 1] = '\0';
 
 
-        char *p = &line[0];
+        char* p = &line[0];
         __trim(p);
 
 
@@ -186,9 +186,9 @@ static void init_fstab() {
 #endif
 
 
-                char *tok = fl;
+                char* tok = fl;
 
-                for (char *k = strtok_r(fl, ",", &tok); k; k = strtok_r(NULL, ",", &tok)) {
+                for (char* k = strtok_r(fl, ",", &tok); k; k = strtok_r(NULL, ",", &tok)) {
 
 #define has(str, flag)         \
     if (strcmp(k, str) == 0) { \
@@ -217,7 +217,7 @@ static void init_fstab() {
 
 static void init_hostname() {
 
-    FILE *fp = fopen("/etc/hostname", "r");
+    FILE* fp = fopen("/etc/hostname", "r");
 
     if (!fp)
         return;
@@ -277,7 +277,7 @@ static void init_initd(void) {
 
 
 
-int main(int argc, char **argv, char **envp) {
+int main(int argc, char** argv, char** envp) {
 
     int fd = open("/dev/kmsg", O_RDWR);
 

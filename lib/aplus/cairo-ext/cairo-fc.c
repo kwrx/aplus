@@ -46,11 +46,11 @@ typedef struct {
         cairo_font_weight_t weight;
 } __fc_line_t;
 
-static list(__fc_line_t *, __fc_lines);
+static list(__fc_line_t*, __fc_lines);
 static FT_Library __ft_lib;
 
 
-int cairo_fc_load(const char *conf) {
+int cairo_fc_load(const char* conf) {
     if (unlikely(!conf))
         conf = sysconfig("ui.font.config", NULL);
 
@@ -59,13 +59,13 @@ int cairo_fc_load(const char *conf) {
         return -1;
     }
 
-    FILE *fp = fopen(conf, "r");
+    FILE* fp = fopen(conf, "r");
     if (!fp)
         return -1;
 
     char buf[BUFSIZ] = {0};
     for (; fgets(buf, sizeof(buf), fp) > 0; memset(buf, 0, sizeof(buf))) {
-        char *p;
+        char* p;
         if ((p = strrchr(buf, '\n')))
             *p = '\0';
 
@@ -75,7 +75,7 @@ int cairo_fc_load(const char *conf) {
         if (buf[0] == '#')
             continue;
 
-        __fc_line_t *ln = (__fc_line_t *)__libaplus_calloc(1, sizeof(__fc_line_t));
+        __fc_line_t* ln = (__fc_line_t*)__libaplus_calloc(1, sizeof(__fc_line_t));
         if (unlikely(!ln)) {
             errno = ENOMEM;
             return -1;
@@ -123,7 +123,7 @@ int cairo_fc_load(const char *conf) {
 }
 
 
-cairo_font_face_t *cairo_fc_font_face_create(const char *family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
+cairo_font_face_t* cairo_fc_font_face_create(const char* family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
     if (!family || strlen(family) == 0) {
         errno = EINVAL;
         return NULL;
@@ -149,9 +149,9 @@ cairo_font_face_t *cairo_fc_font_face_create(const char *family, cairo_font_slan
     return NULL;
 }
 
-void cairo_fc_select_font_face(cairo_t *cr, const char *family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
+void cairo_fc_select_font_face(cairo_t* cr, const char* family, cairo_font_slant_t slant, cairo_font_weight_t weight) {
 
-    cairo_font_face_t *face;
+    cairo_font_face_t* face;
     if ((face = cairo_fc_font_face_create(family, slant, weight)))
         cairo_set_font_face(cr, face);
 }

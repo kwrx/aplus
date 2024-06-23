@@ -42,7 +42,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 #if DEBUG_LEVEL_TRACE
 

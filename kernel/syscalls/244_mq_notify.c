@@ -51,4 +51,4 @@
 typedef long mqd_t;
 struct sigevent;
 
-SYSCALL(244, mq_notify, long sys_mq_notify(mqd_t mqdes, const struct sigevent *notification) { return -ENOSYS; });
+SYSCALL(244, mq_notify, long sys_mq_notify(mqd_t mqdes, const struct sigevent* notification) { return -ENOSYS; });

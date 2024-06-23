@@ -53,4 +53,4 @@ typedef long aio_context_t;
 struct iocb;
 struct io_event;
 
-SYSCALL(210, io_cancel, long sys_io_cancel(aio_context_t ctx_id, struct iocb *iocb, struct io_event *result) { return -ENOSYS; });
+SYSCALL(210, io_cancel, long sys_io_cancel(aio_context_t ctx_id, struct iocb* iocb, struct io_event* result) { return -ENOSYS; });

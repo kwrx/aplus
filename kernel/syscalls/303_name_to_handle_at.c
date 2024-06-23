@@ -54,4 +54,4 @@
 
 struct file_handle;
 
-SYSCALL(303, name_to_handle_at, long sys_name_to_handle_at(int dfd, const char *name, struct file_handle *handle, int *mnt_id, int flag) { return -ENOSYS; });
+SYSCALL(303, name_to_handle_at, long sys_name_to_handle_at(int dfd, const char* name, struct file_handle* handle, int* mnt_id, int flag) { return -ENOSYS; });

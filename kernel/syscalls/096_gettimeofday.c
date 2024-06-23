@@ -54,7 +54,7 @@
 struct timezone;
 
 SYSCALL(
-    96, gettimeofday, long sys_gettimeofday(struct timeval *tv, struct timezone *tz) {
+    96, gettimeofday, long sys_gettimeofday(struct timeval* tv, struct timezone* tz) {
         if (unlikely(!tv))
             return -EINVAL;
 

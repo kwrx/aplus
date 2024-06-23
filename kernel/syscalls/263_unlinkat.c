@@ -51,7 +51,7 @@
  */
 
 SYSCALL(
-    263, unlinkat, long sys_unlinkat(int dfd, const char *pathname, int flags) {
+    263, unlinkat, long sys_unlinkat(int dfd, const char* pathname, int flags) {
         if (unlikely(!pathname))
             return -EINVAL;
 
@@ -60,7 +60,7 @@ SYSCALL(
 
 
 
-        inode_t *cwd = NULL;
+        inode_t* cwd = NULL;
 
 
         if (dfd < 0) {
@@ -103,7 +103,7 @@ SYSCALL(
 #endif
 
 
-        inode_t *r = NULL;
+        inode_t* r = NULL;
 
         if ((r = path_lookup(cwd, __safe_pathname, 0, 0)) == NULL)
             return -errno;

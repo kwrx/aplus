@@ -54,7 +54,7 @@
  */
 
 SYSCALL(
-    257, openat, long sys_openat(int dfd, const char *filename, int flags, mode_t mode) {
+    257, openat, long sys_openat(int dfd, const char* filename, int flags, mode_t mode) {
         if (unlikely(!filename))
             return -EINVAL;
 
@@ -63,7 +63,7 @@ SYSCALL(
 
 
 
-        inode_t *cwd = NULL;
+        inode_t* cwd = NULL;
 
 
         if (dfd < 0) {
@@ -107,7 +107,7 @@ SYSCALL(
 #endif
 
 
-        inode_t *r = NULL;
+        inode_t* r = NULL;
 
         if ((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
             return -errno;
@@ -159,7 +159,7 @@ SYSCALL(
 
 
 
-        inode_t *inode = NULL;
+        inode_t* inode = NULL;
 
         if ((inode = vfs_open(r, flags)) == NULL) {
 
@@ -186,7 +186,7 @@ SYSCALL(
                     break;
 
 
-                struct file *ref = NULL;
+                struct file* ref = NULL;
 
                 if ((ref = fd_append(inode, 0, 0)) == NULL) {
 

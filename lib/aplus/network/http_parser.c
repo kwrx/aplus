@@ -167,7 +167,7 @@
 #define CLOSE             "close"
 
 
-static const char *method_strings[] = {
+static const char* method_strings[] = {
 #define XX(num, name, string) #string,
     HTTP_METHOD_MAP(XX)
 #undef XX
@@ -458,12 +458,12 @@ enum http_host_state {
 /* Map errno values to strings for human-readable output */
 #define HTTP_STRERROR_GEN(n, s) {"HPE_" #n, s},
 static struct {
-        const char *name;
-        const char *description;
+        const char* name;
+        const char* description;
 } http_strerror_tab[] = {HTTP_ERRNO_MAP(HTTP_STRERROR_GEN)};
 #undef HTTP_STRERROR_GEN
 
-int http_message_needs_eof(const http_parser *parser);
+int http_message_needs_eof(const http_parser* parser);
 
 /* Our URL parser.
  *
@@ -622,15 +622,15 @@ static enum state parse_url_char(enum state s, const char ch) {
     return s_dead;
 }
 
-size_t http_parser_execute(http_parser *parser, const http_parser_settings *settings, const char *data, size_t len) {
+size_t http_parser_execute(http_parser* parser, const http_parser_settings* settings, const char* data, size_t len) {
     char c, ch;
     int8_t unhex_val;
-    const char *p                 = data;
-    const char *header_field_mark = 0;
-    const char *header_value_mark = 0;
-    const char *url_mark          = 0;
-    const char *body_mark         = 0;
-    const char *status_mark       = 0;
+    const char* p                 = data;
+    const char* header_field_mark = 0;
+    const char* header_value_mark = 0;
+    const char* url_mark          = 0;
+    const char* body_mark         = 0;
+    const char* status_mark       = 0;
     enum state p_state            = (enum state)parser->state;
     const unsigned int lenient    = parser->lenient_http_headers;
 
@@ -969,7 +969,7 @@ size_t http_parser_execute(http_parser *parser, const http_parser_settings *sett
             }
 
             case s_req_method: {
-                const char *matcher;
+                const char* matcher;
                 if (UNLIKELY(ch == '\0')) {
                     SET_ERRNO(HPE_INVALID_METHOD);
                     goto error;
@@ -1229,7 +1229,7 @@ size_t http_parser_execute(http_parser *parser, const http_parser_settings *sett
             }
 
             case s_header_field: {
-                const char *start = p;
+                const char* start = p;
                 for (; p != data + len; p++) {
                     ch = *p;
                     c  = TOKEN(ch);
@@ -1432,7 +1432,7 @@ size_t http_parser_execute(http_parser *parser, const http_parser_settings *sett
             }
 
             case s_header_value: {
-                const char *start          = p;
+                const char* start          = p;
                 enum header_states h_state = (enum header_states)parser->header_state;
                 for (; p != data + len; p++) {
                     ch = *p;
@@ -1460,14 +1460,14 @@ size_t http_parser_execute(http_parser *parser, const http_parser_settings *sett
 
                     switch (h_state) {
                         case h_general: {
-                            const char *p_cr;
-                            const char *p_lf;
+                            const char* p_cr;
+                            const char* p_lf;
                             size_t limit = data + len - p;
 
                             limit = MIN(limit, HTTP_MAX_HEADER_SIZE);
 
-                            p_cr = (const char *)memchr(p, CR, limit);
-                            p_lf = (const char *)memchr(p, LF, limit);
+                            p_cr = (const char*)memchr(p, CR, limit);
+                            p_lf = (const char*)memchr(p, LF, limit);
                             if (p_cr != NULL) {
                                 if (p_lf != NULL && p_cr >= p_lf)
                                     p = p_lf;
@@ -1999,7 +1999,7 @@ error:
 
 
 /* Does the parser need to see an EOF to find the end of the message? */
-int http_message_needs_eof(const http_parser *parser) {
+int http_message_needs_eof(const http_parser* parser) {
     if (parser->type == HTTP_REQUEST) {
         return 0;
     }
@@ -2020,7 +2020,7 @@ int http_message_needs_eof(const http_parser *parser) {
 }
 
 
-int http_should_keep_alive(const http_parser *parser) {
+int http_should_keep_alive(const http_parser* parser) {
     if (parser->http_major > 0 && parser->http_minor > 0) {
         /* HTTP/1.1 */
         if (parser->flags & F_CONNECTION_CLOSE) {
@@ -2037,13 +2037,13 @@ int http_should_keep_alive(const http_parser *parser) {
 }
 
 
-const char *http_method_str(enum http_method m) {
+const char* http_method_str(enum http_method m) {
     return ELEM_AT(method_strings, m, "<unknown>");
 }
 
 
-void http_parser_init(http_parser *parser, enum http_parser_type t) {
-    void *data = parser->data; /* preserve application data */
+void http_parser_init(http_parser* parser, enum http_parser_type t) {
+    void* data = parser->data; /* preserve application data */
     memset(parser, 0, sizeof(*parser));
     parser->data       = data;
     parser->type       = t;
@@ -2051,16 +2051,16 @@ void http_parser_init(http_parser *parser, enum http_parser_type t) {
     parser->http_errno = HPE_OK;
 }
 
-void http_parser_settings_init(http_parser_settings *settings) {
+void http_parser_settings_init(http_parser_settings* settings) {
     memset(settings, 0, sizeof(*settings));
 }
 
-const char *http_errno_name(enum http_errno err) {
+const char* http_errno_name(enum http_errno err) {
     assert(((size_t)err) < ARRAY_SIZE(http_strerror_tab));
     return http_strerror_tab[err].name;
 }
 
-const char *http_errno_description(enum http_errno err) {
+const char* http_errno_description(enum http_errno err) {
     assert(((size_t)err) < ARRAY_SIZE(http_strerror_tab));
     return http_strerror_tab[err].description;
 }
@@ -2145,10 +2145,10 @@ static enum http_host_state http_parse_host_char(enum http_host_state s, const c
     return s_http_host_dead;
 }
 
-static int http_parse_host(const char *buf, struct http_parser_url *u, int found_at) {
+static int http_parse_host(const char* buf, struct http_parser_url* u, int found_at) {
     enum http_host_state s;
 
-    const char *p;
+    const char* p;
     size_t buflen = u->field_data[UF_HOST].off + u->field_data[UF_HOST].len;
 
     assert(u->field_set & (1 << UF_HOST));
@@ -2226,13 +2226,13 @@ static int http_parse_host(const char *buf, struct http_parser_url *u, int found
     return 0;
 }
 
-void http_parser_url_init(struct http_parser_url *u) {
+void http_parser_url_init(struct http_parser_url* u) {
     memset(u, 0, sizeof(*u));
 }
 
-int http_parser_parse_url(const char *buf, size_t buflen, int is_connect, struct http_parser_url *u) {
+int http_parser_parse_url(const char* buf, size_t buflen, int is_connect, struct http_parser_url* u) {
     enum state s;
-    const char *p;
+    const char* p;
     enum http_parser_url_fields uf, old_uf;
     int found_at = 0;
 
@@ -2330,7 +2330,7 @@ int http_parser_parse_url(const char *buf, size_t buflen, int is_connect, struct
     return 0;
 }
 
-void http_parser_pause(http_parser *parser, int paused) {
+void http_parser_pause(http_parser* parser, int paused) {
     /* Users should only be pausing/unpausing a parser that is not in an error
      * state. In non-debug builds, there's not much that we can do about this
      * other than ignore it.
@@ -2342,7 +2342,7 @@ void http_parser_pause(http_parser *parser, int paused) {
     }
 }
 
-int http_body_is_final(const struct http_parser *parser) {
+int http_body_is_final(const struct http_parser* parser) {
     return parser->state == s_message_done;
 }
 

@@ -52,4 +52,4 @@
 
 struct sockaddr;
 
-SYSCALL(288, accept4, long sys_accept4(int fd, struct sockaddr *sockaddr, int *socklen, int flags) { return -ENOSYS; });
+SYSCALL(288, accept4, long sys_accept4(int fd, struct sockaddr* sockaddr, int* socklen, int flags) { return -ENOSYS; });

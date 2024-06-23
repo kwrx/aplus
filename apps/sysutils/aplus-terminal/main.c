@@ -68,8 +68,8 @@ static struct {
                 uint16_t y;
         } cursor;
 
-        struct tsm_screen *con;
-        struct tsm_vte *vte;
+        struct tsm_screen* con;
+        struct tsm_vte* vte;
 
         struct fb_var_screeninfo var;
         struct fb_fix_screeninfo fix;
@@ -101,7 +101,7 @@ static struct {
         } keymap;
 
         struct {
-                char *buffer;
+                char* buffer;
                 size_t size;
                 size_t capacity;
         } input;
@@ -119,7 +119,7 @@ static struct {
 
 
 
-static void show_usage(int argc, char **argv) {
+static void show_usage(int argc, char** argv) {
     printf("Use: aplus-terminal [options]... [STRING]...\n"
            "Print STRING(s) to standard output.\n\n"
            "   -c, --command               run command on shell\n"
@@ -131,7 +131,7 @@ static void show_usage(int argc, char **argv) {
     exit(0);
 }
 
-static void show_version(int argc, char **argv) {
+static void show_version(int argc, char** argv) {
     printf("%s (aplus coreutils) 0.1\n"
            "Copyright (c) %s Antonino Natale.\n"
            "Built with gcc %s (%s)\n",
@@ -145,28 +145,28 @@ static void show_version(int argc, char **argv) {
 
 static void fb_plot_8(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
-    ((uint8_t *)(context.fix.smem_start))[(y * context.var.xres) + x] = (r >> 5) << 5 | (g >> 5) << 2 | (b >> 6);
+    ((uint8_t*)(context.fix.smem_start))[(y * context.var.xres) + x] = (r >> 5) << 5 | (g >> 5) << 2 | (b >> 6);
 }
 
 static void fb_plot_16(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
-    ((uint16_t *)(context.fix.smem_start))[(y * context.var.xres) + x] = (r >> 3) << 11 | (g >> 2) << 5 | (b >> 3);
+    ((uint16_t*)(context.fix.smem_start))[(y * context.var.xres) + x] = (r >> 3) << 11 | (g >> 2) << 5 | (b >> 3);
 }
 
 static void fb_plot_24(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
-    ((uint8_t *)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 0] = r;
-    ((uint8_t *)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 1] = g;
-    ((uint8_t *)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 2] = b;
+    ((uint8_t*)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 0] = r;
+    ((uint8_t*)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 1] = g;
+    ((uint8_t*)(context.fix.smem_start))[(y * context.var.xres * 3) + (x * 3) + 2] = b;
 }
 
 static void fb_plot_32(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
-    ((uint32_t *)(context.fix.smem_start))[(y * context.var.xres) + x] = 0xFF000000 | (r << 16) | (g << 8) | b;
+    ((uint32_t*)(context.fix.smem_start))[(y * context.var.xres) + x] = 0xFF000000 | (r << 16) | (g << 8) | b;
 }
 
 
-static int fb_draw_cb(struct tsm_screen *con, uint32_t id, const uint32_t *ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr *attr, tsm_age_t age, void *data) {
+static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr* attr, tsm_age_t age, void* data) {
 
     assert(con);
     assert(attr);
@@ -213,7 +213,7 @@ static int fb_draw_cb(struct tsm_screen *con, uint32_t id, const uint32_t *ch, s
         gidx = 0;
     }
 
-    const uint8_t *glyph = &builtin_fontdata[gidx * ATERM_FONT_PITCH];
+    const uint8_t* glyph = &builtin_fontdata[gidx * ATERM_FONT_PITCH];
 
     for (size_t i = 0; i < ATERM_FONT_HEIGHT; i++) {
         for (size_t j = 0; j < ATERM_FONT_WIDTH; j++) {
@@ -307,7 +307,7 @@ static void tsm_update_screen() {
 }
 
 
-static void tsm_handle_input(int out, char *ascii, size_t size, bool handle_internally) {
+static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_internally) {
 
     assert(ascii);
 
@@ -340,7 +340,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_LATIN:
 
             if (down) {
-                tsm_handle_input(out, (char *)&KEY.val, 1, false);
+                tsm_handle_input(out, (char*)&KEY.val, 1, false);
             }
 
             break;
@@ -440,7 +440,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_ASCII:
 
             if (down) {
-                tsm_handle_input(out, (char *)&KEY.val, 1, false);
+                tsm_handle_input(out, (char*)&KEY.val, 1, false);
             }
 
             break;
@@ -448,7 +448,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_LETTER:
 
             if (down) {
-                tsm_handle_input(out, (char *)&KEY.val, 1, false);
+                tsm_handle_input(out, (char*)&KEY.val, 1, false);
             }
 
             break;
@@ -474,7 +474,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
 }
 
 
-static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *data) {
+static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
 
     (void)vte;
     (void)data;
@@ -484,7 +484,7 @@ static void tsm_write_cb(struct tsm_vte *vte, const char *u8, size_t len, void *
     // write(context.ipipefd[1], u8, len);
 }
 
-static void *thr_kbd_handler(void *arg) {
+static void* thr_kbd_handler(void* arg) {
 
     (void)arg;
 
@@ -515,7 +515,7 @@ static void *thr_kbd_handler(void *arg) {
     return NULL;
 }
 
-static void *thr_mouse_handler(void *arg) {
+static void* thr_mouse_handler(void* arg) {
 
     (void)arg;
 
@@ -555,7 +555,7 @@ static void *thr_mouse_handler(void *arg) {
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
     static struct option long_options[] = {
@@ -568,8 +568,8 @@ int main(int argc, char **argv) {
 
 
 
-    char *cmd = NULL;
-    char *pwd = NULL;
+    char* cmd = NULL;
+    char* pwd = NULL;
 
 
     int c, idx;
@@ -664,7 +664,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    void *font = malloc(st.st_size);
+    void* font = malloc(st.st_size);
 
     if (!font) {
         fprintf(stderr, "aplus-terminal: cannot allocate memory for font file\n");
@@ -688,7 +688,7 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    if (FT_New_Memory_Face(context.ft, (const FT_Byte *)font, st.st_size, 0, &context.face)) {
+    if (FT_New_Memory_Face(context.ft, (const FT_Byte*)font, st.st_size, 0, &context.face)) {
         fprintf(stderr, "aplus-terminal: cannot load font\n");
         exit(1);
     }

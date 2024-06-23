@@ -44,7 +44,7 @@ MODULE_LICENSE("GPL");
 
 
 
-int char_getattr(device_t *device, struct stat *st) {
+int char_getattr(device_t* device, struct stat* st) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(st);
@@ -67,7 +67,7 @@ int char_getattr(device_t *device, struct stat *st) {
 }
 
 
-ssize_t char_write(device_t *device, const void *buf, size_t size) {
+ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -129,7 +129,7 @@ ssize_t char_write(device_t *device, const void *buf, size_t size) {
 
 
 
-ssize_t char_read(device_t *device, void *buf, size_t size) {
+ssize_t char_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -170,7 +170,7 @@ ssize_t char_read(device_t *device, void *buf, size_t size) {
 
 
 
-int char_flush(device_t *device) {
+int char_flush(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -207,7 +207,7 @@ int char_flush(device_t *device) {
 }
 
 
-void char_init(device_t *device) {
+void char_init(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -225,7 +225,7 @@ void char_init(device_t *device) {
 }
 
 
-void char_dnit(device_t *device) {
+void char_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -243,7 +243,7 @@ void char_dnit(device_t *device) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     (void)args;
 }
 

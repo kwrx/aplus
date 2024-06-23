@@ -52,10 +52,10 @@
 
 
 
-void dhcp_set_ntp_servers(uint8_t num_ntp_servers, ip_addr_t *ntp_server_addrs) {
+void dhcp_set_ntp_servers(uint8_t num_ntp_servers, ip_addr_t* ntp_server_addrs) {
     kpanicf("%s(): PANIC! not implemented! num_ntp_servers(%d)", __func__, num_ntp_servers);
 }
 
-void dhcp6_set_ntp_servers(uint8_t num_ntp_servers, ip_addr_t *ntp_server_addrs) {
+void dhcp6_set_ntp_servers(uint8_t num_ntp_servers, ip_addr_t* ntp_server_addrs) {
     kpanicf("%s(): PANIC! not implemented! num_ntp_servers(%d)", __func__, num_ntp_servers);
 }

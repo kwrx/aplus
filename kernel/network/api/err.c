@@ -75,7 +75,7 @@ int err_to_errno(err_t err) {
 
 #ifdef LWIP_DEBUG
 
-static const char *err_strerr[] = {
+static const char* err_strerr[] = {
     "Ok.",                    /* ERR_OK          0  */
     "Out of memory error.",   /* ERR_MEM        -1  */
     "Buffer error.",          /* ERR_BUF        -2  */
@@ -101,7 +101,7 @@ static const char *err_strerr[] = {
  * @param err an lwip internal err_t
  * @return a string representation for err
  */
-const char *lwip_strerr(err_t err) {
+const char* lwip_strerr(err_t err) {
     if ((err > 0) || (-err >= (err_t)LWIP_ARRAYSIZE(err_strerr))) {
         return "Unknown error.";
     }

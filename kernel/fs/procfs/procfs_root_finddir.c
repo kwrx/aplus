@@ -39,7 +39,7 @@
 #include "procfs.h"
 
 
-inode_t *procfs_root_finddir(inode_t *inode, const char *name) {
+inode_t* procfs_root_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);

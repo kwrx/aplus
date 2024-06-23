@@ -38,14 +38,14 @@
 
 struct test_hook {
 
-        const void *ptr;
-        const char *name;
+        const void* ptr;
+        const char* name;
 
 } __packed;
 
 
 #if defined(DEBUG) && defined(CONFIG_HAVE_TEST)
-static void test_run(const char *context, uintptr_t hook_start, uintptr_t hook_end) {
+static void test_run(const char* context, uintptr_t hook_start, uintptr_t hook_end) {
 
     DEBUG_ASSERT(context);
     DEBUG_ASSERT(hook_start);
@@ -59,7 +59,7 @@ static void test_run(const char *context, uintptr_t hook_start, uintptr_t hook_e
 
     for (; hook_start < hook_end; hook_start += sizeof(struct test_hook)) {
 
-        struct test_hook *e = (struct test_hook *)(hook_start);
+        struct test_hook* e = (struct test_hook*)(hook_start);
 
         DEBUG_ASSERT(e->ptr);
         DEBUG_ASSERT(e->name);
@@ -106,7 +106,7 @@ void test_init(void) {
 
     { /* Modules */
 
-        extern list(module_t *, m_queue);
+        extern list(module_t*, m_queue);
 
         list_each(m_queue, ko) {
 
@@ -116,7 +116,7 @@ void test_init(void) {
 
             for (size_t i = 1; i < ko->exe.header->e_shnum; i++) {
 
-    #define syname(p) ((const char *)((uintptr_t)ko->exe.header + ko->exe.shstrtab->sh_offset + p))
+    #define syname(p) ((const char*)((uintptr_t)ko->exe.header + ko->exe.shstrtab->sh_offset + p))
 
 
                 if (strcmp(syname(ko->exe.section[i].sh_name), ".tests") == 0) {

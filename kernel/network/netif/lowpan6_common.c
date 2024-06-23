@@ -61,7 +61,7 @@
     #include <string.h>
 
 /* Determine compression mode for unicast address. */
-s8_t lowpan6_get_address_mode(const ip6_addr_t *ip6addr, const struct lowpan6_link_addr *mac_addr) {
+s8_t lowpan6_get_address_mode(const ip6_addr_t* ip6addr, const struct lowpan6_link_addr* mac_addr) {
     if (mac_addr->addr_len == 2) {
         if ((ip6addr->addr[2] == (u32_t)PP_HTONL(0x000000ff)) && ((ip6addr->addr[3] & PP_HTONL(0xffff0000)) == PP_NTOHL(0xfe000000))) {
             if ((ip6addr->addr[3] & PP_HTONL(0x0000ffff)) == lwip_ntohl((mac_addr->addr[0] << 8) | mac_addr->addr[1])) {
@@ -85,7 +85,7 @@ s8_t lowpan6_get_address_mode(const ip6_addr_t *ip6addr, const struct lowpan6_li
     #if LWIP_6LOWPAN_IPHC
 
 /* Determine compression mode for multicast address. */
-static s8_t lowpan6_get_address_mode_mc(const ip6_addr_t *ip6addr) {
+static s8_t lowpan6_get_address_mode_mc(const ip6_addr_t* ip6addr) {
     if ((ip6addr->addr[0] == PP_HTONL(0xff020000)) && (ip6addr->addr[1] == 0) && (ip6addr->addr[2] == 0) && ((ip6addr->addr[3] & PP_HTONL(0xffffff00)) == 0)) {
         return 3;
     } else if (((ip6addr->addr[0] & PP_HTONL(0xff00ffff)) == PP_HTONL(0xff000000)) && (ip6addr->addr[1] == 0)) {
@@ -100,7 +100,7 @@ static s8_t lowpan6_get_address_mode_mc(const ip6_addr_t *ip6addr) {
 }
 
         #if LWIP_6LOWPAN_NUM_CONTEXTS > 0
-static s8_t lowpan6_context_lookup(const ip6_addr_t *lowpan6_contexts, const ip6_addr_t *ip6addr) {
+static s8_t lowpan6_context_lookup(const ip6_addr_t* lowpan6_contexts, const ip6_addr_t* ip6addr) {
     s8_t i;
 
     for (i = 0; i < LWIP_6LOWPAN_NUM_CONTEXTS; i++) {
@@ -115,13 +115,13 @@ static s8_t lowpan6_context_lookup(const ip6_addr_t *lowpan6_contexts, const ip6
 /*
  * Compress IPv6 and/or UDP headers.
  * */
-err_t lowpan6_compress_headers(struct netif *netif, u8_t *inbuf, size_t inbuf_size, u8_t *outbuf, size_t outbuf_size, u8_t *lowpan6_header_len_out, u8_t *hidden_header_len_out, ip6_addr_t *lowpan6_contexts,
-                               const struct lowpan6_link_addr *src, const struct lowpan6_link_addr *dst) {
+err_t lowpan6_compress_headers(struct netif* netif, u8_t* inbuf, size_t inbuf_size, u8_t* outbuf, size_t outbuf_size, u8_t* lowpan6_header_len_out, u8_t* hidden_header_len_out, ip6_addr_t* lowpan6_contexts,
+                               const struct lowpan6_link_addr* src, const struct lowpan6_link_addr* dst) {
     u8_t *buffer, *inptr;
     u8_t lowpan6_header_len;
     u8_t hidden_header_len = 0;
     s8_t i;
-    struct ip6_hdr *ip6hdr;
+    struct ip6_hdr* ip6hdr;
     ip_addr_t ip6src, ip6dst;
 
     LWIP_ASSERT("netif != NULL", netif != NULL);
@@ -144,7 +144,7 @@ err_t lowpan6_compress_headers(struct netif *netif, u8_t *inbuf, size_t inbuf_si
     }
 
     /* Point to ip6 header and align copies of src/dest addresses. */
-    ip6hdr = (struct ip6_hdr *)inptr;
+    ip6hdr = (struct ip6_hdr*)inptr;
     ip_addr_copy_from_ip6_packed(ip6dst, ip6hdr->dest);
     ip6_addr_assign_zone(ip_2_ip6(&ip6dst), IP6_UNKNOWN, netif);
     ip_addr_copy_from_ip6_packed(ip6src, ip6hdr->src);
@@ -368,10 +368,10 @@ err_t lowpan6_compress_headers(struct netif *netif, u8_t *inbuf, size_t inbuf_si
  * @param dest destination address of the outer layer, used for address compression
  * @return ERR_OK if decompression succeeded, an error otherwise
  */
-static err_t lowpan6_decompress_hdr(u8_t *lowpan6_buffer, size_t lowpan6_bufsize, u8_t *decomp_buffer, size_t decomp_bufsize, u16_t *hdr_size_comp, u16_t *hdr_size_decomp, u16_t datagram_size, u16_t compressed_size,
-                                    ip6_addr_t *lowpan6_contexts, struct lowpan6_link_addr *src, struct lowpan6_link_addr *dest) {
+static err_t lowpan6_decompress_hdr(u8_t* lowpan6_buffer, size_t lowpan6_bufsize, u8_t* decomp_buffer, size_t decomp_bufsize, u16_t* hdr_size_comp, u16_t* hdr_size_decomp, u16_t datagram_size, u16_t compressed_size,
+                                    ip6_addr_t* lowpan6_contexts, struct lowpan6_link_addr* src, struct lowpan6_link_addr* dest) {
     u16_t lowpan6_offset;
-    struct ip6_hdr *ip6hdr;
+    struct ip6_hdr* ip6hdr;
     s8_t i;
     u32_t header_temp;
     u16_t ip6_offset = IP6_HLEN;
@@ -383,7 +383,7 @@ static err_t lowpan6_decompress_hdr(u8_t *lowpan6_buffer, size_t lowpan6_bufsize
     LWIP_ASSERT("hdr_size_comp != NULL", hdr_size_comp != NULL);
     LWIP_ASSERT("dehdr_size_decompst != NULL", hdr_size_decomp != NULL);
 
-    ip6hdr = (struct ip6_hdr *)decomp_buffer;
+    ip6hdr = (struct ip6_hdr*)decomp_buffer;
     if (decomp_bufsize < IP6_HLEN) {
         return ERR_MEM;
     }
@@ -675,12 +675,12 @@ static err_t lowpan6_decompress_hdr(u8_t *lowpan6_buffer, size_t lowpan6_bufsize
         #if LWIP_UDP
         if ((lowpan6_buffer[lowpan6_offset] & 0xf8) == 0xf0) {
             /* NHC: UDP */
-            struct udp_hdr *udphdr;
+            struct udp_hdr* udphdr;
             LWIP_DEBUGF(LWIP_LOWPAN6_DECOMPRESSION_DEBUG, ("NHC: UDP\n"));
 
             /* UDP compression */
             IP6H_NEXTH_SET(ip6hdr, IP6_NEXTH_UDP);
-            udphdr = (struct udp_hdr *)((u8_t *)decomp_buffer + ip6_offset);
+            udphdr = (struct udp_hdr*)((u8_t*)decomp_buffer + ip6_offset);
             if (decomp_bufsize < IP6_HLEN + UDP_HLEN) {
                 return ERR_MEM;
             }
@@ -744,8 +744,8 @@ static err_t lowpan6_decompress_hdr(u8_t *lowpan6_buffer, size_t lowpan6_bufsize
     return ERR_OK;
 }
 
-struct pbuf *lowpan6_decompress(struct pbuf *p, u16_t datagram_size, ip6_addr_t *lowpan6_contexts, struct lowpan6_link_addr *src, struct lowpan6_link_addr *dest) {
-    struct pbuf *q;
+struct pbuf* lowpan6_decompress(struct pbuf* p, u16_t datagram_size, ip6_addr_t* lowpan6_contexts, struct lowpan6_link_addr* src, struct lowpan6_link_addr* dest) {
+    struct pbuf* q;
     u16_t lowpan6_offset, ip6_offset;
     err_t err;
 
@@ -770,7 +770,7 @@ struct pbuf *lowpan6_decompress(struct pbuf *p, u16_t datagram_size, ip6_addr_t 
     }
 
     /* Decompress the IPv6 (and possibly UDP) header(s) into the new pbuf */
-    err = lowpan6_decompress_hdr((u8_t *)p->payload, p->len, (u8_t *)q->payload, q->len, &lowpan6_offset, &ip6_offset, datagram_size, p->tot_len, lowpan6_contexts, src, dest);
+    err = lowpan6_decompress_hdr((u8_t*)p->payload, p->len, (u8_t*)q->payload, q->len, &lowpan6_offset, &ip6_offset, datagram_size, p->tot_len, lowpan6_contexts, src, dest);
     if (err != ERR_OK) {
         pbuf_free(p);
         pbuf_free(q);

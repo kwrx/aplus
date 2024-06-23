@@ -84,11 +84,11 @@
             #define WRITE_DELAYED
             #define WRITE_DELAYED_PARAM
         #endif /* LWIP_TCPIP_CORE_LOCKING */
-static err_t lwip_netconn_do_writemore(struct netconn *conn WRITE_DELAYED_PARAM);
-static err_t lwip_netconn_do_close_internal(struct netconn *conn WRITE_DELAYED_PARAM);
+static err_t lwip_netconn_do_writemore(struct netconn* conn WRITE_DELAYED_PARAM);
+static err_t lwip_netconn_do_close_internal(struct netconn* conn WRITE_DELAYED_PARAM);
     #endif
 
-static void netconn_drain(struct netconn *conn);
+static void netconn_drain(struct netconn* conn);
 
     #if LWIP_TCPIP_CORE_LOCKING
         #define TCPIP_APIMSG_ACK(m)
@@ -102,7 +102,7 @@ static void netconn_drain(struct netconn *conn);
     #if LWIP_NETCONN_FULLDUPLEX
 const u8_t netconn_deleted = 0;
 
-int lwip_netconn_is_deallocated_msg(void *msg) {
+int lwip_netconn_is_deallocated_msg(void* msg) {
     if (msg == &netconn_deleted) {
         return 1;
     }
@@ -116,21 +116,21 @@ const u8_t netconn_reset   = 0;
 const u8_t netconn_closed  = 0;
 
 /** Translate an error to a unique void* passed via an mbox */
-static void *lwip_netconn_err_to_msg(err_t err) {
+static void* lwip_netconn_err_to_msg(err_t err) {
     switch (err) {
         case ERR_ABRT:
-            return LWIP_CONST_CAST(void *, &netconn_aborted);
+            return LWIP_CONST_CAST(void*, &netconn_aborted);
         case ERR_RST:
-            return LWIP_CONST_CAST(void *, &netconn_reset);
+            return LWIP_CONST_CAST(void*, &netconn_reset);
         case ERR_CLSD:
-            return LWIP_CONST_CAST(void *, &netconn_closed);
+            return LWIP_CONST_CAST(void*, &netconn_closed);
         default:
             LWIP_ASSERT("unhandled error", err == ERR_OK);
             return NULL;
     }
 }
 
-int lwip_netconn_is_err_msg(void *msg, err_t *err) {
+int lwip_netconn_is_err_msg(void* msg, err_t* err) {
     LWIP_ASSERT("err != NULL", err != NULL);
 
     if (msg == &netconn_aborted) {
@@ -156,13 +156,13 @@ int lwip_netconn_is_err_msg(void *msg, err_t *err) {
  *
  * @see raw.h (struct raw_pcb.recv) for parameters and return value
  */
-static u8_t recv_raw(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_addr_t *addr) {
-    struct pbuf *q;
-    struct netbuf *buf;
-    struct netconn *conn;
+static u8_t recv_raw(void* arg, struct raw_pcb* pcb, struct pbuf* p, const ip_addr_t* addr) {
+    struct pbuf* q;
+    struct netbuf* buf;
+    struct netconn* conn;
 
     LWIP_UNUSED_ARG(addr);
-    conn = (struct netconn *)arg;
+    conn = (struct netconn*)arg;
 
     if ((conn != NULL) && NETCONN_MBOX_VALID(conn, &conn->recvmbox)) {
         #if LWIP_SO_RCVBUF
@@ -176,7 +176,7 @@ static u8_t recv_raw(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_ad
         q = pbuf_clone(PBUF_RAW, PBUF_RAM, p);
         if (q != NULL) {
             u16_t len;
-            buf = (struct netbuf *)memp_malloc(MEMP_NETBUF);
+            buf = (struct netbuf*)memp_malloc(MEMP_NETBUF);
             if (buf == NULL) {
                 pbuf_free(q);
                 return 0;
@@ -212,9 +212,9 @@ static u8_t recv_raw(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_ad
  *
  * @see udp.h (struct udp_pcb.recv) for parameters
  */
-static void recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t *addr, u16_t port) {
-    struct netbuf *buf;
-    struct netconn *conn;
+static void recv_udp(void* arg, struct udp_pcb* pcb, struct pbuf* p, const ip_addr_t* addr, u16_t port) {
+    struct netbuf* buf;
+    struct netconn* conn;
     u16_t len;
         #if LWIP_SO_RCVBUF
     int recv_avail;
@@ -223,7 +223,7 @@ static void recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
     LWIP_UNUSED_ARG(pcb); /* only used for asserts... */
     LWIP_ASSERT("recv_udp must have a pcb argument", pcb != NULL);
     LWIP_ASSERT("recv_udp must have an argument", arg != NULL);
-    conn = (struct netconn *)arg;
+    conn = (struct netconn*)arg;
 
     if (conn == NULL) {
         pbuf_free(p);
@@ -242,7 +242,7 @@ static void recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
         return;
     }
 
-    buf = (struct netbuf *)memp_malloc(MEMP_NETBUF);
+    buf = (struct netbuf*)memp_malloc(MEMP_NETBUF);
     if (buf == NULL) {
         pbuf_free(p);
         return;
@@ -254,7 +254,7 @@ static void recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
         #if LWIP_NETBUF_RECVINFO
         if (conn->flags & NETCONN_FLAG_PKTINFO) {
             /* get the UDP header - always in the first pbuf, ensured by udp_input */
-            const struct udp_hdr *udphdr = (const struct udp_hdr *)ip_next_header_ptr();
+            const struct udp_hdr* udphdr = (const struct udp_hdr*)ip_next_header_ptr();
             buf->flags                   = NETBUF_FLAG_DESTADDR;
             ip_addr_set(&buf->toaddr, ip_current_dest_addr());
             buf->toport_chksum = udphdr->dest;
@@ -283,17 +283,17 @@ static void recv_udp(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_ad
  *
  * @see tcp.h (struct tcp_pcb.recv) for parameters and return value
  */
-static err_t recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err) {
-    struct netconn *conn;
+static err_t recv_tcp(void* arg, struct tcp_pcb* pcb, struct pbuf* p, err_t err) {
+    struct netconn* conn;
     u16_t len;
-    void *msg;
+    void* msg;
 
     LWIP_UNUSED_ARG(pcb);
     LWIP_ASSERT("recv_tcp must have a pcb argument", pcb != NULL);
     LWIP_ASSERT("recv_tcp must have an argument", arg != NULL);
     LWIP_ASSERT("err != ERR_OK unhandled", err == ERR_OK);
     LWIP_UNUSED_ARG(err); /* for LWIP_NOASSERT */
-    conn = (struct netconn *)arg;
+    conn = (struct netconn*)arg;
 
     if (conn == NULL) {
         return ERR_VAL;
@@ -316,7 +316,7 @@ static err_t recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
         msg = p;
         len = p->tot_len;
     } else {
-        msg = LWIP_CONST_CAST(void *, &netconn_closed);
+        msg = LWIP_CONST_CAST(void*, &netconn_closed);
         len = 0;
     }
 
@@ -345,8 +345,8 @@ static err_t recv_tcp(void *arg, struct tcp_pcb *pcb, struct pbuf *p, err_t err)
  *
  * @see tcp.h (struct tcp_pcb.poll) for parameters and return value
  */
-static err_t poll_tcp(void *arg, struct tcp_pcb *pcb) {
-    struct netconn *conn = (struct netconn *)arg;
+static err_t poll_tcp(void* arg, struct tcp_pcb* pcb) {
+    struct netconn* conn = (struct netconn*)arg;
 
     LWIP_UNUSED_ARG(pcb);
     LWIP_ASSERT("conn != NULL", (conn != NULL));
@@ -383,8 +383,8 @@ static err_t poll_tcp(void *arg, struct tcp_pcb *pcb) {
  *
  * @see tcp.h (struct tcp_pcb.sent) for parameters and return value
  */
-static err_t sent_tcp(void *arg, struct tcp_pcb *pcb, u16_t len) {
-    struct netconn *conn = (struct netconn *)arg;
+static err_t sent_tcp(void* arg, struct tcp_pcb* pcb, u16_t len) {
+    struct netconn* conn = (struct netconn*)arg;
 
     LWIP_UNUSED_ARG(pcb);
     LWIP_ASSERT("conn != NULL", (conn != NULL));
@@ -414,13 +414,13 @@ static err_t sent_tcp(void *arg, struct tcp_pcb *pcb, u16_t len) {
  *
  * @see tcp.h (struct tcp_pcb.err) for parameters
  */
-static void err_tcp(void *arg, err_t err) {
-    struct netconn *conn;
+static void err_tcp(void* arg, err_t err) {
+    struct netconn* conn;
     enum netconn_state old_state;
-    void *mbox_msg;
+    void* mbox_msg;
     SYS_ARCH_DECL_PROTECT(lev);
 
-    conn = (struct netconn *)arg;
+    conn = (struct netconn*)arg;
     LWIP_ASSERT("conn != NULL", (conn != NULL));
 
     SYS_ARCH_PROTECT(lev);
@@ -464,7 +464,7 @@ static void err_tcp(void *arg, err_t err) {
         SET_NONBLOCKING_CONNECT(conn, 0);
 
         if (!was_nonblocking_connect) {
-            sys_sem_t *op_completed_sem;
+            sys_sem_t* op_completed_sem;
             /* set error return code */
             LWIP_ASSERT("conn->current_msg != NULL", conn->current_msg != NULL);
             if (old_state == NETCONN_CLOSE) {
@@ -493,8 +493,8 @@ static void err_tcp(void *arg, err_t err) {
  *
  * @param conn the TCP netconn to setup
  */
-static void setup_tcp(struct netconn *conn) {
-    struct tcp_pcb *pcb;
+static void setup_tcp(struct netconn* conn) {
+    struct tcp_pcb* pcb;
 
     pcb = conn->pcb.tcp;
     tcp_arg(pcb, conn);
@@ -510,9 +510,9 @@ static void setup_tcp(struct netconn *conn) {
  *
  * @see tcp.h (struct tcp_pcb_listen.accept) for parameters and return value
  */
-static err_t accept_function(void *arg, struct tcp_pcb *newpcb, err_t err) {
-    struct netconn *newconn;
-    struct netconn *conn = (struct netconn *)arg;
+static err_t accept_function(void* arg, struct tcp_pcb* newpcb, err_t err) {
+    struct netconn* newconn;
+    struct netconn* conn = (struct netconn*)arg;
 
     if (conn == NULL) {
         return ERR_VAL;
@@ -556,7 +556,7 @@ static err_t accept_function(void *arg, struct tcp_pcb *newpcb, err_t err) {
         /* When returning != ERR_OK, the pcb is aborted in tcp_process(),
            so do nothing here! */
         /* remove all references to this netconn from the pcb */
-        struct tcp_pcb *pcb = newconn->pcb.tcp;
+        struct tcp_pcb* pcb = newconn->pcb.tcp;
         tcp_arg(pcb, NULL);
         tcp_recv(pcb, NULL);
         tcp_sent(pcb, NULL);
@@ -584,7 +584,7 @@ static err_t accept_function(void *arg, struct tcp_pcb *newpcb, err_t err) {
  *
  * @param msg the api_msg describing the connection type
  */
-static void pcb_new(struct api_msg *msg) {
+static void pcb_new(struct api_msg* msg) {
     enum lwip_ip_addr_type iptype = IPADDR_TYPE_V4;
 
     LWIP_ASSERT("pcb_new: pcb already allocated", msg->conn->pcb.tcp == NULL);
@@ -653,8 +653,8 @@ static void pcb_new(struct api_msg *msg) {
  *
  * @param m the api_msg describing the connection type
  */
-void lwip_netconn_do_newconn(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_newconn(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     msg->err = ERR_OK;
     if (msg->conn->pcb.tcp == NULL) {
@@ -676,12 +676,12 @@ void lwip_netconn_do_newconn(void *m) {
  * @return a newly allocated struct netconn or
  *         NULL on memory error
  */
-struct netconn *netconn_alloc(enum netconn_type t, netconn_callback callback) {
-    struct netconn *conn;
+struct netconn* netconn_alloc(enum netconn_type t, netconn_callback callback) {
+    struct netconn* conn;
     int size;
     u8_t init_flags = 0;
 
-    conn = (struct netconn *)memp_malloc(MEMP_NETCONN);
+    conn = (struct netconn*)memp_malloc(MEMP_NETCONN);
     if (conn == NULL) {
         return NULL;
     }
@@ -763,7 +763,7 @@ free_and_return:
  *
  * @param conn the netconn to free
  */
-void netconn_free(struct netconn *conn) {
+void netconn_free(struct netconn* conn) {
     LWIP_ASSERT("PCB must be deallocated outside this function", conn->pcb.tcp == NULL);
 
     #if LWIP_NETCONN_FULLDUPLEX
@@ -792,8 +792,8 @@ void netconn_free(struct netconn *conn) {
  * @bytes_drained bytes drained from recvmbox
  * @accepts_drained pending connections drained from acceptmbox
  */
-static void netconn_drain(struct netconn *conn) {
-    void *mem;
+static void netconn_drain(struct netconn* conn) {
+    void* mem;
 
     /* This runs when mbox and netconn are marked as closed,
        so we don't need to lock against rx packets */
@@ -812,12 +812,12 @@ static void netconn_drain(struct netconn *conn) {
                 if (NETCONNTYPE_GROUP(conn->type) == NETCONN_TCP) {
                     err_t err;
                     if (!lwip_netconn_is_err_msg(mem, &err)) {
-                        pbuf_free((struct pbuf *)mem);
+                        pbuf_free((struct pbuf*)mem);
                     }
                 } else
     #endif /* LWIP_TCP */
                 {
-                    netbuf_delete((struct netbuf *)mem);
+                    netbuf_delete((struct netbuf*)mem);
                 }
             }
         }
@@ -835,7 +835,7 @@ static void netconn_drain(struct netconn *conn) {
             {
                 err_t err;
                 if (!lwip_netconn_is_err_msg(mem, &err)) {
-                    struct netconn *newconn = (struct netconn *)mem;
+                    struct netconn* newconn = (struct netconn*)mem;
                     /* Only tcp pcbs have an acceptmbox, so no need to check conn->type */
                     /* pcb might be set to NULL already by err_tcp() */
                     /* drain recvmbox */
@@ -855,9 +855,9 @@ static void netconn_drain(struct netconn *conn) {
 }
 
     #if LWIP_NETCONN_FULLDUPLEX
-static void netconn_mark_mbox_invalid(struct netconn *conn) {
+static void netconn_mark_mbox_invalid(struct netconn* conn) {
     int i, num_waiting;
-    void *msg = LWIP_CONST_CAST(void *, &netconn_deleted);
+    void* msg = LWIP_CONST_CAST(void*, &netconn_deleted);
 
     /* Prevent new calls/threads from reading from the mbox */
     conn->flags |= NETCONN_FLAG_MBOXINVALID;
@@ -881,11 +881,11 @@ static void netconn_mark_mbox_invalid(struct netconn *conn) {
  *
  * @param conn the TCP netconn to close
  */
-static err_t lwip_netconn_do_close_internal(struct netconn *conn WRITE_DELAYED_PARAM) {
+static err_t lwip_netconn_do_close_internal(struct netconn* conn WRITE_DELAYED_PARAM) {
     err_t err;
     u8_t shut, shut_rx, shut_tx, shut_close;
     u8_t close_finished = 0;
-    struct tcp_pcb *tpcb;
+    struct tcp_pcb* tpcb;
         #if LWIP_SO_LINGER
     u8_t linger_wait_required = 0;
         #endif /* LWIP_SO_LINGER */
@@ -1014,7 +1014,7 @@ static err_t lwip_netconn_do_close_internal(struct netconn *conn WRITE_DELAYED_P
     }
     if (close_finished) {
         /* Closing done (succeeded, non-memory error, nonblocking error or timeout) */
-        sys_sem_t *op_completed_sem = LWIP_API_MSG_SEM(conn->current_msg);
+        sys_sem_t* op_completed_sem = LWIP_API_MSG_SEM(conn->current_msg);
         conn->current_msg->err      = err;
         conn->current_msg           = NULL;
         conn->state                 = NETCONN_NONE;
@@ -1068,8 +1068,8 @@ static err_t lwip_netconn_do_close_internal(struct netconn *conn WRITE_DELAYED_P
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_delconn(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_delconn(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     enum netconn_state state = msg->conn->state;
     LWIP_ASSERT("netconn state error", /* this only happens for TCP netconns */
@@ -1079,7 +1079,7 @@ void lwip_netconn_do_delconn(void *m) {
     if (state != NETCONN_NONE) {
         if ((state == NETCONN_WRITE) || ((state == NETCONN_CONNECT) && !IN_NONBLOCKING_CONNECT(msg->conn))) {
             /* close requested, abort running write/connect */
-            sys_sem_t *op_completed_sem;
+            sys_sem_t* op_completed_sem;
             LWIP_ASSERT("msg->conn->current_msg != NULL", msg->conn->current_msg != NULL);
             op_completed_sem            = LWIP_API_MSG_SEM(msg->conn->current_msg);
             msg->conn->current_msg->err = ERR_CLSD;
@@ -1164,8 +1164,8 @@ void lwip_netconn_do_delconn(void *m) {
  * @param m the api_msg pointing to the connection and containing
  *          the IP address and port to bind to
  */
-void lwip_netconn_do_bind(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_bind(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
     err_t err;
 
     if (msg->conn->pcb.tcp != NULL) {
@@ -1202,9 +1202,9 @@ void lwip_netconn_do_bind(void *m) {
  * @param m the api_msg pointing to the connection and containing
  *          the IP address and port to bind to
  */
-void lwip_netconn_do_bind_if(void *m) {
-    struct netif *netif;
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_bind_if(void* m) {
+    struct netif* netif;
+    struct api_msg* msg = (struct api_msg*)m;
     err_t err;
 
     netif = netif_get_by_index(msg->msg.bc.if_idx);
@@ -1245,14 +1245,14 @@ void lwip_netconn_do_bind_if(void *m) {
  *
  * @see tcp.h (struct tcp_pcb.connected) for parameters and return values
  */
-static err_t lwip_netconn_do_connected(void *arg, struct tcp_pcb *pcb, err_t err) {
-    struct netconn *conn;
+static err_t lwip_netconn_do_connected(void* arg, struct tcp_pcb* pcb, err_t err) {
+    struct netconn* conn;
     int was_blocking;
-    sys_sem_t *op_completed_sem = NULL;
+    sys_sem_t* op_completed_sem = NULL;
 
     LWIP_UNUSED_ARG(pcb);
 
-    conn = (struct netconn *)arg;
+    conn = (struct netconn*)arg;
 
     if (conn == NULL) {
         return ERR_VAL;
@@ -1289,8 +1289,8 @@ static err_t lwip_netconn_do_connected(void *arg, struct tcp_pcb *pcb, err_t err
  * @param m the api_msg pointing to the connection and containing
  *          the IP address and port to connect to
  */
-void lwip_netconn_do_connect(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_connect(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
     err_t err;
 
     if (msg->conn->pcb.tcp == NULL) {
@@ -1359,8 +1359,8 @@ void lwip_netconn_do_connect(void *m) {
  *
  * @param m the api_msg pointing to the connection to disconnect
  */
-void lwip_netconn_do_disconnect(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_disconnect(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     #if LWIP_UDP
     if (NETCONNTYPE_GROUP(msg->conn->type) == NETCONN_UDP) {
@@ -1381,14 +1381,14 @@ void lwip_netconn_do_disconnect(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_listen(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_listen(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
     err_t err;
 
     if (msg->conn->pcb.tcp != NULL) {
         if (NETCONNTYPE_GROUP(msg->conn->type) == NETCONN_TCP) {
             if (msg->conn->state == NETCONN_NONE) {
-                struct tcp_pcb *lpcb;
+                struct tcp_pcb* lpcb;
                 if (msg->conn->pcb.tcp->state != CLOSED) {
                     /* connection is not closed, cannot listen */
                     err = ERR_VAL;
@@ -1461,8 +1461,8 @@ void lwip_netconn_do_listen(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_send(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_send(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     err_t err = netconn_err(msg->conn);
     if (err == ERR_OK) {
@@ -1513,8 +1513,8 @@ void lwip_netconn_do_send(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_recv(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_recv(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     msg->err = ERR_OK;
     if (msg->conn->pcb.tcp != NULL) {
@@ -1536,8 +1536,8 @@ void lwip_netconn_do_recv(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_accepted(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_accepted(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     msg->err = ERR_OK;
     if (msg->conn->pcb.tcp != NULL) {
@@ -1560,9 +1560,9 @@ void lwip_netconn_do_accepted(void *m) {
  * @return ERR_OK
  *         ERR_MEM if LWIP_TCPIP_CORE_LOCKING=1 and sending hasn't yet finished
  */
-static err_t lwip_netconn_do_writemore(struct netconn *conn WRITE_DELAYED_PARAM) {
+static err_t lwip_netconn_do_writemore(struct netconn* conn WRITE_DELAYED_PARAM) {
     err_t err;
-    const void *dataptr;
+    const void* dataptr;
     u16_t len, available;
     u8_t write_finished = 0;
     size_t diff;
@@ -1594,7 +1594,7 @@ static err_t lwip_netconn_do_writemore(struct netconn *conn WRITE_DELAYED_PARAM)
         #endif /* LWIP_SO_SNDTIMEO */
     {
         do {
-            dataptr = (const u8_t *)conn->current_msg->msg.w.vector->ptr + conn->current_msg->msg.w.vector_off;
+            dataptr = (const u8_t*)conn->current_msg->msg.w.vector->ptr + conn->current_msg->msg.w.vector_off;
             diff    = conn->current_msg->msg.w.vector->len - conn->current_msg->msg.w.vector_off;
             if (diff > 0xffffUL) { /* max_u16_t */
                 len = 0xffff;
@@ -1700,7 +1700,7 @@ static err_t lwip_netconn_do_writemore(struct netconn *conn WRITE_DELAYED_PARAM)
     if (write_finished) {
         /* everything was written: set back connection state
            and back to application task */
-        sys_sem_t *op_completed_sem = LWIP_API_MSG_SEM(conn->current_msg);
+        sys_sem_t* op_completed_sem = LWIP_API_MSG_SEM(conn->current_msg);
         conn->current_msg->err      = err;
         conn->current_msg           = NULL;
         conn->state                 = NETCONN_NONE;
@@ -1726,8 +1726,8 @@ static err_t lwip_netconn_do_writemore(struct netconn *conn WRITE_DELAYED_PARAM)
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_write(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_write(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     err_t err = netconn_err(msg->conn);
     if (err == ERR_OK) {
@@ -1778,8 +1778,8 @@ void lwip_netconn_do_write(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_getaddr(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_getaddr(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     if (msg->conn->pcb.ip != NULL) {
         if (msg->msg.ad.local) {
@@ -1840,8 +1840,8 @@ void lwip_netconn_do_getaddr(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_close(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_close(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     #if LWIP_TCP
     enum netconn_state state = msg->conn->state;
@@ -1856,7 +1856,7 @@ void lwip_netconn_do_close(void *m) {
         #if LWIP_NETCONN_FULLDUPLEX
             if (msg->msg.sd.shut & NETCONN_SHUT_WR) {
                 /* close requested, abort running write */
-                sys_sem_t *write_completed_sem;
+                sys_sem_t* write_completed_sem;
                 LWIP_ASSERT("msg->conn->current_msg != NULL", msg->conn->current_msg != NULL);
                 write_completed_sem         = LWIP_API_MSG_SEM(msg->conn->current_msg);
                 msg->conn->current_msg->err = ERR_CLSD;
@@ -1916,8 +1916,8 @@ void lwip_netconn_do_close(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_join_leave_group(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
+void lwip_netconn_do_join_leave_group(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
 
     msg->err = ERR_CONN;
     if (msg->conn->pcb.tcp != NULL) {
@@ -1956,9 +1956,9 @@ void lwip_netconn_do_join_leave_group(void *m) {
  *
  * @param m the api_msg pointing to the connection
  */
-void lwip_netconn_do_join_leave_group_netif(void *m) {
-    struct api_msg *msg = (struct api_msg *)m;
-    struct netif *netif;
+void lwip_netconn_do_join_leave_group_netif(void* m) {
+    struct api_msg* msg = (struct api_msg*)m;
+    struct netif* netif;
 
     netif = netif_get_by_index(msg->msg.jl.if_idx);
     if (netif == NULL) {
@@ -2007,8 +2007,8 @@ done:
  * (or on timeout). A waiting application thread is waked up by
  * signaling the semaphore.
  */
-static void lwip_netconn_do_dns_found(const char *name, const ip_addr_t *ipaddr, void *arg) {
-    struct dns_api_msg *msg = (struct dns_api_msg *)arg;
+static void lwip_netconn_do_dns_found(const char* name, const ip_addr_t* ipaddr, void* arg) {
+    struct dns_api_msg* msg = (struct dns_api_msg*)arg;
 
     /* we trust the internal implementation to be correct :-) */
     LWIP_UNUSED_ARG(name);
@@ -2031,8 +2031,8 @@ static void lwip_netconn_do_dns_found(const char *name, const ip_addr_t *ipaddr,
  *
  * @param arg the dns_api_msg pointing to the query
  */
-void lwip_netconn_do_gethostbyname(void *arg) {
-    struct dns_api_msg *msg = (struct dns_api_msg *)arg;
+void lwip_netconn_do_gethostbyname(void* arg) {
+    struct dns_api_msg* msg = (struct dns_api_msg*)arg;
     u8_t addrtype =
         #if LWIP_IPV4 && LWIP_IPV6
         msg->dns_addrtype;

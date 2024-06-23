@@ -56,7 +56,7 @@
  */
 
 SYSCALL(
-    18, pwrite64, long sys_pwrite64(unsigned int fd, const char *buf, size_t count, off_t pos) {
+    18, pwrite64, long sys_pwrite64(unsigned int fd, const char* buf, size_t count, off_t pos) {
         DEBUG_ASSERT(current_task);
 
         current_task->iostat.rchar += (uint64_t)count;

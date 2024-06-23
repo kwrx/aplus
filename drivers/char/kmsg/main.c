@@ -43,8 +43,8 @@ MODULE_LICENSE("GPL");
 
 
 
-static ssize_t kmsg_read(device_t *, void *, size_t);
-static ssize_t kmsg_write(device_t *, const void *, size_t);
+static ssize_t kmsg_read(device_t*, void*, size_t);
+static ssize_t kmsg_write(device_t*, const void*, size_t);
 
 
 device_t device = {
@@ -72,7 +72,7 @@ device_t device = {
 
 
 
-static ssize_t kmsg_read(device_t *device, void *buf, size_t size) {
+static ssize_t kmsg_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -81,7 +81,7 @@ static ssize_t kmsg_read(device_t *device, void *buf, size_t size) {
 }
 
 
-static ssize_t kmsg_write(device_t *device, const void *buf, size_t size) {
+static ssize_t kmsg_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -99,7 +99,7 @@ static ssize_t kmsg_write(device_t *device, const void *buf, size_t size) {
 
     size_t i;
     for (i = 0; i < size; i++)
-        arch_debug_putc(((char *)buf)[i]);
+        arch_debug_putc(((char*)buf)[i]);
 
     arch_debug_putc('\e');
     arch_debug_putc('[');
@@ -113,7 +113,7 @@ static ssize_t kmsg_write(device_t *device, const void *buf, size_t size) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     device_mkdev(&device, 0666);
 }
 

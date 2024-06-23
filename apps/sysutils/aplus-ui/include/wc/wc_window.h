@@ -41,12 +41,12 @@ extern "C" {
 
 typedef struct wc_window {
 
-        struct wc_window *parent;
-        struct wc_window *root;
-        struct wc_window *next;
+        struct wc_window* parent;
+        struct wc_window* root;
+        struct wc_window* next;
 
         wc_ref_t ref;
-        wc_font_t *font;
+        wc_font_t* font;
 
         int x;
         int y;
@@ -68,21 +68,21 @@ typedef struct wc_window {
 } wc_window_t;
 
 
-int wc_window_create(wc_window_t **window, wc_window_t *parent);
-int wc_window_destroy(wc_window_t *window);
-void wc_window_set_title(wc_window_t *window, const char *title);
-void wc_window_set_position(wc_window_t *window, int x, int y);
-void wc_window_set_size(wc_window_t *window, int width, int height);
-void wc_window_set_min_size(wc_window_t *window, int width, int height);
-void wc_window_set_max_size(wc_window_t *window, int width, int height);
-void wc_window_set_flags(wc_window_t *window, int flags);
-void wc_window_set_font(wc_window_t *window, wc_font_t *font);
+int wc_window_create(wc_window_t** window, wc_window_t* parent);
+int wc_window_destroy(wc_window_t* window);
+void wc_window_set_title(wc_window_t* window, const char* title);
+void wc_window_set_position(wc_window_t* window, int x, int y);
+void wc_window_set_size(wc_window_t* window, int width, int height);
+void wc_window_set_min_size(wc_window_t* window, int width, int height);
+void wc_window_set_max_size(wc_window_t* window, int width, int height);
+void wc_window_set_flags(wc_window_t* window, int flags);
+void wc_window_set_font(wc_window_t* window, wc_font_t* font);
 
-void wc_window_enqueue(wc_window_t *window);
-void wc_window_dequeue(wc_window_t *window);
+void wc_window_enqueue(wc_window_t* window);
+void wc_window_dequeue(wc_window_t* window);
 
-void wc_window_draw(wc_window_t *window, wc_renderer_t *renderer);
-void wc_window_draw_all(wc_renderer_t *renderer);
+void wc_window_draw(wc_window_t* window, wc_renderer_t* renderer);
+void wc_window_draw_all(wc_renderer_t* renderer);
 
 #ifdef __cplusplus
 }

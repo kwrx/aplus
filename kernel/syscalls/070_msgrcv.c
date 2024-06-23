@@ -53,4 +53,4 @@
 
 struct msgbuf;
 
-SYSCALL(70, msgrcv, long sys_msgrcv(int msqid, struct msgbuf *msgp, size_t msgsz, long msgtyp, int msgflg) { return -ENOSYS; });
+SYSCALL(70, msgrcv, long sys_msgrcv(int msqid, struct msgbuf* msgp, size_t msgsz, long msgtyp, int msgflg) { return -ENOSYS; });

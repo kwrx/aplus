@@ -47,9 +47,9 @@ void futex_rt_unlock() {
 }
 
 #if DEBUG_LEVEL_TRACE
-void __futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const struct timespec *utime, const char *OBJ, const char *FILE, int LINE) {
+void __futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
 #else
-void futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const struct timespec *utime) {
+void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime) {
 #endif
 
     DEBUG_ASSERT(task);
@@ -90,7 +90,7 @@ void futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const st
 
 
 
-    futex_t *futex = (futex_t *)kcalloc(1, sizeof(futex_t), GFP_KERNEL);
+    futex_t* futex = (futex_t*)kcalloc(1, sizeof(futex_t), GFP_KERNEL);
 
     futex->address = kaddr;
     futex->value   = value;
@@ -104,13 +104,11 @@ void futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const st
     }
 
 
-    __lock(&task->lock, {
-        list_push(task->futexes, futex);
-    });
+    __lock(&task->lock, { list_push(task->futexes, futex); });
 }
 
 
-size_t futex_wakeup(uint32_t *kaddr, size_t max) {
+size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
     DEBUG_ASSERT(kaddr);
 
@@ -124,7 +122,7 @@ size_t futex_wakeup(uint32_t *kaddr, size_t max) {
 
     cpu_foreach(cpu) {
 
-        task_t *tmp;
+        task_t* tmp;
         for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
             __lock(&tmp->lock, {
@@ -154,7 +152,7 @@ return wok;
 }
 
 
-size_t futex_requeue(uint32_t *kaddr, uint32_t *kaddr2, size_t max) {
+size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
     DEBUG_ASSERT(kaddr);
     DEBUG_ASSERT(kaddr2);
@@ -169,7 +167,7 @@ size_t futex_requeue(uint32_t *kaddr, uint32_t *kaddr2, size_t max) {
 
     cpu_foreach(cpu) {
 
-        task_t *tmp;
+        task_t* tmp;
         for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
             __lock(&tmp->lock, {
@@ -198,7 +196,7 @@ return req;
 
 
 
-bool futex_expired(futex_t *futex) {
+bool futex_expired(futex_t* futex) {
 
     DEBUG_ASSERT(futex);
 

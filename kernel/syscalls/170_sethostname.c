@@ -31,7 +31,7 @@
 
 
 // @see kernel/init/hostname.c
-extern char *hostname;
+extern char* hostname;
 
 
 /***
@@ -48,7 +48,7 @@ extern char *hostname;
  */
 
 SYSCALL(
-    170, sethostname, long sys_sethostname(char *name, int len) {
+    170, sethostname, long sys_sethostname(char* name, int len) {
         if (unlikely(!name))
             return -EFAULT;
 

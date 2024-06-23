@@ -34,11 +34,11 @@
 
 
 inode_t __vfs_root;
-inode_t *vfs_root = &__vfs_root;
+inode_t* vfs_root = &__vfs_root;
 
 
 
-static int rootfs_getattr(inode_t *inode, struct stat *st) {
+static int rootfs_getattr(inode_t* inode, struct stat* st) {
 
     __unused_param(inode);
 

@@ -106,7 +106,7 @@ uint64_t pci_read(pcidev_t device, int field, size_t size) {
 
 
 
-void init(const char *args) {
+void init(const char* args) {
     (void)args;
 }
 

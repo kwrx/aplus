@@ -94,13 +94,13 @@
  * Specifically, this should be either control sequences
  * or raw characters (ie, for vt220 mode)
  */
-const char *colors[256] = {NULL};
+const char* colors[256] = {NULL};
 
 /*
  * For most modes, we output spaces, but for some
  * we will use block characters (or even nothing)
  */
-const char *output = "  ";
+const char* output = "  ";
 
 /*
  * Are we currently in telnet mode?
@@ -326,7 +326,7 @@ void send_command(int cmd, int opt) {
 /*
  * Print the usage / help text describing options
  */
-void usage(char *argv[]) {
+void usage(char* argv[]) {
     printf("Terminal Nyancat\n"
            "\n"
            "usage: %s [-hitn] [-f \033[3mframes\033[0m]\n"
@@ -348,9 +348,9 @@ void usage(char *argv[]) {
            argv[0]);
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
-    char *term = NULL;
+    char* term = NULL;
     unsigned int k;
     int ttype;
     uint32_t option = 0, done = 0, sb_mode = 0;
@@ -495,7 +495,7 @@ int main(int argc, char **argv) {
                                 /* This was a response to the TTYPE command, meaning
                                  * that this should be a terminal type */
                                 alarm(2);
-                                term = strndup((char *)&sb[2], sizeof(sb) - 2);
+                                term = strndup((char*)&sb[2], sizeof(sb) - 2);
                                 done++;
                             } else if (sb[0] == NAWS) {
                                 /* This was a response to the NAWS command, meaning
@@ -851,7 +851,7 @@ int main(int argc, char **argv) {
                     /*
                      * Our rainbow, with some padding.
                      */
-                    const char *rainbow = ",,>>&&&+++###==;;;,,";
+                    const char* rainbow = ",,>>&&&+++###==;;;,,";
                     color               = rainbow[mod_x + y - 23];
                     if (color == 0)
                         color = ',';

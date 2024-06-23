@@ -58,7 +58,7 @@
  * Perform the MPPE rekey algorithm, from RFC 3078, sec. 7.3.
  * Well, not what's written there, but rather what they meant.
  */
-static void mppe_rekey(ppp_mppe_state *state, int initial_key) {
+static void mppe_rekey(ppp_mppe_state* state, int initial_key) {
     lwip_sha1_context sha1_ctx;
     u8_t sha1_digest[SHA1_SIGNATURE_SIZE];
 
@@ -96,7 +96,7 @@ static void mppe_rekey(ppp_mppe_state *state, int initial_key) {
  * Set key, used by MSCHAP before mppe_init() is actually called by CCP so we
  * don't have to keep multiple copies of keys.
  */
-void mppe_set_key(ppp_pcb *pcb, ppp_mppe_state *state, u8_t *key) {
+void mppe_set_key(ppp_pcb* pcb, ppp_mppe_state* state, u8_t* key) {
     LWIP_UNUSED_ARG(pcb);
     MEMCPY(state->master_key, key, MPPE_MAX_KEY_LEN);
 }
@@ -104,11 +104,11 @@ void mppe_set_key(ppp_pcb *pcb, ppp_mppe_state *state, u8_t *key) {
 /*
  * Initialize (de)compressor state.
  */
-void mppe_init(ppp_pcb *pcb, ppp_mppe_state *state, u8_t options) {
+void mppe_init(ppp_pcb* pcb, ppp_mppe_state* state, u8_t options) {
     #if PPP_DEBUG
-    const u8_t *debugstr = (const u8_t *)"mppe_comp_init";
+    const u8_t* debugstr = (const u8_t*)"mppe_comp_init";
     if (&pcb->mppe_decomp == state) {
-        debugstr = (const u8_t *)"mppe_decomp_init";
+        debugstr = (const u8_t*)"mppe_decomp_init";
     }
     #endif /* PPP_DEBUG */
 
@@ -170,7 +170,7 @@ void mppe_init(ppp_pcb *pcb, ppp_mppe_state *state, u8_t options) {
  * know how many times we've rekeyed.  (If we rekey and THEN get another
  * CCP Reset-Request, we must rekey again.)
  */
-void mppe_comp_reset(ppp_pcb *pcb, ppp_mppe_state *state) {
+void mppe_comp_reset(ppp_pcb* pcb, ppp_mppe_state* state) {
     LWIP_UNUSED_ARG(pcb);
     state->bits |= MPPE_BIT_FLUSHED;
 }
@@ -180,9 +180,9 @@ void mppe_comp_reset(ppp_pcb *pcb, ppp_mppe_state *state) {
  * It's strange to call this a compressor, since the output is always
  * MPPE_OVHD + 2 bytes larger than the input.
  */
-err_t mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t protocol) {
+err_t mppe_compress(ppp_pcb* pcb, ppp_mppe_state* state, struct pbuf** pb, u16_t protocol) {
     struct pbuf *n, *np;
-    u8_t *pl;
+    u8_t* pl;
     err_t err;
 
     LWIP_UNUSED_ARG(pcb);
@@ -207,7 +207,7 @@ err_t mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t
     pbuf_add_header(np, MPPE_OVHD + sizeof(protocol));
 
     *pb = np;
-    pl  = (u8_t *)np->payload;
+    pl  = (u8_t*)np->payload;
 
     state->ccount = (state->ccount + 1) % MPPE_CCOUNT_SPACE;
     PPPDEBUG(LOG_DEBUG, ("mppe_compress[%d]: ccount %d\n", pcb->netif->num, state->ccount));
@@ -239,7 +239,7 @@ err_t mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t
 
     /* Encrypt packet */
     for (n = np; n != NULL; n = n->next) {
-        lwip_arc4_crypt(&state->arc4, (u8_t *)n->payload, n->len);
+        lwip_arc4_crypt(&state->arc4, (u8_t*)n->payload, n->len);
         if (n->tot_len == n->len) {
             break;
         }
@@ -254,7 +254,7 @@ err_t mppe_compress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb, u16_t
 /*
  * We received a CCP Reset-Ack.  Just ignore it.
  */
-void mppe_decomp_reset(ppp_pcb *pcb, ppp_mppe_state *state) {
+void mppe_decomp_reset(ppp_pcb* pcb, ppp_mppe_state* state) {
     LWIP_UNUSED_ARG(pcb);
     LWIP_UNUSED_ARG(state);
     return;
@@ -263,9 +263,9 @@ void mppe_decomp_reset(ppp_pcb *pcb, ppp_mppe_state *state) {
 /*
  * Decompress (decrypt) an MPPE packet.
  */
-err_t mppe_decompress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb) {
+err_t mppe_decompress(ppp_pcb* pcb, ppp_mppe_state* state, struct pbuf** pb) {
     struct pbuf *n0 = *pb, *n;
-    u8_t *pl;
+    u8_t* pl;
     u16_t ccount;
     u8_t flushed;
 
@@ -276,7 +276,7 @@ err_t mppe_decompress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb) {
         goto sanity_error;
     }
 
-    pl      = (u8_t *)n0->payload;
+    pl      = (u8_t*)n0->payload;
     flushed = MPPE_BITS(pl) & MPPE_BIT_FLUSHED;
     ccount  = MPPE_CCOUNT(pl);
     PPPDEBUG(LOG_DEBUG, ("mppe_decompress[%d]: ccount %d\n", pcb->netif->num, ccount));
@@ -366,7 +366,7 @@ err_t mppe_decompress(ppp_pcb *pcb, ppp_mppe_state *state, struct pbuf **pb) {
 
     /* Decrypt the packet. */
     for (n = n0; n != NULL; n = n->next) {
-        lwip_arc4_crypt(&state->arc4, (u8_t *)n->payload, n->len);
+        lwip_arc4_crypt(&state->arc4, (u8_t*)n->payload, n->len);
         if (n->tot_len == n->len) {
             break;
         }

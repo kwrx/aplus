@@ -25,7 +25,7 @@ int wc_event_initialize(void) {
 }
 
 
-int wc_event_wait(wc_event_t *type) {
+int wc_event_wait(wc_event_t* type) {
 
     assert(evpipe[0] != -1);
     assert(evpipe[1] != -1);

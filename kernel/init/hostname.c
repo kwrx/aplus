@@ -29,7 +29,7 @@
 
 
 char __hostname[CONFIG_NAME_MAX] = "kwrx\0";
-char *hostname                   = &__hostname[0];
+char* hostname                   = &__hostname[0];
 
 
 TEST(hostname_test, {

@@ -432,7 +432,7 @@ struct ahci {
 
         semaphore_t io;
 
-        hba_t volatile *hba;
+        hba_t volatile* hba;
 };
 
 
@@ -441,7 +441,7 @@ static uint8_t devices_count = 0;
 
 
 
-static void irq(pcidev_t device, uint8_t irq, struct ahci *ahci) {
+static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
 
     DEBUG_ASSERT(ahci);
     DEBUG_ASSERT(ahci->irq == irq);
@@ -482,7 +482,7 @@ static void irq(pcidev_t device, uint8_t irq, struct ahci *ahci) {
 
 
 
-static inline void ahci_wait_io(struct ahci *ahci, int port, int channel) {
+static inline void ahci_wait_io(struct ahci* ahci, int port, int channel) {
 
     DEBUG_ASSERT(ahci);
 
@@ -496,13 +496,13 @@ static inline void ahci_wait_io(struct ahci *ahci, int port, int channel) {
 }
 
 
-static void satapi_init(device_t *device) {
+static void satapi_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -510,7 +510,7 @@ static void satapi_init(device_t *device) {
     DEBUG_ASSERT(i >= 0 && i < 32);
 
 
-    hba_cmd_t volatile *cmd = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
 
     cmd->cfl   = sizeof(fis_h2d_t) / sizeof(uint32_t);
     cmd->w     = 0;
@@ -518,21 +518,21 @@ static void satapi_init(device_t *device) {
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile *tbl = (hba_cmd_table_t volatile *)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
 
 
 
-    fis_h2d_t volatile *h2d = (fis_h2d_t volatile *)&tbl->cfis;
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*)&tbl->cfis;
 
     h2d->type    = FIS_TYPE_H2D;
     h2d->c       = 1;
@@ -557,7 +557,7 @@ static void satapi_init(device_t *device) {
 
     ata_identify_t identify = {0};
 
-    memcpy(&identify, (void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
+    memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
 
 
 
@@ -573,10 +573,10 @@ static void satapi_init(device_t *device) {
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 2048);
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 2048);
 
 
 
@@ -589,7 +589,7 @@ static void satapi_init(device_t *device) {
     h2d->lba1 = (2048 >> 8) & 0xFF;
 
 
-    uint8_t *command = (uint8_t *)(&tbl->acmd);
+    uint8_t* command = (uint8_t*)(&tbl->acmd);
 
     command[0] = 0x25; /* 25h: SCSI_READ_CAPACITY */
     command[1] = 0x00;
@@ -647,7 +647,7 @@ static void satapi_init(device_t *device) {
 
 
 
-static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t count) {
+static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t count) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -656,7 +656,7 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
     DEBUG_ASSERT(count <= 64);
 
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long d = AHCI_DEVICE_INDEX(device);
@@ -673,7 +673,7 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
     }
 
 
-    hba_cmd_t volatile *cmd = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
     cmd += b;
 
     cmd->cfl   = sizeof(fis_h2d_t) / sizeof(uint32_t);
@@ -682,21 +682,21 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile *tbl = (hba_cmd_table_t volatile *)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 11) - 1;
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 11));
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 11));
 
 
 
-    fis_h2d_t volatile *h2d = (fis_h2d_t volatile *)&tbl->cfis;
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*)&tbl->cfis;
 
     h2d->type    = FIS_TYPE_H2D;
     h2d->c       = 1;
@@ -708,7 +708,7 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
 
 
 
-    uint8_t *command = (uint8_t *)(&tbl->acmd);
+    uint8_t* command = (uint8_t*)(&tbl->acmd);
 
     command[0] = 0x28; /* 28h: SCSI_READ (10) */
     command[1] = 0x00;
@@ -743,7 +743,7 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
     }
 
 
-    memcpy(buf, (void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 11);
+    memcpy(buf, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 11);
 
 
     DEBUG_ASSERT(cmd->prdbc == (count << 11));
@@ -752,12 +752,12 @@ static ssize_t satapi_read(device_t *device, void *buf, off_t offset, size_t cou
 
 
 
-static void sata_init(device_t *device) {
+static void sata_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -765,7 +765,7 @@ static void sata_init(device_t *device) {
     DEBUG_ASSERT(i >= 0 && i < 32);
 
 
-    hba_cmd_t volatile *cmd = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
 
     cmd->cfl   = sizeof(fis_h2d_t) / sizeof(uint32_t);
     cmd->w     = 0;
@@ -773,21 +773,21 @@ static void sata_init(device_t *device) {
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile *tbl = (hba_cmd_table_t volatile *)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
 
 
 
-    fis_h2d_t volatile *h2d = (fis_h2d_t volatile *)&tbl->cfis;
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*)&tbl->cfis;
 
     h2d->type    = FIS_TYPE_H2D;
     h2d->c       = 1;
@@ -812,7 +812,7 @@ static void sata_init(device_t *device) {
 
     ata_identify_t identify = {0};
 
-    memcpy(&identify, (void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
+    memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
 
 
     device->blk.blkcount = identify.sectors_28 ? identify.sectors_28 : identify.sectors_48;
@@ -841,12 +841,12 @@ static void sata_init(device_t *device) {
 }
 
 
-static void sata_dnit(device_t *device) {
+static void sata_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -864,12 +864,12 @@ static void sata_dnit(device_t *device) {
 }
 
 
-static void sata_reset(device_t *device) {
+static void sata_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -919,7 +919,7 @@ static void sata_reset(device_t *device) {
 
 
 
-static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count) {
+static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -927,7 +927,7 @@ static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count
     DEBUG_ASSERT(count);
     DEBUG_ASSERT(count <= 256);
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long d = AHCI_DEVICE_INDEX(device);
@@ -944,7 +944,7 @@ static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count
     }
 
 
-    hba_cmd_t volatile *cmd = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
     cmd += b;
 
     cmd->cfl   = sizeof(fis_h2d_t) / sizeof(uint32_t);
@@ -953,21 +953,21 @@ static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile *tbl = (hba_cmd_table_t volatile *)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
 
 
 
-    fis_h2d_t volatile *h2d = (fis_h2d_t volatile *)&tbl->cfis;
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*)&tbl->cfis;
 
     h2d->type    = FIS_TYPE_H2D;
     h2d->c       = 1;
@@ -1008,7 +1008,7 @@ static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count
     }
 
 
-    memcpy(buf, (void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 9);
+    memcpy(buf, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 9);
 
 
     DEBUG_ASSERT(cmd->prdbc == (count << 9));
@@ -1017,7 +1017,7 @@ static ssize_t sata_read(device_t *device, void *buf, off_t offset, size_t count
 
 
 
-static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_t count) {
+static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_t count) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -1025,7 +1025,7 @@ static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_
     DEBUG_ASSERT(count);
     DEBUG_ASSERT(count <= 256);
 
-    struct ahci *ahci = (struct ahci *)device->userdata;
+    struct ahci* ahci = (struct ahci*)device->userdata;
 
 
     long d = AHCI_DEVICE_INDEX(device);
@@ -1042,7 +1042,7 @@ static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_
     }
 
 
-    hba_cmd_t volatile *cmd = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
+    hba_cmd_t volatile* cmd = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[d].clb, ARCH_VMM_AREA_HEAP));
     cmd += b;
 
     cmd->cfl   = sizeof(fis_h2d_t) / sizeof(uint32_t);
@@ -1051,21 +1051,21 @@ static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_
     cmd->prdtl = 1;
 
 
-    hba_cmd_table_t volatile *tbl = (hba_cmd_table_t volatile *)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
+    hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
     tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i   = 1;
 
 
-    memset((void *)&tbl->cfis, 0, sizeof(tbl->cfis));
-    memset((void *)&tbl->acmd, 0, sizeof(tbl->acmd));
+    memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
+    memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
+    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
 
 
 
-    fis_h2d_t volatile *h2d = (fis_h2d_t volatile *)&tbl->cfis;
+    fis_h2d_t volatile* h2d = (fis_h2d_t volatile*)&tbl->cfis;
 
     h2d->type    = FIS_TYPE_H2D;
     h2d->c       = 1;
@@ -1086,7 +1086,7 @@ static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_
     h2d->counth = (count >> 8) & 0xFF;
 
 
-    memcpy((void *)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (buf), (count << 9));
+    memcpy((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (buf), (count << 9));
 
 
     while (ahci->hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
@@ -1115,7 +1115,7 @@ static ssize_t sata_write(device_t *device, const void *buf, off_t offset, size_
 
 
 
-static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
+static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     static struct {
             uint16_t vid;
@@ -1173,7 +1173,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 
 
 
-    struct ahci *ahci = &devices[devices_count++];
+    struct ahci* ahci = &devices[devices_count++];
 
     pci_enable_pio(device);
     pci_enable_mmio(device);
@@ -1182,7 +1182,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
     ahci->deviceid = device;
     ahci->irq      = pci_read(device, PCI_INTERRUPT_LINE, 1);
 
-    ahci->hba = (hba_t volatile *)(pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
+    ahci->hba = (hba_t volatile*)(pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
 
 
     uint32_t size = pci_bar_size(device, PCI_BAR5, 4);
@@ -1197,13 +1197,13 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     pci_scan(&pci_find, PCI_TYPE_SATA, NULL);
 
 
-    struct ahci *ahci;
+    struct ahci* ahci;
     for (int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
 
 
@@ -1316,7 +1316,7 @@ void init(const char *args) {
 
 
 
-            hba_cmd_t volatile *clbp = (hba_cmd_t volatile *)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
+            hba_cmd_t volatile* clbp = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
 
             for (int j = 0; j < 32; j++) {
 
@@ -1360,7 +1360,7 @@ void init(const char *args) {
                 continue;
 
 
-            device_t *d = (device_t *)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+            device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
 
             strncpy(d->name, "sda", DEVICE_MAXNAMELEN);
             strncpy(d->description, "SATA disk device", DEVICE_MAXDESCLEN);
@@ -1384,7 +1384,7 @@ void init(const char *args) {
             d->blk.read  = sata_read;
             d->blk.write = sata_write;
 
-            d->userdata = (void *)ahci;
+            d->userdata = (void*)ahci;
 
             device_mkdev(d, 0660);
         }
@@ -1398,7 +1398,7 @@ void init(const char *args) {
                 continue;
 
 
-            device_t *d = (device_t *)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+            device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
 
             strncpy(d->name, "scd0", DEVICE_MAXNAMELEN);
             strncpy(d->description, "SATA CD-ROM device", DEVICE_MAXDESCLEN);
@@ -1422,7 +1422,7 @@ void init(const char *args) {
             d->blk.read  = satapi_read;
             d->blk.write = NULL;
 
-            d->userdata = (void *)ahci;
+            d->userdata = (void*)ahci;
 
             device_mkdev(d, 0660);
         }
@@ -1433,7 +1433,7 @@ void init(const char *args) {
 
 void dnit(void) {
 
-    struct ahci *ahci;
+    struct ahci* ahci;
     for (int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
 
 

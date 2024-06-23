@@ -11,16 +11,16 @@ extern "C" {
 
 typedef struct wc_ref {
         int refcount;
-        int (*dtor)(void *);
-        void *object;
+        int (*dtor)(void*);
+        void* object;
 } wc_ref_t;
 
 
-#define wc_ref_init(ref, func, data)                  \
-    do {                                              \
-        (ref)->refcount = 1;                          \
-        (ref)->dtor     = (int (*)(void *)) & (func); \
-        (ref)->object   = (void *)(data);             \
+#define wc_ref_init(ref, func, data)                 \
+    do {                                             \
+        (ref)->refcount = 1;                         \
+        (ref)->dtor     = (int (*)(void*)) & (func); \
+        (ref)->object   = (void*)(data);             \
     } while (0)
 
 #define wc_ref_inc(ref) (++(ref)->refcount)

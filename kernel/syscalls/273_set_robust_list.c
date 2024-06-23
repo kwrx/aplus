@@ -50,4 +50,4 @@
 
 struct robust_list_head;
 
-SYSCALL(273, set_robust_list, long sys_set_robust_list(struct robust_list_head *head, size_t len) { return -ENOSYS; });
+SYSCALL(273, set_robust_list, long sys_set_robust_list(struct robust_list_head* head, size_t len) { return -ENOSYS; });

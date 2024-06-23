@@ -80,10 +80,10 @@ MODULE_LICENSE("GPL");
 
 
 
-static void bga_init(device_t *);
-static void bga_dnit(device_t *);
-static void bga_reset(device_t *);
-static void bga_update(device_t *);
+static void bga_init(device_t*);
+static void bga_dnit(device_t*);
+static void bga_reset(device_t*);
+static void bga_update(device_t*);
 
 
 device_t device = {
@@ -108,7 +108,7 @@ device_t device = {
 
 
 
-static void bga_init(device_t *device) {
+static void bga_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base);
@@ -121,7 +121,7 @@ static void bga_init(device_t *device) {
 }
 
 
-static void bga_dnit(device_t *device) {
+static void bga_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base);
@@ -131,7 +131,7 @@ static void bga_dnit(device_t *device) {
 }
 
 
-static void bga_reset(device_t *device) {
+static void bga_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -164,7 +164,7 @@ static void bga_reset(device_t *device) {
 }
 
 
-static void bga_update(device_t *device) {
+static void bga_update(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base);
@@ -229,18 +229,18 @@ static void bga_update(device_t *device) {
 }
 
 
-static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
+static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if (likely(!(((vid == 0x1234) || (vid == 0x80EE)) && ((did == 0x1111) || (did == 0xBEEF)))))
         return;
 
 
-    ((device_t *)arg)->vid.fb_base = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
-    ((device_t *)arg)->vid.fb_size = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
+    ((device_t*)arg)->vid.fb_base = pci_read(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
+    ((device_t*)arg)->vid.fb_size = pci_bar_size(device, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
 
 #if defined(__x86_64__)
     if (pci_is_64bit(device, PCI_BAR0))
-        ((device_t *)arg)->vid.fb_base |= (pci_read(device, PCI_BAR1, 4) << 32);
+        ((device_t*)arg)->vid.fb_base |= (pci_read(device, PCI_BAR1, 4) << 32);
 #endif
 
 
@@ -250,7 +250,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "graphics=off"))
         return;

@@ -37,7 +37,7 @@
 #include "procfs.h"
 
 
-ssize_t procfs_root_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) {
+ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -54,9 +54,9 @@ ssize_t procfs_root_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t 
 
     cpu_foreach(cpu) {
 
-        task_t *task = cpu->sched_queue;
+        task_t* task = cpu->sched_queue;
 
-        for (task_t *q = cpu->sched_queue; q; q = q->next) {
+        for (task_t* q = cpu->sched_queue; q; q = q->next) {
 
             if (pos-- > 0)
                 continue;

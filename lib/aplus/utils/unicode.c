@@ -164,7 +164,7 @@ int32_t utf8_bytes(unsigned char c) {
    if the input is partly broken.  This checks the first byte of the
    input, but it doesn't check the subsequent bytes. */
 
-int32_t utf8_no_checks(const unsigned char *input, const unsigned char **end_ptr) {
+int32_t utf8_no_checks(const unsigned char* input, const unsigned char** end_ptr) {
     unsigned char c;
     c = input[0];
     switch (utf8_sequence_len[c]) {
@@ -209,7 +209,7 @@ int32_t utf8_no_checks(const unsigned char *input, const unsigned char **end_ptr
    returned. If the value extrapolated from "input" ends in 0xFFFF or
    0xFFFE, UNICODE_NOT_CHARACTER is returned. */
 
-int32_t utf8_to_ucs2(const unsigned char *input, const unsigned char **end_ptr) {
+int32_t utf8_to_ucs2(const unsigned char* input, const unsigned char** end_ptr) {
     unsigned char c;
     uint8_t l;
     *end_ptr = input;
@@ -309,7 +309,7 @@ int32_t utf8_to_ucs2(const unsigned char *input, const unsigned char **end_ptr) 
    buffer "utf8" has at least UNICODE_MAX_LENGTH (5) bytes of space to
    write to, without checking. */
 
-int32_t ucs2_to_utf8(int32_t ucs2, unsigned char *utf8) {
+int32_t ucs2_to_utf8(int32_t ucs2, unsigned char* utf8) {
     if (ucs2 < 0x80) {
         utf8[0] = ucs2;
         utf8[1] = '\0';
@@ -360,7 +360,7 @@ int32_t ucs2_to_utf8(int32_t ucs2, unsigned char *utf8) {
    and "*lo_ptr" are undefined. If the conversion is successful,
    UNICODE_OK is returned. */
 
-int32_t unicode_to_surrogates(unsigned unicode, int32_t *hi_ptr, int32_t *lo_ptr) {
+int32_t unicode_to_surrogates(unsigned unicode, int32_t* hi_ptr, int32_t* lo_ptr) {
     int32_t hi = UNI_SUR_HIGH_START;
     int32_t lo = UNI_SUR_LOW_START;
     if (unicode < HALF_BASE) {
@@ -405,7 +405,7 @@ int32_t surrogates_to_unicode(int32_t hi, int32_t lo) {
    can return the same errors as them, and has the same restriction on
    "utf8" as ucs2_to_utf8. */
 
-int32_t surrogate_to_utf8(int32_t hi, int32_t lo, unsigned char *utf8) {
+int32_t surrogate_to_utf8(int32_t hi, int32_t lo, unsigned char* utf8) {
     int32_t C;
     C = surrogates_to_unicode(hi, lo);
     if (C < 0) {
@@ -421,10 +421,10 @@ int32_t surrogate_to_utf8(int32_t hi, int32_t lo, unsigned char *utf8) {
    value is UNICODE_EMPTY_INPUT. This may also return any of the error
    values of "utf8_to_ucs2". */
 
-int32_t unicode_chars_to_bytes(const unsigned char *utf8, int32_t n_chars) {
+int32_t unicode_chars_to_bytes(const unsigned char* utf8, int32_t n_chars) {
     int32_t i;
-    const unsigned char *p = utf8;
-    int32_t len            = strlen((const char *)utf8);
+    const unsigned char* p = utf8;
+    int32_t len            = strlen((const char*)utf8);
     if (len == 0 && n_chars != 0) {
         return UNICODE_EMPTY_INPUT;
     }
@@ -442,9 +442,9 @@ int32_t unicode_chars_to_bytes(const unsigned char *utf8, int32_t n_chars) {
    sequence. It may return UTF8_BAD_LEADING_BYTE if the first byte is
    invalid. */
 
-int32_t unicode_count_chars_fast(const unsigned char *utf8) {
+int32_t unicode_count_chars_fast(const unsigned char* utf8) {
     int32_t chars;
-    const unsigned char *p;
+    const unsigned char* p;
     chars = 0;
     p     = utf8;
     while (*p) {
@@ -469,10 +469,10 @@ int32_t unicode_count_chars_fast(const unsigned char *utf8) {
    If an error occurs, this may return UTF8_BAD_LEADING_BYTE or any of the
    errors of "utf8_to_ucs2". */
 
-int32_t unicode_count_chars(const unsigned char *utf8) {
+int32_t unicode_count_chars(const unsigned char* utf8) {
     int32_t chars          = 0;
-    const unsigned char *p = utf8;
-    int32_t len            = strlen((const char *)utf8);
+    const unsigned char* p = utf8;
+    int32_t len            = strlen((const char*)utf8);
     if (len == 0) {
         return 0;
     }
@@ -753,7 +753,7 @@ int32_t unicode_count_chars(const unsigned char *utf8) {
    to "input_length". The return value may be UTF8_VALID or
    UTF8_INVALID. */
 
-int32_t valid_utf8(const unsigned char *input, int32_t input_length) {
+int32_t valid_utf8(const unsigned char* input, int32_t input_length) {
     int32_t i;
     unsigned char c;
 
@@ -905,8 +905,8 @@ byte24_80_8f:
    containing zero) are considered valid. This does not check for
    invalid UTF-8 bytes such as 0xFE and 0xFF. */
 
-int32_t trim_to_utf8_start(unsigned char **ptr) {
-    unsigned char *p = *ptr;
+int32_t trim_to_utf8_start(unsigned char** ptr) {
+    unsigned char* p = *ptr;
     unsigned char c;
     int32_t i;
     /* 0xC0 = 1100_0000. */
@@ -924,7 +924,7 @@ int32_t trim_to_utf8_start(unsigned char **ptr) {
     return UTF8_BAD_CONTINUATION_BYTE;
 }
 
-const char *code_to_error(int32_t code) {
+const char* code_to_error(int32_t code) {
     switch (code) {
         case UTF8_BAD_LEADING_BYTE:
             return "The leading byte of a UTF-8 sequence was invalid";

@@ -52,7 +52,7 @@
  */
 
 SYSCALL(
-    6, newlstat, long sys_newlstat(const char *filename, struct stat *statbuf) {
+    6, newlstat, long sys_newlstat(const char* filename, struct stat* statbuf) {
         if (!filename)
             return -EINVAL;
 
@@ -83,9 +83,7 @@ SYSCALL(
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
 
-            __lock(&fds->descriptors[fd].ref->lock, {
-                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
-            });
+            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf); });
         });
 
 

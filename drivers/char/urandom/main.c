@@ -44,8 +44,8 @@ MODULE_LICENSE("GPL");
 
 
 
-static ssize_t urandom_read(device_t *, void *, size_t);
-static ssize_t urandom_write(device_t *, const void *, size_t);
+static ssize_t urandom_read(device_t*, void*, size_t);
+static ssize_t urandom_write(device_t*, const void*, size_t);
 
 
 device_t device = {
@@ -72,7 +72,7 @@ device_t device = {
 
 
 
-static ssize_t urandom_read(device_t *device, void *buf, size_t size) {
+static ssize_t urandom_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -81,21 +81,21 @@ static ssize_t urandom_read(device_t *device, void *buf, size_t size) {
     size_t i = 0;
 
     for (; i + 8 < size; i += 8)
-        *(uint64_t *)(((uintptr_t)buf) + i) = arch_random() & 0xFFFFFFFFFFFFFFFF;
+        *(uint64_t*)(((uintptr_t)buf) + i) = arch_random() & 0xFFFFFFFFFFFFFFFF;
 
     for (; i + 4 < size; i += 4)
-        *(uint32_t *)(((uintptr_t)buf) + i) = arch_random() & 0xFFFFFFFF;
+        *(uint32_t*)(((uintptr_t)buf) + i) = arch_random() & 0xFFFFFFFF;
 
     for (; i + 2 < size; i += 2)
-        *(uint16_t *)(((uintptr_t)buf) + i) = arch_random() & 0xFFFF;
+        *(uint16_t*)(((uintptr_t)buf) + i) = arch_random() & 0xFFFF;
 
     for (; i < size; i += 1)
-        *(uint8_t *)(((uintptr_t)buf) + i) = arch_random() & 0xFF;
+        *(uint8_t*)(((uintptr_t)buf) + i) = arch_random() & 0xFF;
 
     return size;
 }
 
-static ssize_t urandom_write(device_t *device, const void *buf, size_t size) {
+static ssize_t urandom_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -104,7 +104,7 @@ static ssize_t urandom_write(device_t *device, const void *buf, size_t size) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     device_mkdev(&device, 0666);
 }
 

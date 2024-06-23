@@ -39,7 +39,7 @@
 
 
 
-int tmpfs_umount(inode_t *dir) {
+int tmpfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);
@@ -47,7 +47,7 @@ int tmpfs_umount(inode_t *dir) {
     DEBUG_ASSERT(dir->sb->root == dir);
 
 
-    tmpfs_t *tmpfs = (tmpfs_t *)dir->sb->fsinfo;
+    tmpfs_t* tmpfs = (tmpfs_t*)dir->sb->fsinfo;
 
 
     cache_destroy(&dir->sb->cache);

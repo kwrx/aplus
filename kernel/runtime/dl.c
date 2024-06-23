@@ -36,17 +36,17 @@
 #include <sys/types.h>
 
 
-uintptr_t runtime_get_address(const char *name) {
+uintptr_t runtime_get_address(const char* name) {
 
-    Elf_Shdr *strtab = NULL;
-    Elf_Shdr *symtab = NULL;
-    Elf_Shdr *shdr   = (Elf_Shdr *)&core->exe.sections[0];
+    Elf_Shdr* strtab = NULL;
+    Elf_Shdr* symtab = NULL;
+    Elf_Shdr* shdr   = (Elf_Shdr*)&core->exe.sections[0];
 
-#define shname(name) ((const char *)(arch_vmm_p2v(shdr[core->exe.sh_shndx].sh_addr + name, ARCH_VMM_AREA_HEAP)))
+#define shname(name) ((const char*)(arch_vmm_p2v(shdr[core->exe.sh_shndx].sh_addr + name, ARCH_VMM_AREA_HEAP)))
 
-#define syname(name) ((const char *)(arch_vmm_p2v(strtab->sh_addr + name, ARCH_VMM_AREA_HEAP)))
+#define syname(name) ((const char*)(arch_vmm_p2v(strtab->sh_addr + name, ARCH_VMM_AREA_HEAP)))
 
-#define sypobj(index) ((Elf_Sym *)(arch_vmm_p2v(symtab->sh_addr + (symtab->sh_entsize * index), ARCH_VMM_AREA_HEAP)))
+#define sypobj(index) ((Elf_Sym*)(arch_vmm_p2v(symtab->sh_addr + (symtab->sh_entsize * index), ARCH_VMM_AREA_HEAP)))
 
 
 
@@ -82,19 +82,19 @@ uintptr_t runtime_get_address(const char *name) {
     return 0;
 }
 
-const char *runtime_get_name(uintptr_t address) {
+const char* runtime_get_name(uintptr_t address) {
 
-    extern list(symbol_t *, m_symtab);
+    extern list(symbol_t*, m_symtab);
 
-    Elf_Shdr *strtab = NULL;
-    Elf_Shdr *symtab = NULL;
-    Elf_Shdr *shdr   = (Elf_Shdr *)&core->exe.sections[0];
+    Elf_Shdr* strtab = NULL;
+    Elf_Shdr* symtab = NULL;
+    Elf_Shdr* shdr   = (Elf_Shdr*)&core->exe.sections[0];
 
-#define shname(name) ((const char *)(arch_vmm_p2v(shdr[core->exe.sh_shndx].sh_addr + name, ARCH_VMM_AREA_HEAP)))
+#define shname(name) ((const char*)(arch_vmm_p2v(shdr[core->exe.sh_shndx].sh_addr + name, ARCH_VMM_AREA_HEAP)))
 
-#define syname(name) ((const char *)(arch_vmm_p2v(strtab->sh_addr + name, ARCH_VMM_AREA_HEAP)))
+#define syname(name) ((const char*)(arch_vmm_p2v(strtab->sh_addr + name, ARCH_VMM_AREA_HEAP)))
 
-#define sypobj(index) ((Elf_Sym *)(arch_vmm_p2v(symtab->sh_addr + (symtab->sh_entsize * index), ARCH_VMM_AREA_HEAP)))
+#define sypobj(index) ((Elf_Sym*)(arch_vmm_p2v(symtab->sh_addr + (symtab->sh_entsize * index), ARCH_VMM_AREA_HEAP)))
 
 #define in(x, a, b) (((uintptr_t)(x)) >= (uintptr_t)(a) && ((uintptr_t)(x)) < ((uintptr_t)(a) + (uintptr_t)(b)))
 
@@ -148,7 +148,7 @@ TEST(dl_runtime_test, {
     uintptr_t addr = runtime_get_address("runtime_get_address");
     DEBUG_ASSERT(addr != 0);
 
-    const char *name = runtime_get_name(addr);
+    const char* name = runtime_get_name(addr);
     DEBUG_ASSERT(name != NULL);
 
     DEBUG_ASSERT(strcmp(name, "runtime_get_address") == 0);

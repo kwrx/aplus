@@ -49,4 +49,4 @@
 
 struct __sysctl_args;
 
-SYSCALL(156, sysctl, long sys_sysctl(struct __sysctl_args *args) { return -ENOSYS; });
+SYSCALL(156, sysctl, long sys_sysctl(struct __sysctl_args* args) { return -ENOSYS; });

@@ -50,4 +50,4 @@
 
 struct statfs;
 
-SYSCALL(138, fstatfs, long sys_fstatfs(unsigned int fd, struct statfs *buf) { return -ENOSYS; });
+SYSCALL(138, fstatfs, long sys_fstatfs(unsigned int fd, struct statfs* buf) { return -ENOSYS; });

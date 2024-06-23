@@ -35,7 +35,7 @@
 
 
 
-int tmpfs_truncate(inode_t *inode, off_t len) {
+int tmpfs_truncate(inode_t* inode, off_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -43,7 +43,7 @@ int tmpfs_truncate(inode_t *inode, off_t len) {
 
 
 
-    tmpfs_inode_t *i = cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
     if (len >= i->st.st_size)
         return 0;

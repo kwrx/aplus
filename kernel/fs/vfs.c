@@ -39,10 +39,10 @@
 static struct {
 
         int id;
-        const char *name;
+        const char* name;
 
-        int (*mount)(inode_t *, inode_t *, int, const char *);
-        int (*umount)(inode_t *);
+        int (*mount)(inode_t*, inode_t*, int, const char*);
+        int (*umount)(inode_t*);
 
 } fs_table[32];
 
@@ -71,7 +71,7 @@ void vfs_init(void) {
 }
 
 
-int vfs_mount(inode_t *dev, inode_t *dir, const char *fs, int flags, const char *args) {
+int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(fs);
@@ -118,18 +118,18 @@ int vfs_mount(inode_t *dev, inode_t *dir, const char *fs, int flags, const char 
 }
 
 
-inode_t *vfs_open(inode_t *inode, int flags) {
+inode_t* vfs_open(inode_t* inode, int flags) {
 
     DEBUG_ASSERT(inode);
 
     if (likely(inode->ops.open))
-        __lock_return(&inode->lock, inode_t *, inode->ops.open(inode, flags));
+        __lock_return(&inode->lock, inode_t*, inode->ops.open(inode, flags));
 
     return errno = ENOSYS, NULL;
 }
 
 
-int vfs_close(inode_t *inode) {
+int vfs_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
 
@@ -156,7 +156,7 @@ int vfs_close(inode_t *inode) {
 }
 
 
-int vfs_ioctl(inode_t *inode, long req, void *arg) {
+int vfs_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
 
@@ -167,7 +167,7 @@ int vfs_ioctl(inode_t *inode, long req, void *arg) {
 }
 
 
-int vfs_getattr(inode_t *inode, struct stat *st) {
+int vfs_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
@@ -179,7 +179,7 @@ int vfs_getattr(inode_t *inode, struct stat *st) {
 }
 
 
-int vfs_setattr(inode_t *inode, struct stat *st) {
+int vfs_setattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
@@ -191,7 +191,7 @@ int vfs_setattr(inode_t *inode, struct stat *st) {
 }
 
 
-int vfs_setxattr(inode_t *inode, const char *name, const void *value, size_t size, int flags) {
+int vfs_setxattr(inode_t* inode, const char* name, const void* value, size_t size, int flags) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -205,7 +205,7 @@ int vfs_setxattr(inode_t *inode, const char *name, const void *value, size_t siz
 }
 
 
-int vfs_getxattr(inode_t *inode, const char *name, void *value, size_t size) {
+int vfs_getxattr(inode_t* inode, const char* name, void* value, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -219,7 +219,7 @@ int vfs_getxattr(inode_t *inode, const char *name, void *value, size_t size) {
 }
 
 
-int vfs_listxattr(inode_t *inode, char *buf, size_t size) {
+int vfs_listxattr(inode_t* inode, char* buf, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
@@ -232,7 +232,7 @@ int vfs_listxattr(inode_t *inode, char *buf, size_t size) {
 }
 
 
-int vfs_removexattr(inode_t *inode, const char *name) {
+int vfs_removexattr(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -244,7 +244,7 @@ int vfs_removexattr(inode_t *inode, const char *name) {
 }
 
 
-int vfs_truncate(inode_t *inode, off_t len) {
+int vfs_truncate(inode_t* inode, off_t len) {
 
     DEBUG_ASSERT(inode);
 
@@ -255,7 +255,7 @@ int vfs_truncate(inode_t *inode, off_t len) {
 }
 
 
-int vfs_fsync(inode_t *inode, int datasync) {
+int vfs_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
 
@@ -266,7 +266,7 @@ int vfs_fsync(inode_t *inode, int datasync) {
 }
 
 
-ssize_t vfs_read(inode_t *inode, void *buf, off_t off, size_t size) {
+ssize_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
@@ -294,7 +294,7 @@ ssize_t vfs_read(inode_t *inode, void *buf, off_t off, size_t size) {
 }
 
 
-ssize_t vfs_write(inode_t *inode, const void *buf, off_t off, size_t size) {
+ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
@@ -322,7 +322,7 @@ ssize_t vfs_write(inode_t *inode, const void *buf, off_t off, size_t size) {
 }
 
 
-ssize_t vfs_readlink(inode_t *inode, char *buf, size_t size) {
+ssize_t vfs_readlink(inode_t* inode, char* buf, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
@@ -335,7 +335,7 @@ ssize_t vfs_readlink(inode_t *inode, char *buf, size_t size) {
 }
 
 
-inode_t *vfs_creat(inode_t *inode, const char *name, mode_t mode) {
+inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -350,8 +350,8 @@ inode_t *vfs_creat(inode_t *inode, const char *name, mode_t mode) {
 
     if (likely(inode->ops.creat)) {
 
-        __lock_return(&inode->lock, inode_t *, ({
-            inode_t *r = NULL;
+        __lock_return(&inode->lock, inode_t*, ({
+            inode_t* r = NULL;
 
             if ((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
@@ -369,7 +369,7 @@ inode_t *vfs_creat(inode_t *inode, const char *name, mode_t mode) {
 }
 
 
-inode_t *vfs_finddir(inode_t *inode, const char *name) {
+inode_t* vfs_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -381,7 +381,7 @@ inode_t *vfs_finddir(inode_t *inode, const char *name) {
 
     if (name[0] == '.' && name[1] == '.' && name[2] == '\0') {
 
-        inode_t *parent = NULL;
+        inode_t* parent = NULL;
 
         shared_ptr_access(current_task->fs, fs, {
             if (fs->root != inode || inode->parent)
@@ -395,7 +395,7 @@ inode_t *vfs_finddir(inode_t *inode, const char *name) {
 
 
 
-    inode_t *r = NULL;
+    inode_t* r = NULL;
 
     if ((r = vfs_dcache_find(inode, name)) != NULL)
         return r;
@@ -419,7 +419,7 @@ inode_t *vfs_finddir(inode_t *inode, const char *name) {
 }
 
 
-ssize_t vfs_readdir(inode_t *inode, struct dirent *ent, off_t off, size_t size) {
+ssize_t vfs_readdir(inode_t* inode, struct dirent* ent, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(ent);
@@ -432,7 +432,7 @@ ssize_t vfs_readdir(inode_t *inode, struct dirent *ent, off_t off, size_t size) 
 }
 
 
-int vfs_rename(inode_t *inode, const char *name, const char *newname) {
+int vfs_rename(inode_t* inode, const char* name, const char* newname) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -460,7 +460,7 @@ int vfs_rename(inode_t *inode, const char *name, const char *newname) {
 }
 
 
-int vfs_symlink(inode_t *inode, const char *name, const char *target) {
+int vfs_symlink(inode_t* inode, const char* name, const char* target) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -482,7 +482,7 @@ int vfs_symlink(inode_t *inode, const char *name, const char *target) {
 }
 
 
-int vfs_unlink(inode_t *inode, const char *name) {
+int vfs_unlink(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);

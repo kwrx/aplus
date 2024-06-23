@@ -67,7 +67,7 @@
 /*
  * MD4 context setup
  */
-void md4_starts(md4_context *ctx) {
+void md4_starts(md4_context* ctx) {
     ctx->total[0] = 0;
     ctx->total[1] = 0;
 
@@ -77,7 +77,7 @@ void md4_starts(md4_context *ctx) {
     ctx->state[3] = 0x10325476;
 }
 
-static void md4_process(md4_context *ctx, const unsigned char data[64]) {
+static void md4_process(md4_context* ctx, const unsigned char data[64]) {
     unsigned long X[16], A, B, C, D;
 
     GET_ULONG_LE(X[0], data, 0);
@@ -194,7 +194,7 @@ static void md4_process(md4_context *ctx, const unsigned char data[64]) {
 /*
  * MD4 process buffer
  */
-void md4_update(md4_context *ctx, const unsigned char *input, int ilen) {
+void md4_update(md4_context* ctx, const unsigned char* input, int ilen) {
     int fill;
     unsigned long left;
 
@@ -211,7 +211,7 @@ void md4_update(md4_context *ctx, const unsigned char *input, int ilen) {
         ctx->total[1]++;
 
     if (left && ilen >= fill) {
-        MEMCPY((void *)(ctx->buffer + left), input, fill);
+        MEMCPY((void*)(ctx->buffer + left), input, fill);
         md4_process(ctx, ctx->buffer);
         input += fill;
         ilen -= fill;
@@ -225,7 +225,7 @@ void md4_update(md4_context *ctx, const unsigned char *input, int ilen) {
     }
 
     if (ilen > 0) {
-        MEMCPY((void *)(ctx->buffer + left), input, ilen);
+        MEMCPY((void*)(ctx->buffer + left), input, ilen);
     }
 }
 
@@ -235,7 +235,7 @@ static const unsigned char md4_padding[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 /*
  * MD4 final digest
  */
-void md4_finish(md4_context *ctx, unsigned char output[16]) {
+void md4_finish(md4_context* ctx, unsigned char output[16]) {
     unsigned long last, padn;
     unsigned long high, low;
     unsigned char msglen[8];
@@ -261,7 +261,7 @@ void md4_finish(md4_context *ctx, unsigned char output[16]) {
 /*
  * output = MD4( input buffer )
  */
-void md4(unsigned char *input, int ilen, unsigned char output[16]) {
+void md4(unsigned char* input, int ilen, unsigned char output[16]) {
     md4_context ctx;
 
     md4_starts(&ctx);

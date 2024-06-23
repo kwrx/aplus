@@ -36,14 +36,14 @@
 
 
 
-int ext2_setattr(inode_t *inode, struct stat *st) {
+int ext2_setattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(st);
 
-    struct ext2_inode *n = cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     n->i_mode  = st->st_mode;
     n->i_uid   = st->st_uid;

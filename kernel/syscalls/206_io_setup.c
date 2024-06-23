@@ -50,4 +50,4 @@
 
 typedef long aio_context_t;
 
-SYSCALL(206, io_setup, long sys_io_setup(unsigned nr_reqs, aio_context_t *ctx) { return -ENOSYS; });
+SYSCALL(206, io_setup, long sys_io_setup(unsigned nr_reqs, aio_context_t* ctx) { return -ENOSYS; });

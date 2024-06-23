@@ -49,7 +49,7 @@
     #define MD5_MIN_MAX_POWER_OF_TWO_CHALLENGE 3 /* 2^3-1 = 7, 17+7 = 24 */
 
     #if PPP_SERVER
-static void chap_md5_generate_challenge(ppp_pcb *pcb, unsigned char *cp) {
+static void chap_md5_generate_challenge(ppp_pcb* pcb, unsigned char* cp) {
     int clen;
     LWIP_UNUSED_ARG(pcb);
 
@@ -58,7 +58,7 @@ static void chap_md5_generate_challenge(ppp_pcb *pcb, unsigned char *cp) {
     magic_random_bytes(cp, clen);
 }
 
-static int chap_md5_verify_response(ppp_pcb *pcb, int id, const char *name, const unsigned char *secret, int secret_len, const unsigned char *challenge, const unsigned char *response, char *message, int message_space) {
+static int chap_md5_verify_response(ppp_pcb* pcb, int id, const char* name, const unsigned char* secret, int secret_len, const unsigned char* challenge, const unsigned char* response, char* message, int message_space) {
     lwip_md5_context ctx;
     unsigned char idbyte = id;
     unsigned char hash[MD5_HASH_SIZE];
@@ -89,7 +89,7 @@ static int chap_md5_verify_response(ppp_pcb *pcb, int id, const char *name, cons
 }
     #endif /* PPP_SERVER */
 
-static void chap_md5_make_response(ppp_pcb *pcb, unsigned char *response, int id, const char *our_name, const unsigned char *challenge, const char *secret, int secret_len, unsigned char *private_) {
+static void chap_md5_make_response(ppp_pcb* pcb, unsigned char* response, int id, const char* our_name, const unsigned char* challenge, const char* secret, int secret_len, unsigned char* private_) {
     lwip_md5_context ctx;
     unsigned char idbyte = id;
     int challenge_len    = *challenge++;
@@ -100,7 +100,7 @@ static void chap_md5_make_response(ppp_pcb *pcb, unsigned char *response, int id
     lwip_md5_init(&ctx);
     lwip_md5_starts(&ctx);
     lwip_md5_update(&ctx, &idbyte, 1);
-    lwip_md5_update(&ctx, (const u_char *)secret, secret_len);
+    lwip_md5_update(&ctx, (const u_char*)secret, secret_len);
     lwip_md5_update(&ctx, challenge, challenge_len);
     lwip_md5_finish(&ctx, &response[1]);
     lwip_md5_free(&ctx);

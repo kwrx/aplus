@@ -56,7 +56,7 @@
  */
 
 SYSCALL(
-    20, writev, long sys_writev(unsigned long fd, const struct iovec *vec, unsigned long vlen) {
+    20, writev, long sys_writev(unsigned long fd, const struct iovec* vec, unsigned long vlen) {
         if (unlikely(!vec))
             return -EINVAL;
 

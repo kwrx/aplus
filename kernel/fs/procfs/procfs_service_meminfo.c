@@ -37,7 +37,7 @@
 #include "procfs.h"
 
 
-static int procfs_service_meminfo_fetch(inode_t *inode, char **buf, size_t *size, void *arg) {
+static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     (void)arg;
 
@@ -86,9 +86,9 @@ static int procfs_service_meminfo_fetch(inode_t *inode, char **buf, size_t *size
     return 0;
 }
 
-inode_t *procfs_service_meminfo_inode(inode_t *parent) {
+inode_t* procfs_service_meminfo_inode(inode_t* parent) {
 
-    static inode_t *inode = NULL;
+    static inode_t* inode = NULL;
 
     if (inode == NULL) {
         inode = procfs_service_inode(parent, "meminfo", S_IFREG | 0666, procfs_service_meminfo_fetch, NULL);

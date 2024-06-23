@@ -36,7 +36,7 @@
 #include <unistd.h>
 
 
-extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
+extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
 
 
 /***
@@ -55,7 +55,7 @@ extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
  */
 
 SYSCALL(
-    267, readlinkat, long sys_readlinkat(int dfd, const char *path, char *buf, int size) {
+    267, readlinkat, long sys_readlinkat(int dfd, const char* path, char* buf, int size) {
         DEBUG_ASSERT(current_task);
 
         current_task->iostat.rchar += (uint64_t)size;
@@ -87,7 +87,7 @@ SYSCALL(
             return fd;
 
 
-        inode_t *inode = NULL;
+        inode_t* inode = NULL;
 
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);

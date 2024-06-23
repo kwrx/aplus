@@ -75,11 +75,11 @@ SYSCALL(
                 break;
 
             case ARCH_GET_GS:
-                *(uintptr_t *)addr = current_task->userspace.cpu_area;
+                *(uintptr_t*)addr = current_task->userspace.cpu_area;
                 break;
 
             case ARCH_GET_FS:
-                *(uintptr_t *)addr = current_task->userspace.thread_area;
+                *(uintptr_t*)addr = current_task->userspace.thread_area;
                 break;
 
             default:

@@ -41,8 +41,8 @@ MODULE_LICENSE("GPL");
 
 
 
-static ssize_t full_write(device_t *, const void *, size_t);
-static ssize_t full_read(device_t *, void *, size_t);
+static ssize_t full_write(device_t*, const void*, size_t);
+static ssize_t full_read(device_t*, void*, size_t);
 
 
 device_t device = {
@@ -69,7 +69,7 @@ device_t device = {
 
 
 
-static ssize_t full_write(device_t *device, const void *buf, size_t size) {
+static ssize_t full_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -78,7 +78,7 @@ static ssize_t full_write(device_t *device, const void *buf, size_t size) {
     return -1;
 }
 
-static ssize_t full_read(device_t *device, void *buf, size_t size) {
+static ssize_t full_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
@@ -88,7 +88,7 @@ static ssize_t full_read(device_t *device, void *buf, size_t size) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     device_mkdev(&device, 0666);
 }
 

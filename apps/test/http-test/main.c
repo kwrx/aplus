@@ -45,7 +45,7 @@
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
     // GET a web page from a server
 
@@ -61,13 +61,13 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    if (connect(sock, (struct sockaddr *)&in, sizeof(in)) < 0) {
+    if (connect(sock, (struct sockaddr*)&in, sizeof(in)) < 0) {
         perror("connect");
         exit(1);
     }
 
 
-    char *request = "GET /512MB.zip HTTP/1.1\r\nHost: ipv4.download.thinkbroadband.com\r\n\r\n";
+    char* request = "GET /512MB.zip HTTP/1.1\r\nHost: ipv4.download.thinkbroadband.com\r\n\r\n";
 
     if (send(sock, request, strlen(request), 0) < 0) {
         perror("send");
@@ -120,7 +120,7 @@ int main(int argc, char **argv) {
 
     #include <stdio.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     fprintf(stderr, "Network support not enabled\n");
     return 1;
 }

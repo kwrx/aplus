@@ -38,7 +38,7 @@
 
 
 
-int ext2_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
+int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev);
@@ -106,9 +106,9 @@ int ext2_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 
 
 
-    ext2_t *ext2 = (void *)kcalloc(1, sizeof(ext2_t), GFP_USER);
+    ext2_t* ext2 = (void*)kcalloc(1, sizeof(ext2_t), GFP_USER);
 
-    ext2->iocache           = (void *)kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
+    ext2->iocache           = (void*)kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
     ext2->first_block_group = sb.s_first_data_block + 1;
     ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
     ext2->blocksize         = (1024) << sb.s_log_block_size;
@@ -123,7 +123,7 @@ int ext2_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 
 
 
-    dir->sb = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
     dir->sb->fsid  = FSID_EXT2;
     dir->sb->dev   = dev;
@@ -131,7 +131,7 @@ int ext2_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
     dir->sb->flags = flags;
 
 
-    dir->sb->fsinfo = (void *)ext2;
+    dir->sb->fsinfo = (void*)ext2;
 
     dir->sb->st.f_bsize   = 1024 << sb.s_log_block_size;
     dir->sb->st.f_frsize  = 1024 << sb.s_log_frag_size;

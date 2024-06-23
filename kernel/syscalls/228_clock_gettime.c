@@ -52,7 +52,7 @@
  */
 
 SYSCALL(
-    228, clock_gettime, long sys_clock_gettime(clockid_t which_clock, struct timespec *user_tp) {
+    228, clock_gettime, long sys_clock_gettime(clockid_t which_clock, struct timespec* user_tp) {
         if (unlikely(!user_tp))
             return -EINVAL;
 

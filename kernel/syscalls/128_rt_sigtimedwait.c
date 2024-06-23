@@ -52,4 +52,4 @@
  */
 
 
-SYSCALL(128, rt_sigtimedwait, long sys_rt_sigtimedwait(const sigset_t *uthese, siginfo_t *uinfo, const struct timespec *uts, size_t sigsetsize) { return -ENOSYS; });
+SYSCALL(128, rt_sigtimedwait, long sys_rt_sigtimedwait(const sigset_t* uthese, siginfo_t* uinfo, const struct timespec* uts, size_t sigsetsize) { return -ENOSYS; });

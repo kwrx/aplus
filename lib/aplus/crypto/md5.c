@@ -30,15 +30,15 @@
 #include <string.h>
 
 
-char *md5(const char *buf) {
-    uint8_t *initial_msg = (uint8_t *)buf;
+char* md5(const char* buf) {
+    uint8_t* initial_msg = (uint8_t*)buf;
     size_t initial_len   = strlen(buf);
 
 
 #define LEFTROTATE(x, c) (((x) << (c)) | ((x) >> (32 - (c))))
 
 
-    uint8_t *msg = NULL;
+    uint8_t* msg = NULL;
     uint32_t r[] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20, 5, 9,  14, 20,
                     4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
@@ -71,7 +71,7 @@ char *md5(const char *buf) {
     int offset;
     for (offset = 0; offset < new_len; offset += (512 / 8)) {
 
-        uint32_t *w = (uint32_t *)(msg + offset);
+        uint32_t* w = (uint32_t*)(msg + offset);
 
         uint32_t a = h0;
         uint32_t b = h1;
@@ -122,7 +122,7 @@ char *md5(const char *buf) {
 
     int i;
     for (i = 0; i < 16; i++)
-        sprintf(&ret[i * 2], "%02x", ((uint8_t *)digest)[i] & 0xFF);
+        sprintf(&ret[i * 2], "%02x", ((uint8_t*)digest)[i] & 0xFF);
 
-    return (char *)ret;
+    return (char*)ret;
 }

@@ -52,4 +52,4 @@
 
 struct mq_attr;
 
-SYSCALL(240, mq_open, long sys_mq_open(const char *name, int oflag, mode_t mode, struct mq_attr *attr) { return -ENOSYS; });
+SYSCALL(240, mq_open, long sys_mq_open(const char* name, int oflag, mode_t mode, struct mq_attr* attr) { return -ENOSYS; });

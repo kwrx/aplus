@@ -27,4 +27,4 @@
 
 
 static struct syscore __core = {0};
-struct syscore *core         = &__core;
+struct syscore* core         = &__core;

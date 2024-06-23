@@ -51,4 +51,4 @@
 
 struct robust_list_head;
 
-SYSCALL(274, get_robust_list, long sys_get_robust_list(int pid, struct robust_list_head **head_ptr, size_t *len_ptr) { return -ENOSYS; });
+SYSCALL(274, get_robust_list, long sys_get_robust_list(int pid, struct robust_list_head** head_ptr, size_t* len_ptr) { return -ENOSYS; });

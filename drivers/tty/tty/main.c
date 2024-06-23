@@ -46,7 +46,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static int tty_getattr(inode_t *inode, struct stat *st) {
+static int tty_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(st);
@@ -69,7 +69,7 @@ static int tty_getattr(inode_t *inode, struct stat *st) {
 }
 
 
-static ssize_t tty_readlink(inode_t *inode, char *buf, size_t size) {
+static ssize_t tty_readlink(inode_t* inode, char* buf, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
@@ -85,7 +85,7 @@ static ssize_t tty_readlink(inode_t *inode, char *buf, size_t size) {
     });
 }
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     int fd;
@@ -95,7 +95,7 @@ void init(const char *args) {
     }
 
 
-    inode_t *inode = NULL;
+    inode_t* inode = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
         DEBUG_ASSERT(fds->descriptors[fd].ref);

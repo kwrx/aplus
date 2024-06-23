@@ -35,7 +35,7 @@
 
 
 
-inode_t *tmpfs_creat(inode_t *inode, const char *name, mode_t mode) {
+inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -50,7 +50,7 @@ inode_t *tmpfs_creat(inode_t *inode, const char *name, mode_t mode) {
     }
 
 
-    tmpfs_inode_t *i = (tmpfs_inode_t *)cache_get(&inode->sb->cache, ++next_ino);
+    tmpfs_inode_t* i = (tmpfs_inode_t*)cache_get(&inode->sb->cache, ++next_ino);
 
     i->capacity = 0;
     i->data     = NULL;
@@ -58,7 +58,7 @@ inode_t *tmpfs_creat(inode_t *inode, const char *name, mode_t mode) {
     shared_ptr_access(current_task->fs, fs, { i->st.st_mode = mode & ~fs->umask; });
 
 
-    inode_t *d = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+    inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
     strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
@@ -106,7 +106,7 @@ inode_t *tmpfs_creat(inode_t *inode, const char *name, mode_t mode) {
     inode->sb->st.f_favail--;
 
 
-    tmpfs_t *tmpfs = (tmpfs_t *)inode->sb->fsinfo;
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
     list_push(tmpfs->children, d);
 
     return d;

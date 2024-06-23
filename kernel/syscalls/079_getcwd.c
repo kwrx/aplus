@@ -37,7 +37,7 @@
 #include <unistd.h>
 
 
-static int __append(char *buf, size_t size, const char *name) {
+static int __append(char* buf, size_t size, const char* name) {
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(name);
@@ -67,7 +67,7 @@ static int __append(char *buf, size_t size, const char *name) {
  */
 
 SYSCALL(
-    79, getcwd, long sys_getcwd(char *ubuf, unsigned long size) {
+    79, getcwd, long sys_getcwd(char* ubuf, unsigned long size) {
         DEBUG_ASSERT(current_task);
 
 
@@ -84,7 +84,7 @@ SYSCALL(
             size = CONFIG_PATH_MAX;
 
 
-        inode_t *inode = NULL;
+        inode_t* inode = NULL;
 
         shared_ptr_access(current_task->fs, fs, {
             inode = fs->cwd;

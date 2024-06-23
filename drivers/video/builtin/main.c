@@ -48,9 +48,9 @@ MODULE_LICENSE("GPL");
 
 
 
-static void builtin_init(device_t *);
-static void builtin_dnit(device_t *);
-static void builtin_reset(device_t *);
+static void builtin_init(device_t*);
+static void builtin_dnit(device_t*);
+static void builtin_reset(device_t*);
 
 
 device_t device = {
@@ -73,7 +73,7 @@ device_t device = {
 
 
 
-static void builtin_init(device_t *device) {
+static void builtin_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base);
@@ -85,7 +85,7 @@ static void builtin_init(device_t *device) {
 }
 
 
-static void builtin_dnit(device_t *device) {
+static void builtin_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base);
@@ -95,7 +95,7 @@ static void builtin_dnit(device_t *device) {
 }
 
 
-static void builtin_reset(device_t *device) {
+static void builtin_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -140,7 +140,7 @@ static void builtin_reset(device_t *device) {
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "graphics=off"))
         return;

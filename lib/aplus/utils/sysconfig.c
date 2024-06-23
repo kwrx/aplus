@@ -30,14 +30,14 @@
 #include <string.h>
 
 
-static sysvalue_t parse_string(char *value) {
+static sysvalue_t parse_string(char* value) {
     if (value[strlen(value) - 1] == '\"')
         value[strlen(value) - 1] = '\0';
 
     return (sysvalue_t)&value[1];
 }
 
-static sysvalue_t parse_number(char *value) {
+static sysvalue_t parse_number(char* value) {
     long sign = 1;
 
     if (value[0] == '+')
@@ -71,8 +71,8 @@ static sysvalue_t parse_number(char *value) {
     return 0;
 }
 
-sysvalue_t __sysconfig(const char *option, sysvalue_t defvalue) {
-    FILE *fp = fopen(PATH_SYSCONFIG, "r");
+sysvalue_t __sysconfig(const char* option, sysvalue_t defvalue) {
+    FILE* fp = fopen(PATH_SYSCONFIG, "r");
     if (!fp) {
         errno = ENOENT;
         return defvalue;
@@ -82,7 +82,7 @@ sysvalue_t __sysconfig(const char *option, sysvalue_t defvalue) {
 
 
 
-    int pl(char *ln, const char *option, char *value) {
+    int pl(char* ln, const char* option, char* value) {
         char name[BUFSIZ];
         memset(name, 0, BUFSIZ);
 

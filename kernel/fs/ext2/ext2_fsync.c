@@ -35,7 +35,7 @@
 
 
 
-int ext2_fsync(inode_t *inode, int datasync) {
+int ext2_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);

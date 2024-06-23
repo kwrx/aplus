@@ -58,7 +58,7 @@ typedef uint32_t socklen_t;
 struct sockaddr;
 
 SYSCALL(
-    45, recvfrom, long sys_recvfrom(int fd, void *buf, size_t size, unsigned flags, struct sockaddr *sockaddr, socklen_t *socklen) {
+    45, recvfrom, long sys_recvfrom(int fd, void* buf, size_t size, unsigned flags, struct sockaddr* sockaddr, socklen_t* socklen) {
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))
@@ -96,7 +96,7 @@ SYSCALL(
             char __sockaddr[__socklen];
             uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
 
-            e = lwip_recvfrom(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr *)__sockaddr, &__socklen);
+            e = lwip_recvfrom(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*)__sockaddr, &__socklen);
 
             uio_w32(socklen, __socklen);
             uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);

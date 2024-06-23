@@ -49,7 +49,7 @@
  */
 
 SYSCALL(
-    80, chdir, long sys_chdir(const char *filename) {
+    80, chdir, long sys_chdir(const char* filename) {
         if (unlikely(!filename))
             return -EINVAL;
 

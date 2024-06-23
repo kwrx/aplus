@@ -64,7 +64,7 @@ SYSCALL(
 
             ssize_t e;
 
-            if ((e = lwip_ioctl(NETWORK_SOCKFD(fd), cmd, (void *)arg)) < 0)
+            if ((e = lwip_ioctl(NETWORK_SOCKFD(fd), cmd, (void*)arg)) < 0)
                 return -errno;
 
             return e;
@@ -85,7 +85,7 @@ SYSCALL(
                 if (unlikely(!fds->descriptors[fd].ref))
                     return -EBADF;
 
-                __lock(&fds->descriptors[fd].ref->lock, { e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void *)arg); });
+                __lock(&fds->descriptors[fd].ref->lock, { e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void*)arg); });
             });
 
 

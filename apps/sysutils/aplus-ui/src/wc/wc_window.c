@@ -11,10 +11,10 @@
 
 
 
-static wc_window_t *queue = NULL;
+static wc_window_t* queue = NULL;
 
 
-void wc_window_enqueue(wc_window_t *window) {
+void wc_window_enqueue(wc_window_t* window) {
 
     assert(window);
 
@@ -22,12 +22,12 @@ void wc_window_enqueue(wc_window_t *window) {
     queue        = window;
 }
 
-void wc_window_dequeue(wc_window_t *window) {
+void wc_window_dequeue(wc_window_t* window) {
 
     assert(window);
 
-    wc_window_t *prev = NULL;
-    wc_window_t *curr = queue;
+    wc_window_t* prev = NULL;
+    wc_window_t* curr = queue;
 
     while (curr) {
 
@@ -48,7 +48,7 @@ void wc_window_dequeue(wc_window_t *window) {
 }
 
 
-int wc_window_create(wc_window_t **window, wc_window_t *parent) {
+int wc_window_create(wc_window_t** window, wc_window_t* parent) {
 
     assert(window);
 
@@ -78,7 +78,7 @@ int wc_window_create(wc_window_t **window, wc_window_t *parent) {
 }
 
 
-int wc_window_destroy(wc_window_t *window) {
+int wc_window_destroy(wc_window_t* window) {
 
     assert(window);
 
@@ -91,7 +91,7 @@ int wc_window_destroy(wc_window_t *window) {
 
 
 
-void wc_window_set_title(wc_window_t *window, const char *title) {
+void wc_window_set_title(wc_window_t* window, const char* title) {
 
     assert(window);
     assert(title);
@@ -102,7 +102,7 @@ void wc_window_set_title(wc_window_t *window, const char *title) {
 }
 
 
-void wc_window_set_position(wc_window_t *window, int x, int y) {
+void wc_window_set_position(wc_window_t* window, int x, int y) {
 
     assert(window);
 
@@ -111,7 +111,7 @@ void wc_window_set_position(wc_window_t *window, int x, int y) {
 }
 
 
-void wc_window_set_size(wc_window_t *window, int width, int height) {
+void wc_window_set_size(wc_window_t* window, int width, int height) {
 
     assert(window);
 
@@ -122,7 +122,7 @@ void wc_window_set_size(wc_window_t *window, int width, int height) {
 }
 
 
-void wc_window_set_min_size(wc_window_t *window, int width, int height) {
+void wc_window_set_min_size(wc_window_t* window, int width, int height) {
 
     assert(window);
 
@@ -131,7 +131,7 @@ void wc_window_set_min_size(wc_window_t *window, int width, int height) {
 }
 
 
-void wc_window_set_max_size(wc_window_t *window, int width, int height) {
+void wc_window_set_max_size(wc_window_t* window, int width, int height) {
 
     assert(window);
 
@@ -140,7 +140,7 @@ void wc_window_set_max_size(wc_window_t *window, int width, int height) {
 }
 
 
-void wc_window_set_flags(wc_window_t *window, int flags) {
+void wc_window_set_flags(wc_window_t* window, int flags) {
 
     assert(window);
 
@@ -149,7 +149,7 @@ void wc_window_set_flags(wc_window_t *window, int flags) {
 }
 
 
-void wc_window_set_font(wc_window_t *window, wc_font_t *font) {
+void wc_window_set_font(wc_window_t* window, wc_font_t* font) {
 
     assert(window);
     assert(font);
@@ -191,7 +191,7 @@ void wc_window_set_font(wc_window_t *window, wc_font_t *font) {
 // }
 
 
-int wc_window_set_top(wc_window_t *window) {
+int wc_window_set_top(wc_window_t* window) {
 
     assert(window);
 
@@ -201,7 +201,7 @@ int wc_window_set_top(wc_window_t *window) {
     return 0;
 }
 
-void wc_window_update(wc_window_t *window) {
+void wc_window_update(wc_window_t* window) {
 
     assert(window);
 
@@ -245,13 +245,13 @@ void wc_window_update(wc_window_t *window) {
     }
 }
 
-void wc_window_draw(wc_window_t *window, wc_renderer_t *renderer) {
+void wc_window_draw(wc_window_t* window, wc_renderer_t* renderer) {
 
     assert(window);
     assert(renderer);
 
 
-    cairo_t *cr = renderer->cr;
+    cairo_t* cr = renderer->cr;
 
 
     cairo_save(cr);
@@ -304,7 +304,7 @@ void wc_window_draw(wc_window_t *window, wc_renderer_t *renderer) {
 }
 
 
-void wc_window_draw_all(wc_renderer_t *renderer) {
+void wc_window_draw_all(wc_renderer_t* renderer) {
 
     assert(renderer);
     assert(renderer->cr);
@@ -315,7 +315,7 @@ void wc_window_draw_all(wc_renderer_t *renderer) {
     cairo_save(renderer->cr);
     cairo_set_operator(renderer->cr, CAIRO_OPERATOR_SOURCE);
 
-    for (wc_window_t *window = queue; window; window = window->next) {
+    for (wc_window_t* window = queue; window; window = window->next) {
 
         wc_window_update(window);
         wc_window_draw(window, renderer);
