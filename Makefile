@@ -98,6 +98,6 @@ report:
 
 format:
 	$(QUIET)echo "    FMT     $(ROOTDIR)"
-	$(QUIET)find $(ROOTDIR) -name "*.[ch]" -exec clang-format -i {} \;
+	$(QUIET)find $(ROOTDIR) -name "*.[ch]" -exec echo "    FMT     {}" \; -exec clang-format-18 -i {} \;
 
 -include build/build-utils.mk
