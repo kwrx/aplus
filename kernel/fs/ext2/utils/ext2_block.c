@@ -39,7 +39,7 @@
 
 
 
-void ext2_utils_read_block(ext2_t *ext2, uint32_t block, uint32_t offset, void *data, size_t size, bool cached) {
+void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size, bool cached) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
@@ -59,7 +59,7 @@ void ext2_utils_read_block(ext2_t *ext2, uint32_t block, uint32_t offset, void *
         DEBUG_ASSERT(offset + size <= ext2->blocksize);
 
 
-        void *buffer = cache_get(&ext2->bcache, block);
+        void* buffer = cache_get(&ext2->bcache, block);
 
         if (unlikely(!buffer))
             kpanicf("%s() FAIL! cache_get() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block)*ext2->blocksize) + offset);
@@ -76,7 +76,7 @@ void ext2_utils_read_block(ext2_t *ext2, uint32_t block, uint32_t offset, void *
 
 
 
-void ext2_utils_write_block(ext2_t *ext2, uint32_t block, uint32_t offset, const void *data, size_t size) {
+void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
@@ -95,7 +95,7 @@ void ext2_utils_write_block(ext2_t *ext2, uint32_t block, uint32_t offset, const
 }
 
 
-void ext2_utils_zero_block(ext2_t *ext2, uint32_t block) {
+void ext2_utils_zero_block(ext2_t* ext2, uint32_t block) {
 
     uint8_t zero[ext2->blocksize];
     memset(zero, 0, sizeof(zero));
@@ -105,7 +105,7 @@ void ext2_utils_zero_block(ext2_t *ext2, uint32_t block) {
 
 
 
-void ext2_utils_alloc_block(ext2_t *ext2, uint32_t *block) {
+void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
@@ -135,7 +135,7 @@ void ext2_utils_alloc_block(ext2_t *ext2, uint32_t *block) {
 
 
 
-            uint32_t *bitmap = ext2->iocache;
+            uint32_t* bitmap = ext2->iocache;
 
             for (j = 0; j < (ext2->blocksize / sizeof(*bitmap)); j++, bitmap++) {
 
@@ -182,7 +182,7 @@ void ext2_utils_alloc_block(ext2_t *ext2, uint32_t *block) {
 }
 
 
-void ext2_utils_free_block(ext2_t *ext2, uint32_t block) {
+void ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block > 1);

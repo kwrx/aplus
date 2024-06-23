@@ -51,18 +51,18 @@
 #include "netif/etharp.h"
 
 /* See os/kernel/init/hostname.c */
-extern char *hostname;
+extern char* hostname;
 
 
 semaphore_t tcpip_done = {0};
 
 
-static void tcpip_init_done(void *arg) {
+static void tcpip_init_done(void* arg) {
 
     DEBUG_ASSERT(arg);
 
 
-    struct netif *lo = netif_find("lo0");
+    struct netif* lo = netif_find("lo0");
 
     if (likely(lo)) {
 
@@ -74,7 +74,7 @@ static void tcpip_init_done(void *arg) {
     }
 
 
-    ip_addr_t *dns = (ip_addr_t *)arg;
+    ip_addr_t* dns = (ip_addr_t*)arg;
 
     dns_setserver(0, &dns[0]);
     dns_setserver(1, &dns[1]);

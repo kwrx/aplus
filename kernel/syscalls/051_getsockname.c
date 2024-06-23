@@ -51,4 +51,4 @@
 
 struct sockaddr;
 
-SYSCALL(51, getsockname, long sys_getsockname(int fd, struct sockaddr *sockaddr, int *socklen) { return -ENOSYS; });
+SYSCALL(51, getsockname, long sys_getsockname(int fd, struct sockaddr* sockaddr, int* socklen) { return -ENOSYS; });

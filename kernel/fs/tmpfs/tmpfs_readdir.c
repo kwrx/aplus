@@ -35,7 +35,7 @@
 #include "tmpfs.h"
 
 
-static inode_t **__next_entry(list(inode_t *, children), inode_t *parent, inode_t **curr) {
+static inode_t** __next_entry(list(inode_t*, children), inode_t* parent, inode_t** curr) {
 
     if (curr == NULL) {
 
@@ -58,7 +58,7 @@ static inode_t **__next_entry(list(inode_t *, children), inode_t *parent, inode_
 }
 
 
-ssize_t tmpfs_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) {
+ssize_t tmpfs_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -71,8 +71,8 @@ ssize_t tmpfs_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count)
         return 0;
 
 
-    tmpfs_t *tmpfs  = (tmpfs_t *)inode->sb->fsinfo;
-    inode_t **entry = NULL;
+    tmpfs_t* tmpfs  = (tmpfs_t*)inode->sb->fsinfo;
+    inode_t** entry = NULL;
 
 
     if (pos > 1) {
@@ -137,7 +137,7 @@ ssize_t tmpfs_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count)
                     return i;
 
 
-                tmpfs_inode_t *c = cache_get(&inode->sb->cache, (*entry)->ino);
+                tmpfs_inode_t* c = cache_get(&inode->sb->cache, (*entry)->ino);
 
                 e[i].d_ino    = c->st.st_ino;
                 e[i].d_off    = i;

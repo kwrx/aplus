@@ -97,10 +97,10 @@ MODULE_LICENSE("GPL");
     })
 
 
-static void vmware_init(device_t *);
-static void vmware_dnit(device_t *);
-static void vmware_reset(device_t *);
-static void vmware_update(device_t *);
+static void vmware_init(device_t*);
+static void vmware_dnit(device_t*);
+static void vmware_reset(device_t*);
+static void vmware_update(device_t*);
 
 
 device_t device = {
@@ -126,7 +126,7 @@ device_t device = {
 
 
 
-static void vmware_init(device_t *device) {
+static void vmware_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->iobase);
@@ -141,7 +141,7 @@ static void vmware_init(device_t *device) {
 }
 
 
-static void vmware_dnit(device_t *device) {
+static void vmware_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->iobase);
@@ -150,7 +150,7 @@ static void vmware_dnit(device_t *device) {
 }
 
 
-static void vmware_reset(device_t *device) {
+static void vmware_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -180,7 +180,7 @@ static void vmware_reset(device_t *device) {
 }
 
 
-static void vmware_update(device_t *device) {
+static void vmware_update(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->iobase);
@@ -229,13 +229,13 @@ static void vmware_update(device_t *device) {
 }
 
 
-static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
+static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if (likely(!(vid == 0x15AD && did == 0x0405)))
         return;
 
 
-    ((device_t *)arg)->iobase = pci_read(device, PCI_BAR0, 4) & PCI_BAR_IO_MASK;
+    ((device_t*)arg)->iobase = pci_read(device, PCI_BAR0, 4) & PCI_BAR_IO_MASK;
 
     pci_enable_bus_mastering(device);
     pci_enable_mmio(device);
@@ -243,7 +243,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "graphics=off"))
         return;

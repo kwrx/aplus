@@ -75,7 +75,7 @@ struct sys_mbox {
 };
 
 
-err_t sys_mbox_new(struct sys_mbox **mbox, int size) {
+err_t sys_mbox_new(struct sys_mbox** mbox, int size) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(size);
@@ -83,7 +83,7 @@ err_t sys_mbox_new(struct sys_mbox **mbox, int size) {
     LWIP_UNUSED_ARG(size);
 
 
-    struct sys_mbox *m = (struct sys_mbox *)kcalloc(sizeof(struct sys_mbox), 1, GFP_KERNEL);
+    struct sys_mbox* m = (struct sys_mbox*)kcalloc(sizeof(struct sys_mbox), 1, GFP_KERNEL);
 
     if (unlikely(!m)) {
         return ERR_MEM;
@@ -98,7 +98,7 @@ err_t sys_mbox_new(struct sys_mbox **mbox, int size) {
 }
 
 
-void sys_mbox_free(struct sys_mbox **mbox) {
+void sys_mbox_free(struct sys_mbox** mbox) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
@@ -112,7 +112,7 @@ void sys_mbox_free(struct sys_mbox **mbox) {
 }
 
 
-err_t sys_mbox_trypost_fromisr(struct sys_mbox **mbox, void *msg) {
+err_t sys_mbox_trypost_fromisr(struct sys_mbox** mbox, void* msg) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
@@ -121,7 +121,7 @@ err_t sys_mbox_trypost_fromisr(struct sys_mbox **mbox, void *msg) {
 }
 
 
-err_t sys_mbox_trypost(struct sys_mbox **mbox, void *msg) {
+err_t sys_mbox_trypost(struct sys_mbox** mbox, void* msg) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
@@ -130,7 +130,7 @@ err_t sys_mbox_trypost(struct sys_mbox **mbox, void *msg) {
 }
 
 
-void sys_mbox_post(struct sys_mbox **mbox, void *msg) {
+void sys_mbox_post(struct sys_mbox** mbox, void* msg) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
@@ -139,7 +139,7 @@ void sys_mbox_post(struct sys_mbox **mbox, void *msg) {
 }
 
 
-u32_t sys_arch_mbox_fetch(struct sys_mbox **mbox, void **msg, u32_t timeout) {
+u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);
@@ -148,7 +148,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox **mbox, void **msg, u32_t timeout) {
     size_t e = 0;
     size_t r = 1;
 
-    void *m = NULL;
+    void* m = NULL;
 
     do {
 
@@ -188,7 +188,7 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox **mbox, void **msg, u32_t timeout) {
 }
 
 
-u32_t sys_arch_mbox_tryfetch(struct sys_mbox **mbox, void **msg) {
+u32_t sys_arch_mbox_tryfetch(struct sys_mbox** mbox, void** msg) {
 
     DEBUG_ASSERT(mbox);
     DEBUG_ASSERT(*mbox);

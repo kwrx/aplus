@@ -53,7 +53,7 @@
  */
 
 SYSCALL(
-    76, truncate, long sys_truncate(const char *path, long length) {
+    76, truncate, long sys_truncate(const char* path, long length) {
         if (!uio_check(path, R_OK))
             return -EFAULT;
 

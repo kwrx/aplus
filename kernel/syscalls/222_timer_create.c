@@ -51,4 +51,4 @@
 
 struct sigevent;
 
-SYSCALL(222, timer_create, long sys_timer_create(clockid_t which_clock, struct sigevent *timer_event_spec, timer_t *created_timer_id) { return -ENOSYS; });
+SYSCALL(222, timer_create, long sys_timer_create(clockid_t which_clock, struct sigevent* timer_event_spec, timer_t* created_timer_id) { return -ENOSYS; });

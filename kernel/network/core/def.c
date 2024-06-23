@@ -98,15 +98,15 @@ u32_t lwip_htonl(u32_t n) {
  * lwIP default implementation for strnstr() non-standard function.
  * This can be \#defined to strnstr() depending on your platform port.
  */
-char *lwip_strnstr(const char *buffer, const char *token, size_t n) {
-    const char *p;
+char* lwip_strnstr(const char* buffer, const char* token, size_t n) {
+    const char* p;
     size_t tokenlen = strlen(token);
     if (tokenlen == 0) {
-        return LWIP_CONST_CAST(char *, buffer);
+        return LWIP_CONST_CAST(char*, buffer);
     }
     for (p = buffer; *p && (p + tokenlen <= buffer + n); p++) {
         if ((*p == *token) && (strncmp(p, token, tokenlen) == 0)) {
-            return LWIP_CONST_CAST(char *, p);
+            return LWIP_CONST_CAST(char*, p);
         }
     }
     return NULL;
@@ -119,7 +119,7 @@ char *lwip_strnstr(const char *buffer, const char *token, size_t n) {
  * lwIP default implementation for stricmp() non-standard function.
  * This can be \#defined to stricmp() depending on your platform port.
  */
-int lwip_stricmp(const char *str1, const char *str2) {
+int lwip_stricmp(const char* str1, const char* str2) {
     char c1, c2;
 
     do {
@@ -152,7 +152,7 @@ int lwip_stricmp(const char *str1, const char *str2) {
  * lwIP default implementation for strnicmp() non-standard function.
  * This can be \#defined to strnicmp() depending on your platform port.
  */
-int lwip_strnicmp(const char *str1, const char *str2, size_t len) {
+int lwip_strnicmp(const char* str1, const char* str2, size_t len) {
     char c1, c2;
 
     do {
@@ -186,9 +186,9 @@ int lwip_strnicmp(const char *str1, const char *str2, size_t len) {
  * lwIP default implementation for itoa() non-standard function.
  * This can be \#defined to itoa() or snprintf(result, bufsize, "%d", number) depending on your platform port.
  */
-void lwip_itoa(char *result, size_t bufsize, int number) {
-    char *res = result;
-    char *tmp = result + bufsize - 1;
+void lwip_itoa(char* result, size_t bufsize, int number) {
+    char* res = result;
+    char* tmp = result + bufsize - 1;
     int n     = (number >= 0) ? number : -number;
 
     /* handle invalid bufsize */

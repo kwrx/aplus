@@ -54,4 +54,4 @@
 typedef long aio_context_t;
 struct io_event;
 
-SYSCALL(208, io_getevents, long sys_io_getevents(aio_context_t ctx_id, long min_nr, long nr, struct io_event *events, struct timespec *timeout) { return -ENOSYS; });
+SYSCALL(208, io_getevents, long sys_io_getevents(aio_context_t ctx_id, long min_nr, long nr, struct io_event* events, struct timespec* timeout) { return -ENOSYS; });

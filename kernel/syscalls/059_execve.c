@@ -99,7 +99,7 @@ static inline uintptr_t __sbrk(uintptr_t incr) {
 
 
 SYSCALL(
-    59, execve, long sys_execve(const char *filename, const char **argv, const char **envp) {
+    59, execve, long sys_execve(const char* filename, const char** argv, const char** envp) {
         if (unlikely(!filename))
             return -EINVAL;
 
@@ -160,7 +160,7 @@ SYSCALL(
         }
 
 
-        inode_t *inode = NULL;
+        inode_t* inode = NULL;
 
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
@@ -195,8 +195,8 @@ SYSCALL(
 
         // * Save the given arguments and environment
 
-        const char **__safe_argv = uio_get_ptr(argv);
-        const char **__safe_envp = uio_get_ptr(envp);
+        const char** __safe_argv = uio_get_ptr(argv);
+        const char** __safe_envp = uio_get_ptr(envp);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -222,8 +222,8 @@ SYSCALL(
 
         // * Backup into stack the data for _start()
 
-        char **argq = (char **)__builtin_alloca(sizeof(char *) * (argc + 1));
-        char **envq = (char **)__builtin_alloca(sizeof(char *) * (envc + 1));
+        char** argq = (char**)__builtin_alloca(sizeof(char*) * (argc + 1));
+        char** envq = (char**)__builtin_alloca(sizeof(char*) * (envc + 1));
 
         DEBUG_ASSERT(argq);
         DEBUG_ASSERT(envq);
@@ -234,7 +234,7 @@ SYSCALL(
 
         for (size_t i = 0; __safe_argv[i]; i++) {
 
-            char *p = (char *)__builtin_alloca(uio_strlen(__safe_argv[i]) + 1);
+            char* p = (char*)__builtin_alloca(uio_strlen(__safe_argv[i]) + 1);
             uio_strcpy_u2s(p, __safe_argv[i]);
 
             argq[i + 0] = p;
@@ -243,7 +243,7 @@ SYSCALL(
 
         for (size_t i = 0; __safe_envp[i]; i++) {
 
-            char *p = (char *)__builtin_alloca(uio_strlen(__safe_envp[i]) + 1);
+            char* p = (char*)__builtin_alloca(uio_strlen(__safe_envp[i]) + 1);
             uio_strcpy_u2s(p, __safe_envp[i]);
 
             envq[i + 0] = p;
@@ -257,24 +257,24 @@ SYSCALL(
         do_unshare(CLONE_SIGHAND);
 
 
-#define RXX(a, b, c, d)                                                                   \
-    {                                                                                     \
-                                                                                          \
-        if ((e = vfs_read(inode, (void *)(a), (off_t)(b), (size_t)(c))) != (size_t)(c)) { \
-            if (e < 0)                                                                    \
-                return -errno;                                                            \
-            else                                                                          \
-                return -EIO;                                                              \
-        }                                                                                 \
-                                                                                          \
-        if ((size_t)(d) - (size_t)(c)) {                                                  \
-            memset((void *)((size_t)(a) + (size_t)(c)), 0, (size_t)(d) - (size_t)(c));    \
-        }                                                                                 \
+#define RXX(a, b, c, d)                                                                  \
+    {                                                                                    \
+                                                                                         \
+        if ((e = vfs_read(inode, (void*)(a), (off_t)(b), (size_t)(c))) != (size_t)(c)) { \
+            if (e < 0)                                                                   \
+                return -errno;                                                           \
+            else                                                                         \
+                return -EIO;                                                             \
+        }                                                                                \
+                                                                                         \
+        if ((size_t)(d) - (size_t)(c)) {                                                 \
+            memset((void*)((size_t)(a) + (size_t)(c)), 0, (size_t)(d) - (size_t)(c));    \
+        }                                                                                \
     }
 
 
 
-        vmm_address_space_t *current_space = current_task->address_space;
+        vmm_address_space_t* current_space = current_task->address_space;
 
         uintptr_t end   = 0;
         uintptr_t flags = 0;
@@ -406,9 +406,7 @@ SYSCALL(
 
         // * Set new fs executable
 
-        shared_ptr_access(current_task->fs, fs, {
-            fs->exe = inode;
-        });
+        shared_ptr_access(current_task->fs, fs, { fs->exe = inode; });
 
 
 
@@ -416,7 +414,7 @@ SYSCALL(
 
         for (size_t i = 0; argq[i]; i++) {
 
-            char *p = (char *)__sbrk(uio_strlen(argq[i]) + 1);
+            char* p = (char*)__sbrk(uio_strlen(argq[i]) + 1);
             uio_strcpy_s2u(p, argq[i]);
 
             argq[i] = p;
@@ -424,7 +422,7 @@ SYSCALL(
 
         for (size_t i = 0; __safe_envp[i]; i++) {
 
-            char *p = (char *)__sbrk(uio_strlen(envq[i]) + 1);
+            char* p = (char*)__sbrk(uio_strlen(envq[i]) + 1);
             uio_strcpy_s2u(p, envq[i]);
 
             envq[i] = p;
@@ -444,7 +442,7 @@ SYSCALL(
         uintptr_t stack  = __sbrk(0);
 
 
-        uintptr_t *sp = (uintptr_t *)bottom;
+        uintptr_t* sp = (uintptr_t*)bottom;
 
 
 
@@ -494,7 +492,7 @@ SYSCALL(
 
         current_task->userspace.stack    = stack;
         current_task->userspace.sigstack = sigstack;
-        current_task->userspace.siginfo  = (siginfo_t *)siginfo;
+        current_task->userspace.siginfo  = (siginfo_t*)siginfo;
 
         arch_vmm_free_address_space(current_space);
 
@@ -505,7 +503,7 @@ SYSCALL(
 #endif
 
 
-        arch_userspace_enter(head.e_entry, stack, (void *)bottom);
+        arch_userspace_enter(head.e_entry, stack, (void*)bottom);
 
 
         return -EINTR;

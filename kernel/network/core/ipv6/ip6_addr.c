@@ -67,9 +67,9 @@ const ip_addr_t ip6_addr_any = IPADDR6_INIT(0ul, 0ul, 0ul, 0ul);
  * @param addr pointer to which to save the ip address in network order
  * @return 1 if cp could be converted to addr, 0 on failure
  */
-int ip6addr_aton(const char *cp, ip6_addr_t *addr) {
+int ip6addr_aton(const char* cp, ip6_addr_t* addr) {
     u32_t addr_index, zero_blocks, current_block_index, current_block_value;
-    const char *s;
+    const char* s;
     #if LWIP_IPV4
     int check_ipv4_mapped = 0;
     #endif /* LWIP_IPV4 */
@@ -196,7 +196,7 @@ int ip6addr_aton(const char *cp, ip6_addr_t *addr) {
  * @return pointer to a global static (!) buffer that holds the ASCII
  *         representation of addr
  */
-char *ip6addr_ntoa(const ip6_addr_t *addr) {
+char* ip6addr_ntoa(const ip6_addr_t* addr) {
     static char str[40];
     return ip6addr_ntoa_r(addr, str, 40);
 }
@@ -210,7 +210,7 @@ char *ip6addr_ntoa(const ip6_addr_t *addr) {
  * @return either pointer to buf which now holds the ASCII
  *         representation of addr or NULL if buf was too small
  */
-char *ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen) {
+char* ip6addr_ntoa_r(const ip6_addr_t* addr, char* buf, int buflen) {
     u32_t current_block_index, current_block_value, next_block_value;
     s32_t i;
     u8_t zero_flag, empty_block_flag;
@@ -219,9 +219,9 @@ char *ip6addr_ntoa_r(const ip6_addr_t *addr, char *buf, int buflen) {
     if (ip6_addr_isipv4mappedipv6(addr)) {
         /* This is an IPv4 mapped address */
         ip4_addr_t addr4;
-        char *ret;
+        char* ret;
         #define IP4MAPPED_HEADER "::FFFF:"
-        char *buf_ip4  = buf + sizeof(IP4MAPPED_HEADER) - 1;
+        char* buf_ip4  = buf + sizeof(IP4MAPPED_HEADER) - 1;
         int buflen_ip4 = buflen - sizeof(IP4MAPPED_HEADER) + 1;
         if (buflen < (int)sizeof(IP4MAPPED_HEADER)) {
             return NULL;

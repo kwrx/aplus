@@ -36,7 +36,7 @@
 #include "tmpfs.h"
 
 
-int tmpfs_getattr(inode_t *inode, struct stat *st) {
+int tmpfs_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -65,7 +65,7 @@ int tmpfs_getattr(inode_t *inode, struct stat *st) {
 
     } else {
 
-        tmpfs_inode_t *i = cache_get(&inode->sb->cache, inode->ino);
+        tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
         if (unlikely(!i))
             return -ENOENT;

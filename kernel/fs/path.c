@@ -38,7 +38,7 @@
 
 
 
-static inode_t *path_find(inode_t *inode, const char *path, size_t size) {
+static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(path);
@@ -70,7 +70,7 @@ static inode_t *path_find(inode_t *inode, const char *path, size_t size) {
 
 
 
-inode_t *path_follows(inode_t *inode) {
+inode_t* path_follows(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
 
@@ -84,13 +84,13 @@ inode_t *path_follows(inode_t *inode) {
 
 
 
-inode_t *path_lookup(inode_t *cwd, const char *path, int flags, mode_t mode) {
+inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     DEBUG_ASSERT(cwd);
     DEBUG_ASSERT(path);
 
 
-    inode_t *c = NULL;
+    inode_t* c = NULL;
 
     if (path[0] == '/') {
 
@@ -122,7 +122,7 @@ inode_t *path_lookup(inode_t *cwd, const char *path, int flags, mode_t mode) {
         return errno = ENOENT, NULL;
     }
 
-    inode_t *r;
+    inode_t* r;
 
     if (path[0] != '\0')
         r = path_find(c, path, strlen(path));

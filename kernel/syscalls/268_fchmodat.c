@@ -36,7 +36,7 @@
 #include <unistd.h>
 
 
-extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
+extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
 extern long sys_fchmod(unsigned int fd, mode_t mode);
 
 /***
@@ -54,7 +54,7 @@ extern long sys_fchmod(unsigned int fd, mode_t mode);
  */
 
 SYSCALL(
-    268, fchmodat, long sys_fchmodat(int dfd, const char *filename, mode_t mode) {
+    268, fchmodat, long sys_fchmodat(int dfd, const char* filename, mode_t mode) {
         if (unlikely(!filename))
             return -EINVAL;
 

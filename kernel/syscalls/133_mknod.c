@@ -51,7 +51,7 @@
  */
 
 SYSCALL(
-    133, mknod, long sys_mknod(const char *filename, mode_t mode, unsigned dev) {
+    133, mknod, long sys_mknod(const char* filename, mode_t mode, unsigned dev) {
         if (unlikely(!filename))
             return -EINVAL;
 
@@ -76,7 +76,7 @@ SYSCALL(
                 return fd;
 
 
-            inode_t *inode = NULL;
+            inode_t* inode = NULL;
 
             shared_ptr_access(current_task->fd, fds, {
                 DEBUG_ASSERT(fds->descriptors[fd].ref);

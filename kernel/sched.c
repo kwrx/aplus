@@ -43,7 +43,7 @@
 #include <aplus/utils/queue.h>
 
 
-extern long sys_clock_gettime(clockid_t, struct timespec *);
+extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
 
@@ -93,7 +93,7 @@ static inline void do_sleep(void) {
 }
 
 
-static void handle_default_signal(const siginfo_t *siginfo) {
+static void handle_default_signal(const siginfo_t* siginfo) {
 
     switch (siginfo->si_signo) {
 
@@ -135,7 +135,7 @@ static void handle_default_signal(const siginfo_t *siginfo) {
 
 
 
-static void handle_user_signal(siginfo_t *siginfo, struct ksigaction *action) {
+static void handle_user_signal(siginfo_t* siginfo, struct ksigaction* action) {
 
     arch_task_prepare_to_signal(siginfo);
 
@@ -145,9 +145,9 @@ static void handle_user_signal(siginfo_t *siginfo, struct ksigaction *action) {
 }
 
 
-static void handle_default_or_user_signal(siginfo_t *siginfo) {
+static void handle_default_or_user_signal(siginfo_t* siginfo) {
 
-    struct ksigaction *action = NULL;
+    struct ksigaction* action = NULL;
 
     shared_ptr_access(current_task->sighand, sighand, { action = &sighand->action[siginfo->si_signo]; });
 
@@ -172,7 +172,7 @@ static void handle_default_or_user_signal(siginfo_t *siginfo) {
 }
 
 
-static void handle_signal(siginfo_t *siginfo) {
+static void handle_signal(siginfo_t* siginfo) {
 
 #if DEBUG_LEVEL_TRACE
     kprintf("sched: received signal(%d) from tid(%d) to tid(%d)\n", siginfo->si_signo, siginfo->si_pid, current_task->tid);
@@ -204,9 +204,9 @@ static inline void do_signals(void) {
     }
 
 
-    siginfo_t *siginfo;
+    siginfo_t* siginfo;
 
-    if ((siginfo = (siginfo_t *)queue_pop(&current_task->sigqueue)) != NULL) {
+    if ((siginfo = (siginfo_t*)queue_pop(&current_task->sigqueue)) != NULL) {
 
         DEBUG_ASSERT(siginfo);
         DEBUG_ASSERT(siginfo->si_signo >= 0);
@@ -290,7 +290,7 @@ void schedule(int resched) {
 
 
 
-    task_t *prev_task = current_task;
+    task_t* prev_task = current_task;
 
 
     uint64_t elapsed = arch_timer_percpu_getns();
@@ -331,9 +331,7 @@ void schedule(int resched) {
 
 
 
-    __lock(&current_cpu->sched_lock, {
-        arch_task_switch(prev_task, current_task);
-    });
+    __lock(&current_cpu->sched_lock, { arch_task_switch(prev_task, current_task); });
 
 
     do_signals();
@@ -347,9 +345,9 @@ void schedule(int resched) {
  *
  * @param task The task to be enqueued
  */
-void sched_enqueue(task_t *task) {
+void sched_enqueue(task_t* task) {
 
-    cpu_t *cpu = NULL;
+    cpu_t* cpu = NULL;
     size_t min = ~0UL;
 
 
@@ -389,7 +387,7 @@ void sched_enqueue(task_t *task) {
  *
  * @param task The task to be dequeued
  */
-void sched_dequeue(task_t *task) {
+void sched_dequeue(task_t* task) {
 
     int found = 0;
 
@@ -404,7 +402,7 @@ void sched_dequeue(task_t *task) {
 
             } else {
 
-                task_t *tmp;
+                task_t* tmp;
 
                 for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
 
@@ -437,7 +435,7 @@ void sched_dequeue(task_t *task) {
 }
 
 
-void sched_requeue(task_t *task) {
+void sched_requeue(task_t* task) {
 
     int found = 0;
 
@@ -452,7 +450,7 @@ void sched_requeue(task_t *task) {
 
             } else {
 
-                task_t *tmp;
+                task_t* tmp;
 
                 for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
 
@@ -496,7 +494,7 @@ void sched_requeue(task_t *task) {
 
 
 
-int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t *info) {
+int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
     DEBUG_ASSERT(sig < NSIG - 1);
@@ -507,7 +505,7 @@ int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t *inf
 
     cpu_foreach(cpu) {
 
-        for (task_t *tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
             if (pgrp > 0 && tmp->pgrp != pgrp) {
                 continue;
@@ -541,7 +539,7 @@ int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t *inf
             }
 
 
-            struct ksigaction *action = NULL;
+            struct ksigaction* action = NULL;
 
             shared_ptr_access(tmp->sighand, sighand, { action = &sighand->action[sig]; });
 
@@ -557,7 +555,7 @@ int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t *inf
             }
 
 
-            siginfo_t *siginfo = (siginfo_t *)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+            siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
 
             if (unlikely(!siginfo)) {
                 return errno = ENOMEM, -1;

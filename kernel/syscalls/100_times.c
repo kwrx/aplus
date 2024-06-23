@@ -49,4 +49,4 @@
 
 struct tms;
 
-SYSCALL(100, times, long sys_times(struct tms *tbuf) { return -ENOSYS; });
+SYSCALL(100, times, long sys_times(struct tms* tbuf) { return -ENOSYS; });

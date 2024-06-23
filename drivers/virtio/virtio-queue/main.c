@@ -48,7 +48,7 @@ MODULE_LICENSE("GPL");
 
 
 
-int virtq_init(struct virtio_driver *driver, struct virtio_pci_common_cfg volatile *cfg, uint16_t index) {
+int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volatile* cfg, uint16_t index) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(cfg);
@@ -68,9 +68,9 @@ int virtq_init(struct virtio_driver *driver, struct virtio_pci_common_cfg volati
         return errno = ENOMEM, -1;
 
 
-    void *qdesc = (void *)arch_vmm_p2v(pbuf + (0), ARCH_VMM_AREA_HEAP);
-    void *qfree = (void *)arch_vmm_p2v(pbuf + (qsize * 16), ARCH_VMM_AREA_HEAP);
-    void *qused = (void *)arch_vmm_p2v(pbuf + (qsize * 16) + (qsize * 2 + 6), ARCH_VMM_AREA_HEAP);
+    void* qdesc = (void*)arch_vmm_p2v(pbuf + (0), ARCH_VMM_AREA_HEAP);
+    void* qfree = (void*)arch_vmm_p2v(pbuf + (qsize * 16), ARCH_VMM_AREA_HEAP);
+    void* qused = (void*)arch_vmm_p2v(pbuf + (qsize * 16) + (qsize * 2 + 6), ARCH_VMM_AREA_HEAP);
 
     if (!qdesc || !qfree || !qused)
         return errno = EFAULT, -1;
@@ -84,10 +84,10 @@ int virtq_init(struct virtio_driver *driver, struct virtio_pci_common_cfg volati
     driver->internals.queues[index].buffers.sendbuf = pbuf + (qsize * 16) + (qsize * 2 + 6) + (qsize * 8 + 6);
     driver->internals.queues[index].buffers.recvbuf = pbuf + (qsize * 16) + (qsize * 2 + 6) + (qsize * 8 + 6) + (qsize * driver->send_window_size);
 
-    driver->internals.queues[index].descriptors = (struct virtq_descriptor volatile *)qdesc;
-    driver->internals.queues[index].available   = (struct virtq_available volatile *)qfree;
-    driver->internals.queues[index].used        = (struct virtq_used volatile *)qused;
-    driver->internals.queues[index].notify      = (struct virtq_notify volatile *)driver->internals.notify_offset + (cfg->queue_notify_off * driver->internals.notify_off_multiplier);
+    driver->internals.queues[index].descriptors = (struct virtq_descriptor volatile*)qdesc;
+    driver->internals.queues[index].available   = (struct virtq_available volatile*)qfree;
+    driver->internals.queues[index].used        = (struct virtq_used volatile*)qused;
+    driver->internals.queues[index].notify      = (struct virtq_notify volatile*)driver->internals.notify_offset + (cfg->queue_notify_off * driver->internals.notify_off_multiplier);
     driver->internals.queues[index].size        = qsize;
 
     sem_init(&driver->internals.queues[index].iosem, 0);
@@ -118,7 +118,7 @@ int virtq_init(struct virtio_driver *driver, struct virtio_pci_common_cfg volati
 
 
 
-int virtq_get_free_descriptor(struct virtio_driver *driver, uint16_t queue) {
+int virtq_get_free_descriptor(struct virtio_driver* driver, uint16_t queue) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -164,7 +164,7 @@ int virtq_get_free_descriptor(struct virtio_driver *driver, uint16_t queue) {
 
 
 
-ssize_t virtq_sendrecv(struct virtio_driver *driver, uint16_t queue, void *message, size_t size, void *output, size_t outsize) {
+ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* message, size_t size, void* output, size_t outsize) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -199,7 +199,7 @@ ssize_t virtq_sendrecv(struct virtio_driver *driver, uint16_t queue, void *messa
 
 
 
-    memcpy((void *)arch_vmm_p2v(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size), ARCH_VMM_AREA_HEAP), message, size);
+    memcpy((void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size), ARCH_VMM_AREA_HEAP), message, size);
 
 
 
@@ -245,7 +245,7 @@ ssize_t virtq_sendrecv(struct virtio_driver *driver, uint16_t queue, void *messa
                 continue;
 
 
-            memcpy(output, (void *)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
+            memcpy(output, (void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -269,7 +269,7 @@ ssize_t virtq_sendrecv(struct virtio_driver *driver, uint16_t queue, void *messa
 }
 
 
-ssize_t virtq_send(struct virtio_driver *driver, uint16_t queue, void *message, size_t size) {
+ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, size_t size) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -300,7 +300,7 @@ ssize_t virtq_send(struct virtio_driver *driver, uint16_t queue, void *message, 
 
 
 
-    memcpy((void *)arch_vmm_p2v(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size), ARCH_VMM_AREA_HEAP), message, size);
+    memcpy((void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size), ARCH_VMM_AREA_HEAP), message, size);
 
 
 
@@ -332,13 +332,13 @@ ssize_t virtq_send(struct virtio_driver *driver, uint16_t queue, void *message, 
 
 
 
-void virtq_flush(struct virtio_driver *driver, uint16_t queue) {
+void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
     sem_post(&driver->internals.queues[queue].iosem);
 }
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 }
 
 void dnit(void) {

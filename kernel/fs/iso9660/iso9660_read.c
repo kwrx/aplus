@@ -36,7 +36,7 @@
 
 
 
-ssize_t iso9660_read(inode_t *inode, void *buf, off_t pos, size_t len) {
+ssize_t iso9660_read(inode_t* inode, void* buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -46,10 +46,10 @@ ssize_t iso9660_read(inode_t *inode, void *buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    iso9660_t *iso9660 = (iso9660_t *)inode->sb->fsinfo;
+    iso9660_t* iso9660 = (iso9660_t*)inode->sb->fsinfo;
 
 
-    iso9660_directory_record_t *record = NULL;
+    iso9660_directory_record_t* record = NULL;
 
     if (unlikely(inode == inode->sb->root)) {
 
@@ -57,7 +57,7 @@ ssize_t iso9660_read(inode_t *inode, void *buf, off_t pos, size_t len) {
 
     } else {
 
-        iso9660_inode_t *e = cache_get(&inode->sb->cache, inode->userdata);
+        iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
 
         if (unlikely(!e))
             return errno = EIO, -1;

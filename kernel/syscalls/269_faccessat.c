@@ -38,7 +38,7 @@
 #include <aplus/hal.h>
 
 
-extern long sys_newfstatat(int dfd, const char *filename, struct stat *statbuf, int flag);
+extern long sys_newfstatat(int dfd, const char* filename, struct stat* statbuf, int flag);
 
 
 /***
@@ -56,7 +56,7 @@ extern long sys_newfstatat(int dfd, const char *filename, struct stat *statbuf, 
  */
 
 SYSCALL(
-    269, faccessat, long sys_faccessat(int dfd, const char *filename, int mode) {
+    269, faccessat, long sys_faccessat(int dfd, const char* filename, int mode) {
         if (unlikely(!filename))
             return -EINVAL;
 

@@ -51,7 +51,7 @@
  */
 
 SYSCALL(
-    218, set_tid_address, long sys_set_tid_address(int *tidptr) {
+    218, set_tid_address, long sys_set_tid_address(int* tidptr) {
         DEBUG_ASSERT(tidptr);
         DEBUG_ASSERT(uio_check(tidptr, R_OK | W_OK));
 

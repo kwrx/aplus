@@ -37,7 +37,7 @@
 
 
 
-iso9660_inode_t *iso9660_cache_fetch(cache_t *cache, iso9660_t *iso9660, size_t position) {
+iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t position) {
 
     (void)cache;
 
@@ -235,7 +235,7 @@ iso9660_inode_t *iso9660_cache_fetch(cache_t *cache, iso9660_t *iso9660, size_t 
 
 
 
-    iso9660_inode_t *r = (iso9660_inode_t *)kmalloc(sizeof(iso9660_inode_t), GFP_USER);
+    iso9660_inode_t* r = (iso9660_inode_t*)kmalloc(sizeof(iso9660_inode_t), GFP_USER);
 
     if (unlikely(!r))
         return NULL;
@@ -246,7 +246,7 @@ iso9660_inode_t *iso9660_cache_fetch(cache_t *cache, iso9660_t *iso9660, size_t 
 }
 
 
-void iso9660_cache_commit(cache_t *cache, iso9660_t *iso9660, size_t position, iso9660_inode_t *inode) {
+void iso9660_cache_commit(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
 
     (void)cache;
 
@@ -255,7 +255,7 @@ void iso9660_cache_commit(cache_t *cache, iso9660_t *iso9660, size_t position, i
 }
 
 
-void iso9660_cache_release(cache_t *cache, iso9660_t *iso9660, size_t position, iso9660_inode_t *inode) {
+void iso9660_cache_release(cache_t* cache, iso9660_t* iso9660, size_t position, iso9660_inode_t* inode) {
 
     (void)cache;
 

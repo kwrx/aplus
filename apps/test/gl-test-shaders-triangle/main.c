@@ -43,7 +43,7 @@
 
 
 // vertex shader for a triangle
-static char *vertex_shader = "#version 120                                   \n"
+static char* vertex_shader = "#version 120                                   \n"
                              "                                               \n"
                              "attribute vec3 position;                       \n"
                              "attribute vec3 color;                          \n"
@@ -56,7 +56,7 @@ static char *vertex_shader = "#version 120                                   \n"
                              "}                                              \n";
 
 // fragment shader for a triangle
-static char *fragment_shader = "#version 120                                   \n"
+static char* fragment_shader = "#version 120                                   \n"
                                "                                               \n"
                                "varying vec3 v_color;                          \n"
                                "                                               \n"
@@ -66,7 +66,7 @@ static char *fragment_shader = "#version 120                                   \
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
     int fd = open("/dev/fb0", O_RDWR);
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
     }
 
 
-    void *backbuffer = malloc(var.yres * fix.line_length);
+    void* backbuffer = malloc(var.yres * fix.line_length);
 
     if (!backbuffer) {
         return perror("malloc"), 1;
@@ -141,8 +141,8 @@ int main(int argc, char **argv) {
     GLuint vert = glCreateShader(GL_VERTEX_SHADER);
     GLuint frag = glCreateShader(GL_FRAGMENT_SHADER);
 
-    glShaderSource(vert, 1, (const GLchar **)&vertex_shader, NULL);
-    glShaderSource(frag, 1, (const GLchar **)&fragment_shader, NULL);
+    glShaderSource(vert, 1, (const GLchar**)&vertex_shader, NULL);
+    glShaderSource(frag, 1, (const GLchar**)&fragment_shader, NULL);
 
     glCompileShader(vert);
     glCompileShader(frag);
@@ -179,7 +179,7 @@ int main(int argc, char **argv) {
 
         glFinish();
 
-        memcpy((void *)fix.smem_start, backbuffer, var.yres * fix.line_length);
+        memcpy((void*)fix.smem_start, backbuffer, var.yres * fix.line_length);
 
 
     } while (1);
@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
 
     #include <stdio.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     return fprintf(stderr, "OSMesa not available\n"), 1;
 }
 

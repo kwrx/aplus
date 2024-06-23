@@ -50,4 +50,4 @@
 
 struct timex;
 
-SYSCALL(305, clock_adjtime, long sys_clock_adjtime(clockid_t which_clock, struct timex *tx) { return -ENOSYS; });
+SYSCALL(305, clock_adjtime, long sys_clock_adjtime(clockid_t which_clock, struct timex* tx) { return -ENOSYS; });

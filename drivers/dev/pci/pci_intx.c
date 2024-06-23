@@ -49,7 +49,7 @@ static spinlock_t pci_intx_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OW
 
 
 
-static void pci_intx_interrupt_handler(void *frame, irq_t irq) {
+static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
     size_t i;
     for (i = 0; i < PCI_INTX_DEVICES_MAX; i++) {

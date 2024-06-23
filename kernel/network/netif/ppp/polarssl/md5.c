@@ -66,7 +66,7 @@
 /*
  * MD5 context setup
  */
-void md5_starts(md5_context *ctx) {
+void md5_starts(md5_context* ctx) {
     ctx->total[0] = 0;
     ctx->total[1] = 0;
 
@@ -76,7 +76,7 @@ void md5_starts(md5_context *ctx) {
     ctx->state[3] = 0x10325476;
 }
 
-static void md5_process(md5_context *ctx, const unsigned char data[64]) {
+static void md5_process(md5_context* ctx, const unsigned char data[64]) {
     unsigned long X[16], A, B, C, D;
 
     GET_ULONG_LE(X[0], data, 0);
@@ -202,7 +202,7 @@ static void md5_process(md5_context *ctx, const unsigned char data[64]) {
 /*
  * MD5 process buffer
  */
-void md5_update(md5_context *ctx, const unsigned char *input, int ilen) {
+void md5_update(md5_context* ctx, const unsigned char* input, int ilen) {
     int fill;
     unsigned long left;
 
@@ -219,7 +219,7 @@ void md5_update(md5_context *ctx, const unsigned char *input, int ilen) {
         ctx->total[1]++;
 
     if (left && ilen >= fill) {
-        MEMCPY((void *)(ctx->buffer + left), input, fill);
+        MEMCPY((void*)(ctx->buffer + left), input, fill);
         md5_process(ctx, ctx->buffer);
         input += fill;
         ilen -= fill;
@@ -233,7 +233,7 @@ void md5_update(md5_context *ctx, const unsigned char *input, int ilen) {
     }
 
     if (ilen > 0) {
-        MEMCPY((void *)(ctx->buffer + left), input, ilen);
+        MEMCPY((void*)(ctx->buffer + left), input, ilen);
     }
 }
 
@@ -243,7 +243,7 @@ static const unsigned char md5_padding[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 /*
  * MD5 final digest
  */
-void md5_finish(md5_context *ctx, unsigned char output[16]) {
+void md5_finish(md5_context* ctx, unsigned char output[16]) {
     unsigned long last, padn;
     unsigned long high, low;
     unsigned char msglen[8];
@@ -269,7 +269,7 @@ void md5_finish(md5_context *ctx, unsigned char output[16]) {
 /*
  * output = MD5( input buffer )
  */
-void md5(unsigned char *input, int ilen, unsigned char output[16]) {
+void md5(unsigned char* input, int ilen, unsigned char output[16]) {
     md5_context ctx;
 
     md5_starts(&ctx);

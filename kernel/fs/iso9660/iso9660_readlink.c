@@ -35,7 +35,7 @@
 
 
 
-ssize_t iso9660_readlink(inode_t *inode, char *buf, size_t len) {
+ssize_t iso9660_readlink(inode_t* inode, char* buf, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -54,7 +54,7 @@ ssize_t iso9660_readlink(inode_t *inode, char *buf, size_t len) {
 
 
 
-    iso9660_inode_t *e = cache_get(&inode->sb->cache, inode->userdata);
+    iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
 
     if (unlikely(!e))
         return errno = EIO, -1;

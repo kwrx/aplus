@@ -89,7 +89,7 @@ static void ecp_init(int unit);
     static void ecp_protrej (int unit);
     */
     #if PRINTPKT_SUPPORT
-static int ecp_printpkt(const u_char *pkt, int len, void (*printer)(void *, char *, ...), void *arg);
+static int ecp_printpkt(const u_char* pkt, int len, void (*printer)(void*, char*, ...), void* arg);
     #endif /* PRINTPKT_SUPPORT */
 /*
 static void ecp_datainput (int unit, u_char *pkt, int len);
@@ -146,7 +146,7 @@ static const fsm_callbacks ecp_callbacks = {NULL,                         /* ecp
  */
 static void ecp_init(unit) int unit;
 {
-    fsm *f = &ecp_fsm[unit];
+    fsm* f = &ecp_fsm[unit];
 
     f->unit      = unit;
     f->protocol  = PPP_ECP;
@@ -163,10 +163,10 @@ static void ecp_init(unit) int unit;
 
 
     #if PRINTPKT_SUPPORT
-static int ecp_printpkt(p, plen, printer, arg) const u_char *p;
+static int ecp_printpkt(p, plen, printer, arg) const u_char* p;
 int plen;
-void (*printer)(void *, char *, ...);
-void *arg;
+void (*printer)(void*, char*, ...);
+void* arg;
 { return 0; }
     #endif /* PRINTPKT_SUPPORT */
 

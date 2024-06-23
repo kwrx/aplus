@@ -59,7 +59,7 @@ typedef uint32_t socklen_t;
 
 
 SYSCALL(
-    43, accept, long sys_accept(int fd, struct sockaddr *sockaddr, socklen_t *socklen) {
+    43, accept, long sys_accept(int fd, struct sockaddr* sockaddr, socklen_t* socklen) {
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))
@@ -86,7 +86,7 @@ SYSCALL(
 
         ssize_t e;
 
-        if ((e = lwip_accept(NETWORK_SOCKFD(fd), (struct sockaddr *)__sockaddr, &__socklen)) < 0)
+        if ((e = lwip_accept(NETWORK_SOCKFD(fd), (struct sockaddr*)__sockaddr, &__socklen)) < 0)
             return -errno;
 
 

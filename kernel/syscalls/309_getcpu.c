@@ -54,7 +54,7 @@
 struct getcpu_cache;
 
 SYSCALL(
-    309, getcpu, long sys_getcpu(unsigned *cpu, unsigned *node, struct getcpu_cache *cache) {
+    309, getcpu, long sys_getcpu(unsigned* cpu, unsigned* node, struct getcpu_cache* cache) {
         DEBUG_ASSERT(cache == NULL);
 
 

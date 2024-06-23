@@ -33,7 +33,7 @@ static int16_t cursor_z = 0;
 
 
 
-static void *thread_event_fn(const char *device) {
+static void* thread_event_fn(const char* device) {
 
 
     int fd = open(device, O_RDONLY);
@@ -65,7 +65,7 @@ static void *thread_event_fn(const char *device) {
 
                 } else {
 
-                    const wc_display_t *display = wc_display_at_position(cursor_x, cursor_y);
+                    const wc_display_t* display = wc_display_at_position(cursor_x, cursor_y);
 
                     if (display) {
 
@@ -118,10 +118,10 @@ int wc_input_initialize(void) {
     memset(input_state, 0, sizeof(input_state));
 
 
-    if (pthread_create(&thread_mouse, NULL, (void *(*)(void *)) & thread_event_fn, "/dev/mouse") < 0)
+    if (pthread_create(&thread_mouse, NULL, (void* (*)(void*)) & thread_event_fn, "/dev/mouse") < 0)
         return -1;
 
-    if (pthread_create(&thread_keyboard, NULL, (void *(*)(void *)) & thread_event_fn, "/dev/kbd") < 0)
+    if (pthread_create(&thread_keyboard, NULL, (void* (*)(void*)) & thread_event_fn, "/dev/kbd") < 0)
         return -1;
 
 

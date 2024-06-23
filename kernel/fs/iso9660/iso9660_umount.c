@@ -39,7 +39,7 @@
 
 
 
-int iso9660_umount(inode_t *dir) {
+int iso9660_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);

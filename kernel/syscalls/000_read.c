@@ -58,7 +58,7 @@
  */
 
 SYSCALL(
-    0, read, long sys_read(unsigned int fd, void *buf, size_t size) {
+    0, read, long sys_read(unsigned int fd, void* buf, size_t size) {
         DEBUG_ASSERT(current_task);
 
         current_task->iostat.rchar += (uint64_t)size;

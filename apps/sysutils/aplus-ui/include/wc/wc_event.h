@@ -13,7 +13,7 @@ extern "C" {
 typedef uint8_t wc_event_t;
 
 int wc_event_initialize(void);
-int wc_event_wait(wc_event_t *type);
+int wc_event_wait(wc_event_t* type);
 int wc_event_post(wc_event_t type);
 
 

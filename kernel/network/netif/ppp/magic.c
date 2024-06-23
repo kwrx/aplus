@@ -97,15 +97,15 @@ static u32_t magic_randomseed;             /* Seed used for random number genera
  *
  * Ref: Applied Cryptography 2nd Ed. by Bruce Schneier p. 427
  */
-static void magic_churnrand(char *rand_data, u32_t rand_len) {
+static void magic_churnrand(char* rand_data, u32_t rand_len) {
     lwip_md5_context md5_ctx;
 
     /* LWIP_DEBUGF(LOG_INFO, ("magic_churnrand: %u@%P\n", rand_len, rand_data)); */
     lwip_md5_init(&md5_ctx);
     lwip_md5_starts(&md5_ctx);
-    lwip_md5_update(&md5_ctx, (u_char *)magic_randpool, sizeof(magic_randpool));
+    lwip_md5_update(&md5_ctx, (u_char*)magic_randpool, sizeof(magic_randpool));
     if (rand_data) {
-        lwip_md5_update(&md5_ctx, (u_char *)rand_data, rand_len);
+        lwip_md5_update(&md5_ctx, (u_char*)rand_data, rand_len);
     } else {
         struct {
                 /* INCLUDE fields for any system sources of randomness */
@@ -120,9 +120,9 @@ static void magic_churnrand(char *rand_data, u32_t rand_len) {
         sys_data.rand = LWIP_RAND();
         #endif /* LWIP_RAND */
         /* Load sys_data fields here. */
-        lwip_md5_update(&md5_ctx, (u_char *)&sys_data, sizeof(sys_data));
+        lwip_md5_update(&md5_ctx, (u_char*)&sys_data, sizeof(sys_data));
     }
-    lwip_md5_finish(&md5_ctx, (u_char *)magic_randpool);
+    lwip_md5_finish(&md5_ctx, (u_char*)magic_randpool);
     lwip_md5_free(&md5_ctx);
     /*  LWIP_DEBUGF(LOG_INFO, ("magic_churnrand: -> 0\n")); */
 }
@@ -159,7 +159,7 @@ void magic_randomize(void) {
  *  magic_randcount each time?  Probably there is a weakness but I wish that
  *  it was documented.
  */
-void magic_random_bytes(unsigned char *buf, u32_t buf_len) {
+void magic_random_bytes(unsigned char* buf, u32_t buf_len) {
     lwip_md5_context md5_ctx;
     u_char tmp[MD5_HASH_SIZE];
     u32_t n;
@@ -167,8 +167,8 @@ void magic_random_bytes(unsigned char *buf, u32_t buf_len) {
     while (buf_len > 0) {
         lwip_md5_init(&md5_ctx);
         lwip_md5_starts(&md5_ctx);
-        lwip_md5_update(&md5_ctx, (u_char *)magic_randpool, sizeof(magic_randpool));
-        lwip_md5_update(&md5_ctx, (u_char *)&magic_randcount, sizeof(magic_randcount));
+        lwip_md5_update(&md5_ctx, (u_char*)magic_randpool, sizeof(magic_randpool));
+        lwip_md5_update(&md5_ctx, (u_char*)&magic_randcount, sizeof(magic_randcount));
         lwip_md5_finish(&md5_ctx, tmp);
         lwip_md5_free(&md5_ctx);
         magic_randcount++;
@@ -185,7 +185,7 @@ void magic_random_bytes(unsigned char *buf, u32_t buf_len) {
 u32_t magic(void) {
     u32_t new_rand;
 
-    magic_random_bytes((unsigned char *)&new_rand, sizeof(new_rand));
+    magic_random_bytes((unsigned char*)&new_rand, sizeof(new_rand));
 
     return new_rand;
 }
@@ -271,7 +271,7 @@ u32_t magic(void) {
 /*
  * magic_random_bytes - Fill a buffer with random bytes.
  */
-void magic_random_bytes(unsigned char *buf, u32_t buf_len) {
+void magic_random_bytes(unsigned char* buf, u32_t buf_len) {
     u32_t new_rand, n;
 
     while (buf_len > 0) {

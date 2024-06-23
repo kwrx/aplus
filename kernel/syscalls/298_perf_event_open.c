@@ -53,4 +53,4 @@
 
 struct perf_event_attr;
 
-SYSCALL(298, perf_event_open, long sys_perf_event_open(struct perf_event_attr *attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) { return -ENOSYS; });
+SYSCALL(298, perf_event_open, long sys_perf_event_open(struct perf_event_attr* attr_uptr, pid_t pid, int cpu, int group_fd, unsigned long flags) { return -ENOSYS; });

@@ -37,7 +37,7 @@
 
 
 
-int tmpfs_unlink(inode_t *inode, const char *name) {
+int tmpfs_unlink(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -47,8 +47,8 @@ int tmpfs_unlink(inode_t *inode, const char *name) {
 
 
 
-    tmpfs_t *tmpfs = (tmpfs_t *)inode->sb->fsinfo;
-    inode_t *d     = NULL;
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+    inode_t* d     = NULL;
 
 
     list_each(tmpfs->children, i) {
@@ -71,7 +71,7 @@ int tmpfs_unlink(inode_t *inode, const char *name) {
 
 
 
-    tmpfs_inode_t *i = cache_get(&inode->sb->cache, d->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, d->ino);
 
     inode->sb->st.f_ffree++;
     inode->sb->st.f_favail++;

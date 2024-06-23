@@ -50,4 +50,4 @@
 
 struct itimerval;
 
-SYSCALL(36, getitimer, long sys_getitimer(int which, struct itimerval *value) { return -ENOSYS; });
+SYSCALL(36, getitimer, long sys_getitimer(int which, struct itimerval* value) { return -ENOSYS; });

@@ -32,13 +32,13 @@
 #include <aplus/utils/ptr.h>
 
 
-static void print_path(const char *prefix, inode_t *inode) {
+static void print_path(const char* prefix, inode_t* inode) {
 
-    char *ppath[CONFIG_PATH_MAX] = {0};
+    char* ppath[CONFIG_PATH_MAX] = {0};
 
     size_t i = 0;
 
-    for (inode_t *tmp = inode; tmp; tmp = tmp->parent) {
+    for (inode_t* tmp = inode; tmp; tmp = tmp->parent) {
         ppath[i++] = tmp->name;
     }
 

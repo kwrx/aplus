@@ -50,4 +50,4 @@
 
 struct sigaltstack;
 
-SYSCALL(131, sigaltstack, long sys_sigaltstack(const struct sigaltstack *uss, struct sigaltstack *uoss) { return -ENOSYS; });
+SYSCALL(131, sigaltstack, long sys_sigaltstack(const struct sigaltstack* uss, struct sigaltstack* uoss) { return -ENOSYS; });

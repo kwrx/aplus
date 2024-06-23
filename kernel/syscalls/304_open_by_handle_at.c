@@ -52,4 +52,4 @@
 
 struct file_handle;
 
-SYSCALL(304, open_by_handle_at, long sys_open_by_handle_at(int mountdirfd, struct file_handle *handle, int flags) { return -ENOSYS; });
+SYSCALL(304, open_by_handle_at, long sys_open_by_handle_at(int mountdirfd, struct file_handle* handle, int flags) { return -ENOSYS; });

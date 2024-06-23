@@ -102,7 +102,7 @@ void do_unshare(int flags) {
  * @return      the new task's process ID (`pid_t`), or -1 if an error occurred.
  *              In case of error, `errno` is set to indicate the error.
  */
-pid_t do_fork(struct kclone_args *args, size_t size) {
+pid_t do_fork(struct kclone_args* args, size_t size) {
 
     DEBUG_ASSERT(args);
     DEBUG_ASSERT(size == sizeof(struct kclone_args));
@@ -148,7 +148,7 @@ pid_t do_fork(struct kclone_args *args, size_t size) {
     }
 
 
-    task_t *child = arch_task_get_empty_thread(0);
+    task_t* child = arch_task_get_empty_thread(0);
 
     memcpy(&child->userspace, &current_task->userspace, sizeof(child->userspace));
     memcpy(&child->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);
@@ -214,7 +214,7 @@ pid_t do_fork(struct kclone_args *args, size_t size) {
 
 
 
-    child->ustack = args->stack ? (void *)args->stack : (void *)current_cpu->ustack;
+    child->ustack = args->stack ? (void*)args->stack : (void*)current_cpu->ustack;
 
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long)current_cpu->frame);

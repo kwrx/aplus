@@ -50,7 +50,7 @@
  */
 
 SYSCALL(
-    293, pipe2, long sys_pipe2(int *fildes, int flags) {
+    293, pipe2, long sys_pipe2(int* fildes, int flags) {
         if (unlikely(!fildes))
             return -EFAULT;
 
@@ -61,14 +61,14 @@ SYSCALL(
             return -EINVAL;
 
 
-        inode_t *inode = pipefs_inode();
+        inode_t* inode = pipefs_inode();
 
         if ((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, flags)) == NULL)
             return -ENOMEM;
 
 
 
-        struct file *refs[2];
+        struct file* refs[2];
 
         if ((refs[0] = fd_append(inode, 0, 0)) == NULL)
             return -ENFILE;

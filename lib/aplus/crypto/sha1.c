@@ -77,7 +77,7 @@ void sha1_transform(uint32_t state[5], const unsigned char buffer[64]) {
      * And the result is written through.  I threw a "const" in, hoping
      * this will cause a diagnostic.
      */
-    CHAR64LONG16 *block = (const CHAR64LONG16 *)buffer;
+    CHAR64LONG16* block = (const CHAR64LONG16*)buffer;
 #endif
     /* Copy context->state[] to working vars */
     a = state[0];
@@ -182,7 +182,7 @@ void sha1_transform(uint32_t state[5], const unsigned char buffer[64]) {
 
 /* sha1_init - Initialize new context */
 
-void sha1_init(sha1_t *context) {
+void sha1_init(sha1_t* context) {
     /* SHA1 initialization constants */
     context->state[0] = 0x67452301;
     context->state[1] = 0xEFCDAB89;
@@ -195,7 +195,7 @@ void sha1_init(sha1_t *context) {
 
 /* Run your data through this. */
 
-void sha1_update(sha1_t *context, const unsigned char *data, size_t len) {
+void sha1_update(sha1_t* context, const unsigned char* data, size_t len) {
     uint32_t i;
 
     uint32_t j;
@@ -220,7 +220,7 @@ void sha1_update(sha1_t *context, const unsigned char *data, size_t len) {
 
 /* Add padding and return the message digest. */
 
-void sha1_final(sha1_t *context, unsigned char digest[SHA1_DIGEST_SIZE]) {
+void sha1_final(sha1_t* context, unsigned char digest[SHA1_DIGEST_SIZE]) {
     unsigned i;
 
     unsigned char finalcount[8];
@@ -263,17 +263,17 @@ void sha1_final(sha1_t *context, unsigned char digest[SHA1_DIGEST_SIZE]) {
     memset(&finalcount, '\0', sizeof(finalcount));
 }
 
-char *sha1(const char *str) {
+char* sha1(const char* str) {
     sha1_t ctx;
     unsigned int ii;
     char hash[SHA1_DIGEST_SIZE];
-    char *buf = __libaplus_malloc(SHA1_DIGEST_SIZE * 2);
+    char* buf = __libaplus_malloc(SHA1_DIGEST_SIZE * 2);
 
 
     sha1_init(&ctx);
     for (ii = 0; ii < strlen(str); ii += 1)
-        sha1_update(&ctx, (const unsigned char *)str + ii, 1);
-    sha1_final(&ctx, (unsigned char *)hash);
+        sha1_update(&ctx, (const unsigned char*)str + ii, 1);
+    sha1_final(&ctx, (unsigned char*)hash);
     hash[SHA1_DIGEST_SIZE] = '\0';
 
     for (ii = 0; ii < SHA1_DIGEST_SIZE; ii++)

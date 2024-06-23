@@ -36,7 +36,7 @@
 
 
 
-ssize_t ext2_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) {
+ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -46,11 +46,11 @@ ssize_t ext2_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) 
     DEBUG_ASSERT(count);
 
 
-    ext2_t *ext2 = (ext2_t *)inode->sb->fsinfo;
+    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
 
 
 
-    struct ext2_inode *n = cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     int entries = 0;
     int q;
@@ -62,7 +62,7 @@ ssize_t ext2_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) 
 
             for (size_t i = 0; i < ext2->blocksize;) {
 
-                struct ext2_dir_entry_2 *d = (struct ext2_dir_entry_2 *)((uintptr_t)ext2->iocache + i);
+                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*)((uintptr_t)ext2->iocache + i);
 
                 DEBUG_ASSERT(d->rec_len);
                 DEBUG_ASSERT(d->name_len);

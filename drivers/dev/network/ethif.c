@@ -41,23 +41,23 @@
 
 
 /* See kernel/init/hostname.c */
-extern char *hostname;
+extern char* hostname;
 
 
-void ethif_input(struct netif *netif) {
+void ethif_input(struct netif* netif) {
 
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
 
-    struct eth_hdr *hdr;
+    struct eth_hdr* hdr;
     struct pbuf *p, *q;
 
     long len;
     long frames = 0;
 
 
-    struct device *dev = netif->state;
+    struct device* dev = netif->state;
 
     do {
 
@@ -130,7 +130,7 @@ void ethif_input(struct netif *netif) {
 }
 
 
-static err_t ethif_linkoutput(struct netif *netif, struct pbuf *p) {
+static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
 
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
@@ -140,8 +140,8 @@ static err_t ethif_linkoutput(struct netif *netif, struct pbuf *p) {
     DEBUG_ASSERT(p->len);
 
 
-    struct device *dev = netif->state;
-    struct pbuf *q;
+    struct device* dev = netif->state;
+    struct pbuf* q;
 
 
     if (!dev->net.low_level_startoutput(dev->net.internals))
@@ -166,13 +166,13 @@ static err_t ethif_linkoutput(struct netif *netif, struct pbuf *p) {
     return ERR_OK;
 }
 
-err_t ethif_init(struct netif *netif) {
+err_t ethif_init(struct netif* netif) {
 
     DEBUG_ASSERT(netif);
     DEBUG_ASSERT(netif->state);
 
 
-    struct device *dev = netif->state;
+    struct device* dev = netif->state;
 
 #if LWIP_NETIF_HOSTNAME
     netif->hostname = hostname;

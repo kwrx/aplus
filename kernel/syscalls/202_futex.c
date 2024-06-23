@@ -53,7 +53,7 @@
 
 
 SYSCALL(
-    202, futex, long sys_futex(uint32_t *uaddr, int op, uint32_t val, long __val2, uint32_t *uaddr2, uint32_t val3) {
+    202, futex, long sys_futex(uint32_t* uaddr, int op, uint32_t val, long __val2, uint32_t* uaddr2, uint32_t val3) {
         if (unlikely(!uaddr))
             return -EINVAL;
 
@@ -61,7 +61,7 @@ SYSCALL(
             return -EACCES;
 
 
-        uint32_t *kaddr = uio_get_ptr(uaddr);
+        uint32_t* kaddr = uio_get_ptr(uaddr);
 
 
         switch (op & FUTEX_CMD_MASK) {
@@ -70,7 +70,7 @@ SYSCALL(
 
             {
 
-                const struct timespec *utime = (const struct timespec *)__val2;
+                const struct timespec* utime = (const struct timespec*)__val2;
 
                 if (unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
@@ -120,7 +120,7 @@ SYSCALL(
                     return -EACCES;
 
 
-                uint32_t *kaddr2 = uio_get_ptr(uaddr2);
+                uint32_t* kaddr2 = uio_get_ptr(uaddr2);
 
                 return futex_requeue(kaddr, kaddr2, (uint32_t)__val2);
             }

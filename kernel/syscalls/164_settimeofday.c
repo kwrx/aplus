@@ -50,4 +50,4 @@
 
 struct timezone;
 
-SYSCALL(164, settimeofday, long sys_settimeofday(struct timeval *tv, struct timezone *tz) { return -ENOSYS; });
+SYSCALL(164, settimeofday, long sys_settimeofday(struct timeval* tv, struct timezone* tz) { return -ENOSYS; });

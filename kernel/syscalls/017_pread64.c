@@ -56,7 +56,7 @@
  */
 
 SYSCALL(
-    17, pread64, long sys_pread64(unsigned int fd, char *buf, size_t count, off_t pos) {
+    17, pread64, long sys_pread64(unsigned int fd, char* buf, size_t count, off_t pos) {
         DEBUG_ASSERT(current_task);
 
         current_task->iostat.rchar += (uint64_t)count;

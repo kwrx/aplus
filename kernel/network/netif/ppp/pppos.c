@@ -55,25 +55,25 @@
 LWIP_MEMPOOL_DECLARE(PPPOS_PCB, MEMP_NUM_PPPOS_INTERFACES, sizeof(pppos_pcb), "PPPOS_PCB")
 
 /* callbacks called from PPP core */
-static err_t pppos_write(ppp_pcb *ppp, void *ctx, struct pbuf *p);
-static err_t pppos_netif_output(ppp_pcb *ppp, void *ctx, struct pbuf *pb, u16_t protocol);
-static void pppos_connect(ppp_pcb *ppp, void *ctx);
+static err_t pppos_write(ppp_pcb* ppp, void* ctx, struct pbuf* p);
+static err_t pppos_netif_output(ppp_pcb* ppp, void* ctx, struct pbuf* pb, u16_t protocol);
+static void pppos_connect(ppp_pcb* ppp, void* ctx);
     #if PPP_SERVER
-static void pppos_listen(ppp_pcb *ppp, void *ctx);
+static void pppos_listen(ppp_pcb* ppp, void* ctx);
     #endif /* PPP_SERVER */
-static void pppos_disconnect(ppp_pcb *ppp, void *ctx);
-static err_t pppos_destroy(ppp_pcb *ppp, void *ctx);
-static void pppos_send_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, int accomp);
-static void pppos_recv_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, int accomp);
+static void pppos_disconnect(ppp_pcb* ppp, void* ctx);
+static err_t pppos_destroy(ppp_pcb* ppp, void* ctx);
+static void pppos_send_config(ppp_pcb* ppp, void* ctx, u32_t accm, int pcomp, int accomp);
+static void pppos_recv_config(ppp_pcb* ppp, void* ctx, u32_t accm, int pcomp, int accomp);
 
     /* Prototypes for procedures local to this file. */
     #if PPP_INPROC_IRQ_SAFE
-static void pppos_input_callback(void *arg);
+static void pppos_input_callback(void* arg);
     #endif /* PPP_INPROC_IRQ_SAFE */
-static void pppos_input_free_current_packet(pppos_pcb *pppos);
-static void pppos_input_drop(pppos_pcb *pppos);
-static err_t pppos_output_append(pppos_pcb *pppos, err_t err, struct pbuf *nb, u8_t c, u8_t accm, u16_t *fcs);
-static err_t pppos_output_last(pppos_pcb *pppos, err_t err, struct pbuf *nb, u16_t *fcs);
+static void pppos_input_free_current_packet(pppos_pcb* pppos);
+static void pppos_input_drop(pppos_pcb* pppos);
+static err_t pppos_output_append(pppos_pcb* pppos, err_t err, struct pbuf* nb, u8_t c, u8_t accm, u16_t* fcs);
+static err_t pppos_output_last(pppos_pcb* pppos, err_t err, struct pbuf* nb, u16_t* fcs);
 
 /* Callbacks structure for PPP core */
 static const struct link_callbacks pppos_callbacks = {pppos_connect,
@@ -138,12 +138,12 @@ static u16_t ppp_get_fcs(u8_t byte) {
  *
  * Return 0 on success, an error code on failure.
  */
-ppp_pcb *pppos_create(struct netif *pppif, pppos_output_cb_fn output_cb, ppp_link_status_cb_fn link_status_cb, void *ctx_cb) {
-    pppos_pcb *pppos;
-    ppp_pcb *ppp;
+ppp_pcb* pppos_create(struct netif* pppif, pppos_output_cb_fn output_cb, ppp_link_status_cb_fn link_status_cb, void* ctx_cb) {
+    pppos_pcb* pppos;
+    ppp_pcb* ppp;
     LWIP_ASSERT_CORE_LOCKED();
 
-    pppos = (pppos_pcb *)LWIP_MEMPOOL_ALLOC(PPPOS_PCB);
+    pppos = (pppos_pcb*)LWIP_MEMPOOL_ALLOC(PPPOS_PCB);
     if (pppos == NULL) {
         return NULL;
     }
@@ -161,10 +161,10 @@ ppp_pcb *pppos_create(struct netif *pppif, pppos_output_cb_fn output_cb, ppp_lin
 }
 
 /* Called by PPP core */
-static err_t pppos_write(ppp_pcb *ppp, void *ctx, struct pbuf *p) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
-    u8_t *s;
-    struct pbuf *nb;
+static err_t pppos_write(ppp_pcb* ppp, void* ctx, struct pbuf* p) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
+    u8_t* s;
+    struct pbuf* nb;
     u16_t n;
     u16_t fcs_out;
     err_t err;
@@ -195,7 +195,7 @@ static err_t pppos_write(ppp_pcb *ppp, void *ctx, struct pbuf *p) {
 
     /* Load output buffer. */
     fcs_out = PPP_INITFCS;
-    s       = (u8_t *)p->payload;
+    s       = (u8_t*)p->payload;
     n       = p->len;
     while (n-- > 0) {
         err = pppos_output_append(pppos, err, nb, *s++, 1, &fcs_out);
@@ -212,8 +212,8 @@ static err_t pppos_write(ppp_pcb *ppp, void *ctx, struct pbuf *p) {
 }
 
 /* Called by PPP core */
-static err_t pppos_netif_output(ppp_pcb *ppp, void *ctx, struct pbuf *pb, u16_t protocol) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+static err_t pppos_netif_output(ppp_pcb* ppp, void* ctx, struct pbuf* pb, u16_t protocol) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     struct pbuf *nb, *p;
     u16_t fcs_out;
     err_t err;
@@ -254,7 +254,7 @@ static err_t pppos_netif_output(ppp_pcb *ppp, void *ctx, struct pbuf *pb, u16_t 
     /* Load packet. */
     for (p = pb; p; p = p->next) {
         u16_t n = p->len;
-        u8_t *s = (u8_t *)p->payload;
+        u8_t* s = (u8_t*)p->payload;
 
         while (n-- > 0) {
             err = pppos_output_append(pppos, err, nb, *s++, 1, &fcs_out);
@@ -270,8 +270,8 @@ static err_t pppos_netif_output(ppp_pcb *ppp, void *ctx, struct pbuf *pb, u16_t 
     return err;
 }
 
-static void pppos_connect(ppp_pcb *ppp, void *ctx) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+static void pppos_connect(ppp_pcb* ppp, void* ctx) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     PPPOS_DECL_PROTECT(lev);
 
     #if PPP_INPROC_IRQ_SAFE
@@ -300,8 +300,8 @@ static void pppos_connect(ppp_pcb *ppp, void *ctx) {
 }
 
     #if PPP_SERVER
-static void pppos_listen(ppp_pcb *ppp, void *ctx) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+static void pppos_listen(ppp_pcb* ppp, void* ctx) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     PPPOS_DECL_PROTECT(lev);
 
         #if PPP_INPROC_IRQ_SAFE
@@ -330,8 +330,8 @@ static void pppos_listen(ppp_pcb *ppp, void *ctx) {
 }
     #endif /* PPP_SERVER */
 
-static void pppos_disconnect(ppp_pcb *ppp, void *ctx) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+static void pppos_disconnect(ppp_pcb* ppp, void* ctx) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     PPPOS_DECL_PROTECT(lev);
 
     PPPOS_PROTECT(lev);
@@ -350,8 +350,8 @@ static void pppos_disconnect(ppp_pcb *ppp, void *ctx) {
     ppp_link_end(ppp); /* notify upper layers */
 }
 
-static err_t pppos_destroy(ppp_pcb *ppp, void *ctx) {
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+static err_t pppos_destroy(ppp_pcb* ppp, void* ctx) {
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     LWIP_UNUSED_ARG(ppp);
 
     #if PPP_INPROC_IRQ_SAFE
@@ -372,8 +372,8 @@ static err_t pppos_destroy(ppp_pcb *ppp, void *ctx) {
  * @param s received data
  * @param l length of received data
  */
-err_t pppos_input_tcpip(ppp_pcb *ppp, u8_t *s, int l) {
-    struct pbuf *p;
+err_t pppos_input_tcpip(ppp_pcb* ppp, u8_t* s, int l) {
+    struct pbuf* p;
     err_t err;
 
     p = pbuf_alloc(PBUF_RAW, l, PBUF_POOL);
@@ -390,13 +390,13 @@ err_t pppos_input_tcpip(ppp_pcb *ppp, u8_t *s, int l) {
 }
 
 /* called from TCPIP thread */
-err_t pppos_input_sys(struct pbuf *p, struct netif *inp) {
-    ppp_pcb *ppp = (ppp_pcb *)inp->state;
-    struct pbuf *n;
+err_t pppos_input_sys(struct pbuf* p, struct netif* inp) {
+    ppp_pcb* ppp = (ppp_pcb*)inp->state;
+    struct pbuf* n;
     LWIP_ASSERT_CORE_LOCKED();
 
     for (n = p; n; n = n->next) {
-        pppos_input(ppp, (u8_t *)n->payload, n->len);
+        pppos_input(ppp, (u8_t*)n->payload, n->len);
     }
     pbuf_free(p);
     return ERR_OK;
@@ -411,7 +411,7 @@ err_t pppos_input_sys(struct pbuf *p, struct netif *inp) {
         #endif
 PACK_STRUCT_BEGIN
 struct pppos_input_header {
-        PACK_STRUCT_FIELD(ppp_pcb *ppp);
+        PACK_STRUCT_FIELD(ppp_pcb* ppp);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
         #ifdef PACK_STRUCT_USE_INCLUDES
@@ -425,9 +425,9 @@ PACK_STRUCT_END
  * @param s received data
  * @param l length of received data
  */
-void pppos_input(ppp_pcb *ppp, u8_t *s, int l) {
-    pppos_pcb *pppos = (pppos_pcb *)ppp->link_ctx_cb;
-    struct pbuf *next_pbuf;
+void pppos_input(ppp_pcb* ppp, u8_t* s, int l) {
+    pppos_pcb* pppos = (pppos_pcb*)ppp->link_ctx_cb;
+    struct pbuf* next_pbuf;
     u8_t cur_char;
     u8_t escaped;
     PPPOS_DECL_PROTECT(lev);
@@ -478,7 +478,7 @@ void pppos_input(ppp_pcb *ppp, u8_t *s, int l) {
                     pppos_input_drop(pppos);
                     /* Otherwise it's a good packet so pass it on. */
                 } else {
-                    struct pbuf *inp;
+                    struct pbuf* inp;
                     /* Trim off the checksum. */
                     if (pppos->in_tail->len > 2) {
                         pppos->in_tail->len -= 2;
@@ -628,9 +628,9 @@ void pppos_input(ppp_pcb *ppp, u8_t *s, int l) {
                             break;
                         }
                         if (pppos->in_head == NULL) {
-                            u8_t *payload = ((u8_t *)next_pbuf->payload) + pbuf_alloc_len;
+                            u8_t* payload = ((u8_t*)next_pbuf->payload) + pbuf_alloc_len;
     #if PPP_INPROC_IRQ_SAFE
-                            ((struct pppos_input_header *)payload)->ppp = ppp;
+                            ((struct pppos_input_header*)payload)->ppp = ppp;
                             payload += sizeof(struct pppos_input_header);
                             next_pbuf->len += sizeof(struct pppos_input_header);
     #endif /* PPP_INPROC_IRQ_SAFE */
@@ -642,7 +642,7 @@ void pppos_input(ppp_pcb *ppp, u8_t *s, int l) {
                         pppos->in_tail = next_pbuf;
                     }
                     /* Load character into buffer. */
-                    ((u8_t *)pppos->in_tail->payload)[pppos->in_tail->len++] = cur_char;
+                    ((u8_t*)pppos->in_tail->payload)[pppos->in_tail->len++] = cur_char;
                     break;
                 default:
                     break;
@@ -657,11 +657,11 @@ void pppos_input(ppp_pcb *ppp, u8_t *s, int l) {
     #if PPP_INPROC_IRQ_SAFE
 /* PPPoS input callback using one input pointer
  */
-static void pppos_input_callback(void *arg) {
-    struct pbuf *pb = (struct pbuf *)arg;
-    ppp_pcb *ppp;
+static void pppos_input_callback(void* arg) {
+    struct pbuf* pb = (struct pbuf*)arg;
+    ppp_pcb* ppp;
 
-    ppp = ((struct pppos_input_header *)pb->payload)->ppp;
+    ppp = ((struct pppos_input_header*)pb->payload)->ppp;
     if (pbuf_remove_header(pb, sizeof(struct pppos_input_header))) {
         LWIP_ASSERT("pbuf_remove_header failed\n", 0);
         goto drop;
@@ -678,9 +678,9 @@ drop:
 }
     #endif /* PPP_INPROC_IRQ_SAFE */
 
-static void pppos_send_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, int accomp) {
+static void pppos_send_config(ppp_pcb* ppp, void* ctx, u32_t accm, int pcomp, int accomp) {
     int i;
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     LWIP_UNUSED_ARG(ppp);
 
     pppos->pcomp  = pcomp;
@@ -694,9 +694,9 @@ static void pppos_send_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, in
     PPPDEBUG(LOG_INFO, ("pppos_send_config[%d]: out_accm=%X %X %X %X\n", pppos->ppp->netif->num, pppos->out_accm[0], pppos->out_accm[1], pppos->out_accm[2], pppos->out_accm[3]));
 }
 
-static void pppos_recv_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, int accomp) {
+static void pppos_recv_config(ppp_pcb* ppp, void* ctx, u32_t accm, int pcomp, int accomp) {
     int i;
-    pppos_pcb *pppos = (pppos_pcb *)ctx;
+    pppos_pcb* pppos = (pppos_pcb*)ctx;
     PPPOS_DECL_PROTECT(lev);
     LWIP_UNUSED_ARG(ppp);
     LWIP_UNUSED_ARG(pcomp);
@@ -715,7 +715,7 @@ static void pppos_recv_config(ppp_pcb *ppp, void *ctx, u32_t accm, int pcomp, in
 /*
  * Drop the input packet.
  */
-static void pppos_input_free_current_packet(pppos_pcb *pppos) {
+static void pppos_input_free_current_packet(pppos_pcb* pppos) {
     if (pppos->in_head != NULL) {
         if (pppos->in_tail && (pppos->in_tail != pppos->in_head)) {
             pbuf_free(pppos->in_tail);
@@ -729,12 +729,12 @@ static void pppos_input_free_current_packet(pppos_pcb *pppos) {
 /*
  * Drop the input packet and increase error counters.
  */
-static void pppos_input_drop(pppos_pcb *pppos) {
+static void pppos_input_drop(pppos_pcb* pppos) {
     if (pppos->in_head != NULL) {
     #if 0
     PPPDEBUG(LOG_INFO, ("pppos_input_drop: %d:%.*H\n", pppos->in_head->len, min(60, pppos->in_head->len * 2), pppos->in_head->payload));
     #endif
-        PPPDEBUG(LOG_INFO, ("pppos_input_drop: pbuf len=%d, addr %p\n", pppos->in_head->len, (void *)pppos->in_head));
+        PPPDEBUG(LOG_INFO, ("pppos_input_drop: pbuf len=%d, addr %p\n", pppos->in_head->len, (void*)pppos->in_head));
     }
     pppos_input_free_current_packet(pppos);
     #if VJ_SUPPORT
@@ -751,7 +751,7 @@ static void pppos_input_drop(pppos_pcb *pppos) {
  * If pbuf is full, send the pbuf and reuse it.
  * Return the current pbuf.
  */
-static err_t pppos_output_append(pppos_pcb *pppos, err_t err, struct pbuf *nb, u8_t c, u8_t accm, u16_t *fcs) {
+static err_t pppos_output_append(pppos_pcb* pppos, err_t err, struct pbuf* nb, u8_t c, u8_t accm, u16_t* fcs) {
     if (err != ERR_OK) {
         return err;
     }
@@ -760,7 +760,7 @@ static err_t pppos_output_append(pppos_pcb *pppos, err_t err, struct pbuf *nb, u
      * Sure we don't quite fill the buffer if the character doesn't
      * get escaped but is one character worth complicating this? */
     if ((PBUF_POOL_BUFSIZE - nb->len) < 2) {
-        u32_t l = pppos->output_cb(pppos->ppp, (u8_t *)nb->payload, nb->len, pppos->ppp->ctx_cb);
+        u32_t l = pppos->output_cb(pppos->ppp, (u8_t*)nb->payload, nb->len, pppos->ppp->ctx_cb);
         if (l != nb->len) {
             return ERR_IF;
         }
@@ -774,17 +774,17 @@ static err_t pppos_output_append(pppos_pcb *pppos, err_t err, struct pbuf *nb, u
 
     /* Copy to output buffer escaping special characters. */
     if (accm && ESCAPE_P(pppos->out_accm, c)) {
-        *((u8_t *)nb->payload + nb->len++) = PPP_ESCAPE;
-        *((u8_t *)nb->payload + nb->len++) = c ^ PPP_TRANS;
+        *((u8_t*)nb->payload + nb->len++) = PPP_ESCAPE;
+        *((u8_t*)nb->payload + nb->len++) = c ^ PPP_TRANS;
     } else {
-        *((u8_t *)nb->payload + nb->len++) = c;
+        *((u8_t*)nb->payload + nb->len++) = c;
     }
 
     return ERR_OK;
 }
 
-static err_t pppos_output_last(pppos_pcb *pppos, err_t err, struct pbuf *nb, u16_t *fcs) {
-    ppp_pcb *ppp = pppos->ppp;
+static err_t pppos_output_last(pppos_pcb* pppos, err_t err, struct pbuf* nb, u16_t* fcs) {
+    ppp_pcb* ppp = pppos->ppp;
 
     /* Add FCS and trailing flag. */
     err = pppos_output_append(pppos, err, nb, ~(*fcs) & 0xFF, 1, NULL);
@@ -797,7 +797,7 @@ static err_t pppos_output_last(pppos_pcb *pppos, err_t err, struct pbuf *nb, u16
 
     /* Send remaining buffer if not empty */
     if (nb->len > 0) {
-        u32_t l = pppos->output_cb(ppp, (u8_t *)nb->payload, nb->len, ppp->ctx_cb);
+        u32_t l = pppos->output_cb(ppp, (u8_t*)nb->payload, nb->len, ppp->ctx_cb);
         if (l != nb->len) {
             err = ERR_IF;
             goto failed;

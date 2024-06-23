@@ -51,4 +51,4 @@
 
 struct user_msghdr;
 
-SYSCALL(46, sendmsg, long sys_sendmsg(int fd, struct user_msghdr *msg, unsigned flags) { return -ENOSYS; });
+SYSCALL(46, sendmsg, long sys_sendmsg(int fd, struct user_msghdr* msg, unsigned flags) { return -ENOSYS; });

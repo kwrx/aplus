@@ -44,12 +44,12 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static inode_t *ptmx_open(inode_t *inode, int flags) {
+static inode_t* ptmx_open(inode_t* inode, int flags) {
 
     DEBUG_ASSERT(inode);
 
 
-    inode_t *ptmx = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_USER);
+    inode_t* ptmx = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_USER);
 
     if (unlikely(!ptmx))
         goto fail_1;
@@ -69,7 +69,7 @@ static inode_t *ptmx_open(inode_t *inode, int flags) {
 
 
 
-    pty_t *pty = pty_create(ptmx, flags);
+    pty_t* pty = pty_create(ptmx, flags);
 
     if (unlikely(!pty))
         goto fail_2;
@@ -94,7 +94,7 @@ fail_1:
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     int fd;
@@ -104,7 +104,7 @@ void init(const char *args) {
     }
 
 
-    inode_t *inode = NULL;
+    inode_t* inode = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
         DEBUG_ASSERT(fds->descriptors[fd].ref);

@@ -54,7 +54,7 @@ static const uint64_t k[80] = {0x428A2F98D728AE22LL, 0x7137449123EF65CDLL, 0xB5C
                                0xC67178F2E372532BLL, 0xCA273ECEEA26619CLL, 0xD186B8C721C0C207LL, 0xEADA7DD6CDE0EB1ELL, 0xF57D4F7FEE6ED178LL, 0x06F067AA72176FBALL, 0x0A637DC5A2C898A6LL, 0x113F9804BEF90DAELL, 0x1B710B35131C471BLL,
                                0x28DB77F523047D84LL, 0x32CAAB7B40C72493LL, 0x3C9EBE0A15C9BEBCLL, 0x431D67C49C100D4CLL, 0x4CC5D4BECB3E42B6LL, 0x597F299CFC657E2ALL, 0x5FCB6FAB3AD6FAECLL, 0x6C44198C4A475817LL};
 
-void sha512_init(sha512_t *ctx) {
+void sha512_init(sha512_t* ctx) {
     ctx->h_dig.h[0] = 0x6A09E667F3BCC908LL;
     ctx->h_dig.h[1] = 0xBB67AE8584CAA73BLL;
     ctx->h_dig.h[2] = 0x3C6EF372FE94F82BLL;
@@ -67,8 +67,8 @@ void sha512_init(sha512_t *ctx) {
     ctx->size = ctx->totalSize = 0;
 }
 
-char *sha512(const char *data) {
-    char *out = (char *)__libaplus_malloc(SHA512_DIGEST_SIZE * 2);
+char* sha512(const char* data) {
+    char* out = (char*)__libaplus_malloc(SHA512_DIGEST_SIZE * 2);
 
     sha512_t hash;
     char buf[SHA512_DIGEST_SIZE];
@@ -85,7 +85,7 @@ char *sha512(const char *data) {
     return out;
 }
 
-static void sha512_process(sha512_t *ctx) {
+static void sha512_process(sha512_t* ctx) {
     int t;
     uint64_t temp1;
     uint64_t temp2;
@@ -101,7 +101,7 @@ static void sha512_process(sha512_t *ctx) {
     uint64_t h = ctx->h_dig.h[7];
 
     // Process message in 16-word blocks
-    uint64_t *w = ctx->w_buf.w;
+    uint64_t* w = ctx->w_buf.w;
 
     // Convert from big-endian byte order to host byte order
     for (t = 0; t < 16; t++)
@@ -140,7 +140,7 @@ static void sha512_process(sha512_t *ctx) {
 }
 
 
-void sha512_update(sha512_t *ctx, const unsigned char *msg, size_t len) {
+void sha512_update(sha512_t* ctx, const unsigned char* msg, size_t len) {
     while (len > 0) {
         // The buffer can hold at most 128 bytes
         size_t n = MIN(len, 128 - ctx->size);
@@ -152,7 +152,7 @@ void sha512_update(sha512_t *ctx, const unsigned char *msg, size_t len) {
         ctx->size += n;
         ctx->totalSize += n;
         // Advance the data pointer
-        msg = (uint8_t *)msg + n;
+        msg = (uint8_t*)msg + n;
         // Remaining bytes to process
         len -= n;
 
@@ -167,7 +167,7 @@ void sha512_update(sha512_t *ctx, const unsigned char *msg, size_t len) {
 }
 
 
-void sha512_final(sha512_t *ctx, unsigned char digest[SHA512_DIGEST_SIZE]) {
+void sha512_final(sha512_t* ctx, unsigned char digest[SHA512_DIGEST_SIZE]) {
     int i;
     size_t paddingSize;
     uint64_t totalSize;

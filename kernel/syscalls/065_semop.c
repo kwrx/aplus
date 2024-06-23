@@ -51,4 +51,4 @@
 
 struct sembuf;
 
-SYSCALL(65, semop, long sys_semop(int semid, struct sembuf *sops, unsigned nsops) { return -ENOSYS; });
+SYSCALL(65, semop, long sys_semop(int semid, struct sembuf* sops, unsigned nsops) { return -ENOSYS; });

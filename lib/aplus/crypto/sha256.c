@@ -12,7 +12,7 @@ This code is based on public domain code from Wei Dai's Crypto++ library. */
 #define _SHA256_UNROLL
 #define _SHA256_UNROLL2
 
-void sha256_init(sha256_t *p) {
+void sha256_init(sha256_t* p) {
     p->state[0] = 0x6a09e667;
     p->state[1] = 0xbb67ae85;
     p->state[2] = 0x3c6ef372;
@@ -90,7 +90,7 @@ static const uint32_t K[64] = {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0
                                0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
                                0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2};
 
-static void sha256_transform(uint32_t *state, const uint32_t *data) {
+static void sha256_transform(uint32_t* state, const uint32_t* data) {
     uint32_t W[16];
     unsigned j;
 #ifdef _SHA256_UNROLL2
@@ -145,7 +145,7 @@ static void sha256_transform(uint32_t *state, const uint32_t *data) {
 #undef s0
 #undef s1
 
-static void sha256_write_byte_block(sha256_t *p) {
+static void sha256_write_byte_block(sha256_t* p) {
     uint32_t data32[16];
     unsigned i;
     for (i = 0; i < 16; i++)
@@ -154,8 +154,8 @@ static void sha256_write_byte_block(sha256_t *p) {
 }
 
 
-char *sha256(const char *data) {
-    char *out = (char *)__libaplus_malloc(SHA256_DIGEST_SIZE * 2);
+char* sha256(const char* data) {
+    char* out = (char*)__libaplus_malloc(SHA256_DIGEST_SIZE * 2);
 
     sha256_t hash;
     char buf[SHA256_DIGEST_SIZE];
@@ -173,7 +173,7 @@ char *sha256(const char *data) {
 }
 
 
-void sha256_update(sha256_t *p, const unsigned char *data, size_t size) {
+void sha256_update(sha256_t* p, const unsigned char* data, size_t size) {
     uint32_t curBufferPos = (uint32_t)p->count & 0x3F;
     while (size > 0) {
         p->buffer[curBufferPos++] = *data++;
@@ -187,8 +187,8 @@ void sha256_update(sha256_t *p, const unsigned char *data, size_t size) {
 }
 
 
-void sha256_final(sha256_t *p, unsigned char _digest[SHA256_DIGEST_SIZE]) {
-    unsigned char *digest = (unsigned char *)_digest;
+void sha256_final(sha256_t* p, unsigned char _digest[SHA256_DIGEST_SIZE]) {
+    unsigned char* digest = (unsigned char*)_digest;
     uint64_t lenInBits    = (p->count << 3);
     uint32_t curBufferPos = (uint32_t)p->count & 0x3F;
     unsigned i;

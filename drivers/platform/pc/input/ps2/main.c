@@ -200,7 +200,7 @@ static inline void ps2_ack() {
 
 
 
-void ps2_keyboard_irq(void *context, irq_t irq) {
+void ps2_keyboard_irq(void* context, irq_t irq) {
 
     static int vk_e0 = 0;
 
@@ -247,7 +247,7 @@ void ps2_keyboard_irq(void *context, irq_t irq) {
 }
 
 
-void ps2_mouse_irq(void *context, irq_t irq) {
+void ps2_mouse_irq(void* context, irq_t irq) {
 
     static uint8_t packet[5] = {0};
     static uint8_t cycle     = 0;
@@ -391,7 +391,7 @@ void ps2_mouse_irq(void *context, irq_t irq) {
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     memset(&__mouse_buttons[0], 0, sizeof(__mouse_buttons));

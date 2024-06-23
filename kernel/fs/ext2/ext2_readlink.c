@@ -35,7 +35,7 @@
 
 
 
-ssize_t ext2_readlink(inode_t *inode, char *buf, size_t len) {
+ssize_t ext2_readlink(inode_t* inode, char* buf, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -46,11 +46,11 @@ ssize_t ext2_readlink(inode_t *inode, char *buf, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    ext2_t *ext2 = (ext2_t *)inode->sb->fsinfo;
+    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
 
 
 
-    struct ext2_inode *n = cache_get(&inode->sb->cache, inode->ino);
+    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     if (unlikely(len > n->i_size)) {
         len = n->i_size;
@@ -62,7 +62,7 @@ ssize_t ext2_readlink(inode_t *inode, char *buf, size_t len) {
 
     if (len < 60) {
 
-        memcpy(buf, (const char *)n->i_block, len);
+        memcpy(buf, (const char*)n->i_block, len);
 
     } else {
 

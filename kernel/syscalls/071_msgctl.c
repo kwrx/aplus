@@ -51,4 +51,4 @@
 
 struct msqid_ds;
 
-SYSCALL(71, msgctl, long sys_msgctl(int msqid, int cmd, struct msqid_ds *buf) { return -ENOSYS; });
+SYSCALL(71, msgctl, long sys_msgctl(int msqid, int cmd, struct msqid_ds* buf) { return -ENOSYS; });

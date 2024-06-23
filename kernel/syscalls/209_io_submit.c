@@ -52,4 +52,4 @@
 typedef long aio_context_t;
 struct iocb;
 
-SYSCALL(209, io_submit, long sys_io_submit(aio_context_t cid, long nr, struct iocb **iocbpp) { return -ENOSYS; });
+SYSCALL(209, io_submit, long sys_io_submit(aio_context_t cid, long nr, struct iocb** iocbpp) { return -ENOSYS; });

@@ -52,17 +52,17 @@ MODULE_LICENSE("GPL");
 
 
 
-static list(device_t *, devices);
+static list(device_t*, devices);
 
 
-static ssize_t device_read(inode_t *inode, void *buf, off_t off, size_t size) {
+static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
 
 
-    device_t *device = (device_t *)inode->userdata;
+    device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -88,14 +88,14 @@ static ssize_t device_read(inode_t *inode, void *buf, off_t off, size_t size) {
 
 
 
-static ssize_t device_write(inode_t *inode, const void *buf, off_t off, size_t size) {
+static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(buf);
 
 
-    device_t *device = (device_t *)inode->userdata;
+    device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -121,13 +121,13 @@ static ssize_t device_write(inode_t *inode, const void *buf, off_t off, size_t s
 
 
 
-static int device_ioctl(inode_t *inode, long req, void *arg) {
+static int device_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
 
-    device_t *device = (device_t *)inode->userdata;
+    device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -153,13 +153,13 @@ static int device_ioctl(inode_t *inode, long req, void *arg) {
 
 
 
-static int device_fsync(inode_t *inode, int datasync) {
+static int device_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
 
 
-    device_t *device = (device_t *)inode->userdata;
+    device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -184,14 +184,14 @@ static int device_fsync(inode_t *inode, int datasync) {
 }
 
 
-static int device_getattr(inode_t *inode, struct stat *st) {
+static int device_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(st);
 
 
-    device_t *device = (device_t *)inode->userdata;
+    device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
         return errno = EBUSY, -1;
@@ -217,7 +217,7 @@ static int device_getattr(inode_t *inode, struct stat *st) {
 
 
 
-void device_mkdev(device_t *device, mode_t mode) {
+void device_mkdev(device_t* device, mode_t mode) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->name);
@@ -295,7 +295,7 @@ void device_mkdev(device_t *device, mode_t mode) {
     }
 
 
-    inode_t *i = NULL;
+    inode_t* i = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
         DEBUG_ASSERT(fds->descriptors[fd].ref);
@@ -312,7 +312,7 @@ void device_mkdev(device_t *device, mode_t mode) {
 
 
 
-    i->userdata = (void *)device;
+    i->userdata = (void*)device;
 
     i->ops.getattr = device_getattr;
     i->ops.write   = device_write;
@@ -373,7 +373,7 @@ void device_mkdev(device_t *device, mode_t mode) {
 }
 
 
-void device_unlink(device_t *device) {
+void device_unlink(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -426,7 +426,7 @@ void device_unlink(device_t *device) {
 }
 
 
-void device_reset(device_t *device) {
+void device_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
 
@@ -443,7 +443,7 @@ void device_reset(device_t *device) {
 }
 
 
-void device_error(device_t *device, const char *errstr) {
+void device_error(device_t* device, const char* errstr) {
 
     kprintf("device::error: %s: '%s'\n", device->name, errstr);
 
@@ -464,7 +464,7 @@ void device_error(device_t *device, const char *errstr) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     memset(&devices, 0, sizeof(devices));
 

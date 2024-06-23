@@ -52,4 +52,4 @@
 
 struct rlimit64;
 
-SYSCALL(302, prlimit64, long sys_prlimit64(pid_t pid, unsigned int resource, const struct rlimit64 *new_rlim, struct rlimit64 *old_rlim) { return -ENOSYS; });
+SYSCALL(302, prlimit64, long sys_prlimit64(pid_t pid, unsigned int resource, const struct rlimit64* new_rlim, struct rlimit64* old_rlim) { return -ENOSYS; });

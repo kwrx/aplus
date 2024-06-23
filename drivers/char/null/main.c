@@ -41,11 +41,11 @@ MODULE_LICENSE("GPL");
 
 
 
-static ssize_t dummy_read(struct device *device, void *buf, size_t count) {
+static ssize_t dummy_read(struct device* device, void* buf, size_t count) {
     return 0;
 }
 
-static ssize_t dummy_write(struct device *device, const void *buf, size_t count) {
+static ssize_t dummy_write(struct device* device, const void* buf, size_t count) {
     return count;
 }
 
@@ -73,7 +73,7 @@ device_t device = {
 };
 
 
-void init(const char *args) {
+void init(const char* args) {
     device_mkdev(&device, 0666);
 }
 

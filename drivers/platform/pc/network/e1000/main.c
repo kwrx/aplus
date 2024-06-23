@@ -192,14 +192,14 @@ struct e1000 {
         device_t device;
 };
 
-static struct e1000 *devices[E1000_MAX_DEVICES];
+static struct e1000* devices[E1000_MAX_DEVICES];
 
 static uint32_t pci_devices[E1000_MAX_DEVICES];
 static uint32_t pci_count = 0;
 
 
 
-static inline void wrcmd(struct e1000 *dev, uint16_t address, uint32_t value) {
+static inline void wrcmd(struct e1000* dev, uint16_t address, uint32_t value) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(address);
@@ -209,7 +209,7 @@ static inline void wrcmd(struct e1000 *dev, uint16_t address, uint32_t value) {
 }
 
 
-static inline uint32_t rdcmd(struct e1000 *dev, uint16_t address) {
+static inline uint32_t rdcmd(struct e1000* dev, uint16_t address) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(address);
@@ -220,7 +220,7 @@ static inline uint32_t rdcmd(struct e1000 *dev, uint16_t address) {
 
 
 
-static int e1000_startoutput(void *internals) {
+static int e1000_startoutput(void* internals) {
 
     DEBUG_ASSERT(internals);
 
@@ -228,55 +228,55 @@ static int e1000_startoutput(void *internals) {
 }
 
 
-static void e1000_output(void *internals, void *buf, uint16_t len) {
+static void e1000_output(void* internals, void* buf, uint16_t len) {
 
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    struct e1000 *dev = (struct e1000 *)internals;
+    struct e1000* dev = (struct e1000*)internals;
 
-    memcpy((void *)(arch_vmm_p2v(dev->cache, ARCH_VMM_AREA_HEAP)), (void *)(buf), (size_t)len);
+    memcpy((void*)(arch_vmm_p2v(dev->cache, ARCH_VMM_AREA_HEAP)), (void*)(buf), (size_t)len);
 
 
     uint8_t j = dev->tx_cur;
 
-    ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = (uint64_t)dev->cache;
-    ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->length = len;
-    ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->cmd    = CMD_EOP | CMD_IFCS | CMD_RS;
-    ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
+    ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = (uint64_t)dev->cache;
+    ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->length = len;
+    ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->cmd    = CMD_EOP | CMD_IFCS | CMD_RS;
+    ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
 
     dev->tx_cur = (dev->tx_cur + 1) % E1000_NUM_TX_DESC;
 
 
     wrcmd(dev, REG_TXDESCTAIL, dev->tx_cur);
 
-    while (!(((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF))
+    while (!(((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF))
         __builtin_ia32_pause();
 }
 
 
-static void e1000_endoutput(void *internals, uint16_t len) {
+static void e1000_endoutput(void* internals, uint16_t len) {
 
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(len);
 }
 
 
-static int e1000_startinput(void *internals) {
+static int e1000_startinput(void* internals) {
 
     DEBUG_ASSERT(internals);
 
-    struct e1000 *dev = (struct e1000 *)internals;
+    struct e1000* dev = (struct e1000*)internals;
 
 
-    if (!(((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->status & 0x1))
+    if (!(((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->status & 0x1))
         return 0;
 
 
 
-    uint16_t size = ((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->length;
+    uint16_t size = ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->length;
 
 
 #if DEBUG_LEVEL_TRACE
@@ -289,47 +289,47 @@ static int e1000_startinput(void *internals) {
 
 
 
-static void e1000_input(void *internals, void *buf, uint16_t len) {
+static void e1000_input(void* internals, void* buf, uint16_t len) {
 
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(len);
 
 
-    struct e1000 *dev = (struct e1000 *)internals;
+    struct e1000* dev = (struct e1000*)internals;
 
 
     uint8_t j = dev->rx_cur;
 
-    memcpy((void *)(buf), (void *)((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->addr, (size_t)len);
+    memcpy((void*)(buf), (void*)((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->addr, (size_t)len);
 
     dev->rx_cur = (dev->rx_cur + 1) % E1000_NUM_RX_DESC;
 
 
-    ((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
+    ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
 
     wrcmd(dev, REG_RXDESCTAIL, j);
 
 
     int i;
     for (i = 0; i < len; i++)
-        kprintf("%c ", ((char *)buf)[i] & 0xFF);
+        kprintf("%c ", ((char*)buf)[i] & 0xFF);
 }
 
 
-static void e1000_endinput(void *internals) {
+static void e1000_endinput(void* internals) {
 
     DEBUG_ASSERT(internals);
 }
 
 
-static void e1000_input_nomem(void *internals, uint16_t len) {
+static void e1000_input_nomem(void* internals, uint16_t len) {
     kpanicf("e1000: PANIC! no memory left for %d bytes\n", len);
 }
 
 
 
-static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000 *dev) {
+static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000* dev) {
 
     DEBUG_ASSERT(dev);
     DEBUG_ASSERT(dev->irq == irq);
@@ -349,14 +349,14 @@ static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000 *dev) {
 }
 
 
-static void e1000_init(void *internals, uint8_t *address, void *mcast) {
+static void e1000_init(void* internals, uint8_t* address, void* mcast) {
 
     DEBUG_ASSERT(internals);
     DEBUG_ASSERT(address);
     // DEBUG_ASSERT(mcast);
 
 
-    struct e1000 *dev = (struct e1000 *)internals;
+    struct e1000* dev = (struct e1000*)internals;
 
 
 
@@ -372,8 +372,8 @@ static void e1000_init(void *internals, uint8_t *address, void *mcast) {
 
         dev->rx_desc[j] = ptr + (j * 16);
 
-        ((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = pmm_alloc_blocks(4);
-        ((struct e1000_rx_desc *)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
+        ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = pmm_alloc_blocks(4);
+        ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
     }
 
     wrcmd(dev, REG_RXDESCLO, (uint32_t)((uint64_t)ptr >> 32));
@@ -393,9 +393,9 @@ static void e1000_init(void *internals, uint8_t *address, void *mcast) {
 
         dev->tx_desc[j] = ptr + (j * 16);
 
-        ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = 0;
-        ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->cmd    = 0;
-        ((struct e1000_tx_desc *)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status = TSTA_DD;
+        ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->addr   = 0;
+        ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->cmd    = 0;
+        ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status = TSTA_DD;
     }
 
     wrcmd(dev, REG_TXDESCLO, (uint32_t)((uint64_t)ptr >> 32));
@@ -419,7 +419,7 @@ static void e1000_init(void *internals, uint8_t *address, void *mcast) {
 
 
 
-static void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void *data) {
+static void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void* data) {
 
     if (pci_count >= E1000_MAX_DEVICES) {
         return;
@@ -438,7 +438,7 @@ static void find_pci(uint32_t device, uint16_t venid, uint16_t devid, void *data
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "network=off"))
         return;
@@ -457,7 +457,7 @@ void init(const char *args) {
 
     for (size_t i = 0; i < pci_count; i++) {
 
-        struct e1000 *eth = (struct e1000 *)kcalloc(1, sizeof(struct e1000), GFP_KERNEL);
+        struct e1000* eth = (struct e1000*)kcalloc(1, sizeof(struct e1000), GFP_KERNEL);
 
         eth->pci  = pci_devices[i];
         eth->irq  = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);

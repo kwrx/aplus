@@ -50,4 +50,4 @@
 
 struct ustat;
 
-SYSCALL(136, ustat, long sys_ustat(unsigned dev, struct ustat *ubuf) { return -ENOSYS; });
+SYSCALL(136, ustat, long sys_ustat(unsigned dev, struct ustat* ubuf) { return -ENOSYS; });

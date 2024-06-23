@@ -52,4 +52,4 @@
 
 typedef long qid_t;
 
-SYSCALL(179, quotactl, long sys_quotactl(unsigned int cmd, const char *special, qid_t id, void *addr) { return -ENOSYS; });
+SYSCALL(179, quotactl, long sys_quotactl(unsigned int cmd, const char* special, qid_t id, void* addr) { return -ENOSYS; });

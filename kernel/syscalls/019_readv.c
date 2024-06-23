@@ -56,7 +56,7 @@
  */
 
 SYSCALL(
-    19, readv, long sys_readv(unsigned long fd, const struct iovec *vec, unsigned long vlen) {
+    19, readv, long sys_readv(unsigned long fd, const struct iovec* vec, unsigned long vlen) {
         if (unlikely(!vec))
             return -EINVAL;
 

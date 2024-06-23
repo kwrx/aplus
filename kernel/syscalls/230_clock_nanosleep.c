@@ -33,7 +33,7 @@
 #include <aplus/syscall.h>
 
 
-extern long sys_clock_gettime(clockid_t, struct timespec *);
+extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
 /***
@@ -52,7 +52,7 @@ extern long sys_clock_gettime(clockid_t, struct timespec *);
  */
 
 SYSCALL(
-    230, clock_nanosleep, long sys_clock_nanosleep(clockid_t which_clock, int flags, const struct timespec *__rqtp, struct timespec *__rmtp) {
+    230, clock_nanosleep, long sys_clock_nanosleep(clockid_t which_clock, int flags, const struct timespec* __rqtp, struct timespec* __rmtp) {
         if (unlikely(!__rqtp))
             return -EINVAL;
 

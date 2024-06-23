@@ -40,7 +40,7 @@
 
 
 
-int iso9660_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
+int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev);
@@ -66,7 +66,7 @@ int iso9660_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 #undef __
 
 
-    iso9660_t *iso9660 = (iso9660_t *)kcalloc(sizeof(iso9660_t), 1, GFP_USER);
+    iso9660_t* iso9660 = (iso9660_t*)kcalloc(sizeof(iso9660_t), 1, GFP_USER);
 
     iso9660->dev = dev;
     iso9660->dir = dir;
@@ -92,7 +92,7 @@ int iso9660_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
                 kprintf("iso9660: found ISO9660_VOLUME_DESCRIPTOR_BOOT_RECORD at sector %ld\n"
                         " - boot system id: %s\n"
                         " - boot id: %s\n",
-                        block, (char *)vd.boot_record.boot_system_id, (char *)vd.boot_record.boot_id);
+                        block, (char*)vd.boot_record.boot_system_id, (char*)vd.boot_record.boot_id);
 
 #endif
                 break;
@@ -128,9 +128,9 @@ int iso9660_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
                         " - publisher id: %s\n"
                         " - data preparer id: %s\n"
                         " - application id: %s\n",
-                        block, (char *)vd.primary.system_id, (char *)vd.primary.volume_id, le32_to_cpu(vd.primary.volume_space_size.lsb), le16_to_cpu(vd.primary.volume_set_size.lsb), le16_to_cpu(vd.primary.volume_sequence_number.lsb),
-                        le16_to_cpu(vd.primary.logical_block_size.lsb), le16_to_cpu(vd.primary.path_table_size.lsb), le32_to_cpu(vd.primary.type_l_path_table), le32_to_cpu(vd.primary.type_l_path_table_opt), (char *)vd.primary.volume_set_id,
-                        (char *)vd.primary.publisher_id, (char *)vd.primary.preparer_id, (char *)vd.primary.application_id);
+                        block, (char*)vd.primary.system_id, (char*)vd.primary.volume_id, le32_to_cpu(vd.primary.volume_space_size.lsb), le16_to_cpu(vd.primary.volume_set_size.lsb), le16_to_cpu(vd.primary.volume_sequence_number.lsb),
+                        le16_to_cpu(vd.primary.logical_block_size.lsb), le16_to_cpu(vd.primary.path_table_size.lsb), le32_to_cpu(vd.primary.type_l_path_table), le32_to_cpu(vd.primary.type_l_path_table_opt), (char*)vd.primary.volume_set_id,
+                        (char*)vd.primary.publisher_id, (char*)vd.primary.preparer_id, (char*)vd.primary.application_id);
 
 #endif
                 break;
@@ -183,7 +183,7 @@ int iso9660_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
     DEBUG_ASSERT(iso9660->block_size == ISO9660_BLOCK_SIZE);
 
 
-    dir->sb = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
     dir->sb->fsid   = FSID_ISO9660;
     dir->sb->dev    = dev;

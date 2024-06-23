@@ -36,7 +36,7 @@
 #include "procfs.h"
 
 
-int procfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
+int procfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dev == NULL);
@@ -64,7 +64,7 @@ int procfs_mount(inode_t *dev, inode_t *dir, int flags, const char *args) {
 #undef __
 
 
-    dir->sb = (struct superblock *)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
 
     dir->sb->fsid  = FSID_PROCFS;
     dir->sb->dev   = dev;

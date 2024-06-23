@@ -54,7 +54,7 @@ static ino64_t __pipefs_next_ino = PIPEFS_FIRST_INO + 1;
 
 
 
-int pipefs_close(inode_t *inode) {
+int pipefs_close(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
@@ -64,13 +64,13 @@ int pipefs_close(inode_t *inode) {
     inode->ops.write = NULL;
     inode->ops.close = NULL;
 
-    ringbuffer_destroy((ringbuffer_t *)inode->userdata);
+    ringbuffer_destroy((ringbuffer_t*)inode->userdata);
 
     return 0;
 }
 
 
-ssize_t pipefs_read(inode_t *inode, void *buf, off_t offset, size_t size) {
+ssize_t pipefs_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
@@ -83,13 +83,13 @@ ssize_t pipefs_read(inode_t *inode, void *buf, off_t offset, size_t size) {
         return 0;
 
 
-    ringbuffer_t *rb = (ringbuffer_t *)inode->userdata;
+    ringbuffer_t* rb = (ringbuffer_t*)inode->userdata;
 
     return ringbuffer_read(rb, buf, size);
 }
 
 
-ssize_t pipefs_write(inode_t *inode, const void *buf, off_t offset, size_t size) {
+ssize_t pipefs_write(inode_t* inode, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
@@ -102,18 +102,18 @@ ssize_t pipefs_write(inode_t *inode, const void *buf, off_t offset, size_t size)
         return 0;
 
 
-    ringbuffer_t *rb = (ringbuffer_t *)inode->userdata;
+    ringbuffer_t* rb = (ringbuffer_t*)inode->userdata;
 
     return ringbuffer_write(rb, buf, size);
 }
 
-int pipefs_getattr(inode_t *inode, struct stat *st) {
+int pipefs_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(st);
 
-    ringbuffer_t *rb = (ringbuffer_t *)inode->userdata;
+    ringbuffer_t* rb = (ringbuffer_t*)inode->userdata;
 
     st->st_ino     = inode->ino;
     st->st_mode    = S_IFIFO | 0666;
@@ -132,7 +132,7 @@ int pipefs_getattr(inode_t *inode, struct stat *st) {
 
 
 
-inode_t *vfs_mkfifo(inode_t *inode, size_t bufsize, int flags) {
+inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(bufsize);
@@ -140,7 +140,7 @@ inode_t *vfs_mkfifo(inode_t *inode, size_t bufsize, int flags) {
     __unused_param(flags);
 
 
-    ringbuffer_t *rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
+    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
 
     if (unlikely(!rb))
         return errno = ENOMEM, NULL;
@@ -161,9 +161,9 @@ inode_t *vfs_mkfifo(inode_t *inode, size_t bufsize, int flags) {
     return inode;
 }
 
-inode_t *pipefs_inode() {
+inode_t* pipefs_inode() {
 
-    inode_t *inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
     if (unlikely(!inode))
         return errno = ENOMEM, NULL;

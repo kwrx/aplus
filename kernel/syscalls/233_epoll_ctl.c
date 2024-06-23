@@ -52,4 +52,4 @@
 
 struct epoll_event;
 
-SYSCALL(233, epoll_ctl, long sys_epoll_ctl(int epfd, int op, int fd, struct epoll_event *event) { return -ENOSYS; });
+SYSCALL(233, epoll_ctl, long sys_epoll_ctl(int epfd, int op, int fd, struct epoll_event* event) { return -ENOSYS; });

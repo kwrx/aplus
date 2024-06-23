@@ -39,7 +39,7 @@
 
 
 
-void ext2_utils_read_inode(ext2_t *ext2, ino_t ino, void *data) {
+void ext2_utils_read_inode(ext2_t* ext2, ino_t ino, void* data) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -57,7 +57,7 @@ void ext2_utils_read_inode(ext2_t *ext2, ino_t ino, void *data) {
 
 
 
-void ext2_utils_write_inode(ext2_t *ext2, ino_t ino, const void *data) {
+void ext2_utils_write_inode(ext2_t* ext2, ino_t ino, const void* data) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -71,7 +71,7 @@ void ext2_utils_write_inode(ext2_t *ext2, ino_t ino, const void *data) {
 
 
 
-void ext2_utils_read_inode_data(ext2_t *ext2, uint32_t *blocks, uint32_t block, uint32_t offset, void *data, size_t size) {
+void ext2_utils_read_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, void* data, size_t size) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(blocks);
@@ -135,7 +135,7 @@ void ext2_utils_read_inode_data(ext2_t *ext2, uint32_t *blocks, uint32_t block, 
 
 
 
-void ext2_utils_write_inode_data(ext2_t *ext2, uint32_t *blocks, uint32_t block, uint32_t offset, const void *data, size_t size) {
+void ext2_utils_write_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block, uint32_t offset, const void* data, size_t size) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(blocks);
@@ -199,7 +199,7 @@ void ext2_utils_write_inode_data(ext2_t *ext2, uint32_t *blocks, uint32_t block,
 }
 
 
-void ext2_utils_alloc_inode_data(ext2_t *ext2, uint32_t *blocks, uint32_t block) {
+void ext2_utils_alloc_inode_data(ext2_t* ext2, uint32_t* blocks, uint32_t block) {
 
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(blocks);

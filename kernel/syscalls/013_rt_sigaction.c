@@ -55,7 +55,7 @@
 struct sigaction;
 
 SYSCALL(
-    13, rt_sigaction, long sys_rt_sigaction(int signo, const struct ksigaction *act, struct ksigaction *oldact, size_t size) {
+    13, rt_sigaction, long sys_rt_sigaction(int signo, const struct ksigaction* act, struct ksigaction* oldact, size_t size) {
         DEBUG_ASSERT(current_task);
 
 

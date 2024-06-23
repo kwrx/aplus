@@ -11,11 +11,11 @@
 #include <sys/ioctl.h>
 
 
-static wc_display_t *queue = NULL;
+static wc_display_t* queue = NULL;
 
 
 
-static int wc_display_destroy(struct wc_display *display) {
+static int wc_display_destroy(struct wc_display* display) {
 
     assert(display);
 
@@ -38,7 +38,7 @@ static int wc_display_destroy(struct wc_display *display) {
 
     } else {
 
-        struct wc_display *prev = queue;
+        struct wc_display* prev = queue;
 
         while (prev && prev->next != display) {
             prev = prev->next;
@@ -55,18 +55,18 @@ static int wc_display_destroy(struct wc_display *display) {
 }
 
 
-static int wc_display_create(const char *device, size_t offset_x, size_t offset_y) {
+static int wc_display_create(const char* device, size_t offset_x, size_t offset_y) {
 
     assert(device);
 
 
     int fd = -1;
 
-    cairo_t *cr              = NULL;
-    cairo_surface_t *surface = NULL;
+    cairo_t* cr              = NULL;
+    cairo_surface_t* surface = NULL;
 
 
-    wc_display_t *display = NULL;
+    wc_display_t* display = NULL;
 
     if (!(display = calloc(1, sizeof(struct wc_display)))) {
         goto fail;
@@ -100,19 +100,19 @@ static int wc_display_create(const char *device, size_t offset_x, size_t offset_
     switch (var.bits_per_pixel) {
 
         case 8:
-            surface = cairo_image_surface_create_for_data((unsigned char *)fix.smem_start, CAIRO_FORMAT_A8, var.xres, var.yres, fix.line_length);
+            surface = cairo_image_surface_create_for_data((unsigned char*)fix.smem_start, CAIRO_FORMAT_A8, var.xres, var.yres, fix.line_length);
             break;
 
         case 16:
-            surface = cairo_image_surface_create_for_data((unsigned char *)fix.smem_start, CAIRO_FORMAT_RGB16_565, var.xres, var.yres, fix.line_length);
+            surface = cairo_image_surface_create_for_data((unsigned char*)fix.smem_start, CAIRO_FORMAT_RGB16_565, var.xres, var.yres, fix.line_length);
             break;
 
         case 24:
-            surface = cairo_image_surface_create_for_data((unsigned char *)fix.smem_start, CAIRO_FORMAT_RGB24, var.xres, var.yres, fix.line_length);
+            surface = cairo_image_surface_create_for_data((unsigned char*)fix.smem_start, CAIRO_FORMAT_RGB24, var.xres, var.yres, fix.line_length);
             break;
 
         case 32:
-            surface = cairo_image_surface_create_for_data((unsigned char *)fix.smem_start, CAIRO_FORMAT_ARGB32, var.xres, var.yres, fix.line_length);
+            surface = cairo_image_surface_create_for_data((unsigned char*)fix.smem_start, CAIRO_FORMAT_ARGB32, var.xres, var.yres, fix.line_length);
             break;
 
         default:
@@ -200,9 +200,9 @@ int wc_display_initialize(void) {
 }
 
 
-struct wc_display *wc_display_at_position(uint16_t x, uint16_t y) {
+struct wc_display* wc_display_at_position(uint16_t x, uint16_t y) {
 
-    struct wc_display *display = queue;
+    struct wc_display* display = queue;
 
     while (display) {
 
@@ -218,13 +218,13 @@ struct wc_display *wc_display_at_position(uint16_t x, uint16_t y) {
 }
 
 
-struct wc_display *wc_display_primary() {
+struct wc_display* wc_display_primary() {
 
     return wc_ref_inc(&(queue->ref)), queue;
 }
 
 
-struct wc_display *wc_display_next(struct wc_display *display) {
+struct wc_display* wc_display_next(struct wc_display* display) {
 
     if (!display)
         return NULL;

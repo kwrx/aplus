@@ -64,17 +64,17 @@
     #include "netif/ppp/lcp.h"
 
     #if defined(SUNOS4)
-extern char *strerror();
+extern char* strerror();
     #endif
 
-static void ppp_logit(int level, const char *fmt, va_list args);
-static void ppp_log_write(int level, char *buf);
+static void ppp_logit(int level, const char* fmt, va_list args);
+static void ppp_log_write(int level, char* buf);
     #if PRINTPKT_SUPPORT
-static void ppp_vslp_printer(void *arg, const char *fmt, ...);
-static void ppp_format_packet(const u_char *p, int len, void (*printer)(void *, const char *, ...), void *arg);
+static void ppp_vslp_printer(void* arg, const char* fmt, ...);
+static void ppp_format_packet(const u_char* p, int len, void (*printer)(void*, const char*, ...), void* arg);
 
 struct buffer_info {
-        char *ptr;
+        char* ptr;
         int len;
 };
     #endif /* PRINTPKT_SUPPORT */
@@ -83,7 +83,7 @@ struct buffer_info {
  * ppp_strlcpy - like strcpy/strncpy, doesn't overflow destination buffer,
  * always leaves destination null-terminated (for len > 0).
  */
-size_t ppp_strlcpy(char *dest, const char *src, size_t len) {
+size_t ppp_strlcpy(char* dest, const char* src, size_t len) {
     size_t ret = strlen(src);
 
     if (len != 0) {
@@ -101,7 +101,7 @@ size_t ppp_strlcpy(char *dest, const char *src, size_t len) {
  * ppp_strlcat - like strcat/strncat, doesn't overflow destination buffer,
  * always leaves destination null-terminated (for len > 0).
  */
-size_t ppp_strlcat(char *dest, const char *src, size_t len) {
+size_t ppp_strlcat(char* dest, const char* src, size_t len) {
     size_t dlen = strlen(dest);
 
     return dlen + ppp_strlcpy(dest + dlen, src, (len > dlen ? len - dlen : 0));
@@ -116,7 +116,7 @@ size_t ppp_strlcat(char *dest, const char *src, size_t len) {
  * Doesn't do floating-point formats.
  * Returns the number of chars put into buf.
  */
-int ppp_slprintf(char *buf, int buflen, const char *fmt, ...) {
+int ppp_slprintf(char* buf, int buflen, const char* fmt, ...) {
     va_list args;
     int n;
 
@@ -131,14 +131,14 @@ int ppp_slprintf(char *buf, int buflen, const char *fmt, ...) {
      */
     #define OUTCHAR(c) (buflen > 0 ? (--buflen, *buf++ = (c)) : 0)
 
-int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
+int ppp_vslprintf(char* buf, int buflen, const char* fmt, va_list args) {
     int c, i, n;
     int width, prec, fillch;
     int base, len, neg, quoted;
     unsigned long val = 0;
-    const char *f;
+    const char* f;
     char *str, *buf0;
-    const unsigned char *p;
+    const unsigned char* p;
     char num[32];
     #if 0  /* need port */
     time_t t;
@@ -252,7 +252,7 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
 	    break;
     #endif /* unused (and wrong on LLP64 systems) */
             case 's':
-                str = va_arg(args, char *);
+                str = va_arg(args, char*);
                 break;
             case 'c':
                 num[0] = va_arg(args, int);
@@ -281,13 +281,13 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
             case 'v': /* "visible" string */
             case 'q': /* quoted string */
                 quoted = c == 'q';
-                p      = va_arg(args, unsigned char *);
+                p      = va_arg(args, unsigned char*);
                 if (p == NULL)
-                    p = (const unsigned char *)"<NULL>";
+                    p = (const unsigned char*)"<NULL>";
                 if (fillch == '0' && prec >= 0) {
                     n = prec;
                 } else {
-                    n = strlen((const char *)p);
+                    n = strlen((const char*)p);
                     if (prec >= 0 && n > prec)
                         n = prec;
                 }
@@ -338,7 +338,7 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
             case 'P': /* print PPP packet */
                 bufinfo.ptr = buf;
                 bufinfo.len = buflen + 1;
-                p           = va_arg(args, unsigned char *);
+                p           = va_arg(args, unsigned char*);
                 n           = va_arg(args, int);
                 ppp_format_packet(p, n, ppp_vslp_printer, &bufinfo);
                 buf    = bufinfo.ptr;
@@ -346,7 +346,7 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
                 continue;
     #endif /* PRINTPKT_SUPPORT */
             case 'B':
-                p = va_arg(args, unsigned char *);
+                p = va_arg(args, unsigned char*);
                 for (n = prec; n > 0; --n) {
                     c = *p++;
                     if (fillch == ' ')
@@ -411,13 +411,13 @@ int ppp_vslprintf(char *buf, int buflen, const char *fmt, va_list args) {
 /*
  * vslp_printer - used in processing a %P format
  */
-static void ppp_vslp_printer(void *arg, const char *fmt, ...) {
+static void ppp_vslp_printer(void* arg, const char* fmt, ...) {
     int n;
     va_list pvar;
-    struct buffer_info *bi;
+    struct buffer_info* bi;
 
     va_start(pvar, fmt);
-    bi = (struct buffer_info *)arg;
+    bi = (struct buffer_info*)arg;
     n  = ppp_vslprintf(bi->ptr, bi->len, fmt, pvar);
     va_end(pvar);
 
@@ -449,10 +449,10 @@ log_packet(p, len, prefix, level)
  * ppp_format_packet - make a readable representation of a packet,
  * calling `printer(arg, format, ...)' to output it.
  */
-static void ppp_format_packet(const u_char *p, int len, void (*printer)(void *, const char *, ...), void *arg) {
+static void ppp_format_packet(const u_char* p, int len, void (*printer)(void*, const char*, ...), void* arg) {
     int i, n;
     u_short proto;
-    const struct protent *protp;
+    const struct protent* protp;
 
     if (len >= 2) {
         GETSHORT(proto, p);
@@ -574,7 +574,7 @@ pr_log (void *arg, const char *fmt, ...)
  * ppp_print_string - print a readable representation of a string using
  * printer.
  */
-void ppp_print_string(const u_char *p, int len, void (*printer)(void *, const char *, ...), void *arg) {
+void ppp_print_string(const u_char* p, int len, void (*printer)(void*, const char*, ...), void* arg) {
     int c;
 
     printer(arg, "\"");
@@ -607,14 +607,14 @@ void ppp_print_string(const u_char *p, int len, void (*printer)(void *, const ch
 /*
  * ppp_logit - does the hard work for fatal et al.
  */
-static void ppp_logit(int level, const char *fmt, va_list args) {
+static void ppp_logit(int level, const char* fmt, va_list args) {
     char buf[1024];
 
     ppp_vslprintf(buf, sizeof(buf), fmt, args);
     ppp_log_write(level, buf);
 }
 
-static void ppp_log_write(int level, char *buf) {
+static void ppp_log_write(int level, char* buf) {
     LWIP_UNUSED_ARG(level); /* necessary if PPPDEBUG is defined to an empty function */
     LWIP_UNUSED_ARG(buf);
     PPPDEBUG(level, ("%s\n", buf));
@@ -634,7 +634,7 @@ static void ppp_log_write(int level, char *buf) {
 /*
  * ppp_fatal - log an error message and die horribly.
  */
-void ppp_fatal(const char *fmt, ...) {
+void ppp_fatal(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -647,7 +647,7 @@ void ppp_fatal(const char *fmt, ...) {
 /*
  * ppp_error - log an error message.
  */
-void ppp_error(const char *fmt, ...) {
+void ppp_error(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -661,7 +661,7 @@ void ppp_error(const char *fmt, ...) {
 /*
  * ppp_warn - log a warning message.
  */
-void ppp_warn(const char *fmt, ...) {
+void ppp_warn(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -672,7 +672,7 @@ void ppp_warn(const char *fmt, ...) {
 /*
  * ppp_notice - log a notice-level message.
  */
-void ppp_notice(const char *fmt, ...) {
+void ppp_notice(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -683,7 +683,7 @@ void ppp_notice(const char *fmt, ...) {
 /*
  * ppp_info - log an informational message.
  */
-void ppp_info(const char *fmt, ...) {
+void ppp_info(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -694,7 +694,7 @@ void ppp_info(const char *fmt, ...) {
 /*
  * ppp_dbglog - log a debug message.
  */
-void ppp_dbglog(const char *fmt, ...) {
+void ppp_dbglog(const char* fmt, ...) {
     va_list pvar;
 
     va_start(pvar, fmt);
@@ -707,7 +707,7 @@ void ppp_dbglog(const char *fmt, ...) {
  * ppp_dump_packet - print out a packet in readable form if it is interesting.
  * Assumes len >= PPP_HDRLEN.
  */
-void ppp_dump_packet(ppp_pcb *pcb, const char *tag, unsigned char *p, int len) {
+void ppp_dump_packet(ppp_pcb* pcb, const char* tag, unsigned char* p, int len) {
     int proto;
 
     /*
@@ -721,7 +721,7 @@ void ppp_dump_packet(ppp_pcb *pcb, const char *tag, unsigned char *p, int len) {
      * don't print valid LCP echo request/reply packets if the link is up.
      */
     if (proto == PPP_LCP && pcb->phase == PPP_PHASE_RUNNING && len >= 2 + HEADERLEN) {
-        unsigned char *lcp = p + 2;
+        unsigned char* lcp = p + 2;
         int l              = (lcp[2] << 8) + lcp[3];
 
         if ((lcp[0] == ECHOREQ || lcp[0] == ECHOREP) && l >= HEADERLEN && l <= len - 2)

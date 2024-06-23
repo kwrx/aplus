@@ -50,4 +50,4 @@
 
 struct rusage;
 
-SYSCALL(98, getrusage, long sys_getrusage(int who, struct rusage *ru) { return -ENOSYS; });
+SYSCALL(98, getrusage, long sys_getrusage(int who, struct rusage* ru) { return -ENOSYS; });

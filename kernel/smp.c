@@ -29,7 +29,7 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 
-__returns_nonnull cpu_t *smp_get_current_cpu(void) {
+__returns_nonnull cpu_t* smp_get_current_cpu(void) {
 
     cpuid_t id = arch_cpu_get_current_id();
 
@@ -49,7 +49,7 @@ __returns_nonnull cpu_t *smp_get_current_cpu(void) {
     kpanicf("smp_get_current_cpu(): PANIC! wrong cpu id(%ld)\n", id);
 }
 
-__returns_nonnull cpu_t *smp_get_cpu(int index) {
+__returns_nonnull cpu_t* smp_get_cpu(int index) {
 
     DEBUG_ASSERT(index >= 0);
     DEBUG_ASSERT(index <= SMP_CPU_MAX - 1);

@@ -334,7 +334,7 @@ void lwip_init(void) {
 #ifndef LWIP_SKIP_CONST_CHECK
     int a = 0;
     LWIP_UNUSED_ARG(a);
-    LWIP_ASSERT("LWIP_CONST_CAST not implemented correctly. Check your lwIP port.", LWIP_CONST_CAST(void *, &a) == &a);
+    LWIP_ASSERT("LWIP_CONST_CAST not implemented correctly. Check your lwIP port.", LWIP_CONST_CAST(void*, &a) == &a);
 #endif
 #ifndef LWIP_SKIP_PACKING_CHECK
     LWIP_ASSERT("Struct packing not implemented correctly. Check your lwIP port.", sizeof(struct packed_struct_test) == PACKED_STRUCT_TEST_EXPECTED_SIZE);

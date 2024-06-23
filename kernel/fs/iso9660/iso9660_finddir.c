@@ -38,7 +38,7 @@
 
 
 
-inode_t *iso9660_finddir(inode_t *inode, const char *name) {
+inode_t* iso9660_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -48,10 +48,10 @@ inode_t *iso9660_finddir(inode_t *inode, const char *name) {
     DEBUG_ASSERT(name);
 
 
-    iso9660_t *iso9660 = (iso9660_t *)inode->sb->fsinfo;
+    iso9660_t* iso9660 = (iso9660_t*)inode->sb->fsinfo;
 
 
-    iso9660_directory_record_t *record = NULL;
+    iso9660_directory_record_t* record = NULL;
 
     if (unlikely(inode == inode->sb->root)) {
 
@@ -59,7 +59,7 @@ inode_t *iso9660_finddir(inode_t *inode, const char *name) {
 
     } else {
 
-        iso9660_inode_t *e = cache_get(&inode->sb->cache, inode->userdata);
+        iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
 
         if (unlikely(!e))
             return errno = EIO, NULL;
@@ -83,7 +83,7 @@ inode_t *iso9660_finddir(inode_t *inode, const char *name) {
 
         if (unlikely(length > 0)) {
 
-            iso9660_inode_t *child;
+            iso9660_inode_t* child;
 
             if (unlikely((child = cache_get(&inode->sb->cache, position)) == NULL))
                 break;
@@ -92,7 +92,7 @@ inode_t *iso9660_finddir(inode_t *inode, const char *name) {
             if (unlikely(strncmp(child->name, name, ISO9660_MAX_NAME) == 0)) {
 
 
-                inode_t *d = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+                inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
 
                 d->ino    = child->st.st_ino;
                 d->sb     = inode->sb;
@@ -123,7 +123,7 @@ inode_t *iso9660_finddir(inode_t *inode, const char *name) {
                     d->ops.readlink = iso9660_readlink;
                 }
 
-                d->userdata = (void *)((uintptr_t)position);
+                d->userdata = (void*)((uintptr_t)position);
 
 
                 spinlock_init(&d->lock);

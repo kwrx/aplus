@@ -53,4 +53,4 @@
 
 typedef long mqd_t;
 
-SYSCALL(242, mq_timedsend, long sys_mq_timedsend(mqd_t mqdes, const char *msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec *abs_timeout) { return -ENOSYS; });
+SYSCALL(242, mq_timedsend, long sys_mq_timedsend(mqd_t mqdes, const char* msg_ptr, size_t msg_len, unsigned int msg_prio, const struct timespec* abs_timeout) { return -ENOSYS; });

@@ -44,7 +44,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-int video_getattr(device_t *device, struct stat *st) {
+int video_getattr(device_t* device, struct stat* st) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(st);
@@ -67,7 +67,7 @@ int video_getattr(device_t *device, struct stat *st) {
 }
 
 
-int video_ioctl(device_t *device, int req, void *arg) {
+int video_ioctl(device_t* device, int req, void* arg) {
 
     DEBUG_ASSERT(device);
 
@@ -110,17 +110,17 @@ int video_ioctl(device_t *device, int req, void *arg) {
 }
 
 
-void video_init(device_t *device) {
+void video_init(device_t* device) {
     DEBUG_ASSERT(device);
 }
 
 
-void video_dnit(device_t *device) {
+void video_dnit(device_t* device) {
     DEBUG_ASSERT(device);
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
     (void)args;
 }
 

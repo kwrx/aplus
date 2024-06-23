@@ -55,7 +55,7 @@
  */
 
 SYSCALL(
-    14, rt_sigprocmask, long sys_rt_sigprocmask(int how, sigset_t *set, sigset_t *oset, size_t sigsetsize) {
+    14, rt_sigprocmask, long sys_rt_sigprocmask(int how, sigset_t* set, sigset_t* oset, size_t sigsetsize) {
         if (unlikely(set && !uio_check(set, R_OK)))
             return -EFAULT;
 
@@ -107,7 +107,7 @@ SYSCALL(
 
             for (size_t i = current_task->sigpending.size; i > 0; i--) {
 
-                siginfo_t *info;
+                siginfo_t* info;
                 if ((info = queue_pop(&current_task->sigpending))) {
 
                     if (unlikely(sighand->sigmask.__bits[info->si_signo / (sizeof(long) << 3)] & (1 << (info->si_signo % (sizeof(long) << 3)))))

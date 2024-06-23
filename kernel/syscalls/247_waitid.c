@@ -54,4 +54,4 @@
 struct siginfo;
 struct rusage;
 
-SYSCALL(247, waitid, long sys_waitid(int which, pid_t pid, struct siginfo *infop, int options, struct rusage *ru) { return -ENOSYS; });
+SYSCALL(247, waitid, long sys_waitid(int which, pid_t pid, struct siginfo* infop, int options, struct rusage* ru) { return -ENOSYS; });

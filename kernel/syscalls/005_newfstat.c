@@ -52,7 +52,7 @@
  */
 
 SYSCALL(
-    5, newfstat, long sys_newfstat(unsigned int fd, struct stat *statbuf) {
+    5, newfstat, long sys_newfstat(unsigned int fd, struct stat* statbuf) {
         if (unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
@@ -72,9 +72,7 @@ SYSCALL(
                 return -EBADF;
 
 
-            __lock(&fds->descriptors[fd].ref->lock, {
-                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
-            });
+            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf); });
         });
 
 

@@ -58,7 +58,7 @@ typedef uint32_t socklen_t;
  */
 
 SYSCALL(
-    42, connect, long sys_connect(int fd, struct sockaddr *sockaddr, socklen_t socklen) {
+    42, connect, long sys_connect(int fd, struct sockaddr* sockaddr, socklen_t socklen) {
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))
@@ -79,7 +79,7 @@ SYSCALL(
 
         ssize_t e;
 
-        if ((e = lwip_connect(NETWORK_SOCKFD(fd), (struct sockaddr *)__sockaddr, socklen)) < 0)
+        if ((e = lwip_connect(NETWORK_SOCKFD(fd), (struct sockaddr*)__sockaddr, socklen)) < 0)
             return -errno;
 
         return e;

@@ -34,7 +34,7 @@
 #include <aplus/vfs.h>
 
 
-int procfs_umount(inode_t *dir) {
+int procfs_umount(inode_t* dir) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(dir->sb);

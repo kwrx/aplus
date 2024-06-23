@@ -52,7 +52,7 @@
  */
 
 SYSCALL(
-    201, time, long sys_time(time_t *tloc) {
+    201, time, long sys_time(time_t* tloc) {
         uint64_t tm = arch_timer_gettime();
 
 

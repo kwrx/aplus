@@ -35,11 +35,11 @@
 
 
 
-list(module_t *, m_queue);
-list(symbol_t *, m_symtab);
+list(module_t*, m_queue);
+list(symbol_t*, m_symtab);
 
 
-static void module_export(module_t *mod, const char *name, void *address, size_t size) {
+static void module_export(module_t* mod, const char* name, void* address, size_t size) {
 
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(address);
@@ -73,7 +73,7 @@ static void module_export(module_t *mod, const char *name, void *address, size_t
     }
 
 
-    symbol_t *s = (symbol_t *)kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
+    symbol_t* s = (symbol_t*)kmalloc(sizeof(symbol_t) + strlen(name) + 1, GFP_KERNEL);
 
     s->address = address;
     s->size    = size;
@@ -85,7 +85,7 @@ static void module_export(module_t *mod, const char *name, void *address, size_t
 
 
 
-static void *module_resolve(module_t *m, const char *name) {
+static void* module_resolve(module_t* m, const char* name) {
 
     list_each(m_symtab, v) {
 
@@ -94,8 +94,8 @@ static void *module_resolve(module_t *m, const char *name) {
     }
 
 
-    void *p;
-    if ((p = (void *)runtime_get_address(name))) {
+    void* p;
+    if ((p = (void*)runtime_get_address(name))) {
 
         return module_export(NULL, name, p, 0), p;
     }
@@ -107,7 +107,7 @@ static void *module_resolve(module_t *m, const char *name) {
 
 
 
-void module_run(module_t *m) {
+void module_run(module_t* m) {
 
     if (m->status == MODULE_STATUS_LOADED)
         return;
@@ -128,7 +128,7 @@ void module_run(module_t *m) {
 
 #define find(s)                                                        \
     ({                                                                 \
-        module_t *r = NULL;                                            \
+        module_t* r = NULL;                                            \
         list_each(m_queue, i) {                                        \
             if (strcmp(i->name, s) != 0)                               \
                 continue;                                              \
@@ -157,18 +157,18 @@ void module_run(module_t *m) {
 
             int i = 0;
 
-            for (char *s = strchr(m->deps, ','); s; s = strchr(++s, ','))
+            for (char* s = strchr(m->deps, ','); s; s = strchr(++s, ','))
                 i++;
 
 
-            module_t *deps[i + 1];
+            module_t* deps[i + 1];
 
             i = 0;
 
 
-            char *tok = (char *)m->deps;
+            char* tok = (char*)m->deps;
 
-            for (char *s = strtok_r((char *)m->deps, ",", &tok); s; s = strtok_r(NULL, ",", &tok))
+            for (char* s = strtok_r((char*)m->deps, ",", &tok); s; s = strtok_r(NULL, ",", &tok))
                 deps[i++] = find(s);
 
             while (i) {
@@ -182,10 +182,10 @@ void module_run(module_t *m) {
 
     for (Elf_Xword i = 0; i < m->exe.symtab->sh_size / m->exe.symtab->sh_entsize; i++) {
 
-#define syname(p) ((const char *)((uintptr_t)m->exe.header + m->exe.strtab->sh_offset + p))
+#define syname(p) ((const char*)((uintptr_t)m->exe.header + m->exe.strtab->sh_offset + p))
 
 
-        Elf_Sym *s = &((Elf_Sym *)((uintptr_t)m->exe.header + m->exe.symtab->sh_offset))[i];
+        Elf_Sym* s = &((Elf_Sym*)((uintptr_t)m->exe.header + m->exe.symtab->sh_offset))[i];
 
         switch (s->st_shndx) {
 
@@ -201,7 +201,7 @@ void module_run(module_t *m) {
 
                 if (ELF_ST_TYPE(s->st_info) == STT_FUNC) {
                     if (ELF_ST_BIND(s->st_info) == STB_GLOBAL) {
-                        module_export(m, syname(s->st_name), (void *)s->st_value, s->st_size);
+                        module_export(m, syname(s->st_name), (void*)s->st_value, s->st_size);
                     }
                 }
 
@@ -225,14 +225,14 @@ void module_run(module_t *m) {
         if (m->exe.section[i].sh_type != SHT_REL)
             continue;
 
-        Elf_Rel *r = (Elf_Rel *)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
-        Elf_Sym *s = (Elf_Sym *)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
+        Elf_Rel* r = (Elf_Rel*)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Sym* s = (Elf_Sym*)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
 
 
         for (Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
-            Elf_Addr *obj = (Elf_Addr *)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
-            Elf_Sym *sym  = &s[ELF_R_SYM(r[j].r_info)];
+            Elf_Addr* obj = (Elf_Addr*)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
+            Elf_Sym* sym  = &s[ELF_R_SYM(r[j].r_info)];
 
 
 #define A ((Elf_Addr) * obj)
@@ -242,9 +242,9 @@ void module_run(module_t *m) {
 #define Z ((Elf_Addr)sym->st_size)
 #define B ((Elf_Addr)m->core.ptr)
 
-#define _(x, y, z)            \
-    case x: {                 \
-        *(z *)(obj) = (z)(y); \
+#define _(x, y, z)           \
+    case x: {                \
+        *(z*)(obj) = (z)(y); \
     } break;
 
 
@@ -325,14 +325,14 @@ void module_run(module_t *m) {
         if (m->exe.section[i].sh_type != SHT_RELA)
             continue;
 
-        Elf_Rela *r = (Elf_Rela *)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
-        Elf_Sym *s  = (Elf_Sym *)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
+        Elf_Rela* r = (Elf_Rela*)((uintptr_t)m->exe.header + m->exe.section[i].sh_offset);
+        Elf_Sym* s  = (Elf_Sym*)((uintptr_t)m->exe.header + m->exe.section[m->exe.section[i].sh_link].sh_offset);
 
 
         for (Elf_Xword j = 0; j < m->exe.section[i].sh_size / m->exe.section[i].sh_entsize; j++) {
 
-            Elf_Addr *obj = (Elf_Addr *)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
-            Elf_Sym *sym  = &s[ELF_R_SYM(r[j].r_info)];
+            Elf_Addr* obj = (Elf_Addr*)((uintptr_t)m->core.ptr + m->exe.section[m->exe.section[i].sh_info].sh_addr + r[j].r_offset);
+            Elf_Sym* sym  = &s[ELF_R_SYM(r[j].r_info)];
 
 
 #define A ((Elf_Addr)r[j].r_addend)
@@ -342,9 +342,9 @@ void module_run(module_t *m) {
 #define Z ((Elf_Addr)sym->st_size)
 #define B ((Elf_Addr)m->core.ptr)
 
-#define _(x, y, z)            \
-    case x: {                 \
-        *(z *)(obj) = (z)(y); \
+#define _(x, y, z)           \
+    case x: {                \
+        *(z*)(obj) = (z)(y); \
     } break;
 
 
@@ -446,10 +446,10 @@ void module_init(void) {
 
 
 
-        module_t *m = (module_t *)kcalloc(1, sizeof(module_t), GFP_KERNEL);
+        module_t* m = (module_t*)kcalloc(1, sizeof(module_t), GFP_KERNEL);
 
 
-        m->exe.header = (Elf_Ehdr *)arch_vmm_p2v(core->modules.ko[i].ptr, ARCH_VMM_AREA_HEAP);
+        m->exe.header = (Elf_Ehdr*)arch_vmm_p2v(core->modules.ko[i].ptr, ARCH_VMM_AREA_HEAP);
 
         DEBUG_ASSERT(m->exe.header);
         DEBUG_ASSERT(m->exe.header->e_ident[EI_MAG0] == ELFMAG0);
@@ -459,7 +459,7 @@ void module_init(void) {
         DEBUG_ASSERT(m->exe.header->e_type == ET_REL);
 
 
-        m->exe.section  = (Elf_Shdr *)((uintptr_t)m->exe.header + m->exe.header->e_shoff);
+        m->exe.section  = (Elf_Shdr*)((uintptr_t)m->exe.header + m->exe.header->e_shoff);
         m->exe.shstrtab = &m->exe.section[m->exe.header->e_shstrndx];
 
         DEBUG_ASSERT(m->exe.section);
@@ -468,14 +468,14 @@ void module_init(void) {
 
         for (Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
 
-#define syname(p) ((const char *)((uintptr_t)m->exe.header + m->exe.shstrtab->sh_offset + p))
+#define syname(p) ((const char*)((uintptr_t)m->exe.header + m->exe.shstrtab->sh_offset + p))
 
 
             if (strcmp(syname(m->exe.section[j].sh_name), ".module_name") == 0)
-                m->name = (const char *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
+                m->name = (const char*)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
 
             if (strcmp(syname(m->exe.section[j].sh_name), ".module_deps") == 0)
-                m->deps = (const char *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
+                m->deps = (const char*)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset);
 
 
 #undef syname
@@ -499,7 +499,7 @@ void module_init(void) {
         }
 
 
-        m->core.ptr = (void *)kmalloc(m->core.size, GFP_KERNEL);
+        m->core.ptr = (void*)kmalloc(m->core.size, GFP_KERNEL);
 
 
         for (Elf_Half j = 1; j < m->exe.header->e_shnum; j++) {
@@ -521,7 +521,7 @@ void module_init(void) {
                     if (m->exe.section[j].sh_size == 0)
                         break;
 
-                    memcpy((void *)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), (void *)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset), m->exe.section[j].sh_size);
+                    memcpy((void*)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), (void*)((uintptr_t)m->exe.header + m->exe.section[j].sh_offset), m->exe.section[j].sh_size);
 
                     break;
 
@@ -530,7 +530,7 @@ void module_init(void) {
                     if (m->exe.section[j].sh_size == 0)
                         break;
 
-                    memset((void *)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), 0, m->exe.section[j].sh_size);
+                    memset((void*)((uintptr_t)m->core.ptr + m->exe.section[j].sh_addr), 0, m->exe.section[j].sh_size);
 
                     break;
 
@@ -548,7 +548,7 @@ void module_init(void) {
 
         m->status   = MODULE_STATUS_READY;
         m->refcount = 1;
-        m->args     = (const char *)&core->modules.ko[i].cmdline;
+        m->args     = (const char*)&core->modules.ko[i].cmdline;
 
 
         list_each(m_queue, v) {

@@ -31,7 +31,7 @@
 
 
 
-void sem_init(semaphore_t *s, uint32_t value) {
+void sem_init(semaphore_t* s, uint32_t value) {
 
     DEBUG_ASSERT(s);
     DEBUG_ASSERT(value >= 0);
@@ -40,9 +40,9 @@ void sem_init(semaphore_t *s, uint32_t value) {
 }
 
 #if DEBUG_LEVEL_TRACE
-void __sem_wait(semaphore_t *s, const char *FUNC, const char *FILE, int LINE) {
+void __sem_wait(semaphore_t* s, const char* FUNC, const char* FILE, int LINE) {
 #else
-void sem_wait(semaphore_t *s) {
+void sem_wait(semaphore_t* s) {
 #endif
 
     DEBUG_ASSERT(s);
@@ -69,7 +69,7 @@ void sem_wait(semaphore_t *s) {
 
 
 
-int sem_trywait(semaphore_t *s) {
+int sem_trywait(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 
@@ -81,7 +81,7 @@ int sem_trywait(semaphore_t *s) {
 }
 
 
-void sem_post(semaphore_t *s) {
+void sem_post(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 

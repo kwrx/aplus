@@ -52,7 +52,7 @@ static spinlock_t pci_msix_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OW
 
 
 
-static void pci_msix_interrupt_handler(void *frame, irq_t irq) {
+static void pci_msix_interrupt_handler(void* frame, irq_t irq) {
 
     DEBUG_ASSERT(irq > PCI_MSIX_INTR_BASE - 1);
     DEBUG_ASSERT(irq < PCI_MSIX_INTR_BASE + PCI_MSIX_DEVICES_MAX);
@@ -72,7 +72,7 @@ static void pci_msix_interrupt_handler(void *frame, irq_t irq) {
 
 
 
-int pci_find_msix(pcidev_t device, pci_msix_t *mptr) {
+int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
 
     DEBUG_ASSERT(device);
 
@@ -122,7 +122,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t *mptr) {
 
 
         msix.msix_cap  = caps;
-        msix.msix_rows = (pci_msix_row_t volatile *)mmio;
+        msix.msix_rows = (pci_msix_row_t volatile*)mmio;
 
 
 
@@ -146,7 +146,7 @@ int pci_find_msix(pcidev_t device, pci_msix_t *mptr) {
 
 
 
-void pci_msix_enable(pcidev_t device, pci_msix_t *msix) {
+void pci_msix_enable(pcidev_t device, pci_msix_t* msix) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(msix);
@@ -159,7 +159,7 @@ void pci_msix_enable(pcidev_t device, pci_msix_t *msix) {
     return pci_write(device, msix->msix_cap + 2, 2, pci_read(device, msix->msix_cap + 2, 2) | PCI_MSIX_ENABLE);
 }
 
-void pci_msix_disable(pcidev_t device, pci_msix_t *msix) {
+void pci_msix_disable(pcidev_t device, pci_msix_t* msix) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(msix);
@@ -173,7 +173,7 @@ void pci_msix_disable(pcidev_t device, pci_msix_t *msix) {
 }
 
 
-void pci_msix_mask(pcidev_t device, pci_msix_t *msix, uint32_t index) {
+void pci_msix_mask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(msix);
@@ -184,7 +184,7 @@ void pci_msix_mask(pcidev_t device, pci_msix_t *msix, uint32_t index) {
     __atomic_membarrier();
 }
 
-void pci_msix_unmask(pcidev_t device, pci_msix_t *msix, uint32_t index) {
+void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(msix);
@@ -197,7 +197,7 @@ void pci_msix_unmask(pcidev_t device, pci_msix_t *msix, uint32_t index) {
 
 
 
-int pci_msix_map_irq(pcidev_t device, pci_msix_t *msix, pci_irq_handler_t handler, pci_irq_data_t data, uint16_t index) {
+int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handler, pci_irq_data_t data, uint16_t index) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(handler);
@@ -253,7 +253,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t *msix, pci_irq_handler_t handle
 }
 
 
-int pci_msix_unmap_irq(pcidev_t device, pci_msix_t *msix) {
+int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
 
     spinlock_lock(&pci_msix_lock);
 

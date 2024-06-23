@@ -34,7 +34,7 @@ void runtime_stacktrace() {
 
     __aligned(16) uintptr_t frames[64] = {0};
 
-    arch_debug_stacktrace((uintptr_t *)&frames, sizeof(frames) / sizeof(uintptr_t));
+    arch_debug_stacktrace((uintptr_t*)&frames, sizeof(frames) / sizeof(uintptr_t));
 
 
     kprintf("--- Stacktrace for cpu(%ld), pid(%d) ---\n", current_cpu->id, current_task ? current_task->tid : -1);
@@ -45,7 +45,7 @@ void runtime_stacktrace() {
         if (!frames[i])
             break;
 
-        const char *s;
+        const char* s;
         if ((s = runtime_get_name(frames[i])))
             kprintf("[%d] 0x%8lX <%s>\n", i, frames[i], s);
         else

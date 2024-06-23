@@ -42,15 +42,15 @@
 static cache_t cache = {0};
 
 
-static inode_t *procfs_service_pid_finddir(inode_t *inode, const char *name) {
+static inode_t* procfs_service_pid_finddir(inode_t* inode, const char* name) {
     return NULL;
 }
 
-static ssize_t procfs_service_pid_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) {
+static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
     return 0;
 }
 
-static int procfs_service_pid_self_fetch(inode_t *inode, char **buf, size_t *size, void *arg) {
+static int procfs_service_pid_self_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -70,13 +70,13 @@ static int procfs_service_pid_self_fetch(inode_t *inode, char **buf, size_t *siz
 }
 
 
-static inode_t *procfs_service_pid_cache_fetch(cache_t *cache, inode_t *parent, cache_key_t key) {
+static inode_t* procfs_service_pid_cache_fetch(cache_t* cache, inode_t* parent, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(parent);
 
 
-    inode_t *inode = NULL;
+    inode_t* inode = NULL;
 
 
     pid_t pid = (pid_t)((uintptr_t)key);
@@ -99,14 +99,14 @@ static inode_t *procfs_service_pid_cache_fetch(cache_t *cache, inode_t *parent, 
     return inode;
 }
 
-static void procfs_service_pid_cache_commit(cache_t *cache, inode_t *parent, cache_key_t key, inode_t *value) {
+static void procfs_service_pid_cache_commit(cache_t* cache, inode_t* parent, cache_key_t key, inode_t* value) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(value);
     DEBUG_ASSERT(parent);
 }
 
-static void procfs_service_pid_cache_release(cache_t *cache, inode_t *parent, cache_key_t key, inode_t *value) {
+static void procfs_service_pid_cache_release(cache_t* cache, inode_t* parent, cache_key_t key, inode_t* value) {
 
     DEBUG_ASSERT(cache);
     DEBUG_ASSERT(value);
@@ -117,7 +117,7 @@ static void procfs_service_pid_cache_release(cache_t *cache, inode_t *parent, ca
 
 
 
-inode_t *procfs_service_pid_inode(inode_t *parent, pid_t pid) {
+inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid) {
 
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);
@@ -126,7 +126,7 @@ inode_t *procfs_service_pid_inode(inode_t *parent, pid_t pid) {
     return cache_get(&cache, pid);
 }
 
-void procfs_service_pid_init(inode_t *parent) {
+void procfs_service_pid_init(inode_t* parent) {
 
     cache_ops_t ops = {
         .fetch   = (cache_fetch_handler_t)procfs_service_pid_cache_fetch,

@@ -86,14 +86,14 @@
 // }
 
 
-int wc_renderer_create(struct wc_renderer **renderer, struct wc_display *display) {
+int wc_renderer_create(struct wc_renderer** renderer, struct wc_display* display) {
 
     assert(display);
     assert(renderer);
 
 
-    cairo_t *cr              = NULL;
-    cairo_surface_t *surface = NULL;
+    cairo_t* cr              = NULL;
+    cairo_surface_t* surface = NULL;
 
     surface = cairo_image_surface_create(cairo_image_surface_get_format(display->surface), cairo_image_surface_get_width(display->surface), cairo_image_surface_get_height(display->surface));
 
@@ -137,7 +137,7 @@ fail:
 }
 
 
-int wc_renderer_destroy(struct wc_renderer *renderer) {
+int wc_renderer_destroy(struct wc_renderer* renderer) {
 
     assert(renderer);
 
@@ -159,7 +159,7 @@ int wc_renderer_destroy(struct wc_renderer *renderer) {
 }
 
 
-int wc_renderer_flush(struct wc_renderer *renderer) {
+int wc_renderer_flush(struct wc_renderer* renderer) {
 
     assert(renderer);
     assert(renderer->surface);
@@ -183,7 +183,7 @@ int wc_renderer_flush(struct wc_renderer *renderer) {
 }
 
 
-int wc_renderer_clear(struct wc_renderer *renderer, double r, double g, double b) {
+int wc_renderer_clear(struct wc_renderer* renderer, double r, double g, double b) {
 
     assert(renderer);
     assert(renderer->cr);

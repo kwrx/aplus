@@ -35,7 +35,7 @@
 #include "iso9660.h"
 
 
-int iso9660_getattr(inode_t *inode, struct stat *st) {
+int iso9660_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -64,7 +64,7 @@ int iso9660_getattr(inode_t *inode, struct stat *st) {
     } else {
 
 
-        iso9660_inode_t *i = cache_get(&inode->sb->cache, inode->userdata);
+        iso9660_inode_t* i = cache_get(&inode->sb->cache, inode->userdata);
 
         memcpy(st, &i->st, sizeof(struct stat));
     }

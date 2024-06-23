@@ -66,7 +66,7 @@
 /*
  * SHA-1 context setup
  */
-void sha1_starts(sha1_context *ctx) {
+void sha1_starts(sha1_context* ctx) {
     ctx->total[0] = 0;
     ctx->total[1] = 0;
 
@@ -77,7 +77,7 @@ void sha1_starts(sha1_context *ctx) {
     ctx->state[4] = 0xC3D2E1F0;
 }
 
-static void sha1_process(sha1_context *ctx, const unsigned char data[64]) {
+static void sha1_process(sha1_context* ctx, const unsigned char data[64]) {
     unsigned long temp, W[16], A, B, C, D, E;
 
     GET_ULONG_BE(W[0], data, 0);
@@ -231,7 +231,7 @@ static void sha1_process(sha1_context *ctx, const unsigned char data[64]) {
 /*
  * SHA-1 process buffer
  */
-void sha1_update(sha1_context *ctx, const unsigned char *input, int ilen) {
+void sha1_update(sha1_context* ctx, const unsigned char* input, int ilen) {
     int fill;
     unsigned long left;
 
@@ -248,7 +248,7 @@ void sha1_update(sha1_context *ctx, const unsigned char *input, int ilen) {
         ctx->total[1]++;
 
     if (left && ilen >= fill) {
-        MEMCPY((void *)(ctx->buffer + left), input, fill);
+        MEMCPY((void*)(ctx->buffer + left), input, fill);
         sha1_process(ctx, ctx->buffer);
         input += fill;
         ilen -= fill;
@@ -262,7 +262,7 @@ void sha1_update(sha1_context *ctx, const unsigned char *input, int ilen) {
     }
 
     if (ilen > 0) {
-        MEMCPY((void *)(ctx->buffer + left), input, ilen);
+        MEMCPY((void*)(ctx->buffer + left), input, ilen);
     }
 }
 
@@ -272,7 +272,7 @@ static const unsigned char sha1_padding[64] = {0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 /*
  * SHA-1 final digest
  */
-void sha1_finish(sha1_context *ctx, unsigned char output[20]) {
+void sha1_finish(sha1_context* ctx, unsigned char output[20]) {
     unsigned long last, padn;
     unsigned long high, low;
     unsigned char msglen[8];
@@ -299,7 +299,7 @@ void sha1_finish(sha1_context *ctx, unsigned char output[20]) {
 /*
  * output = SHA-1( input buffer )
  */
-void sha1(unsigned char *input, int ilen, unsigned char output[20]) {
+void sha1(unsigned char* input, int ilen, unsigned char output[20]) {
     sha1_context ctx;
 
     sha1_starts(&ctx);

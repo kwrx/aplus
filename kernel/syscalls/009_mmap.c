@@ -204,9 +204,9 @@ SYSCALL(
         if (flags & MAP_LOCKED || flags & MAP_POPULATE) {
 
             if (flags & MAP_ANONYMOUS)
-                memset((void *)ret, 0, len);
+                memset((void*)ret, 0, len);
             else
-                sys_read(fd, (void *)start, len);
+                sys_read(fd, (void*)start, len);
         }
 
 

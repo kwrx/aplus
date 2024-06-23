@@ -35,7 +35,7 @@
 #include <dev/interface.h>
 
 
-static bool detect_gpt_partition_table(device_t *device) {
+static bool detect_gpt_partition_table(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -51,7 +51,7 @@ static bool detect_gpt_partition_table(device_t *device) {
     return (memcmp(efi, BLOCK_GPT_PARTITION_MAGIC, sizeof(efi)) == 0);
 }
 
-static bool detect_mbr_partition_table(device_t *device) {
+static bool detect_mbr_partition_table(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -68,7 +68,7 @@ static bool detect_mbr_partition_table(device_t *device) {
 }
 
 
-static void device_mkpart(device_t *device, inode_t *inode, void (*mkdev)(device_t *, mode_t), size_t index, size_t first, size_t end) {
+static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t), size_t index, size_t first, size_t end) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -79,7 +79,7 @@ static void device_mkpart(device_t *device, inode_t *inode, void (*mkdev)(device
     DEBUG_ASSERT(index < 1000);
 
 
-    device_t *d = (device_t *)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+    device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
 
 
     d->type = DEVICE_TYPE_BLOCK;
@@ -141,7 +141,7 @@ static void device_mkpart(device_t *device, inode_t *inode, void (*mkdev)(device
 
 
 
-void block_parse_partitions(device_t *device, inode_t *inode, void (*mkdev)(device_t *, mode_t)) {
+void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(device_t*, mode_t)) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);

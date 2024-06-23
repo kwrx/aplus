@@ -107,12 +107,12 @@ static u16_t ip_id;
 
     #if LWIP_MULTICAST_TX_OPTIONS
 /** The default netif used for multicast */
-static struct netif *ip4_default_multicast_netif;
+static struct netif* ip4_default_multicast_netif;
 
 /**
  * @ingroup ip4
  * Set a default netif for IPv4 multicast. */
-void ip4_set_default_multicast_netif(struct netif *default_multicast_netif) {
+void ip4_set_default_multicast_netif(struct netif* default_multicast_netif) {
     ip4_default_multicast_netif = default_multicast_netif;
 }
     #endif /* LWIP_MULTICAST_TX_OPTIONS */
@@ -122,10 +122,10 @@ void ip4_set_default_multicast_netif(struct netif *default_multicast_netif) {
  * Source based IPv4 routing must be fully implemented in
  * LWIP_HOOK_IP4_ROUTE_SRC(). This function only provides the parameters.
  */
-struct netif *ip4_route_src(const ip4_addr_t *src, const ip4_addr_t *dest) {
+struct netif* ip4_route_src(const ip4_addr_t* src, const ip4_addr_t* dest) {
     if (src != NULL) {
         /* when src==NULL, the hook is called from ip4_route(dest) */
-        struct netif *netif = LWIP_HOOK_IP4_ROUTE_SRC(src, dest);
+        struct netif* netif = LWIP_HOOK_IP4_ROUTE_SRC(src, dest);
         if (netif != NULL) {
             return netif;
         }
@@ -143,9 +143,9 @@ struct netif *ip4_route_src(const ip4_addr_t *src, const ip4_addr_t *dest) {
  * @param dest the destination IP address for which to find the route
  * @return the netif on which to send to reach dest
  */
-struct netif *ip4_route(const ip4_addr_t *dest) {
+struct netif* ip4_route(const ip4_addr_t* dest) {
     #if !LWIP_SINGLE_NETIF
-    struct netif *netif;
+    struct netif* netif;
 
     LWIP_ASSERT_CORE_LOCKED();
 
@@ -226,7 +226,7 @@ struct netif *ip4_route(const ip4_addr_t *dest) {
  * @param p the packet to forward
  * @return 1: can forward 0: discard
  */
-static int ip4_canforward(struct pbuf *p) {
+static int ip4_canforward(struct pbuf* p) {
     u32_t addr = lwip_htonl(ip4_addr_get_u32(ip4_current_dest_addr()));
 
         #ifdef LWIP_HOOK_IP4_CANFORWARD
@@ -266,8 +266,8 @@ static int ip4_canforward(struct pbuf *p) {
  * @param iphdr the IP header of the input packet
  * @param inp the netif on which this packet was received
  */
-static void ip4_forward(struct pbuf *p, struct ip_hdr *iphdr, struct netif *inp) {
-    struct netif *netif;
+static void ip4_forward(struct pbuf* p, struct ip_hdr* iphdr, struct netif* inp) {
+    struct netif* netif;
 
     PERF_START;
     LWIP_UNUSED_ARG(inp);
@@ -354,7 +354,7 @@ return_noroute:
     #endif /* IP_FORWARD */
 
 /** Return true if the current input packet should be accepted on this netif */
-static int ip4_input_accept(struct netif *netif) {
+static int ip4_input_accept(struct netif* netif) {
     LWIP_DEBUGF(IP_DEBUG, ("ip_input: iphdr->dest 0x%" X32_F " netif->ip_addr 0x%" X32_F " (0x%" X32_F ", 0x%" X32_F ", 0x%" X32_F ")\n", ip4_addr_get_u32(ip4_current_dest_addr()), ip4_addr_get_u32(netif_ip4_addr(netif)),
                            ip4_addr_get_u32(ip4_current_dest_addr()) & ip4_addr_get_u32(netif_ip4_netmask(netif)), ip4_addr_get_u32(netif_ip4_addr(netif)) & ip4_addr_get_u32(netif_ip4_netmask(netif)),
                            ip4_addr_get_u32(ip4_current_dest_addr()) & ~ip4_addr_get_u32(netif_ip4_netmask(netif))));
@@ -400,9 +400,9 @@ static int ip4_input_accept(struct netif *netif) {
  * @return ERR_OK if the packet was processed (could return ERR_* if it wasn't
  *         processed, but currently always returns ERR_OK)
  */
-err_t ip4_input(struct pbuf *p, struct netif *inp) {
-    const struct ip_hdr *iphdr;
-    struct netif *netif;
+err_t ip4_input(struct pbuf* p, struct netif* inp) {
+    const struct ip_hdr* iphdr;
+    struct netif* netif;
     u16_t iphdr_hlen;
     u16_t iphdr_len;
     #if IP_ACCEPT_LINK_LAYER_ADDRESSING || LWIP_IGMP
@@ -418,7 +418,7 @@ err_t ip4_input(struct pbuf *p, struct netif *inp) {
     MIB2_STATS_INC(mib2.ipinreceives);
 
     /* identify the IP header */
-    iphdr = (struct ip_hdr *)p->payload;
+    iphdr = (struct ip_hdr*)p->payload;
     if (IPH_V(iphdr) != 4) {
         LWIP_DEBUGF(IP_DEBUG | LWIP_DBG_LEVEL_WARNING, ("IP packet dropped due to bad version number %" U16_F "\n", (u16_t)IPH_V(iphdr)));
         ip4_debug_print(p);
@@ -548,7 +548,7 @@ err_t ip4_input(struct pbuf *p, struct netif *inp) {
     if (netif == NULL) {
         /* remote port is DHCP server? */
         if (IPH_PROTO(iphdr) == IP_PROTO_UDP) {
-            const struct udp_hdr *udphdr = (const struct udp_hdr *)((const u8_t *)iphdr + iphdr_hlen);
+            const struct udp_hdr* udphdr = (const struct udp_hdr*)((const u8_t*)iphdr + iphdr_hlen);
             LWIP_DEBUGF(IP_DEBUG | LWIP_DBG_TRACE, ("ip4_input: UDP packet to DHCP client port %" U16_F "\n", lwip_ntohs(udphdr->dest)));
             if (IP_ACCEPT_LINK_LAYER_ADDRESSED_PORT(udphdr->dest)) {
                 LWIP_DEBUGF(IP_DEBUG | LWIP_DBG_TRACE, ("ip4_input: DHCP packet accepted.\n"));
@@ -589,7 +589,7 @@ err_t ip4_input(struct pbuf *p, struct netif *inp) {
         /* non-broadcast packet? */
         if (!ip4_addr_isbroadcast(ip4_current_dest_addr(), inp)) {
             /* try to forward IP packet on (other) interfaces */
-            ip4_forward(p, (struct ip_hdr *)p->payload, inp);
+            ip4_forward(p, (struct ip_hdr*)p->payload, inp);
         } else
     #endif /* IP_FORWARD */
         {
@@ -611,7 +611,7 @@ err_t ip4_input(struct pbuf *p, struct netif *inp) {
         if (p == NULL) {
             return ERR_OK;
         }
-        iphdr = (const struct ip_hdr *)p->payload;
+        iphdr = (const struct ip_hdr*)p->payload;
     #else  /* IP_REASSEMBLY == 0, no packet fragment reassembly code present */
         pbuf_free(p);
         LWIP_DEBUGF(IP_DEBUG | LWIP_DBG_LEVEL_SERIOUS, ("IP packet dropped since it was fragmented (0x%" X16_F ") (while IP_REASSEMBLY == 0).\n", lwip_ntohs(IPH_OFFSET(iphdr))));
@@ -748,7 +748,7 @@ err_t ip4_input(struct pbuf *p, struct netif *inp) {
  * @note ip_id: RFC791 "some host may be able to simply use
  *  unique identifiers independent of destination"
  */
-err_t ip4_output_if(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto, struct netif *netif) {
+err_t ip4_output_if(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto, struct netif* netif) {
     #if IP_OPTIONS_SEND
     return ip4_output_if_opt(p, src, dest, ttl, tos, proto, netif, NULL, 0);
 }
@@ -759,9 +759,9 @@ err_t ip4_output_if(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *des
  * @ param ip_options pointer to the IP options, copied into the IP header
  * @ param optlen length of ip_options
  */
-err_t ip4_output_if_opt(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto, struct netif *netif, void *ip_options, u16_t optlen) {
+err_t ip4_output_if_opt(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto, struct netif* netif, void* ip_options, u16_t optlen) {
     #endif /* IP_OPTIONS_SEND */
-    const ip4_addr_t *src_used = src;
+    const ip4_addr_t* src_used = src;
     if (dest != LWIP_IP_HDRINCL) {
         if (ip4_addr_isany(src)) {
             src_used = netif_ip4_addr(netif);
@@ -779,7 +779,7 @@ err_t ip4_output_if_opt(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t 
  * Same as ip_output_if() but 'src' address is not replaced by netif address
  * when it is 'any'.
  */
-err_t ip4_output_if_src(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto, struct netif *netif) {
+err_t ip4_output_if_src(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto, struct netif* netif) {
     #if IP_OPTIONS_SEND
     return ip4_output_if_opt_src(p, src, dest, ttl, tos, proto, netif, NULL, 0);
 }
@@ -788,9 +788,9 @@ err_t ip4_output_if_src(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t 
  * Same as ip_output_if_opt() but 'src' address is not replaced by netif address
  * when it is 'any'.
  */
-err_t ip4_output_if_opt_src(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto, struct netif *netif, void *ip_options, u16_t optlen) {
+err_t ip4_output_if_opt_src(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto, struct netif* netif, void* ip_options, u16_t optlen) {
     #endif /* IP_OPTIONS_SEND */
-    struct ip_hdr *iphdr;
+    struct ip_hdr* iphdr;
     ip4_addr_t dest_addr;
     #if CHECKSUM_GEN_IP_INLINE
     u32_t chk_sum = 0;
@@ -830,11 +830,11 @@ err_t ip4_output_if_opt_src(struct pbuf *p, const ip4_addr_t *src, const ip4_add
             MEMCPY(p->payload, ip_options, optlen);
             if (optlen < optlen_aligned) {
                 /* zero the remaining bytes */
-                memset(((char *)p->payload) + optlen, 0, (size_t)(optlen_aligned - optlen));
+                memset(((char*)p->payload) + optlen, 0, (size_t)(optlen_aligned - optlen));
             }
         #if CHECKSUM_GEN_IP_INLINE
             for (i = 0; i < optlen_aligned / 2; i++) {
-                chk_sum += ((u16_t *)p->payload)[i];
+                chk_sum += ((u16_t*)p->payload)[i];
             }
         #endif /* CHECKSUM_GEN_IP_INLINE */
         }
@@ -848,7 +848,7 @@ err_t ip4_output_if_opt_src(struct pbuf *p, const ip4_addr_t *src, const ip4_add
             return ERR_BUF;
         }
 
-        iphdr = (struct ip_hdr *)p->payload;
+        iphdr = (struct ip_hdr*)p->payload;
         LWIP_ASSERT("check that first pbuf can hold struct ip_hdr", (p->len >= sizeof(struct ip_hdr)));
 
         IPH_TTL_SET(iphdr, ttl);
@@ -917,7 +917,7 @@ err_t ip4_output_if_opt_src(struct pbuf *p, const ip4_addr_t *src, const ip4_add
             MIB2_STATS_INC(mib2.ipoutdiscards);
             return ERR_BUF;
         }
-        iphdr = (struct ip_hdr *)p->payload;
+        iphdr = (struct ip_hdr*)p->payload;
         ip4_addr_copy(dest_addr, iphdr->dest);
         dest = &dest_addr;
     }
@@ -971,8 +971,8 @@ err_t ip4_output_if_opt_src(struct pbuf *p, const ip4_addr_t *src, const ip4_add
  * @return ERR_RTE if no route is found
  *         see ip_output_if() for more return values
  */
-err_t ip4_output(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto) {
-    struct netif *netif;
+err_t ip4_output(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto) {
+    struct netif* netif;
 
     LWIP_IP_CHECK_PBUF_REF_COUNT_FOR_TX(p);
 
@@ -1004,8 +1004,8 @@ err_t ip4_output(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, 
  * @return ERR_RTE if no route is found
  *         see ip_output_if() for more return values
  */
-err_t ip4_output_hinted(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t *dest, u8_t ttl, u8_t tos, u8_t proto, struct netif_hint *netif_hint) {
-    struct netif *netif;
+err_t ip4_output_hinted(struct pbuf* p, const ip4_addr_t* src, const ip4_addr_t* dest, u8_t ttl, u8_t tos, u8_t proto, struct netif_hint* netif_hint) {
+    struct netif* netif;
     err_t err;
 
     LWIP_IP_CHECK_PBUF_REF_COUNT_FOR_TX(p);
@@ -1028,8 +1028,8 @@ err_t ip4_output_hinted(struct pbuf *p, const ip4_addr_t *src, const ip4_addr_t 
 /* Print an IP header by using LWIP_DEBUGF
  * @param p an IP packet, p->payload pointing to the IP header
  */
-void ip4_debug_print(struct pbuf *p) {
-    struct ip_hdr *iphdr = (struct ip_hdr *)p->payload;
+void ip4_debug_print(struct pbuf* p) {
+    struct ip_hdr* iphdr = (struct ip_hdr*)p->payload;
 
     LWIP_DEBUGF(IP_DEBUG, ("IP header:\n"));
     LWIP_DEBUGF(IP_DEBUG, ("+-------------------------------+\n"));

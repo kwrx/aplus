@@ -60,7 +60,7 @@ typedef struct bridgeif_dfdb_entry_s {
 
 typedef struct bridgeif_dfdb_s {
         u16_t max_fdb_entries;
-        bridgeif_dfdb_entry_t *fdb;
+        bridgeif_dfdb_entry_t* fdb;
 } bridgeif_dfdb_t;
 
 /**
@@ -72,13 +72,13 @@ typedef struct bridgeif_dfdb_s {
  * ATTENTION: This is meant as an example only, in real-world use, you should
  * provide a better implementation :-)
  */
-void bridgeif_fdb_update_src(void *fdb_ptr, struct eth_addr *src_addr, u8_t port_idx) {
+void bridgeif_fdb_update_src(void* fdb_ptr, struct eth_addr* src_addr, u8_t port_idx) {
     int i;
-    bridgeif_dfdb_t *fdb = (bridgeif_dfdb_t *)fdb_ptr;
+    bridgeif_dfdb_t* fdb = (bridgeif_dfdb_t*)fdb_ptr;
     BRIDGEIF_DECL_PROTECT(lev);
     BRIDGEIF_READ_PROTECT(lev);
     for (i = 0; i < fdb->max_fdb_entries; i++) {
-        bridgeif_dfdb_entry_t *e = &fdb->fdb[i];
+        bridgeif_dfdb_entry_t* e = &fdb->fdb[i];
         if (e->used && e->ts) {
             if (!memcmp(&e->addr, src_addr, sizeof(struct eth_addr))) {
                 LWIP_DEBUGF(BRIDGEIF_FDB_DEBUG,
@@ -94,7 +94,7 @@ void bridgeif_fdb_update_src(void *fdb_ptr, struct eth_addr *src_addr, u8_t port
     }
     /* not found, allocate new entry from free */
     for (i = 0; i < fdb->max_fdb_entries; i++) {
-        bridgeif_dfdb_entry_t *e = &fdb->fdb[i];
+        bridgeif_dfdb_entry_t* e = &fdb->fdb[i];
         if (!e->used || !e->ts) {
             BRIDGEIF_WRITE_PROTECT(lev);
             /* check again when protected */
@@ -120,13 +120,13 @@ void bridgeif_fdb_update_src(void *fdb_ptr, struct eth_addr *src_addr, u8_t port
  * @ingroup bridgeif_fdb
  * Walk our list of auto-learnt fdb entries and return a port to forward or BR_FLOOD if unknown
  */
-bridgeif_portmask_t bridgeif_fdb_get_dst_ports(void *fdb_ptr, struct eth_addr *dst_addr) {
+bridgeif_portmask_t bridgeif_fdb_get_dst_ports(void* fdb_ptr, struct eth_addr* dst_addr) {
     int i;
-    bridgeif_dfdb_t *fdb = (bridgeif_dfdb_t *)fdb_ptr;
+    bridgeif_dfdb_t* fdb = (bridgeif_dfdb_t*)fdb_ptr;
     BRIDGEIF_DECL_PROTECT(lev);
     BRIDGEIF_READ_PROTECT(lev);
     for (i = 0; i < fdb->max_fdb_entries; i++) {
-        bridgeif_dfdb_entry_t *e = &fdb->fdb[i];
+        bridgeif_dfdb_entry_t* e = &fdb->fdb[i];
         if (e->used && e->ts) {
             if (!memcmp(&e->addr, dst_addr, sizeof(struct eth_addr))) {
                 bridgeif_portmask_t ret = (bridgeif_portmask_t)(1 << e->port);
@@ -143,16 +143,16 @@ bridgeif_portmask_t bridgeif_fdb_get_dst_ports(void *fdb_ptr, struct eth_addr *d
  * @ingroup bridgeif_fdb
  * Aging implementation of our simple fdb
  */
-static void bridgeif_fdb_age_one_second(void *fdb_ptr) {
+static void bridgeif_fdb_age_one_second(void* fdb_ptr) {
     int i;
-    bridgeif_dfdb_t *fdb;
+    bridgeif_dfdb_t* fdb;
     BRIDGEIF_DECL_PROTECT(lev);
 
-    fdb = (bridgeif_dfdb_t *)fdb_ptr;
+    fdb = (bridgeif_dfdb_t*)fdb_ptr;
     BRIDGEIF_READ_PROTECT(lev);
 
     for (i = 0; i < fdb->max_fdb_entries; i++) {
-        bridgeif_dfdb_entry_t *e = &fdb->fdb[i];
+        bridgeif_dfdb_entry_t* e = &fdb->fdb[i];
         if (e->used && e->ts) {
             BRIDGEIF_WRITE_PROTECT(lev);
             /* check again when protected */
@@ -168,8 +168,8 @@ static void bridgeif_fdb_age_one_second(void *fdb_ptr) {
 }
 
 /** Timer callback for fdb aging, called once per second */
-static void bridgeif_age_tmr(void *arg) {
-    bridgeif_dfdb_t *fdb = (bridgeif_dfdb_t *)arg;
+static void bridgeif_age_tmr(void* arg) {
+    bridgeif_dfdb_t* fdb = (bridgeif_dfdb_t*)arg;
 
     LWIP_ASSERT("invalid arg", arg != NULL);
 
@@ -181,18 +181,18 @@ static void bridgeif_age_tmr(void *arg) {
  * @ingroup bridgeif_fdb
  * Init our simple fdb list
  */
-void *bridgeif_fdb_init(u16_t max_fdb_entries) {
-    bridgeif_dfdb_t *fdb;
+void* bridgeif_fdb_init(u16_t max_fdb_entries) {
+    bridgeif_dfdb_t* fdb;
     size_t alloc_len_sizet = sizeof(bridgeif_dfdb_t) + (max_fdb_entries * sizeof(bridgeif_dfdb_entry_t));
     mem_size_t alloc_len   = (mem_size_t)alloc_len_sizet;
     LWIP_ASSERT("alloc_len == alloc_len_sizet", alloc_len == alloc_len_sizet);
     LWIP_DEBUGF(BRIDGEIF_DEBUG, ("bridgeif_fdb_init: allocating %d bytes for private FDB data\n", (int)alloc_len));
-    fdb = (bridgeif_dfdb_t *)mem_calloc(1, alloc_len);
+    fdb = (bridgeif_dfdb_t*)mem_calloc(1, alloc_len);
     if (fdb == NULL) {
         return NULL;
     }
     fdb->max_fdb_entries = max_fdb_entries;
-    fdb->fdb             = (bridgeif_dfdb_entry_t *)(fdb + 1);
+    fdb->fdb             = (bridgeif_dfdb_entry_t*)(fdb + 1);
 
     sys_timeout(BRIDGEIF_AGE_TIMER_MS, bridgeif_age_tmr, fdb);
 

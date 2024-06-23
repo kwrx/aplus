@@ -37,7 +37,7 @@
 
 
 
-int tmpfs_rename(inode_t *inode, const char *name, const char *newname) {
+int tmpfs_rename(inode_t* inode, const char* name, const char* newname) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -48,8 +48,8 @@ int tmpfs_rename(inode_t *inode, const char *name, const char *newname) {
 
 
 
-    tmpfs_t *tmpfs = (tmpfs_t *)inode->sb->fsinfo;
-    inode_t *d     = NULL;
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+    inode_t* d     = NULL;
 
 
     list_each(tmpfs->children, i) {

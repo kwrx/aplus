@@ -52,4 +52,4 @@
 
 struct kexec_segment;
 
-SYSCALL(246, kexec_load, long sys_kexec_load(unsigned long entry, unsigned long nr_segments, struct kexec_segment *segments, unsigned long flags) { return -ENOSYS; });
+SYSCALL(246, kexec_load, long sys_kexec_load(unsigned long entry, unsigned long nr_segments, struct kexec_segment* segments, unsigned long flags) { return -ENOSYS; });

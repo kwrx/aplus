@@ -231,14 +231,14 @@ static void des_setkey(unsigned long SK[32], unsigned char key[8]) {
 /*
  * DES key schedule (56-bit, encryption)
  */
-void des_setkey_enc(des_context *ctx, unsigned char key[8]) {
+void des_setkey_enc(des_context* ctx, unsigned char key[8]) {
     des_setkey(ctx->sk, key);
 }
 
 /*
  * DES key schedule (56-bit, decryption)
  */
-void des_setkey_dec(des_context *ctx, unsigned char key[8]) {
+void des_setkey_dec(des_context* ctx, unsigned char key[8]) {
     int i;
 
     des_setkey(ctx->sk, key);
@@ -252,7 +252,7 @@ void des_setkey_dec(des_context *ctx, unsigned char key[8]) {
 /*
  * DES-ECB block encryption/decryption
  */
-void des_crypt_ecb(des_context *ctx, const unsigned char input[8], unsigned char output[8]) {
+void des_crypt_ecb(des_context* ctx, const unsigned char input[8], unsigned char output[8]) {
     int i;
     unsigned long X, Y, T, *SK;
 

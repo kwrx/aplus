@@ -176,16 +176,16 @@ int no_ifaceid_neg = 0;
 /*
  * Callbacks for fsm code.  (CI = Configuration Information)
  */
-static void ipv6cp_resetci(fsm *f);                                             /* Reset our CI */
-static int ipv6cp_cilen(fsm *f);                                                /* Return length of our CI */
-static void ipv6cp_addci(fsm *f, u_char *ucp, int *lenp);                       /* Add our CI */
-static int ipv6cp_ackci(fsm *f, u_char *p, int len);                            /* Peer ack'd our CI */
-static int ipv6cp_nakci(fsm *f, u_char *p, int len, int treat_as_reject);       /* Peer nak'd our CI */
-static int ipv6cp_rejci(fsm *f, u_char *p, int len);                            /* Peer rej'd our CI */
-static int ipv6cp_reqci(fsm *f, u_char *inp, int *len, int reject_if_disagree); /* Rcv CI */
-static void ipv6cp_up(fsm *f);                                                  /* We're UP */
-static void ipv6cp_down(fsm *f);                                                /* We're DOWN */
-static void ipv6cp_finished(fsm *f);                                            /* Don't need lower layer */
+static void ipv6cp_resetci(fsm* f);                                             /* Reset our CI */
+static int ipv6cp_cilen(fsm* f);                                                /* Return length of our CI */
+static void ipv6cp_addci(fsm* f, u_char* ucp, int* lenp);                       /* Add our CI */
+static int ipv6cp_ackci(fsm* f, u_char* p, int len);                            /* Peer ack'd our CI */
+static int ipv6cp_nakci(fsm* f, u_char* p, int len, int treat_as_reject);       /* Peer nak'd our CI */
+static int ipv6cp_rejci(fsm* f, u_char* p, int len);                            /* Peer rej'd our CI */
+static int ipv6cp_reqci(fsm* f, u_char* inp, int* len, int reject_if_disagree); /* Rcv CI */
+static void ipv6cp_up(fsm* f);                                                  /* We're UP */
+static void ipv6cp_down(fsm* f);                                                /* We're DOWN */
+static void ipv6cp_finished(fsm* f);                                            /* Don't need lower layer */
 
 static const fsm_callbacks ipv6cp_callbacks = {
     /* IPV6CP callback routines */
@@ -215,7 +215,7 @@ static void printifaceid(option_t *,
 			      void (*)(void *, char *, ...), void *));
 
 static option_t ipv6cp_option_list[] = {
-    {"ipv6", o_special, (void *)setifaceid, "Set interface identifiers for IPV6", OPT_A2PRINTER, (void *)printifaceid},
+    {"ipv6", o_special, (void*)setifaceid, "Set interface identifiers for IPV6", OPT_A2PRINTER, (void*)printifaceid},
 
     {"+ipv6", o_bool, &ipv6cp_protent.enabled_flag, "Enable IPv6 and IPv6CP", OPT_PRIO | 1},
     {"noipv6", o_bool, &ipv6cp_protent.enabled_flag, "Disable IPv6 and IPv6CP", OPT_PRIOSUB},
@@ -239,13 +239,13 @@ static option_t ipv6cp_option_list[] = {
 /*
  * Protocol entry points from main code.
  */
-static void ipv6cp_init(ppp_pcb *pcb);
-static void ipv6cp_open(ppp_pcb *pcb);
-static void ipv6cp_close(ppp_pcb *pcb, const char *reason);
-static void ipv6cp_lowerup(ppp_pcb *pcb);
-static void ipv6cp_lowerdown(ppp_pcb *pcb);
-static void ipv6cp_input(ppp_pcb *pcb, u_char *p, int len);
-static void ipv6cp_protrej(ppp_pcb *pcb);
+static void ipv6cp_init(ppp_pcb* pcb);
+static void ipv6cp_open(ppp_pcb* pcb);
+static void ipv6cp_close(ppp_pcb* pcb, const char* reason);
+static void ipv6cp_lowerup(ppp_pcb* pcb);
+static void ipv6cp_lowerdown(ppp_pcb* pcb);
+static void ipv6cp_input(ppp_pcb* pcb, u_char* p, int len);
+static void ipv6cp_protrej(ppp_pcb* pcb);
     #if PPP_OPTIONS
 static void ipv6_check_options(void);
     #endif /* PPP_OPTIONS */
@@ -253,10 +253,10 @@ static void ipv6_check_options(void);
 static int ipv6_demand_conf(int u);
     #endif /* DEMAND_SUPPORT */
     #if PRINTPKT_SUPPORT
-static int ipv6cp_printpkt(const u_char *p, int plen, void (*printer)(void *, const char *, ...), void *arg);
+static int ipv6cp_printpkt(const u_char* p, int plen, void (*printer)(void*, const char*, ...), void* arg);
     #endif /* PRINTPKT_SUPPORT */
     #if DEMAND_SUPPORT
-static int ipv6_active_pkt(u_char *pkt, int len);
+static int ipv6_active_pkt(u_char* pkt, int len);
     #endif /* DEMAND_SUPPORT */
 
 const struct protent ipv6cp_protent = {PPP_IPV6CP,
@@ -287,7 +287,7 @@ const struct protent ipv6cp_protent = {PPP_IPV6CP,
     #endif /* DEMAND_SUPPORT */
 };
 
-static void ipv6cp_clear_addrs(ppp_pcb *pcb, eui64_t ourid, eui64_t hisid);
+static void ipv6cp_clear_addrs(ppp_pcb* pcb, eui64_t ourid, eui64_t hisid);
     #if 0  /* UNUSED */
 static void ipv6cp_script(char *));
 static void ipv6cp_script_done(void *));
@@ -314,17 +314,17 @@ static enum script_state {
 static pid_t ipv6cp_script_pid;
     #endif /* UNUSED */
 
-static char *llv6_ntoa(eui64_t ifaceid);
+static char* llv6_ntoa(eui64_t ifaceid);
 
     #if PPP_OPTIONS
 /*
  * setifaceid - set the interface identifiers manually
  */
 static int setifaceid(argv)
-char **argv;
+char** argv;
 {
     char *comma, *arg, c;
-    ipv6cp_options *wo = &ipv6cp_wantoptions[0];
+    ipv6cp_options* wo = &ipv6cp_wantoptions[0];
     struct in6_addr addr;
     static int prio_local, prio_remote;
 
@@ -374,11 +374,11 @@ char **argv;
     return 1;
 }
 
-static void printifaceid(opt, printer, arg) option_t *opt;
+static void printifaceid(opt, printer, arg) option_t* opt;
     void (*printer)(void *, char *, ...));
-    void *arg;
+    void* arg;
     {
-        ipv6cp_options *wo = &ipv6cp_wantoptions[0];
+        ipv6cp_options* wo = &ipv6cp_wantoptions[0];
 
         if (wo->opt_local)
             printer(arg, "%s", llv6_ntoa(wo->ourid));
@@ -391,7 +391,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * Make a string representation of a network address.
      */
-    static char *llv6_ntoa(eui64_t ifaceid) {
+    static char* llv6_ntoa(eui64_t ifaceid) {
         static char b[26];
 
         sprintf(b, "fe80::%02x%02x:%02x%02x:%02x%02x:%02x%02x", ifaceid.e8[0], ifaceid.e8[1], ifaceid.e8[2], ifaceid.e8[3], ifaceid.e8[4], ifaceid.e8[5], ifaceid.e8[6], ifaceid.e8[7]);
@@ -403,10 +403,10 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_init - Initialize IPV6CP.
      */
-    static void ipv6cp_init(ppp_pcb *pcb) {
-        fsm *f             = &pcb->ipv6cp_fsm;
-        ipv6cp_options *wo = &pcb->ipv6cp_wantoptions;
-        ipv6cp_options *ao = &pcb->ipv6cp_allowoptions;
+    static void ipv6cp_init(ppp_pcb* pcb) {
+        fsm* f             = &pcb->ipv6cp_fsm;
+        ipv6cp_options* wo = &pcb->ipv6cp_wantoptions;
+        ipv6cp_options* ao = &pcb->ipv6cp_allowoptions;
 
         f->pcb       = pcb;
         f->protocol  = PPP_IPV6CP;
@@ -433,7 +433,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_open - IPV6CP is allowed to come up.
      */
-    static void ipv6cp_open(ppp_pcb *pcb) {
+    static void ipv6cp_open(ppp_pcb* pcb) {
         fsm_open(&pcb->ipv6cp_fsm);
     }
 
@@ -441,7 +441,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_close - Take IPV6CP down.
      */
-    static void ipv6cp_close(ppp_pcb *pcb, const char *reason) {
+    static void ipv6cp_close(ppp_pcb* pcb, const char* reason) {
         fsm_close(&pcb->ipv6cp_fsm, reason);
     }
 
@@ -449,7 +449,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_lowerup - The lower layer is up.
      */
-    static void ipv6cp_lowerup(ppp_pcb *pcb) {
+    static void ipv6cp_lowerup(ppp_pcb* pcb) {
         fsm_lowerup(&pcb->ipv6cp_fsm);
     }
 
@@ -457,7 +457,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_lowerdown - The lower layer is down.
      */
-    static void ipv6cp_lowerdown(ppp_pcb *pcb) {
+    static void ipv6cp_lowerdown(ppp_pcb* pcb) {
         fsm_lowerdown(&pcb->ipv6cp_fsm);
     }
 
@@ -465,7 +465,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_input - Input IPV6CP packet.
      */
-    static void ipv6cp_input(ppp_pcb *pcb, u_char *p, int len) {
+    static void ipv6cp_input(ppp_pcb* pcb, u_char* p, int len) {
         fsm_input(&pcb->ipv6cp_fsm, p, len);
     }
 
@@ -475,7 +475,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      *
      * Pretend the lower layer went down, so we shut up.
      */
-    static void ipv6cp_protrej(ppp_pcb *pcb) {
+    static void ipv6cp_protrej(ppp_pcb* pcb) {
         fsm_lowerdown(&pcb->ipv6cp_fsm);
     }
 
@@ -483,11 +483,11 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_resetci - Reset our CI.
      */
-    static void ipv6cp_resetci(fsm *f) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *wo = &pcb->ipv6cp_wantoptions;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
-        ipv6cp_options *ao = &pcb->ipv6cp_allowoptions;
+    static void ipv6cp_resetci(fsm* f) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* wo = &pcb->ipv6cp_wantoptions;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
+        ipv6cp_options* ao = &pcb->ipv6cp_allowoptions;
 
         wo->req_ifaceid = wo->neg_ifaceid && ao->neg_ifaceid;
 
@@ -503,9 +503,9 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_cilen - Return length of our CI.
      */
-    static int ipv6cp_cilen(fsm *f) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static int ipv6cp_cilen(fsm* f) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
 
     #ifdef IPV6CP_COMP
         #define LENCIVJ(neg) (neg ? CILEN_COMPRESS : 0)
@@ -523,9 +523,9 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_addci - Add our desired CIs to a packet.
      */
-    static void ipv6cp_addci(fsm *f, u_char *ucp, int *lenp) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static void ipv6cp_addci(fsm* f, u_char* ucp, int* lenp) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
         int len            = *lenp;
 
     #ifdef IPV6CP_COMP
@@ -571,9 +571,9 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      *	0 - Ack was bad.
      *	1 - Ack was good.
      */
-    static int ipv6cp_ackci(fsm *f, u_char *p, int len) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static int ipv6cp_ackci(fsm* f, u_char* p, int len) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
         u_short cilen, citype;
     #ifdef IPV6CP_COMP
         u_short cishort;
@@ -643,9 +643,9 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      *	0 - Nak was bad.
      *	1 - Nak was good.
      */
-    static int ipv6cp_nakci(fsm *f, u_char *p, int len, int treat_as_reject) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static int ipv6cp_nakci(fsm* f, u_char* p, int len, int treat_as_reject) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
         u_char citype, cilen, *next;
     #ifdef IPV6CP_COMP
         u_short cishort;
@@ -764,9 +764,9 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_rejci - Reject some of our CIs.
      */
-    static int ipv6cp_rejci(fsm *f, u_char *p, int len) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static int ipv6cp_rejci(fsm* f, u_char* p, int len) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
         u_char cilen;
     #ifdef IPV6CP_COMP
         u_short cishort;
@@ -839,12 +839,12 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * len = Length of requested CIs
      *
      */
-    static int ipv6cp_reqci(fsm *f, u_char *inp, int *len, int reject_if_disagree) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *wo = &pcb->ipv6cp_wantoptions;
-        ipv6cp_options *ho = &pcb->ipv6cp_hisoptions;
-        ipv6cp_options *ao = &pcb->ipv6cp_allowoptions;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static int ipv6cp_reqci(fsm* f, u_char* inp, int* len, int reject_if_disagree) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* wo = &pcb->ipv6cp_wantoptions;
+        ipv6cp_options* ho = &pcb->ipv6cp_hisoptions;
+        ipv6cp_options* ao = &pcb->ipv6cp_allowoptions;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
         u_char *cip, *next;    /* Pointer to current and next CIs */
         u_short cilen, citype; /* Parsed len, type */
     #ifdef IPV6CP_COMP
@@ -853,8 +853,8 @@ static void printifaceid(opt, printer, arg) option_t *opt;
         eui64_t ifaceid;    /* Parsed interface identifier */
         int rc = CONFACK;   /* Final packet return code */
         int orc;            /* Individual option return code */
-        u_char *p;          /* Pointer to next char to parse */
-        u_char *ucp = inp;  /* Pointer to current output char */
+        u_char* p;          /* Pointer to next char to parse */
+        u_char* ucp = inp;  /* Pointer to current output char */
         int l       = *len; /* Length left */
 
         /*
@@ -1014,7 +1014,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * and assign appropriate defaults.
      */
     static void ipv6_check_options() {
-        ipv6cp_options *wo = &ipv6cp_wantoptions[0];
+        ipv6cp_options* wo = &ipv6cp_wantoptions[0];
 
         if (!ipv6cp_protent.enabled_flag)
             return;
@@ -1071,7 +1071,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * IPV6CP were up, for use with dial-on-demand.
      */
     static int ipv6_demand_conf(int u) {
-        ipv6cp_options *wo = &ipv6cp_wantoptions[u];
+        ipv6cp_options* wo = &ipv6cp_wantoptions[u];
 
         if (!sif6up(u))
             return 0;
@@ -1096,11 +1096,11 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      *
      * Configure the IPv6 network interface appropriately and bring it up.
      */
-    static void ipv6cp_up(fsm *f) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *wo = &pcb->ipv6cp_wantoptions;
-        ipv6cp_options *ho = &pcb->ipv6cp_hisoptions;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
+    static void ipv6cp_up(fsm* f) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* wo = &pcb->ipv6cp_wantoptions;
+        ipv6cp_options* ho = &pcb->ipv6cp_hisoptions;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
 
         IPV6CPDEBUG(("ipv6cp: up"));
 
@@ -1214,10 +1214,10 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * Take the IPv6 network interface down, clear its addresses
      * and delete routes through it.
      */
-    static void ipv6cp_down(fsm *f) {
-        ppp_pcb *pcb       = f->pcb;
-        ipv6cp_options *go = &pcb->ipv6cp_gotoptions;
-        ipv6cp_options *ho = &pcb->ipv6cp_hisoptions;
+    static void ipv6cp_down(fsm* f) {
+        ppp_pcb* pcb       = f->pcb;
+        ipv6cp_options* go = &pcb->ipv6cp_gotoptions;
+        ipv6cp_options* ho = &pcb->ipv6cp_hisoptions;
 
         IPV6CPDEBUG(("ipv6cp: down"));
     #if PPP_STATS_SUPPORT
@@ -1262,7 +1262,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
      * ipv6cp_clear_addrs() - clear the interface addresses, routes,
      * proxy neighbour discovery entries, etc.
      */
-    static void ipv6cp_clear_addrs(ppp_pcb *pcb, eui64_t ourid, eui64_t hisid) {
+    static void ipv6cp_clear_addrs(ppp_pcb* pcb, eui64_t ourid, eui64_t hisid) {
         cif6addr(pcb, ourid, hisid);
     }
 
@@ -1270,7 +1270,7 @@ static void printifaceid(opt, printer, arg) option_t *opt;
     /*
      * ipv6cp_finished - possibly shut down the lower layers.
      */
-    static void ipv6cp_finished(fsm *f) {
+    static void ipv6cp_finished(fsm* f) {
         np_finished(f->pcb, PPP_IPV6);
     }
 
@@ -1335,9 +1335,9 @@ ipv6cp_script(script)
     /*
      * ipv6cp_printpkt - print the contents of an IPV6CP packet.
      */
-    static const char *const ipv6cp_codenames[] = {"ConfReq", "ConfAck", "ConfNak", "ConfRej", "TermReq", "TermAck", "CodeRej"};
+    static const char* const ipv6cp_codenames[] = {"ConfReq", "ConfAck", "ConfNak", "ConfRej", "TermReq", "TermAck", "CodeRej"};
 
-    static int ipv6cp_printpkt(const u_char *p, int plen, void (*printer)(void *, const char *, ...), void *arg) {
+    static int ipv6cp_printpkt(const u_char* p, int plen, void (*printer)(void*, const char*, ...), void* arg) {
         int code, id, len, olen;
         const u_char *pstart, *optend;
         #ifdef IPV6CP_COMP
@@ -1444,12 +1444,12 @@ ipv6cp_script(script)
          * and some compilers might use word loads to get th_off or ip_hl.
          */
 
-        #define get_ip6nh(x)    (((unsigned char *)(x))[6])
-        #define get_tcpoff(x)   (((unsigned char *)(x))[12] >> 4)
-        #define get_tcpflags(x) (((unsigned char *)(x))[13])
+        #define get_ip6nh(x)    (((unsigned char*)(x))[6])
+        #define get_tcpoff(x)   (((unsigned char*)(x))[12] >> 4)
+        #define get_tcpflags(x) (((unsigned char*)(x))[13])
 
-    static int ipv6_active_pkt(u_char *pkt, int len) {
-        u_char *tcp;
+    static int ipv6_active_pkt(u_char* pkt, int len) {
+        u_char* tcp;
 
         len -= PPP_HDRLEN;
         pkt += PPP_HDRLEN;

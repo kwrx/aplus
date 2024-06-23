@@ -76,12 +76,12 @@ struct sys_sem {
 };
 
 
-err_t sys_sem_new(struct sys_sem **sem, u8_t count) {
+err_t sys_sem_new(struct sys_sem** sem, u8_t count) {
 
     DEBUG_ASSERT(sem);
 
 
-    *(sem) = (struct sys_sem *)kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
+    *(sem) = (struct sys_sem*)kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
 
     if (unlikely(*(sem) == NULL)) {
         return ERR_MEM;
@@ -96,7 +96,7 @@ err_t sys_sem_new(struct sys_sem **sem, u8_t count) {
 }
 
 
-void sys_sem_free(struct sys_sem **sem) {
+void sys_sem_free(struct sys_sem** sem) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);
@@ -108,7 +108,7 @@ void sys_sem_free(struct sys_sem **sem) {
 }
 
 
-void sys_sem_signal(struct sys_sem **sem) {
+void sys_sem_signal(struct sys_sem** sem) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);
@@ -117,7 +117,7 @@ void sys_sem_signal(struct sys_sem **sem) {
 }
 
 
-u32_t sys_arch_sem_wait(struct sys_sem **sem, u32_t timeout) {
+u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t timeout) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);

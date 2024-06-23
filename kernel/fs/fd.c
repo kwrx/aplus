@@ -34,7 +34,7 @@
 #include <aplus/vfs.h>
 
 
-static struct file *filetable = NULL;
+static struct file* filetable = NULL;
 static spinlock_t filetable_lock;
 
 static unsigned int lowestfree = 0;
@@ -43,14 +43,14 @@ static unsigned int lowestfree = 0;
 
 void fd_init(void) {
 
-    filetable  = (struct file *)kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
+    filetable  = (struct file*)kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
     lowestfree = 0;
 
     spinlock_init(&filetable_lock);
 }
 
 
-struct file *fd_append(inode_t *inode, off_t position, int status) {
+struct file* fd_append(inode_t* inode, off_t position, int status) {
 
     DEBUG_ASSERT(filetable);
     DEBUG_ASSERT(inode);
@@ -90,7 +90,7 @@ struct file *fd_append(inode_t *inode, off_t position, int status) {
 }
 
 
-void fd_remove(struct file *fd, bool close) {
+void fd_remove(struct file* fd, bool close) {
 
     DEBUG_ASSERT(fd);
     DEBUG_ASSERT(filetable);
@@ -121,7 +121,7 @@ void fd_remove(struct file *fd, bool close) {
 }
 
 
-void fd_ref(struct file *file) {
+void fd_ref(struct file* file) {
 
     DEBUG_ASSERT(file);
     DEBUG_ASSERT(filetable);

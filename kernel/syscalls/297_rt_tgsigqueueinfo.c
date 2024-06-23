@@ -53,7 +53,7 @@
 
 
 SYSCALL(
-    297, rt_tgsigqueueinfo, long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *uinfo) {
+    297, rt_tgsigqueueinfo, long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t* uinfo) {
         if (unlikely(tid == 1 && current_task->tid != 1))
             return -EINVAL;
 

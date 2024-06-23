@@ -49,7 +49,7 @@
  */
 
 SYSCALL(
-    161, chroot, long sys_chroot(const char *filename) {
+    161, chroot, long sys_chroot(const char* filename) {
         if (unlikely(!filename))
             return -EINVAL;
 

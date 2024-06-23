@@ -35,7 +35,7 @@
 
 
 
-ssize_t tmpfs_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
+ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -45,7 +45,7 @@ ssize_t tmpfs_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
-    tmpfs_inode_t *i = cache_get(&inode->sb->cache, inode->ino);
+    tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
 
     if ((size_t)pos + len > (size_t)i->st.st_size) {
@@ -72,7 +72,7 @@ ssize_t tmpfs_write(inode_t *inode, const void *buf, off_t pos, size_t len) {
     }
 
 
-    memcpy((void *)((uintptr_t)i->data + (uintptr_t)pos), buf, len);
+    memcpy((void*)((uintptr_t)i->data + (uintptr_t)pos), buf, len);
 
     return len;
 }

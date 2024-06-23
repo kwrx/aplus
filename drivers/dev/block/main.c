@@ -53,7 +53,7 @@ MODULE_LICENSE("GPL");
 
 
 
-int block_getattr(device_t *device, struct stat *st) {
+int block_getattr(device_t* device, struct stat* st) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(st);
@@ -76,7 +76,7 @@ int block_getattr(device_t *device, struct stat *st) {
 }
 
 
-ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size) {
+ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -132,7 +132,7 @@ ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size
             __cache_update(device->blk.cache, sb, 1);
         }
 
-        memcpy((void *)((uintptr_t)device->blk.cache.c_data + ((uintptr_t)offset % device->blk.blksize)), buf, p);
+        memcpy((void*)((uintptr_t)device->blk.cache.c_data + ((uintptr_t)offset % device->blk.blksize)), buf, p);
 
         if (device->blk.write(device, device->blk.cache.c_data, sb, 1) <= 0)
             return errno = EIO, xoff;
@@ -157,7 +157,7 @@ ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size
             __cache_update(device->blk.cache, eb, 1);
         }
 
-        memcpy(device->blk.cache.c_data, (void *)((uintptr_t)buf + size - p), p);
+        memcpy(device->blk.cache.c_data, (void*)((uintptr_t)buf + size - p), p);
 
         if (device->blk.write(device, device->blk.cache.c_data, eb, 1) <= 0)
             return errno = EIO, xoff;
@@ -177,7 +177,7 @@ ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size
 
             for (; i - max >= 0; i -= max, sb += max, xoff += device->blk.blksize * max) {
 
-                if (unlikely(device->blk.write(device, (void *)((uintptr_t)buf + (uintptr_t)xoff), sb, device->blk.blkmax)) <= 0)
+                if (unlikely(device->blk.write(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, device->blk.blkmax)) <= 0)
                     return errno = EIO, xoff;
             }
         }
@@ -185,7 +185,7 @@ ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size
 
         if (likely(i > 0)) {
 
-            if (unlikely(device->blk.write(device, (void *)((uintptr_t)buf + (uintptr_t)xoff), sb, i)) <= 0)
+            if (unlikely(device->blk.write(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, i)) <= 0)
                 return errno = EIO, xoff;
         }
     }
@@ -195,7 +195,7 @@ ssize_t block_write(device_t *device, const void *buf, off_t offset, size_t size
 
 
 
-ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
+ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->blk.blksize);
@@ -251,7 +251,7 @@ ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
             __cache_update(device->blk.cache, sb, 1);
         }
 
-        memcpy(buf, (void *)((uintptr_t)device->blk.cache.c_data + ((uintptr_t)offset % device->blk.blksize)), p);
+        memcpy(buf, (void*)((uintptr_t)device->blk.cache.c_data + ((uintptr_t)offset % device->blk.blksize)), p);
 
         xoff += p;
         sb++;
@@ -272,7 +272,7 @@ ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
             __cache_update(device->blk.cache, eb, 1);
         }
 
-        memcpy((void *)((uintptr_t)buf + size - p), device->blk.cache.c_data, p);
+        memcpy((void*)((uintptr_t)buf + size - p), device->blk.cache.c_data, p);
         eb--;
     }
 
@@ -287,7 +287,7 @@ ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
 
             for (; i - max >= 0; i -= max, sb += max, xoff += device->blk.blksize * max) {
 
-                if (unlikely(device->blk.read(device, (void *)((uintptr_t)buf + (uintptr_t)xoff), sb, device->blk.blkmax)) <= 0)
+                if (unlikely(device->blk.read(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, device->blk.blkmax)) <= 0)
                     return errno = EIO, xoff;
             }
         }
@@ -295,7 +295,7 @@ ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
 
         if (likely(i > 0)) {
 
-            if (unlikely(device->blk.read(device, (void *)((uintptr_t)buf + (uintptr_t)xoff), sb, i)) <= 0)
+            if (unlikely(device->blk.read(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, i)) <= 0)
                 return errno = EIO, xoff;
         }
     }
@@ -305,13 +305,13 @@ ssize_t block_read(device_t *device, void *buf, off_t offset, size_t size) {
 
 
 
-void block_init(device_t *device) {
+void block_init(device_t* device) {
     DEBUG_ASSERT(device);
 
     device->blk.cache.c_cached = 0;
 }
 
-void block_dnit(device_t *device) {
+void block_dnit(device_t* device) {
     DEBUG_ASSERT(device);
 
     device->blk.cache.c_cached = 0;
@@ -319,7 +319,7 @@ void block_dnit(device_t *device) {
 
 
 
-void init(const char *args) {
+void init(const char* args) {
     (void)args;
 }
 

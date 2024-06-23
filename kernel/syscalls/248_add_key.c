@@ -53,4 +53,4 @@
 
 typedef long key_serial_t;
 
-SYSCALL(248, add_key, long sys_add_key(const char *_type, const char *_description, const void *_payload, size_t plen, key_serial_t destringid) { return -ENOSYS; });
+SYSCALL(248, add_key, long sys_add_key(const char* _type, const char* _description, const void* _payload, size_t plen, key_serial_t destringid) { return -ENOSYS; });

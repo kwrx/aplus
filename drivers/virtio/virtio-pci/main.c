@@ -47,7 +47,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static void virtio_pci_interrupt(pcidev_t device, irq_t vector, struct virtio_driver *driver) {
+static void virtio_pci_interrupt(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(driver);
@@ -80,7 +80,7 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t vector, struct virtio_dr
     }
 }
 
-static uintptr_t virtio_pci_find_bar(struct virtio_driver *driver, uint8_t bar, uintptr_t offset) {
+static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -122,7 +122,7 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver *driver, uint8_t bar, 
 
 
 
-static int virtio_pci_init_common_cfg(struct virtio_driver *driver, uint8_t bar, uintptr_t offset) {
+static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -150,7 +150,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver *driver, uint8_t bar,
 
 
 
-    struct virtio_pci_common_cfg volatile *cfg = (struct virtio_pci_common_cfg volatile *)virtio_pci_find_bar(driver, bar, offset);
+    struct virtio_pci_common_cfg volatile* cfg = (struct virtio_pci_common_cfg volatile*)virtio_pci_find_bar(driver, bar, offset);
 
 
     //
@@ -303,7 +303,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver *driver, uint8_t bar,
 
 
 
-static int virtio_pci_init_device_cfg(struct virtio_driver *driver, uintptr_t caps, uint8_t bar, uintptr_t offset) {
+static int virtio_pci_init_device_cfg(struct virtio_driver* driver, uintptr_t caps, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -334,7 +334,7 @@ static int virtio_pci_init_device_cfg(struct virtio_driver *driver, uintptr_t ca
 
 
 
-static int virtio_pci_init_isr_status(struct virtio_driver *driver, uint8_t bar, uintptr_t offset) {
+static int virtio_pci_init_isr_status(struct virtio_driver* driver, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -342,7 +342,7 @@ static int virtio_pci_init_isr_status(struct virtio_driver *driver, uint8_t bar,
     DEBUG_ASSERT(bar >= 0 && bar <= 5);
 
 
-    driver->internals.isr_status = (uint32_t volatile *)virtio_pci_find_bar(driver, bar, offset);
+    driver->internals.isr_status = (uint32_t volatile*)virtio_pci_find_bar(driver, bar, offset);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -354,7 +354,7 @@ static int virtio_pci_init_isr_status(struct virtio_driver *driver, uint8_t bar,
 
 
 
-static int virtio_pci_init_notify_cfg(struct virtio_driver *driver, uintptr_t caps, uint8_t bar, uintptr_t offset) {
+static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, uintptr_t caps, uint8_t bar, uintptr_t offset) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -386,7 +386,7 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver *driver, uintptr_t ca
 
 
 
-int virtio_pci_init(struct virtio_driver *driver) {
+int virtio_pci_init(struct virtio_driver* driver) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
@@ -484,7 +484,7 @@ int virtio_pci_init(struct virtio_driver *driver) {
 
 
 
-void init(const char *args) {
+void init(const char* args) {
 }
 
 void dnit(void) {

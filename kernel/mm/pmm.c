@@ -100,7 +100,7 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
         DEBUG_ASSERT(pml2_bitmap[pml2_index] != 0);
 
 
-        uint64_t *pml1_bitmap = (uint64_t *)pml2_bitmap[pml2_index];
+        uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[pml2_index];
 
         __lock(&pml2_lock[pml2_index], {
             pml1_bitmap[pml1_index / 64] |= (1ULL << (pml1_index % 64));
@@ -151,7 +151,7 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
         DEBUG_ASSERT(pml2_bitmap[pml2_index] != 0);
 
 
-        uint64_t *pml1_bitmap = (uint64_t *)pml2_bitmap[pml2_index];
+        uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[pml2_index];
 
         __lock(&pml2_lock[pml2_index], {
             pml1_bitmap[pml1_index / 64] &= ~(1ULL << (pml1_index % 64));
@@ -184,7 +184,7 @@ uintptr_t pmm_alloc_block() {
             continue;
 
 
-        uint64_t *pml1_bitmap = (uint64_t *)pml2_bitmap[i];
+        uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[i];
 
 
         for (q = 0; q < PML1_MAX_ENTRIES; q++) {
@@ -257,7 +257,7 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
         }
 
 
-        uint64_t *pml1_bitmap = (uint64_t *)pml2_bitmap[i];
+        uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[i];
 
 
         for (q = 0; q < PML1_MAX_ENTRIES; q++) {
@@ -339,7 +339,7 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
 
 
 
-        uint64_t *pml1_bitmap = (uint64_t *)pml2_bitmap[i];
+        uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[i];
 
 
         for (q = 0; q < PML1_MAX_ENTRIES; q++) {
@@ -534,7 +534,7 @@ void pmm_init(uintptr_t max_memory) {
             kpanicf("pmm: failed to map bitmap for PML2 entry %ld\n", i);
         }
 
-        memset((void *)virt, 0, PML1_MAX_ENTRIES * sizeof(uint64_t));
+        memset((void*)virt, 0, PML1_MAX_ENTRIES * sizeof(uint64_t));
 
 
         pml2_bitmap[i] = virt;

@@ -52,4 +52,4 @@
 
 struct msgbuf;
 
-SYSCALL(69, msgsnd, long sys_msgsnd(int msqid, struct msgbuf *msgp, size_t msgsz, int msgflg) { return -ENOSYS; });
+SYSCALL(69, msgsnd, long sys_msgsnd(int msqid, struct msgbuf* msgp, size_t msgsz, int msgflg) { return -ENOSYS; });

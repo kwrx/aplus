@@ -37,7 +37,7 @@
 
 
 
-ssize_t iso9660_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t count) {
+ssize_t iso9660_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -52,10 +52,10 @@ ssize_t iso9660_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t coun
 
 
 
-    iso9660_t *iso9660 = (iso9660_t *)inode->sb->fsinfo;
+    iso9660_t* iso9660 = (iso9660_t*)inode->sb->fsinfo;
 
 
-    iso9660_directory_record_t *record = NULL;
+    iso9660_directory_record_t* record = NULL;
 
     if (unlikely(inode == inode->sb->root)) {
 
@@ -63,7 +63,7 @@ ssize_t iso9660_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t coun
 
     } else {
 
-        iso9660_inode_t *e = cache_get(&inode->sb->cache, inode->userdata);
+        iso9660_inode_t* e = cache_get(&inode->sb->cache, inode->userdata);
 
         if (unlikely(!e))
             return errno = EIO, -1;
@@ -90,7 +90,7 @@ ssize_t iso9660_readdir(inode_t *inode, struct dirent *e, off_t pos, size_t coun
 
         if (unlikely(length > 0)) {
 
-            iso9660_inode_t *child;
+            iso9660_inode_t* child;
 
             if (unlikely((child = cache_get(&inode->sb->cache, position)) == NULL))
                 break;

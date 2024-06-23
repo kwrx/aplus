@@ -51,7 +51,7 @@
  */
 
 SYSCALL(
-    318, getrandom, long sys_getrandom(char *buf, size_t count, unsigned int flags) {
+    318, getrandom, long sys_getrandom(char* buf, size_t count, unsigned int flags) {
         if (unlikely(!buf))
             return -EINVAL;
 

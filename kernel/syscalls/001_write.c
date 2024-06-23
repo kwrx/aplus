@@ -57,7 +57,7 @@
  */
 
 SYSCALL(
-    1, write, long sys_write(unsigned int fd, const void *buf, size_t size) {
+    1, write, long sys_write(unsigned int fd, const void* buf, size_t size) {
         DEBUG_ASSERT(current_task);
 
         current_task->iostat.wchar += (uint64_t)size;

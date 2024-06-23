@@ -75,13 +75,13 @@ static option_t pap_option_list[] = {
 /*
  * Protocol entry points.
  */
-static void upap_init(ppp_pcb *pcb);
-static void upap_lowerup(ppp_pcb *pcb);
-static void upap_lowerdown(ppp_pcb *pcb);
-static void upap_input(ppp_pcb *pcb, u_char *inpacket, int l);
-static void upap_protrej(ppp_pcb *pcb);
+static void upap_init(ppp_pcb* pcb);
+static void upap_lowerup(ppp_pcb* pcb);
+static void upap_lowerdown(ppp_pcb* pcb);
+static void upap_input(ppp_pcb* pcb, u_char* inpacket, int l);
+static void upap_protrej(ppp_pcb* pcb);
     #if PRINTPKT_SUPPORT
-static int upap_printpkt(const u_char *p, int plen, void (*printer)(void *, const char *, ...), void *arg);
+static int upap_printpkt(const u_char* p, int plen, void (*printer)(void*, const char*, ...), void* arg);
     #endif /* PRINTPKT_SUPPORT */
 
 const struct protent pap_protent = {PPP_PAP,
@@ -112,23 +112,23 @@ const struct protent pap_protent = {PPP_PAP,
     #endif /* DEMAND_SUPPORT */
 };
 
-static void upap_timeout(void *arg);
+static void upap_timeout(void* arg);
     #if PPP_SERVER
-static void upap_reqtimeout(void *arg);
-static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len);
+static void upap_reqtimeout(void* arg);
+static void upap_rauthreq(ppp_pcb* pcb, u_char* inp, int id, int len);
     #endif /* PPP_SERVER */
-static void upap_rauthack(ppp_pcb *pcb, u_char *inp, int id, int len);
-static void upap_rauthnak(ppp_pcb *pcb, u_char *inp, int id, int len);
-static void upap_sauthreq(ppp_pcb *pcb);
+static void upap_rauthack(ppp_pcb* pcb, u_char* inp, int id, int len);
+static void upap_rauthnak(ppp_pcb* pcb, u_char* inp, int id, int len);
+static void upap_sauthreq(ppp_pcb* pcb);
     #if PPP_SERVER
-static void upap_sresp(ppp_pcb *pcb, u_char code, u_char id, const char *msg, int msglen);
+static void upap_sresp(ppp_pcb* pcb, u_char code, u_char id, const char* msg, int msglen);
     #endif /* PPP_SERVER */
 
 
 /*
  * upap_init - Initialize a UPAP unit.
  */
-static void upap_init(ppp_pcb *pcb) {
+static void upap_init(ppp_pcb* pcb) {
     pcb->upap.us_user        = NULL;
     pcb->upap.us_userlen     = 0;
     pcb->upap.us_passwd      = NULL;
@@ -146,7 +146,7 @@ static void upap_init(ppp_pcb *pcb) {
  *
  * Set new state and send authenticate's.
  */
-void upap_authwithpeer(ppp_pcb *pcb, const char *user, const char *password) {
+void upap_authwithpeer(ppp_pcb* pcb, const char* user, const char* password) {
 
     if (!user || !password)
         return;
@@ -173,7 +173,7 @@ void upap_authwithpeer(ppp_pcb *pcb, const char *user, const char *password) {
  *
  * Set new state.
  */
-void upap_authpeer(ppp_pcb *pcb) {
+void upap_authpeer(ppp_pcb* pcb) {
 
     /* Lower layer up yet? */
     if (pcb->upap.us_serverstate == UPAPSS_INITIAL || pcb->upap.us_serverstate == UPAPSS_PENDING) {
@@ -190,8 +190,8 @@ void upap_authpeer(ppp_pcb *pcb) {
 /*
  * upap_timeout - Retransmission timer for sending auth-reqs expired.
  */
-static void upap_timeout(void *arg) {
-    ppp_pcb *pcb = (ppp_pcb *)arg;
+static void upap_timeout(void* arg) {
+    ppp_pcb* pcb = (ppp_pcb*)arg;
 
     if (pcb->upap.us_clientstate != UPAPCS_AUTHREQ)
         return;
@@ -212,8 +212,8 @@ static void upap_timeout(void *arg) {
 /*
  * upap_reqtimeout - Give up waiting for the peer to send an auth-req.
  */
-static void upap_reqtimeout(void *arg) {
-    ppp_pcb *pcb = (ppp_pcb *)arg;
+static void upap_reqtimeout(void* arg) {
+    ppp_pcb* pcb = (ppp_pcb*)arg;
 
     if (pcb->upap.us_serverstate != UPAPSS_LISTEN)
         return; /* huh?? */
@@ -229,7 +229,7 @@ static void upap_reqtimeout(void *arg) {
  *
  * Start authenticating if pending.
  */
-static void upap_lowerup(ppp_pcb *pcb) {
+static void upap_lowerup(ppp_pcb* pcb) {
 
     if (pcb->upap.us_clientstate == UPAPCS_INITIAL)
         pcb->upap.us_clientstate = UPAPCS_CLOSED;
@@ -254,7 +254,7 @@ static void upap_lowerup(ppp_pcb *pcb) {
  *
  * Cancel all timeouts.
  */
-static void upap_lowerdown(ppp_pcb *pcb) {
+static void upap_lowerdown(ppp_pcb* pcb) {
 
     if (pcb->upap.us_clientstate == UPAPCS_AUTHREQ) /* Timeout pending? */
         UNTIMEOUT(upap_timeout, pcb);               /* Cancel timeout */
@@ -275,7 +275,7 @@ static void upap_lowerdown(ppp_pcb *pcb) {
  *
  * This shouldn't happen.  In any case, pretend lower layer went down.
  */
-static void upap_protrej(ppp_pcb *pcb) {
+static void upap_protrej(ppp_pcb* pcb) {
 
     if (pcb->upap.us_clientstate == UPAPCS_AUTHREQ) {
         ppp_error("PAP authentication failed due to protocol-reject");
@@ -294,8 +294,8 @@ static void upap_protrej(ppp_pcb *pcb) {
 /*
  * upap_input - Input UPAP packet.
  */
-static void upap_input(ppp_pcb *pcb, u_char *inpacket, int l) {
-    u_char *inp;
+static void upap_input(ppp_pcb* pcb, u_char* inpacket, int l) {
+    u_char* inp;
     u_char code, id;
     int len;
 
@@ -348,13 +348,13 @@ static void upap_input(ppp_pcb *pcb, u_char *inpacket, int l) {
 /*
  * upap_rauth - Receive Authenticate.
  */
-static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len) {
+static void upap_rauthreq(ppp_pcb* pcb, u_char* inp, int id, int len) {
     u_char ruserlen, rpasswdlen;
-    char *ruser;
-    char *rpasswd;
+    char* ruser;
+    char* rpasswd;
     char rhostname[256];
     int retcode;
-    const char *msg;
+    const char* msg;
     int msglen;
 
     if (pcb->upap.us_serverstate < UPAPSS_LISTEN)
@@ -386,7 +386,7 @@ static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len) {
         UPAPDEBUG(("pap_rauth: rcvd short packet."));
         return;
     }
-    ruser = (char *)inp;
+    ruser = (char*)inp;
     INCPTR(ruserlen, inp);
     GETCHAR(rpasswdlen, inp);
     if (len < rpasswdlen) {
@@ -394,7 +394,7 @@ static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len) {
         return;
     }
 
-    rpasswd = (char *)inp;
+    rpasswd = (char*)inp;
 
     /*
      * Check the username and password given.
@@ -447,9 +447,9 @@ static void upap_rauthreq(ppp_pcb *pcb, u_char *inp, int id, int len) {
 /*
  * upap_rauthack - Receive Authenticate-Ack.
  */
-static void upap_rauthack(ppp_pcb *pcb, u_char *inp, int id, int len) {
+static void upap_rauthack(ppp_pcb* pcb, u_char* inp, int id, int len) {
     u_char msglen;
-    char *msg;
+    char* msg;
     LWIP_UNUSED_ARG(id);
 
     if (pcb->upap.us_clientstate != UPAPCS_AUTHREQ) /* XXX */
@@ -468,7 +468,7 @@ static void upap_rauthack(ppp_pcb *pcb, u_char *inp, int id, int len) {
                 UPAPDEBUG(("pap_rauthack: rcvd short packet."));
                 return;
             }
-            msg = (char *)inp;
+            msg = (char*)inp;
             PRINTMSG(msg, msglen);
         }
     }
@@ -482,9 +482,9 @@ static void upap_rauthack(ppp_pcb *pcb, u_char *inp, int id, int len) {
 /*
  * upap_rauthnak - Receive Authenticate-Nak.
  */
-static void upap_rauthnak(ppp_pcb *pcb, u_char *inp, int id, int len) {
+static void upap_rauthnak(ppp_pcb* pcb, u_char* inp, int id, int len) {
     u_char msglen;
-    char *msg;
+    char* msg;
     LWIP_UNUSED_ARG(id);
 
     if (pcb->upap.us_clientstate != UPAPCS_AUTHREQ) /* XXX */
@@ -503,7 +503,7 @@ static void upap_rauthnak(ppp_pcb *pcb, u_char *inp, int id, int len) {
                 UPAPDEBUG(("pap_rauthnak: rcvd short packet."));
                 return;
             }
-            msg = (char *)inp;
+            msg = (char*)inp;
             PRINTMSG(msg, msglen);
         }
     }
@@ -518,9 +518,9 @@ static void upap_rauthnak(ppp_pcb *pcb, u_char *inp, int id, int len) {
 /*
  * upap_sauthreq - Send an Authenticate-Request.
  */
-static void upap_sauthreq(ppp_pcb *pcb) {
-    struct pbuf *p;
-    u_char *outp;
+static void upap_sauthreq(ppp_pcb* pcb) {
+    struct pbuf* p;
+    u_char* outp;
     int outlen;
 
     outlen = UPAP_HEADERLEN + 2 * sizeof(u_char) + pcb->upap.us_userlen + pcb->upap.us_passwdlen;
@@ -532,7 +532,7 @@ static void upap_sauthreq(ppp_pcb *pcb) {
         return;
     }
 
-    outp = (u_char *)p->payload;
+    outp = (u_char*)p->payload;
     MAKEHEADER(outp, PPP_PAP);
 
     PUTCHAR(UPAP_AUTHREQ, outp);
@@ -555,9 +555,9 @@ static void upap_sauthreq(ppp_pcb *pcb) {
 /*
  * upap_sresp - Send a response (ack or nak).
  */
-static void upap_sresp(ppp_pcb *pcb, u_char code, u_char id, const char *msg, int msglen) {
-    struct pbuf *p;
-    u_char *outp;
+static void upap_sresp(ppp_pcb* pcb, u_char code, u_char id, const char* msg, int msglen) {
+    struct pbuf* p;
+    u_char* outp;
     int outlen;
 
     outlen = UPAP_HEADERLEN + sizeof(u_char) + msglen;
@@ -569,7 +569,7 @@ static void upap_sresp(ppp_pcb *pcb, u_char code, u_char id, const char *msg, in
         return;
     }
 
-    outp = (u_char *)p->payload;
+    outp = (u_char*)p->payload;
     MAKEHEADER(outp, PPP_PAP);
 
     PUTCHAR(code, outp);
@@ -586,13 +586,13 @@ static void upap_sresp(ppp_pcb *pcb, u_char code, u_char id, const char *msg, in
 /*
  * upap_printpkt - print the contents of a PAP packet.
  */
-static const char *const upap_codenames[] = {"AuthReq", "AuthAck", "AuthNak"};
+static const char* const upap_codenames[] = {"AuthReq", "AuthAck", "AuthNak"};
 
-static int upap_printpkt(const u_char *p, int plen, void (*printer)(void *, const char *, ...), void *arg) {
+static int upap_printpkt(const u_char* p, int plen, void (*printer)(void*, const char*, ...), void* arg) {
     int code, id, len;
     int mlen, ulen, wlen;
     const u_char *user, *pwd, *msg;
-    const u_char *pstart;
+    const u_char* pstart;
 
     if (plen < UPAP_HEADERLEN)
         return 0;
@@ -619,8 +619,8 @@ static int upap_printpkt(const u_char *p, int plen, void (*printer)(void *, cons
             wlen = p[ulen + 1];
             if (len < ulen + wlen + 2)
                 break;
-            user = (const u_char *)(p + 1);
-            pwd  = (const u_char *)(p + ulen + 2);
+            user = (const u_char*)(p + 1);
+            pwd  = (const u_char*)(p + ulen + 2);
             p += ulen + wlen + 2;
             len -= ulen + wlen + 2;
             printer(arg, " user=");
@@ -643,7 +643,7 @@ static int upap_printpkt(const u_char *p, int plen, void (*printer)(void *, cons
             mlen = p[0];
             if (len < mlen + 1)
                 break;
-            msg = (const u_char *)(p + 1);
+            msg = (const u_char*)(p + 1);
             p += mlen + 1;
             len -= mlen + 1;
             printer(arg, " ");

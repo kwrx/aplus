@@ -47,13 +47,13 @@ MODULE_LICENSE("GPL");
 
 
 
-static int pts_getattr(inode_t *inode, struct stat *st) {
+static int pts_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(st);
 
-    pty_t *pty = (pty_t *)inode->userdata;
+    pty_t* pty = (pty_t*)inode->userdata;
 
 
     st->st_ino     = pty->index;
@@ -73,7 +73,7 @@ static int pts_getattr(inode_t *inode, struct stat *st) {
     return 0;
 }
 
-static ssize_t pts_readdir(inode_t *inode, struct dirent *e, off_t position, size_t count) {
+static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(e);
@@ -89,7 +89,7 @@ static ssize_t pts_readdir(inode_t *inode, struct dirent *e, off_t position, siz
 
     {
 
-        for (pty_t *queue = pty_queue(); queue; queue = queue->next) {
+        for (pty_t* queue = pty_queue(); queue; queue = queue->next) {
 
             if (position-- > 0)
                 continue;
@@ -113,7 +113,7 @@ static ssize_t pts_readdir(inode_t *inode, struct dirent *e, off_t position, siz
     return i;
 }
 
-static inode_t *pts_finddir(inode_t *inode, const char *name) {
+static inode_t* pts_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
@@ -131,7 +131,7 @@ static inode_t *pts_finddir(inode_t *inode, const char *name) {
 
     {
 
-        for (pty_t *queue = pty_queue(); queue; queue = queue->next) {
+        for (pty_t* queue = pty_queue(); queue; queue = queue->next) {
 
             if (queue->index != index)
                 continue;
@@ -139,7 +139,7 @@ static inode_t *pts_finddir(inode_t *inode, const char *name) {
             DEBUG_ASSERT(queue->ptmx);
 
 
-            inode_t *d = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_USER);
+            inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_USER);
 
             strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
@@ -172,7 +172,7 @@ static inode_t *pts_finddir(inode_t *inode, const char *name) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
 
     int fd;
@@ -182,7 +182,7 @@ void init(const char *args) {
     }
 
 
-    inode_t *inode = NULL;
+    inode_t* inode = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
         DEBUG_ASSERT(fds->descriptors[fd].ref);

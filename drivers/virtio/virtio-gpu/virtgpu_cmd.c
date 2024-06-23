@@ -44,7 +44,7 @@
 
 
 
-int virtgpu_cmd_resource_detach_backing(struct virtgpu *gpu, uint64_t resource) {
+int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -64,7 +64,7 @@ int virtgpu_cmd_resource_detach_backing(struct virtgpu *gpu, uint64_t resource) 
 }
 
 
-int virtgpu_cmd_resource_unref(struct virtgpu *gpu, uint64_t resource) {
+int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -84,7 +84,7 @@ int virtgpu_cmd_resource_unref(struct virtgpu *gpu, uint64_t resource) {
 }
 
 
-int virtgpu_cmd_resource_create_2d(struct virtgpu *gpu, uint64_t *resource, uint32_t format, uint32_t width, uint32_t height) {
+int virtgpu_cmd_resource_create_2d(struct virtgpu* gpu, uint64_t* resource, uint32_t format, uint32_t width, uint32_t height) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -120,7 +120,7 @@ int virtgpu_cmd_resource_create_2d(struct virtgpu *gpu, uint64_t *resource, uint
 }
 
 
-int virtgpu_cmd_resource_attach_backing(struct virtgpu *gpu, uint64_t resource, uint64_t framebuffer, size_t size) {
+int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, uint64_t framebuffer, size_t size) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -150,7 +150,7 @@ int virtgpu_cmd_resource_attach_backing(struct virtgpu *gpu, uint64_t resource, 
 }
 
 
-int virtgpu_cmd_set_scanout(struct virtgpu *gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -182,7 +182,7 @@ int virtgpu_cmd_set_scanout(struct virtgpu *gpu, uint32_t scanout_id, uint64_t r
 }
 
 
-int virtgpu_cmd_transfer_to_host_2d(struct virtgpu *gpu, uint64_t resource, uint64_t offset, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint64_t offset, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
@@ -207,7 +207,7 @@ int virtgpu_cmd_transfer_to_host_2d(struct virtgpu *gpu, uint64_t resource, uint
 }
 
 
-int virtgpu_cmd_get_display_info(struct virtgpu *gpu, struct virtio_gpu_resp_display_info *display_info) {
+int virtgpu_cmd_get_display_info(struct virtgpu* gpu, struct virtio_gpu_resp_display_info* display_info) {
 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);

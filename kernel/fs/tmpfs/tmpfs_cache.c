@@ -37,12 +37,12 @@
 
 
 
-tmpfs_inode_t *tmpfs_cache_fetch(cache_t *cache, tmpfs_t *tmpfs, ino_t ino) {
+tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
     DEBUG_ASSERT(tmpfs);
     DEBUG_ASSERT(cache);
 
-    tmpfs_inode_t *i = (tmpfs_inode_t *)kcalloc(sizeof(tmpfs_inode_t), 1, GFP_KERNEL);
+    tmpfs_inode_t* i = (tmpfs_inode_t*)kcalloc(sizeof(tmpfs_inode_t), 1, GFP_KERNEL);
 
     i->capacity = 0;
     i->data     = NULL;
@@ -64,7 +64,7 @@ tmpfs_inode_t *tmpfs_cache_fetch(cache_t *cache, tmpfs_t *tmpfs, ino_t ino) {
 
 
 
-void tmpfs_cache_commit(cache_t *cache, tmpfs_t *tmpfs, ino_t ino, tmpfs_inode_t *inode) {
+void tmpfs_cache_commit(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode) {
 
     DEBUG_ASSERT(tmpfs);
     DEBUG_ASSERT(cache);
@@ -74,7 +74,7 @@ void tmpfs_cache_commit(cache_t *cache, tmpfs_t *tmpfs, ino_t ino, tmpfs_inode_t
 }
 
 
-void tmpfs_cache_release(cache_t *cache, tmpfs_t *tmpfs, ino_t ino, tmpfs_inode_t *inode) {
+void tmpfs_cache_release(cache_t* cache, tmpfs_t* tmpfs, ino_t ino, tmpfs_inode_t* inode) {
 
     DEBUG_ASSERT(tmpfs);
     DEBUG_ASSERT(cache);

@@ -33,7 +33,7 @@
 #include <unistd.h>
 
 
-static void show_usage(int argc, char **argv) {
+static void show_usage(int argc, char** argv) {
     printf("Use: iobench [options]... DEVICE...\n"
            "Read or write to a DEVICE in benchmark mode.\n"
            "   -w                          write mode\n"
@@ -45,7 +45,7 @@ static void show_usage(int argc, char **argv) {
     exit(0);
 }
 
-static void show_version(int argc, char **argv) {
+static void show_version(int argc, char** argv) {
     printf("%s (aplus coreutils) 0.1\n"
            "Copyright (c) %s Antonino Natale.\n"
            "Built with gcc %s (%s)\n",
@@ -57,7 +57,7 @@ static void show_version(int argc, char **argv) {
 
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
     static struct option long_options[] = {
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
         show_usage(argc, argv);
 
 
-    char *device = argv[optind++];
+    char* device = argv[optind++];
 
 
     int fd = open(device, mode ? O_WRONLY : O_RDONLY);
@@ -114,7 +114,7 @@ int main(int argc, char **argv) {
     }
 
 
-    char *buf = malloc(blksize);
+    char* buf = malloc(blksize);
 
     if (!buf) {
         perror("malloc");

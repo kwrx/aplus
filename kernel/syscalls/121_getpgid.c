@@ -58,7 +58,7 @@ SYSCALL(
 
         cpu_foreach(cpu) {
 
-            task_t *tmp;
+            task_t* tmp;
             for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
                 if (tmp->tid == pid)

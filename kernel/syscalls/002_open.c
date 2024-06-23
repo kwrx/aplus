@@ -53,8 +53,8 @@
  */
 
 SYSCALL(
-    2, open, long sys_open(const char *filename, int flags, mode_t mode) {
-        extern long sys_openat(int dfd, const char *filename, int flags, mode_t mode);
+    2, open, long sys_open(const char* filename, int flags, mode_t mode) {
+        extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
 
         return sys_openat(AT_FDCWD, filename, flags, mode);
     });

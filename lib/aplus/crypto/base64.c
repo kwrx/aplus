@@ -32,16 +32,16 @@ static const char b64_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J
                                  'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'};
 
 
-char *base64_encode(const unsigned char *src, size_t len) {
+char* base64_encode(const unsigned char* src, size_t len) {
     int i       = 0;
     int j       = 0;
-    char *enc   = NULL;
+    char* enc   = NULL;
     size_t size = 0;
     unsigned char buf[4];
     unsigned char tmp[3];
 
     // alloc
-    enc = (char *)__libaplus_malloc(1);
+    enc = (char*)__libaplus_malloc(1);
     if (NULL == enc) {
         return NULL;
     }
@@ -62,7 +62,7 @@ char *base64_encode(const unsigned char *src, size_t len) {
             // then translate each encoded buffer
             // part by index from the base 64 index table
             // into `enc' unsigned char array
-            char *p = (char *)__libaplus_malloc(size + 4);
+            char* p = (char*)__libaplus_malloc(size + 4);
             if (!p)
                 return NULL;
             memcpy(p, enc, size);
@@ -93,7 +93,7 @@ char *base64_encode(const unsigned char *src, size_t len) {
 
         // perform same write to `enc` with new allocation
         for (j = 0; (j < i + 1); ++j) {
-            char *p = (char *)__libaplus_malloc(size + 1);
+            char* p = (char*)__libaplus_malloc(size + 1);
             if (!p)
                 return NULL;
             memcpy(p, enc, size);
@@ -105,7 +105,7 @@ char *base64_encode(const unsigned char *src, size_t len) {
         // while there is still a remainder
         // append `=' to `enc'
         while ((i++ < 3)) {
-            char *p = (char *)__libaplus_malloc(size + 1);
+            char* p = (char*)__libaplus_malloc(size + 1);
             if (!p)
                 return NULL;
             memcpy(p, enc, size);
@@ -116,7 +116,7 @@ char *base64_encode(const unsigned char *src, size_t len) {
     }
 
     // Make sure we have enough space to add '\0' character at end.
-    char *p = (char *)__libaplus_malloc(size + 1);
+    char* p = (char*)__libaplus_malloc(size + 1);
     if (!p)
         return NULL;
     memcpy(p, enc, size);
@@ -129,17 +129,17 @@ char *base64_encode(const unsigned char *src, size_t len) {
 
 
 
-unsigned char *base64_decode(const char *src, size_t len) {
+unsigned char* base64_decode(const char* src, size_t len) {
     int i              = 0;
     int j              = 0;
     int l              = 0;
     size_t size        = 0;
-    unsigned char *dec = NULL;
+    unsigned char* dec = NULL;
     unsigned char buf[3];
     unsigned char tmp[4];
 
     // alloc
-    dec = (unsigned char *)__libaplus_malloc(1);
+    dec = (unsigned char*)__libaplus_malloc(1);
     if (NULL == dec) {
         return NULL;
     }
@@ -176,7 +176,7 @@ unsigned char *base64_decode(const char *src, size_t len) {
             buf[2] = ((tmp[2] & 0x3) << 6) + tmp[3];
 
 
-            char *p = (unsigned char *)__libaplus_malloc(size + 3);
+            char* p = (unsigned char*)__libaplus_malloc(size + 3);
             if (!p)
                 return NULL;
             memcpy(p, dec, size);
@@ -216,7 +216,7 @@ unsigned char *base64_decode(const char *src, size_t len) {
         buf[2] = ((tmp[2] & 0x3) << 6) + tmp[3];
 
         // write remainer decoded buffer to `dec'
-        char *p = (unsigned char *)__libaplus_malloc(size + (i - 1));
+        char* p = (unsigned char*)__libaplus_malloc(size + (i - 1));
         if (!p)
             return NULL;
         memcpy(p, dec, size);
@@ -229,7 +229,7 @@ unsigned char *base64_decode(const char *src, size_t len) {
     }
 
     // Make sure we have enough space to add '\0' character at end.
-    char *p = (unsigned char *)__libaplus_malloc(size + 1);
+    char* p = (unsigned char*)__libaplus_malloc(size + 1);
     if (!p)
         return NULL;
     memcpy(p, dec, size);

@@ -123,13 +123,13 @@ void pci_enable_mmio(pcidev_t device) {
 
 
 
-void pci_memcpy(pcidev_t device, void *dest, uintptr_t offset, size_t size) {
+void pci_memcpy(pcidev_t device, void* dest, uintptr_t offset, size_t size) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(dest);
     DEBUG_ASSERT(size);
 
-    char *p = (char *)dest;
+    char* p = (char*)dest;
 
     for (size_t i = 0; i < size; i++)
         p[i] = pci_read(device, offset + i, 1);

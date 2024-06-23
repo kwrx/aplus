@@ -103,8 +103,8 @@ void kmain(void) {
     // Execute init
     {
 
-        const char *__argv[2] = {"/sbin/init", NULL};
-        const char *__envp[1] = {NULL};
+        const char* __argv[2] = {"/sbin/init", NULL};
+        const char* __envp[1] = {NULL};
 
         int e = sys_execve(__argv[0], __argv, __envp);
         if (e < 0) {

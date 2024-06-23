@@ -37,10 +37,10 @@
 
 
 
-extern cairo_surface_t *_cairo_surface_create_in_error(cairo_status_t);
+extern cairo_surface_t* _cairo_surface_create_in_error(cairo_status_t);
 
 
-static cairo_surface_t *_cairo_image_surface_decode_webp(const void *data, size_t size) {
+static cairo_surface_t* _cairo_image_surface_decode_webp(const void* data, size_t size) {
 
     assert(data);
     assert(size);
@@ -52,14 +52,14 @@ static cairo_surface_t *_cairo_image_surface_decode_webp(const void *data, size_
     }
 
 
-    uint8_t *frame = WebPDecodeBGRA(data, size, &w, &h);
+    uint8_t* frame = WebPDecodeBGRA(data, size, &w, &h);
 
     if (!frame) {
         return _cairo_surface_create_in_error(CAIRO_STATUS_READ_ERROR);
     }
 
 
-    cairo_surface_t *surface = cairo_image_surface_create_for_data(frame, CAIRO_FORMAT_ARGB32, w, h, cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, w));
+    cairo_surface_t* surface = cairo_image_surface_create_for_data(frame, CAIRO_FORMAT_ARGB32, w, h, cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32, w));
 
 
     if (!surface || cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
@@ -72,7 +72,7 @@ static cairo_surface_t *_cairo_image_surface_decode_webp(const void *data, size_
 
 
 
-__attribute__((weak)) cairo_surface_t *cairo_image_surface_create_from_webp(const char *filename) {
+__attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp(const char* filename) {
 
     assert(filename);
 
@@ -91,7 +91,7 @@ __attribute__((weak)) cairo_surface_t *cairo_image_surface_create_from_webp(cons
     }
 
 
-    void *data = malloc(st.st_size);
+    void* data = malloc(st.st_size);
 
     if (!data) {
         close(fd);
@@ -109,7 +109,7 @@ __attribute__((weak)) cairo_surface_t *cairo_image_surface_create_from_webp(cons
     close(fd);
 
 
-    cairo_surface_t *surface = _cairo_image_surface_decode_webp(data, st.st_size);
+    cairo_surface_t* surface = _cairo_image_surface_decode_webp(data, st.st_size);
 
     return free(data), surface;
 }

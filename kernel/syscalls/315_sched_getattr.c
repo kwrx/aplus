@@ -53,4 +53,4 @@
 
 struct sched_attr;
 
-SYSCALL(315, sched_getattr, long sys_sched_getattr(pid_t pid, struct sched_attr *attr, unsigned int size, unsigned int flags) { return -ENOSYS; });
+SYSCALL(315, sched_getattr, long sys_sched_getattr(pid_t pid, struct sched_attr* attr, unsigned int size, unsigned int flags) { return -ENOSYS; });

@@ -37,10 +37,10 @@
 
 
 static uint16_t pci_find_type(uint32_t);
-static void pci_scan_hit(pci_func_t, uint32_t, void *);
-static void pci_scan_func(pci_func_t, int, int, int, int, void *);
-static void pci_scan_slot(pci_func_t, int, int, int, void *);
-static void pci_scan_bus(pci_func_t, int, int, void *);
+static void pci_scan_hit(pci_func_t, uint32_t, void*);
+static void pci_scan_func(pci_func_t, int, int, int, int, void*);
+static void pci_scan_slot(pci_func_t, int, int, int, void*);
+static void pci_scan_bus(pci_func_t, int, int, void*);
 
 
 
@@ -50,7 +50,7 @@ static uint16_t pci_find_type(uint32_t device) {
 }
 
 
-static void pci_scan_hit(pci_func_t fn, uint32_t device, void *arg) {
+static void pci_scan_hit(pci_func_t fn, uint32_t device, void* arg) {
 
     int v = pci_read(device, PCI_VENDOR_ID, 2);
     int d = pci_read(device, PCI_DEVICE_ID, 2);
@@ -59,7 +59,7 @@ static void pci_scan_hit(pci_func_t fn, uint32_t device, void *arg) {
 }
 
 
-static void pci_scan_func(pci_func_t fn, int type, int bus, int slot, int func, void *arg) {
+static void pci_scan_func(pci_func_t fn, int type, int bus, int slot, int func, void* arg) {
 
     pcidev_t d = pci_box_device(bus, slot, func);
 
@@ -71,7 +71,7 @@ static void pci_scan_func(pci_func_t fn, int type, int bus, int slot, int func, 
 }
 
 
-static void pci_scan_slot(pci_func_t fn, int type, int bus, int slot, void *arg) {
+static void pci_scan_slot(pci_func_t fn, int type, int bus, int slot, void* arg) {
 
     pcidev_t d = pci_box_device(bus, slot, 0);
 
@@ -96,7 +96,7 @@ static void pci_scan_slot(pci_func_t fn, int type, int bus, int slot, void *arg)
 }
 
 
-static void pci_scan_bus(pci_func_t fn, int type, int bus, void *arg) {
+static void pci_scan_bus(pci_func_t fn, int type, int bus, void* arg) {
 
     for (size_t i = 0; i < 32; i++) {
         pci_scan_slot(fn, type, bus, i, arg);
@@ -104,7 +104,7 @@ static void pci_scan_bus(pci_func_t fn, int type, int bus, void *arg) {
 }
 
 
-void pci_scan(pci_func_t fn, int type, void *arg) {
+void pci_scan(pci_func_t fn, int type, void* arg) {
 
     pci_scan_bus(fn, type, 0, arg);
 

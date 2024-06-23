@@ -153,7 +153,7 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
 }
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
 
 
     int fd = open("/dev/fb0", O_RDWR);
@@ -192,7 +192,7 @@ int main(int argc, char **argv) {
     }
 
 
-    void *backbuffer = malloc(var.yres * fix.line_length);
+    void* backbuffer = malloc(var.yres * fix.line_length);
 
     if (!backbuffer) {
         return perror("malloc"), 1;
@@ -310,7 +310,7 @@ int main(int argc, char **argv) {
         glFinish();
 
 
-        memcpy((void *)fix.smem_start, backbuffer, var.yres * fix.line_length);
+        memcpy((void*)fix.smem_start, backbuffer, var.yres * fix.line_length);
 
         angle += 2.0f;
 
@@ -326,7 +326,7 @@ int main(int argc, char **argv) {
 
     #include <stdio.h>
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv) {
     return fprintf(stderr, "OSMesa not available\n"), 1;
 }
 

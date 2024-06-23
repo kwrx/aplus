@@ -43,8 +43,8 @@ long (*syscalls[SYSMAX])(long, long, long, long, long, long);
 struct syscall_hook {
 
         uint32_t no;
-        const void *ptr;
-        const char *name;
+        const void* ptr;
+        const char* name;
 
 #if defined(__x86_64__)
         char __padding[12];
@@ -68,7 +68,7 @@ void syscall_init(void) {
 
     for (; hook_start < hook_end; hook_start += sizeof(struct syscall_hook)) {
 
-        struct syscall_hook *e = (struct syscall_hook *)(hook_start);
+        struct syscall_hook* e = (struct syscall_hook*)(hook_start);
 
         DEBUG_ASSERT(e->no < SYSMAX);
         DEBUG_ASSERT(e->ptr);

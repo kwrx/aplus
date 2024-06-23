@@ -52,4 +52,4 @@
 
 struct mmsghdr;
 
-SYSCALL(307, sendmmsg, long sys_sendmmsg(int fd, struct mmsghdr *msg, unsigned int vlen, unsigned flags) { return -ENOSYS; });
+SYSCALL(307, sendmmsg, long sys_sendmmsg(int fd, struct mmsghdr* msg, unsigned int vlen, unsigned flags) { return -ENOSYS; });

@@ -56,7 +56,7 @@
  */
 
 SYSCALL(
-    165, mount, long sys_mount(char const *dev_name, char const *dir_name, char const *type, unsigned long flags, void *data) {
+    165, mount, long sys_mount(char const* dev_name, char const* dir_name, char const* type, unsigned long flags, void* data) {
         if (unlikely(!dir_name))
             return -EINVAL;
 
@@ -82,8 +82,8 @@ SYSCALL(
 
 
 
-        inode_t *s = NULL;
-        inode_t *d = NULL;
+        inode_t* s = NULL;
+        inode_t* d = NULL;
 
         int fd;
         int e;
@@ -124,7 +124,7 @@ SYSCALL(
 
         DEBUG_ASSERT(d);
 
-        if (vfs_mount(s, d, __safe_type, flags, (const char *)data) < 0)
+        if (vfs_mount(s, d, __safe_type, flags, (const char*)data) < 0)
             return -errno;
 
 

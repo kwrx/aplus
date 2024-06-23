@@ -53,4 +53,4 @@
 
 struct mmsghdr;
 
-SYSCALL(299, recvmmsg, long sys_recvmmsg(int fd, struct mmsghdr *msg, unsigned int vlen, unsigned flags, struct timespec *timeout) { return -ENOSYS; });
+SYSCALL(299, recvmmsg, long sys_recvmmsg(int fd, struct mmsghdr* msg, unsigned int vlen, unsigned flags, struct timespec* timeout) { return -ENOSYS; });

@@ -50,10 +50,10 @@
 SYSCALL(
     56, clone,
 #if defined(__x86_64__)
-    long sys_clone(unsigned long flags, void *stack, int *parent_tid, int *child_tid, unsigned long tls)
+    long sys_clone(unsigned long flags, void* stack, int* parent_tid, int* child_tid, unsigned long tls)
 
 #else
-    long sys_clone(unsigned long flags, void *stack, int *parent_tid, unsigned long tls, int *child_tid)
+    long sys_clone(unsigned long flags, void* stack, int* parent_tid, unsigned long tls, int* child_tid)
 
 #endif
     {

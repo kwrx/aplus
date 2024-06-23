@@ -18,7 +18,7 @@ static struct {
         uint16_t fallback;
 
         struct {
-                cairo_surface_t *surface;
+                cairo_surface_t* surface;
         } types[WC_CURSOR_TYPE_LENGTH];
 
 } cursor;
@@ -71,7 +71,7 @@ int wc_cursor_set_type(uint16_t type) {
 }
 
 
-int wc_cursor_load(uint16_t type, const char *path) {
+int wc_cursor_load(uint16_t type, const char* path) {
 
     assert(path);
     assert(type < WC_CURSOR_TYPE_LENGTH);
@@ -91,7 +91,7 @@ int wc_cursor_load(uint16_t type, const char *path) {
 }
 
 
-int wc_cursor_render(wc_renderer_t *renderer) {
+int wc_cursor_render(wc_renderer_t* renderer) {
 
     assert(renderer);
 
@@ -99,7 +99,7 @@ int wc_cursor_render(wc_renderer_t *renderer) {
         return 0;
     }
 
-    cairo_surface_t *surface = cursor.types[cursor.type].surface;
+    cairo_surface_t* surface = cursor.types[cursor.type].surface;
 
     if (!surface) {
         return 0;

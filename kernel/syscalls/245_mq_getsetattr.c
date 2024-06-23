@@ -52,4 +52,4 @@
 typedef long mqd_t;
 struct mq_attr;
 
-SYSCALL(245, mq_getsetattr, long sys_mq_getsetattr(mqd_t mqdes, const struct mq_attr *mqstat, struct mq_attr *omqstat) { return -ENOSYS; });
+SYSCALL(245, mq_getsetattr, long sys_mq_getsetattr(mqd_t mqdes, const struct mq_attr* mqstat, struct mq_attr* omqstat) { return -ENOSYS; });

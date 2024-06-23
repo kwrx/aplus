@@ -24,8 +24,8 @@ extern "C" {
 int wc_cursor_initialize(void);
 int wc_cursor_set_type(uint16_t type);
 int wc_cursor_set_fallback(uint16_t type);
-int wc_cursor_load(uint16_t type, const char *path);
-int wc_cursor_render(wc_renderer_t *renderer);
+int wc_cursor_load(uint16_t type, const char* path);
+int wc_cursor_render(wc_renderer_t* renderer);
 
 
 

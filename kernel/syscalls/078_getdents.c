@@ -55,4 +55,4 @@
  */
 
 
-SYSCALL(78, getdents, long sys_getdents(unsigned int fd, struct dirent *dirent, unsigned int count) { return -ENOSYS; });
+SYSCALL(78, getdents, long sys_getdents(unsigned int fd, struct dirent* dirent, unsigned int count) { return -ENOSYS; });

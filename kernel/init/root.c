@@ -41,9 +41,9 @@ void root_init(void) {
     strncpy(cmd, core->boot.cmdline, sizeof(cmd));
 
 
-    char *tok = cmd;
+    char* tok = cmd;
 
-    for (char *s = strtok_r(cmd, " ", &tok); s; s = strtok_r(NULL, " ", &tok)) {
+    for (char* s = strtok_r(cmd, " ", &tok); s; s = strtok_r(NULL, " ", &tok)) {
 
         if ((strstr(s, "root="))) {
             strncpy(root, &s[5], CONFIG_MAXNAMLEN);

@@ -53,4 +53,4 @@
 
 struct pollfd;
 
-SYSCALL(271, ppoll, long sys_ppoll(struct pollfd *ufds, unsigned int nfds, struct timespec *tsp, const sigset_t *sigmask, size_t sigsetsize) { return -ENOSYS; });
+SYSCALL(271, ppoll, long sys_ppoll(struct pollfd* ufds, unsigned int nfds, struct timespec* tsp, const sigset_t* sigmask, size_t sigsetsize) { return -ENOSYS; });

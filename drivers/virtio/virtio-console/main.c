@@ -48,9 +48,9 @@ MODULE_LICENSE("GPL");
 
 
 
-static void virtconsole_init(device_t *);
-static void virtconsole_dnit(device_t *);
-static void virtconsole_reset(device_t *);
+static void virtconsole_init(device_t*);
+static void virtconsole_dnit(device_t*);
+static void virtconsole_reset(device_t*);
 
 
 device_t device = {
@@ -77,7 +77,7 @@ device_t device = {
 
 
 
-static void virtconsole_init(device_t *device) {
+static void virtconsole_init(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->mmiobase);
@@ -87,19 +87,19 @@ static void virtconsole_init(device_t *device) {
 }
 
 
-static void virtconsole_dnit(device_t *device) {
+static void virtconsole_dnit(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->mmiobase);
 }
 
 
-static void virtconsole_reset(device_t *device) {
+static void virtconsole_reset(device_t* device) {
 
     DEBUG_ASSERT(device);
 }
 
-static int negotiate_features(struct virtio_driver *driver, uint32_t *features, size_t index) {
+static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 
     if (index == 0) {
 
@@ -111,16 +111,16 @@ static int negotiate_features(struct virtio_driver *driver, uint32_t *features, 
     return 0;
 }
 
-static int setup_config(struct virtio_driver *driver, uintptr_t device_config) {
+static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver *driver) {
+static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
     return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
 }
 
 
-static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
+static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     if (vid != VIRTIO_PCI_VENDOR)
         return;
@@ -155,7 +155,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void *arg) {
 }
 
 
-void init(const char *args) {
+void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "virtio=off"))
         return;
