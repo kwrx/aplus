@@ -1,5 +1,5 @@
 [package]
-name = "rustk"
+name = "kernel-rust"
 version = "0.6.0"
 authors = ["Antonino Natale <antonio.natale97@hotmail.com>"]
 edition = "2021"

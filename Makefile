@@ -13,7 +13,7 @@ export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
-PROJECTS := lib kernel drivers apps
+PROJECTS := kernel-rust kernel drivers apps
 TARGET	 := aplus.img
 
 REPORT   := docs/REPORT.md
