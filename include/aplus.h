@@ -271,7 +271,7 @@ struct syscore {
                 uintptr_t sh_entsize;
                 uintptr_t sh_shndx;
 
-                char sections[CONFIG_BUFSIZ << 2];
+                char sections[CONFIG_BUFSIZ << 4];
 
         } exe;
 
