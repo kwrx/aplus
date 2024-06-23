@@ -20,7 +20,7 @@ cache   = '/tmp/get-pkg'
 
 
 
-def GetPackage(remote, cache, repo, p):
+def pkg_get(remote, cache, repo, p):
     if os.path.exists('%s/%s/%s.tar.xz' % (cache, repo, p)) == False:
         wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
         print('')
@@ -30,7 +30,7 @@ def GetPackage(remote, cache, repo, p):
 
 
 
-def ProcessPackage(z, trigger, prefix):
+def pkg_process(z, trigger, prefix):
     
     try:
         z.getmember('.pkg/%s' % (trigger))
@@ -51,10 +51,10 @@ def ProcessPackage(z, trigger, prefix):
 
 
 
-def ExtractPackage(archive, prefix):
+def pkg_extract(archive, prefix):
     z = tarfile.open(archive, 'r:xz')
 
-    ProcessPackage(z, 'pre-install', prefix)
+    pkg_process(z, 'pre-install', prefix)
 
     for m in z.getnames():
 
@@ -77,28 +77,28 @@ def ExtractPackage(archive, prefix):
             z.extract(m, path=prefix)
 
 
-    ProcessPackage(z, 'post-install', prefix)
+    pkg_process(z, 'post-install', prefix)
 
     z.close()
 
 
 
-def InstallPackages(cache, repo, packages, prefix):
+def pkg_install(cache, repo, packages, prefix):
 
     for p in packages:
         print('GET %s %s.tar.xz' % (repo, p))
-        GetPackage(remote, cache, repo, p)
+        pkg_get(remote, cache, repo, p)
 
 
     for p in packages:
         print("Unpacking %s.tar.xz..." % (p))
-        ExtractPackage('%s/%s/%s.tar.xz' % (cache, repo, p), prefix)
+        pkg_extract('%s/%s/%s.tar.xz' % (cache, repo, p), prefix)
 
 
-def RemovePackages(cache, repo, packages, prefix):
+def pkg_rm(cache, repo, packages, prefix):
     pass
 
-def ListPackages(cache, repo, packages):
+def pkg_list(cache, repo, packages):
     pass
 
 
@@ -122,13 +122,13 @@ def main(argv):
 
 
     if argv.install is not None:
-        InstallPackages(cache, repo, argv.install, prefix)
+        pkg_install(cache, repo, argv.install, prefix)
     
     if argv.remove is not None:
-        RemovePackages(cache, repo, argv.remove, prefix)
+        pkg_rm(cache, repo, argv.remove, prefix)
 
     if argv.list is not None:
-        ListPackages(cache, repo, argv.list)
+        pkg_list(cache, repo, argv.list)
 
     sys.exit(0)
 
