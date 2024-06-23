@@ -1,16 +1,15 @@
 
 # aplus `#os`
-[![deploy](https://github.com/kwrx/aplus/actions/workflows/deploy.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/deploy.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
-An operating system built mostly from scratch with a hybrid and cross-platform kernel that resembles Unix. The project began in September 2013 as a way to improve my creator's low-level programming skills. It primarily uses C/C++ and Assembly programming languages.
+An operating system built mostly from scratch with a hybrid and cross-platform kernel that resembles Unix. The project began in September 2013 as a way to improve my creator's low-level programming skills. It primarily uses C/C++, Rust and Assembly programming languages.
 
 ## :fire: Features
 
 * **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets
 * **Multitasking**: Thread and Process support with SMP
-* **Network**: [kernel/network/](/kernel/network), Almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
+* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
 * **Unix-like**: VFS, Signals, Pipes, IPC, Shared Memory, Unix Sockets
 * **ELF**: Dynamic and static executables 
 * **Linux Framebuffer**: Linux-like framebuffer support
@@ -28,7 +27,7 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
 
 ## :electron: Kernel
 The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
-Moreover, it uses a modular architecture with loadables kernel objects and run on different platforms like x86, x86_64, ARM, etc.
+Moreover, it uses a modular architecture with loadables kernel objects and run on different platforms like x86_64, aarch64, etc.
 
 
 ## :robot: Userspace
@@ -55,26 +54,7 @@ $ git clone https://github.com/kwrx/aplus
 $ cd aplus
 ```
 
-Now you have basically two options to build image from sources.
-
-### Building with Docker (Recommended):
-1. Pull and run the build system in a docker image environment
-
-```console
-# docker run -it --privileged=true      \
-    -v $(pwd):/opt/prj/aplus            \
-    -w /opt/prj/aplus -t ubuntu:focal   \
-    ./scripts/build-with-docker
-```
-
-2. Run it (Linux):
-```console
-$ ./scripts/run-qemu TARGET
-```
-
-**NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
-
-### Building with Toolchain:
+### Build from Linux:
 It's recommended you use a recent Linux host environment with this method.
 
 Some packages are required for the build system:
@@ -87,12 +67,8 @@ Some packages are required for the build system:
 
 <br>
 
-1. Install dependencies
-```console
-$ pip3 install -r requirements.txt
-```
 
-2. Configure and check environment
+1. Configure and check environment
 ```console
 $ ./configure
 ```
@@ -107,5 +83,6 @@ $ ./makew run
 ## :globe_with_meridians: Third-Party Software:
 `aplus` uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
-Licenses for the included third-party tools and libraries can be found [here](/extra/licenses), and for project [here](/LICENSE)
+## :page_with_curl: License
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](/LICENSE) file for details.
 
