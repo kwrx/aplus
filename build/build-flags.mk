@@ -108,8 +108,3 @@ LDFLAGS     += $(subst $\",,$(CONFIG_COMPILER_EXTRA_LDFLAGS))
 # Cargo
 #
 CARGO_FLAGS += --target $(ROOTDIR)/build/rust/$(CARGO_TARGET).json
-
-#
-# Rust
-#
-RUSTFLAGS   += --target $(ROOTDIR)/build/rust/$(CARGO_TARGET).json

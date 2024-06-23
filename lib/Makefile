@@ -1,10 +1,8 @@
 .PHONY: all install clean distclean
 
 
-LIBS := rustk
-
+LIBS    := rustk
 TARGETS	:= $(shell find $(LIBS) -type f -iname "Makefile" -exec dirname {} \;)
-
 
 
 BUILDALL:   $(TARGETS)

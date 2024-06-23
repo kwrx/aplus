@@ -1,17 +1,19 @@
 
-SRCDIRS	 := $(ROOTDIR)/arch/$(PLATFORM) $(ROOTDIR)/libk .
-INCLUDES := $(ROOTDIR)/include
-DEFINES	 := KERNEL=1
-LIBS	 := gcc
+SRCDIRS	  := $(ROOTDIR)/arch/$(PLATFORM) $(ROOTDIR)/libk .
+INCLUDES  := $(ROOTDIR)/include
+DEFINES	  := KERNEL=1
+LIBS	  := gcc
 
-CFLAGS   := -include $(ROOTDIR)/config.h -fno-builtin
-CXXFLAGS := -include $(ROOTDIR)/config.h -fno-builtin
-ASFLAGS  := -include $(ROOTDIR)/config.h
+CFLAGS    := -include $(ROOTDIR)/config.h -fno-builtin
+CXXFLAGS  := -include $(ROOTDIR)/config.h -fno-builtin
+ASFLAGS   := -include $(ROOTDIR)/config.h
 
-DESTDIR  := $(SYSROOT)/boot
-TARGET	 := aplus.bin
+DESTDIR   := $(SYSROOT)/boot
+TARGET	  := aplus.bin
 
-# LDFLAGS  := -Wl,--whole-archive $(ROOTDIR)/lib/rustk/librustk.a -Wl,--no-whole-archive
+LDFLAGS   := -Wl,--whole-archive $(ROOTDIR)/lib/rustk/librustk.a -Wl,--no-whole-archive
+
+RESOURCES := $(ROOTDIR)/lib/rustk/librustk.a
 
 include $(ROOTDIR)/arch/$(PLATFORM)/config.mk
 include $(ROOTDIR)/build/cross.mk
