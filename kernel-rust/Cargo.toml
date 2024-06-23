@@ -7,6 +7,9 @@ edition = "2021"
 [lib]
 crate-type = ["staticlib", "rlib"]
 
+[profile.dev]
+split-debuginfo = "unpacked"
+
 [dependencies]
 spin = "0.9.8"
 
