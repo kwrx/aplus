@@ -1,5 +1,6 @@
 .vscode
 .idea
+.venv
 
 *.o
 *.d
@@ -37,7 +38,7 @@
 /config.h
 /config.mk
 /makew
-/extra/third-party
+/build/packages/
 
 # Sysroot
 /root

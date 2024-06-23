@@ -1,107 +1,153 @@
 #!/bin/bash
-# Usage: configure [PRESET]
+# This script is used to install the necessary packages for the project
 
+# Paths
+CFGDIR="$(pwd)/build/setup"
+PKGDIR="$(pwd)/build/packages"
 
-gconfig="build/setup"
-kconfig="extra/third-party/kconfiglib"
+# URLs
+URL_KCONFIGLIB="https://github.com/kwrx/aplus-kconfiglib"
+URL_TOOLCHAIN="https://github.com/kwrx/aplus-toolchain"
 
+# Config
+HOST_PYTHON=""
+PREBUILT_TOOLCHAIN_AVAILABLE=1
+PREBUILT_TOOLCHAIN_NEEDS_REBUILD=1
 
-# Arguments
-skip_packages=0
+#
+# Functions
+#
 
-case "$1" in
-    --skip-packages)
-        skip_packages=1
-        shift
-        ;;
-esac
+optional() {
+    echo -n "Checking for $1..."
+    if ! command -v "$1"; then
+        tput setaf 3
+        echo "not found, $2"
+        tput sgr0
+    fi
+}
 
-        
+required() {
+    echo -n "Checking for $1..."
 
-echo "## Checking dependencies"
+    if ! command -v "$1"; then
+        tput setaf 1
+        echo "not found, dependency not satisfied, please install $1 and try again."
+        tput sgr0
+        exit 1
+    fi
+}
 
-    required() {
-        echo -n "Checking for $1..."
-
-        if ! command -v "$1"; then
-            echo "not found, dependency not satisfied, please install $1 and try again."
+required_python_3() {
+    echo -n "Checking for python..."
+    if command -v python; then
+        HOST_PYTHON=$(command -v python)
+    else
+        echo "not found"
+        echo -n "Checking for python3..."
+        if command -v python3; then
+            HOST_PYTHON=$(command -v python3)
+        else
+            tput setaf 1
+            echo "not found, dependency not satisfied, please install python3 and try again."
+            tput sgr0
             exit 1
         fi
-    }
-
-
-    required git
-    required gcc
-    required ld
-    required gdisk
-    required mkfs.vfat
-    required mkfs.ext2
-    required dd
-    required sudo
-    required sync
-    required make
-    required find
-    required awk
-    required automake
-    required autoconf
-    required fc-scan
-    required grub-install
-    required python3
-    required pip3
-    required gzip
-    required zip
-
-
-echo "## Preparing environment"
-
-    if [ ! -d $kconfig ]; then
-        git clone --depth=1 https://github.com/kwrx/aplus-kconfiglib $kconfig
     fi
+}
 
-    pip3 install -r requirements.txt
+die() {
+    tput setaf 8
+    echo "> $@"
+    tput sgr0
+    $@ || exit 1
+}
 
+stage_1() {
 
-echo "## Generate configuration"
+    tput setaf 6
+    echo "## Stage 1: Collecting dependencies"
+    tput sgr0
 
-    if [ -f $gconfig/$1.config ]; then
-        KCONFIG_CONFIG=config.mk python3 $kconfig/defconfig.py --kconfig .config $gconfig/$1.config
+    if [ ! -d "$PKGDIR/kconfiglib" ]; then
+        echo "+ kconfiglib: GET $URL_KCONFIGLIB"
+        die git clone -q --depth=1 https://github.com/kwrx/aplus-kconfiglib $PKGDIR/kconfiglib
     else
-        KCONFIG_CONFIG=config.mk python3 $kconfig/menuconfig.py .config
+        if [ -n "$(git -C $PKGDIR/kconfiglib fetch)" ]; then
+            echo "+ kconfiglib: PULL $URL_KCONFIGLIB"
+            die git -C $PKGDIR/kconfiglib pull 1>/dev/null
+        else
+            echo "+ kconfiglib: CACHED"
+        fi
     fi
 
-    KCONFIG_CONFIG=config.mk python3 $kconfig/genconfig.py  .config
+    if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 0 ]; then
+        if [ ! -d "$PKGDIR/aplus-toolchain" ]; then
+            echo "+ toolchain: GET $URL_TOOLCHAIN"
+            die git clone -q --depth=1 $URL_TOOLCHAIN $PKGDIR/aplus-toolchain
+        else
+            if [ -n "$(git -C $PKGDIR/aplus-toolchain fetch)" ]; then
+                echo "+ toolchain: PULL $URL_TOOLCHAIN"
+                die git -C $PKGDIR/aplus-toolchain -q pull
+            else
+                PREBUILT_TOOLCHAIN_NEEDS_REBUILD=0
+                echo "+ toolchain: CACHED"
+            fi
+        fi
+    else
+        echo "+ toolchain: PREBUILT"
+    fi
 
+    echo "+ requirements.txt"
+    die pip install -q -r $(pwd)/requirements.txt
 
-    if [ ! -f config.mk ]; then
-        echo "config.mk: no such file or directory"
+}
+
+stage_2() {
+
+    tput setaf 6
+    echo "## Stage 2: Generating configuration"
+    tput sgr0
+
+    if [ -f $TMPLDIR/$ARG_KCONFIG.config ]; then
+        KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/defconfig.py --kconfig $(pwd)/.config $TMPLDIR/$ARG_KCONFIG.config
+    else
+        KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/menuconfig.py $(pwd)/.config
+    fi
+
+    KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/genconfig.py $(pwd)/.config
+
+    if [ ! -f $(pwd)/config.mk ]; then
+        tput setaf 1
+        echo "config.mk: not found, configuration failed."
+        tput sgr0
         exit 1
     fi
 
-    if [ ! -f config.h ]; then
-        echo "config.h: no such file or directory"
+    if [ ! -f $(pwd)/config.h ]; then
+        tput setaf 1
+        echo "config.h: not found, configuration failed."
+        tput sgr0
         exit 1
     fi
 
+    . $(pwd)/config.mk
+    export PATH="$PATH:$CONFIG_SYSTEM_PATH_TOOLCHAIN/bin"
 
+}
 
-echo "## Configure environment"
+stage_3() {
 
-    . config.mk
-    PATH="$PATH:$CONFIG_SYSTEM_PATH_TOOLCHAIN/bin"
+    tput setaf 6
+    echo "## Stage 3: Getting Packages"
+    tput sgr0
 
-
-if [ $skip_packages -eq 1 ]; then
-    echo "## Get Packages (skipping)"
-else
-
-    echo "## Get Packages"
-
-    packages="system-base system-cursors system-fonts system-images system-keymaps"    
+    packages="system-base system-cursors system-fonts system-images system-keymaps"
 
     if [ "$CONFIG_HAVE_BUSYBOX" == "y" ]; then
         packages="$packages busybox"
     fi
-    
+
     if [ "$CONFIG_HAVE_DASH" == "y" ]; then
         packages="$packages dash"
     fi
@@ -166,31 +212,198 @@ else
         packages="$packages mesa"
     fi
 
+    # Get packages
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
-    python3 ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
-    python3 ./scripts/get-pkg.py --repo kwrx/aplus-packages  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i $packages
-
+    # Get additional packages
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
-        python3 ./scripts/get-pkg.py --repo kwrx/aplus-doom  --prefix $CONFIG_SYSTEM_PATH_SYSROOT   -i doom
+        die python ./scripts/get-pkg.py --repo kwrx/aplus-doom --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i doom
     fi
-    
-fi
 
+}
 
-echo "## Generate Wrapper"
+stage_4() {
 
-    echo '#!/bin/sh'                                                         > makew
-    echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"'   >> makew
-    echo 'make --no-print-directory -s MAKE_WRAPPER=y $@'                   >> makew
+    tput setaf 6
+    echo "## Stage 4: Getting Toolchain"
+    tput sgr0
+
+    if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 1 ]; then
+        if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
+            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+        fi
+    else
+
+        if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
+            PREBUILT_TOOLCHAIN_NEEDS_REBUILD=1
+        fi
+
+        if [ $PREBUILT_TOOLCHAIN_NEEDS_REBUILD -eq 1 ]; then
+
+            pushd $PKGDIR/aplus-toolchain &>/dev/null
+            echo "Cleaning toolchain..."
+            die rm -rf toolchain
+            die rm -rf tmp
+            echo "Building toolchain..."
+            if [ $ARG_VERBOSE -eq 1 ]; then
+                die ./ci/build.sh $CONFIG_COMPILER_HOST-aplus $(gcc -dumpmachine)
+            else
+                die ./ci/build.sh $CONFIG_COMPILER_HOST-aplus $(gcc -dumpmachine) &>build.log
+            fi
+            popd
+
+        fi
+
+        die mkdir -p $(dirname $CONFIG_SYSTEM_PATH_TOOLCHAIN)
+        die ln -sf $PKGDIR/aplus-toolchain/toolchain $(dirname $CONFIG_SYSTEM_PATH_TOOLCHAIN)
+
+    fi
+
+}
+
+stage_5() {
+
+    tput setaf 6
+    echo "## Stage 5: Setting up Rust"
+    tput sgr0
+
+    # Nightly
+    die rustup default nightly
+
+    # Target
+    die rustup target add $CONFIG_COMPILER_TARGET
+
+}
+
+stage_6() {
+
+    tput setaf 6
+    echo "## Stage 6: Generating Wrapper"
+    tput sgr0
+
+    echo '#!/bin/sh' >makew
+    echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"' >>makew
+    echo 'make --no-print-directory -s MAKE_WRAPPER=y $@' >>makew
 
     chmod +x makew
 
+}
 
+#
+# Main
+#
 
+# Arguments
+ARG_KCONFIG=""
+ARG_SKIP_PACKAGES=0
+ARG_SKIP_TOOLCHAIN=0
+ARG_VERBOSE=0
 
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    --kconfig)
+        ARG_KCONFIG="$2"
+        shift
+        shift
+        ;;
+    --skip-packages)
+        ARG_SKIP_PACKAGES=1
+        shift
+        ;;
+    --skip-toolchain)
+        ARG_SKIP_TOOLCHAIN=1
+        shift
+        ;;
+    --verbose)
+        ARG_VERBOSE=1
+        shift
+        ;;
+    --help)
+        echo "Usage: $0 [--kconfig <file>] [--skip-packages] [--skip-toolchain] [--verbose]"
+        exit 0
+        ;;
+    *)
+        echo "Unknown argument: $1"
+        exit 1
+        ;;
+    esac
+done
 
+# Check if the script is run on a Linux machine
+if [ "$(uname)" != "Linux" ]; then
+    echo "This script is intended to run on a Linux machine."
+    exit 1
+fi
 
+# Check if the script is run as root
+if [ "$(id -u)" -eq 0 ]; then
+    echo "This script should not be run as root."
+    exit 1
+fi
 
+# Check for required tools
+optional clang-format "formatting will not be available"
+optional doxygen "documentation will not be available"
+optional qemu-img "disk images conversion will not be available"
+required git
+required make
+required automake
+required autoconf
+required gcc
+required ld
+required gdisk
+required mkfs.vfat
+required mkfs.ext2
+required dd
+required sync
+required sudo
+required find
+required awk
+required grub-install
+required fc-scan
+required gzip
+required zip
+required rustc
+required rustup
+required cargo
+required_python_3
+
+# Check for host architecture
+HOST=$(gcc -dumpmachine)
+
+# Check if a prebuilt toolchain is available
+case $HOST in
+x86_64-*) ;;
+*)
+    PREBUILT_TOOLCHAIN_AVAILABLE=0
+    tput setaf 3
+    echo "WARN! Prebuilt toolchain is not available for $HOST, a custom toolchain will be built from source."
+    tput sgr0
+    ;;
+esac
+
+# Prepare .venv
+die $HOST_PYTHON -m venv .venv
+die source .venv/bin/activate
+
+# Execute stages
+stage_1
+stage_2
+if [ $ARG_SKIP_PACKAGES -eq 0 ]; then
+    stage_3
+fi
+if [ $ARG_SKIP_TOOLCHAIN -eq 0 ]; then
+    stage_4
+fi
+# stage_5
+stage_6
+
+# Cleanup
+die deactivate
+
+# Output configuration
 if [ "$CONFIG_HAVE_DEBUG" == "y" ]; then
     buildtype="Debug"
 else
@@ -214,8 +427,6 @@ if [ "$CONFIG_HAVE_SMP" == "y" ]; then
 else
     smp="False"
 fi
-
-
 
 echo -e "\
                                                                                                         \n\
@@ -242,5 +453,4 @@ Setup completed!                                                                
         See config.h to more detals.                                                                    \n\
                                                                                                         \n"
 
-
-
+exit 0
