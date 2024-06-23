@@ -190,6 +190,9 @@ if [ $LIVE_MODE -eq 1 ]; then
     sudo cp -rf $SOURCE/boot/* $TMPDIR/p1/boot/
     sudo cp -rf $SOURCE/usr/lib/modules/* $TMPDIR/p1/usr/lib/modules/
 
+    # Copy grub modules
+    sudo cp -rf /usr/lib/grub/x86_64-efi $TMPDIR/p1/boot/grub
+
     # Copy initrd
     sudo cp -f /tmp/aplus-initrd/initrd.img $TMPDIR/p1/boot/initrd.img
 
@@ -200,6 +203,9 @@ else
 
     # Copy files
     sudo cp -rf $SOURCE/* $TMPDIR/p1
+
+    # Copy grub modules
+    sudo cp -rf /usr/lib/grub/x86_64-efi $TMPDIR/p1/boot/grub
 
 fi
 
