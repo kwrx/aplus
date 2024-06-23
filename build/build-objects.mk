@@ -68,6 +68,3 @@ endif
 %.o: %.asm
 	$(QUIET)echo "    ASM     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)nasm -felf64          $< -o $@
-%.o: %.rs
-	$(QUIET)echo "    RUST    $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)rustc --crate-type=staticlib --emit=obj $(RUSTFLAGS) $< -o $@

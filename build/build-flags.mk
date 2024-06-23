@@ -5,7 +5,6 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 	CFLAGS      += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
 	CXXFLAGS    += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
 	ASFLAGS     += -g3 -Og -fno-omit-frame-pointer -Wall -Werror
-	RUSTFLAGS   += -g
 	DEFINES     += DEBUG=1
 
 
@@ -53,7 +52,6 @@ else
 	CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 	CXXFLAGS    += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 	ASFLAGS     += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
-	RUSTFLAGS   += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
 	DEFINES     += NDEBUG=1
 
 	ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
@@ -70,12 +68,6 @@ ifneq (,$(findstring KERNEL=1,$(DEFINES)))
 	CFLAGS   += -fno-builtin -mgeneral-regs-only
 	CXXFLAGS += -fno-builtin -mgeneral-regs-only -fno-rtti -fno-exceptions
 	ASFLAGS  += -fno-builtin -mgeneral-regs-only
-
-	RUSTFLAGS += -C panic=abort
-	RUSTFLAGS += -C code-model=large
-	RUSTFLAGS += -C relocation-model=static
-	RUSTFLAGS += -C linker-flavor=ld.lld
-	RUSTFLAGS += -C soft-float=y
 
 endif
 
