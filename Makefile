@@ -96,8 +96,5 @@ report:
 	$(QUIET)echo "    GEN     $(REPORT)"
 	$(QUIET)./scripts/gen-report > $(REPORT)
 
-format:
-	$(QUIET)echo "    FMT     $(ROOTDIR)"
-	$(QUIET)find $(ROOTDIR) -name "*.[ch]" -exec echo "    FMT     {}" \; -exec clang-format-18 -i {} \;
-
+-include build/build-format.mk
 -include build/build-utils.mk
