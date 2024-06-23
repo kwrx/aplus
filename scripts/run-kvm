@@ -3,11 +3,11 @@
 arch=""
 flags=""
 
-CPUS=${CPUS:-1}
+CPUS=${CPUS:-4}
 
 
 case $1 in
-
+    
     x86_64)
         arch="x86_64"
 
@@ -16,8 +16,9 @@ case $1 in
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
         flags="$flags -boot order=c"
         flags="$flags -m 4G"
+        flags="$flags -M q35,accel=kvm"
         flags="$flags -rtc clock=host"
-        flags="$flags -cpu max,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
+        flags="$flags -cpu host,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
         flags="$flags -smp $CPUS,sockets=1,cores=$CPUS,threads=1"
         flags="$flags -vga std"
         flags="$flags -device pcnet,netdev=net0"
@@ -53,5 +54,5 @@ fi
 #rm -f trace.dat
 
 #qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+qemu-system-$arch -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
 #qemu-system-$arch -nographic -serial mon:stdio -no-reboot -no-shutdown -s $debug $flags $trace
