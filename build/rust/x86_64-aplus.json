@@ -12,5 +12,6 @@
   "panic-strategy": "abort",
   "disable-redzone": true,
   "features": "-mmx,-sse,+soft-float",
-  "code-model": "large"
+  "relocation-model": "static",
+  "code-model": "kernel"
 }
