@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -25,11 +25,11 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/hal.h>
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
-#include <aplus/task.h>
 #include <aplus/syscall.h>
-#include <aplus/hal.h>
+#include <aplus/task.h>
 
 
 
@@ -71,19 +71,19 @@
 
 
 struct sys_sem {
-    semaphore_t sem;
-    volatile long flags;
+        semaphore_t sem;
+        volatile long flags;
 };
 
 
-err_t sys_sem_new(struct sys_sem** sem, u8_t count) {
+err_t sys_sem_new(struct sys_sem **sem, u8_t count) {
 
     DEBUG_ASSERT(sem);
 
 
-    *(sem) = (struct sys_sem*) kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
+    *(sem) = (struct sys_sem *)kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
 
-    if(unlikely(*(sem) == NULL)) {
+    if (unlikely(*(sem) == NULL)) {
         return ERR_MEM;
     }
 
@@ -93,11 +93,10 @@ err_t sys_sem_new(struct sys_sem** sem, u8_t count) {
     SYS_STATS_INC(sem.used);
 
     return ERR_OK;
-
 }
 
 
-void sys_sem_free(struct sys_sem** sem) {
+void sys_sem_free(struct sys_sem **sem) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);
@@ -106,21 +105,19 @@ void sys_sem_free(struct sys_sem** sem) {
     (*sem) = NULL;
 
     SYS_STATS_DEC(sem.used);
-
 }
 
 
-void sys_sem_signal(struct sys_sem** sem) {
+void sys_sem_signal(struct sys_sem **sem) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);
 
     sem_post(&(*(sem))->sem);
-
 }
 
 
-u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t timeout) {
+u32_t sys_arch_sem_wait(struct sys_sem **sem, u32_t timeout) {
 
     DEBUG_ASSERT(sem);
     DEBUG_ASSERT(*sem);
@@ -128,26 +125,23 @@ u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t timeout) {
 
     size_t e = 0;
 
-    if(timeout) {
+    if (timeout) {
 
         uint64_t t0 = arch_timer_generic_getms() + timeout;
 
-        if((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
+        if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
             return e;
 
-        if(arch_timer_generic_getms() >= t0)
+        if (arch_timer_generic_getms() >= t0)
             return SYS_ARCH_TIMEOUT;
 
         return t0 - arch_timer_generic_getms();
 
     } else {
 
-        if((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
+        if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
             return e;
 
         return 1;
-
     }
-
 }
-

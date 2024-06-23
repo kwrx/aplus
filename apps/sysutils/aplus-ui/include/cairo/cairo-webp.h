@@ -7,7 +7,7 @@ extern "C" {
 
 #include <cairo/cairo.h>
 
-cairo_surface_t* cairo_image_surface_create_from_webp(const char* filename);
+cairo_surface_t *cairo_image_surface_create_from_webp(const char *filename);
 
 #ifdef __cplusplus
 }

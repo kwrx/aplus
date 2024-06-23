@@ -1,43 +1,43 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
-#include <aplus/module.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
-#include <aplus/pty.h>
-#include <aplus/syscall.h>
-#include <aplus/errno.h>
 #include <aplus/endian.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/memory.h>
+#include <aplus/module.h>
+#include <aplus/pty.h>
+#include <aplus/smp.h>
+#include <aplus/syscall.h>
 
-#include <sys/sysmacros.h>
 #include <ctype.h>
+#include <sys/sysmacros.h>
 
 
 MODULE_NAME("tty/pts");
@@ -47,13 +47,13 @@ MODULE_LICENSE("GPL");
 
 
 
-static int pts_getattr(inode_t* inode, struct stat* st) {
+static int pts_getattr(inode_t *inode, struct stat *st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->userdata);
     DEBUG_ASSERT(st);
 
-    pty_t* pty = (pty_t*) inode->userdata;
+    pty_t *pty = (pty_t *)inode->userdata;
 
 
     st->st_ino     = pty->index;
@@ -71,15 +71,14 @@ static int pts_getattr(inode_t* inode, struct stat* st) {
     st->st_ctime   = arch_timer_gettime();
 
     return 0;
-
 }
 
-static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, size_t count) {
+static ssize_t pts_readdir(inode_t *inode, struct dirent *e, off_t position, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(e);
 
-    if(unlikely(count == 0))
+    if (unlikely(count == 0))
         return 0;
 
 
@@ -89,10 +88,10 @@ static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, siz
     pty_queue_lock();
 
     {
-    
-        for(pty_t* queue = pty_queue(); queue; queue = queue->next) {
 
-            if(position-- > 0)
+        for (pty_t *queue = pty_queue(); queue; queue = queue->next) {
+
+            if (position-- > 0)
                 continue;
 
 
@@ -104,27 +103,24 @@ static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, siz
             snprintf(e[i].d_name, sizeof(e[i].d_name), "%lu", queue->index);
 
 
-            if(++i == count)
+            if (++i == count)
                 break;
-
         }
-
     }
 
     pty_queue_unlock();
 
     return i;
-
 }
 
-static inode_t* pts_finddir(inode_t* inode, const char* name) {
+static inode_t *pts_finddir(inode_t *inode, const char *name) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(name[0] != '\0');
 
 
-    if(unlikely(!isdigit(name[0]))) {
+    if (unlikely(!isdigit(name[0]))) {
         return errno = ENOENT, NULL;
     }
 
@@ -134,16 +130,16 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
     pty_queue_lock();
 
     {
-    
-        for(pty_t* queue = pty_queue(); queue; queue = queue->next) {
 
-            if(queue->index != index)
+        for (pty_t *queue = pty_queue(); queue; queue = queue->next) {
+
+            if (queue->index != index)
                 continue;
 
             DEBUG_ASSERT(queue->ptmx);
 
 
-            inode_t* d = (inode_t*) kcalloc(sizeof(inode_t), 1, GFP_USER);
+            inode_t *d = (inode_t *)kcalloc(sizeof(inode_t), 1, GFP_USER);
 
             strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
@@ -160,60 +156,55 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             d->ops.read  = pty_slave_read;
             d->ops.write = pty_slave_write;
             d->ops.ioctl = pty_ioctl;
-            d->userdata = queue;
+            d->userdata  = queue;
 
             d->ev = shared_ptr_ref(queue->ptmx->ev);
 
 
             return d;
-
         }
-
     }
 
     pty_queue_unlock();
 
-    
-    return errno = ENOENT, NULL;
 
+    return errno = ENOENT, NULL;
 }
 
 
-void init(const char* args) {
+void init(const char *args) {
 
 
     int fd;
 
-    if((fd = sys_creat("/dev/pts", S_IFDIR | 0666)) < 0) {
+    if ((fd = sys_creat("/dev/pts", S_IFDIR | 0666)) < 0) {
         kpanicf("ptmx: failed to create /dev/pts: %s", strerror(-fd));
     }
 
 
-    inode_t* inode = NULL;
+    inode_t *inode = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
-
         DEBUG_ASSERT(fds->descriptors[fd].ref);
         DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
         inode = fds->descriptors[fd].ref->inode;
-
     });
 
     DEBUG_ASSERT(inode);
 
 
-    inode->ops.open     = NULL;
-    inode->ops.read     = NULL;
-    inode->ops.readdir  = pts_readdir;
-    inode->ops.finddir  = pts_finddir;
-    inode->ops.unlink   = NULL;
-    inode->ops.rename   = NULL;
-    inode->ops.creat    = NULL;
-    inode->flags        = INODE_FLAGS_DCACHE_DISABLED;
+    inode->ops.open    = NULL;
+    inode->ops.read    = NULL;
+    inode->ops.readdir = pts_readdir;
+    inode->ops.finddir = pts_finddir;
+    inode->ops.unlink  = NULL;
+    inode->ops.rename  = NULL;
+    inode->ops.creat   = NULL;
+    inode->flags       = INODE_FLAGS_DCACHE_DISABLED;
 
 
-    if((fd = sys_close(fd)) < 0) {
+    if ((fd = sys_close(fd)) < 0) {
         kpanicf("ptmx: failed to close /dev/ptmx: %s", strerror(-fd));
     }
 
@@ -222,11 +213,9 @@ void init(const char* args) {
 #if DEBUG_LEVEL_INFO
     kprintf("tty/pts: initialized '/dev/pts'\n");
 #endif
-
 }
 
 void dnit(void) {
 
     sys_unlink("/dev/ptmx");
-
 }

@@ -1,19 +1,19 @@
 
 #include <wc/wc.h>
-#include <wc/wc_input.h>
 #include <wc/wc_display.h>
 #include <wc/wc_event.h>
+#include <wc/wc_input.h>
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
 #include <pthread.h>
 
@@ -33,47 +33,45 @@ static int16_t cursor_z = 0;
 
 
 
-static void* thread_event_fn(const char* device) {
+static void *thread_event_fn(const char *device) {
 
 
     int fd = open(device, O_RDONLY);
 
-    if(fd < 0) {
+    if (fd < 0) {
         return LOG("FATAL! failed to open %s: %s\n", device, strerror(errno)), NULL;
     }
 
 
     do {
 
-        event_t ev = { 0 };
+        event_t ev = {0};
 
-        if(read(fd, &ev, sizeof(ev)) != sizeof(ev))
+        if (read(fd, &ev, sizeof(ev)) != sizeof(ev))
             continue;
 
 
-        switch(ev.ev_type) {
+        switch (ev.ev_type) {
 
             case EV_REL:
 
                 ev.ev_rel.x *= (log10(abs(ev.ev_rel.x) + abs(ev.ev_rel.y)) * 0.5) + 1;
                 ev.ev_rel.y *= (log10(abs(ev.ev_rel.x) + abs(ev.ev_rel.y)) * 0.5) + 1;
-                
-                if(wc_display_at_position(cursor_x + ev.ev_rel.x, cursor_y - ev.ev_rel.y) != NULL) {
+
+                if (wc_display_at_position(cursor_x + ev.ev_rel.x, cursor_y - ev.ev_rel.y) != NULL) {
 
                     cursor_x += ev.ev_rel.x;
                     cursor_y -= ev.ev_rel.y;
 
                 } else {
 
-                    const wc_display_t* display = wc_display_at_position(cursor_x, cursor_y);
+                    const wc_display_t *display = wc_display_at_position(cursor_x, cursor_y);
 
-                    if(display) {
+                    if (display) {
 
                         cursor_x = wc_clamp(cursor_x + ev.ev_rel.x, display->offset_x, display->offset_x + display->var.xres);
                         cursor_y = wc_clamp(cursor_y - ev.ev_rel.y, display->offset_y, display->offset_y + display->var.yres);
-
                     }
-
                 }
 
                 cursor_z += ev.ev_rel.z;
@@ -82,11 +80,10 @@ static void* thread_event_fn(const char* device) {
 
             case EV_ABS:
 
-                if(wc_display_at_position(ev.ev_abs.x, ev.ev_abs.y) != NULL) {
+                if (wc_display_at_position(ev.ev_abs.x, ev.ev_abs.y) != NULL) {
 
                     cursor_x = ev.ev_abs.x;
                     cursor_y = ev.ev_abs.y;
-
                 }
 
                 cursor_z = ev.ev_abs.z;
@@ -94,8 +91,8 @@ static void* thread_event_fn(const char* device) {
                 break;
 
             case EV_KEY:
-                
-                if(ev.ev_key.down) {
+
+                if (ev.ev_key.down) {
                     input_state[ev.ev_key.vkey] = wc_time();
                 } else {
                     input_state[ev.ev_key.vkey] = 0;
@@ -105,17 +102,14 @@ static void* thread_event_fn(const char* device) {
 
             default:
                 break;
-
         }
 
 
         wc_event_post(WC_EVENT_TYPE_INPUT);
-        
 
-    } while(1);
 
+    } while (1);
 }
-
 
 
 
@@ -124,17 +118,16 @@ int wc_input_initialize(void) {
     memset(input_state, 0, sizeof(input_state));
 
 
-    if(pthread_create(&thread_mouse, NULL, (void* (*)(void*)) &thread_event_fn, "/dev/mouse") < 0)
+    if (pthread_create(&thread_mouse, NULL, (void *(*)(void *)) & thread_event_fn, "/dev/mouse") < 0)
         return -1;
 
-    if(pthread_create(&thread_keyboard, NULL, (void* (*)(void*)) &thread_event_fn, "/dev/kbd") < 0)
+    if (pthread_create(&thread_keyboard, NULL, (void *(*)(void *)) & thread_event_fn, "/dev/kbd") < 0)
         return -1;
 
 
     LOG("input subsystem initialized\n");
 
     return 0;
-
 }
 
 

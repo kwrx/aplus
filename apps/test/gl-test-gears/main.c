@@ -1,44 +1,44 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #if defined(CONFIG_HAVE_MESA)
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <math.h>
+    #include <fcntl.h>
+    #include <math.h>
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <string.h>
+    #include <unistd.h>
 
-#include <GL/gl.h>
-#include <GL/osmesa.h>
+    #include <GL/gl.h>
+    #include <GL/osmesa.h>
 
-#include <aplus/fb.h>
+    #include <aplus/fb.h>
 
 
 
 static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLint teeth, GLfloat tooth_depth) {
-  
+
     GLint i;
     GLfloat r0, r1, r2;
     GLfloat angle, da;
@@ -48,7 +48,7 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
     r1 = outer_radius - tooth_depth / 2.f;
     r2 = outer_radius + tooth_depth / 2.f;
 
-    da = 2.f * (float) M_PI / teeth / 4.f;
+    da = 2.f * (float)M_PI / teeth / 4.f;
 
     glShadeModel(GL_FLAT);
 
@@ -57,26 +57,26 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
     /* draw front face */
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i <= teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
-        glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), width * 0.5f);
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), width * 0.5f);
+        angle = i * 2.f * (float)M_PI / teeth;
+        glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), width * 0.5f);
         if (i < teeth) {
-            glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), width * 0.5f);
-            glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), width * 0.5f);
+            glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), width * 0.5f);
+            glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), width * 0.5f);
         }
     }
     glEnd();
 
     /* draw front sides of teeth */
     glBegin(GL_QUADS);
-    da = 2.f * (float) M_PI / teeth / 4.f;
+    da = 2.f * (float)M_PI / teeth / 4.f;
     for (i = 0; i < teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
+        angle = i * 2.f * (float)M_PI / teeth;
 
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + da), r2 * (float) sin(angle + da), width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + 2 * da), r2 * (float) sin(angle + 2 * da), width * 0.5f);
-        glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + da), r2 * (float)sin(angle + da), width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + 2 * da), r2 * (float)sin(angle + 2 * da), width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), width * 0.5f);
     }
     glEnd();
 
@@ -85,57 +85,57 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
     /* draw back face */
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i <= teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), -width * 0.5f);
-        glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), -width * 0.5f);
+        angle = i * 2.f * (float)M_PI / teeth;
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), -width * 0.5f);
+        glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), -width * 0.5f);
         if (i < teeth) {
-            glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), -width * 0.5f);
-            glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), -width * 0.5f);
+            glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), -width * 0.5f);
+            glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), -width * 0.5f);
         }
     }
     glEnd();
 
     /* draw back sides of teeth */
     glBegin(GL_QUADS);
-    da = 2.f * (float) M_PI / teeth / 4.f;
+    da = 2.f * (float)M_PI / teeth / 4.f;
     for (i = 0; i < teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
+        angle = i * 2.f * (float)M_PI / teeth;
 
-        glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), -width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + 2 * da), r2 * (float) sin(angle + 2 * da), -width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + da), r2 * (float) sin(angle + da), -width * 0.5f);
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), -width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), -width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + 2 * da), r2 * (float)sin(angle + 2 * da), -width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + da), r2 * (float)sin(angle + da), -width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), -width * 0.5f);
     }
     glEnd();
 
     /* draw outward faces of teeth */
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i < teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
+        angle = i * 2.f * (float)M_PI / teeth;
 
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), width * 0.5f);
-        glVertex3f(r1 * (float) cos(angle), r1 * (float) sin(angle), -width * 0.5f);
-        u = r2 * (float) cos(angle + da) - r1 * (float) cos(angle);
-        v = r2 * (float) sin(angle + da) - r1 * (float) sin(angle);
-        len = (float) sqrt(u * u + v * v);
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle), r1 * (float)sin(angle), -width * 0.5f);
+        u   = r2 * (float)cos(angle + da) - r1 * (float)cos(angle);
+        v   = r2 * (float)sin(angle + da) - r1 * (float)sin(angle);
+        len = (float)sqrt(u * u + v * v);
         u /= len;
         v /= len;
         glNormal3f(v, -u, 0.0);
-        glVertex3f(r2 * (float) cos(angle + da), r2 * (float) sin(angle + da), width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + da), r2 * (float) sin(angle + da), -width * 0.5f);
-        glNormal3f((float) cos(angle), (float) sin(angle), 0.f);
-        glVertex3f(r2 * (float) cos(angle + 2 * da), r2 * (float) sin(angle + 2 * da), width * 0.5f);
-        glVertex3f(r2 * (float) cos(angle + 2 * da), r2 * (float) sin(angle + 2 * da), -width * 0.5f);
-        u = r1 * (float) cos(angle + 3 * da) - r2 * (float) cos(angle + 2 * da);
-        v = r1 * (float) sin(angle + 3 * da) - r2 * (float) sin(angle + 2 * da);
+        glVertex3f(r2 * (float)cos(angle + da), r2 * (float)sin(angle + da), width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + da), r2 * (float)sin(angle + da), -width * 0.5f);
+        glNormal3f((float)cos(angle), (float)sin(angle), 0.f);
+        glVertex3f(r2 * (float)cos(angle + 2 * da), r2 * (float)sin(angle + 2 * da), width * 0.5f);
+        glVertex3f(r2 * (float)cos(angle + 2 * da), r2 * (float)sin(angle + 2 * da), -width * 0.5f);
+        u = r1 * (float)cos(angle + 3 * da) - r2 * (float)cos(angle + 2 * da);
+        v = r1 * (float)sin(angle + 3 * da) - r2 * (float)sin(angle + 2 * da);
         glNormal3f(v, -u, 0.f);
-        glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), width * 0.5f);
-        glVertex3f(r1 * (float) cos(angle + 3 * da), r1 * (float) sin(angle + 3 * da), -width * 0.5f);
-        glNormal3f((float) cos(angle), (float) sin(angle), 0.f);
+        glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), width * 0.5f);
+        glVertex3f(r1 * (float)cos(angle + 3 * da), r1 * (float)sin(angle + 3 * da), -width * 0.5f);
+        glNormal3f((float)cos(angle), (float)sin(angle), 0.f);
     }
 
-    glVertex3f(r1 * (float) cos(0), r1 * (float) sin(0), width * 0.5f);
-    glVertex3f(r1 * (float) cos(0), r1 * (float) sin(0), -width * 0.5f);
+    glVertex3f(r1 * (float)cos(0), r1 * (float)sin(0), width * 0.5f);
+    glVertex3f(r1 * (float)cos(0), r1 * (float)sin(0), -width * 0.5f);
 
     glEnd();
 
@@ -144,22 +144,21 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
     /* draw inside radius cylinder */
     glBegin(GL_QUAD_STRIP);
     for (i = 0; i <= teeth; i++) {
-        angle = i * 2.f * (float) M_PI / teeth;
-        glNormal3f(-(float) cos(angle), -(float) sin(angle), 0.f);
-        glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), -width * 0.5f);
-        glVertex3f(r0 * (float) cos(angle), r0 * (float) sin(angle), width * 0.5f);
+        angle = i * 2.f * (float)M_PI / teeth;
+        glNormal3f(-(float)cos(angle), -(float)sin(angle), 0.f);
+        glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), -width * 0.5f);
+        glVertex3f(r0 * (float)cos(angle), r0 * (float)sin(angle), width * 0.5f);
     }
     glEnd();
-
 }
 
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
 
 
     int fd = open("/dev/fb0", O_RDWR);
 
-    if(fd < 0) {
+    if (fd < 0) {
         return perror("open /dev/fb0"), 1;
     }
 
@@ -167,11 +166,11 @@ int main(int argc, char** argv) {
     struct fb_var_screeninfo var;
     struct fb_fix_screeninfo fix;
 
-    if(ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
         return perror("ioctl FBIOGET_VSCREENINFO"), 1;
     }
 
-    if(ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0) {
+    if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0) {
         return perror("ioctl FBIOGET_FSCREENINFO"), 1;
     }
 
@@ -179,27 +178,27 @@ int main(int argc, char** argv) {
     fprintf(stderr, "fb0: %dx%d, %d bpp, %d bytes per line ", var.xres, var.yres, var.bits_per_pixel, fix.line_length);
 
 
-    
+
     OSMesaContext ctx;
 
-#if OSMESA_MAJOR_VERSION * 100 + OSMESA_MINOR_VERSION >= 305
+    #if OSMESA_MAJOR_VERSION * 100 + OSMESA_MINOR_VERSION >= 305
     ctx = OSMesaCreateContextExt(OSMESA_RGBA, var.bits_per_pixel, 0, 0, NULL);
-#else
+    #else
     ctx = OSMesaCreateContext(OSMESA_RGBA, NULL);
-#endif
+    #endif
 
-    if(!ctx) {
+    if (!ctx) {
         return perror("OSMesaCreateContext"), 1;
     }
 
 
-    void* backbuffer = malloc(var.yres * fix.line_length);
+    void *backbuffer = malloc(var.yres * fix.line_length);
 
-    if(!backbuffer) {
+    if (!backbuffer) {
         return perror("malloc"), 1;
     }
 
-    if(!OSMesaMakeCurrent(ctx, backbuffer, GL_UNSIGNED_BYTE, var.xres, var.yres)) {
+    if (!OSMesaMakeCurrent(ctx, backbuffer, GL_UNSIGNED_BYTE, var.xres, var.yres)) {
         return perror("OSMesaMakeCurrent"), 1;
     }
 
@@ -211,7 +210,7 @@ int main(int argc, char** argv) {
 
 
 
-    GLfloat ratio = (GLfloat) var.yres / (GLfloat) var.xres;
+    GLfloat ratio = (GLfloat)var.yres / (GLfloat)var.xres;
     GLfloat xmax  = 2.5f;
 
     glViewport(0, 0, var.xres, var.yres);
@@ -224,11 +223,10 @@ int main(int argc, char** argv) {
 
 
 
-
-    static GLfloat pos[4]   = { 5.0f, 5.0f, 10.0f, 0.0f };
-    static GLfloat red[4]   = { 0.8f, 0.1f, 0.0f, 1.0f };
-    static GLfloat green[4] = { 0.0f, 0.8f, 0.2f, 1.0f };
-    static GLfloat blue[4]  = { 0.2f, 0.2f, 1.0f, 1.0f };
+    static GLfloat pos[4]   = {5.0f, 5.0f, 10.0f, 0.0f};
+    static GLfloat red[4]   = {0.8f, 0.1f, 0.0f, 1.0f};
+    static GLfloat green[4] = {0.0f, 0.8f, 0.2f, 1.0f};
+    static GLfloat blue[4]  = {0.2f, 0.2f, 1.0f, 1.0f};
 
 
     glLightfv(GL_LIGHT0, GL_POSITION, pos);
@@ -264,7 +262,7 @@ int main(int argc, char** argv) {
     GLfloat view_rotx = 20.0f;
     GLfloat view_roty = 30.0f;
     GLfloat view_rotz = 0.0f;
-    GLfloat angle = 0.0f;
+    GLfloat angle     = 0.0f;
 
     do {
 
@@ -273,59 +271,62 @@ int main(int argc, char** argv) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-        glPushMatrix(); {
+        glPushMatrix();
+        {
 
             glRotatef(view_rotx, 1.0f, 0.0f, 0.0f);
             glRotatef(view_roty, 0.0f, 1.0f, 0.0f);
             glRotatef(view_rotz, 0.0f, 0.0f, 1.0f);
 
-            glPushMatrix(); {
+            glPushMatrix();
+            {
 
                 glTranslatef(-3.0f, -2.0f, 0.0f);
                 glRotatef(angle, 0.0f, 0.0f, 1.0f);
                 glCallList(gear1);
-            
-            } glPopMatrix();
+            }
+            glPopMatrix();
 
-            glPushMatrix(); {
+            glPushMatrix();
+            {
 
                 glTranslatef(3.1f, -2.0f, 0.0f);
                 glRotatef(-2.0f * angle - 9.0f, 0.0f, 0.0f, 1.0f);
                 glCallList(gear2);
-            
-            } glPopMatrix();
+            }
+            glPopMatrix();
 
-            glPushMatrix(); {
+            glPushMatrix();
+            {
 
                 glTranslatef(-3.1f, 4.2f, 0.0f);
                 glRotatef(-2.0f * angle - 25.0f, 0.0f, 0.0f, 1.0f);
                 glCallList(gear3);
-            
-            } glPopMatrix();
-
-        } glPopMatrix();
+            }
+            glPopMatrix();
+        }
+        glPopMatrix();
 
         glFinish();
 
 
-        memcpy((void*) fix.smem_start, backbuffer, var.yres * fix.line_length);
+        memcpy((void *)fix.smem_start, backbuffer, var.yres * fix.line_length);
 
         angle += 2.0f;
 
-    } while(1);
+    } while (1);
 
 
     OSMesaDestroyContext(ctx);
 
     return 0;
-
 }
 
 #else
 
-#include <stdio.h>
+    #include <stdio.h>
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
     return fprintf(stderr, "OSMesa not available\n"), 1;
 }
 

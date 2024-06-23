@@ -1,38 +1,38 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdint.h>
 #include <signal.h>
-#include <unistd.h>
+#include <stdint.h>
 #include <sys/types.h>
+#include <unistd.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
-#include <aplus/errno.h>
 
 
 
@@ -52,35 +52,33 @@
  */
 
 
-SYSCALL(297, rt_tgsigqueueinfo,
-long sys_rt_tgsigqueueinfo (pid_t tgid, pid_t tid, int sig, siginfo_t  * uinfo) {
-    
-    if(unlikely(tid == 1 && current_task->tid != 1))
-        return -EINVAL;
+SYSCALL(
+    297, rt_tgsigqueueinfo, long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t *uinfo) {
+        if (unlikely(tid == 1 && current_task->tid != 1))
+            return -EINVAL;
 
-    if(unlikely(sig < 0))
-        return -EINVAL;
+        if (unlikely(sig < 0))
+            return -EINVAL;
 
-    if(unlikely(sig > _NSIG - 1))
-        return -EINVAL;
+        if (unlikely(sig > _NSIG - 1))
+            return -EINVAL;
 
-    if(unlikely(!uinfo))
-        return -EINVAL;
+        if (unlikely(!uinfo))
+            return -EINVAL;
 
-    if(unlikely(!uio_check(uinfo, R_OK)))
-        return -EFAULT;
+        if (unlikely(!uio_check(uinfo, R_OK)))
+            return -EFAULT;
 
-    if(unlikely(tgid != current_task->pid && uinfo->si_code >= 0))
-        return -EPERM;
-
+        if (unlikely(tgid != current_task->pid && uinfo->si_code >= 0))
+            return -EPERM;
 
 
-    siginfo_t __uinfo;
-    uio_memcpy_u2s(&__uinfo, uinfo, sizeof(siginfo_t));
 
-    if(unlikely(sched_sigqueueinfo(-1, tgid, tid, sig, &__uinfo)) < 0)
-        return -errno;
+        siginfo_t __uinfo;
+        uio_memcpy_u2s(&__uinfo, uinfo, sizeof(siginfo_t));
 
-    return 0;
+        if (unlikely(sched_sigqueueinfo(-1, tgid, tid, sig, &__uinfo)) < 0)
+            return -errno;
 
-});
+        return 0;
+    });

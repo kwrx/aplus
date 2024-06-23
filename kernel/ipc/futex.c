@@ -1,37 +1,37 @@
-/*                                                                      
- * GPL3 License                                                         
- *                                                                      
- * Author(s):                                                              
- *      Antonino Natale <antonio.natale97@hotmail.com>                  
- *                                                                      
- *                                                                      
- * Copyright (c) 2013-2019 Antonino Natale                              
- *                                                                      
- * This file is part of aplus.                                          
- *                                                                      
- * aplus is free software: you can redistribute it and/or modify        
- * it under the terms of the GNU General Public License as published by 
- * the Free Software Foundation, either version 3 of the License, or    
- * (at your option) any later version.                                  
- *                                                                      
- * aplus is distributed in the hope that it will be useful,             
- * but WITHOUT ANY WARRANTY; without even the implied warranty of       
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        
- * GNU General Public License for more details.                         
- *                                                                      
- * You should have received a copy of the GNU General Public License    
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.       
- */                                                                     
+/*
+ * GPL3 License
+ *
+ * Author(s):
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
-#include <stdint.h> 
 #include <stdbool.h>
-                                                      
+#include <stdint.h>
+
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/hal.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
-#include <aplus/hal.h>
 
 
 
@@ -47,9 +47,9 @@ void futex_rt_unlock() {
 }
 
 #if DEBUG_LEVEL_TRACE
-void __futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
+void __futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const struct timespec *utime, const char *OBJ, const char *FILE, int LINE) {
 #else
-void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime) {
+void futex_wait(task_t *task, volatile uint32_t *kaddr, uint32_t value, const struct timespec *utime) {
 #endif
 
     DEBUG_ASSERT(task);
@@ -61,66 +61,56 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 
 
 
-
     list_each(task->futexes, futex) {
 
-        if(likely(futex->address != kaddr))
+        if (likely(futex->address != kaddr))
             continue;
 
-        
+
         __lock(&task->lock, {
-
             futex->address = kaddr;
-            futex->value = value;
+            futex->value   = value;
 
-            if(utime) {
+            if (utime) {
 
                 memcpy(&futex->timeout, utime, sizeof(struct timespec));
 
-                futex->timeout.tv_sec  += arch_timer_generic_getms() / 1000ULL;
-                futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL; 
+                futex->timeout.tv_sec += arch_timer_generic_getms() / 1000ULL;
+                futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL;
 
             } else {
 
                 futex->timeout.tv_sec  = 0;
                 futex->timeout.tv_nsec = 0;
-
             }
-
         });
 
         return;
-
     }
 
 
 
-    futex_t* futex = (futex_t*) kcalloc(1, sizeof(futex_t), GFP_KERNEL);
+    futex_t *futex = (futex_t *)kcalloc(1, sizeof(futex_t), GFP_KERNEL);
 
     futex->address = kaddr;
     futex->value   = value;
-    
-    if(utime) {
+
+    if (utime) {
 
         memcpy(&futex->timeout, utime, sizeof(struct timespec));
 
-        futex->timeout.tv_sec  += arch_timer_generic_getms() / 1000ULL;
-        futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL; 
-
+        futex->timeout.tv_sec += arch_timer_generic_getms() / 1000ULL;
+        futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL;
     }
 
 
     __lock(&task->lock, {
-
         list_push(task->futexes, futex);
-
     });
-
-
 }
 
 
-size_t futex_wakeup(uint32_t* kaddr, size_t max) {
+size_t futex_wakeup(uint32_t *kaddr, size_t max) {
 
     DEBUG_ASSERT(kaddr);
 
@@ -134,8 +124,8 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
     cpu_foreach(cpu) {
 
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
+        task_t *tmp;
+        for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
             __lock(&tmp->lock, {
 
@@ -145,9 +135,9 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
                         continue;
 
 
-    #if DEBUG_LEVEL_TRACE
+#if DEBUG_LEVEL_TRACE
                     kprintf("futex: woke up pid(%d) kaddr(%p)\n", tmp->tid, kaddr);
-    #endif
+#endif
 
 
                     i->address =  0;
@@ -155,21 +145,16 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
                     max--; wok++;
                     break;
-
-                }
-
-            });
-
         }
+    });
+}
+}
 
-    }
-
-    return wok;
-
+return wok;
 }
 
 
-size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
+size_t futex_requeue(uint32_t *kaddr, uint32_t *kaddr2, size_t max) {
 
     DEBUG_ASSERT(kaddr);
     DEBUG_ASSERT(kaddr2);
@@ -184,8 +169,8 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
     cpu_foreach(cpu) {
 
-        task_t* tmp;
-        for(tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
+        task_t *tmp;
+        for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
             __lock(&tmp->lock, {
 
@@ -195,43 +180,36 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
                         continue;
 
 
-    #if DEBUG_LEVEL_TRACE
+#if DEBUG_LEVEL_TRACE
                     kprintf("futex: requeue pid(%d) from kaddr(%p) to kaddr2(%p)\n", tmp->tid, kaddr, kaddr2);
-    #endif
+#endif
 
                     i->address = kaddr2;
 
                     max--; req++;
                     break;
-
-                }
-
-            });
-
         }
+    });
+}
+}
 
-    }
-
-    return req;
-
+return req;
 }
 
 
 
-bool futex_expired(futex_t* futex) {
+bool futex_expired(futex_t *futex) {
 
     DEBUG_ASSERT(futex);
 
-    if(futex->address == NULL)
+    if (futex->address == NULL)
         return true;
 
-    if(__atomic_load_n(futex->address, __ATOMIC_SEQ_CST) != futex->value)
+    if (__atomic_load_n(futex->address, __ATOMIC_SEQ_CST) != futex->value)
         return true;
 
-    if(futex->timeout.tv_sec + futex->timeout.tv_nsec == 0)
+    if (futex->timeout.tv_sec + futex->timeout.tv_nsec == 0)
         return false;
 
     return (arch_timer_generic_getns() > (futex->timeout.tv_sec * 1000000000ULL + futex->timeout.tv_nsec));
-
 }
-

@@ -1,22 +1,22 @@
 /*
  * Author:
  *      Antonino Natale <antonio.natale97@hotmail.com>
- * 
+ *
  * Copyright (c) 2013-2019 Antonino Natale
- * 
- * 
+ *
+ *
  * This file is part of aplus.
- * 
+ *
  * aplus is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * aplus is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,17 +24,16 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/errno.h>
+#include <aplus/hal.h>
+#include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
-#include <aplus/smp.h>
-#include <aplus/hal.h>
-#include <aplus/errno.h>
-#include <stdint.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/stat.h>
-
+#include <sys/types.h>
+#include <unistd.h>
 
 
 
@@ -55,108 +54,103 @@
 
 struct rusage;
 
-SYSCALL(61, wait4,
-long sys_wait4 (pid_t pid, int  * status, int options, struct rusage  * rusage) {
-    
-    if(unlikely(status && !uio_check(status, R_OK | W_OK))) {
-        return -EFAULT;
-    }
-
-    if(unlikely(rusage && !uio_check(rusage, R_OK | W_OK))) {
-        return -EFAULT;
-    }
-
-
-    size_t count = 0;
-
-    current_task->wait_options = options;
-    current_task->wait_rusage = !rusage ? NULL : (void*) uio_get_ptr(rusage);
-    current_task->wait_status = !status ? NULL : (void*) uio_get_ptr(status);
-
-
-    cpu_foreach(cpu) {
-
-        for(task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-
-            if(unlikely(tmp == current_task))
-                continue;
-
-            if(unlikely(tmp->parent != current_task))
-                continue;
-
-
-            #define continue_if(pid, cond)  \
-                if(pid) { if(cond) continue; }
-
-
-            continue_if(pid < -1, tmp->pgrp != -pid);
-            continue_if(pid == 0, tmp->pgrp != current_task->pgrp);
-            continue_if(pid >  0, tmp->tid  != pid);
-            continue_if(pid == -1, 0);
-
-            if(tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
-                continue;
-
-
-
-
-            if( tmp->status == TASK_STATUS_STOP ||
-                tmp->status == TASK_STATUS_ZOMBIE ) {
-
-
-                if(current_task->wait_status)
-                    *current_task->wait_status = tmp->exit.value;
-
-                if(current_task->wait_rusage)
-                    memcpy(current_task->wait_rusage, &tmp->rusage, sizeof(struct rusage));
-
-                
-                pid_t tid = tmp->tid;
-
-                if(tmp->status == TASK_STATUS_ZOMBIE) {
-                    sched_dequeue(tmp);
-                }
-
-                return tid;
-
-
-            } else if(tmp->status == TASK_STATUS_DEAD) {
-
-                sched_dequeue(tmp);
-
-            } else {
-
-                if(!(options & WNOHANG)) {
-                    list_push(tmp->wait_queue, current_task);
-                }
-
-                count++;
-
-            }
-
-
+SYSCALL(
+    61, wait4, long sys_wait4(pid_t pid, int *status, int options, struct rusage *rusage) {
+        if (unlikely(status && !uio_check(status, R_OK | W_OK))) {
+            return -EFAULT;
         }
 
+        if (unlikely(rusage && !uio_check(rusage, R_OK | W_OK))) {
+            return -EFAULT;
+        }
+
+
+        size_t count = 0;
+
+        current_task->wait_options = options;
+        current_task->wait_rusage  = !rusage ? NULL : (void *)uio_get_ptr(rusage);
+        current_task->wait_status  = !status ? NULL : (void *)uio_get_ptr(status);
+
+
+        cpu_foreach(cpu) {
+
+            for (task_t *tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                if (unlikely(tmp == current_task))
+                    continue;
+
+                if (unlikely(tmp->parent != current_task))
+                    continue;
+
+
+#define continue_if(pid, cond) \
+    if (pid) {                 \
+        if (cond)              \
+            continue;          \
     }
 
 
-    if(count == 0)
-        return -ECHILD;
+                continue_if(pid < -1, tmp->pgrp != -pid);
+                continue_if(pid == 0, tmp->pgrp != current_task->pgrp);
+                continue_if(pid > 0, tmp->tid != pid);
+                continue_if(pid == -1, 0);
 
-    if(options & WNOHANG)
-        return 0;
+                if (tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
+                    continue;
+
+
+
+                if (tmp->status == TASK_STATUS_STOP || tmp->status == TASK_STATUS_ZOMBIE) {
+
+
+                    if (current_task->wait_status)
+                        *current_task->wait_status = tmp->exit.value;
+
+                    if (current_task->wait_rusage)
+                        memcpy(current_task->wait_rusage, &tmp->rusage, sizeof(struct rusage));
+
+
+                    pid_t tid = tmp->tid;
+
+                    if (tmp->status == TASK_STATUS_ZOMBIE) {
+                        sched_dequeue(tmp);
+                    }
+
+                    return tid;
+
+
+                } else if (tmp->status == TASK_STATUS_DEAD) {
+
+                    sched_dequeue(tmp);
+
+                } else {
+
+                    if (!(options & WNOHANG)) {
+                        list_push(tmp->wait_queue, current_task);
+                    }
+
+                    count++;
+                }
+            }
+        }
+
+
+        if (count == 0)
+            return -ECHILD;
+
+        if (options & WNOHANG)
+            return 0;
 
 
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("wait: task %d waiting for %ld tasks\n", current_task->tid, count);
+        kprintf("wait: task %d waiting for %ld tasks\n", current_task->tid, count);
 #endif
 
 
-    thread_suspend(current_task);    
-    thread_restart_sched(current_task);
-    thread_restart_syscall(current_task);
-    
-    return -EINTR;
+        thread_suspend(current_task);
+        thread_restart_sched(current_task);
+        thread_restart_syscall(current_task);
 
-});
+        return -EINTR;
+    });
