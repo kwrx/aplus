@@ -23,6 +23,33 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-pub mod panic;
-pub mod io;
-pub mod allocator;
+use core::alloc::{GlobalAlloc, Layout};
+
+extern "C" {
+    fn kmalloc(size: usize, gfp: u32) -> *mut u8;
+    fn kcalloc(nmemb: usize, size: usize, gfp: u32) -> *mut u8;
+    fn kfree(ptr: *mut u8);
+}
+
+const GFP_KERNEL: u32 = 0;
+// const GFP_ATOMIC: u32 = 1;
+// const GFP_USER: u32 = 2;
+
+pub struct Allocator;
+
+unsafe impl GlobalAlloc for Allocator {
+    unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+        kmalloc(layout.size(), GFP_KERNEL)
+    }
+
+    unsafe fn alloc_zeroed(&self, layout: Layout) -> *mut u8 {
+        kcalloc(1, layout.size(), GFP_KERNEL)
+    }
+
+    unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
+        kfree(ptr);
+    }
+}
+
+#[global_allocator]
+static ALLOCATOR: Allocator = Allocator;
