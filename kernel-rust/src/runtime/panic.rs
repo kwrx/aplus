@@ -23,9 +23,25 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// #[import_c_fn(kpanicf)]
+
+use crate::bindings::kpanicf;
+use crate::println;
 use core::panic::PanicInfo;
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
-    loop {}
+fn panic(info: &PanicInfo) -> ! {
+    if let Some(location) = info.location() {
+        println!(
+            "Panic at {}:{}: {}",
+            location.file(),
+            location.line(),
+            info.message()
+        );
+    } else {
+        println!("Panic: {}", info.message());
+    }
+    unsafe {
+        kpanicf(b"Kernel Panic!\n\0".as_ptr() as *const i8);
+    }
 }
