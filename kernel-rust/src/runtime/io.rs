@@ -23,13 +23,12 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// #[import_c_fn(arch_debug_putc)]
+
+use crate::bindings::arch_debug_putc;
+use crate::ipc::mutex::Mutex;
 use core::fmt::{self, Write};
 use lazy_static::lazy_static;
-use spin::Mutex;
-
-extern "C" {
-    fn arch_debug_putc(c: u8);
-}
 
 pub struct KernelLogger;
 
@@ -37,7 +36,7 @@ impl Write for KernelLogger {
     fn write_str(&mut self, s: &str) -> Result<(), fmt::Error> {
         for c in s.bytes() {
             unsafe {
-                arch_debug_putc(c);
+                arch_debug_putc(c as i8);
             }
         }
         Ok(())
@@ -68,5 +67,5 @@ macro_rules! println {
 #[doc(hidden)]
 pub fn _print(args: fmt::Arguments) {
     use fmt::Write;
-    LOGGER.lock().write_fmt(args).unwrap();
+    LOGGER.lock_uninterruptible().write_fmt(args).unwrap();
 }
