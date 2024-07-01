@@ -48,7 +48,7 @@ AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortCompoundRequirementOnASingleLine: true
 AllowShortEnumsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLambdasOnASingleLine: All
 AllowShortLoopsOnASingleLine: false
@@ -126,7 +126,7 @@ IncludeCategories:
     CaseSensitive: false
 IncludeIsMainRegex: (Test)?$
 IncludeIsMainSourceRegex: ""
-IndentAccessModifiers: true
+IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentCaseLabels: true
 IndentExternBlock: AfterExternBlock

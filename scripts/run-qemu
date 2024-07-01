@@ -12,12 +12,12 @@ case $1 in
         arch="x86_64"
 
         flags=""
-        flags="$flags --bios /usr/share/ovmf/x64/OVMF_CODE.fd -net none"
+        flags="$flags --bios /usr/share/ovmf/OVMF.fd -net none"
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
         flags="$flags -boot order=c"
         flags="$flags -m 4G"
         flags="$flags -rtc clock=host"
-        flags="$flags -cpu max,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
+        flags="$flags -cpu max,-pdpe1gb,+rdtscp,+fxsr"
         flags="$flags -smp $CPUS,sockets=1,cores=$CPUS,threads=1"
         flags="$flags -vga std"
         flags="$flags -device pcnet,netdev=net0"
@@ -53,5 +53,5 @@ fi
 #rm -f trace.dat
 
 #qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
+qemu-system-$arch -display none -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
 #qemu-system-$arch -nographic -serial mon:stdio -no-reboot -no-shutdown -s $debug $flags $trace

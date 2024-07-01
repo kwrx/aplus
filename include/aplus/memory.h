@@ -62,6 +62,45 @@
     #define mmio_w64(p, v) \
         { mmio_r64(p) = (uint64_t)(v); }
 
+static inline void* mmio_memcpy(void* d, const void* s, size_t n) {
+
+    DEBUG_ASSERT(d);
+    DEBUG_ASSERT(s);
+    DEBUG_ASSERT(n);
+
+    size_t k = 0;
+
+    // for (; k + 32 <= n; k += 32) {
+    //     mmio_w64((uintptr_t)(d) + k + 0, mmio_r64((uintptr_t)(s) + k + 0));
+    //     mmio_w64((uintptr_t)(d) + k + 8, mmio_r64((uintptr_t)(s) + k + 8));
+    //     mmio_w64((uintptr_t)(d) + k + 16, mmio_r64((uintptr_t)(s) + k + 16));
+    //     mmio_w64((uintptr_t)(d) + k + 24, mmio_r64((uintptr_t)(s) + k + 24));
+    // }
+
+    // for (; k + 16 <= n; k += 16) {
+    //     mmio_w64((uintptr_t)(d) + k + 0, mmio_r64((uintptr_t)(s) + k + 0));
+    //     mmio_w64((uintptr_t)(d) + k + 8, mmio_r64((uintptr_t)(s) + k + 8));
+    // }
+
+    // for (; k + 8 <= n; k += 8) {
+    //     mmio_w64((uintptr_t)(d) + k + 0, mmio_r64((uintptr_t)(s) + k + 0));
+    // }
+
+    // for (; k + 4 <= n; k += 4) {
+    //     mmio_w32((uintptr_t)(d) + k + 0, mmio_r32((uintptr_t)(s) + k + 0));
+    // }
+
+    // for (; k + 2 <= n; k += 2) {
+    //     mmio_w16((uintptr_t)(d) + k + 0, mmio_r16((uintptr_t)(s) + k + 0));
+    // }
+
+    for (; k < n; k += 1) {
+        mmio_w8((uintptr_t)(d) + k, mmio_r8((uintptr_t)(s) + k));
+    }
+
+    return d;
+}
+
 
     //* Virtual Memory */
     #define ARCH_VMM_MAP_RDWR          (1 << 0)

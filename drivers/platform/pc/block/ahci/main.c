@@ -159,280 +159,280 @@ MODULE_LICENSE("GPL");
 
 typedef struct {
 
-        uint16_t flags;
-        uint16_t reserved0[9];
+    uint16_t flags;
+    uint16_t reserved0[9];
 
-        char serial[20];
-        uint16_t reserved1[3];
+    char serial[20];
+    uint16_t reserved1[3];
 
-        char firmware[8];
-        char model[40];
+    char firmware[8];
+    char model[40];
 
-        uint16_t sectors_per_int;
-        uint16_t reserved2;
-        uint16_t caps[2];
-        uint16_t reserved3;
-        uint16_t reserved4;
-        uint16_t valid_ext_data;
-        uint16_t reserved5[5];
-        uint16_t size_of_rw_mult;
-        uint32_t sectors_28;
-        uint16_t reserved6[38];
-        uint64_t sectors_48;
-        uint16_t reserved7[152];
+    uint16_t sectors_per_int;
+    uint16_t reserved2;
+    uint16_t caps[2];
+    uint16_t reserved3;
+    uint16_t reserved4;
+    uint16_t valid_ext_data;
+    uint16_t reserved5[5];
+    uint16_t size_of_rw_mult;
+    uint32_t sectors_28;
+    uint16_t reserved6[38];
+    uint64_t sectors_48;
+    uint16_t reserved7[152];
 
 } __packed ata_identify_t;
 
 
 typedef volatile struct {
 
-        uint8_t type;
+    uint8_t type;
 
-        uint8_t pmport : 4;
-        uint8_t rsv0   : 3;
-        uint8_t c      : 1;
+    uint8_t pmport : 4;
+    uint8_t rsv0   : 3;
+    uint8_t c      : 1;
 
-        uint8_t command;
-        uint8_t featurel;
+    uint8_t command;
+    uint8_t featurel;
 
-        uint8_t lba0;
-        uint8_t lba1;
-        uint8_t lba2;
-        uint8_t device;
+    uint8_t lba0;
+    uint8_t lba1;
+    uint8_t lba2;
+    uint8_t device;
 
-        uint8_t lba3;
-        uint8_t lba4;
-        uint8_t lba5;
-        uint8_t featureh;
+    uint8_t lba3;
+    uint8_t lba4;
+    uint8_t lba5;
+    uint8_t featureh;
 
-        uint8_t countl;
-        uint8_t counth;
-        uint8_t icc;
-        uint8_t control;
+    uint8_t countl;
+    uint8_t counth;
+    uint8_t icc;
+    uint8_t control;
 
-        uint8_t rsv1[4];
+    uint8_t rsv1[4];
 
 } __packed fis_h2d_t;
 
 
 typedef volatile struct {
 
-        uint8_t type;
+    uint8_t type;
 
-        uint8_t pmport : 4;
-        uint8_t rsv0   : 2;
-        uint8_t i      : 1;
-        uint8_t rsv1   : 1;
+    uint8_t pmport : 4;
+    uint8_t rsv0   : 2;
+    uint8_t i      : 1;
+    uint8_t rsv1   : 1;
 
-        uint8_t status;
-        uint8_t error;
+    uint8_t status;
+    uint8_t error;
 
-        uint8_t lba0;
-        uint8_t lba1;
-        uint8_t lba2;
-        uint8_t device;
+    uint8_t lba0;
+    uint8_t lba1;
+    uint8_t lba2;
+    uint8_t device;
 
-        uint8_t lba3;
-        uint8_t lba4;
-        uint8_t lba5;
-        uint8_t rsv2;
+    uint8_t lba3;
+    uint8_t lba4;
+    uint8_t lba5;
+    uint8_t rsv2;
 
-        uint8_t countl;
-        uint8_t counth;
+    uint8_t countl;
+    uint8_t counth;
 
-        uint8_t rsv3[6];
+    uint8_t rsv3[6];
 
 } __packed fis_d2h_t;
 
 
 typedef volatile struct {
 
-        uint8_t type;
+    uint8_t type;
 
-        uint8_t pmport : 4;
-        uint8_t rsv0   : 4;
+    uint8_t pmport : 4;
+    uint8_t rsv0   : 4;
 
-        uint8_t rsv1[2];
-        uint32_t payload[1];
+    uint8_t rsv1[2];
+    uint32_t payload[1];
 
 } __packed fis_data_t;
 
 
 typedef volatile struct {
 
-        uint8_t type;
+    uint8_t type;
 
-        uint8_t pmport : 4;
-        uint8_t rsv0   : 1;
-        uint8_t d      : 1;
-        uint8_t i      : 1;
-        uint8_t rsv1   : 1;
+    uint8_t pmport : 4;
+    uint8_t rsv0   : 1;
+    uint8_t d      : 1;
+    uint8_t i      : 1;
+    uint8_t rsv1   : 1;
 
-        uint8_t status;
-        uint8_t error;
+    uint8_t status;
+    uint8_t error;
 
-        uint8_t lba0;
-        uint8_t lba1;
-        uint8_t lba2;
-        uint8_t device;
+    uint8_t lba0;
+    uint8_t lba1;
+    uint8_t lba2;
+    uint8_t device;
 
-        uint8_t lba3;
-        uint8_t lba4;
-        uint8_t lba5;
-        uint8_t rsv2;
+    uint8_t lba3;
+    uint8_t lba4;
+    uint8_t lba5;
+    uint8_t rsv2;
 
-        uint8_t countl;
-        uint8_t counth;
-        uint8_t rsv3;
-        uint8_t status2;
+    uint8_t countl;
+    uint8_t counth;
+    uint8_t rsv3;
+    uint8_t status2;
 
-        uint16_t tc;
+    uint16_t tc;
 
-        uint8_t rsv4[4];
+    uint8_t rsv4[4];
 
 } __packed fis_pio_setup_t;
 
 
 typedef volatile struct {
 
-        uint8_t type;
+    uint8_t type;
 
-        uint8_t pmport : 4;
-        uint8_t rsv0   : 1;
-        uint8_t d      : 1;
-        uint8_t i      : 1;
-        uint8_t a      : 1;
+    uint8_t pmport : 4;
+    uint8_t rsv0   : 1;
+    uint8_t d      : 1;
+    uint8_t i      : 1;
+    uint8_t a      : 1;
 
-        uint8_t rsv1[2];
+    uint8_t rsv1[2];
 
-        uint64_t id;
-        uint32_t rsv2;
-        uint32_t offset;
-        uint32_t tc;
-        uint32_t rsv3;
+    uint64_t id;
+    uint32_t rsv2;
+    uint32_t offset;
+    uint32_t tc;
+    uint32_t rsv3;
 
 } __packed fis_dma_setup_t;
 
 
 typedef volatile struct {
-        union {
+    union {
 
-                uint32_t dw[8];
+        uint32_t dw[8];
 
-                volatile struct {
-                        uint8_t cfl : 5;
-                        uint8_t a   : 1;
-                        uint8_t w   : 1;
-                        uint8_t p   : 1;
-                        uint8_t r   : 1;
-                        uint8_t b   : 1;
-                        uint8_t c   : 1;
-                        uint8_t rsv : 1;
-                        uint8_t pmp : 4;
-                        uint16_t prdtl;
+        volatile struct {
+            uint8_t cfl : 5;
+            uint8_t a   : 1;
+            uint8_t w   : 1;
+            uint8_t p   : 1;
+            uint8_t r   : 1;
+            uint8_t b   : 1;
+            uint8_t c   : 1;
+            uint8_t rsv : 1;
+            uint8_t pmp : 4;
+            uint16_t prdtl;
 
-                        uint32_t prdbc;
+            uint32_t prdbc;
 
-                        uint32_t ctba;
-                        uint32_t ctbau;
-                };
+            uint32_t ctba;
+            uint32_t ctbau;
         };
+    };
 } __packed hba_cmd_t;
 
 
 typedef volatile struct {
 
-        uint8_t cfis[64];
-        uint8_t acmd[16];
-        uint8_t rsv0[48];
+    uint8_t cfis[64];
+    uint8_t acmd[16];
+    uint8_t rsv0[48];
 
-        struct {
+    struct {
 
-                uint32_t dba;
-                uint32_t dbau;
-                uint32_t rsv0;
+        uint32_t dba;
+        uint32_t dbau;
+        uint32_t rsv0;
 
-                uint32_t dbc  : 22;
-                uint32_t rsv1 : 9;
-                uint32_t i    : 1;
+        uint32_t dbc  : 22;
+        uint32_t rsv1 : 9;
+        uint32_t i    : 1;
 
-        } __packed prdt[1];
+    } __packed prdt[1];
 
 } __packed hba_cmd_table_t;
 
 
 typedef volatile struct {
 
-        fis_dma_setup_t dma;
-        uint8_t __padding0[4];
+    fis_dma_setup_t dma;
+    uint8_t __padding0[4];
 
-        fis_pio_setup_t pio;
-        uint8_t __padding1[12];
+    fis_pio_setup_t pio;
+    uint8_t __padding1[12];
 
-        fis_d2h_t d2h;
-        uint8_t __padding2[4];
+    fis_d2h_t d2h;
+    uint8_t __padding2[4];
 
-        // fis_dev_bits_t bits;
-        uint8_t __padding3[8];
+    // fis_dev_bits_t bits;
+    uint8_t __padding3[8];
 
-        uint8_t ufis[64];
-        uint8_t __padding[96];
+    uint8_t ufis[64];
+    uint8_t __padding[96];
 
 } __packed hba_fb_t;
 
 
 typedef volatile struct hba {
 
-        uint32_t caps;
-        uint32_t ghc;
+    uint32_t caps;
+    uint32_t ghc;
+    uint32_t is;
+    uint32_t pi;
+    uint32_t vs;
+    uint32_t ccc_ctl;
+    uint32_t ccc_pts;
+    uint32_t em_loc;
+    uint32_t em_ctl;
+    uint32_t caps_ext;
+    uint32_t bohc;
+
+    uint8_t __padding[212];
+
+    volatile struct {
+
+        uint32_t clb;
+        uint32_t clbu;
+        uint32_t fb;
+        uint32_t fbu;
         uint32_t is;
-        uint32_t pi;
-        uint32_t vs;
-        uint32_t ccc_ctl;
-        uint32_t ccc_pts;
-        uint32_t em_loc;
-        uint32_t em_ctl;
-        uint32_t caps_ext;
-        uint32_t bohc;
+        uint32_t ie;
+        uint32_t cmd;
+        uint32_t rsv;
+        uint32_t tfd;
+        uint32_t sig;
+        uint32_t ssts;
+        uint32_t sctl;
+        uint32_t serr;
+        uint32_t sact;
+        uint32_t ci;
+        uint32_t sntf;
+        uint32_t fbs;
+        uint32_t __padding[15];
 
-        uint8_t __padding[212];
-
-        volatile struct {
-
-                uint32_t clb;
-                uint32_t clbu;
-                uint32_t fb;
-                uint32_t fbu;
-                uint32_t is;
-                uint32_t ie;
-                uint32_t cmd;
-                uint32_t rsv;
-                uint32_t tfd;
-                uint32_t sig;
-                uint32_t ssts;
-                uint32_t sctl;
-                uint32_t serr;
-                uint32_t sact;
-                uint32_t ci;
-                uint32_t sntf;
-                uint32_t fbs;
-                uint32_t __padding[15];
-
-        } __packed ports[32];
+    } __packed ports[32];
 
 } __packed hba_t;
 
 
 struct ahci {
 
-        uintptr_t contiguous_memory_area;
+    uintptr_t contiguous_memory_area;
 
-        pcidev_t deviceid;
-        uint8_t irq;
+    pcidev_t deviceid;
+    uint8_t irq;
 
-        semaphore_t io;
+    semaphore_t io;
 
-        hba_t volatile* hba;
+    hba_t volatile* hba;
 };
 
 
@@ -479,7 +479,6 @@ static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
     ahci->hba->ports[p].is = s;
     ahci->hba->is          = p + 1;
 }
-
 
 
 static inline void ahci_wait_io(struct ahci* ahci, int port, int channel) {
@@ -558,7 +557,6 @@ static void satapi_init(device_t* device) {
     ata_identify_t identify = {0};
 
     memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
-
 
 
     /* Read Capacity */
@@ -794,7 +792,6 @@ static void sata_init(device_t* device) {
     h2d->command = ATA_CMD_IDENTIFY;
     h2d->device  = 0;
 
-
     while (ahci->hba->ports[i].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
         __builtin_ia32_pause();
 
@@ -810,20 +807,27 @@ static void sata_init(device_t* device) {
     }
 
 
-    ata_identify_t identify = {0};
+    // ata_identify_t _identify = {0};
+    // const void* src          = (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP));
 
-    memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
+    // for (size_t i = 0; i < sizeof(ata_identify_t); i++) {
+    //     ((uint8_t*)&_identify)[i] = mmio_r8(src + i);
+    // }
 
+    ata_identify_t* identify = (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP));
 
-    device->blk.blkcount = identify.sectors_28 ? identify.sectors_28 : identify.sectors_48;
+    uint64_t sectors_28 = mmio_r32(&identify->sectors_28);
+    uint64_t sectors_48 = mmio_r64(&identify->sectors_48);
+
+    device->blk.blkcount = sectors_28 ? sectors_28 : sectors_48;
 
 
 #if DEBUG_LEVEL_TRACE
 
     for (int j = 0; j < 39; j += 2) {
-        identify.model[j] ^= identify.model[j + 1];
-        identify.model[j + 1] ^= identify.model[j];
-        identify.model[j] ^= identify.model[j + 1];
+        identify->model[j] ^= identify->model[j + 1];
+        identify->model[j + 1] ^= identify->model[j];
+        identify->model[j] ^= identify->model[j + 1];
     }
 
 
@@ -833,9 +837,12 @@ static void sata_init(device_t* device) {
             "   Serial:     %.20s\n"
             "   Firmware:   %.8s\n"
             "   Sector28:   %d\n"
-            "   Sector48:   %lld\n",
-
-            i, identify.model, identify.serial, identify.firmware, identify.sectors_28, identify.sectors_48);
+            "   Sector48:   %lld\n"
+            "   SectorsPerInt: %d\n"
+            "   Capabilities: 0x%.4X%.4X\n"
+            "   ValidExtData: %d\n"
+            "   SizeOfRWMult: %d\n",
+            i, identify->model, identify->serial, identify->firmware, identify->sectors_28, identify->sectors_48, identify->sectors_per_int, identify->caps[0], identify->caps[1], identify->valid_ext_data, identify->size_of_rw_mult);
 
 #endif
 }
@@ -1118,8 +1125,8 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     static struct {
-            uint16_t vid;
-            uint16_t did;
+        uint16_t vid;
+        uint16_t did;
     } supported_devices[] = {
         {0x8086, 0x2652},
         {0x8086, 0x2653},
@@ -1182,7 +1189,10 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     ahci->deviceid = device;
     ahci->irq      = pci_read(device, PCI_INTERRUPT_LINE, 1);
 
-    ahci->hba = (hba_t volatile*)(pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
+    if (pci_is_64bit(device, PCI_BAR5))
+        ahci->hba = (hba_t volatile*)(pci_read(device, PCI_BAR5, 8) & PCI_BAR_64_MM_MASK);
+    else
+        ahci->hba = (hba_t volatile*)(pci_read(device, PCI_BAR5, 4) & PCI_BAR_MM_MASK);
 
 
     uint32_t size = pci_bar_size(device, PCI_BAR5, 4);
