@@ -72,8 +72,6 @@ __noreturn __nosanitize("undefined") void kpanicf(const char* fmt, ...) {
     arch_debug_putc('m');
 
 
-    for (;;) {
-        __cpu_pause();
-        __cpu_halt();
-    }
+    arch_reboot(ARCH_REBOOT_CRASH);
+
 }
