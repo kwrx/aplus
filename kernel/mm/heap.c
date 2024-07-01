@@ -35,7 +35,6 @@
 
 #define PTR_TO_HEADER(p) ((struct kmalloc_header*)((uintptr_t)p - sizeof(struct kmalloc_header)))
 
-
 static uint64_t heap_used_memory = 0;
 
 
@@ -55,8 +54,7 @@ struct kmalloc_header {
 } __packed;
 
 
-
-__malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
+__weak __malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
 
     DEBUG_ASSERT(size);
     DEBUG_ASSERT(gfp == GFP_KERNEL || gfp == GFP_ATOMIC || gfp == GFP_USER);
@@ -94,7 +92,7 @@ __malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
 }
 
 
-__malloc __alloc_size(1, 2) void* kcalloc(size_t n, size_t m, int gfp) {
+__weak __malloc __alloc_size(1, 2) void* kcalloc(size_t n, size_t m, int gfp) {
 
     DEBUG_ASSERT(n);
     DEBUG_ASSERT(m);
@@ -109,7 +107,7 @@ __malloc __alloc_size(1, 2) void* kcalloc(size_t n, size_t m, int gfp) {
 }
 
 
-__malloc __alloc_size(2) void* krealloc(void* address, size_t size, int gfp) {
+__weak __malloc __alloc_size(2) void* krealloc(void* address, size_t size, int gfp) {
 
     DEBUG_ASSERT(address != NULL || size > 0);
 
@@ -137,7 +135,7 @@ __malloc __alloc_size(2) void* krealloc(void* address, size_t size, int gfp) {
 }
 
 
-void kfree(void* address) {
+__weak void kfree(void* address) {
 
     DEBUG_ASSERT(address);
     DEBUG_ASSERT(memcmp(PTR_TO_HEADER(address)->magic, "USED", 4) == 0);
@@ -154,7 +152,7 @@ void kfree(void* address) {
 }
 
 
-uint64_t kheap_get_used_memory(void) {
+__weak uint64_t kheap_get_used_memory(void) {
     return heap_used_memory * PML1_PAGESIZE;
 }
 

@@ -55,6 +55,7 @@
     #define ARCH_REBOOT_SUSPEND  1
     #define ARCH_REBOOT_POWEROFF 2
     #define ARCH_REBOOT_HALT     3
+    #define ARCH_REBOOT_CRASH    4
 
 
     #define ARCH_VMM_AREA_HEAP   1
@@ -163,7 +164,6 @@ void arch_task_switch_address_space(vmm_address_space_t*);
 
 
 void arch_reboot(int) __noreturn;
-
 
 void arch_timer_delay(uint64_t);
 uint64_t arch_timer_gettime(void);

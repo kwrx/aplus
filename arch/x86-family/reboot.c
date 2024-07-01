@@ -82,13 +82,6 @@ __noreturn void arch_reboot(int mode) {
 
         } break;
 
-
-        case ARCH_REBOOT_SUSPEND:
-
-            kpanicf("arch_reboot(): PANIC! ARCH_REBOOT_SUSPEND not yet supported\n");
-            break;
-
-
         case ARCH_REBOOT_POWEROFF: {
 
             /* ACPI */
@@ -96,21 +89,58 @@ __noreturn void arch_reboot(int mode) {
 
             kprintf("x86-reboot: ACPI power-off failed\n");
 
+            {
+                /* QEMU */
+                const int QEMU_EXIT_PORT = 0xF4;
+                const int QEMU_EXIT_CODE = 0x10;
 
-            /* Virtual Machine */
-            outw(0xB004, 0x2000); /* Bochs */
-            outw(0x0604, 0x2000); /* Qemu  */
-            outw(0x4004, 0x3400); /* Vbox  */
+                outl(QEMU_EXIT_PORT, QEMU_EXIT_CODE);
+            }
+
+
+            {
+                /* VirtualBox */
+                const int VBOX_PORT  = 0x4004;
+                const int VBOX_MAGIC = 0x3400;
+
+                outw(VBOX_PORT, VBOX_MAGIC);
+            }
 
             kprintf("x86-reboot: VM power-off failed\n");
 
         } break;
 
+        case ARCH_REBOOT_CRASH: {
+
+            {
+                /* QEMU */
+                const int QEMU_EXIT_PORT = 0xF4;
+                const int QEMU_EXIT_CODE = 0x11;
+
+                outl(QEMU_EXIT_PORT, QEMU_EXIT_CODE);
+            }
+
+            {
+                /* VirtualBox */
+                const int VBOX_PORT  = 0x4004;
+                const int VBOX_MAGIC = 0x3401;
+
+                outw(VBOX_PORT, VBOX_MAGIC);
+            }
+
+        } break;
+
+        case ARCH_REBOOT_SUSPEND:
+
+            kpanicf("arch_reboot(): PANIC! ARCH_REBOOT_SUSPEND not yet supported\n");
+            break;
 
         case ARCH_REBOOT_HALT:
             break;
     }
 
-
-    kpanicf("System Halted!");
+    for (;;) {
+        __cpu_pause();
+        __cpu_halt();
+    }
 }

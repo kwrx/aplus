@@ -25,8 +25,13 @@
 
 #![no_std]
 #![no_main]
+#![feature(alloc_error_handler)]
+#![feature(panic_info_message)]
 
 extern crate alloc;
 
-mod runtime;
-mod mm;
+pub mod ipc;
+pub mod mm;
+pub mod runtime;
+pub mod bindings;
+
