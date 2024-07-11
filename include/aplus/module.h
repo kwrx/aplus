@@ -73,7 +73,7 @@ typedef struct {
         const char* args;
 
         int status;
-        int refcount;
+        atomic_int refcount;
 
 } module_t;
 

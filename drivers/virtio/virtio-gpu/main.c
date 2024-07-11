@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -274,8 +275,8 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
     struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)device_config;
 
-    __atomic_store_n(&cfg->events_clear, cfg->events_read, __ATOMIC_SEQ_CST);
-    __atomic_membarrier();
+    mmio_w32(&cfg->events_clear, cfg->events_read);
+    atomic_thread_fence(memory_order_release);
 
 
 #if DEBUG_LEVEL_TRACE

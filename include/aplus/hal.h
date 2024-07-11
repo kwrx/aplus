@@ -35,18 +35,15 @@
 
 
     #if defined(__i386__) || defined(__x86_64__)
-        #define __atomic_membarrier() __asm__ __volatile__("mfence" : : : "memory")
-        #define __cpu_pause()         __asm__ __volatile__("pause" : : : "memory")
-        #define __cpu_halt()          __asm__ __volatile__("hlt" : : : "memory")
+        #define __cpu_pause() __asm__ __volatile__("pause" : : : "memory")
+        #define __cpu_halt()  __asm__ __volatile__("hlt" : : : "memory")
     #elif defined(__arm__) || defined(__aarch64__)
-        #define __atomic_membarrier() __builtin_arm_dmb(15)
-        #define __cpu_pause()         __builtin_arm_wfe()
-        #define __cpu_halt()          __builtin_arm_wfi()
+        #define __cpu_pause() __builtin_arm_wfe()
+        #define __cpu_halt()  __builtin_arm_wfi()
     #else
         #warning "Unknown architecture"
-        #define __atomic_membarrier() __asm__ __volatile__("" : : : "memory")
-        #define __cpu_pause()         __asm__ __volatile__("" : : : "memory")
-        #define __cpu_halt()          __asm__ __volatile__("" : : : "memory")
+        #define __cpu_pause() __asm__ __volatile__("" : : : "memory")
+        #define __cpu_halt()  __asm__ __volatile__("" : : : "memory")
     #endif
 
 
@@ -227,6 +224,7 @@ __nonnull(1, 2) static inline void uio_memcpy_u2s(void* dst, const void* src, si
     uintptr_t d = (uintptr_t)dst;
     uintptr_t s = (uintptr_t)src;
 
+    // FIXME: check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies
 
     // for(; i + 8 < n; i += 8) {
     //     *(uint64_t*) (d + i) = uio_r64(s + i);
@@ -253,6 +251,8 @@ __nonnull(1, 2) static inline void uio_memcpy_s2u(void* dst, const void* src, si
     uintptr_t s = (uintptr_t)src;
 
 
+    // FIXME: check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies
+
     // for(; i + 8 < n; i += 8) {
     //     uio_w64(d + i, *(uint64_t*) (s + i));
     // }
@@ -277,6 +277,8 @@ __nonnull(1, 2) static inline void uio_memcpy_u2u(void* dst, const void* src, si
     uintptr_t d = (uintptr_t)dst;
     uintptr_t s = (uintptr_t)src;
 
+
+    // FIXME: check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies
 
     // for(; i + 8 < n; i += 8) {
     //     uio_w64(d + i, uio_r64(s + i));

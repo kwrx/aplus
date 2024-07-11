@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -55,8 +56,9 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     DEBUG_ASSERT(cfg->queue_size);
 
 
-    __atomic_store_n(&cfg->queue_select, cpu_to_le16(index), __ATOMIC_SEQ_CST);
-    __atomic_membarrier();
+
+    mmio_w16(&cfg->queue_select, cpu_to_le16(index));
+    atomic_thread_fence(memory_order_seq_cst);
 
 
     size_t qsize = cfg->queue_size;
@@ -105,7 +107,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     cfg->queue_device = cpu_to_le64(pbuf + (qsize * 16) + (qsize * 2 + 6));
     cfg->queue_enable = cpu_to_le16(1);
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_release);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -203,7 +205,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
 
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
     driver->internals.queues[queue].descriptors[inp].q_address = cpu_to_le64(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size));
     driver->internals.queues[queue].descriptors[inp].q_length  = cpu_to_le32(size);
@@ -217,7 +219,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
 
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
     uint16_t seen = le16_to_cpu(driver->internals.queues[queue].used->q_idx);
     uint16_t next = le16_to_cpu(driver->internals.queues[queue].available->q_idx) % driver->internals.queues[queue].size;
@@ -226,11 +228,11 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
     driver->internals.queues[queue].available->q_flags      = cpu_to_le16(0);
     driver->internals.queues[queue].available->q_idx        = cpu_to_le16(le16_to_cpu(driver->internals.queues[queue].available->q_idx) + 1);
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
 
 
@@ -256,7 +258,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
             break;
         }
 
-        __atomic_membarrier();
+        atomic_thread_fence(memory_order_seq_cst);
 
     } while (seen != 0xFFFF);
 
@@ -304,14 +306,14 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, 
 
 
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
     driver->internals.queues[queue].descriptors[inp].q_address = cpu_to_le64(driver->internals.queues[queue].buffers.sendbuf + (inp * driver->send_window_size));
     driver->internals.queues[queue].descriptors[inp].q_length  = cpu_to_le32(size);
     driver->internals.queues[queue].descriptors[inp].q_flags   = cpu_to_le16(0);
     driver->internals.queues[queue].descriptors[inp].q_next    = cpu_to_le16(0);
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
 
     uint16_t next = le16_to_cpu(driver->internals.queues[queue].available->q_idx) % driver->internals.queues[queue].size;
@@ -324,7 +326,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, void* message, 
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
 
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_acq_rel);
 
 
     return size;

@@ -22,6 +22,7 @@
  */
 
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 #include <time.h>
@@ -435,7 +436,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 
     task->address_space = (void*)current_task->address_space;
 
-    __atomic_add_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST);
+    atomic_fetch_add(&current_task->address_space->refcount, 1);
 
 
     task->fs      = shared_ptr_dup(current_task->fs, GFP_KERNEL);

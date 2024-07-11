@@ -78,7 +78,7 @@ SYSCALL(
                     fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
                     fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
-                    __atomic_add_fetch(&fds->descriptors[fd].ref->refcount, 1, __ATOMIC_SEQ_CST);
+                    atomic_fetch_add(&fds->descriptors[fd].ref->refcount, 1);
                 });
             });
         });

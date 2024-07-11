@@ -8,11 +8,13 @@ fn main() {
         .header("include/wrapper.h")
         .clang_arg("-I../include")
         .clang_arg("-I../sdk/toolchain/x86_64-aplus/include")
+        .clang_arg("-I../sdk/toolchain/lib/gcc/x86_64-aplus/12.2.0/include")
         .clang_arg("-include../config.h")
         .clang_arg("-nostdinc")
         .clang_arg("-nostdlib")
         .clang_arg("-DKERNEL=1")
-        .clang_arg("-D_GNU_SOURCE=1");
+        .clang_arg("-D_GNU_SOURCE=1")
+        .clang_arg("-std=c23");
 
     let srcdir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
     let srcdir = srcdir.join("src");
