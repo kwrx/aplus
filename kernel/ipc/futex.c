@@ -186,12 +186,12 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
                     max--; req++;
                     break;
+                }
+            });
         }
-    });
-}
-}
+    }
 
-return req;
+    return req;
 }
 
 
@@ -203,7 +203,7 @@ bool futex_expired(futex_t* futex) {
     if (futex->address == NULL)
         return true;
 
-    if (__atomic_load_n(futex->address, __ATOMIC_SEQ_CST) != futex->value)
+    if (atomic_load(futex->address) != futex->value)
         return true;
 
     if (futex->timeout.tv_sec + futex->timeout.tv_nsec == 0)

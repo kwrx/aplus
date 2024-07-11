@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 
 #include <aplus.h>
@@ -61,7 +62,7 @@ void spinlock_init_with_flags(spinlock_t* lock, int flags) {
     kprintf("ipc: spinlock_init_with_flags(%p, %x, %s, %s:%d)\n", lock, flags, FUNC, FILE, LINE);
 #endif
 
-    __atomic_clear(&lock->value, __ATOMIC_RELAXED);
+    atomic_flag_clear(&lock->value);
 }
 
 
@@ -97,11 +98,11 @@ void spinlock_lock(spinlock_t* lock) {
 
     volatile uint64_t own;
 
-    if ((own = __atomic_load_n(&lock->owner, __ATOMIC_CONSUME)) == spinlock_get_new_owner(lock)) {
+    if ((own = atomic_load_explicit(&lock->owner, memory_order_consume)) == spinlock_get_new_owner(lock)) {
 
         if (lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
 
-            __atomic_add_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST);
+            atomic_fetch_add(&lock->refcount, 1);
 
         } else {
 
@@ -121,7 +122,7 @@ void spinlock_lock(spinlock_t* lock) {
         // //         uint64_t deadlock_detector = 0ULL;
         // // #endif
 
-        while (__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE)) {
+        while (atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire)) {
 
 #if defined(__i386__) || defined(__x86_64__)
             __builtin_ia32_pause();
@@ -148,7 +149,7 @@ void spinlock_lock(spinlock_t* lock) {
         lock->owner   = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
 
-        __atomic_store_n(&lock->refcount, 1, __ATOMIC_RELAXED);
+        atomic_store_explicit(&lock->refcount, 1, memory_order_relaxed);
     }
 }
 
@@ -162,8 +163,12 @@ int spinlock_trylock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
     int e;
-    if ((e = !__atomic_test_and_set(&lock->value, __ATOMIC_ACQUIRE))) {
+    if ((e = atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire)) == 0) {
+
+        lock->owner   = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
+
+        atomic_store_explicit(&lock->refcount, 1, memory_order_relaxed);
     }
 
     return e;
@@ -183,7 +188,7 @@ void spinlock_unlock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
 
-    if (__atomic_load_n(&lock->owner, __ATOMIC_RELAXED) != spinlock_get_new_owner(lock)) {
+    if (atomic_load_explicit(&lock->owner, memory_order_consume) != spinlock_get_new_owner(lock)) {
 #if DEBUG_LEVEL_TRACE
         kpanicf("ipc: PANIC! EPERM! spinlock(%p) at %s:%d %s() not owned, owner(%ld) flags(%X) current_owner(%ld)\n", lock, FILE, LINE, FUNC, lock->owner, lock->flags, spinlock_get_new_owner(lock));
 #else
@@ -193,7 +198,7 @@ void spinlock_unlock(spinlock_t* lock) {
     } else {
 
 
-        if (__atomic_sub_fetch(&lock->refcount, 1, __ATOMIC_SEQ_CST) > 0)
+        if (atomic_fetch_sub(&lock->refcount, 1) > 1)
             return;
 
 
@@ -203,7 +208,7 @@ void spinlock_unlock(spinlock_t* lock) {
         lock->refcount = 0;
         lock->irqsave  = 0;
 
-        __atomic_clear(&lock->value, __ATOMIC_RELEASE);
+        atomic_flag_clear(&lock->value);
 
 
         arch_intr_enable(e);

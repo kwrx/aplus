@@ -30,6 +30,8 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
+
+#include <stdatomic.h>
 #include <stdint.h>
 
 
@@ -79,10 +81,10 @@ void do_unshare(int flags) {
         clone_flags |= ARCH_VMM_CLONE_DEMAND;
 #endif
 
-        if (__atomic_sub_fetch(&current_task->address_space->refcount, 1, __ATOMIC_SEQ_CST) > 0) {
+        if (atomic_fetch_sub(&current_task->address_space->refcount, 1) > 1) {
             current_task->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
         } else {
-            current_task->address_space->refcount = 1; // FIXME: not sure if this is correct, maybe we should use atomic operations
+            atomic_store(&current_task->address_space->refcount, 1);
         }
 
         // Reload current address space
@@ -200,7 +202,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     if (args->flags & CLONE_VM) {
         child->address_space = current_task->address_space;
-        __atomic_add_fetch(&child->address_space->refcount, 1, __ATOMIC_SEQ_CST);
+        atomic_fetch_add(&child->address_space->refcount, 1);
     } else {
 
         int clone_flags = ARCH_VMM_CLONE_USERSPACE;

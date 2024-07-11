@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 
 #include <aplus.h>
@@ -31,12 +32,13 @@
 
 
 
-void sem_init(semaphore_t* s, uint32_t value) {
+void sem_init(semaphore_t* s, uint32_t waiters) {
 
     DEBUG_ASSERT(s);
-    DEBUG_ASSERT(value >= 0);
+    DEBUG_ASSERT(waiters >= 0);
 
-    __atomic_store(s, &value, __ATOMIC_RELAXED);
+    spinlock_init(&s->lock);
+    s->waiters = waiters;
 }
 
 #if DEBUG_LEVEL_TRACE
@@ -51,10 +53,17 @@ void sem_wait(semaphore_t* s) {
     uint64_t t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
 #endif
 
-    while (__atomic_load_n(s, __ATOMIC_CONSUME) == 0) {
-#if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
-#endif
+    while (true) {
+
+        spinlock_lock(&s->lock);
+        uint32_t waiters = s->waiters;
+        spinlock_unlock(&s->lock);
+
+        if (unlikely(waiters > 0)) {
+            break;
+        }
+
+        __cpu_pause();
 
 #if DEBUG_LEVEL_TRACE
         if (arch_timer_generic_getms() > t0) {
@@ -64,7 +73,9 @@ void sem_wait(semaphore_t* s) {
 #endif
     }
 
-    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
+    spinlock_lock(&s->lock);
+    s->waiters--;
+    spinlock_unlock(&s->lock);
 }
 
 
@@ -73,11 +84,18 @@ int sem_trywait(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 
-    if (__atomic_load_n(s, __ATOMIC_CONSUME) == 0)
-        return 0;
+    spinlock_lock(&s->lock);
 
-    __atomic_sub_fetch(s, 1, __ATOMIC_ACQUIRE);
-    return 1;
+    int ret = 0;
+    if (unlikely(s->waiters == 0)) {
+        ret = 0;
+    } else {
+        s->waiters--;
+        ret = 1;
+    }
+
+    spinlock_unlock(&s->lock);
+    return ret;
 }
 
 
@@ -85,5 +103,7 @@ void sem_post(semaphore_t* s) {
 
     DEBUG_ASSERT(s);
 
-    __atomic_add_fetch(s, 1, __ATOMIC_RELEASE);
+    spinlock_lock(&s->lock);
+    s->waiters++;
+    spinlock_unlock(&s->lock);
 }

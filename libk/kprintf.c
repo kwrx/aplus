@@ -51,8 +51,7 @@ __nosanitize("undefined") void kprintf(const char* fmt, ...) {
 
 
     __lock(&buflock, {
-        for (int i = 0; buf[i] && !((1 << current_cpu->id) & __atomic_load_n(&accmask, __ATOMIC_CONSUME)); i++) {
-
+        for (int i = 0; buf[i] && !((1 << current_cpu->id) & atomic_load_explicit(&accmask, memory_order_consume)); i++) {
             arch_debug_putc(buf[i]);
         }
     });
@@ -68,6 +67,6 @@ void kprintf_resume(void) {
 }
 
 void kprintf_mask(int mask) {
-    __atomic_store_n(&accmask, mask, __ATOMIC_SEQ_CST);
-    __atomic_thread_fence(__ATOMIC_SEQ_CST);
+    atomic_store(&accmask, mask);
+    atomic_thread_fence(memory_order_release);
 }

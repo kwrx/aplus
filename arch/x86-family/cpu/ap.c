@@ -29,6 +29,7 @@
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/multiboot.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -66,8 +67,7 @@ __percpu void ap_bmain(uint64_t magic, uint64_t cpu) {
     __asm__ __volatile__("sti");
 
 
-
-    __atomic_add_fetch(&ap_cores, 1, __ATOMIC_ACQ_REL);
+    atomic_fetch_add_explicit(&ap_cores, 1, memory_order_acq_rel);
 }
 
 
@@ -106,7 +106,7 @@ int ap_check(int core, int timeout) {
     int us;
     for (us = 0; us < timeout; us += 200) {
 
-        __atomic_thread_fence(__ATOMIC_SEQ_CST);
+        atomic_thread_fence(memory_order_seq_cst);
 
         if (!(ap_cores < core))
             return 1;
@@ -114,6 +114,6 @@ int ap_check(int core, int timeout) {
         arch_timer_delay(200);
     }
 
-    __atomic_thread_fence(__ATOMIC_SEQ_CST);
+    atomic_thread_fence(memory_order_seq_cst);
     return (!(ap_cores < core));
 }

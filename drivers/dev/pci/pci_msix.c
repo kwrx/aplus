@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -179,9 +180,9 @@ void pci_msix_mask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_rows);
 
+    atomic_thread_fence(memory_order_acquire);
     msix->msix_rows[index].pr_ctl |= PCI_MSIX_INTR_MASK;
-
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_release);
 }
 
 void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
@@ -190,9 +191,9 @@ void pci_msix_unmask(pcidev_t device, pci_msix_t* msix, uint32_t index) {
     DEBUG_ASSERT(msix);
     DEBUG_ASSERT(msix->msix_rows);
 
+    atomic_thread_fence(memory_order_acquire);
     msix->msix_rows[index].pr_ctl &= ~PCI_MSIX_INTR_MASK;
-
-    __atomic_membarrier();
+    atomic_thread_fence(memory_order_release);
 }
 
 
@@ -230,7 +231,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         msix->msix_rows[index].pr_data    = cpu_to_le32(i + PCI_MSIX_INTR_BASE);
         msix->msix_rows[index].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[index].pr_ctl) | PCI_MSIX_INTR_MASK);
 
-        __atomic_membarrier();
+        atomic_thread_fence(memory_order_seq_cst);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -269,7 +270,7 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         msix->msix_rows[pci_msix_devices[i].index].pr_data    = 0;
         msix->msix_rows[pci_msix_devices[i].index].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[pci_msix_devices[i].index].pr_ctl) | PCI_MSIX_INTR_MASK);
 
-        __atomic_membarrier();
+        atomic_thread_fence(memory_order_seq_cst);
 
 
         pci_msix_devices[i].index   = 0;

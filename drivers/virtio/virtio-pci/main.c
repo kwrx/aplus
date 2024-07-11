@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -133,7 +134,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 #if DEBUG_LEVEL_ERROR
     #define cfg_set_status_and_check(status)                                                                                          \
         {                                                                                                                             \
-            __atomic_or_fetch(&cfg->device_status, status, __ATOMIC_SEQ_CST);                                                         \
+            atomic_fetch_or(&cfg->device_status, status);                                                                             \
             if ((cfg->device_status & status) == 0) {                                                                                 \
                 kprintf("virtio-pci: FAIL! device %d setting status %s [status(%X)]\n", driver->device, #status, cfg->device_status); \
                 return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;                                                     \
@@ -142,7 +143,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 #else
     #define cfg_set_status_and_check(status)                                      \
         {                                                                         \
-            __atomic_or_fetch(&cfg->device_status, status, __ATOMIC_SEQ_CST);     \
+            atomic_fetch_or(&cfg->device_status, status);                         \
             if ((cfg->device_status & status) == 0)                               \
                 return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS; \
         }
@@ -158,9 +159,11 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
     // @see https://docs.oasis-open.org/virtio/virtio/v1.1/virtio-v1.1.pdf (chap.3)
     //
 
-    cfg->device_status = VIRTIO_DEVICE_STATUS_RESET;
 
-    while (__atomic_load_n(&cfg->device_status, __ATOMIC_CONSUME) != VIRTIO_DEVICE_STATUS_RESET)
+    cfg->device_status = VIRTIO_DEVICE_STATUS_RESET;
+    atomic_thread_fence(memory_order_release);
+
+    while (atomic_load_explicit(&cfg->device_status, memory_order_consume) != VIRTIO_DEVICE_STATUS_RESET)
         ;
 
     cfg_set_status_and_check(VIRTIO_DEVICE_STATUS_ACKNOWNLEDGE);
@@ -179,7 +182,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
             cfg->device_feature_select = i;
             cfg->driver_feature_select = i;
 
-            __atomic_membarrier();
+            atomic_thread_fence(memory_order_release);
 
 
             uint32_t features = le32_to_cpu(cfg->device_feature);
@@ -198,7 +201,7 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
             cfg->driver_feature = cpu_to_le32(features);
 
-            __atomic_membarrier();
+            atomic_thread_fence(memory_order_release);
 
 
             if (cfg->driver_feature != features) {
