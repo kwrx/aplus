@@ -53,17 +53,17 @@ void sem_wait(semaphore_t* s) {
     uint64_t t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
 #endif
 
-    while (true) {
+    bool wait = true;
+
+    while (wait) {
 
         spinlock_lock(&s->lock);
-        uint32_t waiters = s->waiters;
-        spinlock_unlock(&s->lock);
 
-        if (unlikely(waiters > 0)) {
-            break;
+        if (unlikely(s->waiters > 0)) {
+            wait = false;
         }
 
-        __cpu_pause();
+        spinlock_unlock(&s->lock);
 
 #if DEBUG_LEVEL_TRACE
         if (arch_timer_generic_getms() > t0) {
@@ -71,6 +71,8 @@ void sem_wait(semaphore_t* s) {
             kprintf("ipc: TRACE! %s(): Timeout expired for %s:%d %s(%p), cpu(%ld), tid(%d)\n", __func__, FILE, LINE, FUNC, s, current_cpu->id, current_task->tid);
         }
 #endif
+
+        __cpu_pause();
     }
 
     spinlock_lock(&s->lock);
