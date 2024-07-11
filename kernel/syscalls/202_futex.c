@@ -75,7 +75,7 @@ SYSCALL(
                 if (unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
 
-                if (__atomic_load_n(kaddr, __ATOMIC_RELAXED) != val)
+                if (atomic_load_explicit(kaddr, memory_order_consume) != val)
                     return -EAGAIN;
 
 
@@ -102,7 +102,7 @@ SYSCALL(
 
             case FUTEX_CMP_REQUEUE:
 
-                if (__atomic_load_n(kaddr, __ATOMIC_RELAXED) != val3)
+                if (atomic_load_explicit(kaddr, memory_order_relaxed) != val3)
                     return -EAGAIN;
 
 

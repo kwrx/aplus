@@ -31,6 +31,8 @@
     #include <aplus/debug.h>
     #include <aplus/ipc.h>
     #include <aplus/utils/hashmap.h>
+
+    #include <stdatomic.h>
     #include <stdint.h>
 
 
@@ -67,12 +69,12 @@ __BEGIN_DECLS
         })
 
 
-    #define shared_ptr_ref(ptr)                                        \
-        ({                                                             \
-            DEBUG_ASSERT((ptr));                                       \
-            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);            \
-            __atomic_add_fetch(&(ptr)->refcount, 1, __ATOMIC_SEQ_CST); \
-            (ptr);                                                     \
+    #define shared_ptr_ref(ptr)                                                   \
+        ({                                                                        \
+            DEBUG_ASSERT((ptr));                                                  \
+            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                       \
+            atomic_fetch_add_explicit(&(ptr)->refcount, 1, memory_order_acquire); \
+            (ptr);                                                                \
         })
 
     #define shared_ptr_dup(ptr, gfp)                                              \
@@ -95,22 +97,22 @@ __BEGIN_DECLS
         })
 
 
-    #define shared_ptr_free(ptr)                                                  \
-        {                                                                         \
-            DEBUG_ASSERT((ptr));                                                  \
-            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                       \
-            if (__atomic_sub_fetch(&(ptr)->refcount, 1, __ATOMIC_SEQ_CST) == 0) { \
-                kfree((ptr));                                                     \
-            }                                                                     \
+    #define shared_ptr_free(ptr)                                                             \
+        {                                                                                    \
+            DEBUG_ASSERT((ptr));                                                             \
+            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                                  \
+            if (atomic_fetch_sub_explicit(&(ptr)->refcount, 1, memory_order_consume) == 1) { \
+                kfree((ptr));                                                                \
+            }                                                                                \
         }
 
-    #define shared_ptr_free_with_dtor(ptr, var, dtor)                             \
-        {                                                                         \
-            DEBUG_ASSERT((ptr));                                                  \
-            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                       \
-            if (__atomic_sub_fetch(&(ptr)->refcount, 1, __ATOMIC_SEQ_CST) == 0) { \
-                shared_ptr_access(ptr, var, { dtor; });                           \
-            }                                                                     \
+    #define shared_ptr_free_with_dtor(ptr, var, dtor)                                        \
+        {                                                                                    \
+            DEBUG_ASSERT((ptr));                                                             \
+            DEBUG_ASSERT((ptr)->magic == SHARED_PTR_MAGIC);                                  \
+            if (atomic_fetch_sub_explicit(&(ptr)->refcount, 1, memory_order_consume) == 1) { \
+                shared_ptr_access(ptr, var, { dtor; });                                      \
+            }                                                                                \
         }
 
 

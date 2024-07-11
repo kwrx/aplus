@@ -23,17 +23,11 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// #[import_c_var(GFP_KERNEL)]
+
+use crate::bindings::GFP_KERNEL;
+use crate::mm::heap::{kcalloc, kfree, kmalloc};
 use core::alloc::{GlobalAlloc, Layout};
-
-extern "C" {
-    fn kmalloc(size: usize, gfp: u32) -> *mut u8;
-    fn kcalloc(nmemb: usize, size: usize, gfp: u32) -> *mut u8;
-    fn kfree(ptr: *mut u8);
-}
-
-const GFP_KERNEL: u32 = 0;
-// const GFP_ATOMIC: u32 = 1;
-// const GFP_USER: u32 = 2;
 
 pub struct Allocator;
 
@@ -53,3 +47,8 @@ unsafe impl GlobalAlloc for Allocator {
 
 #[global_allocator]
 static ALLOCATOR: Allocator = Allocator;
+
+#[alloc_error_handler]
+fn alloc_error_handler(layout: Layout) -> ! {
+    panic!("allocation error: {:?}", layout)
+}

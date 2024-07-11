@@ -97,7 +97,7 @@ void fd_remove(struct file* fd, bool close) {
 
 
     __lock(&filetable_lock, {
-        if (__atomic_sub_fetch(&fd->refcount, 1, __ATOMIC_SEQ_CST) == 0) {
+        if (atomic_fetch_sub(&fd->refcount, 1) == 1) {
 
             if (close) {
                 vfs_close(fd->inode);
@@ -126,5 +126,5 @@ void fd_ref(struct file* file) {
     DEBUG_ASSERT(file);
     DEBUG_ASSERT(filetable);
 
-    __lock(&filetable_lock, { __atomic_add_fetch(&file->refcount, 1, __ATOMIC_SEQ_CST); });
+    __lock(&filetable_lock, { atomic_fetch_sub(&file->refcount, 1); });
 }

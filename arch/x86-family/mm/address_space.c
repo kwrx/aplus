@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -295,7 +296,7 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     DEBUG_ASSERT(space);
     DEBUG_ASSERT(space->pm);
 
-    if (__atomic_sub_fetch(&space->refcount, 1, __ATOMIC_SEQ_CST) > 0) {
+    if (atomic_fetch_sub(&space->refcount, 1) > 1) {
         return;
     }
 
