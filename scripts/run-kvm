@@ -1,58 +1,10 @@
 #!/bin/bash
 
-arch=""
-flags=""
+# This script is used to run a VM using KVM
+# It is used by the run-vm script
 
-CPUS=${CPUS:-4}
+# Get script dir
+SCRIPT_DIR=$(dirname $(readlink -f $0))
 
-
-case $1 in
-    
-    x86_64)
-        arch="x86_64"
-
-        flags=""
-        flags="$flags --bios /usr/share/ovmf/x64/OVMF_CODE.fd -net none"
-        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
-        flags="$flags -boot order=c"
-        flags="$flags -m 4G"
-        flags="$flags -M q35,accel=kvm"
-        flags="$flags -rtc clock=host"
-        flags="$flags -cpu host,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
-        flags="$flags -smp $CPUS,sockets=1,cores=$CPUS,threads=1"
-        flags="$flags -vga std"
-        flags="$flags -device pcnet,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
-        # flags="$flags -object filter-dump,id=f1,netdev=net0,file=network.dat"
-        #flags="$flags -device virtio-serial-pci-non-transitional -chardev file,path=/tmp/kmsg.log,id=aplus -device virtconsole,name=jobsaplus,chardev=aplus,name=org.fedoraproject.console.aplus"
-        ;;
-
-    *)
-        echo "run-vm: unknown ARCH \"$1\""
-        exit 1
-        ;;
-
-esac
-
-#if ! which qemu-system-$arch.exe &> /dev/null; then
-#    echo "run-vm: qemu-system-$arch not found, you should try to install \"qemu-arch-extra\" package"
-#    exit 1
-#fi
-
-debug=""
-if [ ! -z $2 ]; then
-    debug="-S"
-fi
-
-trace=""
-if [ ! -z $TRACE ]; then
-    trace="-trace $TRACE"
-fi
-
-#sudo trace-cmd record -e kvm/* qemu-system-$arch -d int -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
-#sudo trace-cmd report > trace.log
-#rm -f trace.dat
-
-#qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-qemu-system-$arch -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-#qemu-system-$arch -nographic -serial mon:stdio -no-reboot -no-shutdown -s $debug $flags $trace
+# Call wrapper
+$SCRIPT_DIR/run-qemu -k $@
