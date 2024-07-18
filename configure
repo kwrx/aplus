@@ -283,7 +283,7 @@ stage_6() {
 
     echo '#!/bin/sh' >makew
     echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"' >>makew
-    echo 'make --no-print-directory -s MAKE_WRAPPER=y $@' >>makew
+    echo 'make --no-print-directory -s MAKE_WRAPPER=y REMOTE="$ARG_REMOTE" -j$(nproc) $@' >>makew
 
     chmod +x makew
 
@@ -316,12 +316,25 @@ while [[ $# -gt 0 ]]; do
         ARG_SKIP_TOOLCHAIN=1
         shift
         ;;
-    --verbose)
+    --remote)
+        ARG_REMOTE="$2"
+        shift
+        shift
+        ;;
+    -v | --verbose)
         ARG_VERBOSE=1
         shift
         ;;
-    --help)
-        echo "Usage: $0 [--kconfig <file>] [--skip-packages] [--skip-toolchain] [--verbose]"
+    -h | --help)
+        echo "Usage: configure [OPTIONS]"
+        echo ""
+        echo "Options:"
+        echo "  --kconfig FILE: use a specific Kconfig file"
+        echo "  --skip-packages: skip packages"
+        echo "  --skip-toolchain: skip toolchain"
+        echo "  --remote URI: use a remote toolchain"
+        echo "  -v, --verbose: enable verbose mode"
+        echo "  -h, --help: show this help message and exit"
         exit 0
         ;;
     *)
