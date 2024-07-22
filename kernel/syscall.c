@@ -42,12 +42,12 @@ long (*syscalls[SYSMAX])(long, long, long, long, long, long);
 
 struct syscall_hook {
 
-        uint32_t no;
-        const void* ptr;
-        const char* name;
+    uint32_t no;
+    const void* ptr;
+    const char* name;
 
 #if defined(__x86_64__)
-        char __padding[12];
+    char __padding[12];
 #endif
 
 } __packed;

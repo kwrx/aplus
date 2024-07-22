@@ -71,8 +71,8 @@
 
 
 struct sys_sem {
-        semaphore_t sem;
-        volatile long flags;
+    semaphore_t sem;
+    volatile long flags;
 };
 
 

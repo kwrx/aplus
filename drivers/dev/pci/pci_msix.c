@@ -43,10 +43,10 @@
 
 
 static struct {
-        pci_irq_handler_t handler;
-        pci_irq_data_t data;
-        pcidev_t device;
-        uint16_t index;
+    pci_irq_handler_t handler;
+    pci_irq_data_t data;
+    pcidev_t device;
+    uint16_t index;
 } pci_msix_devices[PCI_MSIX_DEVICES_MAX] = {0};
 
 static spinlock_t pci_msix_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);

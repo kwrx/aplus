@@ -66,42 +66,42 @@ __BEGIN_DECLS
 
 typedef struct {
 
-        uint16_t xoffset;
-        uint16_t yoffset;
-        uint16_t width;
-        uint16_t height;
-        uint16_t bpp;
-        uint32_t pitch;
-        uint32_t size;
-        uint32_t flags;
+    uint16_t xoffset;
+    uint16_t yoffset;
+    uint16_t width;
+    uint16_t height;
+    uint16_t bpp;
+    uint32_t pitch;
+    uint32_t size;
+    uint32_t flags;
 
-        uintptr_t framebuffer;
+    uintptr_t framebuffer;
 
 } device_video_display_t;
 
 
 typedef struct {
 
-        uint16_t x;
-        uint16_t y;
-        uint16_t width;
-        uint16_t height;
-        uint16_t flags;
-        uintptr_t buffer;
+    uint16_t x;
+    uint16_t y;
+    uint16_t width;
+    uint16_t height;
+    uint16_t flags;
+    uintptr_t buffer;
 
-        spinlock_t lock;
+    spinlock_t lock;
 
 } device_video_resource_t;
 
 
 typedef struct {
 
-        device_video_display_t root;
-        device_video_display_t displays[DEVICE_VIDEO_MAX_DISPLAY];
-        device_video_resource_t resources[DEVICE_VIDEO_MAX_RESOURCES];
+    device_video_display_t root;
+    device_video_display_t displays[DEVICE_VIDEO_MAX_DISPLAY];
+    device_video_resource_t resources[DEVICE_VIDEO_MAX_RESOURCES];
 
-        size_t display_count;
-        size_t resources_count;
+    size_t display_count;
+    size_t resources_count;
 
 } device_video_context_t;
 
@@ -109,9 +109,9 @@ typedef struct {
 
 typedef struct {
 
-        uint16_t width;
-        uint16_t height;
-        uint16_t bpp;
+    uint16_t width;
+    uint16_t height;
+    uint16_t bpp;
 
 } device_video_display_mode_t;
 

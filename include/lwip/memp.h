@@ -119,9 +119,9 @@ extern const struct memp_desc* const memp_pools[MEMP_MAX];
 /** This structure is used to save the pool one element came from.
  * This has to be defined here as it is required for pool size calculation. */
 struct memp_malloc_helper {
-        memp_t poolnr;
+    memp_t poolnr;
     #if MEMP_OVERFLOW_CHECK || (LWIP_STATS && MEM_STATS)
-        u16_t size;
+    u16_t size;
     #endif /* MEMP_OVERFLOW_CHECK || (LWIP_STATS && MEM_STATS) */
 };
 #endif /* MEM_USE_POOLS */

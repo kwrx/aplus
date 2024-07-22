@@ -74,8 +74,8 @@ static void ppp_vslp_printer(void* arg, const char* fmt, ...);
 static void ppp_format_packet(const u_char* p, int len, void (*printer)(void*, const char*, ...), void* arg);
 
 struct buffer_info {
-        char* ptr;
-        int len;
+    char* ptr;
+    int len;
 };
     #endif /* PRINTPKT_SUPPORT */
 

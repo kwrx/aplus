@@ -77,80 +77,80 @@ extern "C" {
     for a netconn in another thread context (mainly used to process netconns
     in the tcpip_thread context to be thread safe). */
 struct api_msg {
-        /** The netconn which to process - always needed: it includes the semaphore
-            which is used to block the application thread until the function finished. */
-        struct netconn* conn;
-        /** The return value of the function executed in tcpip_thread. */
-        err_t err;
-        /** Depending on the executed function, one of these union members is used */
-        union {
-                /** used for lwip_netconn_do_send */
-                struct netbuf* b;
-                /** used for lwip_netconn_do_newconn */
-                struct {
-                        u8_t proto;
-                } n;
-                /** used for lwip_netconn_do_bind and lwip_netconn_do_connect */
-                struct {
-                        API_MSG_M_DEF_C(ip_addr_t, ipaddr);
-                        u16_t port;
-                        u8_t if_idx;
-                } bc;
-                /** used for lwip_netconn_do_getaddr */
-                struct {
-                        ip_addr_t API_MSG_M_DEF(ipaddr);
-                        u16_t API_MSG_M_DEF(port);
-                        u8_t local;
-                } ad;
-                /** used for lwip_netconn_do_write */
-                struct {
-                        /** current vector to write */
-                        const struct netvector* vector;
-                        /** number of unwritten vectors */
-                        u16_t vector_cnt;
-                        /** offset into current vector */
-                        size_t vector_off;
-                        /** total length across vectors */
-                        size_t len;
-                        /** offset into total length/output of bytes written when err == ERR_OK */
-                        size_t offset;
-                        u8_t apiflags;
+    /** The netconn which to process - always needed: it includes the semaphore
+        which is used to block the application thread until the function finished. */
+    struct netconn* conn;
+    /** The return value of the function executed in tcpip_thread. */
+    err_t err;
+    /** Depending on the executed function, one of these union members is used */
+    union {
+        /** used for lwip_netconn_do_send */
+        struct netbuf* b;
+        /** used for lwip_netconn_do_newconn */
+        struct {
+            u8_t proto;
+        } n;
+        /** used for lwip_netconn_do_bind and lwip_netconn_do_connect */
+        struct {
+            API_MSG_M_DEF_C(ip_addr_t, ipaddr);
+            u16_t port;
+            u8_t if_idx;
+        } bc;
+        /** used for lwip_netconn_do_getaddr */
+        struct {
+            ip_addr_t API_MSG_M_DEF(ipaddr);
+            u16_t API_MSG_M_DEF(port);
+            u8_t local;
+        } ad;
+        /** used for lwip_netconn_do_write */
+        struct {
+            /** current vector to write */
+            const struct netvector* vector;
+            /** number of unwritten vectors */
+            u16_t vector_cnt;
+            /** offset into current vector */
+            size_t vector_off;
+            /** total length across vectors */
+            size_t len;
+            /** offset into total length/output of bytes written when err == ERR_OK */
+            size_t offset;
+            u8_t apiflags;
     #if LWIP_SO_SNDTIMEO
-                        u32_t time_started;
+            u32_t time_started;
     #endif /* LWIP_SO_SNDTIMEO */
-                } w;
-                /** used for lwip_netconn_do_recv */
-                struct {
-                        size_t len;
-                } r;
+        } w;
+        /** used for lwip_netconn_do_recv */
+        struct {
+            size_t len;
+        } r;
     #if LWIP_TCP
-                /** used for lwip_netconn_do_close (/shutdown) */
-                struct {
-                        u8_t shut;
+        /** used for lwip_netconn_do_close (/shutdown) */
+        struct {
+            u8_t shut;
         #if LWIP_SO_SNDTIMEO || LWIP_SO_LINGER
-                        u32_t time_started;
+            u32_t time_started;
         #else  /* LWIP_SO_SNDTIMEO || LWIP_SO_LINGER */
-                        u8_t polls_left;
+            u8_t polls_left;
         #endif /* LWIP_SO_SNDTIMEO || LWIP_SO_LINGER */
-                } sd;
+        } sd;
     #endif /* LWIP_TCP */
     #if LWIP_IGMP || (LWIP_IPV6 && LWIP_IPV6_MLD)
-                /** used for lwip_netconn_do_join_leave_group */
-                struct {
-                        API_MSG_M_DEF_C(ip_addr_t, multiaddr);
-                        API_MSG_M_DEF_C(ip_addr_t, netif_addr);
-                        u8_t if_idx;
-                        enum netconn_igmp join_or_leave;
-                } jl;
+        /** used for lwip_netconn_do_join_leave_group */
+        struct {
+            API_MSG_M_DEF_C(ip_addr_t, multiaddr);
+            API_MSG_M_DEF_C(ip_addr_t, netif_addr);
+            u8_t if_idx;
+            enum netconn_igmp join_or_leave;
+        } jl;
     #endif /* LWIP_IGMP || (LWIP_IPV6 && LWIP_IPV6_MLD) */
     #if TCP_LISTEN_BACKLOG
-                struct {
-                        u8_t backlog;
-                } lb;
+        struct {
+            u8_t backlog;
+        } lb;
     #endif /* TCP_LISTEN_BACKLOG */
-        } msg;
+    } msg;
     #if LWIP_NETCONN_SEM_PER_THREAD
-        sys_sem_t* op_completed_sem;
+    sys_sem_t* op_completed_sem;
     #endif /* LWIP_NETCONN_SEM_PER_THREAD */
 };
 
@@ -167,23 +167,23 @@ struct api_msg {
     lwip_netconn_do_gethostbyname must be called using tcpip_callback instead of tcpip_apimsg
     (see netconn_gethostbyname). */
 struct dns_api_msg {
-                /** Hostname to query or dotted IP address string */
+            /** Hostname to query or dotted IP address string */
         #if LWIP_MPU_COMPATIBLE
-        char name[DNS_MAX_NAME_LENGTH];
+    char name[DNS_MAX_NAME_LENGTH];
         #else  /* LWIP_MPU_COMPATIBLE */
-        const char* name;
+    const char* name;
         #endif /* LWIP_MPU_COMPATIBLE */
-        /** The resolved address is stored here */
-        ip_addr_t API_MSG_M_DEF(addr);
+    /** The resolved address is stored here */
+    ip_addr_t API_MSG_M_DEF(addr);
         #if LWIP_IPV4 && LWIP_IPV6
-        /** Type of resolve call */
-        u8_t dns_addrtype;
+    /** Type of resolve call */
+    u8_t dns_addrtype;
         #endif /* LWIP_IPV4 && LWIP_IPV6 */
-        /** This semaphore is posted when the name is resolved, the application thread
-            should wait on it. */
-        sys_sem_t API_MSG_M_DEF_SEM(sem);
-        /** Errors are given back here */
-        err_t API_MSG_M_DEF(err);
+    /** This semaphore is posted when the name is resolved, the application thread
+        should wait on it. */
+    sys_sem_t API_MSG_M_DEF_SEM(sem);
+    /** Errors are given back here */
+    err_t API_MSG_M_DEF(err);
 };
     #endif /* LWIP_DNS */
 
@@ -235,32 +235,32 @@ typedef void (*netifapi_void_fn)(struct netif* netif);
 typedef err_t (*netifapi_errt_fn)(struct netif* netif);
 
 struct netifapi_msg {
-        struct tcpip_api_call_data call;
-        struct netif* netif;
-        union {
-                struct {
+    struct tcpip_api_call_data call;
+    struct netif* netif;
+    union {
+        struct {
     #if LWIP_IPV4
-                        NETIFAPI_IPADDR_DEF(ip4_addr_t, ipaddr);
-                        NETIFAPI_IPADDR_DEF(ip4_addr_t, netmask);
-                        NETIFAPI_IPADDR_DEF(ip4_addr_t, gw);
+            NETIFAPI_IPADDR_DEF(ip4_addr_t, ipaddr);
+            NETIFAPI_IPADDR_DEF(ip4_addr_t, netmask);
+            NETIFAPI_IPADDR_DEF(ip4_addr_t, gw);
     #endif /* LWIP_IPV4 */
-                        void* state;
-                        netif_init_fn init;
-                        netif_input_fn input;
-                } add;
-                struct {
-                        netifapi_void_fn voidfunc;
-                        netifapi_errt_fn errtfunc;
-                } common;
-                struct {
+            void* state;
+            netif_init_fn init;
+            netif_input_fn input;
+        } add;
+        struct {
+            netifapi_void_fn voidfunc;
+            netifapi_errt_fn errtfunc;
+        } common;
+        struct {
     #if LWIP_MPU_COMPATIBLE
-                        char name[NETIF_NAMESIZE];
+            char name[NETIF_NAMESIZE];
     #else  /* LWIP_MPU_COMPATIBLE */
-                        char* name;
+            char* name;
     #endif /* LWIP_MPU_COMPATIBLE */
-                        u8_t index;
-                } ifs;
-        } msg;
+            u8_t index;
+        } ifs;
+    } msg;
 };
 
 #endif /* LWIP_NETIF_API */

@@ -10,9 +10,9 @@ extern "C" {
 #endif
 
 typedef struct wc_ref {
-        int refcount;
-        int (*dtor)(void*);
-        void* object;
+    int refcount;
+    int (*dtor)(void*);
+    void* object;
 } wc_ref_t;
 
 

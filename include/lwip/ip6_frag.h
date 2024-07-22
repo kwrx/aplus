@@ -88,27 +88,27 @@ extern "C" {
  * This is exported because memp needs to know the size.
  */
 struct ip6_reassdata {
-        struct ip6_reassdata* next;
-        struct pbuf* p;
-        struct ip6_hdr* iphdr; /* pointer to the first (original) IPv6 header */
+    struct ip6_reassdata* next;
+    struct pbuf* p;
+    struct ip6_hdr* iphdr; /* pointer to the first (original) IPv6 header */
     #if IPV6_FRAG_COPYHEADER
-        ip6_addr_p_t src;  /* copy of the source address in the IP header */
-        ip6_addr_p_t dest; /* copy of the destination address in the IP header */
-        /* This buffer (for the part of the original header that we overwrite) will
-         * be slightly oversized, but we cannot compute the exact size from here. */
-        u8_t orig_hdr[sizeof(struct ip6_frag_hdr) + sizeof(void*)];
+    ip6_addr_p_t src;  /* copy of the source address in the IP header */
+    ip6_addr_p_t dest; /* copy of the destination address in the IP header */
+    /* This buffer (for the part of the original header that we overwrite) will
+     * be slightly oversized, but we cannot compute the exact size from here. */
+    u8_t orig_hdr[sizeof(struct ip6_frag_hdr) + sizeof(void*)];
     #else  /* IPV6_FRAG_COPYHEADER */
-        /* In this case we still need the buffer, for sending ICMPv6 replies. */
-        u8_t orig_hdr[sizeof(struct ip6_frag_hdr)];
+    /* In this case we still need the buffer, for sending ICMPv6 replies. */
+    u8_t orig_hdr[sizeof(struct ip6_frag_hdr)];
     #endif /* IPV6_FRAG_COPYHEADER */
-        u32_t identification;
-        u16_t datagram_len;
-        u8_t nexth;
-        u8_t timer;
+    u32_t identification;
+    u16_t datagram_len;
+    u8_t nexth;
+    u8_t timer;
     #if LWIP_IPV6_SCOPES
-        u8_t src_zone;  /* zone of original packet's source address */
-        u8_t dest_zone; /* zone of original packet's destination address */
-    #endif              /* LWIP_IPV6_SCOPES */
+    u8_t src_zone;  /* zone of original packet's source address */
+    u8_t dest_zone; /* zone of original packet's destination address */
+    #endif          /* LWIP_IPV6_SCOPES */
 };
 
     #define ip6_reass_init() /* Compatibility define */
@@ -125,10 +125,10 @@ struct pbuf* ip6_reass(struct pbuf* p);
  * when this custom pbuf is freed. This is used to create a custom PBUF_REF
  * that points into the original pbuf. */
 struct pbuf_custom_ref {
-        /** 'base class' */
-        struct pbuf_custom pc;
-        /** pointer to the original pbuf that is referenced */
-        struct pbuf* original;
+    /** 'base class' */
+    struct pbuf_custom pc;
+    /** pointer to the original pbuf that is referenced */
+    struct pbuf* original;
 };
     #endif /* LWIP_PBUF_CUSTOM_REF_DEFINED */
 

@@ -66,26 +66,26 @@ typedef void (*altcp_err_fn)(void* arg, err_t err);
 typedef struct altcp_pcb* (*altcp_new_fn)(void* arg, u8_t ip_type);
 
 struct altcp_pcb {
-        const struct altcp_functions* fns;
-        struct altcp_pcb* inner_conn;
-        void* arg;
-        void* state;
-        /* application callbacks */
-        altcp_accept_fn accept;
-        altcp_connected_fn connected;
-        altcp_recv_fn recv;
-        altcp_sent_fn sent;
-        altcp_poll_fn poll;
-        altcp_err_fn err;
-        u8_t pollinterval;
+    const struct altcp_functions* fns;
+    struct altcp_pcb* inner_conn;
+    void* arg;
+    void* state;
+    /* application callbacks */
+    altcp_accept_fn accept;
+    altcp_connected_fn connected;
+    altcp_recv_fn recv;
+    altcp_sent_fn sent;
+    altcp_poll_fn poll;
+    altcp_err_fn err;
+    u8_t pollinterval;
 };
 
 /** @ingroup altcp */
 typedef struct altcp_allocator_s {
-        /** Allocator function */
-        altcp_new_fn alloc;
-        /** Argument to allocator function */
-        void* arg;
+    /** Allocator function */
+    altcp_new_fn alloc;
+    /** Argument to allocator function */
+    void* arg;
 } altcp_allocator_t;
 
 struct altcp_pcb* altcp_new(altcp_allocator_t* allocator);

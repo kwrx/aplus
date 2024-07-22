@@ -13,25 +13,25 @@ extern "C" {
 
 typedef struct wc_font {
 
-        cairo_font_slant_t slant;
-        cairo_font_weight_t weight;
+    cairo_font_slant_t slant;
+    cairo_font_weight_t weight;
 
-        cairo_font_face_t* face;
+    cairo_font_face_t* face;
 
-        wc_ref_t ref;
+    wc_ref_t ref;
 
 } wc_font_t;
 
 
 typedef struct wc_fontface {
 
-        char path[BUFSIZ];
-        char family[BUFSIZ];
+    char path[BUFSIZ];
+    char family[BUFSIZ];
 
-        cairo_font_slant_t slant;
-        cairo_font_weight_t weight;
+    cairo_font_slant_t slant;
+    cairo_font_weight_t weight;
 
-        struct wc_fontface* next;
+    struct wc_fontface* next;
 
 } wc_fontface_t;
 

@@ -49,13 +49,13 @@ extern "C" {
 
 /** basic scalar node */
 struct snmp_scalar_node {
-        /** inherited "base class" members */
-        struct snmp_leaf_node node;
-        u8_t asn1_type;
-        snmp_access_t access;
-        node_instance_get_value_method get_value;
-        node_instance_set_test_method set_test;
-        node_instance_set_value_method set_value;
+    /** inherited "base class" members */
+    struct snmp_leaf_node node;
+    u8_t asn1_type;
+    snmp_access_t access;
+    node_instance_get_value_method get_value;
+    node_instance_set_test_method set_test;
+    node_instance_set_value_method set_value;
 };
 
 
@@ -72,9 +72,9 @@ snmp_err_t snmp_scalar_get_next_instance(const u32_t* root_oid, u8_t root_oid_le
 
 /** scalar array node - a tree node which contains scalars only as children */
 struct snmp_scalar_array_node_def {
-        u32_t oid;
-        u8_t asn1_type;
-        snmp_access_t access;
+    u32_t oid;
+    u8_t asn1_type;
+    snmp_access_t access;
 };
 
 typedef s16_t (*snmp_scalar_array_get_value_method)(const struct snmp_scalar_array_node_def*, void*);
@@ -83,13 +83,13 @@ typedef snmp_err_t (*snmp_scalar_array_set_value_method)(const struct snmp_scala
 
 /** basic scalar array node */
 struct snmp_scalar_array_node {
-        /** inherited "base class" members */
-        struct snmp_leaf_node node;
-        u16_t array_node_count;
-        const struct snmp_scalar_array_node_def* array_nodes;
-        snmp_scalar_array_get_value_method get_value;
-        snmp_scalar_array_set_test_method set_test;
-        snmp_scalar_array_set_value_method set_value;
+    /** inherited "base class" members */
+    struct snmp_leaf_node node;
+    u16_t array_node_count;
+    const struct snmp_scalar_array_node_def* array_nodes;
+    snmp_scalar_array_get_value_method get_value;
+    snmp_scalar_array_set_test_method set_test;
+    snmp_scalar_array_set_value_method set_value;
 };
 
 snmp_err_t snmp_scalar_array_get_instance(const u32_t* root_oid, u8_t root_oid_len, struct snmp_node_instance* instance);

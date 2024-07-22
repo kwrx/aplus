@@ -126,25 +126,25 @@ typedef enum {
 
 /** internal object identifier representation */
 struct snmp_obj_id {
-        u8_t len;
-        u32_t id[SNMP_MAX_OBJ_ID_LEN];
+    u8_t len;
+    u32_t id[SNMP_MAX_OBJ_ID_LEN];
 };
 
 struct snmp_obj_id_const_ref {
-        u8_t len;
-        const u32_t* id;
+    u8_t len;
+    const u32_t* id;
 };
 
 extern const struct snmp_obj_id_const_ref snmp_zero_dot_zero; /* administrative identifier from SNMPv2-SMI */
 
 /** SNMP variant value, used as reference in struct snmp_node_instance and table implementation */
 union snmp_variant_value {
-        void* ptr;
-        const void* const_ptr;
-        u32_t u32;
-        s32_t s32;
+    void* ptr;
+    const void* const_ptr;
+    u32_t u32;
+    s32_t s32;
     #if LWIP_HAVE_INT64
-        u64_t u64;
+    u64_t u64;
     #endif
 };
 
@@ -164,10 +164,10 @@ union snmp_variant_value {
 
 /** node "base class" layout, the mandatory fields for a node  */
 struct snmp_node {
-        /** one out of SNMP_NODE_TREE or any leaf node type (like SNMP_NODE_SCALAR) */
-        u8_t node_type;
-        /** the number assigned to this node which used as part of the full OID */
-        u32_t oid;
+    /** one out of SNMP_NODE_TREE or any leaf node type (like SNMP_NODE_SCALAR) */
+    u8_t node_type;
+    /** the number assigned to this node which used as part of the full OID */
+    u32_t oid;
 };
 
 /** SNMP node instance access types */
@@ -191,38 +191,38 @@ typedef void (*node_instance_release_method)(struct snmp_node_instance*);
 
 /** SNMP node instance */
 struct snmp_node_instance {
-        /** prefilled with the node, get_instance() is called on; may be changed by user to any value to pass an arbitrary node between calls to get_instance() and get_value/test_value/set_value */
-        const struct snmp_node* node;
-        /** prefilled with the instance id requested; for get_instance() this is the exact oid requested; for get_next_instance() this is the relative starting point, stack expects relative oid of next node here */
-        struct snmp_obj_id instance_oid;
+    /** prefilled with the node, get_instance() is called on; may be changed by user to any value to pass an arbitrary node between calls to get_instance() and get_value/test_value/set_value */
+    const struct snmp_node* node;
+    /** prefilled with the instance id requested; for get_instance() this is the exact oid requested; for get_next_instance() this is the relative starting point, stack expects relative oid of next node here */
+    struct snmp_obj_id instance_oid;
 
-        /** ASN type for this object (see snmp_asn1.h for definitions) */
-        u8_t asn1_type;
-        /** one out of instance access types defined above (SNMP_NODE_INSTANCE_READ_ONLY,...) */
-        snmp_access_t access;
+    /** ASN type for this object (see snmp_asn1.h for definitions) */
+    u8_t asn1_type;
+    /** one out of instance access types defined above (SNMP_NODE_INSTANCE_READ_ONLY,...) */
+    snmp_access_t access;
 
-        /** returns object value for the given object identifier. Return values <0 to indicate an error */
-        node_instance_get_value_method get_value;
-        /** tests length and/or range BEFORE setting */
-        node_instance_set_test_method set_test;
-        /** sets object value, only called when set_test() was successful */
-        node_instance_set_value_method set_value;
-        /** called in any case when the instance is not required anymore by stack (useful for freeing memory allocated in get_instance/get_next_instance methods) */
-        node_instance_release_method release_instance;
+    /** returns object value for the given object identifier. Return values <0 to indicate an error */
+    node_instance_get_value_method get_value;
+    /** tests length and/or range BEFORE setting */
+    node_instance_set_test_method set_test;
+    /** sets object value, only called when set_test() was successful */
+    node_instance_set_value_method set_value;
+    /** called in any case when the instance is not required anymore by stack (useful for freeing memory allocated in get_instance/get_next_instance methods) */
+    node_instance_release_method release_instance;
 
-        /** reference to pass arbitrary value between calls to get_instance() and get_value/test_value/set_value */
-        union snmp_variant_value reference;
-        /** see reference (if reference is a pointer, the length of underlying data may be stored here or anything else) */
-        u32_t reference_len;
+    /** reference to pass arbitrary value between calls to get_instance() and get_value/test_value/set_value */
+    union snmp_variant_value reference;
+    /** see reference (if reference is a pointer, the length of underlying data may be stored here or anything else) */
+    u32_t reference_len;
 };
 
 
 /** SNMP tree node */
 struct snmp_tree_node {
-        /** inherited "base class" members */
-        struct snmp_node node;
-        u16_t subnode_count;
-        const struct snmp_node* const* subnodes;
+    /** inherited "base class" members */
+    struct snmp_node node;
+    u16_t subnode_count;
+    const struct snmp_node* const* subnodes;
 };
 
     #define SNMP_CREATE_TREE_NODE(oid, subnodes) \
@@ -239,25 +239,25 @@ struct snmp_tree_node {
 
 /** SNMP leaf node */
 struct snmp_leaf_node {
-        /** inherited "base class" members */
-        struct snmp_node node;
-        snmp_err_t (*get_instance)(const u32_t* root_oid, u8_t root_oid_len, struct snmp_node_instance* instance);
-        snmp_err_t (*get_next_instance)(const u32_t* root_oid, u8_t root_oid_len, struct snmp_node_instance* instance);
+    /** inherited "base class" members */
+    struct snmp_node node;
+    snmp_err_t (*get_instance)(const u32_t* root_oid, u8_t root_oid_len, struct snmp_node_instance* instance);
+    snmp_err_t (*get_next_instance)(const u32_t* root_oid, u8_t root_oid_len, struct snmp_node_instance* instance);
 };
 
 /** represents a single mib with its base oid and root node */
 struct snmp_mib {
-        const u32_t* base_oid;
-        u8_t base_oid_len;
-        const struct snmp_node* root_node;
+    const u32_t* base_oid;
+    u8_t base_oid_len;
+    const struct snmp_node* root_node;
 };
 
     #define SNMP_MIB_CREATE(oid_list, root_node) {(oid_list), (u8_t)LWIP_ARRAYSIZE(oid_list), root_node}
 
 /** OID range structure */
 struct snmp_oid_range {
-        u32_t min;
-        u32_t max;
+    u32_t min;
+    u32_t max;
 };
 
 /** checks if incoming OID length and values are in allowed ranges */
@@ -271,15 +271,15 @@ typedef enum {
 
 /** state for next_oid_init / next_oid_check functions */
 struct snmp_next_oid_state {
-        const u32_t* start_oid;
-        u8_t start_oid_len;
+    const u32_t* start_oid;
+    u8_t start_oid_len;
 
-        u32_t* next_oid;
-        u8_t next_oid_len;
-        u8_t next_oid_max_len;
+    u32_t* next_oid;
+    u8_t next_oid_len;
+    u8_t next_oid_max_len;
 
-        snmp_next_oid_status_t status;
-        void* reference;
+    snmp_next_oid_status_t status;
+    void* reference;
 };
 
 void snmp_next_oid_init(struct snmp_next_oid_state* state, const u32_t* start_oid, u8_t start_oid_len, u32_t* next_oid_buf, u8_t next_oid_max_len);
@@ -320,40 +320,40 @@ u8_t snmp_encode_bits(u8_t* buf, u32_t buf_len, u32_t bit_value, u8_t bit_count)
 u8_t snmp_encode_truthvalue(s32_t* asn1_value, u32_t bool_value);
 
 struct snmp_statistics {
-        u32_t inpkts;
-        u32_t outpkts;
-        u32_t inbadversions;
-        u32_t inbadcommunitynames;
-        u32_t inbadcommunityuses;
-        u32_t inasnparseerrs;
-        u32_t intoobigs;
-        u32_t innosuchnames;
-        u32_t inbadvalues;
-        u32_t inreadonlys;
-        u32_t ingenerrs;
-        u32_t intotalreqvars;
-        u32_t intotalsetvars;
-        u32_t ingetrequests;
-        u32_t ingetnexts;
-        u32_t insetrequests;
-        u32_t ingetresponses;
-        u32_t intraps;
-        u32_t outtoobigs;
-        u32_t outnosuchnames;
-        u32_t outbadvalues;
-        u32_t outgenerrs;
-        u32_t outgetrequests;
-        u32_t outgetnexts;
-        u32_t outsetrequests;
-        u32_t outgetresponses;
-        u32_t outtraps;
+    u32_t inpkts;
+    u32_t outpkts;
+    u32_t inbadversions;
+    u32_t inbadcommunitynames;
+    u32_t inbadcommunityuses;
+    u32_t inasnparseerrs;
+    u32_t intoobigs;
+    u32_t innosuchnames;
+    u32_t inbadvalues;
+    u32_t inreadonlys;
+    u32_t ingenerrs;
+    u32_t intotalreqvars;
+    u32_t intotalsetvars;
+    u32_t ingetrequests;
+    u32_t ingetnexts;
+    u32_t insetrequests;
+    u32_t ingetresponses;
+    u32_t intraps;
+    u32_t outtoobigs;
+    u32_t outnosuchnames;
+    u32_t outbadvalues;
+    u32_t outgenerrs;
+    u32_t outgetrequests;
+    u32_t outgetnexts;
+    u32_t outsetrequests;
+    u32_t outgetresponses;
+    u32_t outtraps;
     #if LWIP_SNMP_V3
-        u32_t unsupportedseclevels;
-        u32_t notintimewindows;
-        u32_t unknownusernames;
-        u32_t unknownengineids;
-        u32_t wrongdigests;
-        u32_t decryptionerrors;
+    u32_t unsupportedseclevels;
+    u32_t notintimewindows;
+    u32_t unknownusernames;
+    u32_t unknownengineids;
+    u32_t wrongdigests;
+    u32_t decryptionerrors;
     #endif
 };
 

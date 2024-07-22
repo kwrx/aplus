@@ -71,7 +71,7 @@
 
 
 struct sys_mbox {
-        queue_t queue;
+    queue_t queue;
 };
 
 

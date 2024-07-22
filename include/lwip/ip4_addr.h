@@ -49,7 +49,7 @@ extern "C" {
 /** This is the aligned version of ip4_addr_t,
    used as local variable, on the stack, etc. */
 struct ip4_addr {
-        u32_t addr;
+    u32_t addr;
 };
 
 /** ip4_addr_t uses a struct for convenience only, so that the same defines can

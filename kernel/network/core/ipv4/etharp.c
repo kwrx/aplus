@@ -90,17 +90,17 @@ enum etharp_state {
 
 struct etharp_entry {
     #if ARP_QUEUEING
-        /** Pointer to queue of pending outgoing packets on this ARP entry. */
-        struct etharp_q_entry* q;
+    /** Pointer to queue of pending outgoing packets on this ARP entry. */
+    struct etharp_q_entry* q;
     #else  /* ARP_QUEUEING */
-        /** Pointer to a single pending outgoing packet on this ARP entry. */
-        struct pbuf* q;
+    /** Pointer to a single pending outgoing packet on this ARP entry. */
+    struct pbuf* q;
     #endif /* ARP_QUEUEING */
-        ip4_addr_t ipaddr;
-        struct netif* netif;
-        struct eth_addr ethaddr;
-        u16_t ctime;
-        u8_t state;
+    ip4_addr_t ipaddr;
+    struct netif* netif;
+    struct eth_addr ethaddr;
+    u16_t ctime;
+    u8_t state;
 };
 
 static struct etharp_entry arp_table[ARP_TABLE_SIZE];

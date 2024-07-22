@@ -40,13 +40,13 @@
  */
 
 struct list_head {
-        list_element *first, *last;
-        size_t length;
+    list_element *first, *last;
+    size_t length;
 };
 
 struct list_element {
-        list_head* list;
-        list_element *prev, *next;
+    list_head* list;
+    list_element *prev, *next;
 };
 
 static list_element* get_element(list_element* elem) {

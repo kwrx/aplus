@@ -229,12 +229,12 @@ static void sockaddr_to_ipaddr_port(const struct sockaddr* sockaddr, ip_addr_t* 
  *  sockaddr_in6 if instantiated.
  */
 union sockaddr_aligned {
-        struct sockaddr sa;
+    struct sockaddr sa;
     #if LWIP_IPV6
-        struct sockaddr_in6 sin6;
+    struct sockaddr_in6 sin6;
     #endif /* LWIP_IPV6 */
     #if LWIP_IPV4
-        struct sockaddr_in sin;
+    struct sockaddr_in sin;
     #endif /* LWIP_IPV4 */
 };
 
@@ -247,12 +247,12 @@ union sockaddr_aligned {
 /* This is to keep track of IP_ADD_MEMBERSHIP calls to drop the membership when
    a socket is closed */
 struct lwip_socket_multicast_pair {
-        /** the socket */
-        struct lwip_sock* sock;
-        /** the interface address */
-        ip4_addr_t if_addr;
-        /** the group address */
-        ip4_addr_t multi_addr;
+    /** the socket */
+    struct lwip_sock* sock;
+    /** the interface address */
+    ip4_addr_t if_addr;
+    /** the group address */
+    ip4_addr_t multi_addr;
 };
 
 static struct lwip_socket_multicast_pair socket_ipv4_multicast_memberships[LWIP_SOCKET_MAX_MEMBERSHIPS];
@@ -266,12 +266,12 @@ static void lwip_socket_drop_registered_memberships(int s);
 /* This is to keep track of IP_JOIN_GROUP calls to drop the membership when
    a socket is closed */
 struct lwip_socket_multicast_mld6_pair {
-        /** the socket */
-        struct lwip_sock* sock;
-        /** the interface index */
-        u8_t if_idx;
-        /** the group address */
-        ip6_addr_t multi_addr;
+    /** the socket */
+    struct lwip_sock* sock;
+    /** the interface index */
+    u8_t if_idx;
+    /** the group address */
+    ip6_addr_t multi_addr;
 };
 
 static struct lwip_socket_multicast_mld6_pair socket_ipv6_multicast_memberships[LWIP_SOCKET_MAX_MEMBERSHIPS];

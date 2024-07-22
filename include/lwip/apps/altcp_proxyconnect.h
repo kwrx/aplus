@@ -52,8 +52,8 @@ extern "C" {
     #endif
 
 struct altcp_proxyconnect_config {
-        ip_addr_t proxy_addr;
-        u16_t proxy_port;
+    ip_addr_t proxy_addr;
+    u16_t proxy_port;
 };
 
 
@@ -64,8 +64,8 @@ struct altcp_pcb* altcp_proxyconnect_alloc(void* arg, u8_t ip_type);
 
     #if LWIP_ALTCP_TLS
 struct altcp_proxyconnect_tls_config {
-        struct altcp_proxyconnect_config proxy;
-        struct altcp_tls_config* tls_config;
+    struct altcp_proxyconnect_config proxy;
+    struct altcp_tls_config* tls_config;
 };
 
 struct altcp_pcb* altcp_proxyconnect_tls_alloc(void* arg, u8_t ip_type);

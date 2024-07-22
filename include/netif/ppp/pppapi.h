@@ -45,61 +45,61 @@ extern "C" {
     #endif
 
 struct pppapi_msg_msg {
-        ppp_pcb* ppp;
-        union {
+    ppp_pcb* ppp;
+    union {
     #if PPP_NOTIFY_PHASE
-                struct {
-                        ppp_notify_phase_cb_fn notify_phase_cb;
-                } setnotifyphasecb;
+        struct {
+            ppp_notify_phase_cb_fn notify_phase_cb;
+        } setnotifyphasecb;
     #endif /* PPP_NOTIFY_PHASE */
     #if PPPOS_SUPPORT
-                struct {
-                        struct netif* pppif;
-                        pppos_output_cb_fn output_cb;
-                        ppp_link_status_cb_fn link_status_cb;
-                        void* ctx_cb;
-                } serialcreate;
+        struct {
+            struct netif* pppif;
+            pppos_output_cb_fn output_cb;
+            ppp_link_status_cb_fn link_status_cb;
+            void* ctx_cb;
+        } serialcreate;
     #endif /* PPPOS_SUPPORT */
     #if PPPOE_SUPPORT
-                struct {
-                        struct netif* pppif;
-                        struct netif* ethif;
-                        const char* service_name;
-                        const char* concentrator_name;
-                        ppp_link_status_cb_fn link_status_cb;
-                        void* ctx_cb;
-                } ethernetcreate;
+        struct {
+            struct netif* pppif;
+            struct netif* ethif;
+            const char* service_name;
+            const char* concentrator_name;
+            ppp_link_status_cb_fn link_status_cb;
+            void* ctx_cb;
+        } ethernetcreate;
     #endif /* PPPOE_SUPPORT */
     #if PPPOL2TP_SUPPORT
-                struct {
-                        struct netif* pppif;
-                        struct netif* netif;
-                        API_MSG_M_DEF_C(ip_addr_t, ipaddr);
-                        u16_t port;
+        struct {
+            struct netif* pppif;
+            struct netif* netif;
+            API_MSG_M_DEF_C(ip_addr_t, ipaddr);
+            u16_t port;
         #if PPPOL2TP_AUTH_SUPPORT
-                        const u8_t* secret;
-                        u8_t secret_len;
+            const u8_t* secret;
+            u8_t secret_len;
         #endif /* PPPOL2TP_AUTH_SUPPORT */
-                        ppp_link_status_cb_fn link_status_cb;
-                        void* ctx_cb;
-                } l2tpcreate;
+            ppp_link_status_cb_fn link_status_cb;
+            void* ctx_cb;
+        } l2tpcreate;
     #endif /* PPPOL2TP_SUPPORT */
-                struct {
-                        u16_t holdoff;
-                } connect;
-                struct {
-                        u8_t nocarrier;
-                } close;
-                struct {
-                        u8_t cmd;
-                        void* arg;
-                } ioctl;
-        } msg;
+        struct {
+            u16_t holdoff;
+        } connect;
+        struct {
+            u8_t nocarrier;
+        } close;
+        struct {
+            u8_t cmd;
+            void* arg;
+        } ioctl;
+    } msg;
 };
 
 struct pppapi_msg {
-        struct tcpip_api_call_data call;
-        struct pppapi_msg_msg msg;
+    struct tcpip_api_call_data call;
+    struct pppapi_msg_msg msg;
 };
 
 /* API for application */

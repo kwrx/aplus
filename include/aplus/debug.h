@@ -41,8 +41,8 @@
     #if defined(DEBUG) && defined(CONFIG_HAVE_TEST)
         #define TEST(x, y...)                                          \
             static void test_##x(void){y} __section(".tests") struct { \
-                    void* a;                                           \
-                    char* name;                                        \
+                void* a;                                               \
+                char* name;                                            \
             } __packed __test_##x = {(void*)test_##x, (char*)#x}
     #else
         #define TEST(x, y...)

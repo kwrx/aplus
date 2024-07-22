@@ -63,8 +63,8 @@ void sha1_transform(uint32_t state[5], const unsigned char buffer[64]) {
     uint32_t a, b, c, d, e;
 
     typedef union {
-            unsigned char c[64];
-            uint32_t l[16];
+        unsigned char c[64];
+        uint32_t l[16];
     } CHAR64LONG16;
 
 #ifdef SHA1HANDSOFF

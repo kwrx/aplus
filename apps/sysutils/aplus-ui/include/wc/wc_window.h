@@ -41,29 +41,29 @@ extern "C" {
 
 typedef struct wc_window {
 
-        struct wc_window* parent;
-        struct wc_window* root;
-        struct wc_window* next;
+    struct wc_window* parent;
+    struct wc_window* root;
+    struct wc_window* next;
 
-        wc_ref_t ref;
-        wc_font_t* font;
+    wc_ref_t ref;
+    wc_font_t* font;
 
-        int x;
-        int y;
-        int width;
-        int height;
+    int x;
+    int y;
+    int width;
+    int height;
 
-        int min_width;
-        int min_height;
-        int max_width;
-        int max_height;
+    int min_width;
+    int min_height;
+    int max_width;
+    int max_height;
 
-        int drag_x;
-        int drag_y;
+    int drag_x;
+    int drag_y;
 
-        int flags;
+    int flags;
 
-        char title[WC_WINDOW_TITLE_MAX];
+    char title[WC_WINDOW_TITLE_MAX];
 
 } wc_window_t;
 

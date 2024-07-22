@@ -68,16 +68,16 @@ typedef u64_t bridgeif_portmask_t;
  * when the bridge is added.
  */
 typedef struct bridgeif_initdata_s {
-        /** MAC address of the bridge (cannot use the netif's addresses) */
-        struct eth_addr ethaddr;
-        /** Maximum number of ports in the bridge (ports are stored in an array, this
-            influences memory allocated for netif->state of the bridge netif). */
-        u8_t max_ports;
-        /** Maximum number of dynamic/learning entries in the bridge's forwarding database.
-            In the default implementation, this controls memory consumption only. */
-        u16_t max_fdb_dynamic_entries;
-        /** Maximum number of static forwarding entries. Influences memory consumption! */
-        u16_t max_fdb_static_entries;
+    /** MAC address of the bridge (cannot use the netif's addresses) */
+    struct eth_addr ethaddr;
+    /** Maximum number of ports in the bridge (ports are stored in an array, this
+        influences memory allocated for netif->state of the bridge netif). */
+    u8_t max_ports;
+    /** Maximum number of dynamic/learning entries in the bridge's forwarding database.
+        In the default implementation, this controls memory consumption only. */
+    u16_t max_fdb_dynamic_entries;
+    /** Maximum number of static forwarding entries. Influences memory consumption! */
+    u16_t max_fdb_static_entries;
 } bridgeif_initdata_t;
 
 /** @ingroup bridgeif

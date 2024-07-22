@@ -38,11 +38,11 @@
 
 static struct {
 
-        int id;
-        const char* name;
+    int id;
+    const char* name;
 
-        int (*mount)(inode_t*, inode_t*, int, const char*);
-        int (*umount)(inode_t*);
+    int (*mount)(inode_t*, inode_t*, int, const char*);
+    int (*umount)(inode_t*);
 
 } fs_table[32];
 

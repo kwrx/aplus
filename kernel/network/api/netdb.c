@@ -51,9 +51,9 @@
 
 /** helper struct for gethostbyname_r to access the char* buffer */
 struct gethostbyname_r_helper {
-        ip_addr_t* addr_list[2];
-        ip_addr_t addr;
-        char* aliases;
+    ip_addr_t* addr_list[2];
+    ip_addr_t addr;
+    char* aliases;
 };
 
     /** h_errno is exported in netdb.h for access by applications. */

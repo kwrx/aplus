@@ -20,13 +20,13 @@ typedef uint8_t wc_renderer_mode_t;
 
 typedef struct wc_renderer {
 
-        struct wc_display* display;
-        // struct wc_font* font;
+    struct wc_display* display;
+    // struct wc_font* font;
 
-        cairo_surface_t* surface;
-        cairo_t* cr;
+    cairo_surface_t* surface;
+    cairo_t* cr;
 
-        wc_ref_t ref;
+    wc_ref_t ref;
 
 } wc_renderer_t;
 

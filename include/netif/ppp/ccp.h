@@ -128,28 +128,28 @@ extern "C" {
 
 typedef struct ccp_options {
         #if DEFLATE_SUPPORT
-        unsigned int deflate         : 1; /* do Deflate? */
-        unsigned int deflate_correct : 1; /* use correct code for deflate? */
-        unsigned int deflate_draft   : 1; /* use draft RFC code for deflate? */
-        #endif                            /* DEFLATE_SUPPORT */
+    unsigned int deflate         : 1; /* do Deflate? */
+    unsigned int deflate_correct : 1; /* use correct code for deflate? */
+    unsigned int deflate_draft   : 1; /* use draft RFC code for deflate? */
+        #endif                      /* DEFLATE_SUPPORT */
         #if BSDCOMPRESS_SUPPORT
-        unsigned int bsd_compress : 1; /* do BSD Compress? */
-        #endif                         /* BSDCOMPRESS_SUPPORT */
+    unsigned int bsd_compress : 1; /* do BSD Compress? */
+        #endif                     /* BSDCOMPRESS_SUPPORT */
         #if PREDICTOR_SUPPORT
-        unsigned int predictor_1 : 1; /* do Predictor-1? */
-        unsigned int predictor_2 : 1; /* do Predictor-2? */
-        #endif                        /* PREDICTOR_SUPPORT */
+    unsigned int predictor_1 : 1; /* do Predictor-1? */
+    unsigned int predictor_2 : 1; /* do Predictor-2? */
+        #endif                    /* PREDICTOR_SUPPORT */
 
         #if MPPE_SUPPORT
-        u8_t mppe; /* MPPE bitfield */
-        #endif     /* MPPE_SUPPORT */
+    u8_t mppe; /* MPPE bitfield */
+        #endif /* MPPE_SUPPORT */
         #if BSDCOMPRESS_SUPPORT
-        u_short bsd_bits; /* # bits/code for BSD Compress */
-        #endif            /* BSDCOMPRESS_SUPPORT */
+    u_short bsd_bits; /* # bits/code for BSD Compress */
+        #endif        /* BSDCOMPRESS_SUPPORT */
         #if DEFLATE_SUPPORT
-        u_short deflate_size; /* lg(window size) for Deflate */
-        #endif                /* DEFLATE_SUPPORT */
-        u8_t method;          /* code for chosen compression method */
+    u_short deflate_size; /* lg(window size) for Deflate */
+        #endif            /* DEFLATE_SUPPORT */
+    u8_t method;          /* code for chosen compression method */
 } ccp_options;
 
 extern const struct protent ccp_protent;

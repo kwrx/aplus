@@ -32,10 +32,10 @@
 
 typedef struct procfs_service {
 
-        int (*fetch)(inode_t*, char**, size_t*, void*);
+    int (*fetch)(inode_t*, char**, size_t*, void*);
 
-        void* arg;
-        mode_t mode;
+    void* arg;
+    mode_t mode;
 
 } procfs_service_t;
 

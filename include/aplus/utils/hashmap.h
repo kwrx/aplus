@@ -20,15 +20,15 @@ extern "C" {
 struct hashmap_entry;
 
 struct hashmap_base {
-        size_t table_size_init;
-        size_t table_size;
-        size_t size;
-        struct hashmap_entry* table;
-        size_t (*hash)(const void*);
-        int (*compare)(const void*, const void*);
-        void* (*key_dup)(const void*);
-        void (*key_free)(void*);
-        spinlock_t lock;
+    size_t table_size_init;
+    size_t table_size;
+    size_t size;
+    struct hashmap_entry* table;
+    size_t (*hash)(const void*);
+    int (*compare)(const void*, const void*);
+    void* (*key_dup)(const void*);
+    void (*key_free)(void*);
+    spinlock_t lock;
 };
 
 
@@ -103,26 +103,26 @@ size_t hashmap_hash_string_i(const char* key);
  *   // key_type:       const char *
  *   // data_type:      char *
  */
-#define HASHMAP(key_type, data_type)                                           \
-    struct {                                                                   \
-            struct hashmap_base map_base;                                      \
-            struct {                                                           \
-                    const key_type* t_key;                                     \
-                    data_type* t_data;                                         \
-                    size_t (*t_hash_func)(const key_type*);                    \
-                    int (*t_compare_func)(const key_type*, const key_type*);   \
-                    key_type* (*t_key_dup_func)(const key_type*);              \
-                    void (*t_key_free_func)(key_type*);                        \
-                    int (*t_foreach_func)(const key_type*, data_type*, void*); \
-                    struct {                                                   \
-                            struct hashmap_base* iter_map;                     \
-                            struct hashmap_entry* iter_pos;                    \
-                            struct {                                           \
-                                    key_type* t_key;                           \
-                                    data_type* t_data;                         \
-                            } iter_types[0];                                   \
-                    } t_iterator;                                              \
-            } map_types[0];                                                    \
+#define HASHMAP(key_type, data_type)                                   \
+    struct {                                                           \
+        struct hashmap_base map_base;                                  \
+        struct {                                                       \
+            const key_type* t_key;                                     \
+            data_type* t_data;                                         \
+            size_t (*t_hash_func)(const key_type*);                    \
+            int (*t_compare_func)(const key_type*, const key_type*);   \
+            key_type* (*t_key_dup_func)(const key_type*);              \
+            void (*t_key_free_func)(key_type*);                        \
+            int (*t_foreach_func)(const key_type*, data_type*, void*); \
+            struct {                                                   \
+                struct hashmap_base* iter_map;                         \
+                struct hashmap_entry* iter_pos;                        \
+                struct {                                               \
+                    key_type* t_key;                                   \
+                    data_type* t_data;                                 \
+                } iter_types[0];                                       \
+            } t_iterator;                                              \
+        } map_types[0];                                                \
     }
 
 /*

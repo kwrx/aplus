@@ -1411,8 +1411,8 @@ int get_loop_output(void) {
     #if PPP_PROTOCOLNAME
 /* List of protocol names, to make our messages a little more informative. */
 struct protocol_list {
-        u_short proto;
-        const char* name;
+    u_short proto;
+    const char* name;
 } const protocol_list[] = {
     {0x21,   "IP"                                              },
     {0x23,   "OSI Network Layer"                               },

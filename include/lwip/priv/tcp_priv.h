@@ -257,19 +257,19 @@ err_t tcp_process_refused_data(struct tcp_pcb* pcb);
 
 /* This structure represents a TCP segment on the unsent, unacked and ooseq queues */
 struct tcp_seg {
-        struct tcp_seg* next; /* used when putting segments on a queue */
-        struct pbuf* p;       /* buffer containing data + TCP header */
-        u16_t len;            /* the TCP length of this segment */
+    struct tcp_seg* next; /* used when putting segments on a queue */
+    struct pbuf* p;       /* buffer containing data + TCP header */
+    u16_t len;            /* the TCP length of this segment */
     #if TCP_OVERSIZE_DBGCHECK
-        u16_t oversize_left; /* Extra bytes available at the end of the last
-                                pbuf in unsent (used for asserting vs.
-                                tcp_pcb.unsent_oversize only) */
-    #endif                   /* TCP_OVERSIZE_DBGCHECK */
+    u16_t oversize_left; /* Extra bytes available at the end of the last
+                            pbuf in unsent (used for asserting vs.
+                            tcp_pcb.unsent_oversize only) */
+    #endif               /* TCP_OVERSIZE_DBGCHECK */
     #if TCP_CHECKSUM_ON_COPY
-        u16_t chksum;
-        u8_t chksum_swapped;
+    u16_t chksum;
+    u8_t chksum_swapped;
     #endif /* TCP_CHECKSUM_ON_COPY */
-        u8_t flags;
+    u8_t flags;
     #define TF_SEG_OPTS_MSS (u8_t)0x01U /* Include MSS option (only used in SYN segments) */
     #define TF_SEG_OPTS_TS  (u8_t)0x02U /* Include timestamp option. */
     #define TF_SEG_DATA_CHECKSUMMED                                           \
@@ -277,7 +277,7 @@ struct tcp_seg {
                                                  checksummed into 'chksum' */
     #define TF_SEG_OPTS_WND_SCALE (u8_t)0x08U /* Include WND SCALE option (only used in SYN segments) */
     #define TF_SEG_OPTS_SACK_PERM (u8_t)0x10U /* Include SACK Permitted option (only used in SYN segments) */
-        struct tcp_hdr* tcphdr;               /* the TCP header */
+    struct tcp_hdr* tcphdr;                   /* the TCP header */
 };
 
     #define LWIP_TCP_OPT_EOL       0
@@ -334,8 +334,8 @@ extern u8_t tcp_active_pcbs_changed;
 
 /* The TCP PCB lists. */
 union tcp_listen_pcbs_t { /* List of all TCP PCBs in LISTEN state. */
-        struct tcp_pcb_listen* listen_pcbs;
-        struct tcp_pcb* pcbs;
+    struct tcp_pcb_listen* listen_pcbs;
+    struct tcp_pcb* pcbs;
 };
 extern struct tcp_pcb* tcp_bound_pcbs;
 extern union tcp_listen_pcbs_t tcp_listen_pcbs;

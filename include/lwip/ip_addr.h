@@ -67,12 +67,12 @@ enum lwip_ip_addr_type {
  * ATTENTION: watch out for its size when adding IPv6 address scope!
  */
 typedef struct ip_addr {
-        union {
-                ip6_addr_t ip6;
-                ip4_addr_t ip4;
-        } u_addr;
-        /** @ref lwip_ip_addr_type */
-        u8_t type;
+    union {
+        ip6_addr_t ip6;
+        ip4_addr_t ip4;
+    } u_addr;
+    /** @ref lwip_ip_addr_type */
+    u8_t type;
 } ip_addr_t;
 
 extern const ip_addr_t ip_addr_any_type;

@@ -85,10 +85,10 @@ extern "C" {
         #endif
 PACK_STRUCT_BEGIN
 struct pppoehdr {
-        PACK_STRUCT_FLD_8(u8_t vertype);
-        PACK_STRUCT_FLD_8(u8_t code);
-        PACK_STRUCT_FIELD(u16_t session);
-        PACK_STRUCT_FIELD(u16_t plen);
+    PACK_STRUCT_FLD_8(u8_t vertype);
+    PACK_STRUCT_FLD_8(u8_t code);
+    PACK_STRUCT_FIELD(u16_t session);
+    PACK_STRUCT_FIELD(u16_t plen);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
         #ifdef PACK_STRUCT_USE_INCLUDES
@@ -100,8 +100,8 @@ PACK_STRUCT_END
         #endif
 PACK_STRUCT_BEGIN
 struct pppoetag {
-        PACK_STRUCT_FIELD(u16_t tag);
-        PACK_STRUCT_FIELD(u16_t len);
+    PACK_STRUCT_FIELD(u16_t tag);
+    PACK_STRUCT_FIELD(u16_t len);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
         #ifdef PACK_STRUCT_USE_INCLUDES
@@ -141,26 +141,26 @@ PACK_STRUCT_END
         #endif
 
 struct pppoe_softc {
-        struct pppoe_softc* next;
-        struct netif* sc_ethif; /* ethernet interface we are using */
-        ppp_pcb* pcb;           /* PPP PCB */
+    struct pppoe_softc* next;
+    struct netif* sc_ethif; /* ethernet interface we are using */
+    ppp_pcb* pcb;           /* PPP PCB */
 
-        struct eth_addr sc_dest; /* hardware address of concentrator */
-        u16_t sc_session;        /* PPPoE session id */
-        u8_t sc_state;           /* discovery phase or session connected */
+    struct eth_addr sc_dest; /* hardware address of concentrator */
+    u16_t sc_session;        /* PPPoE session id */
+    u8_t sc_state;           /* discovery phase or session connected */
 
         #ifdef PPPOE_TODO
-        u8_t* sc_service_name;                      /* if != NULL: requested name of service */
-        u8_t* sc_concentrator_name;                 /* if != NULL: requested concentrator id */
-        #endif                                      /* PPPOE_TODO */
-        u8_t sc_ac_cookie[PPPOE_MAX_AC_COOKIE_LEN]; /* content of AC cookie we must echo back */
-        u8_t sc_ac_cookie_len;                      /* length of cookie data */
+    u8_t* sc_service_name;                      /* if != NULL: requested name of service */
+    u8_t* sc_concentrator_name;                 /* if != NULL: requested concentrator id */
+        #endif                                  /* PPPOE_TODO */
+    u8_t sc_ac_cookie[PPPOE_MAX_AC_COOKIE_LEN]; /* content of AC cookie we must echo back */
+    u8_t sc_ac_cookie_len;                      /* length of cookie data */
         #ifdef PPPOE_SERVER
-        u8_t* sc_hunique;    /* content of host unique we must echo back */
-        u8_t sc_hunique_len; /* length of host unique */
+    u8_t* sc_hunique;    /* content of host unique we must echo back */
+    u8_t sc_hunique_len; /* length of host unique */
         #endif
-        u8_t sc_padi_retried; /* number of PADI retries already done */
-        u8_t sc_padr_retried; /* number of PADR retries already done */
+    u8_t sc_padi_retried; /* number of PADI retries already done */
+    u8_t sc_padr_retried; /* number of PADR retries already done */
 };
 
 

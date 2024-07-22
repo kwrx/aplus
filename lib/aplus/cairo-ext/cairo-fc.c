@@ -40,10 +40,10 @@
     #include <aplus/utils/list.h>
 
 typedef struct {
-        char family[BUFSIZ];
-        char path[BUFSIZ];
-        cairo_font_slant_t slant;
-        cairo_font_weight_t weight;
+    char family[BUFSIZ];
+    char path[BUFSIZ];
+    cairo_font_slant_t slant;
+    cairo_font_weight_t weight;
 } __fc_line_t;
 
 static list(__fc_line_t*, __fc_lines);

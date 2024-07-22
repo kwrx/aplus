@@ -45,23 +45,23 @@ typedef void (*cache_release_handler_t)(cache_t*, void*, cache_key_t, cache_valu
 
 typedef struct cache_ops {
 
-        cache_fetch_handler_t fetch;
-        cache_commit_handler_t commit;
-        cache_release_handler_t release;
+    cache_fetch_handler_t fetch;
+    cache_commit_handler_t commit;
+    cache_release_handler_t release;
 
 } cache_ops_t;
 
 typedef struct cache {
 
-        HASHMAP(cache_key_t, cache_value_t) map;
+    HASHMAP(cache_key_t, cache_value_t) map;
 
-        size_t size;
-        size_t capacity;
+    size_t size;
+    size_t capacity;
 
-        void* userdata;
+    void* userdata;
 
-        cache_ops_t ops;
-        spinlock_t lock;
+    cache_ops_t ops;
+    spinlock_t lock;
 
 } cache_t;
 

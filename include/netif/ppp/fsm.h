@@ -76,55 +76,55 @@ extern "C" {
  * Each FSM is described by an fsm structure and fsm callbacks.
  */
 typedef struct fsm {
-        ppp_pcb* pcb;                          /* PPP Interface */
-        const struct fsm_callbacks* callbacks; /* Callback routines */
-        const char* term_reason;               /* Reason for closing protocol */
-        u8_t seen_ack;                         /* Have received valid Ack/Nak/Rej to Req */
-                                               /* -- This is our only flag, we might use u_int :1 if we have more flags */
-        u16_t protocol;                        /* Data Link Layer Protocol field value */
-        u8_t state;                            /* State */
-        u8_t flags;                            /* Contains option bits */
-        u8_t id;                               /* Current id */
-        u8_t reqid;                            /* Current request id */
-        u8_t retransmits;                      /* Number of retransmissions left */
-        u8_t nakloops;                         /* Number of nak loops since last ack */
-        u8_t rnakloops;                        /* Number of naks received */
-        u8_t maxnakloops;                      /* Maximum number of nak loops tolerated
-                                      (necessary because IPCP require a custom large max nak loops value) */
-        u8_t term_reason_len;                  /* Length of term_reason */
+    ppp_pcb* pcb;                          /* PPP Interface */
+    const struct fsm_callbacks* callbacks; /* Callback routines */
+    const char* term_reason;               /* Reason for closing protocol */
+    u8_t seen_ack;                         /* Have received valid Ack/Nak/Rej to Req */
+                                           /* -- This is our only flag, we might use u_int :1 if we have more flags */
+    u16_t protocol;                        /* Data Link Layer Protocol field value */
+    u8_t state;                            /* State */
+    u8_t flags;                            /* Contains option bits */
+    u8_t id;                               /* Current id */
+    u8_t reqid;                            /* Current request id */
+    u8_t retransmits;                      /* Number of retransmissions left */
+    u8_t nakloops;                         /* Number of nak loops since last ack */
+    u8_t rnakloops;                        /* Number of naks received */
+    u8_t maxnakloops;                      /* Maximum number of nak loops tolerated
+                                  (necessary because IPCP require a custom large max nak loops value) */
+    u8_t term_reason_len;                  /* Length of term_reason */
 } fsm;
 
 
 typedef struct fsm_callbacks {
-        void(*resetci) /* Reset our Configuration Information */
-            (fsm*);
-        int(*cilen) /* Length of our Configuration Information */
-            (fsm*);
-        void(*addci) /* Add our Configuration Information */
-            (fsm*, u_char*, int*);
-        int(*ackci) /* ACK our Configuration Information */
-            (fsm*, u_char*, int);
-        int(*nakci) /* NAK our Configuration Information */
-            (fsm*, u_char*, int, int);
-        int(*rejci) /* Reject our Configuration Information */
-            (fsm*, u_char*, int);
-        int(*reqci) /* Request peer's Configuration Information */
-            (fsm*, u_char*, int*, int);
-        void(*up) /* Called when fsm reaches PPP_FSM_OPENED state */
-            (fsm*);
-        void(*down) /* Called when fsm leaves PPP_FSM_OPENED state */
-            (fsm*);
-        void(*starting) /* Called when we want the lower layer */
-            (fsm*);
-        void(*finished) /* Called when we don't want the lower layer */
-            (fsm*);
-        void(*protreject) /* Called when Protocol-Reject received */
-            (int);
-        void(*retransmit) /* Retransmission is necessary */
-            (fsm*);
-        int(*extcode) /* Called when unknown code received */
-            (fsm*, int, int, u_char*, int);
-        const char* proto_name; /* String name for protocol (for messages) */
+    void(*resetci) /* Reset our Configuration Information */
+        (fsm*);
+    int(*cilen) /* Length of our Configuration Information */
+        (fsm*);
+    void(*addci) /* Add our Configuration Information */
+        (fsm*, u_char*, int*);
+    int(*ackci) /* ACK our Configuration Information */
+        (fsm*, u_char*, int);
+    int(*nakci) /* NAK our Configuration Information */
+        (fsm*, u_char*, int, int);
+    int(*rejci) /* Reject our Configuration Information */
+        (fsm*, u_char*, int);
+    int(*reqci) /* Request peer's Configuration Information */
+        (fsm*, u_char*, int*, int);
+    void(*up) /* Called when fsm reaches PPP_FSM_OPENED state */
+        (fsm*);
+    void(*down) /* Called when fsm leaves PPP_FSM_OPENED state */
+        (fsm*);
+    void(*starting) /* Called when we want the lower layer */
+        (fsm*);
+    void(*finished) /* Called when we don't want the lower layer */
+        (fsm*);
+    void(*protreject) /* Called when Protocol-Reject received */
+        (int);
+    void(*retransmit) /* Retransmission is necessary */
+        (fsm*);
+    int(*extcode) /* Called when unknown code received */
+        (fsm*, int, int, u_char*, int);
+    const char* proto_name; /* String name for protocol (for messages) */
 } fsm_callbacks;
 
 

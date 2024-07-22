@@ -38,9 +38,9 @@
 
 #define SYSCALL(x, y, z...)           \
     z __section(".syscalls") struct { \
-            uint32_t a;               \
-            void* b;                  \
-            char* name;               \
+        uint32_t a;                   \
+        void* b;                      \
+        char* name;                   \
     } __packed __sc_##y = {(int)x, (void*)sys_##y, (char*)#y}
 
 

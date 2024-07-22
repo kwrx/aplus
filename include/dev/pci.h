@@ -141,43 +141,43 @@ __BEGIN_DECLS
 
 typedef struct pci_msix_row {
 
-        volatile uint64_t pr_address;
-        volatile uint32_t pr_data;
-        volatile uint32_t pr_ctl;
+    volatile uint64_t pr_address;
+    volatile uint32_t pr_data;
+    volatile uint32_t pr_ctl;
 
 } __packed pci_msix_row_t;
 
 typedef struct pci_msix {
 
+    struct {
+
+        uint8_t pci_capid;
+        uint8_t pci_capnext;
+
+        union {
+            struct {
+                uint16_t pci_msgctl_table_size : 10;
+                uint16_t pci_msgctl_reserved   : 3;
+                uint16_t pci_msgctl_mask       : 1;
+                uint16_t pci_msgctl_enable     : 1;
+            };
+            uint16_t pci_msgctl;
+        };
+
         struct {
+            uint32_t pci_bir    : 3;
+            uint32_t pci_offset : 28;
+        };
 
-                uint8_t pci_capid;
-                uint8_t pci_capnext;
+        struct {
+            uint32_t pci_pending_bir    : 3;
+            uint32_t pci_pending_offset : 28;
+        };
 
-                union {
-                        struct {
-                                uint16_t pci_msgctl_table_size : 10;
-                                uint16_t pci_msgctl_reserved   : 3;
-                                uint16_t pci_msgctl_mask       : 1;
-                                uint16_t pci_msgctl_enable     : 1;
-                        };
-                        uint16_t pci_msgctl;
-                };
+    } msix_pci;
 
-                struct {
-                        uint32_t pci_bir    : 3;
-                        uint32_t pci_offset : 28;
-                };
-
-                struct {
-                        uint32_t pci_pending_bir    : 3;
-                        uint32_t pci_pending_offset : 28;
-                };
-
-        } msix_pci;
-
-        uintptr_t msix_cap;
-        pci_msix_row_t volatile* msix_rows;
+    uintptr_t msix_cap;
+    pci_msix_row_t volatile* msix_rows;
 
 } __packed pci_msix_t;
 

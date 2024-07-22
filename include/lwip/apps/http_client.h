@@ -123,20 +123,20 @@ typedef void (*httpc_result_fn)(void* arg, httpc_result_t httpc_result, u32_t rx
 typedef err_t (*httpc_headers_done_fn)(httpc_state_t* connection, void* arg, struct pbuf* hdr, u16_t hdr_len, u32_t content_len);
 
 typedef struct _httpc_connection {
-        ip_addr_t proxy_addr;
-        u16_t proxy_port;
-        u8_t use_proxy;
-            /* @todo: add username:pass? */
+    ip_addr_t proxy_addr;
+    u16_t proxy_port;
+    u8_t use_proxy;
+        /* @todo: add username:pass? */
 
     #if LWIP_ALTCP
-        altcp_allocator_t* altcp_allocator;
+    altcp_allocator_t* altcp_allocator;
     #endif
 
-        /* this callback is called when the transfer is finished (or aborted) */
-        httpc_result_fn result_fn;
-        /* this callback is called after receiving the http headers
-           It can abort the connection by returning != ERR_OK */
-        httpc_headers_done_fn headers_done_fn;
+    /* this callback is called when the transfer is finished (or aborted) */
+    httpc_result_fn result_fn;
+    /* this callback is called after receiving the http headers
+       It can abort the connection by returning != ERR_OK */
+    httpc_headers_done_fn headers_done_fn;
 } httpc_connection_t;
 
 err_t httpc_get_file(const ip_addr_t* server_addr, u16_t port, const char* uri, const httpc_connection_t* settings, altcp_recv_fn recv_fn, void* callback_arg, httpc_state_t** connection);

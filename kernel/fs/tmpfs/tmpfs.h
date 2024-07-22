@@ -37,15 +37,15 @@
 
 
 typedef struct {
-        list(inode_t*, children);
+    list(inode_t*, children);
 } tmpfs_t;
 
 typedef struct {
 
-        struct stat st;
+    struct stat st;
 
-        size_t capacity;
-        void* data;
+    size_t capacity;
+    void* data;
 
 } tmpfs_inode_t;
 
