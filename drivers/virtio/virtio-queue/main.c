@@ -165,6 +165,26 @@ int virtq_get_free_descriptor(struct virtio_driver* driver, uint16_t queue) {
 }
 
 
+int virtq_free_descriptor(struct virtio_driver* driver, uint16_t queue, uint16_t descriptor) {
+
+    DEBUG_ASSERT(driver);
+    DEBUG_ASSERT(driver->device);
+
+    DEBUG_ASSERT(queue < driver->internals.num_queues);
+    DEBUG_ASSERT(descriptor < driver->internals.queues[queue].size);
+
+
+    driver->internals.queues[queue].descriptors[descriptor].q_address = 0;
+    driver->internals.queues[queue].descriptors[descriptor].q_length  = 0;
+    driver->internals.queues[queue].descriptors[descriptor].q_flags   = 0;
+    driver->internals.queues[queue].descriptors[descriptor].q_next    = 0;
+
+    atomic_thread_fence(memory_order_acq_rel);
+
+    return 0;
+}
+
+
 
 ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* message, size_t size, void* output, size_t outsize) {
 
@@ -262,6 +282,9 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, void* messa
 
     } while (seen != 0xFFFF);
 
+
+    virtq_free_descriptor(driver, queue, inp);
+    virtq_free_descriptor(driver, queue, out);
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d has sent and received %ld bytes of data on queue %d\n", driver->device, outsize, queue);

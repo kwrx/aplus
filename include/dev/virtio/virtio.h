@@ -26,11 +26,10 @@
 
 
 // Device PCI
-#define VIRTIO_PCI_VENDOR                 0x1AF4
-#define VIRTIO_PCI_DEVICE_MIN             0x1040
-#define VIRTIO_PCI_DEVICE_MAX             0x107F
-#define VIRTIO_PCI_DEVICE(d)              (VIRTIO_PCI_DEVICE_MIN + d)
-#define VIRTIO_PCI_DEVICE_TRANSITIONAL(d) (VIRTIO_PCI_DEVICE_MIN - 0x40 + d)
+#define VIRTIO_PCI_VENDOR     0x1AF4
+#define VIRTIO_PCI_DEVICE_MIN 0x1040
+#define VIRTIO_PCI_DEVICE_MAX 0x107F
+#define VIRTIO_PCI_DEVICE(d)  (VIRTIO_PCI_DEVICE_MIN + d)
 
 
 // Device PCI Capabilities
@@ -111,7 +110,7 @@
 
 __BEGIN_DECLS
 
-struct virtio_driver {
+typedef struct virtio_driver {
 
     uint16_t type;
     pcidev_t device;
@@ -155,7 +154,7 @@ struct virtio_driver {
         } queues[VIRTQ_MAX_QUEUES];
 
     } internals;
-};
+} virtio_driver_t;
 
 
 struct virtio_pci_cap {
@@ -247,7 +246,6 @@ int virtio_pci_init(struct virtio_driver*);
 int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
 ssize_t virtq_send(struct virtio_driver*, uint16_t, void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, void*, size_t, void*, size_t);
-ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
 void virtq_flush(struct virtio_driver*, uint16_t);
 
 __END_DECLS
