@@ -527,7 +527,7 @@ static void satapi_init(device_t* device) {
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 2048);
 
 
 
@@ -814,7 +814,9 @@ static void sata_init(device_t* device) {
     memcpy(&identify, (void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
 
 
+    /* Update info */
     device->blk.blkcount = identify.sectors_28 ? identify.sectors_28 : identify.sectors_48;
+    device->blk.blksize  = 512;
 
 
 #if DEBUG_LEVEL_TRACE
@@ -871,13 +873,13 @@ static void sata_reset(device_t* device) {
     struct ahci* ahci = (struct ahci*)device->userdata;
 
 
-    long i = AHCI_DEVICE_INDEX(device);
+    size_t i = AHCI_DEVICE_INDEX(device);
 
     DEBUG_ASSERT(i >= 0 && i < 32);
 
 
 
-    int c = ahci->hba->ports[i].cmd;
+    uint32_t c = ahci->hba->ports[i].cmd;
 
     if ((c & AHCI_PORT_CMD_ST) || (c & AHCI_PORT_CMD_CR) || (c & AHCI_PORT_CMD_FRE) || (c & AHCI_PORT_CMD_FR)) {
 
@@ -929,7 +931,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     struct ahci* ahci = (struct ahci*)device->userdata;
 
 
-    long d = AHCI_DEVICE_INDEX(device);
+    size_t d = AHCI_DEVICE_INDEX(device);
 
     DEBUG_ASSERT(d >= 0 && d < 32);
 
@@ -1027,7 +1029,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     struct ahci* ahci = (struct ahci*)device->userdata;
 
 
-    long d = AHCI_DEVICE_INDEX(device);
+    size_t d = AHCI_DEVICE_INDEX(device);
 
     DEBUG_ASSERT(d >= 0 && d < 32);
 
@@ -1203,7 +1205,7 @@ void init(const char* args) {
 
 
     struct ahci* ahci;
-    for (int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
+    for (size_t index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
 
 
         if (!ahci->deviceid)
@@ -1211,6 +1213,8 @@ void init(const char* args) {
 
 
         ahci->contiguous_memory_area = pmm_alloc_blocks(AHCI_MEMORY_SIZE >> 12);
+
+        memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area, ARCH_VMM_AREA_HEAP)), 0, AHCI_MEMORY_SIZE);
 
 #if DEBUG_LEVEL_TRACE
         kprintf("ahci: contiguous memory area: address(0x%lX) size(0x%X)\n", ahci->contiguous_memory_area, AHCI_MEMORY_SIZE);
@@ -1240,9 +1244,9 @@ void init(const char* args) {
         ahci->hba->ghc |= AHCI_HBA_GHC_AE;
         ahci->hba->ghc &= ~AHCI_HBA_GHC_IE;
 
-        int p = ahci->hba->pi;
-        int q = 0;
-        int w = 0;
+        uint32_t p = ahci->hba->pi;
+        uint32_t q = 0;
+        uint32_t w = 0;
 
 
 
@@ -1252,9 +1256,9 @@ void init(const char* args) {
                 continue;
 
 
-            int s = ahci->hba->ports[i].ssts;
-            int c = ahci->hba->ports[i].cmd;
-            int m = ahci->hba->ports[i].sig;
+            uint32_t s = ahci->hba->ports[i].ssts;
+            uint32_t c = ahci->hba->ports[i].cmd;
+            uint32_t m = ahci->hba->ports[i].sig;
 
             if ((s & AHCI_PORT_STSS_DET) != (3 << 0)) /* Device detected and connected */
                 continue;
@@ -1317,7 +1321,7 @@ void init(const char* args) {
 
             hba_cmd_t volatile* clbp = (hba_cmd_t volatile*)(arch_vmm_p2v(ahci->hba->ports[i].clb, ARCH_VMM_AREA_HEAP));
 
-            for (int j = 0; j < 32; j++) {
+            for (size_t j = 0; j < 32; j++) {
 
                 clbp[j].prdtl = 8;
                 clbp[j].ctba  = ahci->contiguous_memory_area + (40 << 10) + (i << 13) + (j << 8);
@@ -1433,7 +1437,7 @@ void init(const char* args) {
 void dnit(void) {
 
     struct ahci* ahci;
-    for (int index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
+    for (size_t index = 0; (index < devices_count) && (ahci = &devices[index]); index++) {
 
 
         if (!ahci->deviceid)
