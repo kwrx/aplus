@@ -94,30 +94,30 @@
 
 typedef struct {
 
-        uintptr_t start;
-        uintptr_t end;
-        uintptr_t fd;
-        uintptr_t offset;
+    uintptr_t start;
+    uintptr_t end;
+    uintptr_t fd;
+    uintptr_t offset;
 
 } mmap_mapping_t;
 
 
 typedef struct vmm_address_space {
 
-        uintptr_t pm;
-        size_t size;
-        size_t refcount;
+    uintptr_t pm;
+    size_t size;
+    size_t refcount;
 
-        struct {
+    struct {
 
-                uintptr_t heap_start;
-                uintptr_t heap_end;
+        uintptr_t heap_start;
+        uintptr_t heap_end;
 
-                mmap_mapping_t mappings[CONFIG_MMAP_MAX];
+        mmap_mapping_t mappings[CONFIG_MMAP_MAX];
 
-        } mmap;
+    } mmap;
 
-        spinlock_t lock;
+    spinlock_t lock;
 
 } vmm_address_space_t;
 

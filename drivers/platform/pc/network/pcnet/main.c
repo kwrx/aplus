@@ -64,32 +64,32 @@ MODULE_LICENSE("GPL");
 
 struct pcnet {
 
-        uint32_t pci;
-        uint16_t io;
-        uintptr_t mem;
-        uint8_t irq;
+    uint32_t pci;
+    uint16_t io;
+    uintptr_t mem;
+    uint8_t irq;
 
-        uintptr_t buf;
-        uintptr_t rxdes;
-        uintptr_t txdes;
-        uintptr_t rxbuf;
-        uintptr_t txbuf;
+    uintptr_t buf;
+    uintptr_t rxdes;
+    uintptr_t txdes;
+    uintptr_t rxbuf;
+    uintptr_t txbuf;
 
-        uintptr_t vbuf;
-        uintptr_t vrxdes;
-        uintptr_t vtxdes;
-        uintptr_t vrxbuf;
-        uintptr_t vtxbuf;
+    uintptr_t vbuf;
+    uintptr_t vrxdes;
+    uintptr_t vtxdes;
+    uintptr_t vrxbuf;
+    uintptr_t vtxbuf;
 
-        int rxid;
-        int txid;
+    int rxid;
+    int txid;
 
-        uint8_t cache[0x4000];
-        uint16_t size;
-        uint16_t offset;
+    uint8_t cache[0x4000];
+    uint16_t size;
+    uint16_t offset;
 
-        spinlock_t lock;
-        device_t device;
+    spinlock_t lock;
+    device_t device;
 };
 
 static struct pcnet* devices[PCNET_MAX_DEVICES] = {0};

@@ -51,9 +51,9 @@ extern "C" {
  * Maybe this should be done by processing struct in6_addr directly...
  */
 typedef union {
-        u8_t e8[8];
-        u16_t e16[4];
-        u32_t e32[2];
+    u8_t e8[8];
+    u16_t e16[4];
+    u32_t e32[2];
 } eui64_t;
 
         #define eui64_iszero(e)    (((e).e32[0] | (e).e32[1]) == 0)

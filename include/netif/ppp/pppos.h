@@ -71,30 +71,30 @@ typedef u8_t ext_accm[32];
  */
 typedef struct pppos_pcb_s pppos_pcb;
 struct pppos_pcb_s {
-        /* -- below are data that will NOT be cleared between two sessions */
-        ppp_pcb* ppp;                 /* PPP PCB */
-        pppos_output_cb_fn output_cb; /* PPP serial output callback */
+    /* -- below are data that will NOT be cleared between two sessions */
+    ppp_pcb* ppp;                 /* PPP PCB */
+    pppos_output_cb_fn output_cb; /* PPP serial output callback */
 
-        /* -- below are data that will be cleared between two sessions
-         *
-         * last_xmit must be the first member of cleared members, because it is
-         * used to know which part must not be cleared.
-         */
-        u32_t last_xmit;   /* Time of last transmission. */
-        ext_accm out_accm; /* Async-Ctl-Char-Map for output. */
+    /* -- below are data that will be cleared between two sessions
+     *
+     * last_xmit must be the first member of cleared members, because it is
+     * used to know which part must not be cleared.
+     */
+    u32_t last_xmit;   /* Time of last transmission. */
+    ext_accm out_accm; /* Async-Ctl-Char-Map for output. */
 
-        /* flags */
-        unsigned int open   : 1; /* Set if PPPoS is open */
-        unsigned int pcomp  : 1; /* Does peer accept protocol compression? */
-        unsigned int accomp : 1; /* Does peer accept addr/ctl compression? */
+    /* flags */
+    unsigned int open   : 1; /* Set if PPPoS is open */
+    unsigned int pcomp  : 1; /* Does peer accept protocol compression? */
+    unsigned int accomp : 1; /* Does peer accept addr/ctl compression? */
 
-        /* PPPoS rx */
-        ext_accm in_accm;               /* Async-Ctl-Char-Map for input. */
-        struct pbuf *in_head, *in_tail; /* The input packet. */
-        u16_t in_protocol;              /* The input protocol code. */
-        u16_t in_fcs;                   /* Input Frame Check Sequence value. */
-        u8_t in_state;                  /* The input process state. */
-        u8_t in_escaped;                /* Escape next character. */
+    /* PPPoS rx */
+    ext_accm in_accm;               /* Async-Ctl-Char-Map for input. */
+    struct pbuf *in_head, *in_tail; /* The input packet. */
+    u16_t in_protocol;              /* The input protocol code. */
+    u16_t in_fcs;                   /* Input Frame Check Sequence value. */
+    u8_t in_state;                  /* The input process state. */
+    u8_t in_escaped;                /* Escape next character. */
 };
 
 /* Create a new PPPoS session. */

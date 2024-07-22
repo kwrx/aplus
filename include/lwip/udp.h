@@ -78,37 +78,37 @@ typedef void (*udp_recv_fn)(void* arg, struct udp_pcb* pcb, struct pbuf* p, cons
 
 /** the UDP protocol control block */
 struct udp_pcb {
-        /** Common members of all PCB types */
-        IP_PCB;
+    /** Common members of all PCB types */
+    IP_PCB;
 
-        /* Protocol specific PCB members */
+    /* Protocol specific PCB members */
 
-        struct udp_pcb* next;
+    struct udp_pcb* next;
 
-        u8_t flags;
-        /** ports are in host byte order */
-        u16_t local_port, remote_port;
+    u8_t flags;
+    /** ports are in host byte order */
+    u16_t local_port, remote_port;
 
     #if LWIP_MULTICAST_TX_OPTIONS
         #if LWIP_IPV4
-        /** outgoing network interface for multicast packets, by IPv4 address (if not 'any') */
-        ip4_addr_t mcast_ip4;
+    /** outgoing network interface for multicast packets, by IPv4 address (if not 'any') */
+    ip4_addr_t mcast_ip4;
         #endif /* LWIP_IPV4 */
-        /** outgoing network interface for multicast packets, by interface index (if nonzero) */
-        u8_t mcast_ifindex;
-        /** TTL for outgoing multicast packets */
-        u8_t mcast_ttl;
+    /** outgoing network interface for multicast packets, by interface index (if nonzero) */
+    u8_t mcast_ifindex;
+    /** TTL for outgoing multicast packets */
+    u8_t mcast_ttl;
     #endif /* LWIP_MULTICAST_TX_OPTIONS */
 
     #if LWIP_UDPLITE
-        /** used for UDP_LITE only */
-        u16_t chksum_len_rx, chksum_len_tx;
+    /** used for UDP_LITE only */
+    u16_t chksum_len_rx, chksum_len_tx;
     #endif /* LWIP_UDPLITE */
 
-        /** receive callback function */
-        udp_recv_fn recv;
-        /** user-supplied argument for the recv callback */
-        void* recv_arg;
+    /** receive callback function */
+    udp_recv_fn recv;
+    /** user-supplied argument for the recv callback */
+    void* recv_arg;
 };
 /* udp_pcbs export for external reference (e.g. SNMP agent) */
 extern struct udp_pcb* udp_pcbs;

@@ -43,9 +43,9 @@
  * \brief          ARC4 context structure
  */
 typedef struct {
-        int x;                /*!< permutation index */
-        int y;                /*!< permutation index */
-        unsigned char m[256]; /*!< permutation table */
+    int x;                /*!< permutation index */
+    int y;                /*!< permutation index */
+    unsigned char m[256]; /*!< permutation table */
 } arc4_context;
 
         #ifdef __cplusplus

@@ -108,10 +108,10 @@ static void magic_churnrand(char* rand_data, u32_t rand_len) {
         lwip_md5_update(&md5_ctx, (u_char*)rand_data, rand_len);
     } else {
         struct {
-                /* INCLUDE fields for any system sources of randomness */
-                u32_t jiffies;
+            /* INCLUDE fields for any system sources of randomness */
+            u32_t jiffies;
         #ifdef LWIP_RAND
-                u32_t rand;
+            u32_t rand;
         #endif /* LWIP_RAND */
         } sys_data;
         magic_randomseed += sys_jiffies();

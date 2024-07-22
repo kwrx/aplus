@@ -133,7 +133,7 @@ void vj_compress_init(struct vjcompress* comp) {
     #endif
 PACK_STRUCT_BEGIN
 struct vj_u32_t {
-        PACK_STRUCT_FIELD(u32_t v);
+    PACK_STRUCT_FIELD(u32_t v);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
     #ifdef PACK_STRUCT_USE_INCLUDES
@@ -145,7 +145,7 @@ PACK_STRUCT_END
     #endif
 PACK_STRUCT_BEGIN
 struct vj_u16_t {
-        PACK_STRUCT_FIELD(u16_t v);
+    PACK_STRUCT_FIELD(u16_t v);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
     #ifdef PACK_STRUCT_USE_INCLUDES

@@ -458,8 +458,8 @@ enum http_host_state {
 /* Map errno values to strings for human-readable output */
 #define HTTP_STRERROR_GEN(n, s) {"HPE_" #n, s},
 static struct {
-        const char* name;
-        const char* description;
+    const char* name;
+    const char* description;
 } http_strerror_tab[] = {HTTP_ERRNO_MAP(HTTP_STRERROR_GEN)};
 #undef HTTP_STRERROR_GEN
 

@@ -51,29 +51,29 @@
 
 typedef struct {
 
-        struct {
-                Elf_Ehdr* header;
-                Elf_Shdr* section;
-                Elf_Shdr* symtab;
-                Elf_Shdr* strtab;
-                Elf_Shdr* shstrtab;
-        } exe;
+    struct {
+        Elf_Ehdr* header;
+        Elf_Shdr* section;
+        Elf_Shdr* symtab;
+        Elf_Shdr* strtab;
+        Elf_Shdr* shstrtab;
+    } exe;
 
-        struct {
-                void* ptr;
-                size_t size;
-        } core;
+    struct {
+        void* ptr;
+        size_t size;
+    } core;
 
 
-        void (*init)(const char*);
-        void (*dnit)();
+    void (*init)(const char*);
+    void (*dnit)();
 
-        const char* name;
-        const char* deps;
-        const char* args;
+    const char* name;
+    const char* deps;
+    const char* args;
 
-        int status;
-        atomic_int refcount;
+    int status;
+    atomic_int refcount;
 
 } module_t;
 

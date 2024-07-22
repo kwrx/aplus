@@ -293,8 +293,8 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
 
 
     struct stack {
-            struct stack* bp;
-            uintptr_t ip;
+        struct stack* bp;
+        uintptr_t ip;
     } __packed* frame;
 
 

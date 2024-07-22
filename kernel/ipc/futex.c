@@ -186,12 +186,12 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
                     max--; req++;
                     break;
-                }
-            });
         }
-    }
+    });
+}
+}
 
-    return req;
+return req;
 }
 
 

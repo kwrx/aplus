@@ -14,12 +14,12 @@
 
 static struct {
 
-        uint16_t type;
-        uint16_t fallback;
+    uint16_t type;
+    uint16_t fallback;
 
-        struct {
-                cairo_surface_t* surface;
-        } types[WC_CURSOR_TYPE_LENGTH];
+    struct {
+        cairo_surface_t* surface;
+    } types[WC_CURSOR_TYPE_LENGTH];
 
 } cursor;
 

@@ -72,29 +72,29 @@ typedef u8_t (*raw_recv_fn)(void* arg, struct raw_pcb* pcb, struct pbuf* p, cons
 
 /** the RAW protocol control block */
 struct raw_pcb {
-        /* Common members of all PCB types */
-        IP_PCB;
+    /* Common members of all PCB types */
+    IP_PCB;
 
-        struct raw_pcb* next;
+    struct raw_pcb* next;
 
-        u8_t protocol;
-        u8_t flags;
+    u8_t protocol;
+    u8_t flags;
 
     #if LWIP_MULTICAST_TX_OPTIONS
-        /** outgoing network interface for multicast packets, by interface index (if nonzero) */
-        u8_t mcast_ifindex;
-        /** TTL for outgoing multicast packets */
-        u8_t mcast_ttl;
+    /** outgoing network interface for multicast packets, by interface index (if nonzero) */
+    u8_t mcast_ifindex;
+    /** TTL for outgoing multicast packets */
+    u8_t mcast_ttl;
     #endif /* LWIP_MULTICAST_TX_OPTIONS */
 
-        /** receive callback function */
-        raw_recv_fn recv;
-        /* user-supplied argument for the recv callback */
-        void* recv_arg;
+    /** receive callback function */
+    raw_recv_fn recv;
+    /* user-supplied argument for the recv callback */
+    void* recv_arg;
     #if LWIP_IPV6
-        /* fields for handling checksum computations as per RFC3542. */
-        u16_t chksum_offset;
-        u8_t chksum_reqd;
+    /* fields for handling checksum computations as per RFC3542. */
+    u16_t chksum_offset;
+    u8_t chksum_reqd;
     #endif
 };
 

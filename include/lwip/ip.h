@@ -90,8 +90,8 @@ extern "C" {
         IP_PCB_NETIFHINT
 
 struct ip_pcb {
-        /* Common members of all PCB types */
-        IP_PCB;
+    /* Common members of all PCB types */
+    IP_PCB;
 };
 
 /*
@@ -106,24 +106,24 @@ struct ip_pcb {
 
 /** Global variables of this module, kept in a struct for efficient access using base+index. */
 struct ip_globals {
-        /** The interface that accepted the packet for the current callback invocation. */
-        struct netif* current_netif;
-        /** The interface that received the packet for the current callback invocation. */
-        struct netif* current_input_netif;
+    /** The interface that accepted the packet for the current callback invocation. */
+    struct netif* current_netif;
+    /** The interface that received the packet for the current callback invocation. */
+    struct netif* current_input_netif;
 #if LWIP_IPV4
-        /** Header of the input packet currently being processed. */
-        const struct ip_hdr* current_ip4_header;
+    /** Header of the input packet currently being processed. */
+    const struct ip_hdr* current_ip4_header;
 #endif /* LWIP_IPV4 */
 #if LWIP_IPV6
-        /** Header of the input IPv6 packet currently being processed. */
-        struct ip6_hdr* current_ip6_header;
+    /** Header of the input IPv6 packet currently being processed. */
+    struct ip6_hdr* current_ip6_header;
 #endif /* LWIP_IPV6 */
-        /** Total header length of current_ip4/6_header (i.e. after this, the UDP/TCP header starts) */
-        u16_t current_ip_header_tot_len;
-        /** Source IP address of current_header */
-        ip_addr_t current_iphdr_src;
-        /** Destination IP address of current_header */
-        ip_addr_t current_iphdr_dest;
+    /** Total header length of current_ip4/6_header (i.e. after this, the UDP/TCP header starts) */
+    u16_t current_ip_header_tot_len;
+    /** Source IP address of current_header */
+    ip_addr_t current_iphdr_src;
+    /** Destination IP address of current_header */
+    ip_addr_t current_iphdr_dest;
 };
 extern struct ip_globals ip_data;
 

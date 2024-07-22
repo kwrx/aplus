@@ -66,26 +66,26 @@ struct altcp_tls_config;
  * @ingroup mqtt
  * Client information and connection parameters */
 struct mqtt_connect_client_info_t {
-        /** Client identifier, must be set by caller */
-        const char* client_id;
-        /** User name, set to NULL if not used */
-        const char* client_user;
-        /** Password, set to NULL if not used */
-        const char* client_pass;
-        /** keep alive time in seconds, 0 to disable keep alive functionality*/
-        u16_t keep_alive;
-        /** will topic, set to NULL if will is not to be used,
-            will_msg, will_qos and will retain are then ignored */
-        const char* will_topic;
-        /** will_msg, see will_topic */
-        const char* will_msg;
-        /** will_qos, see will_topic */
-        u8_t will_qos;
-        /** will_retain, see will_topic */
-        u8_t will_retain;
+    /** Client identifier, must be set by caller */
+    const char* client_id;
+    /** User name, set to NULL if not used */
+    const char* client_user;
+    /** Password, set to NULL if not used */
+    const char* client_pass;
+    /** keep alive time in seconds, 0 to disable keep alive functionality*/
+    u16_t keep_alive;
+    /** will topic, set to NULL if will is not to be used,
+        will_msg, will_qos and will retain are then ignored */
+    const char* will_topic;
+    /** will_msg, see will_topic */
+    const char* will_msg;
+    /** will_qos, see will_topic */
+    u8_t will_qos;
+    /** will_retain, see will_topic */
+    u8_t will_retain;
 #if LWIP_ALTCP && LWIP_ALTCP_TLS
-        /** TLS configuration for secure connections */
-        struct altcp_tls_config* tls_config;
+    /** TLS configuration for secure connections */
+    struct altcp_tls_config* tls_config;
 #endif
 };
 

@@ -74,48 +74,48 @@ typedef uint16_t evid_t;
 
 typedef struct {
 
-        evid_t ev_devid;
-        uint8_t ev_type;
+    evid_t ev_devid;
+    uint8_t ev_type;
 
-        union {
+    union {
 
-                struct {
-                        vkey_t vkey;
-                        uint8_t down;
-                } ev_key;
+        struct {
+            vkey_t vkey;
+            uint8_t down;
+        } ev_key;
 
-                struct {
-                        vaxis_t x;
-                        vaxis_t y;
-                        vaxis_t z;
-                } ev_rel;
+        struct {
+            vaxis_t x;
+            vaxis_t y;
+            vaxis_t z;
+        } ev_rel;
 
-                struct {
-                        vaxis_t x;
-                        vaxis_t y;
-                        vaxis_t z;
-                } ev_abs;
+        struct {
+            vaxis_t x;
+            vaxis_t y;
+            vaxis_t z;
+        } ev_abs;
 
-                struct {
-                        uint16_t raw_type;
-                        uint64_t raw_data;
-                } ev_msc;
+        struct {
+            uint16_t raw_type;
+            uint64_t raw_data;
+        } ev_msc;
 
-                struct {
-                        int status;
-                } ev_sw;
+        struct {
+            int status;
+        } ev_sw;
 
-                struct {
-                        int16_t ledno;
-                        uint8_t on;
-                } ev_led;
+        struct {
+            int16_t ledno;
+            uint8_t on;
+        } ev_led;
 
-                struct {
-                        int status;
-                } ev_pwr;
+        struct {
+            int status;
+        } ev_pwr;
 
-                char ev_args[1];
-        };
+        char ev_args[1];
+    };
 
 } __attribute__((packed)) event_t;
 

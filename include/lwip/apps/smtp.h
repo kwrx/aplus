@@ -52,17 +52,17 @@ typedef void (*smtp_result_fn)(void* arg, u8_t smtp_result, u16_t srv_err, err_t
  * (e.g. using mem_malloc/mem_free) until its 'callback_fn' is called.
  */
 struct smtp_send_request {
-        const char* from;
-        const char* to;
-        const char* subject;
-        const char* body;
-        smtp_result_fn callback_fn;
-        void* callback_arg;
-        /** If this is != 0, data is *not* copied into an extra buffer
-         * but used from the pointers supplied in this struct.
-         * This means less memory usage, but data must stay untouched until
-         * the callback function is called. */
-        u8_t static_data;
+    const char* from;
+    const char* to;
+    const char* subject;
+    const char* body;
+    smtp_result_fn callback_fn;
+    void* callback_arg;
+    /** If this is != 0, data is *not* copied into an extra buffer
+     * but used from the pointers supplied in this struct.
+     * This means less memory usage, but data must stay untouched until
+     * the callback function is called. */
+    u8_t static_data;
 };
 
 
@@ -73,11 +73,11 @@ struct smtp_send_request {
     #endif /* SMTP_BODYDH_BUFFER_SIZE */
 
 struct smtp_bodydh {
-        u16_t state;
-        u16_t length;                         /* Length of content in buffer */
-        char buffer[SMTP_BODYDH_BUFFER_SIZE]; /* buffer for generated content */
+    u16_t state;
+    u16_t length;                         /* Length of content in buffer */
+    char buffer[SMTP_BODYDH_BUFFER_SIZE]; /* buffer for generated content */
     #ifdef SMTP_BODYDH_USER_SIZE
-        u8_t user[SMTP_BODYDH_USER_SIZE];
+    u8_t user[SMTP_BODYDH_USER_SIZE];
     #endif /* SMTP_BODYDH_USER_SIZE */
 };
 

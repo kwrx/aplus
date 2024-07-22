@@ -296,8 +296,8 @@ static bool pncrypt_setkey(int timeoffs) {
 static char base64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
 struct b64state {
-        u32_t bs_bits;
-        int bs_offs;
+    u32_t bs_bits;
+    int bs_offs;
 };
 
 static int b64enc(bs, inp, inlen, outp)

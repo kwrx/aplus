@@ -27,8 +27,8 @@
 
 
 struct hashmap_entry {
-        void* key;
-        void* data;
+    void* key;
+    void* data;
 };
 
 

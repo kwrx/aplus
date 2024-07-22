@@ -330,15 +330,15 @@ void mem_free(void* rmem) {
  * we only use the macro SIZEOF_STRUCT_MEM, which automatically aligns.
  */
 struct mem {
-        /** index (-> ram[next]) of the next struct */
-        mem_size_t next;
-        /** index (-> ram[prev]) of the previous struct */
-        mem_size_t prev;
-        /** 1: this area is used; 0: this area is unused */
-        u8_t used;
+    /** index (-> ram[next]) of the next struct */
+    mem_size_t next;
+    /** index (-> ram[prev]) of the previous struct */
+    mem_size_t prev;
+    /** 1: this area is used; 0: this area is unused */
+    u8_t used;
     #if MEM_OVERFLOW_CHECK
-        /** this keeps track of the user allocation size for guard checks */
-        mem_size_t user_size;
+    /** this keeps track of the user allocation size for guard checks */
+    mem_size_t user_size;
     #endif
 };
 

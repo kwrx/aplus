@@ -90,29 +90,29 @@ typedef enum tcp_state (*altcp_dbg_get_tcp_state_fn)(struct altcp_pcb* conn);
     #endif
 
 struct altcp_functions {
-        altcp_set_poll_fn set_poll;
-        altcp_recved_fn recved;
-        altcp_bind_fn bind;
-        altcp_connect_fn connect;
-        altcp_listen_fn listen;
-        altcp_abort_fn abort;
-        altcp_close_fn close;
-        altcp_shutdown_fn shutdown;
-        altcp_write_fn write;
-        altcp_output_fn output;
-        altcp_mss_fn mss;
-        altcp_sndbuf_fn sndbuf;
-        altcp_sndqueuelen_fn sndqueuelen;
-        altcp_nagle_disable_fn nagle_disable;
-        altcp_nagle_enable_fn nagle_enable;
-        altcp_nagle_disabled_fn nagle_disabled;
-        altcp_setprio_fn setprio;
-        altcp_dealloc_fn dealloc;
-        altcp_get_tcp_addrinfo_fn addrinfo;
-        altcp_get_ip_fn getip;
-        altcp_get_port_fn getport;
+    altcp_set_poll_fn set_poll;
+    altcp_recved_fn recved;
+    altcp_bind_fn bind;
+    altcp_connect_fn connect;
+    altcp_listen_fn listen;
+    altcp_abort_fn abort;
+    altcp_close_fn close;
+    altcp_shutdown_fn shutdown;
+    altcp_write_fn write;
+    altcp_output_fn output;
+    altcp_mss_fn mss;
+    altcp_sndbuf_fn sndbuf;
+    altcp_sndqueuelen_fn sndqueuelen;
+    altcp_nagle_disable_fn nagle_disable;
+    altcp_nagle_enable_fn nagle_enable;
+    altcp_nagle_disabled_fn nagle_disabled;
+    altcp_setprio_fn setprio;
+    altcp_dealloc_fn dealloc;
+    altcp_get_tcp_addrinfo_fn addrinfo;
+    altcp_get_ip_fn getip;
+    altcp_get_port_fn getport;
     #ifdef LWIP_DEBUG
-        altcp_dbg_get_tcp_state_fn dbg_get_tcp_state;
+    altcp_dbg_get_tcp_state_fn dbg_get_tcp_state;
     #endif
 };
 

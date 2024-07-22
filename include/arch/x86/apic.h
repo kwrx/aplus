@@ -97,10 +97,10 @@
 
 
 typedef struct {
-        uintptr_t address;
-        uint32_t gsi_base;
-        uint32_t gsi_max;
-        spinlock_t lock;
+    uintptr_t address;
+    uint32_t gsi_base;
+    uint32_t gsi_max;
+    spinlock_t lock;
 } ioapic_t;
 
 

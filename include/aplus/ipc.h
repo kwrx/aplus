@@ -76,12 +76,10 @@
     #define FUTEX_CMP_REQUEUE_PI_PRIVATE  (FUTEX_CMP_REQUEUE_PI | FUTEX_PRIVATE_FLAG)
 
 
-    #define SPINLOCK_INIT \
-        { {ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0, 0 }
-    #define SPINLOCK_INIT_WITH_FLAGS(p) \
-        { {ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0 | (p), 0 }
-    #define SPINLOCK_FLAGS_CPU_OWNER (1U << 30)
-    #define SPINLOCK_FLAGS_RECURSIVE (1U << 31)
+    #define SPINLOCK_INIT               {{ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0, 0}
+    #define SPINLOCK_INIT_WITH_FLAGS(p) {{ATOMIC_FLAG_INIT}, 0ULL, -1ULL, 0 | (p), 0}
+    #define SPINLOCK_FLAGS_CPU_OWNER    (1U << 30)
+    #define SPINLOCK_FLAGS_RECURSIVE    (1U << 31)
 
 
     #define SEMAPHORE_INIT 0L
@@ -90,32 +88,32 @@
 
 typedef volatile struct spinlock {
 
-        union {
-                atomic_flag value;
-                volatile uint64_t __padding;
-        };
+    union {
+        atomic_flag value;
+        volatile uint64_t __padding;
+    };
 
-        volatile uint64_t irqsave;
-        volatile uint64_t owner;
+    volatile uint64_t irqsave;
+    volatile uint64_t owner;
 
-        atomic_int flags;
-        atomic_int refcount;
+    atomic_int flags;
+    atomic_int refcount;
 
 } spinlock_t;
 
 typedef struct semaphore {
 
-        uint32_t waiters;
-        spinlock_t lock;
+    uint32_t waiters;
+    spinlock_t lock;
 
 } semaphore_t;
 
 typedef struct futex {
 
-        volatile uint32_t* address;
-        volatile uint32_t value;
+    volatile uint32_t* address;
+    volatile uint32_t value;
 
-        struct timespec timeout;
+    struct timespec timeout;
 
 } futex_t;
 

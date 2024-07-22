@@ -156,10 +156,10 @@ typedef err_t (*tcp_connected_fn)(void* arg, struct tcp_pcb* tpcb, err_t err);
 /** SACK ranges to include in ACK packets.
  * SACK entry is invalid if left==right. */
 struct tcp_sack_range {
-        /** Left edge of the SACK: the first acknowledged sequence number. */
-        u32_t left;
-        /** Right edge of the SACK: the last acknowledged sequence number +1 (so first NOT acknowledged). */
-        u32_t right;
+    /** Left edge of the SACK: the first acknowledged sequence number. */
+    u32_t left;
+    /** Right edge of the SACK: the last acknowledged sequence number +1 (so first NOT acknowledged). */
+    u32_t right;
 };
     #endif /* LWIP_TCP_SACK_OUT */
 
@@ -182,10 +182,10 @@ typedef err_t (*tcp_extarg_callback_passive_open_fn)(u8_t id, struct tcp_pcb_lis
 
 /** A table of callback functions that is invoked for ext arguments */
 struct tcp_ext_arg_callbacks {
-        /** @ref tcp_extarg_callback_pcb_destroyed_fn */
-        tcp_extarg_callback_pcb_destroyed_fn destroy;
-        /** @ref tcp_extarg_callback_passive_open_fn */
-        tcp_extarg_callback_passive_open_fn passive_open;
+    /** @ref tcp_extarg_callback_pcb_destroyed_fn */
+    tcp_extarg_callback_pcb_destroyed_fn destroy;
+    /** @ref tcp_extarg_callback_passive_open_fn */
+    tcp_extarg_callback_passive_open_fn passive_open;
 };
 
     #define LWIP_TCP_PCB_NUM_EXT_ARG_ID_INVALID 0xFF
@@ -193,8 +193,8 @@ struct tcp_ext_arg_callbacks {
     #if LWIP_TCP_PCB_NUM_EXT_ARGS
 /* This is the structure for ext args in tcp pcbs (used as array) */
 struct tcp_pcb_ext_args {
-        const struct tcp_ext_arg_callbacks* callbacks;
-        void* data;
+    const struct tcp_ext_arg_callbacks* callbacks;
+    void* data;
 };
         /* This is a helper define to prevent zero size arrays if disabled */
         #define TCP_PCB_EXTARGS struct tcp_pcb_ext_args ext_args[LWIP_TCP_PCB_NUM_EXT_ARGS];
@@ -220,34 +220,34 @@ typedef u16_t tcpflags_t;
 
 /** the TCP protocol control block for listening pcbs */
 struct tcp_pcb_listen {
-        /** Common members of all PCB types */
-        IP_PCB;
-        /** Protocol specific PCB members */
-        TCP_PCB_COMMON(struct tcp_pcb_listen);
+    /** Common members of all PCB types */
+    IP_PCB;
+    /** Protocol specific PCB members */
+    TCP_PCB_COMMON(struct tcp_pcb_listen);
 
     #if LWIP_CALLBACK_API
-        /* Function to call when a listener has been connected. */
-        tcp_accept_fn accept;
+    /* Function to call when a listener has been connected. */
+    tcp_accept_fn accept;
     #endif /* LWIP_CALLBACK_API */
 
     #if TCP_LISTEN_BACKLOG
-        u8_t backlog;
-        u8_t accepts_pending;
+    u8_t backlog;
+    u8_t accepts_pending;
     #endif /* TCP_LISTEN_BACKLOG */
 };
 
 
 /** the TCP protocol control block */
 struct tcp_pcb {
-        /** common PCB members */
-        IP_PCB;
-        /** protocol specific PCB members */
-        TCP_PCB_COMMON(struct tcp_pcb);
+    /** common PCB members */
+    IP_PCB;
+    /** protocol specific PCB members */
+    TCP_PCB_COMMON(struct tcp_pcb);
 
-        /* ports are in host byte order */
-        u16_t remote_port;
+    /* ports are in host byte order */
+    u16_t remote_port;
 
-        tcpflags_t flags;
+    tcpflags_t flags;
     #define TF_ACK_DELAY   0x01U /* Delayed ACK. */
     #define TF_ACK_NOW     0x02U /* Immediate ACK. */
     #define TF_INFR        0x04U /* In fast recovery. */
@@ -270,120 +270,120 @@ struct tcp_pcb {
         #define TF_SACK 0x1000U /* Selective ACKs enabled */
     #endif
 
-        /* the rest of the fields are in host byte order
-           as we have to do some math with them */
+    /* the rest of the fields are in host byte order
+       as we have to do some math with them */
 
-        /* Timers */
-        u8_t polltmr, pollinterval;
-        u8_t last_timer;
-        u32_t tmr;
+    /* Timers */
+    u8_t polltmr, pollinterval;
+    u8_t last_timer;
+    u32_t tmr;
 
-        /* receiver variables */
-        u32_t rcv_nxt;             /* next seqno expected */
-        tcpwnd_size_t rcv_wnd;     /* receiver window available */
-        tcpwnd_size_t rcv_ann_wnd; /* receiver window to announce */
-        u32_t rcv_ann_right_edge;  /* announced right edge of window */
+    /* receiver variables */
+    u32_t rcv_nxt;             /* next seqno expected */
+    tcpwnd_size_t rcv_wnd;     /* receiver window available */
+    tcpwnd_size_t rcv_ann_wnd; /* receiver window to announce */
+    u32_t rcv_ann_right_edge;  /* announced right edge of window */
 
     #if LWIP_TCP_SACK_OUT
-        /* SACK ranges to include in ACK packets (entry is invalid if left==right) */
-        struct tcp_sack_range rcv_sacks[LWIP_TCP_MAX_SACK_NUM];
+    /* SACK ranges to include in ACK packets (entry is invalid if left==right) */
+    struct tcp_sack_range rcv_sacks[LWIP_TCP_MAX_SACK_NUM];
         #define LWIP_TCP_SACK_VALID(pcb, idx) ((pcb)->rcv_sacks[idx].left != (pcb)->rcv_sacks[idx].right)
     #endif /* LWIP_TCP_SACK_OUT */
 
-        /* Retransmission timer. */
-        s16_t rtime;
+    /* Retransmission timer. */
+    s16_t rtime;
 
-        u16_t mss; /* maximum segment size */
+    u16_t mss; /* maximum segment size */
 
-        /* RTT (round trip time) estimation variables */
-        u32_t rttest; /* RTT estimate in 500ms ticks */
-        u32_t rtseq;  /* sequence number being timed */
-        s16_t sa, sv; /* @see "Congestion Avoidance and Control" by Van Jacobson and Karels */
+    /* RTT (round trip time) estimation variables */
+    u32_t rttest; /* RTT estimate in 500ms ticks */
+    u32_t rtseq;  /* sequence number being timed */
+    s16_t sa, sv; /* @see "Congestion Avoidance and Control" by Van Jacobson and Karels */
 
-        s16_t rto; /* retransmission time-out (in ticks of TCP_SLOW_INTERVAL) */
-        u8_t nrtx; /* number of retransmissions */
+    s16_t rto; /* retransmission time-out (in ticks of TCP_SLOW_INTERVAL) */
+    u8_t nrtx; /* number of retransmissions */
 
-        /* fast retransmit/recovery */
-        u8_t dupacks;
-        u32_t lastack; /* Highest acknowledged seqno. */
+    /* fast retransmit/recovery */
+    u8_t dupacks;
+    u32_t lastack; /* Highest acknowledged seqno. */
 
-        /* congestion avoidance/control variables */
-        tcpwnd_size_t cwnd;
-        tcpwnd_size_t ssthresh;
+    /* congestion avoidance/control variables */
+    tcpwnd_size_t cwnd;
+    tcpwnd_size_t ssthresh;
 
-        /* first byte following last rto byte */
-        u32_t rto_end;
+    /* first byte following last rto byte */
+    u32_t rto_end;
 
-        /* sender variables */
-        u32_t snd_nxt;             /* next new seqno to be sent */
-        u32_t snd_wl1, snd_wl2;    /* Sequence and acknowledgement numbers of last
-                                      window update. */
-        u32_t snd_lbb;             /* Sequence number of next byte to be buffered. */
-        tcpwnd_size_t snd_wnd;     /* sender window */
-        tcpwnd_size_t snd_wnd_max; /* the maximum sender window announced by the remote host */
+    /* sender variables */
+    u32_t snd_nxt;             /* next new seqno to be sent */
+    u32_t snd_wl1, snd_wl2;    /* Sequence and acknowledgement numbers of last
+                                  window update. */
+    u32_t snd_lbb;             /* Sequence number of next byte to be buffered. */
+    tcpwnd_size_t snd_wnd;     /* sender window */
+    tcpwnd_size_t snd_wnd_max; /* the maximum sender window announced by the remote host */
 
-        tcpwnd_size_t snd_buf; /* Available buffer space for sending (in bytes). */
+    tcpwnd_size_t snd_buf; /* Available buffer space for sending (in bytes). */
     #define TCP_SNDQUEUELEN_OVERFLOW (0xffffU - 3)
-        u16_t snd_queuelen; /* Number of pbufs currently in the send buffer. */
+    u16_t snd_queuelen; /* Number of pbufs currently in the send buffer. */
 
     #if TCP_OVERSIZE
-        /* Extra bytes available at the end of the last pbuf in unsent. */
-        u16_t unsent_oversize;
+    /* Extra bytes available at the end of the last pbuf in unsent. */
+    u16_t unsent_oversize;
     #endif /* TCP_OVERSIZE */
 
-        tcpwnd_size_t bytes_acked;
+    tcpwnd_size_t bytes_acked;
 
-        /* These are ordered by sequence number: */
-        struct tcp_seg* unsent;  /* Unsent (queued) segments. */
-        struct tcp_seg* unacked; /* Sent but unacknowledged segments. */
+    /* These are ordered by sequence number: */
+    struct tcp_seg* unsent;  /* Unsent (queued) segments. */
+    struct tcp_seg* unacked; /* Sent but unacknowledged segments. */
     #if TCP_QUEUE_OOSEQ
-        struct tcp_seg* ooseq; /* Received out of sequence segments. */
-    #endif                     /* TCP_QUEUE_OOSEQ */
+    struct tcp_seg* ooseq; /* Received out of sequence segments. */
+    #endif                 /* TCP_QUEUE_OOSEQ */
 
-        struct pbuf* refused_data; /* Data previously received but not yet taken by upper layer */
+    struct pbuf* refused_data; /* Data previously received but not yet taken by upper layer */
 
     #if LWIP_CALLBACK_API || TCP_LISTEN_BACKLOG
-        struct tcp_pcb_listen* listener;
+    struct tcp_pcb_listen* listener;
     #endif /* LWIP_CALLBACK_API || TCP_LISTEN_BACKLOG */
 
     #if LWIP_CALLBACK_API
-        /* Function to be called when more send buffer space is available. */
-        tcp_sent_fn sent;
-        /* Function to be called when (in-sequence) data has arrived. */
-        tcp_recv_fn recv;
-        /* Function to be called when a connection has been set up. */
-        tcp_connected_fn connected;
-        /* Function which is called periodically. */
-        tcp_poll_fn poll;
-        /* Function to be called whenever a fatal error occurs. */
-        tcp_err_fn errf;
+    /* Function to be called when more send buffer space is available. */
+    tcp_sent_fn sent;
+    /* Function to be called when (in-sequence) data has arrived. */
+    tcp_recv_fn recv;
+    /* Function to be called when a connection has been set up. */
+    tcp_connected_fn connected;
+    /* Function which is called periodically. */
+    tcp_poll_fn poll;
+    /* Function to be called whenever a fatal error occurs. */
+    tcp_err_fn errf;
     #endif /* LWIP_CALLBACK_API */
 
     #if LWIP_TCP_TIMESTAMPS
-        u32_t ts_lastacksent;
-        u32_t ts_recent;
+    u32_t ts_lastacksent;
+    u32_t ts_recent;
     #endif /* LWIP_TCP_TIMESTAMPS */
 
-        /* idle time before KEEPALIVE is sent */
-        u32_t keep_idle;
+    /* idle time before KEEPALIVE is sent */
+    u32_t keep_idle;
     #if LWIP_TCP_KEEPALIVE
-        u32_t keep_intvl;
-        u32_t keep_cnt;
+    u32_t keep_intvl;
+    u32_t keep_cnt;
     #endif /* LWIP_TCP_KEEPALIVE */
 
-        /* Persist timer counter */
-        u8_t persist_cnt;
-        /* Persist timer back-off */
-        u8_t persist_backoff;
-        /* Number of persist probes */
-        u8_t persist_probe;
+    /* Persist timer counter */
+    u8_t persist_cnt;
+    /* Persist timer back-off */
+    u8_t persist_backoff;
+    /* Number of persist probes */
+    u8_t persist_probe;
 
-        /* KEEPALIVE counter */
-        u8_t keep_cnt_sent;
+    /* KEEPALIVE counter */
+    u8_t keep_cnt_sent;
 
     #if LWIP_WND_SCALE
-        u8_t snd_scale;
-        u8_t rcv_scale;
+    u8_t snd_scale;
+    u8_t rcv_scale;
     #endif
 };
 

@@ -84,40 +84,40 @@ extern "C" {
         #endif /* VJ_SUPPORT */
 
 typedef struct ipcp_options {
-        unsigned int neg_addr  : 1; /* Negotiate IP Address? */
-        unsigned int old_addrs : 1; /* Use old (IP-Addresses) option? */
-        unsigned int req_addr  : 1; /* Ask peer to send IP address? */
-        #if 0                       /* UNUSED */
+    unsigned int neg_addr  : 1; /* Negotiate IP Address? */
+    unsigned int old_addrs : 1; /* Use old (IP-Addresses) option? */
+    unsigned int req_addr  : 1; /* Ask peer to send IP address? */
+        #if 0                  /* UNUSED */
     unsigned int default_route          :1; /* Assign default route through interface? */
     unsigned int replace_default_route  :1; /* Replace default route through interface? */
-        #endif                      /* UNUSED */
-        #if 0                       /* UNUSED - PROXY ARP */
+        #endif                 /* UNUSED */
+        #if 0                  /* UNUSED - PROXY ARP */
     unsigned int proxy_arp              :1; /* Make proxy ARP entry for peer? */
-        #endif                      /* UNUSED - PROXY ARP */
+        #endif                 /* UNUSED - PROXY ARP */
         #if VJ_SUPPORT
-        unsigned int neg_vj : 1; /* Van Jacobson Compression? */
-        unsigned int old_vj : 1; /* use old (short) form of VJ option? */
-        unsigned int cflag  : 1;
-        #endif                          /* VJ_SUPPORT */
-        unsigned int accept_local  : 1; /* accept peer's value for ouraddr */
-        unsigned int accept_remote : 1; /* accept peer's value for hisaddr */
+    unsigned int neg_vj : 1; /* Van Jacobson Compression? */
+    unsigned int old_vj : 1; /* use old (short) form of VJ option? */
+    unsigned int cflag  : 1;
+        #endif                     /* VJ_SUPPORT */
+    unsigned int accept_local  : 1; /* accept peer's value for ouraddr */
+    unsigned int accept_remote : 1; /* accept peer's value for hisaddr */
         #if LWIP_DNS
-        unsigned int req_dns1 : 1; /* Ask peer to send primary DNS address? */
-        unsigned int req_dns2 : 1; /* Ask peer to send secondary DNS address? */
-        #endif                     /* LWIP_DNS */
+    unsigned int req_dns1 : 1; /* Ask peer to send primary DNS address? */
+    unsigned int req_dns2 : 1; /* Ask peer to send secondary DNS address? */
+        #endif                 /* LWIP_DNS */
 
-        u32_t ouraddr, hisaddr; /* Addresses in NETWORK BYTE ORDER */
+    u32_t ouraddr, hisaddr; /* Addresses in NETWORK BYTE ORDER */
         #if LWIP_DNS
-        u32_t dnsaddr[2]; /* Primary and secondary MS DNS entries */
-        #endif            /* LWIP_DNS */
-        #if 0             /* UNUSED - WINS */
+    u32_t dnsaddr[2]; /* Primary and secondary MS DNS entries */
+        #endif        /* LWIP_DNS */
+        #if 0         /* UNUSED - WINS */
     u32_t winsaddr[2];	/* Primary and secondary MS WINS entries */
-        #endif            /* UNUSED - WINS */
+        #endif        /* UNUSED - WINS */
 
         #if VJ_SUPPORT
-        u16_t vj_protocol; /* protocol value to use in VJ option */
-        u8_t maxslotindex; /* values for RFC1332 VJ compression neg. */
-        #endif             /* VJ_SUPPORT */
+    u16_t vj_protocol; /* protocol value to use in VJ option */
+    u8_t maxslotindex; /* values for RFC1332 VJ compression neg. */
+        #endif         /* VJ_SUPPORT */
 } ipcp_options;
 
         #if 0  /* UNUSED, already defined by lwIP */

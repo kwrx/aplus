@@ -87,6 +87,4 @@ long __arch_syscall6(unsigned long n, long a, long b, long c, long d, long e, lo
 }
 
 
-TEST(x86_syscall_test, {
-    DEBUG_ASSERT(__arch_syscall6(404, 1, 2, 3, 4, 5, 6) == 0xDEADBEEF);
-});
+TEST(x86_syscall_test, { DEBUG_ASSERT(__arch_syscall6(404, 1, 2, 3, 4, 5, 6) == 0xDEADBEEF); });

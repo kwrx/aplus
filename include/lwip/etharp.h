@@ -68,8 +68,8 @@ extern "C" {
  * defined here to be accessed by memp.h
  */
 struct etharp_q_entry {
-        struct etharp_q_entry* next;
-        struct pbuf* p;
+    struct etharp_q_entry* next;
+    struct pbuf* p;
 };
         #endif /* ARP_QUEUEING */
 

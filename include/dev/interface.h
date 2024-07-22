@@ -61,103 +61,103 @@
 
 typedef struct device {
 
-        int type;
-        int status;
+    int type;
+    int status;
 
-        char name[DEVICE_MAXNAMELEN];
-        char description[DEVICE_MAXDESCLEN];
+    char name[DEVICE_MAXNAMELEN];
+    char description[DEVICE_MAXDESCLEN];
 
-        uint16_t major;
-        uint16_t minor;
+    uint16_t major;
+    uint16_t minor;
 
-        uintptr_t iobase;
-        uintptr_t mmiobase;
-
-
-        spinlock_t lock;
+    uintptr_t iobase;
+    uintptr_t mmiobase;
 
 
-        void (*init)(struct device*);
-        void (*dnit)(struct device*);
-        void (*reset)(struct device*);
+    spinlock_t lock;
 
 
-        inode_t* inode;
+    void (*init)(struct device*);
+    void (*dnit)(struct device*);
+    void (*reset)(struct device*);
 
 
-        union {
+    inode_t* inode;
+
+
+    union {
+        struct {
+            union {
                 struct {
-                        union {
-                                struct {
-                                        void (*flush)(struct device*);
-                                };
-                                struct {
-                                        ssize_t (*write)(struct device*, const void*, size_t);
-                                        ssize_t (*read)(struct device*, void*, size_t);
-                                };
-                        };
-
-                        uint8_t io;
-                        ringbuffer_t buffer;
-
-                } chr;
-
+                    void (*flush)(struct device*);
+                };
                 struct {
+                    ssize_t (*write)(struct device*, const void*, size_t);
+                    ssize_t (*read)(struct device*, void*, size_t);
+                };
+            };
 
-                        size_t blksize;
-                        size_t blkcount;
-                        size_t blkmax;
-                        size_t blkoff;
+            uint8_t io;
+            ringbuffer_t buffer;
 
-                        struct {
-                                uint8_t c_data[8192];
-                                uint8_t c_cached;
-                                uint32_t c_blkno;
-                        } cache;
+        } chr;
 
-                        ssize_t (*write)(struct device*, const void*, off_t, size_t);
-                        ssize_t (*read)(struct device*, void*, off_t, size_t);
+        struct {
 
-                } blk;
+            size_t blksize;
+            size_t blkcount;
+            size_t blkmax;
+            size_t blkoff;
 
-                struct {
+            struct {
+                uint8_t c_data[8192];
+                uint8_t c_cached;
+                uint32_t c_blkno;
+            } cache;
 
-                        struct fb_var_screeninfo vs;
-                        struct fb_fix_screeninfo fs;
+            ssize_t (*write)(struct device*, const void*, off_t, size_t);
+            ssize_t (*read)(struct device*, void*, off_t, size_t);
 
-                        uintptr_t fb_base;
-                        uintptr_t fb_size;
+        } blk;
 
-                        void (*update)(struct device*);
-                        void (*wait_vsync)(struct device*);
+        struct {
 
-                } vid;
+            struct fb_var_screeninfo vs;
+            struct fb_fix_screeninfo fs;
 
-                struct {
+            uintptr_t fb_base;
+            uintptr_t fb_size;
 
-                        void (*low_level_init)(void*, uint8_t*, void*);
-                        int (*low_level_startoutput)(void*);
-                        void (*low_level_output)(void*, void*, uint16_t);
-                        void (*low_level_endoutput)(void*, uint16_t);
-                        int (*low_level_startinput)(void*);
-                        void (*low_level_input)(void*, void*, uint16_t);
-                        void (*low_level_endinput)(void*);
-                        void (*low_level_input_nomem)(void*, uint16_t);
+            void (*update)(struct device*);
+            void (*wait_vsync)(struct device*);
 
-                        void* internals;
-                        uint8_t address[6];
+        } vid;
 
-                        ip4_addr_t ip;
-                        ip4_addr_t nm;
-                        ip4_addr_t gw;
+        struct {
 
-                        struct netif interface;
+            void (*low_level_init)(void*, uint8_t*, void*);
+            int (*low_level_startoutput)(void*);
+            void (*low_level_output)(void*, void*, uint16_t);
+            void (*low_level_endoutput)(void*, uint16_t);
+            int (*low_level_startinput)(void*);
+            void (*low_level_input)(void*, void*, uint16_t);
+            void (*low_level_endinput)(void*);
+            void (*low_level_input_nomem)(void*, uint16_t);
 
-                } net;
-        };
+            void* internals;
+            uint8_t address[6];
+
+            ip4_addr_t ip;
+            ip4_addr_t nm;
+            ip4_addr_t gw;
+
+            struct netif interface;
+
+        } net;
+    };
 
 
-        void* userdata;
+    void* userdata;
 
 } device_t;
 

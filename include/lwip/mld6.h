@@ -56,18 +56,18 @@ extern "C" {
 
 /** MLD group */
 struct mld_group {
-        /** next link */
-        struct mld_group* next;
-        /** multicast address */
-        ip6_addr_t group_address;
-        /** signifies we were the last person to report */
-        u8_t last_reporter_flag;
-        /** current state of the group */
-        u8_t group_state;
-        /** timer for reporting */
-        u16_t timer;
-        /** counter of simultaneous uses */
-        u8_t use;
+    /** next link */
+    struct mld_group* next;
+    /** multicast address */
+    ip6_addr_t group_address;
+    /** signifies we were the last person to report */
+    u8_t last_reporter_flag;
+    /** current state of the group */
+    u8_t group_state;
+    /** timer for reporting */
+    u16_t timer;
+    /** counter of simultaneous uses */
+    u8_t use;
 };
 
     #define MLD6_TMR_INTERVAL 100 /* Milliseconds */

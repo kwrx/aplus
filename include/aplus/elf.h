@@ -35,9 +35,9 @@
     #if defined(KERNEL)
 
 typedef struct symbol {
-        void* address;
-        size_t size;
-        char name[1];
+    void* address;
+    size_t size;
+    char name[1];
 } symbol_t;
 
     #endif

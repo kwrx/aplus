@@ -68,17 +68,17 @@
     #endif
 PACK_STRUCT_BEGIN
 struct zep_hdr {
-        PACK_STRUCT_FLD_8(u8_t prot_id[2]);
-        PACK_STRUCT_FLD_8(u8_t prot_version);
-        PACK_STRUCT_FLD_8(u8_t type);
-        PACK_STRUCT_FLD_8(u8_t channel_id);
-        PACK_STRUCT_FIELD(u16_t device_id);
-        PACK_STRUCT_FLD_8(u8_t crc_mode);
-        PACK_STRUCT_FLD_8(u8_t unknown_1);
-        PACK_STRUCT_FIELD(u32_t timestamp[2]);
-        PACK_STRUCT_FIELD(u32_t seq_num);
-        PACK_STRUCT_FLD_8(u8_t unknown_2[10]);
-        PACK_STRUCT_FLD_8(u8_t len);
+    PACK_STRUCT_FLD_8(u8_t prot_id[2]);
+    PACK_STRUCT_FLD_8(u8_t prot_version);
+    PACK_STRUCT_FLD_8(u8_t type);
+    PACK_STRUCT_FLD_8(u8_t channel_id);
+    PACK_STRUCT_FIELD(u16_t device_id);
+    PACK_STRUCT_FLD_8(u8_t crc_mode);
+    PACK_STRUCT_FLD_8(u8_t unknown_1);
+    PACK_STRUCT_FIELD(u32_t timestamp[2]);
+    PACK_STRUCT_FIELD(u32_t seq_num);
+    PACK_STRUCT_FLD_8(u8_t unknown_2[10]);
+    PACK_STRUCT_FLD_8(u8_t len);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
     #ifdef PACK_STRUCT_USE_INCLUDES
@@ -86,9 +86,9 @@ PACK_STRUCT_END
     #endif
 
 struct zepif_state {
-        struct zepif_init init;
-        struct udp_pcb* pcb;
-        u32_t seqno;
+    struct zepif_init init;
+    struct udp_pcb* pcb;
+    u32_t seqno;
 };
 
 static u8_t zep_lowpan_timer_running;

@@ -52,20 +52,20 @@ extern "C" {
 
 /** SNMP variable binding descriptor (publically needed for traps) */
 struct snmp_varbind {
-        /** pointer to next varbind, NULL for last in list */
-        struct snmp_varbind* next;
-        /** pointer to previous varbind, NULL for first in list */
-        struct snmp_varbind* prev;
+    /** pointer to next varbind, NULL for last in list */
+    struct snmp_varbind* next;
+    /** pointer to previous varbind, NULL for first in list */
+    struct snmp_varbind* prev;
 
-        /** object identifier */
-        struct snmp_obj_id oid;
+    /** object identifier */
+    struct snmp_obj_id oid;
 
-        /** value ASN1 type */
-        u8_t type;
-        /** object value length */
-        u16_t value_len;
-        /** object value */
-        void* value;
+    /** value ASN1 type */
+    u8_t type;
+    /** object value length */
+    u16_t value_len;
+    /** object value */
+    void* value;
 };
 
 /**

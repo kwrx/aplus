@@ -40,16 +40,16 @@ static uint64_t heap_used_memory = 0;
 
 struct kmalloc_header {
 
-        union {
-                struct {
-                        char magic[4];
-                        uint32_t blocks;
-                        uint64_t size;
-                };
-                uint64_t __padding0[2];
+    union {
+        struct {
+            char magic[4];
+            uint32_t blocks;
+            uint64_t size;
         };
+        uint64_t __padding0[2];
+    };
 
-        char ptr[0];
+    char ptr[0];
 
 } __packed;
 

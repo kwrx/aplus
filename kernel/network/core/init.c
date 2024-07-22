@@ -68,8 +68,8 @@
     #endif
 PACK_STRUCT_BEGIN
 struct packed_struct_test {
-        PACK_STRUCT_FLD_8(u8_t dummy1);
-        PACK_STRUCT_FIELD(u32_t dummy2);
+    PACK_STRUCT_FLD_8(u8_t dummy1);
+    PACK_STRUCT_FIELD(u32_t dummy2);
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
     #ifdef PACK_STRUCT_USE_INCLUDES

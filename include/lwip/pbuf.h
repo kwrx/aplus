@@ -184,41 +184,41 @@ typedef enum {
 
 /** Main packet buffer struct */
 struct pbuf {
-        /** next pbuf in singly linked pbuf chain */
-        struct pbuf* next;
+    /** next pbuf in singly linked pbuf chain */
+    struct pbuf* next;
 
-        /** pointer to the actual data in the buffer */
-        void* payload;
+    /** pointer to the actual data in the buffer */
+    void* payload;
 
-        /**
-         * total length of this buffer and all next buffers in chain
-         * belonging to the same packet.
-         *
-         * For non-queue packet chains this is the invariant:
-         * p->tot_len == p->len + (p->next? p->next->tot_len: 0)
-         */
-        u16_t tot_len;
+    /**
+     * total length of this buffer and all next buffers in chain
+     * belonging to the same packet.
+     *
+     * For non-queue packet chains this is the invariant:
+     * p->tot_len == p->len + (p->next? p->next->tot_len: 0)
+     */
+    u16_t tot_len;
 
-        /** length of this buffer */
-        u16_t len;
+    /** length of this buffer */
+    u16_t len;
 
-        /** a bit field indicating pbuf type and allocation sources
-            (see PBUF_TYPE_FLAG_*, PBUF_ALLOC_FLAG_* and PBUF_TYPE_ALLOC_SRC_MASK)
-          */
-        u8_t type_internal;
+    /** a bit field indicating pbuf type and allocation sources
+        (see PBUF_TYPE_FLAG_*, PBUF_ALLOC_FLAG_* and PBUF_TYPE_ALLOC_SRC_MASK)
+      */
+    u8_t type_internal;
 
-        /** misc flags */
-        u8_t flags;
+    /** misc flags */
+    u8_t flags;
 
-        /**
-         * the reference count always equals the number of pointers
-         * that refer to this pbuf. This can be pointers from an application,
-         * the stack itself, or pbuf->next pointers from a chain.
-         */
-        LWIP_PBUF_REF_T ref;
+    /**
+     * the reference count always equals the number of pointers
+     * that refer to this pbuf. This can be pointers from an application,
+     * the stack itself, or pbuf->next pointers from a chain.
+     */
+    LWIP_PBUF_REF_T ref;
 
-        /** For incoming packets, this contains the input netif's index */
-        u8_t if_idx;
+    /** For incoming packets, this contains the input netif's index */
+    u8_t if_idx;
 };
 
 
@@ -227,11 +227,11 @@ struct pbuf {
  * for PBUF_ROM type.
  */
 struct pbuf_rom {
-        /** next pbuf in singly linked pbuf chain */
-        struct pbuf* next;
+    /** next pbuf in singly linked pbuf chain */
+    struct pbuf* next;
 
-        /** pointer to the actual data in the buffer */
-        const void* payload;
+    /** pointer to the actual data in the buffer */
+    const void* payload;
 };
 
 #if LWIP_SUPPORT_CUSTOM_PBUF
@@ -240,10 +240,10 @@ typedef void (*pbuf_free_custom_fn)(struct pbuf* p);
 
 /** A custom pbuf: like a pbuf, but following a function pointer to free it. */
 struct pbuf_custom {
-        /** The actual pbuf */
-        struct pbuf pbuf;
-        /** This function is called when pbuf_free deallocates this pbuf(_custom) */
-        pbuf_free_custom_fn custom_free_function;
+    /** The actual pbuf */
+    struct pbuf pbuf;
+    /** This function is called when pbuf_free deallocates this pbuf(_custom) */
+    pbuf_free_custom_fn custom_free_function;
 };
 #endif /* LWIP_SUPPORT_CUSTOM_PBUF */
 

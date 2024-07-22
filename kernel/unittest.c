@@ -38,8 +38,8 @@
 
 struct test_hook {
 
-        const void* ptr;
-        const char* name;
+    const void* ptr;
+    const char* name;
 
 } __packed;
 

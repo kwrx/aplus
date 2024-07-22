@@ -217,73 +217,73 @@ typedef void (*netconn_callback)(struct netconn*, enum netconn_evt, u16_t len);
 
 /** A netconn descriptor */
 struct netconn {
-        /** type of the netconn (TCP, UDP or RAW) */
-        enum netconn_type type;
-        /** current state of the netconn */
-        enum netconn_state state;
-        /** the lwIP internal protocol control block */
-        union {
-                struct ip_pcb* ip;
-                struct tcp_pcb* tcp;
-                struct udp_pcb* udp;
-                struct raw_pcb* raw;
-        } pcb;
-        /** the last asynchronous unreported error this netconn had */
-        err_t pending_err;
+    /** type of the netconn (TCP, UDP or RAW) */
+    enum netconn_type type;
+    /** current state of the netconn */
+    enum netconn_state state;
+    /** the lwIP internal protocol control block */
+    union {
+        struct ip_pcb* ip;
+        struct tcp_pcb* tcp;
+        struct udp_pcb* udp;
+        struct raw_pcb* raw;
+    } pcb;
+    /** the last asynchronous unreported error this netconn had */
+    err_t pending_err;
     #if !LWIP_NETCONN_SEM_PER_THREAD
-        /** sem that is used to synchronously execute functions in the core context */
-        sys_sem_t op_completed;
+    /** sem that is used to synchronously execute functions in the core context */
+    sys_sem_t op_completed;
     #endif
-        /** mbox where received packets are stored until they are fetched
-            by the netconn application thread (can grow quite big) */
-        sys_mbox_t recvmbox;
+    /** mbox where received packets are stored until they are fetched
+        by the netconn application thread (can grow quite big) */
+    sys_mbox_t recvmbox;
     #if LWIP_TCP
-        /** mbox where new connections are stored until processed
-            by the application thread */
-        sys_mbox_t acceptmbox;
+    /** mbox where new connections are stored until processed
+        by the application thread */
+    sys_mbox_t acceptmbox;
     #endif /* LWIP_TCP */
     #if LWIP_NETCONN_FULLDUPLEX
-        /** number of threads waiting on an mbox. This is required to unblock
-            all threads when closing while threads are waiting. */
-        int mbox_threads_waiting;
+    /** number of threads waiting on an mbox. This is required to unblock
+        all threads when closing while threads are waiting. */
+    int mbox_threads_waiting;
     #endif
-            /** only used for socket layer */
+        /** only used for socket layer */
     #if LWIP_SOCKET
-        int socket;
+    int socket;
     #endif /* LWIP_SOCKET */
     #if LWIP_SO_SNDTIMEO
-        /** timeout to wait for sending data (which means enqueueing data for sending
-            in internal buffers) in milliseconds */
-        s32_t send_timeout;
+    /** timeout to wait for sending data (which means enqueueing data for sending
+        in internal buffers) in milliseconds */
+    s32_t send_timeout;
     #endif /* LWIP_SO_RCVTIMEO */
     #if LWIP_SO_RCVTIMEO
-        /** timeout in milliseconds to wait for new data to be received
-            (or connections to arrive for listening netconns) */
-        u32_t recv_timeout;
+    /** timeout in milliseconds to wait for new data to be received
+        (or connections to arrive for listening netconns) */
+    u32_t recv_timeout;
     #endif /* LWIP_SO_RCVTIMEO */
     #if LWIP_SO_RCVBUF
-        /** maximum amount of bytes queued in recvmbox
-            not used for TCP: adjust TCP_WND instead! */
-        int recv_bufsize;
-        /** number of bytes currently in recvmbox to be received,
-            tested against recv_bufsize to limit bytes on recvmbox
-            for UDP and RAW, used for FIONREAD */
-        int recv_avail;
+    /** maximum amount of bytes queued in recvmbox
+        not used for TCP: adjust TCP_WND instead! */
+    int recv_bufsize;
+    /** number of bytes currently in recvmbox to be received,
+        tested against recv_bufsize to limit bytes on recvmbox
+        for UDP and RAW, used for FIONREAD */
+    int recv_avail;
     #endif /* LWIP_SO_RCVBUF */
     #if LWIP_SO_LINGER
-        /** values <0 mean linger is disabled, values > 0 are seconds to linger */
-        s16_t linger;
+    /** values <0 mean linger is disabled, values > 0 are seconds to linger */
+    s16_t linger;
     #endif /* LWIP_SO_LINGER */
-        /** flags holding more netconn-internal state, see NETCONN_FLAG_* defines */
-        u8_t flags;
+    /** flags holding more netconn-internal state, see NETCONN_FLAG_* defines */
+    u8_t flags;
     #if LWIP_TCP
-        /** TCP: when data passed to netconn_write doesn't fit into the send buffer,
-            this temporarily stores the message.
-            Also used during connect and close. */
-        struct api_msg* current_msg;
+    /** TCP: when data passed to netconn_write doesn't fit into the send buffer,
+        this temporarily stores the message.
+        Also used during connect and close. */
+    struct api_msg* current_msg;
     #endif /* LWIP_TCP */
-        /** A callback function that is informed about events for this netconn */
-        netconn_callback callback;
+    /** A callback function that is informed about events for this netconn */
+    netconn_callback callback;
 };
 
 /** This vector type is passed to @ref netconn_write_vectors_partly to send
@@ -292,10 +292,10 @@ struct netconn {
  *            into the other!
  */
 struct netvector {
-        /** pointer to the application buffer that contains the data to send */
-        const void* ptr;
-        /** size of the application data to send */
-        size_t len;
+    /** pointer to the application buffer that contains the data to send */
+    const void* ptr;
+    /** size of the application data to send */
+    size_t len;
 };
 
     /** Register an Network connection event */

@@ -57,224 +57,224 @@
 
 typedef struct iso9660_volume_descriptor {
 
-        uint8_t type;
-        uint8_t id[5];
-        uint8_t version;
+    uint8_t type;
+    uint8_t id[5];
+    uint8_t version;
 
 
-        union {
+    union {
 
-                struct {
+        struct {
 
-                        uint8_t boot_system_id[32];
-                        uint8_t boot_id[32];
-                        uint8_t boot_system_use[1977];
+            uint8_t boot_system_id[32];
+            uint8_t boot_id[32];
+            uint8_t boot_system_use[1977];
 
-                } __packed boot_record;
+        } __packed boot_record;
 
 
-                struct {
+        struct {
 
-                        uint8_t __unused[1];
-                        uint8_t system_id[32];
-                        uint8_t volume_id[32];
-                        uint8_t __unused2[8];
+            uint8_t __unused[1];
+            uint8_t system_id[32];
+            uint8_t volume_id[32];
+            uint8_t __unused2[8];
 
-                        struct {
-                                uint32_t lsb;
-                                uint32_t msb;
-                        } __packed volume_space_size;
+            struct {
+                uint32_t lsb;
+                uint32_t msb;
+            } __packed volume_space_size;
 
-                        uint8_t __unused3[32];
+            uint8_t __unused3[32];
 
-                        struct {
-                                uint16_t lsb;
-                                uint16_t msb;
-                        } __packed volume_set_size;
+            struct {
+                uint16_t lsb;
+                uint16_t msb;
+            } __packed volume_set_size;
 
-                        struct {
-                                uint16_t lsb;
-                                uint16_t msb;
-                        } __packed volume_sequence_number;
+            struct {
+                uint16_t lsb;
+                uint16_t msb;
+            } __packed volume_sequence_number;
 
-                        struct {
-                                uint16_t lsb;
-                                uint16_t msb;
-                        } __packed logical_block_size;
+            struct {
+                uint16_t lsb;
+                uint16_t msb;
+            } __packed logical_block_size;
 
-                        struct {
-                                uint32_t lsb;
-                                uint32_t msb;
-                        } __packed path_table_size;
+            struct {
+                uint32_t lsb;
+                uint32_t msb;
+            } __packed path_table_size;
 
-                        uint32_t type_l_path_table;
-                        uint32_t type_l_path_table_opt;
+            uint32_t type_l_path_table;
+            uint32_t type_l_path_table_opt;
 
-                        uint32_t type_m_path_table;
-                        uint32_t type_m_path_table_opt;
+            uint32_t type_m_path_table;
+            uint32_t type_m_path_table_opt;
 
-                        uint8_t root_directory_record[34];
+            uint8_t root_directory_record[34];
 
-                        uint8_t volume_set_id[128];
-                        uint8_t publisher_id[128];
-                        uint8_t preparer_id[128];
-                        uint8_t application_id[128];
-                        uint8_t copyright_file_id[37];
-                        uint8_t abstract_file_id[37];
-                        uint8_t bibliographic_file_id[37];
+            uint8_t volume_set_id[128];
+            uint8_t publisher_id[128];
+            uint8_t preparer_id[128];
+            uint8_t application_id[128];
+            uint8_t copyright_file_id[37];
+            uint8_t abstract_file_id[37];
+            uint8_t bibliographic_file_id[37];
 
-                        struct {
-                                uint8_t creation[17];
-                                uint8_t modification[17];
-                                uint8_t expiration[17];
-                                uint8_t effective[17];
-                        } __packed volume_creation_date;
+            struct {
+                uint8_t creation[17];
+                uint8_t modification[17];
+                uint8_t expiration[17];
+                uint8_t effective[17];
+            } __packed volume_creation_date;
 
-                        uint8_t file_structure_version;
-                        uint8_t __unused4[1];
+            uint8_t file_structure_version;
+            uint8_t __unused4[1];
 
-                        uint8_t application_data[512];
-                        uint8_t __unused5[653];
+            uint8_t application_data[512];
+            uint8_t __unused5[653];
 
-                } __packed primary;
-        };
+        } __packed primary;
+    };
 
 } __packed iso9660_volume_descriptor_t;
 
 
 typedef struct iso9660_directory_record {
 
-        uint8_t length;
-        uint8_t extended_attribute_record_length;
+    uint8_t length;
+    uint8_t extended_attribute_record_length;
 
-        struct {
-                uint32_t lsb;
-                uint32_t msb;
-        } __packed extent_location;
+    struct {
+        uint32_t lsb;
+        uint32_t msb;
+    } __packed extent_location;
 
-        struct {
-                uint32_t lsb;
-                uint32_t msb;
-        } __packed data_length;
+    struct {
+        uint32_t lsb;
+        uint32_t msb;
+    } __packed data_length;
 
-        struct {
-                uint8_t year;
-                uint8_t month;
-                uint8_t day;
-                uint8_t hour;
-                uint8_t minute;
-                uint8_t second;
-                uint8_t offset;
-        } __packed recording_date_time;
+    struct {
+        uint8_t year;
+        uint8_t month;
+        uint8_t day;
+        uint8_t hour;
+        uint8_t minute;
+        uint8_t second;
+        uint8_t offset;
+    } __packed recording_date_time;
 
-        uint8_t file_flags;
-        uint8_t file_unit_size;
-        uint8_t interleave_gap_size;
+    uint8_t file_flags;
+    uint8_t file_unit_size;
+    uint8_t interleave_gap_size;
 
-        struct {
-                uint16_t lsb;
-                uint16_t msb;
-        } __packed volume_sequence_number;
+    struct {
+        uint16_t lsb;
+        uint16_t msb;
+    } __packed volume_sequence_number;
 
-        uint8_t length_of_file_identifier;
-        uint8_t file_identifier[0];
+    uint8_t length_of_file_identifier;
+    uint8_t file_identifier[0];
 
 } __packed iso9660_directory_record_t;
 
 
 typedef struct iso9660_inode {
 
-        char name[ISO9660_MAX_NAME + 1];
-        char symlink[ISO9660_MAX_SYMLINK + 1];
+    char name[ISO9660_MAX_NAME + 1];
+    char symlink[ISO9660_MAX_SYMLINK + 1];
 
-        struct iso9660_directory_record record;
-        struct stat st;
+    struct iso9660_directory_record record;
+    struct stat st;
 
 } iso9660_inode_t;
 
 
 typedef struct iso9660 {
 
-        size_t blocks;
-        size_t block_size;
+    size_t blocks;
+    size_t block_size;
 
-        union {
-                uint8_t __padding[64];
-                iso9660_directory_record_t root;
-        };
+    union {
+        uint8_t __padding[64];
+        iso9660_directory_record_t root;
+    };
 
-        inode_t* dev;
-        inode_t* dir;
+    inode_t* dev;
+    inode_t* dir;
 
-        ino_t next_ino;
+    ino_t next_ino;
 
 } iso9660_t;
 
 
 typedef struct iso9660_rockridge_entry {
 
-        char name[2];
-        uint8_t length;
-        uint8_t version;
+    char name[2];
+    uint8_t length;
+    uint8_t version;
 
-        union {
+    union {
 
-                struct {
+        struct {
 
-                        uint64_t mode;
-                        uint64_t nlinks;
-                        uint64_t uid;
-                        uint64_t gid;
-                        uint64_t ino;
+            uint64_t mode;
+            uint64_t nlinks;
+            uint64_t uid;
+            uint64_t gid;
+            uint64_t ino;
 
-                } __packed px;
+        } __packed px;
 
-                struct {
+        struct {
 
-                        uint64_t dev;
-                        uint64_t rdev;
+            uint64_t dev;
+            uint64_t rdev;
 
-                } __packed pn;
+        } __packed pn;
 
-                struct {
+        struct {
 
-                        uint8_t flags;
-                        uint8_t data[0];
+            uint8_t flags;
+            uint8_t data[0];
 
-                } __packed sl;
+        } __packed sl;
 
-                struct {
+        struct {
 
-                        uint8_t flags;
+            uint8_t flags;
 
-                        struct {
+            struct {
 
-                                uint8_t flags;
-                                uint8_t length;
-                                uint8_t data[0];
+                uint8_t flags;
+                uint8_t length;
+                uint8_t data[0];
 
-                        } __packed components[0];
+            } __packed components[0];
 
-                } __packed nm;
+        } __packed nm;
 
-                struct {
+        struct {
 
-                        struct {
-                                uint32_t lsb;
-                                uint32_t msb;
-                        } __packed location;
+            struct {
+                uint32_t lsb;
+                uint32_t msb;
+            } __packed location;
 
-                } __packed cl;
+        } __packed cl;
 
-                struct {
+        struct {
 
-                        struct {
-                                uint32_t lsb;
-                                uint32_t msb;
-                        } __packed location;
+            struct {
+                uint32_t lsb;
+                uint32_t msb;
+            } __packed location;
 
-                } __packed pl;
-        };
+        } __packed pl;
+    };
 
 } __packed iso9660_rockridge_entry_t;
 

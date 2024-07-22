@@ -94,131 +94,131 @@
 __BEGIN_DECLS
 
 struct virtio_gpu_config {
-        uint32_t events_read;
-        uint32_t events_clear;
-        uint32_t num_scanouts;
-        uint32_t reserved;
+    uint32_t events_read;
+    uint32_t events_clear;
+    uint32_t num_scanouts;
+    uint32_t reserved;
 } __packed;
 
 struct virtio_gpu_ctrl_hdr {
-        uint32_t type;
-        uint32_t flags;
-        uint64_t fence_id;
-        uint32_t ctx_id;
-        uint32_t padding;
+    uint32_t type;
+    uint32_t flags;
+    uint64_t fence_id;
+    uint32_t ctx_id;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_rect {
-        uint32_t x;
-        uint32_t y;
-        uint32_t width;
-        uint32_t height;
+    uint32_t x;
+    uint32_t y;
+    uint32_t width;
+    uint32_t height;
 } __packed;
 
 struct virtio_gpu_resp_display_info {
-        struct virtio_gpu_display_one {
-                struct virtio_gpu_rect r;
-                uint32_t enabled;
-                uint32_t flags;
-        } __packed pmodes[VIRTIO_GPU_MAX_SCANOUTS];
+    struct virtio_gpu_display_one {
+        struct virtio_gpu_rect r;
+        uint32_t enabled;
+        uint32_t flags;
+    } __packed pmodes[VIRTIO_GPU_MAX_SCANOUTS];
 } __packed;
 
 struct virtio_gpu_resp_edid {
-        uint32_t size;
-        uint32_t padding;
-        uint8_t edid[1024];
+    uint32_t size;
+    uint32_t padding;
+    uint8_t edid[1024];
 } __packed;
 
 
 
 struct virtio_gpu_get_edid {
-        struct virtio_gpu_ctrl_hdr hdr;
-        uint32_t scanout;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    uint32_t scanout;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_resource_create_2d {
-        struct virtio_gpu_ctrl_hdr hdr;
-        uint32_t resource_id;
-        uint32_t format;
-        uint32_t width;
-        uint32_t height;
+    struct virtio_gpu_ctrl_hdr hdr;
+    uint32_t resource_id;
+    uint32_t format;
+    uint32_t width;
+    uint32_t height;
 } __packed;
 
 struct virtio_gpu_resource_unref {
-        struct virtio_gpu_ctrl_hdr hdr;
-        uint32_t resource_id;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    uint32_t resource_id;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_set_scanout {
-        struct virtio_gpu_ctrl_hdr hdr;
-        struct virtio_gpu_rect r;
-        uint32_t scanout_id;
-        uint32_t resource_id;
+    struct virtio_gpu_ctrl_hdr hdr;
+    struct virtio_gpu_rect r;
+    uint32_t scanout_id;
+    uint32_t resource_id;
 } __packed;
 
 struct virtio_gpu_resource_flush {
-        struct virtio_gpu_ctrl_hdr hdr;
-        struct virtio_gpu_rect r;
-        uint32_t resource_id;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    struct virtio_gpu_rect r;
+    uint32_t resource_id;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_transfer_to_host_2d {
-        struct virtio_gpu_ctrl_hdr hdr;
-        struct virtio_gpu_rect r;
-        uint64_t offset;
-        uint32_t resource_id;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    struct virtio_gpu_rect r;
+    uint64_t offset;
+    uint32_t resource_id;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_resource_attach_backing {
-        struct virtio_gpu_ctrl_hdr hdr;
-        uint32_t resource_id;
-        uint32_t nr_entries;
-        struct virtio_gpu_mem_entry {
-                uint64_t address;
-                uint32_t length;
-                uint32_t padding;
-        } __packed entries[1];
+    struct virtio_gpu_ctrl_hdr hdr;
+    uint32_t resource_id;
+    uint32_t nr_entries;
+    struct virtio_gpu_mem_entry {
+        uint64_t address;
+        uint32_t length;
+        uint32_t padding;
+    } __packed entries[1];
 } __packed;
 
 struct virtio_gpu_resource_detach_backing {
-        struct virtio_gpu_ctrl_hdr hdr;
-        uint32_t resource_id;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    uint32_t resource_id;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_cursor_pos {
-        uint32_t scanout_id;
-        uint32_t x;
-        uint32_t y;
-        uint32_t padding;
+    uint32_t scanout_id;
+    uint32_t x;
+    uint32_t y;
+    uint32_t padding;
 } __packed;
 
 struct virtio_gpu_update_cursor {
-        struct virtio_gpu_ctrl_hdr hdr;
-        struct virtio_gpu_cursor_pos pos;
-        uint32_t resource_id;
-        uint32_t hot_x;
-        uint32_t hot_y;
-        uint32_t padding;
+    struct virtio_gpu_ctrl_hdr hdr;
+    struct virtio_gpu_cursor_pos pos;
+    uint32_t resource_id;
+    uint32_t hot_x;
+    uint32_t hot_y;
+    uint32_t padding;
 } __packed;
 
 
 struct virtio_gpu_response {
-        struct virtio_gpu_ctrl_hdr hdr;
-        union {
-                struct virtio_gpu_resp_display_info display_info;
-                struct virtio_gpu_resp_edid edid;
-        };
+    struct virtio_gpu_ctrl_hdr hdr;
+    union {
+        struct virtio_gpu_resp_display_info display_info;
+        struct virtio_gpu_resp_edid edid;
+    };
 } __packed;
 
 
 struct virtgpu {
-        struct virtio_driver* driver;
-        uint64_t resource_ids;
+    struct virtio_driver* driver;
+    uint64_t resource_ids;
 } __packed;
 
 

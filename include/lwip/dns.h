@@ -71,11 +71,11 @@ extern "C" {
     #if DNS_LOCAL_HOSTLIST
 /** struct used for local host-list */
 struct local_hostlist_entry {
-        /** static hostname */
-        const char* name;
-        /** static host address in network byteorder */
-        ip_addr_t addr;
-        struct local_hostlist_entry* next;
+    /** static hostname */
+    const char* name;
+    /** static host address in network byteorder */
+    ip_addr_t addr;
+    struct local_hostlist_entry* next;
 };
         #define DNS_LOCAL_HOSTLIST_ELEM(name, addr_init) {name, addr_init, NULL}
         #if DNS_LOCAL_HOSTLIST_IS_DYNAMIC

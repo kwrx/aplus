@@ -72,18 +72,18 @@ extern "C" {
  * from all the other groups
  */
 struct igmp_group {
-        /** next link */
-        struct igmp_group* next;
-        /** multicast address */
-        ip4_addr_t group_address;
-        /** signifies we were the last person to report */
-        u8_t last_reporter_flag;
-        /** current state of the group */
-        u8_t group_state;
-        /** timer for reporting, negative is OFF */
-        u16_t timer;
-        /** counter of simultaneous uses */
-        u8_t use;
+    /** next link */
+    struct igmp_group* next;
+    /** multicast address */
+    ip4_addr_t group_address;
+    /** signifies we were the last person to report */
+    u8_t last_reporter_flag;
+    /** current state of the group */
+    u8_t group_state;
+    /** timer for reporting, negative is OFF */
+    u16_t timer;
+    /** counter of simultaneous uses */
+    u8_t use;
 };
 
 /*  Prototypes */
