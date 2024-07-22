@@ -148,9 +148,8 @@ MODULE_LICENSE("GPL");
 
 
 #define AHCI_MEMORY_SIZE    (1024 * 1024 * 5)
-#define AHCI_MEMORY_IOCACHE (512 * 1024) /* 128 KiB for each device (4MiB at <AHCI_MEMORY_AREA+512KiB>) */
+#define AHCI_MEMORY_IOCACHE (512 * 1024) /* 128 KiB for each device (4MiB at <ahci->contiguous_memory_area+512KiB>) */
 
-#define AHCI_MEMORY_AREA (ahci->contiguous_memory_area)
 #define AHCI_MAX_DEVICES (32)
 
 #define AHCI_DEVICE_INDEX(d) (((long)d->minor >> 3))
@@ -520,7 +519,7 @@ static void satapi_init(device_t* device) {
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i   = 1;
 
@@ -528,7 +527,7 @@ static void satapi_init(device_t* device) {
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
 
 
 
@@ -557,7 +556,7 @@ static void satapi_init(device_t* device) {
 
     ata_identify_t identify = {0};
 
-    memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
+    memcpy(&identify, (void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
 
 
 
@@ -568,7 +567,7 @@ static void satapi_init(device_t* device) {
     cmd->a     = 1;
     cmd->prdtl = 1;
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 2048 - 1;
     tbl->prdt[0].i   = 1;
 
@@ -576,7 +575,7 @@ static void satapi_init(device_t* device) {
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 2048);
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 2048);
 
 
 
@@ -612,8 +611,8 @@ static void satapi_init(device_t* device) {
 
 
     /* Update info */
-    device->blk.blkcount = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP)));
-    device->blk.blksize  = be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP)));
+    device->blk.blkcount = be32_to_cpu(mmio_r32(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP)));
+    device->blk.blksize  = be32_to_cpu(mmio_r32(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP)));
 
     DEBUG_ASSERT(device->blk.blkcount);
     DEBUG_ASSERT(device->blk.blksize == 2048);
@@ -640,8 +639,8 @@ static void satapi_init(device_t* device) {
             "   Sectors:    %d\n"
             "   Block:      %d\n",
 
-            i, identify.model, identify.serial, identify.firmware, be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP))),
-            be32_to_cpu(mmio_r32(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP))));
+            i, identify.model, identify.serial, identify.firmware, be32_to_cpu(mmio_r32(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17) + 0, ARCH_VMM_AREA_HEAP))),
+            be32_to_cpu(mmio_r32(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17) + 4, ARCH_VMM_AREA_HEAP))));
 #endif
 }
 
@@ -684,7 +683,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 11) - 1;
     tbl->prdt[0].i   = 1;
 
@@ -692,7 +691,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 11));
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 11));
 
 
 
@@ -743,7 +742,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     }
 
 
-    memcpy(buf, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 11);
+    memcpy(buf, (void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 11);
 
 
     DEBUG_ASSERT(cmd->prdbc == (count << 11));
@@ -775,7 +774,7 @@ static void sata_init(device_t* device) {
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17);
     tbl->prdt[0].dbc = 512 - 1;
     tbl->prdt[0].i   = 1;
 
@@ -783,7 +782,7 @@ static void sata_init(device_t* device) {
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), (0), 512);
 
 
 
@@ -812,7 +811,7 @@ static void sata_init(device_t* device) {
 
     ata_identify_t identify = {0};
 
-    memcpy(&identify, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
+    memcpy(&identify, (void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (i << 17), ARCH_VMM_AREA_HEAP)), sizeof(identify));
 
 
     device->blk.blkcount = identify.sectors_28 ? identify.sectors_28 : identify.sectors_48;
@@ -955,7 +954,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i   = 1;
 
@@ -963,7 +962,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
 
 
 
@@ -1008,7 +1007,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     }
 
 
-    memcpy(buf, (void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 9);
+    memcpy(buf, (void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), count << 9);
 
 
     DEBUG_ASSERT(cmd->prdbc == (count << 9));
@@ -1053,7 +1052,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
 
     hba_cmd_table_t volatile* tbl = (hba_cmd_table_t volatile*)(arch_vmm_p2v(cmd->ctba, ARCH_VMM_AREA_HEAP));
 
-    tbl->prdt[0].dba = AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17);
+    tbl->prdt[0].dba = ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17);
     tbl->prdt[0].dbc = (count << 9) - 1;
     tbl->prdt[0].i   = 1;
 
@@ -1061,7 +1060,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     memset((void*)&tbl->cfis, 0, sizeof(tbl->cfis));
     memset((void*)&tbl->acmd, 0, sizeof(tbl->acmd));
 
-    memset((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
+    memset((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (0), (count << 9));
 
 
 
@@ -1086,7 +1085,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     h2d->counth = (count >> 8) & 0xFF;
 
 
-    memcpy((void*)(arch_vmm_p2v(AHCI_MEMORY_AREA + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (buf), (count << 9));
+    memcpy((void*)(arch_vmm_p2v(ahci->contiguous_memory_area + AHCI_MEMORY_IOCACHE + (d << 17), ARCH_VMM_AREA_HEAP)), (buf), (count << 9));
 
 
     while (ahci->hba->ports[d].tfd & (ATA_SR_BSY | ATA_SR_DRQ))
@@ -1308,10 +1307,10 @@ void init(const char* args) {
             }
 
 
-            ahci->hba->ports[i].clb  = AHCI_MEMORY_AREA + (i << 10);
+            ahci->hba->ports[i].clb  = ahci->contiguous_memory_area + (i << 10);
             ahci->hba->ports[i].clbu = 0;
 
-            ahci->hba->ports[i].fb  = AHCI_MEMORY_AREA + (32 << 10) + (i << 8);
+            ahci->hba->ports[i].fb  = ahci->contiguous_memory_area + (32 << 10) + (i << 8);
             ahci->hba->ports[i].fbu = 0;
 
 
@@ -1321,7 +1320,7 @@ void init(const char* args) {
             for (int j = 0; j < 32; j++) {
 
                 clbp[j].prdtl = 8;
-                clbp[j].ctba  = AHCI_MEMORY_AREA + (40 << 10) + (i << 13) + (j << 8);
+                clbp[j].ctba  = ahci->contiguous_memory_area + (40 << 10) + (i << 13) + (j << 8);
                 clbp[j].ctbau = 0;
             }
 
