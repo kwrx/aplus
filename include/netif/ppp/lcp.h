@@ -103,58 +103,58 @@ extern "C" {
         /* An endpoint discriminator, used with multilink. */
         #define MAX_ENDP_LEN 20 /* maximum length of discriminator value */
 struct epdisc {
-        unsigned char class_; /* -- The word "class" is reserved in C++. */
-        unsigned char length;
-        unsigned char value[MAX_ENDP_LEN];
+    unsigned char class_; /* -- The word "class" is reserved in C++. */
+    unsigned char length;
+    unsigned char value[MAX_ENDP_LEN];
 };
 
 /*
  * The state of options is described by an lcp_options structure.
  */
 typedef struct lcp_options {
-        unsigned int passive : 1;      /* Don't die if we don't get a response */
-        unsigned int silent  : 1;      /* Wait for the other end to start first */
-        #if 0                          /* UNUSED */
+    unsigned int passive : 1;      /* Don't die if we don't get a response */
+    unsigned int silent  : 1;      /* Wait for the other end to start first */
+        #if 0                     /* UNUSED */
     unsigned int restart           :1; /* Restart vs. exit after close */
-        #endif                         /* UNUSED */
-        unsigned int neg_mru      : 1; /* Negotiate the MRU? */
-        unsigned int neg_asyncmap : 1; /* Negotiate the async map? */
+        #endif                    /* UNUSED */
+    unsigned int neg_mru      : 1; /* Negotiate the MRU? */
+    unsigned int neg_asyncmap : 1; /* Negotiate the async map? */
         #if PAP_SUPPORT
-        unsigned int neg_upap : 1; /* Ask for UPAP authentication? */
-        #endif                     /* PAP_SUPPORT */
+    unsigned int neg_upap : 1; /* Ask for UPAP authentication? */
+        #endif                 /* PAP_SUPPORT */
         #if CHAP_SUPPORT
-        unsigned int neg_chap : 1; /* Ask for CHAP authentication? */
-        #endif                     /* CHAP_SUPPORT */
+    unsigned int neg_chap : 1; /* Ask for CHAP authentication? */
+        #endif                 /* CHAP_SUPPORT */
         #if EAP_SUPPORT
-        unsigned int neg_eap : 1;           /* Ask for EAP authentication? */
-        #endif                              /* EAP_SUPPORT */
-        unsigned int neg_magicnumber   : 1; /* Ask for magic number? */
-        unsigned int neg_pcompression  : 1; /* HDLC Protocol Field Compression? */
-        unsigned int neg_accompression : 1; /* HDLC Address/Control Field Compression? */
+    unsigned int neg_eap : 1;           /* Ask for EAP authentication? */
+        #endif                          /* EAP_SUPPORT */
+    unsigned int neg_magicnumber   : 1; /* Ask for magic number? */
+    unsigned int neg_pcompression  : 1; /* HDLC Protocol Field Compression? */
+    unsigned int neg_accompression : 1; /* HDLC Address/Control Field Compression? */
         #if LQR_SUPPORT
-        unsigned int neg_lqr : 1;  /* Negotiate use of Link Quality Reports */
-        #endif                     /* LQR_SUPPORT */
-        unsigned int neg_cbcp : 1; /* Negotiate use of CBCP */
+    unsigned int neg_lqr : 1;  /* Negotiate use of Link Quality Reports */
+        #endif                 /* LQR_SUPPORT */
+    unsigned int neg_cbcp : 1; /* Negotiate use of CBCP */
         #ifdef HAVE_MULTILINK
-        unsigned int neg_mrru : 1;     /* negotiate multilink MRRU */
-        #endif                         /* HAVE_MULTILINK */
-        unsigned int neg_ssnhf    : 1; /* negotiate short sequence numbers */
-        unsigned int neg_endpoint : 1; /* negotiate endpoint discriminator */
+    unsigned int neg_mrru : 1;     /* negotiate multilink MRRU */
+        #endif                     /* HAVE_MULTILINK */
+    unsigned int neg_ssnhf    : 1; /* negotiate short sequence numbers */
+    unsigned int neg_endpoint : 1; /* negotiate endpoint discriminator */
 
-        u16_t mru; /* Value of MRU */
+    u16_t mru; /* Value of MRU */
         #ifdef HAVE_MULTILINK
-        u16_t mrru; /* Value of MRRU, and multilink enable */
-        #endif      /* MULTILINK */
+    u16_t mrru; /* Value of MRRU, and multilink enable */
+        #endif  /* MULTILINK */
         #if CHAP_SUPPORT
-        u8_t chap_mdtype; /* which MD types (hashing algorithm) */
-        #endif            /* CHAP_SUPPORT */
-        u32_t asyncmap;   /* Value of async map */
-        u32_t magicnumber;
-        u8_t numloops; /* Number of loops during magic number neg. */
+    u8_t chap_mdtype; /* which MD types (hashing algorithm) */
+        #endif        /* CHAP_SUPPORT */
+    u32_t asyncmap;   /* Value of async map */
+    u32_t magicnumber;
+    u8_t numloops; /* Number of loops during magic number neg. */
         #if LQR_SUPPORT
-        u32_t lqr_period;       /* Reporting period for LQR 1/100ths second */
-        #endif                  /* LQR_SUPPORT */
-        struct epdisc endpoint; /* endpoint discriminator */
+    u32_t lqr_period;       /* Reporting period for LQR 1/100ths second */
+        #endif              /* LQR_SUPPORT */
+    struct epdisc endpoint; /* endpoint discriminator */
 } lcp_options;
 
 void lcp_open(ppp_pcb* pcb);

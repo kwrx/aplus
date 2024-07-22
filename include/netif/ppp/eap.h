@@ -110,35 +110,35 @@ enum eap_state_code {
 };
 
 struct eap_auth {
-        const char* ea_name;          /* Our name */
-        char ea_peer[MAXNAMELEN + 1]; /* Peer's name */
-        void* ea_session;             /* Authentication library linkage */
-        u_char* ea_skey;              /* Shared encryption key */
-        u_short ea_namelen;           /* Length of our name */
-        u_short ea_peerlen;           /* Length of peer's name */
-        enum eap_state_code ea_state;
-        u_char ea_id;        /* Current id */
-        u_char ea_requests;  /* Number of Requests sent/received */
-        u_char ea_responses; /* Number of Responses */
-        u_char ea_type;      /* One of EAPT_* */
-        u32_t ea_keyflags;   /* SRP shared key usage flags */
+    const char* ea_name;          /* Our name */
+    char ea_peer[MAXNAMELEN + 1]; /* Peer's name */
+    void* ea_session;             /* Authentication library linkage */
+    u_char* ea_skey;              /* Shared encryption key */
+    u_short ea_namelen;           /* Length of our name */
+    u_short ea_peerlen;           /* Length of peer's name */
+    enum eap_state_code ea_state;
+    u_char ea_id;        /* Current id */
+    u_char ea_requests;  /* Number of Requests sent/received */
+    u_char ea_responses; /* Number of Responses */
+    u_char ea_type;      /* One of EAPT_* */
+    u32_t ea_keyflags;   /* SRP shared key usage flags */
 };
 
         #ifndef EAP_MAX_CHALLENGE_LENGTH
             #define EAP_MAX_CHALLENGE_LENGTH 24
         #endif
 typedef struct eap_state {
-        struct eap_auth es_client; /* Client (authenticatee) data */
+    struct eap_auth es_client; /* Client (authenticatee) data */
         #if PPP_SERVER
-        struct eap_auth es_server; /* Server (authenticator) data */
-        #endif                     /* PPP_SERVER */
-        int es_savedtime;          /* Saved timeout */
-        int es_rechallenge;        /* EAP rechallenge interval */
-        int es_lwrechallenge;      /* SRP lightweight rechallenge inter */
-        u8_t es_usepseudo;         /* Use SRP Pseudonym if offered one */
-        int es_usedpseudo;         /* Set if we already sent PN */
-        int es_challen;            /* Length of challenge string */
-        u_char es_challenge[EAP_MAX_CHALLENGE_LENGTH];
+    struct eap_auth es_server; /* Server (authenticator) data */
+        #endif                 /* PPP_SERVER */
+    int es_savedtime;          /* Saved timeout */
+    int es_rechallenge;        /* EAP rechallenge interval */
+    int es_lwrechallenge;      /* SRP lightweight rechallenge inter */
+    u8_t es_usepseudo;         /* Use SRP Pseudonym if offered one */
+    int es_usedpseudo;         /* Set if we already sent PN */
+    int es_challen;            /* Length of challenge string */
+    u_char es_challenge[EAP_MAX_CHALLENGE_LENGTH];
 } eap_state;
 
         /*

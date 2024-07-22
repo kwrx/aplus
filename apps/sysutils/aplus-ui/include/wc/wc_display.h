@@ -13,22 +13,22 @@ extern "C" {
 
 typedef struct wc_display {
 
-        int fd;
-        struct fb_var_screeninfo var;
-        struct fb_fix_screeninfo fix;
+    int fd;
+    struct fb_var_screeninfo var;
+    struct fb_fix_screeninfo fix;
 
-        size_t offset_x;
-        size_t offset_y;
-        size_t width;
-        size_t height;
+    size_t offset_x;
+    size_t offset_y;
+    size_t width;
+    size_t height;
 
-        cairo_surface_t* surface;
-        cairo_t* cr;
+    cairo_surface_t* surface;
+    cairo_t* cr;
 
-        wc_ref_t ref;
+    wc_ref_t ref;
 
 
-        struct wc_display* next;
+    struct wc_display* next;
 
 } wc_display_t;
 

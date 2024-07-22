@@ -59,13 +59,13 @@ dist: $(TARGET) INSTALLALL
 	$(QUIET)mkdir -p                         aplus-$(PLATFORM)/utils
 	$(QUIET)cp -r $(SYSROOT)                 aplus-$(PLATFORM)
 	$(QUIET)cp -r docs/README.md             aplus-$(PLATFORM)
-	$(QUIET)cp -r requirements.txt      aplus-$(PLATFORM)
-	$(QUIET)cp -r scripts/run-qemu       aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-initrd     aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-grubcfg    aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-image      aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-report     aplus-$(PLATFORM)/utils
-	$(QUIET)cp -r scripts/gen-pkg.py     aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r requirements.txt      	 aplus-$(PLATFORM)
+	$(QUIET)cp -r scripts/run-qemu       	 aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-initrd     	 aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-grubcfg    	 aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-image          aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-report     	 aplus-$(PLATFORM)/utils
+	$(QUIET)cp -r scripts/gen-pkg.py     	 aplus-$(PLATFORM)/utils
 	$(QUIET)tar cJf aplus-$(PLATFORM).tar.xz aplus-$(PLATFORM) 
 	$(QUIET)tar czf aplus-$(PLATFORM).tar.gz aplus-$(PLATFORM) 
 	$(QUIET)zip     aplus-$(PLATFORM).zip    aplus-$(PLATFORM)
@@ -78,8 +78,27 @@ run: install
 run-live: install-live
 	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
+run-remote: install
+	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE) $(PLATFORM) $(VM_DEBUG)
+
+run-live-remote: install-live
+	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE) $(PLATFORM) $(VM_DEBUG)
+
+run-headless: install
+	$(QUIET)./scripts/run-$(VM) --headless $(PLATFORM) $(VM_DEBUG)
+
+run-live-headless: install-live
+	$(QUIET)./scripts/run-$(VM) --headless $(PLATFORM) $(VM_DEBUG)
+
 run-fast:
 	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
+
+run-fast-remote:
+	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE)$(PLATFORM) $(VM_DEBUG)
+
+run-fast-headless:
+	$(QUIET)./scripts/run-$(VM) --headless $(PLATFORM) $(VM_DEBUG)
+
 
 clean: CLEANALL
 distclean: clean DISTCLEANALL

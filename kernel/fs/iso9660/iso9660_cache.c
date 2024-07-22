@@ -132,8 +132,8 @@ iso9660_inode_t* iso9660_cache_fetch(cache_t* cache, iso9660_t* iso9660, size_t 
 
                     struct {
 
-                            uint8_t flags;
-                            uint8_t length;
+                        uint8_t flags;
+                        uint8_t length;
 
                     } __packed sl_component = {0};
 

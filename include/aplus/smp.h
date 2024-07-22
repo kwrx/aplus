@@ -77,31 +77,31 @@ typedef uint64_t cpuid_t;
 
 typedef struct cpu {
 
-        cpuid_t id;
+    cpuid_t id;
 
-        void* frame;
-        void* tss;
-        void* kstack;
-        void* ustack;
+    void* frame;
+    void* tss;
+    void* kstack;
+    void* ustack;
 
-        int errno;
+    int errno;
 
-        uint64_t node;
-        uint64_t archid;
-        uint64_t flags;
-        uint64_t features[SMP_CPU_MAX_FEATURES];
+    uint64_t node;
+    uint64_t archid;
+    uint64_t flags;
+    uint64_t features[SMP_CPU_MAX_FEATURES];
 
-        vmm_address_space_t address_space;
+    vmm_address_space_t address_space;
 
-        task_t* sched_running;
-        task_t* sched_queue;
-        size_t sched_count;
+    task_t* sched_running;
+    task_t* sched_queue;
+    size_t sched_count;
 
-        uint64_t ticks;
-        struct timespec uptime;
+    uint64_t ticks;
+    struct timespec uptime;
 
-        spinlock_t global_lock;
-        spinlock_t sched_lock;
+    spinlock_t global_lock;
+    spinlock_t sched_lock;
 
 } cpu_t;
 

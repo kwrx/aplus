@@ -70,47 +70,47 @@ typedef u16_t in_port_t;
     #if LWIP_IPV4
 /* members are in network byte order */
 struct sockaddr_in {
-        union {
-                sa_family_t sin_family;
-                u16_t sin_len : 8;
-        };
-        in_port_t sin_port;
-        struct in_addr sin_addr;
+    union {
+        sa_family_t sin_family;
+        u16_t sin_len : 8;
+    };
+    in_port_t sin_port;
+    struct in_addr sin_addr;
         #define SIN_ZERO_LEN 8
-        char sin_zero[SIN_ZERO_LEN];
+    char sin_zero[SIN_ZERO_LEN];
 };
     #endif /* LWIP_IPV4 */
 
     #if LWIP_IPV6
 struct sockaddr_in6 {
-        union {
-                sa_family_t sin6_family; /* AF_INET6                    */
-                u16_t sin6_len : 8;      /* length of this structure    */
-        };
-        in_port_t sin6_port;       /* Transport layer port #      */
-        u32_t sin6_flowinfo;       /* IPv6 flow information       */
-        struct in6_addr sin6_addr; /* IPv6 address                */
-        u32_t sin6_scope_id;       /* Set of interfaces for scope */
+    union {
+        sa_family_t sin6_family; /* AF_INET6                    */
+        u16_t sin6_len : 8;      /* length of this structure    */
+    };
+    in_port_t sin6_port;       /* Transport layer port #      */
+    u32_t sin6_flowinfo;       /* IPv6 flow information       */
+    struct in6_addr sin6_addr; /* IPv6 address                */
+    u32_t sin6_scope_id;       /* Set of interfaces for scope */
 };
     #endif /* LWIP_IPV6 */
 
 struct sockaddr {
-        union {
-                sa_family_t sa_family;
-                u16_t sa_len : 8;
-        };
-        char sa_data[14];
+    union {
+        sa_family_t sa_family;
+        u16_t sa_len : 8;
+    };
+    char sa_data[14];
 };
 
 struct sockaddr_storage {
-        union {
-                sa_family_t ss_family;
-                u16_t s2_len : 8;
-        };
-        char s2_data1[2];
-        u32_t s2_data2[3];
+    union {
+        sa_family_t ss_family;
+        u16_t s2_len : 8;
+    };
+    char s2_data1[2];
+    u32_t s2_data2[3];
     #if LWIP_IPV6
-        u32_t s2_data3[3];
+    u32_t s2_data3[3];
     #endif /* LWIP_IPV6 */
 };
 
@@ -134,13 +134,13 @@ typedef u32_t socklen_t;
     #endif
 
 struct msghdr {
-        void* msg_name;
-        socklen_t msg_namelen;
-        struct iovec* msg_iov;
-        int msg_iovlen;
-        void* msg_control;
-        socklen_t msg_controllen;
-        int msg_flags;
+    void* msg_name;
+    socklen_t msg_namelen;
+    struct iovec* msg_iov;
+    int msg_iovlen;
+    void* msg_control;
+    socklen_t msg_controllen;
+    int msg_flags;
 };
 
     /* struct msghdr->msg_flags bit field values */
@@ -149,9 +149,9 @@ struct msghdr {
 
 /* RFC 3542, Section 20: Ancillary Data */
 struct cmsghdr {
-        socklen_t cmsg_len; /* number of bytes, including header */
-        int cmsg_level;     /* originating protocol */
-        int cmsg_type;      /* protocol-specific type */
+    socklen_t cmsg_len; /* number of bytes, including header */
+    int cmsg_level;     /* originating protocol */
+    int cmsg_type;      /* protocol-specific type */
 };
     /* Data section follows header and possible padding, typically referred to as
           unsigned char cmsg_data[]; */
@@ -180,7 +180,7 @@ struct cmsghdr {
     /* Set socket options argument */
     #define IFNAMSIZ NETIF_NAMESIZE
 struct ifreq {
-        char ifr_name[IFNAMSIZ]; /* Interface name */
+    char ifr_name[IFNAMSIZ]; /* Interface name */
 };
 
     /* Socket protocol types (TCP/UDP/RAW) */
@@ -223,8 +223,8 @@ struct ifreq {
  * Structure used for manipulating linger option.
  */
 struct linger {
-        int l_onoff;  /* option on/off */
-        int l_linger; /* linger time in seconds */
+    int l_onoff;  /* option on/off */
+    int l_linger; /* linger time in seconds */
 };
 
     /*
@@ -316,15 +316,15 @@ struct linger {
         #define IP_DROP_MEMBERSHIP 4
 
 typedef struct ip_mreq {
-        struct in_addr imr_multiaddr; /* IP multicast address of group */
-        struct in_addr imr_interface; /* local IP address of interface */
+    struct in_addr imr_multiaddr; /* IP multicast address of group */
+    struct in_addr imr_interface; /* local IP address of interface */
 } ip_mreq;
     #endif /* LWIP_IGMP */
 
     #if LWIP_IPV4
 struct in_pktinfo {
-        unsigned int ipi_ifindex; /* Interface index */
-        struct in_addr ipi_addr;  /* Destination (from header) address */
+    unsigned int ipi_ifindex; /* Interface index */
+    struct in_addr ipi_addr;  /* Destination (from header) address */
 };
     #endif /* LWIP_IPV4 */
 
@@ -338,8 +338,8 @@ struct in_pktinfo {
         #define IPV6_DROP_MEMBERSHIP IPV6_LEAVE_GROUP
 
 typedef struct ipv6_mreq {
-        struct in6_addr ipv6mr_multiaddr; /*  IPv6 multicast addr */
-        unsigned int ipv6mr_interface;    /*  interface index, or 0 */
+    struct in6_addr ipv6mr_multiaddr; /*  IPv6 multicast addr */
+    unsigned int ipv6mr_interface;    /*  interface index, or 0 */
 } ipv6_mreq;
     #endif /* LWIP_IPV6_MLD */
 
@@ -484,7 +484,7 @@ typedef struct ipv6_mreq {
         #define FD_ZERO(p)            memset((void*)(p), 0, sizeof(*(p)))
 
 typedef struct fd_set {
-        unsigned char fd_bits[(FD_SETSIZE + 7) / 8];
+    unsigned char fd_bits[(FD_SETSIZE + 7) / 8];
 } fd_set;
 
     #elif FD_SETSIZE < (LWIP_SOCKET_OFFSET + MEMP_NUM_NETCONN)
@@ -509,9 +509,9 @@ typedef struct fd_set {
         #define POLLHUP    0x200
 typedef unsigned int nfds_t;
 struct pollfd {
-        int fd;
-        short events;
-        short revents;
+    int fd;
+    short events;
+    short revents;
 };
     #endif
 
@@ -523,8 +523,8 @@ struct pollfd {
 
     #if LWIP_TIMEVAL_PRIVATE
 struct timeval {
-        long tv_sec;  /* seconds */
-        long tv_usec; /* and microseconds */
+    long tv_sec;  /* seconds */
+    long tv_usec; /* and microseconds */
 };
     #endif /* LWIP_TIMEVAL_PRIVATE */
 

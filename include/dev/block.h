@@ -54,38 +54,38 @@ __BEGIN_DECLS
 
 typedef struct block_gpt_partition {
 
-        uint8_t sig[8];
+    uint8_t sig[8];
 
-        uint32_t revision;
-        uint32_t header_size;
-        uint32_t header_crc32;
-        uint32_t reserved;
+    uint32_t revision;
+    uint32_t header_size;
+    uint32_t header_crc32;
+    uint32_t reserved;
 
-        uint64_t lba_current;
-        uint64_t lba_backup;
-        uint64_t lba_first;
-        uint64_t lba_last;
+    uint64_t lba_current;
+    uint64_t lba_backup;
+    uint64_t lba_first;
+    uint64_t lba_last;
 
-        uint8_t guid[16];
+    uint8_t guid[16];
 
-        uint64_t lba_table;
-        uint32_t table_entries;
-        uint32_t table_entry_size;
-        uint32_t table_crc32;
+    uint64_t lba_table;
+    uint32_t table_entries;
+    uint32_t table_entry_size;
+    uint32_t table_crc32;
 
 } __packed block_gpt_partition_t;
 
 
 typedef struct block_gpt_partition_entry {
 
-        uint8_t type_guid[16];
-        uint8_t unique_guid[16];
+    uint8_t type_guid[16];
+    uint8_t unique_guid[16];
 
-        uint64_t lba_first;
-        uint64_t lba_last;
+    uint64_t lba_first;
+    uint64_t lba_last;
 
-        uint64_t attributes;
-        uint16_t name[36];
+    uint64_t attributes;
+    uint16_t name[36];
 
 } __packed block_gpt_partition_entry_t;
 
@@ -93,23 +93,23 @@ typedef struct block_gpt_partition_entry {
 
 typedef struct block_dos_partition {
 
-        uint8_t attributes;
+    uint8_t attributes;
 
-        struct {
-                uint8_t h;
-                uint16_t s : 6;
-                uint16_t c : 10;
-        } chs_start;
+    struct {
+        uint8_t h;
+        uint16_t s : 6;
+        uint16_t c : 10;
+    } chs_start;
 
-        uint8_t type;
-        struct {
-                uint8_t h;
-                uint16_t s : 6;
-                uint16_t c : 10;
-        } chs_end;
+    uint8_t type;
+    struct {
+        uint8_t h;
+        uint16_t s : 6;
+        uint16_t c : 10;
+    } chs_end;
 
-        uint32_t lba_start;
-        uint32_t lba_blocks;
+    uint32_t lba_start;
+    uint32_t lba_blocks;
 
 } __packed block_dos_partition_t;
 

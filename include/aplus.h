@@ -212,97 +212,97 @@
 
 struct syscore {
 
-        struct {
+    struct {
 
-                uintptr_t phys_upper;
-                uintptr_t phys_lower;
+        uintptr_t phys_upper;
+        uintptr_t phys_lower;
 
-        } memory;
+    } memory;
 
-        struct {
-
-                struct {
-                        uintptr_t address;
-                        uintptr_t length;
-                        uintptr_t type;
-                } ptr[CONFIG_BUFSIZ << 2];
-
-                size_t count;
-
-        } mmap;
+    struct {
 
         struct {
+            uintptr_t address;
+            uintptr_t length;
+            uintptr_t type;
+        } ptr[CONFIG_BUFSIZ << 2];
 
-                char cmdline[CONFIG_BUFSIZ];
-                char bootloader[CONFIG_BUFSIZ];
+        size_t count;
 
-        } boot;
+    } mmap;
 
-        struct {
+    struct {
 
-                uint16_t width;
-                uint16_t height;
-                uint16_t depth;
-                uint32_t pitch;
-                uintptr_t address;
+        char cmdline[CONFIG_BUFSIZ];
+        char bootloader[CONFIG_BUFSIZ];
 
-                uint8_t red_field_position;
-                uint8_t green_field_position;
-                uint8_t blue_field_position;
+    } boot;
 
-                uint8_t red_mask_size;
-                uint8_t green_mask_size;
-                uint8_t blue_mask_size;
+    struct {
 
-        } framebuffer;
+        uint16_t width;
+        uint16_t height;
+        uint16_t depth;
+        uint32_t pitch;
+        uintptr_t address;
 
+        uint8_t red_field_position;
+        uint8_t green_field_position;
+        uint8_t blue_field_position;
 
-        struct {
-                uintptr_t rsdp_address;
-                uintptr_t rsdp_size;
-        } acpi;
+        uint8_t red_mask_size;
+        uint8_t green_mask_size;
+        uint8_t blue_mask_size;
 
-
-        struct {
-
-                uintptr_t load_base_address;
-
-                uintptr_t sh_num;
-                uintptr_t sh_entsize;
-                uintptr_t sh_shndx;
-
-                char sections[CONFIG_BUFSIZ << 4];
-
-        } exe;
+    } framebuffer;
 
 
-        struct {
+    struct {
+        uintptr_t rsdp_address;
+        uintptr_t rsdp_size;
+    } acpi;
 
-                struct {
 
-                        uintptr_t ptr;
-                        uintptr_t size;
-                        uintptr_t status;
+    struct {
 
-                        char cmdline[CONFIG_BUFSIZ];
+        uintptr_t load_base_address;
 
-                } __packed ko[CORE_MODULE_MAX];
+        uintptr_t sh_num;
+        uintptr_t sh_entsize;
+        uintptr_t sh_shndx;
 
-                size_t count;
+        char sections[CONFIG_BUFSIZ << 4];
 
-        } modules;
+    } exe;
 
+
+    struct {
 
         struct {
 
-                uint16_t max_cores;
-                uint16_t max_threads;
-                uint16_t max_mhz;
-                uint16_t min_mhz;
+            uintptr_t ptr;
+            uintptr_t size;
+            uintptr_t status;
 
-                cpu_t cores[SMP_CPU_MAX];
+            char cmdline[CONFIG_BUFSIZ];
 
-        } cpu;
+        } __packed ko[CORE_MODULE_MAX];
+
+        size_t count;
+
+    } modules;
+
+
+    struct {
+
+        uint16_t max_cores;
+        uint16_t max_threads;
+        uint16_t max_mhz;
+        uint16_t min_mhz;
+
+        cpu_t cores[SMP_CPU_MAX];
+
+    } cpu;
 
         #define bsp cpu.cores[SMP_CPU_BOOTSTRAP_ID]
 };

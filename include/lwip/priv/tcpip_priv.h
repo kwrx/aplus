@@ -100,12 +100,12 @@ err_t tcpip_send_msg_wait_sem(tcpip_callback_fn fn, void* apimsg, sys_sem_t* sem
 
 struct tcpip_api_call_data {
     #if !LWIP_TCPIP_CORE_LOCKING
-        err_t err;
+    err_t err;
         #if !LWIP_NETCONN_SEM_PER_THREAD
-        sys_sem_t sem;
+    sys_sem_t sem;
         #endif /* LWIP_NETCONN_SEM_PER_THREAD */
     #else      /* !LWIP_TCPIP_CORE_LOCKING */
-        u8_t dummy; /* avoid empty struct :-( */
+    u8_t dummy; /* avoid empty struct :-( */
     #endif     /* !LWIP_TCPIP_CORE_LOCKING */
 };
 typedef err_t (*tcpip_api_call_fn)(struct tcpip_api_call_data* call);
@@ -128,38 +128,38 @@ enum tcpip_msg_type {
 };
 
 struct tcpip_msg {
-        enum tcpip_msg_type type;
-        union {
+    enum tcpip_msg_type type;
+    union {
     #if !LWIP_TCPIP_CORE_LOCKING
-                struct {
-                        tcpip_callback_fn function;
-                        void* msg;
-                } api_msg;
-                struct {
-                        tcpip_api_call_fn function;
-                        struct tcpip_api_call_data* arg;
-                        sys_sem_t* sem;
-                } api_call;
+        struct {
+            tcpip_callback_fn function;
+            void* msg;
+        } api_msg;
+        struct {
+            tcpip_api_call_fn function;
+            struct tcpip_api_call_data* arg;
+            sys_sem_t* sem;
+        } api_call;
     #endif /* LWIP_TCPIP_CORE_LOCKING */
     #if !LWIP_TCPIP_CORE_LOCKING_INPUT
-                struct {
-                        struct pbuf* p;
-                        struct netif* netif;
-                        netif_input_fn input_fn;
-                } inp;
+        struct {
+            struct pbuf* p;
+            struct netif* netif;
+            netif_input_fn input_fn;
+        } inp;
     #endif /* !LWIP_TCPIP_CORE_LOCKING_INPUT */
-                struct {
-                        tcpip_callback_fn function;
-                        void* ctx;
-                } cb;
+        struct {
+            tcpip_callback_fn function;
+            void* ctx;
+        } cb;
     #if LWIP_TCPIP_TIMEOUT && LWIP_TIMERS
-                struct {
-                        u32_t msecs;
-                        sys_timeout_handler h;
-                        void* arg;
-                } tmo;
+        struct {
+            u32_t msecs;
+            sys_timeout_handler h;
+            void* arg;
+        } tmo;
     #endif /* LWIP_TCPIP_TIMEOUT && LWIP_TIMERS */
-        } msg;
+    } msg;
 };
 
     #ifdef __cplusplus

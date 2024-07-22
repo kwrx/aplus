@@ -94,11 +94,11 @@ static u8_t nd6_tmr_rs_reduction;
 
 /* Static buffer to parse RA packet options */
 union ra_options {
-        struct lladdr_option lladdr;
-        struct mtu_option mtu;
-        struct prefix_option prefix;
+    struct lladdr_option lladdr;
+    struct mtu_option mtu;
+    struct prefix_option prefix;
     #if LWIP_ND6_RDNSS_MAX_DNS_SERVERS
-        struct rdnss_option rdnss;
+    struct rdnss_option rdnss;
     #endif
 };
 static union ra_options nd6_ra_buffer;

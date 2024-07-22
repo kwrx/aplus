@@ -44,9 +44,9 @@ extern "C" {
 
 #if HTTPD_PRECALCULATED_CHECKSUM
 struct fsdata_chksum {
-        u32_t offset;
-        u16_t chksum;
-        u16_t len;
+    u32_t offset;
+    u16_t chksum;
+    u16_t len;
 };
 #endif /* HTTPD_PRECALCULATED_CHECKSUM */
 
@@ -63,22 +63,22 @@ typedef void fs_file_extension;
 #endif
 
 struct fs_file {
-        const char* data;
-        int len;
-        int index;
-        /* pextension is free for implementations to hold private (extensional)
-           arbitrary data, e.g. holding some file state or file system handle */
-        fs_file_extension* pextension;
+    const char* data;
+    int len;
+    int index;
+    /* pextension is free for implementations to hold private (extensional)
+       arbitrary data, e.g. holding some file state or file system handle */
+    fs_file_extension* pextension;
 #if HTTPD_PRECALCULATED_CHECKSUM
-        const struct fsdata_chksum* chksum;
-        u16_t chksum_count;
+    const struct fsdata_chksum* chksum;
+    u16_t chksum_count;
 #endif /* HTTPD_PRECALCULATED_CHECKSUM */
-        u8_t flags;
+    u8_t flags;
 #if LWIP_HTTPD_CUSTOM_FILES
-        u8_t is_custom_file;
+    u8_t is_custom_file;
 #endif /* LWIP_HTTPD_CUSTOM_FILES */
 #if LWIP_HTTPD_FILE_STATE
-        void* state;
+    void* state;
 #endif /* LWIP_HTTPD_FILE_STATE */
 };
 
@@ -108,14 +108,14 @@ void fs_state_free(struct fs_file* file, void* state);
 #endif /* #if LWIP_HTTPD_FILE_STATE */
 
 struct fsdata_file {
-        const struct fsdata_file* next;
-        const unsigned char* name;
-        const unsigned char* data;
-        int len;
-        u8_t flags;
+    const struct fsdata_file* next;
+    const unsigned char* name;
+    const unsigned char* data;
+    int len;
+    u8_t flags;
 #if HTTPD_PRECALCULATED_CHECKSUM
-        u16_t chksum_count;
-        const struct fsdata_chksum* chksum;
+    u16_t chksum_count;
+    const struct fsdata_chksum* chksum;
 #endif /* HTTPD_PRECALCULATED_CHECKSUM */
 };
 

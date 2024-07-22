@@ -39,14 +39,14 @@
 
 
 extern struct {
-        union {
-                struct {
-                        void (*handler)(void*, uint8_t);
-                        spinlock_t lock __packed;
-                };
-
-                long __padding[4];
+    union {
+        struct {
+            void (*handler)(void*, uint8_t);
+            spinlock_t lock __packed;
         };
+
+        long __padding[4];
+    };
 } bootstrap_irq[224];
 
 

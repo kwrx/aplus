@@ -96,27 +96,27 @@
 
 struct bridgeif_private_s;
 typedef struct bridgeif_port_private_s {
-        struct bridgeif_private_s* bridge;
-        struct netif* port_netif;
-        u8_t port_num;
+    struct bridgeif_private_s* bridge;
+    struct netif* port_netif;
+    u8_t port_num;
 } bridgeif_port_t;
 
 typedef struct bridgeif_fdb_static_entry_s {
-        u8_t used;
-        bridgeif_portmask_t dst_ports;
-        struct eth_addr addr;
+    u8_t used;
+    bridgeif_portmask_t dst_ports;
+    struct eth_addr addr;
 } bridgeif_fdb_static_entry_t;
 
 typedef struct bridgeif_private_s {
-        struct netif* netif;
-        struct eth_addr ethaddr;
-        u8_t max_ports;
-        u8_t num_ports;
-        bridgeif_port_t* ports;
-        u16_t max_fdbs_entries;
-        bridgeif_fdb_static_entry_t* fdbs;
-        u16_t max_fdbd_entries;
-        void* fdbd;
+    struct netif* netif;
+    struct eth_addr ethaddr;
+    u8_t max_ports;
+    u8_t num_ports;
+    bridgeif_port_t* ports;
+    u16_t max_fdbs_entries;
+    bridgeif_fdb_static_entry_t* fdbs;
+    u16_t max_fdbd_entries;
+    void* fdbd;
 } bridgeif_private_t;
 
 /* netif data index to get the bridge on input */

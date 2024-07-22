@@ -110,9 +110,9 @@ enum dhcp6_option_idx {
 };
 
 struct dhcp6_option_info {
-        u8_t option_given;
-        u16_t val_start;
-        u16_t val_length;
+    u8_t option_given;
+    u16_t val_start;
+    u16_t val_length;
 };
 
 /** Holds the decoded option info, only valid while in dhcp6_recv. */

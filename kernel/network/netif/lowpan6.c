@@ -75,29 +75,29 @@
  * (IEEE 802.15.4 limits to 127 bytes)
  */
 struct lowpan6_reass_helper {
-        struct lowpan6_reass_helper* next_packet;
-        struct pbuf* reass;
-        struct pbuf* frags;
-        u8_t timer;
-        struct lowpan6_link_addr sender_addr;
-        u16_t datagram_size;
-        u16_t datagram_tag;
+    struct lowpan6_reass_helper* next_packet;
+    struct pbuf* reass;
+    struct pbuf* frags;
+    u8_t timer;
+    struct lowpan6_link_addr sender_addr;
+    u16_t datagram_size;
+    u16_t datagram_tag;
 };
 
 /** This struct keeps track of per-netif state */
 struct lowpan6_ieee802154_data {
-        /** fragment reassembly list */
-        struct lowpan6_reass_helper* reass_list;
+    /** fragment reassembly list */
+    struct lowpan6_reass_helper* reass_list;
     #if LWIP_6LOWPAN_NUM_CONTEXTS > 0
-        /** address context for compression */
-        ip6_addr_t lowpan6_context[LWIP_6LOWPAN_NUM_CONTEXTS];
+    /** address context for compression */
+    ip6_addr_t lowpan6_context[LWIP_6LOWPAN_NUM_CONTEXTS];
     #endif
-        /** Datagram Tag for fragmentation */
-        u16_t tx_datagram_tag;
-        /** local PAN ID for IEEE 802.15.4 header */
-        u16_t ieee_802154_pan_id;
-        /** Sequence Number for IEEE 802.15.4 transmission */
-        u8_t tx_frame_seq_num;
+    /** Datagram Tag for fragmentation */
+    u16_t tx_datagram_tag;
+    /** local PAN ID for IEEE 802.15.4 header */
+    u16_t ieee_802154_pan_id;
+    /** Sequence Number for IEEE 802.15.4 transmission */
+    u8_t tx_frame_seq_num;
 };
 
     /* Maximum frame size is 127 bytes minus CRC size */

@@ -89,8 +89,8 @@ typedef const char* (*tCGIHandler)(int iIndex, int iNumParams, char* pcParam[], 
  * function which is to be called when that URL is requested.
  */
 typedef struct {
-        const char* pcCGIName;
-        tCGIHandler pfnCGIHandler;
+    const char* pcCGIName;
+    tCGIHandler pfnCGIHandler;
 } tCGI;
 
 void http_set_cgi_handlers(const tCGI* pCGIs, int iNumHandlers);

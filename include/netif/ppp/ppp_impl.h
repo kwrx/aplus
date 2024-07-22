@@ -141,24 +141,24 @@ extern "C" {
  * for a particular lower link level protocol.
  */
 struct link_callbacks {
-        /* Start a connection (e.g. Initiate discovery phase) */
-        void (*connect)(ppp_pcb* pcb, void* ctx);
+    /* Start a connection (e.g. Initiate discovery phase) */
+    void (*connect)(ppp_pcb* pcb, void* ctx);
     #if PPP_SERVER
-        /* Listen for an incoming connection (Passive mode) */
-        void (*listen)(ppp_pcb* pcb, void* ctx);
+    /* Listen for an incoming connection (Passive mode) */
+    void (*listen)(ppp_pcb* pcb, void* ctx);
     #endif /* PPP_SERVER */
-        /* End a connection (i.e. initiate disconnect phase) */
-        void (*disconnect)(ppp_pcb* pcb, void* ctx);
-        /* Free lower protocol control block */
-        err_t (*free)(ppp_pcb* pcb, void* ctx);
-        /* Write a pbuf to a ppp link, only used from PPP functions to send PPP packets. */
-        err_t (*write)(ppp_pcb* pcb, void* ctx, struct pbuf* p);
-        /* Send a packet from lwIP core (IPv4 or IPv6) */
-        err_t (*netif_output)(ppp_pcb* pcb, void* ctx, struct pbuf* p, u_short protocol);
-        /* configure the transmit-side characteristics of the PPP interface */
-        void (*send_config)(ppp_pcb* pcb, void* ctx, u32_t accm, int pcomp, int accomp);
-        /* confire the receive-side characteristics of the PPP interface */
-        void (*recv_config)(ppp_pcb* pcb, void* ctx, u32_t accm, int pcomp, int accomp);
+    /* End a connection (i.e. initiate disconnect phase) */
+    void (*disconnect)(ppp_pcb* pcb, void* ctx);
+    /* Free lower protocol control block */
+    err_t (*free)(ppp_pcb* pcb, void* ctx);
+    /* Write a pbuf to a ppp link, only used from PPP functions to send PPP packets. */
+    err_t (*write)(ppp_pcb* pcb, void* ctx, struct pbuf* p);
+    /* Send a packet from lwIP core (IPv4 or IPv6) */
+    err_t (*netif_output)(ppp_pcb* pcb, void* ctx, struct pbuf* p, u_short protocol);
+    /* configure the transmit-side characteristics of the PPP interface */
+    void (*send_config)(ppp_pcb* pcb, void* ctx, u32_t accm, int pcomp, int accomp);
+    /* confire the receive-side characteristics of the PPP interface */
+    void (*recv_config)(ppp_pcb* pcb, void* ctx, u32_t accm, int pcomp, int accomp);
 };
 
 /*
@@ -176,48 +176,48 @@ enum NPmode {
      */
     #if PPP_STATS_SUPPORT
 struct pppstat {
-        unsigned int ppp_ibytes;   /* bytes received */
-        unsigned int ppp_ipackets; /* packets received */
-        unsigned int ppp_ierrors;  /* receive errors */
-        unsigned int ppp_obytes;   /* bytes sent */
-        unsigned int ppp_opackets; /* packets sent */
-        unsigned int ppp_oerrors;  /* transmit errors */
+    unsigned int ppp_ibytes;   /* bytes received */
+    unsigned int ppp_ipackets; /* packets received */
+    unsigned int ppp_ierrors;  /* receive errors */
+    unsigned int ppp_obytes;   /* bytes sent */
+    unsigned int ppp_opackets; /* packets sent */
+    unsigned int ppp_oerrors;  /* transmit errors */
 };
 
         #if VJ_SUPPORT
 struct vjstat {
-        unsigned int vjs_packets;        /* outbound packets */
-        unsigned int vjs_compressed;     /* outbound compressed packets */
-        unsigned int vjs_searches;       /* searches for connection state */
-        unsigned int vjs_misses;         /* times couldn't find conn. state */
-        unsigned int vjs_uncompressedin; /* inbound uncompressed packets */
-        unsigned int vjs_compressedin;   /* inbound compressed packets */
-        unsigned int vjs_errorin;        /* inbound unknown type packets */
-        unsigned int vjs_tossed;         /* inbound packets tossed because of error */
+    unsigned int vjs_packets;        /* outbound packets */
+    unsigned int vjs_compressed;     /* outbound compressed packets */
+    unsigned int vjs_searches;       /* searches for connection state */
+    unsigned int vjs_misses;         /* times couldn't find conn. state */
+    unsigned int vjs_uncompressedin; /* inbound uncompressed packets */
+    unsigned int vjs_compressedin;   /* inbound compressed packets */
+    unsigned int vjs_errorin;        /* inbound unknown type packets */
+    unsigned int vjs_tossed;         /* inbound packets tossed because of error */
 };
         #endif /* VJ_SUPPORT */
 
 struct ppp_stats {
-        struct pppstat p; /* basic PPP statistics */
+    struct pppstat p; /* basic PPP statistics */
         #if VJ_SUPPORT
-        struct vjstat vj; /* VJ header compression statistics */
-        #endif            /* VJ_SUPPORT */
+    struct vjstat vj; /* VJ header compression statistics */
+        #endif        /* VJ_SUPPORT */
 };
 
         #if CCP_SUPPORT
 struct compstat {
-        unsigned int unc_bytes;    /* total uncompressed bytes */
-        unsigned int unc_packets;  /* total uncompressed packets */
-        unsigned int comp_bytes;   /* compressed bytes */
-        unsigned int comp_packets; /* compressed packets */
-        unsigned int inc_bytes;    /* incompressible bytes */
-        unsigned int inc_packets;  /* incompressible packets */
-        unsigned int ratio;        /* recent compression ratio << 8 */
+    unsigned int unc_bytes;    /* total uncompressed bytes */
+    unsigned int unc_packets;  /* total uncompressed packets */
+    unsigned int comp_bytes;   /* compressed bytes */
+    unsigned int comp_packets; /* compressed packets */
+    unsigned int inc_bytes;    /* incompressible bytes */
+    unsigned int inc_packets;  /* incompressible packets */
+    unsigned int ratio;        /* recent compression ratio << 8 */
 };
 
 struct ppp_comp_stats {
-        struct compstat c; /* packet compression statistics */
-        struct compstat d; /* packet decompression statistics */
+    struct compstat c; /* packet compression statistics */
+    struct compstat d; /* packet decompression statistics */
 };
         #endif /* CCP_SUPPORT */
 
@@ -229,8 +229,8 @@ struct ppp_comp_stats {
  * the last NP packet was sent or received.
  */
 struct ppp_idle {
-        time_t xmit_idle; /* time since last NP packet sent */
-        time_t recv_idle; /* time since last NP packet received */
+    time_t xmit_idle; /* time since last NP packet sent */
+    time_t recv_idle; /* time since last NP packet received */
 };
     #endif /* PPP_IDLETIMELIMIT */
 
@@ -279,43 +279,43 @@ extern int maxoctets_timeout;  /* Timeout for check of octets limit */
  * for a particular protocol.
  */
 struct protent {
-        u_short protocol; /* PPP protocol number */
-        /* Initialization procedure */
-        void (*init)(ppp_pcb* pcb);
-        /* Process a received packet */
-        void (*input)(ppp_pcb* pcb, u_char* pkt, int len);
-        /* Process a received protocol-reject */
-        void (*protrej)(ppp_pcb* pcb);
-        /* Lower layer has come up */
-        void (*lowerup)(ppp_pcb* pcb);
-        /* Lower layer has gone down */
-        void (*lowerdown)(ppp_pcb* pcb);
-        /* Open the protocol */
-        void (*open)(ppp_pcb* pcb);
-        /* Close the protocol */
-        void (*close)(ppp_pcb* pcb, const char* reason);
+    u_short protocol; /* PPP protocol number */
+    /* Initialization procedure */
+    void (*init)(ppp_pcb* pcb);
+    /* Process a received packet */
+    void (*input)(ppp_pcb* pcb, u_char* pkt, int len);
+    /* Process a received protocol-reject */
+    void (*protrej)(ppp_pcb* pcb);
+    /* Lower layer has come up */
+    void (*lowerup)(ppp_pcb* pcb);
+    /* Lower layer has gone down */
+    void (*lowerdown)(ppp_pcb* pcb);
+    /* Open the protocol */
+    void (*open)(ppp_pcb* pcb);
+    /* Close the protocol */
+    void (*close)(ppp_pcb* pcb, const char* reason);
     #if PRINTPKT_SUPPORT
-        /* Print a packet in readable form */
-        int (*printpkt)(const u_char* pkt, int len, void (*printer)(void*, const char*, ...), void* arg);
+    /* Print a packet in readable form */
+    int (*printpkt)(const u_char* pkt, int len, void (*printer)(void*, const char*, ...), void* arg);
     #endif /* PRINTPKT_SUPPORT */
     #if PPP_DATAINPUT
-        /* Process a received data packet */
-        void (*datainput)(ppp_pcb* pcb, u_char* pkt, int len);
+    /* Process a received data packet */
+    void (*datainput)(ppp_pcb* pcb, u_char* pkt, int len);
     #endif /* PPP_DATAINPUT */
     #if PRINTPKT_SUPPORT
-        const char* name;      /* Text name of protocol */
-        const char* data_name; /* Text name of corresponding data protocol */
-    #endif                     /* PRINTPKT_SUPPORT */
+    const char* name;      /* Text name of protocol */
+    const char* data_name; /* Text name of corresponding data protocol */
+    #endif                 /* PRINTPKT_SUPPORT */
     #if PPP_OPTIONS
-        option_t* options; /* List of command-line options */
-        /* Check requested options, assign defaults */
-        void (*check_options)(void);
+    option_t* options; /* List of command-line options */
+    /* Check requested options, assign defaults */
+    void (*check_options)(void);
     #endif /* PPP_OPTIONS */
     #if DEMAND_SUPPORT
-        /* Configure interface for demand-dial */
-        int (*demand_conf)(int unit);
-        /* Say whether to bring up link for this pkt */
-        int (*active_pkt)(u_char* pkt, int len);
+    /* Configure interface for demand-dial */
+    int (*demand_conf)(int unit);
+    /* Say whether to bring up link for this pkt */
+    int (*active_pkt)(u_char* pkt, int len);
     #endif /* DEMAND_SUPPORT */
 };
 
@@ -368,10 +368,10 @@ extern const struct protent* const protocols[];
  * PPP statistics structure
  */
 struct pppd_stats {
-        unsigned int bytes_in;
-        unsigned int bytes_out;
-        unsigned int pkts_in;
-        unsigned int pkts_out;
+    unsigned int bytes_in;
+    unsigned int bytes_out;
+    unsigned int pkts_in;
+    unsigned int pkts_out;
 };
     #endif /* PPP_STATS_SUPPORT */
 

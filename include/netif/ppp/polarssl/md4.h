@@ -43,9 +43,9 @@
  * \brief          MD4 context structure
  */
 typedef struct {
-        unsigned long total[2];   /*!< number of bytes processed  */
-        unsigned long state[4];   /*!< intermediate digest state  */
-        unsigned char buffer[64]; /*!< data block being processed */
+    unsigned long total[2];   /*!< number of bytes processed  */
+    unsigned long state[4];   /*!< intermediate digest state  */
+    unsigned char buffer[64]; /*!< data block being processed */
 } md4_context;
 
         #ifdef __cplusplus

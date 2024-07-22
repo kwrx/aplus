@@ -55,20 +55,20 @@ extern "C" {
     #define DHCP6_TIMER_MSECS 500
 
 struct dhcp6 {
-        /** transaction identifier of last sent request */
-        u32_t xid;
-        /** track PCB allocation state */
-        u8_t pcb_allocated;
-        /** current DHCPv6 state machine state */
-        u8_t state;
-        /** retries of current request */
-        u8_t tries;
-        /** if request config is triggered while another action is active, this keeps track of it */
-        u8_t request_config_pending;
-        /** #ticks with period DHCP6_TIMER_MSECS for request timeout */
-        u16_t request_timeout;
+    /** transaction identifier of last sent request */
+    u32_t xid;
+    /** track PCB allocation state */
+    u8_t pcb_allocated;
+    /** current DHCPv6 state machine state */
+    u8_t state;
+    /** retries of current request */
+    u8_t tries;
+    /** if request config is triggered while another action is active, this keeps track of it */
+    u8_t request_config_pending;
+    /** #ticks with period DHCP6_TIMER_MSECS for request timeout */
+    u16_t request_timeout;
     #if LWIP_IPV6_DHCP6_STATEFUL
-                /* @todo: add more members here to keep track of stateful DHCPv6 data, like lease times */
+            /* @todo: add more members here to keep track of stateful DHCPv6 data, like lease times */
     #endif /* LWIP_IPV6_DHCP6_STATEFUL */
 };
 

@@ -68,90 +68,90 @@ typedef struct inode inode_t;
 
 struct inode_ops {
 
-        inode_t* (*open)(inode_t*, int);
-        int (*close)(inode_t*);
-        int (*ioctl)(inode_t*, long, void*);
+    inode_t* (*open)(inode_t*, int);
+    int (*close)(inode_t*);
+    int (*ioctl)(inode_t*, long, void*);
 
-        /* Inode */
-        int (*getattr)(inode_t*, struct stat*);
-        int (*setattr)(inode_t*, struct stat*);
+    /* Inode */
+    int (*getattr)(inode_t*, struct stat*);
+    int (*setattr)(inode_t*, struct stat*);
 
-        int (*setxattr)(inode_t*, const char*, const void*, size_t, int);
-        int (*getxattr)(inode_t*, const char*, void*, size_t);
-        int (*listxattr)(inode_t*, char*, size_t);
-        int (*removexattr)(inode_t*, const char*);
+    int (*setxattr)(inode_t*, const char*, const void*, size_t, int);
+    int (*getxattr)(inode_t*, const char*, void*, size_t);
+    int (*listxattr)(inode_t*, char*, size_t);
+    int (*removexattr)(inode_t*, const char*);
 
-        int (*truncate)(inode_t*, off_t);
-        int (*fsync)(inode_t*, int);
+    int (*truncate)(inode_t*, off_t);
+    int (*fsync)(inode_t*, int);
 
-        ssize_t (*read)(inode_t*, void*, off_t, size_t);
-        ssize_t (*write)(inode_t*, const void*, off_t, size_t);
-        ssize_t (*readlink)(inode_t*, char*, size_t);
+    ssize_t (*read)(inode_t*, void*, off_t, size_t);
+    ssize_t (*write)(inode_t*, const void*, off_t, size_t);
+    ssize_t (*readlink)(inode_t*, char*, size_t);
 
 
-        /* Directory */
-        inode_t* (*creat)(inode_t*, const char*, mode_t);
-        inode_t* (*finddir)(inode_t*, const char*);
-        ssize_t (*readdir)(inode_t*, struct dirent*, off_t, size_t);
+    /* Directory */
+    inode_t* (*creat)(inode_t*, const char*, mode_t);
+    inode_t* (*finddir)(inode_t*, const char*);
+    ssize_t (*readdir)(inode_t*, struct dirent*, off_t, size_t);
 
-        int (*rename)(inode_t*, const char*, const char*);
-        int (*symlink)(inode_t*, const char*, const char*);
-        int (*unlink)(inode_t*, const char*);
+    int (*rename)(inode_t*, const char*, const char*);
+    int (*symlink)(inode_t*, const char*, const char*);
+    int (*unlink)(inode_t*, const char*);
 };
 
 
 struct inode_events {
-        uint16_t events;
-        uint16_t revents;
-        volatile uint32_t futex;
+    uint16_t events;
+    uint16_t revents;
+    volatile uint32_t futex;
 };
 
 struct inode {
 
-        char name[CONFIG_MAXNAMLEN];
+    char name[CONFIG_MAXNAMLEN];
 
-        ino_t ino;
-        int flags;
+    ino_t ino;
+    int flags;
 
-        struct superblock* sb;
-        struct inode_ops ops;
-        struct inode* parent;
+    struct superblock* sb;
+    struct inode_ops ops;
+    struct inode* parent;
 
-        void* userdata;
-        spinlock_t lock;
+    void* userdata;
+    spinlock_t lock;
 
-        shared_ptr(struct inode_events) ev;
+    shared_ptr(struct inode_events) ev;
 
-        HASHMAP(char, inode_t) dcache;
+    HASHMAP(char, inode_t) dcache;
 };
 
 
 struct superblock {
 
-        id_t fsid;
-        int flags;
+    id_t fsid;
+    int flags;
 
-        inode_t* dev;
-        inode_t* root;
+    inode_t* dev;
+    inode_t* root;
 
-        ino_t ino;
-        struct statvfs st;
-        struct inode_ops ops;
-        struct cache cache;
+    ino_t ino;
+    struct statvfs st;
+    struct inode_ops ops;
+    struct cache cache;
 
-        void* fsinfo;
+    void* fsinfo;
 };
 
 
 struct file {
 
-        inode_t* inode;
-        off_t position;
+    inode_t* inode;
+    off_t position;
 
-        int status;
-        int refcount;
+    int status;
+    int refcount;
 
-        spinlock_t lock;
+    spinlock_t lock;
 };
 
 

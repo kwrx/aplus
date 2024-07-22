@@ -1,9 +1,95 @@
 #!/bin/bash
 
-arch=""
-flags=""
+# This script is used to run a VM using QEMU
+# It is used by the run-vm script
 
-CPUS=${CPUS:-1}
+while [[ $# -gt 0 ]]; do
+    case $1 in
+    -h | --help)
+        echo "Usage: run-qemu [OPTIONS] ARCH [DEBUG] [REMOTE_URI]"
+        echo "  ARCH: architecture to run the VM (x86_64)"
+        echo "  DEBUG: enable debug mode (default: disabled)"
+        echo ""
+        echo "Options:"
+        echo "  -h, --help: show this help message and exit"
+        echo "  -j, --cpus: number of CPUs to use (default: 1)"
+        echo "  -v, --virtio: use virtio devices (default: disabled)"
+        echo "  -k, --kvm: enable KVM (default: disabled)"
+        echo "  -q, --headless: run the VM without a display (default: disabled)"
+        echo "  -r, --remote: run the VM remotely using VNC (default: disabled)"
+        exit 0
+        ;;
+    -j | --cpus)
+        ARG_CPUS=$2
+        shift
+        shift
+        ;;
+    -v | --virtio)
+        ARG_VIRTIO=1
+        shift
+        ;;
+    -k | --kvm)
+        ARG_KVM=1
+        shift
+        ;;
+    -q | --headless)
+        ARG_HEADLESS=1
+        shift
+        ;;
+    -r | --remote)
+        ARG_REMOTE_URI=$2
+        shift
+        shift
+        ;;
+    *)
+        break
+        ;;
+    esac
+done
+
+ARG_ARCH=$1
+ARG_DEBUG=$2
+ARG_REMOTE_URI=${ARG_REMOTE_URI:-}
+ARG_CPUS=${ARG_CPUS:-1}
+ARG_VIRTIO=${ARG_VIRTIO:-0}
+ARG_KVM=${ARG_KVM:-0}
+ARG_HEADLESS=${ARG_HEADLESS:-0}
+ARG_TRACE=${ARG_TRACE:-}
+
+if [ -z $ARG_ARCH ]; then
+    echo "run-qemu: missing ARCH argument"
+    exit 1
+fi
+
+if [ ! -z $ARG_DEBUG ] && [ $ARG_DEBUG != "debug" ]; then
+    echo "run-qemu: unknown argument \"$ARG_DEBUG\""
+    exit 1
+fi
+
+if [ -z $ARG_CPUS ]; then
+    echo "run-qemu: missing CPUS argument"
+    exit 1
+fi
+
+if [ $ARG_HEADLESS -eq 1 ] && [ ! -z $ARG_REMOTE_URI ]; then
+    echo "run-qemu: headless and remote URI are mutually exclusive"
+    exit 1
+fi
+
+function find_ovmf() {
+    local ovmf=""
+    if [ -f /usr/share/ovmf/x64/OVMF_CODE.fd ]; then
+        ovmf="/usr/share/ovmf/x64/OVMF_CODE.fd"
+    elif [ -f /usr/share/OVMF/OVMF_CODE.fd ]; then
+        ovmf="/usr/share/OVMF/OVMF_CODE.fd"
+    elif [ -f /usr/share/ovmf/OVMF.fd ]; then
+        ovmf="/usr/share/ovmf/OVMF.fd"
+    else
+        echo "run-qemu: OVMF firmware not found"
+        exit 1
+    fi
+    echo $ovmf
+}
 
 case $1 in
 
@@ -11,19 +97,51 @@ x86_64)
     arch="x86_64"
 
     flags=""
-    flags="$flags --bios /usr/share/ovmf/OVMF.fd -net none"
-    # flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
-    flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk,id=virtio-disk0,num-queues=4"
-    flags="$flags -boot order=c"
+    flags="$flags --bios $(find_ovmf) -net none"
+
+    # Network
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -device virtio-net-pci,netdev=net0"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
+    else
+        flags="$flags -device pcnet,netdev=net0"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
+    fi
+
+    # Block
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk"
+    else
+        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
+    fi
+
+    # CPU
+    if [ $ARG_KVM -eq 1 ]; then
+        flags="$flags -enable-kvm"
+        flags="$flags -cpu native,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
+    else
+        flags="$flags -cpu max,-pdpe1gb,+rdtscp,+fxsr"
+    fi
+
+    # SMP
+    flags="$flags -smp $ARG_CPUS,sockets=1,cores=$ARG_CPUS,threads=1"
+
+    # Memory
     flags="$flags -m 4G"
+
+    # Clock
     flags="$flags -rtc clock=host"
-    flags="$flags -cpu max,-pdpe1gb,+rdtscp,+fxsr"
-    flags="$flags -smp $CPUS,sockets=1,cores=$CPUS,threads=1"
-    flags="$flags -vga std"
-    flags="$flags -device pcnet,netdev=net0"
-    flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
-    # flags="$flags -object filter-dump,id=f1,netdev=net0,file=network.dat"
-    #flags="$flags -device virtio-serial-pci-non-transitional -chardev file,path=/tmp/kmsg.log,id=aplus -device virtconsole,name=jobsaplus,chardev=aplus,name=org.fedoraproject.console.aplus"
+
+    # Video
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -device virtio-vga"
+    else
+        flags="$flags -vga std"
+    fi
+
+    # Boot
+    flags="$flags -boot order=c"
+
     ;;
 
 *)
@@ -33,25 +151,24 @@ x86_64)
 
 esac
 
-#if ! which qemu-system-$arch.exe &> /dev/null; then
-#    echo "run-vm: qemu-system-$arch not found, you should try to install \"qemu-arch-extra\" package"
-#    exit 1
-#fi
-
-debug=""
-if [ ! -z $2 ]; then
-    debug="-S"
+# Display
+if [ $ARG_HEADLESS -eq 1 ]; then
+    flags="$flags -display none"
+else
+    if [ -z $ARG_REMOTE_URI ]; then
+        flags="$flags -display gtk"
+    else
+        flags="$flags -display none"
+        flags="$flags -vnc $ARG_REMOTE_URI"
+    fi
 fi
 
-trace=""
-if [ ! -z $TRACE ]; then
-    trace="-trace $TRACE"
+# Serial
+flags="$flags -serial stdio"
+
+# Debug
+if [ ! -z $ARG_DEBUG ]; then
+    flags="$flags -S"
 fi
 
-#sudo trace-cmd record -e kvm/* qemu-system-$arch -d int -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags
-#sudo trace-cmd report > trace.log
-#rm -f trace.dat
-
-#qemu-system-$arch --enable-kvm -display gtk,gl=on -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-qemu-system-$arch -display gtk -serial stdio -no-reboot -no-shutdown -s $debug $flags $trace
-#qemu-system-$arch -nographic -serial mon:stdio -no-reboot -no-shutdown -s $debug $flags $trace
+qemu-system-$ARG_ARCH -no-reboot -no-shutdown -s $flags

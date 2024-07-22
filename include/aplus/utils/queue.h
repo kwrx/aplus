@@ -34,19 +34,19 @@
 
 struct queue_element {
 
-        void* element;
-        int priority;
+    void* element;
+    int priority;
 
-        struct queue_element* next;
+    struct queue_element* next;
 };
 
 
 typedef struct {
 
-        struct queue_element* head;
+    struct queue_element* head;
 
-        size_t size;
-        spinlock_t lock;
+    size_t size;
+    spinlock_t lock;
 
 } queue_t;
 

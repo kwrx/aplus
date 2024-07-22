@@ -66,9 +66,9 @@ int flush_flag;
 int fcs;
 
 struct packet {
-        int length;
-        struct packet* next;
-        unsigned char data[1];
+    int length;
+    struct packet* next;
+    unsigned char data[1];
 };
 
 struct packet* pend_q;

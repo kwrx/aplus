@@ -43,21 +43,21 @@
 __BEGIN_DECLS
 
 
-    #define shared_ptr(type)           \
-        struct {                       \
-                uint32_t magic;        \
-                uint32_t refcount;     \
-                spinlock_t lock;       \
-                __typeof__(type) data; \
+    #define shared_ptr(type)       \
+        struct {                   \
+            uint32_t magic;        \
+            uint32_t refcount;     \
+            spinlock_t lock;       \
+            __typeof__(type) data; \
         }*
 
     #define shared_ptr_new(type, gfp)                                                                 \
         ({                                                                                            \
             struct {                                                                                  \
-                    uint32_t magic;                                                                   \
-                    uint32_t refcount;                                                                \
-                    spinlock_t lock;                                                                  \
-                    __typeof__(type) data;                                                            \
+                uint32_t magic;                                                                       \
+                uint32_t refcount;                                                                    \
+                spinlock_t lock;                                                                      \
+                __typeof__(type) data;                                                                \
             } s = {                                                                                   \
                 .magic    = SHARED_PTR_MAGIC,                                                         \
                 .refcount = 1,                                                                        \

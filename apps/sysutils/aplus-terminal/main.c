@@ -55,64 +55,64 @@
 
 static struct {
 
-        void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
+    void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
 
-        int masterfd;
-        int slavefd;
+    int masterfd;
+    int slavefd;
 
-        int kbd;
-        int mouse;
+    int kbd;
+    int mouse;
+
+    struct {
+        uint16_t x;
+        uint16_t y;
+    } cursor;
+
+    struct tsm_screen* con;
+    struct tsm_vte* vte;
+
+    struct fb_var_screeninfo var;
+    struct fb_fix_screeninfo fix;
+
+    struct {
 
         struct {
-                uint16_t x;
-                uint16_t y;
-        } cursor;
 
-        struct tsm_screen* con;
-        struct tsm_vte* vte;
-
-        struct fb_var_screeninfo var;
-        struct fb_fix_screeninfo fix;
-
-        struct {
-
-                struct {
-
-                        struct {
-                                union {
-                                        struct {
+            struct {
+                union {
+                    struct {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-                                                uint8_t val;
-                                                uint8_t typ;
+                        uint8_t val;
+                        uint8_t typ;
 #else
-                                                uint8_t typ;
-                                                uint8_t val;
+                        uint8_t typ;
+                        uint8_t val;
 #endif
-                                        } __attribute__((packed));
+                    } __attribute__((packed));
 
-                                        uint16_t raw;
-                                };
-                        } __attribute__((packed)) keys[NR_KEYS];
+                    uint16_t raw;
+                };
+            } __attribute__((packed)) keys[NR_KEYS];
 
-                } __attribute__((packed)) maps[256];
+        } __attribute__((packed)) maps[256];
 
-                uint8_t modifiers;
+        uint8_t modifiers;
 
-        } keymap;
+    } keymap;
 
-        struct {
-                char* buffer;
-                size_t size;
-                size_t capacity;
-        } input;
+    struct {
+        char* buffer;
+        size_t size;
+        size_t capacity;
+    } input;
 
-        pthread_t thr_kbd;
-        pthread_t thr_mouse;
+    pthread_t thr_kbd;
+    pthread_t thr_mouse;
 
 
 #if !defined(CONFIG_ATERM_BUILTIN_FONT)
-        FT_Library ft;
-        FT_Face face;
+    FT_Library ft;
+    FT_Face face;
 #endif
 
 } context = {0};

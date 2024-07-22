@@ -34,13 +34,13 @@
 
 typedef struct {
 
-        uint8_t* buffer;
-        size_t head;
-        size_t tail;
-        size_t size;
-        uint8_t full;
+    uint8_t* buffer;
+    size_t head;
+    size_t tail;
+    size_t size;
+    uint8_t full;
 
-        spinlock_t lock;
+    spinlock_t lock;
 
 } ringbuffer_t;
 

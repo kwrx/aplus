@@ -56,9 +56,9 @@ extern "C" {
 PACK_STRUCT_BEGIN
 /** minimum set of fields of any DHCPv6 message */
 struct dhcp6_msg {
-        PACK_STRUCT_FLD_8(u8_t msgtype);
-        PACK_STRUCT_FLD_8(u8_t transaction_id[DHCP6_TRANSACTION_ID_LEN]);
-        /* options follow */
+    PACK_STRUCT_FLD_8(u8_t msgtype);
+    PACK_STRUCT_FLD_8(u8_t transaction_id[DHCP6_TRANSACTION_ID_LEN]);
+    /* options follow */
 } PACK_STRUCT_STRUCT;
 PACK_STRUCT_END
 #ifdef PACK_STRUCT_USE_INCLUDES

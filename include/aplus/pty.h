@@ -46,30 +46,30 @@
 
 typedef struct pty {
 
-        uint64_t index;
+    uint64_t index;
 
-        struct winsize ws;
-        struct termios ios;
+    struct winsize ws;
+    struct termios ios;
 
-        ringbuffer_t r1;
-        ringbuffer_t r2;
+    ringbuffer_t r1;
+    ringbuffer_t r2;
 
-        pid_t m_sid;
-        pid_t m_pid;
-        pid_t s_pgrp;
+    pid_t m_sid;
+    pid_t m_pid;
+    pid_t s_pgrp;
 
-        struct {
-                char* buffer;
-                size_t size;
-                size_t capacity;
-                spinlock_t lock;
-        } input;
+    struct {
+        char* buffer;
+        size_t size;
+        size_t capacity;
+        spinlock_t lock;
+    } input;
 
-        bool locked;
+    bool locked;
 
-        inode_t* ptmx;
+    inode_t* ptmx;
 
-        struct pty* next;
+    struct pty* next;
 
 } pty_t;
 

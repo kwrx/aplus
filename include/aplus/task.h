@@ -96,206 +96,206 @@ struct pty;
 
 struct fd_descriptor {
 
-        struct file* ref;
+    struct file* ref;
 
-        struct {
-                int flags         : 30;
-                int close_on_exec : 1;
-        };
+    struct {
+        int flags         : 30;
+        int close_on_exec : 1;
+    };
 };
 
 struct fd {
-        struct fd_descriptor descriptors[CONFIG_OPEN_MAX];
+    struct fd_descriptor descriptors[CONFIG_OPEN_MAX];
 };
 
 
 struct fs {
 
-        inode_t* root;
-        inode_t* cwd;
-        inode_t* exe;
+    inode_t* root;
+    inode_t* cwd;
+    inode_t* exe;
 
-        mode_t umask;
+    mode_t umask;
 };
 
 
 struct ksigaction {
 
-        union {
-                void (*handler)(int);
-                void (*sigaction)(int, siginfo_t*, void*);
-        };
+    union {
+        void (*handler)(int);
+        void (*sigaction)(int, siginfo_t*, void*);
+    };
 
-        long sa_flags;
-        void (*sa_restorer)(void);
+    long sa_flags;
+    void (*sa_restorer)(void);
 
-        int sa_mask[2];
+    int sa_mask[2];
 };
 
 
 struct kclone_args {
 
-        uint64_t flags;        /* Flags bit mask                                           */
-        uint64_t pidfd;        /* Where to store PID file descriptor (pid_t *)             */
-        uint64_t child_tid;    /* Where to store child TID, in child's memory (pid_t *)    */
-        uint64_t parent_tid;   /* Where to store child TID, in parent's memory (int *)     */
-        uint64_t exit_signal;  /* Signal to deliver to parent on child termination         */
-        uint64_t stack;        /* Pointer to lowest byte of stack                          */
-        uint64_t stack_size;   /* Size of stack                                            */
-        uint64_t tls;          /* Location of new TLS                                      */
-        uint64_t set_tid;      /* Pointer to a pid_t array                                 */
-        uint64_t set_tid_size; /* Number of elements in set_tid                            */
+    uint64_t flags;        /* Flags bit mask                                           */
+    uint64_t pidfd;        /* Where to store PID file descriptor (pid_t *)             */
+    uint64_t child_tid;    /* Where to store child TID, in child's memory (pid_t *)    */
+    uint64_t parent_tid;   /* Where to store child TID, in parent's memory (int *)     */
+    uint64_t exit_signal;  /* Signal to deliver to parent on child termination         */
+    uint64_t stack;        /* Pointer to lowest byte of stack                          */
+    uint64_t stack_size;   /* Size of stack                                            */
+    uint64_t tls;          /* Location of new TLS                                      */
+    uint64_t set_tid;      /* Pointer to a pid_t array                                 */
+    uint64_t set_tid_size; /* Number of elements in set_tid                            */
 };
 
 
 struct sighand {
 
-        struct ksigaction action[_NSIG];
-        sigset_t sigmask;
-        size_t refcount;
+    struct ksigaction action[_NSIG];
+    sigset_t sigmask;
+    size_t refcount;
 };
 
 
 
 typedef struct task {
 
-        char** argv;
-        char** environ;
+    char** argv;
+    char** environ;
 
-        pid_t tid;
-        gid_t pid;
-        gid_t pgrp;
+    pid_t tid;
+    gid_t pid;
+    gid_t pgrp;
 
-        uid_t uid;
-        uid_t euid;
-        gid_t gid;
-        gid_t egid;
+    uid_t uid;
+    uid_t euid;
+    gid_t gid;
+    gid_t egid;
 
-        uid_t sid;
-
-
-        ssize_t status;
-        ssize_t policy;
-        ssize_t priority;
-        ssize_t flags;
-        ssize_t caps;
-
-        cpu_set_t affinity;
+    uid_t sid;
 
 
-        void* frame;
-        void* fpu;
-        void* sstack;
-        void* kstack;
-        void* ustack;
-        vmm_address_space_t* address_space;
+    ssize_t status;
+    ssize_t policy;
+    ssize_t priority;
+    ssize_t flags;
+    ssize_t caps;
+
+    cpu_set_t affinity;
+
+
+    void* frame;
+    void* fpu;
+    void* sstack;
+    void* kstack;
+    void* ustack;
+    vmm_address_space_t* address_space;
 
 
 
-        struct {
+    struct {
 
-                clockid_t clockid;
-                struct timespec timeout;
-                struct timespec* remaining;
+        clockid_t clockid;
+        struct timespec timeout;
+        struct timespec* remaining;
 
-                bool expired;
+        bool expired;
 
-        } sleep;
-
-
-        struct timespec clock[TASK_CLOCK_MAX];
+    } sleep;
 
 
-        list(futex_t*, futexes);
-        list(struct task*, wait_queue);
-
-        int wait_options;
-        int* wait_status;
-        struct rusage* wait_rusage;
+    struct timespec clock[TASK_CLOCK_MAX];
 
 
-        shared_ptr(struct fd) fd;
-        shared_ptr(struct fs) fs;
-        shared_ptr(struct sighand) sighand;
-        shared_ptr(struct pty*) ctty;
+    list(futex_t*, futexes);
+    list(struct task*, wait_queue);
 
-        queue_t sigqueue;
-        queue_t sigpending;
-
-
-        struct {
-
-                uintptr_t stack;
-                uintptr_t start;
-                uintptr_t end;
-
-                uintptr_t thread_area;
-                uintptr_t cpu_area;
-
-                uintptr_t tid_address;
-
-                uintptr_t sigstack;
-                siginfo_t* siginfo;
-
-        } userspace;
+    int wait_options;
+    int* wait_status;
+    struct rusage* wait_rusage;
 
 
-        struct {
-                union {
-                        struct {
-                                int16_t o177  : 8;
-                                int16_t signo : 8;
-                        } stopped;
+    shared_ptr(struct fd) fd;
+    shared_ptr(struct fs) fs;
+    shared_ptr(struct sighand) sighand;
+    shared_ptr(struct pty*) ctty;
 
-                        struct {
-                                int16_t zero   : 8;
-                                int16_t retval : 8;
-                        } exited;
-
-                        struct {
-                                int16_t signo : 7;
-                                int16_t corep : 1;
-                                int16_t zero  : 8;
-                        } termed;
-                };
-
-                int16_t value : 16;
-        } exit;
+    queue_t sigqueue;
+    queue_t sigpending;
 
 
-        struct {
-                uint64_t rchar;
-                uint64_t wchar;
-                uint64_t syscr;
-                uint64_t syscw;
-                uint64_t read_bytes;
-                uint64_t write_bytes;
-                uint64_t cancelled_write_bytes;
-        } iostat;
+    struct {
+
+        uintptr_t stack;
+        uintptr_t start;
+        uintptr_t end;
+
+        uintptr_t thread_area;
+        uintptr_t cpu_area;
+
+        uintptr_t tid_address;
+
+        uintptr_t sigstack;
+        siginfo_t* siginfo;
+
+    } userspace;
 
 
-        struct {
+    struct {
+        union {
+            struct {
+                int16_t o177  : 8;
+                int16_t signo : 8;
+            } stopped;
 
-                long index;
-                long param0;
-                long param1;
-                long param2;
-                long param3;
-                long param4;
-                long param5;
+            struct {
+                int16_t zero   : 8;
+                int16_t retval : 8;
+            } exited;
 
-        } syscall;
+            struct {
+                int16_t signo : 7;
+                int16_t corep : 1;
+                int16_t zero  : 8;
+            } termed;
+        };
+
+        int16_t value : 16;
+    } exit;
 
 
-        struct rlimit rlimits[RLIM_NLIMITS];
-        struct rusage rusage;
+    struct {
+        uint64_t rchar;
+        uint64_t wchar;
+        uint64_t syscr;
+        uint64_t syscw;
+        uint64_t read_bytes;
+        uint64_t write_bytes;
+        uint64_t cancelled_write_bytes;
+    } iostat;
 
 
-        spinlock_t lock;
-        spinlock_t sched_lock;
+    struct {
 
-        struct task* parent;
-        struct task* next;
+        long index;
+        long param0;
+        long param1;
+        long param2;
+        long param3;
+        long param4;
+        long param5;
+
+    } syscall;
+
+
+    struct rlimit rlimits[RLIM_NLIMITS];
+    struct rusage rusage;
+
+
+    spinlock_t lock;
+    spinlock_t sched_lock;
+
+    struct task* parent;
+    struct task* next;
 
 } task_t;
 

@@ -152,44 +152,44 @@ MODULE_LICENSE("GPL");
 
 
 struct e1000_rx_desc {
-        volatile uint64_t addr;
-        volatile uint16_t length;
-        volatile uint16_t checksum;
-        volatile uint8_t status;
-        volatile uint8_t errors;
-        volatile uint16_t special;
+    volatile uint64_t addr;
+    volatile uint16_t length;
+    volatile uint16_t checksum;
+    volatile uint8_t status;
+    volatile uint8_t errors;
+    volatile uint16_t special;
 } __packed;
 
 struct e1000_tx_desc {
-        volatile uint64_t addr;
-        volatile uint16_t length;
-        volatile uint8_t cso;
-        volatile uint8_t cmd;
-        volatile uint8_t status;
-        volatile uint8_t css;
-        volatile uint16_t special;
+    volatile uint64_t addr;
+    volatile uint16_t length;
+    volatile uint8_t cso;
+    volatile uint8_t cmd;
+    volatile uint8_t status;
+    volatile uint8_t css;
+    volatile uint16_t special;
 } __packed;
 
 
 
 struct e1000 {
 
-        uint32_t pci;
-        uint8_t irq;
-        uint16_t io;
-        uintptr_t mem;
-        uintptr_t vmem;
+    uint32_t pci;
+    uint8_t irq;
+    uint16_t io;
+    uintptr_t mem;
+    uintptr_t vmem;
 
-        uintptr_t rx_desc[E1000_NUM_RX_DESC];
-        uintptr_t tx_desc[E1000_NUM_TX_DESC];
+    uintptr_t rx_desc[E1000_NUM_RX_DESC];
+    uintptr_t tx_desc[E1000_NUM_TX_DESC];
 
-        uint16_t rx_cur;
-        uint16_t tx_cur;
+    uint16_t rx_cur;
+    uint16_t tx_cur;
 
-        uintptr_t cache;
+    uintptr_t cache;
 
-        spinlock_t lock;
-        device_t device;
+    spinlock_t lock;
+    device_t device;
 };
 
 static struct e1000* devices[E1000_MAX_DEVICES];
