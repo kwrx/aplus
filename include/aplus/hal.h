@@ -52,6 +52,7 @@
     #define ARCH_REBOOT_SUSPEND  1
     #define ARCH_REBOOT_POWEROFF 2
     #define ARCH_REBOOT_HALT     3
+    #define ARCH_REBOOT_CRASH    4
 
 
     #define ARCH_VMM_AREA_HEAP   1
