@@ -142,6 +142,9 @@ x86_64)
     # Boot
     flags="$flags -boot order=c"
 
+    # Quick Exit
+    flags="$flags -device isa-debug-exit,iobase=0xf4,iosize=0x04"
+
     ;;
 
 *)
