@@ -8,6 +8,20 @@
 
 TMPDIR="/tmp/aplus-initrd"
 
+while $1; do
+    case $1 in
+    -h | --help)
+        echo "Usage: gen-initrd SYSROOT"
+        echo "  SYSROOT: The sysroot to generate an initrd for."
+        exit 0
+        ;;
+    *)
+        echo "Unknown option: $1"
+        exit 1
+        ;;
+    esac
+done
+
 if [ -z "$1" ]; then
     echo "No sysroot specified."
     exit 1

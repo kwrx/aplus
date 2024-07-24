@@ -1,5 +1,0 @@
-#!/bin/bash
-
-qemu-img convert -f raw -O vmdk aplus.img /tmp/aplus.vmdk
-cp -f /tmp/aplus.vmdk "/mnt/hgfs/E/Apps/VMware/Virtual Machines/aplus/aplus.vmdk"
-rm -f /tmp/aplus.vmdk

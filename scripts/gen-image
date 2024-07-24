@@ -5,12 +5,12 @@
 
 # This script generates an image from the given source directory.
 
-
 TMPDIR="/tmp/aplus-hdd"
 LIVE_MODE=0
 
-case "$1" in
-    -h|--help)
+while $1; do
+    case $1 in
+    -h | --help)
         echo "Usage: gen-image [OPTIONS] SOURCE OUTPUT"
         echo "  SOURCE: The source directory to generate an image from."
         echo "  OUTPUT: The destination file to generate the image to."
@@ -24,9 +24,11 @@ case "$1" in
         shift
         ;;
     *)
+        echo "Unknown option: $1"
+        exit 1
         ;;
-esac
-
+    esac
+done
 
 SOURCE="$1"
 OUTPUT="$2"
@@ -45,16 +47,12 @@ if [ -e $TMPDIR ]; then
     sudo rm -rf $TMPDIR
 fi
 
-
-
-
 function compress {
 
     echo "    GZIP    $(realpath --relative-base=$TMPDIR/p1 $1)"
     sudo gzip $1
 
 }
-
 
 function losetup_new_device {
 
@@ -70,7 +68,6 @@ function losetup_new_device {
     if [ -z $offset ]; then
         offset=0
     fi
-
 
     local device=$(sudo losetup -f)
 
@@ -90,13 +87,9 @@ function losetup_new_device {
         exit 1
     fi
 
-
     echo $device
 
 }
-
-
-
 
 if [ ! -f $OUTPUT ]; then
 
@@ -107,10 +100,9 @@ if [ ! -f $OUTPUT ]; then
         echo "gen-image: failed to create the disk image"
         exit 1
     fi
-    
-    
+
     # Make partition table, partition and set it bootable
-    echo -e "n\n\n\n93716\nef00\nn\n\n\n\n\nw\ny\n" | gdisk $OUTPUT &> /dev/null
+    echo -e "n\n\n\n93716\nef00\nn\n\n\n\n\nw\ny\n" | gdisk $OUTPUT &>/dev/null
     sync
 
     # Map the partitions from the image file
@@ -119,13 +111,13 @@ if [ ! -f $OUTPUT ]; then
     part=$(losetup_new_device $OUTPUT 48234496)
 
     # Make filesystem on the boot partition
-    sudo mkfs.vfat $boot -n "EFI" -F 32 &> /dev/null
+    sudo mkfs.vfat $boot -n "EFI" -F 32 &>/dev/null
 
     # Make filesystem on the first partition
     if [ $LIVE_MODE -eq 1 ]; then
-        sudo mkfs.vfat -F32 $part &> /dev/null
+        sudo mkfs.vfat -F32 $part &>/dev/null
     else
-        sudo mkfs.ext2 $part &> /dev/null
+        sudo mkfs.ext2 $part &>/dev/null
     fi
 
     # Mount the filesystem via loopback
@@ -141,15 +133,15 @@ if [ ! -f $OUTPUT ]; then
     fi
 
     # Install Grub
-    sudo grub-install --no-floppy                                                                       \
-                 --target=x86_64-efi                                                                    \
-                 --removable                                                                            \
-                 --no-nvram                                                                             \
-                 --force                                                                                \
-                 --modules="part_gpt part_msdos fat ext2 normal multiboot2 gzio progress all_video"     \
-                 --efi-directory=$TMPDIR/boot                                                           \
-                 --root-directory=$TMPDIR/p1                                                            \
-                 --boot-directory=$TMPDIR/p1/boot &> /dev/null                                         
+    sudo grub-install --no-floppy \
+        --target=x86_64-efi \
+        --removable \
+        --no-nvram \
+        --force \
+        --modules="part_gpt part_msdos fat ext2 normal multiboot2 gzio progress all_video" \
+        --efi-directory=$TMPDIR/boot \
+        --root-directory=$TMPDIR/p1 \
+        --boot-directory=$TMPDIR/p1/boot &>/dev/null
 
     # Unmount the loopback
     sudo umount $TMPDIR/boot
@@ -162,7 +154,6 @@ if [ ! -f $OUTPUT ]; then
     sync
 
 fi
-
 
 # Map the partitions from the image file
 part=$(losetup_new_device $OUTPUT 48234496)
@@ -209,7 +200,6 @@ else
 
 fi
 
-
 # Compress boot files
 
 for ko in $(find $TMPDIR/p1/usr/lib/modules -name "*.ko"); do
@@ -222,8 +212,6 @@ compress $TMPDIR/p1/boot/aplus
 if [ $LIVE_MODE -eq 1 ]; then
     compress $TMPDIR/p1/boot/initrd.img
 fi
-
-
 
 # Unmount the loopback
 sudo umount $TMPDIR/p1
