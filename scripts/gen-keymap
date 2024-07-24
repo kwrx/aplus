@@ -3,8 +3,20 @@
 # usage: gen-keymap <keymap> <output>
 # example: gen-keymap us /tmp/us.map
 
-
 CC="${CC:-gcc}"
+
+while $1; do
+    case $1 in
+    -h | --help)
+        echo "usage: gen-keymap <keymap> <output>"
+        exit 0
+        ;;
+    *)
+        echo "error: unknown option $1"
+        exit 1
+        ;;
+    esac
+done
 
 keymap=$1
 output=$2
@@ -14,7 +26,6 @@ if [ -z "$keymap" -o -z "$output" ]; then
     exit 1
 fi
 
-
 map=$(loadkeys -m $keymap)
 
 if [ -z "$map" ]; then
@@ -22,8 +33,8 @@ if [ -z "$map" ]; then
     exit 1
 fi
 
-
-header=$(cat <<-END
+header=$(
+    cat <<-END
 #define NR_KEYS             256
 #define MAX_NR_KEYMAPS      256
 #define MAX_NR_FUNC         256
@@ -31,8 +42,8 @@ header=$(cat <<-END
 END
 )
 
-
-main=$(cat <<-END
+main=$(
+    cat <<-END
 #include <stdio.h>
 #include <stdint.h>
 
@@ -91,8 +102,6 @@ int main(int argc, char** argv) {
 }
 END
 )
-
-
 
 $CC -o /tmp/gen-keymap -x c - <<END
 $header

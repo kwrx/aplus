@@ -21,6 +21,9 @@ cache   = '/tmp/get-pkg'
 
 
 def pkg_get(remote, cache, repo, p):
+    """
+    Download package from remote repository
+    """
     if os.path.exists('%s/%s/%s.tar.xz' % (cache, repo, p)) == False:
         wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
         print('')
@@ -31,6 +34,9 @@ def pkg_get(remote, cache, repo, p):
 
 
 def pkg_process(z, trigger, prefix):
+    """
+    Process trigger file
+    """
     
     try:
         z.getmember('.pkg/%s' % (trigger))
@@ -52,6 +58,9 @@ def pkg_process(z, trigger, prefix):
 
 
 def pkg_extract(archive, prefix):
+    """
+    Extract package
+    """
     z = tarfile.open(archive, 'r:xz')
 
     pkg_process(z, 'pre-install', prefix)
@@ -84,7 +93,9 @@ def pkg_extract(archive, prefix):
 
 
 def pkg_install(cache, repo, packages, prefix):
-
+    """
+    Install package
+    """
     for p in packages:
         print('GET %s %s.tar.xz' % (repo, p))
         pkg_get(remote, cache, repo, p)
@@ -96,9 +107,15 @@ def pkg_install(cache, repo, packages, prefix):
 
 
 def pkg_rm(cache, repo, packages, prefix):
+    """
+    Remove package
+    """
     pass
 
 def pkg_list(cache, repo, packages):
+    """
+    List files from package
+    """
     pass
 
 

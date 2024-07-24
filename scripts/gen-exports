@@ -3,6 +3,19 @@
 # Usage: gen-exports SYSROOT TARGET
 #
 
+while $1; do
+    case $1 in
+        -h|--help)
+            echo "Usage: $0 <SYSROOT> <TARGET>"
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1"
+            exit 1
+            ;;
+    esac
+done
+
 if [ -z $1 ] || [ -z $2 ]; then
     echo "Usage: $0 <SYSROOT> <TARGET>"
     exit 1

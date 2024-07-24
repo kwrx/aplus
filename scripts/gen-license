@@ -1,6 +1,19 @@
 #!/bin/bash
 # Usage: gen-license [SOURCES]
 
+while $1; do
+    case $1 in
+    -h | --help)
+        echo "Usage: gen-license [SOURCES]"
+        exit 0
+        ;;
+    *)
+        echo "Unknown option: $1"
+        exit 1
+        ;;
+    esac
+done
+
 LICENSE="\
 /*                                                                      \n\
  * Author(s):                                                           \n\
@@ -26,9 +39,8 @@ LICENSE="\
  */                                                                     \n\
                                                                         \n"
 
-
 for i in $@; do
-    if ! cat $i | grep "Copyright (c)" &> /dev/null; then
-        echo -e "$LICENSE$(cat $i)" > $i
+    if ! cat $i | grep "Copyright (c)" &>/dev/null; then
+        echo -e "$LICENSE$(cat $i)" >$i
     fi
 done

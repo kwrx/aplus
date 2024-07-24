@@ -360,6 +360,7 @@ fi
 optional clang-format "formatting will not be available"
 optional doxygen "documentation will not be available"
 optional qemu-img "disk images conversion will not be available"
+optional mkisofs "Live images creation will not be available"
 required git
 required make
 required automake
@@ -381,6 +382,7 @@ required zip
 required rustc
 required rustup
 required cargo
+required od
 required_python_3
 
 # Check for host architecture
