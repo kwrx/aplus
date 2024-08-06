@@ -298,6 +298,7 @@ ARG_KCONFIG=""
 ARG_SKIP_PACKAGES=0
 ARG_SKIP_TOOLCHAIN=0
 ARG_VERBOSE=0
+ARG_STAGE=0
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -318,6 +319,11 @@ while [[ $# -gt 0 ]]; do
         ;;
     --remote)
         ARG_REMOTE="$2"
+        shift
+        shift
+        ;;
+    --stage)
+        ARG_STAGE="$2"
         shift
         shift
         ;;
@@ -404,16 +410,34 @@ die $HOST_PYTHON -m venv .venv
 die source .venv/bin/activate
 
 # Execute stages
-stage_1
-stage_2
-if [ $ARG_SKIP_PACKAGES -eq 0 ]; then
+if [ $ARG_STAGE -eq 1 ]; then
+    stage_1
+elif [ $ARG_STAGE -eq 2 ]; then
+    stage_2
+elif [ $ARG_STAGE -eq 3 ]; then
+    stage_2
     stage_3
-fi
-if [ $ARG_SKIP_TOOLCHAIN -eq 0 ]; then
+elif [ $ARG_STAGE -eq 4 ]; then
+    stage_2
     stage_4
+elif [ $ARG_STAGE -eq 5 ]; then
+    stage_2
+    stage_5
+elif [ $ARG_STAGE -eq 6 ]; then
+    stage_2
+    stage_6
+else
+    stage_1
+    stage_2
+    if [ $ARG_SKIP_PACKAGES -eq 0 ]; then
+        stage_3
+    fi
+    if [ $ARG_SKIP_TOOLCHAIN -eq 0 ]; then
+        stage_4
+    fi
+    # stage_5
+    stage_6
 fi
-# stage_5
-stage_6
 
 # Cleanup
 die deactivate
