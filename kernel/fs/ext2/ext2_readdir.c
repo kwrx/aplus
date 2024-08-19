@@ -57,7 +57,8 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
     for (q = 0; q < n->i_size; q += ext2->blocksize) {
 
-        __lock(&ext2->lock, {
+        scoped_lock(&ext2->lock) {
+
             ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
 
             for (size_t i = 0; i < ext2->blocksize;) {
@@ -99,7 +100,7 @@ ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) 
 
                 i += d->rec_len;
             }
-        });
+        }
 
 
         if (count == 0)

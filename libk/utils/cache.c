@@ -84,7 +84,7 @@ void cache_destroy(cache_t* cache) {
 
     DEBUG_ASSERT(cache);
 
-    __lock(&cache->lock, {
+    scoped_lock(&cache->lock) {
         if (likely(cache->ops.commit)) {
 
             cache_key_t key;
@@ -109,7 +109,7 @@ void cache_destroy(cache_t* cache) {
 
         cache->size     = 0;
         cache->userdata = NULL;
-    });
+    }
 }
 
 
@@ -133,7 +133,7 @@ __returns_nonnull cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 
     cache_value_t value = NULL;
 
-    __lock(&cache->lock, {
+    scoped_lock(&cache->lock) {
         value = hashmap_get(&cache->map, key);
 
         if (value == NULL) {
@@ -176,7 +176,7 @@ __returns_nonnull cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
                 cache->size++;
             }
         }
-    });
+    }
 
 
     PANIC_ASSERT(value != NULL && "cache: failed to fetch key");
@@ -193,7 +193,7 @@ void __cache_commit(cache_t* cache, cache_key_t key) {
 
     cache_value_t value = NULL;
 
-    __lock(&cache->lock, {
+    scoped_lock(&cache->lock) {
         cache_value_t v = hashmap_get(&cache->map, key);
 
         if (v != NULL) {
@@ -202,7 +202,7 @@ void __cache_commit(cache_t* cache, cache_key_t key) {
                 cache->ops.commit(cache, cache->userdata, key, value);
             }
         }
-    });
+    }
 
 
     PANIC_ASSERT(value != NULL && "cache: failed to commit key");
@@ -217,7 +217,7 @@ void __cache_remove(cache_t* cache, cache_key_t key) {
 
     cache_value_t value = NULL;
 
-    __lock(&cache->lock, {
+    scoped_lock(&cache->lock) {
         if ((value = hashmap_remove(&cache->map, key)) != NULL) {
             cache->size--;
         }
@@ -225,7 +225,7 @@ void __cache_remove(cache_t* cache, cache_key_t key) {
         if (cache->ops.release) {
             cache->ops.release(cache, cache->userdata, key, value);
         }
-    });
+    }
 
 
     PANIC_ASSERT(value != NULL && "cache: failed to remove key");

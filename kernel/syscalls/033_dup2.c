@@ -25,6 +25,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/ipc.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
@@ -73,14 +74,12 @@ SYSCALL(
             DEBUG_ASSERT(!fds->descriptors[newfd].ref);
 
 
-            __lock(&current_task->lock, {
-                __lock(&fds->descriptors[fd].ref->lock, {
-                    fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
-                    fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
+                fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
+                fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
-                    atomic_fetch_add(&fds->descriptors[fd].ref->refcount, 1);
-                });
-            });
+                atomic_fetch_add(&fds->descriptors[fd].ref->refcount, 1);
+            }
         });
 
 

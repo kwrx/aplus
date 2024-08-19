@@ -84,8 +84,7 @@ SYSCALL(
             DEBUG_ASSERT(fds->descriptors[fd].ref);
             DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
 
-            __lock(
-                &fds->descriptors[fd].ref->lock,
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
 
                 for (unsigned int i = 0; i + sizeof(struct linux_dirent64) < count;) {
                     struct dirent ent = {0};
@@ -113,8 +112,7 @@ SYSCALL(
 
                     dirent = (struct linux_dirent64*)((uintptr_t)dirent + reclen);
                 }
-
-            );
+            }
         });
 
 

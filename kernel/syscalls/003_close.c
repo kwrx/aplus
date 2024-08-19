@@ -82,12 +82,12 @@ SYSCALL(
                     return -EBADF;
 
 
-                __lock(&current_task->lock, {
+                scoped_lock(&current_task->lock) {
                     fd_remove(fds->descriptors[fd].ref, true);
 
                     fds->descriptors[fd].ref   = NULL;
                     fds->descriptors[fd].flags = 0;
-                });
+                }
             });
 
 

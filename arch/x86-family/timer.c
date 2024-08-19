@@ -93,7 +93,7 @@ uint64_t arch_timer_gettime(void) {
 
     struct tm tm = {0};
 
-    __lock(&rtc_lock, {
+    scoped_lock(&rtc_lock) {
         tm.tm_sec   = BCD2BIN(__RTC(0));
         tm.tm_min   = BCD2BIN(__RTC(2));
         tm.tm_hour  = BCD2BIN2(__RTC(4));
@@ -103,7 +103,7 @@ uint64_t arch_timer_gettime(void) {
         tm.tm_wday  = 0;
         tm.tm_yday  = 0;
         tm.tm_isdst = 0;
-    });
+    };
 
 
     static int m[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

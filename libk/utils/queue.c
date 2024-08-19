@@ -88,7 +88,7 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 
     DEBUG_ASSERT(queue);
 
-    __lock(&queue->lock, {
+    scoped_lock(&queue->lock) {
         if (queue->size == 0) {
 
             queue->head = __queue_element(element, priority, NULL);
@@ -117,7 +117,7 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
         }
 
         queue->size += 1;
-    });
+    }
 }
 
 
@@ -134,7 +134,7 @@ void queue_dequeue(queue_t* queue, void* element) {
 
     } else {
 
-        __lock(&queue->lock, {
+        scoped_lock(&queue->lock) {
             struct queue_element* tmp;
             struct queue_element* last;
 
@@ -151,7 +151,7 @@ void queue_dequeue(queue_t* queue, void* element) {
 
 
             queue->size -= 1;
-        });
+        }
     }
 }
 
@@ -182,10 +182,10 @@ void* queue_pop(queue_t* queue) {
     void* element             = top->element;
 
 
-    __lock(&queue->lock, {
+    scoped_lock(&queue->lock) {
         queue->head = queue->head->next;
         queue->size -= 1;
-    });
+    }
 
 
     kfree(top);

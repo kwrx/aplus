@@ -73,7 +73,7 @@ SYSCALL(
 
 
 
-            __lock(&fds->descriptors[fd].ref->lock, {
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
                 switch (whence) {
 
                     case SEEK_SET:
@@ -92,7 +92,7 @@ SYSCALL(
                         DEBUG_ASSERT(0 && "sys_lseek() invalid whence!");
                         break;
                 }
-            });
+            }
 
             return fds->descriptors[fd].ref->position;
         });

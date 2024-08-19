@@ -68,7 +68,9 @@ SYSCALL(
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
 
-            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_truncate(fds->descriptors[fd].ref->inode, length); });
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
+                e = vfs_truncate(fds->descriptors[fd].ref->inode, length);
+            }
         });
 
 

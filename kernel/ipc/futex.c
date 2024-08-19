@@ -67,7 +67,8 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
             continue;
 
 
-        __lock(&task->lock, {
+        scoped_lock(&task->lock) {
+
             futex->address = kaddr;
             futex->value   = value;
 
@@ -83,7 +84,7 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
                 futex->timeout.tv_sec  = 0;
                 futex->timeout.tv_nsec = 0;
             }
-        });
+        }
 
         return;
     }
@@ -104,7 +105,9 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
     }
 
 
-    __lock(&task->lock, { list_push(task->futexes, futex); });
+    scoped_lock(&task->lock) {
+        list_push(task->futexes, futex);
+    }
 }
 
 
@@ -120,16 +123,16 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     size_t wok = 0;
 
 
-    cpu_foreach(cpu) {
+    cpu_foreach (cpu) {
 
         task_t* tmp;
         for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-            __lock(&tmp->lock, {
+            scoped_lock(&tmp->lock) {
 
                 list_each(tmp->futexes, i) {
 
-                    if(likely(i->address != kaddr))
+                    if (likely(i->address != kaddr))
                         continue;
 
 
@@ -138,17 +141,18 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 #endif
 
 
-                    i->address =  0;
+                    i->address = 0;
                     i->value   = ~0;
 
-                    max--; wok++;
+                    max--;
+                    wok++;
                     break;
+                }
+            }
         }
-    });
-}
-}
+    }
 
-return wok;
+    return wok;
 }
 
 
@@ -165,16 +169,16 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
     size_t req = 0;
 
 
-    cpu_foreach(cpu) {
+    cpu_foreach (cpu) {
 
         task_t* tmp;
         for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-            __lock(&tmp->lock, {
+            scoped_lock(&tmp->lock) {
 
                 list_each(tmp->futexes, i) {
 
-                    if(likely(i->address != kaddr))
+                    if (likely(i->address != kaddr))
                         continue;
 
 
@@ -184,14 +188,15 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
                     i->address = kaddr2;
 
-                    max--; req++;
+                    max--;
+                    req++;
                     break;
+                }
+            }
         }
-    });
-}
-}
+    }
 
-return req;
+    return req;
 }
 
 

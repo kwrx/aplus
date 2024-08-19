@@ -118,7 +118,8 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
         return;
 
 
-    __lock(&ext2->lock, {
+    scoped_lock(&ext2->lock) {
+
         size_t i;
         size_t j;
 
@@ -175,7 +176,7 @@ void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
 
             break;
         }
-    });
+    }
 
 
     DEBUG_ASSERT(*block != 0);

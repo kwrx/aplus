@@ -53,14 +53,14 @@ void ringbuffer_destroy(ringbuffer_t* rb) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
-    __lock(&rb->lock, {
+    scoped_lock(&rb->lock) {
         kfree(rb->buffer);
 
         rb->size   = 0;
         rb->head   = 0;
         rb->tail   = 0;
         rb->buffer = NULL;
-    });
+    }
 }
 
 
@@ -69,11 +69,11 @@ void ringbuffer_reset(ringbuffer_t* rb) {
     DEBUG_ASSERT(rb);
     DEBUG_ASSERT(rb->buffer);
 
-    __lock(&rb->lock, {
+    scoped_lock(&rb->lock) {
         rb->head = 0;
         rb->tail = 0;
         rb->full = 0;
-    });
+    }
 }
 
 
@@ -133,7 +133,7 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 
     ssize_t e = -1;
 
-    __lock(&rb->lock, {
+    scoped_lock(&rb->lock) {
         if (unlikely(rb->buffer == NULL)) {
 
             errno = EIO;
@@ -158,7 +158,7 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
                 e = size;
             }
         }
-    });
+    }
 
     return e;
 }
@@ -172,7 +172,7 @@ ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     ssize_t e = -1;
 
-    __lock(&rb->lock, {
+    scoped_lock(&rb->lock) {
         if (unlikely(rb->buffer == NULL)) {
 
             errno = EIO;
@@ -198,7 +198,7 @@ ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
                 e = i;
             }
         }
-    });
+    }
 
     return e;
 }

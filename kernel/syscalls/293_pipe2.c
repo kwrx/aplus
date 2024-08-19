@@ -82,7 +82,7 @@ SYSCALL(
 
                 int fd = -1;
 
-                __lock(&current_task->lock, {
+                scoped_lock(&current_task->lock) {
                     for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
 
                         if (!fds->descriptors[fd].ref)
@@ -95,7 +95,7 @@ SYSCALL(
 
                     fds->descriptors[fd].ref   = refs[i];
                     fds->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);
-                });
+                }
 
 
                 if (fd == CONFIG_OPEN_MAX)

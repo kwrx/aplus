@@ -85,7 +85,9 @@ SYSCALL(
                 if (unlikely(!fds->descriptors[fd].ref))
                     return -EBADF;
 
-                __lock(&fds->descriptors[fd].ref->lock, { e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void*)arg); });
+                scoped_lock(&fds->descriptors[fd].ref->lock) {
+                    e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void*)arg);
+                }
             });
 
 

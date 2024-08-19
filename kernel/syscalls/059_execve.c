@@ -280,7 +280,8 @@ SYSCALL(
         uintptr_t flags = 0;
 
 
-        __lock(&current_task->lock, {
+        scoped_lock(&current_task->lock) {
+
             current_task->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_NEW_SPACE);
 
             current_task->userspace.start = ~0UL;
@@ -368,7 +369,7 @@ SYSCALL(
             }
 
             current_task->userspace.end = (current_task->userspace.end & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
-        });
+        }
 
 
         DEBUG_ASSERT(current_task->userspace.start);
@@ -378,7 +379,6 @@ SYSCALL(
 
 
         // * Close all file descriptors marked as close-on-exec
-
         shared_ptr_access(current_task->fd, fds, {
             for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
@@ -393,7 +393,6 @@ SYSCALL(
         });
 
         // * Reset signal handlers
-
         shared_ptr_access(current_task->sighand, sighand, {
             for (size_t i = 0; i < _NSIG; i++) {
 
@@ -405,13 +404,11 @@ SYSCALL(
 
 
         // * Set new fs executable
-
         shared_ptr_access(current_task->fs, fs, { fs->exe = inode; });
 
 
 
         // * Prepare data for _start()
-
         for (size_t i = 0; argq[i]; i++) {
 
             char* p = (char*)__sbrk(uio_strlen(argq[i]) + 1);
@@ -430,14 +427,12 @@ SYSCALL(
 
 
         // * Allocate Signal Stack
-
         __sbrk(SIGSTKSZ);
         uintptr_t sigstack = __sbrk(0);
         uintptr_t siginfo  = __sbrk(sizeof(siginfo_t));
 
 
         // * Allocate User Stack
-
         uintptr_t bottom = __sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur);
         uintptr_t stack  = __sbrk(0);
 
@@ -447,7 +442,6 @@ SYSCALL(
 
 
         // * Arguments
-
         uio_wptr(sp++, argc);
 
         for (size_t i = 0; i < argc; i++)
@@ -458,7 +452,6 @@ SYSCALL(
 
 
         // * Environment
-
         for (size_t i = 0; i < envc; i++)
             uio_wptr(sp++, (uintptr_t)envq[i]);
 
@@ -467,7 +460,6 @@ SYSCALL(
 
 
     // * AUX vector
-
 #define AUX_ENT(id, value)     \
     {                          \
         uio_wptr(sp++, id);    \

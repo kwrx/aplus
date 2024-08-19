@@ -106,6 +106,7 @@ ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
 ForEachMacros:
   - foreach
+  - cpu_foreach
   - Q_FOREACH
   - BOOST_FOREACH
 IfMacros:
