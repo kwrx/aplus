@@ -175,7 +175,7 @@ SYSCALL(
         int fd = -1;
 
         shared_ptr_access(current_task->fd, fds, {
-            __lock(&current_task->lock, {
+            scoped_lock(&current_task->lock) {
                 for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
 
                     if (fds->descriptors[fd].ref == NULL)
@@ -203,7 +203,7 @@ SYSCALL(
                     fds->descriptors[fd].ref   = ref;
                     fds->descriptors[fd].flags = flags;
                 }
-            });
+            }
 
 
             if (fd == CONFIG_OPEN_MAX)

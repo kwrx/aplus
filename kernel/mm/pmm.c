@@ -102,10 +102,10 @@ void pmm_claim_area(uintptr_t physaddr, uintptr_t size) {
 
         uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[pml2_index];
 
-        __lock(&pml2_lock[pml2_index], {
+        scoped_lock(&pml2_lock[pml2_index]) {
             pml1_bitmap[pml1_index / 64] |= (1ULL << (pml1_index % 64));
             pml2_pusage[pml2_index]++;
-        });
+        }
     }
 
 #if DEBUG_LEVEL_TRACE
@@ -153,10 +153,10 @@ void pmm_unclaim_area(uintptr_t physaddr, size_t size) {
 
         uint64_t* pml1_bitmap = (uint64_t*)pml2_bitmap[pml2_index];
 
-        __lock(&pml2_lock[pml2_index], {
+        scoped_lock(&pml2_lock[pml2_index]) {
             pml1_bitmap[pml1_index / 64] &= ~(1ULL << (pml1_index % 64));
             pml2_pusage[pml2_index]--;
-        });
+        }
     }
 
 #if DEBUG_LEVEL_TRACE
@@ -193,7 +193,7 @@ uintptr_t pmm_alloc_block() {
                 continue;
 
 
-            __lock(&pml2_lock[i], {
+            scoped_lock(&pml2_lock[i]) {
                 for (j = 0; j < 64; j++) {
 
                     if (unlikely(pml1_bitmap[q] & (1ULL << j)))
@@ -206,7 +206,7 @@ uintptr_t pmm_alloc_block() {
                     r = (i * PML2_PAGESIZE) + (((q << 6ULL) + j) * PML1_PAGESIZE);
                     break;
                 }
-            });
+            }
 
             if (unlikely(r != -1))
                 break;
@@ -268,7 +268,7 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
             }
 
 
-            __lock(&pml2_lock[i], {
+            scoped_lock(&pml2_lock[i]) {
                 for (j = 0; j < 64; j++) {
 
                     if (unlikely(pml1_bitmap[q] & (1ULL << j))) {
@@ -282,7 +282,7 @@ uintptr_t pmm_alloc_blocks(size_t blkno) {
                     if (++c == blkno)
                         break;
                 }
-            });
+            }
 
             if (unlikely(c == blkno))
                 break;
@@ -350,7 +350,7 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
             }
 
 
-            __lock(&pml2_lock[i], {
+            scoped_lock(&pml2_lock[i]) {
                 for (j = 0; j < 64; j++) {
 
                     if (unlikely(pml1_bitmap[q] & (1ULL << j))) {
@@ -365,7 +365,7 @@ uintptr_t pmm_alloc_blocks_aligned(size_t blkno, uintptr_t align) {
                     if (++c == blkno)
                         break;
                 }
-            });
+            }
 
             if (unlikely(c == blkno))
                 break;

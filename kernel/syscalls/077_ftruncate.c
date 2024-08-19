@@ -60,7 +60,9 @@ SYSCALL(
             if (unlikely(!fds->descriptors[fd].ref))
                 return -EBADF;
 
-            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_truncate(fds->descriptors[fd].ref->inode, length); });
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
+                e = vfs_truncate(fds->descriptors[fd].ref->inode, length);
+            }
         });
 
 

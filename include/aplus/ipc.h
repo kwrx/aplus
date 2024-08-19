@@ -175,47 +175,11 @@ size_t futex_wakeup(uint32_t*, size_t);
 size_t futex_requeue(uint32_t*, uint32_t*, size_t);
 bool futex_expired(futex_t*);
 
+static inline void __scoped_lock_cleanup(spinlock_t** lock) {
+    spinlock_unlock(*lock);
+}
 
-
-    #define __lock(lk, fn...)      \
-        {                          \
-            spinlock_lock((lk));   \
-            do {                   \
-                fn;                \
-            } while (0);           \
-            spinlock_unlock((lk)); \
-        }
-
-    #define __lock_return(lk, type, fn...) \
-        {                                  \
-            type __r;                      \
-            spinlock_lock(lk);             \
-            __r = fn;                      \
-            spinlock_unlock(lk);           \
-            return __r;                    \
-        }
-
-    #define __trylock(lk, fn...)                                                                    \
-        {                                                                                           \
-            if (unlikely(!spinlock_trylock((lk))))                                                  \
-                kpanicf("spinlock: DEADLOCK! %s in %s:%d <%s>", #lk, __FILE__, __LINE__, __func__); \
-            do {                                                                                    \
-                fn;                                                                                 \
-            } while (0);                                                                            \
-            spinlock_unlock((lk));                                                                  \
-        }
-
-    #define __trylock_return(lk, type, fn...)                                                       \
-        {                                                                                           \
-            type __r;                                                                               \
-            if (unlikely(!spinlock_trylock((lk))))                                                  \
-                kpanicf("spinlock: DEADLOCK! %s in %s:%d <%s>", #lk, __FILE__, __LINE__, __func__); \
-            __r = fn;                                                                               \
-            spinlock_unlock((lk));                                                                  \
-            return __r;                                                                             \
-        }
-
-
+    #define scoped_lock(lk) for (__scoped(__scoped_lock_cleanup) typeof(lk) __scoped_lock = (spinlock_lock(lk), lk), __scoped_cond = lk; __scoped_cond; __scoped_cond = NULL)
 
 __END_DECLS
 

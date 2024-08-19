@@ -53,14 +53,14 @@ SYSCALL(
             return -EBADF;
 
 
-        int i;
+        int i = 0;
 
         shared_ptr_access(current_task->fd, fds, {
             if (unlikely(!fds->descriptors[fd].ref))
                 return -EBADF;
 
 
-            __lock(&current_task->lock, {
+            scoped_lock(&current_task->lock) {
                 for (i = 0; i < CONFIG_OPEN_MAX; i++) {
 
                     if (!fds->descriptors[i].ref)
@@ -71,13 +71,13 @@ SYSCALL(
                     break;
 
 
-                __lock(&fds->descriptors[fd].ref->lock, {
+                scoped_lock(&fds->descriptors[fd].ref->lock) {
                     fds->descriptors[i].ref   = fds->descriptors[fd].ref;
                     fds->descriptors[i].flags = fds->descriptors[fd].flags;
 
                     atomic_fetch_add(&fds->descriptors[i].ref->refcount, 1);
-                });
-            });
+                }
+            }
         });
 
 

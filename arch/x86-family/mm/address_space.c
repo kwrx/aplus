@@ -259,9 +259,13 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
     size_t size = 0UL;
 
 #if defined(__x86_64__)
-    __lock(&parent->lock, __mm_copy_table(parent->pm, dest->pm, &size, 4, flags));
+    scoped_lock(&parent->lock) {
+        __mm_copy_table(parent->pm, dest->pm, &size, 4, flags);
+    }
 #elif defined(__i386__)
-    __lock(&parent->lock, __mm_copy_table(parent->pm, dest->pm, &size, 2, flags));
+    scoped_lock(&parent->lock) {
+        __mm_copy_table(parent->pm, dest->pm, &size, 2, flags);
+    }
 #else
     #error "Unsupported architecture!"
 #endif
@@ -304,9 +308,13 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     // TODO: free all mappings
 
 #if defined(__x86_64__)
-    __lock(&space->lock, __mm_free_table(space->pm, 4));
+    scoped_lock(&space->lock) {
+        __mm_free_table(space->pm, 4);
+    }
 #elif defined(__i386__)
-    __lock(&space->lock, __mm_free_table(space->pm, 2));
+    scoped_lock(&space->lock) {
+        __mm_free_table(space->pm, 2);
+    }
 #else
     #error "Unsupported architecture!"
 #endif

@@ -64,15 +64,16 @@ SYSCALL(
 
 
 
-        int e;
+        int e = 0;
         struct stat __statbuf = {0};
 
         shared_ptr_access(current_task->fd, fds, {
             if (unlikely(!fds->descriptors[fd].ref))
                 return -EBADF;
 
-
-            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf); });
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
+                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
+            }
         });
 
 

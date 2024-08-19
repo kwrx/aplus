@@ -50,11 +50,11 @@ __nosanitize("undefined") void kprintf(const char* fmt, ...) {
     va_end(v);
 
 
-    __lock(&buflock, {
+    scoped_lock(&buflock) {
         for (int i = 0; buf[i] && !((1 << current_cpu->id) & atomic_load_explicit(&accmask, memory_order_consume)); i++) {
             arch_debug_putc(buf[i]);
         }
-    });
+    }
 }
 
 

@@ -117,13 +117,13 @@ SYSCALL(
 
                 uio_lock(buf, size);
 
-                __lock(&fds->descriptors[fd].ref->lock, {
+                scoped_lock(&fds->descriptors[fd].ref->lock) {
                     if ((e = vfs_write(fds->descriptors[fd].ref->inode, buf, fds->descriptors[fd].ref->position, size)) <= 0)
                         break;
 
                     fds->descriptors[fd].ref->position += e;
                     current_task->iostat.write_bytes += (uint64_t)e;
-                });
+                }
 
                 uio_unlock(buf, size);
 

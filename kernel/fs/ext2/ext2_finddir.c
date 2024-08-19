@@ -57,7 +57,8 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
     for (size_t q = 0; q < n->i_size; q += ext2->blocksize) {
 
 
-        __lock(&ext2->lock, {
+        scoped_lock(&ext2->lock) {
+
             ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
 
             for (size_t i = 0; i < ext2->blocksize;) {
@@ -130,7 +131,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
 
                 i += e->rec_len;
             }
-        });
+        }
 
 
         if (d != NULL)

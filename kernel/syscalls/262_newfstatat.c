@@ -76,13 +76,15 @@ SYSCALL(
             return fd;
 
 
-        int e;
+        int e = 0;
         struct stat __statbuf = {0};
 
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
 
-            __lock(&fds->descriptors[fd].ref->lock, { e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf); });
+            scoped_lock(&fds->descriptors[fd].ref->lock) {
+                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
+            }
         });
 
 

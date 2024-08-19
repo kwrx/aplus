@@ -58,7 +58,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 
     int i = CONFIG_FILE_MAX;
 
-    __lock(&filetable_lock, {
+    scoped_lock(&filetable_lock) {
         for (i = lowestfree; i < CONFIG_FILE_MAX; i++) {
 
             if (filetable[i].refcount > 0)
@@ -70,7 +70,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
             filetable[i].refcount = 1;
             break;
         }
-    });
+    }
 
 
     if (i == CONFIG_FILE_MAX) {
@@ -96,7 +96,7 @@ void fd_remove(struct file* fd, bool close) {
     DEBUG_ASSERT(filetable);
 
 
-    __lock(&filetable_lock, {
+    scoped_lock(&filetable_lock) {
         if (atomic_fetch_sub(&fd->refcount, 1) == 1) {
 
             if (close) {
@@ -117,7 +117,7 @@ void fd_remove(struct file* fd, bool close) {
                 lowestfree = i;
             }
         }
-    });
+    }
 }
 
 
@@ -126,5 +126,7 @@ void fd_ref(struct file* file) {
     DEBUG_ASSERT(file);
     DEBUG_ASSERT(filetable);
 
-    __lock(&filetable_lock, { atomic_fetch_sub(&file->refcount, 1); });
+    scoped_lock(&filetable_lock) {
+        atomic_fetch_sub(&file->refcount, 1);
+    }
 }

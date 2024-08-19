@@ -331,7 +331,9 @@ void schedule(int resched) {
 
 
 
-    __lock(&current_cpu->sched_lock, { arch_task_switch(prev_task, current_task); });
+    scoped_lock(&current_cpu->sched_lock) {
+        arch_task_switch(prev_task, current_task);
+    }
 
 
     do_signals();
@@ -367,12 +369,12 @@ void sched_enqueue(task_t* task) {
 
     DEBUG_ASSERT(cpu);
 
-    __lock(&cpu->sched_lock, {
+    scoped_lock(&cpu->sched_lock) {
         task->next = cpu->sched_queue;
 
         cpu->sched_queue = task;
         cpu->sched_count++;
-    });
+    }
 
 
 #if DEBUG_LEVEL_TRACE
@@ -395,7 +397,7 @@ void sched_dequeue(task_t* task) {
 
         found = 1;
 
-        __lock(&cpu->sched_lock, {
+        scoped_lock(&cpu->sched_lock) {
             if (task == cpu->sched_queue) {
 
                 cpu->sched_queue = task->next;
@@ -418,7 +420,7 @@ void sched_dequeue(task_t* task) {
                     found = 0;
                 }
             }
-        });
+        }
 
         if (found) {
             cpu->sched_count--;
@@ -443,7 +445,8 @@ void sched_requeue(task_t* task) {
 
         found = 1;
 
-        __lock(&cpu->sched_lock, {
+        scoped_lock(&cpu->sched_lock) {
+
             if (task == cpu->sched_queue) {
 
                 cpu->sched_queue = task->next;
@@ -466,7 +469,7 @@ void sched_requeue(task_t* task) {
                     found = 0;
                 }
             }
-        });
+        }
 
         if (found) {
 

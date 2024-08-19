@@ -62,14 +62,15 @@ void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
 
         if ((source >= (ioapic[i].gsi_base)) && (source <= (ioapic[i].gsi_base + ioapic[i].gsi_max - 1))) {
 
-            __lock(&ioapic[i].lock, {
+            scoped_lock(&ioapic[i].lock) {
+
                 uint64_t d = 0;
                 d |= (0x20 + irq) & 0xFF;
                 d |= (uint64_t)cpu << 56;
 
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source), d & 0xFFFFFFFF);
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source) + 1, (d >> 32) & 0xFFFFFFFF);
-            });
+            };
 
             return;
         }
@@ -91,13 +92,14 @@ void ioapic_unmap_irq(irq_t source) {
 
         if ((source >= (ioapic[i].gsi_base)) && (source <= (ioapic[i].gsi_base + ioapic[i].gsi_max - 1))) {
 
-            __lock(&ioapic[i].lock, {
+            scoped_lock(&ioapic[i].lock) {
+
                 uint64_t d = 0;
                 d |= (1 << 16);
 
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source), d & 0xFFFFFFFF);
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source) + 1, (d >> 32) & 0xFFFFFFFF);
-            });
+            };
 
             return;
         }

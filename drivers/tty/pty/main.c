@@ -71,13 +71,13 @@ __attribute__((used)) static void pty_input_discard(pty_t* pty, bool drain) {
     DEBUG_ASSERT(pty->input.capacity);
     DEBUG_ASSERT(pty->input.capacity >= pty->input.size);
 
-    __lock(&pty->input.lock, {
+    scoped_lock(&pty->input.lock) {
         if (drain) {
             ringbuffer_write(&pty->r1, pty->input.buffer, pty->input.size);
         }
 
         pty->input.size = 0;
-    });
+    }
 }
 
 
@@ -92,7 +92,7 @@ __attribute__((used)) static void pty_input_backspace(pty_t* pty, bool echo) {
     DEBUG_ASSERT(pty->input.buffer);
     DEBUG_ASSERT(pty->input.capacity);
 
-    __lock(&pty->input.lock, {
+    scoped_lock(&pty->input.lock) {
         if (pty->input.buffer[pty->input.size - 1] < 0x20 || pty->input.buffer[pty->input.size - 1] == 0x7F) {
 
             if (pty->input.size > 0) {
@@ -108,7 +108,7 @@ __attribute__((used)) static void pty_input_backspace(pty_t* pty, bool echo) {
         if (echo) {
             pty_process_output(pty, "\b \b", 3);
         }
-    });
+    }
 }
 
 
@@ -116,7 +116,7 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
 
     DEBUG_ASSERT(pty);
 
-    __lock(&pty->input.lock, {
+    scoped_lock(&pty->input.lock) {
         if (pty->input.capacity == pty->input.size) {
 
             pty->input.capacity += 256;
@@ -132,7 +132,7 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
         if (echo) {
             pty_process_output(pty, &ch, 1);
         }
-    });
+    }
 }
 
 
@@ -846,10 +846,10 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
 
     pty->ptmx = ptmx;
 
-    __lock(&queue_lock, {
+    scoped_lock(&queue_lock) {
         pty->next = queue;
         queue     = pty;
-    });
+    }
 
     return pty;
 }
