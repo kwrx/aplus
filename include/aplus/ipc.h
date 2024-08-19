@@ -179,7 +179,7 @@ static inline void __scoped_lock_cleanup(spinlock_t** lock) {
     spinlock_unlock(*lock);
 }
 
-    #define scoped_lock(lk) for (__scoped(__scoped_lock_cleanup) typeof(lk) __scoped_lock = (spinlock_lock(lk), lk), __scoped_cond = lk; __scoped_cond; __scoped_cond = NULL)
+    #define scoped_lock(lk) for (__scoped(__scoped_lock_cleanup) __typeof__(lk) __scoped_lock = (spinlock_lock(lk), lk), __scoped_cond = lk; __scoped_cond; __scoped_cond = NULL)
 
 __END_DECLS
 
