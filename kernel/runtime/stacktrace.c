@@ -39,17 +39,16 @@ void runtime_stacktrace() {
 
     kprintf("--- Stacktrace for cpu(%ld), pid(%d) ---\n", current_cpu->id, current_task ? current_task->tid : -1);
 
-    int i;
-    for (i = 0; i < sizeof(frames) / sizeof(uintptr_t); i++) {
+    for (size_t i = 0; i < sizeof(frames) / sizeof(uintptr_t); i++) {
 
         if (!frames[i])
             break;
 
         const char* s;
         if ((s = runtime_get_name(frames[i])))
-            kprintf("[%d] 0x%8lX <%s>\n", i, frames[i], s);
+            kprintf("[%zd] 0x%8lX <%s>\n", i, frames[i], s);
         else
-            kprintf("[%d] 0x%8lX <%s>\n", i, frames[i], "unknown");
+            kprintf("[%zd] 0x%8lX <%s>\n", i, frames[i], "unknown");
     }
 
     kprintf("--- End of stacktrace ---\n");
