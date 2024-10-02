@@ -219,6 +219,9 @@ stage_3() {
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
         die python ./scripts/get-pkg.py --repo kwrx/aplus-doom --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i doom
     fi
+    if [ "$CONFIG_HAVE_GAMES_NESEMU" == "y" ]; then
+        die python ./scripts/get-pkg.py --repo kwrx/aplus-nesemu --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i nesemu
+    fi
 
 }
 
