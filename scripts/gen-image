@@ -8,7 +8,7 @@
 TMPDIR="/tmp/aplus-hdd"
 LIVE_MODE=0
 
-while $1; do
+while [ -n "$1" ]; do
     case $1 in
     -h | --help)
         echo "Usage: gen-image [OPTIONS] SOURCE OUTPUT"
@@ -23,9 +23,12 @@ while $1; do
         LIVE_MODE=1
         shift
         ;;
-    *)
+    -*)
         echo "Unknown option: $1"
         exit 1
+        ;;
+    *)
+        break
         ;;
     esac
 done
