@@ -267,7 +267,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
 
-#define _(size, offset) (void*)((uintptr_t)kcalloc(size, 1, GFP_KERNEL) + offset)
+#define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
 
 
     task->frame  = _(sizeof(interrupt_frame_t), 0);
@@ -328,7 +328,7 @@ pid_t arch_task_spawn_init() {
 
 
 
-#define _(size, offset) (void*)((uintptr_t)kcalloc(size, 1, GFP_KERNEL) + offset)
+#define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
 
     task->frame  = _(sizeof(interrupt_frame_t), 0);
     task->sstack = _(sizeof(sigcontext_frame_t) + fpu_size(), 0);

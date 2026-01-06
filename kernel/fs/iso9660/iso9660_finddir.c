@@ -92,7 +92,7 @@ inode_t* iso9660_finddir(inode_t* inode, const char* name) {
             if (unlikely(strncmp(child->name, name, ISO9660_MAX_NAME) == 0)) {
 
 
-                inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+                inode_t* d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
                 d->ino    = child->st.st_ino;
                 d->sb     = inode->sb;

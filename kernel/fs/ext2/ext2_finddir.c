@@ -84,7 +84,7 @@ inode_t* ext2_finddir(inode_t* inode, const char* name) {
                 if (name_len == e->name_len && strncmp(name, e->name, e->name_len) == 0) {
 
 
-                    d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+                    d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
                     d->ino    = e->inode;
                     d->sb     = inode->sb;

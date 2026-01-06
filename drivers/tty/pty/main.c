@@ -792,7 +792,7 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     DEBUG_ASSERT(ptmx);
 
 
-    struct pty* pty = (struct pty*)kcalloc(sizeof(struct pty), 1, GFP_USER);
+    struct pty* pty = (struct pty*)kcalloc(1, sizeof(struct pty), GFP_USER);
 
     if (unlikely(!pty))
         return NULL;

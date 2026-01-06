@@ -38,7 +38,7 @@
 
 struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
-    struct ext2_inode* i = (struct ext2_inode*)kcalloc(sizeof(struct ext2_inode), 1, GFP_KERNEL);
+    struct ext2_inode* i = (struct ext2_inode*)kcalloc(1, sizeof(struct ext2_inode), GFP_KERNEL);
 
     if (unlikely(!i))
         return NULL;

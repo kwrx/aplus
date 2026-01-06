@@ -51,10 +51,8 @@ SYSCALL(
     121, getpgid, long sys_getpgid(pid_t pid) {
         DEBUG_ASSERT(current_task);
 
-
         if (pid == 0)
             return current_task->pgrp;
-
 
         cpu_foreach(cpu) {
 
@@ -65,7 +63,6 @@ SYSCALL(
                     return tmp->pgrp;
             }
         }
-
 
         return -ESRCH;
     });

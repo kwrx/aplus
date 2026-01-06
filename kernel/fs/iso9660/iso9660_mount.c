@@ -66,7 +66,7 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 #undef __
 
 
-    iso9660_t* iso9660 = (iso9660_t*)kcalloc(sizeof(iso9660_t), 1, GFP_USER);
+    iso9660_t* iso9660 = (iso9660_t*)kcalloc(1, sizeof(iso9660_t), GFP_USER);
 
     iso9660->dev = dev;
     iso9660->dir = dir;
@@ -183,7 +183,7 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     DEBUG_ASSERT(iso9660->block_size == ISO9660_BLOCK_SIZE);
 
 
-    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(1, sizeof(struct superblock), GFP_KERNEL);
 
     dir->sb->fsid   = FSID_ISO9660;
     dir->sb->dev    = dev;

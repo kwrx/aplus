@@ -144,7 +144,7 @@ inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fe
     DEBUG_ASSERT(name);
 
 
-    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+    inode_t* inode = kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
     inode->ino    = __next_proc_ino++;
     inode->parent = parent;
@@ -154,7 +154,7 @@ inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fe
     strncpy(inode->name, name, CONFIG_MAXNAMLEN);
 
 
-    procfs_service_t* service = kcalloc(sizeof(procfs_service_t), 1, GFP_KERNEL);
+    procfs_service_t* service = kcalloc(1, sizeof(procfs_service_t), GFP_KERNEL);
 
     service->fetch = fetch;
     service->arg   = arg;

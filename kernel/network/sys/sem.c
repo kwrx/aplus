@@ -81,7 +81,7 @@ err_t sys_sem_new(struct sys_sem** sem, u8_t count) {
     DEBUG_ASSERT(sem);
 
 
-    *(sem) = (struct sys_sem*)kcalloc(sizeof(struct sys_sem), 1, GFP_KERNEL);
+    *(sem) = (struct sys_sem*)kcalloc(1, sizeof(struct sys_sem), GFP_KERNEL);
 
     if (unlikely(*(sem) == NULL)) {
         return ERR_MEM;

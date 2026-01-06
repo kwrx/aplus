@@ -123,7 +123,7 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    dir->sb = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb = (struct superblock*)kcalloc(1, sizeof(struct superblock), GFP_KERNEL);
 
     dir->sb->fsid  = FSID_EXT2;
     dir->sb->dev   = dev;
