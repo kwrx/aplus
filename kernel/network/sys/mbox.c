@@ -83,7 +83,7 @@ err_t sys_mbox_new(struct sys_mbox** mbox, int size) {
     LWIP_UNUSED_ARG(size);
 
 
-    struct sys_mbox* m = (struct sys_mbox*)kcalloc(sizeof(struct sys_mbox), 1, GFP_KERNEL);
+    struct sys_mbox* m = (struct sys_mbox*)kcalloc(1, sizeof(struct sys_mbox), GFP_KERNEL);
 
     if (unlikely(!m)) {
         return ERR_MEM;

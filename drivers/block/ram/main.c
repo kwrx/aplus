@@ -157,7 +157,7 @@ void init(const char* args) {
 
 
 
-        device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+        device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
         strncpy(d->name, "ram0", DEVICE_MAXNAMELEN);
         strncpy(d->description, "RAM disk device", DEVICE_MAXDESCLEN);

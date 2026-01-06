@@ -139,7 +139,7 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             DEBUG_ASSERT(queue->ptmx);
 
 
-            inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_USER);
+            inode_t* d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER);
 
             strncpy(d->name, name, CONFIG_MAXNAMLEN);
 

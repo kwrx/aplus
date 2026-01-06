@@ -49,7 +49,7 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
     DEBUG_ASSERT(inode);
 
 
-    inode_t* ptmx = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_USER);
+    inode_t* ptmx = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER);
 
     if (unlikely(!ptmx))
         goto fail_1;

@@ -79,7 +79,7 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     DEBUG_ASSERT(index < 1000);
 
 
-    device_t* d = (device_t*)kcalloc(sizeof(device_t), 1, GFP_KERNEL);
+    device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
 
     d->type = DEVICE_TYPE_BLOCK;

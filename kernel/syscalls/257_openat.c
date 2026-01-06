@@ -61,10 +61,7 @@ SYSCALL(
         if (unlikely(!uio_check(filename, R_OK)))
             return -EFAULT;
 
-
-
         inode_t* cwd = NULL;
-
 
         if (dfd < 0) {
 
@@ -95,12 +92,8 @@ SYSCALL(
 
         DEBUG_ASSERT(cwd);
 
-
-
         char __safe_filename[CONFIG_PATH_MAX] = {0};
         uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
-
-
 
 #if DEBUG_LEVEL_TRACE
         kprintf("openat(%d, \"%s\", %d, %d)\n", dfd, __safe_filename, flags, mode);
@@ -112,10 +105,7 @@ SYSCALL(
         if ((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
             return -errno;
 
-
-
         struct stat st = {0};
-
         if (vfs_getattr(r, &st) < 0) {
             return (errno == ENOSYS) ? -EACCES : -errno;
         }
@@ -140,7 +130,6 @@ SYSCALL(
 #endif
 
 
-
         if (current_task->uid != 0) {
 
             if (st.st_uid == current_task->uid) {
@@ -156,7 +145,6 @@ SYSCALL(
                     return -EACCES;
             }
         }
-
 
 
         inode_t* inode = NULL;
@@ -176,10 +164,11 @@ SYSCALL(
 
         shared_ptr_access(current_task->fd, fds, {
             scoped_lock(&current_task->lock) {
-                for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
 
-                    if (fds->descriptors[fd].ref == NULL)
+                for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+                    if (fds->descriptors[fd].ref == NULL) {
                         break;
+                    }
                 }
 
                 if (fd == CONFIG_OPEN_MAX)

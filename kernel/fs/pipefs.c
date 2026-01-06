@@ -140,7 +140,7 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
     __unused_param(flags);
 
 
-    ringbuffer_t* rb = kcalloc(sizeof(ringbuffer_t), 1, GFP_KERNEL);
+    ringbuffer_t* rb = kcalloc(1, sizeof(ringbuffer_t), GFP_KERNEL);
 
     if (unlikely(!rb))
         return errno = ENOMEM, NULL;
@@ -163,7 +163,7 @@ inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 
 inode_t* pipefs_inode() {
 
-    inode_t* inode = kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+    inode_t* inode = kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
     if (unlikely(!inode))
         return errno = ENOMEM, NULL;

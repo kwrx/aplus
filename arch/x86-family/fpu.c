@@ -326,7 +326,7 @@ size_t fpu_size(void) {
 
 void* fpu_new_state(void) {
 
-    void* p = (void*)((uintptr_t)kcalloc(fpu_size() + FPU_PAD_SIZE, 1, GFP_KERNEL) + FPU_PAD_SIZE);
+    void* p = (void*)((uintptr_t)kcalloc(1, fpu_size() + FPU_PAD_SIZE, GFP_KERNEL) + FPU_PAD_SIZE);
 
     DEBUG_ASSERT((uintptr_t)p);
     DEBUG_ASSERT(((uintptr_t)p & 63) == 0);

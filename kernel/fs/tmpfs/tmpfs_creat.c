@@ -58,7 +58,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
     shared_ptr_access(current_task->fs, fs, { i->st.st_mode = mode & ~fs->umask; });
 
 
-    inode_t* d = (inode_t*)kcalloc(sizeof(inode_t), 1, GFP_KERNEL);
+    inode_t* d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
     strncpy(d->name, name, CONFIG_MAXNAMLEN);
 

@@ -68,7 +68,7 @@ bind_fn(getattr, int, (inode_t * inode, struct stat* st), (d, st)) bind_fn(setat
     (void)args;
 
 
-    dir->sb         = (struct superblock*)kcalloc(sizeof(struct superblock), 1, GFP_KERNEL);
+    dir->sb         = (struct superblock*)kcalloc(1, sizeof(struct superblock), GFP_KERNEL);
     dir->sb->fsid   = 1;
     dir->sb->dev    = dev;
     dir->sb->root   = dir;

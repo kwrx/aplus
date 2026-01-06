@@ -63,7 +63,7 @@ size_t _list_length(list_head* list) {
 
 void _list_push(list_head** p_list, size_t value_size, void* value) {
     if (!*p_list)
-        *p_list = (list_head*)kcalloc(sizeof(list_head), 1, GFP_KERNEL);
+        *p_list = (list_head*)kcalloc(1, sizeof(list_head), GFP_KERNEL);
 
     list_head* list = *p_list;
 
@@ -87,7 +87,7 @@ void _list_push(list_head** p_list, size_t value_size, void* value) {
 
 void _list_push_front(list_head** p_list, size_t value_size, void* value) {
     if (!*p_list)
-        *p_list = (list_head*)kcalloc(sizeof(list_head), 1, GFP_KERNEL);
+        *p_list = (list_head*)kcalloc(1, sizeof(list_head), GFP_KERNEL);
 
     list_head* list = *p_list;
 
