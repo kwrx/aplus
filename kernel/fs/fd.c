@@ -68,6 +68,11 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
             lowestfree = i + 1;
 
             filetable[i].refcount = 1;
+            filetable[i].inode    = inode;
+            filetable[i].position = position;
+            filetable[i].status   = status;
+
+            spinlock_init(&filetable[i].lock);
             break;
         }
     }
@@ -76,15 +81,6 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
     if (i == CONFIG_FILE_MAX) {
         return errno = ENFILE, NULL;
     }
-
-
-
-    filetable[i].inode    = inode;
-    filetable[i].position = position;
-    filetable[i].status   = status;
-
-    spinlock_init(&filetable[i].lock);
-
 
     return &filetable[i];
 }
@@ -127,6 +123,6 @@ void fd_ref(struct file* file) {
     DEBUG_ASSERT(filetable);
 
     scoped_lock(&filetable_lock) {
-        atomic_fetch_sub(&file->refcount, 1);
+        atomic_fetch_add(&file->refcount, 1);
     }
 }
