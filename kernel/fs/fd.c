@@ -43,7 +43,7 @@ static unsigned int lowestfree = 0;
 
 void fd_init(void) {
 
-    filetable  = (struct file*)kcalloc(sizeof(struct file), CONFIG_FILE_MAX, GFP_KERNEL);
+    filetable  = (struct file*)kcalloc(CONFIG_FILE_MAX, sizeof(struct file), GFP_KERNEL);
     lowestfree = 0;
 
     spinlock_init(&filetable_lock);
@@ -67,7 +67,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 
             lowestfree = i + 1;
 
-            filetable[i].refcount = 1;
+            atomic_store(&filetable[i].refcount, 1);
             filetable[i].inode    = inode;
             filetable[i].position = position;
             filetable[i].status   = status;
@@ -104,7 +104,7 @@ void fd_remove(struct file* fd, bool close) {
             fd->status   = 0;
 
 
-            unsigned int i = (int)((uintptr_t)fd - (uintptr_t)filetable) / sizeof(struct file);
+            int i = (int)(fd - filetable);
 
             DEBUG_ASSERT(i <= CONFIG_FILE_MAX - 1);
             DEBUG_ASSERT(i >= 0);
