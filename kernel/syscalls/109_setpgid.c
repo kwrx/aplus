@@ -50,12 +50,78 @@
 
 SYSCALL(
     109, setpgid, long sys_setpgid(pid_t pid, pid_t pgid) {
-        DEBUG_ASSERT(pid == 0);
-        DEBUG_ASSERT(pgid == 0);
 
-        if (unlikely(pid != 0 || pgid != 0))
-            return -ENOSYS;
+        task_t* target = NULL;
 
-        current_task->pgrp = current_task->pid;
+        if(likely(pid == 0)) {
+            target = current_task;
+        } else {
+            cpu_foreach(cpu) {
+
+                task_t* tmp;
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+                    if (tmp->tid == pid) {
+                        target = tmp;
+                        break;
+                    }
+                }
+
+                if (target)
+                    break;
+            }
+        }
+
+        if (unlikely(!target))
+            return -ESRCH;
+
+        // caller may change only itself or its children
+        if (unlikely(target != current_task && target->parent != current_task))
+            return -ESRCH;
+
+        // calling process and target must be in the same session
+        if (unlikely(target->sid != current_task->sid))
+            return -EPERM;
+
+        // target must not be a session leader
+        if (unlikely(target->tid == target->sid))
+            return -EPERM;
+
+        // pgid must be >= 0
+        if (unlikely(pgid < 0))
+            return -EINVAL;
+
+        // if pgid is 0, set it to target's pid
+        // else, check that pgid belongs to the same session
+        if (pgid == 0) {
+            pgid = target->tid;
+        } else if(pgid != target->tid) {
+            task_t* pgid_task = NULL;
+
+            cpu_foreach(cpu) {
+
+                task_t* tmp;
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+                    if (tmp->tid == pgid) {
+                        pgid_task = tmp;
+                        break;
+                    }
+                }
+
+                if (pgid_task)
+                    break;
+            }
+
+            if (unlikely(!pgid_task))
+                return -EPERM;
+
+            if (unlikely(pgid_task->sid != target->sid))
+                return -EPERM;
+
+        }
+
+        scoped_lock(&target->lock) {
+            target->pgrp = pgid;
+        }
+
         return 0;
     });
