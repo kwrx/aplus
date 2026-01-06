@@ -148,8 +148,8 @@ struct file {
     inode_t* inode;
     off_t position;
 
-    int status;
-    int refcount;
+    atomic_int status;
+    atomic_int refcount;
 
     spinlock_t lock;
 };
