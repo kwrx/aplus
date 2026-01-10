@@ -71,6 +71,10 @@
     #define ARCH_TASK_CONTEXT_PARAM4 8
     #define ARCH_TASK_CONTEXT_PARAM5 9
 
+    #define ARCH_INTR_TYPE_DEFAULT 0
+    #define ARCH_INTR_TYPE_PCI     1
+    #define ARCH_INTR_TYPE_MSI     2
+
 
     #ifndef R_OK
         #define R_OK 4
@@ -143,10 +147,8 @@ void arch_debug_stacktrace(uintptr_t*, size_t);
 
 void arch_intr_enable(long);
 long arch_intr_disable(void);
-void arch_intr_map_irq(irq_t, void (*)(void*, irq_t));
-void arch_intr_unmap_irq(irq_t);
-void arch_intr_map_irq_without_ioapic(irq_t, void (*)(void*, irq_t));
-void arch_intr_unmap_irq_without_ioapic(irq_t);
+void arch_intr_map_irq(irq_t, void (*)(void*, irq_t), int);
+void arch_intr_unmap_irq(irq_t, int);
 
 
 void arch_task_switch(task_t*, task_t*);
