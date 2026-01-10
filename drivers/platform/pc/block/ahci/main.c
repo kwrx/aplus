@@ -1448,8 +1448,7 @@ void dnit(void) {
         ahci->hba->ghc &= ~AHCI_HBA_GHC_AE;
         ahci->hba->is = ~0;
 
-
-        arch_intr_unmap_irq(ahci->irq);
+        pci_intx_unmap_irq(ahci->deviceid);
         arch_vmm_unmap(&core->bsp.address_space, (uintptr_t)ahci->hba, AHCI_HBA_SIZE);
 
         /* TODO: implements ahci de-initialitation */
