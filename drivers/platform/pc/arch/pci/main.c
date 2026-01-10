@@ -63,9 +63,9 @@ void pci_write(pcidev_t device, int field, size_t size, uint64_t value) {
             case 4:
                 return outl(PCI_VALUE_PORT, cpu_to_le32(value));
             case 2:
-                return outw(PCI_VALUE_PORT, cpu_to_le16(value));
+                return outw(PCI_VALUE_PORT + (field & 2), cpu_to_le16(value));
             case 1:
-                return outb(PCI_VALUE_PORT, value);
+                return outb(PCI_VALUE_PORT + (field & 3), value);
             default:
                 PANIC_ASSERT(0 && "Bug: Invalid Size!");
         }
@@ -83,7 +83,7 @@ uint64_t pci_read(pcidev_t device, int field, size_t size) {
         outl(PCI_ADDRESS_PORT, pci_get_addr(device, field + 4));
         uint64_t high = inl(PCI_VALUE_PORT);
 
-        return (le64_to_cpu(high) << 32ULL) | le64_to_cpu(low);
+        return (le32_to_cpu(high) << 32ULL) | le32_to_cpu(low);
 
     } else {
 
