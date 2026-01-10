@@ -51,8 +51,7 @@ static spinlock_t pci_intx_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OW
 
 static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
-    size_t i;
-    for (i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
+    for (size_t i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
 
         if (!pci_intx_devices[i].device)
             continue;
@@ -69,7 +68,6 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
         if ((pci_read(pci_intx_devices[i].device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0)
             continue;
 
-
         pci_intx_devices[i].handler(pci_intx_devices[i].device, irq, pci_intx_devices[i].data);
     }
 }
@@ -79,9 +77,7 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
 
     spinlock_lock(&pci_intx_lock);
 
-
-    size_t i;
-    for (i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
+    for (size_t i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
 
         if (pci_intx_devices[i].device)
             continue;
@@ -91,7 +87,7 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
         pci_intx_devices[i].device  = device;
         pci_intx_devices[i].handler = handler;
 
-        arch_intr_map_irq(irq, pci_intx_interrupt_handler);
+        arch_intr_map_irq(irq, pci_intx_interrupt_handler, ARCH_INTR_TYPE_PCI);
 
 
 #if DEBUG_LEVEL_TRACE
