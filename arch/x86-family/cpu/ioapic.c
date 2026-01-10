@@ -53,7 +53,7 @@ static inline uint32_t ioapic_read(uintptr_t address, const uint32_t offset) {
 }
 
 
-void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
+void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu, uint64_t flags) {
 
     for (size_t i = 0; i < X86_IOAPIC_MAX; i++) {
 
@@ -67,6 +67,7 @@ void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu) {
                 uint64_t d = 0;
                 d |= (0x20 + irq) & 0xFF;
                 d |= (uint64_t)cpu << 56;
+                d |= (flags & X86_IOAPIC_REDTTBL_FLAG_MASK);
 
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source), d & 0xFFFFFFFF);
                 ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source) + 1, (d >> 32) & 0xFFFFFFFF);

@@ -530,15 +530,15 @@ void init(const char* args) {
 
 
 
-    arch_intr_map_irq(1, ps2_keyboard_irq);
-    arch_intr_map_irq(12, ps2_mouse_irq);
+    arch_intr_map_irq(1, ps2_keyboard_irq, ARCH_INTR_TYPE_DEFAULT);
+    arch_intr_map_irq(12, ps2_mouse_irq, ARCH_INTR_TYPE_DEFAULT);
 }
 
 
 void dnit(void) {
 
-    arch_intr_unmap_irq(1);
-    arch_intr_unmap_irq(12);
+    arch_intr_unmap_irq(1, ARCH_INTR_TYPE_DEFAULT);
+    arch_intr_unmap_irq(12, ARCH_INTR_TYPE_DEFAULT);
 
     device_unlink(&keyboard);
     device_unlink(&mouse);

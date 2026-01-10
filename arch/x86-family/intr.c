@@ -70,7 +70,6 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
 
     if (likely(frame->intno >= 0x20)) {
-
         current_cpu->frame = frame;
     }
 
@@ -96,10 +95,9 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x21 ... 0xFD:
 
-            if (likely(bootstrap_irq[frame->intno - 0x20].handler))
+            if (likely(bootstrap_irq[frame->intno - 0x20].handler)) {
                 bootstrap_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
-
-            else {
+            } else {
 #if DEBUG_LEVEL_WARN
                 kprintf("x86-intr: WARN! unhandled IRQ #%ld caught, ignoring\n", frame->intno - 0x20);
 #endif
@@ -195,11 +193,10 @@ long arch_intr_disable(void) {
 
 
 
-void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t)) {
+void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t), int type) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(handler);
-
 
     if (unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
         kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
@@ -207,17 +204,28 @@ void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t)) {
 
     bootstrap_irq[irq].handler = handler;
 
-    ioapic_map_irq(irq, irq, current_cpu->id);
+    switch(type) {
+        case ARCH_INTR_TYPE_DEFAULT:
+            ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH);
+            break;
 
+        case ARCH_INTR_TYPE_PCI:
+            ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_LEVEL | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_LOW);
+            break;
 
+        case ARCH_INTR_TYPE_MSI:
+            break;
+
+        default:
+            kpanicf("x86-intr: PANIC! unknown interrupt type %d for irq %d\n", type, irq);
+    }
 
 #if DEBUG_LEVEL_TRACE
     kprintf("x86-intr: map irq(%d) at %p\n", irq, handler);
 #endif
 }
 
-
-void arch_intr_unmap_irq(irq_t irq) {
+void arch_intr_unmap_irq(irq_t irq, int type) {
 
     DEBUG_ASSERT(irq < (0xFF - 0x20));
     DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
@@ -225,7 +233,18 @@ void arch_intr_unmap_irq(irq_t irq) {
 
     bootstrap_irq[irq].handler = NULL;
 
-    ioapic_unmap_irq(irq);
+    switch(type) {
+        case ARCH_INTR_TYPE_DEFAULT:
+        case ARCH_INTR_TYPE_PCI:
+            ioapic_unmap_irq(irq);
+            break;
+
+        case ARCH_INTR_TYPE_MSI:
+            break;
+
+        default:
+            kpanicf("x86-intr: PANIC! unknown interrupt type %d for irq %d\n", type, irq);
+    }
 
 
 #if DEBUG_LEVEL_TRACE
@@ -234,35 +253,3 @@ void arch_intr_unmap_irq(irq_t irq) {
 }
 
 
-void arch_intr_map_irq_without_ioapic(irq_t irq, void (*handler)(void*, irq_t)) {
-
-    DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(handler);
-
-
-    if (unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
-
-
-    bootstrap_irq[irq].handler = handler;
-
-
-#if DEBUG_LEVEL_TRACE
-    kprintf("x86-intr: map irq(%d) at %p without I/O APIC\n", irq, handler);
-#endif
-}
-
-
-void arch_intr_unmap_irq_without_ioapic(irq_t irq) {
-
-    DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
-
-
-    bootstrap_irq[irq].handler = NULL;
-
-
-#if DEBUG_LEVEL_TRACE
-    kprintf("x86-intr: unmap irq(%d) without I/O APIC\n", irq);
-#endif
-}

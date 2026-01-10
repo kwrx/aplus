@@ -95,6 +95,12 @@
     #define X86_IOAPIC_IOAPICREDTBL(n) (0x10 + 2 * n)
     #define X86_IOAPIC_MAX             0x10
 
+    #define X86_IOAPIC_REDTTBL_FLAG_MASK                    0x0000FFFFFFFFFF00ULL
+    #define X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_LEVEL      (1 << 15)
+    #define X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE       (0 << 15)
+    #define X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_LOW     (1 << 13)
+    #define X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH    (0 << 13)
+
 
 typedef struct {
     uintptr_t address;
@@ -115,7 +121,7 @@ void apic_timer_reset(uint32_t);
 
 
 void ioapic_enable(void);
-void ioapic_map_irq(irq_t, irq_t, cpuid_t);
+void ioapic_map_irq(irq_t, irq_t, cpuid_t, uint64_t);
 void ioapic_unmap_irq(irq_t);
 
 __END_DECLS
