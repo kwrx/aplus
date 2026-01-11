@@ -36,109 +36,55 @@
 #include <dev/pci.h>
 
 
-#define PCI_INTX_DEVICES_MAX 128
-
-
-static struct {
-    pcidev_t device;
-    pci_irq_handler_t handler;
-    pci_irq_data_t data;
-} pci_intx_devices[PCI_INTX_DEVICES_MAX] = {0};
-
-static spinlock_t pci_intx_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);
-
-
-
 static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 
-    for (size_t i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
+    for (size_t index = 0; index < PCI_DEVICES_MAX; index++) {
 
-        if (!pci_intx_devices[i].device)
+        pcidev_t device = pci_dev_get_device(index);
+        if (device == 0)
             continue;
 
-        if (!pci_intx_devices[i].handler)
+        if ((pci_read(device, PCI_INTERRUPT_LINE, 1) != irq))
             continue;
 
-        if ((pci_read(pci_intx_devices[i].device, PCI_INTERRUPT_LINE, 1) != irq))
+        if ((pci_read(device, PCI_STATUS, 2) & PCI_STATUS_REG_INTERRUPT) == 0)
             continue;
 
-        if ((pci_read(pci_intx_devices[i].device, PCI_STATUS, 2) & PCI_STATUS_REG_INTERRUPT) == 0)
+        if ((pci_read(device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0)
             continue;
 
-        if ((pci_read(pci_intx_devices[i].device, PCI_COMMAND, 2) & PCI_COMMAND_REG_INTR_DISABLE) != 0)
-            continue;
+        pci_dev_call_handler(index, irq);
 
-        pci_intx_devices[i].handler(pci_intx_devices[i].device, irq, pci_intx_devices[i].data);
     }
 }
 
 
 int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_irq_data_t data) {
 
-    spinlock_lock(&pci_intx_lock);
-
-    for (size_t i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
-
-        if (pci_intx_devices[i].device)
-            continue;
-
-
-        pci_intx_devices[i].data    = data;
-        pci_intx_devices[i].device  = device;
-        pci_intx_devices[i].handler = handler;
-
-        arch_intr_map_irq(irq, pci_intx_interrupt_handler, ARCH_INTR_TYPE_PCI);
-
-
-#if DEBUG_LEVEL_TRACE
-        kprintf("pci-intx: slot %d mapped for device %d [irq(%p), handler(%p), data(%p)]\n", i, device, irq, handler, data);
+    uint16_t index = pci_dev_register(device, handler, data, 0);
+    if (index == PCI_NONE) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("pci-intx: ERROR! No more device slots available for device %d [irq(%p), handler(%p), data(%p)]\n", device, irq, handler, data);
 #endif
-
-        spinlock_unlock(&pci_intx_lock);
-        return 0;
+        return errno = ENOSPC, -1;
     }
 
-
-    spinlock_unlock(&pci_intx_lock);
-
-
-#if DEBUG_LEVEL_FATAL
-    kprintf("pci-intx: ERROR! No more device slots available for device %d [irq(%p), handler(%p), data(%p)]\n", device, irq, handler, data);
-#endif
-
-    return errno = ENOSPC, -1;
+    arch_intr_map_irq(irq, pci_intx_interrupt_handler, ARCH_INTR_TYPE_PCI);
+    return 0;
 }
 
 
 int pci_intx_unmap_irq(pcidev_t device) {
 
-    spinlock_lock(&pci_intx_lock);
-
-
-    size_t i;
-    for (i = 0; i < PCI_INTX_DEVICES_MAX; i++) {
-
-        if (pci_intx_devices[i].device != device)
-            continue;
-
-
-        pci_intx_devices[i].device  = 0;
-        pci_intx_devices[i].handler = NULL;
-        pci_intx_devices[i].data    = NULL;
-
-        spinlock_unlock(&pci_intx_lock);
-        return 0;
+    uint16_t index = pci_dev_unregister(device);
+    if (index == PCI_NONE) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("pci-intx: ERROR! Device %d not found during unmap\n", device);
+#endif
+        return errno = ESRCH, -1;
     }
 
-
-    spinlock_unlock(&pci_intx_lock);
-
-
-#if DEBUG_LEVEL_FATAL
-    kprintf("pci-intx: ERROR! No device slot found for device %d\n", device);
-#endif
-
-    return errno = ESRCH, -1;
+    return 0;
 }
 
 
