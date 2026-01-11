@@ -119,6 +119,8 @@ struct virtio_driver {
     size_t send_window_size;
     size_t recv_window_size;
 
+    size_t max_queues;
+
     int (*negotiate)(struct virtio_driver*, uint32_t*, size_t);
     int (*setup)(struct virtio_driver*, uintptr_t);
     int (*interrupt)(pcidev_t, irq_t, struct virtio_driver*);
@@ -245,8 +247,8 @@ int virtio_pci_init(struct virtio_driver*);
 
 // Queue
 int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
-ssize_t virtq_send(struct virtio_driver*, uint16_t, void*, size_t);
-ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, void*, size_t, void*, size_t);
+ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
+ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
 void virtq_flush(struct virtio_driver*, uint16_t);
 
