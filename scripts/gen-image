@@ -204,7 +204,6 @@ else
 fi
 
 # Compress boot files
-
 for ko in $(find $TMPDIR/p1/usr/lib/modules -name "*.ko"); do
     compress $ko
 done
