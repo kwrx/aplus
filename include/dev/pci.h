@@ -39,6 +39,7 @@
 typedef uint32_t pcidev_t;
 
 
+    #define PCI_DEVICES_MAX     128
 
     #define PCI_VENDOR_ID   0x00
     #define PCI_DEVICE_ID   0x02
@@ -112,11 +113,34 @@ typedef uint32_t pcidev_t;
     #define PCI_STATUS_REG_INTERRUPT    (1 << 3)
     #define PCI_STATUS_REG_CAPABILITIES (1 << 4)
 
+
+    #define PCI_MSI_CAPID        (0x05)
+    
+    #define PCI_MSI_HDR_CAPID    (0)
+    #define PCI_MSI_HDR_CAPNEXT  (1)
+    #define PCI_MSI_HDR_MSGCTL   (2)
+    #define PCI_MSI_HDR_MSGADDR  (4)
+
+    #define PCI_MSI_MSGCTL_ENABLE               (1 << 0)
+    #define PCI_MSI_MSGCTL_ADDR_64BIT           (1 << 7)
+    #define PCI_MSI_MSGCTL_MSG_COUNT_MASK       (0x0070)
+
+    #define PCI_MSI_INTR_BASE   66
+    
+
     #define PCI_MSIX_CAPID     (0x11)
-    #define PCI_MSIX_ENABLE    (1 << 15)
-    #define PCI_MSIX_INTR_MASK (1 << 0)
 
+    #define PCI_MSIX_HDR_CAPID        (0)
+    #define PCI_MSIX_HDR_CAPNEXT      (1)
+    #define PCI_MSIX_HDR_MSGCTL       (2)
+    #define PCI_MSIX_HDR_TABLE        (4)
+    #define PCI_MSIX_HDR_PBA          (8)
 
+    #define PCI_MSIX_MSGCTL_ENABLE         (1 << 15)
+    #define PCI_MSIX_MSGCTL_MASK           (1 << 14)
+    #define PCI_MSIX_INTR_MASK             (1 << 0)
+
+    #define PCI_MSIX_INTR_BASE   66
 
     #define pci_extract_bus(x)  ((uint8_t)(x >> 16))
     #define pci_extract_slot(x) ((uint8_t)(x >> 8))
@@ -139,13 +163,50 @@ __BEGIN_DECLS
 
 
 
-typedef struct pci_msix_row {
+typedef struct pci_msi_row {
 
-    volatile uint64_t pr_address;
+    struct {
+        uint8_t pci_capid;
+        uint8_t pci_capnext;
+
+        union {
+            struct {
+                uint16_t pci_msgctl_enabled               : 1;
+                uint16_t pci_msgctl_multiple_msg_capable  : 3;
+                uint16_t pci_msgctl_multiple_msg_enable   : 3;
+                uint16_t pci_msgctl_64bit_address         : 1;
+                uint16_t pci_msgctl_reserved              : 8;
+            };
+            uint16_t pci_msgctl;
+        };
+
+    } msi_header;
+
+    struct {
+        union {
+            uint64_t pci_msgaddr64;
+            uint32_t pci_msgaddr32;
+        };
+
+        uint16_t pci_msgdata;
+    } msi_data;
+
+} __packed pci_msi_row_t;
+
+typedef struct pci_msi {
+    uintptr_t msi_cap;
+} __packed pci_msi_t;
+
+typedef struct pci_msix_row {
+    volatile uint32_t pr_address;
+    volatile uint32_t pr_address64;
     volatile uint32_t pr_data;
     volatile uint32_t pr_ctl;
-
 } __packed pci_msix_row_t;
+
+typedef struct pci_msix_pba {
+    volatile uint32_t pb_bitmap[1];
+} __packed pci_msix_pba_t;
 
 typedef struct pci_msix {
 
@@ -178,13 +239,14 @@ typedef struct pci_msix {
 
     uintptr_t msix_cap;
     pci_msix_row_t volatile* msix_rows;
+    pci_msix_pba_t volatile* msix_pba;
 
 } __packed pci_msix_t;
 
 
 
 typedef void* pci_irq_data_t;
-typedef void (*pci_irq_handler_t)(pcidev_t, irq_t, pci_irq_data_t);
+typedef void (*pci_irq_handler_t)(pcidev_t, irq_t, pci_irq_data_t, uint16_t);
 
 
 
@@ -203,10 +265,19 @@ uintptr_t pci_find_capabilities(pcidev_t);
 uintptr_t pci_bar_size(pcidev_t, int, size_t);
 void pci_memcpy(pcidev_t, void*, uintptr_t, size_t);
 
+/* MSI */
+int pci_find_msi(pcidev_t, pci_msi_t*);
+void pci_msi_enable(pcidev_t, pci_msi_t*);
+void pci_msi_disable(pcidev_t, pci_msi_t*);
+bool pci_msi_is_enabled(pcidev_t, pci_msi_t*);
+int pci_msi_map_irq(pcidev_t, pci_msi_t*, pci_irq_handler_t, pci_irq_data_t);
+int pci_msi_unmap_irq(pcidev_t, pci_msi_t*);
+
 /* MSI-X */
 int pci_find_msix(pcidev_t, pci_msix_t*);
 void pci_msix_enable(pcidev_t, pci_msix_t*);
 void pci_msix_disable(pcidev_t, pci_msix_t*);
+bool pci_msix_is_enabled(pcidev_t, pci_msix_t*);
 void pci_msix_mask(pcidev_t, pci_msix_t*, uint32_t);
 void pci_msix_unmask(pcidev_t, pci_msix_t*, uint32_t);
 int pci_msix_map_irq(pcidev_t, pci_msix_t*, pci_irq_handler_t, pci_irq_data_t, uint16_t);
@@ -217,6 +288,12 @@ int pci_intx_map_irq(pcidev_t, irq_t, pci_irq_handler_t, pci_irq_data_t);
 int pci_intx_unmap_irq(pcidev_t);
 void pci_intx_mask(pcidev_t);
 void pci_intx_unmask(pcidev_t);
+
+/* Devices */
+uint16_t pci_dev_register(pcidev_t, pci_irq_handler_t, pci_irq_data_t, uint16_t);
+uint16_t pci_dev_unregister(pcidev_t);
+pcidev_t pci_dev_get_device(uint16_t);
+int pci_dev_call_handler(uint16_t index, irq_t irq);
 
 __END_DECLS
 
