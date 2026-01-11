@@ -51,17 +51,19 @@ MODULE_LICENSE("GPL");
 static void virtconsole_init(device_t*);
 static void virtconsole_dnit(device_t*);
 static void virtconsole_reset(device_t*);
+static ssize_t virtconsole_write(device_t*, const void*, size_t);
+static ssize_t virtconsole_read(device_t*, void*, size_t);
 
 
 device_t device = {
 
     .type = DEVICE_TYPE_CHAR,
 
-    .name        = "vport0p1",
+    .name        = "hvc0",
     .description = "VIRTIO Console Device",
 
-    .major = 10, // FIXME: change values
-    .minor = 243,
+    .major = 229,
+    .minor = 0,
 
     .status = DEVICE_STATUS_UNKNOWN,
 
@@ -70,44 +72,18 @@ device_t device = {
     .reset = virtconsole_reset,
 
     .chr.io = CHAR_IO_NBF,
-    //.chr.write = &virtconsole_write,
-    //.chr.read =  &virtconsole_read,
+    .chr.write = virtconsole_write,
+    .chr.read  = virtconsole_read,
 
 };
 
 
-
-static void virtconsole_init(device_t* device) {
-
-    DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->mmiobase);
-
-
-    virtconsole_reset(device);
-}
-
-
-static void virtconsole_dnit(device_t* device) {
-
-    DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->mmiobase);
-}
-
-
-static void virtconsole_reset(device_t* device) {
-
-    DEBUG_ASSERT(device);
-}
-
 static int negotiate_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
-
     if (index == 0) {
-
         *features &= ~VIRTIO_CONSOLE_F_SIZE;
         *features &= ~VIRTIO_CONSOLE_F_MULTIPORT;
         *features &= ~VIRTIO_CONSOLE_F_EMERG_WRITE;
     }
-
     return 0;
 }
 
@@ -115,12 +91,12 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
-static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
-    return kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!\n"), 0;
-}
-
-
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
+    
+    device_t* config = (device_t*)arg;
+
+    if (config->userdata != NULL)
+        return;
 
     if (vid != VIRTIO_PCI_VENDOR)
         return;
@@ -129,38 +105,76 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         return;
 
 
-    struct virtio_driver driver = {0};
+    struct virtio_driver* driver = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
-    driver.type             = VIRTIO_DEVICE_TYPE_CONSOLE;
-    driver.device           = device;
-    driver.send_window_size = 4096;
-    driver.recv_window_size = 4096;
+    driver->type             = VIRTIO_DEVICE_TYPE_CONSOLE;
+    driver->device           = device;
+    driver->send_window_size = 4096;
+    driver->recv_window_size = 4096;
+    driver->max_queues       = 2;
 
-    driver.negotiate = &negotiate_features;
-    driver.setup     = &setup_config;
-    driver.interrupt = &interrupt_handler;
+    driver->negotiate = &negotiate_features;
+    driver->setup     = &setup_config;
+    driver->interrupt = NULL;
 
 
-    if (virtio_pci_init(&driver) < 0) {
-
+    if (virtio_pci_init(driver) < 0) {
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-console: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
-
         return;
     }
 
+    config->userdata = driver;
 
-    virtq_send(&driver, VIRTIO_CONSOLE_PORT_TX(0), "Hello World!", 13);
+    virtq_send(driver, VIRTIO_CONSOLE_PORT_TX(0), "Hello World!", 13);
 }
 
+
+static void virtconsole_init(device_t* device) {
+    DEBUG_ASSERT(device);
+    virtconsole_reset(device);
+}
+
+static void virtconsole_dnit(device_t* device) {
+    DEBUG_ASSERT(device);
+}
+
+static void virtconsole_reset(device_t* device) {
+    DEBUG_ASSERT(device);
+}
+
+static ssize_t virtconsole_write(device_t* device, const void* buf, size_t size) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+
+    if (unlikely(size == 0))
+        return 0;
+
+    return virtq_send((struct virtio_driver*)device->userdata, VIRTIO_CONSOLE_PORT_TX(0), buf, size);
+}
+
+static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+    DEBUG_ASSERT(buf);
+
+    errno = ENOSYS;
+    return -1;
+}
 
 void init(const char* args) {
 
     if (strstr(core->boot.cmdline, "virtio=off"))
         return;
 
-    pci_scan(&pci_find, PCI_TYPE_ALL, NULL);
+    pci_scan(&pci_find, PCI_TYPE_ALL, &device);
+
+    if (device.userdata == NULL)
+        return;
+
+    device_mkdev(&device, 0644);
 }
 
 void dnit(void) {
