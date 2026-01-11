@@ -36,25 +36,25 @@
  * @brief pml2_bitmap[].
  *        Physical Page Map Level 2.
  */
-static uintptr_t pml2_bitmap[PML2_MAX_ENTRIES];
+static uintptr_t pml2_bitmap[PML2_MAX_ENTRIES] = { 0 };
 
 /*!
  * @brief pml2_pusage[].
  *        Number of allocated pages in Page Map Level 1.
  */
-static uint16_t pml2_pusage[PML2_MAX_ENTRIES];
+static uint16_t pml2_pusage[PML2_MAX_ENTRIES] = { 0 };
 
 /*!
  * @brief pml2_lock[].
  *        Array of spinlock for each page map.
  */
-static spinlock_t pml2_lock[PML2_MAX_ENTRIES];
+static spinlock_t pml2_lock[PML2_MAX_ENTRIES] = { 0 };
 
 /*!
  * @brief pml1_first_bitmap[].
  *        First preallocated Page Map Bitmap (0-2GiB)
  */
-static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOCATED_BITMAPS];
+static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOCATED_BITMAPS] = { 0 };
 
 /*!
  * @brief pmm_max_memory.
