@@ -146,7 +146,7 @@ static void virtgpu_reset_framebuffer(device_t* device) {
     // __(virtgpu_cmd_set_scanout,                device->userdata, VIRTGPU_DISPLAY_PRIMARY, resource, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
 
 
-    struct virtio_gpu_resp_display_info display_info;
+    struct virtio_gpu_resp_display_info display_info = {0};
 
     __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
     __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
@@ -318,10 +318,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
 
 
-    struct virtio_driver* virtio = kmalloc(sizeof(struct virtio_driver), GFP_KERNEL);
-
-    memset(virtio, 0, sizeof(struct virtio_driver));
-
+    struct virtio_driver* virtio = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
     virtio->type             = VIRTIO_DEVICE_TYPE_GPU;
     virtio->device           = device;
