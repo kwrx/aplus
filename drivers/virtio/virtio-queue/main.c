@@ -145,7 +145,7 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     driver->internals.queues[index].size        = q_size;
     
     sem_init(&driver->internals.queues[index].iosem, 0);
-
+    spinlock_init_with_flags(&driver->internals.queues[index].lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
     cfg->queue_msix_vector = cpu_to_le16(index);
@@ -167,48 +167,90 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
 }
 
 
-int virtq_get_free_descriptor(struct virtio_driver* driver, uint16_t queue) {
+uint16_t virtq_alloc_descriptor(struct virtio_driver* driver, uint16_t queue) {
 
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(driver->device);
 
     DEBUG_ASSERT(queue < driver->internals.num_queues);
 
+    scoped_lock(&driver->internals.queues[queue].lock) {
 
-    for (uint16_t d = 1; d < driver->internals.queues[queue].size; d++) {
+        for (uint16_t d = 1; d < driver->internals.queues[queue].size; d++) {
 
-        if (driver->internals.queues[queue].descriptors[d].q_address)
-            continue;
+            if (driver->internals.queues[queue].descriptors[d].q_address)
+                continue;
 
-        if (({ // Search in available buffers
-                bool free = true;
+            driver->internals.queues[queue].descriptors[d].q_address = 0xFFFFFFFFFFFFFFFF;
+            driver->internals.queues[queue].descriptors[d].q_length  = 0;
+            driver->internals.queues[queue].descriptors[d].q_flags   = 0;
+            driver->internals.queues[queue].descriptors[d].q_next    = 0;
 
-                for (uint16_t i = 0; i < driver->internals.queues[queue].size; i++) {
+            kprintf("virtio-queue: device %d allocated descriptor %d on queue %d\n", driver->device, d, queue);
 
-                    if (driver->internals.queues[queue].available->q_ring[i] != cpu_to_le16(d))
-                        continue;
+            return d;
+        }
 
-                    free = false;
-                    break;
-                }
-
-                free;
-
-            }) == false)
-            continue;
-
-        driver->internals.queues[queue].descriptors[d].q_address = 0xFFFFFFFFFFFFFFFF;
-        driver->internals.queues[queue].descriptors[d].q_length  = 0;
-        driver->internals.queues[queue].descriptors[d].q_flags   = 0;
-        driver->internals.queues[queue].descriptors[d].q_next    = 0;
-
-        return d;
     }
 
-    return -1;
+    return 0;
 }
 
+void virtq_free_descriptor(struct virtio_driver* driver, uint16_t queue, uint16_t desc) {
 
+    DEBUG_ASSERT(driver);
+    DEBUG_ASSERT(driver->device);
+
+    DEBUG_ASSERT(queue < driver->internals.num_queues);
+    DEBUG_ASSERT(desc < driver->internals.queues[queue].size);
+
+    scoped_lock(&driver->internals.queues[queue].lock) {
+        driver->internals.queues[queue].descriptors[desc].q_address = 0;
+        driver->internals.queues[queue].descriptors[desc].q_length  = 0;
+        driver->internals.queues[queue].descriptors[desc].q_flags   = 0;
+        driver->internals.queues[queue].descriptors[desc].q_next    = 0;
+    }
+
+}
+
+int virtq_poll(struct virtio_driver* driver, uint16_t queue, uint16_t seen, uint16_t descriptor, size_t* outsize) {
+    DEBUG_ASSERT(driver);
+    
+    do {
+
+        for (size_t k = seen; k < le16_to_cpu(driver->internals.queues[queue].used->q_idx); k++) {
+
+            atomic_thread_fence(memory_order_acquire);
+
+            uint16_t i = k % driver->internals.queues[queue].size;
+
+            if (le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_id) != descriptor)
+                continue;
+
+            if (outsize) {
+                size_t requested_size = *outsize;
+                size_t received_size = le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length);
+
+                if (requested_size > received_size) {
+                    requested_size = received_size;
+                }
+
+                *outsize = requested_size;
+            }
+
+#if DEBUG_LEVEL_TRACE
+            kprintf("virtio-queue: device %d has received %d bytes from idx: %d\n", driver->device, le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length), i);
+#endif
+            
+            return i;
+
+        }
+
+    } while (seen != 0xFFFF);
+
+    return 0xFFFF;
+
+}
 
 ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void* message, size_t size, void* output, size_t outsize) {
 
@@ -223,8 +265,8 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     DEBUG_ASSERT(size < driver->send_window_size);
     DEBUG_ASSERT(outsize < driver->recv_window_size);
 
-    ssize_t inp = virtq_get_free_descriptor(driver, queue);
-    ssize_t out = virtq_get_free_descriptor(driver, queue);
+    ssize_t inp = virtq_alloc_descriptor(driver, queue);
+    ssize_t out = virtq_alloc_descriptor(driver, queue);
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d is sendrecv on queue %d [inp(%d), out(%d), message(%p), size(%p), output(%p), outsize(%p)]\n", driver->device, queue, inp, out, message, size, output, outsize);
@@ -260,34 +302,16 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
-
-    sem_wait(&driver->internals.queues[queue].iosem);
-
-    do {
-
-        for (size_t k = seen; k < le16_to_cpu(driver->internals.queues[queue].used->q_idx); k++) {
-
-            atomic_thread_fence(memory_order_acquire);
-
-            uint16_t i = k % driver->internals.queues[queue].size;
-
-            if (le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_id) != inp)
-                continue;
-
-            if (le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length) < outsize) {
-                outsize = le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length);
-            }
-
-            memcpy(output, (void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
-
-#if DEBUG_LEVEL_TRACE
-            kprintf("virtio-queue: device %d has received %d bytes from idx: %d\n", driver->device, le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length), i);
-#endif
-            seen = 0xFFFF;
-            break;
-        }
-
-    } while (seen != 0xFFFF);
+    int e = virtq_poll(driver, queue, seen, out, &outsize);
+    
+    virtq_free_descriptor(driver, queue, inp);
+    virtq_free_descriptor(driver, queue, out);
+    
+    if (e < 0) {
+        return errno = EIO, -1;
+    } else {
+        memcpy(output, (void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
+    }
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d has sent and received %ld bytes of data on queue %d\n", driver->device, outsize, queue);
@@ -306,7 +330,7 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
     DEBUG_ASSERT(queue < driver->internals.num_queues);
     DEBUG_ASSERT(outsize < driver->recv_window_size);
 
-    ssize_t out = virtq_get_free_descriptor(driver, queue);
+    ssize_t out = virtq_alloc_descriptor(driver, queue);
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d is recv on queue %d [out(%d), output(%p), outsize(%p)]\n", driver->device, queue, out, output, outsize);
@@ -335,34 +359,15 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
 
     *(volatile uint16_t*)driver->internals.queues[queue].notify = cpu_to_le16(queue);
 
-
-    sem_wait(&driver->internals.queues[queue].iosem);
-
-    do {
-
-        for (size_t k = seen; k < le16_to_cpu(driver->internals.queues[queue].used->q_idx); k++) {
-            
-            atomic_thread_fence(memory_order_acquire);
-
-            uint16_t i = k % driver->internals.queues[queue].size;
-
-            if (le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_id) != out)
-                continue;
-
-            if (le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length) < outsize) {
-                outsize = le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length);
-            }
-
-            memcpy(output, (void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
-
-#if DEBUG_LEVEL_TRACE
-            kprintf("virtio-queue: device %d has received %d bytes from idx: %d\n", driver->device, le32_to_cpu(driver->internals.queues[queue].used->q_elements[i].e_length), i);
-#endif
-            seen = 0xFFFF;
-            break;
-        }
-
-    } while (seen != 0xFFFF);
+    int e = virtq_poll(driver, queue, seen, out, &outsize);
+    
+    virtq_free_descriptor(driver, queue, out);
+    
+    if (e < 0) {
+        return errno = EIO, -1;
+    } else {
+        memcpy(output, (void*)arch_vmm_p2v(driver->internals.queues[queue].buffers.recvbuf + (out * driver->recv_window_size), ARCH_VMM_AREA_HEAP), outsize);
+    }
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d has received %ld bytes of data on queue %d\n", driver->device, outsize, queue);
@@ -381,7 +386,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
     DEBUG_ASSERT(queue < driver->internals.num_queues);
     DEBUG_ASSERT(size < driver->send_window_size);
 
-    ssize_t inp = virtq_get_free_descriptor(driver, queue);
+    ssize_t inp = virtq_alloc_descriptor(driver, queue);
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d send on queue %d [inp(%d), message(%p), size(%p)]\n", driver->device, queue, inp, message, size);
