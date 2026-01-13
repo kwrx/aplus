@@ -187,9 +187,25 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         return errno = ENOSPC, -1;
     }
 
-    msix->msix_rows[index].pr_address = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12));
-    msix->msix_rows[index].pr_data    = cpu_to_le32(index + PCI_MSIX_INTR_BASE + 0x20);
-    msix->msix_rows[index].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[index].pr_ctl) | PCI_MSIX_INTR_MASK);
+    size_t i = 0;
+    for (i = 0; i < msix->msix_pci.pci_msgctl_table_size + 1; i++) {
+        
+        if (msix->msix_rows[i].pr_address != 0)
+            continue;
+
+        msix->msix_rows[i].pr_address = cpu_to_le64(0xFEE00000 | (current_cpu->id << 12));
+        msix->msix_rows[i].pr_data    = cpu_to_le32(index + PCI_MSIX_INTR_BASE + 0x20);
+        msix->msix_rows[i].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[i].pr_ctl) | PCI_MSIX_INTR_MASK);
+
+    }
+
+    if (i == msix->msix_pci.pci_msgctl_table_size + 1) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("pci-msix: ERROR! No more MSI-X table slots available for device %d [handler(%p), data(%p)]\n", device, handler, data);
+#endif
+        pci_dev_unregister(device);
+        return errno = ENOSPC, -1;
+    }
             
     arch_intr_map_irq(index + PCI_MSIX_INTR_BASE, pci_msix_interrupt_handler, ARCH_INTR_TYPE_MSI);
 
@@ -197,7 +213,6 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
     kprintf("pci-msix: slot %d mapped for device %d [vector(%p), handler(%p), data(%p)]\n", index, device, vector, handler, data);
 #endif
 
-    atomic_thread_fence(memory_order_seq_cst);
     return 0;
 }
 
@@ -212,10 +227,23 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         return errno = ESRCH, -1;
     }
 
-    msix->msix_rows[index].pr_address = 0;
-    msix->msix_rows[index].pr_data    = 0;
-    msix->msix_rows[index].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[index].pr_ctl) | PCI_MSIX_INTR_MASK);
+    size_t i;
+    for (i = 0; i < msix->msix_pci.pci_msgctl_table_size + 1; i++) {
+        
+        if (msix->msix_rows[i].pr_data != cpu_to_le32(index + PCI_MSIX_INTR_BASE + 0x20))
+            continue;
+        
+        msix->msix_rows[i].pr_address = 0;
+        msix->msix_rows[i].pr_data    = 0;
+        msix->msix_rows[i].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[i].pr_ctl) | PCI_MSIX_INTR_MASK);
 
-    atomic_thread_fence(memory_order_seq_cst);
+    }
+
+    if (i == msix->msix_pci.pci_msgctl_table_size + 1) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("pci-msix: WARN! No MSI-X table slot found for device %d\n", device);
+#endif
+    }
+
     return 0;
 }
