@@ -140,6 +140,7 @@ struct virtio_driver {
 
         struct {
 
+            spinlock_t lock;
             semaphore_t iosem;
 
             struct virtq_descriptor volatile* descriptors;
