@@ -207,7 +207,7 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
     uint16_t index = pci_dev_unregister(device);
     if (index == PCI_NONE) {
 #if DEBUG_LEVEL_FATAL
-        kprintf("pci-msi: ERROR! No device slot found for device %d\n", device);
+        kprintf("pci-msix: ERROR! No device slot found for device %d\n", device);
 #endif
         return errno = ESRCH, -1;
     }
