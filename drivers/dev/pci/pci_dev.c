@@ -76,6 +76,7 @@ uint16_t pci_dev_unregister(pcidev_t device) {
                 continue;
 
             pci_devices[i].device  = 0;
+            pci_devices[i].vector  = 0;
             pci_devices[i].handler = NULL;
             pci_devices[i].data    = NULL;
 
