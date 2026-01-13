@@ -68,7 +68,7 @@ int pci_find_msi(pcidev_t device, pci_msi_t* mptr) {
     uint8_t cap_next = 0;
     do {
 
-        if((cap_id = pci_read(device, caps + PCI_MSI_HDR_CAPID, sizeof(uint8_t)) != PCI_MSI_CAPID))
+        if ((cap_id = pci_read(device, caps + PCI_MSI_HDR_CAPID, sizeof(uint8_t))) != PCI_MSI_CAPID)
             return PCI_NONE;
 
         cap_next = pci_read(device, caps + PCI_MSI_HDR_CAPNEXT, sizeof(uint8_t));

@@ -248,7 +248,7 @@ int virtq_poll(struct virtio_driver* driver, uint16_t queue, uint16_t seen, uint
 
     } while (seen != 0xFFFF);
 
-    return 0xFFFF;
+    return -1;
 
 }
 
