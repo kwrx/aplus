@@ -1,4 +1,4 @@
-#define FSENTRY(a, b, c) {                                              \
+#define FSENTRY(a, b, c, d) {                                           \
     extern int c##_mount(inode_t*, inode_t*, int, const char*);         \
     extern int c##_umount(inode_t*);                                    \
                                                                         \
@@ -6,6 +6,7 @@
                                                                         \
     fs_table[i].id = a;                                                 \
     fs_table[i].name = b;                                               \
+    fs_table[i].nodev = d;                                              \
     fs_table[i].mount = c##_mount;                                      \
     fs_table[i].umount = c##_umount;                                    \
     fs_table[i + 1].id = 0;                                             \
@@ -13,9 +14,9 @@
 }
 
 
-FSENTRY (1             ,   "bind"      ,   bindfs      );
-FSENTRY (FSID_TMPFS    ,   "tmpfs"     ,   tmpfs       );
-FSENTRY (FSID_EXT2     ,   "ext2"      ,   ext2        );
-FSENTRY (FSID_ISO9660  ,   "iso9660"   ,   iso9660     );
-FSENTRY (FSID_PROCFS   ,   "proc"      ,   procfs      );
+FSENTRY (1             ,   "bind"      ,   bindfs    , false );
+FSENTRY (FSID_TMPFS    ,   "tmpfs"     ,   tmpfs     , true  );
+FSENTRY (FSID_EXT2     ,   "ext2"      ,   ext2      , false );
+FSENTRY (FSID_ISO9660  ,   "iso9660"   ,   iso9660   , false );
+FSENTRY (FSID_PROCFS   ,   "proc"      ,   procfs    , true  );
 

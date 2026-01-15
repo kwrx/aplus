@@ -86,12 +86,11 @@ int procfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
 
 
-    // dir->sb->ops.getattr = procfs_getattr;
+    dir->sb->ops.getattr = procfs_root_getattr;
     dir->sb->ops.finddir = procfs_root_finddir;
     dir->sb->ops.readdir = procfs_root_readdir;
 
     dir->sb->flags |= INODE_FLAGS_DCACHE_DISABLED;
-
 
     procfs_service_pid_init(dir);
 
