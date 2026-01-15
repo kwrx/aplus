@@ -98,7 +98,7 @@ void spinlock_lock(spinlock_t* lock) {
 
     volatile uint64_t own;
 
-    if ((own = atomic_load_explicit(&lock->owner, memory_order_consume)) == spinlock_get_new_owner(lock)) {
+    if ((own = atomic_load_explicit(&lock->owner, memory_order_acquire)) == spinlock_get_new_owner(lock)) {
 
         if (lock->flags & SPINLOCK_FLAGS_RECURSIVE) {
 
@@ -149,7 +149,7 @@ void spinlock_lock(spinlock_t* lock) {
         lock->owner   = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
 
-        atomic_store_explicit(&lock->refcount, 1, memory_order_relaxed);
+        atomic_store_explicit(&lock->refcount, 1, memory_order_release);
     }
 }
 
@@ -168,7 +168,7 @@ int spinlock_trylock(spinlock_t* lock) {
         lock->owner   = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
 
-        atomic_store_explicit(&lock->refcount, 1, memory_order_relaxed);
+        atomic_store_explicit(&lock->refcount, 1, memory_order_release);
     }
 
     return e;
@@ -188,7 +188,7 @@ void spinlock_unlock(spinlock_t* lock) {
     DEBUG_ASSERT(lock);
 
 
-    if (atomic_load_explicit(&lock->owner, memory_order_consume) != spinlock_get_new_owner(lock)) {
+    if (atomic_load_explicit(&lock->owner, memory_order_acquire) != spinlock_get_new_owner(lock)) {
 #if DEBUG_LEVEL_TRACE
         kpanicf("ipc: PANIC! EPERM! spinlock(%p) at %s:%d %s() not owned, owner(%ld) flags(%X) current_owner(%ld)\n", lock, FILE, LINE, FUNC, lock->owner, lock->flags, spinlock_get_new_owner(lock));
 #else
@@ -208,8 +208,7 @@ void spinlock_unlock(spinlock_t* lock) {
         lock->refcount = 0;
         lock->irqsave  = 0;
 
-        atomic_flag_clear(&lock->value);
-
+        atomic_flag_clear_explicit(&lock->value, memory_order_release);
 
         arch_intr_enable(e);
     }
