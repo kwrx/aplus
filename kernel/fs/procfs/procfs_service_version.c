@@ -37,7 +37,9 @@
 #include "procfs.h"
 
 
-static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
+static int procfs_service_version_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
+
+    (void)arg;
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -46,36 +48,29 @@ static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
+    static char buffer[64] = {0};
 
-    pid_t pid = (pid_t)((uintptr_t)arg);
 
+    *size = snprintf(buffer, sizeof(buffer), "%s version %s-%s (%s %s) %s\n", 
+        CONFIG_SYSTEM_NAME, 
+        CONFIG_SYSTEM_VERSION, 
+        CONFIG_SYSTEM_CODENAME, 
+        CONFIG_COMPILER_HOST,
+        __VERSION__, 
+        __TIMESTAMP__
+    );
 
-    if (pid < 0) {
-
-        *buf  = core->boot.cmdline;
-        *size = strlen(core->boot.cmdline);
-
-    } else {
-
-        task_t* k = procfs_service_pid_to_task(pid);
-
-        if (!k) {
-            return errno = ESRCH, -1;
-        }
-
-        // TODO: /proc/[pid]/cmdline
-        return errno = ENOSYS, -1;
-    }
+    *buf = buffer;
 
     return 0;
 }
 
-inode_t* procfs_service_cmdline_inode(inode_t* parent, pid_t pid) {
+inode_t* procfs_service_version_inode(inode_t* parent) {
 
     static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "cmdline", S_IFREG | 0666, procfs_service_cmdline_fetch, (void*)((uintptr_t)pid));
+        inode = procfs_service_inode(parent, "version", S_IFREG | 0666, procfs_service_version_fetch, NULL);
     }
 
     return inode;

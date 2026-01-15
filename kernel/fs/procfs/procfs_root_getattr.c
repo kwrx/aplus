@@ -25,58 +25,42 @@
 #include <stdio.h>
 #include <sys/mount.h>
 #include <sys/types.h>
+#include <sys/sysmacros.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
-#include <aplus/hal.h>
 #include <aplus/ipc.h>
+#include <aplus/hal.h>
 #include <aplus/memory.h>
+#include <aplus/smp.h>
 #include <aplus/vfs.h>
 
 #include "procfs.h"
 
 
-static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
+int procfs_root_getattr(inode_t* inode, struct stat* st) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
+    DEBUG_ASSERT(st);
 
-    DEBUG_ASSERT(buf);
-    DEBUG_ASSERT(size);
+    memset(st, 0, sizeof(struct stat));
 
-
-    pid_t pid = (pid_t)((uintptr_t)arg);
-
-
-    if (pid < 0) {
-
-        *buf  = core->boot.cmdline;
-        *size = strlen(core->boot.cmdline);
-
-    } else {
-
-        task_t* k = procfs_service_pid_to_task(pid);
-
-        if (!k) {
-            return errno = ESRCH, -1;
-        }
-
-        // TODO: /proc/[pid]/cmdline
-        return errno = ENOSYS, -1;
-    }
+    st->st_ino     = inode->ino;
+    st->st_mode    = S_IFDIR | 0755;
+    st->st_dev     = makedev(0, 34);
+    st->st_nlink   = 2;
+    st->st_uid     = 0;
+    st->st_gid     = 0;
+    st->st_rdev    = 0;
+    st->st_size    = 0;
+    st->st_blksize = 0;
+    st->st_blocks  = 0;
+    st->st_atime   = arch_timer_gettime();
+    st->st_mtime   = arch_timer_gettime();
+    st->st_ctime   = arch_timer_gettime();
 
     return 0;
-}
-
-inode_t* procfs_service_cmdline_inode(inode_t* parent, pid_t pid) {
-
-    static inode_t* inode = NULL;
-
-    if (inode == NULL) {
-        inode = procfs_service_inode(parent, "cmdline", S_IFREG | 0666, procfs_service_cmdline_fetch, (void*)((uintptr_t)pid));
-    }
-
-    return inode;
 }

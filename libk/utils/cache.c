@@ -76,7 +76,7 @@ void cache_init(cache_t* cache, cache_ops_t* ops, size_t capacity, void* userdat
     hashmap_init(&cache->map, __cache_hash_default, __cache_key_cmp);
 
 
-    spinlock_init(&cache->lock);
+    spinlock_init_with_flags(&cache->lock, SPINLOCK_FLAGS_RECURSIVE);
 }
 
 
@@ -129,7 +129,6 @@ void cache_commit_all(cache_t* cache) {
 __returns_nonnull cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
-    DEBUG_ASSERT(key);
 
     cache_value_t value = NULL;
 
@@ -188,8 +187,6 @@ __returns_nonnull cache_value_t __cache_get(cache_t* cache, cache_key_t key) {
 void __cache_commit(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
-    DEBUG_ASSERT(key);
-
 
     cache_value_t value = NULL;
 
@@ -212,8 +209,6 @@ void __cache_commit(cache_t* cache, cache_key_t key) {
 void __cache_remove(cache_t* cache, cache_key_t key) {
 
     DEBUG_ASSERT(cache);
-    DEBUG_ASSERT(key);
-
 
     cache_value_t value = NULL;
 

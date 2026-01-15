@@ -44,7 +44,6 @@ static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
-    DEBUG_ASSERT(inode->sb->root == inode);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);

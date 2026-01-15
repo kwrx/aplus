@@ -36,16 +36,8 @@
 #include <aplus/utils/ptr.h>
 
 
-static struct {
-
-    int id;
-    const char* name;
-
-    int (*mount)(inode_t*, inode_t*, int, const char*);
-    int (*umount)(inode_t*);
-
-} fs_table[32];
-
+fstable_t __fs_table[VFS_MAX_FILESYSTEMS] = {0};
+fstable_t* fs_table = &__fs_table[0];
 
 
 void vfs_init(void) {

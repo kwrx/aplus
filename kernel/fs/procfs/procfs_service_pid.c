@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <sys/mount.h>
 #include <sys/types.h>
+#include <ctype.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -43,11 +44,73 @@ static cache_t cache = {0};
 
 
 static inode_t* procfs_service_pid_finddir(inode_t* inode, const char* name) {
-    return NULL;
+    
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
+    DEBUG_ASSERT(name);
+
+    if (isdigit(inode->name[0])) {
+
+        long pid = atol(inode->name);
+        
+        if (pid > 0) {
+            return procfs_service_pid_inode(inode, pid);
+        } else {
+            return errno = ENOENT, NULL;
+        }
+
+    } else if(strcmp(inode->name, "self") == 0) {
+        return procfs_service_pid_inode(inode, current_task->tid);
+    } else {
+        return errno = ENOENT, NULL;
+    }
+
 }
 
 static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
-    return 0;
+    
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
+
+    DEBUG_ASSERT(e);
+
+    if (unlikely(count == 0))
+        return 0;
+
+
+    size_t i = 0;
+#define __readdir(ino, type, name)                       \
+    do {                                                 \
+                                                         \
+        if (pos-- > 0)                                   \
+            break;                                       \
+                                                         \
+        e[i].d_ino    = ino;                             \
+        e[i].d_off    = i;                               \
+        e[i].d_reclen = sizeof(struct dirent);           \
+        e[i].d_type   = type;                            \
+                                                         \
+        strncpy(e[i].d_name, name, sizeof(e[i].d_name)); \
+                                                         \
+        if (++i == count)                                \
+            return i;                                    \
+                                                         \
+    } while (0)
+
+
+    __readdir(1, DT_DIR, ".");
+    __readdir(2, DT_DIR, "..");
+    __readdir(3, DT_REG, "cmdline");
+    // __readdir(4, DT_REG, "environ");
+    // __readdir(5, DT_REG, "limits");
+    // __readdir(6, DT_REG, "status");
+    // __readdir(7, DT_REG, "io");
+    // __readdir(8, DT_LNK, "exe");
+    // __readdir(9, DT_LNK, "cwd");
+
+    return i;
 }
 
 static int procfs_service_pid_self_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
@@ -55,7 +118,6 @@ static int procfs_service_pid_self_fetch(inode_t* inode, char** buf, size_t* siz
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
-    DEBUG_ASSERT(inode->sb->root == inode);
 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
