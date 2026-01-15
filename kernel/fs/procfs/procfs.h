@@ -41,6 +41,7 @@ typedef struct procfs_service {
 
 
 
+int procfs_root_getattr(inode_t* inode, struct stat* st);
 inode_t* procfs_root_finddir(inode_t* inode, const char* name);
 ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count);
 
@@ -48,6 +49,8 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
 inode_t* procfs_service_cmdline_inode(inode_t* parent, pid_t pid);
 inode_t* procfs_service_meminfo_inode(inode_t* parent);
 inode_t* procfs_service_uptime_inode(inode_t* parent);
+inode_t* procfs_service_version_inode(inode_t* parent);
+inode_t* procfs_service_filesystems_inode(inode_t* parent);
 
 inode_t* procfs_service_inode(inode_t* parent, char* name, mode_t mode, int (*fetch)(inode_t*, char** buf, size_t*, void*), void* arg);
 

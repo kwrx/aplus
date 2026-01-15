@@ -50,24 +50,21 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
         return 0;
 
 
-    int i = 0;
+    size_t i = 0;
 
     cpu_foreach(cpu) {
-
-        task_t* task = cpu->sched_queue;
 
         for (task_t* q = cpu->sched_queue; q; q = q->next) {
 
             if (pos-- > 0)
                 continue;
 
-
-            e[i].d_ino    = task->tid;
-            e[i].d_off    = pos;
+            e[i].d_ino    = q->tid;
+            e[i].d_off    = i;
             e[i].d_reclen = sizeof(struct dirent);
             e[i].d_type   = DT_DIR;
 
-            snprintf(e->d_name, sizeof(e->d_name), "%d", task->tid);
+            snprintf(e[i].d_name, sizeof(e[i].d_name), "%d", q->tid);
 
             if (++i == count)
                 return i;
@@ -82,7 +79,7 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
             break;                                       \
                                                          \
         e[i].d_ino    = ino;                             \
-        e[i].d_off    = pos;                             \
+        e[i].d_off    = i;                               \
         e[i].d_reclen = sizeof(struct dirent);           \
         e[i].d_type   = type;                            \
                                                          \
@@ -97,12 +94,12 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
     __readdir(1, DT_DIR, ".");
     __readdir(2, DT_DIR, "..");
     __readdir(3, DT_DIR, "self");
-    __readdir(4, DT_REG, "cpuinfo");
+    // __readdir(4, DT_REG, "cpuinfo");
     __readdir(4, DT_REG, "meminfo");
     __readdir(5, DT_REG, "uptime");
     __readdir(6, DT_REG, "version");
-    __readdir(7, DT_REG, "modules");
-    __readdir(8, DT_REG, "mounts");
+    // __readdir(7, DT_REG, "modules");
+    // __readdir(8, DT_REG, "mounts");
     __readdir(9, DT_REG, "filesystems");
     __readdir(10, DT_REG, "cmdline");
 

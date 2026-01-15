@@ -70,11 +70,11 @@ inode_t* procfs_root_finddir(inode_t* inode, const char* name) {
         if (strcmp(name, "uptime") == 0)
             return procfs_service_uptime_inode(inode);
 
-        // if(strcmp(name, "version") == 0)
-        //     return procfs_version_inode();
+        if(strcmp(name, "version") == 0)
+            return procfs_service_version_inode(inode);
 
-        // if(strcmp(name, "filesystems") == 0)
-        //     return procfs_filesystems_inode();
+        if(strcmp(name, "filesystems") == 0)
+            return procfs_service_filesystems_inode(inode);
 
         if (strcmp(name, "cmdline") == 0)
             return procfs_service_cmdline_inode(inode, -1);

@@ -49,6 +49,7 @@
     #include <aplus/utils/ptr.h>
 
 
+    #define VFS_MAX_FILESYSTEMS  32
 
     #define FSID_TMPFS   0xDEAD1000
     #define FSID_EXT2    0xDEAD1001
@@ -154,14 +155,24 @@ struct file {
     spinlock_t lock;
 };
 
+typedef struct {
 
+    int id;
+    const char* name;
+    bool nodev;
+
+    int (*mount)(inode_t*, inode_t*, int, const char*);
+    int (*umount)(inode_t*);
+
+} fstable_t;
 
 __BEGIN_DECLS
 
 
 void vfs_init(void);
 
-//* os/kernel/fs/vfs.c
+//* kernel/fs/vfs.c
+extern fstable_t* fs_table;
 int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
 
 inode_t* vfs_open(inode_t*, int);
