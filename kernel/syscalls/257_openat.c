@@ -96,7 +96,7 @@ SYSCALL(
         uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
 
 #if DEBUG_LEVEL_TRACE
-        kprintf("openat(%d, \"%s\", %d, %d)\n", dfd, __safe_filename, flags, mode);
+        kprintf("syscall: openat(%d, \"%s\", %d, %d)\n", dfd, __safe_filename, flags, mode);
 #endif
 
 
