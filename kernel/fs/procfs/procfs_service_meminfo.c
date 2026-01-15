@@ -52,33 +52,56 @@ static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size
 
 
     *size = snprintf(buffer, sizeof(buffer),
-                     "MemTotal:      %lu kB\n"
-                     "MemFree:       %lu kB\n"
-                     "MemAvailable:  %lu kB\n"
-                     "Buffers:       %lu kB\n"
-                     "Cached:        %lu kB\n"
-                     "SwapCached:    %lu kB\n"
-                     "Active:        %lu kB\n"
-                     "Inactive:      %lu kB\n"
-                     "Active(anon)   %lu kB\n"
-                     "Inactive(anon) %lu kB\n"
-                     "Active(file)   %lu kB\n"
-                     "Inactive(file) %lu kB\n"
-                     "SwapTotal:     %lu kB\n"
-                     "SwapFree:      %lu kB\n"
-                     "Dirty:         %lu kB\n"
-                     "Writeback:     %lu kB\n"
-                     "AnonPages:     %lu kB\n"
-                     "Mapped:        %lu kB\n"
-                     "Shmem:         %lu kB\n"
-                     "Slab:          %lu kB\n"
-                     "SReclaimable:  %lu kB\n"
-                     "SUnreclaim:    %lu kB\n"
-                     "KernelStack:   %lu kB\n"
-                     "PageTables:    %lu kB\n",
+                "MemTotal:      %lu kB\n"
+                "MemFree:       %lu kB\n"
+                "MemAvailable:  %lu kB\n"
+                "Buffers:       %lu kB\n"
+                "Cached:        %lu kB\n"
+                "SwapCached:    %lu kB\n"
+                "Active:        %lu kB\n"
+                "Inactive:      %lu kB\n"
+                "Active(anon)   %lu kB\n"
+                "Inactive(anon) %lu kB\n"
+                "Active(file)   %lu kB\n"
+                "Inactive(file) %lu kB\n"
+                "SwapTotal:     %lu kB\n"
+                "SwapFree:      %lu kB\n"
+                "Dirty:         %lu kB\n"
+                "Writeback:     %lu kB\n"
+                "AnonPages:     %lu kB\n"
+                "Mapped:        %lu kB\n"
+                "Shmem:         %lu kB\n"
+                "Slab:          %lu kB\n"
+                "SReclaimable:  %lu kB\n"
+                "SUnreclaim:    %lu kB\n"
+                "KernelStack:   %lu kB\n"
+                "PageTables:    %lu kB\n",
 
-                     (pmm_get_total_memory()) >> 10, (pmm_get_total_memory() - pmm_get_used_memory()) >> 10, (pmm_get_total_memory() - pmm_get_used_memory()) >> 10, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L,
-                     kheap_get_used_memory() >> 10, 0L, 0L, 0L, 0L);
+                (pmm_get_total_memory()) >> 10,
+                (pmm_get_total_memory() - pmm_get_used_memory()) >> 10,
+                (pmm_get_total_memory() - pmm_get_used_memory()) >> 10,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                0L,
+                kheap_get_used_memory() >> 10,
+                0L,
+                0L,
+                0L,
+                0L
+            );
 
     *buf = buffer;
 
