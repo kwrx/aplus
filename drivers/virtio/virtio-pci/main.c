@@ -260,11 +260,21 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
         uint16_t i = k % (vector_limit - 1);
 
-        pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, i);
+        if(pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, i) < 0) {
+#if DEBUG_LEVEL_FATAL
+            kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for queue %d failed\n", driver->device, i, k);
+#endif
+            return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+        }
         pci_msix_unmask(driver->device, &msix, i);
     }
 
-    pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, vector_limit - 1);
+    if(pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, vector_limit - 1) < 0) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for config failed\n", driver->device, vector_limit - 1);
+#endif
+        return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+    }
     pci_msix_unmask(driver->device, &msix, vector_limit - 1);
 
     cfg->config_msix_vector = vector_limit - 1;
