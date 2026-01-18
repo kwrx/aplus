@@ -53,8 +53,6 @@ MODULE_LICENSE("GPL");
 
 
 #define VIRTGPU_ID "VIRTIO-GPU"
-
-#define VIRTGPU_FB_RESID        1
 #define VIRTGPU_DISPLAY_PRIMARY 0
 
 
@@ -88,21 +86,18 @@ device_t device = {
 
 };
 
+uint64_t virtgpu_fb_resid = 0;
 
 
 static void virtgpu_init(device_t* device) {
-
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->vid.fb_base == 0);
     DEBUG_ASSERT(device->vid.fb_size == 0);
-
-
     virtgpu_reset(device);
 }
 
 
 static void virtgpu_dnit(device_t* device) {
-
     DEBUG_ASSERT(device);
 
     if (unlikely(device->vid.fs.smem_start))
@@ -112,52 +107,38 @@ static void virtgpu_dnit(device_t* device) {
 
 
 static void virtgpu_reset_framebuffer(device_t* device) {
-
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-
-#if DEBUG_LEVEL_ERROR
-    #define __(cmd, args...)                                             \
-        {                                                                \
-            kprintf("virtio-gpu: " #cmd "\n");                           \
-            int e;                                                       \
-            if ((e = cmd(args)) < 0) {                                   \
-                kprintf("virtio-gpu: ERROR! %s failed: %d\n", #cmd, -e); \
-                device->status = DEVICE_STATUS_FAILED;                   \
-                return;                                                  \
-            }                                                            \
-        }
-#else
-    #define __(cmd, args...)                           \
-        {                                              \
-            if (cmd(args) < 0) {                       \
-                device->status = DEVICE_STATUS_FAILED; \
-                return;                                \
-            }                                          \
-        }
-#endif
-
-
-    // uint64_t resource;
-
-    // __(virtgpu_cmd_resource_create_2d,         device->userdata, &resource, VIRTIO_GPU_FORMAT_A8R8G8B8_UNORM, device->vid.vs.xres_virtual, device->vid.vs.yres_virtual);
-    // __(virtgpu_cmd_resource_attach_backing,    device->userdata, resource, device->vid.fb_base, device->vid.fb_size);
-    // __(virtgpu_cmd_set_scanout,                device->userdata, VIRTGPU_DISPLAY_PRIMARY, resource, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
-
-
     struct virtio_gpu_resp_display_info display_info = {0};
+    if (virtgpu_cmd_get_display_info(device->userdata, &display_info) < 0) {
+        device->status = DEVICE_STATUS_FAILED;
+        return;
+    }
 
-    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
-    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
-    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
-    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
-    __(virtgpu_cmd_get_display_info, device->userdata, &display_info);
+    if (!display_info.pmodes[VIRTGPU_DISPLAY_PRIMARY].enabled) {
+#if DEBUG_LEVEL_ERROR
+        kprintf("virtio-gpu: ERROR! Primary display %d not enabled\n", VIRTGPU_DISPLAY_PRIMARY);
+#endif
+        device->status = DEVICE_STATUS_FAILED;
+        return;
+    }
 
-    for (;;)
-        ;
+    if (virtgpu_cmd_resource_create_2d(device->userdata, &virtgpu_fb_resid, VIRTIO_GPU_FORMAT_B8G8R8X8_UNORM, device->vid.vs.xres, device->vid.vs.yres) < 0) {
+        device->status = DEVICE_STATUS_FAILED;
+        return;
+    }
 
-#undef __
+    if (virtgpu_cmd_resource_attach_backing(device->userdata, virtgpu_fb_resid, device->vid.fb_base, device->vid.fb_size) < 0) {
+        device->status = DEVICE_STATUS_FAILED;
+        return;
+    }
+
+    if (virtgpu_cmd_set_scanout(device->userdata, VIRTGPU_DISPLAY_PRIMARY, virtgpu_fb_resid, 0, 0, device->vid.vs.xres, device->vid.vs.yres) < 0) {
+        device->status = DEVICE_STATUS_FAILED;
+        return;
+    }
+
 }
 
 
@@ -195,8 +176,8 @@ static void virtgpu_reset(device_t* device) {
     device->vid.vs.activate = FB_ACTIVATE_NOW;
 
 
-    device->vid.fb_base = pmm_alloc_blocks(device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8 / PML1_PAGESIZE + 1);
-    device->vid.fb_size = device->vid.vs.xres_virtual * device->vid.vs.yres_virtual * device->vid.vs.bits_per_pixel / 8;
+    device->vid.fb_base = pmm_alloc_blocks(device->vid.vs.xres * device->vid.vs.yres * device->vid.vs.bits_per_pixel / 8 / PML1_PAGESIZE + 1);
+    device->vid.fb_size = device->vid.vs.xres * device->vid.vs.yres * device->vid.vs.bits_per_pixel / 8;
 
 
     virtgpu_reset_framebuffer(device);
@@ -243,11 +224,11 @@ static void virtgpu_update(device_t* device) {
 
 
 static void virtgpu_wait_vsync(device_t* device) {
-
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    virtgpu_cmd_transfer_to_host_2d(device->userdata, VIRTGPU_FB_RESID, 0, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+    virtgpu_cmd_transfer_to_host_2d(device->userdata, virtgpu_fb_resid, 0, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+    virtgpu_cmd_resource_flush(device->userdata, virtgpu_fb_resid, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
 }
 
 
@@ -293,29 +274,23 @@ static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver
     struct virtio_gpu_config* cfg = (struct virtio_gpu_config*)driver->internals.device_config;
 
     cfg->events_clear = cfg->events_read;
-
-    kprintf("!!!!!!!!!!!!!!!RECEIVED MSI-X INTERRUPT!!!!!!!!!!!!!!!!!!: %p\n", device);
-
-
     return 0;
 }
 
 
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
-
+    DEBUG_ASSERT(arg);
 
     device_t* driver = (device_t*)arg;
 
     if (driver->userdata != NULL)
         return;
 
-
     if (vid != VIRTIO_PCI_VENDOR)
         return;
 
     if (did != VIRTIO_PCI_DEVICE(VIRTIO_DEVICE_TYPE_GPU))
         return;
-
 
 
     struct virtio_driver* virtio = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
