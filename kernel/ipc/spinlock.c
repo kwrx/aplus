@@ -122,6 +122,8 @@ void spinlock_lock(spinlock_t* lock) {
         // //         uint64_t deadlock_detector = 0ULL;
         // // #endif
 
+        uint64_t irqflags = arch_intr_disable();
+
         while (atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire)) {
 
 #if defined(__i386__) || defined(__x86_64__)
@@ -138,16 +140,16 @@ void spinlock_lock(spinlock_t* lock) {
         }
 
 
-#if DEBUG_LEVEL_TRACE
-
         if (unlikely(lock->owner != -1ULL)) {
+#if DEBUG_LEVEL_TRACE
             kpanicf("ipc: FAIL! %s(): Lock already owned at %s:%d in %s(%p): owner(%ld) flags(%X) current_owner(%ld)\n", __func__, FILE, LINE, FUNC, lock, lock->owner, lock->flags, spinlock_get_new_owner(lock));
+#else
+            kpanicf("ipc: FAIL! Lock already owned: owner(%ld) flags(%X)\n", lock->owner, lock->flags);
+#endif
         }
 
-#endif
-
         lock->owner   = spinlock_get_new_owner(lock);
-        lock->irqsave = arch_intr_disable();
+        lock->irqsave = irqflags;
 
         atomic_store_explicit(&lock->refcount, 1, memory_order_release);
     }
@@ -158,20 +160,21 @@ void spinlock_lock(spinlock_t* lock) {
  * @brief Try to lock a Spinlock.
  * @deprecated
  */
-int spinlock_trylock(spinlock_t* lock) {
+bool spinlock_trylock(spinlock_t* lock) {
 
     DEBUG_ASSERT(lock);
 
-    int e;
-    if ((e = atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire)) == 0) {
+    if (atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire) == 0) {
 
         lock->owner   = spinlock_get_new_owner(lock);
         lock->irqsave = arch_intr_disable();
 
         atomic_store_explicit(&lock->refcount, 1, memory_order_release);
+        
+        return true;
+    } else {
+        return false;
     }
-
-    return e;
 }
 
 
