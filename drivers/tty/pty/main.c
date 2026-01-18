@@ -64,8 +64,9 @@ __attribute__((used)) static void pty_input_discard(pty_t* pty, bool drain) {
     if (pty->input.size == 0)
         return;
 
-
+#if DEBUG_LEVEL_TRACE
     kprintf("pty_input_discard(): discarding %zd bytes\n", pty->input.size);
+#endif
 
     DEBUG_ASSERT(pty->input.buffer);
     DEBUG_ASSERT(pty->input.capacity);
@@ -188,7 +189,9 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
         char ch = buf[i];
 
+#if DEBUG_LEVEL_TRACE
         kprintf("pty_input_process(): processing char '%c' (0x%x), c_lflag: 0%o, c_iflag: 0%o, c_oflag: 0%o, c_cflag: 0%o\n", ch, ch, pty->ios.c_lflag, pty->ios.c_iflag, pty->ios.c_oflag, pty->ios.c_cflag);
+#endif
 
         // c_iflag
 
@@ -233,8 +236,9 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
             if (sig > 0) {
 
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): sending signal %d to process group %d\n", sig, pty->s_pgrp);
-
+#endif
                 if (pty->ios.c_lflag & ECHO) {
 
                     char cb[2] = {'^', ch + 0x40};
@@ -248,7 +252,10 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
                 if (pty->s_pgrp > 0) {
                     int e = sys_kill(-pty->s_pgrp, sig);
+#if DEBUG_LEVEL_TRACE
                     kprintf("pty_input_process(): sys_kill() returned %d (%d)\n", e, errno);
+#endif
+                    (void)e;
                 }
 
                 continue;
@@ -257,12 +264,16 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
         if (pty->ios.c_lflag & ICANON) {
+#if DEBUG_LEVEL_TRACE
             kprintf("pty_input_process(): canonical mode\n");
+#endif
 
             // Canonical mode
 
             if (ch == pty->ios.c_cc[VKILL]) {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VKILL\n");
+#endif
 
                 while (pty->input.size > 0) {
                     pty_input_backspace(pty, pty->ios.c_lflag & ECHOK);
@@ -279,8 +290,9 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
             else if (ch == pty->ios.c_cc[VERASE]) {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VERASE\n");
-
+#endif
                 pty_input_backspace(pty, pty->ios.c_lflag & ECHOE);
 
                 if (!(pty->ios.c_lflag & ECHOE) && pty->ios.c_lflag & ECHO) {
@@ -294,8 +306,9 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
             else if (ch == pty->ios.c_cc[VWERASE]) {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VWERASE\n");
-
+#endif
                 // TODO: VWERASE: erase the word to the left of the cursor
 
                 continue;
@@ -304,16 +317,18 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
             else if (ch == pty->ios.c_cc[VEOF]) {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VEOF\n");
-
+#endif
                 pty_input_discard(pty, pty->ios.c_lflag & ECHO);
 
             }
 
 
             else if (ch == pty->ios.c_cc[VEOL] || ch == '\n') {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VEOL or newline\n");
-
+#endif
                 pty_input_append(pty, '\n', pty->ios.c_lflag & ECHONL);
                 pty_input_discard(pty, pty->ios.c_lflag & ECHO);
 
@@ -321,14 +336,16 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 
 
             else {
+#if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): appending char\n");
-
+#endif
                 pty_input_append(pty, ch, pty->ios.c_lflag & ECHO);
             }
 
         } else {
+#if DEBUG_LEVEL_TRACE
             kprintf("pty_input_process(): non-canonical mode\n");
-
+#endif
             // Non-canonical mode (raw mode)
 
             if (pty->ios.c_lflag & ECHO) {
