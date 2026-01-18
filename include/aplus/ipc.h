@@ -163,7 +163,7 @@ void futex_wait(struct task*, volatile uint32_t*, uint32_t, const struct timespe
     #endif
 
 
-int spinlock_trylock(spinlock_t*);
+bool spinlock_trylock(spinlock_t*);
 
 void sem_init(semaphore_t*, uint32_t);
 void sem_post(semaphore_t*);
