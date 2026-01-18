@@ -266,7 +266,7 @@ void init(const char* args) {
         return;
     }
 
-#ifdef DEBUG_LEVEL_TRACE
+#if DEBUG_LEVEL_TRACE
     kprintf("bochs-vga: found BGA device with identifier 0x%04X\n", identifier);
 #endif
 
