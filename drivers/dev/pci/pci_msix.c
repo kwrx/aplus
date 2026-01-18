@@ -113,6 +113,9 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         msix.msix_rows = (pci_msix_row_t volatile*)pci_bir_address;
         msix.msix_pba  = (pci_msix_pba_t volatile*)pci_pba_address;
 
+        memset((void*) msix.msix_rows, 0, sizeof(pci_msix_row_t) * (msix.msix_pci.pci_msgctl_table_size + 1));
+        memset((void*) msix.msix_pba, 0, sizeof(pci_msix_pba_t) + ((msix.msix_pci.pci_msgctl_table_size + 7) / 8));
+
         for (size_t i = 0; i < msix.msix_pci.pci_msgctl_table_size + 1; i++)
             pci_msix_mask(device, &msix, i);
 
@@ -197,6 +200,7 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
         msix->msix_rows[i].pr_data    = cpu_to_le32(index + PCI_MSIX_INTR_BASE + 0x20);
         msix->msix_rows[i].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[i].pr_ctl) | PCI_MSIX_INTR_MASK);
 
+        break;
     }
 
     if (i == msix->msix_pci.pci_msgctl_table_size + 1) {
@@ -237,6 +241,7 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         msix->msix_rows[i].pr_data    = 0;
         msix->msix_rows[i].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[i].pr_ctl) | PCI_MSIX_INTR_MASK);
 
+        break;
     }
 
     if (i == msix->msix_pci.pci_msgctl_table_size + 1) {
