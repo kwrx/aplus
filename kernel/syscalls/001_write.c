@@ -74,10 +74,9 @@ SYSCALL(
             return -EFAULT;
 
 
+#if defined(CONFIG_HAVE_NETWORK)
 
         ssize_t e = 0;
-
-#if defined(CONFIG_HAVE_NETWORK)
 
         if (unlikely(NETWORK_IS_SOCKFD(fd))) {
 
