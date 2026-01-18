@@ -268,8 +268,10 @@ void ps2_mouse_irq(void* context, irq_t irq) {
 
                 case 0:
 
-                    if ((packet[cycle] & 0x08) == 0)
+                    if ((packet[cycle] & 0x08) == 0) {
+                        cycle = 0;
                         return;
+                    }
 
                     cycle++;
                     break;
@@ -379,7 +381,6 @@ void ps2_mouse_irq(void* context, irq_t irq) {
 
 
                     cycle = 0;
-
                     break;
             }
         }
