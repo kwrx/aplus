@@ -90,6 +90,8 @@ void smp_init() {
 
         arch_cpu_startup(i);
 
+#if DEBUG_LEVEL_INFO
         kprintf("smp: cpu #%zd is online\n", i);
+#endif
     }
 }
