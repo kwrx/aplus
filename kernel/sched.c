@@ -316,25 +316,22 @@ void schedule(int resched) {
         current_task->rusage.ru_nvcsw++;
     }
 
-
-
-    if (likely(current_task->status == TASK_STATUS_RUNNING)) {
-        current_task->status = TASK_STATUS_READY;
-    }
-
-    if (likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
-        __sched_next();
-    }
-
-
-    current_task->status = TASK_STATUS_RUNNING;
-
-
-
     scoped_lock(&current_cpu->sched_lock) {
-        arch_task_switch(prev_task, current_task);
-    }
 
+        if (likely(current_task->status == TASK_STATUS_RUNNING)) {
+            current_task->status = TASK_STATUS_READY;
+        }
+
+        if (likely((current_task->flags & TASK_FLAGS_NO_FRAME) == 0)) {
+            __sched_next();
+        }
+
+
+        current_task->status = TASK_STATUS_RUNNING;
+
+        arch_task_switch(prev_task, current_task);
+
+    }
 
     do_signals();
 }
