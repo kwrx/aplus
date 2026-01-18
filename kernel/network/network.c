@@ -100,7 +100,9 @@ void network_init() {
     tcpip_init(&tcpip_init_done, &dns);
 
 
-    sem_wait(&tcpip_done);
+   sem_wait(&tcpip_done);
 
+#if DEBUG_LEVEL_INFO
     kprintf("network: up!\n");
+#endif
 }
