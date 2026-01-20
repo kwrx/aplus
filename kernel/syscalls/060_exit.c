@@ -87,7 +87,9 @@ SYSCALL(
             if (current_task->status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
                 continue;
 
-
+#if DEBUG_LEVEL_TRACE
+            kprintf("exit: waking up waiter task(%d) for task(%d)\n", q->tid, current_task->tid);
+#endif
             thread_wake(q);
         }
 
