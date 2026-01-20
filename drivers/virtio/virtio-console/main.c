@@ -149,10 +149,24 @@ static ssize_t virtconsole_write(device_t* device, const void* buf, size_t size)
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
 
+    struct virtio_driver* driver = (struct virtio_driver*)device->userdata;
+
     if (unlikely(size == 0))
         return 0;
 
-    return virtq_send((struct virtio_driver*)device->userdata, VIRTIO_CONSOLE_PORT_TX(0), buf, size);
+    for (size_t sent = 0; sent < size; ) {
+
+        ssize_t rem = MIN(size - sent, driver->send_window_size);
+        ssize_t ret = virtq_send(driver, VIRTIO_CONSOLE_PORT_TX(0), (const uint8_t*)buf + sent, rem);
+
+        if (ret < 0) {
+            return ret;
+        }
+
+        sent += ret;
+    }
+
+    return size;
 }
 
 static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
