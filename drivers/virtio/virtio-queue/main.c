@@ -186,8 +186,6 @@ uint16_t virtq_alloc_descriptor(struct virtio_driver* driver, uint16_t queue) {
             driver->internals.queues[queue].descriptors[d].q_flags   = 0;
             driver->internals.queues[queue].descriptors[d].q_next    = 0;
 
-            kprintf("virtio-queue: device %d allocated descriptor %d on queue %d\n", driver->device, d, queue);
-
             return d;
         }
 
@@ -262,8 +260,8 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     DEBUG_ASSERT(outsize);
 
     DEBUG_ASSERT(queue < driver->internals.num_queues);
-    DEBUG_ASSERT(size < driver->send_window_size);
-    DEBUG_ASSERT(outsize < driver->recv_window_size);
+    DEBUG_ASSERT(size <= driver->send_window_size);
+    DEBUG_ASSERT(outsize <= driver->recv_window_size);
 
     ssize_t inp = virtq_alloc_descriptor(driver, queue);
     ssize_t out = virtq_alloc_descriptor(driver, queue);
@@ -302,7 +300,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     
     driver->internals.queues[queue].notify->n_idx = cpu_to_le16(queue);
 
-    int e = virtq_poll(driver, queue, seen, out, &outsize);
+    int e = virtq_poll(driver, queue, seen, inp, &outsize);
     
     virtq_free_descriptor(driver, queue, inp);
     virtq_free_descriptor(driver, queue, out);
@@ -328,7 +326,7 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
     DEBUG_ASSERT(outsize);
 
     DEBUG_ASSERT(queue < driver->internals.num_queues);
-    DEBUG_ASSERT(outsize < driver->recv_window_size);
+    DEBUG_ASSERT(outsize <= driver->recv_window_size);
 
     ssize_t out = virtq_alloc_descriptor(driver, queue);
 
@@ -384,7 +382,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
     DEBUG_ASSERT(size);
 
     DEBUG_ASSERT(queue < driver->internals.num_queues);
-    DEBUG_ASSERT(size < driver->send_window_size);
+    DEBUG_ASSERT(size <= driver->send_window_size);
 
     ssize_t inp = virtq_alloc_descriptor(driver, queue);
 
