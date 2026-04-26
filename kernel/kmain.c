@@ -46,16 +46,13 @@ void cmain(void) {
 
 void kmain(void) {
 
-    // Initialize syscall
     extern void syscall_init(void);
     syscall_init();
 
-    // Initialize VFS
     extern void vfs_init(void);
     vfs_init();
 
 #if defined(CONFIG_HAVE_NETWORK)
-    // Initialize network
     extern void network_init(void);
     network_init();
 #endif
@@ -71,22 +68,18 @@ void kmain(void) {
     }
 
 
-    // Initialize module
     extern void module_init(void);
     module_init();
 
-    // Initialize root
     extern void root_init(void);
     root_init();
 
 #if defined(CONFIG_HAVE_SMP)
-    // Initialize SMP
     extern void smp_init(void);
     smp_init();
 #endif
 
 #if defined(CONFIG_HAVE_TEST)
-    // Initialize test
     extern void test_init(void);
     test_init();
 #endif
