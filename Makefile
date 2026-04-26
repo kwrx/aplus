@@ -7,13 +7,13 @@ endif
 
 
 export QUIET    := @ 
-export VM       := qemu
+export VM       := kvm
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 
 
-PROJECTS := kernel-rust kernel drivers apps
+PROJECTS := kernel drivers apps
 TARGET	 := aplus.img
 
 REPORT   := docs/REPORT.md
