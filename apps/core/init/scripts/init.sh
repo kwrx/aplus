@@ -1,8 +1,5 @@
 #!/bin/sh
 
-aplus-terminal -c "cat /etc/motd && bash"
-# aplus-ui
-
 # cd /tmp
 
 # echo "#include <iostream>" > main.cpp
@@ -14,6 +11,11 @@ aplus-terminal -c "cat /etc/motd && bash"
 
 # ./main
 
+aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
+# aplus-ui
+
+
+
 # iobench -b64 /usr/libexec/gcc/x86_64-aplus/12.2.0/cc1plus
 # iobench -b64 /usr/libexec/gcc/x86_64-aplus/12.2.0/cc1plus
 
@@ -24,4 +26,5 @@ aplus-terminal -c "cat /etc/motd && bash"
 # /usr/lib/ld-musl-x86_64.so.1 --library-path /usr/lib /test
 
 # gl-test-gears
+# gl-test-shaders-triangle
 
