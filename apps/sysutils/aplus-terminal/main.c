@@ -889,9 +889,9 @@ int main(int argc, char** argv) {
 
 
             if (cmd) {
-                execl("/bin/bash", "/bin/bash", "-c", cmd, NULL);
+                execl("/bin/dash", "/bin/dash", "-c", cmd, NULL);
             } else {
-                execl("/bin/bash", "/bin/bash", NULL);
+                execl("/bin/dash", "/bin/dash", NULL);
             }
 
             fprintf(stderr, "aplus-terminal: execl() failed: %s\n", strerror(errno));
