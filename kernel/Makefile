@@ -11,9 +11,9 @@ ASFLAGS   := -include $(ROOTDIR)/config.h
 DESTDIR   := $(SYSROOT)/boot
 TARGET	  := aplus.bin
 
-LDFLAGS   := -Wl,--whole-archive $(ROOTDIR)/kernel-rust/libkernel-rust.a -Wl,--no-whole-archive
+LDFLAGS   :=
 
-RESOURCES := $(ROOTDIR)/kernel-rust/libkernel-rust.a
+RESOURCES :=
 
 include $(ROOTDIR)/arch/$(PLATFORM)/config.mk
 include $(ROOTDIR)/build/cross.mk
