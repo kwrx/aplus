@@ -73,9 +73,8 @@ static void init_framebuffer(void) {
         return (void)fprintf(stderr, "fb0: unable to set screen info\n");
 
     if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0)
-        return (void)fprintf(stderr, "fb0: unable to get screen info\n");
-
-
+        return (void)fprintf(stderr, "fb0: unable to get screen info\n");    
+        
 #if defined(DEBUG)
     fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", var.xres, var.yres, var.bits_per_pixel, (void*)((uintptr_t)fix.smem_start), (void*)((uintptr_t)fix.smem_len));
 #endif
@@ -190,16 +189,27 @@ static void init_fstab() {
 
                 for (char* k = strtok_r(fl, ",", &tok); k; k = strtok_r(NULL, ",", &tok)) {
 
-#define has(str, flag)         \
-    if (strcmp(k, str) == 0) { \
-        flags |= flag;         \
-        continue;              \
-    }
+                    #define has(str, flag)         \
+                        if (strcmp(k, str) == 0) { \
+                            flags |= flag;         \
+                            continue;              \
+                        }
 
-
-                    has("defaults", MS_NOATIME | MS_SHARED | MS_NOSUID) has("noatime", MS_NOATIME) has("nodev", MS_NODEV) has("nodiratime", MS_NODIRATIME) has("dirsync", MS_DIRSYNC) has("noexec", MS_NOEXEC) has("iversion", MS_I_VERSION)
-                        has("mand", MS_MANDLOCK) has("relatime", MS_RELATIME) has("lazytime", MS_LAZYTIME) has("nosuid", MS_NOSUID) has("remount", MS_REMOUNT) has("ro", MS_RDONLY) has("sync", MS_SYNCHRONOUS) has("nouser", MS_NOUSER)
-                            has("silent", MS_SILENT)
+                    has("defaults", MS_NOATIME | MS_SHARED | MS_NOSUID);
+                    has("noatime", MS_NOATIME) has("nodev", MS_NODEV);
+                    has("nodiratime", MS_NODIRATIME);
+                    has("dirsync", MS_DIRSYNC);
+                    has("noexec", MS_NOEXEC);
+                    has("iversion", MS_I_VERSION);
+                    has("mand", MS_MANDLOCK); 
+                    has("relatime", MS_RELATIME); 
+                    has("lazytime", MS_LAZYTIME); 
+                    has("nosuid", MS_NOSUID); 
+                    has("remount", MS_REMOUNT);
+                    has("ro", MS_RDONLY);
+                    has("sync", MS_SYNCHRONOUS);
+                    has("nouser", MS_NOUSER);
+                    has("silent", MS_SILENT);
                 }
 
 
