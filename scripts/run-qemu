@@ -78,16 +78,23 @@ fi
 
 function find_ovmf() {
     local ovmf=""
-    if [ -f /usr/share/ovmf/x64/OVMF_CODE.fd ]; then
-        ovmf="/usr/share/ovmf/x64/OVMF_CODE.fd"
-    elif [ -f /usr/share/OVMF/OVMF_CODE.fd ]; then
-        ovmf="/usr/share/OVMF/OVMF_CODE.fd"
-    elif [ -f /usr/share/ovmf/OVMF.fd ]; then
-        ovmf="/usr/share/ovmf/OVMF.fd"
-    else
-        echo "run-qemu: OVMF firmware not found"
-        exit 1
-    fi
+    # if [ -f /usr/share/OVMF/OVMF_CODE.fd ]; then
+    #     ovmf="/usr/share/OVMF/x64/OVMF_CODE.fd"
+    # elif [ -f /usr/share/OVMF/x64/OVMF_CODE.fd ]; then
+    #     ovmf="/usr/share/OVMF/OVMF_CODE.4m.fd"
+    # elif [ -f /usr/share/ovmf/x64/OVMF.fd ]; then
+    #     ovmf="/usr/share/ovmf/x64/OVMF.fd"
+    # elif [ -f /usr/share/ovmf/x64/OVMF.4m.fd ]; then
+    #     ovmf="/usr/share/ovmf/x64/OVMF.4m.fd"
+    # elif [ -f /usr/share/ovmf/x64/OVMF_CODE.fd ]; then
+    #     ovmf="/usr/share/ovmf/x64/OVMF_CODE.fd"
+    # elif [ -f /usr/share/ovmf/x64/OVMF_CODE.4m.fd ]; then
+    #     ovmf="/usr/share/ovmf/x64/OVMF_CODE.4m.fd"
+    # else
+    #     echo "run-qemu: OVMF firmware not found"
+    #     exit 1
+    # fi
+    ovmf="/usr/share/OVMF/x64/OVMF_CODE.fd"
     echo $ovmf
 }
 
@@ -98,6 +105,13 @@ x86_64)
 
     flags=""
     flags="$flags --bios $(find_ovmf) -net none"
+
+    # GPU
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -device virtio-vga"
+    else
+        flags="$flags -vga std"
+    fi
 
     # Network
     if [ $ARG_VIRTIO -eq 1 ]; then
@@ -115,10 +129,19 @@ x86_64)
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
     fi
 
+    # Random
+    flags="$flags -object rng-random,filename=/dev/random,id=rng0"
+    flags="$flags -device virtio-rng-pci,rng=rng0,disable-legacy=on"
+
+    # Console
+    flags="$flags -chardev file,id=vc0,path=console.log"
+    flags="$flags -device virtio-serial-pci,disable-legacy=on"
+    flags="$flags -device virtconsole,chardev=vc0"
+
     # CPU
     if [ $ARG_KVM -eq 1 ]; then
         flags="$flags -enable-kvm"
-        flags="$flags -cpu native,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
+        flags="$flags -cpu host,+x2apic,-pdpe1gb,+rdtscp,+fxsr"
     else
         flags="$flags -cpu max,-pdpe1gb,+rdtscp,+fxsr"
     fi
@@ -132,15 +155,11 @@ x86_64)
     # Clock
     flags="$flags -rtc clock=host"
 
-    # Video
-    if [ $ARG_VIRTIO -eq 1 ]; then
-        flags="$flags -device virtio-vga"
-    else
-        flags="$flags -vga std"
-    fi
-
     # Boot
     flags="$flags -boot order=c"
+
+    # Quick Exit
+    flags="$flags -device isa-debug-exit,iobase=0xf4,iosize=0x04"
 
     ;;
 
@@ -166,9 +185,21 @@ fi
 # Serial
 flags="$flags -serial stdio"
 
+# Monitor
+flags="$flags -monitor telnet::4444,server,nowait"
+
+# Trace
+echo "apic_*" > /tmp/qemu-trace-events.txt
+echo "ioapic_*" >> /tmp/qemu-trace-events.txt
+# echo "virtio_*" >> /tmp/qemu-trace-events.txt
+# echo "pci_*" >> /tmp/qemu-trace-events.txt
+# echo "msix_*" >> /tmp/qemu-trace-events.txt
+flags="$flags --trace events=/tmp/qemu-trace-events.txt"
+
 # Debug
 if [ ! -z $ARG_DEBUG ]; then
     flags="$flags -S"
 fi
 
+echo "qemu-system-$ARG_ARCH -no-reboot -no-shutdown -s $flags"
 qemu-system-$ARG_ARCH -no-reboot -no-shutdown -s $flags
