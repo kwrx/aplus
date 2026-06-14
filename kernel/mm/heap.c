@@ -59,21 +59,31 @@ __weak __malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
     DEBUG_ASSERT(size);
     DEBUG_ASSERT(gfp == GFP_KERNEL || gfp == GFP_ATOMIC || gfp == GFP_USER);
 
+    if (!size || size > SIZE_MAX - sizeof(struct kmalloc_header))
+        return NULL;
 
     size_t data_size = size;
 
     size += sizeof(struct kmalloc_header);
 
     if (size & (PML1_PAGESIZE - 1)) {
+        if (size > SIZE_MAX - PML1_PAGESIZE)
+            return NULL;
+
         size = (size & ~(PML1_PAGESIZE - 1)) + PML1_PAGESIZE;
     }
 
-    struct kmalloc_header* h;
+    uintptr_t phys;
 
     if (size == PML1_PAGESIZE)
-        h = (struct kmalloc_header*)arch_vmm_p2v(pmm_alloc_block(), ARCH_VMM_AREA_HEAP);
+        phys = pmm_alloc_block();
     else
-        h = (struct kmalloc_header*)arch_vmm_p2v(pmm_alloc_blocks(size / PML1_PAGESIZE), ARCH_VMM_AREA_HEAP);
+        phys = pmm_alloc_blocks(size / PML1_PAGESIZE);
+
+    if (unlikely(phys == (uintptr_t)-1ULL))
+        return NULL;
+
+    struct kmalloc_header* h = (struct kmalloc_header*)arch_vmm_p2v(phys, ARCH_VMM_AREA_HEAP);
 
     heap_used_memory += (size / PML1_PAGESIZE);
 
