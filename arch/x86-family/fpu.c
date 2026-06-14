@@ -32,293 +32,411 @@
 #include <arch/x86/asm.h>
 #include <arch/x86/cpu.h>
 #include <arch/x86/fpu.h>
+#include <arch/x86/intr.h>
 
 
-//!
-//! pmm_block(0)
-//!     + kmalloc(16)
-//!     + padding(48) = 64 bytes alignment
-//!
-#define FPU_PAD_SIZE 48
+#define FPU_INITIAL_STATE_SIZE 8192
+#define FPU_FXSAVE_SIZE        512
+#define FPU_FSAVE_SIZE         108
 
+#define FPU_XSAVE_ALIGNMENT  64
+#define FPU_LEGACY_ALIGNMENT 16
+
+#define XCR0_FPU    (1ULL << 0)
+#define XCR0_SSE    (1ULL << 1)
+#define XCR0_AVX    (1ULL << 2)
+#define XCR0_OPMASK (1ULL << 5)
+#define XCR0_ZMM    (1ULL << 6)
+#define XCR0_ZMM2   (1ULL << 7)
+
+
+enum fpu_mode {
+    FPU_MODE_NONE,
+    FPU_MODE_FSAVE,
+    FPU_MODE_FXSAVE,
+    FPU_MODE_XSAVE,
+    FPU_MODE_XSAVEOPT,
+};
 
 
 static void (*__fpu_switch)(void*, void*) = NULL;
 static void (*__fpu_save)(void*)          = NULL;
 static void (*__fpu_restore)(void*)       = NULL;
 
-static uint8_t __fpu_inital_state[8192] __aligned(64) = {0};
-static uint16_t __fpu_size                            = 0;
+static uint8_t __fpu_initial_state[FPU_INITIAL_STATE_SIZE] __aligned(FPU_XSAVE_ALIGNMENT) = {0};
+static enum fpu_mode __fpu_mode                                                           = FPU_MODE_NONE;
+static size_t __fpu_alignment                                                             = 0;
+static size_t __fpu_size                                                                  = 0;
+static uint64_t __fpu_xcr0                                                                = 0;
 
+
+static void fpu_validate_area(const void* fpu_area) {
+
+    if (unlikely(!fpu_area || !__fpu_alignment || ((uintptr_t)fpu_area & (__fpu_alignment - 1))))
+        kpanicf("x86-fpu: invalid FPU state area %p, required alignment %zd\n", fpu_area, __fpu_alignment);
+}
+
+
+static void* fpu_new_buffer(size_t prefix) {
+
+    if (unlikely(!__fpu_size || !__fpu_alignment || (prefix & (sizeof(void*) - 1))))
+        kpanicf("x86-fpu: invalid state buffer configuration\n");
+
+    if (unlikely(prefix > SIZE_MAX - __fpu_size || prefix + __fpu_size > SIZE_MAX - (__fpu_alignment - 1) - sizeof(void*)))
+        kpanicf("x86-fpu: FPU state allocation size overflow\n");
+
+    size_t allocation_size = prefix + __fpu_size + (__fpu_alignment - 1) + sizeof(void*);
+    void* allocation       = kcalloc(1, allocation_size, GFP_KERNEL);
+
+    if (unlikely(!allocation))
+        kpanicf("x86-fpu: failed to allocate %zd-byte FPU state buffer\n", allocation_size);
+
+    uintptr_t state = ((uintptr_t)allocation + sizeof(void*) + prefix + (__fpu_alignment - 1)) & ~((uintptr_t)__fpu_alignment - 1);
+    void* buffer    = (void*)(state - prefix);
+
+    ((void**)buffer)[-1] = allocation;
+
+    return buffer;
+}
+
+
+static void fpu_free_buffer(void* buffer) {
+
+    if (unlikely(!buffer))
+        kpanicf("x86-fpu: cannot free null FPU state buffer\n");
+
+    kfree(((void**)buffer)[-1]);
+}
 
 
 #if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
+static uint64_t fpu_xsave_supported_mask(void) {
+
+    long a, b, c, d;
+    x86_cpuid(0xD, &a, &b, &c, &d);
+
+    return ((uint64_t)(uint32_t)d << 32) | (uint32_t)a;
+}
+
+
+static size_t fpu_xsave_enabled_size(void) {
+
+    long a, b, c, d;
+    x86_cpuid(0xD, &a, &b, &c, &d);
+
+    return (size_t)(uint32_t)b;
+}
+
+#endif
+
+
+static void fpu_configure_control_registers(uint64_t cpu, int xsave) {
+
+    if (unlikely(!cpu_has(cpu, X86_FEATURE_FPU)))
+        kpanicf("x86-fpu: CPU %ld does not support an FPU\n", cpu);
+
+    x86_set_cr0((x86_get_cr0() & ~(X86_CR0_EM_MASK | X86_CR0_TS_MASK)) | X86_CR0_MP_MASK);
+
+    if (__fpu_mode == FPU_MODE_FXSAVE || __fpu_mode == FPU_MODE_XSAVE || __fpu_mode == FPU_MODE_XSAVEOPT) {
+
+        if (unlikely(!cpu_has(cpu, X86_FEATURE_FXSR)))
+            kpanicf("x86-fpu: CPU %ld does not support the selected FXSAVE state format\n", cpu);
+
+        x86_set_cr4(x86_get_cr4() | X86_CR4_OSFXSR_MASK);
+
+        if (cpu_has(cpu, X86_FEATURE_XMM))
+            x86_set_cr4(x86_get_cr4() | X86_CR4_OSXMMEXCPT_MASK);
+    }
+
+    if (xsave) {
+
+        if (unlikely(!cpu_has(cpu, X86_FEATURE_XSAVE)))
+            kpanicf("x86-fpu: CPU %ld does not support the selected XSAVE state format\n", cpu);
+
+        x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK);
+    }
+}
+
+
+#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
+
+static void xsave_write(void* fpu_area, int optimized) {
+
+    fpu_validate_area(fpu_area);
+
+    uint32_t low  = (uint32_t)__fpu_xcr0;
+    uint32_t high = (uint32_t)(__fpu_xcr0 >> 32);
+
+    if (optimized)
+        __asm__ __volatile__("xsaveopt (%0)" : : "r"(fpu_area), "a"(low), "d"(high) : "memory");
+    else
+        __asm__ __volatile__("xsave (%0)" : : "r"(fpu_area), "a"(low), "d"(high) : "memory");
+}
+
+
+static void xsave_read(void* fpu_area) {
+
+    fpu_validate_area(fpu_area);
+
+    uint32_t low  = (uint32_t)__fpu_xcr0;
+    uint32_t high = (uint32_t)(__fpu_xcr0 >> 32);
+
+    __asm__ __volatile__("xrstor (%0)" : : "r"(fpu_area), "a"(low), "d"(high) : "memory");
+}
+
+
 static void xsaveopt_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(prev);
-    DEBUG_ASSERT(next);
-    DEBUG_ASSERT(((uintptr_t)prev & 63) == 0);
-    DEBUG_ASSERT(((uintptr_t)next & 63) == 0);
-
-
-    __asm__ __volatile__("xsaveopt (%0)" : : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
-
-    __asm__ __volatile__("xrstor (%0)" : : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
+    xsave_write(prev, 1);
+    xsave_read(next);
 }
 
 
 static void xsave_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(prev);
-    DEBUG_ASSERT(next);
-    DEBUG_ASSERT(((uintptr_t)prev & 63) == 0);
-    DEBUG_ASSERT(((uintptr_t)next & 63) == 0);
-
-
-    __asm__ __volatile__("xsave (%0)" : : "r"(prev), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
-
-    __asm__ __volatile__("xrstor (%0)" : : "r"(next), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
+    xsave_write(prev, 0);
+    xsave_read(next);
 }
 
 
 static void xsave_save(void* fpu_area) {
-
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 63) == 0);
-
-    __asm__ __volatile__("xsave (%0)" : : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
+    xsave_write(fpu_area, 0);
 }
 
 
 static void xsave_restore(void* fpu_area) {
-
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 63) == 0);
-
-
-    __asm__ __volatile__("xrstor (%0)" : : "r"(fpu_area), "a"(0xFFFFFFFF), "d"(0xFFFFFFFF));
+    xsave_read(fpu_area);
 }
 
 #endif
-
 
 
 #if !defined(CONFIG_X86_FXSAVE_FORCE_DISABLED)
 
 static void fxsave_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(((uintptr_t)prev & 15) == 0);
-    DEBUG_ASSERT(((uintptr_t)next & 15) == 0);
+    fpu_validate_area(prev);
+    fpu_validate_area(next);
 
-    __asm__ __volatile__("fxsave (%0)" : : "r"(prev));
-
-    __asm__ __volatile__("fxrstor (%0)" : : "r"(next));
+    __asm__ __volatile__("fxsave (%0)" : : "r"(prev) : "memory");
+    __asm__ __volatile__("fxrstor (%0)" : : "r"(next) : "memory");
 }
+
 
 static void fxsave_save(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
-
-    __asm__ __volatile__("fxsave (%0)" : : "r"(fpu_area));
+    fpu_validate_area(fpu_area);
+    __asm__ __volatile__("fxsave (%0)" : : "r"(fpu_area) : "memory");
 }
 
 
 static void fxsave_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
-
-    __asm__ __volatile__("fxrstor (%0)" : : "r"(fpu_area));
+    fpu_validate_area(fpu_area);
+    __asm__ __volatile__("fxrstor (%0)" : : "r"(fpu_area) : "memory");
 }
 
 #endif
 
 
-
 static void fsave_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(((uintptr_t)prev & 15) == 0);
-    DEBUG_ASSERT(((uintptr_t)next & 15) == 0);
+    fpu_validate_area(prev);
+    fpu_validate_area(next);
 
-    __asm__ __volatile__("fsave (%0)" : : "r"(prev));
-
-    __asm__ __volatile__("frstor (%0)" : : "r"(next));
+    __asm__ __volatile__("fsave (%0)" : : "r"(prev) : "memory");
+    __asm__ __volatile__("frstor (%0)" : : "r"(next) : "memory");
 }
 
 
 static void fsave_save(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
-
-    __asm__ __volatile__("fsave (%0)" : : "r"(fpu_area));
+    fpu_validate_area(fpu_area);
+    __asm__ __volatile__("fsave (%0)" : : "r"(fpu_area) : "memory");
 }
 
 
 static void fsave_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(((uintptr_t)fpu_area & 15) == 0);
-
-    __asm__ __volatile__("frstor (%0)" : : "r"(fpu_area));
+    fpu_validate_area(fpu_area);
+    __asm__ __volatile__("frstor (%0)" : : "r"(fpu_area) : "memory");
 }
 
 
-
-void fpu_init(uint64_t cpu) {
-
-    if (!(boot_cpu_has(X86_FEATURE_FPU)))
-        kpanicf("x86-fpu: PANIC! FPU not supported by current cpu, required!\n");
-
-    DEBUG_ASSERT(((uintptr_t)&__fpu_inital_state[0] & 63) == 0);
-
-
-
-    __asm__ __volatile__("fninit");
-
-
-    if (cpu_has(cpu, X86_FEATURE_XMM)) {
-
-        x86_set_cr4(x86_get_cr4() | X86_CR4_OSFXSR_MASK);
-        x86_set_cr4(x86_get_cr4() | X86_CR4_OSXMMEXCPT_MASK);
-
-        x86_set_cr0(x86_get_cr0() & ~X86_CR0_EM_MASK);
-        x86_set_cr0(x86_get_cr0() | X86_CR0_MP_MASK);
-    }
-
+static void fpu_select_bsp_mode(void) {
 
 #if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
 
-    if (cpu_has(cpu, X86_FEATURE_XSAVE)) {
+    if (boot_cpu_has(X86_FEATURE_XSAVE) && boot_cpu_has(X86_FEATURE_FXSR)) {
 
-        x86_set_cr4(x86_get_cr4() | X86_CR4_OSXSAVE_MASK);
+        uint64_t supported = fpu_xsave_supported_mask();
+
+        if (unlikely(!(supported & XCR0_FPU)))
+            kpanicf("x86-fpu: XSAVE does not support mandatory x87 state\n");
+
+        __fpu_xcr0 = XCR0_FPU;
+
+        if (boot_cpu_has(X86_FEATURE_XMM) && ((supported & XCR0_SSE) == XCR0_SSE))
+            __fpu_xcr0 |= XCR0_SSE;
+
+        if (boot_cpu_has(X86_FEATURE_AVX) && ((supported & (XCR0_SSE | XCR0_AVX)) == (XCR0_SSE | XCR0_AVX)))
+            __fpu_xcr0 |= XCR0_SSE | XCR0_AVX;
+
+        if (boot_cpu_has(X86_FEATURE_AVX512F) && ((supported & (XCR0_SSE | XCR0_AVX | XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2)) == (XCR0_SSE | XCR0_AVX | XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2)))
+            __fpu_xcr0 |= XCR0_SSE | XCR0_AVX | XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2;
+
+        __fpu_mode      = boot_cpu_has(X86_FEATURE_XSAVEOPT) ? FPU_MODE_XSAVEOPT : FPU_MODE_XSAVE;
+        __fpu_alignment = FPU_XSAVE_ALIGNMENT;
+
+        fpu_configure_control_registers(SMP_CPU_BOOTSTRAP_ID, 1);
+        x86_xsetbv(0, __fpu_xcr0);
+
+        __fpu_size = fpu_xsave_enabled_size();
+
+        if (unlikely(!__fpu_size || __fpu_size > sizeof(__fpu_initial_state)))
+            kpanicf("x86-fpu: invalid XSAVE area size %zd, maximum supported is %zd\n", __fpu_size, sizeof(__fpu_initial_state));
+
+        __fpu_switch  = __fpu_mode == FPU_MODE_XSAVEOPT ? &xsaveopt_switch : &xsave_switch;
+        __fpu_save    = &xsave_save;
+        __fpu_restore = &xsave_restore;
+
+        return;
     }
 
-#endif
-
-
-
-    if (cpu == SMP_CPU_BOOTSTRAP_ID) {
-
-
-#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
-
-        if (boot_cpu_has(X86_FEATURE_XSAVE)) {
-
-            uint64_t xcr0 = 0;
-
-    #define XCR0_FPU    (1 << 0)
-    #define XCR0_SSE    (1 << 1)
-    #define XCR0_AVX    (1 << 2)
-    #define XCR0_OPMASK (1 << 5)
-    #define XCR0_ZMM    (1 << 6)
-    #define XCR0_ZMM2   (1 << 7)
-
-
-            xcr0 |= XCR0_FPU;
-            xcr0 |= XCR0_SSE;
-
-            if (boot_cpu_has(X86_FEATURE_AVX))
-                xcr0 |= XCR0_AVX;
-
-            if (boot_cpu_has(X86_FEATURE_AVX512F))
-                xcr0 |= XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2;
-
-
-            x86_xsetbv(0, xcr0);
-
-
-            long a, b, c, d;
-            x86_cpuid(0xD, &a, &b, &c, &d);
-
-            if (unlikely(!c))
-                kpanicf("x86-fpu: cannot get size of FPU Extended Area\n");
-
-
-
-            if (boot_cpu_has(X86_FEATURE_XSAVEOPT))
-                __fpu_switch = &xsaveopt_switch;
-            else
-                __fpu_switch = &xsave_switch;
-
-
-            __fpu_save    = &xsave_save;
-            __fpu_restore = &xsave_restore;
-            __fpu_size    = c;
-
-
-
-    #if DEBUG_LEVEL_INFO
-            kprintf("x86-fpu: uses %s/XRSTOR feature set with %d bytes\n", boot_cpu_has(X86_FEATURE_XSAVEOPT) ? "XSAVEOPT" : "XSAVE", __fpu_size);
-    #endif
-
-        }
-
-        else
 #endif
 
 
 #if !defined(CONFIG_X86_FXSAVE_FORCE_DISABLED)
 
-            if (boot_cpu_has(X86_FEATURE_FXSR)) {
+    if (boot_cpu_has(X86_FEATURE_FXSR)) {
 
-            __fpu_switch  = &fxsave_switch;
-            __fpu_save    = &fxsave_save;
-            __fpu_restore = &fxsave_restore;
-            __fpu_size    = 512;
+        __fpu_mode      = FPU_MODE_FXSAVE;
+        __fpu_alignment = FPU_LEGACY_ALIGNMENT;
+        __fpu_size      = FPU_FXSAVE_SIZE;
+        __fpu_switch    = &fxsave_switch;
+        __fpu_save      = &fxsave_save;
+        __fpu_restore   = &fxsave_restore;
 
+        fpu_configure_control_registers(SMP_CPU_BOOTSTRAP_ID, 0);
 
-    #if DEBUG_LEVEL_INFO
-            kprintf("x86-fpu: uses FXSAVE/FXRSTOR feature set with %d bytes\n", __fpu_size);
-    #endif
+        return;
+    }
 
-        }
-
-        else
 #endif
-        {
-            __fpu_switch  = &fsave_switch;
-            __fpu_save    = &fsave_save;
-            __fpu_restore = &fsave_restore;
-            __fpu_size    = 108;
 
+
+    __fpu_mode      = FPU_MODE_FSAVE;
+    __fpu_alignment = FPU_LEGACY_ALIGNMENT;
+    __fpu_size      = FPU_FSAVE_SIZE;
+    __fpu_switch    = &fsave_switch;
+    __fpu_save      = &fsave_save;
+    __fpu_restore   = &fsave_restore;
+
+    fpu_configure_control_registers(SMP_CPU_BOOTSTRAP_ID, 0);
+}
+
+
+static void fpu_configure_ap(uint64_t cpu) {
+
+    int xsave = __fpu_mode == FPU_MODE_XSAVE || __fpu_mode == FPU_MODE_XSAVEOPT;
+
+    fpu_configure_control_registers(cpu, xsave);
+
+#if !defined(CONFIG_X86_XSAVE_FORCE_DISABLED)
+
+    if (xsave) {
+
+        if (unlikely(__fpu_mode == FPU_MODE_XSAVEOPT && !cpu_has(cpu, X86_FEATURE_XSAVEOPT)))
+            kpanicf("x86-fpu: CPU %ld does not support selected XSAVEOPT mode\n", cpu);
+
+        if (unlikely((__fpu_xcr0 & XCR0_SSE) && !cpu_has(cpu, X86_FEATURE_XMM)))
+            kpanicf("x86-fpu: CPU %ld does not support selected SSE state\n", cpu);
+
+        if (unlikely((__fpu_xcr0 & XCR0_AVX) && !cpu_has(cpu, X86_FEATURE_AVX)))
+            kpanicf("x86-fpu: CPU %ld does not support selected AVX state\n", cpu);
+
+        if (unlikely((__fpu_xcr0 & (XCR0_OPMASK | XCR0_ZMM | XCR0_ZMM2)) && !cpu_has(cpu, X86_FEATURE_AVX512F)))
+            kpanicf("x86-fpu: CPU %ld does not support selected AVX-512 state\n", cpu);
+
+        uint64_t supported = fpu_xsave_supported_mask();
+
+        if (unlikely((supported & __fpu_xcr0) != __fpu_xcr0))
+            kpanicf("x86-fpu: CPU %ld does not support selected XCR0 mask 0x%lX\n", cpu, __fpu_xcr0);
+
+        x86_xsetbv(0, __fpu_xcr0);
+
+        size_t size = fpu_xsave_enabled_size();
+
+        if (unlikely(size != __fpu_size))
+            kpanicf("x86-fpu: CPU %ld XSAVE area size %zd differs from BSP size %zd\n", cpu, size, __fpu_size);
+    }
+
+#else
+
+    (void)xsave;
+
+#endif
+}
+
+
+void fpu_init(uint64_t cpu) {
+
+    if (cpu == SMP_CPU_BOOTSTRAP_ID)
+        fpu_select_bsp_mode();
+    else {
+
+        if (unlikely(__fpu_mode == FPU_MODE_NONE))
+            kpanicf("x86-fpu: AP initialized before BSP FPU mode selection\n");
+
+        fpu_configure_ap(cpu);
+    }
+
+    __asm__ __volatile__("fninit" : : : "memory");
+
+    if (cpu == SMP_CPU_BOOTSTRAP_ID) {
+
+        fpu_save(&__fpu_initial_state[0]);
 
 #if DEBUG_LEVEL_INFO
-            kprintf("x86-fpu: uses FSAVE/FRSTOR feature set with %d bytes\n", __fpu_size);
+        const char* mode = __fpu_mode == FPU_MODE_XSAVEOPT ? "XSAVEOPT/XRSTOR" : __fpu_mode == FPU_MODE_XSAVE ? "XSAVE/XRSTOR" : __fpu_mode == FPU_MODE_FXSAVE ? "FXSAVE/FXRSTOR" : "FSAVE/FRSTOR";
+        kprintf("x86-fpu: uses %s with %zd bytes, alignment %zd, XCR0 0x%lX\n", mode, __fpu_size, __fpu_alignment, __fpu_xcr0);
 #endif
-        }
-
-
-
-        fpu_save(&__fpu_inital_state[0]);
     }
 }
 
 
-
 void fpu_switch(void* prev, void* next) {
 
-    DEBUG_ASSERT(__fpu_switch);
+    if (unlikely(!__fpu_switch))
+        kpanicf("x86-fpu: switch requested before initialization\n");
 
-    return __fpu_switch(prev, next);
+    __fpu_switch(prev, next);
 }
 
 
 void fpu_save(void* fpu_area) {
 
-    DEBUG_ASSERT(__fpu_save);
+    if (unlikely(!__fpu_save))
+        kpanicf("x86-fpu: save requested before initialization\n");
 
-    return __fpu_save(fpu_area);
+    __fpu_save(fpu_area);
 }
 
 
 void fpu_restore(void* fpu_area) {
 
-    DEBUG_ASSERT(__fpu_restore);
+    if (unlikely(!__fpu_restore))
+        kpanicf("x86-fpu: restore requested before initialization\n");
 
-    return __fpu_restore(fpu_area);
+    __fpu_restore(fpu_area);
 }
 
 
 size_t fpu_size(void) {
 
-    DEBUG_ASSERT(__fpu_size);
+    if (unlikely(!__fpu_size))
+        kpanicf("x86-fpu: size requested before initialization\n");
 
     return __fpu_size;
 }
@@ -326,21 +444,23 @@ size_t fpu_size(void) {
 
 void* fpu_new_state(void) {
 
-    void* p = (void*)((uintptr_t)kcalloc(1, fpu_size() + FPU_PAD_SIZE, GFP_KERNEL) + FPU_PAD_SIZE);
+    void* state = fpu_new_buffer(0);
+    memcpy(state, &__fpu_initial_state, fpu_size());
 
-    DEBUG_ASSERT((uintptr_t)p);
-    DEBUG_ASSERT(((uintptr_t)p & 63) == 0);
-
-    DEBUG_ASSERT(sizeof(__fpu_inital_state) >= fpu_size());
-
-    memcpy(p, &__fpu_inital_state, fpu_size());
-
-    return p;
+    return state;
 }
 
+
 void fpu_free_state(void* fpu_area) {
+    fpu_free_buffer(fpu_area);
+}
 
-    DEBUG_ASSERT(fpu_area);
 
-    return kfree((void*)((uintptr_t)fpu_area - FPU_PAD_SIZE));
+void* fpu_new_signal_state(void) {
+    return fpu_new_buffer(sizeof(sigcontext_frame_t));
+}
+
+
+void fpu_free_signal_state(void* signal_state) {
+    fpu_free_buffer(signal_state);
 }
