@@ -53,7 +53,61 @@ static uint16_t com_address = 0;
     #define X86_VGA_WIDTH  (8)
     #define X86_VGA_HEIGHT (16)
 
-static uint16_t vga_offset = 0;
+static size_t vga_offset = 0;
+
+
+static int debug_vga_get_geometry(uintptr_t* address, size_t* cols, size_t* rows, size_t* size, size_t* bytes_per_pixel) {
+
+    if (!core->framebuffer.address || core->framebuffer.width < X86_VGA_WIDTH || core->framebuffer.height < X86_VGA_HEIGHT)
+        return 0;
+
+    switch (core->framebuffer.depth) {
+        case 8:
+        case 16:
+        case 24:
+        case 32:
+            break;
+        default:
+            return 0;
+    }
+
+    *bytes_per_pixel = core->framebuffer.depth / 8;
+
+    if (core->framebuffer.width > SIZE_MAX / *bytes_per_pixel)
+        return 0;
+
+    if (core->framebuffer.pitch < core->framebuffer.width * *bytes_per_pixel)
+        return 0;
+
+    if (core->framebuffer.height > SIZE_MAX / core->framebuffer.pitch)
+        return 0;
+
+    *size = core->framebuffer.pitch * core->framebuffer.height;
+
+    if (core->framebuffer.address > UINTPTR_MAX - KERNEL_HEAP_AREA)
+        return 0;
+
+    *address = core->framebuffer.address + KERNEL_HEAP_AREA;
+
+    if (*address > UINTPTR_MAX - *size)
+        return 0;
+
+    *cols = core->framebuffer.width / X86_VGA_WIDTH;
+    *rows = core->framebuffer.height / X86_VGA_HEIGHT;
+
+    return *cols && *rows;
+}
+
+static void debug_vga_scroll(uintptr_t address, size_t cols, size_t rows, size_t size) {
+
+    size_t line_size = core->framebuffer.pitch * X86_VGA_HEIGHT;
+
+    while (vga_offset >= cols * rows) {
+        memmove((void*)address, (void*)(address + line_size), size - line_size);
+        memset((void*)(address + size - line_size), 0x00, line_size);
+        vga_offset -= cols;
+    }
+}
 
 #endif
 
@@ -149,40 +203,33 @@ void arch_debug_putc(char ch) {
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
 
-    #define X86_VGA_ROWS    (core->framebuffer.height / X86_VGA_HEIGHT)
-    #define X86_VGA_COLS    (core->framebuffer.width / X86_VGA_WIDTH)
-    #define X86_VGA_ADDRESS (core->framebuffer.address + KERNEL_HEAP_AREA)
-    #define X86_VGA_ENABLED (core->framebuffer.address != 0)
+    uintptr_t vga_address;
+    size_t vga_cols;
+    size_t vga_rows;
+    size_t vga_size;
+    size_t bytes_per_pixel;
 
+    if (likely(debug_vga_get_geometry(&vga_address, &vga_cols, &vga_rows, &vga_size, &bytes_per_pixel))) {
 
-    if (likely(X86_VGA_ENABLED)) {
-
-        if (unlikely(vga_offset > (X86_VGA_COLS * X86_VGA_ROWS) - 1)) {
-
-            memmove((void*)(X86_VGA_ADDRESS), (void*)(X86_VGA_ADDRESS + (core->framebuffer.pitch * X86_VGA_HEIGHT)), (size_t)(core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT));
-
-            memset((void*)(X86_VGA_ADDRESS + (core->framebuffer.pitch * core->framebuffer.height) - (core->framebuffer.pitch * X86_VGA_HEIGHT)), 0x00, (size_t)(core->framebuffer.pitch * X86_VGA_HEIGHT));
-
-            vga_offset -= X86_VGA_COLS;
-        }
-
+        debug_vga_scroll(vga_address, vga_cols, vga_rows, vga_size);
 
         switch (ch) {
 
             case '\r':
-                vga_offset -= vga_offset % X86_VGA_COLS;
+                vga_offset -= vga_offset % vga_cols;
                 break;
 
             case '\n':
-                vga_offset += X86_VGA_COLS - (vga_offset % X86_VGA_COLS);
+                vga_offset += vga_cols - (vga_offset % vga_cols);
                 break;
 
             case '\v':
-                vga_offset += X86_VGA_COLS;
+                vga_offset += vga_cols;
                 break;
 
             case '\b':
-                vga_offset -= 1;
+                if (vga_offset)
+                    vga_offset -= 1;
                 break;
 
             case '\t':
@@ -191,17 +238,19 @@ void arch_debug_putc(char ch) {
 
             default:
 
+                uint8_t glyph = (uint8_t)ch;
+
                 for (int y = 0; y < X86_VGA_HEIGHT; y++) {
 
-                    uint8_t* ptr = (uint8_t*)(X86_VGA_ADDRESS);
+                    uint8_t* ptr = (uint8_t*)vga_address;
 
-                    ptr += (vga_offset % X86_VGA_COLS) * X86_VGA_WIDTH * (core->framebuffer.depth / 8);
-                    ptr += (vga_offset / X86_VGA_COLS) * X86_VGA_HEIGHT * core->framebuffer.pitch;
+                    ptr += (vga_offset % vga_cols) * X86_VGA_WIDTH * bytes_per_pixel;
+                    ptr += (vga_offset / vga_cols) * X86_VGA_HEIGHT * core->framebuffer.pitch;
                     ptr += (y * core->framebuffer.pitch);
 
                     for (int x = 0; x < X86_VGA_WIDTH; x++) {
 
-                        if (builtin_fontdata[(ch * X86_VGA_HEIGHT) + y] & (1 << (X86_VGA_WIDTH - x))) {
+                        if (builtin_fontdata[(glyph * X86_VGA_HEIGHT) + y] & (1U << (X86_VGA_WIDTH - 1 - x))) {
 
                             switch (core->framebuffer.depth) {
 
@@ -265,7 +314,7 @@ void arch_debug_putc(char ch) {
                             }
                         }
 
-                        ptr += core->framebuffer.depth / 8;
+                        ptr += bytes_per_pixel;
                     }
                 }
 
@@ -273,6 +322,8 @@ void arch_debug_putc(char ch) {
 
                 break;
         }
+
+        debug_vga_scroll(vga_address, vga_cols, vga_rows, vga_size);
     }
 
 #endif
@@ -307,28 +358,46 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
 #endif
 
 
-    int i;
-    for (i = 0; frame && i < count; i++) {
+    uintptr_t stack_start = (uintptr_t)frame;
+    uintptr_t stack_end   = stack_start > UINTPTR_MAX - KERNEL_STACK_SIZE ? UINTPTR_MAX : stack_start + KERNEL_STACK_SIZE;
+
+    for (size_t i = 0; frame && i < count; i++) {
 
         frames[i] = 0;
 
-        if (unlikely(!uio_check(frame, R_OK)))
+        uintptr_t address = (uintptr_t)frame;
+
+        if (unlikely(address < stack_start || address > stack_end || sizeof(*frame) > stack_end - address || (address & (sizeof(uintptr_t) - 1))))
             break;
 
-        if (unlikely(!uio_check(frame, S_OK))) {
+        if (unlikely(!uio_check(address, R_OK) || !uio_check(address + sizeof(*frame) - 1, R_OK)))
+            break;
+
+        struct stack next;
+
+        if (unlikely(!uio_check(address, S_OK))) {
 
 #if defined(__x86_64__)
-            frames[i] = uio_r64((uintptr_t)frame + offsetof(struct stack, ip));
-            frame     = (struct stack*)uio_r64((uintptr_t)frame + offsetof(struct stack, bp));
+            next.ip = uio_r64(address + offsetof(struct stack, ip));
+            next.bp = (struct stack*)uio_r64(address + offsetof(struct stack, bp));
 #else
-            frames[i] = uio_r32((uintptr_t)frame + offsetof(struct stack, ip));
-            frame     = (struct stack*)uio_r32((uintptr_t)frame + offsetof(struct stack, bp));
+            next.ip = uio_r32(address + offsetof(struct stack, ip));
+            next.bp = (struct stack*)uio_r32(address + offsetof(struct stack, bp));
 #endif
 
         } else {
 
-            frames[i] = frame->ip;
-            frame     = frame->bp;
+            next = *frame;
         }
+
+        frames[i] = next.ip;
+
+        if (!next.bp)
+            break;
+
+        if (unlikely((uintptr_t)next.bp <= address))
+            break;
+
+        frame = next.bp;
     }
 }
