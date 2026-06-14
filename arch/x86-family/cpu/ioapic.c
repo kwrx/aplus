@@ -53,60 +53,64 @@ static inline uint32_t ioapic_read(uintptr_t address, const uint32_t offset) {
 }
 
 
-void ioapic_map_irq(irq_t source, irq_t irq, cpuid_t cpu, uint64_t flags) {
+void ioapic_map_irq(uint32_t source, irq_t irq, cpuid_t cpu, uint64_t flags) {
 
     for (size_t i = 0; i < X86_IOAPIC_MAX; i++) {
 
         if (!ioapic[i].address)
             continue;
 
-        if ((source >= (ioapic[i].gsi_base)) && (source <= (ioapic[i].gsi_base + ioapic[i].gsi_max - 1))) {
+        if (source >= ioapic[i].gsi_base && source - ioapic[i].gsi_base < ioapic[i].gsi_count) {
 
             scoped_lock(&ioapic[i].lock) {
 
+                DEBUG_ASSERT(cpu < SMP_CPU_MAX);
+
+                uint64_t destination = core->cpu.cores[cpu].archid;
+                if (destination > UINT8_MAX)
+                    kpanicf("x86-apic: CPU APIC ID %ld cannot receive I/O APIC interrupts\n", destination);
+
+                uint32_t index = source - ioapic[i].gsi_base;
                 uint64_t d = 0;
                 d |= (0x20 + irq) & 0xFF;
-                d |= (uint64_t)cpu << 56;
+                d |= destination << 56;
                 d |= (flags & X86_IOAPIC_REDTTBL_FLAG_MASK);
 
-                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source), d & 0xFFFFFFFF);
-                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source) + 1, (d >> 32) & 0xFFFFFFFF);
+                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(index) + 1, (d >> 32) & 0xFFFFFFFF);
+                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(index), d & 0xFFFFFFFF);
             };
 
             return;
         }
     }
 
-    kpanicf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+    kpanicf("x86-apic: Source Interrupt #%u not managed by any I/O APIC\n", source);
 }
 
-void ioapic_unmap_irq(irq_t source) {
-
-    if (unlikely(source == 0)) /* LVT0, APIC TIMER */
-        return;                // kpanicf("x86-ioapic: attempting to unmap irq#0 (LVT0, APIC TIMER)");
-
+void ioapic_unmap_irq(uint32_t source) {
 
     for (size_t i = 0; i < X86_IOAPIC_MAX; i++) {
 
         if (!ioapic[i].address)
             continue;
 
-        if ((source >= (ioapic[i].gsi_base)) && (source <= (ioapic[i].gsi_base + ioapic[i].gsi_max - 1))) {
+        if (source >= ioapic[i].gsi_base && source - ioapic[i].gsi_base < ioapic[i].gsi_count) {
 
             scoped_lock(&ioapic[i].lock) {
 
+                uint32_t index = source - ioapic[i].gsi_base;
                 uint64_t d = 0;
                 d |= (1 << 16);
 
-                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source), d & 0xFFFFFFFF);
-                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(source) + 1, (d >> 32) & 0xFFFFFFFF);
+                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(index), d & 0xFFFFFFFF);
+                ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(index) + 1, (d >> 32) & 0xFFFFFFFF);
             };
 
             return;
         }
     }
 
-    kpanicf("x86-apic: Source Interrupt #%d not managed by any I/O APIC\n", source);
+    kpanicf("x86-apic: Source Interrupt #%u not managed by any I/O APIC\n", source);
 }
 
 
@@ -129,22 +133,34 @@ void ioapic_enable(void) {
                      ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED);
 
 
-        ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICID, (i & 0xF) << 24);
+        ioapic[i].gsi_count = ((ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16) & 0xFF) + 1;
 
-        ioapic[i].gsi_max = ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16;
-        ioapic[i].gsi_max &= 0xFF;
+        uint64_t gsi_end = (uint64_t)ioapic[i].gsi_base + ioapic[i].gsi_count;
+        if (gsi_end > (uint64_t)UINT32_MAX + 1)
+            kpanicf("x86-apic: I/O APIC #%d has an invalid GSI range\n", ioapic[i].id);
+
+        for (size_t j = 0; j < i; j++) {
+
+            if (!ioapic[j].address)
+                continue;
+
+            uint64_t other_end = (uint64_t)ioapic[j].gsi_base + ioapic[j].gsi_count;
+            if (ioapic[i].gsi_base < other_end && ioapic[j].gsi_base < gsi_end)
+                kpanicf("x86-apic: I/O APIC #%d has an overlapping GSI range\n", ioapic[i].id);
+        }
 
 
         spinlock_init_with_flags(&ioapic[i].lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 
-        for (size_t j = ioapic[i].gsi_base; j < ioapic[i].gsi_max; j++) {
-            ioapic_unmap_irq(j);
+        for (uint32_t j = 0; j < ioapic[i].gsi_count; j++) {
+            ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(j), 1 << 16);
+            ioapic_write(ioapic[i].address, X86_IOAPIC_IOAPICREDTBL(j) + 1, 0);
         }
 
 
 #if DEBUG_LEVEL_INFO
-        kprintf("x86-apic: I/O APIC #%zd initialized [base(0x%lX), gsi(%d-%d)]\n", i, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_max);
+        kprintf("x86-apic: I/O APIC #%d initialized [base(0x%lX), gsi(%u-%u)]\n", ioapic[i].id, ioapic[i].address, ioapic[i].gsi_base, ioapic[i].gsi_base + ioapic[i].gsi_count - 1);
 #endif
     }
 }

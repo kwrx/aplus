@@ -515,15 +515,16 @@ void arch_cpu_startup(cpuid_t index) {
 
         x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | (5 << 8) | (1 << 14));
 
-        while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 32 >> 12) & 1))
+        while (((x86_rdmsr(X86_X2APIC_REG_ICR) >> 12) & 1))
             __builtin_ia32_pause();
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));
+        uintptr_t lapic = apic_get_base();
+        mmio_w32(lapic + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
+        mmio_w32(lapic + X86_APIC_REG_ICR_LO, (5 << 8) | (1 << 14));
 
-        while (((mmio_r32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI) >> 12) & 1))
+        while (((mmio_r32(lapic + X86_APIC_REG_ICR_LO) >> 12) & 1))
             __builtin_ia32_pause();
     }
 
@@ -537,8 +538,9 @@ void arch_cpu_startup(cpuid_t index) {
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        uintptr_t lapic = apic_get_base();
+        mmio_w32(lapic + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
+        mmio_w32(lapic + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
     }
 
     arch_timer_delay(200);
@@ -554,8 +556,9 @@ void arch_cpu_startup(cpuid_t index) {
 
     } else {
 
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
-        mmio_w32(X86_APIC_BASE_ADDR + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
+        uintptr_t lapic = apic_get_base();
+        mmio_w32(lapic + X86_APIC_REG_ICR_HI, core->cpu.cores[index].archid << 24);
+        mmio_w32(lapic + X86_APIC_REG_ICR_LO, ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
     }
 
     arch_timer_delay(200);
