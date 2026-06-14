@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Usage
 #   gen-initrd SYSROOT
@@ -6,45 +6,33 @@
 # This script generates an initrd for the given sysroot.
 
 
+set -euo pipefail
+
 TMPDIR="/tmp/aplus-initrd"
 
-while $1; do
-    case $1 in
-    -h | --help)
-        echo "Usage: gen-initrd SYSROOT"
-        echo "  SYSROOT: The sysroot to generate an initrd for."
-        exit 0
-        ;;
-    *)
-        echo "Unknown option: $1"
-        exit 1
-        ;;
-    esac
-done
+if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+    echo "Usage: gen-initrd SYSROOT"
+    echo "  SYSROOT: The sysroot to generate an initrd for."
+    exit 0
+fi
 
-if [ -z "$1" ]; then
-    echo "No sysroot specified."
+if [ -z "${1:-}" ] || [ ! -d "$1" ]; then
+    echo "No valid sysroot specified." >&2
     exit 1
-else
-    SYSROOT="$1"
 fi
 
-if [ -e $TMPDIR ]; then
-    rm -rf $TMPDIR
-fi
+SYSROOT="$1"
 
-mkdir -p $TMPDIR
+rm -rf "$TMPDIR"
+mkdir -p "$TMPDIR"
 
+pushd "$SYSROOT" &> /dev/null
 
-pushd $SYSROOT &> /dev/null
-
-    mkisofs -R -l -o $TMPDIR/initrd.img -find .         \
-        ! -path "./boot/*"                              \
-        ! -path "./boot"                                \
-        ! -path "./usr/lib/modules/*"                   \
-        ! -path "./usr/lib/modules"                     \
+mkisofs -R -l -o "$TMPDIR/initrd.img" -find . \
+    ! -path "./boot/*" \
+    ! -path "./boot" \
+    ! -path "./usr/lib/modules/*" \
+    ! -path "./usr/lib/modules" \
     &> /dev/null
 
 popd &> /dev/null
-
-exit 0
