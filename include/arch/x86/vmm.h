@@ -106,7 +106,8 @@ static inline uintptr_t __alloc_frame(uintptr_t pagesize, bool zero) {
         p = pmm_alloc_blocks_aligned(pagesize >> 12, pagesize);
     }
 
-    DEBUG_ASSERT(p != -1);
+    if (unlikely(p == (uintptr_t)-1ULL))
+        kpanicf("vmm: out of physical memory allocating a %ld-byte frame\n", pagesize);
 
 
     if (likely(zero)) {
