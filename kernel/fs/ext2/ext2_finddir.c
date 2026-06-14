@@ -4,139 +4,109 @@
  *
  * Copyright (c) 2013-2019 Antonino Natale
  *
- *
  * This file is part of aplus.
- *
- * aplus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aplus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
-#include <aplus/debug.h>
 #include <aplus/errno.h>
-#include <aplus/ipc.h>
 #include <aplus/memory.h>
-#include <aplus/smp.h>
 #include <aplus/vfs.h>
 
 #include "ext2.h"
 
 
+inode_t* ext2_utils_create_vfs_inode(inode_t* parent, ino_t ino, const char* name, mode_t mode) {
+    inode_t* inode = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
+
+    if (unlikely(!inode))
+        return errno = ENOMEM, NULL;
+
+    inode->ino    = ino;
+    inode->sb     = parent->sb;
+    inode->parent = parent;
+
+    strncpy(inode->name, name, sizeof(inode->name) - 1);
+    spinlock_init(&inode->lock);
+
+    inode->ops.getattr = ext2_getattr;
+    inode->ops.setattr = ext2_setattr;
+    inode->ops.fsync   = ext2_fsync;
+
+    if (S_ISDIR(mode)) {
+        inode->ops.creat   = ext2_creat;
+        inode->ops.finddir = ext2_finddir;
+        inode->ops.readdir = ext2_readdir;
+        inode->ops.unlink  = ext2_unlink;
+        vfs_dcache_init(inode);
+    } else if (S_ISREG(mode)) {
+        inode->ops.truncate = ext2_truncate;
+        inode->ops.read     = ext2_read;
+        inode->ops.write    = ext2_write;
+    } else if (S_ISLNK(mode)) {
+        inode->ops.readlink = ext2_readlink;
+    }
+
+    return inode;
+}
+
 
 inode_t* ext2_finddir(inode_t* inode, const char* name) {
-
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(name);
 
-
-    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
-
-
-
-    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
-    struct inode* d      = NULL;
-
-
     size_t name_len = strlen(name);
 
+    if (unlikely(name_len == 0 || name_len > EXT2_NAME_LEN))
+        return errno = ENOENT, NULL;
 
-    for (size_t q = 0; q < n->i_size; q += ext2->blocksize) {
+    ext2_t* ext2            = inode->sb->fsinfo;
+    struct ext2_inode* node = cache_get(&inode->sb->cache, inode->ino);
+    inode_t* result         = NULL;
 
+    errno = 0;
 
-        scoped_lock(&ext2->lock) {
+    scoped_lock(&ext2->lock) {
+        for (uint32_t block = 0; (uint64_t)block * ext2->blocksize < node->i_size; block++) {
+            if (ext2_utils_read_inode_data(ext2, node, block, 0, ext2->iocache, ext2->blocksize) < 0)
+                break;
 
-            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
+            for (uint32_t offset = 0; offset < ext2->blocksize;) {
+                struct ext2_dir_entry_2* entry = (struct ext2_dir_entry_2*)((uint8_t*)ext2->iocache + offset);
 
-            for (size_t i = 0; i < ext2->blocksize;) {
-
-                struct ext2_dir_entry_2* e = (struct ext2_dir_entry_2*)((uintptr_t)ext2->iocache + i);
-
-                DEBUG_ASSERT(e->rec_len);
-
-
-
-                mode_t mode;
-
-                if (ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
-
-                    mode = ext2_utils_file_type(e->file_type);
-
-                } else {
-
-                    mode = ((struct ext2_inode*)cache_get(&inode->sb->cache, e->inode))->i_mode;
-                }
-
-                /* Found? */
-                if (name_len == e->name_len && strncmp(name, e->name, e->name_len) == 0) {
-
-
-                    d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
-
-                    d->ino    = e->inode;
-                    d->sb     = inode->sb;
-                    d->parent = inode;
-
-                    strncpy(d->name, e->name, e->name_len);
-
-
-                    d->ops.getattr = ext2_getattr;
-                    // d->ops.setattr = ext2_setattr;
-                    // d->ops.fsync = ext2_fsync;
-
-                    if (S_ISDIR(mode)) {
-
-                        // d->ops.creat   = ext2_creat;
-                        d->ops.finddir = ext2_finddir;
-                        d->ops.readdir = ext2_readdir;
-                        // d->ops.rename  = ext2_rename;
-                        // d->ops.symlink = ext2_symlink;
-                        // d->ops.unlink  = ext2_unlink;
-
-                        vfs_dcache_init(d);
-
-                    }
-
-                    else if (S_ISREG(mode)) {
-
-                        // d->ops.truncate = ext2_truncate;
-                        d->ops.read  = ext2_read;
-                        d->ops.write = ext2_write;
-
-                    }
-
-                    else if (S_ISLNK(mode)) {
-
-                        d->ops.readlink = ext2_readlink;
-                    }
-
-
-                    spinlock_init(&d->lock);
+                if (unlikely(entry->rec_len < 8 || entry->rec_len > ext2->blocksize - offset || entry->name_len > entry->rec_len - 8)) {
+                    errno = EIO;
                     break;
                 }
 
+                if (entry->inode != 0 && entry->name_len == name_len && memcmp(name, entry->name, name_len) == 0) {
+                    mode_t mode;
 
-                i += e->rec_len;
+                    if (entry->file_type != EXT2_FT_UNKNOWN) {
+                        mode = ext2_utils_file_type(entry->file_type);
+                    } else {
+                        struct ext2_inode* child = cache_get(&inode->sb->cache, entry->inode);
+                        mode                     = child->i_mode;
+                    }
+
+                    result = ext2_utils_create_vfs_inode(inode, entry->inode, name, mode);
+                    break;
+                }
+
+                offset += entry->rec_len;
             }
+
+            if (result)
+                break;
         }
-
-
-        if (d != NULL)
-            break;
     }
 
-    return d;
+    if (!result)
+        errno = errno == EIO ? EIO : ENOENT;
+
+    return result;
 }

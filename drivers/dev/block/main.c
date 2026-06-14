@@ -107,7 +107,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
 
     current_task->rusage.ru_oublock++;
 
-
+    __cache_update(device->blk.cache, 0, 0);
 
     offset += device->blk.blkoff * device->blk.blksize;
 

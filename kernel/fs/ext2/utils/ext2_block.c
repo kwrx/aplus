@@ -4,190 +4,205 @@
  *
  * Copyright (c) 2013-2019 Antonino Natale
  *
- *
  * This file is part of aplus.
- *
- * aplus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aplus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #include <stdint.h>
 #include <string.h>
-#include <sys/mount.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 #include <aplus.h>
-#include <aplus/debug.h>
 #include <aplus/errno.h>
-#include <aplus/ipc.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
+#include <aplus/hal.h>
 #include <aplus/vfs.h>
 
 #include "../ext2.h"
 
 
+static inline bool ext2_bitmap_test(const uint8_t* bitmap, uint32_t bit) {
+    return bitmap[bit >> 3] & (1U << (bit & 7));
+}
 
-void ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size, bool cached) {
+static inline void ext2_bitmap_set(uint8_t* bitmap, uint32_t bit) {
+    bitmap[bit >> 3] |= 1U << (bit & 7);
+}
 
+static inline void ext2_bitmap_clear(uint8_t* bitmap, uint32_t bit) {
+    bitmap[bit >> 3] &= ~(1U << (bit & 7));
+}
+
+
+int ext2_utils_read_block(ext2_t* ext2, uint32_t block, uint32_t offset, void* data, size_t size, bool cached) {
     DEBUG_ASSERT(ext2);
-    DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
-    DEBUG_ASSERT(size);
 
+    (void)cached;
 
-    if (unlikely(block > ext2->sb.s_blocks_count))
-        kpanicf("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
+    if (unlikely(block == 0 || block >= ext2->sb.s_blocks_count || offset > ext2->blocksize || size > ext2->blocksize - offset))
+        return errno = EIO, -1;
 
-    if (unlikely(block < ext2->first_block_group - 1))
-        kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
+    if (unlikely(vfs_read(ext2->dev, data, ((off_t)block * ext2->blocksize) + offset, size) != (ssize_t)size))
+        return errno = EIO, -1;
 
-
-    if (cached) {
-
-        DEBUG_ASSERT(offset + size <= ext2->blocksize);
-
-
-        void* buffer = cache_get(&ext2->bcache, block);
-
-        if (unlikely(!buffer))
-            kpanicf("%s() FAIL! cache_get() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block)*ext2->blocksize) + offset);
-
-        memcpy(data, buffer + offset, size);
-
-
-    } else {
-
-        if (unlikely(vfs_read(ext2->dev, data, ((block)*ext2->blocksize) + offset, size) != size))
-            kpanicf("%s() FAIL! vfs_read() errno(%s) on reading %zd bytes at %d", __func__, strerror(errno), size, ((block)*ext2->blocksize) + offset);
-    }
+    return 0;
 }
 
 
-
-void ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
-
+int ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
     DEBUG_ASSERT(ext2);
-    DEBUG_ASSERT(block);
     DEBUG_ASSERT(data);
-    DEBUG_ASSERT(size);
 
+    if (unlikely(block == 0 || block >= ext2->sb.s_blocks_count || offset > ext2->blocksize || size > ext2->blocksize - offset))
+        return errno = EIO, -1;
 
-    if (unlikely(block > ext2->sb.s_blocks_count))
-        kpanicf("%s() FAIL! block(%d) > s_blocks_count(%d)", __func__, block, ext2->sb.s_blocks_count);
+    if (unlikely(vfs_write(ext2->dev, data, ((off_t)block * ext2->blocksize) + offset, size) != (ssize_t)size))
+        return errno = EIO, -1;
 
-    if (unlikely(block < ext2->first_block_group - 1))
-        kpanicf("%s() FAIL! block(%d) < first_block_group(%d) - 1", __func__, block, ext2->first_block_group);
-
-    if (unlikely(vfs_write(ext2->dev, data, ((block)*ext2->blocksize) + offset, size) != size))
-        kpanicf("%s() FAIL! vfs_read() errno(%s) on writing %zd bytes at %d", __func__, strerror(errno), size, ((block)*ext2->blocksize) + offset);
+    return 0;
 }
 
 
-void ext2_utils_zero_block(ext2_t* ext2, uint32_t block) {
+int ext2_utils_zero_block(ext2_t* ext2, uint32_t block) {
+    DEBUG_ASSERT(ext2);
 
-    uint8_t zero[ext2->blocksize];
-    memset(zero, 0, sizeof(zero));
-
-    ext2_utils_write_block(ext2, block, 0, zero, sizeof(zero));
+    uint8_t zero[EXT2_MAX_BLOCK_SIZE] = {0};
+    return ext2_utils_write_block(ext2, block, 0, zero, ext2->blocksize);
 }
 
 
+int ext2_utils_read_group_desc(ext2_t* ext2, uint32_t group, struct ext2_group_desc* desc) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(desc);
 
-void ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
+    if (unlikely(group >= ext2->count_block_group))
+        return errno = EINVAL, -1;
 
+    uint32_t byte  = group * sizeof(*desc);
+    uint32_t block = ext2->first_block_group + (byte / ext2->blocksize);
+    uint32_t off   = byte % ext2->blocksize;
+
+    return ext2_utils_read_block(ext2, block, off, desc, sizeof(*desc), false);
+}
+
+
+int ext2_utils_write_group_desc(ext2_t* ext2, uint32_t group, const struct ext2_group_desc* desc) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(desc);
+
+    if (unlikely(group >= ext2->count_block_group))
+        return errno = EINVAL, -1;
+
+    uint32_t byte  = group * sizeof(*desc);
+    uint32_t block = ext2->first_block_group + (byte / ext2->blocksize);
+    uint32_t off   = byte % ext2->blocksize;
+
+    return ext2_utils_write_block(ext2, block, off, desc, sizeof(*desc));
+}
+
+
+int ext2_utils_write_super(ext2_t* ext2) {
+    DEBUG_ASSERT(ext2);
+
+    ext2->sb.s_wtime = arch_timer_gettime();
+
+    if (unlikely(vfs_write(ext2->dev, &ext2->sb, 1024, sizeof(ext2->sb)) != (ssize_t)sizeof(ext2->sb)))
+        return errno = EIO, -1;
+
+    return 0;
+}
+
+
+int ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(block);
-
 
     *block = 0;
 
+    if (unlikely(ext2->sb.s_free_blocks_count == 0))
+        return errno = ENOSPC, -1;
 
-    if (ext2->sb.s_free_blocks_count == 0)
-        return;
+    for (uint32_t group = 0; group < ext2->count_block_group; group++) {
+        struct ext2_group_desc desc;
 
+        if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
+            return -1;
 
-    scoped_lock(&ext2->lock) {
+        if (desc.bg_free_blocks_count == 0)
+            continue;
 
-        size_t i;
-        size_t j;
+        if (ext2_utils_read_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false) < 0)
+            return -1;
 
-        for (i = 0; i < (ext2->sb.s_blocks_count / ext2->sb.s_blocks_per_group); i++) {
+        uint64_t group_start = ext2->sb.s_first_data_block + ((uint64_t)group * ext2->sb.s_blocks_per_group);
+        uint32_t bits        = ext2->sb.s_blocks_per_group;
 
-            struct ext2_group_desc d;
-            ext2_utils_read_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d), false);
+        if (group_start + bits > ext2->sb.s_blocks_count)
+            bits = ext2->sb.s_blocks_count - group_start;
 
-            if (d.bg_free_blocks_count == 0)
+        for (uint32_t bit = 0; bit < bits; bit++) {
+            uint32_t candidate = group_start + bit;
+
+            if (ext2_bitmap_test(ext2->iocache, bit))
                 continue;
 
+            if (ext2_utils_zero_block(ext2, candidate) < 0)
+                return -1;
 
-            ext2_utils_read_block(ext2, d.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false);
+            ext2_bitmap_set(ext2->iocache, bit);
 
+            if (ext2_utils_write_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize) < 0)
+                return -1;
 
-
-            uint32_t* bitmap = ext2->iocache;
-
-            for (j = 0; j < (ext2->blocksize / sizeof(*bitmap)); j++, bitmap++) {
-
-                if (*bitmap == 0xFFFFFFFF)
-                    continue;
-
-
-                uint32_t b, q;
-                b = q = __builtin_ffs(~(*bitmap)) - 1;
-                b += j * (sizeof(*bitmap) << 3);
-                b += i * ext2->sb.s_blocks_per_group;
-
-                *bitmap |= (1LL << q);
-                *block = b;
-
-                break;
-            }
-
-
-            DEBUG_ASSERT(block);
-            DEBUG_ASSERT(*block);
-
+            desc.bg_free_blocks_count--;
             ext2->sb.s_free_blocks_count--;
 
-            d.bg_free_blocks_count--;
+            if (ext2_utils_write_group_desc(ext2, group, &desc) < 0 || ext2_utils_write_super(ext2) < 0)
+                return -1;
 
+            ext2->root->sb->st.f_bfree--;
+            ext2->root->sb->st.f_bavail--;
 
-            ext2_utils_zero_block(ext2, *block);
-
-            ext2_utils_write_block(ext2, d.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize);
-            ext2_utils_write_block(ext2, ext2->first_block_group, i * sizeof(d), &d, sizeof(d));
-
-
-#if DEBUG_LEVEL_TRACE
-            kprintf("ext2: alloc block %d (group %ld, bitmap %d, offset %ld)\n", *block, i, d.bg_block_bitmap, j);
-#endif
-
-            break;
+            *block = candidate;
+            return 0;
         }
     }
 
-
-    DEBUG_ASSERT(*block != 0);
+    return errno = ENOSPC, -1;
 }
 
 
-void ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
-
+int ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
     DEBUG_ASSERT(ext2);
-    DEBUG_ASSERT(block > 1);
 
+    if (unlikely(block < ext2->sb.s_first_data_block || block >= ext2->sb.s_blocks_count))
+        return errno = EINVAL, -1;
 
-    /* TODO: free block */
+    uint32_t relative = block - ext2->sb.s_first_data_block;
+    uint32_t group    = relative / ext2->sb.s_blocks_per_group;
+    uint32_t bit      = relative % ext2->sb.s_blocks_per_group;
+    struct ext2_group_desc desc;
+
+    if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
+        return -1;
+
+    if (ext2_utils_read_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false) < 0)
+        return -1;
+
+    if (unlikely(!ext2_bitmap_test(ext2->iocache, bit)))
+        return errno = EINVAL, -1;
+
+    ext2_bitmap_clear(ext2->iocache, bit);
+
+    if (ext2_utils_write_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize) < 0)
+        return -1;
+
+    desc.bg_free_blocks_count++;
+    ext2->sb.s_free_blocks_count++;
+
+    if (ext2_utils_write_group_desc(ext2, group, &desc) < 0 || ext2_utils_write_super(ext2) < 0)
+        return -1;
+
+    ext2->root->sb->st.f_bfree++;
+    ext2->root->sb->st.f_bavail++;
+
+    return 0;
 }

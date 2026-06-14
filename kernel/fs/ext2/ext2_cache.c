@@ -30,6 +30,7 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/vfs.h>
+#include <sys/mount.h>
 
 #include "ext2.h"
 
@@ -38,17 +39,21 @@
 
 struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino) {
 
-    struct ext2_inode* i = (struct ext2_inode*)kcalloc(1, sizeof(struct ext2_inode), GFP_KERNEL);
+    struct ext2_inode* i = (struct ext2_inode*)kcalloc(1, ext2->inodesize, GFP_KERNEL);
 
     if (unlikely(!i))
         return NULL;
 
-    return ext2_utils_read_inode(ext2, ino, i), i;
+    if (ext2_utils_read_inode(ext2, ino, i) < 0)
+        return kfree(i), NULL;
+
+    return i;
 }
 
 
 void ext2_icache_commit(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
-    // ext2_utils_write_inode(ext2, ino, inode);
+    if (!(ext2->root->sb->flags & MS_RDONLY))
+        ext2_utils_write_inode(ext2, ino, inode);
 }
 
 void ext2_icache_release(cache_t* cache, ext2_t* ext2, ino_t ino, struct ext2_inode* inode) {
@@ -73,7 +78,8 @@ void* ext2_bcache_fetch(cache_t* cache, ext2_t* ext2, uint64_t block) {
 
 
 void ext2_bcache_commit(cache_t* cache, ext2_t* ext2, uint64_t block, void* buffer) {
-    // vfs_write(ext2->dev, buffer, block * ext2->blocksize, ext2->blocksize);
+    if (!(ext2->root->sb->flags & MS_RDONLY))
+        ext2_utils_write_block(ext2, block, 0, buffer, ext2->blocksize);
 }
 
 void ext2_bcache_release(cache_t* cache, ext2_t* ext2, uint64_t block, void* buffer) {
