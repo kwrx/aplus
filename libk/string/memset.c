@@ -37,58 +37,62 @@ void* memset(void* dest, int c, size_t n) {
 
     uintptr_t d = (uintptr_t)dest;
 
+    uint64_t value = (uint8_t)c;
+    value |= value << 8;
+    value |= value << 16;
+    value |= value << 32;
 
     size_t i = 0;
 
     for (; i + 64 < n; i += 64) {
 
-        *((uint64_t*)(d + 0))  = c;
-        *((uint64_t*)(d + 8))  = c;
-        *((uint64_t*)(d + 16)) = c;
-        *((uint64_t*)(d + 24)) = c;
-        *((uint64_t*)(d + 32)) = c;
-        *((uint64_t*)(d + 40)) = c;
-        *((uint64_t*)(d + 48)) = c;
-        *((uint64_t*)(d + 56)) = c;
+        *((uint64_t*)(d + 0))  = value;
+        *((uint64_t*)(d + 8))  = value;
+        *((uint64_t*)(d + 16)) = value;
+        *((uint64_t*)(d + 24)) = value;
+        *((uint64_t*)(d + 32)) = value;
+        *((uint64_t*)(d + 40)) = value;
+        *((uint64_t*)(d + 48)) = value;
+        *((uint64_t*)(d + 56)) = value;
 
         d += 64;
     }
 
     for (; i + 32 < n; i += 32) {
 
-        *((uint64_t*)(d + 0))  = c;
-        *((uint64_t*)(d + 8))  = c;
-        *((uint64_t*)(d + 16)) = c;
-        *((uint64_t*)(d + 24)) = c;
+        *((uint64_t*)(d + 0))  = value;
+        *((uint64_t*)(d + 8))  = value;
+        *((uint64_t*)(d + 16)) = value;
+        *((uint64_t*)(d + 24)) = value;
 
         d += 32;
     }
 
     for (; i + 16 < n; i += 16) {
 
-        *((uint64_t*)(d + 0)) = c;
-        *((uint64_t*)(d + 8)) = c;
+        *((uint64_t*)(d + 0)) = value;
+        *((uint64_t*)(d + 8)) = value;
 
         d += 16;
     }
 
     for (; i + 8 < n; i += 8) {
 
-        *((uint64_t*)(d)) = c;
+        *((uint64_t*)(d)) = value;
 
         d += 8;
     }
 
     for (; i + 4 < n; i += 4) {
 
-        *((uint32_t*)(d)) = c;
+        *((uint32_t*)(d)) = (uint32_t)value;
 
         d += 4;
     }
 
     for (; i + 2 < n; i += 2) {
 
-        *((uint16_t*)(d)) = c;
+        *((uint16_t*)(d)) = (uint16_t)value;
 
         d += 2;
     }
@@ -107,9 +111,14 @@ void* memset(void* dest, int c, size_t n) {
 TEST(libk_memset_test, {
     char a[] = "Hello World!";
     char b[] = "Hello World!";
+    uint8_t c[128];
 
     memset(a, 'A', 5);
     memset(b, 'A', 5);
+    memset(c, 0xA5, sizeof(c));
 
     DEBUG_ASSERT(strcmp(a, b) == 0);
+
+    for (size_t i = 0; i < sizeof(c); i++)
+        DEBUG_ASSERT(c[i] == 0xA5);
 });
