@@ -32,6 +32,7 @@
 
 
 #define EXT2_SIGNATURE 0xEF53
+#define EXT2_NAME_LEN  255
 
 
 // TODO: rewrite all ext2 driver to support cache
@@ -86,6 +87,8 @@ struct ext2_group_desc {
     uint16_t bg_pad;
     uint32_t bg_reserved[3];
 };
+
+_Static_assert(sizeof(struct ext2_group_desc) == 32, "invalid ext2 group descriptor layout");
 
 
 /*
@@ -163,6 +166,8 @@ struct ext2_inode {
         } masix2;
     } osd2; /* OS dependent 2 */
 };
+
+_Static_assert(sizeof(struct ext2_inode) == 128, "invalid ext2 inode layout");
 
 #define i_size_high i_dir_acl
 #define i_reserved1 osd1.linux1.l_i_reserved1
@@ -299,6 +304,8 @@ struct ext2_super_block {
     uint32_t s_reserved[190]; /* Padding to the end of the block */
 };
 
+_Static_assert(sizeof(struct ext2_super_block) == 1024, "invalid ext2 superblock layout");
+
 /*
  * Codes for operating systems
  */
@@ -351,6 +358,11 @@ struct ext2_super_block {
 
 #define EXT2_FEATURE_RO_COMPAT_UNSUPPORTED ~EXT2_FEATURE_RO_COMPAT_SUPP
 #define EXT2_FEATURE_INCOMPAT_UNSUPPORTED  ~EXT2_FEATURE_INCOMPAT_SUPP
+
+#define EXT2_FEATURE_INCOMPAT_WRITE_SUPP  EXT2_FEATURE_INCOMPAT_FILETYPE
+#define EXT2_FEATURE_RO_COMPAT_WRITE_SUPP (EXT2_FEATURE_RO_COMPAT_SPARSE_SUPER | EXT2_FEATURE_RO_COMPAT_LARGE_FILE)
+
+#define EXT2_INDEX_FL 0x00001000
 
 
 
@@ -446,15 +458,23 @@ typedef struct {
 
 
 
-#define ext2_inode_set_size(ext2, inode, size)            \
-    {                                                     \
-                                                          \
-        (inode)->i_size = (size) & 0xFFFFFFFF;            \
-                                                          \
-        if ((ext2)->sb.s_rev_level == EXT2_DYNAMIC_REV) { \
-            (inode)->i_size_high = ((size) << 32);        \
-        }                                                 \
+static inline uint64_t ext2_inode_get_size(ext2_t* ext2, struct ext2_inode* inode) {
+    uint64_t size = inode->i_size;
+
+    if (ext2->sb.s_rev_level == EXT2_DYNAMIC_REV && S_ISREG(inode->i_mode)) {
+        size |= (uint64_t)inode->i_size_high << 32;
     }
+
+    return size;
+}
+
+static inline void ext2_inode_set_size(ext2_t* ext2, struct ext2_inode* inode, uint64_t size) {
+    inode->i_size = size & UINT32_MAX;
+
+    if (ext2->sb.s_rev_level == EXT2_DYNAMIC_REV && S_ISREG(inode->i_mode)) {
+        inode->i_size_high = size >> 32;
+    }
+}
 
 
 
@@ -462,19 +482,21 @@ int ext2_fsync(inode_t*, int);
 int ext2_getattr(inode_t*, struct stat*);
 int ext2_setattr(inode_t*, struct stat*);
 
-// int ext2_truncate (inode_t*, off_t);
+int ext2_truncate(inode_t*, off_t);
 
 ssize_t ext2_read(inode_t*, void*, off_t, size_t);
 ssize_t ext2_write(inode_t*, const void*, off_t, size_t);
 ssize_t ext2_readlink(inode_t*, char*, size_t);
 
-// inode_t* ext2_creat (inode_t*, const char*, mode_t);
+inode_t* ext2_creat(inode_t*, const char*, mode_t);
 inode_t* ext2_finddir(inode_t*, const char*);
 ssize_t ext2_readdir(inode_t*, struct dirent*, off_t, size_t);
 
 // int ext2_rename (inode_t*, const char*, const char*);
 // int ext2_symlink (inode_t*, const char*, const char*);
-// int ext2_unlink (inode_t*, const char*);
+int ext2_unlink(inode_t*, const char*);
+
+inode_t* ext2_utils_create_vfs_inode(inode_t*, ino_t, const char*, mode_t);
 
 
 struct ext2_inode* ext2_icache_fetch(cache_t* cache, ext2_t* ext2, ino_t ino);
@@ -485,20 +507,29 @@ void* ext2_bcache_fetch(cache_t* cache, ext2_t* ext2, uint64_t block);
 void ext2_bcache_commit(cache_t* cache, ext2_t* ext2, uint64_t block, void*);
 void ext2_bcache_release(cache_t* cache, ext2_t* ext2, uint64_t block, void*);
 
-void ext2_utils_read_inode(ext2_t*, ino_t, void*);
-void ext2_utils_write_inode(ext2_t*, ino_t, const void*);
-void ext2_utils_zero_block(ext2_t*, uint32_t);
+int ext2_utils_read_inode(ext2_t*, ino_t, void*);
+int ext2_utils_write_inode(ext2_t*, ino_t, const void*);
+int ext2_utils_alloc_inode(ext2_t*, const struct ext2_inode*, ino_t*);
+int ext2_utils_free_inode(ext2_t*, ino_t);
 
-void ext2_utils_read_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, void*, size_t);
-void ext2_utils_write_inode_data(ext2_t*, uint32_t*, uint32_t, uint32_t, const void*, size_t);
-void ext2_utils_alloc_inode_data(ext2_t*, uint32_t*, uint32_t);
+int ext2_utils_read_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, void*, size_t);
+int ext2_utils_write_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, const void*, size_t);
+int ext2_utils_free_inode_data(ext2_t*, struct ext2_inode*, uint32_t);
 
-void ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t, bool);
-void ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
+int ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t, bool);
+int ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
+int ext2_utils_zero_block(ext2_t*, uint32_t);
 
-void ext2_utils_alloc_block(ext2_t*, uint32_t*);
-void ext2_utils_free_block(ext2_t*, uint32_t);
+int ext2_utils_read_group_desc(ext2_t*, uint32_t, struct ext2_group_desc*);
+int ext2_utils_write_group_desc(ext2_t*, uint32_t, const struct ext2_group_desc*);
+int ext2_utils_write_super(ext2_t*);
+
+int ext2_utils_alloc_block(ext2_t*, uint32_t*);
+int ext2_utils_free_block(ext2_t*, uint32_t);
 
 mode_t ext2_utils_file_type(uint8_t);
+uint8_t ext2_utils_dir_type(mode_t);
+int ext2_utils_add_dir_entry(ext2_t*, struct ext2_inode*, ino_t, const char*, mode_t);
+int ext2_utils_remove_dir_entry(ext2_t*, struct ext2_inode*, const char*, ino_t*, uint8_t*);
 
 #endif

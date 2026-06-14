@@ -66,7 +66,10 @@ ssize_t ext2_readlink(inode_t* inode, char* buf, size_t len) {
 
     } else {
 
-        ext2_utils_read_inode_data(ext2, n->i_block, 0, 0, buf, len);
+        scoped_lock(&ext2->lock) {
+            if (ext2_utils_read_inode_data(ext2, n, 0, 0, buf, len) < 0)
+                return -1;
+        }
     }
 
     return len;

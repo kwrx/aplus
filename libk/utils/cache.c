@@ -196,8 +196,10 @@ void __cache_commit(cache_t* cache, cache_key_t key) {
         if (v != NULL) {
 
             if (cache->ops.commit) {
-                cache->ops.commit(cache, cache->userdata, key, value);
+                cache->ops.commit(cache, cache->userdata, key, v);
             }
+
+            value = v;
         }
     }
 

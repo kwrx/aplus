@@ -52,23 +52,12 @@ int ext2_getattr(inode_t* inode, struct stat* st) {
     st->st_uid     = n->i_uid;
     st->st_gid     = n->i_gid;
     st->st_rdev    = 0; /* FIXME */
-    st->st_size    = n->i_size;
-    st->st_blksize = 512;
+    st->st_size    = ext2_inode_get_size(inode->sb->fsinfo, n);
+    st->st_blksize = inode->sb->st.f_bsize;
     st->st_blocks  = n->i_blocks;
     st->st_atime   = n->i_atime;
-    st->st_ctime   = n->i_mtime;
-    st->st_mtime   = n->i_ctime;
-
-
-    if (sizeof(off_t) == 8) {
-
-        ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
-
-        if (ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
-
-            st->st_size |= (off_t)((uint64_t)n->i_size_high << 32);
-        }
-    }
+    st->st_ctime   = n->i_ctime;
+    st->st_mtime   = n->i_mtime;
 
 
     return 0;

@@ -92,26 +92,27 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
 
-    DEBUG_ASSERT((1024 << sb.s_log_block_size) <= EXT2_MAX_BLOCK_SIZE);
-    DEBUG_ASSERT((1024 << sb.s_log_block_size) >= EXT2_MIN_BLOCK_SIZE);
-    DEBUG_ASSERT((1024 << sb.s_log_frag_size) <= EXT2_MAX_FRAG_SIZE);
-    DEBUG_ASSERT((1024 << sb.s_log_frag_size) >= EXT2_MIN_FRAG_SIZE);
+    uint32_t blocksize = 1024 << sb.s_log_block_size;
+    uint32_t fragsize  = 1024 << sb.s_log_frag_size;
 
-    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT2_FEATURE_INCOMPAT_COMPRESSION));
-    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_RECOVER));
-    DEBUG_ASSERT(!(sb.s_feature_incompat & EXT3_FEATURE_INCOMPAT_JOURNAL_DEV));
+    if (blocksize < EXT2_MIN_BLOCK_SIZE || blocksize > EXT2_MAX_BLOCK_SIZE || fragsize < EXT2_MIN_FRAG_SIZE || fragsize > EXT2_MAX_FRAG_SIZE)
+        return errno = EINVAL, -1;
 
-    //! WARN
-    DEBUG_ASSERT(sb.s_rev_level == EXT2_DYNAMIC_REV);
+    if (sb.s_rev_level != EXT2_DYNAMIC_REV || sb.s_inode_size < sizeof(struct ext2_inode) || sb.s_inode_size > blocksize || sb.s_blocks_per_group == 0 || sb.s_inodes_per_group == 0 ||
+        (sb.s_feature_incompat & ~EXT2_FEATURE_INCOMPAT_WRITE_SUPP))
+        return errno = EINVAL, -1;
+
+    if (!(flags & MS_RDONLY) && (sb.s_feature_ro_compat & ~EXT2_FEATURE_RO_COMPAT_WRITE_SUPP))
+        return errno = EROFS, -1;
 
 
 
     ext2_t* ext2 = (void*)kcalloc(1, sizeof(ext2_t), GFP_USER);
 
-    ext2->iocache           = (void*)kmalloc((1024) << sb.s_log_block_size, GFP_KERNEL);
+    ext2->iocache           = (void*)kmalloc(blocksize, GFP_KERNEL);
     ext2->first_block_group = sb.s_first_data_block + 1;
-    ext2->count_block_group = sb.s_blocks_count / sb.s_blocks_per_group;
-    ext2->blocksize         = (1024) << sb.s_log_block_size;
+    ext2->count_block_group = (sb.s_blocks_count - sb.s_first_data_block + sb.s_blocks_per_group - 1) / sb.s_blocks_per_group;
+    ext2->blocksize         = blocksize;
     ext2->inodesize         = sb.s_inode_size;
     ext2->dev               = dev;
     ext2->root              = dir;
@@ -143,16 +144,16 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_favail  = sb.s_free_inodes_count;
     dir->sb->st.f_flag    = stflags;
     dir->sb->st.f_fsid    = FSID_EXT2;
-    dir->sb->st.f_namemax = CONFIG_MAXNAMLEN;
+    dir->sb->st.f_namemax = EXT2_NAME_LEN;
 
     dir->sb->ops.getattr = ext2_getattr;
-    // dir->sb->ops.setattr = ext2_setattr;
-    // dir->sb->ops.creat = ext2_creat;
+    dir->sb->ops.setattr = ext2_setattr;
+    dir->sb->ops.creat   = ext2_creat;
     dir->sb->ops.finddir = ext2_finddir;
     dir->sb->ops.readdir = ext2_readdir;
     // dir->sb->ops.rename = ext2_rename;
     // dir->sb->ops.symlink = ext2_symlink;
-    // dir->sb->ops.unlink = ext2_unlink;
+    dir->sb->ops.unlink = ext2_unlink;
 
 
 

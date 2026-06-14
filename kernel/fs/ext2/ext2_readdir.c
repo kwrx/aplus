@@ -4,108 +4,69 @@
  *
  * Copyright (c) 2013-2019 Antonino Natale
  *
- *
  * This file is part of aplus.
- *
- * aplus is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * aplus is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stddef.h>
 #include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
-#include <aplus/debug.h>
 #include <aplus/errno.h>
-#include <aplus/ipc.h>
-#include <aplus/memory.h>
-#include <aplus/smp.h>
 #include <aplus/vfs.h>
 
 #include "ext2.h"
 
 
-
-ssize_t ext2_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
-
+ssize_t ext2_readdir(inode_t* inode, struct dirent* entries, off_t pos, size_t count) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
+    DEBUG_ASSERT(entries);
 
-    DEBUG_ASSERT(e);
-    DEBUG_ASSERT(count);
+    if (unlikely(pos < 0))
+        return errno = EINVAL, -1;
 
+    if (count == 0)
+        return 0;
 
-    ext2_t* ext2 = (ext2_t*)inode->sb->fsinfo;
+    ext2_t* ext2            = inode->sb->fsinfo;
+    struct ext2_inode* node = cache_get(&inode->sb->cache, inode->ino);
+    size_t seen             = 0;
+    size_t emitted          = 0;
 
+    scoped_lock(&ext2->lock) {
+        for (uint32_t block = 0; (uint64_t)block * ext2->blocksize < node->i_size && emitted < count; block++) {
+            if (ext2_utils_read_inode_data(ext2, node, block, 0, ext2->iocache, ext2->blocksize) < 0)
+                return emitted ? (ssize_t)emitted : -1;
 
+            for (uint32_t offset = 0; offset < ext2->blocksize && emitted < count;) {
+                struct ext2_dir_entry_2* entry = (struct ext2_dir_entry_2*)((uint8_t*)ext2->iocache + offset);
 
-    struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
+                if (unlikely(entry->rec_len < 8 || entry->rec_len > ext2->blocksize - offset || entry->name_len > entry->rec_len - 8))
+                    return errno = EIO, emitted ? (ssize_t)emitted : -1;
 
-    int entries = 0;
-    int q;
+                if (entry->inode != 0) {
+                    if (seen++ >= (size_t)pos) {
+                        struct dirent* out = &entries[emitted++];
 
-    for (q = 0; q < n->i_size; q += ext2->blocksize) {
+                        memset(out, 0, sizeof(*out));
+                        out->d_ino    = entry->inode;
+                        out->d_off    = pos + emitted;
+                        out->d_reclen = sizeof(*out);
+                        out->d_type   = MODE_2_DIRENT_TYPE(ext2_utils_file_type(entry->file_type));
 
-        scoped_lock(&ext2->lock) {
+                        size_t name_len = entry->name_len;
+                        if (name_len >= sizeof(out->d_name))
+                            name_len = sizeof(out->d_name) - 1;
 
-            ext2_utils_read_inode_data(ext2, n->i_block, q / ext2->blocksize, 0, ext2->iocache, ext2->blocksize);
-
-            for (size_t i = 0; i < ext2->blocksize;) {
-
-                struct ext2_dir_entry_2* d = (struct ext2_dir_entry_2*)((uintptr_t)ext2->iocache + i);
-
-                DEBUG_ASSERT(d->rec_len);
-                DEBUG_ASSERT(d->name_len);
-
-
-                if (pos > 0) {
-
-                    pos--;
-
-                } else {
-
-                    if (count == 0)
-                        break;
-
-
-                    e->d_ino    = d->inode;
-                    e->d_off    = entries;
-                    e->d_reclen = sizeof(struct dirent);
-                    e->d_type   = 0;
-
-                    strncpy(e->d_name, d->name, d->name_len);
-
-
-                    if (ext2->sb.s_rev_level == EXT2_DYNAMIC_REV) {
-                        e->d_type = d->file_type;
+                        memcpy(out->d_name, entry->name, name_len);
                     }
-
-
-                    e++;
-                    entries++;
-
-                    count--;
                 }
 
-                i += d->rec_len;
+                offset += entry->rec_len;
             }
         }
-
-
-        if (count == 0)
-            break;
     }
 
-    return entries;
+    return emitted;
 }

@@ -43,6 +43,9 @@ int ext2_setattr(inode_t* inode, struct stat* st) {
     DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
     DEBUG_ASSERT(st);
 
+    if (unlikely(inode->sb->flags & MS_RDONLY))
+        return errno = EROFS, -1;
+
     struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
     n->i_mode  = st->st_mode;
@@ -52,9 +55,7 @@ int ext2_setattr(inode_t* inode, struct stat* st) {
     n->i_ctime = st->st_ctime;
     n->i_mtime = st->st_mtime;
 
-    if (inode->sb->flags & MS_SYNCHRONOUS) {
-        cache_commit(&inode->sb->cache, inode->ino);
-    }
+    ext2_icache_commit(&inode->sb->cache, inode->sb->fsinfo, inode->ino, n);
 
     return 0;
 }

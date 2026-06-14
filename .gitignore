@@ -31,6 +31,8 @@
 *.iml
 *.dat
 
+AGENTS.md
+
 # Generate by Makefile
 /kernel/aplus
 
