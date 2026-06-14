@@ -52,8 +52,8 @@ fi
 DEFAULT_KARGS="smp=auto network=off"
 
 header() {
-    echo -e "default 0"
-    echo -e "timeout 5"
+    echo -e "set default=0"
+    echo -e "set timeout=5"
     echo -e ""
 }
 
