@@ -32,6 +32,7 @@
 
     #define X86_APIC_BASE_MSR  0x01B
     #define X86_APIC_BASE_ADDR 0xFEE00000
+    #define X86_APIC_BASE_MASK 0xFFFFFFFFFFFFF000ULL
 
     #define X86_APIC_MSR_EN   (1 << 11)
     #define X86_APIC_MSR_EXTD (1 << 10)
@@ -103,9 +104,10 @@
 
 
 typedef struct {
+    uint8_t id;
     uintptr_t address;
     uint32_t gsi_base;
-    uint32_t gsi_max;
+    uint32_t gsi_count;
     spinlock_t lock;
 } ioapic_t;
 
@@ -117,12 +119,14 @@ void apic_enable(void);
 void apic_eoi(void);
 uint32_t apic_get_id(void);
 int apic_is_x2apic(void);
+uintptr_t apic_get_base(void);
+void apic_get_isa_irq(irq_t, uint32_t*, uint64_t*);
 void apic_timer_reset(uint32_t);
 
 
 void ioapic_enable(void);
-void ioapic_map_irq(irq_t, irq_t, cpuid_t, uint64_t);
-void ioapic_unmap_irq(irq_t);
+void ioapic_map_irq(uint32_t, irq_t, cpuid_t, uint64_t);
+void ioapic_unmap_irq(uint32_t);
 
 __END_DECLS
 

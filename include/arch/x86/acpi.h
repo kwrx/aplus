@@ -32,11 +32,25 @@
 
     #define X86_ACPI_AREA_SIZE 0x8000 // 32KiB
 
-    #define X86_MADT_ENTRY_LAPIC     0
-    #define X86_MADT_ENTRY_IOAPIC    1
-    #define X86_MADT_ENTRY_INTERRUPT 2
-    #define X86_MADT_ENTRY_NMI       4
-    #define X86_MADT_ENTRY_LAPIC64   5
+    #define X86_MADT_ENTRY_LAPIC                  0
+    #define X86_MADT_ENTRY_IOAPIC                 1
+    #define X86_MADT_ENTRY_INTERRUPT_OVERRIDE     2
+    #define X86_MADT_ENTRY_LAPIC_NMI              4
+    #define X86_MADT_ENTRY_LAPIC_ADDRESS_OVERRIDE 5
+    #define X86_MADT_ENTRY_X2APIC                 9
+
+    #define X86_MADT_CPU_ENABLED        (1 << 0)
+    #define X86_MADT_CPU_ONLINE_CAPABLE (1 << 1)
+
+    #define X86_MADT_INTERRUPT_POLARITY_MASK        0x3
+    #define X86_MADT_INTERRUPT_POLARITY_CONFORMING  0x0
+    #define X86_MADT_INTERRUPT_POLARITY_ACTIVE_HIGH 0x1
+    #define X86_MADT_INTERRUPT_POLARITY_ACTIVE_LOW  0x3
+
+    #define X86_MADT_INTERRUPT_TRIGGER_MASK       0xC
+    #define X86_MADT_INTERRUPT_TRIGGER_CONFORMING 0x0
+    #define X86_MADT_INTERRUPT_TRIGGER_EDGE       0x4
+    #define X86_MADT_INTERRUPT_TRIGGER_LEVEL      0xC
 
 
 typedef struct {
@@ -153,6 +167,69 @@ typedef struct {
     uint8_t entries[0];
 
 } __packed acpi_madt_t;
+
+typedef struct {
+
+    uint8_t type;
+    uint8_t length;
+
+} __packed acpi_madt_entry_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint8_t processor_id;
+    uint8_t apic_id;
+    uint32_t flags;
+
+} __packed acpi_madt_lapic_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint8_t id;
+    uint8_t reserved;
+    uint32_t address;
+    uint32_t gsi_base;
+
+} __packed acpi_madt_ioapic_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint8_t bus;
+    uint8_t source;
+    uint32_t gsi;
+    uint16_t flags;
+
+} __packed acpi_madt_interrupt_override_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint8_t processor_id;
+    uint16_t flags;
+    uint8_t lint;
+
+} __packed acpi_madt_lapic_nmi_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint16_t reserved;
+    uint64_t address;
+
+} __packed acpi_madt_lapic_address_override_t;
+
+typedef struct {
+
+    acpi_madt_entry_t header;
+    uint16_t reserved;
+    uint32_t x2apic_id;
+    uint32_t flags;
+    uint32_t processor_uid;
+
+} __packed acpi_madt_x2apic_t;
 
 
 typedef struct {

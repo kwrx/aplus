@@ -78,8 +78,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
     switch (frame->intno) {
 
         case 0xFF:
-            kpanicf("x86-intr: PANIC! Spourius Interrupt on cpu #%ld\n", arch_cpu_get_current_id());
-            break;
+            return frame;
 
 
         case 0xFE:
@@ -205,9 +204,20 @@ void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t), int type) {
     bootstrap_irq[irq].handler = handler;
 
     switch(type) {
-        case ARCH_INTR_TYPE_DEFAULT:
-            ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH);
+        case ARCH_INTR_TYPE_DEFAULT: {
+            uint32_t gsi;
+            uint64_t flags;
+
+            if (irq < 16) {
+                apic_get_isa_irq(irq, &gsi, &flags);
+            } else {
+                gsi   = irq;
+                flags = X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH;
+            }
+
+            ioapic_map_irq(gsi, irq, current_cpu->id, flags);
             break;
+        }
 
         case ARCH_INTR_TYPE_PCI:
             ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_LEVEL | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_LOW);
@@ -234,7 +244,16 @@ void arch_intr_unmap_irq(irq_t irq, int type) {
     bootstrap_irq[irq].handler = NULL;
 
     switch(type) {
-        case ARCH_INTR_TYPE_DEFAULT:
+        case ARCH_INTR_TYPE_DEFAULT: {
+            uint32_t gsi = irq;
+
+            if (irq < 16)
+                apic_get_isa_irq(irq, &gsi, NULL);
+
+            ioapic_unmap_irq(gsi);
+            break;
+        }
+
         case ARCH_INTR_TYPE_PCI:
             ioapic_unmap_irq(irq);
             break;
@@ -251,5 +270,3 @@ void arch_intr_unmap_irq(irq_t irq, int type) {
     kprintf("x86-intr: unmap irq(%d)\n", irq);
 #endif
 }
-
-
