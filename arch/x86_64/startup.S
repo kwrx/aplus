@@ -160,14 +160,15 @@ multiboot_header_end:
 .align 16
 
     bootstrap_tss:
+      .set cpu, 0
       .rept KERNEL_TSS_MAX
         .long 0
         .quad 0                                                      // RSP0: Syscall Stack
         .quad 0
         .quad 0
         .quad 0
-        .quad KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE    // IST1: Exception Stack
-        .quad KERNEL_INTERRUPT_STACK + KERNEL_INTERRUPT_STACKSIZE    // IST2: Interrupt Stack
+        .quad KERNEL_EXCEPTION_STACK + KERNEL_EXCEPTION_STACKSIZE + (KERNEL_STACK_SIZE * cpu)    // IST1: Exception Stack
+        .quad KERNEL_INTERRUPT_STACK + KERNEL_INTERRUPT_STACKSIZE + (KERNEL_STACK_SIZE * cpu)    // IST2: Interrupt Stack
         .quad 0
         .quad 0
         .quad 0
@@ -178,6 +179,7 @@ multiboot_header_end:
         .quad 0                                                      // Padding
         .quad 0
         .quad 0
+        .set cpu, cpu + 1
       .endr
 
 .align 16
@@ -195,7 +197,7 @@ multiboot_header_end:
       # Timer Handler - idx: 0x20
         .word 0
         .word KERNEL_CS
-        .byte 0x00    // RSP0
+        .byte 0x02    // IST2
         .byte 0x8E    // Interrupt Gate;  DPL=0
         .quad 0
         .word 0
@@ -236,7 +238,7 @@ multiboot_header_end:
       .rept 256
         .align 16
         
-        .if (i == 8) || (i >= 10 && i <= 14) || (i == 17)   // With error code
+        .if (i == 8) || (i >= 10 && i <= 14) || (i == 17) || (i == 21) || (i == 29) || (i == 30)   // With error code
           nop
           nop
           pushq $i
@@ -625,6 +627,5 @@ halt:
         jmp halt
 
 END(_start)
-
 
 
