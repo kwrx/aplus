@@ -145,13 +145,25 @@ int pci_msi_map_irq(pcidev_t device, pci_msi_t* msi, pci_irq_handler_t handler, 
 
 int pci_msi_unmap_irq(pcidev_t device, pci_msi_t* msi) {
 
-    uint16_t index = pci_dev_unregister(device);
+    uint16_t index = PCI_NONE;
+
+    for (size_t i = 0; i < PCI_DEVICES_MAX; i++) {
+        if (pci_dev_get_device(i) == device) {
+            index = i;
+            break;
+        }
+    }
+
     if (index == PCI_NONE) {
 #if DEBUG_LEVEL_FATAL
         kprintf("pci-msi: ERROR! No device slot found for device %d\n", device);
 #endif
         return errno = ESRCH, -1;
     }
+
+    pci_msi_disable(device, msi);
+    arch_intr_unmap_irq(index + PCI_MSI_INTR_BASE, ARCH_INTR_TYPE_MSI);
+    pci_dev_unregister(device);
 
     return 0;
 }

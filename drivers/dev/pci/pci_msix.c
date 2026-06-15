@@ -223,7 +223,15 @@ int pci_msix_map_irq(pcidev_t device, pci_msix_t* msix, pci_irq_handler_t handle
 
 int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
 
-    uint16_t index = pci_dev_unregister(device);
+    uint16_t index = PCI_NONE;
+
+    for (size_t j = 0; j < PCI_DEVICES_MAX; j++) {
+        if (pci_dev_get_device(j) == device) {
+            index = j;
+            break;
+        }
+    }
+
     if (index == PCI_NONE) {
 #if DEBUG_LEVEL_FATAL
         kprintf("pci-msix: ERROR! No device slot found for device %d\n", device);
@@ -236,19 +244,24 @@ int pci_msix_unmap_irq(pcidev_t device, pci_msix_t* msix) {
         
         if (msix->msix_rows[i].pr_data != cpu_to_le32(index + PCI_MSIX_INTR_BASE + 0x20))
             continue;
-        
+
+        pci_msix_mask(device, msix, i);
+        arch_intr_unmap_irq(index + PCI_MSIX_INTR_BASE, ARCH_INTR_TYPE_MSI);
+
         msix->msix_rows[i].pr_address = 0;
         msix->msix_rows[i].pr_data    = 0;
-        msix->msix_rows[i].pr_ctl     = cpu_to_le32(le32_to_cpu(msix->msix_rows[i].pr_ctl) | PCI_MSIX_INTR_MASK);
 
         break;
     }
 
     if (i == msix->msix_pci.pci_msgctl_table_size + 1) {
 #if DEBUG_LEVEL_FATAL
-        kprintf("pci-msix: WARN! No MSI-X table slot found for device %d\n", device);
+        kprintf("pci-msix: ERROR! No MSI-X table slot found for device %d\n", device);
 #endif
+        return errno = ESRCH, -1;
     }
+
+    pci_dev_unregister(device);
 
     return 0;
 }

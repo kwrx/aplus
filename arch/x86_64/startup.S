@@ -136,7 +136,6 @@ multiboot_header_end:
         .global bootstrap_idtp_ptr
         .global bootstrap_tss
         .global bootstrap_isr
-        .global bootstrap_irq
 
         .extern interrupt_common
         
@@ -251,16 +250,6 @@ multiboot_header_end:
 
         .set i, i + 1
         .align 16
-      .endr
-
-.align 16
-
-    bootstrap_irq:
-      .rept 224
-        .quad 0
-        .quad 0
-        .quad 0
-        .quad 0
       .endr
 
 .align 16
@@ -627,5 +616,4 @@ halt:
         jmp halt
 
 END(_start)
-
 
