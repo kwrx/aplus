@@ -70,11 +70,13 @@ SYSCALL(
                 tp.tv_nsec = 0;
                 break;
 
-            case CLOCK_MONOTONIC:
+            case CLOCK_MONOTONIC: {
 
-                tp.tv_sec  = arch_timer_generic_getms() / 1000ULL;
-                tp.tv_nsec = arch_timer_generic_getns() % 1000000000ULL;
+                uint64_t now = arch_timer_generic_getns();
+                tp.tv_sec    = now / 1000000000ULL;
+                tp.tv_nsec   = now % 1000000000ULL;
                 break;
+            }
 
             case CLOCK_THREAD_CPUTIME_ID:
 
