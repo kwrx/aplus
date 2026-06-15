@@ -23,7 +23,6 @@
 
 #include <stdint.h>
 #include <string.h>
-#include <time.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -48,25 +47,86 @@
 #define HPET_GENERAL_ISR     hpet_address + 0x20
 #define HPET_GENERAL_COUNTER hpet_address + 0xF0
 
-#define HPET_TIMER_CCR(i) hpet_address + 0x100 + (0x20 * i)
-#define HPET_TIMER_CVR(i) hpet_address + 0x108 + (0x20 * i)
-#define HPET_TIMER_FSB(i) hpet_address + 0x110 + (0x20 * i)
-
-
-
-static spinlock_t delay_lock;
 static spinlock_t rtc_lock;
 
-static uint64_t tsc_frequency     = 1;
-static uint64_t hpet_frequency    = 1;
-static uint64_t hpet_frequency_ns = 1;
-static uint64_t hpet_frequency_us = 1;
-static uint64_t hpet_frequency_ms = 1;
-static uintptr_t hpet_address     = 0;
+static uint64_t tsc_frequency        = 1;
+static uint64_t hpet_frequency       = 1;
+static uint64_t hpet_period          = 1;
+static uintptr_t hpet_address        = 0;
+static uint8_t rtc_century_register = 0;
 
 
-static inline uint8_t __RTC(uint8_t reg) {
+typedef struct {
+
+    uint8_t second;
+    uint8_t minute;
+    uint8_t hour;
+    uint8_t day;
+    uint8_t month;
+    uint8_t year;
+    uint8_t century;
+
+} rtc_time_t;
+
+
+static inline uint8_t rtc_read(uint8_t reg) {
     return outb(0x70, reg), inb(0x71);
+}
+
+static inline uint8_t bcd_to_binary(uint8_t value) {
+    return (value & 0x0F) + ((value >> 4) * 10);
+}
+
+static uint64_t timer_scale(uint64_t ticks, uint64_t scale, uint64_t frequency) {
+
+    DEBUG_ASSERT(scale);
+    DEBUG_ASSERT(frequency);
+    DEBUG_ASSERT(frequency <= UINT64_MAX / scale);
+
+    return ((ticks / frequency) * scale) + (((ticks % frequency) * scale) / frequency);
+}
+
+static int rtc_is_leap_year(uint64_t year) {
+    return ((year % 4) == 0) && (((year % 100) != 0) || ((year % 400) == 0));
+}
+
+static uint64_t rtc_to_epoch(uint64_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second) {
+
+    static const uint8_t days_in_month[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    PANIC_ASSERT(year >= 1970);
+    PANIC_ASSERT(month >= 1 && month <= 12);
+    PANIC_ASSERT(day >= 1 && day <= days_in_month[month - 1] + ((month == 2) && rtc_is_leap_year(year)));
+    PANIC_ASSERT(hour < 24);
+    PANIC_ASSERT(minute < 60);
+    PANIC_ASSERT(second < 60);
+
+
+    uint64_t previous_year = year - 1;
+    uint64_t days = ((year - 1970) * 365) + (previous_year / 4) - (previous_year / 100) + (previous_year / 400) - 477;
+
+    for (uint8_t i = 1; i < month; i++)
+        days += days_in_month[i - 1];
+
+    if (month > 2 && rtc_is_leap_year(year))
+        days++;
+
+    days += day - 1;
+
+    return (days * 86400) + (hour * 3600) + (minute * 60) + second;
+}
+
+static void rtc_read_time(rtc_time_t* time) {
+
+    DEBUG_ASSERT(time);
+
+    time->second  = rtc_read(0x00);
+    time->minute  = rtc_read(0x02);
+    time->hour    = rtc_read(0x04);
+    time->day     = rtc_read(0x07);
+    time->month   = rtc_read(0x08);
+    time->year    = rtc_read(0x09);
+    time->century = rtc_century_register ? rtc_read(rtc_century_register) : 0;
 }
 
 
@@ -77,51 +137,57 @@ void arch_timer_delay(uint64_t us) {
     DEBUG_ASSERT(us < 100000000); // 10sec max
 
 
-    uint64_t t0 = arch_timer_generic_getus();
+    uint64_t start = arch_timer_generic_getus();
 
-    while (arch_timer_generic_getus() < (t0 + us))
+    while ((arch_timer_generic_getus() - start) < us)
         __builtin_ia32_pause();
 }
 
 
 uint64_t arch_timer_gettime(void) {
 
-#define BCD2BIN(bcd) ((((bcd) & 0x0F) + ((bcd) / 16) * 10))
-
-#define BCD2BIN2(bcd) (((((bcd) & 0x0F) + ((bcd & 0x70) / 16) * 10)) | (bcd & 0x80))
-
-
-    struct tm tm = {0};
+    rtc_time_t first;
+    rtc_time_t second;
+    uint8_t status;
 
     scoped_lock(&rtc_lock) {
-        tm.tm_sec   = BCD2BIN(__RTC(0));
-        tm.tm_min   = BCD2BIN(__RTC(2));
-        tm.tm_hour  = BCD2BIN2(__RTC(4));
-        tm.tm_mday  = BCD2BIN(__RTC(7));
-        tm.tm_mon   = BCD2BIN(__RTC(8));
-        tm.tm_year  = BCD2BIN(__RTC(9)) + 2000;
-        tm.tm_wday  = 0;
-        tm.tm_yday  = 0;
-        tm.tm_isdst = 0;
+
+        do {
+            while (rtc_read(0x0A) & 0x80)
+                __builtin_ia32_pause();
+
+            rtc_read_time(&first);
+
+            while (rtc_read(0x0A) & 0x80)
+                __builtin_ia32_pause();
+
+            rtc_read_time(&second);
+
+        } while (memcmp(&first, &second, sizeof(first)) != 0);
+
+        status = rtc_read(0x0B);
     };
 
 
-    static int m[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    uint8_t pm = second.hour & 0x80;
+    second.hour &= 0x7F;
 
-    uint64_t ty = tm.tm_year - 1970;
-    uint64_t lp = (ty + 2) / 4;
-    uint64_t td = 0;
-
-
-    for (int i = 0; i < tm.tm_mon - 1; i++) {
-        td += m[i];
+    if ((status & 0x04) == 0) {
+        second.second  = bcd_to_binary(second.second);
+        second.minute  = bcd_to_binary(second.minute);
+        second.hour    = bcd_to_binary(second.hour);
+        second.day     = bcd_to_binary(second.day);
+        second.month   = bcd_to_binary(second.month);
+        second.year    = bcd_to_binary(second.year);
+        second.century = bcd_to_binary(second.century);
     }
 
+    if ((status & 0x02) == 0)
+        second.hour = (second.hour % 12) + (pm ? 12 : 0);
 
-    td += tm.tm_mday - 1;
-    td = td + (ty * 365) + lp;
+    uint64_t year = second.century ? ((uint64_t)second.century * 100) + second.year : 2000 + second.year;
 
-    return (uint64_t)((td * 86400) + (tm.tm_hour * 3600) + (tm.tm_min * 60) + tm.tm_sec) + 3600;
+    return rtc_to_epoch(year, second.month, second.day, second.hour, second.minute, second.second);
 }
 
 
@@ -131,11 +197,11 @@ uint64_t arch_timer_percpu_getticks(void) {
 }
 
 uint64_t arch_timer_percpu_getns(void) {
-    return x86_rdtsc() * 1000000 / tsc_frequency;
+    return timer_scale(x86_rdtsc(), 1000000, tsc_frequency);
 }
 
 uint64_t arch_timer_percpu_getus(void) {
-    return x86_rdtsc() * 1000 / tsc_frequency;
+    return timer_scale(x86_rdtsc(), 1000, tsc_frequency);
 }
 
 uint64_t arch_timer_percpu_getms(void) {
@@ -152,15 +218,15 @@ uint64_t arch_timer_generic_getticks(void) {
 }
 
 uint64_t arch_timer_generic_getns(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) * hpet_frequency_ns;
+    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000);
 }
 
 uint64_t arch_timer_generic_getus(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) / hpet_frequency_us;
+    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000);
 }
 
 uint64_t arch_timer_generic_getms(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER) / hpet_frequency_ms;
+    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000000);
 }
 
 uint64_t arch_timer_generic_getres(void) {
@@ -171,9 +237,15 @@ uint64_t arch_timer_generic_getres(void) {
 
 void timer_init(void) {
 
-    spinlock_init_with_flags(&delay_lock, SPINLOCK_FLAGS_CPU_OWNER);
     spinlock_init_with_flags(&rtc_lock, SPINLOCK_FLAGS_CPU_OWNER);
 
+    acpi_sdt_t* facp = NULL;
+    if (acpi_find(&facp, "FACP") == 0) {
+        acpi_fadt_t* fadt = acpi_is_extended() ? (acpi_fadt_t*)&facp->xtables : (acpi_fadt_t*)&facp->tables;
+
+        if (facp->length >= sizeof(acpi_sdt_t) + offsetof(acpi_fadt_t, century) + sizeof(fadt->century))
+            rtc_century_register = fadt->century;
+    }
 
 
     acpi_sdt_t* sdt = NULL;
@@ -245,21 +317,18 @@ void timer_init(void) {
         hpet_address = hpet->address.address;
 
 
-        uint16_t timers = (mmio_r64(HPET_GENERAL_GCID) >> 7) & 0xF;
-        uint64_t period = (mmio_r64(HPET_GENERAL_GCID) >> 32) & 0xFFFFFFFF;
-        uint64_t freq   = (HPET_TICK / period);
+        uint64_t capabilities = mmio_r64(HPET_GENERAL_GCID);
+        uint16_t timers       = ((capabilities >> 8) & 0x1F) + 1;
+        uint64_t period       = capabilities >> 32;
 
 
-        DEBUG_ASSERT(period);
-        DEBUG_ASSERT(freq);
-        DEBUG_ASSERT(timers);
-        DEBUG_ASSERT(timers < 32);
+        PANIC_ASSERT(capabilities & (1ULL << 13));
+        PANIC_ASSERT(period);
 
 
-        hpet_frequency    = freq;
-        hpet_frequency_ns = (1000000000 / hpet_frequency);
-        hpet_frequency_us = (hpet_frequency / 1000000);
-        hpet_frequency_ms = (hpet_frequency / 1000);
+        hpet_period    = period;
+        hpet_frequency = HPET_TICK / hpet_period;
+        PANIC_ASSERT(hpet_frequency);
 
 
 #if 0
@@ -270,12 +339,12 @@ void timer_init(void) {
         (void)timers;
 #endif
 
-        mmio_w64(HPET_GENERAL_ISR, mmio_r64(HPET_GENERAL_ISR) & 0xFFFFFFFF00000000);
+        mmio_w64(HPET_GENERAL_ISR, mmio_r64(HPET_GENERAL_ISR));
         mmio_w64(HPET_GENERAL_CR, mmio_r64(HPET_GENERAL_CR) | 1);
 
 
 #if DEBUG_LEVEL_INFO
-        kprintf("hpet: started! mHZ(%ld) period(%ld) timers(%d)\n", freq / 1000000, period, timers);
+        kprintf("hpet: started! mHZ(%ld) period(%ld) timers(%d)\n", hpet_frequency / 1000000, period, timers);
 #endif
 
 
@@ -287,13 +356,13 @@ void timer_init(void) {
 
         for (int j = 0; j < LOOP_SANITY_CHECK; j++) {
 
-            d = mmio_r64(HPET_GENERAL_COUNTER) + (freq / 1000);
+            d = mmio_r64(HPET_GENERAL_COUNTER);
 
 
             s = x86_rdtsc();
 
-            while (mmio_r64(HPET_GENERAL_COUNTER) < d)
-                ;
+            while ((mmio_r64(HPET_GENERAL_COUNTER) - d) < (hpet_frequency / 1000))
+                __builtin_ia32_pause();
 
             e = x86_rdtsc();
 
@@ -326,4 +395,16 @@ TEST(x86_timer_delay_test, {
     uint64_t then = arch_timer_generic_getus();
 
     DEBUG_ASSERT(then - now >= 100);
+});
+
+TEST(x86_timer_scale_test, {
+    DEBUG_ASSERT(timer_scale(3, 10, 4) == 7);
+    DEBUG_ASSERT(timer_scale(123456789012345ULL, 1000000000, 100000000) == 1234567890123450ULL);
+    DEBUG_ASSERT(timer_scale(UINT64_MAX / 1000000000, 1000000000, 1000000000) == UINT64_MAX / 1000000000);
+});
+
+TEST(x86_timer_epoch_test, {
+    DEBUG_ASSERT(rtc_to_epoch(1970, 1, 1, 0, 0, 0) == 0);
+    DEBUG_ASSERT(rtc_to_epoch(2000, 2, 29, 0, 0, 0) == 951782400);
+    DEBUG_ASSERT(rtc_to_epoch(2024, 3, 1, 0, 0, 0) == 1709251200);
 });
