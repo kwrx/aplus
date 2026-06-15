@@ -38,7 +38,7 @@
 #include <arch/x86/vmm.h>
 
 
-__nonnull(1) void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
+__nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 #if DEBUG_LEVEL_TRACE
@@ -174,13 +174,14 @@ __nonnull(1) void pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
     kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
 #endif
 
-    return;
+    return 0;
 
 
 
 pfe:
 
-    // TODO: implement segmentation fault for user space processes
+    if ((frame->cs & 3) == 3)
+        return -1;
 
     kpanicf(
         "x86-pfe: PANIC! cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",

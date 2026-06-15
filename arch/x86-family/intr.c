@@ -23,6 +23,8 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <signal.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -38,16 +40,98 @@
 #include <arch/x86/vmm.h>
 
 
-extern struct {
-    union {
-        struct {
-            void (*handler)(void*, uint8_t);
-            spinlock_t lock __packed;
-        };
+#define X86_IRQ_COUNT (0xFE - 0x20)
 
-        long __padding[4];
-    };
-} bootstrap_irq[224];
+typedef void (*irq_handler_t)(void*, irq_t);
+
+static struct {
+
+    _Atomic(irq_handler_t) handler;
+    spinlock_t lock;
+    size_t users;
+    int type;
+    int initialized;
+
+} irq_table[X86_IRQ_COUNT];
+
+static spinlock_t irq_table_lock = SPINLOCK_INIT_WITH_FLAGS(SPINLOCK_FLAGS_CPU_OWNER);
+
+
+static int x86_exception_signal(interrupt_frame_t* frame, uintptr_t address) {
+
+    siginfo_t info = {0};
+
+    info.si_code = SI_KERNEL;
+    info.si_addr = (void*)address;
+
+    switch (frame->intno) {
+        case 0x00:
+            info.si_signo = SIGFPE;
+            info.si_code  = FPE_INTDIV;
+            break;
+        case 0x01:
+        case 0x03:
+            info.si_signo = SIGTRAP;
+            break;
+        case 0x04:
+            info.si_signo = SIGFPE;
+            info.si_code  = FPE_INTOVF;
+            break;
+        case 0x05:
+            info.si_signo = SIGSEGV;
+            info.si_code  = SEGV_BNDERR;
+            break;
+        case 0x06:
+            info.si_signo = SIGILL;
+            info.si_code  = ILL_ILLOPC;
+            break;
+        case 0x07:
+            info.si_signo = SIGILL;
+            info.si_code  = ILL_COPROC;
+            break;
+        case 0x0E:
+            info.si_signo = SIGSEGV;
+            info.si_code  = (frame->errno & X86_PF_P) ? SEGV_ACCERR : SEGV_MAPERR;
+            break;
+        case 0x10:
+        case 0x13:
+            info.si_signo = SIGFPE;
+            info.si_code  = FPE_FLTINV;
+            break;
+        case 0x11:
+            info.si_signo = SIGBUS;
+            info.si_code  = BUS_ADRALN;
+            break;
+        default:
+            info.si_signo = SIGSEGV;
+            break;
+    }
+
+    if (sched_sigqueueinfo(-1, current_task->pid, current_task->tid, info.si_signo, &info) < 0)
+        return -1;
+
+    thread_restart_sched(current_task);
+    return 0;
+}
+
+static void x86_irq_dispatch(interrupt_frame_t* frame) {
+
+    irq_t irq = frame->intno - 0x20;
+    irq_handler_t handler = atomic_load_explicit(&irq_table[irq].handler, memory_order_acquire);
+
+    if (likely(handler)) {
+        scoped_lock(&irq_table[irq].lock) {
+            handler = atomic_load_explicit(&irq_table[irq].handler, memory_order_relaxed);
+
+            if (likely(handler))
+                handler(frame, irq);
+        }
+    } else {
+#if DEBUG_LEVEL_WARN
+        kprintf("x86-intr: WARN! unhandled IRQ #%d caught, ignoring\n", irq);
+#endif
+    }
+}
 
 
 void* x86_exception_handler(interrupt_frame_t* frame) {
@@ -69,9 +153,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
     // #endif
 
 
-    if (likely(frame->intno >= 0x20)) {
-        current_cpu->frame = frame;
-    }
+    current_cpu->frame = frame;
 
 
 
@@ -94,15 +176,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x21 ... 0xFD:
 
-            if (likely(bootstrap_irq[frame->intno - 0x20].handler)) {
-                bootstrap_irq[frame->intno - 0x20].handler(frame, frame->intno - 0x20);
-            } else {
-#if DEBUG_LEVEL_WARN
-                kprintf("x86-intr: WARN! unhandled IRQ #%ld caught, ignoring\n", frame->intno - 0x20);
-#endif
-            }
-
-
+            x86_irq_dispatch(frame);
             apic_eoi();
             break;
 
@@ -110,11 +184,11 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
         case 0x20:
 
         {
-            if (unlikely(current_cpu->uptime.tv_nsec + 10000000 > 999999999)) {
+            current_cpu->uptime.tv_nsec += TASK_SCHEDULER_PERIOD_NS;
+
+            if (unlikely(current_cpu->uptime.tv_nsec >= 1000000000)) {
                 current_cpu->uptime.tv_sec += 1;
-                current_cpu->uptime.tv_nsec = 0;
-            } else {
-                current_cpu->uptime.tv_nsec += 10000000;
+                current_cpu->uptime.tv_nsec -= 1000000000;
             }
 
             schedule(0);
@@ -132,12 +206,20 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         case 0x0E:
 
-            pagefault_handle(frame, x86_get_cr2());
+            if (pagefault_handle(frame, x86_get_cr2()) == 0)
+                break;
+
+            if ((frame->cs & 3) == 3 && x86_exception_signal(frame, x86_get_cr2()) == 0)
+                break;
+
+            kpanicf("x86-pfe: PANIC! unhandled page fault, errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), cpu(%ld)\n", frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
             break;
 
         default:
 
-            // TODO: Handle User Exception
+            if ((frame->cs & 3) == 3 && x86_exception_signal(frame, frame->ip) == 0)
+                break;
+
             kpanicf("x86-intr: PANIC! exception(%ld), errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), cpu(%ld)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, frame->bp, current_cpu->id);
             break;
     }
@@ -194,40 +276,51 @@ long arch_intr_disable(void) {
 
 void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t), int type) {
 
-    DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(handler);
+    PANIC_ASSERT(irq > 0 && irq < X86_IRQ_COUNT);
+    PANIC_ASSERT(handler);
+    PANIC_ASSERT(type == ARCH_INTR_TYPE_DEFAULT || type == ARCH_INTR_TYPE_PCI || type == ARCH_INTR_TYPE_MSI);
 
-    if (unlikely(bootstrap_irq[irq].handler && bootstrap_irq[irq].handler != handler))
-        kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, bootstrap_irq[irq].handler);
-
-
-    bootstrap_irq[irq].handler = handler;
-
-    switch(type) {
-        case ARCH_INTR_TYPE_DEFAULT: {
-            uint32_t gsi;
-            uint64_t flags;
-
-            if (irq < 16) {
-                apic_get_isa_irq(irq, &gsi, &flags);
-            } else {
-                gsi   = irq;
-                flags = X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH;
-            }
-
-            ioapic_map_irq(gsi, irq, current_cpu->id, flags);
-            break;
+    scoped_lock(&irq_table_lock) {
+        if (!irq_table[irq].initialized) {
+            spinlock_init_with_flags(&irq_table[irq].lock, SPINLOCK_FLAGS_CPU_OWNER);
+            irq_table[irq].initialized = 1;
         }
 
-        case ARCH_INTR_TYPE_PCI:
-            ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_LEVEL | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_LOW);
-            break;
+        scoped_lock(&irq_table[irq].lock) {
+            irq_handler_t current = atomic_load_explicit(&irq_table[irq].handler, memory_order_relaxed);
 
-        case ARCH_INTR_TYPE_MSI:
-            break;
+            if (unlikely(current && (current != handler || irq_table[irq].type != type)))
+                kpanicf("x86-intr: PANIC! can not map irq(%d), already owned by %p\n", irq, current);
 
-        default:
-            kpanicf("x86-intr: PANIC! unknown interrupt type %d for irq %d\n", type, irq);
+            if (irq_table[irq].users++ == 0) {
+                irq_table[irq].type = type;
+                atomic_store_explicit(&irq_table[irq].handler, handler, memory_order_release);
+
+                switch (type) {
+                    case ARCH_INTR_TYPE_DEFAULT: {
+                        uint32_t gsi;
+                        uint64_t flags;
+
+                        if (irq < 16) {
+                            apic_get_isa_irq(irq, &gsi, &flags);
+                        } else {
+                            gsi   = irq;
+                            flags = X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_EDGE | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_HIGH;
+                        }
+
+                        ioapic_map_irq(gsi, irq, current_cpu->id, flags);
+                        break;
+                    }
+
+                    case ARCH_INTR_TYPE_PCI:
+                        ioapic_map_irq(irq, irq, current_cpu->id, X86_IOAPIC_REDTTBL_FLAG_TRIGGER_MODE_LEVEL | X86_IOAPIC_REDTTBL_FLAG_POLARITY_ACTIVE_LOW);
+                        break;
+
+                    case ARCH_INTR_TYPE_MSI:
+                        break;
+                }
+            }
+        }
     }
 
 #if DEBUG_LEVEL_TRACE
@@ -237,32 +330,40 @@ void arch_intr_map_irq(irq_t irq, void (*handler)(void*, irq_t), int type) {
 
 void arch_intr_unmap_irq(irq_t irq, int type) {
 
-    DEBUG_ASSERT(irq < (0xFF - 0x20));
-    DEBUG_ASSERT(bootstrap_irq[irq].handler != NULL);
+    PANIC_ASSERT(irq > 0 && irq < X86_IRQ_COUNT);
+    PANIC_ASSERT(type == ARCH_INTR_TYPE_DEFAULT || type == ARCH_INTR_TYPE_PCI || type == ARCH_INTR_TYPE_MSI);
 
+    scoped_lock(&irq_table_lock) {
+        PANIC_ASSERT(irq_table[irq].initialized);
 
-    bootstrap_irq[irq].handler = NULL;
+        scoped_lock(&irq_table[irq].lock) {
+            PANIC_ASSERT(irq_table[irq].users);
+            PANIC_ASSERT(irq_table[irq].type == type);
 
-    switch(type) {
-        case ARCH_INTR_TYPE_DEFAULT: {
-            uint32_t gsi = irq;
+            if (--irq_table[irq].users == 0) {
+                switch (type) {
+                    case ARCH_INTR_TYPE_DEFAULT: {
+                        uint32_t gsi = irq;
 
-            if (irq < 16)
-                apic_get_isa_irq(irq, &gsi, NULL);
+                        if (irq < 16)
+                            apic_get_isa_irq(irq, &gsi, NULL);
 
-            ioapic_unmap_irq(gsi);
-            break;
+                        ioapic_unmap_irq(gsi);
+                        break;
+                    }
+
+                    case ARCH_INTR_TYPE_PCI:
+                        ioapic_unmap_irq(irq);
+                        break;
+
+                    case ARCH_INTR_TYPE_MSI:
+                        break;
+                }
+
+                atomic_store_explicit(&irq_table[irq].handler, NULL, memory_order_release);
+                irq_table[irq].type = 0;
+            }
         }
-
-        case ARCH_INTR_TYPE_PCI:
-            ioapic_unmap_irq(irq);
-            break;
-
-        case ARCH_INTR_TYPE_MSI:
-            break;
-
-        default:
-            kpanicf("x86-intr: PANIC! unknown interrupt type %d for irq %d\n", type, irq);
     }
 
 

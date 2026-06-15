@@ -76,6 +76,10 @@ int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_
 
 int pci_intx_unmap_irq(pcidev_t device) {
 
+    irq_t irq = pci_read(device, PCI_INTERRUPT_LINE, 1);
+
+    pci_intx_mask(device);
+
     uint16_t index = pci_dev_unregister(device);
     if (index == PCI_NONE) {
 #if DEBUG_LEVEL_FATAL
@@ -83,6 +87,8 @@ int pci_intx_unmap_irq(pcidev_t device) {
 #endif
         return errno = ESRCH, -1;
     }
+
+    arch_intr_unmap_irq(irq, ARCH_INTR_TYPE_PCI);
 
     return 0;
 }

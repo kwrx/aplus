@@ -132,7 +132,7 @@ static inline void __free_frame(uintptr_t p, uintptr_t pagesize) {
 }
 
 
-void pagefault_handle(interrupt_frame_t*, uintptr_t);
+int pagefault_handle(interrupt_frame_t*, uintptr_t);
 
 __END_DECLS
 

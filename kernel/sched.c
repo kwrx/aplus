@@ -114,6 +114,7 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         // CORE signals
         case SIGQUIT:
         case SIGILL:
+        case SIGTRAP:
         case SIGABRT:
         case SIGFPE:
         case SIGSEGV:
