@@ -402,11 +402,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_SCE);
 
 
-    //? Enable FSGSBASE instructions
-    if (cpu_has(index, X86_FEATURE_FSGSBASE))
-        x86_set_cr4(x86_get_cr4() | X86_CR4_FSGSBASE_MASK);
-
-
 #if defined(CONFIG_X86_ENABLE_SMEP)
     //? Enable SMEP
     if (cpu_has(index, X86_FEATURE_SMEP))
