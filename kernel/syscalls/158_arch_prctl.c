@@ -36,6 +36,8 @@
 
 #include <aplus/hal.h>
 
+#include <arch/x86/cpu.h>
+
 
 
 /***
@@ -67,28 +69,25 @@ SYSCALL(
         switch (code) {
 
             case ARCH_SET_GS:
-                current_task->userspace.cpu_area = (uintptr_t)addr;
-                break;
+            case ARCH_GET_GS:
+                return -ENOSYS;
 
             case ARCH_SET_FS:
                 current_task->userspace.thread_area = (uintptr_t)addr;
-                break;
-
-            case ARCH_GET_GS:
-                *(uintptr_t*)addr = current_task->userspace.cpu_area;
+                arch_task_switch(current_task, current_task);
                 break;
 
             case ARCH_GET_FS:
-                *(uintptr_t*)addr = current_task->userspace.thread_area;
+                if (unlikely(!uio_check(addr, R_OK | W_OK)))
+                    return -EFAULT;
+
+                current_task->userspace.thread_area = x86_rdmsr(X86_MSR_FSBASE);
+                uio_wptr(addr, current_task->userspace.thread_area);
                 break;
 
             default:
                 return -ENOSYS;
         }
-
-
-        // Update stats
-        arch_task_switch(current_task, current_task);
 
         return 0;
 

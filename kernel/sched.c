@@ -430,8 +430,9 @@ void sched_dequeue(task_t* task) {
     kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
 
-    // // kfree(task);
-    // FIXME: unsafe to free here. Moreover there are memory leaks of unfreed attributes
+    if (found) {
+        arch_task_destroy(task);
+    }
 }
 
 

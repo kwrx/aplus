@@ -51,7 +51,7 @@ struct pty;
 
 #define FRAME(p) ((interrupt_frame_t*)(p)->frame)
 
-#define WRITE_SP0(cpu, ptr) ((tss_t*)(cpu)->tss)->sp0 = (uintptr_t)(cpu)->kstack
+#define WRITE_SP0(cpu, ptr) ((tss_t*)(cpu)->tss)->sp0 = (uintptr_t)(ptr)
 
 
 
@@ -72,7 +72,7 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     DEBUG_ASSERT(siginfo);
     DEBUG_ASSERT(siginfo->si_signo >= 0);
-    DEBUG_ASSERT(siginfo->si_signo <= _NSIG);
+    DEBUG_ASSERT(siginfo->si_signo < _NSIG);
 
     DEBUG_ASSERT(current_task->userspace.sigstack);
     DEBUG_ASSERT(current_task->userspace.siginfo);
@@ -193,6 +193,11 @@ void arch_task_switch(task_t* prev, task_t* next) {
     if (likely(prev != next)) {
 
         memcpy(prev->frame, current_cpu->frame, sizeof(interrupt_frame_t));
+
+#if defined(__x86_64__)
+        prev->userspace.thread_area = x86_rdmsr(X86_MSR_FSBASE);
+#endif
+
         memcpy(current_cpu->frame, next->frame, sizeof(interrupt_frame_t));
 
         prev->kstack = current_cpu->kstack;
@@ -212,7 +217,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
     WRITE_SP0(current_cpu, next->kstack);
 
+#if defined(__x86_64__)
     x86_wrmsr(X86_MSR_FSBASE, next->userspace.thread_area);
+#endif
 
 
     // // uint32_t m;
@@ -458,8 +465,11 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 #if defined(__x86_64__)
     FRAME(task)->di = (uintptr_t)arg;
 #else
-    (*(uintptr_t*)FRAME(task)->sp)-- = (uintptr_t)NULL;
-    (*(uintptr_t*)FRAME(task)->sp)-- = (uintptr_t)arg;
+    FRAME(task)->sp -= sizeof(uintptr_t);
+    *(uintptr_t*)FRAME(task)->sp = (uintptr_t)arg;
+
+    FRAME(task)->sp -= sizeof(uintptr_t);
+    *(uintptr_t*)FRAME(task)->sp = (uintptr_t)NULL;
 #endif
 
 
@@ -584,4 +594,32 @@ long arch_task_context_get(task_t* task, int options) {
     }
 
     return -1;
+}
+
+
+void arch_task_destroy(task_t* task) {
+
+    DEBUG_ASSERT(task);
+
+    if (task->frame) {
+        kfree(task->frame);
+    }
+
+    if (task->fpu) {
+        fpu_free_state(task->fpu);
+    }
+
+    if (task->sstack) {
+        fpu_free_signal_state(task->sstack);
+    }
+
+    if (task->kstack) {
+        kfree((void*)((uintptr_t)task->kstack - KERNEL_SYSCALL_STACKSIZE));
+    }
+
+    if (task->ctty) {
+        shared_ptr_free(task->ctty);
+    }
+
+    kfree(task);
 }
