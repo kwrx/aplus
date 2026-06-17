@@ -34,7 +34,6 @@
     //? @see 10.11.2 - Message Data Register Format
     #define IRQ_MSIX_ALLOCATABLE_OFFSET (0x10) // 16 or higher
 
-
 typedef struct {
 
     uintptr_t di;
@@ -93,6 +92,11 @@ typedef struct {
 
 
 __BEGIN_DECLS
+
+static inline bool x86_intr_is_user_mode(interrupt_frame_t* frame) {
+    DEBUG_ASSERT((frame));
+    return (frame->cs & 3) == 3;
+}
 
 void timer_init();
 

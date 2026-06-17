@@ -209,7 +209,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
             if (pagefault_handle(frame, x86_get_cr2()) == 0)
                 break;
 
-            if ((frame->cs & 3) == 3 && x86_exception_signal(frame, x86_get_cr2()) == 0)
+            if (x86_intr_is_user_mode(frame) && x86_exception_signal(frame, x86_get_cr2()) == 0)
                 break;
 
             kpanicf("x86-pfe: PANIC! unhandled page fault, errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), cpu(%ld)\n", frame->errno, frame->cs, frame->ip, frame->sp, current_cpu->id);
@@ -217,7 +217,7 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
         default:
 
-            if ((frame->cs & 3) == 3 && x86_exception_signal(frame, frame->ip) == 0)
+            if (x86_intr_is_user_mode(frame) && x86_exception_signal(frame, frame->ip) == 0)
                 break;
 
             kpanicf("x86-intr: PANIC! exception(%ld), errno(0x%lX), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), cpu(%ld)\n", frame->intno, frame->errno, frame->cs, frame->ip, frame->sp, frame->bp, current_cpu->id);

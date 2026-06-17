@@ -180,7 +180,7 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 pfe:
 
-    if ((frame->cs & 3) == 3)
+    if (x86_intr_is_user_mode(frame))
         return -1;
 
     kpanicf(
