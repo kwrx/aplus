@@ -85,7 +85,7 @@
 
     #if defined(__x86_64__)
 typedef uint64_t x86_page_t;
-    #elif
+    #elif defined(__i386__)
 typedef uint32_t x86_page_t;
     #endif
 

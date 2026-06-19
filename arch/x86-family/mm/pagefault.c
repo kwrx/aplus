@@ -40,6 +40,8 @@
 
 __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
+    bool locked = false;
+    vmm_address_space_t* space = NULL;
 
 #if DEBUG_LEVEL_TRACE
 
@@ -62,6 +64,12 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
     if (unlikely(!pm))
         PFE("no memory mapping", 0L);
+
+    if (current_task && current_task->address_space && current_task->address_space->pm == pm) {
+        space = current_task->address_space;
+        spinlock_lock(&space->lock);
+        locked = true;
+    }
 
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;
@@ -120,7 +128,7 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 #elif defined(__i386__)
 
         /* CR3-L2 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
+        { d = &((x86_page_t*)arch_vmm_p2v(pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
 
 
         /* HUGE_4MB */
@@ -129,7 +137,7 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
             /* PD-L1 */
             {
                 if (*d == X86_MMU_CLEAR)
-                    PFE("PD-L1 doesn't not exist");
+                    PFE("PD-L1 doesn't not exist", *d);
 
                 d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x3FF];
             }
@@ -153,21 +161,30 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
             //! Handle Copy on Write
 
-            uintptr_t page = __alloc_frame(pagesize, false);
+            uintptr_t old = *d;
+            uintptr_t page = __alloc_frame(pagesize, (old & X86_MMU_ADDRESS_MASK) == 0);
 
-            if ((*d & X86_MMU_ADDRESS_MASK) != 0) {
+            if ((old & X86_MMU_ADDRESS_MASK) != 0) {
 
-                memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
+                memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(old & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
 
                 page |= X86_MMU_PG_RW;
             }
 
-            *d = page | X86_MMU_PG_P | X86_MMU_PG_AP_PFB | X86_MMU_PG_AP_TP_PAGE | ((*d & ~X86_MMU_ADDRESS_MASK) & ~(X86_MMU_PG_AP_TP_MASK));
+            *d = page | X86_MMU_PG_P | X86_MMU_PG_AP_PFB | X86_MMU_PG_AP_TP_PAGE | ((old & ~X86_MMU_ADDRESS_MASK) & ~(X86_MMU_PG_AP_TP_MASK));
         }
     }
 
+    __asm__ __volatile__("invlpg (%0)" ::"r"(cr2) : "memory");
 
-    current_task->rusage.ru_majflt++;
+    if (locked) {
+        spinlock_unlock(&space->lock);
+    }
+
+
+    if (current_task) {
+        current_task->rusage.ru_majflt++;
+    }
 
 
 #if DEBUG_LEVEL_TRACE
@@ -179,6 +196,10 @@ __nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
 
 
 pfe:
+
+    if (locked) {
+        spinlock_unlock(&space->lock);
+    }
 
     if (x86_intr_is_user_mode(frame))
         return -1;

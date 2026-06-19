@@ -130,6 +130,11 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
 
         /* Page Table */
         {
+            check_or_fail(*d != X86_MMU_CLEAR);
+
+            if (!(mode & S_OK) && current_cpu->frame && x86_intr_is_user_mode(current_cpu->frame)) {
+                check_or_fail(*d & X86_MMU_PG_U);
+            }
 
             if (mode & R_OK) {
                 if (!(*d & X86_MMU_PG_P)) {

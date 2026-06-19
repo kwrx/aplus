@@ -78,6 +78,9 @@ SYSCALL(
         if (unlikely(flags == 0))
             return -EINVAL;
 
+        if (unlikely(len == 0))
+            return -EINVAL;
+
 
         if (unlikely(!(flags & MAP_PRIVATE) && !(flags & MAP_SHARED) && !(flags & MAP_SHARED_VALIDATE)))
             return -EINVAL;
@@ -106,6 +109,8 @@ SYSCALL(
 
         if (prot != PROT_NONE)
             arch_flags |= ARCH_VMM_MAP_USER;
+        else
+            arch_flags |= ARCH_VMM_MAP_DISABLED;
 
         // if(!(prot & PROT_READ))
         //     arch_flags |= ARCH_VMM_MAP_USER;
@@ -136,7 +141,7 @@ SYSCALL(
                     break;
                 case MAP_HUGE_1GB:
                     arch_flags |= ARCH_VMM_MAP_HUGE_1GB;
-                    pagesize = arch_vmm_gethugepagesize(ARCH_VMM_MAP_HUGE_2MB);
+                    pagesize = arch_vmm_gethugepagesize(ARCH_VMM_MAP_HUGE_1GB);
                     break;
 
                 default:
@@ -159,19 +164,11 @@ SYSCALL(
 
         spinlock_lock(&current_task->address_space->lock);
 
-
-        int i;
-        for (i = 0; i < CONFIG_MMAP_MAX; i++) {
+        size_t i = 0;
+        for (; i < CONFIG_MMAP_MAX; i++) {
 
             if (current_task->address_space->mmap.mappings[i].start != 0UL)
                 continue;
-
-
-            current_task->address_space->mmap.mappings[i].start  = current_task->address_space->mmap.heap_end - len;
-            current_task->address_space->mmap.mappings[i].end    = current_task->address_space->mmap.heap_end;
-            current_task->address_space->mmap.mappings[i].fd     = fd;
-            current_task->address_space->mmap.mappings[i].offset = offset;
-
 
             if (current_task->address_space->mmap.heap_end & (pagesize - 1)) {
 
@@ -179,10 +176,19 @@ SYSCALL(
                 current_task->address_space->mmap.heap_end += (pagesize);
             }
 
+            if (unlikely(current_task->address_space->mmap.heap_end > UINTPTR_MAX - len)) {
+                i = CONFIG_MMAP_MAX;
+                break;
+            }
 
             start = current_task->address_space->mmap.heap_end;
 
             current_task->address_space->mmap.heap_end += len;
+
+            current_task->address_space->mmap.mappings[i].start  = start;
+            current_task->address_space->mmap.mappings[i].end    = start + len;
+            current_task->address_space->mmap.mappings[i].fd     = fd;
+            current_task->address_space->mmap.mappings[i].offset = offset;
 
             break;
         }
