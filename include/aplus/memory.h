@@ -90,6 +90,8 @@
 
     #define ARCH_VMM_CLONE_NEW_SPACE (0)
 
+    #define ARCH_VMM_ADDRESS_SPACE_OWNED (1 << 0)
+
 
 
 typedef struct {
@@ -107,6 +109,7 @@ typedef struct vmm_address_space {
     uintptr_t pm;
     size_t size;
     size_t refcount;
+    uint32_t flags;
 
     struct {
 

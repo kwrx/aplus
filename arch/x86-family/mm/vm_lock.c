@@ -51,6 +51,6 @@ __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, 
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
     if (cpu_has(current_cpu->id, X86_FEATURE_SMAP))
-        x86_set_cr4(x86_get_cr4() & ~(X86_CR4_SMAP_MASK));
+        x86_stac();
 #endif
 }

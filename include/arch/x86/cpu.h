@@ -650,6 +650,14 @@ static inline void x86_swapgs() {
     __asm__ __volatile__("swapgs");
 }
 
+static inline void x86_stac() {
+    __asm__ __volatile__("stac" ::: "memory");
+}
+
+static inline void x86_clac() {
+    __asm__ __volatile__("clac" ::: "memory");
+}
+
 
 /*!
  * @brief Write to Extended Control Register.

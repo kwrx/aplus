@@ -40,7 +40,7 @@
 
 
 
-static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, int level) {
+static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, int level) {
 
     DEBUG_ASSERT(__s);
     DEBUG_ASSERT(size);
@@ -71,22 +71,12 @@ static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, 
     *size += pagesize;
 
 
-#if defined(CONFIG_DEMAND_PAGING)
-    if (on_demand) {
+    uintptr_t page = __alloc_frame(pagesize, false);
 
-        return (*__s = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW);
-
-    } else
-#endif
-    {
-
-        uintptr_t page = __alloc_frame(pagesize, false);
-
-        memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*__s & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
+    memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*__s & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
 
 
-        return page | X86_MMU_PG_AP_PFB | (*__s & ~X86_MMU_ADDRESS_MASK);
-    }
+    return page | X86_MMU_PG_AP_PFB | (*__s & ~X86_MMU_ADDRESS_MASK);
 }
 
 
@@ -107,13 +97,13 @@ static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int l
         if (flags & ARCH_VMM_CLONE_USERSPACE) {
 
 
-            if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+            if (((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) && ((*__s & X86_MMU_ADDRESS_MASK) == 0)) {
 
                 *__d = *__s;
 
             } else {
 
-                *__d = __mm_copy_data(__s, size, (flags & ARCH_VMM_CLONE_DEMAND), level);
+                *__d = __mm_copy_data(__s, size, level);
             }
         }
     }
@@ -231,10 +221,9 @@ static void __mm_free_table(uintptr_t __s, int level) {
 
             __mm_free_table(((uintptr_t)s[i]) & X86_MMU_ADDRESS_MASK, level - 1);
 
-            // FIXME: not safe to free frame here, as it may be used by system page tables
-            // // if(s[i] & X86_MMU_PT_AP_PFB) {
-            // //     __free_frame(((uintptr_t) s[i]) & X86_MMU_ADDRESS_MASK, X86_MMU_PAGESIZE);
-            // // }
+            if (s[i] & X86_MMU_PT_AP_PFB) {
+                __free_frame(((uintptr_t)s[i]) & X86_MMU_ADDRESS_MASK, X86_MMU_PAGESIZE);
+            }
         }
     }
 }
@@ -253,6 +242,7 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 
 
     dest->pm = __alloc_frame(X86_MMU_PAGESIZE, true);
+    dest->flags = ARCH_VMM_ADDRESS_SPACE_OWNED;
 
 
 
@@ -305,7 +295,9 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     }
 
 
-    // TODO: free all mappings
+    if (!(space->flags & ARCH_VMM_ADDRESS_SPACE_OWNED)) {
+        return;
+    }
 
 #if defined(__x86_64__)
     scoped_lock(&space->lock) {
@@ -320,11 +312,12 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
 #endif
 
 
-    // FIXME: maybe unsafe
-    //__free_frame(space->pm, X86_MMU_PAGESIZE);
+    __free_frame(space->pm, X86_MMU_PAGESIZE);
 
     space->pm              = 0UL;
     space->size            = 0UL;
     space->mmap.heap_start = 0UL;
     space->mmap.heap_end   = 0UL;
+
+    kfree(space);
 }

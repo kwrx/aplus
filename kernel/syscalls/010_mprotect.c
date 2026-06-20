@@ -81,6 +81,8 @@ SYSCALL(
 
         if (prot != PROT_NONE)
             arch_flags |= ARCH_VMM_MAP_USER;
+        else
+            arch_flags |= ARCH_VMM_MAP_DISABLED;
 
         // if(!(prot & PROT_READ))
         //     arch_flags |= ARCH_VMM_MAP_USER;

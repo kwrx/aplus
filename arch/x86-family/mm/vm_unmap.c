@@ -154,7 +154,7 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
         }
 
 
-        __asm__ __volatile__("invlpg (%0)" ::"r"(virtaddr) : "memory");
+        __asm__ __volatile__("invlpg (%0)" ::"r"(s) : "memory");
 
         space->size -= pagesize >> 12;
     }

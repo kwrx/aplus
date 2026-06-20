@@ -81,23 +81,23 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
 
 
 
-    uint64_t b = X86_MMU_PG_P;
+    uint64_t base = X86_MMU_PG_P;
 
 
     if (flags & ARCH_VMM_MAP_DISABLED)
-        b &= ~X86_MMU_PG_P;
+        base &= ~X86_MMU_PG_P;
 
     if (flags & ARCH_VMM_MAP_RDWR)
-        b |= X86_MMU_PG_RW;
+        base |= X86_MMU_PG_RW;
 
     if (flags & ARCH_VMM_MAP_USER)
-        b |= X86_MMU_PG_U;
+        base |= X86_MMU_PG_U;
 
     if (flags & ARCH_VMM_MAP_UNCACHED)
-        b |= X86_MMU_PG_CD;
+        base |= X86_MMU_PG_CD;
 
     if (flags & ARCH_VMM_MAP_SHARED)
-        b |= X86_MMU_PG_G;
+        base |= X86_MMU_PG_G;
 
 
 
@@ -106,23 +106,23 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
     //* Set No-Execute Bit
     if (flags & ARCH_VMM_MAP_NOEXEC)
         if (boot_cpu_has(X86_FEATURE_NX))
-            b |= X86_MMU_PT_NX; /* NX */
+            base |= X86_MMU_PT_NX; /* NX */
 
 #endif
 
     if (flags & ARCH_VMM_MAP_HUGETLB) {
 
-        b |= X86_MMU_PG_PS;
+        base |= X86_MMU_PG_PS;
 
         if (flags & ARCH_VMM_MAP_VIDEO_MEMORY)
             if (boot_cpu_has(X86_FEATURE_PAT))
-                b |= X86_MMU_PG_PAT; /* WC */
+                base |= X86_MMU_PG_PAT; /* WC */
 
     } else {
 
         if (flags & ARCH_VMM_MAP_VIDEO_MEMORY)
             if (boot_cpu_has(X86_FEATURE_PAT))
-                b |= X86_MMU_PT_PAT; /* WC */
+                base |= X86_MMU_PT_PAT; /* WC */
     }
 
 
@@ -203,10 +203,13 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
             DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
 
 
-            if (!(*d & X86_MMU_PG_P))
-                b &= ~X86_MMU_PG_P;
+            x86_page_t old = *d;
+            uint64_t page_flags = base;
 
-            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | b;
+            if (!(flags & ARCH_VMM_MAP_DISABLED) && !(old & X86_MMU_PG_P) && ((old & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW))
+                page_flags &= ~X86_MMU_PG_P;
+
+            *d = (old & X86_MMU_ADDRESS_MASK) | (old & (X86_MMU_PG_AP_TP_MASK | X86_MMU_PG_AP_PFB)) | page_flags;
 
 
 

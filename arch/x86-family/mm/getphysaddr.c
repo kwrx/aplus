@@ -41,6 +41,8 @@
 __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
 
 
+retry:
+
     uintptr_t pagesize = X86_MMU_PAGESIZE;
 
 
@@ -125,8 +127,11 @@ __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_
         DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
 
 
-        if (unlikely((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_PAGE))
+        if (unlikely((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_PAGE)) {
+            spinlock_unlock(&space->lock);
             PANIC_ASSERT(pagefault_handle(current_cpu->frame, virtaddr) == 0);
+            goto retry;
+        }
 
 
         DEBUG_ASSERT(((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PAGE) && "Page bad type");

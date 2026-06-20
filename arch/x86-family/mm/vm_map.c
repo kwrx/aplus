@@ -262,7 +262,7 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
                 if (flags & ARCH_VMM_MAP_DEMAND)
                     *d = X86_MMU_PG_AP_TP_COW | (b & ~X86_MMU_PG_P);
                 else
-                    *d = __alloc_frame(pagesize, false) | X86_MMU_PG_AP_PFB | b;
+                    *d = __alloc_frame(pagesize, true) | X86_MMU_PG_AP_PFB | b;
             }
         }
 
