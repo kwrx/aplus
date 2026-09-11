@@ -38,6 +38,14 @@
 #include <arch/x86/vmm.h>
 
 
+/*!
+ * @brief arch_vmm_unlock().
+ *        Close the SMAP window opened by arch_vmm_lock().
+ *
+ * @param space: address space owning the range.
+ * @param virtaddr: base of the range.
+ * @param size: length of the range in bytes.
+ */
 __nonnull(1) void arch_vmm_unlock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
     DEBUG_ASSERT(space->pm);
@@ -50,6 +58,6 @@ __nonnull(1) void arch_vmm_unlock(vmm_address_space_t* space, uintptr_t virtaddr
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
     if (cpu_has(current_cpu->id, X86_FEATURE_SMAP))
-        x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
+        __asm__ __volatile__("clac" ::: "cc");
 #endif
 }

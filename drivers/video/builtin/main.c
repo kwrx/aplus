@@ -79,7 +79,7 @@ static void builtin_init(device_t* device) {
     DEBUG_ASSERT(device->vid.fb_base);
     DEBUG_ASSERT(device->vid.fb_size);
 
-    arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_USER | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_SHARED | ARCH_VMM_MAP_VIDEO_MEMORY);
+    PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_USER | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_SHARED | ARCH_VMM_MAP_VIDEO_MEMORY));
 
     builtin_reset(device);
 }

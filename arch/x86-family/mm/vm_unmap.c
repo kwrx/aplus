@@ -51,11 +51,18 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
 
     DEBUG_ASSERT(length > 0);
 
+    if (unlikely(length == 0))
+        return virtaddr;
+
 
     uintptr_t pagesize = X86_MMU_PAGESIZE;
 
     uintptr_t s = virtaddr;
     uintptr_t e = virtaddr + length;
+
+
+    if (unlikely(e < virtaddr))
+        return virtaddr;
 
 
     if (s & (X86_MMU_PAGESIZE - 1))
@@ -70,80 +77,27 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
 
     for (; s < e; s += pagesize) {
 
-        x86_page_t* d;
+        pagesize = X86_MMU_WALK_ANY;
 
+        x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, NULL);
 
-#if defined(__x86_64__)
+        if (unlikely(!d)) {
 
-        /* CR3-L4 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 39) & 0x1FF]; }
-
-        /* PML4-L3 */
-        {
-            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PML4-L3 not exist");
-
-            d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 30) & 0x1FF];
+            /* Nothing mapped here; unmapping a hole is not an error. */
+            pagesize = X86_MMU_PAGESIZE;
+            continue;
         }
 
 
-        /* HUGE_1GB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PDP-L2 */
-            {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDP-L2 not exist");
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 21) & 0x1FF];
-            }
-
-            /* HUGE_2MB */
-            if (!(*d & X86_MMU_PG_PS)) {
-
-                /* PD-L1 */
-                {
-                    DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
-
-                    d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x1FF];
-                }
-
-                pagesize = X86_MMU_PAGESIZE;
-
-            } else
-                pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-        } else
-            pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
-
-
-#elif defined(__i386__)
-
-        /* CR3-L2 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
-
-
-        /* HUGE_4MB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PD-L1 */
-            {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x3FF];
-            }
-
-            pagesize = X86_MMU_PAGESIZE;
-
-        } else
-            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-#endif
-
         /* Page Table */
         {
-            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page already unmapped");
+            if (unlikely(*d == X86_MMU_CLEAR)) {
+                pagesize = X86_MMU_PAGESIZE;
+                continue;
+            }
 
             if (*d & X86_MMU_PG_AP_PFB)
-                pmm_free_blocks(*d & X86_MMU_ADDRESS_MASK, pagesize >> 12);
+                __free_frame(*d & X86_MMU_ADDRESS_MASK, pagesize);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -154,9 +108,15 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
         }
 
 
-        __asm__ __volatile__("invlpg (%0)" ::"r"(virtaddr) : "memory");
+        /* Previously invalidated `virtaddr` instead of `s`, so only the first page of the
+           range was flushed and the rest kept stale writable translations to frames that had
+           already been handed back to the physical allocator. */
+        arch_vmm_flush(space, s);
 
-        space->size -= pagesize >> 12;
+        if (space->size >= (pagesize >> 12))
+            space->size -= pagesize >> 12;
+        else
+            space->size = 0;
     }
 
     spinlock_unlock(&space->lock);

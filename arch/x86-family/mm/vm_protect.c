@@ -47,16 +47,26 @@
  * @param virtaddr: virtual address.
  * @param length: size of virtual space.
  * @param flags: @see include/arch/x86/vmm.h
+ *
+ * @return the base virtual address on success, ARCH_VMM_MAP_FAILED if any page in the
+ *         range is not mapped.
  */
 __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t virtaddr, size_t length, int flags) {
 
     DEBUG_ASSERT(length > 0);
+
+    if (unlikely(length == 0))
+        return ARCH_VMM_MAP_FAILED;
 
 
     uintptr_t pagesize;
 
     uintptr_t s = virtaddr;
     uintptr_t e = virtaddr + length;
+
+
+    if (unlikely(e < virtaddr))
+        return ARCH_VMM_MAP_FAILED;
 
 
     if (flags & ARCH_VMM_MAP_HUGETLB) {
@@ -93,6 +103,9 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
     if (flags & ARCH_VMM_MAP_USER)
         b |= X86_MMU_PG_U;
 
+    if (flags & ARCH_VMM_MAP_WRITE_THROUGH)
+        b |= X86_MMU_PG_WT;
+
     if (flags & ARCH_VMM_MAP_UNCACHED)
         b |= X86_MMU_PG_CD;
 
@@ -126,87 +139,42 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
     }
 
 
+    bool failed = false;
+
 
     spinlock_lock(&space->lock);
 
     for (; s < e; s += pagesize) {
 
-        x86_page_t* d;
+        pagesize = X86_MMU_WALK_ANY;
 
-#if defined(__x86_64__)
+        x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, NULL);
 
-        /* CR3-L4 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 39) & 0x1FF]; }
-
-        /* PML4-L3 */
-        {
-            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PML4-L3 not exist");
-
-            d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 30) & 0x1FF];
+        if (unlikely(!d || *d == X86_MMU_CLEAR)) {
+            pagesize = X86_MMU_PAGESIZE;
+            failed   = true;
+            break;
         }
 
 
-        /* HUGE_1GB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PDP-L2 */
-            {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDP-L2 not exist");
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 21) & 0x1FF];
-            }
-
-            /* HUGE_2MB */
-            if (!(*d & X86_MMU_PG_PS)) {
-
-                /* PD-L1 */
-                {
-                    DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
-
-                    d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x1FF];
-                }
-
-                pagesize = X86_MMU_PAGESIZE;
-
-            } else
-                pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-        } else
-            pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
-
-
-#elif defined(__i386__)
-
-        /* CR3-L2 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
-
-
-        /* HUGE_4MB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PD-L1 */
-            {
-                DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "PDT-L1 not exist");
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x3FF];
-            }
-
-            pagesize = X86_MMU_PAGESIZE;
-
-        } else
-            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-#endif
-
         /* Page Table */
         {
-            DEBUG_ASSERT((*d != X86_MMU_CLEAR) && "Page unmapped");
-
+            /* Per-page copy. `b` used to be narrowed in place here, so a single absent page
+               in the range cleared the present bit for every page after it. */
+            uint64_t pb = b;
 
             if (!(*d & X86_MMU_PG_P))
-                b &= ~X86_MMU_PG_P;
+                pb &= ~X86_MMU_PG_P;
 
-            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | b;
+            if (pb & X86_MMU_PG_RW)
+                pb |= X86_MMU_PG_AP_COW_RW;
+
+
+            /* Preserve the software bits that describe the frame rather than its protection:
+               PG_AP_PFB records that the frame is ours to free, and dropping it here leaked
+               every frame that had ever been through mprotect -- including each PT_LOAD
+               segment, which execve() mprotects on every exec. */
+            *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | pb;
 
 
 
@@ -216,10 +184,14 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
         }
 
 
-        __asm__ __volatile__("invlpg (%0)" ::"r"(s) : "memory");
+        arch_vmm_flush(space, s);
     }
 
     spinlock_unlock(&space->lock);
+
+
+    if (unlikely(failed))
+        return ARCH_VMM_MAP_FAILED;
 
     return virtaddr;
 }

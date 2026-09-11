@@ -140,7 +140,12 @@ SYSCALL(
 
         struct stat st = {0};
 
-        if (unlikely((e = sys_newstat(filename, &st)) < 0))
+        /* &st is a kernel buffer; `filename` was validated as a user pointer above. */
+        scoped_uio_kernel() {
+            e = sys_newstat(filename, &st);
+        }
+
+        if (unlikely(e < 0))
             return e;
 
         if (unlikely(!S_ISREG(st.st_mode)))
@@ -328,7 +333,8 @@ SYSCALL(
                         flags |= ARCH_VMM_MAP_RDWR;
 
 
-                        arch_vmm_map(current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz, ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_TYPE_PAGE);
+                        if (arch_vmm_map(current_task->address_space, phdr.p_vaddr, -1, phdr.p_memsz, ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_TYPE_PAGE) == ARCH_VMM_MAP_FAILED)
+                            kpanicf("execve: PANIC! out of memory mapping PT_LOAD at 0x%lX\n", (uintptr_t)phdr.p_vaddr);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -338,7 +344,8 @@ SYSCALL(
                         RXX(phdr.p_vaddr, phdr.p_offset, phdr.p_filesz, phdr.p_memsz);
 
 
-                        arch_vmm_mprotect(current_task->address_space, phdr.p_vaddr, phdr.p_memsz, flags | ARCH_VMM_MAP_USER);
+                        if (arch_vmm_mprotect(current_task->address_space, phdr.p_vaddr, phdr.p_memsz, flags | ARCH_VMM_MAP_USER) == ARCH_VMM_MAP_FAILED)
+                            kpanicf("execve: PANIC! failed to protect PT_LOAD at 0x%lX\n", (uintptr_t)phdr.p_vaddr);
 
                         break;
 
@@ -494,6 +501,10 @@ SYSCALL(
                 (pmm_get_used_memory() / 1024) % 1024);
 #endif
 
+
+        /* From here on this task is userspace, so every pointer it hands a syscall must be
+           validated as a user pointer. */
+        current_task->flags &= ~TASK_FLAGS_KERNEL_UIO;
 
         arch_userspace_enter(head.e_entry, stack, (void*)bottom);
 

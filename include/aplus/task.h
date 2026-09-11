@@ -73,6 +73,11 @@
     #define TASK_FLAGS_SIGNALED             8
     #define TASK_FLAGS_NEED_SYSCALL_RESTART 16
 
+/* The task is kernel code invoking a sys_* entry point directly (mounting the root
+   filesystem, exec'ing init), so the pointers it passes are kernel pointers. Cleared for
+   good the moment the task enters userspace. @see uio_check(). */
+    #define TASK_FLAGS_KERNEL_UIO 32
+
 
     #define TASK_CAPS_SYSTEM  255
     #define TASK_CAPS_IO      2

@@ -111,7 +111,13 @@ SYSCALL(
 #endif
         {
             struct timespec t0;
-            if (sys_clock_gettime(which_clock, &t0) < 0)
+            long __e = 0;
+
+            scoped_uio_kernel() { /* &t0 is a kernel buffer */
+                __e = sys_clock_gettime(which_clock, &t0);
+            }
+
+            if (__e < 0)
                 return -EINVAL;
 
             tss = t0.tv_sec;

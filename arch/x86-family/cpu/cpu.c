@@ -54,9 +54,10 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
     if (index == SMP_CPU_BOOTSTRAP_ID) {
 
-        core->cpu.cores[index].address_space.pm       = x86_get_cr3();
-        core->cpu.cores[index].address_space.size     = 0;
-        core->cpu.cores[index].address_space.refcount = 0;
+        core->cpu.cores[index].address_space.pm    = x86_get_cr3();
+        core->cpu.cores[index].address_space.size  = 0;
+        core->cpu.cores[index].address_space.flags = VMM_SPACE_STATIC;
+        atomic_store(&core->cpu.cores[index].address_space.refcount, 0);
         spinlock_init_with_flags(&core->cpu.cores[index].address_space.lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
     }
 
@@ -486,21 +487,27 @@ void arch_cpu_startup(cpuid_t index) {
     kprintf("x86-cpu: starting up core #%zd\n", index);
 #endif
 
-    //* Clone Address Space
-    memcpy(&core->cpu.cores[index].address_space, &core->bsp.address_space, sizeof(vmm_address_space_t));
+    /* Every core runs on the boot page tables until it picks up a task, so there is exactly
+       one kernel address space and every core must go through it. It used to be memcpy'd into
+       each per-CPU slot, which duplicated the root table pointer but gave each core its own
+       copy of the spinlock -- so concurrent AP bring-up mutated one shared hierarchy under
+       locks that did not exclude each other. */
+    vmm_address_space_t* kspace = &core->bsp.address_space;
 
     //* Map AP Startup Area
-    arch_vmm_map(&core->cpu.cores[index].address_space, AP_BOOT_OFFSET, AP_BOOT_OFFSET, X86_MMU_PAGESIZE, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR);
+    if (arch_vmm_map(kspace, AP_BOOT_OFFSET, AP_BOOT_OFFSET, X86_MMU_PAGESIZE, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR) == ARCH_VMM_MAP_FAILED)
+        kpanicf("x86-cpu: PANIC! failed to map the AP startup area for core #%zd\n", index);
 
     // //* Map AP Stack Area
-    arch_vmm_map(&core->cpu.cores[index].address_space, KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index), -1, X86_MMU_HUGE_2MB_PAGESIZE, ARCH_VMM_MAP_HUGETLB | ARCH_VMM_MAP_HUGE_2MB | ARCH_VMM_MAP_RDWR);
+    if (arch_vmm_map(kspace, KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index), -1, X86_MMU_HUGE_2MB_PAGESIZE, ARCH_VMM_MAP_HUGETLB | ARCH_VMM_MAP_HUGE_2MB | ARCH_VMM_MAP_RDWR) == ARCH_VMM_MAP_FAILED)
+        kpanicf("x86-cpu: PANIC! failed to map the stack for core #%zd\n", index);
 
 
 
     ap_init();
 
     ap_get_header()->cpu   = (uint64_t)index;
-    ap_get_header()->cr3   = (uint64_t)core->cpu.cores[index].address_space.pm;
+    ap_get_header()->cr3   = (uint64_t)kspace->pm;
     ap_get_header()->stack = (uint64_t)KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index);
 
 

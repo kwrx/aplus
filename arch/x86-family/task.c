@@ -324,7 +324,7 @@ pid_t arch_task_spawn_init() {
     task->policy   = TASK_POLICY_RR;
     task->priority = TASK_PRIO_REG;
     task->caps     = TASK_CAPS_SYSTEM;
-    task->flags    = TASK_FLAGS_NO_FRAME;
+    task->flags    = TASK_FLAGS_NO_FRAME | TASK_FLAGS_KERNEL_UIO;
 
     CPU_ZERO(&task->affinity);
     CPU_SET(current_cpu->id, &task->affinity);
@@ -347,11 +347,12 @@ pid_t arch_task_spawn_init() {
 
 
     task->address_space = &core->bsp.address_space;
-    core->bsp.address_space.refcount++;
+    atomic_fetch_add(&core->bsp.address_space.refcount, 1);
 
 
     task->address_space->mmap.heap_start = KERNEL_MMAP_AREA;
     task->address_space->mmap.heap_end   = KERNEL_MMAP_AREA;
+    task->address_space->mmap.heap_limit = KERNEL_MMAP_AREA + KERNEL_MMAP_SIZE;
 
     memset(&task->address_space->mmap.mappings, 0, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
 

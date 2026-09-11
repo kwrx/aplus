@@ -72,7 +72,24 @@ SYSCALL(
         if (unlikely((prot & (PROT_GROWSDOWN | PROT_GROWSUP)) == (PROT_GROWSDOWN | PROT_GROWSUP)))
             return -EINVAL;
 
-        if (unlikely(start > current_task->address_space->mmap.heap_end))
+
+        const unsigned long end = start + len;
+
+        if (unlikely(end < start))
+            return -EINVAL;
+
+
+        /* The range has to be one this task actually owns.
+         *
+         * The only check here used to be `start > mmap.heap_end`, which accepts every address
+         * below the mmap window -- and arch_vmm_mprotect() adds the user bit whenever prot is
+         * not PROT_NONE. Device MMIO is identity-mapped low (the local APIC, the HPET, HBA and
+         * virtio BARs, the framebuffers) and those leaves are shared into every address space,
+         * so mprotect(0xFEE00000, ...) handed the caller the local APIC. */
+        const bool in_program = (start >= current_task->userspace.start && end <= current_task->userspace.end);
+        const bool in_mmap    = (start >= current_task->address_space->mmap.heap_start && end <= current_task->address_space->mmap.heap_end);
+
+        if (unlikely(!in_program && !in_mmap))
             return -ENOMEM;
 
 
@@ -92,7 +109,7 @@ SYSCALL(
             arch_flags |= ARCH_VMM_MAP_RDWR;
 
 
-        if (arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) != start)
+        if (arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) == ARCH_VMM_MAP_FAILED)
             return -ENOMEM;
 
         return 0;

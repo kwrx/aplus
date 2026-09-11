@@ -1189,7 +1189,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     uint32_t size = pci_bar_size(device, PCI_BAR5, 4);
 
 
-    arch_vmm_map(&core->bsp.address_space, (uintptr_t)ahci->hba, (uintptr_t)ahci->hba, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH);
+    PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, (uintptr_t)ahci->hba, (uintptr_t)ahci->hba, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH));
 
 
 #if DEBUG_LEVEL_TRACE

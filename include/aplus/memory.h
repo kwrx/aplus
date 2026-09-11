@@ -26,6 +26,8 @@
 
 #ifndef __ASSEMBLY__
 
+    #include <stdatomic.h>
+
     #include <aplus.h>
     #include <aplus/debug.h>
     #include <aplus/ipc.h>
@@ -91,6 +93,12 @@
     #define ARCH_VMM_CLONE_NEW_SPACE (0)
 
 
+    /* Returned by arch_vmm_map()/arch_vmm_mprotect() when the request could not be satisfied.
+       Callers reachable from userspace must check for it: physical memory exhaustion used to
+       panic the kernel, which made an oversized mmap(2) a denial of service. */
+    #define ARCH_VMM_MAP_FAILED ((uintptr_t)-1)
+
+
 
 typedef struct {
 
@@ -102,16 +110,22 @@ typedef struct {
 } mmap_mapping_t;
 
 
+    /* Address space lives in .bss (the per-CPU syscore slots) and must never be freed. */
+    #define VMM_SPACE_STATIC (1 << 0)
+
+
 typedef struct vmm_address_space {
 
     uintptr_t pm;
-    size_t size;
-    size_t refcount;
+    size_t size; /* pages currently mapped */
+    _Atomic size_t refcount;
+    int flags;
 
     struct {
 
         uintptr_t heap_start;
         uintptr_t heap_end;
+        uintptr_t heap_limit; /* first address past the mmap window; set by arch code */
 
         mmap_mapping_t mappings[CONFIG_MMAP_MAX];
 

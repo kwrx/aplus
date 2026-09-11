@@ -128,9 +128,9 @@ void ioapic_enable(void) {
         }
 
 
-        arch_vmm_map(&core->bsp.address_space, ioapic[i].address, ioapic[i].address, PML1_PAGESIZE,
+        PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, ioapic[i].address, ioapic[i].address, PML1_PAGESIZE,
 
-                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED);
+                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED));
 
 
         ioapic[i].gsi_count = ((ioapic_read(ioapic[i].address, X86_IOAPIC_IOAPICVER) >> 16) & 0xFF) + 1;

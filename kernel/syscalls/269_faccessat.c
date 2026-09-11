@@ -67,7 +67,12 @@ SYSCALL(
         int e;
 
         struct stat st;
-        if ((e = sys_newfstatat(dfd, filename, &st, 0)) < 0)
+        /* &st is a kernel buffer; `filename` was validated as a user pointer above. */
+        scoped_uio_kernel() {
+            e = sys_newfstatat(dfd, filename, &st, 0);
+        }
+
+        if (e < 0)
             return e;
 
 

@@ -38,154 +38,159 @@
 #include <arch/x86/vmm.h>
 
 
-__nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
+/*!
+ * @brief x86_vmm_resolve().
+ *        Materialise a copy-on-write or demand-paged entry.
+ *
+ * Shared by the page fault path and by arch_vmm_lock(), which pre-faults a user range before
+ * the kernel dereferences it. The caller must hold the address space lock and is responsible
+ * for invalidating the translation afterwards.
+ *
+ * @param pm: physical address of the root table to walk.
+ * @param virtaddr: faulting address.
+ * @param err: the access being attempted, as X86_PF_* bits. arch_vmm_lock() synthesises
+ *             these; the fault path passes the hardware error code verbatim.
+ * @param reason: optional. Set to a human-readable cause when the entry cannot be resolved.
+ *
+ * @return 0 if the entry now maps a private frame, -1 if the access must not be satisfied.
+ */
+int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason) {
 
-
-#if DEBUG_LEVEL_TRACE
-
-    #define PFE(reason, entry)                                                                                                                                        \
-        {                                                                                                                                                             \
-            kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d) entry(0x%lX): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, entry, reason); \
-            goto pfe;                                                                                                                                                 \
-        }
-
-#else
-
-    #define PFE(reason, entry) \
-        { goto pfe; }
-
-#endif
-
-
-
-    uintptr_t pm = x86_get_cr3();
+#define FAIL(r)              \
+    {                        \
+        if (reason)          \
+            *reason = (r);   \
+        return -1;           \
+    }
 
     if (unlikely(!pm))
-        PFE("no memory mapping", 0L);
+        FAIL("no memory mapping");
 
 
-    uintptr_t pagesize = X86_MMU_PAGESIZE;
-    uintptr_t s        = cr2;
+    uintptr_t pagesize = X86_MMU_WALK_ANY;
+
+    x86_page_t* d = x86_vmm_walk(pm, virtaddr, &pagesize, 0, 0, NULL);
+
+    if (unlikely(!d))
+        FAIL("no page table for address");
+
+    if (*d == X86_MMU_CLEAR)
+        FAIL("page not present");
+
+    // TODO: implement X86_MMU_PG_AP_TP_MMAP
+    if ((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW)
+        FAIL("page fault cannot be handled, no copy on write flags found");
 
 
+    /* Decide whether resolving the entry would actually satisfy the access. Without this the
+       handler resolves the entry, returns, and the very same access faults again on identical
+       terms -- an unkillable fault loop rather than the SIGSEGV the process has earned. */
 
-    {
+    if (err & X86_PF_R)
+        FAIL("reserved bit set in a page table entry");
 
-        x86_page_t* d;
+    if ((err & X86_PF_U) && !(*d & X86_MMU_PG_U))
+        FAIL("user access to a supervisor page");
 
+    if ((err & X86_PF_I) && (*d & X86_MMU_PT_NX))
+        FAIL("instruction fetch from a no-execute page");
 
-#if defined(__x86_64__)
-
-        /* CR3-L4 */
-        { d = &((x86_page_t*)arch_vmm_p2v(pm, ARCH_VMM_AREA_HEAP))[(s >> 39) & 0x1FF]; }
-
-        /* PML4-L3 */
-        {
-            if (*d == X86_MMU_CLEAR)
-                PFE("PML4-L3 doesn't not exist", *d);
-
-            d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 30) & 0x1FF];
-        }
+    if ((err & X86_PF_W) && !(*d & X86_MMU_PG_AP_COW_RW))
+        FAIL("write to a read-only page");
 
 
-        /* HUGE_1GB */
-        if (!(*d & X86_MMU_PG_PS)) {
+    const uintptr_t src = *d & X86_MMU_ADDRESS_MASK;
 
-            /* PDP-L2 */
-            {
-                if (*d == X86_MMU_CLEAR)
-                    PFE("PDP-L2 doesn't not exist", *d);
+    /* A demand page has nothing to copy from, so the frame must be zeroed. It used to be
+       handed to userspace as allocated, still holding whatever the previous owner wrote. */
+    uintptr_t page = __try_alloc_frame(pagesize, src == 0);
 
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 21) & 0x1FF];
-            }
-
-            /* HUGE_2MB */
-            if (!(*d & X86_MMU_PG_PS)) {
-
-                /* PD-L1 */
-                {
-                    if (*d == X86_MMU_CLEAR)
-                        PFE("PD-L1 doesn't not exist", *d);
-
-                    d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x1FF];
-                }
-
-            } else
-                pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-        } else
-            pagesize = X86_MMU_HUGE_1GB_PAGESIZE;
+    if (unlikely(page == X86_MMU_FRAME_NONE))
+        FAIL("out of physical memory");
 
 
-#elif defined(__i386__)
+    if (src != 0) {
 
-        /* CR3-L2 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
-
-
-        /* HUGE_4MB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PD-L1 */
-            {
-                if (*d == X86_MMU_CLEAR)
-                    PFE("PD-L1 doesn't not exist");
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x3FF];
-            }
-
-        } else
-            pagesize = X86_MMU_HUGE_2MB_PAGESIZE;
-
-#endif
-
-        /* Page Table */
-        {
-
-            if (*d == X86_MMU_CLEAR)
-                PFE("page not present", *d);
-
-            // TODO: implement X86_MMU_PG_AP_TP_MMAP
-            if (!(*d & X86_MMU_PG_AP_TP_COW))
-                PFE("page fault cannot be handled, no copy on write flags found", *d);
-
-
-
-            //! Handle Copy on Write
-
-            uintptr_t page = __alloc_frame(pagesize, false);
-
-            if ((*d & X86_MMU_ADDRESS_MASK) != 0) {
-
-                memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
-
-                page |= X86_MMU_PG_RW;
-            }
-
-            *d = page | X86_MMU_PG_P | X86_MMU_PG_AP_PFB | X86_MMU_PG_AP_TP_PAGE | ((*d & ~X86_MMU_ADDRESS_MASK) & ~(X86_MMU_PG_AP_TP_MASK));
-        }
+        memcpy((void*)arch_vmm_p2v(page, ARCH_VMM_AREA_HEAP), (void*)arch_vmm_p2v(src, ARCH_VMM_AREA_HEAP), (size_t)pagesize);
     }
 
 
-    current_task->rusage.ru_majflt++;
+    uint64_t b = (*d & ~X86_MMU_ADDRESS_MASK) & ~X86_MMU_PG_AP_TP_MASK;
+
+    b |= X86_MMU_PG_P | X86_MMU_PG_AP_PFB | X86_MMU_PG_AP_TP_PAGE;
+
+    /* Restore the permission the mapping was created with rather than granting write access
+       unconditionally: a read-only mapping that survived a fork must stay read-only. */
+    if (*d & X86_MMU_PG_AP_COW_RW)
+        b |= X86_MMU_PG_RW;
+    else
+        b &= ~X86_MMU_PG_RW;
 
 
-#if DEBUG_LEVEL_TRACE
-    kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
-#endif
+    *d = page | b;
 
     return 0;
 
+#undef FAIL
+}
 
 
-pfe:
+__nonnull(1) int pagefault_handle(interrupt_frame_t* frame, uintptr_t cr2) {
+
+    /* The fault happened against whatever CR3 holds, which is this task's address space.
+       Take its lock so two threads sharing it cannot both resolve the same entry and leak
+       one of the two frames they allocate. */
+    vmm_address_space_t* space = current_task ? current_task->address_space : NULL;
+
+    const char* reason = "unknown";
+
+    int e = 0;
+
+
+    if (likely(space))
+        spinlock_lock(&space->lock);
+
+    e = x86_vmm_resolve(x86_get_cr3(), cr2, frame->errno, &reason);
+
+    if (likely(e == 0)) {
+
+        /* The stale read-only translation is still cached; without this the write that
+           faulted re-faults, and the entry is no longer COW, so it takes the unhandled path. */
+        if (likely(space))
+            arch_vmm_flush(space, cr2);
+        else
+            __asm__ __volatile__("invlpg (%0)" ::"r"(cr2) : "memory");
+    }
+
+    if (likely(space))
+        spinlock_unlock(&space->lock);
+
+
+    if (likely(e == 0)) {
+
+        /* A copy-on-write or demand fault is serviced without I/O, so it is a minor fault. */
+        if (likely(current_task))
+            current_task->rusage.ru_minflt++;
+
+#if DEBUG_LEVEL_TRACE
+        kprintf("x86-pfe: handled page fault at 0x%lX! cs(0x%lX), ip(0x%lX), sp(0x%lX), cr3(0x%lX) cpu(%ld) pid(%d)\n", cr2, frame->cs, frame->ip, frame->sp, x86_get_cr3(), current_cpu->id, current_task ? current_task->tid : 0);
+#endif
+
+        return 0;
+    }
+
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("x86-pfe: FAULT! address(0x%lX) cpu(%ld) pid(%d): %s\n", cr2, current_cpu->id, current_task ? current_task->tid : 0, reason);
+#endif
 
     if (x86_intr_is_user_mode(frame))
         return -1;
 
     kpanicf(
-        "x86-pfe: PANIC! cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",
-        cr2, x86_get_cr3(), x86_rdmsr(X86_MSR_GSBASE), x86_rdmsr(X86_MSR_FSBASE), current_cpu->id, current_task ? current_task->tid : 0, frame->cs, frame->ip, frame->sp, frame->bp, frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, frame->errno,
+        "x86-pfe: PANIC! %s cr2(0x%lX) cr3(0x%lX) gs(0x%llX) fs(0x%llX) cpu(%ld) pid(%d), cs(0x%lX), ip(0x%lX), sp(0x%lX), bp(0x%lX), ax(0x%lX), bx(0x%lX), cx(0x%lX), dx(0x%lX), si(0x%lX), di(0x%lX), errno(0x%lX) [%s %s %s %s %s %s %s %s]\n",
+        reason, cr2, x86_get_cr3(), x86_rdmsr(X86_MSR_GSBASE), x86_rdmsr(X86_MSR_FSBASE), current_cpu->id, current_task ? current_task->tid : 0, frame->cs, frame->ip, frame->sp, frame->bp, frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di,
+        frame->errno,
         frame->errno & X86_PF_P ? "P" : "NP",   // Page present/not present
         frame->errno & X86_PF_W ? "W" : "R",    // Write/Read
         frame->errno & X86_PF_U ? "U" : "-",    // User/Supervisor
