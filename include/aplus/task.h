@@ -169,7 +169,7 @@ typedef struct task {
 
     pid_t tid;
     gid_t pid;
-    gid_t pgrp;
+    pid_t pgrp;
 
     uid_t uid;
     uid_t euid;
@@ -344,7 +344,7 @@ pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 void sched_requeue(task_t*);
-int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
+int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 
 void schedule(int);
 

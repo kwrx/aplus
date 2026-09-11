@@ -496,7 +496,11 @@ void sched_requeue(task_t* task) {
 
 
 
-int sched_sigqueueinfo(gid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
+//? pgrp, pid and tid are each either a thing to match or -1 for "do not narrow by this". That
+//? sentinel is why they have to be signed: pgrp used to be a gid_t, which is unsigned, so the -1
+//? every caller passes arrived as a huge positive number, `pgrp > 0` was always true, and no task
+//? ever matched a process group. Nothing could be signalled at all.
+int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
     DEBUG_ASSERT(sig < NSIG - 1);
