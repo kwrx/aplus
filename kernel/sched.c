@@ -573,17 +573,15 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
 
             shared_ptr_access(tmp->sighand, sighand, {
-                //? Check if the signal is blocked
-                if (unlikely(sigset_is_member(&sighand->sigmask, sig))) {
-
-                    if (sighand->action[sig].sa_flags & SA_NODEFER)
-                        queue_enqueue(&tmp->sigqueue, siginfo, 0);
-                    else
-                        queue_enqueue(&tmp->sigpending, siginfo, 0);
-
-                } else {
+                //? A blocked signal waits, whatever its action says. SA_NODEFER used to send it
+                //? through anyway, but that flag decides the mask a handler runs under -- whether
+                //? the signal is added on entry to its own handler -- and says nothing about
+                //? whether sigprocmask() may hold it back. Honouring it here delivered signals
+                //? their own thread had explicitly blocked.
+                if (unlikely(sigset_is_member(&sighand->sigmask, sig)))
+                    queue_enqueue(&tmp->sigpending, siginfo, 0);
+                else
                     queue_enqueue(&tmp->sigqueue, siginfo, 0);
-                }
             });
         }
     }
