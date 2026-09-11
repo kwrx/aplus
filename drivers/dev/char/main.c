@@ -74,7 +74,7 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
     DEBUG_ASSERT(size);
 
 
-    int e;
+    ssize_t e;
 
     switch (device->chr.io) {
 
@@ -83,7 +83,7 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
             if (likely(device->chr.write))
                 return device->chr.write(device, buf, size);
 
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
 
 
         case CHAR_IO_LBF:
@@ -124,7 +124,7 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
 
-    return errno = EIO, -1;
+    return -EIO;
 }
 
 
@@ -137,7 +137,7 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
 
 
     if (device->status != DEVICE_STATUS_READY)
-        return errno = EBUSY, -1;
+        return -EBUSY;
 
 
     switch (device->chr.io) {
@@ -147,7 +147,7 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
             if (likely(device->chr.read))
                 return device->chr.read(device, buf, size);
 
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
 
 
         case CHAR_IO_LBF:
@@ -165,7 +165,7 @@ ssize_t char_read(device_t* device, void* buf, size_t size) {
 
     DEBUG_ASSERT(0 && "Bug: Invalid DEVICE_IO_*BF");
 
-    return errno = EIO, -1;
+    return -EIO;
 }
 
 
@@ -216,7 +216,10 @@ void char_init(device_t* device) {
         case CHAR_IO_FBF:
         case CHAR_IO_LBF:
 
-            ringbuffer_init(&device->chr.buffer, BUFSIZ);
+            if (unlikely(ringbuffer_init(&device->chr.buffer, BUFSIZ) < 0))
+                kpanicf("char_init: PANIC! failed to allocate the I/O buffer for '%s'\n", device->name);
+
+            break;
 
 
         default:

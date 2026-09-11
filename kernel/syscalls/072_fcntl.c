@@ -98,21 +98,21 @@ SYSCALL(
 
                 case F_DUPFD_CLOEXEC:
 
-                    if ((e1 = sys_dup(fd) < 0))
+                    if ((e1 = sys_dup(fd)) < 0)
                         return e1;
 
-                    if ((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC) < 0))
+                    if ((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC)) < 0)
                         return e2;
 
                     return e1;
 
                 case F_GETFD:
 
-                    shared_ptr_access(current_task->fd, fds, { return fds->descriptors[fd].close_on_exec; });
+                    shared_ptr_access(current_task->fd, fds, { return fds->descriptors[fd].close_on_exec ? FD_CLOEXEC : 0; });
 
                 case F_SETFD:
 
-                    shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].close_on_exec = arg; });
+                    shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].close_on_exec = !!(arg & FD_CLOEXEC); });
 
                     return 0;
 

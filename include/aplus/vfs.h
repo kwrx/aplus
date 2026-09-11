@@ -60,6 +60,17 @@
 
     #define INODE_FLAGS_DCACHE_DISABLED 0x00000001
 
+    //? No directory entry and no other owner: the last struct file referencing
+    //? this inode is responsible for freeing it (see fd_remove()).
+    #define INODE_FLAGS_ANONYMOUS 0x00000002
+
+
+    //? Which half of a pipe an endpoint inode represents. A named FIFO uses a
+    //? single inode for both directions.
+    #define PIPE_END_READ  0
+    #define PIPE_END_WRITE 1
+    #define PIPE_END_BOTH  2
+
 
     #define MODE_2_DIRENT_TYPE(mode) ((mode & S_IFMT) >> 12)
 
@@ -72,6 +83,11 @@ struct inode_ops {
     inode_t* (*open)(inode_t*, int);
     int (*close)(inode_t*);
     int (*ioctl)(inode_t*, long, void*);
+
+    //? Report which of the requested events are ready right now. Leaving this
+    //? NULL means "always ready", which is the correct answer for anything
+    //? that cannot block -- regular files and directories included.
+    int (*poll)(inode_t*, int);
 
     /* Inode */
     int (*getattr)(inode_t*, struct stat*);
@@ -101,11 +117,21 @@ struct inode_ops {
 };
 
 
+//? Readiness itself is not cached here: it is asked for on demand through
+//? ops.poll(), so data that arrived before anyone was watching still counts.
+//? All this carries is a monotonic "something about this inode changed"
+//? counter, which waiters snapshot and sleep until it differs. Bumping it is
+//? unconditional -- gating the bump on a pre-declared interest mask is what
+//? used to lose wakeups and let a poller sleep on top of a full buffer.
+
 struct inode_events {
-    uint16_t events;
-    uint16_t revents;
     volatile uint32_t futex;
 };
+
+//? shared_ptr() expands to a fresh anonymous struct every time it is written,
+//? so two separate uses are unrelated types. Naming it once here lets an inode
+//? and the channel behind it hold references to the same counter.
+typedef shared_ptr(struct inode_events) inode_events_t;
 
 struct inode {
 
@@ -121,7 +147,7 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
-    shared_ptr(struct inode_events) ev;
+    inode_events_t ev;
 
     HASHMAP(char, inode_t) dcache;
 };
@@ -178,6 +204,8 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 inode_t* vfs_open(inode_t*, int);
 int vfs_close(inode_t*);
 int vfs_ioctl(inode_t*, long, void*);
+int vfs_poll(inode_t*, int);
+void vfs_notify(inode_t*);
 
 int vfs_getattr(inode_t*, struct stat*);
 int vfs_setattr(inode_t*, struct stat*);
@@ -205,6 +233,8 @@ int vfs_unlink(inode_t*, const char*);
 
 // kernel/fs/pipefs.c
 inode_t* pipefs_inode(void);
+int pipefs_create_pair(inode_t**, inode_t**, size_t);
+inode_t* fifofs_open(inode_t*, int);
 inode_t* vfs_mkfifo(inode_t*, size_t, int);
 
 

@@ -96,7 +96,18 @@ void fd_remove(struct file* fd, bool close) {
         if (atomic_fetch_sub(&fd->refcount, 1) == 1) {
 
             if (close) {
-                vfs_close(fd->inode);
+
+                inode_t* inode = fd->inode;
+
+                vfs_close(inode);
+
+                //? An anonymous inode (a pipe or socket endpoint) has no
+                //? directory entry to keep it alive, so the last file
+                //? referencing it has to release it here. inode->ev is
+                //? deliberately left alone: a task parked in poll() still holds
+                //? the address of its futex word.
+                if (inode && (inode->flags & INODE_FLAGS_ANONYMOUS))
+                    kfree(inode);
             }
 
             fd->inode    = NULL;

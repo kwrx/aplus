@@ -46,6 +46,25 @@ void futex_rt_unlock() {
     spinlock_unlock(&rt_lock);
 }
 
+
+//? futex_expired() flattens the deadline back into a single nanosecond count,
+//? so it has to be stored as one. Taking the seconds from a millisecond clock
+//? and the nanoseconds from a second, independent read loses up to a full
+//? second and can leave tv_nsec above 1e9 with nothing to carry it into
+//? tv_sec, which is why relative timeouts never came due when they should.
+
+static inline void __futex_set_deadline(futex_t* futex, const struct timespec* utime) {
+
+    DEBUG_ASSERT(futex);
+    DEBUG_ASSERT(utime);
+
+    uint64_t deadline = arch_timer_generic_getns() + ((uint64_t)utime->tv_sec * 1000000000ULL) + (uint64_t)utime->tv_nsec;
+
+    futex->timeout.tv_sec  = (time_t)(deadline / 1000000000ULL);
+    futex->timeout.tv_nsec = (long)(deadline % 1000000000ULL);
+}
+
+
 #if DEBUG_LEVEL_TRACE
 void __futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const struct timespec* utime, const char* OBJ, const char* FILE, int LINE) {
 #else
@@ -74,10 +93,7 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 
             if (utime) {
 
-                memcpy(&futex->timeout, utime, sizeof(struct timespec));
-
-                futex->timeout.tv_sec += arch_timer_generic_getms() / 1000ULL;
-                futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL;
+                __futex_set_deadline(futex, utime);
 
             } else {
 
@@ -97,11 +113,7 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
     futex->value   = value;
 
     if (utime) {
-
-        memcpy(&futex->timeout, utime, sizeof(struct timespec));
-
-        futex->timeout.tv_sec += arch_timer_generic_getms() / 1000ULL;
-        futex->timeout.tv_nsec += arch_timer_generic_getns() % 1000000000ULL;
+        __futex_set_deadline(futex, utime);
     }
 
 

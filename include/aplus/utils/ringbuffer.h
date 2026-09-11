@@ -47,7 +47,7 @@ typedef struct {
 
 __BEGIN_DECLS
 
-void ringbuffer_init(ringbuffer_t* rb, size_t size);
+int ringbuffer_init(ringbuffer_t* rb, size_t size);
 void ringbuffer_destroy(ringbuffer_t* rb);
 void ringbuffer_reset(ringbuffer_t* rb);
 

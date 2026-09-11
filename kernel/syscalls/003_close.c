@@ -63,7 +63,7 @@ SYSCALL(
 
             ssize_t e;
 
-            if ((e = lwip_close(NETWORK_SOCKFD(fd)) < 0))
+            if ((e = lwip_close(NETWORK_SOCKFD(fd))) < 0)
                 return -errno;
 
             return e;

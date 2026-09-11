@@ -65,7 +65,7 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
     device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
-        return errno = EBUSY, -1;
+        return -EBUSY;
 
 
     switch (device->type) {
@@ -77,10 +77,10 @@ static ssize_t device_read(inode_t* inode, void* buf, off_t off, size_t size) {
             return block_read(device, buf, off, size);
 
         case DEVICE_TYPE_VIDEO:
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
 
         case DEVICE_TYPE_NETWORK:
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
     }
 
     kpanicf("device::read: unknown device type %d for /dev/%s\n", device->type, inode->name);
@@ -98,7 +98,7 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
     device_t* device = (device_t*)inode->userdata;
 
     if (device->status != DEVICE_STATUS_READY)
-        return errno = EBUSY, -1;
+        return -EBUSY;
 
 
     switch (device->type) {
@@ -110,10 +110,10 @@ static ssize_t device_write(inode_t* inode, const void* buf, off_t off, size_t s
             return block_write(device, buf, off, size);
 
         case DEVICE_TYPE_VIDEO:
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
 
         case DEVICE_TYPE_NETWORK:
-            return errno = ENOSYS, -1;
+            return -ENOSYS;
     }
 
     kpanicf("device::write: unknown device type %d for /dev/%s\n", device->type, inode->name);

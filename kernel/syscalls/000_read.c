@@ -126,7 +126,7 @@ SYSCALL(
                 uio_unlock(buf, size);
 
 
-                if (errno == EINTR) {
+                if (e == -EAGAIN) {
 
                     if (fds->descriptors[fd].flags & O_NONBLOCK) {
 
@@ -134,10 +134,10 @@ SYSCALL(
 
                     } else {
 
+                        //? Snapshot the change counter and sleep until it moves.
+                        //? Anything that happened before this point is already
+                        //? reflected in it, so a wakeup can never be missed.
                         shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
-                            ev->revents &= ~POLLIN;
-                            ev->events |= POLLIN;
-
                             futex_wait(current_task, &ev->futex, ev->futex, NULL);
                         });
 
@@ -155,9 +155,6 @@ SYSCALL(
                     }
                 }
 
-
-                if (e < 0)
-                    return -errno;
 
                 return e;
             });

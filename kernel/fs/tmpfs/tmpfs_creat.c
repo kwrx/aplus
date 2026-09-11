@@ -101,6 +101,14 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
     }
 
 
+    //? A FIFO keeps tmpfs's own getattr/setattr and gains only an open hook,
+    //? which hands out a pipe endpoint instead of the node itself.
+    if (S_ISFIFO(mode)) {
+
+        d->ops.open = fifofs_open;
+    }
+
+
 
     inode->sb->st.f_ffree--;
     inode->sb->st.f_favail--;
