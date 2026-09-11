@@ -300,6 +300,13 @@ typedef struct task {
         //? can still be woken by its deadline and nothing else.
         volatile uint32_t deadline_futex;
 
+        //? ppoll() and pselect6() swap the blocked-signal mask for as long as
+        //? they wait, so the mask to put back has to outlive the attempt that
+        //? installed it. One slot, like the deadline above: a wait nested
+        //? inside a signal handler would share it.
+        sigset_t sigmask;
+        bool sigmask_valid;
+
     } syscall;
 
 
