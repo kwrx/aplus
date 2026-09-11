@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -137,6 +138,33 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
 }
 
 
+/*!
+ * @brief __pty_short_write().
+ *        Report how much of a write actually made it into the ring buffer.
+ *
+ * These routines copy a byte at a time, so a buffer that fills partway through has already
+ * committed everything before that point. Returning -1 for the whole call threw that away:
+ * sys_write() saw the failure, suspended the task and restarted the syscall from the top
+ * (@see kernel/syscalls/001_write.c), so the bytes already in the buffer were written a
+ * second time. For a program producing output faster than the terminal drains it -- nyancat,
+ * say -- that duplicates fragments of escape sequences, and the terminal then draws cells at
+ * whatever coordinates the corrupted sequences name.
+ *
+ * So: report the partial count and let the caller resume from there. Only a write that made
+ * no progress at all returns -1/EINTR, which is what asks sys_write() to block and retry.
+ */
+static inline ssize_t __pty_short_write(size_t done) {
+
+    if (done == 0)
+        return errno = EINTR, -1;
+
+    /* sys_write() consults errno even on a successful write, so a stale EINTR here would send
+       it down the blocking path and discard the count we are returning. */
+    errno = 0;
+    return (ssize_t)done;
+}
+
+
 static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
 
     DEBUG_ASSERT(pty);
@@ -151,10 +179,6 @@ static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
         char ch = buf[i];
 
 
-        if (pty->ios.c_oflag & ONLCR && ch == '\n') {
-            ringbuffer_write(&pty->r2, "\r", 1);
-        }
-
         if (pty->ios.c_oflag & ONLRET && ch == '\r') {
             continue;
         }
@@ -168,12 +192,22 @@ static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
         }
 
 
-        if (ringbuffer_write(&pty->r2, &ch, 1) < 0) {
-            return -1;
-        }
+        /* A CR/LF pair has to go in together: emitting the CR and then running out of room
+           for the LF would leave a stray carriage return in the stream. */
+        const bool crlf = (pty->ios.c_oflag & ONLCR) && (ch == '\n');
+
+        if (ringbuffer_writeable(&pty->r2) < (crlf ? 2U : 1U))
+            return __pty_short_write(i);
+
+
+        if (crlf)
+            ringbuffer_write(&pty->r2, "\r", 1);
+
+        if (ringbuffer_write(&pty->r2, &ch, 1) < 0)
+            return __pty_short_write(i);
     }
 
-    return size;
+    return (ssize_t)size;
 }
 
 static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
@@ -352,11 +386,14 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
                 pty_process_output(pty, &ch, 1);
             }
 
-            ringbuffer_write(&pty->r1, &ch, 1);
+            /* Same contract as the output side: a full buffer is a short write, not a
+               silently dropped keystroke. */
+            if (ringbuffer_write(&pty->r1, &ch, 1) < 0)
+                return __pty_short_write(i);
         }
     }
 
-    return size;
+    return (ssize_t)size;
 }
 
 
