@@ -23,6 +23,7 @@
 
 #include <dirent.h>
 #include <fcntl.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -72,13 +73,14 @@ SYSCALL(
         if (unlikely(!uio_check(dirent, R_OK | W_OK)))
             return -EFAULT;
 
-        if (unlikely(count < sizeof(struct dirent)))
+        if (unlikely(count < sizeof(struct linux_dirent64)))
             return -EINVAL;
 
 
 
         ssize_t e = 0;
         ssize_t r = 0;
+        int err   = 0;
 
         shared_ptr_access(current_task->fd, fds, {
             DEBUG_ASSERT(fds->descriptors[fd].ref);
@@ -86,35 +88,59 @@ SYSCALL(
 
             scoped_lock(&fds->descriptors[fd].ref->lock) {
 
-                for (unsigned int i = 0; i + sizeof(struct linux_dirent64) < count;) {
+                struct linux_dirent64* d = dirent;
+
+                for (unsigned int i = 0; i < count;) {
+
                     struct dirent ent = {0};
 
-                    if ((e = vfs_readdir(fds->descriptors[fd].ref->inode, &ent, fds->descriptors[fd].ref->position++, 1)) <= 0)
+                    if ((e = vfs_readdir(fds->descriptors[fd].ref->inode, &ent, fds->descriptors[fd].ref->position, 1)) <= 0)
                         break;
 
 
+                    /* A record is as long as the name it carries, so its size has to be known
+                       before deciding whether it fits. The loop used to test only the fixed
+                       part of the record against the space left and then write
+                       sizeof(linux_dirent64) + strlen(name) bytes, so a directory of long
+                       names ran past the end of the caller's buffer -- and for a libc reading
+                       a directory, what follows that buffer is its own heap. Padded to 8
+                       bytes, as the getdents64 ABI requires. */
+                    const size_t reclen = (offsetof(struct linux_dirent64, d_name) + strlen(ent.d_name) + 1 + 7) & ~(size_t)7;
 
-                    size_t reclen = sizeof(struct linux_dirent64) + strlen(ent.d_name);
+
+                    if (i + reclen > count) {
+
+                        /* Out of room. The read position has deliberately not been advanced
+                           yet, so this entry is simply delivered by the next call. */
+                        if (i == 0)
+                            err = -EINVAL; /* buffer too small for even one entry */
+
+                        break;
+                    }
 
 
-                    DEBUG_ASSERT(dirent);
+                    fds->descriptors[fd].ref->position++;
 
-                    uio_w64(&dirent->d_ino, ent.d_ino);
-                    uio_w64(&dirent->d_off, i);
-                    uio_w16(&dirent->d_reclen, reclen);
-                    uio_w8(&dirent->d_type, ent.d_type);
 
-                    uio_strcpy_s2u(&dirent->d_name[0], ent.d_name);
+                    uio_w64(&d->d_ino, ent.d_ino);
+                    uio_w64(&d->d_off, (int64_t)fds->descriptors[fd].ref->position);
+                    uio_w16(&d->d_reclen, reclen);
+                    uio_w8(&d->d_type, ent.d_type);
+
+                    uio_strcpy_s2u(&d->d_name[0], ent.d_name);
 
 
                     r += reclen;
                     i += reclen;
 
-                    dirent = (struct linux_dirent64*)((uintptr_t)dirent + reclen);
+                    d = (struct linux_dirent64*)((uintptr_t)d + reclen);
                 }
             }
         });
 
+
+        if (err)
+            return err;
 
         if (e < 0)
             return -errno;
