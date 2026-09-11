@@ -58,14 +58,16 @@ SYSCALL(
         DEBUG_ASSERT(current_task->address_space->mmap.heap_end);
 
 
-        // not supported
-        PANIC_ASSERT((flags & MAP_TYPE) == MAP_PRIVATE);
-        PANIC_ASSERT((flags & MAP_TYPE) != MAP_SHARED);
-        PANIC_ASSERT((flags & MAP_TYPE) != MAP_SHARED_VALIDATE);
+        /* These used to be PANIC_ASSERT, which is compiled in unconditionally: any program
+           calling mmap() with MAP_SHARED or MAP_FIXED brought the whole kernel down. */
+        if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE))
+            return -ENOTSUP;
 
-        PANIC_ASSERT(!(flags & MAP_FIXED));
-        PANIC_ASSERT(!(flags & MAP_FIXED_NOREPLACE));
-        PANIC_ASSERT(!(flags & MAP_GROWSDOWN));
+        if (unlikely(flags & (MAP_FIXED | MAP_FIXED_NOREPLACE)))
+            return -ENOTSUP;
+
+        if (unlikely(flags & MAP_GROWSDOWN))
+            return -ENOTSUP;
 
 
         // Silenty ignored
@@ -76,6 +78,9 @@ SYSCALL(
 
 
         if (unlikely(flags == 0))
+            return -EINVAL;
+
+        if (unlikely(len == 0))
             return -EINVAL;
 
 
@@ -97,6 +102,13 @@ SYSCALL(
                 if (unlikely(!fds->descriptors[fd].ref))
                     return -EBADF;
             });
+
+            /* A file mapping is only honoured when the contents can be read in up front.
+               ARCH_VMM_MAP_TYPE_MMAP exists but the fault handler does not implement it yet,
+               so a lazy file mapping would quietly hand back zeroed anonymous memory instead
+               of the file. Refusing is the lesser evil. */
+            if (unlikely(!(flags & (MAP_POPULATE | MAP_LOCKED))))
+                return -ENOTSUP;
         }
 
 
@@ -136,7 +148,9 @@ SYSCALL(
                     break;
                 case MAP_HUGE_1GB:
                     arch_flags |= ARCH_VMM_MAP_HUGE_1GB;
-                    pagesize = arch_vmm_gethugepagesize(ARCH_VMM_MAP_HUGE_2MB);
+                    /* Was asking for the 2MiB size here, so a 1GiB mapping was aligned and
+                       rounded as if it were 2MiB. */
+                    pagesize = arch_vmm_gethugepagesize(ARCH_VMM_MAP_HUGE_1GB);
                     break;
 
                 default:
@@ -153,38 +167,55 @@ SYSCALL(
 
 
         if (unlikely(len & (pagesize - 1))) {
+
+            if (unlikely(len + pagesize < len))
+                return -ENOMEM;
+
             len = (len & ~(pagesize - 1)) + pagesize;
         }
 
 
+        int i;
+
         spinlock_lock(&current_task->address_space->lock);
 
+        {
+            /* Align the cursor first, then carve the region out of it. The bookkeeping used to
+               be filled in from the *unaligned* cursor before it advanced, so every recorded
+               mapping described the region below the one actually returned. */
+            uintptr_t cursor = current_task->address_space->mmap.heap_end;
 
-        int i;
-        for (i = 0; i < CONFIG_MMAP_MAX; i++) {
-
-            if (current_task->address_space->mmap.mappings[i].start != 0UL)
-                continue;
-
-
-            current_task->address_space->mmap.mappings[i].start  = current_task->address_space->mmap.heap_end - len;
-            current_task->address_space->mmap.mappings[i].end    = current_task->address_space->mmap.heap_end;
-            current_task->address_space->mmap.mappings[i].fd     = fd;
-            current_task->address_space->mmap.mappings[i].offset = offset;
+            if (cursor & (pagesize - 1))
+                cursor = (cursor & ~(pagesize - 1)) + pagesize;
 
 
-            if (current_task->address_space->mmap.heap_end & (pagesize - 1)) {
+            /* Keep the cursor inside the window it was seeded from. It only ever grows --
+               munmap does not rewind it -- so without this it eventually walks out of the
+               mmap area and into whatever lies above. */
+            if (unlikely(cursor + len < cursor || cursor + len > current_task->address_space->mmap.heap_limit)) {
 
-                current_task->address_space->mmap.heap_end &= ~(pagesize - 1);
-                current_task->address_space->mmap.heap_end += (pagesize);
+                spinlock_unlock(&current_task->address_space->lock);
+                return -ENOMEM;
             }
 
 
-            start = current_task->address_space->mmap.heap_end;
+            for (i = 0; i < CONFIG_MMAP_MAX; i++) {
 
-            current_task->address_space->mmap.heap_end += len;
+                if (current_task->address_space->mmap.mappings[i].start != 0UL)
+                    continue;
 
-            break;
+
+                current_task->address_space->mmap.mappings[i].start  = cursor;
+                current_task->address_space->mmap.mappings[i].end    = cursor + len;
+                current_task->address_space->mmap.mappings[i].fd     = (flags & MAP_ANONYMOUS) ? (uintptr_t)-1 : (uintptr_t)fd;
+                current_task->address_space->mmap.mappings[i].offset = offset;
+
+                start = cursor;
+
+                current_task->address_space->mmap.heap_end = cursor + len;
+
+                break;
+            }
         }
 
         spinlock_unlock(&current_task->address_space->lock);
@@ -197,16 +228,37 @@ SYSCALL(
 
         uintptr_t ret = arch_vmm_map(current_task->address_space, start, -1, len, arch_flags);
 
-        // if(unlikely(ret < 0))
-        //     return -ENOMEM;
+        if (unlikely(ret == ARCH_VMM_MAP_FAILED)) {
+
+            /* Hand the slot back. The cursor itself is left where it is: another thread may
+               already have carved a region above it. */
+            scoped_lock(&current_task->address_space->lock) {
+                memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
+            }
+
+            return -ENOMEM;
+        }
 
 
-        if (flags & MAP_LOCKED || flags & MAP_POPULATE) {
+        if (!(flags & MAP_ANONYMOUS)) {
 
-            if (flags & MAP_ANONYMOUS)
-                memset((void*)ret, 0, len);
-            else
-                sys_read(fd, (void*)start, len);
+            /* Anonymous pages already come back zeroed from arch_vmm_map(). */
+            uio_lock(start, len);
+
+            long e = sys_read(fd, (void*)start, len);
+
+            uio_unlock(start, len);
+
+            if (unlikely(e < 0)) {
+
+                arch_vmm_unmap(current_task->address_space, start, len);
+
+                scoped_lock(&current_task->address_space->lock) {
+                    memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
+                }
+
+                return e;
+            }
         }
 
 

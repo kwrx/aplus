@@ -43,9 +43,16 @@
  * @brief arch_vmm_access().
  *        Permission check for a virtual address.
  *
+ * This backs uio_check() (@see include/aplus/hal.h), which guards every syscall that
+ * dereferences a user-supplied pointer, so it is the boundary between userspace and the
+ * kernel's own address space. It must be exact.
+ *
  * @param space: address space.
  * @param virtaddr: virtual address.
- * @param mode: access mode.
+ * @param mode: access mode. R_OK/W_OK/X_OK describe a userspace access and require the
+ *              page to be reachable from CPL 3; S_OK instead asserts a supervisor page.
+ *
+ * @return 0 if the access is permitted, -1 otherwise.
  */
 __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr, int mode) {
 
@@ -57,6 +64,16 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
     if (s & (X86_MMU_PAGESIZE - 1))
         s = (s & ~(X86_MMU_PAGESIZE - 1));
 
+
+    /* A user pointer must live in the canonical low half. Rejecting the higher half here is
+       what stops a process from handing the kernel one of its own addresses: KERNEL_HEAP_AREA
+       direct-maps all of physical memory, so a syscall that accepted such a pointer would read
+       or write arbitrary kernel memory on the caller's behalf. */
+    if (!(mode & (S_OK | K_OK))) {
+
+        if (unlikely(virtaddr >= X86_MMU_USERSPACE_END))
+            return -1;
+    }
 
 
 #define check_or_fail(x) \
@@ -70,95 +87,53 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
 
 
     {
+        uintptr_t pagesize = X86_MMU_WALK_ANY;
+        uint64_t effective = 0;
 
-        x86_page_t* d;
+        x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, &effective);
 
-
-#if defined(__x86_64__)
-
-        /* CR3-L4 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 39) & 0x1FF]; }
-
-        /* PML4-L3 */
-        {
-            check_or_fail(*d != X86_MMU_CLEAR);
-
-            d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 30) & 0x1FF];
-        }
+        check_or_fail(d);
+        check_or_fail(*d != X86_MMU_CLEAR);
 
 
-        /* HUGE_1GB */
-        if (!(*d & X86_MMU_PG_PS)) {
+        /* Fold the leaf in: from here on `perm` is what the hardware would actually enforce
+           for this address, across every level of the hierarchy. */
+        uint64_t perm = (effective & (*d | ~(X86_MMU_PG_U | X86_MMU_PG_RW))) | ((effective | *d) & X86_MMU_PT_NX) | (*d & X86_MMU_PG_P);
 
-            /* PDP-L2 */
-            {
-                check_or_fail(*d != X86_MMU_CLEAR);
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 21) & 0x1FF];
-            }
-
-            /* HUGE_2MB */
-            if (!(*d & X86_MMU_PG_PS)) {
-
-                /* PD-L1 */
-                {
-                    check_or_fail(*d != X86_MMU_CLEAR);
-
-                    d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x1FF];
-                }
-            }
-        }
-
-#elif defined(__i386__)
-
-        /* CR3-L2 */
-        { d = &((x86_page_t*)arch_vmm_p2v(space->pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF]; }
-
-
-        /* HUGE_4MB */
-        if (!(*d & X86_MMU_PG_PS)) {
-
-            /* PD-L1 */
-            {
-                check_or_fail(*d != X86_MMU_CLEAR);
-
-                d = &((x86_page_t*)arch_vmm_p2v(*d & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))[(s >> 12) & 0x3FF];
-            }
-        }
-
-#endif
 
         /* Page Table */
         {
+            /* Unless the caller explicitly wants a supervisor page, the access is made on
+               behalf of userspace and the page must carry the user bit at every level. */
+            if (!(mode & (S_OK | K_OK))) {
+                check_or_fail(perm & X86_MMU_PG_U);
+            }
 
             if (mode & R_OK) {
-                if (!(*d & X86_MMU_PG_P)) {
-                    if ((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW) {
-                        e = -1;
-                    }
+                if (!(perm & X86_MMU_PG_P)) {
+                    /* A copy-on-write entry is absent on purpose; the fault handler will
+                       materialise it on first touch. */
+                    check_or_fail((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW);
                 }
             }
 
 #if defined(__x86_64__)
             if (mode & X_OK) {
-                if ((*d & X86_MMU_PT_NX) && !(*d & (1ULL << 47))) {
-                    e = -1;
-                }
+                /* Previously also tested bit 47, which is part of the physical address rather
+                   than a permission -- executability was being decided by where the frame
+                   happened to live. */
+                check_or_fail(!(perm & X86_MMU_PT_NX));
             }
 #endif
 
             if (mode & W_OK) {
-                if (!(*d & X86_MMU_PG_RW)) {
-                    if ((*d & X86_MMU_PG_AP_TP_MASK) != X86_MMU_PG_AP_TP_COW) {
-                        e = -1;
-                    }
+                if (!(perm & X86_MMU_PG_RW)) {
+                    check_or_fail((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW);
                 }
             }
 
             if (mode & S_OK) {
-                if ((*d & X86_MMU_PG_U)) {
-                    e = -1;
-                }
+                check_or_fail(!(perm & X86_MMU_PG_U));
             }
         }
     }

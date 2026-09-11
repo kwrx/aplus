@@ -88,7 +88,12 @@ SYSCALL(
         int fd;
         int e;
 
-        if ((fd = sys_open(__safe_dirname, O_RDONLY | O_DIRECTORY, 0)) < 0)
+        /* __safe_dirname is the kernel-side copy made above. */
+        scoped_uio_kernel() {
+            fd = sys_open(__safe_dirname, O_RDONLY | O_DIRECTORY, 0);
+        }
+
+        if (fd < 0)
             return fd;
 
 

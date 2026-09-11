@@ -70,21 +70,37 @@ SYSCALL(
         // TODO: Use less memory
 
         if (new_brk & (arch_vmm_getpagesize() - 1)) {
+
+            if (unlikely(new_brk + arch_vmm_getpagesize() < new_brk))
+                return current_task->userspace.end;
+
             new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
         }
 
 
+        /* The heap grows upward from the program image and the mmap window grows upward from
+           its own base; keep them apart. Running into the mmap window used to be caught only
+           by a DEBUG_ASSERT inside arch_vmm_map(), which compiles away in a release build --
+           so the overlap silently overwrote live entries and leaked their frames. */
+        if (unlikely(new_brk > current_task->address_space->mmap.heap_start))
+            return current_task->userspace.end;
+
+
         if (new_brk > current_task->userspace.end) {
 
+            uintptr_t e = arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
+                             ARCH_VMM_MAP_RDWR        |
+                             ARCH_VMM_MAP_USER        |
+                             ARCH_VMM_MAP_NOEXEC      |
 #if defined(CONFIG_DEMAND_PAGING) && 0 // TODO: Fix demand paging on brk
-            arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end, ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_USER | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_DEMAND | ARCH_VMM_MAP_TYPE_PAGE);
-#else
-        arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
-                        ARCH_VMM_MAP_RDWR        |
-                        ARCH_VMM_MAP_USER        |
-                        ARCH_VMM_MAP_NOEXEC      |
-                        ARCH_VMM_MAP_TYPE_PAGE );
+                             ARCH_VMM_MAP_DEMAND      |
 #endif
+                             ARCH_VMM_MAP_TYPE_PAGE );
+
+            /* brk(2) reports failure by returning the unchanged break. Out of memory used to
+               panic the kernel instead. */
+            if (unlikely(e == ARCH_VMM_MAP_FAILED))
+                return current_task->userspace.end;
 
         } else if (new_brk < current_task->userspace.end) {
 

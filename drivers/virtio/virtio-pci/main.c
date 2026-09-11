@@ -110,7 +110,13 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
         kprintf("virtio-pci: device %d is mapping bar %d [address(%p), size(%p)]\n", driver->device, bar, mmio, size);
 #endif
 
-        arch_vmm_map(&core->bsp.address_space, mmio, mmio, size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC);
+        if (arch_vmm_map(&core->bsp.address_space, mmio, mmio, size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED) {
+
+#if DEBUG_LEVEL_ERROR
+            kprintf("virtio-pci: ERROR! failed to map bar %d [address(%p), size(%p)]\n", bar, mmio, size);
+#endif
+            return 0;
+        }
 
         driver->internals.bars |= (1 << bar);
     }

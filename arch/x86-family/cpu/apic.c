@@ -538,9 +538,9 @@ void apic_init(void) {
 
     if (!x2apic) {
 
-        arch_vmm_map(&core->bsp.address_space, lapic_address, lapic_address, PML1_PAGESIZE,
+        PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, lapic_address, lapic_address, PML1_PAGESIZE,
 
-                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED);
+                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED));
     }
 
 

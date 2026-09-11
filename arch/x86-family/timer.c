@@ -309,9 +309,9 @@ void timer_init(void) {
 #endif
 
 
-        arch_vmm_map(&core->bsp.address_space, hpet->address.address, hpet->address.address, PML1_PAGESIZE,
+        PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, hpet->address.address, hpet->address.address, PML1_PAGESIZE,
 
-                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED);
+                     ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED));
 
 
         hpet_address = hpet->address.address;

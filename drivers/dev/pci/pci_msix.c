@@ -100,10 +100,16 @@ int pci_find_msix(pcidev_t device, pci_msix_t* mptr) {
         DEBUG_ASSERT(pci_pba_address);
         DEBUG_ASSERT(pci_pba_size);
 
-        arch_vmm_map(&core->bsp.address_space, pci_bir_address, pci_bir_address, pci_bir_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC);
+        if (arch_vmm_map(&core->bsp.address_space, pci_bir_address, pci_bir_address, pci_bir_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED)
+            return -1;
 
         if (msix.msix_pci.pci_bir != msix.msix_pci.pci_pending_bir) {
-            arch_vmm_map(&core->bsp.address_space, pci_pba_address, pci_pba_address, pci_pba_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC);
+
+            if (arch_vmm_map(&core->bsp.address_space, pci_pba_address, pci_pba_address, pci_pba_size, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_NOEXEC) == ARCH_VMM_MAP_FAILED) {
+
+                arch_vmm_unmap(&core->bsp.address_space, pci_bir_address, pci_bir_size);
+                return -1;
+            }
         } 
 
         pci_bir_address += msix.msix_pci.pci_offset;

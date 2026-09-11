@@ -55,7 +55,7 @@ __percpu void ap_bmain(uint64_t magic, uint64_t cpu) {
     arch_cpu_init(cpu);
 
     //* Unmap AP Area
-    arch_vmm_unmap(&core->cpu.cores[cpu].address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
+    arch_vmm_unmap(&core->bsp.address_space, AP_BOOT_OFFSET, X86_MMU_PAGESIZE);
 
     //* Spawn AP INIT Process
     arch_task_spawn_init();
