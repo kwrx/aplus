@@ -264,20 +264,6 @@ stage_4() {
 
 }
 
-stage_5() {
-
-    tput setaf 6
-    echo "## Stage 5: Setting up Rust"
-    tput sgr0
-
-    # Nightly
-    die rustup default nightly
-
-    # Target
-    die rustup target add $CONFIG_COMPILER_TARGET
-
-}
-
 stage_6() {
 
     tput setaf 6
@@ -390,9 +376,6 @@ required gzip
 required tar
 required truncate
 required zip
-required rustc
-required rustup
-required cargo
 required od
 required_python_3
 
@@ -425,9 +408,6 @@ elif [ $ARG_STAGE -eq 3 ]; then
 elif [ $ARG_STAGE -eq 4 ]; then
     stage_2
     stage_4
-elif [ $ARG_STAGE -eq 5 ]; then
-    stage_2
-    stage_5
 elif [ $ARG_STAGE -eq 6 ]; then
     stage_2
     stage_6
@@ -440,7 +420,6 @@ else
     if [ $ARG_SKIP_TOOLCHAIN -eq 0 ]; then
         stage_4
     fi
-    # stage_5
     stage_6
 fi
 

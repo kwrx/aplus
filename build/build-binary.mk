@@ -1,4 +1,4 @@
-.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d .rs .toml
+.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d
 
 TARGET      ?= $(notdir $(shell pwd)).bin
 
