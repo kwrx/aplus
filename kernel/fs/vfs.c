@@ -131,14 +131,10 @@ int vfs_close(inode_t* inode) {
         scoped_lock(&inode->lock) {
             int e = inode->ops.close(inode);
 
+            //? The hangup itself is reported by ops.poll(); all that is owed
+            //? here is the nudge that makes waiters look again.
             shared_ptr_nullable_access(inode->ev, ev, {
-                if (ev->events) {
-
-                    ev->events  = 0;
-                    ev->revents = POLLHUP;
-
-                    atomic_fetch_add(&ev->futex, 1);
-                }
+                atomic_fetch_add(&ev->futex, 1);
             });
 
             return e;
@@ -158,6 +154,30 @@ int vfs_ioctl(inode_t* inode, long req, void* arg) {
     }
 
     return errno = ENOSYS, -1;
+}
+
+
+void vfs_notify(inode_t* inode) {
+
+    if (unlikely(!inode))
+        return;
+
+    shared_ptr_nullable_access(inode->ev, ev, {
+        atomic_fetch_add(&ev->futex, 1);
+    });
+}
+
+
+int vfs_poll(inode_t* inode, int events) {
+
+    DEBUG_ASSERT(inode);
+
+    if (likely(inode->ops.poll)) {
+        scoped_lock(&inode->lock) return inode->ops.poll(inode, events);
+    }
+
+    //? Nothing that can block, so everything the caller asked about is ready.
+    return events & (POLLIN | POLLOUT);
 }
 
 
@@ -280,19 +300,24 @@ ssize_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.read(inode, buf, off, size);
 
-            shared_ptr_nullable_access(inode->ev, ev, {
-                if (ev->events & POLLOUT) {
+            //? Only an actual transfer is a change. A read that returned
+            //? -EAGAIN moved nothing, and bumping the counter for it tells every
+            //? waiter on this inode to go and look at a state that is exactly as
+            //? they left it -- which, where an inode's counter is shared (a pty
+            //? master and its slaves share one), is enough for two blocked
+            //? readers to wake each other forever without either making progress.
+            if (e > 0) {
 
-                    atomic_fetch_or(&ev->revents, POLLOUT);
+                shared_ptr_nullable_access(inode->ev, ev, {
                     atomic_fetch_add(&ev->futex, 1);
-                }
-            });
+                });
+            }
 
             return e;
         }
     }
 
-    return errno = ENOSYS, -1;
+    return -ENOSYS;
 }
 
 
@@ -308,19 +333,20 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
         scoped_lock(&inode->lock) {
             ssize_t e = inode->ops.write(inode, buf, off, size);
 
-            shared_ptr_nullable_access(inode->ev, ev, {
-                if (ev->events & POLLIN) {
+            //? As in vfs_read(): a write that placed no bytes changed nothing
+            //? and must not be announced as if it had.
+            if (e > 0) {
 
-                    atomic_fetch_or(&ev->revents, POLLIN);
+                shared_ptr_nullable_access(inode->ev, ev, {
                     atomic_fetch_add(&ev->futex, 1);
-                }
-            });
+                });
+            }
 
             return e;
         }
     }
 
-    return errno = ENOSYS, -1;
+    return -ENOSYS;
 }
 
 

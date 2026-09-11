@@ -53,7 +53,7 @@
 - [ ] I/O Scheduler
 - [x] Spinlocks
 - [x] Semaphores
-- [ ] Unix Pipe
+- [x] Unix Pipe
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)

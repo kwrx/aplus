@@ -74,7 +74,7 @@ __attribute__((used)) static void pty_input_discard(pty_t* pty, bool drain) {
     DEBUG_ASSERT(pty->input.capacity >= pty->input.size);
 
     scoped_lock(&pty->input.lock) {
-        if (drain) {
+        if (drain && ringbuffer_writeable(&pty->r1) >= pty->input.size) {
             ringbuffer_write(&pty->r1, pty->input.buffer, pty->input.size);
         }
 
@@ -151,16 +151,13 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
  * whatever coordinates the corrupted sequences name.
  *
  * So: report the partial count and let the caller resume from there. Only a write that made
- * no progress at all returns -1/EINTR, which is what asks sys_write() to block and retry.
+ * no progress at all returns -EAGAIN, which is what asks sys_write() to block and retry.
  */
 static inline ssize_t __pty_short_write(size_t done) {
 
     if (done == 0)
-        return errno = EINTR, -1;
+        return -EAGAIN;
 
-    /* sys_write() consults errno even on a successful write, so a stale EINTR here would send
-       it down the blocking path and discard the count we are returning. */
-    errno = 0;
     return (ssize_t)done;
 }
 
@@ -814,7 +811,14 @@ ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
         } else {
 
-            return ringbuffer_read(&pty->r1, buf, MIN(size, ringbuffer_available(&pty->r1)));
+            /* MIN() with an empty buffer would ask for zero bytes, which now reads back as
+               a clean 0 (end of file) rather than the would-block it has always meant here. */
+            size_t avail = ringbuffer_available(&pty->r1);
+
+            if (avail == 0)
+                return -EAGAIN;
+
+            return ringbuffer_read(&pty->r1, buf, MIN(size, avail));
         }
     }
 }
@@ -893,8 +897,18 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     spinlock_init_with_flags(&pty->input.lock, SPINLOCK_FLAGS_RECURSIVE);
 
 
-    ringbuffer_init(&pty->r1, CONFIG_BUFSIZ * 64);
-    ringbuffer_init(&pty->r2, CONFIG_BUFSIZ * 64);
+    if (unlikely(ringbuffer_init(&pty->r1, CONFIG_BUFSIZ * 64) < 0)) {
+
+        kfree(pty);
+        return NULL;
+    }
+
+    if (unlikely(ringbuffer_init(&pty->r2, CONFIG_BUFSIZ * 64) < 0)) {
+
+        ringbuffer_destroy(&pty->r1);
+        kfree(pty);
+        return NULL;
+    }
 
 
 

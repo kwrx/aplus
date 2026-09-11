@@ -26,6 +26,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
@@ -61,62 +62,109 @@ SYSCALL(
             return -EINVAL;
 
 
-        inode_t* inode = pipefs_inode();
+        inode_t* inodes[2] = {NULL, NULL};
 
-        if ((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, flags)) == NULL)
-            return -ENOMEM;
+        long e;
 
-
-
-        struct file* refs[2];
-
-        if ((refs[0] = fd_append(inode, 0, 0)) == NULL)
-            return -ENFILE;
-
-        if ((refs[1] = fd_append(inode, 0, 0)) == NULL)
-            return -ENFILE;
+        if ((e = pipefs_create_pair(&inodes[PIPE_END_READ], &inodes[PIPE_END_WRITE], CONFIG_PIPESIZ)) < 0)
+            return e;
 
 
-        shared_ptr_access(current_task->fd, fds, {
+        //? From here on every exit has to undo exactly what it managed to set
+        //? up: an inode that never reached a struct file is nobody else's to
+        //? release, and a filetable slot that leaks is gone for the whole boot.
+
+        struct file* refs[2] = {NULL, NULL};
+
+        for (size_t i = 0; i < 2; i++)
+            refs[i] = fd_append(inodes[i], 0, 0);
+
+
+        if (unlikely(!refs[PIPE_END_READ] || !refs[PIPE_END_WRITE])) {
+
             for (size_t i = 0; i < 2; i++) {
 
-                int fd = -1;
+                if (refs[i]) {
 
-                scoped_lock(&current_task->lock) {
+                    fd_remove(refs[i], true);
+
+                } else {
+
+                    vfs_close(inodes[i]);
+                    kfree(inodes[i]);
+                }
+            }
+
+            return -ENFILE;
+        }
+
+
+        int assigned[2] = {-1, -1};
+
+        shared_ptr_access(current_task->fd, fds, {
+            scoped_lock(&current_task->lock) {
+                for (size_t i = 0; i < 2; i++) {
+
+                    int fd;
+
                     for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
 
                         if (!fds->descriptors[fd].ref)
                             break;
                     }
 
-                    if (fd == CONFIG_OPEN_MAX)
+                    if (fd == CONFIG_OPEN_MAX) {
+
+                        e = -EMFILE;
                         break;
+                    }
 
 
-                    fds->descriptors[fd].ref   = refs[i];
-                    fds->descriptors[fd].flags = (flags & O_NONBLOCK) | (flags & O_CLOEXEC) | (i ? O_WRONLY : O_RDONLY);
+                    fds->descriptors[fd].ref = refs[i];
+
+                    //? O_CLOEXEC lives in its own bit: execve() looks at
+                    //? close_on_exec and never at the open flags.
+                    fds->descriptors[fd].flags         = (flags & O_NONBLOCK) | (i == PIPE_END_WRITE ? O_WRONLY : O_RDONLY);
+                    fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);
+
+                    assigned[i] = fd;
                 }
 
 
-                if (fd == CONFIG_OPEN_MAX)
-                    return -EMFILE;
+                if (e < 0) {
 
+                    for (size_t i = 0; i < 2; i++) {
 
-                DEBUG_ASSERT(fd >= 0);
-                DEBUG_ASSERT(fd <= CONFIG_OPEN_MAX - 1);
-                DEBUG_ASSERT(fds->descriptors[fd].ref);
-                DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+                        if (assigned[i] < 0)
+                            continue;
 
-
-#if DEBUG_LEVEL_TRACE
-                kprintf("pipe2: assign fd[%zd] = %d (flags: %o)\n", i, fd, flags);
-#endif
-
-
-                uio_w32(&fildes[i], fd);
+                        fds->descriptors[assigned[i]].ref           = NULL;
+                        fds->descriptors[assigned[i]].flags         = 0;
+                        fds->descriptors[assigned[i]].close_on_exec = 0;
+                    }
+                }
             }
         });
 
+
+        if (unlikely(e < 0)) {
+
+            for (size_t i = 0; i < 2; i++)
+                fd_remove(refs[i], true);
+
+            return e;
+        }
+
+
+        DEBUG_ASSERT(assigned[PIPE_END_READ] >= 0);
+        DEBUG_ASSERT(assigned[PIPE_END_WRITE] >= 0);
+
+#if DEBUG_LEVEL_TRACE
+        kprintf("pipe2: assign fd[0] = %d, fd[1] = %d (flags: %o)\n", assigned[0], assigned[1], flags);
+#endif
+
+        uio_w32(&fildes[0], assigned[PIPE_END_READ]);
+        uio_w32(&fildes[1], assigned[PIPE_END_WRITE]);
 
         return 0;
     });

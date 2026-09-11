@@ -86,7 +86,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
 
 
     if (device->status != DEVICE_STATUS_READY)
-        return errno = EBUSY, -1;
+        return -EBUSY;
 
 
     if (!device->blk.write || !device->blk.read)
@@ -205,7 +205,7 @@ ssize_t block_read(device_t* device, void* buf, off_t offset, size_t size) {
 
 
     if (device->status != DEVICE_STATUS_READY)
-        return errno = EBUSY, -1;
+        return -EBUSY;
 
 
     if (!device->blk.read)

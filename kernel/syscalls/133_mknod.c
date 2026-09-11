@@ -52,6 +52,9 @@
 
 SYSCALL(
     133, mknod, long sys_mknod(const char* filename, mode_t mode, unsigned dev) {
+
+        __unused_param(dev);
+
         if (unlikely(!filename))
             return -EINVAL;
 
@@ -59,60 +62,41 @@ SYSCALL(
             return -EFAULT;
 
 
-        if (mode & S_IFBLK)
-            return -ENOSYS;
+        //? The type bits are a value, not a bitmask. Testing them with & picked
+        //? the wrong arm for nearly every type -- S_IFREG (0100000) matched the
+        //? S_IFSOCK (0140000) test and S_IFDIR (0040000) matched S_IFBLK
+        //? (0060000) -- so creating an ordinary file through mknod() failed
+        //? with ENOSYS.
 
-        else if (mode & S_IFCHR)
-            return -ENOSYS;
+        switch (mode & S_IFMT) {
 
-        else if (mode & S_IFSOCK)
-            return -ENOSYS;
-
-        else if (mode & S_IFIFO) {
-
-            int fd;
-
-            if ((fd = sys_creat(filename, mode)) < 0)
-                return fd;
+            case S_IFBLK:
+            case S_IFCHR:
+            case S_IFSOCK:
+                return -ENOSYS;
 
 
-            inode_t* inode = NULL;
+            //? A FIFO needs nothing special here: the filesystem recognises the
+            //? type at creation and attaches the open hook that hands out pipe
+            //? endpoints, so the node below is already a working FIFO.
+            case S_IFIFO:
+            case S_IFREG:
+            case S_IFDIR:
+            case 0: {
 
-            shared_ptr_access(current_task->fd, fds, {
-                DEBUG_ASSERT(fds->descriptors[fd].ref);
-                DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+                long fd;
 
-                inode = fds->descriptors[fd].ref->inode;
-            });
+                if ((fd = sys_creat(filename, mode)) < 0)
+                    return fd;
 
-            DEBUG_ASSERT(inode);
+                if (sys_close(fd) < 0)
+                    return -EIO;
 
-
-            if ((fd = sys_close(fd)) < 0)
-                return -EIO;
-
-            if ((inode = vfs_mkfifo(inode, CONFIG_PIPESIZ, mode)) == NULL)
-                return -ENOMEM;
+                return 0;
+            }
 
 
-            return 0;
-
+            default:
+                return -EINVAL;
         }
-
-        else if (mode & S_IFREG || mode & S_IFDIR || (mode & S_IFMT) == 0) {
-
-            int fd;
-
-            if ((fd = sys_creat(filename, mode)) < 0)
-                return fd;
-
-            if (sys_close(fd) < 0)
-                return -EIO;
-
-            return 0;
-
-        }
-
-        else
-            return -EINVAL;
     });

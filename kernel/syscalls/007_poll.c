@@ -61,61 +61,57 @@
 
 SYSCALL(
     7, poll, long sys_poll(struct pollfd* ufds, unsigned int nfds, int timeout) {
-        if (unlikely(!ufds))
-            return -EINVAL;
-
-        if (unlikely(!uio_check(ufds, R_OK | W_OK)))
-            return -EFAULT;
-
-        if (unlikely(nfds == 0))
-            return -EINVAL;
-
         if (unlikely(nfds > current_task->rlimits[RLIMIT_NOFILE].rlim_cur))
             return -EINVAL;
 
+        if (unlikely(nfds && !ufds))
+            return -EINVAL;
+
+        if (unlikely(nfds && !uio_check(ufds, R_OK | W_OK)))
+            return -EFAULT;
+
+        //? uio_check() validates one address, not a range, so every entry has
+        //? to be checked as it is reached.
 
 
-        size_t e          = 0;
-        struct pollfd pfd = {0};
+        //? Readiness is asked for, never remembered. Every attempt -- including
+        //? each restart after a sleep -- rescans from scratch, so a descriptor
+        //? that became ready while nobody was looking is still reported.
+
+        size_t ready = 0;
 
         for (size_t i = 0; i < nfds; i++) {
+
+            struct pollfd pfd;
 
             if (unlikely(!uio_check(&ufds[i], R_OK | W_OK)))
                 return -EFAULT;
 
-
             uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
 
-            if (pfd.fd < 0)
-                return -EBADF;
+            //? POSIX: revents is output only, so whatever the caller left in it
+            //? is discarded rather than merged into the answer.
+            pfd.revents = 0;
+
+            //? A negative fd is how callers park a slot they are not interested
+            //? in for now; it is skipped, not an error.
+            if (pfd.fd < 0) {
+
+                uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
+                continue;
+            }
 
 
 #if defined(CONFIG_HAVE_NETWORK)
 
             if (NETWORK_IS_SOCKFD(pfd.fd)) {
 
-                struct pollfd sfd;
-
-                sfd.fd      = NETWORK_SOCKFD(pfd.fd);
-                sfd.events  = pfd.events;
-                sfd.revents = 0;
-
+                struct pollfd sfd = {.fd = NETWORK_SOCKFD(pfd.fd), .events = pfd.events, .revents = 0};
 
                 if (lwip_poll_from_syscall(&sfd, 1, NULL, false) < 0)
                     return -errno;
 
-
-                if (sfd.revents & pfd.events) {
-
-                    pfd.revents |= sfd.revents & pfd.events;
-
-                    sfd.events  = 0;
-                    sfd.revents = 0;
-
-                    uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
-
-                    e++;
-                }
+                pfd.revents = sfd.revents & (pfd.events | POLLHUP | POLLERR | POLLNVAL);
 
             } else
 
@@ -123,89 +119,137 @@ SYSCALL(
 
             {
 
-                if (pfd.fd >= CONFIG_OPEN_MAX)
-                    return -EBADF;
+                if (pfd.fd >= CONFIG_OPEN_MAX) {
 
+                    pfd.revents = POLLNVAL;
 
-                shared_ptr_access(current_task->fd, fds, {
-                    if (fds->descriptors[pfd.fd].ref == NULL)
-                        return -EBADF;
-
-                    if (fds->descriptors[pfd.fd].ref->inode == NULL)
-                        return -EBADF;
-
-
-                    shared_ptr_nullable_access(fds->descriptors[pfd.fd].ref->inode->ev, ev, {
-                        if (ev->revents & pfd.events) {
-
-                            pfd.revents = ev->revents & pfd.events;
-
-                            ev->revents &= ~pfd.events;
-                            ev->events &= ~pfd.events;
-
-                            uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
-
-                            e++;
-                        }
-                    });
-                });
-            }
-        }
-
-
-        if (e == 0) {
-
-            struct timespec tm;
-
-            if (timeout > 0) {
-                tm.tv_sec  = (timeout / 1000);
-                tm.tv_nsec = (timeout % 1000) * 1000000;
-            }
-
-
-            for (size_t i = 0; i < nfds; i++) {
-
-                uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
-
-#if defined(CONFIG_HAVE_NETWORK)
-                if (NETWORK_IS_SOCKFD(pfd.fd)) {
-
-                    struct pollfd sfd;
-
-                    sfd.fd      = NETWORK_SOCKFD(pfd.fd);
-                    sfd.events  = pfd.events;
-                    sfd.revents = 0;
-
-
-                    if (lwip_poll_from_syscall(&sfd, 1, timeout > 0 ? &tm : NULL, true) < 0)
-                        return -errno;
-
-                } else
-#endif
-                {
+                } else {
 
                     shared_ptr_access(current_task->fd, fds, {
-                        shared_ptr_nullable_access(fds->descriptors[pfd.fd].ref->inode->ev, ev, {
-                            ev->revents &= ~pfd.events;
-                            ev->events |= pfd.events;
+                        if (fds->descriptors[pfd.fd].ref == NULL || fds->descriptors[pfd.fd].ref->inode == NULL) {
 
-                            futex_wait(current_task, &ev->futex, ev->futex, timeout > 0 ? &tm : NULL);
-                        });
+                            pfd.revents = POLLNVAL;
+
+                        } else {
+
+                            pfd.revents = vfs_poll(fds->descriptors[pfd.fd].ref->inode, pfd.events);
+                        }
                     });
                 }
             }
 
 
-#if DEBUG_LEVEL_TRACE
-            kprintf("poll: task %d waiting for %d events\n", current_task->tid, nfds);
-#endif
+            if (pfd.revents)
+                ready++;
 
-            thread_suspend(current_task);
-            thread_restart_sched(current_task);
-            thread_restart_syscall(current_task);
-
-            return -EINTR;
+            uio_memcpy_s2u(&ufds[i], &pfd, sizeof(struct pollfd));
         }
 
-        return e;
+
+        if (ready > 0)
+            return current_task->syscall.deadline_valid = false, (long)ready;
+
+        //? A zero timeout is a readiness probe, not a wait.
+        if (timeout == 0)
+            return current_task->syscall.deadline_valid = false, 0;
+
+
+        struct timespec tm  = {0, 0};
+        struct timespec* to = NULL;
+
+        if (timeout > 0) {
+
+            //? The deadline is stamped once and reused by every restart; each
+            //? attempt sleeps only for what is left of it. Recomputing the full
+            //? timeout here is what used to keep poll() from ever timing out.
+            if (!current_task->syscall.deadline_valid) {
+
+                uint64_t now = arch_timer_generic_getns() + ((uint64_t)timeout * 1000000ULL);
+
+                current_task->syscall.deadline.tv_sec  = (time_t)(now / 1000000000ULL);
+                current_task->syscall.deadline.tv_nsec = (long)(now % 1000000000ULL);
+                current_task->syscall.deadline_valid   = true;
+            }
+
+
+            uint64_t deadline = ((uint64_t)current_task->syscall.deadline.tv_sec * 1000000000ULL) + (uint64_t)current_task->syscall.deadline.tv_nsec;
+            uint64_t now      = arch_timer_generic_getns();
+
+            if (now >= deadline)
+                return current_task->syscall.deadline_valid = false, 0;
+
+
+            tm.tv_sec  = (time_t)((deadline - now) / 1000000000ULL);
+            tm.tv_nsec = (long)((deadline - now) % 1000000000ULL);
+
+            to = &tm;
+        }
+
+
+        //? futex_wait() registers rather than blocks, so every descriptor is
+        //? armed first and the task suspends once: it wakes on whichever of
+        //? them moves first.
+
+        size_t armed = 0;
+
+        for (size_t i = 0; i < nfds; i++) {
+
+            struct pollfd pfd;
+
+            if (unlikely(!uio_check(&ufds[i], R_OK | W_OK)))
+                return -EFAULT;
+
+            uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
+
+            if (pfd.fd < 0)
+                continue;
+
+
+#if defined(CONFIG_HAVE_NETWORK)
+
+            if (NETWORK_IS_SOCKFD(pfd.fd)) {
+
+                struct pollfd sfd = {.fd = NETWORK_SOCKFD(pfd.fd), .events = pfd.events, .revents = 0};
+
+                if (lwip_poll_from_syscall(&sfd, 1, to, true) < 0)
+                    return -errno;
+
+                armed++;
+                continue;
+            }
+
+#endif
+
+            //? Re-validate: this is a fresh read of user memory and a sibling
+            //? thread may have changed the fd since the scan above.
+            if (pfd.fd >= CONFIG_OPEN_MAX)
+                continue;
+
+            shared_ptr_access(current_task->fd, fds, {
+                if (fds->descriptors[pfd.fd].ref != NULL && fds->descriptors[pfd.fd].ref->inode != NULL) {
+
+                    shared_ptr_nullable_access(fds->descriptors[pfd.fd].ref->inode->ev, ev, {
+                        futex_wait(current_task, &ev->futex, ev->futex, to);
+                        armed++;
+                    });
+                }
+            });
+        }
+
+
+        //? Nothing to watch -- poll(NULL, 0, ms) is a plain sleep. Park on a
+        //? word nobody ever touches so that only the deadline can wake it.
+        if (armed == 0 && to != NULL)
+            futex_wait(current_task, &current_task->syscall.deadline_futex, current_task->syscall.deadline_futex, to);
+
+
+#if DEBUG_LEVEL_TRACE
+        kprintf("poll: task %d waiting for %d events\n", current_task->tid, nfds);
+#endif
+
+        thread_suspend(current_task);
+        thread_restart_sched(current_task);
+        thread_restart_syscall(current_task);
+
+        return -EINTR;
     });

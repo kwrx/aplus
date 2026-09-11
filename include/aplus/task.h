@@ -104,8 +104,8 @@ struct fd_descriptor {
     struct file* ref;
 
     struct {
-        int flags         : 30;
-        int close_on_exec : 1;
+        int flags : 30;
+        unsigned int close_on_exec : 1;
     };
 };
 
@@ -288,6 +288,17 @@ typedef struct task {
         long param3;
         long param4;
         long param5;
+
+        //? A syscall that sleeps is restarted from the top with these same
+        //? arguments, so a relative timeout would start over every time and
+        //? never come due. Whoever sleeps stamps the absolute deadline here on
+        //? the first attempt and clears it on the way out.
+        struct timespec deadline;
+        bool deadline_valid;
+
+        //? A word nothing ever bumps, so a sleep with no descriptor to watch
+        //? can still be woken by its deadline and nothing else.
+        volatile uint32_t deadline_futex;
 
     } syscall;
 
