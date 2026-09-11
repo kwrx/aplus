@@ -3,46 +3,68 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
-An operating system built mostly from scratch with a hybrid and cross-platform kernel that resembles Unix. The project began in September 2013 as a way to improve my creator's low-level programming skills. It primarily uses C/C++ and Assembly programming languages.
+`aplus` is a Unix-like operating system built almost entirely from scratch — a hybrid kernel with loadable kernel modules, its own drivers, and a small userspace on top. The kernel is written in C, with assembly for the architecture-specific parts; the cross toolchain builds C and C++ programs to run on it.
+
+It started in September 2013 as a way to learn low-level and systems programming, and it is still a hobby project rather than a production system. Today it boots on `x86_64` and provides a Linux-like syscall layer, a VFS with several filesystems, an lwIP TCP/IP stack, SMP multitasking and an early graphical stack — with a good deal still unimplemented.
 
 ## :fire: Features
 
-* **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets
-* **Multitasking**: Thread and Process support with SMP
-* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/)
-* **Unix-like**: VFS, Signals, Pipes, IPC, Shared Memory, Unix Sockets
-* **ELF**: Dynamic and static executables 
+* **Hybrid kernel**: modular design with loadable kernel objects, see [drivers/*](/drivers)
+* **Cross-platform**: [arch/*](/arch), designed for cross-platform environment targets. `x86_64` is the target that boots and runs today; `i686` and `aarch64` are placeholders
+* **Multitasking**: processes and threads (`fork`, `vfork`, `clone`, `execve`) with SMP support
+* **Virtual memory**: on-demand paging with `mmap`, `mprotect` and `brk`
+* **Filesystems**: [kernel/fs/](/kernel/fs), a VFS with ext2, ISO 9660, tmpfs, procfs and bindfs
+* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/), reachable through BSD sockets
+* **Unix-like**: Signals, Pipes, Futex, Unix domain sockets, TTY and PTY
+* **I/O Multiplexing**: `poll`, `ppoll`, `select` and `pselect`
+* **ELF**: static executables; dynamic linking is not supported yet
+* **Linux Syscalls**: Linux-like syscall layer, see [SYSCALLS.md](/docs/SYSCALLS.md)
 * **Linux Framebuffer**: Linux-like framebuffer support
-* **Linux Syscalls**: Linux-like syscall layer
-* **Virtio**: Virtio devices (gpu, block, network, crypto)
-* **GUI**: coming soon...
-  
+* **Virtio**: Virtio devices (gpu, console, random) over Virtio PCI
+* **GUI**: early stage, a compositor demo and a terminal emulator
+
 See [FEATURES.md](/docs/FEATURES.md) for more information about features. 
   
 <br>
 <p align="center" width="100%">
-    <img src="./docs/images/v0.4-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
+    <img src="./docs/images/v0.7-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
 </p>
 
 
 ## :electron: Kernel
 The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
-Moreover, it uses a modular architecture with loadables kernel objects and run on different platforms like x86_64, aarch64, etc.
+It is a hybrid kernel: core subsystems are built in, while drivers are loadable kernel objects linked and started at runtime by the [module loader](/kernel/init/module.c).
+
+* **Tasking**, per-CPU run queues with SMP support, signal delivery and futex-based sleeping
+* **Memory**, [kernel/mm/](/kernel/mm), physical memory manager and kernel heap on top of on-demand paging
+* **IPC**, [kernel/ipc/](/kernel/ipc), spinlocks, semaphores, futexes and Unix domain sockets
+* **VFS**, [kernel/fs/](/kernel/fs), inode-based virtual filesystem with a dentry cache and an I/O scheduler
+* **Network**, [kernel/network/](/kernel/network), the lwIP stack wired up to the socket syscalls
+* **Syscalls**, [kernel/syscalls/](/kernel/syscalls), one file per entry, numbered from [syscalls.json](/scripts/gen-syscalls/syscalls.json)
+
+It currently boots and runs on `x86_64`; support for other architectures such as `i686` and `aarch64` is still to be written.
 
 
 ## :robot: Userspace
-Userspace is still under development. It provides several GNU/Linux core tools, devtools like `gcc` or `binutils`, a very simple Java Virtual Machine, graphical interface, windows manager, services like NTP, I/O Cache Sync and so on.
+Userspace is still under development, and is assembled from two sources: the programs built from this repository, and prebuilt packages fetched at `./configure` time from [aplus-packages](https://github.com/kwrx/aplus-packages).
 
-Furthermore, userspace has **multi-user** environment with unix permission support, superuser (root), unix-like filesystem with `/proc` and `/dev` implementation
+Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, an early [compositor](/apps/sysutils/aplus-ui), the `kilo` editor, `nyancat`, and a set of [test programs](/apps/test).
+
+Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors and keymaps, the `zlib`, `libpng`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
+
+Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
 
 ## :electric_plug: Drivers
-Modules provides various core platform features: caching, char/block devices, filesystems, I/O devices, system low-level services, network, audio/video and virtio support.
+Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 30 of them, covering device-class interfaces, char and block devices, terminals, network, video and virtio.
 
 ### Notable modules
-* **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers
+* **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers (block, char, network, video, pci)
 * **AHCI** (Advanced Host Controller Interface), [platform/pc/block/ahci](/drivers/platform/pc/block/ahci/main.c), almost full SATA/SATAPI driver
-* **BGA** (Bochs Video), [platform/pc/video/bga](/drivers/platform/pc/video/bga/main.c), Bochs Virtual VGA Adapter
+* **Bochs VGA**, [platform/pc/video/bochs-vga](/drivers/platform/pc/video/bochs-vga/main.c), Bochs Virtual VGA Adapter
+* **VMware VGA**, [platform/pc/video/vmware](/drivers/platform/pc/video/vmware/main.c), VMware SVGA II Adapter
 * **Intel e1000** (Network device), [platform/pc/network/e1000](/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
+* **PCNET** (Network device), [platform/pc/network/pcnet](/drivers/platform/pc/network/pcnet/main.c), AMD PCnet NIC driver
+* **TTY**, [tty/*](/drivers/tty), terminal devices, `/dev/ptmx` and pseudo-terminal pairs
 * **VirtIO**, [virtio/*](/drivers/virtio), VirtIO devices interfaces
 
 ---
@@ -58,11 +80,11 @@ $ cd aplus
 It's recommended you use a recent Linux host environment with this method.
 
 Some packages are required for the build system:
-* `binutils`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
-* `gcc`, `g++` to compile c/c++ sources
-* `nasm` to compile asm sources
+* `git`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
+* `gcc`, `ld` to compile sources and link objects
 * `python3` to run some build scripts
-* `e2fsprogs`, `grub`, `parted`, `dd`, `fc-scan` to generate hdd image
+* `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `dd`, `truncate`, `fc-scan` to generate hdd image
+* `tar`, `gzip`, `zip`, `find`, `awk`, `od` for the remaining build steps
 * `qemu` or `VirtualBox` to run Virtual Machine  
 
 <br>
@@ -72,11 +94,28 @@ Some packages are required for the build system:
 ```console
 $ ./configure
 ```
+   This opens the Kconfig menu. To build a preset from [build/setup](/build/setup) without it:
+```console
+$ ./configure --kconfig x86_64
+```
+
+2. Build it
+```console
+$ ./makew all
+```
 
 3. Run it
 ```console
 $ ./makew run
 ```
+   Use `./makew run-headless` to run without a graphical display, which is handy to capture console output.
+
+---
+
+## :books: Documentation
+* [FEATURES.md](/docs/FEATURES.md) — per-architecture and per-subsystem feature matrix
+* [SYSCALLS.md](/docs/SYSCALLS.md) — the syscall table
+* [REPORT.md](/docs/REPORT.md) — outstanding `TODO`/`FIXME` markers in the tree
 
 ---
 
