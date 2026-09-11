@@ -574,7 +574,7 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
             shared_ptr_access(tmp->sighand, sighand, {
                 //? Check if the signal is blocked
-                if (unlikely(sighand->sigmask.__bits[sig / (sizeof(long) << 3)] & (1 << (sig % (sizeof(long) << 3))))) {
+                if (unlikely(sigset_is_member(&sighand->sigmask, sig))) {
 
                     if (sighand->action[sig].sa_flags & SA_NODEFER)
                         queue_enqueue(&tmp->sigqueue, siginfo, 0);
