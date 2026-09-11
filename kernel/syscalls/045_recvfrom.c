@@ -28,6 +28,7 @@
 #include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/unix.h>
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -59,6 +60,19 @@ struct sockaddr;
 
 SYSCALL(
     45, recvfrom, long sys_recvfrom(int fd, void* buf, size_t size, unsigned flags, struct sockaddr* sockaddr, socklen_t* socklen) {
+
+        struct unix_sock* us;
+
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            //? Likewise: the peer is fixed, so there is no source address to
+            //? report and this is a plain read.
+            if (sockaddr && socklen)
+                uio_w32((uint32_t*)socklen, 0);
+
+            return sys_read(fd, buf, size);
+        }
+
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))

@@ -28,6 +28,7 @@
 #include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/unix.h>
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -57,6 +58,20 @@ typedef uint32_t socklen_t;
 
 SYSCALL(
     44, sendto, long sys_sendto(int fd, const void* buf, size_t size, unsigned flags, const struct sockaddr* sockaddr, socklen_t socklen) {
+
+        struct unix_sock* us;
+
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            //? A connected stream socket has nowhere else to send to, so this
+            //? is just a write. Routing it through sys_write() reuses the
+            //? blocking and short-write handling rather than repeating it.
+            if (unlikely(sockaddr != NULL))
+                return -EISCONN;
+
+            return sys_write(fd, (void*)buf, size);
+        }
+
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))

@@ -27,6 +27,7 @@
 #include <aplus/errno.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/unix.h>
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -51,4 +52,13 @@
 
 struct sockaddr;
 
-SYSCALL(51, getsockname, long sys_getsockname(int fd, struct sockaddr* sockaddr, int* socklen) { return -ENOSYS; });
+SYSCALL(
+    51, getsockname, long sys_getsockname(int fd, struct sockaddr* sockaddr, int* socklen) {
+
+        struct unix_sock* us;
+
+        if ((us = unix_sock_from_fd(fd)) != NULL)
+            return unix_getsockname(us, sockaddr, (uint32_t*)socklen);
+
+        return -ENOSYS;
+    });

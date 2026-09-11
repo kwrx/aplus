@@ -28,6 +28,7 @@
 #include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/unix.h>
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -58,44 +59,14 @@ typedef uint32_t socklen_t;
  */
 
 
+//? Declared here rather than in syscall.h, which carries no socket prototypes.
+extern long sys_accept4(int fd, struct sockaddr* sockaddr, int* socklen, int flags);
+
+
 SYSCALL(
     43, accept, long sys_accept(int fd, struct sockaddr* sockaddr, socklen_t* socklen) {
 
-#if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(!NETWORK_IS_SOCKFD(fd)))
-            return -ENOTSOCK;
-
-        if (unlikely(!sockaddr))
-            return -EINVAL;
-
-        if (unlikely(!socklen))
-            return -EINVAL;
-
-        if (unlikely(!uio_check(sockaddr, R_OK | W_OK)))
-            return -EFAULT;
-
-        if (unlikely(!uio_check(socklen, R_OK | W_OK)))
-            return -EFAULT;
-
-
-        socklen_t __socklen = uio_r32(socklen);
-
-        char __sockaddr[__socklen];
-        uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
-
-
-        ssize_t e;
-
-        if ((e = lwip_accept(NETWORK_SOCKFD(fd), (struct sockaddr*)__sockaddr, &__socklen)) < 0)
-            return -errno;
-
-
-        uio_w32(socklen, __socklen);
-        uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
-
-        return NETWORK_FD(e);
-
-#else
-    return -ENOSYS;
-#endif
+        //? accept() is accept4() with no flags; keeping one implementation means
+        //? the blocking path and the local-socket dispatch cannot drift apart.
+        return sys_accept4(fd, sockaddr, (int*)socklen, 0);
     });

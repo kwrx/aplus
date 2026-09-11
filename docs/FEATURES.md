@@ -54,6 +54,7 @@
 - [x] Spinlocks
 - [x] Semaphores
 - [x] Unix Pipe
+- [x] Unix Socket (AF_UNIX, SOCK_STREAM)
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)
