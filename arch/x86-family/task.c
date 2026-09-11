@@ -107,7 +107,26 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
         FRAME(current_cpu)->ss    = USER_DS | 3;
         FRAME(current_cpu)->flags = 0x202;
 
-        memcpy(&sighand->sigmask, &action->sa_mask, sizeof(sigset_t));
+        //? POSIX: for as long as the handler runs, the blocked set is whatever was already
+        //? blocked, plus the handler's own sa_mask, plus the signal being delivered unless
+        //? SA_NODEFER asks to let it nest. sigcontext->mask saved just above is what sigreturn
+        //? puts back afterwards, so adding to the live mask here is safe.
+        //?
+        //? sa_mask is the two-word mask the syscall ABI carries, not a whole sigset_t, so that
+        //? is all there is to read: taking sizeof(sigset_t) from it used to drag in 120 bytes
+        //? of the neighbouring action[] entries and install those as the mask.
+        sigset_t handler_mask;
+
+        memset(&handler_mask, 0, sizeof(sigset_t));
+        memcpy(&handler_mask, &action->sa_mask, sizeof(action->sa_mask));
+
+        for (size_t i = 0; i < SIGSET_WORDS; i++) {
+            sighand->sigmask.__bits[i] |= handler_mask.__bits[i];
+        }
+
+        if (!(action->sa_flags & SA_NODEFER)) {
+            sigset_add(&sighand->sigmask, siginfo->si_signo);
+        }
     });
 
     DEBUG_ASSERT(action);
