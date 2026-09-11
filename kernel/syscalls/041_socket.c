@@ -28,6 +28,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/unix.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -55,6 +56,13 @@
 
 SYSCALL(
     41, socket, long sys_socket(int domain, int type, int protocol) {
+
+        //? Local sockets are handled here and never reach lwIP, which has no
+        //? notion of an address family below AF_INET. They also come back as
+        //? ordinary descriptors rather than from the separate socket range.
+        if (domain == AF_UNIX_LOCAL)
+            return unix_socket(type, protocol);
+
 
 #if defined(CONFIG_HAVE_NETWORK)
         ssize_t e;

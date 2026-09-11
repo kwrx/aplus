@@ -27,6 +27,7 @@
 #include <aplus/errno.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/unix.h>
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
@@ -54,6 +55,14 @@
 
 SYSCALL(
     50, listen, long sys_listen(int fd, int backlog) {
+
+        //? Local sockets never reach lwIP, so they are served whether or not
+        //? networking is configured in.
+        struct unix_sock* us;
+
+        if ((us = unix_sock_from_fd(fd)) != NULL)
+            return unix_listen(us, backlog);
+
 
 #if defined(CONFIG_HAVE_NETWORK)
         if (unlikely(!NETWORK_IS_SOCKFD(fd)))
