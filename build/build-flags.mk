@@ -44,9 +44,6 @@ ifeq ($(CONFIG_HAVE_DEBUG),y)
 		endif
 	endif
 
-	CARGO_FLAGS +=
-	CARGO_BUILD := debug
-
 else
 
 	CFLAGS      += -O$(CONFIG_COMPILER_OPTIMIZATION_LEVEL)
@@ -57,9 +54,6 @@ else
 	ifeq ($(CONFIG_COMPILER_STRIP_BINARIES),y)
 		LDFLAGS     += -Wl,--strip-debug
 	endif
-
-	CARGO_FLAGS += --release
-	CARGO_BUILD := release
 
 endif
 
@@ -95,8 +89,3 @@ CFLAGS	    += $(subst $\",,$(CONFIG_COMPILER_EXTRA_CFLAGS))
 CXXFLAGS    += $(subst $\",,$(CONFIG_COMPILER_EXTRA_CXXFLAGS))
 ASFLAGS     += $(subst $\",,$(CONFIG_COMPILER_EXTRA_ASFLAGS))
 LDFLAGS     += $(subst $\",,$(CONFIG_COMPILER_EXTRA_LDFLAGS))
-
-#
-# Cargo
-#
-CARGO_FLAGS += --target $(ROOTDIR)/build/rust/$(CARGO_TARGET).json
