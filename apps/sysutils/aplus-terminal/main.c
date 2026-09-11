@@ -230,6 +230,29 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
     gidx = FT_Get_Char_Index(context.face, gidx);
 
+    posx *= 8;
+    posy *= 16;
+
+    if (posx + 8 >= context.var.xres || posy + 16 >= context.var.yres)
+        return 0;
+
+
+    /* Paint the cell background first, before any of the early returns below.
+     *
+     * A cell with no glyph still has a background colour. An erased cell in particular --
+     * what ESC[J and friends leave behind -- arrives here with len == 0, so gidx is 0 and the
+     * font has nothing to draw for it. Bailing out at that point left the previous frame's
+     * pixels on screen. For ordinary text that is invisible, because almost every cell has a
+     * glyph; for anything that paints with coloured blanks and erases between frames it means
+     * most of the screen is never repainted, and the display fills up with streaks of stale
+     * content. */
+    for (size_t i = 0; i < 16; i++) {
+        for (size_t j = 0; j < 8; j++) {
+            context.plot(posx + j, posy + i, br, bg, bb);
+        }
+    }
+
+
     if (gidx == 0) {
         return 0;
     }
@@ -246,7 +269,13 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
     assert(context.face);
     assert(context.face->glyph);
-    assert(context.face->glyph->bitmap.buffer);
+
+
+    /* A blank glyph (a space) renders to an empty bitmap with no buffer at all; the
+       background painted above is the whole of its appearance. */
+    if (!context.face->glyph->bitmap.buffer) {
+        return 0;
+    }
 
 
     int bbox_ymax   = context.face->bbox.yMax / 64;
@@ -255,20 +284,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     int x_off       = (advance - glyph_width) / 2;
     int y_off       = bbox_ymax - (context.face->glyph->metrics.horiBearingY / 64);
 
-
-
-    posx *= 8;
-    posy *= 16;
-
-    if (posx + context.face->glyph->bitmap.width >= context.var.xres || posy + context.face->glyph->bitmap.rows >= context.var.yres)
-        return 0;
-
-
-    for (size_t i = 0; i < 16; i++) {
-        for (size_t j = 0; j < 8; j++) {
-            context.plot(posx + j, posy + i, br, bg, bb);
-        }
-    }
 
     for (size_t i = 0; i < context.face->glyph->bitmap.rows; i++) {
         for (size_t j = 0; j < context.face->glyph->bitmap.width; j++) {
@@ -905,10 +920,26 @@ int main(int argc, char** argv) {
             do {
 
                 ssize_t size;
+                bool pending = false;
 
                 while ((size = read(context.masterfd, buf, sizeof(buf))) > 0) {
 
                     tsm_vte_input(context.vte, buf, size);
+                    pending = true;
+
+                    /* Repaint once the pending input is drained rather than once per chunk.
+                       A full read means there is very likely more of the frame still queued,
+                       and redrawing the whole grid at that point paints a screen made of
+                       pieces of two different frames -- which is what the tearing looks
+                       like when a program animates faster than the terminal can draw. */
+                    if (size < (ssize_t)sizeof(buf)) {
+
+                        tsm_update_screen();
+                        pending = false;
+                    }
+                }
+
+                if (pending) {
                     tsm_update_screen();
                 }
 
