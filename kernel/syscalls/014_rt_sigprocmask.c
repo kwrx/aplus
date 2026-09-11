@@ -28,9 +28,12 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdint.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -63,6 +66,19 @@ SYSCALL(
             return -EFAULT;
 
 
+        //? sigsetsize is how many bytes of the set the caller considers meaningful -- musl sends
+        //? _NSIG/8, well under the 128-byte sigset_t it hands over. Only whole words of it are
+        //? ever touched, so a size that is not a whole number of them is a caller that disagrees
+        //? with us about the layout.
+        if (unlikely(sigsetsize > sizeof(sigset_t)))
+            return -EINVAL;
+
+        if (unlikely(sigsetsize % sizeof(unsigned long)))
+            return -EINVAL;
+
+
+        size_t words = sigsetsize / sizeof(unsigned long);
+
 
         DEBUG_ASSERT(current_task);
 
@@ -73,28 +89,32 @@ SYSCALL(
 
             if (set) {
 
+                //? Zeroed first and filled only as far as the caller vouched for, so the words
+                //? past sigsetsize are a known quantity rather than whatever was on the stack.
                 sigset_t __safe_set;
-                uio_memcpy_u2s(&__safe_set, set, sizeof(sigset_t));
+                memset(&__safe_set, 0, sizeof(sigset_t));
+
+                uio_memcpy_u2s(&__safe_set, set, sigsetsize);
 
                 switch (how) {
 
                     case SIG_BLOCK:
 
-                        for (size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        for (size_t i = 0; i < words; i++)
                             sighand->sigmask.__bits[i] |= __safe_set.__bits[i];
 
                         break;
 
                     case SIG_UNBLOCK:
 
-                        for (size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        for (size_t i = 0; i < words; i++)
                             sighand->sigmask.__bits[i] &= ~__safe_set.__bits[i];
 
                         break;
 
                     case SIG_SETMASK:
 
-                        for (size_t i = 0; i < sigsetsize; i += sizeof(unsigned long))
+                        for (size_t i = 0; i < words; i++)
                             sighand->sigmask.__bits[i] = __safe_set.__bits[i];
 
                         break;
@@ -105,12 +125,14 @@ SYSCALL(
             }
 
 
+            //? Anything that was held back only because it was blocked gets another look now
+            //? that the mask has moved.
             for (size_t i = current_task->sigpending.size; i > 0; i--) {
 
                 siginfo_t* info;
                 if ((info = queue_pop(&current_task->sigpending))) {
 
-                    if (unlikely(sighand->sigmask.__bits[info->si_signo / (sizeof(long) << 3)] & (1 << (info->si_signo % (sizeof(long) << 3)))))
+                    if (unlikely(sigset_is_member(&sighand->sigmask, info->si_signo)))
                         queue_enqueue(&current_task->sigpending, info, 0);
                     else
                         queue_enqueue(&current_task->sigqueue, info, 0);

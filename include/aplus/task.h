@@ -161,6 +161,36 @@ struct sighand {
 };
 
 
+//? A sigset_t is a bit array of unsigned long. Its byte size and its word count are both worth
+//? having by name: the syscalls that carry one carry a byte count alongside it, while walking
+//? it is done a word at a time, and conflating the two indexes the wrong end of the set.
+    #define SIGSET_BITS_PER_WORD (8 * sizeof(unsigned long))
+    #define SIGSET_WORDS         (sizeof(sigset_t) / sizeof(unsigned long))
+
+
+/**
+ * @brief Ask whether a signal is a member of a set.
+ *
+ * Signals are numbered from 1 and a set numbers its bits from 0, so signal N lives in bit N-1 --
+ * the convention every libc builds its masks with. Testing bit N instead answers for the
+ * neighbouring signal.
+ */
+static inline bool sigset_is_member(const sigset_t* set, int signo) {
+
+    DEBUG_ASSERT(set);
+
+    if (unlikely(signo < 1 || signo >= _NSIG))
+        return false;
+
+
+    size_t bit = (size_t)(signo - 1);
+
+    //? 1UL, not 1: a plain int shifted by 32 or more is undefined, and on x86 the count is
+    //? masked to five bits, so the realtime signals would fold back onto the first few.
+    return (set->__bits[bit / SIGSET_BITS_PER_WORD] & (1UL << (bit % SIGSET_BITS_PER_WORD))) != 0;
+}
+
+
 
 typedef struct task {
 
