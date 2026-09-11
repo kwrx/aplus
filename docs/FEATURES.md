@@ -6,8 +6,9 @@
 - [x] Implement Wait queue
 
 
+------------------------------------------
 
-// TODO: Update TODO.md
+
 ## Architecture
 
 | Features      | x86_64 | i686    | aarch64 |
@@ -20,7 +21,7 @@
 | Interrupts    | yes    | no      | no      |
 | Tasking       | yes    | no      | no      |
 | Timer         | yes    | yes     | no      |
-| Fork          | no     | no      | no      |
+| Fork          | yes    | no      | no      |
 | Random        | no[^3] | no[^3]  | no      |
 | ACPI          | yes    | yes     | no      |
 | Multiprocessing| yes   | no      | no      |
@@ -59,13 +60,14 @@
 - [x] Virtual File System
 - [x] Network Stack (lwIP)
 - [x] User API
-- [ ] Wait Queue
-- [ ] Signal Handling
+- [x] Wait Queue
+- [x] Signal Handling
 - [x] Module Loading
-- [ ] ELF Loading
+- [x] ELF Loading
 - [ ] Fstab
 - [ ] Unix Permissions
 - [x] Futex
+- [x] I/O Multiplexing (poll, ppoll, select, pselect)
 
 ------------------------------------------
 ## Filesystems
@@ -73,9 +75,9 @@
 - [x] BindFS
 - [x] TmpFS
 - [x] DevFS
-- [ ] ProcFS
-- [ ] Iso9660 (CDFS)
-- [x] Ext2 (Read-only)
+- [x] ProcFS
+- [x] Iso9660 (CDFS)
+- [x] Ext2
 - [ ] exFAT
 
 ------------------------------------------
@@ -84,18 +86,18 @@
 - [x] Char Devices
 - [x] Block Devices
 - [x] Network Devices
-- [ ] PTY Devices
-- [ ] Framebuffer Video
+- [x] PTY Devices
+- [x] Framebuffer Video
 - [ ] Full Video Interface
 - [x] Virtio PCI
 - [x] Virtio Queues
-- [ ] Virtio GPU
+- [x] Virtio GPU
 - [ ] Virtio Block
 - [ ] Virtio Network
 - [ ] Virtio Crypto
-- [ ] Virtio Console
+- [x] Virtio Console
 - [x] Bochs VGA Controller
-- [ ] VMWare VGA Controller
+- [x] VMWare VGA Controller
 
 ### Platform (PC)
 - [x] PCI
@@ -111,13 +113,13 @@
 - [ ] USB Support
 - [x] Intel E1000 Network Adapter
 - [x] PCNET Network Adapter
-- [x] Realter RTL8139 Network Adapter
+- [ ] Realtek RTL8139 Network Adapter
 
 ------------------------------------------
 ## Userspace
-- [ ] Init
+- [x] Init
 - [ ] Coreutils
-- [ ] Mininmal Shell
+- [ ] Minimal Shell
 - [ ] NTP Time Daemon
 - [ ] I/O Sync Daemon
 - [ ] HTTP Server
