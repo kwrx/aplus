@@ -49,7 +49,7 @@ else
     EXTRA_MARGS="$3"
 fi
 
-DEFAULT_KARGS="smp=auto network=off"
+DEFAULT_KARGS="smp=auto"
 
 header() {
     echo -e "set default=0"
