@@ -131,6 +131,12 @@ struct virtio_driver {
         uint16_t bars;
         uint16_t num_queues;
 
+        /* How many MSI-X vectors the queues were given. A table is not required to hold one
+           per queue plus one for configuration -- QEMU hands a virtio-input device exactly
+           two whatever its queue count -- so queue i raises vector i % msix_vectors and the
+           configuration vector follows them. */
+        uint16_t msix_vectors;
+
         uint16_t notify_off_multiplier;
         uintptr_t notify_offset;
         uintptr_t device_config;

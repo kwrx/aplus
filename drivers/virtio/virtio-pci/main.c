@@ -52,13 +52,16 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_drive
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
 
-    DEBUG_ASSERT(vector < driver->internals.num_queues + 1);
+    DEBUG_ASSERT(vector < driver->internals.msix_vectors + 1);
 
-    if (vector == driver->internals.num_queues) {
+    if (vector == driver->internals.msix_vectors) {
         // TODO: handle config interrupt
         kprintf("virtio-pci: WARN! received config interrupt!\n");
     } else {
-        virtq_flush(driver, vector);
+        /* A vector serves every queue that was given it, which is more than one whenever the
+           device's table was too small to go round. */
+        for (size_t i = vector; i < driver->internals.num_queues; i += driver->internals.msix_vectors)
+            virtq_flush(driver, i);
     }
 
 #else
@@ -258,32 +261,49 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, uint8_t bar,
 
     // NOTE:
     // Mapping MSI-X vectors:
-    //  vectors[0..(MSIX_VECTORS - 1)]  -> queues 0..num_queues
-    //  vectors[MSIX_VECTORS]           -> config interrupt
+    //  vectors[0..(msix_vectors - 1)]  -> queues, shared round-robin
+    //  vectors[msix_vectors]           -> config interrupt
+    //
+    // The table is not guaranteed to hold one vector per queue plus one for configuration:
+    // QEMU gives a virtio-input device exactly two, however many queues it has, which is the
+    // shared arrangement the device expects a driver to fall back to. Each distinct vector
+    // is mapped exactly once -- pci_msix_map_irq() takes the next free table row rather than
+    // the row named by its argument, so mapping one vector twice would burn two rows and
+    // leave none for the configuration interrupt.
     uint16_t vector_limit = msix.msix_pci.pci_msgctl_table_size + 1;
 
-    for (size_t k = 0; k < driver->internals.num_queues; k++) {
+    if (vector_limit < 2) {
+#if DEBUG_LEVEL_FATAL
+        kprintf("virtio-pci: FAIL! device %d has an MSI-X table of %d, too small to serve a queue and the configuration\n", driver->device, vector_limit);
+#endif
+        return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
+    }
 
-        uint16_t i = k % (vector_limit - 1);
+    driver->internals.msix_vectors = vector_limit - 1;
+
+    if (driver->internals.msix_vectors > driver->internals.num_queues)
+        driver->internals.msix_vectors = driver->internals.num_queues;
+
+    for (uint16_t i = 0; i < driver->internals.msix_vectors; i++) {
 
         if(pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, i) < 0) {
 #if DEBUG_LEVEL_FATAL
-            kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for queue %d failed\n", driver->device, i, k);
+            kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for its queues failed\n", driver->device, i);
 #endif
             return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
         }
         pci_msix_unmask(driver->device, &msix, i);
     }
 
-    if(pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, vector_limit - 1) < 0) {
+    if(pci_msix_map_irq(driver->device, &msix, (pci_irq_handler_t)virtio_pci_interrupt, (pci_irq_data_t)driver, driver->internals.msix_vectors) < 0) {
 #if DEBUG_LEVEL_FATAL
-        kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for config failed\n", driver->device, vector_limit - 1);
+        kprintf("virtio-pci: FAIL! device %d mapping MSI-X vector %d for config failed\n", driver->device, driver->internals.msix_vectors);
 #endif
         return cfg->device_status = VIRTIO_DEVICE_STATUS_FAILED, -ENOSYS;
     }
-    pci_msix_unmask(driver->device, &msix, vector_limit - 1);
+    pci_msix_unmask(driver->device, &msix, driver->internals.msix_vectors);
 
-    cfg->config_msix_vector = vector_limit - 1;
+    cfg->config_msix_vector = cpu_to_le16(driver->internals.msix_vectors);
 
 #else
 
