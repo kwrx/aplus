@@ -57,6 +57,16 @@
 #define EC_PWR       (1 << 0x16)
 #define EC_FF_STATUS (1 << 0x17)
 
+
+/* Absolute axes are reported on one fixed scale rather than in whatever units the device
+   happens to use. A driver normalizes its own range onto this one, so a reader can map an
+   EV_ABS event onto the screen knowing only the screen size -- there is no ioctl to ask a
+   device what its range is, and a reader that hardcoded one device's range would be wrong
+   on the next. The maximum is what vaxis_t can hold, so no event needs a wider field. */
+
+#define EV_ABS_MIN 0
+#define EV_ABS_MAX 32767
+
 // // #define EVIOGID                 _IOR('e', 1, long[2])
 // // #define EVIOGNAME               _IOR('e', 2, char[64 + sizeof(evid_t)])
 // // #define EVIOGCAPS               _IOR('e', 3, evid_t)

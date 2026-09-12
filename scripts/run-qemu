@@ -113,6 +113,13 @@ x86_64)
         flags="$flags -vga std"
     fi
 
+    # Pointer
+    #
+    # An absolute pointer, and not because a tablet is a nicer mouse: a relative one makes
+    # the host grab its own pointer in order to deliver motion, and a grabbed host pointer
+    # is a hidden one, which takes the adapter's cursor plane down with it.
+    flags="$flags -device virtio-tablet-pci,disable-legacy=on"
+
     # Network
     if [ $ARG_VIRTIO -eq 1 ]; then
         flags="$flags -device virtio-net-pci,netdev=net0"
