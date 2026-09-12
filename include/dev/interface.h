@@ -131,6 +131,21 @@ typedef struct device {
             void (*update)(struct device*);
             void (*wait_vsync)(struct device*);
 
+            /* Hand a damaged rectangle to the adapter. Left NULL by adapters that scan out
+               of the framebuffer itself and so have nothing to hand over; video_ioctl()
+               reports success for those rather than ENOTSUP, so a compositor can call
+               FBIO_FLUSH unconditionally. */
+            void (*flush)(struct device*, uint32_t, uint32_t, uint32_t, uint32_t);
+
+            /* The hardware cursor plane. Both NULL, and hwc.flags without
+               FB_HWCINFO_HAS_CURSOR, on an adapter that has none. The image passed to
+               cursor_set() is a kernel buffer of cursor->width * cursor->height pixels that
+               video_ioctl() has already copied in from userspace. */
+            int (*cursor_set)(struct device*, const struct fb_hwcursor*, const uint32_t*);
+            int (*cursor_move)(struct device*, int32_t, int32_t);
+
+            struct fb_hwcinfo hwc;
+
         } vid;
 
         struct {
