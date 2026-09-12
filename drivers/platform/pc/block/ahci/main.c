@@ -109,6 +109,8 @@ MODULE_LICENSE("GPL");
 #define AHCI_HBA_BOHC_OOS (1 << 1)
 
 
+#define AHCI_PORT_MAX     32
+
 #define AHCI_PORT_IS_MASK (0x7DC000FF)
 #define AHCI_PORT_IS_TFES (1 << 30)
 #define AHCI_PORT_IS_HBFE (1 << 29)
@@ -126,6 +128,8 @@ MODULE_LICENSE("GPL");
 #define AHCI_PORT_IS_DSE  (1 << 2)
 #define AHCI_PORT_IS_PSE  (1 << 1)
 #define AHCI_PORT_IS_DHRE (1 << 0)
+
+#define AHCI_PORT_IS_ERRORS (AHCI_PORT_IS_TFES | AHCI_PORT_IS_HBFE | AHCI_PORT_IS_HBDE | AHCI_PORT_IS_IFE | AHCI_PORT_IS_INFE | AHCI_PORT_IS_OFE | AHCI_PORT_IS_IPME | AHCI_PORT_IS_UFE)
 
 #define AHCI_PORT_CMD_CR  (1 << 15)
 #define AHCI_PORT_CMD_FR  (1 << 14)
@@ -446,37 +450,43 @@ static void irq(pcidev_t device, uint8_t irq, struct ahci* ahci) {
     DEBUG_ASSERT(ahci->irq == irq);
 
 
-    int p = ahci->hba->is - 1;
-    int s = ahci->hba->ports[p].is;
+    uint32_t pending = ahci->hba->is;
 
-    // DEBUG_ASSERT(!(s & AHCI_PORT_IS_TFES));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBFE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_HBDE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_IFE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_INFE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_OFE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_IPME));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_PRCE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPME));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_PCE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DPIE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_UFE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_SDBE));
-    DEBUG_ASSERT(!(s & AHCI_PORT_IS_DSE));
-    // DEBUG_ASSERT(!(s & AHCI_PORT_IS_PSE));
-    // DEBUG_ASSERT(!(s & AHCI_PORT_IS_DHRE));
+    if (pending == 0)
+        return;
 
 
-    if (s & AHCI_PORT_IS_DHRE)
-        sem_post(&ahci->io);
+    for (int p = 0; p < AHCI_PORT_MAX; p++) {
+
+        if (!(pending & (1U << p)))
+            continue;
 
 
-    if (s & AHCI_PORT_IS_TFES)
-        s &= ~AHCI_PORT_IS_TFES;
+        uint32_t s = ahci->hba->ports[p].is;
+
+        if (s == 0)
+            continue;
 
 
-    ahci->hba->ports[p].is = s;
-    ahci->hba->is          = p + 1;
+        ahci->hba->ports[p].is = s;
+
+
+        if (s & AHCI_PORT_IS_ERRORS) {
+
+#if DEBUG_LEVEL_ERROR
+            kprintf("ahci: ERROR! port %d interrupt status(%p) serr(%p) tfd(%p)\n", p, s, ahci->hba->ports[p].serr, ahci->hba->ports[p].tfd);
+#endif
+
+            ahci->hba->ports[p].serr = ahci->hba->ports[p].serr;
+        }
+
+
+        if (s & (AHCI_PORT_IS_DHRE | AHCI_PORT_IS_PSE | AHCI_PORT_IS_DSE | AHCI_PORT_IS_SDBE | AHCI_PORT_IS_ERRORS))
+            sem_post(&ahci->io);
+    }
+
+
+    ahci->hba->is = pending;
 }
 
 
