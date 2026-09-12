@@ -24,6 +24,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/sysmacros.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -40,6 +41,29 @@ MODULE_DEPS("");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
+
+
+int network_getattr(device_t* device, struct stat* st) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(st);
+
+    st->st_dev     = makedev(device->major, device->minor);
+    st->st_ino     = device->inode->ino;
+    st->st_mode    = S_IFCHR | 0666;
+    st->st_nlink   = 1;
+    st->st_uid     = 0;
+    st->st_gid     = 0;
+    st->st_rdev    = makedev(device->major, device->minor);
+    st->st_size    = 0;
+    st->st_blksize = 0;
+    st->st_blocks  = 0;
+    st->st_atime   = arch_timer_gettime();
+    st->st_mtime   = arch_timer_gettime();
+    st->st_ctime   = arch_timer_gettime();
+
+    return 0;
+}
 
 
 void init(const char* args) {

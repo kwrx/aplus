@@ -39,6 +39,7 @@
 #include <dev/block.h>
 #include <dev/char.h>
 #include <dev/interface.h>
+#include <dev/network.h>
 #include <dev/video.h>
 
 #include <sys/sysmacros.h>
@@ -46,7 +47,7 @@
 
 
 MODULE_NAME("dev/interface");
-MODULE_DEPS("dev/char,dev/block,dev/video");
+MODULE_DEPS("dev/char,dev/block,dev/video,dev/network");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
@@ -209,7 +210,7 @@ static int device_getattr(inode_t* inode, struct stat* st) {
             return video_getattr(device, st);
 
         case DEVICE_TYPE_NETWORK:
-            return errno = ENOSYS, -1;
+            return network_getattr(device, st);
     }
 
     kpanicf("device::getattr: unknown device type %d for /dev/%s\n", device->type, inode->name);
