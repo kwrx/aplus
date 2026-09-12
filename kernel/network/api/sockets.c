@@ -238,6 +238,34 @@ union sockaddr_aligned {
     #endif /* LWIP_IPV4 */
 };
 
+
+/**
+ * @brief How long the sockaddr just filled in by IPADDR_PORT_TO_SOCKADDR() really is.
+ *
+ * Upstream reads the BSD sa_len field back out of the address to decide how much of it to hand
+ * to the caller. That cannot work here: this port lays sockaddr out the Linux way, so sa_len is
+ * a union alias for the low byte of sa_family rather than a field of its own. Setting the family
+ * overwrites the length, reading sa_len back yields AF_INET, and every address the stack reports
+ * gets truncated to its first two bytes -- a recvfrom() that answers 0.0.0.0:0 and an accept()
+ * that cannot say who connected. The family is the only thing left to size it by.
+ */
+static socklen_t lwip_sock_addr_len(const struct sockaddr* addr) {
+
+    LWIP_ASSERT("addr != NULL", addr != NULL);
+
+    #if LWIP_IPV6
+    if (addr->sa_family == AF_INET6)
+        return sizeof(struct sockaddr_in6);
+    #endif /* LWIP_IPV6 */
+
+    #if LWIP_IPV4
+    if (addr->sa_family == AF_INET)
+        return sizeof(struct sockaddr_in);
+    #endif /* LWIP_IPV4 */
+
+    return sizeof(struct sockaddr);
+}
+
     /* Define the number of IPv4 multicast memberships, default is one per socket */
     #ifndef LWIP_SOCKET_MAX_MEMBERSHIPS
         #define LWIP_SOCKET_MAX_MEMBERSHIPS NUM_SOCKETS
@@ -688,8 +716,8 @@ int lwip_accept(int s, struct sockaddr* addr, socklen_t* addrlen) {
         }
 
         IPADDR_PORT_TO_SOCKADDR(&tempaddr, &naddr, port);
-        if (*addrlen > tempaddr.sa.sa_len) {
-            *addrlen = tempaddr.sa.sa_len;
+        if (*addrlen > lwip_sock_addr_len(&tempaddr.sa)) {
+            *addrlen = lwip_sock_addr_len(&tempaddr.sa);
         }
         MEMCPY(addr, &tempaddr, *addrlen);
 
@@ -1013,10 +1041,13 @@ static int lwip_sock_make_addr(struct netconn* conn, ip_addr_t* fromaddr, u16_t 
     #endif /* LWIP_IPV4 && LWIP_IPV6 */
 
     IPADDR_PORT_TO_SOCKADDR(&saddr, fromaddr, port);
-    if (*fromlen < saddr.sa.sa_len) {
+
+    socklen_t saddrlen = lwip_sock_addr_len(&saddr.sa);
+
+    if (*fromlen < saddrlen) {
         truncated = 1;
-    } else if (*fromlen > saddr.sa.sa_len) {
-        *fromlen = saddr.sa.sa_len;
+    } else if (*fromlen > saddrlen) {
+        *fromlen = saddrlen;
     }
     MEMCPY(from, &saddr, *fromlen);
     return truncated;
@@ -2657,8 +2688,8 @@ static int lwip_getaddrname(int s, struct sockaddr* name, socklen_t* namelen, u8
     ip_addr_debug_print_val(SOCKETS_DEBUG, naddr);
     LWIP_DEBUGF(SOCKETS_DEBUG, (" port=%" U16_F ")\n", port));
 
-    if (*namelen > saddr.sa.sa_len) {
-        *namelen = saddr.sa.sa_len;
+    if (*namelen > lwip_sock_addr_len(&saddr.sa)) {
+        *namelen = lwip_sock_addr_len(&saddr.sa);
     }
     MEMCPY(name, &saddr, *namelen);
 
