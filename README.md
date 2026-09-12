@@ -50,11 +50,16 @@ Userspace is still under development, and is assembled from two sources: the pro
 
 Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), a pair of MesaGL demos ([gears](/apps/extra/gl-gears) and a [shaded triangle](/apps/extra/gl-shaders-triangle)), and a set of [test programs](/apps/test).
 
-Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all.
-
 Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors and keymaps, the `zlib`, `libpng`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
+
+Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all. Below, the `gl-gears` demo draws into a window of its own, stacked above the terminal that launched it — both frames drawn by the server rather than by the programs inside them.
+
+<br>
+<p align="center" width="100%">
+    <img src="./docs/images/v0.7-gears.png" alt="aplus v0.7 - gl-gears drawing into a window above the terminal that launched it" width="60%"></img>
+</p>
 
 Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the forwarded port set up by [run-qemu](/scripts/run-qemu).
 
