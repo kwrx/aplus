@@ -96,6 +96,13 @@ SYSCALL(
 
                 uio_memcpy_u2s(&__safe_set, set, sigsetsize);
 
+                //? SIGKILL and SIGSTOP can never be blocked. They are dropped from the request
+                //? rather than the request being refused, because every caller that blocks
+                //? "everything" passes a full set and expects it to succeed -- and refusing
+                //? would leave those callers with no mask set at all.
+                sigset_del(&__safe_set, SIGKILL);
+                sigset_del(&__safe_set, SIGSTOP);
+
                 switch (how) {
 
                     case SIG_BLOCK:

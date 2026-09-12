@@ -567,7 +567,14 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
             DEBUG_ASSERT(action);
 
 
-            if (unlikely(action->handler == SIG_IGN)) {
+            //? SIGKILL and SIGSTOP cannot be caught, ignored or blocked. rt_sigaction() and
+            //? rt_sigprocmask() both refuse to set that up, but the guarantee is enforced here
+            //? as well: this is the only path a signal reaches a task by, and a disposition or
+            //? mask that got set some other way would otherwise make a process unkillable.
+            bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
+
+
+            if (unlikely(!unstoppable && action->handler == SIG_IGN)) {
                 continue;
             }
 
@@ -593,7 +600,7 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                 //? the signal is added on entry to its own handler -- and says nothing about
                 //? whether sigprocmask() may hold it back. Honouring it here delivered signals
                 //? their own thread had explicitly blocked.
-                if (unlikely(sigset_is_member(&sighand->sigmask, sig)))
+                if (unlikely(!unstoppable && sigset_is_member(&sighand->sigmask, sig)))
                     queue_enqueue(&tmp->sigpending, siginfo, 0);
                 else
                     queue_enqueue(&tmp->sigqueue, siginfo, 0);

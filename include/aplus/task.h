@@ -210,6 +210,25 @@ static inline void sigset_add(sigset_t* set, int signo) {
 }
 
 
+/**
+ * @brief Remove a signal from a set.
+ *
+ * Numbered the same way as sigset_is_member(): signal N is bit N-1.
+ */
+static inline void sigset_del(sigset_t* set, int signo) {
+
+    DEBUG_ASSERT(set);
+
+    if (unlikely(signo < 1 || signo >= _NSIG))
+        return;
+
+
+    size_t bit = (size_t)(signo - 1);
+
+    set->__bits[bit / SIGSET_BITS_PER_WORD] &= ~(1UL << (bit % SIGSET_BITS_PER_WORD));
+}
+
+
 
 typedef struct task {
 
