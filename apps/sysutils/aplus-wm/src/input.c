@@ -36,27 +36,39 @@
 
 
 /*
- * /dev/kbd and /dev/mouse are char devices, and device_mkdev() never installs an
- * inode poll hook. vfs_poll() then falls through to "whatever you asked for is
- * ready", so a poll() over the input devices spins at 100% without ever blocking.
+ * The input devices are char devices, and device_mkdev() never installs an inode poll
+ * hook. vfs_poll() then falls through to "whatever you asked for is ready", so a poll()
+ * over the input devices spins at 100% without ever blocking.
  *
  * The way around it is the one the devices do support: a blocking read(), which the
  * kernel turns into a proper futex sleep woken by the IRQ handler's vfs_write(). One
  * thread per device does that and forwards each event_t down a socketpair, and the
  * socketpair -- being an AF_UNIX socket -- has a real poll implementation the main
  * loop can wait on together with the client connections.
+ *
+ * Which of the pointing devices is actually live is the host's business, not this
+ * server's: a virtio tablet and a PS/2 mouse can both be present while only one of them
+ * is fed, and which one that is can change while the machine runs. Both are read and
+ * their events merged, so the pointer follows whichever is talking.
  */
 
 static int input_pipe[2] = {-1, -1};
 
-static pthread_t thr_keyboard;
-static pthread_t thr_mouse;
+static struct {
 
-static int fd_keyboard = -1;
-static int fd_mouse    = -1;
+    const char* path;
+    bool required;
 
-static bool thr_keyboard_started = false;
-static bool thr_mouse_started    = false;
+    int fd;
+    pthread_t thread;
+    bool started;
+
+} input_devices[] = {
+
+    {.path = "/dev/kbd", .required = true, .fd = -1},
+    {.path = "/dev/mouse", .required = false, .fd = -1},
+    {.path = "/dev/tablet", .required = false, .fd = -1},
+};
 
 
 static void* input_thread(void* arg) {
@@ -97,32 +109,35 @@ int wm_input_open(void) {
     }
 
 
-    if ((fd_keyboard = open("/dev/kbd", O_RDONLY)) < 0) {
-        fprintf(stderr, "aplus-wm: open() failed: cannot open /dev/kbd: %s\n", strerror(errno));
-        return -1;
-    }
+    for (size_t i = 0; i < sizeof(input_devices) / sizeof(input_devices[0]); i++) {
 
-    if (pthread_create(&thr_keyboard, NULL, input_thread, &fd_keyboard) != 0) {
-        fprintf(stderr, "aplus-wm: pthread_create() failed for /dev/kbd: %s\n", strerror(errno));
-        return -1;
-    }
+        /* A machine missing a pointing device is still perfectly usable with the keyboard,
+           and no machine has every pointing device, so only the keyboard is required. */
+        if ((input_devices[i].fd = open(input_devices[i].path, O_RDONLY)) < 0) {
 
-    thr_keyboard_started = true;
+            if (input_devices[i].required) {
+                fprintf(stderr, "aplus-wm: open() failed: cannot open %s: %s\n", input_devices[i].path, strerror(errno));
+                return -1;
+            }
 
+            continue;
+        }
 
-    /* A machine without a PS/2 mouse is still perfectly usable with the keyboard, so a
-       missing /dev/mouse is a warning rather than a failure. */
-    if ((fd_mouse = open("/dev/mouse", O_RDONLY)) < 0) {
+        if (pthread_create(&input_devices[i].thread, NULL, input_thread, &input_devices[i].fd) != 0) {
 
-        fprintf(stderr, "aplus-wm: warning: cannot open /dev/mouse: %s\n", strerror(errno));
+            fprintf(stderr, "aplus-wm: pthread_create() failed for %s: %s\n", input_devices[i].path, strerror(errno));
 
-    } else if (pthread_create(&thr_mouse, NULL, input_thread, &fd_mouse) != 0) {
+            if (input_devices[i].required) {
+                return -1;
+            }
 
-        fprintf(stderr, "aplus-wm: warning: pthread_create() failed for /dev/mouse: %s\n", strerror(errno));
+            close(input_devices[i].fd);
+            input_devices[i].fd = -1;
 
-    } else {
+            continue;
+        }
 
-        thr_mouse_started = true;
+        input_devices[i].started = true;
     }
 
 
@@ -132,20 +147,15 @@ int wm_input_open(void) {
 
 void wm_input_close(void) {
 
-    if (thr_keyboard_started) {
-        pthread_cancel(thr_keyboard);
-    }
+    for (size_t i = 0; i < sizeof(input_devices) / sizeof(input_devices[0]); i++) {
 
-    if (thr_mouse_started) {
-        pthread_cancel(thr_mouse);
-    }
+        if (input_devices[i].started) {
+            pthread_cancel(input_devices[i].thread);
+        }
 
-    if (fd_keyboard >= 0) {
-        close(fd_keyboard);
-    }
-
-    if (fd_mouse >= 0) {
-        close(fd_mouse);
+        if (input_devices[i].fd >= 0) {
+            close(input_devices[i].fd);
+        }
     }
 
     if (input_pipe[0] >= 0) {
@@ -461,6 +471,64 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 }
 
 
+/* Everything a pointer movement pulls in, once the new position is in wm.pointer: both
+ * pointing device kinds land here, having differed only in how they said where to go.
+ */
+
+static void input_pointer_moved(const wm_rect_t* old) {
+
+    if (wm.pointer.x < 0) {
+        wm.pointer.x = 0;
+    }
+
+    if (wm.pointer.y < 0) {
+        wm.pointer.y = 0;
+    }
+
+    if (wm.pointer.x >= wm.display.width) {
+        wm.pointer.x = wm.display.width - 1;
+    }
+
+    if (wm.pointer.y >= wm.display.height) {
+        wm.pointer.y = wm.display.height - 1;
+    }
+
+
+    /* With a cursor plane the pointer is not part of the frame, so a movement damages
+       nothing and costs one short command instead of repainting and re-flushing the
+       rectangle it left and the one it arrived at. That is the whole gain: a pointer
+       moves far more often than anything else on screen, and over a still desktop it
+       now moves without touching the framebuffer at all. */
+    if (wm.display.hwcursor) {
+
+        wm_display_cursor_move(&wm.display, wm.pointer.x, wm.pointer.y);
+
+    } else {
+
+        const wm_rect_t now = wm_cursor_rect();
+
+        wm_damage(old);
+        wm_damage(&now);
+    }
+
+
+    input_update_hover();
+
+    if (wm.drag.window) {
+
+        input_update_drag();
+
+    } else {
+
+        wm_window_t* win = NULL;
+
+        if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CONTENT) {
+            input_send_pointer(win);
+        }
+    }
+}
+
+
 int wm_input_dispatch(int fd) {
 
     event_t ev;
@@ -493,46 +561,40 @@ int wm_input_dispatch(int fd) {
 
             const wm_rect_t old = wm_cursor_rect();
 
+            /* A wheel event carries no movement of its own, and pushing it through the move
+               path would re-place the pointer where it already is. */
+            if (!ev.ev_rel.x && !ev.ev_rel.y) {
+                break;
+            }
+
             wm.pointer.x += ev.ev_rel.x;
             wm.pointer.y -= ev.ev_rel.y;
 
-            if (wm.pointer.x < 0) {
-                wm.pointer.x = 0;
+            input_pointer_moved(&old);
+
+            break;
+        }
+
+        case EV_ABS: {
+
+            const wm_rect_t old = wm_cursor_rect();
+
+            /* The axes arrive normalized to EV_ABS_MAX, whatever range the device itself
+               uses, so placing the pointer needs nothing but the size of the screen. */
+            const int x = ((int)ev.ev_abs.x * (wm.display.width - 1)) / EV_ABS_MAX;
+            const int y = ((int)ev.ev_abs.y * (wm.display.height - 1)) / EV_ABS_MAX;
+
+            /* An absolute device reports a position, not a change, and several of its
+               positions land on the same pixel. Repainting or re-placing the cursor plane
+               for a pointer that has not moved is pure cost. */
+            if (x == wm.pointer.x && y == wm.pointer.y) {
+                break;
             }
 
-            if (wm.pointer.y < 0) {
-                wm.pointer.y = 0;
-            }
+            wm.pointer.x = x;
+            wm.pointer.y = y;
 
-            if (wm.pointer.x >= wm.display.width) {
-                wm.pointer.x = wm.display.width - 1;
-            }
-
-            if (wm.pointer.y >= wm.display.height) {
-                wm.pointer.y = wm.display.height - 1;
-            }
-
-
-            const wm_rect_t now = wm_cursor_rect();
-
-            wm_damage(&old);
-            wm_damage(&now);
-
-
-            input_update_hover();
-
-            if (wm.drag.window) {
-
-                input_update_drag();
-
-            } else {
-
-                wm_window_t* win = NULL;
-
-                if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CONTENT) {
-                    input_send_pointer(win);
-                }
-            }
+            input_pointer_moved(&old);
 
             break;
         }

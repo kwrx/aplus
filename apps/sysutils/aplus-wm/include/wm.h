@@ -37,8 +37,8 @@
 //* Decoration geometry. The content area is what the client owns; everything outside it
 //* is drawn by the server, which is what keeps clients free of widget code.
 
-#define WM_TITLEBAR_HEIGHT 26
-#define WM_BORDER_WIDTH    6
+#define WM_TITLEBAR_HEIGHT 32
+#define WM_BORDER_WIDTH    3
 #define WM_RESIZE_GRIP     16
 
 #define WM_WINDOW_MIN_WIDTH  80
@@ -82,6 +82,16 @@
 #define WM_CURSOR_WIDTH  10
 #define WM_CURSOR_HEIGHT 16
 
+//* The pointer as an image for the hardware cursor plane. It is the same arrow the software
+//* path draws, with a margin around it because the outline is stroked with a pen centred on
+//* the path and so reaches half a pixel outside the shape on every side. The hotspot is the
+//* tip, which is where that margin puts it.
+
+#define WM_CURSOR_IMAGE_WIDTH  16
+#define WM_CURSOR_IMAGE_HEIGHT 20
+#define WM_CURSOR_HOT_X        2
+#define WM_CURSOR_HOT_Y        2
+
 //* The close button, at the right end of the titlebar. It is hit-tested ahead of the
 //* resize grips, which otherwise claim the top row of it from the north-east corner.
 
@@ -123,6 +133,11 @@ typedef struct {
 
     cairo_t* cr;
     cairo_t* cr_screen;
+
+    //? Whether the adapter composites a cursor plane of its own. When it does, the pointer is
+    //? not drawn into the frame at all and moving it costs one small ioctl instead of two
+    //? damaged rectangles and the repaint and flush they pull in.
+    bool hwcursor;
 
 } wm_display_t;
 
@@ -251,6 +266,7 @@ extern wm_server_t wm;
 int wm_display_open(wm_display_t* display, const char* device);
 void wm_display_close(wm_display_t* display);
 void wm_display_flush(wm_display_t* display, const wm_rect_t* rect);
+void wm_display_cursor_move(wm_display_t* display, int x, int y);
 
 //* input.c
 int wm_input_open(void);
@@ -294,5 +310,6 @@ int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, siz
 void wm_damage(const wm_rect_t* rect);
 void wm_damage_window(const wm_window_t* win);
 wm_rect_t wm_cursor_rect(void);
+void wm_cursor_paint(cairo_t* cr, double x, double y);
 
 #endif
