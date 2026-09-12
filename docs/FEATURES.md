@@ -56,6 +56,7 @@
 - [x] Semaphores
 - [x] Unix Pipe
 - [x] Unix Socket (AF_UNIX, SOCK_STREAM)
+- [x] BSD Sockets (AF_INET, SOCK_STREAM), as ordinary file descriptors
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)

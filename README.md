@@ -14,7 +14,7 @@ It started in September 2013 as a way to learn low-level and systems programming
 * **Multitasking**: processes and threads (`fork`, `vfork`, `clone`, `execve`) with SMP support
 * **Virtual memory**: on-demand paging with `mmap`, `mprotect` and `brk`
 * **Filesystems**: [kernel/fs/](/kernel/fs), a VFS with ext2, ISO 9660, tmpfs, procfs and bindfs
-* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/), reachable through BSD sockets
+* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/), reachable through BSD sockets — ordinary file descriptors, so `dup2`, `fork` inheritance and `poll` work on them like any other
 * **Unix-like**: Signals, Pipes, Futex, Unix domain sockets, TTY and PTY
 * **I/O Multiplexing**: `poll`, `ppoll`, `select` and `pselect`
 * **ELF**: static executables; dynamic linking is not supported yet
@@ -27,7 +27,7 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
   
 <br>
 <p align="center" width="100%">
-    <img src="./docs/images/v0.7-os.png" alt="aplus v0.4 - CLI interface running on Qemu" width="100%"></img>
+    <img src="./docs/images/v0.7-os.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
 </p>
 
 
@@ -48,11 +48,18 @@ It currently boots and runs on `x86_64`; support for other architectures such as
 ## :robot: Userspace
 Userspace is still under development, and is assembled from two sources: the programs built from this repository, and prebuilt packages fetched at `./configure` time from [aplus-packages](https://github.com/kwrx/aplus-packages).
 
-Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, an early [compositor](/apps/sysutils/aplus-ui), the `kilo` editor, `nyancat`, and a set of [test programs](/apps/test).
+Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, an early [compositor](/apps/sysutils/aplus-ui), the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), and a set of [test programs](/apps/test).
 
 Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors and keymaps, the `zlib`, `libpng`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
+
+Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the forwarded port set up by [run-qemu](/scripts/run-qemu).
+
+<br>
+<p align="center" width="100%">
+    <img src="./docs/images/v0.7-httpd.png" alt="aplus v0.7 - BusyBox httpd serving a page to a browser on the host" width="100%"></img>
+</p>
 
 ## :electric_plug: Drivers
 Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 30 of them, covering device-class interfaces, char and block devices, terminals, network, video and virtio.
