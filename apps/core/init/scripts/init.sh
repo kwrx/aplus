@@ -31,6 +31,6 @@ aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
 
 # /usr/lib/ld-musl-x86_64.so.1 --library-path /usr/lib /test
 
-# gl-test-gears
-# gl-test-shaders-triangle
+# gl-gears
+# gl-shaders-triangle
 

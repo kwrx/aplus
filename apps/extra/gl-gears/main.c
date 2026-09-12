@@ -23,8 +23,9 @@
 
 #if defined(CONFIG_HAVE_MESA)
 
-    #include <fcntl.h>
+    #include <errno.h>
     #include <math.h>
+    #include <stdbool.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -33,7 +34,12 @@
     #include <GL/gl.h>
     #include <GL/osmesa.h>
 
-    #include <aplus/fb.h>
+    #include <aplus/input.h>
+    #include <aplus/ui.h>
+
+
+    #define GEARS_DEFAULT_WIDTH  480
+    #define GEARS_DEFAULT_HEIGHT 360
 
 
 
@@ -153,74 +159,93 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
 }
 
 
+/* Point OSMesa at the window's own pixels and set the view up for their size.
+ *
+ * There is no blit anywhere in this program: the window buffer libui hands out is a tight
+ * run of 32-bit pixels, which is exactly what OSMesa wants to render into, so GL draws
+ * straight into the surface that gets committed. OSMESA_BGRA is what makes that work -- it
+ * lays each pixel down as B, G, R, A, which read back as the 0xAARRGGBB the server expects.
+ *
+ * Called again after every resize, because applying a configure can move the buffer.
+ */
+
+static int gears_bind(OSMesaContext ctx, ui_window_t* win) {
+
+    const int width  = ui_window_width(win);
+    const int height = ui_window_height(win);
+
+    if (!OSMesaMakeCurrent(ctx, ui_window_pixels(win), GL_UNSIGNED_BYTE, width, height)) {
+        return -1;
+    }
+
+    /* GL counts rows up from the bottom and a window counts them down from the top. Saying
+       so here is cheaper than flipping every frame by hand. */
+    OSMesaPixelStore(OSMESA_Y_UP, 0);
+
+
+    const GLfloat ratio = (GLfloat)height / (GLfloat)width;
+    const GLfloat xmax  = 2.5f;
+
+    glViewport(0, 0, width, height);
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-xmax, xmax, -xmax * ratio, xmax * ratio, 5.0f, 60.0f);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    glTranslatef(0.0f, 0.0f, -20.0f);
+
+    return 0;
+}
+
+
 int main(int argc, char** argv) {
 
+    setvbuf(stdout, NULL, _IONBF, 0);
 
-    int fd = open("/dev/fb0", O_RDWR);
 
-    if (fd < 0) {
-        return perror("open /dev/fb0"), 1;
+    int width  = argc > 1 ? atoi(argv[1]) : GEARS_DEFAULT_WIDTH;
+    int height = argc > 2 ? atoi(argv[2]) : GEARS_DEFAULT_HEIGHT;
+
+
+    ui_connection_t* conn = ui_connect(NULL, 5000);
+
+    if (!conn) {
+        fprintf(stderr, "gl-gears: ui_connect() failed: %s\n", strerror(errno));
+        return 1;
     }
 
+    ui_window_t* win = ui_window_create(conn, width, height, "gl-gears");
 
-    struct fb_var_screeninfo var;
-    struct fb_fix_screeninfo fix;
-
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
-        return perror("ioctl FBIOGET_VSCREENINFO"), 1;
+    if (!win) {
+        fprintf(stderr, "gl-gears: ui_window_create() failed: %s\n", strerror(errno));
+        return 1;
     }
-
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0) {
-        return perror("ioctl FBIOGET_FSCREENINFO"), 1;
-    }
-
-
-    fprintf(stderr, "fb0: %dx%d, %d bpp, %d bytes per line ", var.xres, var.yres, var.bits_per_pixel, fix.line_length);
-
 
 
     OSMesaContext ctx;
 
     #if OSMESA_MAJOR_VERSION * 100 + OSMESA_MINOR_VERSION >= 305
-    ctx = OSMesaCreateContextExt(OSMESA_RGBA, var.bits_per_pixel, 0, 0, NULL);
+    ctx = OSMesaCreateContextExt(OSMESA_BGRA, 24, 0, 0, NULL);
     #else
-    ctx = OSMesaCreateContext(OSMESA_RGBA, NULL);
+    ctx = OSMesaCreateContext(OSMESA_BGRA, NULL);
     #endif
 
     if (!ctx) {
-        return perror("OSMesaCreateContext"), 1;
+        fprintf(stderr, "gl-gears: OSMesaCreateContext() failed\n");
+        return 1;
     }
 
-
-    void* backbuffer = malloc(var.yres * fix.line_length);
-
-    if (!backbuffer) {
-        return perror("malloc"), 1;
-    }
-
-    if (!OSMesaMakeCurrent(ctx, backbuffer, GL_UNSIGNED_BYTE, var.xres, var.yres)) {
-        return perror("OSMesaMakeCurrent"), 1;
+    if (gears_bind(ctx, win) < 0) {
+        fprintf(stderr, "gl-gears: OSMesaMakeCurrent() failed\n");
+        return 1;
     }
 
 
     fprintf(stderr, "GL_RENDERER    = %s\n", glGetString(GL_RENDERER));
     fprintf(stderr, "GL_VERSION     = %s\n", glGetString(GL_VERSION));
     fprintf(stderr, "GL_VENDOR      = %s\n", glGetString(GL_VENDOR));
-    fprintf(stderr, "GL_EXTENSIONS  = %s\n", glGetString(GL_EXTENSIONS));
-
-
-
-    GLfloat ratio = (GLfloat)var.yres / (GLfloat)var.xres;
-    GLfloat xmax  = 2.5f;
-
-    glViewport(0, 0, var.xres, var.yres);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glFrustum(-xmax, xmax, -xmax * ratio, xmax * ratio, 5.0f, 60.0f);
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-    glTranslatef(0.0f, 0.0f, -20.0f);
-
 
 
     static GLfloat pos[4]   = {5.0f, 5.0f, 10.0f, 0.0f};
@@ -258,16 +283,69 @@ int main(int argc, char** argv) {
     glEnable(GL_NORMALIZE);
 
 
-
     GLfloat view_rotx = 20.0f;
     GLfloat view_roty = 30.0f;
     GLfloat view_rotz = 0.0f;
     GLfloat angle     = 0.0f;
 
-    do {
+    bool running = true;
+
+    while (running) {
+
+        /* Drained without waiting, because this window has something to say every frame
+           whether or not the server does. A resize has to be picked up before the frame it
+           applies to is drawn, which is the only reason the events come first. */
+        for (;;) {
+
+            ui_event_t ev;
+
+            int e = ui_next_event(conn, &ev, 0);
+
+            if (e < 0) {
+                fprintf(stderr, "gl-gears: ui_next_event() failed: %s\n", strerror(errno));
+                running = false;
+                break;
+            }
+
+            if (e == 0) {
+                break;
+            }
 
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            if (ev.type == UI_EVENT_CLOSE) {
+                running = false;
+                break;
+            }
+
+            if (ev.type == UI_EVENT_KEY && ev.key.down && ev.key.vkey == KEY_ESC) {
+                running = false;
+                break;
+            }
+
+            if (ev.type == UI_EVENT_CONFIGURE) {
+
+                if (ui_window_apply_configure(win) < 0) {
+                    fprintf(stderr, "gl-gears: ui_window_apply_configure() failed: %s\n", strerror(errno));
+                    running = false;
+                    break;
+                }
+
+                if (gears_bind(ctx, win) < 0) {
+                    fprintf(stderr, "gl-gears: OSMesaMakeCurrent() failed\n");
+                    running = false;
+                    break;
+                }
+            }
+        }
+
+        if (!running) {
+            break;
+        }
+
+
+        /* Opaque black: the window buffer is nominally ARGB, and leaving the alpha at zero
+           would be asking anything that does blend it to drop the frame entirely. */
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
@@ -310,14 +388,21 @@ int main(int argc, char** argv) {
         glFinish();
 
 
-        memcpy((void*)fix.smem_start, backbuffer, var.yres * fix.line_length);
+        ui_window_damage_all(win);
+
+        if (ui_window_commit(win) < 0) {
+            fprintf(stderr, "gl-gears: ui_window_commit() failed: %s\n", strerror(errno));
+            break;
+        }
 
         angle += 2.0f;
-
-    } while (1);
+    }
 
 
     OSMesaDestroyContext(ctx);
+
+    ui_window_destroy(win);
+    ui_disconnect(conn);
 
     return 0;
 }

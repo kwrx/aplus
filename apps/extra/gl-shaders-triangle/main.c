@@ -27,8 +27,9 @@
     #define GL_GLEXT_PROTOTYPES 1
 
 
-    #include <fcntl.h>
+    #include <errno.h>
     #include <math.h>
+    #include <stdbool.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
@@ -38,7 +39,12 @@
     #include <GL/glext.h>
     #include <GL/osmesa.h>
 
-    #include <aplus/fb.h>
+    #include <aplus/input.h>
+    #include <aplus/ui.h>
+
+
+    #define TRIANGLE_DEFAULT_WIDTH  480
+    #define TRIANGLE_DEFAULT_HEIGHT 360
 
 
 
@@ -66,61 +72,81 @@ static char* fragment_shader = "#version 120                                   \
 
 
 
+/* Point OSMesa at the window's own pixels.
+ *
+ * There is no blit anywhere in this program: the window buffer libui hands out is a tight
+ * run of 32-bit pixels, which is exactly what OSMesa wants to render into, so GL draws
+ * straight into the surface that gets committed. OSMESA_BGRA is what makes that work -- it
+ * lays each pixel down as B, G, R, A, which read back as the 0xAARRGGBB the server expects.
+ *
+ * Called again after every resize, because applying a configure can move the buffer.
+ */
+
+static int triangle_bind(OSMesaContext ctx, ui_window_t* win) {
+
+    const int width  = ui_window_width(win);
+    const int height = ui_window_height(win);
+
+    if (!OSMesaMakeCurrent(ctx, ui_window_pixels(win), GL_UNSIGNED_BYTE, width, height)) {
+        return -1;
+    }
+
+    /* GL counts rows up from the bottom and a window counts them down from the top. Saying
+       so here is cheaper than flipping every frame by hand. */
+    OSMesaPixelStore(OSMESA_Y_UP, 0);
+
+    glViewport(0, 0, width, height);
+
+    return 0;
+}
+
+
 int main(int argc, char** argv) {
 
+    setvbuf(stdout, NULL, _IONBF, 0);
 
-    int fd = open("/dev/fb0", O_RDWR);
 
-    if (fd < 0) {
-        return perror("open /dev/fb0"), 1;
+    int width  = argc > 1 ? atoi(argv[1]) : TRIANGLE_DEFAULT_WIDTH;
+    int height = argc > 2 ? atoi(argv[2]) : TRIANGLE_DEFAULT_HEIGHT;
+
+
+    ui_connection_t* conn = ui_connect(NULL, 5000);
+
+    if (!conn) {
+        fprintf(stderr, "gl-shaders-triangle: ui_connect() failed: %s\n", strerror(errno));
+        return 1;
     }
 
+    ui_window_t* win = ui_window_create(conn, width, height, "gl-shaders-triangle");
 
-    struct fb_var_screeninfo var;
-    struct fb_fix_screeninfo fix;
-
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0) {
-        return perror("ioctl FBIOGET_VSCREENINFO"), 1;
+    if (!win) {
+        fprintf(stderr, "gl-shaders-triangle: ui_window_create() failed: %s\n", strerror(errno));
+        return 1;
     }
-
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0) {
-        return perror("ioctl FBIOGET_FSCREENINFO"), 1;
-    }
-
-
-    fprintf(stderr, "fb0: %dx%d, %d bpp, %d bytes per line ", var.xres, var.yres, var.bits_per_pixel, fix.line_length);
-
 
 
     OSMesaContext ctx;
 
     #if OSMESA_MAJOR_VERSION * 100 + OSMESA_MINOR_VERSION >= 305
-    ctx = OSMesaCreateContextExt(OSMESA_RGBA, var.bits_per_pixel, 0, 0, NULL);
+    ctx = OSMesaCreateContextExt(OSMESA_BGRA, 24, 0, 0, NULL);
     #else
-    ctx = OSMesaCreateContext(OSMESA_RGBA, NULL);
+    ctx = OSMesaCreateContext(OSMESA_BGRA, NULL);
     #endif
 
     if (!ctx) {
-        return perror("OSMesaCreateContext"), 1;
+        fprintf(stderr, "gl-shaders-triangle: OSMesaCreateContext() failed\n");
+        return 1;
     }
 
-
-    void* backbuffer = malloc(var.yres * fix.line_length);
-
-    if (!backbuffer) {
-        return perror("malloc"), 1;
-    }
-
-    if (!OSMesaMakeCurrent(ctx, backbuffer, GL_UNSIGNED_BYTE, var.xres, var.yres)) {
-        return perror("OSMesaMakeCurrent"), 1;
+    if (triangle_bind(ctx, win) < 0) {
+        fprintf(stderr, "gl-shaders-triangle: OSMesaMakeCurrent() failed\n");
+        return 1;
     }
 
 
     fprintf(stderr, "GL_RENDERER    = %s\n", glGetString(GL_RENDERER));
     fprintf(stderr, "GL_VERSION     = %s\n", glGetString(GL_VERSION));
     fprintf(stderr, "GL_VENDOR      = %s\n", glGetString(GL_VENDOR));
-    fprintf(stderr, "GL_EXTENSIONS  = %s\n", glGetString(GL_EXTENSIONS));
-
 
 
     static const GLfloat v[3][3] = {
@@ -153,16 +179,19 @@ int main(int argc, char** argv) {
     glLinkProgram(prog);
 
 
+    bool running = true;
+    bool redraw  = true;
 
-    do {
+    while (running) {
 
+        if (redraw) {
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            redraw = false;
 
-
-        glPushMatrix();
-        {
+            /* Opaque black: the window buffer is nominally ARGB, and leaving the alpha at
+               zero would be asking anything that does blend it to drop the frame. */
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
             glUseProgram(prog);
 
@@ -173,24 +202,69 @@ int main(int argc, char** argv) {
             glEnableVertexAttribArray(1);
 
             glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, indices);
+
+            glFinish();
+
+
+            ui_window_damage_all(win);
+
+            if (ui_window_commit(win) < 0) {
+                fprintf(stderr, "gl-shaders-triangle: ui_window_commit() failed: %s\n", strerror(errno));
+                break;
+            }
         }
-        glPopMatrix();
 
 
-        glFinish();
+        /* The picture does not move, so this waits rather than spinning: a frame is drawn
+           when the window is first mapped and again whenever it is resized, and never
+           otherwise. */
+        ui_event_t ev;
 
-        memcpy((void*)fix.smem_start, backbuffer, var.yres * fix.line_length);
+        int e = ui_next_event(conn, &ev, -1);
+
+        if (e < 0) {
+            fprintf(stderr, "gl-shaders-triangle: ui_next_event() failed: %s\n", strerror(errno));
+            break;
+        }
+
+        if (e == 0) {
+            continue;
+        }
 
 
-    } while (1);
+        if (ev.type == UI_EVENT_CLOSE) {
+            break;
+        }
+
+        if (ev.type == UI_EVENT_KEY && ev.key.down && ev.key.vkey == KEY_ESC) {
+            break;
+        }
+
+        if (ev.type == UI_EVENT_CONFIGURE) {
+
+            if (ui_window_apply_configure(win) < 0) {
+                fprintf(stderr, "gl-shaders-triangle: ui_window_apply_configure() failed: %s\n", strerror(errno));
+                break;
+            }
+
+            if (triangle_bind(ctx, win) < 0) {
+                fprintf(stderr, "gl-shaders-triangle: OSMesaMakeCurrent() failed\n");
+                break;
+            }
+
+            redraw = true;
+        }
+    }
 
 
     glDeleteShader(vert);
     glDeleteShader(frag);
     glDeleteProgram(prog);
 
-
     OSMesaDestroyContext(ctx);
+
+    ui_window_destroy(win);
+    ui_disconnect(conn);
 
     return 0;
 }
