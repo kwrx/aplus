@@ -1,0 +1,298 @@
+/*
+ * Author:
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef _APLUS_WM_H
+#define _APLUS_WM_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#include <cairo/cairo.h>
+
+#include <aplus/fb.h>
+#include <aplus/ui.h>
+
+
+//* Decoration geometry. The content area is what the client owns; everything outside it
+//* is drawn by the server, which is what keeps clients free of widget code.
+
+#define WM_TITLEBAR_HEIGHT 26
+#define WM_BORDER_WIDTH    6
+#define WM_RESIZE_GRIP     16
+
+#define WM_WINDOW_MIN_WIDTH  80
+#define WM_WINDOW_MIN_HEIGHT 40
+
+//* Rounded corners and a drop shadow. The shadow is faked by stacking translucent rounded
+//* rectangles rather than blurring, which there is no hardware here to do cheaply; the
+//* stack is clipped to the ring outside the frame, so it costs a border rather than a
+//* whole window.
+
+#define WM_CORNER_RADIUS 10
+#define WM_SHADOW_EXTENT 18
+#define WM_SHADOW_OFFSET 5
+#define WM_SHADOW_LAYERS 14
+#define WM_SHADOW_ALPHA  0.28
+
+
+//* Palette, as cairo component lists so they drop straight into a set_source call. Every
+//* surface is a neutral dark grey a shade apart from the one behind it -- the desktop
+//* darkest, then an idle window, then the active one -- because a shadow cast onto
+//* something this dark carries much less of the separation than it would on a light theme.
+//* What actually marks the active window is the ring around it, not the colour of its
+//* frame, so the ring is the one thing that brightens rather than shifting hue: there is no
+//* hue here to shift.
+
+#define WM_COLOR_DESKTOP_TOP    0.086, 0.086, 0.086
+#define WM_COLOR_DESKTOP_BOTTOM 0.043, 0.043, 0.043
+
+#define WM_COLOR_FRAME_ACTIVE 0.169, 0.169, 0.169
+#define WM_COLOR_FRAME_IDLE   0.125, 0.125, 0.125
+
+#define WM_COLOR_TITLE_ACTIVE 0.910, 0.910, 0.910
+#define WM_COLOR_TITLE_IDLE   0.498, 0.498, 0.498
+
+#define WM_COLOR_RING_ACTIVE 1.000, 1.000, 1.000, 0.45
+#define WM_COLOR_RING_IDLE   1.000, 1.000, 1.000, 0.07
+
+#define WM_COLOR_CLOSE_OVER 0.839, 0.271, 0.302
+#define WM_COLOR_CLOSE_DOWN 0.651, 0.184, 0.212
+
+#define WM_CURSOR_WIDTH  10
+#define WM_CURSOR_HEIGHT 16
+
+//* The close button, at the right end of the titlebar. It is hit-tested ahead of the
+//* resize grips, which otherwise claim the top row of it from the north-east corner.
+
+#define WM_BUTTON_SIZE   16
+#define WM_BUTTON_MARGIN 9
+
+
+//* Keyboard modifiers, as a mask over whatever is held right now. Left and right fold into
+//* the same bit: a binding is about which modifier, not about which side of the keyboard.
+
+#define WM_MOD_SHIFT (1 << 0)
+#define WM_MOD_CTRL  (1 << 1)
+#define WM_MOD_ALT   (1 << 2)
+#define WM_MOD_SUPER (1 << 3)
+
+
+typedef struct {
+
+    int x;
+    int y;
+    int width;
+    int height;
+
+} wm_rect_t;
+
+
+typedef struct {
+
+    int fd;
+
+    struct fb_var_screeninfo var;
+    struct fb_fix_screeninfo fix;
+
+    int width;
+    int height;
+
+    cairo_surface_t* screen;
+    cairo_surface_t* back;
+
+    cairo_t* cr;
+    cairo_t* cr_screen;
+
+} wm_display_t;
+
+
+typedef struct wm_client wm_client_t;
+
+
+typedef struct wm_window {
+
+    uint32_t id;
+    wm_client_t* client;
+
+    char title[UI_TITLE_MAX];
+
+    //? Position of the *content* area on screen. The frame is derived from it.
+    int x;
+    int y;
+    int width;
+    int height;
+
+    //? Bumped on every resize. A commit stamped with an older serial describes a surface
+    //? that no longer exists and is dropped rather than clipped.
+    uint32_t serial;
+
+    cairo_surface_t* backstore;
+
+    struct wm_window* next;
+
+} wm_window_t;
+
+
+struct wm_client {
+
+    int fd;
+
+    bool hello;
+    bool dead;
+
+    struct {
+        uint8_t* data;
+        size_t size;
+        size_t capacity;
+    } rx;
+
+    //? Events are queued rather than written straight out. A blocking write here would
+    //? deadlock against a client blocked writing a commit into a full socket buffer.
+    struct {
+        uint8_t* data;
+        size_t head;
+        size_t size;
+        size_t capacity;
+    } tx;
+
+    struct wm_client* next;
+};
+
+
+typedef enum {
+
+    WM_REGION_NONE = 0,
+    WM_REGION_CONTENT,
+    WM_REGION_TITLEBAR,
+    WM_REGION_CLOSE,
+    WM_REGION_RESIZE_N,
+    WM_REGION_RESIZE_S,
+    WM_REGION_RESIZE_E,
+    WM_REGION_RESIZE_W,
+    WM_REGION_RESIZE_NE,
+    WM_REGION_RESIZE_NW,
+    WM_REGION_RESIZE_SE,
+    WM_REGION_RESIZE_SW,
+
+} wm_region_t;
+
+
+typedef struct {
+
+    wm_display_t display;
+
+    //? Head is the topmost window; compositing walks the list backwards.
+    wm_window_t* windows;
+    wm_client_t* clients;
+
+    wm_window_t* focused;
+
+    //? The window whose close button the pointer is over, if any. A button that lights up
+    //? has to be repainted when the pointer arrives and again when it leaves, so the
+    //? transition is what gets damaged; it doubles as the "still on the button" test that
+    //? decides whether releasing there actually closes anything.
+    wm_window_t* hovered_close;
+
+    uint32_t next_window_id;
+
+    struct {
+        uint16_t modifiers;
+    } keyboard;
+
+    struct {
+        int x;
+        int y;
+        uint8_t buttons;
+    } pointer;
+
+    struct {
+        wm_window_t* window;
+        wm_region_t region;
+        int grab_x;
+        int grab_y;
+        wm_rect_t origin;
+    } drag;
+
+    struct {
+        bool valid;
+        wm_rect_t rect;
+    } damage;
+
+    bool running;
+
+} wm_server_t;
+
+
+extern wm_server_t wm;
+
+
+//* display.c
+int wm_display_open(wm_display_t* display, const char* device);
+void wm_display_close(wm_display_t* display);
+void wm_display_flush(wm_display_t* display, const wm_rect_t* rect);
+
+//* input.c
+int wm_input_open(void);
+void wm_input_close(void);
+int wm_input_dispatch(int fd);
+
+//* keys.c
+bool wm_keys_handle(uint16_t vkey, uint8_t down);
+void wm_keys_reap(void);
+
+//* window.c
+wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title);
+void wm_window_destroy(wm_window_t* win);
+void wm_window_request_close(wm_window_t* win);
+wm_window_t* wm_window_from_id(uint32_t id);
+wm_rect_t wm_window_frame(const wm_window_t* win);
+wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
+wm_rect_t wm_window_close_rect(const wm_window_t* win);
+wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out);
+void wm_window_raise(wm_window_t* win);
+void wm_window_focus(wm_window_t* win);
+void wm_window_move(wm_window_t* win, int x, int y);
+void wm_window_clamp_size(int* width, int* height);
+int wm_window_resize(wm_window_t* win, int width, int height);
+int wm_window_notify_configure(wm_window_t* win);
+void wm_window_paint(cairo_t* cr, wm_window_t* win);
+void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double height, double radius);
+int wm_window_blit(wm_window_t* win, int x, int y, int width, int height, const uint8_t* pixels);
+int wm_font_init(void);
+void wm_font_fini(void);
+
+//* client.c
+wm_client_t* wm_client_accept(int listener);
+void wm_client_destroy(wm_client_t* client);
+int wm_client_read(wm_client_t* client);
+int wm_client_flush(wm_client_t* client);
+bool wm_client_wants_write(const wm_client_t* client);
+int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, size_t size);
+
+//* main.c
+void wm_damage(const wm_rect_t* rect);
+void wm_damage_window(const wm_window_t* win);
+wm_rect_t wm_cursor_rect(void);
+
+#endif
