@@ -65,13 +65,15 @@ SYSCALL(
 
 
 #if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(!NETWORK_IS_SOCKFD(fd)))
+        int socket = socket_from_fd(fd);
+
+        if (unlikely(socket < 0))
             return -ENOTSOCK;
 
 
         ssize_t e;
 
-        if ((e = lwip_shutdown(NETWORK_SOCKFD(fd), flags)) < 0)
+        if ((e = lwip_shutdown(socket, flags)) < 0)
             return -errno;
 
         return e;

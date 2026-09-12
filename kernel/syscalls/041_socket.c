@@ -70,7 +70,9 @@ SYSCALL(
         if ((e = lwip_socket(domain, type, protocol)) < 0)
             return -errno;
 
-        return NETWORK_FD(e);
+        //? Handing the socket to socket_install() passes ownership with it: if no descriptor
+        //? can be found for it, it is closed there rather than leaked here.
+        return socket_install((int)e, 0);
 
 #else
     return -ENOSYS;

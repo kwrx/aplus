@@ -70,7 +70,9 @@ SYSCALL(
 
 
 #if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(!NETWORK_IS_SOCKFD(fd)))
+        int socket = socket_from_fd(fd);
+
+        if (unlikely(socket < 0))
             return -ENOTSOCK;
 
         if (unlikely(socklen == 0))
@@ -88,7 +90,7 @@ SYSCALL(
 
         ssize_t e;
 
-        if ((e = lwip_connect(NETWORK_SOCKFD(fd), (struct sockaddr*)__sockaddr, socklen)) < 0)
+        if ((e = lwip_connect(socket, (struct sockaddr*)__sockaddr, socklen)) < 0)
             return -errno;
 
         return e;

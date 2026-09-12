@@ -74,28 +74,6 @@ SYSCALL(
             return -EFAULT;
 
 
-#if defined(CONFIG_HAVE_NETWORK)
-
-        ssize_t e = 0;
-
-        if (unlikely(NETWORK_IS_SOCKFD(fd))) {
-
-            uio_lock(buf, size);
-
-            e = lwip_write(NETWORK_SOCKFD(fd), buf, size);
-
-            uio_unlock(buf, size);
-
-
-            if (unlikely(e < 0))
-                return -errno;
-
-            return e;
-
-        } else
-
-#endif
-
         {
 
             if (unlikely(fd >= CONFIG_OPEN_MAX))

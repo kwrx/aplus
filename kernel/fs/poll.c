@@ -85,23 +85,6 @@ int poll_scan(int fd, short events, short* revents) {
     *revents = 0;
 
 
-#if defined(CONFIG_HAVE_NETWORK)
-
-    if (NETWORK_IS_SOCKFD(fd)) {
-
-        struct pollfd sfd = {.fd = NETWORK_SOCKFD(fd), .events = events, .revents = 0};
-
-        if (lwip_poll_from_syscall(&sfd, 1, NULL, false) < 0)
-            return -errno;
-
-        *revents = sfd.revents & (events | POLLHUP | POLLERR | POLLNVAL);
-
-        return 0;
-    }
-
-#endif
-
-
     if (fd >= CONFIG_OPEN_MAX)
         return *revents = POLLNVAL, 0;
 
@@ -142,40 +125,50 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
     *armed = false;
 
 
-#if defined(CONFIG_HAVE_NETWORK)
-
-    if (NETWORK_IS_SOCKFD(fd)) {
-
-        struct pollfd sfd = {.fd = NETWORK_SOCKFD(fd), .events = events, .revents = 0};
-
-        if (lwip_poll_from_syscall(&sfd, 1, timeout, true) < 0)
-            return -errno;
-
-        *armed = true;
-
-        return 0;
-    }
-
-#endif
-
-
     //? Re-validated rather than assumed: this runs after a fresh read of user
     //? memory, and a sibling thread may have changed the fd since the scan.
     if (fd >= CONFIG_OPEN_MAX)
         return 0;
 
 
+    int e = 0;
+
     shared_ptr_access(current_task->fd, fds, {
         if (fds->descriptors[fd].ref != NULL && fds->descriptors[fd].ref->inode != NULL) {
 
-            shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
-                futex_wait(current_task, &ev->futex, ev->futex, timeout);
-                *armed = true;
-            });
+            inode_t* inode = fds->descriptors[fd].ref->inode;
+
+            bool handled = false;
+
+#if defined(CONFIG_HAVE_NETWORK)
+
+            //? A socket is watched on lwIP's own queue rather than on an inode event counter,
+            //? so it is asked first -- by what the inode is, not by what its number is.
+            int r = socket_poll_arm(inode, events, timeout);
+
+            if (r != 0) {
+
+                handled = true;
+
+                if (r > 0)
+                    *armed = true;
+                else
+                    e = r;
+            }
+
+#endif
+
+            if (!handled) {
+
+                shared_ptr_nullable_access(inode->ev, ev, {
+                    futex_wait(current_task, &ev->futex, ev->futex, timeout);
+                    *armed = true;
+                });
+            }
         }
     });
 
-    return 0;
+    return e;
 }
 
 

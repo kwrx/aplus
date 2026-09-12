@@ -78,26 +78,6 @@ SYSCALL(
 
         ssize_t e = 0;
 
-#if defined(CONFIG_HAVE_NETWORK)
-
-        if (unlikely(NETWORK_IS_SOCKFD(fd))) {
-
-            uio_lock(buf, size);
-
-            e = lwip_read(NETWORK_SOCKFD(fd), buf, size);
-
-            uio_unlock(buf, size);
-
-
-            if (unlikely(e < 0))
-                return -errno;
-
-            return e;
-
-        } else
-
-#endif
-
         {
 
             if (unlikely(fd >= CONFIG_OPEN_MAX))
