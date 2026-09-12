@@ -87,6 +87,7 @@ typedef uint32_t pcidev_t;
 
     #define PCI_TYPE_ALL      -1
     #define PCI_TYPE_BRIDGE   0x0604
+    #define PCI_TYPE_ISA      0x0601
     #define PCI_TYPE_SATA     0x0106
     #define PCI_TYPE_VGA      0x0300
     #define PCI_TYPE_ETHERNET 0x0200
@@ -141,6 +142,10 @@ typedef uint32_t pcidev_t;
     #define PCI_MSIX_INTR_MASK             (1 << 0)
 
     #define PCI_MSIX_INTR_BASE   66
+
+    #define PCI_PIRQ_ROUTE(i) (0x60 + (i))
+    #define PCI_PIRQ_DISABLED (0x80)
+    #define PCI_PIRQ_IRQ_MASK (0x0F)
 
     #define pci_extract_bus(x)  ((uint8_t)(x >> 16))
     #define pci_extract_slot(x) ((uint8_t)(x >> 8))
@@ -284,6 +289,7 @@ int pci_msix_map_irq(pcidev_t, pci_msix_t*, pci_irq_handler_t, pci_irq_data_t, u
 int pci_msix_unmap_irq(pcidev_t, pci_msix_t*);
 
 /* INTx */
+void pci_intx_fixup_irqs(void);
 int pci_intx_map_irq(pcidev_t, irq_t, pci_irq_handler_t, pci_irq_data_t);
 int pci_intx_unmap_irq(pcidev_t);
 void pci_intx_mask(pcidev_t);
