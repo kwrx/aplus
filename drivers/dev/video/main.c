@@ -102,6 +102,114 @@ int video_ioctl(device_t* device, int req, void* arg) {
             break;
 
 
+        case FBIO_FLUSH: {
+
+            /* An adapter without a flush hook scans out of the framebuffer directly, so the
+               pixels are already on screen and there is nothing to push. Succeeding here is
+               what lets a compositor call this on every frame without first working out
+               which kind of adapter it is looking at. */
+            if (!device->vid.flush)
+                break;
+
+            struct fb_rect rect;
+
+            uio_memcpy_u2s(&rect, arg, sizeof(rect));
+
+            if (!rect.width || !rect.height)
+                break;
+
+            /* Clip against the mode rather than trusting the caller: these go on to become a
+               rectangle the adapter reads out of a framebuffer sized by the mode. */
+            if (rect.x >= device->vid.vs.xres || rect.y >= device->vid.vs.yres)
+                break;
+
+            if (rect.width > device->vid.vs.xres - rect.x)
+                rect.width = device->vid.vs.xres - rect.x;
+
+            if (rect.height > device->vid.vs.yres - rect.y)
+                rect.height = device->vid.vs.yres - rect.y;
+
+            device->vid.flush(device, rect.x, rect.y, rect.width, rect.height);
+
+        } break;
+
+
+        case FBIOGET_HWCINFO:
+
+            if (!(device->vid.hwc.flags & FB_HWCINFO_HAS_CURSOR))
+                return errno = ENOTSUP, -1;
+
+            uio_memcpy_s2u(arg, &device->vid.hwc, sizeof(struct fb_hwcinfo));
+            break;
+
+
+        case FBIOPUT_HWCURSOR: {
+
+            if (!device->vid.cursor_set)
+                return errno = ENOTSUP, -1;
+
+
+            struct fb_hwcursor cursor;
+
+            uio_memcpy_u2s(&cursor, arg, sizeof(cursor));
+
+
+            /* A cursor with no image is only meaningful as a request to hide the plane. */
+            if (cursor.flags & FB_HWCURSOR_ENABLE) {
+
+                if (!cursor.image || !cursor.width || !cursor.height)
+                    return errno = EINVAL, -1;
+
+                if (unlikely(!uio_check(cursor.image, R_OK)))
+                    return errno = EFAULT, -1;
+
+                if (cursor.width > device->vid.hwc.max_width || cursor.height > device->vid.hwc.max_height)
+                    return errno = EINVAL, -1;
+
+                if (cursor.hot_x >= cursor.width || cursor.hot_y >= cursor.height)
+                    return errno = EINVAL, -1;
+            }
+
+
+            uint32_t* image = NULL;
+
+            if (cursor.flags & FB_HWCURSOR_ENABLE) {
+
+                size_t pixels = (size_t)cursor.width * (size_t)cursor.height;
+
+                if (!(image = kcalloc(pixels, sizeof(uint32_t), GFP_KERNEL)))
+                    return errno = ENOMEM, -1;
+
+                uio_memcpy_u2s(image, cursor.image, pixels * sizeof(uint32_t));
+            }
+
+
+            int e = device->vid.cursor_set(device, &cursor, image);
+
+            if (image)
+                kfree(image);
+
+            if (e < 0)
+                return -1;
+
+        } break;
+
+
+        case FBIOPUT_HWCURSOR_POS: {
+
+            if (!device->vid.cursor_move)
+                return errno = ENOTSUP, -1;
+
+            struct fb_hwcursor_pos pos;
+
+            uio_memcpy_u2s(&pos, arg, sizeof(pos));
+
+            if (device->vid.cursor_move(device, pos.x, pos.y) < 0)
+                return -1;
+
+        } break;
+
+
         default:
             return errno = ENOSYS, -1;
     }

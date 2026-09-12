@@ -51,6 +51,21 @@
     #define FBIOGET_DISPINFO    0x4618
     #define FBIO_WAITFORVSYNC   _IOW('F', 0x20, uint32_t)
 
+/* Adapters whose scanout is a copy of the framebuffer rather than the framebuffer itself --
+   virtio-gpu is the one here -- see nothing until the damaged region is handed to them.
+   FBIO_FLUSH is that handover, and it is a no-op on an adapter that scans out of the
+   framebuffer directly, so a caller need not know which kind it has.
+
+   FBIO_WAITFORVSYNC then blocks until the host is done with what was flushed. There is no
+   scanout vblank to wait for on virtio-gpu: what it actually waits for is the completion
+   fence of the last flush, which is what keeps the compositor from overwriting a frame the
+   host has not finished reading. Called without a preceding FBIO_FLUSH it flushes the whole
+   screen first, which is what makes it work on its own. */
+
+    #define FBIO_FLUSH             _IOW('F', 0x21, struct fb_rect)
+    #define FBIOPUT_HWCURSOR       _IOW('F', 0x22, struct fb_hwcursor)
+    #define FBIOPUT_HWCURSOR_POS   _IOW('F', 0x23, struct fb_hwcursor_pos)
+
     #define FB_TYPE_PACKED_PIXELS      0 /* Packed Pixels	*/
     #define FB_TYPE_PLANES             1 /* Non interleaved planes */
     #define FB_TYPE_INTERLEAVED_PLANES 2 /* Interleaved planes	*/
@@ -316,6 +331,64 @@ struct fb_cursor {
     const char* mask;      /* cursor mask bits */
     struct fbcurpos hot;   /* cursor hot spot */
     struct fb_image image; /* Cursor image */
+};
+
+
+
+/* A rectangle in screen pixels, for FBIO_FLUSH. */
+
+struct fb_rect {
+    uint32_t x;
+    uint32_t y;
+    uint32_t width;
+    uint32_t height;
+};
+
+
+/* The hardware cursor plane.
+ *
+ * It is a plane of its own, composited by the adapter on top of the scanout, so moving it
+ * costs neither a repaint of what it uncovers nor a transfer of a single pixel. That is the
+ * whole point of it: a compositor that draws its own pointer has to repaint and re-flush two
+ * rectangles for every mouse event, and a pointer moves far more often than anything else on
+ * screen.
+ *
+ * FBIOGET_HWCINFO reports whether there is one and how large its image may be; on an adapter
+ * without one it fails with ENOTSUP, which is the signal to fall back to drawing the pointer
+ * by hand.
+ */
+
+    #define FB_HWCINFO_HAS_CURSOR (1 << 0)
+
+struct fb_hwcinfo {
+    uint32_t flags;
+    uint32_t max_width;
+    uint32_t max_height;
+};
+
+
+    #define FB_HWCURSOR_ENABLE (1 << 0) /* show it; without this the plane is hidden */
+
+/* image is width * height pixels of 0xAARRGGBB in host byte order, with straight (not
+   premultiplied) alpha, laid out top row first with no padding between rows. It may be NULL
+   only when FB_HWCURSOR_ENABLE is clear. The hotspot is the pixel inside the image that
+   lands on (x, y). */
+
+struct fb_hwcursor {
+    uint32_t flags;
+    uint32_t width;
+    uint32_t height;
+    uint32_t hot_x;
+    uint32_t hot_y;
+    int32_t x;
+    int32_t y;
+    const void* image;
+};
+
+
+struct fb_hwcursor_pos {
+    int32_t x;
+    int32_t y;
 };
 
     #ifdef CONFIG_FB_BACKLIGHT
