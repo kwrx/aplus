@@ -116,10 +116,10 @@ x86_64)
     # Network
     if [ $ARG_VIRTIO -eq 1 ]; then
         flags="$flags -device virtio-net-pci,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
     else
         flags="$flags -device pcnet,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:8080"
+        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
     fi
 
     # Block
