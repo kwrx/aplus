@@ -116,11 +116,24 @@ SYSCALL(
         int arch_flags = 0;
 
 
-        if (prot != PROT_NONE)
-            arch_flags |= ARCH_VMM_MAP_USER;
+        /* A userspace mapping is a user page whatever its protection, PROT_NONE included.
+         *
+         * Withholding the user bit to express "no access" made the page look kernel-owned,
+         * and __mm_copy_page() shares kernel pages by reference rather than dropping them:
+         * a PROT_NONE mapping therefore survived execve() into every descendant address
+         * space. musl puts exactly one of those at the bottom of every thread stack, and
+         * the first mmap of a process lands on mmap.heap_start -- so once any process had
+         * created a thread, everything exec'd below it found a live entry sitting on the
+         * address its own first mmap wanted, and arch_vmm_map() refused it. That surfaced
+         * as pthread_create() failing with EAGAIN for anything started from a shell.
+         *
+         * "No access" is spelled with the present bit instead. The fault handler has no
+         * copy-on-write flags to act on for such a page, so the access becomes the SIGSEGV
+         * PROT_NONE is supposed to produce. */
+        arch_flags |= ARCH_VMM_MAP_USER;
 
-        // if(!(prot & PROT_READ))
-        //     arch_flags |= ARCH_VMM_MAP_USER;
+        if (prot == PROT_NONE)
+            arch_flags |= ARCH_VMM_MAP_DISABLED;
 
         if (!(prot & PROT_EXEC))
             arch_flags |= ARCH_VMM_MAP_NOEXEC;
