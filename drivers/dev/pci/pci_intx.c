@@ -59,6 +59,104 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 }
 
 
+/*
+ * Find the chipset's PCI interrupt router.
+ *
+ * On a PC this is the ISA/LPC bridge on bus 0. Only Intel parts are recognised, because the
+ * 0x60..0x63 register block this reads is their convention and not something to guess at on
+ * a bridge that might lay its config space out differently.
+ */
+static pcidev_t pci_intx_find_router(void) {
+
+    for (uint8_t slot = 0; slot < 32; slot++) {
+
+        pcidev_t device = pci_box_device(0, slot, 0);
+
+        if (pci_read(device, PCI_VENDOR_ID, 2) != 0x8086)
+            continue;
+
+        if ((((pci_read(device, PCI_CLASS, 1) << 8) | pci_read(device, PCI_SUBCLASS, 1))) == PCI_TYPE_ISA)
+            return device;
+    }
+
+    return PCI_NONE;
+}
+
+
+/*
+ * Correct every device's PCI_INTERRUPT_LINE to the interrupt it actually asserts on.
+ *
+ * That register is written by firmware and is not authoritative: what decides where an INTx
+ * pin lands is the chipset's interrupt router, and the two disagree on real configurations.
+ * Here the firmware leaves 11 on a card whose pin is routed through PIRQD to 10, so the
+ * kernel would unmask the wrong I/O APIC pin, the card's level-triggered interrupt would stay
+ * asserted and unserviced forever, and the device would simply never be heard from -- which
+ * is what kept every network card in this tree from ever receiving a packet.
+ *
+ * Rewriting config space rather than returning the value keeps one source of truth: drivers
+ * and the INTx dispatcher both read PCI_INTERRUPT_LINE and now both get the right answer.
+ * Runs over bus 0 only, which is where the routed devices are on this platform.
+ */
+void pci_intx_fixup_irqs(void) {
+
+    pcidev_t router = pci_intx_find_router();
+
+    if (router == PCI_NONE)
+        return;
+
+
+    for (uint8_t slot = 0; slot < 32; slot++) {
+
+        for (uint8_t func = 0; func < 8; func++) {
+
+            pcidev_t device = pci_box_device(0, slot, func);
+
+            if (pci_read(device, PCI_VENDOR_ID, 2) == 0xFFFF)
+                continue;
+
+
+            //? Pins are numbered INTA..INTD as 1..4; zero means the device raises no INTx at all.
+            uint8_t pin = pci_read(device, PCI_INTERRUPT_PIN, 1);
+
+            if (pin < 1 || pin > 4)
+                continue;
+
+
+            //? The standard swizzle: each slot offsets its pins by one position around the four
+            //? PIRQ lines, so that four slots sharing one pin still spread across all of them.
+            //? Both terms are zero-based -- INTA# is pin 1 in config space but link 0 here, and
+            //? slot 1 is the first slot -- hence the -2. An off-by-one here is quietly survivable
+            //? whenever two PIRQ lines happen to share an IRQ, and then storms on the one device
+            //? where they differ: it asserts a line nobody can match, so nobody ever clears it.
+            uint8_t link = (uint8_t)((slot + pin - 2) & 3);
+            uint8_t route = pci_read(router, PCI_PIRQ_ROUTE(link), 1);
+
+            if (route & PCI_PIRQ_DISABLED)
+                continue;
+
+
+            uint8_t irq = route & PCI_PIRQ_IRQ_MASK;
+
+            if (irq == 0)
+                continue;
+
+
+            uint8_t line = pci_read(device, PCI_INTERRUPT_LINE, 1);
+
+            if (line == irq)
+                continue;
+
+
+            pci_write(device, PCI_INTERRUPT_LINE, 1, irq);
+
+#if DEBUG_LEVEL_INFO
+            kprintf("pci-intx: %02x:%02x.%x routed through PIRQ%c to irq(%d), correcting stale interrupt line(%d)\n", 0, slot, func, 'A' + link, irq, line);
+#endif
+        }
+    }
+}
+
+
 int pci_intx_map_irq(pcidev_t device, irq_t irq, pci_irq_handler_t handler, pci_irq_data_t data) {
 
     uint16_t index = pci_dev_register(device, handler, data, 0);

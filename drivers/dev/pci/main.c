@@ -44,6 +44,8 @@ MODULE_LICENSE("GPL");
 
 void init(const char* args) {
 
+    pci_intx_fixup_irqs();
+
 #if DEBUG_LEVEL_TRACE
 
     for (int i = 0; i < 256; i++) {
