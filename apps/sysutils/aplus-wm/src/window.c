@@ -361,7 +361,7 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
     }
 
 
-    /* Ahead of the grips on purpose. The button sits five pixels down from the top of the
+    /* Ahead of the grips on purpose. The button sits eight pixels down from the top of the
        frame and within the north-east corner's reach, so testing the grips first would
        hand them its top row and the window would resize instead of closing. */
     const wm_rect_t c = wm_window_close_rect(win);
@@ -372,7 +372,7 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
 
     /* An edge is only an edge within the border thickness. Measuring it with the corner
-       reach instead would put the top 16 pixels of a 22 pixel titlebar inside the north
+       reach instead would put the top 16 pixels of a 32 pixel titlebar inside the north
        resize zone, and dragging a window by its title would resize it. */
     const bool left   = x < f.x + WM_BORDER_WIDTH;
     const bool right  = x >= f.x + f.width - WM_BORDER_WIDTH;

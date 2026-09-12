@@ -139,10 +139,9 @@ wm_rect_t wm_cursor_rect(void) {
 }
 
 
-static void wm_draw_cursor(cairo_t* cr) {
-
-    const double x = wm.pointer.x;
-    const double y = wm.pointer.y;
+/* The arrow, with its tip at (x, y). Shared with the hardware cursor plane, which needs the
+   same shape drawn once into an image rather than into every frame. */
+void wm_cursor_paint(cairo_t* cr, double x, double y) {
 
     cairo_save(cr);
 
@@ -229,7 +228,11 @@ static void wm_composite(void) {
     }
 
 
-    wm_draw_cursor(cr);
+    /* Skipped entirely when the adapter composites its own cursor plane: drawing it here as
+       well would leave a second arrow trailing behind the real one. */
+    if (!wm.display.hwcursor) {
+        wm_cursor_paint(cr, wm.pointer.x, wm.pointer.y);
+    }
 
     cairo_restore(cr);
 
