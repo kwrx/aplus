@@ -11,6 +11,12 @@
 
 # ./main
 
+# The display server takes over /dev/fb0, /dev/kbd and /dev/mouse and hands out windows
+# over /tmp/aplus-wm.sock. It has to be running before any client, but aplus-terminal
+# retries the connect for a few seconds, so there is no race to sleep around here.
+aplus-wm &
+
+# Now a client rather than the owner of the screen.
 aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
 # aplus-ui
 
