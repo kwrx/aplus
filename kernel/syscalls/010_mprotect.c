@@ -96,11 +96,12 @@ SYSCALL(
 
         int arch_flags = 0;
 
-        if (prot != PROT_NONE)
-            arch_flags |= ARCH_VMM_MAP_USER;
+        //? Same reasoning as sys_mmap(): the user bit says who owns the page, not whether it
+        //? can be touched, and the address space cloner reads it that way.
+        arch_flags |= ARCH_VMM_MAP_USER;
 
-        // if(!(prot & PROT_READ))
-        //     arch_flags |= ARCH_VMM_MAP_USER;
+        if (prot == PROT_NONE)
+            arch_flags |= ARCH_VMM_MAP_DISABLED;
 
         if (!(prot & PROT_EXEC))
             arch_flags |= ARCH_VMM_MAP_NOEXEC;
