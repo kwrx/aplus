@@ -82,6 +82,8 @@ MODULE_LICENSE("GPL");
 
 
 
+#define E1000_TX_TIMEOUT 1000000 // spins to wait for a transmit to be reported done
+
 #define REG_TIPG  0x0410 // Transmit Inter Packet Gap
 #define ECTRL_SLU 0x40   // set link up
 
@@ -186,6 +188,9 @@ struct e1000 {
     uint16_t rx_cur;
     uint16_t tx_cur;
 
+    uint16_t rx_size;
+    uint16_t rx_offset;
+
     uintptr_t cache;
 
     spinlock_t lock;
@@ -199,23 +204,27 @@ static uint32_t pci_count = 0;
 
 
 
+/*
+ * Registers are reached through the memory-mapped window at BAR0. The card also offers an
+ * indirect two-port path through BAR1, but that one is optional on several of the device IDs
+ * matched here, and the address it needs was being taken from the wrong BAR anyway. The
+ * offset is allowed to be zero (REG_CTRL), so it is not asserted.
+ */
 static inline void wrcmd(struct e1000* dev, uint16_t address, uint32_t value) {
 
     DEBUG_ASSERT(dev);
-    DEBUG_ASSERT(address);
+    DEBUG_ASSERT(dev->vmem);
 
-    outl(dev->io, address);
-    outl(dev->io + 4, value);
+    mmio_w32(dev->vmem + address, value);
 }
 
 
 static inline uint32_t rdcmd(struct e1000* dev, uint16_t address) {
 
     DEBUG_ASSERT(dev);
-    DEBUG_ASSERT(address);
+    DEBUG_ASSERT(dev->vmem);
 
-    outl(dev->io, address);
-    return inl(dev->io + 4);
+    return mmio_r32(dev->vmem + address);
 }
 
 
@@ -252,8 +261,21 @@ static void e1000_output(void* internals, void* buf, uint16_t len) {
 
     wrcmd(dev, REG_TXDESCTAIL, dev->tx_cur);
 
-    while (!(((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF))
+
+    //? Wait for the card to report the descriptor done, but not forever: this runs with the
+    //? caller's lock held and on the boot path, so a card that never answers used to hang the
+    //? machine outright rather than drop a frame.
+    for (size_t timeout = 0; timeout < E1000_TX_TIMEOUT; timeout++) {
+
+        if (((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF)
+            return;
+
         __builtin_ia32_pause();
+    }
+
+#if DEBUG_LEVEL_ERROR
+    kprintf("e1000: ERROR! transmit timed out on descriptor %d, frame dropped\n", j);
+#endif
 }
 
 
@@ -284,6 +306,11 @@ static int e1000_startinput(void* internals) {
 #endif
 
 
+    //? The frame is handed up one pbuf at a time, so how far through it we are has to survive
+    //? between calls; the descriptor is only released once, in endinput().
+    dev->rx_size   = size;
+    dev->rx_offset = 0;
+
     return size;
 }
 
@@ -298,28 +325,41 @@ static void e1000_input(void* internals, void* buf, uint16_t len) {
 
     struct e1000* dev = (struct e1000*)internals;
 
-
-    uint8_t j = dev->rx_cur;
-
-    memcpy((void*)(buf), (void*)((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->addr, (size_t)len);
-
-    dev->rx_cur = (dev->rx_cur + 1) % E1000_NUM_RX_DESC;
+    DEBUG_ASSERT(dev->rx_offset < dev->rx_size);
 
 
-    ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
+    if (dev->rx_offset + len > dev->rx_size)
+        len = dev->rx_size - dev->rx_offset;
 
-    wrcmd(dev, REG_RXDESCTAIL, j);
 
+    //? The address in the descriptor is the one the card writes to, a physical one. Reading it
+    //? from the CPU has to go through the mapping, which this did not do.
+    uintptr_t src = arch_vmm_p2v((uintptr_t)((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->addr, ARCH_VMM_AREA_HEAP);
 
-    int i;
-    for (i = 0; i < len; i++)
-        kprintf("%c ", ((char*)buf)[i] & 0xFF);
+    memcpy(buf, (const void*)(src + dev->rx_offset), (size_t)len);
+
+    dev->rx_offset += len;
 }
 
 
 static void e1000_endinput(void* internals) {
 
     DEBUG_ASSERT(internals);
+
+    struct e1000* dev = (struct e1000*)internals;
+
+
+    uint16_t j = dev->rx_cur;
+
+    ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
+
+    dev->rx_cur = (dev->rx_cur + 1) % E1000_NUM_RX_DESC;
+
+    //? The tail marks the last descriptor handed back to the card.
+    wrcmd(dev, REG_RXDESCTAIL, j);
+
+    dev->rx_size   = 0;
+    dev->rx_offset = 0;
 }
 
 
@@ -335,16 +375,17 @@ static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000* dev) {
     DEBUG_ASSERT(dev->irq == irq);
 
 
-    uint32_t s;
+    //? Reading ICR is what acknowledges the interrupt. The causes are independent bits, so they
+    //? are tested separately: as an if/else chain a link-status change on the same interrupt
+    //? would discard the frame that came with it.
+    uint32_t s = rdcmd(dev, 0xC0);
 
-    wrcmd(dev, REG_IMASK, 0x01);
-    s = rdcmd(dev, 0xC0);
-
+#if DEBUG_LEVEL_TRACE
     if (s & 0x04)
-        kprintf("e1000: netif up!");
-    else if (s & 0x10)
-        kprintf("e1000: good treshold");
-    else if (s & 0x80)
+        kprintf("e1000: link status changed\n");
+#endif
+
+    if (s & (0x80 | 0x10))
         ethif_input(&dev->device.net.interface);
 }
 
@@ -376,8 +417,10 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
         ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
     }
 
-    wrcmd(dev, REG_RXDESCLO, (uint32_t)((uint64_t)ptr >> 32));
-    wrcmd(dev, REG_RXDESCHI, (uint32_t)((uint64_t)ptr & 0xFFFFFFFF));
+    //? Low half to the low register, high half to the high one. These were the other way
+    //? round, which pointed the card at a ring address with its two halves exchanged.
+    wrcmd(dev, REG_RXDESCLO, (uint32_t)((uint64_t)ptr & 0xFFFFFFFF));
+    wrcmd(dev, REG_RXDESCHI, (uint32_t)((uint64_t)ptr >> 32));
 
     wrcmd(dev, REG_RXDESCLEN, E1000_NUM_RX_DESC * 16);
     wrcmd(dev, REG_RXDESCHEAD, 0);
@@ -398,8 +441,8 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
         ((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status = TSTA_DD;
     }
 
-    wrcmd(dev, REG_TXDESCLO, (uint32_t)((uint64_t)ptr >> 32));
-    wrcmd(dev, REG_TXDESCHI, (uint32_t)((uint64_t)ptr & 0xFFFFFFFF));
+    wrcmd(dev, REG_TXDESCLO, (uint32_t)((uint64_t)ptr & 0xFFFFFFFF));
+    wrcmd(dev, REG_TXDESCHI, (uint32_t)((uint64_t)ptr >> 32));
 
     wrcmd(dev, REG_TXDESCLEN, E1000_NUM_TX_DESC * 16);
     wrcmd(dev, REG_TXDESCHEAD, 0);
@@ -413,8 +456,6 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
     dev->cache = pmm_alloc_blocks(16);
 
 
-    netif_set_default(&dev->device.net.interface);
-    netif_set_up(&dev->device.net.interface);
 }
 
 
@@ -459,15 +500,30 @@ void init(const char* args) {
 
         struct e1000* eth = (struct e1000*)kcalloc(1, sizeof(struct e1000), GFP_KERNEL);
 
-        eth->pci  = pci_devices[i];
-        eth->irq  = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
-        eth->io   = pci_read(eth->pci, PCI_BAR0, 4);
-        eth->mem  = pci_read(eth->pci, PCI_BAR1, 4);
-        eth->vmem = arch_vmm_p2v(eth->mem, ARCH_VMM_AREA_HEAP);
+        eth->pci = pci_devices[i];
+        eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
+
+        //? BAR0 is the memory window and BAR1 the I/O ports; they were read the other way
+        //? round, so every register access was an outl() to a port number made out of a
+        //? physical address. Both BARs also carry type bits in the low bits, which have to be
+        //? masked off before the value is an address at all.
+        eth->mem = pci_read(eth->pci, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
+        eth->io  = pci_read(eth->pci, PCI_BAR1, 4) & PCI_BAR_IO_MASK;
 
         pci_enable_pio(eth->pci);
         pci_enable_mmio(eth->pci);
         pci_enable_bus_mastering(eth->pci);
+
+
+        //? Device memory is not in the direct map, so the window has to be mapped before it is
+        //? touched. Uncached and write-through: a register write parked in a cache line never
+        //? reaches the card.
+        uintptr_t size = pci_bar_size(eth->pci, PCI_BAR0, 4);
+
+        PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, eth->mem, eth->mem, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH));
+
+        eth->vmem = eth->mem;
+
 
         spinlock_init(&eth->lock);
 
@@ -507,14 +563,6 @@ void init(const char* args) {
 
 
 
-        if (eth->irq != PCI_INTERRUPT_LINE_NONE) {
-
-            pci_intx_map_irq(eth->pci, eth->irq, (pci_irq_handler_t)e1000_irq, (pci_irq_data_t)eth);
-            pci_intx_unmask(eth->pci);
-        }
-
-
-
         IP4_ADDR(&eth->device.net.ip, 10, 0, 2, 15 + i);
         IP4_ADDR(&eth->device.net.nm, 255, 255, 255, 0);
         IP4_ADDR(&eth->device.net.gw, 10, 0, 2, 2);
@@ -527,6 +575,21 @@ void init(const char* args) {
 
             kpanicf("e1000: PANIC! netif_add() failed\n");
         }
+
+
+        //? Only now, with the interface registered, is it safe to take interrupts: the handler
+        //? reaches ethif_input() through this netif. Unmasking earlier -- and bringing the
+        //? interface up from inside low_level_init(), while netif_add() was still running --
+        //? was what wedged this driver at boot.
+        if (eth->irq != PCI_INTERRUPT_LINE_NONE) {
+
+            pci_intx_map_irq(eth->pci, eth->irq, (pci_irq_handler_t)e1000_irq, (pci_irq_data_t)eth);
+            pci_intx_unmask(eth->pci);
+        }
+
+
+        netif_set_default(&eth->device.net.interface);
+        netif_set_up(&eth->device.net.interface);
 
 
         device_mkdev(&eth->device, 0666);
