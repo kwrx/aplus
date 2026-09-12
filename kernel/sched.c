@@ -217,6 +217,21 @@ static inline void do_signals(void) {
 
         handle_signal(siginfo);
         kfree(siginfo);
+
+
+        //? A fatal signal runs the whole of sys_exit() right here, wherever this task happened
+        //? to be inside the kernel -- and sys_exit() closes every descriptor and tears down the
+        //? address space before returning normally. Returning would resume the interrupted
+        //? kernel path with the resources it was in the middle of using already freed: a task
+        //? killed while parked in the network stack came back into lwIP holding a netconn and a
+        //? mailbox that its own exit had just released, and faulted on them.
+        //?
+        //? A dead task never runs again, so give the CPU away and do not come back. A stopped
+        //? one may, and __sched_next() simply passes over it until SIGCONT makes it READY --
+        //? at which point this returns and the interrupted path carries on, which is safe
+        //? because sys_exit() leaves a stopped task's descriptors alone.
+        while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP))
+            schedule(1);
     }
 }
 
