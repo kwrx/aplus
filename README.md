@@ -19,9 +19,9 @@ It started in September 2013 as a way to learn low-level and systems programming
 * **I/O Multiplexing**: `poll`, `ppoll`, `select` and `pselect`
 * **ELF**: static executables; dynamic linking is not supported yet
 * **Linux Syscalls**: Linux-like syscall layer, see [SYSCALLS.md](/docs/SYSCALLS.md)
-* **Linux Framebuffer**: Linux-like framebuffer support
-* **Virtio**: Virtio devices (gpu, console, random) over Virtio PCI
-* **GUI**: early stage, a compositor demo and a terminal emulator
+* **Linux Framebuffer**: Linux-like framebuffer support, with damage-based flushing and a hardware cursor plane on adapters that provide one
+* **Virtio**: Virtio devices (gpu, input, console, random) over Virtio PCI
+* **GUI**: a [display server](/apps/sysutils/aplus-wm) that owns the framebuffer and the input devices, draws window decorations itself, and hands out windows to clients over a Unix socket
 
 See [FEATURES.md](/docs/FEATURES.md) for more information about features. 
   
@@ -50,6 +50,8 @@ Userspace is still under development, and is assembled from two sources: the pro
 
 Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), a pair of MesaGL demos ([gears](/apps/extra/gl-gears) and a [shaded triangle](/apps/extra/gl-shaders-triangle)), and a set of [test programs](/apps/test).
 
+Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all.
+
 Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors and keymaps, the `zlib`, `libpng`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
@@ -62,7 +64,7 @@ Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www`
 </p>
 
 ## :electric_plug: Drivers
-Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 30 of them, covering device-class interfaces, char and block devices, terminals, network, video and virtio.
+Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 31 of them, covering device-class interfaces, char and block devices, terminals, input, network, video and virtio.
 
 ### Notable modules
 * **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers (block, char, network, video, pci)
@@ -71,8 +73,9 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 * **VMware VGA**, [platform/pc/video/vmware](/drivers/platform/pc/video/vmware/main.c), VMware SVGA II Adapter
 * **Intel e1000** (Network device), [platform/pc/network/e1000](/drivers/platform/pc/network/e1000/main.c), Intel NIC driver
 * **PCNET** (Network device), [platform/pc/network/pcnet](/drivers/platform/pc/network/pcnet/main.c), AMD PCnet NIC driver
+* **PS/2**, [platform/pc/input/ps2](/drivers/platform/pc/input/ps2/main.c), keyboard and mouse
 * **TTY**, [tty/*](/drivers/tty), terminal devices, `/dev/ptmx` and pseudo-terminal pairs
-* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO devices interfaces
+* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, plus console and random
 
 ---
 
