@@ -467,8 +467,8 @@ void init(const char* args) {
 
 
         eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
-        eth->io  = pci_read(eth->pci, PCI_BAR0, 4) & 0xFFFFFFF0;
-        eth->mem = pci_read(eth->pci, PCI_BAR1, 4) & 0xFFFFFFF0;
+        eth->io  = pci_read(eth->pci, PCI_BAR0, 4) & PCI_BAR_IO_MASK;
+        eth->mem = pci_read(eth->pci, PCI_BAR1, 4) & PCI_BAR_MM_MASK;
 
         spinlock_init(&eth->lock);
 
