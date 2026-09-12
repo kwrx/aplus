@@ -655,6 +655,25 @@ extern "C" {
 #define KEY_CNT             (KEY_MAX + 1)
 
 
+/* Codes for the axis event types. A device reporting these carries the value in event_t's
+   ev_rel/ev_abs rather than in ev_key, so only the axis identities are needed here. */
+
+#define SYN_REPORT 0x00
+#define SYN_CONFIG 0x01
+
+#define REL_X      0x00
+#define REL_Y      0x01
+#define REL_Z      0x02
+#define REL_HWHEEL 0x06
+#define REL_WHEEL  0x08
+#define REL_MAX    0x0F
+
+#define ABS_X   0x00
+#define ABS_Y   0x01
+#define ABS_Z   0x02
+#define ABS_MAX 0x3F
+
+
 
 #define KT_LATIN  0 /* we depend on this being zero */
 #define KT_FN     1

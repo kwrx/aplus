@@ -254,6 +254,8 @@ int virtio_pci_init(struct virtio_driver*);
 
 // Queue
 int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
+uint16_t virtq_alloc_descriptor(struct virtio_driver*, uint16_t);
+void virtq_free_descriptor(struct virtio_driver*, uint16_t, uint16_t);
 ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
