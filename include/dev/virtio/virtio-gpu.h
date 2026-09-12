@@ -88,7 +88,9 @@
 
     #include <aplus.h>
     #include <aplus/debug.h>
+    #include <aplus/ipc.h>
     #include <aplus/syscall.h>
+    #include <stdbool.h>
     #include <stdint.h>
 
 __BEGIN_DECLS
@@ -216,10 +218,50 @@ struct virtio_gpu_response {
 } __packed;
 
 
+/* The hardware cursor plane is always a 64x64 resource: the device takes no other size, so a
+   smaller image is centred on its hotspot inside one and the rest left transparent. */
+
+    #define VIRTGPU_CURSOR_SIZE 64
+
+
 struct virtgpu {
+
     struct virtio_driver* driver;
     uint64_t resource_ids;
-} __packed;
+
+    /* The scanout resource the framebuffer is attached to. */
+    uint64_t fb_resource_id;
+
+    /* Set by every FBIO_FLUSH, cleared by every FBIO_WAITFORVSYNC. It is what tells a wait
+       whether the caller has already pushed its damage, or is an older caller that expects
+       the wait itself to put the whole screen on the host. */
+    bool frame_flushed;
+
+    /* Serializes whole command sequences, not single commands: a transfer and the flush that
+       publishes it have to reach the device as a pair, and the cursor image has to be
+       transferred before the plane is pointed at it. */
+    spinlock_t lock;
+
+    /* Incremented for every fenced command. The device echoes it back in the response header
+       once the command has completed, which is what FBIO_WAITFORVSYNC waits for. */
+    uint64_t fence_id;
+
+    struct {
+
+        uint64_t resource_id;
+
+        uintptr_t buffer;
+        size_t size;
+
+        uint32_t width;
+        uint32_t height;
+        uint32_t hot_x;
+        uint32_t hot_y;
+
+        bool visible;
+
+    } cursor;
+};
 
 
 int virtgpu_scanout_get_primary_info(struct virtgpu*, uint8_t*, uint16_t*, uint16_t*);
@@ -231,6 +273,9 @@ int virtgpu_cmd_set_scanout(struct virtgpu*, uint32_t, uint64_t, uint32_t, uint3
 int virtgpu_cmd_transfer_to_host_2d(struct virtgpu*, uint64_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
 int virtgpu_cmd_get_display_info(struct virtgpu*, struct virtio_gpu_resp_display_info*);
 int virtgpu_cmd_resource_flush(struct virtgpu*, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_resource_flush_fenced(struct virtgpu*, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_update_cursor(struct virtgpu*, uint32_t, uint64_t, uint32_t, uint32_t, uint32_t, uint32_t);
+int virtgpu_cmd_move_cursor(struct virtgpu*, uint32_t, uint32_t, uint32_t);
 
 __END_DECLS
 

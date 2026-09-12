@@ -205,3 +205,96 @@ int virtgpu_cmd_resource_flush(struct virtgpu* gpu, uint64_t resource, uint32_t 
 
     return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
 }
+
+
+/* The same flush, tagged with a fence the device must retire before it answers. On this
+ * transport virtq_sendrecv() already blocks until the response comes back, so what the fence
+ * buys is the guarantee attached to that response: without it the device may answer as soon
+ * as it has accepted the command, and the framebuffer is then still being read while the
+ * caller believes the frame is done. With it, the answer means the flush has completed.
+ *
+ * The device echoes the fence id back in the response header; a mismatch means the answer
+ * belongs to some other command and the frame cannot be assumed finished.
+ */
+
+int virtgpu_cmd_resource_flush_fenced(struct virtgpu* gpu, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+
+    struct virtio_gpu_resource_flush cmd = {0};
+    struct virtio_gpu_response resp      = {0};
+
+    uint64_t fence = ++gpu->fence_id;
+
+    cmd.hdr.type     = VIRTIO_GPU_CMD_RESOURCE_FLUSH;
+    cmd.hdr.flags    = VIRTIO_GPU_FLAGS_FENCE;
+    cmd.hdr.fence_id = fence;
+    cmd.resource_id  = resource;
+    cmd.r.x          = x;
+    cmd.r.y          = y;
+    cmd.r.width      = width;
+    cmd.r.height     = height;
+
+    if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return errno = EIO, -1;
+
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    if (resp.hdr.fence_id != fence)
+        return errno = EIO, -1;
+
+    return 0;
+}
+
+
+/* Point the cursor plane at a resource, place it, and say which pixel of it sits under the
+ * pointer. Resource 0 means "no cursor", which is how the plane is hidden.
+ *
+ * These go on the cursor queue rather than the control queue on purpose: it exists so that
+ * moving the pointer does not queue behind whatever rendering work is in flight, which is
+ * most of the reason a hardware cursor feels different from a drawn one.
+ */
+
+int virtgpu_cmd_update_cursor(struct virtgpu* gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t hot_x, uint32_t hot_y) {
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+
+    struct virtio_gpu_update_cursor cmd = {0};
+    struct virtio_gpu_response resp     = {0};
+
+    cmd.hdr.type       = VIRTIO_GPU_CMD_UPDATE_CURSOR;
+    cmd.pos.scanout_id = scanout_id;
+    cmd.pos.x          = x;
+    cmd.pos.y          = y;
+    cmd.resource_id    = resource;
+    cmd.hot_x          = hot_x;
+    cmd.hot_y          = hot_y;
+
+    /* The device consumes these without writing anything back, so the response buffer comes
+       back empty. It is sent anyway because it is what returns the descriptors to the pool:
+       a send with no reply to wait for would leak one per pointer movement. */
+    if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CURSOR, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return errno = EIO, -1;
+
+    return 0;
+}
+
+
+int virtgpu_cmd_move_cursor(struct virtgpu* gpu, uint32_t scanout_id, uint32_t x, uint32_t y) {
+    DEBUG_ASSERT(gpu);
+    DEBUG_ASSERT(gpu->driver);
+
+    struct virtio_gpu_update_cursor cmd = {0};
+    struct virtio_gpu_response resp     = {0};
+
+    cmd.hdr.type       = VIRTIO_GPU_CMD_MOVE_CURSOR;
+    cmd.pos.scanout_id = scanout_id;
+    cmd.pos.x          = x;
+    cmd.pos.y          = y;
+
+    if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CURSOR, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
+        return errno = EIO, -1;
+
+    return 0;
+}
