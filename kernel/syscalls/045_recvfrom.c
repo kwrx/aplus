@@ -75,7 +75,9 @@ SYSCALL(
 
 
 #if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(!NETWORK_IS_SOCKFD(fd)))
+        int socket = socket_from_fd(fd);
+
+        if (unlikely(socket < 0))
             return -ENOTSOCK;
 
         if (unlikely(!buf))
@@ -110,14 +112,14 @@ SYSCALL(
             char __sockaddr[__socklen];
             uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
 
-            e = lwip_recvfrom(NETWORK_SOCKFD(fd), buf, size, flags, (struct sockaddr*)__sockaddr, &__socklen);
+            e = lwip_recvfrom(socket, buf, size, flags, (struct sockaddr*)__sockaddr, &__socklen);
 
             uio_w32(socklen, __socklen);
             uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
 
         } else {
 
-            e = lwip_recv(NETWORK_SOCKFD(fd), buf, size, flags);
+            e = lwip_recv(socket, buf, size, flags);
         }
 
         uio_unlock(buf, size);

@@ -104,7 +104,9 @@ SYSCALL(
 
 #if defined(CONFIG_HAVE_NETWORK)
 
-        if (unlikely(!NETWORK_IS_SOCKFD(fd)))
+        int socket = socket_from_fd(fd);
+
+        if (unlikely(socket < 0))
             return -ENOTSOCK;
 
         if (unlikely(!sockaddr || !socklen))
@@ -123,13 +125,14 @@ SYSCALL(
 
         ssize_t e;
 
-        if ((e = lwip_accept(NETWORK_SOCKFD(fd), (struct sockaddr*)__sockaddr, &__socklen)) < 0)
+        if ((e = lwip_accept(socket, (struct sockaddr*)__sockaddr, &__socklen)) < 0)
             return -errno;
 
         uio_w32((uint32_t*)socklen, __socklen);
         uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
 
-        return NETWORK_FD(e);
+        //? accept4() carries the new descriptor's flags rather than inheriting the listener's.
+        return socket_install((int)e, flags);
 
 #else
     return -ENOTSOCK;

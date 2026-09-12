@@ -58,20 +58,6 @@
 SYSCALL(
     3, close, long sys_close(unsigned int fd) {
 
-#if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(NETWORK_IS_SOCKFD(fd))) {
-
-            ssize_t e;
-
-            if ((e = lwip_close(NETWORK_SOCKFD(fd))) < 0)
-                return -errno;
-
-            return e;
-
-        } else
-
-#endif
-
         {
 
             if (unlikely(fd >= CONFIG_OPEN_MAX))

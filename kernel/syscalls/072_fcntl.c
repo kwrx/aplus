@@ -63,20 +63,6 @@ extern long sys_dup(unsigned int);
 SYSCALL(
     72, fcntl, long sys_fcntl(unsigned int fd, unsigned int cmd, unsigned long arg) {
 
-#if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(NETWORK_IS_SOCKFD(fd))) {
-
-            ssize_t e = lwip_fcntl(NETWORK_SOCKFD(fd), cmd, arg);
-
-            if (unlikely(e < 0))
-                return -errno;
-
-            return e;
-
-        } else
-
-#endif
-
         {
 
             if (unlikely(fd >= CONFIG_OPEN_MAX))
@@ -123,6 +109,24 @@ SYSCALL(
                 case F_SETFL:
 
                     shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = arg; });
+
+#if defined(CONFIG_HAVE_NETWORK)
+
+                    //? A socket has to give the same answer in two places: the descriptor,
+                    //? which read() and write() consult before deciding to wait, and lwIP,
+                    //? which decides whether the transfer blocks at all. Letting the two
+                    //? disagree is what turns a non-blocking socket into a sleep.
+                    {
+                        int socket = socket_from_fd(fd);
+
+                        if (socket >= 0) {
+
+                            if (unlikely(lwip_fcntl(socket, F_SETFL, arg) < 0))
+                                return -errno;
+                        }
+                    }
+
+#endif
 
                     return 0;
 

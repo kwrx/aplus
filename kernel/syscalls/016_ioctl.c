@@ -59,20 +59,6 @@
 SYSCALL(
     16, ioctl, long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg) {
 
-#if defined(CONFIG_HAVE_NETWORK)
-        if (unlikely(NETWORK_IS_SOCKFD(fd))) {
-
-            ssize_t e;
-
-            if ((e = lwip_ioctl(NETWORK_SOCKFD(fd), cmd, (void*)arg)) < 0)
-                return -errno;
-
-            return e;
-
-        } else
-
-#endif
-
         {
 
             if (unlikely(fd >= CONFIG_OPEN_MAX))

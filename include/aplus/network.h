@@ -29,6 +29,10 @@
 #ifndef __ASSEMBLY__
 
 
+    #include <time.h>
+
+    #include <aplus.h>
+    #include <aplus/vfs.h>
 
     #include "lwip/opt.h"
     #include "lwipopts.h"
@@ -56,9 +60,14 @@
 
 __BEGIN_DECLS
 
-    #define NETWORK_SOCKFD(fd)    ((fd) - CONFIG_OPEN_MAX)
-    #define NETWORK_FD(fd)        ((fd) + CONFIG_OPEN_MAX)
-    #define NETWORK_IS_SOCKFD(fd) ((fd) >= CONFIG_OPEN_MAX && fd < (CONFIG_OPEN_MAX + CONFIG_SOCKET_MAX))
+/* An lwIP socket is an ordinary descriptor backed by an anonymous inode; see
+   kernel/network/sockfs.c. There is no separate numbering space any more, so nothing needs to
+   ask whether a number "is a socket" before using it as a descriptor. */
+
+int socket_install(int socket, int flags);
+int socket_from_fd(int fd);
+int socket_from_inode(inode_t* inode);
+int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
 
 
 void network_init(void);
