@@ -148,7 +148,9 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     spinlock_init_with_flags(&driver->internals.queues[index].lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
-    cfg->queue_msix_vector = cpu_to_le16(index);
+    /* Queues share vectors when the device's table is too small to give each its own, so the
+       vector a queue raises is not simply its own index. */
+    cfg->queue_msix_vector = cpu_to_le16(index % driver->internals.msix_vectors);
 #else
     cfg->queue_msix_vector = cpu_to_le16(VIRTIO_MSI_NO_VECTOR);
 #endif
