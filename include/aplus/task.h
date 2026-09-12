@@ -375,6 +375,23 @@ typedef struct task {
         sigset_t sigmask;
         bool sigmask_valid;
 
+        //? The syscall a signal interrupted, snapshotted while the handler is being set up.
+        //? The fields above describe whatever the task is running *now*, and by the time
+        //? rt_sigreturn(2) executes that is rt_sigreturn itself -- restarting it from there
+        //? restarts sigreturn, which never terminates. One slot, like the deadline and the
+        //? mask: a signal taken inside a handler shares it, as it already shares sstack.
+        struct {
+
+            long index;
+            long param0;
+            long param1;
+            long param2;
+            long param3;
+            long param4;
+            long param5;
+
+        } interrupted;
+
     } syscall;
 
 

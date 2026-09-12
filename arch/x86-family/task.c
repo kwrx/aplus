@@ -91,6 +91,19 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
     fpu_save(&sigcontext->fpuregs[0]);
 
+
+    /* Snapshot the syscall this signal is interrupting, before the handler gets to run and
+       make syscalls of its own over current_task->syscall. sigreturn needs it to honour
+       SA_RESTART; without it the only thing left to restart is sigreturn itself. */
+    current_task->syscall.interrupted.index  = current_task->syscall.index;
+    current_task->syscall.interrupted.param0 = current_task->syscall.param0;
+    current_task->syscall.interrupted.param1 = current_task->syscall.param1;
+    current_task->syscall.interrupted.param2 = current_task->syscall.param2;
+    current_task->syscall.interrupted.param3 = current_task->syscall.param3;
+    current_task->syscall.interrupted.param4 = current_task->syscall.param4;
+    current_task->syscall.interrupted.param5 = current_task->syscall.param5;
+
+
     sigcontext->ustack = current_cpu->ustack;
     sigcontext->kstack = current_cpu->kstack;
 
@@ -177,11 +190,41 @@ long arch_task_return_from_signal(void) {
     current_cpu->kstack = sigcontext->kstack;
 
 
-    if (sigcontext->flags & SA_RESTART) {
-        return syscall_restart();
+    /* SA_RESTART applies to the syscall the signal interrupted, and only when it was
+     * actually interrupted -- which is exactly what -EINTR left in the return register of
+     * the frame saved above.
+     *
+     * syscall_restart() works off current_task->syscall, so the snapshot taken at delivery
+     * has to go back first. Calling it without that restarted rt_sigreturn instead: the
+     * handler returned, sigreturn restarted sigreturn, and the recursion ran the kernel
+     * stack off the bottom of its 32KiB allocation and into whatever was allocated below
+     * it -- usually this task's own signal frame, whose FPU save area it overwrote with
+     * kernel stack frames. The next xrstor(2) then took a general protection fault, which
+     * is how this surfaced: a #GP in the FPU restore path on any window resize, because
+     * SIGWINCH is the first signal in this system that a resize can send. */
+    if ((sigcontext->flags & SA_RESTART) && (long)sigcontext->regs.ax == -4 /* EINTR */) {
+
+        current_task->syscall.index  = current_task->syscall.interrupted.index;
+        current_task->syscall.param0 = current_task->syscall.interrupted.param0;
+        current_task->syscall.param1 = current_task->syscall.interrupted.param1;
+        current_task->syscall.param2 = current_task->syscall.interrupted.param2;
+        current_task->syscall.param3 = current_task->syscall.interrupted.param3;
+        current_task->syscall.param4 = current_task->syscall.interrupted.param4;
+        current_task->syscall.param5 = current_task->syscall.interrupted.param5;
+
+        //? Flagged rather than called here. This is the same restart a syscall that slept
+        //? asks for, and letting the one path in x86_exception_handler() do it keeps the
+        //? restarted call out of sigreturn's own stack frame -- and means the result lands
+        //? in the frame restored above, which is the context being resumed.
+        thread_restart_syscall(current_task);
     }
 
-    return -4; /* EINTR */
+
+    /* Hand back whatever the interrupted context had in its return register rather than a
+       fixed -EINTR: an interrupted syscall already carries -EINTR there, and a signal that
+       arrived while the task was in userspace must not have its return register rewritten
+       on the way back. */
+    return (long)sigcontext->regs.ax;
 }
 
 
