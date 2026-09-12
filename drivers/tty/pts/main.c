@@ -127,6 +127,16 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
 
     uint64_t index = atoll(name);
 
+
+    /* The slave inode is built inside the loop but handed back after the unlock.
+     *
+     * Returning straight out of the locked region left queue_lock held for good, and
+     * since it is a spinlock taken with interrupts disabled, the next task to want it
+     * spun forever with no way to be preempted -- on a uniprocessor, that is the whole
+     * machine. Every successful openpty() leaked it here, so the first open worked and
+     * the second one wedged the system in pty_create(). */
+    inode_t* d = NULL;
+
     pty_queue_lock();
 
     {
@@ -139,7 +149,8 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             DEBUG_ASSERT(queue->ptmx);
 
 
-            inode_t* d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER);
+            if ((d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER)) == NULL)
+                break;
 
             strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
@@ -161,14 +172,17 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             d->ev = shared_ptr_ref(queue->ptmx->ev);
 
 
-            return d;
+            break;
         }
     }
 
     pty_queue_unlock();
 
 
-    return errno = ENOENT, NULL;
+    if (unlikely(!d))
+        return errno = ENOENT, NULL;
+
+    return d;
 }
 
 
