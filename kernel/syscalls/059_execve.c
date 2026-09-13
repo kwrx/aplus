@@ -496,6 +496,11 @@ SYSCALL(
         arch_vmm_free_address_space(current_space);
 
 
+        //? This task is running in an address space of its own from here on, so
+        //? a parent parked in vfork() waiting to get its own back can go.
+        do_vfork_release();
+
+
 #if DEBUG_LEVEL_TRACE
         kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX) memory(%ld.%ld MB)\n", head.e_entry, current_task->tid, sigstack, stack, bottom, (pmm_get_used_memory() / 1024) / 1024,
                 (pmm_get_used_memory() / 1024) % 1024);

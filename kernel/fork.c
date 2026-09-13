@@ -103,6 +103,21 @@ void do_unshare(int flags) {
 
 
 
+//? Park on the word a vforked child bumps when it is done with the shared
+//? address space. Nothing here switches tasks: like every other blocking path
+//? in this kernel the syscall gives up, gets rescheduled, and is restarted from
+//? the top once the task is picked again.
+
+static inline void __vfork_park(uint32_t seq) {
+
+    futex_wait(current_task, &current_task->vfork.futex, seq, NULL);
+
+    thread_suspend(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
+}
+
+
 /**
  * Creates a new task (a copy of the current task) with certain properties inherited or
  * shared from the parent task based on the flags passed in the `kclone_args` struct.
@@ -128,6 +143,32 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
 
+    //? Second time through: the child this call already created is running and
+    //? all that is left is to finish waiting for it. Reading the word before
+    //? the flag is what makes the two orderings safe - a release that lands in
+    //? between moves the word away from the value parked on below.
+    if (unlikely(current_task->vfork.pending)) {
+
+        uint32_t seq = current_task->vfork.futex;
+
+        if (!current_task->vfork.released) {
+
+            __vfork_park(seq);
+
+            return errno = EINTR, -1;
+        }
+
+
+        pid_t pid = current_task->vfork.child;
+
+        current_task->vfork.pending  = false;
+        current_task->vfork.released = false;
+        current_task->vfork.child    = 0;
+
+        return pid;
+    }
+
+
     if (args->stack == 0ULL) {
 
         if (unlikely(args->stack_size > 0ULL)) {
@@ -150,12 +191,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     if (unlikely(((args->flags & (CLONE_THREAD | CLONE_PARENT)) == (CLONE_THREAD | CLONE_PARENT)) && args->exit_signal)) {
         return errno = EINVAL, -1;
-    }
-
-
-    // TODO: Implement CLONE_VFORK
-    if ((unlikely(args->flags & CLONE_VFORK))) {
-        return errno = ENOSYS, -1;
     }
 
 
@@ -232,8 +267,85 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
 
+    //? Sampled before the child can possibly run: a release landing between
+    //? here and __vfork_park() still leaves the word different from what is
+    //? parked on, so the wait comes straight back instead of sleeping on an
+    //? event that has already happened.
+    uint32_t seq = 0;
+
+    if (args->flags & CLONE_VFORK) {
+
+        current_task->vfork.released = false;
+
+        seq                 = current_task->vfork.futex;
+        child->vfork.waiter = current_task->tid;
+    }
+
+
     sched_enqueue(child);
 
 
+    //? The child is on somebody's run queue now and may be sharing this address
+    //? space, so give the CPU up until it says it is done with it.
+    if (args->flags & CLONE_VFORK) {
+
+        current_task->vfork.child   = child->tid;
+        current_task->vfork.pending = true;
+
+        __vfork_park(seq);
+
+        return errno = EINTR, -1;
+    }
+
+
     return child->tid;
+}
+
+
+/**
+ * Releases the task parked in do_fork() waiting on this one, if any.
+ *
+ * A vfork()ed child holds its parent up for exactly as long as it is borrowing
+ * the shared address space: execve() calls this once it has installed a space
+ * of its own, and exit() once there is nothing left to borrow.
+ */
+void do_vfork_release(void) {
+
+    pid_t tid = current_task->vfork.waiter;
+
+    if (likely(!tid))
+        return;
+
+
+    current_task->vfork.waiter = 0;
+
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                //? Both halves have to match: a tid on its own could belong to a
+                //? task that has since been reaped and its number handed out
+                //? again, and waking the wrong one would leave the real waiter
+                //? parked for good.
+                if (tmp->tid != tid)
+                    continue;
+
+                if (!tmp->vfork.pending || tmp->vfork.child != current_task->tid)
+                    continue;
+
+
+                //? Ordered against do_fork(): the flag it decides on has to be
+                //? visible before the word it is parked on moves, or it would be
+                //? woken only to find nothing had changed and park itself again.
+                tmp->vfork.released = true;
+
+                atomic_fetch_add(&tmp->vfork.futex, 1);
+
+                return;
+            }
+        }
+    }
 }

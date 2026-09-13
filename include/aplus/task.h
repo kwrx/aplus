@@ -279,6 +279,33 @@ typedef struct task {
     struct timespec clock[TASK_CLOCK_MAX];
 
 
+    //? A vfork() borrows the parent's address space, so the two must never run
+    //? at the same time: the parent is parked in do_fork() until the child has
+    //? either execve()d into a space of its own or exited. `waiter` names the
+    //? task parked on this one, and `futex` is the word that task watches,
+    //? bumped once the loan is over.
+    //?
+    //? A tid rather than a pointer because the two ends can outlive each other:
+    //? a parent killed while parked becomes a zombie, and whoever reaps it frees
+    //? the task outright while the child still holds the link.
+    //?
+    //? The wait is a restarted syscall like every other one here, so `pending`
+    //? and `child` carry what the first attempt already did across the restart:
+    //? without them do_fork() would run again from the top and spawn a second
+    //? child on every wakeup.
+    struct {
+
+        pid_t waiter;
+
+        volatile uint32_t futex;
+        bool released;
+
+        pid_t child;
+        bool pending;
+
+    } vfork;
+
+
     list(futex_t*, futexes);
     list(struct task*, wait_queue);
 
@@ -423,6 +450,7 @@ __BEGIN_DECLS
 struct cpu;
 
 void do_unshare(int);
+void do_vfork_release(void);
 pid_t do_fork(struct kclone_args*, size_t);
 
 pid_t sched_nextpid();
