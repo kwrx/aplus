@@ -1,0 +1,337 @@
+/*
+ * Author:
+ *      Antonino Natale <antonio.natale97@hotmail.com>
+ *
+ * Copyright (c) 2013-2019 Antonino Natale
+ *
+ *
+ * This file is part of aplus.
+ *
+ * aplus is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * aplus is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include <stdlib.h>
+#include <string.h>
+
+#include "ui_widget_internal.h"
+
+
+ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interactive) {
+
+    if (!view) {
+        return NULL;
+    }
+
+
+    ui_widget_t* widget = (ui_widget_t*)calloc(1, sizeof(ui_widget_t));
+
+    if (!widget) {
+        return NULL;
+    }
+
+    widget->view        = view;
+    widget->kind        = kind;
+    widget->visible     = true;
+    widget->enabled     = true;
+    widget->interactive = interactive;
+    widget->theme       = view->theme;
+
+
+    /* Appended rather than pushed: the list is in paint order, so a widget created later
+       is drawn over one created earlier, which is the order the code that creates them
+       reads in. */
+    if (view->widgets_tail) {
+        view->widgets_tail->next = widget;
+    } else {
+        view->widgets = widget;
+    }
+
+    view->widgets_tail = widget;
+
+    return widget;
+}
+
+
+void ui_widget_destroy(ui_widget_t* widget) {
+
+    if (!widget) {
+        return;
+    }
+
+
+    ui_view_t* view = widget->view;
+
+    ui_widget_invalidate(widget);
+
+
+    ui_widget_t** it = &view->widgets;
+
+    while (*it) {
+
+        if (*it == widget) {
+            *it = widget->next;
+            break;
+        }
+
+        it = &(*it)->next;
+    }
+
+    /* The tail cache has to be rebuilt rather than guessed at: removing the last widget
+       leaves the new tail somewhere the removal loop above never looked. */
+    view->widgets_tail = NULL;
+
+    for (ui_widget_t* w = view->widgets; w; w = w->next) {
+        view->widgets_tail = w;
+    }
+
+
+    if (view->hovered == widget) {
+        view->hovered = NULL;
+    }
+
+    if (view->pressed == widget) {
+        view->pressed = NULL;
+    }
+
+    free(widget);
+}
+
+
+void ui_widget_draw(ui_widget_t* widget, cairo_t* cr) {
+
+    switch (widget->kind) {
+
+        case UI_WIDGET_PANEL:
+            ui_panel_draw(widget, cr);
+            break;
+
+        case UI_WIDGET_LABEL:
+            ui_label_draw(widget, cr);
+            break;
+
+        case UI_WIDGET_BUTTON:
+            ui_button_draw(widget, cr);
+            break;
+    }
+}
+
+
+bool ui_widget_hit(const ui_widget_t* widget, int x, int y) {
+
+    if (!widget->visible || !widget->enabled || !widget->interactive) {
+        return false;
+    }
+
+    return x >= widget->rect.x && y >= widget->rect.y && x < widget->rect.x + widget->rect.width && y < widget->rect.y + widget->rect.height;
+}
+
+
+void ui_widget_set_rect(ui_widget_t* widget, int x, int y, int width, int height) {
+
+    if (!widget) {
+        return;
+    }
+
+    if (widget->rect.x == x && widget->rect.y == y && widget->rect.width == width && widget->rect.height == height) {
+        return;
+    }
+
+
+    /* Both the rectangle being left and the one being taken have to be repainted, and the
+       old one only exists until the assignment below. */
+    ui_widget_invalidate(widget);
+
+    widget->rect.x      = x;
+    widget->rect.y      = y;
+    widget->rect.width  = width;
+    widget->rect.height = height;
+
+    ui_widget_invalidate(widget);
+}
+
+
+void ui_widget_place(ui_widget_t* widget, ui_rect_t rect) {
+    ui_widget_set_rect(widget, rect.x, rect.y, rect.width, rect.height);
+}
+
+
+ui_rect_t ui_widget_rect(const ui_widget_t* widget) {
+
+    if (!widget) {
+
+        ui_rect_t empty = {0, 0, 0, 0};
+
+        return empty;
+    }
+
+    return widget->rect;
+}
+
+
+void ui_widget_set_visible(ui_widget_t* widget, bool visible) {
+
+    if (!widget || widget->visible == visible) {
+        return;
+    }
+
+    widget->visible = visible;
+
+    ui_widget_invalidate(widget);
+}
+
+
+bool ui_widget_visible(const ui_widget_t* widget) {
+    return widget ? widget->visible : false;
+}
+
+
+void ui_widget_set_enabled(ui_widget_t* widget, bool enabled) {
+
+    if (!widget || widget->enabled == enabled) {
+        return;
+    }
+
+    widget->enabled = enabled;
+
+    /* A control disabled with the pointer on it would otherwise keep the hover it can no
+       longer respond to, and one disabled mid-press would stay pressed forever. */
+    if (!enabled) {
+
+        if (widget->kind == UI_WIDGET_BUTTON) {
+            widget->button.hovered = false;
+            widget->button.pressed = false;
+        }
+
+        if (widget->view->hovered == widget) {
+            widget->view->hovered = NULL;
+        }
+
+        if (widget->view->pressed == widget) {
+            widget->view->pressed = NULL;
+        }
+    }
+
+    ui_widget_invalidate(widget);
+}
+
+
+bool ui_widget_enabled(const ui_widget_t* widget) {
+    return widget ? widget->enabled : false;
+}
+
+
+void ui_widget_set_user(ui_widget_t* widget, void* user) {
+
+    if (widget) {
+        widget->user = user;
+    }
+}
+
+
+void* ui_widget_user(const ui_widget_t* widget) {
+    return widget ? widget->user : NULL;
+}
+
+
+ui_rect_t ui_rect_inset(ui_rect_t rect, int inset) {
+
+    ui_rect_t r = {
+
+        .x      = rect.x + inset,
+        .y      = rect.y + inset,
+        .width  = rect.width - 2 * inset,
+        .height = rect.height - 2 * inset,
+    };
+
+    if (r.width < 0) {
+        r.width = 0;
+    }
+
+    if (r.height < 0) {
+        r.height = 0;
+    }
+
+    return r;
+}
+
+
+ui_grid_t ui_grid(ui_rect_t bounds, int columns, int rows, int gap) {
+
+    ui_grid_t grid = {
+
+        .bounds     = bounds,
+        .columns    = columns > 0 ? columns : 1,
+        .rows       = rows > 0 ? rows : 1,
+        .column_gap = gap,
+        .row_gap    = gap,
+    };
+
+    return grid;
+}
+
+
+/* Where track `index` of `count` starts, given `extent` pixels to fill once the gaps are
+ * taken out of it. Scaling the index into the available space rather than multiplying a
+ * rounded-down track size is what shares the remainder out: consecutive tracks differ by
+ * at most a pixel, and the last one ends exactly on the far edge instead of a few pixels
+ * short of it.
+ */
+static int ui_grid_track(int origin, int extent, int gap, int count, int index) {
+
+    const int inner = extent - gap * (count - 1);
+
+    return origin + (inner * index) / count + gap * index;
+}
+
+
+ui_rect_t ui_grid_cell(const ui_grid_t* grid, int column, int row, int colspan, int rowspan) {
+
+    ui_rect_t cell = {0, 0, 0, 0};
+
+    if (!grid) {
+        return cell;
+    }
+
+    if (colspan < 1) {
+        colspan = 1;
+    }
+
+    if (rowspan < 1) {
+        rowspan = 1;
+    }
+
+
+    /* A cell asked for outside the grid comes back empty rather than clamped into a
+       neighbour's space, where it would silently overlap whatever is already there. */
+    if (column < 0 || row < 0 || column + colspan > grid->columns || row + rowspan > grid->rows) {
+        return cell;
+    }
+
+
+    const int x0 = ui_grid_track(grid->bounds.x, grid->bounds.width, grid->column_gap, grid->columns, column);
+    const int y0 = ui_grid_track(grid->bounds.y, grid->bounds.height, grid->row_gap, grid->rows, row);
+
+    /* The far edge is the start of the track after the span, less the gap that would have
+       separated them. A spanning cell therefore swallows the gaps it crosses, which is
+       what makes it line up with the cells above and below it. */
+    const int x1 = ui_grid_track(grid->bounds.x, grid->bounds.width, grid->column_gap, grid->columns, column + colspan) - grid->column_gap;
+    const int y1 = ui_grid_track(grid->bounds.y, grid->bounds.height, grid->row_gap, grid->rows, row + rowspan) - grid->row_gap;
+
+    cell.x      = x0;
+    cell.y      = y0;
+    cell.width  = x1 - x0;
+    cell.height = y1 - y0;
+
+    return cell;
+}
