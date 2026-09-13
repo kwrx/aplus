@@ -628,3 +628,19 @@ pid_t sched_nextpid(void) {
     static pid_t p = 0;
     return ++p;
 }
+
+/**
+ * @brief Returns the total number of processes across all CPUs
+ * 
+ * @return The total number of processes across all CPUs
+ */
+size_t sched_nprocs(void) {
+
+    size_t count = 0;
+
+    cpu_foreach(cpu) {
+        count += cpu->sched_count;
+    }
+
+    return count;
+}
