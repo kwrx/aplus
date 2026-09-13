@@ -102,11 +102,14 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct virtio_driver* driver = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
+    if (unlikely(!driver))
+        return;
+
     driver->type             = VIRTIO_DEVICE_TYPE_ENTROPY_SOURCE;
     driver->device           = device;
     driver->send_window_size = 4096;
     driver->recv_window_size = 8192;
-    driver->max_queues       = 0;
+    driver->max_queues       = 1;
 
     driver->negotiate = &negotiate_features;
     driver->setup     = &setup_config;
@@ -117,6 +120,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-random: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
+        kfree(driver);
         return;
     }
 
@@ -146,6 +150,12 @@ static ssize_t virtrandom_write(device_t* device, const void* buf, size_t size) 
     return -1;
 }
 
+/* The request is cut to the receive window rather than handed to the queue whole.
+ *
+ * The length goes straight into a descriptor, so a device asked for more than the window
+ * holds writes more than the window holds -- a read of 64KiB used to hand the host an 8KiB
+ * buffer and a promise of 64KiB. */
+
 static ssize_t virtrandom_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
@@ -154,7 +164,25 @@ static ssize_t virtrandom_read(device_t* device, void* buf, size_t size) {
     if (unlikely(size == 0))
         return 0;
 
-    return virtq_recv((struct virtio_driver*)device->userdata, VIRTIO_RANDOM_QUEUE_DATA, buf, size);
+
+    struct virtio_driver* driver = (struct virtio_driver*)device->userdata;
+
+    size_t done = 0;
+
+    while (done < size) {
+
+        ssize_t e = virtq_recv(driver, VIRTIO_RANDOM_QUEUE_DATA, (uint8_t*)buf + done, MIN(size - done, driver->recv_window_size));
+
+        if (unlikely(e < 0))
+            return done ? (ssize_t)done : -1;
+
+        if (unlikely(e == 0))
+            break;
+
+        done += (size_t)e;
+    }
+
+    return (ssize_t)done;
 }
 
 void init(const char* args) {

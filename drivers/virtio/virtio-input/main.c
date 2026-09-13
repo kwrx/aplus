@@ -33,6 +33,7 @@
 #include <aplus/memory.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -61,13 +62,11 @@ MODULE_LICENSE("GPL");
  * driver would only fight the PS/2 driver for those names, and the machines that have a
  * virtio tablet have a PS/2 keyboard too.
  *
- * Left, but not left alone: what a device is cannot be read before its BARs are mapped, and
+ * Left, but put back down: what a device is cannot be read before its BARs are mapped, and
  * mapping them means bringing it all the way up, which is the point at which the host starts
- * routing that kind of input to it. virtio_pci_init() has no counterpart to undo that, so a
- * virtio keyboard probed here would be brought up, abandoned, and would take the keyboard
- * away from the PS/2 driver by existing. Nothing configures one today -- scripts/run-qemu
- * adds the tablet and nothing else -- and the fix is to drive them rather than to probe more
- * carefully, so this is a limitation to know about rather than one to guard against.
+ * routing that kind of input to it. A device that turns out not to be a tablet is therefore
+ * reset and released through virtio_pci_dnit() rather than abandoned in that state, which is
+ * what used to take the keyboard away from the PS/2 driver by existing.
  */
 
 
@@ -87,14 +86,6 @@ struct virtinput {
 
     struct virtio_driver* driver;
     device_t* device;
-
-    /* Guards the available ring, which is written both while setting the device up and from
-       the interrupt that recycles buffers the device has finished with. */
-    spinlock_t lock;
-
-    /* How far into the used ring this driver has looked. Kept as uint16_t so that it wraps
-       exactly where the device's own index does. */
-    uint16_t last_used;
 
     uint16_t buffers;
 
@@ -151,41 +142,6 @@ static bool virtinput_cfg_has_bit(struct virtio_input_config volatile* cfg, uint
 }
 
 
-/* Hand one buffer back to the device. The caller holds the lock; notifying is left to the
- * caller too, so that recycling a whole batch costs one notification rather than one each.
- */
-
-static void virtinput_post(struct virtinput* vi, uint16_t desc) {
-
-    DEBUG_ASSERT(vi);
-
-    struct virtio_driver* driver = vi->driver;
-
-    const uint16_t q = VIRTIO_INPUT_QUEUE_EVENT;
-
-    driver->internals.queues[q].descriptors[desc].q_address = cpu_to_le64(driver->internals.queues[q].buffers.recvbuf + (desc * driver->recv_window_size));
-    driver->internals.queues[q].descriptors[desc].q_length  = cpu_to_le32(VIRTIO_INPUT_EVENT_SIZE);
-    driver->internals.queues[q].descriptors[desc].q_flags   = cpu_to_le16(VIRTQ_DESC_F_WRITE);
-    driver->internals.queues[q].descriptors[desc].q_next    = cpu_to_le16(0);
-
-    uint16_t next = le16_to_cpu(driver->internals.queues[q].available->q_idx) % driver->internals.queues[q].size;
-
-    driver->internals.queues[q].available->q_ring[next] = cpu_to_le16(desc);
-    driver->internals.queues[q].available->q_flags      = cpu_to_le16(0);
-    driver->internals.queues[q].available->q_idx        = cpu_to_le16(le16_to_cpu(driver->internals.queues[q].available->q_idx) + 1);
-}
-
-
-static void virtinput_notify(struct virtinput* vi) {
-
-    DEBUG_ASSERT(vi);
-
-    atomic_thread_fence(memory_order_release);
-
-    vi->driver->internals.queues[VIRTIO_INPUT_QUEUE_EVENT].notify->n_idx = cpu_to_le16(VIRTIO_INPUT_QUEUE_EVENT);
-}
-
-
 /* Fill the event queue. The device drops an entire report the moment it does not have room
  * for all of it at once, so the queue is stocked before anything can be reported rather than
  * a buffer at a time as events arrive.
@@ -195,27 +151,22 @@ static int virtinput_fill(struct virtinput* vi) {
 
     DEBUG_ASSERT(vi);
 
-    scoped_lock(&vi->lock) {
+    for (size_t i = 0; i < VIRTIO_INPUT_BUFFERS; i++) {
 
-        for (size_t i = 0; i < VIRTIO_INPUT_BUFFERS; i++) {
+        uint16_t desc = virtq_alloc_descriptor(vi->driver, VIRTIO_INPUT_QUEUE_EVENT, VIRTQ_REQUEST_POSTED);
 
-            /* Zero is never handed out by the allocator, so it is how it reports that the
-               queue has no descriptor left -- a partial fill is still a working device. */
-            uint16_t desc = virtq_alloc_descriptor(vi->driver, VIRTIO_INPUT_QUEUE_EVENT);
+        if (desc == VIRTQ_DESC_NONE)
+            break;
 
-            if (desc == 0)
-                break;
+        virtq_provide(vi->driver, VIRTIO_INPUT_QUEUE_EVENT, desc, VIRTIO_INPUT_EVENT_SIZE);
 
-            virtinput_post(vi, desc);
-
-            vi->buffers++;
-        }
+        vi->buffers++;
     }
 
     if (unlikely(!vi->buffers))
         return errno = ENOSPC, -1;
 
-    virtinput_notify(vi);
+    virtq_notify(vi->driver, VIRTIO_INPUT_QUEUE_EVENT);
 
     return 0;
 }
@@ -287,8 +238,6 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
             if (code != ABS_X && code != ABS_Y)
                 return;
 
-            /* Scale onto the fixed range the event interface promises. The device's own
-               range is read once at probe time and is not required to start at zero. */
             const uint32_t min   = vi->abs[code].min;
             const uint32_t range = vi->abs[code].range;
 
@@ -359,7 +308,11 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
 
 
 /* Drain everything the device has finished writing and put the buffers straight back. The
- * whole batch is recycled under one lock and announced with one notification.
+ * whole batch is announced with one notification rather than one per buffer.
+ *
+ * The used ring is consumed through virtq_reap(), which is what keeps the events in the
+ * order the device produced them -- and keeps this driver out of the available ring, which
+ * it used to write itself under a lock of its own rather than the queue's.
  */
 
 static void virtinput_drain(struct virtinput* vi) {
@@ -372,37 +325,30 @@ static void virtinput_drain(struct virtinput* vi) {
 
     bool recycled = false;
 
-    while (vi->last_used != le16_to_cpu(driver->internals.queues[q].used->q_idx)) {
+    uint16_t desc;
+    uint32_t len;
 
-        atomic_thread_fence(memory_order_acquire);
+    while (virtq_reap(driver, q, &desc, &len)) {
 
-        uint16_t i    = vi->last_used % driver->internals.queues[q].size;
-        uint16_t desc = (uint16_t)le32_to_cpu(driver->internals.queues[q].used->q_elements[i].e_id);
-        uint32_t len  = le32_to_cpu(driver->internals.queues[q].used->q_elements[i].e_length);
-
-        vi->last_used++;
-
-        if (unlikely(desc >= driver->internals.queues[q].size))
+        if (desc == VIRTQ_DESC_NONE)
             continue;
 
         if (likely(len >= VIRTIO_INPUT_EVENT_SIZE)) {
 
             struct virtio_input_event in;
 
-            memcpy(&in, (void*)arch_vmm_p2v(driver->internals.queues[q].buffers.recvbuf + (desc * driver->recv_window_size), ARCH_VMM_AREA_HEAP), sizeof(in));
+            memcpy(&in, (const void*)virtq_recvbuf(driver, q, desc), sizeof(in));
 
             virtinput_publish(vi, &in);
         }
 
-        scoped_lock(&vi->lock) {
-            virtinput_post(vi, desc);
-        }
+        virtq_provide(driver, q, desc, VIRTIO_INPUT_EVENT_SIZE);
 
         recycled = true;
     }
 
     if (recycled)
-        virtinput_notify(vi);
+        virtq_notify(driver, q);
 }
 
 
@@ -471,11 +417,12 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct virtio_driver* driver = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
+    if (unlikely(!driver))
+        return;
+
     driver->type   = VIRTIO_DEVICE_TYPE_INPUT;
     driver->device = device;
 
-    /* One event per buffer is all the device ever writes, but a queue window is also the
-       stride between buffers, so it is kept at a size the allocator rounds sensibly. */
     driver->send_window_size = 64;
     driver->recv_window_size = 64;
     driver->max_queues       = 2;
@@ -498,28 +445,38 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct virtio_input_config volatile* cfg = (struct virtio_input_config volatile*)driver->internals.device_config;
 
+    if (unlikely(!cfg)) {
 
-    /* Only absolute pointers are claimed. Anything else is a device the PS/2 driver is
-       already serving under the name a client would look for. */
+#if DEBUG_LEVEL_ERROR
+        kprintf("virtio-input: ERROR! device %d has no device configuration to identify it by\n", device);
+#endif
+
+        virtio_pci_dnit(driver);
+        kfree(driver);
+
+        return;
+    }
+
+
     if (!virtinput_cfg_has_bit(cfg, VIRTIO_INPUT_CFG_EV_BITS, EV_ABS, ABS_X) || !virtinput_cfg_has_bit(cfg, VIRTIO_INPUT_CFG_EV_BITS, EV_ABS, ABS_Y)) {
 
 #if DEBUG_LEVEL_WARN
         kprintf("virtio-input: WARN! device %d is not an absolute pointer, leaving it unread\n", device);
 #endif
 
-        /* The driver struct outlives this function on purpose: the device is up and its
-           interrupt handler still points here. Freeing it would leave the handler holding a
-           pointer to nothing. It finds no match in devices[] and returns, which is all that
-           is wanted of it. */
+        virtio_pci_dnit(driver);
+        kfree(driver);
+
         return;
     }
 
 
     struct virtinput* vi = kcalloc(1, sizeof(struct virtinput), GFP_KERNEL);
 
-    vi->driver = driver;
+    if (unlikely(!vi))
+        return;
 
-    spinlock_init(&vi->lock);
+    vi->driver = driver;
 
 
     if (virtinput_abs_range(vi, cfg, ABS_X) < 0 || virtinput_abs_range(vi, cfg, ABS_Y) < 0) {
@@ -528,7 +485,11 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         kprintf("virtio-input: device %d reports absolute axes without a usable range\n", device);
 #endif
 
+        virtio_pci_dnit(driver);
+
         kfree(vi);
+        kfree(driver);
+
         return;
     }
 
@@ -537,7 +498,11 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     chr->type = DEVICE_TYPE_CHAR;
 
-    strncpy(chr->name, "tablet", DEVICE_MAXNAMELEN - 1);
+    if (num_devices == 0)
+        strncpy(chr->name, "tablet", DEVICE_MAXNAMELEN - 1);
+    else
+        snprintf(chr->name, DEVICE_MAXNAMELEN, "tablet%d", (int)num_devices);
+
     strncpy(chr->description, "VIRTIO absolute pointer input device", DEVICE_MAXDESCLEN - 1);
 
     /* Major 13 is the input family; 64 upwards is where its event devices live. */

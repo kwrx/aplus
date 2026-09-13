@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -29,6 +30,7 @@
 #include <aplus/errno.h>
 #include <aplus/fb.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/module.h>
 #include <aplus/smp.h>
@@ -53,6 +55,31 @@ static void virtconsole_dnit(device_t*);
 static void virtconsole_reset(device_t*);
 static ssize_t virtconsole_write(device_t*, const void*, size_t);
 static ssize_t virtconsole_read(device_t*, void*, size_t);
+
+
+/* How much of the receive queue to stock. The device fills one buffer per burst of input
+   and cannot deliver anything at all while the queue is empty, so the depth is headroom
+   between reads rather than anything the reader sees. Capped by what the queue has. */
+
+#define VIRTCONSOLE_BUFFERS 8
+
+
+struct virtconsole {
+
+    struct virtio_driver* driver;
+
+    /* Serializes readers against each other: a read consumes part of a buffer and leaves
+       the rest for the next one, which two readers at once would tear. */
+    spinlock_t lock;
+
+    /* A receive buffer the device has filled that the last read did not finish with.
+       VIRTQ_DESC_NONE when there is none. */
+    struct {
+        uint16_t desc;
+        uint32_t offset;
+        uint32_t length;
+    } pending;
+};
 
 
 device_t device = {
@@ -91,6 +118,44 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
     return 0;
 }
 
+
+/* Stock the receive queue.
+ *
+ * Nothing can be read from a port whose receive queue is empty -- the device has nowhere to
+ * put the input and drops it -- which is why /dev/hvc0 was write only: the queue was never
+ * given a single buffer. */
+
+static size_t virtconsole_fill(struct virtconsole* vc) {
+
+    DEBUG_ASSERT(vc);
+
+    const uint16_t q = VIRTIO_CONSOLE_PORT_RX(0);
+
+    size_t posted = 0;
+
+    for (size_t i = 0; i < VIRTCONSOLE_BUFFERS; i++) {
+
+        uint16_t desc = virtq_alloc_descriptor(vc->driver, q, VIRTQ_REQUEST_POSTED);
+
+        if (desc == VIRTQ_DESC_NONE)
+            break;
+
+        virtq_provide(vc->driver, q, desc, vc->driver->recv_window_size);
+
+        posted++;
+    }
+
+    if (posted)
+        virtq_notify(vc->driver, q);
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("virtio-console: device %d stocked the receive queue with %d buffers\n", vc->driver->device, posted);
+#endif
+
+    return posted;
+}
+
+
 static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     
     device_t* config = (device_t*)arg;
@@ -107,6 +172,9 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct virtio_driver* driver = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
+    if (unlikely(!driver))
+        return;
+
     driver->type             = VIRTIO_DEVICE_TYPE_CONSOLE;
     driver->device           = device;
     driver->send_window_size = 4096;
@@ -122,12 +190,27 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-console: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
+        kfree(driver);
         return;
     }
 
-    config->userdata = driver;
 
-    virtq_send(driver, VIRTIO_CONSOLE_PORT_TX(0), "Hello World!", 13);
+    struct virtconsole* vc = kcalloc(1, sizeof(struct virtconsole), GFP_KERNEL);
+
+    if (unlikely(!vc)) {
+        virtio_pci_dnit(driver);
+        kfree(driver);
+        return;
+    }
+
+    vc->driver       = driver;
+    vc->pending.desc = VIRTQ_DESC_NONE;
+
+    spinlock_init(&vc->lock);
+
+    virtconsole_fill(vc);
+
+    config->userdata = vc;
 }
 
 
@@ -149,33 +232,100 @@ static ssize_t virtconsole_write(device_t* device, const void* buf, size_t size)
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
 
-    struct virtio_driver* driver = (struct virtio_driver*)device->userdata;
+    struct virtio_driver* driver = ((struct virtconsole*)device->userdata)->driver;
 
     if (unlikely(size == 0))
         return 0;
 
-    for (size_t sent = 0; sent < size; ) {
+    for (size_t sent = 0; sent < size;) {
 
-        ssize_t rem = MIN(size - sent, driver->send_window_size);
-        ssize_t ret = virtq_send(driver, VIRTIO_CONSOLE_PORT_TX(0), (const uint8_t*)buf + sent, rem);
+        ssize_t ret = virtq_send(driver, VIRTIO_CONSOLE_PORT_TX(0), (const uint8_t*)buf + sent, MIN(size - sent, driver->send_window_size));
 
-        if (ret < 0) {
-            return ret;
-        }
+        if (unlikely(ret < 0))
+            return sent ? (ssize_t)sent : ret;
 
-        sent += ret;
+        sent += (size_t)ret;
     }
 
-    return size;
+    return (ssize_t)size;
 }
+
+
+/* Drain what the device has put in the receive queue.
+ *
+ * A buffer is handed back to the device as soon as the reader is finished with it, and one
+ * the reader only got partway through is held in pending until the next call: the device
+ * fills a buffer with as much as it has, which is not bound to be as much as was asked for.
+ */
 
 static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
 
-    errno = ENOSYS;
-    return -1;
+    if (unlikely(size == 0))
+        return 0;
+
+
+    struct virtconsole* vc       = (struct virtconsole*)device->userdata;
+    struct virtio_driver* driver = vc->driver;
+
+    const uint16_t q = VIRTIO_CONSOLE_PORT_RX(0);
+
+    size_t done     = 0;
+    bool recycled   = false;
+
+    scoped_lock(&vc->lock) {
+
+        while (done < size) {
+
+            if (vc->pending.desc == VIRTQ_DESC_NONE) {
+
+                uint16_t desc;
+                uint32_t length;
+
+                if (!virtq_reap(driver, q, &desc, &length))
+                    break;
+
+                /* Not one of ours -- a completion for something else on this queue. */
+                if (desc == VIRTQ_DESC_NONE)
+                    continue;
+
+                if (unlikely(!length)) {
+
+                    virtq_provide(driver, q, desc, driver->recv_window_size);
+                    recycled = true;
+
+                    continue;
+                }
+
+                vc->pending.desc   = desc;
+                vc->pending.offset = 0;
+                vc->pending.length = MIN(length, (uint32_t)driver->recv_window_size);
+            }
+
+
+            size_t chunk = MIN(size - done, (size_t)(vc->pending.length - vc->pending.offset));
+
+            memcpy((uint8_t*)buf + done, (const void*)(virtq_recvbuf(driver, q, vc->pending.desc) + vc->pending.offset), chunk);
+
+            done += chunk;
+            vc->pending.offset += chunk;
+
+            if (vc->pending.offset == vc->pending.length) {
+
+                virtq_provide(driver, q, vc->pending.desc, driver->recv_window_size);
+                recycled = true;
+
+                vc->pending.desc = VIRTQ_DESC_NONE;
+            }
+        }
+    }
+
+    if (recycled)
+        virtq_notify(driver, q);
+
+    return (ssize_t)done;
 }
 
 void init(const char* args) {
@@ -192,4 +342,9 @@ void init(const char* args) {
 }
 
 void dnit(void) {
+
+    if (device.userdata == NULL)
+        return;
+
+    device_unlink(&device);
 }

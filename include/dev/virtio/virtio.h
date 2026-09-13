@@ -74,12 +74,40 @@
 #define VIRTIO_ISR_STATUS_QUEUE  (1 << 0)
 #define VIRTIO_ISR_STATUS_CONFIG (1 << 1)
 
-// Features (1)
-#define VIRTIO_F_VERSION_1 (1 << 0)
-#define VIRTIO_F_IN_ORDER  (1 << 6)
+// Features, word 0 (bits 0..31). Bits 0..23 are device specific; the rest are transport.
+#define VIRTIO_F_NOTIFY_ON_EMPTY (1 << 24)
+#define VIRTIO_F_ANY_LAYOUT      (1 << 27)
+#define VIRTIO_F_INDIRECT_DESC   (1 << 28)
+#define VIRTIO_F_EVENT_IDX       (1 << 29)
 
-// Features (0)
-#define VIRTIO_F_EVENT_IDX (1 << 29)
+// Features, word 1 (bits 32..63): the bit number here is the spec's minus 32.
+#define VIRTIO_F_VERSION_1         (1 << 0)  // 32
+#define VIRTIO_F_ACCESS_PLATFORM   (1 << 1)  // 33
+#define VIRTIO_F_RING_PACKED       (1 << 2)  // 34
+#define VIRTIO_F_IN_ORDER          (1 << 3)  // 35
+#define VIRTIO_F_ORDER_PLATFORM    (1 << 4)  // 36
+#define VIRTIO_F_SR_IOV            (1 << 5)  // 37
+#define VIRTIO_F_NOTIFICATION_DATA (1 << 6)  // 38
+#define VIRTIO_F_NOTIF_CONFIG_DATA (1 << 7)  // 39
+#define VIRTIO_F_RING_RESET        (1 << 8)  // 40
+
+
+/* What this driver is prepared to accept, per feature word.
+ *
+ * Word 0 lets every device specific bit through for the device driver's negotiate()
+ * callback to accept or drop, and refuses the transport bits above them: none of
+ * INDIRECT_DESC, EVENT_IDX or NOTIFY_ON_EMPTY is implemented here, and accepting a feature
+ * that is not implemented is how a driver ends up reading a ring the device is writing in a
+ * layout it never agreed to.
+ *
+ * Word 1 is VERSION_1 alone. RING_PACKED would change the ring layout outright,
+ * NOTIFICATION_DATA the payload written to the notify register, ACCESS_PLATFORM the meaning
+ * of every address handed to the device, and IN_ORDER would let the device write only the
+ * last used entry of a batch -- which this driver, handing out arbitrary free descriptors
+ * rather than consecutive ones, is in no position to promise. */
+
+#define VIRTIO_FEATURES_MASK_0 0x00FFFFFFU
+#define VIRTIO_FEATURES_MASK_1 (VIRTIO_F_VERSION_1)
 
 
 // Queue Descriptors
@@ -98,6 +126,29 @@
 #define VIRTQ_MAX_QUEUES      64
 #define VIRTQ_MAX_DESCRIPTORS 65535
 
+// How long virtq_wait() gives a device to answer before giving up on it.
+#define VIRTQ_TIMEOUT_MS 5000
+
+// How long virtq_wait() pauses between two looks at the used ring.
+#define VIRTQ_POLL_SPINS 1024
+
+
+/* Returned by virtq_alloc_descriptor() when the queue has none left. 0xFFFF is not a
+   descriptor index any queue can have: the ring is capped at 32768 entries. */
+#define VIRTQ_DESC_NONE 0xFFFF
+
+
+/* What the driver knows about a descriptor, kept beside the ring rather than in it. The
+   descriptor table itself is read by the device, so it cannot double as the driver's
+   bookkeeping: a descriptor is free or not according to this array and nothing else.
+   Which of these a descriptor is put into at submission time decides who cleans it up. */
+
+#define VIRTQ_REQUEST_FREE     0 // In the pool.
+#define VIRTQ_REQUEST_INFLIGHT 1 // Submitted; a caller is in virtq_wait() for it.
+#define VIRTQ_REQUEST_ASYNC    2 // Submitted and forgotten; virtq_reap() frees it.
+#define VIRTQ_REQUEST_POSTED   3 // A receive buffer; virtq_reap() hands it to its owner.
+#define VIRTQ_REQUEST_DONE     4 // The device is finished with it; the waiter frees it.
+
 
 
 #ifndef __ASSEMBLY__
@@ -106,10 +157,23 @@
     #include <aplus.h>
     #include <aplus/debug.h>
     #include <aplus/syscall.h>
+    #include <stdatomic.h>
     #include <stdint.h>
 
 
 __BEGIN_DECLS
+
+
+struct virtio_pci_common_cfg;
+
+
+/* One slot per descriptor: what the driver did with it and what came back. */
+
+struct virtq_request {
+    uint8_t state;
+    uint32_t length;
+};
+
 
 struct virtio_driver {
 
@@ -141,22 +205,48 @@ struct virtio_driver {
         uintptr_t notify_offset;
         uintptr_t device_config;
 
+        /* Kept so that the device can be told to stop -- queues disabled and the status
+           reset -- when bringing it up fails partway through. */
+        struct virtio_pci_common_cfg volatile* common_config;
+
         uint32_t volatile* isr_status;
 
 
         struct {
 
+            /* Guards the descriptor pool, the available ring and the used ring cursor --
+               everything below that both a caller and the interrupt can touch. Taken with
+               interrupts disabled, so it is safe from either, but it must never nest:
+               re-taking it on one CPU is a deadlock panic, not a recursion. */
             spinlock_t lock;
-            semaphore_t iosem;
+
+            /* Bumped by virtq_flush() out of the interrupt. virtq_wait() watches it so that
+               it rescans the used ring when the device has said something and idles on
+               __cpu_pause() when it has not. */
+            atomic_uint completions;
+
+            /* How far into the used ring the reaper has consumed, as a uint16_t so that it
+               wraps exactly where the device's own index does. */
+            uint16_t last_used;
 
             struct virtq_descriptor volatile* descriptors;
             struct virtq_available volatile* available;
             struct virtq_used volatile* used;
             struct virtq_notify volatile* notify;
 
+            /* size entries, one per descriptor. */
+            struct virtq_request* requests;
+
             struct {
+
+                /* The single physical allocation the five regions are carved out of, kept
+                   so that a queue can be given back if bringing the device up fails. */
+                uintptr_t base;
+                size_t length;
+
                 uintptr_t sendbuf;
                 uintptr_t recvbuf;
+
             } buffers;
 
             size_t size;
@@ -251,14 +341,25 @@ struct virtq_notify {
 
 // PCI
 int virtio_pci_init(struct virtio_driver*);
+void virtio_pci_dnit(struct virtio_driver*);
 
 // Queue
 int virtq_init(struct virtio_driver*, struct virtio_pci_common_cfg volatile*, uint16_t);
-uint16_t virtq_alloc_descriptor(struct virtio_driver*, uint16_t);
+void virtq_dnit(struct virtio_driver*, uint16_t);
+
+uint16_t virtq_alloc_descriptor(struct virtio_driver*, uint16_t, uint8_t);
 void virtq_free_descriptor(struct virtio_driver*, uint16_t, uint16_t);
+
+uintptr_t virtq_recvbuf(struct virtio_driver*, uint16_t, uint16_t);
+
+void virtq_provide(struct virtio_driver*, uint16_t, uint16_t, size_t);
+void virtq_notify(struct virtio_driver*, uint16_t);
+int virtq_reap(struct virtio_driver*, uint16_t, uint16_t*, uint32_t*);
+
 ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);
+
 void virtq_flush(struct virtio_driver*, uint16_t);
 
 __END_DECLS
