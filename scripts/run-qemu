@@ -107,34 +107,30 @@ x86_64)
     flags="$flags --bios $(find_ovmf) -net none"
 
     # GPU
-    if [ $ARG_VIRTIO -eq 1 ]; then
+    if [ $ARG_VIRTIO -eq 0 ]; then
         flags="$flags -device virtio-vga"
     else
         flags="$flags -vga std"
     fi
 
     # Pointer
-    #
-    # An absolute pointer, and not because a tablet is a nicer mouse: a relative one makes
-    # the host grab its own pointer in order to deliver motion, and a grabbed host pointer
-    # is a hidden one, which takes the adapter's cursor plane down with it.
     flags="$flags -device virtio-tablet-pci,disable-legacy=on"
 
     # Network
-    if [ $ARG_VIRTIO -eq 1 ]; then
-        flags="$flags -device virtio-net-pci,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
-    else
+    # if [ $ARG_VIRTIO -eq 1 ]; then
+    #     flags="$flags -device virtio-net-pci,netdev=net0"
+    #     flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
+    # else
         flags="$flags -device pcnet,netdev=net0"
         flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
-    fi
+    # fi
 
     # Block
-    if [ $ARG_VIRTIO -eq 1 ]; then
-        flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk"
-    else
+    # if [ $ARG_VIRTIO -eq 1 ]; then
+    #     flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device virtio-blk-pci-non-transitional,drive=disk"
+    # else
         flags="$flags -drive id=disk,file=aplus.img,if=none,format=raw -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0"
-    fi
+    # fi
 
     # Random
     flags="$flags -object rng-random,filename=/dev/random,id=rng0"
