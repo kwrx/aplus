@@ -356,6 +356,14 @@ void virtq_provide(struct virtio_driver*, uint16_t, uint16_t, size_t);
 void virtq_notify(struct virtio_driver*, uint16_t);
 int virtq_reap(struct virtio_driver*, uint16_t, uint16_t*, uint32_t*);
 
+/* The three below report a failure as a negative errno rather than by setting errno and
+   returning -1, which is what the rest of this interface does. The difference is not style:
+   these are the calls a driver makes underneath read() and write(), and that path carries an
+   error in the return value all the way up -- vfs_read() hands the driver's return straight to
+   sys_read(), which hands it to the libc. A -1 arriving there is not "see errno", it is EPERM.
+   Kernel errno is per-CPU besides (see <aplus/errno.h>), so a task that is preempted between
+   the store and the load reads somebody else's. */
+
 ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);
 ssize_t virtq_recv(struct virtio_driver*, uint16_t, void*, size_t);

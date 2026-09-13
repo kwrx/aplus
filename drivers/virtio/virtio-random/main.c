@@ -146,8 +146,10 @@ static ssize_t virtrandom_write(device_t* device, const void* buf, size_t size) 
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
 
-    errno = ENOSPC;
-    return -1;
+    /* Negative rather than errno and -1: read() and write() carry a driver's error in the
+       return value, and a -1 reaching the libc that way is EPERM, not "see errno". */
+
+    return -ENOSPC;
 }
 
 /* The request is cut to the receive window rather than handed to the queue whole.
@@ -174,7 +176,7 @@ static ssize_t virtrandom_read(device_t* device, void* buf, size_t size) {
         ssize_t e = virtq_recv(driver, VIRTIO_RANDOM_QUEUE_DATA, (uint8_t*)buf + done, MIN(size - done, driver->recv_window_size));
 
         if (unlikely(e < 0))
-            return done ? (ssize_t)done : -1;
+            return done ? (ssize_t)done : e;
 
         if (unlikely(e == 0))
             break;
