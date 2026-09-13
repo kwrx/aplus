@@ -50,19 +50,28 @@
  */
 void do_unshare(int flags) {
 
+    //? Splitting a table nobody else is looking at would be a copy of itself:
+    //? the references it already holds move over to the copy untouched. Only a
+    //? table another task is still using needs a second set of them, and taking
+    //? one unconditionally is what used to pin every inherited descriptor for
+    //? good - a pipe write end carried across execve() then never reached its
+    //? last close, so the reader on the other side never saw end of file.
     if (flags & CLONE_FILES) {
 
-        current_task->fd = shared_ptr_unshare(current_task->fd, GFP_KERNEL);
+        if (atomic_load(&current_task->fd->refcount) > 1) {
 
-        shared_ptr_access(current_task->fd, fds, {
-            for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+            current_task->fd = shared_ptr_unshare(current_task->fd, GFP_KERNEL);
 
-                if (!fds->descriptors[i].ref)
-                    continue;
+            shared_ptr_access(current_task->fd, fds, {
+                for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-                fd_ref(fds->descriptors[i].ref);
-            }
-        });
+                    if (!fds->descriptors[i].ref)
+                        continue;
+
+                    fd_ref(fds->descriptors[i].ref);
+                }
+            });
+        }
     }
 
     if (flags & CLONE_FS) {
