@@ -416,6 +416,28 @@ static void test_sleep(void) {
 
 
 /*
+ * nanosleep() goes through the scheduler's own deadline rather than the one the poll family
+ * uses, so it needs checking on its own. The scheduler read the current time into a kernel
+ * buffer through sys_clock_gettime(), which rejects a kernel pointer coming from a userspace
+ * task and returned -EFAULT having written nothing: the deadline was then compared against
+ * whatever the stack happened to hold, and sleeps ended after an arbitrary fraction of what
+ * was asked for. `watch -n 2` ran its command several times a second.
+ */
+static void test_nanosleep(void) {
+
+    struct timespec ts = {.tv_sec = 0, .tv_nsec = 400000000L};
+
+    uint64_t t0 = now_ms();
+    int r       = nanosleep(&ts, NULL);
+    uint64_t dt = now_ms() - t0;
+
+    CHECK(r == 0, "nanosleep", "nanosleep() returned %d (%s), expected 0", r, strerror(errno));
+    CHECK(dt >= 350, "nanosleep-waited", "nanosleep(400ms) returned after %llu ms", (unsigned long long)dt);
+    CHECK(dt < 3000, "nanosleep-not-overslept", "nanosleep(400ms) returned after %llu ms", (unsigned long long)dt);
+}
+
+
+/*
  * A descriptor above CONFIG_OPEN_MAX is a socket, and readiness for one is answered by the
  * network stack rather than by the VFS. Whether it calls an idle socket writable is its own
  * business; what has to hold is that select() and poll() come back with the same answer, since
@@ -771,6 +793,7 @@ static struct {
     {"count", test_counts_bits_not_fds},
     {"bad-fd", test_bad_fd},
     {"sleep", test_sleep},
+    {"nanosleep", test_nanosleep},
     {"high-fd", test_high_fd_socket},
     {"fd-setsize", test_fd_setsize},
     {"pselect", test_pselect},
