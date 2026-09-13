@@ -36,6 +36,8 @@
 #include <aplus/module.h>
 #include <aplus/smp.h>
 
+#include <arch/x86/asm.h>
+
 #include <dev/interface.h>
 #include <dev/pci.h>
 #include <dev/video.h>
@@ -107,12 +109,30 @@ device_t device = {
  * the right choice for the traffic: a compositor blits whole rows into it.
  */
 
+/* Published at KERNEL_VIDEO_AREA rather than identity-mapped.
+ *
+ * This framebuffer is ordinary system memory -- pmm_alloc_blocks() hands back whatever is
+ * free, which early in the boot is a low address, tens of megabytes in. Mapping it at that
+ * address put it in the middle of every process: user programs load at 0x400000 and their
+ * heap grows up from the end of the image, so the first thing above the image was a few
+ * megabytes of framebuffer. sys_brk() cannot map over it -- arch_vmm_map() refuses a
+ * populated entry -- so the heap stopped there, at whatever address the allocator had
+ * returned, and no process could hold more than that no matter how much memory the machine
+ * had. Anything with a large appetite died on startup; Mesa's softpipe wants a couple of
+ * hundred megabytes of it before it will give out a context at all.
+ *
+ * The physical address stays in fb_base: it is what the device is given as the resource
+ * backing, and the device reads guest memory by physical address. Only what userspace is
+ * handed -- fs.smem_start, set in virtgpu_update() -- becomes the virtual one. */
+
 static void virtgpu_map_framebuffer(device_t* device) {
 
     DEBUG_ASSERT(device->vid.fb_base);
     DEBUG_ASSERT(device->vid.fb_size);
 
-    PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_base, device->vid.fb_size,
+    PANIC_ASSERT(device->vid.fb_size <= KERNEL_VIDEO_SIZE);
+
+    PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, KERNEL_VIDEO_AREA, device->vid.fb_base, device->vid.fb_size,
                                                      ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_USER | ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_SHARED));
 }
 
@@ -122,7 +142,7 @@ static void virtgpu_free_framebuffer(device_t* device) {
     if (!device->vid.fb_base)
         return;
 
-    arch_vmm_unmap(&core->bsp.address_space, device->vid.fb_base, device->vid.fb_size);
+    arch_vmm_unmap(&core->bsp.address_space, KERNEL_VIDEO_AREA, device->vid.fb_size);
 
     pmm_free_blocks(device->vid.fb_base, device->vid.fb_size / PML1_PAGESIZE + 1);
 
@@ -335,7 +355,7 @@ static void virtgpu_update(device_t* device) {
 
     strncpy(device->vid.fs.id, VIRTGPU_ID, 16);
 
-    device->vid.fs.smem_start  = device->vid.fb_base;
+    device->vid.fs.smem_start  = KERNEL_VIDEO_AREA;
     device->vid.fs.smem_len    = device->vid.fb_size;
     device->vid.fs.type        = FB_TYPE_PLANES;
     device->vid.fs.visual      = FB_VISUAL_TRUECOLOR;
