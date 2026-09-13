@@ -28,6 +28,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/endian.h>
 #include <aplus/errno.h>
 #include <aplus/fb.h>
 #include <aplus/hal.h>
@@ -185,23 +186,41 @@ static void virtgpu_dnit(device_t* device) {
 
 
 
-static void virtgpu_reset_framebuffer(device_t* device) {
-    DEBUG_ASSERT(device);
-    DEBUG_ASSERT(device->userdata);
+/* Ask the device what mode its primary scanout is in.
+ *
+ * The mode used to come from core->framebuffer -- whatever the bootloader left on screen --
+ * and the answer to this was fetched, checked for the scanout being enabled, and then
+ * thrown away. That agrees with the device only on virtio-vga, which inherits the boot
+ * mode; a plain virtio-gpu-pci has no boot framebuffer behind it at all and was being
+ * driven at a hard coded 1280x720 whatever the host window was.
+ */
+
+static int virtgpu_get_mode(struct virtgpu* gpu, uint32_t* xres, uint32_t* yres) {
+
+    DEBUG_ASSERT(gpu);
 
     struct virtio_gpu_resp_display_info display_info = {0};
-    if (virtgpu_cmd_get_display_info(device->userdata, &display_info) < 0) {
-        device->status = DEVICE_STATUS_FAILED;
-        return;
-    }
 
-    if (!display_info.pmodes[VIRTGPU_DISPLAY_PRIMARY].enabled) {
+    if (virtgpu_cmd_get_display_info(gpu, &display_info) < 0)
+        return -1;
+
+    if (!le32_to_cpu(display_info.pmodes[VIRTGPU_DISPLAY_PRIMARY].enabled)) {
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-gpu: ERROR! Primary display %d not enabled\n", VIRTGPU_DISPLAY_PRIMARY);
 #endif
-        device->status = DEVICE_STATUS_FAILED;
-        return;
+        return errno = ENODEV, -1;
     }
+
+    *xres = le32_to_cpu(display_info.pmodes[VIRTGPU_DISPLAY_PRIMARY].r.width);
+    *yres = le32_to_cpu(display_info.pmodes[VIRTGPU_DISPLAY_PRIMARY].r.height);
+
+    return 0;
+}
+
+
+static void virtgpu_reset_framebuffer(device_t* device) {
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
 
     struct virtgpu* gpu = device->userdata;
 
@@ -237,22 +256,32 @@ static void virtgpu_reset(device_t* device) {
     memset(&device->vid.fs, 0, sizeof(struct fb_fix_screeninfo));
     memset(&device->vid.vs, 0, sizeof(struct fb_var_screeninfo));
 
-    if (!core->framebuffer.address) {
 
-        device->vid.vs.xres           = 1280;
-        device->vid.vs.yres           = 720;
-        device->vid.vs.xres_virtual   = 1280;
-        device->vid.vs.yres_virtual   = 720;
-        device->vid.vs.bits_per_pixel = 32;
+    uint32_t xres = 0;
+    uint32_t yres = 0;
 
-    } else {
-
-        device->vid.vs.xres           = core->framebuffer.width;
-        device->vid.vs.yres           = core->framebuffer.height;
-        device->vid.vs.xres_virtual   = core->framebuffer.width;
-        device->vid.vs.yres_virtual   = core->framebuffer.height;
-        device->vid.vs.bits_per_pixel = core->framebuffer.depth;
+    if (virtgpu_get_mode(device->userdata, &xres, &yres) < 0) {
+        device->status = DEVICE_STATUS_FAILED;
+        return;
     }
+
+    /* A device is entitled to report a scanout it has no size for yet. Fall back to the
+       mode the machine booted in, and to something usable if there was not one. */
+    if (!xres || !yres) {
+
+        xres = core->framebuffer.address ? core->framebuffer.width : 1280;
+        yres = core->framebuffer.address ? core->framebuffer.height : 720;
+    }
+
+
+    device->vid.vs.xres         = xres;
+    device->vid.vs.yres         = yres;
+    device->vid.vs.xres_virtual = xres;
+    device->vid.vs.yres_virtual = yres;
+
+    /* Fixed rather than inherited: the scanout resource below is created as B8G8R8X8, so
+       the framebuffer behind it is four bytes a pixel whatever the machine booted in. */
+    device->vid.vs.bits_per_pixel = 32;
 
     device->vid.vs.activate = FB_ACTIVATE_NOW;
 
@@ -270,9 +299,8 @@ static void virtgpu_reset(device_t* device) {
 
     virtgpu_reset_framebuffer(device);
 
-    /* fb_fix_screeninfo is what a process reads to find the framebuffer and its pitch, and
-       nothing else here fills it in. Leaving it to the first FBIOPUT_VSCREENINFO would mean
-       whoever opens the device first sees a NULL pointer and a pitch of zero. */
+    /* Nothing else here fills in fb_fix_screeninfo, and whoever opens the device first
+       would otherwise read a NULL framebuffer pointer and a pitch of zero. */
     virtgpu_update(device);
 }
 
@@ -510,19 +538,23 @@ static int virtgpu_cursor_move(device_t* device, int32_t x, int32_t y) {
 
 
 
+/* Nothing is asked for that is not implemented here.
+ *
+ * VIRGL used to be requested unconditionally by a driver that speaks only the 2D commands,
+ * and on an adapter built without it the bit was not on offer at all. IN_ORDER was worse:
+ * the constant named bit 38 rather than 35, so what was being asked for was
+ * NOTIFICATION_DATA -- a different payload on every kick -- and the driver satisfies
+ * neither feature anyway, handing out whichever descriptor is free rather than consecutive
+ * ones. Both went unnoticed because QEMU masks away what it did not offer and hands the raw
+ * word back on a read, so the device came up looking as though it had agreed.
+ *
+ * The transport bits that are usable are already in what the common configuration hands in;
+ * EDID would only be worth asking for once the EDID it returns is read. */
+
 static int setup_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 
-    if (index == 0) {
-
-        *features |= VIRTIO_GPU_F_VIRGL;
-        *features |= VIRTIO_GPU_F_EDID;
-    }
-
-    if (index == 1) {
-
-        *features |= VIRTIO_F_VERSION_1;
-        *features |= VIRTIO_F_IN_ORDER;
-    }
+    if (index == 0)
+        *features = 0;
 
     return 0;
 }
@@ -533,12 +565,12 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
     struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)device_config;
 
-    mmio_w32(&cfg->events_clear, cfg->events_read);
+    mmio_w32(&cfg->events_clear, mmio_r32(&cfg->events_read));
     atomic_thread_fence(memory_order_release);
 
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("virtio-gpu: setup device configuration [scanouts(%d)]\n", cfg->num_scanouts);
+    kprintf("virtio-gpu: setup device configuration [scanouts(%d)]\n", le32_to_cpu(mmio_r32(&cfg->num_scanouts)));
 #endif
 
     return 0;
@@ -548,9 +580,17 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
 static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
 
-    struct virtio_gpu_config* cfg = (struct virtio_gpu_config*)driver->internals.device_config;
+    /* Zero until the device configuration capability has been read, and there is no
+       guarantee a device presents one. */
+    if (unlikely(!driver->internals.device_config))
+        return 0;
 
-    cfg->events_clear = cfg->events_read;
+    /* Through a volatile pointer: this is a device register being acknowledged, and a plain
+       one lets the compiler decide the read and the write do nothing worth keeping. */
+    struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)driver->internals.device_config;
+
+    mmio_w32(&cfg->events_clear, mmio_r32(&cfg->events_read));
+
     return 0;
 }
 
@@ -572,10 +612,14 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     struct virtio_driver* virtio = kcalloc(1, sizeof(struct virtio_driver), GFP_KERNEL);
 
+    if (unlikely(!virtio))
+        return;
+
     virtio->type             = VIRTIO_DEVICE_TYPE_GPU;
     virtio->device           = device;
     virtio->send_window_size = 4096;
     virtio->recv_window_size = 4096;
+    virtio->max_queues       = 2;
 
     virtio->negotiate = &setup_features;
     virtio->setup     = &setup_config;
@@ -588,11 +632,20 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
         kprintf("virtio-gpu: device %d (%X:%X) initialization failed\n", device, vid, did);
 #endif
 
+        kfree(virtio);
         return;
     }
 
 
     struct virtgpu* gpu = kcalloc(1, sizeof(struct virtgpu), GFP_KERNEL);
+
+    if (unlikely(!gpu)) {
+
+        virtio_pci_dnit(virtio);
+        kfree(virtio);
+
+        return;
+    }
 
     gpu->driver = virtio;
 
@@ -614,7 +667,13 @@ void init(const char* args) {
         return;
 
 
-    pci_scan(&pci_find, PCI_TYPE_VGA, &device);
+    /* Every class, filtered on the identity below rather than on the class code.
+     *
+     * PCI_TYPE_VGA finds virtio-vga, which presents itself as a VGA adapter for the sake of
+     * firmware that expects one, and misses virtio-gpu-pci entirely: that one is class
+     * display/other, which is what the specification actually asks a virtio GPU to be. */
+
+    pci_scan(&pci_find, PCI_TYPE_ALL, &device);
 
     if (device.userdata == NULL)
         return;

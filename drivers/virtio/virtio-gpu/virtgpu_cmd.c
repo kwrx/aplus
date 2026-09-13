@@ -26,6 +26,7 @@
 
 #include <aplus.h>
 #include <aplus/debug.h>
+#include <aplus/endian.h>
 #include <aplus/errno.h>
 #include <aplus/fb.h>
 #include <aplus/hal.h>
@@ -48,8 +49,8 @@ int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) 
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
 
-    struct virtio_gpu_resource_detach_backing cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_resource_detach_backing cmd = {0};
+    struct virtio_gpu_response resp               = {0};
 
     cmd.hdr.type    = VIRTIO_GPU_CMD_RESOURCE_DETACH_BACKING;
     cmd.resource_id = resource;
@@ -57,7 +58,10 @@ int virtgpu_cmd_resource_detach_backing(struct virtgpu* gpu, uint64_t resource) 
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
@@ -65,8 +69,8 @@ int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
     DEBUG_ASSERT(gpu);
     DEBUG_ASSERT(gpu->driver);
 
-    struct virtio_gpu_resource_unref cmd;
-    struct virtio_gpu_response resp;
+    struct virtio_gpu_resource_unref cmd = {0};
+    struct virtio_gpu_response resp       = {0};
 
     cmd.hdr.type    = VIRTIO_GPU_CMD_RESOURCE_UNREF;
     cmd.resource_id = resource;
@@ -74,7 +78,10 @@ int virtgpu_cmd_resource_unref(struct virtgpu* gpu, uint64_t resource) {
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
@@ -119,7 +126,10 @@ int virtgpu_cmd_resource_attach_backing(struct virtgpu* gpu, uint64_t resource, 
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
@@ -141,7 +151,10 @@ int virtgpu_cmd_set_scanout(struct virtgpu* gpu, uint32_t scanout_id, uint64_t r
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
@@ -163,7 +176,10 @@ int virtgpu_cmd_transfer_to_host_2d(struct virtgpu* gpu, uint64_t resource, uint
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
@@ -203,7 +219,10 @@ int virtgpu_cmd_resource_flush(struct virtgpu* gpu, uint64_t resource, uint32_t 
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CONTROL, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 
-    return resp.hdr.type == VIRTIO_GPU_RESP_OK_NODATA ? 0 : -EINVAL;
+    if (resp.hdr.type != VIRTIO_GPU_RESP_OK_NODATA)
+        return errno = EINVAL, -1;
+
+    return 0;
 }
 
 
