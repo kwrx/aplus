@@ -430,6 +430,7 @@ void sched_enqueue(task_t*);
 void sched_dequeue(task_t*);
 void sched_requeue(task_t*);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
+size_t sched_nprocs(void);
 
 void schedule(int);
 
