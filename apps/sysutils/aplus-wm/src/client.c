@@ -36,11 +36,14 @@
 //? at a bounded queue size keeps one bad client from growing the server without limit.
 #define WM_CLIENT_TX_MAX (1 * 1024 * 1024)
 
-//? Big enough for one maximum-sized frame still being reassembled plus everything a full
-//? socket buffer (CONFIG_PIPESIZ, 65535 bytes) can hand over in a single drain. Sizing it
-//? to just one frame would make a client that keeps the pipe full look like a client
-//? sending something oversized.
-#define WM_CLIENT_RX_MAX (UI_MSG_PAYLOAD_MAX + sizeof(ui_msg_header_t) + 128 * 1024)
+//? One read of the client socket.
+#define WM_CLIENT_CHUNK (16 * 1024)
+
+//? One maximum-sized frame still being reassembled plus the chunk that will complete it,
+//? which is everything the buffer ever holds: wm_client_read() acts on whole frames after
+//? every chunk, so nothing accumulated earlier in a drain is still in here. What the cap
+//? catches is a client naming a length rather than a client sending a lot.
+#define WM_CLIENT_RX_MAX (UI_MSG_PAYLOAD_MAX + sizeof(ui_msg_header_t) + WM_CLIENT_CHUNK)
 
 
 static int wm_buffer_reserve(uint8_t** data, size_t* capacity, size_t needed, size_t limit) {
@@ -420,58 +423,12 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
 }
 
 
-int wm_client_read(wm_client_t* client) {
+/* Act on every whole frame the receive buffer holds and shift the partial one that is left
+ * over back to the front, so that what is in the buffer on return is never more than one
+ * frame that has yet to arrive in full.
+ */
 
-    /* A stream socket splits and coalesces writes freely, so bytes are accumulated here
-       and only whole frames are acted on.
-     *
-     * Drain to EAGAIN rather than taking one chunk per poll() wakeup. A first frame from a
-     * client is the whole of its surface, and with pixels travelling over the socket that
-     * is a megabyte for a modest window -- one chunk per wakeup turns it into hundreds of
-     * round trips with the client blocked on a full buffer for each one.
-     */
-    uint8_t chunk[16384];
-
-    bool drained = false;
-
-    while (!drained) {
-
-        ssize_t e = read(client->fd, chunk, sizeof(chunk));
-
-        if (e == 0) {
-            return -1;
-        }
-
-        if (e < 0) {
-
-            if (errno == EINTR) {
-                continue;
-            }
-
-            if (errno == EAGAIN) {
-                break;
-            }
-
-            return -1;
-        }
-
-        if (e < (ssize_t)sizeof(chunk)) {
-            drained = true;
-        }
-
-        if (wm_buffer_reserve(&client->rx.data, &client->rx.capacity, client->rx.size + (size_t)e, WM_CLIENT_RX_MAX) < 0) {
-            return -1;
-        }
-
-        memcpy(client->rx.data + client->rx.size, chunk, (size_t)e);
-        client->rx.size += (size_t)e;
-    }
-
-
-    if (!client->rx.size) {
-        return 0;
-    }
-
+static int wm_client_dispatch(wm_client_t* client) {
 
     size_t offset = 0;
 
@@ -509,6 +466,68 @@ int wm_client_read(wm_client_t* client) {
 
         memmove(client->rx.data, client->rx.data + offset, client->rx.size - offset);
         client->rx.size -= offset;
+    }
+
+    return 0;
+}
+
+
+int wm_client_read(wm_client_t* client) {
+
+    /* A stream socket splits and coalesces writes freely, so bytes are accumulated here
+       and only whole frames are acted on.
+     *
+     * Drain to EAGAIN rather than taking one chunk per poll() wakeup. A first frame from a
+     * client is the whole of its surface, and with pixels travelling over the socket that
+     * is a megabyte for a modest window -- one chunk per wakeup turns it into hundreds of
+     * round trips with the client blocked on a full buffer for each one.
+     *
+     * Each chunk is dispatched before the next is read, which is what keeps that drain
+     * bounded. Parsing only once it ends does not work: the client refills the socket as
+     * fast as the server empties it, so the drain runs until the client has nothing left
+     * to send rather than until the socket is empty, and the whole surface would have to
+     * fit in the receive buffer to get there.
+     */
+    uint8_t chunk[WM_CLIENT_CHUNK];
+
+    bool drained = false;
+
+    while (!drained) {
+
+        ssize_t e = read(client->fd, chunk, sizeof(chunk));
+
+        if (e == 0) {
+            return -1;
+        }
+
+        if (e < 0) {
+
+            if (errno == EINTR) {
+                continue;
+            }
+
+            if (errno == EAGAIN) {
+                break;
+            }
+
+            return -1;
+        }
+
+        if (e < (ssize_t)sizeof(chunk)) {
+            drained = true;
+        }
+
+        if (wm_buffer_reserve(&client->rx.data, &client->rx.capacity, client->rx.size + (size_t)e, WM_CLIENT_RX_MAX) < 0) {
+            fprintf(stderr, "aplus-wm: cannot hold %zu bytes from a client: %s\n", client->rx.size + (size_t)e, strerror(errno));
+            return -1;
+        }
+
+        memcpy(client->rx.data + client->rx.size, chunk, (size_t)e);
+        client->rx.size += (size_t)e;
+
+        if (wm_client_dispatch(client) < 0) {
+            return -1;
+        }
     }
 
     return 0;
