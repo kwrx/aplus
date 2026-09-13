@@ -332,6 +332,10 @@ void wm_window_destroy(wm_window_t* win) {
         wm.hovered_close = NULL;
     }
 
+    if (wm.pointer_focus == win) {
+        wm.pointer_focus = NULL;
+    }
+
     if (wm.focused == win) {
         wm.focused = NULL;
         wm_window_focus(wm.windows);

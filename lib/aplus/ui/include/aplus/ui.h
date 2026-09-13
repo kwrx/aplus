@@ -60,6 +60,13 @@ extern "C" {
 #define UI_EV_FOCUS     0x8005
 #define UI_EV_CLOSE     0x8006
 
+//? Sent when the pointer stops being over a window's content area. There is no matching
+//? "enter": arriving somewhere is already described by the UI_EV_POINTER that follows the
+//? pointer in. Leaving is the one transition that produces no event of its own, and
+//? without it a client that highlights whatever is under the pointer keeps the last thing
+//? it highlighted lit forever.
+#define UI_EV_LEAVE 0x8007
+
 
 //? A socket buffer is CONFIG_PIPESIZ (65535) bytes and ringbuffer_write() only ever
 //? makes partial progress, so a frame larger than the buffer could never be written
@@ -192,6 +199,7 @@ typedef enum {
     UI_EVENT_CONFIGURE,
     UI_EVENT_FOCUS,
     UI_EVENT_CLOSE,
+    UI_EVENT_LEAVE,
 
 } ui_event_type_t;
 
