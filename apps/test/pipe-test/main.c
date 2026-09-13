@@ -196,6 +196,97 @@ static void test_eof_on_writer_close(void) {
 
 
 /*
+ * The shape of a shell pipeline, and the one that used to HANG: the writer is a forked child
+ * that execve()s, so the write end has to survive the exec and still reach its last close
+ * when that child exits. do_unshare(CLONE_FILES) took a second reference to every inherited
+ * descriptor on the way through execve() and nothing ever dropped it, so the write end never
+ * reached zero, the pipe kept a writer forever, and the reader never saw end of file.
+ *
+ * $(command substitution) and `cmd | cmd` both boil down to exactly this.
+ */
+static void test_eof_after_exec(void) {
+
+    int fds[2];
+
+    if (pipe(fds) < 0) {
+        CHECK(0, "eof after exec", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        CHECK(0, "eof after exec", "fork() failed: %s", strerror(errno));
+        return;
+    }
+
+    if (pid == 0) {
+
+        close(fds[0]);
+
+        dup2(fds[1], STDOUT_FILENO);
+        close(fds[1]);
+
+        execl("/bin/echo", "echo", "hello", NULL);
+        _exit(127);
+    }
+
+
+    close(fds[1]);
+
+
+    char buf[64] = {0};
+    size_t got   = 0;
+
+    /* Reads until the end of the stream rather than until the expected byte count: the point
+       of the case is that the end of the stream arrives at all. */
+    for (;;) {
+
+        ssize_t e = read(fds[0], buf + got, sizeof(buf) - 1 - got);
+
+        if (e <= 0)
+            break;
+
+        got += (size_t)e;
+    }
+
+    close(fds[0]);
+
+
+    int status = 0;
+    waitpid(pid, &status, 0);
+
+    CHECK(got == 6 && memcmp(buf, "hello\n", 6) == 0, "eof after exec", "read %zu bytes ('%s'), child status %d", got, buf, status);
+}
+
+
+/*
+ * popen() runs its child through posix_spawn(), which clones with CLONE_VFORK and waits for
+ * the child to execve() before touching the stack the two of them share. do_fork() used to
+ * refuse that flag outright with ENOSYS, so nothing built on posix_spawn() -- popen(), and
+ * system(), which is what `watch` runs its command with -- ever started a process at all.
+ */
+static void test_popen(void) {
+
+    FILE* fp = popen("/bin/echo spawned", "r");
+
+    if (!fp) {
+        CHECK(0, "popen", "popen() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    char buf[64] = {0};
+    char* line   = fgets(buf, sizeof(buf), fp);
+
+    int status = pclose(fp);
+
+    CHECK(line && strcmp(buf, "spawned\n") == 0, "popen reads child output", "got '%s', pclose() returned %d", buf, status);
+}
+
+
+/*
  * Writing into a pipe with no reader left is EPIPE. There was previously no reader count at
  * all, so this was indistinguishable from a full buffer and blocked forever.
  */
@@ -422,6 +513,8 @@ static const struct {
 } cases[] = {
     {"large-write", test_large_write},
     {"eof", test_eof_on_writer_close},
+    {"eof-exec", test_eof_after_exec},
+    {"popen", test_popen},
     {"epipe", test_epipe},
     {"poll-buffered", test_poll_sees_buffered_data},
     {"poll-zero", test_poll_zero_timeout},
