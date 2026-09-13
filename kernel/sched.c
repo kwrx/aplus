@@ -65,8 +65,22 @@ static inline void do_sleep(void) {
 
     if (unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
 
-        struct timespec t0;
-        sys_clock_gettime(current_task->sleep.clockid, &t0);
+        struct timespec t0 = {0};
+
+        long e = 0;
+
+        //? &t0 is a kernel buffer, and the task being looked at here is a
+        //? userspace one: without saying so the check rejects the pointer,
+        //? sys_clock_gettime() returns -EFAULT having written nothing, and the
+        //? deadline below gets compared against whatever the stack happened to
+        //? hold. That is what cut every sleep short by an arbitrary amount.
+        scoped_uio_kernel() {
+            e = sys_clock_gettime(current_task->sleep.clockid, &t0);
+        }
+
+        if (unlikely(e < 0))
+            return;
+
 
         uint64_t tss = (current_task->sleep.timeout.tv_sec * 1000000000ULL) + current_task->sleep.timeout.tv_nsec;
         uint64_t tsc = (t0.tv_sec * 1000000000ULL) + t0.tv_nsec;
@@ -74,7 +88,9 @@ static inline void do_sleep(void) {
 
         if (current_task->sleep.remaining) {
 
-            uint64_t time_remaining_ns = tss - tsc;
+            //? Unsigned, so an already-due deadline has to be reported as no
+            //? time left rather than wrapping into a near-eternal one.
+            uint64_t time_remaining_ns = tss > tsc ? tss - tsc : 0ULL;
 
             current_task->sleep.remaining->tv_sec  = time_remaining_ns / 1000000000ULL;
             current_task->sleep.remaining->tv_nsec = time_remaining_ns % 1000000000ULL;
