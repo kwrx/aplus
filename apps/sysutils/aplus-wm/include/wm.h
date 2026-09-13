@@ -223,6 +223,12 @@ typedef struct {
 
     wm_window_t* focused;
 
+    //? The window whose content area the pointer is over. Tracked only so that the client
+    //? can be told when the pointer leaves again: a toolkit highlighting whatever is under
+    //? the pointer has no other way to find out, since the stream of UI_EV_POINTER simply
+    //? stops at the edge of the content.
+    wm_window_t* pointer_focus;
+
     //? The window whose close button the pointer is over, if any. A button that lights up
     //? has to be repainted when the pointer arrives and again when it leaves, so the
     //? transition is what gets damaged; it doubles as the "still on the button" test that

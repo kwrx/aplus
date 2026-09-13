@@ -205,6 +205,32 @@ static void input_send_pointer(wm_window_t* win) {
 }
 
 
+/* The whole of the pointer stream a content area sees: the window under the pointer gets
+   the event, and whichever window had it last is told the pointer has gone once it is no
+   longer that one. Tracking the transition here rather than at each call site is what
+   keeps a leave from being forgotten on one of the paths that moves the pointer. */
+static void input_track_pointer(void) {
+
+    wm_window_t* win = NULL;
+
+    if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) != WM_REGION_CONTENT) {
+        win = NULL;
+    }
+
+
+    if (wm.pointer_focus && wm.pointer_focus != win) {
+
+        ui_msg_window_t msg = {.window_id = wm.pointer_focus->id};
+
+        wm_client_queue(wm.pointer_focus->client, UI_EV_LEAVE, &msg, sizeof(msg));
+    }
+
+    wm.pointer_focus = win;
+
+    input_send_pointer(win);
+}
+
+
 static void input_begin_drag(wm_window_t* win, wm_region_t region) {
 
     wm.drag.window = win;
@@ -383,13 +409,7 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
 
     if (mask != UI_BUTTON_LEFT) {
-
-        wm_window_t* win = NULL;
-
-        if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CONTENT) {
-            input_send_pointer(win);
-        }
-
+        input_track_pointer();
         return;
     }
 
@@ -429,11 +449,7 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
             return;
         }
 
-        wm_window_t* win = NULL;
-
-        if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CONTENT) {
-            input_send_pointer(win);
-        }
+        input_track_pointer();
 
         return;
     }
@@ -450,7 +466,7 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
     wm_window_focus(win);
 
     if (region == WM_REGION_CONTENT) {
-        input_send_pointer(win);
+        input_track_pointer();
         return;
     }
 
@@ -520,11 +536,7 @@ static void input_pointer_moved(const wm_rect_t* old) {
 
     } else {
 
-        wm_window_t* win = NULL;
-
-        if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CONTENT) {
-            input_send_pointer(win);
-        }
+        input_track_pointer();
     }
 }
 

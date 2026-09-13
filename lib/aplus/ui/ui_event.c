@@ -202,6 +202,25 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 return 1;
             }
 
+            case UI_EV_LEAVE: {
+
+                ui_msg_window_t win;
+
+                if (hdr.length != sizeof(win)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_recv_all(conn->fd, &win, sizeof(win)) < 0) {
+                    return -1;
+                }
+
+                out->type      = UI_EVENT_LEAVE;
+                out->window_id = win.window_id;
+
+                return 1;
+            }
+
             case UI_EV_CLOSE: {
 
                 ui_msg_window_t win;
