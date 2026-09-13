@@ -58,19 +58,19 @@ SYSCALL(
             return -EFAULT;
 
         struct sysinfo si = {0};
-        si.uptime         = (unsigned long)arch_timer_generic_getms() / 1000ULL;
+        si.uptime         = (unsigned long)(arch_timer_generic_getms() / 1000ULL);
         si.loads[0]       = (unsigned long)(0 * (1 << SI_LOAD_SHIFT));
         si.loads[1]       = (unsigned long)(0 * (1 << SI_LOAD_SHIFT));
         si.loads[2]       = (unsigned long)(0 * (1 << SI_LOAD_SHIFT));
-        si.totalram       = (unsigned long)(pmm_get_total_memory()) >> 10;
-        si.freeram        = (unsigned long)(pmm_get_total_memory() - pmm_get_used_memory()) >> 10;
+        si.totalram       = (unsigned long)(pmm_get_total_memory());
+        si.freeram        = (unsigned long)(pmm_get_total_memory() - pmm_get_used_memory());
         si.sharedram      = (unsigned long)0;
         si.bufferram      = (unsigned long)0;
         si.totalswap      = (unsigned long)0;
         si.freeswap       = (unsigned long)0;
         si.procs          = (unsigned short)sched_nprocs();
-        si.totalhigh      = (unsigned long)(pmm_get_total_memory()) >> 10;
-        si.freehigh       = (unsigned long)(pmm_get_total_memory() - pmm_get_used_memory()) >> 10;
+        si.totalhigh      = (unsigned long)(pmm_get_total_memory());
+        si.freehigh       = (unsigned long)(pmm_get_total_memory() - pmm_get_used_memory());
         si.mem_unit       = (unsigned long)1;
 
         uio_memcpy_s2u(info, &si, sizeof(struct sysinfo));
