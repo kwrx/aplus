@@ -114,6 +114,11 @@ SYSCALL(
             shared_ptr_free(current_task->sighand);
 
             arch_vmm_free_address_space(current_task->address_space);
+
+            //? Nothing left to borrow, so let a parent parked in vfork() go. A
+            //? task that only stopped is skipped along with the teardown above:
+            //? it can still be continued and is still holding the loan.
+            do_vfork_release();
         }
 
 
