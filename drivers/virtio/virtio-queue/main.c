@@ -570,6 +570,60 @@ static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t hea
 }
 
 
+/* Take a descriptor from the pool, waiting for the device when there are none left.
+ *
+ * A fire and forget request has no completion anybody is sitting on, so the only thing that
+ * ever puts its descriptor back is the next caller reaping the used ring on the way in. That
+ * keeps up with a device that keeps up, and nothing else: a writer faster than the device --
+ * a process in a write() loop on /dev/hvc0 is faster than the host's main loop after a few
+ * hundred sends -- empties the pool with every descriptor still legitimately in flight.
+ *
+ * Failing there reports a queue that is merely full as an I/O error, and because a descriptor
+ * only ever comes back on the way in, giving up is also what makes it permanent: the caller
+ * that would have collected them is the one being turned away. That is how a port that had
+ * been writing happily stopped for good partway through a large transfer.
+ *
+ * So wait instead, on the deadline virtq_wait() gives a device to answer a request: room in a
+ * queue is something the device produces, and one that produces none in five seconds has
+ * stopped rather than fallen behind. The pool is re-examined -- which re-reads the used ring
+ * -- on every pass rather than only when the completion counter moves, because that counter
+ * only says an interrupt got through, and a send from a syscall runs with interrupts disabled
+ * often enough that usually none has. */
+
+static uint16_t virtq_alloc_descriptor_wait(struct virtio_driver* driver, uint16_t queue, uint8_t state) {
+
+    uint16_t desc = virtq_alloc_descriptor(driver, queue, state);
+
+    if (likely(desc != VIRTQ_DESC_NONE))
+        return desc;
+
+
+    uint64_t deadline = arch_timer_generic_getms() + VIRTQ_TIMEOUT_MS;
+
+    unsigned seen = atomic_load(&virtq(driver, queue)->completions);
+
+    do {
+
+        for (size_t spin = 0; spin < VIRTQ_POLL_SPINS; spin++) {
+
+            if (atomic_load(&virtq(driver, queue)->completions) != seen)
+                break;
+
+            __cpu_pause();
+        }
+
+        seen = atomic_load(&virtq(driver, queue)->completions);
+
+        if ((desc = virtq_alloc_descriptor(driver, queue, state)) != VIRTQ_DESC_NONE)
+            return desc;
+
+    } while (arch_timer_generic_getms() < deadline);
+
+
+    return VIRTQ_DESC_NONE;
+}
+
+
 ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void* message, size_t size, void* output, size_t outsize) {
 
     DEBUG_ASSERT(driver);
@@ -719,13 +773,13 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
         return errno = EINVAL, -1;
 
 
-    uint16_t inp = virtq_alloc_descriptor(driver, queue, VIRTQ_REQUEST_ASYNC);
+    uint16_t inp = virtq_alloc_descriptor_wait(driver, queue, VIRTQ_REQUEST_ASYNC);
 
     if (unlikely(inp == VIRTQ_DESC_NONE)) {
 #if DEBUG_LEVEL_ERROR
-        kprintf("virtio-queue: ERROR! device %d has no free descriptor in queue %d\n", driver->device, queue);
+        kprintf("virtio-queue: ERROR! device %d did not free a descriptor in queue %d within %dms\n", driver->device, queue, VIRTQ_TIMEOUT_MS);
 #endif
-        return errno = ENOSPC, -1;
+        return errno = ETIMEDOUT, -1;
     }
 
 
