@@ -97,6 +97,8 @@
 - [ ] Virtio Network
 - [ ] Virtio Crypto
 - [x] Virtio Console
+- [x] Virtio Input
+- [x] Virtio Random
 - [x] Bochs VGA Controller
 - [x] VMWare VGA Controller
 
