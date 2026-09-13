@@ -633,10 +633,10 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     DEBUG_ASSERT(queue < driver->internals.num_queues);
 
     if (unlikely(!size || size > driver->send_window_size))
-        return errno = EINVAL, -1;
+        return -EINVAL;
 
     if (unlikely(!outsize || outsize > driver->recv_window_size))
-        return errno = EINVAL, -1;
+        return -EINVAL;
 
 
     uint16_t inp = virtq_alloc_descriptor(driver, queue, VIRTQ_REQUEST_INFLIGHT);
@@ -645,7 +645,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-queue: ERROR! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
-        return errno = ENOSPC, -1;
+        return -ENOSPC;
     }
 
     uint16_t out = virtq_alloc_descriptor(driver, queue, VIRTQ_REQUEST_INFLIGHT);
@@ -657,7 +657,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-queue: ERROR! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
-        return errno = ENOSPC, -1;
+        return -ENOSPC;
     }
 
 
@@ -694,7 +694,7 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
     virtq_free_descriptor(driver, queue, inp);
 
     if (unlikely(e < 0))
-        return errno = EIO, -1;
+        return -EIO;
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d has sent %ld and received %ld bytes on queue %d\n", driver->device, size, received, queue);
@@ -712,7 +712,7 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
     DEBUG_ASSERT(queue < driver->internals.num_queues);
 
     if (unlikely(!outsize || outsize > driver->recv_window_size))
-        return errno = EINVAL, -1;
+        return -EINVAL;
 
 
     uint16_t out = virtq_alloc_descriptor(driver, queue, VIRTQ_REQUEST_INFLIGHT);
@@ -721,7 +721,7 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-queue: ERROR! device %d has no free descriptor in queue %d\n", driver->device, queue);
 #endif
-        return errno = ENOSPC, -1;
+        return -ENOSPC;
     }
 
 
@@ -748,7 +748,7 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
     virtq_free_descriptor(driver, queue, out);
 
     if (unlikely(e < 0))
-        return errno = EIO, -1;
+        return -EIO;
 
 #if DEBUG_LEVEL_TRACE
     kprintf("virtio-queue: device %d has received %ld bytes of data on queue %d\n", driver->device, received, queue);
@@ -770,7 +770,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
     DEBUG_ASSERT(queue < driver->internals.num_queues);
 
     if (unlikely(!size || size > driver->send_window_size))
-        return errno = EINVAL, -1;
+        return -EINVAL;
 
 
     uint16_t inp = virtq_alloc_descriptor_wait(driver, queue, VIRTQ_REQUEST_ASYNC);
@@ -779,7 +779,7 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
 #if DEBUG_LEVEL_ERROR
         kprintf("virtio-queue: ERROR! device %d did not free a descriptor in queue %d within %dms\n", driver->device, queue, VIRTQ_TIMEOUT_MS);
 #endif
-        return errno = ETIMEDOUT, -1;
+        return -ETIMEDOUT;
     }
 
 
