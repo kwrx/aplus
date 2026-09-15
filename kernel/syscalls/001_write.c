@@ -92,6 +92,18 @@ SYSCALL(
                 ssize_t e = 0;
 
 
+                /* Sampled before the attempt below rather than after it. The counter is
+                   bumped by whoever makes this descriptor ready, and a snapshot taken after
+                   the attempt failed already has that bump in it -- so the sleep below waits
+                   for a wakeup that has been and gone, and nothing will ever move the word
+                   again. On one CPU the window between the two is a preemption wide; on four
+                   the other end really is running at the same time, and this is what leaves a
+                   whole desktop parked with its input sitting in the pipe. */
+                uint32_t seq = 0;
+
+                shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, { seq = ev->futex; });
+
+
                 uio_lock(buf, size);
 
                 scoped_lock(&fds->descriptors[fd].ref->lock) {
@@ -113,11 +125,11 @@ SYSCALL(
 
                     } else {
 
-                        //? Snapshot the change counter and sleep until it moves.
-                        //? Anything that happened before this point is already
-                        //? reflected in it, so a wakeup can never be missed.
+                        //? Sleep until the counter moves away from what it held before the
+                        //? attempt above, so a wakeup that landed in between is not waited for
+                        //? a second time.
                         shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
-                            futex_wait(current_task, &ev->futex, ev->futex, NULL);
+                            futex_wait(current_task, &ev->futex, seq, NULL);
                         });
 
 

@@ -72,15 +72,36 @@ SYSCALL(
         current_task->wait_status  = !status ? NULL : (void*)uio_get_ptr(status);
 
 
-        cpu_foreach(cpu) {
+        /* The scan only decides; it never frees and never writes to user memory. Holding
+         * cpu->sched_lock is what keeps every task on the queue alive while it is looked at
+         * -- sched_dequeue() unlinks and destroys under that same lock -- and this walk used
+         * to run with no lock at all, reaping a child on one CPU while another CPU was
+         * walking the very queue it was being unlinked from. That is the crash: the CPU
+         * mid-walk follows `next` into freed memory and `current_task` becomes rubbish.
+         *
+         * The reaping itself is deferred to after the lock: sched_dequeue() retakes the
+         * queue lock for whichever CPU owns the task, and taking a second CPU's queue lock
+         * while holding the first is how a lock-order cycle between two CPUs starts.
+         */
 
-            for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        task_t* reap = NULL; //? A child to unlink and free once the queue lock is back down.
+        pid_t reported = -1; //? The child to report, if the scan found one to report.
 
-                if (unlikely(tmp == current_task))
-                    continue;
+        int exit_value = 0;
+        struct rusage exit_rusage;
 
-                if (unlikely(tmp->parent != current_task))
-                    continue;
+
+        cpu_foreach_if(cpu, reported < 0) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (unlikely(tmp == current_task))
+                        continue;
+
+                    if (unlikely(tmp->parent != current_task))
+                        continue;
 
 
 #define continue_if(pid, cond) \
@@ -90,48 +111,68 @@ SYSCALL(
     }
 
 
-                continue_if(pid < -1, tmp->pgrp != -pid);
-                continue_if(pid == 0, tmp->pgrp != current_task->pgrp);
-                continue_if(pid > 0, tmp->tid != pid);
-                continue_if(pid == -1, 0);
+                    continue_if(pid < -1, tmp->pgrp != -pid);
+                    continue_if(pid == 0, tmp->pgrp != current_task->pgrp);
+                    continue_if(pid > 0, tmp->tid != pid);
+                    continue_if(pid == -1, 0);
 
-                if (tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
-                    continue;
-
-
-
-                if (tmp->status == TASK_STATUS_STOP || tmp->status == TASK_STATUS_ZOMBIE) {
+                    if (tmp->status == TASK_STATUS_STOP && !(options & WUNTRACED))
+                        continue;
 
 
-                    if (current_task->wait_status)
-                        *current_task->wait_status = tmp->exit.value;
 
-                    if (current_task->wait_rusage)
-                        memcpy(current_task->wait_rusage, &tmp->rusage, sizeof(struct rusage));
+                    if (tmp->status == TASK_STATUS_STOP || tmp->status == TASK_STATUS_ZOMBIE) {
+
+                        exit_value = tmp->exit.value;
+
+                        memcpy(&exit_rusage, &tmp->rusage, sizeof(struct rusage));
+
+                        reported = tmp->tid;
+
+                        if (tmp->status == TASK_STATUS_ZOMBIE) {
+                            reap = tmp;
+                        }
+
+                        break;
 
 
-                    pid_t tid = tmp->tid;
+                    } else if (tmp->status == TASK_STATUS_DEAD) {
 
-                    if (tmp->status == TASK_STATUS_ZOMBIE) {
-                        sched_dequeue(tmp);
+                        //? One per pass, since the reap happens after this walk has ended.
+                        //? Any others are picked up by the next call, which is where they
+                        //? would have been left anyway had this one found a child to report.
+                        if (!reap) {
+                            reap = tmp;
+                        }
+
+                    } else {
+
+                        if (!(options & WNOHANG)) {
+                            list_push(tmp->wait_queue, current_task);
+                        }
+
+                        count++;
                     }
-
-                    return tid;
-
-
-                } else if (tmp->status == TASK_STATUS_DEAD) {
-
-                    sched_dequeue(tmp);
-
-                } else {
-
-                    if (!(options & WNOHANG)) {
-                        list_push(tmp->wait_queue, current_task);
-                    }
-
-                    count++;
                 }
             }
+        }
+
+
+        if (reap) {
+            sched_dequeue(reap);
+        }
+
+        if (reported >= 0) {
+
+            //? Written now rather than during the walk: this is user memory, so storing to
+            //? it can fault, and faulting is not something to do holding a run queue.
+            if (current_task->wait_status)
+                *current_task->wait_status = exit_value;
+
+            if (current_task->wait_rusage)
+                memcpy(current_task->wait_rusage, &exit_rusage, sizeof(struct rusage));
+
+            return reported;
         }
 
 

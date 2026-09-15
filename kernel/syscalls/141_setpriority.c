@@ -87,49 +87,55 @@ SYSCALL(
         size_t found = 0;
 
 
+        //? Every walk of a run queue is held under that CPU's sched_lock: it is the lock
+        //? sched_dequeue() unlinks and frees a task under, so it is the only thing keeping
+        //? the node this cursor is standing on from being handed back to the heap.
         cpu_foreach(cpu) {
 
-            task_t* tmp;
+            scoped_lock(&cpu->sched_lock) {
 
-            for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+                task_t* tmp;
 
-                switch (which) {
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                    case PRIO_PROCESS:
+                    switch (which) {
 
-                        if (tmp->tid != who) {
-                            continue;
-                        }
+                        case PRIO_PROCESS:
 
-                        break;
+                            if (tmp->tid != who) {
+                                continue;
+                            }
 
-                    case PRIO_PGRP:
+                            break;
 
-                        if (tmp->pgrp != who) {
-                            continue;
-                        }
+                        case PRIO_PGRP:
 
-                        break;
+                            if (tmp->pgrp != who) {
+                                continue;
+                            }
 
-                    case PRIO_USER:
+                            break;
 
-                        if (tmp->uid != who) {
-                            continue;
-                        }
+                        case PRIO_USER:
 
-                        break;
+                            if (tmp->uid != who) {
+                                continue;
+                            }
 
-                    default:
-                        return -EINVAL;
+                            break;
+
+                        default:
+                            return -EINVAL;
+                    }
+
+                    // FIXME: check for superuser
+                    if (unlikely(tmp->euid != current_task->euid && tmp->euid != current_task->uid))
+                        return -EPERM;
+
+
+                    tmp->priority = niceval;
+                    found++;
                 }
-
-                // FIXME: check for superuser
-                if (unlikely(tmp->euid != current_task->euid && tmp->euid != current_task->uid))
-                    return -EPERM;
-
-
-                tmp->priority = niceval;
-                found++;
             }
         }
 

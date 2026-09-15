@@ -74,38 +74,44 @@ SYSCALL(
 
 
 
+        //? Every walk of a run queue is held under that CPU's sched_lock: it is the lock
+        //? sched_dequeue() unlinks and frees a task under, so it is the only thing keeping
+        //? the node this cursor is standing on from being handed back to the heap.
         cpu_foreach(cpu) {
 
-            task_t* tmp;
-            for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+            scoped_lock(&cpu->sched_lock) {
 
-                switch (which) {
+                task_t* tmp;
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                    case PRIO_PROCESS:
-                        if (tmp->tid != who)
-                            continue;
-                        break;
+                    switch (which) {
 
-                    case PRIO_PGRP:
-                        if (tmp->pgrp != who)
-                            continue;
-                        break;
+                        case PRIO_PROCESS:
+                            if (tmp->tid != who)
+                                continue;
+                            break;
 
-                    case PRIO_USER:
-                        if (tmp->uid != who)
-                            continue;
-                        break;
+                        case PRIO_PGRP:
+                            if (tmp->pgrp != who)
+                                continue;
+                            break;
 
-                    default:
-                        return -EINVAL;
+                        case PRIO_USER:
+                            if (tmp->uid != who)
+                                continue;
+                            break;
+
+                        default:
+                            return -EINVAL;
+                    }
+
+
+                    if (!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
+                        return -EPERM;
+
+
+                    return 20 + tmp->priority;
                 }
-
-
-                if (!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
-                    return -EPERM;
-
-
-                return 20 + tmp->priority;
             }
         }
 

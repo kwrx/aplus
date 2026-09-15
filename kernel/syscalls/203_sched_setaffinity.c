@@ -80,22 +80,28 @@ SYSCALL(
 
 
 
+        //? Every walk of a run queue is held under that CPU's sched_lock: it is the lock
+        //? sched_dequeue() unlinks and frees a task under, so it is the only thing keeping
+        //? the node this cursor is standing on from being handed back to the heap.
         cpu_foreach(cpu) {
 
-            task_t* tmp;
-            for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+            scoped_lock(&cpu->sched_lock) {
 
-                if (tmp->tid != pid)
-                    continue;
+                task_t* tmp;
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                if (!(tmp->euid == current_task->euid || tmp->uid == current_task->euid))
-                    return -EPERM;
+                    if (tmp->tid != pid)
+                        continue;
+
+                    if (!(tmp->euid == current_task->euid || tmp->uid == current_task->euid))
+                        return -EPERM;
 
 
-                CPU_ZERO(&tmp->affinity);
-                CPU_OR(&tmp->affinity, &tmp->affinity, &user_mask);
+                    CPU_ZERO(&tmp->affinity);
+                    CPU_OR(&tmp->affinity, &tmp->affinity, &user_mask);
 
-                return CPU_SETSIZE;
+                    return CPU_SETSIZE;
+                }
             }
         }
 

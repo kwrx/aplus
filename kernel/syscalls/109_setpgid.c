@@ -51,39 +51,65 @@
 SYSCALL(
     109, setpgid, long sys_setpgid(pid_t pid, pid_t pgid) {
 
-        task_t* target = NULL;
+        /* Nothing here holds on to a task_t across a lock. A pointer read out of a run queue
+           is only good for as long as that queue's sched_lock is held -- sched_dequeue()
+           unlinks and frees under it -- so each step looks the task up again, under the lock,
+           and takes away only the fields it needs.
 
-        if(likely(pid == 0)) {
-            target = current_task;
+           The caller itself is the exception, and needs no lookup: it is running. */
+
+        pid_t target_tid = 0;
+        pid_t target_sid = 0;
+
+        bool found = false;
+        bool owned = false;
+
+
+        if (likely(pid == 0)) {
+
+            target_tid = current_task->tid;
+            target_sid = current_task->sid;
+
+            found = owned = true;
+
         } else {
-            cpu_foreach(cpu) {
 
-                task_t* tmp;
-                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-                    if (tmp->tid == pid) {
-                        target = tmp;
+            cpu_foreach_if(cpu, !found) {
+
+                scoped_lock(&cpu->sched_lock) {
+
+                    for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                        if (tmp->tid != pid)
+                            continue;
+
+                        target_tid = tmp->tid;
+                        target_sid = tmp->sid;
+
+                        //? Read here rather than kept as a pointer to compare later: by then
+                        //? the parent may have been reaped and the memory reused.
+                        owned = (tmp->parent == current_task);
+                        found = true;
+
                         break;
                     }
                 }
-
-                if (target)
-                    break;
             }
         }
 
-        if (unlikely(!target))
+        if (unlikely(!found))
             return -ESRCH;
 
         // caller may change only itself or its children
-        if (unlikely(target != current_task && target->parent != current_task))
+        if (unlikely(!owned))
             return -ESRCH;
 
         // calling process and target must be in the same session
-        if (unlikely(target->sid != current_task->sid))
+        if (unlikely(target_sid != current_task->sid))
             return -EPERM;
 
         // target must not be a session leader
-        if (unlikely(target->tid == target->sid))
+        if (unlikely(target_tid == target_sid))
             return -EPERM;
 
         // pgid must be >= 0
@@ -93,35 +119,75 @@ SYSCALL(
         // if pgid is 0, set it to target's pid
         // else, check that pgid belongs to the same session
         if (pgid == 0) {
-            pgid = target->tid;
-        } else if(pgid != target->tid) {
-            task_t* pgid_task = NULL;
 
-            cpu_foreach(cpu) {
+            pgid = target_tid;
 
-                task_t* tmp;
-                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
-                    if (tmp->tid == pgid) {
-                        pgid_task = tmp;
+        } else if (pgid != target_tid) {
+
+            bool same_session = false;
+            bool pgid_found   = false;
+
+            cpu_foreach_if(cpu, !pgid_found) {
+
+                scoped_lock(&cpu->sched_lock) {
+
+                    for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                        if (tmp->tid != pgid)
+                            continue;
+
+                        same_session = (tmp->sid == target_sid);
+                        pgid_found   = true;
+
                         break;
                     }
                 }
-
-                if (pgid_task)
-                    break;
             }
 
-            if (unlikely(!pgid_task))
+            if (unlikely(!pgid_found))
                 return -EPERM;
 
-            if (unlikely(pgid_task->sid != target->sid))
+            if (unlikely(!same_session))
                 return -EPERM;
-
         }
 
-        scoped_lock(&target->lock) {
-            target->pgrp = pgid;
+
+        if (likely(pid == 0)) {
+
+            scoped_lock(&current_task->lock) {
+                current_task->pgrp = pgid;
+            }
+
+            return 0;
         }
+
+
+        bool applied = false;
+
+        cpu_foreach_if(cpu, !applied) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->tid != pid)
+                        continue;
+
+                    //? sched_lock before task->lock, the order every walker here takes them in.
+                    scoped_lock(&tmp->lock) {
+                        tmp->pgrp = pgid;
+                    }
+
+                    applied = true;
+
+                    break;
+                }
+            }
+        }
+
+        //? Gone between the checks above and here: it exited and was reaped.
+        if (unlikely(!applied))
+            return -ESRCH;
 
         return 0;
     });

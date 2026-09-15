@@ -135,30 +135,37 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     size_t wok = 0;
 
 
+    //? cpu->sched_lock before task->lock, and always in cpu_foreach order, which is the
+    //? order every other walker here takes them in. Without the outer lock a reaper on
+    //? another CPU can free a task mid-walk -- sched_dequeue() unlinks and destroys under
+    //? exactly this lock -- and `tmp->next` then reads memory that is back on the heap.
     cpu_foreach (cpu) {
 
-        task_t* tmp;
-        for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
+        scoped_lock(&cpu->sched_lock) {
 
-            scoped_lock(&tmp->lock) {
+            task_t* tmp;
+            for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-                list_each(tmp->futexes, i) {
+                scoped_lock(&tmp->lock) {
 
-                    if (likely(i->address != kaddr))
-                        continue;
+                    list_each(tmp->futexes, i) {
+
+                        if (likely(i->address != kaddr))
+                            continue;
 
 
 #if DEBUG_LEVEL_TRACE
-                    kprintf("futex: woke up pid(%d) kaddr(%p)\n", tmp->tid, kaddr);
+                        kprintf("futex: woke up pid(%d) kaddr(%p)\n", tmp->tid, kaddr);
 #endif
 
 
-                    i->address = 0;
-                    i->value   = ~0;
+                        i->address = 0;
+                        i->value   = ~0;
 
-                    max--;
-                    wok++;
-                    break;
+                        max--;
+                        wok++;
+                        break;
+                    }
                 }
             }
         }
@@ -181,28 +188,32 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
     size_t req = 0;
 
 
+    //? Same ordering as futex_wakeup(): the run queue first, then the task.
     cpu_foreach (cpu) {
 
-        task_t* tmp;
-        for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
+        scoped_lock(&cpu->sched_lock) {
 
-            scoped_lock(&tmp->lock) {
+            task_t* tmp;
+            for (tmp = cpu->sched_queue; tmp && max; tmp = tmp->next) {
 
-                list_each(tmp->futexes, i) {
+                scoped_lock(&tmp->lock) {
 
-                    if (likely(i->address != kaddr))
-                        continue;
+                    list_each(tmp->futexes, i) {
+
+                        if (likely(i->address != kaddr))
+                            continue;
 
 
 #if DEBUG_LEVEL_TRACE
-                    kprintf("futex: requeue pid(%d) from kaddr(%p) to kaddr2(%p)\n", tmp->tid, kaddr, kaddr2);
+                        kprintf("futex: requeue pid(%d) from kaddr(%p) to kaddr2(%p)\n", tmp->tid, kaddr, kaddr2);
 #endif
 
-                    i->address = kaddr2;
+                        i->address = kaddr2;
 
-                    max--;
-                    req++;
-                    break;
+                        max--;
+                        req++;
+                        break;
+                    }
                 }
             }
         }

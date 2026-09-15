@@ -73,28 +73,40 @@ SYSCALL(
 
         cpu_set_t __safe_mask_ptr;
 
-        cpu_foreach(cpu) {
+        bool found = false;
 
-            for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        //? Every walk of a run queue is held under that CPU's sched_lock: it is the lock
+        //? sched_dequeue() unlinks and frees a task under, so it is the only thing keeping
+        //? the node this cursor is standing on from being handed back to the heap.
+        cpu_foreach_if(cpu, !found) {
 
-                if (tmp->tid != pid)
-                    continue;
+            scoped_lock(&cpu->sched_lock) {
 
-                if (!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
-                    return -EPERM;
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->tid != pid)
+                        continue;
+
+                    if (!(tmp->euid == current_task->euid || tmp->euid == current_task->uid))
+                        return -EPERM;
 
 
-                uio_memcpy_u2s(&__safe_mask_ptr, user_mask_ptr, sizeof(cpu_set_t));
+                    CPU_ZERO(&__safe_mask_ptr);
+                    CPU_OR(&__safe_mask_ptr, &__safe_mask_ptr, &tmp->affinity);
 
-                CPU_ZERO(&__safe_mask_ptr);
-                CPU_OR(&__safe_mask_ptr, &__safe_mask_ptr, &tmp->affinity);
-
-                uio_memcpy_s2u(user_mask_ptr, &__safe_mask_ptr, sizeof(cpu_set_t));
-
-                return CPU_SETSIZE;
+                    found = true;
+                    break;
+                }
             }
         }
 
 
-        return -ESRCH;
+        if (!found)
+            return -ESRCH;
+
+        //? Copied out after the queue lock is down: this writes to user memory, which can
+        //? fault, and a run queue is not something to be holding when it does.
+        uio_memcpy_s2u(user_mask_ptr, &__safe_mask_ptr, sizeof(cpu_set_t));
+
+        return CPU_SETSIZE;
     });

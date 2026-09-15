@@ -54,13 +54,19 @@ SYSCALL(
         if (pid == 0)
             return current_task->pgrp;
 
+        //? Every walk of a run queue is held under that CPU's sched_lock: it is the lock
+        //? sched_dequeue() unlinks and frees a task under, so it is the only thing keeping
+        //? the node this cursor is standing on from being handed back to the heap.
         cpu_foreach(cpu) {
 
-            task_t* tmp;
-            for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+            scoped_lock(&cpu->sched_lock) {
 
-                if (tmp->tid == pid)
-                    return tmp->pgrp;
+                task_t* tmp;
+                for (tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->tid == pid)
+                        return tmp->pgrp;
+                }
             }
         }
 
