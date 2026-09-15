@@ -33,4 +33,5 @@ aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
 
 # gl-gears
 # gl-shaders-triangle
+# gl-shaders-scene
 
