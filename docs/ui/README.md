@@ -15,18 +15,23 @@ the layer that fits and never has to see the other.
           │   <aplus/ui-widgets.h> │                        │  <aplus/ui.h>
           └────────────────── libui (-lui) ─────────────────┘
                                    │
-                    AF_UNIX  /tmp/aplus-wm.sock
+          control:  AF_UNIX /tmp/aplus-wm.sock
+          pixels:   System V shared memory, one segment per window
                                    │
                                 aplus-wm
                                    │
               /dev/fb0   /dev/kbd   /dev/mouse   /dev/tablet
 ```
 
+A window's pixels never go down the socket. The server creates a shared memory segment per
+window and both ends map it, so a client draws into the very memory the compositor reads and a
+commit is a damage rectangle rather than a frame.
+
 ## The two layers
 
 | | header | what it gives you | what it costs |
 |---|---|---|---|
-| **Surface layer** | `<aplus/ui.h>` | A connection, a window, a `uint32_t*` you write pixels into, damage tracking, commits, and an event queue. | You draw everything, including text. |
+| **Surface layer** | `<aplus/ui.h>` | A connection, a window, a shared `uint32_t*` you write pixels into, damage tracking, commits, and an event queue. | You draw everything, including text. |
 | **Widget layer** | `<aplus/ui-widgets.h>` | A view over that surface, a themed panel/label/button set, a grid, hit testing, damage tracking per widget, and an event loop. | Cairo and FreeType get linked in. |
 
 The widget layer is built on the public surface API and nothing else, so the two mix
@@ -45,7 +50,7 @@ inside them.
 | `lib/aplus/ui/include/aplus/ui.h` | Surface API and the wire protocol, shared with the server |
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
-| `lib/aplus/ui/ui_window.c` | Window creation, resize, damage, commit banding |
+| `lib/aplus/ui/ui_window.c` | Window creation, the shared surface, resize, damage, commits |
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |
@@ -129,6 +134,13 @@ bindings are worth knowing:
 
 For a headless run with the console log captured, `./makew run-headless`.
 
+`ui-test` is the smoke test for the pair of them: it opens a window, paints a gradient and
+prints every event, so a window that appears and reports keys means the protocol works.
+`ui-test --once` paints one frame and exits, which is what makes the surface lifecycle
+drivable from a script — every window costs a shared memory segment that both ends have to let
+go of, and `SHM_SEGMENT_MAX` is 64, so a loop of a hundred that still creates its hundredth
+window is a lifecycle with no leak in it.
+
 ## Documentation map
 
 **Tutorials**
@@ -145,10 +157,10 @@ For a headless run with the console log captured, `./makew run-headless`.
 - [Widgets](widgets.md) — the view, the widget set, hit testing, damage and the frame
   lifecycle.
 - [Theming](theming.md) — the colour roles, the default dark scheme, and writing your own.
-- [Window and event API](window-api.md) — the surface layer in full: pixels, damage,
-  commits, configure serials, and the event queue.
-- [Wire protocol](protocol.md) — the bytes on the socket, for anyone writing a second
-  client library or a second server.
+- [Window and event API](window-api.md) — the surface layer in full: the shared pixels and
+  their stride, damage, commits, configure serials, and the event queue.
+- [Wire protocol](protocol.md) — the bytes on the socket and the shared memory behind them,
+  for anyone writing a second client library or a second server.
 
 ## What is not here
 
