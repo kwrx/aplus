@@ -21,9 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/mount.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -48,62 +49,53 @@ static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    static char buffer[8192] = {0};
 
+    procfs_buf_t b = procfs_scratch();
 
-    *size = snprintf(buffer, sizeof(buffer),
-                "MemTotal:      %lu kB\n"
-                "MemFree:       %lu kB\n"
-                "MemAvailable:  %lu kB\n"
-                "Buffers:       %lu kB\n"
-                "Cached:        %lu kB\n"
-                "SwapCached:    %lu kB\n"
-                "Active:        %lu kB\n"
-                "Inactive:      %lu kB\n"
-                "Active(anon)   %lu kB\n"
-                "Inactive(anon) %lu kB\n"
-                "Active(file)   %lu kB\n"
-                "Inactive(file) %lu kB\n"
-                "SwapTotal:     %lu kB\n"
-                "SwapFree:      %lu kB\n"
-                "Dirty:         %lu kB\n"
-                "Writeback:     %lu kB\n"
-                "AnonPages:     %lu kB\n"
-                "Mapped:        %lu kB\n"
-                "Shmem:         %lu kB\n"
-                "Slab:          %lu kB\n"
-                "SReclaimable:  %lu kB\n"
-                "SUnreclaim:    %lu kB\n"
-                "KernelStack:   %lu kB\n"
-                "PageTables:    %lu kB\n",
+    //? Sampled once each: pmm_get_used_memory() sums the whole page-usage table under a
+    //? lock, and this used to call it three times per read.
+    uint64_t total = pmm_get_total_memory();
+    uint64_t used  = pmm_get_used_memory();
+    uint64_t slab  = kheap_get_used_memory();
 
-                (pmm_get_total_memory()) >> 10,
-                (pmm_get_total_memory() - pmm_get_used_memory()) >> 10,
-                (pmm_get_total_memory() - pmm_get_used_memory()) >> 10,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                0L,
-                kheap_get_used_memory() >> 10,
-                0L,
-                0L,
-                0L,
-                0L
-            );
+    uint64_t free = (total > used) ? (total - used) : 0;
 
-    *buf = buffer;
+    /* Every key carries its colon. Active(anon), Inactive(anon), Active(file) and
+       Inactive(file) were written without one, which breaks any reader splitting on ":"
+       -- and free(1) is exactly such a reader. */
+    procfs_bprintf(&b, "MemTotal:       %lu kB\n", total >> 10);
+    procfs_bprintf(&b, "MemFree:        %lu kB\n", free >> 10);
+
+    //? Identical to MemFree by definition here: there is no reclaimable page cache to add.
+    procfs_bprintf(&b, "MemAvailable:   %lu kB\n", free >> 10);
+
+    procfs_bprintf(&b, "Buffers:        0 kB\n");
+    procfs_bprintf(&b, "Cached:         0 kB\n");
+    procfs_bprintf(&b, "SwapCached:     0 kB\n");
+    procfs_bprintf(&b, "Active:         0 kB\n");
+    procfs_bprintf(&b, "Inactive:       0 kB\n");
+    procfs_bprintf(&b, "Active(anon):   0 kB\n");
+    procfs_bprintf(&b, "Inactive(anon): 0 kB\n");
+    procfs_bprintf(&b, "Active(file):   0 kB\n");
+    procfs_bprintf(&b, "Inactive(file): 0 kB\n");
+
+    //? No swap support, so these are structurally zero rather than unknown.
+    procfs_bprintf(&b, "SwapTotal:      0 kB\n");
+    procfs_bprintf(&b, "SwapFree:       0 kB\n");
+
+    procfs_bprintf(&b, "Dirty:          0 kB\n");
+    procfs_bprintf(&b, "Writeback:      0 kB\n");
+    procfs_bprintf(&b, "AnonPages:      0 kB\n");
+    procfs_bprintf(&b, "Mapped:         0 kB\n");
+    procfs_bprintf(&b, "Shmem:          0 kB\n");
+    procfs_bprintf(&b, "Slab:           %lu kB\n", slab >> 10);
+    procfs_bprintf(&b, "SReclaimable:   0 kB\n");
+    procfs_bprintf(&b, "SUnreclaim:     %lu kB\n", slab >> 10);
+    procfs_bprintf(&b, "KernelStack:    0 kB\n");
+    procfs_bprintf(&b, "PageTables:     0 kB\n");
+
+    *buf  = b.data;
+    *size = b.length;
 
     return 0;
 }
@@ -113,7 +105,8 @@ inode_t* procfs_service_meminfo_inode(inode_t* parent) {
     static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "meminfo", S_IFREG | 0666, procfs_service_meminfo_fetch, NULL);
+        inode      = procfs_service_inode(parent, "meminfo", S_IFREG | 0444, procfs_service_meminfo_fetch, NULL);
+        inode->ino = PROCFS_INO_STATIC(2);
     }
 
     return inode;

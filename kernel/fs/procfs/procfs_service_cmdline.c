@@ -21,9 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/mount.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -37,7 +38,15 @@
 #include "procfs.h"
 
 
+/**
+ * @brief /proc/cmdline -- the kernel boot command line.
+ *
+ * Per-pid command lines are a different file with a different backing store.
+ * @see procfs_pid_fetch_cmdline().
+ */
 static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
+
+    (void)arg;
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
@@ -47,35 +56,27 @@ static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size
     DEBUG_ASSERT(size);
 
 
-    pid_t pid = (pid_t)((uintptr_t)arg);
+    procfs_buf_t b = procfs_scratch();
 
-
-    if (pid < 0) {
-
-        *buf  = core->boot.cmdline;
-        *size = strlen(core->boot.cmdline);
-
-    } else {
-
-        task_t* k = procfs_service_pid_to_task(pid);
-
-        if (!k) {
-            return errno = ESRCH, -1;
-        }
-
-        // TODO: /proc/[pid]/cmdline
-        return errno = ENOSYS, -1;
+    //? An empty boot cmdline yields an empty file, which is a legal answer -- it used to
+    //? trip an assert that halted a debug kernel.
+    if (likely(core->boot.cmdline)) {
+        procfs_bputs(&b, core->boot.cmdline, strlen(core->boot.cmdline));
     }
+
+    *buf  = b.data;
+    *size = b.length;
 
     return 0;
 }
 
-inode_t* procfs_service_cmdline_inode(inode_t* parent, pid_t pid) {
+inode_t* procfs_service_cmdline_inode(inode_t* parent) {
 
     static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "cmdline", S_IFREG | 0666, procfs_service_cmdline_fetch, (void*)((uintptr_t)pid));
+        inode      = procfs_service_inode(parent, "cmdline", S_IFREG | 0444, procfs_service_cmdline_fetch, NULL);
+        inode->ino = PROCFS_INO_STATIC(6);
     }
 
     return inode;

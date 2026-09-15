@@ -21,9 +21,11 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
+#include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/mount.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -32,76 +34,121 @@
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 #include "procfs.h"
 
 
+/* The contents of /proc, other than the per-pid directories. One table drives both
+   finddir() and readdir(): they were a strcmp() chain and a separate hardcoded macro list
+   before, and had already drifted -- "self" was advertised as a directory by one and
+   created as a symlink by the other. */
+const procfs_root_entry_t procfs_root_table[] = {
+    {"self",        S_IFLNK | 0777, 1, DT_LNK},
+    {"meminfo",     S_IFREG | 0444, 2, DT_REG},
+    {"uptime",      S_IFREG | 0444, 3, DT_REG},
+    {"version",     S_IFREG | 0444, 4, DT_REG},
+    {"filesystems", S_IFREG | 0444, 5, DT_REG},
+    {"cmdline",     S_IFREG | 0444, 6, DT_REG},
+    {"stat",        S_IFREG | 0444, 7, DT_REG},
+    {"cpuinfo",     S_IFREG | 0444, 8, DT_REG},
+    {"loadavg",     S_IFREG | 0444, 9, DT_REG},
+};
+
+const size_t procfs_root_entries = sizeof(procfs_root_table) / sizeof(procfs_root_table[0]);
+
+
+/**
+ * @brief List /proc.
+ *
+ * The fixed entries come first and the pids after them. The order matters: readdir() is
+ * called once per entry with an ordinal, and when the pids came first a fork or exit
+ * between two calls shifted every later position -- which silently dropped "." and ".."
+ * off the end of a listing.
+ */
 ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
     DEBUG_ASSERT(inode->sb->root == inode);
-
     DEBUG_ASSERT(e);
 
     if (unlikely(count == 0))
         return 0;
 
+    if (unlikely(pos < 0))
+        return errno = EINVAL, -1;
+
 
     size_t i = 0;
 
-    cpu_foreach(cpu) {
-
-        for (task_t* q = cpu->sched_queue; q; q = q->next) {
-
-            if (pos-- > 0)
-                continue;
-
-            e[i].d_ino    = q->tid;
-            e[i].d_off    = i;
-            e[i].d_reclen = sizeof(struct dirent);
-            e[i].d_type   = DT_DIR;
-
-            snprintf(e[i].d_name, sizeof(e[i].d_name), "%d", q->tid);
-
-            if (++i == count)
-                return i;
-        }
-    }
-
-
-#define __readdir(ino, type, name)                       \
-    do {                                                 \
-                                                         \
-        if (pos-- > 0)                                   \
-            break;                                       \
-                                                         \
-        e[i].d_ino    = ino;                             \
-        e[i].d_off    = i;                               \
-        e[i].d_reclen = sizeof(struct dirent);           \
-        e[i].d_type   = type;                            \
-                                                         \
-        strncpy(e[i].d_name, name, sizeof(e[i].d_name)); \
-                                                         \
-        if (++i == count)                                \
-            return i;                                    \
-                                                         \
+#define __emit(_ino, _type, _name)                          \
+    do {                                                    \
+                                                            \
+        if (pos-- > 0)                                      \
+            break;                                          \
+                                                            \
+        e[i].d_ino  = (_ino);                               \
+        e[i].d_off  = (off_t)(i);                           \
+        e[i].d_type = (_type);                              \
+                                                            \
+        strncpy(e[i].d_name, (_name), sizeof(e[i].d_name)); \
+        e[i].d_name[sizeof(e[i].d_name) - 1] = '\0';        \
+                                                            \
+        e[i].d_reclen = sizeof(struct dirent);              \
+                                                            \
+        if (++i == count)                                   \
+            return (ssize_t)i;                              \
+                                                            \
     } while (0)
 
 
-    __readdir(1, DT_DIR, ".");
-    __readdir(2, DT_DIR, "..");
-    __readdir(3, DT_DIR, "self");
-    // __readdir(4, DT_REG, "cpuinfo");
-    __readdir(4, DT_REG, "meminfo");
-    __readdir(5, DT_REG, "uptime");
-    __readdir(6, DT_REG, "version");
-    // __readdir(7, DT_REG, "modules");
-    // __readdir(8, DT_REG, "mounts");
-    __readdir(9, DT_REG, "filesystems");
-    __readdir(10, DT_REG, "cmdline");
+    __emit(PROCFS_INO_ROOT, DT_DIR, ".");
+    __emit(PROCFS_INO_ROOT, DT_DIR, "..");
 
-    return i;
+    for (size_t j = 0; j < procfs_root_entries; j++) {
+        __emit(PROCFS_INO_STATIC(procfs_root_table[j].slot), procfs_root_table[j].type, procfs_root_table[j].name);
+    }
+
+
+    if (pos < 0)
+        return (ssize_t)i;
+
+
+    /* Taken in one locked pass rather than by re-walking the run queues per call, which was
+       both O(n^2) over a listing and a use-after-free against a concurrent reaper. */
+    size_t max = sched_nprocs() + 32;
+
+    pid_t* ids = (pid_t*)kcalloc(max, sizeof(pid_t), GFP_KERNEL);
+
+    if (unlikely(!ids))
+        return (ssize_t)i;
+
+    size_t n = procfs_task_list(ids, max);
+
+
+    for (size_t j = 0; j < n; j++) {
+
+        if (pos-- > 0)
+            continue;
+
+        e[i].d_ino  = PROCFS_INO_PID(ids[j]);
+        e[i].d_off  = (off_t)(i);
+        e[i].d_type = DT_DIR;
+
+        snprintf(e[i].d_name, sizeof(e[i].d_name), "%d", ids[j]);
+
+        e[i].d_reclen = sizeof(struct dirent);
+
+        if (++i == count)
+            break;
+    }
+
+#undef __emit
+
+    kfree(ids);
+
+    return (ssize_t)i;
 }

@@ -48,19 +48,16 @@ static int procfs_service_version_fetch(inode_t* inode, char** buf, size_t* size
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    static char buffer[64] = {0};
+    procfs_buf_t b = procfs_scratch();
 
+    /* Rendered into the shared scratch buffer rather than a 64-byte static. The text is
+       around 64 characters, and the old vsnprintf() wrote its terminator one past the end
+       of a full buffer and returned a length that included it -- so reading this file
+       copied a byte of whatever followed the array out to userspace. */
+    procfs_bprintf(&b, "%s version %s-%s (%s %s) %s\n", CONFIG_SYSTEM_NAME, CONFIG_SYSTEM_VERSION, CONFIG_SYSTEM_CODENAME, CONFIG_COMPILER_HOST, __VERSION__, __TIMESTAMP__);
 
-    *size = snprintf(buffer, sizeof(buffer), "%s version %s-%s (%s %s) %s\n", 
-        CONFIG_SYSTEM_NAME, 
-        CONFIG_SYSTEM_VERSION, 
-        CONFIG_SYSTEM_CODENAME, 
-        CONFIG_COMPILER_HOST,
-        __VERSION__, 
-        __TIMESTAMP__
-    );
-
-    *buf = buffer;
+    *buf  = b.data;
+    *size = b.length;
 
     return 0;
 }
@@ -70,7 +67,8 @@ inode_t* procfs_service_version_inode(inode_t* parent) {
     static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "version", S_IFREG | 0666, procfs_service_version_fetch, NULL);
+        inode      = procfs_service_inode(parent, "version", S_IFREG | 0444, procfs_service_version_fetch, NULL);
+        inode->ino = PROCFS_INO_STATIC(4);
     }
 
     return inode;
