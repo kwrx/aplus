@@ -54,7 +54,12 @@
    fields it needs, the parent among them, since by the end it may have been reaped and its
    memory reused. The caller itself is the exception and needs no lookup: it is running.
    Locks nest sched_lock then task->lock, the order every walker here takes them in, and a
-   target that has gone between the checks and the write has exited and been reaped. */
+   target that has gone between the checks and the write has exited and been reaped.
+
+   The checks are POSIX's: a caller may change only itself or one of its children, the two must
+   be in the same session, the target must not be a session leader, and pgid must not be
+   negative. A pgid of zero means the target's own pid; any other must already belong to the
+   same session. */
 
 SYSCALL(
     109, setpgid, long sys_setpgid(pid_t pid, pid_t pgid) {
@@ -99,24 +104,18 @@ SYSCALL(
         if (unlikely(!found))
             return -ESRCH;
 
-        // caller may change only itself or its children
         if (unlikely(!owned))
             return -ESRCH;
 
-        // calling process and target must be in the same session
         if (unlikely(target_sid != current_task->sid))
             return -EPERM;
 
-        // target must not be a session leader
         if (unlikely(target_tid == target_sid))
             return -EPERM;
 
-        // pgid must be >= 0
         if (unlikely(pgid < 0))
             return -EINVAL;
 
-        // if pgid is 0, set it to target's pid
-        // else, check that pgid belongs to the same session
         if (pgid == 0) {
 
             pgid = target_tid;
