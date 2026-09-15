@@ -213,20 +213,26 @@ uint64_t arch_timer_percpu_getres(void) {
 }
 
 
+/* The HPET is only mapped once timer_init() has parsed its ACPI table, and the counter
+   register lives at hpet_address + 0xF0 -- so a caller that runs earlier faults on the
+   literal address 0xF0 rather than reading a clock. Anything asking the time before there
+   is one gets zero. */
+#define HPET_READY() (likely(hpet_address != 0))
+
 uint64_t arch_timer_generic_getticks(void) {
-    return mmio_r64(HPET_GENERAL_COUNTER);
+    return HPET_READY() ? mmio_r64(HPET_GENERAL_COUNTER) : 0;
 }
 
 uint64_t arch_timer_generic_getns(void) {
-    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000);
+    return HPET_READY() ? timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000) : 0;
 }
 
 uint64_t arch_timer_generic_getus(void) {
-    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000);
+    return HPET_READY() ? timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000) : 0;
 }
 
 uint64_t arch_timer_generic_getms(void) {
-    return timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000000);
+    return HPET_READY() ? timer_scale(mmio_r64(HPET_GENERAL_COUNTER), hpet_period, 1000000000000) : 0;
 }
 
 uint64_t arch_timer_generic_getres(void) {
