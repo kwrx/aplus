@@ -79,18 +79,18 @@
 #define WM_COLOR_CLOSE_OVER 0.839, 0.271, 0.302
 #define WM_COLOR_CLOSE_DOWN 0.651, 0.184, 0.212
 
+//* The cursor theme. Every shape is a webp image with straight alpha, which is what the
+//* hardware cursor plane takes as it is and what cairo composites once premultiplied. The
+//* size limit is both what the plane on this hardware will hold and a bound on what a theme
+//* file is allowed to claim to be; the images that ship here are 32x32.
+
+#define WM_CURSOR_PATH     "/usr/share/cursors"
+#define WM_CURSOR_MAX_SIZE 64
+
+//* The arrow drawn by hand, for when the theme is missing entirely.
+
 #define WM_CURSOR_WIDTH  10
 #define WM_CURSOR_HEIGHT 16
-
-//* The pointer as an image for the hardware cursor plane. It is the same arrow the software
-//* path draws, with a margin around it because the outline is stroked with a pen centred on
-//* the path and so reaches half a pixel outside the shape on every side. The hotspot is the
-//* tip, which is where that margin puts it.
-
-#define WM_CURSOR_IMAGE_WIDTH  16
-#define WM_CURSOR_IMAGE_HEIGHT 20
-#define WM_CURSOR_HOT_X        2
-#define WM_CURSOR_HOT_Y        2
 
 //* The close button, at the right end of the titlebar. It is hit-tested ahead of the
 //* resize grips, which otherwise claim the top row of it from the north-east corner.
@@ -106,6 +106,26 @@
 #define WM_MOD_CTRL  (1 << 1)
 #define WM_MOD_ALT   (1 << 2)
 #define WM_MOD_SUPER (1 << 3)
+
+
+//* The shapes the server puts under the pointer. Each one names a file in the cursor theme,
+//* and what picks between them is the region the pointer is over: the resize shapes are the
+//* only thing that tells an edge that resizes sideways from one that resizes diagonally,
+//* since the two look exactly alike.
+
+typedef enum {
+
+    WM_CURSOR_ARROW = 0,
+    WM_CURSOR_HAND,
+    WM_CURSOR_SIZE_ALL,
+    WM_CURSOR_SIZE_HOR,
+    WM_CURSOR_SIZE_VER,
+    WM_CURSOR_SIZE_FDIAG,
+    WM_CURSOR_SIZE_BDIAG,
+
+    WM_CURSOR_COUNT,
+
+} wm_cursor_shape_t;
 
 
 typedef struct {
@@ -284,6 +304,14 @@ int wm_display_open(wm_display_t* display, const char* device);
 void wm_display_close(wm_display_t* display);
 void wm_display_flush(wm_display_t* display, const wm_rect_t* rect);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
+int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y);
+
+//* cursor.c
+void wm_cursor_set(wm_cursor_shape_t shape);
+int wm_cursor_upload(void);
+wm_rect_t wm_cursor_rect(void);
+void wm_cursor_paint(cairo_t* cr, double x, double y);
+void wm_cursor_fini(void);
 
 //* input.c
 int wm_input_open(void);
@@ -326,7 +354,5 @@ int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, siz
 //* main.c
 void wm_damage(const wm_rect_t* rect);
 void wm_damage_window(const wm_window_t* win);
-wm_rect_t wm_cursor_rect(void);
-void wm_cursor_paint(cairo_t* cr, double x, double y);
 
 #endif

@@ -123,48 +123,6 @@ void wm_damage_window(const wm_window_t* win) {
 }
 
 
-/* The outline is stroked with a one pixel pen centred on the path, so it reaches half a
-   pixel outside the arrow on every side. Repainting only the arrow's own box left that
-   half pixel behind, and the cursor drew a trail across the screen as it moved. */
-wm_rect_t wm_cursor_rect(void) {
-
-    wm_rect_t r = {
-
-        .x      = wm.pointer.x - 2,
-        .y      = wm.pointer.y - 2,
-        .width  = WM_CURSOR_WIDTH + 4,
-        .height = WM_CURSOR_HEIGHT + 4,
-    };
-
-    return r;
-}
-
-
-/* The arrow, with its tip at (x, y). Shared with the hardware cursor plane, which needs the
-   same shape drawn once into an image rather than into every frame. */
-void wm_cursor_paint(cairo_t* cr, double x, double y) {
-
-    cairo_save(cr);
-
-    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-
-    cairo_move_to(cr, x, y);
-    cairo_line_to(cr, x, y + WM_CURSOR_HEIGHT);
-    cairo_line_to(cr, x + 4, y + WM_CURSOR_HEIGHT - 4);
-    cairo_line_to(cr, x + WM_CURSOR_WIDTH, y + WM_CURSOR_HEIGHT - 4);
-    cairo_close_path(cr);
-
-    cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-    cairo_fill_preserve(cr);
-
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-    cairo_set_line_width(cr, 1.0);
-    cairo_stroke(cr);
-
-    cairo_restore(cr);
-}
-
-
 static void wm_composite(void) {
 
     if (!wm.damage.valid) {
@@ -520,6 +478,7 @@ int main(int argc, char** argv) {
 
     wm_input_close();
     wm_font_fini();
+    wm_cursor_fini();
     wm_display_close(&wm.display);
 
     close(listener);
