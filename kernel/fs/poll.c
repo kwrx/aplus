@@ -415,6 +415,11 @@ int poll_timeout_timeval(const struct timeval* tvp, uint64_t* timeout_ns) {
 /**
  * @brief Ask every descriptor in a pollfd array whether it is ready, writing the answers back.
  *
+ * uio_check() validates one address rather than a range, so every entry is checked as it is
+ * reached. revents is output only, per POSIX, so whatever the caller left in it is discarded
+ * rather than merged into the answer; a negative fd is how callers park a slot they are not
+ * interested in for now, and is skipped rather than refused.
+ *
  * @param ufds  Caller's descriptor array, in user memory.
  * @param nfds  Number of entries in @p ufds.
  *
@@ -428,19 +433,13 @@ static long __poll_scan_pollfd(struct pollfd* ufds, unsigned int nfds) {
 
         struct pollfd pfd;
 
-        //? uio_check() validates one address, not a range, so every entry has
-        //? to be checked as it is reached.
         if (unlikely(!uio_check(&ufds[i], R_OK | W_OK)))
             return -EFAULT;
 
         uio_memcpy_u2s(&pfd, &ufds[i], sizeof(struct pollfd));
 
-        //? POSIX: revents is output only, so whatever the caller left in it is
-        //? discarded rather than merged into the answer.
         pfd.revents = 0;
 
-        //? A negative fd is how callers park a slot they are not interested in
-        //? for now; it is skipped, not an error.
         if (pfd.fd >= 0) {
 
             int err;
@@ -461,6 +460,13 @@ static long __poll_scan_pollfd(struct pollfd* ufds, unsigned int nfds) {
 
 /**
  * @brief The body behind poll() and ppoll().
+ *
+ * The descriptors are asked a second time once the interest has been registered, and that
+ * pass is not wasted: one that became ready between the first scan and the arming bumped its
+ * counter before futex_wait() sampled it, so the sample already holds the bump and nothing
+ * will ever move the word again. The task would sleep on an event that has already happened,
+ * with the data it was waiting for sitting in the buffer. Anything arriving after the arming
+ * moves the word past the sample and wakes it.
  *
  * @param ufds          Caller's descriptor array, in user memory.
  * @param nfds          Number of entries in @p ufds.
@@ -531,12 +537,6 @@ long poll_wait_pollfd(struct pollfd* ufds, unsigned int nfds, uint64_t timeout_n
     }
 
 
-    /* Asked again now that the interest is registered, and this is not a wasted pass. A
-       descriptor that became ready between the scan above and the arming just done bumped
-       its counter before futex_wait() sampled it, so the sample already holds the bump and
-       nothing will ever move the word again -- the task would sleep on an event that has
-       already happened, with the data it was waiting for sitting in the buffer. Anything
-       arriving from here on moves the word past the sample and wakes it. */
     if ((ready = __poll_scan_pollfd(ufds, nfds)) != 0)
         return ready;
 
@@ -594,12 +594,16 @@ static int poll_fdset_put(fd_set* uset, size_t words, const unsigned long* kset)
 /**
  * @brief Ask every descriptor in select()'s three sets whether it is ready.
  *
+ * select() has nowhere to report a bad descriptor per entry the way poll() does with
+ * POLLNVAL, so one fails the whole call instead.
+ *
  * @param n                 One past the highest descriptor to look at.
  * @param in, out, ex       The sets the caller asked about.
  * @param rin, rout, rex    Receive the descriptors that are ready in each set.
  *
- * @return The number of ready bits -- a descriptor ready for two sets counts twice, since
- *         that is what select() returns -- or a negative error number.
+ * @return The number of ready bits -- a descriptor ready for two of the three sets counts
+ *         twice, since select() returns a number of ready bits rather than of descriptors --
+ *         or a negative error number.
  */
 static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned long* out, const unsigned long* ex, unsigned long* rin, unsigned long* rout, unsigned long* rex) {
 
@@ -628,14 +632,10 @@ static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned lon
         if ((err = poll_scan(fd, events, &revents)) < 0)
             return err;
 
-        //? select() has nowhere to report a bad descriptor per entry the way
-        //? poll() does with POLLNVAL, so it fails the whole call instead.
         if (revents & POLLNVAL)
             return -EBADF;
 
 
-        //? A descriptor ready for two of the three sets is counted twice: the
-        //? return value is a number of ready bits, not of descriptors.
         if ((revents & POLL_SET_IN) && POLL_FDSET_ISSET(fd, in))
             POLL_FDSET_SET(fd, rin), ready++;
 
@@ -656,6 +656,9 @@ static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned lon
  * The caller's sets are left untouched unless the call is really returning: they
  * are both input and output, and a restart after a sleep re-reads them, so an
  * answer written early would be mistaken for the question on the next attempt.
+ *
+ * As in poll_wait_pollfd(), the descriptors are asked once more after the interest has been
+ * registered, so that one becoming ready in between is reported rather than slept through.
  *
  * @param n             One past the highest descriptor to look at.
  * @param inp           Descriptors to watch for reading, or NULL.
@@ -777,9 +780,6 @@ wait:
     }
 
 
-    //? Asked again now that the interest is registered; see poll_wait_pollfd() for why a
-    //? descriptor that became ready between the scan and the arming would otherwise be
-    //? slept through rather than reported.
     if ((ready = __poll_scan_fdset(n, in, out, ex, rin, rout, rex)) < 0)
         return ready;
 

@@ -382,7 +382,8 @@ void schedule(int resched) {
  *
  * The caller must hold @p cpu's sched_lock -- which is also what makes the task safe to
  * touch at all, since this is the only place a task leaves a queue and sched_dequeue()
- * destroys it immediately afterwards.
+ * destroys it immediately afterwards. The walk carries the node itself as its cursor, so
+ * that unlinking the tail is told apart from running off the end.
  *
  * @param cpu   The CPU whose queue to search.
  * @param task  The task to remove.
@@ -403,10 +404,6 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 
         task_t* tmp = cpu->sched_queue;
 
-        //? Walked with the node itself as the cursor rather than its successor: testing
-        //? tmp->next after the loop cannot tell "found it, and it was last" from "ran off
-        //? the end", so unlinking the tail used to report failure -- leaving the task off
-        //? every queue and never freed.
         for (; tmp && tmp->next != task; tmp = tmp->next) {
             ;
         }
@@ -431,6 +428,8 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
  *
  * Only meaningful for a task that has already been unlinked from every run queue: nothing
  * can select it again from there, so once a CPU has moved off it, it stays off it.
+ * sched_running is read under each CPU's queue lock, which is what schedule() updates it
+ * under.
  *
  * @param task  The task to wait for.
  */
@@ -445,7 +444,6 @@ static void __sched_wait_quiesced(const task_t* task) {
 
         cpu_foreach(cpu) {
 
-            //? Read under the queue lock, because that is what schedule() updates it under.
             scoped_lock(&cpu->sched_lock) {
                 running |= (cpu->sched_running == task);
             }
@@ -505,9 +503,17 @@ void sched_enqueue(task_t* task) {
 }
 
 /**
- * @brief Dequeues a task from its assigned CPU
+ * @brief Dequeues a task from its assigned CPU and destroys it.
  *
- * This function removes the task from the queue of the CPU it is assigned to.
+ * Only the caller that actually unlinks the task destroys it, so two threads of the same
+ * process reaping the same zombie at once free it once between them.
+ *
+ * A zombie becomes reapable before the CPU it died on has finished with it -- sys_exit()
+ * still has the rest of its own syscall to return through, on the kernel stack freed here
+ * -- so the task is unlinked, waited out, and only then destroyed. The destruction is
+ * deliberately outside the queue lock: it frees the kernel stack and the task itself,
+ * which takes locks of its own, and by then nothing can reach the task to need protecting
+ * from it.
  *
  * @param task The task to be dequeued
  */
@@ -526,35 +532,30 @@ void sched_dequeue(task_t* task) {
     kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
 
-    //? Only whoever actually unlinked it frees it. Two threads of the same process can
-    //? wait4() the same zombie at once, and both used to reach this with the task already
-    //? gone from the queue; the second free was of memory the first had handed back.
     if (!found) {
         return;
     }
 
-    //? A zombie is reapable before the CPU it died on has finished with it: sys_exit()
-    //? still has the rest of its own syscall to return through, and it is doing that on
-    //? the kernel stack about to be freed here. Unlinking it above means no CPU can pick
-    //? it up again, so this only has to outlast the one that is already on it.
     __sched_wait_quiesced(task);
 
-    //? Outside the lock on purpose: arch_task_destroy() frees the kernel stack and the
-    //? task itself, which takes locks of its own. Nothing can reach the task by now -- it
-    //? is off every queue and off every CPU -- so there is nothing left to protect it from.
     arch_task_destroy(task);
 }
 
 
+/**
+ * @brief Moves a task to the front of the queue it is already on.
+ *
+ * The unlink and the relink share one critical section: between the two the task belongs to
+ * no queue at all, and that is exactly when the CPU owning the queue may be walking it.
+ *
+ * @param task The task to be requeued
+ */
 void sched_requeue(task_t* task) {
 
     bool found = false;
 
     cpu_foreach_if(cpu, !found) {
 
-        /* Unlink and relink in one critical section. Splitting them left the task belonging
-           to no queue at all for the gap in between, which is exactly when the CPU that owns
-           the queue walks it. */
         scoped_lock(&cpu->sched_lock) {
 
             if ((found = __sched_unlink(cpu, task))) {
@@ -588,6 +589,11 @@ void sched_requeue(task_t* task) {
 //? sentinel is why they have to be signed: pgrp used to be a gid_t, which is unsigned, so the -1
 //? every caller passes arrived as a huge positive number, `pgrp > 0` was always true, and no task
 //? ever matched a process group. Nothing could be signalled at all.
+//?
+//? Each run queue is held for the whole of its walk, not merely to read the head:
+//? sched_dequeue() unlinks and then frees a task under that same lock, so without it a
+//? reaper on another CPU can hand a node back to the heap between one `tmp->next` and the
+//? next.
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
@@ -599,9 +605,6 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
     cpu_foreach(cpu) {
 
-        //? Held for the whole walk, not merely to read the head: sched_dequeue() unlinks and
-        //? then frees a task under this same lock, so without it a reaper on another CPU can
-        //? hand the node back to the heap between one `tmp->next` and the next.
         scoped_lock(&cpu->sched_lock) {
 
             for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
