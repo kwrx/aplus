@@ -50,9 +50,24 @@
  * server's: a virtio tablet and a PS/2 mouse can both be present while only one of them
  * is fed, and which one that is can change while the machine runs. Both are read and
  * their events merged, so the pointer follows whichever is talking.
+ *
+ * Those threads are the only concurrency in the server, and the socketpair is the only
+ * thing they share -- so it is the only thing that needs a lock. It is a stream, not a
+ * datagram queue: a write of one event_t is not promised to go out whole, and the kernel
+ * hands back a short count rather than finishing the job once the buffer is nearly full.
+ * Two threads pushing records into it therefore need two things that a bare write() does
+ * not give them. The record has to be completed before another thread starts one, or the
+ * two interleave; and a short read on the far end has to be carried over rather than
+ * treated as a truncated event. Without either, one split record shifts the stream by a
+ * few bytes and every event after it is read out of the middle of two others -- which
+ * looks exactly like the input devices having gone mad, and never recovers.
  */
 
 static int input_pipe[2] = {-1, -1};
+
+//? Held for one whole record, so that what the main loop reads back is a sequence of
+//? events rather than a splice of two of them.
+static pthread_mutex_t input_pipe_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static struct {
 
@@ -71,6 +86,48 @@ static struct {
 };
 
 
+/* One whole event_t onto the pipe, or a failure. The loop is what makes a short write a
+   delay rather than a lost thread: the old code took anything but the full count as the
+   pipe having gone away and returned, which silently retired that device for the rest of
+   the session -- and left the bytes it did manage to write in the stream. */
+static int input_forward(const event_t* ev) {
+
+    const uint8_t* data = (const uint8_t*)ev;
+
+    size_t left = sizeof(*ev);
+
+    int e = 0;
+
+
+    pthread_mutex_lock(&input_pipe_lock);
+
+    while (left > 0) {
+
+        ssize_t n = write(input_pipe[1], data, left);
+
+        if (n > 0) {
+
+            data += n;
+            left -= (size_t)n;
+
+            continue;
+        }
+
+        if (n < 0 && errno == EINTR) {
+            continue;
+        }
+
+        e = -1;
+
+        break;
+    }
+
+    pthread_mutex_unlock(&input_pipe_lock);
+
+    return e;
+}
+
+
 static void* input_thread(void* arg) {
 
     int fd = *(int*)arg;
@@ -83,7 +140,7 @@ static void* input_thread(void* arg) {
 
         if (e == (ssize_t)sizeof(ev)) {
 
-            if (write(input_pipe[1], &ev, sizeof(ev)) != (ssize_t)sizeof(ev)) {
+            if (input_forward(&ev) < 0) {
                 break;
             }
 
@@ -541,16 +598,7 @@ static void input_pointer_moved(const wm_rect_t* old) {
 }
 
 
-int wm_input_dispatch(int fd) {
-
-    event_t ev;
-
-    ssize_t e = read(fd, &ev, sizeof(ev));
-
-    if (e != (ssize_t)sizeof(ev)) {
-        return e < 0 && errno == EINTR ? 0 : -1;
-    }
-
+static void input_handle_event(const event_t ev) {
 
     switch (ev.ev_type) {
 
@@ -613,6 +661,49 @@ int wm_input_dispatch(int fd) {
 
         default:
             break;
+    }
+}
+
+
+/* Drain whatever the pipe has and act on every whole event in it.
+ *
+ * The pipe is a stream, so a read is not a record: POLLIN fires on a single byte, and what
+ * comes back can be several events, or one and a piece of the next. Anything left over is
+ * kept for the next wakeup rather than dropped -- treating a partial read as a truncated
+ * event is what turned one split write into a permanently misaligned stream, where every
+ * event afterwards was assembled out of the tail of one and the head of another. */
+int wm_input_dispatch(int fd) {
+
+    static uint8_t pending[sizeof(event_t) * 64];
+    static size_t held = 0;
+
+    ssize_t e = read(fd, pending + held, sizeof(pending) - held);
+
+    if (e <= 0) {
+        return e < 0 && errno == EINTR ? 0 : -1;
+    }
+
+    held += (size_t)e;
+
+
+    size_t offset = 0;
+
+    for (; held - offset >= sizeof(event_t); offset += sizeof(event_t)) {
+
+        event_t ev;
+
+        //? Copied out rather than cast in place: event_t is packed, and the buffer only
+        //? happens to be aligned while nothing has been carried over.
+        memcpy(&ev, pending + offset, sizeof(ev));
+
+        input_handle_event(ev);
+    }
+
+    if (offset) {
+
+        held -= offset;
+
+        memmove(pending, pending + offset, held);
     }
 
     return 0;

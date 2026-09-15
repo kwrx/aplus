@@ -24,6 +24,7 @@
  */
 
 #include <signal.h>
+#include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -312,7 +313,14 @@ void schedule(int resched) {
 #define UPDATE_CLOCK(task, type, delta)                      \
     {                                                        \
         if (task->clock[type].tv_nsec + delta > 999999999) { \
-            task->clock[type].tv_nsec = delta;               \
+            /* Carry the remainder. This used to assign the  \
+               delta over the accumulated value and then     \
+               subtract a whole second from it, which threw  \
+               away the nanoseconds already banked and left  \
+               tv_nsec negative for any delta below a second \
+               -- i.e. always. Every CPU time this kernel    \
+               reported was that negative value. */          \
+            task->clock[type].tv_nsec +=  delta;             \
             task->clock[type].tv_nsec -= 1000000000;         \
             task->clock[type].tv_sec += 1;                   \
         } else {                                             \
@@ -370,6 +378,91 @@ void schedule(int resched) {
 
 
 /**
+ * @brief Unlink a task from one CPU's run queue.
+ *
+ * The caller must hold @p cpu's sched_lock -- which is also what makes the task safe to
+ * touch at all, since this is the only place a task leaves a queue and sched_dequeue()
+ * destroys it immediately afterwards.
+ *
+ * @param cpu   The CPU whose queue to search.
+ * @param task  The task to remove.
+ *
+ * @return true if the task was on this queue and has been removed.
+ */
+static bool __sched_unlink(cpu_t* cpu, task_t* task) {
+
+    DEBUG_ASSERT(cpu);
+    DEBUG_ASSERT(task);
+
+
+    if (task == cpu->sched_queue) {
+
+        cpu->sched_queue = task->next;
+
+    } else {
+
+        task_t* tmp = cpu->sched_queue;
+
+        //? Walked with the node itself as the cursor rather than its successor: testing
+        //? tmp->next after the loop cannot tell "found it, and it was last" from "ran off
+        //? the end", so unlinking the tail used to report failure -- leaving the task off
+        //? every queue and never freed.
+        for (; tmp && tmp->next != task; tmp = tmp->next) {
+            ;
+        }
+
+        if (!tmp) {
+            return false;
+        }
+
+        tmp->next = task->next;
+    }
+
+    task->next = NULL;
+
+    cpu->sched_count--;
+
+    return true;
+}
+
+
+/**
+ * @brief Wait until no CPU is running the given task any more.
+ *
+ * Only meaningful for a task that has already been unlinked from every run queue: nothing
+ * can select it again from there, so once a CPU has moved off it, it stays off it.
+ *
+ * @param task  The task to wait for.
+ */
+static void __sched_wait_quiesced(const task_t* task) {
+
+    DEBUG_ASSERT(task);
+
+
+    for (;;) {
+
+        bool running = false;
+
+        cpu_foreach(cpu) {
+
+            //? Read under the queue lock, because that is what schedule() updates it under.
+            scoped_lock(&cpu->sched_lock) {
+                running |= (cpu->sched_running == task);
+            }
+        }
+
+        if (!running) {
+            return;
+        }
+
+#if defined(__i386__) || defined(__x86_64__)
+        __builtin_ia32_pause();
+#endif
+    }
+}
+
+
+/**
  * @brief Enqueues a task to a CPU with the least number of tasks
  *
  * This function schedules the task to a CPU with the least number of tasks.
@@ -420,40 +513,12 @@ void sched_enqueue(task_t* task) {
  */
 void sched_dequeue(task_t* task) {
 
-    int found = 0;
+    bool found = false;
 
     cpu_foreach_if(cpu, !found) {
 
-        found = 1;
-
         scoped_lock(&cpu->sched_lock) {
-            if (task == cpu->sched_queue) {
-
-                cpu->sched_queue = task->next;
-
-            } else {
-
-                task_t* tmp;
-
-                for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
-
-                    if (tmp->next != task) {
-                        continue;
-                    }
-
-                    tmp->next = task->next;
-                    break;
-                }
-
-                if (unlikely(!tmp->next)) {
-                    found = 0;
-                }
-            }
-        }
-
-        if (found) {
-            cpu->sched_count--;
-            break;
+            found = __sched_unlink(cpu, task);
         }
     }
 
@@ -461,62 +526,54 @@ void sched_dequeue(task_t* task) {
     kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
 #endif
 
-    if (found) {
-        arch_task_destroy(task);
+    //? Only whoever actually unlinked it frees it. Two threads of the same process can
+    //? wait4() the same zombie at once, and both used to reach this with the task already
+    //? gone from the queue; the second free was of memory the first had handed back.
+    if (!found) {
+        return;
     }
+
+    //? A zombie is reapable before the CPU it died on has finished with it: sys_exit()
+    //? still has the rest of its own syscall to return through, and it is doing that on
+    //? the kernel stack about to be freed here. Unlinking it above means no CPU can pick
+    //? it up again, so this only has to outlast the one that is already on it.
+    __sched_wait_quiesced(task);
+
+    //? Outside the lock on purpose: arch_task_destroy() frees the kernel stack and the
+    //? task itself, which takes locks of its own. Nothing can reach the task by now -- it
+    //? is off every queue and off every CPU -- so there is nothing left to protect it from.
+    arch_task_destroy(task);
 }
 
 
 void sched_requeue(task_t* task) {
 
-    int found = 0;
+    bool found = false;
 
     cpu_foreach_if(cpu, !found) {
 
-        found = 1;
-
+        /* Unlink and relink in one critical section. Splitting them left the task belonging
+           to no queue at all for the gap in between, which is exactly when the CPU that owns
+           the queue walks it. */
         scoped_lock(&cpu->sched_lock) {
 
-            if (task == cpu->sched_queue) {
+            if ((found = __sched_unlink(cpu, task))) {
 
-                cpu->sched_queue = task->next;
+                if (cpu->sched_running != task) {
 
-            } else {
+                    task->next = cpu->sched_running->next;
 
-                task_t* tmp;
+                    cpu->sched_running->next = task;
 
-                for (tmp = cpu->sched_queue; tmp->next; tmp = tmp->next) {
+                } else {
 
-                    if (tmp->next != task) {
-                        continue;
-                    }
+                    task->next = cpu->sched_queue;
 
-                    tmp->next = task->next;
-                    break;
+                    cpu->sched_queue = task;
                 }
 
-                if (unlikely(!tmp->next)) {
-                    found = 0;
-                }
+                cpu->sched_count++;
             }
-        }
-
-        if (found) {
-
-            if (cpu->sched_running != task) {
-
-                task->next = cpu->sched_running->next;
-
-                cpu->sched_running->next = task;
-
-            } else {
-
-                task->next = cpu->sched_queue;
-
-                cpu->sched_queue = task;
-            }
-
-            break;
         }
     }
 
@@ -542,9 +599,14 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
     cpu_foreach(cpu) {
 
-        for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+        //? Held for the whole walk, not merely to read the head: sched_dequeue() unlinks and
+        //? then frees a task under this same lock, so without it a reaper on another CPU can
+        //? hand the node back to the heap between one `tmp->next` and the next.
+        scoped_lock(&cpu->sched_lock) {
 
-            if (pgrp > 0 && tmp->pgrp != pgrp) {
+            for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                if (pgrp > 0 && tmp->pgrp != pgrp) {
                 continue;
             }
 
@@ -610,17 +672,18 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
             siginfo->si_signo = sig;
 
 
-            shared_ptr_access(tmp->sighand, sighand, {
-                //? A blocked signal waits, whatever its action says. SA_NODEFER used to send it
-                //? through anyway, but that flag decides the mask a handler runs under -- whether
-                //? the signal is added on entry to its own handler -- and says nothing about
-                //? whether sigprocmask() may hold it back. Honouring it here delivered signals
-                //? their own thread had explicitly blocked.
-                if (unlikely(!unstoppable && sigset_is_member(&sighand->sigmask, sig)))
-                    queue_enqueue(&tmp->sigpending, siginfo, 0);
-                else
-                    queue_enqueue(&tmp->sigqueue, siginfo, 0);
-            });
+                shared_ptr_access(tmp->sighand, sighand, {
+                    //? A blocked signal waits, whatever its action says. SA_NODEFER used to send it
+                    //? through anyway, but that flag decides the mask a handler runs under -- whether
+                    //? the signal is added on entry to its own handler -- and says nothing about
+                    //? whether sigprocmask() may hold it back. Honouring it here delivered signals
+                    //? their own thread had explicitly blocked.
+                    if (unlikely(!unstoppable && sigset_is_member(&sighand->sigmask, sig)))
+                        queue_enqueue(&tmp->sigpending, siginfo, 0);
+                    else
+                        queue_enqueue(&tmp->sigqueue, siginfo, 0);
+                });
+            }
         }
     }
 
@@ -640,9 +703,26 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
  *
  * @return The next unique process ID
  */
+//? Atomic because two CPUs allocate from it at once. A plain ++ is a load, an add and a
+//? store, so two concurrent fork()s used to hand out the same number -- and a duplicated
+//? tid is not merely a cosmetic problem: spinlock_get_new_owner() identifies the holder of
+//? a task-owned spinlock by tid, so the twin on the other CPU is taken for the owner and
+//? either walks into the critical section or panics with a DEADLOCK that is not one.
+static atomic_int __sched_lastpid = 0;
+
 pid_t sched_nextpid(void) {
-    static pid_t p = 0;
-    return ++p;
+    return (pid_t)(atomic_fetch_add(&__sched_lastpid, 1) + 1);
+}
+
+/**
+ * @brief Returns the most recently allocated process ID, without allocating one.
+ *
+ * Reported by /proc/loadavg as its last-pid field.
+ *
+ * @return The last process ID handed out by sched_nextpid()
+ */
+pid_t sched_lastpid(void) {
+    return (pid_t)atomic_load(&__sched_lastpid);
 }
 
 /**

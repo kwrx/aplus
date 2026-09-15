@@ -66,7 +66,12 @@ SYSCALL(
 #endif
 
 
-        current_task->status = (WIFSTOPPED(current_task->exit.value)) ? TASK_STATUS_STOP : TASK_STATUS_ZOMBIE;
+        /* Worked out now, published at the very end. A ZOMBIE is reapable the instant another
+           CPU sees it: sched_dequeue() frees the task_t and the kernel stack this call is
+           running on, so setting the status before the teardown below handed a parent on
+           another CPU the memory this code was still using. It showed up as a shell faulting
+           in fd_remove() on a descriptor table that had just been handed back to the heap. */
+        const long exit_status = (WIFSTOPPED(current_task->exit.value)) ? TASK_STATUS_STOP : TASK_STATUS_ZOMBIE;
 
 
         // TODO: implements signal
@@ -82,19 +87,7 @@ SYSCALL(
 
 
 
-        list_each(current_task->wait_queue, q) {
-
-            if (current_task->status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
-                continue;
-
-#if DEBUG_LEVEL_TRACE
-            kprintf("exit: waking up waiter task(%d) for task(%d)\n", q->tid, current_task->tid);
-#endif
-            thread_wake(q);
-        }
-
-
-        if (current_task->status != TASK_STATUS_STOP) {
+        if (exit_status != TASK_STATUS_STOP) {
 
             shared_ptr_free_with_dtor(current_task->fd, fds, {
                 for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
@@ -115,12 +108,38 @@ SYSCALL(
 
             arch_vmm_free_address_space(current_task->address_space);
 
+            /* A task stays on the run queue as a ZOMBIE until someone reaps it, so everything
+               freed just above outlives its own pointers -- and a reader walking the queue
+               (ps, via /proc) finds them still set and follows them into freed memory.
+               shared_ptr_free() does not clear the caller's variable, so clear them here and
+               let shared_ptr_nullable_access() do the rest. */
+            current_task->fd            = NULL;
+            current_task->fs            = NULL;
+            current_task->sighand       = NULL;
+            current_task->address_space = NULL;
+
             //? Nothing left to borrow, so let a parent parked in vfork() go. A
             //? task that only stopped is skipped along with the teardown above:
             //? it can still be continued and is still holding the loan.
             do_vfork_release();
         }
 
+
+        //? Only now, with nothing of this task's left to tear down, does it become something
+        //? another CPU may reap. Waking the waiters afterwards keeps the same order: a parent
+        //? released here finds a status that is already final.
+        current_task->status = exit_status;
+
+        list_each(current_task->wait_queue, q) {
+
+            if (exit_status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
+                continue;
+
+#if DEBUG_LEVEL_TRACE
+            kprintf("exit: waking up waiter task(%d) for task(%d)\n", q->tid, current_task->tid);
+#endif
+            thread_wake(q);
+        }
 
 
         thread_restart_sched(current_task);
