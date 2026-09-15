@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-readonly IMAGE_SIZE=2147483648
+readonly IMAGE_SIZE=4294967296
 readonly EFI_START_SECTOR=2048
 readonly EFI_END_SECTOR=93716
 readonly EFI_SIZE=46934528
