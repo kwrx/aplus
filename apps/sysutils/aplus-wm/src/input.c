@@ -87,9 +87,9 @@ static struct {
 
 
 /* One whole event_t onto the pipe, or a failure. The loop is what makes a short write a
-   delay rather than a lost thread: the old code took anything but the full count as the
-   pipe having gone away and returned, which silently retired that device for the rest of
-   the session -- and left the bytes it did manage to write in the stream. */
+   delay rather than a lost thread: taking anything but the full count as the pipe having
+   gone away retires that device for the rest of the session, and leaves the bytes it did
+   manage to write in the stream. */
 static int input_forward(const event_t* ev) {
 
     const uint8_t* data = (const uint8_t*)ev;
@@ -671,7 +671,10 @@ static void input_handle_event(const event_t ev) {
  * comes back can be several events, or one and a piece of the next. Anything left over is
  * kept for the next wakeup rather than dropped -- treating a partial read as a truncated
  * event is what turned one split write into a permanently misaligned stream, where every
- * event afterwards was assembled out of the tail of one and the head of another. */
+ * event afterwards was assembled out of the tail of one and the head of another.
+ *
+ * Each event is copied out of the buffer rather than cast in place: event_t is packed, and
+ * the buffer only happens to be aligned while nothing has been carried over. */
 int wm_input_dispatch(int fd) {
 
     static uint8_t pending[sizeof(event_t) * 64];
@@ -692,8 +695,6 @@ int wm_input_dispatch(int fd) {
 
         event_t ev;
 
-        //? Copied out rather than cast in place: event_t is packed, and the buffer only
-        //? happens to be aligned while nothing has been carried over.
         memcpy(&ev, pending + offset, sizeof(ev));
 
         input_handle_event(ev);

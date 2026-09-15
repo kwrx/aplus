@@ -123,6 +123,20 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 }
 
 
+/**
+ * @brief Release up to @p max tasks parked on a futex word.
+ *
+ * Locks are taken cpu->sched_lock before task->lock, and the queues in cpu_foreach order,
+ * which is the order every other walker of a run queue here takes them in. Without the
+ * outer lock a reaper on another CPU can free a task mid-walk -- sched_dequeue() unlinks
+ * and destroys under exactly that lock -- and `tmp->next` then reads memory that is back on
+ * the heap.
+ *
+ * @param kaddr Futex word the tasks are parked on.
+ * @param max   Most tasks to release.
+ *
+ * @return How many were released.
+ */
 size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
     DEBUG_ASSERT(kaddr);
@@ -135,10 +149,6 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
     size_t wok = 0;
 
 
-    //? cpu->sched_lock before task->lock, and always in cpu_foreach order, which is the
-    //? order every other walker here takes them in. Without the outer lock a reaper on
-    //? another CPU can free a task mid-walk -- sched_dequeue() unlinks and destroys under
-    //? exactly this lock -- and `tmp->next` then reads memory that is back on the heap.
     cpu_foreach (cpu) {
 
         scoped_lock(&cpu->sched_lock) {
@@ -175,6 +185,17 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 }
 
 
+/**
+ * @brief Move up to @p max tasks from one futex word to another without waking them.
+ *
+ * Same locking as futex_wakeup(): the run queue first, then the task.
+ *
+ * @param kaddr     Futex word the tasks are parked on.
+ * @param kaddr2    Futex word to park them on instead.
+ * @param max       Most tasks to move.
+ *
+ * @return How many were moved.
+ */
 size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 
     DEBUG_ASSERT(kaddr);
@@ -188,7 +209,6 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
     size_t req = 0;
 
 
-    //? Same ordering as futex_wakeup(): the run queue first, then the task.
     cpu_foreach (cpu) {
 
         scoped_lock(&cpu->sched_lock) {

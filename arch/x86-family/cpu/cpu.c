@@ -457,6 +457,15 @@ __percpu void arch_cpu_init(cpuid_t index) {
 }
 
 
+/**
+ * @brief The id of the CPU this is running on.
+ *
+ * RDTSCP writes the counter into EDX:EAX as well as the processor id into ECX, and writing a
+ * 32-bit register clears the top half of the 64-bit one, so all three are declared. With only
+ * ECX named the compiler goes on believing whatever it had left in RAX and RDX is still there
+ * -- and this is reached from current_cpu and current_task, which is to say from nearly every
+ * line in the kernel.
+ */
 __percpu cpuid_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
@@ -465,11 +474,6 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
     #if defined(CONFIG_X86_HAVE_RDPID)
     __asm__ __volatile__("rdpid %0" : "=r"(id));
     #else
-    /* RDTSCP writes the counter into EDX:EAX as well as the processor id into ECX, and
-       writing a 32-bit register clears the top half of the 64-bit one. Both have to be
-       declared: with only ECX named, the compiler goes on believing whatever it had left in
-       RAX and RDX is still there, and this is reached from current_cpu and current_task --
-       which is to say from nearly every line in the kernel. */
     uint64_t tsc_lo, tsc_hi;
 
     __asm__ __volatile__("rdtscp" : "=a"(tsc_lo), "=d"(tsc_hi), "=c"(id));

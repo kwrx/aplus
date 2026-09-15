@@ -336,6 +336,17 @@ void arch_debug_putc(char ch) {
  *
  * Print stacktrace on Serial Port.
  */
+/**
+ * @brief Walk the frame pointer chain into @p frames.
+ *
+ * Frames are checked with S_OK as well as R_OK, because they are on a kernel stack and the
+ * plain check refuses a higher-half address whenever the task on the CPU is a userspace one
+ * -- which is to say on every panic worth reading. Without it the walk stops on its first
+ * frame and the trace comes out empty.
+ *
+ * @param frames    Receives the return addresses, zero-terminated.
+ * @param count     How many @p frames can hold.
+ */
 void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
 
 
@@ -370,10 +381,6 @@ void arch_debug_stacktrace(uintptr_t* frames, size_t count) {
         if (unlikely(address < stack_start || address > stack_end || sizeof(*frame) > stack_end - address || (address & (sizeof(uintptr_t) - 1))))
             break;
 
-        /* S_OK as well as R_OK, because the frames being walked are on a kernel stack and
-           the plain check refuses a higher-half address whenever the task on the CPU is a
-           userspace one -- which is to say on every panic worth reading. Without it the walk
-           stops on its first frame and every panic prints an empty stack trace. */
         if (unlikely(!uio_check(address, R_OK | S_OK) || !uio_check(address + sizeof(*frame) - 1, R_OK | S_OK)))
             break;
 
