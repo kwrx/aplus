@@ -32,6 +32,7 @@
 #include <aplus/hal.h>
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
+#include <aplus/shm.h>
 #include <aplus/smp.h>
 #include <aplus/task.h>
 
@@ -155,6 +156,16 @@ static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, 
 }
 
 
+/*!
+ * @brief __mm_copy_page().
+ *        Give the destination table its own entry for a leaf the source holds.
+ *
+ * A copy-on-write entry is duplicated as it stands and resolved by whichever side writes first.
+ * A shared entry is duplicated as it stands and never resolved at all: the frame belongs to a
+ * shared memory segment, and the whole point of the child inheriting it is that both address
+ * spaces go on seeing the same memory. Neither carries the ownership bit, so neither side ever
+ * frees the frame.
+ */
 static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int level, int flags) {
 
     DEBUG_ASSERT(__s);
@@ -172,7 +183,9 @@ static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int l
         if (flags & ARCH_VMM_CLONE_USERSPACE) {
 
 
-            if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+            const uint64_t type = *__s & X86_MMU_PG_AP_TP_MASK;
+
+            if (type == X86_MMU_PG_AP_TP_COW || type == X86_MMU_PG_AP_TP_SHARED) {
 
                 *__d = *__s;
 
@@ -245,6 +258,14 @@ static void __mm_free_data(x86_page_t* __s, int level) {
 }
 
 
+/*!
+ * @brief __mm_free_page().
+ *        Release a leaf's frame, if this address space is the one that owns it.
+ *
+ * A frame belonging to a shared memory segment is not, and outlives any one address space:
+ * arch_vmm_free_address_space() has already dropped this space's reference by the time the
+ * tables are walked, and the frames go back only once the last attachment anywhere is gone.
+ */
 static void __mm_free_page(x86_page_t* __s, int level) {
 
     DEBUG_ASSERT(__s);
@@ -256,11 +277,17 @@ static void __mm_free_page(x86_page_t* __s, int level) {
 
     } else {
 
-        if ((*__s & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW) {
+        const uint64_t type = *__s & X86_MMU_PG_AP_TP_MASK;
+
+        if (type == X86_MMU_PG_AP_TP_COW) {
 
             /* FIXME: a copy-on-write frame may still be referenced by another address space,
                and there is no per-frame reference count to tell, so it is deliberately leaked
                rather than risking a double free. Only reachable with CONFIG_DEMAND_PAGING. */
+            return;
+
+        } else if (type == X86_MMU_PG_AP_TP_SHARED) {
+
             return;
 
         } else {
@@ -315,6 +342,14 @@ static void __mm_free_table(uintptr_t __s, int level) {
 #endif
 
 
+/*!
+ * @brief arch_vmm_create_address_space().
+ *        Build an address space, either empty or cloned from @parent.
+ *
+ * __mm_copy_table() has already given a userspace clone the parent's shared memory entries by
+ * the time shm_address_space_clone() runs; that call is the other half of it, the bookkeeping
+ * that lets the child detach them and the reference that keeps each segment alive meanwhile.
+ */
 __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address_space_t* parent, int flags) {
 
     DEBUG_ASSERT(parent);
@@ -352,6 +387,8 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 
         memcpy(&dest->mmap.mappings, &parent->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
 
+        shm_address_space_clone(parent, dest);
+
     } else {
 
         dest->mmap.heap_start = parent->mmap.heap_start;
@@ -375,6 +412,13 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 }
 
 
+/*!
+ * @brief arch_vmm_free_address_space().
+ *        Drop a reference to an address space, tearing it down when it was the last.
+ *
+ * Shared memory segments go first. Nothing unmaps them -- the frames are not this space's to
+ * give back -- so all that is owed is the reference each attachment took.
+ */
 void arch_vmm_free_address_space(vmm_address_space_t* space) {
 
     DEBUG_ASSERT(space);
@@ -395,6 +439,9 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
         atomic_store(&space->refcount, 0);
         return;
     }
+
+
+    shm_address_space_release(space);
 
 
     /* Usually the caller is a task tearing down its own address space from exit(2), so the CPU
