@@ -31,129 +31,78 @@
 #include <sys/types.h>
 
 
-__nosanitize("undefined") static void dec(intmax_t __v, ssize_t padding, char* buf, size_t* offset, bool negative) {
+/* Every write goes through __emit(), which drops anything past the buffer while still
+   counting it. Before this, each conversion wrote straight into `buf` with only a
+   between-conversions bounds check, so a single %s or a wide number ran off the end --
+   /proc/version overflowed a 64-byte static array that way and handed the bytes after it
+   to userspace. `len` is the length the output *would* have had, which is what C says to
+   return, so callers can detect truncation with `ret >= size`. */
+struct __sbuf {
+    char* buf;
+    size_t size;
+    size_t len;
+};
+
+__nosanitize("undefined") static inline void __emit(struct __sbuf* s, char c) {
+
+    if (likely(s->len + 1 < s->size)) {
+        s->buf[s->len] = c;
+    }
+
+    s->len++;
+}
+
+__nosanitize("undefined") static void __emit_num(struct __sbuf* s, uintmax_t v, unsigned base, bool upper, ssize_t padding, bool negative) {
+
+    /* Widest case is a 64-bit value in octal: 22 digits. */
+    char tmp[24];
+    size_t n = 0;
+
+    do {
+
+        unsigned d = (unsigned)(v % base);
+
+        tmp[n++] = d < 10 ? (char)('0' + d) : (char)((upper ? 'A' : 'a') + (d - 10));
+
+        v /= base;
+
+    } while (v);
+
 
     if (negative) {
-
-        if (__v < 0LL) {
-
-            __v = -__v;
-
-            buf[*offset + 0] = '-';
-            buf[*offset + 1] = '\0';
-
-            *offset += 1;
-        }
+        __emit(s, '-');
     }
 
-
-    uintmax_t v = (uintmax_t)__v;
-
-    ssize_t digits   = 1;
-    ssize_t radix_10 = 9;
-
-    while (v > (uintmax_t)radix_10) {
-        digits++;
-        radix_10 = (radix_10 * 10) + 9;
+    for (ssize_t i = (ssize_t)n; i < padding; i++) {
+        __emit(s, '0');
     }
 
-
-    if (padding > digits) {
-
-        ssize_t i;
-
-        for (i = 0; i < (padding - digits); i++) {
-            buf[*offset + i] = '0';
-        }
-
-        buf[*offset + i] = '\0';
-
-        *offset += i;
+    while (n) {
+        __emit(s, tmp[--n]);
     }
-
-
-    for (size_t i = digits; i > 0; i--) {
-
-        buf[*offset + (i - 1)] = (v % 10) + '0';
-        v /= 10;
-    }
-
-    *offset += digits;
 }
 
 
+__nosanitize("undefined") static void dec(intmax_t __v, ssize_t padding, struct __sbuf* s, bool negative) {
 
-__nosanitize("undefined") static void hex(uintmax_t v, ssize_t padding, char* buf, size_t* offset, bool upper) {
+    bool neg = negative && __v < 0;
 
-    ssize_t digits   = 1;
-    ssize_t radix_16 = 15;
+    //? Negating INTMAX_MIN overflows, so take the magnitude in unsigned arithmetic.
+    uintmax_t v = neg ? ((uintmax_t)0 - (uintmax_t)__v) : (uintmax_t)__v;
 
-    while (v > (uintmax_t)radix_16) {
-        digits++;
-        radix_16 = (radix_16 * 16) + 15;
-    }
-
-    if (padding > digits) {
-
-        ssize_t i;
-
-        for (i = 0; i < (padding - digits); i++) {
-            buf[*offset + i] = '0';
-        }
-
-        buf[*offset + i] = '\0';
-
-        *offset += i;
-    }
-
-
-    for (size_t i = digits; i > 0; i--) {
-
-        uintmax_t digit = (v % 16);
-
-        if (digit < 10)
-            buf[*offset + (i - 1)] = digit + '0';
-        else
-            buf[*offset + (i - 1)] = (upper ? 'A' : 'a') + (digit - 10);
-
-        v /= 16;
-    }
-
-    *offset += digits;
+    __emit_num(s, v, 10, false, padding, neg);
 }
 
 
-__nosanitize("undefined") static void oct(uintmax_t v, ssize_t padding, char* buf, size_t* offset) {
+__nosanitize("undefined") static void hex(uintmax_t v, ssize_t padding, struct __sbuf* s, bool upper) {
 
-    ssize_t digits  = 1;
-    ssize_t radix_8 = 7;
-
-    while (v > (uintmax_t)radix_8) {
-        digits++;
-        radix_8 = (radix_8 * 8) + 7;
-    }
-
-    if (padding > digits) {
-
-        ssize_t i;
-
-        for (i = 0; i < (padding - digits); i++) {
-            buf[*offset + i] = '0';
-        }
-
-        buf[*offset + i] = '\0';
-
-        *offset += i;
-    }
+    __emit_num(s, v, 16, upper, padding, false);
+}
 
 
-    for (size_t i = digits; i > 0; i--) {
+__nosanitize("undefined") static void oct(uintmax_t v, ssize_t padding, struct __sbuf* s) {
 
-        buf[*offset + (i - 1)] = (v % 8) + '0';
-        v /= 8;
-    }
-
-    *offset += digits;
+    __emit_num(s, v, 8, false, padding, false);
 }
 
 __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt, va_list v) {
@@ -162,15 +111,12 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
     DEBUG_ASSERT(size);
     DEBUG_ASSERT(fmt);
 
-    size_t p = 0;
+    struct __sbuf __out = {.buf = buf, .size = size, .len = 0};
 
     for (; *fmt; fmt++) {
 
-        if (p > size - 1)
-            break;
-
         if (*fmt != '%') {
-            buf[p++] = *fmt;
+            __emit(&__out, *fmt);
             continue;
         }
 
@@ -292,17 +238,17 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
                     ssize_t i = 0;
 
                     for (char* s = va_arg(v, char*); s && *s && m--; s++, i++) {
-                        buf[p++] = *s;
+                        __emit(&__out, *s);
                     }
 
                     for (; i < w; i++) {
-                        buf[p++] = ' ';
+                        __emit(&__out, ' ');
                     }
 
                 } else {
 
                     for (char* s = va_arg(v, char*); s && *s && m--; s++) {
-                        buf[p++] = *s;
+                        __emit(&__out, *s);
                     }
                 }
 
@@ -310,7 +256,7 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
             case 'c':
 
-                buf[p++] = ((int8_t)va_arg(v, int));
+                __emit(&__out, ((int8_t)va_arg(v, int)));
                 break;
 
             case 'x':
@@ -318,16 +264,16 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
                 switch (l) {
                     case 1:
-                        hex((uintmax_t)((uint8_t)va_arg(v, int)), w, buf, &p, (*fmt == 'X'));
+                        hex((uintmax_t)((uint8_t)va_arg(v, int)), w, &__out, (*fmt == 'X'));
                         break;
                     case 2:
-                        hex((uintmax_t)((uint16_t)va_arg(v, int)), w, buf, &p, (*fmt == 'X'));
+                        hex((uintmax_t)((uint16_t)va_arg(v, int)), w, &__out, (*fmt == 'X'));
                         break;
                     case 4:
-                        hex((uintmax_t)((uint32_t)va_arg(v, int)), w, buf, &p, (*fmt == 'X'));
+                        hex((uintmax_t)((uint32_t)va_arg(v, int)), w, &__out, (*fmt == 'X'));
                         break;
                     case 8:
-                        hex((uintmax_t)((uint64_t)va_arg(v, int64_t)), w, buf, &p, (*fmt == 'X'));
+                        hex((uintmax_t)((uint64_t)va_arg(v, int64_t)), w, &__out, (*fmt == 'X'));
                         break;
                     default:
                         DEBUG_ASSERT(0);
@@ -340,16 +286,16 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
                 switch (l) {
                     case 1:
-                        oct((uintmax_t)((uint8_t)va_arg(v, int)), w, buf, &p);
+                        oct((uintmax_t)((uint8_t)va_arg(v, int)), w, &__out);
                         break;
                     case 2:
-                        oct((uintmax_t)((uint16_t)va_arg(v, int)), w, buf, &p);
+                        oct((uintmax_t)((uint16_t)va_arg(v, int)), w, &__out);
                         break;
                     case 4:
-                        oct((uintmax_t)((uint32_t)va_arg(v, int)), w, buf, &p);
+                        oct((uintmax_t)((uint32_t)va_arg(v, int)), w, &__out);
                         break;
                     case 8:
-                        oct((uintmax_t)((uint64_t)va_arg(v, int64_t)), w, buf, &p);
+                        oct((uintmax_t)((uint64_t)va_arg(v, int64_t)), w, &__out);
                         break;
                     default:
                         DEBUG_ASSERT(0);
@@ -377,17 +323,17 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
                     }
 
                     for (uint8_t* bytes = va_arg(v, void*); bytes && m--; bytes++) {
-                        hex(*bytes, 2, buf, &p, 1);
-                        buf[p++] = space;
+                        hex(*bytes, 2, &__out, 1);
+                        __emit(&__out, space);
                     }
 
                 } else {
 
                     fmt--;
 
-                    buf[p++] = '0';
-                    buf[p++] = 'x';
-                    hex((intmax_t)va_arg(v, void*), w, buf, &p, 1);
+                    __emit(&__out, '0');
+                    __emit(&__out, 'x');
+                    hex((intmax_t)va_arg(v, void*), w, &__out, 1);
                 }
 
                 break;
@@ -398,16 +344,16 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
                 switch (l) {
                     case 1:
-                        dec((intmax_t)((int8_t)va_arg(v, int)), w, buf, &p, *fmt != 'u');
+                        dec((intmax_t)((int8_t)va_arg(v, int)), w, &__out, *fmt != 'u');
                         break;
                     case 2:
-                        dec((intmax_t)((int16_t)va_arg(v, int)), w, buf, &p, *fmt != 'u');
+                        dec((intmax_t)((int16_t)va_arg(v, int)), w, &__out, *fmt != 'u');
                         break;
                     case 4:
-                        dec((intmax_t)((int32_t)va_arg(v, int)), w, buf, &p, *fmt != 'u');
+                        dec((intmax_t)((int32_t)va_arg(v, int)), w, &__out, *fmt != 'u');
                         break;
                     case 8:
-                        dec((intmax_t)((int64_t)va_arg(v, int64_t)), w, buf, &p, *fmt != 'u');
+                        dec((intmax_t)((int64_t)va_arg(v, int64_t)), w, &__out, *fmt != 'u');
                         break;
                     default:
                         DEBUG_ASSERT(0);
@@ -421,16 +367,16 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
                 switch (l) {
                     case 1:
-                        *((int8_t*)va_arg(v, int*)) = p;
+                        *((int8_t*)va_arg(v, int*)) = __out.len;
                         break;
                     case 2:
-                        *((int16_t*)va_arg(v, int*)) = p;
+                        *((int16_t*)va_arg(v, int*)) = __out.len;
                         break;
                     case 4:
-                        *((int32_t*)va_arg(v, int*)) = p;
+                        *((int32_t*)va_arg(v, int*)) = __out.len;
                         break;
                     case 8:
-                        *((int64_t*)va_arg(v, int64_t*)) = p;
+                        *((int64_t*)va_arg(v, int64_t*)) = __out.len;
                         break;
                     default:
                         DEBUG_ASSERT(0);
@@ -441,20 +387,25 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
 
             case '%':
 
-                buf[p++] = '%';
+                __emit(&__out, '%');
                 break;
 
             default:
 
                 kpanicf("vsnprintf: unsupported format specifier '%c'\n", *fmt);
 
-                buf[p++] = *fmt;
+                __emit(&__out, *fmt);
                 break;
         }
     }
 
-    buf[p++] = '\0';
+    /* At most size-1 characters are kept, so the terminator always lands inside the
+       buffer -- it used to be written at buf[p] with p already == size, one past the end. */
+    if (likely(size > 0)) {
+        buf[__out.len < size ? __out.len : size - 1] = '\0';
+    }
 
-
-    return p;
+    //? The length the output would have had, excluding the terminator, as C requires:
+    //? a caller detects truncation with `ret >= size`. It used to include the terminator.
+    return (int)__out.len;
 }
