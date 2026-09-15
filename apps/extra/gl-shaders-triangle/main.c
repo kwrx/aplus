@@ -30,9 +30,11 @@
     #include <errno.h>
     #include <math.h>
     #include <stdbool.h>
+    #include <stdint.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <time.h>
     #include <unistd.h>
 
     #include <GL/gl.h>
@@ -45,6 +47,8 @@
 
     #define TRIANGLE_DEFAULT_WIDTH  480
     #define TRIANGLE_DEFAULT_HEIGHT 360
+
+    #define TRIANGLE_FPS_INTERVAL_MS 1000
 
 
 
@@ -98,6 +102,46 @@ static int triangle_bind(OSMesaContext ctx, ui_window_t* win) {
     glViewport(0, 0, width, height);
 
     return 0;
+}
+
+
+static uint64_t now_ms(void) {
+
+    struct timespec ts;
+
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0) {
+        return 0;
+    }
+
+    return ((uint64_t)ts.tv_sec * 1000ULL) + ((uint64_t)ts.tv_nsec / 1000000ULL);
+}
+
+
+/* Report the frame rate once a second, and start a fresh interval when it does.
+ *
+ * Frames are counted between reports rather than timed one by one: a single frame is close
+ * enough to the clock's granularity that timing it says more about the clock than about the
+ * renderer, and the average over a second is the figure worth having. The division is by the
+ * interval actually measured, not by TRIANGLE_FPS_INTERVAL_MS, so a report that arrives late
+ * is still an honest rate rather than an inflated one.
+ *
+ * This window only redraws when it is mapped or resized, so the usual reading here is 0.00
+ * fps. That is the answer, not a missing one -- an idle window costs nothing to composite.
+ */
+
+static void triangle_fps_report(unsigned* frames, uint64_t* since) {
+
+    const uint64_t now     = now_ms();
+    const uint64_t elapsed = now - *since;
+
+    if (elapsed < TRIANGLE_FPS_INTERVAL_MS) {
+        return;
+    }
+
+    printf("gl-shaders-triangle: %.2f fps\n", (double)*frames * 1000.0 / (double)elapsed);
+
+    *frames = 0;
+    *since  = now;
 }
 
 
@@ -182,6 +226,9 @@ int main(int argc, char** argv) {
     bool running = true;
     bool redraw  = true;
 
+    unsigned fps_frames = 0;
+    uint64_t fps_since  = now_ms();
+
     while (running) {
 
         if (redraw) {
@@ -212,15 +259,25 @@ int main(int argc, char** argv) {
                 fprintf(stderr, "gl-shaders-triangle: ui_window_commit() failed: %s\n", strerror(errno));
                 break;
             }
+
+            fps_frames++;
         }
+
+
+        triangle_fps_report(&fps_frames, &fps_since);
 
 
         /* The picture does not move, so this waits rather than spinning: a frame is drawn
            when the window is first mapped and again whenever it is resized, and never
-           otherwise. */
+           otherwise. The wait is bounded rather than indefinite only so that the report
+           above keeps its schedule while nothing is happening; whatever is left of the
+           current interval is exactly how long there is to wait. */
         ui_event_t ev;
 
-        int e = ui_next_event(conn, &ev, -1);
+        const uint64_t elapsed = now_ms() - fps_since;
+        const int timeout      = elapsed >= TRIANGLE_FPS_INTERVAL_MS ? 0 : (int)(TRIANGLE_FPS_INTERVAL_MS - elapsed);
+
+        int e = ui_next_event(conn, &ev, timeout);
 
         if (e < 0) {
             fprintf(stderr, "gl-shaders-triangle: ui_next_event() failed: %s\n", strerror(errno));
