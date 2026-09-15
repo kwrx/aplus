@@ -270,7 +270,12 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         fpu_switch(prev->fpu, next->fpu);
 
-        if (unlikely(prev->address_space->pm != next->address_space->pm)) {
+        /* prev has no address space once it has exited -- sys_exit() frees it and clears
+           the pointer while the task stays on the run queue as a zombie, and switching away
+           from that task is precisely this call. Reading prev->address_space->pm here used
+           to be a use-after-free for the same reason; with nothing to compare against, just
+           load next's unconditionally. */
+        if (unlikely(!prev->address_space || prev->address_space->pm != next->address_space->pm)) {
             arch_task_switch_address_space(next->address_space);
         }
     }
