@@ -380,13 +380,21 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
     if (likely(inode->ops.creat)) {
 
         scoped_lock(&inode->lock) {
-            inode_t* r = NULL;
+
+            //? path_open() only calls creat() after a lookup missed, but that lookup ran
+            //? without this lock: another CPU can have created the same name in between.
+            //? Creating it again would leave the directory holding two entries for one name,
+            //? so adopt what is already there.
+            inode_t* r = vfs_dcache_find(inode, name);
+
+            if (unlikely(r))
+                return r;
+
 
             if ((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
-                if (likely(r->parent == inode)) {
-                    vfs_dcache_add(inode, r);
-                }
+                if (likely(r->parent == inode))
+                    r = vfs_dcache_add(inode, r);
             }
 
             return r;
@@ -433,11 +441,18 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
     if (likely(inode->ops.finddir)) {
 
         scoped_lock(&inode->lock) {
+
+            //? Probe again with the lock held: the miss above was taken without it, so
+            //? another CPU may have walked this same name and cached it since. Skipping this
+            //? lets both CPUs walk the filesystem and build an inode apiece for one file.
+            if ((r = vfs_dcache_find(inode, name)) != NULL)
+                return r;
+
+
             if ((r = inode->ops.finddir(inode, name)) != NULL) {
 
-                if (likely(r->parent == inode)) {
-                    vfs_dcache_add(inode, r);
-                }
+                if (likely(r->parent == inode))
+                    r = vfs_dcache_add(inode, r);
             }
         }
 
@@ -533,13 +548,12 @@ int vfs_unlink(inode_t* inode, const char* name) {
         int r = -1;
 
         scoped_lock(&inode->lock) {
-            if ((r = inode->ops.unlink(inode, name)) == 0) {
 
-                if (!(inode->flags & INODE_FLAGS_DCACHE_DISABLED)) {
-
-                    vfs_dcache_remove(inode, vfs_dcache_find(inode, name));
-                }
-            }
+            //? vfs_dcache_remove() both skips a parent that caches nothing and tolerates a
+            //? name that was never cached, which the lookup-and-pass-back this replaces did
+            //? not: it handed the NULL straight back to be dereferenced.
+            if ((r = inode->ops.unlink(inode, name)) == 0)
+                vfs_dcache_remove(inode, name);
         }
 
         return r;
