@@ -158,11 +158,22 @@ typedef struct wm_window {
     int width;
     int height;
 
-    //? Bumped on every resize. A commit stamped with an older serial describes a surface
-    //? that no longer exists and is dropped rather than clipped.
+    //? Bumped on every resize. A commit stamped with an older serial describes the surface
+    //? the window used to have and is dropped rather than read against the current one.
     uint32_t serial;
 
+    //? The window's surface, and the shared memory segment it lives in. The server creates
+    //? the segment and hands its id to the client, which maps the same frames and draws
+    //? straight into them -- so `backstore` is at once what the client paints and what
+    //? compositing reads, with no copy in between and nothing but a damage rectangle
+    //? travelling over the socket.
     cairo_surface_t* backstore;
+
+    int shm_id;
+    size_t shm_size;
+    int stride;
+
+    void* shm_addr;
 
     struct wm_window* next;
 
@@ -300,7 +311,7 @@ int wm_window_resize(wm_window_t* win, int width, int height);
 int wm_window_notify_configure(wm_window_t* win);
 void wm_window_paint(cairo_t* cr, wm_window_t* win);
 void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double height, double radius);
-int wm_window_blit(wm_window_t* win, int x, int y, int width, int height, const uint8_t* pixels);
+int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int height);
 int wm_font_init(void);
 void wm_font_fini(void);
 

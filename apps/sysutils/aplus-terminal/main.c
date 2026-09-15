@@ -157,15 +157,17 @@ static void show_version(int argc, char** argv) {
 
 /* One plot function now, not four: a window surface is always 32-bit, whatever depth the
    framebuffer underneath it happens to be. Converting to the display format is the
-   server's job, and the only place that has to know about it. */
+   server's job, and the only place that has to know about it.
+
+   Indexed by the surface's own stride rather than by a separately tracked resolution: the
+   framebuffer version used var.xres and ignored fix.line_length, which is only ever right when
+   the two happen to agree, and the surface is now memory the server laid out rather than memory
+   this process allocated. */
 static void win_plot(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
-    uint32_t* pixels = ui_window_pixels(context.win);
+    uint8_t* pixels = (uint8_t*)ui_window_pixels(context.win);
 
-    /* Indexing by the surface width rather than by a separately tracked resolution: the
-       framebuffer version used var.xres as the stride and ignored fix.line_length, which
-       is only ever right when the two happen to agree. */
-    pixels[((size_t)y * (size_t)ui_window_width(context.win)) + (size_t)x] = 0xFF000000 | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
+    *(uint32_t*)(pixels + ((size_t)y * ui_window_stride(context.win)) + ((size_t)x * sizeof(uint32_t))) = 0xFF000000 | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
 }
 
 

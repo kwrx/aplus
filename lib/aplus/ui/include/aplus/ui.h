@@ -38,7 +38,7 @@ extern "C" {
 //? tmpfs mounted by /etc/fstab.
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
-#define UI_PROTOCOL_VERSION 1
+#define UI_PROTOCOL_VERSION 2
 #define UI_TITLE_MAX        64
 
 
@@ -46,6 +46,10 @@ extern "C" {
 //*
 //* AF_UNIX is SOCK_STREAM only here -- there is no SOCK_SEQPACKET -- so every message
 //* carries its own length and both sides have to reassemble frames by hand.
+//*
+//* The socket carries control only. A window's pixels live in a System V shared memory
+//* segment that both ends map, so the largest thing that ever goes down the socket is a
+//* window title.
 
 #define UI_REQ_HELLO          0x0001
 #define UI_REQ_CREATE_WINDOW  0x0002
@@ -68,16 +72,10 @@ extern "C" {
 #define UI_EV_LEAVE 0x8007
 
 
-//? A socket buffer is CONFIG_PIPESIZ (65535) bytes and ringbuffer_write() only ever
-//? makes partial progress, so a frame larger than the buffer could never be written
-//? in one go. Commits are split into bands well under this; the cap is here so that
-//? a malformed length cannot make the peer allocate arbitrarily.
+//? Nothing in this protocol is large any more -- the biggest message is a title -- but a
+//? peer could still name any length it liked, and the cap is what stops that from becoming
+//? an arbitrary allocation.
 #define UI_MSG_PAYLOAD_MAX (32 * 1024)
-
-//? The largest run of pixels a single UI_REQ_COMMIT may carry. Keeping it to a
-//? quarter of the socket buffer means a commit always makes forward progress even
-//? when the peer is slow to drain.
-#define UI_COMMIT_BAND_MAX (16 * 1024)
 
 
 typedef struct {
@@ -105,13 +103,16 @@ typedef struct {
 } __attribute__((packed)) ui_msg_create_window_t;
 
 
+//* A commit carries no pixels. Both ends have the window's surface mapped, so the client has
+//* already written them; what the server is being told is which rectangle changed.
+
 typedef struct {
 
     uint32_t window_id;
 
     //? Echoed back from the last UI_EV_CONFIGURE the client drew against. The server
-    //? drops a commit whose serial is stale, which is what makes a resize that races
-    //? an in-flight frame harmless instead of an overrun.
+    //? drops a commit whose serial is stale, which is what keeps a resize that races an
+    //? in-flight frame from being read against the wrong surface.
     uint32_t serial;
 
     uint16_t x;
@@ -137,12 +138,29 @@ typedef struct {
 } __attribute__((packed)) ui_msg_window_t;
 
 
+//* A configure hands over a surface as well as a size. The segment is created and owned by
+//* the server, which is what lets it go on compositing a window whose client has died, and
+//* removes it (shmctl(2) IPC_RMID) as soon as the window is gone or has been resized: a
+//* removed segment stays alive until its last holder detaches, so a client still drawing into
+//* the previous one is never pulled out from under.
+
 typedef struct {
 
     uint32_t window_id;
     uint32_t serial;
     uint16_t width;
     uint16_t height;
+
+    //? System V shared memory id of the window's surface, to be passed to shmat(2).
+    int32_t shm_id;
+
+    //? Bytes per row. Not width * 4: cairo picks the stride for an image surface, and the
+    //? two ends have to agree on it byte for byte since they are writing and reading the
+    //? same memory.
+    uint32_t stride;
+
+    //? Size of the segment, so the client can sanity check what it attached.
+    uint32_t shm_size;
 
 } __attribute__((packed)) ui_msg_configure_t;
 
@@ -246,19 +264,23 @@ int ui_connection_fd(ui_connection_t* conn);
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title);
 void ui_window_destroy(ui_window_t* win);
 
+//? The window's surface, shared with the server: what is written here is what the server
+//? composites, with no copy in between. A commit is therefore only a statement about which
+//? rectangle changed, and the pointer is valid until the next ui_window_apply_configure().
 uint32_t* ui_window_pixels(ui_window_t* win);
 int ui_window_width(ui_window_t* win);
 int ui_window_height(ui_window_t* win);
 size_t ui_window_stride(ui_window_t* win);
 uint32_t ui_window_id(ui_window_t* win);
 
-//? Resize the surface to the size the last UI_EVENT_CONFIGURE announced, and adopt its
-//? serial. Deliberately not done inside ui_next_event(): the event loop and the drawing
-//? code are usually different threads, and reallocating the pixel buffer out from under a
-//? draw would be a use-after-free. Call it from wherever drawing is serialised. Returns 1
-//? if the surface changed, 0 if nothing was pending, -1 on error. Until it is called the
-//? window keeps its old size, and commits stamped with the old serial are dropped by the
-//? server rather than misread.
+//? Adopt the surface the last UI_EVENT_CONFIGURE announced, along with its size and serial.
+//? Deliberately not done inside ui_next_event(): the event loop and the drawing code are
+//? usually different threads, and swapping the pixel buffer out from under a draw would be a
+//? use-after-free. Call it from wherever drawing is serialised. Returns 1 if the surface
+//? changed, 0 if nothing was pending, -1 on error. Until it is called the window keeps the
+//? surface it has -- the server has removed that segment but cannot destroy it while this
+//? client still holds it -- and commits stamped with the old serial are dropped rather than
+//? read against the wrong memory.
 int ui_window_apply_configure(ui_window_t* win);
 
 void ui_window_damage(ui_window_t* win, int x, int y, int width, int height);

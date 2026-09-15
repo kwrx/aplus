@@ -25,9 +25,10 @@
  * aplus-wm -- the display server.
  *
  * It owns /dev/fb0, /dev/kbd and /dev/mouse, and hands out windows over an AF_UNIX
- * socket. Clients never touch the framebuffer: they draw into their own buffer and
- * ship damaged rectangles down the socket, because this kernel has no shared memory
- * to hand them instead (mmap(MAP_SHARED) is ENOTSUP and SysV shm is a stub).
+ * socket. Clients never touch the framebuffer: each window's surface is a System V shared
+ * memory segment created here and mapped by both ends, so a client draws straight into what
+ * compositing reads and the socket carries nothing but control -- a commit is a damage
+ * rectangle, not a frame.
  *
  * Decorations are drawn entirely here, so a client needs no widget code at all.
  */

@@ -241,7 +241,8 @@ void ui_disconnect(ui_connection_t* conn) {
 
         ui_window_t* next = conn->windows->next;
 
-        free(conn->windows->pixels);
+        ui_window_drop_surface(conn->windows);
+
         free(conn->windows);
 
         conn->windows = next;
