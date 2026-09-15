@@ -286,7 +286,6 @@ static void init_initd(void) {
 }
 
 
-
 int main(int argc, char** argv, char** envp) {
 
     int fd = open("/dev/kmsg", O_RDWR);
