@@ -52,7 +52,9 @@
 
 /* Every walk of a run queue is held under that CPU's sched_lock: it is the lock
    sched_dequeue() unlinks and frees a task under, so it is the only thing keeping the node
-   the cursor stands on from being handed back to the heap. */
+   the cursor stands on from being handed back to the heap.
+
+   FIXME: a superuser should be able to lower any task's niceness, and is not checked for. */
 
 SYSCALL(
     141, setpriority, long sys_setpriority(int which, int who, int niceval) {
@@ -129,7 +131,6 @@ SYSCALL(
                             return -EINVAL;
                     }
 
-                    // FIXME: check for superuser
                     if (unlikely(tmp->euid != current_task->euid && tmp->euid != current_task->uid))
                         return -EPERM;
 

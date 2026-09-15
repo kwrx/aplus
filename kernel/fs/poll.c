@@ -109,6 +109,11 @@ int poll_scan(int fd, short events, short* revents) {
  *
  * Registers only: the caller suspends once after arming everything it watches.
  *
+ * The descriptor is re-validated rather than assumed: this runs after a fresh read of user
+ * memory, and a sibling thread may have changed the fd since the scan. A socket is watched on
+ * lwIP's own queue rather than on an inode event counter, so it is asked first -- by what the
+ * inode is, not by what its number is.
+ *
  * @param fd        Descriptor to watch; must not be negative.
  * @param events    Mask of the events the caller cares about.
  * @param timeout   Time left to sleep, or NULL to wait indefinitely.
@@ -125,8 +130,6 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
     *armed = false;
 
 
-    //? Re-validated rather than assumed: this runs after a fresh read of user
-    //? memory, and a sibling thread may have changed the fd since the scan.
     if (fd >= CONFIG_OPEN_MAX)
         return 0;
 
@@ -142,8 +145,6 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
 
 #if defined(CONFIG_HAVE_NETWORK)
 
-            //? A socket is watched on lwIP's own queue rather than on an inode event counter,
-            //? so it is asked first -- by what the inode is, not by what its number is.
             int r = socket_poll_arm(inode, events, timeout);
 
             if (r != 0) {
@@ -179,6 +180,9 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
  * only for what is left of it. Recomputing the full timeout on each attempt is
  * what used to keep poll() from ever timing out.
  *
+ * POLL_DEADLINE_EXPIRED is also the answer for a zero timeout, which is a readiness probe
+ * rather than a wait: the deadline is already behind us on the first attempt.
+ *
  * @param timeout_ns    Relative timeout in nanoseconds, or POLL_TIMEOUT_FOREVER.
  * @param remaining     Receives the time left when POLL_DEADLINE_REMAINING is returned.
  */
@@ -205,8 +209,6 @@ poll_deadline_t poll_deadline(uint64_t timeout_ns, struct timespec* remaining) {
     uint64_t deadline = ((uint64_t)current_task->syscall.deadline.tv_sec * 1000000000ULL) + (uint64_t)current_task->syscall.deadline.tv_nsec;
     uint64_t now      = arch_timer_generic_getns();
 
-    //? Also the answer for a zero timeout, which is a readiness probe rather
-    //? than a wait: the deadline is already behind us on the first attempt.
     if (now >= deadline)
         return POLL_DEADLINE_EXPIRED;
 
@@ -221,6 +223,9 @@ poll_deadline_t poll_deadline(uint64_t timeout_ns, struct timespec* remaining) {
 /**
  * @brief Suspend the current task until something it armed moves, or time runs out.
  *
+ * With nothing armed -- poll(NULL, 0, ms) is a plain sleep -- the task parks on a word nobody
+ * ever touches, so that only the deadline can wake it.
+ *
  * @param armed     Whether anything was armed at all.
  * @param timeout   Time left to sleep, or NULL to wait indefinitely.
  *
@@ -231,8 +236,6 @@ long poll_suspend(bool armed, struct timespec* timeout) {
     DEBUG_ASSERT(current_task);
 
 
-    //? Nothing to watch -- poll(NULL, 0, ms) is a plain sleep. Park on a word
-    //? nobody ever touches so that only the deadline can wake it.
     if (!armed && timeout != NULL)
         futex_wait(current_task, &current_task->syscall.deadline_futex, current_task->syscall.deadline_futex, timeout);
 
@@ -254,15 +257,14 @@ long poll_suspend(bool armed, struct timespec* timeout) {
  *
  * Every exit from poll(), ppoll(), select() and pselect6() goes through here, so
  * neither the deadline nor a swapped signal mask can be left behind on a path
- * that forgot to clean up.
+ * that forgot to clean up. The sleep path is the exception: the syscall is about to be
+ * restarted from the top, and both the deadline and the swapped mask have to survive it.
  */
 long poll_finish(long retval) {
 
     DEBUG_ASSERT(current_task);
 
 
-    //? Except on the sleep path: the syscall is about to be restarted from the
-    //? top, and both the deadline and the swapped mask have to survive it.
     if (current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)
         return retval;
 
@@ -286,6 +288,12 @@ long poll_finish(long retval) {
  * Saved once and reinstalled by poll_finish(), so a restart after a sleep leaves
  * the caller's mask in place rather than saving it a second time.
  *
+ * sigsetsize counts the bytes userspace considers meaningful -- musl sends _NSIG/8, well under
+ * the 128-byte sigset_t it hands over -- and is bounded and taken a whole word at a time, the
+ * way rt_sigprocmask() reads one. The mask being installed replaces the whole set, so it is
+ * zeroed first and filled only as far as the caller vouched for: what is not given is not
+ * blocked, rather than left over from the stack.
+ *
  * @param sigmask       Mask to install, or NULL to leave the current one alone.
  * @param sigsetsize    Size of @p sigmask, as the caller understands it.
  *
@@ -299,9 +307,6 @@ int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize) {
     if (sigmask == NULL)
         return 0;
 
-    //? sigsetsize counts the bytes userspace considers meaningful -- musl sends
-    //? _NSIG/8, well under the 128-byte sigset_t it hands over. Bounded and
-    //? taken a whole word at a time, the way rt_sigprocmask() reads one.
     if (unlikely(sigsetsize > sizeof(sigset_t)))
         return -EINVAL;
 
@@ -316,9 +321,6 @@ int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize) {
         return 0;
 
 
-    //? Zeroed first and filled only as far as the caller vouched for: the mask
-    //? being installed replaces the whole set, so what is not given is not
-    //? blocked rather than left over from the stack.
     sigset_t safe;
     memset(&safe, 0, sizeof(sigset_t));
 
@@ -548,7 +550,9 @@ long poll_wait_pollfd(struct pollfd* ufds, unsigned int nfds, uint64_t timeout_n
 /**
  * @brief Copy the meaningful words of one of select()'s sets in from user memory.
  *
- * A NULL set means "no interest", which reads back as all-zero.
+ * A NULL set means "no interest", which reads back as all-zero. Only the words covering
+ * descriptors the caller asked about are touched, so a set smaller than fd_set is never read
+ * past its end.
  */
 static int poll_fdset_get(const fd_set* uset, size_t words, unsigned long* kset) {
 
@@ -557,8 +561,6 @@ static int poll_fdset_get(const fd_set* uset, size_t words, unsigned long* kset)
     if (uset == NULL)
         return 0;
 
-    //? Only the words covering descriptors the caller asked about are touched,
-    //? so a set smaller than fd_set is never read past its end.
     for (size_t i = 0; i < words; i++) {
 
         if (unlikely(!uio_check(&uset->fds_bits[i], R_OK)))
@@ -660,6 +662,13 @@ static long __poll_scan_fdset(int n, const unsigned long* in, const unsigned lon
  * As in poll_wait_pollfd(), the descriptors are asked once more after the interest has been
  * registered, so that one becoming ready in between is reported rather than slept through.
  *
+ * No descriptor above POLL_FD_MAX can be open, so a bit set past the ceiling could only be
+ * junk; clamping rather than refusing keeps select(FD_SETSIZE, ...) -- which plenty of callers
+ * write without thinking -- working. A timeout leaves the caller with three empty sets, which
+ * is what the zeroed answers already hold, and the timeout itself is deliberately not written
+ * back: Linux reports the time not slept there, but POSIX leaves it unspecified, and a value
+ * updated in place would be re-read as the full timeout by the next restart.
+ *
  * @param n             One past the highest descriptor to look at.
  * @param inp           Descriptors to watch for reading, or NULL.
  * @param outp          Descriptors to watch for writing, or NULL.
@@ -676,9 +685,6 @@ long poll_wait_fdset(int n, fd_set* inp, fd_set* outp, fd_set* exp, uint64_t tim
     if (unlikely(n < 0))
         return -EINVAL;
 
-    //? No descriptor up there can be open, so a bit set past the ceiling could
-    //? only be junk. Clamping rather than refusing keeps select(FD_SETSIZE, ...)
-    //? -- which plenty of callers write without thinking -- working.
     if (n > POLL_FD_MAX)
         n = POLL_FD_MAX;
 
@@ -717,8 +723,6 @@ long poll_wait_fdset(int n, fd_set* inp, fd_set* outp, fd_set* exp, uint64_t tim
 
         switch (poll_deadline(timeout_ns, &tm)) {
 
-            //? A timeout leaves the caller with three empty sets, which is what
-            //? the zeroed answers already hold.
             case POLL_DEADLINE_EXPIRED:
                 break;
 
@@ -747,10 +751,6 @@ answer:
 
 
 wait:
-
-    //? The timeout is deliberately not written back. Linux reports the time not
-    //? slept there, but POSIX leaves it unspecified, and a value updated in place
-    //? would be re-read as the full timeout by the next restart.
 
     bool armed = false;
 

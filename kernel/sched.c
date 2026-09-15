@@ -62,6 +62,16 @@ static inline void do_futex(void) {
     }
 }
 
+/**
+ * @brief Wake a sleeping task whose deadline has come due, and report the time it has left.
+ *
+ * The clock is read through scoped_uio_kernel(): &t0 is a kernel buffer while the task being
+ * looked at is a userspace one, so without saying so the check rejects the pointer,
+ * sys_clock_gettime() returns -EFAULT having written nothing, and the deadline is compared
+ * against whatever the stack happened to hold. The time left is computed as an unsigned
+ * difference, so an already-due deadline has to be reported as none left rather than wrapping
+ * into a near-eternal one.
+ */
 static inline void do_sleep(void) {
 
     if (unlikely(current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec)) {
@@ -70,11 +80,6 @@ static inline void do_sleep(void) {
 
         long e = 0;
 
-        //? &t0 is a kernel buffer, and the task being looked at here is a
-        //? userspace one: without saying so the check rejects the pointer,
-        //? sys_clock_gettime() returns -EFAULT having written nothing, and the
-        //? deadline below gets compared against whatever the stack happened to
-        //? hold. That is what cut every sleep short by an arbitrary amount.
         scoped_uio_kernel() {
             e = sys_clock_gettime(current_task->sleep.clockid, &t0);
         }
@@ -89,8 +94,6 @@ static inline void do_sleep(void) {
 
         if (current_task->sleep.remaining) {
 
-            //? Unsigned, so an already-due deadline has to be reported as no
-            //? time left rather than wrapping into a near-eternal one.
             uint64_t time_remaining_ns = tss > tsc ? tss - tsc : 0ULL;
 
             current_task->sleep.remaining->tv_sec  = time_remaining_ns / 1000000000ULL;
@@ -110,11 +113,18 @@ static inline void do_sleep(void) {
 }
 
 
+/**
+ * @brief Carry out a signal's default disposition.
+ *
+ * The three groups are the ones POSIX names: the first terminates, the second terminates and
+ * dumps core, the third stops. Anything not listed has no default action here.
+ *
+ * @param siginfo   The signal being delivered.
+ */
 static void handle_default_signal(const siginfo_t* siginfo) {
 
     switch (siginfo->si_signo) {
 
-        // TERM signals
         case SIGHUP:
         case SIGINT:
         case SIGPIPE:
@@ -128,7 +138,6 @@ static void handle_default_signal(const siginfo_t* siginfo) {
             sys_exit((1U << 31) | siginfo->si_signo);
             break;
 
-        // CORE signals
         case SIGQUIT:
         case SIGILL:
         case SIGTRAP:
@@ -142,7 +151,6 @@ static void handle_default_signal(const siginfo_t* siginfo) {
             sys_exit((1U << 31) | siginfo->si_signo | 0x80);
             break;
 
-        // STOP signals
         case SIGTSTP:
         case SIGTTIN:
         case SIGTTOU:
@@ -213,6 +221,19 @@ static void handle_signal(siginfo_t* siginfo) {
 }
 
 
+/**
+ * @brief Deliver one pending signal to the current task.
+ *
+ * A fatal signal runs the whole of sys_exit() right here, wherever this task happened to be
+ * inside the kernel -- and sys_exit() closes every descriptor and tears down the address space
+ * before returning normally. Returning would resume the interrupted kernel path with the
+ * resources it was in the middle of using already freed: a task killed while parked in the
+ * network stack came back into lwIP holding a netconn and a mailbox its own exit had released.
+ *
+ * So a dead task gives the CPU away and does not come back. A stopped one may: __sched_next()
+ * passes over it until SIGCONT makes it READY, at which point this returns and the interrupted
+ * path carries on -- safe, because sys_exit() leaves a stopped task's descriptors alone.
+ */
 static inline void do_signals(void) {
 
     DEBUG_ASSERT(current_task);
@@ -236,17 +257,6 @@ static inline void do_signals(void) {
         kfree(siginfo);
 
 
-        //? A fatal signal runs the whole of sys_exit() right here, wherever this task happened
-        //? to be inside the kernel -- and sys_exit() closes every descriptor and tears down the
-        //? address space before returning normally. Returning would resume the interrupted
-        //? kernel path with the resources it was in the middle of using already freed: a task
-        //? killed while parked in the network stack came back into lwIP holding a netconn and a
-        //? mailbox that its own exit had just released, and faulted on them.
-        //?
-        //? A dead task never runs again, so give the CPU away and do not come back. A stopped
-        //? one may, and __sched_next() simply passes over it until SIGCONT makes it READY --
-        //? at which point this returns and the interrupted path carries on, which is safe
-        //? because sys_exit() leaves a stopped task's descriptors alone.
         while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP))
             schedule(1);
     }
@@ -274,9 +284,6 @@ static void __sched_next(void) {
 
 
 
-        // //__check_timers();
-
-
         if (current_task->status == TASK_STATUS_SLEEP) {
 
             if (!queue_is_empty(&current_task->sigqueue)) {
@@ -302,6 +309,10 @@ static void __sched_next(void) {
  * The selected task is then marked as TASK_STATUS_RUNNING and a task switch is performed using the arch_task_switch() function.
  * Finally, the function calls do_signals() to handle any pending signals.
  *
+ * UPDATE_CLOCK carries the remainder into the seconds. Assigning the delta over the accumulated
+ * value and then subtracting a whole second throws away the nanoseconds already banked and
+ * leaves tv_nsec negative for any delta below a second -- i.e. always.
+ *
  * @param resched Specifies whether the current task is being voluntarily or involuntarily rescheduled
  *
  */
@@ -313,14 +324,7 @@ void schedule(int resched) {
 #define UPDATE_CLOCK(task, type, delta)                      \
     {                                                        \
         if (task->clock[type].tv_nsec + delta > 999999999) { \
-            /* Carry the remainder. This used to assign the  \
-               delta over the accumulated value and then     \
-               subtract a whole second from it, which threw  \
-               away the nanoseconds already banked and left  \
-               tv_nsec negative for any delta below a second \
-               -- i.e. always. Every CPU time this kernel    \
-               reported was that negative value. */          \
-            task->clock[type].tv_nsec +=  delta;             \
+            task->clock[type].tv_nsec += delta;              \
             task->clock[type].tv_nsec -= 1000000000;         \
             task->clock[type].tv_sec += 1;                   \
         } else {                                             \
@@ -594,6 +598,16 @@ void sched_requeue(task_t* task) {
 //? sched_dequeue() unlinks and then frees a task under that same lock, so without it a
 //? reaper on another CPU can hand a node back to the heap between one `tmp->next` and the
 //? next.
+//?
+//? SIGKILL and SIGSTOP cannot be caught, ignored or blocked. rt_sigaction() and
+//? rt_sigprocmask() both refuse to set that up, but the guarantee is enforced here as well:
+//? this is the only path a signal reaches a task by, and a disposition or mask that got set
+//? some other way would otherwise make a process unkillable.
+//?
+//? A blocked signal waits, whatever its action says. SA_NODEFER decides the mask a handler
+//? runs under -- whether the signal is added on entry to its own handler -- and says nothing
+//? about whether sigprocmask() may hold it back, so honouring it here delivers signals the
+//? thread had explicitly blocked.
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
@@ -648,10 +662,6 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
             DEBUG_ASSERT(action);
 
 
-            //? SIGKILL and SIGSTOP cannot be caught, ignored or blocked. rt_sigaction() and
-            //? rt_sigprocmask() both refuse to set that up, but the guarantee is enforced here
-            //? as well: this is the only path a signal reaches a task by, and a disposition or
-            //? mask that got set some other way would otherwise make a process unkillable.
             bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
 
 
@@ -676,11 +686,6 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
 
                 shared_ptr_access(tmp->sighand, sighand, {
-                    //? A blocked signal waits, whatever its action says. SA_NODEFER used to send it
-                    //? through anyway, but that flag decides the mask a handler runs under -- whether
-                    //? the signal is added on entry to its own handler -- and says nothing about
-                    //? whether sigprocmask() may hold it back. Honouring it here delivered signals
-                    //? their own thread had explicitly blocked.
                     if (unlikely(!unstoppable && sigset_is_member(&sighand->sigmask, sig)))
                         queue_enqueue(&tmp->sigpending, siginfo, 0);
                     else

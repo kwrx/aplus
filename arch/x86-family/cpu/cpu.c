@@ -47,6 +47,19 @@ extern uint8_t bootstrap_tss;
 
 
 
+/**
+ * @brief Bring one CPU's per-core state up, and switch on what the hardware offers.
+ *
+ * MSR support is required of every core, long mode and PAE of every x86_64 one, and RDTSCP of
+ * every core in an SMP build -- arch_cpu_get_current_id() reads the processor id out of it.
+ * From there the TSC timer, the NX bit, SYSCALL, SMEP and SMAP are each enabled if the core
+ * reports them, the processor id is written into TSC_AUX, GS is pointed at this core's slot,
+ * and the FPU is initialised. SMP_CPU_FLAGS_ENABLED is set last, once all of that holds.
+ *
+ * WRGSBASE is not used even where the core claims FSGSBASE: it raises an invalid opcode.
+ *
+ * @param index The core to initialise, which is also its id.
+ */
 __percpu void arch_cpu_init(cpuid_t index) {
 
     __builtin_cpu_init();
@@ -373,13 +386,11 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
 
 
-    //! Requirements
     PANIC_ASSERT(cpu_has(index, X86_FEATURE_MSR));
 
 #if defined(__x86_64__)
     PANIC_ASSERT(cpu_has(index, X86_FEATURE_LM));
     PANIC_ASSERT(cpu_has(index, X86_FEATURE_PAE));
-    // // PANIC_ASSERT(cpu_has(index, X86_FEATURE_GBPAGES));
 #endif
 
 #if defined(CONFIG_HAVE_SMP)
@@ -388,36 +399,30 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
 
 
-    //? Enable TSC Timer
     if (cpu_has(index, X86_FEATURE_TSC))
         x86_set_cr4(x86_get_cr4() | X86_CR4_TSD_MASK);
 
 
-    //? Enable NX bit
     if (cpu_has(index, X86_FEATURE_NX))
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_NXE);
 
 
-    //? Enable Syscall bit
     if (cpu_has(index, X86_FEATURE_SYSCALL))
         x86_wrmsr(X86_MSR_EFER, x86_rdmsr(X86_MSR_EFER) | X86_MSR_EFER_SCE);
 
 
 #if defined(CONFIG_X86_ENABLE_SMEP)
-    //? Enable SMEP
     if (cpu_has(index, X86_FEATURE_SMEP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMEP_MASK);
 #endif
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
-    //? Enable SMAP
     if (cpu_has(index, X86_FEATURE_SMAP))
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
 #endif
 
 
 #if defined(CONFIG_HAVE_SMP)
-    //? Write Processor ID
     if (cpu_has(index, X86_FEATURE_RDTSCP))
         x86_wrmsr(X86_MSR_TSC_AUX, index);
 #endif
@@ -425,12 +430,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
 #if defined(__x86_64__)
 
-    // * BUG: Invalid Opcode even if supported by cpu
-    // // if(core->cpu.cores[index].xfeatures & X86_CPU_XFEATURES_FSGSBASE)
-    // //     x86_wrgsbase((uint64_t) &core->cpu.cores[index]);
-    // // else
-
-    // //x86_wrmsr(X86_MSR_KERNELGSBASE, (uint64_t) &core->cpu.cores[index]);
     x86_wrmsr(X86_MSR_GSBASE, (uint64_t)&core->cpu.cores[index]);
 
 #endif
@@ -450,7 +449,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
 #endif
 
 
-    //* Initialize FPU
     fpu_init(index);
 
     core->cpu.cores[index].flags |= SMP_CPU_FLAGS_ENABLED;
@@ -489,6 +487,19 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
 }
 
 
+/**
+ * @brief Start one application processor and wait for it to come up.
+ *
+ * Every core runs on the boot page tables until it picks up a task, so there is exactly one
+ * kernel address space and every core must go through it. Giving each per-CPU slot a memcpy'd
+ * copy duplicates the root table pointer but hands each core its own spinlock, so concurrent
+ * bring-up mutates one shared hierarchy under locks that do not exclude each other.
+ *
+ * The core is woken with the INIT, SIPI, SIPI sequence the manual calls for, after its startup
+ * page and its stack have been mapped.
+ *
+ * @param index The core to start, which is also its id.
+ */
 void arch_cpu_startup(cpuid_t index) {
 
     DEBUG_ASSERT(index != SMP_CPU_BOOTSTRAP_ID);
@@ -501,18 +512,11 @@ void arch_cpu_startup(cpuid_t index) {
     kprintf("x86-cpu: starting up core #%zd\n", index);
 #endif
 
-    /* Every core runs on the boot page tables until it picks up a task, so there is exactly
-       one kernel address space and every core must go through it. It used to be memcpy'd into
-       each per-CPU slot, which duplicated the root table pointer but gave each core its own
-       copy of the spinlock -- so concurrent AP bring-up mutated one shared hierarchy under
-       locks that did not exclude each other. */
     vmm_address_space_t* kspace = &core->bsp.address_space;
 
-    //* Map AP Startup Area
     if (arch_vmm_map(kspace, AP_BOOT_OFFSET, AP_BOOT_OFFSET, X86_MMU_PAGESIZE, ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR) == ARCH_VMM_MAP_FAILED)
         kpanicf("x86-cpu: PANIC! failed to map the AP startup area for core #%zd\n", index);
 
-    // //* Map AP Stack Area
     if (arch_vmm_map(kspace, KERNEL_STACK_AREA + (KERNEL_STACK_SIZE * index), -1, X86_MMU_HUGE_2MB_PAGESIZE, ARCH_VMM_MAP_HUGETLB | ARCH_VMM_MAP_HUGE_2MB | ARCH_VMM_MAP_RDWR) == ARCH_VMM_MAP_FAILED)
         kpanicf("x86-cpu: PANIC! failed to map the stack for core #%zd\n", index);
 
@@ -526,7 +530,6 @@ void arch_cpu_startup(cpuid_t index) {
 
 
 
-    /* INIT */
     if (apic_is_x2apic()) {
 
         x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | (5 << 8) | (1 << 14));
@@ -547,7 +550,6 @@ void arch_cpu_startup(cpuid_t index) {
     arch_timer_delay(10000);
 
 
-    /* SIPI */
     if (apic_is_x2apic()) {
 
         x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));
@@ -565,7 +567,6 @@ void arch_cpu_startup(cpuid_t index) {
         return;
 
 
-    /* SIPI (x2) */
     if (apic_is_x2apic()) {
 
         x86_wrmsr(X86_X2APIC_REG_ICR, (core->cpu.cores[index].archid << 32) | ((AP_BOOT_OFFSET >> 12) & 0xFF) | (6 << 8) | (1 << 14));

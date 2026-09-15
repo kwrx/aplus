@@ -158,6 +158,10 @@ static void* input_thread(void* arg) {
 }
 
 
+/* Opens every input device and starts a thread reading each one. A machine missing a pointing
+   device is still perfectly usable with the keyboard, and no machine has every pointing device,
+   so only the keyboard is required; the rest are taken if they are there. Returns the read end
+   of the merged pipe for the main loop to poll, or -1. */
 int wm_input_open(void) {
 
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, input_pipe) < 0) {
@@ -168,8 +172,6 @@ int wm_input_open(void) {
 
     for (size_t i = 0; i < sizeof(input_devices) / sizeof(input_devices[0]); i++) {
 
-        /* A machine missing a pointing device is still perfectly usable with the keyboard,
-           and no machine has every pointing device, so only the keyboard is required. */
         if ((input_devices[i].fd = open(input_devices[i].path, O_RDONLY)) < 0) {
 
             if (input_devices[i].required) {
@@ -342,6 +344,13 @@ static void input_update_hover(void) {
 }
 
 
+/* Applies the pointer's travel since the grab to the window being dragged or resized.
+ *
+ * Clamping the size after the origin has already moved would let a window slide once it hit a
+ * limit, so whatever the clamp takes away is given back -- but only on the edges that moved the
+ * origin in the first place. A south or east drag leaves the origin where it was, and
+ * correcting it there would slide the window instead.
+ */
 static void input_update_drag(void) {
 
     wm_window_t* win = wm.drag.window;
@@ -404,10 +413,6 @@ static void input_update_drag(void) {
     }
 
 
-    /* Clamping the size after having already moved the origin would let a window slide
-       once it hit a limit, so give back whatever the clamp took away -- but only on the
-       edges that moved the origin in the first place. A south or east drag leaves the
-       origin where it was, and correcting it there would slide the window instead. */
     const bool anchored_right  = (wm.drag.region == WM_REGION_RESIZE_W || wm.drag.region == WM_REGION_RESIZE_NW || wm.drag.region == WM_REGION_RESIZE_SW);
     const bool anchored_bottom = (wm.drag.region == WM_REGION_RESIZE_N || wm.drag.region == WM_REGION_RESIZE_NE || wm.drag.region == WM_REGION_RESIZE_NW);
 
@@ -437,6 +442,17 @@ static void input_update_drag(void) {
 }
 
 
+/* A pointer button going down or up.
+ *
+ * A close button commits on release, and only if the pointer is still on it, so a press can be
+ * taken back by sliding off. A press that was not preceded by any motion -- the pointer was
+ * already parked on the button -- leaves the hover unset, and the button has to draw itself
+ * pressed either way, since raising and focusing only damage a window that was not already on
+ * top and active.
+ *
+ * A resize tells the client its new size on release rather than during, so it repaints once
+ * instead of on every mouse packet of the drag.
+ */
 static void input_handle_button(uint16_t vkey, uint8_t down) {
 
     uint8_t mask = 0;
@@ -488,8 +504,6 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
                 wm_damage(&c);
 
-                /* A button commits on release, and only if the pointer is still on it, so
-                   a press can be taken back by sliding off. */
                 if (wm.hovered_close == win) {
                     wm_window_request_close(win);
                 }
@@ -497,8 +511,6 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
                 return;
             }
 
-            /* Only now does the client hear about the new size, so it repaints once
-               instead of on every mouse packet of the drag. */
             if (was != WM_REGION_TITLEBAR) {
                 wm_window_notify_configure(win);
             }
@@ -531,10 +543,6 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
     if (region == WM_REGION_CLOSE) {
 
-        /* A press that was not preceded by any motion -- the pointer was already parked on
-           the button -- leaves the hover unset, and the button has to draw itself pressed
-           either way. Raising and focusing only damage a window that was not already on
-           top and active, so the button needs saying so itself. */
         wm.hovered_close = win;
 
         const wm_rect_t c = wm_window_close_rect(win);
@@ -546,6 +554,11 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
 /* Everything a pointer movement pulls in, once the new position is in wm.pointer: both
  * pointing device kinds land here, having differed only in how they said where to go.
+ *
+ * With a cursor plane the pointer is not part of the frame, so a movement damages nothing and
+ * costs one short command instead of repainting and re-flushing the rectangle it left and the
+ * one it arrived at. That is the whole gain: a pointer moves far more often than anything else
+ * on screen, and over a still desktop it now moves without touching the framebuffer at all.
  */
 
 static void input_pointer_moved(const wm_rect_t* old) {
@@ -567,11 +580,6 @@ static void input_pointer_moved(const wm_rect_t* old) {
     }
 
 
-    /* With a cursor plane the pointer is not part of the frame, so a movement damages
-       nothing and costs one short command instead of repainting and re-flushing the
-       rectangle it left and the one it arrived at. That is the whole gain: a pointer
-       moves far more often than anything else on screen, and over a still desktop it
-       now moves without touching the framebuffer at all. */
     if (wm.display.hwcursor) {
 
         wm_display_cursor_move(&wm.display, wm.pointer.x, wm.pointer.y);
@@ -598,6 +606,18 @@ static void input_pointer_moved(const wm_rect_t* old) {
 }
 
 
+/* One decoded input event.
+ *
+ * A key the server claimed for a binding stops here: passing it on as well would run the
+ * binding and type the key into the focused window.
+ *
+ * A wheel event carries no movement of its own, and pushing it through the move path would
+ * re-place the pointer where it already is. An absolute device reports a position rather than a
+ * change, and several of its positions land on the same pixel, so one that has not moved is
+ * dropped too -- repainting or re-placing the cursor plane for it is pure cost. Its axes arrive
+ * normalized to EV_ABS_MAX, whatever range the device itself uses, so placing the pointer needs
+ * nothing but the size of the screen.
+ */
 static void input_handle_event(const event_t ev) {
 
     switch (ev.ev_type) {
@@ -610,8 +630,6 @@ static void input_handle_event(const event_t ev) {
 
             } else if (!wm_keys_handle(ev.ev_key.vkey, ev.ev_key.down)) {
 
-                /* A key the server claimed for a binding stops here. Passing it on as well
-                   would run the binding and type the key into the focused window. */
                 input_send_key(ev.ev_key.vkey, ev.ev_key.down);
             }
 
@@ -621,8 +639,6 @@ static void input_handle_event(const event_t ev) {
 
             const wm_rect_t old = wm_cursor_rect();
 
-            /* A wheel event carries no movement of its own, and pushing it through the move
-               path would re-place the pointer where it already is. */
             if (!ev.ev_rel.x && !ev.ev_rel.y) {
                 break;
             }
@@ -639,14 +655,9 @@ static void input_handle_event(const event_t ev) {
 
             const wm_rect_t old = wm_cursor_rect();
 
-            /* The axes arrive normalized to EV_ABS_MAX, whatever range the device itself
-               uses, so placing the pointer needs nothing but the size of the screen. */
             const int x = ((int)ev.ev_abs.x * (wm.display.width - 1)) / EV_ABS_MAX;
             const int y = ((int)ev.ev_abs.y * (wm.display.height - 1)) / EV_ABS_MAX;
 
-            /* An absolute device reports a position, not a change, and several of its
-               positions land on the same pixel. Repainting or re-placing the cursor plane
-               for a pointer that has not moved is pure cost. */
             if (x == wm.pointer.x && y == wm.pointer.y) {
                 break;
             }

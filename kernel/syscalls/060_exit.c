@@ -54,7 +54,17 @@
    another CPU sees it -- sched_dequeue() frees the task_t and the kernel stack this call is
    running on -- so setting the status before the teardown below hands a parent on another
    CPU the memory this code is still using. Waiters are woken after the status for the same
-   reason: a parent released here finds a status that is already final. */
+   reason: a parent released here finds a status that is already final.
+
+   A task stays on the run queue as a ZOMBIE until someone reaps it, so everything freed in the
+   teardown outlives its own pointers, and a reader walking the queue (ps, via /proc) would find
+   them still set and follow them into freed memory. shared_ptr_free() does not clear the
+   caller's variable, so they are cleared here and shared_ptr_nullable_access() does the rest.
+   With nothing left to borrow, a parent parked in vfork() is let go; a task that only stopped
+   is skipped along with the whole teardown, since it can still be continued and is still
+   holding the loan.
+
+   TODO: SIGCHLD is not sent to the parent yet. */
 
 SYSCALL(
     60, exit, long sys_exit(int status) {
@@ -73,19 +83,6 @@ SYSCALL(
 
 
         const long exit_status = (WIFSTOPPED(current_task->exit.value)) ? TASK_STATUS_STOP : TASK_STATUS_ZOMBIE;
-
-
-        // TODO: implements signal
-        // if(current_task->parent) {
-        //     siginfo_t si;
-        //     si.si_code = SI_KERNEL;
-        //     si.si_pid = current_task->pid;
-        //     si.si_uid = current_task->uid;
-        //     si.si_value.sival_int = current_task->exit.value;
-
-        //     sched_sigqueueinfo(current_task->parent, SIGCHLD, &si);
-        // }
-
 
 
         if (exit_status != TASK_STATUS_STOP) {
@@ -109,19 +106,11 @@ SYSCALL(
 
             arch_vmm_free_address_space(current_task->address_space);
 
-            /* A task stays on the run queue as a ZOMBIE until someone reaps it, so everything
-               freed just above outlives its own pointers -- and a reader walking the queue
-               (ps, via /proc) finds them still set and follows them into freed memory.
-               shared_ptr_free() does not clear the caller's variable, so clear them here and
-               let shared_ptr_nullable_access() do the rest. */
             current_task->fd            = NULL;
             current_task->fs            = NULL;
             current_task->sighand       = NULL;
             current_task->address_space = NULL;
 
-            //? Nothing left to borrow, so let a parent parked in vfork() go. A
-            //? task that only stopped is skipped along with the teardown above:
-            //? it can still be continued and is still holding the loan.
             do_vfork_release();
         }
 
