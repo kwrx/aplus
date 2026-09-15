@@ -55,6 +55,7 @@
 - [x] Spinlocks
 - [x] Semaphores
 - [x] Unix Pipe
+- [x] System V Shared Memory (shmget, shmat, shmdt, shmctl)
 - [x] Unix Socket (AF_UNIX, SOCK_STREAM)
 - [x] BSD Sockets (AF_INET, SOCK_STREAM), as ordinary file descriptors
 - [x] Symmetric Multiprocessing

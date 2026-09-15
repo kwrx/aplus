@@ -86,6 +86,12 @@
     #define ARCH_VMM_MAP_TYPE_MMAP (1 << 12)
     #define ARCH_VMM_MAP_TYPE_COW  (2 << 12)
 
+    /* A frame owned by something outside the address space -- a System V shared memory
+       segment. It is mapped with ARCH_VMM_MAP_FIXED and never carries the ownership bit, so
+       unmapping it or tearing the address space down leaves the frame alone, and a fork
+       shares it by reference instead of copying it. @see kernel/ipc/shm.c */
+    #define ARCH_VMM_MAP_TYPE_SHARED (3 << 12)
+
 
     #define ARCH_VMM_CLONE_DEMAND    (1 << 1)
     #define ARCH_VMM_CLONE_USERSPACE (1 << 2)
@@ -98,6 +104,10 @@
        panic the kernel, which made an oversized mmap(2) a denial of service. */
     #define ARCH_VMM_MAP_FAILED ((uintptr_t)-1)
 
+    /* Returned by the pmm_alloc_* family when no run of free blocks is long enough. Zero is a
+       valid physical address, so it cannot stand in for failure. */
+    #define PMM_INVALID_ADDRESS ((uintptr_t)-1ULL)
+
 
 
 typedef struct {
@@ -108,6 +118,24 @@ typedef struct {
     uintptr_t offset;
 
 } mmap_mapping_t;
+
+
+    /* Segments one address space may hold at once. A toolkit needs one per window and swaps it
+       for a new one on every resize, so the ceiling is about how many windows a process draws,
+       not how many times it has drawn them. */
+    #define SHM_ATTACH_MAX 16
+
+
+typedef struct {
+
+    /* Zero marks a free slot: address zero is never handed out, since the mmap window the
+       attachment is carved from starts well above it. */
+    uintptr_t addr;
+    size_t size;
+
+    int id;
+
+} shm_attach_t;
 
 
     /* Address space lives in .bss (the per-CPU syscore slots) and must never be freed. */
@@ -130,6 +158,15 @@ typedef struct vmm_address_space {
         mmap_mapping_t mappings[CONFIG_MMAP_MAX];
 
     } mmap;
+
+    /* Shared memory segments attached into this space, as shmat(2) left them. Held here
+       rather than per-task because threads share an address space and therefore share the
+       attachments: the segment's reference is released when the last of them is gone. */
+    struct {
+
+        shm_attach_t attachments[SHM_ATTACH_MAX];
+
+    } shm;
 
     spinlock_t lock;
 

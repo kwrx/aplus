@@ -54,6 +54,13 @@
     #define X86_MMU_PG_AP_TP_MMAP (1ULL << 10)
     #define X86_MMU_PG_AP_TP_COW  (2ULL << 10)
 
+    /* The frame belongs to a shared memory segment rather than to this address space.
+       Spelled as a page type rather than with the global bit, which would otherwise be the
+       obvious way to say "do not copy this on fork": CR4.PGE is on, so a global user page
+       would keep a live TLB entry across a CR3 reload and let one process read the frame
+       another process had mapped at the same address. */
+    #define X86_MMU_PG_AP_TP_SHARED (3ULL << 10)
+
     #define X86_MMU_PG_AP_TP_MASK (3ULL << 10)
 
 

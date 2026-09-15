@@ -145,6 +145,10 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
         case ARCH_VMM_MAP_TYPE_COW:
             b |= X86_MMU_PG_AP_TP_COW;
             break;
+
+        case ARCH_VMM_MAP_TYPE_SHARED:
+            b |= X86_MMU_PG_AP_TP_SHARED;
+            break;
     }
 
 

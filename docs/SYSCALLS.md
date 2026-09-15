@@ -30,9 +30,9 @@
 - [ ] sys_msync
 - [ ] sys_mincore
 - [ ] sys_madvise
-- [ ] sys_shmget
-- [ ] sys_shmat
-- [ ] sys_shmctl
+- [x] sys_shmget
+- [x] sys_shmat
+- [x] sys_shmctl
 - [x] sys_dup
 - [x] sys_dup2
 - [ ] sys_pause
@@ -68,7 +68,7 @@
 - [ ] sys_semget
 - [ ] sys_semop
 - [ ] sys_semctl
-- [ ] sys_shmdt
+- [x] sys_shmdt
 - [ ] sys_msgget
 - [ ] sys_msgsnd
 - [ ] sys_msgrcv

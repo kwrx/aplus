@@ -42,6 +42,12 @@
  * @brief arch_vmm_getphysaddr().
  *        Translate a virtual address in @space to a physical one.
  *
+ * Only the PAGE and SHARED page types name a frame that exists right now. The others are a
+ * copy-on-write or file mapping that has not been materialised yet, so there is nothing to
+ * report and the caller has to touch the page (or arch_vmm_lock() it) first. Resolving it here
+ * used to call pagefault_handle(), which walks CR3 rather than @space and would therefore fault
+ * a page into whichever address space happened to be loaded.
+ *
  * @param space: address space.
  * @param virtaddr: virtual address.
  *
@@ -68,12 +74,9 @@ __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_
         /* Page Table */
         if (likely(d && *d != X86_MMU_CLEAR)) {
 
-            /* A non-PAGE type is a copy-on-write or file mapping that has not been
-               materialised yet, so there is no frame to report. The caller has to touch the
-               page (or arch_vmm_lock() it) first; resolving it here used to call
-               pagefault_handle(), which walks CR3 rather than @space and would therefore
-               fault a page into whichever address space happened to be loaded. */
-            if (likely((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_PAGE)) {
+            const uint64_t type = *d & X86_MMU_PG_AP_TP_MASK;
+
+            if (likely(type == X86_MMU_PG_AP_TP_PAGE || type == X86_MMU_PG_AP_TP_SHARED)) {
 
                 e = (*d & X86_MMU_ADDRESS_MASK) + (virtaddr & (pagesize - 1));
             }
