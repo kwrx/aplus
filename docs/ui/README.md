@@ -124,13 +124,20 @@ aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
 There is no sleep between the two lines because `ui_connect()` retries — see
 [getting-started.md](getting-started.md#3-connecting).
 
-From a running terminal, a GUI application is started like any other program. Two server
+From a running terminal, a GUI application is started like any other program. A few server
 bindings are worth knowing:
 
 | Keys | |
 |---|---|
 | `Ctrl+Alt+T` | Spawn a new terminal |
 | `Ctrl+Alt+Q` | Close the focused window (sends it `UI_EVENT_CLOSE`) |
+| `Alt+Tab` | Focus and raise the next window down the stack |
+| `Alt+Shift+Tab` | The same walk, the other way round |
+
+Holding `Alt` down keeps the walk going: the order is taken when the first `Tab` arrives and
+does not move again until `Alt` is released, so a second `Tab` reaches the third window rather
+than returning to the first. Tapping the chord and letting go therefore swaps between the two
+most recently used windows.
 
 For a headless run with the console log captured, `./makew run-headless`.
 

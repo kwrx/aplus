@@ -51,6 +51,8 @@ typedef enum {
 
     WM_ACTION_SPAWN,
     WM_ACTION_CLOSE,
+    WM_ACTION_CYCLE_NEXT,
+    WM_ACTION_CYCLE_PREV,
 
 } wm_action_t;
 
@@ -68,8 +70,10 @@ static const struct {
 
 } wm_bindings[] = {
 
-    {WM_MOD_CTRL | WM_MOD_ALT, KEY_T, WM_ACTION_SPAWN, wm_command_terminal},
-    {WM_MOD_CTRL | WM_MOD_ALT, KEY_Q, WM_ACTION_CLOSE, NULL               },
+    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_T,   WM_ACTION_SPAWN,      wm_command_terminal},
+    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_Q,   WM_ACTION_CLOSE,      NULL               },
+    {WM_MOD_ALT,                KEY_TAB, WM_ACTION_CYCLE_NEXT, NULL               },
+    {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB, WM_ACTION_CYCLE_PREV, NULL               },
 };
 
 
@@ -143,6 +147,81 @@ static void wm_spawn(const char* const* argv) {
 }
 
 
+/**
+ * @brief The window order Alt+Tab walks, held from the first Tab until Alt comes up.
+ *        Ids rather than pointers, so a window closed mid-walk is skipped.
+ */
+
+#define WM_CYCLE_MAX 64
+
+static struct {
+
+    bool active;
+
+    size_t count;
+    size_t index;
+
+    uint32_t ids[WM_CYCLE_MAX];
+
+} wm_cycle;
+
+
+/**
+ * @brief Takes the stacking order as it stands, anchored on the focused window.
+ */
+static void wm_cycle_begin(void) {
+
+    wm_cycle.count = 0;
+    wm_cycle.index = 0;
+
+    for (wm_window_t* win = wm.windows; win && wm_cycle.count < WM_CYCLE_MAX; win = win->next) {
+
+        if (win == wm.focused) {
+            wm_cycle.index = wm_cycle.count;
+        }
+
+        wm_cycle.ids[wm_cycle.count++] = win->id;
+    }
+
+    wm_cycle.active = true;
+}
+
+
+/**
+ * @brief One step of the walk, raising and focusing what it lands on. The order is retaken
+ *        when the focus has moved somewhere the walk did not put it.
+ *
+ * @param forward Whether to step towards the back of the stack or the front.
+ */
+static void wm_cycle_step(bool forward) {
+
+    const uint32_t focused = wm.focused ? wm.focused->id : 0;
+
+    if (!wm_cycle.active || wm_cycle.index >= wm_cycle.count || wm_cycle.ids[wm_cycle.index] != focused) {
+        wm_cycle_begin();
+    }
+
+
+    const size_t step = !wm.focused ? 0 : (forward ? 1 : wm_cycle.count - 1);
+
+    for (size_t i = 0; i < wm_cycle.count; i++) {
+
+        wm_cycle.index = (wm_cycle.index + step) % wm_cycle.count;
+
+        wm_window_t* win = wm_window_from_id(wm_cycle.ids[wm_cycle.index]);
+
+        if (!win) {
+            continue;
+        }
+
+        wm_window_raise(win);
+        wm_window_focus(win);
+
+        return;
+    }
+}
+
+
 /* Returns true when the key was a binding and must not reach the client. */
 bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 
@@ -153,7 +232,12 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
         if (down) {
             wm.keyboard.modifiers |= modifier;
         } else {
+
             wm.keyboard.modifiers &= (uint16_t)~modifier;
+
+            if (modifier == WM_MOD_ALT) {
+                wm_cycle.active = false;
+            }
         }
 
         /* A modifier is never swallowed: the client tracks shift for its own keymap, and a
@@ -209,6 +293,14 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
                still eaten -- it matched, it simply had no window to act on. */
             case WM_ACTION_CLOSE:
                 wm_window_request_close(wm.focused);
+                break;
+
+            case WM_ACTION_CYCLE_NEXT:
+                wm_cycle_step(true);
+                break;
+
+            case WM_ACTION_CYCLE_PREV:
+                wm_cycle_step(false);
                 break;
         }
 
