@@ -26,9 +26,11 @@
     #include <errno.h>
     #include <math.h>
     #include <stdbool.h>
+    #include <stdint.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+    #include <time.h>
     #include <unistd.h>
 
     #include <GL/gl.h>
@@ -40,6 +42,8 @@
 
     #define GEARS_DEFAULT_WIDTH  480
     #define GEARS_DEFAULT_HEIGHT 360
+
+    #define GEARS_FPS_INTERVAL_MS 1000
 
 
 
@@ -200,6 +204,43 @@ static int gears_bind(OSMesaContext ctx, ui_window_t* win) {
 }
 
 
+static uint64_t now_ms(void) {
+
+    struct timespec ts;
+
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0) {
+        return 0;
+    }
+
+    return ((uint64_t)ts.tv_sec * 1000ULL) + ((uint64_t)ts.tv_nsec / 1000000ULL);
+}
+
+
+/* Report the frame rate once a second, and start a fresh interval when it does.
+ *
+ * Frames are counted between reports rather than timed one by one: a single frame is close
+ * enough to the clock's granularity that timing it says more about the clock than about the
+ * renderer, and the average over a second is the figure worth having. The division is by the
+ * interval actually measured, not by GEARS_FPS_INTERVAL_MS, so a frame that straddles the
+ * deadline reports a late but honest number instead of an inflated one.
+ */
+
+static void gears_fps_report(unsigned* frames, uint64_t* since) {
+
+    const uint64_t now     = now_ms();
+    const uint64_t elapsed = now - *since;
+
+    if (elapsed < GEARS_FPS_INTERVAL_MS) {
+        return;
+    }
+
+    printf("gl-gears: %.2f fps\n", (double)*frames * 1000.0 / (double)elapsed);
+
+    *frames = 0;
+    *since  = now;
+}
+
+
 int main(int argc, char** argv) {
 
     setvbuf(stdout, NULL, _IONBF, 0);
@@ -287,6 +328,9 @@ int main(int argc, char** argv) {
     GLfloat view_roty = 30.0f;
     GLfloat view_rotz = 0.0f;
     GLfloat angle     = 0.0f;
+
+    unsigned fps_frames = 0;
+    uint64_t fps_since  = now_ms();
 
     bool running = true;
 
@@ -394,6 +438,10 @@ int main(int argc, char** argv) {
             fprintf(stderr, "gl-gears: ui_window_commit() failed: %s\n", strerror(errno));
             break;
         }
+
+        fps_frames++;
+
+        gears_fps_report(&fps_frames, &fps_since);
 
         angle += 2.0f;
     }
