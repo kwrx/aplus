@@ -7,7 +7,7 @@ drawing into it yourself.
 
 ## The surface underneath
 
-Every window is a `uint32_t` buffer you can write to directly, view or no view:
+Every window is a surface you can write to directly, view or no view:
 
 ```c
 uint32_t* ui_window_pixels(ui_window_t* win);
@@ -19,14 +19,31 @@ size_t    ui_window_stride(ui_window_t* win);
 | | |
 |---|---|
 | Format | `0xFFRRGGBB` — 8 bits per channel, not premultiplied, alpha ignored by the server |
-| Stride | `width * sizeof(uint32_t)`, always; there is no row padding |
+| Stride | `ui_window_stride()` bytes per row — **not** `width * 4` |
 | Origin | Top-left of the content area |
 
-Setting a pixel is therefore:
+Those pixels are shared memory: the server composites straight out of them, so there is no
+copy and no transfer, and whatever you leave there is what appears on screen.
+
+Which is also why the stride matters. It is the one the server's cairo surface was built with,
+usually padded past `width * 4`, and a client that assumes otherwise skews its image
+progressively further down the window. Work a row at a time:
 
 ```c
-pixels[(size_t)y * (size_t)width + (size_t)x] = 0xFF000000U | (r << 16) | (g << 8) | b;
+uint8_t* base       = (uint8_t*)ui_window_pixels(win);
+const size_t stride = ui_window_stride(win);
+
+for (int y = 0; y < ui_window_height(win); y++) {
+
+    uint32_t* row = (uint32_t*)(base + (size_t)y * stride);
+
+    for (int x = 0; x < ui_window_width(win); x++) {
+        row[x] = 0xFF000000U | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
+    }
+}
 ```
+
+`apps/test/ui-test/main.c` paints its gradient exactly like that.
 
 Write whatever you like into it, then say what changed and send it:
 
@@ -37,10 +54,10 @@ int  ui_window_commit(ui_window_t* win);
 ```
 
 Damage accumulates into one bounding rectangle — several calls before a commit merge into
-the box that encloses them all. `ui_window_commit()` sends that region and clears it,
-splitting the transfer into bands that fit the socket buffer (see
-[protocol.md](protocol.md#commits-and-banding)); it returns `0` with nothing sent when no
-damage is outstanding.
+the box that encloses them all. `ui_window_commit()` names that region and clears it,
+returning `0` with nothing sent when no damage is outstanding. The message is a rectangle and
+nothing else (see [protocol.md](protocol.md#commits)), so committing a whole surface costs no
+more than committing one glyph.
 
 Nothing reaches the screen without a commit. A frame that is drawn but never committed is a
 frame the server never hears about.
