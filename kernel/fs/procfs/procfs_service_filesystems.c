@@ -21,9 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+
 #include <stdint.h>
 #include <stdio.h>
-#include <sys/mount.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -48,16 +49,23 @@ static int procfs_service_filesystems_fetch(inode_t* inode, char** buf, size_t* 
     DEBUG_ASSERT(buf);
     DEBUG_ASSERT(size);
 
-    static char buffer[BUFSIZ] = {0};
 
-    for(size_t i = 0; i < VFS_MAX_FILESYSTEMS; i++) {
+    procfs_buf_t b = procfs_scratch();
+
+    /* Written through the bounded writer. Advancing an offset by snprintf()'s return value
+       put a NUL between every line, because that return counted the terminator; and once
+       the offset reached the buffer size, `sizeof(buffer) - offset` underflowed to a huge
+       size_t and the next write had no bound at all. */
+    for (size_t i = 0; i < VFS_MAX_FILESYSTEMS; i++) {
+
         if (fs_table[i].id == 0)
             break;
 
-        *size += snprintf(buffer + *size, sizeof(buffer) - *size, "%s %s\n", fs_table[i].nodev ? "nodev" : "     ", fs_table[i].name);
+        procfs_bprintf(&b, "%s\t%s\n", fs_table[i].nodev ? "nodev" : "     ", fs_table[i].name);
     }
 
-    *buf = buffer;
+    *buf  = b.data;
+    *size = b.length;
 
     return 0;
 }
@@ -67,7 +75,8 @@ inode_t* procfs_service_filesystems_inode(inode_t* parent) {
     static inode_t* inode = NULL;
 
     if (inode == NULL) {
-        inode = procfs_service_inode(parent, "filesystems", S_IFREG | 0666, procfs_service_filesystems_fetch, NULL);
+        inode      = procfs_service_inode(parent, "filesystems", S_IFREG | 0444, procfs_service_filesystems_fetch, NULL);
+        inode->ino = PROCFS_INO_STATIC(5);
     }
 
     return inode;

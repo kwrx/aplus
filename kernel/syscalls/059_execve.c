@@ -257,6 +257,41 @@ SYSCALL(
 
 
 
+        /* Take the name and the command line now, while argq[] still holds kernel-side
+           copies and before anything is torn down. task->argv is not a substitute: it is
+           inherited verbatim from the parent and never updated here, so without this every
+           process reports whatever init was called. @see /proc/<pid>/{comm,cmdline,stat}. */
+        {
+            const char* base = argq[0] ? argq[0] : "";
+
+            for (const char* q = base; *q; q++) {
+                if (*q == '/')
+                    base = q + 1;
+            }
+
+            strncpy(current_task->comm, base, TASK_COMM_LEN - 1);
+            current_task->comm[TASK_COMM_LEN - 1] = '\0';
+
+
+            //? Packed NUL-separated, which is the form /proc/<pid>/cmdline hands out. An
+            //? argument that would not fit is dropped whole rather than half-copied.
+            size_t n = 0;
+
+            for (size_t i = 0; argq[i]; i++) {
+
+                size_t len = strlen(argq[i]) + 1;
+
+                if (n + len > TASK_CMDLINE_LEN)
+                    break;
+
+                memcpy(&current_task->cmdline[n], argq[i], len);
+                n += len;
+            }
+
+            current_task->cmdline_len = n;
+        }
+
+
         do_unshare(CLONE_FS);
         do_unshare(CLONE_FILES);
         do_unshare(CLONE_SIGHAND);

@@ -305,6 +305,14 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 
+/**
+ * @brief Ticks since boot, in the USER_HZ units /proc reports times in.
+ */
+static inline uint64_t arch_task_boot_ticks(void) {
+    return arch_timer_generic_getms() / (1000 / TASK_USER_HZ);
+}
+
+
 task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
@@ -365,6 +373,17 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     task->next   = NULL;
     task->parent = current_task;
+
+    /* Reported by /proc. A fresh task shows its parent's name until it execve()s, the way
+       Linux does; `ppid` is stored rather than followed because nothing reparents a child
+       when its parent is reaped, so task->parent dangles for orphans. */
+    task->start_time = arch_task_boot_ticks();
+    task->ppid       = current_task->pid;
+
+    memcpy(task->comm, current_task->comm, TASK_COMM_LEN);
+    memcpy(task->cmdline, current_task->cmdline, TASK_CMDLINE_LEN);
+
+    task->cmdline_len = current_task->cmdline_len;
 
     return task;
 }
@@ -451,6 +470,14 @@ pid_t arch_task_spawn_init() {
 
     task->next   = NULL;
     task->parent = NULL;
+
+    task->start_time = arch_task_boot_ticks();
+    task->ppid       = 0;
+
+    strncpy(task->comm, "init", TASK_COMM_LEN - 1);
+
+    memcpy(task->cmdline, "init", sizeof("init"));
+    task->cmdline_len = sizeof("init");
 
     spinlock_init(&task->lock);
     spinlock_init(&task->sched_lock);
@@ -547,6 +574,13 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 
     task->next   = NULL;
     task->parent = current_task;
+
+    strncpy(task->comm, name, TASK_COMM_LEN - 1);
+    task->comm[TASK_COMM_LEN - 1] = '\0';
+
+    //? A kernel thread has no argv to show, and /proc/<pid>/cmdline being empty is how
+    //? userspace tells a kernel thread from a process.
+    task->cmdline_len = 0;
 
 
 #if DEBUG_LEVEL_TRACE

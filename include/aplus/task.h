@@ -92,6 +92,13 @@
 
     #define TASK_SCHEDULER_PERIOD_NS 1000000ULL
 
+/* Linux's length for a task name, and what /proc/<pid>/stat's comm field is expected to fit. */
+    #define TASK_COMM_LEN    16
+    #define TASK_CMDLINE_LEN 256
+
+//? /proc reports CPU times in USER_HZ units; musl's sysconf(_SC_CLK_TCK) is a hardcoded 100.
+    #define TASK_USER_HZ 100
+
     #define TASK_STACK_MAX (0x100000000ULL) // 4GiB
     #define TASK_STACK_MIN (0x1000ULL)      // 4KiB
 
@@ -432,6 +439,25 @@ typedef struct task {
     struct task* parent;
     struct task* next;
 
+    /* Reported by /proc. These are plain storage inside task_t rather than pointers into
+       anything the task owns, because a task stays on the run queue as a ZOMBIE after
+       sys_exit() has already freed its fs, fd, sighand and address_space -- which is
+       exactly when ps comes along to read it. @see sys_exit(). */
+    char comm[TASK_COMM_LEN];
+
+    //? argv, packed NUL-separated the way /proc/<pid>/cmdline hands it out. task->argv is
+    //? no use for this: it is inherited verbatim from the parent and execve never updates
+    //? it, so every process claims to be whatever init was called.
+    char cmdline[TASK_CMDLINE_LEN];
+    size_t cmdline_len;
+
+    //? USER_HZ ticks since boot, stamped once when the task is created.
+    uint64_t start_time;
+
+    //? The parent's tgid, copied at creation: `parent` is cleared when the parent is
+    //? reaped, and following it afterwards reads freed memory.
+    pid_t ppid;
+
 } task_t;
 
 
@@ -459,6 +485,7 @@ void sched_dequeue(task_t*);
 void sched_requeue(task_t*);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 size_t sched_nprocs(void);
+pid_t sched_lastpid(void);
 
 void schedule(int);
 
