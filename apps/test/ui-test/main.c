@@ -29,9 +29,15 @@
  * Opens a window, paints a gradient into it, and prints every event it receives. It
  * exists so that the server and the library can be debugged without dragging the whole
  * terminal port in: if this shows a window and reports keys, the protocol works.
+ *
+ * With --once it paints a single frame and exits. A client that lives forever cannot be driven
+ * from a script, and the lifecycle is the interesting thing to drive: every window costs a
+ * shared memory segment that the server creates and both ends have to let go of, so a loop of
+ * these is what shows a leak.
  */
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,12 +48,15 @@
 
 static void paint(ui_window_t* win) {
 
-    uint32_t* pixels = ui_window_pixels(win);
+    uint8_t* pixels = (uint8_t*)ui_window_pixels(win);
 
-    const int w = ui_window_width(win);
-    const int h = ui_window_height(win);
+    const int w         = ui_window_width(win);
+    const int h         = ui_window_height(win);
+    const size_t stride = ui_window_stride(win);
 
     for (int y = 0; y < h; y++) {
+
+        uint32_t* row = (uint32_t*)(pixels + ((size_t)y * stride));
 
         for (int x = 0; x < w; x++) {
 
@@ -55,7 +64,7 @@ static void paint(ui_window_t* win) {
             uint8_t g = (uint8_t)((y * 255) / (h > 1 ? h - 1 : 1));
             uint8_t b = 0x80;
 
-            pixels[(size_t)y * (size_t)w + (size_t)x] = 0xFF000000U | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
+            row[x] = 0xFF000000U | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
         }
     }
 
@@ -68,8 +77,31 @@ int main(int argc, char** argv) {
     setvbuf(stdout, NULL, _IONBF, 0);
 
 
-    int width  = argc > 1 ? atoi(argv[1]) : 480;
-    int height = argc > 2 ? atoi(argv[2]) : 320;
+    bool once = false;
+
+    int width  = 480;
+    int height = 320;
+
+    int positional = 0;
+
+    for (int i = 1; i < argc; i++) {
+
+        if (strcmp(argv[i], "--once") == 0) {
+            once = true;
+            continue;
+        }
+
+        switch (positional++) {
+
+            case 0:
+                width = atoi(argv[i]);
+                break;
+
+            case 1:
+                height = atoi(argv[i]);
+                break;
+        }
+    }
 
 
     ui_connection_t* conn = ui_connect(NULL, 5000);
@@ -97,6 +129,17 @@ int main(int argc, char** argv) {
     if (ui_window_commit(win) < 0) {
         fprintf(stderr, "ui-test: ui_window_commit() failed: %s\n", strerror(errno));
         return 1;
+    }
+
+
+    if (once) {
+
+        ui_window_destroy(win);
+        ui_disconnect(conn);
+
+        printf("ui-test: painted one frame\n");
+
+        return 0;
     }
 
 

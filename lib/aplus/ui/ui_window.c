@@ -24,6 +24,8 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 #include <unistd.h>
 
 #include <aplus/ui.h>
@@ -44,50 +46,88 @@ ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id) {
 }
 
 
-int ui_window_reconfigure(ui_window_t* win, int width, int height, uint32_t serial) {
+/* Let go of the window's surface.
+ *
+ * The segment belongs to the server, which has already removed it; detaching is this end's
+ * whole share of the bookkeeping, and is what finally lets the kernel hand the frames back once
+ * the server has let go too.
+ */
+void ui_window_drop_surface(ui_window_t* win) {
 
-    if (width <= 0 || height <= 0) {
+    if (!win->pixels) {
+        return;
+    }
+
+    shmdt(win->pixels);
+
+    win->pixels = NULL;
+    win->shm_id = -1;
+}
+
+
+/* Take up the surface a UI_EV_CONFIGURE described, along with its size and serial.
+ *
+ * A segment too small for the surface it describes is refused, so that a bad or truncated
+ * configure cannot turn into a write past the end of it. The new one is attached before the old
+ * one is let go, so that a failure leaves the window drawing into a surface that still exists
+ * rather than into nothing.
+ *
+ * Nothing is remapped when the id has not changed. The server sends a configure at the end of
+ * every drag, not only the ones that changed the size, and only a size change makes it build a
+ * new segment; re-attaching the one already held would work, but costs a range of address space
+ * that shmdt(2) does not give back. An id is never reused while the segment it names is alive,
+ * so the same id is the same memory.
+ *
+ * The whole surface is damaged on the way out. The server carried the old contents over so that
+ * a window does not go black mid-drag, but only the client knows what belongs there at the new
+ * size.
+ */
+int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stride, int shm_id, size_t shm_size, uint32_t serial) {
+
+    if (width <= 0 || height <= 0 || shm_id < 0) {
         errno = EINVAL;
         return -1;
     }
 
+    if (stride < (size_t)width * sizeof(uint32_t) || shm_size < stride * (size_t)height) {
+        errno = EPROTO;
+        return -1;
+    }
 
-    const size_t needed = (size_t)width * (size_t)height;
 
-    if (needed > win->capacity) {
+    if (shm_id != win->shm_id || !win->pixels) {
 
-        uint32_t* pixels = (uint32_t*)calloc(needed, sizeof(uint32_t));
+        uint32_t* pixels = (uint32_t*)shmat(shm_id, NULL, 0);
 
-        if (!pixels) {
+        if (pixels == (uint32_t*)-1) {
             return -1;
         }
 
-        free(win->pixels);
+        ui_window_drop_surface(win);
 
-        win->pixels   = pixels;
-        win->capacity = needed;
-
-    } else if (width != win->width || height != win->height) {
-
-        /* Reusing the buffer means the old contents are still in it, laid out at the old
-           stride. Clearing avoids a frame of garbage in whatever the client does not
-           redraw straight away. */
-        memset(win->pixels, 0, needed * sizeof(uint32_t));
+        win->pixels = pixels;
+        win->shm_id = shm_id;
     }
 
     win->width  = width;
     win->height = height;
+    win->stride = stride;
 
     win->serial = serial;
 
-    /* The old contents are gone, so the next commit has to carry the whole surface
-       however little the client thinks it changed. */
     ui_window_damage_all(win);
 
     return 0;
 }
 
 
+/* @see <aplus/ui.h>.
+ *
+ * The pending configure is cleared only once the new surface is actually in place. Dropping it
+ * up front would leave the window drawing at the old size against a serial the server has
+ * already moved past, so every commit from then on is discarded and the window never paints
+ * again; keeping it pending means the caller can simply try again.
+ */
 int ui_window_apply_configure(ui_window_t* win) {
 
     if (!win) {
@@ -99,11 +139,7 @@ int ui_window_apply_configure(ui_window_t* win) {
         return 0;
     }
 
-    /* Cleared only once the new size is actually in place. Dropping it up front would
-       leave the window drawing at the old size against a serial the server has already
-       moved past, so every commit from then on is discarded and the window never paints
-       again; keeping it pending means the caller can simply try the resize once more. */
-    if (ui_window_reconfigure(win, win->pending.width, win->pending.height, win->pending.serial) < 0) {
+    if (ui_window_adopt_surface(win, win->pending.width, win->pending.height, win->pending.stride, win->pending.shm_id, win->pending.shm_size, win->pending.serial) < 0) {
         return -1;
     }
 
@@ -127,7 +163,8 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
         return NULL;
     }
 
-    win->conn = conn;
+    win->conn   = conn;
+    win->shm_id = -1;
 
 
     ui_msg_create_window_t req;
@@ -196,7 +233,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
 
     win->id = cfg.window_id;
 
-    if (ui_window_reconfigure(win, cfg.width, cfg.height, cfg.serial) < 0) {
+    if (ui_window_adopt_surface(win, cfg.width, cfg.height, cfg.stride, cfg.shm_id, cfg.shm_size, cfg.serial) < 0) {
         free(win);
         return NULL;
     }
@@ -235,7 +272,8 @@ void ui_window_destroy(ui_window_t* win) {
         it = &(*it)->next;
     }
 
-    free(win->pixels);
+    ui_window_drop_surface(win);
+
     free(win);
 }
 
@@ -253,7 +291,7 @@ int ui_window_height(ui_window_t* win) {
 }
 
 size_t ui_window_stride(ui_window_t* win) {
-    return win ? (size_t)win->width * sizeof(uint32_t) : 0;
+    return win ? win->stride : 0;
 }
 
 uint32_t ui_window_id(ui_window_t* win) {
@@ -329,52 +367,11 @@ void ui_window_damage_all(ui_window_t* win) {
 }
 
 
-static int ui_window_send_band(ui_window_t* win, int x, int y, int width, int height) {
-
-    ui_msg_commit_t commit = {
-
-        .window_id = win->id,
-        .serial    = win->serial,
-        .x         = (uint16_t)x,
-        .y         = (uint16_t)y,
-        .width     = (uint16_t)width,
-        .height    = (uint16_t)height,
-    };
-
-    const size_t row     = (size_t)width * sizeof(uint32_t);
-    const size_t payload = sizeof(commit) + row * (size_t)height;
-
-
-    ui_msg_header_t hdr = {
-
-        .type   = UI_REQ_COMMIT,
-        .flags  = 0,
-        .length = (uint32_t)payload,
-    };
-
-    if (ui_send_all(win->conn->fd, &hdr, sizeof(hdr)) < 0) {
-        return -1;
-    }
-
-    if (ui_send_all(win->conn->fd, &commit, sizeof(commit)) < 0) {
-        return -1;
-    }
-
-    /* One write per row rather than one for the band: the damage rect is a sub-rectangle
-       of a wider surface, so the rows it covers are not contiguous in memory. */
-    for (int i = 0; i < height; i++) {
-
-        const uint32_t* src = win->pixels + (size_t)(y + i) * (size_t)win->width + (size_t)x;
-
-        if (ui_send_all(win->conn->fd, src, row) < 0) {
-            return -1;
-        }
-    }
-
-    return 0;
-}
-
-
+/* Tell the server which part of the surface changed.
+ *
+ * One small message for however much changed: the pixels are already where the server reads
+ * them from, so a full-screen repaint costs the same as a single character cell.
+ */
 int ui_window_commit(ui_window_t* win) {
 
     if (!win) {
@@ -387,56 +384,19 @@ int ui_window_commit(ui_window_t* win) {
     }
 
 
-    const int x0 = win->damage.x0;
-    const int y0 = win->damage.y0;
-    const int x1 = win->damage.x1;
-    const int y1 = win->damage.y1;
+    ui_msg_commit_t commit = {
+
+        .window_id = win->id,
+        .serial    = win->serial,
+        .x         = (uint16_t)win->damage.x0,
+        .y         = (uint16_t)win->damage.y0,
+        .width     = (uint16_t)(win->damage.x1 - win->damage.x0),
+        .height    = (uint16_t)(win->damage.y1 - win->damage.y0),
+    };
 
     win->damage.valid = false;
 
-
-    /* The socket buffer is 65535 bytes and a write only ever makes partial progress, so a
-       whole-surface commit would never fit in one frame. Split the damage into tiles that
-       each stay well inside the buffer; the server stitches them back together because
-       every tile names its own position. */
-    const int max_pixels = UI_COMMIT_BAND_MAX / (int)sizeof(uint32_t);
-
-    int chunk_w = x1 - x0;
-
-    if (chunk_w > max_pixels) {
-        chunk_w = max_pixels;
-    }
-
-
-    for (int x = x0; x < x1; x += chunk_w) {
-
-        int bw = x1 - x;
-
-        if (bw > chunk_w) {
-            bw = chunk_w;
-        }
-
-        int rows = max_pixels / bw;
-
-        if (rows < 1) {
-            rows = 1;
-        }
-
-        for (int y = y0; y < y1; y += rows) {
-
-            int bh = y1 - y;
-
-            if (bh > rows) {
-                bh = rows;
-            }
-
-            if (ui_window_send_band(win, x, y, bw, bh) < 0) {
-                return -1;
-            }
-        }
-    }
-
-    return 0;
+    return ui_send_msg(win->conn->fd, UI_REQ_COMMIT, &commit, sizeof(commit));
 }
 
 

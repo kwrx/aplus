@@ -291,22 +291,24 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
 }
 
 
+/* A commit carries no pixels: the client wrote them through the mapping both ends share, and
+ * this names the rectangle it changed.
+ *
+ * A stale serial means the window was resized while the frame was in flight, so the rectangle
+ * belongs to the surface the window used to have. Dropping it is correct -- a fresh
+ * UI_EV_CONFIGURE has already been queued with the new segment, and the client will redraw into
+ * that. Its writes went into the old segment, which is still mapped for it and which nothing
+ * here reads any more.
+ */
 static int wm_client_handle_commit(wm_client_t* client, const uint8_t* payload, size_t size) {
 
     ui_msg_commit_t req;
 
-    if (size < sizeof(req)) {
+    if (size != sizeof(req)) {
         return -1;
     }
 
     memcpy(&req, payload, sizeof(req));
-
-
-    const size_t expected = (size_t)req.width * (size_t)req.height * sizeof(uint32_t);
-
-    if (size - sizeof(req) != expected) {
-        return -1;
-    }
 
 
     wm_window_t* win = wm_window_from_id(req.window_id);
@@ -315,14 +317,11 @@ static int wm_client_handle_commit(wm_client_t* client, const uint8_t* payload, 
         return -1;
     }
 
-    /* The window was resized while this frame was in flight: it describes a surface that
-       no longer exists. Dropping it is correct -- a fresh UI_EV_CONFIGURE has already been
-       queued and the client will redraw at the new size. */
     if (req.serial != win->serial) {
         return 0;
     }
 
-    if (wm_window_blit(win, req.x, req.y, req.width, req.height, payload + sizeof(req)) < 0) {
+    if (wm_window_damage_content(win, req.x, req.y, req.width, req.height) < 0) {
         return -1;
     }
 
@@ -472,22 +471,20 @@ static int wm_client_dispatch(wm_client_t* client) {
 }
 
 
+/* A stream socket splits and coalesces writes freely, so bytes are accumulated here and only
+ * whole frames are acted on.
+ *
+ * Drains to EAGAIN rather than taking one chunk per poll() wakeup. Nothing large travels this
+ * socket now that pixels do not, but a client that commits faster than the server wakes up
+ * still queues messages, and one chunk per wakeup would leave it a wakeup behind for every
+ * frame it is ahead.
+ *
+ * Each chunk is dispatched before the next is read, which is what keeps that drain bounded:
+ * parsing only once it ends would let a client that refills the socket as fast as the server
+ * empties it grow the receive buffer without limit.
+ */
 int wm_client_read(wm_client_t* client) {
 
-    /* A stream socket splits and coalesces writes freely, so bytes are accumulated here
-       and only whole frames are acted on.
-     *
-     * Drain to EAGAIN rather than taking one chunk per poll() wakeup. A first frame from a
-     * client is the whole of its surface, and with pixels travelling over the socket that
-     * is a megabyte for a modest window -- one chunk per wakeup turns it into hundreds of
-     * round trips with the client blocked on a full buffer for each one.
-     *
-     * Each chunk is dispatched before the next is read, which is what keeps that drain
-     * bounded. Parsing only once it ends does not work: the client refills the socket as
-     * fast as the server empties it, so the drain runs until the client has nothing left
-     * to send rather than until the socket is empty, and the whole surface would have to
-     * fit in the receive buffer to get there.
-     */
     uint8_t chunk[WM_CLIENT_CHUNK];
 
     bool drained = false;

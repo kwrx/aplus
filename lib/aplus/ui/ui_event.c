@@ -51,6 +51,12 @@ static int ui_drain_payload(int fd, size_t size) {
 }
 
 
+/* @see <aplus/ui.h>.
+ *
+ * A configure is recorded and handed on, never acted on: the new surface is attached when the
+ * caller gets to ui_window_apply_configure(). Attaching it here would detach the pixel buffer
+ * from the event thread while the drawing thread is still writing into it.
+ */
 int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
     if (!conn || !out) {
@@ -116,18 +122,17 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                /* Record it and hand the event on; the surface is only reallocated when the
-                   caller gets to ui_window_apply_configure(). Doing it here would free the
-                   pixel buffer from the event thread while the drawing thread is still
-                   writing into it. */
                 ui_window_t* win = ui_window_from_id(conn, cfg.window_id);
 
                 if (win) {
 
-                    win->pending.valid  = true;
-                    win->pending.width  = cfg.width;
-                    win->pending.height = cfg.height;
-                    win->pending.serial = cfg.serial;
+                    win->pending.valid    = true;
+                    win->pending.width    = cfg.width;
+                    win->pending.height   = cfg.height;
+                    win->pending.stride   = cfg.stride;
+                    win->pending.shm_id   = cfg.shm_id;
+                    win->pending.shm_size = cfg.shm_size;
+                    win->pending.serial   = cfg.serial;
                 }
 
                 out->type                = UI_EVENT_CONFIGURE;

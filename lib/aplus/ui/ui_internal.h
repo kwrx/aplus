@@ -40,13 +40,15 @@ struct ui_window {
     int width;
     int height;
 
+    //? Bytes per row, as the server chose it. Never assumed to be width * 4: the two ends
+    //? are reading and writing the same memory and have to agree exactly.
+    size_t stride;
+
+    //? The window's surface, mapped from the server's shared memory segment. Owned by the
+    //? server; this end only attaches and detaches.
     uint32_t* pixels;
 
-    //? Pixels the allocation can hold, which is not the same as width * height. A resize
-    //? that fits reuses the buffer: sys_mmap() never rewinds its cursor and munmap() does
-    //? not give the address space back, so a client that reallocated on every configure
-    //? would eat its own mmap window one drag at a time.
-    size_t capacity;
+    int shm_id;
 
     struct {
 
@@ -69,6 +71,11 @@ struct ui_window {
         int width;
         int height;
 
+        size_t stride;
+
+        int shm_id;
+        size_t shm_size;
+
         uint32_t serial;
 
     } pending;
@@ -85,6 +92,8 @@ struct ui_connection {
 
 
 ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id);
-int ui_window_reconfigure(ui_window_t* win, int width, int height, uint32_t serial);
+
+int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stride, int shm_id, size_t shm_size, uint32_t serial);
+void ui_window_drop_surface(ui_window_t* win);
 
 #endif

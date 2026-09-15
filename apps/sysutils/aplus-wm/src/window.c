@@ -26,6 +26,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
 
 #include <cairo/cairo-ft.h>
 #include <ft2build.h>
@@ -148,45 +150,112 @@ wm_window_t* wm_window_from_id(uint32_t id) {
 }
 
 
+/* Lets go of the window's surface and of the segment behind it.
+ *
+ * Removed rather than merely detached: the client may still have the segment mapped and may
+ * still be drawing into it -- it does not learn about a new one until it acts on the configure
+ * -- and the kernel keeps a removed segment alive until its last holder detaches. So this hands
+ * the server's share back and leaves the memory to the client for as long as it needs it,
+ * without the server having to track when that is.
+ */
+static void wm_window_free_backstore(wm_window_t* win) {
+
+    if (win->backstore) {
+        cairo_surface_destroy(win->backstore);
+        win->backstore = NULL;
+    }
+
+    if (win->shm_addr) {
+        shmdt(win->shm_addr);
+        win->shm_addr = NULL;
+    }
+
+    if (win->shm_id >= 0) {
+        shmctl(win->shm_id, IPC_RMID, NULL);
+        win->shm_id = -1;
+    }
+
+    win->shm_size = 0;
+    win->stride   = 0;
+}
+
+
 /* Allocates the pixel store only; the window's geometry is tracked separately so that a
-   resize drag can move the frame around without reallocating a surface per mouse packet. */
+   resize drag can move the frame around without reallocating a surface per mouse packet.
+
+   The store is a shared memory segment rather than ordinary memory, and the client is given
+   its id in the next UI_EV_CONFIGURE. Both ends then have the same frames mapped: the client
+   draws into them and the server composites from them, and a commit carries only the rectangle
+   that changed. A surface that is being drawn into while it is composited can tear, which is
+   the price of not copying it; the alternative costs a second surface per window and a copy per
+   frame, on a machine that has neither to spare.
+
+   RGB24 rather than ARGB32: windows are opaque, and cairo's ARGB32 wants premultiplied data,
+   which nothing on the client side produces. The memory layout is identical, so a client
+   writing 0xFFRRGGBB lands exactly where it expects to. Nothing fills the new surface, either
+   -- the kernel hands over a zeroed segment, and zero is black in RGB24 -- but the old contents
+   are carried over, without which a window goes black for the whole of a resize drag, since the
+   client is not told the new size until the mouse is released. */
 static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 
-    /* RGB24 rather than ARGB32: windows are opaque, and cairo's ARGB32 wants premultiplied
-       data, which nothing on the client side produces. The memory layout is identical, so
-       a client writing 0xFFRRGGBB lands exactly where it expects to. */
-    cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24, width, height);
+    const int stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, width);
 
-    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
-        cairo_surface_destroy(surface);
+    if (stride <= 0) {
+        return -1;
+    }
+
+    const size_t size = (size_t)stride * (size_t)height;
+
+
+    int id = shmget(IPC_PRIVATE, size, IPC_CREAT | 0600);
+
+    if (id < 0) {
         return -1;
     }
 
 
-    cairo_t* cr = cairo_create(surface);
+    void* addr = shmat(id, NULL, 0);
 
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-    cairo_paint(cr);
+    if (addr == (void*)-1) {
+        shmctl(id, IPC_RMID, NULL);
+        return -1;
+    }
 
-    /* Carry the old contents over. Without this a window goes black for the whole of a
-       resize drag, because the client is not told the new size until the mouse is
-       released and so has nothing to redraw with in the meantime. */
+
+    cairo_surface_t* surface = cairo_image_surface_create_for_data((unsigned char*)addr, CAIRO_FORMAT_RGB24, width, height, stride);
+
+    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+
+        cairo_surface_destroy(surface);
+
+        shmdt(addr);
+        shmctl(id, IPC_RMID, NULL);
+
+        return -1;
+    }
+
+
     if (win->backstore) {
+
+        cairo_t* cr = cairo_create(surface);
 
         cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
         cairo_set_source_surface(cr, win->backstore, 0, 0);
         cairo_rectangle(cr, 0, 0, win->width < width ? win->width : width, win->height < height ? win->height : height);
         cairo_fill(cr);
+
+        cairo_destroy(cr);
     }
 
-    cairo_destroy(cr);
 
-
-    if (win->backstore) {
-        cairo_surface_destroy(win->backstore);
-    }
+    wm_window_free_backstore(win);
 
     win->backstore = surface;
+
+    win->shm_addr = addr;
+    win->shm_id   = id;
+    win->shm_size = size;
+    win->stride   = stride;
 
     return 0;
 }
@@ -228,6 +297,9 @@ void wm_window_clamp_size(int* width, int* height) {
 }
 
 
+/* The window and its first surface. wm_window_notify_configure() is what hands that surface to
+ * the client, and has to be called before anything else is queued for it.
+ */
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title) {
 
     wm_window_clamp_size(&width, &height);
@@ -242,6 +314,9 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     win->id     = wm.next_window_id++;
     win->client = client;
     win->serial = 1;
+
+    //? No surface yet: zero is what the teardown path would otherwise read as a real id.
+    win->shm_id = -1;
 
     if (title) {
         strncpy(win->title, title, UI_TITLE_MAX - 1);
@@ -342,9 +417,7 @@ void wm_window_destroy(wm_window_t* win) {
     }
 
 
-    if (win->backstore) {
-        cairo_surface_destroy(win->backstore);
-    }
+    wm_window_free_backstore(win);
 
     free(win);
 }
@@ -571,15 +644,18 @@ int wm_window_resize(wm_window_t* win, int width, int height) {
 }
 
 
-/* Kept apart from wm_window_resize() on purpose. A resize drag walks through a new size
-   on every mouse packet, and announcing each one would make the client repaint and
-   re-upload the whole surface a hundred times a second -- over a socket, since there is
-   no shared memory to hand it. The server tracks the geometry live and reaches here once,
-   when the drag ends.
+/* Kept apart from wm_window_resize() on purpose. A resize drag walks through a new size on
+   every mouse packet, and announcing each one would make the client repaint at a hundred
+   sizes a second. The server tracks the geometry live and reaches here once, when the drag
+   ends.
  *
- * Reallocating the backstore here rather than in wm_window_resize() matters for the same
- * reason it matters on the client: one allocation per drag instead of one per mouse
- * packet, on a kernel whose mmap cursor never rewinds.
+ * Allocating the surface here rather than in wm_window_resize() matters for the same reason:
+ * one segment per drag instead of one per mouse packet, and each one costs both ends a range
+ * of address space that neither the mmap cursor nor shmdt(2) ever rewinds.
+ *
+ * A window whose new surface cannot be allocated keeps the size it has, rather than being left
+ * describing one that was never allocated: every commit against that would be rejected by
+ * wm_window_damage_content() and the client dropped for what is really this server's failure.
  */
 int wm_window_notify_configure(wm_window_t* win) {
 
@@ -587,10 +663,6 @@ int wm_window_notify_configure(wm_window_t* win) {
 
         if (wm_window_alloc_backstore(win, win->width, win->height) < 0) {
 
-            /* Nothing to draw the new size into. Keep the size that does exist rather than
-               leaving the window describing a surface that was never allocated: every
-               commit against it would be rejected by wm_window_blit() and the client
-               dropped for what is really this server's failure. */
             fprintf(stderr, "aplus-wm: cannot allocate a %dx%d backstore, keeping the window at %dx%d\n", win->width, win->height, cairo_image_surface_get_width(win->backstore), cairo_image_surface_get_height(win->backstore));
 
             win->width  = cairo_image_surface_get_width(win->backstore);
@@ -607,38 +679,36 @@ int wm_window_notify_configure(wm_window_t* win) {
         .serial    = win->serial,
         .width     = (uint16_t)win->width,
         .height    = (uint16_t)win->height,
+        .shm_id    = win->shm_id,
+        .stride    = (uint32_t)win->stride,
+        .shm_size  = (uint32_t)win->shm_size,
     };
 
     return wm_client_queue(win->client, UI_EV_CONFIGURE, &msg, sizeof(msg));
 }
 
 
-int wm_window_blit(wm_window_t* win, int x, int y, int width, int height, const uint8_t* pixels) {
+/* Take a client's word that a rectangle of the shared surface has changed.
+ *
+ * There is nothing to copy -- the pixels were written through the mapping both ends share --
+ * so all this does is bound the claim and tell cairo the surface it caches a description of
+ * has been written to behind its back.
+ *
+ * The bound is the surface rather than win->width/height: during a resize drag the two disagree
+ * on purpose, and it is the surface that says how much memory there actually is.
+ */
+int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int height) {
 
     if (x < 0 || y < 0 || width <= 0 || height <= 0) {
         errno = EINVAL;
         return -1;
     }
 
-    /* Bounded by the surface rather than by win->width/height: during a resize drag the
-       two disagree on purpose, and it is the surface that says how much memory there
-       actually is. */
     if (x + width > cairo_image_surface_get_width(win->backstore) || y + height > cairo_image_surface_get_height(win->backstore)) {
         errno = EINVAL;
         return -1;
     }
 
-
-    cairo_surface_flush(win->backstore);
-
-    unsigned char* data = cairo_image_surface_get_data(win->backstore);
-    const int stride    = cairo_image_surface_get_stride(win->backstore);
-
-    const size_t row = (size_t)width * sizeof(uint32_t);
-
-    for (int i = 0; i < height; i++) {
-        memcpy(data + (size_t)(y + i) * (size_t)stride + (size_t)x * sizeof(uint32_t), pixels + (size_t)i * row, row);
-    }
 
     cairo_surface_mark_dirty_rectangle(win->backstore, x, y, width, height);
 
