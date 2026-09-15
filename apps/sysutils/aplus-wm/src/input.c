@@ -290,6 +290,64 @@ static void input_track_pointer(void) {
 }
 
 
+/* The shape the pointer takes over a region.
+ *
+ * The four resize shapes are the whole point of having a theme at all: every edge and corner of
+ * a frame looks the same, and the arrow is the only thing that says which way the border under
+ * the pointer will move. Which diagonal is which follows the images -- fdiag is the "\" pair,
+ * so it belongs to the north-west and south-east corners, and bdiag the "/" pair to the other
+ * two.
+ */
+static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
+
+    switch (region) {
+
+        case WM_REGION_RESIZE_N:
+        case WM_REGION_RESIZE_S:
+            return WM_CURSOR_SIZE_VER;
+
+        case WM_REGION_RESIZE_E:
+        case WM_REGION_RESIZE_W:
+            return WM_CURSOR_SIZE_HOR;
+
+        case WM_REGION_RESIZE_NW:
+        case WM_REGION_RESIZE_SE:
+            return WM_CURSOR_SIZE_FDIAG;
+
+        case WM_REGION_RESIZE_NE:
+        case WM_REGION_RESIZE_SW:
+            return WM_CURSOR_SIZE_BDIAG;
+
+        case WM_REGION_CLOSE:
+            return WM_CURSOR_HAND;
+
+        default:
+            return WM_CURSOR_ARROW;
+    }
+}
+
+
+/* Point the cursor at whatever it is about to act on.
+ *
+ * A drag pins the shape to the region the button went down on rather than the one under the
+ * pointer now: a resize drag routinely runs the pointer out over the desktop or across another
+ * window, and handing the cursor back to that region mid-drag would say the drag had ended.
+ * Moving a window is the one shape that has no region of its own, since the titlebar it starts
+ * from is an ordinary arrow until the button is held.
+ */
+static void input_update_cursor(void) {
+
+    if (wm.drag.window) {
+
+        wm_cursor_set(wm.drag.region == WM_REGION_TITLEBAR ? WM_CURSOR_SIZE_ALL : input_cursor_for(wm.drag.region));
+
+        return;
+    }
+
+    wm_cursor_set(input_cursor_for(wm_window_hit_test(wm.pointer.x, wm.pointer.y, NULL)));
+}
+
+
 static void input_begin_drag(wm_window_t* win, wm_region_t region) {
 
     wm.drag.window = win;
@@ -442,7 +500,7 @@ static void input_update_drag(void) {
 }
 
 
-/* A pointer button going down or up.
+/* The left pointer button going down or up.
  *
  * A close button commits on release, and only if the pointer is still on it, so a press can be
  * taken back by sliding off. A press that was not preceded by any motion -- the pointer was
@@ -453,39 +511,7 @@ static void input_update_drag(void) {
  * A resize tells the client its new size on release rather than during, so it repaints once
  * instead of on every mouse packet of the drag.
  */
-static void input_handle_button(uint16_t vkey, uint8_t down) {
-
-    uint8_t mask = 0;
-
-    switch (vkey) {
-
-        case BTN_LEFT:
-            mask = UI_BUTTON_LEFT;
-            break;
-        case BTN_RIGHT:
-            mask = UI_BUTTON_RIGHT;
-            break;
-        case BTN_MIDDLE:
-            mask = UI_BUTTON_MIDDLE;
-            break;
-
-        default:
-            return;
-    }
-
-
-    if (down) {
-        wm.pointer.buttons |= mask;
-    } else {
-        wm.pointer.buttons &= (uint8_t)~mask;
-    }
-
-
-    if (mask != UI_BUTTON_LEFT) {
-        input_track_pointer();
-        return;
-    }
-
+static void input_handle_button_left(uint8_t down) {
 
     if (!down) {
 
@@ -552,6 +578,49 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 }
 
 
+static void input_handle_button(uint16_t vkey, uint8_t down) {
+
+    uint8_t mask = 0;
+
+    switch (vkey) {
+
+        case BTN_LEFT:
+            mask = UI_BUTTON_LEFT;
+            break;
+        case BTN_RIGHT:
+            mask = UI_BUTTON_RIGHT;
+            break;
+        case BTN_MIDDLE:
+            mask = UI_BUTTON_MIDDLE;
+            break;
+
+        default:
+            return;
+    }
+
+
+    if (down) {
+        wm.pointer.buttons |= mask;
+    } else {
+        wm.pointer.buttons &= (uint8_t)~mask;
+    }
+
+
+    if (mask != UI_BUTTON_LEFT) {
+        input_track_pointer();
+        return;
+    }
+
+
+    input_handle_button_left(down);
+
+    /* After the press and the release both, because it is the drag that decides the shape while
+       a button is held: a press on a grip pins the cursor for the drag, and the release hands it
+       back to whatever the pointer has ended up over. */
+    input_update_cursor();
+}
+
+
 /* Everything a pointer movement pulls in, once the new position is in wm.pointer: both
  * pointing device kinds land here, having differed only in how they said where to go.
  *
@@ -578,6 +647,11 @@ static void input_pointer_moved(const wm_rect_t* old) {
     if (wm.pointer.y >= wm.display.height) {
         wm.pointer.y = wm.display.height - 1;
     }
+
+
+    /* Ahead of the damage below, not after it: a shape change moves the box the pointer
+       occupies, and the repaint has to be told about the box it is about to occupy. */
+    input_update_cursor();
 
 
     if (wm.display.hwcursor) {

@@ -24,7 +24,6 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
@@ -32,124 +31,71 @@
 #include <wm.h>
 
 
-/* Hand the pointer to the adapter as a cursor plane image.
+/* Put an image on the adapter's cursor plane, at the position the pointer is at.
  *
- * Cairo keeps ARGB32 premultiplied and the framebuffer interface asks for straight alpha, so
- * the colour channels are divided back out on the way. It matters for the antialiased edge of
- * the outline, which is the only part of this arrow that is neither fully opaque nor fully
- * transparent -- premultiplied pixels handed over as straight ones would leave that edge a
- * shade too dark.
- *
- * Failing here is not an error worth refusing to start over: it just means the pointer gets
- * drawn into the frame the old way.
+ * The pixels go over untouched: the theme decodes to straight alpha, which is exactly how the
+ * framebuffer interface specifies a cursor image. It is cairo that wants them premultiplied,
+ * and that is a copy the cursor code keeps separately for the software path.
  */
 
-static bool wm_display_cursor_init(wm_display_t* display) {
-
-    struct fb_hwcinfo hwc;
-
-    if (ioctl(display->fd, FBIOGET_HWCINFO, &hwc) < 0) {
-        return false;
-    }
-
-    if (!(hwc.flags & FB_HWCINFO_HAS_CURSOR)) {
-        return false;
-    }
-
-    if (hwc.max_width < WM_CURSOR_IMAGE_WIDTH || hwc.max_height < WM_CURSOR_IMAGE_HEIGHT) {
-        fprintf(stderr, "aplus-wm: hardware cursor is limited to %ux%u, too small for the pointer\n", hwc.max_width, hwc.max_height);
-        return false;
-    }
-
-
-    cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, WM_CURSOR_IMAGE_WIDTH, WM_CURSOR_IMAGE_HEIGHT);
-
-    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
-        cairo_surface_destroy(surface);
-        return false;
-    }
-
-
-    cairo_t* cr = cairo_create(surface);
-
-    if (cairo_status(cr) != CAIRO_STATUS_SUCCESS) {
-        cairo_destroy(cr);
-        cairo_surface_destroy(surface);
-        return false;
-    }
-
-    wm_cursor_paint(cr, WM_CURSOR_HOT_X, WM_CURSOR_HOT_Y);
-
-    cairo_destroy(cr);
-    cairo_surface_flush(surface);
-
-
-    uint32_t* image = calloc(WM_CURSOR_IMAGE_WIDTH * WM_CURSOR_IMAGE_HEIGHT, sizeof(uint32_t));
-
-    if (!image) {
-        cairo_surface_destroy(surface);
-        return false;
-    }
-
-
-    const unsigned char* data = cairo_image_surface_get_data(surface);
-    const int stride          = cairo_image_surface_get_stride(surface);
-
-    for (int y = 0; y < WM_CURSOR_IMAGE_HEIGHT; y++) {
-
-        const uint32_t* row = (const uint32_t*)(data + (size_t)y * stride);
-
-        for (int x = 0; x < WM_CURSOR_IMAGE_WIDTH; x++) {
-
-            const uint32_t pixel = row[x];
-            const uint32_t alpha = pixel >> 24;
-
-            if (alpha == 0) {
-                image[y * WM_CURSOR_IMAGE_WIDTH + x] = 0;
-                continue;
-            }
-
-            if (alpha == 0xFF) {
-                image[y * WM_CURSOR_IMAGE_WIDTH + x] = pixel;
-                continue;
-            }
-
-            const uint32_t r = (((pixel >> 16) & 0xFF) * 0xFF + alpha / 2) / alpha;
-            const uint32_t g = (((pixel >> 8) & 0xFF) * 0xFF + alpha / 2) / alpha;
-            const uint32_t b = (((pixel >> 0) & 0xFF) * 0xFF + alpha / 2) / alpha;
-
-            image[y * WM_CURSOR_IMAGE_WIDTH + x] = (alpha << 24) | ((r > 0xFF ? 0xFF : r) << 16) | ((g > 0xFF ? 0xFF : g) << 8) | (b > 0xFF ? 0xFF : b);
-        }
-    }
-
-    cairo_surface_destroy(surface);
-
+int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y) {
 
     struct fb_hwcursor cursor = {
 
         .flags  = FB_HWCURSOR_ENABLE,
-        .width  = WM_CURSOR_IMAGE_WIDTH,
-        .height = WM_CURSOR_IMAGE_HEIGHT,
-        .hot_x  = WM_CURSOR_HOT_X,
-        .hot_y  = WM_CURSOR_HOT_Y,
+        .width  = (uint32_t)width,
+        .height = (uint32_t)height,
+        .hot_x  = (uint32_t)hot_x,
+        .hot_y  = (uint32_t)hot_y,
         .x      = wm.pointer.x,
         .y      = wm.pointer.y,
         .image  = image,
     };
 
-    int e = ioctl(display->fd, FBIOPUT_HWCURSOR, &cursor);
-
-    free(image);
-
-    if (e < 0) {
+    if (ioctl(display->fd, FBIOPUT_HWCURSOR, &cursor) < 0) {
         fprintf(stderr, "aplus-wm: ioctl(FBIOPUT_HWCURSOR) failed: %s\n", strerror(errno));
-        return false;
+        return -1;
+    }
+
+    return 0;
+}
+
+
+/* Decide whether the pointer lives on a plane of its own, by asking the adapter for one and
+ * putting the current shape on it.
+ *
+ * The flag has to be set before that first upload rather than after it: it is what tells the
+ * cursor code to keep a decoded image in the straight-alpha form the plane wants, instead of
+ * releasing it once the premultiplied copy is built.
+ *
+ * Failing here is not an error worth refusing to start over: it just means the pointer gets
+ * drawn into the frame the old way.
+ */
+
+static void wm_display_cursor_init(wm_display_t* display) {
+
+    struct fb_hwcinfo hwc;
+
+    if (ioctl(display->fd, FBIOGET_HWCINFO, &hwc) < 0) {
+        return;
+    }
+
+    if (!(hwc.flags & FB_HWCINFO_HAS_CURSOR)) {
+        return;
+    }
+
+
+    display->hwcursor = true;
+
+    if (wm_cursor_upload() < 0) {
+
+        display->hwcursor = false;
+
+        return;
     }
 
 
     fprintf(stderr, "aplus-wm: using the hardware cursor plane\n");
-
-    return true;
 }
 
 
@@ -263,7 +209,7 @@ int wm_display_open(wm_display_t* display, const char* device) {
     fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
 
 
-    display->hwcursor = wm_display_cursor_init(display);
+    wm_display_cursor_init(display);
 
     return 0;
 }
