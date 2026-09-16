@@ -57,9 +57,9 @@ static ssize_t virtconsole_write(device_t*, const void*, size_t);
 static ssize_t virtconsole_read(device_t*, void*, size_t);
 
 
-/* How much of the receive queue to stock. The device fills one buffer per burst of input
-   and cannot deliver anything at all while the queue is empty, so the depth is headroom
-   between reads rather than anything the reader sees. Capped by what the queue has. */
+/**
+ * @brief How much of the receive queue to stock, capped by what the queue has.
+ */
 
 #define VIRTCONSOLE_BUFFERS 8
 
@@ -119,11 +119,12 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 }
 
 
-/* Stock the receive queue.
+/**
+ * @brief Stocks the receive queue, which the device drops input into and cannot read from while empty.
  *
- * Nothing can be read from a port whose receive queue is empty -- the device has nowhere to
- * put the input and drops it -- which is why /dev/hvc0 was write only: the queue was never
- * given a single buffer. */
+ * @param vc The port to stock.
+ * @return The number of buffers handed to the device.
+ */
 
 static size_t virtconsole_fill(struct virtconsole* vc) {
 
@@ -251,11 +252,13 @@ static ssize_t virtconsole_write(device_t* device, const void* buf, size_t size)
 }
 
 
-/* Drain what the device has put in the receive queue.
+/**
+ * @brief Drains what the device has put in the receive queue, holding a partly read buffer for the next call.
  *
- * A buffer is handed back to the device as soon as the reader is finished with it, and one
- * the reader only got partway through is held in pending until the next call: the device
- * fills a buffer with as much as it has, which is not bound to be as much as was asked for.
+ * @param device The port to read from.
+ * @param buf The buffer to fill.
+ * @param size The number of bytes asked for.
+ * @return The number of bytes read, or a negative errno.
  */
 
 static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
@@ -287,7 +290,6 @@ static ssize_t virtconsole_read(device_t* device, void* buf, size_t size) {
                 if (!virtq_reap(driver, q, &desc, &length))
                     break;
 
-                /* Not one of ours -- a completion for something else on this queue. */
                 if (desc == VIRTQ_DESC_NONE)
                     continue;
 

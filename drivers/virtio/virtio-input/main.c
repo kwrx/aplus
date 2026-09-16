@@ -52,31 +52,16 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/* This driver claims absolute pointing devices -- virtio-tablet-pci and nothing else. The
- * point of it is not that a tablet is a nicer mouse: it is that a relative pointer forces
- * the host to grab the real one to deliver motion, and a grabbed host pointer is hidden,
- * which takes the adapter's cursor plane down with it. An absolute pointer needs no grab, so
- * the plane the virtio-gpu driver hands the host is the pointer the user actually sees.
- *
- * Relative and key devices are left to whoever already owns /dev/mouse and /dev/kbd: this
- * driver would only fight the PS/2 driver for those names, and the machines that have a
- * virtio tablet have a PS/2 keyboard too.
- *
- * Left, but put back down: what a device is cannot be read before its BARs are mapped, and
- * mapping them means bringing it all the way up, which is the point at which the host starts
- * routing that kind of input to it. A device that turns out not to be a tablet is therefore
- * reset and released through virtio_pci_dnit() rather than abandoned in that state, which is
- * what used to take the keyboard away from the PS/2 driver by existing.
+/**
+ * @brief How many absolute pointing devices this driver claims; relative and key devices are left alone.
  */
 
 
 #define VIRTIO_INPUT_MAX_DEVICES 4
 
-/* As much of the event queue as it will give. The device takes one buffer per event and
-   drops a whole report the moment it cannot place all of it, so the only thing depth buys is
-   headroom for reports that arrive faster than the interrupt drains them -- and there is
-   nothing else for these descriptors to be spent on. The allocator caps this at what the
-   queue actually has. */
+/**
+ * @brief As much of the event queue as it will give, capped by what the queue actually has.
+ */
 #define VIRTIO_INPUT_BUFFERS 64
 
 #define VIRTIO_INPUT_EVENT_SIZE (sizeof(struct virtio_input_event))
@@ -113,9 +98,13 @@ static device_t chardevs[VIRTIO_INPUT_MAX_DEVICES]         = {0};
 static size_t num_devices = 0;
 
 
-/* Select an entry of the device configuration window and return how many bytes of it the
- * device filled in. Zero means the device has nothing to say about that entry, which is how
- * its capabilities are discovered: an absent EV_BITS/EV_ABS entry means no absolute axes.
+/**
+ * @brief Selects an entry of the device configuration window.
+ *
+ * @param cfg The configuration window.
+ * @param select The entry to select.
+ * @param subsel The subentry to select.
+ * @return How many bytes of the entry the device filled in, zero when it has nothing to say about it.
  */
 
 static uint8_t virtinput_cfg_select(struct virtio_input_config volatile* cfg, uint8_t select, uint8_t subsel) {
@@ -142,9 +131,11 @@ static bool virtinput_cfg_has_bit(struct virtio_input_config volatile* cfg, uint
 }
 
 
-/* Fill the event queue. The device drops an entire report the moment it does not have room
- * for all of it at once, so the queue is stocked before anything can be reported rather than
- * a buffer at a time as events arrive.
+/**
+ * @brief Stocks the event queue, which the device needs whole before it reports anything.
+ *
+ * @param vi The device to stock.
+ * @return 0 on success, or a negative errno.
  */
 
 static int virtinput_fill(struct virtinput* vi) {
@@ -180,12 +171,10 @@ static void virtinput_write(struct virtinput* vi, event_t* ev) {
 }
 
 
-/* Publish the position the report in progress has assembled, if it moved the pointer.
+/**
+ * @brief Publishes the position the report in progress has assembled, if it moved the pointer.
  *
- * The axes arrive one event at a time and event_t carries them as a pair, so sending one the
- * moment it lands would put the pointer somewhere it never was: a diagonal movement would
- * pass through the corner between the old Y and the new X. The pair is held until the report
- * that set it is closed, which is exactly what EV_SYN is for.
+ * @param vi The device whose report has closed.
  */
 
 static void virtinput_flush_pointer(struct virtinput* vi) {
@@ -209,7 +198,12 @@ static void virtinput_flush_pointer(struct virtinput* vi) {
 }
 
 
-/* Translate one device event into the kernel's own and publish it. */
+/**
+ * @brief Translates one device event into the kernel's own and publishes it.
+ *
+ * @param vi The device the event came from.
+ * @param in The event to translate.
+ */
 
 static void virtinput_publish(struct virtinput* vi, const struct virtio_input_event* in) {
 
@@ -271,8 +265,6 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
 
         case EV_KEY:
 
-            /* Where the pointer was when the button was pressed is part of what a press
-               means, so the position this report carries goes out ahead of it. */
             virtinput_flush_pointer(vi);
 
             ev.ev_type     = EV_KEY;
@@ -284,8 +276,6 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
 
         case EV_REL:
 
-            /* A tablet still has a wheel, and the wheel is relative even when the pointer
-               is not. */
             if (code != REL_WHEEL)
                 return;
 
@@ -307,12 +297,10 @@ static void virtinput_publish(struct virtinput* vi, const struct virtio_input_ev
 }
 
 
-/* Drain everything the device has finished writing and put the buffers straight back. The
- * whole batch is announced with one notification rather than one per buffer.
+/**
+ * @brief Drains everything the device has finished writing and puts the buffers straight back.
  *
- * The used ring is consumed through virtq_reap(), which is what keeps the events in the
- * order the device produced them -- and keeps this driver out of the available ring, which
- * it used to write itself under a lock of its own rather than the queue's.
+ * @param vi The device to drain.
  */
 
 static void virtinput_drain(struct virtinput* vi) {
@@ -354,8 +342,6 @@ static void virtinput_drain(struct virtinput* vi) {
 
 static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
 
-    /* The vector is only meaningful on the MSI-X path, and a drain with nothing to drain is
-       a single load of the used index, so every device on this driver is simply checked. */
     for (size_t i = 0; i < num_devices; i++) {
 
         if (devices[i]->driver == driver)
@@ -380,9 +366,13 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 }
 
 
-/* Read the range of one absolute axis. A device that reports the axis but gives it no range
- * would make the scaling a division by zero, so an empty range is refused here rather than
- * guarded against on every event.
+/**
+ * @brief Reads the range of one absolute axis, refusing an axis the device gives no range.
+ *
+ * @param vi The device to read from.
+ * @param cfg The configuration window.
+ * @param axis The axis to read.
+ * @return 0 on success, or a negative errno.
  */
 
 static int virtinput_abs_range(struct virtinput* vi, struct virtio_input_config volatile* cfg, uint8_t axis) {
@@ -505,7 +495,6 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     strncpy(chr->description, "VIRTIO absolute pointer input device", DEVICE_MAXDESCLEN - 1);
 
-    /* Major 13 is the input family; 64 upwards is where its event devices live. */
     chr->major = 13;
     chr->minor = 64 + num_devices;
 
@@ -523,8 +512,6 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
     device_mkdev(chr, 0666);
 
 
-    /* Only now: a buffer handed over before the device node exists would let an event
-       arrive with nowhere to publish it. */
     if (virtinput_fill(vi) < 0) {
 
 #if DEBUG_LEVEL_ERROR

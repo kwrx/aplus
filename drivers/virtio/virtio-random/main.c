@@ -146,17 +146,17 @@ static ssize_t virtrandom_write(device_t* device, const void* buf, size_t size) 
     DEBUG_ASSERT(device->userdata);
     DEBUG_ASSERT(buf);
 
-    /* Negative rather than errno and -1: read() and write() carry a driver's error in the
-       return value, and a -1 reaching the libc that way is EPERM, not "see errno". */
-
     return -ENOSPC;
 }
 
-/* The request is cut to the receive window rather than handed to the queue whole.
+/**
+ * @brief Reads entropy from the device, cut to what the receive window holds.
  *
- * The length goes straight into a descriptor, so a device asked for more than the window
- * holds writes more than the window holds -- a read of 64KiB used to hand the host an 8KiB
- * buffer and a promise of 64KiB. */
+ * @param device The device to read from.
+ * @param buf The buffer to fill.
+ * @param size The number of bytes asked for.
+ * @return The number of bytes read, or a negative errno.
+ */
 
 static ssize_t virtrandom_read(device_t* device, void* buf, size_t size) {
     DEBUG_ASSERT(device);

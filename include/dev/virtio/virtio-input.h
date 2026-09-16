@@ -25,13 +25,16 @@
 #define _DEV_VIRTIO_VIRTIO_INPUT_H
 
 
-// Queues
+/**
+ * @brief The device's two queues.
+ */
 #define VIRTIO_INPUT_QUEUE_EVENT  0
 #define VIRTIO_INPUT_QUEUE_STATUS 1
 
 
-/* The device configuration space is a window, not a record: a driver writes select and
-   subsel, then reads size and the union back to get the one entry it asked for. */
+/**
+ * @brief The configuration space is a window: a driver writes select and subsel, then reads the entry back.
+ */
 
 #define VIRTIO_INPUT_CFG_UNSET     0x00
 #define VIRTIO_INPUT_CFG_ID_NAME   0x01
@@ -85,8 +88,9 @@ struct virtio_input_config {
 } __packed;
 
 
-/* One event, in the same type/code/value shape Linux uses on the wire. The device writes
-   exactly one of these per buffer it takes off the event queue. */
+/**
+ * @brief One event, in the same type/code/value shape Linux uses on the wire.
+ */
 
 struct virtio_input_event {
     uint16_t type;

@@ -52,11 +52,9 @@ MODULE_LICENSE("GPL");
 #define VIRTQ_PAGE_ALIGN(x) (((x) + (PML1_PAGESIZE - 1)) & ~((uintptr_t)PML1_PAGESIZE - 1))
 
 
-/* A queue is five regions of one physical allocation, each starting on a page of its own:
- * three the device is handed the address of, and two it DMAs in and out of. Sized and
- * placed by a single routine so that the two cannot drift apart -- they were separate
- * before, and an allocation that disagrees with the offsets read out of it is the kind of
- * bug that only shows up on a queue size nobody tested. */
+/**
+ * @brief A queue is five regions of one physical allocation, each starting on a page of its own.
+ */
 
 enum {
     VIRTQ_REGION_DESC = 0,
@@ -75,8 +73,8 @@ static size_t virtq_layout(struct virtio_driver* driver, size_t q_size, uintptr_
 
     const size_t sizes[VIRTQ_REGION_MAX] = {
         [VIRTQ_REGION_DESC]  = q_size * sizeof(struct virtq_descriptor),
-        [VIRTQ_REGION_AVAIL] = sizeof(struct virtq_available) + ((q_size + 1) * sizeof(uint16_t)), //? + used_event
-        [VIRTQ_REGION_USED]  = sizeof(struct virtq_used) + (q_size * 8) + sizeof(uint16_t),        //? + avail_event
+        [VIRTQ_REGION_AVAIL] = sizeof(struct virtq_available) + ((q_size + 1) * sizeof(uint16_t)),
+        [VIRTQ_REGION_USED]  = sizeof(struct virtq_used) + (q_size * 8) + sizeof(uint16_t),
         [VIRTQ_REGION_SEND]  = q_size * driver->send_window_size,
         [VIRTQ_REGION_RECV]  = q_size * driver->recv_window_size,
     };
@@ -121,9 +119,6 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
         return errno = EINVAL, -1;
 
 
-    /* The address a queue is kicked through is computed from the notify capability here, so
-       a queue set up before that capability was read would kick something else entirely. */
-
     if (unlikely(!driver->internals.notify_offset || !driver->internals.notify_off_multiplier)) {
 #if DEBUG_LEVEL_FATAL
         kprintf("virtio-queue: FAIL! device %d has no notify configuration yet, cannot set up queue %d\n", driver->device, index);
@@ -136,10 +131,6 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     atomic_thread_fence(memory_order_seq_cst);
 
     size_t q_size = le16_to_cpu(mmio_r16(&cfg->queue_size));
-
-    /* A device offers a queue it does not have as one of size zero, and the ring indices
-       below are taken modulo the size, which only wraps where the device's own 16-bit
-       counters do if that size is a power of two. */
 
     if (unlikely(!q_size || (q_size & (q_size - 1)) || q_size > VIRTQ_MAX_DESCRIPTORS)) {
 #if DEBUG_LEVEL_FATAL
@@ -193,9 +184,6 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
     spinlock_init_with_flags(&virtq(driver, index)->lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 
-    /* Queues share vectors when the device's table is too small to give each its own, so the
-       vector a queue raises is not simply its own index. */
-
     uint16_t vector = VIRTIO_MSI_NO_VECTOR;
 
 #if defined(CONFIG_HAVE_PCI_MSIX)
@@ -204,9 +192,6 @@ int virtq_init(struct virtio_driver* driver, struct virtio_pci_common_cfg volati
 #endif
 
     mmio_w16(&cfg->queue_msix_vector, cpu_to_le16(vector));
-
-    /* A device that could not take the vector says so by reading back NO_VECTOR: the queue
-       goes uninterrupted and virtq_wait() falls back to rescanning on its own. */
 
 #if DEBUG_LEVEL_WARN
     if (vector != VIRTIO_MSI_NO_VECTOR && le16_to_cpu(mmio_r16(&cfg->queue_msix_vector)) != vector)
@@ -249,8 +234,13 @@ void virtq_dnit(struct virtio_driver* driver, uint16_t queue) {
 }
 
 
-/* Put a descriptor and everything chained behind it back in the pool. Bounded by the queue
-   size so that a device that corrupts q_next into a cycle costs a walk, not a hang. */
+/**
+ * @brief Puts a descriptor and everything chained behind it back in the pool, bounded by the queue size.
+ *
+ * @param driver The driver owning the queue.
+ * @param queue The queue the chain belongs to.
+ * @param head The first descriptor of the chain.
+ */
 
 static void virtq_release_locked(struct virtio_driver* driver, uint16_t queue, uint16_t head) {
 
@@ -292,8 +282,13 @@ static uint16_t virtq_alloc_locked(struct virtio_driver* driver, uint16_t queue,
 }
 
 
-/* Publish one descriptor chain on the available ring. The caller holds the lock: this reads
-   and writes the ring index, and two callers doing that at once lose a buffer. */
+/**
+ * @brief Publishes one descriptor chain on the available ring, with the queue lock held.
+ *
+ * @param driver The driver owning the queue.
+ * @param queue The queue to publish on.
+ * @param head The first descriptor of the chain.
+ */
 
 static void virtq_publish_locked(struct virtio_driver* driver, uint16_t queue, uint16_t head) {
 
@@ -301,20 +296,20 @@ static void virtq_publish_locked(struct virtio_driver* driver, uint16_t queue, u
 
     virtq(driver, queue)->available->q_ring[idx % virtq(driver, queue)->size] = cpu_to_le16(head);
 
-    /* The descriptors and the ring entry have to be in place before the index that makes
-       them visible to the device is. */
     atomic_thread_fence(memory_order_release);
 
     virtq(driver, queue)->available->q_idx = cpu_to_le16(idx + 1);
 }
 
 
-/* Take a descriptor out of the pool.
+/**
+ * @brief Takes a descriptor out of the pool.
  *
- * VIRTQ_DESC_NONE means the queue has none left. Descriptor 0 is a descriptor like any
- * other: the pool is tracked in requests[], beside the ring rather than in it, so there is
- * no need to reserve an index to mean failure -- which is what the old sentinel of 0 cost,
- * and it could not be checked for anyway since the return type was unsigned. */
+ * @param driver The driver owning the queue.
+ * @param queue The queue to draw from.
+ * @param state The state to mark the descriptor with.
+ * @return The descriptor, or VIRTQ_DESC_NONE when the queue has none left.
+ */
 
 uint16_t virtq_alloc_descriptor(struct virtio_driver* driver, uint16_t queue, uint8_t state) {
 
@@ -332,9 +327,6 @@ uint16_t virtq_alloc_descriptor(struct virtio_driver* driver, uint16_t queue, ui
     if (likely(desc != VIRTQ_DESC_NONE))
         return desc;
 
-
-    /* An empty pool is most often one that has not been collected from: every fire and
-       forget send leaves its descriptor for whoever next needs one. */
 
     while (virtq_reap(driver, queue, NULL, NULL))
         ;
@@ -360,11 +352,14 @@ void virtq_free_descriptor(struct virtio_driver* driver, uint16_t queue, uint16_
 }
 
 
-/* Hand a receive buffer to the device. The descriptor keeps its window for as long as it is
-   posted, and the owning driver gets it back from virtq_reap() to read and re-post.
-
-   Notifying is left to the caller so that stocking a whole queue costs one notification
-   rather than one per buffer. */
+/**
+ * @brief Hands a receive buffer to the device, leaving the notification to the caller.
+ *
+ * @param driver The driver owning the queue.
+ * @param queue The queue to post on.
+ * @param desc The descriptor to post.
+ * @param length The size of the window the device may write.
+ */
 
 void virtq_provide(struct virtio_driver* driver, uint16_t queue, uint16_t desc, size_t length) {
 
@@ -393,23 +388,21 @@ void virtq_notify(struct virtio_driver* driver, uint16_t queue) {
     DEBUG_ASSERT(driver);
     DEBUG_ASSERT(queue < driver->internals.num_queues);
 
-    /* Everything published has to be visible to the device before it is told to look. */
     atomic_thread_fence(memory_order_seq_cst);
 
     mmio_w16(&virtq(driver, queue)->notify->n_idx, cpu_to_le16(queue));
 }
 
 
-/* Consume the next entry of the used ring.
+/**
+ * @brief Consumes the next entry of the used ring, exactly once.
  *
- * Returns 1 when one was consumed and 0 when the ring is drained. An entry belonging to a
- * buffer the caller posted is reported through desc and length; one belonging to a fire and
- * forget send is freed and one a caller is waiting on is marked done for it, both of which
- * report desc as VIRTQ_DESC_NONE.
- *
- * Each entry is consumed exactly once, which is the point: the old code had every waiter
- * rescan the whole ring from its own snapshot, so an entry could be matched by more than
- * one of them and a descriptor recycled underneath a caller still reading its window. */
+ * @param driver The driver owning the queue.
+ * @param queue The queue to drain.
+ * @param desc Receives the descriptor of a posted buffer, or VIRTQ_DESC_NONE.
+ * @param length Receives how much the device wrote.
+ * @return 1 when an entry was consumed, 0 when the ring is drained.
+ */
 
 int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uint32_t* length) {
 
@@ -425,10 +418,6 @@ int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uin
 
     scoped_lock(&virtq(driver, queue)->lock) {
 
-        /* An unsigned difference, never a comparison: both of these are 16-bit counters
-           that wrap, and "has anything arrived" is a distance rather than an ordering. A
-           plain < stops finding anything the moment the device's index wraps past ours. */
-
         if ((uint16_t)(le16_to_cpu(virtq(driver, queue)->used->q_idx) - virtq(driver, queue)->last_used) == 0)
             return 0;
 
@@ -440,11 +429,6 @@ int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uin
         uint16_t head = (uint16_t)le32_to_cpu(virtq(driver, queue)->used->q_elements[i].e_id);
         uint32_t size = le32_to_cpu(virtq(driver, queue)->used->q_elements[i].e_length);
 
-
-        /* A posted buffer belongs to whoever posted it, and a caller that asked for no
-           descriptor back has nowhere to put it. Leave it where it is rather than consume
-           it into nothing: this is the path virtq_alloc_descriptor() takes when it is
-           looking for space, and swallowing an event there would lose it outright. */
 
         if (head < virtq(driver, queue)->size && virtq(driver, queue)->requests[head].state == VIRTQ_REQUEST_POSTED && !desc)
             return 0;
@@ -498,18 +482,15 @@ int virtq_reap(struct virtio_driver* driver, uint16_t queue, uint16_t* desc, uin
 }
 
 
-/* Wait for the device to finish with a descriptor chain.
+/**
+ * @brief Waits for the device to finish with a descriptor chain, polling the used ring until a deadline.
  *
- * There is no sleeping wait to use here. sem_wait() in this kernel spins on a counter with
- * __cpu_pause() rather than descheduling, so dressing this up as a blocking call would buy
- * nothing and cost the semaphore's counter drift -- one poster in the interrupt, any number
- * of waiters, and a post for every interrupt whether anyone is waiting or not.
- *
- * The interrupt is a hint that shortens the wait, never the thing being waited for: every
- * spinlock in this kernel disables interrupts, so a device driver that holds one across a
- * command -- virtgpu_flush() pairs a transfer and a flush under one -- runs this loop on a
- * CPU that cannot take the completion. The used ring is therefore polled regardless, and
- * the deadline is what stops a wedged device from owning a CPU forever. */
+ * @param driver The driver owning the queue.
+ * @param queue The queue the chain was sent on.
+ * @param head The first descriptor of the chain.
+ * @param length Receives how much the device wrote.
+ * @return 0 on success, or a negative errno.
+ */
 
 static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t head, size_t* length) {
 
@@ -555,8 +536,6 @@ static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t hea
         }
 
 
-        /* Idle before looking again, cut short by the interrupt when one can be taken. */
-
         for (size_t spin = 0; spin < VIRTQ_POLL_SPINS; spin++) {
 
             if (atomic_load(&virtq(driver, queue)->completions) != seen)
@@ -570,25 +549,14 @@ static int virtq_wait(struct virtio_driver* driver, uint16_t queue, uint16_t hea
 }
 
 
-/* Take a descriptor from the pool, waiting for the device when there are none left.
+/**
+ * @brief Takes a descriptor from the pool, waiting for the device when there are none left.
  *
- * A fire and forget request has no completion anybody is sitting on, so the only thing that
- * ever puts its descriptor back is the next caller reaping the used ring on the way in. That
- * keeps up with a device that keeps up, and nothing else: a writer faster than the device --
- * a process in a write() loop on /dev/hvc0 is faster than the host's main loop after a few
- * hundred sends -- empties the pool with every descriptor still legitimately in flight.
- *
- * Failing there reports a queue that is merely full as an I/O error, and because a descriptor
- * only ever comes back on the way in, giving up is also what makes it permanent: the caller
- * that would have collected them is the one being turned away. That is how a port that had
- * been writing happily stopped for good partway through a large transfer.
- *
- * So wait instead, on the deadline virtq_wait() gives a device to answer a request: room in a
- * queue is something the device produces, and one that produces none in five seconds has
- * stopped rather than fallen behind. The pool is re-examined -- which re-reads the used ring
- * -- on every pass rather than only when the completion counter moves, because that counter
- * only says an interrupt got through, and a send from a syscall runs with interrupts disabled
- * often enough that usually none has. */
+ * @param driver The driver owning the queue.
+ * @param queue The queue to draw from.
+ * @param state The state to mark the descriptor with.
+ * @return The descriptor, or VIRTQ_DESC_NONE if none came free before the deadline.
+ */
 
 static uint16_t virtq_alloc_descriptor_wait(struct virtio_driver* driver, uint16_t queue, uint8_t state) {
 
@@ -685,9 +653,6 @@ ssize_t virtq_sendrecv(struct virtio_driver* driver, uint16_t queue, const void*
 
     int e = virtq_wait(driver, queue, inp, &received);
 
-    /* The copy comes out of the window before the descriptor goes back in the pool, not
-       after: a descriptor in the pool is one somebody else may already be filling. */
-
     if (likely(e == 0))
         memcpy(output, (void*)virtq_recvbuf(driver, queue, out), received);
 
@@ -758,9 +723,15 @@ ssize_t virtq_recv(struct virtio_driver* driver, uint16_t queue, void* output, s
 }
 
 
-/* Send without waiting. The descriptor is marked fire and forget, which is what makes it
-   the reaper's to reclaim -- before, nothing reclaimed it at all and a queue ran itself out
-   of descriptors one send at a time. */
+/**
+ * @brief Sends without waiting, marking the descriptor fire and forget for the reaper to reclaim.
+ *
+ * @param driver The driver owning the queue.
+ * @param queue The queue to send on.
+ * @param message The bytes to send.
+ * @param size The number of bytes to send.
+ * @return The number of bytes sent, or a negative errno.
+ */
 
 ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* message, size_t size) {
 
@@ -806,11 +777,12 @@ ssize_t virtq_send(struct virtio_driver* driver, uint16_t queue, const void* mes
 }
 
 
-/* Called from the interrupt for every queue the raised vector serves.
+/**
+ * @brief Tells a waiter to look again, called from the interrupt for every queue the raised vector serves.
  *
- * Nothing is drained here on purpose. A queue stocked with buffers by a device driver is
- * drained by that driver, in order, out of its own handler; draining it here would consume
- * its events out from under it. All this does is tell a waiter to look again. */
+ * @param driver The driver owning the queue.
+ * @param queue The queue the interrupt names.
+ */
 
 void virtq_flush(struct virtio_driver* driver, uint16_t queue) {
 

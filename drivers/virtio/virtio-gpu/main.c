@@ -99,31 +99,11 @@ device_t device = {
 };
 
 
-/* The framebuffer is ordinary RAM that the device reads by DMA, so userspace needs its own
- * view of it. It is mapped at its physical address, as the other video adapters here do,
- * which is what lets fb_fix_screeninfo.smem_start be handed to a process as a pointer.
+/**
+ * @brief Publishes the framebuffer at KERNEL_VIDEO_AREA, leaving fb_base holding its physical address.
  *
- * Unlike those adapters this is RAM rather than a PCI aperture, and the kernel already has it
- * mapped write-back through the direct map; asking for write-combining here as they do would
- * leave two mappings of the same page disagreeing about its memory type. Write-back is also
- * the right choice for the traffic: a compositor blits whole rows into it.
+ * @param device The adapter whose framebuffer is mapped.
  */
-
-/* Published at KERNEL_VIDEO_AREA rather than identity-mapped.
- *
- * This framebuffer is ordinary system memory -- pmm_alloc_blocks() hands back whatever is
- * free, which early in the boot is a low address, tens of megabytes in. Mapping it at that
- * address put it in the middle of every process: user programs load at 0x400000 and their
- * heap grows up from the end of the image, so the first thing above the image was a few
- * megabytes of framebuffer. sys_brk() cannot map over it -- arch_vmm_map() refuses a
- * populated entry -- so the heap stopped there, at whatever address the allocator had
- * returned, and no process could hold more than that no matter how much memory the machine
- * had. Anything with a large appetite died on startup; Mesa's softpipe wants a couple of
- * hundred megabytes of it before it will give out a context at all.
- *
- * The physical address stays in fb_base: it is what the device is given as the resource
- * backing, and the device reads guest memory by physical address. Only what userspace is
- * handed -- fs.smem_start, set in virtgpu_update() -- becomes the virtual one. */
 
 static void virtgpu_map_framebuffer(device_t* device) {
 
@@ -151,11 +131,11 @@ static void virtgpu_free_framebuffer(device_t* device) {
 }
 
 
-/* Take the scanout resource back from the device.
+/**
+ * @brief Takes the scanout resource back from the device, before its framebuffer is handed back to the allocator.
  *
- * This has to happen before the framebuffer it describes is handed back to the allocator,
- * never after: while the resource still holds the backing, the host is entitled to read those
- * pages, and by then they may belong to something else. */
+ * @param gpu The adapter to release.
+ */
 
 static void virtgpu_release_scanout(struct virtgpu* gpu) {
 
@@ -206,13 +186,13 @@ static void virtgpu_dnit(device_t* device) {
 
 
 
-/* Ask the device what mode its primary scanout is in.
+/**
+ * @brief Asks the device what mode its primary scanout is in.
  *
- * The mode used to come from core->framebuffer -- whatever the bootloader left on screen --
- * and the answer to this was fetched, checked for the scanout being enabled, and then
- * thrown away. That agrees with the device only on virtio-vga, which inherits the boot
- * mode; a plain virtio-gpu-pci has no boot framebuffer behind it at all and was being
- * driven at a hard coded 1280x720 whatever the host window was.
+ * @param gpu The adapter to ask.
+ * @param xres Receives the width in pixels.
+ * @param yres Receives the height in pixels.
+ * @return 0 on success, or a negative errno.
  */
 
 static int virtgpu_get_mode(struct virtgpu* gpu, uint32_t* xres, uint32_t* yres) {
@@ -285,8 +265,6 @@ static void virtgpu_reset(device_t* device) {
         return;
     }
 
-    /* A device is entitled to report a scanout it has no size for yet. Fall back to the
-       mode the machine booted in, and to something usable if there was not one. */
     if (!xres || !yres) {
 
         xres = core->framebuffer.address ? core->framebuffer.width : 1280;
@@ -299,8 +277,6 @@ static void virtgpu_reset(device_t* device) {
     device->vid.vs.xres_virtual = xres;
     device->vid.vs.yres_virtual = yres;
 
-    /* Fixed rather than inherited: the scanout resource below is created as B8G8R8X8, so
-       the framebuffer behind it is four bytes a pixel whatever the machine booted in. */
     device->vid.vs.bits_per_pixel = 32;
 
     device->vid.vs.activate = FB_ACTIVATE_NOW;
@@ -319,8 +295,6 @@ static void virtgpu_reset(device_t* device) {
 
     virtgpu_reset_framebuffer(device);
 
-    /* Nothing else here fills in fb_fix_screeninfo, and whoever opens the device first
-       would otherwise read a NULL framebuffer pointer and a pitch of zero. */
     virtgpu_update(device);
 }
 
@@ -364,16 +338,14 @@ static void virtgpu_update(device_t* device) {
 }
 
 
-/* Copy a rectangle of the framebuffer into the scanout resource and publish it.
+/**
+ * @brief Copies a rectangle of the framebuffer into the scanout resource and publishes it.
  *
- * The transfer is the expensive half -- it is the host reading guest memory -- so the
- * rectangle matters: a compositor that damages one character cell moves a few hundred bytes
- * here, where a whole-screen push at this mode moves three and a half megabytes. The offset
- * is where the rectangle starts inside the backing, which the device needs because the
- * backing is laid out by the pitch rather than by the rectangle.
- *
- * Both halves have to reach the device as a pair, hence the lock: a flush that overtook the
- * transfer of another caller would publish a half-written frame.
+ * @param device The adapter to flush.
+ * @param x The left edge of the damaged rectangle.
+ * @param y The top edge of the damaged rectangle.
+ * @param width The width of the damaged rectangle.
+ * @param height The height of the damaged rectangle.
  */
 
 static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
@@ -402,15 +374,10 @@ static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t wid
 }
 
 
-/* There is no scanout vblank to wait for on this device, and claiming otherwise would be a
- * lie the caller then paces itself against. What this waits for is the completion fence of
- * the frame, which is the useful half of a vsync here: it is what stops the compositor from
- * drawing over a framebuffer the host has not finished reading.
+/**
+ * @brief Waits for the completion fence of the frame, transferring the whole screen for a caller that pushed nothing.
  *
- * virtgpu_flush() already waits on that fence before it returns, so a caller that pushed its
- * damage has nothing left to wait for. A caller that pushed nothing is one that expects this
- * call alone to put its frame on screen -- the interface before FBIO_FLUSH existed -- and
- * gets the whole screen transferred, which is what it was getting before.
+ * @param device The adapter to wait on.
  */
 
 static void virtgpu_wait_vsync(device_t* device) {
@@ -433,12 +400,11 @@ static void virtgpu_wait_vsync(device_t* device) {
 
 
 
-/* The cursor plane is a resource like any other, except that the device will only take it at
- * exactly 64x64. A smaller image is placed at the origin of one and the rest left
- * transparent, so the hotspot the caller gave stays correct without adjustment.
+/**
+ * @brief Creates the 64x64 cursor resource on first use, leaving a smaller image transparent around its origin.
  *
- * Created on first use rather than at reset: a system that never shows a pointer should not
- * be paying for the backing, and the display server is the only thing that asks for one.
+ * @param gpu The adapter to create it on.
+ * @return 0 on success, or a negative errno.
  */
 
 static int virtgpu_cursor_create(struct virtgpu* gpu) {
@@ -491,8 +457,6 @@ static int virtgpu_cursor_set(device_t* device, const struct fb_hwcursor* cursor
 
         if (!(cursor->flags & FB_HWCURSOR_ENABLE)) {
 
-            /* Resource 0 is how the device is told there is no cursor. The backing is kept:
-               hiding a pointer is usually a prelude to showing it again. */
             if (virtgpu_cmd_update_cursor(gpu, VIRTGPU_DISPLAY_PRIMARY, 0, 0, 0, 0, 0) < 0)
                 return -1;
 
@@ -534,8 +498,14 @@ static int virtgpu_cursor_set(device_t* device, const struct fb_hwcursor* cursor
 }
 
 
-/* The whole reason the hardware cursor is worth having: one short command on a queue of its
- * own, no framebuffer traffic, and nothing to repaint where the pointer used to be. */
+/**
+ * @brief Moves the cursor plane, with one short command on a queue of its own.
+ *
+ * @param device The adapter to command.
+ * @param x The pointer's position on the scanout.
+ * @param y The pointer's position on the scanout.
+ * @return 0 on success, or a negative errno.
+ */
 
 static int virtgpu_cursor_move(device_t* device, int32_t x, int32_t y) {
 
@@ -558,18 +528,14 @@ static int virtgpu_cursor_move(device_t* device, int32_t x, int32_t y) {
 
 
 
-/* Nothing is asked for that is not implemented here.
+/**
+ * @brief Asks the device for the features this driver implements, and nothing else.
  *
- * VIRGL used to be requested unconditionally by a driver that speaks only the 2D commands,
- * and on an adapter built without it the bit was not on offer at all. IN_ORDER was worse:
- * the constant named bit 38 rather than 35, so what was being asked for was
- * NOTIFICATION_DATA -- a different payload on every kick -- and the driver satisfies
- * neither feature anyway, handing out whichever descriptor is free rather than consecutive
- * ones. Both went unnoticed because QEMU masks away what it did not offer and hands the raw
- * word back on a read, so the device came up looking as though it had agreed.
- *
- * The transport bits that are usable are already in what the common configuration hands in;
- * EDID would only be worth asking for once the EDID it returns is read. */
+ * @param driver The driver negotiating.
+ * @param features In/out. The word the device offers, replaced by what is wanted from it.
+ * @param index Which 32-bit word of the feature set this is.
+ * @return 0 on success, or a negative errno.
+ */
 
 static int setup_features(struct virtio_driver* driver, uint32_t* features, size_t index) {
 
@@ -600,13 +566,9 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
 static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
 
-    /* Zero until the device configuration capability has been read, and there is no
-       guarantee a device presents one. */
     if (unlikely(!driver->internals.device_config))
         return 0;
 
-    /* Through a volatile pointer: this is a device register being acknowledged, and a plain
-       one lets the compiler decide the read and the write do nothing worth keeping. */
     struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)driver->internals.device_config;
 
     mmio_w32(&cfg->events_clear, mmio_r32(&cfg->events_read));
@@ -686,12 +648,6 @@ void init(const char* args) {
     if (strstr(core->boot.cmdline, "graphics=builtin"))
         return;
 
-
-    /* Every class, filtered on the identity below rather than on the class code.
-     *
-     * PCI_TYPE_VGA finds virtio-vga, which presents itself as a VGA adapter for the sake of
-     * firmware that expects one, and misses virtio-gpu-pci entirely: that one is class
-     * display/other, which is what the specification actually asks a virtio GPU to be. */
 
     pci_scan(&pci_find, PCI_TYPE_ALL, &device);
 

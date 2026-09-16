@@ -59,12 +59,10 @@ static void pci_intx_interrupt_handler(void* frame, irq_t irq) {
 }
 
 
-/*
- * Find the chipset's PCI interrupt router.
+/**
+ * @brief Finds the chipset's PCI interrupt router, the ISA/LPC bridge on bus 0.
  *
- * On a PC this is the ISA/LPC bridge on bus 0. Only Intel parts are recognised, because the
- * 0x60..0x63 register block this reads is their convention and not something to guess at on
- * a bridge that might lay its config space out differently.
+ * @return The router's device, or a device with no vendor when none was recognised.
  */
 static pcidev_t pci_intx_find_router(void) {
 
@@ -83,19 +81,10 @@ static pcidev_t pci_intx_find_router(void) {
 }
 
 
-/*
- * Correct every device's PCI_INTERRUPT_LINE to the interrupt it actually asserts on.
+/**
+ * @brief Corrects every device's PCI_INTERRUPT_LINE to the interrupt it actually asserts on.
  *
- * That register is written by firmware and is not authoritative: what decides where an INTx
- * pin lands is the chipset's interrupt router, and the two disagree on real configurations.
- * Here the firmware leaves 11 on a card whose pin is routed through PIRQD to 10, so the
- * kernel would unmask the wrong I/O APIC pin, the card's level-triggered interrupt would stay
- * asserted and unserviced forever, and the device would simply never be heard from -- which
- * is what kept every network card in this tree from ever receiving a packet.
- *
- * Rewriting config space rather than returning the value keeps one source of truth: drivers
- * and the INTx dispatcher both read PCI_INTERRUPT_LINE and now both get the right answer.
- * Runs over bus 0 only, which is where the routed devices are on this platform.
+ * What decides where an INTx pin lands is the chipset's interrupt router, not what firmware left behind.
  */
 void pci_intx_fixup_irqs(void) {
 
@@ -115,19 +104,12 @@ void pci_intx_fixup_irqs(void) {
                 continue;
 
 
-            //? Pins are numbered INTA..INTD as 1..4; zero means the device raises no INTx at all.
             uint8_t pin = pci_read(device, PCI_INTERRUPT_PIN, 1);
 
             if (pin < 1 || pin > 4)
                 continue;
 
 
-            //? The standard swizzle: each slot offsets its pins by one position around the four
-            //? PIRQ lines, so that four slots sharing one pin still spread across all of them.
-            //? Both terms are zero-based -- INTA# is pin 1 in config space but link 0 here, and
-            //? slot 1 is the first slot -- hence the -2. An off-by-one here is quietly survivable
-            //? whenever two PIRQ lines happen to share an IRQ, and then storms on the one device
-            //? where they differ: it asserts a line nobody can match, so nobody ever clears it.
             uint8_t link = (uint8_t)((slot + pin - 2) & 3);
             uint8_t route = pci_read(router, PCI_PIRQ_ROUTE(link), 1);
 
