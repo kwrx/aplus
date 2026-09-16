@@ -213,14 +213,14 @@ stage_3() {
     fi
 
     # Get packages
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.2.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
     # Get additional packages
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
-        die python ./scripts/get-pkg.py --repo kwrx/aplus-doom --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i doom
+        die python ./scripts/get-pkg.py --repo kwrx/aplus-doom --repo-version 0.1.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i doom
     fi
     if [ "$CONFIG_HAVE_GAMES_NESEMU" == "y" ]; then
-        die python ./scripts/get-pkg.py --repo kwrx/aplus-nesemu --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i nesemu
+        die python ./scripts/get-pkg.py --repo kwrx/aplus-nesemu --repo-version 0.1.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i nesemu
     fi
 
 }
@@ -233,7 +233,7 @@ stage_4() {
 
     if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 1 ]; then
         if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
-            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.1.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
         fi
     else
 
