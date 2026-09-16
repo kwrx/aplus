@@ -60,16 +60,12 @@
     #define KERNEL_MMAP_AREA  0x000000A000000000
     #define KERNEL_MMAP_SIZE  0x0000002000000000 //? 128GiB
 
-    /* Where an adapter's framebuffer is published to userspace. Directly above the mmap
-     * window, which ends at KERNEL_MMAP_AREA + KERNEL_MMAP_SIZE, so neither the heap --
-     * capped at KERNEL_MMAP_AREA by sys_brk() -- nor an mmap can reach it.
+    /**
+     * @brief Where an adapter's framebuffer is published to userspace, directly above the mmap window.
      *
-     * An adapter whose framebuffer is a PCI BAR or the firmware's can identity-map it and be
-     * left alone: those live high in the physical map, far above any program. One that
-     * allocates its framebuffer out of system memory cannot, because the address it gets
-     * back is a low one, and identity-mapping that drops a few megabytes of device memory
-     * into the middle of every process -- right where the program image ends and the heap
-     * starts growing. The heap then stops dead at whatever address the allocator returned. */
+     * Out of reach of both the heap and an mmap, which an adapter allocating its framebuffer out of
+     * system memory needs: a low physical address cannot be identity-mapped clear of every process.
+     */
 
     #define KERNEL_VIDEO_AREA 0x000000C000000000
     #define KERNEL_VIDEO_SIZE 0x0000000040000000 //? 1GiB

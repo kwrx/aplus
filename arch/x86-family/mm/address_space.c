@@ -43,9 +43,11 @@
 
 
 
-/*!
- * @brief __mm_pagesize_for_level().
- *        Page size mapped by a leaf entry at a given paging level.
+/**
+ * @brief Reports the page size mapped by a leaf entry at a given paging level.
+ *
+ * @param level The paging level.
+ * @return The page size in bytes.
  */
 static uintptr_t __mm_pagesize_for_level(int level) {
 
@@ -66,28 +68,19 @@ static uintptr_t __mm_pagesize_for_level(int level) {
 }
 
 
-/*!
- * @brief __mm_is_kernel_slot().
- *        Does this top-level slot describe memory owned by the kernel alone?
+/**
+ * @brief Tells whether a top-level slot describes memory owned by the kernel alone.
  *
  * Such a slot is shared by reference between every address space instead of being copied.
- * That matters a great deal: the kernel heap direct map alone is 2TiB, which is 4 PDPTs plus
- * 2048 PDs, so duplicating it cost roughly 8MiB of physical memory on every fork and every
- * exec -- for tables whose leaves were then shared anyway.
  *
- * The predicate is structural (a slot range) rather than a test of the user bit. The user bit
- * does not work here in either direction: arch_vmm_map() sets it on intermediate tables purely
- * from the virtual address, so kernel MMIO identity maps produce user-bit tables holding
- * supervisor leaves, and top-level slot 0 legitimately holds both user program text and
- * identity-mapped device memory. Sharing that slot would hand every process the same page
- * tables.
+ * @param level The paging level.
+ * @param i The slot within that level.
+ * @return true if the slot is the kernel's.
  */
 static inline bool __mm_is_kernel_slot(int level, size_t i) {
 
 #if defined(__x86_64__)
 
-    /* PAGE_INDEX()/PAGE_COUNT() from asm.h shift a plain int and overflow at this level;
-       they are only ever evaluated by the assembler elsewhere. */
     #define MM_PML4_SPAN       (1ULL << 39)
     #define MM_PML4_SLOT(addr) (((uintptr_t)(addr) >> 39) & 0x1FF)
     #define MM_PML4_SPANS(sz)  ((((uintptr_t)(sz)) + MM_PML4_SPAN - 1) >> 39)
@@ -95,11 +88,9 @@ static inline bool __mm_is_kernel_slot(int level, size_t i) {
     if (level != 4)
         return false;
 
-    /* Kernel heap: the direct map of physical memory. */
     if (i >= MM_PML4_SLOT(KERNEL_HEAP_AREA) && i < MM_PML4_SLOT(KERNEL_HEAP_AREA) + MM_PML4_SPANS(KERNEL_HEAP_SIZE))
         return true;
 
-    /* Kernel image, and the per-CPU stacks that share its top-level slot. */
     if (i == MM_PML4_SLOT(KERNEL_HIGH_AREA))
         return true;
 
@@ -131,10 +122,6 @@ static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, 
 #if defined(CONFIG_DEMAND_PAGING)
     if (on_demand) {
 
-        /* Both parent and child become read-only until one of them writes. Record whether the
-           page was writable to begin with: without it the fault handler has no way to tell a
-           writable mapping from a read-only one and used to grant write access to both, so a
-           read-only mapping silently became writable across a fork. */
         x86_page_t e = (*__s & ~(X86_MMU_PG_RW | X86_MMU_PG_AP_TP_MASK)) | X86_MMU_PG_AP_TP_COW;
 
         if (*__s & X86_MMU_PG_RW)
@@ -156,15 +143,14 @@ static x86_page_t __mm_copy_data(x86_page_t* __s, size_t* size, bool on_demand, 
 }
 
 
-/*!
- * @brief __mm_copy_page().
- *        Give the destination table its own entry for a leaf the source holds.
+/**
+ * @brief Gives the destination table its own entry for a leaf the source holds.
  *
- * A copy-on-write entry is duplicated as it stands and resolved by whichever side writes first.
- * A shared entry is duplicated as it stands and never resolved at all: the frame belongs to a
- * shared memory segment, and the whole point of the child inheriting it is that both address
- * spaces go on seeing the same memory. Neither carries the ownership bit, so neither side ever
- * frees the frame.
+ * @param __s The source entry.
+ * @param __d The destination entry.
+ * @param size Accumulates the memory the copy accounts for.
+ * @param level The paging level of the entry.
+ * @param flags The ARCH_VMM_CLONE_* flags the clone was asked for.
  */
 static void __mm_copy_page(x86_page_t* __s, x86_page_t* __d, size_t* size, int level, int flags) {
 
@@ -217,9 +203,6 @@ static void __mm_copy_table(uintptr_t __s, uintptr_t __d, size_t* size, int leve
 
         if (__mm_is_kernel_slot(level, i)) {
 
-            /* Share the subtree rather than duplicating it. The ownership bit is cleared so
-               that __mm_free_table() cannot mistake a borrowed table for one of ours and free
-               it out from under every other address space. */
             d[i] = s[i] & ~X86_MMU_PT_AP_PFB;
             continue;
         }
@@ -258,13 +241,11 @@ static void __mm_free_data(x86_page_t* __s, int level) {
 }
 
 
-/*!
- * @brief __mm_free_page().
- *        Release a leaf's frame, if this address space is the one that owns it.
+/**
+ * @brief Releases a leaf's frame, if this address space is the one that owns it.
  *
- * A frame belonging to a shared memory segment is not, and outlives any one address space:
- * arch_vmm_free_address_space() has already dropped this space's reference by the time the
- * tables are walked, and the frames go back only once the last attachment anywhere is gone.
+ * @param __s The entry to release.
+ * @param level The paging level of the entry.
  */
 static void __mm_free_page(x86_page_t* __s, int level) {
 
@@ -317,9 +298,6 @@ static void __mm_free_table(uintptr_t __s, int level) {
 
         } else {
 
-            /* Only tables this address space allocated carry the ownership bit. A table
-               shared from the kernel half has it cleared by __mm_copy_table(), and the boot
-               tables never had it, so neither is walked or freed here. */
             if (!(s[i] & X86_MMU_PT_AP_PFB))
                 continue;
 
@@ -342,13 +320,12 @@ static void __mm_free_table(uintptr_t __s, int level) {
 #endif
 
 
-/*!
- * @brief arch_vmm_create_address_space().
- *        Build an address space, either empty or cloned from @parent.
+/**
+ * @brief Builds an address space, either empty or cloned from a parent.
  *
- * __mm_copy_table() has already given a userspace clone the parent's shared memory entries by
- * the time shm_address_space_clone() runs; that call is the other half of it, the bookkeeping
- * that lets the child detach them and the reference that keeps each segment alive meanwhile.
+ * @param parent The address space to clone, or the kernel space for an empty one.
+ * @param flags The ARCH_VMM_CLONE_* flags the clone was asked for.
+ * @return The new address space.
  */
 __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address_space_t* parent, int flags) {
 
@@ -400,10 +377,6 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
     spinlock_init_with_flags(&dest->lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
 
 
-    /* A demand clone rewrites the *parent's* entries read-only so that the next write traps.
-       The parent is the task calling fork(), still running on these tables, so its cached
-       writable translations have to go -- otherwise it keeps writing through them and its
-       post-fork stores land in memory the child can see. */
     if ((flags & ARCH_VMM_CLONE_DEMAND) && (flags & ARCH_VMM_CLONE_USERSPACE))
         arch_vmm_flush_all(parent);
 
@@ -412,12 +385,10 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 }
 
 
-/*!
- * @brief arch_vmm_free_address_space().
- *        Drop a reference to an address space, tearing it down when it was the last.
+/**
+ * @brief Drops a reference to an address space, tearing it down when it was the last.
  *
- * Shared memory segments go first. Nothing unmaps them -- the frames are not this space's to
- * give back -- so all that is owed is the reference each attachment took.
+ * @param space The address space to release.
  */
 void arch_vmm_free_address_space(vmm_address_space_t* space) {
 
@@ -429,11 +400,6 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     }
 
 
-    /* core->bsp.address_space lives in .bss and wraps the boot page tables, but the init task
-       holds it like any other address space and execve() frees what it replaces. Freeing it
-       for real would hand bootstrap_pml4 back to the physical allocator and kfree() a pointer
-       into .bss; even the old no-op version zeroed ->pm, which broke every later driver that
-       mapped MMIO through it. */
     if (space->flags & VMM_SPACE_STATIC) {
 
         atomic_store(&space->refcount, 0);
@@ -444,15 +410,6 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     shm_address_space_release(space);
 
 
-    /* Usually the caller is a task tearing down its own address space from exit(2), so the CPU
-       is still running on these very tables and the task descriptor still points at them. Move
-       both onto the kernel address space before any of it is handed back.
-     *
-     * Two things go wrong otherwise, and neither did while this function freed nothing: the
-     * page tables are returned to the allocator and reused underneath the CPU still using
-     * them, and the next context switch reads ->pm out of a kfree'd descriptor to decide
-     * whether CR3 needs reloading -- so it reads garbage, usually decides no reload is needed,
-     * and leaves the next task running on freed page tables. */
     vmm_address_space_t* kspace = &core->bsp.address_space;
 
     if (likely(space != kspace)) {

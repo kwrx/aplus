@@ -83,7 +83,6 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
 
         if (unlikely(!d)) {
 
-            /* Nothing mapped here; unmapping a hole is not an error. */
             pagesize = X86_MMU_PAGESIZE;
             continue;
         }
@@ -108,9 +107,6 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
         }
 
 
-        /* Previously invalidated `virtaddr` instead of `s`, so only the first page of the
-           range was flushed and the rest kept stale writable translations to frames that had
-           already been handed back to the physical allocator. */
         arch_vmm_flush(space, s);
 
         if (space->size >= (pagesize >> 12))

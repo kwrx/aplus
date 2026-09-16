@@ -48,15 +48,7 @@ extern uint8_t bootstrap_tss;
 
 
 /**
- * @brief Bring one CPU's per-core state up, and switch on what the hardware offers.
- *
- * MSR support is required of every core, long mode and PAE of every x86_64 one, and RDTSCP of
- * every core in an SMP build -- arch_cpu_get_current_id() reads the processor id out of it.
- * From there the TSC timer, the NX bit, SYSCALL, SMEP and SMAP are each enabled if the core
- * reports them, the processor id is written into TSC_AUX, GS is pointed at this core's slot,
- * and the FPU is initialised. SMP_CPU_FLAGS_ENABLED is set last, once all of that holds.
- *
- * WRGSBASE is not used even where the core claims FSGSBASE: it raises an invalid opcode.
+ * @brief Brings one CPU's per-core state up, and switches on what the hardware offers.
  *
  * @param index The core to initialise, which is also its id.
  */
@@ -456,13 +448,9 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
 
 /**
- * @brief The id of the CPU this is running on.
+ * @brief Reports the id of the CPU this is running on.
  *
- * RDTSCP writes the counter into EDX:EAX as well as the processor id into ECX, and writing a
- * 32-bit register clears the top half of the 64-bit one, so all three are declared. With only
- * ECX named the compiler goes on believing whatever it had left in RAX and RDX is still there
- * -- and this is reached from current_cpu and current_task, which is to say from nearly every
- * line in the kernel.
+ * @return The processor id, as RDTSCP reports it.
  */
 __percpu cpuid_t arch_cpu_get_current_id(void) {
 
@@ -488,15 +476,7 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
 
 
 /**
- * @brief Start one application processor and wait for it to come up.
- *
- * Every core runs on the boot page tables until it picks up a task, so there is exactly one
- * kernel address space and every core must go through it. Giving each per-CPU slot a memcpy'd
- * copy duplicates the root table pointer but hands each core its own spinlock, so concurrent
- * bring-up mutates one shared hierarchy under locks that do not exclude each other.
- *
- * The core is woken with the INIT, SIPI, SIPI sequence the manual calls for, after its startup
- * page and its stack have been mapped.
+ * @brief Starts one application processor with the INIT, SIPI, SIPI sequence and waits for it to come up.
  *
  * @param index The core to start, which is also its id.
  */

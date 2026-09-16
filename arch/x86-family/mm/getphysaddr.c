@@ -38,23 +38,14 @@
 #include <arch/x86/vmm.h>
 
 
-/*!
- * @brief arch_vmm_getphysaddr().
- *        Translate a virtual address in @space to a physical one.
+/**
+ * @brief Translates a virtual address in an address space to a physical one.
  *
- * Only the PAGE and SHARED page types name a frame that exists right now. The others are a
- * copy-on-write or file mapping that has not been materialised yet, so there is nothing to
- * report and the caller has to touch the page (or arch_vmm_lock() it) first. Resolving it here
- * used to call pagefault_handle(), which walks CR3 rather than @space and would therefore fault
- * a page into whichever address space happened to be loaded.
+ * Only a mapped PAGE or SHARED entry names a frame; anything not yet materialised reports failure.
  *
- * @param space: address space.
- * @param virtaddr: virtual address.
- *
- * @return the physical address, or ARCH_VMM_MAP_FAILED when @virtaddr is not mapped.
- *         Zero is a valid physical address, so it cannot be used to signal failure --
- *         which is what the release build used to return for an unmapped address once
- *         its DEBUG_ASSERTs compiled away.
+ * @param space The address space to translate in.
+ * @param virtaddr The virtual address to translate.
+ * @return The physical address, or ARCH_VMM_MAP_FAILED when @p virtaddr is not mapped.
  */
 __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_t virtaddr) {
 
@@ -71,7 +62,6 @@ __nonnull(1) uintptr_t arch_vmm_getphysaddr(vmm_address_space_t* space, uintptr_
     {
         x86_page_t* d = x86_vmm_walk(space->pm, s, &pagesize, 0, 0, NULL);
 
-        /* Page Table */
         if (likely(d && *d != X86_MMU_CLEAR)) {
 
             const uint64_t type = *d & X86_MMU_PG_AP_TP_MASK;
