@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <sys/uio.h>
 #include <sys/un.h>
 #include <time.h>
 #include <unistd.h>
@@ -101,6 +102,15 @@ ssize_t ui_recv_all(int fd, void* buf, size_t size) {
 }
 
 
+/**
+ * @brief Sends one message, header and payload together so that it costs a single write.
+ *
+ * @param fd The descriptor to send on.
+ * @param type The message type.
+ * @param payload The message body, or NULL when there is none.
+ * @param size The length of the body.
+ * @return 0 on success, or -1 with errno set.
+ */
 int ui_send_msg(int fd, uint16_t type, const void* payload, size_t size) {
 
     if (size > UI_MSG_PAYLOAD_MAX) {
@@ -116,12 +126,180 @@ int ui_send_msg(int fd, uint16_t type, const void* payload, size_t size) {
         .length = (uint32_t)size,
     };
 
-    if (ui_send_all(fd, &hdr, sizeof(hdr)) < 0) {
+    struct iovec iov[2] = {
+        {.iov_base = &hdr,                 .iov_len = sizeof(hdr)},
+        {.iov_base = (void*)(uintptr_t)payload, .iov_len = size   },
+    };
+
+    const int parts = size ? 2 : 1;
+
+    size_t left = sizeof(hdr) + size;
+    int at      = 0;
+
+    while (left > 0) {
+
+        ssize_t e = writev(fd, &iov[at], parts - at);
+
+        if (e < 0) {
+
+            if (errno == EINTR) {
+                continue;
+            }
+
+            return -1;
+        }
+
+        if (e == 0) {
+            errno = EIO;
+            return -1;
+        }
+
+        left -= (size_t)e;
+
+        while (at < parts && (size_t)e >= iov[at].iov_len) {
+            e -= (ssize_t)iov[at].iov_len;
+            at++;
+        }
+
+        if (at < parts && e) {
+            iov[at].iov_base = (uint8_t*)iov[at].iov_base + e;
+            iov[at].iov_len -= (size_t)e;
+        }
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Reads once off the socket onto the end of the connection's buffer.
+ *
+ * @param conn The connection to read from.
+ * @return The number of bytes read, or -1 with errno set; zero only when the peer has gone.
+ */
+int ui_conn_fill(ui_connection_t* conn) {
+
+    if (conn->rx.head && conn->rx.head == conn->rx.size) {
+
+        conn->rx.head = 0;
+        conn->rx.size = 0;
+    }
+
+
+    const size_t want = sizeof(ui_msg_header_t) + UI_MSG_PAYLOAD_MAX;
+
+    if (conn->rx.size + want > conn->rx.capacity) {
+
+        if (conn->rx.head) {
+
+            memmove(conn->rx.data, conn->rx.data + conn->rx.head, conn->rx.size - conn->rx.head);
+
+            conn->rx.size -= conn->rx.head;
+            conn->rx.head = 0;
+        }
+    }
+
+    if (conn->rx.size + want > conn->rx.capacity) {
+
+        const size_t capacity = conn->rx.size + want;
+
+        uint8_t* data = (uint8_t*)realloc(conn->rx.data, capacity);
+
+        if (!data) {
+            return -1;
+        }
+
+        conn->rx.data     = data;
+        conn->rx.capacity = capacity;
+    }
+
+
+    for (;;) {
+
+        ssize_t e = read(conn->fd, conn->rx.data + conn->rx.size, conn->rx.capacity - conn->rx.size);
+
+        if (e > 0) {
+
+            conn->rx.size += (size_t)e;
+
+            return (int)e;
+        }
+
+        if (e == 0) {
+            errno = ECONNRESET;
+            return -1;
+        }
+
+        if (errno == EINTR) {
+            continue;
+        }
+
+        return -1;
+    }
+}
+
+
+/**
+ * @brief Reports whether a whole message is already sitting in the connection's buffer.
+ *
+ * @param conn The connection to look at.
+ * @return 1 when one is, 0 when more has to be read, or -1 when the peer named an impossible length.
+ */
+int ui_conn_message_ready(ui_connection_t* conn) {
+
+    const size_t held = conn->rx.size - conn->rx.head;
+
+    if (held < sizeof(ui_msg_header_t)) {
+        return 0;
+    }
+
+
+    ui_msg_header_t hdr;
+
+    memcpy(&hdr, conn->rx.data + conn->rx.head, sizeof(hdr));
+
+    if (hdr.length > UI_MSG_PAYLOAD_MAX) {
+        errno = EPROTO;
         return -1;
     }
 
-    if (size && ui_send_all(fd, payload, size) < 0) {
-        return -1;
+    return held >= sizeof(hdr) + hdr.length;
+}
+
+
+/**
+ * @brief Takes bytes off the connection, reading more only when the buffer runs short.
+ *
+ * @param conn The connection to read from.
+ * @param buf Receives the bytes.
+ * @param size How many to take.
+ * @return 0 on success, or -1 with errno set.
+ */
+int ui_conn_read(ui_connection_t* conn, void* buf, size_t size) {
+
+    uint8_t* at = (uint8_t*)buf;
+
+    while (size) {
+
+        const size_t held = conn->rx.size - conn->rx.head;
+
+        if (!held) {
+
+            if (ui_conn_fill(conn) < 0) {
+                return -1;
+            }
+
+            continue;
+        }
+
+        const size_t take = held < size ? held : size;
+
+        memcpy(at, conn->rx.data + conn->rx.head, take);
+
+        conn->rx.head += take;
+
+        at += take;
+        size -= take;
     }
 
     return 0;
@@ -202,7 +380,7 @@ ui_connection_t* ui_connect(const char* path, int retry_ms) {
 
     ui_msg_header_t hdr;
 
-    if (ui_recv_all(fd, &hdr, sizeof(hdr)) < 0) {
+    if (ui_conn_read(conn, &hdr, sizeof(hdr)) < 0) {
         ui_disconnect(conn);
         return NULL;
     }
@@ -213,7 +391,7 @@ ui_connection_t* ui_connect(const char* path, int retry_ms) {
         return NULL;
     }
 
-    if (ui_recv_all(fd, &hello, sizeof(hello)) < 0) {
+    if (ui_conn_read(conn, &hello, sizeof(hello)) < 0) {
         ui_disconnect(conn);
         return NULL;
     }
@@ -249,6 +427,7 @@ void ui_disconnect(ui_connection_t* conn) {
         close(conn->fd);
     }
 
+    free(conn->rx.data);
     free(conn);
 }
 

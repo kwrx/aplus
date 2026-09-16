@@ -28,44 +28,20 @@
 #include "ui_widget_internal.h"
 
 
+/**
+ * @brief How many queued events one pass may fold into a frame before it has to paint again.
+ *
+ * A burst of pointer motion is worth one repaint rather than one each; the bound is what stops a
+ * server talking faster than this end can draw from starving the painting altogether.
+ */
+#define UI_VIEW_DRAIN_MAX 256
+
+
 static void ui_view_damage(ui_view_t* view, ui_rect_t rect) {
 
-    int x0 = rect.x - 1;
-    int y0 = rect.y - 1;
-    int x1 = rect.x + rect.width + 1;
-    int y1 = rect.y + rect.height + 1;
+    ui_rect_t bleed = {rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2};
 
-    if (x0 >= x1 || y0 >= y1) {
-        return;
-    }
-
-
-    if (!view->damage.valid) {
-
-        view->damage.valid = true;
-        view->damage.x0    = x0;
-        view->damage.y0    = y0;
-        view->damage.x1    = x1;
-        view->damage.y1    = y1;
-
-        return;
-    }
-
-    if (x0 < view->damage.x0) {
-        view->damage.x0 = x0;
-    }
-
-    if (y0 < view->damage.y0) {
-        view->damage.y0 = y0;
-    }
-
-    if (x1 > view->damage.x1) {
-        view->damage.x1 = x1;
-    }
-
-    if (y1 > view->damage.y1) {
-        view->damage.y1 = y1;
-    }
+    ui_damage_add(&view->damage, bleed);
 }
 
 
@@ -99,7 +75,7 @@ void ui_view_invalidate(ui_view_t* view) {
 
 
 bool ui_view_needs_paint(ui_view_t* view) {
-    return view ? view->damage.valid : false;
+    return view ? view->damage.count != 0 : false;
 }
 
 
@@ -465,33 +441,33 @@ int ui_view_present(ui_view_t* view) {
         return -1;
     }
 
-    if (!view->damage.valid) {
+    if (!view->damage.count) {
         return 0;
     }
 
 
-    const int width  = ui_window_width(view->window);
-    const int height = ui_window_height(view->window);
+    ui_damage_clip(&view->damage, ui_window_width(view->window), ui_window_height(view->window));
 
-    int x0 = view->damage.x0 < 0 ? 0 : view->damage.x0;
-    int y0 = view->damage.y0 < 0 ? 0 : view->damage.y0;
-    int x1 = view->damage.x1 > width ? width : view->damage.x1;
-    int y1 = view->damage.y1 > height ? height : view->damage.y1;
-
-    view->damage.valid = false;
-
-    if (x0 >= x1 || y0 >= y1) {
+    if (!view->damage.count) {
         return 0;
     }
 
 
-    ui_rect_t area = {x0, y0, x1 - x0, y1 - y0};
+    const ui_damage_t area = view->damage;
+
+    ui_damage_reset(&view->damage);
+
 
     cairo_t* cr = view->cr;
 
     cairo_save(cr);
 
-    cairo_rectangle(cr, area.x, area.y, area.width, area.height);
+    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
+
+    for (size_t i = 0; i < area.count; i++) {
+        cairo_rectangle(cr, area.rects[i].x, area.rects[i].y, area.rects[i].width, area.rects[i].height);
+    }
+
     cairo_clip(cr);
 
     ui_draw_set_color(cr, view->theme->background);
@@ -508,9 +484,19 @@ int ui_view_present(ui_view_t* view) {
             continue;
         }
 
-        if (w->rect.x >= x1 || w->rect.y >= y1 || w->rect.x + w->rect.width <= x0 || w->rect.y + w->rect.height <= y0) {
+
+        bool touched = false;
+
+        for (size_t i = 0; i < area.count && !touched; i++) {
+
+            touched = w->rect.x < area.rects[i].x + area.rects[i].width && area.rects[i].x < w->rect.x + w->rect.width && w->rect.y < area.rects[i].y + area.rects[i].height &&
+                      area.rects[i].y < w->rect.y + w->rect.height;
+        }
+
+        if (!touched) {
             continue;
         }
+
 
         cairo_save(cr);
 
@@ -526,7 +512,9 @@ int ui_view_present(ui_view_t* view) {
 
     cairo_surface_flush(view->surface);
 
-    ui_window_damage(view->window, area.x, area.y, area.width, area.height);
+    for (size_t i = 0; i < area.count; i++) {
+        ui_window_damage(view->window, area.rects[i].x, area.rects[i].y, area.rects[i].width, area.rects[i].height);
+    }
 
     if (ui_window_commit(view->window) < 0) {
         return -1;
@@ -564,6 +552,22 @@ int ui_view_run(ui_view_t* view) {
         }
 
         ui_view_dispatch(view, &event);
+
+
+        for (size_t drained = 0; drained < UI_VIEW_DRAIN_MAX && !view->closed; drained++) {
+
+            const int pending = ui_next_event(view->window->conn, &event, 0);
+
+            if (pending < 0) {
+                return -1;
+            }
+
+            if (pending == 0) {
+                break;
+            }
+
+            ui_view_dispatch(view, &event);
+        }
     }
 
     return 0;
