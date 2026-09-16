@@ -34,10 +34,14 @@
 #include "ui_internal.h"
 
 
-/* A local socket is an ordinary descriptor here, so write() can come back having moved
-   fewer bytes than asked: ringbuffer_write() stops at the end of the peer's buffer and
-   reports what it managed. Every send in this protocol therefore has to loop, or a frame
-   would be silently truncated and desynchronise the stream for good. */
+/**
+ * @brief Writes a whole buffer to a descriptor, looping over the short writes a socket may return.
+ *
+ * @param fd The descriptor to write to.
+ * @param buf The bytes to send.
+ * @param size The number of bytes to send.
+ * @return The number of bytes sent, or -1 with errno set.
+ */
 ssize_t ui_send_all(int fd, const void* buf, size_t size) {
 
     const uint8_t* p = (const uint8_t*)buf;
@@ -56,8 +60,6 @@ ssize_t ui_send_all(int fd, const void* buf, size_t size) {
             continue;
         }
 
-        /* A zero-length write is not something a stream socket should do, but treating it
-           as success would spin here forever. */
         if (e == 0) {
             errno = EIO;
         }
@@ -83,8 +85,6 @@ ssize_t ui_recv_all(int fd, void* buf, size_t size) {
             continue;
         }
 
-        /* A zero-length read is the peer closing, which for a half-received frame is an
-           error rather than a short result: there is no way to resynchronise. */
         if (e == 0) {
             errno = ECONNRESET;
             return -1;
@@ -165,9 +165,6 @@ ui_connection_t* ui_connect(const char* path, int retry_ms) {
         close(fd);
         fd = -1;
 
-        /* The server is usually started from the same script, a moment earlier, so the
-           socket may not exist yet. Retrying here is what removes the need for a sleep
-           between the two lines of init.sh. */
         if (waited >= retry_ms) {
             return NULL;
         }

@@ -31,12 +31,9 @@
 #include <sys/types.h>
 
 
-/* Every write goes through __emit(), which drops anything past the buffer while still
-   counting it. Before this, each conversion wrote straight into `buf` with only a
-   between-conversions bounds check, so a single %s or a wide number ran off the end --
-   /proc/version overflowed a 64-byte static array that way and handed the bytes after it
-   to userspace. `len` is the length the output *would* have had, which is what C says to
-   return, so callers can detect truncation with `ret >= size`. */
+/**
+ * @brief The output buffer every conversion writes through, which drops what runs past the end while still counting it.
+ */
 struct __sbuf {
     char* buf;
     size_t size;
@@ -54,7 +51,6 @@ __nosanitize("undefined") static inline void __emit(struct __sbuf* s, char c) {
 
 __nosanitize("undefined") static void __emit_num(struct __sbuf* s, uintmax_t v, unsigned base, bool upper, ssize_t padding, bool negative) {
 
-    /* Widest case is a 64-bit value in octal: 22 digits. */
     char tmp[24];
     size_t n = 0;
 
@@ -87,7 +83,6 @@ __nosanitize("undefined") static void dec(intmax_t __v, ssize_t padding, struct 
 
     bool neg = negative && __v < 0;
 
-    //? Negating INTMAX_MIN overflows, so take the magnitude in unsigned arithmetic.
     uintmax_t v = neg ? ((uintmax_t)0 - (uintmax_t)__v) : (uintmax_t)__v;
 
     __emit_num(s, v, 10, false, padding, neg);
@@ -399,13 +394,9 @@ __nosanitize("undefined") int vsnprintf(char* buf, size_t size, const char* fmt,
         }
     }
 
-    /* At most size-1 characters are kept, so the terminator always lands inside the
-       buffer -- it used to be written at buf[p] with p already == size, one past the end. */
     if (likely(size > 0)) {
         buf[__out.len < size ? __out.len : size - 1] = '\0';
     }
 
-    //? The length the output would have had, excluding the terminator, as C requires:
-    //? a caller detects truncation with `ret >= size`. It used to include the terminator.
     return (int)__out.len;
 }

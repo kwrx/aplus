@@ -32,14 +32,13 @@
 #include <aplus/utils/ringbuffer.h>
 
 
-//? ringbuffer_read() and ringbuffer_write() report their outcome through the
-//? return value alone and never touch errno: errno is per-cpu
-//? (current_cpu->errno) and the caller may be preempted before it reads it.
-//?
-//?     > 0         number of bytes transferred, possibly less than requested
-//?     0           nothing was asked for (size == 0)
-//?     -EAGAIN     would block: the buffer is empty (read) or full (write)
-//?     -EIO        the buffer has been destroyed underneath the caller
+/**
+ * @brief Prepares a ring buffer with a buffer of the given size.
+ *
+ * @param rb The ring buffer to initialise.
+ * @param size The size of the buffer in bytes.
+ * @return 0 on success, or a negative errno.
+ */
 
 
 int ringbuffer_init(ringbuffer_t* rb, size_t size) {
@@ -93,10 +92,12 @@ void ringbuffer_reset(ringbuffer_t* rb) {
 }
 
 
-//? The query helpers below must stay lock-free: ringbuffer_read() and
-//? ringbuffer_write() call them with rb->lock already held, and spinlock
-//? ownership is per-task, so re-entering would trip the DEADLOCK panic.
-//? They also tolerate a destroyed buffer rather than asserting on it.
+/**
+ * @brief Reports whether the buffer is full. Lock-free, since the callers hold rb->lock already.
+ *
+ * @param rb The ring buffer to query.
+ * @return 1 when the buffer is full, 0 otherwise.
+ */
 
 int ringbuffer_is_full(ringbuffer_t* rb) {
 
@@ -172,10 +173,6 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
             e = -EIO;
 
         } else {
-
-            //? Short writes are legal and are what keeps a write larger than
-            //? the buffer from being unsatisfiable forever; only a completely
-            //? full buffer is a would-block condition.
 
             size_t n = ringbuffer_writeable(rb);
 

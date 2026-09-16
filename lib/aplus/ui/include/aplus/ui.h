@@ -33,23 +33,20 @@ extern "C" {
 #endif
 
 
-//? The socket has to live on a filesystem that can store an S_IFSOCK dirent, which
-//? rules out the ext2 root: unix_bind() creates a real directory entry. /tmp is the
-//? tmpfs mounted by /etc/fstab.
+/**
+ * @brief The default socket, on /tmp because unix_bind() needs a filesystem that stores an S_IFSOCK dirent.
+ */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
 #define UI_PROTOCOL_VERSION 2
 #define UI_TITLE_MAX        64
 
 
-//* Wire protocol.
-//*
-//* AF_UNIX is SOCK_STREAM only here -- there is no SOCK_SEQPACKET -- so every message
-//* carries its own length and both sides have to reassemble frames by hand.
-//*
-//* The socket carries control only. A window's pixels live in a System V shared memory
-//* segment that both ends map, so the largest thing that ever goes down the socket is a
-//* window title.
+/**
+ * @brief The wire protocol: every message carries its own length, since AF_UNIX is SOCK_STREAM only here.
+ *
+ * The socket carries control only; a window's pixels live in a shared memory segment both ends map.
+ */
 
 #define UI_REQ_HELLO          0x0001
 #define UI_REQ_CREATE_WINDOW  0x0002
@@ -64,17 +61,15 @@ extern "C" {
 #define UI_EV_FOCUS     0x8005
 #define UI_EV_CLOSE     0x8006
 
-//? Sent when the pointer stops being over a window's content area. There is no matching
-//? "enter": arriving somewhere is already described by the UI_EV_POINTER that follows the
-//? pointer in. Leaving is the one transition that produces no event of its own, and
-//? without it a client that highlights whatever is under the pointer keeps the last thing
-//? it highlighted lit forever.
+/**
+ * @brief Sent when the pointer stops being over a window's content area; arriving needs no event of its own.
+ */
 #define UI_EV_LEAVE 0x8007
 
 
-//? Nothing in this protocol is large any more -- the biggest message is a title -- but a
-//? peer could still name any length it liked, and the cap is what stops that from becoming
-//? an arbitrary allocation.
+/**
+ * @brief The largest payload a peer may name, which is what stops a length from becoming an arbitrary allocation.
+ */
 #define UI_MSG_PAYLOAD_MAX (32 * 1024)
 
 
@@ -103,8 +98,9 @@ typedef struct {
 } __attribute__((packed)) ui_msg_create_window_t;
 
 
-//* A commit carries no pixels. Both ends have the window's surface mapped, so the client has
-//* already written them; what the server is being told is which rectangle changed.
+/**
+ * @brief A commit carries no pixels, only the rectangle the client changed in the surface both ends map.
+ */
 
 typedef struct {
 
@@ -138,11 +134,9 @@ typedef struct {
 } __attribute__((packed)) ui_msg_window_t;
 
 
-//* A configure hands over a surface as well as a size. The segment is created and owned by
-//* the server, which is what lets it go on compositing a window whose client has died, and
-//* removes it (shmctl(2) IPC_RMID) as soon as the window is gone or has been resized: a
-//* removed segment stays alive until its last holder detaches, so a client still drawing into
-//* the previous one is never pulled out from under.
+/**
+ * @brief A configure hands over a surface as well as a size, the segment being created and owned by the server.
+ */
 
 typedef struct {
 
@@ -203,7 +197,9 @@ typedef struct {
 #define UI_BUTTON_MIDDLE (1 << 2)
 
 
-//* Client API.
+/**
+ * @brief Client API.
+ */
 
 typedef struct ui_connection ui_connection_t;
 typedef struct ui_window ui_window_t;
@@ -254,9 +250,13 @@ typedef struct {
 } ui_event_t;
 
 
-//? path may be NULL for UI_DEFAULT_SOCKET. retry_ms > 0 keeps retrying for that long,
-//? which is what lets a client be started from the same script as the server without
-//? a sleep in between.
+/**
+ * @brief Connects to the server.
+ *
+ * @param path The socket to connect to, or NULL for UI_DEFAULT_SOCKET.
+ * @param retry_ms How long to keep retrying for, which lets a client start alongside the server.
+ * @return The connection, or NULL.
+ */
 ui_connection_t* ui_connect(const char* path, int retry_ms);
 void ui_disconnect(ui_connection_t* conn);
 int ui_connection_fd(ui_connection_t* conn);
@@ -264,23 +264,23 @@ int ui_connection_fd(ui_connection_t* conn);
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title);
 void ui_window_destroy(ui_window_t* win);
 
-//? The window's surface, shared with the server: what is written here is what the server
-//? composites, with no copy in between. A commit is therefore only a statement about which
-//? rectangle changed, and the pointer is valid until the next ui_window_apply_configure().
+/**
+ * @brief Reports the window's surface, shared with the server, valid until the next ui_window_apply_configure().
+ */
 uint32_t* ui_window_pixels(ui_window_t* win);
 int ui_window_width(ui_window_t* win);
 int ui_window_height(ui_window_t* win);
 size_t ui_window_stride(ui_window_t* win);
 uint32_t ui_window_id(ui_window_t* win);
 
-//? Adopt the surface the last UI_EVENT_CONFIGURE announced, along with its size and serial.
-//? Deliberately not done inside ui_next_event(): the event loop and the drawing code are
-//? usually different threads, and swapping the pixel buffer out from under a draw would be a
-//? use-after-free. Call it from wherever drawing is serialised. Returns 1 if the surface
-//? changed, 0 if nothing was pending, -1 on error. Until it is called the window keeps the
-//? surface it has -- the server has removed that segment but cannot destroy it while this
-//? client still holds it -- and commits stamped with the old serial are dropped rather than
-//? read against the wrong memory.
+/**
+ * @brief Adopts the surface the last UI_EV_CONFIGURE announced, along with its size and serial.
+ *
+ * Call it from wherever drawing is serialised, never from the event loop if that is another thread.
+ *
+ * @param win The window to configure.
+ * @return 1 if the surface changed, 0 if nothing was pending, -1 on error.
+ */
 int ui_window_apply_configure(ui_window_t* win);
 
 void ui_window_damage(ui_window_t* win, int x, int y, int width, int height);
@@ -288,12 +288,20 @@ void ui_window_damage_all(ui_window_t* win);
 int ui_window_commit(ui_window_t* win);
 int ui_window_set_title(ui_window_t* win, const char* title);
 
-//? timeout_ms < 0 blocks, 0 polls, > 0 waits. Returns 1 when an event was stored,
-//? 0 on timeout, -1 on error (including a server that went away).
+/**
+ * @brief Waits for the next event on a connection.
+ *
+ * @param conn The connection to read from.
+ * @param out Receives the event.
+ * @param timeout_ms Blocks when negative, polls at 0, waits that long when positive.
+ * @return 1 when an event was stored, 0 on timeout, -1 on error.
+ */
 int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms);
 
 
-//* Framing helpers, shared with the server so that both ends agree byte for byte.
+/**
+ * @brief Framing helpers, shared with the server so that both ends agree byte for byte.
+ */
 
 ssize_t ui_send_all(int fd, const void* buf, size_t size);
 ssize_t ui_recv_all(int fd, void* buf, size_t size);

@@ -31,11 +31,8 @@
 #include "ui_widget_internal.h"
 
 
-/* Faces are cached by path and never released. There is no fontconfig in the sysroot, so
- * cairo's toy font API has no family name to resolve and every face has to come from a
- * file opened by hand; a toolkit asks for one on every string it draws, and reopening the
- * file that often would dominate the cost of painting. The table is small because the
- * number of distinct font files an application uses is: a theme names two.
+/**
+ * @brief How many faces the cache holds; faces are keyed by path and never released.
  */
 
 #define UI_FONT_CACHE_MAX 4
@@ -73,8 +70,6 @@ cairo_font_face_t* ui_font_face(const char* path) {
         return NULL;
     }
 
-    /* Refused rather than truncated: a truncated key would go on matching every other path
-       sharing its prefix, and hand back the wrong face. */
     if (strlen(path) >= sizeof(ui_font_cache[0].path)) {
         fprintf(stderr, "libui: font path is too long: %s\n", path);
         return NULL;
@@ -90,9 +85,6 @@ cairo_font_face_t* ui_font_face(const char* path) {
     }
 
 
-    /* The slot is claimed before the face is loaded, and keeps its NULL face if the load
-       fails. That is what makes a missing font file cost one report rather than one per
-       frame. */
     size_t slot = ui_font_cached++;
 
     strcpy(ui_font_cache[slot].path, path);

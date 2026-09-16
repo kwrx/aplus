@@ -48,9 +48,6 @@ ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interact
     widget->theme       = view->theme;
 
 
-    /* Appended rather than pushed: the list is in paint order, so a widget created later
-       is drawn over one created earlier, which is the order the code that creates them
-       reads in. */
     if (view->widgets_tail) {
         view->widgets_tail->next = widget;
     } else {
@@ -87,8 +84,6 @@ void ui_widget_destroy(ui_widget_t* widget) {
         it = &(*it)->next;
     }
 
-    /* The tail cache has to be rebuilt rather than guessed at: removing the last widget
-       leaves the new tail somewhere the removal loop above never looked. */
     view->widgets_tail = NULL;
 
     for (ui_widget_t* w = view->widgets; w; w = w->next) {
@@ -148,8 +143,6 @@ void ui_widget_set_rect(ui_widget_t* widget, int x, int y, int width, int height
     }
 
 
-    /* Both the rectangle being left and the one being taken have to be repainted, and the
-       old one only exists until the assignment below. */
     ui_widget_invalidate(widget);
 
     widget->rect.x      = x;
@@ -204,8 +197,6 @@ void ui_widget_set_enabled(ui_widget_t* widget, bool enabled) {
 
     widget->enabled = enabled;
 
-    /* A control disabled with the pointer on it would otherwise keep the hover it can no
-       longer respond to, and one disabled mid-press would stay pressed forever. */
     if (!enabled) {
 
         if (widget->kind == UI_WIDGET_BUTTON) {
@@ -281,11 +272,15 @@ ui_grid_t ui_grid(ui_rect_t bounds, int columns, int rows, int gap) {
 }
 
 
-/* Where track `index` of `count` starts, given `extent` pixels to fill once the gaps are
- * taken out of it. Scaling the index into the available space rather than multiplying a
- * rounded-down track size is what shares the remainder out: consecutive tracks differ by
- * at most a pixel, and the last one ends exactly on the far edge instead of a few pixels
- * short of it.
+/**
+ * @brief Reports where one track of a grid starts, sharing the remainder out across the tracks.
+ *
+ * @param origin The near edge of the axis.
+ * @param extent The pixels to fill, gaps included.
+ * @param gap The space between two tracks.
+ * @param count The number of tracks.
+ * @param index The track to place.
+ * @return The near edge of that track.
  */
 static int ui_grid_track(int origin, int extent, int gap, int count, int index) {
 
@@ -312,8 +307,6 @@ ui_rect_t ui_grid_cell(const ui_grid_t* grid, int column, int row, int colspan, 
     }
 
 
-    /* A cell asked for outside the grid comes back empty rather than clamped into a
-       neighbour's space, where it would silently overlap whatever is already there. */
     if (column < 0 || row < 0 || column + colspan > grid->columns || row + rowspan > grid->rows) {
         return cell;
     }
@@ -322,9 +315,6 @@ ui_rect_t ui_grid_cell(const ui_grid_t* grid, int column, int row, int colspan, 
     const int x0 = ui_grid_track(grid->bounds.x, grid->bounds.width, grid->column_gap, grid->columns, column);
     const int y0 = ui_grid_track(grid->bounds.y, grid->bounds.height, grid->row_gap, grid->rows, row);
 
-    /* The far edge is the start of the track after the span, less the gap that would have
-       separated them. A spanning cell therefore swallows the gaps it crosses, which is
-       what makes it line up with the cells above and below it. */
     const int x1 = ui_grid_track(grid->bounds.x, grid->bounds.width, grid->column_gap, grid->columns, column + colspan) - grid->column_gap;
     const int y1 = ui_grid_track(grid->bounds.y, grid->bounds.height, grid->row_gap, grid->rows, row + rowspan) - grid->row_gap;
 

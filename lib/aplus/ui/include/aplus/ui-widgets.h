@@ -35,18 +35,16 @@ extern "C" {
 #endif
 
 
-//* Widgets, layered on top of the raw surface a ui_window_t hands out.
-//*
-//* The window protocol deals in pixels and events; everything below turns those into a
-//* list of things that draw themselves and say when they have changed. Cairo does the
-//* drawing, but none of it appears here: an app that only needs the widgets in this
-//* header never has to name a cairo type, and one that outgrows them still has
-//* ui_window_pixels() to fall back on.
+/**
+ * @brief Widgets, layered on top of the raw surface a ui_window_t hands out.
+ *
+ * Nothing here names a cairo type, and an app that outgrows them still has ui_window_pixels().
+ */
 
 
-//* Colours are components rather than a packed pixel because everything downstream of
-//* them -- blending a hover overlay, dimming a disabled control -- is arithmetic, and
-//* doing that on 8-bit channels loses more than it saves.
+/**
+ * @brief A colour, as components rather than a packed pixel, since blending and dimming are arithmetic.
+ */
 
 typedef struct {
 
@@ -58,24 +56,28 @@ typedef struct {
 } ui_color_t;
 
 
-//? Spelled as a brace list rather than a compound literal so that it can also initialise
-//? a theme at file scope, where a compound literal is not a constant expression.
+/**
+ * @brief Colour literals, spelled as brace lists so that they can also initialise a theme at file scope.
+ */
 #define UI_RGB(r, g, b)     {(r) / 255.0, (g) / 255.0, (b) / 255.0, 1.0}
 #define UI_RGBA(r, g, b, a) {(r) / 255.0, (g) / 255.0, (b) / 255.0, (a)}
 
 ui_color_t ui_rgb(uint8_t r, uint8_t g, uint8_t b);
 ui_color_t ui_rgba(uint8_t r, uint8_t g, uint8_t b, double a);
 
-//? `over` composited onto `under`, both straight (non-premultiplied). This is how the
-//? hover and active roles of a scheme are applied: one translucent wash that works over
-//? whatever colour a control happens to have, instead of a second and third colour per
-//? control.
+/**
+ * @brief Composites one colour onto another, both straight, which is how the hover and active roles apply.
+ *
+ * @param under The colour underneath.
+ * @param over The translucent wash to put over it.
+ * @return The result.
+ */
 ui_color_t ui_color_blend(ui_color_t under, ui_color_t over);
 
 
-//* The colour scheme. Roles rather than colours: a widget asks for "the accent" or "the
-//* text on a secondary surface" and the theme decides what that is, which is what makes a
-//* second theme a matter of filling in this struct once.
+/**
+ * @brief The colour scheme, as roles rather than colours, so that a second theme is this struct filled in once.
+ */
 
 typedef struct {
 
@@ -128,9 +130,11 @@ typedef struct {
 
 const ui_theme_t* ui_theme_dark(void);
 
-//? The theme a view is created against. Passing NULL restores the dark default. A view
-//? takes its copy when it is created, so changing this does not restyle a window that
-//? already exists -- set it before ui_view_create().
+/**
+ * @brief Sets the theme a view is created against, or restores the dark default when given NULL.
+ *
+ * A view takes its copy when it is created, so set this before ui_view_create().
+ */
 void ui_theme_set(const ui_theme_t* theme);
 const ui_theme_t* ui_theme(void);
 
@@ -168,18 +172,20 @@ typedef struct ui_widget ui_widget_t;
 
 typedef void (*ui_action_fn)(ui_widget_t* widget, void* user);
 
-//? Called once when the view is created and again after every configure the view has
-//? applied, with the content size already in place. Everything positional belongs here:
-//? a window that can be resized has no fixed geometry to hardcode anywhere else.
+/**
+ * @brief Called once when the view is created and again after every configure, with the content size in place.
+ */
 typedef void (*ui_layout_fn)(ui_view_t* view, int width, int height, void* user);
 
-//? Return true to say the key was handled. Nothing in the view claims keys on its own, so
-//? without a handler a window is pointer-only.
+/**
+ * @brief Called for a key event; return true to say the key was handled.
+ */
 typedef bool (*ui_key_fn)(ui_view_t* view, uint16_t vkey, bool down, void* user);
 
 
-//* The view. It owns the widgets, the drawing surface over the window's pixels, and the
-//* record of what has changed since the last frame.
+/**
+ * @brief The view: it owns the widgets, the drawing surface over the window's pixels, and what has changed.
+ */
 
 ui_view_t* ui_view_create(ui_window_t* window);
 void ui_view_destroy(ui_view_t* view);
@@ -189,29 +195,43 @@ ui_window_t* ui_view_window(ui_view_t* view);
 void ui_view_on_layout(ui_view_t* view, ui_layout_fn fn, void* user);
 void ui_view_on_key(ui_view_t* view, ui_key_fn fn, void* user);
 
-//? Feeds one event into the widgets. Returns true when the view made something of it,
-//? which for a pointer event means a widget changed state. A configure is applied here,
-//? surface and layout included, so a caller driving its own loop does not also have to
-//? call ui_window_apply_configure().
+/**
+ * @brief Feeds one event into the widgets, applying a configure here so the caller need not.
+ *
+ * @param view The view to dispatch into.
+ * @param event The event to act on.
+ * @return true when the view made something of it.
+ */
 bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event);
 
-//? Whether the client has been told to close, by the titlebar button or otherwise.
+/**
+ * @brief Reports whether the client has been told to close, by the titlebar button or otherwise.
+ */
 bool ui_view_closed(ui_view_t* view);
 
 void ui_view_invalidate(ui_view_t* view);
 bool ui_view_needs_paint(ui_view_t* view);
 
-//? Repaints whatever is dirty and commits it. Returns 1 if a frame went out, 0 if
-//? nothing needed painting, -1 on error.
+/**
+ * @brief Repaints whatever is dirty and commits it.
+ *
+ * @param view The view to present.
+ * @return 1 if a frame went out, 0 if nothing needed painting, -1 on error.
+ */
 int ui_view_present(ui_view_t* view);
 
-//? Event loop: present, wait, dispatch, until the window closes or the server goes away.
-//? Returns 0 on a clean close and -1 otherwise.
+/**
+ * @brief Runs the event loop until the window closes or the server goes away.
+ *
+ * @param view The view to run.
+ * @return 0 on a clean close, -1 otherwise.
+ */
 int ui_view_run(ui_view_t* view);
 
 
-//* Widgets. They belong to the view and are freed with it; the returned pointer stays
-//* valid until the view is destroyed or the widget is explicitly removed.
+/**
+ * @brief Widgets belong to the view and are freed with it; a pointer stays valid until it is removed.
+ */
 
 void ui_widget_destroy(ui_widget_t* widget);
 
@@ -231,8 +251,9 @@ void* ui_widget_user(const ui_widget_t* widget);
 void ui_widget_invalidate(ui_widget_t* widget);
 
 
-//* Panel: a filled rectangle, and the only widget that is purely background. It does not
-//* take pointer input, so a widget sitting on one still gets its own events.
+/**
+ * @brief Panel: a filled rectangle, and the only widget that is purely background and takes no pointer input.
+ */
 
 ui_widget_t* ui_panel_create(ui_view_t* view);
 void ui_panel_set_color(ui_widget_t* widget, ui_color_t color);
@@ -240,8 +261,9 @@ void ui_panel_set_radius(ui_widget_t* widget, double radius);
 void ui_panel_set_border(ui_widget_t* widget, ui_color_t color, double width);
 
 
-//* Label: one line of text, clipped to its rect. Transparent, so whatever is behind it
-//* shows through -- a label over a panel needs no colour of its own.
+/**
+ * @brief Label: one line of text, clipped to its rect and transparent behind.
+ */
 
 ui_widget_t* ui_label_create(ui_view_t* view, const char* text);
 void ui_label_set_text(ui_widget_t* widget, const char* text);
@@ -252,7 +274,9 @@ void ui_label_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size
 void ui_label_set_padding(ui_widget_t* widget, int padding);
 
 
-//* Button.
+/**
+ * @brief Button.
+ */
 
 typedef enum {
 
@@ -269,19 +293,21 @@ void ui_button_set_text(ui_widget_t* widget, const char* text);
 void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style);
 void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
 
-//? Runs the click action as if the button had been pressed. For binding a key to a
-//? button without duplicating what the button does.
+/**
+ * @brief Runs the click action as if the button had been pressed, for binding a key to a button.
+ */
 void ui_button_activate(ui_widget_t* widget);
 
-//? Draws the button as held without running anything. Pair it with a key going down and
-//? up to make a keyboard shortcut visible on screen.
+/**
+ * @brief Draws the button as held without running anything, to make a keyboard shortcut visible.
+ */
 void ui_button_set_held(ui_widget_t* widget, bool held);
 bool ui_button_held(const ui_widget_t* widget);
 
 
-//* Grid: cell rectangles over a region, for a layout callback to place widgets with.
-//* Rows and columns share out the remainder pixels, so the last cell ends flush with the
-//* region rather than a few pixels short of it.
+/**
+ * @brief Grid: cell rectangles over a region, whose rows and columns share out the remainder pixels.
+ */
 
 typedef struct {
 
@@ -299,7 +325,9 @@ typedef struct {
 ui_grid_t ui_grid(ui_rect_t bounds, int columns, int rows, int gap);
 ui_rect_t ui_grid_cell(const ui_grid_t* grid, int column, int row, int colspan, int rowspan);
 
-//? `rect` shrunk by `inset` on every side, clamped at empty.
+/**
+ * @brief Shrinks a rectangle by an inset on every side, clamped at empty.
+ */
 ui_rect_t ui_rect_inset(ui_rect_t rect, int inset);
 
 

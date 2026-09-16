@@ -30,10 +30,6 @@
 
 static void ui_view_damage(ui_view_t* view, ui_rect_t rect) {
 
-    /* Widgets are painted over each other with anti-aliased edges, so the pixels a widget
-       affects reach a hair past the rectangle it claims. Growing the damage by a pixel on
-       every side is what stops the outermost row of a rounded corner from being left
-       behind when the widget under it is repainted. */
     int x0 = rect.x - 1;
     int y0 = rect.y - 1;
     int x1 = rect.x + rect.width + 1;
@@ -107,14 +103,11 @@ bool ui_view_needs_paint(ui_view_t* view) {
 }
 
 
-/* Binds a cairo context to whatever buffer the window is holding right now. Every resize
- * hands out a different one -- ui_window_apply_configure() may reallocate -- so the
- * context cannot outlive the configure that made it.
+/**
+ * @brief Binds a cairo context to whatever buffer the window is holding right now.
  *
- * RGB24 rather than ARGB32, to match what the server reads back: ARGB32 in cairo is
- * premultiplied, and the window protocol carries plain 0xFFRRGGBB. The memory layout is
- * the same either way, so the only thing the choice changes is whether cairo tries to
- * un-premultiply pixels that were never premultiplied.
+ * @param view The view to bind.
+ * @return 0 on success, or -1 with errno set.
  */
 static int ui_view_bind_surface(ui_view_t* view) {
 
@@ -254,8 +247,6 @@ void ui_view_on_layout(ui_view_t* view, ui_layout_fn fn, void* user) {
     view->layout      = fn;
     view->layout_user = user;
 
-    /* Run straight away: widgets created before the callback was installed have no
-       geometry yet, and everything that follows assumes a laid-out tree. */
     ui_view_relayout(view);
 }
 
@@ -280,8 +271,6 @@ static ui_widget_t* ui_view_widget_at(ui_view_t* view, int x, int y) {
 
     ui_widget_t* found = NULL;
 
-    /* The list is in paint order, so the last widget that covers the point is the one on
-       top of the stack and the one the pointer is actually touching. */
     for (ui_widget_t* w = view->widgets; w; w = w->next) {
 
         if (ui_widget_hit(w, x, y)) {
@@ -374,10 +363,6 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
     if (down) {
 
-        /* Only the widget the press started on can be the pressed one. Dragging onto a
-           second widget with the button already held must not press that one too, and
-           sliding back off the first has to un-press it, which is what makes a press
-           cancellable by moving away before letting go. */
         if (!view->pressed) {
 
             changed |= ui_view_set_pressed(view, over);
@@ -400,8 +385,6 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
     changed |= ui_view_set_pressed(view, NULL);
 
-    /* The action runs on release and only over the widget the press began on, so a press
-       can be taken back by sliding off it. */
     if (released && released == over && released->kind == UI_WIDGET_BUTTON) {
 
         ui_button_activate(released);
@@ -428,9 +411,6 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 
             if (applied <= 0) {
 
-                /* Nothing was pending, or the resize failed and the pending configure is
-                   still there to retry. Either way the surface still describes the buffer
-                   the window is holding, so it must not be rebound. */
                 return false;
             }
 
@@ -448,8 +428,6 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 
         case UI_EVENT_LEAVE:
 
-            /* A press that ends outside the window is a press that never arrives here as a
-               release, so it is dropped rather than left held. */
             return ui_view_set_hovered(view, NULL) | ui_view_set_pressed(view, NULL);
 
         case UI_EVENT_KEY:
@@ -468,9 +446,6 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 
         case UI_EVENT_FOCUS:
 
-            /* Losing focus means the pointer is somewhere else, and whatever was lit under
-               it should go out. Gaining it says nothing about where the pointer is: the
-               UI_EV_POINTER that follows does. */
             if (!event->focus.focused) {
                 return ui_view_set_hovered(view, NULL) | ui_view_set_pressed(view, NULL);
             }
@@ -519,9 +494,6 @@ int ui_view_present(ui_view_t* view) {
     cairo_rectangle(cr, area.x, area.y, area.width, area.height);
     cairo_clip(cr);
 
-    /* Widgets draw only themselves, so the backdrop has to be laid down first or a label
-       that got shorter would leave the tail of the old string behind. Clipping means this
-       costs the damaged rectangle rather than the window. */
     ui_draw_set_color(cr, view->theme->background);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
@@ -546,17 +518,12 @@ int ui_view_present(ui_view_t* view) {
 
         cairo_restore(cr);
 
-        /* Widgets leave paths behind them -- a fill consumes one, a stroke on a
-           fill_preserve does not -- and a leftover path would be picked up by whatever
-           draws next. */
         cairo_new_path(cr);
     }
 
     cairo_restore(cr);
 
 
-    /* The surface writes straight into the window's pixels, but cairo is free to be
-       holding some of them back until it is told the drawing is finished. */
     cairo_surface_flush(view->surface);
 
     ui_window_damage(view->window, area.x, area.y, area.width, area.height);

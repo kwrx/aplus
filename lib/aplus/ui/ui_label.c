@@ -61,9 +61,6 @@ void ui_label_set_text(ui_widget_t* widget, const char* text) {
         strncpy(next, text, sizeof(next) - 1);
     }
 
-    /* A label whose text is rewritten with the same string on every frame -- a display
-       reformatting the same number, say -- would otherwise repaint the whole window for
-       nothing. */
     if (strcmp(next, widget->label.text) == 0) {
         return;
     }

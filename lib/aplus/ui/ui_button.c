@@ -155,9 +155,12 @@ bool ui_button_set_pressed(ui_widget_t* widget, bool pressed) {
 }
 
 
-/* The scheme role a style resolves to, as the pair of a fill and the colour of the text
- * that goes on it. Returning both together is what keeps a caller from picking a
- * legible-looking fill and an illegible label to sit on it.
+/**
+ * @brief Resolves a button's style to a fill and the colour of the text that goes on it.
+ *
+ * @param widget The button to resolve.
+ * @param fill Receives the fill colour.
+ * @param text Receives the label colour.
  */
 static void ui_button_colors(const ui_widget_t* widget, ui_color_t* fill, ui_color_t* text) {
 
@@ -194,9 +197,6 @@ void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
     ui_button_colors(widget, &fill, &text);
 
 
-    /* One wash at a time, strongest first: a button held from the keyboard is as pressed as
-       one held under the pointer, and a pointer sitting on a button it has already pressed
-       should not read as twice as pressed. */
     if (widget->enabled) {
 
         const ui_color_t* wash = NULL;

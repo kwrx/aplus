@@ -91,9 +91,6 @@ void ui_panel_draw(ui_widget_t* widget, cairo_t* cr) {
     cairo_fill_preserve(cr);
 
 
-    /* Inset by half the pen, because cairo centres a stroke on the path: on the path
-       itself half of a one-pixel border would land outside the widget, over whatever the
-       layout put next to it. */
     const double half = widget->panel.border_width / 2.0;
 
     cairo_new_path(cr);
