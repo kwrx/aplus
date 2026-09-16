@@ -46,6 +46,12 @@
 #define WM_WINDOW_MIN_HEIGHT 40
 
 /**
+ * @brief How many damaged rectangles a frame keeps apart before it starts merging them.
+ */
+
+#define WM_DAMAGE_MAX 8
+
+/**
  * @brief Rounded corners and a drop shadow, faked by stacking translucent rounded rectangles.
  */
 
@@ -154,6 +160,10 @@ typedef struct {
     cairo_t* cr;
     cairo_t* cr_screen;
 
+    //? The desktop gradient, built once: it spans the whole screen and never changes, so
+    //? rebuilding it per frame only costs allocations.
+    cairo_pattern_t* background;
+
     //? Whether the adapter composites a cursor plane of its own. When it does, the pointer is
     //? not drawn into the frame at all and moving it costs one small ioctl instead of two
     //? damaged rectangles and the repaint and flush they pull in.
@@ -194,6 +204,17 @@ typedef struct wm_window {
     int stride;
 
     void* shm_addr;
+
+    //? The drop shadow, rendered once and kept as coverage alone: it is pure black, so an A8
+    //? mask carries everything it needs at a quarter of the memory. Valid while the frame size
+    //? and the focus state still match the ones it was rendered for, which is what the three
+    //? fields below record; NULL when it could not be allocated, in which case the layers are
+    //? drawn straight onto the frame instead.
+    cairo_surface_t* shadow;
+
+    int shadow_width;
+    int shadow_height;
+    bool shadow_focused;
 
     struct wm_window* next;
 
@@ -286,9 +307,13 @@ typedef struct {
         wm_rect_t origin;
     } drag;
 
+    //? What has to be repainted before the next frame reaches the screen. Kept as a handful of
+    //? rectangles rather than the one box around them all: dragging a window damages where it was
+    //? and where it now is, and the box around those two covers the whole sweep between them.
+    //? Merging only starts once the list is full, and takes whichever pair wastes the least.
     struct {
-        bool valid;
-        wm_rect_t rect;
+        wm_rect_t rects[WM_DAMAGE_MAX];
+        size_t count;
     } damage;
 
     bool running;
@@ -304,7 +329,7 @@ extern wm_server_t wm;
  */
 int wm_display_open(wm_display_t* display, const char* device);
 void wm_display_close(wm_display_t* display);
-void wm_display_flush(wm_display_t* display, const wm_rect_t* rect);
+void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
 int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y);
 

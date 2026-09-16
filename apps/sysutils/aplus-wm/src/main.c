@@ -44,6 +44,77 @@
 wm_server_t wm = {0};
 
 
+static int64_t wm_rect_area(const wm_rect_t* r) {
+
+    return (int64_t)r->width * (int64_t)r->height;
+}
+
+
+static wm_rect_t wm_rect_union(const wm_rect_t* a, const wm_rect_t* b) {
+
+    const int x0 = a->x < b->x ? a->x : b->x;
+    const int y0 = a->y < b->y ? a->y : b->y;
+
+    const int ax1 = a->x + a->width;
+    const int ay1 = a->y + a->height;
+    const int bx1 = b->x + b->width;
+    const int by1 = b->y + b->height;
+
+    const int x1 = ax1 > bx1 ? ax1 : bx1;
+    const int y1 = ay1 > by1 ? ay1 : by1;
+
+    wm_rect_t r = {x0, y0, x1 - x0, y1 - y0};
+
+    return r;
+}
+
+
+static int64_t wm_rect_overlap(const wm_rect_t* a, const wm_rect_t* b) {
+
+    const int x0 = a->x > b->x ? a->x : b->x;
+    const int y0 = a->y > b->y ? a->y : b->y;
+
+    const int ax1 = a->x + a->width;
+    const int ay1 = a->y + a->height;
+    const int bx1 = b->x + b->width;
+    const int by1 = b->y + b->height;
+
+    const int x1 = ax1 < bx1 ? ax1 : bx1;
+    const int y1 = ay1 < by1 ? ay1 : by1;
+
+    if (x0 >= x1 || y0 >= y1) {
+        return 0;
+    }
+
+    return (int64_t)(x1 - x0) * (int64_t)(y1 - y0);
+}
+
+
+/**
+ * @brief Reports what merging two rectangles would cost, as the area neither of them covers today.
+ *
+ * @param a The first rectangle.
+ * @param b The second rectangle.
+ * @return The area the merged rectangle would repaint for nothing; zero when one contains the other.
+ */
+static int64_t wm_rect_merge_cost(const wm_rect_t* a, const wm_rect_t* b) {
+
+    const wm_rect_t u = wm_rect_union(a, b);
+
+    return wm_rect_area(&u) - (wm_rect_area(a) + wm_rect_area(b) - wm_rect_overlap(a, b));
+}
+
+
+/**
+ * @brief Adds a rectangle to what the next frame repaints, merging it in wherever that is cheaper.
+ *
+ * Two rectangles are worth merging exactly when their union is no larger than the two of them
+ * added up, since whatever they overlap on would otherwise be painted twice. That keeps the slow
+ * drag -- where the window barely moves and the two rectangles almost coincide -- down to one
+ * rectangle, and leaves a fast one, where they share nothing, as two.
+ *
+ * @param rect The rectangle that has to be repainted.
+ */
 void wm_damage(const wm_rect_t* rect) {
 
     int x0 = rect->x;
@@ -72,31 +143,65 @@ void wm_damage(const wm_rect_t* rect) {
     }
 
 
-    if (!wm.damage.valid) {
+    wm_rect_t add = {x0, y0, x1 - x0, y1 - y0};
 
-        wm.damage.valid       = true;
-        wm.damage.rect.x      = x0;
-        wm.damage.rect.y      = y0;
-        wm.damage.rect.width  = x1 - x0;
-        wm.damage.rect.height = y1 - y0;
+
+    for (size_t i = 0; i < wm.damage.count;) {
+
+        if (wm_rect_merge_cost(&wm.damage.rects[i], &add) > wm_rect_overlap(&wm.damage.rects[i], &add)) {
+            i++;
+            continue;
+        }
+
+        add = wm_rect_union(&wm.damage.rects[i], &add);
+
+        wm.damage.rects[i] = wm.damage.rects[--wm.damage.count];
+
+        i = 0;
+    }
+
+    if (wm.damage.count < WM_DAMAGE_MAX) {
+
+        wm.damage.rects[wm.damage.count++] = add;
 
         return;
     }
 
 
-    const int ux0 = wm.damage.rect.x < x0 ? wm.damage.rect.x : x0;
-    const int uy0 = wm.damage.rect.y < y0 ? wm.damage.rect.y : y0;
+    wm_rect_t pool[WM_DAMAGE_MAX + 1];
 
-    const int rx1 = wm.damage.rect.x + wm.damage.rect.width;
-    const int ry1 = wm.damage.rect.y + wm.damage.rect.height;
+    for (size_t i = 0; i < WM_DAMAGE_MAX; i++) {
+        pool[i] = wm.damage.rects[i];
+    }
 
-    const int ux1 = rx1 > x1 ? rx1 : x1;
-    const int uy1 = ry1 > y1 ? ry1 : y1;
+    pool[WM_DAMAGE_MAX] = add;
 
-    wm.damage.rect.x      = ux0;
-    wm.damage.rect.y      = uy0;
-    wm.damage.rect.width  = ux1 - ux0;
-    wm.damage.rect.height = uy1 - uy0;
+
+    size_t best_a = 0;
+    size_t best_b = 1;
+    int64_t best  = wm_rect_merge_cost(&pool[0], &pool[1]);
+
+    for (size_t i = 0; i < WM_DAMAGE_MAX + 1; i++) {
+
+        for (size_t j = i + 1; j < WM_DAMAGE_MAX + 1; j++) {
+
+            const int64_t cost = wm_rect_merge_cost(&pool[i], &pool[j]);
+
+            if (cost < best) {
+
+                best   = cost;
+                best_a = i;
+                best_b = j;
+            }
+        }
+    }
+
+    pool[best_a] = wm_rect_union(&pool[best_a], &pool[best_b]);
+    pool[best_b] = pool[WM_DAMAGE_MAX];
+
+    for (size_t i = 0; i < WM_DAMAGE_MAX; i++) {
+        wm.damage.rects[i] = pool[i];
+    }
 }
 
 
@@ -119,37 +224,97 @@ void wm_damage_window(const wm_window_t* win) {
 }
 
 
+/**
+ * @brief Reports whether some window paints over the whole of a rectangle anyway.
+ *
+ * Only the part of a content area clear of the frame's rounded corners counts: the corners are
+ * clipped out of the window and leave the desktop showing through.
+ *
+ * @param rect The rectangle to test.
+ * @return true when the desktop behind it never becomes visible.
+ */
+static bool wm_damage_is_covered(const wm_rect_t* rect) {
+
+    for (wm_window_t* win = wm.windows; win; win = win->next) {
+
+        const int x0 = win->x + WM_CORNER_RADIUS;
+        const int y0 = win->y;
+        const int x1 = win->x + win->width - WM_CORNER_RADIUS;
+        const int y1 = win->y + win->height - WM_CORNER_RADIUS;
+
+        if (x0 >= x1 || y0 >= y1) {
+            continue;
+        }
+
+        if (rect->x >= x0 && rect->y >= y0 && rect->x + rect->width <= x1 && rect->y + rect->height <= y1) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 static void wm_composite(void) {
 
-    if (!wm.damage.valid) {
+    if (!wm.damage.count) {
         return;
     }
 
 
-    const wm_rect_t damage = wm.damage.rect;
+    wm_rect_t damage[WM_DAMAGE_MAX];
 
-    wm.damage.valid = false;
+    const size_t count = wm.damage.count;
+
+    for (size_t i = 0; i < count; i++) {
+        damage[i] = wm.damage.rects[i];
+    }
+
+    wm.damage.count = 0;
 
 
     cairo_t* cr = wm.display.cr;
 
     cairo_save(cr);
 
-    cairo_rectangle(cr, damage.x, damage.y, damage.width, damage.height);
+    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
+
+    for (size_t i = 0; i < count; i++) {
+        cairo_rectangle(cr, damage[i].x, damage[i].y, damage[i].width, damage[i].height);
+    }
+
     cairo_clip(cr);
 
 
-    cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+    size_t exposed = 0;
 
-    cairo_pattern_t* background = cairo_pattern_create_linear(0.0, 0.0, 0.0, wm.display.height);
+    for (size_t i = 0; i < count; i++) {
 
-    cairo_pattern_add_color_stop_rgb(background, 0.0, WM_COLOR_DESKTOP_TOP);
-    cairo_pattern_add_color_stop_rgb(background, 1.0, WM_COLOR_DESKTOP_BOTTOM);
+        if (wm_damage_is_covered(&damage[i])) {
+            continue;
+        }
 
-    cairo_set_source(cr, background);
-    cairo_paint(cr);
+        cairo_rectangle(cr, damage[i].x, damage[i].y, damage[i].width, damage[i].height);
 
-    cairo_pattern_destroy(background);
+        exposed++;
+    }
+
+    if (exposed) {
+
+        cairo_save(cr);
+
+        cairo_clip(cr);
+
+        cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
+        cairo_set_source(cr, wm.display.background);
+        cairo_paint(cr);
+
+        cairo_restore(cr);
+
+    } else {
+
+        cairo_new_path(cr);
+    }
 
 
     wm_window_t* stack[64];
@@ -164,7 +329,13 @@ static void wm_composite(void) {
 
         const wm_rect_t extent = wm_window_shadow_rect(stack[depth]);
 
-        if (!wm_rect_intersects(&extent, &damage)) {
+        bool visible = false;
+
+        for (size_t i = 0; i < count && !visible; i++) {
+            visible = wm_rect_intersects(&extent, &damage[i]);
+        }
+
+        if (!visible) {
             continue;
         }
 
@@ -179,7 +350,7 @@ static void wm_composite(void) {
     cairo_restore(cr);
 
 
-    wm_display_flush(&wm.display, &damage);
+    wm_display_flush(&wm.display, damage, count);
 }
 
 
