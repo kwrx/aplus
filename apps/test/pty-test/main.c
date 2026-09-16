@@ -23,15 +23,8 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Tests for pseudo-terminals.
- *
- * The case that matters most here is "more than one": pts_finddir() used to return from
- * inside the pty queue's spinlock without releasing it, so the first openpty() in the
- * life of the system leaked the lock. Nothing noticed until a second pty was created --
- * pty_create() then spun on that lock with interrupts disabled, which on a uniprocessor
- * takes the whole machine down with it. Running a second aplus-terminal was the way to
- * hit it; opening two ptys from one process is the small version of the same thing.
+/**
+ * @brief Tests for pseudo-terminals, the case that matters most being more than one at a time.
  */
 
 #include <errno.h>
@@ -81,17 +74,12 @@ int main(int argc, char** argv) {
     }
 
 
-    /* Opening the second one is the whole point: with the lock leaked this never returns,
-       and the system stops dead rather than failing the test. */
     for (int i = 0; i < PTY_MAX; i++) {
 
         char name[32];
 
         snprintf(name, sizeof(name), "openpty-%d", i);
 
-        /* Raw, so the round-trip below tests the pty channel rather than the line
-           discipline: in canonical mode a read() waits for a line terminator and a single
-           byte would simply never arrive. */
         struct termios raw;
 
         memset(&raw, 0, sizeof(raw));
@@ -110,7 +98,6 @@ int main(int argc, char** argv) {
     }
 
 
-    /* Each has to be a channel of its own rather than an alias of the first. */
     for (int i = 0; i < PTY_MAX; i++) {
 
         if (master[i] < 0) {

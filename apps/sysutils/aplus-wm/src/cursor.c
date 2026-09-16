@@ -21,21 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * The pointer, as an image out of the cursor theme in /usr/share/cursors.
+/**
+ * @brief The pointer, as an image out of the cursor theme in /usr/share/cursors.
  *
- * The shape is not decoration: it is the only thing that says what the border under the
- * pointer will do before the button goes down. A window edge that resizes horizontally and
- * one that resizes diagonally look identical, and the theme has an arrow for each of them.
- *
- * The two output paths disagree about alpha: cairo composites premultiplied ARGB32, and the
- * cursor plane takes straight alpha. The decoder produces the straight one, so that goes to
- * the plane unchanged and is what the premultiplied copy is built from -- and is kept
- * afterwards only when there is a plane that might ask for the shape again.
- *
- * A theme file that is missing or unreadable is not worth refusing to start over, nor even
- * worth a fallback shape: the pointer keeps the last image that did load, and with none at
- * all it is the arrow this file draws by hand.
+ * The plane takes the decoder's straight alpha as it is; cairo composites a premultiplied copy of it.
  */
 
 #include <errno.h>
@@ -91,8 +80,13 @@ static wm_cursor_t wm_cursors[WM_CURSOR_COUNT] = {
 static wm_cursor_shape_t wm_cursor_shape = WM_CURSOR_ARROW;
 
 
-/* Whole file into memory, or NULL. The decoder wants the image in one piece and none of these
-   files is larger than a couple of kilobytes. */
+/**
+ * @brief Reads a whole file into memory, which is how the decoder wants the image.
+ *
+ * @param path The file to read.
+ * @param size Receives the size of the file.
+ * @return The contents, or NULL with errno set.
+ */
 static void* wm_cursor_slurp(const char* path, size_t* size) {
 
     int fd;
@@ -155,12 +149,13 @@ static void* wm_cursor_slurp(const char* path, size_t* size) {
 }
 
 
-/* The premultiplied copy cairo composites from, built from the straight-alpha pixels the
- * decoder produced.
+/**
+ * @brief Builds the premultiplied copy cairo composites from, rounding the division rather than truncating it.
  *
- * Rounding the division rather than truncating it matters at the antialiased edge, which is
- * most of what a 32 pixel cursor is made of: truncating darkens every partly transparent pixel
- * by up to one level, and against the near-black desktop the outline picks up a visible fringe.
+ * @param image The straight-alpha pixels the decoder produced.
+ * @param width The width of the image.
+ * @param height The height of the image.
+ * @return The surface, or NULL.
  */
 static cairo_surface_t* wm_cursor_premultiply(const uint32_t* image, int width, int height) {
 
@@ -208,11 +203,11 @@ static cairo_surface_t* wm_cursor_premultiply(const uint32_t* image, int width, 
 }
 
 
-/* One shape out of the theme, decoded once and kept. Returns whether the shape has an image.
+/**
+ * @brief Decodes one shape out of the theme, once, and keeps it.
  *
- * WebPDecodeBGRA lays the channels out as B, G, R, A, which read back as a little-endian word
- * is the 0xAARRGGBB with straight alpha that the cursor plane is specified in -- so the buffer
- * goes to the adapter exactly as it comes out of the decoder.
+ * @param cursor The shape to load.
+ * @return true when the shape has an image.
  */
 static bool wm_cursor_load(wm_cursor_t* cursor) {
 
@@ -245,8 +240,6 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
         return false;
     }
 
-    /* Both an upper bound on what the cursor plane can be asked to hold and a sanity check on
-       the file: anything this large is not a pointer. */
     if (width <= 0 || height <= 0 || width > WM_CURSOR_MAX_SIZE || height > WM_CURSOR_MAX_SIZE) {
         fprintf(stderr, "aplus-wm: warning: %s is %dx%d, which is not a usable cursor size\n", path, width, height);
         free(file);
@@ -254,9 +247,6 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
     }
 
 
-    /* The hotspots in the table describe the theme this server ships with. A replacement
-       theme drawing the same shape smaller would put one outside its own image, which the
-       cursor plane rejects outright, so it is pulled back inside. */
     if (cursor->hot_x >= width) {
         cursor->hot_x = width - 1;
     }
@@ -296,8 +286,13 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
 }
 
 
-/* The arrow to fall back on when the theme has given us nothing to draw. It is a filled
-   triangle with its tip at (x, y), outlined so that it stays visible over a light window. */
+/**
+ * @brief Draws the arrow to fall back on when the theme has given us nothing, with its tip at (x, y).
+ *
+ * @param cr The cairo context to draw with.
+ * @param x The tip of the arrow.
+ * @param y The tip of the arrow.
+ */
 static void wm_cursor_paint_fallback(cairo_t* cr, double x, double y) {
 
     cairo_save(cr);
@@ -321,13 +316,10 @@ static void wm_cursor_paint_fallback(cairo_t* cr, double x, double y) {
 }
 
 
-/* The rectangle the pointer occupies right now, which is what a software-drawn pointer has to
- * damage as it leaves one position and arrives at another.
+/**
+ * @brief Reports the rectangle the pointer occupies right now, which a software-drawn pointer must damage.
  *
- * The drawn arrow needs a margin the theme images do not: its outline is stroked with a one
- * pixel pen centred on the path, so it reaches half a pixel outside the shape on every side.
- * Repainting only the arrow's own box left that half pixel behind, and the cursor drew a trail
- * across the screen as it moved.
+ * @return The rectangle, with the margin the stroked fallback arrow needs.
  */
 wm_rect_t wm_cursor_rect(void) {
 
@@ -354,8 +346,13 @@ wm_rect_t wm_cursor_rect(void) {
 }
 
 
-/* The current shape, with its hotspot on (x, y). Only the software path draws the pointer at
-   all; an adapter with a cursor plane is handed the image once per shape change instead. */
+/**
+ * @brief Draws the current shape with its hotspot on (x, y), for the software path alone.
+ *
+ * @param cr The cairo context to draw with.
+ * @param x The hotspot's position.
+ * @param y The hotspot's position.
+ */
 void wm_cursor_paint(cairo_t* cr, double x, double y) {
 
     const wm_cursor_t* cursor = &wm_cursors[wm_cursor_shape];
@@ -376,8 +373,11 @@ void wm_cursor_paint(cairo_t* cr, double x, double y) {
 }
 
 
-/* Hand the current shape to the cursor plane. Called on every shape change and once at start-up
-   to decide whether there is a usable plane at all, which is why it reports failure. */
+/**
+ * @brief Hands the current shape to the cursor plane.
+ *
+ * @return 0 on success, or -1 when there is no usable plane.
+ */
 int wm_cursor_upload(void) {
 
     wm_cursor_t* cursor = &wm_cursors[wm_cursor_shape];
@@ -390,13 +390,10 @@ int wm_cursor_upload(void) {
 }
 
 
-/* Switch the pointer to another shape.
+/**
+ * @brief Switches the pointer to another shape, repainting both boxes where there is no cursor plane.
  *
- * With a cursor plane this is the one place the image is re-sent; movement afterwards costs
- * nothing but a position. Without one the pointer is part of the frame, so both the box the old
- * shape occupied and the box the new one will occupy have to be repainted -- they are the same
- * position but not the same size, and a smaller shape would otherwise leave the tail of a larger
- * one behind it.
+ * @param shape The shape to switch to.
  */
 void wm_cursor_set(wm_cursor_shape_t shape) {
 
@@ -404,11 +401,6 @@ void wm_cursor_set(wm_cursor_shape_t shape) {
         return;
     }
 
-    /* A shape the theme has nothing for is not switched to at all, so the pointer keeps an
-       image it does have rather than blinking to the drawn arrow and back. The arrow is the
-       exception, being where every other shape returns to; if the theme has no image for that
-       either then there is no plane in use, because the plane is only taken up once the arrow
-       has loaded, and the drawn one goes into the frame instead. */
     if (!wm_cursor_load(&wm_cursors[shape]) && shape != WM_CURSOR_ARROW) {
         return;
     }

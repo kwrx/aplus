@@ -47,9 +47,6 @@ static cairo_font_face_t* wm_face  = NULL;
 
 int wm_font_init(void) {
 
-    /* There is no fontconfig in the sysroot, so cairo's toy font API has nothing to
-       resolve a family name against. Loading the file explicitly through FreeType is the
-       only way to get a usable face. */
     if (FT_Init_FreeType(&wm_ft) != 0) {
         fprintf(stderr, "aplus-wm: warning: cannot initialize freetype, titles will be blank\n");
         return -1;
@@ -102,9 +99,12 @@ wm_rect_t wm_window_frame(const wm_window_t* win) {
 }
 
 
-/* Everything the shadow can reach. Kept apart from wm_window_frame(), which stays the
-   interactive outline: the shadow must be repainted with the window or it leaves a trail
-   behind a drag, but it must not be clickable. */
+/**
+ * @brief Reports everything the shadow can reach, which is repainted with the window but never clickable.
+ *
+ * @param win The window to measure.
+ * @return The rectangle.
+ */
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win) {
 
     const wm_rect_t f = wm_window_frame(win);
@@ -150,13 +150,10 @@ wm_window_t* wm_window_from_id(uint32_t id) {
 }
 
 
-/* Lets go of the window's surface and of the segment behind it.
+/**
+ * @brief Lets go of the window's surface and removes the segment behind it, which the client may still hold.
  *
- * Removed rather than merely detached: the client may still have the segment mapped and may
- * still be drawing into it -- it does not learn about a new one until it acts on the configure
- * -- and the kernel keeps a removed segment alive until its last holder detaches. So this hands
- * the server's share back and leaves the memory to the client for as long as it needs it,
- * without the server having to track when that is.
+ * @param win The window to detach.
  */
 static void wm_window_free_backstore(wm_window_t* win) {
 
@@ -180,22 +177,14 @@ static void wm_window_free_backstore(wm_window_t* win) {
 }
 
 
-/* Allocates the pixel store only; the window's geometry is tracked separately so that a
-   resize drag can move the frame around without reallocating a surface per mouse packet.
-
-   The store is a shared memory segment rather than ordinary memory, and the client is given
-   its id in the next UI_EV_CONFIGURE. Both ends then have the same frames mapped: the client
-   draws into them and the server composites from them, and a commit carries only the rectangle
-   that changed. A surface that is being drawn into while it is composited can tear, which is
-   the price of not copying it; the alternative costs a second surface per window and a copy per
-   frame, on a machine that has neither to spare.
-
-   RGB24 rather than ARGB32: windows are opaque, and cairo's ARGB32 wants premultiplied data,
-   which nothing on the client side produces. The memory layout is identical, so a client
-   writing 0xFFRRGGBB lands exactly where it expects to. Nothing fills the new surface, either
-   -- the kernel hands over a zeroed segment, and zero is black in RGB24 -- but the old contents
-   are carried over, without which a window goes black for the whole of a resize drag, since the
-   client is not told the new size until the mouse is released. */
+/**
+ * @brief Allocates the pixel store, a shared memory segment both ends map, carrying the old contents over.
+ *
+ * @param win The window to allocate for.
+ * @param width The width in pixels.
+ * @param height The height in pixels.
+ * @return 0 on success, or -1 with errno set.
+ */
 static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 
     const int stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, width);
@@ -261,19 +250,12 @@ static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 }
 
 
-/* The size a window is allowed to have. A window that does not fit gets shrunk rather
-   than refused: a client asking for a size larger than the screen is asking for "as much
-   as you have".
+/**
+ * @brief Clamps a window size to what the display can hold, and to the smallest window that can be grabbed.
  *
- * The upper bound is not cosmetic. A drag on the north or west edge moves the origin as
- * well as the size, so dragging a corner back to (0, 0) adds the window's own offset to
- * its width and height -- and with only the lower bound enforced, "move it away, drag the
- * corner back" grew the window by most of the display every time round. Both sides of the
- * socket allocate width * height * 4 bytes to follow it, so the pair of them consumed
- * quadratically more memory per cycle until calloc() failed.
- *
- * The minimum is applied last so that a display too small to hold one still yields a
- * window that can be grabbed. */
+ * @param width In/out. The width asked for, replaced by the width allowed.
+ * @param height In/out. The height asked for, replaced by the height allowed.
+ */
 void wm_window_clamp_size(int* width, int* height) {
 
     const int max_width  = wm.display.width - 2 * WM_BORDER_WIDTH;
@@ -297,8 +279,14 @@ void wm_window_clamp_size(int* width, int* height) {
 }
 
 
-/* The window and its first surface. wm_window_notify_configure() is what hands that surface to
- * the client, and has to be called before anything else is queued for it.
+/**
+ * @brief Creates a window and its first surface, which wm_window_notify_configure() hands to the client.
+ *
+ * @param client The client the window belongs to.
+ * @param width The width in pixels.
+ * @param height The height in pixels.
+ * @param title The window title.
+ * @return The window, or NULL with errno set.
  */
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title) {
 
@@ -315,7 +303,6 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     win->client = client;
     win->serial = 1;
 
-    //? No surface yet: zero is what the teardown path would otherwise read as a real id.
     win->shm_id = -1;
 
     if (title) {
@@ -332,8 +319,6 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     }
 
 
-    /* Cascade from the top-left so that a second client does not land exactly on top of
-       the first one. */
     static int cascade = 0;
 
     win->x = WM_BORDER_WIDTH + 24 * (cascade % 8);
@@ -359,9 +344,11 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 }
 
 
-/* Asking rather than destroying: the client owns the window. The one client there is exits
-   on this event, which drops the socket and takes the window with it; a client that ignores
-   it keeps its window, which is the whole point of making it a request. */
+/**
+ * @brief Asks a client to close a window, which it owns and may decline to.
+ *
+ * @param win The window to ask about.
+ */
 void wm_window_request_close(wm_window_t* win) {
 
     if (!win) {
@@ -431,16 +418,11 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
         return WM_REGION_NONE;
     }
 
-    /* The content area is tested first, so the resize grips only ever cover the border
-       itself however generous WM_RESIZE_GRIP is. */
     if (x >= win->x && x < win->x + win->width && y >= win->y && y < win->y + win->height) {
         return WM_REGION_CONTENT;
     }
 
 
-    /* Ahead of the grips on purpose. The button sits eight pixels down from the top of the
-       frame and within the north-east corner's reach, so testing the grips first would
-       hand them its top row and the window would resize instead of closing. */
     const wm_rect_t c = wm_window_close_rect(win);
 
     if (x >= c.x && x < c.x + c.width && y >= c.y && y < c.y + c.height) {
@@ -448,16 +430,11 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
     }
 
 
-    /* An edge is only an edge within the border thickness. Measuring it with the corner
-       reach instead would put the top 16 pixels of a 32 pixel titlebar inside the north
-       resize zone, and dragging a window by its title would resize it. */
     const bool left   = x < f.x + WM_BORDER_WIDTH;
     const bool right  = x >= f.x + f.width - WM_BORDER_WIDTH;
     const bool top    = y < f.y + WM_BORDER_WIDTH;
     const bool bottom = y >= f.y + f.height - WM_BORDER_WIDTH;
 
-    /* Corners reach further, but only *along* an edge: the grip is the L-shaped bit of
-       border near the corner, never a square cut out of the content or the titlebar. */
     const bool near_left   = x < f.x + WM_RESIZE_GRIP;
     const bool near_right  = x >= f.x + f.width - WM_RESIZE_GRIP;
     const bool near_top    = y < f.y + WM_RESIZE_GRIP;
@@ -562,8 +539,6 @@ void wm_window_focus(wm_window_t* win) {
     wm.focused = win;
 
 
-    /* The titlebar is drawn differently for the focused window, so both frames have to be
-       repainted even though nothing about their contents changed. */
     if (previous) {
 
         ui_msg_focus_t msg = {.window_id = previous->id, .focused = 0};
@@ -584,8 +559,6 @@ void wm_window_focus(wm_window_t* win) {
 
 void wm_window_move(wm_window_t* win, int x, int y) {
 
-    /* Keep at least the titlebar reachable: a window dragged fully off-screen could never
-       be dragged back. */
     const int min_x = -(win->width - WM_WINDOW_MIN_WIDTH);
     const int min_y = WM_TITLEBAR_HEIGHT;
 
@@ -633,9 +606,6 @@ int wm_window_resize(wm_window_t* win, int width, int height) {
     win->width  = width;
     win->height = height;
 
-    /* Every in-flight commit describes the size the client last heard about. Bumping the
-       serial is what lets those be recognised and dropped rather than blitted at the wrong
-       stride. */
     win->serial++;
 
     wm_damage_window(win);
@@ -644,18 +614,11 @@ int wm_window_resize(wm_window_t* win, int width, int height) {
 }
 
 
-/* Kept apart from wm_window_resize() on purpose. A resize drag walks through a new size on
-   every mouse packet, and announcing each one would make the client repaint at a hundred
-   sizes a second. The server tracks the geometry live and reaches here once, when the drag
-   ends.
+/**
+ * @brief Tells a client the size it ended a resize drag at, allocating the surface for it.
  *
- * Allocating the surface here rather than in wm_window_resize() matters for the same reason:
- * one segment per drag instead of one per mouse packet, and each one costs both ends a range
- * of address space that neither the mmap cursor nor shmdt(2) ever rewinds.
- *
- * A window whose new surface cannot be allocated keeps the size it has, rather than being left
- * describing one that was never allocated: every commit against that would be rejected by
- * wm_window_damage_content() and the client dropped for what is really this server's failure.
+ * @param win The window that was resized.
+ * @return 0 on success, or -1 with errno set.
  */
 int wm_window_notify_configure(wm_window_t* win) {
 
@@ -688,14 +651,15 @@ int wm_window_notify_configure(wm_window_t* win) {
 }
 
 
-/* Take a client's word that a rectangle of the shared surface has changed.
+/**
+ * @brief Takes a client's word that a rectangle of the shared surface has changed.
  *
- * There is nothing to copy -- the pixels were written through the mapping both ends share --
- * so all this does is bound the claim and tell cairo the surface it caches a description of
- * has been written to behind its back.
- *
- * The bound is the surface rather than win->width/height: during a resize drag the two disagree
- * on purpose, and it is the surface that says how much memory there actually is.
+ * @param win The window that committed.
+ * @param x The left edge of the rectangle.
+ * @param y The top edge of the rectangle.
+ * @param width The width of the rectangle.
+ * @param height The height of the rectangle.
+ * @return 0 on success, or -1 when the rectangle does not fit the surface.
  */
 int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int height) {
 
@@ -716,7 +680,16 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 }
 
 
-/* A rectangle with all four corners rounded, as a path. */
+/**
+ * @brief Lays out a rectangle with all four corners rounded, as a path.
+ *
+ * @param cr The cairo context to build the path in.
+ * @param x The left edge.
+ * @param y The top edge.
+ * @param width The width of the rectangle.
+ * @param height The height of the rectangle.
+ * @param radius The corner radius.
+ */
 void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double height, double radius) {
 
     if (radius > width / 2.0) {
@@ -747,10 +720,6 @@ static void wm_window_paint_shadow(cairo_t* cr, const wm_rect_t* f, bool focused
 
     cairo_save(cr);
 
-    /* Only the ring outside the frame can ever show, because the window is painted opaque
-       over the rest of it. Clipping the frame away first means each layer below rasterises
-       a border rather than a whole window -- and it is what keeps a shadow affordable
-       without a GPU to blur with. */
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
     cairo_rectangle(cr, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
@@ -763,15 +732,6 @@ static void wm_window_paint_shadow(cairo_t* cr, const wm_rect_t* f, bool focused
 
     const double strength = WM_SHADOW_ALPHA * (focused ? 1.0 : 0.55);
 
-    /* Nested rounded rectangles, widest first. Where more of them overlap the black
-       accumulates, so the edge fades out instead of stopping dead -- a blur for the price
-       of a handful of fills. Pushed down by WM_SHADOW_OFFSET so the light reads as coming
-       from above.
-     *
-     * The layers are not equally opaque. Giving them all the same alpha puts a step of the
-     * full layer alpha where the outermost one meets the desktop, and that reads as a box
-     * drawn around the window; fading the outer layers to nothing hides where the shadow
-     * ends. */
     for (int i = WM_SHADOW_LAYERS; i > 0; i--) {
 
         const double t      = (double)(i - 1) / (double)WM_SHADOW_LAYERS;
@@ -795,9 +755,6 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     }
 
 
-    /* The strip the title gets to itself: from the left inset up to a gap before the close
-       button. Centring in the whole titlebar instead would run a long title underneath the
-       button, and clipping alone would not stop it. */
     const double left  = f->x + 8;
     const double right = wm_window_close_rect(win).x - 6;
 
@@ -849,8 +806,6 @@ static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focu
 
     cairo_save(cr);
 
-    /* Nothing at all until the pointer arrives -- a permanently red button in a titlebar
-       this dark would be the loudest thing on the screen. */
     if (hovered) {
 
         if (pressed) {
@@ -900,20 +855,12 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    /* Confine the window to its rounded outline. The content area is inset by less than
-       the corner radius, so this is also what gives the client's bottom corners the same
-       curve without the client knowing anything about it. */
     wm_rounded_rect(cr, f.x, f.y, f.width, f.height, WM_CORNER_RADIUS);
     cairo_clip(cr);
 
-    /* OVER rather than SOURCE from here on. The clip edge is antialiased, and SOURCE
-       writes partial coverage straight into an opaque surface, which would fringe every
-       curve with black instead of blending it into the desktop. */
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
 
-    /* One flat colour for the titlebar and the border under it: the frame is a single
-       shape, and shading it would only compete with the shadow for the reader's eye. */
     if (focused) {
         cairo_set_source_rgb(cr, WM_COLOR_FRAME_ACTIVE);
     } else {
@@ -928,9 +875,6 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     wm_window_paint_close(cr, win, focused);
 
 
-    /* Mid-drag the surface can be smaller than the content area it has to fill, so lay
-       down a floor first: painting the surface alone would leave whatever the compositor
-       drew there last frame showing through the uncovered strip. */
     cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
     cairo_rectangle(cr, win->x, win->y, win->width, win->height);
     cairo_fill(cr);
@@ -945,9 +889,6 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     cairo_restore(cr);
 
 
-    /* A hairline just inside the outline, drawn last so the content cannot cover it. With
-       the frames this dark it is doing most of the work of telling two stacked windows
-       apart, and the accent on the active one is the clearest focus cue on screen. */
     cairo_save(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);

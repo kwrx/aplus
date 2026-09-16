@@ -48,17 +48,16 @@
 
     #define SCENE_FPS_INTERVAL_MS 1000
 
-    //? Every pixel of this window is a full raymarch through the scene, and the renderer
-    //? underneath is Mesa's software rasteriser: one shaded pixel here costs what a few
-    //? hundred do in gl-gears. So the shader runs over a fraction of the window and the
-    //? result is blown back up to size on the way out -- the default trades a visibly
-    //? blocky image for a frame rate that still reads as motion. '-' and '=' move it.
+    /**
+     * @brief How much of the window the shader actually runs over, before the result is blown back up.
+     */
     #define SCENE_DEFAULT_PIXEL_SCALE 4
     #define SCENE_MIN_PIXEL_SCALE     1
     #define SCENE_MAX_PIXEL_SCALE     16
 
-    //? Has to stay at or below MARCH_STEPS_MAX in the shader, which is the literal bound
-    //? of the loop the budget is spent inside.
+    /**
+     * @brief The raymarching budget, which has to stay at or below MARCH_STEPS_MAX in the shader.
+     */
     #define SCENE_DEFAULT_MARCH_STEPS 96
     #define SCENE_MIN_MARCH_STEPS     16
     #define SCENE_MAX_MARCH_STEPS     128
@@ -67,8 +66,9 @@
 
 
 
-// Nothing but a fullscreen quad: the vertex stage exists only to hand the fragment stage
-// the point it is shading, in [-1, 1] with the origin at the centre of the window.
+/**
+ * @brief Nothing but a fullscreen quad, handing the fragment stage the point it is shading.
+ */
 static const char* vertex_shader = "#version 120                                                                                         \n"
                                    "                                                                                                     \n"
                                    "attribute vec2 position;                                                                             \n"
@@ -80,16 +80,11 @@ static const char* vertex_shader = "#version 120                                
                                    "    gl_Position = vec4(position, 0.0, 1.0);                                                          \n"
                                    "}                                                                                                    \n";
 
-// The whole scene, geometry included. There are no vertices behind any of this: every
-// surface is a signed distance function, and the picture is what a ray from the eye runs
-// into while walking that field -- a blobby core of a rotating rounded box fused with four
-// orbiting spheres, a thin ring precessing around it, two rows of pillars, and a
-// checkerboard floor that mirrors the lot. Lighting is a sun with a soft shadow, a sky
-// term, ambient occlusion, one mirror bounce, and distance fog.
-//
-// Written against GLSL 1.20, which is as much as the OSMesa build here offers, so: no
-// built-in calls in a global initialiser (SUN_DIR is written out pre-normalised), no
-// round(), and every loop carries a literal bound with the real budget checked inside it.
+/**
+ * @brief The whole scene, geometry included: every surface is a signed distance function.
+ *
+ * Written against GLSL 1.20, which is as much as the OSMesa build here offers.
+ */
 static const char* fragment_shader = "#version 120                                                                                         \n"
                                      "                                                                                                     \n"
                                      "uniform float u_time;                                                                                \n"
@@ -448,20 +443,15 @@ static const char* fragment_shader = "#version 120                              
 
 
 
-/* Point OSMesa at the window's own pixels, and size the rendering to the pixel scale.
+/**
+ * @brief Points OSMesa at the window's own pixels, and sizes the rendering to the pixel scale.
  *
- * There is no blit anywhere in this program: the window buffer libui hands out is a tight
- * run of 32-bit pixels, which is exactly what OSMesa wants to render into, so GL draws
- * straight into the surface that gets committed. OSMESA_BGRA is what makes that work -- it
- * lays each pixel down as B, G, R, A, which read back as the 0xAARRGGBB the server expects.
+ * The viewport is the top-left corner of the window, which scene_upscale() spreads over the rest.
  *
- * The viewport is the top-left corner of the window rather than the whole of it, and
- * scene_upscale() spreads it back over the rest afterwards. GL counts rows up from the
- * bottom while the buffer counts them down from the top, which is why the corner that is
- * the top of the image is named here as the rows just below the far edge of the window.
- *
- * Called again after every resize, because applying a configure can move the buffer, and
- * after every change of scale, because that is what the viewport is.
+ * @param ctx The OSMesa context to bind.
+ * @param win The window to render into.
+ * @param scale How much smaller than the window the rendering is.
+ * @return 0 on success, or -1.
  */
 
 static int scene_bind(OSMesaContext ctx, ui_window_t* win, int scale) {
@@ -484,15 +474,11 @@ static int scene_bind(OSMesaContext ctx, ui_window_t* win, int scale) {
 }
 
 
-/* Spread the corner the shader rendered into over the whole window, scale times in each
- * direction. Nearest-neighbour, in place, on the shared surface itself -- there is nowhere
- * else to put it, and a blur would only make an honestly coarse image look like a broken
- * fine one.
+/**
+ * @brief Spreads the corner the shader rendered into over the whole window, in place and nearest-neighbour.
  *
- * In place works because of the order: a destination row reads source row y / scale, which
- * is never a row this pass has already written as long as the rows are walked downwards,
- * and within the one row where the two meet (y = 0) the columns are walked right to left
- * for the same reason. Both degenerate to copying a pixel over itself at the origin.
+ * @param win The window holding the surface.
+ * @param scale How many times to repeat each pixel in each direction.
  */
 
 static void scene_upscale(ui_window_t* win, int scale) {
@@ -519,9 +505,13 @@ static void scene_upscale(ui_window_t* win, int scale) {
 }
 
 
-/* Compile one stage, and say why if it would not. Worth the twenty lines: a shader that
- * fails to compile still links, still binds, and still draws -- nothing, in black, with no
- * error anywhere in sight. The log is the only account of what went wrong.
+/**
+ * @brief Compiles one shader stage, and says why if it would not.
+ *
+ * @param type The stage to compile.
+ * @param source The shader source.
+ * @param name The stage's name, for the error message.
+ * @return The shader, or 0.
  */
 
 static GLuint scene_shader(GLenum type, const char* source, const char* name) {
@@ -570,12 +560,10 @@ static GLuint scene_program(void) {
     glAttachShader(program, vert);
     glAttachShader(program, frag);
 
-    /* Before the link, which is when the locations are decided. */
     glBindAttribLocation(program, SCENE_ATTRIB_POSITION, "position");
 
     glLinkProgram(program);
 
-    /* The program holds its own reference to each of these until it is deleted. */
     glDeleteShader(vert);
     glDeleteShader(frag);
 
@@ -609,14 +597,11 @@ static uint64_t now_ms(void) {
 }
 
 
-/* Report the frame rate once a second, and start a fresh interval when it does.
+/**
+ * @brief Reports the frame rate once a second, and starts a fresh interval when it does.
  *
- * Frames are counted between reports rather than timed one by one: a single frame is close
- * enough to the clock's granularity that timing it says more about the clock than about the
- * renderer, and the average over a second is the figure worth having. The division is by the
- * interval actually measured, not by SCENE_FPS_INTERVAL_MS, so a frame that straddles the
- * deadline reports a late but honest number instead of an inflated one -- which matters more
- * here than it does elsewhere, since one frame of this can easily outlast the interval.
+ * @param frames In/out. The frames counted since the last report.
+ * @param since In/out. When the interval started.
  */
 
 static void scene_fps_report(unsigned* frames, uint64_t* since) {
@@ -673,8 +658,6 @@ int main(int argc, char** argv) {
 
     OSMesaContext ctx;
 
-    /* No depth buffer: the only thing ever drawn is a quad covering the viewport, and
-       depth in this scene is something the fragment shader works out for itself. */
     #if OSMESA_MAJOR_VERSION * 100 + OSMESA_MINOR_VERSION >= 305
     ctx = OSMesaCreateContextExt(OSMESA_BGRA, 0, 0, 0, NULL);
     #else
@@ -707,9 +690,6 @@ int main(int argc, char** argv) {
     const GLint u_aspect = glGetUniformLocation(program, "u_aspect");
     const GLint u_steps  = glGetUniformLocation(program, "u_steps");
 
-    /* Two triangles' worth of corners, as a strip, in clip space. The fragment shader
-       reads these back interpolated and turns them into a ray, so they are at once the
-       only geometry in the program and the frame the scene is projected onto. */
     static const GLfloat quad[4][2] = {
         {-1.0f, -1.0f},
         {1.0f,  -1.0f},
@@ -731,8 +711,6 @@ int main(int argc, char** argv) {
     bool paused  = false;
     bool redraw  = true;
 
-    /* Scene time, accumulated rather than read off the clock, so that a pause stops the
-       animation where it stands instead of letting it jump ahead while nothing is drawn. */
     uint64_t clock_ms = 0;
     uint64_t last     = now_ms();
 
@@ -741,16 +719,8 @@ int main(int argc, char** argv) {
 
     while (running) {
 
-        /* The pause state as it stands before a single event has been read. Whether the
-           interval about to be measured is time the scene spent moving has to be decided
-           here: a keypress arriving in the middle of it changes the answer for the next
-           interval, not for this one, and asking afterwards would charge the whole of a
-           pause -- however long it lasted -- to the frame that ended it. */
         const bool was_paused = paused;
 
-        /* Animating, there is a frame to draw whether or not the server has anything to
-           say, so the queue is drained without waiting. Paused, there is not: the first
-           read blocks, and the ones after it mop up whatever arrived alongside. */
         int timeout = (was_paused && !redraw) ? -1 : 0;
 
         for (;;) {
@@ -808,15 +778,11 @@ int main(int argc, char** argv) {
 
                     paused = !paused;
 
-                    /* The pause is not a slow second: it would otherwise be averaged
-                       into the rate the frames around it are reported at. */
                     fps_frames = 0;
                     fps_since  = now_ms();
 
                     break;
 
-                /* Fewer window pixels per shaded pixel, so finer and slower; and more,
-                   so coarser and faster. Both are the viewport, hence the rebind. */
                 case KEY_MINUS:
                 case KEY_EQUAL:
 

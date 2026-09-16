@@ -23,16 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for select(), pselect6() and ppoll().
+/**
+ * @brief Regression tests for select(), pselect6() and ppoll().
  *
- * All three sit on the same readiness core as poll(), so most of what is checked here is the
- * part that is not shared: select()'s three in-out descriptor sets. A syscall that sleeps in
- * this kernel is restarted from the top with its original arguments, which makes those sets
- * treacherous -- they are the question and the answer in the same memory. An implementation
- * that writes the answer before going to sleep destroys the question, and the restarted call
- * then watches nothing at all. That failure HANGS rather than returning wrong, so run this
- * under a timeout: a hang is a failure too.
+ * Most of these are about select()'s three in-out sets, which a restarted syscall re-reads; run under a timeout.
  */
 
 #include <errno.h>
@@ -68,10 +62,9 @@ static int total    = 0;
     }
 
 
-/* How much of a sigset_t either side actually means. The type is 128 bytes, but every syscall
-   that carries one also carries a length, and both the kernel and the libc only ever fill in
-   that many -- sigemptyset() does not clear the rest either. Comparing whole sigset_t objects
-   compares stack litter. */
+/**
+ * @brief How much of a sigset_t either side actually means, so that comparisons do not read stack litter.
+ */
 #define SIGMASK_BYTES (_NSIG / 8)
 
 
@@ -94,9 +87,8 @@ static void sleep_ms(unsigned ms) {
 }
 
 
-/*
- * Data already in the pipe has to be reported without sleeping: readiness is a question about
- * now, not a subscription to the next change.
+/**
+ * @brief Checks that data already in the pipe is reported without sleeping.
  */
 static void test_readable(void) {
 
@@ -126,9 +118,8 @@ static void test_readable(void) {
 }
 
 
-/*
- * An empty pipe has a writable write end and an unreadable read end. Both answers come from
- * the same scan, so this also pins down that the sets are kept apart.
+/**
+ * @brief Checks that an empty pipe has a writable write end and an unreadable read end.
  */
 static void test_writable(void) {
 
@@ -160,9 +151,8 @@ static void test_writable(void) {
 }
 
 
-/*
- * A zero timeout is a probe. Nothing is ready, so the answer is zero and all three sets come
- * back empty rather than untouched.
+/**
+ * @brief Checks that a zero timeout is a probe, and that all three sets come back empty.
  */
 static void test_zero_timeout(void) {
 
@@ -193,10 +183,8 @@ static void test_zero_timeout(void) {
 }
 
 
-/*
- * A timeout has to actually come due. The deadline is stamped once and counted down across
- * restarts; one recomputed from the top on every wakeup would never expire, and this would
- * hang instead of failing.
+/**
+ * @brief Checks that a timeout actually comes due, from a deadline stamped once and counted down across restarts.
  */
 static void test_timeout_expires(void) {
 
@@ -227,11 +215,8 @@ static void test_timeout_expires(void) {
 }
 
 
-/*
- * The case the whole design is arranged around. Nothing is ready, so select() sleeps and is
- * restarted when the writer arrives -- and the restart re-reads the very sets it would have
- * written its answer into. If they were written early, the second attempt watches an empty
- * set and this hangs until the timeout.
+/**
+ * @brief Checks that select() sleeps until a writer arrives, with the sets it is restarted on still intact.
  */
 static void test_blocks_until_data(void) {
 
@@ -286,10 +271,8 @@ static void test_blocks_until_data(void) {
 }
 
 
-/*
- * Only the descriptors that are actually ready come back set. A result built by clearing bits
- * in place rather than from an empty set tends to pass the single-descriptor cases above and
- * fail this one.
+/**
+ * @brief Checks that only the descriptors that are actually ready come back set.
  */
 static void test_reports_only_ready(void) {
 
@@ -331,9 +314,8 @@ static void test_reports_only_ready(void) {
 }
 
 
-/*
- * The return value counts ready bits, not descriptors: one that is both readable and writable
- * is worth two.
+/**
+ * @brief Checks that the return value counts ready bits rather than descriptors.
  */
 static void test_counts_bits_not_fds(void) {
 
@@ -365,9 +347,8 @@ static void test_counts_bits_not_fds(void) {
 }
 
 
-/*
- * select() has nowhere to report a bad descriptor per entry the way poll() does with POLLNVAL,
- * so a closed descriptor fails the whole call.
+/**
+ * @brief Checks that a closed descriptor fails the whole call, which select() has no per-entry way to report.
  */
 static void test_bad_fd(void) {
 
@@ -398,8 +379,8 @@ static void test_bad_fd(void) {
 }
 
 
-/*
- * select() with no descriptors at all is a sleep, and has to come back on its own.
+/**
+ * @brief Checks that select() with no descriptors is a sleep that comes back on its own.
  */
 static void test_sleep(void) {
 
@@ -415,13 +396,8 @@ static void test_sleep(void) {
 }
 
 
-/*
- * nanosleep() goes through the scheduler's own deadline rather than the one the poll family
- * uses, so it needs checking on its own. The scheduler read the current time into a kernel
- * buffer through sys_clock_gettime(), which rejects a kernel pointer coming from a userspace
- * task and returned -EFAULT having written nothing: the deadline was then compared against
- * whatever the stack happened to hold, and sleeps ended after an arbitrary fraction of what
- * was asked for. `watch -n 2` ran its command several times a second.
+/**
+ * @brief Checks nanosleep(), which goes through the scheduler's own deadline rather than the poll family's.
  */
 static void test_nanosleep(void) {
 
@@ -437,11 +413,8 @@ static void test_nanosleep(void) {
 }
 
 
-/*
- * A descriptor above CONFIG_OPEN_MAX is a socket, and readiness for one is answered by the
- * network stack rather than by the VFS. Whether it calls an idle socket writable is its own
- * business; what has to hold is that select() and poll() come back with the same answer, since
- * select() reaches that path by a different route. Skipped where there is no socket to make.
+/**
+ * @brief Checks that select() and poll() agree about a socket, whose readiness the network stack answers.
  */
 static void test_high_fd_socket(void) {
 
@@ -488,9 +461,8 @@ static void test_high_fd_socket(void) {
 }
 
 
-/*
- * select(FD_SETSIZE, ...) is a common shorthand for "everything". Descriptors that high cannot
- * exist here, so it has to be bounded rather than refused.
+/**
+ * @brief Checks that select(FD_SETSIZE, ...) is bounded rather than refused.
  */
 static void test_fd_setsize(void) {
 
@@ -519,9 +491,8 @@ static void test_fd_setsize(void) {
 }
 
 
-/*
- * pselect() takes its timeout as a timespec and a signal mask it blocks for the duration. With
- * no mask it is select() with finer units.
+/**
+ * @brief Checks pselect(), which is select() with a timespec and a mask it blocks for the duration.
  */
 static void test_pselect(void) {
 
@@ -551,8 +522,8 @@ static void test_pselect(void) {
 }
 
 
-/*
- * pselect() has to sleep and wake like select() does, restart hazard and all.
+/**
+ * @brief Checks that pselect() sleeps and wakes like select() does, restart hazard and all.
  */
 static void test_pselect_blocks(void) {
 
@@ -606,10 +577,8 @@ static void test_pselect_blocks(void) {
 }
 
 
-/*
- * The mask pselect() installs is for the duration of the call only. It is swapped back on the
- * way out -- including out of a call that slept and was restarted, which is where a saved mask
- * is easiest to lose.
+/**
+ * @brief Checks that the mask pselect() installs is swapped back on the way out, including out of a restart.
  */
 static void test_pselect_restores_sigmask(void) {
 
@@ -623,10 +592,6 @@ static void test_pselect_restores_sigmask(void) {
         return;
     }
 
-
-    /* Two calls, because they leave by different doors: one returns on its first attempt, the
-       other sleeps and comes back through the restart path, where the mask to put back has to
-       have survived in the meantime. */
 
     struct timespec immediate = {0, 0};
 
@@ -653,8 +618,8 @@ static void test_pselect_restores_sigmask(void) {
 }
 
 
-/*
- * ppoll() is poll() with a timespec and a mask. Same core, so this is about the wrapper.
+/**
+ * @brief Checks ppoll(), which is poll() with a timespec and a mask.
  */
 static void test_ppoll(void) {
 
@@ -681,8 +646,8 @@ static void test_ppoll(void) {
 }
 
 
-/*
- * ppoll()'s timeout has to come due like everyone else's.
+/**
+ * @brief Checks that ppoll()'s timeout comes due.
  */
 static void test_ppoll_timeout(void) {
 
@@ -710,10 +675,8 @@ static void test_ppoll_timeout(void) {
 }
 
 
-/*
- * Which of select() and pselect6() the libc reaches for is its own business, so each kernel
- * entry point is also called directly -- otherwise one of the two could stay a stub and every
- * test above would still pass.
+/**
+ * @brief Calls each kernel entry point directly, since which one the libc reaches for is its own business.
  */
 static void test_raw_entry_points(void) {
 
@@ -749,8 +712,6 @@ static void test_raw_entry_points(void) {
 
         struct timespec ts = {0, 0};
 
-        /* pselect6() has seven arguments and a syscall carries six, so the mask and its size
-           travel together behind one pointer. */
         struct {
             const sigset_t* ss;
             size_t ss_len;
@@ -805,14 +766,15 @@ static struct {
 };
 
 
-/*
- * With no argument every case runs. Naming one runs just that case, which is how these get
- * checked against an unfixed kernel: the sleeping cases hang instead of failing, and a hang in
- * one case would otherwise take the whole run down with it.
+/**
+ * @brief Runs every case, or the one named on the command line.
+ *
+ * @param argc The argument count.
+ * @param argv The arguments; an optional case name.
+ * @return 0 when every case that ran passed.
  */
 int main(int argc, char** argv) {
 
-    /* Unbuffered: a case that hangs would otherwise take its own output down with it. */
     setvbuf(stdout, NULL, _IONBF, 0);
 
     printf("select-test: starting\n");

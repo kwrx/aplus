@@ -163,14 +163,12 @@ static void gear(GLfloat inner_radius, GLfloat outer_radius, GLfloat width, GLin
 }
 
 
-/* Point OSMesa at the window's own pixels and set the view up for their size.
+/**
+ * @brief Points OSMesa at the window's own pixels and sets the view up for their size.
  *
- * There is no blit anywhere in this program: the window buffer libui hands out is a tight
- * run of 32-bit pixels, which is exactly what OSMesa wants to render into, so GL draws
- * straight into the surface that gets committed. OSMESA_BGRA is what makes that work -- it
- * lays each pixel down as B, G, R, A, which read back as the 0xAARRGGBB the server expects.
- *
- * Called again after every resize, because applying a configure can move the buffer.
+ * @param ctx The OSMesa context to bind.
+ * @param win The window to render into.
+ * @return 0 on success, or -1.
  */
 
 static int gears_bind(OSMesaContext ctx, ui_window_t* win) {
@@ -182,8 +180,6 @@ static int gears_bind(OSMesaContext ctx, ui_window_t* win) {
         return -1;
     }
 
-    /* GL counts rows up from the bottom and a window counts them down from the top. Saying
-       so here is cheaper than flipping every frame by hand. */
     OSMesaPixelStore(OSMESA_Y_UP, 0);
 
 
@@ -216,13 +212,11 @@ static uint64_t now_ms(void) {
 }
 
 
-/* Report the frame rate once a second, and start a fresh interval when it does.
+/**
+ * @brief Reports the frame rate once a second, and starts a fresh interval when it does.
  *
- * Frames are counted between reports rather than timed one by one: a single frame is close
- * enough to the clock's granularity that timing it says more about the clock than about the
- * renderer, and the average over a second is the figure worth having. The division is by the
- * interval actually measured, not by GEARS_FPS_INTERVAL_MS, so a frame that straddles the
- * deadline reports a late but honest number instead of an inflated one.
+ * @param frames In/out. The frames counted since the last report.
+ * @param since In/out. When the interval started.
  */
 
 static void gears_fps_report(unsigned* frames, uint64_t* since) {
@@ -336,9 +330,6 @@ int main(int argc, char** argv) {
 
     while (running) {
 
-        /* Drained without waiting, because this window has something to say every frame
-           whether or not the server does. A resize has to be picked up before the frame it
-           applies to is drawn, which is the only reason the events come first. */
         for (;;) {
 
             ui_event_t ev;
@@ -387,8 +378,6 @@ int main(int argc, char** argv) {
         }
 
 
-        /* Opaque black: the window buffer is nominally ARGB, and leaving the alpha at zero
-           would be asking anything that does blend it to drop the frame entirely. */
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

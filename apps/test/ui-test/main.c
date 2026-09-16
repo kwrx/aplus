@@ -23,17 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Smoke test for libui and the aplus-wm wire protocol.
+/**
+ * @brief Smoke test for libui and the aplus-wm wire protocol.
  *
- * Opens a window, paints a gradient into it, and prints every event it receives. It
- * exists so that the server and the library can be debugged without dragging the whole
- * terminal port in: if this shows a window and reports keys, the protocol works.
- *
- * With --once it paints a single frame and exits. A client that lives forever cannot be driven
- * from a script, and the lifecycle is the interesting thing to drive: every window costs a
- * shared memory segment that the server creates and both ends have to let go of, so a loop of
- * these is what shows a leak.
+ * Opens a window, paints a gradient into it, and prints every event; with --once it paints one frame and exits.
  */
 
 #include <errno.h>

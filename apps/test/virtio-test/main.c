@@ -23,23 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Tests for the four virtio devices from the far side of the syscall boundary.
+/**
+ * @brief Tests for the four virtio devices from the far side of the syscall boundary.
  *
- * There is one device node per driver -- /dev/hwrng, /dev/hvc0, /dev/tablet and /dev/fb0 --
- * and what is checked here is the contract each one offers a process, not the virtqueue
- * plumbing under it. That boundary is where the interesting defects have been: a transfer
- * larger than a driver's window is split across descriptors and a mistake in the split shows
- * up as a short read, torn data or a queue that runs dry after a few hundred requests, none
- * of which the driver notices itself.
- *
- * Every group skips itself when its device is missing, so this is safe to run on a machine
- * configured without virtio. `scripts/run-qemu` attaches all four by default.
- *
- * With no argument every group runs. Naming one -- random, console, input, gpu -- runs just
- * that group. The input group needs a pointer to actually move, so it consumes what is
- * already buffered and skips when that is nothing; `virtio-test input 5` waits five seconds
- * for a human instead.
+ * Each group skips itself when its device is missing; naming one on the command line runs just that group.
  */
 
 #include <errno.h>
@@ -82,9 +69,9 @@ static int total    = 0;
     }
 
 
-/* The windows the drivers split a transfer at. Neither is visible to a process, which is the
-   point: a read or a write larger than one has to come back whole anyway, and the cases below
-   pick their sizes to land several windows past the boundary rather than just over it. */
+/**
+ * @brief The windows the drivers split a transfer at, which no process sees and every case here reaches past.
+ */
 
 #define VIRTRANDOM_RECV_WINDOW  8192
 #define VIRTCONSOLE_SEND_WINDOW 4096
@@ -109,13 +96,8 @@ static int is_zeroed(const uint8_t* p, size_t size) {
 }
 
 
-/*
- * /dev/hwrng, the entropy source.
- *
- * The device hands over one window of bytes per request and the driver loops until the read is
- * satisfied, so the cases that matter are the ones that do not fit in a single window: a loop
- * that miscounts leaves the tail of the buffer untouched, and a caller has no way to tell that
- * from entropy that happens to be zero -- except in bulk, which is what is checked here.
+/**
+ * @brief Tests /dev/hwrng, the entropy source, over reads too large for a single window.
  */
 
 static void test_random(void) {
@@ -140,8 +122,6 @@ static void test_random(void) {
     CHECK(ra == (ssize_t)sizeof(a), "random-read", "read() returned %d, expected %d (%s)", (int)ra, (int)sizeof(a), strerror(errno));
     CHECK(!is_zeroed(a, sizeof(a)), "random-nonzero", "%s", "32 bytes of entropy came back all zero");
 
-    /* Two reads of the same size colliding is a 1-in-2^256 event, so this failing means the
-       device is handing back the same buffer twice rather than that luck ran out. */
     if (ra == (ssize_t)sizeof(a) && rb == (ssize_t)sizeof(b)) {
         CHECK(memcmp(a, b, sizeof(a)) != 0, "random-varies", "%s", "two reads returned identical bytes");
     }
@@ -166,9 +146,6 @@ static void test_random(void) {
 
         if (rbig == (ssize_t)big) {
 
-            /* Per block rather than over the whole buffer: a loop that stops after the first
-               window leaves everything past it zero, and a single "is any byte set" test
-               passes on that. A legitimately zero 256-byte block is a 1-in-2^2048 event. */
             size_t empty = 0;
 
             for (size_t off = 0; off < big; off += 256) {
@@ -185,14 +162,6 @@ static void test_random(void) {
         SKIP("random-large", "%s", "out of memory");
     }
 
-
-    /* An entropy source is read-only, and says so rather than quietly accepting the bytes.
-     *
-     * On a descriptor of its own, opened for writing. Writing to the O_RDONLY descriptor above
-     * would be refused by sys_write() before the driver was reached at all -- as EPERM, which
-     * is exactly what the device itself would look like if it reported its refusal the wrong
-     * way, so reusing that descriptor here would make this case pass or fail for a reason that
-     * has nothing to do with the device. */
 
     int wfd = open("/dev/hwrng", O_WRONLY);
 
@@ -220,20 +189,8 @@ static void test_random(void) {
 }
 
 
-/*
- * /dev/hvc0, the console port.
- *
- * Writes are the half with a host on the other end -- under run-qemu they land in console.log
- * -- and each one is split at the send window and handed to the transmit queue a descriptor at
- * a time. A descriptor that is not returned to the pool leaves the queue a little smaller than
- * it was, which one write never shows: it takes a few hundred before the pool runs dry and the
- * port stops talking. That is what the burst case is for.
- *
- * Reads are here because the port used to have none at all: its receive queue was never given
- * a buffer, so the device had nowhere to put input and dropped it. A port with a stocked queue
- * and nothing waiting reports zero bytes, which is also what a port with no queue reports --
- * the difference is only visible with a host that sends something, so what this can check is
- * the weaker property that a read is answered at all rather than refused.
+/**
+ * @brief Tests /dev/hvc0, the console port: a burst of writes, and that a read is answered at all.
  */
 
 static void test_console(void) {
@@ -278,19 +235,6 @@ static void test_console(void) {
     }
 
 
-    /* Deep enough to outlast the queue, which is the whole point.
-     *
-     * The queue holds 128 descriptors and the host drains it from a thread of its own, so a
-     * process in a tight write() loop gets ahead of it within a few hundred sends and finds
-     * every descriptor still in flight. That is an ordinary full queue and the write has to
-     * wait for room; what it used to do was fail, and because a fire and forget descriptor
-     * only ever returns to the pool when the next caller collects it, the caller being turned
-     * away was the one that would have collected it. The port stopped transmitting for the
-     * rest of the boot -- not just for this process -- partway through the burst.
-     *
-     * 512 is chosen to be comfortably past 128 so the case has to survive the queue filling
-     * and draining several times over rather than merely fitting. */
-
     int burst_failed = 0;
 
     for (int i = 0; i < 512; i++) {
@@ -304,10 +248,6 @@ static void test_console(void) {
     CHECK(burst_failed == 0, "console-write-burst", "write %d of 512 failed: %s", burst_failed, strerror(errno));
 
 
-    /* Non-blocking on purpose. A port whose queue is stocked and empty reports zero bytes
-       rather than EAGAIN, so this does not actually sleep -- but a regression that turned the
-       zero into an EAGAIN would hang the whole run on a blocking descriptor instead of
-       failing here. */
     char in[64];
 
     errno     = 0;
@@ -319,18 +259,10 @@ static void test_console(void) {
 }
 
 
-/*
- * /dev/tablet, the absolute pointer.
+/**
+ * @brief Tests /dev/tablet, the absolute pointer, whose events must be normalized to EV_ABS_MIN..EV_ABS_MAX.
  *
- * Events arrive as event_t structures through a ring buffer the driver fills from interrupt
- * context, and the one thing a reader is promised about them is the scale: a driver normalizes
- * whatever range its device reports onto EV_ABS_MIN..EV_ABS_MAX, so a reader can map a
- * coordinate onto the screen knowing only the screen size. A driver that forwards raw device
- * coordinates instead puts the pointer in the wrong place on every machine but its own, and
- * that is what the bounds check below is for.
- *
- * Waiting for a pointer to move is not something an automated run can do, so by default this
- * validates whatever is already buffered and skips when there is none.
+ * @param wait_seconds How long to wait for a pointer to move, or 0 to validate only what is already buffered.
  */
 
 static void test_input(int wait_seconds) {
@@ -342,13 +274,6 @@ static void test_input(int wait_seconds) {
         return;
     }
 
-
-    /* A device inode has no poll operation, so vfs_poll() answers "ready" to everything it is
-       asked about -- including a pointer that has not moved since boot. This is not a bug
-       being reported, it is the reason the display server reads these devices from a thread
-       of its own rather than folding them into a select() loop, and it is worth a case so
-       that giving them a real poll operation one day is a deliberate change rather than a
-       silent one that breaks nothing visibly. */
 
     struct pollfd pfd = {.fd = fd, .events = POLLIN};
 
@@ -417,12 +342,6 @@ static void test_input(int wait_seconds) {
 
                 abs_seen++;
 
-                /* Only the lower bound is worth testing: vaxis_t is int16_t and EV_ABS_MAX is
-                   exactly what it holds, so the scale's upper end is enforced by the type and
-                   the one way out of range is negative. That is also the shape the bug takes
-                   -- a driver that forwards a raw coordinate, or scales with signed
-                   arithmetic that wraps, lands below zero rather than above 32767. */
-
                 if (events[i].ev_abs.x < EV_ABS_MIN || events[i].ev_abs.y < EV_ABS_MIN)
                     bad_axis++;
 
@@ -452,20 +371,8 @@ static void test_input(int wait_seconds) {
 }
 
 
-/*
- * /dev/fb0, the display adapter.
- *
- * The framebuffer is reached by dereferencing fb_fix_screeninfo.smem_start directly: it is a
- * physical address the driver identity-mapped with the user bit set, and there is no mapping
- * for a process to make. read(), write() and mmap() all refuse the node, so a process that
- * went looking for the usual framebuffer interface would find nothing and has to be told that
- * this is the arrangement -- hence the three cases that assert the refusals.
- *
- * The rest is FBIO_FLUSH and the hardware cursor. Both take a rectangle or an image from
- * userspace and both clamp what they are given against the current mode, which is the only
- * thing standing between a bad argument and the adapter reading out of memory that is not the
- * framebuffer. Those guards are cheap to break and invisible when broken, so each one gets a
- * case that hands it something out of range and expects a refusal rather than a crash.
+/**
+ * @brief Tests /dev/fb0: that it refuses read(), write() and mmap(), and that its ioctls clamp what they are given.
  */
 
 static void test_gpu(void) {
@@ -496,8 +403,6 @@ static void test_gpu(void) {
     }
 
 
-    /* Everything below this point is the framebuffer contract that any adapter owes; the id
-       only decides whether a failure here is a virtio-gpu problem or somebody else's. */
     int is_virtio = (strncmp(fix.id, "VIRTIO-GPU", sizeof(fix.id)) == 0);
 
     printf("virtio-test: /dev/fb0 is '%.16s', %ux%u at %u bpp, pitch %u\n", fix.id, var.xres, var.yres, var.bits_per_pixel, fix.line_length);
@@ -537,8 +442,6 @@ static void test_gpu(void) {
         munmap(map, 4096);
 
 
-    /* In a child: if smem_start ever stops being reachable from userspace this faults, and a
-       fault here would otherwise take the rest of the run with it. */
     if (var.bits_per_pixel == 32 && fix.smem_start && fix.line_length) {
 
         pid_t pid = fork();
@@ -547,8 +450,6 @@ static void test_gpu(void) {
 
             volatile uint32_t* fb = (volatile uint32_t*)(uintptr_t)fix.smem_start;
 
-            /* Bottom right corner, put back straight away: the display server owns this
-               screen and is very likely painting it while this runs. */
             size_t off = ((size_t)(var.yres - 1) * fix.line_length) / sizeof(uint32_t) + (var.xres - 1);
 
             uint32_t saved = fb[off];
@@ -594,8 +495,6 @@ static void test_gpu(void) {
     CHECK(f2 == 0, "gpu-flush-empty", "FBIO_FLUSH of an empty rectangle returned %d (%s)", f2, strerror(errno));
 
 
-    /* Runs off both edges: the driver is expected to clip it back to the mode, not to transfer
-       a rectangle that walks off the end of the framebuffer. */
     struct fb_rect over = {.x = var.xres / 2, .y = var.yres / 2, .width = var.xres, .height = var.yres};
 
     int f3 = ioctl(fd, FBIO_FLUSH, &over);
@@ -629,9 +528,6 @@ static void test_gpu(void) {
     if (gh == 0) {
 
         CHECK(hwc.max_width && hwc.max_height, "gpu-hwcinfo-size", "cursor plane reports a maximum of %ux%u, expected both nonzero", hwc.max_width, hwc.max_height);
-
-        /* Only the rejections. A cursor that was actually set would replace the pointer the
-           display server put there, and none of these get far enough to touch the plane. */
 
         struct fb_hwcursor cursor;
 
@@ -672,7 +568,6 @@ static void test_gpu(void) {
         CHECK(c3 < 0 && errno == EINVAL, "gpu-hwcursor-too-large", "a %ux%u cursor on a plane that tops out at %ux%u returned %d, errno %d (expected -1, EINVAL)", cursor.width, cursor.height, hwc.max_width, hwc.max_height, c3, errno);
 
 
-        /* Moving it is harmless: the display server puts it back on the next pointer event. */
         struct fb_hwcursor_pos pos = {.x = 0, .y = 0};
 
         errno  = 0;

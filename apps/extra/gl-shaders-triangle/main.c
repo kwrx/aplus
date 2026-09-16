@@ -76,14 +76,12 @@ static char* fragment_shader = "#version 120                                   \
 
 
 
-/* Point OSMesa at the window's own pixels.
+/**
+ * @brief Points OSMesa at the window's own pixels.
  *
- * There is no blit anywhere in this program: the window buffer libui hands out is a tight
- * run of 32-bit pixels, which is exactly what OSMesa wants to render into, so GL draws
- * straight into the surface that gets committed. OSMESA_BGRA is what makes that work -- it
- * lays each pixel down as B, G, R, A, which read back as the 0xAARRGGBB the server expects.
- *
- * Called again after every resize, because applying a configure can move the buffer.
+ * @param ctx The OSMesa context to bind.
+ * @param win The window to render into.
+ * @return 0 on success, or -1.
  */
 
 static int triangle_bind(OSMesaContext ctx, ui_window_t* win) {
@@ -95,8 +93,6 @@ static int triangle_bind(OSMesaContext ctx, ui_window_t* win) {
         return -1;
     }
 
-    /* GL counts rows up from the bottom and a window counts them down from the top. Saying
-       so here is cheaper than flipping every frame by hand. */
     OSMesaPixelStore(OSMESA_Y_UP, 0);
 
     glViewport(0, 0, width, height);
@@ -117,16 +113,13 @@ static uint64_t now_ms(void) {
 }
 
 
-/* Report the frame rate once a second, and start a fresh interval when it does.
+/**
+ * @brief Reports the frame rate once a second, and starts a fresh interval when it does.
  *
- * Frames are counted between reports rather than timed one by one: a single frame is close
- * enough to the clock's granularity that timing it says more about the clock than about the
- * renderer, and the average over a second is the figure worth having. The division is by the
- * interval actually measured, not by TRIANGLE_FPS_INTERVAL_MS, so a report that arrives late
- * is still an honest rate rather than an inflated one.
+ * This window only redraws when it is mapped or resized, so the usual reading is 0.00 fps.
  *
- * This window only redraws when it is mapped or resized, so the usual reading here is 0.00
- * fps. That is the answer, not a missing one -- an idle window costs nothing to composite.
+ * @param frames In/out. The frames counted since the last report.
+ * @param since In/out. When the interval started.
  */
 
 static void triangle_fps_report(unsigned* frames, uint64_t* since) {
@@ -235,8 +228,6 @@ int main(int argc, char** argv) {
 
             redraw = false;
 
-            /* Opaque black: the window buffer is nominally ARGB, and leaving the alpha at
-               zero would be asking anything that does blend it to drop the frame. */
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -267,11 +258,6 @@ int main(int argc, char** argv) {
         triangle_fps_report(&fps_frames, &fps_since);
 
 
-        /* The picture does not move, so this waits rather than spinning: a frame is drawn
-           when the window is first mapped and again whenever it is resized, and never
-           otherwise. The wait is bounded rather than indefinite only so that the report
-           above keeps its schedule while nothing is happening; whatever is left of the
-           current interval is exactly how long there is to wait. */
         ui_event_t ev;
 
         const uint64_t elapsed = now_ms() - fps_since;

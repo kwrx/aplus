@@ -21,16 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Global keybindings.
+/**
+ * @brief Global keybindings, caught before the key reaches the focused window.
  *
- * A chord is caught here before the key reaches the focused window, which is what makes it
- * global: it fires whichever client has the keyboard, and it fires when none of them does.
- *
- * The bindings are on raw key codes, because raw key codes are all the server has -- the
- * keymap lives in the client, which is where it belongs while there is no toolkit. That
- * means a binding is a physical key rather than a letter, so it lands in the same place on
- * every layout instead of moving with it.
+ * The bindings are on raw key codes, so a binding is a physical key rather than a letter.
  */
 
 #include <errno.h>
@@ -57,9 +51,9 @@ typedef enum {
 } wm_action_t;
 
 
-/* The table. A binding matches on the exact set of modifiers held, so a chord with an extra
-   modifier on it falls through to the client rather than firing something the user did not
-   ask for. */
+/**
+ * @brief The bindings, each matching on the exact set of modifiers held.
+ */
 static const struct {
 
     uint16_t modifiers;
@@ -77,10 +71,9 @@ static const struct {
 };
 
 
-/* One bit per key code, set for a key whose press a binding consumed. It does two jobs: the
-   release is consumed along with the press, so the focused client never sees a key go up
-   that it never saw come down, and a held key repeating at the keyboard's own rate fires
-   the binding once instead of once per repeat. */
+/**
+ * @brief One bit per key code, set for a key whose press a binding consumed, so its release is consumed too.
+ */
 static uint32_t wm_swallowed[(KEY_CNT + 31) / 32] = {0};
 
 
@@ -127,16 +120,6 @@ static void wm_spawn(const char* const* argv) {
     }
 
 
-    /* Everything above the standard streams belongs to the server: the framebuffer, the
-     * listening socket, the input pipe, and one accepted connection per client already
-     * running. A process that inherited those would hold another client's socket open long
-     * after the server had dropped it, so that client would never learn its window was
-     * gone -- the same fd leak that once kept a closed terminal's window on screen, only
-     * seen from the other end.
-     *
-     * Nothing between the fork and the exec allocates. This is a forked child of a threaded
-     * process, and the input threads are not here to release the malloc lock if one of them
-     * happened to be holding it. */
     for (int fd = STDERR_FILENO + 1; fd < CONFIG_OPEN_MAX; fd++) {
         close(fd);
     }
@@ -149,7 +132,8 @@ static void wm_spawn(const char* const* argv) {
 
 /**
  * @brief The window order Alt+Tab walks, held from the first Tab until Alt comes up.
- *        Ids rather than pointers, so a window closed mid-walk is skipped.
+ *
+ * Ids rather than pointers, so a window closed mid-walk is skipped.
  */
 
 #define WM_CYCLE_MAX 64
@@ -188,8 +172,7 @@ static void wm_cycle_begin(void) {
 
 
 /**
- * @brief One step of the walk, raising and focusing what it lands on. The order is retaken
- *        when the focus has moved somewhere the walk did not put it.
+ * @brief One step of the walk, raising and focusing what it lands on.
  *
  * @param forward Whether to step towards the back of the stack or the front.
  */
@@ -222,7 +205,13 @@ static void wm_cycle_step(bool forward) {
 }
 
 
-/* Returns true when the key was a binding and must not reach the client. */
+/**
+ * @brief Acts on a key event, before the focused client sees it.
+ *
+ * @param vkey The key code.
+ * @param down Whether the key went down or came up.
+ * @return true when the key was a binding and must not reach the client.
+ */
 bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 
     const uint16_t modifier = wm_modifier_of(vkey);
@@ -240,8 +229,6 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
             }
         }
 
-        /* A modifier is never swallowed: the client tracks shift for its own keymap, and a
-           chord that ate the release would leave it shifted forever. */
         return false;
     }
 
@@ -288,9 +275,6 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
                 wm_spawn(wm_bindings[i].argv);
                 break;
 
-            /* The same request the close button makes, aimed at whatever holds the
-               keyboard. With nothing focused there is nothing to ask, and the chord is
-               still eaten -- it matched, it simply had no window to act on. */
             case WM_ACTION_CLOSE:
                 wm_window_request_close(wm.focused);
                 break;
@@ -311,10 +295,9 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 }
 
 
-/* Nothing reparents an orphan to init here and SIGCHLD is not implemented, so a spawned
-   client that exits stays a zombie in the scheduler's queue until someone waits for it. The
-   threads reading the input devices are not matched: a CLONE_THREAD task inherits its
-   creator's parent rather than becoming its child, so wait4() walks straight past them. */
+/**
+ * @brief Reaps the zombies left by spawned clients, which nothing else waits for.
+ */
 void wm_keys_reap(void) {
 
     while (waitpid(-1, NULL, WNOHANG) > 0) {

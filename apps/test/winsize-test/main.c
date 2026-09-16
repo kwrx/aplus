@@ -23,15 +23,8 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Reports the terminal size the kernel holds for this tty -- what "stty size" would
- * print, which busybox here has no applet for.
- *
- * With no arguments it prints the size once. With -w it stays up for a while and prints
- * again on every SIGWINCH, which is how a resize of the window a shell is running in can
- * be shown to reach all the way down: aplus-terminal turns the window's new size into a
- * TIOCSWINSZ on the pty master, and drivers/tty/pty raises SIGWINCH on the foreground
- * process group from there.
+/**
+ * @brief Reports the terminal size the kernel holds for this tty, once, or on every SIGWINCH with -w.
  */
 
 
@@ -45,16 +38,12 @@
 #include <unistd.h>
 
 
-/* Reporting from inside the handler on purpose.
+/**
+ * @brief Formats an unsigned number, by hand so that the SIGWINCH handler can report from inside itself.
  *
- * The obvious shape -- set a flag, notice it in the main loop -- needs the loop to get
- * control back, and neither way of waiting is reliable here: a blocking read() interrupted
- * by a handled signal is restarted rather than failing with EINTR, and a nanosleep() loop
- * does not pace the way it should. Doing the work in the handler takes the main loop out
- * of the question entirely, so what this prints is exactly "the signal arrived".
- *
- * write() and ioctl() are both async-signal-safe; the number formatting below is hand
- * rolled for the same reason.
+ * @param p The buffer to write into.
+ * @param v The value to format.
+ * @return One past the last digit written.
  */
 
 static char* u32_to_dec(char* p, unsigned int v) {
@@ -149,15 +138,6 @@ int main(int argc, char** argv) {
     printf("winsize-test: watching for SIGWINCH, press a key to stop\n");
 
 
-    /* Just park here. The handler does the reporting, so this loop has nothing to do but
-       keep the process alive and offer a way out.
-     *
-     * Caveat worth knowing when reading the output: the kernel does raise SIGWINCH on a
-     * TIOCSWINSZ -- it shows up as "sched: received signal(28)" -- but it does not break a
-     * task out of a blocking read() to run the handler, so the line may not appear until
-     * the read returns. Run winsize-test with no arguments after a resize to see the size
-     * the kernel currently holds, which is the part that does not depend on any of this.
-     */
     char c;
 
     while (read(STDIN_FILENO, &c, 1) < 0 && errno == EINTR) {

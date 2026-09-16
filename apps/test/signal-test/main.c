@@ -23,17 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for the blocked-signal mask.
+/**
+ * @brief Regression tests for the blocked-signal mask.
  *
- * A sigset_t is a bit array, and there are three ways to index into it wrongly that all look
- * plausible and all used to be live in this kernel: walking it by byte offset while subscripting
- * an array of words, testing bit N for signal N when signal N lives in bit N-1, and shifting a
- * plain int by more than 31 to reach the high signals. Each mistake reads a bit that belongs to
- * some other signal, so the mask appears to work for whichever signals happen to line up.
- *
- * The cases below pin down which bit belongs to which signal by blocking one signal and watching
- * what happens to its neighbours and to the signals in the upper half of the set.
+ * A sigset_t is a bit array, and every way of indexing into it wrongly used to be live in this kernel.
  */
 
 #include <errno.h>
@@ -63,8 +56,9 @@ static int total    = 0;
     }
 
 
-/* How much of a sigset_t either side actually means: the type is 128 bytes, but every syscall
-   carrying one also carries a length, and neither the kernel nor sigemptyset() touches more. */
+/**
+ * @brief How much of a sigset_t either side actually means, which is what the length beside it carries.
+ */
 #define SIGMASK_BYTES (_NSIG / 8)
 
 
@@ -86,14 +80,13 @@ static void sleep_ms(unsigned ms) {
 }
 
 
-/*
- * sigprocmask(), retried across interruption.
+/**
+ * @brief Changes the blocked mask, retrying across the interruption a released signal causes here.
  *
- * Unblocking a signal that was held while blocked hands it over immediately, and this kernel runs
- * the handler on the way out of the very call that released it -- so without SA_RESTART the call
- * itself comes back EINTR, having already done its work. Linux never does this (rt_sigprocmask
- * does not block, so nothing interrupts it), but the mask is applied either way, and none of the
- * cases below are about that difference.
+ * @param how SIG_BLOCK, SIG_UNBLOCK or SIG_SETMASK.
+ * @param set The mask to apply.
+ * @param old Receives the mask that was in force, or NULL.
+ * @return 0 on success, or -1 with errno set.
  */
 static int sigprocmask_retry(int how, const sigset_t* set, sigset_t* old) {
 
@@ -107,8 +100,11 @@ static int sigprocmask_retry(int how, const sigset_t* set, sigset_t* old) {
 }
 
 
-/*
- * Install a catcher for one signal. Returns 0 on success.
+/**
+ * @brief Installs a catcher for one signal.
+ *
+ * @param signo The signal to catch.
+ * @return 0 on success, or -1 with errno set.
  */
 static int catch_signal(int signo) {
 
@@ -123,9 +119,10 @@ static int catch_signal(int signo) {
 }
 
 
-/*
- * Unblock everything. Tasks start with every signal blocked, so without this nothing below would
- * ever be delivered and every case would "pass" for the wrong reason.
+/**
+ * @brief Unblocks everything, which tasks do not start out as.
+ *
+ * @return 0 on success, or -1 with errno set.
  */
 static int unblock_all(void) {
 
@@ -136,9 +133,8 @@ static int unblock_all(void) {
 }
 
 
-/*
- * The premise everything else rests on: with the signal unblocked and a handler installed, raising
- * it runs the handler. If this fails the rest of the file is not measuring what it claims to.
+/**
+ * @brief Checks the premise everything else rests on: an unblocked signal with a handler runs it.
  */
 static void test_delivery(void) {
 
@@ -162,10 +158,8 @@ static void test_delivery(void) {
 }
 
 
-/*
- * A blocked signal is held, not dropped and not delivered. This is the case the off-by-one used
- * to break: blocking signal N set bit N-1, the kernel asked about bit N, found it clear, and
- * delivered the signal anyway.
+/**
+ * @brief Checks that a blocked signal is held rather than dropped or delivered.
  */
 static void test_blocked_is_held(void) {
 
@@ -193,7 +187,6 @@ static void test_blocked_is_held(void) {
     CHECK(caught[SIGUSR1] == 0, "blocked", "a blocked signal was delivered anyway (handler ran %d times)", (int)caught[SIGUSR1]);
 
 
-    /* Held, not dropped: unblocking has to hand it over. */
     if (sigprocmask_retry(SIG_UNBLOCK, &block, NULL) < 0) {
         CHECK(0, "blocked-released", "sigprocmask() failed: %s", strerror(errno));
         return;
@@ -205,9 +198,8 @@ static void test_blocked_is_held(void) {
 }
 
 
-/*
- * Blocking one signal blocks exactly that one. An index that is off by one in either direction
- * catches a neighbour instead, which this notices and the single-signal case above does not.
+/**
+ * @brief Checks that blocking one signal blocks exactly that one, and not a neighbour.
  */
 static void test_neighbours_unaffected(void) {
 
@@ -238,10 +230,8 @@ static void test_neighbours_unaffected(void) {
 }
 
 
-/*
- * A signal in the upper half of the set. Reaching its bit means shifting past 31, which a plain
- * int cannot do: on x86 the count is masked to five bits, so bit 39 used to come out as bit 7 and
- * the signal was read as unblocked.
+/**
+ * @brief Checks a signal in the upper half of the set, whose bit cannot be reached by shifting an int.
  */
 static void test_high_signal(void) {
 
@@ -287,7 +277,9 @@ static void test_high_signal(void) {
 }
 
 
-/* Filled in from inside a running handler, where the mask is not otherwise observable. */
+/**
+ * @brief Filled in from inside a running handler, where the mask is not otherwise observable.
+ */
 static volatile sig_atomic_t inside_ran;
 static sigset_t inside_mask;
 
@@ -304,14 +296,8 @@ static void mask_probe_handler(int signo) {
 }
 
 
-/*
- * What a handler runs under. POSIX builds it by addition, not replacement: whatever was blocked
- * already, plus the handler's own sa_mask, plus the signal being delivered.
- *
- * This is where the sa_mask over-read showed: sa_mask is two words, and copying a whole 128-byte
- * sigset_t out of it pulled in the neighbouring entries of the action table and installed them as
- * the mask, so which signals a handler ran under was decided by whatever happened to sit next to
- * it in memory.
+/**
+ * @brief Checks what a handler runs under: whatever was blocked already, plus sa_mask, plus the signal.
  */
 static void test_handler_mask(void) {
 
@@ -321,8 +307,6 @@ static void test_handler_mask(void) {
     }
 
 
-    /* Blocked before the handler is ever entered: an install that replaces rather than adds
-       loses this one. */
     sigset_t pre;
     sigemptyset(&pre);
     sigaddset(&pre, SIGCHLD);
@@ -364,7 +348,6 @@ static void test_handler_mask(void) {
     CHECK(sigismember(&inside_mask, SIGALRM) == 0, "handler-mask-clean", "%s", "a signal in neither the old mask nor sa_mask was blocked inside the handler");
 
 
-    /* And the whole lot is handed back on the way out. */
     sigset_t after;
     sigemptyset(&after);
 
@@ -380,9 +363,8 @@ static void test_handler_mask(void) {
 }
 
 
-/*
- * SA_NODEFER is the one case where the delivered signal is not added: the handler is willing to
- * be re-entered by its own signal.
+/**
+ * @brief Checks that SA_NODEFER leaves the delivered signal out of the handler's mask.
  */
 static void test_nodefer(void) {
 
@@ -422,10 +404,8 @@ static void test_nodefer(void) {
 }
 
 
-/*
- * The mask reads back as it was written, and the old mask handed out on the way in is the one that
- * was in force. A word-versus-byte confusion in the walk shows up here as a mask that only ever
- * takes its first word.
+/**
+ * @brief Checks that the mask reads back as it was written, and that the old mask handed out is the one in force.
  */
 static void test_mask_roundtrip(void) {
 
@@ -464,9 +444,8 @@ static void test_mask_roundtrip(void) {
 }
 
 
-/*
- * A size that is not a whole number of words describes a set neither side can walk, and one larger
- * than a sigset_t describes memory the caller does not have.
+/**
+ * @brief Checks that a sigsetsize that is not a whole number of words, or larger than a sigset_t, is refused.
  */
 static void test_bad_sigsetsize(void) {
 
@@ -487,7 +466,6 @@ static void test_bad_sigsetsize(void) {
     CHECK(r < 0, "bad-size-large", "rt_sigprocmask with an oversized set returned %ld, expected a failure", r);
 
 
-    /* And the size everyone actually sends still works. */
     errno = 0;
 
     r = syscall(SYS_rt_sigprocmask, SIG_SETMASK, &set, NULL, (size_t)SIGMASK_BYTES);
@@ -513,8 +491,12 @@ static struct {
 };
 
 
-/*
- * With no argument every case runs. Naming one runs just that case.
+/**
+ * @brief Runs every case, or the one named on the command line.
+ *
+ * @param argc The argument count.
+ * @param argv The arguments; an optional case name.
+ * @return 0 when every case that ran passed.
  */
 int main(int argc, char** argv) {
 

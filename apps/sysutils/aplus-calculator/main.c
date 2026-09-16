@@ -23,14 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * A four-function calculator, and the first thing to be built out of libui's widgets
- * rather than out of raw pixels.
+/**
+ * @brief A four-function calculator, built out of libui's widgets rather than out of raw pixels.
  *
- * Arithmetic is immediate-execution -- an operator commits whatever is pending before it
- * takes its place -- which is what a pocket calculator does and what the single
- * accumulator below is enough for. Nothing here knows how anything is drawn: the keypad
- * is twenty buttons and a layout callback, and the display is two labels on a panel.
+ * Arithmetic is immediate-execution: an operator commits whatever is pending before it takes its place.
  */
 
 #include <errno.h>
@@ -47,8 +43,9 @@
 #define CALC_WINDOW_WIDTH  300
 #define CALC_WINDOW_HEIGHT 420
 
-//? Room for a 17-digit %.10g, a sign and a decimal point, with the typed-digit limit well
-//? inside it so that appending never has to be refused for want of space.
+/**
+ * @brief Room for a 17-digit %.10g with a sign and a point, with the typed-digit limit well inside it.
+ */
 #define CALC_ENTRY_MAX    32
 #define CALC_ENTRY_DIGITS 16
 
@@ -190,11 +187,12 @@ static const char* calc_operator_symbol(calc_key_t key) {
 }
 
 
-/* %.10g rather than a fixed number of decimals: it drops the trailing zeros a calculator
- * has no reason to show, keeps small integers exact, and falls back to an exponent for the
- * magnitudes where anything else would be a screenful of digits. Ten is short of a
- * double's seventeen on purpose -- the digits past it are the ones that turn 0.1 + 0.2
- * into 0.30000000000000004.
+/**
+ * @brief Formats a value for the display with %.10g, which drops trailing zeros and keeps small integers exact.
+ *
+ * @param value The value to format.
+ * @param out Receives the text.
+ * @param size The size of @p out.
  */
 static void calc_format(double value, char* out, size_t size) {
 
@@ -207,8 +205,6 @@ static void calc_format(double value, char* out, size_t size) {
         return;
     }
 
-    /* Negative zero is a real double and printf prints it as "-0", which is a strange
-       thing to be shown after subtracting a number from itself. */
     if (value == 0.0) {
         value = 0.0;
     }
@@ -251,9 +247,6 @@ static void calc_refresh(void) {
 
     char pending[CALC_ENTRY_MAX + 8] = {0};
 
-    /* The line above the result, showing what is waiting on the operand being typed. It
-       is the one place the accumulator is visible, and without it a chain of operations
-       gives no sign that anything was carried forward. */
     if (calc.has_pending && !calc.error) {
 
         char left[CALC_ENTRY_MAX];
@@ -309,8 +302,6 @@ static void calc_digit(calc_key_t key) {
         calc.typing   = true;
     }
 
-    /* A leading zero is a placeholder, not a digit, so the first real one replaces it.
-       "0" itself and "0." both have to survive, hence the check for the point. */
     if (strcmp(calc.entry, "0") == 0) {
         calc.entry[0] = '\0';
     }
@@ -365,8 +356,6 @@ static void calc_delete(void) {
         return;
     }
 
-    /* Only what is being typed can be taken back. Backspacing a result would have to
-       invent digits for whatever it left behind. */
     if (!calc.typing) {
         return;
     }
@@ -429,8 +418,6 @@ static void calc_operator(calc_key_t key) {
     }
 
 
-    /* An operator arriving on the heels of another one replaces it rather than applying
-       it: "5 + -" is someone changing their mind, not an operation with no operand. */
     if (calc.has_pending && calc.typing) {
 
         calc.accumulator = calc_apply(calc.accumulator, calc.pending, calc_entry_value());
@@ -520,10 +507,12 @@ static void calc_press(ui_widget_t* widget, void* user) {
 }
 
 
-/* The keyboard as the same twenty keys rather than as a second set of actions: a binding
- * resolves to a button, and pressing it does exactly what clicking it does, lighting up
- * included. Shift is tracked here because the server does not own a keymap -- it forwards
- * raw KEY_* codes and leaves the question of what they mean to whoever needs characters.
+/**
+ * @brief Resolves a key to the button it presses, so that typing does exactly what clicking does.
+ *
+ * @param vkey The raw key code, since the server owns no keymap.
+ * @param shift Whether shift is held.
+ * @return The button, or CALC_KEY_COUNT when the key is not bound to one.
  */
 static calc_key_t calc_key_from_vkey(uint16_t vkey, bool shift) {
 
@@ -637,8 +626,6 @@ static bool calc_on_key(ui_view_t* view, uint16_t vkey, bool down, void* user) {
 
     if (down) {
 
-        /* A held key repeats, and each repeat arrives as another press. Acting only on the
-           first is what keeps leaning on "5" from filling the display with fives. */
         if (ui_button_held(button)) {
             return true;
         }
@@ -655,9 +642,13 @@ static bool calc_on_key(ui_view_t* view, uint16_t vkey, bool down, void* user) {
 }
 
 
-/* Everything positional, run once at startup and again after every resize. The display
- * takes a fixed share of the height and the keypad takes the rest, so the window scales
- * as a whole instead of growing a band of empty space at one end.
+/**
+ * @brief Places everything, run once at startup and again after every resize.
+ *
+ * @param view The view being laid out.
+ * @param width The view width in pixels.
+ * @param height The view height in pixels.
+ * @param user Unused.
  */
 static void calc_layout(ui_view_t* view, int width, int height, void* user) {
 
@@ -704,8 +695,6 @@ static void calc_layout(ui_view_t* view, int width, int height, void* user) {
     ui_widget_place(calc.expression, expression);
     ui_widget_place(calc.value, value);
 
-    /* Type scales with the box it sits in rather than with the window, so the two lines
-       keep their relationship to each other and to the panel at any size. */
     ui_label_set_font(calc.expression, UI_FONT_REGULAR, expression_height * 0.62);
     ui_label_set_font(calc.value, UI_FONT_BOLD, value.height * 0.66);
 
@@ -778,8 +767,6 @@ static int calc_build(ui_view_t* view) {
 
     for (size_t i = 0; i < sizeof(calc_keypad) / sizeof(calc_keypad[0]); i++) {
 
-        /* The key is its own callback argument. Twenty buttons doing the same thing to
-           different values do not need twenty callbacks. */
         ui_widget_t* button = ui_button_create(view, calc_keypad[i].label, calc_press, (void*)(intptr_t)calc_keypad[i].key);
 
         if (!button) {

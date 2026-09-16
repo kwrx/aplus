@@ -23,20 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Stress test for the VFS dentry cache under concurrent path resolution.
+/**
+ * @brief Stress test for the VFS dentry cache under concurrent path resolution.
  *
- * Both cases here race several processes through one directory at once, which is only
- * interesting on more than one CPU: with -smp 1 the kernel never has two lookups of the
- * same name in flight, and everything below passes trivially.
- *
- * The kernel used to panic on either case --
- *
- *   Assert failed on vfs_dcache_add() in fs/dcache.c:57:
- *       'hashmap_get(&parent->dcache, inode->name) == NULL'
- *
- * -- because a cache miss and the insertion that follows it were not one atomic step, so
- * two CPUs could both miss the same name and both go on to resolve and cache it.
+ * Both cases race several processes through one directory at once, which is only interesting on more than one CPU.
  */
 
 #include <dirent.h>
@@ -55,8 +45,9 @@
 #define LOOKUPS 32
 #define CREATES 192
 
-/* limits.h only defines NAME_MAX/PATH_MAX behind a feature-test macro this build does not
-   set, and a name out of readdir() cannot exceed d_name anyway. */
+/**
+ * @brief The name and path lengths, since limits.h defines neither without a feature-test macro this build sets.
+ */
 #define NAMELEN 256
 #define PATHLEN 512
 
@@ -77,8 +68,14 @@ static int failures = 0;
     } while (0)
 
 
-/* Names are collected with readdir(), which resolves nothing: the cache is still cold for
-   every one of them when the workers start, which is the state the race needs. */
+/**
+ * @brief Collects the names in a directory with readdir(), which resolves none of them.
+ *
+ * @param path The directory to read.
+ * @param names Receives the names.
+ * @param max How many names the array holds.
+ * @return The number of names collected.
+ */
 static size_t collect(const char* path, char (*names)[NAMELEN], size_t max) {
 
     DIR* d = opendir(path);
@@ -105,9 +102,13 @@ static size_t collect(const char* path, char (*names)[NAMELEN], size_t max) {
 }
 
 
-/* Forks WORKERS children parked on a read() and releases them together, so they enter the
-   directory at the same time instead of one after another. Returns the number of children
-   that exited 0. */
+/**
+ * @brief Forks the workers parked on a read() and releases them together, so they start at the same time.
+ *
+ * @param worker The function each child runs.
+ * @param forked Receives the number of children forked.
+ * @return The number of children that exited 0.
+ */
 static int race(void (*worker)(int), int* forked) {
 
     int gate[2];
@@ -133,8 +134,6 @@ static int race(void (*worker)(int), int* forked) {
             read(gate[0], &b, 1);
             close(gate[0]);
 
-            //? Anything the parent tripped before the fork is its own; the exit status has
-            //? to report only what this worker saw.
             failures = 0;
 
             worker(i);
@@ -170,8 +169,11 @@ static char cold[LOOKUPS][NAMELEN];
 static size_t cold_count = 0;
 
 
-/* Every worker walks the same names in the same order, so they stay bunched together on
-   whichever name is currently uncached rather than spreading out over the directory. */
+/**
+ * @brief Walks every name in order, so that the workers stay bunched on whichever name is uncached.
+ *
+ * @param id The worker's number.
+ */
 static void lookup_worker(int id) {
 
     (void)id;
@@ -208,9 +210,9 @@ static void creat_worker(int id) {
 }
 
 
-/* A name created twice is the visible half of the same race: two CPUs both miss the cache,
-   both decide the name is absent and both call into the filesystem to create it, leaving
-   the directory with two entries for one name. */
+/**
+ * @brief Checks that no name was created twice, which is the visible half of the race.
+ */
 static void check_no_duplicates(void) {
 
     DIR* d = opendir(SCRATCH);

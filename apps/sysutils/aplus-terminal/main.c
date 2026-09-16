@@ -155,14 +155,15 @@ static void show_version(int argc, char** argv) {
 
 
 
-/* One plot function now, not four: a window surface is always 32-bit, whatever depth the
-   framebuffer underneath it happens to be. Converting to the display format is the
-   server's job, and the only place that has to know about it.
-
-   Indexed by the surface's own stride rather than by a separately tracked resolution: the
-   framebuffer version used var.xres and ignored fix.line_length, which is only ever right when
-   the two happen to agree, and the surface is now memory the server laid out rather than memory
-   this process allocated. */
+/**
+ * @brief Plots one pixel into the window surface, which is 32-bit whatever the framebuffer's depth is.
+ *
+ * @param x The column to plot.
+ * @param y The row to plot.
+ * @param r The red component.
+ * @param g The green component.
+ * @param b The blue component.
+ */
 static void win_plot(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
 
     uint8_t* pixels = (uint8_t*)ui_window_pixels(context.win);
@@ -178,10 +179,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     assert(len < 2);
 
 
-    /* Skip cells that have not changed since the last draw. tsm_screen_draw() hands back
-       the age of the frame and stamps each cell with the age of its last change, so a
-       cell no older than the previous frame still holds exactly what was drawn then. An
-       age of zero means "unknown", which is what a resize or a first draw produces. */
     if (age && context.age && age <= context.age) {
         return 0;
     }
@@ -223,8 +220,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
         return 0;
 
 
-    /* Marking the cell rather than the whole surface is what keeps a keystroke to a few
-       hundred bytes on the wire instead of a megabyte. */
     ui_window_damage(context.win, (int)posx, (int)posy, ATERM_FONT_WIDTH, ATERM_FONT_HEIGHT);
 
 
@@ -259,15 +254,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     ui_window_damage(context.win, (int)posx, (int)posy, 8, 16);
 
 
-    /* Paint the cell background first, before any of the early returns below.
-     *
-     * A cell with no glyph still has a background colour. An erased cell in particular --
-     * what ESC[J and friends leave behind -- arrives here with len == 0, so gidx is 0 and the
-     * font has nothing to draw for it. Bailing out at that point left the previous frame's
-     * pixels on screen. For ordinary text that is invisible, because almost every cell has a
-     * glyph; for anything that paints with coloured blanks and erases between frames it means
-     * most of the screen is never repainted, and the display fills up with streaks of stale
-     * content. */
     for (size_t i = 0; i < 16; i++) {
         for (size_t j = 0; j < 8; j++) {
             context.plot(posx + j, posy + i, br, bg, bb);
@@ -293,8 +279,6 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     assert(context.face->glyph);
 
 
-    /* A blank glyph (a space) renders to an empty bitmap with no buffer at all; the
-       background painted above is the whole of its appearance. */
     if (!context.face->glyph->bitmap.buffer) {
         return 0;
     }
@@ -328,18 +312,11 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 }
 
 
-/* context.lock guards *all* of libtsm, not just drawing.
+/**
+ * @brief Draws the screen with context.lock held, which guards the whole of libtsm rather than the drawing alone.
  *
- * The screen and the vte are one shared mutable structure, and tsm_screen_resize() frees
- * and reallocates the cell array. With tsm_vte_input() left outside the lock, a resize on
- * the event thread could pull the lines out from under the pty reader mid-write, which is
- * a use-after-free -- and on x86-64 a wild pointer usually lands non-canonical, so it
- * surfaces as a general protection fault rather than a page fault. Anything that streams
- * output continuously, nyancat being the obvious one, hits it almost every time.
- *
- * Deliberately not held across write() to the pty master: that can block when the shell is
- * slow to read, and the pty reader would then be stuck waiting for the lock instead of
- * draining the output the shell is blocked writing. */
+ * Never held across a write() to the pty master, which can block when the shell is slow to read.
+ */
 static void tsm_draw_locked(void) {
 
     context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
@@ -360,9 +337,12 @@ static void tsm_update_screen() {
 }
 
 
-/* Take the window's size in pixels and make the terminal, the pty and the shell all agree
-   on what it means in character cells. The kernel turns TIOCSWINSZ into a SIGWINCH for the
-   foreground process group, so a program that tracks its own size follows along. */
+/**
+ * @brief Makes the terminal, the pty and the shell agree on what the window's size means in character cells.
+ *
+ * @param width The window width in pixels.
+ * @param height The window height in pixels.
+ */
 static void tsm_resize(unsigned int width, unsigned int height) {
 
     unsigned int cols = width / ATERM_FONT_WIDTH;
@@ -379,8 +359,6 @@ static void tsm_resize(unsigned int width, unsigned int height) {
 
     pthread_mutex_lock(&context.lock);
 
-    /* Under the lock on purpose: this is what reallocates the pixel buffer, and the pty
-       reader may be part way through a repaint into the old one. */
     if (ui_window_apply_configure(context.win) < 0) {
         fprintf(stderr, "aplus-terminal: ui_window_apply_configure() failed: %s\n", strerror(errno));
         pthread_mutex_unlock(&context.lock);
@@ -394,12 +372,8 @@ static void tsm_resize(unsigned int width, unsigned int height) {
         fprintf(stderr, "aplus-terminal: tsm_screen_resize() failed\n");
     }
 
-    /* The surface underneath is a fresh allocation, so nothing on it survived the resize
-       and every cell has to be drawn again however old libtsm thinks it is. */
     context.age = 0;
 
-    //? Repaint before dropping the lock: releasing it first leaves a window in which the
-    //? pty reader draws the new grid at whatever size it last saw.
     tsm_draw_locked();
 
     pthread_mutex_unlock(&context.lock);
@@ -608,10 +582,6 @@ static void* thr_ui_handler(void* arg) {
 
     (void)arg;
 
-    /* Input no longer comes from /dev/kbd. The server owns the keyboard and routes it to
-       whichever window has the focus, so what arrives here is already addressed to this
-       terminal -- and carries the raw KEY_* code, which is exactly what the keymap below
-       still expects. */
     for (;;) {
 
         ui_event_t ev;
@@ -649,8 +619,6 @@ static void* thr_ui_handler(void* arg) {
 
                 pthread_mutex_unlock(&context.lock);
 
-                //? Left outside the lock because it writes to the pty master, which can
-                //? block; it takes the lock itself around the libtsm call it makes.
                 tsm_handle_key(context.masterfd, ev.key.vkey, ev.key.down);
 
                 tsm_update_screen();
@@ -663,39 +631,6 @@ static void* thr_ui_handler(void* arg) {
 
             case UI_EVENT_CLOSE: {
 
-                /* Hang up, the way a terminal does when its window goes away, rather than
-                 * calling exit() here. exit() from this thread is exit_group(), which
-                 * SIGKILLs the thread reading the pty in the middle of whatever it was
-                 * doing and leaves the shell orphaned on a terminal nobody is reading.
-                 *
-                 * SIGHUP tells the session its terminal is gone, which is exactly what has
-                 * happened; the shell exits, the read() on the master side ends, and this
-                 * process winds down through its normal path with the window destroyed and
-                 * the connection closed in order.
-                 *
-                 * A second request escalates: a shell that ignores SIGHUP, or a full-screen
-                 * program that has trapped it, would otherwise leave the button doing
-                 * nothing at all. That is what SIGKILL is for -- asking first, forcing only
-                 * when asking did not work.
-                 */
-                /* Hang up on the session, then quit -- what a terminal does when its
-                 * window goes away.
-                 *
-                 * SIGHUP rather than SIGKILL: the shell is being told its terminal is
-                 * gone, which is true and which it knows how to act on. Killing it would
-                 * take down whatever it happens to be running with no warning, and there
-                 * is nothing to gain by it; SIGKILL belongs to a forced close.
-                 *
-                 * The pause gives the session a moment to act before the pty disappears
-                 * underneath it. There is no waiting for it properly from here: this is
-                 * not the thread that forked the shell, and sys_wait4() matches children
-                 * against the task that is their parent rather than against the process,
-                 * so waitpid() on this thread only ever answers ECHILD.
-                 *
-                 * Then exit, unconditionally. A shell that ignored the hangup is left
-                 * orphaned on a pty nobody holds, exactly as it would be anywhere else --
-                 * what must not happen is a close button that leaves the window up.
-                 */
                 if (context.child > 0) {
 
                     if (kill(-context.child, SIGHUP) < 0) {
@@ -705,8 +640,6 @@ static void* thr_ui_handler(void* arg) {
                     usleep(150000);
                 }
 
-                /* Quitting is what closes the window: the connection dies with the
-                   process, and the server drops a client's windows with its socket. */
                 exit(0);
             }
 
@@ -762,10 +695,6 @@ int main(int argc, char** argv) {
 
 
 
-    //* 1. Window initialization
-
-    //? The window is asked for in character cells: a terminal has no opinion about pixels
-    //? beyond what the font makes of them.
     const int cols = 80;
     const int rows = 25;
 
@@ -774,8 +703,6 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    /* The server is usually started a line earlier in the same boot script, so retry for a
-       few seconds rather than racing it. */
     if ((context.conn = ui_connect(NULL, 5000)) == NULL) {
         fprintf(stderr, "aplus-terminal: cannot reach the display server on %s: %s\n", UI_DEFAULT_SOCKET, strerror(errno));
         exit(1);
@@ -786,8 +713,6 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    /* The server is free to hand back a smaller window than was asked for, so the grid is
-       derived from what actually came back rather than from what was requested. */
     context.cols = (unsigned int)(ui_window_width(context.win) / ATERM_FONT_WIDTH);
     context.rows = (unsigned int)(ui_window_height(context.win) / ATERM_FONT_HEIGHT);
 
@@ -890,9 +815,6 @@ int main(int argc, char** argv) {
 
     //* 2. I/O initialization
 
-    /* Driven by the font metrics and the window, not by a hardcoded 8x16 and the screen.
-       The "- 1" these lines used to carry existed to keep the last row and column off the
-       edge of the framebuffer; inside a window there is nothing to fall off. */
     struct winsize ws;
 
     ws.ws_col    = (unsigned short)context.cols;
@@ -908,8 +830,6 @@ int main(int argc, char** argv) {
 
     //* 4. Input initialization
 
-    /* /dev/kbd and /dev/mouse belong to the display server now; input arrives as window
-       events instead. */
     memset(&context.input, 0, sizeof(context.input));
 
 
@@ -951,10 +871,6 @@ int main(int argc, char** argv) {
     }
 
     //* 4. Input initialization
-    /* pthread_create() reports failure by returning the error number, not by returning -1
-       and setting errno, so the "< 0" this used to test was never true. A terminal whose
-       event thread failed to start looked completely normal and simply ignored the
-       keyboard for the rest of its life. */
     int thr_e = pthread_create(&context.thr_ui, NULL, thr_ui_handler, NULL);
 
     if (thr_e != 0) {
@@ -966,16 +882,6 @@ int main(int argc, char** argv) {
 
     //* 5. Session initialization
 
-    /* Neither of these is fatal, and a terminal started from inside another one depends on
-       that.
-     *
-       Only the first terminal of a session can lead one: an interactive shell puts each
-       job in its own process group, so a terminal it launches is already a group leader
-       and setsid() can only answer EPERM. Treating that as fatal is what made "run
-       aplus-terminal from aplus-terminal" die on the spot. The session matters for job
-       control in the shell below, which sets its own process group on the slave further
-       down regardless, so carrying on without it costs the nested terminal nothing that
-       was working before. */
     if (setsid() < 0 && errno != EPERM) {
         fprintf(stderr, "aplus-terminal: setsid() failed: %s\n", strerror(errno));
         exit(1);
@@ -1000,13 +906,6 @@ int main(int argc, char** argv) {
 
         } else if (pid == 0) {
 
-            /* The shell must not inherit the connection to the display server, nor the
-               master side of its own terminal.
-             *
-             * Leaving the socket open is what made a window outlive the process that owned
-             * it: the close button asked this terminal to quit, it did, and the server saw
-             * a connection that was still held open by the shell -- so it never learned the
-             * client was gone and the window stayed on screen with nothing behind it. */
             close(ui_connection_fd(context.conn));
             close(context.masterfd);
 
@@ -1082,11 +981,6 @@ int main(int argc, char** argv) {
 
                     pending = true;
 
-                    /* Repaint once the pending input is drained rather than once per chunk.
-                       A full read means there is very likely more of the frame still queued,
-                       and redrawing the whole grid at that point paints a screen made of
-                       pieces of two different frames -- which is what the tearing looks
-                       like when a program animates faster than the terminal can draw. */
                     if (size < (ssize_t)sizeof(buf)) {
 
                         tsm_update_screen();

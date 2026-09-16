@@ -35,38 +35,17 @@
 #include <wm.h>
 
 
-/*
- * The input devices are char devices, and device_mkdev() never installs an inode poll
- * hook. vfs_poll() then falls through to "whatever you asked for is ready", so a poll()
- * over the input devices spins at 100% without ever blocking.
+/**
+ * @brief One thread per input device reads it blocking and forwards each event down a socketpair.
  *
- * The way around it is the one the devices do support: a blocking read(), which the
- * kernel turns into a proper futex sleep woken by the IRQ handler's vfs_write(). One
- * thread per device does that and forwards each event_t down a socketpair, and the
- * socketpair -- being an AF_UNIX socket -- has a real poll implementation the main
- * loop can wait on together with the client connections.
- *
- * Which of the pointing devices is actually live is the host's business, not this
- * server's: a virtio tablet and a PS/2 mouse can both be present while only one of them
- * is fed, and which one that is can change while the machine runs. Both are read and
- * their events merged, so the pointer follows whichever is talking.
- *
- * Those threads are the only concurrency in the server, and the socketpair is the only
- * thing they share -- so it is the only thing that needs a lock. It is a stream, not a
- * datagram queue: a write of one event_t is not promised to go out whole, and the kernel
- * hands back a short count rather than finishing the job once the buffer is nearly full.
- * Two threads pushing records into it therefore need two things that a bare write() does
- * not give them. The record has to be completed before another thread starts one, or the
- * two interleave; and a short read on the far end has to be carried over rather than
- * treated as a truncated event. Without either, one split record shifts the stream by a
- * few bytes and every event after it is read out of the middle of two others -- which
- * looks exactly like the input devices having gone mad, and never recovers.
+ * The socketpair is the only thing those threads share, and the only thing the main loop can poll.
  */
 
 static int input_pipe[2] = {-1, -1};
 
-//? Held for one whole record, so that what the main loop reads back is a sequence of
-//? events rather than a splice of two of them.
+/**
+ * @brief Held for one whole record, so that what the main loop reads back is a sequence of events.
+ */
 static pthread_mutex_t input_pipe_lock = PTHREAD_MUTEX_INITIALIZER;
 
 static struct {
@@ -86,10 +65,12 @@ static struct {
 };
 
 
-/* One whole event_t onto the pipe, or a failure. The loop is what makes a short write a
-   delay rather than a lost thread: taking anything but the full count as the pipe having
-   gone away retires that device for the rest of the session, and leaves the bytes it did
-   manage to write in the stream. */
+/**
+ * @brief Writes one whole event onto the pipe, looping over a short write.
+ *
+ * @param ev The event to forward.
+ * @return 0 on success, or -1 with errno set.
+ */
 static int input_forward(const event_t* ev) {
 
     const uint8_t* data = (const uint8_t*)ev;
@@ -158,10 +139,11 @@ static void* input_thread(void* arg) {
 }
 
 
-/* Opens every input device and starts a thread reading each one. A machine missing a pointing
-   device is still perfectly usable with the keyboard, and no machine has every pointing device,
-   so only the keyboard is required; the rest are taken if they are there. Returns the read end
-   of the merged pipe for the main loop to poll, or -1. */
+/**
+ * @brief Opens every input device and starts a thread reading each one; only the keyboard is required.
+ *
+ * @return The read end of the merged pipe, for the main loop to poll, or -1 with errno set.
+ */
 int wm_input_open(void) {
 
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, input_pipe) < 0) {
@@ -264,10 +246,9 @@ static void input_send_pointer(wm_window_t* win) {
 }
 
 
-/* The whole of the pointer stream a content area sees: the window under the pointer gets
-   the event, and whichever window had it last is told the pointer has gone once it is no
-   longer that one. Tracking the transition here rather than at each call site is what
-   keeps a leave from being forgotten on one of the paths that moves the pointer. */
+/**
+ * @brief Gives the pointer event to the window under the pointer, and tells the last one the pointer left.
+ */
 static void input_track_pointer(void) {
 
     wm_window_t* win = NULL;
@@ -290,13 +271,11 @@ static void input_track_pointer(void) {
 }
 
 
-/* The shape the pointer takes over a region.
+/**
+ * @brief Reports the shape the pointer takes over a region.
  *
- * The four resize shapes are the whole point of having a theme at all: every edge and corner of
- * a frame looks the same, and the arrow is the only thing that says which way the border under
- * the pointer will move. Which diagonal is which follows the images -- fdiag is the "\" pair,
- * so it belongs to the north-west and south-east corners, and bdiag the "/" pair to the other
- * two.
+ * @param region The region under the pointer.
+ * @return The cursor shape for it.
  */
 static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
 
@@ -327,13 +306,8 @@ static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
 }
 
 
-/* Point the cursor at whatever it is about to act on.
- *
- * A drag pins the shape to the region the button went down on rather than the one under the
- * pointer now: a resize drag routinely runs the pointer out over the desktop or across another
- * window, and handing the cursor back to that region mid-drag would say the drag had ended.
- * Moving a window is the one shape that has no region of its own, since the titlebar it starts
- * from is an ordinary arrow until the button is held.
+/**
+ * @brief Points the cursor at whatever it is about to act on, pinning the shape for the length of a drag.
  */
 static void input_update_cursor(void) {
 
@@ -362,10 +336,9 @@ static void input_begin_drag(wm_window_t* win, wm_region_t region) {
 }
 
 
-/* Follows the pointer on and off a close button, damaging the button on each transition so
-   it lights up and goes out again. It keeps running while that same button is held, which
-   is what lets a press slide off the button and cancel instead of closing the window; any
-   other drag suppresses it, since the pointer is busy. */
+/**
+ * @brief Follows the pointer on and off a close button, damaging the button on each transition.
+ */
 static void input_update_hover(void) {
 
     wm_window_t* hovered = NULL;
@@ -402,12 +375,8 @@ static void input_update_hover(void) {
 }
 
 
-/* Applies the pointer's travel since the grab to the window being dragged or resized.
- *
- * Clamping the size after the origin has already moved would let a window slide once it hit a
- * limit, so whatever the clamp takes away is given back -- but only on the edges that moved the
- * origin in the first place. A south or east drag leaves the origin where it was, and
- * correcting it there would slide the window instead.
+/**
+ * @brief Applies the pointer's travel since the grab to the window being dragged or resized.
  */
 static void input_update_drag(void) {
 
@@ -500,16 +469,12 @@ static void input_update_drag(void) {
 }
 
 
-/* The left pointer button going down or up.
+/**
+ * @brief Acts on the left pointer button going down or up.
  *
- * A close button commits on release, and only if the pointer is still on it, so a press can be
- * taken back by sliding off. A press that was not preceded by any motion -- the pointer was
- * already parked on the button -- leaves the hover unset, and the button has to draw itself
- * pressed either way, since raising and focusing only damage a window that was not already on
- * top and active.
+ * A close button commits on release and only if the pointer is still on it; a resize tells the client on release.
  *
- * A resize tells the client its new size on release rather than during, so it repaints once
- * instead of on every mouse packet of the drag.
+ * @param down Whether the button went down or came up.
  */
 static void input_handle_button_left(uint8_t down) {
 
@@ -614,20 +579,14 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
     input_handle_button_left(down);
 
-    /* After the press and the release both, because it is the drag that decides the shape while
-       a button is held: a press on a grip pins the cursor for the drag, and the release hands it
-       back to whatever the pointer has ended up over. */
     input_update_cursor();
 }
 
 
-/* Everything a pointer movement pulls in, once the new position is in wm.pointer: both
- * pointing device kinds land here, having differed only in how they said where to go.
+/**
+ * @brief Everything a pointer movement pulls in, once the new position is in wm.pointer.
  *
- * With a cursor plane the pointer is not part of the frame, so a movement damages nothing and
- * costs one short command instead of repainting and re-flushing the rectangle it left and the
- * one it arrived at. That is the whole gain: a pointer moves far more often than anything else
- * on screen, and over a still desktop it now moves without touching the framebuffer at all.
+ * @param old The rectangle the pointer occupied before it moved.
  */
 
 static void input_pointer_moved(const wm_rect_t* old) {
@@ -649,8 +608,6 @@ static void input_pointer_moved(const wm_rect_t* old) {
     }
 
 
-    /* Ahead of the damage below, not after it: a shape change moves the box the pointer
-       occupies, and the repaint has to be told about the box it is about to occupy. */
     input_update_cursor();
 
 
@@ -680,17 +637,10 @@ static void input_pointer_moved(const wm_rect_t* old) {
 }
 
 
-/* One decoded input event.
+/**
+ * @brief Acts on one decoded input event.
  *
- * A key the server claimed for a binding stops here: passing it on as well would run the
- * binding and type the key into the focused window.
- *
- * A wheel event carries no movement of its own, and pushing it through the move path would
- * re-place the pointer where it already is. An absolute device reports a position rather than a
- * change, and several of its positions land on the same pixel, so one that has not moved is
- * dropped too -- repainting or re-placing the cursor plane for it is pure cost. Its axes arrive
- * normalized to EV_ABS_MAX, whatever range the device itself uses, so placing the pointer needs
- * nothing but the size of the screen.
+ * @param ev The event to act on.
  */
 static void input_handle_event(const event_t ev) {
 
@@ -750,16 +700,12 @@ static void input_handle_event(const event_t ev) {
 }
 
 
-/* Drain whatever the pipe has and act on every whole event in it.
+/**
+ * @brief Drains whatever the pipe has and acts on every whole event in it, keeping the remainder.
  *
- * The pipe is a stream, so a read is not a record: POLLIN fires on a single byte, and what
- * comes back can be several events, or one and a piece of the next. Anything left over is
- * kept for the next wakeup rather than dropped -- treating a partial read as a truncated
- * event is what turned one split write into a permanently misaligned stream, where every
- * event afterwards was assembled out of the tail of one and the head of another.
- *
- * Each event is copied out of the buffer rather than cast in place: event_t is packed, and
- * the buffer only happens to be aligned while nothing has been carried over. */
+ * @param fd The read end of the merged pipe.
+ * @return 0 on success, or -1 with errno set.
+ */
 int wm_input_dispatch(int fd) {
 
     static uint8_t pending[sizeof(event_t) * 64];

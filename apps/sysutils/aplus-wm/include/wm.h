@@ -34,8 +34,9 @@
 #include <aplus/ui.h>
 
 
-//* Decoration geometry. The content area is what the client owns; everything outside it
-//* is drawn by the server, which is what keeps clients free of widget code.
+/**
+ * @brief Decoration geometry: the content area is the client's, everything outside it is the server's.
+ */
 
 #define WM_TITLEBAR_HEIGHT 32
 #define WM_BORDER_WIDTH    3
@@ -44,10 +45,9 @@
 #define WM_WINDOW_MIN_WIDTH  80
 #define WM_WINDOW_MIN_HEIGHT 40
 
-//* Rounded corners and a drop shadow. The shadow is faked by stacking translucent rounded
-//* rectangles rather than blurring, which there is no hardware here to do cheaply; the
-//* stack is clipped to the ring outside the frame, so it costs a border rather than a
-//* whole window.
+/**
+ * @brief Rounded corners and a drop shadow, faked by stacking translucent rounded rectangles.
+ */
 
 #define WM_CORNER_RADIUS 10
 #define WM_SHADOW_EXTENT 18
@@ -56,13 +56,11 @@
 #define WM_SHADOW_ALPHA  0.28
 
 
-//* Palette, as cairo component lists so they drop straight into a set_source call. Every
-//* surface is a neutral dark grey a shade apart from the one behind it -- the desktop
-//* darkest, then an idle window, then the active one -- because a shadow cast onto
-//* something this dark carries much less of the separation than it would on a light theme.
-//* What actually marks the active window is the ring around it, not the colour of its
-//* frame, so the ring is the one thing that brightens rather than shifting hue: there is no
-//* hue here to shift.
+/**
+ * @brief The palette, as cairo component lists that drop straight into a set_source call.
+ *
+ * Every surface is a neutral dark grey a shade apart from the one behind it; the ring marks the active window.
+ */
 
 #define WM_COLOR_DESKTOP_TOP    0.086, 0.086, 0.086
 #define WM_COLOR_DESKTOP_BOTTOM 0.043, 0.043, 0.043
@@ -79,28 +77,31 @@
 #define WM_COLOR_CLOSE_OVER 0.839, 0.271, 0.302
 #define WM_COLOR_CLOSE_DOWN 0.651, 0.184, 0.212
 
-//* The cursor theme. Every shape is a webp image with straight alpha, which is what the
-//* hardware cursor plane takes as it is and what cairo composites once premultiplied. The
-//* size limit is both what the plane on this hardware will hold and a bound on what a theme
-//* file is allowed to claim to be; the images that ship here are 32x32.
+/**
+ * @brief The cursor theme: webp images with straight alpha, and the largest one the plane will hold.
+ */
 
 #define WM_CURSOR_PATH     "/usr/share/cursors"
 #define WM_CURSOR_MAX_SIZE 64
 
-//* The arrow drawn by hand, for when the theme is missing entirely.
+/**
+ * @brief The arrow drawn by hand, for when the theme is missing entirely.
+ */
 
 #define WM_CURSOR_WIDTH  10
 #define WM_CURSOR_HEIGHT 16
 
-//* The close button, at the right end of the titlebar. It is hit-tested ahead of the
-//* resize grips, which otherwise claim the top row of it from the north-east corner.
+/**
+ * @brief The close button, at the right end of the titlebar, hit-tested ahead of the resize grips.
+ */
 
 #define WM_BUTTON_SIZE   16
 #define WM_BUTTON_MARGIN 9
 
 
-//* Keyboard modifiers, as a mask over whatever is held right now. Left and right fold into
-//* the same bit: a binding is about which modifier, not about which side of the keyboard.
+/**
+ * @brief Keyboard modifiers, as a mask over whatever is held right now; left and right fold into one bit.
+ */
 
 #define WM_MOD_SHIFT (1 << 0)
 #define WM_MOD_CTRL  (1 << 1)
@@ -108,10 +109,9 @@
 #define WM_MOD_SUPER (1 << 3)
 
 
-//* The shapes the server puts under the pointer. Each one names a file in the cursor theme,
-//* and what picks between them is the region the pointer is over: the resize shapes are the
-//* only thing that tells an edge that resizes sideways from one that resizes diagonally,
-//* since the two look exactly alike.
+/**
+ * @brief The shapes the server puts under the pointer, each naming a file in the cursor theme.
+ */
 
 typedef enum {
 
@@ -299,30 +299,40 @@ typedef struct {
 extern wm_server_t wm;
 
 
-//* display.c
+/**
+ * @brief Implemented in display.c.
+ */
 int wm_display_open(wm_display_t* display, const char* device);
 void wm_display_close(wm_display_t* display);
 void wm_display_flush(wm_display_t* display, const wm_rect_t* rect);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
 int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y);
 
-//* cursor.c
+/**
+ * @brief Implemented in cursor.c.
+ */
 void wm_cursor_set(wm_cursor_shape_t shape);
 int wm_cursor_upload(void);
 wm_rect_t wm_cursor_rect(void);
 void wm_cursor_paint(cairo_t* cr, double x, double y);
 void wm_cursor_fini(void);
 
-//* input.c
+/**
+ * @brief Implemented in input.c.
+ */
 int wm_input_open(void);
 void wm_input_close(void);
 int wm_input_dispatch(int fd);
 
-//* keys.c
+/**
+ * @brief Implemented in keys.c.
+ */
 bool wm_keys_handle(uint16_t vkey, uint8_t down);
 void wm_keys_reap(void);
 
-//* window.c
+/**
+ * @brief Implemented in window.c.
+ */
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title);
 void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
@@ -343,7 +353,9 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 int wm_font_init(void);
 void wm_font_fini(void);
 
-//* client.c
+/**
+ * @brief Implemented in client.c.
+ */
 wm_client_t* wm_client_accept(int listener);
 void wm_client_destroy(wm_client_t* client);
 int wm_client_read(wm_client_t* client);
@@ -351,7 +363,9 @@ int wm_client_flush(wm_client_t* client);
 bool wm_client_wants_write(const wm_client_t* client);
 int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, size_t size);
 
-//* main.c
+/**
+ * @brief Implemented in main.c.
+ */
 void wm_damage(const wm_rect_t* rect);
 void wm_damage_window(const wm_window_t* win);
 
