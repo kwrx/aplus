@@ -21,16 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * aplus-wm -- the display server.
+/**
+ * @brief aplus-wm, the display server: it owns the framebuffer and the input devices and hands out windows.
  *
- * It owns /dev/fb0, /dev/kbd and /dev/mouse, and hands out windows over an AF_UNIX
- * socket. Clients never touch the framebuffer: each window's surface is a System V shared
- * memory segment created here and mapped by both ends, so a client draws straight into what
- * compositing reads and the socket carries nothing but control -- a commit is a damage
- * rectangle, not a frame.
- *
- * Decorations are drawn entirely here, so a client needs no widget code at all.
+ * A window's surface is a shared memory segment mapped by both ends, so the socket carries only control.
  */
 
 #include <errno.h>
@@ -112,9 +106,11 @@ static bool wm_rect_intersects(const wm_rect_t* a, const wm_rect_t* b) {
 }
 
 
-/* The shadow rectangle, not the frame: a shadow reaches past the window on every side, and
-   repainting only the frame would leave the old shadow behind as a smear whenever a window
-   moves, resizes or changes focus. */
+/**
+ * @brief Repaints a window's shadow rectangle, which reaches past the frame on every side.
+ *
+ * @param win The window to repaint.
+ */
 void wm_damage_window(const wm_window_t* win) {
 
     const wm_rect_t shadow = wm_window_shadow_rect(win);
@@ -145,9 +141,6 @@ static void wm_composite(void) {
 
     cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 
-    /* The desktop is the one thing behind everything else, so it is drawn with SOURCE and
-       an opaque gradient: nothing under it needs blending, and the gradient gives the
-       window shadows something to fall on. */
     cairo_pattern_t* background = cairo_pattern_create_linear(0.0, 0.0, 0.0, wm.display.height);
 
     cairo_pattern_add_color_stop_rgb(background, 0.0, WM_COLOR_DESKTOP_TOP);
@@ -159,9 +152,6 @@ static void wm_composite(void) {
     cairo_pattern_destroy(background);
 
 
-    /* The list is kept topmost-first for hit testing, so compositing has to walk it in
-       reverse. The depth is bounded by the number of open windows, which on this system
-       is small enough that recursion is cheaper than maintaining a second ordering. */
     wm_window_t* stack[64];
 
     size_t depth = 0;
@@ -172,11 +162,6 @@ static void wm_composite(void) {
 
     while (depth--) {
 
-        /* Cairo would clip a window that is nowhere near the damage away for us, but only
-           after every path it draws has been built and tessellated -- and a shadow is a
-           dozen of them. Most frames damage one character cell, so testing the rectangles
-           first is what keeps a keystroke from costing a full set of decorations for every
-           window on screen. */
         const wm_rect_t extent = wm_window_shadow_rect(stack[depth]);
 
         if (!wm_rect_intersects(&extent, &damage)) {
@@ -187,8 +172,6 @@ static void wm_composite(void) {
     }
 
 
-    /* Skipped entirely when the adapter composites its own cursor plane: drawing it here as
-       well would leave a second arrow trailing behind the real one. */
     if (!wm.display.hwcursor) {
         wm_cursor_paint(cr, wm.pointer.x, wm.pointer.y);
     }
@@ -202,9 +185,6 @@ static void wm_composite(void) {
 
 static int wm_listen(const char* path) {
 
-    /* unix_bind() creates a real S_IFSOCK dirent and nothing removes it when the socket
-       is closed, so a server that died leaves its node behind and the next bind() fails
-       with EADDRINUSE. */
     unlink(path);
 
 
@@ -318,7 +298,6 @@ int main(int argc, char** argv) {
 
 
     if (wm_font_init() < 0) {
-        /* Titles will be blank; that is not worth refusing to start over. */
         wm_font_fini();
     }
 
@@ -343,9 +322,6 @@ int main(int argc, char** argv) {
     signal(SIGINT, wm_on_signal);
     signal(SIGTERM, wm_on_signal);
 
-    /* A client that goes away mid-commit must not take the server with it. AF_UNIX writes
-       here report EPIPE rather than raising SIGPIPE, but the socket code is explicit that
-       this is only because the signal is not implemented yet. */
     signal(SIGPIPE, SIG_IGN);
 
 
@@ -440,8 +416,6 @@ int main(int argc, char** argv) {
         }
 
 
-        /* Reaping is deferred to here: a client can be marked dead from inside any of the
-           handlers above, including while another client's message is being processed. */
         wm_client_t* client = wm.clients;
 
         while (client) {

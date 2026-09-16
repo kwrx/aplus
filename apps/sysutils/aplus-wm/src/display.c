@@ -31,11 +31,16 @@
 #include <wm.h>
 
 
-/* Put an image on the adapter's cursor plane, at the position the pointer is at.
+/**
+ * @brief Puts an image on the adapter's cursor plane, at the position the pointer is at.
  *
- * The pixels go over untouched: the theme decodes to straight alpha, which is exactly how the
- * framebuffer interface specifies a cursor image. It is cairo that wants them premultiplied,
- * and that is a copy the cursor code keeps separately for the software path.
+ * @param display The display owning the plane.
+ * @param image The cursor pixels, in straight alpha.
+ * @param width The width of the image.
+ * @param height The height of the image.
+ * @param hot_x The hotspot within the image.
+ * @param hot_y The hotspot within the image.
+ * @return 0 on success, or -1 with errno set.
  */
 
 int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y) {
@@ -61,15 +66,10 @@ int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int wi
 }
 
 
-/* Decide whether the pointer lives on a plane of its own, by asking the adapter for one and
- * putting the current shape on it.
+/**
+ * @brief Decides whether the pointer lives on a plane of its own, by asking the adapter for one.
  *
- * The flag has to be set before that first upload rather than after it: it is what tells the
- * cursor code to keep a decoded image in the straight-alpha form the plane wants, instead of
- * releasing it once the premultiplied copy is built.
- *
- * Failing here is not an error worth refusing to start over: it just means the pointer gets
- * drawn into the frame the old way.
+ * @param display The display to ask.
  */
 
 static void wm_display_cursor_init(wm_display_t* display) {
@@ -138,10 +138,6 @@ int wm_display_open(wm_display_t* display, const char* device) {
     }
 
 
-    /* smem_start is a physical address that the video driver identity-mapped with the user
-       and global bits set, so it is directly dereferenceable here and stays valid across
-       fork(). There is no mmap to do: mmap(MAP_SHARED) is ENOTSUP and /dev/fb0 rejects
-       read() and write() outright. */
     if (!display->fix.smem_start || !display->var.xres || !display->var.yres) {
         fprintf(stderr, "aplus-wm: wrong framebuffer configuration\n");
         close(fd);
@@ -154,8 +150,6 @@ int wm_display_open(wm_display_t* display, const char* device) {
     switch (display->var.bits_per_pixel) {
 
         case 32:
-            /* RGB24 rather than ARGB32: the framebuffer is opaque, and treating the top
-               byte as alpha would ask cairo for premultiplied data nobody produces. */
             format = CAIRO_FORMAT_RGB24;
             break;
 
@@ -184,9 +178,6 @@ int wm_display_open(wm_display_t* display, const char* device) {
     }
 
 
-    /* Everything is composited off-screen and blitted once per frame. Painting straight
-       into the framebuffer would show the background, then each window, as separate
-       flashes. */
     display->back = cairo_image_surface_create(CAIRO_FORMAT_RGB24, display->width, display->height);
 
     if (cairo_surface_status(display->back) != CAIRO_STATUS_SUCCESS) {
@@ -264,15 +255,6 @@ void wm_display_flush(wm_display_t* display, const wm_rect_t* rect) {
     cairo_surface_flush(display->screen);
 
 
-    /* The only path that pushes pixels to the host on virtio-gpu, and the reason the damaged
-       rectangle is carried all the way down here rather than being used just to clip the
-       repaint: the transfer that FBIO_FLUSH triggers is the host reading guest memory, and at
-       this mode a whole screen of it is three and a half megabytes. Most frames damage a
-       character cell.
-
-       On the bochs and vmware adapters the driver has no flush hook and the ioctl succeeds
-       without doing anything, because there the framebuffer is the scanout and the pixels are
-       already there. Both calls are safe to make unconditionally. */
     struct fb_rect damage = {
 
         .x      = (uint32_t)rect->x,

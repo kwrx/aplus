@@ -23,20 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for sockets being ordinary file descriptors.
+/**
+ * @brief Regression tests for sockets being ordinary file descriptors.
  *
- * These used to live in a numbering space of their own, the lwIP index plus CONFIG_OPEN_MAX,
- * which meant a socket was not really a descriptor: dup(), dup2(), fstat() and everything else
- * that bounds-checks an fd against CONFIG_OPEN_MAX answered EBADF for a perfectly good socket.
- * The visible casualty was any server that moves an accepted connection onto stdin/stdout --
- * inetd-style servers and CGI do it as a matter of course, and busybox httpd died on it with
- * "can't duplicate file descriptor".
- *
- * So most of what is checked here is not socket behaviour at all. It is that a socket answers
- * the same generic descriptor calls as a pipe or a file, which is the whole point of the
- * exercise -- and in particular that dup2() onto a low, already-open descriptor works, since
- * that is the case the old layout could not express at all.
+ * Most of what is checked is that a socket answers the same generic descriptor calls as a pipe or a file.
  */
 
 #include <errno.h>
@@ -84,9 +74,8 @@ static int make_socket(void) {
 }
 
 
-/*
- * The header claim: a socket comes out of the ordinary descriptor space. Anything at or above
- * CONFIG_OPEN_MAX is the old parallel numbering, and every generic fd call would reject it.
+/**
+ * @brief Checks that a socket comes out of the ordinary descriptor space, below CONFIG_OPEN_MAX.
  */
 static void test_low_fd(void) {
 
@@ -103,9 +92,8 @@ static void test_low_fd(void) {
 }
 
 
-/*
- * fstat() is the cheapest proof that the fd resolves to something real, and a socket has to
- * report itself as one.
+/**
+ * @brief Checks that fstat() resolves the descriptor and reports it as a socket.
  */
 static void test_fstat(void) {
 
@@ -130,9 +118,8 @@ static void test_fstat(void) {
 }
 
 
-/*
- * dup() has to produce a second, independent descriptor for the same socket; closing one must
- * leave the other usable, which is what the shared reference count is for.
+/**
+ * @brief Checks that dup() produces a second descriptor for the same socket, and that closing one leaves the other.
  */
 static void test_dup(void) {
 
@@ -152,7 +139,6 @@ static void test_dup(void) {
 
         CHECK(d != fd, "dup-distinct", "dup() returned the same descriptor %d", d);
 
-        /* Close the original; the duplicate must still resolve. */
         close(fd);
 
         struct stat st;
@@ -169,9 +155,8 @@ static void test_dup(void) {
 }
 
 
-/*
- * The case the old layout could not express, and the one that broke httpd: move a socket onto
- * a specific low descriptor that is already open.
+/**
+ * @brief Checks that a socket can be moved onto a specific low descriptor that is already open.
  */
 static void test_dup2_onto_stdio(void) {
 
@@ -183,7 +168,6 @@ static void test_dup2_onto_stdio(void) {
     }
 
 
-    /* Keep a way back to the real stdout before standing on it. */
     int saved = dup(STDOUT_FILENO);
 
     if (saved < 0) {
@@ -195,7 +179,6 @@ static void test_dup2_onto_stdio(void) {
 
     int r = dup2(fd, STDOUT_FILENO);
 
-    /* Restore immediately: printf() below has to reach the console, not the socket. */
     int restored = dup2(saved, STDOUT_FILENO);
 
     close(saved);
@@ -206,8 +189,8 @@ static void test_dup2_onto_stdio(void) {
 }
 
 
-/*
- * The descriptor flags are the generic ones, not something the socket layer keeps to itself.
+/**
+ * @brief Checks that the descriptor flags are the generic ones rather than something the socket layer keeps.
  */
 static void test_fcntl_flags(void) {
 
@@ -235,7 +218,6 @@ static void test_fcntl_flags(void) {
     }
 
 
-    /* close-on-exec lives on the descriptor, so it has to work here too. */
     CHECK(fcntl(fd, F_SETFD, FD_CLOEXEC) == 0, "fcntl-setfd", "F_SETFD failed: %s", strerror(errno));
     CHECK((fcntl(fd, F_GETFD) & FD_CLOEXEC) != 0, "fcntl-getfd", "%s", "FD_CLOEXEC did not stick");
 
@@ -243,9 +225,8 @@ static void test_fcntl_flags(void) {
 }
 
 
-/*
- * A socket has to be watchable next to descriptors that are not sockets -- the readiness core
- * reaches them by different routes, and a server sits in one select() over both.
+/**
+ * @brief Checks that a socket can be watched next to descriptors that are not sockets.
  */
 static void test_select_mixed(void) {
 
@@ -286,9 +267,8 @@ static void test_select_mixed(void) {
 }
 
 
-/*
- * close() has to release the socket through the same path as everything else, or a server that
- * runs for a while quietly runs out of them.
+/**
+ * @brief Checks that close() releases a socket, which a server that runs for a while depends on.
  */
 static void test_close_releases(void) {
 
@@ -302,7 +282,6 @@ static void test_close_releases(void) {
     close(first);
 
 
-    /* Open and close many more than the stack can hold at once. */
     int ok = 1;
 
     for (int i = 0; i < 64; i++) {
@@ -321,9 +300,8 @@ static void test_close_releases(void) {
 }
 
 
-/*
- * A child has to inherit the socket across fork(), which is how every accept-and-fork server
- * hands the connection to its worker.
+/**
+ * @brief Checks that a child inherits a socket across fork(), as every accept-and-fork server needs.
  */
 static void test_fork_inherits(void) {
 
@@ -359,9 +337,8 @@ static void test_fork_inherits(void) {
 }
 
 
-/*
- * Local sockets were always ordinary descriptors; they are checked here so that unifying the
- * lwIP ones cannot quietly take them apart.
+/**
+ * @brief Checks that local sockets still work, so that unifying the lwIP ones cannot take them apart.
  */
 static void test_unix_still_works(void) {
 
@@ -384,9 +361,13 @@ static void test_unix_still_works(void) {
 }
 
 
-/*
- * Wait for a child, but not forever: a child that ignores the signal under test would
- * otherwise hang the whole run rather than fail it.
+/**
+ * @brief Waits for a child, but not forever, so that one ignoring the signal under test fails rather than hangs.
+ *
+ * @param pid The child to wait for.
+ * @param status Receives the child's exit status.
+ * @param seconds How long to wait.
+ * @return 1 when the child exited, 0 when the wait timed out.
  */
 static int wait_for_exit(pid_t pid, int* status, int seconds) {
 
@@ -403,8 +384,11 @@ static int wait_for_exit(pid_t pid, int* status, int seconds) {
 }
 
 
-/*
- * Park a child in accept() and leave it there; the caller signals it.
+/**
+ * @brief Parks a child in accept() and leaves it there for the caller to signal.
+ *
+ * @param block_everything Whether the child blocks every signal it can first.
+ * @return The child's pid, or -1.
  */
 static pid_t spawn_blocked_in_accept(int block_everything) {
 
@@ -416,9 +400,6 @@ static pid_t spawn_blocked_in_accept(int block_everything) {
 
     if (block_everything) {
 
-        /* Straight to the kernel: the libc strips SIGKILL and SIGSTOP out of the set before
-           the syscall, and whether the kernel refuses them too is exactly what is in
-           question here. */
         sigset_t all;
         sigfillset(&all);
 
@@ -449,17 +430,14 @@ static pid_t spawn_blocked_in_accept(int block_everything) {
     struct sockaddr_in peer;
     socklen_t plen = sizeof(peer);
 
-    /* Nothing will ever connect, so this only returns if the kernel makes it. */
     accept(fd, (struct sockaddr*)&peer, &plen);
 
     _exit(99);
 }
 
 
-/*
- * A task parked inside the network stack still has to be killable. accept() waits inside lwIP
- * rather than on an inode, so it reaches the scheduler by a different route than a sleeping
- * read() does, and a signal that never arrives leaves a process nothing can shift.
+/**
+ * @brief Checks that a task parked inside the network stack is still killable.
  */
 static void test_signal_reaches_blocked_accept(void) {
 
@@ -490,9 +468,8 @@ static void test_signal_reaches_blocked_accept(void) {
 }
 
 
-/*
- * SIGKILL cannot be blocked, whatever the mask says -- otherwise a process can make itself
- * permanently unkillable, which is the one thing the signal is for.
+/**
+ * @brief Checks that SIGKILL cannot be blocked, whatever the mask says.
  */
 static void test_sigkill_ignores_mask(void) {
 
@@ -514,7 +491,6 @@ static void test_sigkill_ignores_mask(void) {
 
     if (!reaped) {
 
-        /* Nothing else will shift it; leave the run able to finish. */
         kill(pid, SIGKILL);
         waitpid(pid, &status, WNOHANG);
     }

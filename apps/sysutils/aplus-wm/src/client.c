@@ -32,17 +32,19 @@
 #include <wm.h>
 
 
-//? A client that will not drain its events is misbehaving, not merely slow. Dropping it
-//? at a bounded queue size keeps one bad client from growing the server without limit.
+/**
+ * @brief How much may queue for a client before it is dropped as misbehaving rather than slow.
+ */
 #define WM_CLIENT_TX_MAX (1 * 1024 * 1024)
 
-//? One read of the client socket.
+/**
+ * @brief One read of the client socket.
+ */
 #define WM_CLIENT_CHUNK (16 * 1024)
 
-//? One maximum-sized frame still being reassembled plus the chunk that will complete it,
-//? which is everything the buffer ever holds: wm_client_read() acts on whole frames after
-//? every chunk, so nothing accumulated earlier in a drain is still in here. What the cap
-//? catches is a client naming a length rather than a client sending a lot.
+/**
+ * @brief Everything the receive buffer ever holds: one maximum-sized frame plus the chunk completing it.
+ */
 #define WM_CLIENT_RX_MAX (UI_MSG_PAYLOAD_MAX + sizeof(ui_msg_header_t) + WM_CLIENT_CHUNK)
 
 
@@ -161,8 +163,6 @@ int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, siz
     const size_t needed = sizeof(ui_msg_header_t) + size;
 
 
-    /* Compact first: without this the queue only ever grows, because head advances as
-       bytes go out but the buffer is measured from index zero. */
     if (client->tx.head && client->tx.head == client->tx.size) {
         client->tx.head = 0;
         client->tx.size = 0;
@@ -218,10 +218,6 @@ int wm_client_flush(wm_client_t* client) {
             continue;
         }
 
-        /* EAGAIN just means the peer's buffer is full; the rest goes out on the next
-           POLLOUT. Never block here: a client blocked writing a commit into a full server
-           buffer would deadlock against a server blocked writing an event into a full
-           client buffer. */
         if (e < 0 && errno == EAGAIN) {
             return 0;
         }
@@ -278,9 +274,6 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
         return -1;
     }
 
-    /* The configure has to be queued before anything else: ui_window_create() is
-       synchronous and waits for it, so a focus event arriving first would be read as the
-       reply to the create. */
     if (wm_window_notify_configure(win) < 0) {
         return -1;
     }
@@ -291,14 +284,13 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
 }
 
 
-/* A commit carries no pixels: the client wrote them through the mapping both ends share, and
- * this names the rectangle it changed.
+/**
+ * @brief Acts on a commit, which names the rectangle the client changed and carries no pixels.
  *
- * A stale serial means the window was resized while the frame was in flight, so the rectangle
- * belongs to the surface the window used to have. Dropping it is correct -- a fresh
- * UI_EV_CONFIGURE has already been queued with the new segment, and the client will redraw into
- * that. Its writes went into the old segment, which is still mapped for it and which nothing
- * here reads any more.
+ * @param client The client that committed.
+ * @param payload The message body.
+ * @param size The length of the message body.
+ * @return 0 on success, or -1 with errno set.
  */
 static int wm_client_handle_commit(wm_client_t* client, const uint8_t* payload, size_t size) {
 
@@ -415,16 +407,16 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
             return wm_client_handle_destroy_window(client, payload, size);
 
         default:
-            /* Unknown but well-framed: step over it rather than dropping the client, so an
-               older server can talk to a newer library. */
             return 0;
     }
 }
 
 
-/* Act on every whole frame the receive buffer holds and shift the partial one that is left
- * over back to the front, so that what is in the buffer on return is never more than one
- * frame that has yet to arrive in full.
+/**
+ * @brief Acts on every whole frame the receive buffer holds, shifting the partial one back to the front.
+ *
+ * @param client The client to dispatch for.
+ * @return 0 on success, or -1 with errno set.
  */
 
 static int wm_client_dispatch(wm_client_t* client) {
@@ -471,17 +463,11 @@ static int wm_client_dispatch(wm_client_t* client) {
 }
 
 
-/* A stream socket splits and coalesces writes freely, so bytes are accumulated here and only
- * whole frames are acted on.
+/**
+ * @brief Reads from a client, accumulating bytes and acting on whole frames, draining to EAGAIN.
  *
- * Drains to EAGAIN rather than taking one chunk per poll() wakeup. Nothing large travels this
- * socket now that pixels do not, but a client that commits faster than the server wakes up
- * still queues messages, and one chunk per wakeup would leave it a wakeup behind for every
- * frame it is ahead.
- *
- * Each chunk is dispatched before the next is read, which is what keeps that drain bounded:
- * parsing only once it ends would let a client that refills the socket as fast as the server
- * empties it grow the receive buffer without limit.
+ * @param client The client to read from.
+ * @return 0 on success, or -1 with errno set.
  */
 int wm_client_read(wm_client_t* client) {
 

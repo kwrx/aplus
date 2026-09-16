@@ -23,13 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for the virtual memory manager.
+/**
+ * @brief Regression tests for the virtual memory manager.
  *
- * Every case here corresponds to a defect that was live in the kernel: each one either
- * crashed the kernel, handed userspace memory it had no business seeing, or silently
- * succeeded where it had to fail. A pass means the syscall now *refuses*, or that the
- * memory handed over is what it should be.
+ * A pass means the syscall now refuses, or that the memory handed over is what it should be.
  */
 
 #include <errno.h>
@@ -60,15 +57,20 @@ static int total    = 0;
     }
 
 
-/* The kernel direct-maps all of physical memory at this address. A user pointer into it that
-   the kernel honours is an arbitrary kernel read/write primitive. */
+/**
+ * @brief Where the kernel direct-maps all of physical memory; a user pointer into it must be refused.
+ */
 #define KERNEL_HEAP_AREA 0xFFFF800000000000ULL
 
-/* Identity-mapped device MMIO that lives in the low half alongside user memory. */
+/**
+ * @brief Identity-mapped device MMIO that lives in the low half alongside user memory.
+ */
 #define LAPIC_BASE 0xFEE00000ULL
 
 
-/* A kernel pointer handed to a syscall as a buffer must be refused, not dereferenced. */
+/**
+ * @brief Checks that a kernel pointer handed to a syscall as a buffer is refused, not dereferenced.
+ */
 static void test_kernel_pointer_rejected(void) {
 
     int fd = open("/etc/motd", O_RDONLY);
@@ -88,9 +90,9 @@ static void test_kernel_pointer_rejected(void) {
 }
 
 
-/* mprotect() must not be able to reach outside the caller's own regions. Device MMIO is
-   identity-mapped low and shared into every address space; granting it the user bit would
-   hand the caller the hardware. */
+/**
+ * @brief Checks that mprotect() cannot reach outside the caller's own regions.
+ */
 static void test_mprotect_foreign_range_rejected(void) {
 
     errno     = 0;
@@ -101,7 +103,9 @@ static void test_mprotect_foreign_range_rejected(void) {
 }
 
 
-/* MAP_SHARED and MAP_FIXED used to hit a PANIC_ASSERT, taking the whole kernel down. */
+/**
+ * @brief Checks that MAP_SHARED and MAP_FIXED are refused rather than hitting a PANIC_ASSERT.
+ */
 static void test_unsupported_mmap_flags_refused(void) {
 
     errno      = 0;
@@ -115,8 +119,9 @@ static void test_unsupported_mmap_flags_refused(void) {
 }
 
 
-/* An absurd length must come back as ENOMEM rather than exhausting physical memory and
-   panicking inside the frame allocator. */
+/**
+ * @brief Checks that an absurd length comes back as ENOMEM rather than exhausting physical memory.
+ */
 static void test_huge_mmap_refused(void) {
 
     errno      = 0;
@@ -130,8 +135,9 @@ static void test_huge_mmap_refused(void) {
 }
 
 
-/* Freshly mapped anonymous memory must be zero. It used to be handed over still holding
-   whatever the previous owner had written into the frame. */
+/**
+ * @brief Checks that freshly mapped anonymous memory is zero.
+ */
 static void test_fresh_anonymous_memory_is_zero(void) {
 
     const size_t len = 64 * 4096;
@@ -156,7 +162,9 @@ static void test_fresh_anonymous_memory_is_zero(void) {
 }
 
 
-/* Same again for the heap, which brk(2) maps through a different path. */
+/**
+ * @brief Checks that fresh heap memory is zero, which brk(2) maps through a different path.
+ */
 static void test_fresh_brk_memory_is_zero(void) {
 
     const size_t len = 256 * 1024;
@@ -179,7 +187,9 @@ static void test_fresh_brk_memory_is_zero(void) {
 }
 
 
-/* The child must not see anything the parent writes after the fork. */
+/**
+ * @brief Checks that a child sees nothing the parent writes after the fork.
+ */
 static void test_fork_memory_is_private(void) {
 
     volatile unsigned char* p = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -195,7 +205,6 @@ static void test_fork_memory_is_private(void) {
 
     if (pid == 0) {
 
-        /* Give the parent a chance to scribble on its copy. */
         for (volatile int i = 0; i < 2000000; i++)
             ;
 
@@ -213,8 +222,9 @@ static void test_fork_memory_is_private(void) {
 }
 
 
-/* munmap() used to be ENOSYS, so address space only ever grew. A map/unmap loop must be
-   able to run indefinitely without running the mmap cursor out of its window. */
+/**
+ * @brief Checks that a map and unmap loop can run indefinitely without running the mmap cursor out.
+ */
 static void test_munmap_reclaims(void) {
 
     int ok = 1;
@@ -242,8 +252,9 @@ static void test_munmap_reclaims(void) {
 }
 
 
-/* Repeated fork/exit must return memory. Each address space used to duplicate the kernel's
-   2TiB direct map -- roughly 8MiB of page tables -- and then leak it on exit. */
+/**
+ * @brief Checks that repeated fork and exit returns memory.
+ */
 static void test_fork_exit_loop_returns_memory(void) {
 
     int ok = 1;
@@ -269,15 +280,9 @@ static void test_fork_exit_loop_returns_memory(void) {
 }
 
 
-/* getdents64 sizes each record from the length of the file name it carries, but the loop
-   bound used to test only the fixed part of the record against the space left in the caller's
-   buffer. A directory of long names therefore wrote past the end of it -- and for a libc
-   reading a directory, what sits after that buffer is its own heap, so the damage surfaced
-   later as a corrupted malloc free list.
-
-   Whether the last record straddles the end of the buffer depends on how the preceding name
-   lengths happen to add up, so a single buffer size only catches this by luck. Sweep a range
-   of sizes instead: across that many, some are certain to land mid-record. */
+/**
+ * @brief Checks that getdents64 never writes past the caller's buffer, over a sweep of buffer sizes.
+ */
 static void test_getdents_respects_buffer(void) {
 
     int intact = 1;
@@ -312,7 +317,6 @@ static void test_getdents_respects_buffer(void) {
                 break;
             }
 
-            /* Anything beyond the requested count must be untouched. */
             for (size_t i = cap; i < sizeof(area); i++) {
 
                 if (area[i] != 0xA5) {

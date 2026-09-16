@@ -23,13 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for pipes, readiness notification and poll().
+/**
+ * @brief Regression tests for pipes, readiness notification and poll().
  *
- * Every case here corresponds to a defect that was live in the kernel. Several of them used
- * to HANG rather than fail -- a reader that could never learn its writer was gone, a poll()
- * that slept on top of a buffer that was already full, a timeout that restarted from the top
- * on every wakeup. Run this under a timeout: a hang is a failure too.
+ * Several of these used to hang rather than fail, so run this under a timeout.
  */
 
 #include <errno.h>
@@ -61,9 +58,9 @@ static int total    = 0;
     }
 
 
-/* CONFIG_PIPESIZ. A write larger than this is the case that used to be unsatisfiable:
-   ringbuffer_write() was all-or-nothing, so the predicate "does it all fit" could never
-   become true and sys_write() blocked and restarted forever. */
+/**
+ * @brief CONFIG_PIPESIZ; a write larger than this is the case that used to be unsatisfiable.
+ */
 #define PIPE_CAPACITY 65535
 
 
@@ -78,9 +75,8 @@ static uint64_t now_ms(void) {
 }
 
 
-/*
- * A write bigger than the pipe buffer has to make partial progress. The reader drains
- * concurrently so the whole transfer can complete.
+/**
+ * @brief Checks that a write bigger than the pipe buffer makes partial progress, with a reader draining.
  */
 static void test_large_write(void) {
 
@@ -157,9 +153,8 @@ static void test_large_write(void) {
 }
 
 
-/*
- * The canonical pipe idiom. Closing the write end has to surface as end of file on the read
- * end; it used to tear the shared buffer down and leave the survivor with -ENOSYS.
+/**
+ * @brief Checks that closing the write end surfaces as end of file on the read end.
  */
 static void test_eof_on_writer_close(void) {
 
@@ -182,10 +177,8 @@ static void test_eof_on_writer_close(void) {
 
     ssize_t first = read(fds[0], buf, sizeof(buf));
 
-    /* Data written before the close still has to come out ... */
     CHECK(first == 5 && memcmp(buf, "hello", 5) == 0, "drain after writer close", "read() returned %zd (errno %d)", first, errno);
 
-    /* ... and only then does the reader see the end of the stream. */
     errno         = 0;
     ssize_t empty = read(fds[0], buf, sizeof(buf));
 
@@ -195,14 +188,8 @@ static void test_eof_on_writer_close(void) {
 }
 
 
-/*
- * The shape of a shell pipeline, and the one that used to HANG: the writer is a forked child
- * that execve()s, so the write end has to survive the exec and still reach its last close
- * when that child exits. do_unshare(CLONE_FILES) took a second reference to every inherited
- * descriptor on the way through execve() and nothing ever dropped it, so the write end never
- * reached zero, the pipe kept a writer forever, and the reader never saw end of file.
- *
- * $(command substitution) and `cmd | cmd` both boil down to exactly this.
+/**
+ * @brief Checks that a write end survives an execve() and still reaches its last close when that child exits.
  */
 static void test_eof_after_exec(void) {
 
@@ -239,8 +226,6 @@ static void test_eof_after_exec(void) {
     char buf[64] = {0};
     size_t got   = 0;
 
-    /* Reads until the end of the stream rather than until the expected byte count: the point
-       of the case is that the end of the stream arrives at all. */
     for (;;) {
 
         ssize_t e = read(fds[0], buf + got, sizeof(buf) - 1 - got);
@@ -261,11 +246,8 @@ static void test_eof_after_exec(void) {
 }
 
 
-/*
- * popen() runs its child through posix_spawn(), which clones with CLONE_VFORK and waits for
- * the child to execve() before touching the stack the two of them share. do_fork() used to
- * refuse that flag outright with ENOSYS, so nothing built on posix_spawn() -- popen(), and
- * system(), which is what `watch` runs its command with -- ever started a process at all.
+/**
+ * @brief Checks that popen() runs its child, which needs the CLONE_VFORK posix_spawn() clones with.
  */
 static void test_popen(void) {
 
@@ -286,9 +268,8 @@ static void test_popen(void) {
 }
 
 
-/*
- * Writing into a pipe with no reader left is EPIPE. There was previously no reader count at
- * all, so this was indistinguishable from a full buffer and blocked forever.
+/**
+ * @brief Checks that writing into a pipe with no reader left is EPIPE.
  */
 static void test_epipe(void) {
 
@@ -310,10 +291,8 @@ static void test_epipe(void) {
 }
 
 
-/*
- * Readiness has to be a property of the pipe, not of who was watching when the data landed.
- * Data written before poll() is called used to be invisible: the notify was gated on an
- * interest mask that the poller only set on its way to sleep.
+/**
+ * @brief Checks that data written before poll() is called is still reported as ready.
  */
 static void test_poll_sees_buffered_data(void) {
 
@@ -324,7 +303,6 @@ static void test_poll_sees_buffered_data(void) {
         return;
     }
 
-    /* Written first, polled afterwards -- nobody was watching at the time. */
     if (write(fds[1], "a", 1) != 1) {
         CHECK(0, "poll sees buffered data", "write() failed: %s", strerror(errno));
         return;
@@ -337,8 +315,6 @@ static void test_poll_sees_buffered_data(void) {
     CHECK(e == 1 && (pfd.revents & POLLIN), "poll sees buffered data", "poll() returned %d, revents 0x%x", e, pfd.revents);
 
 
-    /* Readiness must not be consumed by observing it: a second poll has to say the same
-       thing while the byte is still sitting there. */
     pfd.revents = 0;
 
     int again = poll(&pfd, 1, 2000);
@@ -350,9 +326,8 @@ static void test_poll_sees_buffered_data(void) {
 }
 
 
-/*
- * A zero timeout is a readiness probe. It used to pass a NULL deadline to the futex layer
- * and block forever.
+/**
+ * @brief Checks that a zero timeout is a readiness probe rather than a wait.
  */
 static void test_poll_zero_timeout(void) {
 
@@ -376,9 +351,8 @@ static void test_poll_zero_timeout(void) {
 }
 
 
-/*
- * A positive timeout has to actually come due. The deadline was rebuilt from scratch on every
- * syscall restart, so poll() re-armed a full timeout each time it woke and never returned 0.
+/**
+ * @brief Checks that a positive timeout actually comes due, whatever the syscall is restarted by.
  */
 static void test_poll_timeout_expires(void) {
 
@@ -402,10 +376,8 @@ static void test_poll_timeout_expires(void) {
 }
 
 
-/*
- * A hung-up peer has to be reportable. POLLHUP is never in the caller's events mask, and the
- * scan used to test revents against that mask, so a hangup could never match and the poller
- * slept on a dead pipe forever.
+/**
+ * @brief Checks that a hung-up peer is reported, though POLLHUP is never in the caller's events mask.
  */
 static void test_poll_hup(void) {
 
@@ -428,9 +400,8 @@ static void test_poll_hup(void) {
 }
 
 
-/*
- * A negative fd is how callers park a slot they are not interested in. POSIX says skip it
- * with revents cleared; it used to be rejected outright with EBADF.
+/**
+ * @brief Checks that a negative fd is skipped with revents cleared, as POSIX asks.
  */
 static void test_poll_negative_fd(void) {
 
@@ -465,9 +436,8 @@ static void test_poll_negative_fd(void) {
 }
 
 
-/*
- * O_CLOEXEC was written into the descriptor's open flags, but execve() consults a separate
- * close_on_exec bit that only fcntl(F_SETFD) ever set -- so the flag was silently ignored.
+/**
+ * @brief Checks that O_CLOEXEC set at creation is honoured by execve(), not only fcntl(F_SETFD).
  */
 static void test_cloexec(void) {
 
@@ -487,9 +457,8 @@ static void test_cloexec(void) {
 }
 
 
-/*
- * mknod() tested the file type bits with & instead of comparing them against S_IFMT, so
- * S_IFREG (0100000) matched the S_IFSOCK (0140000) arm and creating an ordinary file failed.
+/**
+ * @brief Checks that mknod() creates an ordinary file, comparing the type bits against S_IFMT.
  */
 static void test_mknod_regular_file(void) {
 
@@ -526,15 +495,15 @@ static const struct {
 };
 
 
-/*
- * With no argument every case runs. Naming one runs just that case, which is how these get
- * checked against an unfixed kernel: several of the defects hang instead of failing, and a
- * hang in one case would otherwise take the whole run down with it.
+/**
+ * @brief Runs every case, or the one named on the command line.
+ *
+ * @param argc The argument count.
+ * @param argv The arguments; an optional case name.
+ * @return 0 when every case that ran passed.
  */
 int main(int argc, char** argv) {
 
-    /* Unbuffered: a case that hangs would otherwise take its own output down with it, and
-       several of these defects hang rather than fail. */
     setvbuf(stdout, NULL, _IONBF, 0);
 
     printf("pipe-test: starting\n");

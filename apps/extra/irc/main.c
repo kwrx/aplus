@@ -23,23 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * A small line-oriented IRC client (RFC 1459 / RFC 2812).
+/**
+ * @brief A small line-oriented IRC client (RFC 1459 / RFC 2812).
  *
- * The whole thing is one select() loop over two descriptors: the terminal and the server
- * socket. Neither side is allowed to block the other -- a client that read() the keyboard
- * while the server had traffic waiting would stall the connection, and one that drained the
- * socket first would ignore the keyboard for as long as the channel stayed busy.
- *
- * The terminal is left in canonical mode, so the tty line discipline does the editing and a
- * line arrives here already assembled. That is the whole reason this stays small: no raw
- * mode, no cursor arithmetic, no redraw. The cost is that a message arriving while a line is
- * half-typed prints straight through it. The text is still in the kernel's line buffer and
- * still sends correctly on Return.
- *
- * Both directions are framed rather than assumed. TCP hands over arbitrary chunks, so an IRC
- * line can arrive split across two recv() calls or three lines can arrive in one; the same
- * goes for the terminal. Each side accumulates bytes and releases whole lines.
+ * One select() loop over the terminal and the server socket, each side framed into whole lines.
  */
 
 #if CONFIG_HAVE_NETWORK
@@ -63,9 +50,9 @@
     #include <sys/types.h>
 
 
-    /* An IRC line is at most 512 bytes on the wire, CRLF included (RFC 1459 2.3). Anything
-       longer is the server's problem, not ours, but it still has to be absorbed without
-       running off the end of a buffer. */
+    /**
+     * @brief An IRC line is at most 512 bytes on the wire, CRLF included (RFC 1459 2.3).
+     */
     #define IRC_LINE_MAX  512
     #define IRC_PARAM_MAX 16
     #define IRC_NAME_MAX  128
@@ -76,8 +63,9 @@
     #define IRC_VERSION "aplus-irc 1.0"
 
 
-    /* Colours are emitted only when stdout is a terminal, so redirecting to a file gives
-       clean text. col() is the only thing that ever tests the flag. */
+    /**
+     * @brief Colours, emitted only when stdout is a terminal so that redirecting to a file gives clean text.
+     */
     #define C_RESET "\033[0m"
     #define C_TIME  "\033[0;90m"
     #define C_NICK  "\033[1;36m"
@@ -119,9 +107,12 @@ static const char* col(const char* code) {
 }
 
 
-/*
- * strncpy() leaves the destination unterminated exactly when the source was too long, which
- * is the case that matters. Everything here copies through this instead.
+/**
+ * @brief Copies a string and always terminates it, which strncpy() does not when the source is too long.
+ *
+ * @param dst The buffer to copy into.
+ * @param size The size of @p dst.
+ * @param src The string to copy.
  */
 static void str_set(char* dst, size_t size, const char* src) {
 
@@ -137,10 +128,10 @@ static void str_set(char* dst, size_t size, const char* src) {
 }
 
 
-/*
- * One output line, stamped with the local time. Everything the user sees goes through here so
- * the stamp and the trailing newline are never forgotten, and so output stays unbuffered --
- * a client whose messages appear a screenful late is worse than useless.
+/**
+ * @brief Prints one output line, stamped with the local time and unbuffered.
+ *
+ * @param fmt The printf format of the line.
  */
 static void irc_print(const char* fmt, ...) {
 
@@ -173,9 +164,12 @@ static void irc_print(const char* fmt, ...) {
     #define irc_info(fmt, ...)  irc_print("%s** " fmt, col(C_INFO), __VA_ARGS__)
 
 
-/*
- * send() is allowed to place only part of a buffer, and a short write in the middle of an IRC
- * line would desynchronise the server's parser for the rest of the session.
+/**
+ * @brief Writes a whole buffer to the server, looping over the short writes send() may return.
+ *
+ * @param data The bytes to send.
+ * @param len The number of bytes to send.
+ * @return 0 on success, or -1.
  */
 static int irc_send_all(const char* data, size_t len) {
 
@@ -203,10 +197,11 @@ static int irc_send_all(const char* data, size_t len) {
 }
 
 
-/*
- * Format one command and put it on the wire with its CRLF. The formatted text is capped two
- * bytes below the line limit so that the terminator always fits: a line that lost its CRLF to
- * truncation would swallow the line after it.
+/**
+ * @brief Formats one command and puts it on the wire with its CRLF, capped so the terminator always fits.
+ *
+ * @param fmt The printf format of the command.
+ * @return 0 on success, or -1.
  */
 static int irc_sendf(const char* fmt, ...) {
 
@@ -240,11 +235,12 @@ static int irc_sendf(const char* fmt, ...) {
 }
 
 
-/*
- * Split a line in place. Returns 0 on success, -1 if there was no command to be found.
+/**
+ * @brief Splits a line in place into a prefix, a command and its parameters.
  *
- * The trailing parameter is the one introduced by ':' and is the only one allowed to contain
- * spaces; it is always last, so the scan stops there.
+ * @param line The line to split, which is written into.
+ * @param m Receives the pieces.
+ * @return 0 on success, -1 if there was no command to be found.
  */
 static int irc_parse(char* line, struct irc_message* m) {
 
@@ -313,9 +309,11 @@ static int irc_parse(char* line, struct irc_message* m) {
 }
 
 
-/*
- * The nick out of a nick!user@host prefix. Server-sourced messages have no '!' and come back
- * whole, which is what we want to show for them anyway.
+/**
+ * @brief Reports the nick out of a nick!user@host prefix, or the whole of a server-sourced one.
+ *
+ * @param prefix The prefix to read.
+ * @return The nick, in a static buffer.
  */
 static const char* irc_nick_of(const char* prefix) {
 
@@ -340,8 +338,13 @@ static int irc_is_channel(const char* name) {
 }
 
 
-/*
- * Users type "aplus" and mean "#aplus".
+/**
+ * @brief Prefixes a channel name with '#' when the user typed it without one.
+ *
+ * @param name The name the user typed.
+ * @param buf A buffer to build the name in.
+ * @param size The size of @p buf.
+ * @return The channel name.
  */
 static const char* irc_channel_name(const char* name, char* buf, size_t size) {
 
@@ -372,14 +375,12 @@ static void irc_join_params(const struct irc_message* m, int from, char* out, si
 }
 
 
-/* -------------------------------------------------------------------------------------- */
-/* Server -> client                                                                        */
-/* -------------------------------------------------------------------------------------- */
-
-/*
- * CTCP rides inside PRIVMSG, wrapped in \x01. ACTION is the one everybody sees ("/me"); the
- * rest are queries that are answered with a NOTICE, which by convention is never replied to
- * and so cannot start a loop between two clients.
+/**
+ * @brief Acts on a CTCP query, which rides inside a PRIVMSG wrapped in \x01.
+ *
+ * @param from The nick that sent it.
+ * @param target Who it was addressed to.
+ * @param text The message text, terminators included.
  */
 static void irc_handle_ctcp(const char* from, const char* target, const char* text) {
 
@@ -441,8 +442,6 @@ static void irc_handle_privmsg(const struct irc_message* m, int notice) {
     const char* target = m->argv[0];
     const char* text   = m->argv[1];
 
-    /* A message addressed to our own nick is a private one; showing the target verbatim would
-       just print our own name back at us. */
     const char* where = irc_is_channel(target) ? target : "PM";
 
     if (!notice && text[0] == IRC_CTCP) {
@@ -457,9 +456,11 @@ static void irc_handle_privmsg(const struct irc_message* m, int notice) {
 }
 
 
-/*
- * Numerics 001-005 are the greeting, and 001 is the first moment the nick we asked for is
- * confirmed to be ours. Anything that depends on being registered waits for it.
+/**
+ * @brief Acts on a numeric reply; 001 is the first moment the nick asked for is confirmed to be ours.
+ *
+ * @param m The message to act on.
+ * @param num The numeric it carries.
  */
 static void irc_handle_numeric(const struct irc_message* m, int num) {
 
@@ -467,7 +468,7 @@ static void irc_handle_numeric(const struct irc_message* m, int num) {
 
     switch (num) {
 
-        case 1: /* RPL_WELCOME */
+        case 1:
 
             irc.registered = 1;
 
@@ -481,8 +482,6 @@ static void irc_handle_numeric(const struct irc_message* m, int num) {
 
                 irc_sendf("JOIN %s", irc.autojoin);
 
-                /* The default target is the first of them; the rest are joined but have to be
-                   selected with /target before a bare line goes there. */
                 char* comma = strchr(irc.autojoin, ',');
 
                 if (comma)
@@ -493,13 +492,9 @@ static void irc_handle_numeric(const struct irc_message* m, int num) {
 
             return;
 
-        case 433: /* ERR_NICKNAMEINUSE */
-        case 436: /* ERR_NICKCOLLISION */
+        case 433:
+        case 436:
 
-            /* Before registration there is no session to keep, so take the next nick along and
-               try again -- otherwise the connection just sits there never completing. Once
-               registered the user is already on with a working nick and a silent rename would
-               be worse than the error. */
             if (!irc.registered) {
 
                 size_t len = strlen(irc.nick);
@@ -523,7 +518,7 @@ static void irc_handle_numeric(const struct irc_message* m, int num) {
 
             break;
 
-        case 353: /* RPL_NAMREPLY: <nick> <symbol> <channel> :<names> */
+        case 353:
 
             if (m->argc >= 4) {
 
@@ -540,7 +535,6 @@ static void irc_handle_numeric(const struct irc_message* m, int num) {
     }
 
 
-    /* The first parameter of a numeric is always the recipient -- us -- so it is dropped. */
     irc_join_params(m, m->argc > 1 ? 1 : 0, text, sizeof(text));
 
     if (num >= 400)
@@ -561,8 +555,6 @@ static void irc_handle_message(char* line) {
     const char* from = irc_nick_of(m.prefix);
 
 
-    /* PING comes before anything else: a client that does not answer it is disconnected for
-       being unresponsive, however busy it was. */
     if (strcasecmp(m.command, "PING") == 0) {
 
         irc_sendf("PONG :%s", m.argc > 0 ? m.argv[0] : "");
@@ -583,8 +575,6 @@ static void irc_handle_message(char* line) {
 
         const char* chan = m.argc > 0 ? m.argv[0] : "?";
 
-        /* Our own JOIN is the server confirming the channel, so that is the moment to point
-           bare input at it. */
         if (strcmp(from, irc.nick) == 0) {
 
             str_set(irc.target, sizeof(irc.target), chan);
@@ -654,7 +644,6 @@ static void irc_handle_message(char* line) {
         return;
     }
 
-    /* ERROR is the server saying goodbye, usually right before it drops the connection. */
     if (strcasecmp(m.command, "ERROR") == 0) {
 
         irc_error("%s", m.argc > 0 ? m.argv[0] : "server error");
@@ -679,16 +668,10 @@ static void irc_handle_message(char* line) {
 }
 
 
-/* -------------------------------------------------------------------------------------- */
-/* Client -> server                                                                        */
-/* -------------------------------------------------------------------------------------- */
-
 static void irc_say(const char* target, const char* text) {
 
     irc_sendf("PRIVMSG %s :%s", target, text);
 
-    /* The server does not echo a message back to its sender, so the local copy is the only
-       one the user will ever see. */
     irc_print("%s%s %s<%s%s%s>%s %s", col(C_CHAN), target, col(C_RESET), col(C_SELF), irc.nick, col(C_RESET), col(C_RESET), text);
 }
 
@@ -721,8 +704,10 @@ static void irc_help(void) {
 }
 
 
-/*
- * One line typed by the user. The buffer is writable and is carved up in place.
+/**
+ * @brief Acts on one line typed by the user, carving the buffer up in place.
+ *
+ * @param line The line typed, which is written into.
  */
 static void irc_handle_input(char* line) {
 
@@ -732,7 +717,6 @@ static void irc_handle_input(char* line) {
 
     if (line[0] != '/' || line[1] == '/') {
 
-        /* "//..." is the escape for a message that really does start with a slash. */
         const char* text = line[0] == '/' ? line + 1 : line;
 
         if (!irc.target[0]) {
@@ -777,10 +761,6 @@ static void irc_handle_input(char* line) {
 
         irc_sendf("JOIN %s", chan);
 
-        /* Point bare input at the channel now rather than waiting for the server to echo the
-           JOIN back. The round trip is short but not instant, and a line typed inside it would
-           otherwise be refused for having no target. The echo confirms this a moment later,
-           and a join that is actually refused reports itself as a numeric. */
         char* comma = strchr(chan, ',');
 
         if (comma)
@@ -790,7 +770,6 @@ static void irc_handle_input(char* line) {
 
     } else if (strcasecmp(cmd, "part") == 0 || strcasecmp(cmd, "leave") == 0) {
 
-        /* With no argument, or with a reason only, the channel is the current one. */
         if (!args[0]) {
 
             if (!irc.target[0]) {
@@ -879,8 +858,6 @@ static void irc_handle_input(char* line) {
             return;
         }
 
-        /* The rename is not recorded here; it becomes real when the server sends back the
-           NICK message confirming it, and until then the old one is still ours. */
         irc_sendf("NICK %s", args);
 
     } else if (strcasecmp(cmd, "topic") == 0) {
@@ -956,16 +933,8 @@ static void irc_handle_input(char* line) {
 }
 
 
-/* -------------------------------------------------------------------------------------- */
-/* Framing                                                                                 */
-/* -------------------------------------------------------------------------------------- */
-
-/*
- * Turn a stream of bytes into whole lines.
- *
- * A line longer than the buffer is dropped rather than truncated and delivered: half an IRC
- * message parsed as a whole one is worse than no message. The discard runs to the next
- * newline so the stream stays in sync.
+/**
+ * @brief Turns a stream of bytes into whole lines, dropping one longer than the buffer rather than truncating it.
  */
 struct irc_framer {
 
@@ -983,8 +952,6 @@ static void irc_frame(struct irc_framer* f, const char* data, size_t n, void (*o
 
             if (!f->overflow) {
 
-                /* The wire terminator is CRLF, but a bare LF is common enough from test
-                   servers and scripts to be worth accepting. */
                 while (f->len > 0 && f->buf[f->len - 1] == '\r')
                     f->len--;
 
@@ -1061,8 +1028,6 @@ static void irc_on_input_readable(void) {
         return;
     }
 
-    /* End of input -- ^D, or a script that ran out of commands. Leave properly rather than
-       spinning on a descriptor that is readable and empty forever. */
     if (n == 0) {
 
         irc_sendf("QUIT :leaving");
@@ -1075,16 +1040,12 @@ static void irc_on_input_readable(void) {
 }
 
 
-/* -------------------------------------------------------------------------------------- */
-/* Connection                                                                              */
-/* -------------------------------------------------------------------------------------- */
-
-/*
- * Resolve and connect, trying every address the resolver offers. A name can map to several
- * addresses and to both families, and the first one is not always the one that answers.
+/**
+ * @brief Resolves a host and connects, trying every address the resolver offers.
  *
- * getaddrinfo() also handles a bare address literal, so a host given as "10.0.2.2" works
- * without a nameserver configured.
+ * @param host The host to connect to, a name or an address literal.
+ * @param port The port to connect to.
+ * @return The socket, or -1.
  */
 static int irc_connect(const char* host, const char* port) {
 
@@ -1153,8 +1114,6 @@ static void usage(const char* argv0) {
 
 int main(int argc, char** argv) {
 
-    /* A write to a socket the peer has closed raises SIGPIPE, whose default action is to kill
-       the process. Ignored, the same write returns EPIPE and the error is reported instead. */
     signal(SIGPIPE, SIG_IGN);
 
 
@@ -1233,9 +1192,6 @@ int main(int argc, char** argv) {
     if ((irc.sock = irc_connect(host, port)) < 0)
         return 1;
 
-    /* select() addresses descriptors by bit position, and a socket here is numbered above the
-       file-descriptor range. It fits comfortably, but not checking would turn a configuration
-       change into a silent write past the end of an fd_set. */
     if (irc.sock >= FD_SETSIZE) {
 
         fprintf(stderr, "irc: socket descriptor %d is beyond FD_SETSIZE (%d)\n", irc.sock, FD_SETSIZE);
@@ -1247,7 +1203,6 @@ int main(int argc, char** argv) {
     irc_info("%s", "connected, registering");
 
 
-    /* PASS has to come before NICK and USER if it is used at all (RFC 2812 3.1.1). */
     if (pass)
         irc_sendf("PASS %s", pass);
 
@@ -1276,7 +1231,6 @@ int main(int argc, char** argv) {
             break;
         }
 
-        /* The server first: it is the side that can time us out. */
         if (FD_ISSET(irc.sock, &rfds))
             irc_on_server_readable();
 

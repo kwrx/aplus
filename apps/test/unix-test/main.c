@@ -23,16 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Tests for AF_UNIX SOCK_STREAM sockets.
+/**
+ * @brief Tests for AF_UNIX SOCK_STREAM sockets.
  *
- * Every one of these returned ENOSYS or ENOTSOCK before local sockets existed: socket()
- * handed AF_UNIX straight to lwIP, which has no address family below AF_INET, and
- * socketpair() was a stub.
- *
- * The point of most of these cases is that a local socket is an ordinary file descriptor:
- * read, write, poll, dup, close-on-exec and fork inheritance all have to work on it without
- * anything socket-specific being involved.
+ * Most cases check that a local socket is an ordinary descriptor, with nothing socket-specific involved.
  */
 
 #include <errno.h>
@@ -76,7 +70,9 @@ static socklen_t fill_addr(struct sockaddr_un* un, const char* path) {
 }
 
 
-/* Data has to move in both directions over a socketpair. */
+/**
+ * @brief Checks that data moves in both directions over a socketpair.
+ */
 static void test_socketpair_echo(void) {
 
     int sv[2];
@@ -106,7 +102,9 @@ static void test_socketpair_echo(void) {
 }
 
 
-/* Closing one end is end of file on the other, and a broken pipe when written to. */
+/**
+ * @brief Checks that closing one end is end of file on the other, and a broken pipe when written to.
+ */
 static void test_socketpair_peer_close(void) {
 
     int sv[2];
@@ -126,12 +124,10 @@ static void test_socketpair_peer_close(void) {
 
     char buf[32];
 
-    /* Data sent before the close still has to arrive ... */
     ssize_t first = read(sv[1], buf, sizeof(buf));
 
     CHECK(first == 4 && memcmp(buf, "last", 4) == 0, "socketpair drain after close", "read() returned %zd", first);
 
-    /* ... and only then is it end of stream. */
     ssize_t empty = read(sv[1], buf, sizeof(buf));
 
     CHECK(empty == 0, "socketpair eof after close", "read() returned %zd, errno %d (%s)", empty, errno, strerror(errno));
@@ -145,7 +141,9 @@ static void test_socketpair_peer_close(void) {
 }
 
 
-/* A socketpair endpoint is a plain descriptor, so poll() has to work on it. */
+/**
+ * @brief Checks that poll() works on a socketpair endpoint.
+ */
 static void test_socketpair_poll(void) {
 
     int sv[2];
@@ -157,7 +155,6 @@ static void test_socketpair_poll(void) {
 
     struct pollfd pfd = {.fd = sv[1], .events = POLLIN, .revents = 0};
 
-    /* Nothing sent yet. */
     int idle = poll(&pfd, 1, 0);
 
     CHECK(idle == 0, "socketpair poll idle", "poll() returned %d, revents 0x%x", idle, pfd.revents);
@@ -174,7 +171,9 @@ static void test_socketpair_poll(void) {
 }
 
 
-/* The full named-socket path: bind a filesystem entry, listen, connect, accept, talk. */
+/**
+ * @brief Checks the full named-socket path: bind, listen, connect, accept, talk.
+ */
 static void test_named_socket(void) {
 
     const char* path = "/tmp/unix-test.sock";
@@ -203,7 +202,6 @@ static void test_named_socket(void) {
     CHECK(1, "bind", "%s", "");
 
 
-    /* bind() has to leave a real socket node behind on the filesystem. */
     struct stat st;
 
     CHECK(stat(path, &st) == 0 && S_ISSOCK(st.st_mode), "bind creates S_IFSOCK node", "stat() failed or mode 0%o", stat(path, &st) == 0 ? (unsigned)st.st_mode : 0u);
@@ -218,7 +216,6 @@ static void test_named_socket(void) {
     CHECK(1, "listen", "%s", "");
 
 
-    /* Nothing has connected, so the listener must not be readable yet. */
     struct pollfd lp = {.fd = srv, .events = POLLIN, .revents = 0};
 
     CHECK(poll(&lp, 1, 0) == 0, "listener idle", "revents 0x%x", lp.revents);
@@ -235,7 +232,6 @@ static void test_named_socket(void) {
     CHECK(1, "connect", "%s", "");
 
 
-    /* A pending connection is what makes a listening socket readable. */
     lp.revents = 0;
 
     CHECK(poll(&lp, 1, 2000) == 1 && (lp.revents & POLLIN), "listener poll pending", "revents 0x%x", lp.revents);
@@ -268,7 +264,6 @@ static void test_named_socket(void) {
 
     close(cli);
 
-    /* The server side has to see the client go away. */
     ssize_t eof = read(acc, buf, sizeof(buf));
 
     CHECK(eof == 0, "eof on client close", "read() returned %zd, errno %d", eof, errno);
@@ -279,7 +274,9 @@ static void test_named_socket(void) {
 }
 
 
-/* Several clients in a row over one listener, to exercise the accept queue. */
+/**
+ * @brief Checks several clients in a row over one listener, to exercise the accept queue.
+ */
 static void test_multiple_clients(void) {
 
     const char* path = "/tmp/unix-test-multi.sock";
@@ -311,7 +308,6 @@ static void test_multiple_clients(void) {
     CHECK(ok, "three clients connect", "errno %d (%s)", errno, strerror(errno));
 
 
-    /* All three were queued before any was accepted. */
     ok = 1;
 
     for (int i = 0; i < 3; i++) {
@@ -344,7 +340,9 @@ static void test_multiple_clients(void) {
 }
 
 
-/* Connecting to a path nobody is listening on is a refused connection, not a crash. */
+/**
+ * @brief Checks that connecting to a path nobody is listening on is a refused connection.
+ */
 static void test_connect_refused(void) {
 
     int cli = socket(AF_UNIX, SOCK_STREAM, 0);
@@ -366,9 +364,8 @@ static void test_connect_refused(void) {
 }
 
 
-/*
- * The payoff of making these ordinary descriptors: dup() and fork() inheritance work with no
- * socket-specific support, because the generic fd table already handles them.
+/**
+ * @brief Checks that dup() and fork() inheritance work on a local socket with no socket-specific support.
  */
 static void test_dup_and_fork(void) {
 
@@ -417,7 +414,9 @@ static void test_dup_and_fork(void) {
 }
 
 
-/* shutdown(SHUT_WR) has to look like end of file to the peer. */
+/**
+ * @brief Checks that shutdown(SHUT_WR) looks like end of file to the peer.
+ */
 static void test_shutdown(void) {
 
     int sv[2];
@@ -468,8 +467,6 @@ static const struct {
 
 int main(int argc, char** argv) {
 
-    /* Unbuffered: a case that hangs would otherwise take its own output down with it, and
-       several of these defects hang rather than fail. */
     setvbuf(stdout, NULL, _IONBF, 0);
 
     printf("unix-test: starting\n");

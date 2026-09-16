@@ -23,14 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * Regression tests for System V shared memory.
+/**
+ * @brief Regression tests for System V shared memory.
  *
- * The properties worth checking are the ones that separate shared memory from an ordinary
- * mapping: two processes see each other's writes, a fork inherits the sharing rather than a
- * copy, the frames survive the process that created them, and they are handed back once --
- * and only once -- the last holder is gone. The last of those is what a display server relies
- * on when it hands a window surface to a client and removes the segment straight away.
+ * Checks what separates a segment from an ordinary mapping: sharing, inheritance, and who frees the frames.
  */
 
 #include <errno.h>
@@ -63,8 +59,9 @@ static int total    = 0;
 #define SHM_TEST_SIZE (256 * 1024)
 
 
-/* The basics: a segment can be created, attached, written through and read back, and does not
-   carry whatever its frames held for their last owner. */
+/**
+ * @brief Checks that a segment can be created, attached, written through and read back, and starts zeroed.
+ */
 static void test_attach_roundtrip(void) {
 
     int id = shmget(IPC_PRIVATE, SHM_TEST_SIZE, IPC_CREAT | 0600);
@@ -117,8 +114,9 @@ static void test_attach_roundtrip(void) {
 }
 
 
-/* Two attachments of the same segment in one address space are two windows onto one set of
-   frames, not two copies of it. */
+/**
+ * @brief Checks that two attachments of one segment are two windows onto the same frames.
+ */
 static void test_two_attachments_alias(void) {
 
     int id = shmget(IPC_PRIVATE, SHM_TEST_SIZE, IPC_CREAT | 0600);
@@ -153,11 +151,9 @@ static void test_two_attachments_alias(void) {
 }
 
 
-/* The point of the whole exercise: a child sees what the parent writes, and the other way
-   round. An attachment inherited through fork(2) must not have been copy-on-written.
-
-   The child exits through that attachment without detaching it, which is also what checks that
-   address space teardown releases the reference. */
+/**
+ * @brief Checks that a child and its parent see each other's writes through an inherited attachment.
+ */
 static void test_shared_across_fork(void) {
 
     int id = shmget(IPC_PRIVATE, SHM_TEST_SIZE, IPC_CREAT | 0600);
@@ -207,11 +203,9 @@ static void test_shared_across_fork(void) {
 }
 
 
-/* A segment created by a process that then exits stays alive as long as somebody holds it, and
-   the id keeps working. This is the ownership model the display server needs.
-
-   The child attaches it a second time, in an address space of its own, and leaves it attached
-   across the exit. */
+/**
+ * @brief Checks that a segment outlives the process that created it, as long as somebody holds it.
+ */
 static void test_survives_creator(void) {
 
     int id = shmget(IPC_PRIVATE, SHM_TEST_SIZE, IPC_CREAT | 0600);
@@ -278,8 +272,9 @@ static void test_survives_creator(void) {
 }
 
 
-/* Removing a segment that is still attached defers the destruction rather than pulling the
-   memory out from under its holder, and blocks any new attachment in the meantime. */
+/**
+ * @brief Checks that removing an attached segment defers the destruction and blocks any new attachment.
+ */
 static void test_deferred_removal(void) {
 
     int id = shmget(IPC_PRIVATE, SHM_TEST_SIZE, IPC_CREAT | 0600);
@@ -314,12 +309,12 @@ static void test_deferred_removal(void) {
 }
 
 
-/* Segments are named by a key as well as by an id, and a stale id must not resolve to whatever
-   segment later takes the same slot. Anything a previous run left behind under the key is
-   removed first. */
+/**
+ * @brief Checks that a key resolves to its segment and that a stale id resolves to nothing.
+ */
 static void test_keys_and_stale_ids(void) {
 
-    const key_t key = 0x61706C75; /* "aplu" */
+    const key_t key = 0x61706C75;
 
     int old = shmget(key, 0, 0);
 
@@ -358,10 +353,9 @@ static void test_keys_and_stale_ids(void) {
 }
 
 
-/* Everything a segment holds has to come back, however it was let go of. Runs enough cycles
-   that a leak of even one segment's worth would exhaust the system-wide ceiling, touching both
-   ends of every mapping so that one never really established shows up here rather than as a
-   silent success. */
+/**
+ * @brief Checks that everything a segment holds comes back, over enough cycles to exhaust the ceiling if not.
+ */
 static void test_no_leak(void) {
 
     const size_t size = 4 * 1024 * 1024;
