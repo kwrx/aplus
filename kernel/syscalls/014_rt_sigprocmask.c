@@ -66,10 +66,6 @@ SYSCALL(
             return -EFAULT;
 
 
-        //? sigsetsize is how many bytes of the set the caller considers meaningful -- musl sends
-        //? _NSIG/8, well under the 128-byte sigset_t it hands over. Only whole words of it are
-        //? ever touched, so a size that is not a whole number of them is a caller that disagrees
-        //? with us about the layout.
         if (unlikely(sigsetsize > sizeof(sigset_t)))
             return -EINVAL;
 
@@ -89,17 +85,11 @@ SYSCALL(
 
             if (set) {
 
-                //? Zeroed first and filled only as far as the caller vouched for, so the words
-                //? past sigsetsize are a known quantity rather than whatever was on the stack.
                 sigset_t __safe_set;
                 memset(&__safe_set, 0, sizeof(sigset_t));
 
                 uio_memcpy_u2s(&__safe_set, set, sigsetsize);
 
-                //? SIGKILL and SIGSTOP can never be blocked. They are dropped from the request
-                //? rather than the request being refused, because every caller that blocks
-                //? "everything" passes a full set and expects it to succeed -- and refusing
-                //? would leave those callers with no mask set at all.
                 sigset_del(&__safe_set, SIGKILL);
                 sigset_del(&__safe_set, SIGSTOP);
 
@@ -132,8 +122,6 @@ SYSCALL(
             }
 
 
-            //? Anything that was held back only because it was blocked gets another look now
-            //? that the mask has moved.
             for (size_t i = current_task->sigpending.size; i > 0; i--) {
 
                 siginfo_t* info;

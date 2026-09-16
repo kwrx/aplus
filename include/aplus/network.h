@@ -60,9 +60,9 @@
 
 __BEGIN_DECLS
 
-/* An lwIP socket is an ordinary descriptor backed by an anonymous inode; see
-   kernel/network/sockfs.c. There is no separate numbering space any more, so nothing needs to
-   ask whether a number "is a socket" before using it as a descriptor. */
+/**
+ * @brief An lwIP socket is an ordinary descriptor backed by an anonymous inode.
+ */
 
 int socket_install(int socket, int flags);
 int socket_from_fd(int fd);

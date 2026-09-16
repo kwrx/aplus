@@ -140,7 +140,6 @@ SYSCALL(
 
         struct stat st = {0};
 
-        /* &st is a kernel buffer; `filename` was validated as a user pointer above. */
         scoped_uio_kernel() {
             e = sys_newstat(filename, &st);
         }
@@ -257,10 +256,6 @@ SYSCALL(
 
 
 
-        /* Take the name and the command line now, while argq[] still holds kernel-side
-           copies and before anything is torn down. task->argv is not a substitute: it is
-           inherited verbatim from the parent and never updated here, so without this every
-           process reports whatever init was called. @see /proc/<pid>/{comm,cmdline,stat}. */
         {
             const char* base = argq[0] ? argq[0] : "";
 
@@ -273,8 +268,6 @@ SYSCALL(
             current_task->comm[TASK_COMM_LEN - 1] = '\0';
 
 
-            //? Packed NUL-separated, which is the form /proc/<pid>/cmdline hands out. An
-            //? argument that would not fit is dropped whole rather than half-copied.
             size_t n = 0;
 
             for (size_t i = 0; argq[i]; i++) {
@@ -531,8 +524,6 @@ SYSCALL(
         arch_vmm_free_address_space(current_space);
 
 
-        //? This task is running in an address space of its own from here on, so
-        //? a parent parked in vfork() waiting to get its own back can go.
         do_vfork_release();
 
 
@@ -542,8 +533,6 @@ SYSCALL(
 #endif
 
 
-        /* From here on this task is userspace, so every pointer it hands a syscall must be
-           validated as a user pointer. */
         current_task->flags &= ~TASK_FLAGS_KERNEL_UIO;
 
         arch_userspace_enter(head.e_entry, stack, (void*)bottom);

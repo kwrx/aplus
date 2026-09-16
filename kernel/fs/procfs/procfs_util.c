@@ -41,21 +41,16 @@
 #include "procfs.h"
 
 
-/* One buffer, shared by every generated /proc file. It is not per-inode because a per-pid
-   file has one inode per pid, so N readers of N pids would otherwise be writing the same
-   static array at once; and it is not per-read because allocating on the read path would
-   mean calling the heap from inside the VFS. procfs_service_read() holds this lock across
-   both the fetch and the copy out, so nothing can overwrite the contents in between. */
+/**
+ * @brief The one buffer every generated /proc file is written into, and the lock that guards it.
+ */
 static char procfs_scratch_buffer[8192];
 
 spinlock_t procfs_scratch_lock = {0};
 
 
 /**
- * @brief Prepare the scratch buffer's lock.
- *
- * Required: a zeroed spinlock_t reads as owned by task 0 rather than free -- spinlock_init()
- * sets owner to -1ULL -- so the first acquisition of a statically-zeroed lock fails.
+ * @brief Prepares the scratch buffer's lock.
  */
 void procfs_scratch_init(void) {
     spinlock_init(&procfs_scratch_lock);
@@ -99,8 +94,6 @@ void procfs_bprintf(procfs_buf_t* b, const char* fmt, ...) {
     va_list v;
     va_start(v, fmt);
 
-    //? vsnprintf() reports the length the output would have had, so a truncated write is
-    //? visible here rather than silently advancing the cursor past the end.
     int n = vsnprintf(&b->data[b->length], b->capacity - b->length, fmt, v);
 
     va_end(v);
@@ -120,8 +113,6 @@ uint64_t procfs_ticks(const struct timespec* ts) {
 
     DEBUG_ASSERT(ts);
 
-    //? Both halves are signed; a negative one would wrap to something enormous once cast,
-    //? which is how a broken carry in the scheduler surfaced here as a 1.8e12-tick utime.
     if (unlikely(ts->tv_sec < 0))
         return 0;
 
@@ -154,15 +145,12 @@ char procfs_task_state(long status) {
 
 
 /**
- * @brief Copy out everything /proc reports about a task, with the run queue held.
+ * @brief Copies out everything /proc reports about a task, with the run queue held.
  *
- * Holding cpu->sched_lock is what keeps the task alive: sched_dequeue() unlinks and
- * destroys a task under that same lock, so anything read without it races a reaper. The
- * copy is a plain struct so no pointer escapes the critical section.
- *
- * A task that has exited keeps its slot on the queue until it is reaped, but sys_exit()
- * has already freed its address space -- so the memory figures are only read when the
- * task is still alive to have them.
+ * @param t The task to read.
+ * @param cpu The cpu the task sits on.
+ * @param threads The number of threads in its group.
+ * @param o Receives the snapshot.
  */
 static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o) {
 
@@ -213,7 +201,6 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
     o->vm_end   = t->userspace.end;
     o->vm_stack = t->userspace.stack;
 
-    //? Cleared by sys_exit(); a zombie has no address space left to describe.
     if (likely(t->address_space)) {
 
         o->rss_pages  = t->address_space->size;
@@ -231,8 +218,6 @@ int procfs_task_snapshot(pid_t pid, procfs_task_t* out) {
         return errno = ESRCH, -1;
 
 
-    //? Threads of a process share its tgid, and /proc/<pid>/stat reports how many there
-    //? are, so the queues are counted in the same pass that finds the task.
     size_t threads = 0;
     bool found     = false;
 
@@ -291,14 +276,11 @@ bool procfs_pid_exists(pid_t pid) {
 
 
 /**
- * @brief Snapshot the live thread-group leaders into a caller-provided array.
+ * @brief Snapshots the live thread-group leaders into a caller-provided array.
  *
- * Taken in one pass so a listing cannot skip or repeat an entry: readdir() is called once
- * per directory entry with an ordinal, and re-walking a live run queue for each of those
- * meant a fork or exit between two calls silently shifted every later position.
- *
- * The array is allocated by the caller, because allocating here would mean calling into
- * the heap with a spinlock held and interrupts disabled.
+ * @param ids Receives the pids.
+ * @param max The number of pids the array holds.
+ * @return The number of pids written.
  */
 size_t procfs_task_list(pid_t* ids, size_t max) {
 
@@ -312,8 +294,6 @@ size_t procfs_task_list(pid_t* ids, size_t max) {
 
             for (task_t* t = cpu->sched_queue; t && n < max; t = t->next) {
 
-                //? Only thread-group leaders get a /proc/<pid> directory, as on Linux --
-                //? otherwise every thread of a process shows up as its own process.
                 if (t->tid != (pid_t)t->pid)
                     continue;
 

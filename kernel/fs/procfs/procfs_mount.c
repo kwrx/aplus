@@ -90,9 +90,6 @@ int procfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->ops.finddir = procfs_root_finddir;
     dir->sb->ops.readdir = procfs_root_readdir;
 
-    /* The inode, not the superblock. dcache lookups test inode->flags, so setting this on
-       sb->flags disabled nothing -- and since INODE_FLAGS_DCACHE_DISABLED and ST_RDONLY are
-       both 1, it quietly marked the filesystem read-only instead. */
     dir->flags |= INODE_FLAGS_DCACHE_DISABLED;
 
     procfs_scratch_init();

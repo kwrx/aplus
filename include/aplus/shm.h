@@ -34,27 +34,26 @@
     #include <aplus/memory.h>
 
 
-    //* System V shared memory.
-    //*
-    //* A segment is a list of physical frames owned by the segment itself rather than by any
-    //* address space that has it attached. Attaching maps those frames with
-    //* ARCH_VMM_MAP_TYPE_SHARED, which is what keeps fork(2) from copying them and address
-    //* space teardown from freeing them; the frames go back to the physical allocator only
-    //* once the segment has been marked for removal and the last attachment is gone.
+    /**
+     * @brief System V shared memory: a segment is a list of frames owned by the segment itself.
+     *
+     * Attaching maps them with ARCH_VMM_MAP_TYPE_SHARED, so neither a fork nor a teardown touches them.
+     */
 
 
-    //? Segments alive at once, system-wide. An id is the slot index plus a sequence number,
-    //? the classic System V scheme, so an id is never silently reused by a later segment that
-    //? happens to land in the same slot.
+    /**
+     * @brief Segments alive at once, system-wide; an id is a slot index plus a sequence number.
+     */
     #define SHM_SEGMENT_MAX 64
 
-    //? Largest single segment. A full-screen 32-bit surface at 4K is 33MiB, so the cap is set
-    //? just above that: shared memory here exists to carry window surfaces.
+    /**
+     * @brief Largest single segment, set just above the 33MiB a full-screen 32-bit surface at 4K takes.
+     */
     #define SHM_SEGMENT_SIZE_MAX (64UL * 1024UL * 1024UL)
 
-    //? Physical memory every live segment may hold between them. Unlike an anonymous mapping
-    //? this memory is never reclaimed under pressure and is not charged to any one process,
-    //? so it needs a ceiling of its own.
+    /**
+     * @brief Physical memory every live segment may hold between them, which nothing reclaims under pressure.
+     */
     #define SHM_TOTAL_MAX (192UL * 1024UL * 1024UL)
 
 
@@ -68,22 +67,19 @@ long shm_detach(uintptr_t addr);
 long shm_control(int id, int cmd, struct shmid_ds* buf);
 
 
-/*!
- * @brief shm_address_space_clone().
- *        Give @dest a reference to every segment @parent has attached.
+/**
+ * @brief Gives an address space a reference to every segment another one has attached.
  *
- * The page table entries themselves are duplicated by the clone walk; this is the
- * bookkeeping behind them.
+ * @param parent The address space being cloned.
+ * @param dest The address space receiving the references.
  */
 void shm_address_space_clone(vmm_address_space_t* parent, vmm_address_space_t* dest) __nonnull(1, 2);
 
 
-/*!
- * @brief shm_address_space_release().
- *        Drop every attachment @space still holds, as if it had called shmdt(2) on each.
+/**
+ * @brief Drops every attachment an address space still holds, as if it had called shmdt(2) on each.
  *
- * Called when an address space is torn down, so that a process that exits or execs without
- * detaching does not pin a segment forever.
+ * @param space The address space being torn down.
  */
 void shm_address_space_release(vmm_address_space_t* space) __nonnull(1);
 

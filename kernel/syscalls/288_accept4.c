@@ -63,8 +63,6 @@ struct sockaddr;
 SYSCALL(
     288, accept4, long sys_accept4(int fd, struct sockaddr* sockaddr, int* socklen, int flags) {
 
-        //? Local sockets never reach lwIP, so they are served whether or not
-        //? networking is configured in.
         struct unix_sock* us;
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
@@ -89,9 +87,6 @@ SYSCALL(
                 return -EAGAIN;
 
 
-            //? Nothing queued yet. Same shape as a blocking read: snapshot the
-            //? socket's change counter, suspend, and ask for this syscall to be
-            //? run again from the top once something moves.
             unix_sock_wait(us);
 
             thread_suspend(current_task);
@@ -131,7 +126,6 @@ SYSCALL(
         uio_w32((uint32_t*)socklen, __socklen);
         uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
 
-        //? accept4() carries the new descriptor's flags rather than inheriting the listener's.
         return socket_install((int)e, flags);
 
 #else

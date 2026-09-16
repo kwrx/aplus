@@ -55,9 +55,6 @@ static ssize_t procfs_service_read(inode_t* inode, void* buf, off_t pos, size_t 
     procfs_service_t* service = inode->userdata;
 
 
-    /* The fetch renders into the shared scratch buffer, so the lock has to cover the copy
-       out of it as well -- releasing it in between let another reader replace the contents
-       before this one had read them. */
     scoped_lock(&procfs_scratch_lock) {
 
         size_t max  = 0;
@@ -68,8 +65,6 @@ static ssize_t procfs_service_read(inode_t* inode, void* buf, off_t pos, size_t 
 
         DEBUG_ASSERT(data);
 
-        //? A zero-length /proc file is legal -- an empty boot cmdline, or the cmdline of a
-        //? kernel thread. This used to be an assert that halted a debug kernel.
         if (unlikely((size_t)pos >= max))
             return 0;
 
@@ -133,8 +128,6 @@ int procfs_service_getattr(inode_t* inode, struct stat* st) {
 
     memset(st, 0, sizeof(struct stat));
 
-    //? Sampled once: arch_timer_gettime() polls the RTC until two reads agree, and a tool
-    //? walking /proc stats hundreds of paths a second.
     time_t now = (time_t)arch_timer_gettime();
 
     st->st_dev   = 0;
@@ -146,9 +139,6 @@ int procfs_service_getattr(inode_t* inode, struct stat* st) {
     st->st_rdev  = 0;
     st->st_size  = 0;
 
-    /* A symlink has to report its target's length: readlink(1) sizes its buffer from this,
-       and with zero here it read nothing and printed an empty line. Regular /proc files
-       keep reporting 0, as they do on Linux -- their content is generated per read. */
     if (S_ISLNK(service->mode) && service->fetch) {
 
         scoped_lock(&procfs_scratch_lock) {
@@ -161,8 +151,6 @@ int procfs_service_getattr(inode_t* inode, struct stat* st) {
         }
     }
 
-    /* 1024, not 1: stdio sizes its buffer from this, and a one-byte block size made it read
-       a /proc file a byte at a time -- re-rendering the whole file for each one. */
     st->st_blksize = 1024;
     st->st_blocks  = 0;
 
@@ -183,8 +171,6 @@ inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, in
 
     inode_t* inode = kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
-    //? The caller assigns a stable ino from the PROCFS_INO_* scheme; a bare global counter
-    //? disagreed with what readdir advertised for the same file.
     inode->ino    = 0;
     inode->parent = parent;
     inode->sb     = parent->sb;
@@ -220,7 +206,3 @@ inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, in
 }
 
 
-/* procfs_service_pid_to_task() lived here. It walked cpu->sched_queue with no lock and
-   returned a bare task_t*, which a concurrent reaper could free before the caller touched
-   it. Its replacements copy what they need out under cpu->sched_lock instead.
-   @see procfs_task_snapshot(), procfs_pid_exists() in procfs_util.c. */

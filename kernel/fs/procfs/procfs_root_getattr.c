@@ -60,7 +60,6 @@ int procfs_root_getattr(inode_t* inode, struct stat* st) {
     st->st_size    = 0;
     st->st_blksize = 1024;
     st->st_blocks  = 0;
-    //? One RTC read, not three: arch_timer_gettime() polls until two reads agree.
     st->st_atime   = now;
     st->st_mtime   = now;
     st->st_ctime   = now;

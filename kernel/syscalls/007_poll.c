@@ -58,8 +58,6 @@
 
 SYSCALL(
     7, poll, long sys_poll(struct pollfd* ufds, unsigned int nfds, int timeout) {
-        //? A negative timeout is how poll() spells "no timeout at all"; zero is a
-        //? readiness probe, which the deadline reports as already expired.
         uint64_t timeout_ns = timeout < 0 ? POLL_TIMEOUT_FOREVER : (uint64_t)timeout * 1000000ULL;
 
         return poll_finish(poll_wait_pollfd(ufds, nfds, timeout_ns));

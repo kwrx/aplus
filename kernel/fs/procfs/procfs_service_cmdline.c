@@ -39,10 +39,13 @@
 
 
 /**
- * @brief /proc/cmdline -- the kernel boot command line.
+ * @brief Generates /proc/cmdline, the kernel boot command line.
  *
- * Per-pid command lines are a different file with a different backing store.
- * @see procfs_pid_fetch_cmdline().
+ * @param inode The /proc/cmdline inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg Unused.
+ * @return 0 on success.
  */
 static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
@@ -58,8 +61,6 @@ static int procfs_service_cmdline_fetch(inode_t* inode, char** buf, size_t* size
 
     procfs_buf_t b = procfs_scratch();
 
-    //? An empty boot cmdline yields an empty file, which is a legal answer -- it used to
-    //? trip an assert that halted a debug kernel.
     if (likely(core->boot.cmdline)) {
         procfs_bputs(&b, core->boot.cmdline, strlen(core->boot.cmdline));
     }

@@ -42,10 +42,9 @@ typedef struct procfs_service {
 } procfs_service_t;
 
 
-/* A bounded writer. Every generated /proc file is built through this rather than by
-   advancing an offset with snprintf()'s return value: that idiom read `sizeof(buf) - off`
-   as a size_t, so one truncating write underflowed it to a huge value and the next write
-   had no bound at all. Here a full buffer simply stops accepting bytes. */
+/**
+ * @brief A bounded writer that every generated /proc file is built through.
+ */
 typedef struct procfs_buf {
 
     char* data;
@@ -63,10 +62,9 @@ void procfs_bprintf(procfs_buf_t* b, const char* fmt, ...);
 void procfs_bputs(procfs_buf_t* b, const char* s, size_t len);
 
 
-/* Everything a /proc file needs about a task, copied out while the run queue is locked.
-   Fetches must never hold a task_t* instead: a task is freed by whoever reaps it, so a
-   pointer that outlives the lock is a use-after-free -- and a task sitting in ZOMBIE has
-   already had its fs, fd, sighand and address_space freed out from under it. */
+/**
+ * @brief Everything a /proc file needs about a task, copied out while the run queue is locked.
+ */
 typedef struct procfs_task {
 
     pid_t tid;
@@ -117,9 +115,9 @@ typedef struct procfs_task {
 } procfs_task_t;
 
 
-/* One ino scheme for every producer. readdir() used to advertise hardcoded numbers that
-   collided with the pids listed beside them and matched nothing getattr() later reported,
-   so the same file had two different inode numbers depending on how you asked. */
+/**
+ * @brief The inode number scheme shared by every procfs producer.
+ */
 #define PROCFS_INO_ROOT             ((ino_t)1)
 #define PROCFS_INO_STATIC(slot)     ((ino_t)(2 + (slot)))
 #define PROCFS_INO_PID(pid)         ((((ino_t)(pid)) << 8) | 0xFF)
@@ -167,7 +165,9 @@ inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid);
 inode_t* procfs_service_self_inode(inode_t* parent);
 void procfs_service_pid_init(inode_t* parent);
 
-/* Per-pid file fetches, shared with the /proc/<pid> directory table. */
+/**
+ * @brief Per-pid file fetches, shared with the /proc/<pid> directory table.
+ */
 int procfs_pid_fetch_stat(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_status(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_statm(inode_t*, char**, size_t*, void*);

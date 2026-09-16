@@ -59,14 +59,14 @@ typedef uint32_t socklen_t;
  */
 
 
-//? Declared here rather than in syscall.h, which carries no socket prototypes.
+/**
+ * @brief Declared here rather than in syscall.h, which carries no socket prototypes.
+ */
 extern long sys_accept4(int fd, struct sockaddr* sockaddr, int* socklen, int flags);
 
 
 SYSCALL(
     43, accept, long sys_accept(int fd, struct sockaddr* sockaddr, socklen_t* socklen) {
 
-        //? accept() is accept4() with no flags; keeping one implementation means
-        //? the blocking path and the local-socket dispatch cannot drift apart.
         return sys_accept4(fd, sockaddr, (int*)socklen, 0);
     });

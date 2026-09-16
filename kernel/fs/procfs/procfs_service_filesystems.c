@@ -52,10 +52,6 @@ static int procfs_service_filesystems_fetch(inode_t* inode, char** buf, size_t* 
 
     procfs_buf_t b = procfs_scratch();
 
-    /* Written through the bounded writer. Advancing an offset by snprintf()'s return value
-       put a NUL between every line, because that return counted the terminator; and once
-       the offset reached the buffer size, `sizeof(buffer) - offset` underflowed to a huge
-       size_t and the next write had no bound at all. */
     for (size_t i = 0; i < VFS_MAX_FILESYSTEMS; i++) {
 
         if (fs_table[i].id == 0)

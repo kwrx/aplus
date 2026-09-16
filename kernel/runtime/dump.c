@@ -51,14 +51,12 @@ static void print_path(const char* prefix, inode_t* inode) {
     kprintf("\n");
 }
 
-//? A panic printer that faults is worse than no panic printer: the second fault re-enters
-//? this path and the machine spins printing the same line forever instead of the one that
-//? matters. Anything reached through current_task is checked before it is followed, because
-//? the reason this is running at all may well be that one of those pointers is rubbish.
-//?
-//? A range test rather than a page table walk: the walk takes the address space lock, which
-//? whoever panicked may well be holding, and every task_t here comes from kmalloc, which
-//? only ever hands out addresses in the heap area.
+/**
+ * @brief Tells whether a pointer is worth following from the panic printer.
+ *
+ * @param p The pointer to test.
+ * @return true if the address falls inside the kernel heap area.
+ */
 static bool plausible(const void* p) {
 
     return (uintptr_t)p >= arch_vmm_p2v(0, ARCH_VMM_AREA_HEAP);

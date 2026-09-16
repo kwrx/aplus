@@ -58,8 +58,6 @@ SYSCALL(
         DEBUG_ASSERT(current_task->address_space->mmap.heap_end);
 
 
-        /* These used to be PANIC_ASSERT, which is compiled in unconditionally: any program
-           calling mmap() with MAP_SHARED or MAP_FIXED brought the whole kernel down. */
         if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE))
             return -ENOTSUP;
 
@@ -103,10 +101,6 @@ SYSCALL(
                     return -EBADF;
             });
 
-            /* A file mapping is only honoured when the contents can be read in up front.
-               ARCH_VMM_MAP_TYPE_MMAP exists but the fault handler does not implement it yet,
-               so a lazy file mapping would quietly hand back zeroed anonymous memory instead
-               of the file. Refusing is the lesser evil. */
             if (unlikely(!(flags & (MAP_POPULATE | MAP_LOCKED))))
                 return -ENOTSUP;
         }
@@ -116,20 +110,6 @@ SYSCALL(
         int arch_flags = 0;
 
 
-        /* A userspace mapping is a user page whatever its protection, PROT_NONE included.
-         *
-         * Withholding the user bit to express "no access" made the page look kernel-owned,
-         * and __mm_copy_page() shares kernel pages by reference rather than dropping them:
-         * a PROT_NONE mapping therefore survived execve() into every descendant address
-         * space. musl puts exactly one of those at the bottom of every thread stack, and
-         * the first mmap of a process lands on mmap.heap_start -- so once any process had
-         * created a thread, everything exec'd below it found a live entry sitting on the
-         * address its own first mmap wanted, and arch_vmm_map() refused it. That surfaced
-         * as pthread_create() failing with EAGAIN for anything started from a shell.
-         *
-         * "No access" is spelled with the present bit instead. The fault handler has no
-         * copy-on-write flags to act on for such a page, so the access becomes the SIGSEGV
-         * PROT_NONE is supposed to produce. */
         arch_flags |= ARCH_VMM_MAP_USER;
 
         if (prot == PROT_NONE)
@@ -161,8 +141,6 @@ SYSCALL(
                     break;
                 case MAP_HUGE_1GB:
                     arch_flags |= ARCH_VMM_MAP_HUGE_1GB;
-                    /* Was asking for the 2MiB size here, so a 1GiB mapping was aligned and
-                       rounded as if it were 2MiB. */
                     pagesize = arch_vmm_gethugepagesize(ARCH_VMM_MAP_HUGE_1GB);
                     break;
 
@@ -193,18 +171,12 @@ SYSCALL(
         spinlock_lock(&current_task->address_space->lock);
 
         {
-            /* Align the cursor first, then carve the region out of it. The bookkeeping used to
-               be filled in from the *unaligned* cursor before it advanced, so every recorded
-               mapping described the region below the one actually returned. */
             uintptr_t cursor = current_task->address_space->mmap.heap_end;
 
             if (cursor & (pagesize - 1))
                 cursor = (cursor & ~(pagesize - 1)) + pagesize;
 
 
-            /* Keep the cursor inside the window it was seeded from. It only ever grows --
-               munmap does not rewind it -- so without this it eventually walks out of the
-               mmap area and into whatever lies above. */
             if (unlikely(cursor + len < cursor || cursor + len > current_task->address_space->mmap.heap_limit)) {
 
                 spinlock_unlock(&current_task->address_space->lock);
@@ -243,8 +215,6 @@ SYSCALL(
 
         if (unlikely(ret == ARCH_VMM_MAP_FAILED)) {
 
-            /* Hand the slot back. The cursor itself is left where it is: another thread may
-               already have carved a region above it. */
             scoped_lock(&current_task->address_space->lock) {
                 memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
             }
@@ -255,7 +225,6 @@ SYSCALL(
 
         if (!(flags & MAP_ANONYMOUS)) {
 
-            /* Anonymous pages already come back zeroed from arch_vmm_map(). */
             uio_lock(start, len);
 
             long e = sys_read(fd, (void*)start, len);

@@ -42,10 +42,10 @@
 
 
 /**
- * @brief Parse a whole directory name as a pid.
+ * @brief Parses a whole directory name as a pid.
  *
- * Strict where atol() was not: it accepted "1abc" as pid 1, so /proc/1abc resolved to a
- * process. Returns 0 for anything that is not entirely digits.
+ * @param name The name to parse.
+ * @return The pid, or 0 if the name is not entirely digits.
  */
 static pid_t __as_pid(const char* name) {
 
@@ -62,7 +62,6 @@ static pid_t __as_pid(const char* name) {
 
         v = (v * 10) + (unsigned long)(*p - '0');
 
-        //? A name long enough to overflow is not a pid this kernel ever handed out.
         if (v > INT32_MAX)
             return 0;
     }
@@ -78,8 +77,6 @@ inode_t* procfs_root_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode->sb->fsid == FSID_PROCFS);
     DEBUG_ASSERT(inode->sb->root == inode);
     DEBUG_ASSERT(name);
-
-    //? "." and ".." never reach a filesystem: vfs_finddir() answers them itself.
 
     pid_t pid = __as_pid(name);
 

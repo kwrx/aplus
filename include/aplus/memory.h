@@ -86,10 +86,11 @@
     #define ARCH_VMM_MAP_TYPE_MMAP (1 << 12)
     #define ARCH_VMM_MAP_TYPE_COW  (2 << 12)
 
-    /* A frame owned by something outside the address space -- a System V shared memory
-       segment. It is mapped with ARCH_VMM_MAP_FIXED and never carries the ownership bit, so
-       unmapping it or tearing the address space down leaves the frame alone, and a fork
-       shares it by reference instead of copying it. @see kernel/ipc/shm.c */
+    /**
+     * @brief A frame owned by something outside the address space, such as a System V shared memory segment.
+     *
+     * It never carries the ownership bit, so unmapping it leaves the frame alone and a fork shares it.
+     */
     #define ARCH_VMM_MAP_TYPE_SHARED (3 << 12)
 
 
@@ -99,13 +100,14 @@
     #define ARCH_VMM_CLONE_NEW_SPACE (0)
 
 
-    /* Returned by arch_vmm_map()/arch_vmm_mprotect() when the request could not be satisfied.
-       Callers reachable from userspace must check for it: physical memory exhaustion used to
-       panic the kernel, which made an oversized mmap(2) a denial of service. */
+    /**
+     * @brief Returned by arch_vmm_map() and arch_vmm_mprotect() when the request could not be satisfied.
+     */
     #define ARCH_VMM_MAP_FAILED ((uintptr_t)-1)
 
-    /* Returned by the pmm_alloc_* family when no run of free blocks is long enough. Zero is a
-       valid physical address, so it cannot stand in for failure. */
+    /**
+     * @brief Returned by the pmm_alloc_* family when no run of free blocks is long enough.
+     */
     #define PMM_INVALID_ADDRESS ((uintptr_t)-1ULL)
 
 
@@ -120,9 +122,9 @@ typedef struct {
 } mmap_mapping_t;
 
 
-    /* Segments one address space may hold at once. A toolkit needs one per window and swaps it
-       for a new one on every resize, so the ceiling is about how many windows a process draws,
-       not how many times it has drawn them. */
+    /**
+     * @brief Segments one address space may hold at once, which is about how many windows a process draws.
+     */
     #define SHM_ATTACH_MAX 16
 
 
@@ -138,7 +140,9 @@ typedef struct {
 } shm_attach_t;
 
 
-    /* Address space lives in .bss (the per-CPU syscore slots) and must never be freed. */
+    /**
+     * @brief Address space lives in .bss, the per-CPU syscore slots, and must never be freed.
+     */
     #define VMM_SPACE_STATIC (1 << 0)
 
 

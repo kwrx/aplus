@@ -70,10 +70,6 @@ SYSCALL(
             return e;
 
 
-        //? From here on every exit has to undo exactly what it managed to set
-        //? up: an inode that never reached a struct file is nobody else's to
-        //? release, and a filetable slot that leaks is gone for the whole boot.
-
         struct file* refs[2] = {NULL, NULL};
 
         for (size_t i = 0; i < 2; i++)
@@ -122,8 +118,6 @@ SYSCALL(
 
                     fds->descriptors[fd].ref = refs[i];
 
-                    //? O_CLOEXEC lives in its own bit: execve() looks at
-                    //? close_on_exec and never at the open flags.
                     fds->descriptors[fd].flags         = (flags & O_NONBLOCK) | (i == PIPE_END_WRITE ? O_WRONLY : O_RDONLY);
                     fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);
 

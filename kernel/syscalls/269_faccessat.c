@@ -67,7 +67,6 @@ SYSCALL(
         int e;
 
         struct stat st;
-        /* &st is a kernel buffer; `filename` was validated as a user pointer above. */
         scoped_uio_kernel() {
             e = sys_newfstatat(dfd, filename, &st, 0);
         }

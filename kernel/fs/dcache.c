@@ -37,10 +37,9 @@
 
 
 /**
- * @brief Entries are keyed by a pointer into the cached inode's own name buffer.
+ * @brief Prepares the directory entry cache of an inode.
  *
- * The map is told nothing about key ownership, so it neither copies nor frees a key; the
- * key stays valid exactly as long as the inode it points into is in the map.
+ * @param inode The inode whose cache is initialised.
  */
 void vfs_dcache_init(inode_t* inode) {
     hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
@@ -52,18 +51,11 @@ void vfs_dcache_free(inode_t* inode) {
 
 
 /**
- * @brief Cache @p inode under its own name in @p parent, and return the entry now cached.
+ * @brief Caches an inode under its own name in a parent directory.
  *
- * The returned inode is not necessarily the one passed in. Two CPUs can miss the cache for
- * one name and both walk the filesystem for it, and on a filesystem that builds an inode
- * per lookup (ext2, iso9660) they arrive here holding two distinct objects for one file.
- * Whichever gets in first wins and every later caller is handed the winner, so a path never
- * resolves to a second inode carrying its own lock behind the back of the first. This used
- * to assert that the name was absent instead, which is the panic seen on more than one CPU.
- *
- * The loser is left for the caller to deal with: the VFS cannot tell whether it owns that
- * inode. tmpfs and procfs hand back the same object on every lookup, so for them the loser
- * *is* the winner and freeing it would corrupt the filesystem.
+ * @param parent The directory the entry is cached in.
+ * @param inode The inode to cache.
+ * @return The inode now cached under that name, which is an earlier one if a lookup raced this call.
  */
 inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
@@ -88,18 +80,15 @@ inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
     hashmap_unlock(&parent->dcache);
 
 
-    //? An insertion that could not allocate leaves the inode uncached rather than
-    //? unreachable: the caller still gets a usable inode, the next lookup just walks again.
     return cached ? cached : inode;
 }
 
 
 /**
- * @brief Drop the entry for @p name from @p parent and free the inode behind it.
+ * @brief Drops a cached entry from a directory and frees the inode behind it.
  *
- * Keyed by name rather than by inode because the caller used to have to look the entry up
- * and hand the result straight back, which dereferenced NULL for any name that was not
- * cached. Doing both halves here also keeps them atomic against a lookup on another CPU.
+ * @param parent The directory holding the entry.
+ * @param name The name of the entry to drop.
  */
 void vfs_dcache_remove(inode_t* parent, const char* name) {
 
@@ -126,13 +115,11 @@ void vfs_dcache_remove(inode_t* parent, const char* name) {
 
 
 /**
- * @brief Look @p name up in @p parent's cache, or NULL if it is not cached.
+ * @brief Looks a name up in a directory's entry cache.
  *
- * Callable without the parent's inode->lock held, which is what vfs_finddir() does on its
- * hot path, so this cannot borrow that lock for consistency: an insertion on another CPU
- * rehashes and frees the table a lockless reader is probing. The map's own lock -- taken by
- * every entry point in this file -- is what makes a lookup on one CPU safe against an
- * insertion or an eviction on another.
+ * @param parent The directory to search.
+ * @param name The name to look for.
+ * @return The cached inode, or NULL if the name is not cached.
  */
 inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 

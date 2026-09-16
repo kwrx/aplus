@@ -64,8 +64,6 @@ SYSCALL(
         if (unlikely(fd < 0))
             return -EBADF;
 
-        //? Local sockets never reach lwIP, so they are served whether or not
-        //? networking is configured in.
         struct unix_sock* us;
 
         if ((us = unix_sock_from_fd(fd)) != NULL)

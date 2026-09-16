@@ -38,14 +38,16 @@
     #include <aplus.h>
 
 
-//? The readiness core behind poll(), ppoll(), select() and pselect6(). All four
-//? ask the same two questions -- "is this descriptor ready?" and "wake me when
-//? it is" -- and differ only in how the caller spells the descriptor list, the
-//? timeout and the signal mask.
+/**
+ * @brief The readiness core behind poll(), ppoll(), select() and pselect6().
+ *
+ * All four ask the same two questions and differ only in how the caller spells their arguments.
+ */
 
 
-//? One past the highest descriptor that can ever exist: files live below
-//? CONFIG_OPEN_MAX and sockets are folded in just above it.
+/**
+ * @brief One past the highest descriptor that can ever exist.
+ */
     #if defined(CONFIG_HAVE_NETWORK)
         #define POLL_FD_MAX (CONFIG_OPEN_MAX + CONFIG_SOCKET_MAX)
     #else
@@ -53,19 +55,23 @@
     #endif
 
 
-//? A wait with no timeout at all, as opposed to one with nothing left to wait.
+/**
+ * @brief A wait with no timeout at all, as opposed to one with nothing left to wait.
+ */
     #define POLL_TIMEOUT_FOREVER ((uint64_t)-1)
 
 
-//? How select() splits a descriptor's readiness across its three sets. POSIX
-//? leaves "ready" to the implementation; these are the mappings Linux uses, so
-//? a hangup or an error wakes a reader rather than stranding it.
+/**
+ * @brief How select() splits a descriptor's readiness across its three sets, as Linux maps them.
+ */
     #define POLL_SET_IN  (POLLIN | POLLRDNORM | POLLRDBAND | POLLHUP | POLLERR)
     #define POLL_SET_OUT (POLLOUT | POLLWRNORM | POLLWRBAND | POLLERR)
     #define POLL_SET_EX  (POLLPRI)
 
 
-//? What is left of a timeout that has to survive the syscall being restarted.
+/**
+ * @brief What is left of a timeout that has to survive the syscall being restarted.
+ */
 typedef enum {
 
     POLL_DEADLINE_FOREVER,   //? No timeout was asked for: only a descriptor wakes it.
@@ -77,7 +83,9 @@ typedef enum {
 
 __BEGIN_DECLS
 
-//* kernel/fs/poll.c
+/**
+ * @brief Implemented in kernel/fs/poll.c.
+ */
 
 int poll_scan(int fd, short events, short* revents);
 int poll_arm(int fd, short events, struct timespec* timeout, bool* armed);

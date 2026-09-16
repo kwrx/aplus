@@ -112,10 +112,6 @@ SYSCALL(
 
 #if defined(CONFIG_HAVE_NETWORK)
 
-                    //? A socket has to give the same answer in two places: the descriptor,
-                    //? which read() and write() consult before deciding to wait, and lwIP,
-                    //? which decides whether the transfer blocks at all. Letting the two
-                    //? disagree is what turns a non-blocking socket into a sleep.
                     {
                         int socket = socket_from_fd(fd);
 

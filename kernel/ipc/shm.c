@@ -83,8 +83,9 @@ typedef struct {
 
 static shm_segment_t shm_segments[SHM_SEGMENT_MAX];
 
-//? Bumped every time a slot is handed out, and folded into the id so that an id outlives the
-//? segment it named: shmat(2) on a stale id fails rather than landing on a stranger's memory.
+/**
+ * @brief Bumped every time a slot is handed out, and folded into the id so that an id outlives its segment.
+ */
 static uint32_t shm_slot_sequence[SHM_SEGMENT_MAX];
 
 static size_t shm_total;
@@ -107,9 +108,12 @@ static shm_segment_t* shm_lookup_locked(int id) {
 }
 
 
-/* The System V access check: the segment's own mode bits, rotated so that whichever class the
- * caller falls into lines up with the owner bits, and then matched against what was asked for.
- * @want is therefore always expressed in owner terms (S_IRUSR, S_IWUSR).
+/**
+ * @brief The System V access check, matching the segment's mode bits for the caller's class.
+ *
+ * @param seg The segment to test.
+ * @param want The access wanted, in owner terms (S_IRUSR, S_IWUSR).
+ * @return true if the caller may have that access.
  */
 static bool shm_permitted(const shm_segment_t* seg, mode_t want) {
 
@@ -133,17 +137,21 @@ static bool shm_permitted(const shm_segment_t* seg, mode_t want) {
 }
 
 
-/* shmget(2) takes the access it wants in the same nine bits open(2) uses for a file mode, one
- * group per class. Which class the caller belongs to is decided by shm_permitted(), so fold
- * the three down onto one and line that up with the owner bits it matches against.
+/**
+ * @brief Folds shmget(2)'s three permission classes onto the owner bits shm_permitted() matches.
+ *
+ * @param flags The flags passed to shmget(2).
+ * @return The requested access, in owner terms.
  */
 static inline mode_t shm_requested_mode(int flags) {
     return (mode_t)(((((unsigned)flags >> 6) | ((unsigned)flags >> 3) | (unsigned)flags) & 07u) << 6);
 }
 
 
-/* The frame arrays below are only produced when a segment actually went away, so most calls
- * have nothing to release -- and kfree() asserts rather than tolerating a null pointer.
+/**
+ * @brief Releases a frame array, tolerating the NULL that a call releasing nothing hands over.
+ *
+ * @param frames The frame array, or NULL.
  */
 static inline void shm_free_frames(uintptr_t* frames) {
 
@@ -152,9 +160,11 @@ static inline void shm_free_frames(uintptr_t* frames) {
 }
 
 
-/* Hand the frames back and free the slot. The caller must hold the table lock; the frame array
- * itself is returned rather than freed, because kfree() of a segment's worth of pointers is
- * pointless work to do with interrupts off.
+/**
+ * @brief Hands a segment's frames back and frees its slot, with the table lock held.
+ *
+ * @param seg The segment to destroy.
+ * @return The frame array, for the caller to free outside the lock.
  */
 static uintptr_t* shm_destroy_locked(shm_segment_t* seg) {
 
@@ -178,8 +188,11 @@ static uintptr_t* shm_destroy_locked(shm_segment_t* seg) {
 }
 
 
-/* Drop one attachment. Returns the frame array when that was the last one and the segment had
- * already been removed, so that the caller can free it outside the lock.
+/**
+ * @brief Drops one attachment to a segment, with the table lock held.
+ *
+ * @param id The segment id.
+ * @return The frame array when that was the last attachment to a removed segment, otherwise NULL.
  */
 static uintptr_t* shm_put_locked(int id) {
 
@@ -200,24 +213,13 @@ static uintptr_t* shm_put_locked(int id) {
 }
 
 
-/* Look a segment up by key, or create one: the shmget(2) entry point.
+/**
+ * @brief Looks a segment up by key, or creates one: the shmget(2) entry point.
  *
- * A lookup matches a segment at least @size bytes long. Asking for less than it holds is how a
- * second process attaches without caring how large the first one made it; asking for more would
- * go on to map past the end of it. Creating one of zero bytes is refused, since it has no frames
- * to share and no way to grow later.
- *
- * The slot is claimed under the table lock and its frames are allocated with the lock dropped: a
- * spinlock here disables interrupts, and a multi-megabyte segment is thousands of allocations
- * and as many page-sized memsets. The frames are zeroed because the segment is about to be
- * readable by another process. What makes the gap safe is that a slot with no frames yet is
- * invisible to every lookup, so a racing shmget() can neither take it nor see it half-built.
- *
- * Ids are a sequence number times the table size plus the slot, the classic System V scheme, so
- * a stale id fails rather than landing on whatever segment took the slot next. The sequence
- * starts at one and wraps short of overflowing an int, which keeps an id positive and never
- * zero -- callers keep these in structures that start out zeroed, and an id indistinguishable
- * from "none" is a trap.
+ * @param key The key to look up, or IPC_PRIVATE.
+ * @param size The smallest acceptable size, in bytes.
+ * @param flags IPC_CREAT, IPC_EXCL and the nine permission bits.
+ * @return The segment id, or a negative errno.
  */
 long shm_get(key_t key, size_t size, int flags) {
 
@@ -378,23 +380,13 @@ long shm_get(key_t key, size_t size, int flags) {
 }
 
 
-/* Map a segment into the calling address space: the shmat(2) entry point.
+/**
+ * @brief Maps a segment into the calling address space: the shmat(2) entry point.
  *
- * @addr must be zero. Placing a segment where the caller asks would need the fixed mapping
- * support mmap(2) is still missing, so the kernel picks -- out of the same window and the same
- * cursor sys_mmap() carves from, so that the two cannot hand out overlapping ranges. Like an
- * mmap, a detached range is not given back to the cursor: the window is 128GiB and the
- * alternative is a free list. SHM_RND is therefore meaningless here and SHM_REMAP is refused.
- *
- * A segment marked for removal takes no new attachment however many it already has, which is
- * what makes "create it, hand it over, forget it" safe: the last holder destroys it.
- *
- * The reference is taken before the mapping is built, so that the frames cannot be handed back
- * underneath it, and given back on every failure path below. The mapping itself is one call per
- * page: ARCH_VMM_MAP_FIXED walks a single physical run, and these frames were allocated one at
- * a time.
- *
- * @return the address the segment was mapped at, or a negative errno.
+ * @param id The segment id.
+ * @param addr Must be zero; the kernel picks the address.
+ * @param flags SHM_RDONLY; SHM_RND and SHM_REMAP are refused.
+ * @return The address the segment was mapped at, or a negative errno.
  */
 long shm_attach(int id, uintptr_t addr, int flags) {
 
@@ -416,8 +408,6 @@ long shm_attach(int id, uintptr_t addr, int flags) {
     const uintptr_t pagesize = arch_vmm_getpagesize();
 
 
-    /* Initialised: scoped_lock() is a loop to the compiler, which cannot see that it always
-       runs its body once. */
     size_t size       = 0;
     size_t pages      = 0;
     uintptr_t* frames = NULL;
@@ -544,11 +534,11 @@ long shm_attach(int id, uintptr_t addr, int flags) {
 }
 
 
-/* Unmap an attachment: the shmdt(2) entry point.
+/**
+ * @brief Unmaps an attachment: the shmdt(2) entry point.
  *
- * Only the page table entries go. The frames are not this address space's to free, which is
- * exactly what ARCH_VMM_MAP_TYPE_SHARED tells arch_vmm_unmap(); they go back when the last
- * attachment to a removed segment is dropped, which may well be this one.
+ * @param addr The address the segment was mapped at.
+ * @return 0 on success, or a negative errno.
  */
 long shm_detach(uintptr_t addr) {
 
@@ -606,11 +596,13 @@ long shm_detach(uintptr_t addr) {
 }
 
 
-/* Query or change a segment: the shmctl(2) entry point, for IPC_STAT, IPC_SET and IPC_RMID.
+/**
+ * @brief Queries or changes a segment: the shmctl(2) entry point, for IPC_STAT, IPC_SET and IPC_RMID.
  *
- * IPC_RMID on a segment nobody holds destroys it there and then; on one that is still attached
- * it only marks it, and the frames go back when the last holder detaches. That is what makes it
- * safe to remove a segment the moment it has been handed to whoever is going to use it.
+ * @param id The segment id.
+ * @param cmd IPC_STAT, IPC_SET or IPC_RMID.
+ * @param buf The segment description read or written, for IPC_STAT and IPC_SET.
+ * @return 0 on success, or a negative errno.
  */
 long shm_control(int id, int cmd, struct shmid_ds* buf) {
 
@@ -739,8 +731,11 @@ long shm_control(int id, int cmd, struct shmid_ds* buf) {
 }
 
 
-/* @see include/aplus/shm.h. A missing segment cannot happen -- the parent holds a reference, and
- * a segment with one is never destroyed -- so there is nothing to inherit if it somehow did.
+/**
+ * @brief Carries the attachments of one address space over to a copy of it.
+ *
+ * @param parent The address space being cloned.
+ * @param dest The address space receiving the attachments.
  */
 void shm_address_space_clone(vmm_address_space_t* parent, vmm_address_space_t* dest) {
 

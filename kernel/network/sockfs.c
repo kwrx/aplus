@@ -23,21 +23,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * lwIP sockets as ordinary file descriptors.
+/**
+ * @brief lwIP sockets as ordinary file descriptors: an anonymous inode carrying the lwIP index.
  *
- * These used to live in a numbering space of their own -- the lwIP index plus CONFIG_OPEN_MAX
- * -- which meant a socket was not a descriptor at all. Every syscall that took an fd had to
- * either special-case the range or reject it, and the ones that reject it are not obscure:
- * dup(), dup2(), fstat() and mmap() all answered EBADF for a perfectly good socket. That is
- * enough to break any program that moves an accepted connection onto stdin/stdout, which is
- * what inetd-style servers and CGI do as a matter of course.
- *
- * So a socket is given the same shape the local ones already had (see kernel/ipc/unix.c): an
- * anonymous inode carrying the lwIP index, wrapped in a struct file, installed in the caller's
- * descriptor table like anything else. dup(), fork() inheritance, close-on-exec, poll() and
- * last-close teardown then work through the paths that already exist, with no socket-specific
- * code in any of them.
+ * dup(), fork() inheritance, close-on-exec, poll() and last-close teardown then need no socket-specific code.
  */
 
 #include <fcntl.h>
@@ -61,8 +50,9 @@
     #include <aplus/network.h>
 
 
-    //? Distinct from the local-socket filesystem in kernel/ipc/unix.c: the two are told apart
-    //? by their superblock, so they must not share one.
+    /**
+     * @brief Distinct from the local-socket filesystem in kernel/ipc/unix.c, which the superblock tells apart.
+     */
     #define SOCKFS_FSID      0xDEADB0CF
     #define SOCKFS_FIRST_INO 0xFFFFFFFFF000000
 
@@ -80,8 +70,9 @@ static struct superblock sockfs_superblock = {
 static ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 
 
-//? The lwIP index lives in inode->userdata, biased by one so that index 0 stays distinct from
-//? the NULL that a torn-down endpoint leaves behind.
+/**
+ * @brief The lwIP index lives in inode->userdata, biased by one so that index 0 stays distinct from NULL.
+ */
     #define SOCKFS_ENCODE(s) ((void*)(uintptr_t)((s) + 1))
     #define SOCKFS_DECODE(p) ((int)(uintptr_t)(p) - 1)
 
@@ -90,15 +81,16 @@ int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
 
 
 /**
- * @brief The lwIP socket an inode stands for, or -1 if it does not stand for one.
+ * @brief Reports the lwIP socket an inode stands for.
+ *
+ * @param inode The inode to ask about.
+ * @return The lwIP socket, or -1 if the inode does not stand for one.
  */
 int socket_from_inode(inode_t* inode) {
 
     if (unlikely(!inode))
         return -1;
 
-    //? Checked by superblock rather than by ops: a local socket has the same ops layout and
-    //? would otherwise be mistaken for an lwIP index.
     if (inode->sb != &sockfs_superblock)
         return -1;
 
@@ -107,7 +99,10 @@ int socket_from_inode(inode_t* inode) {
 
 
 /**
- * @brief The lwIP socket a descriptor refers to, or -1 if that descriptor is not one.
+ * @brief Reports the lwIP socket a descriptor refers to.
+ *
+ * @param fd The descriptor to ask about.
+ * @return The lwIP socket, or -1 if the descriptor is not one.
  */
 int socket_from_fd(int fd) {
 
@@ -147,11 +142,6 @@ static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size)
 
     if (unlikely(e < 0)) {
 
-        //? A blocking socket sleeps inside lwIP and never lands here, so this is a socket
-        //? someone made non-blocking. The caller may still decide to wait -- read() does when
-        //? the descriptor itself is not O_NONBLOCK -- and it would wait on this inode's event
-        //? counter, which a socket does not have. Arming lwIP's queue first means that if the
-        //? caller does suspend, there is something on the other side to wake it.
         if (errno == EAGAIN || errno == EWOULDBLOCK)
             socket_poll_arm(inode, POLLIN, NULL);
 
@@ -213,9 +203,12 @@ static int sockfs_ioctl(inode_t* inode, long req, void* arg) {
 }
 
 
-/*
- * Readiness now, without sleeping. The waiting half is socket_poll_arm(), because lwIP has its
- * own wait queue and an inode event counter would only be a second, lagging copy of it.
+/**
+ * @brief Reports what an lwIP socket is ready for, without sleeping.
+ *
+ * @param inode The socket inode.
+ * @param events Mask of the events the caller cares about.
+ * @return What is actually ready.
  */
 static int sockfs_poll(inode_t* inode, int events) {
 
@@ -238,12 +231,14 @@ static int sockfs_poll(inode_t* inode, int events) {
 
 
 /**
- * @brief Park the caller on an lwIP socket until something about it moves.
+ * @brief Parks the caller on an lwIP socket until something about it moves.
  *
  * Registers only; the caller suspends once after arming everything it watches.
  *
- * @return 1 if @p inode is a socket and was armed, 0 if it is not a socket, or a negative
- *         error number.
+ * @param inode The socket inode.
+ * @param events Mask of the events the caller cares about.
+ * @param timeout Time left to sleep, or NULL to wait indefinitely.
+ * @return 1 if @p inode is a socket and was armed, 0 if it is not a socket, or a negative error number.
  */
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout) {
 
@@ -273,8 +268,6 @@ static int sockfs_close(inode_t* inode) {
         return 0;
 
 
-    //? Cleared first: the inode outlives this call by a moment, and a second close of an index
-    //? lwIP has already handed out again would tear down somebody else's connection.
     inode->userdata = NULL;
 
     if (unlikely(lwip_close(socket) < 0))
@@ -326,9 +319,6 @@ static inode_t* __sockfs_inode(int socket) {
     inode->ops.poll    = sockfs_poll;
     inode->ops.getattr = sockfs_getattr;
 
-    //? No event counter: readiness is lwIP's to report, and waiters are parked on its queue by
-    //? socket_poll_arm() rather than on an inode futex. Every reader of inode->ev copes with a
-    //? null one.
     inode->ev = NULL;
 
     spinlock_init(&inode->lock);
@@ -338,14 +328,10 @@ static inode_t* __sockfs_inode(int socket) {
 
 
 /**
- * @brief Install an lwIP socket into the caller's descriptor table.
+ * @brief Installs an lwIP socket into the caller's descriptor table, taking ownership of it.
  *
- * Takes ownership of @p socket: on failure it is closed rather than leaked, so a caller that
- * has just created one only has to hand it over and check the result.
- *
- * @param socket    Index returned by lwip_socket() or lwip_accept().
- * @param flags     O_NONBLOCK and O_CLOEXEC as requested by socket()/accept4().
- *
+ * @param socket Index returned by lwip_socket() or lwip_accept().
+ * @param flags O_NONBLOCK and O_CLOEXEC as requested by socket()/accept4().
  * @return The new descriptor, or a negative error number.
  */
 int socket_install(int socket, int flags) {
@@ -396,8 +382,6 @@ int socket_install(int socket, int flags) {
 
     if (unlikely(fd < 0)) {
 
-        //? fd_remove() runs the inode through vfs_close(), which is what closes the lwIP
-        //? socket, and then frees the anonymous inode.
         fd_remove(ref, true);
     }
 

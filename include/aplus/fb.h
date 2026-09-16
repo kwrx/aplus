@@ -51,16 +51,11 @@
     #define FBIOGET_DISPINFO    0x4618
     #define FBIO_WAITFORVSYNC   _IOW('F', 0x20, uint32_t)
 
-/* Adapters whose scanout is a copy of the framebuffer rather than the framebuffer itself --
-   virtio-gpu is the one here -- see nothing until the damaged region is handed to them.
-   FBIO_FLUSH is that handover, and it is a no-op on an adapter that scans out of the
-   framebuffer directly, so a caller need not know which kind it has.
-
-   FBIO_WAITFORVSYNC then blocks until the host is done with what was flushed. There is no
-   scanout vblank to wait for on virtio-gpu: what it actually waits for is the completion
-   fence of the last flush, which is what keeps the compositor from overwriting a frame the
-   host has not finished reading. Called without a preceding FBIO_FLUSH it flushes the whole
-   screen first, which is what makes it work on its own. */
+/**
+ * @brief Hands the damaged region to an adapter that scans out of a copy, and waits for it to be read.
+ *
+ * FBIO_FLUSH is a no-op where the scanout is the framebuffer itself, so a caller need not know which it has.
+ */
 
     #define FBIO_FLUSH             _IOW('F', 0x21, struct fb_rect)
     #define FBIOPUT_HWCURSOR       _IOW('F', 0x22, struct fb_hwcursor)
@@ -335,7 +330,9 @@ struct fb_cursor {
 
 
 
-/* A rectangle in screen pixels, for FBIO_FLUSH. */
+/**
+ * @brief A rectangle in screen pixels, for FBIO_FLUSH.
+ */
 
 struct fb_rect {
     uint32_t x;
@@ -345,17 +342,8 @@ struct fb_rect {
 };
 
 
-/* The hardware cursor plane.
- *
- * It is a plane of its own, composited by the adapter on top of the scanout, so moving it
- * costs neither a repaint of what it uncovers nor a transfer of a single pixel. That is the
- * whole point of it: a compositor that draws its own pointer has to repaint and re-flush two
- * rectangles for every mouse event, and a pointer moves far more often than anything else on
- * screen.
- *
- * FBIOGET_HWCINFO reports whether there is one and how large its image may be; on an adapter
- * without one it fails with ENOTSUP, which is the signal to fall back to drawing the pointer
- * by hand.
+/**
+ * @brief What an adapter reports about its hardware cursor plane, or ENOTSUP when it has none.
  */
 
     #define FB_HWCINFO_HAS_CURSOR (1 << 0)
@@ -369,10 +357,11 @@ struct fb_hwcinfo {
 
     #define FB_HWCURSOR_ENABLE (1 << 0) /* show it; without this the plane is hidden */
 
-/* image is width * height pixels of 0xAARRGGBB in host byte order, with straight (not
-   premultiplied) alpha, laid out top row first with no padding between rows. It may be NULL
-   only when FB_HWCURSOR_ENABLE is clear. The hotspot is the pixel inside the image that
-   lands on (x, y). */
+/**
+ * @brief The cursor image and where it sits: width * height pixels of straight-alpha 0xAARRGGBB, top row first.
+ *
+ * The image may be NULL only when FB_HWCURSOR_ENABLE is clear; the hotspot is the pixel that lands on (x, y).
+ */
 
 struct fb_hwcursor {
     uint32_t flags;

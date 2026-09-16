@@ -55,19 +55,15 @@
 struct rusage;
 
 
-/* The scan only decides; it neither frees anything nor writes to user memory. Holding
-   cpu->sched_lock is what keeps every task on a queue alive while it is looked at --
-   sched_dequeue() unlinks and destroys under that same lock -- so a walk without it can
-   follow `next` into memory a reaper on another CPU has already handed back.
- 
-   `reap` names a child to unlink and free once that lock is back down, and `reported` the
-   child to hand back, if the scan found one. Both are acted on after the walk: sched_dequeue()
-   retakes the queue lock for whichever CPU owns the task, and taking a second CPU's queue
-   lock while holding the first is how a lock-order cycle between two CPUs starts. A dead
-   child is reaped one per pass for the same reason; any others are picked up by the next
-   call, which is where they would have been left anyway had this one found a child to
-   report. The exit status reaches user memory only once the lock is down, since storing to
-   it can fault and faulting is not something to do holding a run queue. */
+/**
+ * @brief Waits for a child to exit or stop, reaping one dead child per pass.
+ *
+ * @param pid The child to wait for, or -1 for any.
+ * @param status Receives the child's exit status, or NULL.
+ * @param options WNOHANG, WUNTRACED and WCONTINUED.
+ * @param rusage Unused.
+ * @return The pid reported on, 0 with WNOHANG when nothing is ready, or a negative errno.
+ */
 
 SYSCALL(
     61, wait4, long sys_wait4(pid_t pid, int* status, int options, struct rusage* rusage) {

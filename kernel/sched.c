@@ -63,14 +63,7 @@ static inline void do_futex(void) {
 }
 
 /**
- * @brief Wake a sleeping task whose deadline has come due, and report the time it has left.
- *
- * The clock is read through scoped_uio_kernel(): &t0 is a kernel buffer while the task being
- * looked at is a userspace one, so without saying so the check rejects the pointer,
- * sys_clock_gettime() returns -EFAULT having written nothing, and the deadline is compared
- * against whatever the stack happened to hold. The time left is computed as an unsigned
- * difference, so an already-due deadline has to be reported as none left rather than wrapping
- * into a near-eternal one.
+ * @brief Wakes the current task if its sleep deadline has come due, and records the time it has left.
  */
 static inline void do_sleep(void) {
 
@@ -114,12 +107,9 @@ static inline void do_sleep(void) {
 
 
 /**
- * @brief Carry out a signal's default disposition.
+ * @brief Carries out a signal's default disposition: terminate, terminate and dump core, or stop.
  *
- * The three groups are the ones POSIX names: the first terminates, the second terminates and
- * dumps core, the third stops. Anything not listed has no default action here.
- *
- * @param siginfo   The signal being delivered.
+ * @param siginfo The signal being delivered.
  */
 static void handle_default_signal(const siginfo_t* siginfo) {
 
@@ -222,17 +212,9 @@ static void handle_signal(siginfo_t* siginfo) {
 
 
 /**
- * @brief Deliver one pending signal to the current task.
+ * @brief Delivers one pending signal to the current task.
  *
- * A fatal signal runs the whole of sys_exit() right here, wherever this task happened to be
- * inside the kernel -- and sys_exit() closes every descriptor and tears down the address space
- * before returning normally. Returning would resume the interrupted kernel path with the
- * resources it was in the middle of using already freed: a task killed while parked in the
- * network stack came back into lwIP holding a netconn and a mailbox its own exit had released.
- *
- * So a dead task gives the CPU away and does not come back. A stopped one may: __sched_next()
- * passes over it until SIGCONT makes it READY, at which point this returns and the interrupted
- * path carries on -- safe, because sys_exit() leaves a stopped task's descriptors alone.
+ * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY.
  */
 static inline void do_signals(void) {
 
@@ -382,16 +364,10 @@ void schedule(int resched) {
 
 
 /**
- * @brief Unlink a task from one CPU's run queue.
+ * @brief Unlinks a task from one CPU's run queue, with that CPU's sched_lock held.
  *
- * The caller must hold @p cpu's sched_lock -- which is also what makes the task safe to
- * touch at all, since this is the only place a task leaves a queue and sched_dequeue()
- * destroys it immediately afterwards. The walk carries the node itself as its cursor, so
- * that unlinking the tail is told apart from running off the end.
- *
- * @param cpu   The CPU whose queue to search.
- * @param task  The task to remove.
- *
+ * @param cpu The CPU whose queue to search.
+ * @param task The task to remove.
  * @return true if the task was on this queue and has been removed.
  */
 static bool __sched_unlink(cpu_t* cpu, task_t* task) {
@@ -428,14 +404,9 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 
 
 /**
- * @brief Wait until no CPU is running the given task any more.
+ * @brief Waits until no CPU is running the given task any more.
  *
- * Only meaningful for a task that has already been unlinked from every run queue: nothing
- * can select it again from there, so once a CPU has moved off it, it stays off it.
- * sched_running is read under each CPU's queue lock, which is what schedule() updates it
- * under.
- *
- * @param task  The task to wait for.
+ * @param task The task to wait for, already unlinked from every run queue.
  */
 static void __sched_wait_quiesced(const task_t* task) {
 
@@ -549,10 +520,7 @@ void sched_dequeue(task_t* task) {
 /**
  * @brief Moves a task to the front of the queue it is already on.
  *
- * The unlink and the relink share one critical section: between the two the task belongs to
- * no queue at all, and that is exactly when the CPU owning the queue may be walking it.
- *
- * @param task The task to be requeued
+ * @param task The task to be requeued.
  */
 void sched_requeue(task_t* task) {
 
@@ -589,25 +557,16 @@ void sched_requeue(task_t* task) {
 
 
 
-//? pgrp, pid and tid are each either a thing to match or -1 for "do not narrow by this". That
-//? sentinel is why they have to be signed: pgrp used to be a gid_t, which is unsigned, so the -1
-//? every caller passes arrived as a huge positive number, `pgrp > 0` was always true, and no task
-//? ever matched a process group. Nothing could be signalled at all.
-//?
-//? Each run queue is held for the whole of its walk, not merely to read the head:
-//? sched_dequeue() unlinks and then frees a task under that same lock, so without it a
-//? reaper on another CPU can hand a node back to the heap between one `tmp->next` and the
-//? next.
-//?
-//? SIGKILL and SIGSTOP cannot be caught, ignored or blocked. rt_sigaction() and
-//? rt_sigprocmask() both refuse to set that up, but the guarantee is enforced here as well:
-//? this is the only path a signal reaches a task by, and a disposition or mask that got set
-//? some other way would otherwise make a process unkillable.
-//?
-//? A blocked signal waits, whatever its action says. SA_NODEFER decides the mask a handler
-//? runs under -- whether the signal is added on entry to its own handler -- and says nothing
-//? about whether sigprocmask() may hold it back, so honouring it here delivers signals the
-//? thread had explicitly blocked.
+/**
+ * @brief Queues a signal on every task matching a process group, a process or a thread.
+ *
+ * @param pgrp The process group to match, or -1 not to narrow by it.
+ * @param pid The process to match, or -1 not to narrow by it.
+ * @param tid The thread to match, or -1 not to narrow by it.
+ * @param sig The signal to queue.
+ * @param info The signal's payload.
+ * @return 0 on success, or -1 with errno set.
+ */
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
@@ -711,11 +670,9 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
  *
  * @return The next unique process ID
  */
-//? Atomic because two CPUs allocate from it at once. A plain ++ is a load, an add and a
-//? store, so two concurrent fork()s used to hand out the same number -- and a duplicated
-//? tid is not merely a cosmetic problem: spinlock_get_new_owner() identifies the holder of
-//? a task-owned spinlock by tid, so the twin on the other CPU is taken for the owner and
-//? either walks into the critical section or panics with a DEADLOCK that is not one.
+/**
+ * @brief The last process id handed out, allocated from atomically because two CPUs draw on it at once.
+ */
 static atomic_int __sched_lastpid = 0;
 
 pid_t sched_nextpid(void) {
@@ -725,9 +682,7 @@ pid_t sched_nextpid(void) {
 /**
  * @brief Returns the most recently allocated process ID, without allocating one.
  *
- * Reported by /proc/loadavg as its last-pid field.
- *
- * @return The last process ID handed out by sched_nextpid()
+ * @return The last process ID handed out by sched_nextpid().
  */
 pid_t sched_lastpid(void) {
     return (pid_t)atomic_load(&__sched_lastpid);

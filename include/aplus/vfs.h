@@ -60,13 +60,15 @@
 
     #define INODE_FLAGS_DCACHE_DISABLED 0x00000001
 
-    //? No directory entry and no other owner: the last struct file referencing
-    //? this inode is responsible for freeing it (see fd_remove()).
+    /**
+     * @brief No directory entry and no other owner: the last struct file referencing this inode frees it.
+     */
     #define INODE_FLAGS_ANONYMOUS 0x00000002
 
 
-    //? Which half of a pipe an endpoint inode represents. A named FIFO uses a
-    //? single inode for both directions.
+    /**
+     * @brief Which half of a pipe an endpoint inode represents; a named FIFO uses one inode for both.
+     */
     #define PIPE_END_READ  0
     #define PIPE_END_WRITE 1
     #define PIPE_END_BOTH  2
@@ -117,20 +119,19 @@ struct inode_ops {
 };
 
 
-//? Readiness itself is not cached here: it is asked for on demand through
-//? ops.poll(), so data that arrived before anyone was watching still counts.
-//? All this carries is a monotonic "something about this inode changed"
-//? counter, which waiters snapshot and sleep until it differs. Bumping it is
-//? unconditional -- gating the bump on a pre-declared interest mask is what
-//? used to lose wakeups and let a poller sleep on top of a full buffer.
+/**
+ * @brief A monotonic "something about this inode changed" counter, which waiters snapshot and sleep on.
+ *
+ * Readiness itself is not cached here: it is asked for on demand through ops.poll().
+ */
 
 struct inode_events {
     volatile uint32_t futex;
 };
 
-//? shared_ptr() expands to a fresh anonymous struct every time it is written,
-//? so two separate uses are unrelated types. Naming it once here lets an inode
-//? and the channel behind it hold references to the same counter.
+/**
+ * @brief The shared reference an inode and the channel behind it both hold, named once so the types match.
+ */
 typedef shared_ptr(struct inode_events) inode_events_t;
 
 struct inode {

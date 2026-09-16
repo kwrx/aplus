@@ -50,12 +50,6 @@
  */
 void do_unshare(int flags) {
 
-    //? Splitting a table nobody else is looking at would be a copy of itself:
-    //? the references it already holds move over to the copy untouched. Only a
-    //? table another task is still using needs a second set of them, and taking
-    //? one unconditionally is what used to pin every inherited descriptor for
-    //? good - a pipe write end carried across execve() then never reached its
-    //? last close, so the reader on the other side never saw end of file.
     if (flags & CLONE_FILES) {
 
         if (atomic_load(&current_task->fd->refcount) > 1) {
@@ -103,10 +97,11 @@ void do_unshare(int flags) {
 
 
 
-//? Park on the word a vforked child bumps when it is done with the shared
-//? address space. Nothing here switches tasks: like every other blocking path
-//? in this kernel the syscall gives up, gets rescheduled, and is restarted from
-//? the top once the task is picked again.
+/**
+ * @brief Parks on the word a vforked child bumps when it is done with the shared address space.
+ *
+ * @param seq The futex value the caller last observed.
+ */
 
 static inline void __vfork_park(uint32_t seq) {
 
@@ -143,10 +138,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
 
-    //? Second time through: the child this call already created is running and
-    //? all that is left is to finish waiting for it. Reading the word before
-    //? the flag is what makes the two orderings safe - a release that lands in
-    //? between moves the word away from the value parked on below.
     if (unlikely(current_task->vfork.pending)) {
 
         uint32_t seq = current_task->vfork.futex;
@@ -269,10 +260,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     arch_task_context_set(child, ARCH_TASK_CONTEXT_RETVAL, 0L);
 
 
-    //? Sampled before the child can possibly run: a release landing between
-    //? here and __vfork_park() still leaves the word different from what is
-    //? parked on, so the wait comes straight back instead of sleeping on an
-    //? event that has already happened.
     uint32_t seq = 0;
 
     if (args->flags & CLONE_VFORK) {
@@ -287,8 +274,6 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     sched_enqueue(child);
 
 
-    //? The child is on somebody's run queue now and may be sharing this address
-    //? space, so give the CPU up until it says it is done with it.
     if (args->flags & CLONE_VFORK) {
 
         current_task->vfork.child   = child->tid;
@@ -305,11 +290,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
 /**
- * Releases the task parked in do_fork() waiting on this one, if any.
- *
- * A vfork()ed child holds its parent up for exactly as long as it is borrowing
- * the shared address space: execve() calls this once it has installed a space
- * of its own, and exit() once there is nothing left to borrow.
+ * @brief Releases the task parked in do_fork() waiting on this one, if any.
  */
 void do_vfork_release(void) {
 
@@ -328,10 +309,6 @@ void do_vfork_release(void) {
 
             for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                //? Both halves have to match: a tid on its own could belong to a
-                //? task that has since been reaped and its number handed out
-                //? again, and waking the wrong one would leave the real waiter
-                //? parked for good.
                 if (tmp->tid != tid)
                     continue;
 
@@ -339,9 +316,6 @@ void do_vfork_release(void) {
                     continue;
 
 
-                //? Ordered against do_fork(): the flag it decides on has to be
-                //? visible before the word it is parked on moves, or it would be
-                //? woken only to find nothing had changed and park itself again.
                 tmp->vfork.released = true;
 
                 atomic_fetch_add(&tmp->vfork.futex, 1);

@@ -54,8 +54,6 @@
 SYSCALL(
     53, socketpair, long sys_socketpair(int domain, int type, int protocol, int* sv) {
 
-        //? Only the local family has anything to pair: lwIP has no concept of
-        //? two connected endpoints created without a name.
         if (domain != AF_UNIX_LOCAL)
             return -EAFNOSUPPORT;
 
