@@ -197,6 +197,18 @@ int wm_display_open(wm_display_t* display, const char* device) {
     }
 
 
+    display->background = cairo_pattern_create_linear(0.0, 0.0, 0.0, display->height);
+
+    if (cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
+        fprintf(stderr, "aplus-wm: cannot create the desktop gradient\n");
+        wm_display_close(display);
+        return -1;
+    }
+
+    cairo_pattern_add_color_stop_rgb(display->background, 0.0, WM_COLOR_DESKTOP_TOP);
+    cairo_pattern_add_color_stop_rgb(display->background, 1.0, WM_COLOR_DESKTOP_BOTTOM);
+
+
     fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
 
 
@@ -207,6 +219,11 @@ int wm_display_open(wm_display_t* display, const char* device) {
 
 
 void wm_display_close(wm_display_t* display) {
+
+    if (display->background) {
+        cairo_pattern_destroy(display->background);
+        display->background = NULL;
+    }
 
     if (display->cr_screen) {
         cairo_destroy(display->cr_screen);
@@ -235,14 +252,34 @@ void wm_display_close(wm_display_t* display) {
 }
 
 
-void wm_display_flush(wm_display_t* display, const wm_rect_t* rect) {
+/**
+ * @brief Puts the composited rectangles on the screen and hands them to the adapter.
+ *
+ * An empty rectangle is dropped rather than passed on: the adapter skips the flush for one and
+ * then makes the vsync that follows transfer the whole screen to catch up.
+ *
+ * @param display The display to put them on.
+ * @param rects The rectangles that were repainted.
+ * @param count How many of them there are.
+ */
+void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count) {
+
+    if (!count) {
+        return;
+    }
+
 
     cairo_surface_flush(display->back);
 
 
     cairo_save(display->cr_screen);
 
-    cairo_rectangle(display->cr_screen, rect->x, rect->y, rect->width, rect->height);
+    cairo_set_fill_rule(display->cr_screen, CAIRO_FILL_RULE_WINDING);
+
+    for (size_t i = 0; i < count; i++) {
+        cairo_rectangle(display->cr_screen, rects[i].x, rects[i].y, rects[i].width, rects[i].height);
+    }
+
     cairo_clip(display->cr_screen);
 
     cairo_set_operator(display->cr_screen, CAIRO_OPERATOR_SOURCE);
@@ -255,15 +292,22 @@ void wm_display_flush(wm_display_t* display, const wm_rect_t* rect) {
     cairo_surface_flush(display->screen);
 
 
-    struct fb_rect damage = {
+    for (size_t i = 0; i < count; i++) {
 
-        .x      = (uint32_t)rect->x,
-        .y      = (uint32_t)rect->y,
-        .width  = (uint32_t)rect->width,
-        .height = (uint32_t)rect->height,
-    };
+        if (rects[i].width <= 0 || rects[i].height <= 0) {
+            continue;
+        }
 
-    ioctl(display->fd, FBIO_FLUSH, &damage);
+        struct fb_rect damage = {
+
+            .x      = (uint32_t)rects[i].x,
+            .y      = (uint32_t)rects[i].y,
+            .width  = (uint32_t)rects[i].width,
+            .height = (uint32_t)rects[i].height,
+        };
+
+        ioctl(display->fd, FBIO_FLUSH, &damage);
+    }
 
     uint32_t crtc = 0;
 

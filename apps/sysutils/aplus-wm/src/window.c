@@ -406,6 +406,11 @@ void wm_window_destroy(wm_window_t* win) {
 
     wm_window_free_backstore(win);
 
+    if (win->shadow) {
+        cairo_surface_destroy(win->shadow);
+        win->shadow = NULL;
+    }
+
     free(win);
 }
 
@@ -716,7 +721,14 @@ void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double heigh
 }
 
 
-static void wm_window_paint_shadow(cairo_t* cr, const wm_rect_t* f, bool focused) {
+/**
+ * @brief Draws the shadow layers around a frame, in whatever space the context is already in.
+ *
+ * @param cr The cairo context to draw with.
+ * @param f The frame the shadow is cast around.
+ * @param focused Whether the window is focused, which is what decides the strength.
+ */
+static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool focused) {
 
     cairo_save(cr);
 
@@ -743,6 +755,89 @@ static void wm_window_paint_shadow(cairo_t* cr, const wm_rect_t* f, bool focused
 
         cairo_fill(cr);
     }
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Reports the window's shadow mask, rendering it first when it does not match the frame.
+ *
+ * @param win The window whose shadow is wanted.
+ * @param f The frame the shadow is cast around.
+ * @param focused Whether the window is focused.
+ * @return The A8 mask, with the frame at (WM_SHADOW_EXTENT, WM_SHADOW_EXTENT), or NULL.
+ */
+static cairo_surface_t* wm_window_shadow_mask(wm_window_t* win, const wm_rect_t* f, bool focused) {
+
+    if (win->shadow && win->shadow_width == f->width && win->shadow_height == f->height && win->shadow_focused == focused) {
+        return win->shadow;
+    }
+
+
+    if (win->shadow) {
+        cairo_surface_destroy(win->shadow);
+        win->shadow = NULL;
+    }
+
+
+    cairo_surface_t* mask = cairo_image_surface_create(CAIRO_FORMAT_A8, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
+
+    if (cairo_surface_status(mask) != CAIRO_STATUS_SUCCESS) {
+        cairo_surface_destroy(mask);
+        return NULL;
+    }
+
+
+    cairo_t* cr = cairo_create(mask);
+
+    if (cairo_status(cr) != CAIRO_STATUS_SUCCESS) {
+        cairo_destroy(cr);
+        cairo_surface_destroy(mask);
+        return NULL;
+    }
+
+
+    const wm_rect_t local = {WM_SHADOW_EXTENT, WM_SHADOW_EXTENT, f->width, f->height};
+
+    wm_window_paint_shadow_direct(cr, &local, focused);
+
+    cairo_destroy(cr);
+
+
+    win->shadow         = mask;
+    win->shadow_width   = f->width;
+    win->shadow_height  = f->height;
+    win->shadow_focused = focused;
+
+    return mask;
+}
+
+
+/**
+ * @brief Puts the window's shadow on the frame, through the cached mask where there is one.
+ *
+ * @param cr The cairo context to draw with.
+ * @param win The window to draw the shadow of.
+ * @param f The frame the shadow is cast around.
+ * @param focused Whether the window is focused.
+ */
+static void wm_window_paint_shadow(cairo_t* cr, wm_window_t* win, const wm_rect_t* f, bool focused) {
+
+    cairo_surface_t* mask = wm_window_shadow_mask(win, f, focused);
+
+    if (!mask) {
+        wm_window_paint_shadow_direct(cr, f, focused);
+        return;
+    }
+
+
+    cairo_save(cr);
+
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+
+    cairo_mask_surface(cr, mask, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT);
 
     cairo_restore(cr);
 }
@@ -850,7 +945,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     const bool focused = (wm.focused == win);
 
 
-    wm_window_paint_shadow(cr, &f, focused);
+    wm_window_paint_shadow(cr, win, &f, focused);
 
 
     cairo_save(cr);
@@ -867,23 +962,43 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
         cairo_set_source_rgb(cr, WM_COLOR_FRAME_IDLE);
     }
 
+    const int bw = cairo_image_surface_get_width(win->backstore);
+    const int bh = cairo_image_surface_get_height(win->backstore);
+
+    const int cw = bw < win->width ? bw : win->width;
+    const int ch = bh < win->height ? bh : win->height;
+
+
+    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
+
     cairo_rectangle(cr, f.x, f.y, f.width, f.height);
+    cairo_rectangle(cr, win->x, win->y, cw, ch);
+
     cairo_fill(cr);
+
+    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
 
 
     wm_window_paint_title(cr, win, &f, focused);
     wm_window_paint_close(cr, win, focused);
 
 
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
-    cairo_rectangle(cr, win->x, win->y, win->width, win->height);
-    cairo_fill(cr);
+    if (cw < win->width || ch < win->height) {
 
-    const int bw = cairo_image_surface_get_width(win->backstore);
-    const int bh = cairo_image_surface_get_height(win->backstore);
+        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+
+        cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
+
+        cairo_rectangle(cr, win->x, win->y, win->width, win->height);
+        cairo_rectangle(cr, win->x, win->y, cw, ch);
+
+        cairo_fill(cr);
+
+        cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
+    }
 
     cairo_set_source_surface(cr, win->backstore, win->x, win->y);
-    cairo_rectangle(cr, win->x, win->y, bw < win->width ? bw : win->width, bh < win->height ? bh : win->height);
+    cairo_rectangle(cr, win->x, win->y, cw, ch);
     cairo_fill(cr);
 
     cairo_restore(cr);

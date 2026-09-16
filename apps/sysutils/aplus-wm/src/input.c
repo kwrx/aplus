@@ -248,12 +248,13 @@ static void input_send_pointer(wm_window_t* win) {
 
 /**
  * @brief Gives the pointer event to the window under the pointer, and tells the last one the pointer left.
+ *
+ * @param win The window under the pointer, as the hit test found it.
+ * @param region The region of that window the pointer is over.
  */
-static void input_track_pointer(void) {
+static void input_track_pointer(wm_window_t* win, wm_region_t region) {
 
-    wm_window_t* win = NULL;
-
-    if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) != WM_REGION_CONTENT) {
+    if (region != WM_REGION_CONTENT) {
         win = NULL;
     }
 
@@ -309,7 +310,7 @@ static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
 /**
  * @brief Points the cursor at whatever it is about to act on, pinning the shape for the length of a drag.
  */
-static void input_update_cursor(void) {
+static void input_update_cursor(wm_region_t region) {
 
     if (wm.drag.window) {
 
@@ -318,7 +319,7 @@ static void input_update_cursor(void) {
         return;
     }
 
-    wm_cursor_set(input_cursor_for(wm_window_hit_test(wm.pointer.x, wm.pointer.y, NULL)));
+    wm_cursor_set(input_cursor_for(region));
 }
 
 
@@ -339,15 +340,13 @@ static void input_begin_drag(wm_window_t* win, wm_region_t region) {
 /**
  * @brief Follows the pointer on and off a close button, damaging the button on each transition.
  */
-static void input_update_hover(void) {
+static void input_update_hover(wm_window_t* win, wm_region_t region) {
 
     wm_window_t* hovered = NULL;
 
     if (!wm.drag.window || wm.drag.region == WM_REGION_CLOSE) {
 
-        wm_window_t* win = NULL;
-
-        if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) == WM_REGION_CLOSE) {
+        if (region == WM_REGION_CLOSE) {
             hovered = win;
         }
     }
@@ -509,7 +508,11 @@ static void input_handle_button_left(uint8_t down) {
             return;
         }
 
-        input_track_pointer();
+        wm_window_t* over = NULL;
+
+        const wm_region_t at = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
+
+        input_track_pointer(over, at);
 
         return;
     }
@@ -526,7 +529,7 @@ static void input_handle_button_left(uint8_t down) {
     wm_window_focus(win);
 
     if (region == WM_REGION_CONTENT) {
-        input_track_pointer();
+        input_track_pointer(win, region);
         return;
     }
 
@@ -572,14 +575,20 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
 
     if (mask != UI_BUTTON_LEFT) {
-        input_track_pointer();
+
+        wm_window_t* over = NULL;
+
+        const wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
+
+        input_track_pointer(over, region);
+
         return;
     }
 
 
     input_handle_button_left(down);
 
-    input_update_cursor();
+    input_update_cursor(wm_window_hit_test(wm.pointer.x, wm.pointer.y, NULL));
 }
 
 
@@ -608,7 +617,12 @@ static void input_pointer_moved(const wm_rect_t* old) {
     }
 
 
-    input_update_cursor();
+    wm_window_t* over = NULL;
+
+    const wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
+
+
+    input_update_cursor(region);
 
 
     if (wm.display.hwcursor) {
@@ -624,7 +638,7 @@ static void input_pointer_moved(const wm_rect_t* old) {
     }
 
 
-    input_update_hover();
+    input_update_hover(over, region);
 
     if (wm.drag.window) {
 
@@ -632,7 +646,7 @@ static void input_pointer_moved(const wm_rect_t* old) {
 
     } else {
 
-        input_track_pointer();
+        input_track_pointer(over, region);
     }
 }
 
