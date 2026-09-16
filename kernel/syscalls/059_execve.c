@@ -309,8 +309,9 @@ SYSCALL(
 
         vmm_address_space_t* current_space = current_task->address_space;
 
-        uintptr_t end   = 0;
-        uintptr_t flags = 0;
+        uintptr_t end       = 0;
+        uintptr_t flags     = 0;
+        uintptr_t phdr_addr = 0;
 
 
         scoped_lock(&current_task->lock) {
@@ -339,6 +340,11 @@ SYSCALL(
                         DEBUG_ASSERT(phdr.p_vaddr);
                         DEBUG_ASSERT(phdr.p_memsz);
                         DEBUG_ASSERT(phdr.p_filesz <= phdr.p_memsz);
+
+
+                        if (head.e_phoff >= phdr.p_offset && head.e_phoff + ((size_t)head.e_phnum * head.e_phentsize) <= phdr.p_offset + phdr.p_filesz)
+                            phdr_addr = phdr.p_vaddr + (head.e_phoff - phdr.p_offset);
+
 
 
                         end = phdr.p_vaddr + phdr.p_memsz;
@@ -504,6 +510,9 @@ SYSCALL(
 
         AUX_ENT(AT_RANDOM, arch_random());
         AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
+        AUX_ENT(AT_PHDR, phdr_addr);
+        AUX_ENT(AT_PHENT, head.e_phentsize);
+        AUX_ENT(AT_PHNUM, head.e_phnum);
         AUX_ENT(AT_HWCAP, 0);
         AUX_ENT(AT_HWCAP2, 0);
         AUX_ENT(AT_CLKTCK, arch_timer_generic_getres());
