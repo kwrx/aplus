@@ -229,14 +229,22 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
     const uint8_t* glyph = &builtin_fontdata[gidx * ATERM_FONT_PITCH];
 
+    uint8_t* const base = (uint8_t*)ui_window_pixels(context.win);
+    const size_t stride = ui_window_stride(context.win);
+
+    const uint32_t fg32 = 0xFF000000u | ((uint32_t)fr << 16) | ((uint32_t)fg << 8) | fb;
+    const uint32_t bg32 = 0xFF000000u | ((uint32_t)br << 16) | ((uint32_t)bg << 8) | bb;
+
     for (size_t i = 0; i < ATERM_FONT_HEIGHT; i++) {
+
+        uint32_t* row      = (uint32_t*)(base + ((size_t)posy + i) * stride) + posx;
+        const uint8_t bits = glyph[i];
+
         for (size_t j = 0; j < ATERM_FONT_WIDTH; j++) {
 
-            if (glyph[i] & (1 << (ATERM_FONT_WIDTH - 1 - j))) {
-                context.plot(posx + j, posy + i, fr, fg, fb);
-            } else {
-                context.plot(posx + j, posy + i, br, bg, bb);
-            }
+            const uint32_t m = 0u - ((bits >> (ATERM_FONT_WIDTH - 1 - j)) & 1u);
+
+            row[j] = (fg32 & m) | (bg32 & ~m);
         }
     }
 
