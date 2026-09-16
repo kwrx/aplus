@@ -107,7 +107,12 @@ static int x86_exception_signal(interrupt_frame_t* frame, uintptr_t address) {
             break;
     }
 
-    if (sched_sigqueueinfo(-1, current_task->pid, current_task->tid, info.si_signo, &info) < 0)
+#if DEBUG_LEVEL_ERROR
+    kprintf("x86-intr: task %d (%s) got signal %d at ip(0x%lX) sp(0x%lX) address(0x%lX) exception(%ld) errno(0x%lX) cpu(%ld)\n", current_task->tid, (current_task->argv && current_task->argv[0]) ? current_task->argv[0] : "?", info.si_signo, frame->ip,
+            frame->sp, address, frame->intno, frame->errno, current_cpu->id);
+#endif
+
+    if (sched_fault_sigqueueinfo(info.si_signo, &info) < 0)
         return -1;
 
     thread_restart_sched(current_task);

@@ -664,6 +664,73 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
 
 /**
+ * @brief Queues a signal raised by a hardware fault on the current task, forcing its default action.
+ *
+ * The signal is unblocked and its disposition reset when it would otherwise be ignored or deferred,
+ * and a signal of the same number already queued is not queued twice.
+ *
+ * @param sig The signal the fault maps to.
+ * @param info The signal's payload.
+ * @return 0 on success, or -1 with errno set.
+ */
+int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(sig > 0);
+    DEBUG_ASSERT(sig < NSIG - 1);
+    DEBUG_ASSERT(info);
+
+
+    if (unlikely(current_task->status == TASK_STATUS_ZOMBIE)) {
+        return 0;
+    }
+
+
+    bool pending = false;
+
+    scoped_lock(&current_task->sigqueue.lock) {
+
+        for (struct queue_element* e = current_task->sigqueue.head; e; e = e->next) {
+
+            if (e->element && ((siginfo_t*)e->element)->si_signo == sig) {
+
+                pending = true;
+                break;
+            }
+        }
+    }
+
+    if (pending) {
+        return 0;
+    }
+
+
+    shared_ptr_access(current_task->sighand, sighand, {
+        if (sighand->action[sig].handler == SIG_IGN || sighand->action[sig].handler == SIG_ERR) {
+            sighand->action[sig].handler = SIG_DFL;
+        }
+
+        sigset_del(&sighand->sigmask, sig);
+    });
+
+
+    siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+
+    if (unlikely(!siginfo)) {
+        return errno = ENOMEM, -1;
+    }
+
+    memcpy(siginfo, info, sizeof(siginfo_t));
+
+    siginfo->si_signo = sig;
+
+    queue_enqueue(&current_task->sigqueue, siginfo, 0);
+
+    return 0;
+}
+
+
+/**
  * @brief Generates the next unique process ID
  *
  * This function generates and returns the next unique process ID, by incrementing a static variable.
