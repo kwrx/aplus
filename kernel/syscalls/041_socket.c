@@ -57,9 +57,6 @@
 SYSCALL(
     41, socket, long sys_socket(int domain, int type, int protocol) {
 
-        //? Local sockets are handled here and never reach lwIP, which has no
-        //? notion of an address family below AF_INET. They also come back as
-        //? ordinary descriptors rather than from the separate socket range.
         if (domain == AF_UNIX_LOCAL)
             return unix_socket(type, protocol);
 
@@ -70,8 +67,6 @@ SYSCALL(
         if ((e = lwip_socket(domain, type, protocol)) < 0)
             return -errno;
 
-        //? Handing the socket to socket_install() passes ownership with it: if no descriptor
-        //? can be found for it, it is closed there rather than leaked here.
         return socket_install((int)e, 0);
 
 #else

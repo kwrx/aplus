@@ -40,8 +40,9 @@
 #include <aplus/task.h>
 
 
-//? pselect6() takes seven arguments and a syscall only carries six, so the mask
-//? and its size travel together behind one pointer.
+/**
+ * @brief The mask and its size, travelling together behind one pointer because a syscall carries only six arguments.
+ */
 struct pselect6_sigmask {
 
     const sigset_t* ss;
@@ -86,11 +87,6 @@ SYSCALL(
             struct pselect6_sigmask sm;
             uio_memcpy_u2s(&sm, sig, sizeof(struct pselect6_sigmask));
 
-            //? Blocking the signals the caller asked to ignore is the whole point
-            //? of pselect6() over select(): it closes the window between changing
-            //? the mask and starting to wait, where a signal could arrive unseen
-            //? and the wait would then block forever. poll_finish() puts the old
-            //? mask back.
             if ((err = poll_sigmask_install(sm.ss, sm.ss_len)) < 0)
                 return poll_finish(err);
         }

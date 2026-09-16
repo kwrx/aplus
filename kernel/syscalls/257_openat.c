@@ -199,9 +199,6 @@ SYSCALL(
                     fds->descriptors[fd].ref   = ref;
                     fds->descriptors[fd].flags = flags;
 
-                    //? execve() consults close_on_exec and never the open
-                    //? flags, so O_CLOEXEC has to be recorded in its own bit or
-                    //? the descriptor survives the exec it was meant to escape.
                     fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);
                 }
             }

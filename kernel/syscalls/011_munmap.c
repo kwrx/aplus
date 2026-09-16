@@ -82,7 +82,6 @@ SYSCALL(
             return -EINVAL;
 
 
-        /* Only the mmap window. The program image and its heap belong to brk(2). */
         if (unlikely(start < current_task->address_space->mmap.heap_start || end > current_task->address_space->mmap.heap_end))
             return -EINVAL;
 
@@ -96,7 +95,6 @@ SYSCALL(
                 if (m[i].start == 0UL)
                     continue;
 
-                /* Disjoint? */
                 if (m[i].end <= start || m[i].start >= end)
                     continue;
 
@@ -109,12 +107,10 @@ SYSCALL(
 
                 if (m[i].start >= start && m[i].end <= end) {
 
-                    /* Wholly covered. */
                     memset(&m[i], 0, sizeof(mmap_mapping_t));
 
                 } else if (m[i].start < start && m[i].end > end) {
 
-                    /* Punched in the middle: the tail needs a slot of its own. */
                     int j;
 
                     for (j = 0; j < CONFIG_MMAP_MAX; j++) {
@@ -125,8 +121,6 @@ SYSCALL(
 
                     if (unlikely(j == CONFIG_MMAP_MAX)) {
 
-                        /* Nowhere to record the tail. The pages are already gone, so report
-                           the bookkeeping failure rather than silently forgetting the region. */
                         m[i].end = start;
                         return -ENOMEM;
                     }
@@ -150,8 +144,6 @@ SYSCALL(
             }
 
 
-            /* Reclaim the cursor if the top of the window is now free, so that a
-               map/unmap loop does not march it out of the window. */
             uintptr_t top = current_task->address_space->mmap.heap_start;
 
             for (int i = 0; i < CONFIG_MMAP_MAX; i++) {

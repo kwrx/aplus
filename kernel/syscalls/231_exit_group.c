@@ -54,19 +54,6 @@ SYSCALL(
         DEBUG_ASSERT(current_task);
 
 
-        /* exit(3) ends the process, not just the thread that called it.
-         *
-         * While this was a stub, musl fell back to plain exit(2) and only the calling
-         * thread died -- harmless for as long as pthread_create() could not succeed, and
-         * not harmless afterwards: a sibling left running after main() returned kept
-         * executing on a stack its joiner had already handed back, faulting on it forever
-         * and, on a uniprocessor, starving everything else.
-         *
-         * CLONE_THREAD gives every thread of a process the same pid, so the thread group is
-         * exactly the set sched_sigqueueinfo() selects by pid. SIGKILL cannot be caught or
-         * blocked, so this reaches all of them. The caller is in that set too; it never
-         * returns to userspace to act on the signal, and sys_exit() below makes it a zombie
-         * first. */
         siginfo_t si;
 
         memset(&si, 0, sizeof(si));

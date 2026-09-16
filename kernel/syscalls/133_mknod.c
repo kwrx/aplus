@@ -62,12 +62,6 @@ SYSCALL(
             return -EFAULT;
 
 
-        //? The type bits are a value, not a bitmask. Testing them with & picked
-        //? the wrong arm for nearly every type -- S_IFREG (0100000) matched the
-        //? S_IFSOCK (0140000) test and S_IFDIR (0040000) matched S_IFBLK
-        //? (0060000) -- so creating an ordinary file through mknod() failed
-        //? with ENOSYS.
-
         switch (mode & S_IFMT) {
 
             case S_IFBLK:
@@ -76,9 +70,6 @@ SYSCALL(
                 return -ENOSYS;
 
 
-            //? A FIFO needs nothing special here: the filesystem recognises the
-            //? type at creation and attaches the open hook that hands out pipe
-            //? endpoints, so the node below is already a working FIFO.
             case S_IFIFO:
             case S_IFREG:
             case S_IFDIR:

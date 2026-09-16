@@ -35,17 +35,17 @@
     #include <aplus/utils/ringbuffer.h>
 
 
-//? lwIP's headers know nothing about the local address family, so the constant
-//? has to come from here. It has to match the libc userspace is built against
-//? (PF_LOCAL), or a bind() would arrive with an address nobody recognises.
+/**
+ * @brief The local address family, which lwIP's headers do not carry; must match the libc's PF_LOCAL.
+ */
     #define AF_UNIX_LOCAL 1
 
     #define UNIX_PATH_MAX 108
 
 
-//? lwIP owns struct sockaddr in kernel space and has no sockaddr_un, so the
-//? local address is spelled out here. The layout has to match the libc
-//? userspace is built against: a two-byte family followed by the path.
+/**
+ * @brief The local address, spelled out here because lwIP owns struct sockaddr and has no sockaddr_un.
+ */
 
 struct sockaddr_un_k {
 
@@ -54,8 +54,9 @@ struct sockaddr_un_k {
 };
 
 
-//? SHUT_RD is 0 in POSIX, so the shutdown constants cannot be stored as a
-//? bitmask. These can.
+/**
+ * @brief The shutdown directions as a bitmask, which POSIX's SHUT_RD of 0 cannot be stored as.
+ */
     #define UNIX_SHUT_RD 1
     #define UNIX_SHUT_WR 2
 
@@ -67,7 +68,9 @@ struct sockaddr_un_k {
     #define UNIX_SOCK_CLOSED    4
 
 
-//? Matches SOCK_STREAM in lwIP and in the libc userspace is built against.
+/**
+ * @brief Matches SOCK_STREAM in lwIP and in the libc userspace is built against.
+ */
     #define UNIX_TYPE_STREAM 1
 
 
@@ -75,13 +78,11 @@ struct sockaddr_un_k {
     #define UNIX_SOCK_BACKLOG 128
 
 
-//? One endpoint of a local socket. A connected pair is two of these pointing at
-//? each other, each draining its own receive buffer and filling the peer's --
-//? the same shape as a pipe channel, with a connection handshake in front.
-//?
-//? An endpoint outlives the file descriptor that closed it: the peer holds a
-//? reference so that it can still tell "no data yet" from "the other side is
-//? gone" after the peer's inode has been released.
+/**
+ * @brief One endpoint of a local socket; a connected pair is two of these pointing at each other.
+ *
+ * An endpoint outlives the descriptor that closed it, since the peer holds a reference to it.
+ */
 
 struct unix_sock {
 
@@ -115,25 +116,26 @@ struct unix_sock {
 
 __BEGIN_DECLS
 
-//? Returns NULL when fd is not a local socket, which is what lets the socket
-//? syscalls tell an AF_UNIX descriptor apart from an lwIP one and from an
-//? ordinary file.
+/**
+ * @brief Resolves a descriptor to a local socket, or NULL when it is not one.
+ */
 struct unix_sock* unix_sock_from_fd(int fd);
 
 long unix_socket(int type, int protocol);
 long unix_socketpair(int type, int protocol, int* sv);
 
-//? Addresses are taken as opaque user pointers so that this interface does not
-//? have to agree with lwIP's on how a sockaddr is spelled.
+/**
+ * @brief Addresses are taken as opaque user pointers, so this interface need not agree with lwIP's.
+ */
 long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len);
 long unix_listen(struct unix_sock* sock, int backlog);
 long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len);
 long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags);
 long unix_shutdown(struct unix_sock* sock, int how);
 
-//? Register the caller on this socket's change counter. The caller still has
-//? to suspend and ask for its syscall to be restarted, exactly as sys_read()
-//? does -- futex_wait() only records the intent to sleep.
+/**
+ * @brief Registers the caller on this socket's change counter, which only records the intent to sleep.
+ */
 void unix_sock_wait(struct unix_sock* sock);
 long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len);
 long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len);

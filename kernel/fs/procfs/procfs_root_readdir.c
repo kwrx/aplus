@@ -40,10 +40,9 @@
 #include "procfs.h"
 
 
-/* The contents of /proc, other than the per-pid directories. One table drives both
-   finddir() and readdir(): they were a strcmp() chain and a separate hardcoded macro list
-   before, and had already drifted -- "self" was advertised as a directory by one and
-   created as a symlink by the other. */
+/**
+ * @brief The contents of /proc other than the per-pid directories, driving both finddir() and readdir().
+ */
 const procfs_root_entry_t procfs_root_table[] = {
     {"self",        S_IFLNK | 0777, 1, DT_LNK},
     {"meminfo",     S_IFREG | 0444, 2, DT_REG},
@@ -60,12 +59,13 @@ const size_t procfs_root_entries = sizeof(procfs_root_table) / sizeof(procfs_roo
 
 
 /**
- * @brief List /proc.
+ * @brief Lists /proc, the fixed entries first and the pids after them.
  *
- * The fixed entries come first and the pids after them. The order matters: readdir() is
- * called once per entry with an ordinal, and when the pids came first a fork or exit
- * between two calls shifted every later position -- which silently dropped "." and ".."
- * off the end of a listing.
+ * @param inode The /proc root inode.
+ * @param e The array of dirents to fill in.
+ * @param pos The ordinal of the first entry to report.
+ * @param count The number of entries the caller's buffer holds.
+ * @return The number of entries written, 0 past the end of the listing, or -1 with errno set.
  */
 ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t count) {
 
@@ -117,8 +117,6 @@ ssize_t procfs_root_readdir(inode_t* inode, struct dirent* e, off_t pos, size_t 
         return (ssize_t)i;
 
 
-    /* Taken in one locked pass rather than by re-walking the run queues per call, which was
-       both O(n^2) over a listing and a use-after-free against a concurrent reaper. */
     size_t max = sched_nprocs() + 32;
 
     pid_t* ids = (pid_t*)kcalloc(max, sizeof(pid_t), GFP_KERNEL);

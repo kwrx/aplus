@@ -113,7 +113,7 @@ SYSCALL(
             struct timespec t0;
             long __e = 0;
 
-            scoped_uio_kernel() { /* &t0 is a kernel buffer */
+            scoped_uio_kernel() {
                 __e = sys_clock_gettime(which_clock, &t0);
             }
 

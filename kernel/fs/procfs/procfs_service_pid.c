@@ -42,10 +42,9 @@
 #include "procfs.h"
 
 
-/* The contents of a /proc/<pid> directory, declared once. readdir() and finddir() are both
-   driven from this table: they used to be a hardcoded macro list and a strcmp() chain kept
-   in step by hand, which is how readdir came to advertise a "cmdline" that finddir could
-   not resolve. */
+/**
+ * @brief One entry of a /proc/<pid> directory, driving both its readdir() and its finddir().
+ */
 typedef struct procfs_pid_entry {
 
     const char* name;
@@ -68,8 +67,9 @@ static const procfs_pid_entry_t procfs_pid_table[] = {
 #define PROCFS_PID_ENTRIES (sizeof(procfs_pid_table) / sizeof(procfs_pid_table[0]))
 
 
-/* Hangs off the directory inode. The child inodes are created on first lookup and kept,
-   because this VFS has no way to release an inode once finddir() has handed it out. */
+/**
+ * @brief The state hanging off a /proc/<pid> directory inode, holding the child inodes made on first lookup.
+ */
 typedef struct procfs_pid_dir {
 
     pid_t pid;
@@ -96,17 +96,12 @@ static inode_t* procfs_service_pid_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(dir);
 
 
-    /* Dispatch on the name being looked up. This function used to branch on inode->name --
-       the directory's own name -- and hand back the directory itself for every lookup, so
-       /proc/<pid>/cmdline resolved to /proc/<pid> and nothing under a pid was reachable. */
     for (size_t i = 0; i < PROCFS_PID_ENTRIES; i++) {
 
         if (strcmp(name, procfs_pid_table[i].name) != 0)
             continue;
 
 
-        //? No lock here: vfs_finddir() already holds inode->lock across this call, which is
-        //? the mutual exclusion the lazily-created child needs. Taking it again deadlocks.
         if (dir->children[i] == NULL) {
 
             dir->children[i] = procfs_service_inode(inode, procfs_pid_table[i].name, procfs_pid_table[i].mode, procfs_pid_table[i].fetch, (void*)((uintptr_t)dir->pid));
@@ -179,11 +174,12 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
 
 
 /**
- * @brief Build the /proc/<pid> directory inode for a pid.
+ * @brief Builds the /proc/<pid> directory inode for a pid the caller has already confirmed exists.
  *
- * Only ever called for a pid that procfs_pid_exists() has already confirmed -- cache_get()
- * ends in a PANIC_ASSERT() on a NULL value, so a miss handler that rejected a bad pid would
- * halt the kernel rather than return ENOENT.
+ * @param c The pid inode cache.
+ * @param parent The /proc root inode.
+ * @param key The pid, as a cache key.
+ * @return The new directory inode.
  */
 static inode_t* procfs_service_pid_cache_fetch(cache_t* c, inode_t* parent, cache_key_t key) {
 
@@ -241,8 +237,6 @@ static void procfs_service_pid_cache_release(cache_t* c, inode_t* parent, cache_
                 if (dir->children[i] == NULL)
                     continue;
 
-                //? Each child owns a procfs_service_t of its own; freeing only the inode
-                //? leaked one per file.
                 kfree(dir->children[i]->userdata);
                 kfree(dir->children[i]);
             }
@@ -267,9 +261,6 @@ inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid) {
         return errno = ENOENT, NULL;
 
 
-    /* Checked before the cache is consulted, not inside the miss handler: an unchecked pid
-       meant stat("/proc/999999") succeeded and allocated an inode that was never evicted,
-       so a loop of them exhausted kernel memory from an unprivileged shell. */
     if (!procfs_pid_exists(pid))
         return errno = ENOENT, NULL;
 

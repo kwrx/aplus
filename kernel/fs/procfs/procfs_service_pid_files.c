@@ -48,10 +48,13 @@ static int __snapshot_of(void* arg, procfs_task_t* t) {
 
 
 /**
- * @brief /proc/<pid>/stat -- the file ps parses.
+ * @brief Generates /proc/<pid>/stat, the 52 space-separated fields ps parses.
  *
- * Linux defines 52 space-separated fields. Fields this kernel cannot answer truthfully are
- * reported as zero rather than invented; the ones that matter to ps are 1-24.
+ * @param inode The /proc/<pid>/stat inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg Unused.
+ * @return 0 on success, or -1 with errno set.
  */
 int procfs_pid_fetch_stat(inode_t* inode, char** buf, size_t* size, void* arg) {
 
@@ -66,48 +69,30 @@ int procfs_pid_fetch_stat(inode_t* inode, char** buf, size_t* size, void* arg) {
         return errno = ESRCH, -1;
 
 
-    //? The scratch buffer's lock is held by procfs_service_read() across this call and the
-    //? copy out of it, so the contents cannot be replaced before the reader sees them.
     procfs_buf_t b = procfs_scratch();
 
     procfs_bprintf(&b, "%d (%s) %c %d %d %d ", t.tid, t.comm, procfs_task_state(t.status), t.ppid, t.pgrp, t.sid);
 
-    //? 7 tty_nr and 8 tpgid: the controlling terminal hangs off a shared_ptr whose access
-    //? takes a lock of its own, and it is freed while the task is still queued as a zombie.
     procfs_bprintf(&b, "0 -1 0 ");
 
-    //? 10-13 minflt, cminflt, majflt, cmajflt. Nothing accounts for children.
     procfs_bprintf(&b, "%lu 0 %lu 0 ", t.minflt, t.majflt);
 
-    //? 14 utime, 15 stime. There is no user/system split in this kernel, so all of the
-    //? task's CPU time is reported as user time and stime is zero -- tools add the two, so
-    //? the total they show is right. 16-17 cutime/cstime: no child accounting.
     procfs_bprintf(&b, "%lu 0 0 0 ", t.utime);
 
-    //? 18 priority, 19 nice, 20 num_threads, 21 itrealvalue, 22 starttime.
     procfs_bprintf(&b, "%ld %ld %lu 0 %lu ", t.priority, t.priority, (unsigned long)t.threads, t.start_time);
 
-    //? 23 vsize in bytes, 24 rss in pages.
     procfs_bprintf(&b, "%lu %lu ", (unsigned long)(t.vm_end - t.vm_start), (unsigned long)t.rss_pages);
 
-    //? 25 rsslim, 26-28 startcode/endcode/startstack.
     procfs_bprintf(&b, "0 %lu %lu %lu ", (unsigned long)t.vm_start, (unsigned long)t.vm_end, (unsigned long)t.vm_stack);
 
-    //? 29-30 kstkesp/kstkeip are deliberately zero: they are kernel addresses and this file
-    //? is world-readable. 31-34 are the signal masks, which live behind the same freed
-    //? shared_ptr as the tty above.
     procfs_bprintf(&b, "0 0 0 0 0 0 ");
 
-    //? 35-38 wchan, nswap, cnswap, exit_signal.
     procfs_bprintf(&b, "0 0 0 17 ");
 
-    //? 39 processor, 40 rt_priority, 41 policy.
     procfs_bprintf(&b, "%d 0 %ld ", (int)t.cpu, t.policy);
 
-    //? 42-51 are blkio, mm layout and signal-stack details this kernel does not track.
     procfs_bprintf(&b, "0 0 0 0 0 0 0 0 0 0 ");
 
-    //? 52 exit_code.
     procfs_bprintf(&b, "%d\n", t.exit_value);
 
 
@@ -131,8 +116,6 @@ int procfs_pid_fetch_status(inode_t* inode, char** buf, size_t* size, void* arg)
         return errno = ESRCH, -1;
 
 
-    //? The scratch buffer's lock is held by procfs_service_read() across this call and the
-    //? copy out of it, so the contents cannot be replaced before the reader sees them.
     procfs_buf_t b = procfs_scratch();
 
     static const char* const states[] = {"running", "running", "sleeping", "stopped", "zombie", "dead"};
@@ -175,15 +158,11 @@ int procfs_pid_fetch_statm(inode_t* inode, char** buf, size_t* size, void* arg) 
         return errno = ESRCH, -1;
 
 
-    //? The scratch buffer's lock is held by procfs_service_read() across this call and the
-    //? copy out of it, so the contents cannot be replaced before the reader sees them.
     procfs_buf_t b = procfs_scratch();
 
     unsigned long size_pages = (unsigned long)((t.vm_end - t.vm_start) / PML1_PAGESIZE);
     unsigned long data_pages = (unsigned long)((t.heap_end - t.heap_start) / PML1_PAGESIZE);
 
-    //? size resident shared text lib data dt -- shared, text and lib need per-section
-    //? accounting that this kernel does not keep.
     procfs_bprintf(&b, "%lu %lu 0 0 0 %lu 0\n", size_pages, (unsigned long)t.rss_pages, data_pages);
 
     *buf  = b.data;
@@ -194,10 +173,13 @@ int procfs_pid_fetch_statm(inode_t* inode, char** buf, size_t* size, void* arg) 
 
 
 /**
- * @brief /proc/<pid>/cmdline -- argv, NUL-separated, with no trailing newline.
+ * @brief Generates /proc/<pid>/cmdline, argv NUL-separated and empty for a kernel thread.
  *
- * Empty for a kernel thread, which is how userspace tells one from a process. This used to
- * return ENOSYS for every pid.
+ * @param inode The /proc/<pid>/cmdline inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg Unused.
+ * @return 0 on success, or -1 with errno set.
  */
 int procfs_pid_fetch_cmdline(inode_t* inode, char** buf, size_t* size, void* arg) {
 
@@ -212,8 +194,6 @@ int procfs_pid_fetch_cmdline(inode_t* inode, char** buf, size_t* size, void* arg
         return errno = ESRCH, -1;
 
 
-    //? The scratch buffer's lock is held by procfs_service_read() across this call and the
-    //? copy out of it, so the contents cannot be replaced before the reader sees them.
     procfs_buf_t b = procfs_scratch();
 
     procfs_bputs(&b, t.cmdline, t.cmdline_len);
@@ -238,8 +218,6 @@ int procfs_pid_fetch_io(inode_t* inode, char** buf, size_t* size, void* arg) {
         return errno = ESRCH, -1;
 
 
-    //? The scratch buffer's lock is held by procfs_service_read() across this call and the
-    //? copy out of it, so the contents cannot be replaced before the reader sees them.
     procfs_buf_t b = procfs_scratch();
 
     procfs_bprintf(&b, "rchar: %lu\n", t.rchar);

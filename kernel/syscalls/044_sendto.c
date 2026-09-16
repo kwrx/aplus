@@ -63,9 +63,6 @@ SYSCALL(
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
 
-            //? A connected stream socket has nowhere else to send to, so this
-            //? is just a write. Routing it through sys_write() reuses the
-            //? blocking and short-write handling rather than repeating it.
             if (unlikely(sockaddr != NULL))
                 return -EISCONN;
 

@@ -73,9 +73,9 @@
     #define TASK_FLAGS_SIGNALED             8
     #define TASK_FLAGS_NEED_SYSCALL_RESTART 16
 
-/* The task is kernel code invoking a sys_* entry point directly (mounting the root
-   filesystem, exec'ing init), so the pointers it passes are kernel pointers. Cleared for
-   good the moment the task enters userspace. @see uio_check(). */
+/**
+ * @brief The task is kernel code invoking a sys_* entry point directly, so the pointers it passes are kernel ones.
+ */
     #define TASK_FLAGS_KERNEL_UIO 32
 
 
@@ -92,11 +92,15 @@
 
     #define TASK_SCHEDULER_PERIOD_NS 1000000ULL
 
-/* Linux's length for a task name, and what /proc/<pid>/stat's comm field is expected to fit. */
+/**
+ * @brief Linux's length for a task name, and what /proc/<pid>/stat's comm field is expected to fit.
+ */
     #define TASK_COMM_LEN    16
     #define TASK_CMDLINE_LEN 256
 
-//? /proc reports CPU times in USER_HZ units; musl's sysconf(_SC_CLK_TCK) is a hardcoded 100.
+/**
+ * @brief The units /proc reports CPU times in, which musl's sysconf(_SC_CLK_TCK) hardcodes to 100.
+ */
     #define TASK_USER_HZ 100
 
     #define TASK_STACK_MAX (0x100000000ULL) // 4GiB
@@ -168,19 +172,19 @@ struct sighand {
 };
 
 
-//? A sigset_t is a bit array of unsigned long. Its byte size and its word count are both worth
-//? having by name: the syscalls that carry one carry a byte count alongside it, while walking
-//? it is done a word at a time, and conflating the two indexes the wrong end of the set.
+/**
+ * @brief The size of a sigset_t in bytes and in words, which the syscalls and the walks need respectively.
+ */
     #define SIGSET_BITS_PER_WORD (8 * sizeof(unsigned long))
     #define SIGSET_WORDS         (sizeof(sigset_t) / sizeof(unsigned long))
 
 
 /**
- * @brief Ask whether a signal is a member of a set.
+ * @brief Asks whether a signal is a member of a set.
  *
- * Signals are numbered from 1 and a set numbers its bits from 0, so signal N lives in bit N-1 --
- * the convention every libc builds its masks with. Testing bit N instead answers for the
- * neighbouring signal.
+ * @param set The set to test.
+ * @param signo The signal to look for, numbered from 1.
+ * @return true if the signal is in the set.
  */
 static inline bool sigset_is_member(const sigset_t* set, int signo) {
 
@@ -192,16 +196,15 @@ static inline bool sigset_is_member(const sigset_t* set, int signo) {
 
     size_t bit = (size_t)(signo - 1);
 
-    //? 1UL, not 1: a plain int shifted by 32 or more is undefined, and on x86 the count is
-    //? masked to five bits, so the realtime signals would fold back onto the first few.
     return (set->__bits[bit / SIGSET_BITS_PER_WORD] & (1UL << (bit % SIGSET_BITS_PER_WORD))) != 0;
 }
 
 
 /**
- * @brief Add a signal to a set.
+ * @brief Adds a signal to a set.
  *
- * Numbered the same way as sigset_is_member(): signal N is bit N-1.
+ * @param set The set to change.
+ * @param signo The signal to add, numbered from 1.
  */
 static inline void sigset_add(sigset_t* set, int signo) {
 
@@ -218,9 +221,10 @@ static inline void sigset_add(sigset_t* set, int signo) {
 
 
 /**
- * @brief Remove a signal from a set.
+ * @brief Removes a signal from a set.
  *
- * Numbered the same way as sigset_is_member(): signal N is bit N-1.
+ * @param set The set to change.
+ * @param signo The signal to remove, numbered from 1.
  */
 static inline void sigset_del(sigset_t* set, int signo) {
 

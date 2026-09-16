@@ -131,8 +131,6 @@ int vfs_close(inode_t* inode) {
         scoped_lock(&inode->lock) {
             int e = inode->ops.close(inode);
 
-            //? The hangup itself is reported by ops.poll(); all that is owed
-            //? here is the nudge that makes waiters look again.
             shared_ptr_nullable_access(inode->ev, ev, {
                 atomic_fetch_add(&ev->futex, 1);
             });
@@ -176,7 +174,6 @@ int vfs_poll(inode_t* inode, int events) {
         scoped_lock(&inode->lock) return inode->ops.poll(inode, events);
     }
 
-    //? Nothing that can block, so everything the caller asked about is ready.
     return events & (POLLIN | POLLOUT);
 }
 
@@ -300,12 +297,6 @@ ssize_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
 
             ssize_t e = inode->ops.read(inode, buf, off, size);
 
-            //? Only an actual transfer is a change. A read that returned
-            //? -EAGAIN moved nothing, and bumping the counter for it tells every
-            //? waiter on this inode to go and look at a state that is exactly as
-            //? they left it -- which, where an inode's counter is shared (a pty
-            //? master and its slaves share one), is enough for two blocked
-            //? readers to wake each other forever without either making progress.
             if (e > 0) {
 
                 shared_ptr_nullable_access(inode->ev, ev, {
@@ -333,8 +324,6 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
         scoped_lock(&inode->lock) {
             ssize_t e = inode->ops.write(inode, buf, off, size);
 
-            //? As in vfs_read(): a write that placed no bytes changed nothing
-            //? and must not be announced as if it had.
             if (e > 0) {
 
                 shared_ptr_nullable_access(inode->ev, ev, {
@@ -381,10 +370,6 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
         scoped_lock(&inode->lock) {
 
-            //? path_open() only calls creat() after a lookup missed, but that lookup ran
-            //? without this lock: another CPU can have created the same name in between.
-            //? Creating it again would leave the directory holding two entries for one name,
-            //? so adopt what is already there.
             inode_t* r = vfs_dcache_find(inode, name);
 
             if (unlikely(r))
@@ -442,9 +427,6 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
 
         scoped_lock(&inode->lock) {
 
-            //? Probe again with the lock held: the miss above was taken without it, so
-            //? another CPU may have walked this same name and cached it since. Skipping this
-            //? lets both CPUs walk the filesystem and build an inode apiece for one file.
             if ((r = vfs_dcache_find(inode, name)) != NULL)
                 return r;
 
@@ -549,9 +531,6 @@ int vfs_unlink(inode_t* inode, const char* name) {
 
         scoped_lock(&inode->lock) {
 
-            //? vfs_dcache_remove() both skips a parent that caches nothing and tolerates a
-            //? name that was never cached, which the lookup-and-pass-back this replaces did
-            //? not: it handed the NULL straight back to be dereferenced.
             if ((r = inode->ops.unlink(inode, name)) == 0)
                 vfs_dcache_remove(inode, name);
         }

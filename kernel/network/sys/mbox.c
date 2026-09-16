@@ -154,11 +154,6 @@ u32_t sys_arch_mbox_fetch(struct sys_mbox** mbox, void** msg, u32_t timeout) {
 
         while (true) {
 
-            //? The mailbox can be taken down while this task is parked on it. Closing a socket
-            //? frees it, and a task being torn down by a fatal signal closes its own
-            //? descriptors -- so the close that frees this mailbox can be the very task that is
-            //? waiting on it, running its exit path on the way out. Re-reading (*mbox) without
-            //? checking is what walked into freed memory and faulted on address 0x8.
             if (unlikely(*mbox == NULL))
                 return SYS_ARCH_TIMEOUT;
 

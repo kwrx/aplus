@@ -41,13 +41,13 @@
 
 
 /**
- * @brief /proc/stat -- system-wide counters.
+ * @brief Generates /proc/stat, the system-wide counters derived from the per-cpu uptimes.
  *
- * The per-cpu jiffy columns are derived from cpu->uptime, which the timer interrupt bumps
- * one scheduler period per tick. There is no idle task and nothing accounts for idle time,
- * so all elapsed time is reported in the "user" column and idle is zero rather than
- * fabricated; a reader computing per-process share against the total still gets a sound
- * denominator.
+ * @param inode The /proc/stat inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg Unused.
+ * @return 0 on success.
  */
 static int procfs_service_stat_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
@@ -143,10 +143,13 @@ inode_t* procfs_service_cpuinfo_inode(inode_t* parent) {
 
 
 /**
- * @brief /proc/loadavg.
+ * @brief Generates /proc/loadavg, which this kernel reports as zero.
  *
- * Nothing in this kernel maintains a load average, so the three figures are reported as
- * zero rather than invented -- the same answer sys_sysinfo() already gives for si.loads[].
+ * @param inode The /proc/loadavg inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg Unused.
+ * @return 0 on success.
  */
 static int procfs_service_loadavg_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 
@@ -183,11 +186,13 @@ inode_t* procfs_service_loadavg_inode(inode_t* parent) {
 
 
 /**
- * @brief /proc/self -- a symlink to the calling task's own directory.
+ * @brief Generates /proc/self, a symlink to the calling task's own directory.
  *
- * A real symlink, and advertised as one. It used to be routed through the pid cache with a
- * key of 0, which the hashmap rejects as a NULL key, so every lookup allocated an inode
- * that could never be stored or found again.
+ * @param inode The /proc/self inode.
+ * @param buf Receives the link target.
+ * @param size Receives the length of the target.
+ * @param arg Unused.
+ * @return 0 on success.
  */
 static int procfs_service_self_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
 

@@ -52,21 +52,15 @@ static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size
 
     procfs_buf_t b = procfs_scratch();
 
-    //? Sampled once each: pmm_get_used_memory() sums the whole page-usage table under a
-    //? lock, and this used to call it three times per read.
     uint64_t total = pmm_get_total_memory();
     uint64_t used  = pmm_get_used_memory();
     uint64_t slab  = kheap_get_used_memory();
 
     uint64_t free = (total > used) ? (total - used) : 0;
 
-    /* Every key carries its colon. Active(anon), Inactive(anon), Active(file) and
-       Inactive(file) were written without one, which breaks any reader splitting on ":"
-       -- and free(1) is exactly such a reader. */
     procfs_bprintf(&b, "MemTotal:       %lu kB\n", total >> 10);
     procfs_bprintf(&b, "MemFree:        %lu kB\n", free >> 10);
 
-    //? Identical to MemFree by definition here: there is no reclaimable page cache to add.
     procfs_bprintf(&b, "MemAvailable:   %lu kB\n", free >> 10);
 
     procfs_bprintf(&b, "Buffers:        0 kB\n");
@@ -79,7 +73,6 @@ static int procfs_service_meminfo_fetch(inode_t* inode, char** buf, size_t* size
     procfs_bprintf(&b, "Active(file):   0 kB\n");
     procfs_bprintf(&b, "Inactive(file): 0 kB\n");
 
-    //? No swap support, so these are structurally zero rather than unknown.
     procfs_bprintf(&b, "SwapTotal:      0 kB\n");
     procfs_bprintf(&b, "SwapFree:       0 kB\n");
 

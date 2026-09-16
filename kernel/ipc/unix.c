@@ -38,10 +38,11 @@
 #include <aplus/vfs.h>
 
 
-//? Local sockets are ordinary VFS descriptors backed by an inode, not a
-//? separate numbering space like the lwIP ones. That is what makes dup(),
-//? fork() inheritance, close-on-exec, poll() and the last-close teardown work
-//? without a single line of socket-specific code in any of them.
+/**
+ * @brief Local sockets are ordinary VFS descriptors backed by an inode, not a numbering space of their own.
+ *
+ * dup(), fork() inheritance, close-on-exec, poll() and the last-close teardown all work unchanged.
+ */
 
 
 #define SOCKFS_FSID      0xDEADB0CE
@@ -75,9 +76,12 @@ static void __unix_wake(struct unix_sock* sock) {
 }
 
 
-//? Two separate questions, and they are not the same one. Nothing more will
-//? ever arrive once the peer has stopped writing; nothing we send will ever be
-//? read once the peer has stopped reading. shutdown() moves only one of them.
+/**
+ * @brief Tells whether a socket's peer is gone, so that nothing more will ever arrive.
+ *
+ * @param sock The endpoint to test.
+ * @return true if the peer has been released or closed.
+ */
 
 static inline bool __unix_peer_gone(struct unix_sock* sock) {
 
@@ -118,9 +122,6 @@ static void __unix_put(struct unix_sock* sock) {
     if (sock->backlog)
         kfree(sock->backlog);
 
-    //? sock->ev is deliberately left allocated: a task parked in poll() still
-    //? holds the address of its futex word and nothing unregisters that.
-
     kfree(sock);
 }
 
@@ -158,8 +159,6 @@ static struct unix_sock* __unix_alloc(int type) {
 }
 
 
-/* ---------------------------------------------------------------- inode ops */
-
 static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
@@ -187,8 +186,6 @@ static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size)
 
     ssize_t e = ringbuffer_read(&sock->rx, buf, size);
 
-    //? Nothing buffered and nobody left to send anything is end of stream, not
-    //? a reason to keep waiting.
     if (e == -EAGAIN && __unix_recv_done(sock))
         return 0;
 
@@ -220,14 +217,10 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
     if (unlikely(sock->shutdown_flags & UNIX_SHUT_WR))
         return -EPIPE;
 
-    //? Same contract as a pipe: writing to a peer that can no longer read is a
-    //? broken pipe. POSIX also wants SIGPIPE, which is not implemented yet.
     if (unlikely(__unix_send_done(sock)))
         return -EPIPE;
 
 
-    //? Data is written into the peer's receive buffer, which is what the peer
-    //? drains in sockfs_read().
     ssize_t e = ringbuffer_write(&sock->peer->rx, buf, size);
 
     if (e > 0)
@@ -251,9 +244,6 @@ static int sockfs_poll(inode_t* inode, int events) {
 
     if (sock->state == UNIX_SOCK_LISTENING) {
 
-        //? A listening socket is readable exactly when accept() would not
-        //? block, which is what lets a server sit in poll() over its listener
-        //? and its clients at once.
         if (sock->backlog_len > 0)
             revents |= POLLIN;
 
@@ -265,8 +255,6 @@ static int sockfs_poll(inode_t* inode, int events) {
         return (sock->state == UNIX_SOCK_CLOSED ? POLLHUP : 0) & (events | POLLHUP | POLLERR);
 
 
-    //? Readable covers "there is data" and "there never will be again": a
-    //? reader has to be woken for the end of the stream, not just for bytes.
     if (ringbuffer_available(&sock->rx) > 0 || __unix_recv_done(sock))
         revents |= POLLIN;
 
@@ -305,8 +293,6 @@ static int sockfs_close(inode_t* inode) {
 
         peer = sock->peer;
 
-        //? Connections queued but never accepted have nobody else to release
-        //? them; the listener takes them down with it.
         queued          = sock->backlog;
         queued_len      = sock->backlog_len;
         sock->backlog   = NULL;
@@ -320,8 +306,6 @@ static int sockfs_close(inode_t* inode) {
     }
 
 
-    //? Whoever is parked on either side has to look again: what they are
-    //? waiting for is never going to arrive now.
     __unix_wake(sock);
     __unix_wake(peer);
 
@@ -343,8 +327,6 @@ static int sockfs_close(inode_t* inode) {
     }
 
 
-    //? The peer keeps this endpoint alive until it closes too, so that it can
-    //? still see that we are gone. Drop only our own references.
     __unix_put(peer);
     __unix_put(sock);
 
@@ -386,9 +368,6 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
     inode->parent  = NULL;
     inode->flags   = INODE_FLAGS_ANONYMOUS;
 
-    //? The inode owns a reference: without it the endpoint would be freed the
-    //? moment its peer dropped the only other one, and the survivor would be
-    //? reading out of a destroyed buffer.
     inode->userdata = __unix_get(sock);
 
     inode->ops.close   = sockfs_close;
@@ -405,10 +384,13 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
 }
 
 
-/* ------------------------------------------------------------ fd plumbing */
-
-//? Install an endpoint into the caller's descriptor table. Returns the new fd,
-//? or a negative error with everything it allocated released again.
+/**
+ * @brief Installs an endpoint into the caller's descriptor table.
+ *
+ * @param sock The endpoint to install.
+ * @param flags O_NONBLOCK and O_CLOEXEC as requested by the caller.
+ * @return The new descriptor, or a negative errno with everything it allocated released again.
+ */
 
 static long __unix_install(struct unix_sock* sock, int flags) {
 
@@ -425,7 +407,6 @@ static long __unix_install(struct unix_sock* sock, int flags) {
         inode->userdata = NULL;
         kfree(inode);
 
-        //? Hand back the reference the inode took.
         __unix_put(sock);
 
         return -ENFILE;
@@ -454,8 +435,6 @@ static long __unix_install(struct unix_sock* sock, int flags) {
 
     if (unlikely(fd < 0)) {
 
-        //? fd_remove() runs the inode through vfs_close(), which is what
-        //? releases the socket, and then frees the anonymous inode.
         fd_remove(ref, true);
     }
 
@@ -482,9 +461,15 @@ struct unix_sock* unix_sock_from_fd(int fd) {
 }
 
 
-/* --------------------------------------------------------------- addresses */
-
-//? Copy a sockaddr_un in from userspace and hand back the path it names.
+/**
+ * @brief Copies a sockaddr_un in from userspace and hands back the path it names.
+ *
+ * @param addr The caller's address, in user memory.
+ * @param len The length of the caller's address.
+ * @param out Receives the path.
+ * @param outsz The size of @p out.
+ * @return 0 on success, or a negative errno.
+ */
 
 static long __unix_addr(const void* addr, uint32_t len, char* out, size_t outsz) {
 
@@ -555,8 +540,6 @@ static long __unix_addr_out(const char* path, void* addr, uint32_t* len) {
 }
 
 
-/* --------------------------------------------------------------- syscalls */
-
 long unix_socket(int type, int protocol) {
 
     if (unlikely(type != UNIX_TYPE_STREAM))
@@ -608,8 +591,6 @@ long unix_socketpair(int type, int protocol, int* sv) {
     }
 
 
-    //? Cross-linked and connected from the start: a socketpair has no name and
-    //? no handshake to perform.
     a->peer  = __unix_get(b);
     b->peer  = __unix_get(a);
     a->state = UNIX_SOCK_CONNECTED;
@@ -637,8 +618,6 @@ long unix_socketpair(int type, int protocol, int* sv) {
     }
 
 
-    //? Each endpoint is now owned by its descriptor; the references taken by
-    //? __unix_alloc() belong to those.
     __unix_put(a);
     __unix_put(b);
 
@@ -673,9 +652,6 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -ENOENT;
 
 
-    //? The node is a real directory entry of type S_IFSOCK, which is how
-    //? connect() finds this socket by path. Filesystems that cannot store the
-    //? type refuse here, which is why sockets belong on tmpfs.
     inode_t* node = path_lookup(cwd, path, O_CREAT | O_EXCL, S_IFSOCK | 0666);
 
     if (unlikely(!node))
@@ -773,10 +749,6 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -EPROTOTYPE;
 
 
-    //? The server side of the connection is built here and parked on the
-    //? listener's queue already linked to us, so accept() only has to hand it
-    //? a descriptor. That also means connect() has nothing left to wait for.
-
     struct unix_sock* server = __unix_alloc(sock->type);
 
     if (unlikely(!server))
@@ -837,7 +809,6 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags) {
 
     if (unlikely(fd < 0)) {
 
-        //? Put it back rather than dropping the connection on the floor.
         scoped_lock(&sock->lock) {
             if (sock->backlog_len < sock->backlog_cap) {
 
@@ -858,7 +829,6 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags) {
     }
 
 
-    //? The descriptor owns it now.
     __unix_put(server);
 
     if (addr && len) {
@@ -893,19 +863,17 @@ long unix_shutdown(struct unix_sock* sock, int how) {
 
     scoped_lock(&sock->lock) {
 
-        //? POSIX numbers these 0/1/2, which cannot be stored as a bitmask.
-
         switch (how) {
 
-            case 0: /* SHUT_RD */
+            case 0:
                 sock->shutdown_flags |= UNIX_SHUT_RD;
                 break;
 
-            case 1: /* SHUT_WR */
+            case 1:
                 sock->shutdown_flags |= UNIX_SHUT_WR;
                 break;
 
-            case 2: /* SHUT_RDWR */
+            case 2:
                 sock->shutdown_flags |= UNIX_SHUT_RD | UNIX_SHUT_WR;
                 break;
 

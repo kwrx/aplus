@@ -51,13 +51,8 @@ static int procfs_service_uptime_fetch(inode_t* inode, char** buf, size_t* size,
 
     procfs_buf_t b = procfs_scratch();
 
-    //? Sampled once. Reading the clock separately for each field let the seconds and the
-    //? fraction come from different instants, so the two could disagree.
     uint64_t ms = arch_timer_generic_getms();
 
-    /* Hundredths, zero-padded, as Linux prints them: the fraction used to be written with
-       %lu straight from the millisecond remainder, so 12005 ms read as "12.5". There is no
-       idle accounting, so the second figure repeats the first rather than inventing one. */
     procfs_bprintf(&b, "%lu.%02lu %lu.%02lu\n", ms / 1000, (ms % 1000) / 10, ms / 1000, (ms % 1000) / 10);
 
     *buf  = b.data;

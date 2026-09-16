@@ -98,22 +98,13 @@ SYSCALL(
                         break;
 
 
-                    /* A record is as long as the name it carries, so its size has to be known
-                       before deciding whether it fits. The loop used to test only the fixed
-                       part of the record against the space left and then write
-                       sizeof(linux_dirent64) + strlen(name) bytes, so a directory of long
-                       names ran past the end of the caller's buffer -- and for a libc reading
-                       a directory, what follows that buffer is its own heap. Padded to 8
-                       bytes, as the getdents64 ABI requires. */
                     const size_t reclen = (offsetof(struct linux_dirent64, d_name) + strlen(ent.d_name) + 1 + 7) & ~(size_t)7;
 
 
                     if (i + reclen > count) {
 
-                        /* Out of room. The read position has deliberately not been advanced
-                           yet, so this entry is simply delivered by the next call. */
                         if (i == 0)
-                            err = -EINVAL; /* buffer too small for even one entry */
+                            err = -EINVAL;
 
                         break;
                     }

@@ -65,10 +65,6 @@ SYSCALL(
             return poll_finish(err);
 
 
-        //? Blocking the signals the caller asked to ignore is the whole point of
-        //? ppoll() over poll(): it closes the window between changing the mask and
-        //? starting to wait, where a signal could arrive unseen and the wait would
-        //? then block forever. poll_finish() puts the old mask back.
         if ((err = poll_sigmask_install(sigmask, sigsetsize)) < 0)
             return poll_finish(err);
 

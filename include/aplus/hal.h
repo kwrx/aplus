@@ -92,8 +92,9 @@
         #define S_OK 64
     #endif
 
-    /* The access is made by kernel code on its own behalf, so a supervisor page is
-       acceptable. Never set for a pointer that came from userspace. */
+    /**
+     * @brief The access is made by kernel code on its own behalf, so a supervisor page is acceptable.
+     */
     #ifndef K_OK
         #define K_OK 128
     #endif
@@ -105,19 +106,10 @@
         #define uio_check(p, m) (arch_vmm_access(current_task->address_space, (uintptr_t)(p), (int)(m) | ((current_task->flags & TASK_FLAGS_KERNEL_UIO) ? K_OK : 0)) == 0 ? 1 : 0)
 
 
-/* Kernel code sometimes invokes a sys_* entry point directly -- mounting the root filesystem,
- * or execve() stat'ing its target into a local struct. The pointers it passes are then kernel
- * pointers, which uio_check() rejects, because from userspace such a pointer is an attempt to
- * make the kernel read or write its own memory.
+/**
+ * @brief Restores the uio scope a scoped_uio_kernel() block saved on entry.
  *
- * Wrap those calls so the check knows the pointers came from the kernel:
- *
- *     scoped_uio_kernel() {
- *         e = sys_newstat(filename, &st);
- *     }
- *
- * Restores the previous setting on exit, so it nests. Never wrap a call that forwards a
- * pointer which originally came from userspace.
+ * @param saved The setting to put back.
  */
 static inline void __scoped_uio_restore(const int* saved) {
 

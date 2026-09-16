@@ -58,11 +58,9 @@
 #define EC_FF_STATUS (1 << 0x17)
 
 
-/* Absolute axes are reported on one fixed scale rather than in whatever units the device
-   happens to use. A driver normalizes its own range onto this one, so a reader can map an
-   EV_ABS event onto the screen knowing only the screen size -- there is no ioctl to ask a
-   device what its range is, and a reader that hardcoded one device's range would be wrong
-   on the next. The maximum is what vaxis_t can hold, so no event needs a wider field. */
+/**
+ * @brief The fixed scale absolute axes are reported on, which every driver normalizes its own range onto.
+ */
 
 #define EV_ABS_MIN 0
 #define EV_ABS_MAX 32767

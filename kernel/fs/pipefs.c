@@ -36,13 +36,11 @@
 #include <aplus/utils/ringbuffer.h>
 
 
-//? A pipe is one buffer shared by two independently closeable endpoints, each
-//? with its own inode. Keeping the endpoints apart is what makes a peer close
-//? observable: the reader has to be able to tell "no data yet" from "no writer
-//? will ever come", and the writer has to learn that nobody is listening.
-//?
-//? The buffer outlives whichever end closes first and is torn down only once
-//? both are gone, so the survivor keeps working on a live channel.
+/**
+ * @brief A pipe is one buffer shared by two independently closeable endpoints, each with its own inode.
+ *
+ * The buffer outlives whichever end closes first and is torn down once both are gone.
+ */
 
 
 #define PIPEFS_FSID      0xDEADCAFE
@@ -140,13 +138,9 @@ int pipefs_close(inode_t* inode) {
     inode->userdata = NULL;
     kfree(ep);
 
-    //? Anyone still parked on this channel has to look again: they may be
-    //? waiting for data or for space that is never going to come now.
     __pipe_wake(pipe);
 
 
-    //? Whoever closes last owns the teardown; until then the survivors are
-    //? still reading from and writing to this buffer.
     if (last) {
 
         if (pipe->node) {
@@ -157,9 +151,6 @@ int pipefs_close(inode_t* inode) {
 
         ringbuffer_destroy(&pipe->rb);
 
-        //? pipe->ev is deliberately left allocated: a task parked in poll()
-        //? still holds the address of its futex word and nothing unregisters
-        //? that on the way out.
         kfree(pipe);
     }
 
@@ -189,9 +180,6 @@ ssize_t pipefs_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     ssize_t e = ringbuffer_read(&ep->pipe->rb, buf, size);
 
-    //? An empty buffer is only temporary while a writer still exists; once the
-    //? last one has gone it is end of file, which is what the caller must see
-    //? instead of blocking forever.
     if (e == -EAGAIN && atomic_load(&ep->pipe->writers) <= 0)
         return 0;
 
@@ -222,8 +210,6 @@ ssize_t pipefs_write(inode_t* inode, const void* buf, off_t offset, size_t size)
         return 0;
 
 
-    //? Writing into a pipe nobody can read from is a broken pipe. POSIX also
-    //? wants SIGPIPE raised here, but signal delivery is not implemented yet.
     if (unlikely(atomic_load(&ep->pipe->readers) <= 0))
         return -EPIPE;
 
@@ -257,8 +243,6 @@ int pipefs_poll(inode_t* inode, int events) {
         if (ringbuffer_available(&pipe->rb) > 0)
             revents |= POLLIN;
 
-        //? Still readable while data remains: a reader has to be able to drain
-        //? what was left behind before it sees the end of the stream.
         if (atomic_load(&pipe->writers) <= 0)
             revents |= POLLHUP;
     }
@@ -274,7 +258,6 @@ int pipefs_poll(inode_t* inode, int events) {
     }
 
 
-    //? POLLHUP and POLLERR are reported whether or not they were asked for.
     return revents & (events | POLLHUP | POLLERR);
 }
 
@@ -315,8 +298,6 @@ inode_t* pipefs_inode(void) {
     inode->sb      = &pipefs_superblock;
     inode->parent  = NULL;
 
-    //? Nothing else will ever reference this inode: it has no directory entry
-    //? and no dcache entry, so the last open file has to free it.
     inode->flags = INODE_FLAGS_ANONYMOUS;
 
     spinlock_init(&inode->lock);
@@ -424,18 +405,17 @@ int pipefs_create_pair(inode_t** rd, inode_t** wr, size_t bufsize) {
 }
 
 
-//? A named FIFO is a directory entry that hands out a fresh endpoint on every
-//? open(). The channel behind it is created by the first opener and detached
-//? again once the last one has gone, so the node stays usable for the life of
-//? the filesystem rather than working exactly once.
+/**
+ * @brief Hands out a fresh endpoint on a named FIFO, creating the channel behind it on the first open.
+ *
+ * @param node The FIFO directory entry.
+ * @param flags The open flags, whose access mode selects the endpoint direction.
+ * @return The endpoint inode, or NULL with errno set.
+ */
 
 inode_t* fifofs_open(inode_t* node, int flags) {
 
     DEBUG_ASSERT(node);
-
-    //? vfs_open() already holds node->lock and spinlock ownership is per-task,
-    //? so re-taking it here would trip the deadlock check. That same lock is
-    //? what serialises the channel creation below.
 
     struct pipe* pipe = (struct pipe*)node->userdata;
 
@@ -490,10 +470,14 @@ inode_t* fifofs_open(inode_t* node, int flags) {
 }
 
 
-//? Turn a freshly created directory entry into a FIFO node. Only ops.open is
-//? installed: the backing filesystem keeps its own read/write/getattr, which
-//? is what the previous implementation destroyed by overwriting them in place
-//? on a live, dcache-resident inode.
+/**
+ * @brief Turns a freshly created directory entry into a FIFO node, installing only its open handler.
+ *
+ * @param inode The directory entry to convert.
+ * @param bufsize Unused.
+ * @param flags Unused.
+ * @return The inode passed in.
+ */
 
 inode_t* vfs_mkfifo(inode_t* inode, size_t bufsize, int flags) {
 

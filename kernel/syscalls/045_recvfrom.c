@@ -65,8 +65,6 @@ SYSCALL(
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
 
-            //? Likewise: the peer is fixed, so there is no source address to
-            //? report and this is a plain read.
             if (sockaddr && socklen)
                 uio_w32((uint32_t*)socklen, 0);
 
