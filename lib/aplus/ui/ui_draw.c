@@ -49,9 +49,6 @@ void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius) {
 
 void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius) {
 
-    /* A radius past half the shorter side would make the two arcs on that side overlap and
-       cairo would draw the join inside out. Clamping is what lets a caller say "very
-       round" without knowing how small the widget has ended up after a layout pass. */
     const double limit = (w < h ? w : h) / 2.0;
 
     if (radius > limit) {
@@ -75,12 +72,16 @@ void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h,
 }
 
 
-/* One line, centred vertically in the rect and aligned horizontally as asked, clipped to
- * the rect so that a string too long for the space it was given spills nowhere.
+/**
+ * @brief Draws one line of text, centred vertically in a rect and clipped to it.
  *
- * Vertical centring uses the font's own extents rather than the string's: centring on the
- * ink of the glyphs actually present would make a row of buttons reading "7 8 9 +" sit at
- * four different heights, because none of those glyphs has the same ink box.
+ * @param cr The cairo context to draw with.
+ * @param rect The rectangle to draw in.
+ * @param text The string to draw.
+ * @param font The font file to draw it with.
+ * @param size The font size in pixels.
+ * @param color The colour of the text.
+ * @param align How to align the text horizontally.
  */
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align) {
 

@@ -51,11 +51,13 @@ static int ui_drain_payload(int fd, size_t size) {
 }
 
 
-/* @see <aplus/ui.h>.
+/**
+ * @brief Waits for the next event on a connection, recording a configure rather than acting on it.
  *
- * A configure is recorded and handed on, never acted on: the new surface is attached when the
- * caller gets to ui_window_apply_configure(). Attaching it here would detach the pixel buffer
- * from the event thread while the drawing thread is still writing into it.
+ * @param conn The connection to read from.
+ * @param out Receives the event.
+ * @param timeout_ms How long to wait, or a negative value to wait indefinitely.
+ * @return 1 when an event was read, 0 on timeout, or -1 with errno set.
  */
 int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
@@ -247,9 +249,6 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
             default:
 
-                /* An unknown message is still framed, so it can be stepped over rather than
-                   killing the connection. That is what lets a newer server talk to an older
-                   client without a version bump for every added event. */
                 if (ui_drain_payload(conn->fd, hdr.length) < 0) {
                     return -1;
                 }
@@ -257,8 +256,6 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 break;
         }
 
-        /* A message was consumed but produced no event for the caller. Only loop back to
-           poll() when there is a timeout to honour; a blocking caller simply reads again. */
         if (timeout_ms == 0) {
             return 0;
         }

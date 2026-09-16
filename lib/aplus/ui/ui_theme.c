@@ -26,21 +26,10 @@
 #include "ui_widget_internal.h"
 
 
-/* The scheme a client wakes up with, chosen to continue the frame the window manager draws
- * around it rather than to stand on its own: #2B2B2B against the titlebar's #2B2B2B, the
- * same #E8E8E8 on top of it, and surfaces that step away from that one neutral in both
- * directions. A window whose content started at some other grey would read as a panel
- * bolted into the frame instead of as the inside of it.
+/**
+ * @brief The scheme a client wakes up with, continuing the frame the window manager draws around it.
  *
- * The chrome is deliberately hueless -- the window manager marks the active window with a
- * ring, not a colour -- but an application has one thing on screen that is the point of
- * the screen, and no ring to say so. That is what `primary` is for, and it is the only
- * saturated colour in the scheme.
- *
- * Hover and active are white washes rather than a second and third colour per role.
- * Anything light enough to read against this background lightens further under one, so
- * the same pair works over the accent and over a plain grey button, and a new role costs
- * one colour instead of three.
+ * The chrome is hueless and `primary` is the one saturated colour; hover and active are white washes.
  */
 static const ui_theme_t ui_theme_default = {
 
@@ -120,9 +109,6 @@ ui_color_t ui_color_blend(ui_color_t under, ui_color_t over) {
         .g = under.g * (1.0 - a) + over.g * a,
         .b = under.b * (1.0 - a) + over.b * a,
 
-        /* The result is painted where `under` already was, so it inherits that
-           coverage: washing a translucent overlay over something does not make the
-           thing itself any more opaque. */
         .a = under.a,
     };
 

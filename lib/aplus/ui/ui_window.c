@@ -46,11 +46,10 @@ ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id) {
 }
 
 
-/* Let go of the window's surface.
+/**
+ * @brief Lets go of the window's surface, which the server has already removed.
  *
- * The segment belongs to the server, which has already removed it; detaching is this end's
- * whole share of the bookkeeping, and is what finally lets the kernel hand the frames back once
- * the server has let go too.
+ * @param win The window to detach.
  */
 void ui_window_drop_surface(ui_window_t* win) {
 
@@ -65,22 +64,19 @@ void ui_window_drop_surface(ui_window_t* win) {
 }
 
 
-/* Take up the surface a UI_EV_CONFIGURE described, along with its size and serial.
+/**
+ * @brief Takes up the surface a UI_EV_CONFIGURE described, along with its size and serial.
  *
- * A segment too small for the surface it describes is refused, so that a bad or truncated
- * configure cannot turn into a write past the end of it. The new one is attached before the old
- * one is let go, so that a failure leaves the window drawing into a surface that still exists
- * rather than into nothing.
+ * The new surface is attached before the old one is let go, and the whole of it is damaged.
  *
- * Nothing is remapped when the id has not changed. The server sends a configure at the end of
- * every drag, not only the ones that changed the size, and only a size change makes it build a
- * new segment; re-attaching the one already held would work, but costs a range of address space
- * that shmdt(2) does not give back. An id is never reused while the segment it names is alive,
- * so the same id is the same memory.
- *
- * The whole surface is damaged on the way out. The server carried the old contents over so that
- * a window does not go black mid-drag, but only the client knows what belongs there at the new
- * size.
+ * @param win The window to attach it to.
+ * @param width The new width in pixels.
+ * @param height The new height in pixels.
+ * @param stride The new row stride in bytes.
+ * @param shm_id The shared memory segment holding the surface.
+ * @param shm_size The size of that segment.
+ * @param serial The serial of the configure being answered.
+ * @return 0 on success, or -1 with errno set.
  */
 int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stride, int shm_id, size_t shm_size, uint32_t serial) {
 
@@ -121,12 +117,11 @@ int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stri
 }
 
 
-/* @see <aplus/ui.h>.
+/**
+ * @brief Applies a pending configure, clearing it only once the new surface is in place.
  *
- * The pending configure is cleared only once the new surface is actually in place. Dropping it
- * up front would leave the window drawing at the old size against a serial the server has
- * already moved past, so every commit from then on is discarded and the window never paints
- * again; keeping it pending means the caller can simply try again.
+ * @param win The window to configure.
+ * @return 1 when a configure was applied, 0 when none was pending, or -1 with errno set.
  */
 int ui_window_apply_configure(ui_window_t* win) {
 
@@ -184,10 +179,6 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
     }
 
 
-    /* Wait for the server to name and size the window. The server queues the configure
-       first, but step over anything else that turns up rather than treating it as a
-       protocol error -- a client with no window yet has nothing to do with a stray event
-       anyway, and this keeps the handshake from depending on the server's queue order. */
     ui_msg_configure_t cfg;
 
     for (;;) {
@@ -367,10 +358,11 @@ void ui_window_damage_all(ui_window_t* win) {
 }
 
 
-/* Tell the server which part of the surface changed.
+/**
+ * @brief Tells the server which part of the surface changed.
  *
- * One small message for however much changed: the pixels are already where the server reads
- * them from, so a full-screen repaint costs the same as a single character cell.
+ * @param win The window to commit.
+ * @return 0 on success, or -1 with errno set.
  */
 int ui_window_commit(ui_window_t* win) {
 

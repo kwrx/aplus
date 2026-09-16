@@ -155,36 +155,52 @@ struct ui_view {
 };
 
 
-//* ui_font.c
-//? NULL when the file cannot be loaded, in which case the caller draws no text rather
-//? than failing: a window with blank labels is still a usable thing to debug.
+/**
+ * @brief Loads a font face from a file. Implemented in ui_font.c.
+ *
+ * @param path The font file to load.
+ * @return The face, or NULL when the file cannot be loaded, in which case the caller draws no text.
+ */
 cairo_font_face_t* ui_font_face(const char* path);
 
-//* ui_widget.c
+/**
+ * @brief Implemented in ui_widget.c.
+ */
 ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interactive);
 void ui_widget_draw(ui_widget_t* widget, cairo_t* cr);
 bool ui_widget_hit(const ui_widget_t* widget, int x, int y);
 
-//* ui_draw.c
+/**
+ * @brief Implemented in ui_draw.c.
+ */
 void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius);
 
-//? The same path in device units, for the half-pixel insets a centred stroke needs.
+/**
+ * @brief The same path in device units, for the half-pixel insets a centred stroke needs.
+ */
 void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius);
 void ui_draw_set_color(cairo_t* cr, ui_color_t color);
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align);
 
-//? How a disabled control is drawn: every colour it would have used pulled back towards
-//? the backdrop. Fading rather than greying keeps a disabled accent recognisable as the
-//? accent, which a single flat grey would not.
+/**
+ * @brief Pulls a colour back towards the backdrop, which is how a disabled control is drawn.
+ *
+ * @param color The colour to fade.
+ * @param theme The theme holding the backdrop.
+ * @return The faded colour.
+ */
 ui_color_t ui_draw_dim(ui_color_t color, const ui_theme_t* theme);
 
-//* ui_panel.c / ui_label.c / ui_button.c
+/**
+ * @brief Implemented in ui_panel.c, ui_label.c and ui_button.c.
+ */
 void ui_panel_draw(ui_widget_t* widget, cairo_t* cr);
 void ui_label_draw(ui_widget_t* widget, cairo_t* cr);
 void ui_button_draw(ui_widget_t* widget, cairo_t* cr);
 
-//? Pointer state transitions, reported back so that the view only repaints a button that
-//? actually changed. Returns true when the button needs redrawing.
+/**
+ * @brief Pointer state transitions, reported back so that the view only repaints a button that changed.
+ */
 bool ui_button_set_hovered(ui_widget_t* widget, bool hovered);
 bool ui_button_set_pressed(ui_widget_t* widget, bool pressed);
 
