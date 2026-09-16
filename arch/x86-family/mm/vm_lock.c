@@ -38,19 +38,14 @@
 #include <arch/x86/vmm.h>
 
 
-/*!
- * @brief arch_vmm_lock().
- *        Make a user range safe for the kernel to dereference.
+/**
+ * @brief Makes a user range safe for the kernel to dereference, and opens the SMAP window.
  *
- * Materialises any copy-on-write or demand-paged entry in the range, so that the
- * uio_* accessors can translate it, and opens the SMAP window.
+ * Must be paired with arch_vmm_unlock() on the same CPU, and the pair is not re-entrant.
  *
- * Must be paired with arch_vmm_unlock() on the same CPU. The pair is not re-entrant:
- * a nested unlock closes the window for the outer region too.
- *
- * @param space: address space owning the range.
- * @param virtaddr: base of the range.
- * @param size: length of the range in bytes.
+ * @param space Address space owning the range.
+ * @param virtaddr Base of the range.
+ * @param size Length of the range in bytes.
  */
 __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, size_t size) {
 
@@ -58,18 +53,11 @@ __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, 
     DEBUG_ASSERT(size > 0);
 
 
-    /* Pre-fault the range. arch_vmm_getphysaddr() deliberately refuses to resolve a
-       not-yet-materialised entry -- it would have to fault it into whichever address space
-       is loaded in CR3, which need not be @space -- so the range has to be settled here,
-       before the kernel starts dereferencing it. */
     if (likely(size > 0)) {
 
         const uintptr_t s = virtaddr & ~(X86_MMU_PAGESIZE - 1);
         const uintptr_t e = (virtaddr + size + X86_MMU_PAGESIZE - 1) & ~(X86_MMU_PAGESIZE - 1);
 
-        /* Only meaningful for the address space we are actually running on: x86_vmm_resolve()
-           walks a root table, and a range belonging to a space that is not loaded cannot be
-           touched through uio_* anyway. */
         if (space->pm == x86_get_cr3()) {
 
             scoped_lock(&space->lock) {
@@ -85,8 +73,6 @@ __nonnull(1) void arch_vmm_lock(vmm_address_space_t* space, uintptr_t virtaddr, 
 
 
 #if defined(CONFIG_X86_ENABLE_SMAP)
-    /* stac/clac rather than a CR4 read-modify-write: toggling CR4.SMAP is a serializing
-       operation on every user-memory access the kernel makes. */
     if (cpu_has(current_cpu->id, X86_FEATURE_SMAP))
         __asm__ __volatile__("stac" ::: "cc");
 #endif

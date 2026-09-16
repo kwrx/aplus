@@ -92,9 +92,6 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     fpu_save(&sigcontext->fpuregs[0]);
 
 
-    /* Snapshot the syscall this signal is interrupting, before the handler gets to run and
-       make syscalls of its own over current_task->syscall. sigreturn needs it to honour
-       SA_RESTART; without it the only thing left to restart is sigreturn itself. */
     current_task->syscall.interrupted.index  = current_task->syscall.index;
     current_task->syscall.interrupted.param0 = current_task->syscall.param0;
     current_task->syscall.interrupted.param1 = current_task->syscall.param1;
@@ -120,14 +117,6 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
         FRAME(current_cpu)->ss    = USER_DS | 3;
         FRAME(current_cpu)->flags = 0x202;
 
-        //? POSIX: for as long as the handler runs, the blocked set is whatever was already
-        //? blocked, plus the handler's own sa_mask, plus the signal being delivered unless
-        //? SA_NODEFER asks to let it nest. sigcontext->mask saved just above is what sigreturn
-        //? puts back afterwards, so adding to the live mask here is safe.
-        //?
-        //? sa_mask is the two-word mask the syscall ABI carries, not a whole sigset_t, so that
-        //? is all there is to read: taking sizeof(sigset_t) from it used to drag in 120 bytes
-        //? of the neighbouring action[] entries and install those as the mask.
         sigset_t handler_mask;
 
         memset(&handler_mask, 0, sizeof(sigset_t));
@@ -190,19 +179,7 @@ long arch_task_return_from_signal(void) {
     current_cpu->kstack = sigcontext->kstack;
 
 
-    /* SA_RESTART applies to the syscall the signal interrupted, and only when it was
-     * actually interrupted -- which is exactly what -EINTR left in the return register of
-     * the frame saved above.
-     *
-     * syscall_restart() works off current_task->syscall, so the snapshot taken at delivery
-     * has to go back first. Calling it without that restarted rt_sigreturn instead: the
-     * handler returned, sigreturn restarted sigreturn, and the recursion ran the kernel
-     * stack off the bottom of its 32KiB allocation and into whatever was allocated below
-     * it -- usually this task's own signal frame, whose FPU save area it overwrote with
-     * kernel stack frames. The next xrstor(2) then took a general protection fault, which
-     * is how this surfaced: a #GP in the FPU restore path on any window resize, because
-     * SIGWINCH is the first signal in this system that a resize can send. */
-    if ((sigcontext->flags & SA_RESTART) && (long)sigcontext->regs.ax == -4 /* EINTR */) {
+    if ((sigcontext->flags & SA_RESTART) && (long)sigcontext->regs.ax == -4) {
 
         current_task->syscall.index  = current_task->syscall.interrupted.index;
         current_task->syscall.param0 = current_task->syscall.interrupted.param0;
@@ -212,18 +189,10 @@ long arch_task_return_from_signal(void) {
         current_task->syscall.param4 = current_task->syscall.interrupted.param4;
         current_task->syscall.param5 = current_task->syscall.interrupted.param5;
 
-        //? Flagged rather than called here. This is the same restart a syscall that slept
-        //? asks for, and letting the one path in x86_exception_handler() do it keeps the
-        //? restarted call out of sigreturn's own stack frame -- and means the result lands
-        //? in the frame restored above, which is the context being resumed.
         thread_restart_syscall(current_task);
     }
 
 
-    /* Hand back whatever the interrupted context had in its return register rather than a
-       fixed -EINTR: an interrupted syscall already carries -EINTR there, and a signal that
-       arrived while the task was in userspace must not have its return register rewritten
-       on the way back. */
     return (long)sigcontext->regs.ax;
 }
 
@@ -270,11 +239,6 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
         fpu_switch(prev->fpu, next->fpu);
 
-        /* prev has no address space once it has exited -- sys_exit() frees it and clears
-           the pointer while the task stays on the run queue as a zombie, and switching away
-           from that task is precisely this call. Reading prev->address_space->pm here used
-           to be a use-after-free for the same reason; with nothing to compare against, just
-           load next's unconditionally. */
         if (unlikely(!prev->address_space || prev->address_space->pm != next->address_space->pm)) {
             arch_task_switch_address_space(next->address_space);
         }
@@ -306,7 +270,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
 
 
 /**
- * @brief Ticks since boot, in the USER_HZ units /proc reports times in.
+ * @brief Reports the ticks since boot, in the USER_HZ units /proc reports times in.
+ *
+ * @return The tick count.
  */
 static inline uint64_t arch_task_boot_ticks(void) {
     return arch_timer_generic_getms() / (1000 / TASK_USER_HZ);
@@ -374,9 +340,6 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->next   = NULL;
     task->parent = current_task;
 
-    /* Reported by /proc. A fresh task shows its parent's name until it execve()s, the way
-       Linux does; `ppid` is stored rather than followed because nothing reparents a child
-       when its parent is reaped, so task->parent dangles for orphans. */
     task->start_time = arch_task_boot_ticks();
     task->ppid       = current_task->pid;
 
@@ -578,8 +541,6 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
     strncpy(task->comm, name, TASK_COMM_LEN - 1);
     task->comm[TASK_COMM_LEN - 1] = '\0';
 
-    //? A kernel thread has no argv to show, and /proc/<pid>/cmdline being empty is how
-    //? userspace tells a kernel thread from a process.
     task->cmdline_len = 0;
 
 

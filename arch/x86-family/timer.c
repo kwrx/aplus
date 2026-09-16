@@ -213,10 +213,9 @@ uint64_t arch_timer_percpu_getres(void) {
 }
 
 
-/* The HPET is only mapped once timer_init() has parsed its ACPI table, and the counter
-   register lives at hpet_address + 0xF0 -- so a caller that runs earlier faults on the
-   literal address 0xF0 rather than reading a clock. Anything asking the time before there
-   is one gets zero. */
+/**
+ * @brief Tells whether the HPET has been mapped, which it is not until timer_init() has parsed its ACPI table.
+ */
 #define HPET_READY() (likely(hpet_address != 0))
 
 uint64_t arch_timer_generic_getticks(void) {

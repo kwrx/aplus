@@ -159,18 +159,8 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
 
         /* Page Table */
         {
-            /* Per-page copy. `b` used to be narrowed in place here, so a single absent page
-               in the range cleared the present bit for every page after it. */
             uint64_t pb = b;
 
-            /* Absent for two quite different reasons, and only one of them is permanent.
-             *
-             * A demand mapping waiting for its first fault has no frame yet, and making it
-             * present would point the CPU at nothing; it has to stay absent. A page mapped
-             * PROT_NONE does have a frame -- it is absent on purpose -- and mprotect() is
-             * exactly how it gets turned back on, which is what musl does to the body of
-             * every thread stack after mapping the whole thing PROT_NONE. Tell the two
-             * apart by whether the entry names a frame, not by the present bit alone. */
             if (!(*d & X86_MMU_PG_P) && !(*d & X86_MMU_ADDRESS_MASK))
                 pb &= ~X86_MMU_PG_P;
 
@@ -178,10 +168,6 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
                 pb |= X86_MMU_PG_AP_COW_RW;
 
 
-            /* Preserve the software bits that describe the frame rather than its protection:
-               PG_AP_PFB records that the frame is ours to free, and dropping it here leaked
-               every frame that had ever been through mprotect -- including each PT_LOAD
-               segment, which execve() mprotects on every exec. */
             *d = (*d & X86_MMU_ADDRESS_MASK) | (*d & X86_MMU_PG_AP_TP_MASK) | (*d & X86_MMU_PG_AP_PFB) | pb;
 
 

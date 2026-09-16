@@ -68,7 +68,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
     uintptr_t e = virtaddr + length;
 
 
-    /* Reject a length that wraps: the loop below would never terminate. */
     if (unlikely(e < virtaddr))
         return ARCH_VMM_MAP_FAILED;
 
@@ -100,7 +99,7 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
     const uintptr_t base = s;
 
 
-    uint64_t b = X86_MMU_PG_P; // flags for Page Table
+    uint64_t b = X86_MMU_PG_P;
 
 
 
@@ -177,9 +176,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
     }
 
 
-    /* A demand mapping starts out absent and is faulted in by pagefault_handle(). Remember
-       whether the caller asked for a writable page so that resolving the fault restores the
-       requested permission rather than unconditionally granting write access. */
     if (b & X86_MMU_PG_RW)
         b |= X86_MMU_PG_AP_COW_RW;
 
@@ -191,9 +187,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
 
     for (; s < e; s += pagesize, p += pagesize) {
 
-        /* Flags for intermediate tables. Computed per page rather than once for the whole
-           request: a range may straddle the user/kernel split, and the hardware ANDs the user
-           bit across every level, so a table shared with the wrong half would be unusable. */
         uint64_t q = X86_MMU_PG_P | X86_MMU_PG_RW;
 
         if (s < X86_MMU_USERSPACE_END)
@@ -210,11 +203,7 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
         }
 
 
-        /* Page Table */
         {
-            /* Checked unconditionally: this used to be a DEBUG_ASSERT, which compiles away in a
-               release build and let an overlapping map silently overwrite a live entry and leak
-               its frame. */
             if (unlikely(*d != X86_MMU_CLEAR)) {
                 failed = true;
                 break;
@@ -233,9 +222,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
 
                 } else {
 
-                    /* Zeroed, not merely allocated. These frames back anonymous mmap(2) and
-                       brk(2) memory, and handing them over as-is disclosed whatever the
-                       previous owner had left in them. */
                     uintptr_t frame = __try_alloc_frame(pagesize, true);
 
                     if (unlikely(frame == X86_MMU_FRAME_NONE)) {
@@ -259,10 +245,6 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
 
     if (unlikely(failed)) {
 
-        /* Roll back the pages this call established. Intermediate tables allocated along the
-           way are left in place: they are valid empty tables, will be reused by a later map at
-           the same address, and are released with the rest of the hierarchy when the address
-           space is torn down. */
         if (s > base)
             arch_vmm_unmap(space, base, s - base);
 

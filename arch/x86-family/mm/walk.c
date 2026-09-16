@@ -42,34 +42,18 @@
 #define TABLE(e) ((x86_page_t*)arch_vmm_p2v((uintptr_t)(e) & X86_MMU_ADDRESS_MASK, ARCH_VMM_AREA_HEAP))
 
 
-/*!
- * @brief x86_vmm_walk().
- *        Walk a page table hierarchy down to the entry mapping @virtaddr.
+/**
+ * @brief Walks a page table hierarchy down to the entry mapping an address.
  *
- * This is the single implementation shared by arch_vmm_map(), arch_vmm_unmap(),
- * arch_vmm_mprotect(), arch_vmm_access(), arch_vmm_getphysaddr() and pagefault_handle().
- * Keeping one copy is deliberate: the six hand-written walks this replaced had each
- * drifted, and several bugs existed in only a subset of them.
+ * The returned pointer aliases the live page tables, so the caller must hold the address space lock.
  *
- * @param pm: physical address of the root table.
- * @param virtaddr: address to translate.
- * @param pagesize: in/out. On entry, the page size the caller wants to reach, or
- *                  X86_MMU_WALK_ANY to stop at whatever level the existing tables use.
- *                  On return, the size of the page the returned entry maps.
- * @param table_flags: flags applied to intermediate tables created by this walk.
- *                     Ignored unless X86_VMM_WALK_CREATE is set.
- * @param walk_flags: @see X86_VMM_WALK_*
- * @param effective: optional. Receives the permissions the hardware would apply across the
- *                   intermediate levels: PG_U and PG_RW are ANDed down the hierarchy, PT_NX is
- *                   ORed. The leaf entry itself is not folded in -- the caller has it. Pass
- *                   NULL when only the entry pointer is wanted.
- *
- * @return a pointer to the leaf entry, or NULL if the walk could not complete: a
- *         missing table without X86_VMM_WALK_CREATE, a request to descend below an
- *         existing huge page, or an out-of-memory condition while creating tables.
- *
- * The returned pointer aliases the live page tables, so the caller must hold the
- * address space lock across both this call and its use of the result.
+ * @param pm Physical address of the root table.
+ * @param virtaddr Address to translate.
+ * @param pagesize In/out. The page size to reach, or X86_MMU_WALK_ANY; receives the size actually mapped.
+ * @param table_flags Flags applied to intermediate tables created by this walk.
+ * @param walk_flags @see X86_VMM_WALK_*
+ * @param effective Optional. Receives the permissions the hardware would apply across the intermediate levels.
+ * @return A pointer to the leaf entry, or NULL if the walk could not complete.
  */
 x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, uint64_t table_flags, int walk_flags, uint64_t* effective) {
 
@@ -83,22 +67,12 @@ x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, 
     uintptr_t s = virtaddr;
     x86_page_t* d;
 
-    /* The hardware ANDs U and RW down the hierarchy and ORs NX, so start permissive and
-       narrow at each level we pass through. */
     uint64_t eff = X86_MMU_PG_U | X86_MMU_PG_RW;
 
     if (effective)
         *effective = eff;
 
 
-/*
- * Descend one level: settle the entry at the current level, fold its permissions into the
- * running total, then step to the entry it points at. On a create walk a missing entry is
- * allocated; on a read walk a missing entry ends the walk.
- *
- * Note the leaf is deliberately never folded in -- the caller is handed the leaf and can
- * inspect it directly, and folding it would hide which level denied the access.
- */
 #define DESCEND(shift, mask)                                                       \
     {                                                                              \
         if (*d == X86_MMU_CLEAR) {                                                 \
@@ -126,15 +100,12 @@ x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, 
 
 #if defined(__x86_64__)
 
-    /* PML4 */
     d = &((x86_page_t*)arch_vmm_p2v(pm, ARCH_VMM_AREA_HEAP))[(s >> 39) & 0x1FF];
 
-    /* -> PDPT */
     DESCEND(30, 0x1FF);
 
     if (*d & X86_MMU_PG_PS) {
 
-        /* An existing 1GiB page. Fine unless the caller wanted to go deeper. */
         if (want != X86_MMU_WALK_ANY && want != X86_MMU_HUGE_1GB_PAGESIZE)
             return NULL;
 
@@ -145,7 +116,6 @@ x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, 
         return *pagesize = X86_MMU_HUGE_1GB_PAGESIZE, d;
 
 
-    /* -> PD */
     DESCEND(21, 0x1FF);
 
     if (*d & X86_MMU_PG_PS) {
@@ -160,12 +130,10 @@ x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, 
         return *pagesize = X86_MMU_HUGE_2MB_PAGESIZE, d;
 
 
-    /* -> PT */
     DESCEND(12, 0x1FF);
 
 #elif defined(__i386__)
 
-    /* PD */
     d = &((x86_page_t*)arch_vmm_p2v(pm, ARCH_VMM_AREA_HEAP))[(s >> 22) & 0x3FF];
 
     if (*d & X86_MMU_PG_PS) {
@@ -180,7 +148,6 @@ x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, 
         return *pagesize = X86_MMU_HUGE_2MB_PAGESIZE, d;
 
 
-    /* -> PT */
     DESCEND(12, 0x3FF);
 
 #else

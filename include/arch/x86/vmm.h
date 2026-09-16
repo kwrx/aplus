@@ -54,18 +54,19 @@
     #define X86_MMU_PG_AP_TP_MMAP (1ULL << 10)
     #define X86_MMU_PG_AP_TP_COW  (2ULL << 10)
 
-    /* The frame belongs to a shared memory segment rather than to this address space.
-       Spelled as a page type rather than with the global bit, which would otherwise be the
-       obvious way to say "do not copy this on fork": CR4.PGE is on, so a global user page
-       would keep a live TLB entry across a CR3 reload and let one process read the frame
-       another process had mapped at the same address. */
+    /**
+     * @brief The frame belongs to a shared memory segment rather than to this address space.
+     *
+     * Spelled as a page type rather than with the global bit, which would survive a CR3 reload.
+     */
     #define X86_MMU_PG_AP_TP_SHARED (3ULL << 10)
 
     #define X86_MMU_PG_AP_TP_MASK (3ULL << 10)
 
 
-    /* System defined 62-52: remembers whether the page was writable before it was marked COW,
-       so that resolving the fault restores the original permission instead of granting RW. */
+    /**
+     * @brief Remembers whether the page was writable before it was marked copy-on-write.
+     */
     #define X86_MMU_PG_AP_COW_RW (1ULL << 52)
 
 
@@ -86,16 +87,18 @@
 
     #define X86_MMU_CLEAR             0x0000000000000000ULL
 
-    /* Sentinel returned by __try_alloc_frame() when physical memory is exhausted. */
+    /**
+     * @brief Sentinel returned by __try_alloc_frame() when physical memory is exhausted.
+     */
     #define X86_MMU_FRAME_NONE        ((uintptr_t)-1ULL)
 
     #define X86_MMU_DIRTY_ACCESS_MASK 0x0000000000000F9FULL
     #define X86_MMU_ADDRESS_MASK      0x0000FFFFFFFFF000ULL
 
 
-/* First address above the canonical low half, i.e. the end of userspace.
-   This was previously spelled as the decimal literal 800000000000 (~745GiB) in vm_map.c,
-   which lands in the middle of the user mmap window. */
+/**
+ * @brief First address above the canonical low half, which is the end of userspace.
+ */
     #if defined(__x86_64__)
         #define X86_MMU_USERSPACE_END 0x0000800000000000ULL
     #elif defined(__i386__)
@@ -120,12 +123,12 @@ typedef uint32_t x86_page_t;
 __BEGIN_DECLS
 
 
-/*!
- * @brief __try_alloc_frame().
- *        Allocate a physical frame, returning X86_MMU_FRAME_NONE when memory is exhausted.
+/**
+ * @brief Allocates a physical frame, for any path reachable from userspace.
  *
- * Prefer this over __alloc_frame() on any path reachable from userspace: __alloc_frame()
- * panics, which would let an oversized mmap(2) take down the kernel.
+ * @param pagesize The size of the frame to allocate.
+ * @param zero Whether to zero it.
+ * @return The physical address, or X86_MMU_FRAME_NONE when memory is exhausted.
  */
 static inline uintptr_t __try_alloc_frame(uintptr_t pagesize, bool zero) {
 
@@ -153,11 +156,12 @@ static inline uintptr_t __try_alloc_frame(uintptr_t pagesize, bool zero) {
 }
 
 
-/*!
- * @brief __alloc_frame().
- *        Allocate a physical frame, panicking when memory is exhausted.
+/**
+ * @brief Allocates a physical frame, panicking when memory is exhausted; only for paths that cannot recover.
  *
- * Only for boot-time and other paths that genuinely cannot recover.
+ * @param pagesize The size of the frame to allocate.
+ * @param zero Whether to zero it.
+ * @return The physical address.
  */
 static inline uintptr_t __alloc_frame(uintptr_t pagesize, bool zero) {
 
@@ -184,10 +188,14 @@ static inline void __free_frame(uintptr_t p, uintptr_t pagesize) {
 }
 
 
-/* x86_vmm_walk() control flags */
+/**
+ * @brief x86_vmm_walk() control flags.
+ */
     #define X86_VMM_WALK_CREATE (1 << 0) /* allocate missing intermediate tables */
 
-/* Page size requested from x86_vmm_walk(): stop wherever the existing tables do. */
+/**
+ * @brief Page size requested from x86_vmm_walk(): stop wherever the existing tables do.
+ */
     #define X86_MMU_WALK_ANY (0UL)
 
 x86_page_t* x86_vmm_walk(uintptr_t pm, uintptr_t virtaddr, uintptr_t* pagesize, uint64_t table_flags, int walk_flags, uint64_t* effective);

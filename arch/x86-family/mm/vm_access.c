@@ -65,10 +65,6 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
         s = (s & ~(X86_MMU_PAGESIZE - 1));
 
 
-    /* A user pointer must live in the canonical low half. Rejecting the higher half here is
-       what stops a process from handing the kernel one of its own addresses: KERNEL_HEAP_AREA
-       direct-maps all of physical memory, so a syscall that accepted such a pointer would read
-       or write arbitrary kernel memory on the caller's behalf. */
     if (!(mode & (S_OK | K_OK))) {
 
         if (unlikely(virtaddr >= X86_MMU_USERSPACE_END))
@@ -96,32 +92,23 @@ __nonnull(1) int arch_vmm_access(vmm_address_space_t* space, uintptr_t virtaddr,
         check_or_fail(*d != X86_MMU_CLEAR);
 
 
-        /* Fold the leaf in: from here on `perm` is what the hardware would actually enforce
-           for this address, across every level of the hierarchy. */
         uint64_t perm = (effective & (*d | ~(X86_MMU_PG_U | X86_MMU_PG_RW))) | ((effective | *d) & X86_MMU_PT_NX) | (*d & X86_MMU_PG_P);
 
 
         /* Page Table */
         {
-            /* Unless the caller explicitly wants a supervisor page, the access is made on
-               behalf of userspace and the page must carry the user bit at every level. */
             if (!(mode & (S_OK | K_OK))) {
                 check_or_fail(perm & X86_MMU_PG_U);
             }
 
             if (mode & R_OK) {
                 if (!(perm & X86_MMU_PG_P)) {
-                    /* A copy-on-write entry is absent on purpose; the fault handler will
-                       materialise it on first touch. */
                     check_or_fail((*d & X86_MMU_PG_AP_TP_MASK) == X86_MMU_PG_AP_TP_COW);
                 }
             }
 
 #if defined(__x86_64__)
             if (mode & X_OK) {
-                /* Previously also tested bit 47, which is part of the physical address rather
-                   than a permission -- executability was being decided by where the frame
-                   happened to live. */
                 check_or_fail(!(perm & X86_MMU_PT_NX));
             }
 #endif

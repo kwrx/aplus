@@ -39,22 +39,14 @@
 
 
 
-/*!
- * @brief arch_vmm_flush().
- *        Invalidate the TLB entry for a single page of an address space.
+/**
+ * @brief Invalidates the TLB entry for a single page of an address space, on every CPU that holds it.
  *
- * The previous code issued a bare invlpg from whichever CPU happened to be editing the
- * tables. That is wrong twice over: it does nothing for the other CPUs, and when @space is
- * not the one currently loaded in CR3 it invalidates an unrelated translation belonging to
- * the address space that *is* loaded, while leaving the intended one stale.
- *
- * @param space: address space the entry belongs to.
- * @param virtaddr: address whose translation is now stale.
+ * @param space Address space the entry belongs to.
+ * @param virtaddr Address whose translation is now stale.
  */
 __nonnull(1) void arch_vmm_flush(vmm_address_space_t* space, uintptr_t virtaddr) {
 
-    /* Higher-half mappings are shared by every address space, so they must always be
-       invalidated locally regardless of which space the caller named. */
     if (space->pm == x86_get_cr3() || virtaddr >= X86_MMU_USERSPACE_END) {
         __asm__ __volatile__("invlpg (%0)" ::"r"(virtaddr) : "memory");
     }
@@ -64,16 +56,12 @@ __nonnull(1) void arch_vmm_flush(vmm_address_space_t* space, uintptr_t virtaddr)
 }
 
 
-/*!
- * @brief arch_vmm_flush_range().
- *        Invalidate the TLB entries covering a range.
+/**
+ * @brief Invalidates the TLB entries covering a range, falling back to a full flush for a large one.
  *
- * Falls back to a full flush once the range is large enough that per-page invalidation
- * costs more than reloading CR3.
- *
- * @param space: address space the range belongs to.
- * @param virtaddr: base address.
- * @param length: size of the range in bytes.
+ * @param space Address space the range belongs to.
+ * @param virtaddr Base address.
+ * @param length Size of the range in bytes.
  */
 __nonnull(1) void arch_vmm_flush_range(vmm_address_space_t* space, uintptr_t virtaddr, size_t length) {
 
@@ -84,7 +72,6 @@ __nonnull(1) void arch_vmm_flush_range(vmm_address_space_t* space, uintptr_t vir
     const uintptr_t s = virtaddr & ~(X86_MMU_PAGESIZE - 1);
     const uintptr_t e = (virtaddr + length + X86_MMU_PAGESIZE - 1) & ~(X86_MMU_PAGESIZE - 1);
 
-    /* Past this many pages a full reload is cheaper than walking the range. */
     if ((e - s) >> 12 > 64) {
         return arch_vmm_flush_all(space);
     }
@@ -94,11 +81,10 @@ __nonnull(1) void arch_vmm_flush_range(vmm_address_space_t* space, uintptr_t vir
 }
 
 
-/*!
- * @brief arch_vmm_flush_all().
- *        Drop every non-global TLB entry for an address space.
+/**
+ * @brief Drops every non-global TLB entry for an address space.
  *
- * @param space: address space to flush.
+ * @param space Address space to flush.
  */
 __nonnull(1) void arch_vmm_flush_all(vmm_address_space_t* space) {
 
