@@ -138,20 +138,11 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
 }
 
 
-/*!
- * @brief __pty_short_write().
- *        Report how much of a write actually made it into the ring buffer.
+/**
+ * @brief Reports how much of a write actually made it into the ring buffer.
  *
- * These routines copy a byte at a time, so a buffer that fills partway through has already
- * committed everything before that point. Returning -1 for the whole call threw that away:
- * sys_write() saw the failure, suspended the task and restarted the syscall from the top
- * (@see kernel/syscalls/001_write.c), so the bytes already in the buffer were written a
- * second time. For a program producing output faster than the terminal drains it -- nyancat,
- * say -- that duplicates fragments of escape sequences, and the terminal then draws cells at
- * whatever coordinates the corrupted sequences name.
- *
- * So: report the partial count and let the caller resume from there. Only a write that made
- * no progress at all returns -EAGAIN, which is what asks sys_write() to block and retry.
+ * @param done The number of bytes copied.
+ * @return The count copied, or -EAGAIN when a write made no progress at all.
  */
 static inline ssize_t __pty_short_write(size_t done) {
 
@@ -189,8 +180,6 @@ static ssize_t pty_process_output(pty_t* pty, const char* buf, size_t size) {
         }
 
 
-        /* A CR/LF pair has to go in together: emitting the CR and then running out of room
-           for the LF would leave a stray carriage return in the stream. */
         const bool crlf = (pty->ios.c_oflag & ONLCR) && (ch == '\n');
 
         if (ringbuffer_writeable(&pty->r2) < (crlf ? 2U : 1U))
@@ -383,8 +372,6 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
                 pty_process_output(pty, &ch, 1);
             }
 
-            /* Same contract as the output side: a full buffer is a short write, not a
-               silently dropped keystroke. */
             if (ringbuffer_write(&pty->r1, &ch, 1) < 0)
                 return __pty_short_write(i);
         }
@@ -811,8 +798,6 @@ ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
         } else {
 
-            /* MIN() with an empty buffer would ask for zero bytes, which now reads back as
-               a clean 0 (end of file) rather than the would-block it has always meant here. */
             size_t avail = ringbuffer_available(&pty->r1);
 
             if (avail == 0)

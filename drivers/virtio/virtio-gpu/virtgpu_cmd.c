@@ -226,14 +226,16 @@ int virtgpu_cmd_resource_flush(struct virtgpu* gpu, uint64_t resource, uint32_t 
 }
 
 
-/* The same flush, tagged with a fence the device must retire before it answers. On this
- * transport virtq_sendrecv() already blocks until the response comes back, so what the fence
- * buys is the guarantee attached to that response: without it the device may answer as soon
- * as it has accepted the command, and the framebuffer is then still being read while the
- * caller believes the frame is done. With it, the answer means the flush has completed.
+/**
+ * @brief Flushes a resource to the screen, tagged with a fence the device must retire before it answers.
  *
- * The device echoes the fence id back in the response header; a mismatch means the answer
- * belongs to some other command and the frame cannot be assumed finished.
+ * @param gpu The device to command.
+ * @param resource The resource to flush.
+ * @param x The left edge of the damaged rectangle.
+ * @param y The top edge of the damaged rectangle.
+ * @param width The width of the damaged rectangle.
+ * @param height The height of the damaged rectangle.
+ * @return 0 on success, or a negative errno.
  */
 
 int virtgpu_cmd_resource_flush_fenced(struct virtgpu* gpu, uint64_t resource, uint32_t x, uint32_t y, uint32_t width, uint32_t height) {
@@ -267,12 +269,17 @@ int virtgpu_cmd_resource_flush_fenced(struct virtgpu* gpu, uint64_t resource, ui
 }
 
 
-/* Point the cursor plane at a resource, place it, and say which pixel of it sits under the
- * pointer. Resource 0 means "no cursor", which is how the plane is hidden.
+/**
+ * @brief Points the cursor plane at a resource, places it, and says which pixel sits under the pointer.
  *
- * These go on the cursor queue rather than the control queue on purpose: it exists so that
- * moving the pointer does not queue behind whatever rendering work is in flight, which is
- * most of the reason a hardware cursor feels different from a drawn one.
+ * @param gpu The device to command.
+ * @param scanout_id The scanout the cursor belongs to.
+ * @param resource The cursor resource, or 0 to hide the plane.
+ * @param x The cursor's position on the scanout.
+ * @param y The cursor's position on the scanout.
+ * @param hot_x The hotspot within the cursor image.
+ * @param hot_y The hotspot within the cursor image.
+ * @return 0 on success, or a negative errno.
  */
 
 int virtgpu_cmd_update_cursor(struct virtgpu* gpu, uint32_t scanout_id, uint64_t resource, uint32_t x, uint32_t y, uint32_t hot_x, uint32_t hot_y) {
@@ -290,9 +297,6 @@ int virtgpu_cmd_update_cursor(struct virtgpu* gpu, uint32_t scanout_id, uint64_t
     cmd.hot_x          = hot_x;
     cmd.hot_y          = hot_y;
 
-    /* The device consumes these without writing anything back, so the response buffer comes
-       back empty. It is sent anyway because it is what returns the descriptors to the pool:
-       a send with no reply to wait for would leak one per pointer movement. */
     if (virtq_sendrecv(gpu->driver, VIRTIO_GPU_QUEUE_CURSOR, &cmd, sizeof(cmd), &resp, sizeof(resp)) < 0)
         return errno = EIO, -1;
 

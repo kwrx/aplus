@@ -74,13 +74,17 @@
 #define VIRTIO_ISR_STATUS_QUEUE  (1 << 0)
 #define VIRTIO_ISR_STATUS_CONFIG (1 << 1)
 
-// Features, word 0 (bits 0..31). Bits 0..23 are device specific; the rest are transport.
+/**
+ * @brief Features, word 0 (bits 0..31). Bits 0..23 are device specific; the rest are transport.
+ */
 #define VIRTIO_F_NOTIFY_ON_EMPTY (1 << 24)
 #define VIRTIO_F_ANY_LAYOUT      (1 << 27)
 #define VIRTIO_F_INDIRECT_DESC   (1 << 28)
 #define VIRTIO_F_EVENT_IDX       (1 << 29)
 
-// Features, word 1 (bits 32..63): the bit number here is the spec's minus 32.
+/**
+ * @brief Features, word 1 (bits 32..63): the bit number here is the spec's minus 32.
+ */
 #define VIRTIO_F_VERSION_1         (1 << 0)  // 32
 #define VIRTIO_F_ACCESS_PLATFORM   (1 << 1)  // 33
 #define VIRTIO_F_RING_PACKED       (1 << 2)  // 34
@@ -92,19 +96,11 @@
 #define VIRTIO_F_RING_RESET        (1 << 8)  // 40
 
 
-/* What this driver is prepared to accept, per feature word.
+/**
+ * @brief What this driver is prepared to accept, per feature word.
  *
- * Word 0 lets every device specific bit through for the device driver's negotiate()
- * callback to accept or drop, and refuses the transport bits above them: none of
- * INDIRECT_DESC, EVENT_IDX or NOTIFY_ON_EMPTY is implemented here, and accepting a feature
- * that is not implemented is how a driver ends up reading a ring the device is writing in a
- * layout it never agreed to.
- *
- * Word 1 is VERSION_1 alone. RING_PACKED would change the ring layout outright,
- * NOTIFICATION_DATA the payload written to the notify register, ACCESS_PLATFORM the meaning
- * of every address handed to the device, and IN_ORDER would let the device write only the
- * last used entry of a batch -- which this driver, handing out arbitrary free descriptors
- * rather than consecutive ones, is in no position to promise. */
+ * Word 0 passes the device specific bits through to negotiate(); word 1 is VERSION_1 alone.
+ */
 
 #define VIRTIO_FEATURES_MASK_0 0x00FFFFFFU
 #define VIRTIO_FEATURES_MASK_1 (VIRTIO_F_VERSION_1)
@@ -126,22 +122,28 @@
 #define VIRTQ_MAX_QUEUES      64
 #define VIRTQ_MAX_DESCRIPTORS 65535
 
-// How long virtq_wait() gives a device to answer before giving up on it.
+/**
+ * @brief How long virtq_wait() gives a device to answer before giving up on it.
+ */
 #define VIRTQ_TIMEOUT_MS 5000
 
-// How long virtq_wait() pauses between two looks at the used ring.
+/**
+ * @brief How long virtq_wait() pauses between two looks at the used ring.
+ */
 #define VIRTQ_POLL_SPINS 1024
 
 
-/* Returned by virtq_alloc_descriptor() when the queue has none left. 0xFFFF is not a
-   descriptor index any queue can have: the ring is capped at 32768 entries. */
+/**
+ * @brief Returned by virtq_alloc_descriptor() when the queue has none left.
+ */
 #define VIRTQ_DESC_NONE 0xFFFF
 
 
-/* What the driver knows about a descriptor, kept beside the ring rather than in it. The
-   descriptor table itself is read by the device, so it cannot double as the driver's
-   bookkeeping: a descriptor is free or not according to this array and nothing else.
-   Which of these a descriptor is put into at submission time decides who cleans it up. */
+/**
+ * @brief What the driver knows about a descriptor, kept beside the ring rather than in it.
+ *
+ * Which of these a descriptor is put into at submission time decides who cleans it up.
+ */
 
 #define VIRTQ_REQUEST_FREE     0 // In the pool.
 #define VIRTQ_REQUEST_INFLIGHT 1 // Submitted; a caller is in virtq_wait() for it.
@@ -167,7 +169,9 @@ __BEGIN_DECLS
 struct virtio_pci_common_cfg;
 
 
-/* One slot per descriptor: what the driver did with it and what came back. */
+/**
+ * @brief One slot per descriptor: what the driver did with it and what came back.
+ */
 
 struct virtq_request {
     uint8_t state;
@@ -356,13 +360,9 @@ void virtq_provide(struct virtio_driver*, uint16_t, uint16_t, size_t);
 void virtq_notify(struct virtio_driver*, uint16_t);
 int virtq_reap(struct virtio_driver*, uint16_t, uint16_t*, uint32_t*);
 
-/* The three below report a failure as a negative errno rather than by setting errno and
-   returning -1, which is what the rest of this interface does. The difference is not style:
-   these are the calls a driver makes underneath read() and write(), and that path carries an
-   error in the return value all the way up -- vfs_read() hands the driver's return straight to
-   sys_read(), which hands it to the libc. A -1 arriving there is not "see errno", it is EPERM.
-   Kernel errno is per-CPU besides (see <aplus/errno.h>), so a task that is preempted between
-   the store and the load reads somebody else's. */
+/**
+ * @brief The three below report a failure as a negative errno, being the calls underneath read() and write().
+ */
 
 ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);

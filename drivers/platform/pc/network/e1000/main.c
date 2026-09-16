@@ -204,11 +204,12 @@ static uint32_t pci_count = 0;
 
 
 
-/*
- * Registers are reached through the memory-mapped window at BAR0. The card also offers an
- * indirect two-port path through BAR1, but that one is optional on several of the device IDs
- * matched here, and the address it needs was being taken from the wrong BAR anyway. The
- * offset is allowed to be zero (REG_CTRL), so it is not asserted.
+/**
+ * @brief Writes a card register through the memory-mapped window at BAR0.
+ *
+ * @param dev The card to write to.
+ * @param address The register offset.
+ * @param value The value to write.
  */
 static inline void wrcmd(struct e1000* dev, uint16_t address, uint32_t value) {
 
@@ -262,9 +263,6 @@ static void e1000_output(void* internals, void* buf, uint16_t len) {
     wrcmd(dev, REG_TXDESCTAIL, dev->tx_cur);
 
 
-    //? Wait for the card to report the descriptor done, but not forever: this runs with the
-    //? caller's lock held and on the boot path, so a card that never answers used to hang the
-    //? machine outright rather than drop a frame.
     for (size_t timeout = 0; timeout < E1000_TX_TIMEOUT; timeout++) {
 
         if (((struct e1000_tx_desc*)arch_vmm_p2v(dev->tx_desc[j], ARCH_VMM_AREA_HEAP))->status & 0xFF)
@@ -306,8 +304,6 @@ static int e1000_startinput(void* internals) {
 #endif
 
 
-    //? The frame is handed up one pbuf at a time, so how far through it we are has to survive
-    //? between calls; the descriptor is only released once, in endinput().
     dev->rx_size   = size;
     dev->rx_offset = 0;
 
@@ -332,8 +328,6 @@ static void e1000_input(void* internals, void* buf, uint16_t len) {
         len = dev->rx_size - dev->rx_offset;
 
 
-    //? The address in the descriptor is the one the card writes to, a physical one. Reading it
-    //? from the CPU has to go through the mapping, which this did not do.
     uintptr_t src = arch_vmm_p2v((uintptr_t)((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[dev->rx_cur], ARCH_VMM_AREA_HEAP))->addr, ARCH_VMM_AREA_HEAP);
 
     memcpy(buf, (const void*)(src + dev->rx_offset), (size_t)len);
@@ -355,7 +349,6 @@ static void e1000_endinput(void* internals) {
 
     dev->rx_cur = (dev->rx_cur + 1) % E1000_NUM_RX_DESC;
 
-    //? The tail marks the last descriptor handed back to the card.
     wrcmd(dev, REG_RXDESCTAIL, j);
 
     dev->rx_size   = 0;
@@ -375,9 +368,6 @@ static void e1000_irq(pcidev_t device, uint8_t irq, struct e1000* dev) {
     DEBUG_ASSERT(dev->irq == irq);
 
 
-    //? Reading ICR is what acknowledges the interrupt. The causes are independent bits, so they
-    //? are tested separately: as an if/else chain a link-status change on the same interrupt
-    //? would discard the frame that came with it.
     uint32_t s = rdcmd(dev, 0xC0);
 
 #if DEBUG_LEVEL_TRACE
@@ -417,8 +407,6 @@ static void e1000_init(void* internals, uint8_t* address, void* mcast) {
         ((struct e1000_rx_desc*)arch_vmm_p2v(dev->rx_desc[j], ARCH_VMM_AREA_HEAP))->status = 0;
     }
 
-    //? Low half to the low register, high half to the high one. These were the other way
-    //? round, which pointed the card at a ring address with its two halves exchanged.
     wrcmd(dev, REG_RXDESCLO, (uint32_t)((uint64_t)ptr & 0xFFFFFFFF));
     wrcmd(dev, REG_RXDESCHI, (uint32_t)((uint64_t)ptr >> 32));
 
@@ -503,10 +491,6 @@ void init(const char* args) {
         eth->pci = pci_devices[i];
         eth->irq = pci_read(eth->pci, PCI_INTERRUPT_LINE, 1);
 
-        //? BAR0 is the memory window and BAR1 the I/O ports; they were read the other way
-        //? round, so every register access was an outl() to a port number made out of a
-        //? physical address. Both BARs also carry type bits in the low bits, which have to be
-        //? masked off before the value is an address at all.
         eth->mem = pci_read(eth->pci, PCI_BAR0, 4) & PCI_BAR_MM_MASK;
         eth->io  = pci_read(eth->pci, PCI_BAR1, 4) & PCI_BAR_IO_MASK;
 
@@ -515,9 +499,6 @@ void init(const char* args) {
         pci_enable_bus_mastering(eth->pci);
 
 
-        //? Device memory is not in the direct map, so the window has to be mapped before it is
-        //? touched. Uncached and write-through: a register write parked in a cache line never
-        //? reaches the card.
         uintptr_t size = pci_bar_size(eth->pci, PCI_BAR0, 4);
 
         PANIC_ASSERT(ARCH_VMM_MAP_FAILED != arch_vmm_map(&core->bsp.address_space, eth->mem, eth->mem, size, ARCH_VMM_MAP_NOEXEC | ARCH_VMM_MAP_FIXED | ARCH_VMM_MAP_RDWR | ARCH_VMM_MAP_UNCACHED | ARCH_VMM_MAP_WRITE_THROUGH));
@@ -577,10 +558,6 @@ void init(const char* args) {
         }
 
 
-        //? Only now, with the interface registered, is it safe to take interrupts: the handler
-        //? reaches ethif_input() through this netif. Unmasking earlier -- and bringing the
-        //? interface up from inside low_level_init(), while netif_add() was still running --
-        //? was what wedged this driver at boot.
         if (eth->irq != PCI_INTERRUPT_LINE_NONE) {
 
             pci_intx_map_irq(eth->pci, eth->irq, (pci_irq_handler_t)e1000_irq, (pci_irq_data_t)eth);

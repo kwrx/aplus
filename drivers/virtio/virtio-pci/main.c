@@ -47,14 +47,20 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/* A capability list long enough to reach this is a malformed or cyclic one. */
+/**
+ * @brief A capability list long enough to reach this is a malformed or cyclic one.
+ */
 #define VIRTIO_PCI_MAX_CAPABILITIES 64
 
-/* How long a device is given to come back from a reset. */
+/**
+ * @brief How long a device is given to come back from a reset.
+ */
 #define VIRTIO_PCI_RESET_TIMEOUT_MS 1000
 
 
-/* Where one virtio capability lives, gathered on a first pass over the list. */
+/**
+ * @brief Where one virtio capability lives, gathered on a first pass over the list.
+ */
 
 struct virtio_pci_location {
 
@@ -80,8 +86,6 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_drive
         // TODO: handle config interrupt
         kprintf("virtio-pci: WARN! received config interrupt!\n");
     } else if (likely(driver->internals.msix_vectors)) {
-        /* A vector serves every queue that was given it, which is more than one whenever the
-           device's table was too small to go round. */
         for (size_t i = vector; i < driver->internals.num_queues; i += driver->internals.msix_vectors)
             virtq_flush(driver, i);
     }
@@ -106,16 +110,13 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_drive
 }
 
 
-/* The size of a BAR, in the one form this driver needs it: whole pages.
+/**
+ * @brief Reports the size of a BAR, rounded out to the page the mapping works in.
  *
- * pci_bar_size() probes by writing all ones over the BAR and complementing what reads back,
- * and leaves the BAR's own read-only type bits in the answer -- a 16KiB aperture comes back
- * as 0x3FFC. It also cannot usefully be asked for the 64-bit form: passing 8 has it write
- * only the low dword and read both back, so the untouched high half is complemented into
- * nonsense and the result is a size of several exabytes.
- *
- * Neither matters for a virtio BAR, which is comfortably under 4GiB. Probe the low dword,
- * mask the type bits off the answer and round it out to the page the mapping works in. */
+ * @param driver The driver owning the device.
+ * @param bar The BAR to size.
+ * @return The size in bytes.
+ */
 
 static uintptr_t virtio_pci_bar_size(struct virtio_driver* driver, uint8_t bar) {
 
@@ -177,13 +178,12 @@ static uintptr_t virtio_pci_find_bar(struct virtio_driver* driver, uint8_t bar, 
 }
 
 
-//
-// Device status.
-//
-// Driven with plain reads and writes rather than atomic_fetch_or(): that emitted a locked
-// read-modify-write against device memory, which is not something a device is obliged to
-// implement, and the status byte has exactly one writer anyway.
-//
+/**
+ * @brief Reads the device status, with a plain read rather than an atomic one.
+ *
+ * @param driver The driver owning the device.
+ * @return The status byte.
+ */
 
 static uint8_t virtio_pci_get_status(struct virtio_driver* driver) {
 
@@ -203,11 +203,11 @@ static void virtio_pci_set_status(struct virtio_driver* driver, uint8_t status) 
 }
 
 
-/* Say that the driver has given up on the device.
+/**
+ * @brief Says that the driver has given up, adding FAILED to the status rather than replacing it.
  *
- * FAILED is added to the status rather than substituted for it: the specification asks a
- * driver to report that it gave up, not to pretend it never acknowledged the device, and
- * clearing ACKNOWLEDGE|DRIVER on the way out is indistinguishable from a reset. */
+ * @param driver The driver owning the device.
+ */
 
 static void virtio_pci_set_failed(struct virtio_driver* driver) {
 
@@ -255,14 +255,11 @@ static int virtio_pci_reset(struct virtio_driver* driver) {
 }
 
 
-/* Agree on a feature set.
+/**
+ * @brief Agrees on a feature set, starting from what both sides can do rather than what the device offers.
  *
- * The starting point is what both sides can do, not everything the device offers. Echoing
- * the device's word straight back accepts whatever it happens to advertise, and a feature
- * that is accepted but not implemented is how a driver ends up reading a ring the device is
- * writing in a layout it never agreed to -- RING_PACKED changes the ring outright,
- * EVENT_IDX moves where the notification threshold lives, IN_ORDER lets the device write
- * only the last used entry of a batch, and NOTIFICATION_DATA changes what a kick even is.
+ * @param driver The driver owning the device.
+ * @return 0 on success, or a negative errno.
  */
 
 static int virtio_pci_negotiate(struct virtio_driver* driver) {
@@ -288,10 +285,6 @@ static int virtio_pci_negotiate(struct virtio_driver* driver) {
             return e;
         }
 
-
-        /* Nothing downstream reports this: QEMU masks the surplus away silently and hands
-           the raw word back on a read, so the device comes up looking as though the feature
-           had been agreed and behaves as though it had been refused. */
 
         if (unlikely(features & ~offered)) {
 #if DEBUG_LEVEL_FATAL
@@ -344,15 +337,6 @@ static int virtio_pci_init_interrupts(struct virtio_driver* driver) {
 
     // NOTE:
     // Mapping MSI-X vectors:
-    //  vectors[0..(msix_vectors - 1)]  -> queues, shared round-robin
-    //  vectors[msix_vectors]           -> config interrupt
-    //
-    // The table is not guaranteed to hold one vector per queue plus one for configuration:
-    // QEMU gives a virtio-input device exactly two, however many queues it has, which is the
-    // shared arrangement the device expects a driver to fall back to. Each distinct vector
-    // is mapped exactly once -- pci_msix_map_irq() takes the next free table row rather than
-    // the row named by its argument, so mapping one vector twice would burn two rows and
-    // leave none for the configuration interrupt.
 
     uint16_t vector_limit = msix.msix_pci.pci_msgctl_table_size + 1;
 
@@ -426,11 +410,13 @@ static int virtio_pci_init_interrupts(struct virtio_driver* driver) {
 }
 
 
-/* Bring the device up as far as its queues.
+/**
+ * @brief Brings the device up as far as its queues, stopping short of DRIVER_OK.
  *
- * Everything up to and including populating the queues, but deliberately not DRIVER_OK: the
- * device specific setup that runs off the device configuration capability belongs between
- * the two, and it used to run before features had even been agreed. */
+ * @param driver The driver owning the device.
+ * @param at Where the common configuration capability was found.
+ * @return 0 on success, or a negative errno.
+ */
 
 static int virtio_pci_init_common_cfg(struct virtio_driver* driver, struct virtio_pci_location* at) {
 
@@ -448,8 +434,6 @@ static int virtio_pci_init_common_cfg(struct virtio_driver* driver, struct virti
 
 
     //
-    // Device initialization
-    // @see https://docs.oasis-open.org/virtio/virtio/v1.1/virtio-v1.1.pdf (chap.3)
     //
 
     int e;
@@ -550,8 +534,6 @@ static int virtio_pci_init_isr_status(struct virtio_driver* driver, struct virti
     DEBUG_ASSERT(driver->device);
     DEBUG_ASSERT(at);
 
-    /* An offset of zero is a legal place for the ISR byte to sit; only the mapping failing
-       is a problem. */
     driver->internals.isr_status = (uint32_t volatile*)virtio_pci_find_bar(driver, at->bar, at->offset);
 
     if (unlikely(!driver->internals.isr_status))
@@ -596,15 +578,11 @@ static int virtio_pci_init_notify_cfg(struct virtio_driver* driver, struct virti
 }
 
 
-/* Put back what bringing the device up took.
+/**
+ * @brief Puts back what bringing the device up took, disabling the queues before their memory goes.
  *
- * The queues are disabled and the device reset before their memory is released, in that
- * order: while a queue is enabled the host is entitled to read the pages behind it, and by
- * the time the allocator has them back they may belong to something else.
- *
- * The BAR mappings are left in place. They are identity mappings of this device's own
- * apertures, which costs page tables and nothing else, and there is no record here of what
- * was mapped where to undo them with. */
+ * @param driver The driver owning the device.
+ */
 
 void virtio_pci_dnit(struct virtio_driver* driver) {
 
@@ -632,8 +610,6 @@ void virtio_pci_dnit(struct virtio_driver* driver) {
 
         pci_msix_disable(driver->device, &msix);
 
-        /* One table row and one device slot per call, and this device took one per queue
-           vector plus one for the configuration. */
         for (uint16_t i = 0; i <= driver->internals.msix_vectors; i++) {
 
             if (pci_msix_unmap_irq(driver->device, &msix) < 0)
@@ -681,10 +657,6 @@ int virtio_pci_init(struct virtio_driver* driver) {
     pci_enable_bus_mastering(driver->device);
 
 
-    /* Read the whole list before acting on any of it: the order these have to be brought up
-       in is not the order they are listed in, and a device listing them in the order the
-       specification does gave every queue a notify address of zero. */
-
     struct virtio_pci_location found[VIRTIO_PCI_CAP_PCI_CFG + 1] = {0};
 
     for (size_t n = 0; caps && n < VIRTIO_PCI_MAX_CAPABILITIES; n++) {
@@ -696,8 +668,6 @@ int virtio_pci_init(struct virtio_driver* driver) {
 
             if (cap.cfg_type <= VIRTIO_PCI_CAP_PCI_CFG) {
 
-                /* The first of each kind wins: a device is free to offer more than one and
-                   the extras are alternative views of the same thing. */
                 if (!found[cap.cfg_type].found) {
 
                     found[cap.cfg_type].found   = true;
@@ -728,25 +698,20 @@ int virtio_pci_init(struct virtio_driver* driver) {
 
     int e;
 
-    //? Before the queues: each one is kicked at an address derived from this.
     if ((e = virtio_pci_init_notify_cfg(driver, &found[VIRTIO_PCI_CAP_NOTIFY_CFG])) < 0)
         goto fail;
 
-    //? Before the interrupts, which read it when MSI-X is not in use.
     if (found[VIRTIO_PCI_CAP_ISR_CFG].found && (e = virtio_pci_init_isr_status(driver, &found[VIRTIO_PCI_CAP_ISR_CFG])) < 0)
         goto fail;
 
-    //? Reset, features, interrupts and queues, but not DRIVER_OK.
     if ((e = virtio_pci_init_common_cfg(driver, &found[VIRTIO_PCI_CAP_COMMON_CFG])) < 0)
         goto fail;
 
-    //? Device specific setup, which needs the features agreed and the queues live.
     if (found[VIRTIO_PCI_CAP_DEVICE_CFG].found && (e = virtio_pci_init_device_cfg(driver, &found[VIRTIO_PCI_CAP_DEVICE_CFG])) < 0) {
         virtio_pci_set_failed(driver);
         goto fail;
     }
 
-    //? Only now is the device allowed to assume the driver is driving it.
     if ((e = virtio_pci_add_status(driver, VIRTIO_DEVICE_STATUS_DRIVER_OK)) < 0)
         goto fail;
 

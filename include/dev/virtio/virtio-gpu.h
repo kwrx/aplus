@@ -218,8 +218,9 @@ struct virtio_gpu_response {
 } __packed;
 
 
-/* The hardware cursor plane is always a 64x64 resource: the device takes no other size, so a
-   smaller image is centred on its hotspot inside one and the rest left transparent. */
+/**
+ * @brief The one size the hardware cursor plane takes; a smaller image is centred inside one.
+ */
 
     #define VIRTGPU_CURSOR_SIZE 64
 

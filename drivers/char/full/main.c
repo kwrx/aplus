@@ -74,9 +74,6 @@ static ssize_t full_write(device_t* device, const void* buf, size_t size) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 
-    /* The whole point of this device, so it has to be the errno that actually arrives: the
-       write path carries a driver's error in the return value, and -1 gets there as EPERM. */
-
     return -ENOSPC;
 }
 
