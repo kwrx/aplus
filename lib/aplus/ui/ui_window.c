@@ -185,7 +185,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
 
         ui_msg_header_t hdr;
 
-        if (ui_recv_all(conn->fd, &hdr, sizeof(hdr)) < 0) {
+        if (ui_conn_read(conn, &hdr, sizeof(hdr)) < 0) {
             free(win);
             return NULL;
         }
@@ -198,7 +198,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
 
         if (hdr.type == UI_EV_CONFIGURE && hdr.length == sizeof(cfg)) {
 
-            if (ui_recv_all(conn->fd, &cfg, sizeof(cfg)) < 0) {
+            if (ui_conn_read(conn, &cfg, sizeof(cfg)) < 0) {
                 free(win);
                 return NULL;
             }
@@ -212,7 +212,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
 
             size_t chunk = left > sizeof(scratch) ? sizeof(scratch) : left;
 
-            if (ui_recv_all(conn->fd, scratch, chunk) < 0) {
+            if (ui_conn_read(conn, scratch, chunk) < 0) {
                 free(win);
                 return NULL;
             }
@@ -315,32 +315,9 @@ void ui_window_damage(ui_window_t* win, int x, int y, int width, int height) {
     }
 
 
-    if (!win->damage.valid) {
+    ui_rect_t rect = {x0, y0, x1 - x0, y1 - y0};
 
-        win->damage.valid = true;
-        win->damage.x0    = x0;
-        win->damage.y0    = y0;
-        win->damage.x1    = x1;
-        win->damage.y1    = y1;
-
-        return;
-    }
-
-    if (x0 < win->damage.x0) {
-        win->damage.x0 = x0;
-    }
-
-    if (y0 < win->damage.y0) {
-        win->damage.y0 = y0;
-    }
-
-    if (x1 > win->damage.x1) {
-        win->damage.x1 = x1;
-    }
-
-    if (y1 > win->damage.y1) {
-        win->damage.y1 = y1;
-    }
+    ui_damage_add(&win->damage, rect);
 }
 
 
@@ -350,16 +327,16 @@ void ui_window_damage_all(ui_window_t* win) {
         return;
     }
 
-    win->damage.valid = true;
-    win->damage.x0    = 0;
-    win->damage.y0    = 0;
-    win->damage.x1    = win->width;
-    win->damage.y1    = win->height;
+
+    ui_rect_t all = {0, 0, win->width, win->height};
+
+    ui_damage_reset(&win->damage);
+    ui_damage_add(&win->damage, all);
 }
 
 
 /**
- * @brief Tells the server which part of the surface changed.
+ * @brief Tells the server which parts of the surface changed, one message per rectangle.
  *
  * @param win The window to commit.
  * @return 0 on success, or -1 with errno set.
@@ -371,24 +348,36 @@ int ui_window_commit(ui_window_t* win) {
         return -1;
     }
 
-    if (!win->damage.valid) {
+    if (!win->damage.count) {
         return 0;
     }
 
 
-    ui_msg_commit_t commit = {
+    const size_t count = win->damage.count;
 
-        .window_id = win->id,
-        .serial    = win->serial,
-        .x         = (uint16_t)win->damage.x0,
-        .y         = (uint16_t)win->damage.y0,
-        .width     = (uint16_t)(win->damage.x1 - win->damage.x0),
-        .height    = (uint16_t)(win->damage.y1 - win->damage.y0),
-    };
+    ui_msg_commit_t commits[UI_DAMAGE_MAX];
 
-    win->damage.valid = false;
+    for (size_t i = 0; i < count; i++) {
 
-    return ui_send_msg(win->conn->fd, UI_REQ_COMMIT, &commit, sizeof(commit));
+        commits[i].window_id = win->id;
+        commits[i].serial    = win->serial;
+        commits[i].x         = (uint16_t)win->damage.rects[i].x;
+        commits[i].y         = (uint16_t)win->damage.rects[i].y;
+        commits[i].width     = (uint16_t)win->damage.rects[i].width;
+        commits[i].height    = (uint16_t)win->damage.rects[i].height;
+    }
+
+    ui_damage_reset(&win->damage);
+
+
+    for (size_t i = 0; i < count; i++) {
+
+        if (ui_send_msg(win->conn->fd, UI_REQ_COMMIT, &commits[i], sizeof(commits[i])) < 0) {
+            return -1;
+        }
+    }
+
+    return 0;
 }
 
 

@@ -52,6 +52,24 @@ static struct {
 static size_t ui_font_cached = 0;
 
 
+/**
+ * @brief How many (face, size) pairs keep a scaled font ready to shape with.
+ */
+#define UI_SCALED_CACHE_MAX 8
+
+
+static struct {
+
+    cairo_font_face_t* face;
+    double size;
+
+    cairo_scaled_font_t* scaled;
+
+} ui_scaled_cache[UI_SCALED_CACHE_MAX];
+
+static size_t ui_scaled_cached = 0;
+
+
 cairo_font_face_t* ui_font_face(const char* path) {
 
     if (!path || !*path) {
@@ -100,4 +118,74 @@ cairo_font_face_t* ui_font_face(const char* path) {
     }
 
     return ui_font_cache[slot].face;
+}
+
+
+/**
+ * @brief Reports a scaled font for a face at a size, building it the first time it is asked for.
+ *
+ * Shaping needs one of these; leaving it to the toy text API means deriving it again on every
+ * call, and shaping the string twice on top of that.
+ *
+ * @param face The font face to scale.
+ * @param size The size in pixels.
+ * @return The scaled font, owned by the cache, or NULL when it could not be built.
+ */
+cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size) {
+
+    if (!face || size <= 0.0) {
+        return NULL;
+    }
+
+
+    for (size_t i = 0; i < ui_scaled_cached; i++) {
+
+        if (ui_scaled_cache[i].face == face && ui_scaled_cache[i].size == size) {
+            return ui_scaled_cache[i].scaled;
+        }
+    }
+
+
+    cairo_matrix_t matrix;
+    cairo_matrix_t ctm;
+
+    cairo_matrix_init_scale(&matrix, size, size);
+    cairo_matrix_init_identity(&ctm);
+
+    cairo_font_options_t* options = cairo_font_options_create();
+
+    if (cairo_font_options_status(options) != CAIRO_STATUS_SUCCESS) {
+        cairo_font_options_destroy(options);
+        return NULL;
+    }
+
+
+    cairo_scaled_font_t* scaled = cairo_scaled_font_create(face, &matrix, &ctm, options);
+
+    cairo_font_options_destroy(options);
+
+    if (cairo_scaled_font_status(scaled) != CAIRO_STATUS_SUCCESS) {
+        cairo_scaled_font_destroy(scaled);
+        return NULL;
+    }
+
+
+    if (ui_scaled_cached == UI_SCALED_CACHE_MAX) {
+
+        cairo_scaled_font_destroy(ui_scaled_cache[0].scaled);
+
+        for (size_t i = 1; i < UI_SCALED_CACHE_MAX; i++) {
+            ui_scaled_cache[i - 1] = ui_scaled_cache[i];
+        }
+
+        ui_scaled_cached--;
+    }
+
+    ui_scaled_cache[ui_scaled_cached].face   = face;
+    ui_scaled_cache[ui_scaled_cached].size   = size;
+    ui_scaled_cache[ui_scaled_cached].scaled = scaled;
+
+    ui_scaled_cached++;
+
+    return scaled;
 }

@@ -27,7 +27,30 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+
+
+/**
+ * @brief How many damaged rectangles are kept apart before they start being merged.
+ */
+#define UI_DAMAGE_MAX 8
+
+
+/**
+ * @brief What still has to be repainted, as a few rectangles rather than the box around them.
+ */
+typedef struct {
+
+    ui_rect_t rects[UI_DAMAGE_MAX];
+    size_t count;
+
+} ui_damage_t;
+
+
+void ui_damage_reset(ui_damage_t* damage);
+void ui_damage_add(ui_damage_t* damage, ui_rect_t rect);
+void ui_damage_clip(ui_damage_t* damage, int width, int height);
 
 
 struct ui_window {
@@ -50,16 +73,7 @@ struct ui_window {
 
     int shm_id;
 
-    struct {
-
-        bool valid;
-
-        int x0;
-        int y0;
-        int x1;
-        int y1;
-
-    } damage;
+    ui_damage_t damage;
 
     //? A configure that has arrived but has not been acted on yet. The surface is only
     //? reallocated when the caller asks, because ui_next_event() usually runs on a
@@ -88,7 +102,26 @@ struct ui_connection {
 
     int fd;
     ui_window_t* windows;
+
+    //? Bytes read off the socket but not yet handed out. Every read on the connection goes
+    //? through here, so one read(2) serves a whole burst of events instead of two syscalls
+    //? per event. Anything checking for a pending event has to look here before it polls:
+    //? a whole event sitting in this buffer raises nothing on the descriptor.
+    struct {
+
+        uint8_t* data;
+
+        size_t head;
+        size_t size;
+        size_t capacity;
+
+    } rx;
 };
+
+
+int ui_conn_read(ui_connection_t* conn, void* buf, size_t size);
+int ui_conn_message_ready(ui_connection_t* conn);
+int ui_conn_fill(ui_connection_t* conn);
 
 
 ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id);

@@ -97,10 +97,29 @@ void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* fon
     }
 
 
+    cairo_scaled_font_t* scaled = ui_font_scaled(face, size);
+
+    if (!scaled) {
+        return;
+    }
+
+
+    cairo_glyph_t* glyphs = NULL;
+    int count             = 0;
+
+    if (cairo_scaled_font_text_to_glyphs(scaled, 0.0, 0.0, text, -1, &glyphs, &count, NULL, NULL, NULL) != CAIRO_STATUS_SUCCESS) {
+        return;
+    }
+
+    if (!glyphs || count <= 0) {
+        cairo_glyph_free(glyphs);
+        return;
+    }
+
+
     cairo_save(cr);
 
-    cairo_set_font_face(cr, face);
-    cairo_set_font_size(cr, size);
+    cairo_set_scaled_font(cr, scaled);
 
     cairo_rectangle(cr, rect.x, rect.y, rect.width, rect.height);
     cairo_clip(cr);
@@ -109,8 +128,8 @@ void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* fon
     cairo_font_extents_t fe;
     cairo_text_extents_t te;
 
-    cairo_font_extents(cr, &fe);
-    cairo_text_extents(cr, text, &te);
+    cairo_scaled_font_extents(scaled, &fe);
+    cairo_scaled_font_glyph_extents(scaled, glyphs, count, &te);
 
 
     double x = rect.x;
@@ -134,10 +153,18 @@ void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* fon
     const double y = rect.y + (rect.height - (fe.ascent + fe.descent)) / 2.0 + fe.ascent;
 
 
+    for (int i = 0; i < count; i++) {
+
+        glyphs[i].x += x;
+        glyphs[i].y += y;
+    }
+
+
     ui_draw_set_color(cr, color);
 
-    cairo_move_to(cr, x, y);
-    cairo_show_text(cr, text);
+    cairo_show_glyphs(cr, glyphs, count);
 
     cairo_restore(cr);
+
+    cairo_glyph_free(glyphs);
 }

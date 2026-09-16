@@ -31,6 +31,8 @@
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
+#include "ui_internal.h"
+
 
 #define UI_LABEL_TEXT_MAX 128
 
@@ -140,16 +142,7 @@ struct ui_view {
     ui_key_fn key;
     void* key_user;
 
-    struct {
-
-        bool valid;
-
-        int x0;
-        int y0;
-        int x1;
-        int y1;
-
-    } damage;
+    ui_damage_t damage;
 
     bool closed;
 };
@@ -162,6 +155,15 @@ struct ui_view {
  * @return The face, or NULL when the file cannot be loaded, in which case the caller draws no text.
  */
 cairo_font_face_t* ui_font_face(const char* path);
+
+/**
+ * @brief Reports a cached scaled font for a face at a size. Implemented in ui_font.c.
+ *
+ * @param face The face to scale.
+ * @param size The size in pixels.
+ * @return The scaled font, owned by the cache, or NULL.
+ */
+cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size);
 
 /**
  * @brief Implemented in ui_widget.c.

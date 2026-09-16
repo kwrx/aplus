@@ -32,7 +32,7 @@
 #include "ui_internal.h"
 
 
-static int ui_drain_payload(int fd, size_t size) {
+static int ui_drain_payload(ui_connection_t* conn, size_t size) {
 
     uint8_t scratch[256];
 
@@ -40,7 +40,7 @@ static int ui_drain_payload(int fd, size_t size) {
 
         size_t chunk = size > sizeof(scratch) ? sizeof(scratch) : size;
 
-        if (ui_recv_all(fd, scratch, chunk) < 0) {
+        if (ui_conn_read(conn, scratch, chunk) < 0) {
             return -1;
         }
 
@@ -69,40 +69,50 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
     for (;;) {
 
-        if (timeout_ms >= 0) {
+        const int ready = ui_conn_message_ready(conn);
 
-            struct pollfd pfd = {
+        if (ready < 0) {
+            return -1;
+        }
 
-                .fd      = conn->fd,
-                .events  = POLLIN,
-                .revents = 0,
-            };
+        if (!ready) {
 
-            int e = poll(&pfd, 1, timeout_ms);
+            if (timeout_ms >= 0) {
 
-            if (e < 0) {
+                struct pollfd pfd = {
 
-                if (errno == EINTR) {
-                    continue;
+                    .fd      = conn->fd,
+                    .events  = POLLIN,
+                    .revents = 0,
+                };
+
+                int e = poll(&pfd, 1, timeout_ms);
+
+                if (e < 0) {
+
+                    if (errno == EINTR) {
+                        continue;
+                    }
+
+                    return -1;
                 }
 
+                if (e == 0) {
+                    return 0;
+                }
+            }
+
+            if (ui_conn_fill(conn) < 0) {
                 return -1;
             }
 
-            if (e == 0) {
-                return 0;
-            }
+            continue;
         }
 
 
         ui_msg_header_t hdr;
 
-        if (ui_recv_all(conn->fd, &hdr, sizeof(hdr)) < 0) {
-            return -1;
-        }
-
-        if (hdr.length > UI_MSG_PAYLOAD_MAX) {
-            errno = EPROTO;
+        if (ui_conn_read(conn, &hdr, sizeof(hdr)) < 0) {
             return -1;
         }
 
@@ -120,7 +130,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &cfg, sizeof(cfg)) < 0) {
+                if (ui_conn_read(conn, &cfg, sizeof(cfg)) < 0) {
                     return -1;
                 }
 
@@ -155,7 +165,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &key, sizeof(key)) < 0) {
+                if (ui_conn_read(conn, &key, sizeof(key)) < 0) {
                     return -1;
                 }
 
@@ -176,7 +186,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &ptr, sizeof(ptr)) < 0) {
+                if (ui_conn_read(conn, &ptr, sizeof(ptr)) < 0) {
                     return -1;
                 }
 
@@ -198,7 +208,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &focus, sizeof(focus)) < 0) {
+                if (ui_conn_read(conn, &focus, sizeof(focus)) < 0) {
                     return -1;
                 }
 
@@ -218,7 +228,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &win, sizeof(win)) < 0) {
+                if (ui_conn_read(conn, &win, sizeof(win)) < 0) {
                     return -1;
                 }
 
@@ -237,7 +247,7 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                     return -1;
                 }
 
-                if (ui_recv_all(conn->fd, &win, sizeof(win)) < 0) {
+                if (ui_conn_read(conn, &win, sizeof(win)) < 0) {
                     return -1;
                 }
 
@@ -249,15 +259,11 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
 
             default:
 
-                if (ui_drain_payload(conn->fd, hdr.length) < 0) {
+                if (ui_drain_payload(conn, hdr.length) < 0) {
                     return -1;
                 }
 
                 break;
-        }
-
-        if (timeout_ms == 0) {
-            return 0;
         }
     }
 }
