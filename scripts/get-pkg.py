@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import os
-import io
 import sys
 import argparse
 import wget
@@ -9,23 +8,27 @@ import shutil
 import tarfile
 
 from subprocess import run
-from subprocess import PIPE
 
 
-remote  = 'https://github.com/'
-repo    = 'kwrx/aplus-packages'
-prefix  = '.'
-verbose = False
-cache   = '/tmp/get-pkg'
+remote       = 'https://github.com/'
+repo         = 'kwrx/aplus-packages'
+repo_version = 'latest'
+prefix       = '.'
+verbose      = False
+cache        = '/tmp/get-pkg'
 
 
 
-def pkg_get(remote, cache, repo, p):
+
+def pkg_get(remote, cache, repo, repo_version, p):
     """
     Download package from remote repository
     """
     if os.path.exists('%s/%s/%s.tar.xz' % (cache, repo, p)) == False:
-        wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
+        if repo_version == 'latest':
+            wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
+        else:
+            wget.download('%s/%s/releases/download/%s/%s.tar.xz' % (remote, repo, repo_version, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
         print('')
     else:
         if verbose:
@@ -92,13 +95,14 @@ def pkg_extract(archive, prefix):
 
 
 
-def pkg_install(cache, repo, packages, prefix):
+
+def pkg_install(cache, repo, repo_version, packages, prefix):
     """
     Install package
     """
     for p in packages:
         print('GET %s %s.tar.xz' % (repo, p))
-        pkg_get(remote, cache, repo, p)
+        pkg_get(remote, cache, repo, repo_version, p)
 
 
     for p in packages:
@@ -125,8 +129,10 @@ def main(argv):
     global repo
     global prefix
     global verbose
+    global repo_version
     
     repo = argv.repo
+    repo_version = argv.repo_version
     prefix = argv.prefix
     verbose = argv.verbose
 
@@ -139,7 +145,7 @@ def main(argv):
 
 
     if argv.install is not None:
-        pkg_install(cache, repo, argv.install, prefix)
+        pkg_install(cache, repo, repo_version, argv.install, prefix)
     
     if argv.remove is not None:
         pkg_rm(cache, repo, argv.remove, prefix)
@@ -160,9 +166,9 @@ if __name__ == '__main__':
     argp.add_argument('-q', '--list', nargs='+', type=str, help='List files from [Package-Name]')
     argp.add_argument('-r', '--remove', nargs='+', type=str, help='Remove [Package-Name]')
 
-
     argp.add_argument('--prefix', type=str, default=prefix, help='Destionation path')
     argp.add_argument('--repo', type=str, default=repo, help="Select another repository")
+    argp.add_argument('--repo-version', type=str, default=repo_version, help="Select another repository version")
     argp.add_argument('--clean', const=True, action='store_const', default=False, help='Clean cache directory')
     argp.add_argument('--verbose', const=True, action='store_const', default=verbose, help='Verbose output on stdout')
     argp.add_argument('--version', action='version', version='%(prog)s 1.0')
