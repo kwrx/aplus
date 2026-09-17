@@ -30,10 +30,12 @@
 #include <dirent.h>
 #include <errno.h>
 #include <limits.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
 
 #include <aplus/input.h>
@@ -41,7 +43,7 @@
 #include <aplus/ui.h>
 
 
-#define EXPLORER_WINDOW_WIDTH  560
+#define EXPLORER_WINDOW_WIDTH  720
 #define EXPLORER_WINDOW_HEIGHT 460
 
 #define EXPLORER_MARGIN 12
@@ -50,6 +52,10 @@
 #define EXPLORER_TOOLBAR_HEIGHT 36
 #define EXPLORER_STATUS_HEIGHT  20
 #define EXPLORER_UP_WIDTH       64
+
+#define EXPLORER_SIDEBAR_WIDTH     148
+#define EXPLORER_SIDEBAR_HEADER    32
+#define EXPLORER_SIDEBAR_FONT_SIZE 14.0
 
 /**
  * @brief How many entries one directory may show, which is what bounds the memory a listing takes.
@@ -61,6 +67,26 @@
  */
 #define EXPLORER_DEPTH_MAX 64
 
+/**
+ * @brief How many shortcuts the sidebar holds.
+ */
+#define EXPLORER_PLACES_MAX 8
+
+/**
+ * @brief How long a name read out of a .desktop file may be.
+ */
+#define EXPLORER_LABEL_MAX 64
+
+/**
+ * @brief Where the .desktop files of the installed applications live.
+ */
+#define EXPLORER_APPLICATIONS_PATH "/usr/share/applications"
+
+/**
+ * @brief What opens a file, whatever kind of file it turns out to be.
+ */
+#define EXPLORER_OPENER "aplus-xopen"
+
 
 /**
  * @brief One directory entry, as the listing needs it rather than as the filesystem reports it.
@@ -69,11 +95,24 @@
 typedef struct {
 
     char name[NAME_MAX + 1];
+    char label[EXPLORER_LABEL_MAX];
 
     bool directory;
     off_t size;
 
 } explorer_entry_t;
+
+
+/**
+ * @brief One sidebar shortcut: the name a row shows and the directory it opens.
+ */
+
+typedef struct {
+
+    char name[32];
+    char path[PATH_MAX];
+
+} explorer_place_t;
 
 
 static struct {
@@ -83,6 +122,8 @@ static struct {
     ui_widget_t* toolbar;
     ui_widget_t* up;
     ui_widget_t* path;
+    ui_widget_t* sidebar_header;
+    ui_widget_t* sidebar;
     ui_widget_t* list;
     ui_widget_t* status;
 
@@ -91,11 +132,32 @@ static struct {
     explorer_entry_t* entries;
     size_t count;
 
+    explorer_place_t places[EXPLORER_PLACES_MAX];
+    size_t places_count;
+
+    //? Set while the sidebar selection is being brought in line with the directory on
+    //? screen, so that the row it moves does not read as a click and open it all over
+    //? again.
+    bool syncing;
+
 } explorer = {0};
 
 
 /**
- * @brief Orders a listing the way a file manager does: directories first, then by name.
+ * @brief Reports the name a row shows, which is the application name for a .desktop file that carried one.
+ *
+ * @param entry The entry.
+ * @return The name, which is the filename when there is nothing better.
+ */
+
+static const char* explorer_label(const explorer_entry_t* entry) {
+
+    return entry->label[0] ? entry->label : entry->name;
+}
+
+
+/**
+ * @brief Orders a listing the way a file manager does: directories first, then by the name shown.
  *
  * @param a The first entry.
  * @param b The second entry.
@@ -111,7 +173,7 @@ static int explorer_compare(const void* a, const void* b) {
         return x->directory ? -1 : 1;
     }
 
-    return strcmp(x->name, y->name);
+    return strcmp(explorer_label(x), explorer_label(y));
 }
 
 
@@ -248,6 +310,266 @@ static void explorer_normalize(const char* path, char* out, size_t max) {
 
 
 /**
+ * @brief Reports the home directory: the environment first, then the password file, then /home.
+ *
+ * @param out Receives the path.
+ * @param max The size of that buffer.
+ */
+
+static void explorer_home(char* out, size_t max) {
+
+    const char* home = getenv("HOME");
+
+    if (!home || !*home) {
+
+        const struct passwd* pw = getpwuid(getuid());
+
+        home = (pw && pw->pw_dir && *pw->pw_dir) ? pw->pw_dir : "/home";
+    }
+
+
+    struct stat st;
+
+    if (stat(home, &st) < 0 || !S_ISDIR(st.st_mode)) {
+        home = "/home";
+    }
+
+    strncpy(out, home, max - 1);
+
+    out[max - 1] = '\0';
+}
+
+
+/**
+ * @brief Appends a shortcut to the sidebar, keeping the rows and the shortcut array in step.
+ *
+ * @param name The name the row shows.
+ * @param path The directory the row opens.
+ */
+
+static void explorer_add_place(const char* name, const char* path) {
+
+    if (explorer.places_count >= EXPLORER_PLACES_MAX) {
+        return;
+    }
+
+
+    explorer_place_t* place = &explorer.places[explorer.places_count];
+
+    strncpy(place->name, name, sizeof(place->name) - 1);
+
+    place->name[sizeof(place->name) - 1] = '\0';
+
+    explorer_normalize(path, place->path, sizeof(place->path));
+
+
+    if (ui_list_add(explorer.sidebar, place->name, NULL, NULL) < 0) {
+        return;
+    }
+
+    explorer.places_count++;
+}
+
+
+/**
+ * @brief Fills the sidebar with the directories that are worth one click.
+ */
+
+static void explorer_build_places(void) {
+
+    char home[PATH_MAX];
+
+    explorer_home(home, sizeof(home));
+
+    explorer_add_place("Root", "/");
+    explorer_add_place("Home", home);
+    explorer_add_place("Applications", EXPLORER_APPLICATIONS_PATH);
+}
+
+
+/**
+ * @brief Highlights the shortcut the current directory is, and no row at all when it is none of them.
+ */
+
+static void explorer_sync_places(void) {
+
+    int index = -1;
+
+    for (size_t i = 0; i < explorer.places_count; i++) {
+
+        if (strcmp(explorer.places[i].path, explorer.directory) == 0) {
+
+            index = (int)i;
+
+            break;
+        }
+    }
+
+
+    explorer.syncing = true;
+
+    ui_list_select(explorer.sidebar, index);
+
+    explorer.syncing = false;
+}
+
+
+/**
+ * @brief Matches an unlocalised key at the head of a .desktop line and reports where its value starts.
+ *
+ * @param text The line, already trimmed.
+ * @param key The key to match.
+ * @return The value, or NULL when the line carries another key.
+ */
+
+static const char* explorer_desktop_value(const char* text, const char* key) {
+
+    const size_t length = strlen(key);
+
+    if (strncmp(text, key, length) != 0) {
+        return NULL;
+    }
+
+
+    const char* value = text + length;
+
+    while (*value == ' ' || *value == '\t') {
+        value++;
+    }
+
+    if (*value != '=') {
+        return NULL;
+    }
+
+    value++;
+
+    while (*value == ' ' || *value == '\t') {
+        value++;
+    }
+
+    return value;
+}
+
+
+/**
+ * @brief Reads the application name out of a .desktop file.
+ *
+ * Only the [Desktop Entry] group counts, and only its unlocalised Name: Name[xx] and every other group are skipped.
+ *
+ * @param path The file to read.
+ * @param out Receives the name, left empty when the file carries none.
+ * @param max The size of that buffer.
+ * @return true when a name was read, false otherwise.
+ */
+
+static bool explorer_desktop_name(const char* path, char* out, size_t max) {
+
+    out[0] = '\0';
+
+    FILE* file = fopen(path, "r");
+
+    if (!file) {
+        return false;
+    }
+
+
+    char line[512];
+
+    bool group = false;
+
+    while (fgets(line, sizeof(line), file)) {
+
+        char* text = line;
+
+        while (*text == ' ' || *text == '\t') {
+            text++;
+        }
+
+        size_t length = strlen(text);
+
+        while (length > 0 && (text[length - 1] == '\n' || text[length - 1] == '\r' || text[length - 1] == ' ' || text[length - 1] == '\t')) {
+            text[--length] = '\0';
+        }
+
+        if (length == 0 || text[0] == '#') {
+            continue;
+        }
+
+
+        if (text[0] == '[') {
+
+            if (group) {
+                break;
+            }
+
+            group = strcmp(text, "[Desktop Entry]") == 0;
+
+            continue;
+        }
+
+        if (!group) {
+            continue;
+        }
+
+
+        const char* value = explorer_desktop_value(text, "Name");
+
+        if (value) {
+
+            strncpy(out, value, max - 1);
+
+            out[max - 1] = '\0';
+
+            break;
+        }
+    }
+
+    fclose(file);
+
+    return out[0] != '\0';
+}
+
+
+/**
+ * @brief Hands a path to the opener, first collecting the children that have since exited.
+ *
+ * The opener replaces itself with the application, so what is spawned here is the application.
+ *
+ * @param path The file to open.
+ * @return 0 on success, -1 with errno set otherwise.
+ */
+
+static int explorer_open_with(const char* path) {
+
+    char* argv[] = {(char*)EXPLORER_OPENER, (char*)path, NULL};
+
+    while (waitpid(-1, NULL, WNOHANG) > 0) {
+        ;
+    }
+
+
+    const pid_t pid = fork();
+
+    if (pid < 0) {
+        return -1;
+    }
+
+    if (pid == 0) {
+
+        for (int fd = STDERR_FILENO + 1; fd < CONFIG_OPEN_MAX; fd++) {
+            close(fd);
+        }
+
+        execvp(argv[0], argv);
+
+        _exit(127);
+    }
+
+    return 0;
+}
+
+
+/**
  * @brief Reads a directory into the entry array, sorted.
  *
  * @param path The directory to read.
@@ -300,6 +622,15 @@ static int explorer_scan(const char* path) {
         }
 
 
+        const size_t length = strlen(out->name);
+
+        out->label[0] = '\0';
+
+        if (!out->directory && length > sizeof(".desktop") - 1 && strcmp(out->name + length - (sizeof(".desktop") - 1), ".desktop") == 0) {
+            explorer_desktop_name(full, out->label, sizeof(out->label));
+        }
+
+
         explorer.count++;
     }
 
@@ -335,11 +666,11 @@ static void explorer_update_status(void) {
 
         explorer_format_size(entry->size, size, sizeof(size));
 
-        snprintf(text, sizeof(text), "%zu items    %s    %s", explorer.count, entry->name, size);
+        snprintf(text, sizeof(text), "%zu items    %s    %s", explorer.count, explorer_label(entry), size);
 
     } else if (entry) {
 
-        snprintf(text, sizeof(text), "%zu items    %s", explorer.count, entry->name);
+        snprintf(text, sizeof(text), "%zu items    %s", explorer.count, explorer_label(entry));
 
     } else {
 
@@ -371,6 +702,8 @@ static void explorer_open(const char* path) {
 
         ui_label_set_text(explorer.status, text);
 
+        explorer_sync_places();
+
         return;
     }
 
@@ -381,6 +714,8 @@ static void explorer_open(const char* path) {
 
     ui_label_set_text(explorer.path, explorer.directory);
     ui_window_set_title(ui_view_window(explorer.view), explorer.directory);
+
+    explorer_sync_places();
 
 
     ui_list_clear(explorer.list);
@@ -402,7 +737,7 @@ static void explorer_open(const char* path) {
             explorer_format_size(explorer.entries[i].size, detail, sizeof(detail));
         }
 
-        ui_list_add(explorer.list, explorer.entries[i].name, detail, NULL);
+        ui_list_add(explorer.list, explorer_label(&explorer.entries[i]), detail, NULL);
     }
 
 
@@ -432,6 +767,31 @@ static void explorer_on_up(ui_widget_t* widget, void* user) {
     (void)user;
 
     explorer_up();
+}
+
+
+/**
+ * @brief Opens a shortcut, which one click on its row is enough to do.
+ *
+ * @param widget The sidebar.
+ * @param index The row, or -1 when the selection was cleared.
+ * @param user Unused.
+ */
+
+static void explorer_on_place(ui_widget_t* widget, int index, void* user) {
+
+    (void)widget;
+    (void)user;
+
+    if (explorer.syncing) {
+        return;
+    }
+
+    if (index < 0 || (size_t)index >= explorer.places_count) {
+        return;
+    }
+
+    explorer_open(explorer.places[index].path);
 }
 
 
@@ -465,16 +825,27 @@ static void explorer_on_activate(ui_widget_t* widget, int index, void* user) {
 
     const explorer_entry_t* entry = &explorer.entries[index - 1];
 
-    if (!entry->directory) {
-        return;
-    }
-
-
     char path[PATH_MAX];
 
     explorer_join(explorer.directory, entry->name, path, sizeof(path));
 
-    explorer_open(path);
+    if (entry->directory) {
+
+        explorer_open(path);
+
+        return;
+    }
+
+
+    char text[PATH_MAX];
+
+    if (explorer_open_with(path) < 0) {
+        snprintf(text, sizeof(text), "cannot open %.255s: %s", explorer_label(entry), strerror(errno));
+    } else {
+        snprintf(text, sizeof(text), "opening %.255s", explorer_label(entry));
+    }
+
+    ui_label_set_text(explorer.status, text);
 }
 
 
@@ -517,7 +888,7 @@ static bool explorer_on_key(ui_view_t* view, uint16_t vkey, bool down, void* use
 
 
 /**
- * @brief Places the toolbar along the top, the status line along the bottom and the list in between.
+ * @brief Places the toolbar along the top, the status line along the bottom, and the sidebar and the listing in between.
  *
  * @param view The view being laid out.
  * @param width The view width in pixels.
@@ -545,10 +916,47 @@ static void explorer_layout(ui_view_t* view, int width, int height, void* user) 
 
     const int status_y = height - EXPLORER_MARGIN - EXPLORER_STATUS_HEIGHT;
 
-    ui_rect_t list = {EXPLORER_MARGIN, toolbar.y + toolbar.height + EXPLORER_GAP, inner, status_y - (toolbar.y + toolbar.height + EXPLORER_GAP) - EXPLORER_GAP};
+    const int content_y = toolbar.y + toolbar.height + EXPLORER_GAP;
 
-    if (list.height < 0) {
-        list.height = 0;
+    int content_height = status_y - content_y - EXPLORER_GAP;
+
+    if (content_height < 0) {
+        content_height = 0;
+    }
+
+
+    int sidebar_width = EXPLORER_SIDEBAR_WIDTH;
+
+    if (sidebar_width > inner / 2) {
+        sidebar_width = inner / 2;
+    }
+
+    if (sidebar_width < 0) {
+        sidebar_width = 0;
+    }
+
+
+    ui_rect_t header = {EXPLORER_MARGIN + EXPLORER_GAP, content_y, sidebar_width - EXPLORER_GAP * 2, EXPLORER_SIDEBAR_HEADER};
+
+    if (header.width < 0) {
+        header.width = 0;
+    }
+
+    ui_widget_place(explorer.sidebar_header, header);
+
+    ui_rect_t sidebar = {EXPLORER_MARGIN, content_y + EXPLORER_SIDEBAR_HEADER, sidebar_width, content_height - EXPLORER_SIDEBAR_HEADER};
+
+    if (sidebar.height < 0) {
+        sidebar.height = 0;
+    }
+
+    ui_widget_place(explorer.sidebar, sidebar);
+
+
+    ui_rect_t list = {EXPLORER_MARGIN + sidebar_width + EXPLORER_GAP, content_y, inner - sidebar_width - EXPLORER_GAP, content_height};
+
+    if (list.width < 0) {
+        list.width = 0;
     }
 
     ui_widget_place(explorer.list, list);
@@ -568,13 +976,15 @@ static void explorer_layout(ui_view_t* view, int width, int height, void* user) 
 
 static int explorer_build(ui_view_t* view) {
 
-    explorer.toolbar = ui_panel_create(view);
-    explorer.up      = ui_button_create(view, "Up", explorer_on_up, NULL);
-    explorer.path    = ui_label_create(view, "");
-    explorer.list    = ui_list_create(view);
-    explorer.status  = ui_label_create(view, "");
+    explorer.toolbar        = ui_panel_create(view);
+    explorer.up             = ui_button_create(view, "Up", explorer_on_up, NULL);
+    explorer.path           = ui_label_create(view, "");
+    explorer.sidebar_header = ui_label_create(view, "Places");
+    explorer.sidebar        = ui_list_create(view);
+    explorer.list           = ui_list_create(view);
+    explorer.status         = ui_label_create(view, "");
 
-    if (!explorer.toolbar || !explorer.up || !explorer.path || !explorer.list || !explorer.status) {
+    if (!explorer.toolbar || !explorer.up || !explorer.path || !explorer.sidebar_header || !explorer.sidebar || !explorer.list || !explorer.status) {
         return -1;
     }
 
@@ -582,10 +992,17 @@ static int explorer_build(ui_view_t* view) {
     ui_label_set_color(explorer.path, ui_theme()->text_muted);
     ui_label_set_padding(explorer.path, EXPLORER_GAP);
 
+    ui_label_set_color(explorer.sidebar_header, ui_theme()->text_muted);
+    ui_label_set_font(explorer.sidebar_header, UI_FONT_REGULAR, EXPLORER_SIDEBAR_FONT_SIZE);
+
+    ui_list_on_select(explorer.sidebar, explorer_on_place, NULL);
+
     ui_label_set_color(explorer.status, ui_theme()->text_muted);
 
     ui_list_on_select(explorer.list, explorer_on_select, NULL);
     ui_list_on_activate(explorer.list, explorer_on_activate, NULL);
+
+    explorer_build_places();
 
     ui_view_focus(view, explorer.list);
 
