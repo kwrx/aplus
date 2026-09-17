@@ -494,6 +494,8 @@ pid_t sched_lastpid(void);
 
 void schedule(int);
 
+void idle_main(void*) __noreturn;
+
 __END_DECLS
 
 #endif

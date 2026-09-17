@@ -471,6 +471,140 @@ pid_t arch_task_spawn_init() {
 }
 
 
+/**
+ * @brief Creates the idle task of the current cpu and installs it as its sched_idle.
+ *
+ * A cpu that is not running a task yet adopts the context it is already executing on, the way the boot
+ * task does; one that is already running a task gets an idle task with a frame and a stack of its own.
+ * The task is never placed on a run queue, so nothing that walks one can see or touch it.
+ *
+ * @return The idle task of the current cpu.
+ */
+task_t* arch_task_spawn_idle(void) {
+
+    DEBUG_ASSERT(!current_cpu->sched_idle);
+
+
+    const bool adopt = (current_cpu->sched_running == NULL);
+
+
+    task_t* task = (task_t*)kcalloc(1, (sizeof(task_t)), GFP_KERNEL);
+
+
+    static char* __argv[2] = {"idle", NULL};
+    static char* __envp[1] = {NULL};
+
+    task->argv    = __argv;
+    task->environ = __envp;
+
+
+    task->tid = task->pid = 0;
+    task->pgrp            = 0;
+    task->uid = task->euid = task->gid = task->egid = 0;
+    task->sid                                       = 0;
+
+    task->status   = TASK_STATUS_READY;
+    task->policy   = TASK_POLICY_IDLE;
+    task->priority = TASK_PRIO_MIN;
+    task->caps     = TASK_CAPS_SYSTEM;
+    task->flags    = TASK_FLAGS_KERNEL_UIO | (adopt ? TASK_FLAGS_NO_FRAME : 0);
+
+    CPU_ZERO(&task->affinity);
+    CPU_SET(current_cpu->id, &task->affinity);
+
+
+    queue_init(&task->sigqueue);
+    queue_init(&task->sigpending);
+
+
+
+#define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
+
+    task->frame  = _(sizeof(interrupt_frame_t), 0);
+    task->sstack = fpu_new_signal_state();
+    task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
+    task->ustack = NULL;
+    task->fpu    = fpu_new_state();
+
+#undef _
+
+
+    if (!adopt) {
+
+        uintptr_t stack = (uintptr_t)kcalloc(1, KERNEL_SYSCALL_STACKSIZE, GFP_KERNEL);
+
+        FRAME(task)->cs    = KERNEL_CS;
+        FRAME(task)->ss    = KERNEL_DS;
+        FRAME(task)->flags = 0x202;
+        FRAME(task)->sp    = ((stack + KERNEL_SYSCALL_STACKSIZE) & ~0xFUL) - sizeof(uintptr_t);
+        FRAME(task)->ip    = (uintptr_t)idle_main;
+    }
+
+
+    task->address_space = &core->bsp.address_space;
+    atomic_fetch_add(&core->bsp.address_space.refcount, 1);
+
+
+    task->fs      = shared_ptr_new(struct fs, GFP_KERNEL);
+    task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
+    task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
+    task->ctty    = shared_ptr_new(struct pty*, GFP_KERNEL);
+
+
+    shared_ptr_access(task->fs, fs, {
+        fs->cwd = fs->root = &__vfs_root;
+        fs->exe            = NULL;
+        fs->umask          = 0;
+    });
+
+    shared_ptr_access(task->sighand, sighand, { memset(&sighand->sigmask, 0xFF, sizeof(sigset_t)); });
+
+
+
+    for (size_t j = 0; j < RLIM_NLIMITS; j++) {
+        task->rlimits[j].rlim_cur = task->rlimits[j].rlim_max = RLIM_INFINITY;
+    }
+
+    task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
+
+
+
+    task->next   = NULL;
+    task->parent = NULL;
+
+    task->start_time = arch_task_boot_ticks();
+    task->ppid       = 0;
+
+    strncpy(task->comm, "idle", TASK_COMM_LEN - 1);
+
+    memcpy(task->cmdline, "idle", sizeof("idle"));
+    task->cmdline_len = sizeof("idle");
+
+    spinlock_init(&task->lock);
+    spinlock_init(&task->sched_lock);
+
+
+
+    if (adopt) {
+
+        current_cpu->sched_running = task;
+        current_cpu->kstack        = task->kstack;
+
+        WRITE_SP0(current_cpu, task->kstack);
+    }
+
+    current_cpu->sched_idle = task;
+
+
+
+#if DEBUG_LEVEL_TRACE
+    kprintf("task: spawn idle task cpu(%ld) kstack(%p) adopt(%d)\n", arch_cpu_get_current_id(), task->kstack, adopt);
+#endif
+
+    return task;
+}
+
+
 pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t stacksize, void* arg) {
 
     DEBUG_ASSERT(name);

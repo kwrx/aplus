@@ -60,16 +60,26 @@ static int procfs_service_stat_fetch(inode_t* inode, char** buf, size_t* size, v
 
     procfs_buf_t b = procfs_scratch();
 
-    uint64_t total = 0;
+    uint64_t busy = 0;
+    uint64_t idle = 0;
 
     cpu_foreach(cpu) {
-        total += procfs_ticks(&cpu->uptime);
+
+        uint64_t up = procfs_ticks(&cpu->uptime);
+        uint64_t id = procfs_ticks(&cpu->idle);
+
+        busy += up > id ? up - id : 0;
+        idle += id;
     }
 
-    procfs_bprintf(&b, "cpu  %lu 0 0 0 0 0 0 0 0 0\n", total);
+    procfs_bprintf(&b, "cpu  %lu 0 0 %lu 0 0 0 0 0 0\n", busy, idle);
 
     cpu_foreach(cpu) {
-        procfs_bprintf(&b, "cpu%d %lu 0 0 0 0 0 0 0 0 0\n", (int)cpu->id, procfs_ticks(&cpu->uptime));
+
+        uint64_t up = procfs_ticks(&cpu->uptime);
+        uint64_t id = procfs_ticks(&cpu->idle);
+
+        procfs_bprintf(&b, "cpu%d %lu 0 0 %lu 0 0 0 0 0 0\n", (int)cpu->id, up > id ? up - id : 0, id);
     }
 
     procfs_bprintf(&b, "intr 0\n");

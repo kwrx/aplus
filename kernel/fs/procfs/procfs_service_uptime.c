@@ -32,6 +32,7 @@
 #include <aplus/hal.h>
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
+#include <aplus/smp.h>
 #include <aplus/vfs.h>
 
 #include "procfs.h"
@@ -53,7 +54,13 @@ static int procfs_service_uptime_fetch(inode_t* inode, char** buf, size_t* size,
 
     uint64_t ms = arch_timer_generic_getms();
 
-    procfs_bprintf(&b, "%lu.%02lu %lu.%02lu\n", ms / 1000, (ms % 1000) / 10, ms / 1000, (ms % 1000) / 10);
+    uint64_t idle = 0;
+
+    cpu_foreach(cpu) {
+        idle += procfs_ticks(&cpu->idle);
+    }
+
+    procfs_bprintf(&b, "%lu.%02lu %lu.%02lu\n", ms / 1000, (ms % 1000) / 10, idle / TASK_USER_HZ, ((idle % TASK_USER_HZ) * 100) / TASK_USER_HZ);
 
     *buf  = b.data;
     *size = b.length;

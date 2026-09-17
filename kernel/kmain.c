@@ -33,14 +33,27 @@
 #include <aplus/syscall.h>
 
 
-void cmain(void) {
+/**
+ * @brief Body of the per-cpu idle task, which halts the core until the next interrupt.
+ *
+ * @param arg Unused.
+ */
+__noreturn void idle_main(void* arg) {
 
-    current_task->priority = TASK_PRIO_MIN;
+    (void)arg;
 
     for (;;) {
         __cpu_pause();
         __cpu_halt();
     }
+}
+
+
+/**
+ * @brief Entry point of an application processor, which runs the idle task it was given at startup.
+ */
+void cmain(void) {
+    idle_main(NULL);
 }
 
 
