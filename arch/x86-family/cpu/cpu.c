@@ -86,19 +86,15 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
     x86_cpuid(0, &ex, &bx, &cx, &dx);
 
+    {
+        char vendor[13] = {0};
 
-#if DEBUG_LEVEL_INFO
+        memcpy(&vendor[0], &bx, 4);
+        memcpy(&vendor[4], &dx, 4);
+        memcpy(&vendor[8], &cx, 4);
 
-    char vendor[13];
-    vendor[12] = '\0';
-
-    memcpy(&vendor[0], &bx, 4);
-    memcpy(&vendor[4], &dx, 4);
-    memcpy(&vendor[8], &cx, 4);
-
-#endif
-
-
+        strncpy(core->cpu.cores[index].vendor_name, vendor, sizeof(core->cpu.cores[index].vendor_name) - 1);
+    }
 
     if (ex >= 1) {
 
@@ -153,6 +149,29 @@ __percpu void arch_cpu_init(cpuid_t index) {
         core->cpu.cores[index].features[6] = cx;
     }
 
+    if (eex >= 0x80000004) {
+        char model[49] = {0};
+
+        x86_cpuid(0x80000002, &ax, &bx, &cx, &dx);
+        memcpy(&model[0], &ax, 4);
+        memcpy(&model[4], &bx, 4);
+        memcpy(&model[8], &cx, 4);
+        memcpy(&model[12], &dx, 4);
+
+        x86_cpuid(0x80000003, &ax, &bx, &cx, &dx);
+        memcpy(&model[16], &ax, 4);
+        memcpy(&model[20], &bx, 4);
+        memcpy(&model[24], &cx, 4);
+        memcpy(&model[28], &dx, 4);
+
+        x86_cpuid(0x80000004, &ax, &bx, &cx, &dx);
+        memcpy(&model[32], &ax, 4);
+        memcpy(&model[36], &bx, 4);
+        memcpy(&model[40], &cx, 4);
+        memcpy(&model[44], &dx, 4);
+
+        strncpy(core->cpu.cores[index].model_name, model, sizeof(core->cpu.cores[index].model_name) - 1);
+    }
 
     if (eex >= 0x80860001) {
 
@@ -162,11 +181,12 @@ __percpu void arch_cpu_init(cpuid_t index) {
     }
 
 
-
 #if DEBUG_LEVEL_INFO
 
     kprintf("cpu: id:         #%zd\n", index);
-    kprintf("     vendor:     %s\n", vendor);
+    kprintf("     archid:     0x%lX\n", core->cpu.cores[index].archid);
+    kprintf("     vendor:     %s\n", core->cpu.cores[index].vendor_name);
+    kprintf("     model:      %s\n", core->cpu.cores[index].model_name);
     kprintf("     cpuid:      0x%lX (extended: 0x%lX)\n", ex, eex);
     kprintf("     features:   ");
 
@@ -363,16 +383,6 @@ __percpu void arch_cpu_init(cpuid_t index) {
     #undef _F
 
     kprintf("\n");
-
-    if (ex >= 0x80000004) {
-
-        char name[48];
-        x86_cpuid(0x80000002, (long*)(name + 0), (long*)(name + 4), (long*)(name + 8), (long*)(name + 12));
-        x86_cpuid(0x80000003, (long*)(name + 16), (long*)(name + 20), (long*)(name + 24), (long*)(name + 28));
-        x86_cpuid(0x80000004, (long*)(name + 32), (long*)(name + 36), (long*)(name + 40), (long*)(name + 44));
-
-        kprintf("     name:       %.48s\n", name);
-    }
 
 #endif
 

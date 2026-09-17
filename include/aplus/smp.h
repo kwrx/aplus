@@ -105,6 +105,9 @@ typedef struct cpu {
     spinlock_t global_lock;
     spinlock_t sched_lock;
 
+    char model_name[64];
+    char vendor_name[64];
+
 } cpu_t;
 
 
