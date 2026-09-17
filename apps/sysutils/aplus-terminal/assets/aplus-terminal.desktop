@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Console
+Comment=Console application
+Exec=aplus-terminal
+Terminal=false
+Type=Application
+Categories=Utility;Terminal;

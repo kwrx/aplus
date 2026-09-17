@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GL Shaders Triangle
+Comment=OpenGL Shaders Triangle demo
+Exec=gl-shaders-triangle
+Terminal=false
+Type=Application
+Categories=Utility;Game;

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GL Gears
+Comment=OpenGL Gears demo
+Exec=gl-gears
+Terminal=false
+Type=Application
+Categories=Utility;Game;
