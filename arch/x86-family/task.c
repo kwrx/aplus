@@ -329,7 +329,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     FRAME(task)->cs    = KERNEL_CS;
     FRAME(task)->flags = 0x202;
-    FRAME(task)->sp    = (uintptr_t)task + sizeof(task_t) + stacksize;
+    FRAME(task)->sp    = (((uintptr_t)task + sizeof(task_t) + stacksize) & ~0xFUL) - sizeof(uintptr_t);
     FRAME(task)->ss    = KERNEL_DS;
 
 
