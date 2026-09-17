@@ -73,6 +73,113 @@ void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h,
 
 
 /**
+ * @brief Measures one line of text.
+ *
+ * @param text The string to measure.
+ * @param font The font file it would be drawn with.
+ * @param size The font size in pixels.
+ * @return The advance width in pixels, or 0 when the font cannot be loaded.
+ */
+double ui_draw_text_width(const char* text, const char* font, double size) {
+
+    if (!text || !*text) {
+        return 0.0;
+    }
+
+
+    cairo_font_face_t* face = ui_font_face(font);
+
+    if (!face) {
+        return 0.0;
+    }
+
+
+    cairo_scaled_font_t* scaled = ui_font_scaled(face, size);
+
+    if (!scaled) {
+        return 0.0;
+    }
+
+
+    cairo_text_extents_t te;
+
+    cairo_scaled_font_text_extents(scaled, text, &te);
+
+    return te.x_advance;
+}
+
+
+/**
+ * @brief Copies text into a buffer, cutting it short with an ellipsis when it does not fit a width.
+ *
+ * @param out Receives the text, always NUL terminated.
+ * @param size The size of that buffer.
+ * @param text The string to fit.
+ * @param font The font file it will be drawn with.
+ * @param fsize The font size in pixels.
+ * @param max_width The width to fit it into.
+ */
+void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width) {
+
+    static const char ellipsis[] = "\xE2\x80\xA6";
+
+    if (!out || size == 0) {
+        return;
+    }
+
+    out[0] = '\0';
+
+    if (!text || !*text || max_width <= 0.0) {
+        return;
+    }
+
+
+    strncpy(out, text, size - 1);
+
+    out[size - 1] = '\0';
+
+
+    const double full = ui_draw_text_width(out, font, fsize);
+
+    if (full <= max_width) {
+        return;
+    }
+
+
+    size_t len = strlen(out);
+
+    const size_t guess = (size_t)((double)len * (max_width / full));
+
+    if (guess < len) {
+        len = guess;
+    }
+
+
+    while (len > 0) {
+
+        while (len > 0 && ((unsigned char)out[len] & 0xC0) == 0x80) {
+            len--;
+        }
+
+        if (len + sizeof(ellipsis) <= size) {
+
+            memcpy(out + len, ellipsis, sizeof(ellipsis));
+
+            if (ui_draw_text_width(out, font, fsize) <= max_width) {
+                return;
+            }
+
+            out[len] = '\0';
+        }
+
+        len--;
+    }
+
+    out[0] = '\0';
+}
+
+
+/**
  * @brief Draws one line of text, centred vertically in a rect and clipped to it.
  *
  * @param cr The cairo context to draw with.

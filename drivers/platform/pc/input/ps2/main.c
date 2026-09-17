@@ -364,11 +364,11 @@ void ps2_mouse_irq(void* context, irq_t irq) {
                         switch (__mouse_id) {
 
                             case 3:
-                                ev.ev_rel.z = (vaxis_t)(packet[3] - ((packet[3] & 0x80) ? 256 : 0));
+                                ev.ev_rel.z = (vaxis_t)(((packet[3] & 0x80) ? 256 : 0) - packet[3]);
                                 break;
 
                             case 4:
-                                ev.ev_rel.z = (vaxis_t)(packet[3] - ((packet[3] & 0x08) ? 16 : 0));
+                                ev.ev_rel.z = (vaxis_t)(((packet[3] & 0x08) ? 16 : 0) - (packet[3] & 0x0F));
                                 break;
 
                             default:

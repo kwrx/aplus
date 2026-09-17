@@ -199,6 +199,27 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 return 1;
             }
 
+            case UI_EV_SCROLL: {
+
+                ui_msg_scroll_t scroll;
+
+                if (hdr.length != sizeof(scroll)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, &scroll, sizeof(scroll)) < 0) {
+                    return -1;
+                }
+
+                out->type      = UI_EVENT_SCROLL;
+                out->window_id = scroll.window_id;
+                out->scroll.dx = scroll.dx;
+                out->scroll.dy = scroll.dy;
+
+                return 1;
+            }
+
             case UI_EV_FOCUS: {
 
                 ui_msg_focus_t focus;

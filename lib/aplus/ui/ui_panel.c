@@ -24,9 +24,18 @@
 #include "ui_widget_internal.h"
 
 
+static void ui_panel_draw(ui_widget_t* widget, cairo_t* cr);
+
+
+static const ui_widget_ops_t ui_panel_ops = {
+
+    .draw = ui_panel_draw,
+};
+
+
 ui_widget_t* ui_panel_create(ui_view_t* view) {
 
-    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_PANEL, false);
+    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_PANEL, &ui_panel_ops, false);
 
     if (!widget) {
         return NULL;
@@ -78,7 +87,7 @@ void ui_panel_set_border(ui_widget_t* widget, ui_color_t color, double width) {
 }
 
 
-void ui_panel_draw(ui_widget_t* widget, cairo_t* cr) {
+static void ui_panel_draw(ui_widget_t* widget, cairo_t* cr) {
 
     ui_draw_rounded_rect(cr, widget->rect, widget->panel.radius);
     ui_draw_set_color(cr, widget->panel.color);

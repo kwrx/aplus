@@ -23,6 +23,7 @@
 
 #include <errno.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "ui_internal.h"
 #include "ui_widget_internal.h"
@@ -35,6 +36,12 @@
  * server talking faster than this end can draw from starving the painting altogether.
  */
 #define UI_VIEW_DRAIN_MAX 256
+
+/**
+ * @brief How close together two presses have to be, in milliseconds and in pixels, to count as a double click.
+ */
+#define UI_VIEW_DOUBLE_CLICK_MS   400
+#define UI_VIEW_DOUBLE_CLICK_SLOP 4
 
 
 static void ui_view_damage(ui_view_t* view, ui_rect_t rect) {
@@ -258,6 +265,24 @@ static ui_widget_t* ui_view_widget_at(ui_view_t* view, int x, int y) {
 }
 
 
+/**
+ * @brief Runs one of a widget's state hooks and repaints it when the hook says it changed.
+ *
+ * @param widget The widget to notify, which may be NULL.
+ * @param changed What the hook reported.
+ * @return The same, so that a caller can accumulate it.
+ */
+
+static bool ui_view_notified(ui_widget_t* widget, bool changed) {
+
+    if (widget && changed) {
+        ui_widget_invalidate(widget);
+    }
+
+    return changed;
+}
+
+
 static bool ui_view_set_hovered(ui_view_t* view, ui_widget_t* widget) {
 
     if (view->hovered == widget) {
@@ -267,70 +292,116 @@ static bool ui_view_set_hovered(ui_view_t* view, ui_widget_t* widget) {
 
     bool changed = false;
 
-    if (view->hovered && view->hovered->kind == UI_WIDGET_BUTTON) {
-
-        if (ui_button_set_hovered(view->hovered, false)) {
-
-            ui_widget_invalidate(view->hovered);
-
-            changed = true;
-        }
+    if (view->hovered && view->hovered->ops->on_hover) {
+        changed |= ui_view_notified(view->hovered, view->hovered->ops->on_hover(view->hovered, false));
     }
 
     view->hovered = widget;
 
-    if (widget && widget->kind == UI_WIDGET_BUTTON) {
-
-        if (ui_button_set_hovered(widget, true)) {
-
-            ui_widget_invalidate(widget);
-
-            changed = true;
-        }
+    if (widget && widget->ops->on_hover) {
+        changed |= ui_view_notified(widget, widget->ops->on_hover(widget, true));
     }
 
     return changed;
 }
 
 
-static bool ui_view_set_pressed(ui_view_t* view, ui_widget_t* widget) {
+/**
+ * @brief Drops the press a widget is holding without activating it, as a pointer leaving the window does.
+ *
+ * @param view The view holding the press.
+ * @return Whether anything has to be repainted.
+ */
 
-    if (view->pressed == widget) {
+static bool ui_view_cancel_pressed(ui_view_t* view) {
+
+    ui_widget_t* pressed = view->pressed;
+
+    if (!pressed) {
+        return false;
+    }
+
+    view->pressed = NULL;
+
+    if (!pressed->ops->on_release) {
+        return false;
+    }
+
+    return ui_view_notified(pressed, pressed->ops->on_release(pressed, 0, 0, false, 0));
+}
+
+
+bool ui_view_focus(ui_view_t* view, ui_widget_t* widget) {
+
+    if (!view || view->focused == widget) {
+        return false;
+    }
+
+    if (widget && (!widget->visible || !widget->enabled)) {
         return false;
     }
 
 
     bool changed = false;
 
-    if (view->pressed && view->pressed->kind == UI_WIDGET_BUTTON) {
-
-        if (ui_button_set_pressed(view->pressed, false)) {
-
-            ui_widget_invalidate(view->pressed);
-
-            changed = true;
-        }
+    if (view->focused && view->focused->ops->on_focus) {
+        changed |= ui_view_notified(view->focused, view->focused->ops->on_focus(view->focused, false));
     }
 
-    view->pressed = widget;
+    view->focused = widget;
 
-    if (widget && widget->kind == UI_WIDGET_BUTTON) {
-
-        if (ui_button_set_pressed(widget, true)) {
-
-            ui_widget_invalidate(widget);
-
-            changed = true;
-        }
+    if (widget && widget->ops->on_focus) {
+        changed |= ui_view_notified(widget, widget->ops->on_focus(widget, true));
     }
 
     return changed;
 }
 
 
+ui_widget_t* ui_view_focused(const ui_view_t* view) {
+    return view ? view->focused : NULL;
+}
+
+
+/**
+ * @brief Counts a press towards a double click, against the last one the view saw.
+ *
+ * @param view The view holding the click history.
+ * @param widget The widget being pressed.
+ * @param x The press position.
+ * @param y The press position.
+ * @return 2 when this press completes a double click, 1 otherwise.
+ */
+
+static int ui_view_count_click(ui_view_t* view, ui_widget_t* widget, int x, int y) {
+
+    struct timespec ts;
+
+    uint64_t now = 0;
+
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
+        now = (uint64_t)ts.tv_sec * 1000ULL + (uint64_t)(ts.tv_nsec / 1000000L);
+    }
+
+
+    const bool again = view->click_widget == widget && now - view->click_time <= UI_VIEW_DOUBLE_CLICK_MS && abs(x - view->click_x) <= UI_VIEW_DOUBLE_CLICK_SLOP && abs(y - view->click_y) <= UI_VIEW_DOUBLE_CLICK_SLOP;
+
+    view->click_count  = again ? view->click_count + 1 : 1;
+    view->click_widget = widget;
+    view->click_time   = now;
+    view->click_x      = x;
+    view->click_y      = y;
+
+    return view->click_count > 2 ? 2 : view->click_count;
+}
+
+
 static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
-    ui_widget_t* over = ui_view_widget_at(view, event->pointer.x, event->pointer.y);
+    const int x = event->pointer.x;
+    const int y = event->pointer.y;
+
+    ui_widget_t* over = ui_view_widget_at(view, x, y);
 
     bool changed = ui_view_set_hovered(view, over);
 
@@ -339,18 +410,31 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
     if (down) {
 
-        if (!view->pressed) {
+        if (view->pressed) {
 
-            changed |= ui_view_set_pressed(view, over);
-
-        } else if (view->pressed->kind == UI_WIDGET_BUTTON) {
-
-            if (ui_button_set_pressed(view->pressed, view->pressed == over)) {
-
-                ui_widget_invalidate(view->pressed);
-
-                changed = true;
+            if (view->pressed->ops->on_drag) {
+                changed |= ui_view_notified(view->pressed, view->pressed->ops->on_drag(view->pressed, x, y, view->pressed == over));
             }
+
+            return changed;
+        }
+
+
+        if (!over) {
+            return changed;
+        }
+
+
+        view->pressed = over;
+
+        view->click_count = ui_view_count_click(view, over, x, y);
+
+        if (over->ops->on_key) {
+            changed |= ui_view_focus(view, over);
+        }
+
+        if (over->ops->on_press) {
+            changed |= ui_view_notified(over, over->ops->on_press(over, x, y));
         }
 
         return changed;
@@ -359,16 +443,37 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
     ui_widget_t* released = view->pressed;
 
-    changed |= ui_view_set_pressed(view, NULL);
+    if (!released) {
+        return changed;
+    }
 
-    if (released && released == over && released->kind == UI_WIDGET_BUTTON) {
+    view->pressed = NULL;
 
-        ui_button_activate(released);
-
-        changed = true;
+    if (released->ops->on_release) {
+        changed |= ui_view_notified(released, released->ops->on_release(released, x, y, released == over, released == over ? view->click_count : 0));
     }
 
     return changed;
+}
+
+
+/**
+ * @brief Sends a wheel step to whatever the pointer is over.
+ *
+ * @param view The view to scroll.
+ * @param event The scroll event.
+ * @return Whether anything has to be repainted.
+ */
+
+static bool ui_view_scroll(ui_view_t* view, const ui_event_t* event) {
+
+    ui_widget_t* over = view->hovered;
+
+    if (!over || !over->ops->on_scroll) {
+        return false;
+    }
+
+    return ui_view_notified(over, over->ops->on_scroll(over, event->scroll.dy));
 }
 
 
@@ -402,11 +507,21 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
         case UI_EVENT_POINTER:
             return ui_view_pointer(view, event);
 
+        case UI_EVENT_SCROLL:
+            return ui_view_scroll(view, event);
+
         case UI_EVENT_LEAVE:
 
-            return ui_view_set_hovered(view, NULL) | ui_view_set_pressed(view, NULL);
+            return ui_view_set_hovered(view, NULL) | ui_view_cancel_pressed(view);
 
         case UI_EVENT_KEY:
+
+            if (view->focused && view->focused->ops->on_key) {
+
+                if (view->focused->ops->on_key(view->focused, event->key.vkey, event->key.down != 0)) {
+                    return true;
+                }
+            }
 
             if (view->key) {
                 return view->key(view, event->key.vkey, event->key.down != 0, view->key_user);
@@ -423,7 +538,7 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
         case UI_EVENT_FOCUS:
 
             if (!event->focus.focused) {
-                return ui_view_set_hovered(view, NULL) | ui_view_set_pressed(view, NULL);
+                return ui_view_set_hovered(view, NULL) | ui_view_cancel_pressed(view);
             }
 
             return false;

@@ -173,6 +173,11 @@ typedef struct ui_widget ui_widget_t;
 typedef void (*ui_action_fn)(ui_widget_t* widget, void* user);
 
 /**
+ * @brief Called with the row a list selection or activation lands on, or -1 when nothing is selected.
+ */
+typedef void (*ui_list_fn)(ui_widget_t* widget, int index, void* user);
+
+/**
  * @brief Called once when the view is created and again after every configure, with the content size in place.
  */
 typedef void (*ui_layout_fn)(ui_view_t* view, int width, int height, void* user);
@@ -219,6 +224,20 @@ bool ui_view_needs_paint(ui_view_t* view);
  * @return 1 if a frame went out, 0 if nothing needed painting, -1 on error.
  */
 int ui_view_present(ui_view_t* view);
+
+/**
+ * @brief Gives one widget the keyboard, taking it from whatever held it.
+ *
+ * Keys reach the focused widget first, and only fall through to ui_view_on_key() when it declines them.
+ * A click moves the focus by itself, but only onto a widget that takes keys at all, never onto a button.
+ *
+ * @param view The view to move the focus in.
+ * @param widget The widget to focus, or NULL to focus nothing.
+ * @return Whether anything changed.
+ */
+bool ui_view_focus(ui_view_t* view, ui_widget_t* widget);
+ui_widget_t* ui_view_focused(const ui_view_t* view);
+
 
 /**
  * @brief Runs the event loop until the window closes or the server goes away.
@@ -303,6 +322,52 @@ void ui_button_activate(ui_widget_t* widget);
  */
 void ui_button_set_held(ui_widget_t* widget, bool held);
 bool ui_button_held(const ui_widget_t* widget);
+
+
+/**
+ * @brief List: one selectable row per item, scrolled by the wheel, the arrow keys or its own scrollbar.
+ *
+ * A row is a name and an optional detail drawn against the right edge, which is what a size column is.
+ */
+
+ui_widget_t* ui_list_create(ui_view_t* view);
+
+void ui_list_clear(ui_widget_t* widget);
+
+/**
+ * @brief Appends a row, copying both strings.
+ *
+ * @param widget The list to append to.
+ * @param text The name, ellipsised when it does not fit.
+ * @param detail The right-hand column, or NULL for none.
+ * @param user Carried along with the row and handed back by ui_list_item_user().
+ * @return The index of the new row, or -1 on error.
+ */
+int ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void* user);
+
+size_t ui_list_count(const ui_widget_t* widget);
+const char* ui_list_text(const ui_widget_t* widget, int index);
+void* ui_list_item_user(const ui_widget_t* widget, int index);
+
+int ui_list_selected(const ui_widget_t* widget);
+
+/**
+ * @brief Selects a row and scrolls it into view, or clears the selection when given -1.
+ */
+void ui_list_select(ui_widget_t* widget, int index);
+void ui_list_scroll_to(ui_widget_t* widget, int index);
+
+/**
+ * @brief Sets the height of a row in pixels, or restores the height the theme implies when given 0.
+ */
+void ui_list_set_row_height(ui_widget_t* widget, int height);
+
+void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user);
+
+/**
+ * @brief Sets what a double click or Enter on a row runs.
+ */
+void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user);
 
 
 /**

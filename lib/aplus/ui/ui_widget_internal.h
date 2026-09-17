@@ -36,20 +36,72 @@
 
 #define UI_LABEL_TEXT_MAX 128
 
+/**
+ * @brief The widest row a list will shape, past which a name is ellipsised anyway.
+ */
+#define UI_LIST_TEXT_MAX 256
+
+
+/**
+ * @brief One row of a list, owning its own strings since a caller's may not outlive the widget.
+ */
+
+typedef struct {
+
+    char* text;
+    char* detail;
+
+    void* user;
+
+} ui_list_item_t;
+
 
 typedef enum {
 
     UI_WIDGET_PANEL = 0,
     UI_WIDGET_LABEL,
     UI_WIDGET_BUTTON,
+    UI_WIDGET_LIST,
 
 } ui_widget_kind_t;
+
+
+/**
+ * @brief What a widget kind provides, so that the view drives every kind through one table.
+ *
+ * Every hook is optional, and every hook that reacts to state returns whether a repaint is due.
+ */
+
+typedef struct {
+
+    void (*draw)(ui_widget_t* widget, cairo_t* cr);
+
+    bool (*on_hover)(ui_widget_t* widget, bool hovered);
+    bool (*on_press)(ui_widget_t* widget, int x, int y);
+
+    //? Motion while the widget holds the press, whether or not the pointer is still over it.
+    bool (*on_drag)(ui_widget_t* widget, int x, int y, bool inside);
+
+    //? `clicks` is 0 when the press was cancelled rather than released over the widget.
+    bool (*on_release)(ui_widget_t* widget, int x, int y, bool inside, int clicks);
+
+    bool (*on_scroll)(ui_widget_t* widget, int delta);
+
+    //? Reports whether the key was handled, and invalidates itself if it changed anything.
+    bool (*on_key)(ui_widget_t* widget, uint16_t vkey, bool down);
+    bool (*on_focus)(ui_widget_t* widget, bool focused);
+
+    void (*destroy)(ui_widget_t* widget);
+
+} ui_widget_ops_t;
 
 
 struct ui_widget {
 
     ui_view_t* view;
     ui_widget_kind_t kind;
+
+    const ui_widget_ops_t* ops;
 
     ui_rect_t rect;
 
@@ -110,6 +162,32 @@ struct ui_widget {
             bool held;
 
         } button;
+
+        struct {
+
+            ui_list_item_t* items;
+            size_t count;
+            size_t capacity;
+
+            int selected;
+            int row_height;
+
+            //? Pixels of content scrolled off the top, never past what the content allows.
+            int scroll;
+
+            bool focused;
+
+            //? Set while the scrollbar thumb is being dragged, with the grab point inside it.
+            bool dragging;
+            int drag_grab;
+
+            ui_list_fn on_select;
+            void* on_select_user;
+
+            ui_list_fn on_activate;
+            void* on_activate_user;
+
+        } list;
     };
 
     struct ui_widget* next;
@@ -135,6 +213,14 @@ struct ui_view {
 
     ui_widget_t* hovered;
     ui_widget_t* pressed;
+    ui_widget_t* focused;
+
+    //? The last press, against which the next one is counted as a double click.
+    ui_widget_t* click_widget;
+    uint64_t click_time;
+    int click_x;
+    int click_y;
+    int click_count;
 
     ui_layout_fn layout;
     void* layout_user;
@@ -168,7 +254,7 @@ cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size);
 /**
  * @brief Implemented in ui_widget.c.
  */
-ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interactive);
+ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, const ui_widget_ops_t* ops, bool interactive);
 void ui_widget_draw(ui_widget_t* widget, cairo_t* cr);
 bool ui_widget_hit(const ui_widget_t* widget, int x, int y);
 
@@ -183,6 +269,8 @@ void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius);
 void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius);
 void ui_draw_set_color(cairo_t* cr, ui_color_t color);
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align);
+double ui_draw_text_width(const char* text, const char* font, double size);
+void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width);
 
 /**
  * @brief Pulls a colour back towards the backdrop, which is how a disabled control is drawn.
@@ -192,18 +280,5 @@ void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* fon
  * @return The faded colour.
  */
 ui_color_t ui_draw_dim(ui_color_t color, const ui_theme_t* theme);
-
-/**
- * @brief Implemented in ui_panel.c, ui_label.c and ui_button.c.
- */
-void ui_panel_draw(ui_widget_t* widget, cairo_t* cr);
-void ui_label_draw(ui_widget_t* widget, cairo_t* cr);
-void ui_button_draw(ui_widget_t* widget, cairo_t* cr);
-
-/**
- * @brief Pointer state transitions, reported back so that the view only repaints a button that changed.
- */
-bool ui_button_set_hovered(ui_widget_t* widget, bool hovered);
-bool ui_button_set_pressed(ui_widget_t* widget, bool pressed);
 
 #endif

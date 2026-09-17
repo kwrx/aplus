@@ -247,6 +247,36 @@ static void input_send_pointer(wm_window_t* win) {
 
 
 /**
+ * @brief Sends a wheel step to the window under the pointer, which need not be the focused one.
+ *
+ * @param dz The step, positive away from the user.
+ */
+
+static void input_send_scroll(int dz) {
+
+    wm_window_t* win = NULL;
+
+    if (wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win) != WM_REGION_CONTENT) {
+        return;
+    }
+
+    if (!win) {
+        return;
+    }
+
+
+    ui_msg_scroll_t msg = {
+
+        .window_id = win->id,
+        .dx        = 0,
+        .dy        = (int16_t)dz,
+    };
+
+    wm_client_queue(win->client, UI_EV_SCROLL, &msg, sizeof(msg));
+}
+
+
+/**
  * @brief Gives the pointer event to the window under the pointer, and tells the last one the pointer left.
  *
  * @param win The window under the pointer, as the hit test found it.
@@ -676,6 +706,10 @@ static void input_handle_event(const event_t ev) {
         case EV_REL: {
 
             const wm_rect_t old = wm_cursor_rect();
+
+            if (ev.ev_rel.z) {
+                input_send_scroll(ev.ev_rel.z);
+            }
 
             if (!ev.ev_rel.x && !ev.ev_rel.y) {
                 break;
