@@ -38,7 +38,7 @@ extern "C" {
  */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
-#define UI_PROTOCOL_VERSION 2
+#define UI_PROTOCOL_VERSION 3
 #define UI_TITLE_MAX        64
 
 
@@ -65,6 +65,11 @@ extern "C" {
  * @brief Sent when the pointer stops being over a window's content area; arriving needs no event of its own.
  */
 #define UI_EV_LEAVE 0x8007
+
+/**
+ * @brief A wheel step, kept apart from UI_EV_POINTER because that one goes out on every motion.
+ */
+#define UI_EV_SCROLL 0x8008
 
 
 /**
@@ -192,6 +197,20 @@ typedef struct {
 } __attribute__((packed)) ui_msg_focus_t;
 
 
+/**
+ * @brief A wheel step in detents, positive being away from the user, which scrolls a view towards its start.
+ */
+
+typedef struct {
+
+    uint32_t window_id;
+
+    int16_t dx;
+    int16_t dy;
+
+} __attribute__((packed)) ui_msg_scroll_t;
+
+
 #define UI_BUTTON_LEFT   (1 << 0)
 #define UI_BUTTON_RIGHT  (1 << 1)
 #define UI_BUTTON_MIDDLE (1 << 2)
@@ -214,6 +233,7 @@ typedef enum {
     UI_EVENT_FOCUS,
     UI_EVENT_CLOSE,
     UI_EVENT_LEAVE,
+    UI_EVENT_SCROLL,
 
 } ui_event_type_t;
 
@@ -245,6 +265,11 @@ typedef struct {
         struct {
             uint8_t focused;
         } focus;
+
+        struct {
+            int16_t dx;
+            int16_t dy;
+        } scroll;
     };
 
 } ui_event_t;

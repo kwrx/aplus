@@ -27,9 +27,9 @@
 #include "ui_widget_internal.h"
 
 
-ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interactive) {
+ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, const ui_widget_ops_t* ops, bool interactive) {
 
-    if (!view) {
+    if (!view || !ops) {
         return NULL;
     }
 
@@ -42,6 +42,7 @@ ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, bool interact
 
     widget->view        = view;
     widget->kind        = kind;
+    widget->ops         = ops;
     widget->visible     = true;
     widget->enabled     = true;
     widget->interactive = interactive;
@@ -99,25 +100,27 @@ void ui_widget_destroy(ui_widget_t* widget) {
         view->pressed = NULL;
     }
 
+    if (view->focused == widget) {
+        view->focused = NULL;
+    }
+
+    if (view->click_widget == widget) {
+        view->click_widget = NULL;
+    }
+
+
+    if (widget->ops->destroy) {
+        widget->ops->destroy(widget);
+    }
+
     free(widget);
 }
 
 
 void ui_widget_draw(ui_widget_t* widget, cairo_t* cr) {
 
-    switch (widget->kind) {
-
-        case UI_WIDGET_PANEL:
-            ui_panel_draw(widget, cr);
-            break;
-
-        case UI_WIDGET_LABEL:
-            ui_label_draw(widget, cr);
-            break;
-
-        case UI_WIDGET_BUTTON:
-            ui_button_draw(widget, cr);
-            break;
+    if (widget->ops->draw) {
+        widget->ops->draw(widget, cr);
     }
 }
 
@@ -199,17 +202,31 @@ void ui_widget_set_enabled(ui_widget_t* widget, bool enabled) {
 
     if (!enabled) {
 
-        if (widget->kind == UI_WIDGET_BUTTON) {
-            widget->button.hovered = false;
-            widget->button.pressed = false;
+        if (widget->view->pressed == widget) {
+
+            if (widget->ops->on_release) {
+                widget->ops->on_release(widget, 0, 0, false, 0);
+            }
+
+            widget->view->pressed = NULL;
         }
 
         if (widget->view->hovered == widget) {
+
+            if (widget->ops->on_hover) {
+                widget->ops->on_hover(widget, false);
+            }
+
             widget->view->hovered = NULL;
         }
 
-        if (widget->view->pressed == widget) {
-            widget->view->pressed = NULL;
+        if (widget->view->focused == widget) {
+
+            if (widget->ops->on_focus) {
+                widget->ops->on_focus(widget, false);
+            }
+
+            widget->view->focused = NULL;
         }
     }
 

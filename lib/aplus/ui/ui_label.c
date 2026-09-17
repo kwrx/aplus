@@ -26,9 +26,18 @@
 #include "ui_widget_internal.h"
 
 
+static void ui_label_draw(ui_widget_t* widget, cairo_t* cr);
+
+
+static const ui_widget_ops_t ui_label_ops = {
+
+    .draw = ui_label_draw,
+};
+
+
 ui_widget_t* ui_label_create(ui_view_t* view, const char* text) {
 
-    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_LABEL, false);
+    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_LABEL, &ui_label_ops, false);
 
     if (!widget) {
         return NULL;
@@ -130,7 +139,7 @@ void ui_label_set_padding(ui_widget_t* widget, int padding) {
 }
 
 
-void ui_label_draw(ui_widget_t* widget, cairo_t* cr) {
+static void ui_label_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const char* font = widget->label.weight == UI_FONT_BOLD ? widget->theme->font_bold : widget->theme->font_regular;
 

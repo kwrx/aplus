@@ -26,9 +26,26 @@
 #include "ui_widget_internal.h"
 
 
+static void ui_button_draw(ui_widget_t* widget, cairo_t* cr);
+static bool ui_button_on_hover(ui_widget_t* widget, bool hovered);
+static bool ui_button_on_press(ui_widget_t* widget, int x, int y);
+static bool ui_button_on_drag(ui_widget_t* widget, int x, int y, bool inside);
+static bool ui_button_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks);
+
+
+static const ui_widget_ops_t ui_button_ops = {
+
+    .draw       = ui_button_draw,
+    .on_hover   = ui_button_on_hover,
+    .on_press   = ui_button_on_press,
+    .on_drag    = ui_button_on_drag,
+    .on_release = ui_button_on_release,
+};
+
+
 ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on_click, void* user) {
 
-    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_BUTTON, true);
+    ui_widget_t* widget = ui_widget_new(view, UI_WIDGET_BUTTON, &ui_button_ops, true);
 
     if (!widget) {
         return NULL;
@@ -131,7 +148,15 @@ bool ui_button_held(const ui_widget_t* widget) {
 }
 
 
-bool ui_button_set_hovered(ui_widget_t* widget, bool hovered) {
+/**
+ * @brief Lights the button while the pointer is over it.
+ *
+ * @param widget The button.
+ * @param hovered Whether the pointer is over it.
+ * @return Whether the button has to be repainted.
+ */
+
+static bool ui_button_on_hover(ui_widget_t* widget, bool hovered) {
 
     if (widget->button.hovered == hovered) {
         return false;
@@ -143,7 +168,7 @@ bool ui_button_set_hovered(ui_widget_t* widget, bool hovered) {
 }
 
 
-bool ui_button_set_pressed(ui_widget_t* widget, bool pressed) {
+static bool ui_button_set_pressed(ui_widget_t* widget, bool pressed) {
 
     if (widget->button.pressed == pressed) {
         return false;
@@ -152,6 +177,39 @@ bool ui_button_set_pressed(ui_widget_t* widget, bool pressed) {
     widget->button.pressed = pressed;
 
     return true;
+}
+
+
+static bool ui_button_on_press(ui_widget_t* widget, int x, int y) {
+
+    (void)x;
+    (void)y;
+
+    return ui_button_set_pressed(widget, true);
+}
+
+
+static bool ui_button_on_drag(ui_widget_t* widget, int x, int y, bool inside) {
+
+    (void)x;
+    (void)y;
+
+    return ui_button_set_pressed(widget, inside);
+}
+
+
+static bool ui_button_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks) {
+
+    (void)x;
+    (void)y;
+
+    const bool changed = ui_button_set_pressed(widget, false);
+
+    if (inside && clicks > 0) {
+        ui_button_activate(widget);
+    }
+
+    return changed;
 }
 
 
@@ -187,7 +245,7 @@ static void ui_button_colors(const ui_widget_t* widget, ui_color_t* fill, ui_col
 }
 
 
-void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
+static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const ui_theme_t* theme = widget->theme;
 
