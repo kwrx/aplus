@@ -175,6 +175,7 @@ void arch_intr_unmap_irq(irq_t, int);
 
 void arch_task_switch(task_t*, task_t*);
 pid_t arch_task_spawn_init(void);
+task_t* arch_task_spawn_idle(void) __returns_nonnull;
 pid_t arch_task_spawn_kthread(const char*, void (*)(void*), size_t, void*);
 task_t* arch_task_get_empty_thread(size_t) __returns_nonnull;
 void arch_task_prepare_to_signal(siginfo_t* siginfo);

@@ -196,6 +196,16 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
                 current_cpu->uptime.tv_nsec -= 1000000000;
             }
 
+            if (current_task == current_cpu->sched_idle) {
+
+                current_cpu->idle.tv_nsec += TASK_SCHEDULER_PERIOD_NS;
+
+                if (unlikely(current_cpu->idle.tv_nsec >= 1000000000)) {
+                    current_cpu->idle.tv_sec += 1;
+                    current_cpu->idle.tv_nsec -= 1000000000;
+                }
+            }
+
             schedule(0);
         }
 

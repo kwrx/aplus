@@ -95,10 +95,12 @@ typedef struct cpu {
 
     task_t* sched_running;
     task_t* sched_queue;
+    task_t* sched_idle;
     size_t sched_count;
 
     uint64_t ticks;
     struct timespec uptime;
+    struct timespec idle;
 
     spinlock_t global_lock;
     spinlock_t sched_lock;

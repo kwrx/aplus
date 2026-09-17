@@ -308,6 +308,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Spawn BSP INIT Process
     arch_task_spawn_init();
 
+    //* Spawn BSP Idle Task
+    arch_task_spawn_idle();
+
     //* Initialize ACPI
     acpi_init();
 

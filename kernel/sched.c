@@ -245,26 +245,28 @@ static inline void do_signals(void) {
 }
 
 
+/**
+ * @brief Picks the next task to run on the current cpu, falling back on its idle task.
+ *
+ * At most one lap of the run queue is walked, so the scan always terminates. The caller holds
+ * sched_lock and taking it disabled interrupts, so a scan that waited here for something to become
+ * runnable would be waiting for a tick that can no longer arrive.
+ *
+ * Sleeping tasks are tested for a wakeup as they are passed, which is the only thing that ever
+ * wakes them: each candidate is published in current_task because do_futex() and do_sleep() read
+ * it, and sys_clock_gettime() reads the cpu-time clocks off it too.
+ *
+ * The idle task is not on the queue and its next is NULL, so a lap that starts on it starts at the
+ * head, which is itself NULL on a cpu with nothing enqueued.
+ */
 static void __sched_next(void) {
 
-    do {
+    task_t* prev = current_task;
+    task_t* next = prev->next ? prev->next : current_cpu->sched_queue;
 
+    for (size_t i = current_cpu->sched_count; i && next; i--, next = next->next ? next->next : current_cpu->sched_queue) {
 
-        current_task = current_task->next;
-
-        if (unlikely(!current_task)) {
-            current_task = current_cpu->sched_queue;
-        }
-
-        if (unlikely(current_task->status == TASK_STATUS_STOP)) {
-            continue;
-        }
-
-        if (unlikely(current_task->status == TASK_STATUS_ZOMBIE)) {
-            continue;
-        }
-
-
+        current_task = next;
 
         if (current_task->status == TASK_STATUS_SLEEP) {
 
@@ -277,8 +279,12 @@ static void __sched_next(void) {
             do_sleep();
         }
 
+        if (likely(current_task->status == TASK_STATUS_READY)) {
+            return;
+        }
+    }
 
-    } while (current_task->status != TASK_STATUS_READY);
+    current_task = current_cpu->sched_idle ? current_cpu->sched_idle : prev;
 }
 
 
@@ -532,7 +538,7 @@ void sched_requeue(task_t* task) {
 
             if ((found = __sched_unlink(cpu, task))) {
 
-                if (cpu->sched_running != task) {
+                if (cpu->sched_running != task && cpu->sched_running != cpu->sched_idle) {
 
                     task->next = cpu->sched_running->next;
 
