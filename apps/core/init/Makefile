@@ -3,8 +3,8 @@ INCLUDES 	+= $(ROOTDIR)/include
 RESOURCES 	+= $(SYSROOT)/etc/init.sh
 
 $(SYSROOT)/etc/init.sh: scripts/init.sh
-	echo "    CP      $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)cp -f $< $@
+	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)install -m 755 -C $< $@
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=GL Shaders Scene
+Comment=OpenGL Shaders Scene demo
+Exec=gl-shaders-scene
+Terminal=false
+Type=Application
+Categories=Utility;Game;
