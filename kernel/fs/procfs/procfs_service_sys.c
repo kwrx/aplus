@@ -122,9 +122,9 @@ static int procfs_service_cpuinfo_fetch(inode_t* inode, char** buf, size_t* size
     cpu_foreach(cpu) {
 
         procfs_bprintf(&b, "processor\t: %d\n", (int)cpu->id);
-        procfs_bprintf(&b, "vendor_id\t: %s\n", CONFIG_COMPILER_HOST);
+        procfs_bprintf(&b, "vendor_id\t: %s\n", cpu->vendor_name);
         procfs_bprintf(&b, "cpu family\t: %lu\n", (unsigned long)cpu->archid);
-        procfs_bprintf(&b, "model name\t: %s %s\n", CONFIG_SYSTEM_NAME, CONFIG_COMPILER_HOST);
+        procfs_bprintf(&b, "model name\t: %s\n", cpu->model_name);
         procfs_bprintf(&b, "cpu MHz\t\t: %lu\n", (unsigned long)core->cpu.max_mhz);
         procfs_bprintf(&b, "cpu cores\t: %lu\n", (unsigned long)core->cpu.max_cores);
         procfs_bprintf(&b, "siblings\t: %lu\n", (unsigned long)core->cpu.max_threads);
