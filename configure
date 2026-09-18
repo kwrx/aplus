@@ -109,8 +109,8 @@ stage_2() {
     echo "## Stage 2: Generating configuration"
     tput sgr0
 
-    if [ -f $TMPLDIR/$ARG_KCONFIG.config ]; then
-        KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/defconfig.py --kconfig $(pwd)/.config $TMPLDIR/$ARG_KCONFIG.config
+    if [ -f $CFGDIR/$ARG_KCONFIG.config ]; then
+        KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/defconfig.py --kconfig $(pwd)/.config $CFGDIR/$ARG_KCONFIG.config
     else
         KCONFIG_CONFIG=config.mk die python $PKGDIR/kconfiglib/menuconfig.py $(pwd)/.config
     fi
