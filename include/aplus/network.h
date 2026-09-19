@@ -69,6 +69,19 @@ int socket_from_fd(int fd);
 int socket_from_inode(inode_t* inode);
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
 
+/**
+ * @brief Largest socket option value the kernel will carry between user and lwIP.
+ */
+    #define SOCKOPT_MAX_OPTLEN 256
+
+/**
+ * @brief Translate a Linux socket option level and name into the lwIP values.
+ * @param level In/out, the Linux level on entry and the lwIP one on success.
+ * @param optname In/out, the Linux option on entry and the lwIP one on success.
+ * @return 0 on success, -ENOPROTOOPT when lwIP has no equivalent.
+ */
+long socket_sockopt_translate(int* level, int* optname);
+
 
 void network_init(void);
 

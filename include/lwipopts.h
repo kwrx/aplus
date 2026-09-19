@@ -26,6 +26,7 @@
 #define _LWIPOPTS_H
 
 
+#include <poll.h>
 #include <stdint.h>
 
 #include <aplus.h>
