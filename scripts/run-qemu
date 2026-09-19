@@ -51,7 +51,7 @@ ARG_ARCH=$1
 ARG_DEBUG=$2
 ARG_REMOTE_URI=${ARG_REMOTE_URI:-}
 ARG_CPUS=${ARG_CPUS:-4}
-ARG_VIRTIO=${ARG_VIRTIO:-0}
+ARG_VIRTIO=${ARG_VIRTIO:-1}
 ARG_KVM=${ARG_KVM:-0}
 ARG_HEADLESS=${ARG_HEADLESS:-0}
 ARG_TRACE=${ARG_TRACE:-}
@@ -107,7 +107,7 @@ x86_64)
     flags="$flags --bios $(find_ovmf) -net none"
 
     # GPU
-    if [ $ARG_VIRTIO -eq 0 ]; then
+    if [ $ARG_VIRTIO -eq 1 ]; then
         flags="$flags -device virtio-vga"
     else
         flags="$flags -vga std"
@@ -117,13 +117,13 @@ x86_64)
     flags="$flags -device virtio-tablet-pci,disable-legacy=on"
 
     # Network
-    # if [ $ARG_VIRTIO -eq 1 ]; then
-    #     flags="$flags -device virtio-net-pci,netdev=net0"
-    #     flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
-    # else
+    if [ $ARG_VIRTIO -eq 1 ]; then
+        flags="$flags -device virtio-net-pci,netdev=net0,disable-legacy=on"
+    else
         flags="$flags -device pcnet,netdev=net0"
-        flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
-    # fi
+    fi
+
+    flags="$flags -netdev user,id=net0,hostfwd=tcp::8080-:80"
 
     # Block
     # if [ $ARG_VIRTIO -eq 1 ]; then
