@@ -64,11 +64,13 @@ SYSCALL(
 
         switch (which_clock) {
 
-            case CLOCK_REALTIME:
+            case CLOCK_REALTIME: {
 
-                tp.tv_sec  = arch_timer_gettime();
-                tp.tv_nsec = 0;
+                uint64_t now = arch_timer_realtime_getns();
+                tp.tv_sec    = now / 1000000000ULL;
+                tp.tv_nsec   = now % 1000000000ULL;
                 break;
+            }
 
             case CLOCK_MONOTONIC: {
 

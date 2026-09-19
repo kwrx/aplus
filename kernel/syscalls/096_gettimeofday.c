@@ -62,8 +62,10 @@ SYSCALL(
             return -EINVAL;
 
 
-        tv->tv_sec  = arch_timer_gettime();
-        tv->tv_usec = 0;
+        const uint64_t now = arch_timer_realtime_getns();
+
+        tv->tv_sec  = now / 1000000000ULL;
+        tv->tv_usec = (now % 1000000000ULL) / 1000ULL;
 
         return 0;
     });

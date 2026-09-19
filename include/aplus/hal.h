@@ -203,6 +203,7 @@ uint64_t arch_timer_generic_getns(void);
 uint64_t arch_timer_generic_getus(void);
 uint64_t arch_timer_generic_getms(void);
 uint64_t arch_timer_generic_getres(void);
+uint64_t arch_timer_realtime_getns(void);
 
 
 void arch_userspace_enter(uintptr_t, uintptr_t, void*);

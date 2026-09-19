@@ -50,6 +50,7 @@
 static spinlock_t rtc_lock;
 
 static uint64_t tsc_frequency        = 1;
+static uint64_t realtime_base_ns     = 0;
 static uint64_t hpet_frequency       = 1;
 static uint64_t hpet_period          = 1;
 static uintptr_t hpet_address        = 0;
@@ -239,6 +240,23 @@ uint64_t arch_timer_generic_getres(void) {
 }
 
 
+/**
+ * @brief Reads the wall clock in nanoseconds, off the generic counter rather than the RTC.
+ *
+ * The RTC counts whole seconds and costs a handful of port reads, so it is read once at
+ * startup and the counter carries the clock from there.
+ *
+ * @return Nanoseconds since the epoch.
+ */
+uint64_t arch_timer_realtime_getns(void) {
+
+    if (unlikely(!realtime_base_ns))
+        return arch_timer_gettime() * 1000000000ULL;
+
+    return realtime_base_ns + arch_timer_generic_getns();
+}
+
+
 
 void timer_init(void) {
 
@@ -383,6 +401,8 @@ void timer_init(void) {
     DEBUG_ASSERT(tsc_frequency);
     DEBUG_ASSERT(hpet_frequency);
     DEBUG_ASSERT(hpet_address);
+
+    realtime_base_ns = (arch_timer_gettime() * 1000000000ULL) - arch_timer_generic_getns();
 
 
 #if DEBUG_LEVEL_INFO
