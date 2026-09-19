@@ -50,7 +50,7 @@
  * @brief Decoration geometry: the content area is the client's, everything outside it is the server's.
  */
 
-#define WM_TITLEBAR_HEIGHT 32
+#define WM_TITLEBAR_HEIGHT 36
 #define WM_BORDER_WIDTH    3
 #define WM_RESIZE_GRIP     16
 
@@ -63,9 +63,9 @@
 
 #define WM_CORNER_RADIUS 10
 #define WM_SHADOW_EXTENT 18
-#define WM_SHADOW_OFFSET 5
+#define WM_SHADOW_OFFSET 0
 #define WM_SHADOW_LAYERS 14
-#define WM_SHADOW_ALPHA  0.28
+#define WM_SHADOW_ALPHA  0.25
 
 
 /**
