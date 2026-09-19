@@ -38,6 +38,10 @@ struct ui_window {
     uint32_t id;
     uint32_t serial;
 
+    //? UI_WINDOW_*, as the window was created with. The server will not change them, so
+    //? this copy stays the answer for the rest of the window's life.
+    uint32_t flags;
+
     int width;
     int height;
 

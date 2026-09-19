@@ -84,12 +84,14 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 
+        const int radius = (int)wm_window_radius(win);
+
         const wm_rect_t opaque = {
 
-            .x      = win->x + WM_CORNER_RADIUS,
+            .x      = win->x + radius,
             .y      = win->y,
-            .width  = win->width - 2 * WM_CORNER_RADIUS,
-            .height = win->height - WM_CORNER_RADIUS,
+            .width  = win->width - 2 * radius,
+            .height = win->height - radius,
         };
 
         if (opaque.width <= 0 || opaque.height <= 0) {

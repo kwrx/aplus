@@ -27,6 +27,7 @@
  * @brief Smoke test for libui and the aplus-wm wire protocol.
  *
  * Opens a window, paints a gradient into it, and prints every event; with --once it paints one frame and exits.
+ * With --borderless the window comes up undecorated: Super and drag moves it, Ctrl+Alt+Q closes it.
  */
 
 #include <errno.h>
@@ -72,6 +73,8 @@ int main(int argc, char** argv) {
 
     bool once = false;
 
+    uint32_t flags = UI_WINDOW_DECORATED;
+
     int width  = 480;
     int height = 320;
 
@@ -81,6 +84,11 @@ int main(int argc, char** argv) {
 
         if (strcmp(argv[i], "--once") == 0) {
             once = true;
+            continue;
+        }
+
+        if (strcmp(argv[i], "--borderless") == 0) {
+            flags |= UI_WINDOW_BORDERLESS;
             continue;
         }
 
@@ -107,14 +115,14 @@ int main(int argc, char** argv) {
     printf("ui-test: connected to " UI_DEFAULT_SOCKET "\n");
 
 
-    ui_window_t* win = ui_window_create(conn, width, height, "ui-test");
+    ui_window_t* win = ui_window_create_ex(conn, width, height, "ui-test", flags);
 
     if (!win) {
-        fprintf(stderr, "ui-test: ui_window_create() failed: %s\n", strerror(errno));
+        fprintf(stderr, "ui-test: ui_window_create_ex() failed: %s\n", strerror(errno));
         return 1;
     }
 
-    printf("ui-test: window %u is %dx%d\n", ui_window_id(win), ui_window_width(win), ui_window_height(win));
+    printf("ui-test: window %u is %dx%d, %s\n", ui_window_id(win), ui_window_width(win), ui_window_height(win), (ui_window_flags(win) & UI_WINDOW_BORDERLESS) ? "borderless" : "decorated");
 
 
     paint(win);

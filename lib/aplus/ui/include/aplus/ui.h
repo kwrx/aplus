@@ -38,7 +38,7 @@ extern "C" {
  */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
-#define UI_PROTOCOL_VERSION 3
+#define UI_PROTOCOL_VERSION 4
 #define UI_TITLE_MAX        64
 
 
@@ -94,10 +94,31 @@ typedef struct {
 } __attribute__((packed)) ui_msg_hello_t;
 
 
+/**
+ * @brief What a window asks to be, named once at creation and fixed for the rest of its life.
+ */
+
+#define UI_WINDOW_DECORATED 0
+
+/**
+ * @brief No titlebar, no border, no close button: the surface is the whole window.
+ *
+ * The server still stacks, focuses and shadows it, but owns none of its pixels, so it can
+ * neither be dragged by a titlebar nor resized by an edge -- see ui_window_create_ex().
+ */
+#define UI_WINDOW_BORDERLESS (1 << 0)
+
+
 typedef struct {
 
     uint16_t width;
     uint16_t height;
+
+    //? UI_WINDOW_*. Unknown bits are refused rather than ignored, so that a client asking
+    //? for something this server has never heard of fails at once instead of silently
+    //? getting a window that is not what it asked for.
+    uint32_t flags;
+
     char title[UI_TITLE_MAX];
 
 } __attribute__((packed)) ui_msg_create_window_t;
@@ -323,6 +344,7 @@ void ui_disconnect(ui_connection_t* conn);
 int ui_connection_fd(ui_connection_t* conn);
 
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title);
+ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, const char* title, uint32_t flags);
 void ui_window_destroy(ui_window_t* win);
 
 /**
@@ -333,6 +355,7 @@ int ui_window_width(ui_window_t* win);
 int ui_window_height(ui_window_t* win);
 size_t ui_window_stride(ui_window_t* win);
 uint32_t ui_window_id(ui_window_t* win);
+uint32_t ui_window_flags(ui_window_t* win);
 
 /**
  * @brief Adopts the surface the last UI_EV_CONFIGURE announced, along with its size and serial.

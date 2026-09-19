@@ -163,6 +163,23 @@ typedef enum {
 typedef ui_rect_t wm_rect_t;
 
 
+/**
+ * @brief How far the decorations reach out from the content area on each side.
+ *
+ * Everything that measures a window goes through these rather than the constants, which is
+ * what lets a borderless window be the same window with every inset at zero.
+ */
+
+typedef struct {
+
+    int left;
+    int top;
+    int right;
+    int bottom;
+
+} wm_insets_t;
+
+
 typedef struct {
 
     int fd;
@@ -199,6 +216,10 @@ typedef struct wm_window {
 
     uint32_t id;
     wm_client_t* client;
+
+    //? UI_WINDOW_*, as the client asked for at creation. Nothing changes them afterwards:
+    //? a window that came up borderless stays borderless.
+    uint32_t flags;
 
     char title[UI_TITLE_MAX];
 
@@ -399,10 +420,13 @@ void wm_keys_reap(void);
 /**
  * @brief Implemented in window.c.
  */
-wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title);
+wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags);
 void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
 wm_window_t* wm_window_from_id(uint32_t id);
+bool wm_window_borderless(const wm_window_t* win);
+wm_insets_t wm_window_insets(const wm_window_t* win);
+double wm_window_radius(const wm_window_t* win);
 wm_rect_t wm_window_frame(const wm_window_t* win);
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
 wm_rect_t wm_window_close_rect(const wm_window_t* win);
@@ -410,7 +434,7 @@ wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out);
 void wm_window_raise(wm_window_t* win);
 void wm_window_focus(wm_window_t* win);
 void wm_window_move(wm_window_t* win, int x, int y);
-void wm_window_clamp_size(int* width, int* height);
+void wm_window_clamp_size(const wm_window_t* win, int* width, int* height);
 int wm_window_resize(wm_window_t* win, int width, int height);
 int wm_window_notify_configure(wm_window_t* win);
 void wm_window_paint(cairo_t* cr, wm_window_t* win);

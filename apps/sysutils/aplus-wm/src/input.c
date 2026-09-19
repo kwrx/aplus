@@ -449,7 +449,7 @@ static void input_update_drag(void) {
     int cw = w;
     int ch = h;
 
-    wm_window_clamp_size(&cw, &ch);
+    wm_window_clamp_size(win, &cw, &ch);
 
     if (anchored_right) {
         x -= cw - w;
@@ -476,6 +476,7 @@ static void input_update_drag(void) {
  * @brief Acts on the left pointer button going down or up.
  *
  * A close button commits on release and only if the pointer is still on it; a resize tells the client on release.
+ * Holding Super moves the window from anywhere on it, which is what a borderless window has instead of a titlebar.
  *
  * @param down Whether the button went down or came up.
  */
@@ -522,8 +523,8 @@ static void input_handle_button_left(uint8_t down) {
     }
 
 
-    wm_window_t* win      = NULL;
-    wm_region_t region    = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win);
+    wm_window_t* win   = NULL;
+    wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win);
 
     if (region == WM_REGION_NONE) {
         return;
@@ -531,6 +532,11 @@ static void input_handle_button_left(uint8_t down) {
 
     wm_window_raise(win);
     wm_window_focus(win);
+
+    if (wm.keyboard.modifiers & WM_MOD_SUPER) {
+        input_begin_drag(win, WM_REGION_TITLEBAR);
+        return;
+    }
 
     if (region == WM_REGION_CONTENT) {
         input_track_pointer(win, region);
