@@ -38,7 +38,16 @@
 
 
 
-static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
+/**
+ * @brief Resolves one path component inside a directory.
+ *
+ * @param inode The directory to look in.
+ * @param path The remaining path, whose first component is looked up.
+ * @param size The length of that component.
+ * @param follow Whether a symlink found here is resolved to what it points at.
+ * @return The inode of the component, or NULL with errno set.
+ */
+static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool follow) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(path);
@@ -53,6 +62,10 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size) {
 
     if ((inode = vfs_finddir(inode, s)) == NULL)
         return NULL;
+
+
+    if (!follow)
+        return inode;
 
 
     struct stat st = {0};
@@ -110,7 +123,7 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     while (strchr(path, '/') && c) {
 
-        c    = path_find(c, path, strcspn(path, "/"));
+        c    = path_find(c, path, strcspn(path, "/"), true);
         path = strchr(path, '/') + 1;
 
         while (path[0] == '/')
@@ -125,7 +138,7 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
     inode_t* r;
 
     if (path[0] != '\0')
-        r = path_find(c, path, strlen(path));
+        r = path_find(c, path, strlen(path), !(flags & O_NOFOLLOW));
     else
         r = c;
 
