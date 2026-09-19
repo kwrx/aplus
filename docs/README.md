@@ -24,7 +24,7 @@ $ ./utils/gen-image root aplus.img
 $ ./utils/run-qemu TARGET
 ```
 
-**NOTE:** replace `TARGET` with the target build: `i686`, `x86_64`, etc.
+**NOTE:** replace `TARGET` with the target build. `x86_64` is the only one the script runs today.
 
 ---
 

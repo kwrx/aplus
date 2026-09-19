@@ -297,4 +297,7 @@ reopening the file that often dominates the cost of painting.
 | You want the theme, and buttons that behave | | ✔ |
 
 `apps/sysutils/aplus-terminal` is the first kind: it owns every pixel and has no use for a
-button. Most things that are not a terminal are the second.
+button. Most things that are not a terminal are the second, and `apps/sysutils/aplus-image-viewer`
+is the worked example of it: a toolbar of buttons and labels the view paints, a panel whose
+inside the layout callback records, and a cairo context over `ui_window_pixels()` that draws the
+picture into it and damages that rectangle alone.

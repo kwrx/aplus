@@ -3,49 +3,44 @@
 | Type | Filename | Message | Link |
 | ---: | -------- | ------- | ---: |
 |**BUG**|`arch/x86_64/startup.S`|stack not aligned when code is optimized by compiler|[#](/arch/x86_64/startup.S#L592)|
-|**BUG**|`arch/x86-family/cpu/cpu.c`|Invalid Opcode even if supported by cpu|[#](/arch/x86-family/cpu/cpu.c#L428)|
-|**BUG**|`arch/x86-family/task.c`|prev->frame is randomly NULL|[#](/arch/x86-family/task.c#L237)|
-|**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L332)|
-|**FIXME**|`arch/x86-family/mm/address_space.c`|a copy-on-write frame may still be referenced by another address space,|[#](/arch/x86-family/mm/address_space.c#L261)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L261)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L288)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L315)|
-|**FIXME**|`kernel/syscalls/141_setpriority.c`|check for superuser|[#](/kernel/syscalls/141_setpriority.c#L126)|
+|**BUG**|`arch/x86-family/task.c`|prev->frame is randomly NULL|[#](/arch/x86-family/task.c#L206)|
+|**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L366)|
+|**FIXME**|`arch/x86-family/mm/address_space.c`|a copy-on-write frame may still be referenced by another address space,|[#](/arch/x86-family/mm/address_space.c#L265)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L254)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L281)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L308)|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|[#](/kernel/syscalls/202_futex.c#L183)|
-|**TODO**|`arch/x86-family/debug.c`|Print Timestamp on Debug Output|[#](/arch/x86-family/debug.c#L193)|
-|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L203)|
-|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L80)|
-|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown, as above.|[#](/arch/x86-family/mm/tlb.c#L108)|
-|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown. Until an IPI vector exists, another CPU running this same|[#](/arch/x86-family/mm/tlb.c#L62)|
+|**TODO**|`arch/x86-family/debug.c`|CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.|[#](/arch/x86-family/debug.c#L169)|
+|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L218)|
+|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L73)|
+|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown, as above.|[#](/arch/x86-family/mm/tlb.c#L94)|
+|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown. Until an IPI vector exists, another CPU running this same|[#](/arch/x86-family/mm/tlb.c#L54)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|[#](/arch/x86-family/reboot.c#L88)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|[#](/arch/x86-family/reboot.c#L47)|
-|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L337)|
+|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L342)|
 |**TODO**|`drivers/dev/interface/main.c`|block_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L143)|
 |**TODO**|`drivers/dev/interface/main.c`|char_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L140)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|implements ahci de-initialitation|[#](/drivers/platform/pc/block/ahci/main.c#L1464)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|implements sata device de-initialitiation|[#](/drivers/platform/pc/block/ahci/main.c#L874)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|see AHCI 1.3.1 - pg 114, 10.4.1|[#](/drivers/platform/pc/block/ahci/main.c#L928)|
 |**TODO**|`drivers/platform/pc/input/ps2/main.c`|implement module_reset and call it here|[#](/drivers/platform/pc/input/ps2/main.c#L178)|
-|**TODO**|`drivers/tty/pty/main.c`|TCFLSH: flush input/output buffer|[#](/drivers/tty/pty/main.c#L579)|
-|**TODO**|`drivers/tty/pty/main.c`|VWERASE: erase the word to the left of the cursor|[#](/drivers/tty/pty/main.c#L343)|
-|**TODO**|`drivers/virtio/virtio-pci/main.c`|handle config interrupt|[#](/drivers/virtio/virtio-pci/main.c#L58)|
-|**TODO**|`drivers/virtio/virtio-pci/main.c`|handle config interrupt|[#](/drivers/virtio/virtio-pci/main.c#L76)|
+|**TODO**|`drivers/tty/pty/main.c`|TCFLSH: flush input/output buffer|[#](/drivers/tty/pty/main.c#L566)|
+|**TODO**|`drivers/tty/pty/main.c`|VWERASE: erase the word to the left of the cursor|[#](/drivers/tty/pty/main.c#L332)|
+|**TODO**|`drivers/virtio/virtio-pci/main.c`|handle config interrupt|[#](/drivers/virtio/virtio-pci/main.c#L102)|
+|**TODO**|`drivers/virtio/virtio-pci/main.c`|handle config interrupt|[#](/drivers/virtio/virtio-pci/main.c#L86)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L239)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L314)|
-|**TODO**|`kernel/fork.c`|Implement CLONE_VFORK|[#](/kernel/fork.c#L147)|
 |**TODO**|`kernel/fs/ext2/ext2_cache.c`|rewrite all ext2 cache functions|[#](/kernel/fs/ext2/ext2_cache.c#L38)|
 |**TODO**|`kernel/fs/ext2/ext2.h`|rewrite all ext2 driver to support cache|[#](/kernel/fs/ext2/ext2.h#L38)|
 |**TODO**|`kernel/fs/ext2/ext2_mount.c`|ext2: include support for fsync and atime|[#](/kernel/fs/ext2/ext2_mount.c#L49)|
 |**TODO**|`kernel/fs/iosched.c`|implements I/O scheduler|[#](/kernel/fs/iosched.c#L24)|
-|**TODO**|`kernel/fs/procfs/procfs_service_cmdline.c`|/proc/[pid]/cmdline|[#](/kernel/fs/procfs/procfs_service_cmdline.c#L66)|
 |**TODO**|`kernel/init/root.c`|add other Kernel Arguments|[#](/kernel/init/root.c#L56)|
 |**TODO**|`kernel/network/core/ipv6/dhcp6.c`||[#](/kernel/network/core/ipv6/dhcp6.c#L12)|
 |**TODO**|`kernel/network/core/ipv6/ip6.c`|process routing by the type|[#](/kernel/network/core/ipv6/ip6.c#L873)|
 |**TODO**|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received|[#](/kernel/network/netif/lowpan6.c#L705)|
-|**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L95)|
+|**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L91)|
 |**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|[#](/kernel/syscalls/012_brk.c#L70)|
 |**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|[#](/kernel/syscalls/058_vfork.c#L53)|
-|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L193)|
-|**TODO**|`kernel/syscalls/060_exit.c`|implements signal|[#](/kernel/syscalls/060_exit.c#L72)|
-|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L135)|
+|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L192)|
+|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L131)|
 |**TODO**|`kernel/syscalls/229_clock_getres.c`|update <sys/features.h>|[#](/kernel/syscalls/229_clock_getres.c#L24)|

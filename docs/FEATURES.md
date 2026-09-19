@@ -57,7 +57,7 @@
 - [x] Unix Pipe
 - [x] System V Shared Memory (shmget, shmat, shmdt, shmctl)
 - [x] Unix Socket (AF_UNIX, SOCK_STREAM)
-- [x] BSD Sockets (AF_INET, SOCK_STREAM), as ordinary file descriptors
+- [x] BSD Sockets (AF_INET, SOCK_STREAM and SOCK_DGRAM), as ordinary file descriptors
 - [x] Symmetric Multiprocessing
 - [x] Virtual File System
 - [x] Network Stack (lwIP)
@@ -132,19 +132,21 @@
 - [ ] Package Manager
 
 ### Porting
-- [ ] Bash
-- [ ] Java Virtual Machine (avm)
+- [x] BusyBox
+- [x] Dash
+- [x] Bash
+- [x] Java Virtual Machine (avm)
 - [ ] Python
 - [ ] Lua
-- [ ] LibZ
-- [ ] LibPNG
-- [ ] LibJPEG
-- [ ] LibWEBP
-- [ ] LibFreetype2
+- [x] LibZ
+- [x] LibPNG
+- [x] LibJPEG
+- [x] LibWEBP
+- [x] LibFreetype2
 - [ ] NCurses
-- [ ] MesaGL
-- [ ] Pixman
-- [ ] Cairo
+- [x] MesaGL
+- [x] Pixman
+- [x] Cairo
 - [ ] SDL2
-- [ ] Binutils
-- [ ] Gcc
+- [x] Binutils
+- [x] Gcc

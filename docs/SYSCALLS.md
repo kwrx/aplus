@@ -12,7 +12,7 @@
 - [x] sys_lseek
 - [x] sys_mmap
 - [x] sys_mprotect
-- [ ] sys_munmap
+- [x] sys_munmap
 - [x] sys_brk
 - [x] sys_rt_sigaction
 - [x] sys_rt_sigprocmask
@@ -24,7 +24,7 @@
 - [x] sys_writev
 - [x] sys_access
 - [x] sys_pipe
-- [ ] sys_select
+- [x] sys_select
 - [x] sys_sched_yield
 - [ ] sys_mremap
 - [ ] sys_msync
@@ -35,28 +35,28 @@
 - [x] sys_shmctl
 - [x] sys_dup
 - [x] sys_dup2
-- [ ] sys_pause
+- [x] sys_pause
 - [x] sys_nanosleep
 - [ ] sys_getitimer
 - [ ] sys_alarm
 - [ ] sys_setitimer
 - [x] sys_getpid
 - [ ] sys_sendfile64
-- [ ] sys_socket
-- [ ] sys_connect
-- [ ] sys_accept
-- [ ] sys_sendto
-- [ ] sys_recvfrom
+- [x] sys_socket
+- [x] sys_connect
+- [x] sys_accept
+- [x] sys_sendto
+- [x] sys_recvfrom
 - [ ] sys_sendmsg
 - [ ] sys_recvmsg
-- [ ] sys_shutdown
-- [ ] sys_bind
-- [ ] sys_listen
-- [ ] sys_getsockname
-- [ ] sys_getpeername
-- [ ] sys_socketpair
-- [ ] sys_setsockopt
-- [ ] sys_getsockopt
+- [x] sys_shutdown
+- [x] sys_bind
+- [x] sys_listen
+- [x] sys_getsockname
+- [x] sys_getpeername
+- [x] sys_socketpair
+- [x] sys_setsockopt
+- [x] sys_getsockopt
 - [x] sys_clone
 - [x] sys_fork
 - [x] sys_vfork
@@ -64,7 +64,7 @@
 - [x] sys_exit
 - [x] sys_wait4
 - [x] sys_kill
-- [ ] sys_newuname
+- [x] sys_newuname
 - [ ] sys_semget
 - [ ] sys_semop
 - [ ] sys_semctl
@@ -73,14 +73,14 @@
 - [ ] sys_msgsnd
 - [ ] sys_msgrcv
 - [ ] sys_msgctl
-- [ ] sys_fcntl
+- [x] sys_fcntl
 - [ ] sys_flock
 - [ ] sys_fsync
 - [ ] sys_fdatasync
-- [ ] sys_truncate
-- [ ] sys_ftruncate
+- [x] sys_truncate
+- [x] sys_ftruncate
 - [ ] sys_getdents
-- [ ] sys_getcwd
+- [x] sys_getcwd
 - [x] sys_chdir
 - [x] sys_fchdir
 - [ ] sys_rename
@@ -88,31 +88,31 @@
 - [ ] sys_rmdir
 - [x] sys_creat
 - [ ] sys_link
-- [ ] sys_unlink
+- [x] sys_unlink
 - [ ] sys_symlink
-- [ ] sys_readlink
-- [ ] sys_chmod
-- [ ] sys_fchmod
+- [x] sys_readlink
+- [x] sys_chmod
+- [x] sys_fchmod
 - [ ] sys_chown
 - [ ] sys_fchown
 - [ ] sys_lchown
-- [ ] sys_umask
+- [x] sys_umask
 - [x] sys_gettimeofday
 - [ ] sys_getrlimit
 - [ ] sys_getrusage
-- [ ] sys_sysinfo
+- [x] sys_sysinfo
 - [ ] sys_times
 - [ ] sys_ptrace
-- [ ] sys_getuid
+- [x] sys_getuid
 - [ ] sys_syslog
-- [ ] sys_getgid
+- [x] sys_getgid
 - [ ] sys_setuid
 - [ ] sys_setgid
-- [ ] sys_geteuid
-- [ ] sys_getegid
-- [ ] sys_setpgid
-- [ ] sys_getppid
-- [ ] sys_getpgrp
+- [x] sys_geteuid
+- [x] sys_getegid
+- [x] sys_setpgid
+- [x] sys_getppid
+- [x] sys_getpgrp
 - [x] sys_setsid
 - [ ] sys_setreuid
 - [ ] sys_setregid
@@ -125,7 +125,7 @@
 - [x] sys_getpgid
 - [ ] sys_setfsuid
 - [ ] sys_setfsgid
-- [ ] sys_getsid
+- [x] sys_getsid
 - [ ] sys_capget
 - [ ] sys_capset
 - [ ] sys_rt_sigpending
@@ -134,7 +134,7 @@
 - [ ] sys_rt_sigsuspend
 - [ ] sys_sigaltstack
 - [ ] sys_utime
-- [ ] sys_mknod
+- [x] sys_mknod
 - [ ] sys_personality
 - [ ] sys_ustat
 - [ ] sys_statfs
@@ -170,13 +170,13 @@
 - [ ] sys_swapon
 - [ ] sys_swapoff
 - [ ] sys_reboot
-- [ ] sys_sethostname
+- [x] sys_sethostname
 - [ ] sys_setdomainname
 - [ ] sys_ioperm
 - [ ] sys_init_module
 - [ ] sys_delete_module
 - [ ] sys_quotactl
-- [ ] sys_gettid
+- [x] sys_gettid
 - [ ] sys_readahead
 - [ ] sys_setxattr
 - [ ] sys_lsetxattr
@@ -205,7 +205,7 @@
 - [ ] sys_remap_file_pages
 - [x] sys_getdents64
 - [x] sys_set_tid_address
-- [x] sys_restart_syscall
+- [ ] sys_restart_syscall
 - [ ] sys_semtimedop
 - [ ] sys_fadvise64
 - [ ] sys_timer_create
@@ -217,7 +217,7 @@
 - [x] sys_clock_gettime
 - [x] sys_clock_getres
 - [x] sys_clock_nanosleep
-- [ ] sys_exit_group
+- [x] sys_exit_group
 - [ ] sys_epoll_wait
 - [ ] sys_epoll_ctl
 - [x] sys_tgkill
@@ -247,16 +247,16 @@
 - [ ] sys_mknodat
 - [ ] sys_fchownat
 - [ ] sys_futimesat
-- [ ] sys_newfstatat
-- [ ] sys_unlinkat
+- [x] sys_newfstatat
+- [x] sys_unlinkat
 - [ ] sys_renameat
 - [ ] sys_linkat
 - [ ] sys_symlinkat
-- [ ] sys_readlinkat
-- [ ] sys_fchmodat
-- [ ] sys_faccessat
-- [ ] sys_pselect6
-- [ ] sys_ppoll
+- [x] sys_readlinkat
+- [x] sys_fchmodat
+- [x] sys_faccessat
+- [x] sys_pselect6
+- [x] sys_ppoll
 - [ ] sys_unshare
 - [ ] sys_set_robust_list
 - [ ] sys_get_robust_list
@@ -273,12 +273,12 @@
 - [ ] sys_fallocate
 - [ ] sys_timerfd_settime
 - [ ] sys_timerfd_gettime
-- [ ] sys_accept4
+- [x] sys_accept4
 - [ ] sys_signalfd4
 - [ ] sys_eventfd2
 - [ ] sys_epoll_create1
 - [ ] sys_dup3
-- [ ] sys_pipe2
+- [x] sys_pipe2
 - [ ] sys_inotify_init1
 - [ ] sys_preadv
 - [ ] sys_pwritev
@@ -303,7 +303,7 @@
 - [ ] sys_sched_getattr
 - [ ] sys_renameat2
 - [ ] sys_seccomp
-- [ ] sys_getrandom
+- [x] sys_getrandom
 - [ ] sys_memfd_create
 - [ ] sys_kexec_file_load
 - [ ] sys_bpf
