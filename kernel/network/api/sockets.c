@@ -2244,8 +2244,10 @@ ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec*
 
     ssize_t e;
 
-    if ((e = lwip_pollscan(fds, nfds, LWIP_POLLSCAN_CLEAR)) < 0)
+    if ((e = lwip_pollscan(fds, nfds, LWIP_POLLSCAN_CLEAR)) < 0) {
+        set_errno(EBADF);
         return -1;
+    }
 
 
     if (wait) {
@@ -2256,8 +2258,10 @@ ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec*
 
             sock = get_socket(fds[i].fd);
 
-            if (!sock)
+            if (!sock) {
+                set_errno(EBADF);
                 return -1;
+            }
 
 
             SYS_ARCH_PROTECT(lev);
