@@ -153,7 +153,7 @@ static err_t ethif_linkoutput(struct netif* netif, struct pbuf* p) {
 #endif
 
     for (q = p; q; q = q->next)
-        dev->net.low_level_output(dev->net.internals, p->payload, p->len);
+        dev->net.low_level_output(dev->net.internals, q->payload, q->len);
 
     dev->net.low_level_endoutput(dev->net.internals, p->tot_len);
 
