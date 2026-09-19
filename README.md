@@ -14,20 +14,20 @@ It started in September 2013 as a way to learn low-level and systems programming
 * **Multitasking**: processes and threads (`fork`, `vfork`, `clone`, `execve`) with SMP support
 * **Virtual memory**: on-demand paging with `mmap`, `mprotect` and `brk`
 * **Filesystems**: [kernel/fs/](/kernel/fs), a VFS with ext2, ISO 9660, tmpfs, procfs and bindfs
-* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/), reachable through BSD sockets — ordinary file descriptors, so `dup2`, `fork` inheritance and `poll` work on them like any other
+* **Network**: [kernel/network/](/kernel/network), almost full TCP/IP Network Stack by [lwIP](https://savannah.nongnu.org/projects/lwip/), reachable through BSD sockets — ordinary file descriptors, so `dup2`, `fork` inheritance and `poll` work on them like any other, with `getsockname`, `getpeername` and `get`/`setsockopt` translating the Linux option numbers lwIP does not share
 * **Unix-like**: Signals, Pipes, Futex, Unix domain sockets, TTY and PTY
 * **I/O Multiplexing**: `poll`, `ppoll`, `select` and `pselect`
 * **ELF**: static executables; dynamic linking is not supported yet
 * **Linux Syscalls**: Linux-like syscall layer, see [SYSCALLS.md](/docs/SYSCALLS.md)
 * **Linux Framebuffer**: Linux-like framebuffer support, with damage-based flushing and a hardware cursor plane on adapters that provide one
-* **Virtio**: Virtio devices (gpu, input, console, random) over Virtio PCI
+* **Virtio**: Virtio devices (gpu, net, input, console, random) over Virtio PCI
 * **GUI**: a [display server](/apps/sysutils/aplus-wm) that owns the framebuffer and the input devices, draws window decorations itself, and hands out windows to clients over a Unix socket
 
 See [FEATURES.md](/docs/FEATURES.md) for more information about features. 
   
 <br>
 <p align="center" width="100%">
-    <img src="./docs/images/v0.7-os.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
+    <img src="./docs/images/v0.7-ui.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
 </p>
 
 
@@ -38,7 +38,7 @@ It is a hybrid kernel: core subsystems are built in, while drivers are loadable 
 * **Tasking**, per-CPU run queues with SMP support, signal delivery and futex-based sleeping
 * **Memory**, [kernel/mm/](/kernel/mm), physical memory manager and kernel heap on top of on-demand paging
 * **IPC**, [kernel/ipc/](/kernel/ipc), spinlocks, semaphores, futexes and Unix domain sockets
-* **VFS**, [kernel/fs/](/kernel/fs), inode-based virtual filesystem with a dentry cache and an I/O scheduler
+* **VFS**, [kernel/fs/](/kernel/fs), inode-based virtual filesystem with a dentry cache, and a `/proc` that exposes per-process state down to the open descriptors in `/proc/<pid>/fd`
 * **Network**, [kernel/network/](/kernel/network), the lwIP stack wired up to the socket syscalls
 * **Syscalls**, [kernel/syscalls/](/kernel/syscalls), one file per entry, numbered from [syscalls.json](/scripts/gen-syscalls/syscalls.json)
 
@@ -48,18 +48,13 @@ It currently boots and runs on `x86_64`; support for other architectures such as
 ## :robot: Userspace
 Userspace is still under development, and is assembled from two sources: the programs built from this repository, and prebuilt packages fetched at `./configure` time from [aplus-packages](https://github.com/kwrx/aplus-packages).
 
-Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
+Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, a [file manager](/apps/sysutils/aplus-explorer), a [calculator](/apps/sysutils/aplus-calculator), an [image viewer](/apps/sysutils/aplus-image-viewer) that draws PNG, JPEG and WebP through [cairo-ext](/lib/aplus/cairo-ext), the [aplus-xopen](/apps/sysutils/aplus-xopen) opener that hands a path to whichever of them handles it, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
 
-Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors and keymaps, the `zlib`, `libpng`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
+Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors, keymaps and sample pictures, the `zlib`, `libpng`, `libjpeg`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
 
-Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all. Below, the `gl-gears` demo draws into a window of its own, stacked above the terminal that launched it — both frames drawn by the server rather than by the programs inside them.
-
-<br>
-<p align="center" width="100%">
-    <img src="./docs/images/v0.7-gears.png" alt="aplus v0.7 - gl-gears drawing into a window above the terminal that launched it" width="60%"></img>
-</p>
+Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator, the sysutils applications and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all. Below, the `gl-gears` demo draws into a window of its own, stacked above the terminal that launched it — both frames drawn by the server rather than by the programs inside them.
 
 Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the forwarded port set up by [run-qemu](/scripts/run-qemu).
 
@@ -69,7 +64,7 @@ Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www`
 </p>
 
 ## :electric_plug: Drivers
-Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 31 of them, covering device-class interfaces, char and block devices, terminals, input, network, video and virtio.
+Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 32 of them, covering device-class interfaces, char and block devices, terminals, input, network, video and virtio.
 
 ### Notable modules
 * **Device Interface**, [dev/*](/drivers/dev), provides a standard interface for drivers (block, char, network, video, pci)
@@ -80,7 +75,7 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 * **PCNET** (Network device), [platform/pc/network/pcnet](/drivers/platform/pc/network/pcnet/main.c), AMD PCnet NIC driver
 * **PS/2**, [platform/pc/input/ps2](/drivers/platform/pc/input/ps2/main.c), keyboard and mouse
 * **TTY**, [tty/*](/drivers/tty), terminal devices, `/dev/ptmx` and pseudo-terminal pairs
-* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, plus console and random
+* **VirtIO**, [virtio/*](/drivers/virtio), VirtIO device interfaces over VirtIO PCI — [gpu](/drivers/virtio/virtio-gpu/main.c) with damage flushing and a cursor plane, [input](/drivers/virtio/virtio-input/main.c) for absolute pointing devices, [net](/drivers/virtio/virtio-net/main.c) feeding the lwIP stack, plus console and random
 
 ---
 
