@@ -49,6 +49,12 @@ static uintptr_t pml2_bitmap[PML2_MAX_ENTRIES] = { 0 };
 static uint16_t pml2_pusage[PML2_MAX_ENTRIES] = { 0 };
 
 /*!
+ * @brief pml2_hint[].
+ *        First bitmap word of a Page Map Level 1 that may still hold a free page.
+ */
+static uint16_t pml2_hint[PML2_MAX_ENTRIES] = { 0 };
+
+/*!
  * @brief pmm_lock.
  *        Serializes all bitmap operations and allocation scans.
  */
@@ -128,8 +134,12 @@ static inline void pmm_set_page_locked(uintptr_t address, bool used) {
         pml1_bitmap[pml1_index / 64] |= mask;
         pml2_pusage[pml2_index]++;
     } else {
+
         pml1_bitmap[pml1_index / 64] &= ~mask;
         pml2_pusage[pml2_index]--;
+
+        if ((pml1_index / 64) < pml2_hint[pml2_index])
+            pml2_hint[pml2_index] = (uint16_t)(pml1_index / 64);
     }
 }
 
@@ -215,47 +225,118 @@ static bool pmm_release_range_locked(uintptr_t start, uintptr_t end, bool strict
 }
 
 
-static uintptr_t pmm_alloc_blocks_locked(size_t blkno, uintptr_t align) {
+/**
+ * @brief Finds a free page in a region, reading the bitmap a word at a time.
+ *
+ * The region's hint says where the last search left off, so a region that is filling up is
+ * not re-read from its start for every page taken out of it.
+ *
+ * @param pml2_index The region to look in.
+ * @param capacity How many pages the region manages.
+ * @return The index of a free page within the region, or SIZE_MAX when it has none.
+ */
+static inline size_t pmm_region_find_free_locked(size_t pml2_index, size_t capacity) {
 
-    if (!blkno || blkno > SIZE_MAX / PML1_PAGESIZE || !align || (align & (PML1_PAGESIZE - 1)) || (align & (align - 1)))
-        return PMM_INVALID_ADDRESS;
+    const uint64_t* pml1_bitmap = (const uint64_t*)pml2_bitmap[pml2_index];
 
-    if (blkno > pmm_managed_end() / PML1_PAGESIZE)
-        return PMM_INVALID_ADDRESS;
+    const size_t words = (capacity + 63) / 64;
 
-    uintptr_t candidate = PMM_INVALID_ADDRESS;
-    size_t contiguous    = 0;
+    size_t w = pml2_hint[pml2_index];
+
+    while (w < words && pml1_bitmap[w] == UINT64_MAX)
+        w++;
+
+    pml2_hint[pml2_index] = (uint16_t)w;
+
+    if (w == words)
+        return SIZE_MAX;
+
+    const size_t page = (w * 64) + (size_t)__builtin_ctzll(~pml1_bitmap[w]);
+
+    return page < capacity ? page : SIZE_MAX;
+}
+
+
+/**
+ * @brief Takes a single page, which is what nearly every caller asks for.
+ *
+ * @return The physical address of the page, or PMM_INVALID_ADDRESS when there is none free.
+ */
+static uintptr_t pmm_scan_block_locked(void) {
 
     for (size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
 
-        size_t capacity = pmm_region_capacity(i);
+        const size_t capacity = pmm_region_capacity(i);
 
         if (!capacity)
             break;
 
-        if (pml2_bitmap[i] == 0) {
+        if (pml2_bitmap[i] == 0 || pml2_pusage[i] == capacity)
+            continue;
+
+        const size_t page = pmm_region_find_free_locked(i, capacity);
+
+        if (page == SIZE_MAX)
+            continue;
+
+        const uintptr_t address = (i * PML2_PAGESIZE) + (page * PML1_PAGESIZE);
+
+        pmm_set_page_locked(address, true);
+
+        return address;
+    }
+
+    return PMM_INVALID_ADDRESS;
+}
+
+
+/**
+ * @brief Takes a run of pages, skipping over whole words of the bitmap that are already full.
+ *
+ * A run may span regions, so the candidate is carried across the outer loop rather than
+ * restarted at every boundary.
+ *
+ * @param blkno Number of pages the run must be long.
+ * @param align Alignment the run has to start on.
+ * @return The physical address of the first page, or PMM_INVALID_ADDRESS.
+ */
+static uintptr_t pmm_scan_run_locked(size_t blkno, uintptr_t align) {
+
+    uintptr_t candidate = PMM_INVALID_ADDRESS;
+    size_t contiguous   = 0;
+
+    for (size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
+
+        const size_t capacity = pmm_region_capacity(i);
+
+        if (!capacity)
+            break;
+
+        if (pml2_bitmap[i] == 0 || pml2_pusage[i] == capacity) {
             candidate  = PMM_INVALID_ADDRESS;
             contiguous = 0;
             continue;
         }
 
-        if (pml2_pusage[i] == capacity) {
-            candidate  = PMM_INVALID_ADDRESS;
-            contiguous = 0;
-            continue;
-        }
+        const uint64_t* pml1_bitmap = (const uint64_t*)pml2_bitmap[i];
 
         for (size_t j = 0; j < capacity; j++) {
 
-            uintptr_t address = (i * PML2_PAGESIZE) + (j * PML1_PAGESIZE);
+            if (contiguous == 0 && (j % 64) == 0 && pml1_bitmap[j / 64] == UINT64_MAX) {
+                j += 63;
+                continue;
+            }
 
-            if (pmm_page_used_locked(address)) {
+            const uintptr_t address = (i * PML2_PAGESIZE) + (j * PML1_PAGESIZE);
+
+            if ((pml1_bitmap[j / 64] & (1ULL << (j % 64))) != 0) {
                 candidate  = PMM_INVALID_ADDRESS;
                 contiguous = 0;
                 continue;
             }
 
             if (!contiguous) {
+
                 if (address & (align - 1))
                     continue;
 
@@ -276,6 +357,28 @@ static uintptr_t pmm_alloc_blocks_locked(size_t blkno, uintptr_t align) {
 }
 
 
+/**
+ * @brief Finds a run of free pages and marks it used.
+ *
+ * @param blkno Number of pages to take.
+ * @param align Alignment the run has to start on.
+ * @return The physical address of the first page, or PMM_INVALID_ADDRESS.
+ */
+static uintptr_t pmm_alloc_blocks_locked(size_t blkno, uintptr_t align) {
+
+    if (!blkno || blkno > SIZE_MAX / PML1_PAGESIZE || !align || (align & (PML1_PAGESIZE - 1)) || (align & (align - 1)))
+        return PMM_INVALID_ADDRESS;
+
+    if (blkno > pmm_managed_end() / PML1_PAGESIZE)
+        return PMM_INVALID_ADDRESS;
+
+    if (blkno == 1 && align == PML1_PAGESIZE)
+        return pmm_scan_block_locked();
+
+    return pmm_scan_run_locked(blkno, align);
+}
+
+
 static void pmm_install_bitmap(size_t pml2_index, uintptr_t bitmap) {
 
     DEBUG_ASSERT(pml2_index < PML2_MAX_ENTRIES);
@@ -285,6 +388,7 @@ static void pmm_install_bitmap(size_t pml2_index, uintptr_t bitmap) {
 
     pml2_bitmap[pml2_index] = bitmap;
     pml2_pusage[pml2_index] = pmm_region_capacity(pml2_index);
+    pml2_hint[pml2_index]   = PML1_MAX_ENTRIES;
 }
 
 
