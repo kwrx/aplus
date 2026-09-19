@@ -95,7 +95,7 @@
 - [x] Virtio Queues
 - [x] Virtio GPU
 - [ ] Virtio Block
-- [ ] Virtio Network
+- [x] Virtio Network
 - [ ] Virtio Crypto
 - [x] Virtio Console
 - [x] Virtio Input
