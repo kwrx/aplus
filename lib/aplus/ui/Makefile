@@ -6,6 +6,7 @@ CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
 
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui-widgets.h
+RESOURCES += $(SYSROOT)/usr/include/aplus/ui-draw.h
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-library.mk

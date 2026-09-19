@@ -22,67 +22,13 @@
  */
 
 #include <errno.h>
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
-#include <cairo/cairo-ft.h>
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 #include <wm.h>
-
-
-#define WM_FONT_PATH "/usr/share/fonts/ttf/Ubuntu-R.ttf"
-#define WM_FONT_SIZE 14.0
-
-
-static FT_Library wm_ft            = NULL;
-static FT_Face wm_ft_face          = NULL;
-static cairo_font_face_t* wm_face  = NULL;
-
-
-int wm_font_init(void) {
-
-    if (FT_Init_FreeType(&wm_ft) != 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot initialize freetype, titles will be blank\n");
-        return -1;
-    }
-
-    if (FT_New_Face(wm_ft, WM_FONT_PATH, 0, &wm_ft_face) != 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot load %s, titles will be blank\n", WM_FONT_PATH);
-        return -1;
-    }
-
-    if ((wm_face = cairo_ft_font_face_create_for_ft_face(wm_ft_face, 0)) == NULL) {
-        fprintf(stderr, "aplus-wm: warning: cannot create a cairo font face, titles will be blank\n");
-        return -1;
-    }
-
-    return 0;
-}
-
-
-void wm_font_fini(void) {
-
-    if (wm_face) {
-        cairo_font_face_destroy(wm_face);
-        wm_face = NULL;
-    }
-
-    if (wm_ft_face) {
-        FT_Done_Face(wm_ft_face);
-        wm_ft_face = NULL;
-    }
-
-    if (wm_ft) {
-        FT_Done_FreeType(wm_ft);
-        wm_ft = NULL;
-    }
-}
 
 
 wm_rect_t wm_window_frame(const wm_window_t* win) {
@@ -230,7 +176,7 @@ static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 
         cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
         cairo_set_source_surface(cr, win->backstore, 0, 0);
-        cairo_rectangle(cr, 0, 0, win->width < width ? win->width : width, win->height < height ? win->height : height);
+        cairo_rectangle(cr, 0, 0, WM_MIN(win->width, width), WM_MIN(win->height, height));
         cairo_fill(cr);
 
         cairo_destroy(cr);
@@ -261,21 +207,8 @@ void wm_window_clamp_size(int* width, int* height) {
     const int max_width  = wm.display.width - 2 * WM_BORDER_WIDTH;
     const int max_height = wm.display.height - WM_TITLEBAR_HEIGHT - WM_BORDER_WIDTH;
 
-    if (*width > max_width) {
-        *width = max_width;
-    }
-
-    if (*height > max_height) {
-        *height = max_height;
-    }
-
-    if (*width < WM_WINDOW_MIN_WIDTH) {
-        *width = WM_WINDOW_MIN_WIDTH;
-    }
-
-    if (*height < WM_WINDOW_MIN_HEIGHT) {
-        *height = WM_WINDOW_MIN_HEIGHT;
-    }
+    *width  = WM_MAX(WM_MIN(*width, max_width), WM_WINDOW_MIN_WIDTH);
+    *height = WM_MAX(WM_MIN(*height, max_height), WM_WINDOW_MIN_HEIGHT);
 }
 
 
@@ -419,18 +352,21 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
     const wm_rect_t f = wm_window_frame(win);
 
-    if (x < f.x || y < f.y || x >= f.x + f.width || y >= f.y + f.height) {
+    if (!wm_rect_contains_point(&f, x, y)) {
         return WM_REGION_NONE;
     }
 
-    if (x >= win->x && x < win->x + win->width && y >= win->y && y < win->y + win->height) {
+
+    const wm_rect_t content = {win->x, win->y, win->width, win->height};
+
+    if (wm_rect_contains_point(&content, x, y)) {
         return WM_REGION_CONTENT;
     }
 
 
     const wm_rect_t c = wm_window_close_rect(win);
 
-    if (x >= c.x && x < c.x + c.width && y >= c.y && y < c.y + c.height) {
+    if (wm_rect_contains_point(&c, x, y)) {
         return WM_REGION_CLOSE;
     }
 
@@ -567,21 +503,8 @@ void wm_window_move(wm_window_t* win, int x, int y) {
     const int min_x = -(win->width - WM_WINDOW_MIN_WIDTH);
     const int min_y = WM_TITLEBAR_HEIGHT;
 
-    if (x < min_x) {
-        x = min_x;
-    }
-
-    if (y < min_y) {
-        y = min_y;
-    }
-
-    if (x > wm.display.width - WM_WINDOW_MIN_WIDTH) {
-        x = wm.display.width - WM_WINDOW_MIN_WIDTH;
-    }
-
-    if (y > wm.display.height - WM_BORDER_WIDTH) {
-        y = wm.display.height - WM_BORDER_WIDTH;
-    }
+    x = WM_CLAMP(x, min_x, wm.display.width - WM_WINDOW_MIN_WIDTH);
+    y = WM_CLAMP(y, min_y, wm.display.height - WM_BORDER_WIDTH);
 
     if (x == win->x && y == win->y) {
         return;
@@ -686,42 +609,6 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 
 
 /**
- * @brief Lays out a rectangle with all four corners rounded, as a path.
- *
- * @param cr The cairo context to build the path in.
- * @param x The left edge.
- * @param y The top edge.
- * @param width The width of the rectangle.
- * @param height The height of the rectangle.
- * @param radius The corner radius.
- */
-void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double height, double radius) {
-
-    if (radius > width / 2.0) {
-        radius = width / 2.0;
-    }
-
-    if (radius > height / 2.0) {
-        radius = height / 2.0;
-    }
-
-    if (radius < 0.0) {
-        radius = 0.0;
-    }
-
-
-    cairo_new_sub_path(cr);
-
-    cairo_arc(cr, x + width - radius, y + radius, radius, -M_PI / 2.0, 0.0);
-    cairo_arc(cr, x + width - radius, y + height - radius, radius, 0.0, M_PI / 2.0);
-    cairo_arc(cr, x + radius, y + height - radius, radius, M_PI / 2.0, M_PI);
-    cairo_arc(cr, x + radius, y + radius, radius, M_PI, 3.0 * M_PI / 2.0);
-
-    cairo_close_path(cr);
-}
-
-
-/**
  * @brief Draws the shadow layers around a frame, in whatever space the context is already in.
  *
  * @param cr The cairo context to draw with.
@@ -735,7 +622,7 @@ static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
     cairo_rectangle(cr, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
-    wm_rounded_rect(cr, f->x, f->y, f->width, f->height, WM_CORNER_RADIUS);
+    ui_draw_rounded_rect_d(cr, f->x, f->y, f->width, f->height, WM_CORNER_RADIUS);
 
     cairo_clip(cr);
 
@@ -751,7 +638,7 @@ static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool 
 
         cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, strength * (1.0 - t) * (1.0 - t));
 
-        wm_rounded_rect(cr, f->x - spread, f->y - spread + WM_SHADOW_OFFSET, f->width + 2.0 * spread, f->height + 2.0 * spread, WM_CORNER_RADIUS + spread);
+        ui_draw_rounded_rect_d(cr, f->x - spread, f->y - spread + WM_SHADOW_OFFSET, f->width + 2.0 * spread, f->height + 2.0 * spread, WM_CORNER_RADIUS + spread);
 
         cairo_fill(cr);
     }
@@ -781,10 +668,9 @@ static cairo_surface_t* wm_window_shadow_mask(wm_window_t* win, const wm_rect_t*
     }
 
 
-    cairo_surface_t* mask = cairo_image_surface_create(CAIRO_FORMAT_A8, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
+    cairo_surface_t* mask = wm_surface_create(CAIRO_FORMAT_A8, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
 
-    if (cairo_surface_status(mask) != CAIRO_STATUS_SUCCESS) {
-        cairo_surface_destroy(mask);
+    if (!mask) {
         return NULL;
     }
 
@@ -845,7 +731,9 @@ static void wm_window_paint_shadow(cairo_t* cr, wm_window_t* win, const wm_rect_
 
 static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, bool focused) {
 
-    if (!wm_face || !win->title[0]) {
+    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+
+    if (!face || !win->title[0]) {
         return;
     }
 
@@ -860,7 +748,7 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
 
     cairo_save(cr);
 
-    cairo_set_font_face(cr, wm_face);
+    cairo_set_font_face(cr, face);
     cairo_set_font_size(cr, WM_FONT_SIZE);
 
     cairo_rectangle(cr, left, f->y, right - left, WM_TITLEBAR_HEIGHT);
@@ -909,7 +797,7 @@ static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focu
             cairo_set_source_rgb(cr, WM_COLOR_CLOSE_OVER);
         }
 
-        wm_rounded_rect(cr, c.x, c.y, c.width, c.height, 4.0);
+        ui_draw_rounded_rect_d(cr, c.x, c.y, c.width, c.height, 4.0);
         cairo_fill(cr);
     }
 
@@ -950,7 +838,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    wm_rounded_rect(cr, f.x, f.y, f.width, f.height, WM_CORNER_RADIUS);
+    ui_draw_rounded_rect_d(cr, f.x, f.y, f.width, f.height, WM_CORNER_RADIUS);
     cairo_clip(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
@@ -965,8 +853,8 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     const int bw = cairo_image_surface_get_width(win->backstore);
     const int bh = cairo_image_surface_get_height(win->backstore);
 
-    const int cw = bw < win->width ? bw : win->width;
-    const int ch = bh < win->height ? bh : win->height;
+    const int cw = WM_MIN(bw, win->width);
+    const int ch = WM_MIN(bh, win->height);
 
 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
@@ -1015,7 +903,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
         cairo_set_source_rgba(cr, WM_COLOR_RING_IDLE);
     }
 
-    wm_rounded_rect(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, WM_CORNER_RADIUS - 0.5);
+    ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, WM_CORNER_RADIUS - 0.5);
     cairo_stroke(cr);
 
     cairo_restore(cr);

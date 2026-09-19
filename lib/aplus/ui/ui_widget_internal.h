@@ -28,6 +28,7 @@
 
 #include <cairo/cairo.h>
 
+#include <aplus/ui-draw.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
@@ -235,23 +236,6 @@ struct ui_view {
 
 
 /**
- * @brief Loads a font face from a file. Implemented in ui_font.c.
- *
- * @param path The font file to load.
- * @return The face, or NULL when the file cannot be loaded, in which case the caller draws no text.
- */
-cairo_font_face_t* ui_font_face(const char* path);
-
-/**
- * @brief Reports a cached scaled font for a face at a size. Implemented in ui_font.c.
- *
- * @param face The face to scale.
- * @param size The size in pixels.
- * @return The scaled font, owned by the cache, or NULL.
- */
-cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size);
-
-/**
  * @brief Implemented in ui_widget.c.
  */
 ui_widget_t* ui_widget_new(ui_view_t* view, ui_widget_kind_t kind, const ui_widget_ops_t* ops, bool interactive);
@@ -259,14 +243,8 @@ void ui_widget_draw(ui_widget_t* widget, cairo_t* cr);
 bool ui_widget_hit(const ui_widget_t* widget, int x, int y);
 
 /**
- * @brief Implemented in ui_draw.c.
+ * @brief Implemented in ui_draw.c. The rounded rectangle and the fonts are in <aplus/ui-draw.h>.
  */
-void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius);
-
-/**
- * @brief The same path in device units, for the half-pixel insets a centred stroke needs.
- */
-void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius);
 void ui_draw_set_color(cairo_t* cr, ui_color_t color);
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align);
 double ui_draw_text_width(const char* text, const char* font, double size);

@@ -44,170 +44,17 @@
 wm_server_t wm = {0};
 
 
-static int64_t wm_rect_area(const wm_rect_t* r) {
-
-    return (int64_t)r->width * (int64_t)r->height;
-}
-
-
-static wm_rect_t wm_rect_union(const wm_rect_t* a, const wm_rect_t* b) {
-
-    const int x0 = a->x < b->x ? a->x : b->x;
-    const int y0 = a->y < b->y ? a->y : b->y;
-
-    const int ax1 = a->x + a->width;
-    const int ay1 = a->y + a->height;
-    const int bx1 = b->x + b->width;
-    const int by1 = b->y + b->height;
-
-    const int x1 = ax1 > bx1 ? ax1 : bx1;
-    const int y1 = ay1 > by1 ? ay1 : by1;
-
-    wm_rect_t r = {x0, y0, x1 - x0, y1 - y0};
-
-    return r;
-}
-
-
-static int64_t wm_rect_overlap(const wm_rect_t* a, const wm_rect_t* b) {
-
-    const int x0 = a->x > b->x ? a->x : b->x;
-    const int y0 = a->y > b->y ? a->y : b->y;
-
-    const int ax1 = a->x + a->width;
-    const int ay1 = a->y + a->height;
-    const int bx1 = b->x + b->width;
-    const int by1 = b->y + b->height;
-
-    const int x1 = ax1 < bx1 ? ax1 : bx1;
-    const int y1 = ay1 < by1 ? ay1 : by1;
-
-    if (x0 >= x1 || y0 >= y1) {
-        return 0;
-    }
-
-    return (int64_t)(x1 - x0) * (int64_t)(y1 - y0);
-}
-
-
 /**
- * @brief Reports what merging two rectangles would cost, as the area neither of them covers today.
+ * @brief Adds a rectangle to what the next frame repaints, clipped to the screen.
  *
- * @param a The first rectangle.
- * @param b The second rectangle.
- * @return The area the merged rectangle would repaint for nothing; zero when one contains the other.
- */
-static int64_t wm_rect_merge_cost(const wm_rect_t* a, const wm_rect_t* b) {
-
-    const wm_rect_t u = wm_rect_union(a, b);
-
-    return wm_rect_area(&u) - (wm_rect_area(a) + wm_rect_area(b) - wm_rect_overlap(a, b));
-}
-
-
-/**
- * @brief Adds a rectangle to what the next frame repaints, merging it in wherever that is cheaper.
- *
- * Two rectangles are worth merging exactly when their union is no larger than the two of them
- * added up, since whatever they overlap on would otherwise be painted twice. That keeps the slow
- * drag -- where the window barely moves and the two rectangles almost coincide -- down to one
- * rectangle, and leaves a fast one, where they share nothing, as two.
+ * Which rectangles are worth merging into one is ui_damage_add()'s decision, the same one the
+ * clients make about their own surfaces.
  *
  * @param rect The rectangle that has to be repainted.
  */
 void wm_damage(const wm_rect_t* rect) {
 
-    int x0 = rect->x;
-    int y0 = rect->y;
-    int x1 = rect->x + rect->width;
-    int y1 = rect->y + rect->height;
-
-    if (x0 < 0) {
-        x0 = 0;
-    }
-
-    if (y0 < 0) {
-        y0 = 0;
-    }
-
-    if (x1 > wm.display.width) {
-        x1 = wm.display.width;
-    }
-
-    if (y1 > wm.display.height) {
-        y1 = wm.display.height;
-    }
-
-    if (x0 >= x1 || y0 >= y1) {
-        return;
-    }
-
-
-    wm_rect_t add = {x0, y0, x1 - x0, y1 - y0};
-
-
-    for (size_t i = 0; i < wm.damage.count;) {
-
-        if (wm_rect_merge_cost(&wm.damage.rects[i], &add) > wm_rect_overlap(&wm.damage.rects[i], &add)) {
-            i++;
-            continue;
-        }
-
-        add = wm_rect_union(&wm.damage.rects[i], &add);
-
-        wm.damage.rects[i] = wm.damage.rects[--wm.damage.count];
-
-        i = 0;
-    }
-
-    if (wm.damage.count < WM_DAMAGE_MAX) {
-
-        wm.damage.rects[wm.damage.count++] = add;
-
-        return;
-    }
-
-
-    wm_rect_t pool[WM_DAMAGE_MAX + 1];
-
-    for (size_t i = 0; i < WM_DAMAGE_MAX; i++) {
-        pool[i] = wm.damage.rects[i];
-    }
-
-    pool[WM_DAMAGE_MAX] = add;
-
-
-    size_t best_a = 0;
-    size_t best_b = 1;
-    int64_t best  = wm_rect_merge_cost(&pool[0], &pool[1]);
-
-    for (size_t i = 0; i < WM_DAMAGE_MAX + 1; i++) {
-
-        for (size_t j = i + 1; j < WM_DAMAGE_MAX + 1; j++) {
-
-            const int64_t cost = wm_rect_merge_cost(&pool[i], &pool[j]);
-
-            if (cost < best) {
-
-                best   = cost;
-                best_a = i;
-                best_b = j;
-            }
-        }
-    }
-
-    pool[best_a] = wm_rect_union(&pool[best_a], &pool[best_b]);
-    pool[best_b] = pool[WM_DAMAGE_MAX];
-
-    for (size_t i = 0; i < WM_DAMAGE_MAX; i++) {
-        wm.damage.rects[i] = pool[i];
-    }
-}
-
-
-static bool wm_rect_intersects(const wm_rect_t* a, const wm_rect_t* b) {
-
-    return a->x < b->x + b->width && b->x < a->x + a->width && a->y < b->y + b->height && b->y < a->y + a->height;
+    ui_damage_add(&wm.damage, wm_rect_clip(rect, wm.display.width, wm.display.height));
 }
 
 
@@ -237,16 +84,19 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 
-        const int x0 = win->x + WM_CORNER_RADIUS;
-        const int y0 = win->y;
-        const int x1 = win->x + win->width - WM_CORNER_RADIUS;
-        const int y1 = win->y + win->height - WM_CORNER_RADIUS;
+        const wm_rect_t opaque = {
 
-        if (x0 >= x1 || y0 >= y1) {
+            .x      = win->x + WM_CORNER_RADIUS,
+            .y      = win->y,
+            .width  = win->width - 2 * WM_CORNER_RADIUS,
+            .height = win->height - WM_CORNER_RADIUS,
+        };
+
+        if (opaque.width <= 0 || opaque.height <= 0) {
             continue;
         }
 
-        if (rect->x >= x0 && rect->y >= y0 && rect->x + rect->width <= x1 && rect->y + rect->height <= y1) {
+        if (wm_rect_contains(&opaque, rect)) {
             return true;
         }
     }
@@ -262,7 +112,7 @@ static void wm_composite(void) {
     }
 
 
-    wm_rect_t damage[WM_DAMAGE_MAX];
+    wm_rect_t damage[UI_DAMAGE_MAX];
 
     const size_t count = wm.damage.count;
 
@@ -270,7 +120,7 @@ static void wm_composite(void) {
         damage[i] = wm.damage.rects[i];
     }
 
-    wm.damage.count = 0;
+    ui_damage_reset(&wm.damage);
 
 
     cairo_t* cr = wm.display.cr;
@@ -321,7 +171,7 @@ static void wm_composite(void) {
 
     size_t depth = 0;
 
-    for (wm_window_t* win = wm.windows; win && depth < (sizeof(stack) / sizeof(stack[0])); win = win->next) {
+    for (wm_window_t* win = wm.windows; win && depth < WM_ARRAY_COUNT(stack); win = win->next) {
         stack[depth++] = win;
     }
 
@@ -411,6 +261,7 @@ static void show_usage(void) {
            "Run the aplus display server.\n\n"
            "   -d, --device                framebuffer device (default: /dev/fb0)\n"
            "   -s, --socket                listening socket (default: " UI_DEFAULT_SOCKET ")\n"
+           "   -w, --wallpaper             desktop wallpaper (default: " WM_WALLPAPER_PATH ")\n"
            "       --help                  show this help\n");
 
     exit(0);
@@ -424,19 +275,21 @@ int main(int argc, char** argv) {
 
 
     static struct option long_options[] = {
-        {"device", required_argument, NULL, 'd'},
-        {"socket", required_argument, NULL, 's'},
-        {"help",   no_argument,       NULL, 'h'},
-        {NULL,     0,                 NULL, 0  }
+        {"device",    required_argument, NULL, 'd'},
+        {"socket",    required_argument, NULL, 's'},
+        {"wallpaper", required_argument, NULL, 'w'},
+        {"help",      no_argument,       NULL, 'h'},
+        {NULL,        0,                 NULL, 0  }
     };
 
-    const char* device = "/dev/fb0";
-    const char* path   = UI_DEFAULT_SOCKET;
+    const char* device    = "/dev/fb0";
+    const char* path      = UI_DEFAULT_SOCKET;
+    const char* wallpaper = WM_WALLPAPER_PATH;
 
 
     int c, idx;
 
-    while ((c = getopt_long(argc, argv, "d:s:h", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "d:s:w:h", long_options, &idx)) != -1) {
 
         switch (c) {
 
@@ -445,6 +298,9 @@ int main(int argc, char** argv) {
                 break;
             case 's':
                 path = optarg;
+                break;
+            case 'w':
+                wallpaper = optarg;
                 break;
             case 'h':
             case '?':
@@ -460,7 +316,7 @@ int main(int argc, char** argv) {
     wm.running        = true;
 
 
-    if (wm_display_open(&wm.display, device) < 0) {
+    if (wm_display_open(&wm.display, device, wallpaper) < 0) {
         return 1;
     }
 
@@ -468,9 +324,7 @@ int main(int argc, char** argv) {
     wm.pointer.y = wm.display.height / 2;
 
 
-    if (wm_font_init() < 0) {
-        wm_font_fini();
-    }
+    ui_font_face(WM_FONT_PATH);
 
 
     int listener = wm_listen(path);
@@ -522,7 +376,7 @@ int main(int argc, char** argv) {
         owners[count]      = NULL;
         count++;
 
-        for (wm_client_t* client = wm.clients; client && count < (sizeof(pfds) / sizeof(pfds[0])); client = client->next) {
+        for (wm_client_t* client = wm.clients; client && count < WM_ARRAY_COUNT(pfds); client = client->next) {
 
             pfds[count].fd      = client->fd;
             pfds[count].events  = POLLIN | (wm_client_wants_write(client) ? POLLOUT : 0);
@@ -622,7 +476,6 @@ int main(int argc, char** argv) {
     }
 
     wm_input_close();
-    wm_font_fini();
     wm_cursor_fini();
     wm_display_close(&wm.display);
 

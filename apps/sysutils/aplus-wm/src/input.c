@@ -66,46 +66,20 @@ static struct {
 
 
 /**
- * @brief Writes one whole event onto the pipe, looping over a short write.
+ * @brief Writes one whole event onto the pipe, under the lock that keeps records apart.
  *
  * @param ev The event to forward.
  * @return 0 on success, or -1 with errno set.
  */
 static int input_forward(const event_t* ev) {
 
-    const uint8_t* data = (const uint8_t*)ev;
-
-    size_t left = sizeof(*ev);
-
-    int e = 0;
-
-
     pthread_mutex_lock(&input_pipe_lock);
 
-    while (left > 0) {
-
-        ssize_t n = write(input_pipe[1], data, left);
-
-        if (n > 0) {
-
-            data += n;
-            left -= (size_t)n;
-
-            continue;
-        }
-
-        if (n < 0 && errno == EINTR) {
-            continue;
-        }
-
-        e = -1;
-
-        break;
-    }
+    const ssize_t e = ui_send_all(input_pipe[1], ev, sizeof(*ev));
 
     pthread_mutex_unlock(&input_pipe_lock);
 
-    return e;
+    return e < 0 ? -1 : 0;
 }
 
 
@@ -152,7 +126,7 @@ int wm_input_open(void) {
     }
 
 
-    for (size_t i = 0; i < sizeof(input_devices) / sizeof(input_devices[0]); i++) {
+    for (size_t i = 0; i < WM_ARRAY_COUNT(input_devices); i++) {
 
         if ((input_devices[i].fd = open(input_devices[i].path, O_RDONLY)) < 0) {
 
@@ -188,7 +162,7 @@ int wm_input_open(void) {
 
 void wm_input_close(void) {
 
-    for (size_t i = 0; i < sizeof(input_devices) / sizeof(input_devices[0]); i++) {
+    for (size_t i = 0; i < WM_ARRAY_COUNT(input_devices); i++) {
 
         if (input_devices[i].started) {
             pthread_cancel(input_devices[i].thread);
@@ -630,21 +604,8 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
 static void input_pointer_moved(const wm_rect_t* old) {
 
-    if (wm.pointer.x < 0) {
-        wm.pointer.x = 0;
-    }
-
-    if (wm.pointer.y < 0) {
-        wm.pointer.y = 0;
-    }
-
-    if (wm.pointer.x >= wm.display.width) {
-        wm.pointer.x = wm.display.width - 1;
-    }
-
-    if (wm.pointer.y >= wm.display.height) {
-        wm.pointer.y = wm.display.height - 1;
-    }
+    wm.pointer.x = WM_CLAMP(wm.pointer.x, 0, wm.display.width - 1);
+    wm.pointer.y = WM_CLAMP(wm.pointer.y, 0, wm.display.height - 1);
 
 
     wm_window_t* over = NULL;
