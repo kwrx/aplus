@@ -111,7 +111,7 @@ void wm_display_cursor_move(wm_display_t* display, int x, int y) {
 }
 
 
-int wm_display_open(wm_display_t* display, const char* device) {
+int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper) {
 
     memset(display, 0, sizeof(*display));
 
@@ -178,9 +178,9 @@ int wm_display_open(wm_display_t* display, const char* device) {
     }
 
 
-    display->back = cairo_image_surface_create(CAIRO_FORMAT_RGB24, display->width, display->height);
+    display->back = wm_surface_create(CAIRO_FORMAT_RGB24, display->width, display->height);
 
-    if (cairo_surface_status(display->back) != CAIRO_STATUS_SUCCESS) {
+    if (!display->back) {
         fprintf(stderr, "aplus-wm: cannot allocate the back buffer\n");
         wm_display_close(display);
         return -1;
@@ -197,16 +197,17 @@ int wm_display_open(wm_display_t* display, const char* device) {
     }
 
 
-    display->background = cairo_pattern_create_linear(0.0, 0.0, 0.0, display->height);
+    display->background = wm_wallpaper_load(wallpaper, display->width, display->height);
 
-    if (cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
-        fprintf(stderr, "aplus-wm: cannot create the desktop gradient\n");
+    if (!display->background) {
+        display->background = wm_wallpaper_gradient(display->height);
+    }
+
+    if (!display->background || cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
+        fprintf(stderr, "aplus-wm: cannot create the desktop background\n");
         wm_display_close(display);
         return -1;
     }
-
-    cairo_pattern_add_color_stop_rgb(display->background, 0.0, WM_COLOR_DESKTOP_TOP);
-    cairo_pattern_add_color_stop_rgb(display->background, 1.0, WM_COLOR_DESKTOP_BOTTOM);
 
 
     fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);

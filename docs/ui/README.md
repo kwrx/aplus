@@ -150,6 +150,16 @@ aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
 There is no sleep between the two lines because `ui_connect()` retries — see
 [getting-started.md](getting-started.md#3-connecting).
 
+The desktop behind the windows is a webp picture out of `/usr/share/images`, shipped by the
+`system-images` package. The server decodes it once at startup and scales it to cover the screen,
+cropping whichever axis is left over, so compositing the desktop stays a plain blit. When the file
+is missing or does not decode, it falls back to the grey gradient and says so on the console.
+`-w`/`--wallpaper` names a different one:
+
+```sh
+aplus-wm -w /usr/share/images/04.webp &
+```
+
 From a running terminal, a GUI application is started like any other program. A few server
 bindings are worth knowing:
 

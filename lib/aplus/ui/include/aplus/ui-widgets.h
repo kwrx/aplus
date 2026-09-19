@@ -156,16 +156,6 @@ typedef enum {
 } ui_align_t;
 
 
-typedef struct {
-
-    int x;
-    int y;
-    int width;
-    int height;
-
-} ui_rect_t;
-
-
 typedef struct ui_view ui_view_t;
 typedef struct ui_widget ui_widget_t;
 

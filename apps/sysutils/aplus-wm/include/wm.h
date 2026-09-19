@@ -31,7 +31,19 @@
 #include <cairo/cairo.h>
 
 #include <aplus/fb.h>
+#include <aplus/ui-draw.h>
 #include <aplus/ui.h>
+
+
+/**
+ * @brief Picking one of two values, and holding one between two others.
+ */
+
+#define WM_MIN(a, b)        ((a) < (b) ? (a) : (b))
+#define WM_MAX(a, b)        ((a) > (b) ? (a) : (b))
+#define WM_CLAMP(v, lo, hi) WM_MIN(WM_MAX((v), (lo)), (hi))
+
+#define WM_ARRAY_COUNT(a) (sizeof(a) / sizeof((a)[0]))
 
 
 /**
@@ -44,12 +56,6 @@
 
 #define WM_WINDOW_MIN_WIDTH  80
 #define WM_WINDOW_MIN_HEIGHT 40
-
-/**
- * @brief How many damaged rectangles a frame keeps apart before it starts merging them.
- */
-
-#define WM_DAMAGE_MAX 8
 
 /**
  * @brief Rounded corners and a drop shadow, faked by stacking translucent rounded rectangles.
@@ -84,11 +90,28 @@
 #define WM_COLOR_CLOSE_DOWN 0.651, 0.184, 0.212
 
 /**
+ * @brief The typeface titles are drawn in, loaded once at startup.
+ */
+
+#define WM_FONT_PATH "/usr/share/fonts/ttf/Ubuntu-R.ttf"
+#define WM_FONT_SIZE 14.0
+
+
+/**
  * @brief The cursor theme: webp images with straight alpha, and the largest one the plane will hold.
  */
 
 #define WM_CURSOR_PATH     "/usr/share/cursors"
 #define WM_CURSOR_MAX_SIZE 64
+
+/**
+ * @brief The desktop picture: one webp file, unlike the cursor theme, which is a directory.
+ *
+ * The limit is on the image as it comes out of the file, before it is scaled down to the screen.
+ */
+
+#define WM_WALLPAPER_PATH     "/usr/share/images/01.webp"
+#define WM_WALLPAPER_MAX_SIZE 8192
 
 /**
  * @brief The arrow drawn by hand, for when the theme is missing entirely.
@@ -134,14 +157,10 @@ typedef enum {
 } wm_cursor_shape_t;
 
 
-typedef struct {
-
-    int x;
-    int y;
-    int width;
-    int height;
-
-} wm_rect_t;
+/**
+ * @brief The server's rectangle is the library's, so that a damage set can be handed to libui as it stands.
+ */
+typedef ui_rect_t wm_rect_t;
 
 
 typedef struct {
@@ -160,8 +179,9 @@ typedef struct {
     cairo_t* cr;
     cairo_t* cr_screen;
 
-    //? The desktop gradient, built once: it spans the whole screen and never changes, so
-    //? rebuilding it per frame only costs allocations.
+    //? What the desktop is painted with, built once: the wallpaper when one decoded, the
+    //? gradient otherwise. It spans the whole screen and never changes, so rebuilding it per
+    //? frame only costs allocations.
     cairo_pattern_t* background;
 
     //? Whether the adapter composites a cursor plane of its own. When it does, the pointer is
@@ -307,14 +327,10 @@ typedef struct {
         wm_rect_t origin;
     } drag;
 
-    //? What has to be repainted before the next frame reaches the screen. Kept as a handful of
+    //? What has to be repainted before the next frame reaches the screen, as a handful of
     //? rectangles rather than the one box around them all: dragging a window damages where it was
     //? and where it now is, and the box around those two covers the whole sweep between them.
-    //? Merging only starts once the list is full, and takes whichever pair wastes the least.
-    struct {
-        wm_rect_t rects[WM_DAMAGE_MAX];
-        size_t count;
-    } damage;
+    ui_damage_t damage;
 
     bool running;
 
@@ -325,9 +341,28 @@ extern wm_server_t wm;
 
 
 /**
+ * @brief Implemented in rect.c.
+ */
+bool wm_rect_contains_point(const wm_rect_t* rect, int x, int y);
+bool wm_rect_contains(const wm_rect_t* outer, const wm_rect_t* inner);
+bool wm_rect_intersects(const wm_rect_t* a, const wm_rect_t* b);
+wm_rect_t wm_rect_clip(const wm_rect_t* rect, int width, int height);
+
+/**
+ * @brief Implemented in image.c.
+ */
+void* wm_slurp(const char* path, size_t* size);
+void* wm_image_probe(const char* path, int max_size, size_t* size, int* width, int* height);
+
+/**
+ * @brief Implemented in draw.c.
+ */
+cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height);
+
+/**
  * @brief Implemented in display.c.
  */
-int wm_display_open(wm_display_t* display, const char* device);
+int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper);
 void wm_display_close(wm_display_t* display);
 void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
@@ -341,6 +376,12 @@ int wm_cursor_upload(void);
 wm_rect_t wm_cursor_rect(void);
 void wm_cursor_paint(cairo_t* cr, double x, double y);
 void wm_cursor_fini(void);
+
+/**
+ * @brief Implemented in wallpaper.c.
+ */
+cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height);
+cairo_pattern_t* wm_wallpaper_gradient(int height);
 
 /**
  * @brief Implemented in input.c.
@@ -373,10 +414,7 @@ void wm_window_clamp_size(int* width, int* height);
 int wm_window_resize(wm_window_t* win, int width, int height);
 int wm_window_notify_configure(wm_window_t* win);
 void wm_window_paint(cairo_t* cr, wm_window_t* win);
-void wm_rounded_rect(cairo_t* cr, double x, double y, double width, double height, double radius);
 int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int height);
-int wm_font_init(void);
-void wm_font_fini(void);
 
 /**
  * @brief Implemented in client.c.

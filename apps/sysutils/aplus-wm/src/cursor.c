@@ -27,13 +27,8 @@
  * The plane takes the decoder's straight alpha as it is; cairo composites a premultiplied copy of it.
  */
 
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <unistd.h>
 
 #include <webp/decode.h>
 
@@ -81,75 +76,6 @@ static wm_cursor_shape_t wm_cursor_shape = WM_CURSOR_ARROW;
 
 
 /**
- * @brief Reads a whole file into memory, which is how the decoder wants the image.
- *
- * @param path The file to read.
- * @param size Receives the size of the file.
- * @return The contents, or NULL with errno set.
- */
-static void* wm_cursor_slurp(const char* path, size_t* size) {
-
-    int fd;
-
-    if ((fd = open(path, O_RDONLY)) < 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot open %s: %s\n", path, strerror(errno));
-        return NULL;
-    }
-
-
-    struct stat st;
-
-    if (fstat(fd, &st) < 0 || st.st_size <= 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot stat %s\n", path);
-        close(fd);
-        return NULL;
-    }
-
-
-    uint8_t* buffer = malloc((size_t)st.st_size);
-
-    if (!buffer) {
-        close(fd);
-        return NULL;
-    }
-
-
-    size_t left = (size_t)st.st_size;
-    uint8_t* at = buffer;
-
-    while (left > 0) {
-
-        ssize_t n = read(fd, at, left);
-
-        if (n > 0) {
-
-            at += n;
-            left -= (size_t)n;
-
-            continue;
-        }
-
-        if (n < 0 && errno == EINTR) {
-            continue;
-        }
-
-        fprintf(stderr, "aplus-wm: warning: cannot read %s: %s\n", path, strerror(errno));
-
-        free(buffer);
-        close(fd);
-
-        return NULL;
-    }
-
-    close(fd);
-
-    *size = (size_t)st.st_size;
-
-    return buffer;
-}
-
-
-/**
  * @brief Builds the premultiplied copy cairo composites from, rounding the division rather than truncating it.
  *
  * @param image The straight-alpha pixels the decoder produced.
@@ -159,10 +85,9 @@ static void* wm_cursor_slurp(const char* path, size_t* size) {
  */
 static cairo_surface_t* wm_cursor_premultiply(const uint32_t* image, int width, int height) {
 
-    cairo_surface_t* surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, width, height);
+    cairo_surface_t* surface = wm_surface_create(CAIRO_FORMAT_ARGB32, width, height);
 
-    if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
-        cairo_surface_destroy(surface);
+    if (!surface) {
         return NULL;
     }
 
@@ -224,25 +149,13 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
 
 
     size_t size = 0;
-    void* file  = wm_cursor_slurp(path, &size);
-
-    if (!file) {
-        return false;
-    }
-
 
     int width  = 0;
     int height = 0;
 
-    if (!WebPGetInfo(file, size, &width, &height)) {
-        fprintf(stderr, "aplus-wm: warning: %s is not a webp image\n", path);
-        free(file);
-        return false;
-    }
+    void* file = wm_image_probe(path, WM_CURSOR_MAX_SIZE, &size, &width, &height);
 
-    if (width <= 0 || height <= 0 || width > WM_CURSOR_MAX_SIZE || height > WM_CURSOR_MAX_SIZE) {
-        fprintf(stderr, "aplus-wm: warning: %s is %dx%d, which is not a usable cursor size\n", path, width, height);
-        free(file);
+    if (!file) {
         return false;
     }
 

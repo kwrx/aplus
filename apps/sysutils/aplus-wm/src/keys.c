@@ -258,7 +258,7 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
     }
 
 
-    for (size_t i = 0; i < sizeof(wm_bindings) / sizeof(wm_bindings[0]); i++) {
+    for (size_t i = 0; i < WM_ARRAY_COUNT(wm_bindings); i++) {
 
         if (wm_bindings[i].vkey != vkey) {
             continue;

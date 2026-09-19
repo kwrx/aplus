@@ -217,6 +217,42 @@ typedef struct {
 
 
 /**
+ * @brief A rectangle, in whatever space the caller is working in.
+ */
+
+typedef struct {
+
+    int x;
+    int y;
+    int width;
+    int height;
+
+} ui_rect_t;
+
+
+/**
+ * @brief How many damaged rectangles are kept apart before they start being merged.
+ */
+#define UI_DAMAGE_MAX 8
+
+
+/**
+ * @brief What still has to be repainted, as a few rectangles rather than the box around them.
+ */
+typedef struct {
+
+    ui_rect_t rects[UI_DAMAGE_MAX];
+    size_t count;
+
+} ui_damage_t;
+
+
+void ui_damage_reset(ui_damage_t* damage);
+void ui_damage_add(ui_damage_t* damage, ui_rect_t rect);
+void ui_damage_clip(ui_damage_t* damage, int width, int height);
+
+
+/**
  * @brief Client API.
  */
 
