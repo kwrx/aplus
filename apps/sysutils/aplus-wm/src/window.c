@@ -31,14 +31,68 @@
 #include <wm.h>
 
 
+/**
+ * @brief Reports whether the server draws nothing at all around a window.
+ *
+ * @param win The window to test.
+ * @return true when the client owns every pixel of the frame.
+ */
+bool wm_window_borderless(const wm_window_t* win) {
+
+    return (win->flags & UI_WINDOW_BORDERLESS) != 0;
+}
+
+
+/**
+ * @brief Reports how far the decorations reach out from a window's content area.
+ *
+ * @param win The window to measure.
+ * @return The insets, every one of them zero when the window is borderless.
+ */
+wm_insets_t wm_window_insets(const wm_window_t* win) {
+
+    if (wm_window_borderless(win)) {
+
+        const wm_insets_t none = {0, 0, 0, 0};
+
+        return none;
+    }
+
+
+    const wm_insets_t decorated = {
+
+        .left   = WM_BORDER_WIDTH,
+        .top    = WM_TITLEBAR_HEIGHT,
+        .right  = WM_BORDER_WIDTH,
+        .bottom = WM_BORDER_WIDTH,
+    };
+
+    return decorated;
+}
+
+
+/**
+ * @brief Reports how far a window's corners are rounded off, which is not at all when it is borderless.
+ *
+ * @param win The window to measure.
+ * @return The radius in pixels.
+ */
+double wm_window_radius(const wm_window_t* win) {
+
+    return wm_window_borderless(win) ? 0.0 : (double)WM_CORNER_RADIUS;
+}
+
+
 wm_rect_t wm_window_frame(const wm_window_t* win) {
+
+    const wm_insets_t in = wm_window_insets(win);
 
     wm_rect_t r = {
 
-        .x      = win->x - WM_BORDER_WIDTH,
-        .y      = win->y - WM_TITLEBAR_HEIGHT,
-        .width  = win->width + 2 * WM_BORDER_WIDTH,
-        .height = win->height + WM_TITLEBAR_HEIGHT + WM_BORDER_WIDTH,
+        .x      = win->x - in.left,
+        .y      = win->y - in.top,
+        .width  = win->width + in.left + in.right,
+        .height = win->height + in.top + in.bottom,
     };
 
     return r;
@@ -68,6 +122,14 @@ wm_rect_t wm_window_shadow_rect(const wm_window_t* win) {
 
 
 wm_rect_t wm_window_close_rect(const wm_window_t* win) {
+
+    if (wm_window_borderless(win)) {
+
+        const wm_rect_t none = {win->x, win->y, 0, 0};
+
+        return none;
+    }
+
 
     const wm_rect_t f = wm_window_frame(win);
 
@@ -199,13 +261,16 @@ static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 /**
  * @brief Clamps a window size to what the display can hold, and to the smallest window that can be grabbed.
  *
+ * @param win The window being sized, whose decorations take up the rest of the display.
  * @param width In/out. The width asked for, replaced by the width allowed.
  * @param height In/out. The height asked for, replaced by the height allowed.
  */
-void wm_window_clamp_size(int* width, int* height) {
+void wm_window_clamp_size(const wm_window_t* win, int* width, int* height) {
 
-    const int max_width  = wm.display.width - 2 * WM_BORDER_WIDTH;
-    const int max_height = wm.display.height - WM_TITLEBAR_HEIGHT - WM_BORDER_WIDTH;
+    const wm_insets_t in = wm_window_insets(win);
+
+    const int max_width  = wm.display.width - in.left - in.right;
+    const int max_height = wm.display.height - in.top - in.bottom;
 
     *width  = WM_MAX(WM_MIN(*width, max_width), WM_WINDOW_MIN_WIDTH);
     *height = WM_MAX(WM_MIN(*height, max_height), WM_WINDOW_MIN_HEIGHT);
@@ -219,12 +284,10 @@ void wm_window_clamp_size(int* width, int* height) {
  * @param width The width in pixels.
  * @param height The height in pixels.
  * @param title The window title.
+ * @param flags UI_WINDOW_*, which decide what the server draws around it.
  * @return The window, or NULL with errno set.
  */
-wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title) {
-
-    wm_window_clamp_size(&width, &height);
-
+wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags) {
 
     wm_window_t* win = (wm_window_t*)calloc(1, sizeof(wm_window_t));
 
@@ -235,6 +298,7 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     win->id     = wm.next_window_id++;
     win->client = client;
     win->serial = 1;
+    win->flags  = flags;
 
     win->shm_id = -1;
 
@@ -242,6 +306,8 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
         strncpy(win->title, title, UI_TITLE_MAX - 1);
     }
 
+
+    wm_window_clamp_size(win, &width, &height);
 
     win->width  = width;
     win->height = height;
@@ -252,19 +318,21 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     }
 
 
+    const wm_insets_t in = wm_window_insets(win);
+
     static int cascade = 0;
 
-    win->x = WM_BORDER_WIDTH + 24 * (cascade % 8);
-    win->y = WM_TITLEBAR_HEIGHT + 24 * (cascade % 8);
+    win->x = in.left + 24 * (cascade % 8);
+    win->y = in.top + 24 * (cascade % 8);
 
     cascade++;
 
-    if (win->x + win->width + WM_BORDER_WIDTH > wm.display.width) {
-        win->x = wm.display.width - win->width - WM_BORDER_WIDTH;
+    if (win->x + win->width + in.right > wm.display.width) {
+        win->x = wm.display.width - win->width - in.right;
     }
 
-    if (win->y + win->height + WM_BORDER_WIDTH > wm.display.height) {
-        win->y = wm.display.height - win->height - WM_BORDER_WIDTH;
+    if (win->y + win->height + in.bottom > wm.display.height) {
+        win->y = wm.display.height - win->height - in.bottom;
     }
 
 
@@ -500,11 +568,16 @@ void wm_window_focus(wm_window_t* win) {
 
 void wm_window_move(wm_window_t* win, int x, int y) {
 
-    const int min_x = -(win->width - WM_WINDOW_MIN_WIDTH);
-    const int min_y = WM_TITLEBAR_HEIGHT;
+    const wm_insets_t in = wm_window_insets(win);
 
-    x = WM_CLAMP(x, min_x, wm.display.width - WM_WINDOW_MIN_WIDTH);
-    y = WM_CLAMP(y, min_y, wm.display.height - WM_BORDER_WIDTH);
+    const int min_x = -(win->width - WM_WINDOW_MIN_WIDTH);
+    const int max_x = wm.display.width - WM_WINDOW_MIN_WIDTH;
+
+    const int min_y = in.top;
+    const int max_y = wm.display.height - WM_WINDOW_MIN_HEIGHT + in.top;
+
+    x = WM_CLAMP(x, min_x, max_x);
+    y = WM_CLAMP(y, min_y, max_y);
 
     if (x == win->x && y == win->y) {
         return;
@@ -522,7 +595,7 @@ void wm_window_move(wm_window_t* win, int x, int y) {
 
 int wm_window_resize(wm_window_t* win, int width, int height) {
 
-    wm_window_clamp_size(&width, &height);
+    wm_window_clamp_size(win, &width, &height);
 
     if (width == win->width && height == win->height) {
         return 0;
@@ -614,15 +687,16 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
  * @param cr The cairo context to draw with.
  * @param f The frame the shadow is cast around.
  * @param focused Whether the window is focused, which is what decides the strength.
+ * @param radius How far the frame's corners are rounded off.
  */
-static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool focused) {
+static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool focused, double radius) {
 
     cairo_save(cr);
 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
     cairo_rectangle(cr, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
-    ui_draw_rounded_rect_d(cr, f->x, f->y, f->width, f->height, WM_CORNER_RADIUS);
+    ui_draw_rounded_rect_d(cr, f->x, f->y, f->width, f->height, radius);
 
     cairo_clip(cr);
 
@@ -638,7 +712,7 @@ static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool 
 
         cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, strength * (1.0 - t) * (1.0 - t));
 
-        ui_draw_rounded_rect_d(cr, f->x - spread, f->y - spread + WM_SHADOW_OFFSET, f->width + 2.0 * spread, f->height + 2.0 * spread, WM_CORNER_RADIUS + spread);
+        ui_draw_rounded_rect_d(cr, f->x - spread, f->y - spread + WM_SHADOW_OFFSET, f->width + 2.0 * spread, f->height + 2.0 * spread, radius + spread);
 
         cairo_fill(cr);
     }
@@ -686,7 +760,7 @@ static cairo_surface_t* wm_window_shadow_mask(wm_window_t* win, const wm_rect_t*
 
     const wm_rect_t local = {WM_SHADOW_EXTENT, WM_SHADOW_EXTENT, f->width, f->height};
 
-    wm_window_paint_shadow_direct(cr, &local, focused);
+    wm_window_paint_shadow_direct(cr, &local, focused, wm_window_radius(win));
 
     cairo_destroy(cr);
 
@@ -713,7 +787,7 @@ static void wm_window_paint_shadow(cairo_t* cr, wm_window_t* win, const wm_rect_
     cairo_surface_t* mask = wm_window_shadow_mask(win, f, focused);
 
     if (!mask) {
-        wm_window_paint_shadow_direct(cr, f, focused);
+        wm_window_paint_shadow_direct(cr, f, focused, wm_window_radius(win));
         return;
     }
 
@@ -829,8 +903,10 @@ static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focu
 
 void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
-    const wm_rect_t f  = wm_window_frame(win);
-    const bool focused = (wm.focused == win);
+    const wm_rect_t f     = wm_window_frame(win);
+    const bool focused    = (wm.focused == win);
+    const bool borderless = wm_window_borderless(win);
+    const double radius   = wm_window_radius(win);
 
 
     wm_window_paint_shadow(cr, win, &f, focused);
@@ -838,7 +914,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    ui_draw_rounded_rect_d(cr, f.x, f.y, f.width, f.height, WM_CORNER_RADIUS);
+    ui_draw_rounded_rect_d(cr, f.x, f.y, f.width, f.height, radius);
     cairo_clip(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
@@ -867,8 +943,11 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
 
 
-    wm_window_paint_title(cr, win, &f, focused);
-    wm_window_paint_close(cr, win, focused);
+    if (!borderless) {
+
+        wm_window_paint_title(cr, win, &f, focused);
+        wm_window_paint_close(cr, win, focused);
+    }
 
 
     if (cw < win->width || ch < win->height) {
@@ -892,6 +971,11 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     cairo_restore(cr);
 
 
+    if (borderless) {
+        return;
+    }
+
+
     cairo_save(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
@@ -903,7 +987,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
         cairo_set_source_rgba(cr, WM_COLOR_RING_IDLE);
     }
 
-    ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, WM_CORNER_RADIUS - 0.5);
+    ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, radius - 0.5);
     cairo_stroke(cr);
 
     cairo_restore(cr);

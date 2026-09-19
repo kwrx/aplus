@@ -71,7 +71,8 @@ back is one that agrees on `UI_PROTOCOL_VERSION`.
 ui_window_t* window = ui_window_create(conn, 260, 200, "ui-hello");
 ```
 
-The size is the *content* area, inside the decorations the server draws. It is a request:
+The size is the *content* area, inside the decorations the server draws — for a window
+created borderless with `ui_window_create_ex()` it is the whole window. It is a request:
 `ui_window_create()` blocks until the server has configured the window, and the size it
 comes back with is the real one — clamped to at least 80×40, and to the screen. Always read
 it back with `ui_window_width()` / `ui_window_height()` rather than assuming you got what
@@ -504,7 +505,8 @@ ui-hello
 
 The window appears where the server decides to put it, with decorations around it. Drag an
 edge and watch the number resize with the panel; the layout callback is running on every
-configure.
+configure. Holding `Super` moves a window from anywhere on it, which is how an undecorated
+one is moved — see [Borderless windows](window-api.md#borderless-windows).
 
 `Ctrl+Alt+T` opens another terminal, `Alt+Tab` moves the focus to the next window (hold
 `Alt` and keep tapping `Tab` to walk further down the stack, add `Shift` to walk back), and

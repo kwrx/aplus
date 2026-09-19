@@ -89,7 +89,7 @@ server → UI_EV_HELLO    { version }
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION 3
+#define UI_PROTOCOL_VERSION 4
 ```
 
 The client sends its version and compares what comes back; a mismatch is fatal on the client
@@ -108,19 +108,40 @@ skips an event it does not know, and a server that never sends one is a mouse wi
 together here, and a single number that names the whole protocol is easier to reason about
 than a list of which features a peer happens to have.
 
+Version 4 added the `flags` field to `ui_msg_create_window_t`, and with it
+`UI_WINDOW_BORDERLESS`. That one *is* a break: the payload grew, so a version 3 client's
+create-window request is four bytes short of what a version 4 server reads and is refused on
+its length. The handshake catches it first and says so.
+
 Unlike every other read in the client, the hello reply is read without skipping unknown
 messages: nothing else can legitimately arrive before it.
 
 ## Creating a window
 
 ```
-client → UI_REQ_CREATE_WINDOW  { width, height, title[64] }
+client → UI_REQ_CREATE_WINDOW  { width, height, flags, title[64] }
 server → UI_EV_CONFIGURE       { window_id, serial, width, height, shm_id, stride, shm_size }
 ```
 
 The window id is assigned by the server and first appears in that configure, together with the
 segment the window is to be drawn into. The size is likewise the server's: the request is a
 hint, clamped to at least 80×40 and to what fits on screen.
+
+`flags` is `UI_WINDOW_*`, and it is the one field of this protocol that is validated rather
+than ignored:
+
+```c
+#define UI_WINDOW_DECORATED  0
+#define UI_WINDOW_BORDERLESS (1 << 0)
+```
+
+A bit the server does not know closes the connection, on the reasoning that a client asking
+for a kind of window that does not exist would otherwise be handed an ordinary one and never
+find out. `UI_WINDOW_BORDERLESS` asks the server to draw nothing around the window: no
+titlebar, no border, no close button, square corners, and the content area covering the whole
+frame — which in turn means pointer events over all of it, no edge to resize from, and Super
+held down as the only way to drag it. Flags are fixed for the life of the window; there is no
+request to change them.
 
 The client waits for the configure, stepping over anything else that turns up rather than
 treating it as a protocol error — a client with no window yet has nothing to do with a stray
@@ -289,7 +310,8 @@ typedef struct {
 Coordinates are relative to the content area, which excludes the server-drawn decorations,
 and can legitimately be negative at the moment the pointer leaves. Events go to the window
 under the pointer, regardless of focus, and only while it is over the content area — the
-titlebar, borders and resize grips are the server's.
+titlebar, borders and resize grips are the server's. A `UI_WINDOW_BORDERLESS` window has none
+of those, so its content area and its frame are the same rectangle.
 
 `UI_EV_LEAVE` follows when the pointer stops being over that content area. There is no
 matching enter event: arriving is described by the `UI_EV_POINTER` that follows the pointer

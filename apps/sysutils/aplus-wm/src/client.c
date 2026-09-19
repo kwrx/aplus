@@ -268,7 +268,13 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
     req.title[UI_TITLE_MAX - 1] = '\0';
 
 
-    wm_window_t* win = wm_window_create(client, req.width, req.height, req.title);
+    if (req.flags & ~(uint32_t)UI_WINDOW_BORDERLESS) {
+        fprintf(stderr, "aplus-wm: client asked for window flags this server does not know (%#x)\n", req.flags);
+        return -1;
+    }
+
+
+    wm_window_t* win = wm_window_create(client, req.width, req.height, req.title, req.flags);
 
     if (!win) {
         return -1;

@@ -41,7 +41,9 @@ through `ui_window_pixels()` for the parts a widget cannot express.
 Neither layer draws window decorations. The titlebar, borders, shadow, close button and
 resize grips all belong to `aplus-wm`, and the coordinates a client sees — the size it is
 configured with, the pointer positions it receives — are relative to the content area
-inside them.
+inside them. A window created with `UI_WINDOW_BORDERLESS` gets none of them and is handed
+its whole frame instead — see
+[Borderless windows](window-api.md#borderless-windows).
 
 ## Where the code lives
 
@@ -169,6 +171,7 @@ bindings are worth knowing:
 | `Ctrl+Alt+Q` | Close the focused window (sends it `UI_EVENT_CLOSE`) |
 | `Alt+Tab` | Focus and raise the next window down the stack |
 | `Alt+Shift+Tab` | The same walk, the other way round |
+| `Super`+drag | Move a window from anywhere on it, decorations or not |
 
 Holding `Alt` down keeps the walk going: the order is taken when the first `Tab` arrives and
 does not move again until `Alt` is released, so a second `Tab` reaches the third window rather

@@ -41,6 +41,7 @@ it permanently.
 
 ```c
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title);
+ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, const char* title, uint32_t flags);
 void         ui_window_destroy(ui_window_t* win);
 
 uint32_t* ui_window_pixels(ui_window_t* win);
@@ -48,6 +49,7 @@ int       ui_window_width(ui_window_t* win);
 int       ui_window_height(ui_window_t* win);
 size_t    ui_window_stride(ui_window_t* win);
 uint32_t  ui_window_id(ui_window_t* win);
+uint32_t  ui_window_flags(ui_window_t* win);
 
 int ui_window_set_title(ui_window_t* win, const char* title);
 ```
@@ -61,6 +63,38 @@ constructor and `ui_window_set_title()`.
 
 `ui_window_destroy()` tells the server and detaches the surface. The window id is the server's
 handle for it and the field every event carries.
+
+### Borderless windows
+
+```c
+#define UI_WINDOW_DECORATED  0
+#define UI_WINDOW_BORDERLESS (1 << 0)
+```
+
+`ui_window_create_ex()` is `ui_window_create()` with the kind of window spelled out;
+`ui_window_create()` is exactly the `UI_WINDOW_DECORATED` case of it. A flag the server does
+not know is refused rather than ignored, so asking for something that does not exist fails at
+creation instead of quietly giving you an ordinary window. `ui_window_flags()` reads back what
+a window was created with; nothing changes them afterwards.
+
+With `UI_WINDOW_BORDERLESS` the server draws nothing around the window — no titlebar, no
+border, no close button, and square corners rather than rounded ones. The surface is the whole
+window, which changes three things for a client:
+
+| | Decorated | Borderless |
+|---|---|---|
+| Pointer events | Content area only | Every pixel of the window |
+| Moving | Drag the titlebar, or hold **Super** | Hold **Super** and drag anywhere on it |
+| Resizing | Drag an edge or a corner | Not possible — the created size is the final one |
+
+It still stacks, focuses and casts a shadow like any other window, and `Ctrl+Alt+Q` still
+closes it — which is worth remembering, because without a titlebar button that is the only
+way a user can.
+
+This is the window for a splash screen, a panel or a popup, and for an application that
+would rather draw its own titlebar than accept the server's. What it is not is a transparent
+window: the surface is `CAIRO_FORMAT_RGB24` and opaque, so every pixel inside the rectangle is
+yours to fill and the corners are square because there is no alpha to round them with.
 
 ### The pixels
 
@@ -271,7 +305,8 @@ several routes on it.
   stream of downs with no intervening up.
 - **Pointer events** go to the window under the pointer, whether or not it has focus, and
   only while the pointer is over the **content** area — not the titlebar, borders or resize
-  grips, which the server handles itself.
+  grips, which the server handles itself. A borderless window has none of those, so its
+  content area is the whole window.
 - **`UI_EVENT_LEAVE`** is sent when the pointer stops being over a window's content area.
   There is no matching "enter": arriving somewhere is already described by the
   `UI_EVENT_POINTER` that follows the pointer in. Leaving is the one transition that produces
@@ -286,7 +321,7 @@ several routes on it.
   state, clear it on focus *loss* — the release that would have cleared it goes to whoever has
   focus now.
 - **`UI_EVENT_CLOSE`** comes from the titlebar button or `Ctrl+Alt+Q`. Nothing exits on your
-  behalf.
+  behalf. A borderless window has no button, so the keybinding is the whole of it.
 
 ## Multiple windows
 

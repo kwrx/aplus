@@ -145,8 +145,32 @@ int ui_window_apply_configure(ui_window_t* win) {
 
 
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title) {
+    return ui_window_create_ex(conn, width, height, title, UI_WINDOW_DECORATED);
+}
+
+
+/**
+ * @brief Creates a window of a given kind, blocking until the server has configured it.
+ *
+ * A UI_WINDOW_BORDERLESS window is handed the whole of its frame: nothing is drawn around
+ * it, so there is no titlebar to drag it by and no edge to resize it from, and the size
+ * asked for here is the one it keeps.
+ *
+ * @param conn The connection to create it on.
+ * @param width The width of the content area in pixels, which the server may clamp.
+ * @param height The height of the content area in pixels, which the server may clamp.
+ * @param title The window title, truncated at UI_TITLE_MAX, or NULL.
+ * @param flags UI_WINDOW_*.
+ * @return The window, or NULL with errno set.
+ */
+ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, const char* title, uint32_t flags) {
 
     if (!conn || width <= 0 || height <= 0) {
+        errno = EINVAL;
+        return NULL;
+    }
+
+    if (flags & ~(uint32_t)UI_WINDOW_BORDERLESS) {
         errno = EINVAL;
         return NULL;
     }
@@ -159,6 +183,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
     }
 
     win->conn   = conn;
+    win->flags  = flags;
     win->shm_id = -1;
 
 
@@ -168,6 +193,7 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
 
     req.width  = (uint16_t)width;
     req.height = (uint16_t)height;
+    req.flags  = flags;
 
     if (title) {
         strncpy(req.title, title, UI_TITLE_MAX - 1);
@@ -287,6 +313,10 @@ size_t ui_window_stride(ui_window_t* win) {
 
 uint32_t ui_window_id(ui_window_t* win) {
     return win ? win->id : 0;
+}
+
+uint32_t ui_window_flags(ui_window_t* win) {
+    return win ? win->flags : 0;
 }
 
 
