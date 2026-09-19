@@ -107,19 +107,26 @@ void ui_window_damage_all(ui_window_t* win);
 int  ui_window_commit(ui_window_t* win);
 ```
 
-Damage accumulates into one bounding rectangle, clipped to the window; several calls before
-a commit merge into the box enclosing them all. Damaging two opposite corners therefore
-sends the whole window, which is correct but not cheap — commit in between if the two regions
-are far apart and the space between them has not changed.
+Damage is a set of up to eight rectangles, clipped to the window, not the one box around them
+all. A new rectangle is merged into one already in the set when merging is cheaper than
+keeping the two apart — when the area the union would repaint for nothing is no larger than
+the area the two already overlap on — and kept separate otherwise. When a ninth arrives, the
+cheapest pair in the set is merged to make room.
 
-`ui_window_commit()` names the damaged region and clears it, returning `0` without sending
-anything when there is no damage outstanding. A frame that is drawn but never committed is a
-frame the server never hears about.
+That is what lets a terminal touch a cell at the top and the cursor at the bottom without
+claiming everything between them. The old behaviour is still reachable: damage that really is
+spread over the window collapses into a box the same way, because by then merging is the
+cheaper of the two.
 
-A commit is one fixed-size message whatever the size of the region — the pixels are already
-where the server reads them from, so committing the whole surface costs what committing a
-single character cell costs. There is no reason to be clever about batching frames; the
-reason to keep damage tight is the compositing the server then does, not the message.
+`ui_window_commit()` sends the set and clears it, returning `0` without sending anything when
+there is no damage outstanding. A frame that is drawn but never committed is a frame the
+server never hears about.
+
+A commit is one fixed-size message per rectangle, whatever the size of the region — the pixels
+are already where the server reads them from, so committing the whole surface costs what
+committing a single character cell costs, and a frame costs at most eight of those. There is
+no reason to be clever about batching frames; the reason to keep damage tight is the
+compositing the server then does, not the message.
 
 ### Resizing
 
@@ -227,6 +234,11 @@ typedef struct {
         struct {
             uint8_t focused;
         } focus;
+
+        struct {
+            int16_t dx;
+            int16_t dy;
+        } scroll;
     };
 
 } ui_event_t;
@@ -237,6 +249,7 @@ typedef struct {
 | `UI_EVENT_CONFIGURE` | `configure` | The window has a new size. Apply it before painting again. |
 | `UI_EVENT_KEY` | `key` | A raw `KEY_*` code from `<aplus/input.h>`, down or up. Focused window only. |
 | `UI_EVENT_POINTER` | `pointer` | Position relative to the content area, plus the button mask. |
+| `UI_EVENT_SCROLL` | `scroll` | A wheel step in detents, positive away from the user. |
 | `UI_EVENT_LEAVE` | — | The pointer has left the content area. |
 | `UI_EVENT_FOCUS` | `focus` | Keyboard focus gained or lost. |
 | `UI_EVENT_CLOSE` | — | A close was requested. The application decides what that means. |
@@ -264,6 +277,11 @@ several routes on it.
   `UI_EVENT_POINTER` that follows the pointer in. Leaving is the one transition that produces
   no event of its own, and without it a client that highlights whatever is under the pointer
   keeps the last thing it highlighted lit forever.
+- **The wheel** arrives as `UI_EVENT_SCROLL` rather than as a field on the pointer event,
+  which goes out on every motion and would carry a zero in it almost always. `dy` counts
+  detents, positive away from the user — the direction that scrolls a view towards its start,
+  so a list subtracts it from its offset. `dx` is the horizontal wheel and is always zero:
+  nothing in the input tree reports one. Scroll events follow the pointer, not the focus.
 - **`UI_EVENT_FOCUS`** on gain says nothing about where the pointer is. If you track modifier
   state, clear it on focus *loss* — the release that would have cleared it goes to whoever has
   focus now.

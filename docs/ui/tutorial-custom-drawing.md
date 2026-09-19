@@ -53,11 +53,13 @@ void ui_window_damage_all(ui_window_t* win);
 int  ui_window_commit(ui_window_t* win);
 ```
 
-Damage accumulates into one bounding rectangle — several calls before a commit merge into
-the box that encloses them all. `ui_window_commit()` names that region and clears it,
-returning `0` with nothing sent when no damage is outstanding. The message is a rectangle and
-nothing else (see [protocol.md](protocol.md#commits)), so committing a whole surface costs no
-more than committing one glyph.
+Damage accumulates into a set of up to eight rectangles, which merge into each other only
+where merging is cheaper than keeping them apart — two far-apart corners stay two rectangles
+rather than becoming the box around them (see
+[window-api.md](window-api.md#damage-and-commits)). `ui_window_commit()` sends the set and
+clears it, returning `0` with nothing sent when no damage is outstanding. Each message is a
+rectangle and nothing else (see [protocol.md](protocol.md#commits)), so committing a whole
+surface costs no more than committing one glyph.
 
 Nothing reaches the screen without a commit. A frame that is drawn but never committed is a
 frame the server never hears about.

@@ -85,14 +85,14 @@ typedef struct {
 |---|---|
 | `background` | The window backdrop. `ui_view_present()` paints this across every region it repaints. |
 | `surface` | A panel raised on the backdrop. The default panel colour. |
-| `surface_sunken` | A well cut into the backdrop — a display, a text area, anything that should read as recessed. |
-| `primary` / `on_primary` | The accent, for the one control on a screen that is the point of the screen. `UI_BUTTON_STYLE_PRIMARY`. |
-| `secondary` / `on_secondary` | Ordinary controls. `UI_BUTTON_STYLE_DEFAULT`. |
+| `surface_sunken` | A well cut into the backdrop — a list, a display, a text area, anything that should read as recessed. The list's background. |
+| `primary` / `on_primary` | The accent, for the one control on a screen that is the point of the screen. `UI_BUTTON_STYLE_PRIMARY`, and the selected row of a focused list. |
+| `secondary` / `on_secondary` | Ordinary controls. `UI_BUTTON_STYLE_DEFAULT`, and the selected row of a list that does not hold the keyboard. |
 | `danger` / `on_danger` | Destructive controls. `UI_BUTTON_STYLE_DANGER`. |
 | `hover` / `active` | State washes, composited over whatever a control is already painted with. |
-| `border` | Panel borders; the default border colour. |
-| `focus_ring` | Declared for a focus indicator the widget set does not draw yet. |
-| `text` / `text_muted` | The default label colour, and a second one for secondary text. |
+| `border` | Panel borders, the list's own border and its scrollbar thumb; the default border colour. |
+| `focus_ring` | What a widget holding the keyboard outlines itself with. The list swaps its border for it when focused. |
+| `text` / `text_muted` | The default label colour, and a second one for secondary text — a list's detail column, among others. |
 
 The `on_*` colours travel with their fill. A style resolves to the pair, so it is not
 possible for a caller to pick a legible-looking fill and an illegible label to sit on it.
@@ -257,6 +257,11 @@ that is invisible on white surfaces and wrong everywhere else.
 **Disabled controls have to stay legible.** `disabled_fade` pulls a colour towards
 `background`; a fill that is already close to the background disappears entirely at 0.55.
 Check a disabled default-style button, which is the closest pair in most schemes.
+
+**A focused list has to look focused.** The selected row moves from `secondary` to `primary`
+and the border from `border` to `focus_ring` when a list takes the keyboard. A scheme whose
+accent is close to its ordinary control colour loses that distinction entirely, and the arrow
+keys start moving a selection with nothing on screen saying why.
 
 A theme does not have to be light or dark to be worth writing. Bumping `font_size` and
 `corner_radius` alone, with the default colours, is a legitimate theme — and the only way to

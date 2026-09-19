@@ -156,6 +156,11 @@ An adaptive layout usually means showing fewer things rather than shrinking ever
 testing and invalidates the rectangle it was occupying, so what was behind it is repainted.
 It does not move it: the widget keeps its geometry and comes back where it was.
 
+What it does not keep is the hover, the press or the keyboard focus — a widget hidden while it
+held any of those gives them up, exactly as a disabled one does. Nothing is handed back when
+it reappears, so a layout that hides whatever had the keyboard has to decide where the
+keyboard goes next.
+
 Placing a hidden widget is harmless, so the simplest correct layout callback places
 everything unconditionally and only toggles visibility.
 
@@ -167,9 +172,11 @@ typedef bool (*ui_key_fn)(ui_view_t* view, uint16_t vkey, bool down, void* user)
 void ui_view_on_key(ui_view_t* view, ui_key_fn fn, void* user);
 ```
 
-One callback for the whole window. There is no keyboard focus between widgets and no
-built-in key handling anywhere in the view, so without this callback a window is
-pointer-only.
+One callback for the whole window, and the last stop for a key rather than the first. A view
+can give one widget the keyboard with `ui_view_focus()`, and a list takes one by being clicked;
+keys reach that widget first and arrive here only when it declines them — see
+[widgets.md](widgets.md#keyboard-focus). With nothing focused, which is how a view starts,
+every key comes straight here, and without this callback a window is pointer-only.
 
 `vkey` is a raw `KEY_*` code from `<aplus/input.h>`, exactly as it came out of `/dev/kbd`.
 The server does not own a keymap — translation stays wherever the characters are actually
@@ -194,9 +201,10 @@ track modifier state, clear it when focus is lost — the release that would hav
 goes to whoever has focus now, and a shift stuck down outlives the window that saw it
 pressed.
 
-Return `true` when you handled the key. Nothing in the library acts on the return value
-today; it is there so that a future view-level binding can tell whether the application
-already claimed the key.
+Return `true` when you handled the key. Nothing in the library acts on the return value of
+*this* callback — it is the last handler in the chain — but the same convention is what the
+chain above it runs on: a focused widget returning `false` is how a key it does not use gets
+here at all.
 
 ### Binding keys to buttons
 

@@ -127,8 +127,8 @@
 - [ ] NTP Time Daemon
 - [ ] I/O Sync Daemon
 - [ ] HTTP Server
-- [ ] Graphics UI Server
-- [ ] Graphics UI Toolkit
+- [x] Graphics UI Server
+- [x] Graphics UI Toolkit
 - [ ] Package Manager
 
 ### Porting

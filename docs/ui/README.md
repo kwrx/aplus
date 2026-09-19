@@ -10,10 +10,10 @@ list of things that draw themselves and say when they have changed. An applicati
 the layer that fits and never has to see the other.
 
 ```
-   aplus-calculator          aplus-terminal              ui-test
-          │                        │                        │
-          │   <aplus/ui-widgets.h> │                        │  <aplus/ui.h>
-          └────────────────── libui (-lui) ─────────────────┘
+   aplus-explorer   aplus-calculator   aplus-terminal         ui-test
+          │                 │                 │                  │
+          │       <aplus/ui-widgets.h>        │                  │  <aplus/ui.h>
+          └─────────────────┴─────────────────┴─ libui (-lui) ───┘
                                    │
           control:  AF_UNIX /tmp/aplus-wm.sock
           pixels:   System V shared memory, one segment per window
@@ -32,7 +32,7 @@ commit is a damage rectangle rather than a frame.
 | | header | what it gives you | what it costs |
 |---|---|---|---|
 | **Surface layer** | `<aplus/ui.h>` | A connection, a window, a shared `uint32_t*` you write pixels into, damage tracking, commits, and an event queue. | You draw everything, including text. |
-| **Widget layer** | `<aplus/ui-widgets.h>` | A view over that surface, a themed panel/label/button set, a grid, hit testing, damage tracking per widget, and an event loop. | Cairo and FreeType get linked in. |
+| **Widget layer** | `<aplus/ui-widgets.h>` | A view over that surface, a themed panel/label/button/list set, a grid, hit testing, keyboard focus, damage tracking per widget, and an event loop. | Cairo and FreeType get linked in. |
 
 The widget layer is built on the public surface API and nothing else, so the two mix
 freely: a view can be driven from your own event loop, and the raw pixels stay reachable
@@ -54,11 +54,13 @@ inside them.
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |
-| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c` | The widgets themselves |
+| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c` | The widgets themselves |
 | `lib/aplus/ui/ui_theme.c` | The colour scheme and the default dark theme |
 | `lib/aplus/ui/ui_draw.c`, `ui_font.c` | Cairo drawing helpers and the FreeType face cache |
+| `lib/aplus/ui/ui_damage.c` | The damage set both the window and the view keep |
 | `apps/sysutils/aplus-wm/` | The server |
-| `apps/sysutils/aplus-calculator/` | The reference widget-layer application |
+| `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
+| `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/test/ui-test/` | The reference surface-layer application |
 
 ## Building against it
@@ -107,6 +109,33 @@ There is nothing else to register. `apps/Makefile` finds every directory under
 `apps/{core,sysutils,extra,test}` that contains a `Makefile`, so a new application is a new
 directory and nothing more.
 
+A graphical application also ships a desktop entry, which is what lets something else start it
+by name rather than by path. `RESOURCES` is a prerequisite of the binary, so naming the
+installed file there is enough to have it built:
+
+```make
+RESOURCES += $(SYSROOT)/usr/share/applications/ui-hello.desktop
+
+$(SYSROOT)/usr/share/applications/ui-hello.desktop: assets/ui-hello.desktop
+	$(QUIET)install -d $(@D)
+	$(QUIET)install -m 644 $< $@
+```
+
+```ini
+[Desktop Entry]
+Name=Hello
+Comment=Hello application
+Exec=ui-hello
+Terminal=false
+Type=Application
+Categories=Utility;
+```
+
+`aplus-xopen` is what reads them: given a path it picks a handler — a directory opens in
+`aplus-explorer`, a `.desktop` file runs the `Exec` it names, through `aplus-terminal` when it
+asks for one — and `execvp()`s it, so the caller ends up with the application as its own child
+rather than with an opener in between.
+
 ## Running it
 
 The display server has to be running before any client. `apps/core/init/scripts/init.sh`
@@ -138,7 +167,9 @@ most recently used windows.
 For a headless run with the console log captured, `./makew run-headless`.
 
 `ui-test` is the smoke test for the pair of them: it opens a window, paints a gradient and
-prints every event, so a window that appears and reports keys means the protocol works.
+prints the keys, pointer, focus and configure events it receives, so a window that appears and
+reports keys means the protocol works. It says nothing about leave or scroll events; a wheel
+is easier to watch from a list in `aplus-explorer`.
 `ui-test --once` paints one frame and exits, which is what makes the surface lifecycle
 drivable from a script — every window costs a shared memory segment that both ends have to let
 go of, and `SHM_SEGMENT_MAX` is 64, so a loop of a hundred that still creates its hundredth
@@ -167,11 +198,15 @@ window is a lifecycle with no leak in it.
 
 ## What is not here
 
-The widget set is three widgets: a panel, a label and a button. There is no text entry, no
-checkbox, no scrollbar, no menu, no nested container, and no layout engine beyond the grid
-helper — a layout callback positions everything in absolute coordinates. Labels are one
-line, clipped, and never wrap. A view has no notion of keyboard focus between widgets: keys
-arrive at one callback for the whole window and it decides what they mean.
+The widget set is four widgets: a panel, a label, a button and a list. There is no text entry,
+no checkbox, no menu, no nested container, and no layout engine beyond the grid helper — a
+layout callback positions everything in absolute coordinates. Labels are one line, clipped,
+and never wrap. There is no standalone scrollbar either: the list has one, but it belongs to
+the list and cannot be put on anything else.
 
-These are gaps rather than decisions, and the shape of the library is meant to absorb them:
-a new widget is a `ui_widget_kind_t`, a draw function and a few setters.
+Keyboard focus exists but does not move by itself. A click focuses the widget it lands on, and
+`ui_view_focus()` moves it deliberately; nothing walks the widgets on Tab, and the view has no
+idea what order they would be walked in.
+
+These are gaps rather than decisions, and the shape of the library is meant to absorb them: a
+new widget is a `ui_widget_kind_t`, a table of hooks and a few setters.

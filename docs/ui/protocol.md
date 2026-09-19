@@ -73,6 +73,7 @@ have the high bit set.
 | `0x8005` | `UI_EV_FOCUS` | `ui_msg_focus_t` |
 | `0x8006` | `UI_EV_CLOSE` | `ui_msg_window_t` |
 | `0x8007` | `UI_EV_LEAVE` | `ui_msg_window_t` |
+| `0x8008` | `UI_EV_SCROLL` | `ui_msg_scroll_t` |
 
 Every payload except the hello and the create-window begins with a `uint32_t window_id`.
 
@@ -88,7 +89,7 @@ server → UI_EV_HELLO    { version }
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION 2
+#define UI_PROTOCOL_VERSION 3
 ```
 
 The client sends its version and compares what comes back; a mismatch is fatal on the client
@@ -100,6 +101,12 @@ a trailing payload, cut into tiles small enough to fit the socket buffer, and th
 stitched them back together into its own copy of the surface. In version 2 the surface is
 shared memory and a commit is the rectangle alone. The two are not compatible in either
 direction, which is what the bump is for.
+
+Version 3 added `UI_EV_SCROLL`. That one is not a break in either direction — an older client
+skips an event it does not know, and a server that never sends one is a mouse without a wheel
+— so the bump is bookkeeping rather than a barrier. Both ends are built and installed
+together here, and a single number that names the whole protocol is easier to reason about
+than a list of which features a peer happens to have.
 
 Unlike every other read in the client, the hello reply is read without skipping unknown
 messages: nothing else can legitimately arrive before it.
@@ -228,6 +235,13 @@ damages that region of the screen. One fixed-size message however much was drawn
 full-screen repaint costs what a single character cell costs. The server validates the payload
 length against `sizeof()` and drops the message otherwise.
 
+A frame can be more than one commit. `libui` keeps a handful of damage rectangles rather than
+the box around them all, and sends one message per rectangle, each carrying the same serial —
+see [Damage and commits](window-api.md#damage-and-commits). The server has always acted on
+each commit on its own, so nothing about this is new on its side: a terminal that changed a
+cell at the top and the cursor at the bottom now says so in two messages instead of claiming
+everything between them.
+
 ### The serial
 
 `serial` is echoed back from the last `UI_EV_CONFIGURE` the client drew against. The server
@@ -280,6 +294,24 @@ titlebar, borders and resize grips are the server's.
 `UI_EV_LEAVE` follows when the pointer stops being over that content area. There is no
 matching enter event: arriving is described by the `UI_EV_POINTER` that follows the pointer
 in, and leaving is the one transition that would otherwise produce nothing.
+
+```c
+typedef struct {
+    uint32_t window_id;
+    int16_t dx;
+    int16_t dy;
+} __attribute__((packed)) ui_msg_scroll_t;
+```
+
+A wheel step, in detents, going to the window under the pointer like any other pointer input.
+Positive `dy` is away from the user, which scrolls a view towards its start; `dx` is the
+horizontal wheel, which no input device in the tree produces today. It is a message of its own
+rather than a field in `ui_msg_pointer_t` because a pointer event goes out on every motion,
+and a client would have to tell a real detent from the zero carried by the other hundred.
+
+The wheel reaches the server as `ev_rel.z` from `/dev/mouse`. Both the PS/2 and the
+virtio-input drivers fill it, and the PS/2 one is normalised to the sign virtio-input already
+used, so the convention above holds whatever the pointer is.
 
 `UI_EV_CONFIGURE` is sent on creation, and once at the end of a resize drag rather than on
 every mouse packet — a client repainting at a hundred sizes a second is the thing being

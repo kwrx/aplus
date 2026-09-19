@@ -252,9 +252,11 @@ including any hover or press it was holding at the moment it was disabled.
     const int status = ui_view_run(view);
 ```
 
-`ui_view_run()` is: paint whatever is dirty, commit it, block for an event, dispatch it,
-repeat, until the window is closed or the server goes away. It returns `0` on a clean close
-and `-1` otherwise, with `errno` set.
+`ui_view_run()` is: paint whatever is dirty, commit it, block for an event, dispatch it, take
+whatever else is already queued behind it, repeat, until the window is closed or the server
+goes away. It returns `0` on a clean close and `-1` otherwise, with `errno` set. Draining
+before painting again is what keeps a burst of pointer motion down to one frame instead of
+one frame each.
 
 Order matters at startup. `ui_view_on_layout()` runs the callback straight away — widgets
 created before it have no geometry, and everything downstream assumes a laid-out tree — so
@@ -515,5 +517,6 @@ For an automated run with the console captured instead of a display, `./makew ru
 ## Where to go next
 
 - The keyboard, spanning grid cells, and a layout that adapts: [tutorial-layout.md](tutorial-layout.md).
+- A list of things to pick from, and the focus that comes with it: [widgets.md](widgets.md#list).
 - Drawing something the widgets cannot express: [tutorial-custom-drawing.md](tutorial-custom-drawing.md).
 - The full widget reference: [widgets.md](widgets.md).
