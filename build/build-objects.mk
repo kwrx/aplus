@@ -1,12 +1,16 @@
 .PHONY: all clean distclean
 
 
+.DEFAULT_GOAL := all
+
+INSTALLED = $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))
+
 all: $(TARGET)
 
 install: $(TARGET)
-	$(QUIET)echo "    INSTALL $(TARGET) -> $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))"
+	$(QUIET)echo "    INSTALL $(TARGET) -> $(INSTALLED)"
 	$(QUIET)mkdir -p $(DESTDIR)
-	$(QUIET)install -C $(TARGET) $(DESTDIR)/$(patsubst %.bin,%,$(TARGET))
+	$(QUIET)install -C $(TARGET) $(INSTALLED)
 
 clean:
 	$(QUIET)echo "    CLEAN   $(TARGET)"
@@ -14,7 +18,7 @@ clean:
 	$(QUIET)$(RM) *.o *.d $(TARGET)
 
 distclean: clean
-	$(QUIET)$(RM) $(DESTDIR)/$(TARGET)
+	$(QUIET)$(RM) $(INSTALLED)
 
 
 
@@ -60,7 +64,6 @@ endif
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.cpp %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
-	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.cxx %.d
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"

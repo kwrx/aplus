@@ -11,7 +11,7 @@ RESOURCES += $(SYSROOT)/usr/share/applications/aplus-calculator.desktop
 $(SYSROOT)/usr/share/applications/aplus-calculator.desktop: assets/aplus-calculator.desktop
 	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)install -d $(@D)
-	$(QUIET)install -m 644 -C $< $@
+	$(QUIET)install -m 644 $< $@
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk

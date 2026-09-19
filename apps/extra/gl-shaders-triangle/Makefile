@@ -10,7 +10,7 @@ RESOURCES += $(SYSROOT)/usr/share/applications/gl-shaders-triangle.desktop
 $(SYSROOT)/usr/share/applications/gl-shaders-triangle.desktop: assets/gl-shaders-triangle.desktop
 	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)install -d $(@D)
-	$(QUIET)install -m 644 -C $< $@
+	$(QUIET)install -m 644 $< $@
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk
