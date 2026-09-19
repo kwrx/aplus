@@ -307,3 +307,176 @@ size_t procfs_task_list(pid_t* ids, size_t max) {
 
     return n;
 }
+
+
+/**
+ * @brief Writes the absolute path an inode sits at, walking up its parent chain.
+ *
+ * @param inode The inode to name.
+ * @param root The root the path is written relative to, as the owning task sees it.
+ * @param buf Receives the path, NUL terminated.
+ * @param size The size of the buffer.
+ * @return The length of the path, or -1 with errno set.
+ */
+static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t size) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(buf);
+
+    if (unlikely(size < 2))
+        return errno = ENAMETOOLONG, -1;
+
+
+    if (inode->flags & INODE_FLAGS_ANONYMOUS)
+        return (ssize_t)snprintf(buf, size, "anon_inode:[%lu]", (unsigned long)inode->ino);
+
+
+    size_t pos = size - 1;
+
+    buf[pos] = '\0';
+
+    for (inode_t* i = inode; i != root && i->parent; i = i->parent) {
+
+        size_t len = strlen(i->name);
+
+        if (unlikely(len + 1 > pos))
+            return errno = ENAMETOOLONG, -1;
+
+        pos -= len;
+        memcpy(&buf[pos], i->name, len);
+
+        buf[--pos] = '/';
+    }
+
+    if (pos == size - 1)
+        buf[--pos] = '/';
+
+    memmove(buf, &buf[pos], size - pos);
+
+    return (ssize_t)(size - pos - 1);
+}
+
+
+bool procfs_task_fd_exists(pid_t pid, int fd) {
+
+    if (unlikely(pid <= 0))
+        return false;
+
+    if (unlikely(fd < 0 || fd >= CONFIG_OPEN_MAX))
+        return false;
+
+
+    cpu_foreach (cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->tid != pid || t->status == TASK_STATUS_DEAD)
+                    continue;
+
+
+                bool open = false;
+
+                shared_ptr_access(t->fd, fds, {
+                    open = fds->descriptors[fd].ref != NULL;
+                });
+
+                return open;
+            }
+        }
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief Snapshots the descriptors a task currently holds open.
+ *
+ * @param pid The tid of the task to inspect.
+ * @param out Receives the descriptor numbers.
+ * @param max The number of descriptors the array holds.
+ * @return The number of descriptors written.
+ */
+size_t procfs_task_fd_list(pid_t pid, int* out, size_t max) {
+
+    DEBUG_ASSERT(out);
+
+    if (unlikely(pid <= 0))
+        return 0;
+
+
+    cpu_foreach (cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->tid != pid || t->status == TASK_STATUS_DEAD)
+                    continue;
+
+
+                size_t n = 0;
+
+                shared_ptr_access(t->fd, fds, {
+                    for (int i = 0; i < CONFIG_OPEN_MAX && n < max; i++) {
+
+                        if (fds->descriptors[i].ref == NULL)
+                            continue;
+
+                        out[n++] = i;
+                    }
+                });
+
+                return n;
+            }
+        }
+    }
+
+    return 0;
+}
+
+
+ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
+
+    DEBUG_ASSERT(buf);
+
+    if (unlikely(pid <= 0))
+        return errno = ESRCH, -1;
+
+    if (unlikely(fd < 0 || fd >= CONFIG_OPEN_MAX))
+        return errno = EBADF, -1;
+
+
+    cpu_foreach (cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->tid != pid || t->status == TASK_STATUS_DEAD)
+                    continue;
+
+
+                inode_t* root = NULL;
+
+                shared_ptr_nullable_access(t->fs, fs, {
+                    root = fs->root;
+                });
+
+
+                ssize_t e = (errno = EBADF, -1);
+
+                shared_ptr_access(t->fd, fds, {
+                    if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
+                        e = __inode_path(fds->descriptors[fd].ref->inode, root, buf, size);
+                });
+
+                return e;
+            }
+        }
+    }
+
+    return errno = ESRCH, -1;
+}

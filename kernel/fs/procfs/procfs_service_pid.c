@@ -74,6 +74,7 @@ typedef struct procfs_pid_dir {
 
     pid_t pid;
     inode_t* children[PROCFS_PID_ENTRIES];
+    inode_t* fd;
 
 } procfs_pid_dir_t;
 
@@ -94,6 +95,15 @@ static inode_t* procfs_service_pid_finddir(inode_t* inode, const char* name) {
     procfs_pid_dir_t* dir     = service->arg;
 
     DEBUG_ASSERT(dir);
+
+
+    if (strcmp(name, "fd") == 0) {
+
+        if (dir->fd == NULL)
+            dir->fd = procfs_service_pid_fd_inode(inode, dir->pid);
+
+        return dir->fd;
+    }
 
 
     for (size_t i = 0; i < PROCFS_PID_ENTRIES; i++) {
@@ -166,6 +176,8 @@ static ssize_t procfs_service_pid_readdir(inode_t* inode, struct dirent* e, off_
     for (size_t j = 0; j < PROCFS_PID_ENTRIES; j++) {
         __emit(PROCFS_INO_PID_FILE(dir->pid, procfs_pid_table[j].slot), DT_REG, procfs_pid_table[j].name);
     }
+
+    __emit(PROCFS_INO_PID_FILE(dir->pid, PROCFS_PID_SLOT_FD), DT_DIR, "fd");
 
 #undef __emit
 
@@ -240,6 +252,8 @@ static void procfs_service_pid_cache_release(cache_t* c, inode_t* parent, cache_
                 kfree(dir->children[i]->userdata);
                 kfree(dir->children[i]);
             }
+
+            procfs_service_pid_fd_free(dir->fd);
 
             kfree(dir);
         }

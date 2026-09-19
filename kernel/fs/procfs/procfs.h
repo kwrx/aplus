@@ -122,6 +122,12 @@ typedef struct procfs_task {
 #define PROCFS_INO_STATIC(slot)     ((ino_t)(2 + (slot)))
 #define PROCFS_INO_PID(pid)         ((((ino_t)(pid)) << 8) | 0xFF)
 #define PROCFS_INO_PID_FILE(pid, s) ((((ino_t)(pid)) << 8) | ((ino_t)(s)))
+#define PROCFS_INO_PID_FD(pid, fd)  ((((ino_t)(pid)) << 24) | (((ino_t)(fd)) << 8) | 0xFE)
+
+/**
+ * @brief The slot /proc/<pid>/fd takes in the per-pid inode numbering.
+ */
+#define PROCFS_PID_SLOT_FD 6
 
 
 typedef struct procfs_root_entry {
@@ -141,6 +147,10 @@ bool procfs_pid_exists(pid_t pid);
 int procfs_task_snapshot(pid_t pid, procfs_task_t* out);
 size_t procfs_task_list(pid_t* ids, size_t max);
 char procfs_task_state(long status);
+
+bool procfs_task_fd_exists(pid_t pid, int fd);
+size_t procfs_task_fd_list(pid_t pid, int* out, size_t max);
+ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size);
 
 uint64_t procfs_ticks(const struct timespec* ts);
 
@@ -164,6 +174,9 @@ inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, in
 inode_t* procfs_service_pid_inode(inode_t* parent, pid_t pid);
 inode_t* procfs_service_self_inode(inode_t* parent);
 void procfs_service_pid_init(inode_t* parent);
+
+inode_t* procfs_service_pid_fd_inode(inode_t* parent, pid_t pid);
+void procfs_service_pid_fd_free(inode_t* inode);
 
 /**
  * @brief Per-pid file fetches, shared with the /proc/<pid> directory table.
