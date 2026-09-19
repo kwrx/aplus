@@ -64,6 +64,11 @@
  */
 #define XOPEN_TERMINAL "aplus-terminal"
 
+/**
+ * @brief What shows a picture.
+ */
+#define XOPEN_IMAGE_VIEWER "aplus-image-viewer"
+
 
 /**
  * @brief The exit codes, which are the ones xdg-open(1) is specified to use.
@@ -89,6 +94,7 @@ typedef enum {
     XOPEN_KIND_UNKNOWN = 0,
     XOPEN_KIND_DIRECTORY,
     XOPEN_KIND_DESKTOP,
+    XOPEN_KIND_IMAGE,
 
 } xopen_kind_t;
 
@@ -118,6 +124,16 @@ static const struct {
 } xopen_types[] = {
 
     {".desktop", XOPEN_KIND_DESKTOP},
+    {".png",     XOPEN_KIND_IMAGE  },
+    {".jpg",     XOPEN_KIND_IMAGE  },
+    {".jpeg",    XOPEN_KIND_IMAGE  },
+    {".bmp",     XOPEN_KIND_IMAGE  },
+    {".gif",     XOPEN_KIND_IMAGE  },
+    {".tiff",    XOPEN_KIND_IMAGE  },
+    {".tif",     XOPEN_KIND_IMAGE  },
+    {".ico",     XOPEN_KIND_IMAGE  },
+    {".svg",     XOPEN_KIND_IMAGE  },
+    {".webp",    XOPEN_KIND_IMAGE  },
 };
 
 
@@ -443,6 +459,7 @@ int main(int argc, char** argv) {
 
 
     char* manager[] = {(char*)XOPEN_FILE_MANAGER, (char*)path, NULL};
+    char* viewer[]  = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
 
     switch (xopen_kind(path, &st)) {
 
@@ -451,6 +468,9 @@ int main(int argc, char** argv) {
 
         case XOPEN_KIND_DESKTOP:
             return xopen_desktop(path);
+
+        case XOPEN_KIND_IMAGE:
+            return xopen_run(viewer);
 
         default:
             break;
