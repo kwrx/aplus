@@ -21,29 +21,24 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fcntl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#ifndef NO_CAIRO_EXTENSION
+#include <cairo/cairo.h>
 
-    #include <fcntl.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <sys/stat.h>
-    #include <sys/types.h>
-    #include <unistd.h>
+#include <webp/decode.h>
+#include <webp/encode.h>
+#include <webp/types.h>
 
-    #include <cairo/cairo.h>
+#include <aplus/cairo-ext/cairo-webp.h>
 
-    #include <webp/decode.h>
-    #include <webp/encode.h>
-    #include <webp/types.h>
-
-    #include <aplus/base.h>
-    #include <aplus/cairo-ext/cairo-cache.h>
-    #include <aplus/cairo-ext/cairo-webp.h>
-
-    #ifndef O_BINARY
-        #define O_BINARY 0
-    #endif
+#ifndef O_BINARY
+    #define O_BINARY 0
+#endif
 
 
 extern cairo_surface_t* _cairo_surface_create_in_error(cairo_status_t);
@@ -71,11 +66,6 @@ static cairo_surface_t* _cairo_image_surface_decode_webp(void* src, size_t size)
 }
 
 __attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp(const char* filename) {
-    cairo_surface_t* surface;
-    if ((surface = cairo_cache_obtain_resource(filename)))
-        return surface;
-
-
     int fd = open(filename, O_RDONLY | O_BINARY);
     if (fd < 0)
         return _cairo_surface_create_in_error(CAIRO_STATUS_FILE_NOT_FOUND);
@@ -84,7 +74,7 @@ __attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp(cons
     struct stat st;
     fstat(fd, &st);
 
-    void* buf = (void*)__libaplus_malloc(st.st_size);
+    void* buf = (void*)calloc(st.st_size, sizeof(char));
     if (!buf) {
         close(fd);
         return _cairo_surface_create_in_error(CAIRO_STATUS_NO_MEMORY);
@@ -99,10 +89,9 @@ __attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp(cons
     close(fd);
 
 
-    surface = _cairo_image_surface_decode_webp(buf, st.st_size);
+    cairo_surface_t* surface = _cairo_image_surface_decode_webp(buf, st.st_size);
     free(buf);
 
-    cairo_cache_put_resource(filename, surface);
     return surface;
 }
 
@@ -110,5 +99,3 @@ __attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp(cons
 __attribute__((weak)) cairo_surface_t* cairo_image_surface_create_from_webp_stream(cairo_read_func_t read, void* arg) {
     return NULL;
 }
-
-#endif
