@@ -175,6 +175,43 @@ ui_rect_t ui_widget_rect(const ui_widget_t* widget) {
 }
 
 
+/**
+ * @brief Gives up the press, the hover and the keyboard focus a widget holds in its view.
+ *
+ * @param widget The widget leaving the running for input, by being hidden or disabled.
+ */
+
+static void ui_widget_release(ui_widget_t* widget) {
+
+    if (widget->view->pressed == widget) {
+
+        if (widget->ops->on_release) {
+            widget->ops->on_release(widget, 0, 0, false, 0);
+        }
+
+        widget->view->pressed = NULL;
+    }
+
+    if (widget->view->hovered == widget) {
+
+        if (widget->ops->on_hover) {
+            widget->ops->on_hover(widget, false);
+        }
+
+        widget->view->hovered = NULL;
+    }
+
+    if (widget->view->focused == widget) {
+
+        if (widget->ops->on_focus) {
+            widget->ops->on_focus(widget, false);
+        }
+
+        widget->view->focused = NULL;
+    }
+}
+
+
 void ui_widget_set_visible(ui_widget_t* widget, bool visible) {
 
     if (!widget || widget->visible == visible) {
@@ -182,6 +219,10 @@ void ui_widget_set_visible(ui_widget_t* widget, bool visible) {
     }
 
     widget->visible = visible;
+
+    if (!visible) {
+        ui_widget_release(widget);
+    }
 
     ui_widget_invalidate(widget);
 }
@@ -201,33 +242,7 @@ void ui_widget_set_enabled(ui_widget_t* widget, bool enabled) {
     widget->enabled = enabled;
 
     if (!enabled) {
-
-        if (widget->view->pressed == widget) {
-
-            if (widget->ops->on_release) {
-                widget->ops->on_release(widget, 0, 0, false, 0);
-            }
-
-            widget->view->pressed = NULL;
-        }
-
-        if (widget->view->hovered == widget) {
-
-            if (widget->ops->on_hover) {
-                widget->ops->on_hover(widget, false);
-            }
-
-            widget->view->hovered = NULL;
-        }
-
-        if (widget->view->focused == widget) {
-
-            if (widget->ops->on_focus) {
-                widget->ops->on_focus(widget, false);
-            }
-
-            widget->view->focused = NULL;
-        }
+        ui_widget_release(widget);
     }
 
     ui_widget_invalidate(widget);
