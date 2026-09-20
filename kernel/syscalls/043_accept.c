@@ -36,12 +36,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#else
-struct sockaddr;
-typedef uint32_t socklen_t;
-#endif
+#include <aplus/network.h>
+
 
 
 /***

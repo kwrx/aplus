@@ -35,9 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 /***
@@ -59,7 +57,6 @@
 SYSCALL(
     55, getsockopt, long sys_getsockopt(int fd, int level, int optname, char* optval, int* optlen) {
 
-#if defined(CONFIG_HAVE_NETWORK)
         int socket = socket_from_fd(fd);
 
         if (unlikely(socket < 0))
@@ -104,8 +101,4 @@ SYSCALL(
             uio_memcpy_s2u(optval, __optval, __optlen);
 
         return e;
-
-#else
-    return -ENOSYS;
-#endif
     });

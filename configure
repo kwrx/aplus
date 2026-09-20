@@ -433,24 +433,6 @@ else
     buildtype="Release"
 fi
 
-if [ "$CONFIG_HAVE_GUI" == "y" ]; then
-    gui="True"
-else
-    gui="False"
-fi
-
-if [ "$CONFIG_HAVE_NETWORK" == "y" ]; then
-    networking="True"
-else
-    networking="False"
-fi
-
-if [ "$CONFIG_HAVE_SMP" == "y" ]; then
-    smp="True"
-else
-    smp="False"
-fi
-
 echo -e "\
                                                                                                         \n\
 Setup completed!                                                                                        \n\
@@ -465,10 +447,6 @@ Setup completed!                                                                
             Toolchain:      $CONFIG_SYSTEM_PATH_TOOLCHAIN                                               \n\
             Locale:         $CONFIG_SYSTEM_LOCALE                                                       \n\
             Timezone:       $CONFIG_SYSTEM_TIMEZONE                                                     \n\
-                                                                                                        \n\
-            GUI:            $gui                                                                        \n\
-            SMP:            $smp                                                                        \n\
-            Networking:     $networking                                                                 \n\
                                                                                                         \n\
         Run:                                                                                            \n\
             $ ./makew [MAKEARGS]                                                                        \n\

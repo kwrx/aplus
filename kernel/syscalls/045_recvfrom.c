@@ -36,12 +36,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#else
-struct sockaddr;
-typedef uint32_t socklen_t;
-#endif
+#include <aplus/network.h>
 
 
 /***
@@ -72,7 +67,6 @@ SYSCALL(
         }
 
 
-#if defined(CONFIG_HAVE_NETWORK)
         int socket = socket_from_fd(fd);
 
         if (unlikely(socket < 0))
@@ -128,8 +122,4 @@ SYSCALL(
             return -errno;
 
         return e;
-
-#else
-    return -ENOSYS;
-#endif
     });

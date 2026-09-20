@@ -29,51 +29,50 @@
  * One select() loop over the terminal and the server socket, each side framed into whole lines.
  */
 
-#if CONFIG_HAVE_NETWORK
 
-    #include <ctype.h>
-    #include <errno.h>
-    #include <getopt.h>
-    #include <signal.h>
-    #include <stdarg.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <strings.h>
-    #include <time.h>
-    #include <unistd.h>
+#include <ctype.h>
+#include <errno.h>
+#include <getopt.h>
+#include <signal.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
+#include <unistd.h>
 
-    #include <netdb.h>
-    #include <netinet/in.h>
-    #include <sys/select.h>
-    #include <sys/socket.h>
-    #include <sys/types.h>
-
-
-    /**
-     * @brief An IRC line is at most 512 bytes on the wire, CRLF included (RFC 1459 2.3).
-     */
-    #define IRC_LINE_MAX  512
-    #define IRC_PARAM_MAX 16
-    #define IRC_NAME_MAX  128
-    #define IRC_TEXT_MAX  IRC_LINE_MAX
-
-    #define IRC_CTCP '\x01'
-
-    #define IRC_VERSION "aplus-irc 1.0"
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 
-    /**
-     * @brief Colours, emitted only when stdout is a terminal so that redirecting to a file gives clean text.
-     */
-    #define C_RESET "\033[0m"
-    #define C_TIME  "\033[0;90m"
-    #define C_NICK  "\033[1;36m"
-    #define C_SELF  "\033[1;32m"
-    #define C_CHAN  "\033[1;35m"
-    #define C_EVENT "\033[0;33m"
-    #define C_ERROR "\033[1;31m"
-    #define C_INFO  "\033[0;36m"
+/**
+ * @brief An IRC line is at most 512 bytes on the wire, CRLF included (RFC 1459 2.3).
+ */
+#define IRC_LINE_MAX  512
+#define IRC_PARAM_MAX 16
+#define IRC_NAME_MAX  128
+#define IRC_TEXT_MAX  IRC_LINE_MAX
+
+#define IRC_CTCP '\x01'
+
+#define IRC_VERSION "aplus-irc 1.0"
+
+
+/**
+ * @brief Colours, emitted only when stdout is a terminal so that redirecting to a file gives clean text.
+ */
+#define C_RESET "\033[0m"
+#define C_TIME  "\033[0;90m"
+#define C_NICK  "\033[1;36m"
+#define C_SELF  "\033[1;32m"
+#define C_CHAN  "\033[1;35m"
+#define C_EVENT "\033[0;33m"
+#define C_ERROR "\033[1;31m"
+#define C_INFO  "\033[0;36m"
 
 
 struct irc_message {
@@ -1246,14 +1245,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-#else
-
-    #include <stdio.h>
-
-int main(int argc, char** argv) {
-
-    fprintf(stderr, "irc: network support is not enabled in this build\n");
-    return 1;
-}
-
-#endif

@@ -66,9 +66,6 @@ static int total    = 0;
     }
 
 
-#if CONFIG_HAVE_NETWORK
-
-
 static int make_socket(void) {
     return socket(AF_INET, SOCK_STREAM, 0);
 }
@@ -535,13 +532,3 @@ int main(int argc, char** argv) {
 
     return failures ? 1 : 0;
 }
-
-#else
-
-int main(int argc, char** argv) {
-
-    fprintf(stderr, "socket-test: network support is not enabled in this build\n");
-    return 1;
-}
-
-#endif

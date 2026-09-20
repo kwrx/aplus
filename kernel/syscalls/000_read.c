@@ -37,9 +37,7 @@
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 

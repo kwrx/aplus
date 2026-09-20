@@ -36,9 +36,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 /***
@@ -64,7 +62,6 @@ SYSCALL(
             return unix_getpeername(us, sockaddr, (uint32_t*)socklen);
 
 
-#if defined(CONFIG_HAVE_NETWORK)
         int socket = socket_from_fd(fd);
 
         if (unlikely(socket < 0))
@@ -94,8 +91,4 @@ SYSCALL(
         uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
 
         return e;
-
-#else
-    return -ENOSYS;
-#endif
     });

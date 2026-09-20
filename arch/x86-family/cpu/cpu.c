@@ -395,9 +395,7 @@ __percpu void arch_cpu_init(cpuid_t index) {
     PANIC_ASSERT(cpu_has(index, X86_FEATURE_PAE));
 #endif
 
-#if defined(CONFIG_HAVE_SMP)
     PANIC_ASSERT(cpu_has(index, X86_FEATURE_RDTSCP));
-#endif
 
 
 
@@ -423,12 +421,8 @@ __percpu void arch_cpu_init(cpuid_t index) {
         x86_set_cr4(x86_get_cr4() | X86_CR4_SMAP_MASK);
 #endif
 
-
-#if defined(CONFIG_HAVE_SMP)
     if (cpu_has(index, X86_FEATURE_RDTSCP))
         x86_wrmsr(X86_MSR_TSC_AUX, index);
-#endif
-
 
 #if defined(__x86_64__)
 
@@ -466,7 +460,6 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
 
     uint64_t id;
 
-#if defined(CONFIG_HAVE_SMP)
     #if defined(CONFIG_X86_HAVE_RDPID)
     __asm__ __volatile__("rdpid %0" : "=r"(id));
     #else
@@ -477,9 +470,6 @@ __percpu cpuid_t arch_cpu_get_current_id(void) {
     __unused_param(tsc_lo);
     __unused_param(tsc_hi);
     #endif
-#else
-    id = 0ULL;
-#endif
 
     return (cpuid_t)id;
 }

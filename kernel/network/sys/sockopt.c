@@ -26,51 +26,49 @@
 #include <aplus/errno.h>
 #include <stdint.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-
-    #include <aplus/network.h>
+#include <aplus/network.h>
 
 
-    #define LINUX_SOL_SOCKET 1
+#define LINUX_SOL_SOCKET 1
 
-    #define LINUX_SO_DEBUG        1
-    #define LINUX_SO_REUSEADDR    2
-    #define LINUX_SO_TYPE         3
-    #define LINUX_SO_ERROR        4
-    #define LINUX_SO_DONTROUTE    5
-    #define LINUX_SO_BROADCAST    6
-    #define LINUX_SO_SNDBUF       7
-    #define LINUX_SO_RCVBUF       8
-    #define LINUX_SO_KEEPALIVE    9
-    #define LINUX_SO_OOBINLINE    10
-    #define LINUX_SO_NO_CHECK     11
-    #define LINUX_SO_LINGER       13
-    #define LINUX_SO_REUSEPORT    15
-    #define LINUX_SO_RCVLOWAT     18
-    #define LINUX_SO_SNDLOWAT     19
-    #define LINUX_SO_RCVTIMEO     20
-    #define LINUX_SO_SNDTIMEO     21
-    #define LINUX_SO_BINDTODEVICE 25
-    #define LINUX_SO_ACCEPTCONN   30
+#define LINUX_SO_DEBUG        1
+#define LINUX_SO_REUSEADDR    2
+#define LINUX_SO_TYPE         3
+#define LINUX_SO_ERROR        4
+#define LINUX_SO_DONTROUTE    5
+#define LINUX_SO_BROADCAST    6
+#define LINUX_SO_SNDBUF       7
+#define LINUX_SO_RCVBUF       8
+#define LINUX_SO_KEEPALIVE    9
+#define LINUX_SO_OOBINLINE    10
+#define LINUX_SO_NO_CHECK     11
+#define LINUX_SO_LINGER       13
+#define LINUX_SO_REUSEPORT    15
+#define LINUX_SO_RCVLOWAT     18
+#define LINUX_SO_SNDLOWAT     19
+#define LINUX_SO_RCVTIMEO     20
+#define LINUX_SO_SNDTIMEO     21
+#define LINUX_SO_BINDTODEVICE 25
+#define LINUX_SO_ACCEPTCONN   30
 
-    #define LINUX_IP_TOS             1
-    #define LINUX_IP_TTL             2
-    #define LINUX_IP_PKTINFO         8
-    #define LINUX_IP_MULTICAST_IF    32
-    #define LINUX_IP_MULTICAST_TTL   33
-    #define LINUX_IP_MULTICAST_LOOP  34
-    #define LINUX_IP_ADD_MEMBERSHIP  35
-    #define LINUX_IP_DROP_MEMBERSHIP 36
+#define LINUX_IP_TOS             1
+#define LINUX_IP_TTL             2
+#define LINUX_IP_PKTINFO         8
+#define LINUX_IP_MULTICAST_IF    32
+#define LINUX_IP_MULTICAST_TTL   33
+#define LINUX_IP_MULTICAST_LOOP  34
+#define LINUX_IP_ADD_MEMBERSHIP  35
+#define LINUX_IP_DROP_MEMBERSHIP 36
 
-    #define LINUX_TCP_NODELAY   1
-    #define LINUX_TCP_KEEPIDLE  4
-    #define LINUX_TCP_KEEPINTVL 5
-    #define LINUX_TCP_KEEPCNT   6
+#define LINUX_TCP_NODELAY   1
+#define LINUX_TCP_KEEPIDLE  4
+#define LINUX_TCP_KEEPINTVL 5
+#define LINUX_TCP_KEEPCNT   6
 
-    #define LINUX_IPV6_CHECKSUM    7
-    #define LINUX_IPV6_JOIN_GROUP  20
-    #define LINUX_IPV6_LEAVE_GROUP 21
-    #define LINUX_IPV6_V6ONLY      26
+#define LINUX_IPV6_CHECKSUM    7
+#define LINUX_IPV6_JOIN_GROUP  20
+#define LINUX_IPV6_LEAVE_GROUP 21
+#define LINUX_IPV6_V6ONLY      26
 
 
 /**
@@ -201,5 +199,3 @@ long socket_sockopt_translate(int* level, int* optname) {
 
     return -ENOPROTOOPT;
 }
-
-#endif

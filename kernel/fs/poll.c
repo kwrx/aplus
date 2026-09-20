@@ -45,9 +45,7 @@
 #include <aplus/task.h>
 #include <aplus/vfs.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 /**
@@ -134,7 +132,6 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
 
             bool handled = false;
 
-#if defined(CONFIG_HAVE_NETWORK)
 
             int r = socket_poll_arm(inode, events, timeout);
 
@@ -148,7 +145,6 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
                     e = r;
             }
 
-#endif
 
             if (!handled) {
 

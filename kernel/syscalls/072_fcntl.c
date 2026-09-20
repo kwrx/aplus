@@ -38,9 +38,7 @@
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 extern long sys_dup(unsigned int);
@@ -110,8 +108,6 @@ SYSCALL(
 
                     shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = arg; });
 
-#if defined(CONFIG_HAVE_NETWORK)
-
                     {
                         int socket = socket_from_fd(fd);
 
@@ -121,8 +117,6 @@ SYSCALL(
                                 return -errno;
                         }
                     }
-
-#endif
 
                     return 0;
 
