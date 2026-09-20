@@ -16,10 +16,11 @@
 # any client, but the clients retry the connect for a few seconds, so there is no race to
 # sleep around here.
 aplus-wm &
-
+sleep 1
 # Now a client rather than the owner of the screen.
-aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
-
+# aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
+aplus-launcher &
+sleep infinity
 
 
 # iobench -b64 /usr/libexec/gcc/x86_64-aplus/12.2.0/cc1plus

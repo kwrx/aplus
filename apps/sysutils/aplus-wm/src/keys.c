@@ -40,6 +40,7 @@
 
 static const char* const wm_command_terminal[] = {"/usr/bin/aplus-terminal", NULL};
 static const char* const wm_command_explorer[] = {"/usr/bin/aplus-explorer", NULL};
+static const char* const wm_command_launcher[] = {"/usr/bin/aplus-launcher", NULL};
 
 
 typedef enum {
@@ -65,11 +66,12 @@ static const struct {
 
 } wm_bindings[] = {
 
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_T,   WM_ACTION_SPAWN,      wm_command_terminal},
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_E,   WM_ACTION_SPAWN,      wm_command_explorer},
-    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_Q,   WM_ACTION_CLOSE,      NULL               },
-    {WM_MOD_ALT,                KEY_TAB, WM_ACTION_CYCLE_NEXT, NULL               },
-    {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB, WM_ACTION_CYCLE_PREV, NULL               },
+    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_T,     WM_ACTION_SPAWN,      wm_command_terminal},
+    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_E,     WM_ACTION_SPAWN,      wm_command_explorer},
+    {WM_MOD_SUPER,              KEY_SPACE, WM_ACTION_SPAWN,      wm_command_launcher},
+    {WM_MOD_CTRL | WM_MOD_ALT,  KEY_Q,     WM_ACTION_CLOSE,      NULL               },
+    {WM_MOD_ALT,                KEY_TAB,   WM_ACTION_CYCLE_NEXT, NULL               },
+    {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB,   WM_ACTION_CYCLE_PREV, NULL               },
 };
 
 

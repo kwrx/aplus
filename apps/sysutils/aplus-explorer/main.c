@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -87,6 +88,19 @@
  */
 #define EXPLORER_OPENER "aplus-xopen"
 
+/**
+ * @brief How long an icon name read out of a .desktop file may be.
+ */
+#define EXPLORER_ICON_MAX 128
+
+/**
+ * @brief The icons a row falls back on when nothing more specific names one.
+ */
+#define EXPLORER_ICON_FOLDER     "folder"
+#define EXPLORER_ICON_UP         "go-up"
+#define EXPLORER_ICON_FILE       "text-x-generic"
+#define EXPLORER_ICON_EXECUTABLE "application-x-executable"
+
 
 /**
  * @brief One directory entry, as the listing needs it rather than as the filesystem reports it.
@@ -96,6 +110,9 @@ typedef struct {
 
     char name[NAME_MAX + 1];
     char label[EXPLORER_LABEL_MAX];
+
+    //? The icon's name, as the theme spells it, or as the .desktop file asked for.
+    char icon[EXPLORER_ICON_MAX];
 
     bool directory;
     off_t size;
@@ -111,6 +128,8 @@ typedef struct {
 
     char name[32];
     char path[PATH_MAX];
+
+    const char* icon;
 
 } explorer_place_t;
 
@@ -141,6 +160,120 @@ static struct {
     bool syncing;
 
 } explorer = {0};
+
+
+/**
+ * @brief What each extension is shown as, everything else being a plain file or an executable.
+ */
+
+static const struct {
+
+    const char* extension;
+    const char* icon;
+
+} explorer_types[] = {
+
+    {".desktop", EXPLORER_ICON_EXECUTABLE},
+
+    {".png",     "image-x-generic"       },
+    {".jpg",     "image-x-generic"       },
+    {".jpeg",    "image-x-generic"       },
+    {".bmp",     "image-x-generic"       },
+    {".gif",     "image-x-generic"       },
+    {".tiff",    "image-x-generic"       },
+    {".tif",     "image-x-generic"       },
+    {".ico",     "image-x-generic"       },
+    {".svg",     "image-x-generic"       },
+    {".webp",    "image-x-generic"       },
+
+    {".wav",     "audio-x-generic"       },
+    {".mp3",     "audio-x-generic"       },
+    {".ogg",     "audio-x-generic"       },
+    {".flac",    "audio-x-generic"       },
+
+    {".mp4",     "video-x-generic"       },
+    {".avi",     "video-x-generic"       },
+    {".mkv",     "video-x-generic"       },
+    {".webm",    "video-x-generic"       },
+    {".mov",     "video-x-generic"       },
+
+    {".tar",     "package-x-generic"     },
+    {".gz",      "package-x-generic"     },
+    {".xz",      "package-x-generic"     },
+    {".bz2",     "package-x-generic"     },
+    {".zip",     "package-x-generic"     },
+    {".iso",     "package-x-generic"     },
+    {".img",     "package-x-generic"     },
+
+    {".ttf",     "font-x-generic"        },
+    {".otf",     "font-x-generic"        },
+
+    {".sh",      "text-x-script"         },
+    {".c",       "text-x-script"         },
+    {".h",       "text-x-script"         },
+    {".cpp",     "text-x-script"         },
+    {".hpp",     "text-x-script"         },
+    {".js",      "text-x-script"         },
+    {".py",      "text-x-script"         },
+};
+
+
+/**
+ * @brief Reports the extension of a name, which a name starting with a dot has none of.
+ *
+ * @param name The file name.
+ * @return The extension, dot included, or NULL when there is none.
+ */
+
+static const char* explorer_extension(const char* name) {
+
+    const char* dot = strrchr(name, '.');
+
+    return (dot && dot != name) ? dot : NULL;
+}
+
+
+/**
+ * @brief Chooses the icon an entry is shown with, out of what it is and what it is called.
+ *
+ * A .desktop file gets this as its fallback only: what the file itself asks for is read
+ * afterwards and wins.
+ *
+ * @param entry The entry, whose icon is filled in.
+ * @param mode The mode stat(2) reported, or 0 when it reported nothing.
+ */
+
+static void explorer_icon(explorer_entry_t* entry, mode_t mode) {
+
+    const char* icon = NULL;
+
+    const char* extension = explorer_extension(entry->name);
+
+    if (entry->directory) {
+
+        icon = EXPLORER_ICON_FOLDER;
+
+    } else if (extension) {
+
+        for (size_t i = 0; i < sizeof(explorer_types) / sizeof(explorer_types[0]); i++) {
+
+            if (strcasecmp(extension, explorer_types[i].extension) == 0) {
+
+                icon = explorer_types[i].icon;
+
+                break;
+            }
+        }
+    }
+
+    if (!icon) {
+        icon = (mode & (S_IXUSR | S_IXGRP | S_IXOTH)) ? EXPLORER_ICON_EXECUTABLE : EXPLORER_ICON_FILE;
+    }
+
+    strncpy(entry->icon, icon, sizeof(entry->icon) - 1);
+
+    entry->icon[sizeof(entry->icon) - 1] = '\0';
+}
 
 
 /**
@@ -345,9 +478,10 @@ static void explorer_home(char* out, size_t max) {
  *
  * @param name The name the row shows.
  * @param path The directory the row opens.
+ * @param icon The icon the row shows.
  */
 
-static void explorer_add_place(const char* name, const char* path) {
+static void explorer_add_place(const char* name, const char* path, const char* icon) {
 
     if (explorer.places_count >= EXPLORER_PLACES_MAX) {
         return;
@@ -362,8 +496,10 @@ static void explorer_add_place(const char* name, const char* path) {
 
     explorer_normalize(path, place->path, sizeof(place->path));
 
+    place->icon = icon;
 
-    if (ui_list_add(explorer.sidebar, place->name, NULL, NULL) < 0) {
+
+    if (ui_list_add_icon(explorer.sidebar, place->icon, place->name, NULL, NULL) < 0) {
         return;
     }
 
@@ -381,9 +517,9 @@ static void explorer_build_places(void) {
 
     explorer_home(home, sizeof(home));
 
-    explorer_add_place("Root", "/");
-    explorer_add_place("Home", home);
-    explorer_add_place("Applications", EXPLORER_APPLICATIONS_PATH);
+    explorer_add_place("Root", "/", "drive-harddisk");
+    explorer_add_place("Home", home, "user-home");
+    explorer_add_place("Applications", EXPLORER_APPLICATIONS_PATH, "applications-system");
 }
 
 
@@ -452,19 +588,21 @@ static const char* explorer_desktop_value(const char* text, const char* key) {
 
 
 /**
- * @brief Reads the application name out of a .desktop file.
+ * @brief Reads the application name and the icon out of a .desktop file.
  *
- * Only the [Desktop Entry] group counts, and only its unlocalised Name: Name[xx] and every other group are skipped.
+ * Only the [Desktop Entry] group counts, and only its unlocalised keys: Name[xx] and every other group are skipped.
  *
  * @param path The file to read.
- * @param out Receives the name, left empty when the file carries none.
- * @param max The size of that buffer.
+ * @param name Receives the name, left empty when the file carries none.
+ * @param name_max The size of that buffer.
+ * @param icon Receives the icon, left as it was when the file names none.
+ * @param icon_max The size of that buffer.
  * @return true when a name was read, false otherwise.
  */
 
-static bool explorer_desktop_name(const char* path, char* out, size_t max) {
+static bool explorer_desktop_read(const char* path, char* name, size_t name_max, char* icon, size_t icon_max) {
 
-    out[0] = '\0';
+    name[0] = '\0';
 
     FILE* file = fopen(path, "r");
 
@@ -512,21 +650,25 @@ static bool explorer_desktop_name(const char* path, char* out, size_t max) {
         }
 
 
-        const char* value = explorer_desktop_value(text, "Name");
+        const char* value;
 
-        if (value) {
+        if ((value = explorer_desktop_value(text, "Name")) != NULL) {
 
-            strncpy(out, value, max - 1);
+            strncpy(name, value, name_max - 1);
 
-            out[max - 1] = '\0';
+            name[name_max - 1] = '\0';
 
-            break;
+        } else if ((value = explorer_desktop_value(text, "Icon")) != NULL && *value) {
+
+            strncpy(icon, value, icon_max - 1);
+
+            icon[icon_max - 1] = '\0';
         }
     }
 
     fclose(file);
 
-    return out[0] != '\0';
+    return name[0] != '\0';
 }
 
 
@@ -611,10 +753,13 @@ static int explorer_scan(const char* path) {
 
         explorer_join(path, out->name, full, sizeof(full));
 
+        mode_t mode = 0;
+
         if (stat(full, &st) == 0) {
 
             out->directory = S_ISDIR(st.st_mode);
             out->size      = st.st_size;
+            mode           = st.st_mode;
 
         } else if (entry->d_type == DT_UNKNOWN) {
 
@@ -622,12 +767,14 @@ static int explorer_scan(const char* path) {
         }
 
 
-        const size_t length = strlen(out->name);
+        const char* extension = explorer_extension(out->name);
 
         out->label[0] = '\0';
 
-        if (!out->directory && length > sizeof(".desktop") - 1 && strcmp(out->name + length - (sizeof(".desktop") - 1), ".desktop") == 0) {
-            explorer_desktop_name(full, out->label, sizeof(out->label));
+        explorer_icon(out, mode);
+
+        if (!out->directory && extension && strcasecmp(extension, ".desktop") == 0) {
+            explorer_desktop_read(full, out->label, sizeof(out->label), out->icon, sizeof(out->icon));
         }
 
 
@@ -720,7 +867,7 @@ static void explorer_open(const char* path) {
 
     ui_list_clear(explorer.list);
 
-    ui_list_add(explorer.list, "..", "up", NULL);
+    ui_list_add_icon(explorer.list, EXPLORER_ICON_UP, "..", "up", NULL);
 
     for (size_t i = 0; i < explorer.count; i++) {
 
@@ -737,7 +884,7 @@ static void explorer_open(const char* path) {
             explorer_format_size(explorer.entries[i].size, detail, sizeof(detail));
         }
 
-        ui_list_add(explorer.list, explorer_label(&explorer.entries[i]), detail, NULL);
+        ui_list_add_icon(explorer.list, explorer.entries[i].icon, explorer_label(&explorer.entries[i]), detail, NULL);
     }
 
 
