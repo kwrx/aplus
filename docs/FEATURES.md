@@ -107,7 +107,7 @@
 - [x] PCI
 - [x] PCI INTx
 - [ ] PCI MSI
-- [ ] PCI MSIX
+- [x] PCI MSIX
 - [x] AHCI Controller (SATA)
 - [x] IDE Controller (PATA)
 - [ ] AC97 Audio Adapter
@@ -122,13 +122,19 @@
 ------------------------------------------
 ## Userspace
 - [x] Init
-- [ ] Coreutils
-- [ ] Minimal Shell
+- [x] Coreutils (BusyBox)
+- [x] Minimal Shell (dash, bash)
 - [ ] NTP Time Daemon
 - [ ] I/O Sync Daemon
 - [ ] HTTP Server
 - [x] Graphics UI Server
 - [x] Graphics UI Toolkit
+- [x] Terminal Emulator
+- [x] File Manager
+- [x] Image Viewer
+- [x] Application Launcher
+- [x] IRC Client
+- [x] Web Browser (NetSurf)
 - [ ] Package Manager
 
 ### Porting
@@ -150,3 +156,8 @@
 - [ ] SDL2
 - [x] Binutils
 - [x] Gcc
+- [x] LibreSSL
+- [x] cURL
+- [x] Expat
+- [x] libtsm
+- [x] NetSurf

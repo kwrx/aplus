@@ -33,19 +33,24 @@ CFLAGS   += -include $(ROOTDIR)/config.h
 CFLAGS   += -isystem $(SYSROOT)/usr/include
 CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
 
+LDFLAGS  += -L$(ROOTDIR)/lib/aplus/ui
+
 LIBS     += ui cairo pixman-1 freetype png z
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk
 ```
 
-Copy the comment along with the lines it explains. Both traps it describes are silent in
-different ways: the first turns a system header into a build error, the second compiles
-every `CONFIG_*` block out of your program while the build still succeeds.
+Every line above the two includes is load-bearing, and all three traps are silent in different
+ways: the first turns a system header into a build error, the second compiles every `CONFIG_*`
+block out of your program while the build still succeeds, and the `LDFLAGS` line is what makes
+you link against the `libui.a` that was just built rather than the one the last
+`./makew install` left in the sysroot — without it, a change to the library never shows up in
+your program and nothing says so.
 
-If your application never creates a view — no widgets, just pixels — `LIBS += ui` on its own
-is enough and the three `CFLAGS` lines can go. `libui.a` is a static archive, so the linker
-only pulls in the objects you actually reach, and cairo never enters the link.
+If your application never creates a view — no widgets, just pixels — `LIBS += ui z` is enough
+and the three `CFLAGS` lines can go. `libui.a` is a static archive, so the linker only pulls in
+the objects you actually reach, and cairo never enters the link.
 
 ## 3. Connecting
 
