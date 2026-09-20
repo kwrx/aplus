@@ -318,8 +318,8 @@ SYSCALL(
 
             current_task->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_NEW_SPACE);
 
-            current_task->userspace.start = ~0UL;
-            current_task->userspace.end   = 0UL;
+            current_task->address_space->brk.start = ~0UL;
+            current_task->address_space->brk.end   = 0UL;
 
             arch_task_switch_address_space(current_task->address_space);
 
@@ -351,11 +351,11 @@ SYSCALL(
                         end = (end & ~(phdr.p_align - 1)) + phdr.p_align;
 
 
-                        if (phdr.p_vaddr < current_task->userspace.start)
-                            current_task->userspace.start = phdr.p_vaddr;
+                        if (phdr.p_vaddr < current_task->address_space->brk.start)
+                            current_task->address_space->brk.start = phdr.p_vaddr;
 
-                        if (end > current_task->userspace.end)
-                            current_task->userspace.end = end;
+                        if (end > current_task->address_space->brk.end)
+                            current_task->address_space->brk.end = end;
 
 
                         flags = 0;
@@ -409,13 +409,13 @@ SYSCALL(
                 }
             }
 
-            current_task->userspace.end = (current_task->userspace.end & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
+            current_task->address_space->brk.end = (current_task->address_space->brk.end & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
         }
 
 
-        DEBUG_ASSERT(current_task->userspace.start);
-        DEBUG_ASSERT(current_task->userspace.end);
-        DEBUG_ASSERT(current_task->userspace.start < current_task->userspace.end);
+        DEBUG_ASSERT(current_task->address_space->brk.start);
+        DEBUG_ASSERT(current_task->address_space->brk.end);
+        DEBUG_ASSERT(current_task->address_space->brk.start < current_task->address_space->brk.end);
 
 
 

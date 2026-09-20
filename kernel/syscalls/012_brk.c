@@ -51,57 +51,65 @@
 
 SYSCALL(
     12, brk, long sys_brk(unsigned long new_brk) {
-        DEBUG_ASSERT(current_task->userspace.start);
-        DEBUG_ASSERT(current_task->userspace.end);
+        DEBUG_ASSERT(current_task->address_space);
+
+        vmm_address_space_t* space = current_task->address_space;
+
+        DEBUG_ASSERT(space->brk.start);
+        DEBUG_ASSERT(space->brk.end);
 
 
-        if (new_brk == 0)
-            return current_task->userspace.end;
+        scoped_lock(&space->lock) {
 
-        if (new_brk < current_task->userspace.start)
-            return current_task->userspace.end;
+            if (new_brk == 0)
+                return space->brk.end;
+
+            if (new_brk < space->brk.start)
+                return space->brk.end;
 
 
 
 #if DEBUG_LEVEL_TRACE
-        // kprintf("sys_brk: pid(%d) brk(0x%lX) new(0x%lX)\n", current_task->tid, current_task->userspace.end, new_brk);
+            // kprintf("sys_brk: pid(%d) brk(0x%lX) new(0x%lX)\n", current_task->tid, space->brk.end, new_brk);
 #endif
 
-        // TODO: Use less memory
+            // TODO: Use less memory
 
-        if (new_brk & (arch_vmm_getpagesize() - 1)) {
+            if (new_brk & (arch_vmm_getpagesize() - 1)) {
 
-            if (unlikely(new_brk + arch_vmm_getpagesize() < new_brk))
-                return current_task->userspace.end;
+                if (unlikely(new_brk + arch_vmm_getpagesize() < new_brk))
+                    return space->brk.end;
 
-            new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
-        }
-
-
-        if (unlikely(new_brk > current_task->address_space->mmap.heap_start))
-            return current_task->userspace.end;
+                new_brk = (new_brk & ~(arch_vmm_getpagesize() - 1)) + arch_vmm_getpagesize();
+            }
 
 
-        if (new_brk > current_task->userspace.end) {
+            if (unlikely(new_brk > space->mmap.heap_start))
+                return space->brk.end;
 
-            uintptr_t e = arch_vmm_map(current_task->address_space, current_task->userspace.end, -1, new_brk - current_task->userspace.end,
-                             ARCH_VMM_MAP_RDWR        |
-                             ARCH_VMM_MAP_USER        |
-                             ARCH_VMM_MAP_NOEXEC      |
+
+            if (new_brk > space->brk.end) {
+
+                uintptr_t e = arch_vmm_map(space, space->brk.end, -1, new_brk - space->brk.end,
+                                 ARCH_VMM_MAP_RDWR        |
+                                 ARCH_VMM_MAP_USER        |
+                                 ARCH_VMM_MAP_NOEXEC      |
 #if defined(CONFIG_DEMAND_PAGING) && 0 // TODO: Fix demand paging on brk
-                             ARCH_VMM_MAP_DEMAND      |
+                                 ARCH_VMM_MAP_DEMAND      |
 #endif
-                             ARCH_VMM_MAP_TYPE_PAGE );
+                                 ARCH_VMM_MAP_TYPE_PAGE );
 
-            if (unlikely(e == ARCH_VMM_MAP_FAILED))
-                return current_task->userspace.end;
+                if (unlikely(e == ARCH_VMM_MAP_FAILED))
+                    return space->brk.end;
 
-        } else if (new_brk < current_task->userspace.end) {
+            } else if (new_brk < space->brk.end) {
 
-            arch_vmm_unmap(current_task->address_space, new_brk, current_task->userspace.end - new_brk);
+                arch_vmm_unmap(space, new_brk, space->brk.end - new_brk);
+            }
+
+
+            space->brk.end = new_brk;
         }
 
-
-        current_task->userspace.end = new_brk;
         return new_brk;
     });
