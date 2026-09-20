@@ -64,43 +64,112 @@ constructor and `ui_window_set_title()`.
 `ui_window_destroy()` tells the server and detaches the surface. The window id is the server's
 handle for it and the field every event carries.
 
-### Borderless windows
+### Window flags
 
 ```c
-#define UI_WINDOW_DECORATED  0
-#define UI_WINDOW_BORDERLESS (1 << 0)
+#define UI_WINDOW_DECORATED   0
+#define UI_WINDOW_BORDERLESS  (1 << 0)
+#define UI_WINDOW_CENTERED    (1 << 1)
+#define UI_WINDOW_TRANSLUCENT (1 << 2)
 ```
 
 `ui_window_create_ex()` is `ui_window_create()` with the kind of window spelled out;
 `ui_window_create()` is exactly the `UI_WINDOW_DECORATED` case of it. A flag the server does
 not know is refused rather than ignored, so asking for something that does not exist fails at
-creation instead of quietly giving you an ordinary window. `ui_window_flags()` reads back what
-a window was created with; nothing changes them afterwards.
+creation instead of quietly giving you an ordinary window — which is also why adding one costs
+a `UI_PROTOCOL_VERSION`. `ui_window_flags()` reads back what a window was created with;
+nothing changes them afterwards.
 
 With `UI_WINDOW_BORDERLESS` the server draws nothing around the window — no titlebar, no
-border, no close button, and square corners rather than rounded ones. The surface is the whole
-window, which changes three things for a client:
+border and no close button. The surface is the whole window, which changes three things for a
+client:
 
 | | Decorated | Borderless |
 |---|---|---|
 | Pointer events | Content area only | Every pixel of the window |
 | Moving | Drag the titlebar, or hold **Super** | Hold **Super** and drag anywhere on it |
-| Resizing | Drag an edge or a corner | Not possible — the created size is the final one |
+| Resizing | Drag an edge or a corner | Only by asking — `ui_window_request_size()` |
 
 It still stacks, focuses and casts a shadow like any other window, and `Ctrl+Alt+Q` still
 closes it — which is worth remembering, because without a titlebar button that is the only
 way a user can.
 
 This is the window for a splash screen, a panel or a popup, and for an application that
-would rather draw its own titlebar than accept the server's. What it is not is a transparent
-window: the surface is `CAIRO_FORMAT_RGB24` and opaque, so every pixel inside the rectangle is
-yours to fill and the corners are square because there is no alpha to round them with.
+would rather draw its own titlebar than accept the server's. Its corners are rounded like any
+other window's, which is [something it has to draw to](#corners).
+
+`UI_WINDOW_CENTERED` puts the window in the middle of the display instead of on the diagonal
+cascade every other window is placed along. It is the frame that is centred, decorations
+included, so a decorated window sits where it looks like it should rather than a titlebar's
+height too low.
+
+`UI_WINDOW_TRANSLUCENT` hands the window a surface that carries alpha, which the server
+blends over the desktop and the windows below it instead of painting over them — see
+[Translucency](#translucency).
+
+This is a creation flag rather than a request to move a window because there is no request to
+move a window: a client cannot position itself, does not know how big the display is, and a
+window that placed itself after the fact would be seen at the cascade position for a frame
+first. Between them the two flags are what a launcher or a dialog needs — `UI_WINDOW_BORDERLESS
+| UI_WINDOW_CENTERED` is a window that appears where it belongs, whole.
+
+### Translucency
+
+```c
+bool ui_window_translucent(ui_window_t* win);
+```
+
+A `UI_WINDOW_TRANSLUCENT` window's surface is premultiplied `CAIRO_FORMAT_ARGB32` rather than
+`RGB24`, and the server blends it over the desktop and whatever windows are below it instead
+of painting over them. Nothing else about the surface changes: the two formats have the same
+stride and the same segment size, so the configure, the bounds check and everything downstream
+of them are identical.
+
+```c
+ui_window_t* win = ui_window_create_ex(conn, 640, 210, "launcher",
+                                       UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
+
+ui_view_t* view = ui_view_create(win);
+```
+
+It is a creation flag and not something to turn on later, because the server picks the
+format when it creates the segment — before the client has been handed a window id to name
+in a request. `ui_view_create()` reads it back with `ui_window_translucent()` when it binds
+its cairo surface, so there is no order to get right beyond the obvious one.
+
+For a view that is the whole of it: what shows through is the alpha of `theme->background`,
+which `ui_view_present()` writes with `CAIRO_OPERATOR_SOURCE` — authoritative rather than
+accumulating a frame at a time — and the alpha of whatever the widgets paint over it. A theme
+is the natural place to put it, since translucency is a property of the scheme rather than of
+any one widget.
+
+Drawing by hand through `ui_window_pixels()` is where the format matters: `0xAARRGGBB`
+**premultiplied**, so half-transparent white is `0x80808080` and not `0x80FFFFFF`.
+
+### Corners
+
+```c
+#define UI_WINDOW_RADIUS 10
+```
+
+Every window the server draws is rounded off by this much, borderless or not. The server
+clips the content to the curve and casts the shadow around the same one, so there is nothing
+to ask for and nothing that can disagree.
+
+It is in the shared header rather than the server's because a client painting its own edge
+has to trace the same curve. A borderless window has no border but the one it draws itself,
+and a square 1px outline inside a rounded clip stops short at all four corners:
+
+```c
+ui_panel_set_radius(backdrop, (double)UI_WINDOW_RADIUS);
+ui_panel_set_border(backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.18), 1.0);
+```
 
 ### The pixels
 
 | | |
 |---|---|
-| Format | `0xFFRRGGBB` — 8 bits per channel, not premultiplied |
+| Format | `0xFFRRGGBB` — 8 bits per channel, not premultiplied, or `0xAARRGGBB` premultiplied when the window is [translucent](#translucency) |
 | Stride | `ui_window_stride()` bytes per row — **not** `width * 4` |
 | Origin | Top-left of the content area, inside the server's decorations |
 
@@ -165,8 +234,18 @@ compositing the server then does, not the message.
 ### Resizing
 
 ```c
+int ui_window_request_size(ui_window_t* win, int width, int height);
 int ui_window_apply_configure(ui_window_t* win);
 ```
+
+`ui_window_request_size()` asks; it does not resize. The window keeps the size it has, and
+the server answers with a `UI_EVENT_CONFIGURE` naming the size it settled on — clamped to
+what the display can hold and to the smallest window that can be grabbed — or with nothing at
+all, when that is the size it already had. A window that grows keeps its top-left corner
+rather than staying centred: `UI_WINDOW_CENTERED` places a window once, when it is created.
+
+Everything after that is the path a resize drag already takes, and the rule below is the same
+one.
 
 This is the one piece of the surface API with a rule attached.
 
@@ -199,7 +278,10 @@ A configure arriving at the end of a drag that did not change the size names the
 window already holds. Nothing is remapped in that case, the pointer is unchanged, and the apply
 is close to free.
 
-A view does this for you inside `ui_view_dispatch()`.
+A view does this for you inside `ui_view_dispatch()`, which also rebinds its cairo surface
+and calls the layout function again — so an application that lays its widgets out from the
+content size it is given has nothing to write for a resize beyond the one call that asks for
+it.
 
 ## Events
 

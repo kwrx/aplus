@@ -43,7 +43,7 @@ resize grips all belong to `aplus-wm`, and the coordinates a client sees — the
 configured with, the pointer positions it receives — are relative to the content area
 inside them. A window created with `UI_WINDOW_BORDERLESS` gets none of them and is handed
 its whole frame instead — see
-[Borderless windows](window-api.md#borderless-windows).
+[Window flags](window-api.md#window-flags).
 
 ## Where the code lives
 
@@ -56,14 +56,18 @@ its whole frame instead — see
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |
-| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c` | The widgets themselves |
+| `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c`, `ui_entry.c` | The widgets themselves |
+| `lib/aplus/ui/ui_keymap.c` | The console keymap, for the widget that needs characters rather than key codes |
 | `lib/aplus/ui/ui_theme.c` | The colour scheme and the default dark theme |
 | `lib/aplus/ui/ui_draw.c`, `ui_font.c` | Cairo drawing helpers and the FreeType face cache |
+| `lib/aplus/ui/ui_icon.c` | Icons by name, out of the theme in `/usr/share/icons` |
+| `lib/aplus/ui/assets/icons/` | The default icon theme, and the SVG sources it is rendered from |
 | `lib/aplus/ui/ui_damage.c` | The damage set both the window and the view keep |
 | `apps/sysutils/aplus-wm/` | The server |
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-image-viewer/` | The one that mixes the layers: a toolbar of widgets around a picture drawn straight into the window pixels |
+| `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a borderless centred window that is translucent and only as tall as it has results |
 | `apps/test/ui-test/` | The reference surface-layer application |
 
 ## Building against it
@@ -129,15 +133,25 @@ $(SYSROOT)/usr/share/applications/ui-hello.desktop: assets/ui-hello.desktop
 Name=Hello
 Comment=Hello application
 Exec=ui-hello
+Icon=ui-hello
 Terminal=false
 Type=Application
 Categories=Utility;
 ```
 
+`Icon` names an icon in the theme rather than a file — see [Icons](icons.md) — and an
+application whose icon the theme has never heard of is listed with a generic one rather than
+with none.
+
 `aplus-xopen` is what reads them: given a path it picks a handler — a directory opens in
 `aplus-explorer`, a picture in `aplus-image-viewer`, a `.desktop` file runs the `Exec` it names,
 through `aplus-terminal` when it asks for one — and `execvp()`s it, so the caller ends up with
 the application as its own child rather than with an opener in between.
+
+`aplus-launcher` is what lists them. It reads the other half of the same files — the `Name`,
+`Comment` and `Icon` a person picks an application by — and hands the path to `aplus-xopen` rather than
+running anything itself, which is also how it stays out of the way of the process tree: it
+`execvp()`s the opener in place, so the application inherits the launcher's parent.
 
 ## Running it
 
@@ -205,6 +219,8 @@ window is a lifecycle with no leak in it.
 - [Widgets](widgets.md) — the view, the widget set, hit testing, damage and the frame
   lifecycle.
 - [Theming](theming.md) — the colour roles, the default dark scheme, and writing your own.
+- [Icons](icons.md) — the theme in `/usr/share/icons`, how a name is resolved, and what
+  `Icon` in a desktop entry buys.
 - [Window and event API](window-api.md) — the surface layer in full: the shared pixels and
   their stride, damage, commits, configure serials, and the event queue.
 - [Wire protocol](protocol.md) — the bytes on the socket and the shared memory behind them,
@@ -212,11 +228,12 @@ window is a lifecycle with no leak in it.
 
 ## What is not here
 
-The widget set is four widgets: a panel, a label, a button and a list. There is no text entry,
-no checkbox, no menu, no nested container, and no layout engine beyond the grid helper — a
-layout callback positions everything in absolute coordinates. Labels are one line, clipped,
-and never wrap. There is no standalone scrollbar either: the list has one, but it belongs to
-the list and cannot be put on anything else.
+The widget set is five widgets: a panel, a label, a button, a list and a single-line entry.
+There is no checkbox, no menu, no nested container, and no layout engine beyond the grid
+helper — a layout callback positions everything in absolute coordinates. Labels are one line,
+clipped, and never wrap; so is the entry, and it has no selection to cut or paste. There is no
+standalone scrollbar either: the list has one, but it belongs to the list and cannot be put on
+anything else.
 
 Keyboard focus exists but does not move by itself. A click focuses the widget it lands on, and
 `ui_view_focus()` moves it deliberately; nothing walks the widgets on Tab, and the view has no

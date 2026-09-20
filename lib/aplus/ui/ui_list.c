@@ -36,6 +36,12 @@
 #define UI_LIST_GAP     12
 
 /**
+ * @brief How much shorter than its row an icon is drawn, and how far the name sits from it.
+ */
+#define UI_LIST_ICON_INSET 4
+#define UI_LIST_ICON_GAP   8
+
+/**
  * @brief How many rows one wheel detent moves.
  */
 #define UI_LIST_WHEEL_ROWS 3
@@ -83,6 +89,30 @@ static ui_rect_t ui_list_rows_rect(const ui_widget_t* widget) {
     }
 
     return rows;
+}
+
+
+/**
+ * @brief Reports how wide the gutter the icons are drawn in is, which is nothing until a row carries one.
+ *
+ * @param widget The list.
+ * @return The width in pixels.
+ */
+
+static int ui_list_icon_width(const ui_widget_t* widget) {
+
+    if (!widget->list.icons) {
+        return 0;
+    }
+
+    if (widget->list.icon_size > 0) {
+        return widget->list.icon_size;
+    }
+
+
+    const int size = widget->list.row_height - UI_LIST_ICON_INSET * 2;
+
+    return size > 8 ? size : 8;
 }
 
 
@@ -230,17 +260,24 @@ void ui_list_clear(ui_widget_t* widget) {
 
         free(widget->list.items[i].text);
         free(widget->list.items[i].detail);
+        free(widget->list.items[i].icon);
     }
 
     widget->list.count    = 0;
     widget->list.selected = -1;
     widget->list.scroll   = 0;
+    widget->list.icons    = false;
 
     ui_widget_invalidate(widget);
 }
 
 
 int ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void* user) {
+    return ui_list_add_icon(widget, NULL, text, detail, user);
+}
+
+
+int ui_list_add_icon(ui_widget_t* widget, const char* icon, const char* text, const char* detail, void* user) {
 
     if (!widget || widget->kind != UI_WIDGET_LIST) {
         return -1;
@@ -266,15 +303,84 @@ int ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void*
 
     item->text   = text ? strdup(text) : NULL;
     item->detail = detail ? strdup(detail) : NULL;
+    item->icon   = icon ? strdup(icon) : NULL;
     item->user   = user;
 
-    if (text && !item->text) {
+    if ((text && !item->text) || (icon && !item->icon)) {
+
+        free(item->text);
+        free(item->detail);
+        free(item->icon);
+
         return -1;
     }
+
+    widget->list.icons = widget->list.icons || item->icon != NULL;
 
     ui_widget_invalidate(widget);
 
     return (int)widget->list.count++;
+}
+
+
+void ui_list_set_icon(ui_widget_t* widget, int index, const char* icon) {
+
+    if (!widget || widget->kind != UI_WIDGET_LIST) {
+        return;
+    }
+
+    if (index < 0 || (size_t)index >= widget->list.count) {
+        return;
+    }
+
+
+    char* name = icon ? strdup(icon) : NULL;
+
+    if (icon && !name) {
+        return;
+    }
+
+    free(widget->list.items[index].icon);
+
+    widget->list.items[index].icon = name;
+
+    widget->list.icons = widget->list.icons || name != NULL;
+
+    ui_widget_invalidate(widget);
+}
+
+
+const char* ui_list_icon(const ui_widget_t* widget, int index) {
+
+    if (!widget || widget->kind != UI_WIDGET_LIST) {
+        return NULL;
+    }
+
+    if (index < 0 || (size_t)index >= widget->list.count) {
+        return NULL;
+    }
+
+    return widget->list.items[index].icon;
+}
+
+
+void ui_list_set_icon_size(ui_widget_t* widget, int size) {
+
+    if (!widget || widget->kind != UI_WIDGET_LIST) {
+        return;
+    }
+
+    if (size < 0) {
+        size = 0;
+    }
+
+    if (widget->list.icon_size == size) {
+        return;
+    }
+
+    widget->list.icon_size = size;
+
+    ui_widget_invalidate(widget);
 }
 
 
@@ -469,6 +575,8 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const int height = widget->list.row_height;
 
+    const int icons = ui_list_icon_width(widget);
+
     int first = height > 0 ? widget->list.scroll / height : 0;
 
     if (first < 0) {
@@ -506,6 +614,19 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
         }
 
 
+        ui_rect_t name_rect = row;
+
+        if (icons > 0) {
+
+            const ui_rect_t box = {row.x, row.y + (row.height - icons) / 2, icons, icons};
+
+            ui_draw_icon(cr, box, ui_icon_load(widget->list.items[i].icon, icons));
+
+            name_rect.x += icons + UI_LIST_ICON_GAP;
+            name_rect.width -= icons + UI_LIST_ICON_GAP;
+        }
+
+
         double taken = 0.0;
 
         const char* detail = widget->list.items[i].detail;
@@ -526,9 +647,9 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
         char name[UI_LIST_TEXT_MAX];
 
-        ui_draw_ellipsize(name, sizeof(name), widget->list.items[i].text, theme->font_regular, theme->font_size, (double)row.width - taken);
+        ui_draw_ellipsize(name, sizeof(name), widget->list.items[i].text, theme->font_regular, theme->font_size, (double)name_rect.width - taken);
 
-        ui_draw_text(cr, row, name, theme->font_regular, theme->font_size, text, UI_ALIGN_LEFT);
+        ui_draw_text(cr, name_rect, name, theme->font_regular, theme->font_size, text, UI_ALIGN_LEFT);
     }
 
     cairo_restore(cr);
@@ -732,6 +853,7 @@ static void ui_list_on_destroy(ui_widget_t* widget) {
 
         free(widget->list.items[i].text);
         free(widget->list.items[i].detail);
+        free(widget->list.items[i].icon);
     }
 
     free(widget->list.items);

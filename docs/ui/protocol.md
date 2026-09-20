@@ -66,6 +66,7 @@ have the high bit set.
 | `0x0003` | `UI_REQ_COMMIT` | `ui_msg_commit_t` |
 | `0x0004` | `UI_REQ_SET_TITLE` | `ui_msg_set_title_t` |
 | `0x0005` | `UI_REQ_DESTROY_WINDOW` | `ui_msg_window_t` |
+| `0x0006` | `UI_REQ_RESIZE_WINDOW` | `ui_msg_resize_t` |
 | `0x8001` | `UI_EV_HELLO` | `ui_msg_hello_t` |
 | `0x8002` | `UI_EV_CONFIGURE` | `ui_msg_configure_t` |
 | `0x8003` | `UI_EV_KEY` | `ui_msg_key_t` |
@@ -89,7 +90,7 @@ server → UI_EV_HELLO    { version }
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION 4
+#define UI_PROTOCOL_VERSION 6
 ```
 
 The client sends its version and compares what comes back; a mismatch is fatal on the client
@@ -113,6 +114,31 @@ Version 4 added the `flags` field to `ui_msg_create_window_t`, and with it
 create-window request is four bytes short of what a version 4 server reads and is refused on
 its length. The handshake catches it first and says so.
 
+Version 5 added `UI_WINDOW_CENTERED`, a bit in the field version 4 already carried. Not a
+byte moved, and yet it is a break too, for the opposite reason to version 2's: because
+unknown flag bits are *refused* rather than ignored, a version 5 client asking to be centred
+is refused outright by a version 4 server. A flag that is validated cannot be added
+compatibly, which is the price of finding out at creation instead of never.
+
+Version 6 added `UI_WINDOW_TRANSLUCENT`, and is a break for the same reason version 5 was:
+another validated bit in the same field. It is a flag rather than a property because the
+format of the surface has to be settled before the segment is created, and that is before a
+client has a window to say anything about — a window that changed format afterwards would
+mean rewrapping a segment already being drawn into, for a thing no client wants to change
+twice.
+
+`UI_REQ_RESIZE_WINDOW` arrived in the same version and **would not have needed a bump of its
+own**, which is why it is written the way it is. It is a new request, and an unknown request
+is drained by its own length rather than being fatal — the escape hatch
+[Extending it](#extending-it) names, which only holds where being ignored leaves the client
+with something it can still use. A server that drops it leaves the window the size it was
+created at, which is what a client that never sent it gets anyway, so nothing waits for an
+answer that is not coming.
+
+Nothing else moved: no payload grew, `ui_msg_configure_t` is untouched, and ARGB32 and RGB24
+have the same stride and the same segment size, so the surface a translucent window is handed
+is the same shape as any other. One flag bit is the whole of what version 6 breaks.
+
 Unlike every other read in the client, the hello reply is read without skipping unknown
 messages: nothing else can legitimately arrive before it.
 
@@ -131,17 +157,32 @@ hint, clamped to at least 80×40 and to what fits on screen.
 than ignored:
 
 ```c
-#define UI_WINDOW_DECORATED  0
-#define UI_WINDOW_BORDERLESS (1 << 0)
+#define UI_WINDOW_DECORATED   0
+#define UI_WINDOW_BORDERLESS  (1 << 0)
+#define UI_WINDOW_CENTERED    (1 << 1)
+#define UI_WINDOW_TRANSLUCENT (1 << 2)
+#define UI_WINDOW_FLAGS_ALL   (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT)
 ```
 
 A bit the server does not know closes the connection, on the reasoning that a client asking
 for a kind of window that does not exist would otherwise be handed an ordinary one and never
 find out. `UI_WINDOW_BORDERLESS` asks the server to draw nothing around the window: no
-titlebar, no border, no close button, square corners, and the content area covering the whole
+titlebar, no border, no close button, and the content area covering the whole
 frame — which in turn means pointer events over all of it, no edge to resize from, and Super
-held down as the only way to drag it. Flags are fixed for the life of the window; there is no
-request to change them.
+held down as the only way to drag it. What it does keep is the corners: every window the
+server draws is rounded off by `UI_WINDOW_RADIUS`, decorated or not, and a borderless one is
+clipped to that curve with its shadow cast around the same one. It can still ask for a size
+with [`UI_REQ_RESIZE_WINDOW`](#resizing). `UI_WINDOW_CENTERED` asks for the frame to be placed
+in the middle of the display rather than on the cascade. `UI_WINDOW_TRANSLUCENT` asks for
+[a surface that carries alpha](#the-window-surface).
+
+Placement is a creation flag because it is the only point at which a client has any say in
+it: there is no move request and no message carrying the screen size, so a window either
+names where it wants to be here or takes what the server gives it. Flags are fixed for the
+life of the window; there is no request to change them, and the resize request above changes
+a property rather than a flag. `UI_WINDOW_TRANSLUCENT` is a flag rather than a property for a
+different reason from the placement one: the server picks the surface's cairo format when it
+creates the segment, and that happens before the client has been told the window exists.
 
 The client waits for the configure, stepping over anything else that turns up rather than
 treating it as a protocol error — a client with no window yet has nothing to do with a stray
@@ -185,8 +226,15 @@ large enough for the surface it was told about. `libui` refuses a configure whos
 below `width * 4`, or whose `shm_size` is below `stride * height`, with `EPROTO` — which is
 what keeps a bad or truncated configure from becoming a write past the end of the segment.
 
-The format is `0xFFRRGGBB` (`CAIRO_FORMAT_RGB24`), not premultiplied. Windows are opaque and
-the alpha byte is ignored.
+The format is `0xFFRRGGBB` (`CAIRO_FORMAT_RGB24`), not premultiplied. The alpha byte is
+ignored, and the window is drawn over whatever is behind it.
+
+A `UI_WINDOW_TRANSLUCENT` window is the exception: its surface is `CAIRO_FORMAT_ARGB32`
+instead, premultiplied, and the server blends it over the desktop and the windows below. The
+two formats have the same stride and the same segment size — cairo picks four bytes a pixel
+either way — so nothing about the configure, the bounds check or the segment changes, only
+what the fourth byte of a pixel means. Which of the two a window gets is settled when it is
+created and does not change.
 
 This is single buffered. A surface drawn into while it is being composited can tear; double
 buffering would cost a second surface per window and a copy per frame, which is precisely what
@@ -233,6 +281,30 @@ so the same id is the same memory.
 The server carries the old contents over into a new segment. Without that a window goes black
 for the whole of a resize drag, since the client is not told the new size until the mouse is
 released.
+
+## Resizing
+
+```c
+typedef struct {
+
+    uint32_t window_id;
+    uint16_t width;
+    uint16_t height;
+
+} __attribute__((packed)) ui_msg_resize_t;
+```
+
+The client end of the resize a drag on a window edge starts. It is a request in the weak
+sense: the server clamps it the way it clamps a creation, and answers with a
+`UI_EV_CONFIGURE` naming the size it settled on — or with nothing at all, when that is the
+size the window already had. A client that treats the request as having worked will paint at
+a size it was never given.
+
+The window keeps its origin. `UI_WINDOW_CENTERED` places a window when it is created and
+nothing re-derives it afterwards, so a window that grows grows downward and to the right
+rather than out from the middle. For the launcher, which is the reason this exists, that is
+also what is wanted: its search field stays where it was put while the results below it come
+and go.
 
 ## Commits
 
@@ -335,8 +407,8 @@ The wheel reaches the server as `ev_rel.z` from `/dev/mouse`. Both the PS/2 and 
 virtio-input drivers fill it, and the PS/2 one is normalised to the sign virtio-input already
 used, so the convention above holds whatever the pointer is.
 
-`UI_EV_CONFIGURE` is sent on creation, and once at the end of a resize drag rather than on
-every mouse packet — a client repainting at a hundred sizes a second is the thing being
+`UI_EV_CONFIGURE` is sent on creation, on a `UI_REQ_RESIZE_WINDOW` that changed something,
+and once at the end of a resize drag rather than on every mouse packet — a client repainting at a hundred sizes a second is the thing being
 avoided. Its payload is [the window surface](#the-window-surface). The serial changes only
 when the size actually did.
 

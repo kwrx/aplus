@@ -45,6 +45,13 @@ struct ui_window {
     int width;
     int height;
 
+    //? The size last asked for with ui_window_request_size(), or last granted when that
+    //? was the server's idea. Compared against rather than the size in force, so that a
+    //? second request made while the first is still in flight is not mistaken for a
+    //? request to stay as things are.
+    int asked_width;
+    int asked_height;
+
     //? Bytes per row, as the server chose it. Never assumed to be width * 4: the two ends
     //? are reading and writing the same memory and have to agree exactly.
     size_t stride;

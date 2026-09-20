@@ -216,6 +216,19 @@ bool ui_view_needs_paint(ui_view_t* view);
 int ui_view_present(ui_view_t* view);
 
 /**
+ * @brief Advances whatever is animating and reports how long the loop may block for.
+ *
+ * Call it once a pass, before waiting for the next event, and hand what it returns to
+ * ui_next_event(): a view holding a focused entry has a caret to blink, and a loop that
+ * blocks forever leaves it frozen mid-cycle. ui_view_run() does this for itself.
+ *
+ * @param view The view to advance.
+ * @return Milliseconds the loop may wait for, or -1 when nothing is animating.
+ */
+int ui_view_timeout(ui_view_t* view);
+
+
+/**
  * @brief Gives one widget the keyboard, taking it from whatever held it.
  *
  * Keys reach the focused widget first, and only fall through to ui_view_on_key() when it declines them.
@@ -335,6 +348,35 @@ void ui_list_clear(ui_widget_t* widget);
  */
 int ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void* user);
 
+/**
+ * @brief Appends a row that carries an icon, which is otherwise ui_list_add().
+ *
+ * The icon is named, not loaded: what it resolves to is the theme's business, and a name
+ * no theme answers leaves the gutter empty rather than failing the row.
+ *
+ * @param widget The list to append to.
+ * @param icon The icon name, or NULL for a row with none.
+ * @param text The name, ellipsised when it does not fit.
+ * @param detail The right-hand column, or NULL for none.
+ * @param user Carried along with the row and handed back by ui_list_item_user().
+ * @return The index of the new row, or -1 on error.
+ */
+int ui_list_add_icon(ui_widget_t* widget, const char* icon, const char* text, const char* detail, void* user);
+
+/**
+ * @brief Sets the icon a row shows, or takes it away when given NULL.
+ */
+void ui_list_set_icon(ui_widget_t* widget, int index, const char* icon);
+const char* ui_list_icon(const ui_widget_t* widget, int index);
+
+/**
+ * @brief Sets how big the icons are drawn, or restores the size the row height implies when given 0.
+ *
+ * The gutter is only reserved once a row has an icon, so a list of plain rows lays out as
+ * it always did whatever this is set to.
+ */
+void ui_list_set_icon_size(ui_widget_t* widget, int size);
+
 size_t ui_list_count(const ui_widget_t* widget);
 const char* ui_list_text(const ui_widget_t* widget, int index);
 void* ui_list_item_user(const ui_widget_t* widget, int index);
@@ -358,6 +400,41 @@ void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user);
  * @brief Sets what a double click or Enter on a row runs.
  */
 void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user);
+
+
+/**
+ * @brief Entry: one line of text the keyboard can edit, in a sunken well with a caret.
+ *
+ * This is the widget that turns key codes into characters, through a keymap of its own. What
+ * it deliberately does not take is Escape, the arrows and the page keys, which fall through
+ * to the view's key callback so that an application can drive a list from a focused field.
+ */
+
+ui_widget_t* ui_entry_create(ui_view_t* view, const char* placeholder);
+
+/**
+ * @brief Replaces the text, putting the caret at the end of it.
+ *
+ * Does not run the change callback: a caller setting the text already knows what it says.
+ */
+void ui_entry_set_text(ui_widget_t* widget, const char* text);
+const char* ui_entry_text(const ui_widget_t* widget);
+
+/**
+ * @brief Sets what is drawn, muted, while the field is empty.
+ */
+void ui_entry_set_placeholder(ui_widget_t* widget, const char* text);
+void ui_entry_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
+
+/**
+ * @brief Sets what runs after every edit, which is what a search field filters from.
+ */
+void ui_entry_on_change(ui_widget_t* widget, ui_action_fn fn, void* user);
+
+/**
+ * @brief Sets what Enter runs.
+ */
+void ui_entry_on_submit(ui_widget_t* widget, ui_action_fn fn, void* user);
 
 
 /**
