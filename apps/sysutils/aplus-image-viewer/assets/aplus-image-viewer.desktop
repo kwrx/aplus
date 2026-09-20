@@ -2,6 +2,7 @@
 Name=Image Viewer
 Comment=Image viewer application
 Exec=aplus-image-viewer
+Icon=aplus-image-viewer
 Terminal=false
 Type=Application
 Categories=Graphics;Viewer;
