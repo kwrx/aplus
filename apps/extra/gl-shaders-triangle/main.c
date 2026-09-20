@@ -21,34 +21,33 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined(CONFIG_HAVE_MESA)
 
-    #define GL_VERSION_3_0      1
-    #define GL_GLEXT_PROTOTYPES 1
-
-
-    #include <errno.h>
-    #include <math.h>
-    #include <stdbool.h>
-    #include <stdint.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <time.h>
-    #include <unistd.h>
-
-    #include <GL/gl.h>
-    #include <GL/glext.h>
-    #include <GL/osmesa.h>
-
-    #include <aplus/input.h>
-    #include <aplus/ui.h>
+#define GL_VERSION_3_0      1
+#define GL_GLEXT_PROTOTYPES 1
 
 
-    #define TRIANGLE_DEFAULT_WIDTH  480
-    #define TRIANGLE_DEFAULT_HEIGHT 360
+#include <errno.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
 
-    #define TRIANGLE_FPS_INTERVAL_MS 1000
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/osmesa.h>
+
+#include <aplus/input.h>
+#include <aplus/ui.h>
+
+
+#define TRIANGLE_DEFAULT_WIDTH  480
+#define TRIANGLE_DEFAULT_HEIGHT 360
+
+#define TRIANGLE_FPS_INTERVAL_MS 1000
 
 
 
@@ -312,12 +311,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-#else
-
-    #include <stdio.h>
-
-int main(int argc, char** argv) {
-    return fprintf(stderr, "OSMesa not available\n"), 1;
-}
-
-#endif

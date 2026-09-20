@@ -21,48 +21,47 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined(CONFIG_HAVE_MESA)
 
-    #define GL_VERSION_3_0      1
-    #define GL_GLEXT_PROTOTYPES 1
-
-
-    #include <errno.h>
-    #include <stdbool.h>
-    #include <stdint.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <time.h>
-
-    #include <GL/gl.h>
-    #include <GL/glext.h>
-    #include <GL/osmesa.h>
-
-    #include <aplus/input.h>
-    #include <aplus/ui.h>
+#define GL_VERSION_3_0      1
+#define GL_GLEXT_PROTOTYPES 1
 
 
-    #define SCENE_DEFAULT_WIDTH  480
-    #define SCENE_DEFAULT_HEIGHT 360
+#include <errno.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
-    #define SCENE_FPS_INTERVAL_MS 1000
+#include <GL/gl.h>
+#include <GL/glext.h>
+#include <GL/osmesa.h>
 
-    /**
-     * @brief How much of the window the shader actually runs over, before the result is blown back up.
-     */
-    #define SCENE_DEFAULT_PIXEL_SCALE 4
-    #define SCENE_MIN_PIXEL_SCALE     1
-    #define SCENE_MAX_PIXEL_SCALE     16
+#include <aplus/input.h>
+#include <aplus/ui.h>
 
-    /**
-     * @brief The raymarching budget, which has to stay at or below MARCH_STEPS_MAX in the shader.
-     */
-    #define SCENE_DEFAULT_MARCH_STEPS 96
-    #define SCENE_MIN_MARCH_STEPS     16
-    #define SCENE_MAX_MARCH_STEPS     128
 
-    #define SCENE_ATTRIB_POSITION 0
+#define SCENE_DEFAULT_WIDTH  480
+#define SCENE_DEFAULT_HEIGHT 360
+
+#define SCENE_FPS_INTERVAL_MS 1000
+
+/**
+ * @brief How much of the window the shader actually runs over, before the result is blown back up.
+ */
+#define SCENE_DEFAULT_PIXEL_SCALE 4
+#define SCENE_MIN_PIXEL_SCALE     1
+#define SCENE_MAX_PIXEL_SCALE     16
+
+/**
+ * @brief The raymarching budget, which has to stay at or below MARCH_STEPS_MAX in the shader.
+ */
+#define SCENE_DEFAULT_MARCH_STEPS 96
+#define SCENE_MIN_MARCH_STEPS     16
+#define SCENE_MAX_MARCH_STEPS     128
+
+#define SCENE_ATTRIB_POSITION 0
 
 
 
@@ -863,12 +862,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-#else
-
-    #include <stdio.h>
-
-int main(int argc, char** argv) {
-    return fprintf(stderr, "OSMesa not available\n"), 1;
-}
-
-#endif

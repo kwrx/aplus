@@ -36,6 +36,19 @@ def pkg_get(remote, cache, repo, repo_version, p):
 
 
 
+def pkg_filter(member, path):
+    """
+    Extraction filter dropping symlinks that point into a package staging directory.
+    """
+    if (member.issym() or member.islnk()) and '/__out/' in member.linkname:
+        if verbose:
+            print(' - Skip %s -> %s' % (member.name, member.linkname))
+        return None
+
+    return tarfile.tar_filter(member, path)
+
+
+
 def pkg_process(z, trigger, prefix):
     """
     Process trigger file
@@ -51,7 +64,7 @@ def pkg_process(z, trigger, prefix):
     if verbose:
         print(' - Extract %s in %s/%s/%s' % (trigger, cache, repo, trigger))
 
-    z.extract('.pkg/%s' % (trigger), '%s/%s' % (cache, repo))
+    z.extract('.pkg/%s' % (trigger), '%s/%s' % (cache, repo), filter=pkg_filter)
 
 
     print('Processing %s...' % (trigger))
@@ -79,14 +92,12 @@ def pkg_extract(archive, prefix):
         if m == '.pkg/post-install':
             continue
 
-
-
         if os.path.exists('%s/%s' % (prefix, m)) == False:
             
             if verbose:
                 print(' - Extract %s in %s' % (m, prefix))
 
-            z.extract(m, path=prefix)
+            z.extract(m, path=prefix, filter=pkg_filter)
 
 
     pkg_process(z, 'post-install', prefix)
