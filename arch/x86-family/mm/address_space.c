@@ -362,6 +362,9 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
         dest->mmap.heap_end   = parent->mmap.heap_end;
         dest->mmap.heap_limit = parent->mmap.heap_limit;
 
+        dest->brk.start = parent->brk.start;
+        dest->brk.end   = parent->brk.end;
+
         memcpy(&dest->mmap.mappings, &parent->mmap.mappings, sizeof(mmap_mapping_t) * CONFIG_MMAP_MAX);
 
         shm_address_space_clone(parent, dest);
@@ -371,6 +374,9 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
         dest->mmap.heap_start = parent->mmap.heap_start;
         dest->mmap.heap_end   = parent->mmap.heap_start;
         dest->mmap.heap_limit = parent->mmap.heap_limit;
+
+        dest->brk.start = 0UL;
+        dest->brk.end   = 0UL;
     }
 
 
@@ -438,6 +444,9 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
     space->mmap.heap_start = 0UL;
     space->mmap.heap_end   = 0UL;
     space->mmap.heap_limit = 0UL;
+
+    space->brk.start = 0UL;
+    space->brk.end   = 0UL;
 
     kfree(space);
 }

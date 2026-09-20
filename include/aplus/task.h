@@ -337,8 +337,6 @@ typedef struct task {
     struct {
 
         uintptr_t stack;
-        uintptr_t start;
-        uintptr_t end;
 
         uintptr_t thread_area;
         uintptr_t cpu_area;

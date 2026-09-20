@@ -163,6 +163,15 @@ typedef struct vmm_address_space {
 
     } mmap;
 
+    /* The program break, shared by every thread in this space: where the executable image
+       starts, and how far brk(2) has grown the heap past its end. */
+    struct {
+
+        uintptr_t start;
+        uintptr_t end;
+
+    } brk;
+
     /* Shared memory segments attached into this space, as shmat(2) left them. Held here
        rather than per-task because threads share an address space and therefore share the
        attachments: the segment's reference is released when the last of them is gone. */

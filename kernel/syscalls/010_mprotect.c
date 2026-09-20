@@ -79,7 +79,7 @@ SYSCALL(
             return -EINVAL;
 
 
-        const bool in_program = (start >= current_task->userspace.start && end <= current_task->userspace.end);
+        const bool in_program = (start >= current_task->address_space->brk.start && end <= current_task->address_space->brk.end);
         const bool in_mmap    = (start >= current_task->address_space->mmap.heap_start && end <= current_task->address_space->mmap.heap_end);
 
         if (unlikely(!in_program && !in_mmap))

@@ -197,12 +197,12 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
 
     o->exit_value = t->exit.value;
 
-    o->vm_start = t->userspace.start;
-    o->vm_end   = t->userspace.end;
     o->vm_stack = t->userspace.stack;
 
     if (likely(t->address_space)) {
 
+        o->vm_start   = t->address_space->brk.start;
+        o->vm_end     = t->address_space->brk.end;
         o->rss_pages  = t->address_space->size;
         o->heap_start = t->address_space->mmap.heap_start;
         o->heap_end   = t->address_space->mmap.heap_end;
