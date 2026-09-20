@@ -48,11 +48,7 @@
 /**
  * @brief One past the highest descriptor that can ever exist.
  */
-    #if defined(CONFIG_HAVE_NETWORK)
-        #define POLL_FD_MAX (CONFIG_OPEN_MAX + CONFIG_SOCKET_MAX)
-    #else
-        #define POLL_FD_MAX (CONFIG_OPEN_MAX)
-    #endif
+    #define POLL_FD_MAX (CONFIG_OPEN_MAX + CONFIG_SOCKET_MAX)
 
 
 /**

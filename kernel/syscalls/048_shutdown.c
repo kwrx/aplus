@@ -35,9 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 /***
@@ -62,7 +60,6 @@ SYSCALL(
             return unix_shutdown(us, flags);
 
 
-#if defined(CONFIG_HAVE_NETWORK)
         int socket = socket_from_fd(fd);
 
         if (unlikely(socket < 0))
@@ -75,8 +72,4 @@ SYSCALL(
             return -errno;
 
         return e;
-
-#else
-    return -ENOSYS;
-#endif
     });

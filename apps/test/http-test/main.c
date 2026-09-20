@@ -21,27 +21,26 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if CONFIG_HAVE_NETWORK
-    #include <dirent.h>
-    #include <errno.h>
-    #include <fcntl.h>
-    #include <getopt.h>
-    #include <poll.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <sys/stat.h>
-    #include <time.h>
-    #include <unistd.h>
+#include <dirent.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <getopt.h>
+#include <poll.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
 
 
-    #include <arpa/inet.h>
-    #include <netdb.h>
-    #include <netinet/in.h>
-    #include <netinet/tcp.h>
-    #include <sys/socket.h>
-    #include <sys/types.h>
-    #include <sys/un.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <netinet/tcp.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <sys/un.h>
 
 
 
@@ -116,13 +115,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-#else
-
-    #include <stdio.h>
-
-int main(int argc, char** argv) {
-    fprintf(stderr, "Network support not enabled\n");
-    return 1;
-}
-
-#endif

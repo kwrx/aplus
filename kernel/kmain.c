@@ -65,10 +65,8 @@ void kmain(void) {
     extern void vfs_init(void);
     vfs_init();
 
-#if defined(CONFIG_HAVE_NETWORK)
     extern void network_init(void);
     network_init();
-#endif
 
 
     // Mount fake root
@@ -87,10 +85,8 @@ void kmain(void) {
     extern void root_init(void);
     root_init();
 
-#if defined(CONFIG_HAVE_SMP)
     extern void smp_init(void);
     smp_init();
-#endif
 
 #if defined(CONFIG_HAVE_TEST)
     extern void test_init(void);

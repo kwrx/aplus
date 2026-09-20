@@ -35,9 +35,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
-    #include <aplus/network.h>
-#endif
+#include <aplus/network.h>
 
 
 /***
@@ -60,16 +58,10 @@ SYSCALL(
         if (domain == AF_UNIX_LOCAL)
             return unix_socket(type, protocol);
 
-
-#if defined(CONFIG_HAVE_NETWORK)
         ssize_t e;
 
         if ((e = lwip_socket(domain, type, protocol)) < 0)
             return -errno;
 
         return socket_install((int)e, 0);
-
-#else
-    return -ENOSYS;
-#endif
     });

@@ -45,16 +45,15 @@
 #include <aplus/task.h>
 #include <aplus/vfs.h>
 
-#if defined(CONFIG_HAVE_NETWORK)
 
-    #include <aplus/network.h>
+#include <aplus/network.h>
 
 
-    /**
-     * @brief Distinct from the local-socket filesystem in kernel/ipc/unix.c, which the superblock tells apart.
-     */
-    #define SOCKFS_FSID      0xDEADB0CF
-    #define SOCKFS_FIRST_INO 0xFFFFFFFFF000000
+/**
+ * @brief Distinct from the local-socket filesystem in kernel/ipc/unix.c, which the superblock tells apart.
+ */
+#define SOCKFS_FSID      0xDEADB0CF
+#define SOCKFS_FIRST_INO 0xFFFFFFFFF000000
 
 
 static struct superblock sockfs_superblock = {
@@ -73,8 +72,8 @@ static ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 /**
  * @brief The lwIP index lives in inode->userdata, biased by one so that index 0 stays distinct from NULL.
  */
-    #define SOCKFS_ENCODE(s) ((void*)(uintptr_t)((s) + 1))
-    #define SOCKFS_DECODE(p) ((int)(uintptr_t)(p) - 1)
+#define SOCKFS_ENCODE(s) ((void*)(uintptr_t)((s) + 1))
+#define SOCKFS_DECODE(p) ((int)(uintptr_t)(p) - 1)
 
 
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
@@ -387,5 +386,3 @@ int socket_install(int socket, int flags) {
 
     return fd;
 }
-
-#endif
