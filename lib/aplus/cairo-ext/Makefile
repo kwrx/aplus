@@ -2,6 +2,7 @@ INCLUDES += include
 INCLUDES += $(ROOTDIR)/include
 
 CFLAGS   += -isystem $(SYSROOT)/usr/include
+CFLAGS   += -DPATH_MAX=4096
 
 RESOURCES += $(SYSROOT)/usr/include/aplus/cairo-ext/cairo-webp.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/cairo-ext/cairo-jpeg.h
