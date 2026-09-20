@@ -41,14 +41,15 @@ extern "C" {
  * that wants text, and it is deliberately outside ui-widgets.h: translation names no cairo
  * type, so a program drawing its own pixels can have characters without the widget layer.
  *
- * A keymap is the one loaded by the console, in the binary form kbd(1) writes.
+ * A keymap is the one loaded by the console, in the binary form kbd(1) writes, gzipped or
+ * not: the files the system installs under /usr/share/keymaps are compressed.
  */
 
 
 /**
  * @brief The keymap loaded when neither a path nor the environment names one.
  */
-#define UI_KEYMAP_DEFAULT "/usr/share/keymaps/it.map"
+#define UI_KEYMAP_DEFAULT "/usr/share/keymaps/it.map.gz"
 
 /**
  * @brief The variable that names a keymap for the whole session.
@@ -106,6 +107,23 @@ size_t ui_keymap_translate(ui_keymap_t* keymap, uint16_t vkey, bool down, char* 
  * @return The mask, or 0 when there is no keymap.
  */
 uint8_t ui_keymap_modifiers(const ui_keymap_t* keymap);
+
+/**
+ * @brief Reports the entry a key has under the modifiers currently held, without acting on it.
+ *
+ * For a caller that wants more than the characters: the entry carries a KT_* type in its high
+ * byte, so the keys ui_keymap_translate() says nothing about -- Enter, the cursor keys, the
+ * keypad -- can be told apart and turned into whatever that caller sends for them. Compare it
+ * against the K_* constants of <aplus/input.h>.
+ *
+ * This reads the map and nothing else. The modifier state is still maintained by
+ * ui_keymap_translate(), which every key event must go through.
+ *
+ * @param keymap The keymap.
+ * @param vkey The key code, as UI_EVENT_KEY carried it.
+ * @return The entry, or 0 when there is no keymap or the key is out of range.
+ */
+uint16_t ui_keymap_lookup(const ui_keymap_t* keymap, uint16_t vkey);
 
 /**
  * @brief Forgets which modifiers are held, for a window that has just lost the keyboard.
