@@ -144,16 +144,17 @@ static void launcher_theme_init(void) {
 /**
  * @brief Reports the window height that shows a number of rows and no part of another.
  *
- * The list insets its rows by a pixel at the top and at the bottom, which is the 2 below.
+ * No rows is the field on its own, which is what an untouched launcher looks like. The list
+ * insets its rows by a pixel at the top and at the bottom, which is the 2 below.
  *
- * @param rows How many rows to fit, clamped to at least one and at most LAUNCHER_ROWS_MAX.
+ * @param rows How many rows to fit, clamped to at most LAUNCHER_ROWS_MAX.
  * @return The height in pixels.
  */
 
 static int launcher_height(int rows) {
 
     if (rows < 1) {
-        rows = 1;
+        return LAUNCHER_FIELD + 2 * LAUNCHER_MARGIN;
     }
 
     if (rows > LAUNCHER_ROWS_MAX) {
@@ -165,7 +166,7 @@ static int launcher_height(int rows) {
 
 
 /**
- * @brief Reports whether an entry answers to a query, which nothing does more readily than an empty one.
+ * @brief Reports whether an entry answers to a query, which nothing does until a character is typed.
  *
  * @param entry The entry to test.
  * @param query What was typed.
@@ -175,7 +176,7 @@ static int launcher_height(int rows) {
 static bool launcher_matches(const launcher_entry_t* entry, const char* query) {
 
     if (!*query) {
-        return true;
+        return false;
     }
 
     return strcasestr(entry->name, query) != NULL || strcasestr(entry->comment, query) != NULL || strcasestr(entry->exec, query) != NULL;
@@ -185,8 +186,9 @@ static bool launcher_matches(const launcher_entry_t* entry, const char* query) {
 /**
  * @brief Rebuilds the list from what is in the field, and asks for the height that now fits it.
  *
- * A query that matches nothing is offered to the shell instead, which is the whole of what
- * this has that a menu does not.
+ * An empty field lists nothing and leaves the window the height of the field alone. A query
+ * that matches nothing is offered to the shell instead, which is the whole of what this has
+ * that a menu does not.
  */
 
 static void launcher_refilter(void) {
@@ -214,9 +216,12 @@ static void launcher_refilter(void) {
         ui_list_add_icon(launcher.list, LAUNCHER_ICON_SHELL, row, "shell", LAUNCHER_RUN_ROW);
     }
 
-    ui_list_select(launcher.list, 0);
+    const size_t rows = ui_list_count(launcher.list);
 
-    ui_window_request_size(launcher.window, LAUNCHER_WINDOW_WIDTH, launcher_height((int)ui_list_count(launcher.list)));
+    ui_list_select(launcher.list, 0);
+    ui_widget_set_visible(launcher.list, rows > 0);
+
+    ui_window_request_size(launcher.window, LAUNCHER_WINDOW_WIDTH, launcher_height((int)rows));
 }
 
 
@@ -420,14 +425,21 @@ static void launcher_layout(ui_view_t* view, int width, int height, void* user) 
 
     const ui_rect_t inner = ui_rect_inset(bounds, LAUNCHER_MARGIN);
 
-    if (inner.width <= 0 || inner.height <= LAUNCHER_FIELD + LAUNCHER_MARGIN) {
+    if (inner.width <= 0 || inner.height < LAUNCHER_FIELD) {
         return;
+    }
+
+
+    int remaining = inner.height - LAUNCHER_FIELD - LAUNCHER_MARGIN;
+
+    if (remaining < 0) {
+        remaining = 0;
     }
 
 
     const ui_rect_t field = {inner.x, inner.y, inner.width, LAUNCHER_FIELD};
 
-    const ui_rect_t rows = {inner.x, inner.y + LAUNCHER_FIELD + LAUNCHER_MARGIN, inner.width, inner.height - LAUNCHER_FIELD - LAUNCHER_MARGIN};
+    const ui_rect_t rows = {inner.x, inner.y + LAUNCHER_FIELD + LAUNCHER_MARGIN, inner.width, remaining};
 
     ui_widget_place(launcher.field, field);
     ui_widget_place(launcher.list, rows);
@@ -556,7 +568,7 @@ int main(int argc, char** argv) {
     }
 
 
-    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height((int)launcher.count), LAUNCHER_NAME, UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
+    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(0), LAUNCHER_NAME, UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
 
     if (!launcher.window) {
 
