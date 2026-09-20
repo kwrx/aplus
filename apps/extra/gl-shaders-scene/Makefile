@@ -4,6 +4,8 @@ INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
 CFLAGS   += -include $(ROOTDIR)/config.h
 CFLAGS   += -isystem $(SYSROOT)/usr/include
 
+LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
+
 LIBS      += ui GL stdc++ supc++ z m
 RESOURCES += $(SYSROOT)/usr/share/applications/gl-shaders-scene.desktop
 

@@ -3,6 +3,7 @@ INCLUDES += $(ROOTDIR)/include
 
 CFLAGS   += -isystem $(SYSROOT)/usr/include
 CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
+CFLAGS   += -DPATH_MAX=4096
 
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui-widgets.h
