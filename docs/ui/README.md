@@ -75,14 +75,16 @@ its whole frame instead — see
 `libui` is built and installed by the ordinary `./makew all`; the headers land in
 `$(SYSROOT)/usr/include/aplus/` and the archive in `$(SYSROOT)/usr/lib/libui.a`.
 
-An application that only uses the surface layer needs nothing beyond `-lui`. Because
-`libui.a` is a static archive, the linker only pulls in the objects that are actually
-referenced, so a client that never touches a view never drags cairo in:
+An application that only uses the surface layer needs nothing beyond `-lui` and the `-lz`
+the keymap is read through. Because `libui.a` is a static archive, the linker only pulls in
+the objects that are actually referenced, so a client that never touches a view never drags
+cairo in:
 
 ```make
 INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
-LIBS     += ui
+LDFLAGS  += -L$(ROOTDIR)/lib/aplus/ui
+LIBS     += ui z
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk
 ```
@@ -98,6 +100,8 @@ CFLAGS   += -include $(ROOTDIR)/config.h
 CFLAGS   += -isystem $(SYSROOT)/usr/include
 CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
 
+LDFLAGS  += -L$(ROOTDIR)/lib/aplus/ui
+
 LIBS     += ui cairo pixman-1 freetype png z
 
 include $(ROOTDIR)/build/cross.mk
@@ -108,6 +112,13 @@ The `CFLAGS += -include $(ROOTDIR)/config.h` line is not optional decoration. `b
 supplies the config header with `?=`, so *any* `CFLAGS` assignment placed above the include
 silently cancels it, every `CONFIG_*` macro becomes undefined, and code guarded by one
 compiles down to its `#else` branch without a warning.
+
+The `LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui` line is not optional either, and what it prevents
+is worse than a build error. `build-binary.mk` links against `$(SYSROOT)/usr/lib`, which holds
+the copy of `libui.a` installed by the *last* `./makew install` — so without this line, editing
+the library and rebuilding an application links it against the old archive and the change
+simply does not appear. `LDFLAGS` is placed ahead of the sysroot directory on the link line, so
+naming the build directory here picks up the archive that was just built.
 
 `LIBS` order matters: `ui` before `cairo`, `cairo` before its own dependencies. The
 archives are searched left to right.

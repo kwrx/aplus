@@ -607,20 +607,23 @@ what it is.
 ```c
 #include <aplus/ui-keymap.h>
 
-#define UI_KEYMAP_DEFAULT "/usr/share/keymaps/it.map"
+#define UI_KEYMAP_DEFAULT "/usr/share/keymaps/it.map.gz"
 #define UI_KEYMAP_ENV     "APLUS_KEYMAP"
 
 ui_keymap_t* ui_keymap_open(const char* path);
 void         ui_keymap_close(ui_keymap_t* keymap);
 
-size_t  ui_keymap_translate(ui_keymap_t* keymap, uint16_t vkey, bool down, char* out, size_t size);
-uint8_t ui_keymap_modifiers(const ui_keymap_t* keymap);
-void    ui_keymap_reset(ui_keymap_t* keymap);
+size_t   ui_keymap_translate(ui_keymap_t* keymap, uint16_t vkey, bool down, char* out, size_t size);
+uint16_t ui_keymap_lookup(const ui_keymap_t* keymap, uint16_t vkey);
+uint8_t  ui_keymap_modifiers(const ui_keymap_t* keymap);
+void     ui_keymap_reset(ui_keymap_t* keymap);
 ```
 
 The server sends key codes and no keymap, on the reasoning that translation belongs wherever
 the characters are actually needed. This is that place, in the one form the system already has
-one: the binary map `kbd(1)` writes, which the console loads too.
+one: the binary map `kbd(1)` writes, which the console loads too. The map is read through
+zlib, so the gzipped files installed under `/usr/share/keymaps` and a plain one both work —
+which is why a client that reaches this far also links `z`.
 
 An entry opens `UI_KEYMAP_DEFAULT` the first time a key reaches it — `APLUS_KEYMAP` overrides
 that for a session — and works without one, minus the typing: a missing map is not an error
@@ -635,6 +638,16 @@ answers in UTF-8 — a map holds one byte per key in the console's charset, and 
 letter leaves here as the two bytes that encode it — and it answers with control bytes too,
 because `Escape` really is `0x1B` in a keymap. Act on those key codes before asking, the way
 the entry does.
+
+`ui_keymap_lookup()` is for a caller that wants more than the characters. It reports the entry
+a key has under the modifiers currently held, without acting on it: the entry carries a `KT_*`
+type in its high byte, so the keys `ui_keymap_translate()` says nothing about — `Enter`, the
+cursor keys, the keypad — can be told apart and turned into whatever that caller sends for
+them. Compare it against the `K_*` constants of `<aplus/input.h>`. It reads the map and
+nothing else, so every key event still has to go through `ui_keymap_translate()`, which is
+what maintains the modifier state this is read against. The terminal emulator is the caller
+this exists for: it takes the characters from `ui_keymap_translate()` and turns the rest into
+the escape sequences a pty expects.
 
 `ui_keymap_reset()` is for `UI_EVENT_FOCUS` on loss: the release that would have cleared a held
 modifier goes to whoever has the focus now, and without it the field comes back with shift

@@ -6,9 +6,9 @@
 |**BUG**|`arch/x86-family/task.c`|prev->frame is randomly NULL|[#](/arch/x86-family/task.c#L206)|
 |**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L366)|
 |**FIXME**|`arch/x86-family/mm/address_space.c`|a copy-on-write frame may still be referenced by another address space,|[#](/arch/x86-family/mm/address_space.c#L265)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L254)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L281)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L308)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L255)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L282)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L309)|
 |**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|[#](/kernel/syscalls/202_futex.c#L183)|
 |**TODO**|`arch/x86-family/debug.c`|CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.|[#](/arch/x86-family/debug.c#L169)|
 |**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L218)|
@@ -17,7 +17,7 @@
 |**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown. Until an IPI vector exists, another CPU running this same|[#](/arch/x86-family/mm/tlb.c#L54)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|[#](/arch/x86-family/reboot.c#L88)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|[#](/arch/x86-family/reboot.c#L47)|
-|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L342)|
+|**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L360)|
 |**TODO**|`drivers/dev/interface/main.c`|block_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L143)|
 |**TODO**|`drivers/dev/interface/main.c`|char_ioctl(): need implementation|[#](/drivers/dev/interface/main.c#L140)|
 |**TODO**|`drivers/platform/pc/block/ahci/main.c`|implements ahci de-initialitation|[#](/drivers/platform/pc/block/ahci/main.c#L1464)|
@@ -38,9 +38,9 @@
 |**TODO**|`kernel/network/core/ipv6/dhcp6.c`||[#](/kernel/network/core/ipv6/dhcp6.c#L12)|
 |**TODO**|`kernel/network/core/ipv6/ip6.c`|process routing by the type|[#](/kernel/network/core/ipv6/ip6.c#L873)|
 |**TODO**|`kernel/network/netif/lowpan6.c`|handle the case where we already have FRAGN received|[#](/kernel/network/netif/lowpan6.c#L705)|
-|**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L91)|
-|**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|[#](/kernel/syscalls/012_brk.c#L70)|
+|**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L97)|
+|**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|[#](/kernel/syscalls/012_brk.c#L76)|
 |**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|[#](/kernel/syscalls/058_vfork.c#L53)|
 |**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L192)|
-|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L131)|
+|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L125)|
 |**TODO**|`kernel/syscalls/229_clock_getres.c`|update <sys/features.h>|[#](/kernel/syscalls/229_clock_getres.c#L24)|

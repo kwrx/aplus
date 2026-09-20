@@ -50,7 +50,7 @@ Userspace is still under development, and is assembled from two sources: the pro
 
 Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, a [file manager](/apps/sysutils/aplus-explorer), a [calculator](/apps/sysutils/aplus-calculator), an [image viewer](/apps/sysutils/aplus-image-viewer) that draws PNG, JPEG and WebP through [cairo-ext](/lib/aplus/cairo-ext), an [application launcher](/apps/sysutils/aplus-launcher) on `Super+Space` that searches the installed `.desktop` files, the [aplus-xopen](/apps/sysutils/aplus-xopen) opener that hands a path to whichever of them handles it, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
 
-Pulled in as packages by the default `x86_64` preset: BusyBox, the `dash` and `bash` shells, system fonts, cursors, keymaps and sample pictures, the `zlib`, `libpng`, `libjpeg`, `libwebp`, `freetype`, `pixman` and `cairo` libraries, plus Doom and a NES emulator. Others are optional and off by default — among them `gcc`, `binutils`, MesaGL, a Javascript interpreter and a very simple Java Virtual Machine — and can be toggled from the Kconfig menu.
+Pulled in as packages, all of them, on every `./configure`: BusyBox, the `dash` and `bash` shells, system fonts, cursors, keymaps and sample pictures, the `zlib`, `libpng`, `libjpeg-turbo`, `libwebp`, `freetype`, `pixman`, `cairo`, `expat`, `libtsm`, LibreSSL and cURL libraries, MesaGL, the [NetSurf](https://www.netsurf-browser.org/) web browser, and `gcc` and `binutils` with the arithmetic libraries they need — a native toolchain, so the guest compiles programs for itself. Doom and a NES emulator are the only optional ones left, off by default and toggled from the Kconfig menu.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
 
@@ -126,6 +126,7 @@ $ ./makew run
 * [FEATURES.md](/docs/FEATURES.md) — per-architecture and per-subsystem feature matrix
 * [SYSCALLS.md](/docs/SYSCALLS.md) — the syscall table
 * [REPORT.md](/docs/REPORT.md) — outstanding `TODO`/`FIXME` markers in the tree
+* [docs/ui/](/docs/ui/README.md) — the display server, the wire protocol, and writing a graphical application against [libui](/lib/aplus/ui)
 
 ---
 
