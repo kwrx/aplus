@@ -23,10 +23,12 @@
 
 
 #include <assert.h>
+#include <cairo/cairo.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <getopt.h>
 #include <libtsm.h>
+#include <math.h>
 #include <poll.h>
 #include <pty.h>
 #include <sched.h>
@@ -34,29 +36,52 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
 #include <aplus/events.h>
 #include <aplus/input.h>
+#include <aplus/ui-draw.h>
+#include <aplus/ui-keymap.h>
 #include <aplus/ui.h>
 
 #include <pthread.h>
 
-#define CONFIG_ATERM_BUILTIN_FONT 1
+/**
+ * @brief The monospaced faces the terminal draws with, and the pixel size they are scaled to.
+ */
+#if !defined(CONFIG_ATERM_FONT_PATH)
+    #define CONFIG_ATERM_FONT_PATH "/usr/share/fonts/ttf/UbuntuMono-R.ttf"
+#endif
 
-#if defined(CONFIG_ATERM_BUILTIN_FONT)
-    #include "lib/builtin_font.h"
-#else
-    #include <freetype2/ft2build.h>
-    #include FT_FREETYPE_H
+#if !defined(CONFIG_ATERM_FONT_BOLD_PATH)
+    #define CONFIG_ATERM_FONT_BOLD_PATH "/usr/share/fonts/ttf/UbuntuMono-B.ttf"
+#endif
+
+#if !defined(CONFIG_ATERM_FONT_SIZE)
+    #define CONFIG_ATERM_FONT_SIZE 16
 #endif
 
 
-static struct {
+/**
+ * @brief How many codepoints keep the glyph they map to one array lookup away.
+ */
+#define ATERM_GLYPH_CACHE_MAX 512
 
-    void (*plot)(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b);
+
+/**
+ * @brief A face scaled to the cell size, along with the glyph indices it has already been asked for.
+ */
+typedef struct {
+
+    cairo_scaled_font_t* scaled;
+
+    int32_t glyphs[ATERM_GLYPH_CACHE_MAX];
+
+} aterm_font_t;
+
+
+static struct {
 
     int masterfd;
     int slavefd;
@@ -87,31 +112,7 @@ static struct {
     //? the end of a draw, two interleaved repaints would also interleave on the wire.
     pthread_mutex_t lock;
 
-    struct {
-
-        struct {
-
-            struct {
-                union {
-                    struct {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-                        uint8_t val;
-                        uint8_t typ;
-#else
-                        uint8_t typ;
-                        uint8_t val;
-#endif
-                    } __attribute__((packed));
-
-                    uint16_t raw;
-                };
-            } __attribute__((packed)) keys[NR_KEYS];
-
-        } __attribute__((packed)) maps[256];
-
-        uint8_t modifiers;
-
-    } keymap;
+    ui_keymap_t* keymap;
 
     struct {
         char* buffer;
@@ -121,11 +122,23 @@ static struct {
 
     pthread_t thr_ui;
 
+    //? The window's buffer as cairo sees it. The buffer is the server's, so a configure hands
+    //? over another one and everything bound to the old one has to be built again.
+    cairo_surface_t* surface;
+    cairo_t* cr;
 
-#if !defined(CONFIG_ATERM_BUILTIN_FONT)
-    FT_Library ft;
-    FT_Face face;
-#endif
+    //? A cell is the regular face's widest advance by its line height, which is what makes a
+    //? column of text line up: every glyph is drawn at a multiple of it, not at a pen position.
+    struct {
+
+        aterm_font_t regular;
+        aterm_font_t bold;
+
+        int width;
+        int height;
+        int baseline;
+
+    } font;
 
 } context = {0};
 
@@ -156,23 +169,222 @@ static void show_version(int argc, char** argv) {
 
 
 /**
- * @brief Plots one pixel into the window surface, which is 32-bit whatever the framebuffer's depth is.
+ * @brief Binds a cairo context to the buffer the window is holding right now.
  *
- * @param x The column to plot.
- * @param y The row to plot.
- * @param r The red component.
- * @param g The green component.
- * @param b The blue component.
+ * @return 0 on success, or -1 with errno set.
  */
-static void win_plot(uint16_t x, uint16_t y, uint8_t r, uint8_t g, uint8_t b) {
+static int aterm_bind_surface(void) {
 
-    uint8_t* pixels = (uint8_t*)ui_window_pixels(context.win);
+    if (context.cr) {
+        cairo_destroy(context.cr);
+        context.cr = NULL;
+    }
 
-    *(uint32_t*)(pixels + ((size_t)y * ui_window_stride(context.win)) + ((size_t)x * sizeof(uint32_t))) = 0xFF000000 | ((uint32_t)r << 16) | ((uint32_t)g << 8) | b;
+    if (context.surface) {
+        cairo_surface_destroy(context.surface);
+        context.surface = NULL;
+    }
+
+
+    const int width  = ui_window_width(context.win);
+    const int height = ui_window_height(context.win);
+
+    unsigned char* pixels = (unsigned char*)ui_window_pixels(context.win);
+
+    if (!pixels || width <= 0 || height <= 0) {
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    const cairo_format_t format = ui_window_translucent(context.win) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+
+    context.surface = cairo_image_surface_create_for_data(pixels, format, width, height, (int)ui_window_stride(context.win));
+
+    if (cairo_surface_status(context.surface) != CAIRO_STATUS_SUCCESS) {
+
+        cairo_surface_destroy(context.surface);
+
+        context.surface = NULL;
+        errno           = ENOMEM;
+
+        return -1;
+    }
+
+
+    context.cr = cairo_create(context.surface);
+
+    if (cairo_status(context.cr) != CAIRO_STATUS_SUCCESS) {
+
+        cairo_destroy(context.cr);
+        cairo_surface_destroy(context.surface);
+
+        context.cr      = NULL;
+        context.surface = NULL;
+        errno           = ENOMEM;
+
+        return -1;
+    }
+
+    return 0;
 }
 
 
+/**
+ * @brief Loads the faces the terminal draws with and takes the cell size from their metrics.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+static int aterm_font_init(void) {
+
+    cairo_font_face_t* regular = ui_font_face(CONFIG_ATERM_FONT_PATH);
+
+    if (!regular) {
+        errno = ENOENT;
+        return -1;
+    }
+
+    cairo_font_face_t* bold = ui_font_face(CONFIG_ATERM_FONT_BOLD_PATH);
+
+    if (!bold) {
+        bold = regular;
+    }
+
+
+    context.font.regular.scaled = ui_font_scaled(regular, CONFIG_ATERM_FONT_SIZE);
+    context.font.bold.scaled    = ui_font_scaled(bold, CONFIG_ATERM_FONT_SIZE);
+
+    if (!context.font.regular.scaled || !context.font.bold.scaled) {
+        errno = ENOMEM;
+        return -1;
+    }
+
+
+    memset(context.font.regular.glyphs, 0xFF, sizeof(context.font.regular.glyphs));
+    memset(context.font.bold.glyphs, 0xFF, sizeof(context.font.bold.glyphs));
+
+
+    cairo_font_extents_t extents;
+
+    cairo_scaled_font_extents(context.font.regular.scaled, &extents);
+
+    context.font.width    = (int)ceil(extents.max_x_advance);
+    context.font.height   = (int)ceil(extents.height);
+    context.font.baseline = (int)ceil(extents.ascent);
+
+    if (context.font.width < 1) {
+        context.font.width = 1;
+    }
+
+    if (context.font.height < 1) {
+        context.font.height = 1;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Encodes one codepoint as UTF-8, which is the only thing cairo maps to a glyph.
+ *
+ * @param codepoint The codepoint.
+ * @param out A buffer of at least four bytes.
+ * @return How many bytes were written.
+ */
+static size_t aterm_utf8_encode(uint32_t codepoint, char* out) {
+
+    if (codepoint < 0x80) {
+
+        out[0] = (char)codepoint;
+
+        return 1;
+    }
+
+    if (codepoint < 0x800) {
+
+        out[0] = (char)(0xC0 | (codepoint >> 6));
+        out[1] = (char)(0x80 | (codepoint & 0x3F));
+
+        return 2;
+    }
+
+    if (codepoint < 0x10000) {
+
+        out[0] = (char)(0xE0 | (codepoint >> 12));
+        out[1] = (char)(0x80 | ((codepoint >> 6) & 0x3F));
+        out[2] = (char)(0x80 | (codepoint & 0x3F));
+
+        return 3;
+    }
+
+    out[0] = (char)(0xF0 | (codepoint >> 18));
+    out[1] = (char)(0x80 | ((codepoint >> 12) & 0x3F));
+    out[2] = (char)(0x80 | ((codepoint >> 6) & 0x3F));
+    out[3] = (char)(0x80 | (codepoint & 0x3F));
+
+    return 4;
+}
+
+
+/**
+ * @brief Reports the glyph a codepoint stands for in a face, out of the face's own cache.
+ *
+ * Mapping a character costs a charmap lookup on the face behind the scaled font, and a
+ * terminal asks for the same hundred or so characters for as long as it is open.
+ *
+ * @param font The face to look the codepoint up in.
+ * @param codepoint The codepoint.
+ * @return The glyph index, or 0 when the face has no glyph for it.
+ */
+static unsigned long aterm_glyph_index(aterm_font_t* font, uint32_t codepoint) {
+
+    if (codepoint < ATERM_GLYPH_CACHE_MAX && font->glyphs[codepoint] >= 0) {
+        return (unsigned long)font->glyphs[codepoint];
+    }
+
+
+    char utf8[4];
+
+    const size_t size = aterm_utf8_encode(codepoint, utf8);
+
+    cairo_glyph_t buffer[4];
+    cairo_glyph_t* glyphs = buffer;
+
+    int count = (int)(sizeof(buffer) / sizeof(buffer[0]));
+
+    unsigned long index = 0;
+
+    if (cairo_scaled_font_text_to_glyphs(font->scaled, 0.0, 0.0, utf8, (int)size, &glyphs, &count, NULL, NULL, NULL) == CAIRO_STATUS_SUCCESS) {
+
+        if (count > 0) {
+            index = glyphs[0].index;
+        }
+    }
+
+    if (glyphs != buffer) {
+        cairo_glyph_free(glyphs);
+    }
+
+    if (codepoint < ATERM_GLYPH_CACHE_MAX) {
+        font->glyphs[codepoint] = (int32_t)index;
+    }
+
+    return index;
+}
+
+
+/**
+ * @brief Draws one cell: its background, the glyph standing in it, and the underline under that.
+ *
+ * Clipped to the cell, because only the cells libtsm reports as changed are repainted and a
+ * glyph reaching past its own advance would otherwise leave a piece of itself in a neighbour
+ * that is never drawn again.
+ */
 static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr* attr, tsm_age_t age, void* data) {
+
+    (void)id;
+    (void)width;
+    (void)data;
 
     assert(con);
     assert(attr);
@@ -184,137 +396,63 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     }
 
 
-    uint8_t fr;
-    uint8_t fg;
-    uint8_t fb;
-    uint8_t br;
-    uint8_t bg;
-    uint8_t bb;
+    const int x = (int)posx * context.font.width;
+    const int y = (int)posy * context.font.height;
 
-    if (attr->inverse) {
-        fr = attr->br;
-        fg = attr->bg;
-        fb = attr->bb;
-        br = attr->fr;
-        bg = attr->fg;
-        bb = attr->fb;
-    } else {
-        fr = attr->fr;
-        fg = attr->fg;
-        fb = attr->fb;
-        br = attr->br;
-        bg = attr->bg;
-        bb = attr->bb;
-    }
-
-
-    uint32_t gidx = len ? *ch : 0;
-
-
-#if defined(CONFIG_ATERM_BUILTIN_FONT)
-
-    posx *= ATERM_FONT_WIDTH;
-    posy *= ATERM_FONT_HEIGHT;
-
-    if ((int)(posx + ATERM_FONT_WIDTH) > ui_window_width(context.win) || (int)(posy + ATERM_FONT_HEIGHT) > ui_window_height(context.win))
+    if (x + context.font.width > ui_window_width(context.win) || y + context.font.height > ui_window_height(context.win)) {
         return 0;
-
-
-    ui_window_damage(context.win, (int)posx, (int)posy, ATERM_FONT_WIDTH, ATERM_FONT_HEIGHT);
-
-
-    if (gidx > 255) {
-        gidx = 0;
     }
 
-    const uint8_t* glyph = &builtin_fontdata[gidx * ATERM_FONT_PITCH];
 
-    uint8_t* const base = (uint8_t*)ui_window_pixels(context.win);
-    const size_t stride = ui_window_stride(context.win);
+    const double fr = (attr->inverse ? attr->br : attr->fr) / 255.0;
+    const double fg = (attr->inverse ? attr->bg : attr->fg) / 255.0;
+    const double fb = (attr->inverse ? attr->bb : attr->fb) / 255.0;
 
-    const uint32_t fg32 = 0xFF000000u | ((uint32_t)fr << 16) | ((uint32_t)fg << 8) | fb;
-    const uint32_t bg32 = 0xFF000000u | ((uint32_t)br << 16) | ((uint32_t)bg << 8) | bb;
+    const double br = (attr->inverse ? attr->fr : attr->br) / 255.0;
+    const double bg = (attr->inverse ? attr->fg : attr->bg) / 255.0;
+    const double bb = (attr->inverse ? attr->fb : attr->bb) / 255.0;
 
-    for (size_t i = 0; i < ATERM_FONT_HEIGHT; i++) {
 
-        uint32_t* row      = (uint32_t*)(base + ((size_t)posy + i) * stride) + posx;
-        const uint8_t bits = glyph[i];
+    cairo_t* cr = context.cr;
 
-        for (size_t j = 0; j < ATERM_FONT_WIDTH; j++) {
+    cairo_save(cr);
 
-            const uint32_t m = 0u - ((bits >> (ATERM_FONT_WIDTH - 1 - j)) & 1u);
+    cairo_rectangle(cr, x, y, context.font.width, context.font.height);
+    cairo_clip(cr);
 
-            row[j] = (fg32 & m) | (bg32 & ~m);
+    cairo_set_source_rgb(cr, br, bg, bb);
+    cairo_paint(cr);
+
+    cairo_set_source_rgb(cr, fr, fg, fb);
+
+
+    aterm_font_t* font = attr->bold ? &context.font.bold : &context.font.regular;
+
+    const uint32_t codepoint = len ? *ch : 0;
+
+    if (codepoint > ' ') {
+
+        const unsigned long index = aterm_glyph_index(font, codepoint);
+
+        if (index) {
+
+            cairo_glyph_t glyph = {.index = index, .x = (double)x, .y = (double)(y + context.font.baseline)};
+
+            cairo_set_scaled_font(cr, font->scaled);
+            cairo_show_glyphs(cr, &glyph, 1);
         }
     }
 
-#else
+    if (attr->underline) {
 
-    gidx = FT_Get_Char_Index(context.face, gidx);
-
-    posx *= 8;
-    posy *= 16;
-
-    if ((int)(posx + 8) > ui_window_width(context.win) || (int)(posy + 16) > ui_window_height(context.win))
-        return 0;
-
-
-    ui_window_damage(context.win, (int)posx, (int)posy, 8, 16);
-
-
-    for (size_t i = 0; i < 16; i++) {
-        for (size_t j = 0; j < 8; j++) {
-            context.plot(posx + j, posy + i, br, bg, bb);
-        }
+        cairo_rectangle(cr, x, y + context.font.baseline + 1, context.font.width, 1);
+        cairo_fill(cr);
     }
 
-
-    if (gidx == 0) {
-        return 0;
-    }
-
-    // draw with freetype
-    if (FT_Load_Glyph(context.face, gidx, FT_LOAD_DEFAULT)) {
-        return 0;
-    }
-
-    if (FT_Render_Glyph(context.face->glyph, FT_RENDER_MODE_MONO)) {
-        return 0;
-    }
+    cairo_restore(cr);
 
 
-    assert(context.face);
-    assert(context.face->glyph);
-
-
-    if (!context.face->glyph->bitmap.buffer) {
-        return 0;
-    }
-
-
-    int bbox_ymax   = context.face->bbox.yMax / 64;
-    int glyph_width = context.face->glyph->metrics.width / 64;
-    int advance     = context.face->glyph->metrics.horiAdvance / 64;
-    int x_off       = (advance - glyph_width) / 2;
-    int y_off       = bbox_ymax - (context.face->glyph->metrics.horiBearingY / 64);
-
-
-    for (size_t i = 0; i < context.face->glyph->bitmap.rows; i++) {
-        for (size_t j = 0; j < context.face->glyph->bitmap.width; j++) {
-
-            char ch = context.face->glyph->bitmap.buffer[i * context.face->glyph->bitmap.pitch + j / 8];
-
-            if (ch & (1 << (7 - j % 8))) {
-                context.plot(posx + j + x_off, posy + i + y_off, fr, fg, fb);
-            }
-        }
-    }
-
-
-
-#endif
-
-
+    ui_window_damage(context.win, x, y, context.font.width, context.font.height);
 
     return 0;
 }
@@ -353,8 +491,8 @@ static void tsm_update_screen() {
  */
 static void tsm_resize(unsigned int width, unsigned int height) {
 
-    unsigned int cols = width / ATERM_FONT_WIDTH;
-    unsigned int rows = height / ATERM_FONT_HEIGHT;
+    unsigned int cols = width / (unsigned int)context.font.width;
+    unsigned int rows = height / (unsigned int)context.font.height;
 
     if (cols < 1) {
         cols = 1;
@@ -373,11 +511,19 @@ static void tsm_resize(unsigned int width, unsigned int height) {
         return;
     }
 
+    if (aterm_bind_surface() < 0) {
+        fprintf(stderr, "aplus-terminal: cannot draw on the window surface: %s\n", strerror(errno));
+        pthread_mutex_unlock(&context.lock);
+        return;
+    }
+
     context.cols = cols;
     context.rows = rows;
 
-    if (tsm_screen_resize(context.con, cols, rows) < 0) {
-        fprintf(stderr, "aplus-terminal: tsm_screen_resize() failed\n");
+    int resized = tsm_screen_resize(context.con, cols, rows);
+
+    if (resized < 0) {
+        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", cols, rows, strerror(-resized));
     }
 
     context.age = 0;
@@ -401,8 +547,6 @@ static void tsm_resize(unsigned int width, unsigned int height) {
             fprintf(stderr, "aplus-terminal: ioctl(TIOCSWINSZ) failed: %s\n", strerror(errno));
         }
     }
-
-    tsm_update_screen();
 }
 
 
@@ -414,7 +558,7 @@ static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_inte
         return;
     }
 
-    if (write(out, ascii, size) != size) {
+    if (write(out, ascii, size) != (ssize_t)size) {
         perror("write");
     }
 
@@ -427,149 +571,60 @@ static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_inte
 }
 
 
+/**
+ * @brief Sends what a key event stands for to the shell.
+ *
+ * @param out The pty master to write to.
+ * @param keysym The key code the display server reported.
+ * @param down Whether the key went down or came up.
+ */
 static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
 
-    if (keysym > NR_KEYS) {
+    const uint16_t key = ui_keymap_lookup(context.keymap, keysym);
+
+    char produced[8];
+
+    const size_t size = ui_keymap_translate(context.keymap, keysym, down, produced, sizeof(produced));
+
+    if (size > 0) {
+        tsm_handle_input(out, produced, size, false);
         return;
     }
 
+    if (!down) {
+        return;
+    }
 
-#define KEY context.keymap.maps[context.keymap.modifiers].keys[keysym]
-
-
-    switch (KEY.typ) {
-
-        case KT_LATIN:
-
-            if (down) {
-                tsm_handle_input(out, (char*)&KEY.val, 1, false);
-            }
-
-            break;
-
-        case KT_FN:
-
-            break;
+    switch (KTYP(key)) {
 
         case KT_SPEC:
 
-            switch (KEY.raw) {
-
-                case K_ENTER:
-
-                    if (down) {
-                        tsm_handle_input(out, "\n", 1, false);
-                    }
-
-                    break;
-
-                default:
-
-                    break;
+            if (key == K_ENTER) {
+                tsm_handle_input(out, "\n", 1, false);
             }
-
-            break;
-
-        case KT_PAD:
-
-            break;
-
-        case KT_DEAD:
-
-            break;
-
-        case KT_CONS:
 
             break;
 
         case KT_CUR:
 
-            switch (KEY.raw) {
+            switch (key) {
 
                 case K_UP:
-
-                    if (down) {
-                        tsm_handle_input(out, "\e[A", 3, true);
-                    }
-
+                    tsm_handle_input(out, "\e[A", 3, true);
                     break;
 
                 case K_DOWN:
-
-                    if (down) {
-                        tsm_handle_input(out, "\e[B", 3, true);
-                    }
-
+                    tsm_handle_input(out, "\e[B", 3, true);
                     break;
 
                 case K_RIGHT:
-
-                    if (down) {
-                        tsm_handle_input(out, "\e[C", 3, true);
-                    }
-
+                    tsm_handle_input(out, "\e[C", 3, true);
                     break;
 
                 case K_LEFT:
-
-                    if (down) {
-                        tsm_handle_input(out, "\e[D", 3, true);
-                    }
-
+                    tsm_handle_input(out, "\e[D", 3, true);
                     break;
             }
-
-            break;
-
-        case KT_SHIFT:
-
-            if (down) {
-                context.keymap.modifiers |= (1 << (KEY.val));
-            } else {
-                context.keymap.modifiers &= ~(1 << (KEY.val));
-            }
-
-            break;
-
-        case KT_LOCK:
-
-            if (down) {
-                context.keymap.modifiers ^= 1 << (KEY.val);
-            }
-
-            break;
-
-        case KT_ASCII:
-
-            if (down) {
-                tsm_handle_input(out, (char*)&KEY.val, 1, false);
-            }
-
-            break;
-
-        case KT_LETTER:
-
-            if (down) {
-                tsm_handle_input(out, (char*)&KEY.val, 1, false);
-            }
-
-            break;
-
-        case KT_META:
-
-            break;
-
-        case KT_SLOCK:
-
-            break;
-
-        case KT_BRL:
-
-            break;
-
-        default:
-
-            fprintf(stderr, "Unknown key type: %04X (%d)\n", KEY.raw, keysym);
 
             break;
     }
@@ -651,8 +706,11 @@ static void* thr_ui_handler(void* arg) {
                 exit(0);
             }
 
-            case UI_EVENT_POINTER:
             case UI_EVENT_FOCUS:
+                ui_keymap_reset(context.keymap);
+                break;
+
+            case UI_EVENT_POINTER:
             default:
                 break;
         }
@@ -660,7 +718,6 @@ static void* thr_ui_handler(void* arg) {
 
     return NULL;
 }
-
 
 
 int main(int argc, char** argv) {
@@ -716,13 +773,27 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    if ((context.win = ui_window_create(context.conn, cols * ATERM_FONT_WIDTH, rows * ATERM_FONT_HEIGHT, "aplus-terminal")) == NULL) {
+
+    //* Font initialization
+
+    if (aterm_font_init() < 0) {
+        fprintf(stderr, "aplus-terminal: cannot load %s: %s\n", CONFIG_ATERM_FONT_PATH, strerror(errno));
+        exit(1);
+    }
+
+
+    if ((context.win = ui_window_create(context.conn, cols * context.font.width, rows * context.font.height, "aplus-terminal")) == NULL) {
         fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
         exit(1);
     }
 
-    context.cols = (unsigned int)(ui_window_width(context.win) / ATERM_FONT_WIDTH);
-    context.rows = (unsigned int)(ui_window_height(context.win) / ATERM_FONT_HEIGHT);
+    if (aterm_bind_surface() < 0) {
+        fprintf(stderr, "aplus-terminal: cannot draw on the window surface: %s\n", strerror(errno));
+        exit(1);
+    }
+
+    context.cols = (unsigned int)(ui_window_width(context.win) / context.font.width);
+    context.rows = (unsigned int)(ui_window_height(context.win) / context.font.height);
 
     if (context.cols < 1) {
         context.cols = 1;
@@ -731,62 +802,6 @@ int main(int argc, char** argv) {
     if (context.rows < 1) {
         context.rows = 1;
     }
-
-
-    context.plot = win_plot;
-
-
-
-        //* Font initialization
-
-#if !defined(CONFIG_ATERM_BUILTIN_FONT)
-
-    if (FT_Init_FreeType(&context.ft)) {
-        fprintf(stderr, "aplus-terminal: cannot initialize freetype library\n");
-        exit(1);
-    }
-
-
-    struct stat st;
-
-    if (stat("/usr/share/fonts/ttf/UbuntuMono-R.ttf", &st) < 0) {
-        fprintf(stderr, "aplus-terminal: cannot stat() font file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    void* font = malloc(st.st_size);
-
-    if (!font) {
-        fprintf(stderr, "aplus-terminal: cannot allocate memory for font file\n");
-        exit(1);
-    }
-
-    int ffd = open("/usr/share/fonts/ttf/UbuntuMono-R.ttf", O_RDONLY);
-
-    if (ffd < 0) {
-        fprintf(stderr, "aplus-terminal: cannot open font file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    if (read(ffd, font, st.st_size) != st.st_size) {
-        fprintf(stderr, "aplus-terminal: cannot read font file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    if (close(ffd) < 0) {
-        fprintf(stderr, "aplus-terminal: cannot close font file: %s\n", strerror(errno));
-        exit(1);
-    }
-
-    if (FT_New_Memory_Face(context.ft, (const FT_Byte*)font, st.st_size, 0, &context.face)) {
-        fprintf(stderr, "aplus-terminal: cannot load font\n");
-        exit(1);
-    }
-
-    FT_Set_Pixel_Sizes(context.face, 0, 16);
-
-#endif
-
 
 
     //* 3. TSM initialization
@@ -807,8 +822,10 @@ int main(int argc, char** argv) {
     assert(context.vte);
 
 
-    if (tsm_screen_resize(context.con, context.cols, context.rows) < 0) {
-        fprintf(stderr, "aplus-terminal: tsm_screen_resize() failed\n");
+    int resized = tsm_screen_resize(context.con, context.cols, context.rows);
+
+    if (resized < 0) {
+        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", context.cols, context.rows, strerror(-resized));
         exit(1);
     }
 
@@ -844,38 +861,11 @@ int main(int argc, char** argv) {
 
     //* Load Keymap
 
-    {
+    context.keymap = ui_keymap_open(NULL);
 
-#define KEYMAP_LANG "it"
-
-        int fd = open("/usr/share/keymaps/" KEYMAP_LANG ".map", O_RDONLY);
-
-        if (fd < 0) {
-            fprintf(stderr, "aplus-terminal: open() failed: cannot open /usr/share/keymaps/" KEYMAP_LANG ".map: %s\n", strerror(errno));
-            exit(1);
-        }
-
-        char magic[8];
-
-        if (read(fd, magic, 8) != 8) {
-            fprintf(stderr, "aplus-terminal: read() failed: cannot read /usr/share/keymaps/" KEYMAP_LANG ".map: %s\n", strerror(errno));
-            exit(1);
-        }
-
-        if (memcmp(magic, "KMAP\x00\x00\x00\x00", 8) != 0) {
-            fprintf(stderr, "aplus-terminal: wrong keymap format\n");
-            exit(1);
-        }
-
-        if (read(fd, &context.keymap.maps, sizeof(context.keymap.maps)) < 0) {
-            fprintf(stderr, "aplus-terminal: read() failed: %s\n", strerror(errno));
-            exit(1);
-        }
-
-        if (close(fd) < 0) {
-            fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-            exit(1);
-        }
+    if (!context.keymap) {
+        fprintf(stderr, "aplus-terminal: cannot load the keymap: %s\n", strerror(errno));
+        exit(1);
     }
 
     //* 4. Input initialization
