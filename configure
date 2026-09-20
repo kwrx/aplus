@@ -14,6 +14,10 @@ HOST_PYTHON=""
 PREBUILT_TOOLCHAIN_AVAILABLE=1
 PREBUILT_TOOLCHAIN_NEEDS_REBUILD=1
 
+# Check for host architecture
+HOST=$(gcc -dumpmachine)
+ARCH=$(gcc -dumpmachine | cut -d- -f1)
+
 #
 # Functions
 #
@@ -144,76 +148,32 @@ stage_3() {
 
     packages="system-base system-cursors system-fonts system-images system-keymaps"
 
-    if [ "$CONFIG_HAVE_BUSYBOX" == "y" ]; then
-        packages="$packages busybox"
-    fi
-
-    if [ "$CONFIG_HAVE_DASH" == "y" ]; then
-        packages="$packages dash"
-    fi
-
-    if [ "$CONFIG_HAVE_BASH" == "y" ]; then
-        packages="$packages bash"
-    fi
-
-    if [ "$CONFIG_HAVE_ATERM" == "y" ]; then
-        packages="$packages libtsm"
-    fi
-
-    if [ "$CONFIG_HAVE_ZLIB" == "y" ]; then
-        packages="$packages zlib"
-    fi
-
-    if [ "$CONFIG_HAVE_LIBPNG" == "y" ]; then
-        packages="$packages libpng"
-    fi
-
-    if [ "$CONFIG_HAVE_LIBWEBP" == "y" ]; then
-        packages="$packages libwebp"
-    fi
-
-    if [ "$CONFIG_HAVE_FREETYPE" == "y" ]; then
-        packages="$packages freetype"
-    fi
-
-    if [ "$CONFIG_HAVE_PIXMAN" == "y" ]; then
-        packages="$packages pixman"
-    fi
-
-    if [ "$CONFIG_HAVE_CAIRO" == "y" ]; then
-        packages="$packages cairo"
-    fi
-
-    if [ "$CONFIG_HAVE_BINUTILS" == "y" ]; then
-        packages="$packages binutils"
-    fi
-
-    if [ "$CONFIG_HAVE_GCC" == "y" ]; then
-        packages="$packages gcc"
-    fi
-
-    if [ "$CONFIG_HAVE_MPC" == "y" ]; then
-        packages="$packages mpc"
-    fi
-
-    if [ "$CONFIG_HAVE_MPFR" == "y" ]; then
-        packages="$packages mpfr"
-    fi
-
-    if [ "$CONFIG_HAVE_GMP" == "y" ]; then
-        packages="$packages gmp"
-    fi
-
-    if [ "$CONFIG_HAVE_ISL" == "y" ]; then
-        packages="$packages isl"
-    fi
-
-    if [ "$CONFIG_HAVE_MESA" == "y" ]; then
-        packages="$packages mesa"
-    fi
+    packages="$packages binutils"
+    packages="$packages busybox"
+    packages="$packages cairo"
+    packages="$packages curl"
+    packages="$packages bash"
+    packages="$packages dash"
+    packages="$packages expat"
+    packages="$packages freetype"
+    packages="$packages gcc"
+    packages="$packages gmp"
+    packages="$packages isl"
+    packages="$packages libjpeg-turbo"
+    packages="$packages libpng"
+    packages="$packages libressl"
+    packages="$packages libtsm"
+    packages="$packages libwebp"
+    packages="$packages mesa"
+    packages="$packages mpc"
+    packages="$packages mpfr"
+    packages="$packages netsurf-all"
+    packages="$packages pixman"
+    packages="$packages pkgconf"
+    packages="$packages zlib"
 
     # Get packages
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.2.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.3.0 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
     # Get additional packages
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
@@ -233,7 +193,7 @@ stage_4() {
 
     if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 1 ]; then
         if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
-            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.1.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain
+            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.1.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$ARCH-linux-gnu
         fi
     else
 
@@ -378,9 +338,6 @@ required truncate
 required zip
 required od
 required_python_3
-
-# Check for host architecture
-HOST=$(gcc -dumpmachine)
 
 # Check if a prebuilt toolchain is available
 case $HOST in

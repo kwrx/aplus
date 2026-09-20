@@ -21,29 +21,28 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#if defined(CONFIG_HAVE_MESA)
 
-    #include <errno.h>
-    #include <math.h>
-    #include <stdbool.h>
-    #include <stdint.h>
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #include <time.h>
-    #include <unistd.h>
+#include <errno.h>
+#include <math.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
 
-    #include <GL/gl.h>
-    #include <GL/osmesa.h>
+#include <GL/gl.h>
+#include <GL/osmesa.h>
 
-    #include <aplus/input.h>
-    #include <aplus/ui.h>
+#include <aplus/input.h>
+#include <aplus/ui.h>
 
 
-    #define GEARS_DEFAULT_WIDTH  480
-    #define GEARS_DEFAULT_HEIGHT 360
+#define GEARS_DEFAULT_WIDTH  480
+#define GEARS_DEFAULT_HEIGHT 360
 
-    #define GEARS_FPS_INTERVAL_MS 1000
+#define GEARS_FPS_INTERVAL_MS 1000
 
 
 
@@ -444,12 +443,3 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-#else
-
-    #include <stdio.h>
-
-int main(int argc, char** argv) {
-    return fprintf(stderr, "OSMesa not available\n"), 1;
-}
-
-#endif
