@@ -50,14 +50,14 @@ static const ui_theme_t ui_theme_default = {
     .active = UI_RGBA(0xFF, 0xFF, 0xFF, 0.20),
 
     .border     = UI_RGBA(0xFF, 0xFF, 0xFF, 0.08),
-    .focus_ring = UI_RGBA(0xFF, 0xFF, 0xFF, 0.45),
+    .focus_ring = UI_RGBA(0xFF, 0xFF, 0xFF, 0.18),
 
     .text       = UI_RGB(0xE8, 0xE8, 0xE8),
     .text_muted = UI_RGB(0x7F, 0x7F, 0x7F),
 
     .disabled_fade = 0.55,
 
-    .corner_radius = 6.0,
+    .corner_radius = 10.0,
     .font_size     = 14.0,
 
     .font_regular = "/usr/share/fonts/ttf/Ubuntu-R.ttf",

@@ -58,10 +58,11 @@
 #define WM_WINDOW_MIN_HEIGHT 40
 
 /**
- * @brief Rounded corners and a drop shadow, faked by stacking translucent rounded rectangles.
+ * @brief The drop shadow, faked by stacking translucent rounded rectangles.
+ *
+ * The corner radius they are stacked at is UI_WINDOW_RADIUS, which lives in the shared
+ * header because a client painting its own edge has to trace the same curve.
  */
-
-#define WM_CORNER_RADIUS 10
 #define WM_SHADOW_EXTENT 18
 #define WM_SHADOW_OFFSET 0
 #define WM_SHADOW_LAYERS 14
@@ -83,7 +84,7 @@
 #define WM_COLOR_TITLE_ACTIVE 0.910, 0.910, 0.910
 #define WM_COLOR_TITLE_IDLE   0.498, 0.498, 0.498
 
-#define WM_COLOR_RING_ACTIVE 1.000, 1.000, 1.000, 0.45
+#define WM_COLOR_RING_ACTIVE 1.000, 1.000, 1.000, 0.18
 #define WM_COLOR_RING_IDLE   1.000, 1.000, 1.000, 0.07
 
 #define WM_COLOR_CLOSE_OVER 0.839, 0.271, 0.302
@@ -220,6 +221,12 @@ typedef struct wm_window {
     //? UI_WINDOW_*, as the client asked for at creation. Nothing changes them afterwards:
     //? a window that came up borderless stays borderless.
     uint32_t flags;
+
+    //? Whether the client has ever said that it drew something. A window is created before
+    //? its client has been told where to draw, so until the first commit its surface holds
+    //? nothing anybody chose, and showing it means a black rectangle for the frame or two
+    //? that takes.
+    bool committed;
 
     char title[UI_TITLE_MAX];
 
@@ -425,8 +432,10 @@ void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
 wm_window_t* wm_window_from_id(uint32_t id);
 bool wm_window_borderless(const wm_window_t* win);
+bool wm_window_centered(const wm_window_t* win);
+bool wm_window_translucent(const wm_window_t* win);
 wm_insets_t wm_window_insets(const wm_window_t* win);
-double wm_window_radius(const wm_window_t* win);
+cairo_format_t wm_window_format(const wm_window_t* win);
 wm_rect_t wm_window_frame(const wm_window_t* win);
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
 wm_rect_t wm_window_close_rect(const wm_window_t* win);

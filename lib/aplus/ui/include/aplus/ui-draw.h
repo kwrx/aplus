@@ -62,6 +62,75 @@ void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius);
 void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius);
 
 /**
+ * @brief Where the icon themes live, one directory each.
+ */
+#define UI_ICON_PATH "/usr/share/icons"
+
+/**
+ * @brief The theme used when $UI_ICON_THEME names none.
+ */
+#define UI_ICON_THEME_DEFAULT "aplus"
+
+/**
+ * @brief How long an icon name may be, terminator included; a longer one resolves to nothing.
+ */
+#define UI_ICON_NAME_MAX 128
+
+
+/**
+ * @brief Reports the theme being drawn from, which is $UI_ICON_THEME when it names one.
+ *
+ * @return The theme name, never NULL.
+ */
+const char* ui_icon_theme(void);
+
+/**
+ * @brief Resolves an icon name to a file in the theme, taking the size nearest the one asked for.
+ *
+ * A name carrying a '/' is a path and is taken as it stands, which is what lets a .desktop
+ * file point at an icon that no theme holds.
+ *
+ * @param name The icon name, as a .desktop file's Icon key spells it.
+ * @param size The pixel size wanted, matched exactly when the theme has it.
+ * @param out Receives the path.
+ * @param max The size of that buffer.
+ * @return true when a file was found.
+ */
+bool ui_icon_find(const char* name, int size, char* out, size_t max);
+
+/**
+ * @brief Loads an icon by name, out of a cache shared by everything drawing in the process.
+ *
+ * The surface belongs to the cache: it is not to be destroyed, and it stays valid until
+ * enough other icons have been asked for to push it out.
+ *
+ * @param name The icon name.
+ * @param size The pixel size wanted.
+ * @return The surface, or NULL when the theme holds no such icon.
+ */
+cairo_surface_t* ui_icon_load(const char* name, int size);
+
+/**
+ * @brief Draws an icon centred in a rectangle, scaled to fit it without distorting it.
+ *
+ * @param cr The cairo context to draw with.
+ * @param rect The rectangle to fit the icon into.
+ * @param icon The icon, which may be NULL for nothing to be drawn.
+ */
+void ui_draw_icon(cairo_t* cr, ui_rect_t rect, cairo_surface_t* icon);
+
+/**
+ * @brief Loads an icon and draws it in one go.
+ *
+ * @param cr The cairo context to draw with.
+ * @param rect The rectangle to fit the icon into.
+ * @param name The icon name.
+ * @param size The pixel size to load, or 0 for the one the rectangle implies.
+ */
+void ui_draw_icon_named(cairo_t* cr, ui_rect_t rect, const char* name, int size);
+
+
+/**
  * @brief Loads a font face from a file, out of a cache that keeps it for the life of the process.
  *
  * @param path The font file to load.

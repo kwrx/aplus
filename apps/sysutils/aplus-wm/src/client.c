@@ -268,7 +268,7 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
     req.title[UI_TITLE_MAX - 1] = '\0';
 
 
-    if (req.flags & ~(uint32_t)UI_WINDOW_BORDERLESS) {
+    if (req.flags & ~(uint32_t)UI_WINDOW_FLAGS_ALL) {
         fprintf(stderr, "aplus-wm: client asked for window flags this server does not know (%#x)\n", req.flags);
         return -1;
     }
@@ -366,6 +366,36 @@ static int wm_client_handle_set_title(wm_client_t* client, const uint8_t* payloa
 }
 
 
+static int wm_client_handle_resize_window(wm_client_t* client, const uint8_t* payload, size_t size) {
+
+    ui_msg_resize_t req;
+
+    if (size != sizeof(req)) {
+        return -1;
+    }
+
+    memcpy(&req, payload, sizeof(req));
+
+
+    wm_window_t* win = wm_window_from_id(req.window_id);
+
+    if (!win || win->client != client) {
+        return -1;
+    }
+
+    if (req.width == 0 || req.height == 0) {
+        return -1;
+    }
+
+
+    if (wm_window_resize(win, req.width, req.height) < 0) {
+        return -1;
+    }
+
+    return wm_window_notify_configure(win);
+}
+
+
 static int wm_client_handle_destroy_window(wm_client_t* client, const uint8_t* payload, size_t size) {
 
     ui_msg_window_t req;
@@ -408,6 +438,9 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
 
         case UI_REQ_SET_TITLE:
             return wm_client_handle_set_title(client, payload, size);
+
+        case UI_REQ_RESIZE_WINDOW:
+            return wm_client_handle_resize_window(client, payload, size);
 
         case UI_REQ_DESTROY_WINDOW:
             return wm_client_handle_destroy_window(client, payload, size);

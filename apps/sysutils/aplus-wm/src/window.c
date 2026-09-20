@@ -44,6 +44,30 @@ bool wm_window_borderless(const wm_window_t* win) {
 
 
 /**
+ * @brief Reports whether a window asked to come up in the middle of the display.
+ *
+ * @param win The window to test.
+ * @return true when it is placed rather than cascaded.
+ */
+bool wm_window_centered(const wm_window_t* win) {
+
+    return (win->flags & UI_WINDOW_CENTERED) != 0;
+}
+
+
+/**
+ * @brief Reports whether a window's surface carries alpha and is blended rather than copied.
+ *
+ * @param win The window to test.
+ * @return true when it is translucent.
+ */
+bool wm_window_translucent(const wm_window_t* win) {
+
+    return (win->flags & UI_WINDOW_TRANSLUCENT) != 0;
+}
+
+
+/**
  * @brief Reports how far the decorations reach out from a window's content area.
  *
  * @param win The window to measure.
@@ -72,14 +96,14 @@ wm_insets_t wm_window_insets(const wm_window_t* win) {
 
 
 /**
- * @brief Reports how far a window's corners are rounded off, which is not at all when it is borderless.
+ * @brief Reports the cairo format the window's surface is read and written as.
  *
- * @param win The window to measure.
- * @return The radius in pixels.
+ * @param win The window.
+ * @return CAIRO_FORMAT_ARGB32 for a translucent window, CAIRO_FORMAT_RGB24 otherwise.
  */
-double wm_window_radius(const wm_window_t* win) {
+cairo_format_t wm_window_format(const wm_window_t* win) {
 
-    return wm_window_borderless(win) ? 0.0 : (double)WM_CORNER_RADIUS;
+    return wm_window_translucent(win) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
 }
 
 
@@ -195,7 +219,9 @@ static void wm_window_free_backstore(wm_window_t* win) {
  */
 static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 
-    const int stride = cairo_format_stride_for_width(CAIRO_FORMAT_RGB24, width);
+    const cairo_format_t format = wm_window_format(win);
+
+    const int stride = cairo_format_stride_for_width(format, width);
 
     if (stride <= 0) {
         return -1;
@@ -219,7 +245,7 @@ static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
     }
 
 
-    cairo_surface_t* surface = cairo_image_surface_create_for_data((unsigned char*)addr, CAIRO_FORMAT_RGB24, width, height, stride);
+    cairo_surface_t* surface = cairo_image_surface_create_for_data((unsigned char*)addr, format, width, height, stride);
 
     if (cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
 
@@ -284,7 +310,7 @@ void wm_window_clamp_size(const wm_window_t* win, int* width, int* height) {
  * @param width The width in pixels.
  * @param height The height in pixels.
  * @param title The window title.
- * @param flags UI_WINDOW_*, which decide what the server draws around it.
+ * @param flags UI_WINDOW_*, which decide what the server draws around it and where it goes.
  * @return The window, or NULL with errno set.
  */
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags) {
@@ -322,10 +348,18 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 
     static int cascade = 0;
 
-    win->x = in.left + 24 * (cascade % 8);
-    win->y = in.top + 24 * (cascade % 8);
+    if (wm_window_centered(win)) {
 
-    cascade++;
+        win->x = in.left + (wm.display.width - win->width - in.left - in.right) / 2;
+        win->y = in.top + (wm.display.height - win->height - in.top - in.bottom) / 2;
+
+    } else {
+
+        win->x = in.left + 24 * (cascade % 8);
+        win->y = in.top + 24 * (cascade % 8);
+
+        cascade++;
+    }
 
     if (win->x + win->width + in.right > wm.display.width) {
         win->x = wm.display.width - win->width - in.right;
@@ -655,6 +689,9 @@ int wm_window_notify_configure(wm_window_t* win) {
 /**
  * @brief Takes a client's word that a rectangle of the shared surface has changed.
  *
+ * The first one is also what puts the window on screen, since until it arrives the surface
+ * holds nothing the client chose.
+ *
  * @param win The window that committed.
  * @param x The left edge of the rectangle.
  * @param y The top edge of the rectangle.
@@ -676,6 +713,13 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 
 
     cairo_surface_mark_dirty_rectangle(win->backstore, x, y, width, height);
+
+    if (!win->committed) {
+
+        win->committed = true;
+
+        wm_damage_window(win);
+    }
 
     return 0;
 }
@@ -760,7 +804,7 @@ static cairo_surface_t* wm_window_shadow_mask(wm_window_t* win, const wm_rect_t*
 
     const wm_rect_t local = {WM_SHADOW_EXTENT, WM_SHADOW_EXTENT, f->width, f->height};
 
-    wm_window_paint_shadow_direct(cr, &local, focused, wm_window_radius(win));
+    wm_window_paint_shadow_direct(cr, &local, focused, (double)UI_WINDOW_RADIUS);
 
     cairo_destroy(cr);
 
@@ -787,7 +831,7 @@ static void wm_window_paint_shadow(cairo_t* cr, wm_window_t* win, const wm_rect_
     cairo_surface_t* mask = wm_window_shadow_mask(win, f, focused);
 
     if (!mask) {
-        wm_window_paint_shadow_direct(cr, f, focused, wm_window_radius(win));
+        wm_window_paint_shadow_direct(cr, f, focused, (double)UI_WINDOW_RADIUS);
         return;
     }
 
@@ -903,10 +947,15 @@ static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focu
 
 void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
+    if (!win->committed) {
+        return;
+    }
+
+
     const wm_rect_t f     = wm_window_frame(win);
     const bool focused    = (wm.focused == win);
     const bool borderless = wm_window_borderless(win);
-    const double radius   = wm_window_radius(win);
+    const double radius   = (double)UI_WINDOW_RADIUS;
 
 
     wm_window_paint_shadow(cr, win, &f, focused);
@@ -950,7 +999,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     }
 
 
-    if (cw < win->width || ch < win->height) {
+    if ((cw < win->width || ch < win->height) && !wm_window_translucent(win)) {
 
         cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 

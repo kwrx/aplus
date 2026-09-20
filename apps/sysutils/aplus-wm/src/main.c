@@ -75,7 +75,9 @@ void wm_damage_window(const wm_window_t* win) {
  * @brief Reports whether some window paints over the whole of a rectangle anyway.
  *
  * Only the part of a content area clear of the frame's rounded corners counts: the corners are
- * clipped out of the window and leave the desktop showing through.
+ * clipped out of the window and leave the desktop showing through. A translucent window covers
+ * nothing at all, since the desktop is what it is blended over, and neither does one that has
+ * yet to be drawn into, since nothing of it is on screen.
  *
  * @param rect The rectangle to test.
  * @return true when the desktop behind it never becomes visible.
@@ -84,7 +86,12 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 
-        const int radius = (int)wm_window_radius(win);
+        if (wm_window_translucent(win) || !win->committed) {
+            continue;
+        }
+
+
+        const int radius = UI_WINDOW_RADIUS;
 
         const wm_rect_t opaque = {
 

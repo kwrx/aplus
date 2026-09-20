@@ -24,6 +24,7 @@
 #ifndef _APLUS_UI_H
 #define _APLUS_UI_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -38,8 +39,16 @@ extern "C" {
  */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
-#define UI_PROTOCOL_VERSION 4
+#define UI_PROTOCOL_VERSION 6
 #define UI_TITLE_MAX        64
+
+/**
+ * @brief How far the server rounds a window's corners off, the same for every window it draws.
+ *
+ * Here rather than in the server because a client painting its own edge has to trace the
+ * curve the server clips it to, or its border stops short of the corners.
+ */
+#define UI_WINDOW_RADIUS 20
 
 
 /**
@@ -53,6 +62,14 @@ extern "C" {
 #define UI_REQ_COMMIT         0x0003
 #define UI_REQ_SET_TITLE      0x0004
 #define UI_REQ_DESTROY_WINDOW 0x0005
+
+/**
+ * @brief Asks for a size, which the server grants by sending a UI_EV_CONFIGURE the way a resize drag does.
+ *
+ * A server that has never heard of this request drains it and leaves the window the size it
+ * was created at.
+ */
+#define UI_REQ_RESIZE_WINDOW 0x0006
 
 #define UI_EV_HELLO     0x8001
 #define UI_EV_CONFIGURE 0x8002
@@ -96,6 +113,8 @@ typedef struct {
 
 /**
  * @brief What a window asks to be, named once at creation and fixed for the rest of its life.
+ *
+ * Its size is not: see UI_REQ_RESIZE_WINDOW.
  */
 
 #define UI_WINDOW_DECORATED 0
@@ -104,9 +123,34 @@ typedef struct {
  * @brief No titlebar, no border, no close button: the surface is the whole window.
  *
  * The server still stacks, focuses and shadows it, but owns none of its pixels, so it can
- * neither be dragged by a titlebar nor resized by an edge -- see ui_window_create_ex().
+ * neither be dragged by a titlebar nor resized by an edge -- see ui_window_create_ex(). Its
+ * corners are rounded off by UI_WINDOW_RADIUS like any other window's.
  */
 #define UI_WINDOW_BORDERLESS (1 << 0)
+
+/**
+ * @brief Placed in the middle of the display rather than on the cascade.
+ *
+ * The frame is what is centred, decorations included, and it happens as the window is
+ * created: there is no request to move one, and a window placed after the fact would be
+ * seen somewhere else first.
+ */
+#define UI_WINDOW_CENTERED (1 << 1)
+
+/**
+ * @brief The surface carries alpha, and the server blends it over the desktop and the windows below.
+ *
+ * It is premultiplied CAIRO_FORMAT_ARGB32 rather than RGB24 -- the same stride and the same
+ * segment size, so nothing about the configure changes, only what the fourth byte means.
+ * A creation flag because the format has to be settled before the segment exists, which is
+ * before a client could have said anything about it.
+ */
+#define UI_WINDOW_TRANSLUCENT (1 << 2)
+
+/**
+ * @brief Every flag this version knows, which is what both ends validate against.
+ */
+#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT)
 
 
 typedef struct {
@@ -151,6 +195,15 @@ typedef struct {
     char title[UI_TITLE_MAX];
 
 } __attribute__((packed)) ui_msg_set_title_t;
+
+
+typedef struct {
+
+    uint32_t window_id;
+    uint16_t width;
+    uint16_t height;
+
+} __attribute__((packed)) ui_msg_resize_t;
 
 
 typedef struct {
@@ -356,6 +409,31 @@ int ui_window_height(ui_window_t* win);
 size_t ui_window_stride(ui_window_t* win);
 uint32_t ui_window_id(ui_window_t* win);
 uint32_t ui_window_flags(ui_window_t* win);
+
+/**
+ * @brief Reports whether the window was created with UI_WINDOW_TRANSLUCENT.
+ *
+ * Cairo writes ARGB32 premultiplied, so anything drawing through ui_window_pixels() by hand
+ * into such a window has to as well.
+ *
+ * @param win The window.
+ * @return true when its surface carries alpha.
+ */
+bool ui_window_translucent(ui_window_t* win);
+
+/**
+ * @brief Asks the server for a size, which arrives as a UI_EV_CONFIGURE rather than taking effect here.
+ *
+ * Asking is not getting: the server clamps what it is given and may answer with another
+ * size or, if nothing changed, with nothing at all. The window keeps the size it has until
+ * ui_window_apply_configure() takes the answer up.
+ *
+ * @param win The window.
+ * @param width The width asked for.
+ * @param height The height asked for.
+ * @return 0, or -1 with errno set.
+ */
+int ui_window_request_size(ui_window_t* win, int width, int height);
 
 /**
  * @brief Adopts the surface the last UI_EV_CONFIGURE announced, along with its size and serial.

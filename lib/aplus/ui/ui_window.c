@@ -109,6 +109,9 @@ int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stri
     win->height = height;
     win->stride = stride;
 
+    win->asked_width  = width;
+    win->asked_height = height;
+
     win->serial = serial;
 
     ui_window_damage_all(win);
@@ -153,8 +156,10 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
  * @brief Creates a window of a given kind, blocking until the server has configured it.
  *
  * A UI_WINDOW_BORDERLESS window is handed the whole of its frame: nothing is drawn around
- * it, so there is no titlebar to drag it by and no edge to resize it from, and the size
- * asked for here is the one it keeps.
+ * it, so there is no titlebar to drag it by and no edge to resize it from, though it can
+ * still ask for a size with ui_window_request_size(). A UI_WINDOW_CENTERED one comes up in
+ * the middle of the display instead of on the cascade. A UI_WINDOW_TRANSLUCENT one is
+ * handed a surface that carries alpha, which the server blends over what is behind it.
  *
  * @param conn The connection to create it on.
  * @param width The width of the content area in pixels, which the server may clamp.
@@ -170,7 +175,7 @@ ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, c
         return NULL;
     }
 
-    if (flags & ~(uint32_t)UI_WINDOW_BORDERLESS) {
+    if (flags & ~(uint32_t)UI_WINDOW_FLAGS_ALL) {
         errno = EINVAL;
         return NULL;
     }
@@ -317,6 +322,41 @@ uint32_t ui_window_id(ui_window_t* win) {
 
 uint32_t ui_window_flags(ui_window_t* win) {
     return win ? win->flags : 0;
+}
+
+bool ui_window_translucent(ui_window_t* win) {
+    return win ? (win->flags & UI_WINDOW_TRANSLUCENT) != 0 : false;
+}
+
+
+int ui_window_request_size(ui_window_t* win, int width, int height) {
+
+    if (!win || width <= 0 || height <= 0 || width > UINT16_MAX || height > UINT16_MAX) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (width == win->asked_width && height == win->asked_height) {
+        return 0;
+    }
+
+
+    ui_msg_resize_t req;
+
+    memset(&req, 0, sizeof(req));
+
+    req.window_id = win->id;
+    req.width     = (uint16_t)width;
+    req.height    = (uint16_t)height;
+
+    if (ui_send_msg(win->conn->fd, UI_REQ_RESIZE_WINDOW, &req, sizeof(req)) < 0) {
+        return -1;
+    }
+
+    win->asked_width  = width;
+    win->asked_height = height;
+
+    return 0;
 }
 
 

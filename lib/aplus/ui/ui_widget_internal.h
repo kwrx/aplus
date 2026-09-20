@@ -29,6 +29,7 @@
 #include <cairo/cairo.h>
 
 #include <aplus/ui-draw.h>
+#include <aplus/ui-keymap.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
@@ -42,6 +43,11 @@
  */
 #define UI_LIST_TEXT_MAX 256
 
+/**
+ * @brief How much text an entry holds, terminator included.
+ */
+#define UI_ENTRY_TEXT_MAX 256
+
 
 /**
  * @brief One row of a list, owning its own strings since a caller's may not outlive the widget.
@@ -51,6 +57,10 @@ typedef struct {
 
     char* text;
     char* detail;
+
+    //? The icon's name rather than the icon, resolved at paint time out of the shared
+    //? cache: a row outlives any one surface the cache is holding.
+    char* icon;
 
     void* user;
 
@@ -63,6 +73,7 @@ typedef enum {
     UI_WIDGET_LABEL,
     UI_WIDGET_BUTTON,
     UI_WIDGET_LIST,
+    UI_WIDGET_ENTRY,
 
 } ui_widget_kind_t;
 
@@ -91,6 +102,11 @@ typedef struct {
     //? Reports whether the key was handled, and invalidates itself if it changed anything.
     bool (*on_key)(ui_widget_t* widget, uint16_t vkey, bool down);
     bool (*on_focus)(ui_widget_t* widget, bool focused);
+
+    //? Asked before the loop blocks, and again every time the deadline it named passes.
+    //? Reports the milliseconds until the widget next has to be repainted, or -1 when it
+    //? is not animating; whatever it changed it invalidates for itself.
+    int (*tick)(ui_widget_t* widget, uint64_t now);
 
     void (*destroy)(ui_widget_t* widget);
 
@@ -173,6 +189,11 @@ struct ui_widget {
             int selected;
             int row_height;
 
+            //? The gutter the icons are drawn in, 0 for the one the row height implies,
+            //? and only reserved at all once a row has been given an icon.
+            int icon_size;
+            bool icons;
+
             //? Pixels of content scrolled off the top, never past what the content allows.
             int scroll;
 
@@ -189,6 +210,42 @@ struct ui_widget {
             void* on_activate_user;
 
         } list;
+
+        struct {
+
+            char text[UI_ENTRY_TEXT_MAX];
+            char placeholder[UI_LABEL_TEXT_MAX];
+
+            ui_font_weight_t weight;
+            double size;
+
+            //? Where the caret sits, as a byte offset into the text.
+            size_t caret;
+
+            //? Pixels of text scrolled off the left, kept at whatever holds the caret in
+            //? view: a field narrower than what has been typed into it has to move.
+            int scroll;
+
+            bool focused;
+
+            //? Whether the caret is in the shown half of its blink, and when that half
+            //? began. Editing restarts it shown: a caret that vanishes under the keys
+            //? being typed reads as a dropped keystroke.
+            bool caret_on;
+            uint64_t caret_at;
+
+            //? Opened the first time a key arrives rather than at construction, so a view
+            //? that never takes text never reads a file.
+            ui_keymap_t* keymap;
+            bool keymap_tried;
+
+            ui_action_fn on_change;
+            void* on_change_user;
+
+            ui_action_fn on_submit;
+            void* on_submit_user;
+
+        } entry;
     };
 
     struct ui_widget* next;
@@ -234,6 +291,11 @@ struct ui_view {
     bool closed;
 };
 
+
+/**
+ * @brief Implemented in ui_view.c.
+ */
+uint64_t ui_now_ms(void);
 
 /**
  * @brief Implemented in ui_widget.c.

@@ -81,6 +81,7 @@ disturb this. The widget that held the focus still holds it when the window come
 void ui_view_invalidate(ui_view_t* view);
 bool ui_view_needs_paint(ui_view_t* view);
 int  ui_view_present(ui_view_t* view);
+int  ui_view_timeout(ui_view_t* view);
 int  ui_view_run(ui_view_t* view);
 bool ui_view_closed(ui_view_t* view);
 ```
@@ -119,6 +120,15 @@ The drain is what keeps a burst of pointer motion from costing a repaint and a c
 and a whole composite in the server for each of those. It is bounded at 256 events, so a
 server talking faster than this end can draw slows the painting down rather than starving it
 altogether.
+
+`ui_view_timeout()` is the other half of a pass. It advances whatever paints on a clock —
+today the caret of a focused entry, and nothing else — invalidating what it changed, and
+returns the milliseconds until the next thing is due, or `-1` when nothing is animating. That
+number is what the loop is allowed to block for, so it goes straight to `ui_next_event()`.
+`ui_view_run()` calls it before each block; a loop of your own has to as well, or every caret
+in the view freezes mid-cycle. A view with nothing animating in it gets `-1` and blocks exactly
+as it did before, which is to say the library still wakes for events and never on a timer it
+does not need.
 
 `ui_view_closed()` becomes true when a `UI_EVENT_CLOSE` is dispatched — the titlebar button,
 `Ctrl+Alt+Q`, or anything else the server decides is a close request. Nothing in the library
@@ -159,13 +169,15 @@ second descriptor to watch:
 ```c
     while (!ui_view_closed(view)) {
 
+        const int timeout = ui_view_timeout(view);
+
         if (ui_view_present(view) < 0) {
             break;
         }
 
         ui_event_t event;
 
-        const int e = ui_next_event(conn, &event, -1);
+        const int e = ui_next_event(conn, &event, timeout);
 
         if (e < 0) {
             break;
@@ -180,8 +192,9 @@ second descriptor to watch:
 ```
 
 For a child process, a socket or a timer alongside the UI, poll `ui_connection_fd()` with
-your own descriptors and call `ui_next_event(conn, &event, 0)` when it is readable. The
-timeout rules are in [window-api.md](window-api.md#events).
+your own descriptors and call `ui_next_event(conn, &event, 0)` when it is readable. Cap your
+own wait at what `ui_view_timeout()` returned, since that is a deadline the view is counting
+on. The timeout rules are in [window-api.md](window-api.md#events).
 
 Present before you block, not after you dispatch: an event that changes nothing leaves the
 frame already on screen correct, and an application that paints after dispatching pays for
@@ -389,6 +402,7 @@ ui_widget_t* ui_list_create(ui_view_t* view);
 
 void ui_list_clear(ui_widget_t* widget);
 int  ui_list_add(ui_widget_t* widget, const char* text, const char* detail, void* user);
+int  ui_list_add_icon(ui_widget_t* widget, const char* icon, const char* text, const char* detail, void* user);
 
 size_t      ui_list_count(const ui_widget_t* widget);
 const char* ui_list_text(const ui_widget_t* widget, int index);
@@ -400,6 +414,10 @@ void ui_list_scroll_to(ui_widget_t* widget, int index);
 
 void ui_list_set_row_height(ui_widget_t* widget, int height);
 
+void        ui_list_set_icon(ui_widget_t* widget, int index, const char* icon);
+const char* ui_list_icon(const ui_widget_t* widget, int index);
+void        ui_list_set_icon_size(ui_widget_t* widget, int size);
+
 void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user);
 void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user);
 ```
@@ -409,8 +427,8 @@ typedef void (*ui_list_fn)(ui_widget_t* widget, int index, void* user);
 ```
 
 One selectable row per item, in a sunken well with a rounded border, scrolled by the wheel,
-the keyboard or its own scrollbar. This is the widget that takes keys, and the reason the view
-has a focus at all.
+the keyboard or its own scrollbar. Along with the entry, this is a widget that takes keys, and the
+reason the view has a focus at all.
 
 A row is a name and an optional detail drawn against the right edge — a size column, a type, a
 count. The detail is measured first and the name is ellipsised into what is left, so a long
@@ -423,6 +441,7 @@ name loses its tail rather than running under the number beside it.
 | selected row | `theme->secondary` / `on_secondary`, or `theme->primary` / `on_primary` when focused |
 | detail colour | `theme->text_muted`, or the row's own text colour when selected |
 | row height | `theme->font_size * 2` — 28 at the default 14.0 |
+| icon size | the row height less 8, for rows that carry one |
 
 `ui_list_add()` copies both strings and returns the new row's index, or `-1`. A caller's
 buffer can be reused immediately; the row owns what it holds until `ui_list_clear()` or the
@@ -436,6 +455,28 @@ the point where a row of any plausible width has been ellipsised anyway.
 
 `ui_list_text()` returns a pointer into the row's own storage, valid until the list is cleared
 or destroyed.
+
+### Icons
+
+A row can carry an icon, named rather than loaded: `ui_list_add_icon()` takes the name a
+`.desktop` file's `Icon` key would spell, and the row resolves it against the icon theme every
+time it is painted, out of the cache the whole process shares — see [Icons](icons.md).
+
+```c
+ui_list_add_icon(list, "folder", "usr", "folder", NULL);
+ui_list_add_icon(list, entry->icon, entry->name, size, entry);
+```
+
+A name no theme answers costs the row nothing but an empty gutter, which is what lets a listing
+hand over whatever a file asked for without checking it first.
+
+The gutter is only reserved once a row has been given an icon, so a list of plain rows lays out
+exactly as it did before. It is as wide as it is tall: `ui_list_set_icon_size()` sets that, and
+`0` restores the size the row height implies, which is 8 pixels less than the row — 20 at the
+default 28-pixel row, 24 in the launcher's 32-pixel one. The name is what moves over; the detail
+stays against the right edge.
+
+`ui_list_set_icon()` changes the icon of a row already added, and `NULL` takes it away.
 
 ### Selection and activation
 
@@ -501,6 +542,104 @@ theme implies. Rows are a fixed height, which is what makes hit testing and the 
 arithmetic rather than a walk — only the rows actually on screen are drawn, so a list of ten
 thousand paints what a list of twenty paints.
 
+## Entry
+
+```c
+ui_widget_t* ui_entry_create(ui_view_t* view, const char* placeholder);
+
+void        ui_entry_set_text(ui_widget_t* widget, const char* text);
+const char* ui_entry_text(const ui_widget_t* widget);
+void        ui_entry_set_placeholder(ui_widget_t* widget, const char* text);
+void        ui_entry_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
+
+void ui_entry_on_change(ui_widget_t* widget, ui_action_fn fn, void* user);
+void ui_entry_on_submit(ui_widget_t* widget, ui_action_fn fn, void* user);
+```
+
+One line of editable text in a sunken well, with a caret and no selection. This is the only
+widget that turns key codes into characters, which it does through a keymap of its own — see
+[Characters](#characters).
+
+| Property | Default |
+|---|---|
+| background | `theme->surface_sunken` |
+| border | `theme->border`, or `theme->focus_ring` when focused |
+| text | `theme->text`, or `theme->text_muted` for the placeholder |
+| weight / size | `UI_FONT_REGULAR`, `theme->font_size` (14.0) |
+
+Text is stored in the widget, capped at `UI_ENTRY_TEXT_MAX` (256) bytes plus a terminator, and
+`ui_entry_text()` returns a pointer into that buffer, valid until the next edit or the view's
+destruction. `ui_entry_set_text()` puts the caret at the end and does **not** run the change
+callback: a caller setting the text already knows what it says, and a callback there turns a
+refresh into a loop.
+
+The caret is drawn only while the widget has the focus, and it blinks at 530 ms a half cycle.
+Anything that moves it — a key, a click, `ui_entry_set_text()`, taking the focus — restarts the
+cycle shown, because a caret that goes dark exactly as a key lands reads as a dropped
+keystroke. This is the one thing in the library that paints on a clock, so a loop of its own
+has to hand `ui_view_timeout()` to `ui_next_event()` or the caret stops mid-cycle — see
+[Driving your own loop](#driving-your-own-loop). Text scrolls horizontally by the least that
+keeps the caret in view, so a field narrower than what has been typed into it still shows where
+you are.
+
+### What it takes, and what it does not
+
+| Key | |
+|---|---|
+| A character | Inserted at the caret |
+| `Backspace` / `Delete` | The character before or after the caret |
+| `Left` / `Right` | Moves the caret one character, over a UTF-8 sequence whole |
+| `Home` / `End` | Either end of the text |
+| `Enter` | Runs `on_submit` |
+
+Everything else falls through to the view's key callback, and the list of what falls through is
+the point of the widget as much as the list above it: `Escape`, `Tab`, the arrows and the page
+keys are left alone deliberately, so that an application can drive a list from a field that
+holds the keyboard. That is what an application launcher is — a focused entry, an unfocused
+list, and `Up`/`Down` arriving at the view — and it needs no focus juggling to work.
+
+The selected row of an unfocused list is drawn in `theme->secondary` rather than
+`theme->primary`, so a list driven this way reads as selected but not as focused, which is
+what it is.
+
+### Characters
+
+```c
+#include <aplus/ui-keymap.h>
+
+#define UI_KEYMAP_DEFAULT "/usr/share/keymaps/it.map"
+#define UI_KEYMAP_ENV     "APLUS_KEYMAP"
+
+ui_keymap_t* ui_keymap_open(const char* path);
+void         ui_keymap_close(ui_keymap_t* keymap);
+
+size_t  ui_keymap_translate(ui_keymap_t* keymap, uint16_t vkey, bool down, char* out, size_t size);
+uint8_t ui_keymap_modifiers(const ui_keymap_t* keymap);
+void    ui_keymap_reset(ui_keymap_t* keymap);
+```
+
+The server sends key codes and no keymap, on the reasoning that translation belongs wherever
+the characters are actually needed. This is that place, in the one form the system already has
+one: the binary map `kbd(1)` writes, which the console loads too.
+
+An entry opens `UI_KEYMAP_DEFAULT` the first time a key reaches it — `APLUS_KEYMAP` overrides
+that for a session — and works without one, minus the typing: a missing map is not an error
+anywhere, it just means no characters. The header is outside `ui-widgets.h` on purpose, since
+translation names no cairo type and a program drawing its own pixels should be able to have
+characters without the widget layer.
+
+`ui_keymap_translate()` is **stateful and wants every key event**, releases and modifier keys
+included: the shift and lock entries of the map are what maintain the mask the next lookup is
+made against, so feeding it only the keys you care about gives you the wrong characters. It
+answers in UTF-8 — a map holds one byte per key in the console's charset, and an accented
+letter leaves here as the two bytes that encode it — and it answers with control bytes too,
+because `Escape` really is `0x1B` in a keymap. Act on those key codes before asking, the way
+the entry does.
+
+`ui_keymap_reset()` is for `UI_EVENT_FOCUS` on loss: the release that would have cleared a held
+modifier goes to whoever has the focus now, and without it the field comes back with shift
+stuck down. The entry does this for itself.
+
 ## Geometry helpers
 
 ```c
@@ -539,7 +678,8 @@ neighbour's space. Worked examples in
 
 ## Adding a widget
 
-The set is four widgets because four were needed, not because the shape resists a fifth. A
+The set is five widgets because five were needed, not because the shape resists a sixth —
+`ui_entry` was the fifth, and adding it touched nothing that was already there. A
 widget kind is a table of hooks — `ui_widget_ops_t` in `lib/aplus/ui/ui_widget_internal.h` —
 and the view drives every kind through it, so a new one does not mean touching `ui_view.c` at
 all:

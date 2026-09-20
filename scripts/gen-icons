@@ -1,0 +1,40 @@
+#!/bin/bash
+
+# Usage
+#   gen-icons [THEME]
+
+# This script renders the SVG sources of an icon theme into the PNG sizes the theme ships,
+# which is what libui looks for at runtime. Run it after adding or changing an icon; the
+# rendered files are committed, so a normal build never needs rsvg-convert.
+
+set -e
+
+ROOTDIR=$(dirname "$(dirname "$(realpath "$0")")")
+THEME=${1:-aplus}
+ASSETS=$ROOTDIR/lib/aplus/ui/assets/icons
+SIZES="16 24 32 48"
+
+if ! command -v rsvg-convert >/dev/null; then
+    echo "gen-icons: rsvg-convert is required (librsvg)" >&2
+    exit 1
+fi
+
+if [ ! -d "$ASSETS/svg" ]; then
+    echo "gen-icons: no SVG sources in $ASSETS/svg" >&2
+    exit 1
+fi
+
+for size in $SIZES; do
+
+    mkdir -p "$ASSETS/$THEME/${size}x${size}"
+
+    for svg in "$ASSETS"/svg/*.svg; do
+
+        name=$(basename "$svg" .svg)
+        png=$ASSETS/$THEME/${size}x${size}/$name.png
+
+        echo "    ICON    ${size}x${size}/$name.png"
+
+        rsvg-convert --width="$size" --height="$size" --format=png --output="$png" "$svg"
+    done
+done

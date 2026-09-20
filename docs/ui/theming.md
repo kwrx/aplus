@@ -83,7 +83,7 @@ typedef struct {
 
 | Role | Used for |
 |---|---|
-| `background` | The window backdrop. `ui_view_present()` paints this across every region it repaints. |
+| `background` | The window backdrop. `ui_view_present()` paints this across every region it repaints, with `CAIRO_OPERATOR_SOURCE` — so on a [translucent window](window-api.md#translucency) its alpha is what shows through, and a theme is where a see-through window is usually decided. |
 | `surface` | A panel raised on the backdrop. The default panel colour. |
 | `surface_sunken` | A well cut into the backdrop — a list, a display, a text area, anything that should read as recessed. The list's background. |
 | `primary` / `on_primary` | The accent, for the one control on a screen that is the point of the screen. `UI_BUTTON_STYLE_PRIMARY`, and the selected row of a focused list. |

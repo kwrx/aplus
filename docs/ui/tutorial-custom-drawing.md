@@ -18,7 +18,7 @@ size_t    ui_window_stride(ui_window_t* win);
 
 | | |
 |---|---|
-| Format | `0xFFRRGGBB` — 8 bits per channel, not premultiplied, alpha ignored by the server |
+| Format | `0xFFRRGGBB` — 8 bits per channel, not premultiplied, alpha ignored by the server, unless the window asked to be [translucent](window-api.md#translucency) |
 | Stride | `ui_window_stride()` bytes per row — **not** `width * 4` |
 | Origin | Top-left of the content area |
 
@@ -136,6 +136,8 @@ the view's, and has to be redone whenever the view painted:
 ```c
     while (!ui_view_closed(canvas_view)) {
 
+        const int timeout = ui_view_timeout(canvas_view);
+
         const int painted = ui_view_present(canvas_view);
 
         if (painted < 0) {
@@ -156,7 +158,7 @@ the view's, and has to be redone whenever the view painted:
 
         ui_event_t event;
 
-        const int e = ui_next_event(conn, &event, -1);
+        const int e = ui_next_event(conn, &event, timeout);
 
         if (e < 0) {
             break;
@@ -254,6 +256,11 @@ wrong one still draws; what differs is that cairo treats ARGB32 as premultiplied
 protocol carries plain `0xFFRRGGBB`. Choosing ARGB32 makes cairo un-premultiply pixels that
 were never premultiplied, and the colours come out subtly wrong in a way that only shows up
 where alpha is involved.
+
+The exception is a window that asked to be translucent, whose surface really is premultiplied
+ARGB32 — `ui_window_translucent()` is the question, and it is what
+[`ui_view_bind_surface()`](../../lib/aplus/ui/ui_view.c) asks before choosing. Drawing by hand
+into one means premultiplying by hand: half-transparent white is `0x80808080`.
 
 **Clip to your rectangle.** Nothing else stops a stray path from painting over a widget.
 

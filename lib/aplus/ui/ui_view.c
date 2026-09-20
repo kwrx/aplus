@@ -44,6 +44,23 @@
 #define UI_VIEW_DOUBLE_CLICK_SLOP 4
 
 
+/**
+ * @brief Reports the monotonic clock in milliseconds, which is what the loop measures in.
+ *
+ * @return The reading, or 0 when there is no clock to read.
+ */
+uint64_t ui_now_ms(void) {
+
+    struct timespec ts;
+
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
+        return 0;
+    }
+
+    return (uint64_t)ts.tv_sec * 1000ULL + (uint64_t)(ts.tv_nsec / 1000000L);
+}
+
+
 static void ui_view_damage(ui_view_t* view, ui_rect_t rect) {
 
     ui_rect_t bleed = {rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2};
@@ -116,7 +133,9 @@ static int ui_view_bind_surface(ui_view_t* view) {
     }
 
 
-    view->surface = cairo_image_surface_create_for_data(pixels, CAIRO_FORMAT_RGB24, width, height, (int)ui_window_stride(view->window));
+    const cairo_format_t format = ui_window_translucent(view->window) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+
+    view->surface = cairo_image_surface_create_for_data(pixels, format, width, height, (int)ui_window_stride(view->window));
 
     if (cairo_surface_status(view->surface) != CAIRO_STATUS_SUCCESS) {
 
@@ -375,14 +394,7 @@ ui_widget_t* ui_view_focused(const ui_view_t* view) {
 
 static int ui_view_count_click(ui_view_t* view, ui_widget_t* widget, int x, int y) {
 
-    struct timespec ts;
-
-    uint64_t now = 0;
-
-    if (clock_gettime(CLOCK_MONOTONIC, &ts) == 0) {
-        now = (uint64_t)ts.tv_sec * 1000ULL + (uint64_t)(ts.tv_nsec / 1000000L);
-    }
-
+    const uint64_t now = ui_now_ms();
 
     const bool again = view->click_widget == widget && now - view->click_time <= UI_VIEW_DOUBLE_CLICK_MS && abs(x - view->click_x) <= UI_VIEW_DOUBLE_CLICK_SLOP && abs(y - view->click_y) <= UI_VIEW_DOUBLE_CLICK_SLOP;
 
@@ -549,6 +561,39 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 }
 
 
+int ui_view_timeout(ui_view_t* view) {
+
+    if (!view) {
+        return -1;
+    }
+
+
+    const uint64_t now = ui_now_ms();
+
+    int soonest = -1;
+
+    for (ui_widget_t* w = view->widgets; w; w = w->next) {
+
+        if (!w->visible || !w->ops->tick) {
+            continue;
+        }
+
+
+        const int next = w->ops->tick(w, now);
+
+        if (next < 0) {
+            continue;
+        }
+
+        if (soonest < 0 || next < soonest) {
+            soonest = next;
+        }
+    }
+
+    return soonest;
+}
+
+
 int ui_view_present(ui_view_t* view) {
 
     if (!view || !view->cr) {
@@ -649,6 +694,8 @@ int ui_view_run(ui_view_t* view) {
 
     while (!view->closed) {
 
+        const int timeout = ui_view_timeout(view);
+
         if (ui_view_present(view) < 0) {
             return -1;
         }
@@ -656,7 +703,7 @@ int ui_view_run(ui_view_t* view) {
 
         ui_event_t event;
 
-        const int e = ui_next_event(view->window->conn, &event, -1);
+        const int e = ui_next_event(view->window->conn, &event, timeout);
 
         if (e < 0) {
             return -1;
