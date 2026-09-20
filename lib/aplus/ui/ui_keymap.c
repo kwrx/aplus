@@ -25,15 +25,15 @@
  * @brief The console keymap, read for the characters the key codes stand for.
  *
  * The file is the binary form kbd(1) writes: a magic, then one table per modifier
- * combination, each of NR_KEYS entries of a value and a type.
+ * combination, each of NR_KEYS entries of a value and a type. It is read through zlib, so
+ * the gzipped files the system installs and a plain one both work.
  */
 
 #include <endian.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
+#include <zlib.h>
 
 #include <aplus/input.h>
 #include <aplus/ui-keymap.h>
@@ -93,31 +93,22 @@ struct ui_keymap {
 
 
 /**
- * @brief Reads a file to the end, or reports that it could not be.
+ * @brief Decompresses exactly as many bytes as are wanted, or reports that it could not.
  *
- * @param fd The descriptor to read.
+ * @param file The keymap, open for reading.
  * @param buffer Receives the bytes.
  * @param size How many to read.
  * @return true when every byte arrived, false otherwise.
  */
-static bool ui_keymap_read_all(int fd, void* buffer, size_t size) {
+static bool ui_keymap_read_all(gzFile file, void* buffer, size_t size) {
 
     uint8_t* at = (uint8_t*)buffer;
 
     while (size > 0) {
 
-        const ssize_t got = read(fd, at, size);
+        const int got = gzread(file, at, (unsigned int)size);
 
-        if (got < 0) {
-
-            if (errno == EINTR) {
-                continue;
-            }
-
-            return false;
-        }
-
-        if (got == 0) {
+        if (got <= 0) {
 
             errno = EPROTO;
             return false;
@@ -142,9 +133,9 @@ ui_keymap_t* ui_keymap_open(const char* path) {
     }
 
 
-    const int fd = open(path, O_RDONLY);
+    gzFile file = gzopen(path, "rb");
 
-    if (fd < 0) {
+    if (!file) {
         return NULL;
     }
 
@@ -155,7 +146,7 @@ ui_keymap_t* ui_keymap_open(const char* path) {
 
         const int saved = errno;
 
-        close(fd);
+        gzclose(file);
 
         errno = saved;
         return NULL;
@@ -164,18 +155,20 @@ ui_keymap_t* ui_keymap_open(const char* path) {
 
     char magic[UI_KEYMAP_MAGIC_SIZE];
 
-    if (!ui_keymap_read_all(fd, magic, sizeof(magic)) || memcmp(magic, UI_KEYMAP_MAGIC, sizeof(magic)) != 0 || !ui_keymap_read_all(fd, keymap->maps, sizeof(keymap->maps))) {
+    errno = 0;
+
+    if (!ui_keymap_read_all(file, magic, sizeof(magic)) || memcmp(magic, UI_KEYMAP_MAGIC, sizeof(magic)) != 0 || !ui_keymap_read_all(file, keymap->maps, sizeof(keymap->maps))) {
 
         const int saved = errno == 0 ? EPROTO : errno;
 
-        close(fd);
+        gzclose(file);
         free(keymap);
 
         errno = saved;
         return NULL;
     }
 
-    close(fd);
+    gzclose(file);
 
     return keymap;
 }
@@ -190,6 +183,16 @@ void ui_keymap_close(ui_keymap_t* keymap) {
 uint8_t ui_keymap_modifiers(const ui_keymap_t* keymap) {
 
     return keymap ? keymap->modifiers : 0;
+}
+
+
+uint16_t ui_keymap_lookup(const ui_keymap_t* keymap, uint16_t vkey) {
+
+    if (!keymap || vkey >= NR_KEYS) {
+        return 0;
+    }
+
+    return keymap->maps[keymap->modifiers].keys[vkey].raw;
 }
 
 
