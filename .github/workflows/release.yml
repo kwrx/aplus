@@ -1,0 +1,26 @@
+name: deploy
+
+on:
+  push:
+    branches: main
+    
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v2 
+    
+    - name: Release
+      working-directory: ${{github.workspace}}
+      shell: bash
+      run: ci/release.sh
+      
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        prerelease: false
+        files: |
+          ${{github.workspace}}/aplus-*.tar.gz
+          ${{github.workspace}}/aplus-*.tar.xz
+          ${{github.workspace}}/aplus-*.zip
