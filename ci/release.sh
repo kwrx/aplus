@@ -1,6 +1,9 @@
 #!/bin/sh
 set -e
 
+export DEBIAN_FRONTEND=noninteractive
+export TZ=Etc/UTC
+
 case "$1" in
     "x86_64")
         TARGET=x86_64
@@ -11,8 +14,8 @@ case "$1" in
         ;;
 esac
 
-sudo apt update
-sudo apt install -y \
+apt update
+apt install -y \
     git \
     build-essential \
     automake \
@@ -22,10 +25,14 @@ sudo apt install -y \
     mtools \
     gdisk \
     grub-common \
+    grub-efi-amd64-bin \
     fontconfig \
     gzip \
     tar \
-    zip
+    zip \
+    python3 \
+    python3-pip \
+    python3-venv
 
 ./configure --kconfig ${TARGET}
 ./makew -j$(nproc)

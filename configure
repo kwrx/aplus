@@ -305,12 +305,6 @@ if [ "$(uname)" != "Linux" ]; then
     exit 1
 fi
 
-# Check if the script is run as root
-if [ "$(id -u)" -eq 0 ]; then
-    echo "This script should not be run as root."
-    exit 1
-fi
-
 # Check for required tools
 optional clang-format "formatting will not be available"
 optional doxygen "documentation will not be available"
