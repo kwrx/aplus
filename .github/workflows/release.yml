@@ -11,10 +11,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2 
     
-    - name: Release
+    - name: Release x86_64
       working-directory: ${{github.workspace}}
       shell: bash
-      run: ci/release.sh
+      run: ci/release.sh x86_64
       
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
