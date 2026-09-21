@@ -14,8 +14,8 @@ case "$1" in
         ;;
 esac
 
-apt update
-apt install -y \
+sudo apt update
+sudo apt install -y \
     git \
     build-essential \
     automake \
