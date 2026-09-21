@@ -80,22 +80,69 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 ---
 
 ## :zap: Getting Started
-0. Clone this repository and change working directory.
+
+### Run a release:
+
+1. Download latest [release](https://github.com/kwrx/aplus/releases/latest)
+2. Requirements: `qemu-system-x86_64` and UEFI firmware (`ovmf` or `edk2-ovmf`)
+
+```bash
+tar xf release-aplus-*-x86_64.tar.xz
+cd release-aplus-*-x86_64
+./run.sh
+```
+
+First run prompts for:
+- Architecture, disk image, UEFI firmware
+- CPUs, RAM
+- Virtio or emulated devices
+- KVM support
+- Display mode (local window or VNC)
+
+Settings are saved to `config.txt`. Edit the file or run `./run.sh --reconfigure` to change settings. Use `./run.sh --help` for all available options.
+
+### Build from Linux:
+Clone this repository and change working directory.
 ```console
 $ git clone https://github.com/kwrx/aplus
 $ cd aplus
 ```
 
-### Build from Linux:
-It's recommended you use a recent Linux host environment with this method.
+**NOTE:** It's recommended you use a **recent Linux** host environment with this method.
 
-Some packages are required for the build system:
+Some packages are **required** for the build system, all of them checked by `./configure`:
 * `git`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
 * `gcc`, `ld` to compile sources and link objects
-* `python3` to run some build scripts
-* `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `dd`, `truncate`, `fc-scan` to generate hdd image
+* `python3`, with `pip` and `venv`: `./configure` creates a `.venv` and installs [requirements.txt](/requirements.txt) into it
+* `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `fakeroot`, `dd`, `truncate`, `fc-scan` to generate the hdd image — `grub-mkstandalone` also needs its `x86_64-efi` modules, packaged apart on some distributions (`grub-efi-amd64-bin` on Ubuntu/Debian)
 * `tar`, `gzip`, `zip`, `find`, `awk`, `od` for the remaining build steps
-* `qemu` or `VirtualBox` to run Virtual Machine  
+* `qemu-system-x86_64` with UEFI firmware (`ovmf` or `edk2-ovmf`)
+
+On **Ubuntu/Debian**, you can install all of them with:
+```console
+$ sudo apt install -y \
+    git \
+    build-essential \
+    automake \
+    autoconf \
+    dosfstools \
+    e2fsprogs \
+    mtools \
+    gdisk \
+    fakeroot \
+    grub-common \
+    grub-efi-amd64-bin \
+    fontconfig \
+    gzip \
+    tar \
+    zip \
+    xz-utils \
+    python3 \
+    python3-pip \
+    python3-venv \
+    qemu-system-x86 \
+    ovmf
+```
 
 <br>
 

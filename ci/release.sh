@@ -41,8 +41,10 @@ sudo apt install -y \
 
 NAME=release-aplus-$(git rev-parse --short HEAD)-${TARGET}
 
-mv aplus.img ${NAME}.img
+mkdir -p ${NAME}
+mv aplus.img ${NAME}/${NAME}.img
+install -m 755 ci/run.sh ${NAME}/run.sh
 
-tar czf ${NAME}.tar.gz ${NAME}.img
-tar cJf ${NAME}.tar.xz ${NAME}.img
-zip -r ${NAME}.zip ${NAME}.img
+tar czf ${NAME}.tar.gz ${NAME}
+tar cJf ${NAME}.tar.xz ${NAME}
+zip -r ${NAME}.zip ${NAME}

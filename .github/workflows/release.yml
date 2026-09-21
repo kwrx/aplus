@@ -19,8 +19,9 @@ jobs:
     - uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        prerelease: false
+        prerelease: true
+        automatic_release_tag: true
         files: |
-          ${{github.workspace}}/aplus-*.tar.gz
-          ${{github.workspace}}/aplus-*.tar.xz
-          ${{github.workspace}}/aplus-*.zip
+          ${{github.workspace}}/release-aplus-*.tar.gz
+          ${{github.workspace}}/release-aplus-*.tar.xz
+          ${{github.workspace}}/release-aplus-*.zip
