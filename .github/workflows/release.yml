@@ -20,8 +20,8 @@ jobs:
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         prerelease: true
-        automatic_release_tag: "nightly-${{ github.sha }}"
-        title: "Release ${{ github.sha }}"
+        automatic_release_tag: "latest"
+        title: "Development Release ${{ github.sha }}"
         files: |
           ${{github.workspace}}/release-aplus-*.tar.gz
           ${{github.workspace}}/release-aplus-*.tar.xz
