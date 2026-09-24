@@ -24,12 +24,14 @@ sudo apt install -y \
     e2fsprogs \
     mtools \
     gdisk \
+    fakeroot \
     grub-common \
     grub-efi-amd64-bin \
     fontconfig \
     gzip \
     tar \
     zip \
+    xz-utils \
     python3 \
     python3-pip \
     python3-venv

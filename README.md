@@ -115,7 +115,7 @@ $ cd aplus
 
 **NOTE:** It's recommended you use a **recent Linux** host environment with this method.
 
-Some packages are **required** for the build system; `./configure` checks for most of them:
+Some packages are **required** for the build system; `./configure` checks for all of them but `xz` and QEMU:
 * `git`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
 * `gcc`, `ld` to compile sources and link objects
 * `python3`, with `pip` and `venv`: `./configure` creates a `.venv` and installs [requirements.txt](/requirements.txt) into it
