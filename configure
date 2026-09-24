@@ -329,6 +329,7 @@ required fc-scan
 required gzip
 required tar
 required truncate
+required fakeroot
 required zip
 required od
 required_python_3
