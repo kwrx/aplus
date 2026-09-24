@@ -1,5 +1,6 @@
 
 # aplus `#os`
+[![release](https://github.com/kwrx/aplus/actions/workflows/release.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/release.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
@@ -56,7 +57,7 @@ Furthermore, userspace has a **multi-user** environment with superuser (root) an
 
 Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator, the sysutils applications and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all. Below, the `gl-gears` demo draws into a window of its own, stacked above the terminal that launched it — both frames drawn by the server rather than by the programs inside them.
 
-Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the forwarded port set up by [run-qemu](/scripts/run-qemu).
+Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the port `8080` forwarded to the guest's `80` by [run-qemu](/scripts/run-qemu) and by the `run.sh` shipped with the releases.
 
 <br>
 <p align="center" width="100%">
@@ -83,7 +84,9 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 
 ### Run a release:
 
-1. Download latest [release](https://github.com/kwrx/aplus/releases/latest)
+Every push to `main` is built by the [release workflow](/.github/workflows/release.yml) and published as the `latest` development release.
+
+1. Download the latest [release](https://github.com/kwrx/aplus/releases/latest): `release-aplus-<commit>-x86_64` holds the disk image and [run.sh](/ci/run.sh)
 2. Requirements: `qemu-system-x86_64` and UEFI firmware (`ovmf` or `edk2-ovmf`)
 
 ```bash
@@ -99,7 +102,9 @@ First run prompts for:
 - KVM support
 - Display mode (local window or VNC)
 
-Settings are saved to `config.txt`. Edit the file or run `./run.sh --reconfigure` to change settings. Use `./run.sh --help` for all available options.
+Settings are saved to `config.txt`. Edit the file or run `./run.sh --reconfigure` to change settings; `./run.sh --defaults` skips the questions, `./run.sh --dry-run` prints the QEMU command line without running it. Use `./run.sh --help` for all available options.
+
+The guest console is written to `console.log`, the QEMU monitor listens on `telnet 127.0.0.1:4444`, and the host port `8080` is forwarded to the guest's `80`.
 
 ### Build from Linux:
 Clone this repository and change working directory.
@@ -110,13 +115,13 @@ $ cd aplus
 
 **NOTE:** It's recommended you use a **recent Linux** host environment with this method.
 
-Some packages are **required** for the build system, all of them checked by `./configure`:
+Some packages are **required** for the build system; `./configure` checks for most of them:
 * `git`, `make`, `autoconf`, `automake` (or `build-essential` on Ubuntu/Debian)
 * `gcc`, `ld` to compile sources and link objects
 * `python3`, with `pip` and `venv`: `./configure` creates a `.venv` and installs [requirements.txt](/requirements.txt) into it
 * `mke2fs`, `mkfs.vfat`, `mcopy`, `mmd`, `sgdisk`, `grub-mkstandalone`, `fakeroot`, `dd`, `truncate`, `fc-scan` to generate the hdd image — `grub-mkstandalone` also needs its `x86_64-efi` modules, packaged apart on some distributions (`grub-efi-amd64-bin` on Ubuntu/Debian)
-* `tar`, `gzip`, `zip`, `find`, `awk`, `od` for the remaining build steps
-* `qemu-system-x86_64` with UEFI firmware (`ovmf` or `edk2-ovmf`)
+* `tar`, `gzip`, `zip`, `find`, `awk`, `od` for the remaining build steps, and `xz` for the archives made by `./makew dist`
+* `qemu-system-x86_64` with UEFI firmware (`ovmf` or `edk2-ovmf`) to run it
 
 On **Ubuntu/Debian**, you can install all of them with:
 ```console
@@ -144,8 +149,7 @@ $ sudo apt install -y \
     ovmf
 ```
 
-<br>
-
+Then:
 
 1. Configure and check environment
 ```console
