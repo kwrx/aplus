@@ -1,5 +1,5 @@
 # aplus `#os`
-[![deploy](https://github.com/kwrx/aplus/actions/workflows/deploy.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/deploy.yml)
+[![release](https://github.com/kwrx/aplus/actions/workflows/release.yml/badge.svg)](https://github.com/kwrx/aplus/actions/workflows/release.yml)
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/kwrx/aplus)](https://github.com/kwrx/aplus/releases/latest)
 [![License: GPL](https://img.shields.io/badge/License-GPL-blue.svg)](/LICENSE) 
 
@@ -29,6 +29,11 @@ $ ./makew run
 **NOTE:** `x86_64` is the only target that boots and runs today. `./makew run-headless` runs
 without a graphical display, which is what to use when capturing console output;
 `./makew run VM_DEBUG=debug` starts the VM paused with a GDB stub on `127.0.0.1:1234`.
+
+A prebuilt image is published for every push to `main` as the `latest`
+[development release](https://github.com/kwrx/aplus/releases/latest), built by
+[ci/release.sh](/ci/release.sh). Unpack it and start `./run.sh`: it asks for the QEMU settings
+on the first run and keeps them in `config.txt` (`./run.sh --help` lists the options).
 
 ## :books: Contents
 
