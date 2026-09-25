@@ -1,9 +1,11 @@
 name: release
 
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types: [closed]
+  push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
 
@@ -12,10 +14,13 @@ permissions:
 
 jobs:
   build:
+    if: github.event.pull_request.merged == true || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-24.04
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
     - name: Release x86_64
       working-directory: ${{ github.workspace }}
@@ -23,18 +28,18 @@ jobs:
       run: ci/release.sh x86_64
 
     - name: Delete previous dev release
-      if: github.ref == 'refs/heads/main'
+      if: github.event_name == 'pull_request'
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: gh release delete latest --cleanup-tag --yes || true
+      run: gh release delete latest --cleanup-tag --yes --repo ${{ github.repository }} || true
 
     - name: Dev release
-      if: github.ref == 'refs/heads/main'
+      if: github.event_name == 'pull_request'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: latest
-        target_commitish: ${{ github.sha }}
-        name: Development Release ${{ github.sha }}
+        target_commitish: ${{ github.event.pull_request.merge_commit_sha }}
+        name: Development Release ${{ github.event.pull_request.merge_commit_sha }}
         prerelease: true
         make_latest: false
         generate_release_notes: true
