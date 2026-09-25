@@ -445,6 +445,11 @@ void ui_list_scroll_to(ui_widget_t* widget, int index) {
 
     const ui_rect_t rows = ui_list_rows_rect(widget);
 
+    if (rows.height <= 0) {
+        return;
+    }
+
+
     const int top    = index * widget->list.row_height;
     const int bottom = top + widget->list.row_height;
 
@@ -599,7 +604,7 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
         if (widget->list.selected == (int)i) {
 
-            ui_rect_t fill = {row.x - UI_LIST_PADDING / 2, row.y, row.width + UI_LIST_PADDING, row.height};
+            ui_rect_t fill = {row.x - UI_LIST_PADDING, row.y, row.width + 2 * UI_LIST_PADDING, row.height};
 
             ui_draw_rounded_rect(cr, fill, radius);
             ui_draw_set_color(cr, widget->list.focused ? theme->primary : theme->secondary);
