@@ -110,8 +110,6 @@ typedef struct {
 
     char name[NAME_MAX + 1];
     char label[EXPLORER_LABEL_MAX];
-
-    //? The icon's name, as the theme spells it, or as the .desktop file asked for.
     char icon[EXPLORER_ICON_MAX];
 
     bool directory;
@@ -154,9 +152,6 @@ static struct {
     explorer_place_t places[EXPLORER_PLACES_MAX];
     size_t places_count;
 
-    //? Set while the sidebar selection is being brought in line with the directory on
-    //? screen, so that the row it moves does not read as a click and open it all over
-    //? again.
     bool syncing;
 
 } explorer = {0};
