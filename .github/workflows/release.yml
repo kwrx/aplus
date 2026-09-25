@@ -2,27 +2,54 @@ name: release
 
 on:
   push:
-    branches: main
-    
+    branches:
+      - main
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-24.04
 
     steps:
-    - uses: actions/checkout@v2 
-    
+    - uses: actions/checkout@v4
+
     - name: Release x86_64
-      working-directory: ${{github.workspace}}
+      working-directory: ${{ github.workspace }}
       shell: bash
       run: ci/release.sh x86_64
-      
-    - uses: "marvinpinto/action-automatic-releases@latest"
+
+    - name: Delete previous dev release
+      if: github.ref == 'refs/heads/main'
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: gh release delete latest --cleanup-tag --yes || true
+
+    - name: Dev release
+      if: github.ref == 'refs/heads/main'
+      uses: softprops/action-gh-release@v2
       with:
-        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        tag_name: latest
+        target_commitish: ${{ github.sha }}
+        name: Development Release ${{ github.sha }}
         prerelease: true
-        automatic_release_tag: "latest"
-        title: "Development Release ${{ github.sha }}"
+        make_latest: false
+        generate_release_notes: true
         files: |
-          ${{github.workspace}}/release-aplus-*.tar.gz
-          ${{github.workspace}}/release-aplus-*.tar.xz
-          ${{github.workspace}}/release-aplus-*.zip
+          ${{ github.workspace }}/release-aplus-*.tar.xz
+          ${{ github.workspace }}/release-aplus-*.zip
+
+    - name: Tagged release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: Release ${{ github.ref_name }}
+        prerelease: false
+        generate_release_notes: true
+        files: |
+          ${{ github.workspace }}/release-aplus-*.tar.xz
+          ${{ github.workspace }}/release-aplus-*.zip
