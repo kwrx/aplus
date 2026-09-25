@@ -47,6 +47,5 @@ mkdir -p ${NAME}
 mv aplus.img ${NAME}/${NAME}.img
 install -m 755 ci/run.sh ${NAME}/run.sh
 
-tar czf ${NAME}.tar.gz ${NAME}
 tar cJf ${NAME}.tar.xz ${NAME}
 zip -r ${NAME}.zip ${NAME}
