@@ -44,6 +44,14 @@
 
 #include "desktop.h"
 
+#if defined(CONFIG_HAVE_AI)
+
+    #include <aplus/ui-draw.h>
+
+    #include "ai.h"
+
+#endif
+
 
 /**
  * @brief What the messages call this program.
@@ -66,10 +74,23 @@
 #define LAUNCHER_SHELL "/bin/dash"
 
 /**
+ * @brief What gives that command a window to run in, and what is left running in it afterwards.
+ */
+#define LAUNCHER_TERMINAL "aplus-terminal"
+#define LAUNCHER_SESSION  "%s; exec " LAUNCHER_SHELL
+
+/**
  * @brief What a row shows when its .desktop file named no icon, and what the shell row shows.
  */
 #define LAUNCHER_ICON_DEFAULT "application-x-executable"
 #define LAUNCHER_ICON_SHELL   "system-run"
+
+#if defined(CONFIG_HAVE_AI)
+    /**
+     * @brief What the row that asks the model, and the row that waits for it, show.
+     */
+    #define LAUNCHER_ICON_AI "system-ai"
+#endif
 
 /**
  * @brief How long to keep trying to reach the display server.
@@ -98,6 +119,36 @@
  */
 #define LAUNCHER_RUN_ROW ((void*)-1)
 
+#if defined(CONFIG_HAVE_AI)
+
+    /**
+     * @brief The same, for the rows an answer is made of: one to ask, one to run, and the rest to read.
+     */
+    #define LAUNCHER_ASK_ROW     ((void*)-2)
+    #define LAUNCHER_COMMAND_ROW ((void*)-3)
+    #define LAUNCHER_TEXT_ROW    ((void*)-4)
+
+    /**
+     * @brief How many rows an answer grows the window to, which is worth more of the screen than a list of matches.
+     */
+    #define LAUNCHER_ANSWER_ROWS_MAX 10
+
+    /**
+     * @brief How long a wrapped line may be, and how many of them an answer is cut down to.
+     */
+    #define LAUNCHER_LINE_MAX  160
+    #define LAUNCHER_LINES_MAX 32
+
+    /**
+     * @brief How much narrower than the window a wrapped line is.
+     *
+     * The list's own padding, the icon gutter it reserves for every row once one row has an
+     * icon, and room for the scrollbar. A line wider than this is ellipsised rather than wrapped.
+     */
+    #define LAUNCHER_LINE_INSET 64
+
+#endif
+
 
 static struct {
 
@@ -112,9 +163,21 @@ static struct {
     launcher_entry_t* entries;
     size_t count;
 
-    //? Set by anything that should close the launcher, and acted on by the event loop
-    //? rather than where it happened, so that nothing exits from inside a callback.
     bool dismissed;
+
+#if defined(CONFIG_HAVE_AI)
+
+    struct {
+
+        bool answered;
+
+        char prompt[LAUNCHER_FIELD_MAX];
+
+        launcher_ai_reply_t reply;
+
+    } ai;
+
+#endif
 
 } launcher = {0};
 
@@ -142,12 +205,32 @@ static void launcher_theme_init(void) {
 
 
 /**
+ * @brief Reports how many rows the window grows to before the list scrolls instead.
+ *
+ * @return The count.
+ */
+
+static int launcher_rows_max(void) {
+
+#if defined(CONFIG_HAVE_AI)
+
+    if (launcher.ai.answered) {
+        return LAUNCHER_ANSWER_ROWS_MAX;
+    }
+
+#endif
+
+    return LAUNCHER_ROWS_MAX;
+}
+
+
+/**
  * @brief Reports the window height that shows a number of rows and no part of another.
  *
  * No rows is the field on its own, which is what an untouched launcher looks like. The list
  * insets its rows by a pixel at the top and at the bottom, which is the 2 below.
  *
- * @param rows How many rows to fit, clamped to at most LAUNCHER_ROWS_MAX.
+ * @param rows How many rows to fit, clamped to at most what launcher_rows_max() allows.
  * @return The height in pixels.
  */
 
@@ -157,11 +240,26 @@ static int launcher_height(int rows) {
         return LAUNCHER_FIELD + 2 * LAUNCHER_MARGIN;
     }
 
-    if (rows > LAUNCHER_ROWS_MAX) {
-        rows = LAUNCHER_ROWS_MAX;
+    if (rows > launcher_rows_max()) {
+        rows = launcher_rows_max();
     }
 
     return LAUNCHER_FIELD + 3 * LAUNCHER_MARGIN + rows * LAUNCHER_ROW + 2;
+}
+
+
+/**
+ * @brief Selects the first row and asks for the height the list now needs.
+ */
+
+static void launcher_resize(void) {
+
+    const size_t rows = ui_list_count(launcher.list);
+
+    ui_list_select(launcher.list, 0);
+    ui_widget_set_visible(launcher.list, rows > 0);
+
+    ui_window_request_size(launcher.window, LAUNCHER_WINDOW_WIDTH, launcher_height((int)rows));
 }
 
 
@@ -197,6 +295,12 @@ static void launcher_refilter(void) {
 
     ui_list_clear(launcher.list);
 
+#if defined(CONFIG_HAVE_AI)
+
+    launcher.ai.answered = false;
+
+#endif
+
     for (size_t i = 0; i < launcher.count; i++) {
 
         if (launcher_matches(&launcher.entries[i], query)) {
@@ -211,18 +315,290 @@ static void launcher_refilter(void) {
 
         char row[LAUNCHER_FIELD_MAX + 8];
 
+#if defined(CONFIG_HAVE_AI)
+
+        snprintf(row, sizeof(row), "Ask \"%s\"", query);
+
+        ui_list_add_icon(launcher.list, LAUNCHER_ICON_AI, row, "ask", LAUNCHER_ASK_ROW);
+
+#else
+
         snprintf(row, sizeof(row), "Run \"%s\"", query);
 
         ui_list_add_icon(launcher.list, LAUNCHER_ICON_SHELL, row, "shell", LAUNCHER_RUN_ROW);
+
+#endif
     }
 
-    const size_t rows = ui_list_count(launcher.list);
-
-    ui_list_select(launcher.list, 0);
-    ui_widget_set_visible(launcher.list, rows > 0);
-
-    ui_window_request_size(launcher.window, LAUNCHER_WINDOW_WIDTH, launcher_height((int)rows));
+    launcher_resize();
 }
+
+
+#if defined(CONFIG_HAVE_AI)
+
+
+/**
+ * @brief Measures a line in the font the rows are drawn in.
+ *
+ * @param text The line to measure.
+ * @return Its width in pixels, or 0 when the font cannot be loaded.
+ */
+
+static double launcher_measure(const char* text) {
+
+    const ui_theme_t* theme = ui_theme();
+
+    cairo_font_face_t* face = ui_font_face(theme->font_regular);
+
+    if (!face) {
+        return 0.0;
+    }
+
+
+    cairo_scaled_font_t* scaled = ui_font_scaled(face, theme->font_size);
+
+    if (!scaled) {
+        return 0.0;
+    }
+
+
+    cairo_text_extents_t extents;
+
+    cairo_scaled_font_text_extents(scaled, text, &extents);
+
+    return extents.x_advance;
+}
+
+
+/**
+ * @brief Reports how much of a word fits a width, which is where a word longer than a line is cut.
+ *
+ * @param word The word.
+ * @param len How long it is, which must leave room for a terminator in a line.
+ * @param width How wide a line may be, in pixels.
+ * @return How many bytes fit, never fewer than one and never half of a character.
+ */
+
+static size_t launcher_fit(const char* word, size_t len, double width) {
+
+    char text[LAUNCHER_LINE_MAX];
+
+    size_t take = len;
+
+    while (take > 1) {
+
+        memcpy(text, word, take);
+
+        text[take] = '\0';
+
+        if (launcher_measure(text) <= width) {
+            break;
+        }
+
+        take--;
+
+        while (take > 1 && ((unsigned char)word[take] & 0xC0) == 0x80) {
+            take--;
+        }
+    }
+
+    return take;
+}
+
+
+/**
+ * @brief Breaks text into lines that fit a width, at the spaces where it can and mid-word where it cannot.
+ *
+ * Blank lines are dropped rather than kept: the window has too few rows to spend one on nothing.
+ *
+ * @param text What to break up.
+ * @param width How wide a line may be, in pixels.
+ * @param out Receives the lines.
+ * @param max How many lines there is room for.
+ * @return How many lines were written.
+ */
+
+static size_t launcher_wrap(const char* text, double width, char out[][LAUNCHER_LINE_MAX], size_t max) {
+
+    char line[LAUNCHER_LINE_MAX];
+
+    size_t count = 0;
+    size_t len   = 0;
+
+    line[0] = '\0';
+
+    for (const char* p = text; *p && count < max;) {
+
+        if (*p == ' ' || *p == '\t' || *p == '\r') {
+            p++;
+            continue;
+        }
+
+        if (*p == '\n') {
+
+            if (len > 0) {
+                memcpy(out[count++], line, len + 1);
+            }
+
+            line[0] = '\0';
+            len     = 0;
+
+            p++;
+
+            continue;
+        }
+
+
+        const char* end = p;
+
+        while (*end && *end != ' ' && *end != '\t' && *end != '\r' && *end != '\n') {
+            end++;
+        }
+
+
+        char candidate[LAUNCHER_LINE_MAX];
+
+        size_t at   = len;
+        size_t take = (size_t)(end - p);
+
+        memcpy(candidate, line, len);
+
+        if (at > 0 && at + 2 < sizeof(candidate)) {
+            candidate[at++] = ' ';
+        }
+
+        if (at + take + 1 > sizeof(candidate)) {
+            take = sizeof(candidate) - at - 1;
+        }
+
+        if (take == 0) {
+
+            memcpy(out[count++], line, len + 1);
+
+            line[0] = '\0';
+            len     = 0;
+
+            continue;
+        }
+
+        memcpy(candidate + at, p, take);
+
+        candidate[at + take] = '\0';
+
+
+        if (launcher_measure(candidate) > width) {
+
+            if (len > 0) {
+
+                memcpy(out[count++], line, len + 1);
+
+                line[0] = '\0';
+                len     = 0;
+
+                continue;
+            }
+
+            take = launcher_fit(candidate, take, width);
+
+            candidate[take] = '\0';
+        }
+
+        memcpy(line, candidate, at + take + 1);
+
+        len = at + take;
+
+        p += take;
+    }
+
+    if (len > 0 && count < max) {
+        memcpy(out[count++], line, len + 1);
+    }
+
+    return count;
+}
+
+
+/**
+ * @brief Says that the model is being waited on, in the one row the query was asked from.
+ */
+
+static void launcher_thinking(void) {
+
+    ui_list_clear(launcher.list);
+    ui_list_add_icon(launcher.list, LAUNCHER_ICON_AI, "Thinking...", NULL, LAUNCHER_TEXT_ROW);
+
+    launcher_resize();
+}
+
+
+/**
+ * @brief Shows what came back: the command it suggested, where there is one, and then the answer itself.
+ *
+ * The command is the first row and so the selected one, which is what makes Enter run it.
+ */
+
+static void launcher_answer(void) {
+
+    const launcher_ai_reply_t* reply = &launcher.ai.reply;
+
+    ui_list_clear(launcher.list);
+
+    launcher.ai.answered = true;
+
+    if (reply->command[0]) {
+        ui_list_add_icon(launcher.list, LAUNCHER_ICON_SHELL, reply->command, "run", LAUNCHER_COMMAND_ROW);
+    }
+
+
+    char lines[LAUNCHER_LINES_MAX][LAUNCHER_LINE_MAX];
+
+    const char* text = reply->error[0] ? reply->error : reply->answer;
+
+    const size_t count = launcher_wrap(text, LAUNCHER_WINDOW_WIDTH - 2 * LAUNCHER_MARGIN - LAUNCHER_LINE_INSET, lines, LAUNCHER_LINES_MAX);
+
+    for (size_t i = 0; i < count; i++) {
+        ui_list_add(launcher.list, lines[i], NULL, LAUNCHER_TEXT_ROW);
+    }
+
+    launcher_resize();
+}
+
+
+/**
+ * @brief Puts the query to the model and shows what comes back.
+ *
+ * The request is made here rather than on a thread of its own, and the window is frozen for
+ * as long as it takes: the C library's allocator takes no lock, so a second thread
+ * allocating alongside the one that draws corrupts the heap of both.
+ *
+ * The waiting row is painted and handed to the display server before the request starts,
+ * which is the whole reason the frozen window has something to say.
+ */
+
+static void launcher_ask(void) {
+
+    const char* query = ui_entry_text(launcher.field);
+
+    if (!*query) {
+        return;
+    }
+
+
+    strncpy(launcher.ai.prompt, query, sizeof(launcher.ai.prompt) - 1);
+
+    launcher.ai.prompt[sizeof(launcher.ai.prompt) - 1] = '\0';
+
+    launcher_thinking();
+
+    ui_view_present(launcher.view);
+
+    launcher_ai_ask(launcher.ai.prompt, &launcher.ai.reply);
+
+    launcher_answer();
+}
+
+
+#endif
 
 
 /**
@@ -249,7 +625,8 @@ static void launcher_teardown(void) {
 /**
  * @brief Runs what the list has selected, replacing this process with it.
  *
- * Returns only when the exec failed, having already given the window back.
+ * A command gets a terminal of its own, which stays at a shell prompt once the command is
+ * through. Returns only when the exec failed, having already given the window back.
  */
 
 static void launcher_run(void) {
@@ -263,18 +640,46 @@ static void launcher_run(void) {
 
     const void* row = ui_list_item_user(launcher.list, index);
 
-    char command[PATH_MAX];
+#if defined(CONFIG_HAVE_AI)
 
-    if (row == LAUNCHER_RUN_ROW) {
-        strncpy(command, ui_entry_text(launcher.field), sizeof(command) - 1);
-    } else {
-        strncpy(command, ((const launcher_entry_t*)row)->path, sizeof(command) - 1);
+    if (row == LAUNCHER_TEXT_ROW) {
+        return;
     }
 
+    if (row == LAUNCHER_ASK_ROW) {
+
+        launcher_ask();
+        return;
+    }
+
+#endif
+
+    const char* source = NULL;
+
+    if (row == LAUNCHER_RUN_ROW) {
+        source = ui_entry_text(launcher.field);
+    }
+
+#if defined(CONFIG_HAVE_AI)
+
+    if (row == LAUNCHER_COMMAND_ROW) {
+        source = launcher.ai.reply.command;
+    }
+
+#endif
+
+    const bool shell = source != NULL;
+
+    if (!shell) {
+        source = ((const launcher_entry_t*)row)->path;
+    }
+
+
+    char command[PATH_MAX];
+
+    strncpy(command, source, sizeof(command) - 1);
+
     command[sizeof(command) - 1] = '\0';
-
-
-    const bool shell = row == LAUNCHER_RUN_ROW;
 
     launcher_teardown();
 
@@ -283,7 +688,14 @@ static void launcher_run(void) {
     }
 
     if (shell) {
+
+        char session[sizeof(command) + sizeof(LAUNCHER_SESSION)];
+
+        snprintf(session, sizeof(session), LAUNCHER_SESSION, command);
+
+        execlp(LAUNCHER_TERMINAL, LAUNCHER_TERMINAL, "-c", session, NULL);
         execl(LAUNCHER_SHELL, LAUNCHER_SHELL, "-c", command, NULL);
+
     } else {
         execlp(LAUNCHER_OPENER, LAUNCHER_OPENER, command, NULL);
     }
