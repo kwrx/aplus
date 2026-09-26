@@ -181,7 +181,7 @@ $ ./makew run
 
 ---
 
-## :globe_with_meridians: Third-Party Software:
+## :globe_with_meridians: Third-Party Software
 `aplus` uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
 ## :page_with_curl: License
