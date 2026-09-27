@@ -24,18 +24,24 @@
  */
 
 /**
- * @brief Regression tests for the blocked-signal mask.
+ * @brief Regression tests for the blocked-signal mask, signal frames, process-directed signals and futex waits.
  *
  * A sigset_t is a bit array, and every way of indexing into it wrongly used to be live in this kernel.
  */
 
 #include <errno.h>
+#include <fcntl.h>
+#include <fenv.h>
+#include <pthread.h>
+#include <setjmp.h>
 #include <signal.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/syscall.h>
+#include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -474,6 +480,1822 @@ static void test_bad_sigsetsize(void) {
 }
 
 
+/**
+ * @brief The futex operations the futex cases issue, which no userspace header here defines.
+ */
+#define FUTEX_OP_WAIT        0
+#define FUTEX_OP_WAKE        1
+#define FUTEX_OP_CMP_REQUEUE 4
+#define FUTEX_OP_LOCK_PI     6
+
+
+/**
+ * @brief Reads the monotonic clock.
+ *
+ * @return Milliseconds since an arbitrary point.
+ */
+static uint64_t now_ms(void) {
+
+    struct timespec ts;
+
+    if (clock_gettime(CLOCK_MONOTONIC, &ts) < 0)
+        return 0;
+
+    return (uint64_t)ts.tv_sec * 1000ULL + (uint64_t)ts.tv_nsec / 1000000ULL;
+}
+
+
+/**
+ * @brief Sleeps for at least the given time, carrying on across signal handlers.
+ *
+ * @param ms How long to sleep.
+ */
+static void sleep_full_ms(unsigned ms) {
+
+    uint64_t end = now_ms() + ms;
+
+    for (uint64_t now = now_ms(); now < end; now = now_ms()) {
+
+        struct timespec ts = {.tv_sec = (end - now) / 1000, .tv_nsec = (long)((end - now) % 1000) * 1000000L};
+
+        nanosleep(&ts, NULL);
+    }
+}
+
+
+/**
+ * @brief Polls a child with WNOHANG until it is reported or time runs out.
+ *
+ * @param pid The child.
+ * @param status Receives its status.
+ * @param options Extra waitpid() options.
+ * @param ms How long to keep trying.
+ * @return What waitpid() returned, or 0 on timeout.
+ */
+static pid_t wait_timeout(pid_t pid, int* status, int options, unsigned ms) {
+
+    uint64_t end = now_ms() + ms;
+
+    for (;;) {
+
+        pid_t r = waitpid(pid, status, options | WNOHANG);
+
+        if (r != 0)
+            return r;
+
+        if (now_ms() >= end)
+            return 0;
+
+        sleep_full_ms(5);
+    }
+}
+
+
+/**
+ * @brief Runs a case body in a child process, killing the child if it outlives its time.
+ *
+ * @param fn The body; what it returns becomes the child's exit status.
+ * @param ms How long the child may run.
+ * @return The child's exit status, 128 plus the signal that killed it, or -1 if it hung or could not be started.
+ */
+static int run_child(int (*fn)(void), unsigned ms) {
+
+    pid_t pid = fork();
+
+    if (pid < 0)
+        return -1;
+
+    if (pid == 0)
+        _exit(fn());
+
+
+    int status = 0;
+
+    if (wait_timeout(pid, &status, 0, ms) != pid) {
+
+        kill(pid, SIGKILL);
+        waitpid(pid, &status, 0);
+
+        return -1;
+    }
+
+    if (WIFEXITED(status))
+        return WEXITSTATUS(status);
+
+    if (WIFSIGNALED(status))
+        return 128 + WTERMSIG(status);
+
+    return -1;
+}
+
+
+/**
+ * @brief Describes what became of a child run by run_child().
+ *
+ * @param r What run_child() returned.
+ * @param codes What each failure code a body returns means, indexed by code.
+ * @param ncodes How many entries @p codes has.
+ * @return A description, in a buffer reused by the next call.
+ */
+static const char* child_result(int r, const char* const* codes, size_t ncodes) {
+
+    static char buf[160];
+
+    if (r < 0)
+        snprintf(buf, sizeof(buf), "hung and was killed");
+    else if (r >= 128)
+        snprintf(buf, sizeof(buf), "died of signal %d", r - 128);
+    else if ((size_t)r < ncodes && codes[r])
+        snprintf(buf, sizeof(buf), "failed: %s", codes[r]);
+    else
+        snprintf(buf, sizeof(buf), "failed with code %d", r);
+
+    return buf;
+}
+
+
+/**
+ * @brief Filled in by nest_handler(), which runs once for the outer signal and once more nested inside it.
+ */
+static volatile sig_atomic_t nest_depth;
+static volatile sig_atomic_t nest_max;
+static volatile sig_atomic_t nest_inner_done;
+static volatile sig_atomic_t nest_outer_ok;
+static int nest_outer_sig;
+static int nest_inner_sig;
+
+
+/**
+ * @brief Raises the inner signal from inside the outer handler and waits for it, then checks the outer frame survived.
+ *
+ * @param signo The signal being handled.
+ */
+static void nest_handler(int signo) {
+
+    nest_depth++;
+
+    if (nest_depth > nest_max)
+        nest_max = nest_depth;
+
+    if (nest_depth == 1 && signo == nest_outer_sig) {
+
+        volatile uint64_t canary[16];
+        volatile double scale = 1.25;
+
+        for (int i = 0; i < 16; i++)
+            canary[i] = 0xC0FFEE0000ULL + (uint64_t)i;
+
+        raise(nest_inner_sig);
+
+        for (uint64_t end = now_ms() + 500; !nest_inner_done && now_ms() < end;)
+            ;
+
+        int ok = nest_inner_done && scale == 1.25;
+
+        for (int i = 0; i < 16; i++)
+            ok = ok && canary[i] == 0xC0FFEE0000ULL + (uint64_t)i;
+
+        nest_outer_ok = ok;
+
+    } else {
+
+        volatile uint64_t junk[64];
+
+        for (int i = 0; i < 64; i++)
+            junk[i] = ~0ULL;
+
+        nest_inner_done = junk[63] == ~0ULL;
+    }
+
+    nest_depth--;
+}
+
+
+/**
+ * @brief Takes the outer signal, whose handler takes the inner one nested, and checks every frame came back intact.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int nest_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = nest_handler;
+    sa.sa_flags   = nest_outer_sig == nest_inner_sig ? SA_NODEFER : 0;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(nest_outer_sig, &sa, NULL) < 0 || sigaction(nest_inner_sig, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+
+    volatile uint64_t mine = 0xABCDEF0123ULL;
+
+    raise(nest_outer_sig);
+
+    for (uint64_t end = now_ms() + 1000; (nest_max == 0 || nest_depth != 0) && now_ms() < end;)
+        ;
+
+    if (nest_max < 2)
+        return 2;
+
+    if (!nest_outer_ok)
+        return 3;
+
+    if (mine != 0xABCDEF0123ULL)
+        return 4;
+
+    return 0;
+}
+
+
+/**
+ * @brief What nest_child() failure codes mean.
+ */
+static const char* const nest_codes[] = {
+    [2]  = "the inner handler never ran nested",
+    [3]  = "the outer handler's frame did not survive the nested one",
+    [4]  = "the interrupted code's frame did not survive",
+    [10] = "setup failed",
+};
+
+
+/**
+ * @brief Checks that a handler taking its own signal again under SA_NODEFER returns through both frames intact.
+ */
+static void test_nested(void) {
+
+    nest_outer_sig = SIGUSR1;
+    nest_inner_sig = SIGUSR1;
+
+    int r = run_child(nest_child, 3000);
+
+    CHECK(r == 0, "nested", "a handler nested in itself %s", child_result(r, nest_codes, sizeof(nest_codes) / sizeof(nest_codes[0])));
+}
+
+
+/**
+ * @brief Checks that a handler interrupted by a different signal returns through both frames intact.
+ */
+static void test_nested_other(void) {
+
+    nest_outer_sig = SIGUSR1;
+    nest_inner_sig = SIGUSR2;
+
+    int r = run_child(nest_child, 3000);
+
+    CHECK(r == 0, "nested-other", "a SIGUSR2 handler nested in a SIGUSR1 handler %s", child_result(r, nest_codes, sizeof(nest_codes) / sizeof(nest_codes[0])));
+}
+
+
+#define FRAME_THREADS 4
+#define FRAME_ROUNDS  200
+
+/**
+ * @brief Which frame_thread() a thread is, and what the handlers have seen.
+ */
+static __thread int frame_index;
+static atomic_int frame_seen[FRAME_THREADS];
+static atomic_int frame_bad;
+
+
+/**
+ * @brief Holds a pattern of its own thread on the handler's stack for a while, then checks it and the payload.
+ *
+ * @param signo The signal.
+ * @param info Its details, whose value names the thread it was sent to.
+ * @param ctx The interrupted context.
+ */
+static void frame_handler(int signo, siginfo_t* info, void* ctx) {
+
+    (void)signo;
+    (void)ctx;
+
+    volatile uint64_t canary[32];
+
+    for (int i = 0; i < 32; i++)
+        canary[i] = ((uint64_t)frame_index << 32) | (uint64_t)i;
+
+    for (volatile int spin = 0; spin < 200000; spin++)
+        ;
+
+    int ok = info->si_value.sival_int == frame_index;
+
+    for (int i = 0; i < 32; i++)
+        ok = ok && canary[i] == (((uint64_t)frame_index << 32) | (uint64_t)i);
+
+    if (!ok)
+        atomic_fetch_add(&frame_bad, 1);
+
+    atomic_fetch_add(&frame_seen[frame_index], 1);
+}
+
+
+/**
+ * @brief Signals its own thread over and over with its index as the payload, waiting for each to be handled.
+ *
+ * @param arg The thread's index.
+ * @return NULL, or non-NULL if a signal could not be sent.
+ */
+static void* frame_thread(void* arg) {
+
+    frame_index = (int)(intptr_t)arg;
+
+    pid_t tid = (pid_t)syscall(SYS_gettid);
+
+    for (int i = 0; i < FRAME_ROUNDS; i++) {
+
+        siginfo_t si;
+
+        memset(&si, 0, sizeof(si));
+
+        si.si_signo           = SIGUSR1;
+        si.si_code            = SI_QUEUE;
+        si.si_pid             = getpid();
+        si.si_uid             = getuid();
+        si.si_value.sival_int = frame_index;
+
+        if (syscall(SYS_rt_tgsigqueueinfo, getpid(), tid, SIGUSR1, &si) < 0)
+            return (void*)1;
+
+        for (uint64_t end = now_ms() + 500; atomic_load(&frame_seen[frame_index]) <= i && now_ms() < end;)
+            ;
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Runs frame_thread() on several threads at once, so that their handlers overlap.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int frame_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_sigaction = frame_handler;
+    sa.sa_flags     = SA_SIGINFO | SA_RESTART;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+
+    pthread_t t[FRAME_THREADS];
+
+    for (int i = 0; i < FRAME_THREADS; i++) {
+
+        if (pthread_create(&t[i], NULL, frame_thread, (void*)(intptr_t)i) != 0)
+            return 10;
+    }
+
+    int failed = 0;
+
+    for (int i = 0; i < FRAME_THREADS; i++) {
+
+        void* r = NULL;
+
+        pthread_join(t[i], &r);
+
+        failed |= r != NULL;
+    }
+
+    if (failed)
+        return 11;
+
+    for (int i = 0; i < FRAME_THREADS; i++) {
+
+        if (atomic_load(&frame_seen[i]) != FRAME_ROUNDS)
+            return 2;
+    }
+
+    return atomic_load(&frame_bad) ? 3 : 0;
+}
+
+
+/**
+ * @brief Checks that threads taking signals at the same time each get a frame and a siginfo of their own.
+ */
+static void test_thread_frames(void) {
+
+    static const char* const codes[] = {
+        [2]  = "a thread's signal was not handled exactly once",
+        [3]  = "a handler found its stack or its siginfo overwritten by another thread's",
+        [10] = "setup failed",
+        [11] = "rt_tgsigqueueinfo() failed",
+    };
+
+    int r = run_child(frame_child, 10000);
+
+    CHECK(r == 0, "thread-frames", "%d threads taking signals at once %s", FRAME_THREADS, child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Filled in by ctx_handler() from the context it was handed.
+ */
+static volatile sig_atomic_t ctx_ran;
+static volatile sig_atomic_t ctx_ok;
+
+
+/**
+ * @brief Checks the siginfo and the interrupted context a handler is handed.
+ *
+ * @param signo The signal.
+ * @param info Its details.
+ * @param ctx The interrupted context.
+ */
+static void ctx_handler(int signo, siginfo_t* info, void* ctx) {
+
+    ucontext_t* uc = ctx;
+    volatile char here;
+
+    ctx_ok = signo == SIGUSR1 && info && info->si_signo == SIGUSR1 && uc && sigismember(&uc->uc_sigmask, SIGUSR2) == 1 && sigismember(&uc->uc_sigmask, SIGUSR1) == 0 && uc->uc_mcontext.gregs[REG_RIP] != 0 &&
+             (uintptr_t)uc->uc_mcontext.gregs[REG_RSP] > (uintptr_t)&here;
+
+    ctx_ran = 1;
+}
+
+
+/**
+ * @brief Takes a signal with SIGUSR2 blocked and checks what the handler saw and what is in force after it.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int ctx_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_sigaction = ctx_handler;
+    sa.sa_flags     = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0)
+        return 10;
+
+
+    sigset_t block;
+    sigemptyset(&block);
+    sigaddset(&block, SIGUSR2);
+
+    if (sigprocmask_retry(SIG_SETMASK, &block, NULL) < 0)
+        return 10;
+
+    raise(SIGUSR1);
+
+    for (uint64_t end = now_ms() + 1000; !ctx_ran && now_ms() < end;)
+        ;
+
+    if (!ctx_ran)
+        return 2;
+
+    if (!ctx_ok)
+        return 3;
+
+
+    sigset_t after;
+    sigemptyset(&after);
+
+    if (sigprocmask_retry(SIG_SETMASK, NULL, &after) < 0 || sigismember(&after, SIGUSR2) != 1 || sigismember(&after, SIGUSR1) != 0)
+        return 4;
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that an SA_SIGINFO handler is handed its siginfo and a context describing the interrupted code.
+ */
+static void test_ucontext(void) {
+
+    static const char* const codes[] = {
+        [2]  = "the handler never ran",
+        [3]  = "the handler was handed a missing or wrong siginfo or context",
+        [4]  = "the mask in force before the handler was not restored after it",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(ctx_child, 3000);
+
+    CHECK(r == 0, "ucontext", "an SA_SIGINFO handler %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Where resume_handler() sends the interrupted code instead of back to where it was.
+ */
+static void resume_escape(void) {
+    _exit(42);
+}
+
+
+/**
+ * @brief Rewrites the interrupted instruction pointer in the context it was handed.
+ *
+ * @param signo The signal.
+ * @param info Its details.
+ * @param ctx The interrupted context.
+ */
+static void resume_handler(int signo, siginfo_t* info, void* ctx) {
+
+    ucontext_t* uc = ctx;
+
+    (void)signo;
+    (void)info;
+
+    if (!uc)
+        _exit(3);
+
+    uc->uc_mcontext.gregs[REG_RIP] = (greg_t)(uintptr_t)resume_escape;
+}
+
+
+/**
+ * @brief Takes a signal whose handler redirects the code it interrupted, and spins where it would otherwise resume.
+ *
+ * @return 42 once redirected, or a failure code.
+ */
+static int resume_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_sigaction = resume_handler;
+    sa.sa_flags     = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+    raise(SIGUSR1);
+
+    for (uint64_t end = now_ms() + 1000; now_ms() < end;)
+        ;
+
+    return 2;
+}
+
+
+/**
+ * @brief Checks that rt_sigreturn resumes the context as the handler left it, which pthread_cancel() depends on.
+ */
+static void test_ucontext_resume(void) {
+
+    static const char* const codes[] = {
+        [2]  = "the handler's change to the interrupted context was ignored",
+        [3]  = "the handler was handed no context",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(resume_child, 3000);
+
+    CHECK(r == 42, "ucontext-resume", "a handler redirecting the interrupted code %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Blocks in read() on a pipe nobody writes to.
+ *
+ * @param arg The descriptor to read.
+ * @return NULL, unless cancelled.
+ */
+static void* cancel_read_thread(void* arg) {
+
+    char c;
+
+    read((int)(intptr_t)arg, &c, 1);
+
+    return NULL;
+}
+
+
+/**
+ * @brief Sleeps until cancelled.
+ *
+ * @param arg Unused.
+ * @return Never, unless cancelled.
+ */
+static void* cancel_sleep_thread(void* arg) {
+
+    (void)arg;
+
+    for (;;)
+        sleep(10);
+
+    return NULL;
+}
+
+
+/**
+ * @brief Cancels a thread once it is blocked, and checks it ends cancelled.
+ *
+ * @param fn What the thread runs.
+ * @return 0 on success, or a failure code.
+ */
+static int cancel_child_run(void* (*fn)(void*)) {
+
+    int p[2];
+
+    if (pipe(p) < 0)
+        return 10;
+
+
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, fn, (void*)(intptr_t)p[0]) != 0)
+        return 10;
+
+    sleep_full_ms(100);
+
+    if (pthread_cancel(t) != 0)
+        return 11;
+
+
+    void* r = NULL;
+
+    if (pthread_join(t, &r) != 0)
+        return 12;
+
+    return r == PTHREAD_CANCELED ? 0 : 2;
+}
+
+
+/**
+ * @brief Cancels a thread blocked in read(), which is restarted under the cancellation handler's SA_RESTART.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int cancel_read_child(void) {
+    return cancel_child_run(cancel_read_thread);
+}
+
+
+/**
+ * @brief Cancels a thread blocked in nanosleep(), which fails with EINTR instead of restarting.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int cancel_sleep_child(void) {
+    return cancel_child_run(cancel_sleep_thread);
+}
+
+
+/**
+ * @brief What cancel_child_run() failure codes mean.
+ */
+static const char* const cancel_codes[] = {
+    [2]  = "the thread was not cancelled",
+    [10] = "setup failed",
+    [11] = "pthread_cancel() failed",
+    [12] = "pthread_join() failed",
+};
+
+
+/**
+ * @brief Checks that pthread_cancel() ends a thread blocked in a restartable read().
+ */
+static void test_cancel_read(void) {
+
+    int r = run_child(cancel_read_child, 3000);
+
+    CHECK(r == 0, "pthread-cancel-read", "cancelling a thread blocked in read() %s", child_result(r, cancel_codes, sizeof(cancel_codes) / sizeof(cancel_codes[0])));
+}
+
+
+/**
+ * @brief Checks that pthread_cancel() ends a thread blocked in sleep().
+ */
+static void test_cancel_sleep(void) {
+
+    int r = run_child(cancel_sleep_child, 3000);
+
+    CHECK(r == 0, "pthread-cancel-sleep", "cancelling a thread blocked in sleep() %s", child_result(r, cancel_codes, sizeof(cancel_codes) / sizeof(cancel_codes[0])));
+}
+
+
+#define ALT_STACK_SIZE 65536
+
+/**
+ * @brief The alternate stacks the sigaltstack cases hand out, and where their handlers found themselves running.
+ */
+static char alt_stack[ALT_STACK_SIZE] __attribute__((aligned(16)));
+static volatile uintptr_t alt_where;
+static volatile int alt_flags;
+
+
+/**
+ * @brief Asks whether an address lies within alt_stack.
+ *
+ * @param p The address.
+ * @return 1 if it does, 0 otherwise.
+ */
+static int on_alt_stack(uintptr_t p) {
+    return p >= (uintptr_t)alt_stack && p < (uintptr_t)alt_stack + sizeof(alt_stack);
+}
+
+
+/**
+ * @brief Records where it runs and what sigaltstack() reports from there.
+ *
+ * @param signo The signal.
+ */
+static void alt_handler(int signo) {
+
+    volatile char here;
+    stack_t cur;
+
+    (void)signo;
+
+    alt_flags = sigaltstack(NULL, &cur) == 0 ? cur.ss_flags : -1;
+    alt_where = (uintptr_t)&here;
+}
+
+
+/**
+ * @brief Raises a signal for alt_handler() and waits for it to run.
+ */
+static void alt_raise(void) {
+
+    alt_where = 0;
+
+    raise(SIGUSR1);
+
+    for (uint64_t end = now_ms() + 1000; !alt_where && now_ms() < end;)
+        ;
+}
+
+
+/**
+ * @brief Takes a signal on an alternate stack, then with the stack disabled, and checks sigaltstack() along the way.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int alt_child(void) {
+
+    stack_t ss = {.ss_sp = alt_stack, .ss_size = sizeof(alt_stack), .ss_flags = 0};
+
+    if (sigaltstack(&ss, NULL) < 0)
+        return 2;
+
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = alt_handler;
+    sa.sa_flags   = SA_ONSTACK;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+    alt_raise();
+
+    if (!on_alt_stack(alt_where))
+        return 3;
+
+    if (alt_flags != SS_ONSTACK)
+        return 4;
+
+
+    stack_t cur;
+
+    if (sigaltstack(NULL, &cur) < 0 || cur.ss_flags != 0 || cur.ss_sp != alt_stack || cur.ss_size != sizeof(alt_stack))
+        return 5;
+
+
+    ss.ss_flags = SS_DISABLE;
+
+    if (sigaltstack(&ss, NULL) < 0)
+        return 6;
+
+    alt_raise();
+
+    if (!alt_where || on_alt_stack(alt_where))
+        return 7;
+
+
+    ss.ss_flags = 0;
+    ss.ss_size  = 1024;
+
+    if (sigaltstack(&ss, NULL) == 0 || errno != ENOMEM)
+        return 8;
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks sigaltstack() and that SA_ONSTACK handlers run on the alternate stack.
+ */
+static void test_altstack(void) {
+
+    static const char* const codes[] = {
+        [2]  = "sigaltstack() failed",
+        [3]  = "an SA_ONSTACK handler did not run on the alternate stack",
+        [4]  = "sigaltstack() did not report SS_ONSTACK inside the handler",
+        [5]  = "sigaltstack() did not read back the stack that was set",
+        [6]  = "sigaltstack(SS_DISABLE) failed",
+        [7]  = "a handler ran on a disabled alternate stack",
+        [8]  = "a stack below MINSIGSTKSZ was not refused with ENOMEM",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(alt_child, 3000);
+
+    CHECK(r == 0, "altstack", "an alternate signal stack %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Where segv_handler() jumps back to.
+ */
+static sigjmp_buf segv_env;
+
+
+/**
+ * @brief Records where it runs and jumps out of the fault.
+ *
+ * @param signo The signal.
+ */
+static void segv_handler(int signo) {
+
+    volatile char here;
+
+    (void)signo;
+
+    alt_where = (uintptr_t)&here;
+
+    siglongjmp(segv_env, 1);
+}
+
+
+/**
+ * @brief Faults twice with an SA_ONSTACK SIGSEGV handler that jumps out, checking it ran on the alternate stack.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int segv_child(void) {
+
+    stack_t ss = {.ss_sp = alt_stack, .ss_size = sizeof(alt_stack), .ss_flags = 0};
+
+    if (sigaltstack(&ss, NULL) < 0)
+        return 2;
+
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = segv_handler;
+    sa.sa_flags   = SA_ONSTACK;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGSEGV, &sa, NULL) < 0)
+        return 10;
+
+    for (int round = 0; round < 2; round++) {
+
+        alt_where = 0;
+
+        if (sigsetjmp(segv_env, 1) == 0) {
+
+            *(volatile int*)(uintptr_t)8 = 1;
+
+            return 3;
+        }
+
+        if (!on_alt_stack(alt_where))
+            return 4;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that a fault handled on the alternate stack can be left with siglongjmp() and taken again.
+ */
+static void test_altstack_segv(void) {
+
+    static const char* const codes[] = {
+        [2]  = "sigaltstack() failed",
+        [3]  = "the faulting write did not fault",
+        [4]  = "the SIGSEGV handler did not run on the alternate stack",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(segv_child, 3000);
+
+    CHECK(r == 0, "altstack-segv", "a SIGSEGV handled on the alternate stack %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief How long fpu_work() runs, read on every call so that the compiler cannot fold the calls together.
+ */
+static volatile int fpu_terms = 200000;
+static volatile sig_atomic_t fpu_hits;
+static volatile int fpu_stop;
+
+
+/**
+ * @brief Sums a long series, which comes out bit for bit the same every time unless the FPU state is disturbed.
+ *
+ * @return The sum.
+ */
+static double fpu_work(void) {
+
+    double s = 0.0;
+
+    for (int i = 1; i < fpu_terms; i++)
+        s += 1.0 / ((double)i * 1.0000001 + 0.5);
+
+    return s;
+}
+
+
+/**
+ * @brief Changes the rounding mode and does floating-point work of its own, restoring nothing.
+ *
+ * @param signo The signal.
+ */
+static void fpu_handler(int signo) {
+
+    volatile double x = 0.0;
+
+    (void)signo;
+
+    fesetround(FE_TOWARDZERO);
+
+    for (int i = 1; i < 1000; i++)
+        x += 3.3 / (double)i;
+
+    fpu_hits++;
+}
+
+
+/**
+ * @brief Signals the main thread every few hundred microseconds until told to stop.
+ *
+ * @param arg The main thread.
+ * @return NULL.
+ */
+static void* fpu_sender(void* arg) {
+
+    pthread_t target = *(pthread_t*)arg;
+
+    while (!fpu_stop) {
+
+        struct timespec ts = {.tv_sec = 0, .tv_nsec = 200000L};
+
+        pthread_kill(target, SIGUSR1);
+        nanosleep(&ts, NULL);
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Repeats fpu_work() while fpu_handler() keeps interrupting it, comparing every result with an undisturbed one.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int fpu_child(void) {
+
+    double want = fpu_work();
+
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = fpu_handler;
+    sa.sa_flags   = SA_RESTART;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+
+    pthread_t self = pthread_self();
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, fpu_sender, &self) != 0)
+        return 10;
+
+    int bad = 0;
+
+    for (uint64_t end = now_ms() + 500; now_ms() < end;)
+        bad += fpu_work() != want;
+
+    fpu_stop = 1;
+    pthread_join(t, NULL);
+
+    if (fpu_hits < 10)
+        return 2;
+
+    return bad ? 3 : 0;
+}
+
+
+/**
+ * @brief Checks that a handler's floating-point work and rounding mode do not leak into the code it interrupts.
+ */
+static void test_fpu_preserved(void) {
+
+    static const char* const codes[] = {
+        [2]  = "too few signals arrived to tell",
+        [3]  = "the interrupted computation came out different",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(fpu_child, 5000);
+
+    CHECK(r == 0, "fpu-preserved", "floating-point work under interruption %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+#define ONCE_THREADS 3
+#define ONCE_ROUNDS  20
+
+/**
+ * @brief How often once_handler() ran, and when its threads should stop.
+ */
+static atomic_int once_count;
+static volatile int once_stop;
+
+
+/**
+ * @brief Counts a delivery.
+ *
+ * @param signo The signal.
+ */
+static void once_handler(int signo) {
+
+    (void)signo;
+
+    atomic_fetch_add(&once_count, 1);
+}
+
+
+/**
+ * @brief Idles until told to stop.
+ *
+ * @param arg Unused.
+ * @return NULL.
+ */
+static void* once_thread(void* arg) {
+
+    (void)arg;
+
+    while (!once_stop) {
+
+        struct timespec ts = {.tv_sec = 0, .tv_nsec = 1000000L};
+
+        nanosleep(&ts, NULL);
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Sends a multithreaded process signals addressed to the whole process, and counts how often the handler ran.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int once_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = once_handler;
+    sa.sa_flags   = SA_RESTART;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+
+    pthread_t t[ONCE_THREADS];
+
+    for (int i = 0; i < ONCE_THREADS; i++) {
+
+        if (pthread_create(&t[i], NULL, once_thread, NULL) != 0)
+            return 10;
+    }
+
+    sleep_full_ms(50);
+
+    for (int i = 0; i < ONCE_ROUNDS; i++) {
+
+        kill(getpid(), SIGUSR1);
+
+        for (uint64_t end = now_ms() + 500; atomic_load(&once_count) <= i && now_ms() < end;)
+            sleep_full_ms(1);
+    }
+
+    sleep_full_ms(100);
+
+    once_stop = 1;
+
+    for (int i = 0; i < ONCE_THREADS; i++)
+        pthread_join(t[i], NULL);
+
+
+    int n = atomic_load(&once_count);
+
+    if (n != ONCE_ROUNDS) {
+
+        printf("signal-test: kill-once: the handler ran %d times for %d signals\n", n, ONCE_ROUNDS);
+        return 2;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that a signal sent to a process runs its handler once, not once per thread.
+ */
+static void test_kill_once(void) {
+
+    static const char* const codes[] = {
+        [2]  = "the handler did not run exactly once per signal",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(once_child, 10000);
+
+    CHECK(r == 0, "kill-once", "kill() on a %d-thread process %s", ONCE_THREADS + 1, child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief How often pick_handler() ran and on which thread, and the one thread that does not block its signal.
+ */
+static atomic_int pick_count;
+static atomic_int pick_wrong;
+static volatile pid_t pick_tid;
+static volatile int pick_ready;
+static volatile int pick_stop;
+
+
+/**
+ * @brief Counts a delivery, and whether it landed on a thread other than the chosen one.
+ *
+ * @param signo The signal.
+ */
+static void pick_handler(int signo) {
+
+    (void)signo;
+
+    atomic_fetch_add(&pick_count, 1);
+
+    if ((pid_t)syscall(SYS_gettid) != pick_tid)
+        atomic_fetch_add(&pick_wrong, 1);
+}
+
+
+/**
+ * @brief Idles with SIGUSR2 blocked, unless it is the chosen thread, and unblocks it once told to stop.
+ *
+ * @param arg Non-NULL for the chosen thread.
+ * @return NULL.
+ */
+static void* pick_thread(void* arg) {
+
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGUSR2);
+
+    if (arg) {
+
+        pick_tid = (pid_t)syscall(SYS_gettid);
+
+        pthread_sigmask(SIG_UNBLOCK, &set, NULL);
+
+        pick_ready = 1;
+    }
+
+    while (!pick_stop) {
+
+        struct timespec ts = {.tv_sec = 0, .tv_nsec = 1000000L};
+
+        nanosleep(&ts, NULL);
+    }
+
+    pthread_sigmask(SIG_UNBLOCK, &set, NULL);
+
+    sleep_full_ms(50);
+
+    return NULL;
+}
+
+
+/**
+ * @brief Sends a process signals only one of its threads accepts, then lets every thread accept them.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int pick_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = pick_handler;
+    sa.sa_flags   = SA_RESTART;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR2, &sa, NULL) < 0)
+        return 10;
+
+
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGUSR2);
+
+    if (sigprocmask_retry(SIG_SETMASK, &set, NULL) < 0)
+        return 10;
+
+
+    pthread_t t[3];
+
+    for (int i = 0; i < 3; i++) {
+
+        if (pthread_create(&t[i], NULL, pick_thread, i == 1 ? (void*)1 : NULL) != 0)
+            return 10;
+    }
+
+    for (uint64_t end = now_ms() + 1000; !pick_ready && now_ms() < end;)
+        sleep_full_ms(1);
+
+    for (int i = 0; i < 10; i++) {
+
+        kill(getpid(), SIGUSR2);
+
+        for (uint64_t end = now_ms() + 500; atomic_load(&pick_count) <= i && now_ms() < end;)
+            sleep_full_ms(1);
+    }
+
+    pick_stop = 1;
+
+    sigprocmask_retry(SIG_UNBLOCK, &set, NULL);
+    sleep_full_ms(100);
+
+    for (int i = 0; i < 3; i++)
+        pthread_join(t[i], NULL);
+
+
+    int n     = atomic_load(&pick_count);
+    int wrong = atomic_load(&pick_wrong);
+
+    if (n != 10 || wrong != 0) {
+
+        printf("signal-test: kill-picks-unblocked: the handler ran %d times for 10 signals, %d of them on a thread that blocked it\n", n, wrong);
+        return 2;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that a signal sent to a process goes to the one thread that does not block it, and only there.
+ */
+static void test_kill_picks_unblocked(void) {
+
+    static const char* const codes[] = {
+        [2]  = "the signals did not all go to the one thread accepting them",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(pick_child, 10000);
+
+    CHECK(r == 0, "kill-picks-unblocked", "kill() on a process where one thread accepts the signal %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Waits forever, with SIGTERM blocked unless told otherwise.
+ *
+ * @param arg Non-NULL to unblock SIGTERM.
+ * @return Never.
+ */
+static void* fatal_thread(void* arg) {
+
+    if (arg) {
+
+        sigset_t set;
+        sigemptyset(&set);
+        sigaddset(&set, SIGTERM);
+
+        pthread_sigmask(SIG_UNBLOCK, &set, NULL);
+    }
+
+    for (;;)
+        pause();
+
+    return NULL;
+}
+
+
+/**
+ * @brief Starts threads that all block SIGTERM but one, and waits forever.
+ *
+ * @return Never, unless setup fails.
+ */
+static int fatal_child(void) {
+
+    signal(SIGTERM, SIG_DFL);
+
+
+    sigset_t set;
+    sigemptyset(&set);
+    sigaddset(&set, SIGTERM);
+
+    if (sigprocmask_retry(SIG_SETMASK, &set, NULL) < 0)
+        return 10;
+
+    for (int i = 0; i < 3; i++) {
+
+        pthread_t t;
+
+        if (pthread_create(&t, NULL, fatal_thread, i == 2 ? (void*)1 : NULL) != 0)
+            return 10;
+    }
+
+    for (;;)
+        pause();
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that a fatal signal taken by one thread terminates the whole process, threads blocking it included.
+ */
+static void test_kill_fatal(void) {
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        CHECK(0, "kill-fatal", "fork() failed: %s", strerror(errno));
+        return;
+    }
+
+    if (pid == 0)
+        _exit(fatal_child());
+
+
+    sleep_full_ms(200);
+
+    kill(pid, SIGTERM);
+
+
+    int status = 0;
+
+    if (wait_timeout(pid, &status, 0, 2000) != pid) {
+
+        kill(pid, SIGKILL);
+        waitpid(pid, &status, 0);
+
+        CHECK(0, "kill-fatal", "%s", "SIGTERM left the process running, with only the thread that took it gone");
+        return;
+    }
+
+    CHECK(WIFSIGNALED(status) && WTERMSIG(status) == SIGTERM, "kill-fatal", "the process ended with status 0x%x, expected death by SIGTERM", status);
+}
+
+
+/**
+ * @brief Writes a byte to a pipe every few milliseconds, forever.
+ *
+ * @param arg The descriptor to write to.
+ * @return Never.
+ */
+static void* tick_thread(void* arg) {
+
+    int fd = (int)(intptr_t)arg;
+
+    for (;;) {
+
+        write(fd, "t", 1);
+        sleep_full_ms(5);
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Reads everything waiting in a non-blocking pipe.
+ *
+ * @param fd The read end.
+ * @return How many bytes were read.
+ */
+static int drain(int fd) {
+
+    char buf[256];
+    int total = 0;
+
+    for (ssize_t n; (n = read(fd, buf, sizeof(buf))) > 0;)
+        total += (int)n;
+
+    return total;
+}
+
+
+/**
+ * @brief Checks that SIGSTOP stops every thread of a process and SIGCONT resumes them all.
+ */
+static void test_kill_stop(void) {
+
+    int p[2];
+
+    if (pipe(p) < 0) {
+        CHECK(0, "kill-stop", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        CHECK(0, "kill-stop", "fork() failed: %s", strerror(errno));
+        return;
+    }
+
+    if (pid == 0) {
+
+        close(p[0]);
+
+        for (int i = 0; i < 3; i++) {
+
+            pthread_t t;
+
+            pthread_create(&t, NULL, tick_thread, (void*)(intptr_t)p[1]);
+        }
+
+        tick_thread((void*)(intptr_t)p[1]);
+        _exit(0);
+    }
+
+    close(p[1]);
+    fcntl(p[0], F_SETFL, O_NONBLOCK);
+
+    sleep_full_ms(200);
+
+    kill(pid, SIGSTOP);
+
+
+    int status  = 0;
+    int stopped = wait_timeout(pid, &status, WUNTRACED, 2000) == pid && WIFSTOPPED(status);
+
+    sleep_full_ms(50);
+    drain(p[0]);
+    sleep_full_ms(200);
+
+    int during = drain(p[0]);
+
+    kill(pid, SIGCONT);
+    sleep_full_ms(200);
+
+    int after = drain(p[0]);
+
+    kill(pid, SIGKILL);
+    waitpid(pid, &status, 0);
+    close(p[0]);
+
+    CHECK(stopped, "kill-stop", "%s", "waitpid(WUNTRACED) never reported the stop");
+    CHECK(during == 0, "kill-stop-threads", "%d bytes were written by threads that should have been stopped", during);
+    CHECK(after > 0, "kill-stop-cont", "%s", "no thread ran again after SIGCONT");
+}
+
+
+/**
+ * @brief Checks that FUTEX_WAIT gives up with ETIMEDOUT once its timeout passes.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int futex_timeout_child(void) {
+
+    uint32_t word      = 0;
+    struct timespec ts = {.tv_sec = 0, .tv_nsec = 50000000L};
+
+    uint64_t t0 = now_ms();
+    long r      = syscall(SYS_futex, &word, FUTEX_OP_WAIT, 0, &ts, NULL, 0);
+    uint64_t dt = now_ms() - t0;
+
+    if (r == 0)
+        return 2;
+
+    if (errno != ETIMEDOUT)
+        return 3;
+
+    if (dt < 45)
+        return 4;
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks the timeout of FUTEX_WAIT.
+ */
+static void test_futex_timeout(void) {
+
+    static const char* const codes[] = {
+        [2] = "FUTEX_WAIT reported a wakeup nobody sent when its timeout passed",
+        [3] = "FUTEX_WAIT failed with an error other than ETIMEDOUT",
+        [4] = "FUTEX_WAIT returned before its timeout",
+    };
+
+    int r = run_child(futex_timeout_child, 3000);
+
+    CHECK(r == 0, "futex-timeout", "a 50 ms FUTEX_WAIT %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief The word futex_wait_thread() waits on, and what its FUTEX_WAIT returned.
+ */
+static uint32_t fw_word;
+static volatile long fw_ret = 1;
+static volatile int fw_errno;
+
+
+/**
+ * @brief Waits on fw_word with no timeout and records the outcome.
+ *
+ * @param arg Unused.
+ * @return NULL.
+ */
+static void* futex_wait_thread(void* arg) {
+
+    (void)arg;
+
+    long r = syscall(SYS_futex, &fw_word, FUTEX_OP_WAIT, 0, NULL, NULL, 0);
+
+    fw_errno = errno;
+    fw_ret   = r;
+
+    return NULL;
+}
+
+
+/**
+ * @brief Does nothing, so that the signal it handles only interrupts.
+ *
+ * @param signo The signal.
+ */
+static void noop_handler(int signo) {
+    (void)signo;
+}
+
+
+/**
+ * @brief Interrupts a thread blocked in FUTEX_WAIT with a handler installed without SA_RESTART.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int futex_eintr_child(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = noop_handler;
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0 || unblock_all() < 0)
+        return 10;
+
+
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, futex_wait_thread, NULL) != 0)
+        return 10;
+
+    sleep_full_ms(100);
+
+    pthread_kill(t, SIGUSR1);
+
+    for (uint64_t end = now_ms() + 500; fw_ret == 1 && now_ms() < end;)
+        sleep_full_ms(1);
+
+    if (fw_ret == 1) {
+
+        fw_word = 1;
+        syscall(SYS_futex, &fw_word, FUTEX_OP_WAKE, 1, NULL, NULL, 0);
+
+        pthread_join(t, NULL);
+        return 2;
+    }
+
+    pthread_join(t, NULL);
+
+    if (fw_ret == 0)
+        return 3;
+
+    return fw_errno == EINTR ? 0 : 4;
+}
+
+
+/**
+ * @brief Checks that a signal handled during FUTEX_WAIT makes it fail with EINTR.
+ */
+static void test_futex_eintr(void) {
+
+    static const char* const codes[] = {
+        [2]  = "FUTEX_WAIT did not return after the handler ran",
+        [3]  = "FUTEX_WAIT reported a wakeup nobody sent",
+        [4]  = "FUTEX_WAIT failed with an error other than EINTR",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(futex_eintr_child, 3000);
+
+    CHECK(r == 0, "futex-eintr", "a signal during FUTEX_WAIT %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Wakes a thread blocked in FUTEX_WAIT.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int futex_wake_child(void) {
+
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, futex_wait_thread, NULL) != 0)
+        return 10;
+
+    sleep_full_ms(100);
+
+    long n = syscall(SYS_futex, &fw_word, FUTEX_OP_WAKE, 1, NULL, NULL, 0);
+
+    for (uint64_t end = now_ms() + 500; fw_ret == 1 && now_ms() < end;)
+        sleep_full_ms(1);
+
+    if (fw_ret == 1)
+        return 2;
+
+    pthread_join(t, NULL);
+
+    if (n != 1)
+        return 3;
+
+    return fw_ret == 0 ? 0 : 4;
+}
+
+
+/**
+ * @brief Checks that FUTEX_WAKE releases a waiter, which returns 0.
+ */
+static void test_futex_wake(void) {
+
+    static const char* const codes[] = {
+        [2]  = "the waiter never returned",
+        [3]  = "FUTEX_WAKE did not report one waiter woken",
+        [4]  = "the woken FUTEX_WAIT failed",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(futex_wake_child, 3000);
+
+    CHECK(r == 0, "futex-wake", "FUTEX_WAKE on a waiter %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief The two words of the requeue case, and whether its waiter has returned.
+ */
+static uint32_t rq_from;
+static uint32_t rq_to = 1;
+static volatile long rq_ret;
+static volatile int rq_done;
+
+
+/**
+ * @brief Waits on rq_from and records the outcome.
+ *
+ * @param arg Unused.
+ * @return NULL.
+ */
+static void* requeue_thread(void* arg) {
+
+    (void)arg;
+
+    rq_ret  = syscall(SYS_futex, &rq_from, FUTEX_OP_WAIT, 0, NULL, NULL, 0);
+    rq_done = 1;
+
+    return NULL;
+}
+
+
+/**
+ * @brief Moves a waiter to a word holding a different value, checks it stays asleep, then wakes it there.
+ *
+ * @return 0 on success, or a failure code.
+ */
+static int futex_requeue_child(void) {
+
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, requeue_thread, NULL) != 0)
+        return 10;
+
+    sleep_full_ms(100);
+
+    long n = syscall(SYS_futex, &rq_from, FUTEX_OP_CMP_REQUEUE, 0, 1L, &rq_to, 0);
+
+    if (n != 1)
+        return 2;
+
+    sleep_full_ms(100);
+
+    if (rq_done)
+        return 3;
+
+
+    long w = syscall(SYS_futex, &rq_to, FUTEX_OP_WAKE, 1, NULL, NULL, 0);
+
+    for (uint64_t end = now_ms() + 500; !rq_done && now_ms() < end;)
+        sleep_full_ms(1);
+
+    if (!rq_done)
+        return 4;
+
+    pthread_join(t, NULL);
+
+    if (w != 1)
+        return 5;
+
+    return rq_ret == 0 ? 0 : 6;
+}
+
+
+/**
+ * @brief Checks that FUTEX_CMP_REQUEUE moves a waiter without waking it, and that it can then be woken where it went.
+ */
+static void test_futex_requeue(void) {
+
+    static const char* const codes[] = {
+        [2]  = "FUTEX_CMP_REQUEUE did not report one waiter moved",
+        [3]  = "the moved waiter woke up without being woken",
+        [4]  = "the moved waiter never returned after FUTEX_WAKE on its new word",
+        [5]  = "FUTEX_WAKE on the new word did not find the moved waiter",
+        [6]  = "the woken FUTEX_WAIT failed",
+        [10] = "setup failed",
+    };
+
+    int r = run_child(futex_requeue_child, 3000);
+
+    CHECK(r == 0, "futex-requeue", "requeueing a waiter %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
+/**
+ * @brief Tries to take a priority-inheritance lock that another thread's tid holds.
+ *
+ * @return 0 unless the lock was reported taken.
+ */
+static int futex_lock_pi_child(void) {
+
+    uint32_t word = (uint32_t)(getpid() + 100000) & 0x3FFFFFFF;
+
+    return syscall(SYS_futex, &word, FUTEX_OP_LOCK_PI, 0, NULL, NULL, 0) == 0 ? 2 : 0;
+}
+
+
+/**
+ * @brief Checks that FUTEX_LOCK_PI never claims a lock another thread holds, by blocking or by failing.
+ */
+static void test_futex_lock_pi(void) {
+
+    static const char* const codes[] = {
+        [2] = "FUTEX_LOCK_PI reported success on a lock another thread holds",
+    };
+
+    int r = run_child(futex_lock_pi_child, 500);
+
+    CHECK(r == 0 || r == -1, "futex-lock-pi", "FUTEX_LOCK_PI %s", child_result(r, codes, sizeof(codes) / sizeof(codes[0])));
+}
+
+
 static struct {
 
     const char* name;
@@ -488,6 +2310,25 @@ static struct {
     {"nodefer", test_nodefer},
     {"roundtrip", test_mask_roundtrip},
     {"bad-size", test_bad_sigsetsize},
+    {"nested", test_nested},
+    {"nested-other", test_nested_other},
+    {"thread-frames", test_thread_frames},
+    {"ucontext", test_ucontext},
+    {"ucontext-resume", test_ucontext_resume},
+    {"pthread-cancel-read", test_cancel_read},
+    {"pthread-cancel-sleep", test_cancel_sleep},
+    {"altstack", test_altstack},
+    {"altstack-segv", test_altstack_segv},
+    {"fpu-preserved", test_fpu_preserved},
+    {"kill-once", test_kill_once},
+    {"kill-picks-unblocked", test_kill_picks_unblocked},
+    {"kill-fatal", test_kill_fatal},
+    {"kill-stop", test_kill_stop},
+    {"futex-timeout", test_futex_timeout},
+    {"futex-eintr", test_futex_eintr},
+    {"futex-wake", test_futex_wake},
+    {"futex-requeue", test_futex_requeue},
+    {"futex-lock-pi", test_futex_lock_pi},
 };
 
 
