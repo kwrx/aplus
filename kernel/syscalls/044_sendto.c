@@ -97,11 +97,11 @@ SYSCALL(
             char __sockaddr[socklen];
             uio_memcpy_u2s(__sockaddr, sockaddr, socklen);
 
-            e = lwip_sendto(socket, buf, size, flags, (struct sockaddr*)__sockaddr, socklen);
+            e = socket_send(socket, buf, size, flags, (struct sockaddr*)__sockaddr, socklen);
 
         } else {
 
-            e = lwip_send(socket, buf, size, flags);
+            e = socket_send(socket, buf, size, flags, NULL, 0);
         }
 
         uio_unlock(buf, size);
