@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
@@ -592,6 +593,179 @@ static void test_no_leak(void) {
 }
 
 
+/**
+ * @brief Checks that readv() returns what its first buffer got instead of waiting to fill the next one.
+ */
+static void test_readv_keeps_data(void) {
+
+    int p[2];
+
+    if (pipe(p) < 0) {
+        CHECK(0, "readv", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(p[0]);
+
+        write(p[1], "abcd", 4);
+
+        struct timespec ts = {.tv_sec = 0, .tv_nsec = 300000000L};
+        nanosleep(&ts, NULL);
+
+        write(p[1], "efgh", 4);
+
+        _exit(0);
+    }
+
+    close(p[1]);
+
+
+    char got[64] = {0};
+    size_t len   = 0;
+
+    for (;;) {
+
+        char head[4];
+        char tail[64];
+
+        struct iovec iov[2] = {
+            {.iov_base = head, .iov_len = sizeof(head)},
+            {.iov_base = tail, .iov_len = sizeof(tail)},
+        };
+
+        ssize_t n = readv(p[0], iov, 2);
+
+        if (n <= 0)
+            break;
+
+        size_t a = (size_t)n < sizeof(head) ? (size_t)n : sizeof(head);
+
+        if (len + (size_t)n >= sizeof(got))
+            break;
+
+        memcpy(&got[len], head, a);
+        memcpy(&got[len + a], tail, (size_t)n - a);
+
+        len += (size_t)n;
+    }
+
+    close(p[0]);
+    waitpid(pid, NULL, 0);
+
+    CHECK(len == 8 && memcmp(got, "abcdefgh", 8) == 0, "readv", "read %zu bytes \"%.*s\", expected \"abcdefgh\"", len, (int)len, got);
+}
+
+
+/**
+ * @brief The byte the writev() check sends at a given offset.
+ *
+ * @param offset The offset into the stream.
+ * @return The expected byte.
+ */
+static unsigned char writev_pattern(size_t offset) {
+    return (unsigned char)((offset * 13U) + (offset >> 9));
+}
+
+
+/**
+ * @brief Checks that writev() into a pipe its first buffer overfills never sends a buffer twice.
+ */
+static void test_writev_no_duplicates(void) {
+
+    enum { A = PIPE_CAPACITY + 1, B = 32768 };
+
+    int p[2];
+
+    if (pipe(p) < 0) {
+        CHECK(0, "writev", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(p[0]);
+
+        static unsigned char data[A + B];
+
+        for (size_t i = 0; i < sizeof(data); i++)
+            data[i] = writev_pattern(i);
+
+
+        size_t off = 0;
+
+        while (off < sizeof(data)) {
+
+            struct iovec iov[2];
+            int cnt = 0;
+
+            if (off < A) {
+                iov[cnt].iov_base = &data[off];
+                iov[cnt].iov_len  = A - off;
+                cnt++;
+            }
+
+            iov[cnt].iov_base = &data[off < A ? A : off];
+            iov[cnt].iov_len  = sizeof(data) - (off < A ? A : off);
+            cnt++;
+
+            ssize_t n = writev(p[1], iov, cnt);
+
+            if (n <= 0)
+                _exit(1);
+
+            off += (size_t)n;
+        }
+
+        _exit(0);
+    }
+
+    close(p[1]);
+
+
+    struct timespec ts = {.tv_sec = 0, .tv_nsec = 300000000L};
+    nanosleep(&ts, NULL);
+
+
+    size_t total_read = 0;
+    size_t bad        = (size_t)-1;
+
+    for (;;) {
+
+        unsigned char buf[4096];
+
+        ssize_t n = read(p[0], buf, sizeof(buf));
+
+        if (n <= 0)
+            break;
+
+        for (ssize_t i = 0; i < n; i++) {
+
+            if (bad == (size_t)-1 && buf[i] != writev_pattern(total_read + (size_t)i))
+                bad = total_read + (size_t)i;
+        }
+
+        total_read += (size_t)n;
+    }
+
+    close(p[0]);
+
+
+    int status = 0;
+    waitpid(pid, &status, 0);
+
+    CHECK(total_read == A + B && bad == (size_t)-1, "writev", "read %zu bytes, expected %d; first wrong byte at %zd", total_read, A + B, bad == (size_t)-1 ? (ssize_t)-1 : (ssize_t)bad);
+    CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0, "writev-status", "writer left status 0x%x", status);
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -609,6 +783,8 @@ static const struct {
     {"cloexec", test_cloexec},
     {"mknod", test_mknod_regular_file},
     {"leak", test_no_leak},
+    {"readv", test_readv_keeps_data},
+    {"writev", test_writev_no_duplicates},
 };
 
 

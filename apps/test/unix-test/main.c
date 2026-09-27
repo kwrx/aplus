@@ -588,6 +588,114 @@ static void test_no_leak(void) {
 }
 
 
+/**
+ * @brief How many connections the accept race makes.
+ */
+#define ACCEPT_RACE_ROUNDS 2000
+
+
+static void alarm_noop(int sig) {
+    (void)sig;
+}
+
+
+/**
+ * @brief Connects to a listener over and over while it sits in a blocking accept(), looking for a lost wakeup.
+ */
+static void test_accept_race(void) {
+
+    const char* path = "/tmp/unix-test-accept-race.sock";
+
+    unlink(path);
+
+
+    int srv = socket(AF_UNIX, SOCK_STREAM, 0);
+
+    struct sockaddr_un un;
+    socklen_t len = fill_addr(&un, path);
+
+    if (srv < 0 || bind(srv, (struct sockaddr*)&un, len) < 0 || listen(srv, 4) < 0) {
+
+        CHECK(0, "accept-race", "listener setup failed: %s", strerror(errno));
+
+        if (srv >= 0)
+            close(srv);
+
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(srv);
+
+        for (int i = 0; i < ACCEPT_RACE_ROUNDS; i++) {
+
+            int c = socket(AF_UNIX, SOCK_STREAM, 0);
+
+            if (c < 0 || connect(c, (struct sockaddr*)&un, len) < 0)
+                _exit(1);
+
+            char ch;
+
+            if (read(c, &ch, 1) != 1)
+                _exit(2);
+
+            close(c);
+        }
+
+        _exit(0);
+    }
+
+
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = alarm_noop;
+
+    sigaction(SIGALRM, &sa, NULL);
+
+
+    int rounds = 0;
+    int stalls = 0;
+
+    for (rounds = 0; rounds < ACCEPT_RACE_ROUNDS; rounds++) {
+
+        alarm(5);
+
+        int c = accept(srv, NULL, NULL);
+
+        alarm(0);
+
+        if (c < 0) {
+
+            stalls += errno == EINTR;
+            break;
+        }
+
+        write(c, "k", 1);
+        close(c);
+    }
+
+    signal(SIGALRM, SIG_DFL);
+
+    close(srv);
+    unlink(path);
+
+
+    int status = 0;
+
+    if (stalls)
+        kill(pid, SIGKILL);
+
+    waitpid(pid, &status, 0);
+
+    CHECK(rounds == ACCEPT_RACE_ROUNDS && stalls == 0, "accept-race", "%d of %d connections accepted, %d stalls, connector status 0x%x", rounds, ACCEPT_RACE_ROUNDS, stalls, status);
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -601,6 +709,7 @@ static const struct {
     {"dup-fork", test_dup_and_fork},
     {"shutdown", test_shutdown},
     {"leak", test_no_leak},
+    {"accept-race", test_accept_race},
 };
 
 

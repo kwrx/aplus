@@ -1060,6 +1060,65 @@ static void test_handler_restart(void) {
 }
 
 
+/**
+ * @brief Checks that read() restarted under SA_RESTART waits for data that arrives only after the handler returned.
+ */
+static void test_restart_waits(void) {
+
+    int eintr = 0;
+    int lost  = 0;
+
+    for (int i = 0; i < 10; i++) {
+
+        int p[2];
+
+        if (pipe(p) < 0) {
+            lost++;
+            continue;
+        }
+
+        catch_signal(SIGUSR1, on_usr1, SA_RESTART);
+
+
+        pid_t parent = getpid();
+        pid_t c      = fork();
+
+        if (c == 0) {
+
+            close(p[0]);
+
+            sleep_ms(50);
+            kill(parent, SIGUSR1);
+
+            sleep_ms(200);
+            write(p[1], "B", 1);
+
+            _exit(0);
+        }
+
+        close(p[1]);
+
+
+        char ch   = 0;
+        ssize_t n = read(p[0], &ch, 1);
+
+        if (n < 0 && errno == EINTR) {
+            eintr++;
+            n = read(p[0], &ch, 1);
+        }
+
+        lost += n != 1 || ch != 'B';
+
+        close(p[0]);
+        waitpid(c, NULL, 0);
+    }
+
+    signal(SIGUSR1, SIG_IGN);
+
+    CHECK(eintr == 0 && lost == 0, "restart-waits", "read() failed with EINTR in %d and lost the byte in %d of 10 rounds", eintr, lost);
+}
+
+
 static struct {
 
     const char* name;
@@ -1078,6 +1137,7 @@ static struct {
     {"sigchld-ignore", test_sigchld_ignore},
     {"sigpipe", test_sigpipe},
     {"handler-restart", test_handler_restart},
+    {"restart-waits", test_restart_waits},
     {"zombie-fd", test_zombie_fd},
     {"wait-killed-parent", test_wait_killed_parent},
     {"kill-exit-race", test_kill_exit_race},
