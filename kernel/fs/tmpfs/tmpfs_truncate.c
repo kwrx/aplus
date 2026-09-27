@@ -43,21 +43,30 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
 
 
 
+    if (unlikely(len < 0))
+        return errno = EINVAL, -1;
+
+
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
     if (len >= i->st.st_size)
         return 0;
 
 
+    void* data = krealloc(i->data, CONFIG_BUFSIZ + len, GFP_KERNEL);
 
+    if (unlikely(!data))
+        return errno = ENOMEM, -1;
+
+
+    size_t freed = i->st.st_size - len;
+
+    i->data       = data;
     i->capacity   = CONFIG_BUFSIZ + len;
     i->st.st_size = len;
 
-    i->data = krealloc(i->data, i->capacity, GFP_KERNEL);
-
-
-    inode->sb->st.f_bfree -= i->st.st_size - len;
-    inode->sb->st.f_bavail -= i->st.st_size - len;
+    inode->sb->st.f_bfree += freed;
+    inode->sb->st.f_bavail += freed;
 
 
     return 0;

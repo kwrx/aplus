@@ -45,9 +45,13 @@ ssize_t tmpfs_read(inode_t* inode, void* buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
+    if (unlikely(pos < 0))
+        return errno = EINVAL, -EINVAL;
+
+
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
-    if (!i->data) {
+    if (!i->data || pos >= i->st.st_size) {
         return 0;
     }
 
@@ -55,9 +59,7 @@ ssize_t tmpfs_read(inode_t* inode, void* buf, off_t pos, size_t len) {
         len = i->st.st_size - pos;
     }
 
-    if (likely(len > 0)) {
-        memcpy(buf, (void*)((uintptr_t)i->data + (uintptr_t)pos), len);
-    }
+    memcpy(buf, (void*)((uintptr_t)i->data + (uintptr_t)pos), len);
 
     return len;
 }

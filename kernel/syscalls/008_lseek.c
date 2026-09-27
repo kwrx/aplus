@@ -73,27 +73,33 @@ SYSCALL(
 
 
 
+            long r = -EINVAL;
+
             scoped_lock(&fds->descriptors[fd].ref->lock) {
-                switch (whence) {
 
-                    case SEEK_SET:
-                        fds->descriptors[fd].ref->position = offset;
-                        break;
+                off_t base     = 0;
+                off_t position = 0;
 
-                    case SEEK_CUR:
-                        fds->descriptors[fd].ref->position += offset;
-                        break;
+                if (whence == SEEK_CUR)
+                    base = fds->descriptors[fd].ref->position;
+                else if (whence == SEEK_END)
+                    base = st.st_size;
+                else if (whence != SEEK_SET)
+                    break;
 
-                    case SEEK_END:
-                        fds->descriptors[fd].ref->position = st.st_size + offset;
-                        break;
-
-                    default:
-                        DEBUG_ASSERT(0 && "sys_lseek() invalid whence!");
-                        break;
+                if (__builtin_add_overflow(base, offset, &position)) {
+                    r = -EOVERFLOW;
+                    break;
                 }
+
+                if (position < 0)
+                    break;
+
+                fds->descriptors[fd].ref->position = position;
+
+                r = position;
             }
 
-            return fds->descriptors[fd].ref->position;
+            return r;
         });
     });
