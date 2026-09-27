@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <string.h>
 
 #include <aplus.h>
@@ -35,7 +36,7 @@
 
 #define PTR_TO_HEADER(p) ((struct kmalloc_header*)((uintptr_t)p - sizeof(struct kmalloc_header)))
 
-static uint64_t heap_used_memory = 0;
+static _Atomic uint64_t heap_used_memory = 0;
 
 
 struct kmalloc_header {
@@ -85,7 +86,7 @@ __malloc __alloc_size(1) void* kmalloc(size_t size, int gfp) {
 
     struct kmalloc_header* h = (struct kmalloc_header*)arch_vmm_p2v(phys, ARCH_VMM_AREA_HEAP);
 
-    heap_used_memory += (size / PML1_PAGESIZE);
+    atomic_fetch_add(&heap_used_memory, size / PML1_PAGESIZE);
 
 
     DEBUG_ASSERT(memcmp(h->magic, "USED", 4) != 0);
@@ -134,7 +135,12 @@ __malloc __alloc_size(2) void* krealloc(void* address, size_t size, int gfp) {
         if (unlikely(!p))
             return NULL;
 
-        memcpy(p, PTR_TO_HEADER(address)->ptr, PTR_TO_HEADER(address)->size);
+        size_t copy = PTR_TO_HEADER(address)->size;
+
+        if (copy > size)
+            copy = size;
+
+        memcpy(p, PTR_TO_HEADER(address)->ptr, copy);
 
         kfree(address);
 
@@ -151,7 +157,7 @@ void kfree(void* address) {
     DEBUG_ASSERT(memcmp(PTR_TO_HEADER(address)->magic, "USED", 4) == 0);
 
 
-    heap_used_memory -= PTR_TO_HEADER(address)->blocks;
+    atomic_fetch_sub(&heap_used_memory, PTR_TO_HEADER(address)->blocks);
 
     PTR_TO_HEADER(address)->magic[0] = 'F';
     PTR_TO_HEADER(address)->magic[1] = 'R';
@@ -163,7 +169,7 @@ void kfree(void* address) {
 
 
 uint64_t kheap_get_used_memory(void) {
-    return heap_used_memory * PML1_PAGESIZE;
+    return atomic_load(&heap_used_memory) * PML1_PAGESIZE;
 }
 
 
