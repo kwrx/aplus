@@ -57,15 +57,15 @@
  */
 
 /**
- * @brief Waits for a child process to exit or stop, reaping it if it exited.
+ * @brief Waits for a child process to exit, stop or continue, reaping it if it exited.
  *
  * Children belong to the whole thread group, so any thread may wait for them, and only thread-group leaders are
- * reported: a leader once its whole group has exited, and a stop once. The child-event word is read
+ * reported: a leader once its whole group has exited, a stop or a continue once each. The child-event word is read
  * before the scan, so a child that changes state after the scan still wakes the waiter.
  *
  * @param pid The child to wait for, -1 for any, 0 for any in the caller's process group, or -pgrp.
  * @param status Receives the child's wait status, or NULL.
- * @param options WNOHANG and WUNTRACED.
+ * @param options WNOHANG, WUNTRACED and WCONTINUED.
  * @param rusage Receives the child's resource usage, or NULL.
  * @return The pid reported on, 0 with WNOHANG when nothing is ready, or a negative errno.
  */
@@ -131,6 +131,15 @@ SYSCALL(
                         reported   = tmp->tid;
 
                         tmp->wait_stopped = false;
+                        break;
+                    }
+
+                    if ((options & WCONTINUED) && tmp->wait_continued) {
+
+                        exit_value = 0xFFFF;
+                        reported   = tmp->tid;
+
+                        tmp->wait_continued = false;
                         break;
                     }
                 }

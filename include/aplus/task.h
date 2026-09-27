@@ -332,8 +332,9 @@ typedef struct task {
     /** @brief Every thread of the group has exited, so wait4() may report and reap this zombie leader. */
     bool group_dead;
 
-    /** @brief A stop that wait4() has not reported yet. */
+    /** @brief A stop, or a continue, that wait4() has not reported yet. */
     bool wait_stopped;
+    bool wait_continued;
 
 
     shared_ptr(struct fd) fd;
