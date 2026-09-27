@@ -35,18 +35,6 @@
 
 
 
-static spinlock_t rt_lock = SPINLOCK_INIT;
-
-
-void futex_rt_lock() {
-    spinlock_lock(&rt_lock);
-}
-
-void futex_rt_unlock() {
-    spinlock_unlock(&rt_lock);
-}
-
-
 /**
  * @brief Stamps a futex with the absolute deadline a relative timeout comes due at.
  *
@@ -197,7 +185,7 @@ size_t futex_wakeup(uint32_t* kaddr, size_t max) {
 
 
 /**
- * @brief Moves up to @p max tasks from one futex word to another without waking them.
+ * @brief Moves up to @p max tasks from one futex word to another without waking them, as waiters for its current value.
  *
  * @param kaddr Futex word the tasks are parked on.
  * @param kaddr2 Futex word to park them on instead.
@@ -237,6 +225,7 @@ size_t futex_requeue(uint32_t* kaddr, uint32_t* kaddr2, size_t max) {
 #endif
 
                         i->address = kaddr2;
+                        i->value   = atomic_load(kaddr2);
 
                         max--;
                         req++;

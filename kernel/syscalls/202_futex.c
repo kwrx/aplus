@@ -33,10 +33,62 @@
 #include <aplus/errno.h>
 #include <aplus/hal.h>
 #include <aplus/ipc.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
 
+
+
+/**
+ * @brief Waits on a futex word with the restart protocol, until a wakeup, the timeout or a signal ends the wait.
+ *
+ * The first attempt checks the word and parks; any later attempt was woken, and reports a timeout if the deadline
+ * has passed and a wakeup otherwise.
+ *
+ * @param kaddr The word, as the kernel reaches it.
+ * @param val The value the caller expects the word to hold.
+ * @param utime The relative timeout in userspace, or NULL to wait for a wakeup alone.
+ * @return 0 once woken, -EAGAIN, -EINVAL or -ETIMEDOUT, or -EINTR with the syscall parked for restart.
+ */
+static long __futex_wait(uint32_t* kaddr, uint32_t val, const struct timespec* utime) {
+
+    uint64_t timeout_ns = POLL_TIMEOUT_FOREVER;
+
+    if (utime) {
+
+        struct timespec ts;
+
+        uio_memcpy_u2s(&ts, utime, sizeof(ts));
+
+        if (unlikely(ts.tv_sec < 0 || ts.tv_nsec < 0 || ts.tv_nsec >= 1000000000L))
+            return poll_finish(-EINVAL);
+
+        if ((uint64_t)ts.tv_sec < (POLL_TIMEOUT_FOREVER / 1000000000ULL) - 1)
+            timeout_ns = (uint64_t)ts.tv_sec * 1000000000ULL + (uint64_t)ts.tv_nsec;
+    }
+
+
+    struct timespec remaining;
+
+    poll_deadline_t deadline = poll_deadline(timeout_ns, &remaining);
+
+    if (current_task->syscall.started)
+        return poll_finish(deadline == POLL_DEADLINE_EXPIRED ? -ETIMEDOUT : 0);
+
+    if (atomic_load_explicit(kaddr, memory_order_acquire) != val)
+        return poll_finish(-EAGAIN);
+
+    if (deadline == POLL_DEADLINE_EXPIRED)
+        return poll_finish(-ETIMEDOUT);
+
+
+    current_task->syscall.started = true;
+
+    futex_wait(current_task, kaddr, val, deadline == POLL_DEADLINE_REMAINING ? &remaining : NULL);
+
+    return poll_suspend(true, NULL);
+}
 
 
 /***
@@ -54,11 +106,11 @@
 
 SYSCALL(
     202, futex, long sys_futex(uint32_t* uaddr, int op, uint32_t val, long __val2, uint32_t* uaddr2, uint32_t val3) {
-        if (unlikely(!uaddr))
+        if (unlikely(!uaddr || ((uintptr_t)uaddr & (sizeof(uint32_t) - 1))))
             return -EINVAL;
 
         if (unlikely(!uio_check(uaddr, R_OK)))
-            return -EACCES;
+            return -EFAULT;
 
 
         uint32_t* kaddr = uio_get_ptr(uaddr);
@@ -75,143 +127,38 @@ SYSCALL(
                 if (unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
 
-                if (atomic_load_explicit(kaddr, memory_order_consume) != val)
-                    return -EAGAIN;
-
-
-                futex_wait(current_task, kaddr, val, utime);
-
-
-                arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
-
-                thread_suspend(current_task);
-                thread_restart_sched(current_task);
-
-                break;
+                return __futex_wait(kaddr, val, utime);
             }
-
 
 
             case FUTEX_WAKE:
                 return (long)futex_wakeup(kaddr, val);
 
 
-            case FUTEX_FD:
-                return -ENOSYS;
-
-
             case FUTEX_CMP_REQUEUE:
-
-                if (atomic_load_explicit(kaddr, memory_order_relaxed) != val3)
-                    return -EAGAIN;
-
-
             case FUTEX_REQUEUE:
 
             {
 
-                futex_wakeup(kaddr, val);
-
-
-                if (unlikely(!uaddr2))
+                if (unlikely(!uaddr2 || ((uintptr_t)uaddr2 & (sizeof(uint32_t) - 1))))
                     return -EINVAL;
 
                 if (unlikely(!uio_check(uaddr2, R_OK)))
-                    return -EACCES;
+                    return -EFAULT;
+
+                if ((op & FUTEX_CMD_MASK) == FUTEX_CMP_REQUEUE && atomic_load_explicit(kaddr, memory_order_acquire) != val3)
+                    return -EAGAIN;
 
 
                 uint32_t* kaddr2 = uio_get_ptr(uaddr2);
 
-                return futex_requeue(kaddr, kaddr2, (uint32_t)__val2);
+                size_t woken = futex_wakeup(kaddr, val);
+
+                return (long)(woken + futex_requeue(kaddr, kaddr2, (uint32_t)__val2));
             }
 
-
-            case FUTEX_WAKE_OP:
-                return -ENOSYS;
-
-
-            case FUTEX_LOCK_PI:
-
-            {
-
-                long e = 0L;
-                futex_rt_lock();
-
-
-                if (*kaddr == 0)
-                    *kaddr = (uint32_t)current_task->tid;
-
-                else {
-
-                    if (*kaddr == current_task->tid)
-                        e = -EDEADLK;
-
-                    else {
-
-                        *kaddr |= FUTEX_WAITERS;
-
-
-                        futex_wait(current_task, kaddr, *kaddr, NULL);
-
-                        arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, 0L);
-                        thread_restart_sched(current_task);
-                    }
-                }
-
-
-                futex_rt_unlock();
-                return e;
-            }
-
-
-            case FUTEX_TRYLOCK_PI:
-
-            {
-
-                long e = 0L;
-                futex_rt_lock();
-
-
-                if (*kaddr == 0)
-                    *kaddr = (uint32_t)current_task->tid;
-
-                else {
-
-                    if (*kaddr == current_task->tid)
-                        e = -EDEADLK;
-
-                    e = -1; // FIXME: return a valid error
-                }
-
-
-                futex_rt_unlock();
-                return e;
-            }
-
-
-            case FUTEX_UNLOCK_PI:
-
-            {
-
-                futex_rt_lock();
-
-                if (*kaddr != 0)
-                    *kaddr = (uint32_t)0;
-
-                futex_wakeup(kaddr, 1);
-                futex_rt_unlock();
-                break;
-            }
-
-
-
-            case FUTEX_WAIT_BITSET:
-                return -ENOSYS;
 
             default:
                 return -ENOSYS;
         }
-
-
-        return 0L;
     });
