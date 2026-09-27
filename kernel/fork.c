@@ -192,8 +192,7 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
     if (args->flags & CLONE_PARENT) {
-        child->parent = current_task->parent;
-        child->ppid   = current_task->ppid;
+        child->ppid = current_task->ppid;
     }
 
     if (args->flags & CLONE_SETTLS) {
@@ -201,9 +200,8 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     }
 
     if (args->flags & CLONE_THREAD) {
-        child->pid    = current_task->pid;
-        child->parent = current_task->parent;
-        child->ppid   = current_task->ppid;
+        child->pid  = current_task->pid;
+        child->ppid = current_task->ppid;
     }
 
 

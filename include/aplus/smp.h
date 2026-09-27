@@ -96,6 +96,7 @@ typedef struct cpu {
     task_t* sched_running;
     task_t* sched_queue;
     task_t* sched_idle;
+    task_t* sched_dead;
     size_t sched_count;
 
     uint64_t ticks;

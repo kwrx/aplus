@@ -87,7 +87,7 @@ SYSCALL(
                         target_tid = tmp->tid;
                         target_sid = tmp->sid;
 
-                        owned = (tmp->parent == current_task);
+                        owned = (tmp->tid == current_task->tid || tmp->ppid == current_task->pid);
                         found = true;
 
                         break;

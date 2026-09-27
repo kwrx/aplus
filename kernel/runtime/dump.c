@@ -87,8 +87,7 @@ void runtime_dump() {
 
         kprintf(" Thread ID: %d\n", current_task->tid);
         kprintf(" Process ID: %d\n", current_task->pid);
-        kprintf(" Parent: %p\n", current_task->parent);
-        kprintf(" Parent Process ID: %d\n", plausible(current_task->parent) ? current_task->parent->pid : -1);
+        kprintf(" Parent Process ID: %d\n", current_task->ppid);
         kprintf(" Process Group ID: %d\n", current_task->pgrp);
         kprintf(" Session ID: %d\n", current_task->sid);
         kprintf(" User ID: %d\n", current_task->uid);
