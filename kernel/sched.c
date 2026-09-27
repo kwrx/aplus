@@ -309,15 +309,11 @@ void schedule(int resched) {
     DEBUG_ASSERT(current_cpu);
     DEBUG_ASSERT(current_task);
 
-#define UPDATE_CLOCK(task, type, delta)                      \
-    {                                                        \
-        if (task->clock[type].tv_nsec + delta > 999999999) { \
-            task->clock[type].tv_nsec += delta;              \
-            task->clock[type].tv_nsec -= 1000000000;         \
-            task->clock[type].tv_sec += 1;                   \
-        } else {                                             \
-            task->clock[type].tv_nsec += delta;              \
-        }                                                    \
+#define UPDATE_CLOCK(task, type, delta)                                      \
+    {                                                                        \
+        task->clock[type].tv_nsec += delta;                                  \
+        task->clock[type].tv_sec += task->clock[type].tv_nsec / 1000000000L; \
+        task->clock[type].tv_nsec %= 1000000000L;                            \
     }
 
 
