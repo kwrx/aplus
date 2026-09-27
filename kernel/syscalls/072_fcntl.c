@@ -41,7 +41,10 @@
 #include <aplus/network.h>
 
 
-extern long sys_dup(unsigned int);
+/**
+ * @brief The file status flags F_SETFL may change; the access mode and the creation flags stay as opened.
+ */
+#define FCNTL_SETFL_MASK (O_APPEND | O_ASYNC | O_DIRECT | O_NOATIME | O_NONBLOCK)
 
 
 /***
@@ -73,22 +76,15 @@ SYSCALL(
             });
 
 
-            long e1, e2;
-
             switch (cmd) {
 
                 case F_DUPFD:
-                    return sys_dup(fd);
-
                 case F_DUPFD_CLOEXEC:
 
-                    if ((e1 = sys_dup(fd)) < 0)
-                        return e1;
+                    if (unlikely(arg >= CONFIG_OPEN_MAX))
+                        return -EINVAL;
 
-                    if ((e2 = sys_fcntl(e1, F_SETFD, FD_CLOEXEC)) < 0)
-                        return e2;
-
-                    return e1;
+                    return fd_dup(fd, (unsigned int)arg, cmd == F_DUPFD_CLOEXEC);
 
                 case F_GETFD:
 
@@ -106,7 +102,7 @@ SYSCALL(
 
                 case F_SETFL:
 
-                    shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = arg; });
+                    shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = (fds->descriptors[fd].flags & ~FCNTL_SETFL_MASK) | (arg & FCNTL_SETFL_MASK); });
 
                     return 0;
 
