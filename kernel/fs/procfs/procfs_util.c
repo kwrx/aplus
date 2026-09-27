@@ -335,6 +335,19 @@ static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t siz
 
     buf[pos] = '\0';
 
+    if (vfs_inode_unlinked(inode)) {
+
+        static const char deleted[] = " (deleted)";
+
+        if (unlikely(sizeof(deleted) + 1 > pos))
+            return errno = ENAMETOOLONG, -1;
+
+        pos -= sizeof(deleted) - 1;
+        memcpy(&buf[pos], deleted, sizeof(deleted) - 1);
+    }
+
+    size_t end = pos;
+
     for (inode_t* i = inode; i != root && i->parent; i = i->parent) {
 
         size_t len = strlen(i->name);
@@ -348,7 +361,7 @@ static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t siz
         buf[--pos] = '/';
     }
 
-    if (pos == size - 1)
+    if (pos == end)
         buf[--pos] = '/';
 
     memmove(buf, &buf[pos], size - pos);
@@ -407,7 +420,7 @@ static bool __task_files_get(pid_t pid, procfs_fd_t* fdt, procfs_fs_t* fst) {
 
 
 /**
- * @brief Drops the references __task_files_get() took, closing the descriptors on the last one.
+ * @brief Drops the references __task_files_get() took, closing the descriptors and releasing the inodes on the last one.
  *
  * @param fdt The descriptor table, or NULL.
  * @param fst The filesystem context, or NULL.
@@ -418,7 +431,7 @@ static void __task_files_put(procfs_fd_t fdt, procfs_fs_t fst) {
         shared_ptr_free_with_dtor(fdt, fds, { fd_close_all(fds); });
 
     if (fst)
-        shared_ptr_free(fst);
+        shared_ptr_free_with_dtor(fst, fs, { fs_put_all(fs); });
 }
 
 

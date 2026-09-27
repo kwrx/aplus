@@ -61,10 +61,10 @@ static inline bool __path_failed_on_its_own(void) {
 /**
  * @brief Follows a link, and each link it lands on, until it reaches an inode that is not a link.
  *
- * @param inode The inode to start from.
+ * @param inode The inode to start from, whose reference the call takes over.
  * @param links The links the whole lookup may still follow, shared by every nesting level.
  * @param depth How deeply this resolution is nested inside the resolution of another link.
- * @return The inode the links lead to, or NULL with errno set.
+ * @return The inode the links lead to, referenced, or NULL with errno set.
  */
 static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 
@@ -79,6 +79,7 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
         struct stat st = {0};
 
         if (vfs_getattr(inode, &st) < 0) {
+            vfs_inode_put(inode);
             inode = NULL;
             break;
         }
@@ -87,14 +88,16 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
             break;
 
         if (--(*links) < 0 || depth >= PATH_MAXNESTED) {
-            errno = ELOOP;
+            vfs_inode_put(inode);
             inode = NULL;
+            errno = ELOOP;
             break;
         }
 
         if (!target && (target = kmalloc(CONFIG_PATH_MAX + 1, GFP_KERNEL)) == NULL) {
-            errno = ENOMEM;
+            vfs_inode_put(inode);
             inode = NULL;
+            errno = ENOMEM;
             break;
         }
 
@@ -102,16 +105,21 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 
         if (n <= 0) {
 
+            vfs_inode_put(inode);
+            inode = NULL;
+
             if (n == 0)
                 errno = ENOENT;
 
-            inode = NULL;
             break;
         }
 
         target[n] = '\0';
 
-        inode = __path_lookup(inode->parent ? inode->parent : inode, target, O_NOFOLLOW, 0, links, depth + 1);
+        inode_t* next = __path_lookup(inode->parent ? inode->parent : inode, target, O_NOFOLLOW, 0, links, depth + 1);
+
+        vfs_inode_put(inode);
+        inode = next;
     }
 
     if (target)
@@ -121,6 +129,11 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 }
 
 
+/**
+ * @brief Looks one path component up in a directory, following it if it is a link and @p follow is set.
+ *
+ * @return The inode, referenced, or NULL with errno set.
+ */
 static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool follow, int* links, int depth) {
 
     DEBUG_ASSERT(inode);
@@ -149,7 +162,12 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool fo
 }
 
 
-
+/**
+ * @brief Follows a link the caller holds to the inode it ends at.
+ *
+ * @param inode The link, whose reference stays with the caller.
+ * @return The inode the link leads to, referenced, or NULL with errno set.
+ */
 inode_t* path_follows(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
@@ -158,11 +176,15 @@ inode_t* path_follows(inode_t* inode) {
 
     errno = 0;
 
-    return __path_follow_links(inode, &links, 0);
+    return __path_follow_links(vfs_inode_get(inode), &links, 0);
 }
 
 
-
+/**
+ * @brief Resolves a path from a directory, creating the last component when asked to.
+ *
+ * @return The inode, referenced, or NULL with errno set.
+ */
 static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth) {
 
     DEBUG_ASSERT(cwd);
@@ -173,11 +195,11 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
     if (path[0] == '/') {
 
-        shared_ptr_access(current_task->fs, fs, { c = fs->root; });
+        shared_ptr_access(current_task->fs, fs, { c = vfs_inode_get(fs->root); });
 
     } else {
 
-        c = cwd;
+        c = vfs_inode_get(cwd);
     }
 
     DEBUG_ASSERT(c);
@@ -189,7 +211,11 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
     while (strchr(path, '/') && c) {
 
-        c    = path_find(c, path, strcspn(path, "/"), true, links, depth);
+        inode_t* next = path_find(c, path, strcspn(path, "/"), true, links, depth);
+
+        vfs_inode_put(c);
+
+        c    = next;
         path = strchr(path, '/') + 1;
 
         while (path[0] == '/')
@@ -206,7 +232,7 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
     if (path[0] != '\0')
         r = path_find(c, path, strlen(path), !(flags & O_NOFOLLOW), links, depth);
     else
-        r = c;
+        r = vfs_inode_get(c);
 
 
     if (unlikely(!r)) {
@@ -219,24 +245,34 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
             r = vfs_creat(c, path, mode);
 
-            if (unlikely(!r))
-                return NULL;
-
         } else {
-            return errno = (__path_failed_on_its_own() ? errno : ENOENT), NULL;
+            errno = (__path_failed_on_its_own() ? errno : ENOENT);
         }
 
     } else {
 
-        if ((flags & O_EXCL) && (flags & O_CREAT))
-            return errno = EEXIST, NULL;
+        if ((flags & O_EXCL) && (flags & O_CREAT)) {
+            vfs_inode_put(r);
+            r     = NULL;
+            errno = EEXIST;
+        }
     }
+
+    vfs_inode_put(c);
 
     return r;
 }
 
 
-
+/**
+ * @brief Resolves a path from a directory the caller holds, creating the last component when asked to.
+ *
+ * @param cwd The directory relative paths start from.
+ * @param path The path.
+ * @param flags O_CREAT, O_EXCL and O_NOFOLLOW as for open().
+ * @param mode The type and permissions of a created entry.
+ * @return The inode, referenced, or NULL with errno set.
+ */
 inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     int links = PATH_MAXSYMLINKS;

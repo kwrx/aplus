@@ -164,19 +164,18 @@ SYSCALL(
         }
 
 
-        inode_t* inode = NULL;
+        inode_t* inode __scoped(vfs_inode_cleanup) = NULL;
 
         shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
-            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
-
-            inode = fds->descriptors[fd].ref->inode;
+            if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
+                inode = vfs_inode_get(fds->descriptors[fd].ref->inode);
         });
-
-        DEBUG_ASSERT(inode);
 
         if ((fd = sys_close(fd)) < 0)
             return fd;
+
+        if (unlikely(!inode))
+            return -EBADF;
 
 
 
@@ -447,7 +446,7 @@ SYSCALL(
 
 
         // * Set new fs executable
-        shared_ptr_access(current_task->fs, fs, { fs->exe = inode; });
+        fs_set_exe(inode);
 
 
 

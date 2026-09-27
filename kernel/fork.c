@@ -71,7 +71,23 @@ void do_unshare(int flags) {
     }
 
     if (flags & CLONE_FS) {
-        current_task->fs = shared_ptr_unshare(current_task->fs, GFP_KERNEL);
+
+        if (atomic_load(&current_task->fs->refcount) > 1) {
+
+            __typeof__(current_task->fs) old  = current_task->fs;
+            __typeof__(current_task->fs) copy = NULL;
+
+            shared_ptr_access(old, fs, {
+                copy = shared_ptr_dup(old, GFP_KERNEL);
+                fs_ref_all(fs);
+            });
+
+            scoped_lock(&current_cpu->sched_lock) {
+                current_task->fs = copy;
+            }
+
+            shared_ptr_free_with_dtor(old, fs, { fs_put_all(fs); });
+        }
     }
 
     if (flags & CLONE_SIGHAND) {
@@ -222,7 +238,11 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
     if (args->flags & CLONE_FS) {
         child->fs = shared_ptr_ref(current_task->fs);
     } else {
-        child->fs = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+
+        shared_ptr_access(current_task->fs, fs, {
+            child->fs = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+            fs_ref_all(fs);
+        });
     }
 
     if (args->flags & CLONE_SIGHAND) {

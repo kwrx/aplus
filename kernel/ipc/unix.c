@@ -650,15 +650,18 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         return e;
 
 
-    inode_t* cwd = NULL;
+    inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-    shared_ptr_access(current_task->fs, fs, { cwd = fs->cwd; });
+    shared_ptr_access(current_task->fs, fs, {
+        if (fs->cwd)
+            cwd = vfs_inode_get(fs->cwd);
+    });
 
     if (unlikely(!cwd))
         return -ENOENT;
 
 
-    inode_t* node = path_lookup(cwd, path, O_CREAT | O_EXCL, S_IFSOCK | 0666);
+    inode_t* node __scoped(vfs_inode_cleanup) = path_lookup(cwd, path, O_CREAT | O_EXCL, S_IFSOCK | 0666);
 
     if (unlikely(!node))
         return -errno;
@@ -729,15 +732,18 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
         return e;
 
 
-    inode_t* cwd = NULL;
+    inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-    shared_ptr_access(current_task->fs, fs, { cwd = fs->cwd; });
+    shared_ptr_access(current_task->fs, fs, {
+        if (fs->cwd)
+            cwd = vfs_inode_get(fs->cwd);
+    });
 
     if (unlikely(!cwd))
         return -ENOENT;
 
 
-    inode_t* node = path_lookup(cwd, path, 0, 0);
+    inode_t* node __scoped(vfs_inode_cleanup) = path_lookup(cwd, path, 0, 0);
 
     if (unlikely(!node))
         return -ECONNREFUSED;

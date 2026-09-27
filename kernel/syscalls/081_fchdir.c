@@ -53,12 +53,14 @@ SYSCALL(
             return -EBADF;
 
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (unlikely(!fds->descriptors[fd].ref))
-                return -EBADF;
+        struct file* file = fd_get(fd, NULL);
 
-            shared_ptr_access(current_task->fs, fs, { fs->cwd = fds->descriptors[fd].ref->inode; });
-        });
+        if (unlikely(!file))
+            return -EBADF;
+
+
+        fs_chdir(file->inode, false);
+        fd_put(file);
 
         return 0;
     });

@@ -64,16 +64,16 @@ SYSCALL(
         }
 
 
-        shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
+        struct file* file = fd_get((unsigned int)fd, NULL);
 
-            shared_ptr_access(current_task->fs, fs, { fs->cwd = fds->descriptors[fd].ref->inode; });
-        });
+        sys_close(fd);
+
+        if (unlikely(!file))
+            return -EBADF;
 
 
-        if ((fd = sys_close(fd)) < 0) {
-            return fd;
-        }
+        fs_chdir(file->inode, false);
+        fd_put(file);
 
         return 0;
     });

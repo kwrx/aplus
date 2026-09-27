@@ -31,9 +31,16 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/memory.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 #include <aplus/utils/ptr.h>
+
+
+/**
+ * @brief The bit of inode->refcount set once the inode's directory entry is gone; the rest counts holders.
+ */
+#define INODE_REF_UNLINKED 0x80000000U
 
 
 fstable_t __fs_table[VFS_MAX_FILESYSTEMS] = {0};
@@ -98,6 +105,12 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
         dir->ino ^= dir->sb->ino;
 
 
+        vfs_inode_get(dir);
+
+        if (dev)
+            vfs_inode_get(dev);
+
+
 #if DEBUG_LEVEL_INFO
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
 #endif
@@ -144,14 +157,20 @@ int vfs_close(inode_t* inode) {
 
 
 /**
- * @brief Frees an anonymous inode, dropping the reference it holds on its change counter.
+ * @brief Frees an inode nothing references any more, with what its filesystem keeps for it, and unpins its directory.
  *
  * @param inode The inode to free.
  */
-void vfs_anonymous_free(inode_t* inode) {
+static void __vfs_inode_release(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
-    DEBUG_ASSERT(inode->flags & INODE_FLAGS_ANONYMOUS);
+
+    inode_t* parent = (atomic_load(&inode->refcount) & INODE_REF_UNLINKED) ? inode->parent : NULL;
+
+    if (inode->ops.release)
+        inode->ops.release(inode);
+
+    vfs_dcache_free(inode);
 
     if (inode->ev) {
         shared_ptr_free(inode->ev);
@@ -159,6 +178,204 @@ void vfs_anonymous_free(inode_t* inode) {
     }
 
     kfree(inode);
+
+    if (parent)
+        vfs_inode_put(parent);
+}
+
+
+/**
+ * @brief Takes a reference to an inode the caller can already reach.
+ *
+ * @param inode The inode.
+ * @return The inode.
+ */
+inode_t* vfs_inode_get(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    atomic_fetch_add(&inode->refcount, 1);
+
+    return inode;
+}
+
+
+/**
+ * @brief Drops a reference taken with vfs_inode_get(), freeing an unlinked or anonymous inode on the last one.
+ *
+ * @param inode The inode.
+ */
+void vfs_inode_put(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    unsigned int old = atomic_fetch_sub(&inode->refcount, 1);
+
+    DEBUG_ASSERT((old & ~INODE_REF_UNLINKED) > 0);
+
+    if ((old & ~INODE_REF_UNLINKED) != 1)
+        return;
+
+    if ((old & INODE_REF_UNLINKED) || (inode->flags & INODE_FLAGS_ANONYMOUS))
+        __vfs_inode_release(inode);
+}
+
+
+/**
+ * @brief Marks an inode's directory entry gone, freeing it now if nothing holds it and pinning its directory otherwise.
+ *
+ * @param inode The inode whose entry was removed.
+ */
+void vfs_inode_unlink(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    if (inode->parent)
+        vfs_inode_get(inode->parent);
+
+    unsigned int old = atomic_fetch_or(&inode->refcount, INODE_REF_UNLINKED);
+
+    if (unlikely(old & INODE_REF_UNLINKED)) {
+
+        if (inode->parent)
+            vfs_inode_put(inode->parent);
+
+        return;
+    }
+
+    if (old == 0)
+        __vfs_inode_release(inode);
+}
+
+
+/**
+ * @brief Tells whether an inode's directory entry is gone.
+ *
+ * @param inode The inode.
+ * @return true once the inode has been unlinked.
+ */
+bool vfs_inode_unlinked(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    return !!(atomic_load(&inode->refcount) & INODE_REF_UNLINKED);
+}
+
+
+/**
+ * @brief Frees an anonymous inode that never got a holder, dropping the reference it holds on its change counter.
+ *
+ * @param inode The inode to free.
+ */
+void vfs_anonymous_free(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->flags & INODE_FLAGS_ANONYMOUS);
+    DEBUG_ASSERT(atomic_load(&inode->refcount) == 0);
+
+    __vfs_inode_release(inode);
+}
+
+
+/**
+ * @brief Moves the caller's working directory, and its root too if asked, onto an inode.
+ *
+ * @param inode The directory.
+ * @param root Whether the root moves as well.
+ */
+void fs_chdir(inode_t* inode, bool root) {
+
+    DEBUG_ASSERT(inode);
+
+    inode_t* oldcwd  = NULL;
+    inode_t* oldroot = NULL;
+
+    vfs_inode_get(inode);
+
+    if (root)
+        vfs_inode_get(inode);
+
+    shared_ptr_access(current_task->fs, fs, {
+        oldcwd  = fs->cwd;
+        fs->cwd = inode;
+
+        if (root) {
+            oldroot  = fs->root;
+            fs->root = inode;
+        }
+    });
+
+    if (oldcwd)
+        vfs_inode_put(oldcwd);
+
+    if (oldroot)
+        vfs_inode_put(oldroot);
+}
+
+
+/**
+ * @brief Records the executable the caller now runs.
+ *
+ * @param inode The executable.
+ */
+void fs_set_exe(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    inode_t* old = NULL;
+
+    vfs_inode_get(inode);
+
+    shared_ptr_access(current_task->fs, fs, {
+        old     = fs->exe;
+        fs->exe = inode;
+    });
+
+    if (old)
+        vfs_inode_put(old);
+}
+
+
+/**
+ * @brief Takes a reference to every inode a filesystem context that has just been copied points at.
+ *
+ * @param fs The copy.
+ */
+void fs_ref_all(struct fs* fs) {
+
+    DEBUG_ASSERT(fs);
+
+    if (fs->root)
+        vfs_inode_get(fs->root);
+
+    if (fs->cwd)
+        vfs_inode_get(fs->cwd);
+
+    if (fs->exe)
+        vfs_inode_get(fs->exe);
+}
+
+
+/**
+ * @brief Drops the references a filesystem context that nothing uses any more holds.
+ *
+ * @param fs The context.
+ */
+void fs_put_all(struct fs* fs) {
+
+    DEBUG_ASSERT(fs);
+
+    inode_t* held[] = {fs->root, fs->cwd, fs->exe};
+
+    fs->root = NULL;
+    fs->cwd  = NULL;
+    fs->exe  = NULL;
+
+    for (size_t i = 0; i < sizeof(held) / sizeof(held[0]); i++) {
+
+        if (held[i])
+            vfs_inode_put(held[i]);
+    }
 }
 
 
@@ -372,6 +589,14 @@ ssize_t vfs_readlink(inode_t* inode, char* buf, size_t size) {
 }
 
 
+/**
+ * @brief Creates an entry in a directory, or finds the one already there under that name.
+ *
+ * @param inode The directory.
+ * @param name The name of the entry.
+ * @param mode The type and permissions of a new entry.
+ * @return The inode, referenced, or NULL with errno set.
+ */
 inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);
@@ -383,6 +608,10 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
     if (name[0] == '.' && name[1] == '.' && name[2] == '\0')
         return errno = EEXIST, NULL;
 
+
+
+    if (unlikely(vfs_inode_unlinked(inode)))
+        return errno = ENOENT, NULL;
 
 
     if (likely(inode->ops.creat)) {
@@ -398,7 +627,7 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
             if ((r = inode->ops.creat(inode, name, mode)) != NULL) {
 
                 if (likely(r->parent == inode))
-                    r = vfs_dcache_add(inode, r);
+                    r = vfs_inode_get(vfs_dcache_add(inode, r));
             }
 
             return r;
@@ -410,6 +639,13 @@ inode_t* vfs_creat(inode_t* inode, const char* name, mode_t mode) {
 }
 
 
+/**
+ * @brief Looks a name up in a directory.
+ *
+ * @param inode The directory.
+ * @param name The name to look for, which may be "." or "..".
+ * @return The inode, referenced, or NULL with errno set.
+ */
 inode_t* vfs_finddir(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
@@ -417,7 +653,7 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
 
 
     if (name[0] == '.' && name[1] == '\0')
-        return inode;
+        return vfs_inode_get(inode);
 
 
     if (name[0] == '.' && name[1] == '.' && name[2] == '\0') {
@@ -431,7 +667,7 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
                 errno = ENOENT;
         });
 
-        return parent;
+        return parent ? vfs_inode_get(parent) : NULL;
     }
 
 
@@ -453,7 +689,7 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
             if ((r = inode->ops.finddir(inode, name)) != NULL) {
 
                 if (likely(r->parent == inode))
-                    r = vfs_dcache_add(inode, r);
+                    r = vfs_inode_get(vfs_dcache_add(inode, r));
             }
         }
 
