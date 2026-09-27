@@ -78,6 +78,16 @@
  */
     #define TASK_FLAGS_KERNEL_UIO 32
 
+/**
+ * @brief The task is a thread nobody waits for, destroyed by its cpu as soon as it has switched away from it for good.
+ */
+    #define TASK_FLAGS_AUTOREAP 64
+
+/**
+ * @brief The task is a kernel thread, which user signals never reach and which owns its argv.
+ */
+    #define TASK_FLAGS_KTHREAD 128
+
 
     #define TASK_CAPS_SYSTEM  255
     #define TASK_CAPS_IO      2
@@ -318,11 +328,12 @@ typedef struct task {
 
 
     list(futex_t*, futexes);
-    list(struct task*, wait_queue);
 
-    int wait_options;
-    int* wait_status;
-    struct rusage* wait_rusage;
+    /** @brief Every thread of the group has exited, so wait4() may report and reap this zombie leader. */
+    bool group_dead;
+
+    /** @brief A stop that wait4() has not reported yet. */
+    bool wait_stopped;
 
 
     shared_ptr(struct fd) fd;
@@ -438,7 +449,6 @@ typedef struct task {
     spinlock_t lock;
     spinlock_t sched_lock;
 
-    struct task* parent;
     struct task* next;
 
     /* Reported by /proc. These are plain storage inside task_t rather than pointers into
@@ -456,8 +466,8 @@ typedef struct task {
     //? USER_HZ ticks since boot, stamped once when the task is created.
     uint64_t start_time;
 
-    //? The parent's tgid, copied at creation: `parent` is cleared when the parent is
-    //? reaped, and following it afterwards reads freed memory.
+    //? The parent's tgid. It is a number rather than a pointer so that it cannot dangle, and
+    //? it becomes 1 once every thread of the parent has exited. @see sched_exit().
     pid_t ppid;
 
 } task_t;
@@ -473,6 +483,7 @@ typedef struct task {
 
 
 
+
 __BEGIN_DECLS
 
 struct cpu;
@@ -483,8 +494,9 @@ pid_t do_fork(struct kclone_args*, size_t);
 
 pid_t sched_nextpid();
 void sched_enqueue(task_t*);
-void sched_dequeue(task_t*);
+void sched_bury(struct cpu*, task_t*);
 void sched_requeue(task_t*);
+void sched_exit(void);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 int sched_fault_sigqueueinfo(int sig, siginfo_t*);
 size_t sched_nprocs(void);
@@ -493,6 +505,8 @@ pid_t sched_lastpid(void);
 void schedule(int);
 
 void idle_main(void*) __noreturn;
+
+extern volatile uint32_t sched_child_event;
 
 __END_DECLS
 

@@ -63,6 +63,12 @@ static inline void do_futex(void) {
 }
 
 /**
+ * @brief Bumped whenever a task exits, stops or continues, and watched by wait4() as a futex word.
+ */
+volatile uint32_t sched_child_event = 0;
+
+
+/**
  * @brief Wakes the current task if its sleep deadline has come due, and records the time it has left.
  */
 static inline void do_sleep(void) {
@@ -107,6 +113,54 @@ static inline void do_sleep(void) {
 
 
 /**
+ * @brief Asks whether a signal queue holds a signal of the given number.
+ *
+ * @param queue The queue to search.
+ * @param sig The signal to look for.
+ * @return true if it is queued.
+ */
+static bool __sigqueue_holds(queue_t* queue, int sig) {
+
+    bool found = false;
+
+    scoped_lock(&queue->lock) {
+
+        for (struct queue_element* e = queue->head; e && !found; e = e->next)
+            found = e->element && ((siginfo_t*)e->element)->si_signo == sig;
+    }
+
+    return found;
+}
+
+
+/**
+ * @brief Tells wait4() that a child exited, stopped or continued.
+ */
+static void __sched_child_changed(void) {
+    atomic_fetch_add(&sched_child_event, 1);
+}
+
+
+/**
+ * @brief Stops the current task for a stop signal.
+ *
+ * @param signo The stop signal.
+ */
+static void do_stop(int signo) {
+
+    scoped_lock(&current_cpu->sched_lock) {
+
+        current_task->exit.value   = (signo << 8) | 0x7F;
+        current_task->status       = TASK_STATUS_STOP;
+        current_task->wait_stopped = true;
+    }
+
+    if (current_task->tid == current_task->pid)
+        __sched_child_changed();
+}
+
+
+/**
  * @brief Carries out a signal's default disposition: terminate, terminate and dump core, or stop.
  *
  * @param siginfo The signal being delivered.
@@ -144,7 +198,7 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGTSTP:
         case SIGTTIN:
         case SIGTTOU:
-            sys_exit((1U << 31) | (siginfo->si_signo << 8) | 0x7F);
+            do_stop(siginfo->si_signo);
             break;
     }
 }
@@ -165,7 +219,7 @@ static void handle_default_or_user_signal(siginfo_t* siginfo) {
 
     struct ksigaction* action = NULL;
 
-    shared_ptr_access(current_task->sighand, sighand, { action = &sighand->action[siginfo->si_signo]; });
+    shared_ptr_nullable_access(current_task->sighand, sighand, { action = &sighand->action[siginfo->si_signo]; });
 
 
     if (unlikely(!action)) {
@@ -201,7 +255,7 @@ static void handle_signal(siginfo_t* siginfo) {
             break;
 
         case SIGSTOP:
-            sys_exit((1 << 31) | (SIGSTOP << 8) | 0x7F);
+            do_stop(SIGSTOP);
             break;
 
         default:
@@ -214,13 +268,18 @@ static void handle_signal(siginfo_t* siginfo) {
 /**
  * @brief Delivers one pending signal to the current task.
  *
- * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY.
+ * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY. Nothing is
+ * delivered to a task already in the middle of exiting.
  */
 static inline void do_signals(void) {
 
     DEBUG_ASSERT(current_task);
 
     if (queue_is_empty(&current_task->sigqueue)) {
+        return;
+    }
+
+    if (unlikely(current_task->sighand == NULL)) {
         return;
     }
 
@@ -239,8 +298,52 @@ static inline void do_signals(void) {
         kfree(siginfo);
 
 
-        while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP))
+        while (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_STOP || current_task->status == TASK_STATUS_DEAD))
             schedule(1);
+    }
+}
+
+
+/**
+ * @brief Destroys the dead tasks of the current cpu that it is no longer running on.
+ *
+ * A dead task is kept while it is still the current one, or while the cpu is still executing on its
+ * kernel stack, as the tail of the interrupt that switched away from it does.
+ */
+static void __sched_destroy_dead(void) {
+
+    if (likely(current_cpu->sched_dead == NULL))
+        return;
+
+
+    task_t* dead = NULL;
+
+    scoped_lock(&current_cpu->sched_lock) {
+
+        dead = current_cpu->sched_dead;
+
+        current_cpu->sched_dead = NULL;
+    }
+
+    while (dead) {
+
+        task_t* next = dead->next;
+
+        if (dead == current_task || arch_task_stack_in_use(dead)) {
+
+            scoped_lock(&current_cpu->sched_lock) {
+
+                dead->next = current_cpu->sched_dead;
+
+                current_cpu->sched_dead = dead;
+            }
+
+        } else {
+
+            arch_task_destroy(dead);
+        }
+
+        dead = next;
     }
 }
 
@@ -257,12 +360,13 @@ static inline void do_signals(void) {
  * it, and sys_clock_gettime() reads the cpu-time clocks off it too.
  *
  * The idle task is not on the queue and its next is NULL, so a lap that starts on it starts at the
- * head, which is itself NULL on a cpu with nothing enqueued.
+ * head, which is itself NULL on a cpu with nothing enqueued. So does a lap that starts on a dead task,
+ * whose next links the dead list instead.
  */
 static void __sched_next(void) {
 
     task_t* prev = current_task;
-    task_t* next = prev->next ? prev->next : current_cpu->sched_queue;
+    task_t* next = (prev->next && prev->status != TASK_STATUS_DEAD) ? prev->next : current_cpu->sched_queue;
 
     for (size_t i = current_cpu->sched_count; i && next; i--, next = next->next ? next->next : current_cpu->sched_queue) {
 
@@ -270,7 +374,7 @@ static void __sched_next(void) {
 
         if (current_task->status == TASK_STATUS_SLEEP) {
 
-            if (!queue_is_empty(&current_task->sigqueue)) {
+            if (!queue_is_empty(&current_task->sigqueue) && current_task->sighand) {
                 thread_wake(current_task);
             }
 
@@ -291,7 +395,7 @@ static void __sched_next(void) {
 /**
  * @brief Schedules the next task to run
  *
- * This function updates the clocks of the current task and its parent, if it has one.
+ * This function first destroys the dead tasks this cpu has finished with, then updates the clocks of the current task.
  * It also keeps track of the number of voluntary and involuntary context switches.
  * If resched is set to true, it marks the current task as TASK_STATUS_READY and selects the next task to run by calling __sched_next().
  * The selected task is then marked as TASK_STATUS_RUNNING and a task switch is performed using the arch_task_switch() function.
@@ -318,6 +422,9 @@ void schedule(int resched) {
 
 
 
+    __sched_destroy_dead();
+
+
     task_t* prev_task = current_task;
 
 
@@ -328,10 +435,6 @@ void schedule(int resched) {
     UPDATE_CLOCK(current_task, TASK_CLOCK_SCHEDULER, TASK_SCHEDULER_PERIOD_NS);
     UPDATE_CLOCK(current_task, TASK_CLOCK_THREAD_CPUTIME, delta);
     UPDATE_CLOCK(current_task, TASK_CLOCK_PROCESS_CPUTIME, delta);
-
-    if (likely(current_task->parent)) {
-        UPDATE_CLOCK(current_task->parent, TASK_CLOCK_PROCESS_CPUTIME, delta);
-    }
 
 
     current_cpu->ticks = elapsed;
@@ -362,6 +465,8 @@ void schedule(int resched) {
 
         arch_task_switch(prev_task, current_task);
 
+        if (unlikely(prev_task != current_task && prev_task->status == TASK_STATUS_ZOMBIE && (prev_task->flags & TASK_FLAGS_AUTOREAP)))
+            sched_bury(current_cpu, prev_task);
     }
 
     do_signals();
@@ -409,38 +514,6 @@ static bool __sched_unlink(cpu_t* cpu, task_t* task) {
 
 
 /**
- * @brief Waits until no CPU is running the given task any more.
- *
- * @param task The task to wait for, already unlinked from every run queue.
- */
-static void __sched_wait_quiesced(const task_t* task) {
-
-    DEBUG_ASSERT(task);
-
-
-    for (;;) {
-
-        bool running = false;
-
-        cpu_foreach(cpu) {
-
-            scoped_lock(&cpu->sched_lock) {
-                running |= (cpu->sched_running == task);
-            }
-        }
-
-        if (!running) {
-            return;
-        }
-
-#if defined(__i386__) || defined(__x86_64__)
-        __builtin_ia32_pause();
-#endif
-    }
-}
-
-
-/**
  * @brief Enqueues a task to a CPU with the least number of tasks
  *
  * This function schedules the task to a CPU with the least number of tasks.
@@ -483,42 +556,30 @@ void sched_enqueue(task_t* task) {
 }
 
 /**
- * @brief Dequeues a task from its assigned CPU and destroys it.
+ * @brief Unlinks a zombie from a cpu's run queue and queues it to be destroyed by that cpu.
  *
- * Only the caller that actually unlinks the task destroys it, so two threads of the same
- * process reaping the same zombie at once free it once between them.
+ * The task is destroyed by the cpu it ran on, and only once that cpu is off its kernel stack.
+ * @see __sched_destroy_dead().
  *
- * A zombie becomes reapable before the CPU it died on has finished with it -- sys_exit()
- * still has the rest of its own syscall to return through, on the kernel stack freed here
- * -- so the task is unlinked, waited out, and only then destroyed. The destruction is
- * deliberately outside the queue lock: it frees the kernel stack and the task itself,
- * which takes locks of its own, and by then nothing can reach the task to need protecting
- * from it.
- *
- * @param task The task to be dequeued
+ * @param cpu The cpu the task is queued on, whose sched_lock the caller holds.
+ * @param task The task to reap.
  */
-void sched_dequeue(task_t* task) {
+void sched_bury(cpu_t* cpu, task_t* task) {
 
-    bool found = false;
+    DEBUG_ASSERT(cpu);
+    DEBUG_ASSERT(task);
 
-    cpu_foreach_if(cpu, !found) {
+    if (!__sched_unlink(cpu, task))
+        return;
 
-        scoped_lock(&cpu->sched_lock) {
-            found = __sched_unlink(cpu, task);
-        }
-    }
+    task->status = TASK_STATUS_DEAD;
+    task->next   = cpu->sched_dead;
+
+    cpu->sched_dead = task;
 
 #if DEBUG_LEVEL_TRACE
-    kprintf("sched: dequeued task(%d) %s\n", task->tid, task->argv[0]);
+    kprintf("sched: buried task(%d) %s\n", task->tid, task->argv[0]);
 #endif
-
-    if (!found) {
-        return;
-    }
-
-    __sched_wait_quiesced(task);
-
-    arch_task_destroy(task);
 }
 
 
@@ -565,6 +626,8 @@ void sched_requeue(task_t* task) {
 /**
  * @brief Queues a signal on every task matching a process group, a process or a thread.
  *
+ * Zombies are not matched, and a task whose signal handlers have already been released is left alone.
+ *
  * @param pgrp The process group to match, or -1 not to narrow by it.
  * @param pid The process to match, or -1 not to narrow by it.
  * @param tid The thread to match, or -1 not to narrow by it.
@@ -575,11 +638,13 @@ void sched_requeue(task_t* task) {
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
 
     DEBUG_ASSERT(sig >= 0);
-    DEBUG_ASSERT(sig < NSIG - 1);
+    DEBUG_ASSERT(sig < _NSIG);
     DEBUG_ASSERT(info);
 
 
     size_t found = 0;
+    int error    = 0;
+
 
     cpu_foreach(cpu) {
 
@@ -587,74 +652,66 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
             for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
 
-                if (pgrp > 0 && tmp->pgrp != pgrp) {
-                continue;
-            }
+                if (pgrp > 0 && tmp->pgrp != pgrp)
+                    continue;
 
-            if (pid > 0 && tmp->pid != pid) {
-                continue;
-            }
+                if (pid > 0 && tmp->pid != pid)
+                    continue;
 
-            if (tid > 0 && tmp->tid != tid) {
-                continue;
-            }
+                if (tid > 0 && tmp->tid != tid)
+                    continue;
 
-            if (tmp->status == TASK_STATUS_ZOMBIE) {
-                continue;
-            }
+                if (tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD)
+                    continue;
 
-            if (!(current_task->euid == tmp->uid || current_task->uid == tmp->uid)) {
-                continue;
-            }
+                if (!(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
+                    continue;
 
 
-            found++;
+                found++;
 
-            if (unlikely(sig == 0)) {
-                continue;
-            }
+                if (unlikely(sig == 0))
+                    continue;
 
-            if (tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
-                return errno = EAGAIN, -1;
-            }
+                if (unlikely(tmp->sighand == NULL))
+                    continue;
 
 
-            struct ksigaction* action = NULL;
+                bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
+                bool blocked     = false;
 
-            shared_ptr_access(tmp->sighand, sighand, { action = &sighand->action[sig]; });
+                void (*handler)(int) = SIG_DFL;
 
-            DEBUG_ASSERT(action);
-
-
-            bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
-
-
-            if (unlikely(!unstoppable && action->handler == SIG_IGN)) {
-                continue;
-            }
-
-            if (unlikely(action->handler == SIG_ERR)) {
-                continue;
-            }
-
-
-            siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
-
-            if (unlikely(!siginfo)) {
-                return errno = ENOMEM, -1;
-            }
-
-            memcpy(siginfo, info, sizeof(siginfo_t));
-
-            siginfo->si_signo = sig;
-
-
-                shared_ptr_access(tmp->sighand, sighand, {
-                    if (unlikely(!unstoppable && sigset_is_member(&sighand->sigmask, sig)))
-                        queue_enqueue(&tmp->sigpending, siginfo, 0);
-                    else
-                        queue_enqueue(&tmp->sigqueue, siginfo, 0);
+                shared_ptr_nullable_access(tmp->sighand, sighand, {
+                    handler = sighand->action[sig].handler;
+                    blocked = !unstoppable && sigset_is_member(&sighand->sigmask, sig);
                 });
+
+
+                if (unlikely(handler == SIG_ERR))
+                    continue;
+
+                if (!unstoppable && handler == SIG_IGN)
+                    continue;
+
+                if (tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
+                    error = EAGAIN;
+                    continue;
+                }
+
+
+                siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+
+                if (unlikely(!siginfo)) {
+                    error = ENOMEM;
+                    continue;
+                }
+
+                memcpy(siginfo, info, sizeof(siginfo_t));
+
+                siginfo->si_signo = sig;
+
+                queue_enqueue(blocked ? &tmp->sigpending : &tmp->sigqueue, siginfo, 0);
             }
         }
     }
@@ -664,7 +721,71 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
         return errno = ESRCH, -1;
     }
 
+    if (unlikely(error)) {
+        return errno = error, -1;
+    }
+
     return 0;
+}
+
+
+/**
+ * @brief Turns the current task into a zombie, and settles what that means for its group and its children.
+ *
+ * The thread that finds every other thread of its group already dead is the last one out. It makes the group's
+ * leader reportable to wait4(), hands the group's children to init, and wakes wait4(). More than one thread can
+ * conclude it is the last, which is harmless, but because each publishes its own death before looking, at least one
+ * always does.
+ */
+void sched_exit(void) {
+
+    task_t* self = current_task;
+
+
+    scoped_lock(&current_cpu->sched_lock) {
+
+        self->status = TASK_STATUS_ZOMBIE;
+
+        if (self->tid != self->pid)
+            self->flags |= TASK_FLAGS_AUTOREAP;
+    }
+
+
+    bool alive = false;
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t != self && t->pid == self->pid && t->status != TASK_STATUS_ZOMBIE && t->status != TASK_STATUS_DEAD)
+                    alive = true;
+            }
+        }
+    }
+
+    if (alive)
+        return;
+
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t->ppid == self->pid)
+                    t->ppid = 1;
+
+                if (t->pid == self->pid && t->tid == t->pid)
+                    t->group_dead = true;
+            }
+        }
+    }
+
+
+    __sched_child_changed();
 }
 
 
@@ -686,26 +807,11 @@ int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
     DEBUG_ASSERT(info);
 
 
-    if (unlikely(current_task->status == TASK_STATUS_ZOMBIE)) {
+    if (unlikely(current_task->status == TASK_STATUS_ZOMBIE || current_task->status == TASK_STATUS_DEAD)) {
         return 0;
     }
 
-
-    bool pending = false;
-
-    scoped_lock(&current_task->sigqueue.lock) {
-
-        for (struct queue_element* e = current_task->sigqueue.head; e; e = e->next) {
-
-            if (e->element && ((siginfo_t*)e->element)->si_signo == sig) {
-
-                pending = true;
-                break;
-            }
-        }
-    }
-
-    if (pending) {
+    if (__sigqueue_holds(&current_task->sigqueue, sig)) {
         return 0;
     }
 

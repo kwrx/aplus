@@ -199,7 +199,7 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
 
     o->vm_stack = t->userspace.stack;
 
-    if (likely(t->address_space)) {
+    if (likely(t->address_space && t->status != TASK_STATUS_ZOMBIE)) {
 
         o->vm_start   = t->address_space->brk.start;
         o->vm_end     = t->address_space->brk.end;
@@ -378,7 +378,7 @@ bool procfs_task_fd_exists(pid_t pid, int fd) {
 
                 bool open = false;
 
-                shared_ptr_access(t->fd, fds, {
+                shared_ptr_nullable_access(t->fd, fds, {
                     open = fds->descriptors[fd].ref != NULL;
                 });
 
@@ -419,7 +419,7 @@ size_t procfs_task_fd_list(pid_t pid, int* out, size_t max) {
 
                 size_t n = 0;
 
-                shared_ptr_access(t->fd, fds, {
+                shared_ptr_nullable_access(t->fd, fds, {
                     for (int i = 0; i < CONFIG_OPEN_MAX && n < max; i++) {
 
                         if (fds->descriptors[i].ref == NULL)
@@ -468,7 +468,7 @@ ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
 
                 ssize_t e = (errno = EBADF, -1);
 
-                shared_ptr_access(t->fd, fds, {
+                shared_ptr_nullable_access(t->fd, fds, {
                     if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
                         e = __inode_path(fds->descriptors[fd].ref->inode, root, buf, size);
                 });

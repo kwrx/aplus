@@ -337,8 +337,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     spinlock_init(&task->sched_lock);
 
 
-    task->next   = NULL;
-    task->parent = current_task;
+    task->next = NULL;
 
     task->start_time = arch_task_boot_ticks();
     task->ppid       = current_task->pid;
@@ -431,8 +430,7 @@ pid_t arch_task_spawn_init() {
 
 
 
-    task->next   = NULL;
-    task->parent = NULL;
+    task->next = NULL;
 
     task->start_time = arch_task_boot_ticks();
     task->ppid       = 0;
@@ -445,11 +443,6 @@ pid_t arch_task_spawn_init() {
     spinlock_init(&task->lock);
     spinlock_init(&task->sched_lock);
 
-
-
-    if (current_cpu->id != SMP_CPU_BOOTSTRAP_ID) {
-        task->parent = core->bsp.sched_running;
-    }
 
 
     current_cpu->sched_running = task;
@@ -569,8 +562,7 @@ task_t* arch_task_spawn_idle(void) {
 
 
 
-    task->next   = NULL;
-    task->parent = NULL;
+    task->next = NULL;
 
     task->start_time = arch_task_boot_ticks();
     task->ppid       = 0;
@@ -629,7 +621,8 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
         CPU_SET(i, &task->affinity);
     }
 
-    task->pid = current_task->tid;
+    task->pid    = current_task->tid;
+    task->flags |= TASK_FLAGS_KTHREAD;
 
 
 
@@ -669,8 +662,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
     spinlock_init(&task->sched_lock);
 
 
-    task->next   = NULL;
-    task->parent = current_task;
+    task->next = NULL;
 
     strncpy(task->comm, name, TASK_COMM_LEN - 1);
     task->comm[TASK_COMM_LEN - 1] = '\0';
@@ -794,9 +786,47 @@ long arch_task_context_get(task_t* task, int options) {
 }
 
 
+/**
+ * @brief Asks whether the current cpu is executing on a task's kernel stack.
+ *
+ * Only the kernel stack is checked: the stack a kernel thread runs on sits inside its task, and kernel threads
+ * never exit.
+ *
+ * @param task The task.
+ * @return true if the stack pointer lies within the task's kernel stack.
+ */
+bool arch_task_stack_in_use(const task_t* task) {
+
+    DEBUG_ASSERT(task);
+
+    uintptr_t sp  = (uintptr_t)__builtin_frame_address(0);
+    uintptr_t top = (uintptr_t)task->kstack;
+
+    return top && sp < top && sp >= top - KERNEL_SYSCALL_STACKSIZE;
+}
+
+
+/**
+ * @brief Frees a task and everything it still owns: its stacks and frame, queued signals, futex registrations, and
+ *        the argv of a kernel thread.
+ *
+ * @param task The task, which no cpu is running or executing on the stack of any more.
+ */
 void arch_task_destroy(task_t* task) {
 
     DEBUG_ASSERT(task);
+
+
+    siginfo_t* siginfo;
+
+    while ((siginfo = queue_pop(&task->sigqueue)) != NULL)
+        kfree(siginfo);
+
+    while ((siginfo = queue_pop(&task->sigpending)) != NULL)
+        kfree(siginfo);
+
+    if ((task->flags & TASK_FLAGS_KTHREAD) && task->argv)
+        kfree(task->argv);
 
     if (task->frame) {
         kfree(task->frame);

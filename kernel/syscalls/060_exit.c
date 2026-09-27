@@ -22,6 +22,7 @@
  */
 
 #include <fcntl.h>
+#include <stdatomic.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -51,12 +52,72 @@
  */
 
 /**
+ * @brief Releases the descriptors, filesystem context, signal handlers and address space of the calling task.
+ *
+ * Each is unpublished under the run-queue lock, which is what other cpus hold while they read them, and released only
+ * once that lock is dropped. The task moves onto the kernel address space before giving up its own, so that no cpu is
+ * ever left running on page tables freed by another.
+ */
+static void __exit_release(void) {
+
+    __typeof__(current_task->fd) fd           = NULL;
+    __typeof__(current_task->fs) fs           = NULL;
+    __typeof__(current_task->sighand) sighand = NULL;
+
+    vmm_address_space_t* space  = NULL;
+    vmm_address_space_t* kspace = &core->bsp.address_space;
+
+    atomic_fetch_add(&kspace->refcount, 1);
+
+
+    scoped_lock(&current_cpu->sched_lock) {
+
+        fd      = current_task->fd;
+        fs      = current_task->fs;
+        sighand = current_task->sighand;
+        space   = current_task->address_space;
+
+        current_task->fd            = NULL;
+        current_task->fs            = NULL;
+        current_task->sighand       = NULL;
+        current_task->address_space = kspace;
+    }
+
+    arch_task_switch_address_space(kspace);
+
+
+    if (fd) {
+
+        shared_ptr_free_with_dtor(fd, fds, {
+            for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+
+                if (!fds->descriptors[i].ref)
+                    continue;
+
+                fd_remove(fds->descriptors[i].ref, true);
+
+                fds->descriptors[i].ref   = NULL;
+                fds->descriptors[i].flags = 0;
+            }
+        });
+    }
+
+    if (fs)
+        shared_ptr_free(fs);
+
+    if (sighand)
+        shared_ptr_free(sighand);
+
+    if (space)
+        arch_vmm_free_address_space(space);
+}
+
+
+/**
  * @brief Ends the calling task, publishing its exit status and releasing everything it holds.
  *
- * @param status The status a waiter will be handed.
- * @return Does not return to the caller.
- *
- * @todo SIGCHLD is not sent to the parent yet.
+ * @param status The status a waiter will be handed, or a wait status with bit 31 set.
+ * @return 0; the task is rescheduled away and never runs again.
  */
 
 SYSCALL(
@@ -71,55 +132,15 @@ SYSCALL(
 
 
 #if DEBUG_LEVEL_TRACE
-        kprintf("exit: task %d (%s) %s with %X\n", current_task->tid, current_task->argv[0], WIFSTOPPED(current_task->exit.value) ? "stopped" : "exited", current_task->exit.value & 0xFFFF);
+        kprintf("exit: task %d (%s) exited with %X\n", current_task->tid, current_task->argv[0], current_task->exit.value & 0xFFFF);
 #endif
 
 
-        const long exit_status = (WIFSTOPPED(current_task->exit.value)) ? TASK_STATUS_STOP : TASK_STATUS_ZOMBIE;
+        __exit_release();
 
+        do_vfork_release();
 
-        if (exit_status != TASK_STATUS_STOP) {
-
-            shared_ptr_free_with_dtor(current_task->fd, fds, {
-                for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
-
-                    if (!fds->descriptors[i].ref)
-                        continue;
-
-                    fd_remove(fds->descriptors[i].ref, true);
-
-                    fds->descriptors[i].ref   = NULL;
-                    fds->descriptors[i].flags = 0;
-                }
-            });
-
-
-            shared_ptr_free(current_task->fs);
-            shared_ptr_free(current_task->sighand);
-
-            arch_vmm_free_address_space(current_task->address_space);
-
-            current_task->fd            = NULL;
-            current_task->fs            = NULL;
-            current_task->sighand       = NULL;
-            current_task->address_space = NULL;
-
-            do_vfork_release();
-        }
-
-
-        current_task->status = exit_status;
-
-        list_each(current_task->wait_queue, q) {
-
-            if (exit_status == TASK_STATUS_STOP && !(q->wait_options & WUNTRACED))
-                continue;
-
-#if DEBUG_LEVEL_TRACE
-            kprintf("exit: waking up waiter task(%d) for task(%d)\n", q->tid, current_task->tid);
-#endif
-            thread_wake(q);
-        }
+        sched_exit();
 
 
         thread_restart_sched(current_task);

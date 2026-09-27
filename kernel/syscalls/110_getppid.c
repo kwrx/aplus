@@ -51,9 +51,5 @@ SYSCALL(
         DEBUG_ASSERT(current_cpu);
         DEBUG_ASSERT(current_task);
 
-        if (likely(current_task->parent)) {
-            return current_task->parent->pid;
-        } else {
-            return current_task->pid;
-        }
+        return current_task->ppid;
     });

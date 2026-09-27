@@ -314,12 +314,17 @@ SYSCALL(
         uintptr_t phdr_addr = 0;
 
 
+        vmm_address_space_t* new_space = arch_vmm_create_address_space(current_space, ARCH_VMM_CLONE_NEW_SPACE);
+
+        new_space->brk.start = ~0UL;
+        new_space->brk.end   = 0UL;
+
+        scoped_lock(&current_cpu->sched_lock) {
+            current_task->address_space = new_space;
+        }
+
+
         scoped_lock(&current_task->lock) {
-
-            current_task->address_space = arch_vmm_create_address_space(current_task->address_space, ARCH_VMM_CLONE_NEW_SPACE);
-
-            current_task->address_space->brk.start = ~0UL;
-            current_task->address_space->brk.end   = 0UL;
 
             arch_task_switch_address_space(current_task->address_space);
 
