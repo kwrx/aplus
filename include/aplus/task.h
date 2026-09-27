@@ -177,7 +177,6 @@ struct kclone_args {
 struct sighand {
 
     struct ksigaction action[_NSIG];
-    sigset_t sigmask;
     size_t refcount;
 };
 
@@ -345,6 +344,9 @@ typedef struct task {
     queue_t sigqueue;
     queue_t sigpending;
 
+    /** @brief The signals this thread blocks, changed only through sched_sigmask(). */
+    sigset_t sigmask;
+
 
     struct {
 
@@ -500,6 +502,7 @@ void sched_requeue(task_t*);
 void sched_exit(void);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 int sched_fault_sigqueueinfo(int sig, siginfo_t*);
+void sched_sigmask(const sigset_t*);
 size_t sched_nprocs(void);
 pid_t sched_lastpid(void);
 

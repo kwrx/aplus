@@ -82,10 +82,8 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
     sigcontext_frame_t* sigcontext = (sigcontext_frame_t*)current_task->sstack;
 
 
-    shared_ptr_access(current_task->sighand, sighand, {
-        memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
-        memcpy(&sigcontext->mask, &sighand->sigmask, sizeof(sigset_t));
-    });
+    memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
+    memcpy(&sigcontext->mask, &current_task->sigmask, sizeof(sigset_t));
 
 
 
@@ -116,22 +114,25 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
         FRAME(current_cpu)->cs    = USER_CS | 3;
         FRAME(current_cpu)->ss    = USER_DS | 3;
         FRAME(current_cpu)->flags = 0x202;
-
-        sigset_t handler_mask;
-
-        memset(&handler_mask, 0, sizeof(sigset_t));
-        memcpy(&handler_mask, &action->sa_mask, sizeof(action->sa_mask));
-
-        for (size_t i = 0; i < SIGSET_WORDS; i++) {
-            sighand->sigmask.__bits[i] |= handler_mask.__bits[i];
-        }
-
-        if (!(action->sa_flags & SA_NODEFER)) {
-            sigset_add(&sighand->sigmask, siginfo->si_signo);
-        }
     });
 
     DEBUG_ASSERT(action);
+
+
+    sigset_t handler_mask;
+
+    memset(&handler_mask, 0, sizeof(sigset_t));
+    memcpy(&handler_mask, &action->sa_mask, sizeof(action->sa_mask));
+
+    for (size_t i = 0; i < SIGSET_WORDS; i++) {
+        handler_mask.__bits[i] |= current_task->sigmask.__bits[i];
+    }
+
+    if (!(action->sa_flags & SA_NODEFER)) {
+        sigset_add(&handler_mask, siginfo->si_signo);
+    }
+
+    sched_sigmask(&handler_mask);
 
 
 #if defined(__x86_64__)
@@ -168,10 +169,12 @@ long arch_task_return_from_signal(void) {
 
     sigcontext_frame_t* sigcontext = (sigcontext_frame_t*)current_task->sstack;
 
-    shared_ptr_access(current_task->sighand, sighand, {
-        memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
-        memcpy(&sighand->sigmask, &sigcontext->mask, sizeof(sigset_t));
-    });
+    sigset_t mask;
+
+    memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
+    memcpy(&mask, &sigcontext->mask, sizeof(sigset_t));
+
+    sched_sigmask(&mask);
 
     fpu_restore(&sigcontext->fpuregs[0]);
 
@@ -310,6 +313,8 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     queue_init(&task->sigqueue);
     queue_init(&task->sigpending);
 
+    memcpy(&task->sigmask, &current_task->sigmask, sizeof(sigset_t));
+
 
     task->ctty = shared_ptr_new(struct pty*, GFP_KERNEL);
 
@@ -418,7 +423,7 @@ pid_t arch_task_spawn_init() {
         fs->umask          = 0;
     });
 
-    shared_ptr_access(task->sighand, sighand, { memset(&sighand->sigmask, 0xFF, sizeof(sigset_t)); });
+    memset(&task->sigmask, 0xFF, sizeof(sigset_t));
 
 
 
@@ -550,7 +555,7 @@ task_t* arch_task_spawn_idle(void) {
         fs->umask          = 0;
     });
 
-    shared_ptr_access(task->sighand, sighand, { memset(&sighand->sigmask, 0xFF, sizeof(sigset_t)); });
+    memset(&task->sigmask, 0xFF, sizeof(sigset_t));
 
 
 
@@ -635,7 +640,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
     task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
     task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
 
-    shared_ptr_access(task->sighand, sighand, { memset(&sighand->sigmask, 0xFF, sizeof(sigset_t)); });
+    memset(&task->sigmask, 0xFF, sizeof(sigset_t));
 
 
     memcpy(&task->rlimits, &current_task->rlimits, sizeof(struct rlimit) * RLIM_NLIMITS);

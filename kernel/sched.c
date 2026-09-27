@@ -634,7 +634,8 @@ void sched_requeue(task_t* task) {
 /**
  * @brief Queues a signal on every task matching a process group, a process or a thread.
  *
- * Zombies are not matched, and SIGCONT and SIGKILL resume a stopped task before anything is queued.
+ * Zombies are not matched. SIGCONT and SIGKILL resume a stopped task before anything is queued, and a
+ * standard signal already pending on a thread that blocks it is not queued twice.
  *
  * @param pgrp The process group to match, or -1 not to narrow by it.
  * @param pid The process to match, or -1 not to narrow by it.
@@ -687,14 +688,11 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
 
 
                 bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
-                bool blocked     = false;
+                bool blocked     = !unstoppable && sigset_is_member(&tmp->sigmask, sig);
 
                 void (*handler)(int) = SIG_DFL;
 
-                shared_ptr_nullable_access(tmp->sighand, sighand, {
-                    handler = sighand->action[sig].handler;
-                    blocked = !unstoppable && sigset_is_member(&sighand->sigmask, sig);
-                });
+                shared_ptr_nullable_access(tmp->sighand, sighand, { handler = sighand->action[sig].handler; });
 
 
                 if ((sig == SIGCONT || sig == SIGKILL) && tmp->status == TASK_STATUS_STOP) {
@@ -715,6 +713,9 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                     continue;
 
                 if (!unstoppable && handler == SIG_IGN)
+                    continue;
+
+                if (blocked && sig < 32 && __sigqueue_holds(&tmp->sigpending, sig))
                     continue;
 
                 if (tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
@@ -753,6 +754,39 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
     }
 
     return 0;
+}
+
+
+/**
+ * @brief Replaces the current thread's blocked-signal mask, and makes deliverable the pending signals it unblocks.
+ *
+ * The run-queue lock is held throughout, as it is while a signal is queued, so a signal cannot be parked as blocked
+ * just after the move that would have released it.
+ *
+ * @param set The new mask. SIGKILL and SIGSTOP are never blocked.
+ */
+void sched_sigmask(const sigset_t* set) {
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(set);
+
+    scoped_lock(&current_cpu->sched_lock) {
+
+        memcpy(&current_task->sigmask, set, sizeof(sigset_t));
+
+        sigset_del(&current_task->sigmask, SIGKILL);
+        sigset_del(&current_task->sigmask, SIGSTOP);
+
+        for (size_t i = current_task->sigpending.size; i > 0; i--) {
+
+            siginfo_t* info = (siginfo_t*)queue_pop(&current_task->sigpending);
+
+            if (!info)
+                break;
+
+            queue_enqueue(sigset_is_member(&current_task->sigmask, info->si_signo) ? &current_task->sigpending : &current_task->sigqueue, info, 0);
+        }
+    }
 }
 
 
@@ -847,9 +881,12 @@ int sched_fault_sigqueueinfo(int sig, siginfo_t* info) {
         if (sighand->action[sig].handler == SIG_IGN || sighand->action[sig].handler == SIG_ERR) {
             sighand->action[sig].handler = SIG_DFL;
         }
-
-        sigset_del(&sighand->sigmask, sig);
     });
+
+    sigset_t mask = current_task->sigmask;
+
+    sigset_del(&mask, sig);
+    sched_sigmask(&mask);
 
 
     siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
