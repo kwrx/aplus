@@ -80,20 +80,19 @@ int poll_scan(int fd, short events, short* revents) {
     *revents = 0;
 
 
-    if (fd >= CONFIG_OPEN_MAX)
-        return *revents = POLLNVAL, 0;
+    struct file* file = fd_get((unsigned int)fd, NULL);
 
+    if (file == NULL || file->inode == NULL) {
 
-    shared_ptr_access(current_task->fd, fds, {
-        if (fds->descriptors[fd].ref == NULL || fds->descriptors[fd].ref->inode == NULL) {
+        *revents = POLLNVAL;
 
-            *revents = POLLNVAL;
+    } else {
 
-        } else {
+        *revents = vfs_poll(file->inode, events);
+    }
 
-            *revents = vfs_poll(fds->descriptors[fd].ref->inode, events);
-        }
-    });
+    if (file)
+        fd_put(file);
 
     return 0;
 }
@@ -119,44 +118,30 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
     *armed = false;
 
 
-    if (fd >= CONFIG_OPEN_MAX)
+    struct file* file = fd_get((unsigned int)fd, NULL);
+
+    if (file == NULL)
         return 0;
 
 
-    int e = 0;
+    if (file->inode != NULL) {
 
-    shared_ptr_access(current_task->fd, fds, {
-        if (fds->descriptors[fd].ref != NULL && fds->descriptors[fd].ref->inode != NULL) {
+        if (socket_poll_arm(file->inode, events, timeout) > 0) {
 
-            inode_t* inode = fds->descriptors[fd].ref->inode;
+            *armed = true;
 
-            bool handled = false;
+        } else {
 
-
-            int r = socket_poll_arm(inode, events, timeout);
-
-            if (r != 0) {
-
-                handled = true;
-
-                if (r > 0)
-                    *armed = true;
-                else
-                    e = r;
-            }
-
-
-            if (!handled) {
-
-                shared_ptr_nullable_access(inode->ev, ev, {
-                    futex_wait(current_task, &ev->futex, ev->futex, timeout);
-                    *armed = true;
-                });
-            }
+            shared_ptr_nullable_access(file->inode->ev, ev, {
+                futex_wait(current_task, &ev->futex, ev->futex, timeout);
+                *armed = true;
+            });
         }
-    });
+    }
 
-    return e;
+    fd_put(file);
+
+    return 0;
 }
 
 

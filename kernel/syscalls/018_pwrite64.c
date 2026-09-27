@@ -79,27 +79,30 @@ SYSCALL(
 
         ssize_t e = 0;
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (unlikely(!fds->descriptors[fd].ref))
-                return -EBADF;
+        int flags         = 0;
+        struct file* file = fd_get(fd, &flags);
 
-            if (unlikely(!((fds->descriptors[fd].flags & O_WRONLY) || (fds->descriptors[fd].flags & O_RDWR))))
-                return -EPERM;
+        if (unlikely(!file))
+            return -EBADF;
+
+        if (unlikely(!((flags & O_WRONLY) || (flags & O_RDWR)))) {
+            fd_put(file);
+            return -EPERM;
+        }
 
 
+        uio_lock(buf, count);
 
-            uio_lock(buf, count);
+        scoped_lock(&file->lock) {
+            if ((e = vfs_write(file->inode, buf, pos, count)) <= 0)
+                break;
 
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
-                if ((e = vfs_write(fds->descriptors[fd].ref->inode, buf, pos, count)) <= 0)
-                    break;
+            current_task->iostat.write_bytes += (uint64_t)e;
+        }
 
-                current_task->iostat.write_bytes += (uint64_t)e;
-            }
+        uio_unlock(buf, count);
 
-            uio_unlock(buf, count);
-        });
-
+        fd_put(file);
 
 
         if (e < 0)

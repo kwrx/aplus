@@ -425,18 +425,15 @@ SYSCALL(
 
 
         // * Close all file descriptors marked as close-on-exec
-        shared_ptr_access(current_task->fd, fds, {
-            for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+        for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
 
-                if (!fds->descriptors[i].ref)
-                    continue;
+            bool cloexec = false;
 
-                if (!fds->descriptors[i].close_on_exec)
-                    continue;
+            shared_ptr_access(current_task->fd, fds, { cloexec = fds->descriptors[i].ref && fds->descriptors[i].close_on_exec; });
 
+            if (cloexec)
                 sys_close(i);
-            }
-        });
+        }
 
         // * Reset signal handlers
         shared_ptr_access(current_task->sighand, sighand, {

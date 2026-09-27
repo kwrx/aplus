@@ -56,28 +56,23 @@
 
 SYSCALL(
     16, ioctl, long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg) {
+        struct file* file = fd_get(fd, NULL);
 
-        {
-
-            if (unlikely(fd >= CONFIG_OPEN_MAX))
-                return -EBADF;
-
-
-            int e = 0;
-
-            shared_ptr_access(current_task->fd, fds, {
-                if (unlikely(!fds->descriptors[fd].ref))
-                    return -EBADF;
-
-                scoped_lock(&fds->descriptors[fd].ref->lock) {
-                    e = vfs_ioctl(fds->descriptors[fd].ref->inode, cmd, (void*)arg);
-                }
-            });
+        if (unlikely(!file))
+            return -EBADF;
 
 
-            if (e < 0)
-                return -errno;
+        int e = 0;
 
-            return e;
+        scoped_lock(&file->lock) {
+            e = vfs_ioctl(file->inode, cmd, (void*)arg);
         }
+
+        fd_put(file);
+
+
+        if (e < 0)
+            return -errno;
+
+        return e;
     });

@@ -31,6 +31,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/memory.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 
@@ -86,24 +87,24 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
 }
 
 
+/**
+ * @brief Drops a reference to an open file, releasing its slot and closing it outside filetable_lock on the last one.
+ *
+ * @param fd The file.
+ * @param close Whether the last reference also closes the inode.
+ */
 void fd_remove(struct file* fd, bool close) {
 
     DEBUG_ASSERT(fd);
     DEBUG_ASSERT(filetable);
 
 
+    inode_t* inode = NULL;
+
     scoped_lock(&filetable_lock) {
         if (atomic_fetch_sub(&fd->refcount, 1) == 1) {
 
-            if (close) {
-
-                inode_t* inode = fd->inode;
-
-                vfs_close(inode);
-
-                if (inode && (inode->flags & INODE_FLAGS_ANONYMOUS))
-                    vfs_anonymous_free(inode);
-            }
+            inode = fd->inode;
 
             fd->inode    = NULL;
             fd->position = 0;
@@ -120,15 +121,96 @@ void fd_remove(struct file* fd, bool close) {
             }
         }
     }
+
+
+    if (!close || !inode)
+        return;
+
+    vfs_close(inode);
+
+    if (inode->flags & INODE_FLAGS_ANONYMOUS)
+        vfs_anonymous_free(inode);
 }
 
 
+/**
+ * @brief Takes another reference to an open file the caller already holds one to.
+ *
+ * @param file The file.
+ */
 void fd_ref(struct file* file) {
 
     DEBUG_ASSERT(file);
     DEBUG_ASSERT(filetable);
+    DEBUG_ASSERT(atomic_load(&file->refcount) > 0);
 
-    scoped_lock(&filetable_lock) {
-        atomic_fetch_add(&file->refcount, 1);
+    atomic_fetch_add(&file->refcount, 1);
+}
+
+
+/**
+ * @brief Takes a reference to the open file behind one of the caller's descriptors, leaving the table unlocked.
+ *
+ * @param fd The descriptor.
+ * @param flags Receives the descriptor's flags, or NULL.
+ * @return The file, or NULL if @p fd is not open.
+ */
+struct file* fd_get(unsigned int fd, int* flags) {
+
+    DEBUG_ASSERT(current_task);
+
+
+    if (unlikely(fd >= CONFIG_OPEN_MAX))
+        return NULL;
+
+
+    struct file* file = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+        if (fds->descriptors[fd].ref != NULL) {
+
+            file = fds->descriptors[fd].ref;
+
+            if (flags)
+                *flags = fds->descriptors[fd].flags;
+
+            fd_ref(file);
+        }
+    });
+
+    return file;
+}
+
+
+/**
+ * @brief Drops a reference taken with fd_get().
+ *
+ * @param file The file.
+ */
+void fd_put(struct file* file) {
+
+    fd_remove(file, true);
+}
+
+
+/**
+ * @brief Closes every descriptor of a table that nothing references any more.
+ *
+ * @param fds The table.
+ */
+void fd_close_all(struct fd* fds) {
+
+    DEBUG_ASSERT(fds);
+
+    for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+
+        if (!fds->descriptors[i].ref)
+            continue;
+
+        fd_remove(fds->descriptors[i].ref, true);
+
+        fds->descriptors[i].ref   = NULL;
+        fds->descriptors[i].flags = 0;
     }
 }
+

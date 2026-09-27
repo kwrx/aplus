@@ -54,22 +54,29 @@ SYSCALL(
             return -EBADF;
 
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (unlikely(!fds->descriptors[fd].ref))
-                return -EBADF;
+        struct file* file = fd_get(fd, NULL);
+
+        if (unlikely(!file))
+            return -EBADF;
 
 
-            struct stat st = {0};
+        long e = 0;
 
-            if (vfs_getattr(fds->descriptors[fd].ref->inode, &st) < 0)
-                return -errno;
+        struct stat st = {0};
+
+        if (vfs_getattr(file->inode, &st) < 0) {
+
+            e = -errno;
+
+        } else {
 
             shared_ptr_access(current_task->fs, fs, { st.st_mode = ((st.st_mode & ~07777) | (mode & 07777)) & ~fs->umask; });
 
-            if (vfs_setattr(fds->descriptors[fd].ref->inode, &st) < 0)
-                return -errno;
-        });
+            if (vfs_setattr(file->inode, &st) < 0)
+                e = -errno;
+        }
 
+        fd_put(file);
 
-        return 0;
+        return e;
     });

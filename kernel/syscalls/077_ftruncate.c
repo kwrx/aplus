@@ -56,14 +56,16 @@ SYSCALL(
 
         int e = 0;
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (unlikely(!fds->descriptors[fd].ref))
-                return -EBADF;
+        struct file* file = fd_get(fd, NULL);
 
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
-                e = vfs_truncate(fds->descriptors[fd].ref->inode, length);
-            }
-        });
+        if (unlikely(!file))
+            return -EBADF;
+
+        scoped_lock(&file->lock) {
+            e = vfs_truncate(file->inode, length);
+        }
+
+        fd_put(file);
 
 
         if (e < 0)

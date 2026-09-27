@@ -171,6 +171,8 @@ struct superblock {
 };
 
 
+struct fd;
+
 struct file {
 
     inode_t* inode;
@@ -258,6 +260,9 @@ void fd_init(void);
 void fd_ref(struct file*);
 void fd_remove(struct file*, bool);
 struct file* fd_append(inode_t*, off_t, int);
+struct file* fd_get(unsigned int, int*);
+void fd_put(struct file*);
+void fd_close_all(struct fd*);
 
 
 // kernel/fs/path.c

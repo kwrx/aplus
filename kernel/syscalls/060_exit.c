@@ -109,18 +109,7 @@ static void __exit_release(void) {
 
     if (fd) {
 
-        shared_ptr_free_with_dtor(fd, fds, {
-            for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
-
-                if (!fds->descriptors[i].ref)
-                    continue;
-
-                fd_remove(fds->descriptors[i].ref, true);
-
-                fds->descriptors[i].ref   = NULL;
-                fds->descriptors[i].flags = 0;
-            }
-        });
+        shared_ptr_free_with_dtor(fd, fds, { fd_close_all(fds); });
     }
 
     if (fs)
