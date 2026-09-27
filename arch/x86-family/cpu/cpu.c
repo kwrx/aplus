@@ -64,6 +64,7 @@ __percpu void arch_cpu_init(cpuid_t index) {
         core->cpu.cores[index].address_space.flags = VMM_SPACE_STATIC;
         atomic_store(&core->cpu.cores[index].address_space.refcount, 0);
         spinlock_init_with_flags(&core->cpu.cores[index].address_space.lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+        spinlock_init_with_flags(&core->cpu.cores[index].address_space.tlb.lock, SPINLOCK_FLAGS_CPU_OWNER);
     }
 
 
@@ -76,6 +77,7 @@ __percpu void arch_cpu_init(cpuid_t index) {
 
     spinlock_init_with_flags(&core->cpu.cores[index].global_lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
     spinlock_init_with_flags(&core->cpu.cores[index].sched_lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+    spinlock_init_with_flags(&core->cpu.cores[index].tlb.lock, SPINLOCK_FLAGS_CPU_OWNER);
 
     core->cpu.cores[index].sched_count = 0;
 

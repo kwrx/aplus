@@ -65,6 +65,7 @@ long shm_get(key_t key, size_t size, int flags);
 long shm_attach(int id, uintptr_t addr, int flags);
 long shm_detach(uintptr_t addr);
 long shm_control(int id, int cmd, struct shmid_ds* buf);
+void shm_release(int id);
 
 
 /**

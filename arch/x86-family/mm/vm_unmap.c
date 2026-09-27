@@ -73,6 +73,8 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
 
 
 
+    vmm_tlb_batch_t* batches = NULL;
+
     spinlock_lock(&space->lock);
 
     for (; s < e; s += pagesize) {
@@ -96,7 +98,7 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
             }
 
             if (*d & X86_MMU_PG_AP_PFB)
-                __free_frame(*d & X86_MMU_ADDRESS_MASK, pagesize);
+                x86_vmm_tlb_collect(&batches, *d & X86_MMU_ADDRESS_MASK, pagesize);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -115,7 +117,12 @@ __nonnull(1) uintptr_t arch_vmm_unmap(vmm_address_space_t* space, uintptr_t virt
             space->size = 0;
     }
 
+    const uint64_t gen = x86_vmm_tlb_bump(space);
+
     spinlock_unlock(&space->lock);
+
+
+    x86_vmm_tlb_retire(space, batches, gen);
 
     return virtaddr;
 }

@@ -227,6 +227,9 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 
 void arch_vmm_free_address_space(vmm_address_space_t* space);
 
+void arch_vmm_reclaim(vmm_address_space_t* space) __nonnull(1);
+void arch_vmm_release_shm(vmm_address_space_t* space, int id) __nonnull(1);
+
 
 
 long __arch_syscall0(unsigned long);

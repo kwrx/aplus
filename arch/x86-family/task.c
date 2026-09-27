@@ -55,13 +55,13 @@ struct pty;
 
 
 
+/**
+ * @brief Loads an address space on this CPU, or reloads the current task's when given NULL.
+ *
+ * @param address_space The address space, or NULL.
+ */
 void arch_task_switch_address_space(vmm_address_space_t* address_space) {
-
-    if (unlikely(!address_space)) {
-        x86_set_cr3(x86_get_cr3());
-    } else {
-        x86_set_cr3(address_space->pm);
-    }
+    x86_vmm_tlb_load(address_space ? address_space : current_task->address_space);
 }
 
 
@@ -234,11 +234,9 @@ void arch_task_switch(task_t* prev, task_t* next) {
         current_cpu->ustack = next->ustack;
 
         fpu_switch(prev->fpu, next->fpu);
-
-        if (unlikely(!prev->address_space || prev->address_space->pm != next->address_space->pm)) {
-            arch_task_switch_address_space(next->address_space);
-        }
     }
+
+    x86_vmm_tlb_sync(next->address_space);
 
 
 

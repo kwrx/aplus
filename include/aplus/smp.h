@@ -93,6 +93,15 @@ typedef struct cpu {
 
     vmm_address_space_t address_space;
 
+    /* The address space loaded on this CPU, and the generation of it the TLB holds nothing older than. */
+    struct {
+
+        vmm_address_space_t* space;
+        uint64_t gen;
+        spinlock_t lock;
+
+    } tlb;
+
     task_t* sched_running;
     task_t* sched_queue;
     task_t* sched_idle;

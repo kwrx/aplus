@@ -499,6 +499,8 @@ void schedule(int resched) {
             sched_bury(current_cpu, prev_task);
     }
 
+    arch_vmm_reclaim(current_task->address_space);
+
     do_signals();
 }
 
