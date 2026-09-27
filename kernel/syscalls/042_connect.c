@@ -59,8 +59,14 @@ SYSCALL(
 
         struct unix_sock* us;
 
-        if ((us = unix_sock_from_fd(fd)) != NULL)
-            return unix_connect(us, sockaddr, socklen);
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            long e = unix_connect(us, sockaddr, socklen);
+
+            unix_sock_put(us);
+
+            return e;
+        }
 
 
         if (unlikely(socklen == 0 || socklen > SOCKADDR_MAX))

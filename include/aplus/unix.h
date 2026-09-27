@@ -117,9 +117,14 @@ struct unix_sock {
 __BEGIN_DECLS
 
 /**
- * @brief Resolves a descriptor to a local socket, or NULL when it is not one.
+ * @brief Resolves a descriptor to a local socket and takes a reference to it, or NULL when it is not one.
  */
 struct unix_sock* unix_sock_from_fd(int fd);
+
+/**
+ * @brief Drops a reference unix_sock_from_fd() took.
+ */
+void unix_sock_put(struct unix_sock* sock);
 
 long unix_socket(int type, int protocol);
 long unix_socketpair(int type, int protocol, int* sv);

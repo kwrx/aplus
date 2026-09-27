@@ -59,6 +59,8 @@ SYSCALL(
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
 
+            unix_sock_put(us);
+
             if (unlikely(sockaddr != NULL))
                 return -EISCONN;
 

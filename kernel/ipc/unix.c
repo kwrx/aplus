@@ -289,6 +289,7 @@ static int sockfs_close(inode_t* inode) {
     struct unix_sock* peer    = NULL;
     struct unix_sock** queued = NULL;
     size_t queued_len         = 0;
+    inode_t* bound            = NULL;
 
     scoped_lock(&sock->lock) {
 
@@ -301,11 +302,19 @@ static int sockfs_close(inode_t* inode) {
         sock->backlog   = NULL;
         sock->backlog_len = 0;
 
-        if (sock->bound) {
+        bound       = sock->bound;
+        sock->bound = NULL;
+    }
 
-            sock->bound->userdata = NULL;
-            sock->bound           = NULL;
+
+    if (bound) {
+
+        scoped_lock(&bound->lock) {
+            if (bound->userdata == sock)
+                bound->userdata = NULL;
         }
+
+        vfs_inode_put(bound);
     }
 
 
@@ -460,11 +469,41 @@ struct unix_sock* unix_sock_from_fd(int fd) {
     shared_ptr_access(current_task->fd, fds, {
         if (fds->descriptors[fd].ref != NULL && fds->descriptors[fd].ref->inode != NULL && fds->descriptors[fd].ref->inode->sb == &sockfs_superblock) {
 
-            sock = (struct unix_sock*)fds->descriptors[fd].ref->inode->userdata;
+            sock = __unix_get((struct unix_sock*)fds->descriptors[fd].ref->inode->userdata);
         }
     });
 
     return sock;
+}
+
+
+void unix_sock_put(struct unix_sock* sock) {
+
+    __unix_put(sock);
+}
+
+
+/**
+ * @brief Copies the name the socket is bound to, or an empty string when it is not bound.
+ *
+ * @param sock The socket, or NULL.
+ * @param out Receives the name.
+ * @param size The size of @p out.
+ */
+static void __unix_bound_name(struct unix_sock* sock, char* out, size_t size) {
+
+    out[0] = '\0';
+
+    if (!sock)
+        return;
+
+    scoped_lock(&sock->lock) {
+
+        if (sock->bound) {
+            strncpy(out, sock->bound->name, size - 1);
+            out[size - 1] = '\0';
+        }
+    }
 }
 
 
@@ -667,15 +706,24 @@ long unix_bind(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -errno;
 
 
+    e = -EINVAL;
+
     scoped_lock(&sock->lock) {
 
-        node->userdata = sock;
+        if (unlikely(sock->state != UNIX_SOCK_UNBOUND))
+            break;
 
-        sock->bound = node;
+        scoped_lock(&node->lock) {
+            node->userdata = sock;
+        }
+
+        sock->bound = vfs_inode_get(node);
         sock->state = UNIX_SOCK_BOUND;
+
+        e = 0;
     }
 
-    return 0;
+    return e;
 }
 
 
@@ -749,43 +797,63 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
         return -ECONNREFUSED;
 
 
-    struct unix_sock* listener = (struct unix_sock*)node->userdata;
+    struct stat st;
 
-    if (unlikely(!listener || node->sb == &sockfs_superblock))
+    if (unlikely(node->sb == &sockfs_superblock || vfs_getattr(node, &st) < 0 || !S_ISSOCK(st.st_mode)))
         return -ECONNREFUSED;
 
-    if (unlikely(listener->state != UNIX_SOCK_LISTENING))
-        return -ECONNREFUSED;
 
-    if (unlikely(listener->type != sock->type))
-        return -EPROTOTYPE;
+    struct unix_sock* listener = NULL;
 
-
-    struct unix_sock* server = __unix_alloc(sock->type);
-
-    if (unlikely(!server))
-        return -ENOMEM;
-
-
-    scoped_lock(&listener->lock) {
-
-        if (unlikely(listener->backlog_len >= listener->backlog_cap)) {
-
-            __unix_put(server);
-            return -ECONNREFUSED;
-        }
-
-        server->peer  = __unix_get(sock);
-        sock->peer    = __unix_get(server);
-        server->state = UNIX_SOCK_CONNECTED;
-        sock->state   = UNIX_SOCK_CONNECTED;
-
-        listener->backlog[listener->backlog_len++] = server;
+    scoped_lock(&node->lock) {
+        listener = __unix_get((struct unix_sock*)node->userdata);
     }
 
-    __unix_wake(listener);
+    if (unlikely(!listener))
+        return -ECONNREFUSED;
 
-    return 0;
+
+    struct unix_sock* server = NULL;
+
+    if (unlikely(listener->state != UNIX_SOCK_LISTENING))
+        e = -ECONNREFUSED;
+    else if (unlikely(listener->type != sock->type))
+        e = -EPROTOTYPE;
+    else if (unlikely(!(server = __unix_alloc(sock->type))))
+        e = -ENOMEM;
+    else
+        e = -ECONNREFUSED;
+
+
+    if (server) {
+
+        scoped_lock(&listener->lock) {
+
+            if (unlikely(listener->state != UNIX_SOCK_LISTENING || listener->backlog_len >= listener->backlog_cap))
+                break;
+
+            server->peer  = __unix_get(sock);
+            sock->peer    = __unix_get(server);
+            server->state = UNIX_SOCK_CONNECTED;
+            sock->state   = UNIX_SOCK_CONNECTED;
+
+            listener->backlog[listener->backlog_len++] = server;
+            server = NULL;
+
+            e = 0;
+        }
+
+        if (server)
+            __unix_put(server);
+    }
+
+
+    if (e == 0)
+        __unix_wake(listener);
+
+    __unix_put(listener);
+
+    return e;
 }
 
 
@@ -845,9 +913,12 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags) {
 
     if (addr && len) {
 
+        char name[CONFIG_MAXNAMLEN];
+        __unix_bound_name(sock, name, sizeof(name));
+
         long e;
 
-        if ((e = __unix_addr_out(sock->bound ? sock->bound->name : "", addr, len)) < 0)
+        if ((e = __unix_addr_out(name, addr, len)) < 0)
             return e;
     }
 
@@ -917,7 +988,10 @@ long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len) {
 
     DEBUG_ASSERT(sock);
 
-    return __unix_addr_out(sock->bound ? sock->bound->name : "", addr, len);
+    char name[CONFIG_MAXNAMLEN];
+    __unix_bound_name(sock, name, sizeof(name));
+
+    return __unix_addr_out(name, addr, len);
 }
 
 
@@ -928,5 +1002,17 @@ long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len) {
     if (unlikely(sock->state != UNIX_SOCK_CONNECTED))
         return -ENOTCONN;
 
-    return __unix_addr_out(sock->peer && sock->peer->bound ? sock->peer->bound->name : "", addr, len);
+
+    struct unix_sock* peer = NULL;
+
+    scoped_lock(&sock->lock) {
+        peer = __unix_get(sock->peer);
+    }
+
+    char name[CONFIG_MAXNAMLEN];
+    __unix_bound_name(peer, name, sizeof(name));
+
+    __unix_put(peer);
+
+    return __unix_addr_out(name, addr, len);
 }

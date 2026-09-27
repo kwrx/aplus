@@ -67,8 +67,10 @@ SYSCALL(
 
             long e = unix_accept(us, sockaddr, (uint32_t*)socklen, flags);
 
-            if (e != -EAGAIN)
+            if (e != -EAGAIN) {
+                unix_sock_put(us);
                 return e;
+            }
 
 
             bool nonblock = !!(flags & O_NONBLOCK);
@@ -81,11 +83,14 @@ SYSCALL(
                 });
             }
 
-            if (nonblock)
+            if (nonblock) {
+                unix_sock_put(us);
                 return -EAGAIN;
+            }
 
 
             unix_sock_wait(us, seq);
+            unix_sock_put(us);
 
             thread_suspend(current_task);
             thread_restart_sched(current_task);
