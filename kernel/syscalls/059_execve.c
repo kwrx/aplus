@@ -95,8 +95,6 @@ struct execve_layout {
 
     uintptr_t stack;
     uintptr_t bottom;
-    uintptr_t sigstack;
-    uintptr_t siginfo;
 };
 
 
@@ -311,7 +309,7 @@ static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* 
 
 
 /**
- * @brief Lays out the strings, AT_RANDOM bytes, pointer vectors, signal stack and user stack of the program being started.
+ * @brief Lays out the strings, AT_RANDOM bytes, pointer vectors and user stack of the program being started.
  *
  * @param strings The arguments then the environment, one string after the other.
  * @param size Their total size.
@@ -328,15 +326,8 @@ static long __execve_stack(const char* strings, size_t size, size_t argc, size_t
 
     uintptr_t base      = 0;
     uintptr_t at_random = 0;
-    uintptr_t unused    = 0;
 
     if (__execve_sbrk(size, &base) < 0 || __execve_sbrk(sizeof(entropy), &at_random) < 0)
-        return -ENOMEM;
-
-    if (__execve_sbrk(SIGSTKSZ, &unused) < 0 || __execve_sbrk(0, &layout->sigstack) < 0)
-        return -ENOMEM;
-
-    if (__execve_sbrk(sizeof(siginfo_t), &layout->siginfo) < 0)
         return -ENOMEM;
 
     if (__execve_sbrk(current_task->rlimits[RLIMIT_STACK].rlim_cur, &layout->bottom) < 0 || __execve_sbrk(0, &layout->stack) < 0)
@@ -688,9 +679,9 @@ SYSCALL(
         __execve_name(strings, argc);
 
 
-        current_task->userspace.stack    = layout.stack;
-        current_task->userspace.sigstack = layout.sigstack;
-        current_task->userspace.siginfo  = (siginfo_t*)layout.siginfo;
+        current_task->userspace.stack = layout.stack;
+
+        memset(&current_task->userspace.altstack, 0, sizeof(current_task->userspace.altstack));
 
         arch_vmm_free_address_space(current_space);
 
@@ -709,7 +700,7 @@ SYSCALL(
 
 
 #if DEBUG_LEVEL_TRACE
-        kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) sigstack(0x%lX) stack(0x%lX) bottom(0x%lX) memory(%ld.%ld MB)\n", head.e_entry, current_task->tid, layout.sigstack, layout.stack, layout.bottom,
+        kprintf("sys_execve: entering on userspace at address(0x%lX) task(%d) stack(0x%lX) bottom(0x%lX) memory(%ld.%ld MB)\n", head.e_entry, current_task->tid, layout.stack, layout.bottom,
                 (pmm_get_used_memory() / 1024) / 1024, (pmm_get_used_memory() / 1024) % 1024);
 #endif
 

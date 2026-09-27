@@ -224,6 +224,9 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
     child->userspace.tid_address = (args->flags & CLONE_CHILD_CLEARTID) ? args->child_tid : 0;
 
+    if ((args->flags & (CLONE_VM | CLONE_VFORK)) == CLONE_VM)
+        memset(&child->userspace.altstack, 0, sizeof(child->userspace.altstack));
+
 
     if (args->flags & CLONE_FILES) {
         child->fd = shared_ptr_ref(current_task->fd);

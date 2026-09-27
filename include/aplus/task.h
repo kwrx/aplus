@@ -278,7 +278,7 @@ typedef struct task {
 
     void* frame;
     void* fpu;
-    void* sstack;
+    void* sigfpu;
     void* kstack;
     void* ustack;
     vmm_address_space_t* address_space;
@@ -361,8 +361,8 @@ typedef struct task {
 
         uintptr_t tid_address;
 
-        uintptr_t sigstack;
-        siginfo_t* siginfo;
+        /** @brief The alternate signal stack set with sigaltstack(2), or a zero size when there is none. */
+        stack_t altstack;
 
     } userspace;
 
@@ -435,22 +435,8 @@ typedef struct task {
         /** @brief The first attempt already started what the later ones only wait on, such as a connect(). */
         bool started;
 
-        //? The syscall a signal interrupted, snapshotted while the handler is being set up.
-        //? The fields above describe whatever the task is running *now*, and by the time
-        //? rt_sigreturn(2) executes that is rt_sigreturn itself -- restarting it from there
-        //? restarts sigreturn, which never terminates. One slot, like the deadline and the
-        //? mask: a signal taken inside a handler shares it, as it already shares sstack.
-        struct {
-
-            long index;
-            long param0;
-            long param1;
-            long param2;
-            long param3;
-            long param4;
-            long param5;
-
-        } interrupted;
+        /** @brief The syscall, numbered from 1, that syscall_interrupt() left for a handler's frame to rewind, or 0. */
+        long interrupted;
 
     } syscall;
 
@@ -521,6 +507,7 @@ void sched_bury(struct cpu*, task_t*);
 void sched_requeue(task_t*);
 void sched_exit(void);
 void sched_group_exit(int);
+void sched_die(int);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*, int flags);
 int sched_fault_sigqueueinfo(int sig, siginfo_t*);

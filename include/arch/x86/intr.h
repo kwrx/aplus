@@ -68,28 +68,6 @@ typedef struct {
 } __packed interrupt_frame_t;
 
 
-typedef struct {
-
-    union {
-
-        struct {
-
-            void* ustack;
-            void* kstack;
-
-            long flags;
-            sigset_t mask;
-            interrupt_frame_t regs;
-        };
-
-        char __padding[512 - 16];
-    };
-
-    char fpuregs[0];
-
-} __packed sigcontext_frame_t;
-
-
 
 __BEGIN_DECLS
 
