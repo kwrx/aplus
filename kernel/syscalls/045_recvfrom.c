@@ -60,6 +60,8 @@ SYSCALL(
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
 
+            unix_sock_put(us);
+
             if (sockaddr && socklen)
                 uio_w32((uint32_t*)socklen, 0);
 

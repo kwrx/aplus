@@ -56,8 +56,14 @@ SYSCALL(
 
         struct unix_sock* us;
 
-        if ((us = unix_sock_from_fd(fd)) != NULL)
-            return unix_listen(us, backlog);
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            long e = unix_listen(us, backlog);
+
+            unix_sock_put(us);
+
+            return e;
+        }
 
 
         int socket = socket_from_fd(fd);

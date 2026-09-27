@@ -58,8 +58,14 @@ SYSCALL(
 
         struct unix_sock* us;
 
-        if ((us = unix_sock_from_fd(fd)) != NULL)
-            return unix_getpeername(us, sockaddr, (uint32_t*)socklen);
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            long e = unix_getpeername(us, sockaddr, (uint32_t*)socklen);
+
+            unix_sock_put(us);
+
+            return e;
+        }
 
 
         int socket = socket_from_fd(fd);

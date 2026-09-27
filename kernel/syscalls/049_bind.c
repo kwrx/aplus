@@ -61,8 +61,14 @@ SYSCALL(
 
         struct unix_sock* us;
 
-        if ((us = unix_sock_from_fd(fd)) != NULL)
-            return unix_bind(us, sockaddr, socklen);
+        if ((us = unix_sock_from_fd(fd)) != NULL) {
+
+            long e = unix_bind(us, sockaddr, socklen);
+
+            unix_sock_put(us);
+
+            return e;
+        }
 
 
         int socket = socket_from_fd(fd);
