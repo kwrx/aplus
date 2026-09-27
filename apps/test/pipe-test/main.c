@@ -64,6 +64,37 @@ static int total    = 0;
 #define PIPE_CAPACITY 65535
 
 
+/**
+ * @brief How much the kernel heap may grow over a leak check before it counts as a leak, in kB.
+ */
+#define LEAK_SLACK_KB 256
+
+
+/**
+ * @brief Reads how much memory the kernel heap holds, from the Slab line of /proc/meminfo.
+ *
+ * @return The heap size in kB, or -1 if it could not be read.
+ */
+static long slab_kb(void) {
+
+    FILE* f = fopen("/proc/meminfo", "r");
+
+    if (!f)
+        return -1;
+
+
+    char line[128];
+    long kb = -1;
+
+    while (kb < 0 && fgets(line, sizeof(line), f))
+        sscanf(line, "Slab: %ld kB", &kb);
+
+    fclose(f);
+
+    return kb;
+}
+
+
 static uint64_t now_ms(void) {
 
     struct timespec ts;
@@ -476,6 +507,90 @@ static void test_mknod_regular_file(void) {
 }
 
 
+/**
+ * @brief Creates and closes pipes, then bounces a byte between two processes, checking the kernel heap stays put.
+ *
+ * Every round trip parks both sides in a blocking read, so the second half exercises the wakeup path.
+ */
+static void test_no_leak(void) {
+
+    long before = slab_kb();
+    int made    = 0;
+
+    for (int i = 0; i < 2000; i++) {
+
+        int fds[2];
+        char c = 'x';
+
+        if (pipe(fds) < 0)
+            break;
+
+        if (write(fds[1], &c, 1) == 1 && read(fds[0], &c, 1) == 1)
+            made++;
+
+        close(fds[0]);
+        close(fds[1]);
+    }
+
+    long after_pipes = slab_kb();
+
+    CHECK(made == 2000 && before >= 0 && after_pipes - before < LEAK_SLACK_KB, "leak-pipes", "%d pipes worked, kernel heap grew by %ld kB", made, after_pipes - before);
+
+
+    int ping[2];
+    int pong[2];
+
+    if (pipe(ping) < 0 || pipe(pong) < 0) {
+        CHECK(0, "leak-wakeups", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        char c;
+
+        for (int i = 0; i < 2000; i++) {
+
+            if (read(ping[0], &c, 1) != 1)
+                _exit(1);
+
+            if (write(pong[1], &c, 1) != 1)
+                _exit(2);
+        }
+
+        _exit(0);
+    }
+
+
+    int trips = 0;
+    char c    = 'p';
+
+    for (int i = 0; pid > 0 && i < 2000; i++) {
+
+        if (write(ping[1], &c, 1) != 1 || read(pong[0], &c, 1) != 1)
+            break;
+
+        trips++;
+    }
+
+    int status = -1;
+
+    if (pid > 0)
+        waitpid(pid, &status, 0);
+
+    close(ping[0]);
+    close(ping[1]);
+    close(pong[0]);
+    close(pong[1]);
+
+    long after_wakes = slab_kb();
+
+    CHECK(trips == 2000 && status == 0 && after_wakes - after_pipes < LEAK_SLACK_KB, "leak-wakeups", "%d round trips, child status 0x%x, kernel heap grew by %ld kB", trips, status, after_wakes - after_pipes);
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -492,6 +607,7 @@ static const struct {
     {"poll-negative", test_poll_negative_fd},
     {"cloexec", test_cloexec},
     {"mknod", test_mknod_regular_file},
+    {"leak", test_no_leak},
 };
 
 
