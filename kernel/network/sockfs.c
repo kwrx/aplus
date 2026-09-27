@@ -151,6 +151,88 @@ static ssize_t sockfs_read(inode_t* inode, void* buf, off_t offset, size_t size)
 }
 
 
+/**
+ * @brief The largest piece of a stream write copied into the kernel at once, which keeps the copy within eight pages.
+ */
+#define SOCKFS_CHUNK_MAX ((8 * PML1_PAGESIZE) - 64)
+
+
+/**
+ * @brief Tells whether an lwIP socket is a byte stream, whose writes may be split into pieces.
+ *
+ * @param socket The lwIP socket.
+ * @return true for SOCK_STREAM.
+ */
+static bool __socket_is_stream(int socket) {
+
+    int type      = 0;
+    socklen_t len = sizeof(type);
+
+    return lwip_getsockopt(socket, SOL_SOCKET, SO_TYPE, &type, &len) == 0 && type == SOCK_STREAM;
+}
+
+
+/**
+ * @brief Sends caller data on an lwIP socket through a kernel copy of it.
+ *
+ * A blocking TCP write is finished by the lwIP thread, which runs in the kernel address space and cannot read
+ * the caller's pages. A stream is copied a piece at a time; a datagram is copied whole, since splitting it
+ * would change what the peer receives.
+ *
+ * @param socket The lwIP socket.
+ * @param buf The data, in memory the caller has made accessible with uio_lock().
+ * @param size How many bytes to send.
+ * @param flags MSG_* flags.
+ * @param to The destination, already in kernel memory, or NULL.
+ * @param tolen The length of @p to.
+ * @return The number of bytes sent, or -1 with errno set.
+ */
+ssize_t socket_send(int socket, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen) {
+
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(size);
+
+
+    size_t chunk = size;
+
+    if (size > SOCKFS_CHUNK_MAX && __socket_is_stream(socket))
+        chunk = SOCKFS_CHUNK_MAX;
+
+    void* kbuf = kmalloc(chunk, GFP_KERNEL);
+
+    if (unlikely(!kbuf))
+        return errno = ENOMEM, -1;
+
+
+    size_t sent = 0;
+    ssize_t e   = 0;
+
+    while (sent < size) {
+
+        size_t n = size - sent < chunk ? size - sent : chunk;
+
+        memcpy(kbuf, (const uint8_t*)buf + sent, n);
+
+        if (to)
+            e = lwip_sendto(socket, kbuf, n, flags, to, tolen);
+        else
+            e = lwip_send(socket, kbuf, n, flags);
+
+        if (e <= 0)
+            break;
+
+        sent += (size_t)e;
+
+        if ((size_t)e < n)
+            break;
+    }
+
+    kfree(kbuf);
+
+    return sent > 0 ? (ssize_t)sent : e;
+}
+
+
 static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(inode);
@@ -168,7 +250,7 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
         return 0;
 
 
-    ssize_t e = lwip_write(socket, buf, size);
+    ssize_t e = socket_send(socket, buf, size, 0, NULL, 0);
 
     if (unlikely(e < 0)) {
 

@@ -123,25 +123,31 @@ u32_t sys_arch_sem_wait(struct sys_sem** sem, u32_t timeout) {
     DEBUG_ASSERT(*sem);
 
 
-    size_t e = 0;
+    uint64_t t0 = arch_timer_generic_getms();
 
-    if (timeout) {
+    for (;;) {
 
-        uint64_t t0 = arch_timer_generic_getms() + timeout;
-
-        if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
-            return e;
-
-        if (arch_timer_generic_getms() >= t0)
+        if (unlikely(*sem == NULL))
             return SYS_ARCH_TIMEOUT;
 
-        return t0 - arch_timer_generic_getms();
+        if (sem_trywait(&(*sem)->sem))
+            break;
 
-    } else {
 
-        if ((e = arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, timeout)) < 0)
-            return e;
+        u32_t left = 0;
 
-        return 1;
+        if (timeout) {
+
+            uint64_t elapsed = arch_timer_generic_getms() - t0;
+
+            if (elapsed >= timeout)
+                return SYS_ARCH_TIMEOUT;
+
+            left = (u32_t)(timeout - elapsed);
+        }
+
+        arch_syscall3(SYSCALL_NR_TCPIP_WAIT, &(*sem)->sem, 0, left);
     }
+
+    return (u32_t)(arch_timer_generic_getms() - t0);
 }

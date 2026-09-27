@@ -68,6 +68,7 @@ int socket_install(int socket, int flags);
 int socket_from_fd(int fd);
 int socket_from_inode(inode_t* inode);
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
+ssize_t socket_send(int socket, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen);
 
 /**
  * @brief Largest socket option value the kernel will carry between user and lwIP.

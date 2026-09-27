@@ -494,6 +494,130 @@ static void test_sigkill_ignores_mask(void) {
 }
 
 
+/**
+ * @brief How much the bulk transfer sends, far more than the send buffer and the receive window together.
+ */
+#define BULK_BYTES (2 * 1024 * 1024)
+
+
+/**
+ * @brief The byte the bulk transfer carries at a given offset.
+ *
+ * @param offset The offset into the stream.
+ * @return The expected byte.
+ */
+static unsigned char bulk_pattern(size_t offset) {
+    return (unsigned char)((offset * 7U) + (offset >> 11));
+}
+
+
+/**
+ * @brief Streams patterned data over loopback TCP to a reader that stalls twice, checking every byte arrives.
+ *
+ * Each stall fills the sender's send buffer, so its blocking write has to wait for the stack more than once.
+ */
+static void test_bulk_tcp(void) {
+
+    int srv = socket(AF_INET, SOCK_STREAM, 0);
+
+    struct sockaddr_in in;
+    memset(&in, 0, sizeof(in));
+
+    in.sin_family      = AF_INET;
+    in.sin_port        = 0;
+    in.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+
+    socklen_t len = sizeof(in);
+
+    if (srv < 0 || bind(srv, (struct sockaddr*)&in, sizeof(in)) < 0 || listen(srv, 1) < 0 || getsockname(srv, (struct sockaddr*)&in, &len) < 0) {
+
+        CHECK(0, "bulk-tcp", "listener setup failed: %s", strerror(errno));
+
+        if (srv >= 0)
+            close(srv);
+
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(srv);
+
+        int cli = socket(AF_INET, SOCK_STREAM, 0);
+
+        if (cli < 0 || connect(cli, (struct sockaddr*)&in, sizeof(in)) < 0)
+            _exit(90);
+
+        unsigned char chunk[8192];
+        size_t sent = 0;
+
+        while (sent < BULK_BYTES) {
+
+            size_t n = BULK_BYTES - sent < sizeof(chunk) ? BULK_BYTES - sent : sizeof(chunk);
+
+            for (size_t i = 0; i < n; i++)
+                chunk[i] = bulk_pattern(sent + i);
+
+            ssize_t w = write(cli, chunk, n);
+
+            if (w <= 0)
+                _exit(91);
+
+            sent += (size_t)w;
+        }
+
+        close(cli);
+        _exit(0);
+    }
+
+
+    int acc = pid > 0 ? accept(srv, NULL, NULL) : -1;
+
+    sleep(1);
+
+    unsigned char buf[4096];
+
+    size_t got   = 0;
+    int mismatch = 0;
+    int stalled  = 0;
+
+    while (acc >= 0 && got < BULK_BYTES) {
+
+        if (!stalled && got >= BULK_BYTES / 2) {
+            sleep(1);
+            stalled = 1;
+        }
+
+        ssize_t n = read(acc, buf, sizeof(buf));
+
+        if (n <= 0)
+            break;
+
+        for (ssize_t i = 0; i < n; i++)
+            mismatch += (buf[i] != bulk_pattern(got + (size_t)i));
+
+        got += (size_t)n;
+    }
+
+    if (acc >= 0)
+        close(acc);
+
+    close(srv);
+
+
+    int status = -1;
+    int reaped = pid > 0 && wait_for_exit(pid, &status, 20);
+
+    if (pid > 0 && !reaped)
+        kill(pid, SIGKILL);
+
+    CHECK(got == BULK_BYTES && mismatch == 0 && reaped && status == 0, "bulk-tcp", "received %zu of %d bytes, %d mismatched, sender status 0x%x", got, BULK_BYTES, mismatch, status);
+}
+
+
 static struct {
 
     const char* name;
@@ -511,6 +635,7 @@ static struct {
     {"unix", test_unix_still_works},
     {"signal-accept", test_signal_reaches_blocked_accept},
     {"sigkill-mask", test_sigkill_ignores_mask},
+    {"bulk-tcp", test_bulk_tcp},
 };
 
 
