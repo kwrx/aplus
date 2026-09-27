@@ -248,7 +248,7 @@ long poll_finish(long retval) {
 
     if (current_task->syscall.sigmask_valid) {
 
-        shared_ptr_access(current_task->sighand, sighand, { memcpy(&sighand->sigmask, &current_task->syscall.sigmask, sizeof(sigset_t)); });
+        sched_sigmask(&current_task->syscall.sigmask);
 
         current_task->syscall.sigmask_valid = false;
     }
@@ -291,10 +291,9 @@ int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize) {
 
     uio_memcpy_u2s(&safe, sigmask, sigsetsize);
 
-    shared_ptr_access(current_task->sighand, sighand, {
-        memcpy(&current_task->syscall.sigmask, &sighand->sigmask, sizeof(sigset_t));
-        memcpy(&sighand->sigmask, &safe, sizeof(sigset_t));
-    });
+    memcpy(&current_task->syscall.sigmask, &current_task->sigmask, sizeof(sigset_t));
+
+    sched_sigmask(&safe);
 
     current_task->syscall.sigmask_valid = true;
 
