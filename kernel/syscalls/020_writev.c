@@ -26,6 +26,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/memory.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
@@ -38,6 +39,7 @@
 #include <unistd.h>
 
 #include <aplus/hal.h>
+#include <aplus/network.h>
 
 
 /***
@@ -70,9 +72,29 @@ SYSCALL(
             return 0;
 
 
-        long i, tot;
+        int flags         = 0;
+        struct file* file = fd_get((unsigned int)fd, &flags);
 
-        for (i = tot = 0; i < vlen; i++) {
+        if (unlikely(!file))
+            return -EBADF;
+
+        if (unlikely(!((flags & O_WRONLY) || (flags & O_RDWR)))) {
+            fd_put(file);
+            return -EPERM;
+        }
+
+
+        volatile uint32_t* word = poll_event_word(file->inode);
+        uint32_t seq            = word ? *word : 0;
+
+        bool whole   = socket_from_inode(file->inode) >= 0;
+        bool stopped = false;
+
+        size_t done = current_task->syscall.progress;
+        size_t skip = done;
+        ssize_t e   = 0;
+
+        for (unsigned long i = 0; i < vlen; i++) {
 
             struct iovec iovec;
             uio_memcpy_u2s(&iovec, &vec[i], sizeof(struct iovec));
@@ -84,18 +106,60 @@ SYSCALL(
             if (unlikely(!iovec.iov_len))
                 continue;
 
-            if (unlikely(!uio_check(iovec.iov_base, R_OK)))
-                return -EFAULT;
-
-
-            ssize_t e;
-            if ((e = sys_write(fd, iovec.iov_base, iovec.iov_len)) < 0) {
-                return e;
+            if (skip >= iovec.iov_len) {
+                skip -= iovec.iov_len;
+                continue;
             }
 
-            tot += e;
+            if (unlikely(!uio_check(iovec.iov_base, R_OK))) {
+                e      = -EFAULT;
+                stopped = true;
+                break;
+            }
+
+
+            const uint8_t* base = (const uint8_t*)iovec.iov_base + skip;
+            size_t len          = iovec.iov_len - skip;
+
+            skip = 0;
+
+
+            uio_lock(base, len);
+
+            e = fd_write(file, base, len);
+
+            uio_unlock(base, len);
+
+
+            if (e > 0) {
+                done += (size_t)e;
+                current_task->iostat.write_bytes += (uint64_t)e;
+            }
+
+            if (e <= 0 || (size_t)e < len) {
+                stopped = true;
+                break;
+            }
         }
 
 
-        return tot;
+        current_task->iostat.syscw += 1;
+
+        if (stopped && !(flags & O_NONBLOCK) && ((e == -EAGAIN && (done == 0 || whole)) || (e > 0 && whole))) {
+
+            current_task->syscall.progress = done;
+
+            e = poll_wait_event(word, seq, socket_timeout(file->inode, true));
+
+            if (e == -EAGAIN && done)
+                e = (ssize_t)done;
+
+        } else if (done || !stopped) {
+
+            e = (ssize_t)done;
+        }
+
+        fd_put(file);
+
+        return e;
     });

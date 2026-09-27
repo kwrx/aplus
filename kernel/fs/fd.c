@@ -231,3 +231,52 @@ void fd_ref_all(struct fd* fds) {
     }
 }
 
+
+/**
+ * @brief Makes one attempt at reading from an open file at its position, advancing it, without waiting.
+ *
+ * @param file The file.
+ * @param buf The buffer, in memory the caller has made accessible with uio_lock().
+ * @param size The number of bytes to read.
+ * @return The number of bytes read, or a negative errno, -EAGAIN when nothing is ready yet.
+ */
+ssize_t fd_read(struct file* file, void* buf, size_t size) {
+
+    DEBUG_ASSERT(file);
+    DEBUG_ASSERT(file->inode);
+
+
+    ssize_t e = 0;
+
+    scoped_lock(&file->lock) {
+        if ((e = vfs_read(file->inode, buf, file->position, size)) > 0)
+            file->position += e;
+    }
+
+    return e;
+}
+
+
+/**
+ * @brief Makes one attempt at writing to an open file at its position, advancing it, without waiting.
+ *
+ * @param file The file.
+ * @param buf The data, in memory the caller has made accessible with uio_lock().
+ * @param size The number of bytes to write.
+ * @return The number of bytes written, or a negative errno, -EAGAIN when there is no room yet.
+ */
+ssize_t fd_write(struct file* file, const void* buf, size_t size) {
+
+    DEBUG_ASSERT(file);
+    DEBUG_ASSERT(file->inode);
+
+
+    ssize_t e = 0;
+
+    scoped_lock(&file->lock) {
+        if ((e = vfs_write(file->inode, buf, file->position, size)) > 0)
+            file->position += e;
+    }
+
+    return e;
+}

@@ -679,10 +679,28 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 
 
 
+/**
+ * @brief Finds the frame a task resumes from: the cpu's own for the task running on it, its saved copy otherwise.
+ *
+ * @param task The task.
+ * @return The frame.
+ */
+static interrupt_frame_t* __task_live_frame(task_t* task) {
+
+    if (task == current_task && current_cpu->frame)
+        return (interrupt_frame_t*)current_cpu->frame;
+
+    return FRAME(task);
+}
+
+
 void arch_task_context_set(task_t* task, int options, long value) {
 
     DEBUG_ASSERT(task);
     DEBUG_ASSERT(task->frame);
+
+
+    interrupt_frame_t* frame = __task_live_frame(task);
 
 
 #if DEBUG_LEVEL_TRACE
@@ -693,19 +711,19 @@ void arch_task_context_set(task_t* task, int options, long value) {
     switch (options) {
 
         case ARCH_TASK_CONTEXT_COPY:
-            memcpy(task->frame, (interrupt_frame_t*)value, sizeof(interrupt_frame_t));
+            memcpy(frame, (interrupt_frame_t*)value, sizeof(interrupt_frame_t));
             break;
 
         case ARCH_TASK_CONTEXT_PC:
-            FRAME(task)->ip = value;
+            frame->ip = value;
             break;
 
         case ARCH_TASK_CONTEXT_STACK:
-            FRAME(task)->sp = value;
+            frame->sp = value;
             break;
 
         case ARCH_TASK_CONTEXT_RETVAL:
-            FRAME(task)->ax = value;
+            frame->ax = value;
             break;
 
 
@@ -718,8 +736,8 @@ void arch_task_context_set(task_t* task, int options, long value) {
         case ARCH_TASK_CONTEXT_PARAM4:
         case ARCH_TASK_CONTEXT_PARAM5:
 
-            FRAME(task)->sp -= sizeof(long);
-            uio_w32(FRAME(task)->sp, value);
+            frame->sp -= sizeof(long);
+            uio_w32(frame->sp, value);
             break;
 
 #endif
@@ -728,27 +746,27 @@ void arch_task_context_set(task_t* task, int options, long value) {
 #if defined(__x86_64__)
 
         case ARCH_TASK_CONTEXT_PARAM0:
-            FRAME(task)->di = value;
+            frame->di = value;
             break;
 
         case ARCH_TASK_CONTEXT_PARAM1:
-            FRAME(task)->si = value;
+            frame->si = value;
             break;
 
         case ARCH_TASK_CONTEXT_PARAM2:
-            FRAME(task)->dx = value;
+            frame->dx = value;
             break;
 
         case ARCH_TASK_CONTEXT_PARAM3:
-            FRAME(task)->cx = value;
+            frame->cx = value;
             break;
 
         case ARCH_TASK_CONTEXT_PARAM4:
-            FRAME(task)->r8 = value;
+            frame->r8 = value;
             break;
 
         case ARCH_TASK_CONTEXT_PARAM5:
-            FRAME(task)->r9 = value;
+            frame->r9 = value;
             break;
 
 #endif
@@ -765,16 +783,19 @@ long arch_task_context_get(task_t* task, int options) {
     DEBUG_ASSERT(task->frame);
 
 
+    interrupt_frame_t* frame = __task_live_frame(task);
+
+
     switch (options) {
 
         case ARCH_TASK_CONTEXT_PC:
-            return FRAME(task)->ip;
+            return frame->ip;
 
         case ARCH_TASK_CONTEXT_STACK:
-            return FRAME(task)->sp;
+            return frame->sp;
 
         case ARCH_TASK_CONTEXT_RETVAL:
-            return FRAME(task)->ax;
+            return frame->ax;
 
         default:
             kpanicf("x86-task: PANIC! invalid ARCH_TASK_CONTEXT_* %d\n", options);

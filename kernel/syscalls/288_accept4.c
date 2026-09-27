@@ -93,11 +93,6 @@ SYSCALL(
         }
 
 
-        int socket = socket_from_fd(fd);
-
-        if (unlikely(socket < 0))
-            return -ENOTSOCK;
-
         if (sockaddr) {
 
             if (unlikely(!socklen || !uio_check(socklen, R_OK | W_OK)))
@@ -108,13 +103,23 @@ SYSCALL(
         }
 
 
+        int fdflags       = 0;
+        struct file* file = fd_get((unsigned int)fd, &fdflags);
+
+        if (unlikely(!file))
+            return -EBADF;
+
+
         struct sockaddr_storage peer;
         socklen_t peerlen = sizeof(peer);
 
-        ssize_t e;
+        long e = socket_accept(file->inode, sockaddr ? (struct sockaddr*)&peer : NULL, sockaddr ? &peerlen : NULL, !!(fdflags & O_NONBLOCK));
 
-        if ((e = lwip_accept(socket, sockaddr ? (struct sockaddr*)&peer : NULL, sockaddr ? &peerlen : NULL)) < 0)
-            return -errno;
+        fd_put(file);
+
+        if (e < 0)
+            return e;
+
 
         if (sockaddr) {
 

@@ -66,6 +66,10 @@ SYSCALL(
             return -ENOTSOCK;
 
 
+        if (flags == SHUT_RDWR)
+            socket_unlinger(socket);
+
+
         ssize_t e;
 
         if ((e = lwip_shutdown(socket, flags)) < 0)

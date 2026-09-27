@@ -38,6 +38,13 @@
 #include <aplus/network.h>
 
 
+/**
+ * @brief The flags socket() takes in its type argument, numbered as the open flags they stand for.
+ */
+#define LINUX_SOCK_NONBLOCK 00004000
+#define LINUX_SOCK_CLOEXEC  02000000
+
+
 /***
  * Name:        socket
  * Description: create an endpoint for communication
@@ -58,10 +65,22 @@ SYSCALL(
         if (domain == AF_UNIX_LOCAL)
             return unix_socket(type, protocol);
 
+
+        int flags = 0;
+
+        if (type & LINUX_SOCK_NONBLOCK)
+            flags |= O_NONBLOCK;
+
+        if (type & LINUX_SOCK_CLOEXEC)
+            flags |= O_CLOEXEC;
+
+        type &= ~(LINUX_SOCK_NONBLOCK | LINUX_SOCK_CLOEXEC);
+
+
         ssize_t e;
 
         if ((e = lwip_socket(domain, type, protocol)) < 0)
             return -errno;
 
-        return socket_install((int)e, 0);
+        return socket_install((int)e, flags);
     });

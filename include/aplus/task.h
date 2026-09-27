@@ -429,6 +429,12 @@ typedef struct task {
         sigset_t sigmask;
         bool sigmask_valid;
 
+        /** @brief How many bytes the earlier attempts of a restarted transfer already moved. */
+        size_t progress;
+
+        /** @brief The first attempt already started what the later ones only wait on, such as a connect(). */
+        bool started;
+
         //? The syscall a signal interrupted, snapshotted while the handler is being set up.
         //? The fields above describe whatever the task is running *now*, and by the time
         //? rt_sigreturn(2) executes that is rt_sigreturn itself -- restarting it from there

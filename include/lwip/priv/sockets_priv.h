@@ -71,7 +71,9 @@ struct lwip_sock {
     union lwip_sock_lastdata lastdata;
     #if LWIP_SOCKET_SELECT || LWIP_SOCKET_POLL
         #if defined(__aplus__)
-    u32_t evt;
+    volatile u32_t evt;
+    /** a reset ended the handshake of a connect(), which SO_ERROR reports as ECONNREFUSED */
+    u8_t refused;
         #endif
     /** number of times data was received, set by event_callback(),
         tested by the receive and select functions */

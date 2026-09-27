@@ -170,6 +170,13 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
     if (unlikely(r == -EPIPE))
         __syscall_epipe(idx, p2, p3);
 
+    if (likely(!(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART))) {
+
+        current_task->syscall.deadline_valid = false;
+        current_task->syscall.progress       = 0;
+        current_task->syscall.started        = false;
+    }
+
     if (r < 0L)
         errno = -r;
     else
@@ -247,8 +254,9 @@ static bool __syscall_restartable(long idx) {
  * @brief Gives up the syscall the current task is parked in, because a signal handler is about to run instead.
  *
  * The syscall is kept in syscall.interrupted for rt_sigreturn() to restart under SA_RESTART, unless it never
- * restarts, and whatever it carried across attempts is dropped. An interrupted sleep reports the time it had left.
- * A task that was not parked in a syscall has nothing to restart.
+ * restarts, and whatever it carried across attempts is dropped. A transfer that already moved some bytes returns
+ * that count instead, and an interrupted sleep reports the time it had left. A task that was not parked in a
+ * syscall has nothing to restart.
  */
 void syscall_interrupt(void) {
 
@@ -264,7 +272,13 @@ void syscall_interrupt(void) {
     current_task->flags &= ~TASK_FLAGS_NEED_SYSCALL_RESTART;
 
 
-    if (current_task->syscall.index > 0 && __syscall_restartable(current_task->syscall.index - 1)) {
+    if (current_task->syscall.progress > 0) {
+
+        arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, (long)current_task->syscall.progress);
+
+        current_task->syscall.interrupted.index = 0;
+
+    } else if (current_task->syscall.index > 0 && __syscall_restartable(current_task->syscall.index - 1)) {
 
         current_task->syscall.interrupted.index  = current_task->syscall.index;
         current_task->syscall.interrupted.param0 = current_task->syscall.param0;
@@ -281,6 +295,8 @@ void syscall_interrupt(void) {
 
 
     current_task->syscall.deadline_valid = false;
+    current_task->syscall.progress       = 0;
+    current_task->syscall.started        = false;
 
 
     if ((current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec) && current_task->sleep.remaining) {

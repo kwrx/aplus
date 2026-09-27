@@ -63,28 +63,29 @@ SYSCALL(
             return unix_connect(us, sockaddr, socklen);
 
 
-        int socket = socket_from_fd(fd);
-
-        if (unlikely(socket < 0))
-            return -ENOTSOCK;
-
-        if (unlikely(socklen == 0))
+        if (unlikely(socklen == 0 || socklen > SOCKADDR_MAX))
             return -EINVAL;
 
         if (unlikely(!sockaddr))
             return -EINVAL;
 
-        if (unlikely(!uio_check(sockaddr, R_OK | W_OK)))
+        if (unlikely(!uio_check(sockaddr, R_OK)))
             return -EFAULT;
 
 
-        char __sockaddr[socklen];
-        uio_memcpy_u2s(__sockaddr, sockaddr, socklen);
+        int flags         = 0;
+        struct file* file = fd_get((unsigned int)fd, &flags);
 
-        ssize_t e;
+        if (unlikely(!file))
+            return -EBADF;
 
-        if ((e = lwip_connect(socket, (struct sockaddr*)__sockaddr, socklen)) < 0)
-            return -errno;
+
+        uint64_t addr[SOCKADDR_MAX / sizeof(uint64_t)];
+        uio_memcpy_u2s(addr, sockaddr, socklen);
+
+        long e = socket_connect(file->inode, (struct sockaddr*)addr, socklen, !!(flags & O_NONBLOCK));
+
+        fd_put(file);
 
         return e;
     });

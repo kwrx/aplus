@@ -67,11 +67,6 @@ SYSCALL(
         }
 
 
-        int socket = socket_from_fd(fd);
-
-        if (unlikely(socket < 0))
-            return -ENOTSOCK;
-
         if (unlikely(!buf))
             return -EINVAL;
 
@@ -87,39 +82,45 @@ SYSCALL(
         if (unlikely(sockaddr && !uio_check(socklen, R_OK | W_OK)))
             return -EFAULT;
 
-        if (unlikely(!size))
+
+        int fdflags       = 0;
+        struct file* file = fd_get((unsigned int)fd, &fdflags);
+
+        if (unlikely(!file))
+            return -EBADF;
+
+        if (unlikely(socket_from_inode(file->inode) < 0)) {
+            fd_put(file);
+            return -ENOTSOCK;
+        }
+
+        if (unlikely(!size)) {
+            fd_put(file);
             return 0;
+        }
 
 
-        ssize_t e;
-
+        uint64_t addr[SOCKADDR_MAX / sizeof(uint64_t)];
+        socklen_t addrlen = sizeof(addr);
 
 
         uio_lock(buf, size);
 
-        if (likely(sockaddr)) {
-
-            socklen_t __socklen = uio_r32(socklen);
-
-            char __sockaddr[__socklen];
-            uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
-
-            e = lwip_recvfrom(socket, buf, size, flags, (struct sockaddr*)__sockaddr, &__socklen);
-
-            uio_w32(socklen, __socklen);
-            uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
-
-        } else {
-
-            e = lwip_recv(socket, buf, size, flags);
-        }
+        long e = socket_recv(file->inode, buf, size, (int)flags, sockaddr ? (struct sockaddr*)addr : NULL, sockaddr ? &addrlen : NULL, !!(fdflags & O_NONBLOCK));
 
         uio_unlock(buf, size);
 
 
+        fd_put(file);
 
-        if (unlikely(e < 0))
-            return -errno;
+
+        if (e >= 0 && sockaddr) {
+
+            socklen_t room = uio_r32(socklen);
+
+            uio_memcpy_s2u(sockaddr, addr, room < addrlen ? room : addrlen);
+            uio_w32(socklen, addrlen);
+        }
 
         return e;
     });

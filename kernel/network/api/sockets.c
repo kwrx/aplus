@@ -558,6 +558,9 @@ static int alloc_socket(struct netconn* newconn, int accepted) {
              * (unless it has been created by accept()). */
             sockets[i].sendevent = (NETCONNTYPE_GROUP(newconn->type) == NETCONN_TCP ? (accepted != 0) : 1);
             sockets[i].errevent  = 0;
+        #if defined(__aplus__)
+            sockets[i].refused = 0;
+        #endif
     #endif /* LWIP_SOCKET_SELECT || LWIP_SOCKET_POLL */
             return i + LWIP_SOCKET_OFFSET;
         }
@@ -2234,10 +2237,14 @@ static void lwip_poll_dec_sockets_used(struct pollfd* fds, nfds_t nfds) {
 
         #if defined(__aplus__)
 
-ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec* ts, bool wait) {
-
-    struct lwip_sock* sock;
-    SYS_ARCH_DECL_PROTECT(lev);
+/**
+ * @brief Reports what a set of lwIP sockets is ready for, without waiting.
+ *
+ * @param fds The sockets and the events asked about; revents receives the answers.
+ * @param nfds The number of entries in @p fds.
+ * @return The number of ready sockets, or -1 with errno set.
+ */
+ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds) {
 
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_poll_from_syscall: fds=%p nfds=%" S32_F "\n", fds, nfds));
 
@@ -2249,32 +2256,47 @@ ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec*
         return -1;
     }
 
-
-    if (wait) {
-
-        for (nfds_t i = 0; i < nfds; i++) {
-
-            LWIP_ASSERT("fds[i].fd >= 0", fds[i].fd >= 0);
-
-            sock = get_socket(fds[i].fd);
-
-            if (!sock) {
-                set_errno(EBADF);
-                return -1;
-            }
-
-
-            SYS_ARCH_PROTECT(lev);
-
-            sock->evt = 0;
-
-            futex_wait(current_task, &sock->evt, 0, ts);
-
-            SYS_ARCH_UNPROTECT(lev);
-        }
-    }
-
     return e;
+}
+
+
+/**
+ * @brief Finds the word an lwIP socket bumps whenever its readiness may have changed, for use as a futex.
+ *
+ * @param s The lwIP socket.
+ * @return The word, or NULL if @p s is not a socket.
+ */
+volatile u32_t* lwip_socket_event(int s) {
+
+    struct lwip_sock* sock = get_socket(s);
+
+    if (!sock)
+        return NULL;
+
+    done_socket(sock);
+
+    return &sock->evt;
+}
+
+
+/**
+ * @brief Makes an lwIP socket fail with EWOULDBLOCK instead of waiting inside lwIP.
+ *
+ * @param s The lwIP socket.
+ * @return 0, or -1 with errno set.
+ */
+int lwip_socket_nonblocking(int s) {
+
+    struct lwip_sock* sock = get_socket(s);
+
+    if (!sock)
+        return -1;
+
+    netconn_set_nonblocking(sock->conn, 1);
+
+    done_socket(sock);
+
+    return 0;
 }
 
         #endif
@@ -2495,6 +2517,10 @@ static void event_callback(struct netconn* conn, enum netconn_evt evt, u16_t len
             break;
         case NETCONN_EVT_ERROR:
             sock->errevent = 1;
+        #if defined(__aplus__)
+            if (conn->pending_err == ERR_RST && netconn_is_flag_set(conn, NETCONN_FLAG_IN_NONBLOCKING_CONNECT))
+                sock->refused = 1;
+        #endif
             break;
         default:
             LWIP_ASSERT("unknown event", 0);
@@ -2900,6 +2926,11 @@ static int lwip_getsockopt_impl(int s, int level, int optname, void* optval, soc
                 case SO_ERROR:
                     LWIP_SOCKOPT_CHECK_OPTLEN(sock, *optlen, int);
                     *(int*)optval = err_to_errno(netconn_err(sock->conn));
+        #if defined(__aplus__)
+                    if (sock->refused && *(int*)optval == ECONNRESET)
+                        *(int*)optval = ECONNREFUSED;
+                    sock->refused = 0;
+        #endif
                     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_getsockopt(%d, SOL_SOCKET, SO_ERROR) = %d\n", s, *(int*)optval));
                     break;
 

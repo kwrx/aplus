@@ -66,50 +66,50 @@ SYSCALL(
         }
 
 
-        int socket = socket_from_fd(fd);
-
-        if (unlikely(socket < 0))
-            return -ENOTSOCK;
-
         if (unlikely(!buf))
             return -EINVAL;
 
         if (unlikely(!uio_check(buf, R_OK)))
             return -EFAULT;
 
-        if (unlikely(sockaddr && !socklen))
+        if (unlikely(sockaddr && (!socklen || socklen > SOCKADDR_MAX)))
             return -EINVAL;
 
         if (unlikely(sockaddr && !uio_check(sockaddr, R_OK)))
             return -EFAULT;
 
-        if (unlikely(!size))
+
+        int fdflags       = 0;
+        struct file* file = fd_get((unsigned int)fd, &fdflags);
+
+        if (unlikely(!file))
+            return -EBADF;
+
+        if (unlikely(socket_from_inode(file->inode) < 0)) {
+            fd_put(file);
+            return -ENOTSOCK;
+        }
+
+        if (unlikely(!size)) {
+            fd_put(file);
             return 0;
+        }
 
 
-        ssize_t e;
+        uint64_t addr[SOCKADDR_MAX / sizeof(uint64_t)];
+
+        if (sockaddr)
+            uio_memcpy_u2s(addr, sockaddr, socklen);
 
 
         uio_lock(buf, size);
 
-        if (likely(sockaddr)) {
-
-            char __sockaddr[socklen];
-            uio_memcpy_u2s(__sockaddr, sockaddr, socklen);
-
-            e = socket_send(socket, buf, size, flags, (struct sockaddr*)__sockaddr, socklen);
-
-        } else {
-
-            e = socket_send(socket, buf, size, flags, NULL, 0);
-        }
+        long e = socket_sendto(file->inode, buf, size, (int)flags, sockaddr ? (struct sockaddr*)addr : NULL, sockaddr ? socklen : 0, !!(fdflags & O_NONBLOCK));
 
         uio_unlock(buf, size);
 
 
-
-        if (unlikely(e < 0))
-            return -errno;
+        fd_put(file);
 
         return e;
     });

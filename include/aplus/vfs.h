@@ -264,6 +264,8 @@ struct file* fd_get(unsigned int, int*);
 void fd_put(struct file*);
 void fd_close_all(struct fd*);
 void fd_ref_all(struct fd*);
+ssize_t fd_read(struct file*, void*, size_t);
+ssize_t fd_write(struct file*, const void*, size_t);
 
 
 // kernel/fs/path.c
