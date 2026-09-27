@@ -97,6 +97,94 @@ static long slab_kb(void) {
 }
 
 
+#define PREFIX "pipe-test"
+
+/**
+ * @brief How many files churn_files() creates to get freed kernel memory handed out again.
+ */
+#define CHURN_FILES 32
+
+
+/**
+ * @brief The byte a churn file holds at a given offset.
+ *
+ * @param i Which churn file.
+ * @param offset The offset into it.
+ * @return The expected byte.
+ */
+static unsigned char churn_byte(int i, size_t offset) {
+    return (unsigned char)((i * 29) + (offset * 7) + (offset >> 8) + 1);
+}
+
+
+/**
+ * @brief Creates and fills a batch of files, so that pages the kernel has just freed are handed out again.
+ */
+static void churn_files(void) {
+
+    unsigned char buf[4096];
+    char path[64];
+
+    for (int i = 0; i < CHURN_FILES; i++) {
+
+        snprintf(path, sizeof(path), "/tmp/%s-churn-%d", PREFIX, i);
+
+        for (size_t j = 0; j < sizeof(buf); j++)
+            buf[j] = churn_byte(i, j);
+
+        int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+        if (fd < 0)
+            continue;
+
+        if (write(fd, buf, sizeof(buf)) < 0)
+            perror("churn write");
+
+        close(fd);
+    }
+}
+
+
+/**
+ * @brief Checks the files churn_files() created and removes them.
+ *
+ * @return 1 if every file still held what was written to it.
+ */
+static int churn_intact(void) {
+
+    unsigned char buf[4096];
+    char path[64];
+    int intact = 1;
+
+    for (int i = 0; i < CHURN_FILES; i++) {
+
+        snprintf(path, sizeof(path), "/tmp/%s-churn-%d", PREFIX, i);
+
+        int fd = open(path, O_RDONLY);
+
+        if (fd < 0 || read(fd, buf, sizeof(buf)) != (ssize_t)sizeof(buf)) {
+            intact = 0;
+        } else {
+
+            for (size_t j = 0; j < sizeof(buf); j++) {
+
+                if (buf[j] != churn_byte(i, j)) {
+                    intact = 0;
+                    break;
+                }
+            }
+        }
+
+        if (fd >= 0)
+            close(fd);
+
+        unlink(path);
+    }
+
+    return intact;
+}
+
+
 static uint64_t now_ms(void) {
 
     struct timespec ts;
@@ -766,6 +854,131 @@ static void test_writev_no_duplicates(void) {
 }
 
 
+/**
+ * @brief Opens and closes the two ends of a named FIFO from two processes at once, then checks it still carries data.
+ */
+static void test_fifo_race(void) {
+
+    const char* path = "/tmp/pipe-test.fifo";
+
+    unlink(path);
+
+    if (mkfifo(path, 0644) < 0) {
+        CHECK(0, "fifo-race", "mkfifo(): %s", strerror(errno));
+        return;
+    }
+
+
+    pid_t pids[2];
+
+    for (int k = 0; k < 2; k++) {
+
+        if ((pids[k] = fork()) != 0)
+            continue;
+
+        char c = 'f';
+
+        for (int i = 0; i < 3000; i++) {
+
+            int fd = open(path, (k ? O_WRONLY : O_RDONLY) | O_NONBLOCK);
+
+            if (fd < 0) {
+
+                if (errno == ENXIO)
+                    continue;
+
+                _exit(1);
+            }
+
+            if (k)
+                (void)!write(fd, &c, 1);
+            else
+                (void)!read(fd, &c, 1);
+
+            close(fd);
+        }
+
+        _exit(0);
+    }
+
+
+    int failed = 0;
+
+    for (int k = 0; k < 2; k++) {
+
+        int status = 0;
+
+        if (pids[k] < 0 || waitpid(pids[k], &status, 0) < 0 || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+            failed++;
+    }
+
+
+    int rd = open(path, O_RDONLY | O_NONBLOCK);
+    int wr = open(path, O_WRONLY | O_NONBLOCK);
+
+    char junk[256];
+
+    while (rd >= 0 && read(rd, junk, sizeof(junk)) > 0)
+        ;
+
+    const char msg[] = "still flowing";
+    char back[sizeof(msg)] = {0};
+
+    ssize_t w = wr >= 0 ? write(wr, msg, sizeof(msg)) : -1;
+    ssize_t r = rd >= 0 ? read(rd, back, sizeof(back)) : -1;
+
+    CHECK(failed == 0 && w == (ssize_t)sizeof(msg) && r == (ssize_t)sizeof(msg) && memcmp(msg, back, sizeof(msg)) == 0, "fifo-race", "%d openers failed, then wrote %zd and read %zd bytes", failed, w, r);
+
+    if (rd >= 0)
+        close(rd);
+
+    if (wr >= 0)
+        close(wr);
+
+    unlink(path);
+}
+
+
+/**
+ * @brief Moves data through a named FIFO whose directory entry was removed while both ends were open.
+ */
+static void test_fifo_unlinked(void) {
+
+    const char* path = "/tmp/pipe-test-gone.fifo";
+
+    unlink(path);
+
+    if (mkfifo(path, 0644) < 0) {
+        CHECK(0, "fifo-unlinked", "mkfifo(): %s", strerror(errno));
+        return;
+    }
+
+
+    int rd = open(path, O_RDONLY | O_NONBLOCK);
+    int wr = open(path, O_WRONLY | O_NONBLOCK);
+    int e  = unlink(path);
+
+    churn_files();
+
+
+    const char msg[] = "through a removed fifo";
+    char back[sizeof(msg)] = {0};
+
+    ssize_t w = wr >= 0 ? write(wr, msg, sizeof(msg)) : -1;
+    ssize_t r = rd >= 0 ? read(rd, back, sizeof(back)) : -1;
+
+    CHECK(rd >= 0 && wr >= 0 && e == 0 && w == (ssize_t)sizeof(msg) && r == (ssize_t)sizeof(msg) && memcmp(msg, back, sizeof(msg)) == 0, "fifo-unlinked", "open %d/%d, unlink %d, wrote %zd and read %zd bytes", rd, wr, e, w, r);
+
+    if (wr >= 0)
+        close(wr);
+
+    if (rd >= 0)
+        close(rd);
+
+    CHECK(churn_intact(), "fifo-unlinked-close", "%s", "files written while the fifo was open were damaged by its last close");
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -785,6 +998,8 @@ static const struct {
     {"leak", test_no_leak},
     {"readv", test_readv_keeps_data},
     {"writev", test_writev_no_duplicates},
+    {"fifo-race", test_fifo_race},
+    {"fifo-unlinked", test_fifo_unlinked},
 };
 
 

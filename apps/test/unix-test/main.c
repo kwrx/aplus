@@ -91,6 +91,94 @@ static long slab_kb(void) {
 }
 
 
+#define PREFIX "unix-test"
+
+/**
+ * @brief How many files churn_files() creates to get freed kernel memory handed out again.
+ */
+#define CHURN_FILES 32
+
+
+/**
+ * @brief The byte a churn file holds at a given offset.
+ *
+ * @param i Which churn file.
+ * @param offset The offset into it.
+ * @return The expected byte.
+ */
+static unsigned char churn_byte(int i, size_t offset) {
+    return (unsigned char)((i * 29) + (offset * 7) + (offset >> 8) + 1);
+}
+
+
+/**
+ * @brief Creates and fills a batch of files, so that pages the kernel has just freed are handed out again.
+ */
+static void churn_files(void) {
+
+    unsigned char buf[4096];
+    char path[64];
+
+    for (int i = 0; i < CHURN_FILES; i++) {
+
+        snprintf(path, sizeof(path), "/tmp/%s-churn-%d", PREFIX, i);
+
+        for (size_t j = 0; j < sizeof(buf); j++)
+            buf[j] = churn_byte(i, j);
+
+        int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+
+        if (fd < 0)
+            continue;
+
+        if (write(fd, buf, sizeof(buf)) < 0)
+            perror("churn write");
+
+        close(fd);
+    }
+}
+
+
+/**
+ * @brief Checks the files churn_files() created and removes them.
+ *
+ * @return 1 if every file still held what was written to it.
+ */
+static int churn_intact(void) {
+
+    unsigned char buf[4096];
+    char path[64];
+    int intact = 1;
+
+    for (int i = 0; i < CHURN_FILES; i++) {
+
+        snprintf(path, sizeof(path), "/tmp/%s-churn-%d", PREFIX, i);
+
+        int fd = open(path, O_RDONLY);
+
+        if (fd < 0 || read(fd, buf, sizeof(buf)) != (ssize_t)sizeof(buf)) {
+            intact = 0;
+        } else {
+
+            for (size_t j = 0; j < sizeof(buf); j++) {
+
+                if (buf[j] != churn_byte(i, j)) {
+                    intact = 0;
+                    break;
+                }
+            }
+        }
+
+        if (fd >= 0)
+            close(fd);
+
+        unlink(path);
+    }
+
+    return intact;
+}
+
+
 static socklen_t fill_addr(struct sockaddr_un* un, const char* path) {
 
     memset(un, 0, sizeof(*un));
@@ -696,6 +784,160 @@ static void test_accept_race(void) {
 }
 
 
+/**
+ * @brief Creates sockets and socket pairs with SOCK_NONBLOCK and SOCK_CLOEXEC, and checks both flags took.
+ */
+static void test_sock_flags(void) {
+
+    int fd = socket(AF_UNIX, SOCK_STREAM | SOCK_NONBLOCK | SOCK_CLOEXEC, 0);
+
+    int fl = fd >= 0 ? fcntl(fd, F_GETFL) : -1;
+    int fd_flags = fd >= 0 ? fcntl(fd, F_GETFD) : -1;
+
+    CHECK(fd >= 0 && fl >= 0 && (fl & O_NONBLOCK) && fd_flags >= 0 && (fd_flags & FD_CLOEXEC), "sock-flags", "socket() returned %d (%s), F_GETFL 0x%x, F_GETFD 0x%x", fd, fd < 0 ? strerror(errno) : "ok", fl, fd_flags);
+
+    if (fd >= 0)
+        close(fd);
+
+
+    int sv[2] = {-1, -1};
+    int e     = socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sv);
+
+    int f0 = e == 0 ? fcntl(sv[0], F_GETFD) : -1;
+    int f1 = e == 0 ? fcntl(sv[1], F_GETFD) : -1;
+
+    CHECK(e == 0 && f0 >= 0 && (f0 & FD_CLOEXEC) && f1 >= 0 && (f1 & FD_CLOEXEC), "sock-flags-pair", "socketpair() returned %d (%s), F_GETFD 0x%x 0x%x", e, e < 0 ? strerror(errno) : "ok", f0, f1);
+
+    if (e == 0) {
+        close(sv[0]);
+        close(sv[1]);
+    }
+}
+
+
+/**
+ * @brief Keeps using a listening socket after its path is removed, while new files reuse freed kernel memory.
+ */
+static void test_bound_unlink(void) {
+
+    const char* path = "/tmp/unix-test-bound.sock";
+
+    unlink(path);
+
+    int srv = socket(AF_UNIX, SOCK_STREAM, 0);
+
+    struct sockaddr_un un;
+    socklen_t len = fill_addr(&un, path);
+
+    if (srv < 0 || bind(srv, (struct sockaddr*)&un, len) < 0 || listen(srv, 4) < 0) {
+        CHECK(0, "bound-unlink", "could not set up the listener: %s", strerror(errno));
+        return;
+    }
+
+
+    struct sockaddr_un a0 = {0};
+    struct sockaddr_un a1 = {0};
+
+    socklen_t l0 = sizeof(a0);
+    socklen_t l1 = sizeof(a1);
+
+    int g0 = getsockname(srv, (struct sockaddr*)&a0, &l0);
+    int e  = unlink(path);
+
+    churn_files();
+
+    int g1 = getsockname(srv, (struct sockaddr*)&a1, &l1);
+
+    CHECK(g0 == 0 && e == 0 && g1 == 0 && strcmp(a0.sun_path, a1.sun_path) == 0, "bound-unlink-name", "getsockname gave \"%s\" before the unlink and \"%s\" after", a0.sun_path, a1.sun_path);
+
+
+    errno = 0;
+
+    int cli = socket(AF_UNIX, SOCK_STREAM, 0);
+    int c   = cli >= 0 ? connect(cli, (struct sockaddr*)&un, len) : -1;
+
+    CHECK(c < 0 && (errno == ENOENT || errno == ECONNREFUSED), "bound-unlink-connect", "connecting to the removed path returned %d, errno %d", c, errno);
+
+    if (cli >= 0)
+        close(cli);
+
+    close(srv);
+
+    CHECK(churn_intact(), "bound-unlink-close", "%s", "files written after the unlink were damaged when the listener closed");
+}
+
+
+/**
+ * @brief Connects to a path over and over while another process keeps closing and rebinding the listener behind it.
+ */
+static void test_connect_close_race(void) {
+
+    const char* path = "/tmp/unix-test-race.sock";
+
+    struct sockaddr_un un;
+    socklen_t len = fill_addr(&un, path);
+
+    unlink(path);
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        for (int i = 0; i < 3000; i++) {
+
+            int s = socket(AF_UNIX, SOCK_STREAM, 0);
+
+            if (s < 0)
+                _exit(1);
+
+            (void)!connect(s, (struct sockaddr*)&un, len);
+            close(s);
+        }
+
+        _exit(0);
+    }
+
+
+    int rounds = 0;
+
+    for (int i = 0; pid > 0 && i < 300; i++) {
+
+        unlink(path);
+
+        int srv = socket(AF_UNIX, SOCK_STREAM, 0);
+
+        if (srv < 0)
+            break;
+
+        if (fcntl(srv, F_SETFL, O_NONBLOCK) == 0 && bind(srv, (struct sockaddr*)&un, len) == 0 && listen(srv, 8) == 0) {
+
+            for (int j = 0; j < 4; j++) {
+
+                int a = accept(srv, NULL, NULL);
+
+                if (a >= 0)
+                    close(a);
+            }
+
+            rounds++;
+        }
+
+        close(srv);
+    }
+
+    unlink(path);
+
+
+    int status = -1;
+
+    if (pid > 0)
+        waitpid(pid, &status, 0);
+
+    CHECK(rounds > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0, "connect-close-race", "%d listener rounds, connecting child left status 0x%x", rounds, status);
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -710,6 +952,9 @@ static const struct {
     {"shutdown", test_shutdown},
     {"leak", test_no_leak},
     {"accept-race", test_accept_race},
+    {"sock-flags", test_sock_flags},
+    {"bound-unlink", test_bound_unlink},
+    {"connect-close-race", test_connect_close_race},
 };
 
 
