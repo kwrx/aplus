@@ -66,9 +66,9 @@ SYSCALL(
 
         struct kclone_args args = {
             .flags       = (uint64_t)(flags & ~CSIGNAL),
-            .pidfd       = (uint64_t)(parent_tid ? uio_get_ptr(parent_tid) : 0),
-            .parent_tid  = (uint64_t)(parent_tid ? uio_get_ptr(parent_tid) : 0),
-            .child_tid   = (uint64_t)(child_tid ? uio_get_ptr(child_tid) : 0),
+            .pidfd       = (uint64_t)parent_tid,
+            .parent_tid  = (uint64_t)parent_tid,
+            .child_tid   = (uint64_t)child_tid,
             .exit_signal = (uint64_t)(flags & CSIGNAL),
             .stack       = (uint64_t)stack,
             .tls         = (uint64_t)tls,
