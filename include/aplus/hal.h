@@ -184,6 +184,7 @@ void arch_task_context_set(task_t*, int, long);
 long arch_task_context_get(task_t*, int);
 void arch_task_destroy(task_t*);
 bool arch_task_stack_in_use(const task_t*);
+bool arch_task_parked_in_kernel(const task_t*, bool);
 void arch_task_switch_address_space(vmm_address_space_t*);
 
 

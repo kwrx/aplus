@@ -806,6 +806,36 @@ long arch_task_context_get(task_t* task, int options) {
 
 
 /**
+ * @brief Asks whether a task would resume inside the kernel, parked in the middle of a syscall.
+ *
+ * @param task The task.
+ * @param live Whether its registers are the ones on the cpu right now rather than its saved copy.
+ * @return true if the task is parked inside the kernel.
+ */
+bool arch_task_parked_in_kernel(const task_t* task, bool live) {
+
+    DEBUG_ASSERT(task);
+
+
+    interrupt_frame_t* frame = live ? (interrupt_frame_t*)current_cpu->frame : FRAME(task);
+
+    if (unlikely(!frame))
+        return false;
+
+    if (x86_intr_is_user_mode(frame))
+        return false;
+
+#if defined(__x86_64__)
+    extern uint8_t x86_syscall_leave[];
+
+    return frame->ip != (uintptr_t)x86_syscall_leave;
+#else
+    return true;
+#endif
+}
+
+
+/**
  * @brief Asks whether the current cpu is executing on a task's kernel stack.
  *
  * Only the kernel stack is checked: the stack a kernel thread runs on sits inside its task, and kernel threads

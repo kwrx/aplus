@@ -64,7 +64,9 @@ x86_syscall_handler:
 
 
     .align 16, 0x90
+    .global x86_syscall_leave
 .L0:
+x86_syscall_leave:
 
   # Restore User Stack
     movq    %gs:32, %rsp
