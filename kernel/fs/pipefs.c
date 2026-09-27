@@ -57,7 +57,7 @@ static struct superblock pipefs_superblock = {
     .st     = {.f_bsize = CONFIG_BUFSIZ, .f_frsize = CONFIG_BUFSIZ, .f_blocks = 0, .f_bfree = 0, .f_bavail = 0, .f_files = 0, .f_ffree = 0, .f_favail = 0, .f_fsid = PIPEFS_FSID, .f_flag = 0, .f_namemax = 0},
 };
 
-static ino64_t __pipefs_next_ino = PIPEFS_FIRST_INO + 1;
+static _Atomic ino64_t __pipefs_next_ino = PIPEFS_FIRST_INO + 1;
 
 
 struct pipe {
@@ -150,6 +150,8 @@ int pipefs_close(inode_t* inode) {
         }
 
         ringbuffer_destroy(&pipe->rb);
+
+        shared_ptr_free(pipe->ev);
 
         kfree(pipe);
     }
@@ -294,7 +296,7 @@ inode_t* pipefs_inode(void) {
 
 
     inode->name[0] = '\0';
-    inode->ino     = __pipefs_next_ino++;
+    inode->ino     = atomic_fetch_add(&__pipefs_next_ino, 1);
     inode->sb      = &pipefs_superblock;
     inode->parent  = NULL;
 
@@ -385,6 +387,7 @@ int pipefs_create_pair(inode_t** rd, inode_t** wr, size_t bufsize) {
             kfree(w);
 
         ringbuffer_destroy(&pipe->rb);
+        shared_ptr_free(pipe->ev);
         kfree(pipe);
 
         return -ENOMEM;

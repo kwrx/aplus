@@ -204,6 +204,7 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 
 inode_t* vfs_open(inode_t*, int);
 int vfs_close(inode_t*);
+void vfs_anonymous_free(inode_t*);
 int vfs_ioctl(inode_t*, long, void*);
 int vfs_poll(inode_t*, int);
 void vfs_notify(inode_t*);

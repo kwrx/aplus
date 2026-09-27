@@ -102,7 +102,7 @@ void fd_remove(struct file* fd, bool close) {
                 vfs_close(inode);
 
                 if (inode && (inode->flags & INODE_FLAGS_ANONYMOUS))
-                    kfree(inode);
+                    vfs_anonymous_free(inode);
             }
 
             fd->inode    = NULL;

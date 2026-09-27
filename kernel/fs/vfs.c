@@ -143,6 +143,25 @@ int vfs_close(inode_t* inode) {
 }
 
 
+/**
+ * @brief Frees an anonymous inode, dropping the reference it holds on its change counter.
+ *
+ * @param inode The inode to free.
+ */
+void vfs_anonymous_free(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->flags & INODE_FLAGS_ANONYMOUS);
+
+    if (inode->ev) {
+        shared_ptr_free(inode->ev);
+        inode->ev = NULL;
+    }
+
+    kfree(inode);
+}
+
+
 int vfs_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);

@@ -66,7 +66,7 @@ static struct superblock sockfs_superblock = {
     .st     = {.f_bsize = CONFIG_BUFSIZ, .f_frsize = CONFIG_BUFSIZ, .f_fsid = SOCKFS_FSID, .f_namemax = 0},
 };
 
-static ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
+static _Atomic ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 
 
 /**
@@ -304,7 +304,7 @@ static inode_t* __sockfs_inode(int socket) {
         return NULL;
 
     inode->name[0] = '\0';
-    inode->ino     = __sockfs_next_ino++;
+    inode->ino     = atomic_fetch_add(&__sockfs_next_ino, 1);
     inode->sb      = &sockfs_superblock;
     inode->parent  = NULL;
     inode->flags   = INODE_FLAGS_ANONYMOUS;
@@ -352,7 +352,7 @@ int socket_install(int socket, int flags) {
     if (unlikely(!ref)) {
 
         inode->userdata = NULL;
-        kfree(inode);
+        vfs_anonymous_free(inode);
 
         lwip_close(socket);
         return -ENFILE;

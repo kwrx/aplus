@@ -87,7 +87,7 @@ SYSCALL(
                 } else {
 
                     vfs_close(inodes[i]);
-                    kfree(inodes[i]);
+                    vfs_anonymous_free(inodes[i]);
                 }
             }
 
