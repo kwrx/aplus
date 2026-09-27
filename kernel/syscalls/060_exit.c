@@ -52,6 +52,27 @@
  */
 
 /**
+ * @brief Clears the word CLONE_CHILD_CLEARTID or set_tid_address() named, and wakes one task waiting on it.
+ */
+static void __exit_clear_tid(void) {
+
+    uint32_t* uaddr = (uint32_t*)current_task->userspace.tid_address;
+
+    if (!uaddr)
+        return;
+
+    current_task->userspace.tid_address = 0;
+
+    if (unlikely(!uio_check(uaddr, R_OK | W_OK)))
+        return;
+
+    uio_w32(uaddr, 0);
+
+    futex_wakeup(uio_get_ptr(uaddr), 1);
+}
+
+
+/**
  * @brief Releases the descriptors, filesystem context, signal handlers and address space of the calling task.
  *
  * Each is unpublished under the run-queue lock, which is what other cpus hold while they read them, and released only
@@ -136,6 +157,7 @@ SYSCALL(
 #endif
 
 
+        __exit_clear_tid();
         __exit_release();
 
         do_vfork_release();

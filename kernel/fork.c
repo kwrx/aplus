@@ -204,6 +204,8 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
         child->ppid = current_task->ppid;
     }
 
+    child->userspace.tid_address = (args->flags & CLONE_CHILD_CLEARTID) ? args->child_tid : 0;
+
 
     if (args->flags & CLONE_FILES) {
         child->fd = shared_ptr_ref(current_task->fd);
@@ -252,6 +254,15 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
 
 
     child->ustack = args->stack ? (void*)args->stack : (void*)current_cpu->ustack;
+
+
+    if ((args->flags & CLONE_PARENT_SETTID) && args->parent_tid && uio_check(args->parent_tid, R_OK | W_OK)) {
+        uio_w32(args->parent_tid, child->tid);
+    }
+
+    if ((args->flags & CLONE_CHILD_SETTID) && (args->flags & CLONE_VM) && args->child_tid && uio_check(args->child_tid, R_OK | W_OK)) {
+        uio_w32(args->child_tid, child->tid);
+    }
 
 
     arch_task_context_set(child, ARCH_TASK_CONTEXT_COPY, (long)current_cpu->frame);
