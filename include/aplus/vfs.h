@@ -116,6 +116,9 @@ struct inode_ops {
     int (*rename)(inode_t*, const char*, const char*);
     int (*symlink)(inode_t*, const char*, const char*);
     int (*unlink)(inode_t*, const char*);
+
+    /** @brief Frees what the filesystem keeps for an unlinked inode once nothing references it any more. */
+    void (*release)(inode_t*);
 };
 
 
@@ -148,6 +151,9 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
+    /** @brief How many holders other than its directory entry reference the inode, plus a flag once that entry is gone. */
+    atomic_uint refcount;
+
     inode_events_t ev;
 
     HASHMAP(char, inode_t) dcache;
@@ -172,6 +178,7 @@ struct superblock {
 
 
 struct fd;
+struct fs;
 
 struct file {
 
@@ -233,6 +240,28 @@ ssize_t vfs_readdir(inode_t*, struct dirent*, off_t, size_t);
 int vfs_rename(inode_t*, const char*, const char*);
 int vfs_symlink(inode_t*, const char*, const char*);
 int vfs_unlink(inode_t*, const char*);
+
+inode_t* vfs_inode_get(inode_t*);
+void vfs_inode_put(inode_t*);
+void vfs_inode_unlink(inode_t*);
+bool vfs_inode_unlinked(inode_t*);
+
+void fs_chdir(inode_t*, bool);
+void fs_set_exe(inode_t*);
+void fs_ref_all(struct fs*);
+void fs_put_all(struct fs*);
+
+
+/**
+ * @brief Drops the reference an inode pointer holds when it goes out of scope, for use with __scoped().
+ *
+ * @param inode The pointer, which may be NULL.
+ */
+static inline void vfs_inode_cleanup(inode_t** inode) {
+
+    if (*inode)
+        vfs_inode_put(*inode);
+}
 
 
 // kernel/fs/pipefs.c

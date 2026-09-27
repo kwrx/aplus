@@ -83,12 +83,14 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
         return errno = ENFILE, NULL;
     }
 
+    vfs_inode_get(inode);
+
     return &filetable[i];
 }
 
 
 /**
- * @brief Drops a reference to an open file, releasing its slot and closing it outside filetable_lock on the last one.
+ * @brief Drops a reference to an open file, releasing its slot, closing it and dropping its inode on the last one.
  *
  * @param fd The file.
  * @param close Whether the last reference also closes the inode.
@@ -127,9 +129,7 @@ void fd_remove(struct file* fd, bool close) {
         return;
 
     vfs_close(inode);
-
-    if (inode->flags & INODE_FLAGS_ANONYMOUS)
-        vfs_anonymous_free(inode);
+    vfs_inode_put(inode);
 }
 
 

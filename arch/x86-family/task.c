@@ -411,9 +411,10 @@ pid_t arch_task_spawn_init() {
 
 
     shared_ptr_access(task->fs, fs, {
-        fs->cwd = fs->root = &__vfs_root;
-        fs->exe            = NULL;
-        fs->umask          = 0;
+        fs->cwd   = vfs_inode_get(&__vfs_root);
+        fs->root  = vfs_inode_get(&__vfs_root);
+        fs->exe   = NULL;
+        fs->umask = 0;
     });
 
     memset(&task->sigmask, 0xFF, sizeof(sigset_t));
@@ -543,9 +544,10 @@ task_t* arch_task_spawn_idle(void) {
 
 
     shared_ptr_access(task->fs, fs, {
-        fs->cwd = fs->root = &__vfs_root;
-        fs->exe            = NULL;
-        fs->umask          = 0;
+        fs->cwd   = vfs_inode_get(&__vfs_root);
+        fs->root  = vfs_inode_get(&__vfs_root);
+        fs->exe   = NULL;
+        fs->umask = 0;
     });
 
     memset(&task->sigmask, 0xFF, sizeof(sigset_t));
@@ -629,7 +631,11 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
     atomic_fetch_add(&current_task->address_space->refcount, 1);
 
 
-    task->fs      = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+    shared_ptr_access(current_task->fs, fs, {
+        task->fs = shared_ptr_dup(current_task->fs, GFP_KERNEL);
+        fs_ref_all(fs);
+    });
+
     task->fd      = shared_ptr_new(struct fd, GFP_KERNEL);
     task->sighand = shared_ptr_new(struct sighand, GFP_KERNEL);
 

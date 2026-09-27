@@ -45,8 +45,15 @@ void vfs_dcache_init(inode_t* inode) {
     hashmap_init(&inode->dcache, hashmap_hash_string, strcmp);
 }
 
+/**
+ * @brief Frees the directory entry cache of an inode, if it ever held an entry.
+ *
+ * @param inode The inode whose cache is freed.
+ */
 void vfs_dcache_free(inode_t* inode) {
-    hashmap_cleanup(&inode->dcache);
+
+    if (inode->dcache.map_base.table)
+        hashmap_cleanup(&inode->dcache);
 }
 
 
@@ -85,7 +92,7 @@ inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
 
 /**
- * @brief Drops a cached entry from a directory and frees the inode behind it.
+ * @brief Drops a cached entry from a directory and unlinks the inode behind it.
  *
  * @param parent The directory holding the entry.
  * @param name The name of the entry to drop.
@@ -110,16 +117,16 @@ void vfs_dcache_remove(inode_t* parent, const char* name) {
 
 
     if (likely(inode))
-        kfree(inode);
+        vfs_inode_unlink(inode);
 }
 
 
 /**
- * @brief Looks a name up in a directory's entry cache.
+ * @brief Looks a name up in a directory's entry cache, taking a reference to what it finds.
  *
  * @param parent The directory to search.
  * @param name The name to look for.
- * @return The cached inode, or NULL if the name is not cached.
+ * @return The cached inode, referenced, or NULL if the name is not cached.
  */
 inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 
@@ -135,7 +142,8 @@ inode_t* vfs_dcache_find(inode_t* parent, const char* name) {
 
     hashmap_lock(&parent->dcache);
     {
-        inode = hashmap_get(&parent->dcache, name);
+        if ((inode = hashmap_get(&parent->dcache, name)) != NULL)
+            vfs_inode_get(inode);
     }
     hashmap_unlock(&parent->dcache);
 

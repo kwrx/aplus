@@ -113,7 +113,7 @@ static void __exit_release(void) {
     }
 
     if (fs)
-        shared_ptr_free(fs);
+        shared_ptr_free_with_dtor(fs, f, { fs_put_all(f); });
 
     if (sighand)
         shared_ptr_free(sighand);

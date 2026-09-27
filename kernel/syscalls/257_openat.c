@@ -61,7 +61,7 @@ SYSCALL(
         if (unlikely(!uio_check(filename, R_OK)))
             return -EFAULT;
 
-        inode_t* cwd = NULL;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
         if (dfd < 0) {
 
@@ -73,7 +73,7 @@ SYSCALL(
                 if (unlikely(!fs->cwd))
                     return -ENOENT;
 
-                cwd = fs->cwd;
+                cwd = vfs_inode_get(fs->cwd);
             });
 
 
@@ -86,7 +86,7 @@ SYSCALL(
                 if (unlikely(!fds->descriptors[dfd].ref))
                     return -EBADF;
 
-                cwd = fds->descriptors[dfd].ref->inode;
+                cwd = vfs_inode_get(fds->descriptors[dfd].ref->inode);
             });
         }
 
@@ -100,7 +100,7 @@ SYSCALL(
 #endif
 
 
-        inode_t* r = NULL;
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
 
         if ((r = path_lookup(cwd, __safe_filename, flags, mode)) == NULL)
             return -errno;
@@ -116,7 +116,12 @@ SYSCALL(
             !(flags & O_NOFOLLOW) &&
 #endif
             S_ISLNK(st.st_mode)) {
-            if ((r = path_follows(r)) == NULL)
+
+            inode_t* target = path_follows(r);
+
+            vfs_inode_put(r);
+
+            if ((r = target) == NULL)
                 return -errno;
         }
 
