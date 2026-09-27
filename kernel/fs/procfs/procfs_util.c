@@ -357,13 +357,29 @@ static ssize_t __inode_path(inode_t* inode, inode_t* root, char* buf, size_t siz
 }
 
 
-bool procfs_task_fd_exists(pid_t pid, int fd) {
+/**
+ * @brief A reference to a task's descriptor table or filesystem context, typed as task_t holds them.
+ */
+typedef __typeof__(((task_t*)0)->fd) procfs_fd_t;
+typedef __typeof__(((task_t*)0)->fs) procfs_fs_t;
 
-    if (unlikely(pid <= 0))
-        return false;
 
-    if (unlikely(fd < 0 || fd >= CONFIG_OPEN_MAX))
-        return false;
+/**
+ * @brief Takes references to a task's descriptor table and filesystem context, under the lock of its cpu only.
+ *
+ * @param pid The tid of the task.
+ * @param fdt Receives the descriptor table, or NULL for a task that has none left.
+ * @param fst Receives the filesystem context in the same way, or NULL if the caller does not want it.
+ * @return true if the task exists.
+ */
+static bool __task_files_get(pid_t pid, procfs_fd_t* fdt, procfs_fs_t* fst) {
+
+    DEBUG_ASSERT(fdt);
+
+    *fdt = NULL;
+
+    if (fst)
+        *fst = NULL;
 
 
     cpu_foreach (cpu) {
@@ -375,19 +391,61 @@ bool procfs_task_fd_exists(pid_t pid, int fd) {
                 if (t->tid != pid || t->status == TASK_STATUS_DEAD)
                     continue;
 
+                if (t->fd)
+                    *fdt = shared_ptr_ref(t->fd);
 
-                bool open = false;
+                if (fst && t->fs)
+                    *fst = shared_ptr_ref(t->fs);
 
-                shared_ptr_nullable_access(t->fd, fds, {
-                    open = fds->descriptors[fd].ref != NULL;
-                });
-
-                return open;
+                return true;
             }
         }
     }
 
     return false;
+}
+
+
+/**
+ * @brief Drops the references __task_files_get() took, closing the descriptors on the last one.
+ *
+ * @param fdt The descriptor table, or NULL.
+ * @param fst The filesystem context, or NULL.
+ */
+static void __task_files_put(procfs_fd_t fdt, procfs_fs_t fst) {
+
+    if (fdt)
+        shared_ptr_free_with_dtor(fdt, fds, { fd_close_all(fds); });
+
+    if (fst)
+        shared_ptr_free(fst);
+}
+
+
+bool procfs_task_fd_exists(pid_t pid, int fd) {
+
+    if (unlikely(pid <= 0))
+        return false;
+
+    if (unlikely(fd < 0 || fd >= CONFIG_OPEN_MAX))
+        return false;
+
+
+    procfs_fd_t fdt = NULL;
+
+    if (!__task_files_get(pid, &fdt, NULL))
+        return false;
+
+
+    bool open = false;
+
+    shared_ptr_nullable_access(fdt, fds, {
+        open = fds->descriptors[fd].ref != NULL;
+    });
+
+    __task_files_put(fdt, NULL);
+
+    return open;
 }
 
 
@@ -407,34 +465,27 @@ size_t procfs_task_fd_list(pid_t pid, int* out, size_t max) {
         return 0;
 
 
-    cpu_foreach (cpu) {
+    procfs_fd_t fdt = NULL;
 
-        scoped_lock(&cpu->sched_lock) {
-
-            for (task_t* t = cpu->sched_queue; t; t = t->next) {
-
-                if (t->tid != pid || t->status == TASK_STATUS_DEAD)
-                    continue;
+    if (!__task_files_get(pid, &fdt, NULL))
+        return 0;
 
 
-                size_t n = 0;
+    size_t n = 0;
 
-                shared_ptr_nullable_access(t->fd, fds, {
-                    for (int i = 0; i < CONFIG_OPEN_MAX && n < max; i++) {
+    shared_ptr_nullable_access(fdt, fds, {
+        for (int i = 0; i < CONFIG_OPEN_MAX && n < max; i++) {
 
-                        if (fds->descriptors[i].ref == NULL)
-                            continue;
+            if (fds->descriptors[i].ref == NULL)
+                continue;
 
-                        out[n++] = i;
-                    }
-                });
-
-                return n;
-            }
+            out[n++] = i;
         }
-    }
+    });
 
-    return 0;
+    __task_files_put(fdt, NULL);
+
+    return n;
 }
 
 
@@ -449,34 +500,28 @@ ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
         return errno = EBADF, -1;
 
 
-    cpu_foreach (cpu) {
+    procfs_fd_t fdt = NULL;
+    procfs_fs_t fst = NULL;
 
-        scoped_lock(&cpu->sched_lock) {
-
-            for (task_t* t = cpu->sched_queue; t; t = t->next) {
-
-                if (t->tid != pid || t->status == TASK_STATUS_DEAD)
-                    continue;
+    if (!__task_files_get(pid, &fdt, &fst))
+        return errno = ESRCH, -1;
 
 
-                inode_t* root = NULL;
+    inode_t* root = NULL;
 
-                shared_ptr_nullable_access(t->fs, fs, {
-                    root = fs->root;
-                });
+    shared_ptr_nullable_access(fst, fs, {
+        root = fs->root;
+    });
 
 
-                ssize_t e = (errno = EBADF, -1);
+    ssize_t e = (errno = EBADF, -1);
 
-                shared_ptr_nullable_access(t->fd, fds, {
-                    if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
-                        e = __inode_path(fds->descriptors[fd].ref->inode, root, buf, size);
-                });
+    shared_ptr_nullable_access(fdt, fds, {
+        if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
+            e = __inode_path(fds->descriptors[fd].ref->inode, root, buf, size);
+    });
 
-                return e;
-            }
-        }
-    }
+    __task_files_put(fdt, fst);
 
-    return errno = ESRCH, -1;
+    return e;
 }
