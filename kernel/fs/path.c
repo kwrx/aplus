@@ -39,19 +39,97 @@
 
 
 /**
- * @brief Resolves one path component inside a directory.
- *
- * @param inode The directory to look in.
- * @param path The remaining path, whose first component is looked up.
- * @param size The length of that component.
- * @param follow Whether a symlink found here is resolved to what it points at.
- * @return The inode of the component, or NULL with errno set.
+ * @brief How many symbolic links one lookup may follow, and how deeply resolving a link's target may nest.
  */
-static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool follow) {
+#define PATH_MAXSYMLINKS 40
+#define PATH_MAXNESTED   8
+
+
+static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth);
+
+
+/**
+ * @brief Tells whether a lookup failed for a reason of its own rather than a missing name, which is reported as ENOENT.
+ *
+ * @return true if errno already holds the reason.
+ */
+static inline bool __path_failed_on_its_own(void) {
+    return errno == ELOOP || errno == ENAMETOOLONG || errno == ENOMEM;
+}
+
+
+/**
+ * @brief Follows a link, and each link it lands on, until it reaches an inode that is not a link.
+ *
+ * @param inode The inode to start from.
+ * @param links The links the whole lookup may still follow, shared by every nesting level.
+ * @param depth How deeply this resolution is nested inside the resolution of another link.
+ * @return The inode the links lead to, or NULL with errno set.
+ */
+static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(links);
+
+
+    char* target = NULL;
+
+    while (inode) {
+
+        struct stat st = {0};
+
+        if (vfs_getattr(inode, &st) < 0) {
+            inode = NULL;
+            break;
+        }
+
+        if (!S_ISLNK(st.st_mode))
+            break;
+
+        if (--(*links) < 0 || depth >= PATH_MAXNESTED) {
+            errno = ELOOP;
+            inode = NULL;
+            break;
+        }
+
+        if (!target && (target = kmalloc(CONFIG_PATH_MAX + 1, GFP_KERNEL)) == NULL) {
+            errno = ENOMEM;
+            inode = NULL;
+            break;
+        }
+
+        ssize_t n = vfs_readlink(inode, target, CONFIG_PATH_MAX);
+
+        if (n <= 0) {
+
+            if (n == 0)
+                errno = ENOENT;
+
+            inode = NULL;
+            break;
+        }
+
+        target[n] = '\0';
+
+        inode = __path_lookup(inode->parent ? inode->parent : inode, target, O_NOFOLLOW, 0, links, depth + 1);
+    }
+
+    if (target)
+        kfree(target);
+
+    return inode;
+}
+
+
+static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool follow, int* links, int depth) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(path);
     DEBUG_ASSERT(size);
+
+
+    if (unlikely(size >= CONFIG_MAXNAMLEN))
+        return errno = ENAMETOOLONG, NULL;
 
 
     char s[size + 1];
@@ -67,18 +145,7 @@ static inode_t* path_find(inode_t* inode, const char* path, size_t size, bool fo
     if (!follow)
         return inode;
 
-
-    struct stat st = {0};
-
-    if (vfs_getattr(inode, &st) < 0) {
-        return NULL;
-    }
-
-    if (S_ISLNK(st.st_mode)) {
-        inode = path_follows(inode);
-    }
-
-    return inode;
+    return __path_follow_links(inode, links, depth);
 }
 
 
@@ -87,17 +154,16 @@ inode_t* path_follows(inode_t* inode) {
 
     DEBUG_ASSERT(inode);
 
-    char s[CONFIG_PATH_MAX + 1] = {0};
+    int links = PATH_MAXSYMLINKS;
 
-    if (vfs_readlink(inode, s, CONFIG_PATH_MAX) <= 0)
-        return NULL;
+    errno = 0;
 
-    return path_lookup(inode->parent, s, O_RDONLY, 0);
+    return __path_follow_links(inode, &links, 0);
 }
 
 
 
-inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
+static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth) {
 
     DEBUG_ASSERT(cwd);
     DEBUG_ASSERT(path);
@@ -123,7 +189,7 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     while (strchr(path, '/') && c) {
 
-        c    = path_find(c, path, strcspn(path, "/"), true);
+        c    = path_find(c, path, strcspn(path, "/"), true, links, depth);
         path = strchr(path, '/') + 1;
 
         while (path[0] == '/')
@@ -132,20 +198,20 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
 
     if (unlikely(!c)) {
-        return errno = ENOENT, NULL;
+        return errno = (__path_failed_on_its_own() ? errno : ENOENT), NULL;
     }
 
     inode_t* r;
 
     if (path[0] != '\0')
-        r = path_find(c, path, strlen(path), !(flags & O_NOFOLLOW));
+        r = path_find(c, path, strlen(path), !(flags & O_NOFOLLOW), links, depth);
     else
         r = c;
 
 
     if (unlikely(!r)) {
 
-        if (flags & O_CREAT) {
+        if ((flags & O_CREAT) && !__path_failed_on_its_own()) {
 
             if ((mode & S_IFMT) == 0) {
                 mode |= S_IFREG;
@@ -157,7 +223,7 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
                 return NULL;
 
         } else {
-            return errno = ENOENT, NULL;
+            return errno = (__path_failed_on_its_own() ? errno : ENOENT), NULL;
         }
 
     } else {
@@ -167,4 +233,15 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
     }
 
     return r;
+}
+
+
+
+inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
+
+    int links = PATH_MAXSYMLINKS;
+
+    errno = 0;
+
+    return __path_lookup(cwd, path, flags, mode, &links, 0);
 }
