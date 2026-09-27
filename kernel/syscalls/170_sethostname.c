@@ -26,12 +26,15 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
 #include <aplus/syscall.h>
 #include <stdint.h>
+#include <string.h>
 
 
 // @see kernel/init/hostname.c
 extern char* hostname;
+extern spinlock_t hostname_lock;
 
 
 /***
@@ -62,9 +65,16 @@ SYSCALL(
             return -EINVAL;
 
 
-        uio_memcpy_u2s(hostname, name, len);
+        char staged[CONFIG_NAME_MAX + 1];
 
-        hostname[len] = '\0';
+        uio_memcpy_u2s(staged, name, len);
+
+        staged[len] = '\0';
+
+
+        scoped_lock(&hostname_lock) {
+            memcpy(hostname, staged, len + 1);
+        }
 
         return 0;
     });

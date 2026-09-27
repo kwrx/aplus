@@ -26,10 +26,16 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
 
 
-char __hostname[CONFIG_NAME_MAX] = "kwrx\0";
-char* hostname                   = &__hostname[0];
+char __hostname[CONFIG_NAME_MAX + 1] = "kwrx\0";
+char* hostname                       = &__hostname[0];
+
+/**
+ * @brief Serialises changes to the hostname against the readers that copy it out.
+ */
+spinlock_t hostname_lock = SPINLOCK_INIT;
 
 
 TEST(hostname_test, {
