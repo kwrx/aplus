@@ -69,7 +69,7 @@ volatile uint32_t sched_child_event = 0;
 
 
 /**
- * @brief Wakes the current task if its sleep deadline has come due, and records the time it has left.
+ * @brief Wakes the current task if its sleep deadline has come due.
  */
 static inline void do_sleep(void) {
 
@@ -91,19 +91,10 @@ static inline void do_sleep(void) {
         uint64_t tsc = (t0.tv_sec * 1000000000ULL) + t0.tv_nsec;
 
 
-        if (current_task->sleep.remaining) {
-
-            uint64_t time_remaining_ns = tss > tsc ? tss - tsc : 0ULL;
-
-            current_task->sleep.remaining->tv_sec  = time_remaining_ns / 1000000000ULL;
-            current_task->sleep.remaining->tv_nsec = time_remaining_ns % 1000000000ULL;
-        }
-
-        if (tss < tsc) {
+        if (tss <= tsc) {
 
             current_task->sleep.timeout.tv_sec  = 0L;
             current_task->sleep.timeout.tv_nsec = 0L;
-            current_task->sleep.remaining       = NULL;
             current_task->sleep.expired         = true;
 
             thread_wake(current_task);
@@ -215,6 +206,8 @@ static void handle_default_signal(const siginfo_t* siginfo) {
 
 static void handle_user_signal(siginfo_t* siginfo, struct ksigaction* action) {
 
+    syscall_interrupt();
+
     arch_task_prepare_to_signal(siginfo);
 
     if (action->sa_flags & SA_RESETHAND) {
@@ -277,7 +270,8 @@ static void handle_signal(siginfo_t* siginfo) {
  * @brief Delivers one pending signal to the current task.
  *
  * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY. Nothing is
- * delivered to a task already in the middle of exiting.
+ * delivered to a parent parked in vfork(), since its child is still running on its stack, nor to a task
+ * already in the middle of exiting.
  */
 static inline void do_signals(void) {
 
@@ -287,7 +281,7 @@ static inline void do_signals(void) {
         return;
     }
 
-    if (unlikely(current_task->sighand == NULL)) {
+    if (unlikely(current_task->vfork.pending || current_task->sighand == NULL)) {
         return;
     }
 
@@ -382,7 +376,7 @@ static void __sched_next(void) {
 
         if (current_task->status == TASK_STATUS_SLEEP) {
 
-            if (!queue_is_empty(&current_task->sigqueue) && current_task->sighand) {
+            if (!queue_is_empty(&current_task->sigqueue) && !current_task->vfork.pending && current_task->sighand) {
                 thread_wake(current_task);
             }
 
