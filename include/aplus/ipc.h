@@ -169,8 +169,6 @@ void sem_init(semaphore_t*, uint32_t);
 void sem_post(semaphore_t*);
 int sem_trywait(semaphore_t* s);
 
-void futex_rt_lock(void);
-void futex_rt_unlock(void);
 size_t futex_wakeup(uint32_t*, size_t);
 void futex_release_all(struct task*);
 size_t futex_requeue(uint32_t*, uint32_t*, size_t);
