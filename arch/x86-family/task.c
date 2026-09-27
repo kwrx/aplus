@@ -83,20 +83,13 @@ void arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
 
     memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
-    memcpy(&sigcontext->mask, &current_task->sigmask, sizeof(sigset_t));
+    memcpy(&sigcontext->mask, current_task->syscall.sigmask_valid ? &current_task->syscall.sigmask : &current_task->sigmask, sizeof(sigset_t));
+
+    current_task->syscall.sigmask_valid = false;
 
 
 
     fpu_save(&sigcontext->fpuregs[0]);
-
-
-    current_task->syscall.interrupted.index  = current_task->syscall.index;
-    current_task->syscall.interrupted.param0 = current_task->syscall.param0;
-    current_task->syscall.interrupted.param1 = current_task->syscall.param1;
-    current_task->syscall.interrupted.param2 = current_task->syscall.param2;
-    current_task->syscall.interrupted.param3 = current_task->syscall.param3;
-    current_task->syscall.interrupted.param4 = current_task->syscall.param4;
-    current_task->syscall.interrupted.param5 = current_task->syscall.param5;
 
 
     sigcontext->ustack = current_cpu->ustack;
@@ -182,7 +175,7 @@ long arch_task_return_from_signal(void) {
     current_cpu->kstack = sigcontext->kstack;
 
 
-    if ((sigcontext->flags & SA_RESTART) && (long)sigcontext->regs.ax == -4) {
+    if ((sigcontext->flags & SA_RESTART) && current_task->syscall.interrupted.index && (long)sigcontext->regs.ax == -4) {
 
         current_task->syscall.index  = current_task->syscall.interrupted.index;
         current_task->syscall.param0 = current_task->syscall.interrupted.param0;

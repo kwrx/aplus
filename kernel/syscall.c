@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <syscall.h>
+#include <time.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -83,6 +84,9 @@ void syscall_init(void) {
 #endif
 }
 
+
+
+extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
 long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long p4, long p5) {
@@ -155,4 +159,104 @@ long syscall_restart(void) {
 
 
     return syscall_invoke(current_task->syscall.index - 1, current_task->syscall.param0, current_task->syscall.param1, current_task->syscall.param2, current_task->syscall.param3, current_task->syscall.param4, current_task->syscall.param5);
+}
+
+
+/**
+ * @brief Asks whether a syscall may be restarted after a signal handler with SA_RESTART, which as on Linux the waits
+ *        for signals, time and descriptor readiness never are.
+ *
+ * @param idx The syscall number.
+ * @return false for poll, select, pause, the sleeps, rt_sigsuspend, pselect6 and ppoll.
+ */
+static bool __syscall_restartable(long idx) {
+
+    switch (idx) {
+
+        case SYS_poll:
+        case SYS_select:
+        case SYS_pause:
+        case SYS_nanosleep:
+        case SYS_rt_sigsuspend:
+        case SYS_clock_nanosleep:
+        case SYS_pselect6:
+        case SYS_ppoll:
+            return false;
+
+        default:
+            return true;
+    }
+}
+
+
+/**
+ * @brief Gives up the syscall the current task is parked in, because a signal handler is about to run instead.
+ *
+ * The syscall is kept in syscall.interrupted for rt_sigreturn() to restart under SA_RESTART, unless it never
+ * restarts, and whatever it carried across attempts is dropped. An interrupted sleep reports the time it had left.
+ * A task that was not parked in a syscall has nothing to restart.
+ */
+void syscall_interrupt(void) {
+
+    DEBUG_ASSERT(current_task);
+
+
+    if (!(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)) {
+
+        current_task->syscall.interrupted.index = 0;
+        return;
+    }
+
+    current_task->flags &= ~TASK_FLAGS_NEED_SYSCALL_RESTART;
+
+
+    if (current_task->syscall.index > 0 && __syscall_restartable(current_task->syscall.index - 1)) {
+
+        current_task->syscall.interrupted.index  = current_task->syscall.index;
+        current_task->syscall.interrupted.param0 = current_task->syscall.param0;
+        current_task->syscall.interrupted.param1 = current_task->syscall.param1;
+        current_task->syscall.interrupted.param2 = current_task->syscall.param2;
+        current_task->syscall.interrupted.param3 = current_task->syscall.param3;
+        current_task->syscall.interrupted.param4 = current_task->syscall.param4;
+        current_task->syscall.interrupted.param5 = current_task->syscall.param5;
+
+    } else {
+
+        current_task->syscall.interrupted.index = 0;
+    }
+
+
+    current_task->syscall.deadline_valid = false;
+
+
+    if ((current_task->sleep.timeout.tv_sec || current_task->sleep.timeout.tv_nsec) && current_task->sleep.remaining) {
+
+        struct timespec now = {0};
+
+        long e = 0;
+
+        scoped_uio_kernel() {
+            e = sys_clock_gettime(current_task->sleep.clockid, &now);
+        }
+
+        if (likely(e == 0)) {
+
+            uint64_t tss = (current_task->sleep.timeout.tv_sec * 1000000000ULL) + current_task->sleep.timeout.tv_nsec;
+            uint64_t tsc = (now.tv_sec * 1000000000ULL) + now.tv_nsec;
+
+            uint64_t left = tss > tsc ? tss - tsc : 0ULL;
+
+            struct timespec remaining = {
+                .tv_sec  = left / 1000000000ULL,
+                .tv_nsec = left % 1000000000ULL,
+            };
+
+            uio_memcpy_s2u(current_task->sleep.remaining, &remaining, sizeof(remaining));
+        }
+    }
+
+    current_task->sleep.timeout.tv_sec  = 0L;
+    current_task->sleep.timeout.tv_nsec = 0L;
+    current_task->sleep.remaining       = NULL;
+    current_task->sleep.expired         = false;
 }
