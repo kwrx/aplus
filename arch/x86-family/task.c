@@ -65,131 +65,332 @@ void arch_task_switch_address_space(vmm_address_space_t* address_space) {
 }
 
 
-void arch_task_prepare_to_signal(siginfo_t* siginfo) {
+#if defined(__x86_64__)
 
-    DEBUG_ASSERT(current_task);
-    DEBUG_ASSERT(current_task->sstack);
+/**
+ * @brief The frame a signal handler starts on: the return address into sa_restorer, then the interrupted context and
+ *        the signal's details, laid out as on Linux.
+ */
+struct sigframe {
 
-    DEBUG_ASSERT(siginfo);
-    DEBUG_ASSERT(siginfo->si_signo >= 0);
-    DEBUG_ASSERT(siginfo->si_signo < _NSIG);
+    uintptr_t restorer;
+    ucontext_t uc;
+    siginfo_t info;
+};
 
-    DEBUG_ASSERT(current_task->userspace.sigstack);
-    DEBUG_ASSERT(current_task->userspace.siginfo);
-
-
-
-    sigcontext_frame_t* sigcontext = (sigcontext_frame_t*)current_task->sstack;
+#else
+    #error "i386: not supported"
+#endif
 
 
-    memcpy(&sigcontext->regs, FRAME(current_cpu), sizeof(interrupt_frame_t));
-    memcpy(&sigcontext->mask, current_task->syscall.sigmask_valid ? &current_task->syscall.sigmask : &current_task->sigmask, sizeof(sigset_t));
+/**
+ * @brief The flags a context restored by rt_sigreturn(2) may carry; the rest are the kernel's to set.
+ */
+#define SIGFRAME_USER_FLAGS 0x40CD5UL
+
+/**
+ * @brief The bytes below a user stack pointer that code may still be using, which a signal frame must skip.
+ */
+#define SIGFRAME_RED_ZONE 128
+
+/**
+ * @brief The alignment of the FPU state in a signal frame, which XSAVE requires.
+ */
+#define SIGFRAME_FPU_ALIGNMENT 64
+
+
+/**
+ * @brief Asks whether every page of a range of userspace allows an access.
+ *
+ * @param start The first byte.
+ * @param size How many bytes.
+ * @param mode R_OK or W_OK.
+ * @return true if the whole range lies in userspace and allows the access.
+ */
+static bool __sigframe_range_ok(uintptr_t start, size_t size, int mode) {
+
+    if (unlikely(size == 0 || start + size < start || start + size > X86_MMU_USERSPACE_END))
+        return false;
+
+    for (uintptr_t p = start & ~(X86_MMU_PAGESIZE - 1); p < start + size; p += X86_MMU_PAGESIZE) {
+
+        if (!uio_check(p, mode))
+            return false;
+    }
+
+    return true;
+}
+
+
+/**
+ * @brief Asks whether a user stack pointer lies on the current task's alternate signal stack.
+ *
+ * @param sp The stack pointer.
+ * @return true if it does.
+ */
+static bool __sigframe_on_altstack(uintptr_t sp) {
+
+    const stack_t* alt = &current_task->userspace.altstack;
+
+    return alt->ss_size && sp > (uintptr_t)alt->ss_sp && sp - (uintptr_t)alt->ss_sp <= alt->ss_size;
+}
+
+
+/**
+ * @brief Copies the context the current task resumes into a signal frame, rewinding a restartable syscall to run again.
+ *
+ * @param uc The context to fill in.
+ * @param restart Whether the syscall syscall_interrupt() gave up is to be re-executed when the handler returns.
+ */
+static void __sigframe_save_context(ucontext_t* uc, bool restart) {
+
+    interrupt_frame_t* frame = FRAME(current_cpu);
+    greg_t* g                = uc->uc_mcontext.gregs;
+
+    g[REG_R8]  = frame->r8;
+    g[REG_R9]  = frame->r9;
+    g[REG_R10] = frame->r10;
+    g[REG_R11] = frame->r11;
+    g[REG_R12] = frame->r12;
+    g[REG_R13] = frame->r13;
+    g[REG_R14] = frame->r14;
+    g[REG_R15] = frame->r15;
+    g[REG_RDI] = frame->di;
+    g[REG_RSI] = frame->si;
+    g[REG_RBP] = frame->bp;
+    g[REG_RBX] = frame->bx;
+    g[REG_RDX] = frame->dx;
+    g[REG_RAX] = frame->ax;
+    g[REG_RCX] = frame->cx;
+
+    if (x86_intr_is_user_mode(frame)) {
+
+        g[REG_RIP]    = frame->ip;
+        g[REG_RSP]    = frame->sp;
+        g[REG_EFL]    = frame->flags;
+        g[REG_ERR]    = frame->errno;
+        g[REG_TRAPNO] = frame->intno;
+
+    } else {
+
+        g[REG_RIP] = frame->cx;
+        g[REG_RSP] = (uintptr_t)current_cpu->ustack;
+        g[REG_EFL] = frame->r11;
+    }
+
+    if (restart) {
+
+        g[REG_RIP] -= 2;
+        g[REG_RAX] = current_task->syscall.interrupted - 1;
+        g[REG_RDI] = current_task->syscall.param0;
+        g[REG_RSI] = current_task->syscall.param1;
+        g[REG_RDX] = current_task->syscall.param2;
+        g[REG_R10] = current_task->syscall.param3;
+        g[REG_R8]  = current_task->syscall.param4;
+        g[REG_R9]  = current_task->syscall.param5;
+    }
+
+    g[REG_CSGSFS] = (greg_t)(USER_CS | 3) | ((greg_t)(USER_DS | 3) << 48);
+
+
+    const stack_t* alt = &current_task->userspace.altstack;
+
+    uc->uc_stack.ss_sp    = alt->ss_sp;
+    uc->uc_stack.ss_size  = alt->ss_size;
+    uc->uc_stack.ss_flags = alt->ss_size == 0 ? SS_DISABLE : __sigframe_on_altstack((uintptr_t)g[REG_RSP]) ? SS_ONSTACK : 0;
+
+    memcpy(&uc->uc_sigmask, current_task->syscall.sigmask_valid ? &current_task->syscall.sigmask : &current_task->sigmask, sizeof(sigset_t));
 
     current_task->syscall.sigmask_valid = false;
+}
 
 
+/**
+ * @brief Sets the current task up to run a signal handler on a frame pushed onto its stack, or onto its alternate
+ *        stack under SA_ONSTACK.
+ *
+ * The frame carries the interrupted context, the signal mask to restore, the siginfo and the FPU state, so each
+ * thread and each nested signal has its own and rt_sigreturn(2) restores whatever the handler left there.
+ *
+ * @param siginfo The signal being delivered.
+ * @return 0, or -1 if the frame does not fit in writable user memory.
+ */
+int arch_task_prepare_to_signal(siginfo_t* siginfo) {
 
-    fpu_save(&sigcontext->fpuregs[0]);
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->sigfpu);
+
+    DEBUG_ASSERT(siginfo);
+    DEBUG_ASSERT(siginfo->si_signo > 0);
+    DEBUG_ASSERT(siginfo->si_signo < _NSIG);
 
 
-    sigcontext->ustack = current_cpu->ustack;
-    sigcontext->kstack = current_cpu->kstack;
+    struct ksigaction action;
+    bool found = false;
 
-
-
-    struct ksigaction* action = NULL;
-
-    shared_ptr_access(current_task->sighand, sighand, {
-        action = &sighand->action[siginfo->si_signo];
-
-        FRAME(current_cpu)->ip    = (uintptr_t)action->sigaction;
-        FRAME(current_cpu)->sp    = current_task->userspace.sigstack;
-        FRAME(current_cpu)->cs    = USER_CS | 3;
-        FRAME(current_cpu)->ss    = USER_DS | 3;
-        FRAME(current_cpu)->flags = 0x202;
+    shared_ptr_nullable_access(current_task->sighand, sighand, {
+        action = sighand->action[siginfo->si_signo];
+        found  = true;
     });
 
-    DEBUG_ASSERT(action);
+    if (unlikely(!found))
+        return -1;
+
+
+    struct sigframe sf;
+
+    memset(&sf, 0, sizeof(sf));
+
+    __sigframe_save_context(&sf.uc, current_task->syscall.interrupted && (action.sa_flags & SA_RESTART));
+
+    current_task->syscall.interrupted = 0;
+
+    memcpy(&sf.info, siginfo, sizeof(siginfo_t));
+
+    sf.restorer = (uintptr_t)action.sa_restorer;
+
+
+    const stack_t* alt = &current_task->userspace.altstack;
+
+    uintptr_t sp = (uintptr_t)sf.uc.uc_mcontext.gregs[REG_RSP] - SIGFRAME_RED_ZONE;
+    bool onalt   = __sigframe_on_altstack(sp);
+
+    if ((action.sa_flags & SA_ONSTACK) && alt->ss_size && !onalt) {
+
+        sp    = (uintptr_t)alt->ss_sp + alt->ss_size;
+        onalt = true;
+    }
+
+    uintptr_t fpu = (sp - fpu_size()) & ~((uintptr_t)SIGFRAME_FPU_ALIGNMENT - 1);
+    uintptr_t top = ((fpu - sizeof(struct sigframe)) & ~(uintptr_t)15) - sizeof(uintptr_t);
+
+    if (unlikely(onalt && top < (uintptr_t)alt->ss_sp))
+        return -1;
+
+    if (unlikely(top > sp || !__sigframe_range_ok(top, sp - top, W_OK)))
+        return -1;
+
+
+    sf.uc.uc_mcontext.fpregs = (fpregset_t)fpu;
+
+    fpu_save(current_task->sigfpu);
+
+    uio_lock(top, sp - top);
+    memcpy((void*)top, &sf, sizeof(sf));
+    memcpy((void*)fpu, current_task->sigfpu, fpu_size());
+    uio_unlock(top, sp - top);
+
+
+    interrupt_frame_t* frame = FRAME(current_cpu);
+
+    frame->ip    = (uintptr_t)action.handler;
+    frame->cs    = USER_CS | 3;
+    frame->flags = 0x202;
+    frame->sp    = top;
+    frame->ss    = USER_DS | 3;
+    frame->di    = siginfo->si_signo;
+    frame->si    = top + offsetof(struct sigframe, info);
+    frame->dx    = top + offsetof(struct sigframe, uc);
+    frame->ax    = 0;
 
 
     sigset_t handler_mask;
 
     memset(&handler_mask, 0, sizeof(sigset_t));
-    memcpy(&handler_mask, &action->sa_mask, sizeof(action->sa_mask));
+    memcpy(&handler_mask, &action.sa_mask, sizeof(action.sa_mask));
 
     for (size_t i = 0; i < SIGSET_WORDS; i++) {
         handler_mask.__bits[i] |= current_task->sigmask.__bits[i];
     }
 
-    if (!(action->sa_flags & SA_NODEFER)) {
+    if (!(action.sa_flags & SA_NODEFER)) {
         sigset_add(&handler_mask, siginfo->si_signo);
     }
 
     sched_sigmask(&handler_mask);
 
-
-#if defined(__x86_64__)
-
-    FRAME(current_cpu)->di = siginfo->si_signo;                          // movq  $signo, %rdi
-    FRAME(current_cpu)->si = (uintptr_t)current_task->userspace.siginfo; // movq  $siginfo, %rsi
-    FRAME(current_cpu)->dx = 0L;                                         // movq  $ucontext, %rdx
-
-    uio_w64(FRAME(current_cpu)->sp - 0x08, 0UL);                 // pushq $0
-    uio_w64(FRAME(current_cpu)->sp - 0x10, 0UL);                 // pushq $0
-    uio_w64(FRAME(current_cpu)->sp - 0x18, action->sa_restorer); // callq $handler
-
-    FRAME(current_cpu)->sp -= 0x18;
-
-#else
-
-    uio_w32(FRAME(current_cpu)->sp - 0x04, siginfo->si_signo);               // pushl $signo
-    uio_w32(FRAME(current_cpu)->sp - 0x08, current_task->userspace.siginfo); // pushl $siginfo
-    uio_w32(FRAME(current_cpu)->sp - 0x0C, 0UL);                             // pushl $ucontext
-    uio_w32(FRAME(current_cpu)->sp - 0x10, action->sa_restorer);             // call  $handler
-
-    FRAME(current_cpu)->sp -= 0x10;
-
-#endif
-
-
-    sigcontext->flags = action->sa_flags;
-
-    uio_memcpy_s2u(current_task->userspace.siginfo, siginfo, sizeof(siginfo_t));
+    return 0;
 }
 
 
-long arch_task_return_from_signal(void) {
+/**
+ * @brief Resumes the context saved in the frame of the signal handler that is returning, with its mask and FPU state.
+ *
+ * The frame sits just above the user stack pointer, whose return address into sa_restorer the handler has popped.
+ * Whatever the handler changed in the frame takes effect, except for the segments and the privileged flags.
+ *
+ * @param retval Receives the restored rax, which rt_sigreturn(2) hands back so that it survives.
+ * @return 0, or -1 if the frame cannot be read or does not describe a user context.
+ */
+int arch_task_return_from_signal(long* retval) {
 
-    sigcontext_frame_t* sigcontext = (sigcontext_frame_t*)current_task->sstack;
-
-    sigset_t mask;
-
-    memcpy(current_cpu->frame, &sigcontext->regs, sizeof(interrupt_frame_t));
-    memcpy(&mask, &sigcontext->mask, sizeof(sigset_t));
-
-    sched_sigmask(&mask);
-
-    fpu_restore(&sigcontext->fpuregs[0]);
-
-    current_cpu->ustack = sigcontext->ustack;
-    current_cpu->kstack = sigcontext->kstack;
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(current_task->sigfpu);
+    DEBUG_ASSERT(retval);
 
 
-    if ((sigcontext->flags & SA_RESTART) && current_task->syscall.interrupted.index && (long)sigcontext->regs.ax == -4) {
+    uintptr_t uaddr = (uintptr_t)current_cpu->ustack - sizeof(uintptr_t) + offsetof(struct sigframe, uc);
 
-        current_task->syscall.index  = current_task->syscall.interrupted.index;
-        current_task->syscall.param0 = current_task->syscall.interrupted.param0;
-        current_task->syscall.param1 = current_task->syscall.interrupted.param1;
-        current_task->syscall.param2 = current_task->syscall.interrupted.param2;
-        current_task->syscall.param3 = current_task->syscall.interrupted.param3;
-        current_task->syscall.param4 = current_task->syscall.interrupted.param4;
-        current_task->syscall.param5 = current_task->syscall.interrupted.param5;
+    if (unlikely(!__sigframe_range_ok(uaddr, sizeof(ucontext_t), R_OK)))
+        return -1;
 
-        thread_restart_syscall(current_task);
+
+    ucontext_t uc;
+
+    uio_lock(uaddr, sizeof(ucontext_t));
+    memcpy(&uc, (const void*)uaddr, sizeof(ucontext_t));
+    uio_unlock(uaddr, sizeof(ucontext_t));
+
+
+    const greg_t* g = uc.uc_mcontext.gregs;
+
+    if (unlikely((uint64_t)g[REG_RIP] >= X86_MMU_USERSPACE_END || (uint64_t)g[REG_RSP] >= X86_MMU_USERSPACE_END))
+        return -1;
+
+    if (uc.uc_mcontext.fpregs) {
+
+        uintptr_t fpu = (uintptr_t)uc.uc_mcontext.fpregs;
+
+        if (unlikely(!__sigframe_range_ok(fpu, fpu_size(), R_OK)))
+            return -1;
+
+        uio_lock(fpu, fpu_size());
+        memcpy(current_task->sigfpu, (const void*)fpu, fpu_size());
+        uio_unlock(fpu, fpu_size());
+
+        fpu_sanitize(current_task->sigfpu);
+        fpu_restore(current_task->sigfpu);
     }
 
 
-    return (long)sigcontext->regs.ax;
+    interrupt_frame_t* frame = FRAME(current_cpu);
+
+    frame->r8    = g[REG_R8];
+    frame->r9    = g[REG_R9];
+    frame->r10   = g[REG_R10];
+    frame->r11   = g[REG_R11];
+    frame->r12   = g[REG_R12];
+    frame->r13   = g[REG_R13];
+    frame->r14   = g[REG_R14];
+    frame->r15   = g[REG_R15];
+    frame->di    = g[REG_RDI];
+    frame->si    = g[REG_RSI];
+    frame->bp    = g[REG_RBP];
+    frame->bx    = g[REG_RBX];
+    frame->dx    = g[REG_RDX];
+    frame->ax    = g[REG_RAX];
+    frame->cx    = g[REG_RCX];
+    frame->ip    = g[REG_RIP];
+    frame->sp    = g[REG_RSP];
+    frame->flags = ((uint64_t)g[REG_EFL] & SIGFRAME_USER_FLAGS) | 0x202;
+    frame->cs    = USER_CS | 3;
+    frame->ss    = USER_DS | 3;
+
+    sched_sigmask(&uc.uc_sigmask);
+
+    *retval = (long)frame->ax;
+
+    return 0;
 }
 
 
@@ -315,7 +516,7 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
 
     task->frame  = _(sizeof(interrupt_frame_t), 0);
-    task->sstack = fpu_new_signal_state();
+    task->sigfpu = fpu_new_signal_state();
     task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
     task->ustack = NULL;
     task->fpu    = fpu_new_state();
@@ -382,7 +583,7 @@ pid_t arch_task_spawn_init() {
 #define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
 
     task->frame  = _(sizeof(interrupt_frame_t), 0);
-    task->sstack = fpu_new_signal_state();
+    task->sigfpu = fpu_new_signal_state();
     task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
     task->ustack = NULL;
     task->fpu    = fpu_new_state();
@@ -511,7 +712,7 @@ task_t* arch_task_spawn_idle(void) {
 #define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
 
     task->frame  = _(sizeof(interrupt_frame_t), 0);
-    task->sstack = fpu_new_signal_state();
+    task->sigfpu = fpu_new_signal_state();
     task->kstack = _(KERNEL_SYSCALL_STACKSIZE, KERNEL_SYSCALL_STACKSIZE);
     task->ustack = NULL;
     task->fpu    = fpu_new_state();
@@ -889,8 +1090,8 @@ void arch_task_destroy(task_t* task) {
         fpu_free_state(task->fpu);
     }
 
-    if (task->sstack) {
-        fpu_free_signal_state(task->sstack);
+    if (task->sigfpu) {
+        fpu_free_signal_state(task->sigfpu);
     }
 
     if (task->kstack) {

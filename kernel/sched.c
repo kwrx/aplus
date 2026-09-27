@@ -232,7 +232,10 @@ static void handle_user_signal(siginfo_t* siginfo, struct ksigaction* action) {
 
     syscall_interrupt();
 
-    arch_task_prepare_to_signal(siginfo);
+    if (unlikely(arch_task_prepare_to_signal(siginfo) < 0)) {
+        sched_die(SIGSEGV | 0x80);
+        return;
+    }
 
     if (action->sa_flags & SA_RESETHAND) {
         action->handler = SIG_DFL;
@@ -1040,6 +1043,22 @@ void sched_group_exit(int value) {
             }
         }
     }
+}
+
+
+/**
+ * @brief Ends every thread of the current process, the way a fatal signal's default action does.
+ *
+ * A thread already told to exit by a group exit in progress only exits, reporting the status it was given.
+ *
+ * @param status The wait status the process reports: the signal, with 0x80 added when it dumps core.
+ */
+void sched_die(int status) {
+
+    if (!current_task->exit_group_pending)
+        sched_group_exit(status & 0x7FFF);
+
+    sys_exit((1U << 31) | (status & 0x7FFF));
 }
 
 

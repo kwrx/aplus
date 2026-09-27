@@ -42,6 +42,12 @@
 #define FPU_XSAVE_ALIGNMENT  64
 #define FPU_LEGACY_ALIGNMENT 16
 
+#define FPU_MXCSR_OFFSET        24
+#define FPU_MXCSR_MASK_OFFSET   28
+#define FPU_MXCSR_DEFAULT_MASK  0xFFBF
+#define FPU_XSAVE_HEADER_OFFSET 512
+#define FPU_XSAVE_HEADER_SIZE   64
+
 #define XCR0_FPU    (1ULL << 0)
 #define XCR0_SSE    (1ULL << 1)
 #define XCR0_AVX    (1ULL << 2)
@@ -457,7 +463,37 @@ void fpu_free_state(void* fpu_area) {
 
 
 void* fpu_new_signal_state(void) {
-    return fpu_new_buffer(sizeof(sigcontext_frame_t));
+    return fpu_new_buffer(0);
+}
+
+
+/**
+ * @brief Clears what would make restoring an FPU state copied in from userspace fault: reserved MXCSR bits, and XSAVE
+ *        header fields naming components that are not enabled or not in the standard format.
+ *
+ * @param fpu_area The state, in the format fpu_save() writes.
+ */
+void fpu_sanitize(void* fpu_area) {
+
+    fpu_validate_area(fpu_area);
+
+    if (__fpu_mode == FPU_MODE_FSAVE)
+        return;
+
+
+    uint32_t mask = 0;
+
+    memcpy(&mask, &__fpu_initial_state[FPU_MXCSR_MASK_OFFSET], sizeof(mask));
+
+    ((uint32_t*)fpu_area)[FPU_MXCSR_OFFSET / sizeof(uint32_t)] &= mask ? mask : FPU_MXCSR_DEFAULT_MASK;
+
+    if (__fpu_mode == FPU_MODE_XSAVE || __fpu_mode == FPU_MODE_XSAVEOPT) {
+
+        uint64_t* header = (uint64_t*)((uint8_t*)fpu_area + FPU_XSAVE_HEADER_OFFSET);
+
+        header[0] &= __fpu_xcr0;
+        memset(&header[1], 0, FPU_XSAVE_HEADER_SIZE - sizeof(uint64_t));
+    }
 }
 
 

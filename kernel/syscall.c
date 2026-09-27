@@ -253,7 +253,7 @@ static bool __syscall_restartable(long idx) {
 /**
  * @brief Gives up the syscall the current task is parked in, because a signal handler is about to run instead.
  *
- * The syscall is kept in syscall.interrupted for rt_sigreturn() to restart under SA_RESTART, unless it never
+ * The syscall is named in syscall.interrupted for the handler's frame to rewind under SA_RESTART, unless it never
  * restarts, and whatever it carried across attempts is dropped. A transfer that already moved some bytes returns
  * that count instead, and an interrupted sleep reports the time it had left. A task that was not parked in a
  * syscall has nothing to restart.
@@ -263,11 +263,10 @@ void syscall_interrupt(void) {
     DEBUG_ASSERT(current_task);
 
 
-    if (!(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)) {
+    current_task->syscall.interrupted = 0;
 
-        current_task->syscall.interrupted.index = 0;
+    if (!(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART))
         return;
-    }
 
     current_task->flags &= ~TASK_FLAGS_NEED_SYSCALL_RESTART;
 
@@ -276,21 +275,9 @@ void syscall_interrupt(void) {
 
         arch_task_context_set(current_task, ARCH_TASK_CONTEXT_RETVAL, (long)current_task->syscall.progress);
 
-        current_task->syscall.interrupted.index = 0;
-
     } else if (current_task->syscall.index > 0 && __syscall_restartable(current_task->syscall.index - 1)) {
 
-        current_task->syscall.interrupted.index  = current_task->syscall.index;
-        current_task->syscall.interrupted.param0 = current_task->syscall.param0;
-        current_task->syscall.interrupted.param1 = current_task->syscall.param1;
-        current_task->syscall.interrupted.param2 = current_task->syscall.param2;
-        current_task->syscall.interrupted.param3 = current_task->syscall.param3;
-        current_task->syscall.interrupted.param4 = current_task->syscall.param4;
-        current_task->syscall.interrupted.param5 = current_task->syscall.param5;
-
-    } else {
-
-        current_task->syscall.interrupted.index = 0;
+        current_task->syscall.interrupted = current_task->syscall.index;
     }
 
 

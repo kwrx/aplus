@@ -42,6 +42,7 @@ void* fpu_new_state(void);
 void fpu_free_state(void*);
 void* fpu_new_signal_state(void);
 void fpu_free_signal_state(void*);
+void fpu_sanitize(void*);
 size_t fpu_size(void);
 
 __END_DECLS
