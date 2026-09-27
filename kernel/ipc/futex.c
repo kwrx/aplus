@@ -104,6 +104,9 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 
     futex_t* futex = (futex_t*)kcalloc(1, sizeof(futex_t), GFP_KERNEL);
 
+    if (unlikely(!futex))
+        return;
+
     futex->address = kaddr;
     futex->value   = value;
 
@@ -114,6 +117,26 @@ void futex_wait(task_t* task, volatile uint32_t* kaddr, uint32_t value, const st
 
     scoped_lock(&task->lock) {
         list_push(task->futexes, futex);
+    }
+}
+
+
+/**
+ * @brief Drops every futex registration a task holds and frees them.
+ *
+ * @param task The task whose registrations are dropped.
+ */
+void futex_release_all(task_t* task) {
+
+    DEBUG_ASSERT(task);
+
+    scoped_lock(&task->lock) {
+
+        list_each(task->futexes, futex) {
+            kfree(futex);
+        }
+
+        list_clear(task->futexes);
     }
 }
 

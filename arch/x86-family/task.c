@@ -818,5 +818,7 @@ void arch_task_destroy(task_t* task) {
         shared_ptr_free(task->ctty);
     }
 
+    futex_release_all(task);
+
     kfree(task);
 }
