@@ -450,19 +450,15 @@ long shm_attach(int id, uintptr_t addr, int flags) {
 
         if (likely(slot != SHM_ATTACH_MAX)) {
 
-            uintptr_t cursor = space->mmap.heap_end;
+            uintptr_t cursor = vmm_mmap_find(space, size, pagesize);
 
-            if (cursor & (pagesize - 1))
-                cursor = (cursor & ~(pagesize - 1)) + pagesize;
-
-
-            if (likely(cursor + size > cursor && cursor + size <= space->mmap.heap_limit)) {
+            if (likely(cursor)) {
 
                 space->shm.attachments[slot].addr = cursor;
                 space->shm.attachments[slot].size = size;
                 space->shm.attachments[slot].id   = id;
 
-                space->mmap.heap_end = cursor + size;
+                vmm_mmap_update_top(space);
 
                 start = cursor;
 
@@ -505,6 +501,7 @@ long shm_attach(int id, uintptr_t addr, int flags) {
 
         scoped_lock(&space->lock) {
             memset(&space->shm.attachments[slot], 0, sizeof(shm_attach_t));
+            vmm_mmap_update_top(space);
         }
 
         uintptr_t* stale = NULL;
@@ -563,6 +560,7 @@ long shm_detach(uintptr_t addr) {
             id   = space->shm.attachments[i].id;
 
             memset(&space->shm.attachments[i], 0, sizeof(shm_attach_t));
+            vmm_mmap_update_top(space);
 
             break;
         }
