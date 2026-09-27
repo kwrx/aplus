@@ -51,10 +51,15 @@
 
 SYSCALL(
     62, kill, long sys_kill(pid_t pid, int sig) {
+        if (unlikely(sig < 0 || sig > _NSIG - 1))
+            return -EINVAL;
+
         siginfo_t siginfo = {0};
         siginfo.si_signo  = sig;
         siginfo.si_code   = SI_USER;
         siginfo.si_errno  = 0;
+        siginfo.si_pid    = current_task->pid;
+        siginfo.si_uid    = current_task->uid;
 
 
         int e = 0;
@@ -68,7 +73,7 @@ SYSCALL(
         }
 
         else if (pid == -1) {
-            e = sched_sigqueueinfo(-1, -1, -1, sig, &siginfo);
+            e = sched_sigqueue(-1, -1, -1, sig, &siginfo, SCHED_SIGQUEUE_BROADCAST);
         }
 
         else if (pid < -1) {

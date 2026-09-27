@@ -335,6 +335,10 @@ typedef struct task {
     bool wait_stopped;
     bool wait_continued;
 
+    /** @brief The status exit_group() asked this thread to report instead of the SIGKILL it was sent. */
+    bool exit_group_pending;
+    int exit_group_value;
+
 
     shared_ptr(struct fd) fd;
     shared_ptr(struct fs) fs;
@@ -490,6 +494,11 @@ typedef struct task {
  */
     #define SCHED_SIGQUEUE_KERNEL 1
 
+/**
+ * @brief sched_sigqueue() flags: kill(-1), which spares init and the caller's own process.
+ */
+    #define SCHED_SIGQUEUE_BROADCAST 2
+
 
 
 __BEGIN_DECLS
@@ -505,6 +514,7 @@ void sched_enqueue(task_t*);
 void sched_bury(struct cpu*, task_t*);
 void sched_requeue(task_t*);
 void sched_exit(void);
+void sched_group_exit(int);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*, int flags);
 int sched_fault_sigqueueinfo(int sig, siginfo_t*);

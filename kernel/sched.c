@@ -663,7 +663,8 @@ static inline bool __sig_default_ignored(int sig) {
 /**
  * @brief Queues a signal on every task matching a process group, a process or a thread.
  *
- * Zombies are not matched. SIGCONT and SIGKILL resume a stopped task before anything is queued, a
+ * Zombies are not matched. Kernel threads, and init for any signal it has not asked to handle, are
+ * matched but left alone. SIGCONT and SIGKILL resume a stopped task before anything is queued, a
  * signal that would only be ignored on arrival is dropped rather than queued, and a standard signal
  * already pending on a thread that blocks it is not queued twice.
  *
@@ -672,7 +673,7 @@ static inline bool __sig_default_ignored(int sig) {
  * @param tid The thread to match, or -1 not to narrow by it.
  * @param sig The signal to queue.
  * @param info The signal's payload.
- * @param flags SCHED_SIGQUEUE_KERNEL, or 0.
+ * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
  * @return 0 on success, or -1 with errno set.
  */
 int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, int flags) {
@@ -711,6 +712,9 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
                 if (tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD)
                     continue;
 
+                if ((flags & SCHED_SIGQUEUE_BROADCAST) && (tmp->pid == 1 || tmp->pid == current_task->pid))
+                    continue;
+
                 if (!(flags & SCHED_SIGQUEUE_KERNEL) && !(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
                     continue;
 
@@ -718,6 +722,9 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
                 found++;
 
                 if (unlikely(sig == 0))
+                    continue;
+
+                if (unlikely(tmp->flags & TASK_FLAGS_KTHREAD))
                     continue;
 
                 if (unlikely(tmp->sighand == NULL))
@@ -734,6 +741,10 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
                     handler  = sighand->action[sig].handler;
                     sa_flags = sighand->action[sig].sa_flags;
                 });
+
+
+                if (unlikely(tmp->pid == 1 && (unstoppable || handler == SIG_DFL || handler == SIG_IGN)))
+                    continue;
 
 
                 if ((sig == SIGCONT || sig == SIGKILL) && tmp->status == TASK_STATUS_STOP) {
@@ -966,6 +977,63 @@ void sched_exit(void) {
         __sched_child_changed(ppid, self->pid, self->uid, WCOREDUMP(value) ? CLD_DUMPED : CLD_KILLED, WTERMSIG(value));
     else
         __sched_child_changed(ppid, self->pid, self->uid, CLD_EXITED, WEXITSTATUS(value));
+}
+
+
+/**
+ * @brief Kills every other thread of the current process, each reporting the given status rather than SIGKILL.
+ *
+ * SIGKILL is queued directly, past the limits and dispositions that could otherwise drop it.
+ *
+ * @param value The wait status the process exits with.
+ */
+void sched_group_exit(int value) {
+
+    cpu_foreach(cpu) {
+
+        scoped_lock(&cpu->sched_lock) {
+
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (t == current_task || t->pid != current_task->pid)
+                    continue;
+
+                if (t->flags & TASK_FLAGS_KTHREAD)
+                    continue;
+
+                if (t->status == TASK_STATUS_DEAD)
+                    continue;
+
+                if (t->status == TASK_STATUS_ZOMBIE) {
+
+                    if (t->tid == t->pid)
+                        t->exit.value = value;
+
+                    continue;
+                }
+
+
+                t->exit_group_pending = true;
+                t->exit_group_value   = value;
+
+                if (t->status == TASK_STATUS_STOP)
+                    t->status = TASK_STATUS_READY;
+
+
+                siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+
+                if (unlikely(!siginfo))
+                    continue;
+
+                siginfo->si_signo = SIGKILL;
+                siginfo->si_code  = SI_KERNEL;
+                siginfo->si_pid   = current_task->pid;
+                siginfo->si_uid   = current_task->uid;
+
+                queue_enqueue(&t->sigqueue, siginfo, 0);
+            }
+        }
+    }
 }
 
 

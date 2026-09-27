@@ -146,7 +146,9 @@ SYSCALL(
         PANIC_ASSERT(current_task->tid != 1);
 
 
-        if (status & (1U << 31))
+        if (current_task->exit_group_pending)
+            current_task->exit.value = current_task->exit_group_value;
+        else if (status & (1U << 31))
             current_task->exit.value = status & 0x7FFF;
         else
             current_task->exit.value = (status & 0377) << 8;
