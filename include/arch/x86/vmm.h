@@ -204,6 +204,13 @@ void arch_vmm_flush(vmm_address_space_t*, uintptr_t) __nonnull(1);
 void arch_vmm_flush_range(vmm_address_space_t*, uintptr_t, size_t) __nonnull(1);
 void arch_vmm_flush_all(vmm_address_space_t*) __nonnull(1);
 
+void x86_vmm_tlb_load(vmm_address_space_t*) __nonnull(1);
+void x86_vmm_tlb_sync(vmm_address_space_t*) __nonnull(1);
+uint64_t x86_vmm_tlb_bump(vmm_address_space_t*) __nonnull(1);
+void x86_vmm_tlb_collect(vmm_tlb_batch_t**, uintptr_t, uintptr_t) __nonnull(1);
+void x86_vmm_tlb_retire(vmm_address_space_t*, vmm_tlb_batch_t*, uint64_t) __nonnull(1);
+void x86_vmm_tlb_drain(vmm_address_space_t*) __nonnull(1);
+
 int x86_vmm_resolve(uintptr_t pm, uintptr_t virtaddr, uint64_t err, const char** reason);
 
 int pagefault_handle(interrupt_frame_t*, uintptr_t);

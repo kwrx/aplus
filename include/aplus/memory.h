@@ -141,6 +141,30 @@ typedef struct {
 
 
     /**
+     * @brief Entries a deferred-free batch holds, sized so the batch fills one kernel heap page.
+     */
+    #define VMM_TLB_BATCH_MAX ((4096UL - 16UL - 24UL) / sizeof(uintptr_t))
+
+    #define VMM_TLB_BATCH_FRAMES 0
+    #define VMM_TLB_BATCH_SHM    1
+
+
+/**
+ * @brief Frames, or shared memory attachments, an address space stopped mapping, kept until no CPU can reach them.
+ */
+typedef struct vmm_tlb_batch {
+
+    struct vmm_tlb_batch* next;
+    uint64_t gen;
+    uint32_t count;
+    uint32_t kind;
+
+    uintptr_t entries[VMM_TLB_BATCH_MAX];
+
+} vmm_tlb_batch_t;
+
+
+    /**
      * @brief Address space lives in .bss, the per-CPU syscore slots, and must never be freed.
      */
     #define VMM_SPACE_STATIC (1 << 0)
@@ -180,6 +204,16 @@ typedef struct vmm_address_space {
         shm_attach_t attachments[SHM_ATTACH_MAX];
 
     } shm;
+
+    /* The TLB generation, bumped whenever translations are removed or narrowed, and what was
+       unmapped while another CPU running this space might still reach it. */
+    struct {
+
+        _Atomic uint64_t gen;
+        vmm_tlb_batch_t* deferred;
+        spinlock_t lock;
+
+    } tlb;
 
     spinlock_t lock;
 

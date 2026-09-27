@@ -181,6 +181,8 @@ __nonnull(1) uintptr_t arch_vmm_mprotect(vmm_address_space_t* space, uintptr_t v
         arch_vmm_flush(space, s);
     }
 
+    x86_vmm_tlb_bump(space);
+
     spinlock_unlock(&space->lock);
 
 

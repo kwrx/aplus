@@ -575,8 +575,6 @@ long shm_detach(uintptr_t addr) {
     arch_vmm_unmap(space, addr, size);
 
 
-    uintptr_t* stale = NULL;
-
     scoped_lock(&shm_lock) {
 
         shm_segment_t* seg = shm_lookup_locked(id);
@@ -586,13 +584,28 @@ long shm_detach(uintptr_t addr) {
             seg->lpid  = current_task->pid;
             seg->dtime = (time_t)arch_timer_gettime();
         }
+    }
 
+    arch_vmm_release_shm(space, id);
+
+    return 0;
+}
+
+
+/**
+ * @brief Drops one attachment to a segment, freeing a removed segment when it was the last.
+ *
+ * @param id The segment id.
+ */
+void shm_release(int id) {
+
+    uintptr_t* stale = NULL;
+
+    scoped_lock(&shm_lock) {
         stale = shm_put_locked(id);
     }
 
     shm_free_frames(stale);
-
-    return 0;
 }
 
 
@@ -773,13 +786,6 @@ void shm_address_space_release(vmm_address_space_t* space) {
 
         memset(&space->shm.attachments[i], 0, sizeof(shm_attach_t));
 
-
-        uintptr_t* stale = NULL;
-
-        scoped_lock(&shm_lock) {
-            stale = shm_put_locked(id);
-        }
-
-        shm_free_frames(stale);
+        shm_release(id);
     }
 }

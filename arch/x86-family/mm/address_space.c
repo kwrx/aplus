@@ -381,10 +381,13 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
 
 
     spinlock_init_with_flags(&dest->lock, SPINLOCK_FLAGS_CPU_OWNER | SPINLOCK_FLAGS_RECURSIVE);
+    spinlock_init_with_flags(&dest->tlb.lock, SPINLOCK_FLAGS_CPU_OWNER);
 
 
-    if ((flags & ARCH_VMM_CLONE_DEMAND) && (flags & ARCH_VMM_CLONE_USERSPACE))
+    if ((flags & ARCH_VMM_CLONE_DEMAND) && (flags & ARCH_VMM_CLONE_USERSPACE)) {
+        x86_vmm_tlb_bump(parent);
         arch_vmm_flush_all(parent);
+    }
 
 
     return dest;
@@ -427,10 +430,12 @@ void arch_vmm_free_address_space(vmm_address_space_t* space) {
         }
 
         if (space->pm == x86_get_cr3()) {
-            x86_set_cr3(kspace->pm);
+            x86_vmm_tlb_load(kspace);
         }
     }
 
+
+    x86_vmm_tlb_drain(space);
 
     scoped_lock(&space->lock) {
         __mm_free_table(space->pm, MM_TOP_LEVEL);
