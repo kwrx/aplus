@@ -72,6 +72,9 @@ SYSCALL(
         if (unlikely(fd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
+        if (unlikely(pos < 0))
+            return -EINVAL;
+
 
 
         ssize_t e = 0;
