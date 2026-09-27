@@ -59,6 +59,37 @@ static int total    = 0;
     }
 
 
+/**
+ * @brief How much the kernel heap may grow over a leak check before it counts as a leak, in kB.
+ */
+#define LEAK_SLACK_KB 256
+
+
+/**
+ * @brief Reads how much memory the kernel heap holds, from the Slab line of /proc/meminfo.
+ *
+ * @return The heap size in kB, or -1 if it could not be read.
+ */
+static long slab_kb(void) {
+
+    FILE* f = fopen("/proc/meminfo", "r");
+
+    if (!f)
+        return -1;
+
+
+    char line[128];
+    long kb = -1;
+
+    while (kb < 0 && fgets(line, sizeof(line), f))
+        sscanf(line, "Slab: %ld kB", &kb);
+
+    fclose(f);
+
+    return kb;
+}
+
+
 static socklen_t fill_addr(struct sockaddr_un* un, const char* path) {
 
     memset(un, 0, sizeof(*un));
@@ -450,6 +481,112 @@ static void test_shutdown(void) {
 }
 
 
+/**
+ * @brief Creates and closes sockets, pairs and connections, checking the kernel heap stays put.
+ *
+ * The last connection is left unaccepted when the listener closes, which is the path that used to strand both ends.
+ */
+static void test_no_leak(void) {
+
+    const char* path = "/tmp/unix-test-leak.sock";
+
+    long before = slab_kb();
+    int made    = 0;
+
+    for (int i = 0; i < 300; i++) {
+
+        int fd = socket(AF_UNIX, SOCK_STREAM, 0);
+
+        if (fd < 0)
+            break;
+
+        close(fd);
+        made++;
+    }
+
+    long after_sockets = slab_kb();
+
+    CHECK(made == 300 && before >= 0 && after_sockets - before < LEAK_SLACK_KB, "leak-socket", "%d sockets made, kernel heap grew by %ld kB", made, after_sockets - before);
+
+
+    made = 0;
+
+    for (int i = 0; i < 300; i++) {
+
+        int sv[2];
+
+        if (socketpair(AF_UNIX, SOCK_STREAM, 0, sv) < 0)
+            break;
+
+        close(sv[0]);
+        close(sv[1]);
+        made++;
+    }
+
+    long after_pairs = slab_kb();
+
+    CHECK(made == 300 && after_pairs - after_sockets < LEAK_SLACK_KB, "leak-socketpair", "%d pairs made, kernel heap grew by %ld kB", made, after_pairs - after_sockets);
+
+
+    unlink(path);
+
+    struct sockaddr_un un;
+    socklen_t len = fill_addr(&un, path);
+
+    int srv = socket(AF_UNIX, SOCK_STREAM, 0);
+
+    if (srv < 0 || bind(srv, (struct sockaddr*)&un, len) < 0 || listen(srv, 8) < 0) {
+
+        CHECK(0, "leak-connect", "listener setup failed: %s", strerror(errno));
+
+        if (srv >= 0)
+            close(srv);
+
+        return;
+    }
+
+    made = 0;
+
+    for (int i = 0; i < 100; i++) {
+
+        int cli = socket(AF_UNIX, SOCK_STREAM, 0);
+
+        if (cli < 0)
+            break;
+
+        if (connect(cli, (struct sockaddr*)&un, len) < 0) {
+            close(cli);
+            break;
+        }
+
+        int acc = accept(srv, NULL, NULL);
+
+        if (acc >= 0) {
+            close(acc);
+            made++;
+        }
+
+        close(cli);
+    }
+
+    int stranded = socket(AF_UNIX, SOCK_STREAM, 0);
+
+    if (stranded >= 0)
+        connect(stranded, (struct sockaddr*)&un, len);
+
+    close(srv);
+
+    if (stranded >= 0)
+        close(stranded);
+
+    unlink(path);
+
+    long after_connect = slab_kb();
+
+    CHECK(made == 100 && after_connect - after_pairs < LEAK_SLACK_KB, "leak-connect", "%d connections accepted, kernel heap grew by %ld kB", made, after_connect - after_pairs);
+}
+
+
 static const struct {
     const char* name;
     void (*fn)(void);
@@ -462,6 +599,7 @@ static const struct {
     {"refused", test_connect_refused},
     {"dup-fork", test_dup_and_fork},
     {"shutdown", test_shutdown},
+    {"leak", test_no_leak},
 };
 
 

@@ -59,7 +59,7 @@ static struct superblock sockfs_superblock = {
     .st     = {.f_bsize = CONFIG_BUFSIZ, .f_frsize = CONFIG_BUFSIZ, .f_fsid = SOCKFS_FSID, .f_namemax = 0},
 };
 
-static ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
+static _Atomic ino64_t __sockfs_next_ino = SOCKFS_FIRST_INO + 1;
 
 
 static void __unix_put(struct unix_sock* sock);
@@ -121,6 +121,9 @@ static void __unix_put(struct unix_sock* sock) {
 
     if (sock->backlog)
         kfree(sock->backlog);
+
+    if (sock->ev)
+        shared_ptr_free(sock->ev);
 
     kfree(sock);
 }
@@ -317,9 +320,13 @@ static int sockfs_close(inode_t* inode) {
             if (!queued[i])
                 continue;
 
-            queued[i]->state = UNIX_SOCK_CLOSED;
+            struct unix_sock* client = queued[i]->peer;
 
-            __unix_wake(queued[i]->peer);
+            queued[i]->state = UNIX_SOCK_CLOSED;
+            queued[i]->peer  = NULL;
+
+            __unix_wake(client);
+            __unix_put(client);
             __unix_put(queued[i]);
         }
 
@@ -363,7 +370,7 @@ static inode_t* __sockfs_inode(struct unix_sock* sock) {
         return NULL;
 
     inode->name[0] = '\0';
-    inode->ino     = __sockfs_next_ino++;
+    inode->ino     = atomic_fetch_add(&__sockfs_next_ino, 1);
     inode->sb      = &sockfs_superblock;
     inode->parent  = NULL;
     inode->flags   = INODE_FLAGS_ANONYMOUS;
@@ -405,7 +412,7 @@ static long __unix_install(struct unix_sock* sock, int flags) {
     if (unlikely(!ref)) {
 
         inode->userdata = NULL;
-        kfree(inode);
+        vfs_anonymous_free(inode);
 
         __unix_put(sock);
 
@@ -557,8 +564,7 @@ long unix_socket(int type, int protocol) {
 
     long fd = __unix_install(sock, 0);
 
-    if (unlikely(fd < 0))
-        __unix_put(sock);
+    __unix_put(sock);
 
     return fd;
 }
