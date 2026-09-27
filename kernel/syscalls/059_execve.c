@@ -311,7 +311,7 @@ static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* 
 
 
 /**
- * @brief Lays out the strings, pointer vectors, signal stack and user stack of the program being started.
+ * @brief Lays out the strings, AT_RANDOM bytes, pointer vectors, signal stack and user stack of the program being started.
  *
  * @param strings The arguments then the environment, one string after the other.
  * @param size Their total size.
@@ -324,10 +324,13 @@ static long __execve_load(inode_t* inode, const Elf_Ehdr* head, const Elf_Phdr* 
  */
 static long __execve_stack(const char* strings, size_t size, size_t argc, size_t envc, const Elf_Ehdr* head, uintptr_t phdr_addr, struct execve_layout* layout) {
 
-    uintptr_t base   = 0;
-    uintptr_t unused = 0;
+    const uint64_t entropy[2] = {arch_random(), arch_random()};
 
-    if (__execve_sbrk(size, &base) < 0)
+    uintptr_t base      = 0;
+    uintptr_t at_random = 0;
+    uintptr_t unused    = 0;
+
+    if (__execve_sbrk(size, &base) < 0 || __execve_sbrk(sizeof(entropy), &at_random) < 0)
         return -ENOMEM;
 
     if (__execve_sbrk(SIGSTKSZ, &unused) < 0 || __execve_sbrk(0, &layout->sigstack) < 0)
@@ -346,6 +349,10 @@ static long __execve_stack(const char* strings, size_t size, size_t argc, size_t
         memcpy((void*)base, strings, size);
         uio_unlock(base, size);
     }
+
+    uio_lock(at_random, sizeof(entropy));
+    memcpy((void*)at_random, entropy, sizeof(entropy));
+    uio_unlock(at_random, sizeof(entropy));
 
 
     uintptr_t* sp = (uintptr_t*)layout->bottom;
@@ -368,7 +375,7 @@ static long __execve_stack(const char* strings, size_t size, size_t argc, size_t
     uio_wptr(sp++, 0UL);
 
 
-    AUX_ENT(AT_RANDOM, arch_random());
+    AUX_ENT(AT_RANDOM, at_random);
     AUX_ENT(AT_PAGESZ, arch_vmm_getpagesize());
     AUX_ENT(AT_PHDR, phdr_addr);
     AUX_ENT(AT_PHENT, head->e_phentsize);
