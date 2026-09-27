@@ -142,20 +142,28 @@ static void __sched_child_changed(void) {
 
 
 /**
- * @brief Stops the current task for a stop signal.
+ * @brief Stops the current task for a stop signal, unless a SIGCONT is already queued behind it.
  *
  * @param signo The stop signal.
  */
 static void do_stop(int signo) {
 
+    bool stopped = false;
+
     scoped_lock(&current_cpu->sched_lock) {
 
-        current_task->exit.value   = (signo << 8) | 0x7F;
-        current_task->status       = TASK_STATUS_STOP;
-        current_task->wait_stopped = true;
+        if (!__sigqueue_holds(&current_task->sigqueue, SIGCONT)) {
+
+            current_task->exit.value     = (signo << 8) | 0x7F;
+            current_task->status         = TASK_STATUS_STOP;
+            current_task->wait_stopped   = true;
+            current_task->wait_continued = false;
+
+            stopped = true;
+        }
     }
 
-    if (current_task->tid == current_task->pid)
+    if (stopped && current_task->tid == current_task->pid)
         __sched_child_changed();
 }
 
@@ -626,7 +634,7 @@ void sched_requeue(task_t* task) {
 /**
  * @brief Queues a signal on every task matching a process group, a process or a thread.
  *
- * Zombies are not matched, and a task whose signal handlers have already been released is left alone.
+ * Zombies are not matched, and SIGCONT and SIGKILL resume a stopped task before anything is queued.
  *
  * @param pgrp The process group to match, or -1 not to narrow by it.
  * @param pid The process to match, or -1 not to narrow by it.
@@ -642,8 +650,9 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
     DEBUG_ASSERT(info);
 
 
-    size_t found = 0;
-    int error    = 0;
+    bool continued = false;
+    size_t found   = 0;
+    int error      = 0;
 
 
     cpu_foreach(cpu) {
@@ -688,6 +697,20 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                 });
 
 
+                if ((sig == SIGCONT || sig == SIGKILL) && tmp->status == TASK_STATUS_STOP) {
+
+                    tmp->status = TASK_STATUS_READY;
+
+                    if (sig == SIGCONT) {
+
+                        tmp->wait_stopped   = false;
+                        tmp->wait_continued = true;
+
+                        continued = true;
+                    }
+                }
+
+
                 if (unlikely(handler == SIG_ERR))
                     continue;
 
@@ -715,6 +738,10 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
             }
         }
     }
+
+
+    if (continued)
+        __sched_child_changed();
 
 
     if (unlikely(found == 0)) {
