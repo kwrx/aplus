@@ -171,13 +171,9 @@ SYSCALL(
         spinlock_lock(&current_task->address_space->lock);
 
         {
-            uintptr_t cursor = current_task->address_space->mmap.heap_end;
+            uintptr_t cursor = vmm_mmap_find(current_task->address_space, len, pagesize);
 
-            if (cursor & (pagesize - 1))
-                cursor = (cursor & ~(pagesize - 1)) + pagesize;
-
-
-            if (unlikely(cursor + len < cursor || cursor + len > current_task->address_space->mmap.heap_limit)) {
+            if (unlikely(!cursor)) {
 
                 spinlock_unlock(&current_task->address_space->lock);
                 return -ENOMEM;
@@ -197,7 +193,7 @@ SYSCALL(
 
                 start = cursor;
 
-                current_task->address_space->mmap.heap_end = cursor + len;
+                vmm_mmap_update_top(current_task->address_space);
 
                 break;
             }
@@ -217,6 +213,7 @@ SYSCALL(
 
             scoped_lock(&current_task->address_space->lock) {
                 memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
+                vmm_mmap_update_top(current_task->address_space);
             }
 
             return -ENOMEM;
@@ -237,6 +234,7 @@ SYSCALL(
 
                 scoped_lock(&current_task->address_space->lock) {
                     memset(&current_task->address_space->mmap.mappings[i], 0, sizeof(mmap_mapping_t));
+                    vmm_mmap_update_top(current_task->address_space);
                 }
 
                 return e;

@@ -242,6 +242,9 @@ void kfree(void*);
 
 uint64_t kheap_get_used_memory();
 
+uintptr_t vmm_mmap_find(vmm_address_space_t*, size_t, uintptr_t);
+void vmm_mmap_update_top(vmm_address_space_t*);
+
 __END_DECLS
 
 #endif

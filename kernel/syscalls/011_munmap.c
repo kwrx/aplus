@@ -102,16 +102,9 @@ SYSCALL(
                 const uintptr_t lo = m[i].start > start ? m[i].start : start;
                 const uintptr_t hi = m[i].end < end ? m[i].end : end;
 
-                arch_vmm_unmap(current_task->address_space, lo, hi - lo);
+                int j = -1;
 
-
-                if (m[i].start >= start && m[i].end <= end) {
-
-                    memset(&m[i], 0, sizeof(mmap_mapping_t));
-
-                } else if (m[i].start < start && m[i].end > end) {
-
-                    int j;
+                if (m[i].start < start && m[i].end > end) {
 
                     for (j = 0; j < CONFIG_MMAP_MAX; j++) {
 
@@ -119,11 +112,18 @@ SYSCALL(
                             break;
                     }
 
-                    if (unlikely(j == CONFIG_MMAP_MAX)) {
-
-                        m[i].end = start;
+                    if (unlikely(j == CONFIG_MMAP_MAX))
                         return -ENOMEM;
-                    }
+                }
+
+                arch_vmm_unmap(current_task->address_space, lo, hi - lo);
+
+
+                if (m[i].start >= start && m[i].end <= end) {
+
+                    memset(&m[i], 0, sizeof(mmap_mapping_t));
+
+                } else if (j >= 0) {
 
                     m[j].start  = end;
                     m[j].end    = m[i].end;
@@ -144,19 +144,7 @@ SYSCALL(
             }
 
 
-            uintptr_t top = current_task->address_space->mmap.heap_start;
-
-            for (int i = 0; i < CONFIG_MMAP_MAX; i++) {
-
-                if (m[i].start == 0UL)
-                    continue;
-
-                if (m[i].end > top)
-                    top = m[i].end;
-            }
-
-            if (top < current_task->address_space->mmap.heap_end)
-                current_task->address_space->mmap.heap_end = top;
+            vmm_mmap_update_top(current_task->address_space);
         }
 
 
