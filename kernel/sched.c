@@ -55,10 +55,10 @@ static inline void do_futex(void) {
         if (!futex_expired(i))
             continue;
 
-
-        list_remove(current_task->futexes, i);
-
+        futex_release_all(current_task);
         thread_wake(current_task);
+
+        break;
     }
 }
 
@@ -360,6 +360,9 @@ void schedule(int resched) {
 
 
         current_task->status = TASK_STATUS_RUNNING;
+
+        if (unlikely(current_task->futexes != NULL))
+            futex_release_all(current_task);
 
         arch_task_switch(prev_task, current_task);
 
