@@ -51,25 +51,27 @@ int tmpfs_rename(inode_t* inode, const char* name, const char* newname) {
     tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
     inode_t* d     = NULL;
 
+    scoped_lock(&tmpfs->lock) {
 
-    list_each(tmpfs->children, i) {
+        list_each(tmpfs->children, i) {
 
-        if (likely(i->parent != inode))
-            continue;
+            if (likely(i->parent != inode))
+                continue;
 
-        if (likely(strcmp(i->name, name) != 0))
-            continue;
+            if (likely(strcmp(i->name, name) != 0))
+                continue;
 
-        d = i;
-        break;
+            d = i;
+            break;
+        }
+
+        if (d)
+            strncpy(d->name, newname, CONFIG_MAXNAMLEN);
     }
 
     if (!d) {
         return errno = ENOENT, -1;
     }
-
-    strncpy(d->name, newname, CONFIG_MAXNAMLEN);
-
 
     return 0;
 }

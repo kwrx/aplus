@@ -76,6 +76,9 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
     dir->sb->fsinfo = (void*)kcalloc(1, sizeof(tmpfs_t), GFP_USER);
 
+    ((tmpfs_t*)dir->sb->fsinfo)->next_ino = 1;
+    spinlock_init(&((tmpfs_t*)dir->sb->fsinfo)->lock);
+
 
     dir->sb->st.f_bsize   = 1;
     dir->sb->st.f_frsize  = 1;

@@ -65,8 +65,12 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
     i->capacity   = CONFIG_BUFSIZ + len;
     i->st.st_size = len;
 
-    inode->sb->st.f_bfree += freed;
-    inode->sb->st.f_bavail += freed;
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+
+    scoped_lock(&tmpfs->lock) {
+        inode->sb->st.f_bfree += freed;
+        inode->sb->st.f_bavail += freed;
+    }
 
 
     return 0;

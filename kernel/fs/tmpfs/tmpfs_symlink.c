@@ -58,6 +58,11 @@ int tmpfs_symlink(inode_t* inode, const char* name, const char* target) {
 
     strncpy(i->data, target, i->capacity);
 
+    scoped_lock(&((tmpfs_t*)inode->sb->fsinfo)->lock) {
+        inode->sb->st.f_bfree -= i->st.st_size;
+        inode->sb->st.f_bavail -= i->st.st_size;
+    }
+
 
     return 0;
 }
