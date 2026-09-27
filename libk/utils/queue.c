@@ -121,73 +121,31 @@ void queue_enqueue(queue_t* queue, void* element, int priority) {
 }
 
 
-void queue_dequeue(queue_t* queue, void* element) {
-
-    DEBUG_ASSERT(queue);
-
-    if (queue->size == 0)
-        return;
-
-    if (queue_top(queue) == element) {
-
-        queue_pop(element);
-
-    } else {
-
-        scoped_lock(&queue->lock) {
-            struct queue_element* tmp;
-            struct queue_element* last;
-
-            for (last = queue->head, tmp = queue->head->next; tmp; last = tmp, tmp = tmp->next) {
-
-                if (tmp->element != element)
-                    continue;
-
-
-                last->next = tmp->next;
-
-                kfree(tmp);
-            }
-
-
-            queue->size -= 1;
-        }
-    }
-}
-
-
-void* queue_top(queue_t* queue) {
-
-    DEBUG_ASSERT(queue);
-
-    if (queue->size == 0)
-        return NULL;
-
-    DEBUG_ASSERT(queue->head);
-    return queue->head->element;
-}
-
-
 void* queue_pop(queue_t* queue) {
 
     DEBUG_ASSERT(queue);
 
-    if (queue->size == 0)
-        return NULL;
 
-    DEBUG_ASSERT(queue->head);
-
-
-    struct queue_element* top = queue->head;
-    void* element             = top->element;
-
+    struct queue_element* top = NULL;
+    void* element             = NULL;
 
     scoped_lock(&queue->lock) {
-        queue->head = queue->head->next;
+
+        if (queue->size == 0)
+            break;
+
+        DEBUG_ASSERT(queue->head);
+
+        top     = queue->head;
+        element = top->element;
+
+        queue->head = top->next;
         queue->size -= 1;
     }
 
 
-    kfree(top);
+    if (top)
+        kfree(top);
+
     return element;
 }
