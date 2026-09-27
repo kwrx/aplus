@@ -184,7 +184,7 @@ static void do_stop(int signo) {
 
 
 /**
- * @brief Carries out a signal's default disposition: terminate, terminate and dump core, or stop.
+ * @brief Carries out a signal's default disposition: terminate or dump core, which end the whole process, or stop.
  *
  * @param siginfo The signal being delivered.
  */
@@ -202,7 +202,7 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGPOLL:
         case SIGPROF:
         case SIGVTALRM:
-            sys_exit((1U << 31) | siginfo->si_signo);
+            sched_die(siginfo->si_signo);
             break;
 
         case SIGQUIT:
@@ -215,7 +215,7 @@ static void handle_default_signal(const siginfo_t* siginfo) {
         case SIGSYS:
         case SIGXCPU:
         case SIGXFSZ:
-            sys_exit((1U << 31) | siginfo->si_signo | 0x80);
+            sched_die(siginfo->si_signo | 0x80);
             break;
 
         case SIGTSTP:
@@ -279,7 +279,7 @@ static void handle_signal(siginfo_t* siginfo) {
     switch (siginfo->si_signo) {
 
         case SIGKILL:
-            sys_exit((1 << 31) | SIGKILL);
+            sched_die(SIGKILL);
             break;
 
         case SIGSTOP:
@@ -670,12 +670,198 @@ static inline bool __sig_default_ignored(int sig) {
 
 
 /**
- * @brief Queues a signal on every task matching a process group, a process or a thread.
+ * @brief Asks whether a signal sent to a process goes to every one of its threads rather than to one.
  *
- * Zombies are not matched. Kernel threads, and init for any signal it has not asked to handle, are
- * matched but left alone. SIGCONT and SIGKILL resume a stopped task before anything is queued, a
- * signal that would only be ignored on arrival is dropped rather than queued, and a standard signal
- * already pending on a thread that blocks it is not queued twice.
+ * @param sig The signal.
+ * @param handler Its disposition.
+ * @return true for SIGKILL, SIGSTOP, and the stop signals left to their default action, which each thread carries out
+ *         for itself.
+ */
+static inline bool __sig_every_thread(int sig, void (*handler)(int)) {
+
+    if (sig == SIGKILL || sig == SIGSTOP)
+        return true;
+
+    return handler == SIG_DFL && (sig == SIGTSTP || sig == SIGTTIN || sig == SIGTTOU);
+}
+
+
+/**
+ * @brief A process that a signal sent to the whole process matched, and the thread picked to take it.
+ */
+struct sigpick {
+
+    pid_t pid;
+    pid_t tid;
+    int rank;
+};
+
+
+/**
+ * @brief Considers a thread for taking a signal sent to its process, keeping the best candidate per process.
+ *
+ * A thread that does not block the signal beats the leader, which beats any other thread.
+ *
+ * @param picks The candidates so far, grown as needed.
+ * @param count How many there are.
+ * @param capacity How many fit.
+ * @param task The thread.
+ * @param blocked Whether it blocks the signal.
+ * @return 0, or ENOMEM.
+ */
+static int __sigpick_consider(struct sigpick** picks, size_t* count, size_t* capacity, const task_t* task, bool blocked) {
+
+    int rank = !blocked ? 3 : task->tid == task->pid ? 2 : 1;
+
+    for (size_t i = 0; i < *count; i++) {
+
+        if ((*picks)[i].pid != task->pid)
+            continue;
+
+        if (rank > (*picks)[i].rank) {
+
+            (*picks)[i].tid  = task->tid;
+            (*picks)[i].rank = rank;
+        }
+
+        return 0;
+    }
+
+
+    if (*count == *capacity) {
+
+        size_t grown      = *capacity ? *capacity * 2 : 16;
+        struct sigpick* p = (struct sigpick*)krealloc(*picks, grown * sizeof(struct sigpick), GFP_KERNEL);
+
+        if (unlikely(!p))
+            return ENOMEM;
+
+        *picks    = p;
+        *capacity = grown;
+    }
+
+    (*picks)[*count].pid  = task->pid;
+    (*picks)[*count].tid  = task->tid;
+    (*picks)[*count].rank = rank;
+
+    (*count)++;
+
+    return 0;
+}
+
+
+/**
+ * @brief Queues a signal on one thread, as pending if the thread blocks it, unless the thread would only discard it.
+ *
+ * The caller holds the sched_lock of the thread's cpu, and has already found that the signal may reach the thread.
+ *
+ * @param task The thread.
+ * @param sig The signal.
+ * @param info Its payload.
+ * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
+ * @return 0, or EAGAIN or ENOMEM.
+ */
+static int __sigqueue_on(task_t* task, int sig, const siginfo_t* info, int flags) {
+
+    bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
+    bool blocked     = !unstoppable && sigset_is_member(&task->sigmask, sig);
+
+    void (*handler)(int) = SIG_DFL;
+    long sa_flags        = 0;
+
+    shared_ptr_nullable_access(task->sighand, sighand, {
+        handler  = sighand->action[sig].handler;
+        sa_flags = sighand->action[sig].sa_flags;
+    });
+
+
+    if (unlikely(handler == SIG_ERR))
+        return 0;
+
+    if (!unstoppable && handler == SIG_IGN)
+        return 0;
+
+    if (!unstoppable && !blocked && handler == SIG_DFL && __sig_default_ignored(sig))
+        return 0;
+
+    if (sig == SIGCHLD && (sa_flags & SA_NOCLDSTOP) && (info->si_code == CLD_STOPPED || info->si_code == CLD_CONTINUED))
+        return 0;
+
+    if (blocked && sig < 32 && __sigqueue_holds(&task->sigpending, sig))
+        return 0;
+
+    if (!(flags & SCHED_SIGQUEUE_KERNEL) && task->sigqueue.size > task->rlimits[RLIMIT_SIGPENDING].rlim_cur)
+        return EAGAIN;
+
+
+    siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
+
+    if (unlikely(!siginfo))
+        return ENOMEM;
+
+    memcpy(siginfo, info, sizeof(siginfo_t));
+
+    siginfo->si_signo = sig;
+
+    queue_enqueue(blocked ? &task->sigpending : &task->sigqueue, siginfo, 0);
+
+    return 0;
+}
+
+
+/**
+ * @brief Queues a signal on the thread picked for its process, or on another live thread of it if that one is gone.
+ *
+ * @param pick The process and the thread picked.
+ * @param sig The signal.
+ * @param info Its payload.
+ * @param flags SCHED_SIGQUEUE_KERNEL and SCHED_SIGQUEUE_BROADCAST.
+ * @return 0, or EAGAIN or ENOMEM.
+ */
+static int __sigqueue_on_pick(const struct sigpick* pick, int sig, const siginfo_t* info, int flags) {
+
+    pid_t want = pick->tid;
+
+    for (int attempt = 0; attempt < 2 && want > 0; attempt++) {
+
+        pid_t other = 0;
+
+        cpu_foreach(cpu) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->pid != pick->pid || tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD || tmp->sighand == NULL)
+                        continue;
+
+                    if (tmp->tid == want)
+                        return __sigqueue_on(tmp, sig, info, flags);
+
+                    if (!other && !(tmp->flags & TASK_FLAGS_KTHREAD))
+                        other = tmp->tid;
+                }
+            }
+        }
+
+        want = other;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Queues a signal on the tasks matching a process group, a process or a thread.
+ *
+ * A signal sent to a thread is queued on that thread. One sent to a process, or to every process of a group or of the
+ * system, is queued on a single thread of each: one that does not block it if there is any, the leader otherwise.
+ * SIGKILL and default stops are the exception, queued on every thread.
+ *
+ * Zombies are not matched. Kernel threads, and init for any signal it has not asked to handle, are matched but left
+ * alone. SIGCONT and SIGKILL resume every stopped thread they match before anything is queued, a signal that would only
+ * be ignored on arrival is dropped rather than queued, and a standard signal already pending on a thread that blocks
+ * it is not queued twice.
  *
  * @param pgrp The process group to match, or -1 not to narrow by it.
  * @param pid The process to match, or -1 not to narrow by it.
@@ -701,6 +887,10 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
     size_t ncontinued = 0;
     size_t found      = 0;
     int error         = 0;
+
+    struct sigpick* picks = NULL;
+    size_t npicks         = 0;
+    size_t cpicks         = 0;
 
 
     cpu_foreach(cpu) {
@@ -741,15 +931,10 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
 
 
                 bool unstoppable = (sig == SIGKILL || sig == SIGSTOP);
-                bool blocked     = !unstoppable && sigset_is_member(&tmp->sigmask, sig);
 
                 void (*handler)(int) = SIG_DFL;
-                long sa_flags        = 0;
 
-                shared_ptr_nullable_access(tmp->sighand, sighand, {
-                    handler  = sighand->action[sig].handler;
-                    sa_flags = sighand->action[sig].sa_flags;
-                });
+                shared_ptr_nullable_access(tmp->sighand, sighand, { handler = sighand->action[sig].handler; });
 
 
                 if (unlikely(tmp->pid == 1 && (unstoppable || handler == SIG_DFL || handler == SIG_IGN)))
@@ -777,42 +962,30 @@ int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, i
                 }
 
 
-                if (unlikely(handler == SIG_ERR))
-                    continue;
+                int e = 0;
 
-                if (!unstoppable && handler == SIG_IGN)
-                    continue;
+                if (tid > 0 || __sig_every_thread(sig, handler))
+                    e = __sigqueue_on(tmp, sig, info, flags);
+                else
+                    e = __sigpick_consider(&picks, &npicks, &cpicks, tmp, sigset_is_member(&tmp->sigmask, sig));
 
-                if (!unstoppable && !blocked && handler == SIG_DFL && __sig_default_ignored(sig))
-                    continue;
-
-                if (sig == SIGCHLD && (sa_flags & SA_NOCLDSTOP) && (info->si_code == CLD_STOPPED || info->si_code == CLD_CONTINUED))
-                    continue;
-
-                if (blocked && sig < 32 && __sigqueue_holds(&tmp->sigpending, sig))
-                    continue;
-
-                if (!(flags & SCHED_SIGQUEUE_KERNEL) && tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
-                    error = EAGAIN;
-                    continue;
-                }
-
-
-                siginfo_t* siginfo = (siginfo_t*)kcalloc(1, sizeof(siginfo_t), GFP_KERNEL);
-
-                if (unlikely(!siginfo)) {
-                    error = ENOMEM;
-                    continue;
-                }
-
-                memcpy(siginfo, info, sizeof(siginfo_t));
-
-                siginfo->si_signo = sig;
-
-                queue_enqueue(blocked ? &tmp->sigpending : &tmp->sigqueue, siginfo, 0);
+                if (e)
+                    error = e;
             }
         }
     }
+
+
+    for (size_t i = 0; i < npicks; i++) {
+
+        int e = __sigqueue_on_pick(&picks[i], sig, info, flags);
+
+        if (e)
+            error = e;
+    }
+
+    if (picks)
+        kfree(picks);
 
 
     for (size_t i = 0; i < ncontinued; i++)
