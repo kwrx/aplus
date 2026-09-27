@@ -849,12 +849,24 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags) {
 }
 
 
-void unix_sock_wait(struct unix_sock* sock) {
+uint32_t unix_sock_seq(struct unix_sock* sock) {
+
+    DEBUG_ASSERT(sock);
+
+    uint32_t seq = 0;
+
+    shared_ptr_nullable_access(sock->ev, ev, { seq = ev->futex; });
+
+    return seq;
+}
+
+
+void unix_sock_wait(struct unix_sock* sock, uint32_t seq) {
 
     DEBUG_ASSERT(sock);
 
     shared_ptr_nullable_access(sock->ev, ev, {
-        futex_wait(current_task, &ev->futex, ev->futex, NULL);
+        futex_wait(current_task, &ev->futex, seq, NULL);
     });
 }
 

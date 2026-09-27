@@ -63,6 +63,8 @@ SYSCALL(
 
         if ((us = unix_sock_from_fd(fd)) != NULL) {
 
+            uint32_t seq = unix_sock_seq(us);
+
             long e = unix_accept(us, sockaddr, (uint32_t*)socklen, flags);
 
             if (e != -EAGAIN)
@@ -83,7 +85,7 @@ SYSCALL(
                 return -EAGAIN;
 
 
-            unix_sock_wait(us);
+            unix_sock_wait(us, seq);
 
             thread_suspend(current_task);
             thread_restart_sched(current_task);

@@ -134,9 +134,14 @@ long unix_accept(struct unix_sock* sock, void* addr, uint32_t* len, int flags);
 long unix_shutdown(struct unix_sock* sock, int how);
 
 /**
- * @brief Registers the caller on this socket's change counter, which only records the intent to sleep.
+ * @brief Snapshots this socket's change counter, to be taken before trying the operation that may have to wait.
  */
-void unix_sock_wait(struct unix_sock* sock);
+uint32_t unix_sock_seq(struct unix_sock* sock);
+
+/**
+ * @brief Registers the caller on this socket's change counter against a snapshot, which only records the intent to sleep.
+ */
+void unix_sock_wait(struct unix_sock* sock, uint32_t seq);
 long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len);
 long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len);
 
