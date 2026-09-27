@@ -60,8 +60,6 @@ __BEGIN_DECLS
 void queue_init(queue_t* queue);
 void queue_destroy(queue_t* queue);
 void queue_enqueue(queue_t* queue, void* element, int priority);
-void queue_dequeue(queue_t* queue, void* element);
-void* queue_top(queue_t*);
 void* queue_pop(queue_t*);
 
 __END_DECLS
