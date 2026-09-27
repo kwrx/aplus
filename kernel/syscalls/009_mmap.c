@@ -38,6 +38,9 @@
 
 
 
+extern long sys_pread64(unsigned int fd, char* buf, size_t count, off_t pos);
+
+
 /***
  * Name:        mmap
  * Description: map or unmap files or devices into memory
@@ -100,9 +103,6 @@ SYSCALL(
                 if (unlikely(!fds->descriptors[fd].ref))
                     return -EBADF;
             });
-
-            if (unlikely(!(flags & (MAP_POPULATE | MAP_LOCKED))))
-                return -ENOTSUP;
         }
 
 
@@ -123,7 +123,7 @@ SYSCALL(
 
 
 #if defined(CONFIG_DEMAND_PAGING)
-        if (!(flags & MAP_POPULATE) && !(flags & MAP_LOCKED))
+        if ((flags & MAP_ANONYMOUS) && !(flags & MAP_POPULATE) && !(flags & MAP_LOCKED))
             arch_flags |= ARCH_VMM_MAP_DEMAND;
 #endif
 
@@ -207,7 +207,9 @@ SYSCALL(
 
 
 
-        uintptr_t ret = arch_vmm_map(current_task->address_space, start, -1, len, arch_flags);
+        const int map_flags = (flags & MAP_ANONYMOUS) ? arch_flags : ((arch_flags | ARCH_VMM_MAP_RDWR) & ~ARCH_VMM_MAP_DISABLED);
+
+        uintptr_t ret = arch_vmm_map(current_task->address_space, start, -1, len, map_flags);
 
         if (unlikely(ret == ARCH_VMM_MAP_FAILED)) {
 
@@ -222,11 +224,16 @@ SYSCALL(
 
         if (!(flags & MAP_ANONYMOUS)) {
 
-            uio_lock(start, len);
+            long e = 0;
 
-            long e = sys_read(fd, (void*)start, len);
+            for (size_t done = 0; done < len; done += (size_t)e) {
 
-            uio_unlock(start, len);
+                if ((e = sys_pread64(fd, (char*)(start + done), len - done, offset + (off_t)done)) <= 0)
+                    break;
+            }
+
+            if (likely(e >= 0) && map_flags != arch_flags && arch_vmm_mprotect(current_task->address_space, start, len, arch_flags) == ARCH_VMM_MAP_FAILED)
+                e = -ENOMEM;
 
             if (unlikely(e < 0)) {
 
