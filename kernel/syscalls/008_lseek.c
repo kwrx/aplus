@@ -54,52 +54,54 @@
 
 SYSCALL(
     8, lseek, long sys_lseek(unsigned int fd, off_t offset, unsigned int whence) {
-        if (unlikely(fd >= CONFIG_OPEN_MAX))
+        struct file* file = fd_get(fd, NULL);
+
+        if (unlikely(!file))
             return -EBADF;
 
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (unlikely(!fds->descriptors[fd].ref))
-                return -EBADF;
+        struct stat st = {0};
+
+        if (vfs_getattr(file->inode, &st) < 0) {
+            fd_put(file);
+            return -errno;
+        }
+
+        if (S_ISFIFO(st.st_mode)) {
+            fd_put(file);
+            return -ESPIPE;
+        }
 
 
-            struct stat st = {0};
 
-            if (vfs_getattr(fds->descriptors[fd].ref->inode, &st) < 0)
-                return -errno;
+        long r = -EINVAL;
 
-            if (S_ISFIFO(st.st_mode))
-                return -ESPIPE;
+        scoped_lock(&file->lock) {
 
+            off_t base     = 0;
+            off_t position = 0;
 
+            if (whence == SEEK_CUR)
+                base = file->position;
+            else if (whence == SEEK_END)
+                base = st.st_size;
+            else if (whence != SEEK_SET)
+                break;
 
-            long r = -EINVAL;
-
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
-
-                off_t base     = 0;
-                off_t position = 0;
-
-                if (whence == SEEK_CUR)
-                    base = fds->descriptors[fd].ref->position;
-                else if (whence == SEEK_END)
-                    base = st.st_size;
-                else if (whence != SEEK_SET)
-                    break;
-
-                if (__builtin_add_overflow(base, offset, &position)) {
-                    r = -EOVERFLOW;
-                    break;
-                }
-
-                if (position < 0)
-                    break;
-
-                fds->descriptors[fd].ref->position = position;
-
-                r = position;
+            if (__builtin_add_overflow(base, offset, &position)) {
+                r = -EOVERFLOW;
+                break;
             }
 
-            return r;
-        });
+            if (position < 0)
+                break;
+
+            file->position = position;
+
+            r = position;
+        }
+
+        fd_put(file);
+
+        return r;
     });

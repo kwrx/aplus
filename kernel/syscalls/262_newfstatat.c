@@ -79,13 +79,16 @@ SYSCALL(
         int e = 0;
         struct stat __statbuf = {0};
 
-        shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
+        struct file* file = fd_get((unsigned int)fd, NULL);
 
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
-                e = vfs_getattr(fds->descriptors[fd].ref->inode, &__statbuf);
-            }
-        });
+        if (unlikely(!file))
+            return -EBADF;
+
+        scoped_lock(&file->lock) {
+            e = vfs_getattr(file->inode, &__statbuf);
+        }
+
+        fd_put(file);
 
 
         if ((fd = sys_close(fd)) < 0)

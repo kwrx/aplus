@@ -54,26 +54,26 @@
 
 SYSCALL(
     3, close, long sys_close(unsigned int fd) {
-
-        {
-
-            if (unlikely(fd >= CONFIG_OPEN_MAX))
-                return -EBADF;
-
-            shared_ptr_access(current_task->fd, fds, {
-                if (unlikely(!fds->descriptors[fd].ref))
-                    return -EBADF;
+        if (unlikely(fd >= CONFIG_OPEN_MAX))
+            return -EBADF;
 
 
-                scoped_lock(&current_task->lock) {
-                    fd_remove(fds->descriptors[fd].ref, true);
+        struct file* file = NULL;
 
-                    fds->descriptors[fd].ref   = NULL;
-                    fds->descriptors[fd].flags = 0;
-                }
-            });
+        shared_ptr_access(current_task->fd, fds, {
+            scoped_lock(&current_task->lock) {
+                file = fds->descriptors[fd].ref;
+
+                fds->descriptors[fd].ref   = NULL;
+                fds->descriptors[fd].flags = 0;
+            }
+        });
 
 
-            return 0;
-        }
+        if (unlikely(!file))
+            return -EBADF;
+
+        fd_remove(file, true);
+
+        return 0;
     });

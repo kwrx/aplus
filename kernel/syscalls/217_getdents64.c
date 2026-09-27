@@ -82,52 +82,54 @@ SYSCALL(
         ssize_t r = 0;
         int err   = 0;
 
-        shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
-            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+        struct file* file = fd_get(fd, NULL);
 
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
+        if (unlikely(!file))
+            return -EBADF;
 
-                struct linux_dirent64* d = dirent;
+        scoped_lock(&file->lock) {
 
-                for (unsigned int i = 0; i < count;) {
+            struct linux_dirent64* d = dirent;
 
-                    struct dirent ent = {0};
+            for (unsigned int i = 0; i < count;) {
 
-                    if ((e = vfs_readdir(fds->descriptors[fd].ref->inode, &ent, fds->descriptors[fd].ref->position, 1)) <= 0)
-                        break;
+                struct dirent ent = {0};
 
-
-                    const size_t reclen = (offsetof(struct linux_dirent64, d_name) + strlen(ent.d_name) + 1 + 7) & ~(size_t)7;
+                if ((e = vfs_readdir(file->inode, &ent, file->position, 1)) <= 0)
+                    break;
 
 
-                    if (i + reclen > count) {
-
-                        if (i == 0)
-                            err = -EINVAL;
-
-                        break;
-                    }
+                const size_t reclen = (offsetof(struct linux_dirent64, d_name) + strlen(ent.d_name) + 1 + 7) & ~(size_t)7;
 
 
-                    fds->descriptors[fd].ref->position++;
+                if (i + reclen > count) {
 
+                    if (i == 0)
+                        err = -EINVAL;
 
-                    uio_w64(&d->d_ino, ent.d_ino);
-                    uio_w64(&d->d_off, (int64_t)fds->descriptors[fd].ref->position);
-                    uio_w16(&d->d_reclen, reclen);
-                    uio_w8(&d->d_type, ent.d_type);
-
-                    uio_strcpy_s2u(&d->d_name[0], ent.d_name);
-
-
-                    r += reclen;
-                    i += reclen;
-
-                    d = (struct linux_dirent64*)((uintptr_t)d + reclen);
+                    break;
                 }
+
+
+                file->position++;
+
+
+                uio_w64(&d->d_ino, ent.d_ino);
+                uio_w64(&d->d_off, (int64_t)file->position);
+                uio_w16(&d->d_reclen, reclen);
+                uio_w8(&d->d_type, ent.d_type);
+
+                uio_strcpy_s2u(&d->d_name[0], ent.d_name);
+
+
+                r += reclen;
+                i += reclen;
+
+                d = (struct linux_dirent64*)((uintptr_t)d + reclen);
             }
-        });
+        }
+
+        fd_put(file);
 
 
         if (err)

@@ -58,6 +58,8 @@ SYSCALL(
             return -EBADF;
 
 
+        struct file* old = NULL;
+
         shared_ptr_access(current_task->fd, fds, {
             if (unlikely(!fds->descriptors[fd].ref))
                 return -EBADF;
@@ -66,22 +68,19 @@ SYSCALL(
                 return newfd;
 
 
+            scoped_lock(&current_task->lock) {
+                old = fds->descriptors[newfd].ref;
 
-            if (fds->descriptors[newfd].ref) {
-                sys_close(newfd);
-            }
-
-            DEBUG_ASSERT(!fds->descriptors[newfd].ref);
-
-
-            scoped_lock(&fds->descriptors[fd].ref->lock) {
                 fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
                 fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
 
-                atomic_fetch_add(&fds->descriptors[fd].ref->refcount, 1);
+                fd_ref(fds->descriptors[newfd].ref);
             }
         });
 
+
+        if (old)
+            fd_remove(old, true);
 
         return newfd;
     });
