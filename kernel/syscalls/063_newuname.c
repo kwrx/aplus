@@ -53,6 +53,7 @@ struct new_utsname {
 
 // See kernel/init/hostname.c
 extern char* hostname;
+extern spinlock_t hostname_lock;
 
 
 
@@ -80,7 +81,9 @@ SYSCALL(
 
         struct new_utsname utsname = {.sysname = CONFIG_SYSTEM_NAME, .release = CONFIG_SYSTEM_VERSION, .version = CONFIG_SYSTEM_CODENAME, .machine = CONFIG_COMPILER_HOST, .domainname = "(none)"};
 
-        strncpy(utsname.nodename, hostname, sizeof(utsname.nodename));
+        scoped_lock(&hostname_lock) {
+            strncpy(utsname.nodename, hostname, sizeof(utsname.nodename) - 1);
+        }
 
         uio_memcpy_s2u(name, &utsname, sizeof(struct new_utsname));
 
