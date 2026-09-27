@@ -30,6 +30,7 @@
  */
 
 #include <errno.h>
+#include <signal.h>
 #include <fcntl.h>
 #include <poll.h>
 #include <stdint.h>
@@ -606,6 +607,7 @@ static const struct {
 int main(int argc, char** argv) {
 
     setvbuf(stdout, NULL, _IONBF, 0);
+    signal(SIGPIPE, SIG_IGN);
 
     printf("unix-test: starting\n");
 

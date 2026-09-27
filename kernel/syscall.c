@@ -21,8 +21,10 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <signal.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/socket.h>
 #include <syscall.h>
 #include <time.h>
 
@@ -89,6 +91,55 @@ void syscall_init(void) {
 extern long sys_clock_gettime(clockid_t, struct timespec*);
 
 
+/**
+ * @brief Raises SIGPIPE on a task whose write found nobody left to read it, unless the send asked not to.
+ *
+ * @param idx The syscall that failed with EPIPE.
+ * @param p2 Its third argument, the flags of sendmsg().
+ * @param p3 Its fourth argument, the flags of sendto().
+ */
+static void __syscall_epipe(unsigned long idx, long p2, long p3) {
+
+    switch (idx) {
+
+        case SYS_sendto:
+
+            if (p3 & MSG_NOSIGNAL)
+                return;
+
+            break;
+
+        case SYS_sendmsg:
+
+            if (p2 & MSG_NOSIGNAL)
+                return;
+
+            break;
+
+        case SYS_write:
+        case SYS_writev:
+        case SYS_pwrite64:
+        case SYS_pwritev:
+            break;
+
+        default:
+            return;
+    }
+
+
+    siginfo_t info;
+
+    memset(&info, 0, sizeof(info));
+
+    info.si_signo = SIGPIPE;
+    info.si_code  = SI_USER;
+    info.si_pid   = current_task->pid;
+    info.si_uid   = current_task->uid;
+
+    sched_raise(SIGPIPE, &info);
+}
+
+
 long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long p4, long p5) {
 
     if (unlikely(idx >= SYSMAX || !syscalls[idx]))
@@ -115,6 +166,9 @@ long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long 
 
 
     long r = syscalls[idx](p0, p1, p2, p3, p4, p5);
+
+    if (unlikely(r == -EPIPE))
+        __syscall_epipe(idx, p2, p3);
 
     if (r < 0L)
         errno = -r;
