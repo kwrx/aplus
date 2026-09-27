@@ -105,7 +105,7 @@ SYSCALL(
 
         inode_t* r __scoped(vfs_inode_cleanup) = NULL;
 
-        if ((r = path_lookup(cwd, __safe_pathname, 0, 0)) == NULL)
+        if ((r = path_lookup(cwd, __safe_pathname, O_NOFOLLOW, 0)) == NULL)
             return -errno;
 
 
@@ -117,28 +117,19 @@ SYSCALL(
         }
 
 
-        if (
-#ifdef O_NOFOLLOW
-            !(flags & O_NOFOLLOW) &&
-#endif
-            S_ISLNK(st.st_mode)) {
+        if (flags & AT_REMOVEDIR) {
 
-            inode_t* target = path_follows(r);
+            if (!S_ISDIR(st.st_mode))
+                return -ENOTDIR;
 
-            vfs_inode_put(r);
+        } else if (S_ISDIR(st.st_mode)) {
 
-            if ((r = target) == NULL)
-                return -errno;
+            return -EISDIR;
         }
 
 
-
-#ifdef AT_REMOVEDIR
-
-        if (S_ISDIR(st.st_mode) && !(flags & AT_REMOVEDIR))
-            return -EISDIR;
-
-#endif
+        if (!r->parent || (r->sb && r->sb->root == r))
+            return -EBUSY;
 
 
 
@@ -164,9 +155,6 @@ SYSCALL(
             }
         }
 
-
-        DEBUG_ASSERT(r);
-        DEBUG_ASSERT(r->parent);
 
         if ((vfs_unlink(r->parent, r->name)) < 0) {
 

@@ -35,8 +35,11 @@ int ext2_unlink(inode_t* parent, const char* name) {
 
     struct ext2_inode* node = cache_get(&parent->sb->cache, target->ino);
 
-    if (!S_ISREG(node->i_mode))
+    if (S_ISDIR(node->i_mode))
         return kfree(target), errno = EISDIR, -1;
+
+    if (!S_ISREG(node->i_mode))
+        return kfree(target), errno = EPERM, -1;
 
     ext2_t* ext2           = parent->sb->fsinfo;
     struct ext2_inode* dir = cache_get(&parent->sb->cache, parent->ino);
