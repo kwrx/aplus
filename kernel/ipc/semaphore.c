@@ -53,17 +53,7 @@ void sem_wait(semaphore_t* s) {
     uint64_t t0 = arch_timer_generic_getms() + IPC_DEFAULT_TIMEOUT;
 #endif
 
-    bool wait = true;
-
-    while (wait) {
-
-        spinlock_lock(&s->lock);
-
-        if (unlikely(s->waiters > 0)) {
-            wait = false;
-        }
-
-        spinlock_unlock(&s->lock);
+    while (!sem_trywait(s)) {
 
 #if DEBUG_LEVEL_TRACE
         if (arch_timer_generic_getms() > t0) {
@@ -74,10 +64,6 @@ void sem_wait(semaphore_t* s) {
 
         __cpu_pause();
     }
-
-    spinlock_lock(&s->lock);
-    s->waiters--;
-    spinlock_unlock(&s->lock);
 }
 
 
