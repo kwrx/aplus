@@ -37,6 +37,32 @@
 
 
 
+/**
+ * @brief Tells whether a tmpfs directory still has an entry in it, with the tmpfs lock held.
+ *
+ * @param tmpfs The mounted tmpfs.
+ * @param dir The directory.
+ * @return true if some inode has @p dir as its parent.
+ */
+static bool __tmpfs_has_children(tmpfs_t* tmpfs, inode_t* dir) {
+
+    list_each(tmpfs->children, i) {
+
+        if (i->parent == dir)
+            return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief Removes an entry from a tmpfs directory; its data stays until the inode is released.
+ *
+ * @param inode The directory.
+ * @param name The name of the entry.
+ * @return 0 on success, or -1 with errno set.
+ */
 int tmpfs_unlink(inode_t* inode, const char* name) {
 
     DEBUG_ASSERT(inode);
@@ -48,37 +74,72 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
 
     tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
-    inode_t* d     = NULL;
+    int e          = ENOENT;
+
+    scoped_lock(&tmpfs->lock) {
+
+        inode_t* d = NULL;
+
+        list_each(tmpfs->children, i) {
+
+            if (likely(i->parent != inode))
+                continue;
+
+            if (likely(strcmp(i->name, name) != 0))
+                continue;
+
+            d = i;
+            break;
+        }
+
+        if (!d)
+            break;
 
 
-    list_each(tmpfs->children, i) {
+        tmpfs_inode_t* ti = (tmpfs_inode_t*)cache_get(&inode->sb->cache, d->ino);
 
-        if (likely(i->parent != inode))
-            continue;
+        if (S_ISDIR(ti->st.st_mode) && __tmpfs_has_children(tmpfs, d)) {
+            e = ENOTEMPTY;
+            break;
+        }
 
-        if (likely(strcmp(i->name, name) != 0))
-            continue;
+        list_remove(tmpfs->children, d);
 
-        d = i;
-        break;
+        ti->st.st_nlink = 0;
+
+        inode->sb->st.f_ffree++;
+        inode->sb->st.f_favail++;
+
+        e = 0;
     }
 
-    if (!d) {
-        return errno = ENOENT, -1;
-    }
 
-    list_remove(tmpfs->children, d);
-
-
-
-    tmpfs_inode_t* i = cache_get(&inode->sb->cache, d->ino);
-
-    inode->sb->st.f_ffree++;
-    inode->sb->st.f_favail++;
-    inode->sb->st.f_bavail += i->st.st_size;
-    inode->sb->st.f_bfree += i->st.st_size;
-
-    cache_remove(&inode->sb->cache, d->ino);
+    if (e)
+        return errno = e, -1;
 
     return 0;
+}
+
+
+/**
+ * @brief Frees the data of an unlinked tmpfs inode once nothing references it, returning its space.
+ *
+ * @param inode The inode.
+ */
+void tmpfs_release(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->sb);
+    DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
+
+
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+    off_t size     = ((tmpfs_inode_t*)cache_get(&inode->sb->cache, inode->ino))->st.st_size;
+
+    cache_remove(&inode->sb->cache, inode->ino);
+
+    scoped_lock(&tmpfs->lock) {
+        inode->sb->st.f_bavail += size;
+        inode->sb->st.f_bfree += size;
+    }
 }

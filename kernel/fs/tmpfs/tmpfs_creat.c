@@ -35,6 +35,14 @@
 
 
 
+/**
+ * @brief Creates an inode in a tmpfs directory.
+ *
+ * @param inode The directory.
+ * @param name The name of the new entry.
+ * @param mode The type and permissions of the new entry.
+ * @return The new inode, or NULL with errno set.
+ */
 inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     DEBUG_ASSERT(inode);
@@ -43,26 +51,20 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
     DEBUG_ASSERT(name);
 
 
-    static ino_t next_ino = 1;
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+    inode_t* d     = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
 
-    if (unlikely(inode->sb->st.f_ffree == 0)) {
-        return errno = ENOSPC, NULL;
-    }
-
-
-    tmpfs_inode_t* i = (tmpfs_inode_t*)cache_get(&inode->sb->cache, ++next_ino);
-
-    i->capacity = 0;
-    i->data     = NULL;
-
-    shared_ptr_access(current_task->fs, fs, { i->st.st_mode = mode & ~fs->umask; });
+    if (unlikely(!d))
+        return errno = ENOMEM, NULL;
 
 
-    inode_t* d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_KERNEL);
+    mode_t umask = 0;
+
+    shared_ptr_access(current_task->fs, fs, { umask = fs->umask; });
+
 
     strncpy(d->name, name, CONFIG_MAXNAMLEN);
 
-    d->ino    = i->st.st_ino;
     d->sb     = inode->sb;
     d->parent = inode;
 
@@ -72,6 +74,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
     d->ops.getattr = tmpfs_getattr;
     d->ops.setattr = tmpfs_setattr;
+    d->ops.release = tmpfs_release;
 
 
     if (S_ISDIR(mode)) {
@@ -108,12 +111,43 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
 
 
-    inode->sb->st.f_ffree--;
-    inode->sb->st.f_favail--;
+    int e = 0;
+
+    scoped_lock(&tmpfs->lock) {
+
+        if (inode != inode->sb->root && ((tmpfs_inode_t*)cache_get(&inode->sb->cache, inode->ino))->st.st_nlink == 0) {
+            e = ENOENT;
+            break;
+        }
+
+        if (unlikely(inode->sb->st.f_ffree == 0)) {
+            e = ENOSPC;
+            break;
+        }
+
+        inode->sb->st.f_ffree--;
+        inode->sb->st.f_favail--;
 
 
-    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
-    list_push(tmpfs->children, d);
+        tmpfs_inode_t* i = (tmpfs_inode_t*)cache_get(&inode->sb->cache, ++tmpfs->next_ino);
+
+        i->capacity   = 0;
+        i->data       = NULL;
+        i->st.st_mode = mode & ~umask;
+
+        d->ino = i->st.st_ino;
+
+        list_push(tmpfs->children, d);
+    }
+
+
+    if (unlikely(e)) {
+
+        vfs_dcache_free(d);
+        kfree(d);
+
+        return errno = e, NULL;
+    }
 
     return d;
 }

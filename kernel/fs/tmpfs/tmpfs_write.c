@@ -45,28 +45,57 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     DEBUG_ASSERT(len);
 
 
+    if (unlikely(pos < 0))
+        return -EINVAL;
+
+
+    tmpfs_t* tmpfs   = (tmpfs_t*)inode->sb->fsinfo;
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
 
     if ((size_t)pos + len > (size_t)i->st.st_size) {
 
-        if (unlikely(((long)inode->sb->st.f_bavail - (long)((pos + len) - i->st.st_size)) <= 0L)
+        size_t grow = ((size_t)pos + len) - (size_t)i->st.st_size;
+        bool full   = false;
 
-        ) {
-            return errno = ENOSPC, -1;
+        scoped_lock(&tmpfs->lock) {
+
+            if (((long)inode->sb->st.f_bavail - (long)grow) <= 0L) {
+                full = true;
+                break;
+            }
+
+            inode->sb->st.f_bfree -= grow;
+            inode->sb->st.f_bavail -= grow;
         }
+
+        if (unlikely(full))
+            return -ENOSPC;
 
 
         if ((size_t)pos + len > i->capacity) {
 
-            i->capacity = pos + len;
-            i->capacity = i->capacity + (i->capacity / 2);
+            size_t capacity = (size_t)pos + len;
+            capacity += capacity / 2;
 
-            i->data = krealloc(i->data, i->capacity, GFP_USER);
+            void* data = krealloc(i->data, capacity, GFP_USER);
+
+            if (unlikely(!data)) {
+
+                scoped_lock(&tmpfs->lock) {
+                    inode->sb->st.f_bfree += grow;
+                    inode->sb->st.f_bavail += grow;
+                }
+
+                return -ENOMEM;
+            }
+
+            i->data     = data;
+            i->capacity = capacity;
         }
 
-        inode->sb->st.f_bfree -= (pos + len) - i->st.st_size;
-        inode->sb->st.f_bavail -= (pos + len) - i->st.st_size;
+        if ((size_t)pos > (size_t)i->st.st_size)
+            memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, (size_t)pos - (size_t)i->st.st_size);
 
         i->st.st_size = pos + len;
     }
