@@ -108,16 +108,6 @@ SYSCALL(
 
                     shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = arg; });
 
-                    {
-                        int socket = socket_from_fd(fd);
-
-                        if (socket >= 0) {
-
-                            if (unlikely(lwip_fcntl(socket, F_SETFL, arg) < 0))
-                                return -errno;
-                        }
-                    }
-
                     return 0;
 
                 case F_SETPIPE_SZ:

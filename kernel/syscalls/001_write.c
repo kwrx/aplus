@@ -33,6 +33,7 @@
 #include <aplus/errno.h>
 #include <aplus/hal.h>
 #include <aplus/memory.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
@@ -81,69 +82,54 @@ SYSCALL(
             return -EFAULT;
 
 
-        {
+        int flags         = 0;
+        struct file* file = fd_get(fd, &flags);
 
-            if (unlikely(fd >= CONFIG_OPEN_MAX))
-                return -EBADF;
+        if (unlikely(!file))
+            return -EBADF;
 
-
-            shared_ptr_access(current_task->fd, fds, {
-                if (unlikely(!fds->descriptors[fd].ref))
-                    return -EBADF;
-
-                if (unlikely(!((fds->descriptors[fd].flags & O_WRONLY) || (fds->descriptors[fd].flags & O_RDWR))))
-                    return -EPERM;
-
-
-
-                ssize_t e = 0;
-
-
-                uint32_t seq = 0;
-
-                shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, { seq = ev->futex; });
-
-
-                uio_lock(buf, size);
-
-                scoped_lock(&fds->descriptors[fd].ref->lock) {
-                    if ((e = vfs_write(fds->descriptors[fd].ref->inode, buf, fds->descriptors[fd].ref->position, size)) <= 0)
-                        break;
-
-                    fds->descriptors[fd].ref->position += e;
-                    current_task->iostat.write_bytes += (uint64_t)e;
-                }
-
-                uio_unlock(buf, size);
-
-
-                if (e == -EAGAIN) {
-
-                    if (fds->descriptors[fd].flags & O_NONBLOCK) {
-
-                        return -EAGAIN;
-
-                    } else {
-
-                        shared_ptr_nullable_access(fds->descriptors[fd].ref->inode->ev, ev, {
-                            futex_wait(current_task, &ev->futex, seq, NULL);
-                        });
-
-
-#if DEBUG_LEVEL_TRACE
-                        kprintf("read: task %d waiting for POLLOUT event on fd %d (node->name: '%s')\n", current_task->tid, fd, fds->descriptors[fd].ref->inode->name);
-#endif
-
-                        thread_suspend(current_task);
-                        thread_restart_sched(current_task);
-                        thread_restart_syscall(current_task);
-
-                        return -EINTR;
-                    }
-                }
-
-
-                return e;
-            });
+        if (unlikely(!((flags & O_WRONLY) || (flags & O_RDWR)))) {
+            fd_put(file);
+            return -EPERM;
         }
+
+
+        volatile uint32_t* word = poll_event_word(file->inode);
+        uint32_t seq            = word ? *word : 0;
+
+        size_t done = current_task->syscall.progress;
+
+
+        uio_lock(buf, size);
+
+        ssize_t e = done < size ? fd_write(file, (const uint8_t*)buf + done, size - done) : 0;
+
+        uio_unlock(buf, size);
+
+
+        if (e > 0) {
+            done += (size_t)e;
+            current_task->iostat.write_bytes += (uint64_t)e;
+        }
+
+
+        bool whole = socket_from_inode(file->inode) >= 0;
+
+        if (done < size && !(flags & O_NONBLOCK) && ((e == -EAGAIN && (done == 0 || whole)) || (e > 0 && whole))) {
+
+            current_task->syscall.progress = done;
+
+            e = poll_wait_event(word, seq, socket_timeout(file->inode, true));
+
+            if (e == -EAGAIN && done)
+                e = (ssize_t)done;
+
+        } else if (done) {
+
+            e = (ssize_t)done;
+        }
+
+        fd_put(file);
+
+        return e;
     });

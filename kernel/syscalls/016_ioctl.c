@@ -56,6 +56,31 @@
 
 SYSCALL(
     16, ioctl, long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg) {
+        if (cmd == FIONBIO) {
+
+            if (unlikely(!uio_check((void*)arg, R_OK)))
+                return -EFAULT;
+
+
+            bool on = uio_r32((uint32_t*)arg) != 0;
+            long e  = -EBADF;
+
+            shared_ptr_access(current_task->fd, fds, {
+                if (fd < CONFIG_OPEN_MAX && fds->descriptors[fd].ref) {
+
+                    if (on)
+                        fds->descriptors[fd].flags |= O_NONBLOCK;
+                    else
+                        fds->descriptors[fd].flags &= ~O_NONBLOCK;
+
+                    e = 0;
+                }
+            });
+
+            return e;
+        }
+
+
         struct file* file = fd_get(fd, NULL);
 
         if (unlikely(!file))

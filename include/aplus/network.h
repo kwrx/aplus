@@ -69,11 +69,23 @@ int socket_from_fd(int fd);
 int socket_from_inode(inode_t* inode);
 int socket_poll_arm(inode_t* inode, int events, struct timespec* timeout);
 ssize_t socket_send(int socket, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen);
+volatile uint32_t* socket_event_word(inode_t* inode);
+uint64_t socket_timeout(inode_t* inode, bool send);
+long socket_recv(inode_t* inode, void* buf, size_t size, int flags, struct sockaddr* from, socklen_t* fromlen, bool nonblock);
+long socket_sendto(inode_t* inode, const void* buf, size_t size, int flags, const struct sockaddr* to, socklen_t tolen, bool nonblock);
+long socket_accept(inode_t* inode, struct sockaddr* peer, socklen_t* peerlen, bool nonblock);
+long socket_connect(inode_t* inode, const struct sockaddr* addr, socklen_t len, bool nonblock);
+void socket_unlinger(int socket);
 
 /**
  * @brief Largest socket option value the kernel will carry between user and lwIP.
  */
     #define SOCKOPT_MAX_OPTLEN 256
+
+/**
+ * @brief The longest socket address a caller may pass, the size of Linux's sockaddr_storage.
+ */
+    #define SOCKADDR_MAX 128
 
 /**
  * @brief Translate a Linux socket option level and name into the lwIP values.

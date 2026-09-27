@@ -77,6 +77,9 @@ typedef enum {
 } poll_deadline_t;
 
 
+struct inode;
+
+
 __BEGIN_DECLS
 
 /**
@@ -90,6 +93,9 @@ poll_deadline_t poll_deadline(uint64_t timeout_ns, struct timespec* remaining);
 
 long poll_suspend(bool armed, struct timespec* timeout);
 long poll_finish(long retval);
+
+volatile uint32_t* poll_event_word(struct inode* inode);
+long poll_wait_event(volatile uint32_t* word, uint32_t seq, uint64_t timeout_ns);
 
 int poll_sigmask_install(const sigset_t* sigmask, size_t sigsetsize);
 

@@ -604,7 +604,9 @@ int lwip_select(int maxfdp1, fd_set* readset, fd_set* writeset, fd_set* exceptse
 int lwip_poll(struct pollfd* fds, nfds_t nfds, int timeout);
     #endif
     #if defined(__aplus__)
-ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds, struct timespec* ts, bool wait);
+ssize_t lwip_poll_from_syscall(struct pollfd* fds, nfds_t nfds);
+volatile u32_t* lwip_socket_event(int s);
+int lwip_socket_nonblocking(int s);
     #endif
 int lwip_ioctl(int s, long cmd, void* argp);
 int lwip_fcntl(int s, int cmd, int val);

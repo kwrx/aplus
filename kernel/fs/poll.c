@@ -99,6 +99,29 @@ int poll_scan(int fd, short events, short* revents) {
 
 
 /**
+ * @brief Finds the futex word that moves whenever an inode's readiness may have changed.
+ *
+ * @param inode The inode.
+ * @return The word, or NULL if nothing ever wakes a waiter on @p inode.
+ */
+volatile uint32_t* poll_event_word(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+
+    volatile uint32_t* word = socket_event_word(inode);
+
+    if (word)
+        return word;
+
+    if (inode->ev)
+        return &inode->ev->data.futex;
+
+    return NULL;
+}
+
+
+/**
  * @brief Registers the current task to be woken when a descriptor moves.
  *
  * Registers only: the caller suspends once after arming everything it watches.
@@ -142,6 +165,43 @@ int poll_arm(int fd, short events, struct timespec* timeout, bool* armed) {
     fd_put(file);
 
     return 0;
+}
+
+
+/**
+ * @brief Parks the current task after an attempt found a file not ready, until the file moves or time runs out.
+ *
+ * @param word The word from poll_event_word(), snapshotted before the attempt, or NULL.
+ * @param seq The value @p word held before the attempt.
+ * @param timeout_ns How long the whole wait may last, or POLL_TIMEOUT_FOREVER.
+ * @return -EINTR with the syscall marked for restart, or -EAGAIN once the timeout has run out.
+ */
+long poll_wait_event(volatile uint32_t* word, uint32_t seq, uint64_t timeout_ns) {
+
+    DEBUG_ASSERT(current_task);
+
+
+    struct timespec tm  = {0, 0};
+    struct timespec* to = NULL;
+
+    switch (poll_deadline(timeout_ns, &tm)) {
+
+        case POLL_DEADLINE_EXPIRED:
+            return -EAGAIN;
+
+        case POLL_DEADLINE_REMAINING:
+            to = &tm;
+            break;
+
+        case POLL_DEADLINE_FOREVER:
+            break;
+    }
+
+
+    if (word)
+        futex_wait(current_task, word, seq, to);
+
+    return poll_suspend(word != NULL, to);
 }
 
 

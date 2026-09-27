@@ -26,6 +26,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/memory.h>
+#include <aplus/poll.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/vfs.h>
@@ -38,6 +39,7 @@
 #include <unistd.h>
 
 #include <aplus/hal.h>
+#include <aplus/network.h>
 
 
 /***
@@ -70,9 +72,25 @@ SYSCALL(
             return 0;
 
 
-        long i, tot;
+        int flags         = 0;
+        struct file* file = fd_get((unsigned int)fd, &flags);
 
-        for (i = tot = 0; i < vlen; i++) {
+        if (unlikely(!file))
+            return -EBADF;
+
+        if (unlikely(!(!(flags & O_WRONLY) || (flags & O_RDONLY)))) {
+            fd_put(file);
+            return -EPERM;
+        }
+
+
+        volatile uint32_t* word = poll_event_word(file->inode);
+        uint32_t seq            = word ? *word : 0;
+
+        ssize_t e  = 0;
+        size_t tot = 0;
+
+        for (unsigned long i = 0; i < vlen; i++) {
 
             struct iovec iovec;
             uio_memcpy_u2s(&iovec, &vec[i], sizeof(struct iovec));
@@ -84,18 +102,38 @@ SYSCALL(
             if (unlikely(!iovec.iov_len))
                 continue;
 
-            if (unlikely(!uio_check(iovec.iov_base, R_OK | W_OK)))
-                return -EFAULT;
-
-
-            ssize_t e;
-            if ((e = sys_read(fd, iovec.iov_base, iovec.iov_len)) < 0) {
-                return e;
+            if (unlikely(!uio_check(iovec.iov_base, R_OK | W_OK))) {
+                e = -EFAULT;
+                break;
             }
 
-            tot += e;
+
+            uio_lock(iovec.iov_base, iovec.iov_len);
+
+            e = fd_read(file, iovec.iov_base, iovec.iov_len);
+
+            uio_unlock(iovec.iov_base, iovec.iov_len);
+
+
+            if (e <= 0)
+                break;
+
+            tot += (size_t)e;
+
+            if ((size_t)e < iovec.iov_len)
+                break;
         }
 
 
-        return tot;
+        current_task->iostat.syscr += 1;
+        current_task->iostat.read_bytes += (uint64_t)tot;
+
+        if (tot > 0)
+            e = (ssize_t)tot;
+        else if (e == -EAGAIN && !(flags & O_NONBLOCK))
+            e = poll_wait_event(word, seq, socket_timeout(file->inode, false));
+
+        fd_put(file);
+
+        return e;
     });
