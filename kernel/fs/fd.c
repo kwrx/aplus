@@ -214,3 +214,20 @@ void fd_close_all(struct fd* fds) {
     }
 }
 
+
+/**
+ * @brief Takes a reference to every open file in a table that has just been copied.
+ *
+ * @param fds The copy.
+ */
+void fd_ref_all(struct fd* fds) {
+
+    DEBUG_ASSERT(fds);
+
+    for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
+
+        if (fds->descriptors[i].ref)
+            fd_ref(fds->descriptors[i].ref);
+    }
+}
+

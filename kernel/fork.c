@@ -54,17 +54,19 @@ void do_unshare(int flags) {
 
         if (atomic_load(&current_task->fd->refcount) > 1) {
 
-            current_task->fd = shared_ptr_unshare(current_task->fd, GFP_KERNEL);
+            __typeof__(current_task->fd) old  = current_task->fd;
+            __typeof__(current_task->fd) copy = NULL;
 
-            shared_ptr_access(current_task->fd, fds, {
-                for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
-
-                    if (!fds->descriptors[i].ref)
-                        continue;
-
-                    fd_ref(fds->descriptors[i].ref);
-                }
+            shared_ptr_access(old, fds, {
+                copy = shared_ptr_dup(old, GFP_KERNEL);
+                fd_ref_all(fds);
             });
+
+            scoped_lock(&current_cpu->sched_lock) {
+                current_task->fd = copy;
+            }
+
+            shared_ptr_free_with_dtor(old, fds, { fd_close_all(fds); });
         }
     }
 
@@ -211,16 +213,9 @@ pid_t do_fork(struct kclone_args* args, size_t size) {
         child->fd = shared_ptr_ref(current_task->fd);
     } else {
 
-        child->fd = shared_ptr_dup(current_task->fd, GFP_KERNEL);
-
-        shared_ptr_access(child->fd, fds, {
-            for (size_t i = 0; i < CONFIG_OPEN_MAX; i++) {
-
-                if (!fds->descriptors[i].ref)
-                    continue;
-
-                fd_ref(fds->descriptors[i].ref);
-            }
+        shared_ptr_access(current_task->fd, fds, {
+            child->fd = shared_ptr_dup(current_task->fd, GFP_KERNEL);
+            fd_ref_all(fds);
         });
     }
 
