@@ -194,6 +194,99 @@ void fd_put(struct file* file) {
 
 
 /**
+ * @brief Duplicates one of the caller's descriptors into the lowest free slot at or above a minimum.
+ *
+ * @param fd The descriptor to duplicate.
+ * @param min The lowest slot the copy may take.
+ * @param cloexec Whether the copy is closed on exec.
+ * @return The new descriptor, or -EBADF, -EINVAL or -EMFILE.
+ */
+long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
+
+    DEBUG_ASSERT(current_task);
+
+
+    if (unlikely(fd >= CONFIG_OPEN_MAX))
+        return -EBADF;
+
+    if (unlikely(min >= CONFIG_OPEN_MAX))
+        return -EINVAL;
+
+
+    long e = -EMFILE;
+
+    shared_ptr_access(current_task->fd, fds, {
+        if (unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        scoped_lock(&current_task->lock) {
+
+            for (unsigned int i = min; i < CONFIG_OPEN_MAX; i++) {
+
+                if (fds->descriptors[i].ref)
+                    continue;
+
+                fds->descriptors[i].ref           = fds->descriptors[fd].ref;
+                fds->descriptors[i].flags         = fds->descriptors[fd].flags;
+                fds->descriptors[i].close_on_exec = cloexec;
+
+                fd_ref(fds->descriptors[i].ref);
+
+                e = i;
+                break;
+            }
+        }
+    });
+
+    return e;
+}
+
+
+/**
+ * @brief Duplicates one of the caller's descriptors into a given slot, closing whatever the slot held.
+ *
+ * @param fd The descriptor to duplicate.
+ * @param newfd The slot to put the copy in, which must differ from @p fd.
+ * @param cloexec Whether the copy is closed on exec.
+ * @return @p newfd, or -EBADF.
+ */
+long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
+
+    DEBUG_ASSERT(current_task);
+    DEBUG_ASSERT(fd != newfd);
+
+
+    if (unlikely(fd >= CONFIG_OPEN_MAX || newfd >= CONFIG_OPEN_MAX))
+        return -EBADF;
+
+
+    struct file* old = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+        if (unlikely(!fds->descriptors[fd].ref))
+            return -EBADF;
+
+        scoped_lock(&current_task->lock) {
+
+            old = fds->descriptors[newfd].ref;
+
+            fds->descriptors[newfd].ref           = fds->descriptors[fd].ref;
+            fds->descriptors[newfd].flags         = fds->descriptors[fd].flags;
+            fds->descriptors[newfd].close_on_exec = cloexec;
+
+            fd_ref(fds->descriptors[newfd].ref);
+        }
+    });
+
+
+    if (old)
+        fd_remove(old, true);
+
+    return newfd;
+}
+
+
+/**
  * @brief Closes every descriptor of a table that nothing references any more.
  *
  * @param fds The table.
@@ -209,8 +302,9 @@ void fd_close_all(struct fd* fds) {
 
         fd_remove(fds->descriptors[i].ref, true);
 
-        fds->descriptors[i].ref   = NULL;
-        fds->descriptors[i].flags = 0;
+        fds->descriptors[i].ref           = NULL;
+        fds->descriptors[i].flags         = 0;
+        fds->descriptors[i].close_on_exec = 0;
     }
 }
 

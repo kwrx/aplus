@@ -51,36 +51,16 @@
 
 SYSCALL(
     33, dup2, long sys_dup2(unsigned int fd, unsigned int newfd) {
-        if (unlikely(fd >= CONFIG_OPEN_MAX))
+        if (unlikely(fd >= CONFIG_OPEN_MAX || newfd >= CONFIG_OPEN_MAX))
             return -EBADF;
 
-        if (unlikely(newfd >= CONFIG_OPEN_MAX))
-            return -EBADF;
-
-
-        struct file* old = NULL;
+        if (fd != newfd)
+            return fd_dup_to(fd, newfd, false);
 
         shared_ptr_access(current_task->fd, fds, {
             if (unlikely(!fds->descriptors[fd].ref))
                 return -EBADF;
-
-            if (fd == newfd)
-                return newfd;
-
-
-            scoped_lock(&current_task->lock) {
-                old = fds->descriptors[newfd].ref;
-
-                fds->descriptors[newfd].ref   = fds->descriptors[fd].ref;
-                fds->descriptors[newfd].flags = fds->descriptors[fd].flags;
-
-                fd_ref(fds->descriptors[newfd].ref);
-            }
         });
-
-
-        if (old)
-            fd_remove(old, true);
 
         return newfd;
     });
