@@ -209,17 +209,23 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
         path++;
     }
 
-    while (strchr(path, '/') && c) {
+    while (c) {
 
-        inode_t* next = path_find(c, path, strcspn(path, "/"), true, links, depth);
+        const char* next = path + strcspn(path, "/");
+
+        while (next[0] == '/')
+            next++;
+
+        if (next[0] == '\0')
+            break;
+
+
+        inode_t* found = path_find(c, path, strcspn(path, "/"), true, links, depth);
 
         vfs_inode_put(c);
 
-        c    = next;
-        path = strchr(path, '/') + 1;
-
-        while (path[0] == '/')
-            path++;
+        c    = found;
+        path = next;
     }
 
 
@@ -227,10 +233,13 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
         return errno = (__path_failed_on_its_own() ? errno : ENOENT), NULL;
     }
 
+
+    size_t last = strcspn(path, "/");
+
     inode_t* r;
 
-    if (path[0] != '\0')
-        r = path_find(c, path, strlen(path), !(flags & O_NOFOLLOW), links, depth);
+    if (last > 0)
+        r = path_find(c, path, last, !(flags & O_NOFOLLOW), links, depth);
     else
         r = vfs_inode_get(c);
 
@@ -243,7 +252,12 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
                 mode |= S_IFREG;
             }
 
-            r = vfs_creat(c, path, mode);
+            char name[last + 1];
+
+            memcpy(name, path, last);
+            name[last] = '\0';
+
+            r = vfs_creat(c, name, mode);
 
         } else {
             errno = (__path_failed_on_its_own() ? errno : ENOENT);
