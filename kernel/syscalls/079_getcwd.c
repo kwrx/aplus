@@ -112,7 +112,7 @@ SYSCALL(
         });
 
 
-        if (__append(buf, size, "/") < 0)
+        if (buf[0] != '/' && __append(buf, size, "/") < 0)
             return -ERANGE;
 
 
