@@ -98,27 +98,31 @@ SYSCALL(
         if (unlikely(socket < 0))
             return -ENOTSOCK;
 
-        if (unlikely(!sockaddr || !socklen))
-            return -EINVAL;
+        if (sockaddr) {
 
-        if (unlikely(!uio_check(socklen, R_OK | W_OK)))
-            return -EFAULT;
+            if (unlikely(!socklen || !uio_check(socklen, R_OK | W_OK)))
+                return -EFAULT;
 
-        socklen_t __socklen = (socklen_t)uio_r32((uint32_t*)socklen);
+            if (unlikely(!uio_check(sockaddr, R_OK | W_OK)))
+                return -EFAULT;
+        }
 
-        if (unlikely(!uio_check(sockaddr, R_OK | W_OK)))
-            return -EFAULT;
 
-        char __sockaddr[__socklen];
-        uio_memcpy_u2s(__sockaddr, sockaddr, __socklen);
+        struct sockaddr_storage peer;
+        socklen_t peerlen = sizeof(peer);
 
         ssize_t e;
 
-        if ((e = lwip_accept(socket, (struct sockaddr*)__sockaddr, &__socklen)) < 0)
+        if ((e = lwip_accept(socket, sockaddr ? (struct sockaddr*)&peer : NULL, sockaddr ? &peerlen : NULL)) < 0)
             return -errno;
 
-        uio_w32((uint32_t*)socklen, __socklen);
-        uio_memcpy_s2u(sockaddr, __sockaddr, __socklen);
+        if (sockaddr) {
+
+            socklen_t room = (socklen_t)uio_r32((uint32_t*)socklen);
+
+            uio_memcpy_s2u(sockaddr, &peer, room < peerlen ? room : peerlen);
+            uio_w32((uint32_t*)socklen, peerlen);
+        }
 
         return socket_install((int)e, flags);
     });
