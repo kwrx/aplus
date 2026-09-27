@@ -121,7 +121,11 @@ int pipefs_close(inode_t* inode) {
     DEBUG_ASSERT(pipe);
 
 
-    bool last = false;
+    inode_t* node = pipe->node;
+    bool last     = false;
+
+    if (node)
+        spinlock_lock(&node->lock);
 
     scoped_lock(&pipe->lock) {
 
@@ -132,22 +136,27 @@ int pipefs_close(inode_t* inode) {
             atomic_fetch_sub(&pipe->writers, 1);
 
         last = (atomic_load(&pipe->readers) <= 0 && atomic_load(&pipe->writers) <= 0);
+
+        __pipe_wake(pipe);
     }
+
+    if (last && node) {
+        node->userdata = NULL;
+        pipe->node     = NULL;
+    }
+
+    if (node)
+        spinlock_unlock(&node->lock);
 
 
     inode->userdata = NULL;
     kfree(ep);
 
-    __pipe_wake(pipe);
-
 
     if (last) {
 
-        if (pipe->node) {
-
-            pipe->node->userdata = NULL;
-            pipe->node           = NULL;
-        }
+        if (node)
+            vfs_inode_put(node);
 
         ringbuffer_destroy(&pipe->rb);
 
@@ -427,7 +436,7 @@ inode_t* fifofs_open(inode_t* node, int flags) {
         if (unlikely(!(pipe = __pipefs_channel(CONFIG_PIPESIZ))))
             return errno = ENOMEM, NULL;
 
-        pipe->node     = node;
+        pipe->node     = vfs_inode_get(node);
         node->userdata = pipe;
     }
 
