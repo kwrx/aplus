@@ -125,9 +125,31 @@ static bool __sigqueue_holds(queue_t* queue, int sig) {
 
 
 /**
- * @brief Tells wait4() that a child exited, stopped or continued.
+ * @brief Tells a parent that one of its children exited, stopped or continued, with SIGCHLD and a child event.
+ *
+ * @param ppid The parent's pid, or 0 if there is nobody to tell.
+ * @param pid The child.
+ * @param uid The child's user.
+ * @param code CLD_EXITED, CLD_KILLED, CLD_DUMPED, CLD_STOPPED or CLD_CONTINUED.
+ * @param status The exit status, or the signal that stopped, continued or killed the child.
  */
-static void __sched_child_changed(void) {
+static void __sched_child_changed(pid_t ppid, pid_t pid, uid_t uid, int code, int status) {
+
+    if (ppid > 0) {
+
+        siginfo_t info;
+
+        memset(&info, 0, sizeof(info));
+
+        info.si_signo  = SIGCHLD;
+        info.si_code   = code;
+        info.si_pid    = pid;
+        info.si_uid    = uid;
+        info.si_status = status;
+
+        sched_sigqueue(-1, ppid, -1, SIGCHLD, &info, SCHED_SIGQUEUE_KERNEL);
+    }
+
     atomic_fetch_add(&sched_child_event, 1);
 }
 
@@ -140,6 +162,7 @@ static void __sched_child_changed(void) {
 static void do_stop(int signo) {
 
     bool stopped = false;
+    pid_t ppid   = 0;
 
     scoped_lock(&current_cpu->sched_lock) {
 
@@ -151,11 +174,12 @@ static void do_stop(int signo) {
             current_task->wait_continued = false;
 
             stopped = true;
+            ppid    = current_task->ppid;
         }
     }
 
     if (stopped && current_task->tid == current_task->pid)
-        __sched_child_changed();
+        __sched_child_changed(ppid, current_task->pid, current_task->uid, CLD_STOPPED, signo);
 }
 
 
@@ -626,28 +650,47 @@ void sched_requeue(task_t* task) {
 
 
 /**
+ * @brief Asks whether a signal's default action is to be ignored.
+ *
+ * @param sig The signal.
+ * @return true for SIGCHLD, SIGCONT, SIGURG and SIGWINCH.
+ */
+static inline bool __sig_default_ignored(int sig) {
+    return sig == SIGCHLD || sig == SIGCONT || sig == SIGURG || sig == SIGWINCH;
+}
+
+
+/**
  * @brief Queues a signal on every task matching a process group, a process or a thread.
  *
- * Zombies are not matched. SIGCONT and SIGKILL resume a stopped task before anything is queued, and a
- * standard signal already pending on a thread that blocks it is not queued twice.
+ * Zombies are not matched. SIGCONT and SIGKILL resume a stopped task before anything is queued, a
+ * signal that would only be ignored on arrival is dropped rather than queued, and a standard signal
+ * already pending on a thread that blocks it is not queued twice.
  *
  * @param pgrp The process group to match, or -1 not to narrow by it.
  * @param pid The process to match, or -1 not to narrow by it.
  * @param tid The thread to match, or -1 not to narrow by it.
  * @param sig The signal to queue.
  * @param info The signal's payload.
+ * @param flags SCHED_SIGQUEUE_KERNEL, or 0.
  * @return 0 on success, or -1 with errno set.
  */
-int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
+int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info, int flags) {
 
     DEBUG_ASSERT(sig >= 0);
     DEBUG_ASSERT(sig < _NSIG);
     DEBUG_ASSERT(info);
 
 
-    bool continued = false;
-    size_t found   = 0;
-    int error      = 0;
+    struct {
+        pid_t ppid;
+        pid_t pid;
+        uid_t uid;
+    } continued[8];
+
+    size_t ncontinued = 0;
+    size_t found      = 0;
+    int error         = 0;
 
 
     cpu_foreach(cpu) {
@@ -668,7 +711,7 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                 if (tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD)
                     continue;
 
-                if (!(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
+                if (!(flags & SCHED_SIGQUEUE_KERNEL) && !(current_task->euid == tmp->uid || current_task->uid == tmp->uid))
                     continue;
 
 
@@ -685,8 +728,12 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                 bool blocked     = !unstoppable && sigset_is_member(&tmp->sigmask, sig);
 
                 void (*handler)(int) = SIG_DFL;
+                long sa_flags        = 0;
 
-                shared_ptr_nullable_access(tmp->sighand, sighand, { handler = sighand->action[sig].handler; });
+                shared_ptr_nullable_access(tmp->sighand, sighand, {
+                    handler  = sighand->action[sig].handler;
+                    sa_flags = sighand->action[sig].sa_flags;
+                });
 
 
                 if ((sig == SIGCONT || sig == SIGKILL) && tmp->status == TASK_STATUS_STOP) {
@@ -698,7 +745,14 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                         tmp->wait_stopped   = false;
                         tmp->wait_continued = true;
 
-                        continued = true;
+                        if (tmp->tid == tmp->pid && ncontinued < sizeof(continued) / sizeof(continued[0])) {
+
+                            continued[ncontinued].ppid = tmp->ppid;
+                            continued[ncontinued].pid  = tmp->pid;
+                            continued[ncontinued].uid  = tmp->uid;
+
+                            ncontinued++;
+                        }
                     }
                 }
 
@@ -709,10 +763,16 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
                 if (!unstoppable && handler == SIG_IGN)
                     continue;
 
+                if (!unstoppable && !blocked && handler == SIG_DFL && __sig_default_ignored(sig))
+                    continue;
+
+                if (sig == SIGCHLD && (sa_flags & SA_NOCLDSTOP) && (info->si_code == CLD_STOPPED || info->si_code == CLD_CONTINUED))
+                    continue;
+
                 if (blocked && sig < 32 && __sigqueue_holds(&tmp->sigpending, sig))
                     continue;
 
-                if (tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
+                if (!(flags & SCHED_SIGQUEUE_KERNEL) && tmp->sigqueue.size > tmp->rlimits[RLIMIT_SIGPENDING].rlim_cur) {
                     error = EAGAIN;
                     continue;
                 }
@@ -735,8 +795,8 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
     }
 
 
-    if (continued)
-        __sched_child_changed();
+    for (size_t i = 0; i < ncontinued; i++)
+        __sched_child_changed(continued[i].ppid, continued[i].pid, continued[i].uid, CLD_CONTINUED, SIGCONT);
 
 
     if (unlikely(found == 0)) {
@@ -748,6 +808,36 @@ int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* inf
     }
 
     return 0;
+}
+
+
+/**
+ * @brief Queues a signal on behalf of the current task, which must be allowed to signal each target.
+ *
+ * @param pgrp The process group to match, or -1 not to narrow by it.
+ * @param pid The process to match, or -1 not to narrow by it.
+ * @param tid The thread to match, or -1 not to narrow by it.
+ * @param sig The signal to queue.
+ * @param info The signal's payload.
+ * @return 0 on success, or -1 with errno set.
+ */
+int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t* info) {
+    return sched_sigqueue(pgrp, pid, tid, sig, info, 0);
+}
+
+
+/**
+ * @brief Queues a signal the current task brought on itself, to be delivered before its syscall returns.
+ *
+ * @param sig The signal.
+ * @param info The signal's payload.
+ */
+void sched_raise(int sig, siginfo_t* info) {
+
+    DEBUG_ASSERT(current_task);
+
+    if (sched_sigqueue(-1, -1, current_task->tid, sig, info, SCHED_SIGQUEUE_KERNEL) == 0)
+        current_task->flags |= TASK_FLAGS_SIGNALED;
 }
 
 
@@ -785,16 +875,25 @@ void sched_sigmask(const sigset_t* set) {
 
 
 /**
- * @brief Turns the current task into a zombie, and settles what that means for its group and its children.
+ * @brief Delivers a pending signal to the current task now, rather than at its next reschedule.
+ */
+void sched_signals(void) {
+    do_signals();
+}
+
+
+/**
+ * @brief Turns the current task into a zombie, and settles what that means for its group, its parent and its children.
  *
  * The thread that finds every other thread of its group already dead is the last one out. It makes the group's
- * leader reportable to wait4(), hands the group's children to init, and wakes wait4(). More than one thread can
- * conclude it is the last, which is harmless, but because each publishes its own death before looking, at least one
- * always does.
+ * leader reportable to wait4(), or reaps it at once when the parent ignores SIGCHLD, hands the group's children to
+ * init, and tells the parent. More than one thread can conclude it is the last, which is harmless, but because each
+ * publishes its own death before looking, at least one always does.
  */
 void sched_exit(void) {
 
     task_t* self = current_task;
+    pid_t ppid   = 0;
 
 
     scoped_lock(&current_cpu->sched_lock) {
@@ -803,10 +902,13 @@ void sched_exit(void) {
 
         if (self->tid != self->pid)
             self->flags |= TASK_FLAGS_AUTOREAP;
+
+        ppid = self->ppid;
     }
 
 
-    bool alive = false;
+    bool alive  = false;
+    bool ignore = false;
 
     cpu_foreach(cpu) {
 
@@ -816,6 +918,13 @@ void sched_exit(void) {
 
                 if (t != self && t->pid == self->pid && t->status != TASK_STATUS_ZOMBIE && t->status != TASK_STATUS_DEAD)
                     alive = true;
+
+                if (ppid > 0 && t->pid == ppid) {
+
+                    shared_ptr_nullable_access(t->sighand, sighand, {
+                        ignore |= sighand->action[SIGCHLD].handler == SIG_IGN || (sighand->action[SIGCHLD].sa_flags & SA_NOCLDWAIT);
+                    });
+                }
             }
         }
     }
@@ -824,23 +933,39 @@ void sched_exit(void) {
         return;
 
 
+    int value = self->exit.value & 0xFFFF;
+
     cpu_foreach(cpu) {
 
         scoped_lock(&cpu->sched_lock) {
 
-            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+            task_t* next = NULL;
+
+            for (task_t* t = cpu->sched_queue; t; t = next) {
+
+                next = t->next;
 
                 if (t->ppid == self->pid)
                     t->ppid = 1;
 
-                if (t->pid == self->pid && t->tid == t->pid)
+                if (t->pid != self->pid || t->tid != t->pid)
+                    continue;
+
+                value = t->exit.value & 0xFFFF;
+
+                if (ignore)
+                    sched_bury(cpu, t);
+                else
                     t->group_dead = true;
             }
         }
     }
 
 
-    __sched_child_changed();
+    if (WIFSIGNALED(value))
+        __sched_child_changed(ppid, self->pid, self->uid, WCOREDUMP(value) ? CLD_DUMPED : CLD_KILLED, WTERMSIG(value));
+    else
+        __sched_child_changed(ppid, self->pid, self->uid, CLD_EXITED, WEXITSTATUS(value));
 }
 
 

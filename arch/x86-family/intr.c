@@ -176,6 +176,12 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
             frame->ax = syscall_invoke(frame->ax, frame->bx, frame->cx, frame->dx, frame->si, frame->di, 0);
 #endif
 
+            if (unlikely(current_task->flags & TASK_FLAGS_SIGNALED)) {
+
+                current_task->flags &= ~TASK_FLAGS_SIGNALED;
+                sched_signals();
+            }
+
             break;
 
 

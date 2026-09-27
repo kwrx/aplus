@@ -485,6 +485,11 @@ typedef struct task {
     #define thread_wake(task) task->status = TASK_STATUS_READY;
 
 
+/**
+ * @brief sched_sigqueue() flags: sent by the kernel itself, so no permission check applies.
+ */
+    #define SCHED_SIGQUEUE_KERNEL 1
+
 
 
 __BEGIN_DECLS
@@ -501,8 +506,11 @@ void sched_bury(struct cpu*, task_t*);
 void sched_requeue(task_t*);
 void sched_exit(void);
 int sched_sigqueueinfo(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*);
+int sched_sigqueue(pid_t pgrp, pid_t pid, pid_t tid, int sig, siginfo_t*, int flags);
 int sched_fault_sigqueueinfo(int sig, siginfo_t*);
+void sched_raise(int sig, siginfo_t*);
 void sched_sigmask(const sigset_t*);
+void sched_signals(void);
 size_t sched_nprocs(void);
 pid_t sched_lastpid(void);
 
