@@ -139,6 +139,12 @@ static void x86_irq_dispatch(interrupt_frame_t* frame) {
 }
 
 
+/**
+ * @brief Handles every interrupt, exception and syscall, then reschedules and restarts until neither is pending.
+ *
+ * @param frame The interrupted context.
+ * @return The frame to resume.
+ */
 void* x86_exception_handler(interrupt_frame_t* frame) {
 
     DEBUG_ASSERT((frame));
@@ -247,13 +253,16 @@ void* x86_exception_handler(interrupt_frame_t* frame) {
 
 
 
-    if (unlikely(current_task->flags & TASK_FLAGS_NEED_RESCHED)) {
+    for (;;) {
 
-        current_task->flags &= ~TASK_FLAGS_NEED_RESCHED;
-        schedule(1);
-    }
+        if (unlikely(current_task->flags & TASK_FLAGS_NEED_RESCHED)) {
 
-    if (unlikely(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)) {
+            current_task->flags &= ~TASK_FLAGS_NEED_RESCHED;
+            schedule(1);
+        }
+
+        if (likely(!(current_task->flags & TASK_FLAGS_NEED_SYSCALL_RESTART)))
+            break;
 
         current_task->flags &= ~TASK_FLAGS_NEED_SYSCALL_RESTART;
         frame->ax = syscall_restart();
