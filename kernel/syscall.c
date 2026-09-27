@@ -87,8 +87,8 @@ void syscall_init(void) {
 
 long syscall_invoke(unsigned long idx, long p0, long p1, long p2, long p3, long p4, long p5) {
 
-    DEBUG_ASSERT(idx < SYSMAX);
-    DEBUG_ASSERT(syscalls[idx]);
+    if (unlikely(idx >= SYSMAX || !syscalls[idx]))
+        return -ENOSYS;
 
 
 #if DEBUG_LEVEL_TRACE && SYSCALL_VERBOSE

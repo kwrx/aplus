@@ -21,11 +21,13 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <errno.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/syscall.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -173,6 +175,37 @@ static int run_case(const char* name, void (*fn)(void), int expect_exit) {
 }
 
 
+/**
+ * @brief Calls syscall numbers the kernel does not implement, which must fail with ENOSYS instead of crashing it.
+ *
+ * @return The number of calls that did not fail with ENOSYS.
+ */
+static int check_nosys(void) {
+
+    static const long numbers[] = {332, 435, 511, 512, 4096};
+
+    int bad = 0;
+
+    for (size_t i = 0; i < sizeof(numbers) / sizeof(numbers[0]); i++) {
+
+        errno  = 0;
+        long r = syscall(numbers[i]);
+
+        if (r == -1 && errno == ENOSYS) {
+
+            printf("fault-test: nosys(%ld) ok\n", numbers[i]);
+
+        } else {
+
+            printf("fault-test: nosys(%ld) FAILED, returned %ld errno %d\n", numbers[i], r, errno);
+            bad++;
+        }
+    }
+
+    return bad;
+}
+
+
 int main(int argc, char** argv) {
 
     if (argc > 1) {
@@ -200,6 +233,7 @@ int main(int argc, char** argv) {
     failures += run_case("movdqa", fault_movdqa, -1);
     failures += run_case("blocked", fault_blocked, -1);
     failures += run_case("handled", fault_handled, HANDLER_EXIT_CODE);
+    failures += check_nosys();
 
     printf("fault-test: %s (%d failure%s)\n", failures ? "FAILED" : "PASSED", failures, failures == 1 ? "" : "s");
 
