@@ -294,8 +294,8 @@ static void handle_signal(siginfo_t* siginfo) {
  * @brief Delivers one pending signal to the current task.
  *
  * A fatal signal exits here and never returns; a stopped task returns once SIGCONT makes it READY. Nothing is
- * delivered to a parent parked in vfork(), since its child is still running on its stack, nor to a task
- * already in the middle of exiting.
+ * delivered to a parent parked in vfork(), since its child is still running on its stack, to a task already in the
+ * middle of exiting, nor to a task parked inside the kernel.
  */
 static inline void do_signals(void) {
 
@@ -306,6 +306,10 @@ static inline void do_signals(void) {
     }
 
     if (unlikely(current_task->vfork.pending || current_task->sighand == NULL)) {
+        return;
+    }
+
+    if (unlikely(arch_task_parked_in_kernel(current_task, true))) {
         return;
     }
 
@@ -400,7 +404,7 @@ static void __sched_next(void) {
 
         if (current_task->status == TASK_STATUS_SLEEP) {
 
-            if (!queue_is_empty(&current_task->sigqueue) && !current_task->vfork.pending && current_task->sighand) {
+            if (!queue_is_empty(&current_task->sigqueue) && !current_task->vfork.pending && current_task->sighand && !arch_task_parked_in_kernel(current_task, current_task == prev)) {
                 thread_wake(current_task);
             }
 
