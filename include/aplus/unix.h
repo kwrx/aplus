@@ -73,6 +73,12 @@ struct sockaddr_un_k {
  */
     #define UNIX_TYPE_STREAM 1
 
+    /**
+     * @brief The flags socket() and socketpair() accept or'ed into the type, with Linux's values.
+     */
+    #define UNIX_TYPE_NONBLOCK 04000
+    #define UNIX_TYPE_CLOEXEC  02000000
+
 
     #define UNIX_SOCK_BUFSIZ  CONFIG_PIPESIZ
     #define UNIX_SOCK_BACKLOG 128

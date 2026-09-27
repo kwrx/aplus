@@ -586,7 +586,31 @@ static long __unix_addr_out(const char* path, void* addr, uint32_t* len) {
 }
 
 
+/**
+ * @brief Splits the flags off a socket type into the O_NONBLOCK and O_CLOEXEC they ask for.
+ *
+ * @param type The type, which loses its flags.
+ * @return The descriptor flags.
+ */
+static int __unix_type_flags(int* type) {
+
+    int flags = 0;
+
+    if (*type & UNIX_TYPE_NONBLOCK)
+        flags |= O_NONBLOCK;
+
+    if (*type & UNIX_TYPE_CLOEXEC)
+        flags |= O_CLOEXEC;
+
+    *type &= ~(UNIX_TYPE_NONBLOCK | UNIX_TYPE_CLOEXEC);
+
+    return flags;
+}
+
+
 long unix_socket(int type, int protocol) {
+
+    int flags = __unix_type_flags(&type);
 
     if (unlikely(type != UNIX_TYPE_STREAM))
         return -ESOCKTNOSUPPORT;
@@ -601,7 +625,7 @@ long unix_socket(int type, int protocol) {
         return -ENOMEM;
 
 
-    long fd = __unix_install(sock, 0);
+    long fd = __unix_install(sock, flags);
 
     __unix_put(sock);
 
@@ -610,6 +634,8 @@ long unix_socket(int type, int protocol) {
 
 
 long unix_socketpair(int type, int protocol, int* sv) {
+
+    int flags = __unix_type_flags(&type);
 
     if (unlikely(type != UNIX_TYPE_STREAM))
         return -ESOCKTNOSUPPORT;
@@ -642,7 +668,7 @@ long unix_socketpair(int type, int protocol, int* sv) {
     b->state = UNIX_SOCK_CONNECTED;
 
 
-    long fd0 = __unix_install(a, 0);
+    long fd0 = __unix_install(a, flags);
 
     if (unlikely(fd0 < 0)) {
 
@@ -652,7 +678,7 @@ long unix_socketpair(int type, int protocol, int* sv) {
         return fd0;
     }
 
-    long fd1 = __unix_install(b, 0);
+    long fd1 = __unix_install(b, flags);
 
     if (unlikely(fd1 < 0)) {
 
