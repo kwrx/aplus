@@ -816,6 +816,104 @@ static void test_sock_flags(void) {
 
 
 /**
+ * @brief Checks that accept4(SOCK_NONBLOCK) on a blocking listener waits for a connection and makes a non-blocking socket.
+ */
+static void test_accept4_nonblock(void) {
+
+    const char* path = "/tmp/unix-test-accept4.sock";
+
+    unlink(path);
+
+
+    int srv = socket(AF_UNIX, SOCK_STREAM, 0);
+
+    struct sockaddr_un un;
+    socklen_t len = fill_addr(&un, path);
+
+    if (srv < 0 || bind(srv, (struct sockaddr*)&un, len) < 0 || listen(srv, 4) < 0) {
+
+        CHECK(0, "accept4-nonblock", "listener setup failed: %s", strerror(errno));
+
+        if (srv >= 0)
+            close(srv);
+
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(srv);
+        usleep(200000);
+
+        int c = socket(AF_UNIX, SOCK_STREAM, 0);
+
+        if (c < 0 || connect(c, (struct sockaddr*)&un, len) < 0)
+            _exit(1);
+
+        char ch;
+        read(c, &ch, 1);
+
+        _exit(0);
+    }
+
+
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = alarm_noop;
+
+    sigaction(SIGUSR1, &sa, NULL);
+
+
+    pid_t parent = getpid();
+    pid_t w      = fork();
+
+    if (w == 0) {
+
+        sleep(5);
+        kill(parent, SIGUSR1);
+
+        _exit(0);
+    }
+
+
+    errno = 0;
+    int c = accept4(srv, NULL, NULL, SOCK_NONBLOCK);
+    int e = errno;
+
+    kill(w, SIGKILL);
+    waitpid(w, NULL, 0);
+
+    signal(SIGUSR1, SIG_DFL);
+
+
+    int fl = c >= 0 ? fcntl(c, F_GETFL) : -1;
+
+    CHECK(c >= 0, "accept4-nonblock-waits", "accept4(SOCK_NONBLOCK) on a blocking listener returned %d (%s), expected it to wait for the connection", c, strerror(e));
+    CHECK(c < 0 || (fl >= 0 && (fl & O_NONBLOCK)), "accept4-nonblock-flag", "the accepted socket's F_GETFL reads 0x%x, without O_NONBLOCK", fl);
+
+    if (c >= 0) {
+        write(c, "k", 1);
+        close(c);
+    }
+
+    close(srv);
+    unlink(path);
+
+
+    int status = 0;
+
+    if (c < 0)
+        kill(pid, SIGKILL);
+
+    waitpid(pid, &status, 0);
+}
+
+
+/**
  * @brief Keeps using a listening socket after its path is removed, while new files reuse freed kernel memory.
  */
 static void test_bound_unlink(void) {
@@ -953,6 +1051,7 @@ static const struct {
     {"leak", test_no_leak},
     {"accept-race", test_accept_race},
     {"sock-flags", test_sock_flags},
+    {"accept4-nonblock", test_accept4_nonblock},
     {"bound-unlink", test_bound_unlink},
     {"connect-close-race", test_connect_close_race},
 };
