@@ -36,6 +36,7 @@
     #include <sys/resource.h>
     #include <sys/stat.h>
     #include <sys/types.h>
+    #include <sys/uio.h>
 
     #include <sys/statvfs.h>
 
@@ -233,6 +234,7 @@ int vfs_fsync(inode_t*, int);
 ssize_t vfs_read(inode_t*, void*, off_t, size_t);
 ssize_t vfs_write(inode_t*, const void*, off_t, size_t);
 ssize_t vfs_write_append(inode_t*, const void*, off_t*, size_t);
+ssize_t vfs_writev(inode_t*, const struct iovec*, size_t, off_t*, bool);
 ssize_t vfs_readlink(inode_t*, char*, size_t);
 
 inode_t* vfs_creat(inode_t*, const char*, mode_t);
@@ -301,6 +303,7 @@ void fd_close_all(struct fd*);
 void fd_ref_all(struct fd*);
 ssize_t fd_read(struct file*, void*, size_t);
 ssize_t fd_write(struct file*, const void*, size_t);
+ssize_t fd_writev(struct file*, const struct iovec*, size_t);
 
 
 // kernel/fs/path.c

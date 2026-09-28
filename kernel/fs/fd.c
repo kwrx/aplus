@@ -428,3 +428,31 @@ ssize_t fd_write(struct file* file, const void* buf, size_t size) {
 
     return e;
 }
+
+
+/**
+ * @brief Writes a vector to an open file as one write, at its position or at the end of a regular file under O_APPEND, advancing it.
+ *
+ * @param file The file.
+ * @param iov The buffers, none of them empty, in memory the caller has made accessible with uio_lock().
+ * @param count How many buffers there are.
+ * @return The number of bytes written, or a negative errno if none were.
+ */
+ssize_t fd_writev(struct file* file, const struct iovec* iov, size_t count) {
+
+    DEBUG_ASSERT(file);
+    DEBUG_ASSERT(file->inode);
+
+
+    ssize_t e = 0;
+
+    scoped_lock(&file->lock) {
+
+        off_t off = file->position;
+
+        if ((e = vfs_writev(file->inode, iov, count, &off, !!(file->flags & O_APPEND))) > 0)
+            file->position = off + e;
+    }
+
+    return e;
+}
