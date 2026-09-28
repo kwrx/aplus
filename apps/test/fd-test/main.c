@@ -29,9 +29,12 @@
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
 #include <sys/syscall.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -325,6 +328,259 @@ static void test_cloexec_exec(void) {
 
 
 /**
+ * @brief A SIGUSR1 handler that does nothing, so the signal only interrupts a blocked call.
+ *
+ * @param sig The signal.
+ */
+static void signal_noop(int sig) {
+    (void)sig;
+}
+
+
+/**
+ * @brief Starts a child that sends SIGUSR1 to the caller after a delay, standing in for alarm(), which is ENOSYS.
+ *
+ * @param ms The delay in milliseconds.
+ * @return The watchdog's pid, for watchdog_stop().
+ */
+static pid_t watchdog_start(int ms) {
+
+    struct sigaction sa;
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = signal_noop;
+
+    sigaction(SIGUSR1, &sa, NULL);
+
+
+    pid_t parent = getpid();
+    pid_t pid    = fork();
+
+    if (pid == 0) {
+
+        usleep(ms * 1000);
+        kill(parent, SIGUSR1);
+
+        _exit(0);
+    }
+
+    return pid;
+}
+
+
+/**
+ * @brief Stops a watchdog and restores the default action of SIGUSR1.
+ *
+ * @param pid The watchdog's pid.
+ */
+static void watchdog_stop(pid_t pid) {
+
+    if (pid > 0) {
+        kill(pid, SIGKILL);
+        waitpid(pid, NULL, 0);
+    }
+
+    signal(SIGUSR1, SIG_DFL);
+}
+
+
+/**
+ * @brief Reads one byte, giving up after a second instead of blocking forever.
+ *
+ * @param fd The descriptor.
+ * @return What read() returned, with errno EINTR when it blocked.
+ */
+static ssize_t read_guarded(int fd) {
+
+    pid_t w = watchdog_start(1000);
+
+    char c;
+
+    errno     = 0;
+    ssize_t n = read(fd, &c, 1);
+    int e     = errno;
+
+    watchdog_stop(w);
+
+    errno = e;
+
+    return n;
+}
+
+
+/**
+ * @brief Checks that O_NONBLOCK set on one descriptor is seen through dup(), dup2() and F_DUPFD copies, by F_GETFL and by read().
+ */
+static void test_shared_dup(void) {
+
+    int p[2];
+
+    if (pipe(p) < 0) {
+        CHECK(0, "shared-dup", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+    int a = dup(p[0]);
+    int b = dup2(p[0], 40);
+    int c = fcntl(p[0], F_DUPFD, 50);
+
+    if (a < 0 || b < 0 || c < 0) {
+        CHECK(0, "shared-dup", "setup failed: %s", strerror(errno));
+        return;
+    }
+
+
+    fcntl(p[0], F_SETFL, O_NONBLOCK);
+
+    CHECK(fcntl(a, F_GETFL) & O_NONBLOCK, "shared-dup", "F_GETFL on the dup() reads 0x%x after O_NONBLOCK was set on the original", fcntl(a, F_GETFL));
+    CHECK(fcntl(b, F_GETFL) & O_NONBLOCK, "shared-dup2", "F_GETFL on the dup2() reads 0x%x after O_NONBLOCK was set on the original", fcntl(b, F_GETFL));
+    CHECK(fcntl(c, F_GETFL) & O_NONBLOCK, "shared-dupfd", "F_GETFL on the F_DUPFD copy reads 0x%x after O_NONBLOCK was set on the original", fcntl(c, F_GETFL));
+
+    ssize_t n = read_guarded(a);
+
+    CHECK(n < 0 && errno == EAGAIN, "shared-dup-read", "a read() on the empty pipe through the dup() returned %zd (%s), expected EAGAIN", n, strerror(errno));
+
+
+    fcntl(b, F_SETFL, 0);
+
+    CHECK(!(fcntl(p[0], F_GETFL) & O_NONBLOCK), "shared-dup-clear", "F_GETFL on the original reads 0x%x after O_NONBLOCK was cleared on the dup2()", fcntl(p[0], F_GETFL));
+
+    close(a);
+    close(b);
+    close(c);
+    close(p[0]);
+    close(p[1]);
+
+
+    int s[2];
+
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, s) < 0) {
+        CHECK(0, "shared-fionbio", "socketpair() failed: %s", strerror(errno));
+        return;
+    }
+
+    int d  = dup(s[0]);
+    int on = 1;
+
+    ioctl(s[0], FIONBIO, &on);
+
+    CHECK(fcntl(d, F_GETFL) & O_NONBLOCK, "shared-fionbio", "F_GETFL on the dup() reads 0x%x after FIONBIO on the original", fcntl(d, F_GETFL));
+
+    n = read_guarded(d);
+
+    CHECK(n < 0 && errno == EAGAIN, "shared-fionbio-read", "a read() on the idle socket through the dup() returned %zd (%s), expected EAGAIN", n, strerror(errno));
+
+    close(d);
+    close(s[0]);
+    close(s[1]);
+}
+
+
+/**
+ * @brief Checks that F_SETFL in a forked child is seen by the parent, and the other way round.
+ */
+static void test_shared_fork(void) {
+
+    int p[2];
+    int sync[2];
+
+    if (pipe(p) < 0 || pipe(sync) < 0) {
+        CHECK(0, "shared-fork", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        char c;
+
+        if (read(sync[0], &c, 1) != 1)
+            _exit(2);
+
+        if (!(fcntl(p[0], F_GETFL) & O_NONBLOCK))
+            _exit(1);
+
+        fcntl(p[0], F_SETFL, 0);
+
+        _exit(0);
+    }
+
+
+    fcntl(p[0], F_SETFL, O_NONBLOCK);
+    write(sync[1], "x", 1);
+
+    int status = 0;
+
+    waitpid(pid, &status, 0);
+
+    CHECK(WIFEXITED(status) && WEXITSTATUS(status) == 0, "shared-fork-child", "the child reported %d (1: it did not see the O_NONBLOCK its parent set after fork)", WIFEXITED(status) ? WEXITSTATUS(status) : -1);
+    CHECK(!(fcntl(p[0], F_GETFL) & O_NONBLOCK), "shared-fork-parent", "F_GETFL in the parent reads 0x%x after the child cleared O_NONBLOCK", fcntl(p[0], F_GETFL));
+
+    close(p[0]);
+    close(p[1]);
+    close(sync[0]);
+    close(sync[1]);
+}
+
+
+/**
+ * @brief Checks that F_GETFL reports only the access mode and the status flags, not the open-time or descriptor flags.
+ */
+static void test_getfl_clean(void) {
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-getfl.%d", (int)getpid());
+
+    int a = open(path, O_RDWR | O_CREAT | O_TRUNC | O_EXCL | O_CLOEXEC | O_APPEND, 0600);
+
+    if (a < 0) {
+        CHECK(0, "getfl-open", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    int f = fcntl(a, F_GETFL);
+
+    CHECK(f >= 0 && !(f & (O_CREAT | O_TRUNC | O_EXCL | O_CLOEXEC)), "getfl-open", "F_GETFL reads 0x%x, which has O_CREAT, O_TRUNC, O_EXCL or O_CLOEXEC", f);
+    CHECK(f >= 0 && (f & O_ACCMODE) == O_RDWR && (f & O_APPEND), "getfl-open-status", "F_GETFL reads 0x%x, expected O_RDWR | O_APPEND", f);
+
+    close(a);
+    unlink(path);
+
+
+    int p[2];
+
+    if (pipe2(p, O_CLOEXEC | O_NONBLOCK) < 0) {
+        CHECK(0, "getfl-pipe2", "pipe2() failed: %s", strerror(errno));
+        return;
+    }
+
+    f = fcntl(p[1], F_GETFL);
+
+    CHECK(f == (O_WRONLY | O_NONBLOCK), "getfl-pipe2", "F_GETFL on a pipe2(O_CLOEXEC | O_NONBLOCK) write end reads 0x%x, expected 0x%x", f, O_WRONLY | O_NONBLOCK);
+
+    close(p[0]);
+    close(p[1]);
+
+
+    int s = socket(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
+
+    if (s < 0) {
+        CHECK(0, "getfl-socket", "socket() failed: %s", strerror(errno));
+        return;
+    }
+
+    f = fcntl(s, F_GETFL);
+
+    CHECK(f == (O_RDWR | O_NONBLOCK), "getfl-socket", "F_GETFL on a SOCK_CLOEXEC | SOCK_NONBLOCK socket reads 0x%x, expected 0x%x", f, O_RDWR | O_NONBLOCK);
+
+    close(s);
+}
+
+
+/**
  * @brief The exec'd half of test_cloexec_exec().
  *
  * @param argv The three descriptors, as strings.
@@ -363,6 +619,9 @@ static struct {
     {"dup3", test_dup3},
     {"dup-offset", test_dup_shares_offset},
     {"cloexec-exec", test_cloexec_exec},
+    {"shared-dup", test_shared_dup},
+    {"shared-fork", test_shared_fork},
+    {"getfl-clean", test_getfl_clean},
 };
 
 
