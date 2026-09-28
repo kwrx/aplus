@@ -36,6 +36,7 @@
 #include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/syscall.h>
+#include <sys/uio.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -581,6 +582,293 @@ static void test_getfl_clean(void) {
 
 
 /**
+ * @brief Reads a whole file into a NUL-terminated buffer.
+ *
+ * @param path The file.
+ * @param buf The buffer.
+ * @param size Its size, including room for the NUL.
+ * @return The number of bytes read, or -1 with errno set.
+ */
+static ssize_t read_file(const char* path, char* buf, size_t size) {
+
+    int fd = open(path, O_RDONLY);
+
+    if (fd < 0)
+        return -1;
+
+    ssize_t n = 0;
+    ssize_t r = 0;
+
+    while ((size_t)n < size - 1 && (r = read(fd, buf + n, size - 1 - n)) > 0)
+        n += r;
+
+    close(fd);
+
+    buf[n] = '\0';
+
+    return n;
+}
+
+
+/**
+ * @brief Checks that writes and writev()s through two descriptors opened separately with O_APPEND all land at the end.
+ *
+ * @param dir The directory to put the file in, which picks the filesystem.
+ * @param name The case name.
+ */
+static void check_append_separate(const char* dir, const char* name) {
+
+    char path[64];
+    char offname[64];
+
+    snprintf(path, sizeof(path), "%s/fd-test-append.%d", dir, (int)getpid());
+    snprintf(offname, sizeof(offname), "%s-offset", name);
+
+    int a = open(path, O_WRONLY | O_CREAT | O_TRUNC | O_APPEND, 0600);
+    int b = open(path, O_WRONLY | O_APPEND);
+
+    if (a < 0 || b < 0) {
+        CHECK(0, name, "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    struct iovec iov[2] = {
+        {(void*)"b1", 2},
+        {(void*)"-", 1},
+    };
+
+    write(a, "a0-", 3);
+    write(b, "b0-", 3);
+    write(a, "a1-", 3);
+    writev(b, iov, 2);
+    write(a, "a2", 2);
+
+    char buf[64];
+    ssize_t n = read_file(path, buf, sizeof(buf));
+
+    CHECK(n == 14 && strcmp(buf, "a0-b0-a1-b1-a2") == 0, name, "the file holds \"%s\" (%zd bytes), expected \"a0-b0-a1-b1-a2\"", n >= 0 ? buf : "", n);
+
+    off_t off = lseek(a, 0, SEEK_CUR);
+
+    CHECK(off == 14, offname, "the last writer is at offset %ld, expected the end of the file, 14", (long)off);
+
+    close(a);
+    close(b);
+    unlink(path);
+}
+
+
+/**
+ * @brief Checks O_APPEND through separately opened descriptors on tmpfs and on the ext2 root.
+ */
+static void test_append_separate(void) {
+
+    check_append_separate("/tmp", "append-separate");
+    check_append_separate("", "append-separate-ext2");
+}
+
+
+/**
+ * @brief Checks that O_APPEND set with F_SETFL after open() sends the next write to the end, and that clearing it stops that.
+ */
+static void test_append_setfl(void) {
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-setfl-append.%d", (int)getpid());
+
+    int a = open(path, O_RDWR | O_CREAT | O_TRUNC, 0600);
+
+    if (a < 0) {
+        CHECK(0, "append-setfl", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    write(a, "hello", 5);
+    lseek(a, 0, SEEK_SET);
+
+    fcntl(a, F_SETFL, fcntl(a, F_GETFL) | O_APPEND);
+    write(a, "XY", 2);
+
+    char buf[64];
+    ssize_t n = read_file(path, buf, sizeof(buf));
+
+    CHECK(n == 7 && strcmp(buf, "helloXY") == 0, "append-setfl", "the file holds \"%s\" after F_SETFL O_APPEND and a write at offset 0, expected \"helloXY\"", n >= 0 ? buf : "");
+
+    fcntl(a, F_SETFL, fcntl(a, F_GETFL) & ~O_APPEND);
+    lseek(a, 0, SEEK_SET);
+    write(a, "J", 1);
+
+    n = read_file(path, buf, sizeof(buf));
+
+    CHECK(n == 7 && strcmp(buf, "JelloXY") == 0, "append-setfl-clear", "the file holds \"%s\" after O_APPEND was cleared and a write at offset 0, expected \"JelloXY\"", n >= 0 ? buf : "");
+
+    close(a);
+    unlink(path);
+}
+
+
+/**
+ * @brief Checks that open() with O_APPEND starts at offset 0, so a read sees the start of the file until the first write.
+ */
+static void test_append_open_offset(void) {
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-open-append.%d", (int)getpid());
+
+    int a = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (a < 0) {
+        CHECK(0, "append-open-offset", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    write(a, "hello", 5);
+    close(a);
+
+    int b = open(path, O_RDWR | O_APPEND);
+
+    off_t off = lseek(b, 0, SEEK_CUR);
+
+    char c    = 0;
+    ssize_t n = read(b, &c, 1);
+
+    CHECK(off == 0 && n == 1 && c == 'h', "append-open-offset", "a new O_APPEND descriptor is at offset %ld and read() returned %zd, expected offset 0 and the byte 'h'", (long)off, n);
+
+    close(b);
+    unlink(path);
+}
+
+
+/**
+ * @brief Checks that pwrite() on an O_APPEND descriptor writes at the offset it is given and leaves the file position alone.
+ */
+static void test_append_pwrite(void) {
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-pwrite-append.%d", (int)getpid());
+
+    int a = open(path, O_RDWR | O_CREAT | O_TRUNC | O_APPEND, 0600);
+
+    if (a < 0) {
+        CHECK(0, "append-pwrite", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    write(a, "hello", 5);
+
+    ssize_t w = pwrite(a, "J", 1, 0);
+
+    char buf[64];
+    ssize_t n = read_file(path, buf, sizeof(buf));
+
+    CHECK(w == 1 && n == 5 && strcmp(buf, "Jello") == 0, "append-pwrite", "pwrite() at offset 0 returned %zd and the file holds \"%s\", expected \"Jello\"", w, n >= 0 ? buf : "");
+
+    off_t off = lseek(a, 0, SEEK_CUR);
+
+    CHECK(off == 5, "append-pwrite-offset", "the descriptor is at offset %ld after pwrite(), expected 5", (long)off);
+
+    close(a);
+    unlink(path);
+}
+
+
+/**
+ * @brief Checks that processes appending fixed-size records through their own O_APPEND descriptors at the same time lose none.
+ */
+static void test_append_concurrent(void) {
+
+    enum { WRITERS = 3, RECORDS = 400, RECLEN = 8 };
+
+    static char buf[WRITERS * RECORDS * RECLEN + 64];
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-append-mp.%d", (int)getpid());
+
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (fd < 0) {
+        CHECK(0, "append-concurrent", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    close(fd);
+
+
+    pid_t pids[WRITERS];
+
+    for (int w = 0; w < WRITERS; w++) {
+
+        if ((pids[w] = fork()) == 0) {
+
+            int a = open(path, O_WRONLY | O_APPEND);
+
+            if (a < 0)
+                _exit(1);
+
+            for (int i = 0; i < RECORDS; i++) {
+
+                char rec[RECLEN + 1];
+
+                snprintf(rec, sizeof(rec), "%c%06d\n", 'a' + w, i);
+
+                if (write(a, rec, RECLEN) != RECLEN)
+                    _exit(2);
+            }
+
+            _exit(0);
+        }
+    }
+
+
+    int failed = 0;
+
+    for (int w = 0; w < WRITERS; w++) {
+
+        int status = 0;
+
+        if (waitpid(pids[w], &status, 0) != pids[w] || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+            failed = w + 1;
+    }
+
+    CHECK(failed == 0, "append-concurrent-writers", "writer %d did not finish cleanly", failed);
+
+
+    ssize_t n = read_file(path, buf, sizeof(buf));
+
+    CHECK(n == WRITERS * RECORDS * RECLEN, "append-concurrent-size", "the file is %zd bytes, expected %d", n, WRITERS * RECORDS * RECLEN);
+
+
+    int next[WRITERS] = {0};
+    long bad          = -1;
+
+    for (long k = 0; n > 0 && k + RECLEN <= n; k += RECLEN) {
+
+        int w = buf[k] - 'a';
+
+        if (w < 0 || w >= WRITERS || buf[k + RECLEN - 1] != '\n' || atoi(&buf[k + 1]) != next[w]) {
+            bad = k;
+            break;
+        }
+
+        next[w]++;
+    }
+
+    for (int w = 0; bad < 0 && w < WRITERS; w++) {
+        if (next[w] != RECORDS)
+            bad = n;
+    }
+
+    CHECK(bad < 0, "append-concurrent", "the records are lost, torn or out of order from byte %ld", bad);
+
+    unlink(path);
+}
+
+
+/**
  * @brief The exec'd half of test_cloexec_exec().
  *
  * @param argv The three descriptors, as strings.
@@ -622,6 +910,11 @@ static struct {
     {"shared-dup", test_shared_dup},
     {"shared-fork", test_shared_fork},
     {"getfl-clean", test_getfl_clean},
+    {"append-separate", test_append_separate},
+    {"append-setfl", test_append_setfl},
+    {"append-open-offset", test_append_open_offset},
+    {"append-pwrite", test_append_pwrite},
+    {"append-concurrent", test_append_concurrent},
 };
 
 
