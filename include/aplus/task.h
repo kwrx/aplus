@@ -124,10 +124,7 @@ struct fd_descriptor {
 
     struct file* ref;
 
-    struct {
-        int flags : 30;
-        unsigned int close_on_exec : 1;
-    };
+    bool close_on_exec;
 };
 
 struct fd {

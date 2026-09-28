@@ -77,10 +77,13 @@ SYSCALL(
 
             if (!nonblock) {
 
-                shared_ptr_access(current_task->fd, fds, {
-                    if (fds->descriptors[fd].ref)
-                        nonblock = !!(fds->descriptors[fd].flags & O_NONBLOCK);
-                });
+                int fdflags       = 0;
+                struct file* file = fd_get((unsigned int)fd, &fdflags);
+
+                if (file) {
+                    nonblock = !!(fdflags & O_NONBLOCK);
+                    fd_put(file);
+                }
             }
 
             if (nonblock) {

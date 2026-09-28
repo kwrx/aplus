@@ -189,7 +189,7 @@ SYSCALL(
 
                 struct file* ref = NULL;
 
-                if ((ref = fd_append(inode, 0, 0)) == NULL) {
+                if ((ref = fd_append(inode, 0, flags)) == NULL) {
 
                     fd = CONFIG_FILE_MAX;
 
@@ -201,9 +201,7 @@ SYSCALL(
                         ref->position = 0;
 
 
-                    fds->descriptors[fd].ref   = ref;
-                    fds->descriptors[fd].flags = flags;
-
+                    fds->descriptors[fd].ref           = ref;
                     fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);
                 }
             }

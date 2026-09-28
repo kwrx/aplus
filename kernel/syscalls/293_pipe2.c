@@ -73,7 +73,7 @@ SYSCALL(
         struct file* refs[2] = {NULL, NULL};
 
         for (size_t i = 0; i < 2; i++)
-            refs[i] = fd_append(inodes[i], 0, 0);
+            refs[i] = fd_append(inodes[i], 0, (flags & O_NONBLOCK) | (i == PIPE_END_WRITE ? O_WRONLY : O_RDONLY));
 
 
         if (unlikely(!refs[PIPE_END_READ] || !refs[PIPE_END_WRITE])) {
@@ -116,9 +116,7 @@ SYSCALL(
                     }
 
 
-                    fds->descriptors[fd].ref = refs[i];
-
-                    fds->descriptors[fd].flags         = (flags & O_NONBLOCK) | (i == PIPE_END_WRITE ? O_WRONLY : O_RDONLY);
+                    fds->descriptors[fd].ref           = refs[i];
                     fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);
 
                     assigned[i] = fd;
@@ -133,8 +131,7 @@ SYSCALL(
                             continue;
 
                         fds->descriptors[assigned[i]].ref           = NULL;
-                        fds->descriptors[assigned[i]].flags         = 0;
-                        fds->descriptors[assigned[i]].close_on_exec = 0;
+                        fds->descriptors[assigned[i]].close_on_exec = false;
                     }
                 }
             }

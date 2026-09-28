@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <fcntl.h>
 #include <poll.h>
 #include <stdint.h>
 #include <string.h>
@@ -33,6 +34,12 @@
 #include <aplus/memory.h>
 #include <aplus/task.h>
 #include <aplus/vfs.h>
+
+
+/**
+ * @brief The open() flags an open file keeps: its access mode and its status flags.
+ */
+#define FILE_STATUS_FLAGS (O_ACCMODE | O_APPEND | O_ASYNC | O_DIRECT | O_DSYNC | O_NOATIME | O_NONBLOCK | O_SYNC)
 
 
 static struct file* filetable = NULL;
@@ -51,7 +58,15 @@ void fd_init(void) {
 }
 
 
-struct file* fd_append(inode_t* inode, off_t position, int status) {
+/**
+ * @brief Allocates an open file for an inode, taking a reference to the inode.
+ *
+ * @param inode The inode.
+ * @param position The initial position.
+ * @param flags The open() flags, of which the access mode and status flags are kept.
+ * @return The file, holding one reference, or NULL with errno ENFILE.
+ */
+struct file* fd_append(inode_t* inode, off_t position, int flags) {
 
     DEBUG_ASSERT(filetable);
     DEBUG_ASSERT(inode);
@@ -71,7 +86,7 @@ struct file* fd_append(inode_t* inode, off_t position, int status) {
             atomic_store(&filetable[i].refcount, 1);
             filetable[i].inode    = inode;
             filetable[i].position = position;
-            filetable[i].status   = status;
+            filetable[i].flags    = flags & FILE_STATUS_FLAGS;
 
             spinlock_init(&filetable[i].lock);
             break;
@@ -110,7 +125,7 @@ void fd_remove(struct file* fd, bool close) {
 
             fd->inode    = NULL;
             fd->position = 0;
-            fd->status   = 0;
+            fd->flags    = 0;
 
 
             int i = (int)(fd - filetable);
@@ -152,7 +167,7 @@ void fd_ref(struct file* file) {
  * @brief Takes a reference to the open file behind one of the caller's descriptors, leaving the table unlocked.
  *
  * @param fd The descriptor.
- * @param flags Receives the descriptor's flags, or NULL.
+ * @param flags Receives the file's access mode and status flags, or NULL.
  * @return The file, or NULL if @p fd is not open.
  */
 struct file* fd_get(unsigned int fd, int* flags) {
@@ -167,16 +182,12 @@ struct file* fd_get(unsigned int fd, int* flags) {
     struct file* file = NULL;
 
     shared_ptr_access(current_task->fd, fds, {
-        if (fds->descriptors[fd].ref != NULL) {
-
-            file = fds->descriptors[fd].ref;
-
-            if (flags)
-                *flags = fds->descriptors[fd].flags;
-
+        if ((file = fds->descriptors[fd].ref) != NULL)
             fd_ref(file);
-        }
     });
+
+    if (file && flags)
+        *flags = fd_flags(file);
 
     return file;
 }
@@ -190,6 +201,44 @@ struct file* fd_get(unsigned int fd, int* flags) {
 void fd_put(struct file* file) {
 
     fd_remove(file, true);
+}
+
+
+/**
+ * @brief Reads the access mode and status flags of an open file.
+ *
+ * @param file The file.
+ * @return The flags.
+ */
+int fd_flags(struct file* file) {
+
+    DEBUG_ASSERT(file);
+
+
+    int flags = 0;
+
+    scoped_lock(&file->lock) {
+        flags = file->flags;
+    }
+
+    return flags;
+}
+
+
+/**
+ * @brief Changes some of the status flags of an open file, for every descriptor that refers to it.
+ *
+ * @param file The file.
+ * @param mask The flags to change.
+ * @param flags Their new values.
+ */
+void fd_set_flags(struct file* file, int mask, int flags) {
+
+    DEBUG_ASSERT(file);
+
+    scoped_lock(&file->lock) {
+        file->flags = (file->flags & ~mask) | (flags & mask);
+    }
 }
 
 
@@ -227,7 +276,6 @@ long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
                     continue;
 
                 fds->descriptors[i].ref           = fds->descriptors[fd].ref;
-                fds->descriptors[i].flags         = fds->descriptors[fd].flags;
                 fds->descriptors[i].close_on_exec = cloexec;
 
                 fd_ref(fds->descriptors[i].ref);
@@ -271,7 +319,6 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
             old = fds->descriptors[newfd].ref;
 
             fds->descriptors[newfd].ref           = fds->descriptors[fd].ref;
-            fds->descriptors[newfd].flags         = fds->descriptors[fd].flags;
             fds->descriptors[newfd].close_on_exec = cloexec;
 
             fd_ref(fds->descriptors[newfd].ref);
@@ -303,8 +350,7 @@ void fd_close_all(struct fd* fds) {
         fd_remove(fds->descriptors[i].ref, true);
 
         fds->descriptors[i].ref           = NULL;
-        fds->descriptors[i].flags         = 0;
-        fds->descriptors[i].close_on_exec = 0;
+        fds->descriptors[i].close_on_exec = false;
     }
 }
 
