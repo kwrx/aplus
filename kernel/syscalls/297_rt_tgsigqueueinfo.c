@@ -66,16 +66,19 @@ SYSCALL(
         if (unlikely(!uinfo))
             return -EINVAL;
 
+        if (unlikely(tgid <= 0))
+            return -EINVAL;
+
         if (unlikely(!uio_check(uinfo, R_OK)))
             return -EFAULT;
-
-        if (unlikely(tgid != current_task->pid && uinfo->si_code >= 0))
-            return -EPERM;
 
 
 
         siginfo_t __uinfo;
         uio_memcpy_u2s(&__uinfo, uinfo, sizeof(siginfo_t));
+
+        if (unlikely(tgid != current_task->pid && __uinfo.si_code >= 0))
+            return -EPERM;
 
         if (unlikely(sched_sigqueueinfo(-1, tgid, tid, sig, &__uinfo)) < 0)
             return -errno;

@@ -55,12 +55,21 @@ SYSCALL(
         kprintf("syscall: WARN! deprecated syscall: tkill(%d, %d)\n", tid, sig);
 #endif
 
-        siginfo_t info;
-        info.si_signo = sig;
-        info.si_code  = SI_TKILL;
-        info.si_errno = 0;
+        if (unlikely(tid <= 0))
+            return -EINVAL;
 
-        if (sched_sigqueueinfo(-1, current_task->pid, tid, sig, &info) < 0)
+        if (unlikely(sig < 0 || sig > _NSIG - 1))
+            return -EINVAL;
+
+
+        siginfo_t info = {0};
+        info.si_signo  = sig;
+        info.si_code   = SI_TKILL;
+        info.si_errno  = 0;
+        info.si_pid    = current_task->pid;
+        info.si_uid    = current_task->uid;
+
+        if (sched_sigqueueinfo(-1, -1, tid, sig, &info) < 0)
             return -errno;
 
         return 0;
