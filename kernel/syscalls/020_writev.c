@@ -42,6 +42,67 @@
 #include <aplus/network.h>
 
 
+/**
+ * @brief How many buffers writev_whole() copies on the stack before it allocates.
+ */
+#define WRITEV_FASTIOV 8
+
+
+/**
+ * @brief Writes a user's whole vector to an open file as one write, so under O_APPEND it lands contiguously at the end.
+ *
+ * @param file The file.
+ * @param vec The user's vector.
+ * @param vlen How many buffers it has.
+ * @return The number of bytes written, or a negative errno.
+ */
+static ssize_t writev_whole(struct file* file, const struct iovec* vec, unsigned long vlen) {
+
+    struct iovec fast[WRITEV_FASTIOV];
+    struct iovec* iov = fast;
+
+    if (vlen > WRITEV_FASTIOV && (iov = kcalloc(vlen, sizeof(struct iovec), GFP_KERNEL)) == NULL)
+        return -ENOMEM;
+
+
+    size_t count = 0;
+    ssize_t e    = 0;
+
+    for (unsigned long i = 0; i < vlen; i++) {
+
+        uio_memcpy_u2s(&iov[count], &vec[i], sizeof(struct iovec));
+
+        if (unlikely(!iov[count].iov_base || !iov[count].iov_len))
+            continue;
+
+        if (unlikely(!uio_check(iov[count].iov_base, R_OK))) {
+            e = -EFAULT;
+            break;
+        }
+
+        count++;
+    }
+
+
+    if (e == 0 && count > 0) {
+
+        for (size_t i = 0; i < count; i++)
+            uio_lock(iov[i].iov_base, iov[i].iov_len);
+
+        e = fd_writev(file, iov, count);
+
+        for (size_t i = 0; i < count; i++)
+            uio_unlock(iov[i].iov_base, iov[i].iov_len);
+    }
+
+
+    if (iov != fast)
+        kfree(iov);
+
+    return e;
+}
+
+
 /***
  * Name:        writev
  * Description: read or write
@@ -81,6 +142,23 @@ SYSCALL(
         if (unlikely((flags & O_ACCMODE) != O_WRONLY && (flags & O_ACCMODE) != O_RDWR)) {
             fd_put(file);
             return -EBADF;
+        }
+
+
+        struct stat st;
+
+        if ((flags & O_APPEND) && vfs_getattr(file->inode, &st) == 0 && S_ISREG(st.st_mode)) {
+
+            ssize_t e = writev_whole(file, vec, vlen);
+
+            if (e > 0)
+                current_task->iostat.write_bytes += (uint64_t)e;
+
+            current_task->iostat.syscw += 1;
+
+            fd_put(file);
+
+            return e;
         }
 
 

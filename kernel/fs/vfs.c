@@ -588,6 +588,59 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 
 
 /**
+ * @brief Writes a vector in one hold of the inode's lock, so no other write lands between its buffers.
+ *
+ * @param inode The inode.
+ * @param iov The buffers, none of them empty.
+ * @param count How many buffers there are.
+ * @param off Where to write, ignored for a regular file when @p append is set; receives the offset written at.
+ * @param append Whether a regular file is written at its end, read under the same lock.
+ * @return The number of bytes written, what the filesystem's write returned when it wrote none, or -ENOSYS.
+ */
+ssize_t vfs_writev(inode_t* inode, const struct iovec* iov, size_t count, off_t* off, bool append) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(iov);
+    DEBUG_ASSERT(count);
+    DEBUG_ASSERT(off);
+
+
+    if (likely(inode->ops.write)) {
+
+        scoped_lock(&inode->lock) {
+
+            struct stat st;
+
+            if (append && inode->ops.getattr && inode->ops.getattr(inode, &st) == 0 && S_ISREG(st.st_mode))
+                *off = st.st_size;
+
+
+            ssize_t done = 0;
+            ssize_t e    = 0;
+
+            for (size_t i = 0; i < count; i++) {
+
+                DEBUG_ASSERT(iov[i].iov_base);
+                DEBUG_ASSERT(iov[i].iov_len);
+
+                if ((e = vfs_write_locked(inode, iov[i].iov_base, *off + done, iov[i].iov_len)) <= 0)
+                    break;
+
+                done += e;
+
+                if ((size_t)e < iov[i].iov_len)
+                    break;
+            }
+
+            return done > 0 ? done : e;
+        }
+    }
+
+    return -ENOSYS;
+}
+
+
+/**
  * @brief Writes at the end of a regular file, reading its size under the same lock as the write; anything else is written at @p off.
  *
  * @param inode The inode.
@@ -598,26 +651,15 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
  */
 ssize_t vfs_write_append(inode_t* inode, const void* buf, off_t* off, size_t size) {
 
-    DEBUG_ASSERT(inode);
     DEBUG_ASSERT(buf);
-    DEBUG_ASSERT(off);
     DEBUG_ASSERT(size);
 
+    struct iovec iov = {
+        .iov_base = (void*)buf,
+        .iov_len  = size,
+    };
 
-    if (likely(inode->ops.write)) {
-
-        scoped_lock(&inode->lock) {
-
-            struct stat st;
-
-            if (inode->ops.getattr && inode->ops.getattr(inode, &st) == 0 && S_ISREG(st.st_mode))
-                *off = st.st_size;
-
-            return vfs_write_locked(inode, buf, *off, size);
-        }
-    }
-
-    return -ENOSYS;
+    return vfs_writev(inode, &iov, 1, off, true);
 }
 
 
