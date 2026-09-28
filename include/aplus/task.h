@@ -503,7 +503,6 @@ pid_t do_fork(struct kclone_args*, size_t);
 pid_t sched_nextpid();
 void sched_enqueue(task_t*);
 void sched_bury(struct cpu*, task_t*);
-void sched_requeue(task_t*);
 void sched_exit(void);
 void sched_group_exit(int);
 void sched_die(int);

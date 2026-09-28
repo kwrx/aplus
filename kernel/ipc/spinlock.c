@@ -157,28 +157,6 @@ void spinlock_lock(spinlock_t* lock) {
 
 
 /*!
- * @brief Try to lock a Spinlock.
- * @deprecated
- */
-bool spinlock_trylock(spinlock_t* lock) {
-
-    DEBUG_ASSERT(lock);
-
-    if (atomic_flag_test_and_set_explicit(&lock->value, memory_order_acquire) == 0) {
-
-        lock->owner   = spinlock_get_new_owner(lock);
-        lock->irqsave = arch_intr_disable();
-
-        atomic_store_explicit(&lock->refcount, 1, memory_order_release);
-        
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
-/*!
  * @brief Release a Spinlock.
  */
 #if DEBUG_LEVEL_TRACE

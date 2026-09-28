@@ -44,7 +44,6 @@
  * <li>CLONE_FILES - stop sharing file descriptors</li>
  * <li>CLONE_FS - stop sharing filesystem information</li>
  * <li>CLONE_SIGHAND - stop sharing signal handlers</li>
- * <li>CLONE_VM - stop sharing address space</li>
  * </ul>
  *
  */
@@ -92,24 +91,6 @@ void do_unshare(int flags) {
 
     if (flags & CLONE_SIGHAND) {
         current_task->sighand = shared_ptr_unshare(current_task->sighand, GFP_KERNEL);
-    }
-
-    if (flags & CLONE_VM) {
-
-        int clone_flags = ARCH_VMM_CLONE_USERSPACE;
-
-#if defined(CONFIG_DEMAND_PAGING)
-        clone_flags |= ARCH_VMM_CLONE_DEMAND;
-#endif
-
-        if (atomic_fetch_sub(&current_task->address_space->refcount, 1) > 1) {
-            current_task->address_space = arch_vmm_create_address_space(current_task->address_space, clone_flags);
-        } else {
-            atomic_store(&current_task->address_space->refcount, 1);
-        }
-
-        // Reload current address space
-        arch_task_switch_address_space(NULL);
     }
 }
 
