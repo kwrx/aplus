@@ -619,46 +619,6 @@ void sched_bury(cpu_t* cpu, task_t* task) {
 
 
 /**
- * @brief Moves a task to the front of the queue it is already on.
- *
- * @param task The task to be requeued.
- */
-void sched_requeue(task_t* task) {
-
-    bool found = false;
-
-    cpu_foreach_if(cpu, !found) {
-
-        scoped_lock(&cpu->sched_lock) {
-
-            if ((found = __sched_unlink(cpu, task))) {
-
-                if (cpu->sched_running != task && cpu->sched_running != cpu->sched_idle) {
-
-                    task->next = cpu->sched_running->next;
-
-                    cpu->sched_running->next = task;
-
-                } else {
-
-                    task->next = cpu->sched_queue;
-
-                    cpu->sched_queue = task;
-                }
-
-                cpu->sched_count++;
-            }
-        }
-    }
-
-#if DEBUG_LEVEL_TRACE
-    kprintf("sched: requeued task(%d) %s\n", task->tid, task->argv[0]);
-#endif
-}
-
-
-
-/**
  * @brief Asks whether a signal's default action is to be ignored.
  *
  * @param sig The signal.

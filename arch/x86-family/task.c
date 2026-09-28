@@ -400,7 +400,7 @@ void arch_task_switch(task_t* prev, task_t* next) {
     DEBUG_ASSERT(current_cpu->frame);
 
     DEBUG_ASSERT(prev);
-    DEBUG_ASSERT(prev->frame); // BUG: prev->frame is randomly NULL
+    DEBUG_ASSERT(prev->frame);
 
     DEBUG_ASSERT(next);
     DEBUG_ASSERT(next->frame);
