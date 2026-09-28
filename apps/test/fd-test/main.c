@@ -1171,6 +1171,115 @@ static void test_append_concurrent(void) {
 
 
 /**
+ * @brief Checks that processes appending fixed-size records with writev()s of two or three buffers at the same time never split a record.
+ */
+static void test_append_writev(void) {
+
+    enum { WRITERS = 4, RECORDS = 1000, RECLEN = 16 };
+
+    static char buf[WRITERS * RECORDS * RECLEN + 64];
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-append-writev.%d", (int)getpid());
+
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (fd < 0) {
+        CHECK(0, "append-writev", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    close(fd);
+
+
+    pid_t pids[WRITERS];
+
+    for (int w = 0; w < WRITERS; w++) {
+
+        if ((pids[w] = fork()) == 0) {
+
+            int a = open(path, O_WRONLY | O_APPEND);
+
+            if (a < 0)
+                _exit(1);
+
+            for (int i = 0; i < RECORDS; i++) {
+
+                char rec[RECLEN + 1];
+
+                snprintf(rec, sizeof(rec), "%c%06d:%c%06d\n", 'a' + w, i, 'a' + w, i);
+
+                struct iovec three[] = {
+                    {rec, 5},
+                    {rec + 5, 6},
+                    {rec + 11, RECLEN - 11},
+                };
+
+                struct iovec two[] = {
+                    {rec, 9},
+                    {rec + 9, RECLEN - 9},
+                };
+
+                if ((i & 1 ? writev(a, two, 2) : writev(a, three, 3)) != RECLEN)
+                    _exit(2);
+            }
+
+            _exit(0);
+        }
+    }
+
+
+    int failed = 0;
+
+    for (int w = 0; w < WRITERS; w++) {
+
+        int status = 0;
+
+        if (waitpid(pids[w], &status, 0) != pids[w] || !WIFEXITED(status) || WEXITSTATUS(status) != 0)
+            failed = w + 1;
+    }
+
+    CHECK(failed == 0, "append-writev-writers", "writer %d did not finish cleanly", failed);
+
+
+    ssize_t n = read_file(path, buf, sizeof(buf));
+
+    CHECK(n == WRITERS * RECORDS * RECLEN, "append-writev-size", "the file is %zd bytes, expected %d", n, WRITERS * RECORDS * RECLEN);
+
+
+    int next[WRITERS] = {0};
+    long bad          = -1;
+
+    for (long k = 0; n > 0 && k + RECLEN <= n; k += RECLEN) {
+
+        int w = buf[k] - 'a';
+
+        char rec[RECLEN + 1];
+
+        if (w >= 0 && w < WRITERS)
+            snprintf(rec, sizeof(rec), "%c%06d:%c%06d\n", 'a' + w, next[w], 'a' + w, next[w]);
+
+        if (w < 0 || w >= WRITERS || memcmp(&buf[k], rec, RECLEN) != 0) {
+            bad = k;
+            break;
+        }
+
+        next[w]++;
+    }
+
+    for (int w = 0; bad < 0 && w < WRITERS; w++) {
+        if (next[w] != RECORDS)
+            bad = n;
+    }
+
+    CHECK(bad < 0, "append-writev", "a record is split, lost or out of order at byte %ld", bad);
+
+    unlink(path);
+}
+
+
+/**
  * @brief The exec'd half of test_cloexec_exec().
  *
  * @param argv The three descriptors, as strings.
@@ -1221,6 +1330,7 @@ static struct {
     {"append-open-offset", test_append_open_offset},
     {"append-pwrite", test_append_pwrite},
     {"append-concurrent", test_append_concurrent},
+    {"append-writev", test_append_writev},
 };
 
 
