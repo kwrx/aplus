@@ -59,8 +59,8 @@ SYSCALL(
     18, pwrite64, long sys_pwrite64(unsigned int fd, const char* buf, size_t count, off_t pos) {
         DEBUG_ASSERT(current_task);
 
-        current_task->iostat.rchar += (uint64_t)count;
-        current_task->iostat.syscr += 1;
+        current_task->iostat.wchar += (uint64_t)count;
+        current_task->iostat.syscw += 1;
 
 
         if (unlikely(count == 0))
@@ -85,9 +85,9 @@ SYSCALL(
         if (unlikely(!file))
             return -EBADF;
 
-        if (unlikely(!((flags & O_WRONLY) || (flags & O_RDWR)))) {
+        if (unlikely((flags & O_ACCMODE) != O_WRONLY && (flags & O_ACCMODE) != O_RDWR)) {
             fd_put(file);
-            return -EPERM;
+            return -EBADF;
         }
 
 

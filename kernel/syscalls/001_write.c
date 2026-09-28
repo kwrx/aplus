@@ -88,9 +88,9 @@ SYSCALL(
         if (unlikely(!file))
             return -EBADF;
 
-        if (unlikely(!((flags & O_WRONLY) || (flags & O_RDWR)))) {
+        if (unlikely((flags & O_ACCMODE) != O_WRONLY && (flags & O_ACCMODE) != O_RDWR)) {
             fd_put(file);
-            return -EPERM;
+            return -EBADF;
         }
 
 
