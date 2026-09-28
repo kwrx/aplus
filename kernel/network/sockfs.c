@@ -764,7 +764,7 @@ int socket_install(int socket, int flags) {
     }
 
 
-    struct file* ref = fd_append(inode, 0, 0);
+    struct file* ref = fd_append(inode, 0, O_RDWR | (flags & O_NONBLOCK));
 
     if (unlikely(!ref)) {
 
@@ -786,7 +786,6 @@ int socket_install(int socket, int flags) {
                     continue;
 
                 fds->descriptors[i].ref           = ref;
-                fds->descriptors[i].flags         = O_RDWR | (flags & O_NONBLOCK);
                 fds->descriptors[i].close_on_exec = !!(flags & O_CLOEXEC);
 
                 fd = i;

@@ -416,7 +416,7 @@ static long __unix_install(struct unix_sock* sock, int flags) {
         return -ENOMEM;
 
 
-    struct file* ref = fd_append(inode, 0, 0);
+    struct file* ref = fd_append(inode, 0, O_RDWR | (flags & O_NONBLOCK));
 
     if (unlikely(!ref)) {
 
@@ -439,7 +439,6 @@ static long __unix_install(struct unix_sock* sock, int flags) {
                     continue;
 
                 fds->descriptors[i].ref           = ref;
-                fds->descriptors[i].flags         = O_RDWR | (flags & O_NONBLOCK);
                 fds->descriptors[i].close_on_exec = !!(flags & O_CLOEXEC);
 
                 fd = i;

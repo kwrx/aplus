@@ -96,15 +96,31 @@ SYSCALL(
 
                     return 0;
 
-                case F_GETFL:
+                case F_GETFL: {
 
-                    shared_ptr_access(current_task->fd, fds, { return fds->descriptors[fd].flags; });
+                    int flags         = 0;
+                    struct file* file = fd_get(fd, &flags);
 
-                case F_SETFL:
+                    if (unlikely(!file))
+                        return -EBADF;
 
-                    shared_ptr_access(current_task->fd, fds, { fds->descriptors[fd].flags = (fds->descriptors[fd].flags & ~FCNTL_SETFL_MASK) | (arg & FCNTL_SETFL_MASK); });
+                    fd_put(file);
+
+                    return flags;
+                }
+
+                case F_SETFL: {
+
+                    struct file* file = fd_get(fd, NULL);
+
+                    if (unlikely(!file))
+                        return -EBADF;
+
+                    fd_set_flags(file, FCNTL_SETFL_MASK, (int)arg);
+                    fd_put(file);
 
                     return 0;
+                }
 
                 case F_SETPIPE_SZ:
                 case F_GETPIPE_SZ:

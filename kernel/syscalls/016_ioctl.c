@@ -63,21 +63,16 @@ SYSCALL(
 
 
             bool on = uio_r32((uint32_t*)arg) != 0;
-            long e  = -EBADF;
 
-            shared_ptr_access(current_task->fd, fds, {
-                if (fd < CONFIG_OPEN_MAX && fds->descriptors[fd].ref) {
+            struct file* file = fd_get(fd, NULL);
 
-                    if (on)
-                        fds->descriptors[fd].flags |= O_NONBLOCK;
-                    else
-                        fds->descriptors[fd].flags &= ~O_NONBLOCK;
+            if (unlikely(!file))
+                return -EBADF;
 
-                    e = 0;
-                }
-            });
+            fd_set_flags(file, O_NONBLOCK, on ? O_NONBLOCK : 0);
+            fd_put(file);
 
-            return e;
+            return 0;
         }
 
 

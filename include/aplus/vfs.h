@@ -185,7 +185,8 @@ struct file {
     inode_t* inode;
     off_t position;
 
-    atomic_int status;
+    /** @brief The access mode and status flags, shared by every descriptor of the file and guarded by lock. */
+    int flags;
     atomic_int refcount;
 
     spinlock_t lock;
@@ -291,6 +292,8 @@ void fd_remove(struct file*, bool);
 struct file* fd_append(inode_t*, off_t, int);
 struct file* fd_get(unsigned int, int*);
 void fd_put(struct file*);
+int fd_flags(struct file*);
+void fd_set_flags(struct file*, int, int);
 long fd_dup(unsigned int, unsigned int, bool);
 long fd_dup_to(unsigned int, unsigned int, bool);
 void fd_close_all(struct fd*);

@@ -65,8 +65,7 @@ SYSCALL(
                 file = fds->descriptors[fd].ref;
 
                 fds->descriptors[fd].ref           = NULL;
-                fds->descriptors[fd].flags         = 0;
-                fds->descriptors[fd].close_on_exec = 0;
+                fds->descriptors[fd].close_on_exec = false;
             }
         });
 
