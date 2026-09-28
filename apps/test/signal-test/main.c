@@ -552,22 +552,13 @@ static pid_t wait_timeout(pid_t pid, int* status, int options, unsigned ms) {
 
 
 /**
- * @brief Runs a case body in a child process, killing the child if it outlives its time.
+ * @brief Waits for a child, killing it if it outlives its time.
  *
- * @param fn The body; what it returns becomes the child's exit status.
- * @param ms How long the child may run.
- * @return The child's exit status, 128 plus the signal that killed it, or -1 if it hung or could not be started.
+ * @param pid The child.
+ * @param ms How long it may run.
+ * @return The child's exit status, 128 plus the signal that killed it, or -1 if it hung.
  */
-static int run_child(int (*fn)(void), unsigned ms) {
-
-    pid_t pid = fork();
-
-    if (pid < 0)
-        return -1;
-
-    if (pid == 0)
-        _exit(fn());
-
+static int reap_child(pid_t pid, unsigned ms) {
 
     int status = 0;
 
@@ -586,6 +577,27 @@ static int run_child(int (*fn)(void), unsigned ms) {
         return 128 + WTERMSIG(status);
 
     return -1;
+}
+
+
+/**
+ * @brief Runs a case body in a child process, killing the child if it outlives its time.
+ *
+ * @param fn The body; what it returns becomes the child's exit status.
+ * @param ms How long the child may run.
+ * @return The child's exit status, 128 plus the signal that killed it, or -1 if it hung or could not be started.
+ */
+static int run_child(int (*fn)(void), unsigned ms) {
+
+    pid_t pid = fork();
+
+    if (pid < 0)
+        return -1;
+
+    if (pid == 0)
+        _exit(fn());
+
+    return reap_child(pid, ms);
 }
 
 
@@ -2296,6 +2308,264 @@ static void test_futex_lock_pi(void) {
 }
 
 
+/**
+ * @brief Filled in by info_handler() from the siginfo of the last SIGUSR2.
+ */
+static volatile sig_atomic_t info_caught;
+static volatile sig_atomic_t info_code;
+static volatile sig_atomic_t info_pid;
+static volatile sig_atomic_t info_uid;
+static volatile sig_atomic_t info_value;
+
+
+/**
+ * @brief Records what a signal's siginfo carried.
+ *
+ * @param signo The signal.
+ * @param si Its siginfo.
+ * @param uc Unused.
+ */
+static void info_handler(int signo, siginfo_t* si, void* uc) {
+
+    (void)signo;
+    (void)uc;
+
+    info_code  = si->si_code;
+    info_pid   = si->si_pid;
+    info_uid   = (sig_atomic_t)si->si_uid;
+    info_value = si->si_value.sival_int;
+    info_caught++;
+}
+
+
+/**
+ * @brief Installs info_handler() for SIGUSR2 and forgets what it last recorded.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+static int catch_info(void) {
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_sigaction = info_handler;
+    sa.sa_flags     = SA_SIGINFO;
+    sigemptyset(&sa.sa_mask);
+
+    info_caught = 0;
+    info_code   = 0;
+    info_pid    = 0;
+    info_uid    = -1;
+    info_value  = 0;
+
+    return sigaction(SIGUSR2, &sa, NULL);
+}
+
+
+/**
+ * @brief Waits for info_handler() to run.
+ *
+ * @param ms How long to wait.
+ * @return 1 if it ran, 0 otherwise.
+ */
+static int wait_info(unsigned ms) {
+
+    for (unsigned i = 0; i < ms && !info_caught; i += 5)
+        sleep_ms(5);
+
+    return info_caught != 0;
+}
+
+
+/**
+ * @brief Forks a child that catches SIGUSR2 with info_handler() and waits for it.
+ *
+ * @param code The si_code the child expects.
+ * @param value The si_value the child expects, or 0 not to check it.
+ * @return The child's pid once it is ready, or -1.
+ */
+static pid_t fork_info_child(int code, int value) {
+
+    int p[2];
+
+    if (pipe(p) < 0)
+        return -1;
+
+    pid_t pid = fork();
+
+    if (pid == 0) {
+
+        close(p[0]);
+
+        if (catch_info() < 0)
+            _exit(10);
+
+        char c = 1;
+        write(p[1], &c, 1);
+
+        if (!wait_info(2000))
+            _exit(1);
+
+        if (info_code != code)
+            _exit(2);
+
+        if (info_pid != getppid())
+            _exit(3);
+
+        if (info_uid != (sig_atomic_t)getuid())
+            _exit(4);
+
+        if (value && info_value != value)
+            _exit(5);
+
+        _exit(0);
+    }
+
+    close(p[1]);
+
+    char c    = 0;
+    ssize_t n = pid > 0 ? read(p[0], &c, 1) : -1;
+
+    close(p[0]);
+
+    return n == 1 ? pid : -1;
+}
+
+
+static const char* const info_codes[] = {
+    [1]  = "the signal never arrived",
+    [2]  = "si_code is wrong",
+    [3]  = "si_pid is not the sender's",
+    [4]  = "si_uid is not the sender's",
+    [5]  = "si_value is wrong",
+    [10] = "sigaction() failed",
+};
+
+
+/**
+ * @brief Sends a signal to another process's thread with tkill(), which must arrive carrying the sender's pid and uid.
+ */
+static void test_tkill_other(void) {
+
+    pid_t pid = fork_info_child(SI_TKILL, 0);
+
+    if (pid < 0) {
+        CHECK(0, "tkill-other", "starting the child failed: %s", strerror(errno));
+        return;
+    }
+
+    errno  = 0;
+    long r = syscall(SYS_tkill, pid, SIGUSR2);
+    int e  = errno;
+
+    int c = reap_child(pid, 3000);
+
+    CHECK(r == 0 && c == 0, "tkill-other", "tkill() returned %ld (%s), and the child %s", r, r < 0 ? strerror(e) : "ok", c == 0 ? "got it" : child_result(c, info_codes, sizeof(info_codes) / sizeof(info_codes[0])));
+}
+
+
+/**
+ * @brief Checks that tkill() refuses thread ids that name no single thread.
+ */
+static void test_tkill_invalid(void) {
+
+    if (catch_info() < 0) {
+        CHECK(0, "tkill-invalid", "sigaction() failed: %s", strerror(errno));
+        return;
+    }
+
+    errno  = 0;
+    long z = syscall(SYS_tkill, 0, SIGUSR2);
+    int ze = errno;
+
+    errno  = 0;
+    long n = syscall(SYS_tkill, -1, SIGUSR2);
+    int ne = errno;
+
+    sleep_ms(50);
+
+    CHECK(z < 0 && ze == EINVAL && n < 0 && ne == EINVAL, "tkill-invalid", "tkill(0) returned %ld (%s) and tkill(-1) returned %ld (%s)", z, z < 0 ? strerror(ze) : "ok", n, n < 0 ? strerror(ne) : "ok");
+}
+
+
+/**
+ * @brief Checks that tkill() and tgkill() refuse a signal number past the last one.
+ */
+static void test_tkill_bad_signal(void) {
+
+    pid_t tid = (pid_t)syscall(SYS_gettid);
+
+    errno  = 0;
+    long t = syscall(SYS_tkill, tid, _NSIG + 35);
+    int te = errno;
+
+    errno  = 0;
+    long g = syscall(SYS_tgkill, getpid(), tid, _NSIG + 35);
+    int ge = errno;
+
+    CHECK(t < 0 && te == EINVAL && g < 0 && ge == EINVAL, "tkill-bad-signal", "tkill() returned %ld (%s) and tgkill() returned %ld (%s)", t, t < 0 ? strerror(te) : "ok", g, g < 0 ? strerror(ge) : "ok");
+}
+
+
+/**
+ * @brief Sends the caller a signal with tgkill(), then names a thread outside the group given.
+ */
+static void test_tgkill(void) {
+
+    if (catch_info() < 0) {
+        CHECK(0, "tgkill", "sigaction() failed: %s", strerror(errno));
+        return;
+    }
+
+    pid_t tid = (pid_t)syscall(SYS_gettid);
+
+    errno  = 0;
+    long r = syscall(SYS_tgkill, getpid(), tid, SIGUSR2);
+    int e  = errno;
+
+    int got = r == 0 && wait_info(500);
+
+    CHECK(got && info_code == SI_TKILL && info_pid == getpid(), "tgkill", "tgkill() on the caller returned %ld (%s); handler ran %d, si_code %d, si_pid %d", r, r < 0 ? strerror(e) : "ok", (int)info_caught, (int)info_code, (int)info_pid);
+
+
+    errno  = 0;
+    long w = syscall(SYS_tgkill, getppid(), tid, SIGUSR2);
+    e      = errno;
+
+    CHECK(w < 0 && e == ESRCH, "tgkill-wrong-group", "tgkill() naming a thread outside the group returned %ld (%s)", w, w < 0 ? strerror(e) : "ok");
+}
+
+
+/**
+ * @brief Queues a signal with a value on another process, then on pid 0, which names no process.
+ */
+static void test_sigqueue_other(void) {
+
+    pid_t pid = fork_info_child(SI_QUEUE, 4242);
+
+    if (pid < 0) {
+        CHECK(0, "sigqueue-other", "starting the child failed: %s", strerror(errno));
+        return;
+    }
+
+    errno = 0;
+    int r = sigqueue(pid, SIGUSR2, (union sigval){.sival_int = 4242});
+    int e = errno;
+
+    int c = reap_child(pid, 3000);
+
+    CHECK(r == 0 && c == 0, "sigqueue-other", "sigqueue() returned %d (%s), and the child %s", r, r < 0 ? strerror(e) : "ok", c == 0 ? "got it" : child_result(c, info_codes, sizeof(info_codes) / sizeof(info_codes[0])));
+
+
+    errno = 0;
+    int z = sigqueue(0, SIGUSR2, (union sigval){.sival_int = 1});
+    e     = errno;
+
+    CHECK(z < 0 && e == ESRCH, "sigqueue-bad-pid", "sigqueue(0) returned %d (%s)", z, z < 0 ? strerror(e) : "ok");
+}
+
+
 static struct {
 
     const char* name;
@@ -2329,6 +2599,11 @@ static struct {
     {"futex-wake", test_futex_wake},
     {"futex-requeue", test_futex_requeue},
     {"futex-lock-pi", test_futex_lock_pi},
+    {"tkill-other", test_tkill_other},
+    {"tkill-invalid", test_tkill_invalid},
+    {"tgkill", test_tgkill},
+    {"tkill-bad-signal", test_tkill_bad_signal},
+    {"sigqueue-other", test_sigqueue_other},
 };
 
 
