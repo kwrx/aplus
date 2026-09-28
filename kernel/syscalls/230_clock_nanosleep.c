@@ -57,7 +57,8 @@ extern long sys_clock_gettime(clockid_t, struct timespec*);
  * Each attempt restarts the syscall, so the deadline is stamped on the task by the first one. A signal handler
  * abandons the sleep instead, and reports the time left through rmtp. @see syscall_interrupt().
  *
- * @param which_clock CLOCK_REALTIME, CLOCK_MONOTONIC or CLOCK_PROCESS_CPUTIME_ID.
+ * @param which_clock CLOCK_REALTIME or CLOCK_MONOTONIC. CLOCK_PROCESS_CPUTIME_ID only counts the calling thread, which
+ *                    stops while it sleeps, so it is refused.
  * @param flags TIMER_ABSTIME, or 0 for a relative sleep.
  * @param __rqtp The duration or the deadline.
  * @param __rmtp Receives the time left if a handler cuts the sleep short, or NULL.
@@ -82,7 +83,7 @@ SYSCALL(
 
 
 
-        if (rqtp.tv_nsec < 0 || rqtp.tv_nsec > 999999999)
+        if (rqtp.tv_sec < 0 || rqtp.tv_nsec < 0 || rqtp.tv_nsec > 999999999)
             return -EINVAL;
 
 
@@ -112,31 +113,39 @@ SYSCALL(
 
             case CLOCK_REALTIME:
             case CLOCK_MONOTONIC:
-            case CLOCK_PROCESS_CPUTIME_ID:
                 break;
+
+            case CLOCK_PROCESS_CPUTIME_ID:
+                return -ENOTSUP;
 
             default:
                 return -EINVAL;
         }
 
 
+        struct timespec t0;
+        long __e = 0;
+
+        scoped_uio_kernel() {
+            __e = sys_clock_gettime(which_clock, &t0);
+        }
+
+        if (__e < 0)
+            return -EINVAL;
+
+
         uint64_t tss = 0ULL;
         uint64_t tsn = 0ULL;
 
 #if defined(TIMER_ABSTIME)
-        if (!(flags & TIMER_ABSTIME))
+        if (flags & TIMER_ABSTIME) {
+
+            if (rqtp.tv_sec < t0.tv_sec || (rqtp.tv_sec == t0.tv_sec && rqtp.tv_nsec <= t0.tv_nsec))
+                return 0;
+
+        } else
 #endif
         {
-            struct timespec t0;
-            long __e = 0;
-
-            scoped_uio_kernel() {
-                __e = sys_clock_gettime(which_clock, &t0);
-            }
-
-            if (__e < 0)
-                return -EINVAL;
-
             tss = t0.tv_sec;
             tsn = t0.tv_nsec;
 
