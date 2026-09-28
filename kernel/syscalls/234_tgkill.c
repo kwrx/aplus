@@ -51,10 +51,22 @@
 
 SYSCALL(
     234, tgkill, long sys_tgkill(pid_t tgid, pid_t tid, int sig) {
-        siginfo_t siginfo;
-        siginfo.si_signo = sig;
-        siginfo.si_code  = SI_TKILL;
-        siginfo.si_errno = 0;
+        if (unlikely(tgid <= 0 || tid <= 0))
+            return -EINVAL;
 
-        return sys_rt_tgsigqueueinfo(tgid, tid, sig, &siginfo);
+        if (unlikely(sig < 0 || sig > _NSIG - 1))
+            return -EINVAL;
+
+
+        siginfo_t siginfo = {0};
+        siginfo.si_signo  = sig;
+        siginfo.si_code   = SI_TKILL;
+        siginfo.si_errno  = 0;
+        siginfo.si_pid    = current_task->pid;
+        siginfo.si_uid    = current_task->uid;
+
+        if (sched_sigqueueinfo(-1, tgid, tid, sig, &siginfo) < 0)
+            return -errno;
+
+        return 0;
     });
