@@ -22,6 +22,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -33,6 +34,61 @@
 
 #include "tmpfs.h"
 
+
+
+/**
+ * @brief Extends a tmpfs file to @p len bytes, the new ones reading as zeros.
+ *
+ * @param inode The inode, whose lock the caller holds.
+ * @param i The file's tmpfs data.
+ * @param len The new size, larger than the current one.
+ * @return 0, or -1 with errno ENOSPC or ENOMEM.
+ */
+static int tmpfs_truncate_grow(inode_t* inode, tmpfs_inode_t* i, off_t len) {
+
+    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+    size_t grow    = (size_t)len - (size_t)i->st.st_size;
+    bool full      = false;
+
+    scoped_lock(&tmpfs->lock) {
+
+        if (((long)inode->sb->st.f_bavail - (long)grow) <= 0L) {
+            full = true;
+            break;
+        }
+
+        inode->sb->st.f_bfree -= grow;
+        inode->sb->st.f_bavail -= grow;
+    }
+
+    if (unlikely(full))
+        return errno = ENOSPC, -1;
+
+
+    if ((size_t)len > i->capacity) {
+
+        void* data = krealloc(i->data, (size_t)len, GFP_USER);
+
+        if (unlikely(!data)) {
+
+            scoped_lock(&tmpfs->lock) {
+                inode->sb->st.f_bfree += grow;
+                inode->sb->st.f_bavail += grow;
+            }
+
+            return errno = ENOMEM, -1;
+        }
+
+        i->data     = data;
+        i->capacity = (size_t)len;
+    }
+
+    memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, grow);
+
+    i->st.st_size = len;
+
+    return 0;
+}
 
 
 int tmpfs_truncate(inode_t* inode, off_t len) {
@@ -49,8 +105,11 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
 
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
-    if (len >= i->st.st_size)
+    if (len == i->st.st_size)
         return 0;
+
+    if (len > i->st.st_size)
+        return tmpfs_truncate_grow(inode, i, len);
 
 
     void* data = krealloc(i->data, CONFIG_BUFSIZ + len, GFP_KERNEL);
