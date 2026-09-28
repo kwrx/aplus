@@ -72,6 +72,14 @@ SYSCALL(
             return -EBADF;
 
 
+        struct stat st = {0};
+
+        if (vfs_getattr(file->inode, &st) < 0 || !S_ISDIR(st.st_mode)) {
+            fd_put(file);
+            return -ENOTDIR;
+        }
+
+
         fs_chdir(file->inode, false);
         fd_put(file);
 
