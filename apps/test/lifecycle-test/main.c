@@ -33,6 +33,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <pthread.h>
+#include <sched.h>
 #include <signal.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -40,6 +41,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -1119,6 +1121,212 @@ static void test_restart_waits(void) {
 }
 
 
+/**
+ * @brief Runs a case body in a child process, killing the child if it outlives its time.
+ *
+ * @param fn The body; what it returns becomes the child's exit status.
+ * @param ms How long the child may run.
+ * @return The child's exit status, 128 plus the signal that killed it, or -1 if it hung or could not be started.
+ */
+static int run_child(int (*fn)(void), unsigned ms) {
+
+    pid_t pid = fork();
+
+    if (pid < 0)
+        return -1;
+
+    if (pid == 0)
+        _exit(fn());
+
+
+    int status = 0;
+
+    if (wait_timeout(pid, &status, 0, ms) != pid) {
+
+        kill(pid, SIGKILL);
+        waitpid(pid, &status, 0);
+
+        return -1;
+    }
+
+    if (WIFEXITED(status))
+        return WEXITSTATUS(status);
+
+    if (WIFSIGNALED(status))
+        return 128 + WTERMSIG(status);
+
+    return -1;
+}
+
+
+/**
+ * @brief Forks a child that exits at once, and reaps it.
+ *
+ * @return 1 if the child ran and exited with status 0, 0 otherwise.
+ */
+static int child_forks(void) {
+
+    pid_t pid = fork();
+
+    if (pid < 0)
+        return 0;
+
+    if (pid == 0)
+        _exit(0);
+
+    int status = 0;
+
+    return wait_timeout(pid, &status, 0, 2000) == pid && WIFEXITED(status) && WEXITSTATUS(status) == 0;
+}
+
+
+/**
+ * @brief Sleeps until time 0 on the monotonic and the realtime clock.
+ *
+ * @return 0 if both sleeps returned 0, or 1 or 2 for the clock whose sleep failed.
+ */
+static int abstime_past_child(void) {
+
+    struct timespec zero = {0, 0};
+
+    if (clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &zero, NULL) != 0)
+        return 1;
+
+    if (clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &zero, NULL) != 0)
+        return 2;
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that an absolute sleep until a moment already past returns at once.
+ */
+static void test_sleep_abstime_past(void) {
+
+    int r = run_child(abstime_past_child, 1000);
+
+    CHECK(r == 0, "sleep-abstime-past", "clock_nanosleep(TIMER_ABSTIME) until time 0 ended with code %d (-1 hung, 1 CLOCK_MONOTONIC failed, 2 CLOCK_REALTIME failed)", r);
+}
+
+
+/**
+ * @brief Sleeps 20 ms of process cpu time while a second thread spins.
+ *
+ * @return 0 if the sleep ended or was refused with ENOTSUP, 1 if it failed otherwise, 2 if the thread did not start.
+ */
+static int cputime_sleep_child(void) {
+
+    pthread_t t;
+
+    if (pthread_create(&t, NULL, thread_spin, NULL) != 0)
+        return 2;
+
+    struct timespec ts = {0, 20 * 1000000L};
+
+    int e = clock_nanosleep(CLOCK_PROCESS_CPUTIME_ID, 0, &ts, NULL);
+
+    return e == 0 || e == ENOTSUP ? 0 : 1;
+}
+
+
+/**
+ * @brief Checks that a sleep on the process cpu clock, which another thread keeps running, does not hang.
+ */
+static void test_sleep_cputime(void) {
+
+    int r = run_child(cputime_sleep_child, 3000);
+
+    CHECK(r == 0, "sleep-cputime", "clock_nanosleep(CLOCK_PROCESS_CPUTIME_ID) ended with code %d (-1 hung, 1 failed, 2 no thread)", r);
+}
+
+
+/**
+ * @brief Pins the calling process to the first cpu it may use, reads the mask back and forks.
+ *
+ * @return 0 on success, or the step that failed: 1 get, 2 empty mask, 3 set, 4 read back, 5 fork.
+ */
+static int affinity_child(void) {
+
+    cpu_set_t set;
+    CPU_ZERO(&set);
+
+    if (sched_getaffinity(0, sizeof(set), &set) != 0)
+        return 1;
+
+    int cpu = -1;
+
+    for (int i = 0; i < CPU_SETSIZE && cpu < 0; i++) {
+        if (CPU_ISSET(i, &set))
+            cpu = i;
+    }
+
+    if (cpu < 0)
+        return 2;
+
+
+    cpu_set_t one;
+    CPU_ZERO(&one);
+    CPU_SET(cpu, &one);
+
+    if (sched_setaffinity(0, sizeof(one), &one) != 0)
+        return 3;
+
+    CPU_ZERO(&set);
+
+    if (sched_getaffinity(0, sizeof(set), &set) != 0 || !CPU_EQUAL(&set, &one))
+        return 4;
+
+    return child_forks() ? 0 : 5;
+}
+
+
+/**
+ * @brief Checks that sched_getaffinity() and sched_setaffinity() work with a cpu_set_t.
+ */
+static void test_affinity(void) {
+
+    int r = run_child(affinity_child, 3000);
+
+    CHECK(r == 0, "affinity", "the child ended with code %d (-1 hung, 1 get, 2 empty mask, 3 set, 4 read back, 5 fork)", r);
+}
+
+
+/**
+ * @brief Asks for a mask holding only cpu 1000 through a 1024-byte buffer, then forks.
+ *
+ * @return 0 if the mask was refused with EINVAL and the fork worked, 1 if it was not refused, 2 if the fork failed.
+ */
+static int affinity_offline_child(void) {
+
+    static unsigned long mask[1024 / sizeof(unsigned long)];
+
+    mask[1000 / (8 * sizeof(unsigned long))] |= 1UL << (1000 % (8 * sizeof(unsigned long)));
+
+    errno  = 0;
+    long r = syscall(SYS_sched_setaffinity, 0, sizeof(mask), mask);
+    int e  = errno;
+
+    int forked = child_forks();
+
+    if (r != -1 || e != EINVAL)
+        return 1;
+
+    return forked ? 0 : 2;
+}
+
+
+/**
+ * @brief Checks that sched_setaffinity() refuses a mask with no cpu that exists, which would leave a child nowhere to run.
+ */
+static void test_affinity_offline(void) {
+
+    int r = run_child(affinity_offline_child, 3000);
+
+    CHECK(r == 0, "affinity-offline", "the child ended with code %d (-1 hung, 1 mask accepted, 2 fork failed)", r);
+}
+
+
 static struct {
 
     const char* name;
@@ -1130,6 +1338,8 @@ static struct {
     {"stop-cont", test_stop_cont},
     {"wait-any-thread", test_wait_any_thread},
     {"nanosleep-spurious", test_nanosleep_spurious},
+    {"sleep-abstime-past", test_sleep_abstime_past},
+    {"sleep-cputime", test_sleep_cputime},
     {"exit-group-leak", test_exit_group_leak},
     {"exit-code-thread", test_exit_code_thread},
     {"zombie-leader", test_zombie_leader},
@@ -1143,6 +1353,8 @@ static struct {
     {"kill-exit-race", test_kill_exit_race},
     {"mt-exit", test_mt_exit},
     {"kill-init", test_kill_init},
+    {"affinity", test_affinity},
+    {"affinity-offline", test_affinity_offline},
 };
 
 
