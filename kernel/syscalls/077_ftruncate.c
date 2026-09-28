@@ -56,10 +56,21 @@ SYSCALL(
 
         int e = 0;
 
-        struct file* file = fd_get(fd, NULL);
+        int flags         = 0;
+        struct file* file = fd_get(fd, &flags);
 
         if (unlikely(!file))
             return -EBADF;
+
+        if (unlikely(flags & O_PATH)) {
+            fd_put(file);
+            return -EBADF;
+        }
+
+        if (unlikely((flags & O_ACCMODE) != O_WRONLY && (flags & O_ACCMODE) != O_RDWR)) {
+            fd_put(file);
+            return -EINVAL;
+        }
 
         scoped_lock(&file->lock) {
             e = vfs_truncate(file->inode, length);
