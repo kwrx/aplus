@@ -49,9 +49,11 @@ It currently boots and runs on `x86_64`; support for other architectures such as
 ## :robot: Userspace
 Userspace is still under development, and is assembled from two sources: the programs built from this repository, and prebuilt packages fetched at `./configure` time from [aplus-packages](https://github.com/kwrx/aplus-packages).
 
-Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, a [file manager](/apps/sysutils/aplus-explorer), a [calculator](/apps/sysutils/aplus-calculator), an [image viewer](/apps/sysutils/aplus-image-viewer) that draws PNG, JPEG and WebP through [cairo-ext](/lib/aplus/cairo-ext), an [application launcher](/apps/sysutils/aplus-launcher) on `Super+Space` that searches the installed `.desktop` files, the [aplus-xopen](/apps/sysutils/aplus-xopen) opener that hands a path to whichever of them handles it, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
+Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, a [file manager](/apps/sysutils/aplus-explorer), a [calculator](/apps/sysutils/aplus-calculator), an [image viewer](/apps/sysutils/aplus-image-viewer) that draws PNG, JPEG and WebP through [cairo-ext](/lib/aplus/cairo-ext), an [application launcher](/apps/sysutils/aplus-launcher) on `Super+Space` that searches the installed `.desktop` files and runs anything else as a shell command — or, built with `CONFIG_HAVE_AI`, asks a Hugging Face model about it and offers the command it suggests, the [aplus-xopen](/apps/sysutils/aplus-xopen) opener that hands a path to whichever of them handles it, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, file descriptors, tmpfs, the process lifecycle, the stack protector, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
 
 Pulled in as packages, all of them, on every `./configure`: BusyBox, the `dash` and `bash` shells, system fonts, cursors, keymaps and sample pictures, the `zlib`, `libpng`, `libjpeg-turbo`, `libwebp`, `freetype`, `pixman`, `cairo`, `expat`, `libtsm`, LibreSSL and cURL libraries, MesaGL, the [NetSurf](https://www.netsurf-browser.org/) web browser, and `gcc` and `binutils` with the arithmetic libraries they need — a native toolchain, so the guest compiles programs for itself. Doom and a NES emulator are the only optional ones left, off by default and toggled from the Kconfig menu.
+
+The launcher's AI mode is off by default too: enable **AI** in the Kconfig menu and set `CONFIG_HUGGINGFACE_API_KEY` (and optionally `CONFIG_HUGGINGFACE_MODEL`). The key is compiled into the launcher, so an image built with it carries the key — don't share that image.
 
 Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
 
@@ -84,9 +86,9 @@ Drivers are loadable kernel objects: one directory with a `main.c` per module, e
 
 ### Run a release:
 
-Every push to `main` is built by the [release workflow](/.github/workflows/release.yml) and published as the `latest` development release.
+Images are built by the [release workflow](/.github/workflows/release.yml): every pull request merged into `main` replaces the [development release](https://github.com/kwrx/aplus/releases/tag/latest) tagged `latest`, and every version tag (`X.Y.Z`) publishes a [versioned release](https://github.com/kwrx/aplus/releases).
 
-1. Download the latest [release](https://github.com/kwrx/aplus/releases/latest): `release-aplus-<commit>-x86_64` holds the disk image and [run.sh](/ci/run.sh)
+1. Download a release as `.tar.xz` or `.zip`: `release-aplus-<commit>-x86_64` holds the disk image and [run.sh](/ci/run.sh)
 2. Requirements: `qemu-system-x86_64` and UEFI firmware (`ovmf` or `edk2-ovmf`)
 
 ```bash

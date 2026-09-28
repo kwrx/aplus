@@ -164,6 +164,14 @@ the application as its own child rather than with an opener in between.
 running anything itself, which is also how it stays out of the way of the process tree: it
 `execvp()`s the opener in place, so the application inherits the launcher's parent.
 
+A query that matches no application becomes a row of its own: `Run "…"` runs it as a command in
+a new `aplus-terminal`, left at a `dash` prompt when the command is through. Built with
+`CONFIG_HAVE_AI`, the row is `Ask "…"` instead: Enter sends the query to the Hugging Face model
+named by `CONFIG_HUGGINGFACE_MODEL`, and the reply comes back as rows — the command the model
+suggests, selected so that Enter runs it the same way, followed by its answer. The request is
+made on the UI thread, so the window shows `Thinking...` and stays frozen until the model
+answers or the 20-second timeout runs out.
+
 ## Running it
 
 The display server has to be running before any client. `apps/core/init/scripts/init.sh`

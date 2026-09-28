@@ -30,10 +30,11 @@ $ ./makew run
 without a graphical display, which is what to use when capturing console output;
 `./makew run VM_DEBUG=debug` starts the VM paused with a GDB stub on `127.0.0.1:1234`.
 
-A prebuilt image is published for every push to `main` as the `latest`
-[development release](https://github.com/kwrx/aplus/releases/latest), built by
-[ci/release.sh](/ci/release.sh). Unpack it and start `./run.sh`: it asks for the QEMU settings
-on the first run and keeps them in `config.txt` (`./run.sh --help` lists the options).
+A prebuilt image is published by [ci/release.sh](/ci/release.sh) for every pull request merged
+into `main`, as the [development release](https://github.com/kwrx/aplus/releases/tag/latest)
+tagged `latest`, and for every version tag as a [versioned release](https://github.com/kwrx/aplus/releases).
+Unpack it and start `./run.sh`: it asks for the QEMU settings on the first run and keeps them in
+`config.txt` (`./run.sh --help` lists the options).
 
 ## :books: Contents
 

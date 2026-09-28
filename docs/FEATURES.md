@@ -63,7 +63,7 @@
 - [x] Network Stack (lwIP)
 - [x] User API
 - [x] Wait Queue
-- [x] Signal Handling
+- [x] Signal Handling (alternate signal stacks, rt_sigsuspend)
 - [x] Module Loading
 - [x] ELF Loading
 - [ ] Fstab
@@ -133,6 +133,7 @@
 - [x] File Manager
 - [x] Image Viewer
 - [x] Application Launcher
+- [x] AI Assistant in the Launcher (Hugging Face, optional)
 - [x] IRC Client
 - [x] Web Browser (NetSurf)
 - [ ] Package Manager

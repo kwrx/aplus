@@ -3,18 +3,13 @@
 | Type | Filename | Message | Link |
 | ---: | -------- | ------- | ---: |
 |**BUG**|`arch/x86_64/startup.S`|stack not aligned when code is optimized by compiler|[#](/arch/x86_64/startup.S#L592)|
-|**BUG**|`arch/x86-family/task.c`|prev->frame is randomly NULL|[#](/arch/x86-family/task.c#L206)|
-|**BUG**|`kernel/syscalls/059_execve.c`|musl write on non-writable segment on pthread_create()|[#](/kernel/syscalls/059_execve.c#L366)|
 |**FIXME**|`arch/x86-family/mm/address_space.c`|a copy-on-write frame may still be referenced by another address space,|[#](/arch/x86-family/mm/address_space.c#L265)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L255)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L282)|
-|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L309)|
-|**FIXME**|`kernel/syscalls/202_futex.c`|return a valid error|[#](/kernel/syscalls/202_futex.c#L183)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L260)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L287)|
+|**FIXME**|`include/aplus/hal.h`|check page alignment and use 64-bit, 32-bit, 16-bit and 8-bit copies|[#](/include/aplus/hal.h#L314)|
 |**TODO**|`arch/x86-family/debug.c`|CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.|[#](/arch/x86-family/debug.c#L169)|
-|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L218)|
-|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L73)|
-|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown, as above.|[#](/arch/x86-family/mm/tlb.c#L94)|
-|**TODO**|`arch/x86-family/mm/tlb.c`|cross-CPU shootdown. Until an IPI vector exists, another CPU running this same|[#](/arch/x86-family/mm/tlb.c#L54)|
+|**TODO**|`arch/x86-family/intr.c`|Handle NMI Interrupts|[#](/arch/x86-family/intr.c#L230)|
+|**TODO**|`arch/x86-family/mm/pagefault.c`|implement X86_MMU_PG_AP_TP_MMAP|[#](/arch/x86-family/mm/pagefault.c#L106)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Power-off|[#](/arch/x86-family/reboot.c#L88)|
 |**TODO**|`arch/x86-family/reboot.c`|ACPI Restart|[#](/arch/x86-family/reboot.c#L47)|
 |**TODO**|`arch/x86-family/timer.c`|Initialize HPET Timers|[#](/arch/x86-family/timer.c#L360)|
@@ -30,8 +25,8 @@
 |**TODO**|`drivers/virtio/virtio-pci/main.c`|handle config interrupt|[#](/drivers/virtio/virtio-pci/main.c#L86)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L239)|
 |**TODO**|`include/arch/x86/cpu.h`|Implements features|[#](/include/arch/x86/cpu.h#L314)|
-|**TODO**|`kernel/fs/ext2/ext2_cache.c`|rewrite all ext2 cache functions|[#](/kernel/fs/ext2/ext2_cache.c#L38)|
 |**TODO**|`kernel/fs/ext2/ext2.h`|rewrite all ext2 driver to support cache|[#](/kernel/fs/ext2/ext2.h#L38)|
+|**TODO**|`kernel/fs/ext2/ext2_cache.c`|rewrite all ext2 cache functions|[#](/kernel/fs/ext2/ext2_cache.c#L38)|
 |**TODO**|`kernel/fs/ext2/ext2_mount.c`|ext2: include support for fsync and atime|[#](/kernel/fs/ext2/ext2_mount.c#L49)|
 |**TODO**|`kernel/fs/iosched.c`|implements I/O scheduler|[#](/kernel/fs/iosched.c#L24)|
 |**TODO**|`kernel/init/root.c`|add other Kernel Arguments|[#](/kernel/init/root.c#L56)|
@@ -41,6 +36,6 @@
 |**TODO**|`kernel/syscalls/012_brk.c`|Fix demand paging on brk|[#](/kernel/syscalls/012_brk.c#L97)|
 |**TODO**|`kernel/syscalls/012_brk.c`|Use less memory|[#](/kernel/syscalls/012_brk.c#L76)|
 |**TODO**|`kernel/syscalls/058_vfork.c`|Implements vfork() syscall in do_fork();|[#](/kernel/syscalls/058_vfork.c#L53)|
-|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L192)|
-|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L125)|
+|**TODO**|`kernel/syscalls/059_execve.c`|read and execute command scripts|[#](/kernel/syscalls/059_execve.c#L552)|
+|**TODO**|`kernel/syscalls/072_fcntl.c`|Implements pipe size routines for fcntl|[#](/kernel/syscalls/072_fcntl.c#L127)|
 |**TODO**|`kernel/syscalls/229_clock_getres.c`|update <sys/features.h>|[#](/kernel/syscalls/229_clock_getres.c#L24)|

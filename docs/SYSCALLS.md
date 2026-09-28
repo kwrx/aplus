@@ -85,7 +85,7 @@
 - [x] sys_fchdir
 - [ ] sys_rename
 - [x] sys_mkdir
-- [ ] sys_rmdir
+- [x] sys_rmdir
 - [x] sys_creat
 - [ ] sys_link
 - [x] sys_unlink
@@ -131,8 +131,8 @@
 - [ ] sys_rt_sigpending
 - [ ] sys_rt_sigtimedwait
 - [x] sys_rt_sigqueueinfo
-- [ ] sys_rt_sigsuspend
-- [ ] sys_sigaltstack
+- [x] sys_rt_sigsuspend
+- [x] sys_sigaltstack
 - [ ] sys_utime
 - [x] sys_mknod
 - [ ] sys_personality
@@ -277,7 +277,7 @@
 - [ ] sys_signalfd4
 - [ ] sys_eventfd2
 - [ ] sys_epoll_create1
-- [ ] sys_dup3
+- [x] sys_dup3
 - [x] sys_pipe2
 - [ ] sys_inotify_init1
 - [ ] sys_preadv
