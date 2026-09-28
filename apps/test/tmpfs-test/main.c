@@ -305,6 +305,105 @@ static void test_truncate_shrink(void) {
 
 
 /**
+ * @brief Tells whether a range of an open file reads as zeros.
+ *
+ * @param fd The file.
+ * @param off Where the range starts.
+ * @param size How many bytes it has.
+ * @return 1 if every byte is zero, 0 otherwise.
+ */
+static int fd_is_zero(int fd, off_t off, size_t size) {
+
+    unsigned char chunk[1024];
+    size_t done = 0;
+
+    while (done < size) {
+
+        size_t n = size - done < sizeof(chunk) ? size - done : sizeof(chunk);
+
+        if (pread(fd, chunk, n, off + (off_t)done) != (ssize_t)n)
+            return 0;
+
+        for (size_t i = 0; i < n; i++) {
+
+            if (chunk[i] != 0)
+                return 0;
+        }
+
+        done += n;
+    }
+
+    return 1;
+}
+
+
+/**
+ * @brief Grows a file with ftruncate() and truncate(), checking that the old bytes stay and the new ones read as zeros.
+ */
+static void test_truncate_grow(void) {
+
+    const char* path = SCRATCH "/grow";
+
+    if (write_pattern(path, 20000, 9) < 0) {
+        CHECK(0, "ftruncate-grow", "could not write %s: %s", path, strerror(errno));
+        return;
+    }
+
+    int fd = open(path, O_RDWR);
+
+    if (fd < 0) {
+        CHECK(0, "ftruncate-grow", "open(%s): %s", path, strerror(errno));
+        return;
+    }
+
+
+    struct stat st;
+
+    int e1 = ftruncate(fd, 100);
+    int e2 = ftruncate(fd, 30000);
+
+    memset(&st, 0, sizeof(st));
+    fstat(fd, &st);
+
+    int kept  = fd_has_pattern(fd, 100, 9);
+    int zeros = fd_is_zero(fd, 100, 29900);
+
+    CHECK(e1 == 0 && e2 == 0 && st.st_size == 30000 && kept && zeros, "ftruncate-grow", "ftruncate() to 100 then 30000 returned %d and %d, left %ld bytes, the first 100 %s and the rest %s", e1, e2, (long)st.st_size,
+          kept ? "kept" : "changed", zeros ? "zeros" : "not zeros");
+
+
+    char mid[4] = {0};
+
+    ssize_t w = pwrite(fd, "mid", 3, 15000);
+
+    memset(&st, 0, sizeof(st));
+    fstat(fd, &st);
+
+    int inside = pread(fd, mid, 3, 15000) == 3 && memcmp(mid, "mid", 3) == 0 && fd_has_pattern(fd, 100, 9) && fd_is_zero(fd, 100, 14900) && fd_is_zero(fd, 15003, 14997);
+
+    CHECK(w == 3 && st.st_size == 30000 && inside, "ftruncate-grow-write", "a write inside the grown range returned %zd, left %ld bytes (expected 30000) and %s", w, (long)st.st_size, inside ? "the right content" : "the wrong content");
+
+    close(fd);
+
+
+    int e3 = truncate(path, 40000);
+
+    fd = open(path, O_RDONLY);
+
+    memset(&st, 0, sizeof(st));
+
+    int grown = fd >= 0 && fstat(fd, &st) == 0 && st.st_size == 40000 && pread(fd, mid, 3, 15000) == 3 && memcmp(mid, "mid", 3) == 0 && fd_is_zero(fd, 30000, 10000);
+
+    CHECK(e3 == 0 && grown, "truncate-grow", "truncate() to 40000 returned %d and left %ld bytes with %s", e3, (long)st.st_size, grown ? "the right content" : "the wrong content");
+
+    if (fd >= 0)
+        close(fd);
+
+    unlink(path);
+}
+
+
+/**
  * @brief Reads at and past the end of a short file, which must report end of file rather than copy anything.
  */
 static void test_read_past_eof(void) {
@@ -892,6 +991,7 @@ static struct {
     {"lseek-invalid", test_lseek_invalid},
     {"read-past-eof", test_read_past_eof},
     {"truncate-shrink", test_truncate_shrink},
+    {"truncate-grow", test_truncate_grow},
     {"symlink-chain", test_symlink_chain},
     {"symlink-loop", test_symlink_loop},
     {"unlink-open", test_unlink_open},
