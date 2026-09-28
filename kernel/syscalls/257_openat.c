@@ -154,8 +154,6 @@ SYSCALL(
         if ((flags & O_TRUNC) && ((flags & O_WRONLY) || (flags & O_RDWR)) && S_ISREG(st.st_mode)) {
             if (vfs_truncate(r, 0) < 0)
                 return -errno;
-
-            st.st_size = 0;
         }
 
 
@@ -194,12 +192,6 @@ SYSCALL(
                     fd = CONFIG_FILE_MAX;
 
                 } else {
-
-                    if (flags & O_APPEND)
-                        ref->position = st.st_size;
-                    else
-                        ref->position = 0;
-
 
                     fds->descriptors[fd].ref           = ref;
                     fds->descriptors[fd].close_on_exec = !!(flags & O_CLOEXEC);

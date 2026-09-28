@@ -398,7 +398,7 @@ ssize_t fd_read(struct file* file, void* buf, size_t size) {
 
 
 /**
- * @brief Makes one attempt at writing to an open file at its position, advancing it, without waiting.
+ * @brief Makes one attempt at writing to an open file at its position, or at the end of a regular file under O_APPEND, advancing it, without waiting.
  *
  * @param file The file.
  * @param buf The data, in memory the caller has made accessible with uio_lock().
@@ -414,8 +414,16 @@ ssize_t fd_write(struct file* file, const void* buf, size_t size) {
     ssize_t e = 0;
 
     scoped_lock(&file->lock) {
-        if ((e = vfs_write(file->inode, buf, file->position, size)) > 0)
-            file->position += e;
+
+        off_t off = file->position;
+
+        if (file->flags & O_APPEND)
+            e = vfs_write_append(file->inode, buf, &off, size);
+        else
+            e = vfs_write(file->inode, buf, off, size);
+
+        if (e > 0)
+            file->position = off + e;
     }
 
     return e;

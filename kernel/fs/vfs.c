@@ -548,6 +548,30 @@ ssize_t vfs_read(inode_t* inode, void* buf, off_t off, size_t size) {
 }
 
 
+/**
+ * @brief Writes to an inode whose lock the caller holds, and signals its readers.
+ *
+ * @param inode The inode, locked.
+ * @param buf The data.
+ * @param off The offset.
+ * @param size The number of bytes to write.
+ * @return What the filesystem's write returned.
+ */
+static ssize_t vfs_write_locked(inode_t* inode, const void* buf, off_t off, size_t size) {
+
+    ssize_t e = inode->ops.write(inode, buf, off, size);
+
+    if (e > 0) {
+
+        shared_ptr_nullable_access(inode->ev, ev, {
+            atomic_fetch_add(&ev->futex, 1);
+        });
+    }
+
+    return e;
+}
+
+
 ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 
     DEBUG_ASSERT(inode);
@@ -556,18 +580,40 @@ ssize_t vfs_write(inode_t* inode, const void* buf, off_t off, size_t size) {
 
 
     if (likely(inode->ops.write)) {
+        scoped_lock(&inode->lock) return vfs_write_locked(inode, buf, off, size);
+    }
+
+    return -ENOSYS;
+}
+
+
+/**
+ * @brief Writes at the end of a regular file, reading its size under the same lock as the write; anything else is written at @p off.
+ *
+ * @param inode The inode.
+ * @param buf The data.
+ * @param off The offset for an inode that is not a regular file; receives the offset written at.
+ * @param size The number of bytes to write.
+ * @return What the filesystem's write returned, or -ENOSYS.
+ */
+ssize_t vfs_write_append(inode_t* inode, const void* buf, off_t* off, size_t size) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(off);
+    DEBUG_ASSERT(size);
+
+
+    if (likely(inode->ops.write)) {
 
         scoped_lock(&inode->lock) {
-            ssize_t e = inode->ops.write(inode, buf, off, size);
 
-            if (e > 0) {
+            struct stat st;
 
-                shared_ptr_nullable_access(inode->ev, ev, {
-                    atomic_fetch_add(&ev->futex, 1);
-                });
-            }
+            if (inode->ops.getattr && inode->ops.getattr(inode, &st) == 0 && S_ISREG(st.st_mode))
+                *off = st.st_size;
 
-            return e;
+            return vfs_write_locked(inode, buf, *off, size);
         }
     }
 
