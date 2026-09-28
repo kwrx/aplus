@@ -34,7 +34,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/mman.h>
 #include <sys/socket.h>
+#include <sys/stat.h>
 #include <sys/syscall.h>
 #include <sys/uio.h>
 #include <sys/wait.h>
@@ -582,17 +584,18 @@ static void test_getfl_clean(void) {
 
 
 /**
- * @brief Records whether a call failed with EBADF.
+ * @brief Records whether a call failed with the expected errno.
  *
  * @param n What the call returned.
+ * @param expected The errno it should fail with.
  * @param name The case name.
  * @param call What was called, for the message.
  */
-static void check_ebadf(ssize_t n, const char* name, const char* call) {
+static void check_errno(ssize_t n, int expected, const char* name, const char* call) {
 
     int e = errno;
 
-    CHECK(n < 0 && e == EBADF, name, "%s returned %zd errno %d (%s), expected -1 EBADF", call, n, n < 0 ? e : 0, n < 0 ? strerror(e) : "none");
+    CHECK(n < 0 && e == expected, name, "%s returned %zd errno %d (%s), expected -1 errno %d (%s)", call, n, n < 0 ? e : 0, n < 0 ? strerror(e) : "none", expected, strerror(expected));
 }
 
 
@@ -629,12 +632,12 @@ static void test_accmode_ebadf(void) {
     struct iovec iov_in  = {&in, 1};
     struct iovec iov_out = {&out, 1};
 
-    check_ebadf(write(r, &out, 1), "accmode-write", "write() on an O_RDONLY descriptor");
-    check_ebadf(writev(r, &iov_out, 1), "accmode-writev", "writev() on an O_RDONLY descriptor");
-    check_ebadf(pwrite(r, &out, 1, 0), "accmode-pwrite", "pwrite() on an O_RDONLY descriptor");
-    check_ebadf(read(w, &in, 1), "accmode-read", "read() on an O_WRONLY descriptor");
-    check_ebadf(readv(w, &iov_in, 1), "accmode-readv", "readv() on an O_WRONLY descriptor");
-    check_ebadf(pread(w, &in, 1, 0), "accmode-pread", "pread() on an O_WRONLY descriptor");
+    check_errno(write(r, &out, 1), EBADF, "accmode-write", "write() on an O_RDONLY descriptor");
+    check_errno(writev(r, &iov_out, 1), EBADF, "accmode-writev", "writev() on an O_RDONLY descriptor");
+    check_errno(pwrite(r, &out, 1, 0), EBADF, "accmode-pwrite", "pwrite() on an O_RDONLY descriptor");
+    check_errno(read(w, &in, 1), EBADF, "accmode-read", "read() on an O_WRONLY descriptor");
+    check_errno(readv(w, &iov_in, 1), EBADF, "accmode-readv", "readv() on an O_WRONLY descriptor");
+    check_errno(pread(w, &in, 1, 0), EBADF, "accmode-pread", "pread() on an O_WRONLY descriptor");
 
 
     int p = open(path, O_PATH);
@@ -643,10 +646,10 @@ static void test_accmode_ebadf(void) {
     CHECK(p >= 0 && q >= 0, "accmode-path-open", "open(O_PATH) failed: %s", strerror(errno));
 
     if (p >= 0)
-        check_ebadf(read(p, &in, 1), "accmode-path-read", "read() on an O_PATH descriptor");
+        check_errno(read(p, &in, 1), EBADF, "accmode-path-read", "read() on an O_PATH descriptor");
 
     if (q >= 0)
-        check_ebadf(write(q, &out, 1), "accmode-path-write", "write() on an O_PATH | O_RDWR descriptor");
+        check_errno(write(q, &out, 1), EBADF, "accmode-path-write", "write() on an O_PATH | O_RDWR descriptor");
 
 
     char buf[8] = {0};
@@ -673,11 +676,141 @@ static void test_accmode_ebadf(void) {
         return;
     }
 
-    check_ebadf(write(fds[0], &out, 1), "accmode-pipe-write", "write() on a pipe's read end");
-    check_ebadf(read_guarded(fds[1]), "accmode-pipe-read", "read() on a pipe's write end");
+    check_errno(write(fds[0], &out, 1), EBADF, "accmode-pipe-write", "write() on a pipe's read end");
+    check_errno(read_guarded(fds[1]), EBADF, "accmode-pipe-read", "read() on a pipe's write end");
 
     close(fds[0]);
     close(fds[1]);
+}
+
+
+/**
+ * @brief Creates a file in /tmp that holds "hello".
+ *
+ * @param path Receives the file's path.
+ * @param size The size of @p path.
+ * @param tag A word that sets the file apart from other cases' files.
+ * @return 0, or -1 with errno set.
+ */
+static int make_hello(char* path, size_t size, const char* tag) {
+
+    snprintf(path, size, "/tmp/fd-test-%s.%d", tag, (int)getpid());
+
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (fd < 0)
+        return -1;
+
+    ssize_t n = write(fd, "hello", 5);
+
+    close(fd);
+
+    return n == 5 ? 0 : -1;
+}
+
+
+/**
+ * @brief Checks that ftruncate() refuses a descriptor not open for writing with EINVAL and an O_PATH one with EBADF.
+ */
+static void test_ftruncate_accmode(void) {
+
+    char path[64];
+
+    if (make_hello(path, sizeof(path), "ftruncate") < 0) {
+        CHECK(0, "ftruncate-rdonly", "creating the file failed: %s", strerror(errno));
+        return;
+    }
+
+    int r = open(path, O_RDONLY);
+    int w = open(path, O_WRONLY);
+    int p = open(path, O_PATH);
+
+    if (r < 0 || w < 0 || p < 0) {
+        CHECK(0, "ftruncate-rdonly", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    check_errno(ftruncate(r, 0), EINVAL, "ftruncate-rdonly", "ftruncate() on an O_RDONLY descriptor");
+    check_errno(ftruncate(p, 0), EBADF, "ftruncate-path", "ftruncate() on an O_PATH descriptor");
+
+
+    struct stat st;
+    memset(&st, 0, sizeof(st));
+
+    CHECK(fstat(r, &st) == 0 && st.st_size == 5, "ftruncate-unchanged", "the file is %ld bytes, expected 5", (long)st.st_size);
+
+
+    int e = ftruncate(w, 2);
+
+    memset(&st, 0, sizeof(st));
+
+    CHECK(e == 0 && fstat(r, &st) == 0 && st.st_size == 2, "ftruncate-wronly", "ftruncate(2) on an O_WRONLY descriptor returned %d and left %ld bytes", e, (long)st.st_size);
+
+    close(r);
+    close(w);
+    close(p);
+    unlink(path);
+}
+
+
+/**
+ * @brief Maps and unmaps the first page of a file.
+ *
+ * @param fd The descriptor.
+ * @param prot The protection.
+ * @param flags The mapping type and flags.
+ * @return 0, or -1 with errno set.
+ */
+static ssize_t try_mmap(int fd, int prot, int flags) {
+
+    void* m = mmap(NULL, 4096, prot, flags, fd, 0);
+
+    if (m == MAP_FAILED)
+        return -1;
+
+    munmap(m, 4096);
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that mmap() of a file needs a descriptor open for reading, and one open for writing too for a writable MAP_SHARED mapping.
+ */
+static void test_mmap_accmode(void) {
+
+    char path[64];
+
+    if (make_hello(path, sizeof(path), "mmap") < 0) {
+        CHECK(0, "mmap-wronly", "creating the file failed: %s", strerror(errno));
+        return;
+    }
+
+    int r = open(path, O_RDONLY);
+    int w = open(path, O_WRONLY);
+    int p = open(path, O_PATH);
+
+    if (r < 0 || w < 0 || p < 0) {
+        CHECK(0, "mmap-wronly", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    check_errno(try_mmap(w, PROT_READ, MAP_PRIVATE), EACCES, "mmap-wronly", "mmap() on an O_WRONLY descriptor");
+    check_errno(try_mmap(r, PROT_READ | PROT_WRITE, MAP_SHARED), EACCES, "mmap-shared-rdonly", "a writable MAP_SHARED mmap() on an O_RDONLY descriptor");
+    check_errno(try_mmap(p, PROT_READ, MAP_PRIVATE), EBADF, "mmap-path", "mmap() on an O_PATH descriptor");
+
+
+    char* m = mmap(NULL, 4096, PROT_READ | PROT_WRITE, MAP_PRIVATE, r, 0);
+
+    CHECK(m != MAP_FAILED && memcmp(m, "hello", 5) == 0, "mmap-private-rdonly", "a writable MAP_PRIVATE mmap() on an O_RDONLY descriptor %s", m == MAP_FAILED ? strerror(errno) : "has the wrong contents");
+
+    if (m != MAP_FAILED)
+        munmap(m, 4096);
+
+    close(r);
+    close(w);
+    close(p);
+    unlink(path);
 }
 
 
@@ -1081,6 +1214,8 @@ static struct {
     {"getfl-clean", test_getfl_clean},
     {"accmode", test_accmode_ebadf},
     {"pwrite-iostat", test_pwrite_iostat},
+    {"ftruncate-accmode", test_ftruncate_accmode},
+    {"mmap-accmode", test_mmap_accmode},
     {"append-separate", test_append_separate},
     {"append-setfl", test_append_setfl},
     {"append-open-offset", test_append_open_offset},
