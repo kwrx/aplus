@@ -52,17 +52,31 @@
  */
 
 /**
- * @brief Reports the set of cpus a task may run on.
+ * @brief Reports the online cpus a task may run on.
  *
  * @param pid The task to ask about, or 0 for the caller.
- * @param len The size of the caller's mask in bytes.
+ * @param len The size of the caller's mask in bytes: a multiple of a long, with a bit for every cpu.
  * @param user_mask_ptr Receives the cpu mask.
  * @return The number of bytes written, or a negative errno.
  */
 
 SYSCALL(
     204, sched_getaffinity, long sys_sched_getaffinity(pid_t pid, unsigned int len, unsigned long* user_mask_ptr) {
-        if (unlikely(len != CPU_SETSIZE))
+        size_t ncpus = 0;
+
+        cpu_set_t online_mask;
+        CPU_ZERO(&online_mask);
+
+        cpu_foreach(cpu) {
+            CPU_SET(cpu->id, &online_mask);
+            ncpus = MAX(ncpus, (size_t)cpu->id + 1);
+        }
+
+
+        if (unlikely((size_t)len * 8 < ncpus))
+            return -EINVAL;
+
+        if (unlikely(len & (sizeof(unsigned long) - 1)))
             return -EINVAL;
 
         if (unlikely(!user_mask_ptr))
@@ -98,7 +112,7 @@ SYSCALL(
 
 
                     CPU_ZERO(&__safe_mask_ptr);
-                    CPU_OR(&__safe_mask_ptr, &__safe_mask_ptr, &tmp->affinity);
+                    CPU_AND(&__safe_mask_ptr, &tmp->affinity, &online_mask);
 
                     found = true;
                     break;
@@ -110,7 +124,9 @@ SYSCALL(
         if (!found)
             return -ESRCH;
 
-        uio_memcpy_s2u(user_mask_ptr, &__safe_mask_ptr, sizeof(cpu_set_t));
+        size_t size = MIN((size_t)len, sizeof(cpu_set_t));
 
-        return CPU_SETSIZE;
+        uio_memcpy_s2u(user_mask_ptr, &__safe_mask_ptr, size);
+
+        return (long)size;
     });

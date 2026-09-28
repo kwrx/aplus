@@ -816,7 +816,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
 
     CPU_ZERO(&task->affinity);
 
-    for (size_t i = 0; i < (CPU_SETSIZE << 3); i++) {
+    for (size_t i = 0; i < CPU_SETSIZE; i++) {
         CPU_SET(i, &task->affinity);
     }
 

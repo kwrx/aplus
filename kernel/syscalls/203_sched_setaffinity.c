@@ -53,17 +53,20 @@
  */
 
 /**
- * @brief Restricts a task to a set of cpus.
+ * @brief Restricts a task to a set of cpus, of which at least one must be online.
+ *
+ * The mask is read only when a task is placed on a cpu, at creation: the task stays where it is, and the tasks it
+ * creates from then on inherit the mask. @see sched_enqueue().
  *
  * @param pid The task to change, or 0 for the caller.
- * @param len The size of the caller's mask in bytes.
+ * @param len The size of the caller's mask in bytes; bytes past a cpu_set_t are ignored.
  * @param user_mask_ptr The cpu mask to install.
  * @return 0 on success, or a negative errno.
  */
 
 SYSCALL(
     203, sched_setaffinity, long sys_sched_setaffinity(pid_t pid, unsigned int len, unsigned long* user_mask_ptr) {
-        if (unlikely(len != CPU_SETSIZE))
+        if (unlikely(len == 0))
             return -EINVAL;
 
         if (unlikely(!user_mask_ptr))
@@ -76,11 +79,22 @@ SYSCALL(
         cpu_set_t empty_mask;
         CPU_ZERO(&empty_mask);
 
+        cpu_set_t online_mask;
+        CPU_ZERO(&online_mask);
+
+        cpu_foreach(cpu) {
+            CPU_SET(cpu->id, &online_mask);
+        }
+
         cpu_set_t user_mask;
-        uio_memcpy_u2s(&user_mask, user_mask_ptr, sizeof(cpu_set_t));
+        CPU_ZERO(&user_mask);
+
+        uio_memcpy_u2s(&user_mask, user_mask_ptr, MIN((size_t)len, sizeof(cpu_set_t)));
+
+        CPU_AND(&user_mask, &user_mask, &online_mask);
 
 
-        if (unlikely(CPU_EQUAL(&user_mask_ptr, &empty_mask)))
+        if (unlikely(CPU_EQUAL(&user_mask, &empty_mask)))
             return -EINVAL;
 
 
@@ -106,7 +120,7 @@ SYSCALL(
                     CPU_ZERO(&tmp->affinity);
                     CPU_OR(&tmp->affinity, &tmp->affinity, &user_mask);
 
-                    return CPU_SETSIZE;
+                    return 0;
                 }
             }
         }
