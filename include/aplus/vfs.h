@@ -232,6 +232,7 @@ int vfs_fsync(inode_t*, int);
 
 ssize_t vfs_read(inode_t*, void*, off_t, size_t);
 ssize_t vfs_write(inode_t*, const void*, off_t, size_t);
+ssize_t vfs_write_append(inode_t*, const void*, off_t*, size_t);
 ssize_t vfs_readlink(inode_t*, char*, size_t);
 
 inode_t* vfs_creat(inode_t*, const char*, mode_t);
