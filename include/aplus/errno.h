@@ -34,7 +34,7 @@
         #ifdef errno
             #undef errno
         #endif
-        #define errno current_cpu->errno
+        #define errno (*smp_get_current_errno())
     #endif
 
 #endif

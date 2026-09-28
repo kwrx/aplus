@@ -272,6 +272,8 @@ typedef struct task {
 
     cpu_set_t affinity;
 
+    int errnum;
+
 
     void* frame;
     void* fpu;
