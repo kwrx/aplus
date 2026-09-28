@@ -73,20 +73,17 @@ SYSCALL(
             }
 
 
-            bool nonblock = !!(flags & O_NONBLOCK);
+            int fdflags       = 0;
+            struct file* file = fd_get((unsigned int)fd, &fdflags);
 
-            if (!nonblock) {
-
-                int fdflags       = 0;
-                struct file* file = fd_get((unsigned int)fd, &fdflags);
-
-                if (file) {
-                    nonblock = !!(fdflags & O_NONBLOCK);
-                    fd_put(file);
-                }
+            if (unlikely(!file)) {
+                unix_sock_put(us);
+                return -EBADF;
             }
 
-            if (nonblock) {
+            fd_put(file);
+
+            if (fdflags & O_NONBLOCK) {
                 unix_sock_put(us);
                 return -EAGAIN;
             }
