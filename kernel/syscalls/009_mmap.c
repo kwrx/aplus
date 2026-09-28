@@ -61,6 +61,27 @@ SYSCALL(
         DEBUG_ASSERT(current_task->address_space->mmap.heap_end);
 
 
+        if (!(flags & MAP_ANONYMOUS)) {
+
+            int fdflags       = 0;
+            struct file* file = fd_get((unsigned int)fd, &fdflags);
+
+            if (unlikely(!file))
+                return -EBADF;
+
+            fd_put(file);
+
+            if (unlikely(fdflags & O_PATH))
+                return -EBADF;
+
+            if (unlikely((fdflags & O_ACCMODE) != O_RDONLY && (fdflags & O_ACCMODE) != O_RDWR))
+                return -EACCES;
+
+            if (unlikely(((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE) && (prot & PROT_WRITE) && (fdflags & O_ACCMODE) != O_RDWR))
+                return -EACCES;
+        }
+
+
         if (unlikely((flags & MAP_TYPE) == MAP_SHARED || (flags & MAP_TYPE) == MAP_SHARED_VALIDATE))
             return -ENOTSUP;
 
@@ -91,19 +112,6 @@ SYSCALL(
 
         uintptr_t pagesize = arch_vmm_getpagesize();
         uintptr_t start    = 0UL;
-
-
-
-        if (!(flags & MAP_ANONYMOUS)) {
-
-            if (unlikely(fd >= CONFIG_OPEN_MAX))
-                return -EBADF;
-
-            shared_ptr_access(current_task->fd, fds, {
-                if (unlikely(!fds->descriptors[fd].ref))
-                    return -EBADF;
-            });
-        }
 
 
 
