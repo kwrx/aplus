@@ -84,7 +84,7 @@ typedef struct cpu {
     void* kstack;
     void* ustack;
 
-    int errno;
+    int errnum;
 
     uint64_t node;
     uint64_t archid;
@@ -127,6 +127,7 @@ __BEGIN_DECLS
 
 cpu_t* smp_get_current_cpu(void) __returns_nonnull;
 cpu_t* smp_get_cpu(int) __returns_nonnull;
+int* smp_get_current_errno(void) __returns_nonnull;
 
 void smp_init();
 
