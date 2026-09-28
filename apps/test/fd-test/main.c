@@ -582,6 +582,106 @@ static void test_getfl_clean(void) {
 
 
 /**
+ * @brief Records whether a call failed with EBADF.
+ *
+ * @param n What the call returned.
+ * @param name The case name.
+ * @param call What was called, for the message.
+ */
+static void check_ebadf(ssize_t n, const char* name, const char* call) {
+
+    int e = errno;
+
+    CHECK(n < 0 && e == EBADF, name, "%s returned %zd errno %d (%s), expected -1 EBADF", call, n, n < 0 ? e : 0, n < 0 ? strerror(e) : "none");
+}
+
+
+/**
+ * @brief Checks that reading or writing through a descriptor whose access mode does not allow it fails with EBADF, O_PATH included.
+ */
+static void test_accmode_ebadf(void) {
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-accmode.%d", (int)getpid());
+
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (fd < 0 || write(fd, "hello", 5) != 5) {
+        CHECK(0, "accmode", "creating the file failed: %s", strerror(errno));
+        return;
+    }
+
+    close(fd);
+
+
+    int r = open(path, O_RDONLY);
+    int w = open(path, O_WRONLY);
+
+    if (r < 0 || w < 0) {
+        CHECK(0, "accmode", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    char in  = 0;
+    char out = 'x';
+
+    struct iovec iov_in  = {&in, 1};
+    struct iovec iov_out = {&out, 1};
+
+    check_ebadf(write(r, &out, 1), "accmode-write", "write() on an O_RDONLY descriptor");
+    check_ebadf(writev(r, &iov_out, 1), "accmode-writev", "writev() on an O_RDONLY descriptor");
+    check_ebadf(pwrite(r, &out, 1, 0), "accmode-pwrite", "pwrite() on an O_RDONLY descriptor");
+    check_ebadf(read(w, &in, 1), "accmode-read", "read() on an O_WRONLY descriptor");
+    check_ebadf(readv(w, &iov_in, 1), "accmode-readv", "readv() on an O_WRONLY descriptor");
+    check_ebadf(pread(w, &in, 1, 0), "accmode-pread", "pread() on an O_WRONLY descriptor");
+
+
+    int p = open(path, O_PATH);
+    int q = open(path, O_PATH | O_RDWR);
+
+    CHECK(p >= 0 && q >= 0, "accmode-path-open", "open(O_PATH) failed: %s", strerror(errno));
+
+    if (p >= 0)
+        check_ebadf(read(p, &in, 1), "accmode-path-read", "read() on an O_PATH descriptor");
+
+    if (q >= 0)
+        check_ebadf(write(q, &out, 1), "accmode-path-write", "write() on an O_PATH | O_RDWR descriptor");
+
+
+    char buf[8] = {0};
+    ssize_t n   = pread(r, buf, sizeof(buf) - 1, 0);
+
+    CHECK(n == 5 && memcmp(buf, "hello", 5) == 0, "accmode-unchanged", "the file holds \"%s\" (%zd bytes), expected \"hello\"", buf, n);
+
+    close(r);
+    close(w);
+
+    if (p >= 0)
+        close(p);
+
+    if (q >= 0)
+        close(q);
+
+    unlink(path);
+
+
+    int fds[2];
+
+    if (pipe(fds) < 0) {
+        CHECK(0, "accmode-pipe", "pipe() failed: %s", strerror(errno));
+        return;
+    }
+
+    check_ebadf(write(fds[0], &out, 1), "accmode-pipe-write", "write() on a pipe's read end");
+    check_ebadf(read_guarded(fds[1]), "accmode-pipe-read", "read() on a pipe's write end");
+
+    close(fds[0]);
+    close(fds[1]);
+}
+
+
+/**
  * @brief Reads a whole file into a NUL-terminated buffer.
  *
  * @param path The file.
@@ -776,6 +876,75 @@ static void test_append_pwrite(void) {
 
 
 /**
+ * @brief Reads the calling process's write counters from /proc/<pid>/io.
+ *
+ * @param wchar Receives the bytes passed to write calls.
+ * @param syscw Receives the number of write calls.
+ * @return 0, or -1 if the file could not be read or parsed.
+ */
+static int read_write_counters(unsigned long* wchar, unsigned long* syscw) {
+
+    char path[64];
+    char buf[512];
+
+    snprintf(path, sizeof(path), "/proc/%d/io", (int)getpid());
+
+    if (read_file(path, buf, sizeof(buf)) <= 0)
+        return -1;
+
+    char* w = strstr(buf, "wchar: ");
+    char* s = strstr(buf, "syscw: ");
+
+    if (!w || !s)
+        return -1;
+
+    *wchar = strtoul(w + 7, NULL, 10);
+    *syscw = strtoul(s + 7, NULL, 10);
+
+    return 0;
+}
+
+
+/**
+ * @brief Checks that pwrite() counts as a write in /proc/<pid>/io.
+ */
+static void test_pwrite_iostat(void) {
+
+    static char data[1000];
+
+    char path[64];
+
+    snprintf(path, sizeof(path), "/tmp/fd-test-iostat.%d", (int)getpid());
+
+    int fd = open(path, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+
+    if (fd < 0) {
+        CHECK(0, "pwrite-iostat", "open() failed: %s", strerror(errno));
+        return;
+    }
+
+    unsigned long w0 = 0;
+    unsigned long s0 = 0;
+    unsigned long w1 = 0;
+    unsigned long s1 = 0;
+
+    int ok    = read_write_counters(&w0, &s0) == 0;
+    ssize_t n = pwrite(fd, data, sizeof(data), 0);
+    ok        = read_write_counters(&w1, &s1) == 0 && ok;
+
+    close(fd);
+    unlink(path);
+
+    if (!ok) {
+        CHECK(0, "pwrite-iostat", "reading /proc/%d/io failed", (int)getpid());
+        return;
+    }
+
+    CHECK(n == (ssize_t)sizeof(data) && w1 - w0 == sizeof(data) && s1 - s0 == 1, "pwrite-iostat", "pwrite() of %zu bytes returned %zd and moved wchar by %lu and syscw by %lu", sizeof(data), n, w1 - w0, s1 - s0);
+}
+
+
+/**
  * @brief Checks that processes appending fixed-size records through their own O_APPEND descriptors at the same time lose none.
  */
 static void test_append_concurrent(void) {
@@ -910,6 +1079,8 @@ static struct {
     {"shared-dup", test_shared_dup},
     {"shared-fork", test_shared_fork},
     {"getfl-clean", test_getfl_clean},
+    {"accmode", test_accmode_ebadf},
+    {"pwrite-iostat", test_pwrite_iostat},
     {"append-separate", test_append_separate},
     {"append-setfl", test_append_setfl},
     {"append-open-offset", test_append_open_offset},
