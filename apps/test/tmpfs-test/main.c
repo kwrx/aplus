@@ -982,6 +982,44 @@ static void test_trailing_slash(void) {
 }
 
 
+/**
+ * @brief Checks that chdir() and fchdir() refuse a regular file with ENOTDIR and leave the working directory alone.
+ */
+static void test_chdir_notdir(void) {
+
+    const char* path = SCRATCH "/notdir";
+
+    int fd = open(path, O_RDWR | O_CREAT | O_TRUNC, 0644);
+
+    if (fd < 0) {
+        CHECK(0, "chdir-notdir", "creating %s failed: %s", path, strerror(errno));
+        return;
+    }
+
+    chdir("/");
+
+    errno  = 0;
+    int c  = chdir(path);
+    int ce = errno;
+
+    errno  = 0;
+    int f  = fchdir(fd);
+    int fe = errno;
+
+    char cwd[256] = {0};
+    getcwd(cwd, sizeof(cwd));
+
+    chdir("/");
+
+    CHECK(c < 0 && ce == ENOTDIR, "chdir-notdir", "chdir() on a regular file returned %d, errno %d (%s)", c, ce, strerror(ce));
+    CHECK(f < 0 && fe == ENOTDIR, "fchdir-notdir", "fchdir() on a regular file returned %d, errno %d (%s)", f, fe, strerror(fe));
+    CHECK(strcmp(cwd, "/") == 0, "chdir-notdir-cwd", "the working directory became \"%s\"", cwd);
+
+    close(fd);
+    unlink(path);
+}
+
+
 static struct {
 
     const char* name;
@@ -1002,6 +1040,7 @@ static struct {
     {"ino-unique", test_ino_unique},
     {"leak-unlink", test_leak_unlink},
     {"trailing-slash", test_trailing_slash},
+    {"chdir-notdir", test_chdir_notdir},
 };
 
 
