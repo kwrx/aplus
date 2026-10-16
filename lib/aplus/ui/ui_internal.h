@@ -58,7 +58,10 @@ struct ui_window {
 
     //? The window's surface, mapped from the server's shared memory segment. Owned by the
     //? server; this end only attaches and detaches.
-    uint32_t* pixels;
+    uint32_t* front;
+
+    //? What the client draws into, private to it and laid out like the front.
+    uint32_t* back;
 
     int shm_id;
 
