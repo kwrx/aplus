@@ -167,7 +167,7 @@ wm_rect_t wm_window_shadow_rect(const wm_window_t* win) {
  * @brief Reports where a titlebar button sits, counting leftwards from the close button at the right end.
  *
  * @param win The window.
- * @param region WM_REGION_CLOSE or WM_REGION_MAXIMIZE.
+ * @param region WM_REGION_CLOSE, WM_REGION_MAXIMIZE or WM_REGION_MINIMIZE.
  * @return The button's square, empty for a window without a titlebar.
  */
 wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region) {
@@ -182,7 +182,7 @@ wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region) {
 
     const wm_rect_t f = wm_window_frame(win);
 
-    const int slot = region == WM_REGION_CLOSE ? 0 : 1;
+    const int slot = region == WM_REGION_CLOSE ? 0 : region == WM_REGION_MAXIMIZE ? 1 : 2;
 
     wm_rect_t r = {
 
@@ -207,14 +207,41 @@ wm_rect_t wm_window_maximize_rect(const wm_window_t* win) {
 
 
 /**
+ * @brief Reports the transition that lights a titlebar button while the pointer is on it.
+ *
+ * @param win The window.
+ * @param region The button.
+ * @return The transition.
+ */
+ui_anim_t* wm_window_button_hover(wm_window_t* win, wm_region_t region) {
+
+    switch (region) {
+
+        case WM_REGION_CLOSE:
+            return &win->hover_close;
+
+        case WM_REGION_MAXIMIZE:
+            return &win->hover_maximize;
+
+        default:
+            return &win->hover_minimize;
+    }
+}
+
+
+/**
  * @brief Reports whether a window paints every pixel of its content area solid right now.
  *
  * @param win The window.
- * @return false for a translucent window, one not yet drawn, and one still fading or morphing.
+ * @return false for a translucent window, one not yet drawn, one minimised, and one still fading, morphing or minimising.
  */
 bool wm_window_opaque(const wm_window_t* win) {
 
-    if (!win->committed || wm_window_translucent(win) || win->morph) {
+    if (!win->committed || wm_window_translucent(win) || win->morph || win->minimized) {
+        return false;
+    }
+
+    if (ui_anim_value(&win->minimize, wm.frame_time) > 0.0) {
         return false;
     }
 
@@ -232,6 +259,36 @@ wm_window_t* wm_window_from_id(uint32_t id) {
     }
 
     return NULL;
+}
+
+
+/**
+ * @brief Reports the frontmost window that is not minimised, which is where the focus falls back to.
+ *
+ * @return The window, or NULL when there is none.
+ */
+wm_window_t* wm_window_topmost(void) {
+
+    for (wm_window_t* w = wm.windows; w; w = w->next) {
+
+        if (!w->minimized) {
+            return w;
+        }
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Reports whether a window has an entry on the taskbar: one that has drawn and has a titlebar.
+ *
+ * @param win The window.
+ * @return true when it is listed.
+ */
+bool wm_window_listed(const wm_window_t* win) {
+
+    return win->committed && !wm_window_borderless(win);
 }
 
 
@@ -347,9 +404,10 @@ static int wm_window_alloc_backstore(wm_window_t* win, int width, int height) {
 void wm_window_clamp_size(const wm_window_t* win, int* width, int* height) {
 
     const wm_insets_t in = wm_window_insets(win);
+    const wm_rect_t work = wm_workarea();
 
-    const int max_width  = wm.display.width - in.left - in.right;
-    const int max_height = wm.display.height - in.top - in.bottom;
+    const int max_width  = work.width - in.left - in.right;
+    const int max_height = work.height - in.top - in.bottom;
 
     *width  = WM_MAX(WM_MIN(*width, max_width), WM_WINDOW_MIN_WIDTH);
     *height = WM_MAX(WM_MIN(*height, max_height), WM_WINDOW_MIN_HEIGHT);
@@ -418,9 +476,10 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 
 
     const wm_insets_t in = wm_window_insets(win);
+    const wm_rect_t work = wm_workarea();
 
-    win->x = in.left + (wm.display.width - win->width - in.left - in.right) / 2;
-    win->y = in.top + (wm.display.height - win->height - in.top - in.bottom) / 2;
+    win->x = work.x + in.left + (work.width - win->width - in.left - in.right) / 2;
+    win->y = work.y + in.top + (work.height - win->height - in.top - in.bottom) / 2;
 
     if (!wm_window_centered(win)) {
 
@@ -431,12 +490,12 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
         }
     }
 
-    if (win->x + win->width + in.right > wm.display.width) {
-        win->x = wm.display.width - win->width - in.right;
+    if (win->x + win->width + in.right > work.x + work.width) {
+        win->x = work.x + work.width - win->width - in.right;
     }
 
-    if (win->y + win->height + in.bottom > wm.display.height) {
-        win->y = wm.display.height - win->height - in.bottom;
+    if (win->y + win->height + in.bottom > work.y + work.height) {
+        win->y = work.y + work.height - win->height - in.bottom;
     }
 
     wm_window_set_icon(win, NULL);
@@ -459,34 +518,11 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
  */
 void wm_window_set_icon(wm_window_t* win, const char* name) {
 
-    cairo_surface_t* source = NULL;
-
-    if (name && *name && !strchr(name, '/')) {
-        source = ui_icon_load(name, WM_ICON_SIZE);
-    }
-
-    if (!source) {
-        source = ui_icon_load(WM_ICON_FALLBACK, WM_ICON_SIZE);
-    }
-
-    if (!source) {
-        return;
-    }
-
-
-    cairo_surface_t* icon = wm_surface_create(CAIRO_FORMAT_ARGB32, WM_ICON_SIZE, WM_ICON_SIZE);
+    cairo_surface_t* icon = wm_icon_create(name, WM_ICON_SIZE);
 
     if (!icon) {
         return;
     }
-
-
-    cairo_t* cr = cairo_create(icon);
-
-    ui_draw_icon(cr, (ui_rect_t){0, 0, WM_ICON_SIZE, WM_ICON_SIZE}, source);
-
-    cairo_destroy(cr);
-
 
     if (win->icon) {
         cairo_surface_destroy(win->icon);
@@ -495,6 +531,7 @@ void wm_window_set_icon(wm_window_t* win, const char* name) {
     win->icon = icon;
 
     wm_damage_window(win);
+    wm_taskbar_damage();
 }
 
 
@@ -557,8 +594,10 @@ void wm_window_destroy(wm_window_t* win) {
 
     if (wm.focused == win) {
         wm.focused = NULL;
-        wm_window_focus(wm.windows);
+        wm_window_focus(wm_window_topmost());
     }
+
+    wm_taskbar_forget(win);
 
 
     wm_window_free_backstore(win);
@@ -603,6 +642,12 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
     if (wm_rect_contains_point(&m, x, y)) {
         return WM_REGION_MAXIMIZE;
+    }
+
+    const wm_rect_t n = wm_window_button_rect(win, WM_REGION_MINIMIZE);
+
+    if (wm_rect_contains_point(&n, x, y)) {
+        return WM_REGION_MINIMIZE;
     }
 
     if (win->maximized) {
@@ -658,7 +703,21 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
 wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out) {
 
+    if (wm_taskbar_contains(x, y)) {
+
+        if (out) {
+            *out = NULL;
+        }
+
+        return WM_REGION_TASKBAR;
+    }
+
+
     for (wm_window_t* win = wm.windows; win; win = win->next) {
+
+        if (win->minimized) {
+            continue;
+        }
 
         wm_region_t region = wm_window_region(win, x, y);
 
@@ -744,18 +803,21 @@ void wm_window_focus(wm_window_t* win) {
             ui_anim_set(&win->focus, 1.0);
         }
     }
+
+    wm_taskbar_damage();
 }
 
 
 void wm_window_move(wm_window_t* win, int x, int y) {
 
     const wm_insets_t in = wm_window_insets(win);
+    const wm_rect_t work = wm_workarea();
 
-    const int min_x = -(win->width - WM_WINDOW_MIN_WIDTH);
-    const int max_x = wm.display.width - WM_WINDOW_MIN_WIDTH;
+    const int min_x = work.x - (win->width - WM_WINDOW_MIN_WIDTH);
+    const int max_x = work.x + work.width - WM_WINDOW_MIN_WIDTH;
 
-    const int min_y = in.top;
-    const int max_y = wm.display.height - WM_WINDOW_MIN_HEIGHT + in.top;
+    const int min_y = work.y + in.top;
+    const int max_y = work.y + work.height - WM_WINDOW_MIN_HEIGHT + in.top;
 
     x = WM_CLAMP(x, min_x, max_x);
     y = WM_CLAMP(y, min_y, max_y);
@@ -869,6 +931,7 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
         ui_anim_to(&win->appear, 1.0, UI_MOTION_SLOW, ui_anim_now());
 
         wm_damage_window(win);
+        wm_taskbar_damage();
     }
 
     return 0;
@@ -938,6 +1001,7 @@ void wm_window_toggle_maximize(wm_window_t* win) {
     } else {
 
         const wm_insets_t in = wm_window_insets(win);
+        const wm_rect_t work = wm_workarea();
 
         win->restore.x      = win->x;
         win->restore.y      = win->y;
@@ -946,10 +1010,10 @@ void wm_window_toggle_maximize(wm_window_t* win) {
 
         win->maximized = true;
 
-        win->x = in.left;
-        win->y = in.top;
+        win->x = work.x + in.left;
+        win->y = work.y + in.top;
 
-        wm_window_resize(win, wm.display.width - in.left - in.right, wm.display.height - in.top - in.bottom);
+        wm_window_resize(win, work.width - in.left - in.right, work.height - in.top - in.bottom);
     }
 
     wm_damage_window(win);
@@ -1009,6 +1073,92 @@ void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y) {
 
 
 /**
+ * @brief Hides a window in its taskbar entry, handing the focus to the frontmost one left.
+ *
+ * @param win The window, which must be listed on the taskbar to be minimised at all.
+ */
+void wm_window_minimize(wm_window_t* win) {
+
+    if (!win || win->minimized || !wm_window_listed(win)) {
+        return;
+    }
+
+
+    wm_damage_window(win);
+
+    if (win->morph) {
+
+        cairo_surface_destroy(win->morph);
+
+        win->morph = NULL;
+
+        ui_anim_set(&win->morph_anim, 1.0);
+    }
+
+    win->minimized = true;
+
+    win->minimize.ease = UI_EASE_IN_OUT;
+
+    ui_anim_to(&win->minimize, 1.0, UI_MOTION_SLOW, ui_anim_now());
+
+
+    if (wm.drag.window == win) {
+        wm.drag.window = NULL;
+        wm.drag.region = WM_REGION_NONE;
+    }
+
+    if (wm.hover.window == win) {
+
+        ui_anim_set(wm_window_button_hover(win, wm.hover.region), 0.0);
+
+        wm.hover.window = NULL;
+        wm.hover.region = WM_REGION_NONE;
+    }
+
+    if (wm.pointer_focus == win) {
+
+        ui_msg_window_t msg = {.window_id = win->id};
+
+        wm_client_queue(win->client, UI_EV_LEAVE, &msg, sizeof(msg));
+
+        wm.pointer_focus = NULL;
+    }
+
+    if (wm.focused == win) {
+        wm_window_focus(wm_window_topmost());
+    }
+
+    wm_taskbar_damage();
+}
+
+
+/**
+ * @brief Brings a minimised window back out of its taskbar entry, in front and focused.
+ *
+ * @param win The window.
+ */
+void wm_window_restore(wm_window_t* win) {
+
+    if (!win || !win->minimized) {
+        return;
+    }
+
+
+    win->minimized = false;
+
+    win->minimize.ease = UI_EASE_IN_OUT;
+
+    ui_anim_to(&win->minimize, 0.0, UI_MOTION_SLOW, ui_anim_now());
+
+    wm_window_raise(win);
+    wm_window_focus(win);
+
+    wm_damage_window(win);
+    wm_taskbar_damage();
+}
+
+
+/**
  * @brief Sets the source to a colour part way between two, each given as four cairo components.
  *
  * @param cr The cairo context.
@@ -1039,7 +1189,7 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     }
 
 
-    const wm_rect_t buttons = wm_window_maximize_rect(win);
+    const wm_rect_t buttons = wm_window_button_rect(win, WM_REGION_MINIMIZE);
 
     const double right = buttons.x - WM_BUTTON_GAP;
     const double left  = f->x + (f->x + f->width - right);
@@ -1122,15 +1272,15 @@ static void wm_window_paint_icon(cairo_t* cr, const wm_window_t* win, const wm_r
  *
  * @param cr The cairo context.
  * @param win The window the button belongs to.
- * @param region WM_REGION_CLOSE or WM_REGION_MAXIMIZE.
+ * @param region WM_REGION_CLOSE, WM_REGION_MAXIMIZE or WM_REGION_MINIMIZE.
  * @param focus How focused the window is, 0 to 1.
  */
-static void wm_window_paint_button(cairo_t* cr, const wm_window_t* win, wm_region_t region, double focus) {
+static void wm_window_paint_button(cairo_t* cr, wm_window_t* win, wm_region_t region, double focus) {
 
     const wm_rect_t r = wm_window_button_rect(win, region);
 
     const bool close   = region == WM_REGION_CLOSE;
-    const double hover = ui_anim_value(close ? &win->hover_close : &win->hover_maximize, wm.frame_time);
+    const double hover = ui_anim_value(wm_window_button_hover(win, region), wm.frame_time);
     const bool pressed = wm.hover.window == win && wm.hover.region == region && wm.drag.window == win && wm.drag.region == region;
 
     const double cx = r.x + r.width / 2.0;
@@ -1183,6 +1333,11 @@ static void wm_window_paint_button(cairo_t* cr, const wm_window_t* win, wm_regio
 
         cairo_move_to(cr, cx + h, cy - h);
         cairo_line_to(cr, cx - h, cy + h);
+
+    } else if (region == WM_REGION_MINIMIZE) {
+
+        cairo_move_to(cr, cx - h, cy);
+        cairo_line_to(cr, cx + h, cy);
 
     } else if (win->maximized) {
 
@@ -1279,6 +1434,7 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
 
         wm_window_paint_icon(cr, win, &f, focus);
         wm_window_paint_title(cr, win, &f, focus);
+        wm_window_paint_button(cr, win, WM_REGION_MINIMIZE, focus);
         wm_window_paint_button(cr, win, WM_REGION_MAXIMIZE, focus);
         wm_window_paint_button(cr, win, WM_REGION_CLOSE, focus);
     }
@@ -1409,7 +1565,51 @@ static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
 
 
 /**
- * @brief Draws a window as it is this frame: growing in, morphing, or still.
+ * @brief Draws a window on its way into its taskbar entry or back out, shrinking towards it and fading.
+ *
+ * @param cr The cairo context.
+ * @param win The window.
+ * @param t How far it has gone, 0 where it stands to 1 inside the entry.
+ */
+static void wm_window_paint_minimizing(cairo_t* cr, wm_window_t* win, double t) {
+
+    const wm_rect_t f  = wm_window_frame(win);
+    const wm_rect_t to = wm_taskbar_entry_rect(win);
+
+    if (f.width <= 0 || f.height <= 0) {
+        return;
+    }
+
+
+    const double end   = WM_MIN((double)to.width / f.width, (double)to.height / f.height);
+    const double scale = ui_lerp(1.0, end, t);
+
+    const double fx = f.x + f.width / 2.0;
+    const double fy = f.y + f.height / 2.0;
+
+    const double cx = ui_lerp(fx, to.x + to.width / 2.0, t);
+    const double cy = ui_lerp(fy, to.y + to.height / 2.0, t);
+
+
+    cairo_save(cr);
+
+    cairo_push_group(cr);
+
+    cairo_translate(cr, cx, cy);
+    cairo_scale(cr, scale, scale);
+    cairo_translate(cr, -fx, -fy);
+
+    wm_window_paint_still(cr, win);
+
+    cairo_pop_group_to_source(cr);
+    cairo_paint_with_alpha(cr, 1.0 - t);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws a window as it is this frame: minimising, growing in, morphing, or still.
  *
  * @param cr The cairo context to draw with.
  * @param win The window to draw.
@@ -1417,6 +1617,18 @@ static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
 void wm_window_paint(cairo_t* cr, wm_window_t* win) {
 
     if (!win->committed) {
+        return;
+    }
+
+
+    const double gone = ui_anim_value(&win->minimize, wm.frame_time);
+
+    if (gone >= 1.0) {
+        return;
+    }
+
+    if (gone > 0.0) {
+        wm_window_paint_minimizing(cr, win, gone);
         return;
     }
 

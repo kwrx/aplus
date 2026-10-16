@@ -361,6 +361,7 @@ static int wm_client_handle_set_title(wm_client_t* client, const uint8_t* payloa
     win->title[UI_TITLE_MAX - 1] = '\0';
 
     wm_damage_window(win);
+    wm_taskbar_damage();
 
     return 0;
 }

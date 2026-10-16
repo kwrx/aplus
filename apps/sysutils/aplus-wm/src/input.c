@@ -305,6 +305,7 @@ static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
 
         case WM_REGION_CLOSE:
         case WM_REGION_MAXIMIZE:
+        case WM_REGION_MINIMIZE:
             return WM_CURSOR_HAND;
 
         default:
@@ -347,10 +348,10 @@ static void input_begin_drag(wm_window_t* win, wm_region_t region) {
  * @brief Reports whether a region is one of the titlebar buttons.
  *
  * @param region The region.
- * @return true for the close and maximise buttons.
+ * @return true for the close, maximise and minimise buttons.
  */
 static bool input_is_button(wm_region_t region) {
-    return region == WM_REGION_CLOSE || region == WM_REGION_MAXIMIZE;
+    return region == WM_REGION_CLOSE || region == WM_REGION_MAXIMIZE || region == WM_REGION_MINIMIZE;
 }
 
 
@@ -363,9 +364,7 @@ static bool input_is_button(wm_region_t region) {
  */
 static void input_light_button(wm_window_t* win, wm_region_t region, bool lit) {
 
-    ui_anim_t* anim = region == WM_REGION_CLOSE ? &win->hover_close : &win->hover_maximize;
-
-    ui_anim_to(anim, lit ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
+    ui_anim_to(wm_window_button_hover(win, region), lit ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
 
     const wm_rect_t r = wm_window_button_rect(win, region);
 
@@ -526,6 +525,10 @@ static void input_handle_button_left(uint8_t down) {
 
     if (!down) {
 
+        if (wm_taskbar_release(wm.pointer.x, wm.pointer.y)) {
+            return;
+        }
+
         if (wm.drag.window) {
 
             wm_window_t* win      = wm.drag.window;
@@ -545,6 +548,8 @@ static void input_handle_button_left(uint8_t down) {
 
                     if (was == WM_REGION_CLOSE) {
                         wm_window_request_close(win);
+                    } else if (was == WM_REGION_MINIMIZE) {
+                        wm_window_minimize(win);
                     } else {
                         wm_window_toggle_maximize(win);
                     }
@@ -581,6 +586,11 @@ static void input_handle_button_left(uint8_t down) {
     wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win);
 
     if (region == WM_REGION_NONE) {
+        return;
+    }
+
+    if (region == WM_REGION_TASKBAR) {
+        wm_taskbar_press(wm.pointer.x, wm.pointer.y);
         return;
     }
 
@@ -710,6 +720,8 @@ static void input_pointer_moved(const wm_rect_t* old) {
 
 
     input_update_hover(over, region);
+
+    wm_taskbar_hover(wm.pointer.x, wm.pointer.y);
 
     if (wm.drag.window) {
 

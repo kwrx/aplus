@@ -84,8 +84,8 @@ $(SYSROOT)/usr/share/icons/aplus/48x48/ui-hello.png: assets/ui-hello.png
 
 ## In the titlebar
 
-`aplus-wm` draws every decorated window's icon at the left end of its titlebar, 20 pixels
-square, out of the same theme. A window names it with `ui_window_set_icon()` and starts out
+`aplus-wm` draws every decorated window's icon at the left end of its titlebar, and again on
+its taskbar entry, 20 pixels square, out of the same theme. A window names it with `ui_window_set_icon()` and starts out
 naming the program it belongs to, so an application that installs an icon under the name it is
 run as has it in the titlebar as well as in the launcher, with no code. One that does not gets
 `application-x-executable`. The server takes names only, never paths — see

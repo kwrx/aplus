@@ -91,9 +91,16 @@ int wm_animate(uint64_t now) {
 
         bool whole   = false;
         bool buttons = false;
+        bool bar     = false;
+        bool flight  = false;
 
         running |= wm_anim_step(&win->appear, now, &whole);
-        running |= wm_anim_step(&win->focus, now, &whole);
+        running |= wm_anim_step(&win->focus, now, &bar);
+        running |= wm_anim_step(&win->minimize, now, &flight);
+
+        whole |= bar;
+
+        running |= wm_anim_step(&win->hover_task, now, &bar);
 
         if (win->morph) {
 
@@ -112,7 +119,17 @@ int wm_animate(uint64_t now) {
 
         running |= wm_anim_step(&win->hover_close, now, &buttons);
         running |= wm_anim_step(&win->hover_maximize, now, &buttons);
+        running |= wm_anim_step(&win->hover_minimize, now, &buttons);
 
+
+        if (flight) {
+
+            const wm_rect_t shadow = wm_window_shadow_rect(win);
+            const wm_rect_t entry  = wm_taskbar_entry_rect(win);
+            const wm_rect_t path   = wm_rect_union(&shadow, &entry);
+
+            wm_damage(&path);
+        }
 
         if (whole) {
 
@@ -122,10 +139,25 @@ int wm_animate(uint64_t now) {
 
             const wm_rect_t close    = wm_window_close_rect(win);
             const wm_rect_t maximize = wm_window_maximize_rect(win);
+            const wm_rect_t minimize = wm_window_button_rect(win, WM_REGION_MINIMIZE);
 
             wm_damage(&close);
             wm_damage(&maximize);
+            wm_damage(&minimize);
         }
+
+        if (bar || flight) {
+            wm_taskbar_damage();
+        }
+    }
+
+
+    bool launcher = false;
+
+    running |= wm_anim_step(&wm.taskbar.hover_launcher, now, &launcher);
+
+    if (launcher) {
+        wm_taskbar_damage();
     }
 
 
@@ -205,7 +237,7 @@ cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect) {
  */
 void wm_ghost_create(wm_window_t* win) {
 
-    if (!win->committed) {
+    if (!win->committed || win->minimized) {
         return;
     }
 

@@ -57,7 +57,8 @@ int ui_window_set_icon(ui_window_t* win, const char* name);
 
 `ui_window_create()` blocks until the server has configured the window, stepping over any
 other message that arrives first. The size you asked for is a request — the server clamps to
-at least 80×40 and to what fits — so read the real one back rather than assuming.
+at least 80×40 and to what fits above the taskbar — so read the real one back rather than
+assuming.
 
 Titles are truncated at `UI_TITLE_MAX` (64) bytes including the terminator, in both the
 constructor and `ui_window_set_title()`.
@@ -97,6 +98,7 @@ client:
 | Pointer events | Content area only | Every pixel of the window |
 | Moving | Drag the titlebar, or hold **Super** | Hold **Super** and drag anywhere on it |
 | Resizing | Drag an edge or a corner | Only by asking — `ui_window_request_size()` |
+| Taskbar | An entry, which also minimises it | None, and no minimising |
 
 It still stacks, focuses and casts a shadow like any other window, and `Ctrl+Alt+Q` still
 closes it — which is worth remembering, because without a titlebar button that is the only

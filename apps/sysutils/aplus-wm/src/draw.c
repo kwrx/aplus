@@ -27,6 +27,8 @@
  * The rounded rectangle and the font come from libui, which the widgets are drawn with too.
  */
 
+#include <string.h>
+
 #include <wm.h>
 
 
@@ -48,4 +50,47 @@ cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height)
     }
 
     return surface;
+}
+
+
+/**
+ * @brief Renders a theme icon at a size into a surface of its own, falling back to WM_ICON_FALLBACK.
+ *
+ * The copy is the caller's: libui's cache destroys its own surfaces once other icons push them out.
+ *
+ * @param name A name in the icon theme; a path, a name the theme lacks, or NULL gets the fallback.
+ * @param size The width and height in pixels.
+ * @return The surface, or NULL when not even the fallback can be loaded.
+ */
+cairo_surface_t* wm_icon_create(const char* name, int size) {
+
+    cairo_surface_t* source = NULL;
+
+    if (name && *name && !strchr(name, '/')) {
+        source = ui_icon_load(name, size);
+    }
+
+    if (!source) {
+        source = ui_icon_load(WM_ICON_FALLBACK, size);
+    }
+
+    if (!source) {
+        return NULL;
+    }
+
+
+    cairo_surface_t* icon = wm_surface_create(CAIRO_FORMAT_ARGB32, size, size);
+
+    if (!icon) {
+        return NULL;
+    }
+
+
+    cairo_t* cr = cairo_create(icon);
+
+    ui_draw_icon(cr, (ui_rect_t){0, 0, size, size}, source);
+
+    cairo_destroy(cr);
+
+    return icon;
 }

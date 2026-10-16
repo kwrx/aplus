@@ -142,6 +142,28 @@ cairo_font_face_t* ui_font_face(const char* path);
  */
 cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size);
 
+/**
+ * @brief Measures how far a string advances in a font at a size.
+ *
+ * @param text The string.
+ * @param font The font file.
+ * @param size The font size in pixels.
+ * @return The advance in pixels, 0 when the font cannot be loaded.
+ */
+double ui_draw_text_width(const char* text, const char* font, double size);
+
+/**
+ * @brief Copies text into a buffer, cutting it short with an ellipsis when it does not fit a width.
+ *
+ * @param out Receives the text, always NUL terminated.
+ * @param size The size of that buffer.
+ * @param text The string to fit.
+ * @param font The font file it will be drawn with.
+ * @param fsize The font size in pixels.
+ * @param max_width The width to fit it into.
+ */
+void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width);
+
 
 #ifdef __cplusplus
 }

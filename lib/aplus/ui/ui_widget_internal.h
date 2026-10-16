@@ -358,8 +358,6 @@ void ui_draw_set_color(cairo_t* cr, ui_color_t color);
 const char* ui_draw_font(const ui_theme_t* theme, ui_font_weight_t weight);
 ui_color_t ui_color_alpha(ui_color_t color, double alpha);
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align);
-double ui_draw_text_width(const char* text, const char* font, double size);
-void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width);
 
 /**
  * @brief Pulls a colour back towards the backdrop, which is how a disabled control is drawn.
