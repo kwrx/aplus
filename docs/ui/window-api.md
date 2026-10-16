@@ -52,6 +52,7 @@ uint32_t  ui_window_id(ui_window_t* win);
 uint32_t  ui_window_flags(ui_window_t* win);
 
 int ui_window_set_title(ui_window_t* win, const char* title);
+int ui_window_set_icon(ui_window_t* win, const char* name);
 ```
 
 `ui_window_create()` blocks until the server has configured the window, stepping over any
@@ -60,6 +61,13 @@ at least 80×40 and to what fits — so read the real one back rather than assum
 
 Titles are truncated at `UI_TITLE_MAX` (64) bytes including the terminator, in both the
 constructor and `ui_window_set_title()`.
+
+`ui_window_set_icon()` names the icon the server draws at the left of the titlebar, as an
+[icon theme](icons.md) name. A window starts out with the program's own name, which is what its
+desktop entry's `Icon` key holds as well, so most applications never call it. A name the
+server's theme lacks gets the generic icon rather than none. Unlike a title, a name too long
+for `UI_ICON_NAME_MAX` (128 bytes, terminator included) is refused with `ENAMETOOLONG`, since
+cutting it short would name some other icon.
 
 `ui_window_destroy()` tells the server and detaches the surface. The window id is the server's
 handle for it and the field every event carries.

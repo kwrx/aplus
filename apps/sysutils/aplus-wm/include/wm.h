@@ -158,6 +158,14 @@
 #define WM_BUTTON_GAP    6
 #define WM_BUTTON_GLYPH  8
 
+/**
+ * @brief The titlebar icon, in the slot that mirrors the close button, dimmed like the title when idle.
+ */
+
+#define WM_ICON_SIZE     20
+#define WM_ICON_IDLE     0.55
+#define WM_ICON_FALLBACK "application-x-executable"
+
 
 /**
  * @brief Keyboard modifiers, as a mask over whatever is held right now; left and right fold into one bit.
@@ -289,6 +297,10 @@ typedef struct wm_window {
     bool committed;
 
     char title[UI_TITLE_MAX];
+
+    //? Already scaled to WM_ICON_SIZE, and a copy rather than libui's cached surface,
+    //? which the cache destroys once other icons push it out.
+    cairo_surface_t* icon;
 
     //? Position of the *content* area on screen. The frame is derived from it.
     int x;
@@ -530,6 +542,7 @@ void wm_keys_reap(void);
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags);
 void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
+void wm_window_set_icon(wm_window_t* win, const char* name);
 wm_window_t* wm_window_from_id(uint32_t id);
 bool wm_window_borderless(const wm_window_t* win);
 bool wm_window_centered(const wm_window_t* win);

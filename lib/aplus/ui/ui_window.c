@@ -147,6 +147,23 @@ int ui_window_apply_configure(ui_window_t* win) {
 }
 
 
+/**
+ * @brief Reports the icon a window starts with: the program's own name, which is what its desktop entry calls it too.
+ *
+ * @return The name, or NULL when the program has none that fits UI_ICON_NAME_MAX.
+ */
+static const char* ui_window_default_icon(void) {
+
+    const char* name = program_invocation_short_name;
+
+    if (!name || !*name || strlen(name) >= UI_ICON_NAME_MAX) {
+        return NULL;
+    }
+
+    return name;
+}
+
+
 ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, const char* title) {
     return ui_window_create_ex(conn, width, height, title, UI_WINDOW_DECORATED);
 }
@@ -263,6 +280,14 @@ ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, c
 
     win->next     = conn->windows;
     conn->windows = win;
+
+
+    const char* icon = ui_window_default_icon();
+
+    if (icon && ui_window_set_icon(win, icon) < 0) {
+        ui_window_destroy(win);
+        return NULL;
+    }
 
     return win;
 }
@@ -470,4 +495,31 @@ int ui_window_set_title(ui_window_t* win, const char* title) {
     }
 
     return ui_send_msg(win->conn->fd, UI_REQ_SET_TITLE, &req, sizeof(req));
+}
+
+
+int ui_window_set_icon(ui_window_t* win, const char* name) {
+
+    if (!win) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (name && strlen(name) >= UI_ICON_NAME_MAX) {
+        errno = ENAMETOOLONG;
+        return -1;
+    }
+
+
+    ui_msg_set_icon_t req;
+
+    memset(&req, 0, sizeof(req));
+
+    req.window_id = win->id;
+
+    if (name) {
+        strcpy(req.icon, name);
+    }
+
+    return ui_send_msg(win->conn->fd, UI_REQ_SET_ICON, &req, sizeof(req));
 }
