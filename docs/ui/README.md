@@ -38,7 +38,7 @@ The widget layer is built on the public surface API and nothing else, so the two
 freely: a view can be driven from your own event loop, and the raw pixels stay reachable
 through `ui_window_pixels()` for the parts a widget cannot express.
 
-Neither layer draws window decorations. The titlebar, borders, shadow, close and maximise
+Neither layer draws window decorations. The titlebar and its icon, borders, shadow, close and maximise
 buttons and resize grips all belong to `aplus-wm`, and the coordinates a client sees — the size it is
 configured with, the pointer positions it receives — are relative to the content area
 inside them. A window created with `UI_WINDOW_BORDERLESS` gets none of them and is handed

@@ -439,6 +439,8 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
         win->y = wm.display.height - win->height - in.bottom;
     }
 
+    wm_window_set_icon(win, NULL);
+
 
     win->next  = wm.windows;
     wm.windows = win;
@@ -446,6 +448,53 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
     wm_damage_window(win);
 
     return win;
+}
+
+
+/**
+ * @brief Gives a window the icon its titlebar shows, scaled here once so that painting it is a plain copy.
+ *
+ * @param win The window.
+ * @param name A name in the server's icon theme; a path, a name the theme lacks, or NULL gets WM_ICON_FALLBACK.
+ */
+void wm_window_set_icon(wm_window_t* win, const char* name) {
+
+    cairo_surface_t* source = NULL;
+
+    if (name && *name && !strchr(name, '/')) {
+        source = ui_icon_load(name, WM_ICON_SIZE);
+    }
+
+    if (!source) {
+        source = ui_icon_load(WM_ICON_FALLBACK, WM_ICON_SIZE);
+    }
+
+    if (!source) {
+        return;
+    }
+
+
+    cairo_surface_t* icon = wm_surface_create(CAIRO_FORMAT_ARGB32, WM_ICON_SIZE, WM_ICON_SIZE);
+
+    if (!icon) {
+        return;
+    }
+
+
+    cairo_t* cr = cairo_create(icon);
+
+    ui_draw_icon(cr, (ui_rect_t){0, 0, WM_ICON_SIZE, WM_ICON_SIZE}, source);
+
+    cairo_destroy(cr);
+
+
+    if (win->icon) {
+        cairo_surface_destroy(win->icon);
+    }
+
+    win->icon = icon;
+
+    wm_damage_window(win);
 }
 
 
@@ -517,6 +566,11 @@ void wm_window_destroy(wm_window_t* win) {
     if (win->morph) {
         cairo_surface_destroy(win->morph);
         win->morph = NULL;
+    }
+
+    if (win->icon) {
+        cairo_surface_destroy(win->icon);
+        win->icon = NULL;
     }
 
     free(win);
@@ -1033,6 +1087,37 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
 
 
 /**
+ * @brief Draws the icon at the left end of the titlebar, in the slot that mirrors the close button.
+ *
+ * @param cr The cairo context.
+ * @param win The window.
+ * @param f The window's frame.
+ * @param focus How focused the window is, 0 to 1.
+ */
+static void wm_window_paint_icon(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, double focus) {
+
+    if (!win->icon) {
+        return;
+    }
+
+
+    const int x = f->x + WM_BUTTON_MARGIN + (WM_BUTTON_SIZE - WM_ICON_SIZE) / 2;
+    const int y = f->y + (WM_TITLEBAR_HEIGHT - WM_ICON_SIZE) / 2;
+
+    cairo_save(cr);
+
+    cairo_rectangle(cr, x, y, WM_ICON_SIZE, WM_ICON_SIZE);
+    cairo_clip(cr);
+
+    cairo_set_source_surface(cr, win->icon, x, y);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
+    cairo_paint_with_alpha(cr, ui_lerp(WM_ICON_IDLE, 1.0, focus));
+
+    cairo_restore(cr);
+}
+
+
+/**
  * @brief Draws one round titlebar button: a faint disc that lights up under the pointer, and its glyph.
  *
  * @param cr The cairo context.
@@ -1192,6 +1277,7 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
         cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
 
 
+        wm_window_paint_icon(cr, win, &f, focus);
         wm_window_paint_title(cr, win, &f, focus);
         wm_window_paint_button(cr, win, WM_REGION_MAXIMIZE, focus);
         wm_window_paint_button(cr, win, WM_REGION_CLOSE, focus);

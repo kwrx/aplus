@@ -43,6 +43,11 @@ extern "C" {
 #define UI_TITLE_MAX        64
 
 /**
+ * @brief How long an icon name may be, terminator included; a longer one resolves to nothing.
+ */
+#define UI_ICON_NAME_MAX 128
+
+/**
  * @brief How far the server rounds a window's corners off, the same for every window it draws.
  *
  * Here rather than in the server because a client painting its own edge has to trace the
@@ -70,6 +75,13 @@ extern "C" {
  * was created at.
  */
 #define UI_REQ_RESIZE_WINDOW 0x0006
+
+/**
+ * @brief Names the icon the server draws in a window's titlebar, out of the server's own icon theme.
+ *
+ * A server that has never heard of this request drains it and draws no icon.
+ */
+#define UI_REQ_SET_ICON 0x0007
 
 #define UI_EV_HELLO     0x8001
 #define UI_EV_CONFIGURE 0x8002
@@ -195,6 +207,17 @@ typedef struct {
     char title[UI_TITLE_MAX];
 
 } __attribute__((packed)) ui_msg_set_title_t;
+
+
+/**
+ * @brief An icon by theme name, empty for the server's generic one.
+ */
+typedef struct {
+
+    uint32_t window_id;
+    char icon[UI_ICON_NAME_MAX];
+
+} __attribute__((packed)) ui_msg_set_icon_t;
 
 
 typedef struct {
@@ -449,6 +472,15 @@ void ui_window_damage(ui_window_t* win, int x, int y, int width, int height);
 void ui_window_damage_all(ui_window_t* win);
 int ui_window_commit(ui_window_t* win);
 int ui_window_set_title(ui_window_t* win, const char* title);
+
+/**
+ * @brief Names the icon the server draws in the window's titlebar, which starts as the program's own name.
+ *
+ * @param win The window.
+ * @param name A name in the icon theme, or NULL for the server's generic icon.
+ * @return 0, or -1 with errno set: ENAMETOOLONG for a name UI_ICON_NAME_MAX cannot hold.
+ */
+int ui_window_set_icon(ui_window_t* win, const char* name);
 
 /**
  * @brief Waits for the next event on a connection.

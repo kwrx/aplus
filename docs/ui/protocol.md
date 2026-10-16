@@ -13,7 +13,7 @@ implementations from drifting.
 `AF_UNIX`, `SOCK_STREAM`, at `/tmp/aplus-wm.sock` by default.
 
 The socket carries control only. A window's pixels live in a System V shared memory segment
-that both ends map, so the largest thing that ever travels over it is a window title — see
+that both ends map, so the largest thing that ever travels over it is an icon name — see
 [the window surface](#the-window-surface).
 
 There is no `SOCK_SEQPACKET` here, so message boundaries do not survive the transport: every
@@ -51,7 +51,7 @@ typedef struct {
 ```
 
 A payload longer than this is refused by both ends. Nothing in this protocol is large any
-more — the biggest message is a title — but a peer could still name any length it liked, and
+more — the biggest message is an icon name — but a peer could still name any length it liked, and
 the cap is what stops that from becoming an arbitrary allocation.
 
 ## Messages
@@ -67,6 +67,7 @@ have the high bit set.
 | `0x0004` | `UI_REQ_SET_TITLE` | `ui_msg_set_title_t` |
 | `0x0005` | `UI_REQ_DESTROY_WINDOW` | `ui_msg_window_t` |
 | `0x0006` | `UI_REQ_RESIZE_WINDOW` | `ui_msg_resize_t` |
+| `0x0007` | `UI_REQ_SET_ICON` | `ui_msg_set_icon_t` |
 | `0x8001` | `UI_EV_HELLO` | `ui_msg_hello_t` |
 | `0x8002` | `UI_EV_CONFIGURE` | `ui_msg_configure_t` |
 | `0x8003` | `UI_EV_KEY` | `ui_msg_key_t` |
@@ -138,6 +139,11 @@ answer that is not coming.
 Nothing else moved: no payload grew, `ui_msg_configure_t` is untouched, and ARGB32 and RGB24
 have the same stride and the same segment size, so the surface a translucent window is handed
 is the same shape as any other. One flag bit is the whole of what version 6 breaks.
+
+`UI_REQ_SET_ICON` came later and did not bump the version, for the reason the resize request
+gives: a server that drains it draws no icon, which is all a client that never sends it gets
+anyway. A bump would have had every client already linked against version 6 refused at the
+handshake over a request it never makes.
 
 Unlike every other read in the client, the hello reply is read without skipping unknown
 messages: nothing else can legitimately arrive before it.
@@ -309,6 +315,28 @@ nothing re-derives it afterwards, so a window that grows grows downward and to t
 rather than out from the middle. For the launcher, which is the reason this exists, that is
 also what is wanted: its search field stays where it was put while the results below it come
 and go.
+
+## Icons
+
+```c
+typedef struct {
+
+    uint32_t window_id;
+    char icon[UI_ICON_NAME_MAX];
+
+} __attribute__((packed)) ui_msg_set_icon_t;
+```
+
+Names the icon the server draws at the left end of the window's titlebar. It is a name in the
+*server's* icon theme, resolved the way [the lookup](icons.md#the-lookup) describes, and only
+a name: one carrying a `/` is not followed as a path, since that would have the server open
+any file a client cared to name. An empty name, a path, and a name the theme does not hold all
+get the generic `application-x-executable`, and so does a window whose client never sends this
+at all. None of those is an error; a wrong length or someone else's window id is.
+
+`libui` sends one by itself as each window is created, naming the program
+(`program_invocation_short_name`), which is what the program's desktop entry calls its icon
+too. A borderless window has no titlebar, so its icon is never drawn.
 
 ## Commits
 

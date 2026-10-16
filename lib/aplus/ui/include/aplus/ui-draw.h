@@ -71,11 +71,6 @@ void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h,
  */
 #define UI_ICON_THEME_DEFAULT "aplus"
 
-/**
- * @brief How long an icon name may be, terminator included; a longer one resolves to nothing.
- */
-#define UI_ICON_NAME_MAX 128
-
 
 /**
  * @brief Reports the theme being drawn from, which is $UI_ICON_THEME when it names one.
