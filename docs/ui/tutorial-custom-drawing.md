@@ -22,10 +22,12 @@ size_t    ui_window_stride(ui_window_t* win);
 | Stride | `ui_window_stride()` bytes per row — **not** `width * 4` |
 | Origin | Top-left of the content area |
 
-Those pixels are shared memory: the server composites straight out of them, so there is no
-copy and no transfer, and whatever you leave there is what appears on screen.
+Those pixels are a back buffer of your own. The server composites out of a shared memory
+segment behind it, and a commit copies what you damaged from one to the other, so nothing you
+draw is on screen until you commit it, and never half drawn.
 
-Which is also why the stride matters. It is the one the server's cairo surface was built with,
+The back buffer is laid out like that segment, which is why the stride matters. It is the one
+the server's cairo surface was built with,
 usually padded past `width * 4`, and a client that assumes otherwise skews its image
 progressively further down the window. Work a row at a time:
 
@@ -56,10 +58,11 @@ int  ui_window_commit(ui_window_t* win);
 Damage accumulates into a set of up to eight rectangles, which merge into each other only
 where merging is cheaper than keeping them apart — two far-apart corners stay two rectangles
 rather than becoming the box around them (see
-[window-api.md](window-api.md#damage-and-commits)). `ui_window_commit()` sends the set and
-clears it, returning `0` with nothing sent when no damage is outstanding. Each message is a
-rectangle and nothing else (see [protocol.md](protocol.md#commits)), so committing a whole
-surface costs no more than committing one glyph.
+[window-api.md](window-api.md#damage-and-commits)). `ui_window_commit()` copies the set into
+the shared segment, sends it and clears it, returning `0` with nothing sent when no damage is
+outstanding. Each message is a rectangle and nothing else (see
+[protocol.md](protocol.md#commits)); what a bigger rectangle costs is the copy, not the
+message.
 
 Nothing reaches the screen without a commit. A frame that is drawn but never committed is a
 frame the server never hears about.
@@ -118,8 +121,9 @@ the server drops. That is the mechanism, not a bug: a resize racing an in-flight
 becomes a discarded frame rather than an overrun. But a client that never applies a
 configure never paints again, so this is the one event you cannot ignore.
 
-After a successful apply, the buffer contents are gone (it is cleared, or reallocated) and
-the whole surface is marked damaged. Repaint everything, not just what you think changed.
+After a successful apply, the buffer has been reallocated — only what the new size has in
+common with the old carries over — and the whole surface is marked damaged. Repaint
+everything, not just what you think changed.
 
 The full details are in [window-api.md](window-api.md).
 

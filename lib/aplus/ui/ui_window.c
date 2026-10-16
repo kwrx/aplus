@@ -47,27 +47,85 @@ ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id) {
 
 
 /**
- * @brief Lets go of the window's surface, which the server has already removed.
+ * @brief Lets go of the window's surface, which the server has already removed, and frees its back buffer.
  *
  * @param win The window to detach.
  */
 void ui_window_drop_surface(ui_window_t* win) {
 
-    if (!win->pixels) {
+    free(win->back);
+
+    win->back = NULL;
+
+    if (!win->front) {
         return;
     }
 
-    shmdt(win->pixels);
+    shmdt(win->front);
 
-    win->pixels = NULL;
+    win->front  = NULL;
     win->shm_id = -1;
+}
+
+
+/**
+ * @brief Allocates a back buffer of a new size, carrying over the part it shares with the current one.
+ *
+ * @param win The window the buffer is for.
+ * @param width The new width in pixels.
+ * @param height The new height in pixels.
+ * @param stride The new row stride in bytes.
+ * @return The new buffer, or NULL with errno set.
+ */
+static uint32_t* ui_window_alloc_back(ui_window_t* win, int width, int height, size_t stride) {
+
+    uint8_t* back = (uint8_t*)calloc((size_t)height, stride);
+
+    if (!back || !win->back) {
+        return (uint32_t*)back;
+    }
+
+    const size_t row = (size_t)(width < win->width ? width : win->width) * sizeof(uint32_t);
+    const int rows   = height < win->height ? height : win->height;
+
+    for (int y = 0; y < rows; y++) {
+        memcpy(back + (size_t)y * stride, (const uint8_t*)win->back + (size_t)y * win->stride, row);
+    }
+
+    return (uint32_t*)back;
+}
+
+
+/**
+ * @brief Copies a rectangle of the back buffer into the front, where the server composites from.
+ *
+ * @param win The window to copy within.
+ * @param rect The rectangle, inside the window.
+ */
+static void ui_window_flip(ui_window_t* win, const ui_rect_t* rect) {
+
+    const size_t offset = (size_t)rect->y * win->stride + (size_t)rect->x * sizeof(uint32_t);
+    const size_t row    = (size_t)rect->width * sizeof(uint32_t);
+
+    const uint8_t* src = (const uint8_t*)win->back + offset;
+    uint8_t* dst       = (uint8_t*)win->front + offset;
+
+    if (row == win->stride) {
+        memcpy(dst, src, row * (size_t)rect->height);
+        return;
+    }
+
+    for (int y = 0; y < rect->height; y++) {
+        memcpy(dst + (size_t)y * win->stride, src + (size_t)y * win->stride, row);
+    }
 }
 
 
 /**
  * @brief Takes up the surface a UI_EV_CONFIGURE described, along with its size and serial.
  *
- * The new surface is attached before the old one is let go, and the whole of it is damaged.
+ * The new surface is attached before the old one is let go, the back buffer follows its
+ * size, and the whole of it is damaged.
  *
  * @param win The window to attach it to.
  * @param width The new width in pixels.
@@ -91,18 +149,45 @@ int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stri
     }
 
 
-    if (shm_id != win->shm_id || !win->pixels) {
+    uint32_t* back = win->back;
 
-        uint32_t* pixels = (uint32_t*)shmat(shm_id, NULL, 0);
+    if (!back || width != win->width || height != win->height || stride != win->stride) {
 
-        if (pixels == (uint32_t*)-1) {
+        back = ui_window_alloc_back(win, width, height, stride);
+
+        if (!back) {
+            return -1;
+        }
+    }
+
+
+    if (shm_id != win->shm_id || !win->front) {
+
+        uint32_t* front = (uint32_t*)shmat(shm_id, NULL, 0);
+
+        if (front == (uint32_t*)-1) {
+
+            if (back != win->back) {
+                free(back);
+            }
+
             return -1;
         }
 
-        ui_window_drop_surface(win);
+        if (win->front) {
+            shmdt(win->front);
+        }
 
-        win->pixels = pixels;
+        win->front  = front;
         win->shm_id = shm_id;
+    }
+
+
+    if (back != win->back) {
+
+        free(win->back);
+
+        win->back = back;
     }
 
     win->width  = width;
@@ -326,7 +411,7 @@ void ui_window_destroy(ui_window_t* win) {
 
 
 uint32_t* ui_window_pixels(ui_window_t* win) {
-    return win ? win->pixels : NULL;
+    return win ? win->back : NULL;
 }
 
 int ui_window_width(ui_window_t* win) {
@@ -431,7 +516,7 @@ void ui_window_damage_all(ui_window_t* win) {
 
 
 /**
- * @brief Tells the server which parts of the surface changed, one message per rectangle.
+ * @brief Copies the damaged parts of the back buffer to the front and tells the server, one message per rectangle.
  *
  * @param win The window to commit.
  * @return 0 on success, or -1 with errno set.
@@ -453,6 +538,8 @@ int ui_window_commit(ui_window_t* win) {
     ui_msg_commit_t commits[UI_DAMAGE_MAX];
 
     for (size_t i = 0; i < count; i++) {
+
+        ui_window_flip(win, &win->damage.rects[i]);
 
         commits[i].window_id = win->id;
         commits[i].serial    = win->serial;

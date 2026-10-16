@@ -24,14 +24,15 @@ the layer that fits and never has to see the other.
 ```
 
 A window's pixels never go down the socket. The server creates a shared memory segment per
-window and both ends map it, so a client draws into the very memory the compositor reads and a
-commit is a damage rectangle rather than a frame.
+window and both ends map it. A client draws into a back buffer of its own, and a commit copies
+the damaged rectangles into the segment the compositor reads, then sends those rectangles
+rather than a frame.
 
 ## The two layers
 
 | | header | what it gives you | what it costs |
 |---|---|---|---|
-| **Surface layer** | `<aplus/ui.h>` | A connection, a window, a shared `uint32_t*` you write pixels into, damage tracking, commits, and an event queue. | You draw everything, including text. |
+| **Surface layer** | `<aplus/ui.h>` | A connection, a window, a double-buffered `uint32_t*` you write pixels into, damage tracking, commits, and an event queue. | You draw everything, including text. |
 | **Widget layer** | `<aplus/ui-widgets.h>` | A view over that surface, a themed panel/label/button/list set, a grid, hit testing, keyboard focus, damage tracking per widget, and an event loop. | Cairo and FreeType get linked in. |
 
 The widget layer is built on the public surface API and nothing else, so the two mix
@@ -53,7 +54,7 @@ its whole frame instead — see
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
 | `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
-| `lib/aplus/ui/ui_window.c` | Window creation, the shared surface, resize, damage, commits |
+| `lib/aplus/ui/ui_window.c` | Window creation, the shared surface and its back buffer, resize, damage, commits |
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |

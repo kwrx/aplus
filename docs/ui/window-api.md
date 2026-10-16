@@ -183,16 +183,18 @@ ui_panel_set_border(backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.18), 1.0);
 | Stride | `ui_window_stride()` bytes per row — **not** `width * 4` |
 | Origin | Top-left of the content area, inside the server's decorations |
 
-This is not a buffer of your own that gets sent somewhere. It is a shared memory segment the
-server created and composites directly from, so what you write here is what ends up on screen
-with no copy in between, and a commit only says which rectangle changed.
+This is a back buffer of your own. Behind it is a shared memory segment the server created
+and composites from, and `ui_window_commit()` copies each damaged rectangle from one to the
+other before telling the server which ones changed. Nothing you draw is seen until it is
+committed, so the server never composites a frame that is half drawn.
 
-Two things follow from that, and both matter:
+Two things matter when writing into it:
 
-**Index rows by the stride.** Cairo picks the stride for the server's image surface, so it is
+**Index rows by the stride.** The back buffer is laid out exactly like the server's surface,
+so that a commit is a straight copy of rows. Cairo picks the stride for that surface, so it is
 whatever `cairo_format_stride_for_width()` returned for the width — padded to an alignment
-boundary more often than not. Both ends are reading and writing the same bytes, so a client
-assuming `width * 4` skews the image progressively down the window:
+boundary more often than not. A client assuming `width * 4` skews the image progressively
+down the window:
 
 ```c
 uint32_t* row = (uint32_t*)((uint8_t*)ui_window_pixels(win) + (size_t)y * ui_window_stride(win));
@@ -200,14 +202,17 @@ uint32_t* row = (uint32_t*)((uint8_t*)ui_window_pixels(win) + (size_t)y * ui_win
 row[x] = 0xFF000000U | (r << 16) | (g << 8) | b;
 ```
 
-**Hold the pointer no longer than a frame.** The segment is replaced on resize, and
-`ui_window_apply_configure()` is what swaps it — see [Resizing](#resizing). The old one stays
-mapped and writable until then, so a frame already in progress is never pulled out from under;
-what it is not any more is read by the server.
+**Hold the pointer no longer than a frame.** The back buffer is reallocated on resize, along
+with the segment behind it, and `ui_window_apply_configure()` is what swaps them — see
+[Resizing](#resizing). The old ones stay valid until then, so a frame already in progress is
+never pulled out from under; what the new size has in common with the old is carried over, and
+the rest starts out cleared.
 
-Because nothing is copied, this is single buffered: a surface drawn into while it is being
-composited can tear. Double buffering would cost a second surface per window and a copy per
-frame, which is the thing the shared segment removes.
+The cost of the double buffering is a second surface per window, private to the client, and a
+copy per frame of the rectangles it damaged rather than of the whole window. The copy into the
+segment is not synchronised with compositing, but it only ever moves finished pixels, and the
+commit sent after it damages the same rectangles again, so a composite that lands mid-copy is
+put right on the next frame.
 
 For a cairo context over these pixels, use `CAIRO_FORMAT_RGB24` — see
 [tutorial-custom-drawing.md](tutorial-custom-drawing.md#your-own-cairo-context).
@@ -231,15 +236,14 @@ claiming everything between them. The old behaviour is still reachable: damage t
 spread over the window collapses into a box the same way, because by then merging is the
 cheaper of the two.
 
-`ui_window_commit()` sends the set and clears it, returning `0` without sending anything when
-there is no damage outstanding. A frame that is drawn but never committed is a frame the
-server never hears about.
+`ui_window_commit()` copies the set out of the back buffer, sends it and clears it, returning
+`0` without sending anything when there is no damage outstanding. A frame that is drawn but
+never committed is a frame the server never sees.
 
-A commit is one fixed-size message per rectangle, whatever the size of the region — the pixels
-are already where the server reads them from, so committing the whole surface costs what
-committing a single character cell costs, and a frame costs at most eight of those. There is
-no reason to be clever about batching frames; the reason to keep damage tight is the
-compositing the server then does, not the message.
+A commit is one fixed-size message per rectangle, whatever the size of the region, and a frame
+costs at most eight of those. What grows with the damage is the copy into the segment and the
+compositing the server then does. There is no reason to be clever about batching frames, and
+every reason to keep damage tight.
 
 ### Resizing
 
@@ -262,8 +266,8 @@ This is the one piece of the surface API with a rule attached.
 When a `UI_EVENT_CONFIGURE` arrives, `ui_next_event()` records the new size, serial and
 segment but changes nothing: swapping the surface from the event path would unmap it under a
 thread still drawing into it. The resize happens when you call `ui_window_apply_configure()`,
-from wherever drawing is serialised. It attaches the new segment, detaches the old one, and
-takes up the new size and serial.
+from wherever drawing is serialised. It attaches the new segment, detaches the old one,
+reallocates the back buffer to match, and takes up the new size and serial.
 
 | Return | |
 |---|---|
@@ -279,7 +283,7 @@ racing an in-flight frame harmless rather than an overrun, and it is also why a 
 never applies a configure never paints again. This is the one event that cannot be ignored.
 
 After a successful apply, read `ui_window_pixels()` again rather than reusing what it returned
-before: a new size means a new segment at a new address. The whole surface is already marked
+before: a new size means a new back buffer at a new address. The whole surface is already marked
 damaged, and repainting all of it is the right response — the server copies the old contents
 across so that a window does not go black mid-drag, but only the client knows what belongs
 there at the new size.
@@ -437,10 +441,9 @@ writes and corrupt the stream — every message is a header write followed by a 
 and nothing holds a lock across the pair. If you split event handling from drawing, keep all
 sending on one side.
 
-The surface itself has no locking either, and both ends have it mapped: the server composites
-from it whenever it likes, without waiting for a commit to say it may. Two threads drawing into
-one window race each other exactly as they would in any other shared buffer, and a single
-thread drawing while the server composites can tear.
+The back buffer has no locking either. Two threads drawing into one window race each other
+exactly as they would in any other buffer, so serialise drawing and committing. The server
+only ever sees what a commit copied out, so drawing while it composites does not tear.
 
 ## Framing helpers
 

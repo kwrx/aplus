@@ -424,7 +424,7 @@ ui_window_t* ui_window_create_ex(ui_connection_t* conn, int width, int height, c
 void ui_window_destroy(ui_window_t* win);
 
 /**
- * @brief Reports the window's surface, shared with the server, valid until the next ui_window_apply_configure().
+ * @brief Reports the window's back buffer, which ui_window_commit() copies to the server, valid until the next ui_window_apply_configure().
  */
 uint32_t* ui_window_pixels(ui_window_t* win);
 int ui_window_width(ui_window_t* win);

@@ -344,10 +344,10 @@ typedef struct wm_window {
     uint32_t serial;
 
     //? The window's surface, and the shared memory segment it lives in. The server creates
-    //? the segment and hands its id to the client, which maps the same frames and draws
-    //? straight into them -- so `backstore` is at once what the client paints and what
-    //? compositing reads, with no copy in between and nothing but a damage rectangle
-    //? travelling over the socket.
+    //? the segment and hands its id to the client, which maps the same frames and copies
+    //? each finished frame into them from a back buffer of its own as it commits -- so
+    //? `backstore` is what compositing reads, and nothing but a damage rectangle travels
+    //? over the socket.
     cairo_surface_t* backstore;
 
     int shm_id;

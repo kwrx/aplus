@@ -201,9 +201,10 @@ null-terminated by the sender's intent but always written from a zeroed struct.
 ## The window surface
 
 A window's pixels are a System V shared memory segment. The server creates it, wraps its own
-cairo backstore over it, and names it in the configure; the client attaches it with `shmat(2)`,
-and `ui_window_pixels()` hands back a pointer into the very memory compositing reads. There is
-no copy in either direction, and no pixel ever goes down the socket.
+cairo backstore over it, and names it in the configure; the client attaches it with `shmat(2)`.
+`libui` keeps a back buffer of the same size and stride beside it, which is what
+`ui_window_pixels()` hands back, and copies the damaged rectangles across as it commits. No
+pixel ever goes down the socket.
 
 ```c
 typedef struct {
@@ -243,9 +244,12 @@ either way — so nothing about the configure, the bounds check or the segment c
 what the fourth byte of a pixel means. Which of the two a window gets is settled when it is
 created and does not change.
 
-This is single buffered. A surface drawn into while it is being composited can tear; double
-buffering would cost a second surface per window and a copy per frame, which is precisely what
-the shared segment exists to avoid.
+The segment is the front buffer, and the server composites from it whenever it likes. The
+client's back buffer is what makes that safe: a frame is drawn there in private and reaches the
+segment only as a copy of the rectangles it damaged, so the server never reads one half drawn.
+The copy is not synchronised with compositing, but it moves only finished pixels, and the
+commit sent after it damages the same rectangles again. None of this is on the wire: a client
+that writes into the segment directly is single buffered, and can tear.
 
 ### Who owns the segment
 
@@ -354,8 +358,8 @@ typedef struct {
 } __attribute__((packed)) ui_msg_commit_t;
 ```
 
-Nothing follows this struct. The client has already written the pixels through the mapping
-both ends share; the commit is a statement about which rectangle changed, and the server
+Nothing follows this struct. The client has already copied the pixels into the mapping both
+ends share; the commit is a statement about which rectangle changed, and the server
 damages that region of the screen. One fixed-size message however much was drawn — a
 full-screen repaint costs what a single character cell costs. The server validates the payload
 length against `sizeof()` and drops the message otherwise.
