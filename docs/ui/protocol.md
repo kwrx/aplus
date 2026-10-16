@@ -173,7 +173,8 @@ held down as the only way to drag it. What it does keep is the corners: every wi
 server draws is rounded off by `UI_WINDOW_RADIUS`, decorated or not, and a borderless one is
 clipped to that curve with its shadow cast around the same one. It can still ask for a size
 with [`UI_REQ_RESIZE_WINDOW`](#resizing). `UI_WINDOW_CENTERED` asks for the frame to be placed
-in the middle of the display rather than on the cascade. `UI_WINDOW_TRANSLUCENT` asks for
+exactly in the middle of the display. Every other window starts there too, but steps down and
+right from a window already sitting in that spot. `UI_WINDOW_TRANSLUCENT` asks for
 [a surface that carries alpha](#the-window-surface).
 
 Placement is a creation flag because it is the only point at which a client has any say in
@@ -299,6 +300,9 @@ sense: the server clamps it the way it clamps a creation, and answers with a
 `UI_EV_CONFIGURE` naming the size it settled on — or with nothing at all, when that is the
 size the window already had. A client that treats the request as having worked will paint at
 a size it was never given.
+
+A maximised window is the exception: it keeps filling the display, and the request is answered
+with a `UI_EV_CONFIGURE` naming the size it already has.
 
 The window keeps its origin. `UI_WINDOW_CENTERED` places a window when it is created and
 nothing re-derives it afterwards, so a window that grows grows downward and to the right

@@ -29,38 +29,39 @@
 /**
  * @brief The scheme a client wakes up with, continuing the frame the window manager draws around it.
  *
- * The chrome is hueless and `primary` is the one saturated colour; hover and active are white washes.
+ * The chrome is hueless and `primary` is the one saturated colour, which the focus ring shares.
  */
 static const ui_theme_t ui_theme_default = {
 
     .background     = UI_RGB(0x2B, 0x2B, 0x2B),
-    .surface        = UI_RGB(0x35, 0x35, 0x35),
-    .surface_sunken = UI_RGB(0x16, 0x16, 0x16),
+    .surface        = UI_RGB(0x34, 0x34, 0x34),
+    .surface_sunken = UI_RGB(0x1C, 0x1C, 0x1C),
 
-    .primary    = UI_RGB(0x3D, 0x7E, 0xE0),
+    .primary    = UI_RGB(0x35, 0x84, 0xE4),
     .on_primary = UI_RGB(0xFF, 0xFF, 0xFF),
 
-    .secondary    = UI_RGB(0x3C, 0x3C, 0x3C),
-    .on_secondary = UI_RGB(0xE8, 0xE8, 0xE8),
+    .secondary    = UI_RGB(0x3A, 0x3A, 0x3A),
+    .on_secondary = UI_RGB(0xEE, 0xEE, 0xEE),
 
-    .danger    = UI_RGB(0xD6, 0x45, 0x4D),
+    .danger    = UI_RGB(0xE5, 0x48, 0x4D),
     .on_danger = UI_RGB(0xFF, 0xFF, 0xFF),
 
-    .hover  = UI_RGBA(0xFF, 0xFF, 0xFF, 0.09),
-    .active = UI_RGBA(0xFF, 0xFF, 0xFF, 0.20),
+    .hover  = UI_RGBA(0xFF, 0xFF, 0xFF, 0.07),
+    .active = UI_RGBA(0xFF, 0xFF, 0xFF, 0.14),
 
-    .border     = UI_RGBA(0xFF, 0xFF, 0xFF, 0.08),
-    .focus_ring = UI_RGBA(0xFF, 0xFF, 0xFF, 0.18),
+    .border     = UI_RGBA(0xFF, 0xFF, 0xFF, 0.07),
+    .focus_ring = UI_RGBA(0x35, 0x84, 0xE4, 0.75),
 
-    .text       = UI_RGB(0xE8, 0xE8, 0xE8),
-    .text_muted = UI_RGB(0x7F, 0x7F, 0x7F),
+    .text       = UI_RGB(0xEE, 0xEE, 0xEE),
+    .text_muted = UI_RGB(0x9A, 0x9A, 0x9A),
 
     .disabled_fade = 0.55,
 
-    .corner_radius = 10.0,
+    .corner_radius = 8.0,
     .font_size     = 14.0,
 
     .font_regular = "/usr/share/fonts/ttf/Ubuntu-R.ttf",
+    .font_medium  = "/usr/share/fonts/ttf/Ubuntu-M.ttf",
     .font_bold    = "/usr/share/fonts/ttf/Ubuntu-B.ttf",
 };
 

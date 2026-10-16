@@ -43,6 +43,7 @@
 #include <aplus/input.h>
 #include <aplus/ui-draw.h>
 #include <aplus/ui-keymap.h>
+#include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
 #include <pthread.h>
@@ -67,6 +68,40 @@
  * @brief How many codepoints keep the glyph they map to one array lookup away.
  */
 #define ATERM_GLYPH_CACHE_MAX 512
+
+/**
+ * @brief The space between the window's edge and the character cells.
+ */
+#define ATERM_PADDING 10
+
+/**
+ * @brief The colour codes libtsm stamps a cell with when it uses the default foreground and background.
+ */
+#define ATERM_CODE_FOREGROUND 16
+#define ATERM_CODE_BACKGROUND 17
+
+
+/**
+ * @brief The sixteen ANSI colours, normal then bright, drawn instead of libtsm's own.
+ */
+static const uint8_t aterm_palette[16][3] = {
+    {0x24, 0x1F, 0x31},
+    {0xC0, 0x1C, 0x28},
+    {0x2E, 0xC2, 0x7E},
+    {0xF5, 0xC2, 0x11},
+    {0x1E, 0x78, 0xE4},
+    {0x98, 0x41, 0xBB},
+    {0x0A, 0xB9, 0xDC},
+    {0xC0, 0xBF, 0xBC},
+    {0x5E, 0x5C, 0x64},
+    {0xED, 0x33, 0x3B},
+    {0x57, 0xE3, 0x89},
+    {0xF8, 0xE4, 0x5C},
+    {0x51, 0xA1, 0xFF},
+    {0xC0, 0x61, 0xCB},
+    {0x4F, 0xD2, 0xFD},
+    {0xF6, 0xF5, 0xF4},
+};
 
 
 /**
@@ -374,6 +409,52 @@ static unsigned long aterm_glyph_index(aterm_font_t* font, uint32_t codepoint) {
 
 
 /**
+ * @brief Resolves one of a cell's colours, putting the theme's and the palette's in place of libtsm's own.
+ *
+ * @param code The colour code libtsm gave the cell.
+ * @param r The red component it resolved the code to.
+ * @param g The green component it resolved the code to.
+ * @param b The blue component it resolved the code to.
+ * @return The colour to draw with.
+ */
+static ui_color_t aterm_color(int8_t code, uint8_t r, uint8_t g, uint8_t b) {
+
+    if (code == ATERM_CODE_BACKGROUND) {
+        return ui_theme_dark()->surface_sunken;
+    }
+
+    if (code == ATERM_CODE_FOREGROUND) {
+        return ui_theme_dark()->text;
+    }
+
+    if (code >= 0 && code < 16) {
+        return ui_rgb(aterm_palette[code][0], aterm_palette[code][1], aterm_palette[code][2]);
+    }
+
+    return ui_rgb(r, g, b);
+}
+
+
+/**
+ * @brief Paints the whole surface the default background, padding included.
+ */
+static void aterm_clear(void) {
+
+    const ui_color_t bg = ui_theme_dark()->surface_sunken;
+
+    cairo_save(context.cr);
+
+    cairo_set_operator(context.cr, CAIRO_OPERATOR_SOURCE);
+    cairo_set_source_rgb(context.cr, bg.r, bg.g, bg.b);
+    cairo_paint(context.cr);
+
+    cairo_restore(context.cr);
+
+    ui_window_damage_all(context.win);
+}
+
+
+/**
  * @brief Draws one cell: its background, the glyph standing in it, and the underline under that.
  *
  * Clipped to the cell, because only the cells libtsm reports as changed are repainted and a
@@ -396,21 +477,24 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     }
 
 
-    const int x = (int)posx * context.font.width;
-    const int y = (int)posy * context.font.height;
+    const int x = ATERM_PADDING + (int)posx * context.font.width;
+    const int y = ATERM_PADDING + (int)posy * context.font.height;
 
     if (x + context.font.width > ui_window_width(context.win) || y + context.font.height > ui_window_height(context.win)) {
         return 0;
     }
 
 
-    const double fr = (attr->inverse ? attr->br : attr->fr) / 255.0;
-    const double fg = (attr->inverse ? attr->bg : attr->fg) / 255.0;
-    const double fb = (attr->inverse ? attr->bb : attr->fb) / 255.0;
+    const ui_color_t front = aterm_color(attr->fccode, attr->fr, attr->fg, attr->fb);
+    const ui_color_t back  = aterm_color(attr->bccode, attr->br, attr->bg, attr->bb);
 
-    const double br = (attr->inverse ? attr->fr : attr->br) / 255.0;
-    const double bg = (attr->inverse ? attr->fg : attr->bg) / 255.0;
-    const double bb = (attr->inverse ? attr->fb : attr->bb) / 255.0;
+    const double fr = attr->inverse ? back.r : front.r;
+    const double fg = attr->inverse ? back.g : front.g;
+    const double fb = attr->inverse ? back.b : front.b;
+
+    const double br = attr->inverse ? front.r : back.r;
+    const double bg = attr->inverse ? front.g : back.g;
+    const double bb = attr->inverse ? front.b : back.b;
 
 
     cairo_t* cr = context.cr;
@@ -465,6 +549,10 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
  */
 static void tsm_draw_locked(void) {
 
+    if (!context.age) {
+        aterm_clear();
+    }
+
     context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
     if (ui_window_commit(context.win) < 0) {
@@ -491,8 +579,11 @@ static void tsm_update_screen() {
  */
 static void tsm_resize(unsigned int width, unsigned int height) {
 
-    unsigned int cols = width / (unsigned int)context.font.width;
-    unsigned int rows = height / (unsigned int)context.font.height;
+    const unsigned int inner_width  = width > 2 * ATERM_PADDING ? width - 2 * ATERM_PADDING : 0;
+    const unsigned int inner_height = height > 2 * ATERM_PADDING ? height - 2 * ATERM_PADDING : 0;
+
+    unsigned int cols = inner_width / (unsigned int)context.font.width;
+    unsigned int rows = inner_height / (unsigned int)context.font.height;
 
     if (cols < 1) {
         cols = 1;
@@ -782,7 +873,7 @@ int main(int argc, char** argv) {
     }
 
 
-    if ((context.win = ui_window_create(context.conn, cols * context.font.width, rows * context.font.height, "aplus-terminal")) == NULL) {
+    if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "aplus-terminal")) == NULL) {
         fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
         exit(1);
     }
@@ -792,8 +883,8 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    context.cols = (unsigned int)(ui_window_width(context.win) / context.font.width);
-    context.rows = (unsigned int)(ui_window_height(context.win) / context.font.height);
+    context.cols = (unsigned int)((ui_window_width(context.win) - 2 * ATERM_PADDING) / context.font.width);
+    context.rows = (unsigned int)((ui_window_height(context.win) - 2 * ATERM_PADDING) / context.font.height);
 
     if (context.cols < 1) {
         context.cols = 1;

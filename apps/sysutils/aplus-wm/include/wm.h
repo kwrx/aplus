@@ -31,6 +31,7 @@
 #include <cairo/cairo.h>
 
 #include <aplus/fb.h>
+#include <aplus/ui-anim.h>
 #include <aplus/ui-draw.h>
 #include <aplus/ui.h>
 
@@ -58,15 +59,37 @@
 #define WM_WINDOW_MIN_HEIGHT 40
 
 /**
- * @brief The drop shadow, faked by stacking translucent rounded rectangles.
- *
- * The corner radius they are stacked at is UI_WINDOW_RADIUS, which lives in the shared
- * header because a client painting its own edge has to trace the same curve.
+ * @brief How far a new window steps down and right from one already open where it would have gone.
  */
-#define WM_SHADOW_EXTENT 18
-#define WM_SHADOW_OFFSET 0
-#define WM_SHADOW_LAYERS 14
-#define WM_SHADOW_ALPHA  0.25
+#define WM_CASCADE_STEP 32
+
+/**
+ * @brief The drop shadow: a wide soft key light cast downwards, and a tight ambient one hugging the frame.
+ *
+ * Each is a blurred rounded rectangle rendered once and stretched around any frame size.
+ */
+#define WM_SHADOW_KEY_BLUR      30
+#define WM_SHADOW_KEY_OFFSET    10
+#define WM_SHADOW_KEY_ALPHA     0.42
+#define WM_SHADOW_AMBIENT_BLUR  6
+#define WM_SHADOW_AMBIENT_ALPHA 0.30
+#define WM_SHADOW_IDLE          0.55
+
+/**
+ * @brief How a window grows into place when it opens and shrinks away when it closes.
+ */
+#define WM_OPEN_SCALE  0.94
+#define WM_CLOSE_SCALE 0.94
+
+/**
+ * @brief How close together two presses on a titlebar have to be to maximise the window.
+ */
+#define WM_DOUBLE_CLICK_MS 400
+
+/**
+ * @brief How far a maximised window's titlebar has to be dragged before the window comes loose.
+ */
+#define WM_UNMAXIMIZE_SLOP 6
 
 
 /**
@@ -79,22 +102,27 @@
 #define WM_COLOR_DESKTOP_BOTTOM 0.043, 0.043, 0.043
 
 #define WM_COLOR_FRAME_ACTIVE 0.169, 0.169, 0.169
-#define WM_COLOR_FRAME_IDLE   0.125, 0.125, 0.125
+#define WM_COLOR_FRAME_IDLE   0.141, 0.141, 0.141
 
-#define WM_COLOR_TITLE_ACTIVE 0.910, 0.910, 0.910
-#define WM_COLOR_TITLE_IDLE   0.498, 0.498, 0.498
+#define WM_COLOR_TITLE_ACTIVE 0.933, 0.933, 0.933
+#define WM_COLOR_TITLE_IDLE   0.540, 0.540, 0.540
 
-#define WM_COLOR_RING_ACTIVE 1.000, 1.000, 1.000, 0.18
-#define WM_COLOR_RING_IDLE   1.000, 1.000, 1.000, 0.07
+#define WM_COLOR_OUTLINE        0.000, 0.000, 0.000, 0.55
+#define WM_COLOR_HIGHLIGHT      1.000, 1.000, 1.000, 0.10
+#define WM_COLOR_HIGHLIGHT_IDLE 1.000, 1.000, 1.000, 0.05
 
-#define WM_COLOR_CLOSE_OVER 0.839, 0.271, 0.302
-#define WM_COLOR_CLOSE_DOWN 0.651, 0.184, 0.212
+#define WM_COLOR_BUTTON      1.000, 1.000, 1.000, 0.07
+#define WM_COLOR_BUTTON_OVER 1.000, 1.000, 1.000, 0.16
+#define WM_COLOR_BUTTON_DOWN 1.000, 1.000, 1.000, 0.24
+
+#define WM_COLOR_CLOSE_OVER 0.898, 0.282, 0.302
+#define WM_COLOR_CLOSE_DOWN 0.741, 0.196, 0.220
 
 /**
  * @brief The typeface titles are drawn in, loaded once at startup.
  */
 
-#define WM_FONT_PATH "/usr/share/fonts/ttf/Ubuntu-R.ttf"
+#define WM_FONT_PATH "/usr/share/fonts/ttf/Ubuntu-M.ttf"
 #define WM_FONT_SIZE 14.0
 
 
@@ -122,11 +150,13 @@
 #define WM_CURSOR_HEIGHT 16
 
 /**
- * @brief The close button, at the right end of the titlebar, hit-tested ahead of the resize grips.
+ * @brief The titlebar buttons, round and right-aligned, hit-tested ahead of the resize grips.
  */
 
-#define WM_BUTTON_SIZE   16
-#define WM_BUTTON_MARGIN 9
+#define WM_BUTTON_SIZE   22
+#define WM_BUTTON_MARGIN 8
+#define WM_BUTTON_GAP    6
+#define WM_BUTTON_GLYPH  8
 
 
 /**
@@ -210,6 +240,36 @@ typedef struct {
 } wm_display_t;
 
 
+/**
+ * @brief A blurred rounded rectangle, cut into nine and stretched around a frame of any size.
+ */
+typedef struct {
+
+    //? Rows then columns: a corner, the one-pixel strip that is stretched along an edge, and
+    //? the opposite corner. The middle of the middle is never drawn, since a frame covers it.
+    cairo_surface_t* pieces[3][3];
+
+    int blur;
+    int corner;
+
+} wm_shadow_t;
+
+
+/**
+ * @brief What is left on screen of a window that has gone: a picture of it, fading and shrinking away.
+ */
+typedef struct wm_ghost {
+
+    cairo_surface_t* surface;
+
+    wm_rect_t rect;
+    ui_anim_t fade;
+
+    struct wm_ghost* next;
+
+} wm_ghost_t;
+
+
 typedef struct wm_client wm_client_t;
 
 
@@ -253,16 +313,23 @@ typedef struct wm_window {
 
     void* shm_addr;
 
-    //? The drop shadow, rendered once and kept as coverage alone: it is pure black, so an A8
-    //? mask carries everything it needs at a quarter of the memory. Valid while the frame size
-    //? and the focus state still match the ones it was rendered for, which is what the three
-    //? fields below record; NULL when it could not be allocated, in which case the layers are
-    //? drawn straight onto the frame instead.
-    cairo_surface_t* shadow;
+    //? Transitions: growing in on the first commit, the focus state, and the light on each
+    //? titlebar button.
+    ui_anim_t appear;
+    ui_anim_t focus;
+    ui_anim_t hover_close;
+    ui_anim_t hover_maximize;
 
-    int shadow_width;
-    int shadow_height;
-    bool shadow_focused;
+    //? Filling the display, and the content area it had before, to go back to.
+    bool maximized;
+    wm_rect_t restore;
+
+    //? Maximising or restoring: a picture of the frame as it was, stretched towards where the
+    //? frame now is while the live window grows out of it.
+    cairo_surface_t* morph;
+    wm_rect_t morph_rect;
+    wm_rect_t morph_from;
+    ui_anim_t morph_anim;
 
     struct wm_window* next;
 
@@ -301,6 +368,7 @@ typedef enum {
     WM_REGION_CONTENT,
     WM_REGION_TITLEBAR,
     WM_REGION_CLOSE,
+    WM_REGION_MAXIMIZE,
     WM_REGION_RESIZE_N,
     WM_REGION_RESIZE_S,
     WM_REGION_RESIZE_E,
@@ -329,11 +397,27 @@ typedef struct {
     //? stops at the edge of the content.
     wm_window_t* pointer_focus;
 
-    //? The window whose close button the pointer is over, if any. A button that lights up
-    //? has to be repainted when the pointer arrives and again when it leaves, so the
-    //? transition is what gets damaged; it doubles as the "still on the button" test that
-    //? decides whether releasing there actually closes anything.
-    wm_window_t* hovered_close;
+    //? The titlebar button the pointer is over, if any. It doubles as the "still on the
+    //? button" test that decides whether releasing there actually does anything.
+    struct {
+        wm_window_t* window;
+        wm_region_t region;
+    } hover;
+
+    //? The last press on a titlebar, against which the next one is counted as a double click.
+    struct {
+        uint32_t window_id;
+        uint64_t time;
+    } title_click;
+
+    //? Windows already gone, still fading out, painted over everything else.
+    wm_ghost_t* ghosts;
+
+    wm_shadow_t shadow_key;
+    wm_shadow_t shadow_ambient;
+
+    //? The clock reading the frame being composited is drawn at.
+    uint64_t frame_time;
 
     uint32_t next_window_id;
 
@@ -406,6 +490,22 @@ void wm_cursor_paint(cairo_t* cr, double x, double y);
 void wm_cursor_fini(void);
 
 /**
+ * @brief Implemented in shadow.c.
+ */
+int wm_shadow_init(wm_shadow_t* shadow, int blur, int radius);
+void wm_shadow_fini(wm_shadow_t* shadow);
+void wm_shadow_paint(cairo_t* cr, const wm_shadow_t* shadow, const wm_rect_t* frame, int offset, double alpha);
+
+/**
+ * @brief Implemented in anim.c.
+ */
+int wm_animate(uint64_t now);
+void wm_ghost_create(wm_window_t* win);
+void wm_ghost_paint(cairo_t* cr, const wm_rect_t* damage, size_t count);
+void wm_ghost_fini(void);
+cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect);
+
+/**
  * @brief Implemented in wallpaper.c.
  */
 cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height);
@@ -439,6 +539,12 @@ cairo_format_t wm_window_format(const wm_window_t* win);
 wm_rect_t wm_window_frame(const wm_window_t* win);
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
 wm_rect_t wm_window_close_rect(const wm_window_t* win);
+wm_rect_t wm_window_maximize_rect(const wm_window_t* win);
+wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region);
+int wm_window_radius(const wm_window_t* win);
+bool wm_window_opaque(const wm_window_t* win);
+void wm_window_toggle_maximize(wm_window_t* win);
+void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y);
 wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out);
 void wm_window_raise(wm_window_t* win);
 void wm_window_focus(wm_window_t* win);
@@ -447,6 +553,7 @@ void wm_window_clamp_size(const wm_window_t* win, int* width, int* height);
 int wm_window_resize(wm_window_t* win, int width, int height);
 int wm_window_notify_configure(wm_window_t* win);
 void wm_window_paint(cairo_t* cr, wm_window_t* win);
+void wm_window_paint_still(cairo_t* cr, wm_window_t* win);
 int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int height);
 
 /**

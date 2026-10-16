@@ -22,6 +22,7 @@
  */
 
 #include <errno.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -124,28 +125,52 @@ wm_rect_t wm_window_frame(const wm_window_t* win) {
 
 
 /**
+ * @brief Reports how far a window's corners are rounded off, which is not at all once it fills the display.
+ *
+ * @param win The window.
+ * @return The radius in pixels.
+ */
+int wm_window_radius(const wm_window_t* win) {
+
+    return win->maximized ? 0 : UI_WINDOW_RADIUS;
+}
+
+
+/**
  * @brief Reports everything the shadow can reach, which is repainted with the window but never clickable.
  *
  * @param win The window to measure.
- * @return The rectangle.
+ * @return The rectangle, which is the frame alone for a window that casts no shadow.
  */
 wm_rect_t wm_window_shadow_rect(const wm_window_t* win) {
 
     const wm_rect_t f = wm_window_frame(win);
 
+    if (win->maximized) {
+        return f;
+    }
+
+
     wm_rect_t r = {
 
-        .x      = f.x - WM_SHADOW_EXTENT,
-        .y      = f.y - WM_SHADOW_EXTENT,
-        .width  = f.width + 2 * WM_SHADOW_EXTENT,
-        .height = f.height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET,
+        .x      = f.x - WM_SHADOW_KEY_BLUR,
+        .y      = f.y - WM_SHADOW_KEY_BLUR,
+        .width  = f.width + 2 * WM_SHADOW_KEY_BLUR,
+        .height = f.height + 2 * WM_SHADOW_KEY_BLUR + WM_SHADOW_KEY_OFFSET,
     };
 
     return r;
 }
 
 
-wm_rect_t wm_window_close_rect(const wm_window_t* win) {
+/**
+ * @brief Reports where a titlebar button sits, counting leftwards from the close button at the right end.
+ *
+ * @param win The window.
+ * @param region WM_REGION_CLOSE or WM_REGION_MAXIMIZE.
+ * @return The button's square, empty for a window without a titlebar.
+ */
+wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region) {
 
     if (wm_window_borderless(win)) {
 
@@ -157,15 +182,43 @@ wm_rect_t wm_window_close_rect(const wm_window_t* win) {
 
     const wm_rect_t f = wm_window_frame(win);
 
+    const int slot = region == WM_REGION_CLOSE ? 0 : 1;
+
     wm_rect_t r = {
 
-        .x      = f.x + f.width - WM_BUTTON_MARGIN - WM_BUTTON_SIZE,
+        .x      = f.x + f.width - WM_BUTTON_MARGIN - WM_BUTTON_SIZE - slot * (WM_BUTTON_SIZE + WM_BUTTON_GAP),
         .y      = f.y + (WM_TITLEBAR_HEIGHT - WM_BUTTON_SIZE) / 2,
         .width  = WM_BUTTON_SIZE,
         .height = WM_BUTTON_SIZE,
     };
 
     return r;
+}
+
+
+wm_rect_t wm_window_close_rect(const wm_window_t* win) {
+    return wm_window_button_rect(win, WM_REGION_CLOSE);
+}
+
+
+wm_rect_t wm_window_maximize_rect(const wm_window_t* win) {
+    return wm_window_button_rect(win, WM_REGION_MAXIMIZE);
+}
+
+
+/**
+ * @brief Reports whether a window paints every pixel of its content area solid right now.
+ *
+ * @param win The window.
+ * @return false for a translucent window, one not yet drawn, and one still fading or morphing.
+ */
+bool wm_window_opaque(const wm_window_t* win) {
+
+    if (!win->committed || wm_window_translucent(win) || win->morph) {
+        return false;
+    }
+
+    return ui_anim_value(&win->appear, wm.frame_time) >= 1.0;
 }
 
 
@@ -313,6 +366,26 @@ void wm_window_clamp_size(const wm_window_t* win, int* width, int* height) {
  * @param flags UI_WINDOW_*, which decide what the server draws around it and where it goes.
  * @return The window, or NULL with errno set.
  */
+/**
+ * @brief Reports whether a window already sits at a spot, which a new one cascades away from.
+ *
+ * @param x The left edge of a content area.
+ * @param y The top edge of a content area.
+ * @return true when an open window's content area starts within a few pixels of it.
+ */
+static bool wm_window_spot_taken(int x, int y) {
+
+    for (wm_window_t* w = wm.windows; w; w = w->next) {
+
+        if (abs(w->x - x) < WM_CASCADE_STEP / 2 && abs(w->y - y) < WM_CASCADE_STEP / 2) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags) {
 
     wm_window_t* win = (wm_window_t*)calloc(1, sizeof(wm_window_t));
@@ -346,19 +419,16 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 
     const wm_insets_t in = wm_window_insets(win);
 
-    static int cascade = 0;
+    win->x = in.left + (wm.display.width - win->width - in.left - in.right) / 2;
+    win->y = in.top + (wm.display.height - win->height - in.top - in.bottom) / 2;
 
-    if (wm_window_centered(win)) {
+    if (!wm_window_centered(win)) {
 
-        win->x = in.left + (wm.display.width - win->width - in.left - in.right) / 2;
-        win->y = in.top + (wm.display.height - win->height - in.top - in.bottom) / 2;
+        for (int step = 0; step < 8 && wm_window_spot_taken(win->x, win->y); step++) {
 
-    } else {
-
-        win->x = in.left + 24 * (cascade % 8);
-        win->y = in.top + 24 * (cascade % 8);
-
-        cascade++;
+            win->x += WM_CASCADE_STEP;
+            win->y += WM_CASCADE_STEP;
+        }
     }
 
     if (win->x + win->width + in.right > wm.display.width) {
@@ -404,6 +474,8 @@ void wm_window_destroy(wm_window_t* win) {
     }
 
 
+    wm_ghost_create(win);
+
     wm_damage_window(win);
 
 
@@ -425,8 +497,9 @@ void wm_window_destroy(wm_window_t* win) {
         wm.drag.region = WM_REGION_NONE;
     }
 
-    if (wm.hovered_close == win) {
-        wm.hovered_close = NULL;
+    if (wm.hover.window == win) {
+        wm.hover.window = NULL;
+        wm.hover.region = WM_REGION_NONE;
     }
 
     if (wm.pointer_focus == win) {
@@ -441,9 +514,9 @@ void wm_window_destroy(wm_window_t* win) {
 
     wm_window_free_backstore(win);
 
-    if (win->shadow) {
-        cairo_surface_destroy(win->shadow);
-        win->shadow = NULL;
+    if (win->morph) {
+        cairo_surface_destroy(win->morph);
+        win->morph = NULL;
     }
 
     free(win);
@@ -470,6 +543,16 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
     if (wm_rect_contains_point(&c, x, y)) {
         return WM_REGION_CLOSE;
+    }
+
+    const wm_rect_t m = wm_window_maximize_rect(win);
+
+    if (wm_rect_contains_point(&m, x, y)) {
+        return WM_REGION_MAXIMIZE;
+    }
+
+    if (win->maximized) {
+        return WM_REGION_TITLEBAR;
     }
 
 
@@ -581,6 +664,8 @@ void wm_window_focus(wm_window_t* win) {
 
     wm.focused = win;
 
+    const uint64_t now = ui_anim_now();
+
 
     if (previous) {
 
@@ -588,6 +673,8 @@ void wm_window_focus(wm_window_t* win) {
 
         wm_client_queue(previous->client, UI_EV_FOCUS, &msg, sizeof(msg));
         wm_damage_window(previous);
+
+        ui_anim_to(&previous->focus, 0.0, UI_MOTION_NORMAL, now);
     }
 
     if (win) {
@@ -596,6 +683,12 @@ void wm_window_focus(wm_window_t* win) {
 
         wm_client_queue(win->client, UI_EV_FOCUS, &msg, sizeof(msg));
         wm_damage_window(win);
+
+        if (win->committed) {
+            ui_anim_to(&win->focus, 1.0, UI_MOTION_NORMAL, now);
+        } else {
+            ui_anim_set(&win->focus, 1.0);
+        }
     }
 }
 
@@ -718,6 +811,9 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 
         win->committed = true;
 
+        ui_anim_set(&win->appear, 0.0);
+        ui_anim_to(&win->appear, 1.0, UI_MOTION_SLOW, ui_anim_now());
+
         wm_damage_window(win);
     }
 
@@ -726,128 +822,161 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 
 
 /**
- * @brief Draws the shadow layers around a frame, in whatever space the context is already in.
+ * @brief Starts the morph from where a frame was to where it is now, out of a picture taken before it moved.
  *
- * @param cr The cairo context to draw with.
- * @param f The frame the shadow is cast around.
- * @param focused Whether the window is focused, which is what decides the strength.
- * @param radius How far the frame's corners are rounded off.
+ * @param win The window that changed shape.
+ * @param snapshot The picture, which the window takes over, or NULL for no morph.
+ * @param snapshot_rect Where the picture was on screen.
+ * @param from The frame the picture shows.
  */
-static void wm_window_paint_shadow_direct(cairo_t* cr, const wm_rect_t* f, bool focused, double radius) {
+static void wm_window_begin_morph(wm_window_t* win, cairo_surface_t* snapshot, const wm_rect_t* snapshot_rect, const wm_rect_t* from) {
 
-    cairo_save(cr);
-
-    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
-
-    cairo_rectangle(cr, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
-    ui_draw_rounded_rect_d(cr, f->x, f->y, f->width, f->height, radius);
-
-    cairo_clip(cr);
-
-
-    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-
-    const double strength = WM_SHADOW_ALPHA * (focused ? 1.0 : 0.55);
-
-    for (int i = WM_SHADOW_LAYERS; i > 0; i--) {
-
-        const double t      = (double)(i - 1) / (double)WM_SHADOW_LAYERS;
-        const double spread = (double)WM_SHADOW_EXTENT * (double)i / (double)WM_SHADOW_LAYERS;
-
-        cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, strength * (1.0 - t) * (1.0 - t));
-
-        ui_draw_rounded_rect_d(cr, f->x - spread, f->y - spread + WM_SHADOW_OFFSET, f->width + 2.0 * spread, f->height + 2.0 * spread, radius + spread);
-
-        cairo_fill(cr);
+    if (!snapshot) {
+        return;
     }
 
-    cairo_restore(cr);
+    if (win->morph) {
+        cairo_surface_destroy(win->morph);
+    }
+
+    win->morph      = snapshot;
+    win->morph_rect = *snapshot_rect;
+    win->morph_from = *from;
+
+    ui_anim_set(&win->morph_anim, 0.0);
+
+    win->morph_anim.ease = UI_EASE_IN_OUT;
+
+    ui_anim_to(&win->morph_anim, 1.0, UI_MOTION_SLOW, ui_anim_now());
 }
 
 
 /**
- * @brief Reports the window's shadow mask, rendering it first when it does not match the frame.
+ * @brief Fills the display with a window, or puts it back where it was before it did.
  *
- * @param win The window whose shadow is wanted.
- * @param f The frame the shadow is cast around.
- * @param focused Whether the window is focused.
- * @return The A8 mask, with the frame at (WM_SHADOW_EXTENT, WM_SHADOW_EXTENT), or NULL.
+ * @param win The window, which must have a titlebar to be maximised at all.
  */
-static cairo_surface_t* wm_window_shadow_mask(wm_window_t* win, const wm_rect_t* f, bool focused) {
+void wm_window_toggle_maximize(wm_window_t* win) {
 
-    if (win->shadow && win->shadow_width == f->width && win->shadow_height == f->height && win->shadow_focused == focused) {
-        return win->shadow;
-    }
-
-
-    if (win->shadow) {
-        cairo_surface_destroy(win->shadow);
-        win->shadow = NULL;
-    }
-
-
-    cairo_surface_t* mask = wm_surface_create(CAIRO_FORMAT_A8, f->width + 2 * WM_SHADOW_EXTENT, f->height + 2 * WM_SHADOW_EXTENT + WM_SHADOW_OFFSET);
-
-    if (!mask) {
-        return NULL;
-    }
-
-
-    cairo_t* cr = cairo_create(mask);
-
-    if (cairo_status(cr) != CAIRO_STATUS_SUCCESS) {
-        cairo_destroy(cr);
-        cairo_surface_destroy(mask);
-        return NULL;
-    }
-
-
-    const wm_rect_t local = {WM_SHADOW_EXTENT, WM_SHADOW_EXTENT, f->width, f->height};
-
-    wm_window_paint_shadow_direct(cr, &local, focused, (double)UI_WINDOW_RADIUS);
-
-    cairo_destroy(cr);
-
-
-    win->shadow         = mask;
-    win->shadow_width   = f->width;
-    win->shadow_height  = f->height;
-    win->shadow_focused = focused;
-
-    return mask;
-}
-
-
-/**
- * @brief Puts the window's shadow on the frame, through the cached mask where there is one.
- *
- * @param cr The cairo context to draw with.
- * @param win The window to draw the shadow of.
- * @param f The frame the shadow is cast around.
- * @param focused Whether the window is focused.
- */
-static void wm_window_paint_shadow(cairo_t* cr, wm_window_t* win, const wm_rect_t* f, bool focused) {
-
-    cairo_surface_t* mask = wm_window_shadow_mask(win, f, focused);
-
-    if (!mask) {
-        wm_window_paint_shadow_direct(cr, f, focused, (double)UI_WINDOW_RADIUS);
+    if (!win || wm_window_borderless(win)) {
         return;
     }
 
 
-    cairo_save(cr);
+    const wm_rect_t before = wm_window_frame(win);
 
-    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+    wm_rect_t snapshot_rect;
 
-    cairo_mask_surface(cr, mask, f->x - WM_SHADOW_EXTENT, f->y - WM_SHADOW_EXTENT);
+    cairo_surface_t* snapshot = win->committed ? wm_window_snapshot(win, &snapshot_rect) : NULL;
 
-    cairo_restore(cr);
+
+    wm_damage_window(win);
+
+    if (win->maximized) {
+
+        win->maximized = false;
+
+        win->x = win->restore.x;
+        win->y = win->restore.y;
+
+        wm_window_resize(win, win->restore.width, win->restore.height);
+
+    } else {
+
+        const wm_insets_t in = wm_window_insets(win);
+
+        win->restore.x      = win->x;
+        win->restore.y      = win->y;
+        win->restore.width  = win->width;
+        win->restore.height = win->height;
+
+        win->maximized = true;
+
+        win->x = in.left;
+        win->y = in.top;
+
+        wm_window_resize(win, wm.display.width - in.left - in.right, wm.display.height - in.top - in.bottom);
+    }
+
+    wm_damage_window(win);
+
+    wm_window_notify_configure(win);
+
+    wm_window_begin_morph(win, snapshot, &snapshot_rect, &before);
 }
 
 
-static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, bool focused) {
+/**
+ * @brief Lets go of the display when a maximised window is dragged, keeping the titlebar under the pointer.
+ *
+ * @param win The maximised window.
+ * @param pointer_x Where the titlebar was grabbed.
+ * @param pointer_y Where the titlebar was grabbed.
+ */
+void wm_window_unmaximize_at(wm_window_t* win, int pointer_x, int pointer_y) {
+
+    if (!win->maximized) {
+        return;
+    }
+
+
+    const wm_rect_t f = wm_window_frame(win);
+
+    const double fraction = f.width > 0 ? (double)(pointer_x - f.x) / (double)f.width : 0.5;
+    const int grab_y      = pointer_y - f.y;
+
+    wm_damage_window(win);
+
+    if (win->morph) {
+
+        cairo_surface_destroy(win->morph);
+
+        win->morph = NULL;
+
+        ui_anim_set(&win->morph_anim, 1.0);
+    }
+
+    win->maximized = false;
+
+    wm_window_resize(win, win->restore.width, win->restore.height);
+
+
+    const wm_insets_t in = wm_window_insets(win);
+
+    const int frame_width = win->width + in.left + in.right;
+
+    win->x = pointer_x - (int)(fraction * frame_width) + in.left;
+    win->y = pointer_y - grab_y + in.top;
+
+    wm_damage_window(win);
+
+    wm_window_notify_configure(win);
+}
+
+
+/**
+ * @brief Sets the source to a colour part way between two, each given as four cairo components.
+ *
+ * @param cr The cairo context.
+ * @param a The colour at 0.
+ * @param b The colour at 1.
+ * @param t How far towards the second one.
+ */
+static void wm_source_mix(cairo_t* cr, const double* a, const double* b, double t) {
+
+    cairo_set_source_rgba(cr, ui_lerp(a[0], b[0], t), ui_lerp(a[1], b[1], t), ui_lerp(a[2], b[2], t), ui_lerp(a[3], b[3], t));
+}
+
+
+/**
+ * @brief Draws the title centred on the frame, pushed aside by the buttons when it is too long.
+ *
+ * @param cr The cairo context.
+ * @param win The window.
+ * @param f The window's frame.
+ * @param focus How focused the window is, 0 to 1.
+ */
+static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, double focus) {
 
     cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
 
@@ -856,8 +985,10 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     }
 
 
-    const double left  = f->x + 8;
-    const double right = wm_window_close_rect(win).x - 6;
+    const wm_rect_t buttons = wm_window_maximize_rect(win);
+
+    const double right = buttons.x - WM_BUTTON_GAP;
+    const double left  = f->x + (f->x + f->width - right);
 
     if (right - left < 8.0) {
         return;
@@ -874,70 +1005,112 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
 
 
     cairo_text_extents_t extents;
+    cairo_font_extents_t font;
 
     cairo_text_extents(cr, win->title, &extents);
+    cairo_font_extents(cr, &font);
 
-    double x = left + (right - left - extents.width) / 2.0 - extents.x_bearing;
-    double y = f->y + (WM_TITLEBAR_HEIGHT + extents.height) / 2.0;
+    double x = f->x + (f->width - extents.x_advance) / 2.0;
+
+    if (x + extents.x_advance > right) {
+        x = right - extents.x_advance;
+    }
 
     if (x < left) {
         x = left;
     }
 
-    if (focused) {
-        cairo_set_source_rgb(cr, WM_COLOR_TITLE_ACTIVE);
-    } else {
-        cairo_set_source_rgb(cr, WM_COLOR_TITLE_IDLE);
-    }
+    const double y = f->y + (WM_TITLEBAR_HEIGHT - (font.ascent + font.descent)) / 2.0 + font.ascent;
 
-    cairo_move_to(cr, x, y);
+
+    wm_source_mix(cr, (const double[]){WM_COLOR_TITLE_IDLE, 1.0}, (const double[]){WM_COLOR_TITLE_ACTIVE, 1.0}, focus);
+
+    cairo_move_to(cr, round(x), round(y));
     cairo_show_text(cr, win->title);
 
     cairo_restore(cr);
 }
 
 
-static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focused) {
+/**
+ * @brief Draws one round titlebar button: a faint disc that lights up under the pointer, and its glyph.
+ *
+ * @param cr The cairo context.
+ * @param win The window the button belongs to.
+ * @param region WM_REGION_CLOSE or WM_REGION_MAXIMIZE.
+ * @param focus How focused the window is, 0 to 1.
+ */
+static void wm_window_paint_button(cairo_t* cr, const wm_window_t* win, wm_region_t region, double focus) {
 
-    const wm_rect_t c = wm_window_close_rect(win);
+    const wm_rect_t r = wm_window_button_rect(win, region);
 
-    const bool hovered = (wm.hovered_close == win);
-    const bool pressed = (hovered && wm.drag.window == win && wm.drag.region == WM_REGION_CLOSE);
+    const bool close   = region == WM_REGION_CLOSE;
+    const double hover = ui_anim_value(close ? &win->hover_close : &win->hover_maximize, wm.frame_time);
+    const bool pressed = wm.hover.window == win && wm.hover.region == region && wm.drag.window == win && wm.drag.region == region;
+
+    const double cx = r.x + r.width / 2.0;
+    const double cy = r.y + r.height / 2.0;
 
 
     cairo_save(cr);
 
-    if (hovered) {
+    cairo_new_path(cr);
+    cairo_arc(cr, cx, cy, r.width / 2.0, 0.0, 2.0 * M_PI);
+
+    const double rest[4] = {WM_COLOR_BUTTON};
+
+    const double idle[4] = {rest[0], rest[1], rest[2], rest[3] * ui_lerp(0.5, 1.0, focus)};
+
+    if (close) {
 
         if (pressed) {
             cairo_set_source_rgb(cr, WM_COLOR_CLOSE_DOWN);
         } else {
-            cairo_set_source_rgb(cr, WM_COLOR_CLOSE_OVER);
+            wm_source_mix(cr, idle, (const double[]){WM_COLOR_CLOSE_OVER, 1.0}, hover);
         }
 
-        ui_draw_rounded_rect_d(cr, c.x, c.y, c.width, c.height, 4.0);
-        cairo_fill(cr);
-    }
-
-
-    if (hovered) {
-        cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
-    } else if (focused) {
-        cairo_set_source_rgb(cr, WM_COLOR_TITLE_ACTIVE);
     } else {
-        cairo_set_source_rgb(cr, WM_COLOR_TITLE_IDLE);
+
+        if (pressed) {
+            cairo_set_source_rgba(cr, WM_COLOR_BUTTON_DOWN);
+        } else {
+            wm_source_mix(cr, idle, (const double[]){WM_COLOR_BUTTON_OVER}, hover);
+        }
     }
 
-    const double inset = 4.5;
+    cairo_fill(cr);
 
-    cairo_set_line_width(cr, 1.4);
+
+    const double glyph[4] = {ui_lerp(0.540, 0.933, focus), ui_lerp(0.540, 0.933, focus), ui_lerp(0.540, 0.933, focus), 1.0};
+
+    wm_source_mix(cr, glyph, (const double[]){1.0, 1.0, 1.0, 1.0}, close ? hover : 0.0);
+
+    cairo_set_line_width(cr, 1.5);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
 
-    cairo_move_to(cr, c.x + inset, c.y + inset);
-    cairo_line_to(cr, c.x + c.width - inset, c.y + c.height - inset);
+    const double h = WM_BUTTON_GLYPH / 2.0;
 
-    cairo_move_to(cr, c.x + c.width - inset, c.y + inset);
-    cairo_line_to(cr, c.x + inset, c.y + c.height - inset);
+    if (close) {
+
+        cairo_move_to(cr, cx - h, cy - h);
+        cairo_line_to(cr, cx + h, cy + h);
+
+        cairo_move_to(cr, cx + h, cy - h);
+        cairo_line_to(cr, cx - h, cy + h);
+
+    } else if (win->maximized) {
+
+        ui_draw_rounded_rect_d(cr, cx - h, cy - h + 2.0, 2.0 * h - 2.0, 2.0 * h - 2.0, 1.5);
+
+        cairo_move_to(cr, cx - h + 2.0, cy - h);
+        cairo_line_to(cr, cx + h, cy - h);
+        cairo_line_to(cr, cx + h, cy + h - 2.0);
+
+    } else {
+
+        ui_draw_rounded_rect_d(cr, cx - h, cy - h, 2.0 * h, 2.0 * h, 1.5);
+    }
 
     cairo_stroke(cr);
 
@@ -945,20 +1118,49 @@ static void wm_window_paint_close(cairo_t* cr, const wm_window_t* win, bool focu
 }
 
 
-void wm_window_paint(cairo_t* cr, wm_window_t* win) {
+/**
+ * @brief Draws a window as it stands, with no transition applied: shadow, frame, content and outline.
+ *
+ * @param cr The cairo context to draw with.
+ * @param win The window to draw.
+ */
+void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
 
     if (!win->committed) {
         return;
     }
 
 
-    const wm_rect_t f     = wm_window_frame(win);
-    const bool focused    = (wm.focused == win);
-    const bool borderless = wm_window_borderless(win);
-    const double radius   = (double)UI_WINDOW_RADIUS;
+    const wm_rect_t f      = wm_window_frame(win);
+    const bool borderless  = wm_window_borderless(win);
+    const bool translucent = wm_window_translucent(win);
+    const double radius    = (double)wm_window_radius(win);
+    const double focus     = ui_anim_value(&win->focus, wm.frame_time);
 
 
-    wm_window_paint_shadow(cr, win, &f, focused);
+    if (!win->maximized) {
+
+        const double strength = ui_lerp(WM_SHADOW_IDLE, 1.0, focus);
+
+        cairo_save(cr);
+
+        if (translucent) {
+
+            const wm_rect_t extent = wm_window_shadow_rect(win);
+
+            cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
+
+            cairo_rectangle(cr, extent.x, extent.y, extent.width, extent.height);
+            ui_draw_rounded_rect_d(cr, f.x, f.y, f.width, f.height, radius);
+
+            cairo_clip(cr);
+        }
+
+        wm_shadow_paint(cr, &wm.shadow_key, &f, WM_SHADOW_KEY_OFFSET, WM_SHADOW_KEY_ALPHA * strength);
+        wm_shadow_paint(cr, &wm.shadow_ambient, &f, 0, WM_SHADOW_AMBIENT_ALPHA * strength);
+
+        cairo_restore(cr);
+    }
 
 
     cairo_save(cr);
@@ -969,12 +1171,6 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
 
 
-    if (focused) {
-        cairo_set_source_rgb(cr, WM_COLOR_FRAME_ACTIVE);
-    } else {
-        cairo_set_source_rgb(cr, WM_COLOR_FRAME_IDLE);
-    }
-
     const int bw = cairo_image_surface_get_width(win->backstore);
     const int bh = cairo_image_surface_get_height(win->backstore);
 
@@ -982,26 +1178,29 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     const int ch = WM_MIN(bh, win->height);
 
 
-    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
-
-    cairo_rectangle(cr, f.x, f.y, f.width, f.height);
-    cairo_rectangle(cr, win->x, win->y, cw, ch);
-
-    cairo_fill(cr);
-
-    cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
-
-
     if (!borderless) {
 
-        wm_window_paint_title(cr, win, &f, focused);
-        wm_window_paint_close(cr, win, focused);
+        wm_source_mix(cr, (const double[]){WM_COLOR_FRAME_IDLE, 1.0}, (const double[]){WM_COLOR_FRAME_ACTIVE, 1.0}, focus);
+
+        cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
+
+        cairo_rectangle(cr, f.x, f.y, f.width, f.height);
+        cairo_rectangle(cr, win->x, win->y, cw, ch);
+
+        cairo_fill(cr);
+
+        cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
+
+
+        wm_window_paint_title(cr, win, &f, focus);
+        wm_window_paint_button(cr, win, WM_REGION_MAXIMIZE, focus);
+        wm_window_paint_button(cr, win, WM_REGION_CLOSE, focus);
     }
 
 
-    if ((cw < win->width || ch < win->height) && !wm_window_translucent(win)) {
+    if ((cw < win->width || ch < win->height) && !translucent) {
 
-        cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+        cairo_set_source_rgb(cr, WM_COLOR_FRAME_ACTIVE);
 
         cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
@@ -1014,6 +1213,7 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     }
 
     cairo_set_source_surface(cr, win->backstore, win->x, win->y);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
     cairo_rectangle(cr, win->x, win->y, cw, ch);
     cairo_fill(cr);
 
@@ -1030,14 +1230,147 @@ void wm_window_paint(cairo_t* cr, wm_window_t* win) {
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
     cairo_set_line_width(cr, 1.0);
 
-    if (focused) {
-        cairo_set_source_rgba(cr, WM_COLOR_RING_ACTIVE);
-    } else {
-        cairo_set_source_rgba(cr, WM_COLOR_RING_IDLE);
+    if (!win->maximized) {
+
+        cairo_set_source_rgba(cr, WM_COLOR_OUTLINE);
+
+        ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, radius - 0.5);
+        cairo_stroke(cr);
     }
 
-    ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, radius - 0.5);
+    wm_source_mix(cr, (const double[]){WM_COLOR_HIGHLIGHT_IDLE}, (const double[]){WM_COLOR_HIGHLIGHT}, focus);
+
+    ui_draw_rounded_rect_d(cr, f.x + 1.5, f.y + 1.5, f.width - 3.0, f.height - 3.0, radius > 1.5 ? radius - 1.5 : 0.0);
     cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Maps one frame rectangle onto another in the current transformation.
+ *
+ * @param cr The cairo context.
+ * @param from The rectangle as drawn.
+ * @param to Where it has to land.
+ */
+static void wm_window_map(cairo_t* cr, const wm_rect_t* from, const wm_rect_t* to) {
+
+    if (from->width <= 0 || from->height <= 0) {
+        return;
+    }
+
+    cairo_translate(cr, to->x, to->y);
+    cairo_scale(cr, (double)to->width / from->width, (double)to->height / from->height);
+    cairo_translate(cr, -from->x, -from->y);
+}
+
+
+/**
+ * @brief Draws a window changing shape: the old picture stretching towards the new frame, the live window growing out of it.
+ *
+ * Both go over a solid frame at the in-between size, so the desktop never shows through the crossfade.
+ *
+ * @param cr The cairo context.
+ * @param win The window.
+ */
+static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
+
+    const double t = ui_anim_value(&win->morph_anim, wm.frame_time);
+
+    const wm_rect_t to   = wm_window_frame(win);
+    const wm_rect_t from = win->morph_from;
+
+    const wm_rect_t now = {
+
+        .x      = (int)lround(ui_lerp(from.x, to.x, t)),
+        .y      = (int)lround(ui_lerp(from.y, to.y, t)),
+        .width  = (int)lround(ui_lerp(from.width, to.width, t)),
+        .height = (int)lround(ui_lerp(from.height, to.height, t)),
+    };
+
+    const double radius = ui_lerp(win->maximized ? UI_WINDOW_RADIUS : 0.0, wm_window_radius(win), t);
+
+
+    cairo_save(cr);
+
+    wm_source_mix(cr, (const double[]){WM_COLOR_FRAME_IDLE, 1.0}, (const double[]){WM_COLOR_FRAME_ACTIVE, 1.0}, ui_anim_value(&win->focus, wm.frame_time));
+
+    ui_draw_rounded_rect_d(cr, now.x, now.y, now.width, now.height, radius);
+    cairo_fill(cr);
+
+    wm_window_map(cr, &from, &now);
+
+    cairo_set_source_surface(cr, win->morph, win->morph_rect.x, win->morph_rect.y);
+    cairo_pattern_set_filter(cairo_get_source(cr), CAIRO_FILTER_BILINEAR);
+    cairo_paint_with_alpha(cr, 1.0 - t);
+
+    cairo_restore(cr);
+
+
+    cairo_save(cr);
+
+    cairo_push_group(cr);
+
+    wm_window_map(cr, &to, &now);
+    wm_window_paint_still(cr, win);
+
+    cairo_pop_group_to_source(cr);
+    cairo_paint_with_alpha(cr, t);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws a window as it is this frame: growing in, morphing, or still.
+ *
+ * @param cr The cairo context to draw with.
+ * @param win The window to draw.
+ */
+void wm_window_paint(cairo_t* cr, wm_window_t* win) {
+
+    if (!win->committed) {
+        return;
+    }
+
+    if (win->morph) {
+        wm_window_paint_morph(cr, win);
+        return;
+    }
+
+
+    const double shown = ui_anim_value(&win->appear, wm.frame_time);
+
+    if (shown >= 1.0) {
+        wm_window_paint_still(cr, win);
+        return;
+    }
+
+    if (shown <= 0.0) {
+        return;
+    }
+
+
+    const wm_rect_t f = wm_window_frame(win);
+
+    const double scale = ui_lerp(WM_OPEN_SCALE, 1.0, shown);
+    const double cx    = f.x + f.width / 2.0;
+    const double cy    = f.y + f.height / 2.0;
+
+
+    cairo_save(cr);
+
+    cairo_push_group(cr);
+
+    cairo_translate(cr, cx, cy);
+    cairo_scale(cr, scale, scale);
+    cairo_translate(cr, -cx, -cy);
+
+    wm_window_paint_still(cr, win);
+
+    cairo_pop_group_to_source(cr);
+    cairo_paint_with_alpha(cr, shown);
 
     cairo_restore(cr);
 }

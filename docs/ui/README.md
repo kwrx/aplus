@@ -38,8 +38,8 @@ The widget layer is built on the public surface API and nothing else, so the two
 freely: a view can be driven from your own event loop, and the raw pixels stay reachable
 through `ui_window_pixels()` for the parts a widget cannot express.
 
-Neither layer draws window decorations. The titlebar, borders, shadow, close button and
-resize grips all belong to `aplus-wm`, and the coordinates a client sees — the size it is
+Neither layer draws window decorations. The titlebar, borders, shadow, close and maximise
+buttons and resize grips all belong to `aplus-wm`, and the coordinates a client sees — the size it is
 configured with, the pointer positions it receives — are relative to the content area
 inside them. A window created with `UI_WINDOW_BORDERLESS` gets none of them and is handed
 its whole frame instead — see
@@ -51,6 +51,7 @@ its whole frame instead — see
 |---|---|
 | `lib/aplus/ui/include/aplus/ui.h` | Surface API and the wire protocol, shared with the server |
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
+| `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
 | `lib/aplus/ui/ui_window.c` | Window creation, the shared surface, resize, damage, commits |
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
@@ -196,7 +197,13 @@ bindings are worth knowing:
 | `Ctrl+Alt+Q` | Close the focused window (sends it `UI_EVENT_CLOSE`) |
 | `Alt+Tab` | Focus and raise the next window down the stack |
 | `Alt+Shift+Tab` | The same walk, the other way round |
+| `Super+Up` | Maximise the focused window, or put it back |
 | `Super`+drag | Move a window from anywhere on it, decorations or not |
+
+A double click on a titlebar maximises the window too, and so does the button beside the close
+button. Dragging a maximised window by its titlebar puts it back at its old size under the
+pointer. Windows open centred, stepping down and right from one already there, and they grow
+into place, fade away when they close, and morph between their two sizes when maximised.
 
 Holding `Alt` down keeps the walk going: the order is taken when the first `Tab` arrives and
 does not move again until `Alt` is released, so a second `Tab` reaches the third window rather

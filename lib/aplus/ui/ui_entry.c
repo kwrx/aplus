@@ -47,6 +47,12 @@
  */
 #define UI_ENTRY_BLINK_MS 530
 
+/**
+ * @brief How tall the caret is against the font size, and how wide the focus ring is drawn.
+ */
+#define UI_ENTRY_CARET_HEIGHT 1.35
+#define UI_ENTRY_RING_WIDTH   2.0
+
 
 static void ui_entry_draw(ui_widget_t* widget, cairo_t* cr);
 static bool ui_entry_on_press(ui_widget_t* widget, int x, int y);
@@ -94,7 +100,7 @@ ui_widget_t* ui_entry_create(ui_view_t* view, const char* placeholder) {
  */
 static const char* ui_entry_font(const ui_widget_t* widget) {
 
-    return widget->entry.weight == UI_FONT_BOLD ? widget->theme->font_bold : widget->theme->font_regular;
+    return ui_draw_font(widget->theme, widget->entry.weight);
 }
 
 
@@ -145,7 +151,7 @@ static double ui_entry_width_to(const ui_widget_t* widget, size_t offset) {
 static void ui_entry_reveal_caret(ui_widget_t* widget) {
 
     widget->entry.caret_on = true;
-    widget->entry.caret_at = ui_now_ms();
+    widget->entry.caret_at = ui_anim_now();
 
 
     const ui_rect_t text = ui_entry_text_rect(widget);
@@ -455,12 +461,18 @@ static void ui_entry_draw(ui_widget_t* widget, cairo_t* cr) {
     ui_draw_text(cr, scrolled, empty ? widget->entry.placeholder : widget->entry.text, ui_entry_font(widget), widget->entry.size, color, UI_ALIGN_LEFT);
 
 
-    if (widget->entry.focused && widget->entry.caret_on && widget->enabled) {
+    if (widget->entry.focused && widget->entry.caret_on && widget->enabled && widget->view->active) {
 
         const int caret = text.x + (int)ui_entry_width_to(widget, widget->entry.caret) - widget->entry.scroll;
 
-        cairo_rectangle(cr, caret, text.y, UI_ENTRY_CARET_WIDTH, text.height);
-        ui_draw_set_color(cr, theme->text_muted);
+        double height = widget->entry.size * UI_ENTRY_CARET_HEIGHT;
+
+        if (height > text.height) {
+            height = text.height;
+        }
+
+        ui_draw_rounded_rect_d(cr, caret, text.y + (text.height - height) / 2.0, UI_ENTRY_CARET_WIDTH, height, UI_ENTRY_CARET_WIDTH / 2.0);
+        ui_draw_set_color(cr, theme->text);
         cairo_fill(cr);
     }
 
@@ -468,10 +480,24 @@ static void ui_entry_draw(ui_widget_t* widget, cairo_t* cr) {
 
 
     ui_draw_rounded_rect_d(cr, widget->rect.x + 0.5, widget->rect.y + 0.5, widget->rect.width - 1.0, widget->rect.height - 1.0, radius);
-    ui_draw_set_color(cr, widget->entry.focused ? theme->focus_ring : theme->border);
+    ui_draw_set_color(cr, theme->border);
 
     cairo_set_line_width(cr, 1.0);
     cairo_stroke(cr);
+
+
+    const double focus = widget->enabled ? ui_widget_anim(widget, &widget->entry.focus_anim) : 0.0;
+
+    if (focus > 0.0) {
+
+        const double inset = UI_ENTRY_RING_WIDTH / 2.0;
+
+        ui_draw_rounded_rect_d(cr, widget->rect.x + inset, widget->rect.y + inset, widget->rect.width - UI_ENTRY_RING_WIDTH, widget->rect.height - UI_ENTRY_RING_WIDTH, radius - inset);
+        ui_draw_set_color(cr, ui_color_alpha(theme->focus_ring, focus));
+
+        cairo_set_line_width(cr, UI_ENTRY_RING_WIDTH);
+        cairo_stroke(cr);
+    }
 }
 
 
@@ -584,6 +610,8 @@ static bool ui_entry_on_focus(ui_widget_t* widget, bool focused) {
 
     widget->entry.focused = focused;
 
+    ui_anim_to(&widget->entry.focus_anim, focused ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
+
     if (focused) {
         ui_entry_reveal_caret(widget);
     } else {
@@ -595,15 +623,22 @@ static bool ui_entry_on_focus(ui_widget_t* widget, bool focused) {
 
 
 /**
- * @brief Blinks the caret, which is the only thing in the library that paints on a clock.
+ * @brief Blinks the caret, and keeps painting while the focus ring fades in or out.
  *
  * @param widget The entry.
  * @param now The loop's reading of the monotonic clock, in milliseconds.
- * @return How long until the caret flips again, or -1 when there is no caret to blink.
+ * @return How long until the next frame, or -1 when there is nothing to animate.
  */
 static int ui_entry_tick(ui_widget_t* widget, uint64_t now) {
 
-    if (!widget->entry.focused || !widget->enabled) {
+    if (ui_widget_animating(widget, &widget->entry.focus_anim)) {
+
+        ui_widget_invalidate(widget);
+
+        return UI_ANIM_FRAME_MS;
+    }
+
+    if (!widget->entry.focused || !widget->enabled || !widget->view->active) {
         return -1;
     }
 

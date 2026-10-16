@@ -49,6 +49,7 @@ typedef enum {
     WM_ACTION_CLOSE,
     WM_ACTION_CYCLE_NEXT,
     WM_ACTION_CYCLE_PREV,
+    WM_ACTION_MAXIMIZE,
 
 } wm_action_t;
 
@@ -72,6 +73,7 @@ static const struct {
     {WM_MOD_CTRL | WM_MOD_ALT,  KEY_Q,     WM_ACTION_CLOSE,      NULL               },
     {WM_MOD_ALT,                KEY_TAB,   WM_ACTION_CYCLE_NEXT, NULL               },
     {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB,   WM_ACTION_CYCLE_PREV, NULL               },
+    {WM_MOD_SUPER,              KEY_UP,    WM_ACTION_MAXIMIZE,   NULL               },
 };
 
 
@@ -289,6 +291,10 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 
             case WM_ACTION_CYCLE_PREV:
                 wm_cycle_step(false);
+                break;
+
+            case WM_ACTION_MAXIMIZE:
+                wm_window_toggle_maximize(wm.focused);
                 break;
         }
 
