@@ -199,6 +199,8 @@ static void wm_composite(void) {
         wm_window_paint(cr, stack[depth]);
     }
 
+    wm_taskbar_paint(cr, damage, count);
+
     wm_ghost_paint(cr, damage, count);
 
 
@@ -356,6 +358,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    const int clock = wm_taskbar_open();
+
 
     signal(SIGINT, wm_on_signal);
     signal(SIGTERM, wm_on_signal);
@@ -391,6 +395,12 @@ int main(int argc, char** argv) {
         pfds[count].fd     = input;
         pfds[count].events = POLLIN;
         owners[count]      = NULL;
+        count++;
+
+        pfds[count].fd      = clock;
+        pfds[count].events  = POLLIN;
+        pfds[count].revents = 0;
+        owners[count]       = NULL;
         count++;
 
         for (wm_client_t* client = wm.clients; client && count < WM_ARRAY_COUNT(pfds); client = client->next) {
@@ -430,7 +440,12 @@ int main(int argc, char** argv) {
         }
 
 
-        for (nfds_t i = 2; i < count; i++) {
+        if (pfds[2].revents & POLLIN) {
+            wm_taskbar_tick(clock);
+        }
+
+
+        for (nfds_t i = 3; i < count; i++) {
 
             wm_client_t* client = owners[i];
 
@@ -510,6 +525,7 @@ int main(int argc, char** argv) {
     wm_input_close();
     wm_cursor_fini();
     wm_ghost_fini();
+    wm_taskbar_fini();
     wm_shadow_fini(&wm.shadow_key);
     wm_shadow_fini(&wm.shadow_ambient);
     wm_display_close(&wm.display);

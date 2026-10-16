@@ -118,6 +118,15 @@
 #define WM_COLOR_CLOSE_OVER 0.898, 0.282, 0.302
 #define WM_COLOR_CLOSE_DOWN 0.741, 0.196, 0.220
 
+#define WM_COLOR_ACCENT 0.208, 0.518, 0.894
+
+#define WM_COLOR_TASKBAR        0.110, 0.110, 0.110, 0.94
+#define WM_COLOR_TASKBAR_EDGE   1.000, 1.000, 1.000, 0.08
+#define WM_COLOR_TASKBAR_HOVER  1.000, 1.000, 1.000, 0.07
+#define WM_COLOR_TASKBAR_ACTIVE 1.000, 1.000, 1.000, 0.11
+#define WM_COLOR_TASKBAR_DOWN   1.000, 1.000, 1.000, 0.16
+#define WM_COLOR_TASKBAR_MARK   0.600, 0.600, 0.600, 0.70
+
 /**
  * @brief The typeface titles are drawn in, loaded once at startup.
  */
@@ -165,6 +174,28 @@
 #define WM_ICON_SIZE     20
 #define WM_ICON_IDLE     0.55
 #define WM_ICON_FALLBACK "application-x-executable"
+
+/**
+ * @brief The taskbar along the bottom edge: the launcher's button, an entry per window, and a clock.
+ *
+ * Windows are placed, clamped and maximised within the display above it.
+ */
+
+#define WM_TASKBAR_HEIGHT    44
+#define WM_TASKBAR_PAD       5
+#define WM_TASKBAR_ITEM      34
+#define WM_TASKBAR_GAP       4
+#define WM_TASKBAR_ENTRY_MAX 200
+#define WM_TASKBAR_RADIUS    6
+#define WM_TASKBAR_MARK      3
+#define WM_TASKBAR_CLOCK     64
+#define WM_TASKBAR_FONT_SIZE 13.0
+
+/**
+ * @brief What the taskbar's own button names in place of a window id, and what it starts.
+ */
+#define WM_TASKBAR_LAUNCHER UINT32_MAX
+#define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
 
 
 /**
@@ -331,6 +362,12 @@ typedef struct wm_window {
     ui_anim_t focus;
     ui_anim_t hover_close;
     ui_anim_t hover_maximize;
+    ui_anim_t hover_minimize;
+    ui_anim_t hover_task;
+
+    //? Hidden in its taskbar entry, and how far it has gone there: 1 once it is out of sight.
+    bool minimized;
+    ui_anim_t minimize;
 
     //? Filling the display, and the content area it had before, to go back to.
     bool maximized;
@@ -381,6 +418,8 @@ typedef enum {
     WM_REGION_TITLEBAR,
     WM_REGION_CLOSE,
     WM_REGION_MAXIMIZE,
+    WM_REGION_MINIMIZE,
+    WM_REGION_TASKBAR,
     WM_REGION_RESIZE_N,
     WM_REGION_RESIZE_S,
     WM_REGION_RESIZE_E,
@@ -451,6 +490,16 @@ typedef struct {
         wm_rect_t origin;
     } drag;
 
+    //? The taskbar item the pointer is over and the one it went down on: a window id,
+    //? WM_TASKBAR_LAUNCHER, or 0 for nothing. And the minute the clock last showed.
+    struct {
+        uint32_t hover;
+        uint32_t pressed;
+        ui_anim_t hover_launcher;
+        cairo_surface_t* launcher_icon;
+        long minute;
+    } taskbar;
+
     //? What has to be repainted before the next frame reaches the screen, as a handful of
     //? rectangles rather than the one box around them all: dragging a window damages where it was
     //? and where it now is, and the box around those two covers the whole sweep between them.
@@ -471,6 +520,7 @@ bool wm_rect_contains_point(const wm_rect_t* rect, int x, int y);
 bool wm_rect_contains(const wm_rect_t* outer, const wm_rect_t* inner);
 bool wm_rect_intersects(const wm_rect_t* a, const wm_rect_t* b);
 wm_rect_t wm_rect_clip(const wm_rect_t* rect, int width, int height);
+wm_rect_t wm_rect_union(const wm_rect_t* a, const wm_rect_t* b);
 
 /**
  * @brief Implemented in image.c.
@@ -482,6 +532,7 @@ void* wm_image_probe(const char* path, int max_size, size_t* size, int* width, i
  * @brief Implemented in draw.c.
  */
 cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height);
+cairo_surface_t* wm_icon_create(const char* name, int size);
 
 /**
  * @brief Implemented in display.c.
@@ -535,6 +586,24 @@ int wm_input_dispatch(int fd);
  */
 bool wm_keys_handle(uint16_t vkey, uint8_t down);
 void wm_keys_reap(void);
+void wm_spawn(const char* const* argv);
+
+/**
+ * @brief Implemented in taskbar.c.
+ */
+wm_rect_t wm_taskbar_rect(void);
+wm_rect_t wm_workarea(void);
+wm_rect_t wm_taskbar_entry_rect(const wm_window_t* win);
+bool wm_taskbar_contains(int x, int y);
+void wm_taskbar_damage(void);
+void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count);
+void wm_taskbar_hover(int x, int y);
+void wm_taskbar_press(int x, int y);
+bool wm_taskbar_release(int x, int y);
+void wm_taskbar_forget(const wm_window_t* win);
+int wm_taskbar_open(void);
+void wm_taskbar_tick(int fd);
+void wm_taskbar_fini(void);
 
 /**
  * @brief Implemented in window.c.
@@ -544,6 +613,10 @@ void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
 void wm_window_set_icon(wm_window_t* win, const char* name);
 wm_window_t* wm_window_from_id(uint32_t id);
+wm_window_t* wm_window_topmost(void);
+bool wm_window_listed(const wm_window_t* win);
+void wm_window_minimize(wm_window_t* win);
+void wm_window_restore(wm_window_t* win);
 bool wm_window_borderless(const wm_window_t* win);
 bool wm_window_centered(const wm_window_t* win);
 bool wm_window_translucent(const wm_window_t* win);
@@ -554,6 +627,7 @@ wm_rect_t wm_window_shadow_rect(const wm_window_t* win);
 wm_rect_t wm_window_close_rect(const wm_window_t* win);
 wm_rect_t wm_window_maximize_rect(const wm_window_t* win);
 wm_rect_t wm_window_button_rect(const wm_window_t* win, wm_region_t region);
+ui_anim_t* wm_window_button_hover(wm_window_t* win, wm_region_t region);
 int wm_window_radius(const wm_window_t* win);
 bool wm_window_opaque(const wm_window_t* win);
 void wm_window_toggle_maximize(wm_window_t* win);

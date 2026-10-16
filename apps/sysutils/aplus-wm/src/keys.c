@@ -40,7 +40,7 @@
 
 static const char* const wm_command_terminal[] = {"/usr/bin/aplus-terminal", NULL};
 static const char* const wm_command_explorer[] = {"/usr/bin/aplus-explorer", NULL};
-static const char* const wm_command_launcher[] = {"/usr/bin/aplus-launcher", NULL};
+static const char* const wm_command_launcher[] = {WM_LAUNCHER_PATH, NULL};
 
 
 typedef enum {
@@ -50,6 +50,7 @@ typedef enum {
     WM_ACTION_CYCLE_NEXT,
     WM_ACTION_CYCLE_PREV,
     WM_ACTION_MAXIMIZE,
+    WM_ACTION_MINIMIZE,
 
 } wm_action_t;
 
@@ -74,6 +75,7 @@ static const struct {
     {WM_MOD_ALT,                KEY_TAB,   WM_ACTION_CYCLE_NEXT, NULL               },
     {WM_MOD_ALT | WM_MOD_SHIFT, KEY_TAB,   WM_ACTION_CYCLE_PREV, NULL               },
     {WM_MOD_SUPER,              KEY_UP,    WM_ACTION_MAXIMIZE,   NULL               },
+    {WM_MOD_SUPER,              KEY_DOWN,  WM_ACTION_MINIMIZE,   NULL               },
 };
 
 
@@ -109,7 +111,12 @@ static uint16_t wm_modifier_of(uint16_t vkey) {
 }
 
 
-static void wm_spawn(const char* const* argv) {
+/**
+ * @brief Starts a program as a child of the server, which reaps it in wm_keys_reap().
+ *
+ * @param argv The program and its arguments, NULL terminated.
+ */
+void wm_spawn(const char* const* argv) {
 
     pid_t pid = fork();
 
@@ -157,7 +164,7 @@ static struct {
 
 
 /**
- * @brief Takes the stacking order as it stands, anchored on the focused window.
+ * @brief Takes the stacking order as it stands, anchored on the focused window, leaving out the minimised ones.
  */
 static void wm_cycle_begin(void) {
 
@@ -165,6 +172,10 @@ static void wm_cycle_begin(void) {
     wm_cycle.index = 0;
 
     for (wm_window_t* win = wm.windows; win && wm_cycle.count < WM_CYCLE_MAX; win = win->next) {
+
+        if (win->minimized) {
+            continue;
+        }
 
         if (win == wm.focused) {
             wm_cycle.index = wm_cycle.count;
@@ -199,7 +210,7 @@ static void wm_cycle_step(bool forward) {
 
         wm_window_t* win = wm_window_from_id(wm_cycle.ids[wm_cycle.index]);
 
-        if (!win) {
+        if (!win || win->minimized) {
             continue;
         }
 
@@ -295,6 +306,10 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
 
             case WM_ACTION_MAXIMIZE:
                 wm_window_toggle_maximize(wm.focused);
+                break;
+
+            case WM_ACTION_MINIMIZE:
+                wm_window_minimize(wm.focused);
                 break;
         }
 

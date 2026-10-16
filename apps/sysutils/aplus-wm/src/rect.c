@@ -90,3 +90,23 @@ wm_rect_t wm_rect_clip(const wm_rect_t* rect, int width, int height) {
 
     return r;
 }
+
+
+/**
+ * @brief Reports the smallest rectangle holding both of two others.
+ *
+ * @param a The first rectangle.
+ * @param b The second rectangle.
+ * @return The box around them.
+ */
+wm_rect_t wm_rect_union(const wm_rect_t* a, const wm_rect_t* b) {
+
+    const int x0 = WM_MIN(a->x, b->x);
+    const int y0 = WM_MIN(a->y, b->y);
+    const int x1 = WM_MAX(a->x + a->width, b->x + b->width);
+    const int y1 = WM_MAX(a->y + a->height, b->y + b->height);
+
+    wm_rect_t r = {x0, y0, x1 - x0, y1 - y0};
+
+    return r;
+}
