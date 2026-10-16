@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -303,6 +304,7 @@ static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
             return WM_CURSOR_SIZE_BDIAG;
 
         case WM_REGION_CLOSE:
+        case WM_REGION_MAXIMIZE:
             return WM_CURSOR_HAND;
 
         default:
@@ -342,38 +344,65 @@ static void input_begin_drag(wm_window_t* win, wm_region_t region) {
 
 
 /**
- * @brief Follows the pointer on and off a close button, damaging the button on each transition.
+ * @brief Reports whether a region is one of the titlebar buttons.
+ *
+ * @param region The region.
+ * @return true for the close and maximise buttons.
+ */
+static bool input_is_button(wm_region_t region) {
+    return region == WM_REGION_CLOSE || region == WM_REGION_MAXIMIZE;
+}
+
+
+/**
+ * @brief Eases one titlebar button's light towards on or off.
+ *
+ * @param win The window the button belongs to.
+ * @param region The button.
+ * @param lit Whether the pointer is on it.
+ */
+static void input_light_button(wm_window_t* win, wm_region_t region, bool lit) {
+
+    ui_anim_t* anim = region == WM_REGION_CLOSE ? &win->hover_close : &win->hover_maximize;
+
+    ui_anim_to(anim, lit ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
+
+    const wm_rect_t r = wm_window_button_rect(win, region);
+
+    wm_damage(&r);
+}
+
+
+/**
+ * @brief Follows the pointer on and off the titlebar buttons; during a press only the pressed one can light.
  */
 static void input_update_hover(wm_window_t* win, wm_region_t region) {
 
     wm_window_t* hovered = NULL;
+    wm_region_t button   = WM_REGION_NONE;
 
-    if (!wm.drag.window || wm.drag.region == WM_REGION_CLOSE) {
+    if (input_is_button(region)) {
 
-        if (region == WM_REGION_CLOSE) {
+        if (!wm.drag.window || (wm.drag.window == win && wm.drag.region == region)) {
             hovered = win;
+            button  = region;
         }
     }
 
-    if (hovered == wm.hovered_close) {
+    if (hovered == wm.hover.window && button == wm.hover.region) {
         return;
     }
 
 
-    if (wm.hovered_close) {
-
-        const wm_rect_t c = wm_window_close_rect(wm.hovered_close);
-
-        wm_damage(&c);
+    if (wm.hover.window) {
+        input_light_button(wm.hover.window, wm.hover.region, false);
     }
 
-    wm.hovered_close = hovered;
+    wm.hover.window = hovered;
+    wm.hover.region = button;
 
-    if (wm.hovered_close) {
-
-        const wm_rect_t c = wm_window_close_rect(wm.hovered_close);
-
-        wm_damage(&c);
+    if (hovered) {
+        input_light_button(hovered, button, true);
     }
 }
 
@@ -388,11 +417,24 @@ static void input_update_drag(void) {
     const int dx = wm.pointer.x - wm.drag.grab_x;
     const int dy = wm.pointer.y - wm.drag.grab_y;
 
-    if (wm.drag.region == WM_REGION_CLOSE) {
+    if (input_is_button(wm.drag.region)) {
         return;
     }
 
     if (wm.drag.region == WM_REGION_TITLEBAR) {
+
+        if (win->maximized) {
+
+            if (abs(dx) < WM_UNMAXIMIZE_SLOP && abs(dy) < WM_UNMAXIMIZE_SLOP) {
+                return;
+            }
+
+            wm_window_unmaximize_at(win, wm.drag.grab_x, wm.drag.grab_y);
+
+            wm.drag.origin.x = win->x;
+            wm.drag.origin.y = win->y;
+        }
+
         wm_window_move(win, wm.drag.origin.x + dx, wm.drag.origin.y + dy);
         return;
     }
@@ -493,15 +535,27 @@ static void input_handle_button_left(uint8_t down) {
             wm.drag.region = WM_REGION_NONE;
 
 
-            if (was == WM_REGION_CLOSE) {
+            if (input_is_button(was)) {
 
-                const wm_rect_t c = wm_window_close_rect(win);
+                const wm_rect_t r = wm_window_button_rect(win, was);
 
-                wm_damage(&c);
+                wm_damage(&r);
 
-                if (wm.hovered_close == win) {
-                    wm_window_request_close(win);
+                if (wm.hover.window == win && wm.hover.region == was) {
+
+                    if (was == WM_REGION_CLOSE) {
+                        wm_window_request_close(win);
+                    } else {
+                        wm_window_toggle_maximize(win);
+                    }
                 }
+
+
+                wm_window_t* over = NULL;
+
+                const wm_region_t at = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
+
+                input_update_hover(over, at);
 
                 return;
             }
@@ -543,15 +597,35 @@ static void input_handle_button_left(uint8_t down) {
         return;
     }
 
+
+    if (region == WM_REGION_TITLEBAR) {
+
+        const uint64_t now = ui_anim_now();
+
+        if (wm.title_click.window_id == win->id && now - wm.title_click.time <= WM_DOUBLE_CLICK_MS) {
+
+            wm.title_click.window_id = 0;
+
+            wm_window_toggle_maximize(win);
+
+            return;
+        }
+
+        wm.title_click.window_id = win->id;
+        wm.title_click.time      = now;
+    }
+
+
     input_begin_drag(win, region);
 
-    if (region == WM_REGION_CLOSE) {
+    if (input_is_button(region)) {
 
-        wm.hovered_close = win;
+        wm.hover.window = win;
+        wm.hover.region = region;
 
-        const wm_rect_t c = wm_window_close_rect(win);
+        const wm_rect_t r = wm_window_button_rect(win, region);
 
-        wm_damage(&c);
+        wm_damage(&r);
     }
 }
 

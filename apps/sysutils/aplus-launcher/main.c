@@ -98,11 +98,24 @@
 #define LAUNCHER_CONNECT_MS 5000
 
 
-#define LAUNCHER_WINDOW_WIDTH 640
+#define LAUNCHER_WINDOW_WIDTH 680
 
-#define LAUNCHER_MARGIN 0
-#define LAUNCHER_FIELD  48
-#define LAUNCHER_ROW    32
+#define LAUNCHER_FIELD     56
+#define LAUNCHER_ROW       40
+#define LAUNCHER_ICON      24
+#define LAUNCHER_SEPARATOR 1
+
+/**
+ * @brief How far the field and the list sit in from the sides, and the space left under the last row.
+ */
+#define LAUNCHER_FIELD_INSET 5
+#define LAUNCHER_LIST_INSET  6
+#define LAUNCHER_BOTTOM      4
+
+/**
+ * @brief What the list takes up besides its rows: a pixel of border and its own inset, top and bottom.
+ */
+#define LAUNCHER_LIST_CHROME (2 + 2 * UI_LIST_INSET)
 
 /**
  * @brief How many rows the window grows to before the list starts scrolling instead.
@@ -145,7 +158,7 @@
      * The list's own padding, the icon gutter it reserves for every row once one row has an
      * icon, and room for the scrollbar. A line wider than this is ellipsised rather than wrapped.
      */
-    #define LAUNCHER_LINE_INSET 64
+    #define LAUNCHER_LINE_INSET 72
 
 #endif
 
@@ -158,6 +171,7 @@ static struct {
 
     ui_widget_t* backdrop;
     ui_widget_t* field;
+    ui_widget_t* separator;
     ui_widget_t* list;
 
     launcher_entry_t* entries;
@@ -183,7 +197,7 @@ static struct {
 
 
 /**
- * @brief The dark theme with the light let through it: a backdrop that paints nothing, and recesses that only tint.
+ * @brief The dark theme with the light let through it: nothing but the panel paints a background, and the selection takes the accent.
  *
  * The panel is what the window looks like, so the view is left with nothing of its own to
  * fill -- anything it painted would sit under the panel and darken it for no gain.
@@ -200,7 +214,12 @@ static void launcher_theme_init(void) {
     launcher_theme = *ui_theme_dark();
 
     launcher_theme.background     = ui_rgba(0x00, 0x00, 0x00, 0.0);
-    launcher_theme.surface_sunken = ui_rgba(0x0E, 0x0E, 0x0E, 0.35);
+    launcher_theme.surface_sunken = ui_rgba(0x00, 0x00, 0x00, 0.0);
+    launcher_theme.border         = ui_rgba(0x00, 0x00, 0x00, 0.0);
+    launcher_theme.focus_ring     = ui_rgba(0x00, 0x00, 0x00, 0.0);
+
+    launcher_theme.secondary    = launcher_theme.primary;
+    launcher_theme.on_secondary = launcher_theme.on_primary;
 }
 
 
@@ -227,8 +246,7 @@ static int launcher_rows_max(void) {
 /**
  * @brief Reports the window height that shows a number of rows and no part of another.
  *
- * No rows is the field on its own, which is what an untouched launcher looks like. The list
- * insets its rows by a pixel at the top and at the bottom, which is the 2 below.
+ * No rows is the field on its own, which is what an untouched launcher looks like.
  *
  * @param rows How many rows to fit, clamped to at most what launcher_rows_max() allows.
  * @return The height in pixels.
@@ -237,14 +255,14 @@ static int launcher_rows_max(void) {
 static int launcher_height(int rows) {
 
     if (rows < 1) {
-        return LAUNCHER_FIELD + 2 * LAUNCHER_MARGIN;
+        return LAUNCHER_FIELD;
     }
 
     if (rows > launcher_rows_max()) {
         rows = launcher_rows_max();
     }
 
-    return LAUNCHER_FIELD + 3 * LAUNCHER_MARGIN + rows * LAUNCHER_ROW + 2;
+    return LAUNCHER_FIELD + LAUNCHER_SEPARATOR + rows * LAUNCHER_ROW + LAUNCHER_LIST_CHROME + LAUNCHER_BOTTOM;
 }
 
 
@@ -258,6 +276,7 @@ static void launcher_resize(void) {
 
     ui_list_select(launcher.list, 0);
     ui_widget_set_visible(launcher.list, rows > 0);
+    ui_widget_set_visible(launcher.separator, rows > 0);
 
     ui_window_request_size(launcher.window, LAUNCHER_WINDOW_WIDTH, launcher_height((int)rows));
 }
@@ -554,7 +573,7 @@ static void launcher_answer(void) {
 
     const char* text = reply->error[0] ? reply->error : reply->answer;
 
-    const size_t count = launcher_wrap(text, LAUNCHER_WINDOW_WIDTH - 2 * LAUNCHER_MARGIN - LAUNCHER_LINE_INSET, lines, LAUNCHER_LINES_MAX);
+    const size_t count = launcher_wrap(text, LAUNCHER_WINDOW_WIDTH - 2 * LAUNCHER_LIST_INSET - LAUNCHER_LINE_INSET, lines, LAUNCHER_LINES_MAX);
 
     for (size_t i = 0; i < count; i++) {
         ui_list_add(launcher.list, lines[i], NULL, LAUNCHER_TEXT_ROW);
@@ -743,7 +762,7 @@ static void launcher_move(int delta) {
 
 static int launcher_page(void) {
 
-    const int height = (ui_widget_rect(launcher.list).height - 2) / LAUNCHER_ROW;
+    const int height = (ui_widget_rect(launcher.list).height - LAUNCHER_LIST_CHROME) / LAUNCHER_ROW;
 
     return height > 1 ? height : 1;
 }
@@ -834,26 +853,24 @@ static void launcher_layout(ui_view_t* view, int width, int height, void* user) 
 
     ui_widget_place(launcher.backdrop, bounds);
 
-
-    const ui_rect_t inner = ui_rect_inset(bounds, LAUNCHER_MARGIN);
-
-    if (inner.width <= 0 || inner.height < LAUNCHER_FIELD) {
+    if (width <= 2 * LAUNCHER_LIST_INSET || height < LAUNCHER_FIELD) {
         return;
     }
 
 
-    int remaining = inner.height - LAUNCHER_FIELD - LAUNCHER_MARGIN;
+    int remaining = height - LAUNCHER_FIELD - LAUNCHER_SEPARATOR - LAUNCHER_BOTTOM;
 
     if (remaining < 0) {
         remaining = 0;
     }
 
 
-    const ui_rect_t field = {inner.x, inner.y, inner.width, LAUNCHER_FIELD};
-
-    const ui_rect_t rows = {inner.x, inner.y + LAUNCHER_FIELD + LAUNCHER_MARGIN, inner.width, remaining};
+    const ui_rect_t field     = {LAUNCHER_FIELD_INSET, 0, width - 2 * LAUNCHER_FIELD_INSET, LAUNCHER_FIELD};
+    const ui_rect_t separator = {1, LAUNCHER_FIELD, width - 2, LAUNCHER_SEPARATOR};
+    const ui_rect_t rows      = {LAUNCHER_LIST_INSET, LAUNCHER_FIELD + LAUNCHER_SEPARATOR, width - 2 * LAUNCHER_LIST_INSET, remaining};
 
     ui_widget_place(launcher.field, field);
+    ui_widget_place(launcher.separator, separator);
     ui_widget_place(launcher.list, rows);
 }
 
@@ -868,23 +885,29 @@ static int launcher_build(void) {
 
     const ui_theme_t* theme = ui_theme();
 
-    launcher.backdrop = ui_panel_create(launcher.view);
-    launcher.field    = ui_entry_create(launcher.view, "Search applications...");
-    launcher.list     = ui_list_create(launcher.view);
+    launcher.backdrop  = ui_panel_create(launcher.view);
+    launcher.field     = ui_entry_create(launcher.view, "Search applications\xE2\x80\xA6");
+    launcher.separator = ui_panel_create(launcher.view);
+    launcher.list      = ui_list_create(launcher.view);
 
-    if (!launcher.backdrop || !launcher.field || !launcher.list) {
+    if (!launcher.backdrop || !launcher.field || !launcher.separator || !launcher.list) {
         return -1;
     }
 
-    ui_panel_set_color(launcher.backdrop, ui_rgba(0x1E, 0x1E, 0x1E, 0.86));
+    ui_panel_set_color(launcher.backdrop, ui_rgba(0x24, 0x24, 0x24, 0.90));
     ui_panel_set_radius(launcher.backdrop, (double)UI_WINDOW_RADIUS);
-    ui_panel_set_border(launcher.backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.18), 1.0);
+    ui_panel_set_border(launcher.backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.14), 1.0);
 
-    ui_entry_set_font(launcher.field, UI_FONT_REGULAR, theme->font_size + 3.0);
+    ui_panel_set_color(launcher.separator, ui_rgba(0xFF, 0xFF, 0xFF, 0.09));
+    ui_panel_set_radius(launcher.separator, 0.0);
+    ui_widget_set_visible(launcher.separator, false);
+
+    ui_entry_set_font(launcher.field, UI_FONT_REGULAR, theme->font_size + 4.0);
     ui_entry_on_change(launcher.field, launcher_on_change, NULL);
     ui_entry_on_submit(launcher.field, launcher_on_submit, NULL);
 
     ui_list_set_row_height(launcher.list, LAUNCHER_ROW);
+    ui_list_set_icon_size(launcher.list, LAUNCHER_ICON);
     ui_list_on_activate(launcher.list, launcher_on_activate, NULL);
 
     ui_view_focus(launcher.view, launcher.field);

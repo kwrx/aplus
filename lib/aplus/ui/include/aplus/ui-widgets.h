@@ -123,6 +123,7 @@ typedef struct {
     //? Absolute paths. There is no fontconfig in the sysroot, so a family name would have
     //? nothing to resolve against.
     const char* font_regular;
+    const char* font_medium;
     const char* font_bold;
 
 } ui_theme_t;
@@ -143,6 +144,7 @@ typedef enum {
 
     UI_FONT_REGULAR = 0,
     UI_FONT_BOLD,
+    UI_FONT_MEDIUM,
 
 } ui_font_weight_t;
 
@@ -332,6 +334,11 @@ bool ui_button_held(const ui_widget_t* widget);
  *
  * A row is a name and an optional detail drawn against the right edge, which is what a size column is.
  */
+
+/**
+ * @brief How far a list's rows sit inside its border, at the top and at the bottom.
+ */
+#define UI_LIST_INSET 4
 
 ui_widget_t* ui_list_create(ui_view_t* view);
 

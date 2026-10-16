@@ -31,6 +31,18 @@ static bool ui_button_on_hover(ui_widget_t* widget, bool hovered);
 static bool ui_button_on_press(ui_widget_t* widget, int x, int y);
 static bool ui_button_on_drag(ui_widget_t* widget, int x, int y, bool inside);
 static bool ui_button_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks);
+static int ui_button_tick(ui_widget_t* widget, uint64_t now);
+
+
+/**
+ * @brief How far a held button shrinks towards its centre, as a fraction of its size.
+ */
+#define UI_BUTTON_PRESS_SCALE 0.04
+
+/**
+ * @brief How quickly a press lands; the release eases back at the normal pace.
+ */
+#define UI_BUTTON_PRESS_MS 60
 
 
 static const ui_widget_ops_t ui_button_ops = {
@@ -40,6 +52,7 @@ static const ui_widget_ops_t ui_button_ops = {
     .on_press   = ui_button_on_press,
     .on_drag    = ui_button_on_drag,
     .on_release = ui_button_on_release,
+    .tick       = ui_button_tick,
 };
 
 
@@ -52,7 +65,7 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
     }
 
     widget->button.style    = UI_BUTTON_STYLE_DEFAULT;
-    widget->button.weight   = UI_FONT_REGULAR;
+    widget->button.weight   = UI_FONT_MEDIUM;
     widget->button.size     = widget->theme->font_size;
     widget->button.on_click = on_click;
 
@@ -126,6 +139,19 @@ void ui_button_activate(ui_widget_t* widget) {
 }
 
 
+/**
+ * @brief Points the press transition at whatever the pointer and the key binding say together.
+ *
+ * @param widget The button.
+ */
+static void ui_button_update_press(ui_widget_t* widget) {
+
+    const bool down = widget->button.pressed || widget->button.held;
+
+    ui_anim_to(&widget->button.press_anim, down ? 1.0 : 0.0, down ? UI_BUTTON_PRESS_MS : UI_MOTION_NORMAL, ui_anim_now());
+}
+
+
 void ui_button_set_held(ui_widget_t* widget, bool held) {
 
     if (!widget || widget->kind != UI_WIDGET_BUTTON || widget->button.held == held) {
@@ -134,6 +160,7 @@ void ui_button_set_held(ui_widget_t* widget, bool held) {
 
     widget->button.held = held;
 
+    ui_button_update_press(widget);
     ui_widget_invalidate(widget);
 }
 
@@ -164,6 +191,8 @@ static bool ui_button_on_hover(ui_widget_t* widget, bool hovered) {
 
     widget->button.hovered = hovered;
 
+    ui_anim_to(&widget->button.hover_anim, hovered ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
+
     return true;
 }
 
@@ -176,7 +205,30 @@ static bool ui_button_set_pressed(ui_widget_t* widget, bool pressed) {
 
     widget->button.pressed = pressed;
 
+    ui_button_update_press(widget);
+
     return true;
+}
+
+
+/**
+ * @brief Keeps painting while the hover or the press is still easing in or out.
+ *
+ * @param widget The button.
+ * @param now The loop's clock reading.
+ * @return The delay until the next frame, or -1 when the button is still.
+ */
+static int ui_button_tick(ui_widget_t* widget, uint64_t now) {
+
+    (void)now;
+
+    if (!ui_widget_animating(widget, &widget->button.hover_anim) && !ui_widget_animating(widget, &widget->button.press_anim)) {
+        return -1;
+    }
+
+    ui_widget_invalidate(widget);
+
+    return UI_ANIM_FRAME_MS;
 }
 
 
@@ -255,19 +307,14 @@ static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
     ui_button_colors(widget, &fill, &text);
 
 
+    double press = 0.0;
+
     if (widget->enabled) {
 
-        const ui_color_t* wash = NULL;
+        press = ui_widget_anim(widget, &widget->button.press_anim);
 
-        if (widget->button.pressed || widget->button.held) {
-            wash = &theme->active;
-        } else if (widget->button.hovered) {
-            wash = &theme->hover;
-        }
-
-        if (wash) {
-            fill = ui_color_blend(fill, *wash);
-        }
+        fill = ui_color_blend(fill, ui_color_alpha(theme->hover, ui_widget_anim(widget, &widget->button.hover_anim)));
+        fill = ui_color_blend(fill, ui_color_alpha(theme->active, press));
 
     } else {
 
@@ -276,12 +323,22 @@ static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
     }
 
 
+    if (press > 0.0) {
+
+        const double cx    = widget->rect.x + widget->rect.width / 2.0;
+        const double cy    = widget->rect.y + widget->rect.height / 2.0;
+        const double scale = 1.0 - UI_BUTTON_PRESS_SCALE * press;
+
+        cairo_translate(cr, cx, cy);
+        cairo_scale(cr, scale, scale);
+        cairo_translate(cr, -cx, -cy);
+    }
+
+
     ui_draw_rounded_rect(cr, widget->rect, theme->corner_radius);
     ui_draw_set_color(cr, fill);
     cairo_fill(cr);
 
 
-    const char* font = widget->button.weight == UI_FONT_BOLD ? theme->font_bold : theme->font_regular;
-
-    ui_draw_text(cr, widget->rect, widget->button.text, font, widget->button.size, text, UI_ALIGN_CENTER);
+    ui_draw_text(cr, widget->rect, widget->button.text, ui_draw_font(theme, widget->button.weight), widget->button.size, text, UI_ALIGN_CENTER);
 }

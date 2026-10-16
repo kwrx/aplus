@@ -28,6 +28,7 @@
 
 #include <cairo/cairo.h>
 
+#include <aplus/ui-anim.h>
 #include <aplus/ui-draw.h>
 #include <aplus/ui-keymap.h>
 #include <aplus/ui-widgets.h>
@@ -89,6 +90,7 @@ typedef struct {
     void (*draw)(ui_widget_t* widget, cairo_t* cr);
 
     bool (*on_hover)(ui_widget_t* widget, bool hovered);
+    bool (*on_motion)(ui_widget_t* widget, int x, int y);
     bool (*on_press)(ui_widget_t* widget, int x, int y);
 
     //? Motion while the widget holds the press, whether or not the pointer is still over it.
@@ -178,6 +180,9 @@ struct ui_widget {
             bool pressed;
             bool held;
 
+            ui_anim_t hover_anim;
+            ui_anim_t press_anim;
+
         } button;
 
         struct {
@@ -196,6 +201,19 @@ struct ui_widget {
 
             //? Pixels of content scrolled off the top, never past what the content allows.
             int scroll;
+            ui_anim_t scroll_anim;
+
+            int hover;
+            ui_anim_t hover_anim;
+
+            int hover_prev;
+            ui_anim_t hover_prev_anim;
+
+            ui_anim_t select_anim;
+
+            int pointer_x;
+            int pointer_y;
+            bool pointer_in;
 
             bool focused;
 
@@ -233,6 +251,8 @@ struct ui_widget {
             //? being typed reads as a dropped keystroke.
             bool caret_on;
             uint64_t caret_at;
+
+            ui_anim_t focus_anim;
 
             //? Opened the first time a key arrives rather than at construction, so a view
             //? that never takes text never reads a file.
@@ -288,14 +308,23 @@ struct ui_view {
 
     ui_damage_t damage;
 
+    //? The clock reading the last frame was painted at, which every transition is drawn against.
+    uint64_t frame_time;
+
+    //? Whether the window holds the server's focus, without which a selection greys out and no caret blinks.
+    bool active;
+
     bool closed;
 };
 
 
 /**
- * @brief Implemented in ui_view.c.
+ * @brief Repaints part of a widget, clipped to it. Implemented in ui_view.c.
+ *
+ * @param widget The widget.
+ * @param rect The part to repaint, in view coordinates.
  */
-uint64_t ui_now_ms(void);
+void ui_widget_invalidate_rect(ui_widget_t* widget, ui_rect_t rect);
 
 /**
  * @brief Implemented in ui_widget.c.
@@ -305,9 +334,29 @@ void ui_widget_draw(ui_widget_t* widget, cairo_t* cr);
 bool ui_widget_hit(const ui_widget_t* widget, int x, int y);
 
 /**
+ * @brief Reports whether a transition has frames the last paint has not shown yet.
+ *
+ * @param widget The widget the transition belongs to.
+ * @param anim The transition.
+ * @return true while the view still has to paint it.
+ */
+bool ui_widget_animating(const ui_widget_t* widget, const ui_anim_t* anim);
+
+/**
+ * @brief Reports a transition's value at the frame being painted.
+ *
+ * @param widget The widget the transition belongs to.
+ * @param anim The transition.
+ * @return The value.
+ */
+double ui_widget_anim(const ui_widget_t* widget, const ui_anim_t* anim);
+
+/**
  * @brief Implemented in ui_draw.c. The rounded rectangle and the fonts are in <aplus/ui-draw.h>.
  */
 void ui_draw_set_color(cairo_t* cr, ui_color_t color);
+const char* ui_draw_font(const ui_theme_t* theme, ui_font_weight_t weight);
+ui_color_t ui_color_alpha(ui_color_t color, double alpha);
 void ui_draw_text(cairo_t* cr, ui_rect_t rect, const char* text, const char* font, double size, ui_color_t color, ui_align_t align);
 double ui_draw_text_width(const char* text, const char* font, double size);
 void ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width);

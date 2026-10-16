@@ -74,10 +74,8 @@ void wm_damage_window(const wm_window_t* win) {
 /**
  * @brief Reports whether some window paints over the whole of a rectangle anyway.
  *
- * Only the part of a content area clear of the frame's rounded corners counts: the corners are
- * clipped out of the window and leave the desktop showing through. A translucent window covers
- * nothing at all, since the desktop is what it is blended over, and neither does one that has
- * yet to be drawn into, since nothing of it is on screen.
+ * Only the part of a content area clear of the frame's rounded corners counts, and only a
+ * window that is solid right now covers anything: see wm_window_opaque().
  *
  * @param rect The rectangle to test.
  * @return true when the desktop behind it never becomes visible.
@@ -86,12 +84,12 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 
-        if (wm_window_translucent(win) || !win->committed) {
+        if (!wm_window_opaque(win)) {
             continue;
         }
 
 
-        const int radius = UI_WINDOW_RADIUS;
+        const int radius = wm_window_radius(win);
 
         const wm_rect_t opaque = {
 
@@ -188,7 +186,7 @@ static void wm_composite(void) {
 
         const wm_rect_t extent = wm_window_shadow_rect(stack[depth]);
 
-        bool visible = false;
+        bool visible = stack[depth]->morph != NULL;
 
         for (size_t i = 0; i < count && !visible; i++) {
             visible = wm_rect_intersects(&extent, &damage[i]);
@@ -200,6 +198,8 @@ static void wm_composite(void) {
 
         wm_window_paint(cr, stack[depth]);
     }
+
+    wm_ghost_paint(cr, damage, count);
 
 
     if (!wm.display.hwcursor) {
@@ -335,6 +335,10 @@ int main(int argc, char** argv) {
 
     ui_font_face(WM_FONT_PATH);
 
+    if (wm_shadow_init(&wm.shadow_key, WM_SHADOW_KEY_BLUR, UI_WINDOW_RADIUS) < 0 || wm_shadow_init(&wm.shadow_ambient, WM_SHADOW_AMBIENT_BLUR, UI_WINDOW_RADIUS) < 0) {
+        fprintf(stderr, "aplus-wm: cannot render the window shadows, drawing none\n");
+    }
+
 
     int listener = wm_listen(path);
 
@@ -364,9 +368,13 @@ int main(int argc, char** argv) {
 
     wm_rect_t everything = {0, 0, wm.display.width, wm.display.height};
 
+    wm.frame_time = ui_anim_now();
+
     wm_damage(&everything);
     wm_composite();
 
+
+    int timeout = -1;
 
     while (wm.running) {
 
@@ -396,7 +404,7 @@ int main(int argc, char** argv) {
         }
 
 
-        int e = poll(pfds, count, -1);
+        int e = poll(pfds, count, timeout);
 
         if (e < 0) {
 
@@ -466,7 +474,22 @@ int main(int argc, char** argv) {
 
         wm_keys_reap();
 
+        wm.frame_time = ui_anim_now();
+
+        const int next = wm_animate(wm.frame_time);
+
         wm_composite();
+
+        if (next < 0) {
+
+            timeout = -1;
+
+        } else {
+
+            const uint64_t spent = ui_anim_now() - wm.frame_time;
+
+            timeout = spent >= (uint64_t)next ? 0 : next - (int)spent;
+        }
     }
 
 
@@ -486,6 +509,9 @@ int main(int argc, char** argv) {
 
     wm_input_close();
     wm_cursor_fini();
+    wm_ghost_fini();
+    wm_shadow_fini(&wm.shadow_key);
+    wm_shadow_fini(&wm.shadow_ambient);
     wm_display_close(&wm.display);
 
     close(listener);

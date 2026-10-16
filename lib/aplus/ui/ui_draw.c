@@ -32,6 +32,45 @@ void ui_draw_set_color(cairo_t* cr, ui_color_t color) {
 }
 
 
+/**
+ * @brief Reports the font file a theme draws a weight with.
+ *
+ * @param theme The theme.
+ * @param weight The weight.
+ * @return The path of the font file.
+ */
+const char* ui_draw_font(const ui_theme_t* theme, ui_font_weight_t weight) {
+
+    switch (weight) {
+
+        case UI_FONT_BOLD:
+            return theme->font_bold;
+
+        case UI_FONT_MEDIUM:
+            return theme->font_medium ? theme->font_medium : theme->font_regular;
+
+        case UI_FONT_REGULAR:
+        default:
+            return theme->font_regular;
+    }
+}
+
+
+/**
+ * @brief Scales a colour's opacity.
+ *
+ * @param color The colour.
+ * @param alpha The factor to multiply its alpha by.
+ * @return The colour, more transparent.
+ */
+ui_color_t ui_color_alpha(ui_color_t color, double alpha) {
+
+    color.a *= alpha;
+
+    return color;
+}
+
+
 ui_color_t ui_draw_dim(ui_color_t color, const ui_theme_t* theme) {
 
     ui_color_t towards = theme->background;

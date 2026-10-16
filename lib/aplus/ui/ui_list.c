@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -30,10 +31,17 @@
 
 
 #define UI_LIST_SCROLLBAR_WIDTH 10
+#define UI_LIST_SCROLLBAR_THUMB 6
 #define UI_LIST_SCROLLBAR_MIN   24
 
-#define UI_LIST_PADDING 8
+#define UI_LIST_PADDING 12
 #define UI_LIST_GAP     12
+
+/**
+ * @brief How far a highlighted row's fill sits inside the list, and how its corners are rounded.
+ */
+#define UI_LIST_HIGHLIGHT_INSET  4
+#define UI_LIST_HIGHLIGHT_RADIUS 6
 
 /**
  * @brief How much shorter than its row an icon is drawn, and how far the name sits from it.
@@ -48,24 +56,30 @@
 
 
 static void ui_list_draw(ui_widget_t* widget, cairo_t* cr);
+static bool ui_list_on_hover(ui_widget_t* widget, bool hovered);
+static bool ui_list_on_motion(ui_widget_t* widget, int x, int y);
 static bool ui_list_on_press(ui_widget_t* widget, int x, int y);
 static bool ui_list_on_drag(ui_widget_t* widget, int x, int y, bool inside);
 static bool ui_list_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks);
 static bool ui_list_on_scroll(ui_widget_t* widget, int delta);
 static bool ui_list_on_key(ui_widget_t* widget, uint16_t vkey, bool down);
 static bool ui_list_on_focus(ui_widget_t* widget, bool focused);
+static int ui_list_tick(ui_widget_t* widget, uint64_t now);
 static void ui_list_on_destroy(ui_widget_t* widget);
 
 
 static const ui_widget_ops_t ui_list_ops = {
 
     .draw       = ui_list_draw,
+    .on_hover   = ui_list_on_hover,
+    .on_motion  = ui_list_on_motion,
     .on_press   = ui_list_on_press,
     .on_drag    = ui_list_on_drag,
     .on_release = ui_list_on_release,
     .on_scroll  = ui_list_on_scroll,
     .on_key     = ui_list_on_key,
     .on_focus   = ui_list_on_focus,
+    .tick       = ui_list_tick,
     .destroy    = ui_list_on_destroy,
 };
 
@@ -84,8 +98,15 @@ static ui_rect_t ui_list_rows_rect(const ui_widget_t* widget) {
     rows.x += UI_LIST_PADDING;
     rows.width -= UI_LIST_PADDING * 2;
 
+    rows.y += UI_LIST_INSET;
+    rows.height -= UI_LIST_INSET * 2;
+
     if (rows.width < 0) {
         rows.width = 0;
+    }
+
+    if (rows.height < 0) {
+        rows.height = 0;
     }
 
     return rows;
@@ -151,7 +172,11 @@ static bool ui_list_scrollbar(const ui_widget_t* widget, ui_rect_t* track, ui_re
 
     const ui_rect_t inner = ui_rect_inset(widget->rect, 1);
 
-    ui_rect_t t = {inner.x + inner.width - UI_LIST_SCROLLBAR_WIDTH, inner.y, UI_LIST_SCROLLBAR_WIDTH, inner.height};
+    ui_rect_t t = {inner.x + inner.width - UI_LIST_SCROLLBAR_WIDTH, inner.y + UI_LIST_INSET, UI_LIST_SCROLLBAR_WIDTH, inner.height - UI_LIST_INSET * 2};
+
+    if (t.height <= 0) {
+        return false;
+    }
 
     if (track) {
         *track = t;
@@ -175,7 +200,7 @@ static bool ui_list_scrollbar(const ui_widget_t* widget, ui_rect_t* track, ui_re
 
         const int travel = t.height - height;
 
-        ui_rect_t h = {t.x + 2, t.y + (travel * widget->list.scroll) / max, UI_LIST_SCROLLBAR_WIDTH - 4, height};
+        ui_rect_t h = {t.x + (UI_LIST_SCROLLBAR_WIDTH - UI_LIST_SCROLLBAR_THUMB) / 2, t.y + (travel * widget->list.scroll) / max, UI_LIST_SCROLLBAR_THUMB, height};
 
         *thumb = h;
     }
@@ -184,7 +209,14 @@ static bool ui_list_scrollbar(const ui_widget_t* widget, ui_rect_t* track, ui_re
 }
 
 
-static bool ui_list_set_scroll(ui_widget_t* widget, int scroll) {
+/**
+ * @brief Holds an offset within what the content allows.
+ *
+ * @param widget The list.
+ * @param scroll The offset.
+ * @return The clamped offset.
+ */
+static int ui_list_clamp_scroll(const ui_widget_t* widget, int scroll) {
 
     const int max = ui_list_max_scroll(widget);
 
@@ -196,6 +228,23 @@ static bool ui_list_set_scroll(ui_widget_t* widget, int scroll) {
         scroll = 0;
     }
 
+    return scroll;
+}
+
+
+/**
+ * @brief Scrolls at once, cutting short any glide under way.
+ *
+ * @param widget The list.
+ * @param scroll The offset to scroll to, clamped to the content.
+ * @return Whether the offset changed.
+ */
+static bool ui_list_set_scroll(ui_widget_t* widget, int scroll) {
+
+    scroll = ui_list_clamp_scroll(widget, scroll);
+
+    ui_anim_set(&widget->list.scroll_anim, scroll);
+
     if (widget->list.scroll == scroll) {
         return false;
     }
@@ -205,6 +254,35 @@ static bool ui_list_set_scroll(ui_widget_t* widget, int scroll) {
     ui_widget_invalidate(widget);
 
     return true;
+}
+
+
+/**
+ * @brief Reports where the list is scrolling to, which is where it is when nothing is gliding.
+ *
+ * @param widget The list.
+ * @return The offset.
+ */
+static int ui_list_scroll_target(const ui_widget_t* widget) {
+    return (int)lround(ui_anim_target(&widget->list.scroll_anim));
+}
+
+
+/**
+ * @brief Eases the list towards an offset, which the tick then steps through frame by frame.
+ *
+ * @param widget The list.
+ * @param scroll The offset to end at, clamped to the content.
+ */
+static void ui_list_glide(ui_widget_t* widget, int scroll) {
+
+    scroll = ui_list_clamp_scroll(widget, scroll);
+
+    if (scroll == ui_list_scroll_target(widget)) {
+        return;
+    }
+
+    ui_anim_to(&widget->list.scroll_anim, scroll, UI_MOTION_NORMAL, ui_anim_now());
 }
 
 
@@ -243,6 +321,8 @@ ui_widget_t* ui_list_create(ui_view_t* view) {
     }
 
     widget->list.selected   = -1;
+    widget->list.hover      = -1;
+    widget->list.hover_prev = -1;
     widget->list.row_height = (int)(widget->theme->font_size * 2.0);
 
     return widget;
@@ -263,10 +343,16 @@ void ui_list_clear(ui_widget_t* widget) {
         free(widget->list.items[i].icon);
     }
 
-    widget->list.count    = 0;
-    widget->list.selected = -1;
-    widget->list.scroll   = 0;
-    widget->list.icons    = false;
+    widget->list.count      = 0;
+    widget->list.selected   = -1;
+    widget->list.scroll     = 0;
+    widget->list.hover      = -1;
+    widget->list.hover_prev = -1;
+    widget->list.icons      = false;
+
+    ui_anim_set(&widget->list.scroll_anim, 0);
+    ui_anim_set(&widget->list.hover_anim, 0);
+    ui_anim_set(&widget->list.hover_prev_anim, 0);
 
     ui_widget_invalidate(widget);
 }
@@ -452,14 +538,15 @@ void ui_list_scroll_to(ui_widget_t* widget, int index) {
 
     const int top    = index * widget->list.row_height;
     const int bottom = top + widget->list.row_height;
+    const int target = ui_list_scroll_target(widget);
 
-    if (top < widget->list.scroll) {
+    if (top < target) {
 
-        ui_list_set_scroll(widget, top);
+        ui_list_glide(widget, top);
 
-    } else if (bottom > widget->list.scroll + rows.height) {
+    } else if (bottom > target + rows.height) {
 
-        ui_list_set_scroll(widget, bottom - rows.height);
+        ui_list_glide(widget, bottom - rows.height);
     }
 }
 
@@ -478,7 +565,20 @@ void ui_list_select(ui_widget_t* widget, int index) {
         return;
     }
 
+    const int previous = widget->list.selected;
+
     widget->list.selected = index;
+
+    if (index >= 0) {
+
+        const double top = (double)index * widget->list.row_height;
+
+        if (previous >= 0) {
+            ui_anim_to(&widget->list.select_anim, top, UI_MOTION_FAST, ui_anim_now());
+        } else {
+            ui_anim_set(&widget->list.select_anim, top);
+        }
+    }
 
     ui_list_scroll_to(widget, index);
 
@@ -505,6 +605,8 @@ void ui_list_set_row_height(ui_widget_t* widget, int height) {
     }
 
     widget->list.row_height = height;
+
+    ui_anim_set(&widget->list.select_anim, (double)widget->list.selected * height);
 
     ui_list_set_scroll(widget, widget->list.scroll);
 
@@ -550,6 +652,95 @@ static void ui_list_activate(ui_widget_t* widget) {
 }
 
 
+/**
+ * @brief Reports the fill a highlighted row gets, inset from the list's sides and from its neighbours.
+ *
+ * @param widget The list.
+ * @param top The row's top edge, in view coordinates.
+ * @param width The width the rows are laid out at, less the scrollbar when there is one.
+ * @return The rectangle.
+ */
+static ui_rect_t ui_list_highlight_rect(const ui_widget_t* widget, int top, int width) {
+
+    const ui_rect_t rows = ui_list_rows_rect(widget);
+
+    ui_rect_t fill = {
+
+        .x      = rows.x - UI_LIST_PADDING + UI_LIST_HIGHLIGHT_INSET,
+        .y      = top + 1,
+        .width  = width + 2 * (UI_LIST_PADDING - UI_LIST_HIGHLIGHT_INSET),
+        .height = widget->list.row_height - 2,
+    };
+
+    return fill;
+}
+
+
+/**
+ * @brief Reports the strip one row covers across the whole list, for repainting it alone.
+ *
+ * @param widget The list.
+ * @param index The row.
+ * @return The rectangle, in view coordinates.
+ */
+static ui_rect_t ui_list_row_strip(const ui_widget_t* widget, int index) {
+
+    const ui_rect_t rows = ui_list_rows_rect(widget);
+
+    ui_rect_t strip = {
+
+        .x      = widget->rect.x,
+        .y      = rows.y + index * widget->list.row_height - widget->list.scroll,
+        .width  = widget->rect.width,
+        .height = widget->list.row_height,
+    };
+
+    return strip;
+}
+
+
+/**
+ * @brief Reports whether the selection is drawn in the accent, which takes the keyboard and the window's focus both.
+ *
+ * @param widget The list.
+ * @return true when the list is focused in a focused window.
+ */
+static bool ui_list_lit(const ui_widget_t* widget) {
+    return widget->list.focused && widget->view->active;
+}
+
+
+/**
+ * @brief Paints a hover wash under one row, at the strength its transition has reached.
+ *
+ * @param widget The list.
+ * @param cr The cairo context to draw with.
+ * @param index The row, or -1 for none.
+ * @param anim The transition the strength comes from.
+ * @param width The width the rows are laid out at.
+ */
+static void ui_list_draw_hover(ui_widget_t* widget, cairo_t* cr, int index, const ui_anim_t* anim, int width) {
+
+    if (index < 0 || (size_t)index >= widget->list.count || index == widget->list.selected) {
+        return;
+    }
+
+
+    const double strength = ui_widget_anim(widget, anim);
+
+    if (strength <= 0.0) {
+        return;
+    }
+
+
+    const ui_rect_t rows = ui_list_rows_rect(widget);
+
+    ui_draw_rounded_rect(cr, ui_list_highlight_rect(widget, rows.y + index * widget->list.row_height - widget->list.scroll, width), UI_LIST_HIGHLIGHT_RADIUS);
+    ui_draw_set_color(cr, ui_color_alpha(widget->theme->hover, strength));
+    cairo_fill(cr);
+}
+
+
 static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const ui_theme_t* theme = widget->theme;
@@ -571,6 +762,8 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const int width = bar ? rows.width - UI_LIST_SCROLLBAR_WIDTH : rows.width;
 
+    const int height = widget->list.row_height;
+
 
     cairo_save(cr);
 
@@ -578,41 +771,58 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
     cairo_clip(cr);
 
 
-    const int height = widget->list.row_height;
+    if (width > 0 && height > 0) {
+
+        ui_list_draw_hover(widget, cr, widget->list.hover_prev, &widget->list.hover_prev_anim, width);
+        ui_list_draw_hover(widget, cr, widget->list.hover, &widget->list.hover_anim, width);
+
+
+        if (widget->list.selected >= 0 && (size_t)widget->list.selected < widget->list.count) {
+
+            const int top = rows.y + (int)lround(ui_widget_anim(widget, &widget->list.select_anim)) - widget->list.scroll;
+
+            ui_draw_rounded_rect(cr, ui_list_highlight_rect(widget, top, width), UI_LIST_HIGHLIGHT_RADIUS);
+            ui_draw_set_color(cr, ui_list_lit(widget) ? theme->primary : theme->secondary);
+            cairo_fill(cr);
+        }
+    }
+
+
+    double clip_x0;
+    double clip_y0;
+    double clip_x1;
+    double clip_y1;
+
+    cairo_clip_extents(cr, &clip_x0, &clip_y0, &clip_x1, &clip_y1);
+
 
     const int icons = ui_list_icon_width(widget);
 
-    int first = height > 0 ? widget->list.scroll / height : 0;
+    int first = height > 0 ? ((int)floor(clip_y0) - rows.y + widget->list.scroll) / height : 0;
 
     if (first < 0) {
         first = 0;
     }
 
 
-    for (size_t i = (size_t)first; i < widget->list.count && width > 0; i++) {
+    for (size_t i = (size_t)first; i < widget->list.count && width > 0 && height > 0; i++) {
 
         const int top = rows.y + (int)i * height - widget->list.scroll;
 
-        if (top >= rows.y + rows.height) {
+        if (top >= clip_y1) {
             break;
         }
 
 
         ui_rect_t row = {rows.x, top, width, height};
 
+        const bool selected = widget->list.selected == (int)i;
+
         ui_color_t text = theme->text;
 
-        if (widget->list.selected == (int)i) {
-
-            ui_rect_t fill = {row.x - UI_LIST_PADDING, row.y, row.width + 2 * UI_LIST_PADDING, row.height};
-
-            ui_draw_rounded_rect(cr, fill, radius);
-            ui_draw_set_color(cr, widget->list.focused ? theme->primary : theme->secondary);
-            cairo_fill(cr);
-
-            text = widget->list.focused ? theme->on_primary : theme->on_secondary;
+        if (selected) {
+            text = ui_list_lit(widget) ? theme->on_primary : theme->on_secondary;
         }
-
 
         if (!widget->enabled) {
             text = ui_draw_dim(text, theme);
@@ -640,7 +850,7 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
             taken = ui_draw_text_width(detail, theme->font_regular, theme->font_size) + UI_LIST_GAP;
 
-            ui_color_t muted = widget->list.selected == (int)i ? text : theme->text_muted;
+            ui_color_t muted = selected ? ui_color_alpha(text, 0.8) : theme->text_muted;
 
             if (!widget->enabled) {
                 muted = ui_draw_dim(muted, theme);
@@ -662,17 +872,220 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
     if (bar) {
 
+        const bool hot = widget->list.dragging || (widget->list.pointer_in && widget->list.pointer_x >= track.x);
+
         ui_draw_rounded_rect(cr, thumb, (double)thumb.width / 2.0);
-        ui_draw_set_color(cr, theme->border);
+        ui_draw_set_color(cr, ui_color_alpha(theme->text, hot ? 0.45 : 0.22));
         cairo_fill(cr);
     }
 
 
     ui_draw_rounded_rect_d(cr, widget->rect.x + 0.5, widget->rect.y + 0.5, widget->rect.width - 1.0, widget->rect.height - 1.0, radius);
-    ui_draw_set_color(cr, widget->list.focused ? theme->focus_ring : theme->border);
+    ui_draw_set_color(cr, theme->border);
 
     cairo_set_line_width(cr, 1.0);
     cairo_stroke(cr);
+}
+
+
+/**
+ * @brief Moves the hover onto a row, fading the one it leaves out as the new one fades in.
+ *
+ * @param widget The list.
+ * @param index The row under the pointer, or -1 for none.
+ */
+static void ui_list_set_hover(ui_widget_t* widget, int index) {
+
+    if (widget->list.hover == index) {
+        return;
+    }
+
+
+    const uint64_t now = ui_anim_now();
+
+    if (widget->list.hover_prev >= 0) {
+        ui_widget_invalidate_rect(widget, ui_list_row_strip(widget, widget->list.hover_prev));
+    }
+
+
+    const int leaving      = widget->list.hover;
+    const ui_anim_t fading = widget->list.hover_anim;
+    const bool coming_back = index >= 0 && index == widget->list.hover_prev;
+
+    if (coming_back) {
+        widget->list.hover_anim = widget->list.hover_prev_anim;
+    } else {
+        ui_anim_set(&widget->list.hover_anim, 0.0);
+    }
+
+    widget->list.hover = index;
+
+    if (index >= 0) {
+        ui_anim_to(&widget->list.hover_anim, 1.0, UI_MOTION_FAST, now);
+    }
+
+
+    widget->list.hover_prev      = leaving;
+    widget->list.hover_prev_anim = fading;
+
+    ui_anim_to(&widget->list.hover_prev_anim, 0.0, UI_MOTION_NORMAL, now);
+
+
+    if (leaving >= 0) {
+        ui_widget_invalidate_rect(widget, ui_list_row_strip(widget, leaving));
+    }
+
+    if (index >= 0) {
+        ui_widget_invalidate_rect(widget, ui_list_row_strip(widget, index));
+    }
+}
+
+
+/**
+ * @brief Points the hover at whatever row is under the pointer now, which scrolling changes too.
+ *
+ * @param widget The list.
+ */
+static void ui_list_track_hover(ui_widget_t* widget) {
+
+    int index = -1;
+
+    if (widget->list.pointer_in && widget->enabled && !widget->list.dragging) {
+
+        ui_rect_t track;
+
+        if (!ui_list_scrollbar(widget, &track, NULL) || widget->list.pointer_x < track.x) {
+            index = ui_list_row_at(widget, widget->list.pointer_y);
+        }
+    }
+
+    ui_list_set_hover(widget, index);
+}
+
+
+/**
+ * @brief Lets the hover go when the pointer leaves; arriving is left to the motion that follows.
+ *
+ * @param widget The list.
+ * @param hovered Whether the pointer is over the list.
+ * @return false, since whatever changed has been invalidated already.
+ */
+static bool ui_list_on_hover(ui_widget_t* widget, bool hovered) {
+
+    if (hovered) {
+        return false;
+    }
+
+
+    ui_rect_t track;
+
+    if (ui_list_scrollbar(widget, &track, NULL)) {
+        ui_widget_invalidate_rect(widget, track);
+    }
+
+    widget->list.pointer_in = false;
+
+    ui_list_track_hover(widget);
+
+    return false;
+}
+
+
+/**
+ * @brief Follows the pointer from row to row, and on and off the scrollbar.
+ *
+ * @param widget The list.
+ * @param x The pointer position.
+ * @param y The pointer position.
+ * @return false, since whatever changed has been invalidated already.
+ */
+static bool ui_list_on_motion(ui_widget_t* widget, int x, int y) {
+
+    ui_rect_t track;
+
+    const bool bar = ui_list_scrollbar(widget, &track, NULL);
+
+    const bool was_hot = bar && widget->list.pointer_in && widget->list.pointer_x >= track.x;
+
+    widget->list.pointer_x  = x;
+    widget->list.pointer_y  = y;
+    widget->list.pointer_in = true;
+
+    ui_list_track_hover(widget);
+
+    if (bar && was_hot != (x >= track.x)) {
+        ui_widget_invalidate_rect(widget, track);
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief Steps a glide one frame on, and keeps painting while a hover or the selection is still moving.
+ *
+ * @param widget The list.
+ * @param now The loop's clock reading.
+ * @return The delay until the next frame, or -1 when the list is still.
+ */
+static int ui_list_tick(ui_widget_t* widget, uint64_t now) {
+
+    int next = -1;
+
+
+    if (widget->list.scroll_anim.duration) {
+
+        const int scroll = ui_list_clamp_scroll(widget, (int)lround(ui_anim_value(&widget->list.scroll_anim, now)));
+
+        if (scroll != widget->list.scroll) {
+
+            widget->list.scroll = scroll;
+
+            ui_widget_invalidate(widget);
+            ui_list_track_hover(widget);
+        }
+
+        if (ui_anim_running(&widget->list.scroll_anim, now)) {
+            next = UI_ANIM_FRAME_MS;
+        } else {
+            ui_anim_set(&widget->list.scroll_anim, widget->list.scroll);
+        }
+    }
+
+
+    if (ui_widget_animating(widget, &widget->list.hover_anim) && widget->list.hover >= 0) {
+
+        ui_widget_invalidate_rect(widget, ui_list_row_strip(widget, widget->list.hover));
+
+        next = UI_ANIM_FRAME_MS;
+    }
+
+    if (ui_widget_animating(widget, &widget->list.hover_prev_anim) && widget->list.hover_prev >= 0) {
+
+        ui_widget_invalidate_rect(widget, ui_list_row_strip(widget, widget->list.hover_prev));
+
+        next = UI_ANIM_FRAME_MS;
+    }
+
+
+    if (ui_widget_animating(widget, &widget->list.select_anim)) {
+
+        const ui_rect_t rows = ui_list_rows_rect(widget);
+
+        const double from = widget->list.select_anim.from;
+        const double to   = widget->list.select_anim.to;
+
+        const int top    = rows.y + (int)floor(from < to ? from : to) - widget->list.scroll;
+        const int bottom = rows.y + (int)ceil(from < to ? to : from) + widget->list.row_height - widget->list.scroll;
+
+        ui_rect_t sweep = {widget->rect.x, top, widget->rect.width, bottom - top};
+
+        ui_widget_invalidate_rect(widget, sweep);
+
+        next = UI_ANIM_FRAME_MS;
+    }
+
+    return next;
 }
 
 
@@ -716,13 +1129,18 @@ static bool ui_list_on_press(ui_widget_t* widget, int x, int y) {
             widget->list.dragging  = true;
             widget->list.drag_grab = y - thumb.y;
 
+            ui_list_set_hover(widget, -1);
+            ui_widget_invalidate_rect(widget, track);
+
             return false;
         }
 
 
         const ui_rect_t rows = ui_list_rows_rect(widget);
 
-        return ui_list_set_scroll(widget, widget->list.scroll + (y < thumb.y ? -rows.height : rows.height));
+        ui_list_glide(widget, ui_list_scroll_target(widget) + (y < thumb.y ? -rows.height : rows.height));
+
+        return false;
     }
 
 
@@ -774,7 +1192,14 @@ static bool ui_list_on_release(ui_widget_t* widget, int x, int y, bool inside, i
 
     widget->list.dragging = false;
 
-    if (dragged || !inside || clicks < 2) {
+    if (dragged) {
+
+        ui_list_track_hover(widget);
+
+        return true;
+    }
+
+    if (!inside || clicks < 2) {
         return false;
     }
 
@@ -787,7 +1212,10 @@ static bool ui_list_on_release(ui_widget_t* widget, int x, int y, bool inside, i
 
 
 static bool ui_list_on_scroll(ui_widget_t* widget, int delta) {
-    return ui_list_set_scroll(widget, widget->list.scroll - delta * widget->list.row_height * UI_LIST_WHEEL_ROWS);
+
+    ui_list_glide(widget, ui_list_scroll_target(widget) - delta * widget->list.row_height * UI_LIST_WHEEL_ROWS);
+
+    return false;
 }
 
 

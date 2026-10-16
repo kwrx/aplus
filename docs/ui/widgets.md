@@ -122,13 +122,19 @@ server talking faster than this end can draw slows the painting down rather than
 altogether.
 
 `ui_view_timeout()` is the other half of a pass. It advances whatever paints on a clock —
-today the caret of a focused entry, and nothing else — invalidating what it changed, and
-returns the milliseconds until the next thing is due, or `-1` when nothing is animating. That
-number is what the loop is allowed to block for, so it goes straight to `ui_next_event()`.
-`ui_view_run()` calls it before each block; a loop of your own has to as well, or every caret
-in the view freezes mid-cycle. A view with nothing animating in it gets `-1` and blocks exactly
-as it did before, which is to say the library still wakes for events and never on a timer it
-does not need.
+the caret of a focused entry, and the transitions the widgets ease through: a button's hover
+and press, a list's hover, selection and scrolling, an entry's focus ring — invalidating what it
+changed, and returns the milliseconds until the next thing is due, or `-1` when nothing is
+animating. While a transition runs that is `UI_ANIM_FRAME_MS` (16). The number is what the loop
+is allowed to block for, so it goes straight to `ui_next_event()`. `ui_view_run()` calls it
+before each block; a loop of your own has to as well, or every caret and transition in the view
+freezes mid-way. A view with nothing animating in it gets `-1` and blocks, which is to say the
+library still wakes for events and never on a timer it does not need.
+
+Every transition is drawn against the clock reading of the frame being painted, so a widget
+that changes state twice before a frame goes out simply eases from wherever it had got to. The
+easing and the shared durations (`UI_MOTION_FAST`, `UI_MOTION_NORMAL`, `UI_MOTION_SLOW`) live in
+`<aplus/ui-anim.h>`, which `aplus-wm` uses for its own transitions too.
 
 `ui_view_closed()` becomes true when a `UI_EVENT_CLOSE` is dispatched — the titlebar button,
 `Ctrl+Alt+Q`, or anything else the server decides is a close request. Nothing in the library
@@ -150,7 +156,7 @@ does with each type:
 | `UI_EVENT_POINTER` | Hit tests, updates hover and press state, moves the keyboard focus on a press, counts double clicks, runs a click action on release |
 | `UI_EVENT_SCROLL` | Goes to the widget under the pointer, and nowhere if that widget does not scroll |
 | `UI_EVENT_LEAVE` | Clears hover and press — the release for a press that ended outside the window never arrives |
-| `UI_EVENT_FOCUS` | On focus loss, clears hover and press. Gaining focus says nothing about where the pointer is; the `UI_EVENT_POINTER` that follows does. The keyboard focus *inside* the view is not touched |
+| `UI_EVENT_FOCUS` | Records whether the window is the active one: while it is not, a list's selection is drawn grey and no caret blinks. On focus loss it also clears hover and press. Gaining focus says nothing about where the pointer is; the `UI_EVENT_POINTER` that follows does. The keyboard focus *inside* the view is not touched |
 | `UI_EVENT_KEY` | Offered to the focused widget first, then to the key callback if the widget declined it |
 | `UI_EVENT_CLOSE` | Sets the closed flag |
 
@@ -372,13 +378,13 @@ distinguished by what each was given as `user`.
 Fill and text colour always travel together, so it is not possible to pick a legible-looking
 fill and an illegible label to sit on it.
 
-State is drawn as a single translucent wash over the style's fill, strongest first: pressed
-or held uses `theme->active`, hover uses `theme->hover`, and a button both hovered and
-pressed gets one wash rather than two — it should not read as twice as pressed. A disabled
-button is faded towards the background instead.
+State is drawn as translucent washes over the style's fill: `theme->hover` eases in over
+110 ms while the pointer is on the button, and `theme->active` lands in 60 ms when it is
+pressed or held and eases back out over 180 ms. A pressed button also shrinks 4% towards its
+centre. A disabled button is faded towards the background instead.
 
-Text is centred, capped at 127 bytes like a label's, and the label is always bold or regular
-from the theme's two font files.
+Text is centred, capped at 127 bytes like a label's, and drawn in the theme's medium face
+unless `ui_button_set_font()` picks regular or bold.
 
 ### Activation
 
@@ -437,8 +443,9 @@ name loses its tail rather than running under the number beside it.
 | Property | Default |
 |---|---|
 | background | `theme->surface_sunken` |
-| border | `theme->border`, or `theme->focus_ring` when focused |
-| selected row | `theme->secondary` / `on_secondary`, or `theme->primary` / `on_primary` when focused |
+| border | `theme->border` |
+| selected row | `theme->secondary` / `on_secondary`, or `theme->primary` / `on_primary` when focused in the active window |
+| row under the pointer | `theme->hover`, faded in and out |
 | detail colour | `theme->text_muted`, or the row's own text colour when selected |
 | row height | `theme->font_size * 2` — 28 at the default 14.0 |
 | icon size | the row height less 8, for rows that carry one |
@@ -473,8 +480,8 @@ hand over whatever a file asked for without checking it first.
 The gutter is only reserved once a row has been given an icon, so a list of plain rows lays out
 exactly as it did before. It is as wide as it is tall: `ui_list_set_icon_size()` sets that, and
 `0` restores the size the row height implies, which is 8 pixels less than the row — 20 at the
-default 28-pixel row, 24 in the launcher's 32-pixel one. The name is what moves over; the detail
-stays against the right edge.
+default 28-pixel row. The launcher sets 24 on its 40-pixel rows. The name is what moves over;
+the detail stays against the right edge.
 
 `ui_list_set_icon()` changes the icon of a row already added, and `NULL` takes it away.
 
@@ -512,9 +519,13 @@ it. A click that lands on no row leaves the selection alone.
 
 ### Scrolling
 
-The list scrolls in pixels, clamped so that the content never leaves the well. There is no
-scrollbar widget: the bar is part of the list, appearing at 10 pixels wide down the right-hand
-edge only when the rows do not fit. Dragging the thumb keeps the grab point inside it, so it
+The list scrolls in pixels, clamped so that the content never leaves the well, and the rows sit
+`UI_LIST_INSET` (4) pixels inside its border at the top and at the bottom. The wheel, the keys
+and a click on the track glide to their offset over 180 ms rather than jumping, and a selection
+moved by a row slides its highlight there; hit testing always uses the offset on screen, so a
+click mid-glide lands on the row under the pointer. There is no scrollbar widget: the bar is
+part of the list, a 6-pixel thumb in a 10-pixel track down the right-hand edge, appearing only
+when the rows do not fit and brightening while the pointer is on it. Dragging the thumb keeps the grab point inside it, so it
 does not jump to the pointer when the drag starts, and clicking the track above or below the
 thumb pages towards it. A drag of the thumb never activates a row, however it ends.
 
@@ -563,7 +574,7 @@ widget that turns key codes into characters, which it does through a keymap of i
 | Property | Default |
 |---|---|
 | background | `theme->surface_sunken` |
-| border | `theme->border`, or `theme->focus_ring` when focused |
+| border | `theme->border`, with a 2-pixel `theme->focus_ring` faded in over it while focused |
 | text | `theme->text`, or `theme->text_muted` for the placeholder |
 | weight / size | `UI_FONT_REGULAR`, `theme->font_size` (14.0) |
 
@@ -573,11 +584,11 @@ destruction. `ui_entry_set_text()` puts the caret at the end and does **not** ru
 callback: a caller setting the text already knows what it says, and a callback there turns a
 refresh into a loop.
 
-The caret is drawn only while the widget has the focus, and it blinks at 530 ms a half cycle.
-Anything that moves it — a key, a click, `ui_entry_set_text()`, taking the focus — restarts the
-cycle shown, because a caret that goes dark exactly as a key lands reads as a dropped
-keystroke. This is the one thing in the library that paints on a clock, so a loop of its own
-has to hand `ui_view_timeout()` to `ui_next_event()` or the caret stops mid-cycle — see
+The caret is drawn only while the widget has the focus and its window is the active one, and
+it blinks at 530 ms a half cycle. Anything that moves it — a key, a click, `ui_entry_set_text()`,
+taking the focus — restarts the cycle shown, because a caret that goes dark exactly as a key
+lands reads as a dropped keystroke. A loop of its own has to hand `ui_view_timeout()` to
+`ui_next_event()` or the caret stops mid-cycle — see
 [Driving your own loop](#driving-your-own-loop). Text scrolls horizontally by the least that
 keeps the caret in view, so a field narrower than what has been typed into it still shows where
 you are.
@@ -703,6 +714,7 @@ typedef struct {
     void (*draw)(ui_widget_t* widget, cairo_t* cr);
 
     bool (*on_hover)(ui_widget_t* widget, bool hovered);
+    bool (*on_motion)(ui_widget_t* widget, int x, int y);
     bool (*on_press)(ui_widget_t* widget, int x, int y);
     bool (*on_drag)(ui_widget_t* widget, int x, int y, bool inside);
     bool (*on_release)(ui_widget_t* widget, int x, int y, bool inside, int clicks);
@@ -711,10 +723,19 @@ typedef struct {
     bool (*on_key)(ui_widget_t* widget, uint16_t vkey, bool down);
     bool (*on_focus)(ui_widget_t* widget, bool focused);
 
+    int (*tick)(ui_widget_t* widget, uint64_t now);
+
     void (*destroy)(ui_widget_t* widget);
 
 } ui_widget_ops_t;
 ```
+
+`on_motion` is pointer motion over the hovered widget while nothing is pressed, which is how
+the list follows the pointer from row to row. `tick` is what `ui_view_timeout()` calls: it
+returns the delay until the widget next has to be painted, or `-1`, and invalidates whatever it
+changed. A widget easing a `ui_anim_t` asks `ui_widget_animating()` whether the last frame
+painted has shown the transition's end yet, and reads the value with `ui_widget_anim()`, which
+uses that same frame's clock.
 
 Every hook is optional — a panel fills in `draw` and nothing else. Every hook that reacts to
 state returns whether a repaint is due, and the view invalidates the widget for it; `on_key`

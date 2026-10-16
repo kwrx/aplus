@@ -387,6 +387,10 @@ static int wm_client_handle_resize_window(wm_client_t* client, const uint8_t* pa
         return -1;
     }
 
+    if (win->maximized) {
+        return wm_window_notify_configure(win);
+    }
+
 
     if (wm_window_resize(win, req.width, req.height) < 0) {
         return -1;

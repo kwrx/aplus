@@ -23,7 +23,6 @@
 
 #include <errno.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "ui_internal.h"
 #include "ui_widget_internal.h"
@@ -44,23 +43,6 @@
 #define UI_VIEW_DOUBLE_CLICK_SLOP 4
 
 
-/**
- * @brief Reports the monotonic clock in milliseconds, which is what the loop measures in.
- *
- * @return The reading, or 0 when there is no clock to read.
- */
-uint64_t ui_now_ms(void) {
-
-    struct timespec ts;
-
-    if (clock_gettime(CLOCK_MONOTONIC, &ts) != 0) {
-        return 0;
-    }
-
-    return (uint64_t)ts.tv_sec * 1000ULL + (uint64_t)(ts.tv_nsec / 1000000L);
-}
-
-
 static void ui_view_damage(ui_view_t* view, ui_rect_t rect) {
 
     ui_rect_t bleed = {rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2};
@@ -76,6 +58,23 @@ void ui_widget_invalidate(ui_widget_t* widget) {
     }
 
     ui_view_damage(widget->view, widget->rect);
+}
+
+
+void ui_widget_invalidate_rect(ui_widget_t* widget, ui_rect_t rect) {
+
+    const int x0 = rect.x > widget->rect.x ? rect.x : widget->rect.x;
+    const int y0 = rect.y > widget->rect.y ? rect.y : widget->rect.y;
+    const int x1 = rect.x + rect.width < widget->rect.x + widget->rect.width ? rect.x + rect.width : widget->rect.x + widget->rect.width;
+    const int y1 = rect.y + rect.height < widget->rect.y + widget->rect.height ? rect.y + rect.height : widget->rect.y + widget->rect.height;
+
+    if (x1 <= x0 || y1 <= y0) {
+        return;
+    }
+
+    ui_rect_t clipped = {x0, y0, x1 - x0, y1 - y0};
+
+    ui_view_damage(widget->view, clipped);
 }
 
 
@@ -192,6 +191,7 @@ ui_view_t* ui_view_create(ui_window_t* window) {
 
     view->window = window;
     view->theme  = ui_theme();
+    view->active = true;
 
     if (ui_view_bind_surface(view) < 0) {
         free(view);
@@ -394,7 +394,7 @@ ui_widget_t* ui_view_focused(const ui_view_t* view) {
 
 static int ui_view_count_click(ui_view_t* view, ui_widget_t* widget, int x, int y) {
 
-    const uint64_t now = ui_now_ms();
+    const uint64_t now = ui_anim_now();
 
     const bool again = view->click_widget == widget && now - view->click_time <= UI_VIEW_DOUBLE_CLICK_MS && abs(x - view->click_x) <= UI_VIEW_DOUBLE_CLICK_SLOP && abs(y - view->click_y) <= UI_VIEW_DOUBLE_CLICK_SLOP;
 
@@ -456,6 +456,11 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
     ui_widget_t* released = view->pressed;
 
     if (!released) {
+
+        if (over && over->ops->on_motion) {
+            changed |= ui_view_notified(over, over->ops->on_motion(over, x, y));
+        }
+
         return changed;
     }
 
@@ -549,11 +554,17 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 
         case UI_EVENT_FOCUS:
 
+            view->active = event->focus.focused != 0;
+
+            if (view->focused) {
+                ui_widget_invalidate(view->focused);
+            }
+
             if (!event->focus.focused) {
                 return ui_view_set_hovered(view, NULL) | ui_view_cancel_pressed(view);
             }
 
-            return false;
+            return view->focused != NULL;
 
         default:
             return false;
@@ -568,7 +579,7 @@ int ui_view_timeout(ui_view_t* view) {
     }
 
 
-    const uint64_t now = ui_now_ms();
+    const uint64_t now = ui_anim_now();
 
     int soonest = -1;
 
@@ -616,6 +627,8 @@ int ui_view_present(ui_view_t* view) {
     const ui_damage_t area = view->damage;
 
     ui_damage_reset(&view->damage);
+
+    view->frame_time = ui_anim_now();
 
 
     cairo_t* cr = view->cr;

@@ -76,6 +76,7 @@ typedef struct {
     double font_size;
 
     const char* font_regular;
+    const char* font_medium;
     const char* font_bold;
 
 } ui_theme_t;
@@ -86,12 +87,12 @@ typedef struct {
 | `background` | The window backdrop. `ui_view_present()` paints this across every region it repaints, with `CAIRO_OPERATOR_SOURCE` — so on a [translucent window](window-api.md#translucency) its alpha is what shows through, and a theme is where a see-through window is usually decided. |
 | `surface` | A panel raised on the backdrop. The default panel colour. |
 | `surface_sunken` | A well cut into the backdrop — a list, a display, a text area, anything that should read as recessed. The list's background. |
-| `primary` / `on_primary` | The accent, for the one control on a screen that is the point of the screen. `UI_BUTTON_STYLE_PRIMARY`, and the selected row of a focused list. |
-| `secondary` / `on_secondary` | Ordinary controls. `UI_BUTTON_STYLE_DEFAULT`, and the selected row of a list that does not hold the keyboard. |
+| `primary` / `on_primary` | The accent, for the one control on a screen that is the point of the screen. `UI_BUTTON_STYLE_PRIMARY`, and the selected row of a focused list in the active window. |
+| `secondary` / `on_secondary` | Ordinary controls. `UI_BUTTON_STYLE_DEFAULT`, and the selected row of a list that does not hold the keyboard or whose window is not the active one. |
 | `danger` / `on_danger` | Destructive controls. `UI_BUTTON_STYLE_DANGER`. |
-| `hover` / `active` | State washes, composited over whatever a control is already painted with. |
-| `border` | Panel borders, the list's own border and its scrollbar thumb; the default border colour. |
-| `focus_ring` | What a widget holding the keyboard outlines itself with. The list swaps its border for it when focused. |
+| `hover` / `active` | State washes, composited over whatever a control is already painted with, and the wash under the list row the pointer is on. |
+| `border` | Panel borders, and the list's and the entry's own; the default border colour. |
+| `focus_ring` | What an entry holding the keyboard outlines itself with, two pixels wide over its border. |
 | `text` / `text_muted` | The default label colour, and a second one for secondary text — a list's detail column, among others. |
 
 The `on_*` colours travel with their fill. A style resolves to the pair, so it is not
@@ -100,13 +101,13 @@ possible for a caller to pick a legible-looking fill and an illegible label to s
 | Scalar | |
 |---|---|
 | `disabled_fade` | How far a disabled control fades towards the background, 0 to 1. Fading rather than greying keeps a disabled accent recognisable as the accent. |
-| `corner_radius` | Default panel radius and the button radius, which buttons do not override. |
+| `corner_radius` | Default panel radius, and the radius of buttons, lists and entries. |
 | `font_size` | Default label and button size, used whenever a `set_font()` gets a size of `0.0` or less. |
 
 The washes are the part worth understanding before writing a theme. `hover` and `active`
 carry their strength in their *alpha*, and are composited over whatever a control already
 is. That is why the default scheme spends one colour on hover instead of one per role: the
-same white-at-9% lightens the blue accent and the grey button alike, and adding a fourth
+same white-at-7% lightens the blue accent and the grey button alike, and adding a fourth
 button style costs one colour rather than three.
 
 ## The default dark scheme
@@ -116,31 +117,34 @@ button style costs one colour rather than three.
 | Role | |
 |---|---|
 | `background` | `#2B2B2B` |
-| `surface` | `#353535` |
-| `surface_sunken` | `#161616` |
-| `primary` / `on_primary` | `#3D7EE0` / `#FFFFFF` |
-| `secondary` / `on_secondary` | `#3C3C3C` / `#E8E8E8` |
-| `danger` / `on_danger` | `#D6454D` / `#FFFFFF` |
-| `hover` / `active` | white at 9% / white at 20% |
-| `border` / `focus_ring` | white at 8% / white at 45% |
-| `text` / `text_muted` | `#E8E8E8` / `#7F7F7F` |
+| `surface` | `#343434` |
+| `surface_sunken` | `#1C1C1C` |
+| `primary` / `on_primary` | `#3584E4` / `#FFFFFF` |
+| `secondary` / `on_secondary` | `#3A3A3A` / `#EEEEEE` |
+| `danger` / `on_danger` | `#E5484D` / `#FFFFFF` |
+| `hover` / `active` | white at 7% / white at 14% |
+| `border` / `focus_ring` | white at 7% / `#3584E4` at 75% |
+| `text` / `text_muted` | `#EEEEEE` / `#9A9A9A` |
 | `disabled_fade` | `0.55` |
-| `corner_radius` / `font_size` | `6.0` / `14.0` |
+| `corner_radius` / `font_size` | `8.0` / `14.0` |
 
 The greys are chosen to continue the frame `aplus-wm` draws around the window rather than to
-stand on their own: `#2B2B2B` content against a `#2B2B2B` titlebar, the same `#E8E8E8` on
+stand on their own: `#2B2B2B` content against a `#2B2B2B` titlebar, the same `#EEEEEE` on
 top of both. A window whose content started at some other grey would read as a panel bolted
-into the frame instead of as the inside of it.
+into the frame instead of as the inside of it. `aplus-terminal` takes its background and its
+default text colour from `surface_sunken` and `text` for the same reason.
 
-The chrome is deliberately hueless — the window manager marks the active window with a ring,
-not a colour — but an application has one thing on screen that is the point of the screen and
-no ring to say so. That is what `primary` is for, and it is the only saturated colour in the
-scheme.
+The chrome is deliberately hueless — the window manager marks the active window with a brighter
+frame and title and a deeper shadow, not a colour — but an application has one thing on screen
+that is the point of the screen and nothing in the chrome to say so. That is what `primary` is
+for, and it is the only saturated colour in the scheme; the focus ring borrows it, since that
+too says where the keyboard is.
 
 ## Fonts
 
 ```c
     const char* font_regular;
+    const char* font_medium;
     const char* font_bold;
 ```
 
@@ -150,17 +154,19 @@ names:
 
 ```
 /usr/share/fonts/ttf/Ubuntu-R.ttf
+/usr/share/fonts/ttf/Ubuntu-M.ttf
 /usr/share/fonts/ttf/Ubuntu-B.ttf
 ```
 
-Those are guest paths — inside the running system, not in the build tree. The sysroot copy is
-under `root/usr/share/fonts/ttf/`, which also holds the Ubuntu light, medium, condensed and
-mono faces if a theme wants something else.
+Buttons are drawn in the medium face by default; a theme that leaves `font_medium` `NULL`
+gets the regular one there instead. Those are guest paths — inside the running system, not in
+the build tree. The sysroot copy is under `root/usr/share/fonts/ttf/`, which also holds the
+Ubuntu light, condensed and mono faces if a theme wants something else.
 
 Three limits come from the face cache in `ui_font.c`:
 
-- **Four distinct font files per process.** Faces are cached by path and never released; a
-  theme names two, so the budget is a theme plus one more.
+- **Six distinct font files per process.** Faces are cached by path and never released; a
+  theme names three, which leaves room for a pair of mono faces and one more.
 - **Paths under 128 bytes.** A longer one is refused rather than truncated, because a
   truncated key would go on matching every other path sharing its prefix and hand back the
   wrong face.

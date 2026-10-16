@@ -125,6 +125,16 @@ void ui_widget_draw(ui_widget_t* widget, cairo_t* cr) {
 }
 
 
+bool ui_widget_animating(const ui_widget_t* widget, const ui_anim_t* anim) {
+    return anim->duration != 0 && widget->view->frame_time < anim->start + anim->duration;
+}
+
+
+double ui_widget_anim(const ui_widget_t* widget, const ui_anim_t* anim) {
+    return ui_anim_value(anim, widget->view->frame_time);
+}
+
+
 bool ui_widget_hit(const ui_widget_t* widget, int x, int y) {
 
     if (!widget->visible || !widget->enabled || !widget->interactive) {

@@ -141,7 +141,7 @@ void ui_label_set_padding(ui_widget_t* widget, int padding) {
 
 static void ui_label_draw(ui_widget_t* widget, cairo_t* cr) {
 
-    const char* font = widget->label.weight == UI_FONT_BOLD ? widget->theme->font_bold : widget->theme->font_regular;
+    const char* font = ui_draw_font(widget->theme, widget->label.weight);
 
     ui_color_t color = widget->label.color;
 
