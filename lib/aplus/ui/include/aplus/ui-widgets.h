@@ -313,6 +313,11 @@ void ui_label_set_padding(ui_widget_t* widget, int padding);
  * @brief Button.
  */
 
+/**
+ * @brief How big a button draws its icon until ui_button_set_icon_size() says otherwise.
+ */
+#define UI_BUTTON_ICON_SIZE 16
+
 typedef enum {
 
     //? The scheme's secondary role: what a button looks like when nothing says otherwise.
@@ -327,6 +332,22 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
 void ui_button_set_text(ui_widget_t* widget, const char* text);
 void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style);
 void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
+
+/**
+ * @brief Sets the icon a button shows, ahead of its text or alone when it has none.
+ *
+ * @param widget The button.
+ * @param icon A name in the icon theme, or NULL to take the icon away.
+ */
+void ui_button_set_icon(ui_widget_t* widget, const char* icon);
+
+/**
+ * @brief Sets how big a button's icon is drawn.
+ *
+ * @param widget The button.
+ * @param size The size in pixels, or 0 for UI_BUTTON_ICON_SIZE.
+ */
+void ui_button_set_icon_size(ui_widget_t* widget, int size);
 
 /**
  * @brief Runs the click action as if the button had been pressed, for binding a key to a button.

@@ -21,6 +21,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <math.h>
 #include <string.h>
 
 #include "ui_widget_internal.h"
@@ -44,6 +45,11 @@ static int ui_button_tick(ui_widget_t* widget, uint64_t now);
  */
 #define UI_BUTTON_PRESS_MS 60
 
+/**
+ * @brief How far a button's text sits from its icon.
+ */
+#define UI_BUTTON_ICON_GAP 6
+
 
 static const ui_widget_ops_t ui_button_ops = {
 
@@ -64,10 +70,11 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
         return NULL;
     }
 
-    widget->button.style    = UI_BUTTON_STYLE_DEFAULT;
-    widget->button.weight   = UI_FONT_MEDIUM;
-    widget->button.size     = widget->theme->font_size;
-    widget->button.on_click = on_click;
+    widget->button.style     = UI_BUTTON_STYLE_DEFAULT;
+    widget->button.weight    = UI_FONT_MEDIUM;
+    widget->button.size      = widget->theme->font_size;
+    widget->button.icon_size = UI_BUTTON_ICON_SIZE;
+    widget->button.on_click  = on_click;
 
     widget->user = user;
 
@@ -122,6 +129,41 @@ void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double siz
 
     widget->button.weight = weight;
     widget->button.size   = size > 0.0 ? size : widget->theme->font_size;
+
+    ui_widget_invalidate(widget);
+}
+
+
+void ui_button_set_icon(ui_widget_t* widget, const char* icon) {
+
+    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+        return;
+    }
+
+
+    char next[UI_ICON_NAME_MAX] = {0};
+
+    if (icon && strlen(icon) < sizeof(next)) {
+        strcpy(next, icon);
+    }
+
+    if (strcmp(next, widget->button.icon) == 0) {
+        return;
+    }
+
+    memcpy(widget->button.icon, next, sizeof(next));
+
+    ui_widget_invalidate(widget);
+}
+
+
+void ui_button_set_icon_size(ui_widget_t* widget, int size) {
+
+    if (!widget || widget->kind != UI_WIDGET_BUTTON) {
+        return;
+    }
+
+    widget->button.icon_size = size > 0 ? size : UI_BUTTON_ICON_SIZE;
 
     ui_widget_invalidate(widget);
 }
@@ -297,6 +339,50 @@ static void ui_button_colors(const ui_widget_t* widget, ui_color_t* fill, ui_col
 }
 
 
+/**
+ * @brief Draws a button's icon and its text as one group centred in it, the icon faded like the fill when disabled.
+ *
+ * @param widget The button.
+ * @param cr The cairo context to draw with.
+ * @param color The colour of the text.
+ */
+static void ui_button_draw_icon(ui_widget_t* widget, cairo_t* cr, ui_color_t color) {
+
+    const char* font = ui_draw_font(widget->theme, widget->button.weight);
+    const int size   = widget->button.icon_size;
+
+    const int label = widget->button.text[0] ? (int)ceil(ui_draw_text_width(widget->button.text, font, widget->button.size)) : 0;
+    const int width = label > 0 ? size + UI_BUTTON_ICON_GAP + label : size;
+
+    const int x = width < widget->rect.width ? widget->rect.x + (widget->rect.width - width) / 2 : widget->rect.x;
+
+    const ui_rect_t box = {x, widget->rect.y + (widget->rect.height - size) / 2, size, size};
+
+    cairo_surface_t* icon = ui_icon_load(widget->button.icon, size);
+
+    if (widget->enabled) {
+
+        ui_draw_icon(cr, box, icon);
+
+    } else {
+
+        cairo_push_group(cr);
+        ui_draw_icon(cr, box, icon);
+        cairo_pop_group_to_source(cr);
+        cairo_paint_with_alpha(cr, 1.0 - widget->theme->disabled_fade);
+    }
+
+    if (label > 0) {
+
+        const int left = box.x + size + UI_BUTTON_ICON_GAP;
+
+        const ui_rect_t rect = {left, widget->rect.y, widget->rect.x + widget->rect.width - left, widget->rect.height};
+
+        ui_draw_text(cr, rect, widget->button.text, font, widget->button.size, color, UI_ALIGN_LEFT);
+    }
+}
+
+
 static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const ui_theme_t* theme = widget->theme;
@@ -340,5 +426,9 @@ static void ui_button_draw(ui_widget_t* widget, cairo_t* cr) {
     cairo_fill(cr);
 
 
-    ui_draw_text(cr, widget->rect, widget->button.text, ui_draw_font(theme, widget->button.weight), widget->button.size, text, UI_ALIGN_CENTER);
+    if (widget->button.icon[0]) {
+        ui_button_draw_icon(widget, cr, text);
+    } else {
+        ui_draw_text(cr, widget->rect, widget->button.text, ui_draw_font(theme, widget->button.weight), widget->button.size, text, UI_ALIGN_CENTER);
+    }
 }

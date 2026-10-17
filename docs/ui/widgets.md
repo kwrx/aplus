@@ -374,6 +374,8 @@ ui_widget_t* ui_button_create(ui_view_t* view, const char* text, ui_action_fn on
 void ui_button_set_text(ui_widget_t* widget, const char* text);
 void ui_button_set_style(ui_widget_t* widget, ui_button_style_t style);
 void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size);
+void ui_button_set_icon(ui_widget_t* widget, const char* icon);
+void ui_button_set_icon_size(ui_widget_t* widget, int size);
 
 void ui_button_activate(ui_widget_t* widget);
 void ui_button_set_held(ui_widget_t* widget, bool held);
@@ -404,6 +406,14 @@ centre. A disabled button is faded towards the background instead.
 
 Text is centred, capped at 127 bytes like a label's, and drawn in the theme's medium face
 unless `ui_button_set_font()` picks regular or bold.
+
+`ui_button_set_icon()` gives the button an [icon theme](icons.md) name, drawn ahead of the text
+with the two centred together, or alone in the middle when the text is empty or `NULL` — an
+icon button. `NULL` takes the icon away again. It is drawn `UI_BUTTON_ICON_SIZE` (16) pixels
+square unless `ui_button_set_icon_size()` says otherwise, and faded with the rest of the button
+when it is disabled. A name the theme lacks, or one too long for `UI_ICON_NAME_MAX`, leaves the
+space empty rather than failing. `aplus-editor`'s toolbar is five icon buttons, 28 pixels
+square with 20-pixel icons.
 
 ### Activation
 
