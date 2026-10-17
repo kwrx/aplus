@@ -92,19 +92,20 @@ inode_t* vfs_dcache_add(inode_t* parent, inode_t* inode) {
 
 
 /**
- * @brief Drops a cached entry from a directory and unlinks the inode behind it.
+ * @brief Drops a cached entry from a directory and leaves the inode behind it linked.
  *
  * @param parent The directory holding the entry.
  * @param name The name of the entry to drop.
+ * @return The inode that was cached under that name, or NULL.
  */
-void vfs_dcache_remove(inode_t* parent, const char* name) {
+inode_t* vfs_dcache_detach(inode_t* parent, const char* name) {
 
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(name);
     DEBUG_ASSERT(name[0] != '\0');
 
     if (parent->flags & INODE_FLAGS_DCACHE_DISABLED)
-        return;
+        return NULL;
 
 
     inode_t* inode = NULL;
@@ -115,6 +116,19 @@ void vfs_dcache_remove(inode_t* parent, const char* name) {
     }
     hashmap_unlock(&parent->dcache);
 
+    return inode;
+}
+
+
+/**
+ * @brief Drops a cached entry from a directory and unlinks the inode behind it.
+ *
+ * @param parent The directory holding the entry.
+ * @param name The name of the entry to drop.
+ */
+void vfs_dcache_remove(inode_t* parent, const char* name) {
+
+    inode_t* inode = vfs_dcache_detach(parent, name);
 
     if (likely(inode))
         vfs_inode_unlink(inode);

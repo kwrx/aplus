@@ -280,6 +280,7 @@ void vfs_dcache_init(inode_t*);
 void vfs_dcache_free(inode_t*);
 inode_t* vfs_dcache_add(inode_t*, inode_t*);
 void vfs_dcache_remove(inode_t*, const char*);
+inode_t* vfs_dcache_detach(inode_t*, const char*);
 inode_t* vfs_dcache_find(inode_t*, const char*);
 
 

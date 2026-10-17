@@ -83,7 +83,7 @@
 - [x] sys_getcwd
 - [x] sys_chdir
 - [x] sys_fchdir
-- [ ] sys_rename
+- [x] sys_rename
 - [x] sys_mkdir
 - [ ] sys_rmdir
 - [x] sys_creat
@@ -249,7 +249,7 @@
 - [ ] sys_futimesat
 - [x] sys_newfstatat
 - [x] sys_unlinkat
-- [ ] sys_renameat
+- [x] sys_renameat
 - [ ] sys_linkat
 - [ ] sys_symlinkat
 - [x] sys_readlinkat
@@ -301,7 +301,7 @@
 - [ ] sys_finit_module
 - [ ] sys_sched_setattr
 - [ ] sys_sched_getattr
-- [ ] sys_renameat2
+- [x] sys_renameat2
 - [ ] sys_seccomp
 - [x] sys_getrandom
 - [ ] sys_memfd_create
