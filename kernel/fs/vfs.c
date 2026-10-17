@@ -824,7 +824,20 @@ int vfs_rename(inode_t* inode, const char* name, const char* newname) {
 
 
     if (likely(inode->ops.rename)) {
-        scoped_lock(&inode->lock) return inode->ops.rename(inode, name, newname);
+
+        int r = -1;
+
+        scoped_lock(&inode->lock) {
+
+            inode_t* cached = vfs_dcache_detach(inode, name);
+
+            r = inode->ops.rename(inode, name, newname);
+
+            if (cached)
+                vfs_dcache_add(inode, cached);
+        }
+
+        return r;
     }
 
     return errno = EROFS, -1;
