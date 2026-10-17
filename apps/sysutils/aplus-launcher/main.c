@@ -47,6 +47,9 @@
 
 #if defined(CONFIG_HAVE_AI)
 
+    #include <pthread.h>
+    #include <stdatomic.h>
+
     #include <aplus/ui-draw.h>
 
     #include "ai.h"
@@ -161,6 +164,32 @@
      */
     #define LAUNCHER_LINE_INSET 72
 
+    /**
+     * @brief How often the event loop checks for an answer while one is awaited, in milliseconds.
+     */
+    #define LAUNCHER_AI_TICK_MS 100
+
+    /**
+     * @brief The stack of the thread that asks the model, sized for a TLS handshake.
+     */
+    #define LAUNCHER_AI_STACK (512 * 1024)
+
+
+/**
+ * @brief One question to the model, owned jointly by the main thread and the thread asking it.
+ */
+
+typedef struct {
+
+    atomic_int refs;
+    atomic_bool done;
+
+    char prompt[LAUNCHER_FIELD_MAX];
+
+    launcher_ai_reply_t reply;
+
+} launcher_job_t;
+
 #endif
 
 
@@ -187,7 +216,7 @@ static struct {
 
         bool answered;
 
-        char prompt[LAUNCHER_FIELD_MAX];
+        launcher_job_t* job;
 
         launcher_ai_reply_t reply;
 
@@ -302,6 +331,62 @@ static bool launcher_matches(const launcher_entry_t* entry, const char* query) {
 }
 
 
+#if defined(CONFIG_HAVE_AI)
+
+
+/**
+ * @brief Drops one hold on a question, freeing it with the last.
+ *
+ * @param job The question.
+ */
+
+static void launcher_job_put(launcher_job_t* job) {
+
+    if (atomic_fetch_sub_explicit(&job->refs, 1, memory_order_acq_rel) == 1) {
+        free(job);
+    }
+}
+
+
+/**
+ * @brief Asks the model a question on a thread of its own.
+ *
+ * @param arg The question.
+ * @return NULL.
+ */
+
+static void* launcher_job_run(void* arg) {
+
+    launcher_job_t* job = arg;
+
+    launcher_ai_ask(job->prompt, &job->reply);
+
+    atomic_store_explicit(&job->done, true, memory_order_release);
+
+    launcher_job_put(job);
+
+    return NULL;
+}
+
+
+/**
+ * @brief Forgets the question in flight, so that its answer is dropped when it arrives.
+ */
+
+static void launcher_abandon(void) {
+
+    if (launcher.ai.job) {
+
+        launcher_job_put(launcher.ai.job);
+
+        launcher.ai.job = NULL;
+    }
+}
+
+
+#endif
+
+
 /**
  * @brief Rebuilds the list from what is in the field, and asks for the height that now fits it.
  *
@@ -319,6 +404,8 @@ static void launcher_refilter(void) {
 #if defined(CONFIG_HAVE_AI)
 
     launcher.ai.answered = false;
+
+    launcher_abandon();
 
 #endif
 
@@ -586,14 +673,23 @@ static void launcher_answer(void) {
 
 
 /**
- * @brief Puts the query to the model and shows what comes back.
+ * @brief Shows an answer that could not even be asked for.
  *
- * The request is made here rather than on a thread of its own, and the window is frozen for
- * as long as it takes: the C library's allocator takes no lock, so a second thread
- * allocating alongside the one that draws corrupts the heap of both.
- *
- * The waiting row is painted and handed to the display server before the request starts,
- * which is the whole reason the frozen window has something to say.
+ * @param reason What went wrong.
+ */
+
+static void launcher_refuse(const char* reason) {
+
+    memset(&launcher.ai.reply, 0, sizeof(launcher.ai.reply));
+
+    snprintf(launcher.ai.reply.error, sizeof(launcher.ai.reply.error), "%s", reason);
+
+    launcher_answer();
+}
+
+
+/**
+ * @brief Puts the query to the model on a thread of its own, leaving the window live until launcher_collect() shows the answer.
  */
 
 static void launcher_ask(void) {
@@ -604,17 +700,69 @@ static void launcher_ask(void) {
         return;
     }
 
+    launcher_abandon();
 
-    strncpy(launcher.ai.prompt, query, sizeof(launcher.ai.prompt) - 1);
+    if (launcher_ai_init() < 0) {
 
-    launcher.ai.prompt[sizeof(launcher.ai.prompt) - 1] = '\0';
+        launcher_refuse("Cannot initialise the HTTPS library.");
+        return;
+    }
+
+
+    launcher_job_t* job = calloc(1, sizeof(*job));
+
+    if (!job) {
+
+        launcher_refuse("Out of memory.");
+        return;
+    }
+
+    strncpy(job->prompt, query, sizeof(job->prompt) - 1);
+
+    atomic_init(&job->refs, 2);
+    atomic_init(&job->done, false);
+
+
+    pthread_attr_t attr;
+    pthread_t thread;
+
+    pthread_attr_init(&attr);
+    pthread_attr_setstacksize(&attr, LAUNCHER_AI_STACK);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+
+    const int e = pthread_create(&thread, &attr, launcher_job_run, job);
+
+    pthread_attr_destroy(&attr);
+
+    if (e != 0) {
+
+        free(job);
+
+        launcher_refuse(strerror(e));
+        return;
+    }
+
+    launcher.ai.job = job;
 
     launcher_thinking();
+}
 
-    ui_view_present(launcher.view);
 
-    launcher_ai_ask(launcher.ai.prompt, &launcher.ai.reply);
+/**
+ * @brief Shows the answer to the question in flight, once it has one.
+ */
 
+static void launcher_collect(void) {
+
+    launcher_job_t* job = launcher.ai.job;
+
+    if (!job || !atomic_load_explicit(&job->done, memory_order_acquire)) {
+        return;
+    }
+
+    launcher.ai.reply = job->reply;
+
+    launcher_abandon();
     launcher_answer();
 }
 
@@ -627,6 +775,12 @@ static void launcher_ask(void) {
  */
 
 static void launcher_teardown(void) {
+
+#if defined(CONFIG_HAVE_AI)
+
+    launcher_abandon();
+
+#endif
 
     ui_view_destroy(launcher.view);
     ui_window_destroy(launcher.window);
@@ -938,6 +1092,28 @@ static bool launcher_dispatch(const ui_event_t* event) {
 
 
 /**
+ * @brief Reports how long the event loop may sleep: as long as the view allows, and no longer than a tick while an answer is awaited.
+ *
+ * @return The timeout in milliseconds, or -1 to block.
+ */
+
+static int launcher_timeout(void) {
+
+    int timeout = ui_view_timeout(launcher.view);
+
+#if defined(CONFIG_HAVE_AI)
+
+    if (launcher.ai.job && (timeout < 0 || timeout > LAUNCHER_AI_TICK_MS)) {
+        timeout = LAUNCHER_AI_TICK_MS;
+    }
+
+#endif
+
+    return timeout;
+}
+
+
+/**
  * @brief The event loop, which is the library's own plus a window that closes when it is left.
  *
  * @return 0 on a clean dismissal, -1 when the connection failed.
@@ -949,7 +1125,13 @@ static int launcher_loop(void) {
 
     while (running) {
 
-        const int timeout = ui_view_timeout(launcher.view);
+#if defined(CONFIG_HAVE_AI)
+
+        launcher_collect();
+
+#endif
+
+        const int timeout = launcher_timeout();
 
         if (ui_view_present(launcher.view) < 0) {
             return -1;

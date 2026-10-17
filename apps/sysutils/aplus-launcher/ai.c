@@ -51,9 +51,6 @@
 
     /**
      * @brief How long a request, and the connecting part of it, may take before it is given up on, in seconds.
-     *
-     * The window is frozen for exactly this long in the worst case, which is what keeps both
-     * numbers small enough to sit through.
      */
     #define LAUNCHER_AI_TIMEOUT         20
     #define LAUNCHER_AI_TIMEOUT_CONNECT 10
@@ -242,9 +239,24 @@ static int launcher_ai_parse(const char* json, long status, launcher_ai_reply_t*
 }
 
 
-int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
+int launcher_ai_init(void) {
 
     static bool ready = false;
+
+    if (!ready) {
+
+        if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
+            return -1;
+        }
+
+        ready = true;
+    }
+
+    return 0;
+}
+
+
+int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
 
     memset(out, 0, sizeof(*out));
 
@@ -258,13 +270,6 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
 
         snprintf(out->error, sizeof(out->error), "No API key: set CONFIG_HUGGINGFACE_API_KEY and build again.");
         return -1;
-    }
-
-
-    if (!ready) {
-
-        curl_global_init(CURL_GLOBAL_DEFAULT);
-        ready = true;
     }
 
 
