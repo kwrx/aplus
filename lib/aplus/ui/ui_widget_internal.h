@@ -131,6 +131,9 @@ struct ui_widget {
     //? are not, which is what lets them sit under a button without swallowing its clicks.
     bool interactive;
 
+    //? The pointer shape while the widget is under the pointer or holding a press.
+    ui_cursor_t cursor;
+
     void* user;
 
     //? The view's theme, copied here so that a widget never has to reach back through the
@@ -292,6 +295,9 @@ struct ui_view {
     ui_widget_t* hovered;
     ui_widget_t* pressed;
     ui_widget_t* focused;
+
+    //? The pointer shape where no widget answers for it, as ui_view_set_cursor() left it.
+    ui_cursor_t cursor;
 
     //? The last press, against which the next one is counted as a double click.
     ui_widget_t* click_widget;

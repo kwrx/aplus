@@ -83,6 +83,13 @@ extern "C" {
  */
 #define UI_REQ_SET_ICON 0x0007
 
+/**
+ * @brief Names the shape the server gives the pointer while it is over a window's content area.
+ *
+ * A server that has never heard of this request drains it and keeps its arrow.
+ */
+#define UI_REQ_SET_CURSOR 0x0008
+
 #define UI_EV_HELLO     0x8001
 #define UI_EV_CONFIGURE 0x8002
 #define UI_EV_KEY       0x8003
@@ -218,6 +225,30 @@ typedef struct {
     char icon[UI_ICON_NAME_MAX];
 
 } __attribute__((packed)) ui_msg_set_icon_t;
+
+
+/**
+ * @brief The pointer shapes a window can ask for over its content area.
+ */
+typedef enum {
+
+    UI_CURSOR_DEFAULT = 0,
+    UI_CURSOR_TEXT,
+
+    UI_CURSOR_COUNT,
+
+} ui_cursor_t;
+
+
+/**
+ * @brief A pointer shape, as one of ui_cursor_t; one the server does not know is its arrow.
+ */
+typedef struct {
+
+    uint32_t window_id;
+    uint8_t cursor;
+
+} __attribute__((packed)) ui_msg_set_cursor_t;
 
 
 typedef struct {
@@ -481,6 +512,15 @@ int ui_window_set_title(ui_window_t* win, const char* title);
  * @return 0, or -1 with errno set: ENAMETOOLONG for a name UI_ICON_NAME_MAX cannot hold.
  */
 int ui_window_set_icon(ui_window_t* win, const char* name);
+
+/**
+ * @brief Sets the pointer shape over the window's content area, which starts as the server's arrow.
+ *
+ * @param win The window.
+ * @param cursor The shape.
+ * @return 0, or -1 with errno set: EINVAL for a shape ui_cursor_t does not name.
+ */
+int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor);
 
 /**
  * @brief Waits for the next event on a connection.

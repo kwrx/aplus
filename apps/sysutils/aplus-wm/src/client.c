@@ -400,6 +400,37 @@ static int wm_client_handle_set_icon(wm_client_t* client, const uint8_t* payload
 }
 
 
+/**
+ * @brief Acts on a request for the pointer shape over a window's content area.
+ *
+ * @param client The client that asked.
+ * @param payload The message body.
+ * @param size The length of the message body.
+ * @return 0 on success, or -1 for a malformed request.
+ */
+static int wm_client_handle_set_cursor(wm_client_t* client, const uint8_t* payload, size_t size) {
+
+    ui_msg_set_cursor_t req;
+
+    if (size != sizeof(req)) {
+        return -1;
+    }
+
+    memcpy(&req, payload, sizeof(req));
+
+
+    wm_window_t* win = wm_window_from_id(req.window_id);
+
+    if (!win || win->client != client) {
+        return -1;
+    }
+
+    wm_window_set_cursor(win, (ui_cursor_t)req.cursor);
+
+    return 0;
+}
+
+
 static int wm_client_handle_resize_window(wm_client_t* client, const uint8_t* payload, size_t size) {
 
     ui_msg_resize_t req;
@@ -479,6 +510,9 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
 
         case UI_REQ_SET_ICON:
             return wm_client_handle_set_icon(client, payload, size);
+
+        case UI_REQ_SET_CURSOR:
+            return wm_client_handle_set_cursor(client, payload, size);
 
         case UI_REQ_RESIZE_WINDOW:
             return wm_client_handle_resize_window(client, payload, size);

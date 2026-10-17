@@ -70,6 +70,7 @@ static wm_cursor_t wm_cursors[WM_CURSOR_COUNT] = {
     [WM_CURSOR_SIZE_VER]   = {.name = "size_ver",   .hot_x = 16, .hot_y = 15},
     [WM_CURSOR_SIZE_FDIAG] = {.name = "size_fdiag", .hot_x = 16, .hot_y = 15},
     [WM_CURSOR_SIZE_BDIAG] = {.name = "size_bdiag", .hot_x = 16, .hot_y = 15},
+    [WM_CURSOR_TEXT]       = {.name = "text",       .hot_x = 16, .hot_y = 15},
 };
 
 static wm_cursor_shape_t wm_cursor_shape = WM_CURSOR_ARROW;

@@ -68,6 +68,7 @@ have the high bit set.
 | `0x0005` | `UI_REQ_DESTROY_WINDOW` | `ui_msg_window_t` |
 | `0x0006` | `UI_REQ_RESIZE_WINDOW` | `ui_msg_resize_t` |
 | `0x0007` | `UI_REQ_SET_ICON` | `ui_msg_set_icon_t` |
+| `0x0008` | `UI_REQ_SET_CURSOR` | `ui_msg_set_cursor_t` |
 | `0x8001` | `UI_EV_HELLO` | `ui_msg_hello_t` |
 | `0x8002` | `UI_EV_CONFIGURE` | `ui_msg_configure_t` |
 | `0x8003` | `UI_EV_KEY` | `ui_msg_key_t` |
@@ -143,7 +144,8 @@ is the same shape as any other. One flag bit is the whole of what version 6 brea
 `UI_REQ_SET_ICON` came later and did not bump the version, for the reason the resize request
 gives: a server that drains it draws no icon, which is all a client that never sends it gets
 anyway. A bump would have had every client already linked against version 6 refused at the
-handshake over a request it never makes.
+handshake over a request it never makes. `UI_REQ_SET_CURSOR` followed on the same terms: a
+server that drains it keeps its arrow.
 
 Unlike every other read in the client, the hello reply is read without skipping unknown
 messages: nothing else can legitimately arrive before it.
@@ -341,6 +343,38 @@ at all. None of those is an error; a wrong length or someone else's window id is
 `libui` sends one by itself as each window is created, naming the program
 (`program_invocation_short_name`), which is what the program's desktop entry calls its icon
 too. A borderless window has no titlebar, so its icon is never drawn.
+
+## Cursors
+
+```c
+typedef enum {
+
+    UI_CURSOR_DEFAULT = 0,
+    UI_CURSOR_TEXT,
+
+    UI_CURSOR_COUNT,
+
+} ui_cursor_t;
+
+typedef struct {
+
+    uint32_t window_id;
+    uint8_t cursor;
+
+} __attribute__((packed)) ui_msg_set_cursor_t;
+```
+
+Names the shape the pointer takes while it is over the window's content area; over the
+titlebar, the edges and everything else the server draws, the server picks the shape as it
+always has. A window starts at `UI_CURSOR_DEFAULT`, the arrow, and `UI_CURSOR_TEXT` is the
+I-beam from the cursor theme's `text.webp`. A value the server does not know is the arrow
+rather than an error, so a later shape costs an older server nothing; a wrong length or
+someone else's window id is still an error.
+
+The server applies it at once when the pointer is already over that window, so a client sends
+it as the pointer crosses into a region that wants a different shape and not before. `libui`
+only sends it when the shape changes, and the view decides which one — see
+[Widgets](widgets.md#the-pointer-shape).
 
 ## Commits
 

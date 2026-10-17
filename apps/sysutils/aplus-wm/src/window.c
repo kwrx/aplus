@@ -536,6 +536,36 @@ void wm_window_set_icon(wm_window_t* win, const char* name) {
 
 
 /**
+ * @brief The shape the pointer takes over a content area, by what the client asked for.
+ */
+static const wm_cursor_shape_t wm_window_cursors[UI_CURSOR_COUNT] = {
+
+    [UI_CURSOR_DEFAULT] = WM_CURSOR_ARROW,
+    [UI_CURSOR_TEXT]    = WM_CURSOR_TEXT,
+};
+
+
+/**
+ * @brief Gives a window the pointer shape its content area shows, at once if the pointer is over it.
+ *
+ * @param win The window.
+ * @param cursor The shape the client asked for; one this server does not know is the arrow.
+ */
+void wm_window_set_cursor(wm_window_t* win, ui_cursor_t cursor) {
+
+    const wm_cursor_shape_t shape = (unsigned)cursor < UI_CURSOR_COUNT ? wm_window_cursors[cursor] : WM_CURSOR_ARROW;
+
+    if (win->cursor == shape) {
+        return;
+    }
+
+    win->cursor = shape;
+
+    wm_input_refresh_cursor();
+}
+
+
+/**
  * @brief Asks a client to close a window, which it owns and may decline to.
  *
  * @param win The window to ask about.
@@ -590,6 +620,7 @@ void wm_window_destroy(wm_window_t* win) {
 
     if (wm.pointer_focus == win) {
         wm.pointer_focus = NULL;
+        wm_input_refresh_cursor();
     }
 
     if (wm.focused == win) {
@@ -1122,6 +1153,8 @@ void wm_window_minimize(wm_window_t* win) {
         wm_client_queue(win->client, UI_EV_LEAVE, &msg, sizeof(msg));
 
         wm.pointer_focus = NULL;
+
+        wm_input_refresh_cursor();
     }
 
     if (wm.focused == win) {

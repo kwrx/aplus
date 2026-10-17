@@ -53,6 +53,7 @@ uint32_t  ui_window_flags(ui_window_t* win);
 
 int ui_window_set_title(ui_window_t* win, const char* title);
 int ui_window_set_icon(ui_window_t* win, const char* name);
+int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor);
 ```
 
 `ui_window_create()` blocks until the server has configured the window, stepping over any
@@ -69,6 +70,12 @@ desktop entry's `Icon` key holds as well, so most applications never call it. A 
 server's theme lacks gets the generic icon rather than none. Unlike a title, a name too long
 for `UI_ICON_NAME_MAX` (128 bytes, terminator included) is refused with `ENAMETOOLONG`, since
 cutting it short would name some other icon.
+
+`ui_window_set_cursor()` sets the pointer shape over the content area: `UI_CURSOR_DEFAULT`
+(the arrow, which every window starts with) or `UI_CURSOR_TEXT` (the I-beam). Asking for the
+shape already set sends nothing, so calling it on every pointer event is fine. A view calls it
+for you — see [Widgets](widgets.md#the-pointer-shape) — so this is for clients that draw
+everything themselves.
 
 `ui_window_destroy()` tells the server and detaches the surface. The window id is the server's
 handle for it and the field every event carries.
