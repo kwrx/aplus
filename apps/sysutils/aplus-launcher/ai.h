@@ -53,7 +53,14 @@ typedef struct {
 
 
 /**
- * @brief Asks the model a question, blocking until it answers, fails or runs out of time.
+ * @brief Prepares the HTTPS library, once, from the main thread before any request is made.
+ *
+ * @return 0 on success, -1 when the library could not be initialised.
+ */
+int launcher_ai_init(void);
+
+/**
+ * @brief Asks the model a question, blocking until it answers, fails or runs out of time; safe on any thread after launcher_ai_init().
  *
  * @param prompt What to ask.
  * @param out Receives the answer, or a message for the user in its error when this fails.
