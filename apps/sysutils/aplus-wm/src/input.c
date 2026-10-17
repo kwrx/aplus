@@ -620,6 +620,8 @@ static void input_handle_button_left(uint8_t down) {
     wm_window_t* win   = NULL;
     wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win);
 
+    wm_drawer_press(win, region);
+
     if (region == WM_REGION_NONE) {
         return;
     }

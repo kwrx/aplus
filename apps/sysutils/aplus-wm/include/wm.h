@@ -328,6 +328,25 @@ typedef struct wm_ghost {
 
 
 typedef struct wm_client wm_client_t;
+typedef struct wm_window wm_window_t;
+
+
+/**
+ * @brief The drawer: the window slid out of the rail, or a picture of it sliding back in after it has gone.
+ */
+typedef struct {
+
+    wm_window_t* window;
+    cairo_surface_t* still;
+
+    wm_rect_t rect;
+
+    ui_anim_t open;
+    ui_anim_t height;
+
+    wm_rect_t painted;
+
+} wm_drawer_t;
 
 
 typedef struct wm_window {
@@ -530,6 +549,8 @@ typedef struct {
         } popout;
     } taskbar;
 
+    wm_drawer_t drawer;
+
     //? What has to be repainted before the next frame reaches the screen, as a handful of
     //? rectangles rather than the one box around them all: dragging a window damages where it was
     //? and where it now is, and the box around those two covers the whole sweep between them.
@@ -637,6 +658,20 @@ void wm_taskbar_tick(int fd);
 void wm_taskbar_fini(void);
 
 /**
+ * @brief Implemented in drawer.c.
+ */
+void wm_drawer_attach(wm_window_t* win);
+void wm_drawer_reveal(wm_window_t* win);
+void wm_drawer_resized(wm_window_t* win);
+void wm_drawer_detach(wm_window_t* win);
+void wm_drawer_press(const wm_window_t* win, wm_region_t region);
+wm_window_t* wm_drawer_at(int x, int y);
+void wm_drawer_damage(void);
+void wm_drawer_settle(void);
+void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count);
+void wm_drawer_fini(void);
+
+/**
  * @brief Implemented in window.c.
  */
 wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const char* title, uint32_t flags);
@@ -651,6 +686,7 @@ void wm_window_minimize(wm_window_t* win);
 void wm_window_restore(wm_window_t* win);
 bool wm_window_borderless(const wm_window_t* win);
 bool wm_window_centered(const wm_window_t* win);
+bool wm_window_drawer(const wm_window_t* win);
 bool wm_window_translucent(const wm_window_t* win);
 wm_insets_t wm_window_insets(const wm_window_t* win);
 cairo_format_t wm_window_format(const wm_window_t* win);

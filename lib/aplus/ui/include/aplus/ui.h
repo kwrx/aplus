@@ -167,9 +167,14 @@ typedef struct {
 #define UI_WINDOW_TRANSLUCENT (1 << 2)
 
 /**
+ * @brief Slid out of the taskbar's rail as a drawer, borderless, over a background the server paints.
+ */
+#define UI_WINDOW_DRAWER (1 << 3)
+
+/**
  * @brief Every flag this version knows, which is what both ends validate against.
  */
-#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT)
+#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER)
 
 
 typedef struct {
