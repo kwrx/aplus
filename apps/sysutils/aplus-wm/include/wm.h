@@ -192,9 +192,10 @@
 #define WM_TASKBAR_FONT_SIZE 13.0
 
 /**
- * @brief How big the launcher's button draws its icon, larger than a window entry's.
+ * @brief The launcher's mark: a 3x3 grid of dots, this far apart centre to centre and this big in radius.
  */
-#define WM_TASKBAR_LAUNCHER_ICON 28
+#define WM_TASKBAR_LAUNCHER_PITCH 8.0
+#define WM_TASKBAR_LAUNCHER_DOT   2.5
 
 /**
  * @brief What the taskbar's own button names in place of a window id, and what it starts.
@@ -505,7 +506,6 @@ typedef struct {
         uint32_t hover;
         uint32_t pressed;
         ui_anim_t hover_launcher;
-        cairo_surface_t* launcher_icon;
         long minute;
     } taskbar;
 
