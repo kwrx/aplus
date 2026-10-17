@@ -120,8 +120,7 @@
 
 #define WM_COLOR_ACCENT 0.208, 0.518, 0.894
 
-#define WM_COLOR_TASKBAR        0.110, 0.110, 0.110, 0.94
-#define WM_COLOR_TASKBAR_EDGE   1.000, 1.000, 1.000, 0.08
+#define WM_COLOR_TASKBAR        0.071, 0.071, 0.071, 1.00
 #define WM_COLOR_TASKBAR_HOVER  1.000, 1.000, 1.000, 0.07
 #define WM_COLOR_TASKBAR_ACTIVE 1.000, 1.000, 1.000, 0.11
 #define WM_COLOR_TASKBAR_DOWN   1.000, 1.000, 1.000, 0.16
@@ -176,20 +175,31 @@
 #define WM_ICON_FALLBACK "application-x-executable"
 
 /**
- * @brief The taskbar along the bottom edge: the launcher's button, an entry per window, and a clock.
+ * @brief The taskbar: a rail down the left edge with the launcher, an entry per window and a clock,
+ * joined to a thin border round the other three edges whose inner corners are rounded like a window's.
  *
- * Windows are placed, clamped and maximised within the display above it.
+ * Windows are placed, clamped and maximised within the rounded inset it leaves.
  */
 
-#define WM_TASKBAR_HEIGHT    44
-#define WM_TASKBAR_PAD       5
-#define WM_TASKBAR_ITEM      34
-#define WM_TASKBAR_GAP       4
-#define WM_TASKBAR_ENTRY_MAX 200
-#define WM_TASKBAR_RADIUS    6
-#define WM_TASKBAR_MARK      3
-#define WM_TASKBAR_CLOCK     64
-#define WM_TASKBAR_FONT_SIZE 13.0
+#define WM_TASKBAR_WIDTH       48
+#define WM_TASKBAR_BORDER      8
+#define WM_TASKBAR_RADIUS      UI_WINDOW_RADIUS
+#define WM_TASKBAR_ITEM        34
+#define WM_TASKBAR_PAD         ((WM_TASKBAR_WIDTH - WM_TASKBAR_ITEM) / 2)
+#define WM_TASKBAR_GAP         4
+#define WM_TASKBAR_ITEM_RADIUS 9
+#define WM_TASKBAR_MARK        3
+#define WM_TASKBAR_CLOCK       40
+#define WM_TASKBAR_CLOCK_SIZE  15.0
+#define WM_TASKBAR_FONT_SIZE   13.0
+
+/**
+ * @brief The label that grows out of the rail beside the item under the pointer.
+ */
+
+#define WM_TASKBAR_POPOUT_RADIUS 10
+#define WM_TASKBAR_POPOUT_PAD    14
+#define WM_TASKBAR_POPOUT_MAX    360
 
 /**
  * @brief The launcher's mark: a 3x3 grid of dots, this far apart centre to centre and this big in radius.
@@ -198,9 +208,10 @@
 #define WM_TASKBAR_LAUNCHER_DOT   2.5
 
 /**
- * @brief What the taskbar's own button names in place of a window id, and what it starts.
+ * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
  */
 #define WM_TASKBAR_LAUNCHER UINT32_MAX
+#define WM_TASKBAR_DATE     (UINT32_MAX - 1)
 #define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
 
 
@@ -471,7 +482,7 @@ typedef struct {
         uint64_t time;
     } title_click;
 
-    //? Windows already gone, still fading out, painted over everything else.
+    //? Windows already gone, still fading out, painted over every window still open.
     wm_ghost_t* ghosts;
 
     wm_shadow_t shadow_key;
@@ -501,12 +512,22 @@ typedef struct {
     } drag;
 
     //? The taskbar item the pointer is over and the one it went down on: a window id,
-    //? WM_TASKBAR_LAUNCHER, or 0 for nothing. And the minute the clock last showed.
+    //? WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, or 0 for nothing. And the minute the clock last showed.
     struct {
         uint32_t hover;
         uint32_t pressed;
         ui_anim_t hover_launcher;
         long minute;
+
+        //? The label beside the hovered item: what it says, how far out it is, where it is
+        //? centred and how wide it is when fully out, and where the last frame drew it.
+        struct {
+            char text[UI_TITLE_MAX * 2];
+            ui_anim_t open;
+            ui_anim_t center;
+            ui_anim_t width;
+            wm_rect_t painted;
+        } popout;
     } taskbar;
 
     //? What has to be repainted before the next frame reaches the screen, as a handful of
