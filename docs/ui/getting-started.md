@@ -513,9 +513,10 @@ edge and watch the number resize with the panel; the layout callback is running 
 configure. Holding `Super` moves a window from anywhere on it, which is how an undecorated
 one is moved — see [Window flags](window-api.md#window-flags).
 
-`Super+Space` opens the launcher, `Ctrl+Alt+T` opens another terminal, `Alt+Tab` moves the
-focus to the next window (hold `Alt` and keep tapping `Tab` to walk further down the stack,
-add `Shift` to walk back), and `Ctrl+Alt+Q` closes the focused window. Closing from
+`Super+Space` opens the launcher (so does the button at the top of the taskbar), `Ctrl+Alt+T`
+opens another terminal, `Alt+Tab` moves the focus to the next window (hold `Alt` and keep
+tapping `Tab` to walk further down the stack, add `Shift` to walk back), and `Ctrl+Alt+Q`
+closes the focused window. Closing from
 the titlebar button sends `UI_EVENT_CLOSE`, which `ui_view_run()` turns into a clean return
 from `main()` — the application decides when to die, not the server.
 

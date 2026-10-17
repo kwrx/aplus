@@ -169,7 +169,8 @@ than ignored:
 #define UI_WINDOW_BORDERLESS  (1 << 0)
 #define UI_WINDOW_CENTERED    (1 << 1)
 #define UI_WINDOW_TRANSLUCENT (1 << 2)
-#define UI_WINDOW_FLAGS_ALL   (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT)
+#define UI_WINDOW_DRAWER      (1 << 3)
+#define UI_WINDOW_FLAGS_ALL   (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER)
 ```
 
 A bit the server does not know closes the connection, on the reasoning that a client asking
@@ -183,7 +184,11 @@ clipped to that curve with its shadow cast around the same one. It can still ask
 with [`UI_REQ_RESIZE_WINDOW`](#resizing). `UI_WINDOW_CENTERED` asks for the frame to be placed
 exactly in the middle of the display. Every other window starts there too, but steps down and
 right from a window already sitting in that spot. `UI_WINDOW_TRANSLUCENT` asks for
-[a surface that carries alpha](#the-window-surface).
+[a surface that carries alpha](#the-window-surface). `UI_WINDOW_DRAWER` asks for the window to
+slide out of the taskbar's rail: the server draws nothing around it, puts it in the top-left
+corner of the work area and never moves it, keeps one at a time — a new drawer has a
+`UI_EV_CLOSE` sent to the one before it — and sends one too when a press lands anywhere but on
+the drawer or the taskbar.
 
 Placement is a creation flag because it is the only point at which a client has any say in
 it: there is no move request and no message carrying the screen size, so a window either
@@ -313,7 +318,7 @@ sense: the server clamps it the way it clamps a creation, and answers with a
 size the window already had. A client that treats the request as having worked will paint at
 a size it was never given.
 
-A maximised window is the exception: it keeps filling the display above the taskbar, and the
+A maximised window is the exception: it keeps filling the area the taskbar leaves, and the
 request is answered with a `UI_EV_CONFIGURE` naming the size it already has.
 
 The window keeps its origin. `UI_WINDOW_CENTERED` places a window when it is created and

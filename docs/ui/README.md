@@ -70,7 +70,7 @@ its whole frame instead — see
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-image-viewer/` | The one that mixes the layers: a toolbar of widgets around a picture drawn straight into the window pixels |
 | `apps/sysutils/aplus-editor/` | The bigger mix: a toolbar, a prompt bar and a status line of widgets around a text area it draws, damages and blinks a caret in by itself |
-| `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a borderless centred window that is translucent and only as tall as it has results |
+| `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a translucent window only as tall as it has results — borderless and centred, or a drawer out of the taskbar's rail with `--drawer` |
 | `apps/test/ui-test/` | The reference surface-layer application |
 
 ## Building against it
@@ -209,15 +209,23 @@ button. Dragging a maximised window by its titlebar puts it back at its old size
 pointer. Windows open centred, stepping down and right from one already there, and they grow
 into place, fade away when they close, and morph between their two sizes when maximised.
 
-The taskbar runs along the bottom of the display. Its left end starts the launcher, as
-`Super+Space` does, but with `--all`, so it opens listing every application rather than an
-empty field; its right end shows the time. Between them is an entry for every
-decorated window, in the order the windows opened, with its icon and title; the active one is
-lit and marked in the accent. Clicking an entry brings that window to the front, or hides it if
-it is already there, and brings a hidden one back. The third titlebar button hides a window
-too, which then shrinks into its entry. Windows are placed, clamped and maximised within the
-display above the taskbar, and a borderless window gets no entry. `Alt+Tab` steps over the
-hidden ones.
+The taskbar is a rail down the left edge of the display, joined to a thin border round the
+rest of it, and windows are placed, clamped and maximised within the rounded area the two
+leave. At the top of the rail is the launcher's button, a grid of dots whose middle cross is
+in the accent. It starts the launcher as `Super+Space` does, but with `--all --drawer`, so it
+lists every application rather than an empty field and slides out of the rail as a drawer in
+the top-left corner instead of opening in the middle. While the drawer is out the button's
+cross turns into a close cross; a second click, `Escape`, or a press anywhere off the drawer
+and the taskbar puts it away.
+
+Below the button is an entry for every decorated window, in the order the windows opened,
+with its icon; the active one is lit and marked in the accent against the rail's edge, and its
+title runs up the free stretch of rail under the entries. The foot of the rail shows the time,
+the hours over the minutes. Hovering an item pops a label out of the rail beside it: the
+window's title, `Applications` for the launcher's button, the date for the clock. Clicking an
+entry brings that window to the front, or hides it if it is already there, and brings a hidden
+one back. The third titlebar button hides a window too, which then shrinks into its entry. A
+borderless window gets no entry, and `Alt+Tab` steps over the hidden ones.
 
 Holding `Alt` down keeps the walk going: the order is taken when the first `Tab` arrives and
 does not move again until `Alt` is released, so a second `Tab` reaches the third window rather
