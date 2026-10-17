@@ -383,6 +383,31 @@ ui_widget_t* ui_view_focused(const ui_view_t* view) {
 
 
 /**
+ * @brief Gives the pointer the shape of whatever answers for it: the pressed widget, else the hovered one, else the view.
+ *
+ * @param view The view.
+ */
+static void ui_view_update_cursor(ui_view_t* view) {
+
+    const ui_widget_t* widget = view->pressed ? view->pressed : view->hovered;
+
+    ui_window_set_cursor(view->window, widget ? widget->cursor : view->cursor);
+}
+
+
+void ui_view_set_cursor(ui_view_t* view, ui_cursor_t cursor) {
+
+    if (!view || (unsigned)cursor >= UI_CURSOR_COUNT) {
+        return;
+    }
+
+    view->cursor = cursor;
+
+    ui_view_update_cursor(view);
+}
+
+
+/**
  * @brief Counts a press towards a double click, against the last one the view saw.
  *
  * @param view The view holding the click history.
@@ -521,8 +546,14 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
             return true;
         }
 
-        case UI_EVENT_POINTER:
-            return ui_view_pointer(view, event);
+        case UI_EVENT_POINTER: {
+
+            const bool changed = ui_view_pointer(view, event);
+
+            ui_view_update_cursor(view);
+
+            return changed;
+        }
 
         case UI_EVENT_SCROLL:
             return ui_view_scroll(view, event);

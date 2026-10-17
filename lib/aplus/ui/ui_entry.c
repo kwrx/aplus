@@ -81,6 +81,7 @@ ui_widget_t* ui_entry_create(ui_view_t* view, const char* placeholder) {
         return NULL;
     }
 
+    widget->cursor       = UI_CURSOR_TEXT;
     widget->entry.weight = UI_FONT_REGULAR;
     widget->entry.size   = widget->theme->font_size;
 

@@ -610,3 +610,31 @@ int ui_window_set_icon(ui_window_t* win, const char* name) {
 
     return ui_send_msg(win->conn->fd, UI_REQ_SET_ICON, &req, sizeof(req));
 }
+
+
+int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor) {
+
+    if (!win || (unsigned)cursor >= UI_CURSOR_COUNT) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (win->cursor == cursor) {
+        return 0;
+    }
+
+
+    ui_msg_set_cursor_t req = {
+
+        .window_id = win->id,
+        .cursor    = (uint8_t)cursor,
+    };
+
+    if (ui_send_msg(win->conn->fd, UI_REQ_SET_CURSOR, &req, sizeof(req)) < 0) {
+        return -1;
+    }
+
+    win->cursor = cursor;
+
+    return 0;
+}

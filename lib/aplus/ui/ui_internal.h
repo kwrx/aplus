@@ -67,6 +67,9 @@ struct ui_window {
 
     ui_damage_t damage;
 
+    //? The pointer shape last sent, so that asking for the same one again costs nothing.
+    ui_cursor_t cursor;
+
     //? A configure that has arrived but has not been acted on yet. The surface is only
     //? reallocated when the caller asks, because ui_next_event() usually runs on a
     //? different thread from the one drawing into the pixels.

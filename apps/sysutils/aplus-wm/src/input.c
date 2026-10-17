@@ -280,12 +280,16 @@ static void input_track_pointer(wm_window_t* win, wm_region_t region) {
 /**
  * @brief Reports the shape the pointer takes over a region.
  *
+ * @param win The window the region belongs to, or NULL.
  * @param region The region under the pointer.
  * @return The cursor shape for it.
  */
-static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
+static wm_cursor_shape_t input_cursor_for(const wm_window_t* win, wm_region_t region) {
 
     switch (region) {
+
+        case WM_REGION_CONTENT:
+            return win ? win->cursor : WM_CURSOR_ARROW;
 
         case WM_REGION_RESIZE_N:
         case WM_REGION_RESIZE_S:
@@ -316,17 +320,33 @@ static wm_cursor_shape_t input_cursor_for(wm_region_t region) {
 
 /**
  * @brief Points the cursor at whatever it is about to act on, pinning the shape for the length of a drag.
+ *
+ * @param win The window under the pointer, or NULL.
+ * @param region The region under the pointer.
  */
-static void input_update_cursor(wm_region_t region) {
+static void input_update_cursor(const wm_window_t* win, wm_region_t region) {
 
     if (wm.drag.window) {
 
-        wm_cursor_set(wm.drag.region == WM_REGION_TITLEBAR ? WM_CURSOR_SIZE_ALL : input_cursor_for(wm.drag.region));
+        wm_cursor_set(wm.drag.region == WM_REGION_TITLEBAR ? WM_CURSOR_SIZE_ALL : input_cursor_for(wm.drag.window, wm.drag.region));
 
         return;
     }
 
-    wm_cursor_set(input_cursor_for(region));
+    wm_cursor_set(input_cursor_for(win, region));
+}
+
+
+/**
+ * @brief Gives the pointer the shape of whatever is under it again, as a client changing its own shape needs.
+ */
+void wm_input_refresh_cursor(void) {
+
+    wm_window_t* over = NULL;
+
+    const wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
+
+    input_update_cursor(over, region);
 }
 
 
@@ -682,7 +702,7 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
     input_handle_button_left(down);
 
-    input_update_cursor(wm_window_hit_test(wm.pointer.x, wm.pointer.y, NULL));
+    wm_input_refresh_cursor();
 }
 
 
@@ -703,7 +723,7 @@ static void input_pointer_moved(const wm_rect_t* old) {
     const wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
 
 
-    input_update_cursor(region);
+    input_update_cursor(over, region);
 
 
     if (wm.display.hwcursor) {

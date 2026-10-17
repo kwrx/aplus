@@ -221,6 +221,7 @@ typedef enum {
     WM_CURSOR_SIZE_VER,
     WM_CURSOR_SIZE_FDIAG,
     WM_CURSOR_SIZE_BDIAG,
+    WM_CURSOR_TEXT,
 
     WM_CURSOR_COUNT,
 
@@ -332,6 +333,9 @@ typedef struct wm_window {
     //? Already scaled to WM_ICON_SIZE, and a copy rather than libui's cached surface,
     //? which the cache destroys once other icons push it out.
     cairo_surface_t* icon;
+
+    //? The shape the client asked the pointer to take over the content area.
+    wm_cursor_shape_t cursor;
 
     //? Position of the *content* area on screen. The frame is derived from it.
     int x;
@@ -580,6 +584,7 @@ cairo_pattern_t* wm_wallpaper_gradient(int height);
 int wm_input_open(void);
 void wm_input_close(void);
 int wm_input_dispatch(int fd);
+void wm_input_refresh_cursor(void);
 
 /**
  * @brief Implemented in keys.c.
@@ -612,6 +617,7 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 void wm_window_destroy(wm_window_t* win);
 void wm_window_request_close(wm_window_t* win);
 void wm_window_set_icon(wm_window_t* win, const char* name);
+void wm_window_set_cursor(wm_window_t* win, ui_cursor_t cursor);
 wm_window_t* wm_window_from_id(uint32_t id);
 wm_window_t* wm_window_topmost(void);
 bool wm_window_listed(const wm_window_t* win);

@@ -243,6 +243,17 @@ int ui_view_timeout(ui_view_t* view);
 bool ui_view_focus(ui_view_t* view, ui_widget_t* widget);
 ui_widget_t* ui_view_focused(const ui_view_t* view);
 
+/**
+ * @brief Sets the pointer shape wherever no widget that takes the pointer is under it, which starts as the arrow.
+ *
+ * A widget under the pointer, or holding a press, shows its own shape instead: the text
+ * cursor for an entry, the arrow for everything else.
+ *
+ * @param view The view.
+ * @param cursor The shape.
+ */
+void ui_view_set_cursor(ui_view_t* view, ui_cursor_t cursor);
+
 
 /**
  * @brief Runs the event loop until the window closes or the server goes away.

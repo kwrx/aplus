@@ -287,6 +287,25 @@ that happens to overlap. Layout is absolute, everywhere.
 Wheel events do not follow the press. They go to whatever the pointer is over, which is the
 widget hover is already tracking.
 
+### The pointer shape
+
+```c
+void ui_view_set_cursor(ui_view_t* view, ui_cursor_t cursor);
+```
+
+The view picks the pointer shape on every pointer event and tells the server when it changes.
+The widget holding a press decides, else the widget under the pointer, else the view: an
+entry asks for the I-beam (`UI_CURSOR_TEXT`) and every other widget for the arrow. Since a
+press keeps its widget's shape, a drag that started in an entry keeps the I-beam wherever the
+pointer goes.
+
+`ui_view_set_cursor()` sets the view's own shape, the one shown wherever no hit-testable widget
+is under the pointer: the arrow until it is set. That is where a client drawing part of the
+window itself says what its drawing is. `aplus-editor` sets the I-beam while the pointer is over
+the text it draws and back to the arrow over its scrollbar, from its own pointer handler after
+the view has had the event; asking for the shape already set sends nothing, so doing it on
+every event costs nothing.
+
 ## Panel
 
 ```c
@@ -577,6 +596,7 @@ widget that turns key codes into characters, which it does through a keymap of i
 | border | `theme->border`, with a 2-pixel `theme->focus_ring` faded in over it while focused |
 | text | `theme->text`, or `theme->text_muted` for the placeholder |
 | weight / size | `UI_FONT_REGULAR`, `theme->font_size` (14.0) |
+| pointer | `UI_CURSOR_TEXT`, the I-beam — see [The pointer shape](#the-pointer-shape) |
 
 Text is stored in the widget, capped at `UI_ENTRY_TEXT_MAX` (256) bytes plus a terminator, and
 `ui_entry_text()` returns a pointer into that buffer, valid until the next edit or the view's
