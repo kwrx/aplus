@@ -31,6 +31,7 @@
  */
 
 #include <errno.h>
+#include <getopt.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -177,6 +178,7 @@ static struct {
     launcher_entry_t* entries;
     size_t count;
 
+    bool all;
     bool dismissed;
 
 #if defined(CONFIG_HAVE_AI)
@@ -283,7 +285,7 @@ static void launcher_resize(void) {
 
 
 /**
- * @brief Reports whether an entry answers to a query, which nothing does until a character is typed.
+ * @brief Reports whether an entry answers to a query; an empty one matches everything with --all, and nothing otherwise.
  *
  * @param entry The entry to test.
  * @param query What was typed.
@@ -293,7 +295,7 @@ static void launcher_resize(void) {
 static bool launcher_matches(const launcher_entry_t* entry, const char* query) {
 
     if (!*query) {
-        return false;
+        return launcher.all;
     }
 
     return strcasestr(entry->name, query) != NULL || strcasestr(entry->comment, query) != NULL || strcasestr(entry->exec, query) != NULL;
@@ -303,9 +305,9 @@ static bool launcher_matches(const launcher_entry_t* entry, const char* query) {
 /**
  * @brief Rebuilds the list from what is in the field, and asks for the height that now fits it.
  *
- * An empty field lists nothing and leaves the window the height of the field alone. A query
- * that matches nothing is offered to the shell instead, which is the whole of what this has
- * that a menu does not.
+ * An empty field lists nothing and leaves the window the height of the field alone, or lists
+ * every application with --all. A query that matches nothing is offered to the shell instead,
+ * which is the whole of what this has that a menu does not.
  */
 
 static void launcher_refilter(void) {
@@ -982,12 +984,50 @@ static int launcher_loop(void) {
 }
 
 
+/**
+ * @brief Prints how to run the launcher and exits.
+ */
+
+static void launcher_usage(void) {
+
+    printf("Use: " LAUNCHER_NAME " [options]...\n"
+           "Search the installed applications and run one.\n\n"
+           "   -a, --all                   list every application before anything is typed\n"
+           "       --help                  show this help\n");
+
+    exit(0);
+}
+
+
 int main(int argc, char** argv) {
 
-    (void)argc;
-    (void)argv;
-
     setvbuf(stdout, NULL, _IONBF, 0);
+
+
+    static struct option long_options[] = {
+        {"all",  no_argument, NULL, 'a'},
+        {"help", no_argument, NULL, 'h'},
+        {NULL,   0,           NULL, 0  }
+    };
+
+
+    int c, idx;
+
+    while ((c = getopt_long(argc, argv, "ah", long_options, &idx)) != -1) {
+
+        switch (c) {
+
+            case 'a':
+                launcher.all = true;
+                break;
+            case 'h':
+            case '?':
+                launcher_usage();
+                break;
+            default:
+                abort();
+        }
+    }
 
 
     launcher.count = launcher_scan(LAUNCHER_APPLICATIONS, &launcher.entries);
@@ -1003,7 +1043,7 @@ int main(int argc, char** argv) {
     }
 
 
-    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(0), LAUNCHER_NAME, UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
+    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(launcher.all ? (int)launcher.count : 0), LAUNCHER_NAME, UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
 
     if (!launcher.window) {
 

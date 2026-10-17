@@ -210,7 +210,8 @@ pointer. Windows open centred, stepping down and right from one already there, a
 into place, fade away when they close, and morph between their two sizes when maximised.
 
 The taskbar runs along the bottom of the display. Its left end starts the launcher, as
-`Super+Space` does, and its right end shows the time. Between them is an entry for every
+`Super+Space` does, but with `--all`, so it opens listing every application rather than an
+empty field; its right end shows the time. Between them is an entry for every
 decorated window, in the order the windows opened, with its icon and title; the active one is
 lit and marked in the accent. Clicking an entry brings that window to the front, or hides it if
 it is already there, and brings a hidden one back. The third titlebar button hides a window

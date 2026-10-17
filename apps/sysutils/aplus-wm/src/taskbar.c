@@ -43,7 +43,7 @@
 #define WM_TASKBAR_ENTRIES_MAX 64
 
 
-static const char* const wm_taskbar_command[] = {WM_LAUNCHER_PATH, NULL};
+static const char* const wm_taskbar_command[] = {WM_LAUNCHER_PATH, "--all", NULL};
 
 
 /**
