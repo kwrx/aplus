@@ -199,9 +199,9 @@ static void wm_composite(void) {
         wm_window_paint(cr, stack[depth]);
     }
 
-    wm_taskbar_paint(cr, damage, count);
-
     wm_ghost_paint(cr, damage, count);
+
+    wm_taskbar_paint(cr, damage, count);
 
 
     if (!wm.display.hwcursor) {

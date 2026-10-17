@@ -152,11 +152,14 @@ int wm_animate(uint64_t now) {
     }
 
 
-    bool launcher = false;
+    bool rail = false;
 
-    running |= wm_anim_step(&wm.taskbar.hover_launcher, now, &launcher);
+    running |= wm_anim_step(&wm.taskbar.hover_launcher, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.popout.open, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.popout.center, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.popout.width, now, &rail);
 
-    if (launcher) {
+    if (rail) {
         wm_taskbar_damage();
     }
 
@@ -276,7 +279,7 @@ void wm_ghost_create(wm_window_t* win) {
 
 
 /**
- * @brief Paints the windows that have gone, shrinking and fading, over everything else.
+ * @brief Paints the windows that have gone, shrinking and fading, over every window still open.
  *
  * @param cr The cairo context to draw with, already clipped to the damage.
  * @param damage The damaged rectangles.
