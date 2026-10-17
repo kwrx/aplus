@@ -69,6 +69,7 @@ its whole frame instead — see
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-image-viewer/` | The one that mixes the layers: a toolbar of widgets around a picture drawn straight into the window pixels |
+| `apps/sysutils/aplus-editor/` | The bigger mix: a toolbar, a prompt bar and a status line of widgets around a text area it draws, damages and blinks a caret in by itself |
 | `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a borderless centred window that is translucent and only as tall as it has results |
 | `apps/test/ui-test/` | The reference surface-layer application |
 
@@ -157,9 +158,10 @@ application whose icon the theme has never heard of is listed with a generic one
 with none.
 
 `aplus-xopen` is what reads them: given a path it picks a handler — a directory opens in
-`aplus-explorer`, a picture in `aplus-image-viewer`, a `.desktop` file runs the `Exec` it names,
-through `aplus-terminal` when it asks for one — and `execvp()`s it, so the caller ends up with
-the application as its own child rather than with an opener in between.
+`aplus-explorer`, a picture in `aplus-image-viewer`, a text file in `aplus-editor` (and so does a
+file with no known extension and no NUL byte in its first 4 KiB), a `.desktop` file runs the
+`Exec` it names, through `aplus-terminal` when it asks for one — and `execvp()`s it, so the
+caller ends up with the application as its own child rather than with an opener in between.
 
 `aplus-launcher` is what lists them. It reads the other half of the same files — the `Name`,
 `Comment` and `Icon` a person picks an application by — and hands the path to `aplus-xopen` rather than

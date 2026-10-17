@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Text Editor
+Comment=Text editor application
+Exec=aplus-editor
+Icon=aplus-editor
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;

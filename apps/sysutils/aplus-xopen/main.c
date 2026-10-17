@@ -29,6 +29,7 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -69,6 +70,16 @@
  */
 #define XOPEN_IMAGE_VIEWER "aplus-image-viewer"
 
+/**
+ * @brief What edits a text file.
+ */
+#define XOPEN_TEXT_EDITOR "aplus-editor"
+
+/**
+ * @brief How much of a file with no known extension is read to tell text from binary.
+ */
+#define XOPEN_SNIFF_SIZE 4096
+
 
 /**
  * @brief The exit codes, which are the ones xdg-open(1) is specified to use.
@@ -95,6 +106,7 @@ typedef enum {
     XOPEN_KIND_DIRECTORY,
     XOPEN_KIND_DESKTOP,
     XOPEN_KIND_IMAGE,
+    XOPEN_KIND_TEXT,
 
 } xopen_kind_t;
 
@@ -134,7 +146,51 @@ static const struct {
     {".ico",     XOPEN_KIND_IMAGE  },
     {".svg",     XOPEN_KIND_IMAGE  },
     {".webp",    XOPEN_KIND_IMAGE  },
+    {".txt",     XOPEN_KIND_TEXT   },
+    {".md",      XOPEN_KIND_TEXT   },
+    {".c",       XOPEN_KIND_TEXT   },
+    {".h",       XOPEN_KIND_TEXT   },
+    {".cpp",     XOPEN_KIND_TEXT   },
+    {".hpp",     XOPEN_KIND_TEXT   },
+    {".sh",      XOPEN_KIND_TEXT   },
+    {".py",      XOPEN_KIND_TEXT   },
+    {".js",      XOPEN_KIND_TEXT   },
+    {".json",    XOPEN_KIND_TEXT   },
+    {".conf",    XOPEN_KIND_TEXT   },
+    {".cfg",     XOPEN_KIND_TEXT   },
+    {".ini",     XOPEN_KIND_TEXT   },
+    {".log",     XOPEN_KIND_TEXT   },
 };
+
+
+/**
+ * @brief Reports whether a file reads as text, which is no NUL byte in its first few kilobytes.
+ *
+ * @param path The file.
+ * @return true when it does, an empty file included.
+ */
+
+static bool xopen_looks_like_text(const char* path) {
+
+    const int fd = open(path, O_RDONLY);
+
+    if (fd < 0) {
+        return false;
+    }
+
+
+    char head[XOPEN_SNIFF_SIZE];
+
+    ssize_t got;
+
+    do {
+        got = read(fd, head, sizeof(head));
+    } while (got < 0 && errno == EINTR);
+
+    close(fd);
+
+    return got >= 0 && memchr(head, '\0', (size_t)got) == NULL;
+}
 
 
 /**
@@ -158,16 +214,15 @@ static xopen_kind_t xopen_kind(const char* path, const struct stat* st) {
 
     const char* extension = strrchr(name, '.');
 
-    if (!extension) {
-        return XOPEN_KIND_UNKNOWN;
-    }
-
-
-    for (size_t i = 0; i < sizeof(xopen_types) / sizeof(xopen_types[0]); i++) {
+    for (size_t i = 0; extension && i < sizeof(xopen_types) / sizeof(xopen_types[0]); i++) {
 
         if (strcasecmp(extension, xopen_types[i].extension) == 0) {
             return xopen_types[i].kind;
         }
+    }
+
+    if (S_ISREG(st->st_mode) && xopen_looks_like_text(path)) {
+        return XOPEN_KIND_TEXT;
     }
 
     return XOPEN_KIND_UNKNOWN;
@@ -460,6 +515,7 @@ int main(int argc, char** argv) {
 
     char* manager[] = {(char*)XOPEN_FILE_MANAGER, (char*)path, NULL};
     char* viewer[]  = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
+    char* editor[]  = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
 
     switch (xopen_kind(path, &st)) {
 
@@ -471,6 +527,9 @@ int main(int argc, char** argv) {
 
         case XOPEN_KIND_IMAGE:
             return xopen_run(viewer);
+
+        case XOPEN_KIND_TEXT:
+            return xopen_run(editor);
 
         default:
             break;
