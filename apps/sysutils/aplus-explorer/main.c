@@ -52,7 +52,12 @@
 
 #define EXPLORER_TOOLBAR_HEIGHT 36
 #define EXPLORER_STATUS_HEIGHT  20
-#define EXPLORER_UP_WIDTH       64
+
+/**
+ * @brief The Up button's slot, square in the toolbar, and the size its icon is drawn at.
+ */
+#define EXPLORER_UP_WIDTH EXPLORER_TOOLBAR_HEIGHT
+#define EXPLORER_UP_ICON  20
 
 #define EXPLORER_SIDEBAR_WIDTH     148
 #define EXPLORER_SIDEBAR_HEADER    32
@@ -1119,7 +1124,7 @@ static void explorer_layout(ui_view_t* view, int width, int height, void* user) 
 static int explorer_build(ui_view_t* view) {
 
     explorer.toolbar        = ui_panel_create(view);
-    explorer.up             = ui_button_create(view, "Up", explorer_on_up, NULL);
+    explorer.up             = ui_button_create(view, NULL, explorer_on_up, NULL);
     explorer.path           = ui_label_create(view, "");
     explorer.sidebar_header = ui_label_create(view, "Places");
     explorer.sidebar        = ui_list_create(view);
@@ -1130,6 +1135,9 @@ static int explorer_build(ui_view_t* view) {
         return -1;
     }
 
+
+    ui_button_set_icon(explorer.up, "go-up");
+    ui_button_set_icon_size(explorer.up, EXPLORER_UP_ICON);
 
     ui_label_set_color(explorer.path, ui_theme()->text_muted);
     ui_label_set_padding(explorer.path, EXPLORER_GAP);
