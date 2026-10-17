@@ -131,7 +131,7 @@ static size_t launcher_ai_request(char* out, size_t max, const char* prompt) {
     char user[LAUNCHER_AI_REQUEST_MAX / 2];
 
     json_escape(system, sizeof(system), launcher_ai_system);
-    json_escape(model, sizeof(model), CONFIG_API_MODEL);
+    json_escape(model, sizeof(model), CONFIG_AI_API_MODEL);
     json_escape(user, sizeof(user), prompt);
 
     const int len = snprintf(out, max, "{\"model\":\"%s\",\"messages\":[{\"role\":\"system\",\"content\":\"%s\"},{\"role\":\"user\",\"content\":\"%s\"}]}", model, system, user);
@@ -269,9 +269,9 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
         return -1;
     }
 
-    if (!*CONFIG_API_KEY) {
+    if (!*CONFIG_AI_API_KEY) {
 
-        snprintf(out->error, sizeof(out->error), "No API key: set CONFIG_API_KEY and build again.");
+        snprintf(out->error, sizeof(out->error), "No API key: set CONFIG_AI_API_KEY and build again.");
         return -1;
     }
 
@@ -303,7 +303,7 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
 
     char auth[512];
 
-    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_API_KEY);
+    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_AI_API_KEY);
 
     struct curl_slist* headers = NULL;
 
