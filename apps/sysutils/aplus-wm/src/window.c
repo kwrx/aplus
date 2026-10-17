@@ -40,7 +40,7 @@
  */
 bool wm_window_borderless(const wm_window_t* win) {
 
-    return (win->flags & UI_WINDOW_BORDERLESS) != 0;
+    return (win->flags & (UI_WINDOW_BORDERLESS | UI_WINDOW_DRAWER)) != 0;
 }
 
 
@@ -53,6 +53,18 @@ bool wm_window_borderless(const wm_window_t* win) {
 bool wm_window_centered(const wm_window_t* win) {
 
     return (win->flags & UI_WINDOW_CENTERED) != 0;
+}
+
+
+/**
+ * @brief Reports whether a window slides out of the rail as a drawer.
+ *
+ * @param win The window to test.
+ * @return true when it asked to be one.
+ */
+bool wm_window_drawer(const wm_window_t* win) {
+
+    return (win->flags & UI_WINDOW_DRAWER) != 0;
 }
 
 
@@ -498,6 +510,10 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
         win->y = work.y + work.height - win->height - in.bottom;
     }
 
+    if (wm_window_drawer(win)) {
+        wm_drawer_attach(win);
+    }
+
     wm_window_set_icon(win, NULL);
 
 
@@ -590,6 +606,7 @@ void wm_window_destroy(wm_window_t* win) {
     }
 
 
+    wm_drawer_detach(win);
     wm_ghost_create(win);
 
     wm_damage_window(win);
@@ -734,6 +751,18 @@ static wm_region_t wm_window_region(const wm_window_t* win, int x, int y) {
 
 wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out) {
 
+    wm_window_t* drawer = wm_drawer_at(x, y);
+
+    if (drawer) {
+
+        if (out) {
+            *out = drawer;
+        }
+
+        return WM_REGION_CONTENT;
+    }
+
+
     if (wm_taskbar_contains(x, y)) {
 
         if (out) {
@@ -746,7 +775,7 @@ wm_region_t wm_window_hit_test(int x, int y, wm_window_t** out) {
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 
-        if (win->minimized) {
+        if (win->minimized || wm_window_drawer(win)) {
             continue;
         }
 
@@ -841,6 +870,11 @@ void wm_window_focus(wm_window_t* win) {
 
 void wm_window_move(wm_window_t* win, int x, int y) {
 
+    if (wm_window_drawer(win)) {
+        return;
+    }
+
+
     const wm_insets_t in = wm_window_insets(win);
     const wm_rect_t work = wm_workarea();
 
@@ -884,6 +918,10 @@ int wm_window_resize(wm_window_t* win, int width, int height) {
     win->serial++;
 
     wm_damage_window(win);
+
+    if (wm_window_drawer(win)) {
+        wm_drawer_resized(win);
+    }
 
     return 0;
 }
@@ -960,6 +998,10 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 
         ui_anim_set(&win->appear, 0.0);
         ui_anim_to(&win->appear, 1.0, UI_MOTION_SLOW, ui_anim_now());
+
+        if (wm_window_drawer(win)) {
+            wm_drawer_reveal(win);
+        }
 
         wm_damage_window(win);
         wm_taskbar_damage();

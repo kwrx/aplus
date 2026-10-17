@@ -208,6 +208,7 @@ static struct {
     size_t count;
 
     bool all;
+    bool drawer;
     bool dismissed;
 
 #if defined(CONFIG_HAVE_AI)
@@ -1007,7 +1008,9 @@ static void launcher_layout(ui_view_t* view, int width, int height, void* user) 
 
     const ui_rect_t bounds = {0, 0, width, height};
 
-    ui_widget_place(launcher.backdrop, bounds);
+    if (launcher.backdrop) {
+        ui_widget_place(launcher.backdrop, bounds);
+    }
 
     if (width <= 2 * LAUNCHER_LIST_INSET || height < LAUNCHER_FIELD) {
         return;
@@ -1041,18 +1044,20 @@ static int launcher_build(void) {
 
     const ui_theme_t* theme = ui_theme();
 
-    launcher.backdrop  = ui_panel_create(launcher.view);
+    launcher.backdrop  = launcher.drawer ? NULL : ui_panel_create(launcher.view);
     launcher.field     = ui_entry_create(launcher.view, "Search applications\xE2\x80\xA6");
     launcher.separator = ui_panel_create(launcher.view);
     launcher.list      = ui_list_create(launcher.view);
 
-    if (!launcher.backdrop || !launcher.field || !launcher.separator || !launcher.list) {
+    if ((!launcher.drawer && !launcher.backdrop) || !launcher.field || !launcher.separator || !launcher.list) {
         return -1;
     }
 
-    ui_panel_set_color(launcher.backdrop, ui_rgba(0x24, 0x24, 0x24, 0.90));
-    ui_panel_set_radius(launcher.backdrop, (double)UI_WINDOW_RADIUS);
-    ui_panel_set_border(launcher.backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.14), 1.0);
+    if (launcher.backdrop) {
+        ui_panel_set_color(launcher.backdrop, ui_rgba(0x24, 0x24, 0x24, 0.90));
+        ui_panel_set_radius(launcher.backdrop, (double)UI_WINDOW_RADIUS);
+        ui_panel_set_border(launcher.backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.14), 1.0);
+    }
 
     ui_panel_set_color(launcher.separator, ui_rgba(0xFF, 0xFF, 0xFF, 0.09));
     ui_panel_set_radius(launcher.separator, 0.0);
@@ -1175,6 +1180,7 @@ static void launcher_usage(void) {
     printf("Use: " LAUNCHER_NAME " [options]...\n"
            "Search the installed applications and run one.\n\n"
            "   -a, --all                   list every application before anything is typed\n"
+           "   -d, --drawer                slide out of the taskbar's rail instead of opening in the middle\n"
            "       --help                  show this help\n");
 
     exit(0);
@@ -1187,20 +1193,24 @@ int main(int argc, char** argv) {
 
 
     static struct option long_options[] = {
-        {"all",  no_argument, NULL, 'a'},
-        {"help", no_argument, NULL, 'h'},
-        {NULL,   0,           NULL, 0  }
+        {"all",    no_argument, NULL, 'a'},
+        {"drawer", no_argument, NULL, 'd'},
+        {"help",   no_argument, NULL, 'h'},
+        {NULL,     0,           NULL, 0  }
     };
 
 
     int c, idx;
 
-    while ((c = getopt_long(argc, argv, "ah", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "adh", long_options, &idx)) != -1) {
 
         switch (c) {
 
             case 'a':
                 launcher.all = true;
+                break;
+            case 'd':
+                launcher.drawer = true;
                 break;
             case 'h':
             case '?':
@@ -1225,7 +1235,9 @@ int main(int argc, char** argv) {
     }
 
 
-    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(launcher.all ? (int)launcher.count : 0), LAUNCHER_NAME, UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT);
+    const uint32_t flags = launcher.drawer ? UI_WINDOW_DRAWER | UI_WINDOW_TRANSLUCENT : UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT;
+
+    launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(launcher.all ? (int)launcher.count : 0), LAUNCHER_NAME, flags);
 
     if (!launcher.window) {
 

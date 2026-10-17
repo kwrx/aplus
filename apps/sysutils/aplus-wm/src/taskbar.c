@@ -44,7 +44,7 @@
 #define WM_TASKBAR_ENTRIES_MAX 64
 
 
-static const char* const wm_taskbar_command[] = {WM_LAUNCHER_PATH, "--all", NULL};
+static const char* const wm_taskbar_command[] = {WM_LAUNCHER_PATH, "--all", "--drawer", NULL};
 
 
 /**
@@ -550,7 +550,13 @@ bool wm_taskbar_release(int x, int y) {
     }
 
     if (pressed == WM_TASKBAR_LAUNCHER) {
-        wm_spawn(wm_taskbar_command);
+
+        if (wm.drawer.window) {
+            wm_window_request_close(wm.drawer.window);
+        } else {
+            wm_spawn(wm_taskbar_command);
+        }
+
         return true;
     }
 
@@ -978,10 +984,11 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
 
-    const bool held = wm.taskbar.pressed == WM_TASKBAR_LAUNCHER && wm.taskbar.hover == WM_TASKBAR_LAUNCHER;
+    const bool held   = wm.taskbar.pressed == WM_TASKBAR_LAUNCHER && wm.taskbar.hover == WM_TASKBAR_LAUNCHER;
+    const double open = ui_anim_value(&wm.drawer.open, wm.frame_time);
 
-    wm_taskbar_paint_wash(cr, &launcher, ui_anim_value(&wm.taskbar.hover_launcher, wm.frame_time), held, 0.0);
-    wm_taskbar_paint_launcher(cr, &launcher, 0.0);
+    wm_taskbar_paint_wash(cr, &launcher, ui_anim_value(&wm.taskbar.hover_launcher, wm.frame_time), held, open);
+    wm_taskbar_paint_launcher(cr, &launcher, open);
 
 
     wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];

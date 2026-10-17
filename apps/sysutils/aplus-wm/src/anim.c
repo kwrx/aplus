@@ -164,6 +164,19 @@ int wm_animate(uint64_t now) {
     }
 
 
+    bool drawer = false;
+
+    running |= wm_anim_step(&wm.drawer.open, now, &drawer);
+    running |= wm_anim_step(&wm.drawer.height, now, &drawer);
+
+    if (drawer) {
+        wm_drawer_damage();
+        wm_taskbar_damage();
+    }
+
+    wm_drawer_settle();
+
+
     wm_ghost_t** it = &wm.ghosts;
 
     while (*it) {
@@ -240,7 +253,7 @@ cairo_surface_t* wm_window_snapshot(wm_window_t* win, wm_rect_t* rect) {
  */
 void wm_ghost_create(wm_window_t* win) {
 
-    if (!win->committed || win->minimized) {
+    if (!win->committed || win->minimized || wm_window_drawer(win)) {
         return;
     }
 

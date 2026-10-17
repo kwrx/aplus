@@ -184,6 +184,10 @@ static void wm_composite(void) {
 
     while (depth--) {
 
+        if (wm_window_drawer(stack[depth])) {
+            continue;
+        }
+
         const wm_rect_t extent = wm_window_shadow_rect(stack[depth]);
 
         bool visible = stack[depth]->morph != NULL;
@@ -202,6 +206,8 @@ static void wm_composite(void) {
     wm_ghost_paint(cr, damage, count);
 
     wm_taskbar_paint(cr, damage, count);
+
+    wm_drawer_paint(cr, damage, count);
 
 
     if (!wm.display.hwcursor) {
@@ -525,6 +531,7 @@ int main(int argc, char** argv) {
     wm_input_close();
     wm_cursor_fini();
     wm_ghost_fini();
+    wm_drawer_fini();
     wm_taskbar_fini();
     wm_shadow_fini(&wm.shadow_key);
     wm_shadow_fini(&wm.shadow_ambient);
