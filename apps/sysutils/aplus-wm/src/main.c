@@ -366,6 +366,8 @@ int main(int argc, char** argv) {
 
     const int clock = wm_taskbar_open();
 
+    wm_launcher_copy();
+
 
     signal(SIGINT, wm_on_signal);
     signal(SIGTERM, wm_on_signal);
