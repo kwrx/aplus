@@ -57,6 +57,7 @@ size_t ringbuffer_available(ringbuffer_t* rb);
 size_t ringbuffer_writeable(ringbuffer_t* rb);
 
 ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size);
+ssize_t ringbuffer_write_whole(ringbuffer_t* rb, const void* buf, size_t size);
 ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size);
 
 __END_DECLS

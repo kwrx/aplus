@@ -84,9 +84,17 @@ static int input_forward(const event_t* ev) {
 }
 
 
+/**
+ * @brief Forwards one input device's events until it fails, and says so when it does.
+ *
+ * @param arg The index of the device in input_devices.
+ * @return NULL.
+ */
 static void* input_thread(void* arg) {
 
-    int fd = *(int*)arg;
+    const size_t index = (size_t)(uintptr_t)arg;
+
+    const int fd = input_devices[index].fd;
 
     for (;;) {
 
@@ -97,6 +105,7 @@ static void* input_thread(void* arg) {
         if (e == (ssize_t)sizeof(ev)) {
 
             if (input_forward(&ev) < 0) {
+                fprintf(stderr, "aplus-wm: stopped forwarding %s: %s\n", input_devices[index].path, strerror(errno));
                 break;
             }
 
@@ -105,6 +114,12 @@ static void* input_thread(void* arg) {
 
         if (e < 0 && errno == EINTR) {
             continue;
+        }
+
+        if (e < 0) {
+            fprintf(stderr, "aplus-wm: stopped reading %s: %s\n", input_devices[index].path, strerror(errno));
+        } else {
+            fprintf(stderr, "aplus-wm: stopped reading %s: got %zd of %zu bytes\n", input_devices[index].path, e, sizeof(ev));
         }
 
         break;
@@ -139,7 +154,7 @@ int wm_input_open(void) {
             continue;
         }
 
-        if (pthread_create(&input_devices[i].thread, NULL, input_thread, &input_devices[i].fd) != 0) {
+        if (pthread_create(&input_devices[i].thread, NULL, input_thread, (void*)(uintptr_t)i) != 0) {
 
             fprintf(stderr, "aplus-wm: pthread_create() failed for %s: %s\n", input_devices[i].path, strerror(errno));
 

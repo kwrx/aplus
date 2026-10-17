@@ -105,7 +105,7 @@ ssize_t char_write(device_t* device, const void* buf, size_t size) {
             DEBUG_ASSERT(device->chr.buffer.buffer);
             DEBUG_ASSERT(device->chr.buffer.size);
 
-            e = ringbuffer_write(&device->chr.buffer, buf, size);
+            e = ringbuffer_write_whole(&device->chr.buffer, buf, size);
 
 
             if (ringbuffer_is_full(&device->chr.buffer)) {
