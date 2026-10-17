@@ -192,6 +192,11 @@
 #define WM_TASKBAR_FONT_SIZE 13.0
 
 /**
+ * @brief How big the launcher's button draws its icon, larger than a window entry's.
+ */
+#define WM_TASKBAR_LAUNCHER_ICON 28
+
+/**
  * @brief What the taskbar's own button names in place of a window id, and what it starts.
  */
 #define WM_TASKBAR_LAUNCHER UINT32_MAX
