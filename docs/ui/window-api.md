@@ -58,7 +58,7 @@ int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor);
 
 `ui_window_create()` blocks until the server has configured the window, stepping over any
 other message that arrives first. The size you asked for is a request — the server clamps to
-at least 80×40 and to what fits above the taskbar — so read the real one back rather than
+at least 80×40 and to what fits beside the taskbar — so read the real one back rather than
 assuming.
 
 Titles are truncated at `UI_TITLE_MAX` (64) bytes including the terminator, in both the
@@ -87,6 +87,7 @@ handle for it and the field every event carries.
 #define UI_WINDOW_BORDERLESS  (1 << 0)
 #define UI_WINDOW_CENTERED    (1 << 1)
 #define UI_WINDOW_TRANSLUCENT (1 << 2)
+#define UI_WINDOW_DRAWER      (1 << 3)
 ```
 
 `ui_window_create_ex()` is `ui_window_create()` with the kind of window spelled out;
@@ -123,6 +124,14 @@ height too low.
 `UI_WINDOW_TRANSLUCENT` hands the window a surface that carries alpha, which the server
 blends over the desktop and the windows below it instead of painting over them — see
 [Translucency](#translucency).
+
+`UI_WINDOW_DRAWER` slides the window out of the taskbar's rail into the top-left corner of
+the work area, over a background in the taskbar's colour that joins it to the rail, and slides
+a picture of it back in once it closes. The server draws nothing around it, as for a
+borderless window, and does not let it be moved. There is one drawer at a time: a new one
+closes the one before it, and so does a press anywhere but on the drawer or the taskbar, so a
+drawer is ended by `UI_EVENT_CLOSE` more often than by its own hand. `aplus-launcher --drawer`
+opens in one, translucent, which is how the taskbar's button starts it.
 
 This is a creation flag rather than a request to move a window because there is no request to
 move a window: a client cannot position itself, does not know how big the display is, and a
