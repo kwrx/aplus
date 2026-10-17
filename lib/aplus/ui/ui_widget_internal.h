@@ -175,6 +175,10 @@ struct ui_widget {
             ui_font_weight_t weight;
             double size;
 
+            //? The icon's name, empty for none, resolved out of the shared cache at paint time.
+            char icon[UI_ICON_NAME_MAX];
+            int icon_size;
+
             ui_action_fn on_click;
 
             //? Pointer state, kept apart from `held`: a key binding lights a button without
