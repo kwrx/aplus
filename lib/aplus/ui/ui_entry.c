@@ -33,7 +33,7 @@
 
 
 /**
- * @brief How far the text sits inside the well, on both sides.
+ * @brief How far the text sits inside the well, at the left and at the right.
  */
 #define UI_ENTRY_PADDING 10
 
@@ -106,14 +106,32 @@ static const char* ui_entry_font(const ui_widget_t* widget) {
 
 
 /**
- * @brief Reports where the text is drawn, which is the well less its padding.
+ * @brief Reports where the text is drawn: the well less its padding at the sides, and less the focus ring above and below.
  *
  * @param widget The entry.
  * @return The rectangle.
  */
 static ui_rect_t ui_entry_text_rect(const ui_widget_t* widget) {
 
-    return ui_rect_inset(widget->rect, UI_ENTRY_PADDING);
+    const int ring = (int)UI_ENTRY_RING_WIDTH;
+
+    ui_rect_t rect = {
+
+        .x      = widget->rect.x + UI_ENTRY_PADDING,
+        .y      = widget->rect.y + ring,
+        .width  = widget->rect.width - UI_ENTRY_PADDING * 2,
+        .height = widget->rect.height - ring * 2,
+    };
+
+    if (rect.width < 0) {
+        rect.width = 0;
+    }
+
+    if (rect.height < 0) {
+        rect.height = 0;
+    }
+
+    return rect;
 }
 
 
