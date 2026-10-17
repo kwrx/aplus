@@ -202,6 +202,54 @@ ssize_t ringbuffer_write(ringbuffer_t* rb, const void* buf, size_t size) {
 }
 
 
+/**
+ * @brief Writes a record whole or not at all, so that a reader never finds part of one.
+ *
+ * @param rb The ring buffer to write to.
+ * @param buf The record.
+ * @param size Its size in bytes.
+ * @return size on success, -EAGAIN when it does not fit, or -EIO without a buffer.
+ */
+
+ssize_t ringbuffer_write_whole(ringbuffer_t* rb, const void* buf, size_t size) {
+
+    DEBUG_ASSERT(rb);
+    DEBUG_ASSERT(buf);
+
+
+    if (unlikely(size == 0))
+        return 0;
+
+
+    ssize_t e = -EIO;
+
+    scoped_lock(&rb->lock) {
+        if (unlikely(rb->buffer == NULL)) {
+
+            e = -EIO;
+
+        } else if (ringbuffer_writeable(rb) < size) {
+
+            e = -EAGAIN;
+
+        } else {
+
+            for (size_t i = 0; i < size; i++) {
+
+                rb->buffer[rb->head] = ((uint8_t*)buf)[i];
+
+                rb->head = (rb->head + 1) % rb->size;
+                rb->full = (rb->head == rb->tail);
+            }
+
+            e = (ssize_t)size;
+        }
+    }
+
+    return e;
+}
+
+
 ssize_t ringbuffer_read(ringbuffer_t* rb, void* buf, size_t size) {
 
     DEBUG_ASSERT(rb);
