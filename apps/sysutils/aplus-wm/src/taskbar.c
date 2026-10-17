@@ -438,10 +438,10 @@ static void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover,
 
 
 /**
- * @brief Draws an icon already scaled to WM_ICON_SIZE, which makes it a plain copy.
+ * @brief Draws an icon already scaled to the size it is shown at, which makes it a plain copy.
  *
  * @param cr The cairo context.
- * @param icon The icon, WM_ICON_SIZE square, or NULL for nothing.
+ * @param icon The icon, or NULL for nothing.
  * @param x The left edge.
  * @param y The top edge.
  * @param alpha How opaque to draw it.
@@ -454,7 +454,7 @@ static void wm_taskbar_paint_icon(cairo_t* cr, cairo_surface_t* icon, int x, int
 
     cairo_save(cr);
 
-    cairo_rectangle(cr, x, y, WM_ICON_SIZE, WM_ICON_SIZE);
+    cairo_rectangle(cr, x, y, cairo_image_surface_get_width(icon), cairo_image_surface_get_height(icon));
     cairo_clip(cr);
 
     cairo_set_source_surface(cr, icon, x, y);
@@ -614,7 +614,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
 
     if (!wm.taskbar.launcher_icon) {
-        wm.taskbar.launcher_icon = wm_icon_create("aplus-launcher", WM_ICON_SIZE);
+        wm.taskbar.launcher_icon = wm_icon_create("aplus-launcher", WM_TASKBAR_LAUNCHER_ICON);
     }
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
@@ -622,7 +622,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     const bool held = wm.taskbar.pressed == WM_TASKBAR_LAUNCHER && wm.taskbar.hover == WM_TASKBAR_LAUNCHER;
 
     wm_taskbar_paint_wash(cr, &launcher, ui_anim_value(&wm.taskbar.hover_launcher, wm.frame_time), held, 0.0);
-    wm_taskbar_paint_icon(cr, wm.taskbar.launcher_icon, launcher.x + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, launcher.y + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, 1.0);
+    wm_taskbar_paint_icon(cr, wm.taskbar.launcher_icon, launcher.x + (WM_TASKBAR_ITEM - WM_TASKBAR_LAUNCHER_ICON) / 2, launcher.y + (WM_TASKBAR_ITEM - WM_TASKBAR_LAUNCHER_ICON) / 2, 1.0);
 
 
     wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
