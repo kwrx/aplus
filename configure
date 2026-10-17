@@ -173,7 +173,7 @@ stage_3() {
     packages="$packages zlib"
 
     # Get packages
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.3.0 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.3.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
     # Get additional packages
     if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
@@ -193,7 +193,7 @@ stage_4() {
 
     if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 1 ]; then
         if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
-            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.1.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$ARCH-linux-gnu
+            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.2.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$ARCH-linux-gnu
         fi
     else
 
