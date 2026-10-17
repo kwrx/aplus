@@ -45,11 +45,6 @@
 
 
     /**
-     * @brief Where the chat completions live.
-     */
-    #define LAUNCHER_AI_URL "https://router.huggingface.co/v1/chat/completions"
-
-    /**
      * @brief How long a request, and the connecting part of it, may take before it is given up on, in seconds.
      */
     #define LAUNCHER_AI_TIMEOUT         20
@@ -134,7 +129,7 @@ static size_t launcher_ai_request(char* out, size_t max, const char* prompt) {
     char user[LAUNCHER_AI_REQUEST_MAX / 2];
 
     json_escape(system, sizeof(system), launcher_ai_system);
-    json_escape(model, sizeof(model), CONFIG_HUGGINGFACE_MODEL);
+    json_escape(model, sizeof(model), CONFIG_API_MODEL);
     json_escape(user, sizeof(user), prompt);
 
     const int len = snprintf(out, max, "{\"model\":\"%s\",\"messages\":[{\"role\":\"system\",\"content\":\"%s\"},{\"role\":\"user\",\"content\":\"%s\"}]}", model, system, user);
@@ -266,9 +261,15 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
         return -1;
     }
 
-    if (!*CONFIG_HUGGINGFACE_API_KEY) {
+    if (!*CONFIG_AI_PROVIDER_URL) {
 
-        snprintf(out->error, sizeof(out->error), "No API key: set CONFIG_HUGGINGFACE_API_KEY and build again.");
+        snprintf(out->error, sizeof(out->error), "No provider: set CONFIG_AI_PROVIDER_URL and build again.");
+        return -1;
+    }
+
+    if (!*CONFIG_API_KEY) {
+
+        snprintf(out->error, sizeof(out->error), "No API key: set CONFIG_API_KEY and build again.");
         return -1;
     }
 
@@ -300,14 +301,14 @@ int launcher_ai_ask(const char* prompt, launcher_ai_reply_t* out) {
 
     char auth[512];
 
-    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_HUGGINGFACE_API_KEY);
+    snprintf(auth, sizeof(auth), "Authorization: Bearer %s", CONFIG_API_KEY);
 
     struct curl_slist* headers = NULL;
 
     headers = curl_slist_append(headers, auth);
     headers = curl_slist_append(headers, "Content-Type: application/json");
 
-    curl_easy_setopt(curl, CURLOPT_URL, LAUNCHER_AI_URL);
+    curl_easy_setopt(curl, CURLOPT_URL, CONFIG_AI_PROVIDER_URL);
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request);
     curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, (long)len);
