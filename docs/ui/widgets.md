@@ -413,7 +413,7 @@ icon button. `NULL` takes the icon away again. It is drawn `UI_BUTTON_ICON_SIZE`
 square unless `ui_button_set_icon_size()` says otherwise, and faded with the rest of the button
 when it is disabled. A name the theme lacks, or one too long for `UI_ICON_NAME_MAX`, leaves the
 space empty rather than failing. `aplus-editor`'s toolbar is five icon buttons, 28 pixels
-square with 20-pixel icons.
+square with 20-pixel icons, and `aplus-explorer`'s Up button is one more of the same.
 
 ### Activation
 
