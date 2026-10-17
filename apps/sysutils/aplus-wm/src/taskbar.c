@@ -466,6 +466,56 @@ static void wm_taskbar_paint_icon(cairo_t* cr, cairo_surface_t* icon, int x, int
 
 
 /**
+ * @brief Draws the launcher's mark: a grid of dots whose middle cross is the accent, turning into a close cross as the launcher opens.
+ *
+ * @param cr The cairo context.
+ * @param r The launcher's button.
+ * @param open How far open the launcher is, 0 to 1.
+ */
+static void wm_taskbar_paint_launcher(cairo_t* cr, const wm_rect_t* r, double open) {
+
+    const double grey[4] = {WM_COLOR_TASKBAR_MARK};
+
+    cairo_save(cr);
+    cairo_translate(cr, r->x + r->width / 2.0, r->y + r->height / 2.0);
+
+    if (open < 1.0) {
+
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+
+                if (i && j) {
+                    cairo_new_sub_path(cr);
+                    cairo_arc(cr, i * WM_TASKBAR_LAUNCHER_PITCH, j * WM_TASKBAR_LAUNCHER_PITCH, WM_TASKBAR_LAUNCHER_DOT, 0.0, 2.0 * M_PI);
+                }
+            }
+        }
+
+        cairo_set_source_rgba(cr, grey[0], grey[1], grey[2], grey[3] * (1.0 - open));
+        cairo_fill(cr);
+    }
+
+
+    cairo_rotate(cr, open * M_PI / 4.0);
+
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+
+            if (!i || !j) {
+                cairo_new_sub_path(cr);
+                cairo_arc(cr, i * WM_TASKBAR_LAUNCHER_PITCH, j * WM_TASKBAR_LAUNCHER_PITCH, WM_TASKBAR_LAUNCHER_DOT, 0.0, 2.0 * M_PI);
+            }
+        }
+    }
+
+    cairo_set_source_rgb(cr, WM_COLOR_ACCENT);
+    cairo_fill(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
  * @brief Draws one window's entry: its icon, its title cut to fit, and a mark along the bottom.
  *
  * The mark is grey for a window in the background and widens into the accent for the active one.
@@ -613,16 +663,12 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     cairo_fill(cr);
 
 
-    if (!wm.taskbar.launcher_icon) {
-        wm.taskbar.launcher_icon = wm_icon_create("aplus-launcher", WM_TASKBAR_LAUNCHER_ICON);
-    }
-
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
 
     const bool held = wm.taskbar.pressed == WM_TASKBAR_LAUNCHER && wm.taskbar.hover == WM_TASKBAR_LAUNCHER;
 
     wm_taskbar_paint_wash(cr, &launcher, ui_anim_value(&wm.taskbar.hover_launcher, wm.frame_time), held, 0.0);
-    wm_taskbar_paint_icon(cr, wm.taskbar.launcher_icon, launcher.x + (WM_TASKBAR_ITEM - WM_TASKBAR_LAUNCHER_ICON) / 2, launcher.y + (WM_TASKBAR_ITEM - WM_TASKBAR_LAUNCHER_ICON) / 2, 1.0);
+    wm_taskbar_paint_launcher(cr, &launcher, 0.0);
 
 
     wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
@@ -673,11 +719,6 @@ void wm_taskbar_tick(int fd) {
 
 
 void wm_taskbar_fini(void) {
-
-    if (wm.taskbar.launcher_icon) {
-        cairo_surface_destroy(wm.taskbar.launcher_icon);
-        wm.taskbar.launcher_icon = NULL;
-    }
 
     for (int i = 0; i < 2; i++) {
 
