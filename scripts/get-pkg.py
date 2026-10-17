@@ -20,19 +20,57 @@ cache        = '/tmp/get-pkg'
 
 
 
+def pkg_archive(cache, repo, repo_version, p):
+    """
+    @brief Path of a package archive in the cache, one directory per repository version.
+    @param cache The cache root.
+    @param repo The repository.
+    @param repo_version The release, or 'latest'.
+    @param p The package name.
+    @return The archive path.
+    """
+    return '%s/%s/%s/%s.tar.xz' % (cache, repo, repo_version, p)
+
+
+
 def pkg_get(remote, cache, repo, repo_version, p):
     """
-    Download package from remote repository
+    @brief Downloads a package unless that version is cached; 'latest' is always downloaded again.
+    @param remote The host serving the releases.
+    @param cache The cache root.
+    @param repo The repository.
+    @param repo_version The release, or 'latest'.
+    @param p The package name.
     """
-    if os.path.exists('%s/%s/%s.tar.xz' % (cache, repo, p)) == False:
+    archive = pkg_archive(cache, repo, repo_version, p)
+
+    if repo_version == 'latest' and os.path.exists(archive):
+        os.unlink(archive)
+
+    if os.path.exists(archive) == False:
         if repo_version == 'latest':
-            wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
+            wget.download('%s/%s/releases/latest/download/%s.tar.xz' % (remote, repo, p), archive)
         else:
-            wget.download('%s/%s/releases/download/%s/%s.tar.xz' % (remote, repo, repo_version, p), '%s/%s/%s.tar.xz' % (cache, repo, p))
+            wget.download('%s/%s/releases/download/%s/%s.tar.xz' % (remote, repo, repo_version, p), archive)
         print('')
     else:
         if verbose:
-            print('(Cached) %s %s.tar.xz' % (repo, p))
+            print('(Cached) %s %s %s.tar.xz' % (repo, repo_version, p))
+
+
+
+def pkg_dropped(member):
+    """
+    @brief Reports whether a member is a link into a package staging directory, which is never extracted.
+    @param member The member.
+    @return True when it is dropped.
+    """
+    if (member.issym() or member.islnk()) and '/__out/' in member.linkname:
+        if verbose:
+            print(' - Skip %s -> %s' % (member.name, member.linkname))
+        return True
+
+    return False
 
 
 
@@ -40,9 +78,7 @@ def pkg_filter(member, path):
     """
     Extraction filter dropping symlinks that point into a package staging directory.
     """
-    if (member.issym() or member.islnk()) and '/__out/' in member.linkname:
-        if verbose:
-            print(' - Skip %s -> %s' % (member.name, member.linkname))
+    if pkg_dropped(member):
         return None
 
     return tarfile.tar_filter(member, path)
@@ -73,31 +109,80 @@ def pkg_process(z, trigger, prefix):
 
 
 
+def pkg_target(prefix, member):
+    """
+    @brief Where a member lands in the prefix.
+    @param prefix Where the package is installed.
+    @param member The member.
+    @return The path.
+    """
+    return os.path.join(prefix, member.name.lstrip('/'))
+
+
+
+def pkg_clear(prefix, member):
+    """
+    @brief Removes what an older install left where a file, link or device is about to be extracted.
+    @param prefix Where the package is installed.
+    @param member The member about to be extracted.
+    @return False when the member is skipped: a real directory is in the way, or the path resolves outside the prefix.
+    """
+    target = pkg_target(prefix, member)
+
+    if os.path.lexists(target) == False:
+        return True
+
+    root   = os.path.realpath(prefix)
+    parent = os.path.realpath(os.path.dirname(target))
+
+    if os.path.commonpath([root, parent]) != root:
+        print(' ! Skip %s, it resolves outside %s' % (member.name, prefix))
+        return False
+
+    if os.path.isdir(target) and not os.path.islink(target):
+        print(' ! Skip %s, a directory is in the way' % (member.name))
+        return False
+
+    os.unlink(target)
+    return True
+
+
+
 def pkg_extract(archive, prefix):
     """
-    Extract package
+    @brief Extracts a package over the prefix, replacing the files an older version left; existing directories are kept.
+    @param archive The package archive.
+    @param prefix Where to install it.
     """
     z = tarfile.open(archive, 'r:xz')
 
     pkg_process(z, 'pre-install', prefix)
 
-    for m in z.getnames():
+    for member in z.getmembers():
 
-        if m == '.pkg':
-            continue
-        
-        if m == '.pkg/pre-install':
+        if member.name == '.pkg':
             continue
 
-        if m == '.pkg/post-install':
+        if member.name == '.pkg/pre-install':
             continue
 
-        if os.path.exists('%s/%s' % (prefix, m)) == False:
-            
-            if verbose:
-                print(' - Extract %s in %s' % (m, prefix))
+        if member.name == '.pkg/post-install':
+            continue
 
-            z.extract(m, path=prefix, filter=pkg_filter)
+        if pkg_dropped(member):
+            continue
+
+        if member.isdir():
+            if os.path.lexists(pkg_target(prefix, member)):
+                continue
+
+        elif pkg_clear(prefix, member) == False:
+            continue
+
+        if verbose:
+            print(' - Extract %s in %s' % (member.name, prefix))
+
+        z.extract(member, path=prefix, filter=pkg_filter)
 
 
     pkg_process(z, 'post-install', prefix)
@@ -118,7 +203,7 @@ def pkg_install(cache, repo, repo_version, packages, prefix):
 
     for p in packages:
         print("Unpacking %s.tar.xz..." % (p))
-        pkg_extract('%s/%s/%s.tar.xz' % (cache, repo, p), prefix)
+        pkg_extract(pkg_archive(cache, repo, repo_version, p), prefix)
 
 
 def pkg_rm(cache, repo, packages, prefix):
@@ -152,7 +237,7 @@ def main(argv):
             shutil.rmtree(cache)
 
     os.makedirs(cache, 0o755, exist_ok = True)
-    os.makedirs('%s/%s' % (cache, repo), 0o755, exist_ok = True)
+    os.makedirs('%s/%s/%s' % (cache, repo, repo_version), 0o755, exist_ok = True)
 
 
     if argv.install is not None:
