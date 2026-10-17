@@ -22,6 +22,7 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <cairo/cairo-ft.h>
@@ -44,12 +45,52 @@ static struct {
 
     char path[128];
 
+    FT_Byte* data;
     FT_Face ft_face;
     cairo_font_face_t* face;
 
 } ui_font_cache[UI_FONT_CACHE_MAX];
 
 static size_t ui_font_cached = 0;
+
+
+/**
+ * @brief Reads a whole font file into memory, so that loading a glyph never goes back to the disk.
+ *
+ * @param path The file.
+ * @param size Receives its length.
+ * @return The bytes, which the caller frees, or NULL.
+ */
+static FT_Byte* ui_font_read(const char* path, size_t* size) {
+
+    FILE* f = fopen(path, "rb");
+
+    if (!f) {
+        return NULL;
+    }
+
+
+    FT_Byte* data = NULL;
+
+    const long length = fseek(f, 0, SEEK_END) == 0 ? ftell(f) : -1;
+
+    if (length > 0 && fseek(f, 0, SEEK_SET) == 0 && (data = (FT_Byte*)malloc((size_t)length))) {
+
+        if (fread(data, 1, (size_t)length, f) == (size_t)length) {
+
+            *size = (size_t)length;
+
+        } else {
+
+            free(data);
+            data = NULL;
+        }
+    }
+
+    fclose(f);
+
+    return data;
+}
 
 
 /**
@@ -107,7 +148,9 @@ cairo_font_face_t* ui_font_face(const char* path) {
 
     strcpy(ui_font_cache[slot].path, path);
 
-    if (FT_New_Face(ui_ft, path, 0, &ui_font_cache[slot].ft_face) != 0) {
+    size_t size = 0;
+
+    if (!(ui_font_cache[slot].data = ui_font_read(path, &size)) || FT_New_Memory_Face(ui_ft, ui_font_cache[slot].data, (FT_Long)size, 0, &ui_font_cache[slot].ft_face) != 0) {
         fprintf(stderr, "libui: cannot load %s, text will not be drawn\n", path);
         return NULL;
     }
