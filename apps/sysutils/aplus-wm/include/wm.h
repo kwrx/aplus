@@ -214,6 +214,12 @@
 #define WM_TASKBAR_DATE     (UINT32_MAX - 1)
 #define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
 
+/**
+ * @brief The server's cache on the tmpfs, and the copy of the launcher kept there, which starts without reading the disk.
+ */
+#define WM_CACHE_PATH    "/tmp/.wm"
+#define WM_LAUNCHER_COPY WM_CACHE_PATH "/aplus-launcher"
+
 
 /**
  * @brief Keyboard modifiers, as a mask over whatever is held right now; left and right fold into one bit.
@@ -639,6 +645,7 @@ void wm_input_refresh_cursor(void);
 bool wm_keys_handle(uint16_t vkey, uint8_t down);
 void wm_keys_reap(void);
 void wm_spawn(const char* const* argv);
+void wm_launcher_copy(void);
 
 /**
  * @brief Implemented in taskbar.c.

@@ -28,8 +28,11 @@
  */
 
 #include <errno.h>
+#include <fcntl.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/stat.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
@@ -112,7 +115,7 @@ static uint16_t wm_modifier_of(uint16_t vkey) {
 
 
 /**
- * @brief Starts a program as a child of the server, which reaps it in wm_keys_reap().
+ * @brief Starts a program as a child of the server, which reaps it in wm_keys_reap(); the launcher from WM_LAUNCHER_COPY when it is there.
  *
  * @param argv The program and its arguments, NULL terminated.
  */
@@ -137,9 +140,77 @@ void wm_spawn(const char* const* argv) {
         close(fd);
     }
 
+    if (strcmp(argv[0], WM_LAUNCHER_PATH) == 0) {
+        execv(WM_LAUNCHER_COPY, (char* const*)argv);
+    }
+
     execv(argv[0], (char* const*)argv);
 
     _exit(127);
+}
+
+
+/**
+ * @brief Copies the launcher into WM_CACHE_PATH under another name, renaming it into place once it is whole.
+ *
+ * @param arg Unused.
+ * @return NULL.
+ */
+static void* wm_launcher_copy_thread(void* arg) {
+
+    (void)arg;
+
+    static char buffer[64 * 1024];
+
+    if (mkdir(WM_CACHE_PATH, 0755) < 0 && errno != EEXIST) {
+        fprintf(stderr, "aplus-wm: cannot create %s, starting the launcher from the disk instead: %s\n", WM_CACHE_PATH, strerror(errno));
+        return NULL;
+    }
+
+    const int in  = open(WM_LAUNCHER_PATH, O_RDONLY);
+    const int out = in < 0 ? -1 : open(WM_LAUNCHER_COPY ".part", O_WRONLY | O_CREAT | O_TRUNC, 0755);
+
+    ssize_t got = -1;
+
+    while (out >= 0 && (got = read(in, buffer, sizeof(buffer))) > 0) {
+
+        if (ui_send_all(out, buffer, (size_t)got) < 0) {
+            got = -1;
+            break;
+        }
+    }
+
+    if (in >= 0) {
+        close(in);
+    }
+
+    if (out >= 0) {
+        close(out);
+    }
+
+    if (got != 0 || rename(WM_LAUNCHER_COPY ".part", WM_LAUNCHER_COPY) < 0) {
+
+        fprintf(stderr, "aplus-wm: cannot copy %s to %s, starting it from the disk instead: %s\n", WM_LAUNCHER_PATH, WM_LAUNCHER_COPY, strerror(errno));
+
+        unlink(WM_LAUNCHER_COPY ".part");
+    }
+
+    return NULL;
+}
+
+
+/**
+ * @brief Starts copying the launcher to the tmpfs in the background, which wm_spawn() then prefers.
+ */
+void wm_launcher_copy(void) {
+
+    pthread_t thread;
+
+    if (pthread_create(&thread, NULL, wm_launcher_copy_thread, NULL) != 0) {
+        return;
+    }
+
+    pthread_detach(thread);
 }
 
 
