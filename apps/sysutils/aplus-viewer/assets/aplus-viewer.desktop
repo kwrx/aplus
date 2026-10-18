@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Viewer
+Comment=Document and image viewer
+Exec=aplus-viewer
+Icon=aplus-viewer
+Terminal=false
+Type=Application
+Categories=Graphics;Office;Viewer;

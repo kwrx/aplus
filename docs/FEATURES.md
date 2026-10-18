@@ -131,8 +131,7 @@
 - [x] Graphics UI Toolkit
 - [x] Terminal Emulator
 - [x] File Manager
-- [x] Image Viewer
-- [x] PDF Viewer
+- [x] PDF and Image Viewer
 - [x] Application Launcher
 - [x] IRC Client
 - [x] Web Browser (NetSurf)

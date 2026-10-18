@@ -66,14 +66,9 @@
 #define XOPEN_TERMINAL "aplus-terminal"
 
 /**
- * @brief What shows a picture.
+ * @brief What shows a PDF document or a picture.
  */
-#define XOPEN_IMAGE_VIEWER "aplus-image-viewer"
-
-/**
- * @brief What shows a PDF document.
- */
-#define XOPEN_PDF_VIEWER "aplus-pdf-viewer"
+#define XOPEN_VIEWER "aplus-viewer"
 
 /**
  * @brief What edits a text file.
@@ -115,8 +110,7 @@ typedef enum {
     XOPEN_KIND_UNKNOWN = 0,
     XOPEN_KIND_DIRECTORY,
     XOPEN_KIND_DESKTOP,
-    XOPEN_KIND_IMAGE,
-    XOPEN_KIND_PDF,
+    XOPEN_KIND_DOCUMENT,
     XOPEN_KIND_TEXT,
     XOPEN_KIND_NES_ROM,
 
@@ -147,33 +141,43 @@ static const struct {
 
 } xopen_types[] = {
 
-    {".desktop", XOPEN_KIND_DESKTOP},
-    {".png",     XOPEN_KIND_IMAGE  },
-    {".jpg",     XOPEN_KIND_IMAGE  },
-    {".jpeg",    XOPEN_KIND_IMAGE  },
-    {".bmp",     XOPEN_KIND_IMAGE  },
-    {".gif",     XOPEN_KIND_IMAGE  },
-    {".tiff",    XOPEN_KIND_IMAGE  },
-    {".tif",     XOPEN_KIND_IMAGE  },
-    {".ico",     XOPEN_KIND_IMAGE  },
-    {".svg",     XOPEN_KIND_IMAGE  },
-    {".webp",    XOPEN_KIND_IMAGE  },
-    {".pdf",     XOPEN_KIND_PDF    },
-    {".txt",     XOPEN_KIND_TEXT   },
-    {".md",      XOPEN_KIND_TEXT   },
-    {".c",       XOPEN_KIND_TEXT   },
-    {".h",       XOPEN_KIND_TEXT   },
-    {".cpp",     XOPEN_KIND_TEXT   },
-    {".hpp",     XOPEN_KIND_TEXT   },
-    {".sh",      XOPEN_KIND_TEXT   },
-    {".py",      XOPEN_KIND_TEXT   },
-    {".js",      XOPEN_KIND_TEXT   },
-    {".json",    XOPEN_KIND_TEXT   },
-    {".conf",    XOPEN_KIND_TEXT   },
-    {".cfg",     XOPEN_KIND_TEXT   },
-    {".ini",     XOPEN_KIND_TEXT   },
-    {".log",     XOPEN_KIND_TEXT   },
-    {".nes",     XOPEN_KIND_NES_ROM},
+    {".desktop", XOPEN_KIND_DESKTOP },
+    {".pdf",     XOPEN_KIND_DOCUMENT},
+    {".png",     XOPEN_KIND_DOCUMENT},
+    {".jpg",     XOPEN_KIND_DOCUMENT},
+    {".jpeg",    XOPEN_KIND_DOCUMENT},
+    {".jpe",     XOPEN_KIND_DOCUMENT},
+    {".jfif",    XOPEN_KIND_DOCUMENT},
+    {".bmp",     XOPEN_KIND_DOCUMENT},
+    {".gif",     XOPEN_KIND_DOCUMENT},
+    {".tiff",    XOPEN_KIND_DOCUMENT},
+    {".tif",     XOPEN_KIND_DOCUMENT},
+    {".pnm",     XOPEN_KIND_DOCUMENT},
+    {".pbm",     XOPEN_KIND_DOCUMENT},
+    {".pgm",     XOPEN_KIND_DOCUMENT},
+    {".ppm",     XOPEN_KIND_DOCUMENT},
+    {".pam",     XOPEN_KIND_DOCUMENT},
+    {".psd",     XOPEN_KIND_DOCUMENT},
+    {".jp2",     XOPEN_KIND_DOCUMENT},
+    {".j2k",     XOPEN_KIND_DOCUMENT},
+    {".jpx",     XOPEN_KIND_DOCUMENT},
+    {".jb2",     XOPEN_KIND_DOCUMENT},
+    {".jbig2",   XOPEN_KIND_DOCUMENT},
+    {".txt",     XOPEN_KIND_TEXT    },
+    {".md",      XOPEN_KIND_TEXT    },
+    {".c",       XOPEN_KIND_TEXT    },
+    {".h",       XOPEN_KIND_TEXT    },
+    {".cpp",     XOPEN_KIND_TEXT    },
+    {".hpp",     XOPEN_KIND_TEXT    },
+    {".sh",      XOPEN_KIND_TEXT    },
+    {".py",      XOPEN_KIND_TEXT    },
+    {".js",      XOPEN_KIND_TEXT    },
+    {".json",    XOPEN_KIND_TEXT    },
+    {".conf",    XOPEN_KIND_TEXT    },
+    {".cfg",     XOPEN_KIND_TEXT    },
+    {".ini",     XOPEN_KIND_TEXT    },
+    {".log",     XOPEN_KIND_TEXT    },
+    {".nes",     XOPEN_KIND_NES_ROM },
 };
 
 
@@ -528,8 +532,7 @@ int main(int argc, char** argv) {
 
 
     char* manager[]  = {(char*)XOPEN_FILE_MANAGER, (char*)path, NULL};
-    char* viewer[]   = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
-    char* document[] = {(char*)XOPEN_PDF_VIEWER, (char*)path, NULL};
+    char* viewer[]   = {(char*)XOPEN_VIEWER, (char*)path, NULL};
     char* editor[]   = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
     char* emulator[] = {(char*)XOPEN_NES_EMULATOR, (char*)path, NULL};
 
@@ -541,11 +544,8 @@ int main(int argc, char** argv) {
         case XOPEN_KIND_DESKTOP:
             return xopen_desktop(path);
 
-        case XOPEN_KIND_IMAGE:
+        case XOPEN_KIND_DOCUMENT:
             return xopen_run(viewer);
-
-        case XOPEN_KIND_PDF:
-            return xopen_run(document);
 
         case XOPEN_KIND_TEXT:
             return xopen_run(editor);

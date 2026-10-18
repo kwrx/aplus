@@ -24,7 +24,7 @@
  */
 
 /**
- * @brief A PDF viewer: the pages are laid out one under the other and drawn by mupdf a tile at a time.
+ * @brief A document and picture viewer: mupdf draws the pages, laid out one under the other, a tile at a time.
  */
 
 #include <errno.h>
@@ -44,7 +44,7 @@
 #include <aplus/ui.h>
 
 
-#define VIEWER_NAME "aplus-pdf-viewer"
+#define VIEWER_NAME "aplus-viewer"
 
 #define VIEWER_WINDOW_WIDTH  680
 #define VIEWER_WINDOW_HEIGHT 560
@@ -72,8 +72,13 @@
 #define VIEWER_PAGE_WIDTH  612.0
 #define VIEWER_PAGE_HEIGHT 792.0
 
-#define VIEWER_SCALE_MIN  0.10
-#define VIEWER_SCALE_MAX  8.0
+/**
+ * @brief How many points mupdf lays an inch out in, which turns a picture's resolution into a scale.
+ */
+#define VIEWER_POINTS_PER_INCH 72.0
+
+#define VIEWER_SCALE_MIN  0.05
+#define VIEWER_SCALE_MAX  32.0
 #define VIEWER_SCALE_STEP 1.25
 
 #define VIEWER_SCROLL_STEP 48
@@ -222,6 +227,9 @@ typedef struct {
     int doc_width;
     int doc_height;
 
+    bool picture;
+
+    double unit;
     double scale;
     double scroll_x;
     double scroll_y;
@@ -290,7 +298,7 @@ static double viewer_clamp_scale(double scale) {
 
 static int viewer_pixels(double points) {
 
-    const long pixels = lround(points * viewer.scale);
+    const long pixels = lround(points * viewer.unit * viewer.scale);
 
     return pixels < 1 ? 1 : (int)pixels;
 }
@@ -532,7 +540,7 @@ static void viewer_zoom_centered(double scale) {
 
 
 /**
- * @brief The scale at which the widest page fills the width of the canvas.
+ * @brief The scale at which the widest page fills the width of the canvas, or a picture fits whole without being enlarged.
  *
  * @return The scale.
  */
@@ -541,17 +549,22 @@ static double viewer_fit_scale(void) {
 
     const ui_rect_t canvas = viewer_canvas();
 
-    double widest = 0.0;
+    double widest  = 0.0;
+    double tallest = 0.0;
 
     for (int i = 0; i < viewer.count; i++) {
-        widest = fmax(widest, viewer.pages[i].bounds.x1 - viewer.pages[i].bounds.x0);
+        widest  = fmax(widest, viewer.pages[i].bounds.x1 - viewer.pages[i].bounds.x0);
+        tallest = fmax(tallest, viewer.pages[i].bounds.y1 - viewer.pages[i].bounds.y0);
     }
 
-    if (widest <= 0.0 || canvas.width <= VIEWER_PAGE_MARGIN * 2) {
+    if (widest <= 0.0 || tallest <= 0.0 || canvas.width <= VIEWER_PAGE_MARGIN * 2 || canvas.height <= VIEWER_PAGE_MARGIN * 2) {
         return 1.0;
     }
 
-    return viewer_clamp_scale((canvas.width - VIEWER_PAGE_MARGIN * 2) / widest);
+    const double across = (canvas.width - VIEWER_PAGE_MARGIN * 2) / (widest * viewer.unit);
+    const double down   = (canvas.height - VIEWER_PAGE_MARGIN * 2) / (tallest * viewer.unit);
+
+    return viewer_clamp_scale(viewer.picture ? fmin(fmin(across, down), 1.0) : across);
 }
 
 
@@ -627,7 +640,7 @@ static int viewer_current_page(void) {
 
 
 /**
- * @brief Writes the page and the magnification into the status line.
+ * @brief Writes the page, or the size of a picture, and the magnification into the status line.
  */
 
 static void viewer_status(void) {
@@ -637,9 +650,18 @@ static void viewer_status(void) {
     }
 
 
+    const int current = viewer_current_page();
+    const int percent = (int)(viewer.scale * 100.0 + 0.5);
+
+    const fz_rect bounds = viewer.pages[current].bounds;
+
     char text[64];
 
-    snprintf(text, sizeof(text), "page %d of %d      %d%%", viewer_current_page() + 1, viewer.count, (int)(viewer.scale * 100.0 + 0.5));
+    if (viewer.picture) {
+        snprintf(text, sizeof(text), "%ld x %ld      %d%%", lround((bounds.x1 - bounds.x0) * viewer.unit), lround((bounds.y1 - bounds.y0) * viewer.unit), percent);
+    } else {
+        snprintf(text, sizeof(text), "page %d of %d      %d%%", current + 1, viewer.count, percent);
+    }
 
     ui_label_set_text(viewer.status, text);
 }
@@ -974,6 +996,8 @@ static void viewer_close_document(void) {
     viewer.pages    = NULL;
     viewer.count    = 0;
     viewer.document = NULL;
+    viewer.picture  = false;
+    viewer.unit     = 1.0;
 }
 
 
@@ -1010,6 +1034,53 @@ static fz_rect viewer_page_bounds(fz_document* document, int index) {
     }
 
     return bounds;
+}
+
+
+/**
+ * @brief Reads the resolution of a picture, at which one of its pixels covers one window pixel at 1:1.
+ *
+ * @param path The file.
+ * @return The horizontal resolution in dots per inch, or 0 when the file is not a picture.
+ */
+
+static int viewer_picture_resolution(const char* path) {
+
+    fz_stream* stream = NULL;
+    fz_image* image   = NULL;
+
+    unsigned char head[8];
+
+    int xres = 0;
+    int yres = 0;
+
+    fz_var(stream);
+    fz_var(image);
+    fz_var(xres);
+
+    fz_try(viewer.ctx) {
+
+        stream = fz_open_file(viewer.ctx, path);
+
+        if (fz_read(viewer.ctx, stream, head, sizeof(head)) == sizeof(head) && fz_recognize_image_format(viewer.ctx, head) != FZ_IMAGE_UNKNOWN) {
+
+            image = fz_new_image_from_file(viewer.ctx, path);
+
+            fz_image_resolution(image, &xres, &yres);
+        }
+    }
+    fz_always(viewer.ctx) {
+
+        fz_drop_image(viewer.ctx, image);
+        fz_drop_stream(viewer.ctx, stream);
+    }
+    fz_catch(viewer.ctx) {
+
+        fz_report_error(viewer.ctx);
+        xres = 0;
+    }
+
+    return xres;
 }
 
 
@@ -1077,9 +1148,13 @@ static const char* viewer_load(const char* path) {
         pages[i].bounds = viewer_page_bounds(document, i);
     }
 
+    const int resolution = viewer_picture_resolution(path);
+
     viewer.document = document;
     viewer.pages    = pages;
     viewer.count    = count;
+    viewer.picture  = resolution > 0;
+    viewer.unit     = resolution > 0 ? resolution / VIEWER_POINTS_PER_INCH : 1.0;
 
     return NULL;
 }
@@ -1237,7 +1312,7 @@ static void viewer_on_pointer(const ui_event_t* event) {
 
 
 /**
- * @brief Scrolls the document a detent at a time, or zooms about the pointer while Ctrl is held.
+ * @brief Scrolls the document a detent at a time, or zooms about the pointer over a picture or while Ctrl is held.
  *
  * @param event The scroll event.
  */
@@ -1249,7 +1324,7 @@ static void viewer_on_scroll(const ui_event_t* event) {
     }
 
 
-    if (viewer.ctrl) {
+    if (viewer.ctrl || viewer.picture) {
 
         double scale = viewer.scale;
 
@@ -1635,6 +1710,7 @@ int main(int argc, char** argv) {
 
     setvbuf(stdout, NULL, _IONBF, 0);
 
+    viewer.unit  = 1.0;
     viewer.scale = 1.0;
     viewer.fit   = true;
 

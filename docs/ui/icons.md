@@ -106,7 +106,7 @@ every PNG under it. It ships the icons the in-tree applications ask for, the pla
 
 | | |
 |---|---|
-| Applications | `aplus-calculator`, `aplus-editor`, `aplus-explorer`, `aplus-image-viewer`, `aplus-launcher`, `aplus-pdf-viewer`, `aplus-terminal`, `doom`, `gl-gears`, `gl-shaders-scene`, `gl-shaders-triangle` |
+| Applications | `aplus-calculator`, `aplus-editor`, `aplus-explorer`, `aplus-launcher`, `aplus-terminal`, `aplus-viewer`, `doom`, `gl-gears`, `gl-shaders-scene`, `gl-shaders-triangle` |
 | Places and actions | `applications-system`, `document-new`, `document-open`, `document-save`, `document-save-as`, `drive-harddisk`, `edit-find`, `folder`, `go-up`, `system-run`, `user-home` |
 | File types | `application-pdf`, `application-x-executable`, `application-x-nes-rom`, `audio-x-generic`, `font-x-generic`, `image-x-generic`, `package-x-generic`, `text-x-generic`, `text-x-script`, `video-x-generic` |
 
