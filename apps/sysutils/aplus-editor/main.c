@@ -482,7 +482,7 @@ static void editor_update_title(void) {
 
     char title[UI_TITLE_MAX];
 
-    snprintf(title, sizeof(title), "%s%.40s - %s", modified ? "*" : "", editor_basename(), EDITOR_NAME);
+    snprintf(title, sizeof(title), "%s%.40s - %s", modified ? "*" : "", editor_basename(), "Text Editor");
 
     if (strcmp(title, editor.title) != 0) {
 
@@ -3078,7 +3078,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    if (!(editor.window = ui_window_create(editor.conn, EDITOR_WINDOW_WIDTH, EDITOR_WINDOW_HEIGHT, EDITOR_NAME))) {
+    if (!(editor.window = ui_window_create(editor.conn, EDITOR_WINDOW_WIDTH, EDITOR_WINDOW_HEIGHT, "Text Editor"))) {
         fprintf(stderr, "%s: ui_window_create() failed: %s\n", EDITOR_NAME, strerror(errno));
         ui_disconnect(editor.conn);
         return 1;

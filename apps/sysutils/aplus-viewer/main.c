@@ -46,7 +46,7 @@
 #include "webp.h"
 
 
-#define VIEWER_NAME "aplus-viewer"
+#define VIEWER_NAME "Viewer"
 
 #define VIEWER_WINDOW_WIDTH  680
 #define VIEWER_WINDOW_HEIGHT 560

@@ -150,6 +150,7 @@ static struct {
     ui_widget_t* status;
 
     char directory[PATH_MAX];
+    char title[UI_TITLE_MAX];
 
     explorer_entry_t* entries;
     size_t count;
@@ -872,12 +873,11 @@ static void explorer_open(const char* path) {
     }
 
 
-    strncpy(explorer.directory, resolved, sizeof(explorer.directory) - 1);
-
-    explorer.directory[sizeof(explorer.directory) - 1] = '\0';
+    snprintf(explorer.title, sizeof(explorer.title), "%.52s - Explorer", resolved);
+    snprintf(explorer.directory, sizeof(explorer.directory), "%.255s", resolved);
 
     ui_label_set_text(explorer.path, explorer.directory);
-    ui_window_set_title(ui_view_window(explorer.view), explorer.directory);
+    ui_window_set_title(ui_view_window(explorer.view), explorer.title);
 
     explorer_sync_places();
 
@@ -1195,7 +1195,7 @@ int main(int argc, char** argv) {
     }
 
 
-    ui_window_t* window = ui_window_create(conn, EXPLORER_WINDOW_WIDTH, EXPLORER_WINDOW_HEIGHT, "aplus-explorer");
+    ui_window_t* window = ui_window_create(conn, EXPLORER_WINDOW_WIDTH, EXPLORER_WINDOW_HEIGHT, "Explorer");
 
     if (!window) {
         fprintf(stderr, "aplus-explorer: ui_window_create() failed: %s\n", strerror(errno));

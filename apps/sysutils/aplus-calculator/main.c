@@ -801,7 +801,7 @@ int main(int argc, char** argv) {
     }
 
 
-    ui_window_t* window = ui_window_create(conn, CALC_WINDOW_WIDTH, CALC_WINDOW_HEIGHT, "aplus-calculator");
+    ui_window_t* window = ui_window_create(conn, CALC_WINDOW_WIDTH, CALC_WINDOW_HEIGHT, "Calculator");
 
     if (!window) {
         fprintf(stderr, "aplus-calculator: ui_window_create() failed: %s\n", strerror(errno));

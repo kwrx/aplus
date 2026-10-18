@@ -873,7 +873,7 @@ int main(int argc, char** argv) {
     }
 
 
-    if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "aplus-terminal")) == NULL) {
+    if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "Console")) == NULL) {
         fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
         exit(1);
     }
