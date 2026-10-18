@@ -182,6 +182,7 @@ else
     else
         flags="$flags -display none"
         flags="$flags -vnc $ARG_REMOTE_URI"
+        flags="$flags -k it"
     fi
 fi
 

@@ -11,6 +11,7 @@ export VM       := kvm
 export PLATFORM := $(subst $\",,$(CONFIG_COMPILER_HOST))
 export ROOTDIR  := $(shell pwd)
 export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
+VNC             := $(or $(REMOTE),:0)
 
 
 PROJECTS := kernel drivers lib apps
@@ -79,10 +80,10 @@ run-live: install-live
 	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 run-remote: install
-	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE) $(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) --remote $(VNC) $(PLATFORM) $(VM_DEBUG)
 
 run-live-remote: install-live
-	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE) $(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) --remote $(VNC) $(PLATFORM) $(VM_DEBUG)
 
 run-headless: install
 	$(QUIET)./scripts/run-$(VM) --headless $(PLATFORM) $(VM_DEBUG)
@@ -94,7 +95,7 @@ run-fast:
 	$(QUIET)./scripts/run-$(VM) $(PLATFORM) $(VM_DEBUG)
 
 run-fast-remote:
-	$(QUIET)./scripts/run-$(VM) --remote $(REMOTE)$(PLATFORM) $(VM_DEBUG)
+	$(QUIET)./scripts/run-$(VM) --remote $(VNC) $(PLATFORM) $(VM_DEBUG)
 
 run-fast-headless:
 	$(QUIET)./scripts/run-$(VM) --headless $(PLATFORM) $(VM_DEBUG)
