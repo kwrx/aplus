@@ -78,29 +78,18 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     DEBUG_ASSERT(end > first);
     DEBUG_ASSERT(index < 1000);
 
-
     device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
-
-    d->type = DEVICE_TYPE_BLOCK;
-
-    strncpy(d->description, device->description, DEVICE_MAXDESCLEN);
-
-
-    if (index > 999) {
-        kpanicf("device::block: ERROR! partition index %zu is too high for device /dev/%s\n", index, device->name);
-    }
-
+    snprintf(d->description, DEVICE_MAXDESCLEN, "%s Partition %zu", device->description, index + 1);
     snprintf(d->name, sizeof(d->name), "%s%zu", device->name, index + 1);
 
-
+    d->type = DEVICE_TYPE_BLOCK;
     d->major = device->major;
     d->minor = device->minor + index + 1;
 
     d->init  = NULL;
     d->dnit  = NULL;
     d->reset = NULL;
-
 
     d->blk.read     = device->blk.read;
     d->blk.write    = device->blk.write;
@@ -112,10 +101,9 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     d->userdata = device->userdata;
 
 
-
     mode_t mode;
 
-    struct stat st;
+    struct stat st = {0};
     if (vfs_getattr(inode, &st) < 0) {
         mode = 0666;
     } else {
