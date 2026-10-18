@@ -217,6 +217,8 @@ static const struct {
     {".py",      "text-x-script"         },
 
     {".pdf",     "application-pdf"       },
+
+    {".nes",     "application-x-nes-rom" },
 };
 
 
