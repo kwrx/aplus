@@ -88,7 +88,11 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     strncpy(d->description, device->description, DEVICE_MAXDESCLEN);
 
 
-    if (index > 99) {
+    if (index > 999) {
+
+        kpanicf("device::block: ERROR! partition index %zu is too high for device /dev/%s\n", index, device->name);
+    
+    } else if (index > 99) {
 
         d->name[strlen(device->name) + 0] = '1' + (index / 100);
         d->name[strlen(device->name) + 1] = '0' + (index % 100) / 10;
@@ -149,17 +153,11 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(devi
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(mkdev);
 
-
-
     if (detect_gpt_partition_table(device)) {
-
 
 #if DEBUG_LEVEL_TRACE
         kprintf("device::block: found GPT Partition Table in /dev/%s\n", device->name);
 #endif
-
-
-        // * Read GPT Header
 
         block_gpt_partition_t gpt = {0};
 
@@ -167,24 +165,19 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(devi
             kpanicf("device::block: ERROR! Read Error at lba(%ld) offset(0)\n", BLOCK_GPT_PARTITION_MAGIC_LBA);
 
 
-
-        // * Read GPT Entries
-
         for (size_t i = 0; i < gpt.table_entries; i++) {
-
 
             block_gpt_partition_entry_t entry = {0};
 
-            if (block_read(device, &entry, (gpt.lba_table * device->blk.blksize) + (i * gpt.table_entry_size), sizeof(entry)) != sizeof(entry))
+            if (block_read(device, &entry, (gpt.lba_table * device->blk.blksize) + (i * gpt.table_entry_size), sizeof(entry)) != sizeof(entry)) {
                 kpanicf("device::block: ERROR! Read Error at lba(%ld) offset(%ld)\n", gpt.lba_table * device->blk.blksize, i * gpt.table_entry_size);
-
+            }
 
             if (entry.type_guid[0] == 0)
                 continue;
 
             if (entry.type_guid[0] == 0xFF)
                 continue;
-
 
 #if DEBUG_LEVEL_TRACE
             kprintf("device::block: found GPT Partition %d in /dev/%s with GUID %.16phC\n", i, device->name, &entry.unique_guid);
@@ -196,28 +189,19 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(devi
 
     } else if (detect_mbr_partition_table(device)) {
 
-
 #if DEBUG_LEVEL_TRACE
         kprintf("device::block: found MBR Partition Table in /dev/%s\n", device->name);
 #endif
-
-
-        // * Read MBR
 
         block_dos_partition_t part[4] = {0};
 
         if (block_read(device, &part, BLOCK_MBR_PARTITION_TABLE_OFFSET, sizeof(part)) != sizeof(part))
             kpanicf("device::block: ERROR! Read Error at offset lba(0) offset(0x1BE)\n");
 
-
-
-        // * Read Partitions
-
         for (size_t i = 0; i < BLOCK_MBR_PARTITION_TABLE_ENTRIES; i++) {
 
             if (part[i].type == BLOCK_MBR_PARTITION_TYPE_EMPTY)
                 continue;
-
 
 #if DEBUG_LEVEL_TRACE
             kprintf("device::block: found MBR Partition %d in /dev/%s of type %X\n", i, device->name, part[i].type);
@@ -228,7 +212,6 @@ void block_parse_partitions(device_t* device, inode_t* inode, void (*mkdev)(devi
 
 
     } else {
-
 #if DEBUG_LEVEL_WARN
         kprintf("device::block: WARN! unknown partition table for /dev/%s\n", device->name);
 #endif
