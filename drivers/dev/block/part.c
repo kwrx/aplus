@@ -84,32 +84,14 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
 
     d->type = DEVICE_TYPE_BLOCK;
 
-    strncpy(d->name, device->name, DEVICE_MAXNAMELEN);
     strncpy(d->description, device->description, DEVICE_MAXDESCLEN);
 
 
     if (index > 999) {
-
         kpanicf("device::block: ERROR! partition index %zu is too high for device /dev/%s\n", index, device->name);
-    
-    } else if (index > 99) {
-
-        d->name[strlen(device->name) + 0] = '1' + (index / 100);
-        d->name[strlen(device->name) + 1] = '0' + (index % 100) / 10;
-        d->name[strlen(device->name) + 2] = '0' + (index % 10);
-        d->name[strlen(device->name) + 3] = '\0';
-
-    } else if (index > 9) {
-
-        d->name[strlen(device->name) + 0] = '1' + (index / 10);
-        d->name[strlen(device->name) + 1] = '0' + (index % 10);
-        d->name[strlen(device->name) + 2] = '\0';
-
-    } else {
-
-        d->name[strlen(device->name) + 0] = '1' + index;
-        d->name[strlen(device->name) + 1] = '\0';
     }
+
+    snprintf(d->name, sizeof(d->name), "%s%zu", device->name, index + 1);
 
 
     d->major = device->major;
