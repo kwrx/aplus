@@ -132,6 +132,7 @@
 - [x] Terminal Emulator
 - [x] File Manager
 - [x] Image Viewer
+- [x] PDF Viewer
 - [x] Application Launcher
 - [x] IRC Client
 - [x] Web Browser (NetSurf)
@@ -161,3 +162,4 @@
 - [x] Expat
 - [x] libtsm
 - [x] NetSurf
+- [x] MuPDF

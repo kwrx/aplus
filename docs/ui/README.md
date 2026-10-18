@@ -69,6 +69,7 @@ its whole frame instead — see
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-image-viewer/` | The one that mixes the layers: a toolbar of widgets around a picture drawn straight into the window pixels |
+| `apps/sysutils/aplus-pdf-viewer/` | The same layout around a document: mupdf renders the pages a tile at a time, and the canvas scrolls, zooms and drags over them |
 | `apps/sysutils/aplus-editor/` | The bigger mix: a toolbar, a prompt bar and a status line of widgets around a text area it draws, damages and blinks a caret in by itself |
 | `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a translucent window only as tall as it has results — borderless and centred, or a drawer out of the taskbar's rail with `--drawer` |
 | `apps/test/ui-test/` | The reference surface-layer application |
