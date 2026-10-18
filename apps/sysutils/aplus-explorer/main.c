@@ -215,6 +215,8 @@ static const struct {
     {".hpp",     "text-x-script"         },
     {".js",      "text-x-script"         },
     {".py",      "text-x-script"         },
+
+    {".pdf",     "application-pdf"       },
 };
 
 

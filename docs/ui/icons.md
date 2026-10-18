@@ -94,9 +94,9 @@ run as has it in the titlebar as well as in the launcher, with no code. One that
 ## What the explorer shows
 
 Everything else in a listing is named by what it is. Directories are `folder`, the `..` row is
-`go-up`, and a file is looked up by extension — images, audio, video, archives, fonts and
-scripts each have their own — falling back to `application-x-executable` when the file is
-executable and `text-x-generic` when it is not.
+`go-up`, and a file is looked up by extension — images, audio, video, archives, fonts, scripts
+and PDF documents each have their own — falling back to `application-x-executable` when the
+file is executable and `text-x-generic` when it is not.
 
 ## The default theme
 
