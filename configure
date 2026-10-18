@@ -171,17 +171,11 @@ stage_3() {
     packages="$packages pixman"
     packages="$packages pkgconf"
     packages="$packages zlib"
+    packages="$packages doom"    
+    packages="$packages nesemu"
+    packages="$packages mupdf"
 
-    # Get packages
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.3.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
-
-    # Get additional packages
-    if [ "$CONFIG_HAVE_GAMES_DOOM" == "y" ]; then
-        die python ./scripts/get-pkg.py --repo kwrx/aplus-doom --repo-version 0.1.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i doom
-    fi
-    if [ "$CONFIG_HAVE_GAMES_NESEMU" == "y" ]; then
-        die python ./scripts/get-pkg.py --repo kwrx/aplus-nesemu --repo-version 0.1.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i nesemu
-    fi
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.6.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
 }
 
