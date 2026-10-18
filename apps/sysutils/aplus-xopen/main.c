@@ -71,6 +71,11 @@
 #define XOPEN_IMAGE_VIEWER "aplus-image-viewer"
 
 /**
+ * @brief What shows a PDF document.
+ */
+#define XOPEN_PDF_VIEWER "aplus-pdf-viewer"
+
+/**
  * @brief What edits a text file.
  */
 #define XOPEN_TEXT_EDITOR "aplus-editor"
@@ -106,6 +111,7 @@ typedef enum {
     XOPEN_KIND_DIRECTORY,
     XOPEN_KIND_DESKTOP,
     XOPEN_KIND_IMAGE,
+    XOPEN_KIND_PDF,
     XOPEN_KIND_TEXT,
 
 } xopen_kind_t;
@@ -146,6 +152,7 @@ static const struct {
     {".ico",     XOPEN_KIND_IMAGE  },
     {".svg",     XOPEN_KIND_IMAGE  },
     {".webp",    XOPEN_KIND_IMAGE  },
+    {".pdf",     XOPEN_KIND_PDF    },
     {".txt",     XOPEN_KIND_TEXT   },
     {".md",      XOPEN_KIND_TEXT   },
     {".c",       XOPEN_KIND_TEXT   },
@@ -513,9 +520,10 @@ int main(int argc, char** argv) {
     }
 
 
-    char* manager[] = {(char*)XOPEN_FILE_MANAGER, (char*)path, NULL};
-    char* viewer[]  = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
-    char* editor[]  = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
+    char* manager[]  = {(char*)XOPEN_FILE_MANAGER, (char*)path, NULL};
+    char* viewer[]   = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
+    char* document[] = {(char*)XOPEN_PDF_VIEWER, (char*)path, NULL};
+    char* editor[]   = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
 
     switch (xopen_kind(path, &st)) {
 
@@ -527,6 +535,9 @@ int main(int argc, char** argv) {
 
         case XOPEN_KIND_IMAGE:
             return xopen_run(viewer);
+
+        case XOPEN_KIND_PDF:
+            return xopen_run(document);
 
         case XOPEN_KIND_TEXT:
             return xopen_run(editor);
