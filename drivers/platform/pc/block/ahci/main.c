@@ -156,7 +156,8 @@ MODULE_LICENSE("GPL");
 
 #define AHCI_MAX_DEVICES (32)
 
-#define AHCI_DEVICE_INDEX(d) (((long)d->minor >> 3))
+#define AHCI_DEVICE_PORT(d)  ((struct ahci_port*)(d)->userdata)
+#define AHCI_DEVICE_INDEX(d) (AHCI_DEVICE_PORT(d)->index)
 
 
 
@@ -426,6 +427,14 @@ typedef volatile struct hba {
 } __packed hba_t;
 
 
+/**
+ * @brief One AHCI port, shared by a disk's device and its partitions.
+ */
+struct ahci_port {
+    struct ahci* ahci;
+    long index;
+};
+
 struct ahci {
 
     uintptr_t contiguous_memory_area;
@@ -436,6 +445,8 @@ struct ahci {
     semaphore_t io;
 
     hba_t volatile* hba;
+
+    struct ahci_port ports[32];
 };
 
 
@@ -511,7 +522,7 @@ static void satapi_init(device_t* device) {
     DEBUG_ASSERT(device->userdata);
 
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -665,7 +676,7 @@ static ssize_t satapi_read(device_t* device, void* buf, off_t offset, size_t cou
     DEBUG_ASSERT(count <= 64);
 
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     long d = AHCI_DEVICE_INDEX(device);
@@ -766,7 +777,7 @@ static void sata_init(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -857,7 +868,7 @@ static void sata_dnit(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     long i = AHCI_DEVICE_INDEX(device);
@@ -880,7 +891,7 @@ static void sata_reset(device_t* device) {
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     size_t i = AHCI_DEVICE_INDEX(device);
@@ -938,7 +949,7 @@ static ssize_t sata_read(device_t* device, void* buf, off_t offset, size_t count
     DEBUG_ASSERT(count);
     DEBUG_ASSERT(count <= 256);
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     size_t d = AHCI_DEVICE_INDEX(device);
@@ -1036,7 +1047,7 @@ static ssize_t sata_write(device_t* device, const void* buf, off_t offset, size_
     DEBUG_ASSERT(count);
     DEBUG_ASSERT(count <= 256);
 
-    struct ahci* ahci = (struct ahci*)device->userdata;
+    struct ahci* ahci = AHCI_DEVICE_PORT(device)->ahci;
 
 
     size_t d = AHCI_DEVICE_INDEX(device);
@@ -1383,7 +1394,7 @@ void init(const char* args) {
 
             d->type  = DEVICE_TYPE_BLOCK;
             d->major = index ? 65 + index : 8;
-            d->minor = i << 3;
+            d->minor = i * BLOCK_MINORS_PER_DISK;
 
             d->init  = sata_init;
             d->dnit  = sata_dnit;
@@ -1397,7 +1408,8 @@ void init(const char* args) {
             d->blk.read  = sata_read;
             d->blk.write = sata_write;
 
-            d->userdata = (void*)ahci;
+            ahci->ports[i] = (struct ahci_port){ahci, i};
+            d->userdata    = &ahci->ports[i];
 
             device_mkdev(d, 0660);
         }
@@ -1421,7 +1433,7 @@ void init(const char* args) {
 
             d->type  = DEVICE_TYPE_BLOCK;
             d->major = 11;
-            d->minor = i << 3;
+            d->minor = i * BLOCK_MINORS_PER_DISK;
 
             d->init  = satapi_init;
             d->dnit  = sata_dnit;
@@ -1435,7 +1447,8 @@ void init(const char* args) {
             d->blk.read  = satapi_read;
             d->blk.write = NULL;
 
-            d->userdata = (void*)ahci;
+            ahci->ports[i] = (struct ahci_port){ahci, i};
+            d->userdata    = &ahci->ports[i];
 
             device_mkdev(d, 0660);
         }

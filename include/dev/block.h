@@ -48,6 +48,9 @@
     #define BLOCK_GPT_PARTITION_MAGIC_LBA 1
 
 
+    #define BLOCK_MINORS_PER_DISK 256
+
+
 
 __BEGIN_DECLS
 

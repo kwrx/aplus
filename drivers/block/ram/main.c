@@ -165,7 +165,7 @@ void init(const char* args) {
         d->name[3] += device;
         d->type  = DEVICE_TYPE_BLOCK;
         d->major = device ? 65 + device : 8;
-        d->minor = device << 3;
+        d->minor = device * BLOCK_MINORS_PER_DISK;
 
 
         d->init  = NULL;
