@@ -31,6 +31,10 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
     <img src="./docs/images/v0.7-ui.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
 </p>
 
+<p align="center" width="100%">
+    <img src="./docs/images/v0.7-ui-2.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
+</p>
+
 
 ## :electron: Kernel
 The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
@@ -62,6 +66,7 @@ Networking works end to end: below, BusyBox `httpd` serves a page from the guest
 <p align="center" width="100%">
     <img src="./docs/images/v0.7-httpd.png" alt="aplus v0.7 - BusyBox httpd serving a page to a browser on the host" width="100%"></img>
 </p>
+
 
 ## :electric_plug: Drivers
 Drivers are loadable kernel objects: one directory with a `main.c` per module, each declaring its identity and dependencies through `MODULE_NAME()`/`MODULE_DEPS()` and exporting `init`/`dnit` entry points. The tree currently builds 32 of them, covering device-class interfaces, char and block devices, terminals, input, network, video and virtio.
