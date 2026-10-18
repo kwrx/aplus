@@ -47,17 +47,16 @@ It currently boots and runs on `x86_64`; support for other architectures such as
 
 
 ## :robot: Userspace
-Userspace is still under development, and is assembled from two sources: the programs built from this repository, and prebuilt packages fetched at `./configure` time from [aplus-packages](https://github.com/kwrx/aplus-packages).
+Userspace is still under development. It is built from this repository plus prebuilt packages that `./configure` fetches from [aplus-packages](https://github.com/kwrx/aplus-packages), and runs as a multi-user system on a unix-like filesystem with `/proc` and `/dev`.
 
-Built here: the [init system](/apps/core/init) and its [init.sh](/apps/core/init/scripts/init.sh) boot script, a [display server](/apps/sysutils/aplus-wm) with its [client library](/lib/aplus/ui), a [terminal emulator](/apps/sysutils/aplus-terminal) on top of `libtsm` and `cairo`, a [file manager](/apps/sysutils/aplus-explorer), a [calculator](/apps/sysutils/aplus-calculator), an [image viewer](/apps/sysutils/aplus-image-viewer) that draws PNG, JPEG and WebP through [cairo-ext](/lib/aplus/cairo-ext), a [text editor](/apps/sysutils/aplus-editor) with undo, search and a line-numbered gutter, an [application launcher](/apps/sysutils/aplus-launcher) on `Super+Space` and the taskbar's button that searches the installed `.desktop` files, the [aplus-xopen](/apps/sysutils/aplus-xopen) opener that hands a path to whichever of them handles it, the `kilo` editor, `nyancat`, an [IRC client](/apps/extra/irc), three MesaGL demos ([gears](/apps/extra/gl-gears), a [shaded triangle](/apps/extra/gl-shaders-triangle) and a [raymarched scene](/apps/extra/gl-shaders-scene)), and a set of [test programs](/apps/test) — guest-side integration tests, run from the shell, covering signals, pipes, pseudo-terminals, sockets, `select`, the virtual memory manager and the [virtio device nodes](/apps/test/virtio-test).
+* **Init**, [apps/core/init](/apps/core/init), runs the [init.sh](/apps/core/init/scripts/init.sh) boot script
+* **Desktop**, [aplus-wm](/apps/sysutils/aplus-wm), a display server that owns the framebuffer and the input devices and draws every window frame, with [libui](/lib/aplus/ui) for its clients
+* **Applications**, [apps/sysutils](/apps/sysutils), terminal, file manager, text editor, image viewer, calculator, and a launcher with an optional AI assistant
+* **Extras**, [apps/extra](/apps/extra), `kilo`, `nyancat`, an IRC client and MesaGL demos
+* **Tests**, [apps/test](/apps/test), guest-side integration tests run from the shell
+* **Packages**, BusyBox, `dash` and `bash`, the graphics and TLS libraries, MesaGL, [NetSurf](https://www.netsurf-browser.org/) and a native `gcc` toolchain; Doom and a NES emulator are optional
 
-Pulled in as packages, all of them, on every `./configure`: BusyBox, the `dash` and `bash` shells, system fonts, cursors, keymaps and sample pictures, the `zlib`, `libpng`, `libjpeg-turbo`, `libwebp`, `freetype`, `pixman`, `cairo`, `expat`, `libtsm`, LibreSSL and cURL libraries, MesaGL, the [NetSurf](https://www.netsurf-browser.org/) web browser, and `gcc` and `binutils` with the arithmetic libraries they need — a native toolchain, so the guest compiles programs for itself. Doom and a NES emulator are the only optional ones left, off by default and toggled from the Kconfig menu.
-
-Furthermore, userspace has a **multi-user** environment with superuser (root) and a unix-like filesystem with `/proc` and `/dev` implementation.
-
-Graphical programs are windowed rather than each taking over the screen: [aplus-wm](/apps/sysutils/aplus-wm) owns `/dev/fb0` and the input devices, draws every titlebar and border itself, and hands clients a buffer to draw into through [libui](/lib/aplus/ui). The terminal emulator, the sysutils applications and the MesaGL demos are ordinary clients of it. Where the adapter composites a cursor plane of its own — virtio-gpu does — the pointer moves without touching the framebuffer at all. In the screenshot at the top, the editor, the file manager, the image viewer, the calculator, NetSurf, two terminals (one running `top`) and the `gl-gears` demo each draw into a window of their own, every frame around them drawn by the server rather than by the programs inside them, with the taskbar's rail down the left edge; the launcher is open in the middle, showing an answer from its optional AI assistant (`CONFIG_HAVE_AI`).
-
-Networked programs work end to end: below, BusyBox `httpd` is serving `/var/www` from inside the guest to a browser on the host, over the port `8080` forwarded to the guest's `80` by [run-qemu](/scripts/run-qemu) and by the `run.sh` shipped with the releases.
+Networking works end to end: below, BusyBox `httpd` serves a page from the guest to a browser on the host, through port `8080` forwarded by [run-qemu](/scripts/run-qemu).
 
 <br>
 <p align="center" width="100%">
