@@ -160,19 +160,16 @@ void init(const char* args) {
 
         device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
-        strncpy(d->name, "ram0", DEVICE_MAXNAMELEN);
-        strncpy(d->description, "RAM disk device", DEVICE_MAXDESCLEN);
+        snprintf(d->name, DEVICE_MAXNAMELEN, "ram%zu", device);
+        snprintf(d->description, DEVICE_MAXDESCLEN, "RAM disk device %zu", device);
 
-        d->name[3] += device;
         d->type  = DEVICE_TYPE_BLOCK;
         d->major = RAMDISK_MAJOR;
         d->minor = device * BLOCK_MINORS_PER_DISK;
 
-
         d->init  = NULL;
         d->dnit  = NULL;
         d->reset = NULL;
-
 
         d->blk.blksize  = RAMDISK_BLKSIZE;
         d->blk.blkcount = RAMDISK_BYTES2BLK(core->modules.ko[index].size);
