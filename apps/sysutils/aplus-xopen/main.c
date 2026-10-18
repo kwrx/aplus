@@ -81,6 +81,11 @@
 #define XOPEN_TEXT_EDITOR "aplus-editor"
 
 /**
+ * @brief What runs a NES cartridge image.
+ */
+#define XOPEN_NES_EMULATOR "nesemu"
+
+/**
  * @brief How much of a file with no known extension is read to tell text from binary.
  */
 #define XOPEN_SNIFF_SIZE 4096
@@ -113,6 +118,7 @@ typedef enum {
     XOPEN_KIND_IMAGE,
     XOPEN_KIND_PDF,
     XOPEN_KIND_TEXT,
+    XOPEN_KIND_NES_ROM,
 
 } xopen_kind_t;
 
@@ -167,6 +173,7 @@ static const struct {
     {".cfg",     XOPEN_KIND_TEXT   },
     {".ini",     XOPEN_KIND_TEXT   },
     {".log",     XOPEN_KIND_TEXT   },
+    {".nes",     XOPEN_KIND_NES_ROM},
 };
 
 
@@ -524,6 +531,7 @@ int main(int argc, char** argv) {
     char* viewer[]   = {(char*)XOPEN_IMAGE_VIEWER, (char*)path, NULL};
     char* document[] = {(char*)XOPEN_PDF_VIEWER, (char*)path, NULL};
     char* editor[]   = {(char*)XOPEN_TEXT_EDITOR, (char*)path, NULL};
+    char* emulator[] = {(char*)XOPEN_NES_EMULATOR, (char*)path, NULL};
 
     switch (xopen_kind(path, &st)) {
 
@@ -541,6 +549,9 @@ int main(int argc, char** argv) {
 
         case XOPEN_KIND_TEXT:
             return xopen_run(editor);
+
+        case XOPEN_KIND_NES_ROM:
+            return xopen_run(emulator);
 
         default:
             break;

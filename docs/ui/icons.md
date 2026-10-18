@@ -94,9 +94,9 @@ run as has it in the titlebar as well as in the launcher, with no code. One that
 ## What the explorer shows
 
 Everything else in a listing is named by what it is. Directories are `folder`, the `..` row is
-`go-up`, and a file is looked up by extension — images, audio, video, archives, fonts, scripts
-and PDF documents each have their own — falling back to `application-x-executable` when the
-file is executable and `text-x-generic` when it is not.
+`go-up`, and a file is looked up by extension — images, audio, video, archives, fonts, scripts,
+PDF documents and NES ROMs each have their own — falling back to `application-x-executable` when
+the file is executable and `text-x-generic` when it is not.
 
 ## The default theme
 
@@ -108,7 +108,7 @@ every PNG under it. It ships the icons the in-tree applications ask for, the pla
 |---|---|
 | Applications | `aplus-calculator`, `aplus-editor`, `aplus-explorer`, `aplus-image-viewer`, `aplus-launcher`, `aplus-pdf-viewer`, `aplus-terminal`, `doom`, `gl-gears`, `gl-shaders-scene`, `gl-shaders-triangle` |
 | Places and actions | `applications-system`, `document-new`, `document-open`, `document-save`, `document-save-as`, `drive-harddisk`, `edit-find`, `folder`, `go-up`, `system-run`, `user-home` |
-| File types | `application-pdf`, `application-x-executable`, `audio-x-generic`, `font-x-generic`, `image-x-generic`, `package-x-generic`, `text-x-generic`, `text-x-script`, `video-x-generic` |
+| File types | `application-pdf`, `application-x-executable`, `application-x-nes-rom`, `audio-x-generic`, `font-x-generic`, `image-x-generic`, `package-x-generic`, `text-x-generic`, `text-x-script`, `video-x-generic` |
 
 The PNGs are rendered from the SVG sources in `assets/icons/svg` and committed alongside them,
 so an ordinary build needs no SVG renderer. Adding or changing an icon means editing the SVG

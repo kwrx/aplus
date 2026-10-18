@@ -161,9 +161,9 @@ with none.
 `aplus-xopen` is what reads them: given a path it picks a handler — a directory opens in
 `aplus-explorer`, a picture in `aplus-image-viewer`, a `.pdf` in `aplus-pdf-viewer`, a text file
 in `aplus-editor` (and so does a file with no known extension and no NUL byte in its first 4 KiB),
-a `.desktop` file runs the `Exec` it names, through `aplus-terminal` when it asks for one — and
-`execvp()`s it, so the caller ends up with the application as its own child rather than with an
-opener in between.
+a `.nes` ROM in `nesemu`, a `.desktop` file runs the `Exec` it names, through `aplus-terminal` when
+it asks for one — and `execvp()`s it, so the caller ends up with the application as its own child
+rather than with an opener in between.
 
 `aplus-launcher` is what lists them. It reads the other half of the same files — the `Name`,
 `Comment` and `Icon` a person picks an application by — and hands the path to `aplus-xopen` rather than
