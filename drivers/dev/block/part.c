@@ -76,7 +76,11 @@ static void device_mkpart(device_t* device, inode_t* inode, void (*mkdev)(device
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(mkdev);
     DEBUG_ASSERT(end > first);
-    DEBUG_ASSERT(index < 1000);
+
+    if (index + 1 >= BLOCK_MINORS_PER_DISK) {
+        kprintf("device::block: WARN! /dev/%s has no minor left for partition %zu, skipping it\n", device->name, index + 1);
+        return;
+    }
 
     device_t* d = (device_t*)kcalloc(1, sizeof(device_t), GFP_KERNEL);
 
