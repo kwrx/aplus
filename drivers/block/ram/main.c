@@ -23,6 +23,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
