@@ -54,7 +54,7 @@ Userspace is still under development. It is built from this repository plus preb
 * **Applications**, [apps/sysutils](/apps/sysutils), terminal, file manager, text editor, image viewer, PDF viewer, calculator, and a launcher with an optional AI assistant
 * **Extras**, [apps/extra](/apps/extra), `kilo`, `nyancat`, an IRC client and MesaGL demos
 * **Tests**, [apps/test](/apps/test), guest-side integration tests run from the shell
-* **Packages**, BusyBox, `dash` and `bash`, the graphics and TLS libraries, MesaGL, [NetSurf](https://www.netsurf-browser.org/), [MuPDF](https://mupdf.com/) and a native `gcc` toolchain; Doom and a NES emulator are optional
+* **Packages**, BusyBox, `dash` and `bash`, the graphics and TLS libraries, MesaGL, [NetSurf](https://www.netsurf-browser.org/), [MuPDF](https://mupdf.com/), Doom, a NES emulator and a native `gcc` toolchain
 
 Networking works end to end: below, BusyBox `httpd` serves a page from the guest to a browser on the host, through port `8080` forwarded by [run-qemu](/scripts/run-qemu).
 
