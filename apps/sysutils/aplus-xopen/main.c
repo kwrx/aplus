@@ -163,6 +163,7 @@ static const struct {
     {".jpx",     XOPEN_KIND_DOCUMENT},
     {".jb2",     XOPEN_KIND_DOCUMENT},
     {".jbig2",   XOPEN_KIND_DOCUMENT},
+    {".webp",    XOPEN_KIND_DOCUMENT},
     {".txt",     XOPEN_KIND_TEXT    },
     {".md",      XOPEN_KIND_TEXT    },
     {".c",       XOPEN_KIND_TEXT    },
