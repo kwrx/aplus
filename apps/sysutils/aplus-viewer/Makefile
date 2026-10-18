@@ -8,7 +8,7 @@ CFLAGS += -DPATH_MAX=4096
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 
-LIBS      += ui mupdf mupdf-third cairo pixman-1 freetype jpeg png z
+LIBS      += ui mupdf mupdf-third webp cairo pixman-1 freetype jpeg png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-viewer.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-viewer.desktop: assets/aplus-viewer.desktop

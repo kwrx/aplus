@@ -43,6 +43,8 @@
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
+#include "webp.h"
+
 
 #define VIEWER_NAME "aplus-viewer"
 
@@ -1049,7 +1051,7 @@ static int viewer_picture_resolution(const char* path) {
     fz_stream* stream = NULL;
     fz_image* image   = NULL;
 
-    unsigned char head[8];
+    unsigned char head[VIEWER_WEBP_HEAD];
 
     int xres = 0;
     int yres = 0;
@@ -1062,11 +1064,18 @@ static int viewer_picture_resolution(const char* path) {
 
         stream = fz_open_file(viewer.ctx, path);
 
-        if (fz_read(viewer.ctx, stream, head, sizeof(head)) == sizeof(head) && fz_recognize_image_format(viewer.ctx, head) != FZ_IMAGE_UNKNOWN) {
+        if (fz_read(viewer.ctx, stream, head, sizeof(head)) == sizeof(head)) {
 
-            image = fz_new_image_from_file(viewer.ctx, path);
+            if (viewer_webp_recognize(head)) {
 
-            fz_image_resolution(image, &xres, &yres);
+                xres = (int)VIEWER_POINTS_PER_INCH;
+
+            } else if (fz_recognize_image_format(viewer.ctx, head) != FZ_IMAGE_UNKNOWN) {
+
+                image = fz_new_image_from_file(viewer.ctx, path);
+
+                fz_image_resolution(image, &xres, &yres);
+            }
         }
     }
     fz_always(viewer.ctx) {
@@ -1723,7 +1732,9 @@ int main(int argc, char** argv) {
     }
 
     fz_try(viewer.ctx) {
+
         fz_register_document_handlers(viewer.ctx);
+        fz_register_document_handler(viewer.ctx, &viewer_webp_handler);
     }
     fz_catch(viewer.ctx) {
 
