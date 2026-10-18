@@ -47,6 +47,7 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
+#define RAMDISK_MAJOR          1
 #define RAMDISK_BLKSIZE        4096
 #define RAMDISK_BLK2BYTES(blk) ((blk) * RAMDISK_BLKSIZE)
 #define RAMDISK_BYTES2BLK(blk) ((blk) / RAMDISK_BLKSIZE)
@@ -164,7 +165,7 @@ void init(const char* args) {
 
         d->name[3] += device;
         d->type  = DEVICE_TYPE_BLOCK;
-        d->major = device ? 65 + device : 8;
+        d->major = RAMDISK_MAJOR;
         d->minor = device * BLOCK_MINORS_PER_DISK;
 
 
