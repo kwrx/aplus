@@ -34,6 +34,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/select.h>
+#include <sys/wait.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -55,6 +57,100 @@ static int total    = 0;
 
 
 #define PTY_MAX 4
+
+
+/**
+ * @brief Asks select() whether a descriptor is readable.
+ *
+ * @param fd The descriptor.
+ * @param timeout_ms How long select() may wait, 0 for a probe.
+ * @return 1 when readable, 0 when not, -1 when select() failed.
+ */
+static int readable(int fd, int timeout_ms) {
+
+    fd_set rfds;
+
+    FD_ZERO(&rfds);
+    FD_SET(fd, &rfds);
+
+    struct timeval tv = {
+        .tv_sec  = timeout_ms / 1000,
+        .tv_usec = (timeout_ms % 1000) * 1000,
+    };
+
+    if (select(fd + 1, &rfds, NULL, NULL, &tv) < 0) {
+        return -1;
+    }
+
+    return FD_ISSET(fd, &rfds) ? 1 : 0;
+}
+
+
+/**
+ * @brief Checks that each end of a raw pty is readable only while the other end's bytes are waiting in it.
+ *
+ * @param master The master descriptor.
+ * @param slave The slave descriptor.
+ */
+static void test_readiness(int master, int slave) {
+
+    char buf[16];
+
+    CHECK(readable(slave, 0) == 0, "slave-empty", "%s", "an empty slave is reported readable");
+    CHECK(readable(master, 0) == 0, "master-empty", "%s", "an empty master is reported readable");
+
+    if (write(master, "x", 1) != 1) {
+        CHECK(0, "slave-input", "write() failed: %s", strerror(errno));
+        return;
+    }
+
+    CHECK(readable(slave, 0) == 1, "slave-input", "%s", "the slave is not readable after the master wrote");
+    CHECK(read(slave, buf, sizeof(buf)) == 1, "slave-input-read", "%s", "the slave did not return the byte");
+    CHECK(readable(slave, 0) == 0, "slave-drained", "%s", "a drained slave is reported readable");
+
+    if (write(slave, "y", 1) != 1) {
+        CHECK(0, "master-output", "write() failed: %s", strerror(errno));
+        return;
+    }
+
+    CHECK(readable(master, 0) == 1, "master-output", "%s", "the master is not readable after the slave wrote");
+    CHECK(read(master, buf, sizeof(buf)) == 1, "master-output-read", "%s", "the master did not return the byte");
+    CHECK(readable(master, 0) == 0, "master-drained", "%s", "a drained master is reported readable");
+}
+
+
+/**
+ * @brief Checks that a select() sleeping on an empty slave wakes up when the master writes.
+ *
+ * @param master The master descriptor.
+ * @param slave The slave descriptor.
+ */
+static void test_wakeup(int master, int slave) {
+
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        CHECK(0, "slave-wakeup", "fork() failed: %s", strerror(errno));
+        return;
+    }
+
+    if (pid == 0) {
+        usleep(200000);
+        _exit(write(master, "z", 1) == 1 ? 0 : 1);
+    }
+
+    const int r = readable(slave, 3000);
+
+    CHECK(r == 1, "slave-wakeup", "select() returned %d instead of waking up on input", r);
+
+    waitpid(pid, NULL, 0);
+
+    char buf[16];
+
+    if (r == 1) {
+        (void)read(slave, buf, sizeof(buf));
+    }
+}
 
 
 int main(int argc, char** argv) {
@@ -120,6 +216,12 @@ int main(int argc, char** argv) {
         ssize_t got = read(slave[i], buf, sizeof(buf));
 
         CHECK(got >= 1 && buf[0] == payload, name, "read() returned %zd, buf[0]=%#x", got, (unsigned)buf[0]);
+    }
+
+
+    if (master[0] >= 0) {
+        test_readiness(master[0], slave[0]);
+        test_wakeup(master[0], slave[0]);
     }
 
 

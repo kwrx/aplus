@@ -82,6 +82,8 @@ ssize_t pty_master_read(inode_t* inode, void* buf, off_t offset, size_t size);
 ssize_t pty_master_write(inode_t* inode, const void* buf, off_t offset, size_t size);
 ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size);
 ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t size);
+int pty_master_poll(inode_t* inode, int events);
+int pty_slave_poll(inode_t* inode, int events);
 
 pty_t* pty_create(inode_t* ptmx, int flags);
 pty_t* pty_queue();

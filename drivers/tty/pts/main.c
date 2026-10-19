@@ -160,6 +160,7 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             d->ops.read  = pty_slave_read;
             d->ops.write = pty_slave_write;
             d->ops.ioctl = pty_ioctl;
+            d->ops.poll  = pty_slave_poll;
             d->userdata  = queue;
 
             d->ev = shared_ptr_ref(queue->ptmx->ev);
