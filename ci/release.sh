@@ -34,7 +34,11 @@ sudo apt install -y \
     xz-utils \
     python3 \
     python3-pip \
-    python3-venv
+    python3-venv && \
+    rm -rf /var/lib/apt/lists/*
+
+
+rm -rf /tmp/get-pkg
 
 ./configure --kconfig ${TARGET}
 ./makew -j$(nproc)
@@ -49,3 +53,5 @@ install -m 755 ci/run.sh ${NAME}/run.sh
 
 tar cJf ${NAME}.tar.xz ${NAME}
 zip -r ${NAME}.zip ${NAME}
+
+rm -rf /tmp/get-pkg
