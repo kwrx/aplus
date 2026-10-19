@@ -351,12 +351,44 @@ int main(int argc, char** argv) {
                 break;
             }
 
-            if (ev.type == UI_EVENT_KEY && ev.key.down && ev.key.vkey == KEY_ESC) {
-                running = false;
-                break;
+            else if (ev.type == UI_EVENT_KEY && ev.key.down) {
+
+                switch (ev.key.vkey) {
+
+                    case KEY_ESC:
+                        running = false;
+                        break;
+
+                    case KEY_UP:
+                        view_rotx += 5.0f;
+                        break;
+
+                    case KEY_DOWN:
+                        view_rotx -= 5.0f;
+                        break;
+
+                    case KEY_LEFT:
+                        view_roty -= 5.0f;
+                        break;
+
+                    case KEY_RIGHT:
+                        view_roty += 5.0f;
+                        break;
+
+                    case KEY_PAGEUP:
+                        view_rotz += 5.0f;
+                        break;
+
+                    case KEY_PAGEDOWN:
+                        view_rotz -= 5.0f;
+                        break;
+
+                    default:
+                        break;
+                }
             }
 
-            if (ev.type == UI_EVENT_CONFIGURE) {
+            else if (ev.type == UI_EVENT_CONFIGURE) {
 
                 if (ui_window_apply_configure(win) < 0) {
                     fprintf(stderr, "gl-gears: ui_window_apply_configure() failed: %s\n", strerror(errno));
