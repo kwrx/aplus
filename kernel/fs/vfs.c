@@ -63,6 +63,7 @@ void vfs_init(void) {
 
     rootfs_init();
     fd_init();
+    vfs_locks_init();
 
 #if DEBUG_LEVEL_INFO
     kprintf("vfs: ready!\n");

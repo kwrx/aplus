@@ -141,7 +141,12 @@ void fd_remove(struct file* fd, bool close) {
     }
 
 
-    if (!close || !inode)
+    if (!inode)
+        return;
+
+    vfs_lock_release(inode, (uintptr_t)fd);
+
+    if (!close)
         return;
 
     vfs_close(inode);
@@ -310,10 +315,13 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
 
 
     struct file* old = NULL;
+    uintptr_t owner  = 0;
 
     shared_ptr_access(current_task->fd, fds, {
         if (unlikely(!fds->descriptors[fd].ref))
             return -EBADF;
+
+        owner = (uintptr_t)fds;
 
         scoped_lock(&current_task->lock) {
 
@@ -327,8 +335,13 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
     });
 
 
-    if (old)
+    if (old) {
+
+        if (old->inode)
+            vfs_lock_release(old->inode, owner);
+
         fd_remove(old, true);
+    }
 
     return newfd;
 }
@@ -390,6 +403,9 @@ void fd_close_all(struct fd* fds) {
 
         if (!fds->descriptors[i].ref)
             continue;
+
+        if (fds->descriptors[i].ref->inode)
+            vfs_lock_release(fds->descriptors[i].ref->inode, (uintptr_t)fds);
 
         fd_remove(fds->descriptors[i].ref, true);
 

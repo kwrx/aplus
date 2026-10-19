@@ -59,8 +59,11 @@ SYSCALL(
 
 
         struct file* file = NULL;
+        uintptr_t owner   = 0;
 
         shared_ptr_access(current_task->fd, fds, {
+            owner = (uintptr_t)fds;
+
             scoped_lock(&current_task->lock) {
                 file = fds->descriptors[fd].ref;
 
@@ -72,6 +75,9 @@ SYSCALL(
 
         if (unlikely(!file))
             return -EBADF;
+
+        if (file->inode)
+            vfs_lock_release(file->inode, owner);
 
         fd_remove(file, true);
 

@@ -68,6 +68,12 @@
 
 
     /**
+     * @brief The last byte of a record lock that extends to the end of the file and beyond.
+     */
+    #define VFS_LOCK_EOF INT64_MAX
+
+
+    /**
      * @brief Which half of a pipe an endpoint inode represents; a named FIFO uses one inode for both.
      */
     #define PIPE_END_READ  0
@@ -207,6 +213,8 @@ typedef struct {
 __BEGIN_DECLS
 
 
+extern volatile uint32_t vfs_lock_event;
+
 void vfs_init(void);
 
 //* kernel/fs/vfs.c
@@ -230,6 +238,11 @@ int vfs_removexattr(inode_t*, const char*);
 
 int vfs_truncate(inode_t*, off_t);
 int vfs_fsync(inode_t*, int);
+
+void vfs_locks_init(void);
+void vfs_lock_test(inode_t*, uintptr_t, short*, off_t*, off_t*, pid_t*);
+int vfs_lock_set(inode_t*, uintptr_t, pid_t, short, off_t, off_t);
+void vfs_lock_release(inode_t*, uintptr_t);
 
 ssize_t vfs_read(inode_t*, void*, off_t, size_t);
 ssize_t vfs_write(inode_t*, const void*, off_t, size_t);

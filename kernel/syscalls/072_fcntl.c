@@ -33,9 +33,11 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 #include <aplus/network.h>
@@ -45,6 +47,192 @@
  * @brief The file status flags F_SETFL may change; the access mode and the creation flags stay as opened.
  */
 #define FCNTL_SETFL_MASK (O_APPEND | O_ASYNC | O_DIRECT | O_NOATIME | O_NONBLOCK)
+
+
+/**
+ * @brief Turns the range of a struct flock into the first and last byte it covers.
+ *
+ * @param file The open file, for SEEK_CUR and SEEK_END.
+ * @param fl The lock request.
+ * @param start Receives the first byte.
+ * @param end Receives the last byte, VFS_LOCK_EOF when it extends to the end of the file and beyond.
+ * @return 0, or -EINVAL or -EOVERFLOW.
+ */
+static long __fcntl_lock_range(struct file* file, const struct flock* fl, off_t* start, off_t* end) {
+
+    off_t base = 0;
+
+    switch (fl->l_whence) {
+
+        case SEEK_SET:
+            break;
+
+        case SEEK_CUR:
+            scoped_lock(&file->lock) {
+                base = file->position;
+            }
+            break;
+
+        case SEEK_END: {
+
+            struct stat st = {0};
+
+            if (vfs_getattr(file->inode, &st) < 0)
+                return -errno;
+
+            base = st.st_size;
+            break;
+        }
+
+        default:
+            return -EINVAL;
+    }
+
+
+    off_t first;
+    off_t last;
+
+    if (__builtin_add_overflow(base, fl->l_start, &first))
+        return -EOVERFLOW;
+
+    if (fl->l_len > 0) {
+
+        if (__builtin_add_overflow(first, fl->l_len - 1, &last))
+            return -EOVERFLOW;
+
+    } else if (fl->l_len == 0) {
+
+        last = VFS_LOCK_EOF;
+
+    } else {
+
+        last = first - 1;
+
+        if (__builtin_add_overflow(first, fl->l_len, &first))
+            return -EINVAL;
+    }
+
+    if (first < 0 || last < first)
+        return -EINVAL;
+
+    *start = first;
+    *end   = last;
+
+    return 0;
+}
+
+
+/**
+ * @brief Tests, takes or drops a record lock on the file behind a descriptor: F_GETLK, F_SETLK, F_SETLKW and their OFD variants.
+ *
+ * @param fd The descriptor.
+ * @param cmd The command.
+ * @param user The struct flock, in user memory.
+ * @return 0, or a negative errno; -EINTR with the syscall marked for restart while F_SETLKW waits.
+ */
+static long __fcntl_lock(unsigned int fd, unsigned int cmd, struct flock* user) {
+
+    const bool ofd  = cmd == F_OFD_GETLK || cmd == F_OFD_SETLK || cmd == F_OFD_SETLKW;
+    const bool test = cmd == F_GETLK || cmd == F_OFD_GETLK;
+    const bool wait = cmd == F_SETLKW || cmd == F_OFD_SETLKW;
+    const int mode  = test ? R_OK | W_OK : R_OK;
+
+    if (unlikely(!uio_check(user, mode) || !uio_check((const char*)(user + 1) - 1, mode)))
+        return -EFAULT;
+
+
+    struct flock fl;
+    uio_memcpy_u2s(&fl, user, sizeof(fl));
+
+    if (fl.l_type != F_RDLCK && fl.l_type != F_WRLCK && fl.l_type != F_UNLCK)
+        return -EINVAL;
+
+    if (test && fl.l_type == F_UNLCK)
+        return -EINVAL;
+
+    if (ofd && fl.l_pid != 0)
+        return -EINVAL;
+
+
+    int flags         = 0;
+    struct file* file = fd_get(fd, &flags);
+
+    if (unlikely(!file))
+        return -EBADF;
+
+    if (unlikely(flags & O_PATH)) {
+        fd_put(file);
+        return -EBADF;
+    }
+
+    if (!test && ((fl.l_type == F_RDLCK && (flags & 03) == O_WRONLY) || (fl.l_type == F_WRLCK && (flags & 03) == O_RDONLY))) {
+        fd_put(file);
+        return -EBADF;
+    }
+
+
+    uintptr_t owner = (uintptr_t)file;
+
+    if (!ofd)
+        shared_ptr_access(current_task->fd, fds, { owner = (uintptr_t)fds; });
+
+
+    off_t start = 0;
+    off_t end   = 0;
+    long e      = __fcntl_lock_range(file, &fl, &start, &end);
+
+    if (e < 0) {
+        fd_put(file);
+        return e;
+    }
+
+
+    if (test) {
+
+        short type = fl.l_type;
+        pid_t pid  = 0;
+
+        vfs_lock_test(file->inode, owner, &type, &start, &end, &pid);
+
+        fl.l_type = type;
+
+        if (type != F_UNLCK) {
+            fl.l_whence = SEEK_SET;
+            fl.l_start  = start;
+            fl.l_len    = end == VFS_LOCK_EOF ? 0 : end - start + 1;
+            fl.l_pid    = pid;
+        }
+
+        fd_put(file);
+
+        uio_memcpy_s2u(user, &fl, sizeof(fl));
+        return 0;
+    }
+
+
+    const uint32_t seq = atomic_load(&vfs_lock_event);
+
+    if (vfs_lock_set(file->inode, owner, ofd ? -1 : current_task->pid, fl.l_type, start, end) == 0) {
+        fd_put(file);
+        return 0;
+    }
+
+    e = -errno;
+
+    fd_put(file);
+
+    if (e != -EAGAIN || !wait)
+        return e;
+
+
+    futex_wait(current_task, &vfs_lock_event, seq, NULL);
+
+    thread_suspend(current_task);
+    thread_restart_sched(current_task);
+    thread_restart_syscall(current_task);
+
+    return -EINTR;
+}
 
 
 /***
@@ -121,6 +309,14 @@ SYSCALL(
 
                     return 0;
                 }
+
+                case F_GETLK:
+                case F_SETLK:
+                case F_SETLKW:
+                case F_OFD_GETLK:
+                case F_OFD_SETLK:
+                case F_OFD_SETLKW:
+                    return __fcntl_lock(fd, cmd, (struct flock*)arg);
 
                 case F_SETPIPE_SZ:
                 case F_GETPIPE_SZ:
