@@ -502,7 +502,7 @@ int main(int argc, char** argv) {
 ./makew run
 ```
 
-In the terminal the window manager opens for you:
+The desktop starts empty. Open a terminal with `Ctrl+Alt+T` and start it from there:
 
 ```sh
 ui-hello
@@ -527,4 +527,5 @@ For an automated run with the console captured instead of a display, `./makew ru
 - The keyboard, spanning grid cells, and a layout that adapts: [tutorial-layout.md](tutorial-layout.md).
 - A list of things to pick from, and the focus that comes with it: [widgets.md](widgets.md#list).
 - Drawing something the widgets cannot express: [tutorial-custom-drawing.md](tutorial-custom-drawing.md).
+- Making something of your own move: [tutorial-animation.md](tutorial-animation.md).
 - The full widget reference: [widgets.md](widgets.md).

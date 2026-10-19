@@ -206,6 +206,10 @@ static void canvas_on_step(ui_widget_t* widget, void* user) {
 widget's rectangle. Either makes `ui_view_needs_paint()` true and the next
 `ui_view_present()` return `1`.
 
+Content that moves by itself, rather than a step at a time on a click, needs the loop to wake up
+for each frame too — [tutorial-animation.md](tutorial-animation.md#9-drawing-it-yourself-instead)
+covers that.
+
 ## Your own cairo context
 
 Cairo is already linked into any application using widgets, so the easy way to draw into

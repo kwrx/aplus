@@ -52,7 +52,7 @@ its whole frame instead — see
 |---|---|
 | `lib/aplus/ui/include/aplus/ui.h` | Surface API and the wire protocol, shared with the server |
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
-| `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server |
+| `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server — see [Animation](animation.md) |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
 | `lib/aplus/ui/ui_window.c` | Window creation, the shared surface and its back buffer, resize, damage, commits |
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
@@ -172,14 +172,15 @@ running anything itself, which is also how it stays out of the way of the proces
 ## Running it
 
 The display server has to be running before any client. `apps/core/init/scripts/init.sh`
-starts it at boot:
+starts it at boot, and nothing else:
 
 ```sh
 aplus-wm &
-aplus-terminal -c "cat /etc/motd && while true; do /bin/dash; done"
+sleep infinity
 ```
 
-There is no sleep between the two lines because `ui_connect()` retries — see
+The desktop comes up empty; `Ctrl+Alt+T` opens a terminal. A client started from the same script
+needs no sleep before it, because `ui_connect()` retries — see
 [getting-started.md](getting-started.md#3-connecting).
 
 The desktop behind the windows is a webp picture out of `/usr/share/images`, shipped by the
@@ -208,7 +209,8 @@ bindings are worth knowing:
 A double click on a titlebar maximises the window too, and so does the button beside the close
 button. Dragging a maximised window by its titlebar puts it back at its old size under the
 pointer. Windows open centred, stepping down and right from one already there, and they grow
-into place, fade away when they close, and morph between their two sizes when maximised.
+into place, fade away when they close, and morph between their two sizes when maximised —
+[Animation](animation.md#what-the-server-animates) lists every transition the server runs.
 
 The taskbar is a rail down the left edge of the display, joined to a thin border round the
 rest of it, and windows are placed, clamped and maximised within the rounded area the two
@@ -254,11 +256,15 @@ window is a lifecycle with no leak in it.
   the keyboard to the same widgets the pointer drives.
 - [Custom drawing](tutorial-custom-drawing.md) — dropping to raw pixels, and mixing your
   own cairo into a widget view.
+- [Animation](tutorial-animation.md) — a value that glides and a pulse that knows when to stop,
+  stepped by a loop of your own alongside the widgets' transitions.
 
 **Reference**
 
 - [Widgets](widgets.md) — the view, the widget set, hit testing, damage and the frame
   lifecycle.
+- [Animation](animation.md) — transitions, the curves and the shared durations, how frames
+  are scheduled, and what the widgets and the server animate by themselves.
 - [Theming](theming.md) — the colour roles, the default dark scheme, and writing your own.
 - [Icons](icons.md) — the theme in `/usr/share/icons`, how a name is resolved, and what
   `Icon` in a desktop entry buys.

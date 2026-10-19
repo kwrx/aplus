@@ -134,7 +134,9 @@ library still wakes for events and never on a timer it does not need.
 Every transition is drawn against the clock reading of the frame being painted, so a widget
 that changes state twice before a frame goes out simply eases from wherever it had got to. The
 easing and the shared durations (`UI_MOTION_FAST`, `UI_MOTION_NORMAL`, `UI_MOTION_SLOW`) live in
-`<aplus/ui-anim.h>`, which `aplus-wm` uses for its own transitions too.
+`<aplus/ui-anim.h>`, which `aplus-wm` uses for its own transitions too. [animation.md](animation.md)
+has the whole of it, and [tutorial-animation.md](tutorial-animation.md) steps an animation of
+your own alongside the view's.
 
 `ui_view_closed()` becomes true when a `UI_EVENT_CLOSE` is dispatched — the titlebar button,
 `Ctrl+Alt+Q`, or anything else the server decides is a close request. Nothing in the library
@@ -765,7 +767,7 @@ the list follows the pointer from row to row. `tick` is what `ui_view_timeout()`
 returns the delay until the widget next has to be painted, or `-1`, and invalidates whatever it
 changed. A widget easing a `ui_anim_t` asks `ui_widget_animating()` whether the last frame
 painted has shown the transition's end yet, and reads the value with `ui_widget_anim()`, which
-uses that same frame's clock.
+uses that same frame's clock — see [animation.md](animation.md#inside-a-widget).
 
 Every hook is optional — a panel fills in `draw` and nothing else. Every hook that reacts to
 state returns whether a repaint is due, and the view invalidates the widget for it; `on_key`
