@@ -80,6 +80,16 @@
  */
 #define EXECVE_ARG_MIN (128UL * 1024UL)
 
+/**
+ * @brief Most bytes of a #! line execve() reads, as Linux does.
+ */
+#define EXECVE_SCRIPT_LINE 256
+
+/**
+ * @brief Most #! scripts execve() follows before the image must be a program.
+ */
+#define EXECVE_SCRIPT_DEPTH 4
+
 
 #define AUX_ENT(id, value)     \
     {                          \
@@ -405,6 +415,170 @@ static void __execve_rollback(vmm_address_space_t* old) {
 
 
 /**
+ * @brief Checks that a path names an executable regular file and takes a reference to it.
+ *
+ * @param path The path, in kernel memory.
+ * @param inode Receives the file, referenced.
+ * @return 0, or a negative errno.
+ */
+static long __execve_open(const char* path, inode_t** inode) {
+
+    struct stat st = {0};
+    long fd;
+
+    scoped_uio_kernel() {
+
+        long e = sys_newstat(path, &st);
+
+        if (unlikely(e < 0))
+            return e;
+
+        if (unlikely(!S_ISREG(st.st_mode)))
+            return -ENOEXEC;
+
+        if (unlikely(st.st_size == 0))
+            return -ENOEXEC;
+
+        if (unlikely(sys_access(path, X_OK) < 0))
+            return -EACCES;
+
+        if ((fd = sys_open(path, O_RDONLY, 0)) < 0)
+            return fd;
+    }
+
+
+    inode_t* file = NULL;
+
+    shared_ptr_access(current_task->fd, fds, {
+        if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
+            file = vfs_inode_get(fds->descriptors[fd].ref->inode);
+    });
+
+    if ((fd = sys_close(fd)) < 0) {
+
+        if (file)
+            vfs_inode_put(file);
+
+        return fd;
+    }
+
+    if (unlikely(!file))
+        return -EBADF;
+
+    *inode = file;
+
+    return 0;
+}
+
+
+/**
+ * @brief Turns the exec of a #! script into that of its interpreter: the interpreter, its optional argument, the script path, then the script's arguments after the first.
+ *
+ * @param inode The script.
+ * @param path The script path, replaced by the interpreter path.
+ * @param strings The arguments then the environment, replaced by the new ones.
+ * @param argsz The bytes the arguments take, updated.
+ * @param argc How many arguments, updated.
+ * @param envsz The bytes the environment takes.
+ * @param envc How many environment entries.
+ * @param limit The bytes the strings and a pointer to each may take.
+ * @return 0, or -ENOEXEC for a malformed #! line, -E2BIG, -ENOMEM or the error of the read.
+ */
+static long __execve_script(inode_t* inode, char* path, char** strings, long* argsz, size_t* argc, long envsz, size_t envc, size_t limit) {
+
+    char line[EXECVE_SCRIPT_LINE + 1] = {0};
+
+    const ssize_t size = vfs_read(inode, line, 0, EXECVE_SCRIPT_LINE);
+
+    if (size < 0)
+        return -errno;
+
+    char* end = memchr(line, '\n', size);
+
+    if (!end) {
+
+        if (size == EXECVE_SCRIPT_LINE)
+            return -ENOEXEC;
+
+        end = &line[size];
+    }
+
+    *end = '\0';
+
+
+    char* interp = &line[2];
+
+    while (*interp == ' ' || *interp == '\t')
+        interp++;
+
+    char* arg = interp;
+
+    while (*arg && *arg != ' ' && *arg != '\t')
+        arg++;
+
+    if (arg == interp)
+        return -ENOEXEC;
+
+    if (*arg) {
+
+        *arg++ = '\0';
+
+        while (*arg == ' ' || *arg == '\t')
+            arg++;
+
+        for (char* tail = arg + strlen(arg); tail > arg && (tail[-1] == ' ' || tail[-1] == '\t'); tail--)
+            tail[-1] = '\0';
+    }
+
+
+    const size_t skip  = *argc ? strlen(*strings) + 1 : 0;
+    const size_t lint  = strlen(interp) + 1;
+    const size_t larg  = *arg ? strlen(arg) + 1 : 0;
+    const size_t lpath = strlen(path) + 1;
+    const size_t newsz = lint + larg + lpath + (*argsz - skip);
+    const size_t newc  = (larg ? 3 : 2) + (*argc ? *argc - 1 : 0);
+
+    if (newsz + envsz + (newc + envc) * sizeof(char*) > limit)
+        return -E2BIG;
+
+
+    char* buf = (char*)kmalloc(newsz + envsz + 1, GFP_KERNEL);
+
+    if (unlikely(!buf))
+        return -ENOMEM;
+
+    char* p = buf;
+
+    memcpy(p, interp, lint);
+    p += lint;
+
+    if (larg) {
+        memcpy(p, arg, larg);
+        p += larg;
+    }
+
+    memcpy(p, path, lpath);
+    p += lpath;
+
+    memcpy(p, *strings + skip, (*argsz - skip) + envsz);
+
+    buf[newsz + envsz] = '\0';
+
+
+    kfree(*strings);
+
+    *strings = buf;
+    *argsz   = newsz;
+    *argc    = newc;
+
+    strncpy(path, interp, CONFIG_PATH_MAX - 1);
+    path[CONFIG_PATH_MAX - 1] = '\0';
+
+    return 0;
+}
+
+
+/**
  * @brief Records the program name and command line /proc shows, from the new arguments.
  *
  * @param strings The arguments, one string after the other.
@@ -499,57 +673,71 @@ SYSCALL(
 
         long e;
 
-        struct stat st = {0};
+        char* path __scoped(__execve_kfree) = (char*)kmalloc(CONFIG_PATH_MAX, GFP_KERNEL);
 
-        scoped_uio_kernel() {
-            e = sys_newstat(filename, &st);
-        }
+        if (unlikely(!path))
+            return -ENOMEM;
 
-        if (unlikely(e < 0))
-            return e;
-
-        if (unlikely(!S_ISREG(st.st_mode)))
-            return -ENOEXEC;
-
-        if (unlikely(st.st_size == 0))
-            return -ENOEXEC;
-
-        if (unlikely(sys_access(filename, X_OK) < 0))
-            return -EACCES;
+        uio_strncpy_u2s(path, filename, CONFIG_PATH_MAX);
 
 
 
-        int fd;
-        if ((fd = sys_open(filename, O_RDONLY, 0)) < 0) {
-            return fd;
-        }
+        const size_t limit = MAX(current_task->rlimits[RLIMIT_STACK].rlim_cur / 4, EXECVE_ARG_MIN);
+
+        size_t argc = 0;
+        size_t envc = 0;
+        size_t n    = 0;
+
+        long argsz = __execve_copy_strings(argv, NULL, limit, &argc);
+
+        if (argsz < 0)
+            return argsz;
+
+        const long envsz = __execve_copy_strings(envp, NULL, limit - argsz - argc * sizeof(char*), &envc);
+
+        if (envsz < 0)
+            return envsz;
+
+
+        char* strings __scoped(__execve_kfree) = (char*)kmalloc(argsz + envsz + 1, GFP_KERNEL);
+
+        if (unlikely(!strings))
+            return -ENOMEM;
+
+        if ((e = __execve_copy_strings(argv, strings, argsz + argc * sizeof(char*), &n)) != argsz || n != argc)
+            return e < 0 ? e : -EFAULT;
+
+        if ((e = __execve_copy_strings(envp, strings + argsz, envsz + envc * sizeof(char*), &n)) != envsz || n != envc)
+            return e < 0 ? e : -EFAULT;
+
 
 
         inode_t* inode __scoped(vfs_inode_cleanup) = NULL;
 
-        shared_ptr_access(current_task->fd, fds, {
-            if (fds->descriptors[fd].ref && fds->descriptors[fd].ref->inode)
-                inode = vfs_inode_get(fds->descriptors[fd].ref->inode);
-        });
-
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
-
-        if (unlikely(!inode))
-            return -EBADF;
-
-
-
         Elf_Ehdr head = {0};
 
-        if (vfs_read(inode, &head, 0, sizeof(head)) < 0) {
-            return -errno;
+        for (int depth = 0;; depth++) {
+
+            if ((e = __execve_open(path, &inode)) < 0)
+                return e;
+
+            memset(&head, 0, sizeof(head));
+
+            if (vfs_read(inode, &head, 0, sizeof(head)) < 0)
+                return -errno;
+
+            if (head.e_ident[0] != '#' || head.e_ident[1] != '!')
+                break;
+
+            if (depth == EXECVE_SCRIPT_DEPTH)
+                return -ELOOP;
+
+            if ((e = __execve_script(inode, path, &strings, &argsz, &argc, envsz, envc, limit)) < 0)
+                return e;
+
+            vfs_inode_put(inode);
+            inode = NULL;
         }
-
-
-
-        if (head.e_ident[0] == '#' && head.e_ident[1] == '!')
-            return -ENOEXEC; // TODO: read and execute command scripts
 
 
         if ((head.e_ident[EI_MAG0] != ELFMAG0) || (head.e_ident[EI_MAG1] != ELFMAG1) || (head.e_ident[EI_MAG2] != ELFMAG2) || (head.e_ident[EI_MAG3] != ELFMAG3) || (head.e_type != ET_EXEC) || (head.e_entry == 0))
@@ -574,36 +762,6 @@ SYSCALL(
 
         if ((e = __execve_check(phdrs, head.e_phnum, current_space->mmap.heap_start)) < 0)
             return e;
-
-
-
-        const size_t limit = MAX(current_task->rlimits[RLIMIT_STACK].rlim_cur / 4, EXECVE_ARG_MIN);
-
-        size_t argc = 0;
-        size_t envc = 0;
-        size_t n    = 0;
-
-        const long argsz = __execve_copy_strings(argv, NULL, limit, &argc);
-
-        if (argsz < 0)
-            return argsz;
-
-        const long envsz = __execve_copy_strings(envp, NULL, limit - argsz - argc * sizeof(char*), &envc);
-
-        if (envsz < 0)
-            return envsz;
-
-
-        char* strings __scoped(__execve_kfree) = (char*)kmalloc(argsz + envsz + 1, GFP_KERNEL);
-
-        if (unlikely(!strings))
-            return -ENOMEM;
-
-        if ((e = __execve_copy_strings(argv, strings, argsz + argc * sizeof(char*), &n)) != argsz || n != argc)
-            return e < 0 ? e : -EFAULT;
-
-        if ((e = __execve_copy_strings(envp, strings + argsz, envsz + envc * sizeof(char*), &n)) != envsz || n != envc)
-            return e < 0 ? e : -EFAULT;
 
 
 
@@ -691,6 +849,9 @@ SYSCALL(
 
         kfree(phdrs);
         phdrs = NULL;
+
+        kfree(path);
+        path = NULL;
 
         vfs_inode_put(inode);
         inode = NULL;
