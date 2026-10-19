@@ -34,8 +34,7 @@ sudo apt install -y \
     xz-utils \
     python3 \
     python3-pip \
-    python3-venv && \
-    rm -rf /var/lib/apt/lists/*
+    python3-venv
 
 
 if [ -d /tmp/get-pkg ]; then
