@@ -19,6 +19,12 @@
 #include "ext2.h"
 
 
+/**
+ * @brief Removes a regular file or an empty directory from a directory.
+ * @param parent The directory.
+ * @param name The name of the entry.
+ * @return 0 on success, -1 with errno set.
+ */
 int ext2_unlink(inode_t* parent, const char* name) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);
@@ -35,10 +41,9 @@ int ext2_unlink(inode_t* parent, const char* name) {
 
     struct ext2_inode* node = cache_get(&parent->sb->cache, target->ino);
 
-    if (S_ISDIR(node->i_mode))
-        return kfree(target), errno = EISDIR, -1;
+    bool is_dir = S_ISDIR(node->i_mode);
 
-    if (!S_ISREG(node->i_mode))
+    if (!S_ISREG(node->i_mode) && !is_dir)
         return kfree(target), errno = EPERM, -1;
 
     ext2_t* ext2           = parent->sb->fsinfo;
@@ -48,6 +53,15 @@ int ext2_unlink(inode_t* parent, const char* name) {
     int result             = -1;
 
     scoped_lock(&ext2->lock) {
+        if (is_dir) {
+            int empty = ext2_utils_dir_empty(ext2, node);
+
+            if (empty <= 0) {
+                errno = empty < 0 ? errno : ENOTEMPTY;
+                break;
+            }
+        }
+
         if (ext2_utils_remove_dir_entry(ext2, dir, name, &ino, &type) < 0)
             break;
 
@@ -56,7 +70,7 @@ int ext2_unlink(inode_t* parent, const char* name) {
             break;
         }
 
-        if (node->i_links_count > 1) {
+        if (!is_dir && node->i_links_count > 1) {
             node->i_links_count--;
             node->i_ctime = arch_timer_gettime();
 
@@ -82,6 +96,13 @@ int ext2_unlink(inode_t* parent, const char* name) {
 
             if (ext2_utils_write_inode(ext2, ino, node) < 0 || ext2_utils_free_inode(ext2, ino) < 0)
                 break;
+        }
+
+        if (is_dir) {
+            if (ext2_utils_count_dir(ext2, ino, -1) < 0)
+                break;
+
+            dir->i_links_count--;
         }
 
         dir->i_mtime = arch_timer_gettime();

@@ -511,6 +511,7 @@ int ext2_utils_read_inode(ext2_t*, ino_t, void*);
 int ext2_utils_write_inode(ext2_t*, ino_t, const void*);
 int ext2_utils_alloc_inode(ext2_t*, const struct ext2_inode*, ino_t*);
 int ext2_utils_free_inode(ext2_t*, ino_t);
+int ext2_utils_count_dir(ext2_t*, ino_t, int);
 
 int ext2_utils_read_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, void*, size_t);
 int ext2_utils_write_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, const void*, size_t);
@@ -531,5 +532,7 @@ mode_t ext2_utils_file_type(uint8_t);
 uint8_t ext2_utils_dir_type(mode_t);
 int ext2_utils_add_dir_entry(ext2_t*, struct ext2_inode*, ino_t, const char*, mode_t);
 int ext2_utils_remove_dir_entry(ext2_t*, struct ext2_inode*, const char*, ino_t*, uint8_t*);
+int ext2_utils_init_dir(ext2_t*, struct ext2_inode*, ino_t, ino_t);
+int ext2_utils_dir_empty(ext2_t*, struct ext2_inode*);
 
 #endif

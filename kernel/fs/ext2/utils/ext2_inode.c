@@ -178,6 +178,31 @@ int ext2_utils_free_inode(ext2_t* ext2, ino_t ino) {
 }
 
 
+/**
+ * @brief Adjusts the directory count of the block group an inode belongs to.
+ * @param ext2 The filesystem.
+ * @param ino The inode of a directory being created or removed.
+ * @param delta +1 for a new directory, -1 for a removed one.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_count_dir(ext2_t* ext2, ino_t ino, int delta) {
+    DEBUG_ASSERT(ext2);
+
+    if (unlikely(ino == 0 || ino > ext2->sb.s_inodes_count))
+        return errno = EINVAL, -1;
+
+    uint32_t group = (ino - 1) / ext2->sb.s_inodes_per_group;
+    struct ext2_group_desc desc;
+
+    if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
+        return -1;
+
+    desc.bg_used_dirs_count += delta;
+
+    return ext2_utils_write_group_desc(ext2, group, &desc);
+}
+
+
 static int ext2_inode_block_path(ext2_t* ext2, uint32_t logical, uint32_t* slot, uint32_t indexes[3], uint32_t* levels) {
     uint64_t per_block = ext2->blocksize / sizeof(uint32_t);
 

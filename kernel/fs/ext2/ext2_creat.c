@@ -21,6 +21,34 @@
 #include "ext2.h"
 
 
+/**
+ * @brief Undoes a half-created inode: frees the block of a new directory, clears the inode and releases it.
+ * @param ext2 The filesystem.
+ * @param node The new inode.
+ * @param ino Its inode number.
+ */
+static void ext2_creat_rollback(ext2_t* ext2, struct ext2_inode* node, ino_t ino) {
+    int e = errno;
+
+    if (S_ISDIR(node->i_mode))
+        ext2_utils_free_inode_data(ext2, node, 0);
+
+    memset(node, 0, ext2->inodesize);
+
+    ext2_utils_write_inode(ext2, ino, node);
+    ext2_utils_free_inode(ext2, ino);
+
+    errno = e;
+}
+
+
+/**
+ * @brief Creates a regular file or a directory in a directory.
+ * @param parent The directory.
+ * @param name The name of the entry.
+ * @param mode The type and permissions of the entry.
+ * @return The new inode, or NULL with errno set.
+ */
 inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
     DEBUG_ASSERT(parent);
     DEBUG_ASSERT(parent->sb);
@@ -30,7 +58,7 @@ inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
     if (unlikely(parent->sb->flags & MS_RDONLY))
         return errno = EROFS, NULL;
 
-    if (unlikely(!S_ISREG(mode)))
+    if (unlikely(!S_ISREG(mode) && !S_ISDIR(mode)))
         return errno = EOPNOTSUPP, NULL;
 
     size_t name_len = strlen(name);
@@ -53,7 +81,7 @@ inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
     created->i_mode        = mode & ~umask;
     created->i_uid         = current_task->uid;
     created->i_gid         = current_task->gid;
-    created->i_links_count = 1;
+    created->i_links_count = S_ISDIR(mode) ? 2 : 1;
     created->i_atime       = arch_timer_gettime();
     created->i_ctime       = created->i_atime;
     created->i_mtime       = created->i_atime;
@@ -62,16 +90,26 @@ inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
         if (ext2_utils_alloc_inode(ext2, created, &ino) < 0)
             break;
 
-        if (ext2_utils_add_dir_entry(ext2, dir, ino, name, created->i_mode) < 0) {
-            ext2_utils_free_inode(ext2, ino);
-            ino = 0;
+        if (S_ISDIR(mode) && ext2_utils_init_dir(ext2, created, ino, parent->ino) < 0) {
+            ext2_creat_rollback(ext2, created, ino);
             break;
         }
+
+        if (ext2_utils_add_dir_entry(ext2, dir, ino, name, created->i_mode) < 0) {
+            ext2_creat_rollback(ext2, created, ino);
+            break;
+        }
+
+        if (S_ISDIR(mode))
+            dir->i_links_count++;
 
         dir->i_mtime = arch_timer_gettime();
         dir->i_ctime = dir->i_mtime;
 
         if (ext2_utils_write_inode(ext2, parent->ino, dir) < 0)
+            break;
+
+        if (S_ISDIR(mode) && ext2_utils_count_dir(ext2, ino, 1) < 0)
             break;
 
         result = ext2_utils_create_vfs_inode(parent, ino, name, created->i_mode);

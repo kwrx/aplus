@@ -12,6 +12,7 @@
 
 #include <aplus.h>
 #include <aplus/errno.h>
+#include <aplus/memory.h>
 #include <aplus/vfs.h>
 
 #include "../ext2.h"
@@ -179,4 +180,75 @@ int ext2_utils_remove_dir_entry(ext2_t* ext2, struct ext2_inode* dir, const char
     }
 
     return errno = ENOENT, -1;
+}
+
+
+/**
+ * @brief Writes the first block of a new directory, holding its "." and ".." entries, and records it in the inode.
+ * @param ext2 The filesystem.
+ * @param node The new directory, updated in memory and on disk.
+ * @param ino Its inode number.
+ * @param parent The inode number of its parent.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_init_dir(ext2_t* ext2, struct ext2_inode* node, ino_t ino, ino_t parent) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(node);
+
+    uint8_t* block = kcalloc(1, ext2->blocksize, GFP_KERNEL);
+
+    if (unlikely(!block))
+        return errno = ENOMEM, -1;
+
+    struct ext2_dir_entry_2* dot = (struct ext2_dir_entry_2*)block;
+    ext2_fill_dir_entry(dot, EXT2_DIR_REC_LEN(1), ino, ".", S_IFDIR);
+
+    struct ext2_dir_entry_2* dotdot = (struct ext2_dir_entry_2*)(block + dot->rec_len);
+    ext2_fill_dir_entry(dotdot, ext2->blocksize - dot->rec_len, parent, "..", S_IFDIR);
+
+    int result = ext2_utils_write_inode_data(ext2, node, 0, 0, block, ext2->blocksize);
+
+    kfree(block);
+
+    if (result < 0)
+        return -1;
+
+    node->i_size = ext2->blocksize;
+
+    return ext2_utils_write_inode(ext2, ino, node);
+}
+
+
+/**
+ * @brief Tells whether a directory holds nothing but its "." and ".." entries.
+ * @param ext2 The filesystem.
+ * @param node The directory.
+ * @return 1 when it is empty, 0 when it is not, -1 with errno set on error.
+ */
+int ext2_utils_dir_empty(ext2_t* ext2, struct ext2_inode* node) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(node);
+
+    uint32_t blocks = (node->i_size + ext2->blocksize - 1) / ext2->blocksize;
+
+    for (uint32_t block = 0; block < blocks; block++) {
+        if (ext2_utils_read_inode_data(ext2, node, block, 0, ext2->iocache, ext2->blocksize) < 0)
+            return -1;
+
+        for (uint32_t offset = 0; offset < ext2->blocksize;) {
+            struct ext2_dir_entry_2* entry = (struct ext2_dir_entry_2*)((uint8_t*)ext2->iocache + offset);
+
+            if (unlikely(entry->rec_len < 8 || entry->rec_len > ext2->blocksize - offset || entry->name_len > entry->rec_len - 8))
+                return errno = EIO, -1;
+
+            bool dots = (entry->name_len == 1 && entry->name[0] == '.') || (entry->name_len == 2 && entry->name[0] == '.' && entry->name[1] == '.');
+
+            if (entry->inode != 0 && !dots)
+                return 0;
+
+            offset += entry->rec_len;
+        }
+    }
+
+    return 1;
 }
