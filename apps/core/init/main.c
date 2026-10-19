@@ -281,6 +281,10 @@ static void init_initd(void) {
 
     if (fork() == 0) {
 
+        sigset_t mask;
+        sigemptyset(&mask);
+        sigprocmask(SIG_SETMASK, &mask, NULL);
+
         execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
         exit(EXIT_FAILURE);
 
