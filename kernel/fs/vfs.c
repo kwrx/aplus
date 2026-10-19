@@ -739,10 +739,8 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
 
-
     if (name[0] == '.' && name[1] == '\0')
         return vfs_inode_get(inode);
-
 
     if (name[0] == '.' && name[1] == '.' && name[2] == '\0') {
 
@@ -758,21 +756,16 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
         return parent ? vfs_inode_get(parent) : NULL;
     }
 
-
-
-    inode_t* r = NULL;
-
-    if ((r = vfs_dcache_find(inode, name)) != NULL)
-        return r;
-
-
     if (likely(inode->ops.finddir)) {
+
+        inode_t* r = NULL;
+        if ((r = vfs_dcache_find(inode, name)) != NULL)
+            return r;
 
         scoped_lock(&inode->lock) {
 
             if ((r = vfs_dcache_find(inode, name)) != NULL)
                 return r;
-
 
             if ((r = inode->ops.finddir(inode, name)) != NULL) {
 
@@ -784,7 +777,7 @@ inode_t* vfs_finddir(inode_t* inode, const char* name) {
         return r;
     }
 
-    return errno = ENOSYS, NULL;
+    return errno = ENOTDIR, NULL;
 }
 
 
