@@ -1,6 +1,7 @@
 name: release
 
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - main
@@ -14,7 +15,7 @@ permissions:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true || startsWith(github.ref, 'refs/tags/')
+    if: github.event.pull_request.merged == true || startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
 
     steps:
@@ -28,13 +29,13 @@ jobs:
       run: ci/release.sh x86_64
 
     - name: Delete previous dev release
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: gh release delete latest --cleanup-tag --yes --repo ${{ github.repository }} || true
 
     - name: Dev release
-      if: github.event_name == 'pull_request'
+      if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
       uses: softprops/action-gh-release@v2
       with:
         tag_name: latest
