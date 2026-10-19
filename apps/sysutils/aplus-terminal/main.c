@@ -127,6 +127,8 @@ static struct {
     //? group rather than tearing this process down underneath it.
     pid_t child;
 
+    int sigchld[2];
+
     struct tsm_screen* con;
     struct tsm_vte* vte;
 
@@ -733,6 +735,75 @@ static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* 
     // write(context.ipipefd[1], u8, len);
 }
 
+/**
+ * @brief Hangs up on the shell's process group and ends the terminal, which closes its window.
+ */
+__attribute__((noreturn)) static void aterm_quit(void) {
+
+    if (context.child > 0) {
+
+        if (kill(-context.child, SIGHUP) == 0) {
+            usleep(150000);
+        } else if (errno != ESRCH) {
+            fprintf(stderr, "aplus-terminal: cannot hang up the session: %s\n", strerror(errno));
+        }
+    }
+
+    exit(0);
+}
+
+
+/**
+ * @brief Wakes the main loop through the SIGCHLD pipe, whichever thread the signal landed on.
+ *
+ * @param signum The signal, SIGCHLD.
+ */
+static void aterm_on_sigchld(int signum) {
+
+    (void)signum;
+
+    const int saved = errno;
+    const char byte = 0;
+
+    (void)write(context.sigchld[1], &byte, 1);
+
+    errno = saved;
+}
+
+
+/**
+ * @brief Opens the SIGCHLD pipe and installs the handler that feeds it.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+static int aterm_watch_child(void) {
+
+    if (pipe2(context.sigchld, O_CLOEXEC | O_NONBLOCK) < 0) {
+        return -1;
+    }
+
+    struct sigaction sa;
+
+    memset(&sa, 0, sizeof(sa));
+
+    sa.sa_handler = aterm_on_sigchld;
+    sa.sa_flags   = SA_RESTART | SA_NOCLDSTOP;
+
+    sigemptyset(&sa.sa_mask);
+
+    if (sigaction(SIGCHLD, &sa, NULL) < 0) {
+        return -1;
+    }
+
+    sigset_t set;
+
+    sigemptyset(&set);
+    sigaddset(&set, SIGCHLD);
+
+    return sigprocmask(SIG_UNBLOCK, &set, NULL);
+}
+
+
 static void* thr_ui_handler(void* arg) {
 
     (void)arg;
@@ -784,19 +855,8 @@ static void* thr_ui_handler(void* arg) {
                 tsm_resize(ev.configure.width, ev.configure.height);
                 break;
 
-            case UI_EVENT_CLOSE: {
-
-                if (context.child > 0) {
-
-                    if (kill(-context.child, SIGHUP) < 0) {
-                        fprintf(stderr, "aplus-terminal: cannot hang up the session: %s\n", strerror(errno));
-                    }
-
-                    usleep(150000);
-                }
-
-                exit(0);
-            }
+            case UI_EVENT_CLOSE:
+                aterm_quit();
 
             case UI_EVENT_FOCUS:
                 ui_keymap_reset(context.keymap);
@@ -960,6 +1020,11 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
+    if (aterm_watch_child() < 0) {
+        fprintf(stderr, "aplus-terminal: cannot watch for the shell to exit: %s\n", strerror(errno));
+        exit(1);
+    }
+
     //* 4. Input initialization
     int thr_e = pthread_create(&context.thr_ui, NULL, thr_ui_handler, NULL);
 
@@ -985,139 +1050,150 @@ int main(int argc, char** argv) {
 
     //* 5. Child initialization
 
-    do {
+    pid_t pid = fork();
 
-        pid_t pid = fork();
+    if (pid < 0) {
 
-        if (pid < 0) {
+        fprintf(stderr, "aplus-terminal: fork() failed\n");
+        exit(1);
 
-            fprintf(stderr, "aplus-terminal: fork() failed\n");
+    } else if (pid == 0) {
+
+        close(ui_connection_fd(context.conn));
+        close(context.masterfd);
+
+        setenv("TERM", "xterm-256color", 1);
+        setenv("COLORTERM", "truecolor", 1);
+        setenv("TERMINFO", "/usr/share/terminfo", 1);
+        setenv("COLORFGBG", "7;0", 1);
+
+        struct passwd* pw = getpwuid(getuid());
+
+        if (pw) {
+            setenv("HOME", pw->pw_dir, 0);
+            setenv("USER", pw->pw_name, 0);
+            setenv("LOGNAME", pw->pw_name, 0);
+
+            if (pw->pw_shell && pw->pw_shell[0] != '\0')
+                setenv("SHELL", pw->pw_shell, 0);
+        }
+
+        setenv("SHELL", "/bin/bash", 0);
+
+
+        pid_t pgrp = getpid();
+
+        if (setpgrp() < 0) {
+            fprintf(stderr, "aplus-terminal: setpgrp() failed: %s\n", strerror(errno));
             exit(1);
+        }
 
-        } else if (pid == 0) {
-
-            close(ui_connection_fd(context.conn));
-            close(context.masterfd);
-
-            setenv("TERM", "xterm-256color", 1);
-            setenv("COLORTERM", "truecolor", 1);
-            setenv("TERMINFO", "/usr/share/terminfo", 1);
-            setenv("COLORFGBG", "7;0", 1);
-
-            struct passwd* pw = getpwuid(getuid());
-
-            if (pw) {
-                setenv("HOME", pw->pw_dir, 0);
-                setenv("USER", pw->pw_name, 0);
-                setenv("LOGNAME", pw->pw_name, 0);
-
-                if (pw->pw_shell && pw->pw_shell[0] != '\0')
-                    setenv("SHELL", pw->pw_shell, 0);
-            }
-
-            setenv("SHELL", "/bin/bash", 0);
-
-
-            pid_t pgrp = getpid();
-
-            if (setpgrp() < 0) {
-                fprintf(stderr, "aplus-terminal: setpgrp() failed: %s\n", strerror(errno));
-                exit(1);
-            }
-
-            if (ioctl(context.slavefd, TIOCSPGRP, &pgrp) < 0) {
-                fprintf(stderr, "aplus-terminal: ioctl() failed: %s\n", strerror(errno));
-                exit(1);
-            }
-
-            if (dup2(context.slavefd, STDIN_FILENO) < 0) {
-                fprintf(stderr, "aplus-terminal: dup2() failed\n");
-                exit(1);
-            }
-
-            if (dup2(context.slavefd, STDOUT_FILENO) < 0) {
-                fprintf(stderr, "aplus-terminal: dup2() failed\n");
-                exit(1);
-            }
-
-            if (dup2(context.slavefd, STDERR_FILENO) < 0) {
-                fprintf(stderr, "aplus-terminal: dup2() failed\n");
-                exit(1);
-            }
-
-
-            if (pwd) {
-                if (chdir(pwd) < 0) {
-                    fprintf(stderr, "aplus-terminal: chdir() failed: %s\n", strerror(errno));
-                    exit(1);
-                }
-            }
-
-
-            const char* shell = getenv("SHELL");
-
-            if (cmd) {
-                execl(shell, shell, "-c", cmd, NULL);
-            } else {
-                execl(shell, shell, NULL);
-            }
-
-            fprintf(stderr, "aplus-terminal: cannot run %s: %s\n", shell, strerror(errno));
+        if (ioctl(context.slavefd, TIOCSPGRP, &pgrp) < 0) {
+            fprintf(stderr, "aplus-terminal: ioctl() failed: %s\n", strerror(errno));
             exit(1);
+        }
+
+        if (dup2(context.slavefd, STDIN_FILENO) < 0) {
+            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            exit(1);
+        }
+
+        if (dup2(context.slavefd, STDOUT_FILENO) < 0) {
+            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            exit(1);
+        }
+
+        if (dup2(context.slavefd, STDERR_FILENO) < 0) {
+            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            exit(1);
+        }
 
 
-        } else {
-
-            context.child = pid;
-
-
-            char buf[BUFSIZ] = {0};
-
-            do {
-
-                ssize_t size;
-                bool pending = false;
-
-                while ((size = read(context.masterfd, buf, sizeof(buf))) > 0) {
-
-                    pthread_mutex_lock(&context.lock);
-                    tsm_vte_input(context.vte, buf, size);
-                    pthread_mutex_unlock(&context.lock);
-
-                    pending = true;
-
-                    if (size < (ssize_t)sizeof(buf)) {
-
-                        tsm_update_screen();
-                        pending = false;
-                    }
-                }
-
-                if (pending) {
-                    tsm_update_screen();
-                }
-
-            } while (errno == EINTR);
-
-            if (waitpid(pid, NULL, 0) < 0) {
-                fprintf(stderr, "aplus-terminal: waitpid() failed: %s\n", strerror(errno));
+        if (pwd) {
+            if (chdir(pwd) < 0) {
+                fprintf(stderr, "aplus-terminal: chdir() failed: %s\n", strerror(errno));
                 exit(1);
             }
         }
 
-    } while (true);
+
+        const char* shell = getenv("SHELL");
+
+        if (cmd) {
+            execl(shell, shell, "-c", cmd, NULL);
+        } else {
+            execl(shell, shell, NULL);
+        }
+
+        fprintf(stderr, "aplus-terminal: cannot run %s: %s\n", shell, strerror(errno));
+        exit(1);
+    }
 
 
+    context.child = pid;
 
     if (close(context.slavefd) < 0) {
         fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
         exit(1);
     }
 
-    if (close(context.masterfd) < 0) {
-        fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
-        exit(1);
-    }
 
-    return 0;
+    char buf[BUFSIZ];
+    bool pending = false;
+
+    for (;;) {
+
+        struct pollfd fds[2] = {
+            {.fd = context.masterfd,   .events = POLLIN},
+            {.fd = context.sigchld[0], .events = POLLIN},
+        };
+
+        const int ready = poll(fds, 2, pending ? 0 : -1);
+
+        if (ready < 0) {
+
+            if (errno == EINTR) {
+                continue;
+            }
+
+            fprintf(stderr, "aplus-terminal: poll() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+
+        if (ready == 0) {
+
+            tsm_update_screen();
+            pending = false;
+
+            continue;
+        }
+
+        if (fds[0].revents & POLLIN) {
+
+            const ssize_t size = read(context.masterfd, buf, sizeof(buf));
+
+            if (size > 0) {
+
+                pthread_mutex_lock(&context.lock);
+                tsm_vte_input(context.vte, buf, size);
+                pthread_mutex_unlock(&context.lock);
+
+                pending = size == (ssize_t)sizeof(buf);
+
+                if (!pending) {
+                    tsm_update_screen();
+                }
+            }
+        }
+
+        if (fds[1].revents & POLLIN) {
+
+            while (read(context.sigchld[0], buf, sizeof(buf)) > 0)
+                ;
+
+            if (waitpid(context.child, NULL, WNOHANG) != 0) {
+                aterm_quit();
+            }
+        }
+    }
 }
