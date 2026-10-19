@@ -51,7 +51,7 @@
  * @param utime The relative timeout in userspace, or NULL to wait for a wakeup alone.
  * @return 0 once woken, -EAGAIN, -EINVAL or -ETIMEDOUT, or -EINTR with the syscall parked for restart.
  */
-static long __futex_wait(uint32_t* kaddr, uint32_t val, const struct timespec* utime) {
+static long __sys_futex_wait(uint32_t* kaddr, uint32_t val, const struct timespec* utime) {
 
     uint64_t timeout_ns = POLL_TIMEOUT_FOREVER;
 
@@ -127,7 +127,7 @@ SYSCALL(
                 if (unlikely(utime && !uio_check(utime, R_OK)))
                     return -EFAULT;
 
-                return __futex_wait(kaddr, val, utime);
+                return __sys_futex_wait(kaddr, val, utime);
             }
 
 
