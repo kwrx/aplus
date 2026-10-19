@@ -38,7 +38,9 @@ sudo apt install -y \
     rm -rf /var/lib/apt/lists/*
 
 
-rm -rf /tmp/get-pkg
+if [ -d /tmp/get-pkg ]; then
+    rm -rf /tmp/get-pkg
+fi
 
 ./configure --kconfig ${TARGET}
 ./makew -j$(nproc)
