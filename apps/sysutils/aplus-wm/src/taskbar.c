@@ -234,7 +234,7 @@ static size_t wm_taskbar_windows(wm_window_t** out) {
 
 static wm_rect_t wm_taskbar_launcher_rect(void) {
 
-    const wm_rect_t r = {WM_TASKBAR_PAD, WM_TASKBAR_PAD, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+    const wm_rect_t r = {WM_TASKBAR_PAD, WM_TASKBAR_PAD + 4, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
 
     return r;
 }
@@ -247,7 +247,7 @@ static wm_rect_t wm_taskbar_launcher_rect(void) {
  */
 static wm_rect_t wm_taskbar_clock_rect(void) {
 
-    const wm_rect_t r = {0, wm.display.height - WM_TASKBAR_PAD - WM_TASKBAR_CLOCK, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
+    const wm_rect_t r = {0, wm.display.height - WM_TASKBAR_PAD - WM_TASKBAR_CLOCK - 4, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
 
     return r;
 }
