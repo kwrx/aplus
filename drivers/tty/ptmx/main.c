@@ -62,6 +62,7 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
     ptmx->ops.read  = pty_master_read;
     ptmx->ops.write = pty_master_write;
     ptmx->ops.ioctl = pty_ioctl;
+    ptmx->ops.poll  = pty_master_poll;
 
     ptmx->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
 

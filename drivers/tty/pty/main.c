@@ -38,6 +38,7 @@
 #include <aplus/utils/ringbuffer.h>
 
 #include <ctype.h>
+#include <poll.h>
 #include <sys/sysmacros.h>
 
 
@@ -576,7 +577,11 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return -EFAULT;
 
 
-            return pty_process_input(pty, uio_get_ptr(arg), 1);
+            ssize_t e = pty_process_input(pty, uio_get_ptr(arg), 1);
+
+            vfs_notify(inode);
+
+            return e;
         }
 
         case TIOCCONS: {
@@ -827,6 +832,58 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
 
 
     return pty_process_output(pty, buf, size);
+}
+
+
+/**
+ * @brief Reports what the master side of a pty is ready for: output the terminal can read, room for its input.
+ *
+ * @param inode The master inode.
+ * @param events The events the caller waits for.
+ * @return The subset of @p events that is ready.
+ */
+int pty_master_poll(inode_t* inode, int events) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+    struct pty* pty = (struct pty*)inode->userdata;
+
+    int revents = 0;
+
+    if (ringbuffer_available(&pty->r2) > 0)
+        revents |= POLLIN | POLLRDNORM;
+
+    if (ringbuffer_writeable(&pty->r1) > 0)
+        revents |= POLLOUT | POLLWRNORM;
+
+    return revents & events;
+}
+
+
+/**
+ * @brief Reports what the slave side of a pty is ready for: input the line discipline has released, room for output.
+ *
+ * @param inode The slave inode.
+ * @param events The events the caller waits for.
+ * @return The subset of @p events that is ready.
+ */
+int pty_slave_poll(inode_t* inode, int events) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+    struct pty* pty = (struct pty*)inode->userdata;
+
+    int revents = 0;
+
+    if (ringbuffer_available(&pty->r1) > 0)
+        revents |= POLLIN | POLLRDNORM;
+
+    if (ringbuffer_writeable(&pty->r2) > 0)
+        revents |= POLLOUT | POLLWRNORM;
+
+    return revents & events;
 }
 
 
