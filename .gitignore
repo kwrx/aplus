@@ -24,6 +24,7 @@
 *.vmdk
 *.log
 *.conf
+!apps/core/pkg/assets/etc/pkg.conf
 *.old
 *.out
 *.generated.h

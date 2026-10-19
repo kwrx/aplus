@@ -54,6 +54,7 @@ It currently boots and runs on `x86_64`; support for other architectures such as
 Userspace is still under development. It is built from this repository plus prebuilt packages that `./configure` fetches from [aplus-packages](https://github.com/kwrx/aplus-packages), and runs as a multi-user system on a unix-like filesystem with `/proc` and `/dev`.
 
 * **Init**, [apps/core/init](/apps/core/init), runs the [init.sh](/apps/core/init/scripts/init.sh) boot script
+* **Package manager**, [apps/core/pkg](/apps/core/pkg), `pkg` installs, upgrades and removes packages from the aplus-packages releases, tracking them in a local SQLite index
 * **Desktop**, [aplus-wm](/apps/sysutils/aplus-wm), a display server that owns the framebuffer and the input devices and draws every window frame, with [libui](/lib/aplus/ui) for its clients
 * **Applications**, [apps/sysutils](/apps/sysutils), terminal, file manager, text editor, PDF and image viewer, calculator, and a launcher with an optional AI assistant
 * **Extras**, [apps/extra](/apps/extra), `kilo`, `nyancat`, an IRC client and MesaGL demos

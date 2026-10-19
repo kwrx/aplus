@@ -179,8 +179,10 @@ stage_3() {
     packages="$packages make"
     packages="$packages nano"
     packages="$packages lua"
+    packages="$packages sqlite"
+    packages="$packages xz"
 
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.6.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
+    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.6.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
 
 }
 

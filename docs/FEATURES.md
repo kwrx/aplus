@@ -135,7 +135,7 @@
 - [x] Application Launcher
 - [x] IRC Client
 - [x] Web Browser (NetSurf)
-- [ ] Package Manager
+- [x] Package Manager
 
 ### Porting
 - [x] BusyBox
