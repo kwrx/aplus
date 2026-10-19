@@ -131,8 +131,13 @@ static void init_environment(void) {
 
             default:
 
-                if (strchr(p, '='))
-                    putenv(p);
+                if (strchr(p, '=')) {
+
+                    char* entry = strdup(p);
+
+                    if (entry)
+                        putenv(entry);
+                }
 
                 break;
         }
