@@ -300,6 +300,7 @@ int fd_flags(struct file*);
 void fd_set_flags(struct file*, int, int);
 long fd_dup(unsigned int, unsigned int, bool);
 long fd_dup_to(unsigned int, unsigned int, bool);
+long fd_sync(unsigned int, int);
 void fd_close_all(struct fd*);
 void fd_ref_all(struct fd*);
 ssize_t fd_read(struct file*, void*, size_t);

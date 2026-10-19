@@ -30,17 +30,37 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/vfs.h>
+#include <sys/mount.h>
 
 #include "ext2.h"
 
 
 
+/**
+ * @brief Writes the inode of a file back to the disk, then flushes the disk.
+ * @param inode The file.
+ * @param datasync Whether only the data must be flushed, passed on to the disk.
+ * @return 0 on success, -1 with errno set.
+ */
 int ext2_fsync(inode_t* inode, int datasync) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(inode->sb);
     DEBUG_ASSERT(inode->sb->fsid == FSID_EXT2);
 
-    cache_commit_all(&inode->sb->cache);
+    if (!(inode->sb->flags & MS_RDONLY)) {
+
+        ext2_t* ext2            = inode->sb->fsinfo;
+        struct ext2_inode* node = cache_get(&inode->sb->cache, inode->ino);
+        int r                   = -1;
+
+        scoped_lock(&ext2->lock) {
+            r = ext2_utils_write_inode(ext2, inode->ino, node);
+        }
+
+        if (r < 0)
+            return -1;
+    }
+
     return vfs_fsync(inode->sb->dev, datasync);
 }

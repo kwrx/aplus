@@ -27,6 +27,7 @@
 #include <poll.h>
 #include <stdint.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #include <aplus.h>
 #include <aplus/debug.h>
@@ -330,6 +331,49 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
         fd_remove(old, true);
 
     return newfd;
+}
+
+
+/**
+ * @brief Flushes the file behind one of the caller's descriptors to its storage.
+ *
+ * @param fd The descriptor.
+ * @param datasync Whether only the data, and the metadata needed to read it, must be flushed.
+ * @return 0, or -EBADF, -EINVAL for a file that cannot be flushed, or the error of the filesystem.
+ */
+long fd_sync(unsigned int fd, int datasync) {
+
+    int flags         = 0;
+    struct file* file = fd_get(fd, &flags);
+
+    if (unlikely(!file))
+        return -EBADF;
+
+
+    long e = 0;
+
+    if (unlikely(flags & O_PATH)) {
+
+        e = -EBADF;
+
+    } else if (vfs_fsync(file->inode, datasync) < 0) {
+
+        e = -errno;
+
+        if (e == -ENOSYS) {
+
+            struct stat st;
+
+            if (vfs_getattr(file->inode, &st) == 0 && (S_ISREG(st.st_mode) || S_ISDIR(st.st_mode)))
+                e = 0;
+            else
+                e = -EINVAL;
+        }
+    }
+
+    fd_put(file);
+
+    return e;
 }
 
 
