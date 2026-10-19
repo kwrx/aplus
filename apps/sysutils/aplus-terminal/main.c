@@ -31,6 +31,7 @@
 #include <math.h>
 #include <poll.h>
 #include <pty.h>
+#include <pwd.h>
 #include <sched.h>
 #include <signal.h>
 #include <stdio.h>
@@ -641,7 +642,14 @@ static void tsm_resize(unsigned int width, unsigned int height) {
 }
 
 
-static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_internally) {
+/**
+ * @brief Sends the bytes a key produced to the shell, which echoes back whatever should appear.
+ *
+ * @param out The pty master to write to.
+ * @param ascii The bytes.
+ * @param size How many there are.
+ */
+static void tsm_handle_input(int out, const char* ascii, size_t size) {
 
     assert(ascii);
 
@@ -651,13 +659,6 @@ static void tsm_handle_input(int out, char* ascii, size_t size, bool handle_inte
 
     if (write(out, ascii, size) != (ssize_t)size) {
         perror("write");
-    }
-
-    if (handle_internally) {
-
-        pthread_mutex_lock(&context.lock);
-        tsm_vte_input(context.vte, ascii, size);
-        pthread_mutex_unlock(&context.lock);
     }
 }
 
@@ -678,7 +679,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
     const size_t size = ui_keymap_translate(context.keymap, keysym, down, produced, sizeof(produced));
 
     if (size > 0) {
-        tsm_handle_input(out, produced, size, false);
+        tsm_handle_input(out, produced, size);
         return;
     }
 
@@ -691,7 +692,7 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
         case KT_SPEC:
 
             if (key == K_ENTER) {
-                tsm_handle_input(out, "\n", 1, false);
+                tsm_handle_input(out, "\n", 1);
             }
 
             break;
@@ -701,19 +702,19 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
             switch (key) {
 
                 case K_UP:
-                    tsm_handle_input(out, "\e[A", 3, true);
+                    tsm_handle_input(out, "\e[A", 3);
                     break;
 
                 case K_DOWN:
-                    tsm_handle_input(out, "\e[B", 3, true);
+                    tsm_handle_input(out, "\e[B", 3);
                     break;
 
                 case K_RIGHT:
-                    tsm_handle_input(out, "\e[C", 3, true);
+                    tsm_handle_input(out, "\e[C", 3);
                     break;
 
                 case K_LEFT:
-                    tsm_handle_input(out, "\e[D", 3, true);
+                    tsm_handle_input(out, "\e[D", 3);
                     break;
             }
 
@@ -1000,8 +1001,21 @@ int main(int argc, char** argv) {
 
             setenv("TERM", "xterm-256color", 1);
             setenv("COLORTERM", "truecolor", 1);
-            setenv("TERMINFO", "/usr/share/terminfo/x/xterm-256color", 1);
+            setenv("TERMINFO", "/usr/share/terminfo", 1);
             setenv("COLORFGBG", "7;0", 1);
+
+            struct passwd* pw = getpwuid(getuid());
+
+            if (pw) {
+                setenv("HOME", pw->pw_dir, 0);
+                setenv("USER", pw->pw_name, 0);
+                setenv("LOGNAME", pw->pw_name, 0);
+
+                if (pw->pw_shell && pw->pw_shell[0] != '\0')
+                    setenv("SHELL", pw->pw_shell, 0);
+            }
+
+            setenv("SHELL", "/bin/bash", 0);
 
 
             pid_t pgrp = getpid();
@@ -1040,13 +1054,15 @@ int main(int argc, char** argv) {
             }
 
 
+            const char* shell = getenv("SHELL");
+
             if (cmd) {
-                execl("/bin/dash", "/bin/dash", "-c", cmd, NULL);
+                execl(shell, shell, "-c", cmd, NULL);
             } else {
-                execl("/bin/dash", "/bin/dash", NULL);
+                execl(shell, shell, NULL);
             }
 
-            fprintf(stderr, "aplus-terminal: execl() failed: %s\n", strerror(errno));
+            fprintf(stderr, "aplus-terminal: cannot run %s: %s\n", shell, strerror(errno));
             exit(1);
 
 
