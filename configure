@@ -176,6 +176,9 @@ stage_3() {
     packages="$packages mupdf"
     packages="$packages ncurses"
     packages="$packages readline"
+    packages="$packages make"
+    packages="$packages nano"
+    packages="$packages lua"
 
     die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.6.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT -i $packages
 
