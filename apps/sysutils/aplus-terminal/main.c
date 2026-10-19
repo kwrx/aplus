@@ -307,7 +307,7 @@ static int aterm_font_init(void) {
     cairo_scaled_font_extents(context.font.regular.scaled, &extents);
 
     context.font.width    = (int)ceil(extents.max_x_advance);
-    context.font.height   = (int)ceil(extents.height);
+    context.font.height   = (int)ceil(extents.height + extents.descent);
     context.font.baseline = (int)ceil(extents.ascent);
 
     if (context.font.width < 1) {
