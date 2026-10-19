@@ -140,6 +140,58 @@ __attribute__((used)) static void pty_input_append(pty_t* pty, char ch, bool ech
 
 
 /**
+ * @brief Queues an end-of-file behind the input the slave has not read yet, unless one is already pending.
+ *
+ * @param pty The pty.
+ */
+static void pty_input_eof(pty_t* pty) {
+
+    DEBUG_ASSERT(pty);
+
+    scoped_lock(&pty->input.lock) {
+        if (!pty->eof.pending) {
+            pty->eof.pending = true;
+            pty->eof.offset  = ringbuffer_available(&pty->r1);
+        }
+    }
+}
+
+
+/**
+ * @brief Reads canonical input up to the pending end-of-file, which reads as 0 once reached.
+ *
+ * @param pty The pty.
+ * @param buf The buffer.
+ * @param size The size of the buffer.
+ * @return The number of bytes read, 0 at the end-of-file, or -EAGAIN when there is nothing to read.
+ */
+static ssize_t pty_input_read(pty_t* pty, void* buf, size_t size) {
+
+    DEBUG_ASSERT(pty);
+
+    ssize_t e = 0;
+
+    scoped_lock(&pty->input.lock) {
+
+        if (!pty->eof.pending) {
+
+            e = ringbuffer_read(&pty->r1, buf, size);
+
+        } else if (pty->eof.offset == 0) {
+
+            pty->eof.pending = false;
+
+        } else if ((e = ringbuffer_read(&pty->r1, buf, MIN(size, pty->eof.offset))) > 0) {
+
+            pty->eof.offset -= (size_t)e;
+        }
+    }
+
+    return e;
+}
+
+
+/**
  * @brief Reports how much of a write actually made it into the ring buffer.
  *
  * @param done The number of bytes copied.
@@ -250,8 +302,6 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
                 sig = SIGQUIT;
             } else if (ch == pty->ios.c_cc[VSUSP]) {
                 sig = SIGTSTP;
-            } else if (ch == pty->ios.c_cc[VEOF]) {
-                sig = SIGTERM;
             }
 
 
@@ -341,7 +391,11 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
 #if DEBUG_LEVEL_TRACE
                 kprintf("pty_input_process(): VEOF\n");
 #endif
-                pty_input_discard(pty, pty->ios.c_lflag & ECHO);
+                if (pty->input.size > 0) {
+                    pty_input_discard(pty, true);
+                } else {
+                    pty_input_eof(pty);
+                }
 
             }
 
@@ -351,7 +405,7 @@ static ssize_t pty_process_input(pty_t* pty, const char* buf, size_t size) {
                 kprintf("pty_input_process(): VEOL or newline\n");
 #endif
                 pty_input_append(pty, '\n', pty->ios.c_lflag & ECHONL);
-                pty_input_discard(pty, pty->ios.c_lflag & ECHO);
+                pty_input_discard(pty, true);
 
             }
 
@@ -508,6 +562,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
                 return -EFAULT;
 
             uio_memcpy_u2s(&pty->ios, arg, sizeof(struct termios));
+
+            if (!(pty->ios.c_lflag & ICANON)) {
+                scoped_lock(&pty->input.lock) pty->eof.pending = false;
+            }
 
             return 0;
         }
@@ -793,7 +851,7 @@ ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
 
     if (pty->ios.c_lflag & ICANON) {
 
-        return ringbuffer_read(&pty->r1, buf, size);
+        return pty_input_read(pty, buf, size);
 
     } else {
 
@@ -877,7 +935,7 @@ int pty_slave_poll(inode_t* inode, int events) {
 
     int revents = 0;
 
-    if (ringbuffer_available(&pty->r1) > 0)
+    if (ringbuffer_available(&pty->r1) > 0 || pty->eof.pending)
         revents |= POLLIN | POLLRDNORM;
 
     if (ringbuffer_writeable(&pty->r2) > 0)

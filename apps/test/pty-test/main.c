@@ -153,6 +153,95 @@ static void test_wakeup(int master, int slave) {
 }
 
 
+/**
+ * @brief Reads from the slave only when select() says it would not block.
+ *
+ * @param slave The slave descriptor.
+ * @param buf The buffer.
+ * @param size The size of the buffer.
+ * @return What read() returned, or -2 when the slave was not readable.
+ */
+static ssize_t read_ready(int slave, char* buf, size_t size) {
+
+    memset(buf, 0, size);
+
+    if (readable(slave, 0) != 1) {
+        return -2;
+    }
+
+    return read(slave, buf, size);
+}
+
+
+/**
+ * @brief Checks that VEOF releases a partial line, reads as end-of-file on an empty one, and is plain data in raw mode.
+ *
+ * @param master The master descriptor.
+ * @param slave The slave descriptor.
+ */
+static void test_eof(int master, int slave) {
+
+    struct termios saved;
+
+    if (tcgetattr(slave, &saved) < 0) {
+        CHECK(0, "eof-setup", "tcgetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+    struct termios ios = saved;
+
+    ios.c_lflag |= ICANON | ISIG;
+    ios.c_lflag &= ~(ECHO | ECHONL);
+    ios.c_cc[VEOF] = 0x04;
+
+    if (tcsetattr(slave, TCSANOW, &ios) < 0) {
+        CHECK(0, "eof-setup", "tcsetattr() failed: %s", strerror(errno));
+        return;
+    }
+
+
+    char buf[16];
+    ssize_t got;
+
+    if (write(master, "abc\x04", 4) == 4) {
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 3 && memcmp(buf, "abc", 3) == 0, "eof-partial-line", "read() returned %zd instead of \"abc\"", got);
+    }
+
+    if (write(master, "\x04", 1) == 1) {
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 0, "eof-empty-line", "read() returned %zd instead of 0", got);
+        CHECK(readable(slave, 0) == 0, "eof-consumed", "%s", "the slave is still readable after the end-of-file was read");
+    }
+
+    if (write(master, "line\n\x04", 6) == 6) {
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 5 && memcmp(buf, "line\n", 5) == 0, "eof-after-line", "read() returned %zd instead of the line", got);
+        got = read_ready(slave, buf, sizeof(buf));
+        CHECK(got == 0, "eof-after-line-eof", "read() returned %zd instead of 0", got);
+    }
+
+    if (write(master, "\x04", 1) == 1) {
+
+        ios.c_lflag &= ~ICANON;
+        ios.c_cc[VMIN]  = 1;
+        ios.c_cc[VTIME] = 0;
+
+        if (tcsetattr(slave, TCSANOW, &ios) == 0) {
+
+            CHECK(readable(slave, 0) == 0, "eof-dropped-raw", "%s", "a pending end-of-file survived leaving canonical mode");
+
+            if (write(master, "\x04", 1) == 1) {
+                got = read_ready(slave, buf, sizeof(buf));
+                CHECK(got == 1 && buf[0] == 0x04, "eof-raw-data", "read() returned %zd, buf[0]=%#x", got, (unsigned)buf[0]);
+            }
+        }
+    }
+
+    tcsetattr(slave, TCSANOW, &saved);
+}
+
+
 int main(int argc, char** argv) {
 
     (void)argc;
@@ -222,6 +311,7 @@ int main(int argc, char** argv) {
     if (master[0] >= 0) {
         test_readiness(master[0], slave[0]);
         test_wakeup(master[0], slave[0]);
+        test_eof(master[0], slave[0]);
     }
 
 

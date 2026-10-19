@@ -65,6 +65,11 @@ typedef struct pty {
         spinlock_t lock;
     } input;
 
+    struct {
+        bool pending;
+        size_t offset;
+    } eof;
+
     bool locked;
 
     inode_t* ptmx;
