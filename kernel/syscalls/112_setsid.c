@@ -57,5 +57,8 @@ SYSCALL(
         current_task->sid  = current_task->tid;
         current_task->pgrp = current_task->tid;
 
+        if (current_task->ctty)
+            shared_ptr_access(current_task->ctty, ctty, { *ctty = NULL; });
+
         return 0;
     });
