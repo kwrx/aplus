@@ -15,11 +15,10 @@ install: $(TARGET)
 clean:
 	$(QUIET)echo "    CLEAN   $(TARGET)"
 	$(QUIET)$(RM) $(OBJS) $(DEPS)
-	$(QUIET)$(RM) *.o *.d $(TARGET)
+	$(QUIET)$(RM) *.o *.dep $(TARGET)
 
 distclean: clean
 	$(QUIET)$(RM) $(INSTALLED)
-
 
 
 NODEPS := clean distclean
@@ -29,43 +28,42 @@ ifeq (0, $(words $(findstring $(MAKECMDGOALS), $(NODEPS))))
 endif
 
 
-
-%.d: %.c
+%.dep: %.c
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CC)  $(CFLAGS)   -MM -MT '$(patsubst %.c,%.o,$<)'   $< -MF $@
-%.d: %.S
+%.dep: %.S
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -MM -MT '$(patsubst %.S,%.o,$<)'   $< -MF $@
-%.d: %.s
+%.dep: %.s
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -MM -MT '$(patsubst %.s,%.o,$<)'   $< -MF $@
-%.d: %.cc
+%.dep: %.cc
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cc,%.o,$<)'  $< -MF $@
-%.d: %.cpp
+%.dep: %.cpp
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cpp,%.o,$<)' $< -MF $@
-%.d: %.cxx
+%.dep: %.cxx
 	$(QUIET)echo "    GEN     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -MM -MT '$(patsubst %.cxx,%.o,$<)' $< -MF $@
 
 
-%.o: %.c %.d
+%.o: %.c %.dep
 	$(QUIET)echo "    CC      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CC)  $(CFLAGS)   -c $< -o $@
-%.o: %.S %.d
+%.o: %.S %.dep
 	$(QUIET)echo "    AS      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -c $< -o $@
-%.o: %.s %.d
+%.o: %.s %.dep
 	$(QUIET)echo "    AS      $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(AS)  $(ASFLAGS)  -c $< -o $@
-%.o: %.cc %.d
+%.o: %.cc %.dep
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
-%.o: %.cpp %.d
+%.o: %.cpp %.dep
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
-%.o: %.cxx %.d
+%.o: %.cxx %.dep
 	$(QUIET)echo "    CXX     $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)$(CXX) $(CXXFLAGS) -c $< -o $@
 %.o: %.asm

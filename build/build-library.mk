@@ -1,4 +1,4 @@
-.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .d
+.SUFFIXES: .c .cpp .cxx .cc .s .S .asm .h .hpp .dep
 
 TARGET      ?= lib$(notdir $(shell pwd)).a
 
