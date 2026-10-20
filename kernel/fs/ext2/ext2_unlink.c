@@ -50,7 +50,7 @@ int ext2_unlink(inode_t* parent, const char* name) {
     int result             = -1;
 
     scoped_lock(&ext2->lock) {
-        if (!S_ISREG(node->i_mode) && !is_dir && node->i_links_count < 2) {
+        if (!S_ISREG(node->i_mode) && !S_ISLNK(node->i_mode) && !is_dir && node->i_links_count < 2) {
             errno = EPERM;
             break;
         }
@@ -80,7 +80,7 @@ int ext2_unlink(inode_t* parent, const char* name) {
                 break;
 
         } else {
-            uint64_t size   = ext2_inode_get_size(ext2, node);
+            uint64_t size   = ext2_inode_is_fast_symlink(node) ? 0 : ext2_inode_get_size(ext2, node);
             uint32_t blocks = (size + ext2->blocksize - 1) / ext2->blocksize;
             bool failed     = false;
 

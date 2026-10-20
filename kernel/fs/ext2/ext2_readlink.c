@@ -52,15 +52,15 @@ ssize_t ext2_readlink(inode_t* inode, char* buf, size_t len) {
 
     struct ext2_inode* n = cache_get(&inode->sb->cache, inode->ino);
 
+    if (unlikely(n->i_size > ext2->blocksize))
+        return errno = EIO, -1;
+
     if (unlikely(len > n->i_size)) {
         len = n->i_size;
     }
 
 
-    //! WARN
-    DEBUG_ASSERT(n->i_size <= ext2->blocksize);
-
-    if (len < 60) {
+    if (ext2_inode_is_fast_symlink(n)) {
 
         memcpy(buf, (const char*)n->i_block, len);
 

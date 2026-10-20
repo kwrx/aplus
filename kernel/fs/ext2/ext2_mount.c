@@ -152,9 +152,9 @@ int ext2_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->ops.finddir = ext2_finddir;
     dir->sb->ops.readdir = ext2_readdir;
     dir->sb->ops.rename  = ext2_rename;
-    // dir->sb->ops.symlink = ext2_symlink;
-    dir->sb->ops.unlink = ext2_unlink;
-    dir->sb->ops.link   = ext2_link;
+    dir->sb->ops.symlink = ext2_symlink;
+    dir->sb->ops.unlink  = ext2_unlink;
+    dir->sb->ops.link    = ext2_link;
 
 
 

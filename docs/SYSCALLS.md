@@ -89,7 +89,7 @@
 - [x] sys_creat
 - [x] sys_link
 - [x] sys_unlink
-- [ ] sys_symlink
+- [x] sys_symlink
 - [x] sys_readlink
 - [x] sys_chmod
 - [x] sys_fchmod
@@ -251,7 +251,7 @@
 - [x] sys_unlinkat
 - [x] sys_renameat
 - [x] sys_linkat
-- [ ] sys_symlinkat
+- [x] sys_symlinkat
 - [x] sys_readlinkat
 - [x] sys_fchmodat
 - [x] sys_faccessat
