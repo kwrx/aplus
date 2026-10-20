@@ -10,5 +10,11 @@ LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
 
 LIBS     += ui cairo pixman-1 freetype png webp z
 
+RESOURCES 	+= $(SYSROOT)/etc/init.d/01-aplus-wm.sh
+
+$(SYSROOT)/etc/init.d/01-aplus-wm.sh: assets/etc/init.d/01-aplus-wm.sh
+	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
+	$(QUIET)install -m 755 $< $@
+
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk
