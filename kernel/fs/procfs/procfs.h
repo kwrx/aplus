@@ -75,8 +75,15 @@ typedef struct procfs_task {
 
     uid_t uid;
     uid_t euid;
+    uid_t suid;
+    uid_t fsuid;
     gid_t gid;
     gid_t egid;
+    gid_t sgid;
+    gid_t fsgid;
+
+    size_t ngroups;
+    gid_t groups[TASK_NGROUPS_MAX];
 
     long status;
     long policy;

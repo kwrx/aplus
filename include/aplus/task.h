@@ -116,6 +116,11 @@
     #define TASK_STACK_MAX (0x100000000ULL) // 4GiB
     #define TASK_STACK_MIN (0x1000ULL)      // 4KiB
 
+/**
+ * @brief The most supplementary groups a task may hold, musl's NGROUPS_MAX.
+ */
+    #define TASK_NGROUPS_MAX 32
+
 
 
 struct pty;
@@ -258,8 +263,16 @@ typedef struct task {
 
     uid_t uid;
     uid_t euid;
+    uid_t suid;
+    uid_t fsuid;
     gid_t gid;
     gid_t egid;
+    gid_t sgid;
+    gid_t fsgid;
+
+    /** @brief The supplementary group IDs set by setgroups(). */
+    size_t ngroups;
+    gid_t groups[TASK_NGROUPS_MAX];
 
     uid_t sid;
 
@@ -478,6 +491,27 @@ typedef struct task {
     #define thread_suspend(task) task->status = TASK_STATUS_SLEEP
 
     #define thread_wake(task) task->status = TASK_STATUS_READY;
+
+
+/**
+ * @brief Tells whether a task belongs to a group, through its filesystem group ID or a supplementary one.
+ *
+ * @param task The task.
+ * @param gid The group.
+ * @return true if the task is a member of @p gid.
+ */
+static inline bool task_in_group(const task_t* task, gid_t gid) {
+
+    if (task->fsgid == gid)
+        return true;
+
+    for (size_t i = 0; i < task->ngroups; i++) {
+        if (task->groups[i] == gid)
+            return true;
+    }
+
+    return false;
+}
 
 
 /**

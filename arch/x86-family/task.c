@@ -488,9 +488,16 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
     task->pgrp            = current_task->pgrp;
     task->uid             = current_task->uid;
     task->euid            = current_task->euid;
+    task->suid            = current_task->suid;
+    task->fsuid           = current_task->fsuid;
     task->gid             = current_task->gid;
     task->egid            = current_task->egid;
+    task->sgid            = current_task->sgid;
+    task->fsgid           = current_task->fsgid;
+    task->ngroups         = current_task->ngroups;
     task->sid             = current_task->sid;
+
+    memcpy(task->groups, current_task->groups, sizeof(task->groups));
 
     task->status   = TASK_STATUS_READY;
     task->policy   = current_task->policy;
@@ -562,8 +569,15 @@ pid_t arch_task_spawn_init() {
 
     task->tid = task->pid = sched_nextpid();
     task->pgrp            = 1;
-    task->uid = task->euid = task->gid = task->egid = 0;
-    task->sid                                       = 1;
+    task->uid             = 0;
+    task->euid            = 0;
+    task->suid            = 0;
+    task->fsuid           = 0;
+    task->gid             = 0;
+    task->egid            = 0;
+    task->sgid            = 0;
+    task->fsgid           = 0;
+    task->sid             = 1;
 
     task->status   = TASK_STATUS_READY;
     task->policy   = TASK_POLICY_RR;
@@ -691,8 +705,15 @@ task_t* arch_task_spawn_idle(void) {
 
     task->tid = task->pid = 0;
     task->pgrp            = 0;
-    task->uid = task->euid = task->gid = task->egid = 0;
-    task->sid                                       = 0;
+    task->uid             = 0;
+    task->euid            = 0;
+    task->suid            = 0;
+    task->fsuid           = 0;
+    task->gid             = 0;
+    task->egid            = 0;
+    task->sgid            = 0;
+    task->fsgid           = 0;
+    task->sid             = 0;
 
     task->status   = TASK_STATUS_READY;
     task->policy   = TASK_POLICY_IDLE;
@@ -820,7 +841,7 @@ pid_t arch_task_spawn_kthread(const char* name, void (*entry)(void*), size_t sta
         CPU_SET(i, &task->affinity);
     }
 
-    task->pid    = current_task->tid;
+    task->pid = current_task->tid;
     task->flags |= TASK_FLAGS_KTHREAD;
 
 

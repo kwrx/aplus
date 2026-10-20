@@ -135,13 +135,13 @@ SYSCALL(
 #endif
 
 
-        if (current_task->uid != 0) {
+        if (current_task->fsuid != 0) {
 
-            if (st.st_uid == current_task->uid) {
+            if (st.st_uid == current_task->fsuid) {
                 if (!((flags & O_RDONLY ? (mode & S_IRUSR) : 1) && (flags & O_WRONLY ? (mode & S_IWUSR) : 1) && (flags & O_RDWR ? (mode & S_IRUSR) && (mode & S_IWUSR) : 1)))
                     return -EACCES;
 
-            } else if (st.st_gid == current_task->gid) {
+            } else if (task_in_group(current_task, st.st_gid)) {
                 if (!((flags & O_RDONLY ? (mode & S_IRGRP) : 1) && (flags & O_WRONLY ? (mode & S_IWGRP) : 1) && (flags & O_RDWR ? (mode & S_IRGRP) && (mode & S_IWGRP) : 1)))
                     return -EACCES;
 

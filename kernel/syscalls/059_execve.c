@@ -837,6 +837,10 @@ SYSCALL(
         __execve_name(strings, argc);
 
 
+        current_task->suid = current_task->fsuid = current_task->euid;
+        current_task->sgid = current_task->fsgid = current_task->egid;
+
+
         current_task->userspace.stack = layout.stack;
 
         memset(&current_task->userspace.altstack, 0, sizeof(current_task->userspace.altstack));
