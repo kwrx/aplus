@@ -14,7 +14,7 @@ export SYSROOT  := $(ROOTDIR)/$(subst $\",,$(CONFIG_SYSTEM_PATH_SYSROOT))
 VNC             := $(or $(REMOTE),:0)
 
 
-PROJECTS := kernel drivers lib apps
+PROJECTS := kernel drivers lib apps tests
 TARGET	 := aplus.img
 
 REPORT   := docs/REPORT.md
