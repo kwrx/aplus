@@ -42,8 +42,8 @@ if [ -d /tmp/get-pkg ]; then
 fi
 
 ./configure --kconfig ${TARGET}
-./makew -j$(nproc)
-./makew install
+./makew PROJECTS="kernel drivers lib apps" -j$(nproc) 
+./makew PROJECTS="kernel drivers lib apps" install
 
 
 NAME=release-aplus-$(git rev-parse --short HEAD)-${TARGET}
