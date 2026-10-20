@@ -57,18 +57,40 @@ static int pts_getattr(inode_t* inode, struct stat* st) {
 
 
     st->st_ino     = pty->index;
-    st->st_mode    = S_IFCHR | 0666;
+    st->st_mode    = S_IFCHR | (pty->mode & 07777);
     st->st_dev     = makedev(136, pty->index);
     st->st_rdev    = makedev(136, pty->index);
     st->st_nlink   = 1;
-    st->st_uid     = 0;
-    st->st_gid     = 0;
+    st->st_uid     = pty->uid;
+    st->st_gid     = pty->gid;
     st->st_size    = 0;
     st->st_blksize = 0;
     st->st_blocks  = 0;
     st->st_atime   = arch_timer_gettime();
     st->st_mtime   = arch_timer_gettime();
     st->st_ctime   = arch_timer_gettime();
+
+    return 0;
+}
+
+/**
+ * @brief Keeps the permission bits and owner chmod() and chown() give a slave; the rest of its attributes are fixed.
+ *
+ * @param inode The slave.
+ * @param st The new attributes.
+ * @return 0.
+ */
+static int pts_setattr(inode_t* inode, struct stat* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+    DEBUG_ASSERT(st);
+
+    pty_t* pty = (pty_t*)inode->userdata;
+
+    pty->mode = st->st_mode & 07777;
+    pty->uid  = st->st_uid;
+    pty->gid  = st->st_gid;
 
     return 0;
 }
@@ -155,7 +177,7 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
 
 
             d->ops.getattr = pts_getattr;
-            d->ops.setattr = NULL;
+            d->ops.setattr = pts_setattr;
 
             d->ops.read  = pty_slave_read;
             d->ops.write = pty_slave_write;

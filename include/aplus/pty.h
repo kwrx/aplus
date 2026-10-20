@@ -58,6 +58,10 @@ typedef struct pty {
     pid_t m_pid;
     pid_t s_pgrp;
 
+    mode_t mode;
+    uid_t uid;
+    gid_t gid;
+
     struct {
         char* buffer;
         size_t size;

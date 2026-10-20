@@ -93,9 +93,9 @@
 - [x] sys_readlink
 - [x] sys_chmod
 - [x] sys_fchmod
-- [ ] sys_chown
-- [ ] sys_fchown
-- [ ] sys_lchown
+- [x] sys_chown
+- [x] sys_fchown
+- [x] sys_lchown
 - [x] sys_umask
 - [x] sys_gettimeofday
 - [ ] sys_getrlimit
@@ -245,7 +245,7 @@
 - [x] sys_openat
 - [ ] sys_mkdirat
 - [ ] sys_mknodat
-- [ ] sys_fchownat
+- [x] sys_fchownat
 - [ ] sys_futimesat
 - [x] sys_newfstatat
 - [x] sys_unlinkat

@@ -326,6 +326,11 @@ inode_t* path_follows(inode_t*);
 inode_t* path_lookup(inode_t*, const char*, int, mode_t);
 
 
+// kernel/fs/attr.c
+long attr_chmod(inode_t*, mode_t);
+long attr_chown(inode_t*, uid_t, gid_t);
+
+
 __END_DECLS
 
 #endif
