@@ -46,6 +46,9 @@ tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
 
     i->capacity = 0;
     i->data     = NULL;
+    i->inodes   = 0;
+
+    spinlock_init(&i->lock);
 
 
     i->st.st_uid = current_task->fsuid;

@@ -33,6 +33,7 @@
 
 #define EXT2_SIGNATURE 0xEF53
 #define EXT2_NAME_LEN  255
+#define EXT2_LINK_MAX  32000
 
 
 // TODO: rewrite all ext2 driver to support cache
@@ -495,6 +496,7 @@ ssize_t ext2_readdir(inode_t*, struct dirent*, off_t, size_t);
 // int ext2_rename (inode_t*, const char*, const char*);
 // int ext2_symlink (inode_t*, const char*, const char*);
 int ext2_unlink(inode_t*, const char*);
+int ext2_link(inode_t*, inode_t*, const char*);
 
 inode_t* ext2_utils_create_vfs_inode(inode_t*, ino_t, const char*, mode_t);
 

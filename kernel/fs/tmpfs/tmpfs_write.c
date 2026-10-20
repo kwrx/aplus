@@ -52,56 +52,58 @@ ssize_t tmpfs_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     tmpfs_t* tmpfs   = (tmpfs_t*)inode->sb->fsinfo;
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
+    scoped_lock(&i->lock) {
 
-    if ((size_t)pos + len > (size_t)i->st.st_size) {
+        if ((size_t)pos + len > (size_t)i->st.st_size) {
 
-        size_t grow = ((size_t)pos + len) - (size_t)i->st.st_size;
-        bool full   = false;
+            size_t grow = ((size_t)pos + len) - (size_t)i->st.st_size;
+            bool full   = false;
 
-        scoped_lock(&tmpfs->lock) {
+            scoped_lock(&tmpfs->lock) {
 
-            if (((long)inode->sb->st.f_bavail - (long)grow) <= 0L) {
-                full = true;
-                break;
-            }
-
-            inode->sb->st.f_bfree -= grow;
-            inode->sb->st.f_bavail -= grow;
-        }
-
-        if (unlikely(full))
-            return -ENOSPC;
-
-
-        if ((size_t)pos + len > i->capacity) {
-
-            size_t capacity = (size_t)pos + len;
-            capacity += capacity / 2;
-
-            void* data = krealloc(i->data, capacity, GFP_USER);
-
-            if (unlikely(!data)) {
-
-                scoped_lock(&tmpfs->lock) {
-                    inode->sb->st.f_bfree += grow;
-                    inode->sb->st.f_bavail += grow;
+                if (((long)inode->sb->st.f_bavail - (long)grow) <= 0L) {
+                    full = true;
+                    break;
                 }
 
-                return -ENOMEM;
+                inode->sb->st.f_bfree -= grow;
+                inode->sb->st.f_bavail -= grow;
             }
 
-            i->data     = data;
-            i->capacity = capacity;
+            if (unlikely(full))
+                return -ENOSPC;
+
+
+            if ((size_t)pos + len > i->capacity) {
+
+                size_t capacity = (size_t)pos + len;
+                capacity += capacity / 2;
+
+                void* data = krealloc(i->data, capacity, GFP_USER);
+
+                if (unlikely(!data)) {
+
+                    scoped_lock(&tmpfs->lock) {
+                        inode->sb->st.f_bfree += grow;
+                        inode->sb->st.f_bavail += grow;
+                    }
+
+                    return -ENOMEM;
+                }
+
+                i->data     = data;
+                i->capacity = capacity;
+            }
+
+            if ((size_t)pos > (size_t)i->st.st_size)
+                memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, (size_t)pos - (size_t)i->st.st_size);
+
+            i->st.st_size = pos + len;
         }
 
-        if ((size_t)pos > (size_t)i->st.st_size)
-            memset((void*)((uintptr_t)i->data + (uintptr_t)i->st.st_size), 0, (size_t)pos - (size_t)i->st.st_size);
 
-        i->st.st_size = pos + len;
+        memcpy((void*)((uintptr_t)i->data + (uintptr_t)pos), buf, len);
     }
-
-
-    memcpy((void*)((uintptr_t)i->data + (uintptr_t)pos), buf, len);
 
     return len;
 }

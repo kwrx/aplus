@@ -105,32 +105,34 @@ int tmpfs_truncate(inode_t* inode, off_t len) {
 
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
-    if (len == i->st.st_size)
-        return 0;
+    scoped_lock(&i->lock) {
 
-    if (len > i->st.st_size)
-        return tmpfs_truncate_grow(inode, i, len);
+        if (len == i->st.st_size)
+            return 0;
 
-
-    void* data = krealloc(i->data, CONFIG_BUFSIZ + len, GFP_KERNEL);
-
-    if (unlikely(!data))
-        return errno = ENOMEM, -1;
+        if (len > i->st.st_size)
+            return tmpfs_truncate_grow(inode, i, len);
 
 
-    size_t freed = i->st.st_size - len;
+        void* data = krealloc(i->data, CONFIG_BUFSIZ + len, GFP_KERNEL);
 
-    i->data       = data;
-    i->capacity   = CONFIG_BUFSIZ + len;
-    i->st.st_size = len;
+        if (unlikely(!data))
+            return errno = ENOMEM, -1;
 
-    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
 
-    scoped_lock(&tmpfs->lock) {
-        inode->sb->st.f_bfree += freed;
-        inode->sb->st.f_bavail += freed;
+        size_t freed = i->st.st_size - len;
+
+        i->data       = data;
+        i->capacity   = CONFIG_BUFSIZ + len;
+        i->st.st_size = len;
+
+        tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
+
+        scoped_lock(&tmpfs->lock) {
+            inode->sb->st.f_bfree += freed;
+            inode->sb->st.f_bavail += freed;
+        }
     }
-
 
     return 0;
 }

@@ -26,6 +26,7 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <aplus/ipc.h>
 #include <aplus/memory.h>
 #include <aplus/smp.h>
@@ -105,10 +106,15 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
         list_remove(tmpfs->children, d);
 
-        ti->st.st_nlink = 0;
+        if (ti->st.st_nlink > 0)
+            ti->st.st_nlink--;
 
-        inode->sb->st.f_ffree++;
-        inode->sb->st.f_favail++;
+        ti->st.st_ctime = arch_timer_gettime();
+
+        if (ti->st.st_nlink == 0) {
+            inode->sb->st.f_ffree++;
+            inode->sb->st.f_favail++;
+        }
 
         e = 0;
     }
@@ -122,7 +128,7 @@ int tmpfs_unlink(inode_t* inode, const char* name) {
 
 
 /**
- * @brief Frees the data of an unlinked tmpfs inode once nothing references it, returning its space.
+ * @brief Frees the data of an unlinked tmpfs inode once no other name or holder refers to it, returning its space.
  *
  * @param inode The inode.
  */
@@ -133,8 +139,18 @@ void tmpfs_release(inode_t* inode) {
     DEBUG_ASSERT(inode->sb->fsid == FSID_TMPFS);
 
 
-    tmpfs_t* tmpfs = (tmpfs_t*)inode->sb->fsinfo;
-    off_t size     = ((tmpfs_inode_t*)cache_get(&inode->sb->cache, inode->ino))->st.st_size;
+    tmpfs_t* tmpfs   = (tmpfs_t*)inode->sb->fsinfo;
+    tmpfs_inode_t* i = (tmpfs_inode_t*)cache_get(&inode->sb->cache, inode->ino);
+    off_t size       = 0;
+    bool last        = false;
+
+    scoped_lock(&tmpfs->lock) {
+        last = --i->inodes == 0;
+        size = i->st.st_size;
+    }
+
+    if (!last)
+        return;
 
     cache_remove(&inode->sb->cache, inode->ino);
 

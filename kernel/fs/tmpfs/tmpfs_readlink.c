@@ -47,13 +47,17 @@ ssize_t tmpfs_readlink(inode_t* inode, char* buf, size_t len) {
 
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, inode->ino);
 
-    if (!i->data)
-        return 0;
+    scoped_lock(&i->lock) {
 
-    if (len > (size_t)i->st.st_size)
-        len = i->st.st_size;
+        if (!i->data)
+            return 0;
+
+        if (len > (size_t)i->st.st_size)
+            len = i->st.st_size;
 
 
-    memcpy(buf, i->data, len);
+        memcpy(buf, i->data, len);
+    }
+
     return len;
 }

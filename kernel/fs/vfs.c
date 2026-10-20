@@ -890,3 +890,48 @@ int vfs_unlink(inode_t* inode, const char* name) {
 
     return errno = EROFS, -1;
 }
+
+
+/**
+ * @brief Adds a new name in a directory for an existing inode.
+ *
+ * @param inode The directory.
+ * @param target The inode the new name refers to.
+ * @param name The new name.
+ * @return 0 on success, or -1 with errno set.
+ */
+int vfs_link(inode_t* inode, inode_t* target, const char* name) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(target);
+    DEBUG_ASSERT(name);
+
+
+    if (name[0] == '.' && name[1] == '\0')
+        return errno = EEXIST, -1;
+
+    if (name[0] == '.' && name[1] == '.' && name[2] == '\0')
+        return errno = EEXIST, -1;
+
+    if (unlikely(vfs_inode_unlinked(inode) || vfs_inode_unlinked(target)))
+        return errno = ENOENT, -1;
+
+
+
+    if (likely(inode->ops.link)) {
+
+        scoped_lock(&inode->lock) {
+
+            inode_t* cached = vfs_dcache_find(inode, name);
+
+            if (unlikely(cached)) {
+                vfs_inode_put(cached);
+                return errno = EEXIST, -1;
+            }
+
+            return inode->ops.link(inode, target, name);
+        }
+    }
+
+    return errno = (target->sb != inode->sb) ? EXDEV : EPERM, -1;
+}

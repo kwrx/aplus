@@ -85,6 +85,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
         d->ops.rename  = tmpfs_rename;
         d->ops.symlink = tmpfs_symlink;
         d->ops.unlink  = tmpfs_unlink;
+        d->ops.link    = tmpfs_link;
 
         vfs_dcache_init(d);
     }
@@ -133,6 +134,7 @@ inode_t* tmpfs_creat(inode_t* inode, const char* name, mode_t mode) {
 
         i->capacity   = 0;
         i->data       = NULL;
+        i->inodes     = 1;
         i->st.st_mode = mode & ~umask;
 
         d->ino = i->st.st_ino;
