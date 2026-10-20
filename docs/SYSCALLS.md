@@ -265,7 +265,7 @@
 - [ ] sys_sync_file_range
 - [ ] sys_vmsplice
 - [ ] sys_move_pages
-- [ ] sys_utimensat
+- [x] sys_utimensat
 - [ ] sys_epoll_pwait
 - [ ] sys_signalfd
 - [ ] sys_timerfd_create
