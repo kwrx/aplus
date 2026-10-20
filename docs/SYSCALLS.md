@@ -106,25 +106,25 @@
 - [x] sys_getuid
 - [ ] sys_syslog
 - [x] sys_getgid
-- [ ] sys_setuid
-- [ ] sys_setgid
+- [x] sys_setuid
+- [x] sys_setgid
 - [x] sys_geteuid
 - [x] sys_getegid
 - [x] sys_setpgid
 - [x] sys_getppid
 - [x] sys_getpgrp
 - [x] sys_setsid
-- [ ] sys_setreuid
-- [ ] sys_setregid
-- [ ] sys_getgroups
-- [ ] sys_setgroups
-- [ ] sys_setresuid
-- [ ] sys_getresuid
-- [ ] sys_setresgid
-- [ ] sys_getresgid
+- [x] sys_setreuid
+- [x] sys_setregid
+- [x] sys_getgroups
+- [x] sys_setgroups
+- [x] sys_setresuid
+- [x] sys_getresuid
+- [x] sys_setresgid
+- [x] sys_getresgid
 - [x] sys_getpgid
-- [ ] sys_setfsuid
-- [ ] sys_setfsgid
+- [x] sys_setfsuid
+- [x] sys_setfsgid
 - [x] sys_getsid
 - [ ] sys_capget
 - [ ] sys_capset

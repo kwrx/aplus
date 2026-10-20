@@ -162,10 +162,17 @@ static void __snapshot(task_t* t, cpuid_t cpu, size_t threads, procfs_task_t* o)
     o->pgrp = t->pgrp;
     o->sid  = (pid_t)t->sid;
 
-    o->uid  = t->uid;
-    o->euid = t->euid;
-    o->gid  = t->gid;
-    o->egid = t->egid;
+    o->uid     = t->uid;
+    o->euid    = t->euid;
+    o->suid    = t->suid;
+    o->fsuid   = t->fsuid;
+    o->gid     = t->gid;
+    o->egid    = t->egid;
+    o->sgid    = t->sgid;
+    o->fsgid   = t->fsgid;
+    o->ngroups = t->ngroups;
+
+    memcpy(o->groups, t->groups, sizeof(o->groups));
 
     o->status   = (long)t->status;
     o->policy   = (long)t->policy;

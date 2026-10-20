@@ -133,15 +133,15 @@ SYSCALL(
 
 
 
-        if (current_task->uid != 0) {
+        if (current_task->fsuid != 0) {
 
-            if (st.st_uid == current_task->uid) {
+            if (st.st_uid == current_task->fsuid) {
 
                 if (!(st.st_mode & S_IWUSR)) {
                     return -EACCES;
                 }
 
-            } else if (st.st_gid == current_task->gid) {
+            } else if (task_in_group(current_task, st.st_gid)) {
 
                 if (!(st.st_mode & S_IWGRP)) {
                     return -EACCES;

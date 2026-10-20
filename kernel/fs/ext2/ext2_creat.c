@@ -79,8 +79,8 @@ inode_t* ext2_creat(inode_t* parent, const char* name, mode_t mode) {
     shared_ptr_access(current_task->fs, fs, { umask = fs->umask; });
 
     created->i_mode        = mode & ~umask;
-    created->i_uid         = current_task->uid;
-    created->i_gid         = current_task->gid;
+    created->i_uid         = current_task->fsuid;
+    created->i_gid         = current_task->fsgid;
     created->i_links_count = S_ISDIR(mode) ? 2 : 1;
     created->i_atime       = arch_timer_gettime();
     created->i_ctime       = created->i_atime;

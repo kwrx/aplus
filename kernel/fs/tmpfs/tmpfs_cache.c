@@ -48,8 +48,8 @@ tmpfs_inode_t* tmpfs_cache_fetch(cache_t* cache, tmpfs_t* tmpfs, ino_t ino) {
     i->data     = NULL;
 
 
-    i->st.st_uid = current_task->uid;
-    i->st.st_gid = current_task->gid;
+    i->st.st_uid = current_task->fsuid;
+    i->st.st_gid = current_task->fsgid;
 
     i->st.st_ino    = ino;
     i->st.st_nlink  = 1;

@@ -164,7 +164,7 @@ static inode_t* renameat2_dir(int dfd, const char* path) {
  */
 static bool renameat2_writable(inode_t* dir) {
 
-    if (current_task->uid == 0)
+    if (current_task->fsuid == 0)
         return true;
 
     struct stat st = {0};
@@ -172,10 +172,10 @@ static bool renameat2_writable(inode_t* dir) {
     if (vfs_getattr(dir, &st) < 0)
         return false;
 
-    if (st.st_uid == current_task->uid)
+    if (st.st_uid == current_task->fsuid)
         return (st.st_mode & S_IWUSR) != 0;
 
-    if (st.st_gid == current_task->gid)
+    if (task_in_group(current_task, st.st_gid))
         return (st.st_mode & S_IWGRP) != 0;
 
     return (st.st_mode & S_IWOTH) != 0;

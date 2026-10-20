@@ -128,10 +128,15 @@ int procfs_pid_fetch_status(inode_t* inode, char** buf, size_t* size, void* arg)
     procfs_bprintf(&b, "Pid:\t%d\n", t.tid);
     procfs_bprintf(&b, "PPid:\t%d\n", t.ppid);
     procfs_bprintf(&b, "TracerPid:\t0\n");
-    procfs_bprintf(&b, "Uid:\t%d\t%d\t%d\t%d\n", t.uid, t.euid, t.euid, t.euid);
-    procfs_bprintf(&b, "Gid:\t%d\t%d\t%d\t%d\n", t.gid, t.egid, t.egid, t.egid);
+    procfs_bprintf(&b, "Uid:\t%d\t%d\t%d\t%d\n", t.uid, t.euid, t.suid, t.fsuid);
+    procfs_bprintf(&b, "Gid:\t%d\t%d\t%d\t%d\n", t.gid, t.egid, t.sgid, t.fsgid);
     procfs_bprintf(&b, "FDSize:\t%d\n", CONFIG_OPEN_MAX);
-    procfs_bprintf(&b, "Groups:\t\n");
+    procfs_bprintf(&b, "Groups:\t");
+
+    for (size_t i = 0; i < t.ngroups; i++)
+        procfs_bprintf(&b, "%d ", t.groups[i]);
+
+    procfs_bprintf(&b, "\n");
     procfs_bprintf(&b, "VmSize:\t%lu kB\n", (unsigned long)((t.vm_end - t.vm_start) >> 10));
     procfs_bprintf(&b, "VmRSS:\t%lu kB\n", (unsigned long)((t.rss_pages * PML1_PAGESIZE) >> 10));
     procfs_bprintf(&b, "Threads:\t%lu\n", (unsigned long)t.threads);
