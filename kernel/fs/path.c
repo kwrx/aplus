@@ -45,7 +45,7 @@
 #define PATH_MAXNESTED   8
 
 
-static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth);
+static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth, bool* created);
 
 
 /**
@@ -116,7 +116,7 @@ static inode_t* __path_follow_links(inode_t* inode, int* links, int depth) {
 
         target[n] = '\0';
 
-        inode_t* next = __path_lookup(inode->parent ? inode->parent : inode, target, O_NOFOLLOW, 0, links, depth + 1);
+        inode_t* next = __path_lookup(inode->parent ? inode->parent : inode, target, O_NOFOLLOW, 0, links, depth + 1, NULL);
 
         vfs_inode_put(inode);
         inode = next;
@@ -183,9 +183,9 @@ inode_t* path_follows(inode_t* inode) {
 /**
  * @brief Resolves a path from a directory, creating the last component when asked to.
  *
- * @return The inode, referenced, or NULL with errno set.
+ * @return The inode, referenced, or NULL with errno set; @p created, when given, is set if the last component was created.
  */
-static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth) {
+static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode, int* links, int depth, bool* created) {
 
     DEBUG_ASSERT(cwd);
     DEBUG_ASSERT(path);
@@ -259,6 +259,9 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
             r = vfs_creat(c, name, mode);
 
+            if (r && created)
+                *created = true;
+
         } else {
             errno = (__path_failed_on_its_own() ? errno : ENOENT);
         }
@@ -293,5 +296,28 @@ inode_t* path_lookup(inode_t* cwd, const char* path, int flags, mode_t mode) {
 
     errno = 0;
 
-    return __path_lookup(cwd, path, flags, mode, &links, 0);
+    return __path_lookup(cwd, path, flags, mode, &links, 0, NULL);
+}
+
+
+/**
+ * @brief Resolves a path like path_lookup(), also telling whether the last component was created by this call.
+ *
+ * @param cwd The directory relative paths start from.
+ * @param path The path.
+ * @param flags O_CREAT, O_EXCL and O_NOFOLLOW as for open().
+ * @param mode The type and permissions of a created entry.
+ * @param created Set to true if the entry did not exist and was created, false otherwise.
+ * @return The inode, referenced, or NULL with errno set.
+ */
+inode_t* path_lookup_created(inode_t* cwd, const char* path, int flags, mode_t mode, bool* created) {
+
+    DEBUG_ASSERT(created);
+
+    int links = PATH_MAXSYMLINKS;
+
+    errno    = 0;
+    *created = false;
+
+    return __path_lookup(cwd, path, flags, mode, &links, 0, created);
 }

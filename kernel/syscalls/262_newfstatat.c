@@ -38,9 +38,6 @@
 #include <aplus/hal.h>
 
 
-extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
-
-
 /***
  * Name:        newfstatat
  * Description: get file status
@@ -72,7 +69,7 @@ SYSCALL(
 
 
         int fd;
-        if ((fd = sys_openat(dfd, filename, O_RDONLY, 0)) < 0)
+        if ((fd = do_openat(dfd, filename, O_RDONLY, 0, false)) < 0)
             return fd;
 
 

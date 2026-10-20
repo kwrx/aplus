@@ -89,7 +89,7 @@ SYSCALL(
         int e;
 
         scoped_uio_kernel() {
-            fd = sys_open(__safe_dirname, O_RDONLY | O_DIRECTORY, 0);
+            fd = do_openat(AT_FDCWD, __safe_dirname, O_RDONLY | O_DIRECTORY, 0, false);
         }
 
         if (fd < 0)
@@ -111,7 +111,7 @@ SYSCALL(
 
         if (likely(dev_name) && !(flags & MS_NODEV)) {
 
-            if ((fd = sys_open(dev_name, O_RDONLY, 0)) < 0)
+            if ((fd = do_openat(AT_FDCWD, dev_name, O_RDONLY, 0, false)) < 0)
                 return fd;
 
             shared_ptr_access(current_task->fd, fds, {

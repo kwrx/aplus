@@ -51,6 +51,8 @@ long syscall_invoke(unsigned long, long, long, long, long, long, long);
 long syscall_restart();
 void syscall_interrupt(void);
 
+long do_openat(int dfd, const char* filename, int flags, mode_t mode, bool check_access);
+
 
 
 /* Syscalls */

@@ -36,9 +36,6 @@
 #include <unistd.h>
 
 
-extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
-
-
 /***
  * Name:        readlinkat
  * Description: read value of a symbolic link
@@ -83,7 +80,7 @@ SYSCALL(
 
         int fd = -1;
 
-        if ((fd = sys_openat(dfd, path, O_RDONLY | O_NOFOLLOW, 0)) < 0)
+        if ((fd = do_openat(dfd, path, O_RDONLY | O_NOFOLLOW, 0, false)) < 0)
             return fd;
 
 

@@ -69,11 +69,11 @@ SYSCALL(
         int fd;
 
 #if defined(O_NOFOLLOW)
-        if ((fd = sys_open(filename, O_RDONLY | O_NOFOLLOW, 0)) < 0)
+        if ((fd = do_openat(AT_FDCWD, filename, O_RDONLY | O_NOFOLLOW, 0, false)) < 0)
             return fd;
 #else
-    if((fd = sys_open(filename, O_RDONLY, 0)) < 0)
-        return fd;
+        if ((fd = do_openat(AT_FDCWD, filename, O_RDONLY, 0, false)) < 0)
+            return fd;
 #endif
 
 
