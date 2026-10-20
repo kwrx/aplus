@@ -29,15 +29,13 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-
-extern long sys_openat(int dfd, const char* filename, int flags, mode_t mode);
-extern long sys_fchmod(unsigned int fd, mode_t mode);
 
 /***
  * Name:        fchmodat
@@ -62,20 +60,60 @@ SYSCALL(
             return -EFAULT;
 
 
-        int fd = -1;
-        int e  = -1;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-        if ((fd = sys_openat(dfd, filename, O_RDONLY, 0)) < 0)
-            return fd;
+        if (dfd < 0) {
 
-        e = sys_fchmod(fd, mode);
+            if (dfd != AT_FDCWD)
+                return -EBADF;
 
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
+            shared_ptr_access(current_task->fs, fs, {
+                if (unlikely(!fs->cwd))
+                    return -ENOENT;
+
+                cwd = vfs_inode_get(fs->cwd);
+            });
+
+        } else {
+
+            if (dfd >= CONFIG_OPEN_MAX)
+                return -EBADF;
+
+            shared_ptr_access(current_task->fd, fds, {
+                if (unlikely(!fds->descriptors[dfd].ref))
+                    return -EBADF;
+
+                cwd = vfs_inode_get(fds->descriptors[dfd].ref->inode);
+            });
+        }
+
+        DEBUG_ASSERT(cwd);
 
 
-        if (e < 0)
+        char __safe_filename[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
+
+
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if ((r = path_lookup(cwd, __safe_filename, 0, 0)) == NULL)
             return -errno;
 
-        return e;
+        struct stat st = {0};
+
+        if (vfs_getattr(r, &st) < 0)
+            return -errno;
+
+
+        if (S_ISLNK(st.st_mode)) {
+
+            inode_t* target = path_follows(r);
+
+            vfs_inode_put(r);
+
+            if ((r = target) == NULL)
+                return -errno;
+        }
+
+        return attr_chmod(r, mode);
     });

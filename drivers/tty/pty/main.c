@@ -961,6 +961,10 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     pty->m_pid  = current_task->tid;
     pty->s_pgrp = 0;
 
+    pty->mode = 0666;
+    pty->uid  = current_task->fsuid;
+    pty->gid  = current_task->fsgid;
+
     pty->ios.c_cc[VINTR]    = 0x03;
     pty->ios.c_cc[VQUIT]    = 0x1C;
     pty->ios.c_cc[VERASE]   = 0x7F;

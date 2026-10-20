@@ -25,9 +25,11 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -54,27 +56,15 @@ SYSCALL(
             return -EBADF;
 
 
-        struct file* file = fd_get(fd, NULL);
+        int flags = 0;
+
+        struct file* file = fd_get(fd, &flags);
 
         if (unlikely(!file))
             return -EBADF;
 
 
-        long e = 0;
-
-        struct stat st = {0};
-
-        if (vfs_getattr(file->inode, &st) < 0) {
-
-            e = -errno;
-
-        } else {
-
-            shared_ptr_access(current_task->fs, fs, { st.st_mode = ((st.st_mode & ~07777) | (mode & 07777)) & ~fs->umask; });
-
-            if (vfs_setattr(file->inode, &st) < 0)
-                e = -errno;
-        }
+        long e = (flags & O_PATH) ? -EBADF : attr_chmod(file->inode, mode);
 
         fd_put(file);
 
