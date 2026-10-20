@@ -24,9 +24,10 @@
  */
 
 /**
- * @brief Tests for rename(), renameat() and renameat2() on tmpfs, and for mv on top of them.
+ * @brief Tests for rename(), renameat() and renameat2() on tmpfs and ext2, and for mv on top of them.
  */
 
+#include <dirent.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdbool.h>
@@ -48,24 +49,24 @@
 #endif
 
 
-#define SCRATCH "/tmp/rename-test.d"
-#define ON_EXT2 "/rename-test.ext2"
-#define MOVED   "/rename-test.mv"
+#define MOVED     "/rename-test.mv"
+#define LONG_NAME "a-name-long-enough-that-its-directory-entry-cannot-reuse-the-slot-left-by-a-short-one-0123456789abcdef"
 
 
-static int failures = 0;
-static int total    = 0;
+static int failures      = 0;
+static int total         = 0;
+static const char* label = "";
 
 
-#define CHECK(cond, name, fmt, ...)                                          \
-    {                                                                        \
-        total++;                                                             \
-        if (cond) {                                                          \
-            printf("rename-test: PASS  %s\n", (name));                       \
-        } else {                                                             \
-            failures++;                                                      \
-            printf("rename-test: FAIL  %s: " fmt "\n", (name), __VA_ARGS__); \
-        }                                                                    \
+#define CHECK(cond, name, fmt, ...)                                                      \
+    {                                                                                    \
+        total++;                                                                         \
+        if (cond) {                                                                      \
+            printf("rename-test: PASS  [%s] %s\n", label, (name));                       \
+        } else {                                                                         \
+            failures++;                                                                  \
+            printf("rename-test: FAIL  [%s] %s: " fmt "\n", label, (name), __VA_ARGS__); \
+        }                                                                                \
     }
 
 
@@ -132,6 +133,31 @@ static bool gone(const char* path) {
 
 
 /**
+ * @brief Reports whether the current directory lists a name.
+ * @param name The name.
+ * @return true when readdir() returns it.
+ */
+static bool listed(const char* name) {
+
+    DIR* dir = opendir(".");
+
+    if (!dir) {
+        return false;
+    }
+
+    bool found = false;
+
+    for (struct dirent* ent; !found && (ent = readdir(dir)) != NULL;) {
+        found = strcmp(ent->d_name, name) == 0;
+    }
+
+    closedir(dir);
+
+    return found;
+}
+
+
+/**
  * @brief Renames with renameat2(), which the C library does not wrap.
  *
  * @param from The old path.
@@ -150,32 +176,40 @@ static int rename2(const char* from, const char* to, unsigned int flags) {
  */
 static void test_files(void) {
 
-    put(SCRATCH "/a", "alpha");
+    put("a", "alpha");
 
-    int r = rename(SCRATCH "/a", SCRATCH "/b");
-    CHECK(r == 0 && gone(SCRATCH "/a") && holds(SCRATCH "/b", "alpha"), "rename-file", "r=%d errno=%s", r, strerror(errno));
+    int r = rename("a", "b");
+    CHECK(r == 0 && gone("a") && holds("b", "alpha"), "rename-file", "r=%d errno=%s", r, strerror(errno));
 
     bool coherent = true;
 
     for (int i = 0; i < 8 && coherent; i++) {
 
-        const char* from = (i & 1) ? SCRATCH "/a" : SCRATCH "/b";
-        const char* to   = (i & 1) ? SCRATCH "/b" : SCRATCH "/a";
+        const char* from = (i & 1) ? "a" : "b";
+        const char* to   = (i & 1) ? "b" : "a";
 
         coherent = rename(from, to) == 0 && gone(from) && holds(to, "alpha");
     }
 
     CHECK(coherent, "rename-back-and-forth", "errno=%s", strerror(errno));
 
-    put(SCRATCH "/c", "gamma");
+    CHECK(listed("b") && !listed("a"), "rename-updates-directory", "b=%d a=%d", listed("b"), listed("a"));
 
-    r = rename(SCRATCH "/b", SCRATCH "/c");
-    CHECK(r == 0 && gone(SCRATCH "/b") && holds(SCRATCH "/c", "alpha"), "rename-replaces-file", "r=%d errno=%s", r, strerror(errno));
+    r = rename("b", LONG_NAME);
+    CHECK(r == 0 && gone("b") && listed(LONG_NAME) && !listed("b") && holds(LONG_NAME, "alpha"), "rename-to-long-name", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename(SCRATCH "/c", SCRATCH "/c");
-    CHECK(r == 0 && holds(SCRATCH "/c", "alpha"), "rename-onto-itself", "r=%d errno=%s", r, strerror(errno));
+    r = rename(LONG_NAME, "b");
+    CHECK(r == 0 && gone(LONG_NAME) && !listed(LONG_NAME) && holds("b", "alpha"), "rename-from-long-name", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename(SCRATCH "/missing", SCRATCH "/x");
+    put("c", "gamma");
+
+    r = rename("b", "c");
+    CHECK(r == 0 && gone("b") && holds("c", "alpha"), "rename-replaces-file", "r=%d errno=%s", r, strerror(errno));
+
+    r = rename("c", "c");
+    CHECK(r == 0 && holds("c", "alpha"), "rename-onto-itself", "r=%d errno=%s", r, strerror(errno));
+
+    r = rename("missing", "x");
     CHECK(r < 0 && errno == ENOENT, "rename-missing-source", "r=%d errno=%s", r, strerror(errno));
 }
 
@@ -185,16 +219,16 @@ static void test_files(void) {
  */
 static void test_flags(void) {
 
-    put(SCRATCH "/d", "delta");
+    put("d", "delta");
 
-    int r = rename2(SCRATCH "/c", SCRATCH "/d", RENAME_NOREPLACE);
-    CHECK(r < 0 && errno == EEXIST && holds(SCRATCH "/c", "alpha") && holds(SCRATCH "/d", "delta"), "renameat2-noreplace-existing", "r=%d errno=%s", r, strerror(errno));
+    int r = rename2("c", "d", RENAME_NOREPLACE);
+    CHECK(r < 0 && errno == EEXIST && holds("c", "alpha") && holds("d", "delta"), "renameat2-noreplace-existing", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename2(SCRATCH "/c", SCRATCH "/e", RENAME_NOREPLACE);
-    CHECK(r == 0 && gone(SCRATCH "/c") && holds(SCRATCH "/e", "alpha"), "renameat2-noreplace-new", "r=%d errno=%s", r, strerror(errno));
+    r = rename2("c", "e", RENAME_NOREPLACE);
+    CHECK(r == 0 && gone("c") && holds("e", "alpha"), "renameat2-noreplace-new", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename2(SCRATCH "/e", SCRATCH "/x", RENAME_WHITEOUT);
-    CHECK(r < 0 && errno == EINVAL && holds(SCRATCH "/e", "alpha"), "renameat2-unknown-flag", "r=%d errno=%s", r, strerror(errno));
+    r = rename2("e", "x", RENAME_WHITEOUT);
+    CHECK(r < 0 && errno == EINVAL && holds("e", "alpha"), "renameat2-unknown-flag", "r=%d errno=%s", r, strerror(errno));
 }
 
 
@@ -205,9 +239,9 @@ static void test_open_file(void) {
 
     char buffer[16] = {0};
 
-    const int fd = open(SCRATCH "/e", O_RDONLY);
+    const int fd = open("e", O_RDONLY);
 
-    const int r = rename(SCRATCH "/e", SCRATCH "/f");
+    const int r = rename("e", "f");
 
     const ssize_t n = fd < 0 ? -1 : read(fd, buffer, sizeof(buffer) - 1);
 
@@ -224,31 +258,31 @@ static void test_open_file(void) {
  */
 static void test_directories(void) {
 
-    mkdir(SCRATCH "/d1", 0755);
-    put(SCRATCH "/d1/inner", "inner");
+    mkdir("d1", 0755);
+    put("d1/inner", "inner");
 
-    int r = rename(SCRATCH "/d1", SCRATCH "/d2");
-    CHECK(r == 0 && gone(SCRATCH "/d1") && holds(SCRATCH "/d2/inner", "inner"), "rename-directory", "r=%d errno=%s", r, strerror(errno));
+    int r = rename("d1", "d2");
+    CHECK(r == 0 && gone("d1") && holds("d2/inner", "inner"), "rename-directory", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename(SCRATCH "/f", SCRATCH "/d2");
+    r = rename("f", "d2");
     CHECK(r < 0 && errno == EISDIR, "rename-file-over-directory", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename(SCRATCH "/d2", SCRATCH "/f");
+    r = rename("d2", "f");
     CHECK(r < 0 && errno == ENOTDIR, "rename-directory-over-file", "r=%d errno=%s", r, strerror(errno));
 
-    mkdir(SCRATCH "/d3", 0755);
-    put(SCRATCH "/d3/x", "x");
+    mkdir("d3", 0755);
+    put("d3/x", "x");
 
-    r = rename(SCRATCH "/d2", SCRATCH "/d3");
-    CHECK(r < 0 && errno == ENOTEMPTY && holds(SCRATCH "/d2/inner", "inner"), "rename-over-full-directory", "r=%d errno=%s", r, strerror(errno));
+    r = rename("d2", "d3");
+    CHECK(r < 0 && errno == ENOTEMPTY && holds("d2/inner", "inner"), "rename-over-full-directory", "r=%d errno=%s", r, strerror(errno));
 
-    mkdir(SCRATCH "/d4", 0755);
+    mkdir("d4", 0755);
 
-    r = rename(SCRATCH "/d2/", SCRATCH "/d4/");
-    CHECK(r == 0 && gone(SCRATCH "/d2") && holds(SCRATCH "/d4/inner", "inner"), "rename-over-empty-directory", "r=%d errno=%s", r, strerror(errno));
+    r = rename("d2/", "d4/");
+    CHECK(r == 0 && gone("d2") && holds("d4/inner", "inner"), "rename-over-empty-directory", "r=%d errno=%s", r, strerror(errno));
 
-    r = rename(SCRATCH "/f", SCRATCH "/d4/f");
-    CHECK(r < 0 && errno == EXDEV && holds(SCRATCH "/f", "alpha"), "rename-across-directories", "r=%d errno=%s", r, strerror(errno));
+    r = rename("f", "d4/f");
+    CHECK(r < 0 && errno == EXDEV && holds("f", "alpha"), "rename-across-directories", "r=%d errno=%s", r, strerror(errno));
 }
 
 
@@ -257,11 +291,11 @@ static void test_directories(void) {
  */
 static void test_renameat(void) {
 
-    const int dfd = open(SCRATCH, O_RDONLY | O_DIRECTORY);
+    const int dfd = open(".", O_RDONLY | O_DIRECTORY);
 
     const int r = dfd < 0 ? -1 : renameat(dfd, "f", dfd, "g");
 
-    CHECK(r == 0 && gone(SCRATCH "/f") && holds(SCRATCH "/g", "alpha"), "renameat-dirfd", "dfd=%d r=%d errno=%s", dfd, r, strerror(errno));
+    CHECK(r == 0 && gone("f") && holds("g", "alpha"), "renameat-dirfd", "dfd=%d r=%d errno=%s", dfd, r, strerror(errno));
 
     if (dfd >= 0) {
         close(dfd);
@@ -270,63 +304,63 @@ static void test_renameat(void) {
 
 
 /**
- * @brief Checks that ext2, which cannot rename, answers EXDEV so callers fall back to copying.
- */
-static void test_ext2(void) {
-
-    put(ON_EXT2, "ext2");
-
-    const int r = rename(ON_EXT2, ON_EXT2 ".new");
-
-    CHECK(r < 0 && errno == EXDEV && holds(ON_EXT2, "ext2"), "rename-on-ext2-is-exdev", "r=%d errno=%s", r, strerror(errno));
-
-    unlink(ON_EXT2);
-    unlink(ON_EXT2 ".new");
-}
-
-
-/**
- * @brief Runs mv within tmpfs, and onto ext2 where it has to copy.
+ * @brief Runs mv within the directory, and out of it where it has to copy.
  */
 static void test_mv(void) {
 
-    int r = system("mv " SCRATCH "/g " SCRATCH "/h");
-    CHECK(r == 0 && gone(SCRATCH "/g") && holds(SCRATCH "/h", "alpha"), "mv-within-directory", "status=%d", r);
+    int r = system("mv g h");
+    CHECK(r == 0 && gone("g") && holds("h", "alpha"), "mv-within-directory", "status=%d", r);
 
-    r = system("mv " SCRATCH "/h " MOVED);
-    CHECK(r == 0 && gone(SCRATCH "/h") && holds(MOVED, "alpha"), "mv-to-ext2-copies", "status=%d", r);
+    r = system("mv h " MOVED);
+    CHECK(r == 0 && gone("h") && holds(MOVED, "alpha"), "mv-out-of-directory-copies", "status=%d", r);
 
     unlink(MOVED);
 }
 
 
 /**
- * @brief Runs every case in a scratch directory on the tmpfs.
- *
- * @return 0 when every case passed, 1 otherwise.
+ * @brief Runs every case in a fresh scratch directory.
+ * @param fs The filesystem the directory lives on.
+ * @param scratch The scratch directory.
  */
-int main(void) {
+static void run(const char* fs, const char* scratch) {
 
-    setvbuf(stdout, NULL, _IONBF, 0);
+    char cleanup[64];
+    snprintf(cleanup, sizeof(cleanup), "rm -rf %s", scratch);
 
-    system("rm -rf " SCRATCH);
+    label = fs;
 
-    if (mkdir(SCRATCH, 0755) < 0) {
-        printf("rename-test: mkdir(%s): %s\n", SCRATCH, strerror(errno));
-        return 1;
+    system(cleanup);
+
+    if (mkdir(scratch, 0755) < 0 || chdir(scratch) < 0) {
+        CHECK(false, "scratch-directory", "%s: %s", scratch, strerror(errno));
+        return;
     }
-
-    printf("rename-test: starting\n");
 
     test_files();
     test_flags();
     test_open_file();
     test_directories();
     test_renameat();
-    test_ext2();
     test_mv();
 
-    system("rm -rf " SCRATCH);
+    chdir("/");
+    system(cleanup);
+}
+
+
+/**
+ * @brief Runs every case on the tmpfs and on the ext2 root.
+ * @return 0 when every case passed, 1 otherwise.
+ */
+int main(void) {
+
+    setvbuf(stdout, NULL, _IONBF, 0);
+
+    printf("rename-test: starting\n");
+
+    run("tmpfs", "/tmp/rename-test.d");
+    run("ext2", "/rename-test.d");
 
     printf("rename-test: %d/%d passed, %d failed\n", total - failures, total, failures);
 

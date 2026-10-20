@@ -39,6 +39,7 @@ inode_t* ext2_utils_create_vfs_inode(inode_t* parent, ino_t ino, const char* nam
         inode->ops.creat   = ext2_creat;
         inode->ops.finddir = ext2_finddir;
         inode->ops.readdir = ext2_readdir;
+        inode->ops.rename  = ext2_rename;
         inode->ops.unlink  = ext2_unlink;
         inode->ops.link    = ext2_link;
         vfs_dcache_init(inode);
