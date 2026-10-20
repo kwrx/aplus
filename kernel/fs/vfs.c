@@ -856,13 +856,27 @@ int vfs_symlink(inode_t* inode, const char* name, const char* target) {
     if (name[0] == '.' && name[1] == '.' && name[2] == '\0')
         return errno = EEXIST, -1;
 
+    if (unlikely(vfs_inode_unlinked(inode)))
+        return errno = ENOENT, -1;
+
 
 
     if (likely(inode->ops.symlink)) {
-        scoped_lock(&inode->lock) return inode->ops.symlink(inode, name, target);
+
+        scoped_lock(&inode->lock) {
+
+            inode_t* cached = vfs_dcache_find(inode, name);
+
+            if (unlikely(cached)) {
+                vfs_inode_put(cached);
+                return errno = EEXIST, -1;
+            }
+
+            return inode->ops.symlink(inode, name, target);
+        }
     }
 
-    return errno = EROFS, -1;
+    return errno = EPERM, -1;
 }
 
 

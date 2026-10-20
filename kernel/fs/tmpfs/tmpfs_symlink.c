@@ -47,13 +47,14 @@ int tmpfs_symlink(inode_t* inode, const char* name, const char* target) {
 
 
     inode_t* d;
-    if ((d = tmpfs_creat(inode, name, S_IFLNK | 0666)) == NULL)
+    if ((d = tmpfs_creat(inode, name, S_IFLNK | 0777)) == NULL)
         return -1;
 
     tmpfs_inode_t* i = cache_get(&inode->sb->cache, d->ino);
 
-    i->st.st_size = strlen(target) + 1;
-    i->capacity   = i->st.st_size;
+    i->st.st_mode = S_IFLNK | 0777;
+    i->st.st_size = strlen(target);
+    i->capacity   = i->st.st_size + 1;
     i->data       = kmalloc(i->capacity, GFP_KERNEL);
 
     strncpy(i->data, target, i->capacity);

@@ -477,6 +477,15 @@ static inline void ext2_inode_set_size(ext2_t* ext2, struct ext2_inode* inode, u
     }
 }
 
+/**
+ * @brief Tells whether a symbolic link keeps its target in the inode's block pointers rather than in a data block.
+ * @param inode The inode.
+ * @return true for a fast symbolic link.
+ */
+static inline bool ext2_inode_is_fast_symlink(struct ext2_inode* inode) {
+    return S_ISLNK(inode->i_mode) && inode->i_size < sizeof(inode->i_block);
+}
+
 
 
 int ext2_fsync(inode_t*, int);
@@ -494,7 +503,7 @@ inode_t* ext2_finddir(inode_t*, const char*);
 ssize_t ext2_readdir(inode_t*, struct dirent*, off_t, size_t);
 
 int ext2_rename(inode_t*, const char*, const char*);
-// int ext2_symlink (inode_t*, const char*, const char*);
+int ext2_symlink(inode_t*, const char*, const char*);
 int ext2_unlink(inode_t*, const char*);
 int ext2_link(inode_t*, inode_t*, const char*);
 
