@@ -521,7 +521,7 @@ static void pci_find(pcidev_t device, uint16_t vid, uint16_t did, void* arg) {
 
     devices[num_devices] = vn;
 
-    if (!netif_add(&vn->device.net.interface, &vn->device.net.ip, &vn->device.net.nm, &vn->device.net.gw, &vn->device, ethif_init, ethernet_input)) {
+    if (!netif_add(&vn->device.net.interface, &vn->device.net.ip, &vn->device.net.nm, &vn->device.net.gw, &vn->device, ethif_init, tcpip_input)) {
 
         devices[num_devices] = NULL;
 

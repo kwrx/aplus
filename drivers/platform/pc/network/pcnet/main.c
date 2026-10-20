@@ -506,7 +506,7 @@ void init(const char* args) {
         eth->device.net.internals       = eth;
 
 
-        if (!netif_add(&eth->device.net.interface, &eth->device.net.ip, &eth->device.net.nm, &eth->device.net.gw, &eth->device, ethif_init, ethernet_input)) {
+        if (!netif_add(&eth->device.net.interface, &eth->device.net.ip, &eth->device.net.nm, &eth->device.net.gw, &eth->device, ethif_init, tcpip_input)) {
 
             kpanicf("pcnet: PANIC! netif_add() failed\n");
         }
