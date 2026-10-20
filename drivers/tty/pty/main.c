@@ -452,10 +452,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* index = (int*)arg;
 
             if (unlikely(!index))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(index, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(index, pty->index);
@@ -468,10 +468,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             struct winsize* ws = (struct winsize*)arg;
 
             if (unlikely(!ws))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(ws, R_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             pty->ws.ws_row    = uio_rstruct(ws, ws_row);
@@ -491,10 +491,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             struct winsize* ws = (struct winsize*)arg;
 
             if (unlikely(!ws))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(ws, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_wstruct(ws, ws_row, pty->ws.ws_row);
@@ -510,10 +510,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             pid_t* pgrp = (pid_t*)arg;
 
             if (unlikely(!pgrp))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(pgrp, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(pgrp, pty->s_pgrp);
@@ -526,10 +526,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             pid_t* pgrp = (pid_t*)arg;
 
             if (unlikely(!pgrp))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(pgrp, R_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             pty->s_pgrp = uio_read(pgrp);
@@ -540,10 +540,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
         case TCGETS: {
 
             if (unlikely(!arg))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(arg, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_memcpy_s2u(arg, &pty->ios, sizeof(struct termios));
@@ -556,10 +556,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
         case TCSETSW: {
 
             if (unlikely(!arg))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(arg, R_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             uio_memcpy_u2s(&pty->ios, arg, sizeof(struct termios));
 
@@ -593,10 +593,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* count = (int*)arg;
 
             if (unlikely(!count))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(count, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(count, (int)ringbuffer_available(&pty->r1));
@@ -609,10 +609,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* count = (int*)arg;
 
             if (unlikely(!count))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(count, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(count, (int)ringbuffer_available(&pty->r2));
@@ -629,10 +629,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
         case TIOCSTI: {
 
             if (unlikely(!arg))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(arg, R_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             ssize_t e = pty_process_input(pty, uio_get_ptr(arg), 1);
@@ -651,44 +651,62 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
 
         case TIOCSCTTY: {
 
-            if (unlikely(pty->m_pid > 0))
-                return -EPERM;
-
             if (unlikely(current_task->sid != current_task->tid))
-                return -EPERM;
+                return errno = EPERM, -1;
 
 
-            shared_ptr_access(current_task->ctty, ctty,
-                              {
-                                  if (unlikely(*ctty))
-                                      return -EPERM;
+            int e = 0;
 
-                                  pty->m_pid  = current_task->tid;
-                                  pty->m_sid  = current_task->sid;
-                                  pty->s_pgrp = 0;
+            shared_ptr_access(current_task->ctty, ctty, {
+                if (*ctty != pty) {
 
-                                  *ctty = pty;
-                              })
+                    if (unlikely(*ctty || (pty->m_sid > 0 && pty->m_sid != current_task->sid))) {
 
-                return 0;
+                        e = EPERM;
+
+                    } else {
+
+                        pty->m_pid  = current_task->tid;
+                        pty->m_sid  = current_task->sid;
+                        pty->s_pgrp = current_task->pgrp;
+
+                        *ctty = pty;
+                    }
+                }
+            });
+
+            if (unlikely(e))
+                return errno = e, -1;
+
+            return 0;
         }
 
         case TIOCNOTTY: {
 
-            if (pty->s_pgrp != 0) {
-                sys_kill(-pty->s_pgrp, SIGHUP);
-            }
+            bool controlling = false;
 
             shared_ptr_access(current_task->ctty, ctty, {
-                if (unlikely(*ctty != pty))
-                    return -EPERM;
+                if (*ctty == pty) {
+                    controlling = true;
+                    *ctty       = NULL;
+                }
+            });
+
+            if (unlikely(!controlling))
+                return errno = ENOTTY, -1;
+
+
+            if (current_task->sid == current_task->tid && pty->m_sid == current_task->sid) {
+
+                if (pty->s_pgrp > 0) {
+                    sys_kill(-pty->s_pgrp, SIGHUP);
+                    sys_kill(-pty->s_pgrp, SIGCONT);
+                }
 
                 pty->m_pid  = 0;
                 pty->m_sid  = 0;
                 pty->s_pgrp = 0;
-
-                *ctty = NULL;
-            });
+            }
 
             return 0;
         }
@@ -698,10 +716,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             pid_t* sid = (pid_t*)arg;
 
             if (unlikely(!sid))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(sid, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(sid, pty->m_sid);
@@ -721,10 +739,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* excl = (int*)arg;
 
             if (unlikely(!excl))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(excl, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(excl, 0);
@@ -746,10 +764,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* lock = (int*)arg;
 
             if (unlikely(!lock))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(lock, R_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             pty->locked = !!(uio_read(lock));
@@ -762,10 +780,10 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             int* lock = (int*)arg;
 
             if (unlikely(!lock))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
             if (unlikely(!uio_check(lock, R_OK | W_OK)))
-                return -EFAULT;
+                return errno = EFAULT, -1;
 
 
             uio_write(lock, pty->locked);
@@ -958,7 +976,7 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
 
     pty->index = __next_pty_index++;
 
-    pty->m_pid  = current_task->tid;
+    pty->m_pid  = 0;
     pty->s_pgrp = 0;
 
     pty->mode = 0666;

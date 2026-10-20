@@ -517,6 +517,14 @@ task_t* arch_task_get_empty_thread(size_t stacksize) {
 
     task->ctty = shared_ptr_new(struct pty*, GFP_KERNEL);
 
+    if (current_task->ctty) {
+
+        struct pty* inherited = NULL;
+
+        shared_ptr_access(current_task->ctty, parent, { inherited = *parent; });
+        shared_ptr_access(task->ctty, child, { *child = inherited; });
+    }
+
 
 
 #define _(size, offset) (void*)((uintptr_t)kcalloc(1, size, GFP_KERNEL) + offset)
