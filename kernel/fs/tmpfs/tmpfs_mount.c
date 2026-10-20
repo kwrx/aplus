@@ -101,6 +101,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->ops.rename  = tmpfs_rename;
     dir->sb->ops.symlink = tmpfs_symlink;
     dir->sb->ops.unlink  = tmpfs_unlink;
+    dir->sb->ops.link    = tmpfs_link;
 
 
 

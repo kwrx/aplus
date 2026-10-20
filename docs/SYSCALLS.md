@@ -87,7 +87,7 @@
 - [x] sys_mkdir
 - [ ] sys_rmdir
 - [x] sys_creat
-- [ ] sys_link
+- [x] sys_link
 - [x] sys_unlink
 - [ ] sys_symlink
 - [x] sys_readlink
@@ -250,7 +250,7 @@
 - [x] sys_newfstatat
 - [x] sys_unlinkat
 - [x] sys_renameat
-- [ ] sys_linkat
+- [x] sys_linkat
 - [ ] sys_symlinkat
 - [x] sys_readlinkat
 - [x] sys_fchmodat

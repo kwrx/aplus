@@ -93,9 +93,6 @@ struct inode_ops {
     int (*close)(inode_t*);
     int (*ioctl)(inode_t*, long, void*);
 
-    //? Report which of the requested events are ready right now. Leaving this
-    //? NULL means "always ready", which is the correct answer for anything
-    //? that cannot block -- regular files and directories included.
     int (*poll)(inode_t*, int);
 
     /* Inode */
@@ -124,7 +121,8 @@ struct inode_ops {
     int (*symlink)(inode_t*, const char*, const char*);
     int (*unlink)(inode_t*, const char*);
 
-    /** @brief Frees what the filesystem keeps for an unlinked inode once nothing references it any more. */
+    int (*link)(inode_t*, inode_t*, const char*);
+
     void (*release)(inode_t*);
 };
 
@@ -158,7 +156,6 @@ struct inode {
     void* userdata;
     spinlock_t lock;
 
-    /** @brief How many holders other than its directory entry reference the inode, plus a flag once that entry is gone. */
     atomic_uint refcount;
 
     inode_events_t ev;
@@ -192,7 +189,6 @@ struct file {
     inode_t* inode;
     off_t position;
 
-    /** @brief The access mode and status flags, shared by every descriptor of the file and guarded by lock. */
     int flags;
     atomic_int refcount;
 
@@ -257,6 +253,7 @@ ssize_t vfs_readdir(inode_t*, struct dirent*, off_t, size_t);
 int vfs_rename(inode_t*, const char*, const char*);
 int vfs_symlink(inode_t*, const char*, const char*);
 int vfs_unlink(inode_t*, const char*);
+int vfs_link(inode_t*, inode_t*, const char*);
 
 inode_t* vfs_inode_get(inode_t*);
 void vfs_inode_put(inode_t*);

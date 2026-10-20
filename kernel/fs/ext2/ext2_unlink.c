@@ -43,9 +43,6 @@ int ext2_unlink(inode_t* parent, const char* name) {
 
     bool is_dir = S_ISDIR(node->i_mode);
 
-    if (!S_ISREG(node->i_mode) && !is_dir)
-        return kfree(target), errno = EPERM, -1;
-
     ext2_t* ext2           = parent->sb->fsinfo;
     struct ext2_inode* dir = cache_get(&parent->sb->cache, parent->ino);
     ino_t ino              = 0;
@@ -53,6 +50,11 @@ int ext2_unlink(inode_t* parent, const char* name) {
     int result             = -1;
 
     scoped_lock(&ext2->lock) {
+        if (!S_ISREG(node->i_mode) && !is_dir && node->i_links_count < 2) {
+            errno = EPERM;
+            break;
+        }
+
         if (is_dir) {
             int empty = ext2_utils_dir_empty(ext2, node);
 

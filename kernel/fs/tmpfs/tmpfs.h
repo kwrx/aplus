@@ -46,12 +46,18 @@ typedef struct {
     spinlock_t lock;
 } tmpfs_t;
 
+/**
+ * @brief The data of a tmpfs file, shared by every name linked to it and freed with the last inode that refers to it.
+ */
 typedef struct {
 
     struct stat st;
 
     size_t capacity;
     void* data;
+
+    size_t inodes;
+    spinlock_t lock;
 
 } tmpfs_inode_t;
 
@@ -73,6 +79,7 @@ ssize_t tmpfs_readdir(inode_t*, struct dirent*, off_t, size_t);
 int tmpfs_rename(inode_t*, const char*, const char*);
 int tmpfs_symlink(inode_t*, const char*, const char*);
 int tmpfs_unlink(inode_t*, const char*);
+int tmpfs_link(inode_t*, inode_t*, const char*);
 void tmpfs_release(inode_t*);
 
 
