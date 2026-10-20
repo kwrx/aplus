@@ -182,6 +182,7 @@ stage_3() {
     packages="$packages sqlite"
     packages="$packages xz"
     packages="$packages dropbear"
+    packages="$packages git"
 
     die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.8.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
 
