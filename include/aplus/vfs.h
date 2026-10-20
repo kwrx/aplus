@@ -324,6 +324,7 @@ ssize_t fd_writev(struct file*, const struct iovec*, size_t);
 // kernel/fs/path.c
 inode_t* path_follows(inode_t*);
 inode_t* path_lookup(inode_t*, const char*, int, mode_t);
+inode_t* path_lookup_created(inode_t*, const char*, int, mode_t, bool*);
 
 
 // kernel/fs/attr.c

@@ -59,7 +59,7 @@ SYSCALL(
 
 
         int fd;
-        if ((fd = sys_open(path, O_RDONLY, 0)) < 0)
+        if ((fd = do_openat(AT_FDCWD, path, O_RDONLY, 0, false)) < 0)
             return fd;
 
 

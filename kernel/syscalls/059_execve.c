@@ -442,7 +442,7 @@ static long __execve_open(const char* path, inode_t** inode) {
         if (unlikely(sys_access(path, X_OK) < 0))
             return -EACCES;
 
-        if ((fd = sys_open(path, O_RDONLY, 0)) < 0)
+        if ((fd = do_openat(AT_FDCWD, path, O_RDONLY, 0, false)) < 0)
             return fd;
     }
 

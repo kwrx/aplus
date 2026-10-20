@@ -24,7 +24,7 @@
  */
 
 /**
- * @brief Tests for the set*id/getres*id/setgroups family and for chmod()/chown() on tmpfs, ext2 and a pty slave. Run as root.
+ * @brief Tests for the set*id/getres*id/setgroups family, for chmod()/chown() on tmpfs, ext2 and a pty slave, and for open()'s permission check. Run as root.
  */
 
 #include <errno.h>
@@ -165,7 +165,7 @@ static int child_seteuid_roundtrip(void) {
 
     errno = 0;
 
-    if (chmod(SCRATCH "/secret", 0644) == 0 || errno != EPERM)
+    if (open(SCRATCH "/secret", O_RDONLY) >= 0 || errno != EACCES)
         return 5;
 
     if (setgroups(0, NULL) == 0 || errno != EPERM)
@@ -180,8 +180,12 @@ static int child_seteuid_roundtrip(void) {
     if (!resuid_is(0, 0, 0) || !resgid_is(0, 0, 0))
         return 9;
 
-    if (chmod(SCRATCH "/secret", 0600) < 0)
+    int fd = open(SCRATCH "/secret", O_RDONLY);
+
+    if (fd < 0)
         return 10;
+
+    close(fd);
 
     return 0;
 }
@@ -262,6 +266,110 @@ static int child_chown_unprivileged(void) {
 
     if (chmod(SCRATCH "/secret", 0666) == 0 || errno != EPERM)
         return 8;
+
+    return 0;
+}
+
+
+/**
+ * @brief Tells whether open() fails with EACCES.
+ *
+ * @param path The file.
+ * @param flags The open() flags.
+ * @return true if it was refused for permission.
+ */
+static bool refused(const char* path, int flags) {
+
+    errno = 0;
+
+    int fd = open(path, flags);
+
+    if (fd >= 0) {
+        close(fd);
+        return false;
+    }
+
+    return errno == EACCES;
+}
+
+/**
+ * @brief Tells whether open() succeeds.
+ *
+ * @param path The file.
+ * @param flags The open() flags.
+ * @return true if a descriptor came back.
+ */
+static bool allowed(const char* path, int flags) {
+
+    int fd = open(path, flags);
+
+    if (fd < 0)
+        return false;
+
+    close(fd);
+
+    return true;
+}
+
+/**
+ * @brief open() checks the owner, group or other bits that apply, except for O_PATH and a file it creates itself; stat() and chdir() need no read permission.
+ *
+ * @return 0, or the number of the step that failed.
+ */
+static int child_open_permissions(void) {
+
+    struct stat st;
+
+    if (make_file(SCRATCH "/o-0600", 0600) < 0 || make_file(SCRATCH "/o-0644", 0644) < 0)
+        return 1;
+
+    if (make_file(SCRATCH "/o-0640", 0640) < 0 || chown(SCRATCH "/o-0640", 0, GROUP) < 0)
+        return 2;
+
+    if (make_file(SCRATCH "/o-0420", 0420) < 0 || chown(SCRATCH "/o-0420", USER, GROUP) < 0)
+        return 3;
+
+    unlink(SCRATCH "/o-new");
+    rmdir(SCRATCH "/d-0711");
+
+    if (mkdir(SCRATCH "/d-0711", 0711) < 0 || chmod(SCRATCH "/d-0711", 0711) < 0)
+        return 4;
+
+    gid_t groups[] = {GROUP};
+
+    if (setgroups(1, groups) < 0 || setresgid(USER, USER, USER) < 0 || setresuid(USER, USER, USER) < 0)
+        return 5;
+
+    if (!refused(SCRATCH "/o-0600", O_RDONLY) || !refused(SCRATCH "/o-0600", O_WRONLY))
+        return 6;
+
+    if (!allowed(SCRATCH "/o-0644", O_RDONLY) || !refused(SCRATCH "/o-0644", O_WRONLY) || !refused(SCRATCH "/o-0644", O_RDWR))
+        return 7;
+
+    if (!allowed(SCRATCH "/o-0640", O_RDONLY) || !refused(SCRATCH "/o-0640", O_WRONLY))
+        return 8;
+
+    if (!refused(SCRATCH "/o-0420", O_WRONLY) || !allowed(SCRATCH "/o-0420", O_RDONLY))
+        return 9;
+
+    if (!allowed(SCRATCH "/o-0600", O_PATH))
+        return 10;
+
+    int fd = open(SCRATCH "/o-new", O_CREAT | O_EXCL | O_WRONLY, 0444);
+
+    if (fd < 0)
+        return 11;
+
+    close(fd);
+
+    if (!refused(SCRATCH "/o-new", O_WRONLY))
+        return 12;
+
+    if (stat(SCRATCH "/o-0600", &st) < 0)
+        return 13;
+
+    if (!refused(SCRATCH "/d-0711", O_RDONLY | O_DIRECTORY) || chdir(SCRATCH "/d-0711") < 0)
+        return 14;
 
     return 0;
 }
@@ -455,10 +563,11 @@ int main(int argc, char** argv) {
     test_attrs("ext2", ON_EXT2);
     test_pty();
 
-    in_child("seteuid round trip drops privilege", child_seteuid_roundtrip);
+    in_child("seteuid round trip restricts open", child_seteuid_roundtrip);
     in_child("setuid drops root for good", child_setuid_drops);
     in_child("setreuid", child_setreuid);
     in_child("unprivileged chown/chmod", child_chown_unprivileged);
+    in_child("open permissions", child_open_permissions);
 
     test_exec(argv[0]);
 
