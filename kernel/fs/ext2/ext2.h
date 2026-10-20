@@ -493,7 +493,7 @@ inode_t* ext2_creat(inode_t*, const char*, mode_t);
 inode_t* ext2_finddir(inode_t*, const char*);
 ssize_t ext2_readdir(inode_t*, struct dirent*, off_t, size_t);
 
-// int ext2_rename (inode_t*, const char*, const char*);
+int ext2_rename(inode_t*, const char*, const char*);
 // int ext2_symlink (inode_t*, const char*, const char*);
 int ext2_unlink(inode_t*, const char*);
 int ext2_link(inode_t*, inode_t*, const char*);

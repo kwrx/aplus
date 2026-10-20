@@ -827,6 +827,11 @@ int vfs_rename(inode_t* inode, const char* name, const char* newname) {
 
             r = inode->ops.rename(inode, name, newname);
 
+            if (cached && r == 0) {
+                strncpy(cached->name, newname, sizeof(cached->name) - 1);
+                cached->name[sizeof(cached->name) - 1] = '\0';
+            }
+
             if (cached)
                 vfs_dcache_add(inode, cached);
         }
