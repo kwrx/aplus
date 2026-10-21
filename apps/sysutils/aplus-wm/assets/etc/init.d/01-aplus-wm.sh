@@ -3,6 +3,11 @@
 EXEC_NAME="aplus-wm"
 EXEC_DESC="Window Manager"
 
+if cat /proc/cmdline | grep -q "mode=console"; then
+    echo "init.d: Console mode detected, skipping $EXEC_DESC startup."
+    exit 0
+fi
+
 case "$1" in
     start)
         if command -v $EXEC_NAME >/dev/null 2>&1; then
