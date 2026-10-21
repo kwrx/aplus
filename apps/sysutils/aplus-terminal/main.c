@@ -40,12 +40,14 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include <aplus/fb.h>
 #include <aplus/events.h>
 #include <aplus/input.h>
 #include <aplus/ui-draw.h>
 #include <aplus/ui-keymap.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+
 
 #include <pthread.h>
 
@@ -62,6 +64,10 @@
 
 #if !defined(CONFIG_ATERM_FONT_SIZE)
     #define CONFIG_ATERM_FONT_SIZE 16
+#endif
+
+#if !defined(CONFIG_ATERM_DEFAULT_SHELL)
+    #define CONFIG_ATERM_DEFAULT_SHELL "/bin/bash"
 #endif
 
 
@@ -152,12 +158,6 @@ static struct {
 
     ui_keymap_t* keymap;
 
-    struct {
-        char* buffer;
-        size_t size;
-        size_t capacity;
-    } input;
-
     pthread_t thr_ui;
 
     //? The window's buffer as cairo sees it. The buffer is the server's, so a configure hands
@@ -178,6 +178,19 @@ static struct {
 
     } font;
 
+    struct {
+        int fd;
+        struct fb_var_screeninfo var;
+        struct fb_fix_screeninfo fix;
+    } fb;
+
+    struct {
+        int fd;
+        pthread_t thr;
+    } kbd;
+
+    bool windowed;
+
 } context = {0};
 
 
@@ -187,12 +200,13 @@ static void show_usage(int argc, char** argv) {
            "Print STRING(s) to standard output.\n\n"
            "   -c, --command               run command on shell\n"
            "   -w, --working-dir           set current working directory\n"
-           "   -n                          no newline at end of output\n"
+           "   -f, --framebuffer           use framebuffer instead of window\n"
            "       --help                  show this help\n"
            "       --version               print version info and exit\n");
 
     exit(0);
 }
+
 
 static void show_version(int argc, char** argv) {
     printf("%s (aplus coreutils) 0.1\n"
@@ -205,6 +219,158 @@ static void show_version(int argc, char** argv) {
 }
 
 
+/**
+ * @brief Returns the width of the window's pixel buffer.
+ * 
+ * @return The width in pixels.
+ */
+size_t aterm_window_width(void) {
+    if (context.windowed) {
+        return ui_window_width(context.win);
+    } else {
+        return context.fb.var.xres;
+    }
+}
+
+
+/**
+ * @brief Returns the height of the window's pixel buffer.
+ * 
+ * @return The height in pixels.
+ */
+size_t aterm_window_height(void) {
+    if (context.windowed) {
+        return ui_window_height(context.win);
+    } else {
+        return context.fb.var.yres;
+    }
+}
+
+
+/**
+ * @brief Returns a pointer to the window's pixel buffer.
+ * 
+ * @return A pointer to the pixel buffer.
+ */
+void* aterm_window_pixels(void) {
+    if (context.windowed) {
+        return ui_window_pixels(context.win);
+    } else {
+        return (void*)(uintptr_t)context.fb.fix.smem_start;
+    }
+}
+
+
+/**
+ * @brief Returns the stride of the window's pixel buffer.
+ * 
+ * @return The stride in bytes.
+ */
+size_t aterm_window_stride(void) {
+    if (context.windowed) {
+        return ui_window_stride(context.win);
+    } else {
+        return context.fb.fix.line_length;
+    }
+}
+
+
+/**
+ * @brief Returns the Cairo format of the window's pixel buffer.
+ * 
+ * @return The Cairo format.
+ */
+cairo_format_t aterm_window_cairo_format() {
+    if (context.windowed) {
+        return ui_window_translucent(context.win) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+    } else {
+        switch (context.fb.var.bits_per_pixel) {
+            case 16:
+                return CAIRO_FORMAT_RGB16_565;
+            case 24:
+                return CAIRO_FORMAT_INVALID;
+            case 32:
+                return CAIRO_FORMAT_RGB24;
+            default:
+                return CAIRO_FORMAT_INVALID;
+        }
+    }
+}
+
+/**
+ * @brief Damages the whole window, so it will be repainted on the next commit.
+ */
+void aterm_window_damage_all(void) {
+    if (context.windowed) {
+        ui_window_damage_all(context.win);
+    }
+}
+
+
+/**
+ * @brief Damages a rectangle of the window, so it will be repainted on the next commit.
+ * 
+ * @param x The x coordinate of the rectangle.
+ * @param y The y coordinate of the rectangle.
+ * @param width The width of the rectangle.
+ * @param height The height of the rectangle.
+ */
+void aterm_window_damage(int x, int y, int width, int height) {
+    if (context.windowed) {
+        ui_window_damage(context.win, x, y, width, height);
+    }
+}
+
+
+/**
+ * @brief Commits the window's pixel buffer to the screen.
+ */
+int aterm_window_commit(void) {
+    if (context.windowed) {
+        return ui_window_commit(context.win);
+    } else {
+        struct fb_rect damage;
+        damage.x = 0;
+        damage.y = 0;
+        damage.width = (uint32_t)aterm_window_width();
+        damage.height = (uint32_t)aterm_window_height();
+        return ioctl(context.fb.fd, FBIO_FLUSH, &damage);
+    }
+}
+
+
+/**
+ * @brief Opens the framebuffer device and queries its fixed and variable information.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+int aterm_fb_connect(void) {
+
+    if (context.windowed) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd < 0) {
+        return -1;
+    }
+
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
+        close(fd);
+        return -1;
+    }
+
+    if (ioctl(fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
+        close(fd);
+        return -1;
+    }
+    
+    fprintf(stderr, "aplus-terminal: framebuffer %dx%dx%d [ptr(%p), size(%p)]\n", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
+
+    context.fb.fd = fd;
+    return 0;
+}
 
 /**
  * @brief Binds a cairo context to the buffer the window is holding right now.
@@ -224,10 +390,10 @@ static int aterm_bind_surface(void) {
     }
 
 
-    const int width  = ui_window_width(context.win);
-    const int height = ui_window_height(context.win);
+    const int width  = aterm_window_width();
+    const int height = aterm_window_height();
 
-    unsigned char* pixels = (unsigned char*)ui_window_pixels(context.win);
+    unsigned char* pixels = (unsigned char*)aterm_window_pixels();
 
     if (!pixels || width <= 0 || height <= 0) {
         errno = EINVAL;
@@ -235,9 +401,9 @@ static int aterm_bind_surface(void) {
     }
 
 
-    const cairo_format_t format = ui_window_translucent(context.win) ? CAIRO_FORMAT_ARGB32 : CAIRO_FORMAT_RGB24;
+    const cairo_format_t format = aterm_window_cairo_format();
 
-    context.surface = cairo_image_surface_create_for_data(pixels, format, width, height, (int)ui_window_stride(context.win));
+    context.surface = cairo_image_surface_create_for_data(pixels, format, width, height, (int)aterm_window_stride());
 
     if (cairo_surface_status(context.surface) != CAIRO_STATUS_SUCCESS) {
 
@@ -453,7 +619,7 @@ static void aterm_clear(void) {
 
     cairo_restore(context.cr);
 
-    ui_window_damage_all(context.win);
+    aterm_window_damage_all();
 }
 
 
@@ -483,7 +649,7 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     const int x = ATERM_PADDING + (int)posx * context.font.width;
     const int y = ATERM_PADDING + (int)posy * context.font.height;
 
-    if (x + context.font.width > ui_window_width(context.win) || y + context.font.height > ui_window_height(context.win)) {
+    if (x + context.font.width > (int)aterm_window_width() || y + context.font.height > (int)aterm_window_height()) {
         return 0;
     }
 
@@ -539,7 +705,7 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
     cairo_restore(cr);
 
 
-    ui_window_damage(context.win, x, y, context.font.width, context.font.height);
+    aterm_window_damage(x, y, context.font.width, context.font.height);
 
     return 0;
 }
@@ -558,8 +724,8 @@ static void tsm_draw_locked(void) {
 
     context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
-    if (ui_window_commit(context.win) < 0) {
-        fprintf(stderr, "aplus-terminal: ui_window_commit() failed: %s\n", strerror(errno));
+    if (aterm_window_commit() < 0) {
+        fprintf(stderr, "aplus-terminal: aterm_window_commit() failed: %s\n", strerror(errno));
     }
 }
 
@@ -581,6 +747,10 @@ static void tsm_update_screen() {
  * @param height The window height in pixels.
  */
 static void tsm_resize(unsigned int width, unsigned int height) {
+
+    if (!context.windowed) {
+        return;
+    }
 
     const unsigned int inner_width  = width > 2 * ATERM_PADDING ? width - 2 * ATERM_PADDING : 0;
     const unsigned int inner_height = height > 2 * ATERM_PADDING ? height - 2 * ATERM_PADDING : 0;
@@ -725,16 +895,6 @@ static void tsm_handle_key(int out, vkey_t keysym, uint8_t down) {
 }
 
 
-static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
-
-    (void)vte;
-    (void)data;
-
-    // fprintf(stderr, "tsm_write_cb: %ld bytes '%X'\n", len, *u8);
-
-    // write(context.ipipefd[1], u8, len);
-}
-
 /**
  * @brief Hangs up on the shell's process group and ends the terminal, which closes its window.
  */
@@ -846,7 +1006,6 @@ static void* thr_ui_handler(void* arg) {
                 pthread_mutex_unlock(&context.lock);
 
                 tsm_handle_key(context.masterfd, ev.key.vkey, ev.key.down);
-
                 tsm_update_screen();
 
                 break;
@@ -872,31 +1031,91 @@ static void* thr_ui_handler(void* arg) {
 }
 
 
-int main(int argc, char** argv) {
+static void* thr_kbd_handler(void* arg) {
 
+    (void)arg;
+
+    do {
+
+        event_t ev = { 0 };
+
+        do {
+
+            ssize_t e = read(context.kbd.fd, &ev, sizeof(ev));
+
+            if (e < 0) {
+
+                if (errno == EINTR) {
+                    continue;
+                }
+
+                fprintf(stderr, "aplus-terminal: cannot read from the keyboard: %s\n", strerror(errno));
+                exit(1);
+            }
+
+            else if(e > 0) {
+
+                switch(ev.ev_type) {
+                    case EV_KEY:
+                        pthread_mutex_lock(&context.lock);
+                        if(tsm_vte_handle_keyboard(context.vte, ev.ev_key.vkey, 0, 0, 0)) {
+                            tsm_screen_sb_reset(context.con);
+                        }
+                        pthread_mutex_unlock(&context.lock);
+
+                        tsm_handle_key(context.masterfd, ev.ev_key.vkey, ev.ev_key.down);
+                        tsm_update_screen();
+                        break;
+
+                    default:
+                        break;
+                }
+            }
+
+        } while(errno == EINTR);
+
+    } while(true);
+
+    return NULL;
+}
+
+
+static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
+
+    (void)vte;
+    (void)data;
+    (void)u8;
+    (void)len;
+
+}
+
+
+int main(int argc, char** argv) {
 
     static struct option long_options[] = {
         {"command",     required_argument, NULL, 'c'},
         {"working-dir", required_argument, NULL, 'w'},
+        {"framebuffer", no_argument,       NULL, 'f'},
         {"help",        no_argument,       NULL, 'h'},
         {"version",     no_argument,       NULL, 'v'},
         {NULL,          0,                 NULL, 0  }
     };
 
-
-
     char* cmd = NULL;
     char* pwd = NULL;
-
+    bool windowed = true;
 
     int c, idx;
-    while ((c = getopt_long(argc, argv, "c:w:vh", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:w:fvh", long_options, &idx)) != -1) {
         switch (c) {
             case 'c':
                 cmd = strdup(optarg);
                 break;
             case 'w':
                 pwd = strdup(optarg);
+                break;
+            case 'f':
+                windowed = false;
                 break;
             case 'v':
                 show_version(argc, argv);
@@ -920,23 +1139,34 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    if ((context.conn = ui_connect(NULL, 5000)) == NULL) {
-        fprintf(stderr, "aplus-terminal: cannot reach the display server on %s: %s\n", UI_DEFAULT_SOCKET, strerror(errno));
-        exit(1);
+    context.windowed = windowed;
+    fprintf(stderr, "aplus-terminal: running in %s mode\n", context.windowed ? "windowed" : "framebuffer");
+
+    if (context.windowed) {
+        if ((context.conn = ui_connect(NULL, 5000)) == NULL) {
+            fprintf(stderr, "aplus-terminal: cannot reach the display server on %s: %s\n", UI_DEFAULT_SOCKET, strerror(errno));
+            exit(1);
+        }
+    } else {
+        if (aterm_fb_connect() < 0) {
+            fprintf(stderr, "aplus-terminal: cannot open the framebuffer: %s\n", strerror(errno));
+            exit(1);
+        }
     }
 
 
     //* Font initialization
-
     if (aterm_font_init() < 0) {
         fprintf(stderr, "aplus-terminal: cannot load %s: %s\n", CONFIG_ATERM_FONT_PATH, strerror(errno));
         exit(1);
     }
 
-
-    if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "Console")) == NULL) {
-        fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
-        exit(1);
+    //* Window initialization
+    if (context.windowed) {
+        if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "Console")) == NULL) {
+            fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
+            exit(1);
+        }
     }
 
     if (aterm_bind_surface() < 0) {
@@ -944,8 +1174,8 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    context.cols = (unsigned int)((ui_window_width(context.win) - 2 * ATERM_PADDING) / context.font.width);
-    context.rows = (unsigned int)((ui_window_height(context.win) - 2 * ATERM_PADDING) / context.font.height);
+    context.cols = (unsigned int)((aterm_window_width() - 2 * ATERM_PADDING) / context.font.width);
+    context.rows = (unsigned int)((aterm_window_height() - 2 * ATERM_PADDING) / context.font.height);
 
     if (context.cols < 1) {
         context.cols = 1;
@@ -957,7 +1187,6 @@ int main(int argc, char** argv) {
 
 
     //* 3. TSM initialization
-
     if (tsm_screen_new(&context.con, NULL, NULL) < 0) {
         fprintf(stderr, "aplus-terminal: tsm_screen_new() failed\n");
         exit(1);
@@ -991,28 +1220,45 @@ int main(int argc, char** argv) {
 
 
     //* 2. I/O initialization
-
     struct winsize ws;
 
     ws.ws_col    = (unsigned short)context.cols;
     ws.ws_row    = (unsigned short)context.rows;
-    ws.ws_xpixel = (unsigned short)ui_window_width(context.win);
-    ws.ws_ypixel = (unsigned short)ui_window_height(context.win);
+    ws.ws_xpixel = (unsigned short)aterm_window_width();
+    ws.ws_ypixel = (unsigned short)aterm_window_height();
 
     if (openpty(&context.masterfd, &context.slavefd, NULL, NULL, &ws) < 0) {
         fprintf(stderr, "aplus-terminal: cannot open pseudo-terminal: %s\n", strerror(errno));
         exit(1);
     }
 
+    if (!context.windowed) {
+
+        sigset_t set;
+        sigemptyset(&set);
+        sigprocmask(SIG_SETMASK, &set, NULL);
+        for (int i = 1; i < NSIG; i++)
+            signal(i, SIG_DFL);
+    }
+
 
     //* 4. Input initialization
+    if (!context.windowed) {
 
-    memset(&context.input, 0, sizeof(context.input));
+        context.kbd.fd = open("/dev/kbd", O_RDONLY);
+        if (context.kbd.fd < 0) {
+            fprintf(stderr, "aplus-terminal: cannot open the keyboard: %s\n", strerror(errno));
+            exit(1);
+        }
 
-
+        int thr_e = pthread_create(&context.kbd.thr, NULL, thr_kbd_handler, NULL);
+        if (thr_e != 0) {
+            fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(errno));
+            exit(1);
+        }
+    }
 
     //* Load Keymap
-
     context.keymap = ui_keymap_open(NULL);
 
     if (!context.keymap) {
@@ -1025,18 +1271,18 @@ int main(int argc, char** argv) {
         exit(1);
     }
 
-    //* 4. Input initialization
-    int thr_e = pthread_create(&context.thr_ui, NULL, thr_ui_handler, NULL);
+    //* 4. UI initialization
+    if (context.windowed) {
 
-    if (thr_e != 0) {
-        fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(thr_e));
-        exit(1);
+        int thr_e = pthread_create(&context.thr_ui, NULL, thr_ui_handler, NULL);
+        if (thr_e != 0) {
+            fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(thr_e));
+            exit(1);
+        }
     }
 
 
-
     //* 5. Session initialization
-
     if (setsid() < 0 && errno != EPERM) {
         fprintf(stderr, "aplus-terminal: setsid() failed: %s\n", strerror(errno));
         exit(1);
@@ -1047,9 +1293,7 @@ int main(int argc, char** argv) {
     }
 
 
-
     //* 5. Child initialization
-
     pid_t pid = fork();
 
     if (pid < 0) {
@@ -1059,7 +1303,12 @@ int main(int argc, char** argv) {
 
     } else if (pid == 0) {
 
-        close(ui_connection_fd(context.conn));
+        if (context.windowed) {
+            close(ui_connection_fd(context.conn));
+        } else {
+            close(context.fb.fd);
+            close(context.kbd.fd);
+        }
         close(context.masterfd);
 
         setenv("TERM", "xterm-256color", 1);
@@ -1078,7 +1327,7 @@ int main(int argc, char** argv) {
                 setenv("SHELL", pw->pw_shell, 0);
         }
 
-        setenv("SHELL", "/bin/bash", 0);
+        setenv("SHELL", CONFIG_ATERM_DEFAULT_SHELL, 0);
 
 
         pid_t pgrp = getpid();
