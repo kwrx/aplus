@@ -59,8 +59,8 @@ NAME=release-aplus-$(git rev-parse --short HEAD)-${TARGET}
 mkdir -p ${NAME}
 mkdir -p ${NAME}-minimal
 
-mv aplus-minmal.qcow2 ${NAME}-minimal/${NAME}.qcow2
-mv aplus.qcow2 ${NAME}/${NAME}.qcow2
+mv aplus-minmal.qcow2 ${NAME}-minimal/aplus.qcow2
+mv aplus.qcow2 ${NAME}/aplus.qcow2
 
 install -m 755 ci/run.sh ${NAME}/run.sh
 install -m 755 ci/run.sh ${NAME}-minimal/run.sh
