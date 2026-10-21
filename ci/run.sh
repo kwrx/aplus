@@ -129,10 +129,10 @@ find_firmware() {
 }
 
 # @brief Look for a disk image in the current directory.
-# @return The path of the image on stdout, "aplus.img" when none was found.
+# @return The path of the image on stdout, "aplus.qcow2" when none was found.
 find_image() {
-    if [ -f aplus.img ]; then
-        printf 'aplus.img'
+    if [ -f aplus.qcow2 ]; then
+        printf 'aplus.qcow2'
         return 0
     fi
     for candidate in *.img; do
@@ -141,7 +141,7 @@ find_image() {
             return 0
         fi
     done
-    printf 'aplus.img'
+    printf 'aplus.qcow2'
 }
 
 # @brief Ask a question on the terminal.
@@ -395,7 +395,7 @@ fi
 set -- "$@" -netdev user,id=net0,hostfwd=tcp::8080-:80
 
 # Block
-set -- "$@" -drive "id=disk,file=$IMAGE,if=none,format=raw"
+set -- "$@" -drive "id=disk,file=$IMAGE,if=none,format=qcow2,cache=writeback"
 set -- "$@" -device ich9-ahci,id=ahci -device ide-hd,drive=disk,bus=ahci.0
 
 # Random
