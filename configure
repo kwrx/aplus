@@ -148,41 +148,44 @@ stage_3() {
 
     packages="system-base system-cursors system-fonts system-images system-keymaps"
 
-    packages="$packages binutils"
     packages="$packages busybox"
-    packages="$packages cairo"
-    packages="$packages curl"
     packages="$packages bash"
     packages="$packages dash"
-    packages="$packages expat"
-    packages="$packages freetype"
-    packages="$packages gcc"
-    packages="$packages gmp"
-    packages="$packages isl"
-    packages="$packages libjpeg-turbo"
-    packages="$packages libpng"
+    packages="$packages nano"
+    packages="$packages sqlite"
+    packages="$packages dropbear"
+    packages="$packages xz"
+    packages="$packages zlib"
+    packages="$packages curl"
     packages="$packages libressl"
+    packages="$packages pixman"
+    packages="$packages cairo"
+    packages="$packages freetype"
+    packages="$packages libpng"
     packages="$packages libtsm"
+    packages="$packages mupdf"
+    packages="$packages libjpeg-turbo"
     packages="$packages libwebp"
     packages="$packages mesa"
-    packages="$packages mpc"
-    packages="$packages mpfr"
-    packages="$packages netsurf-all"
-    packages="$packages pixman"
-    packages="$packages pkgconf"
-    packages="$packages zlib"
-    packages="$packages doom"    
-    packages="$packages nesemu"
-    packages="$packages mupdf"
     packages="$packages ncurses"
-    packages="$packages readline"
-    packages="$packages make"
-    packages="$packages nano"
-    packages="$packages lua"
-    packages="$packages sqlite"
-    packages="$packages xz"
-    packages="$packages dropbear"
-    packages="$packages git"
+
+    if [ $ARG_ONLY_REQUIRED_PACKAGES -eq 0 ]; then
+        packages="$packages binutils"
+        packages="$packages expat"
+        packages="$packages gcc"
+        packages="$packages gmp"
+        packages="$packages isl"
+        packages="$packages mpc"
+        packages="$packages mpfr"
+        packages="$packages netsurf-all"
+        packages="$packages pkgconf"
+        packages="$packages doom"    
+        packages="$packages nesemu"
+        packages="$packages readline"
+        packages="$packages make"
+        packages="$packages lua"
+        packages="$packages git"
+    fi
 
     die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.8.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
 
@@ -249,6 +252,7 @@ stage_6() {
 ARG_KCONFIG=""
 ARG_SKIP_PACKAGES=0
 ARG_SKIP_TOOLCHAIN=0
+ARG_ONLY_REQUIRED_PACKAGES=0
 ARG_VERBOSE=0
 ARG_STAGE=0
 
@@ -263,6 +267,11 @@ while [[ $# -gt 0 ]]; do
         ;;
     --skip-packages)
         ARG_SKIP_PACKAGES=1
+        shift
+        ;;
+    --only-required-packages)
+        ARG_SKIP_PACKAGES=0
+        ARG_ONLY_REQUIRED_PACKAGES=1
         shift
         ;;
     --skip-toolchain)
