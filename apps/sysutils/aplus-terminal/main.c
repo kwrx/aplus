@@ -66,8 +66,8 @@
     #define CONFIG_ATERM_FONT_SIZE 16
 #endif
 
-#if !defined(CONFIG_ATERM_DEFAULT_SHELL)
-    #define CONFIG_ATERM_DEFAULT_SHELL "/bin/bash"
+#if !defined(CONFIG_DEFAULT_SHELL)
+    #define CONFIG_DEFAULT_SHELL "/bin/bash"
 #endif
 
 
@@ -1327,7 +1327,7 @@ int main(int argc, char** argv) {
                 setenv("SHELL", pw->pw_shell, 0);
         }
 
-        setenv("SHELL", CONFIG_ATERM_DEFAULT_SHELL, 0);
+        setenv("SHELL", CONFIG_DEFAULT_SHELL, 0);
 
 
         pid_t pgrp = getpid();
