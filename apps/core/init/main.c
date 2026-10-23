@@ -42,6 +42,7 @@
 #include <sys/syscall.h>
 #include <sys/times.h>
 #include <sys/wait.h>
+#include <sys/reboot.h>
 #include <termios.h>
 
 #include <aplus/fb.h>
@@ -52,6 +53,75 @@
 #define __trim(str)       \
     while (isblank(*str)) \
     str++
+
+
+static void sig_shutdown_handler(int sig) {
+
+#if defined(DEBUG)
+    switch (sig) {
+        case SIGTERM:
+            fprintf(stderr, "init: received shutdown request, rebooting...\n");
+            break;
+        case SIGUSR1:
+            fprintf(stderr, "init: received shutdown request, halting...\n");
+            break;
+        case SIGUSR2:
+            fprintf(stderr, "init: received shutdown request, powering off...\n");
+            break;
+    }
+#endif
+
+    kill(-1, SIGTERM);
+    kill(-1, SIGHUP);
+    kill(-1, SIGCONT);
+    for(size_t timeout = 0; timeout < 5; timeout++) {
+        errno = 0;
+        while(waitpid(-1, NULL, WNOHANG) > 0)
+            ;
+        if (errno == ECHILD)
+            break;
+#if defined(DEBUG)
+        fprintf(stderr, "init: waiting for processes to terminate...\n");
+#endif
+        sleep(1);
+    }
+
+    kill(-1, SIGKILL);
+    for(size_t timeout = 0; timeout < 3; timeout++) {
+        errno = 0;
+        while(waitpid(-1, NULL, WNOHANG) > 0)
+            ;
+        if (errno == ECHILD)
+            break;
+#if defined(DEBUG)
+        fprintf(stderr, "init: waiting for processes to forcefully terminate...\n");
+#endif
+        sleep(1);
+    }
+
+    sync();
+
+    switch (sig) {
+
+        case SIGTERM:
+            reboot(RB_AUTOBOOT);
+            break;
+
+        case SIGUSR2:
+            reboot(RB_POWER_OFF);
+            break;
+
+        case SIGUSR1:
+            reboot(RB_HALT_SYSTEM);
+            break;
+
+    }
+
+    for(;;)
+        pause();
+
+}
+
 
 
 
@@ -73,8 +143,8 @@ static void init_framebuffer(void) {
         return (void)fprintf(stderr, "fb0: unable to set screen info\n");
 
     if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0)
-        return (void)fprintf(stderr, "fb0: unable to get screen info\n");    
-        
+        return (void)fprintf(stderr, "fb0: unable to get screen info\n");
+
 #if defined(DEBUG)
     fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", var.xres, var.yres, var.bits_per_pixel, (void*)((uintptr_t)fix.smem_start), (void*)((uintptr_t)fix.smem_len));
 #endif
@@ -106,10 +176,8 @@ static void init_welcome(void) {
 static void init_environment(void) {
 
     FILE* fp = fopen("/etc/environment", "r");
-
     if (!fp)
         return (void)fprintf(stderr, "env: no environment file found\n");
-
 
     char line[BUFSIZ];
     while (fgets(line, sizeof(line), fp) > 0) {
@@ -118,10 +186,8 @@ static void init_environment(void) {
             line[strlen(line) - 1] = '\0';
         }
 
-
         char* p = &line[0];
         __trim(p);
-
 
         switch (*p) {
 
@@ -130,11 +196,8 @@ static void init_environment(void) {
                 continue;
 
             default:
-
                 if (strchr(p, '=')) {
-
                     char* entry = strdup(p);
-
                     if (entry)
                         putenv(entry);
                 }
@@ -182,16 +245,14 @@ static void init_fstab() {
                 char fs[32];
                 char fl[128];
 
-                if (sscanf(p, "%s %s %s %s", dev, dir, fs, fl) <= 0)
+                if (sscanf(p, "%127s %127s %31s %127s", dev, dir, fs, fl) != 4)
                     break;
 
 #if defined(DEBUG)
                 fprintf(stderr, "fstab: mount device %s in %s [fstype(%s), flags(%s)]\n", dev, dir, fs, fl);
 #endif
 
-
                 char* tok = fl;
-
                 for (char* k = strtok_r(fl, ",", &tok); k; k = strtok_r(NULL, ",", &tok)) {
 
                     #define has(str, flag)         \
@@ -201,15 +262,16 @@ static void init_fstab() {
                         }
 
                     has("defaults", MS_NOATIME | MS_SHARED | MS_NOSUID);
-                    has("noatime", MS_NOATIME) has("nodev", MS_NODEV);
+                    has("noatime", MS_NOATIME);
+                    has("nodev", MS_NODEV);
                     has("nodiratime", MS_NODIRATIME);
                     has("dirsync", MS_DIRSYNC);
                     has("noexec", MS_NOEXEC);
                     has("iversion", MS_I_VERSION);
-                    has("mand", MS_MANDLOCK); 
-                    has("relatime", MS_RELATIME); 
-                    has("lazytime", MS_LAZYTIME); 
-                    has("nosuid", MS_NOSUID); 
+                    has("mand", MS_MANDLOCK);
+                    has("relatime", MS_RELATIME);
+                    has("lazytime", MS_LAZYTIME);
+                    has("nosuid", MS_NOSUID);
                     has("remount", MS_REMOUNT);
                     has("ro", MS_RDONLY);
                     has("sync", MS_SYNCHRONOUS);
@@ -268,31 +330,6 @@ static void init_hostname() {
 }
 
 
-static void init_initd(void) {
-
-    cpu_set_t cpus;
-    CPU_ZERO(&cpus);
-
-    for (int cpu = 0; cpu < (CPU_SETSIZE << 3); cpu++)
-        CPU_SET(cpu, &cpus);
-
-    sched_setaffinity(0, sizeof(cpu_set_t), &cpus);
-
-
-    if (fork() == 0) {
-
-        sigset_t mask;
-        sigemptyset(&mask);
-        sigprocmask(SIG_SETMASK, &mask, NULL);
-
-        execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
-        exit(EXIT_FAILURE);
-
-    } else {
-
-        waitpid(-1, NULL, 0);
-    }
-}
 
 
 int main(int argc, char** argv, char** envp) {
@@ -336,36 +373,64 @@ int main(int argc, char** argv, char** envp) {
 
 #endif
 
-
-    sigset_t mask;
-    sigfillset(&mask);
-    sigprocmask(SIG_SETMASK, &mask, NULL);
-
-
     setsid();
     tcsetpgrp(STDIN_FILENO, getpgrp());
-
 
     init_environment();
     init_framebuffer();
     init_fstab();
     init_hostname();
     init_welcome();
-    init_initd();
 
-    setpriority(0, PRIO_PROCESS, 19);
+    cpu_set_t cpus;
+    CPU_ZERO(&cpus);
+    for (int cpu = 0; cpu < (CPU_SETSIZE << 3); cpu++)
+        CPU_SET(cpu, &cpus);
+
+    sched_setaffinity(0, sizeof(cpu_set_t), &cpus);
+
+    sigset_t mask;
+    sigemptyset(&mask);
+    sigprocmask(SIG_SETMASK, &mask, NULL);
 
 
+    int e = fork();
+    if (e < 0) {
 
-    fprintf(stderr, "init: going to sleep...\n");
+        perror("fork()");
+        exit(EXIT_FAILURE);
+    
+    }
 
-    do {
-        waitpid(-1, NULL, 0);
-    } while (errno != ECHILD);
+    else if (e == 0) {
 
+        execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
+        exit(EXIT_FAILURE);
 
-    fprintf(stderr, "init: unreachable point! system halted!\n");
+    } else {
 
-    for (;;)
-        ;
+        setpriority(0, PRIO_PROCESS, 19);
+
+#if defined(DEBUG)
+        fprintf(stderr, "init: going to sleep...\n");
+#endif
+
+        struct sigaction sa = {0};
+        sa.sa_handler = sig_shutdown_handler;
+        sigfillset(&sa.sa_mask);
+        sigaction(SIGTERM, &sa, NULL);
+        sigaction(SIGUSR1, &sa, NULL);
+        sigaction(SIGUSR2, &sa, NULL);
+
+        do {
+            waitpid(-1, NULL, 0);
+        } while (errno != ECHILD);
+
+        fprintf(stderr, "init: unreachable point! system halted!\n");
+
+        for (;;)
+            pause();
+
+    }
+
 }
