@@ -1091,7 +1091,11 @@ static int launcher_build(void) {
     const ui_theme_t* theme = ui_theme();
 
     launcher.backdrop  = launcher.drawer ? NULL : ui_panel_create(launcher.view);
-    launcher.field     = ui_entry_create(launcher.view, "Search applications\xE2\x80\xA6");
+#if defined(CONFIG_HAVE_AI)
+    launcher.field     = ui_entry_create(launcher.view, "Search apps, ask anything, or > run a command\xE2\x80\xA6");
+#else
+    launcher.field     = ui_entry_create(launcher.view, "Search apps or > run a command\xE2\x80\xA6");
+#endif
     launcher.separator = ui_panel_create(launcher.view);
     launcher.list      = ui_list_create(launcher.view);
 
