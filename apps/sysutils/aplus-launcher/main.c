@@ -315,6 +315,29 @@ static void launcher_resize(void) {
 
 
 /**
+ * @brief Reports the command a query spells out with a leading '>', which is run rather than searched for or asked.
+ *
+ * @param query What was typed.
+ * @return The command past the '>' and any blanks, or NULL when the query does not start with one.
+ */
+
+static const char* launcher_command(const char* query) {
+
+    if (*query != '>') {
+        return NULL;
+    }
+
+    query++;
+
+    while (*query == ' ' || *query == '\t') {
+        query++;
+    }
+
+    return query;
+}
+
+
+/**
  * @brief Reports whether an entry answers to a query; an empty one matches everything with --all, and nothing otherwise.
  *
  * @param entry The entry to test.
@@ -393,7 +416,8 @@ static void launcher_abandon(void) {
  *
  * An empty field lists nothing and leaves the window the height of the field alone, or lists
  * every application with --all. A query that matches nothing is offered to the shell instead,
- * which is the whole of what this has that a menu does not.
+ * which is the whole of what this has that a menu does not. A query starting with '>' is
+ * always offered to the shell, without searching or asking.
  */
 
 static void launcher_refilter(void) {
@@ -409,6 +433,23 @@ static void launcher_refilter(void) {
     launcher_abandon();
 
 #endif
+
+    const char* command = launcher_command(query);
+
+    if (command) {
+
+        if (*command) {
+
+            char row[LAUNCHER_FIELD_MAX + 8];
+
+            snprintf(row, sizeof(row), "Run \"%s\"", command);
+
+            ui_list_add_icon(launcher.list, LAUNCHER_ICON_SHELL, row, "shell", LAUNCHER_RUN_ROW);
+        }
+
+        launcher_resize();
+        return;
+    }
 
     for (size_t i = 0; i < launcher.count; i++) {
 
@@ -833,7 +874,12 @@ static void launcher_run(void) {
     const char* source = NULL;
 
     if (row == LAUNCHER_RUN_ROW) {
+
         source = ui_entry_text(launcher.field);
+
+        if (launcher_command(source)) {
+            source = launcher_command(source);
+        }
     }
 
 #if defined(CONFIG_HAVE_AI)
