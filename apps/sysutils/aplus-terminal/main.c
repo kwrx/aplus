@@ -201,8 +201,8 @@ static void show_usage(int argc, char** argv) {
            "   -c, --command               run command on shell\n"
            "   -w, --working-dir           set current working directory\n"
            "   -f, --framebuffer           use framebuffer instead of window\n"
-           "       --help                  show this help\n"
-           "       --version               print version info and exit\n");
+           "   -h, --help                  show this help\n"
+           "   -v, --version               print version info and exit\n");
 
     exit(0);
 }
