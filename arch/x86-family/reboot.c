@@ -75,11 +75,6 @@ __noreturn void arch_reboot(int mode) {
             kprintf("x86-reboot: triple fault failed, hanging...\n");
 #endif
 
-            for (;;) {
-                __cpu_pause();
-                __cpu_halt();
-            }
-
         } break;
 
         case ARCH_REBOOT_POWEROFF: {
@@ -110,11 +105,6 @@ __noreturn void arch_reboot(int mode) {
             kprintf("x86-reboot: power-off failed, hanging...\n");
 #endif
 
-            for (;;) {
-                __cpu_pause();
-                __cpu_halt();
-            }
-
         } break;
 
         case ARCH_REBOOT_CRASH: {
@@ -138,11 +128,6 @@ __noreturn void arch_reboot(int mode) {
 #if DEBUG_LEVEL_ERROR
             kprintf("x86-reboot: crash failed, hanging...\n");
 #endif
-
-            for (;;) {
-                __cpu_pause();
-                __cpu_halt();
-            }
 
         } break;
 
