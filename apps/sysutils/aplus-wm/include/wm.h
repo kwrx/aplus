@@ -597,6 +597,7 @@ cairo_surface_t* wm_icon_create(const char* name, int size);
 int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper);
 void wm_display_close(wm_display_t* display);
 void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count);
+void wm_display_clear(wm_display_t* display);
 void wm_display_cursor_move(wm_display_t* display, int x, int y);
 int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int width, int height, int hot_x, int hot_y);
 

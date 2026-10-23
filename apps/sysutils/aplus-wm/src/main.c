@@ -371,8 +371,8 @@ int main(int argc, char** argv) {
 
     signal(SIGINT, wm_on_signal);
     signal(SIGTERM, wm_on_signal);
-
     signal(SIGPIPE, SIG_IGN);
+    signal(SIGHUP, SIG_IGN);
 
 
     fprintf(stderr, "aplus-wm: listening on %s\n", path);

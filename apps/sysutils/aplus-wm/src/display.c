@@ -221,6 +221,8 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
 void wm_display_close(wm_display_t* display) {
 
+    wm_display_clear(display);
+
     if (display->background) {
         cairo_pattern_destroy(display->background);
         display->background = NULL;
@@ -269,7 +271,6 @@ void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t coun
         return;
     }
 
-
     cairo_surface_flush(display->back);
 
 
@@ -313,4 +314,25 @@ void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t coun
     uint32_t crtc = 0;
 
     ioctl(display->fd, FBIO_WAITFORVSYNC, &crtc);
+}
+
+
+/**
+ * @brief Clears the screen to black and flushes it.
+ *
+ * @param display The display to clear.
+ */
+void wm_display_clear(wm_display_t* display) {
+
+    cairo_set_operator(display->cr, CAIRO_OPERATOR_CLEAR);
+    cairo_paint(display->cr);
+
+    wm_rect_t rect = {
+        .x      = 0,
+        .y      = 0,
+        .width  = display->width,
+        .height = display->height,
+    };
+
+    wm_display_flush(display, &rect, 1);
 }
