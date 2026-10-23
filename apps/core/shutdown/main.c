@@ -35,8 +35,9 @@ void show_usage(void) {
               "  -H, --halt     Halt the machine\n"
               "  -P, --poweroff Power off the machine\n"
               "  -r, --reboot   Reboot the machine\n"
-              "  -h, --help     Show this help message and exit\n"
-              "  -v, --version  Show version information and exit\n");
+              "  -h,            Equivalent to --poweroff\n"
+              "      --help     Show this help message and exit\n"
+              "      --version  Show version information and exit\n");
 }
 
 void show_version(void) {
@@ -51,7 +52,7 @@ int main(int argc, char** argv) {
         {"halt",     no_argument, NULL, 'H'},
         {"poweroff", no_argument, NULL, 'P'},
         {"reboot",   no_argument, NULL, 'r'},
-        {"help",     no_argument, NULL, 'h'},
+        {"help",     no_argument, NULL, 'x'},
         {"version",  no_argument, NULL, 'v'},
         {NULL,       0,           NULL, 0  },
     };
@@ -60,7 +61,7 @@ int main(int argc, char** argv) {
     int delay = 60;
 
     int opt;
-    while ((opt = getopt_long(argc, argv, "HPrhv", long_options, NULL)) != -1) {
+    while ((opt = getopt_long(argc, argv, "HPrh", long_options, NULL)) != -1) {
         switch (opt) {
             case 'H':
                 sig_to_send = SIGUSR1;
@@ -72,6 +73,10 @@ int main(int argc, char** argv) {
                 sig_to_send = SIGTERM;
                 break;
             case 'h':
+                sig_to_send = SIGUSR2;
+                break;
+            case 'x':
+            case '?':
                 show_usage();
                 return 0;
             case 'v':
