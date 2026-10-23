@@ -372,7 +372,6 @@ fi
 
 check_config
 
-set -- -no-reboot -no-shutdown
 set -- "$@" --bios "$BIOS" -net none
 
 # GPU

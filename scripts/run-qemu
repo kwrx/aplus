@@ -205,5 +205,5 @@ if [ ! -z $ARG_DEBUG ]; then
     flags="$flags -S"
 fi
 
-echo "qemu-system-$ARG_ARCH -no-reboot -no-shutdown -s $flags"
-qemu-system-$ARG_ARCH -no-reboot -no-shutdown -s $flags
+echo "qemu-system-$ARG_ARCH -no-reboot -s $flags"
+qemu-system-$ARG_ARCH -no-reboot -s $flags
