@@ -343,6 +343,11 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
         return true;
     }
 
+    if (vkey == KEY_ESC && wm_taskbar_dismiss()) {
+        wm_swallowed[word] |= bit;
+        return true;
+    }
+
 
     for (size_t i = 0; i < WM_ARRAY_COUNT(wm_bindings); i++) {
 

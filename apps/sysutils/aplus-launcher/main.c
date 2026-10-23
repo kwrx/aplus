@@ -1092,9 +1092,9 @@ static int launcher_build(void) {
 
     launcher.backdrop  = launcher.drawer ? NULL : ui_panel_create(launcher.view);
 #if defined(CONFIG_HAVE_AI)
-    launcher.field     = ui_entry_create(launcher.view, "Search apps, ask anything, or > run a command\xE2\x80\xA6");
+    launcher.field     = ui_entry_create(launcher.view, "Search apps, ask or type > command\xE2\x80\xA6");
 #else
-    launcher.field     = ui_entry_create(launcher.view, "Search apps or > run a command\xE2\x80\xA6");
+    launcher.field     = ui_entry_create(launcher.view, "Search apps or type > command\xE2\x80\xA6");
 #endif
     launcher.separator = ui_panel_create(launcher.view);
     launcher.list      = ui_list_create(launcher.view);

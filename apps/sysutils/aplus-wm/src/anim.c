@@ -155,6 +155,12 @@ int wm_animate(uint64_t now) {
     bool rail = false;
 
     running |= wm_anim_step(&wm.taskbar.hover_launcher, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.hover_power, now, &rail);
+    running |= wm_anim_step(&wm.taskbar.session.open, now, &rail);
+
+    for (size_t i = 0; i < WM_ARRAY_COUNT(wm.taskbar.session.hover); i++) {
+        running |= wm_anim_step(&wm.taskbar.session.hover[i], now, &rail);
+    }
     running |= wm_anim_step(&wm.taskbar.popout.open, now, &rail);
     running |= wm_anim_step(&wm.taskbar.popout.center, now, &rail);
     running |= wm_anim_step(&wm.taskbar.popout.width, now, &rail);

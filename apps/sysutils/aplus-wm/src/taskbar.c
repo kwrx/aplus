@@ -22,8 +22,8 @@
  */
 
 /**
- * @brief The taskbar: a rail down the left edge with the launcher's button, an entry per window in the order they opened
- * and a clock, joined to a border round the rest of the screen.
+ * @brief The taskbar: a rail down the left edge with the launcher's button, an entry per window in the order they opened,
+ * a clock and a power button, joined to a border round the rest of the screen.
  */
 
 #include <errno.h>
@@ -44,7 +44,43 @@
 #define WM_TASKBAR_ENTRIES_MAX 64
 
 
-static const char* const wm_taskbar_command[] = {WM_LAUNCHER_PATH, "--all", "--drawer", NULL};
+static const char* const wm_taskbar_command[]  = {WM_LAUNCHER_PATH, "--all", "--drawer", NULL};
+static const char* const wm_taskbar_halt[]     = {WM_SHUTDOWN_PATH, "--halt", "now", NULL};
+static const char* const wm_taskbar_restart[]  = {WM_SHUTDOWN_PATH, "--reboot", "now", NULL};
+static const char* const wm_taskbar_shutdown[] = {WM_SHUTDOWN_PATH, "--poweroff", "now", NULL};
+
+
+/**
+ * @brief The session menu's rows, top to bottom, the last one level with the power button.
+ */
+static const struct {
+    uint32_t item;
+    const char* label;
+    const char* const* argv;
+} wm_taskbar_session_rows[WM_TASKBAR_SESSION_ROWS] = {
+    {WM_TASKBAR_HALT,     "Halt",      wm_taskbar_halt    },
+    {WM_TASKBAR_RESTART,  "Restart",   wm_taskbar_restart },
+    {WM_TASKBAR_SHUTDOWN, "Shut down", wm_taskbar_shutdown},
+};
+
+
+/**
+ * @brief Finds an item's row in the session menu.
+ *
+ * @param item Any taskbar item.
+ * @return Its index in wm_taskbar_session_rows, or -1 when it is not a session item.
+ */
+static int wm_taskbar_session_index(uint32_t item) {
+
+    for (int i = 0; i < WM_TASKBAR_SESSION_ROWS; i++) {
+
+        if (wm_taskbar_session_rows[i].item == item) {
+            return i;
+        }
+    }
+
+    return -1;
+}
 
 
 /**
@@ -135,17 +171,49 @@ wm_rect_t wm_workarea(void) {
 
 
 /**
+ * @brief Reports where the session menu is once all the way out, leaving out the fillets that join it to the rail and the border.
+ *
+ * @return The menu, sitting on the bottom border against the rail.
+ */
+static wm_rect_t wm_taskbar_session_rect(void) {
+
+    const wm_rect_t work = wm_workarea();
+    const int height     = WM_TASKBAR_SESSION_ROWS * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP) - WM_TASKBAR_GAP + 2 * WM_TASKBAR_PAD;
+
+    const wm_rect_t r = {WM_TASKBAR_WIDTH, work.y + work.height - height, WM_TASKBAR_SESSION_WIDTH, height};
+
+    return r;
+}
+
+
+/**
+ * @brief Reports whether the session menu is out, or on its way out.
+ *
+ * @return true from the press that opens it to the one that closes it.
+ */
+static bool wm_taskbar_session_open(void) {
+    return ui_anim_target(&wm.taskbar.session.open) > 0.0;
+}
+
+
+/**
  * @brief Reports whether a point is on the taskbar, which is everything outside the rounded inset.
  *
  * @param x The point.
  * @param y The point.
- * @return true on the rail, the border, or a corner it rounds off.
+ * @return true on the rail, the border, a corner it rounds off, or the session menu while it is out.
  */
 bool wm_taskbar_contains(int x, int y) {
 
     const wm_rect_t work = wm_workarea();
 
     if (!wm_rect_contains_point(&work, x, y)) {
+        return true;
+    }
+
+    const wm_rect_t session = wm_taskbar_session_rect();
+
+    if (wm_taskbar_session_open() && wm_rect_contains_point(&session, x, y)) {
         return true;
     }
 
@@ -190,16 +258,45 @@ static wm_rect_t wm_taskbar_popout_extent(uint64_t now) {
 
 
 /**
- * @brief Repaints the rail, and the popout where the last frame drew it and where the next one will.
+ * @brief Reports where the session menu is at a moment, with the fillets that join it to the rail and the border.
+ *
+ * @param now The clock reading.
+ * @return Its bounding box, empty while it is all the way in.
+ */
+static wm_rect_t wm_taskbar_session_extent(uint64_t now) {
+
+    const double open = ui_anim_value(&wm.taskbar.session.open, now);
+
+    if (open <= 0.0) {
+
+        const wm_rect_t none = {0, 0, 0, 0};
+
+        return none;
+    }
+
+
+    const wm_rect_t panel = wm_taskbar_session_rect();
+
+    const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + WM_TASKBAR_POPOUT_RADIUS + 2, panel.height + WM_TASKBAR_POPOUT_RADIUS + 4};
+
+    return r;
+}
+
+
+/**
+ * @brief Repaints the rail, and the popout and the session menu where the last frame drew them and where the next one will.
  */
 void wm_taskbar_damage(void) {
 
-    const wm_rect_t bar    = wm_taskbar_rect();
-    const wm_rect_t popout = wm_taskbar_popout_extent(wm.frame_time);
+    const wm_rect_t bar     = wm_taskbar_rect();
+    const wm_rect_t popout  = wm_taskbar_popout_extent(wm.frame_time);
+    const wm_rect_t session = wm_taskbar_session_extent(wm.frame_time);
 
     wm_damage(&bar);
     wm_damage(&wm.taskbar.popout.painted);
     wm_damage(&popout);
+    wm_damage(&wm.taskbar.session.painted);
+    wm_damage(&session);
 }
 
 
@@ -241,13 +338,44 @@ static wm_rect_t wm_taskbar_launcher_rect(void) {
 
 
 /**
- * @brief Reports where the clock sits, at the foot of the rail.
+ * @brief Reports where the power button sits, at the foot of the rail.
+ *
+ * @return The button's square, mirroring the launcher's at the head.
+ */
+static wm_rect_t wm_taskbar_power_rect(void) {
+
+    const wm_rect_t r = {WM_TASKBAR_PAD, wm.display.height - WM_TASKBAR_PAD - 4 - WM_TASKBAR_ITEM, WM_TASKBAR_ITEM, WM_TASKBAR_ITEM};
+
+    return r;
+}
+
+
+/**
+ * @brief Reports where the clock sits, just above the power button.
  *
  * @return The clock's rectangle, as wide as the rail.
  */
 static wm_rect_t wm_taskbar_clock_rect(void) {
 
-    const wm_rect_t r = {0, wm.display.height - WM_TASKBAR_PAD - WM_TASKBAR_CLOCK - 4, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
+    const wm_rect_t power = wm_taskbar_power_rect();
+
+    const wm_rect_t r = {0, power.y - WM_TASKBAR_GAP - WM_TASKBAR_CLOCK, WM_TASKBAR_WIDTH, WM_TASKBAR_CLOCK};
+
+    return r;
+}
+
+
+/**
+ * @brief Reports where a row of the session menu is, once the menu is all the way out.
+ *
+ * @param index The row's place in wm_taskbar_session_rows.
+ * @return The row, inset from the menu's edges.
+ */
+static wm_rect_t wm_taskbar_session_row(int index) {
+
+    const wm_rect_t panel = wm_taskbar_session_rect();
+
+    const wm_rect_t r = {panel.x + WM_TASKBAR_PAD, panel.y + WM_TASKBAR_PAD + index * (WM_TASKBAR_ITEM + WM_TASKBAR_GAP), panel.width - 2 * WM_TASKBAR_PAD, WM_TASKBAR_ITEM};
 
     return r;
 }
@@ -309,7 +437,7 @@ wm_rect_t wm_taskbar_entry_rect(const wm_window_t* win) {
 /**
  * @brief Reports where an item sits on the rail.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, or 0.
+ * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, WM_TASKBAR_POWER, or 0.
  * @return Its rectangle, empty when it is not on show.
  */
 static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
@@ -320,6 +448,10 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
 
     if (item == WM_TASKBAR_DATE) {
         return wm_taskbar_clock_rect();
+    }
+
+    if (item == WM_TASKBAR_POWER) {
+        return wm_taskbar_power_rect();
     }
 
 
@@ -341,12 +473,31 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
  *
  * @param x The point.
  * @param y The point.
- * @return A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, or 0 for nothing.
+ * @return A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item, or 0 for nothing.
  */
 static uint32_t wm_taskbar_item_at(int x, int y) {
 
     if (!wm_taskbar_contains(x, y)) {
         return 0;
+    }
+
+
+    if (ui_anim_target(&wm.taskbar.session.open) >= 1.0) {
+
+        for (int i = 0; i < WM_TASKBAR_SESSION_ROWS; i++) {
+
+            const wm_rect_t r = wm_taskbar_session_row(i);
+
+            if (wm_rect_contains_point(&r, x, y)) {
+                return wm_taskbar_session_rows[i].item;
+            }
+        }
+    }
+
+    const wm_rect_t power = wm_taskbar_power_rect();
+
+    if (wm_rect_contains_point(&power, x, y)) {
+        return WM_TASKBAR_POWER;
     }
 
 
@@ -383,7 +534,7 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
 /**
  * @brief Writes what the popout says for an item: the window's title, the date, or what the launcher's button opens.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER or WM_TASKBAR_DATE.
+ * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE or a session item.
  * @param out Receives the text, cut to fit the popout.
  * @param size The size of out.
  * @return false when there is nothing to say.
@@ -394,7 +545,15 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 
     const char* text = NULL;
 
-    if (item == WM_TASKBAR_LAUNCHER) {
+    if (wm_taskbar_session_index(item) >= 0) {
+
+        return false;
+
+    } else if (item == WM_TASKBAR_POWER) {
+
+        text = wm_taskbar_session_open() ? NULL : "Power";
+
+    } else if (item == WM_TASKBAR_LAUNCHER) {
 
         text = "Applications";
 
@@ -470,16 +629,44 @@ static void wm_taskbar_popout(uint32_t item) {
 
 
 /**
+ * @brief Finds the wash behind a taskbar item.
+ *
+ * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE or a session item.
+ * @return Its animation, or NULL for an item that has none.
+ */
+static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
+
+    switch (item) {
+
+        case WM_TASKBAR_LAUNCHER:
+            return &wm.taskbar.hover_launcher;
+
+        case WM_TASKBAR_POWER:
+            return &wm.taskbar.hover_power;
+
+    }
+
+    const int row = wm_taskbar_session_index(item);
+
+    if (row >= 0) {
+        return &wm.taskbar.session.hover[row];
+    }
+
+    wm_window_t* win = wm_window_from_id(item);
+
+    return win ? &win->hover_task : NULL;
+}
+
+
+/**
  * @brief Eases the wash behind one taskbar item in or out.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER or WM_TASKBAR_DATE.
+ * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE or a session item.
  * @param lit Whether the pointer is on it.
  */
 static void wm_taskbar_light(uint32_t item, bool lit) {
 
-    wm_window_t* win = item == WM_TASKBAR_LAUNCHER ? NULL : wm_window_from_id(item);
-
-    ui_anim_t* anim = item == WM_TASKBAR_LAUNCHER ? &wm.taskbar.hover_launcher : win ? &win->hover_task : NULL;
+    ui_anim_t* anim = wm_taskbar_hover_anim(item);
 
     if (anim) {
         ui_anim_to(anim, lit ? 1.0 : 0.0, UI_MOTION_FAST, ui_anim_now());
@@ -526,7 +713,56 @@ void wm_taskbar_press(int x, int y) {
 
 
 /**
- * @brief Acts on a release over the item the press went down on: open or close the launcher, or show, raise or hide a window.
+ * @brief Slides the session menu out of the rail or back in, and brings the pointer's item and label up to date.
+ *
+ * @param open Whether it comes out.
+ */
+static void wm_taskbar_session(bool open) {
+
+    ui_anim_to(&wm.taskbar.session.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, ui_anim_now());
+
+    wm_taskbar_hover(wm.pointer.x, wm.pointer.y);
+    wm_taskbar_popout(wm.taskbar.hover);
+}
+
+
+/**
+ * @brief Closes the session menu when a press lands anywhere but on it or on the power button.
+ *
+ * @param x The press.
+ * @param y The press.
+ */
+void wm_taskbar_session_press(int x, int y) {
+
+    const wm_rect_t panel = wm_taskbar_session_rect();
+    const wm_rect_t power = wm_taskbar_power_rect();
+
+    if (wm_taskbar_session_open() && !wm_rect_contains_point(&panel, x, y) && !wm_rect_contains_point(&power, x, y)) {
+        wm_taskbar_session(false);
+    }
+}
+
+
+/**
+ * @brief Closes the session menu, which is what Escape does while it is out.
+ *
+ * @return true when it was out.
+ */
+bool wm_taskbar_dismiss(void) {
+
+    if (!wm_taskbar_session_open()) {
+        return false;
+    }
+
+    wm_taskbar_session(false);
+
+    return true;
+}
+
+
+/**
+ * @brief Acts on a release over the item the press went down on: open or close the launcher or the session menu,
+ * restart or power off, or show, raise or hide a window.
  *
  * @param x The pointer.
  * @param y The pointer.
@@ -546,6 +782,23 @@ bool wm_taskbar_release(int x, int y) {
 
 
     if (wm_taskbar_item_at(x, y) != pressed) {
+        return true;
+    }
+
+    if (pressed == WM_TASKBAR_POWER) {
+
+        wm_taskbar_session(!wm_taskbar_session_open());
+
+        return true;
+    }
+
+    const int row = wm_taskbar_session_index(pressed);
+
+    if (row >= 0) {
+
+        wm_taskbar_session(false);
+        wm_spawn(wm_taskbar_session_rows[row].argv);
+
         return true;
     }
 
@@ -708,6 +961,106 @@ static void wm_taskbar_paint_launcher(cairo_t* cr, const wm_rect_t* r, double op
     cairo_fill(cr);
 
     cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws the power mark: a ring broken at the top, with a stroke down through the gap.
+ *
+ * @param cr The cairo context, its source already set.
+ * @param x The centre.
+ * @param y The centre.
+ */
+static void wm_taskbar_paint_power_glyph(cairo_t* cr, double x, double y) {
+
+    const double g = WM_TASKBAR_SESSION_GLYPH;
+
+    cairo_save(cr);
+
+    cairo_set_line_width(cr, 2.0);
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+
+    cairo_new_path(cr);
+    cairo_arc(cr, x, y, g, -M_PI / 2.0 + 0.7, 3.0 * M_PI / 2.0 - 0.7);
+    cairo_stroke(cr);
+
+    cairo_move_to(cr, x, y - g - 1.5);
+    cairo_line_to(cr, x, y - 1.0);
+    cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws the restart mark: a ring turning clockwise, open at the top where its arrowhead points along.
+ *
+ * @param cr The cairo context, its source already set.
+ * @param x The centre.
+ * @param y The centre.
+ */
+static void wm_taskbar_paint_restart_glyph(cairo_t* cr, double x, double y) {
+
+    const double g = WM_TASKBAR_SESSION_GLYPH;
+
+    cairo_save(cr);
+
+    cairo_set_line_width(cr, 2.0);
+    cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+    cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+
+    cairo_new_path(cr);
+    cairo_arc(cr, x, y, g, -M_PI / 2.0 + 0.6, 3.0 * M_PI / 2.0);
+    cairo_stroke(cr);
+
+    cairo_move_to(cr, x - 1.0, y - g - 3.5);
+    cairo_line_to(cr, x + 2.5, y - g);
+    cairo_line_to(cr, x - 1.0, y - g + 3.5);
+    cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws the halt mark: a rounded square, the sign for stop.
+ *
+ * @param cr The cairo context, its source already set.
+ * @param x The centre.
+ * @param y The centre.
+ */
+static void wm_taskbar_paint_halt_glyph(cairo_t* cr, double x, double y) {
+
+    const double g = WM_TASKBAR_SESSION_GLYPH - 1.0;
+
+    cairo_save(cr);
+
+    cairo_set_line_width(cr, 2.0);
+
+    cairo_new_path(cr);
+    ui_draw_rounded_rect_d(cr, x - g, y - g, 2.0 * g, 2.0 * g, 2.5);
+    cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Draws the power button at the foot of the rail, its mark in red and its wash held while the session menu is out.
+ *
+ * @param cr The cairo context.
+ */
+static void wm_taskbar_paint_power(cairo_t* cr) {
+
+    const wm_rect_t r = wm_taskbar_power_rect();
+
+    const bool held   = wm.taskbar.pressed == WM_TASKBAR_POWER && wm.taskbar.hover == WM_TASKBAR_POWER;
+    const double open = ui_anim_value(&wm.taskbar.session.open, wm.frame_time);
+
+    wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.taskbar.hover_power, wm.frame_time), held, open);
+
+    cairo_set_source_rgb(cr, WM_COLOR_TASKBAR_POWER);
+    wm_taskbar_paint_power_glyph(cr, r.x + r.width / 2.0, r.y + r.height / 2.0);
 }
 
 
@@ -909,7 +1262,113 @@ static void wm_taskbar_paint_popout(cairo_t* cr) {
 
 
 /**
- * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, or the popout.
+ * @brief Draws one row of the session menu: its wash, its mark and what it does.
+ *
+ * @param cr The cairo context, clipped to the menu.
+ * @param index The row's place in wm_taskbar_session_rows.
+ * @param shift How far the menu still is from all the way out, which the row is slid back by.
+ * @param alpha How opaque to draw the mark and the text.
+ */
+static void wm_taskbar_paint_session_row(cairo_t* cr, int index, int shift, double alpha) {
+
+    const uint32_t item = wm_taskbar_session_rows[index].item;
+
+    wm_rect_t r = wm_taskbar_session_row(index);
+
+    r.x -= shift;
+
+    const bool held = wm.taskbar.pressed == item && wm.taskbar.hover == item;
+
+    wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.taskbar.session.hover[index], wm.frame_time), held, 0.0);
+
+
+    const double cx = r.x + WM_TASKBAR_ITEM / 2.0;
+    const double cy = r.y + r.height / 2.0;
+
+    if (item == WM_TASKBAR_SHUTDOWN) {
+        cairo_set_source_rgba(cr, WM_COLOR_TASKBAR_POWER, alpha);
+        wm_taskbar_paint_power_glyph(cr, cx, cy);
+    } else if (item == WM_TASKBAR_RESTART) {
+        cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+        wm_taskbar_paint_restart_glyph(cr, cx, cy);
+    } else {
+        cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+        wm_taskbar_paint_halt_glyph(cr, cx, cy);
+    }
+
+
+    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+
+    if (!face) {
+        return;
+    }
+
+    cairo_font_extents_t font;
+
+    cairo_set_font_face(cr, face);
+    cairo_set_font_size(cr, WM_TASKBAR_FONT_SIZE);
+    cairo_font_extents(cr, &font);
+
+    const double y = r.y + (r.height - (font.ascent + font.descent)) / 2.0 + font.ascent;
+
+    cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+    cairo_move_to(cr, r.x + WM_TASKBAR_ITEM, round(y));
+    cairo_show_text(cr, wm_taskbar_session_rows[index].label);
+}
+
+
+/**
+ * @brief Draws the session menu sliding out of the rail, flaring into it at the top and into the bottom border at its right.
+ *
+ * @param cr The cairo context.
+ */
+static void wm_taskbar_paint_session(cairo_t* cr) {
+
+    wm.taskbar.session.painted = wm_taskbar_session_extent(wm.frame_time);
+
+    const double open     = ui_anim_value(&wm.taskbar.session.open, wm.frame_time);
+    const wm_rect_t panel = wm_taskbar_session_rect();
+
+    const double x0 = panel.x;
+    const double x1 = x0 + panel.width * open;
+
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+
+    const double top    = panel.y;
+    const double bottom = panel.y + panel.height;
+
+    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
+    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    cairo_move_to(cr, x0, top - fillet);
+    cairo_arc_negative(cr, x0 + fillet, top - fillet, fillet, M_PI, M_PI / 2.0);
+    cairo_arc(cr, x1 - corner, top + corner, corner, -M_PI / 2.0, 0.0);
+    cairo_arc_negative(cr, x1 + fillet, bottom - fillet, fillet, M_PI, M_PI / 2.0);
+    cairo_line_to(cr, x0, bottom);
+    cairo_close_path(cr);
+
+    cairo_set_source_rgba(cr, WM_COLOR_TASKBAR);
+    cairo_fill_preserve(cr);
+    cairo_clip(cr);
+
+    const int shift = (int)round(panel.width - (x1 - x0));
+
+    for (int i = 0; i < WM_TASKBAR_SESSION_ROWS; i++) {
+        wm_taskbar_paint_session_row(cr, i, shift, open);
+    }
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, the popout or the session menu.
  *
  * @param damage The damaged rectangles.
  * @param count How many there are.
@@ -930,6 +1389,8 @@ static bool wm_taskbar_visible(const wm_rect_t* damage, size_t count) {
 
         wm.taskbar.popout.painted,
         wm_taskbar_popout_extent(wm.frame_time),
+        wm.taskbar.session.painted,
+        wm_taskbar_session_extent(wm.frame_time),
     };
 
     for (size_t i = 0; i < WM_ARRAY_COUNT(parts); i++) {
@@ -979,6 +1440,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
 
+    wm_taskbar_paint_session(cr);
     wm_taskbar_paint_popout(cr);
 
 
@@ -1015,6 +1477,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     wm_taskbar_paint_title(cr, below, clock.y);
     wm_taskbar_paint_clock(cr);
+    wm_taskbar_paint_power(cr);
 
     cairo_restore(cr);
 }

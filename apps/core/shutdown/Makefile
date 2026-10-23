@@ -1,14 +1,15 @@
+DESTDIR 	:= $(SYSROOT)/usr/sbin
 CFLAGS      += -include $(ROOTDIR)/config.h
 CFLAGS      += -isystem $(SYSROOT)/usr/include
 
-RESOURCES   += $(SYSROOT)/usr/bin/reboot
-RESOURCES   += $(SYSROOT)/usr/bin/halt
+RESOURCES   += $(SYSROOT)/usr/sbin/reboot
+RESOURCES   += $(SYSROOT)/usr/sbin/halt
 
-$(SYSROOT)/usr/bin/reboot: assets/usr/bin/reboot
+$(SYSROOT)/usr/sbin/reboot: assets/usr/sbin/reboot
 	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)install -m 755 $< $@
 
-$(SYSROOT)/usr/bin/halt: assets/usr/bin/halt
+$(SYSROOT)/usr/sbin/halt: assets/usr/sbin/halt
 	$(QUIET)echo "    INSTALL $(shell realpath --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)install -m 755 $< $@
 

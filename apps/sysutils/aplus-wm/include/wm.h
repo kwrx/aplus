@@ -125,6 +125,7 @@
 #define WM_COLOR_TASKBAR_ACTIVE 1.000, 1.000, 1.000, 0.11
 #define WM_COLOR_TASKBAR_DOWN   1.000, 1.000, 1.000, 0.16
 #define WM_COLOR_TASKBAR_MARK   0.600, 0.600, 0.600, 0.70
+#define WM_COLOR_TASKBAR_POWER  0.898, 0.282, 0.302
 
 /**
  * @brief The typeface titles are drawn in, loaded once at startup.
@@ -208,10 +209,22 @@
 #define WM_TASKBAR_LAUNCHER_DOT   2.5
 
 /**
+ * @brief The session menu that slides out of the rail beside the power button and down into the border, and its glyphs' radius.
+ */
+#define WM_TASKBAR_SESSION_WIDTH 168
+#define WM_TASKBAR_SESSION_ROWS  3
+#define WM_TASKBAR_SESSION_GLYPH 7.0
+
+/**
  * @brief What the taskbar's own items name in place of a window id, and what the launcher's button starts.
  */
 #define WM_TASKBAR_LAUNCHER UINT32_MAX
 #define WM_TASKBAR_DATE     (UINT32_MAX - 1)
+#define WM_TASKBAR_POWER    (UINT32_MAX - 2)
+#define WM_TASKBAR_RESTART  (UINT32_MAX - 3)
+#define WM_TASKBAR_SHUTDOWN (UINT32_MAX - 4)
+#define WM_TASKBAR_HALT     (UINT32_MAX - 5)
+#define WM_SHUTDOWN_PATH    "/usr/sbin/shutdown"
 #define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
 
 /**
@@ -537,12 +550,20 @@ typedef struct {
     } drag;
 
     //? The taskbar item the pointer is over and the one it went down on: a window id,
-    //? WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, or 0 for nothing. And the minute the clock last showed.
+    //? WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item, or 0 for nothing. And the minute the clock last showed.
     struct {
         uint32_t hover;
         uint32_t pressed;
         ui_anim_t hover_launcher;
+        ui_anim_t hover_power;
         long minute;
+
+        //? The session menu: how far out it is, the wash behind each of its rows, and where the last frame drew it.
+        struct {
+            ui_anim_t open;
+            ui_anim_t hover[WM_TASKBAR_SESSION_ROWS];
+            wm_rect_t painted;
+        } session;
 
         //? The label beside the hovered item: what it says, how far out it is, where it is
         //? centred and how wide it is when fully out, and where the last frame drew it.
@@ -661,6 +682,8 @@ void wm_taskbar_hover(int x, int y);
 void wm_taskbar_press(int x, int y);
 bool wm_taskbar_release(int x, int y);
 void wm_taskbar_forget(const wm_window_t* win);
+void wm_taskbar_session_press(int x, int y);
+bool wm_taskbar_dismiss(void);
 int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
 void wm_taskbar_fini(void);
