@@ -36,21 +36,17 @@
 __noreturn void arch_reboot(int mode) {
 
 
-    // arch_intr_disable();
-
-
     switch (mode) {
 
         case ARCH_REBOOT_RESTART: {
 
             /* ACPI */
             // TODO: ACPI Restart
-
-            kprintf("x86-reboot: ACPI reboot failed\n");
-
+#if DEBUG_LEVEL_TRACE
+            kprintf("x86-reboot: skipping acpi restart, not yet implemented\n");
+#endif
 
             /* Keyboard Reset */
-
             for (int i = 0; i < 10; i++) {
 
                 for (int j = 0; j < 0x10000; j++) {
@@ -61,24 +57,28 @@ __noreturn void arch_reboot(int mode) {
                     __builtin_ia32_pause();
                 }
 
-
                 arch_timer_delay(50);
                 outb(0x64, 0xFE);
                 arch_timer_delay(50);
             }
 
-
-            kprintf("x86-reboot: PS/2 reboot failed\n");
-
+#if DEBUG_LEVEL_ERROR
+            kprintf("x86-reboot: keyboard reset failed, trying triple fault...\n");
+#endif
 
             /* Triple Fault */
             uintptr_t invalid[3] = {0};
-
             __asm__ __volatile__("lidt %0" ::"m"(invalid));
             __asm__ __volatile__("int $3");
 
+#if DEBUG_LEVEL_ERROR
+            kprintf("x86-reboot: triple fault failed, hanging...\n");
+#endif
 
-            kprintf("x86-reboot: Triple Fault reboot failed\n");
+            for (;;) {
+                __cpu_pause();
+                __cpu_halt();
+            }
 
         } break;
 
@@ -86,8 +86,9 @@ __noreturn void arch_reboot(int mode) {
 
             /* ACPI */
             // TODO: ACPI Power-off
-
-            kprintf("x86-reboot: ACPI power-off failed\n");
+#if DEBUG_LEVEL_TRACE
+            kprintf("x86-reboot: skipping acpi power-off, not yet implemented\n");
+#endif
 
             {
                 /* QEMU */
@@ -97,7 +98,6 @@ __noreturn void arch_reboot(int mode) {
                 outl(QEMU_EXIT_PORT, QEMU_EXIT_CODE);
             }
 
-
             {
                 /* VirtualBox */
                 const int VBOX_PORT  = 0x4004;
@@ -106,7 +106,14 @@ __noreturn void arch_reboot(int mode) {
                 outw(VBOX_PORT, VBOX_MAGIC);
             }
 
-            kprintf("x86-reboot: VM power-off failed\n");
+#if DEBUG_LEVEL_ERROR
+            kprintf("x86-reboot: power-off failed, hanging...\n");
+#endif
+
+            for (;;) {
+                __cpu_pause();
+                __cpu_halt();
+            }
 
         } break;
 
@@ -128,11 +135,20 @@ __noreturn void arch_reboot(int mode) {
                 outw(VBOX_PORT, VBOX_MAGIC);
             }
 
+#if DEBUG_LEVEL_ERROR
+            kprintf("x86-reboot: crash failed, hanging...\n");
+#endif
+
+            for (;;) {
+                __cpu_pause();
+                __cpu_halt();
+            }
+
         } break;
 
         case ARCH_REBOOT_SUSPEND:
 
-            kpanicf("arch_reboot(): PANIC! ARCH_REBOOT_SUSPEND not yet supported\n");
+            kpanicf("arch_reboot(): PANIC! suspend not yet implemented, panicking...\n");
             break;
 
         case ARCH_REBOOT_HALT:
