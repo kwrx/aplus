@@ -112,6 +112,32 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 }
 
 
+/**
+ * @brief Follows the adapter into a new mode: rebuilds the display and repaints all of it.
+ *
+ * @return 0 on success, or -1 when the new mode cannot be drawn on.
+ */
+static int wm_display_changed(void) {
+
+    if (wm_display_resize(&wm.display) < 0) {
+        fprintf(stderr, "aplus-wm: cannot follow the display mode change\n");
+        return -1;
+    }
+
+    wm.pointer.x = WM_CLAMP(wm.pointer.x, 0, wm.display.width - 1);
+    wm.pointer.y = WM_CLAMP(wm.pointer.y, 0, wm.display.height - 1);
+
+    wm_display_cursor_move(&wm.display, wm.pointer.x, wm.pointer.y);
+
+
+    wm_rect_t everything = {0, 0, wm.display.width, wm.display.height};
+
+    wm_damage(&everything);
+
+    return 0;
+}
+
+
 static void wm_composite(void) {
 
     if (!wm.damage.count) {
@@ -217,7 +243,15 @@ static void wm_composite(void) {
     cairo_restore(cr);
 
 
-    wm_display_flush(&wm.display, damage, count);
+    if (wm_display_flush(&wm.display, damage, count) < 0 && errno == ESTALE) {
+
+        if (wm_display_changed() < 0) {
+            wm.running = false;
+            return;
+        }
+
+        wm_composite();
+    }
 }
 
 
