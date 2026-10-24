@@ -238,7 +238,7 @@ stage_6() {
 
     echo '#!/bin/sh' >makew
     echo 'export PATH="$PATH:$(pwd)/'$CONFIG_SYSTEM_PATH_TOOLCHAIN'/bin"' >>makew
-    echo 'make --no-print-directory -s MAKE_WRAPPER=y REMOTE="$ARG_REMOTE" -j$(nproc) $@' >>makew
+    echo 'make --no-print-directory -s MAKE_WRAPPER=y REMOTE="$ARG_REMOTE" -j$(nproc) "$@"' >>makew
 
     chmod +x makew
 
