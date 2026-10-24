@@ -18,6 +18,12 @@ PREBUILT_TOOLCHAIN_NEEDS_REBUILD=1
 HOST=$(gcc -dumpmachine)
 ARCH=$(gcc -dumpmachine | cut -d- -f1)
 
+# Repositories
+REPO_PACKAGES="kwrx/aplus-packages"
+REPO_PACKAGES_VERSION="0.9.1"
+REPO_TOOLCHAIN="kwrx/aplus-toolchain"
+REPO_TOOLCHAIN_VERSION="0.2.0"
+
 #
 # Functions
 #
@@ -187,7 +193,7 @@ stage_3() {
         packages="$packages git"
     fi
 
-    die python ./scripts/get-pkg.py --repo kwrx/aplus-packages --repo-version 0.9.1 --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
+    die python ./scripts/get-pkg.py --repo $REPO_PACKAGES --repo-version $REPO_PACKAGES_VERSION --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
 
 }
 
@@ -199,7 +205,7 @@ stage_4() {
 
     if [ $PREBUILT_TOOLCHAIN_AVAILABLE -eq 1 ]; then
         if [ ! -d "$CONFIG_SYSTEM_PATH_TOOLCHAIN" ]; then
-            die python ./scripts/get-pkg.py --repo kwrx/aplus-toolchain --repo-version 0.2.0 --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$ARCH-linux-gnu
+            die python ./scripts/get-pkg.py --repo $REPO_TOOLCHAIN --repo-version $REPO_TOOLCHAIN_VERSION --prefix $CONFIG_SYSTEM_PATH_TOOLCHAIN -i $CONFIG_COMPILER_HOST-aplus-toolchain-$ARCH-linux-gnu
         fi
     else
 
