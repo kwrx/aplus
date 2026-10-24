@@ -111,36 +111,27 @@ void wm_display_cursor_move(wm_display_t* display, int x, int y) {
 }
 
 
-int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper) {
+/**
+ * @brief Wraps the framebuffer in the screen and back surfaces at the adapter's current mode.
+ *
+ * @param display The display, with its device already open.
+ * @return 0 on success, or -1 with the surfaces partly built.
+ */
+static int wm_display_setup(wm_display_t* display) {
 
-    memset(display, 0, sizeof(*display));
-
-    display->fd = -1;
-
-
-    int fd;
-
-    if ((fd = open(device, O_RDWR)) < 0) {
-        fprintf(stderr, "aplus-wm: open() failed: cannot open %s: %s\n", device, strerror(errno));
-        return -1;
-    }
-
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &display->var) < 0) {
+    if (ioctl(display->fd, FBIOGET_VSCREENINFO, &display->var) < 0) {
         fprintf(stderr, "aplus-wm: ioctl(FBIOGET_VSCREENINFO) failed: %s\n", strerror(errno));
-        close(fd);
         return -1;
     }
 
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &display->fix) < 0) {
+    if (ioctl(display->fd, FBIOGET_FSCREENINFO, &display->fix) < 0) {
         fprintf(stderr, "aplus-wm: ioctl(FBIOGET_FSCREENINFO) failed: %s\n", strerror(errno));
-        close(fd);
         return -1;
     }
 
 
     if (!display->fix.smem_start || !display->var.xres || !display->var.yres) {
         fprintf(stderr, "aplus-wm: wrong framebuffer configuration\n");
-        close(fd);
         return -1;
     }
 
@@ -159,12 +150,10 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
         default:
             fprintf(stderr, "aplus-wm: unsupported framebuffer depth: %u bpp\n", display->var.bits_per_pixel);
-            close(fd);
             return -1;
     }
 
 
-    display->fd     = fd;
     display->width  = (int)display->var.xres;
     display->height = (int)display->var.yres;
 
@@ -173,7 +162,6 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
     if (cairo_surface_status(display->screen) != CAIRO_STATUS_SUCCESS) {
         fprintf(stderr, "aplus-wm: cannot wrap the framebuffer: %s\n", cairo_status_to_string(cairo_surface_status(display->screen)));
-        wm_display_close(display);
         return -1;
     }
 
@@ -182,7 +170,6 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
     if (!display->back) {
         fprintf(stderr, "aplus-wm: cannot allocate the back buffer\n");
-        wm_display_close(display);
         return -1;
     }
 
@@ -192,12 +179,11 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
     if (cairo_status(display->cr) != CAIRO_STATUS_SUCCESS || cairo_status(display->cr_screen) != CAIRO_STATUS_SUCCESS) {
         fprintf(stderr, "aplus-wm: cannot create a drawing context\n");
-        wm_display_close(display);
         return -1;
     }
 
 
-    display->background = wm_wallpaper_load(wallpaper, display->width, display->height);
+    display->background = wm_wallpaper_load(display->wallpaper, display->width, display->height);
 
     if (!display->background) {
         display->background = wm_wallpaper_gradient(display->height);
@@ -205,23 +191,19 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
     if (!display->background || cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
         fprintf(stderr, "aplus-wm: cannot create the desktop background\n");
-        wm_display_close(display);
         return -1;
     }
-
-
-    fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
-
-
-    wm_display_cursor_init(display);
 
     return 0;
 }
 
 
-void wm_display_close(wm_display_t* display) {
-
-    wm_display_clear(display);
+/**
+ * @brief Destroys the surfaces wm_display_setup() built, keeping the device open.
+ *
+ * @param display The display to strip.
+ */
+static void wm_display_release(wm_display_t* display) {
 
     if (display->background) {
         cairo_pattern_destroy(display->background);
@@ -247,6 +229,67 @@ void wm_display_close(wm_display_t* display) {
         cairo_surface_destroy(display->screen);
         display->screen = NULL;
     }
+}
+
+
+int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper) {
+
+    memset(display, 0, sizeof(*display));
+
+    display->fd        = -1;
+    display->wallpaper = wallpaper;
+
+
+    if ((display->fd = open(device, O_RDWR)) < 0) {
+        fprintf(stderr, "aplus-wm: open() failed: cannot open %s: %s\n", device, strerror(errno));
+        return -1;
+    }
+
+    if (wm_display_setup(display) < 0) {
+        wm_display_release(display);
+        close(display->fd);
+        display->fd = -1;
+        return -1;
+    }
+
+
+    fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
+
+
+    wm_display_cursor_init(display);
+
+    return 0;
+}
+
+
+/**
+ * @brief Rebuilds the surfaces after the adapter switched to another mode.
+ *
+ * @param display The display whose mode changed.
+ * @return 0 on success, or -1 when the new mode cannot be drawn on.
+ */
+int wm_display_resize(wm_display_t* display) {
+
+    wm_display_release(display);
+
+    if (wm_display_setup(display) < 0) {
+        wm_display_release(display);
+        return -1;
+    }
+
+    fprintf(stderr, "aplus-wm: display is now %dx%d, pitch %u\n", display->width, display->height, display->fix.line_length);
+
+    return 0;
+}
+
+
+void wm_display_close(wm_display_t* display) {
+
+    if (display->cr) {
+        wm_display_clear(display);
+    }
+
+    wm_display_release(display);
 
     if (display->fd >= 0) {
         close(display->fd);
@@ -264,11 +307,12 @@ void wm_display_close(wm_display_t* display) {
  * @param display The display to put them on.
  * @param rects The rectangles that were repainted.
  * @param count How many of them there are.
+ * @return 0 on success, or -1 with errno ESTALE when the adapter has switched to another mode.
  */
-void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count) {
+int wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count) {
 
     if (!count) {
-        return;
+        return 0;
     }
 
     cairo_surface_flush(display->back);
@@ -313,7 +357,7 @@ void wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t coun
 
     uint32_t crtc = 0;
 
-    ioctl(display->fd, FBIO_WAITFORVSYNC, &crtc);
+    return ioctl(display->fd, FBIO_WAITFORVSYNC, &crtc);
 }
 
 
