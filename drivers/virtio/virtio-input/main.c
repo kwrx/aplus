@@ -340,7 +340,7 @@ static void virtinput_drain(struct virtinput* vi) {
 }
 
 
-static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
+static int interrupt_handler(pcidev_t device, irq_t vector, uint8_t type, struct virtio_driver* driver) {
 
     for (size_t i = 0; i < num_devices; i++) {
 

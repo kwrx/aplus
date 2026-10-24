@@ -47,20 +47,8 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-/**
- * @brief A capability list long enough to reach this is a malformed or cyclic one.
- */
 #define VIRTIO_PCI_MAX_CAPABILITIES 64
-
-/**
- * @brief How long a device is given to come back from a reset.
- */
 #define VIRTIO_PCI_RESET_TIMEOUT_MS 1000
-
-
-/**
- * @brief Where one virtio capability lives, gathered on a first pass over the list.
- */
 
 struct virtio_pci_location {
 
@@ -70,24 +58,23 @@ struct virtio_pci_location {
     uintptr_t offset;
     uintptr_t length;
 
-    /* Offset of the capability structure itself in configuration space, for the few
-       capabilities that carry more than the header. */
     uintptr_t address;
 };
 
 
 static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_driver* driver, uint16_t vector) {
 
-#if defined(CONFIG_HAVE_PCI_MSIX)
+    uint8_t type = VIRTIO_INTERRUPT_TYPE_UNKNOWN;
 
+#if defined(CONFIG_HAVE_PCI_MSIX)
     DEBUG_ASSERT(vector <= driver->internals.msix_vectors);
 
     if (vector == driver->internals.msix_vectors) {
-        // TODO: handle config interrupt
-        kprintf("virtio-pci: WARN! received config interrupt!\n");
+        type = VIRTIO_INTERRUPT_TYPE_CONFIG;
     } else if (likely(driver->internals.msix_vectors)) {
         for (size_t i = vector; i < driver->internals.num_queues; i += driver->internals.msix_vectors)
             virtq_flush(driver, i);
+        type = VIRTIO_INTERRUPT_TYPE_QUEUE;
     }
 
 #else
@@ -96,16 +83,16 @@ static void virtio_pci_interrupt(pcidev_t device, irq_t irq, struct virtio_drive
     if (isr & VIRTIO_ISR_STATUS_QUEUE) {
         for (size_t i = 0; i < driver->internals.num_queues; i++)
             virtq_flush(driver, i);
+        type = VIRTIO_INTERRUPT_TYPE_QUEUE;
     }
 
     if (isr & VIRTIO_ISR_STATUS_CONFIG) {
-        // TODO: handle config interrupt
-        kprintf("virtio-pci: WARN! received isr status config!\n");
+        type = VIRTIO_INTERRUPT_TYPE_CONFIG;
     }
 #endif
 
     if (likely(driver->interrupt)) {
-        driver->interrupt(device, vector, driver);
+        driver->interrupt(device, vector, type, driver);
     }
 }
 

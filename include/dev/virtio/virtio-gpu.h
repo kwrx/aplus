@@ -34,6 +34,8 @@
 // Flags
 #define VIRTIO_GPU_FLAGS_FENCE (1 << 0)
 
+// Events
+#define VIRTIO_GPU_EVENT_DISPLAY (1 << 0)
 
 // Display Commands
 #define VIRTIO_GPU_CMD_GET_DISPLAY_INFO        0x100
@@ -77,10 +79,16 @@
 #define VIRTIO_GPU_FORMAT_A8B8G8R8_UNORM 121
 #define VIRTIO_GPU_FORMAT_R8G8B8X8_UNORM 134
 
-
 // Queues
 #define VIRTIO_GPU_QUEUE_CONTROL 0
 #define VIRTIO_GPU_QUEUE_CURSOR  1
+
+// Cursor
+#define VIRTGPU_CURSOR_SIZE 64
+
+// Framebuffer
+#define VIRTGPU_FB_MAX_SIZE (7680 * 4320 * 4)
+
 
 
 #ifndef __ASSEMBLY__
@@ -90,6 +98,7 @@
     #include <aplus/debug.h>
     #include <aplus/ipc.h>
     #include <aplus/syscall.h>
+    #include <stdatomic.h>
     #include <stdbool.h>
     #include <stdint.h>
 
@@ -217,34 +226,19 @@ struct virtio_gpu_response {
     };
 } __packed;
 
-
-/**
- * @brief The one size the hardware cursor plane takes; a smaller image is centred inside one.
- */
-
-    #define VIRTGPU_CURSOR_SIZE 64
-
-
 struct virtgpu {
 
     struct virtio_driver* driver;
+
     uint64_t resource_ids;
-
-    /* The scanout resource the framebuffer is attached to. */
     uint64_t fb_resource_id;
-
-    /* Set by every FBIO_FLUSH, cleared by every FBIO_WAITFORVSYNC. It is what tells a wait
-       whether the caller has already pushed its damage, or is an older caller that expects
-       the wait itself to put the whole screen on the host. */
+    
     bool frame_flushed;
+    atomic_bool mode_changed;
+    atomic_bool mode_stale;
 
-    /* Serializes whole command sequences, not single commands: a transfer and the flush that
-       publishes it have to reach the device as a pair, and the cursor image has to be
-       transferred before the plane is pointed at it. */
     spinlock_t lock;
 
-    /* Incremented for every fenced command. The device echoes it back in the response header
-       once the command has completed, which is what FBIO_WAITFORVSYNC waits for. */
     uint64_t fence_id;
 
     struct {
