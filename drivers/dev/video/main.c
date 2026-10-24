@@ -97,7 +97,8 @@ int video_ioctl(device_t* device, int req, void* arg) {
         case FBIO_WAITFORVSYNC:
 
             if (likely(device->vid.wait_vsync))
-                device->vid.wait_vsync(device);
+                if (device->vid.wait_vsync(device) < 0)
+                    return -1;
 
             break;
 

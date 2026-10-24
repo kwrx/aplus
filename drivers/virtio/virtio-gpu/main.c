@@ -62,9 +62,10 @@ MODULE_LICENSE("GPL");
 static void virtgpu_init(device_t*);
 static void virtgpu_dnit(device_t*);
 static void virtgpu_reset(device_t*);
+static void virtgpu_modeset(device_t*);
 static void virtgpu_update(device_t*);
 static void virtgpu_flush(device_t*, uint32_t, uint32_t, uint32_t, uint32_t);
-static void virtgpu_wait_vsync(device_t*);
+static int virtgpu_wait_vsync(device_t*);
 static int virtgpu_cursor_set(device_t*, const struct fb_hwcursor*, const uint32_t*);
 static int virtgpu_cursor_move(device_t*, int32_t, int32_t);
 
@@ -282,8 +283,15 @@ static void virtgpu_reset(device_t* device) {
     device->vid.vs.activate = FB_ACTIVATE_NOW;
 
 
-    device->vid.fb_size = device->vid.vs.xres * device->vid.vs.yres * device->vid.vs.bits_per_pixel / 8;
+    size_t size = device->vid.vs.xres * device->vid.vs.yres * device->vid.vs.bits_per_pixel / 8;
+
+    device->vid.fb_size = MAX(size, VIRTGPU_FB_MAX_SIZE);
     device->vid.fb_base = pmm_alloc_blocks(device->vid.fb_size / PML1_PAGESIZE + 1);
+
+    if (unlikely(!device->vid.fb_base)) {
+        device->vid.fb_size = size;
+        device->vid.fb_base = pmm_alloc_blocks(device->vid.fb_size / PML1_PAGESIZE + 1);
+    }
 
     if (unlikely(!device->vid.fb_base)) {
         device->status = DEVICE_STATUS_FAILED;
@@ -296,6 +304,62 @@ static void virtgpu_reset(device_t* device) {
     virtgpu_reset_framebuffer(device);
 
     virtgpu_update(device);
+
+    atomic_store(&((struct virtgpu*)device->userdata)->mode_changed, false);
+}
+
+
+/**
+ * @brief Moves the scanout to the display's current mode, keeping the framebuffer memory where it is. Called with the gpu lock held.
+ *
+ * @param device The adapter whose display changed.
+ */
+
+static void virtgpu_modeset(device_t* device) {
+
+    DEBUG_ASSERT(device);
+    DEBUG_ASSERT(device->userdata);
+
+    struct virtgpu* gpu = device->userdata;
+
+    uint32_t xres = 0;
+    uint32_t yres = 0;
+
+    if (virtgpu_get_mode(gpu, &xres, &yres) < 0)
+        return;
+
+    if (!xres || !yres)
+        return;
+
+    if (xres == device->vid.vs.xres && yres == device->vid.vs.yres)
+        return;
+
+    if ((size_t)xres * yres * (device->vid.vs.bits_per_pixel / 8) > device->vid.fb_size) {
+#if DEBUG_LEVEL_WARN
+        kprintf("virtio-gpu: WARN! mode %dx%d does not fit the framebuffer, keeping %dx%d\n", xres, yres, device->vid.vs.xres, device->vid.vs.yres);
+#endif
+        return;
+    }
+
+
+    uint64_t old_resource_id = gpu->fb_resource_id;
+
+    device->vid.vs.xres         = xres;
+    device->vid.vs.yres         = yres;
+    device->vid.vs.xres_virtual = xres;
+    device->vid.vs.yres_virtual = yres;
+
+    virtgpu_reset_framebuffer(device);
+
+    virtgpu_update(device);
+
+
+    if (old_resource_id) {
+        virtgpu_cmd_resource_detach_backing(gpu, old_resource_id);
+        virtgpu_cmd_resource_unref(gpu, old_resource_id);
+    }
+
+    atomic_store(&gpu->mode_stale, true);
 }
 
 
@@ -355,13 +419,21 @@ static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t wid
 
     struct virtgpu* gpu = device->userdata;
 
-    if (unlikely(!gpu->fb_resource_id))
-        return;
-
-
-    uint64_t offset = (uint64_t)y * device->vid.fs.line_length + (uint64_t)x * (device->vid.vs.bits_per_pixel / 8);
-
     scoped_lock(&gpu->lock) {
+
+        if (atomic_exchange(&gpu->mode_changed, false))
+            virtgpu_modeset(device);
+
+        if (unlikely(!gpu->fb_resource_id))
+            return;
+
+        if (x >= device->vid.vs.xres || y >= device->vid.vs.yres)
+            return;
+
+        width  = MIN(width, device->vid.vs.xres - x);
+        height = MIN(height, device->vid.vs.yres - y);
+
+        uint64_t offset = (uint64_t)y * device->vid.fs.line_length + (uint64_t)x * (device->vid.vs.bits_per_pixel / 8);
 
         if (virtgpu_cmd_transfer_to_host_2d(gpu, gpu->fb_resource_id, offset, x, y, width, height) < 0)
             return;
@@ -378,24 +450,25 @@ static void virtgpu_flush(device_t* device, uint32_t x, uint32_t y, uint32_t wid
  * @brief Waits for the completion fence of the frame, transferring the whole screen for a caller that pushed nothing.
  *
  * @param device The adapter to wait on.
+ * @return 0 on success, or -1 with errno ESTALE once after the display mode changed.
  */
 
-static void virtgpu_wait_vsync(device_t* device) {
+static int virtgpu_wait_vsync(device_t* device) {
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(device->userdata);
 
     struct virtgpu* gpu = device->userdata;
 
-    if (gpu->frame_flushed) {
-
-        gpu->frame_flushed = false;
-        return;
-    }
-
-    virtgpu_flush(device, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
+    if (!gpu->frame_flushed)
+        virtgpu_flush(device, 0, 0, device->vid.vs.xres, device->vid.vs.yres);
 
     gpu->frame_flushed = false;
+
+    if (atomic_exchange(&gpu->mode_stale, false))
+        return errno = ESTALE, -1;
+
+    return 0;
 }
 
 
@@ -564,14 +637,34 @@ static int setup_config(struct virtio_driver* driver, uintptr_t device_config) {
 
 
 
-static int interrupt_handler(pcidev_t device, irq_t vector, struct virtio_driver* driver) {
+static int interrupt_handler(pcidev_t pcidev, irq_t vector, uint8_t type, struct virtio_driver* driver) {
 
     if (unlikely(!driver->internals.device_config))
         return 0;
 
-    struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)driver->internals.device_config;
+    struct virtgpu* gpu = device.userdata;
 
-    mmio_w32(&cfg->events_clear, mmio_r32(&cfg->events_read));
+    switch(type) {
+        case VIRTIO_INTERRUPT_TYPE_UNKNOWN:
+            kprintf("virtio-gpu: WARN! received unknown interrupt from device(%d) [type(%d)]\n", driver->device, driver->type);
+            break;
+        case VIRTIO_INTERRUPT_TYPE_CONFIG: {
+            struct virtio_gpu_config volatile* cfg = (struct virtio_gpu_config volatile*)driver->internals.device_config;
+
+            uint32_t events = mmio_r32(&cfg->events_read);
+            mmio_w32(&cfg->events_clear, events);
+
+            if (likely(events & VIRTIO_GPU_EVENT_DISPLAY)) {
+                if (likely(gpu)) {
+                    atomic_store(&gpu->mode_changed, true);
+                }
+            }
+
+            break;
+        }
+        case VIRTIO_INTERRUPT_TYPE_QUEUE:
+            break;
+    }
 
     return 0;
 }

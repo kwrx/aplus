@@ -74,6 +74,11 @@
 #define VIRTIO_ISR_STATUS_QUEUE  (1 << 0)
 #define VIRTIO_ISR_STATUS_CONFIG (1 << 1)
 
+// Interrupt Type
+#define VIRTIO_INTERRUPT_TYPE_UNKNOWN 0
+#define VIRTIO_INTERRUPT_TYPE_QUEUE   1
+#define VIRTIO_INTERRUPT_TYPE_CONFIG  2
+
 /**
  * @brief Features, word 0 (bits 0..31). Bits 0..23 are device specific; the rest are transport.
  */
@@ -169,10 +174,6 @@ __BEGIN_DECLS
 struct virtio_pci_common_cfg;
 
 
-/**
- * @brief One slot per descriptor: what the driver did with it and what came back.
- */
-
 struct virtq_request {
     uint8_t state;
     uint32_t length;
@@ -191,66 +192,40 @@ struct virtio_driver {
 
     int (*negotiate)(struct virtio_driver*, uint32_t*, size_t);
     int (*setup)(struct virtio_driver*, uintptr_t);
-    int (*interrupt)(pcidev_t, irq_t, struct virtio_driver*);
+    int (*interrupt)(pcidev_t, irq_t, uint8_t, struct virtio_driver*);
 
     struct {
 
         irq_t irq;
         uint16_t bars;
         uint16_t num_queues;
-
-        /* How many MSI-X vectors the queues were given. A table is not required to hold one
-           per queue plus one for configuration -- QEMU hands a virtio-input device exactly
-           two whatever its queue count -- so queue i raises vector i % msix_vectors and the
-           configuration vector follows them. */
         uint16_t msix_vectors;
 
         uint16_t notify_off_multiplier;
         uintptr_t notify_offset;
         uintptr_t device_config;
 
-        /* Kept so that the device can be told to stop -- queues disabled and the status
-           reset -- when bringing it up fails partway through. */
         struct virtio_pci_common_cfg volatile* common_config;
 
         uint32_t volatile* isr_status;
 
 
         struct {
-
-            /* Guards the descriptor pool, the available ring and the used ring cursor --
-               everything below that both a caller and the interrupt can touch. Taken with
-               interrupts disabled, so it is safe from either, but it must never nest:
-               re-taking it on one CPU is a deadlock panic, not a recursion. */
             spinlock_t lock;
-
-            /* Bumped by virtq_flush() out of the interrupt. virtq_wait() watches it so that
-               it rescans the used ring when the device has said something and idles on
-               __cpu_pause() when it has not. */
             atomic_uint completions;
-
-            /* How far into the used ring the reaper has consumed, as a uint16_t so that it
-               wraps exactly where the device's own index does. */
             uint16_t last_used;
 
             struct virtq_descriptor volatile* descriptors;
             struct virtq_available volatile* available;
             struct virtq_used volatile* used;
             struct virtq_notify volatile* notify;
-
-            /* size entries, one per descriptor. */
             struct virtq_request* requests;
 
             struct {
-
-                /* The single physical allocation the five regions are carved out of, kept
-                   so that a queue can be given back if bringing the device up fails. */
                 uintptr_t base;
                 size_t length;
-
                 uintptr_t sendbuf;
                 uintptr_t recvbuf;
-
             } buffers;
 
             size_t size;
@@ -359,10 +334,6 @@ uintptr_t virtq_recvbuf(struct virtio_driver*, uint16_t, uint16_t);
 void virtq_provide(struct virtio_driver*, uint16_t, uint16_t, size_t);
 void virtq_notify(struct virtio_driver*, uint16_t);
 int virtq_reap(struct virtio_driver*, uint16_t, uint16_t*, uint32_t*);
-
-/**
- * @brief The three below report a failure as a negative errno, being the calls underneath read() and write().
- */
 
 ssize_t virtq_send(struct virtio_driver*, uint16_t, const void*, size_t);
 ssize_t virtq_sendrecv(struct virtio_driver*, uint16_t, const void*, size_t, void*, size_t);
