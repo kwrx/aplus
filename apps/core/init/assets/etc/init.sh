@@ -8,7 +8,7 @@ cd $HOME
 mkdir -p /var/log/init.d
 for i in /etc/init.d/*; do
     if [ -x "$i" ]; then
-        "$i" start > /var/log/init.d/$(basename $i).log 2>&1
+        "$i" start 2>&1 | tee /var/log/init.d/${i##*/}.log > /dev/kmsg &
     fi
 done
 

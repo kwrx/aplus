@@ -12,7 +12,7 @@ case "$1" in
     start)
         if command -v $EXEC_NAME >/dev/null 2>&1; then
             echo "init.d: Starting $EXEC_DESC..."
-            $EXEC_NAME -f &
+            $EXEC_NAME -f
         else
             echo "init.d: $EXEC_NAME not found, skipping $EXEC_DESC startup."
         fi

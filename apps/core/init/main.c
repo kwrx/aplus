@@ -404,7 +404,7 @@ int main(int argc, char** argv, char** envp) {
 
     else if (e == 0) {
 
-        execle("/bin/dash", "/bin/dash", "/etc/init.sh", NULL, environ);
+        execle("/etc/init.sh", "/etc/init.sh", NULL, environ);
         exit(EXIT_FAILURE);
 
     } else {
