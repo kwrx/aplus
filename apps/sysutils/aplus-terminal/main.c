@@ -128,9 +128,6 @@ static struct {
     int masterfd;
     int slavefd;
 
-    //? The shell running on the other side of the pty, and its process group -- it calls
-    //? setpgrp(), so the two are the same number. Closing the window hangs up on that
-    //? group rather than tearing this process down underneath it.
     pid_t child;
 
     int sigchld[2];
@@ -138,35 +135,23 @@ static struct {
     struct tsm_screen* con;
     struct tsm_vte* vte;
 
-    //? The window this terminal lives in. Its pixel buffer is ordinary heap memory: the
-    //? server is a separate process and this kernel has no shared memory to put a surface
-    //? in, so what gets committed travels down the socket as damaged rectangles.
     ui_connection_t* conn;
     ui_window_t* win;
 
-    //? libtsm stamps every cell with the age of its last change. Keeping the age of the
-    //? previous draw is what turns a repaint into "the cells that actually moved", which
-    //? is the difference between shipping one cell per keystroke and shipping a frame.
     tsm_age_t age;
 
     unsigned int cols;
     unsigned int rows;
 
-    //? The pty reader and the event reader both draw. They always did; with a commit on
-    //? the end of a draw, two interleaved repaints would also interleave on the wire.
     pthread_mutex_t lock;
 
     ui_keymap_t* keymap;
 
     pthread_t thr_ui;
 
-    //? The window's buffer as cairo sees it. The buffer is the server's, so a configure hands
-    //? over another one and everything bound to the old one has to be built again.
     cairo_surface_t* surface;
     cairo_t* cr;
 
-    //? A cell is the regular face's widest advance by its line height, which is what makes a
-    //? column of text line up: every glyph is drawn at a multiple of it, not at a pen position.
     struct {
 
         aterm_font_t regular;
@@ -192,7 +177,6 @@ static struct {
     bool windowed;
 
 } context = {0};
-
 
 
 static void show_usage(int argc, char** argv) {
@@ -334,43 +318,14 @@ int aterm_window_commit(void) {
         damage.y = 0;
         damage.width = (uint32_t)aterm_window_width();
         damage.height = (uint32_t)aterm_window_height();
-        return ioctl(context.fb.fd, FBIO_FLUSH, &damage);
+        if (ioctl(context.fb.fd, FBIO_FLUSH, &damage) < 0) {
+            return -1;
+        }
+        uint32_t crtc = 0;
+        return ioctl(context.fb.fd, FBIO_WAITFORVSYNC, &crtc);
     }
 }
 
-
-/**
- * @brief Opens the framebuffer device and queries its fixed and variable information.
- *
- * @return 0 on success, or -1 with errno set.
- */
-int aterm_fb_connect(void) {
-
-    if (context.windowed) {
-        errno = EINVAL;
-        return -1;
-    }
-
-    int fd = open("/dev/fb0", O_RDWR);
-    if (fd < 0) {
-        return -1;
-    }
-
-    if (ioctl(fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
-        close(fd);
-        return -1;
-    }
-
-    if (ioctl(fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
-        close(fd);
-        return -1;
-    }
-    
-    fprintf(stderr, "aplus-terminal: framebuffer %dx%dx%d [ptr(%p), size(%p)]\n", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
-
-    context.fb.fd = fd;
-    return 0;
-}
 
 /**
  * @brief Binds a cairo context to the buffer the window is holding right now.
@@ -712,6 +667,84 @@ static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, s
 
 
 /**
+ * @brief Tells the shell on the other side of the pty how big the terminal is now.
+ *
+ * @param width The drawing area width in pixels.
+ * @param height The drawing area height in pixels.
+ */
+static void aterm_pty_winsize(unsigned int width, unsigned int height) {
+
+    if (context.masterfd <= 0) {
+        return;
+    }
+
+    struct winsize ws = {
+
+        .ws_col    = (unsigned short)context.cols,
+        .ws_row    = (unsigned short)context.rows,
+        .ws_xpixel = (unsigned short)width,
+        .ws_ypixel = (unsigned short)height,
+    };
+
+    if (ioctl(context.masterfd, TIOCSWINSZ, &ws) < 0) {
+        fprintf(stderr, "aplus-terminal: ioctl(TIOCSWINSZ) failed: %s\n", strerror(errno));
+    }
+}
+
+
+/**
+ * @brief Follows the framebuffer into the mode it switched to, with context.lock held.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+static int aterm_fb_resize(void) {
+
+    if (ioctl(context.fb.fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
+        return -1;
+    }
+
+    if (ioctl(context.fb.fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
+        return -1;
+    }
+
+    if (aterm_bind_surface() < 0) {
+        return -1;
+    }
+
+    const unsigned int width  = (unsigned int)aterm_window_width();
+    const unsigned int height = (unsigned int)aterm_window_height();
+
+    const unsigned int inner_width  = width > 2 * ATERM_PADDING ? width - 2 * ATERM_PADDING : 0;
+    const unsigned int inner_height = height > 2 * ATERM_PADDING ? height - 2 * ATERM_PADDING : 0;
+
+    context.cols = inner_width / (unsigned int)context.font.width;
+    context.rows = inner_height / (unsigned int)context.font.height;
+
+    if (context.cols < 1) {
+        context.cols = 1;
+    }
+
+    if (context.rows < 1) {
+        context.rows = 1;
+    }
+
+    int resized = tsm_screen_resize(context.con, context.cols, context.rows);
+
+    if (resized < 0) {
+        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", context.cols, context.rows, strerror(-resized));
+    }
+
+    context.age = 0;
+
+    fprintf(stderr, "aplus-terminal: framebuffer is now %ux%ux%u, %ux%u cells\n", width, height, context.fb.var.bits_per_pixel, context.cols, context.rows);
+
+    aterm_pty_winsize(width, height);
+
+    return 0;
+}
+
+
+/**
  * @brief Draws the screen with context.lock held, which guards the whole of libtsm rather than the drawing alone.
  *
  * Never held across a write() to the pty master, which can block when the shell is slow to read.
@@ -724,8 +757,21 @@ static void tsm_draw_locked(void) {
 
     context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
 
-    if (aterm_window_commit() < 0) {
-        fprintf(stderr, "aplus-terminal: aterm_window_commit() failed: %s\n", strerror(errno));
+    while (aterm_window_commit() < 0) {
+
+        if (context.windowed || errno != ESTALE) {
+            fprintf(stderr, "aplus-terminal: aterm_window_commit() failed: %s\n", strerror(errno));
+            return;
+        }
+
+        if (aterm_fb_resize() < 0) {
+            fprintf(stderr, "aplus-terminal: cannot follow the framebuffer mode change: %s\n", strerror(errno));
+            return;
+        }
+
+        aterm_clear();
+
+        context.age = tsm_screen_draw(context.con, fb_draw_cb, NULL);
     }
 }
 
@@ -797,20 +843,7 @@ static void tsm_resize(unsigned int width, unsigned int height) {
     pthread_mutex_unlock(&context.lock);
 
 
-    if (context.masterfd > 0) {
-
-        struct winsize ws = {
-
-            .ws_col    = (unsigned short)cols,
-            .ws_row    = (unsigned short)rows,
-            .ws_xpixel = (unsigned short)width,
-            .ws_ypixel = (unsigned short)height,
-        };
-
-        if (ioctl(context.masterfd, TIOCSWINSZ, &ws) < 0) {
-            fprintf(stderr, "aplus-terminal: ioctl(TIOCSWINSZ) failed: %s\n", strerror(errno));
-        }
-    }
+    aterm_pty_winsize(width, height);
 }
 
 
@@ -961,6 +994,40 @@ static int aterm_watch_child(void) {
     sigaddset(&set, SIGCHLD);
 
     return sigprocmask(SIG_UNBLOCK, &set, NULL);
+}
+
+
+/**
+ * @brief Opens the framebuffer device and queries its fixed and variable information.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+int aterm_fb_connect(void) {
+
+    if (context.windowed) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    int fd = open("/dev/fb0", O_RDWR);
+    if (fd < 0) {
+        return -1;
+    }
+
+    if (ioctl(fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
+        close(fd);
+        return -1;
+    }
+
+    if (ioctl(fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
+        close(fd);
+        return -1;
+    }
+    
+    fprintf(stderr, "aplus-terminal: framebuffer %dx%dx%d [ptr(%p), size(%p)]\n", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
+
+    context.fb.fd = fd;
+    return 0;
 }
 
 
