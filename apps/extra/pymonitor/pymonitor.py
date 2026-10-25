@@ -2223,7 +2223,7 @@ def main():
     parser.add_argument("--verbose", action="store_true", help="log every request")
     args = parser.parse_args()
 
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO, format="%(asctime)s %(name)s[%(process)d]: %(levelname)s: %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z")
 
     sampler = Sampler(clamp(args.interval, 0.2, 60.0))
     sampler.start()
