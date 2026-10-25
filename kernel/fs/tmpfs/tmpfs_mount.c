@@ -85,7 +85,7 @@ int tmpfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->st.f_blocks  = pmm_get_total_memory();
     dir->sb->st.f_bfree   = pmm_get_total_memory();
     dir->sb->st.f_bavail  = pmm_get_total_memory();
-    dir->sb->st.f_files   = 0;
+    dir->sb->st.f_files   = TMPFS_NODES_MAX;
     dir->sb->st.f_ffree   = TMPFS_NODES_MAX;
     dir->sb->st.f_favail  = TMPFS_NODES_MAX;
     dir->sb->st.f_flag    = ST_SYNCHRONOUS | ST_NODEV | stflags;

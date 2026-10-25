@@ -47,6 +47,27 @@ fstable_t __fs_table[VFS_MAX_FILESYSTEMS] = {0};
 fstable_t* fs_table = &__fs_table[0];
 
 
+/**
+ * @brief The Linux magic number statfs() reports for each filesystem.
+ */
+static const struct {
+
+    id_t fsid;
+    unsigned long magic;
+
+} vfs_fs_magic[] = {
+    {FSID_TMPFS,   0x01021994},
+    {FSID_EXT2,    0xEF53    },
+    {FSID_VFAT,    0x4D44    },
+    {FSID_ISO9660, 0x9660    },
+    {FSID_PROCFS,  0x9FA0    },
+};
+
+#ifndef ST_VALID
+    #define ST_VALID 0x0020
+#endif
+
+
 void vfs_init(void) {
 
     int i = 0;
@@ -121,6 +142,54 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 
 
     return errno = EINVAL, -1;
+}
+
+
+/**
+ * @brief Reports the statistics of the filesystem an inode belongs to, in the layout statfs() returns.
+ *
+ * @param inode Any inode of the filesystem.
+ * @param st Receives the statistics.
+ * @return 0 on success, or -1 with errno set.
+ */
+int vfs_statfs(inode_t* inode, struct statfs* st) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(st);
+
+    struct superblock* sb = NULL;
+
+    for (inode_t* i = inode; i && !sb; i = i->parent)
+        sb = i->sb;
+
+    while (sb && sb->fsid == FSID_BIND && sb->dev)
+        sb = sb->dev->sb;
+
+    if (unlikely(!sb))
+        return errno = ENOSYS, -1;
+
+
+    memset(st, 0, sizeof(struct statfs));
+
+    for (size_t i = 0; i < sizeof(vfs_fs_magic) / sizeof(vfs_fs_magic[0]); i++) {
+
+        if (vfs_fs_magic[i].fsid == sb->fsid)
+            st->f_type = vfs_fs_magic[i].magic;
+    }
+
+    st->f_bsize         = sb->st.f_bsize;
+    st->f_frsize        = sb->st.f_frsize;
+    st->f_blocks        = sb->st.f_blocks;
+    st->f_bfree         = sb->st.f_bfree;
+    st->f_bavail        = sb->st.f_bavail;
+    st->f_files         = sb->st.f_files;
+    st->f_ffree         = sb->st.f_ffree;
+    st->f_fsid.__val[0] = (int)(sb->st.f_fsid & 0xFFFFFFFF);
+    st->f_fsid.__val[1] = (int)(sb->st.f_fsid >> 32);
+    st->f_namelen       = sb->st.f_namemax;
+    st->f_flags         = sb->st.f_flag | ST_VALID;
+
+    return 0;
 }
 
 

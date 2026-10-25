@@ -192,7 +192,7 @@ int iso9660_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
     dir->sb->fsinfo = iso9660;
 
     dir->sb->st.f_bsize   = iso9660->block_size;
-    dir->sb->st.f_frsize  = 1;
+    dir->sb->st.f_frsize  = iso9660->block_size;
     dir->sb->st.f_blocks  = iso9660->blocks;
     dir->sb->st.f_bfree   = 0;
     dir->sb->st.f_bavail  = 0;
