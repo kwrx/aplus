@@ -35,6 +35,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 
+#include <fcntl.h>
 #include <sys/sysmacros.h>
 
 
@@ -100,7 +101,7 @@ void init(const char* args) {
 
     int fd;
 
-    if ((fd = sys_creat("/dev/ptmx", S_IFCHR | 0666)) < 0) {
+    if ((fd = sys_open("/dev/ptmx", O_CREAT | O_EXCL | O_WRONLY, S_IFCHR | 0666)) < 0) {
         kpanicf("ptmx: failed to create /dev/ptmx: %s\n", strerror(-fd));
     }
 

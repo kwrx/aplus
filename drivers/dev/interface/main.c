@@ -23,6 +23,7 @@
 
 
 #include <dirent.h>
+#include <fcntl.h>
 #include <stdint.h>
 #include <sys/types.h>
 
@@ -32,6 +33,7 @@
 #include <aplus/memory.h>
 #include <aplus/module.h>
 #include <aplus/smp.h>
+#include <aplus/syscall.h>
 #include <aplus/vfs.h>
 
 #include <aplus/utils/list.h>
@@ -289,7 +291,7 @@ void device_mkdev(device_t* device, mode_t mode) {
     }
 
 
-    int fd = sys_creat(buf, mode);
+    int fd = sys_open(buf, O_CREAT | O_EXCL | O_WRONLY, mode);
 
     if (unlikely(fd < 0)) {
         kpanicf("device::create: failed, device already exists: %s\n", buf);

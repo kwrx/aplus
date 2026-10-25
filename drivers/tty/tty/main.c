@@ -37,6 +37,7 @@
 #include <aplus/syscall.h>
 
 #include <ctype.h>
+#include <fcntl.h>
 #include <sys/sysmacros.h>
 
 
@@ -92,7 +93,7 @@ void init(const char* args) {
 
     int fd;
 
-    if ((fd = sys_creat("/dev/tty", S_IFREG | 0666)) < 0) {
+    if ((fd = sys_open("/dev/tty", O_CREAT | O_EXCL | O_WRONLY, S_IFREG | 0666)) < 0) {
         kpanicf("tty: failed to create /dev/tty: %s", strerror(-fd));
     }
 
