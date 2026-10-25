@@ -80,6 +80,11 @@ SYSCALL(
         char __safe_type[CONFIG_PATH_MAX];
         uio_strncpy_u2s(__safe_type, type, CONFIG_PATH_MAX);
 
+        char __safe_devname[CONFIG_PATH_MAX] = {0};
+
+        if (dev_name)
+            uio_strncpy_u2s(__safe_devname, dev_name, CONFIG_PATH_MAX);
+
 
 
         inode_t* s = NULL;
@@ -128,7 +133,7 @@ SYSCALL(
 
         DEBUG_ASSERT(d);
 
-        if (vfs_mount(s, d, __safe_type, flags, (const char*)data) < 0)
+        if (vfs_mount(s, d, dev_name ? __safe_devname : NULL, __safe_type, flags, (const char*)data) < 0)
             return -errno;
 
 

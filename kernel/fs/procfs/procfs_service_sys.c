@@ -234,3 +234,50 @@ inode_t* procfs_service_self_inode(inode_t* parent) {
 
     return inode;
 }
+
+
+/**
+ * @brief Generates /proc/mounts, a symlink to the calling task's own mount table.
+ *
+ * @param inode The /proc/mounts inode.
+ * @param buf Receives the link target.
+ * @param size Receives the length of the target.
+ * @param arg Unused.
+ * @return 0 on success.
+ */
+static int procfs_service_mounts_fetch(inode_t* inode, char** buf, size_t* size, void* arg) {
+
+    (void)arg;
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(size);
+
+
+    procfs_buf_t b = procfs_scratch();
+
+    procfs_bprintf(&b, "self/mounts");
+
+    *buf  = b.data;
+    *size = b.length;
+
+    return 0;
+}
+
+/**
+ * @brief Returns the /proc/mounts inode, creating it on first use.
+ *
+ * @param parent The /proc root inode.
+ * @return The /proc/mounts inode.
+ */
+inode_t* procfs_service_mounts_inode(inode_t* parent) {
+
+    static inode_t* inode = NULL;
+
+    if (inode == NULL) {
+        inode      = procfs_service_inode(parent, "mounts", S_IFLNK | 0777, procfs_service_mounts_fetch, NULL);
+        inode->ino = PROCFS_INO_STATIC(10);
+    }
+
+    return inode;
+}

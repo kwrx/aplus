@@ -26,6 +26,7 @@
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/mount.h>
 #include <sys/types.h>
 
 #include <aplus.h>
@@ -544,4 +545,148 @@ ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size) {
     __task_files_put(fdt, fst);
 
     return e;
+}
+
+
+/**
+ * @brief The mount flags /proc/mounts spells out after rw or ro, in the order Linux prints them.
+ */
+static const struct {
+
+    int flag;
+    const char* name;
+
+} procfs_mount_options[] = {
+    {MS_SYNCHRONOUS, "sync"      },
+    {MS_DIRSYNC,     "dirsync"   },
+    {MS_MANDLOCK,    "mand"      },
+    {MS_LAZYTIME,    "lazytime"  },
+    {MS_NOSUID,      "nosuid"    },
+    {MS_NODEV,       "nodev"     },
+    {MS_NOEXEC,      "noexec"    },
+    {MS_NOATIME,     "noatime"   },
+    {MS_NODIRATIME,  "nodiratime"},
+    {MS_RELATIME,    "relatime"  },
+};
+
+
+/**
+ * @brief Where a mount table listing is written, and the root its paths are relative to.
+ */
+typedef struct procfs_mounts {
+
+    procfs_buf_t* b;
+    inode_t* root;
+
+} procfs_mounts_t;
+
+
+/**
+ * @brief Appends a string with the characters /proc/mounts uses as separators written as octal escapes.
+ *
+ * @param b The buffer to append to.
+ * @param s The string.
+ */
+static void __bputs_mangled(procfs_buf_t* b, const char* s) {
+
+    for (; *s; s++) {
+
+        if (*s == ' ' || *s == '\t' || *s == '\n' || *s == '\\')
+            procfs_bprintf(b, "\\%03o", (unsigned char)*s);
+        else
+            procfs_bputs(b, s, 1);
+    }
+}
+
+
+/**
+ * @brief Tells whether an inode can be reached by walking down from a root.
+ *
+ * @param inode The inode.
+ * @param root The root, or NULL for the top of the tree.
+ * @return true if the inode is the root or lies beneath it.
+ */
+static bool __inode_under(inode_t* inode, inode_t* root) {
+
+    if (!root)
+        return true;
+
+    for (inode_t* i = inode; i; i = i->parent) {
+
+        if (i == root)
+            return true;
+    }
+
+    return false;
+}
+
+
+/**
+ * @brief Writes the /proc/mounts line of one mount, or nothing when its mountpoint lies outside the root.
+ *
+ * @param m The mount.
+ * @param arg The procfs_mounts_t listing it.
+ */
+static void __task_mounts_line(const mount_t* m, void* arg) {
+
+    procfs_mounts_t* ctx = arg;
+
+    if (!__inode_under(m->dir, ctx->root))
+        return;
+
+    char path[CONFIG_PATH_MAX];
+
+    if (__inode_path(m->dir, ctx->root, path, sizeof(path)) < 0)
+        return;
+
+    bool rdonly = (m->flags & MS_RDONLY) || (m->sb->st.f_flag & ST_RDONLY);
+
+    __bputs_mangled(ctx->b, m->source);
+    procfs_bputs(ctx->b, " ", 1);
+    __bputs_mangled(ctx->b, path);
+    procfs_bprintf(ctx->b, " %s %s", m->type, rdonly ? "ro" : "rw");
+
+    for (size_t i = 0; i < sizeof(procfs_mount_options) / sizeof(procfs_mount_options[0]); i++) {
+
+        if (m->flags & procfs_mount_options[i].flag)
+            procfs_bprintf(ctx->b, ",%s", procfs_mount_options[i].name);
+    }
+
+    procfs_bputs(ctx->b, " 0 0\n", 5);
+}
+
+
+/**
+ * @brief Writes the mount table as a task sees it from its root, one /proc/mounts line per mount.
+ *
+ * @param pid The task.
+ * @param b The buffer to write into.
+ * @return 0 on success, or -1 with errno set.
+ */
+int procfs_task_mounts(pid_t pid, procfs_buf_t* b) {
+
+    DEBUG_ASSERT(b);
+
+    if (unlikely(pid <= 0))
+        return errno = ESRCH, -1;
+
+
+    procfs_fd_t fdt = NULL;
+    procfs_fs_t fst = NULL;
+
+    if (!__task_files_get(pid, &fdt, &fst))
+        return errno = ESRCH, -1;
+
+
+    procfs_mounts_t ctx = {.b = b, .root = NULL};
+
+    shared_ptr_nullable_access(fst, fs, {
+        ctx.root = fs->root;
+    });
+
+    vfs_mounts_foreach(__task_mounts_line, &ctx);
+
+    __task_files_put(fdt, fst);
+
+    return 0;
 }

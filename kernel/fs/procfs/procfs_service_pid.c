@@ -62,6 +62,7 @@ static const procfs_pid_entry_t procfs_pid_table[] = {
     {"statm",   S_IFREG | 0444, 3, procfs_pid_fetch_statm  },
     {"cmdline", S_IFREG | 0444, 4, procfs_pid_fetch_cmdline},
     {"io",      S_IFREG | 0444, 5, procfs_pid_fetch_io     },
+    {"mounts",  S_IFREG | 0444, 7, procfs_pid_fetch_mounts },
 };
 
 #define PROCFS_PID_ENTRIES (sizeof(procfs_pid_table) / sizeof(procfs_pid_table[0]))

@@ -48,6 +48,13 @@ fstable_t* fs_table = &__fs_table[0];
 
 
 /**
+ * @brief Every filesystem mounted so far, in mount order, and the lock that guards the list.
+ */
+static list(mount_t*, vfs_mounts);
+static spinlock_t vfs_mounts_lock = {0};
+
+
+/**
  * @brief The Linux magic number statfs() reports for each filesystem.
  */
 static const struct {
@@ -82,6 +89,8 @@ void vfs_init(void) {
 #endif
 
 
+    spinlock_init(&vfs_mounts_lock);
+
     rootfs_init();
     fd_init();
     vfs_locks_init();
@@ -92,7 +101,54 @@ void vfs_init(void) {
 }
 
 
-int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args) {
+/**
+ * @brief Records a successful mount in the mount table.
+ *
+ * @param dir The mountpoint, now the root of the mounted filesystem.
+ * @param dev The source inode, or NULL.
+ * @param source The source as the caller named it, or NULL.
+ * @param fs The filesystem that was mounted.
+ * @param flags The MS_* mount flags.
+ */
+static void __mount_record(inode_t* dir, inode_t* dev, const char* source, const fstable_t* fs, int flags) {
+
+    mount_t* m = kcalloc(1, sizeof(mount_t), GFP_KERNEL);
+
+    m->dir   = dir;
+    m->sb    = dir->sb;
+    m->type  = fs->name;
+    m->flags = flags;
+
+    if (!source)
+        source = fs->name;
+
+
+    scoped_lock(&vfs_mounts_lock) {
+
+        if (fs->id == FSID_BIND && dev) {
+
+            list_each(vfs_mounts, i) {
+
+                if (i->sb != dev->sb)
+                    continue;
+
+                m->type = i->type;
+                source  = i->source;
+            }
+        }
+
+
+        size_t len = strlen(source) + 1;
+
+        m->source = kmalloc(len, GFP_KERNEL);
+        memcpy(m->source, source, len);
+
+        list_push(vfs_mounts, m);
+    }
+}
+
+
+int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, int flags, const char* args) {
 
     DEBUG_ASSERT(dir);
     DEBUG_ASSERT(fs);
@@ -133,6 +189,9 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
             vfs_inode_get(dev);
 
 
+        __mount_record(dir, dev, source, &fs_table[i], flags);
+
+
 #if DEBUG_LEVEL_INFO
         kprintf("mount: volume %s mounted on %s with %s\n", dev ? dev->name : "nodev", dir->name, fs);
 #endif
@@ -142,6 +201,25 @@ int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char*
 
 
     return errno = EINVAL, -1;
+}
+
+
+/**
+ * @brief Calls a function on every mount in the mount table, in mount order, with the table locked.
+ *
+ * @param fn The function to call, which must not mount anything.
+ * @param arg Passed through to fn.
+ */
+void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg) {
+
+    DEBUG_ASSERT(fn);
+
+    scoped_lock(&vfs_mounts_lock) {
+
+        list_each(vfs_mounts, m) {
+            fn(m, arg);
+        }
+    }
 }
 
 
