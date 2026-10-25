@@ -32,7 +32,9 @@
 #include <aplus/memory.h>
 #include <aplus/module.h>
 #include <aplus/pty.h>
+#include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 #include <aplus/utils/ringbuffer.h>
@@ -48,10 +50,32 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
-static uint64_t __next_pty_index = 0;
-
 static pty_t* queue          = NULL;
 static spinlock_t queue_lock = SPINLOCK_INIT;
+
+
+/**
+ * @brief Finds the lowest index no live pty uses; the caller holds queue_lock.
+ *
+ * @return The index.
+ */
+static uint64_t __pty_free_index(void) {
+
+    uint64_t index = 0;
+    pty_t* p       = queue;
+
+    while (p) {
+
+        if (p->index == index) {
+            index++;
+            p = queue;
+        } else {
+            p = p->next;
+        }
+    }
+
+    return index;
+}
 
 
 
@@ -660,7 +684,11 @@ int pty_ioctl(inode_t* inode, long req, void* arg) {
             shared_ptr_access(current_task->ctty, ctty, {
                 if (*ctty != pty) {
 
-                    if (unlikely(*ctty || (pty->m_sid > 0 && pty->m_sid != current_task->sid))) {
+                    if (unlikely(atomic_load(&pty->hungup))) {
+
+                        e = EIO;
+
+                    } else if (unlikely(*ctty || (pty->m_sid > 0 && pty->m_sid != current_task->sid))) {
 
                         e = EPERM;
 
@@ -867,26 +895,30 @@ ssize_t pty_slave_read(inode_t* inode, void* buf, off_t offset, size_t size) {
         return 0;
 
 
+    ssize_t e;
+
     if (pty->ios.c_lflag & ICANON) {
 
-        return pty_input_read(pty, buf, size);
+        e = pty_input_read(pty, buf, size);
 
     } else {
 
         if (pty->ios.c_cc[VMIN] > 0) {
 
-            return ringbuffer_read(&pty->r1, buf, MIN(size, pty->ios.c_cc[VMIN]));
+            e = ringbuffer_read(&pty->r1, buf, MIN(size, pty->ios.c_cc[VMIN]));
 
         } else {
 
             size_t avail = ringbuffer_available(&pty->r1);
 
-            if (avail == 0)
-                return -EAGAIN;
-
-            return ringbuffer_read(&pty->r1, buf, MIN(size, avail));
+            e = avail == 0 ? -EAGAIN : ringbuffer_read(&pty->r1, buf, MIN(size, avail));
         }
     }
+
+    if (e == -EAGAIN && atomic_load(&pty->hungup))
+        return -EIO;
+
+    return e;
 }
 
 
@@ -905,6 +937,9 @@ ssize_t pty_slave_write(inode_t* inode, const void* buf, off_t offset, size_t si
 
     if (unlikely(!size))
         return 0;
+
+    if (unlikely(atomic_load(&pty->hungup)))
+        return -EIO;
 
 
     return pty_process_output(pty, buf, size);
@@ -953,6 +988,9 @@ int pty_slave_poll(inode_t* inode, int events) {
 
     int revents = 0;
 
+    if (atomic_load(&pty->hungup))
+        return (events & (POLLIN | POLLRDNORM)) | POLLHUP;
+
     if (ringbuffer_available(&pty->r1) > 0 || pty->eof.pending)
         revents |= POLLIN | POLLRDNORM;
 
@@ -973,8 +1011,6 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
     if (unlikely(!pty))
         return NULL;
 
-
-    pty->index = __next_pty_index++;
 
     pty->m_pid  = 0;
     pty->s_pgrp = 0;
@@ -1034,14 +1070,117 @@ pty_t* pty_create(inode_t* ptmx, int flags) {
 
 
 
-    pty->ptmx = ptmx;
+    pty->ptmx  = ptmx;
+    pty->slave = NULL;
+
+    atomic_init(&pty->hungup, false);
+    atomic_init(&pty->refcount, 1);
 
     scoped_lock(&queue_lock) {
-        pty->next = queue;
-        queue     = pty;
+        pty->index = __pty_free_index();
+        pty->next  = queue;
+        queue      = pty;
     }
 
     return pty;
+}
+
+
+/**
+ * @brief Takes another reference to a pty.
+ *
+ * @param pty The pty.
+ * @return The pty.
+ */
+pty_t* pty_get(pty_t* pty) {
+
+    DEBUG_ASSERT(pty);
+
+    atomic_fetch_add(&pty->refcount, 1);
+
+    return pty;
+}
+
+
+/**
+ * @brief Drops a reference to a pty, freeing it with its buffers on the last one.
+ *
+ * @param pty The pty.
+ */
+void pty_put(pty_t* pty) {
+
+    DEBUG_ASSERT(pty);
+
+    if (atomic_fetch_sub(&pty->refcount, 1) != 1)
+        return;
+
+    ringbuffer_destroy(&pty->r1);
+    ringbuffer_destroy(&pty->r2);
+
+    if (pty->input.buffer)
+        kfree(pty->input.buffer);
+
+    kfree(pty);
+}
+
+
+/**
+ * @brief Hangs a pty up once its master is closed: hides its slave, detaches it from every session and signals the foreground group.
+ *
+ * @param pty The pty.
+ */
+void pty_hangup(pty_t* pty) {
+
+    DEBUG_ASSERT(pty);
+
+    inode_t* slave = NULL;
+
+    scoped_lock(&queue_lock) {
+
+        for (pty_t** p = &queue; *p; p = &(*p)->next) {
+            if (*p == pty) {
+                *p = pty->next;
+                break;
+            }
+        }
+
+        slave = pty->slave;
+
+        pty->next  = NULL;
+        pty->slave = NULL;
+        pty->ptmx  = NULL;
+
+        atomic_store(&pty->hungup, true);
+    }
+
+
+    cpu_foreach (cpu) {
+        scoped_lock(&cpu->sched_lock) {
+            for (task_t* t = cpu->sched_queue; t; t = t->next) {
+
+                if (!t->ctty)
+                    continue;
+
+                shared_ptr_access(t->ctty, ctty, {
+                    if (*ctty == pty)
+                        *ctty = NULL;
+                });
+            }
+        }
+    }
+
+
+    if (pty->s_pgrp > 0) {
+        sys_kill(-pty->s_pgrp, SIGHUP);
+        sys_kill(-pty->s_pgrp, SIGCONT);
+    }
+
+
+    if (slave) {
+        scoped_lock(&slave->parent->lock) {
+            vfs_inode_unlink(slave);
+        }
+    }
 }
 
 pty_t* pty_queue() {

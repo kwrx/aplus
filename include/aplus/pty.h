@@ -75,8 +75,11 @@ typedef struct pty {
     } eof;
 
     bool locked;
+    atomic_bool hungup;
+    atomic_int refcount;
 
     inode_t* ptmx;
+    inode_t* slave;
 
     struct pty* next;
 
@@ -95,6 +98,9 @@ int pty_master_poll(inode_t* inode, int events);
 int pty_slave_poll(inode_t* inode, int events);
 
 pty_t* pty_create(inode_t* ptmx, int flags);
+pty_t* pty_get(pty_t* pty);
+void pty_put(pty_t* pty);
+void pty_hangup(pty_t* pty);
 pty_t* pty_queue();
 void pty_queue_lock();
 void pty_queue_unlock();

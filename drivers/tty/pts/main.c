@@ -96,6 +96,19 @@ static int pts_setattr(inode_t* inode, struct stat* st) {
     return 0;
 }
 
+/**
+ * @brief Drops the reference a slave inode holds on its pty as the inode is freed after a hangup.
+ *
+ * @param inode The slave.
+ */
+static void pts_release(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+    pty_put((pty_t*)inode->userdata);
+}
+
 static ssize_t pts_readdir(inode_t* inode, struct dirent* e, off_t position, size_t count) {
 
     DEBUG_ASSERT(inode);
@@ -165,14 +178,20 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             DEBUG_ASSERT(queue->ptmx);
 
 
+            if (queue->slave) {
+                d = queue->slave;
+                break;
+            }
+
             if ((d = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER)) == NULL)
                 break;
 
-            strncpy(d->name, name, CONFIG_MAXNAMLEN);
+            strncpy(d->name, name, CONFIG_MAXNAMLEN - 1);
 
             d->ino    = index;
             d->sb     = inode->sb;
             d->parent = inode;
+            d->flags  = INODE_FLAGS_DCACHE_DISABLED;
 
             spinlock_init(&d->lock);
 
@@ -180,14 +199,16 @@ static inode_t* pts_finddir(inode_t* inode, const char* name) {
             d->ops.getattr = pts_getattr;
             d->ops.setattr = pts_setattr;
 
-            d->ops.read  = pty_slave_read;
-            d->ops.write = pty_slave_write;
-            d->ops.ioctl = pty_ioctl;
-            d->ops.poll  = pty_slave_poll;
-            d->userdata  = queue;
+            d->ops.read    = pty_slave_read;
+            d->ops.write   = pty_slave_write;
+            d->ops.ioctl   = pty_ioctl;
+            d->ops.poll    = pty_slave_poll;
+            d->ops.release = pts_release;
+            d->userdata    = pty_get(queue);
 
             d->ev = shared_ptr_ref(queue->ptmx->ev);
 
+            queue->slave = d;
 
             break;
         }

@@ -45,6 +45,46 @@ MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
 
+/**
+ * @brief Hangs the pty up when the last descriptor on its master closes, and lets the master inode be freed.
+ *
+ * @param inode The master inode.
+ * @return 0.
+ */
+static int ptmx_close(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(inode->userdata);
+
+    pty_hangup((pty_t*)inode->userdata);
+
+    inode->flags |= INODE_FLAGS_ANONYMOUS;
+
+    return 0;
+}
+
+
+/**
+ * @brief Drops the reference a master inode holds on its pty as the inode is freed.
+ *
+ * @param inode The master inode.
+ */
+static void ptmx_release(inode_t* inode) {
+
+    DEBUG_ASSERT(inode);
+
+    if (inode->userdata)
+        pty_put((pty_t*)inode->userdata);
+}
+
+
+/**
+ * @brief Opens /dev/ptmx: creates a pty and returns the master inode private to this open.
+ *
+ * @param inode The /dev/ptmx inode.
+ * @param flags The open() flags.
+ * @return The master inode, or NULL with errno set.
+ */
 static inode_t* ptmx_open(inode_t* inode, int flags) {
 
     DEBUG_ASSERT(inode);
@@ -53,46 +93,43 @@ static inode_t* ptmx_open(inode_t* inode, int flags) {
     inode_t* ptmx = (inode_t*)kcalloc(1, sizeof(inode_t), GFP_USER);
 
     if (unlikely(!ptmx))
-        goto fail_1;
+        return errno = ENOMEM, NULL;
 
 
-    memcpy(ptmx, inode, sizeof(inode_t));
+    strncpy(ptmx->name, inode->name, CONFIG_MAXNAMLEN - 1);
 
-    ptmx->ops.open  = NULL;
-    ptmx->ops.close = NULL;
-    ptmx->ops.read  = pty_master_read;
-    ptmx->ops.write = pty_master_write;
-    ptmx->ops.ioctl = pty_ioctl;
-    ptmx->ops.poll  = pty_master_poll;
+    ptmx->ino    = inode->ino;
+    ptmx->sb     = inode->sb;
+    ptmx->parent = inode->parent;
+    ptmx->ops    = inode->ops;
 
-    ptmx->ev = shared_ptr_new(struct inode_events, GFP_KERNEL);
+    ptmx->ops.open    = NULL;
+    ptmx->ops.close   = ptmx_close;
+    ptmx->ops.read    = pty_master_read;
+    ptmx->ops.write   = pty_master_write;
+    ptmx->ops.ioctl   = pty_ioctl;
+    ptmx->ops.poll    = pty_master_poll;
+    ptmx->ops.release = ptmx_release;
 
     spinlock_init(&ptmx->lock);
 
+    if (unlikely(!(ptmx->ev = shared_ptr_new(struct inode_events, GFP_KERNEL)))) {
+        kfree(ptmx);
+        return errno = ENOMEM, NULL;
+    }
 
 
     pty_t* pty = pty_create(ptmx, flags);
 
-    if (unlikely(!pty))
-        goto fail_2;
+    if (unlikely(!pty)) {
+        shared_ptr_free(ptmx->ev);
+        kfree(ptmx);
+        return errno = ENOMEM, NULL;
+    }
 
     ptmx->userdata = pty;
 
     return ptmx;
-
-
-fail_2:
-
-    if (pty)
-        kfree(pty);
-
-fail_1:
-
-    if (ptmx)
-        kfree(ptmx);
-
-
-    return NULL;
 }
 
 
