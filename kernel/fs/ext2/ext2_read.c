@@ -8,6 +8,7 @@
  */
 
 #include <stdint.h>
+#include <string.h>
 
 #include <aplus.h>
 #include <aplus/errno.h>
@@ -39,16 +40,28 @@ ssize_t ext2_read(inode_t* inode, void* buf, off_t pos, size_t len) {
 
     scoped_lock(&ext2->lock) {
         while (done < len) {
+
+            uint32_t physical;
             uint64_t offset  = pos + done;
             uint32_t block   = offset / ext2->blocksize;
             uint32_t inblock = offset % ext2->blocksize;
-            size_t chunk     = ext2->blocksize - inblock;
+            
+            size_t blocks = (inblock + (len - done) + ext2->blocksize - 1) / ext2->blocksize;
+
+            long run = ext2_utils_map_blocks(ext2, node, block, blocks, &physical);
+            if (run < 0)
+                return done ? (ssize_t)done : -1;
+
+            size_t chunk = (size_t)run * ext2->blocksize - inblock;
 
             if (chunk > len - done)
                 chunk = len - done;
 
-            if (ext2_utils_read_inode_data(ext2, node, block, inblock, (uint8_t*)buf + done, chunk) < 0)
+            if (physical == 0) {
+                memset((uint8_t*)buf + done, 0, chunk);
+            } else if (ext2_utils_read_blocks(ext2, physical, inblock, (uint8_t*)buf + done, chunk) < 0) {
                 return done ? (ssize_t)done : -1;
+            }
 
             done += chunk;
         }

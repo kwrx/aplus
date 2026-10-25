@@ -109,6 +109,7 @@ _Static_assert(sizeof(struct ext2_group_desc) == 32, "invalid ext2 group descrip
 #define EXT2_DIND_BLOCK  (EXT2_IND_BLOCK + 1)
 #define EXT2_TIND_BLOCK  (EXT2_DIND_BLOCK + 1)
 #define EXT2_N_BLOCKS    (EXT2_TIND_BLOCK + 1)
+#define EXT2_IND_LEVELS  (EXT2_N_BLOCKS - EXT2_NDIR_BLOCKS)
 
 
 /*
@@ -439,6 +440,15 @@ struct ext2_dir_entry_2 {
 
 
 
+/**
+ * @brief A block of block pointers kept in memory between reads, one per level of indirection.
+ */
+typedef struct {
+    uint32_t block;
+    uint32_t* pointers;
+} ext2_mapcache_t;
+
+
 typedef struct {
 
     struct ext2_super_block sb;
@@ -449,6 +459,7 @@ typedef struct {
     uint32_t inodesize;
 
     void* iocache;
+    ext2_mapcache_t mapcache[EXT2_IND_LEVELS];
     cache_t bcache;
     spinlock_t lock;
 
@@ -527,8 +538,10 @@ int ext2_utils_count_dir(ext2_t*, ino_t, int);
 int ext2_utils_read_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, void*, size_t);
 int ext2_utils_write_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, const void*, size_t);
 int ext2_utils_free_inode_data(ext2_t*, struct ext2_inode*, uint32_t);
+long ext2_utils_map_blocks(ext2_t*, struct ext2_inode*, uint32_t, size_t, uint32_t*);
 
 int ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t, bool);
+int ext2_utils_read_blocks(ext2_t*, uint32_t, uint32_t, void*, size_t);
 int ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
 int ext2_utils_zero_block(ext2_t*, uint32_t);
 

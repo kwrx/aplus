@@ -12,6 +12,7 @@
 
 #include <aplus.h>
 #include <aplus/errno.h>
+#include <aplus/memory.h>
 #include <aplus/vfs.h>
 
 #include "../ext2.h"
@@ -307,6 +308,104 @@ static int ext2_inode_get_block(ext2_t* ext2, struct ext2_inode* inode, uint32_t
 
     *physical = current;
     return 0;
+}
+
+
+/**
+ * @brief Returns a block of block pointers through the cache slot of its level of indirection.
+ * @param ext2 The filesystem, locked.
+ * @param depth The level of indirection.
+ * @param block The block of pointers.
+ * @return The pointers, or NULL with errno set.
+ */
+static uint32_t* ext2_inode_pointer_block(ext2_t* ext2, uint32_t depth, uint32_t block) {
+    ext2_mapcache_t* cache = &ext2->mapcache[depth];
+
+    if (cache->block == block)
+        return cache->pointers;
+
+    if (unlikely(!cache->pointers && !(cache->pointers = (uint32_t*)kmalloc(ext2->blocksize, GFP_KERNEL))))
+        return errno = ENOMEM, NULL;
+
+    cache->block = 0;
+
+    if (ext2_utils_read_block(ext2, block, 0, cache->pointers, ext2->blocksize, false) < 0)
+        return NULL;
+
+    cache->block = block;
+    return cache->pointers;
+}
+
+
+/**
+ * @brief Finds the physical block behind a logical block without allocating.
+ * @param ext2 The filesystem, locked.
+ * @param inode The inode.
+ * @param logical The logical block.
+ * @param physical Receives the physical block, or 0 for a hole.
+ * @return 0 on success, -1 with errno set.
+ */
+static int ext2_inode_lookup(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, uint32_t* physical) {
+    uint32_t indexes[EXT2_IND_LEVELS] = {0};
+    uint32_t levels;
+    uint32_t slot;
+
+    if (ext2_inode_block_path(ext2, logical, &slot, indexes, &levels) < 0)
+        return -1;
+
+    uint32_t current = inode->i_block[slot];
+
+    for (uint32_t depth = 0; depth < levels && current != 0; depth++) {
+        uint32_t* pointers = ext2_inode_pointer_block(ext2, depth, current);
+
+        if (unlikely(!pointers))
+            return -1;
+
+        current = pointers[indexes[depth]];
+    }
+
+    if (unlikely(current >= ext2->sb.s_blocks_count))
+        return errno = EIO, -1;
+
+    *physical = current;
+    return 0;
+}
+
+
+/**
+ * @brief Maps logical blocks onto a run of physically consecutive blocks, or onto a run of holes.
+ * @param ext2 The filesystem, locked.
+ * @param inode The inode.
+ * @param logical The first logical block.
+ * @param count The most blocks the run may cover.
+ * @param physical Receives the first physical block of the run, or 0 for holes.
+ * @return The number of blocks in the run, or -1 with errno set.
+ */
+long ext2_utils_map_blocks(ext2_t* ext2, struct ext2_inode* inode, uint32_t logical, size_t count, uint32_t* physical) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(physical);
+    DEBUG_ASSERT(count > 0);
+
+    uint32_t first;
+
+    if (ext2_inode_lookup(ext2, inode, logical, &first) < 0)
+        return -1;
+
+    long run = 1;
+
+    for (; (size_t)run < count; run++) {
+        uint32_t next;
+
+        if (ext2_inode_lookup(ext2, inode, logical + run, &next) < 0)
+            break;
+
+        if (first == 0 ? next != 0 : next != first + run)
+            break;
+    }
+
+    *physical = first;
+    return run;
 }
 
 
