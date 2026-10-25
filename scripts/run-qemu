@@ -123,7 +123,7 @@ x86_64)
         flags="$flags -device pcnet,netdev=net0"
     fi
 
-    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22"
+    flags="$flags -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080"
 
     # Block
     # if [ $ARG_VIRTIO -eq 1 ]; then

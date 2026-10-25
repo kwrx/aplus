@@ -391,7 +391,7 @@ else
     set -- "$@" -device pcnet,netdev=net0
 fi
 
-set -- "$@" -netdev user,id=net0,hostfwd=tcp::8080-:80
+set -- "$@" -netdev user,id=net0,hostfwd=tcp::2222-:22,hostfwd=tcp::8080-:8080
 
 # Block
 set -- "$@" -drive "id=disk,file=$IMAGE,if=none,format=qcow2,cache=writeback"
