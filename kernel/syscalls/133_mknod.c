@@ -29,6 +29,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -73,21 +74,36 @@ SYSCALL(
             case S_IFIFO:
             case S_IFREG:
             case S_IFDIR:
-            case 0: {
-
-                long fd;
-
-                if ((fd = sys_creat(filename, mode)) < 0)
-                    return fd;
-
-                if (sys_close(fd) < 0)
-                    return -EIO;
-
-                return 0;
-            }
+            case 0:
+                break;
 
 
             default:
                 return -EINVAL;
         }
+
+
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
+
+        shared_ptr_access(current_task->fs, fs, {
+            if (unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = vfs_inode_get(fs->cwd);
+        });
+
+
+        char __safe_filename[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
+
+        if (unlikely(__safe_filename[0] == '\0'))
+            return -ENOENT;
+
+
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if ((r = path_lookup(cwd, __safe_filename, O_CREAT | O_EXCL, mode)) == NULL)
+            return -errno;
+
+        return 0;
     });

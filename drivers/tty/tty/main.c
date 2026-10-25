@@ -79,9 +79,11 @@ static ssize_t tty_readlink(inode_t* inode, char* buf, size_t size) {
 
     shared_ptr_access(current_task->ctty, ctty, {
         if (unlikely(!(*ctty)))
-            return -ENOENT;
+            return (errno = ENOENT, -1);
 
-        return snprintf(buf, size, "/dev/pts/%lu", (*ctty)->index);
+        int n = snprintf(buf, size, "/dev/pts/%lu", (*ctty)->index);
+
+        return (size_t)n < size ? n : (ssize_t)size - 1;
     });
 }
 

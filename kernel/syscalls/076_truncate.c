@@ -29,6 +29,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -54,32 +55,65 @@
 
 SYSCALL(
     76, truncate, long sys_truncate(const char* path, long length) {
+        if (unlikely(!path))
+            return -EINVAL;
+
         if (!uio_check(path, R_OK))
             return -EFAULT;
 
-
-        int fd;
-        if ((fd = do_openat(AT_FDCWD, path, O_RDONLY, 0, false)) < 0)
-            return fd;
+        if (unlikely(length < 0))
+            return -EINVAL;
 
 
-        int e = 0;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-        struct file* file = fd_get((unsigned int)fd, NULL);
+        shared_ptr_access(current_task->fs, fs, {
+            if (unlikely(!fs->cwd))
+                return -ENOENT;
 
-        if (unlikely(!file))
-            return -EBADF;
+            cwd = vfs_inode_get(fs->cwd);
+        });
 
-        scoped_lock(&file->lock) {
-            e = vfs_truncate(file->inode, length);
+
+        char __safe_path[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_path, path, CONFIG_PATH_MAX);
+
+        if (unlikely(__safe_path[0] == '\0'))
+            return -ENOENT;
+
+
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if ((r = path_lookup(cwd, __safe_path, 0, 0)) == NULL)
+            return -errno;
+
+        struct stat st = {0};
+
+        if (vfs_getattr(r, &st) < 0)
+            return -errno;
+
+
+        if (S_ISLNK(st.st_mode)) {
+
+            inode_t* target = path_follows(r);
+
+            vfs_inode_put(r);
+
+            if ((r = target) == NULL)
+                return -errno;
+
+            if (vfs_getattr(r, &st) < 0)
+                return -errno;
         }
 
-        fd_put(file);
+        if (S_ISDIR(st.st_mode))
+            return -EISDIR;
+
+        if (!S_ISREG(st.st_mode))
+            return -EINVAL;
 
 
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
-
+        int e = vfs_truncate(r, length);
 
         if (e < 0)
             return -errno;

@@ -33,6 +33,8 @@
 #include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
+#include <aplus/vfs.h>
 
 
 
@@ -57,21 +59,52 @@ SYSCALL(
             return -EFAULT;
 
 
-        int fd;
-        if ((fd = do_openat(AT_FDCWD, filename, O_RDONLY, 0, false)) < 0)
-            return fd;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
+
+        shared_ptr_access(current_task->fs, fs, {
+            if (unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = vfs_inode_get(fs->cwd);
+        });
 
 
-        struct file* file = fd_get((unsigned int)fd, NULL);
+        char __safe_filename[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
 
-        sys_close(fd);
-
-        if (unlikely(!file))
-            return -EBADF;
+        if (unlikely(__safe_filename[0] == '\0'))
+            return -ENOENT;
 
 
-        fs_chdir(file->inode, true);
-        fd_put(file);
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if ((r = path_lookup(cwd, __safe_filename, 0, 0)) == NULL)
+            return -errno;
+
+        struct stat st = {0};
+
+        if (vfs_getattr(r, &st) < 0)
+            return -errno;
+
+
+        if (S_ISLNK(st.st_mode)) {
+
+            inode_t* target = path_follows(r);
+
+            vfs_inode_put(r);
+
+            if ((r = target) == NULL)
+                return -errno;
+
+            if (vfs_getattr(r, &st) < 0)
+                return -errno;
+        }
+
+        if (!S_ISDIR(st.st_mode))
+            return -ENOTDIR;
+
+
+        fs_chdir(r, true);
 
         return 0;
     });

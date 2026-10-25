@@ -29,6 +29,7 @@
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -78,26 +79,51 @@ SYSCALL(
             return -EFAULT;
 
 
-        int fd = -1;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
-        if ((fd = do_openat(dfd, path, O_RDONLY | O_NOFOLLOW, 0, false)) < 0)
-            return fd;
+        if (dfd < 0) {
+
+            if (dfd != AT_FDCWD)
+                return -EBADF;
+
+            shared_ptr_access(current_task->fs, fs, {
+                if (unlikely(!fs->cwd))
+                    return -ENOENT;
+
+                cwd = vfs_inode_get(fs->cwd);
+            });
+
+        } else {
+
+            if (dfd >= CONFIG_OPEN_MAX)
+                return -EBADF;
+
+            shared_ptr_access(current_task->fd, fds, {
+                if (unlikely(!fds->descriptors[dfd].ref))
+                    return -EBADF;
+
+                cwd = vfs_inode_get(fds->descriptors[dfd].ref->inode);
+            });
+        }
+
+        DEBUG_ASSERT(cwd);
 
 
-        inode_t* inode = NULL;
+        char __safe_path[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_path, path, CONFIG_PATH_MAX);
 
-        shared_ptr_access(current_task->fd, fds, {
-            DEBUG_ASSERT(fds->descriptors[fd].ref);
-            DEBUG_ASSERT(fds->descriptors[fd].ref->inode);
+        inode_t* inode __scoped(vfs_inode_cleanup) = NULL;
 
-            inode = fds->descriptors[fd].ref->inode;
-        });
+        if (__safe_path[0] == '\0') {
 
-        DEBUG_ASSERT(inode);
+            if (dfd < 0)
+                return -ENOENT;
 
+            inode = vfs_inode_get(cwd);
 
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
+        } else if ((inode = path_lookup(cwd, __safe_path, O_NOFOLLOW, 0)) == NULL) {
+            return -errno;
+        }
 
 
         struct stat st = {0};

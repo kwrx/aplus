@@ -25,9 +25,11 @@
 #include <aplus.h>
 #include <aplus/debug.h>
 #include <aplus/errno.h>
+#include <aplus/hal.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
 #include <aplus/task.h>
+#include <aplus/vfs.h>
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
@@ -50,12 +52,34 @@
 
 SYSCALL(
     83, mkdir, long sys_mkdir(const char* pathname, mode_t mode) {
-        int fd = do_openat(AT_FDCWD, pathname, O_CREAT | O_EXCL | O_RDONLY, S_IFDIR | (mode & 0777), false);
-        if (fd < 0)
-            return fd;
+        if (unlikely(!pathname))
+            return -EINVAL;
 
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
+        if (unlikely(!uio_check(pathname, R_OK)))
+            return -EFAULT;
+
+
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
+
+        shared_ptr_access(current_task->fs, fs, {
+            if (unlikely(!fs->cwd))
+                return -ENOENT;
+
+            cwd = vfs_inode_get(fs->cwd);
+        });
+
+
+        char __safe_pathname[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_pathname, pathname, CONFIG_PATH_MAX);
+
+        if (unlikely(__safe_pathname[0] == '\0'))
+            return -ENOENT;
+
+
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if ((r = path_lookup(cwd, __safe_pathname, O_CREAT | O_EXCL, S_IFDIR | (mode & 0777))) == NULL)
+            return -errno;
 
         return 0;
     });
