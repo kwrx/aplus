@@ -101,11 +101,11 @@ else
     ARGS="root=/dev/sda2 rootfs=ext2"
 fi
 
-entry "aplus" "$ARGS $DEFAULT_KARGS $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
+entry "aplus" "$ARGS $DEFAULT_KARGS mode=desktop $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
 entry "aplus - Console Mode" "$ARGS mode=console $DEFAULT_KARGS $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
     
 submenu_begin "Advanced Options" >>$SYSROOT/boot/grub/grub.cfg
-    entry "aplus - Builtin Graphics" "$ARGS $DEFAULT_KARGS graphics=builtin $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
-    entry "aplus - Builtin Graphics (Console)" "$ARGS $DEFAULT_KARGS graphics=builtin mode=console $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
-    entry "aplus - No Graphics (Console)" "$ARGS $DEFAULT_KARGS graphics=off mode=console $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
+    entry "aplus - Builtin Graphics" "$ARGS $DEFAULT_KARGS mode=desktop graphics=builtin $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
+    entry "aplus - Builtin Graphics (Console)" "$ARGS $DEFAULT_KARGS mode=console graphics=builtin $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
+    entry "aplus - No Graphics (Headless)" "$ARGS $DEFAULT_KARGS mode=headless graphics=off $EXTRA_KARGS" "$EXTRA_MARGS" >>$SYSROOT/boot/grub/grub.cfg
 submenu_end >>$SYSROOT/boot/grub/grub.cfg
