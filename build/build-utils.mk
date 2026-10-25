@@ -12,12 +12,11 @@ vhd: install
 	$(QUIET)qemu-img convert -f raw -O vpc $(TARGET) aplus.vhd
 
 usb: install-live
-	$(QUIET)read -p "Enter the USB device path (e.g. /dev/sdb): " USBDEV; 	\
+	$(QUIET)read -p "Enter the USB device path [/dev/sdb]: " USBDEV; 		\
 		if [ -z "$$USBDEV" ]; then 											\
-			echo "No USB device path specified"; 							\
-			exit 1; 														\
+			USBDEV=/dev/sdb; 												\
 		fi; 																\
 		echo "    FLASH   $$USBDEV"; 										\
-		sudo dd if=$(TARGET) of=$$USBDEV bs=4M; 							\
+		sudo dd if=$(TARGET) of=$$USBDEV bs=4M status=progress conv=fsync; 	\
 		sudo sync; 															\
 		sudo eject $$USBDEV
