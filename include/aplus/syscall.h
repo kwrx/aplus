@@ -129,6 +129,9 @@ extern long sys_kill(pid_t pid, int sig);
 
 extern long sys_rt_tgsigqueueinfo(pid_t tgid, pid_t tid, int sig, siginfo_t* uinfo);
 
+struct rlimit64;
+extern long sys_prlimit64(pid_t pid, unsigned int resource, const struct rlimit64* new_rlim, struct rlimit64* old_rlim);
+
 __END_DECLS
 
 #endif

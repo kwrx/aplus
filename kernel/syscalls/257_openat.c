@@ -189,18 +189,19 @@ long do_openat(int dfd, const char* filename, int flags, mode_t mode, bool check
     DEBUG_ASSERT(inode);
 
 
-    int fd = -1;
+    int fd          = -1;
+    const int limit = fd_limit();
 
     shared_ptr_access(current_task->fd, fds, {
         scoped_lock(&current_task->lock) {
 
-            for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+            for (fd = 0; fd < limit; fd++) {
                 if (fds->descriptors[fd].ref == NULL) {
                     break;
                 }
             }
 
-            if (fd == CONFIG_OPEN_MAX)
+            if (fd == limit)
                 break;
 
 
@@ -218,7 +219,7 @@ long do_openat(int dfd, const char* filename, int flags, mode_t mode, bool check
         }
 
 
-        if (fd == CONFIG_OPEN_MAX)
+        if (fd == limit)
             return -EMFILE;
 
         if (fd == CONFIG_FILE_MAX)

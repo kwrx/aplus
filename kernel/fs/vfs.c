@@ -388,7 +388,7 @@ int vfs_ioctl(inode_t* inode, long req, void* arg) {
         scoped_lock(&inode->lock) return inode->ops.ioctl(inode, req, arg);
     }
 
-    return errno = ENOSYS, -1;
+    return errno = ENOTTY, -1;
 }
 
 

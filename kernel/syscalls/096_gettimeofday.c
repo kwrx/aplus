@@ -31,6 +31,7 @@
 #include <fcntl.h>
 #include <stdint.h>
 #include <sys/stat.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -54,18 +55,21 @@
 struct timezone;
 
 SYSCALL(
-    96, gettimeofday, long sys_gettimeofday(struct timeval* tv, struct timezone* tz) {
-        if (unlikely(!tv))
+    96, gettimeofday, long sys_gettimeofday(struct timeval* user_tv, struct timezone* tz) {
+        if (unlikely(!user_tv))
             return -EINVAL;
 
-        if (!uio_check(tv, R_OK | W_OK))
+        if (!uio_check(user_tv, R_OK | W_OK))
             return -EINVAL;
 
 
         const uint64_t now = arch_timer_realtime_getns();
 
-        tv->tv_sec  = now / 1000000000ULL;
-        tv->tv_usec = (now % 1000000000ULL) / 1000ULL;
+        struct timeval tv;
+        tv.tv_sec  = now / 1000000000ULL;
+        tv.tv_usec = (now % 1000000000ULL) / 1000ULL;
+
+        uio_memcpy_s2u(user_tv, &tv, sizeof(struct timeval));
 
         return 0;
     });

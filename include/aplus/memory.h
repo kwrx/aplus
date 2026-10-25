@@ -173,7 +173,8 @@ typedef struct vmm_tlb_batch {
 typedef struct vmm_address_space {
 
     uintptr_t pm;
-    size_t size; /* pages currently mapped */
+    size_t size;      /* pages currently mapped */
+    size_t size_peak; /* most pages ever mapped at once */
     _Atomic size_t refcount;
     int flags;
 

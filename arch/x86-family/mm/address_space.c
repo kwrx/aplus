@@ -350,8 +350,9 @@ __returns_nonnull vmm_address_space_t* arch_vmm_create_address_space(vmm_address
     }
 
 
-    dest->size = size;
-    dest->flags = 0;
+    dest->size      = size;
+    dest->size_peak = size;
+    dest->flags     = 0;
 
     atomic_store(&dest->refcount, 1);
 

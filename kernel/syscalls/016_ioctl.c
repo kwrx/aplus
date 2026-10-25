@@ -35,6 +35,7 @@
 #include <aplus/memory.h>
 #include <aplus/smp.h>
 #include <aplus/syscall.h>
+#include <aplus/task.h>
 #include <aplus/vfs.h>
 
 #include <aplus/network.h>
@@ -56,43 +57,72 @@
 
 SYSCALL(
     16, ioctl, long sys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg) {
-        if (cmd == FIONBIO) {
 
-            if (unlikely(!uio_check((void*)arg, R_OK)))
-                return -EFAULT;
+        switch (cmd) {
+            
+            case FIOCLEX:
+            case FIONCLEX: {
+
+                if (unlikely(fd >= CONFIG_OPEN_MAX))
+                    return -EBADF;
+
+                shared_ptr_access(current_task->fd, fds, {
+
+                    if (unlikely(!fds->descriptors[fd].ref))
+                        return -EBADF;
+
+                    if (cmd == FIOCLEX) {
+                        fds->descriptors[fd].close_on_exec = 1;
+                    } else {
+                        fds->descriptors[fd].close_on_exec = 0;
+                    }
+
+                });
+
+                return 0;
+            }
+
+            case FIONBIO: {
+
+                if (unlikely(!uio_check((void*)arg, R_OK)))
+                    return -EFAULT;
+
+                struct file* file = fd_get(fd, NULL);
+                if (unlikely(!file))
+                    return -EBADF;
 
 
-            bool on = uio_r32((uint32_t*)arg) != 0;
+                if (uio_r32((uint32_t*)arg) != 0) {
+                    fd_set_flags(file, O_NONBLOCK, O_NONBLOCK);
+                } else {
+                    fd_set_flags(file, O_NONBLOCK, 0);
+                }
 
-            struct file* file = fd_get(fd, NULL);
+                fd_put(file);
+                return 0;
+            }
 
-            if (unlikely(!file))
-                return -EBADF;
+            default: {
 
-            fd_set_flags(file, O_NONBLOCK, on ? O_NONBLOCK : 0);
-            fd_put(file);
+                struct file* file = fd_get(fd, NULL);
+                if (unlikely(!file))
+                    return -EBADF;
+                
+                int e = 0;
+                scoped_lock(&file->lock) {
+                    e = vfs_ioctl(file->inode, cmd, (void*)arg);
+                }
 
-            return 0;
+                fd_put(file);
+
+                if (unlikely(e < 0))
+                    return -errno;
+                
+                return e;
+            }
+
         }
 
+        return -ENOSYS;
 
-        struct file* file = fd_get(fd, NULL);
-
-        if (unlikely(!file))
-            return -EBADF;
-
-
-        int e = 0;
-
-        scoped_lock(&file->lock) {
-            e = vfs_ioctl(file->inode, cmd, (void*)arg);
-        }
-
-        fd_put(file);
-
-
-        if (e < 0)
-            return -errno;
-
-        return e;
     });

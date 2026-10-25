@@ -249,6 +249,21 @@ void fd_set_flags(struct file* file, int mask, int flags) {
 
 
 /**
+ * @brief Gives the first descriptor number the caller may not open, from its RLIMIT_NOFILE and the table size.
+ *
+ * @return The limit, at most CONFIG_OPEN_MAX.
+ */
+unsigned int fd_limit(void) {
+
+    DEBUG_ASSERT(current_task);
+
+    rlim_t limit = current_task->rlimits[RLIMIT_NOFILE].rlim_cur;
+
+    return limit < CONFIG_OPEN_MAX ? (unsigned int)limit : CONFIG_OPEN_MAX;
+}
+
+
+/**
  * @brief Duplicates one of the caller's descriptors into the lowest free slot at or above a minimum.
  *
  * @param fd The descriptor to duplicate.
@@ -264,7 +279,9 @@ long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
     if (unlikely(fd >= CONFIG_OPEN_MAX))
         return -EBADF;
 
-    if (unlikely(min >= CONFIG_OPEN_MAX))
+    const unsigned int limit = fd_limit();
+
+    if (unlikely(min >= limit))
         return -EINVAL;
 
 
@@ -276,7 +293,7 @@ long fd_dup(unsigned int fd, unsigned int min, bool cloexec) {
 
         scoped_lock(&current_task->lock) {
 
-            for (unsigned int i = min; i < CONFIG_OPEN_MAX; i++) {
+            for (unsigned int i = min; i < limit; i++) {
 
                 if (fds->descriptors[i].ref)
                     continue;
@@ -310,7 +327,7 @@ long fd_dup_to(unsigned int fd, unsigned int newfd, bool cloexec) {
     DEBUG_ASSERT(fd != newfd);
 
 
-    if (unlikely(fd >= CONFIG_OPEN_MAX || newfd >= CONFIG_OPEN_MAX))
+    if (unlikely(fd >= CONFIG_OPEN_MAX || newfd >= fd_limit()))
         return -EBADF;
 
 

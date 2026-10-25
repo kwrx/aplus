@@ -29,6 +29,7 @@
     #include <sched.h>
 
     #include <signal.h>
+    #include <stddef.h>
     #include <stdint.h>
     #include <time.h>
 
@@ -98,6 +99,12 @@
     #define TASK_CLOCK_SCHEDULER       0
     #define TASK_CLOCK_THREAD_CPUTIME  1
     #define TASK_CLOCK_PROCESS_CPUTIME 2
+
+
+    /**
+     * @brief Bytes of struct rusage the Linux ABI copies out; musl's struct adds reserved space after them.
+     */
+    #define TASK_RUSAGE_ABI_SIZE (offsetof(struct rusage, ru_nivcsw) + sizeof(long))
 
 
     #define TASK_SCHEDULER_PERIOD_NS 1000000ULL
@@ -455,6 +462,8 @@ typedef struct task {
 
     struct rlimit rlimits[RLIM_NLIMITS];
     struct rusage rusage;
+    struct rusage rusage_dead;     /* threads of the group that already exited, kept on the leader */
+    struct rusage rusage_children; /* children this thread waited for, and their own children */
 
 
     spinlock_t lock;
@@ -511,6 +520,50 @@ static inline bool task_in_group(const task_t* task, gid_t gid) {
     }
 
     return false;
+}
+
+
+/**
+ * @brief Adds one resource usage record into another, keeping the larger peak resident set.
+ *
+ * @param dst The record added to.
+ * @param src The record to add.
+ */
+static inline void task_rusage_add(struct rusage* dst, const struct rusage* src) {
+
+    dst->ru_utime.tv_sec += src->ru_utime.tv_sec + (dst->ru_utime.tv_usec + src->ru_utime.tv_usec) / 1000000;
+    dst->ru_utime.tv_usec = (dst->ru_utime.tv_usec + src->ru_utime.tv_usec) % 1000000;
+    dst->ru_stime.tv_sec += src->ru_stime.tv_sec + (dst->ru_stime.tv_usec + src->ru_stime.tv_usec) / 1000000;
+    dst->ru_stime.tv_usec = (dst->ru_stime.tv_usec + src->ru_stime.tv_usec) % 1000000;
+
+    if (src->ru_maxrss > dst->ru_maxrss)
+        dst->ru_maxrss = src->ru_maxrss;
+
+    dst->ru_minflt += src->ru_minflt;
+    dst->ru_majflt += src->ru_majflt;
+    dst->ru_nswap += src->ru_nswap;
+    dst->ru_inblock += src->ru_inblock;
+    dst->ru_oublock += src->ru_oublock;
+    dst->ru_msgsnd += src->ru_msgsnd;
+    dst->ru_msgrcv += src->ru_msgrcv;
+    dst->ru_nsignals += src->ru_nsignals;
+    dst->ru_nvcsw += src->ru_nvcsw;
+    dst->ru_nivcsw += src->ru_nivcsw;
+}
+
+
+/**
+ * @brief Gives a thread's own resource usage, with its CPU time taken from its thread clock.
+ *
+ * @param task The thread.
+ * @param ru Receives the usage.
+ */
+static inline void task_rusage_self(const task_t* task, struct rusage* ru) {
+
+    *ru = task->rusage;
+
+    ru->ru_utime.tv_sec  = task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_sec;
+    ru->ru_utime.tv_usec = task->clock[TASK_CLOCK_THREAD_CPUTIME].tv_nsec / 1000;
 }
 
 

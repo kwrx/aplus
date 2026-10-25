@@ -30,9 +30,12 @@
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <aplus/hal.h>
 
 
 /***
@@ -52,4 +55,85 @@
 
 struct rlimit64;
 
-SYSCALL(302, prlimit64, long sys_prlimit64(pid_t pid, unsigned int resource, const struct rlimit64* new_rlim, struct rlimit64* old_rlim) { return -ENOSYS; });
+SYSCALL(
+    302, prlimit64, long sys_prlimit64(pid_t pid, unsigned int resource, const struct rlimit64* new_rlim, struct rlimit64* old_rlim) {
+        if (unlikely(resource >= RLIM_NLIMITS))
+            return -EINVAL;
+
+        struct rlimit new_limit;
+        struct rlimit old_limit;
+
+        if (new_rlim) {
+
+            if (unlikely(!uio_check(new_rlim, R_OK)))
+                return -EFAULT;
+
+            uio_memcpy_u2s(&new_limit, new_rlim, sizeof(struct rlimit));
+
+            if (unlikely(new_limit.rlim_cur > new_limit.rlim_max))
+                return -EINVAL;
+
+            if (unlikely(resource == RLIMIT_NOFILE && new_limit.rlim_max > CONFIG_OPEN_MAX))
+                return -EPERM;
+        }
+
+        if (unlikely(old_rlim && !uio_check(old_rlim, R_OK | W_OK)))
+            return -EFAULT;
+
+
+        if (pid == 0)
+            pid = current_task->tid;
+
+        bool found = false;
+        pid_t tgid = 0;
+
+        cpu_foreach(cpu) {
+
+            scoped_lock(&cpu->sched_lock) {
+
+                for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                    if (tmp->tid != pid)
+                        continue;
+
+                    bool allowed = tmp->pid == current_task->pid || current_task->euid == 0 ||
+                                   (tmp->uid == current_task->uid && tmp->euid == current_task->uid && tmp->suid == current_task->uid && tmp->gid == current_task->gid &&
+                                    tmp->egid == current_task->gid && tmp->sgid == current_task->gid);
+
+                    if (unlikely(!allowed))
+                        return -EPERM;
+
+                    if (unlikely(new_rlim && new_limit.rlim_max > tmp->rlimits[resource].rlim_max && current_task->euid != 0))
+                        return -EPERM;
+
+                    old_limit = tmp->rlimits[resource];
+                    tgid      = tmp->pid;
+                    found     = true;
+                }
+            }
+        }
+
+        if (unlikely(!found))
+            return -ESRCH;
+
+
+        if (new_rlim) {
+
+            cpu_foreach(cpu) {
+
+                scoped_lock(&cpu->sched_lock) {
+
+                    for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                        if (tmp->pid == tgid)
+                            tmp->rlimits[resource] = new_limit;
+                    }
+                }
+            }
+        }
+
+        if (old_rlim)
+            uio_memcpy_s2u(old_rlim, &old_limit, sizeof(struct rlimit));
+
+        return 0;
+    });

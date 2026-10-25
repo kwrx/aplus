@@ -30,9 +30,14 @@
 #include <aplus/task.h>
 #include <fcntl.h>
 #include <stdint.h>
+#include <string.h>
+#include <sys/resource.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
+#include <aplus/hal.h>
+#include <aplus/memory.h>
 
 
 /***
@@ -50,4 +55,60 @@
 
 struct rusage;
 
-SYSCALL(98, getrusage, long sys_getrusage(int who, struct rusage* ru) { return -ENOSYS; });
+SYSCALL(
+    98, getrusage, long sys_getrusage(int who, struct rusage* ru) {
+        if (unlikely(who != RUSAGE_SELF && who != RUSAGE_CHILDREN && who != RUSAGE_THREAD))
+            return -EINVAL;
+
+        if (unlikely(!ru))
+            return -EFAULT;
+
+        if (unlikely(!uio_check(ru, R_OK | W_OK)))
+            return -EFAULT;
+
+
+        struct rusage usage;
+        memset(&usage, 0, sizeof(usage));
+
+        if (who == RUSAGE_THREAD) {
+
+            task_rusage_self(current_task, &usage);
+
+        } else {
+
+            cpu_foreach(cpu) {
+
+                scoped_lock(&cpu->sched_lock) {
+
+                    for (task_t* tmp = cpu->sched_queue; tmp; tmp = tmp->next) {
+
+                        if (tmp->pid != current_task->pid)
+                            continue;
+
+                        if (tmp->tid != tmp->pid && (tmp->status == TASK_STATUS_ZOMBIE || tmp->status == TASK_STATUS_DEAD))
+                            continue;
+
+                        if (who == RUSAGE_CHILDREN) {
+
+                            task_rusage_add(&usage, &tmp->rusage_children);
+
+                        } else {
+
+                            struct rusage thread;
+                            task_rusage_self(tmp, &thread);
+
+                            task_rusage_add(&usage, &thread);
+                            task_rusage_add(&usage, &tmp->rusage_dead);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (who != RUSAGE_CHILDREN && likely(current_task->address_space))
+            usage.ru_maxrss = MAX(usage.ru_maxrss, (long)((current_task->address_space->size_peak * PML1_PAGESIZE) >> 10));
+
+        uio_memcpy_s2u(ru, &usage, TASK_RUSAGE_ABI_SIZE);
+
+        return 0;
+    });

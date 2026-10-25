@@ -96,6 +96,7 @@ SYSCALL(
 
 
         int assigned[2] = {-1, -1};
+        const int limit = fd_limit();
 
         shared_ptr_access(current_task->fd, fds, {
             scoped_lock(&current_task->lock) {
@@ -103,13 +104,13 @@ SYSCALL(
 
                     int fd;
 
-                    for (fd = 0; fd < CONFIG_OPEN_MAX; fd++) {
+                    for (fd = 0; fd < limit; fd++) {
 
                         if (!fds->descriptors[fd].ref)
                             break;
                     }
 
-                    if (fd == CONFIG_OPEN_MAX) {
+                    if (fd == limit) {
 
                         e = -EMFILE;
                         break;

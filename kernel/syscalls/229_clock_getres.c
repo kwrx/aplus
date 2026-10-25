@@ -57,42 +57,40 @@
  */
 
 SYSCALL(
-    229, clock_getres, long sys_clock_getres(clockid_t which_clock, struct timespec* tp) {
-        if (unlikely(!tp))
+    229, clock_getres, long sys_clock_getres(clockid_t which_clock, struct timespec* user_tp) {        
+        
+        if (unlikely(!user_tp))
             return -EINVAL;
 
-        if (unlikely(!uio_check(tp, R_OK | W_OK)))
+        if (unlikely(!uio_check(user_tp, R_OK | W_OK)))
             return -EFAULT;
 
-
+        struct timespec tp = {0};
         switch (which_clock) {
 
             case CLOCK_REALTIME:
-
-                tp->tv_sec  = 1;
-                tp->tv_nsec = 0;
+                tp.tv_sec  = 1;
+                tp.tv_nsec = 0;
                 break;
 
             case CLOCK_MONOTONIC:
-
-                tp->tv_sec  = 0;
-                tp->tv_nsec = 1000000000 / arch_timer_generic_getres();
+                tp.tv_sec  = 0;
+                tp.tv_nsec = 1000000000 / arch_timer_generic_getres();
                 break;
 
             case CLOCK_THREAD_CPUTIME_ID:
             case CLOCK_PROCESS_CPUTIME_ID:
-
-                tp->tv_sec  = 0;
-                tp->tv_nsec = 1000000000 / arch_timer_percpu_getres();
+                tp.tv_sec  = 0;
+                tp.tv_nsec = 1000000000 / arch_timer_percpu_getres();
                 break;
 
             default:
                 return -EINVAL;
         }
 
+        if (tp.tv_sec == 0 && tp.tv_nsec == 0)
+            tp.tv_nsec = 1;
 
-        if (tp->tv_sec == 0 && tp->tv_nsec == 0)
-            tp->tv_nsec = 1;
-
+        uio_memcpy_s2u(user_tp, &tp, sizeof(struct timespec));
         return 0;
     });

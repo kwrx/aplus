@@ -1049,6 +1049,10 @@ void sched_exit(void) {
     pid_t ppid   = 0;
 
 
+    if (likely(self->address_space))
+        self->rusage.ru_maxrss = MAX(self->rusage.ru_maxrss, (long)((self->address_space->size_peak * PML1_PAGESIZE) >> 10));
+
+
     scoped_lock(&current_cpu->sched_lock) {
 
         self->status = TASK_STATUS_ZOMBIE;
@@ -1071,6 +1075,15 @@ void sched_exit(void) {
 
                 if (t != self && t->pid == self->pid && t->status != TASK_STATUS_ZOMBIE && t->status != TASK_STATUS_DEAD)
                     alive = true;
+
+                if (self->tid != self->pid && t->tid == self->pid) {
+
+                    struct rusage usage;
+                    task_rusage_self(self, &usage);
+
+                    task_rusage_add(&t->rusage_dead, &usage);
+                    task_rusage_add(&t->rusage_children, &self->rusage_children);
+                }
 
                 if (ppid > 0 && t->pid == ppid) {
 

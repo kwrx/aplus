@@ -308,6 +308,7 @@ struct file* fd_get(unsigned int, int*);
 void fd_put(struct file*);
 int fd_flags(struct file*);
 void fd_set_flags(struct file*, int, int);
+unsigned int fd_limit(void);
 long fd_dup(unsigned int, unsigned int, bool);
 long fd_dup_to(unsigned int, unsigned int, bool);
 long fd_sync(unsigned int, int);

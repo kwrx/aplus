@@ -429,11 +429,12 @@ static long __unix_install(struct unix_sock* sock, int flags) {
     }
 
 
-    long fd = -EMFILE;
+    long fd          = -EMFILE;
+    const int limit = fd_limit();
 
     shared_ptr_access(current_task->fd, fds, {
         scoped_lock(&current_task->lock) {
-            for (int i = 0; i < CONFIG_OPEN_MAX; i++) {
+            for (int i = 0; i < limit; i++) {
 
                 if (fds->descriptors[i].ref)
                     continue;

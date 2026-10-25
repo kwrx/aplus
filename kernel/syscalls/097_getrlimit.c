@@ -50,4 +50,4 @@
 
 struct rlimit;
 
-SYSCALL(97, getrlimit, long sys_getrlimit(unsigned int resource, struct rlimit* rlim) { return -ENOSYS; });
+SYSCALL(97, getrlimit, long sys_getrlimit(unsigned int resource, struct rlimit* rlim) { return sys_prlimit64(0, resource, NULL, (struct rlimit64*)rlim); });

@@ -238,6 +238,9 @@ __nonnull(1) uintptr_t arch_vmm_map(vmm_address_space_t* space, uintptr_t virtad
         arch_vmm_flush(space, s);
 
         space->size += pagesize >> 12;
+
+        if (space->size > space->size_peak)
+            space->size_peak = space->size;
     }
 
     spinlock_unlock(&space->lock);

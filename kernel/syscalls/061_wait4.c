@@ -119,7 +119,11 @@ SYSCALL(
                         exit_value = tmp->exit.value & 0xFFFF;
                         reported   = tmp->tid;
 
-                        memcpy(&exit_rusage, &tmp->rusage, sizeof(struct rusage));
+                        task_rusage_self(tmp, &exit_rusage);
+                        task_rusage_add(&exit_rusage, &tmp->rusage_dead);
+                        task_rusage_add(&exit_rusage, &tmp->rusage_children);
+
+                        task_rusage_add(&current_task->rusage_children, &exit_rusage);
 
                         sched_bury(cpu, tmp);
                         break;
@@ -153,7 +157,7 @@ SYSCALL(
                 uio_w32(status, exit_value);
 
             if (rusage)
-                uio_memcpy_s2u(rusage, &exit_rusage, sizeof(struct rusage));
+                uio_memcpy_s2u(rusage, &exit_rusage, TASK_RUSAGE_ABI_SIZE);
 
             return reported;
         }

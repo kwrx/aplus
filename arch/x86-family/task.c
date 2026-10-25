@@ -646,7 +646,8 @@ pid_t arch_task_spawn_init() {
         task->rlimits[j].rlim_cur = task->rlimits[j].rlim_max = RLIM_INFINITY;
     }
 
-    task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
+    task->rlimits[RLIMIT_STACK].rlim_cur  = KERNEL_STACK_SIZE;
+    task->rlimits[RLIMIT_NOFILE].rlim_cur = task->rlimits[RLIMIT_NOFILE].rlim_max = CONFIG_OPEN_MAX;
 
 
 
@@ -786,7 +787,8 @@ task_t* arch_task_spawn_idle(void) {
         task->rlimits[j].rlim_cur = task->rlimits[j].rlim_max = RLIM_INFINITY;
     }
 
-    task->rlimits[RLIMIT_STACK].rlim_cur = KERNEL_STACK_SIZE;
+    task->rlimits[RLIMIT_STACK].rlim_cur  = KERNEL_STACK_SIZE;
+    task->rlimits[RLIMIT_NOFILE].rlim_cur = task->rlimits[RLIMIT_NOFILE].rlim_max = CONFIG_OPEN_MAX;
 
 
 
