@@ -137,8 +137,8 @@
 - [x] sys_mknod
 - [ ] sys_personality
 - [ ] sys_ustat
-- [ ] sys_statfs
-- [ ] sys_fstatfs
+- [x] sys_statfs
+- [x] sys_fstatfs
 - [ ] sys_sysfs
 - [x] sys_getpriority
 - [x] sys_setpriority

@@ -69,7 +69,7 @@ int bindfs_mount(inode_t* dev, inode_t* dir, int flags, const char* args) {
 
 
     dir->sb         = (struct superblock*)kcalloc(1, sizeof(struct superblock), GFP_KERNEL);
-    dir->sb->fsid   = 1;
+    dir->sb->fsid   = FSID_BIND;
     dir->sb->dev    = dev;
     dir->sb->root   = dir;
     dir->sb->flags  = flags;

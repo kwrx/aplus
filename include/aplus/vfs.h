@@ -38,6 +38,7 @@
     #include <sys/types.h>
     #include <sys/uio.h>
 
+    #include <sys/statfs.h>
     #include <sys/statvfs.h>
 
     #include <aplus.h>
@@ -52,6 +53,7 @@
 
     #define VFS_MAX_FILESYSTEMS  32
 
+    #define FSID_BIND    1
     #define FSID_TMPFS   0xDEAD1000
     #define FSID_EXT2    0xDEAD1001
     #define FSID_VFAT    0xDEAD1002
@@ -216,6 +218,7 @@ void vfs_init(void);
 //* kernel/fs/vfs.c
 extern fstable_t* fs_table;
 int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
+int vfs_statfs(inode_t*, struct statfs*);
 
 inode_t* vfs_open(inode_t*, int);
 int vfs_close(inode_t*);
