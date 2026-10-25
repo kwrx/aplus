@@ -57,6 +57,9 @@ PROCESS_SIGNALS = ("TERM", "INT", "HUP", "KILL", "STOP", "CONT", "USR1", "USR2")
 
 SERVICE_FIELD = re.compile(r"^\s*(EXEC_NAME|EXEC_DESC)=[\"']?([^\"'\n]*)", re.M)
 
+## @brief Octal escape /proc/mounts writes for a space, tab, newline or backslash in a field.
+MOUNT_ESCAPE = re.compile(r"\\([0-7]{3})")
+
 CSP = "default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'"
 
 log = logging.getLogger("pymonitor")
@@ -370,19 +373,83 @@ def read_cpuinfo():
 
 
 ## @brief Lists the filesystem types the kernel supports.
-#  @return Their names, from /proc/filesystems.
+#  @return One dict per type from /proc/filesystems, with its name and whether it mounts without a source.
 def read_filesystems():
-    return [line.split()[-1] for line in (read_text("/proc/filesystems") or "").splitlines() if line.strip()]
+    types = []
+    for line in (read_text("/proc/filesystems") or "").splitlines():
+        parts = line.split()
+        if parts:
+            types.append({"name": parts[-1], "nodev": parts[0] == "nodev" and len(parts) > 1})
+    return types
+
+
+## @brief Decodes the octal escapes in a /proc/mounts field.
+#  @param field The field as /proc/mounts prints it.
+#  @return The string mount() was given.
+def unmangle(field):
+    return MOUNT_ESCAPE.sub(lambda m: chr(int(m.group(1), 8)), field)
+
+
+## @brief Reads the mount table as the dashboard sees it from its root.
+#  @return One dict per mount, in mount order, with its source, mountpoint, type and options.
+def read_mounts():
+    mounts = []
+    for line in (read_text("/proc/mounts") or "").splitlines():
+        fields = line.split()
+        if len(fields) < 4:
+            continue
+        options = fields[3].split(",")
+        mounts.append({"source": unmangle(fields[0]), "target": unmangle(fields[1]), "type": unmangle(fields[2]), "options": options, "readonly": "ro" in options})
+    return mounts
+
+
+## @brief Measures the filesystem a path lives on with statfs.
+#  @param path Any path on that filesystem.
+#  @return A dict with sizes in bytes, block and inode counts, and the name limit; raises OSError when statfs fails.
+def fs_usage(path):
+    st = os.statvfs(path)
+    size = st.f_blocks * st.f_frsize
+    free = st.f_bfree * st.f_frsize
+    return {
+        "block_size": st.f_bsize,
+        "fragment_size": st.f_frsize,
+        "blocks": st.f_blocks,
+        "size": size,
+        "used": size - free,
+        "free": free,
+        "avail": st.f_bavail * st.f_frsize,
+        "inodes": st.f_files,
+        "inodes_free": st.f_ffree,
+        "namemax": st.f_namemax,
+    }
+
+
+## @brief Lists every mount with the usage of its filesystem.
+#  @return The mounts in mount order, each with "usage" or "error", and "covered" when a later mount on the same path hides it.
+def list_mounts():
+    mounts = read_mounts()
+    for i, mount in enumerate(mounts):
+        mount["covered"] = any(later["target"] == mount["target"] for later in mounts[i + 1:])
+        mount["usage"] = None
+        mount["error"] = None
+        if mount["covered"]:
+            continue
+        try:
+            mount["usage"] = fs_usage(mount["target"])
+        except OSError as e:
+            mount["error"] = e.strerror or str(e)
+    return mounts
 
 
 ## @brief Measures the root filesystem.
-#  @return A dict with total and free bytes, or None while statfs is unimplemented.
+#  @return Its fs_usage() with the source and type of the mount on /, or None when statfs fails.
 def root_disk():
     try:
-        st = os.statvfs("/")
+        usage = fs_usage("/")
     except OSError:
         return None
-    return {"total": st.f_blocks * st.f_frsize, "free": st.f_bavail * st.f_frsize}
+    root = next((m for m in reversed(read_mounts()) if m["target"] == "/"), {})
+    return dict(usage, source=root.get("source"), type=root.get("type"))
 
 
 ## @brief Finds the address of the interface holding the default route.
@@ -775,6 +842,14 @@ def route_services(handler, args):
     return {"services": list_services(handler.server.processes.scan())}
 
 
+## @brief GET /api/mounts.
+#  @param handler The request being answered.
+#  @param args Query arguments.
+#  @return The mount table with each filesystem's usage, and the filesystem types the kernel supports.
+def route_mounts(handler, args):
+    return {"mounts": list_mounts(), "filesystems": read_filesystems()}
+
+
 ## @brief GET /api/logs.
 #  @param handler The request being answered.
 #  @param args Query arguments.
@@ -898,6 +973,7 @@ GET_ROUTES = {
     "/api/processes": route_processes,
     "/api/process": route_process,
     "/api/services": route_services,
+    "/api/mounts": route_mounts,
     "/api/logs": route_logs,
     "/api/log": route_log,
     "/api/files": route_files,
@@ -1210,6 +1286,11 @@ tbody tr[aria-selected="true"] { background: var(--surface-2); box-shadow: inset
 .detail h4 { margin: 16px 0 6px; font-size: 12px; color: var(--ink-2); font-weight: 600; }
 .detail .files { max-height: 240px; overflow: auto; }
 .empty { color: var(--ink-2); padding: 24px 0; text-align: center; }
+.usage { display: grid; grid-template-columns: 72px 40px; align-items: center; gap: 8px; }
+.usage .meter { margin: 0; }
+.usage .pct { text-align: right; font-variant-numeric: tabular-nums; }
+#mounts-table tr.covered td { color: var(--muted); }
+#mounts-table td.mono { max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
 pre.out { background: var(--surface-2); border-radius: 8px; padding: 12px; margin: 0; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
 .logs { grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); align-items: start; }
 .loglist { display: flex; flex-direction: column; gap: 2px; max-height: 70vh; overflow: auto; }
@@ -1268,6 +1349,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
   <button role="tab" data-tab="processes" aria-selected="false">Processes</button>
   <button role="tab" data-tab="services" aria-selected="false">Services</button>
   <button role="tab" data-tab="logs" aria-selected="false">Logs</button>
+  <button role="tab" data-tab="mounts" aria-selected="false">Mounts</button>
   <button role="tab" data-tab="files" aria-selected="false">Files</button>
   <button role="tab" data-tab="console" aria-selected="false">Console</button>
 </nav>
@@ -1278,6 +1360,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
       <div class="card tile"><div class="label">Memory in use</div><div class="value" id="t-mem">&mdash;</div><div class="note" id="t-mem-note"></div><div class="meter" id="t-mem-meter"><span style="width:0"></span></div></div>
       <div class="card tile"><div class="label">Processes</div><div class="value" id="t-procs">&mdash;</div><div class="note" id="t-procs-note"></div></div>
       <div class="card tile"><div class="label">Uptime</div><div class="value" id="t-uptime">&mdash;</div><div class="note" id="t-uptime-note"></div></div>
+      <div class="card tile"><div class="label">Root disk in use</div><div class="value" id="t-disk">&mdash;</div><div class="note" id="t-disk-note"></div><div class="meter" id="t-disk-meter"><span style="width:0"></span></div></div>
     </div>
     <div class="grid charts">
       <div class="card"><h2>CPU usage</h2><p class="sub" id="cpu-sub">All CPUs, percent busy</p><div class="chart" id="cpu-chart"></div></div>
@@ -1335,6 +1418,20 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
           <label class="check"><input type="checkbox" id="log-follow" checked> Follow</label>
         </div>
         <pre class="out" id="log-view"></pre>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-mounts" hidden>
+    <div class="card table-wrap">
+      <h2>Mounts</h2><p class="sub" id="mounts-sub">From /proc/mounts, in mount order, with usage from statfs</p>
+      <table id="mounts-table"><thead><tr><th>Mountpoint</th><th>Source</th><th>Type</th><th class="num">Size</th><th class="num">Used</th><th class="num">Available</th><th>Use</th><th class="num">Inodes</th></tr></thead><tbody></tbody></table>
+    </div>
+    <div class="grid split">
+      <div class="card detail" id="mount-detail"><div class="empty">Select a mount to see its filesystem.</div></div>
+      <div class="card table-wrap">
+        <h2>Filesystem types</h2><p class="sub">From /proc/filesystems. A nodev type mounts without a source.</p>
+        <table id="fstypes-table"><thead><tr><th>Type</th><th>Source</th><th class="num">Mounts</th></tr></thead><tbody></tbody></table>
       </div>
     </div>
   </section>
@@ -1407,6 +1504,8 @@ const state = {
   procs: [],
   sort: {key: "cpu", dir: -1},
   selected: null,
+  mounts: null,
+  mountKey: null,
   logs: [],
   logPath: null,
   filesPath: storageGet("pymonitor-files-path") || "/",
@@ -1719,6 +1818,10 @@ function renderOverview() {
   $("#t-procs-note").textContent = o.last_pid !== null ? `last pid ${o.last_pid}` : "";
   $("#t-uptime").textContent = fmtDuration(o.uptime);
   $("#t-uptime-note").textContent = o.boot_time ? `since ${new Date(o.boot_time * 1000).toLocaleString()}` : "";
+  const disk = o.disk;
+  $("#t-disk").textContent = disk ? fmtBytes(disk.used) : "—";
+  $("#t-disk-note").textContent = disk ? `of ${fmtBytes(disk.size)}, ${fmtBytes(disk.avail)} available` : "statfs failed on /";
+  setMeter($("#t-disk-meter"), usedShare(disk));
 
   const span = o.interval * o.history_len;
   $("#cpu-sub").textContent = `All CPUs, percent busy, last ${fmtDuration(span)}`;
@@ -1733,7 +1836,6 @@ function renderOverview() {
     return el("div", {class: "cpu-row"}, el("span", {text: `CPU ${i}`}), meter, el("span", {class: "pct", text: `${Math.round(pct)}%`}));
   }));
 
-  const disk = o.disk ? `${fmtBytes(o.disk.total - o.disk.free)} used of ${fmtBytes(o.disk.total)}` : "unavailable (statfs is not implemented)";
   const facts = [
     ["Hostname", o.hostname],
     ["Kernel", o.version || `${o.uname.sysname} ${o.uname.release}`],
@@ -1742,8 +1844,8 @@ function renderOverview() {
     ["CPU", `${o.cpu_model || "unknown"} × ${o.cpu_count}`],
     ["Address", o.address || "no network"],
     ["Command line", o.cmdline || "—", true],
-    ["Root disk", disk],
-    ["Filesystems", o.filesystems.join(", ")],
+    ["Root filesystem", disk && disk.type ? `${disk.type} on ${disk.source}` : "unknown"],
+    ["Filesystems", o.filesystems.map(f => f.name).join(", ")],
     ["Dashboard", `pid ${o.dashboard.pid} as ${o.dashboard.user}, Python ${o.dashboard.python}`],
   ];
   $("#facts").replaceChildren(...facts.flatMap(([k, v, mono]) => [el("dt", {text: k}), el("dd", {class: mono ? "mono" : null, text: v})]));
@@ -1929,6 +2031,138 @@ async function serviceAction(name, action) {
     toast(e.message, true);
   }
   setTimeout(() => runTask("services", loadServices), 800);
+}
+
+/**
+ * @brief Computes the share of a filesystem in use as df does, against the space users can still take.
+ * @param {Object} usage Usage from the API, or null.
+ * @returns {number} The share from 0 to 1, or 0 when the filesystem counts no space.
+ */
+function usedShare(usage) {
+  return usage && usage.used + usage.avail > 0 ? usage.used / (usage.used + usage.avail) : 0;
+}
+
+/**
+ * @brief Names a mount uniquely, since one path can be mounted on more than once.
+ * @param {Object} m Mount from /api/mounts.
+ * @param {number} i Its position in the mount table.
+ * @returns {string} The key.
+ */
+function mountKey(m, i) { return `${i}:${m.target}`; }
+
+/**
+ * @brief Fetches the mount table and renders the mounts tab.
+ */
+async function loadMounts() {
+  state.mounts = await api("/api/mounts");
+  renderMounts();
+}
+
+/**
+ * @brief Renders the mount table, the selected mount and the filesystem types.
+ */
+function renderMounts() {
+  const {mounts, filesystems} = state.mounts;
+  $("#mounts-sub").textContent = `${mounts.length} mount${mounts.length === 1 ? "" : "s"} from /proc/mounts, in mount order, with usage from statfs`;
+  $("#mounts-table tbody").replaceChildren(...(mounts.length
+    ? mounts.map((m, i) => mountRow(m, mountKey(m, i)))
+    : [el("tr", {}, el("td", {colspan: 8, class: "empty", text: "No mounts in /proc/mounts."}))]));
+  const selected = mounts.find((m, i) => mountKey(m, i) === state.mountKey);
+  if (selected) renderMountDetail(selected);
+  else {
+    state.mountKey = null;
+    $("#mount-detail").replaceChildren(el("div", {class: "empty", text: "Select a mount to see its filesystem."}));
+  }
+  const counts = {};
+  for (const m of mounts) counts[m.type] = (counts[m.type] || 0) + 1;
+  $("#fstypes-table tbody").replaceChildren(...(filesystems.length
+    ? filesystems.map(f => el("tr", {style: "cursor:default"},
+        el("td", {class: "mono", text: f.name}),
+        el("td", {text: f.nodev ? "none (nodev)" : "required"}),
+        el("td", {class: "num", text: counts[f.name] || 0})))
+    : [el("tr", {}, el("td", {colspan: 3, class: "empty", text: "/proc/filesystems is empty."}))]));
+}
+
+/**
+ * @brief Builds one row of the mount table.
+ * @param {Object} m Mount from /api/mounts.
+ * @param {string} key The mount's key.
+ * @returns {HTMLElement} The row.
+ */
+function mountRow(m, key) {
+  const u = m.usage && m.usage.blocks > 0 ? m.usage : null;
+  const share = usedShare(u);
+  const meter = el("div", {class: "meter"}, el("span"));
+  setMeter(meter, share);
+  const note = m.covered ? "covered" : m.error ? "statfs failed" : null;
+  const select = () => selectMount(key);
+  return el("tr", {
+    class: m.covered ? "covered" : null,
+    tabindex: "0",
+    "aria-selected": String(key === state.mountKey),
+    onclick: select,
+    onkeydown: ev => { if (ev.key === "Enter") select(); },
+  },
+    el("td", {class: "mono", title: m.target}, m.target, note ? el("span", {class: "tag", style: "margin-left:8px", text: note}) : null),
+    el("td", {class: "mono", title: m.source, text: m.source}),
+    el("td", {text: m.type}),
+    el("td", {class: "num", text: u ? fmtBytes(u.size) : "—"}),
+    el("td", {class: "num", text: u ? fmtBytes(u.used) : "—"}),
+    el("td", {class: "num", text: u ? fmtBytes(u.avail) : "—"}),
+    el("td", {}, u ? el("div", {class: "usage"}, meter, el("span", {class: "pct", text: `${Math.round(share * 100)}%`})) : "—"),
+    el("td", {class: "num", text: m.usage && m.usage.inodes ? `${Math.round(100 * (m.usage.inodes - m.usage.inodes_free) / m.usage.inodes)}%` : "—"}));
+}
+
+/**
+ * @brief Selects a mount and shows its filesystem.
+ * @param {string} key The mount's key.
+ */
+function selectMount(key) {
+  state.mountKey = key;
+  renderMounts();
+}
+
+/**
+ * @brief Renders the detail panel for one mount.
+ * @param {Object} m Mount from /api/mounts.
+ */
+function renderMountDetail(m) {
+  const u = m.usage;
+  const facts = [
+    ["Source", m.source],
+    ["Mountpoint", m.target],
+    ["Type", m.type],
+    ["Options", m.options.join(",")],
+    ["Access", m.readonly ? "read only" : "read and write"],
+  ];
+  if (u && u.blocks) facts.push(
+    ["Size", `${fmtBytes(u.size)} in ${u.blocks} blocks`],
+    ["Used", `${fmtBytes(u.used)}, ${Math.round(usedShare(u) * 100)}%`],
+    ["Available", u.free > u.avail ? `${fmtBytes(u.avail)}, plus ${fmtBytes(u.free - u.avail)} reserved` : fmtBytes(u.avail)]);
+  else if (u) facts.push(["Size", "not counted"]);
+  if (u) facts.push(
+    ["Block size", u.fragment_size !== u.block_size ? `${fmtBytes(u.block_size)}, fragments of ${fmtBytes(u.fragment_size)}` : fmtBytes(u.block_size)],
+    ["Inodes", u.inodes ? `${u.inodes - u.inodes_free} used of ${u.inodes}, ${u.inodes_free} free` : "not counted"],
+    ["Longest name", `${u.namemax} bytes`]);
+  const note = m.covered ? "A later mount on the same path hides this one, so statfs reaches that one instead." : m.error ? `statfs failed: ${m.error}` : null;
+  $("#mount-detail").replaceChildren(...[
+    el("h3", {text: m.target}),
+    el("p", {class: "sub", text: `${m.type} from ${m.source}`}),
+    el("div", {class: "buttons"}, el("button", {class: "btn small", text: "Browse", disabled: m.covered, onclick: () => browse(m.target)})),
+    note ? el("p", {class: "sub", style: "margin:12px 0 0", text: note}) : null,
+    el("h4", {text: "Filesystem"}),
+    el("dl", {class: "facts"}, ...facts.flatMap(([k, v]) => [el("dt", {text: k}), el("dd", {class: "mono", text: v})])),
+  ].filter(Boolean));
+}
+
+/**
+ * @brief Opens a directory in the files tab.
+ * @param {string} path Absolute directory path.
+ */
+function browse(path) {
+  state.filesPath = path;
+  state.filesLoaded = false;
+  showTab("files");
 }
 
 /**
@@ -2163,6 +2397,7 @@ function showTab(name) {
   if (name === "overview") renderOverview();
   if (name === "processes") runTask("processes", loadProcesses);
   if (name === "services") runTask("services", loadServices);
+  if (name === "mounts") runTask("mounts", loadMounts);
   if (name === "logs") runTask("logs", async () => { await loadLogs(); await loadLog(); });
   if (name === "files" && !state.filesLoaded) openPath(state.filesPath);
   if (name === "console") $("#command").focus();
@@ -2177,6 +2412,7 @@ function tick() {
   if (n % 2 === 0) runTask("overview", loadOverview);
   if (state.tab === "processes" && $("#proc-auto").checked && n % 3 === 0) runTask("processes", loadProcesses);
   if (state.tab === "services" && n % 5 === 0) runTask("services", loadServices);
+  if (state.tab === "mounts" && n % 5 === 0) runTask("mounts", loadMounts);
   if (state.tab === "logs" && n % 10 === 0) runTask("logs", loadLogs);
   if (state.tab === "logs" && $("#log-follow").checked && n % 2 === 0) runTask("log", loadLog);
 }
@@ -2197,7 +2433,7 @@ $("#command").addEventListener("keydown", walkHistory);
 $("#clear").addEventListener("click", () => $("#console-out").replaceChildren());
 window.addEventListener("resize", () => { if (state.tab === "overview") renderOverview(); });
 renderProcessHeader();
-showTab(["overview", "processes", "services", "logs", "files", "console"].includes(storageGet("pymonitor-tab")) ? storageGet("pymonitor-tab") : "overview");
+showTab(["overview", "processes", "services", "logs", "mounts", "files", "console"].includes(storageGet("pymonitor-tab")) ? storageGet("pymonitor-tab") : "overview");
 loadOverview();
 setInterval(tick, 1000);
 </script>
