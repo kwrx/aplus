@@ -208,6 +208,21 @@ typedef struct {
 
 } fstable_t;
 
+
+/**
+ * @brief A mounted filesystem, as /proc/mounts lists it.
+ */
+typedef struct mount {
+
+    inode_t* dir;
+    struct superblock* sb;
+
+    const char* type;
+    char* source;
+    int flags;
+
+} mount_t;
+
 __BEGIN_DECLS
 
 
@@ -217,7 +232,8 @@ void vfs_init(void);
 
 //* kernel/fs/vfs.c
 extern fstable_t* fs_table;
-int vfs_mount(inode_t* dev, inode_t* dir, const char* fs, int flags, const char* args);
+int vfs_mount(inode_t* dev, inode_t* dir, const char* source, const char* fs, int flags, const char* args);
+void vfs_mounts_foreach(void (*fn)(const mount_t*, void*), void* arg);
 int vfs_statfs(inode_t*, struct statfs*);
 
 inode_t* vfs_open(inode_t*, int);

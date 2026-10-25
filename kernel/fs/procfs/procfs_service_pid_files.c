@@ -235,3 +235,31 @@ int procfs_pid_fetch_io(inode_t* inode, char** buf, size_t* size, void* arg) {
 
     return 0;
 }
+
+
+/**
+ * @brief Generates /proc/<pid>/mounts, the mount table as the task sees it from its root.
+ *
+ * @param inode The /proc/<pid>/mounts inode.
+ * @param buf Receives the generated contents.
+ * @param size Receives the length of the contents.
+ * @param arg The pid.
+ * @return 0 on success, or -1 with errno set.
+ */
+int procfs_pid_fetch_mounts(inode_t* inode, char** buf, size_t* size, void* arg) {
+
+    DEBUG_ASSERT(inode);
+    DEBUG_ASSERT(buf);
+    DEBUG_ASSERT(size);
+
+
+    procfs_buf_t b = procfs_scratch();
+
+    if (procfs_task_mounts((pid_t)((uintptr_t)arg), &b) < 0)
+        return -1;
+
+    *buf  = b.data;
+    *size = b.length;
+
+    return 0;
+}

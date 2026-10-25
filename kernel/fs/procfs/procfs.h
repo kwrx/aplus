@@ -158,6 +158,7 @@ char procfs_task_state(long status);
 bool procfs_task_fd_exists(pid_t pid, int fd);
 size_t procfs_task_fd_list(pid_t pid, int* out, size_t max);
 ssize_t procfs_task_fd_path(pid_t pid, int fd, char* buf, size_t size);
+int procfs_task_mounts(pid_t pid, procfs_buf_t* b);
 
 uint64_t procfs_ticks(const struct timespec* ts);
 
@@ -175,6 +176,7 @@ inode_t* procfs_service_filesystems_inode(inode_t* parent);
 inode_t* procfs_service_stat_inode(inode_t* parent);
 inode_t* procfs_service_cpuinfo_inode(inode_t* parent);
 inode_t* procfs_service_loadavg_inode(inode_t* parent);
+inode_t* procfs_service_mounts_inode(inode_t* parent);
 
 inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, int (*fetch)(inode_t*, char** buf, size_t*, void*), void* arg);
 
@@ -193,5 +195,6 @@ int procfs_pid_fetch_status(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_statm(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_cmdline(inode_t*, char**, size_t*, void*);
 int procfs_pid_fetch_io(inode_t*, char**, size_t*, void*);
+int procfs_pid_fetch_mounts(inode_t*, char**, size_t*, void*);
 
 #endif

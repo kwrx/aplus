@@ -44,15 +44,16 @@
  * @brief The contents of /proc other than the per-pid directories, driving both finddir() and readdir().
  */
 const procfs_root_entry_t procfs_root_table[] = {
-    {"self",        S_IFLNK | 0777, 1, DT_LNK},
-    {"meminfo",     S_IFREG | 0444, 2, DT_REG},
-    {"uptime",      S_IFREG | 0444, 3, DT_REG},
-    {"version",     S_IFREG | 0444, 4, DT_REG},
-    {"filesystems", S_IFREG | 0444, 5, DT_REG},
-    {"cmdline",     S_IFREG | 0444, 6, DT_REG},
-    {"stat",        S_IFREG | 0444, 7, DT_REG},
-    {"cpuinfo",     S_IFREG | 0444, 8, DT_REG},
-    {"loadavg",     S_IFREG | 0444, 9, DT_REG},
+    {"self",        S_IFLNK | 0777, 1,  DT_LNK},
+    {"meminfo",     S_IFREG | 0444, 2,  DT_REG},
+    {"uptime",      S_IFREG | 0444, 3,  DT_REG},
+    {"version",     S_IFREG | 0444, 4,  DT_REG},
+    {"filesystems", S_IFREG | 0444, 5,  DT_REG},
+    {"cmdline",     S_IFREG | 0444, 6,  DT_REG},
+    {"stat",        S_IFREG | 0444, 7,  DT_REG},
+    {"cpuinfo",     S_IFREG | 0444, 8,  DT_REG},
+    {"loadavg",     S_IFREG | 0444, 9,  DT_REG},
+    {"mounts",      S_IFLNK | 0777, 10, DT_LNK},
 };
 
 const size_t procfs_root_entries = sizeof(procfs_root_table) / sizeof(procfs_root_table[0]);
