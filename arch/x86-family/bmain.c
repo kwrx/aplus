@@ -248,14 +248,15 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
 
 
     //* Get total memory size
-
+    uintptr_t ram_end = 0;
     for (size_t i = 0; i < core->mmap.count; i++) {
-
         if (core->mmap.ptr[i].type == MULTIBOOT_MEMORY_AVAILABLE) {
-
-            core->memory.phys_upper = MAX(core->memory.phys_upper * 1024, core->mmap.ptr[i].address + core->mmap.ptr[i].length) / 1024;
-            core->memory.phys_upper -= core->memory.phys_lower;
+            ram_end = MAX(ram_end, core->mmap.ptr[i].address + core->mmap.ptr[i].length);
         }
+    }
+
+    if (ram_end) {
+        core->memory.phys_upper = (ram_end / 1024) - core->memory.phys_lower;
     }
 
 

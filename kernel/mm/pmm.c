@@ -72,6 +72,11 @@ static uint64_t pml1_first_preallocated_bitmaps[PML1_MAX_ENTRIES * PML1_PREALLOC
  */
 static uintptr_t pmm_max_memory = 0;
 
+/**
+ * @brief Number of pages the memory map reports as usable RAM.
+ */
+static size_t pmm_usable_pages = 0;
+
 
 
 static inline uintptr_t pmm_managed_end(void) {
@@ -424,6 +429,29 @@ static void pmm_apply_memory_map(bool available, uintptr_t limit) {
 }
 
 
+/**
+ * @brief Counts the free pages across every managed region.
+ *
+ * @return The number of free pages.
+ */
+static size_t pmm_free_pages_locked(void) {
+
+    size_t free = 0;
+
+    for (size_t i = 0; i < PML2_MAX_ENTRIES; i++) {
+
+        size_t capacity = pmm_region_capacity(i);
+
+        if (!capacity)
+            break;
+
+        free += capacity - pml2_pusage[i];
+    }
+
+    return free;
+}
+
+
 #if defined(DEBUG)
 static void pmm_validate_locked(void) {
 
@@ -585,14 +613,13 @@ void pmm_free_blocks(uintptr_t address, size_t blkno) {
  */
 uint64_t pmm_get_used_memory() {
 
-    uint64_t sum = 0;
+    size_t free = 0;
 
     scoped_lock(&pmm_lock) {
-        for (size_t i = 0; i < PML2_MAX_ENTRIES; i++)
-            sum += pml2_pusage[i];
+        free = pmm_free_pages_locked();
     }
 
-    return sum * PML1_PAGESIZE;
+    return (uint64_t)(pmm_usable_pages - MIN(free, pmm_usable_pages)) * PML1_PAGESIZE;
 }
 
 
@@ -601,7 +628,7 @@ uint64_t pmm_get_used_memory() {
  *        Get Physical Memory size.
  */
 uint64_t pmm_get_total_memory() {
-    return pmm_max_memory;
+    return (uint64_t)pmm_usable_pages * PML1_PAGESIZE;
 }
 
 
@@ -666,6 +693,10 @@ void pmm_init(uintptr_t max_memory) {
 
     pmm_apply_memory_map(true, pmm_managed_end());
 
+    scoped_lock(&pmm_lock) {
+        pmm_usable_pages = pmm_free_pages_locked();
+    }
+
     pmm_claim_area(0, arch_vmm_v2p((uintptr_t)&end, ARCH_VMM_AREA_KERNEL));
     pmm_apply_memory_map(false, pmm_managed_end());
 
@@ -681,7 +712,7 @@ void pmm_init(uintptr_t max_memory) {
 #endif
 
 #if DEBUG_LEVEL_INFO
-    kprintf("pmm: physical memory: %ld KB\n", pmm_max_memory / 1024);
+    kprintf("pmm: physical memory: %ld KB usable, %ld KB address space\n", pmm_get_total_memory() / 1024, pmm_max_memory / 1024);
 #endif
 }
 
