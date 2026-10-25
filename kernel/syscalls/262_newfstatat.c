@@ -68,32 +68,73 @@ SYSCALL(
             return -EFAULT;
 
 
-        int fd;
-        if ((fd = do_openat(dfd, filename, O_RDONLY, 0, false)) < 0)
-            return fd;
+        inode_t* cwd __scoped(vfs_inode_cleanup) = NULL;
 
+        if (dfd < 0) {
 
-        int e = 0;
-        struct stat __statbuf = {0};
+            if (dfd != AT_FDCWD)
+                return -EBADF;
 
-        struct file* file = fd_get((unsigned int)fd, NULL);
+            shared_ptr_access(current_task->fs, fs, {
+                if (unlikely(!fs->cwd))
+                    return -ENOENT;
 
-        if (unlikely(!file))
-            return -EBADF;
+                cwd = vfs_inode_get(fs->cwd);
+            });
 
-        scoped_lock(&file->lock) {
-            e = vfs_getattr(file->inode, &__statbuf);
+        } else {
+
+            if (dfd >= CONFIG_OPEN_MAX)
+                return -EBADF;
+
+            shared_ptr_access(current_task->fd, fds, {
+                if (unlikely(!fds->descriptors[dfd].ref))
+                    return -EBADF;
+
+                cwd = vfs_inode_get(fds->descriptors[dfd].ref->inode);
+            });
         }
 
-        fd_put(file);
+        DEBUG_ASSERT(cwd);
 
 
-        if ((fd = sys_close(fd)) < 0)
-            return fd;
+        char __safe_filename[CONFIG_PATH_MAX] = {0};
+        uio_strncpy_u2s(__safe_filename, filename, CONFIG_PATH_MAX);
+
+        bool follow = !(flag & AT_SYMLINK_NOFOLLOW);
 
 
-        if (e < 0)
+        inode_t* r __scoped(vfs_inode_cleanup) = NULL;
+
+        if (__safe_filename[0] == '\0') {
+
+            if (unlikely(!(flag & AT_EMPTY_PATH)))
+                return -ENOENT;
+
+            r = vfs_inode_get(cwd);
+
+        } else if ((r = path_lookup(cwd, __safe_filename, follow ? 0 : O_NOFOLLOW, 0)) == NULL) {
             return -errno;
+        }
+
+        struct stat __statbuf = {0};
+
+        if (vfs_getattr(r, &__statbuf) < 0)
+            return -errno;
+
+
+        if (follow && S_ISLNK(__statbuf.st_mode)) {
+
+            inode_t* target = path_follows(r);
+
+            vfs_inode_put(r);
+
+            if ((r = target) == NULL)
+                return -errno;
+
+            if (vfs_getattr(r, &__statbuf) < 0)
+                return -errno;
+        }
 
 
         uio_memcpy_s2u(statbuf, &__statbuf, sizeof(struct stat));
