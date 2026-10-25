@@ -1,14 +1,16 @@
 INCLUDES += include
 INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
+INCLUDES += $(ROOTDIR)/lib/aplus/ulog/include
 
 CFLAGS   += -include $(ROOTDIR)/config.h
 CFLAGS   += -isystem $(SYSROOT)/usr/include
 CFLAGS   += -isystem $(SYSROOT)/usr/include/freetype2
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
+LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS     += ui cairo pixman-1 freetype png webp z
+LIBS     += ui ulog cairo pixman-1 freetype png webp z
 
 RESOURCES 	+= $(SYSROOT)/etc/init.d/01-aplus-wm.sh
 

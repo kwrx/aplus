@@ -42,6 +42,7 @@
 #include <aplus/input.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 #include "desktop.h"
 
@@ -922,7 +923,7 @@ static void launcher_run(void) {
         execlp(LAUNCHER_OPENER, LAUNCHER_OPENER, command, NULL);
     }
 
-    fprintf(stderr, "%s: exec() failed: %s: %s\n", LAUNCHER_NAME, command, strerror(errno));
+    ulog_errorf("exec() failed: %s: %s", command, strerror(errno));
 
     _exit(127);
 }
@@ -1278,7 +1279,7 @@ int main(int argc, char** argv) {
 
     if (!launcher.conn) {
 
-        fprintf(stderr, "%s: ui_connect() failed: %s\n", LAUNCHER_NAME, strerror(errno));
+        ulog_errorf("ui_connect() failed: %s", strerror(errno));
 
         free(launcher.entries);
         return 1;
@@ -1291,7 +1292,7 @@ int main(int argc, char** argv) {
 
     if (!launcher.window) {
 
-        fprintf(stderr, "%s: ui_window_create_ex() failed: %s\n", LAUNCHER_NAME, strerror(errno));
+        ulog_errorf("ui_window_create_ex() failed: %s", strerror(errno));
 
         ui_disconnect(launcher.conn);
 
@@ -1307,7 +1308,7 @@ int main(int argc, char** argv) {
 
     if (!launcher.view || launcher_build() < 0) {
 
-        fprintf(stderr, "%s: cannot build the window\n", LAUNCHER_NAME);
+        ulog_errorf("cannot build the window");
 
         launcher_teardown();
         return 1;

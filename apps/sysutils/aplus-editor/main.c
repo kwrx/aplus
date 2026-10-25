@@ -43,6 +43,7 @@
 #include <aplus/ui-keymap.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 #include "editor.h"
 
@@ -3059,40 +3060,40 @@ int main(int argc, char** argv) {
     editor_history_init(&editor.history);
 
     if (editor_buffer_init(&editor.buffer) < 0) {
-        fprintf(stderr, "%s: out of memory\n", EDITOR_NAME);
+        ulog_errorf("out of memory");
         return 1;
     }
 
     if (editor_canvas_init() < 0) {
-        fprintf(stderr, "%s: cannot load %s: %s\n", EDITOR_NAME, EDITOR_FONT_PATH, strerror(errno));
+        ulog_errorf("cannot load %s: %s", EDITOR_FONT_PATH, strerror(errno));
         return 1;
     }
 
     if (!(editor.keymap = ui_keymap_open(NULL))) {
-        fprintf(stderr, "%s: cannot load the keymap, typing will not work: %s\n", EDITOR_NAME, strerror(errno));
+        ulog_warnf("cannot load the keymap, typing will not work: %s", strerror(errno));
     }
 
 
     if (!(editor.conn = ui_connect(NULL, 5000))) {
-        fprintf(stderr, "%s: ui_connect() failed: %s\n", EDITOR_NAME, strerror(errno));
+        ulog_errorf("ui_connect() failed: %s", strerror(errno));
         return 1;
     }
 
     if (!(editor.window = ui_window_create(editor.conn, EDITOR_WINDOW_WIDTH, EDITOR_WINDOW_HEIGHT, "Text Editor"))) {
-        fprintf(stderr, "%s: ui_window_create() failed: %s\n", EDITOR_NAME, strerror(errno));
+        ulog_errorf("ui_window_create() failed: %s", strerror(errno));
         ui_disconnect(editor.conn);
         return 1;
     }
 
     if (!(editor.view = ui_view_create(editor.window))) {
-        fprintf(stderr, "%s: ui_view_create() failed: %s\n", EDITOR_NAME, strerror(errno));
+        ulog_errorf("ui_view_create() failed: %s", strerror(errno));
         ui_window_destroy(editor.window);
         ui_disconnect(editor.conn);
         return 1;
     }
 
     if (editor_build(editor.view) < 0) {
-        fprintf(stderr, "%s: cannot create the widgets\n", EDITOR_NAME);
+        ulog_errorf("cannot create the widgets");
         ui_view_destroy(editor.view);
         ui_window_destroy(editor.window);
         ui_disconnect(editor.conn);
@@ -3114,7 +3115,7 @@ int main(int argc, char** argv) {
     const int status = editor_run();
 
     if (status < 0) {
-        fprintf(stderr, "%s: the connection went away: %s\n", EDITOR_NAME, strerror(errno));
+        ulog_errorf("the connection went away: %s", strerror(errno));
     }
 
     ui_view_destroy(editor.view);

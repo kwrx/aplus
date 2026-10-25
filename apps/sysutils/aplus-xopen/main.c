@@ -39,6 +39,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <aplus/ulog.h>
+
 
 /**
  * @brief What the messages call this program.
@@ -450,7 +452,7 @@ static int xopen_run(char** argv) {
 
     execvp(argv[0], argv);
 
-    fprintf(stderr, "%s: %s: %s\n", XOPEN_NAME, argv[0], strerror(errno));
+    ulog_errorf("%s: %s", argv[0], strerror(errno));
 
     return XOPEN_NO_HANDLER;
 }
@@ -471,14 +473,14 @@ static int xopen_desktop(const char* path) {
 
     if (!xopen_desktop_read(path, &desktop)) {
 
-        fprintf(stderr, "%s: %s: not a desktop entry\n", XOPEN_NAME, path);
+        ulog_errorf("%s: not a desktop entry", path);
 
         return XOPEN_FAILED;
     }
 
     if (xopen_desktop_argv(desktop.exec, argv, XOPEN_ARGV_MAX) == 0) {
 
-        fprintf(stderr, "%s: %s: no command to run\n", XOPEN_NAME, path);
+        ulog_errorf("%s: no command to run", path);
 
         return XOPEN_FAILED;
     }
@@ -526,7 +528,7 @@ int main(int argc, char** argv) {
 
     if (stat(path, &st) < 0) {
 
-        fprintf(stderr, "%s: %s: %s\n", XOPEN_NAME, path, strerror(errno));
+        ulog_errorf("%s: %s", path, strerror(errno));
 
         return XOPEN_NOT_FOUND;
     }
@@ -558,7 +560,7 @@ int main(int argc, char** argv) {
             break;
     }
 
-    fprintf(stderr, "%s: %s: no application handles this file\n", XOPEN_NAME, path);
+    ulog_errorf("%s: no application handles this file", path);
 
     return XOPEN_NO_HANDLER;
 }

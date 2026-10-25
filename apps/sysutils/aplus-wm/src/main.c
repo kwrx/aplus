@@ -38,6 +38,8 @@
 #include <sys/un.h>
 #include <unistd.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -120,7 +122,7 @@ static bool wm_damage_is_covered(const wm_rect_t* rect) {
 static int wm_display_changed(void) {
 
     if (wm_display_resize(&wm.display) < 0) {
-        fprintf(stderr, "aplus-wm: cannot follow the display mode change\n");
+        ulog_errorf("cannot follow the display mode change");
         return -1;
     }
 
@@ -263,7 +265,7 @@ static int wm_listen(const char* path) {
     int fd;
 
     if ((fd = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-        fprintf(stderr, "aplus-wm: socket() failed: %s\n", strerror(errno));
+        ulog_errorf("socket() failed: %s", strerror(errno));
         return -1;
     }
 
@@ -274,7 +276,7 @@ static int wm_listen(const char* path) {
     addr.sun_family = AF_UNIX;
 
     if (strlen(path) >= sizeof(addr.sun_path)) {
-        fprintf(stderr, "aplus-wm: socket path is too long: %s\n", path);
+        ulog_errorf("socket path is too long: %s", path);
         close(fd);
         return -1;
     }
@@ -283,13 +285,13 @@ static int wm_listen(const char* path) {
 
 
     if (bind(fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
-        fprintf(stderr, "aplus-wm: bind() failed on %s: %s\n", path, strerror(errno));
+        ulog_errorf("bind() failed on %s: %s", path, strerror(errno));
         close(fd);
         return -1;
     }
 
     if (listen(fd, 16) < 0) {
-        fprintf(stderr, "aplus-wm: listen() failed: %s\n", strerror(errno));
+        ulog_errorf("listen() failed: %s", strerror(errno));
         close(fd);
         return -1;
     }
@@ -378,7 +380,7 @@ int main(int argc, char** argv) {
     ui_font_face(WM_FONT_PATH);
 
     if (wm_shadow_init(&wm.shadow_key, WM_SHADOW_KEY_BLUR, UI_WINDOW_RADIUS) < 0 || wm_shadow_init(&wm.shadow_ambient, WM_SHADOW_AMBIENT_BLUR, UI_WINDOW_RADIUS) < 0) {
-        fprintf(stderr, "aplus-wm: cannot render the window shadows, drawing none\n");
+        ulog_warnf("cannot render the window shadows, drawing none");
     }
 
 
@@ -409,7 +411,7 @@ int main(int argc, char** argv) {
     signal(SIGHUP, SIG_IGN);
 
 
-    fprintf(stderr, "aplus-wm: listening on %s\n", path);
+    ulog_infof("listening on %s", path);
 
 
     wm_rect_t everything = {0, 0, wm.display.width, wm.display.height};
@@ -464,7 +466,7 @@ int main(int argc, char** argv) {
                 continue;
             }
 
-            fprintf(stderr, "aplus-wm: poll() failed: %s\n", strerror(errno));
+            ulog_errorf("poll() failed: %s", strerror(errno));
             break;
         }
 
@@ -476,7 +478,7 @@ int main(int argc, char** argv) {
         if (pfds[1].revents & POLLIN) {
 
             if (wm_input_dispatch(input) < 0) {
-                fprintf(stderr, "aplus-wm: the input pipe went away\n");
+                ulog_errorf("the input pipe went away");
                 break;
             }
         }
@@ -550,7 +552,7 @@ int main(int argc, char** argv) {
     }
 
 
-    fprintf(stderr, "aplus-wm: shutting down\n");
+    ulog_infof("shutting down");
 
     for (wm_window_t* win = wm.windows; win; win = win->next) {
 

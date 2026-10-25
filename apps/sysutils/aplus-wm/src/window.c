@@ -29,6 +29,8 @@
 #include <sys/ipc.h>
 #include <sys/shm.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -939,7 +941,7 @@ int wm_window_notify_configure(wm_window_t* win) {
 
         if (wm_window_alloc_backstore(win, win->width, win->height) < 0) {
 
-            fprintf(stderr, "aplus-wm: cannot allocate a %dx%d backstore, keeping the window at %dx%d\n", win->width, win->height, cairo_image_surface_get_width(win->backstore), cairo_image_surface_get_height(win->backstore));
+            ulog_warnf("cannot allocate a %dx%d backstore, keeping the window at %dx%d", win->width, win->height, cairo_image_surface_get_width(win->backstore), cairo_image_surface_get_height(win->backstore));
 
             win->width  = cairo_image_surface_get_width(win->backstore);
             win->height = cairo_image_surface_get_height(win->backstore);

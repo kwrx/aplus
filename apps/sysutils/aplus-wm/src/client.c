@@ -29,6 +29,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -243,7 +245,7 @@ static int wm_client_handle_hello(wm_client_t* client, const uint8_t* payload, s
     memcpy(&hello, payload, sizeof(hello));
 
     if (hello.version != UI_PROTOCOL_VERSION) {
-        fprintf(stderr, "aplus-wm: client speaks protocol %u, expected %u\n", hello.version, UI_PROTOCOL_VERSION);
+        ulog_warnf("client speaks protocol %u, expected %u", hello.version, UI_PROTOCOL_VERSION);
         return -1;
     }
 
@@ -269,7 +271,7 @@ static int wm_client_handle_create_window(wm_client_t* client, const uint8_t* pa
 
 
     if (req.flags & ~(uint32_t)UI_WINDOW_FLAGS_ALL) {
-        fprintf(stderr, "aplus-wm: client asked for window flags this server does not know (%#x)\n", req.flags);
+        ulog_warnf("client asked for window flags this server does not know (%#x)", req.flags);
         return -1;
     }
 
@@ -549,7 +551,7 @@ static int wm_client_dispatch(wm_client_t* client) {
         memcpy(&hdr, client->rx.data + offset, sizeof(hdr));
 
         if (hdr.length > UI_MSG_PAYLOAD_MAX) {
-            fprintf(stderr, "aplus-wm: client sent an oversized frame (%u bytes)\n", hdr.length);
+            ulog_warnf("client sent an oversized frame (%u bytes)", hdr.length);
             return -1;
         }
 
@@ -559,7 +561,7 @@ static int wm_client_dispatch(wm_client_t* client) {
 
 
         if (wm_client_handle(client, hdr.type, client->rx.data + offset + sizeof(hdr), hdr.length) < 0) {
-            fprintf(stderr, "aplus-wm: client sent a bad message (type %#x, %u bytes)\n", hdr.type, hdr.length);
+            ulog_warnf("client sent a bad message (type %#x, %u bytes)", hdr.type, hdr.length);
             return -1;
         }
 
@@ -615,7 +617,7 @@ int wm_client_read(wm_client_t* client) {
         }
 
         if (wm_buffer_reserve(&client->rx.data, &client->rx.capacity, client->rx.size + (size_t)e, WM_CLIENT_RX_MAX) < 0) {
-            fprintf(stderr, "aplus-wm: cannot hold %zu bytes from a client: %s\n", client->rx.size + (size_t)e, strerror(errno));
+            ulog_errorf("cannot hold %zu bytes from a client: %s", client->rx.size + (size_t)e, strerror(errno));
             return -1;
         }
 

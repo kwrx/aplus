@@ -35,6 +35,8 @@
 
 #include <webp/decode.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -50,7 +52,7 @@ void* wm_slurp(const char* path, size_t* size) {
     int fd;
 
     if ((fd = open(path, O_RDONLY)) < 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot open %s: %s\n", path, strerror(errno));
+        ulog_warnf("cannot open %s: %s", path, strerror(errno));
         return NULL;
     }
 
@@ -58,7 +60,7 @@ void* wm_slurp(const char* path, size_t* size) {
     struct stat st;
 
     if (fstat(fd, &st) < 0 || st.st_size <= 0) {
-        fprintf(stderr, "aplus-wm: warning: cannot stat %s\n", path);
+        ulog_warnf("cannot stat %s", path);
         close(fd);
         return NULL;
     }
@@ -74,7 +76,7 @@ void* wm_slurp(const char* path, size_t* size) {
 
     if (ui_recv_all(fd, buffer, (size_t)st.st_size) < 0) {
 
-        fprintf(stderr, "aplus-wm: warning: cannot read %s: %s\n", path, strerror(errno));
+        ulog_warnf("cannot read %s: %s", path, strerror(errno));
 
         free(buffer);
         close(fd);
@@ -110,13 +112,13 @@ void* wm_image_probe(const char* path, int max_size, size_t* size, int* width, i
 
 
     if (!WebPGetInfo(file, *size, width, height)) {
-        fprintf(stderr, "aplus-wm: warning: %s is not a webp image\n", path);
+        ulog_warnf("%s is not a webp image", path);
         free(file);
         return NULL;
     }
 
     if (*width <= 0 || *height <= 0 || *width > max_size || *height > max_size) {
-        fprintf(stderr, "aplus-wm: warning: %s is %dx%d, which is not a usable size\n", path, *width, *height);
+        ulog_warnf("%s is %dx%d, which is not a usable size", path, *width, *height);
         free(file);
         return NULL;
     }

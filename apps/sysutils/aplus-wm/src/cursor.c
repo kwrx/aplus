@@ -32,6 +32,8 @@
 
 #include <webp/decode.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -175,7 +177,7 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
     free(file);
 
     if (!pixels) {
-        fprintf(stderr, "aplus-wm: warning: cannot decode %s\n", path);
+        ulog_warnf("cannot decode %s", path);
         return false;
     }
 

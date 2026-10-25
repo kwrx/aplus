@@ -33,6 +33,8 @@
 
 #include <webp/decode.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -154,7 +156,7 @@ cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height) {
     free(file);
 
     if (!surface) {
-        fprintf(stderr, "aplus-wm: warning: cannot decode %s\n", path);
+        ulog_warnf("cannot decode %s", path);
         return NULL;
     }
 
@@ -166,7 +168,7 @@ cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height) {
         cairo_surface_destroy(surface);
 
         if (!scaled) {
-            fprintf(stderr, "aplus-wm: warning: cannot scale %s to %dx%d\n", path, width, height);
+            ulog_warnf("cannot scale %s to %dx%d", path, width, height);
             return NULL;
         }
 
@@ -186,7 +188,7 @@ cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height) {
     cairo_pattern_set_filter(pattern, CAIRO_FILTER_NEAREST);
     cairo_pattern_set_extend(pattern, CAIRO_EXTEND_PAD);
 
-    fprintf(stderr, "aplus-wm: %s is %dx%d, covering %dx%d\n", path, iw, ih, width, height);
+    ulog_debugf("%s is %dx%d, covering %dx%d", path, iw, ih, width, height);
 
     return pattern;
 }

@@ -47,6 +47,7 @@
 #include <aplus/ui-keymap.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 
 #include <pthread.h>
@@ -687,7 +688,7 @@ static void aterm_pty_winsize(unsigned int width, unsigned int height) {
     };
 
     if (ioctl(context.masterfd, TIOCSWINSZ, &ws) < 0) {
-        fprintf(stderr, "aplus-terminal: ioctl(TIOCSWINSZ) failed: %s\n", strerror(errno));
+        ulog_warnf("ioctl(TIOCSWINSZ) failed: %s", strerror(errno));
     }
 }
 
@@ -731,12 +732,12 @@ static int aterm_fb_resize(void) {
     int resized = tsm_screen_resize(context.con, context.cols, context.rows);
 
     if (resized < 0) {
-        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", context.cols, context.rows, strerror(-resized));
+        ulog_warnf("cannot resize the screen to %ux%u: %s", context.cols, context.rows, strerror(-resized));
     }
 
     context.age = 0;
 
-    fprintf(stderr, "aplus-terminal: framebuffer is now %ux%ux%u, %ux%u cells\n", width, height, context.fb.var.bits_per_pixel, context.cols, context.rows);
+    ulog_infof("framebuffer is now %ux%ux%u, %ux%u cells", width, height, context.fb.var.bits_per_pixel, context.cols, context.rows);
 
     aterm_pty_winsize(width, height);
 
@@ -760,12 +761,12 @@ static void tsm_draw_locked(void) {
     while (aterm_window_commit() < 0) {
 
         if (context.windowed || errno != ESTALE) {
-            fprintf(stderr, "aplus-terminal: aterm_window_commit() failed: %s\n", strerror(errno));
+            ulog_errorf("aterm_window_commit() failed: %s", strerror(errno));
             return;
         }
 
         if (aterm_fb_resize() < 0) {
-            fprintf(stderr, "aplus-terminal: cannot follow the framebuffer mode change: %s\n", strerror(errno));
+            ulog_errorf("cannot follow the framebuffer mode change: %s", strerror(errno));
             return;
         }
 
@@ -816,13 +817,13 @@ static void tsm_resize(unsigned int width, unsigned int height) {
     pthread_mutex_lock(&context.lock);
 
     if (ui_window_apply_configure(context.win) < 0) {
-        fprintf(stderr, "aplus-terminal: ui_window_apply_configure() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_window_apply_configure() failed: %s", strerror(errno));
         pthread_mutex_unlock(&context.lock);
         return;
     }
 
     if (aterm_bind_surface() < 0) {
-        fprintf(stderr, "aplus-terminal: cannot draw on the window surface: %s\n", strerror(errno));
+        ulog_errorf("cannot draw on the window surface: %s", strerror(errno));
         pthread_mutex_unlock(&context.lock);
         return;
     }
@@ -833,7 +834,7 @@ static void tsm_resize(unsigned int width, unsigned int height) {
     int resized = tsm_screen_resize(context.con, cols, rows);
 
     if (resized < 0) {
-        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", cols, rows, strerror(-resized));
+        ulog_warnf("cannot resize the screen to %ux%u: %s", cols, rows, strerror(-resized));
     }
 
     context.age = 0;
@@ -863,7 +864,7 @@ static void tsm_handle_input(int out, const char* ascii, size_t size) {
     }
 
     if (write(out, ascii, size) != (ssize_t)size) {
-        perror("write");
+        ulog_errorf("write(): %s", strerror(errno));
     }
 }
 
@@ -938,7 +939,7 @@ __attribute__((noreturn)) static void aterm_quit(void) {
         if (kill(-context.child, SIGHUP) == 0) {
             usleep(150000);
         } else if (errno != ESRCH) {
-            fprintf(stderr, "aplus-terminal: cannot hang up the session: %s\n", strerror(errno));
+            ulog_warnf("cannot hang up the session: %s", strerror(errno));
         }
     }
 
@@ -1024,7 +1025,7 @@ int aterm_fb_connect(void) {
         return -1;
     }
     
-    fprintf(stderr, "aplus-terminal: framebuffer %dx%dx%d [ptr(%p), size(%p)]\n", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
+    ulog_infof("framebuffer %dx%dx%d [ptr(%p), size(%p)]", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
 
     context.fb.fd = fd;
     return 0;
@@ -1047,7 +1048,7 @@ static void* thr_ui_handler(void* arg) {
                 continue;
             }
 
-            fprintf(stderr, "aplus-terminal: lost the connection to the display server: %s\n", strerror(errno));
+            ulog_errorf("lost the connection to the display server: %s", strerror(errno));
             exit(1);
         }
 
@@ -1116,7 +1117,7 @@ static void* thr_kbd_handler(void* arg) {
                     continue;
                 }
 
-                fprintf(stderr, "aplus-terminal: cannot read from the keyboard: %s\n", strerror(errno));
+                ulog_errorf("cannot read from the keyboard: %s", strerror(errno));
                 exit(1);
             }
 
@@ -1202,21 +1203,21 @@ int main(int argc, char** argv) {
     const int rows = 25;
 
     if (pthread_mutex_init(&context.lock, NULL) != 0) {
-        fprintf(stderr, "aplus-terminal: pthread_mutex_init() failed: %s\n", strerror(errno));
+        ulog_errorf("pthread_mutex_init() failed: %s", strerror(errno));
         exit(1);
     }
 
     context.windowed = windowed;
-    fprintf(stderr, "aplus-terminal: running in %s mode\n", context.windowed ? "windowed" : "framebuffer");
+    ulog_infof("running in %s mode", context.windowed ? "windowed" : "framebuffer");
 
     if (context.windowed) {
         if ((context.conn = ui_connect(NULL, 5000)) == NULL) {
-            fprintf(stderr, "aplus-terminal: cannot reach the display server on %s: %s\n", UI_DEFAULT_SOCKET, strerror(errno));
+            ulog_errorf("cannot reach the display server on %s: %s", UI_DEFAULT_SOCKET, strerror(errno));
             exit(1);
         }
     } else {
         if (aterm_fb_connect() < 0) {
-            fprintf(stderr, "aplus-terminal: cannot open the framebuffer: %s\n", strerror(errno));
+            ulog_errorf("cannot open the framebuffer: %s", strerror(errno));
             exit(1);
         }
     }
@@ -1224,20 +1225,20 @@ int main(int argc, char** argv) {
 
     //* Font initialization
     if (aterm_font_init() < 0) {
-        fprintf(stderr, "aplus-terminal: cannot load %s: %s\n", CONFIG_ATERM_FONT_PATH, strerror(errno));
+        ulog_errorf("cannot load %s: %s", CONFIG_ATERM_FONT_PATH, strerror(errno));
         exit(1);
     }
 
     //* Window initialization
     if (context.windowed) {
         if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "Console")) == NULL) {
-            fprintf(stderr, "aplus-terminal: ui_window_create() failed: %s\n", strerror(errno));
+            ulog_errorf("ui_window_create() failed: %s", strerror(errno));
             exit(1);
         }
     }
 
     if (aterm_bind_surface() < 0) {
-        fprintf(stderr, "aplus-terminal: cannot draw on the window surface: %s\n", strerror(errno));
+        ulog_errorf("cannot draw on the window surface: %s", strerror(errno));
         exit(1);
     }
 
@@ -1255,7 +1256,7 @@ int main(int argc, char** argv) {
 
     //* 3. TSM initialization
     if (tsm_screen_new(&context.con, NULL, NULL) < 0) {
-        fprintf(stderr, "aplus-terminal: tsm_screen_new() failed\n");
+        ulog_errorf("tsm_screen_new() failed");
         exit(1);
     }
 
@@ -1263,7 +1264,7 @@ int main(int argc, char** argv) {
 
 
     if (tsm_vte_new(&context.vte, context.con, tsm_write_cb, NULL, NULL, NULL) < 0) {
-        fprintf(stderr, "aplus-terminal: tsm_vte_new() failed\n");
+        ulog_errorf("tsm_vte_new() failed");
         exit(1);
     }
 
@@ -1273,7 +1274,7 @@ int main(int argc, char** argv) {
     int resized = tsm_screen_resize(context.con, context.cols, context.rows);
 
     if (resized < 0) {
-        fprintf(stderr, "aplus-terminal: cannot resize the screen to %ux%u: %s\n", context.cols, context.rows, strerror(-resized));
+        ulog_errorf("cannot resize the screen to %ux%u: %s", context.cols, context.rows, strerror(-resized));
         exit(1);
     }
 
@@ -1295,7 +1296,7 @@ int main(int argc, char** argv) {
     ws.ws_ypixel = (unsigned short)aterm_window_height();
 
     if (openpty(&context.masterfd, &context.slavefd, NULL, NULL, &ws) < 0) {
-        fprintf(stderr, "aplus-terminal: cannot open pseudo-terminal: %s\n", strerror(errno));
+        ulog_errorf("cannot open pseudo-terminal: %s", strerror(errno));
         exit(1);
     }
 
@@ -1314,13 +1315,13 @@ int main(int argc, char** argv) {
 
         context.kbd.fd = open("/dev/kbd", O_RDONLY);
         if (context.kbd.fd < 0) {
-            fprintf(stderr, "aplus-terminal: cannot open the keyboard: %s\n", strerror(errno));
+            ulog_errorf("cannot open the keyboard: %s", strerror(errno));
             exit(1);
         }
 
         int thr_e = pthread_create(&context.kbd.thr, NULL, thr_kbd_handler, NULL);
         if (thr_e != 0) {
-            fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(errno));
+            ulog_errorf("pthread_create() failed: %s", strerror(errno));
             exit(1);
         }
     }
@@ -1329,12 +1330,12 @@ int main(int argc, char** argv) {
     context.keymap = ui_keymap_open(NULL);
 
     if (!context.keymap) {
-        fprintf(stderr, "aplus-terminal: cannot load the keymap: %s\n", strerror(errno));
+        ulog_errorf("cannot load the keymap: %s", strerror(errno));
         exit(1);
     }
 
     if (aterm_watch_child() < 0) {
-        fprintf(stderr, "aplus-terminal: cannot watch for the shell to exit: %s\n", strerror(errno));
+        ulog_errorf("cannot watch for the shell to exit: %s", strerror(errno));
         exit(1);
     }
 
@@ -1343,7 +1344,7 @@ int main(int argc, char** argv) {
 
         int thr_e = pthread_create(&context.thr_ui, NULL, thr_ui_handler, NULL);
         if (thr_e != 0) {
-            fprintf(stderr, "aplus-terminal: pthread_create() failed: %s\n", strerror(thr_e));
+            ulog_errorf("pthread_create() failed: %s", strerror(thr_e));
             exit(1);
         }
     }
@@ -1351,12 +1352,12 @@ int main(int argc, char** argv) {
 
     //* 5. Session initialization
     if (setsid() < 0 && errno != EPERM) {
-        fprintf(stderr, "aplus-terminal: setsid() failed: %s\n", strerror(errno));
+        ulog_errorf("setsid() failed: %s", strerror(errno));
         exit(1);
     }
 
     if (ioctl(context.masterfd, TIOCSCTTY, 0) < 0) {
-        fprintf(stderr, "aplus-terminal: warning: cannot claim the pty as a controlling terminal: %s\n", strerror(errno));
+        ulog_warnf("cannot claim the pty as a controlling terminal: %s", strerror(errno));
     }
 
 
@@ -1365,7 +1366,7 @@ int main(int argc, char** argv) {
 
     if (pid < 0) {
 
-        fprintf(stderr, "aplus-terminal: fork() failed\n");
+        ulog_errorf("fork() failed");
         exit(1);
 
     } else if (pid == 0) {
@@ -1400,34 +1401,34 @@ int main(int argc, char** argv) {
         pid_t pgrp = getpid();
 
         if (setpgrp() < 0) {
-            fprintf(stderr, "aplus-terminal: setpgrp() failed: %s\n", strerror(errno));
+            ulog_errorf("setpgrp() failed: %s", strerror(errno));
             exit(1);
         }
 
         if (ioctl(context.slavefd, TIOCSPGRP, &pgrp) < 0) {
-            fprintf(stderr, "aplus-terminal: ioctl() failed: %s\n", strerror(errno));
+            ulog_errorf("ioctl() failed: %s", strerror(errno));
             exit(1);
         }
 
         if (dup2(context.slavefd, STDIN_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            ulog_errorf("dup2() failed");
             exit(1);
         }
 
         if (dup2(context.slavefd, STDOUT_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            ulog_errorf("dup2() failed");
             exit(1);
         }
 
         if (dup2(context.slavefd, STDERR_FILENO) < 0) {
-            fprintf(stderr, "aplus-terminal: dup2() failed\n");
+            ulog_errorf("dup2() failed");
             exit(1);
         }
 
 
         if (pwd) {
             if (chdir(pwd) < 0) {
-                fprintf(stderr, "aplus-terminal: chdir() failed: %s\n", strerror(errno));
+                ulog_errorf("chdir() failed: %s", strerror(errno));
                 exit(1);
             }
         }
@@ -1441,7 +1442,7 @@ int main(int argc, char** argv) {
             execl(shell, shell, NULL);
         }
 
-        fprintf(stderr, "aplus-terminal: cannot run %s: %s\n", shell, strerror(errno));
+        ulog_errorf("cannot run %s: %s", shell, strerror(errno));
         exit(1);
     }
 
@@ -1449,7 +1450,7 @@ int main(int argc, char** argv) {
     context.child = pid;
 
     if (close(context.slavefd) < 0) {
-        fprintf(stderr, "aplus-terminal: close() failed: %s\n", strerror(errno));
+        ulog_errorf("close() failed: %s", strerror(errno));
         exit(1);
     }
 
@@ -1472,7 +1473,7 @@ int main(int argc, char** argv) {
                 continue;
             }
 
-            fprintf(stderr, "aplus-terminal: poll() failed: %s\n", strerror(errno));
+            ulog_errorf("poll() failed: %s", strerror(errno));
             exit(1);
         }
 

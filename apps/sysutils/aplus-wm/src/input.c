@@ -32,6 +32,7 @@
 
 #include <aplus/events.h>
 #include <aplus/input.h>
+#include <aplus/ulog.h>
 
 #include <wm.h>
 
@@ -105,7 +106,7 @@ static void* input_thread(void* arg) {
         if (e == (ssize_t)sizeof(ev)) {
 
             if (input_forward(&ev) < 0) {
-                fprintf(stderr, "aplus-wm: stopped forwarding %s: %s\n", input_devices[index].path, strerror(errno));
+                ulog_errorf("stopped forwarding %s: %s", input_devices[index].path, strerror(errno));
                 break;
             }
 
@@ -117,9 +118,9 @@ static void* input_thread(void* arg) {
         }
 
         if (e < 0) {
-            fprintf(stderr, "aplus-wm: stopped reading %s: %s\n", input_devices[index].path, strerror(errno));
+            ulog_errorf("stopped reading %s: %s", input_devices[index].path, strerror(errno));
         } else {
-            fprintf(stderr, "aplus-wm: stopped reading %s: got %zd of %zu bytes\n", input_devices[index].path, e, sizeof(ev));
+            ulog_errorf("stopped reading %s: got %zd of %zu bytes", input_devices[index].path, e, sizeof(ev));
         }
 
         break;
@@ -137,7 +138,7 @@ static void* input_thread(void* arg) {
 int wm_input_open(void) {
 
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, input_pipe) < 0) {
-        fprintf(stderr, "aplus-wm: socketpair() failed: %s\n", strerror(errno));
+        ulog_errorf("socketpair() failed: %s", strerror(errno));
         return -1;
     }
 
@@ -147,7 +148,7 @@ int wm_input_open(void) {
         if ((input_devices[i].fd = open(input_devices[i].path, O_RDONLY)) < 0) {
 
             if (input_devices[i].required) {
-                fprintf(stderr, "aplus-wm: open() failed: cannot open %s: %s\n", input_devices[i].path, strerror(errno));
+                ulog_errorf("open() failed: cannot open %s: %s", input_devices[i].path, strerror(errno));
                 return -1;
             }
 
@@ -156,7 +157,7 @@ int wm_input_open(void) {
 
         if (pthread_create(&input_devices[i].thread, NULL, input_thread, (void*)(uintptr_t)i) != 0) {
 
-            fprintf(stderr, "aplus-wm: pthread_create() failed for %s: %s\n", input_devices[i].path, strerror(errno));
+            ulog_warnf("pthread_create() failed for %s: %s", input_devices[i].path, strerror(errno));
 
             if (input_devices[i].required) {
                 return -1;

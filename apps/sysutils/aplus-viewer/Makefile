@@ -1,5 +1,6 @@
 INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
+INCLUDES += $(ROOTDIR)/lib/aplus/ulog/include
 
 CFLAGS += -include $(ROOTDIR)/config.h
 CFLAGS += -isystem $(SYSROOT)/usr/include
@@ -7,8 +8,9 @@ CFLAGS += -isystem $(SYSROOT)/usr/include/freetype2
 CFLAGS += -DPATH_MAX=4096
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
+LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS      += ui mupdf mupdf-third webp cairo pixman-1 freetype jpeg png z
+LIBS      += ui ulog mupdf mupdf-third webp cairo pixman-1 freetype jpeg png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-viewer.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-viewer.desktop: assets/aplus-viewer.desktop

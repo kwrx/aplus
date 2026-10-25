@@ -42,6 +42,7 @@
 #include <aplus/input.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 #include "webp.h"
 
@@ -1727,7 +1728,7 @@ int main(int argc, char** argv) {
     viewer.ctx = fz_new_context(NULL, NULL, VIEWER_STORE_SIZE);
 
     if (!viewer.ctx) {
-        fprintf(stderr, "%s: fz_new_context() failed\n", VIEWER_NAME);
+        ulog_errorf("fz_new_context() failed");
         return 1;
     }
 
@@ -1748,7 +1749,7 @@ int main(int argc, char** argv) {
     viewer.conn = ui_connect(NULL, 5000);
 
     if (!viewer.conn) {
-        fprintf(stderr, "%s: ui_connect() failed: %s\n", VIEWER_NAME, strerror(errno));
+        ulog_errorf("ui_connect() failed: %s", strerror(errno));
         viewer_shutdown();
         return 1;
     }
@@ -1757,7 +1758,7 @@ int main(int argc, char** argv) {
     viewer.window = ui_window_create(viewer.conn, VIEWER_WINDOW_WIDTH, VIEWER_WINDOW_HEIGHT, VIEWER_NAME);
 
     if (!viewer.window) {
-        fprintf(stderr, "%s: ui_window_create() failed: %s\n", VIEWER_NAME, strerror(errno));
+        ulog_errorf("ui_window_create() failed: %s", strerror(errno));
         viewer_shutdown();
         return 1;
     }
@@ -1766,14 +1767,14 @@ int main(int argc, char** argv) {
     viewer.view = ui_view_create(viewer.window);
 
     if (!viewer.view) {
-        fprintf(stderr, "%s: ui_view_create() failed: %s\n", VIEWER_NAME, strerror(errno));
+        ulog_errorf("ui_view_create() failed: %s", strerror(errno));
         viewer_shutdown();
         return 1;
     }
 
 
     if (viewer_build(viewer.view) < 0) {
-        fprintf(stderr, "%s: cannot create the widgets\n", VIEWER_NAME);
+        ulog_errorf("cannot create the widgets");
         viewer_shutdown();
         return 1;
     }
@@ -1783,14 +1784,14 @@ int main(int argc, char** argv) {
 
 
     if (argc > 1 && viewer_open(argv[1]) < 0) {
-        fprintf(stderr, "%s: cannot show %s\n", VIEWER_NAME, argv[1]);
+        ulog_errorf("cannot show %s", argv[1]);
     }
 
 
     const int status = viewer_run();
 
     if (status < 0) {
-        fprintf(stderr, "%s: the connection went away: %s\n", VIEWER_NAME, strerror(errno));
+        ulog_errorf("the connection went away: %s", strerror(errno));
     }
 
     viewer_shutdown();

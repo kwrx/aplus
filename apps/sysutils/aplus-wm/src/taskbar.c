@@ -35,6 +35,8 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -126,7 +128,7 @@ static void* wm_clock_thread(void* arg) {
 int wm_taskbar_open(void) {
 
     if (socketpair(AF_UNIX, SOCK_STREAM, 0, wm_clock_pipe) < 0) {
-        fprintf(stderr, "aplus-wm: socketpair() failed: %s\n", strerror(errno));
+        ulog_errorf("socketpair() failed: %s", strerror(errno));
         return -1;
     }
 
@@ -134,7 +136,7 @@ int wm_taskbar_open(void) {
     pthread_t thread;
 
     if (pthread_create(&thread, NULL, wm_clock_thread, NULL) != 0) {
-        fprintf(stderr, "aplus-wm: pthread_create() failed for the clock: %s\n", strerror(errno));
+        ulog_errorf("pthread_create() failed for the clock: %s", strerror(errno));
         return -1;
     }
 

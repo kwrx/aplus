@@ -37,6 +37,7 @@
 #include <unistd.h>
 
 #include <aplus/input.h>
+#include <aplus/ulog.h>
 
 #include <wm.h>
 
@@ -125,13 +126,13 @@ void wm_spawn(const char* const* argv) {
 
     if (pid < 0) {
 
-        fprintf(stderr, "aplus-wm: fork() failed: %s\n", strerror(errno));
+        ulog_errorf("fork() failed: %s", strerror(errno));
         return;
     }
 
     if (pid > 0) {
 
-        fprintf(stderr, "aplus-wm: spawned %s as pid %d\n", argv[0], pid);
+        ulog_debugf("spawned %s as pid %d", argv[0], pid);
         return;
     }
 
@@ -163,7 +164,7 @@ static void* wm_launcher_copy_thread(void* arg) {
     static char buffer[64 * 1024];
 
     if (mkdir(WM_CACHE_PATH, 0755) < 0 && errno != EEXIST) {
-        fprintf(stderr, "aplus-wm: cannot create %s, starting the launcher from the disk instead: %s\n", WM_CACHE_PATH, strerror(errno));
+        ulog_warnf("cannot create %s, starting the launcher from the disk instead: %s", WM_CACHE_PATH, strerror(errno));
         return NULL;
     }
 
@@ -190,7 +191,7 @@ static void* wm_launcher_copy_thread(void* arg) {
 
     if (got != 0 || rename(WM_LAUNCHER_COPY ".part", WM_LAUNCHER_COPY) < 0) {
 
-        fprintf(stderr, "aplus-wm: cannot copy %s to %s, starting it from the disk instead: %s\n", WM_LAUNCHER_PATH, WM_LAUNCHER_COPY, strerror(errno));
+        ulog_warnf("cannot copy %s to %s, starting it from the disk instead: %s", WM_LAUNCHER_PATH, WM_LAUNCHER_COPY, strerror(errno));
 
         unlink(WM_LAUNCHER_COPY ".part");
     }

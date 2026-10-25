@@ -1,13 +1,15 @@
 INCLUDES += $(ROOTDIR)/include
 INCLUDES += $(ROOTDIR)/lib/aplus/ui/include
+INCLUDES += $(ROOTDIR)/lib/aplus/ulog/include
 
 CFLAGS += -include $(ROOTDIR)/config.h
 CFLAGS += -isystem $(SYSROOT)/usr/include
 CFLAGS += -isystem $(SYSROOT)/usr/include/freetype2
 
 LDFLAGS += -L$(ROOTDIR)/lib/aplus/ui
+LDFLAGS += -L$(ROOTDIR)/lib/aplus/ulog
 
-LIBS      += ui cairo pixman-1 freetype png z
+LIBS      += ui ulog cairo pixman-1 freetype png z
 RESOURCES += $(SYSROOT)/usr/share/applications/aplus-calculator.desktop
 
 $(SYSROOT)/usr/share/applications/aplus-calculator.desktop: assets/aplus-calculator.desktop

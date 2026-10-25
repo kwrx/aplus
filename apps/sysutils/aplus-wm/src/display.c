@@ -28,6 +28,8 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
+#include <aplus/ulog.h>
+
 #include <wm.h>
 
 
@@ -58,7 +60,7 @@ int wm_display_cursor_image(wm_display_t* display, const uint32_t* image, int wi
     };
 
     if (ioctl(display->fd, FBIOPUT_HWCURSOR, &cursor) < 0) {
-        fprintf(stderr, "aplus-wm: ioctl(FBIOPUT_HWCURSOR) failed: %s\n", strerror(errno));
+        ulog_warnf("ioctl(FBIOPUT_HWCURSOR) failed: %s", strerror(errno));
         return -1;
     }
 
@@ -95,7 +97,7 @@ static void wm_display_cursor_init(wm_display_t* display) {
     }
 
 
-    fprintf(stderr, "aplus-wm: using the hardware cursor plane\n");
+    ulog_infof("using the hardware cursor plane");
 }
 
 
@@ -120,18 +122,18 @@ void wm_display_cursor_move(wm_display_t* display, int x, int y) {
 static int wm_display_setup(wm_display_t* display) {
 
     if (ioctl(display->fd, FBIOGET_VSCREENINFO, &display->var) < 0) {
-        fprintf(stderr, "aplus-wm: ioctl(FBIOGET_VSCREENINFO) failed: %s\n", strerror(errno));
+        ulog_errorf("ioctl(FBIOGET_VSCREENINFO) failed: %s", strerror(errno));
         return -1;
     }
 
     if (ioctl(display->fd, FBIOGET_FSCREENINFO, &display->fix) < 0) {
-        fprintf(stderr, "aplus-wm: ioctl(FBIOGET_FSCREENINFO) failed: %s\n", strerror(errno));
+        ulog_errorf("ioctl(FBIOGET_FSCREENINFO) failed: %s", strerror(errno));
         return -1;
     }
 
 
     if (!display->fix.smem_start || !display->var.xres || !display->var.yres) {
-        fprintf(stderr, "aplus-wm: wrong framebuffer configuration\n");
+        ulog_errorf("wrong framebuffer configuration");
         return -1;
     }
 
@@ -149,7 +151,7 @@ static int wm_display_setup(wm_display_t* display) {
             break;
 
         default:
-            fprintf(stderr, "aplus-wm: unsupported framebuffer depth: %u bpp\n", display->var.bits_per_pixel);
+            ulog_errorf("unsupported framebuffer depth: %u bpp", display->var.bits_per_pixel);
             return -1;
     }
 
@@ -161,7 +163,7 @@ static int wm_display_setup(wm_display_t* display) {
     display->screen = cairo_image_surface_create_for_data((unsigned char*)display->fix.smem_start, format, display->width, display->height, (int)display->fix.line_length);
 
     if (cairo_surface_status(display->screen) != CAIRO_STATUS_SUCCESS) {
-        fprintf(stderr, "aplus-wm: cannot wrap the framebuffer: %s\n", cairo_status_to_string(cairo_surface_status(display->screen)));
+        ulog_errorf("cannot wrap the framebuffer: %s", cairo_status_to_string(cairo_surface_status(display->screen)));
         return -1;
     }
 
@@ -169,7 +171,7 @@ static int wm_display_setup(wm_display_t* display) {
     display->back = wm_surface_create(CAIRO_FORMAT_RGB24, display->width, display->height);
 
     if (!display->back) {
-        fprintf(stderr, "aplus-wm: cannot allocate the back buffer\n");
+        ulog_errorf("cannot allocate the back buffer");
         return -1;
     }
 
@@ -178,7 +180,7 @@ static int wm_display_setup(wm_display_t* display) {
     display->cr_screen = cairo_create(display->screen);
 
     if (cairo_status(display->cr) != CAIRO_STATUS_SUCCESS || cairo_status(display->cr_screen) != CAIRO_STATUS_SUCCESS) {
-        fprintf(stderr, "aplus-wm: cannot create a drawing context\n");
+        ulog_errorf("cannot create a drawing context");
         return -1;
     }
 
@@ -190,7 +192,7 @@ static int wm_display_setup(wm_display_t* display) {
     }
 
     if (!display->background || cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
-        fprintf(stderr, "aplus-wm: cannot create the desktop background\n");
+        ulog_errorf("cannot create the desktop background");
         return -1;
     }
 
@@ -241,7 +243,7 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
 
 
     if ((display->fd = open(device, O_RDWR)) < 0) {
-        fprintf(stderr, "aplus-wm: open() failed: cannot open %s: %s\n", device, strerror(errno));
+        ulog_errorf("open() failed: cannot open %s: %s", device, strerror(errno));
         return -1;
     }
 
@@ -253,7 +255,7 @@ int wm_display_open(wm_display_t* display, const char* device, const char* wallp
     }
 
 
-    fprintf(stderr, "aplus-wm: %s is %dx%d at %u bpp, pitch %u\n", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
+    ulog_infof("%s is %dx%d at %u bpp, pitch %u", device, display->width, display->height, display->var.bits_per_pixel, display->fix.line_length);
 
 
     wm_display_cursor_init(display);
@@ -277,7 +279,7 @@ int wm_display_resize(wm_display_t* display) {
         return -1;
     }
 
-    fprintf(stderr, "aplus-wm: display is now %dx%d, pitch %u\n", display->width, display->height, display->fix.line_length);
+    ulog_infof("display is now %dx%d, pitch %u", display->width, display->height, display->fix.line_length);
 
     return 0;
 }

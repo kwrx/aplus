@@ -38,6 +38,7 @@
 #include <aplus/input.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 
 #define CALC_WINDOW_WIDTH  300
@@ -796,7 +797,7 @@ int main(int argc, char** argv) {
     ui_connection_t* conn = ui_connect(NULL, 5000);
 
     if (!conn) {
-        fprintf(stderr, "aplus-calculator: ui_connect() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_connect() failed: %s", strerror(errno));
         return 1;
     }
 
@@ -804,7 +805,7 @@ int main(int argc, char** argv) {
     ui_window_t* window = ui_window_create(conn, CALC_WINDOW_WIDTH, CALC_WINDOW_HEIGHT, "Calculator");
 
     if (!window) {
-        fprintf(stderr, "aplus-calculator: ui_window_create() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_window_create() failed: %s", strerror(errno));
         ui_disconnect(conn);
         return 1;
     }
@@ -813,7 +814,7 @@ int main(int argc, char** argv) {
     ui_view_t* view = ui_view_create(window);
 
     if (!view) {
-        fprintf(stderr, "aplus-calculator: ui_view_create() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_view_create() failed: %s", strerror(errno));
         ui_window_destroy(window);
         ui_disconnect(conn);
         return 1;
@@ -821,7 +822,7 @@ int main(int argc, char** argv) {
 
 
     if (calc_build(view) < 0) {
-        fprintf(stderr, "aplus-calculator: cannot create the widgets\n");
+        ulog_errorf("cannot create the widgets");
         ui_view_destroy(view);
         ui_window_destroy(window);
         ui_disconnect(conn);
@@ -837,7 +838,7 @@ int main(int argc, char** argv) {
     const int status = ui_view_run(view);
 
     if (status < 0) {
-        fprintf(stderr, "aplus-calculator: ui_view_run() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_view_run() failed: %s", strerror(errno));
     }
 
     ui_view_destroy(view);

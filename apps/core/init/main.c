@@ -46,6 +46,7 @@
 #include <termios.h>
 
 #include <aplus/fb.h>
+#include <aplus/ulog.h>
 
 #include <pthread.h>
 
@@ -57,19 +58,17 @@
 
 static void sig_shutdown_handler(int sig) {
 
-#if defined(DEBUG)
     switch (sig) {
         case SIGTERM:
-            fprintf(stderr, "init: received shutdown request, rebooting...\n");
+            ulog_infof("received shutdown request, rebooting...");
             break;
         case SIGUSR1:
-            fprintf(stderr, "init: received shutdown request, halting...\n");
+            ulog_infof("received shutdown request, halting...");
             break;
         case SIGUSR2:
-            fprintf(stderr, "init: received shutdown request, powering off...\n");
+            ulog_infof("received shutdown request, powering off...");
             break;
     }
-#endif
 
     kill(-1, SIGTERM);
     kill(-1, SIGHUP);
@@ -80,9 +79,7 @@ static void sig_shutdown_handler(int sig) {
             ;
         if (errno == ECHILD)
             break;
-#if defined(DEBUG)
-        fprintf(stderr, "init: waiting for processes to terminate...\n");
-#endif
+        ulog_infof("waiting for processes to terminate...");
         sleep(1);
     }
 
@@ -93,9 +90,7 @@ static void sig_shutdown_handler(int sig) {
             ;
         if (errno == ECHILD)
             break;
-#if defined(DEBUG)
-        fprintf(stderr, "init: waiting for processes to forcefully terminate...\n");
-#endif
+        ulog_infof("waiting for processes to forcefully terminate...");
         sleep(1);
     }
 
@@ -130,23 +125,23 @@ static void init_framebuffer(void) {
     int fd = open("/dev/fb0", O_RDONLY);
 
     if (fd < 0)
-        return (void)fprintf(stderr, "fb0: no framebuffer device found\n");
+        return (void)ulog_warnf("fb0: no framebuffer device found");
 
 
     struct fb_fix_screeninfo fix;
     struct fb_var_screeninfo var;
 
     if (ioctl(fd, FBIOGET_VSCREENINFO, &var) < 0)
-        return (void)fprintf(stderr, "fb0: unable to get screen info\n");
+        return (void)ulog_errorf("fb0: unable to get screen info: %s", strerror(errno));
 
     if (ioctl(fd, FBIOPUT_VSCREENINFO, &var) < 0)
-        return (void)fprintf(stderr, "fb0: unable to set screen info\n");
+        return (void)ulog_errorf("fb0: unable to set screen info: %s", strerror(errno));
 
     if (ioctl(fd, FBIOGET_FSCREENINFO, &fix) < 0)
-        return (void)fprintf(stderr, "fb0: unable to get screen info\n");
+        return (void)ulog_errorf("fb0: unable to get screen info: %s", strerror(errno));
 
 #if defined(DEBUG)
-    fprintf(stderr, "fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]\n", var.xres, var.yres, var.bits_per_pixel, (void*)((uintptr_t)fix.smem_start), (void*)((uintptr_t)fix.smem_len));
+    ulog_debugf("fb0: initialized framebuffer device %dx%dx%d [ptr(%p), size(%p)]", var.xres, var.yres, var.bits_per_pixel, (void*)((uintptr_t)fix.smem_start), (void*)((uintptr_t)fix.smem_len));
 #endif
 
     close(fd);
@@ -177,7 +172,7 @@ static void init_environment(void) {
 
     FILE* fp = fopen("/etc/environment", "r");
     if (!fp)
-        return (void)fprintf(stderr, "env: no environment file found\n");
+        return (void)ulog_warnf("env: no environment file found");
 
     char line[BUFSIZ];
     while (fgets(line, sizeof(line), fp) > 0) {
@@ -216,7 +211,7 @@ static void init_fstab() {
     FILE* fp = fopen("/etc/fstab", "r");
 
     if (!fp)
-        return (void)fprintf(stderr, "fstab: no fstab config file found");
+        return (void)ulog_errorf("fstab: no fstab config file found");
 
 
     char line[BUFSIZ];
@@ -249,7 +244,7 @@ static void init_fstab() {
                     break;
 
 #if defined(DEBUG)
-                fprintf(stderr, "fstab: mount device %s in %s [fstype(%s), flags(%s)]\n", dev, dir, fs, fl);
+                ulog_debugf("fstab: mount device %s in %s [fstype(%s), flags(%s)]", dev, dir, fs, fl);
 #endif
 
                 char* tok = fl;
@@ -281,7 +276,7 @@ static void init_fstab() {
 
 
                 if (mount(dev, dir, fs, flags, NULL) < 0)
-                    perror("mount()");
+                    ulog_errorf("fstab: mount(%s, %s): %s", dev, dir, strerror(errno));
 
 
             } break;
@@ -323,10 +318,7 @@ static void init_hostname() {
         syscall(SYS_sethostname, hostname, strlen(hostname));
     }
 
-
-#if defined(DEBUG)
-    fprintf(stderr, "hostname: set hostname '%s'\n", hostname);
-#endif
+    ulog_debugf("hostname: set hostname '%s'", hostname);
 }
 
 
@@ -347,28 +339,28 @@ int main(int argc, char** argv, char** envp) {
 #if defined(DEBUG)
 
     if (getpid() != 1)
-        fprintf(stderr, "init: WARN! getpid() != 1\n");
+        ulog_warnf("getpid() != 1");
 
 
-    fprintf(stderr, "init: pid(%d) ppid(%d) gid(%d) uid(%d)\n", getpid(), getppid(), getgid(), getuid());
-    fprintf(stderr, "init: argc(%d) argv(%p) envp(%p)\n", argc, argv, envp);
+    ulog_debugf("pid(%d) ppid(%d) gid(%d) uid(%d)", getpid(), getppid(), getgid(), getuid());
+    ulog_debugf("argc(%d) argv(%p) envp(%p)", argc, argv, envp);
 
     for (size_t i = 0; i < argc; i++)
-        fprintf(stderr, "init: argv[%zu] = %s (%p)\n", i, argv[i], argv[i]);
+        ulog_debugf("argv[%zu] = %s (%p)", i, argv[i], argv[i]);
 
 
-    fprintf(stderr, "init: auxval(AT_RANDOM)        = %zu\n", getauxval(AT_RANDOM));
-    fprintf(stderr, "init: auxval(AT_PAGESZ)        = %zu\n", getauxval(AT_PAGESZ));
-    fprintf(stderr, "init: auxval(AT_HWCAP)         = %zu\n", getauxval(AT_HWCAP));
-    fprintf(stderr, "init: auxval(AT_HWCAP2)        = %zu\n", getauxval(AT_HWCAP2));
-    fprintf(stderr, "init: auxval(AT_CLKTCK)        = %zu\n", getauxval(AT_CLKTCK));
-    fprintf(stderr, "init: auxval(AT_UID)           = %zu\n", getauxval(AT_UID));
-    fprintf(stderr, "init: auxval(AT_GID)           = %zu\n", getauxval(AT_GID));
-    fprintf(stderr, "init: auxval(AT_EUID)          = %zu\n", getauxval(AT_EUID));
-    fprintf(stderr, "init: auxval(AT_EGID)          = %zu\n", getauxval(AT_EGID));
-    fprintf(stderr, "init: auxval(AT_ENTRY)         = %zu\n", getauxval(AT_ENTRY));
-    fprintf(stderr, "init: auxval(AT_FLAGS)         = %zu\n", getauxval(AT_FLAGS));
-    fprintf(stderr, "init: auxval(AT_NULL)          = %zu\n", getauxval(AT_NULL));
+    ulog_debugf("auxval(AT_RANDOM)        = %zu", getauxval(AT_RANDOM));
+    ulog_debugf("auxval(AT_PAGESZ)        = %zu", getauxval(AT_PAGESZ));
+    ulog_debugf("auxval(AT_HWCAP)         = %zu", getauxval(AT_HWCAP));
+    ulog_debugf("auxval(AT_HWCAP2)        = %zu", getauxval(AT_HWCAP2));
+    ulog_debugf("auxval(AT_CLKTCK)        = %zu", getauxval(AT_CLKTCK));
+    ulog_debugf("auxval(AT_UID)           = %zu", getauxval(AT_UID));
+    ulog_debugf("auxval(AT_GID)           = %zu", getauxval(AT_GID));
+    ulog_debugf("auxval(AT_EUID)          = %zu", getauxval(AT_EUID));
+    ulog_debugf("auxval(AT_EGID)          = %zu", getauxval(AT_EGID));
+    ulog_debugf("auxval(AT_ENTRY)         = %zu", getauxval(AT_ENTRY));
+    ulog_debugf("auxval(AT_FLAGS)         = %zu", getauxval(AT_FLAGS));
+    ulog_debugf("auxval(AT_NULL)          = %zu", getauxval(AT_NULL));
 
 
 #endif
@@ -397,9 +389,9 @@ int main(int argc, char** argv, char** envp) {
     int e = fork();
     if (e < 0) {
 
-        perror("fork()");
+        ulog_errorf("fork(): %s", strerror(errno));
         exit(EXIT_FAILURE);
-    
+
     }
 
     else if (e == 0) {
@@ -412,7 +404,7 @@ int main(int argc, char** argv, char** envp) {
         setpriority(0, PRIO_PROCESS, 19);
 
 #if defined(DEBUG)
-        fprintf(stderr, "init: going to sleep...\n");
+        ulog_debugf("going to sleep...");
 #endif
 
         struct sigaction sa = {0};
@@ -426,7 +418,7 @@ int main(int argc, char** argv, char** envp) {
             waitpid(-1, NULL, 0);
         } while (errno != ECHILD);
 
-        fprintf(stderr, "init: unreachable point! system halted!\n");
+        ulog_errorf("unreachable point! system halted!");
 
         for (;;)
             pause();

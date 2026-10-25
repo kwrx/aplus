@@ -42,6 +42,7 @@
 #include <aplus/input.h>
 #include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
+#include <aplus/ulog.h>
 
 
 #define EXPLORER_WINDOW_WIDTH  720
@@ -1182,7 +1183,7 @@ int main(int argc, char** argv) {
     explorer.entries = (explorer_entry_t*)calloc(EXPLORER_ENTRIES_MAX, sizeof(explorer_entry_t));
 
     if (!explorer.entries) {
-        fprintf(stderr, "aplus-explorer: calloc() failed: %s\n", strerror(errno));
+        ulog_errorf("calloc() failed: %s", strerror(errno));
         return 1;
     }
 
@@ -1190,7 +1191,7 @@ int main(int argc, char** argv) {
     ui_connection_t* conn = ui_connect(NULL, 5000);
 
     if (!conn) {
-        fprintf(stderr, "aplus-explorer: ui_connect() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_connect() failed: %s", strerror(errno));
         return 1;
     }
 
@@ -1198,7 +1199,7 @@ int main(int argc, char** argv) {
     ui_window_t* window = ui_window_create(conn, EXPLORER_WINDOW_WIDTH, EXPLORER_WINDOW_HEIGHT, "Explorer");
 
     if (!window) {
-        fprintf(stderr, "aplus-explorer: ui_window_create() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_window_create() failed: %s", strerror(errno));
         ui_disconnect(conn);
         return 1;
     }
@@ -1207,7 +1208,7 @@ int main(int argc, char** argv) {
     ui_view_t* view = ui_view_create(window);
 
     if (!view) {
-        fprintf(stderr, "aplus-explorer: ui_view_create() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_view_create() failed: %s", strerror(errno));
         ui_window_destroy(window);
         ui_disconnect(conn);
         return 1;
@@ -1217,7 +1218,7 @@ int main(int argc, char** argv) {
 
 
     if (explorer_build(view) < 0) {
-        fprintf(stderr, "aplus-explorer: cannot create the widgets\n");
+        ulog_errorf("cannot create the widgets");
         ui_view_destroy(view);
         ui_window_destroy(window);
         ui_disconnect(conn);
@@ -1233,7 +1234,7 @@ int main(int argc, char** argv) {
     const int status = ui_view_run(view);
 
     if (status < 0) {
-        fprintf(stderr, "aplus-explorer: ui_view_run() failed: %s\n", strerror(errno));
+        ulog_errorf("ui_view_run() failed: %s", strerror(errno));
     }
 
     ui_view_destroy(view);
