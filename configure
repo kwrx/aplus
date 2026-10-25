@@ -154,10 +154,10 @@ stage_3() {
 
     packages="system-base system-cursors system-fonts system-images system-keymaps"
 
+    packages="$packages aplus"
     packages="$packages busybox"
     packages="$packages bash"
     packages="$packages dash"
-    packages="$packages nano"
     packages="$packages sqlite"
     packages="$packages dropbear"
     packages="$packages xz"
@@ -169,6 +169,7 @@ stage_3() {
     packages="$packages freetype"
     packages="$packages libpng"
     packages="$packages libtsm"
+    packages="$packages libffi"
     packages="$packages mupdf"
     packages="$packages libjpeg-turbo"
     packages="$packages libwebp"
@@ -191,6 +192,11 @@ stage_3() {
         packages="$packages make"
         packages="$packages lua"
         packages="$packages git"
+        packages="$packages bzip2"
+        packages="$packages zstd"
+        packages="$packages nano"
+        packages="$packages util-linux"
+        packages="$packages Python"
     fi
 
     die python ./scripts/get-pkg.py --repo $REPO_PACKAGES --repo-version $REPO_PACKAGES_VERSION --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
