@@ -114,7 +114,19 @@ SYSCALL(
 
 
 
-        if (likely(dev_name) && !(flags & MS_NODEV)) {
+        bool needs_dev = false;
+
+        for (size_t i = 0; fs_table[i].id; i++) {
+
+            if (strcmp(fs_table[i].name, __safe_type) == 0)
+                needs_dev = !fs_table[i].nodev;
+        }
+
+        if (unlikely(needs_dev && !dev_name))
+            return -EINVAL;
+
+
+        if (needs_dev) {
 
             if ((fd = do_openat(AT_FDCWD, dev_name, O_RDONLY, 0, false)) < 0)
                 return fd;
