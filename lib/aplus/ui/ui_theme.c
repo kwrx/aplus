@@ -63,9 +63,9 @@ static const ui_theme_t ui_theme_default = {
     .corner_radius = 8.0,
     .font_size     = 14.0,
 
-    .font_regular = "/usr/share/fonts/ttf/Ubuntu-R.ttf",
-    .font_medium  = "/usr/share/fonts/ttf/Ubuntu-M.ttf",
-    .font_bold    = "/usr/share/fonts/ttf/Ubuntu-B.ttf",
+    .font_regular = "/usr/share/fonts/ttf/NotoSans-Regular.ttf",
+    .font_medium  = "/usr/share/fonts/ttf/NotoSans-Medium.ttf",
+    .font_bold    = "/usr/share/fonts/ttf/NotoSans-Bold.ttf",
 };
 
 

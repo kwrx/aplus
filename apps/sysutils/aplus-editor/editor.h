@@ -44,7 +44,7 @@
 /**
  * @brief The monospaced face the text is drawn with, and its size in pixels.
  */
-#define EDITOR_FONT_PATH "/usr/share/fonts/ttf/UbuntuMono-R.ttf"
+#define EDITOR_FONT_PATH "/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf"
 #define EDITOR_FONT_SIZE 16
 
 /**

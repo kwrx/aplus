@@ -156,15 +156,18 @@ to resolve against, and cairo's toy font API has nothing to select from. The def
 names:
 
 ```
-/usr/share/fonts/ttf/Ubuntu-R.ttf
-/usr/share/fonts/ttf/Ubuntu-M.ttf
-/usr/share/fonts/ttf/Ubuntu-B.ttf
+/usr/share/fonts/ttf/NotoSans-Regular.ttf
+/usr/share/fonts/ttf/NotoSans-Medium.ttf
+/usr/share/fonts/ttf/NotoSans-Bold.ttf
 ```
 
 Buttons are drawn in the medium face by default; a theme that leaves `font_medium` `NULL`
 gets the regular one there instead. Those are guest paths — inside the running system, not in
-the build tree. The sysroot copy is under `root/usr/share/fonts/ttf/`, which also holds the
-Ubuntu light, condensed and mono faces if a theme wants something else.
+the build tree. The sysroot copy is under `root/usr/share/fonts/ttf/`, installed by the
+`system-fonts` package, which also holds Inter (regular, medium, bold and their italics), the
+Ubuntu family, and the JetBrains Mono, Adwaita Mono and Ubuntu Mono faces if a theme wants
+something else. Name static font files: a variable font only ever loads its default instance,
+so its medium and bold would draw the same weight as the regular.
 
 Three limits come from the face cache in `ui_font.c`:
 
@@ -336,8 +339,8 @@ static const ui_theme_t app_theme_light = {
     .corner_radius = 6.0,
     .font_size     = 14.0,
 
-    .font_regular = "/usr/share/fonts/ttf/Ubuntu-R.ttf",
-    .font_bold    = "/usr/share/fonts/ttf/Ubuntu-B.ttf",
+    .font_regular = "/usr/share/fonts/ttf/NotoSans-Regular.ttf",
+    .font_bold    = "/usr/share/fonts/ttf/NotoSans-Bold.ttf",
 };
 ```
 

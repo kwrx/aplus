@@ -56,11 +56,11 @@
  * @brief The monospaced faces the terminal draws with, and the pixel size they are scaled to.
  */
 #if !defined(CONFIG_ATERM_FONT_PATH)
-    #define CONFIG_ATERM_FONT_PATH "/usr/share/fonts/ttf/UbuntuMono-R.ttf"
+    #define CONFIG_ATERM_FONT_PATH "/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf"
 #endif
 
 #if !defined(CONFIG_ATERM_FONT_BOLD_PATH)
-    #define CONFIG_ATERM_FONT_BOLD_PATH "/usr/share/fonts/ttf/UbuntuMono-B.ttf"
+    #define CONFIG_ATERM_FONT_BOLD_PATH "/usr/share/fonts/ttf/JetBrainsMono-Bold.ttf"
 #endif
 
 #if !defined(CONFIG_ATERM_FONT_SIZE)

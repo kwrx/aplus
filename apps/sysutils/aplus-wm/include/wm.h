@@ -136,7 +136,7 @@
  * @brief The typeface titles are drawn in, loaded once at startup.
  */
 
-#define WM_FONT_PATH "/usr/share/fonts/ttf/Ubuntu-M.ttf"
+#define WM_FONT_PATH "/usr/share/fonts/ttf/NotoSans-Medium.ttf"
 #define WM_FONT_SIZE 14.0
 
 
