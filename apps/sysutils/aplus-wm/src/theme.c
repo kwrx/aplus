@@ -126,6 +126,9 @@ static const wm_theme_key_t wm_theme_keys[] = {
     WM_THEME_UI_PATH(font_regular, WM_THEME_PATH),
     WM_THEME_UI_PATH(font_medium, WM_THEME_PATH_OPTIONAL),
     WM_THEME_UI_PATH(font_bold, WM_THEME_PATH_OPTIONAL),
+    WM_THEME_UI_PATH(font_mono, WM_THEME_PATH_OPTIONAL),
+    WM_THEME_UI_PATH(font_mono_bold, WM_THEME_PATH_OPTIONAL),
+    WM_THEME_UI_NUMBER(font_mono_size, 4.0, 72.0),
 
     WM_THEME_WM_COLOR(desktop_top),
     WM_THEME_WM_COLOR(desktop_bottom),
@@ -239,6 +242,10 @@ static void wm_theme_defaults(wm_theme_t* theme) {
     snprintf(client->font_regular, sizeof(client->font_regular), "%s", ui->font_regular ? ui->font_regular : "");
     snprintf(client->font_medium, sizeof(client->font_medium), "%s", ui->font_medium ? ui->font_medium : "");
     snprintf(client->font_bold, sizeof(client->font_bold), "%s", ui->font_bold ? ui->font_bold : "");
+    snprintf(client->font_mono, sizeof(client->font_mono), "%s", ui->font_mono ? ui->font_mono : "");
+    snprintf(client->font_mono_bold, sizeof(client->font_mono_bold), "%s", ui->font_mono_bold ? ui->font_mono_bold : "");
+
+    client->font_mono_size = ui->font_mono_size;
 }
 
 

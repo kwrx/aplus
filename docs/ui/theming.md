@@ -79,6 +79,10 @@ typedef struct {
     const char* font_medium;
     const char* font_bold;
 
+    const char* font_mono;
+    const char* font_mono_bold;
+    double font_mono_size;
+
 } ui_theme_t;
 ```
 
@@ -103,6 +107,7 @@ possible for a caller to pick a legible-looking fill and an illegible label to s
 | `disabled_fade` | How far a disabled control fades towards the background, 0 to 1. Fading rather than greying keeps a disabled accent recognisable as the accent. |
 | `corner_radius` | Default panel radius, and the radius of buttons, lists and entries. |
 | `font_size` | Default label and button size, used whenever a `set_font()` gets a size of `0.0` or less. |
+| `font_mono_size` | The size [the monospaced faces](#fonts) are drawn at, which decides the cell size. `0.0` leaves it to the application. |
 
 The washes are the part worth understanding before writing a theme. `hover` and `active`
 carry their strength in their *alpha*, and are composited over whatever a control already
@@ -149,6 +154,10 @@ at least 3:1. `danger` is deepened the same way.
     const char* font_regular;
     const char* font_medium;
     const char* font_bold;
+
+    const char* font_mono;
+    const char* font_mono_bold;
+    double font_mono_size;
 ```
 
 Absolute paths. There is no fontconfig in the sysroot, so a family name would have nothing
@@ -169,10 +178,25 @@ Ubuntu family, and the JetBrains Mono, Adwaita Mono and Ubuntu Mono faces if a t
 something else. Name static font files: a variable font only ever loads its default instance,
 so its medium and bold would draw the same weight as the regular.
 
+`font_mono`, `font_mono_bold` and `font_mono_size` are for text laid out in cells:
+`aplus-terminal` draws with both faces, `aplus-editor` with the regular one, and the size
+decides how big a cell is. The built-in theme leaves them `NULL` and `0.0`, and so does a
+theme file that does not name them; each application then falls back on its own, the way the
+window manager falls back on `WM_FONT_PATH` for its titles. The terminal's are the Kconfig
+`ATERM_FONT_PATH`, `ATERM_FONT_BOLD_PATH` and `ATERM_FONT_SIZE`, the editor's
+`EDITOR_FONT_PATH` and `EDITOR_FONT_SIZE`. A theme that names `font_mono` alone gets it for
+bold as well, and a face that cannot be loaded falls back the same way. `dark.conf` and
+`light.conf` both name JetBrains Mono at 16:
+
+```
+/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf
+/usr/share/fonts/ttf/JetBrainsMono-Bold.ttf
+```
+
 Three limits come from the face cache in `ui_font.c`:
 
 - **Sixteen distinct font files per process.** Faces are cached by path and never released; a
-  theme names three, so every switch to a theme with fonts of its own uses up more of them, and
+  theme names up to five, so every switch to a theme with fonts of its own uses up more of them, and
   the seventeenth face draws no text.
 - **Paths under 128 bytes.** A longer one is refused rather than truncated, because a
   truncated key would go on matching every other path sharing its prefix and hand back the
@@ -294,8 +318,10 @@ Three things do not follow:
 - **Font sizes taken when a label, button or entry was created** keep the old size, since the
   widget copied it. Both installed themes use the same size.
 - **A loop that draws without a view** has to call `ui_theme_update()` itself on
-  `UI_EVENT_THEME`, from the thread that draws. `aplus-terminal` keeps `ui_theme_dark()` on
-  purpose.
+  `UI_EVENT_THEME`, from the thread that draws. `aplus-terminal` does, but only for its faces:
+  its colours stay `ui_theme_dark()`'s on purpose. A theme with other monospaced faces or
+  another `font_mono_size` keeps the window's size and changes how many cells it holds, and the
+  shell is told the new size.
 
 ## Writing a theme
 

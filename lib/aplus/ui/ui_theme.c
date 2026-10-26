@@ -76,7 +76,7 @@ static ui_theme_t ui_theme_live;
 static bool ui_theme_live_ready = false;
 
 static char ui_theme_live_name[UI_THEME_NAME_MAX] = "default";
-static char ui_theme_live_fonts[3][UI_THEME_PATH_MAX];
+static char ui_theme_live_fonts[5][UI_THEME_PATH_MAX];
 
 
 static const ui_theme_t* ui_theme_current = &ui_theme_live;
@@ -164,7 +164,7 @@ static ui_color_t ui_theme_color(ui_msg_color_t color) {
 /**
  * @brief Copies a font path off the wire into the system theme's own storage.
  *
- * @param slot Which of the theme's three font buffers to fill.
+ * @param slot Which of the theme's five font buffers to fill.
  * @param path The path as sent, not necessarily terminated.
  * @param fallback What to keep when the path is empty.
  * @return The path to draw with.
@@ -206,6 +206,10 @@ void ui_theme_adopt(const ui_msg_theme_t* msg) {
     theme->font_regular = ui_theme_font(0, msg->font_regular, ui_theme_default.font_regular);
     theme->font_medium  = ui_theme_font(1, msg->font_medium, theme->font_regular);
     theme->font_bold    = ui_theme_font(2, msg->font_bold, theme->font_regular);
+
+    theme->font_mono      = ui_theme_font(3, msg->font_mono, NULL);
+    theme->font_mono_bold = ui_theme_font(4, msg->font_mono_bold, theme->font_mono);
+    theme->font_mono_size = msg->font_mono_size > 0.0 ? msg->font_mono_size : 0.0;
 
     snprintf(ui_theme_live_name, sizeof(ui_theme_live_name), "%.*s", UI_THEME_NAME_MAX - 1, msg->name);
 }

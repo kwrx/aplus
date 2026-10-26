@@ -53,7 +53,7 @@
 #include <pthread.h>
 
 /**
- * @brief The monospaced faces the terminal draws with, and the pixel size they are scaled to.
+ * @brief The monospaced faces the terminal draws with, and the pixel size they are scaled to, when the theme names none.
  */
 #if !defined(CONFIG_ATERM_FONT_PATH)
     #define CONFIG_ATERM_FONT_PATH "/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf"
@@ -64,7 +64,7 @@
 #endif
 
 #if !defined(CONFIG_ATERM_FONT_SIZE)
-    #define CONFIG_ATERM_FONT_SIZE 16
+    #define CONFIG_ATERM_FONT_SIZE 14
 #endif
 
 #if !defined(CONFIG_DEFAULT_SHELL)
@@ -206,7 +206,7 @@ static void show_version(int argc, char** argv) {
 
 /**
  * @brief Returns the width of the window's pixel buffer.
- * 
+ *
  * @return The width in pixels.
  */
 size_t aterm_window_width(void) {
@@ -220,7 +220,7 @@ size_t aterm_window_width(void) {
 
 /**
  * @brief Returns the height of the window's pixel buffer.
- * 
+ *
  * @return The height in pixels.
  */
 size_t aterm_window_height(void) {
@@ -234,7 +234,7 @@ size_t aterm_window_height(void) {
 
 /**
  * @brief Returns a pointer to the window's pixel buffer.
- * 
+ *
  * @return A pointer to the pixel buffer.
  */
 void* aterm_window_pixels(void) {
@@ -248,7 +248,7 @@ void* aterm_window_pixels(void) {
 
 /**
  * @brief Returns the stride of the window's pixel buffer.
- * 
+ *
  * @return The stride in bytes.
  */
 size_t aterm_window_stride(void) {
@@ -262,7 +262,7 @@ size_t aterm_window_stride(void) {
 
 /**
  * @brief Returns the Cairo format of the window's pixel buffer.
- * 
+ *
  * @return The Cairo format.
  */
 cairo_format_t aterm_window_cairo_format() {
@@ -294,7 +294,7 @@ void aterm_window_damage_all(void) {
 
 /**
  * @brief Damages a rectangle of the window, so it will be repainted on the next commit.
- * 
+ *
  * @param x The x coordinate of the rectangle.
  * @param y The y coordinate of the rectangle.
  * @param width The width of the rectangle.
@@ -391,33 +391,67 @@ static int aterm_bind_surface(void) {
 
 
 /**
- * @brief Loads the faces the terminal draws with and takes the cell size from their metrics.
+ * @brief Loads the face a theme names, or the configured one when it names none or that one cannot be loaded.
  *
- * @return 0 on success, or -1 with errno set.
+ * @param path The path the theme names, or NULL.
+ * @param fallback The configured path.
+ * @return The face, or NULL when neither loads.
+ */
+static cairo_font_face_t* aterm_font_face(const char* path, const char* fallback) {
+
+    cairo_font_face_t* face = path ? ui_font_face(path) : NULL;
+
+    return face ? face : ui_font_face(fallback);
+}
+
+
+/**
+ * @brief Loads the theme's monospaced faces at its size and takes the cell size from their metrics, keeping the faces in use on failure.
+ *
+ * @return 1 when the faces changed, 0 when they were already in use, or -1 with errno set.
  */
 static int aterm_font_init(void) {
 
-    cairo_font_face_t* regular = ui_font_face(CONFIG_ATERM_FONT_PATH);
+    const ui_theme_t* theme = ui_theme_system();
+
+    const double size = theme->font_mono_size > 0.0 ? theme->font_mono_size : CONFIG_ATERM_FONT_SIZE;
+
+    cairo_font_face_t* regular = aterm_font_face(theme->font_mono, CONFIG_ATERM_FONT_PATH);
 
     if (!regular) {
         errno = ENOENT;
         return -1;
     }
 
-    cairo_font_face_t* bold = ui_font_face(CONFIG_ATERM_FONT_BOLD_PATH);
+    cairo_font_face_t* bold = aterm_font_face(theme->font_mono_bold, CONFIG_ATERM_FONT_BOLD_PATH);
 
     if (!bold) {
         bold = regular;
     }
 
 
-    context.font.regular.scaled = ui_font_scaled(regular, CONFIG_ATERM_FONT_SIZE);
-    context.font.bold.scaled    = ui_font_scaled(bold, CONFIG_ATERM_FONT_SIZE);
+    cairo_scaled_font_t* regular_scaled = ui_font_scaled(regular, size);
+    cairo_scaled_font_t* bold_scaled    = ui_font_scaled(bold, size);
 
-    if (!context.font.regular.scaled || !context.font.bold.scaled) {
+    if (!regular_scaled || !bold_scaled) {
         errno = ENOMEM;
         return -1;
     }
+
+    if (regular_scaled == context.font.regular.scaled && bold_scaled == context.font.bold.scaled) {
+        return 0;
+    }
+
+    if (context.font.regular.scaled) {
+        cairo_scaled_font_destroy(context.font.regular.scaled);
+    }
+
+    if (context.font.bold.scaled) {
+        cairo_scaled_font_destroy(context.font.bold.scaled);
+    }
+
+    context.font.regular.scaled = cairo_scaled_font_reference(regular_scaled);
+    context.font.bold.scaled    = cairo_scaled_font_reference(bold_scaled);
 
 
     memset(context.font.regular.glyphs, 0xFF, sizeof(context.font.regular.glyphs));
@@ -425,11 +459,10 @@ static int aterm_font_init(void) {
 
 
     cairo_font_extents_t extents;
-
     cairo_scaled_font_extents(context.font.regular.scaled, &extents);
 
     context.font.width    = (int)ceil(extents.max_x_advance);
-    context.font.height   = (int)ceil(extents.height + extents.descent);
+    context.font.height   = (int)ceil(extents.height);
     context.font.baseline = (int)ceil(extents.ascent);
 
     if (context.font.width < 1) {
@@ -440,7 +473,7 @@ static int aterm_font_init(void) {
         context.font.height = 1;
     }
 
-    return 0;
+    return 1;
 }
 
 
@@ -694,26 +727,12 @@ static void aterm_pty_winsize(unsigned int width, unsigned int height) {
 
 
 /**
- * @brief Follows the framebuffer into the mode it switched to, with context.lock held.
+ * @brief Fits as many cells as a drawing area holds and resizes the screen to match, with context.lock held.
  *
- * @return 0 on success, or -1 with errno set.
+ * @param width The drawing area width in pixels.
+ * @param height The drawing area height in pixels.
  */
-static int aterm_fb_resize(void) {
-
-    if (ioctl(context.fb.fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
-        return -1;
-    }
-
-    if (ioctl(context.fb.fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
-        return -1;
-    }
-
-    if (aterm_bind_surface() < 0) {
-        return -1;
-    }
-
-    const unsigned int width  = (unsigned int)aterm_window_width();
-    const unsigned int height = (unsigned int)aterm_window_height();
+static void aterm_fit(unsigned int width, unsigned int height) {
 
     const unsigned int inner_width  = width > 2 * ATERM_PADDING ? width - 2 * ATERM_PADDING : 0;
     const unsigned int inner_height = height > 2 * ATERM_PADDING ? height - 2 * ATERM_PADDING : 0;
@@ -736,6 +755,32 @@ static int aterm_fb_resize(void) {
     }
 
     context.age = 0;
+}
+
+
+/**
+ * @brief Follows the framebuffer into the mode it switched to, with context.lock held.
+ *
+ * @return 0 on success, or -1 with errno set.
+ */
+static int aterm_fb_resize(void) {
+
+    if (ioctl(context.fb.fd, FBIOGET_VSCREENINFO, &context.fb.var) < 0) {
+        return -1;
+    }
+
+    if (ioctl(context.fb.fd, FBIOGET_FSCREENINFO, &context.fb.fix) < 0) {
+        return -1;
+    }
+
+    if (aterm_bind_surface() < 0) {
+        return -1;
+    }
+
+    const unsigned int width  = (unsigned int)aterm_window_width();
+    const unsigned int height = (unsigned int)aterm_window_height();
+
+    aterm_fit(width, height);
 
     ulog_infof("framebuffer is now %ux%ux%u, %ux%u cells", width, height, context.fb.var.bits_per_pixel, context.cols, context.rows);
 
@@ -799,20 +844,6 @@ static void tsm_resize(unsigned int width, unsigned int height) {
         return;
     }
 
-    const unsigned int inner_width  = width > 2 * ATERM_PADDING ? width - 2 * ATERM_PADDING : 0;
-    const unsigned int inner_height = height > 2 * ATERM_PADDING ? height - 2 * ATERM_PADDING : 0;
-
-    unsigned int cols = inner_width / (unsigned int)context.font.width;
-    unsigned int rows = inner_height / (unsigned int)context.font.height;
-
-    if (cols < 1) {
-        cols = 1;
-    }
-
-    if (rows < 1) {
-        rows = 1;
-    }
-
 
     pthread_mutex_lock(&context.lock);
 
@@ -828,16 +859,43 @@ static void tsm_resize(unsigned int width, unsigned int height) {
         return;
     }
 
-    context.cols = cols;
-    context.rows = rows;
+    aterm_fit(width, height);
 
-    int resized = tsm_screen_resize(context.con, cols, rows);
+    tsm_draw_locked();
 
-    if (resized < 0) {
-        ulog_warnf("cannot resize the screen to %ux%u: %s", cols, rows, strerror(-resized));
+    pthread_mutex_unlock(&context.lock);
+
+
+    aterm_pty_winsize(width, height);
+}
+
+
+/**
+ * @brief Adopts the theme the server sent and, when it names other monospaced faces, refits the cells to the window.
+ */
+static void aterm_restyle(void) {
+
+    ui_theme_update(context.conn);
+
+
+    pthread_mutex_lock(&context.lock);
+
+    const int changed = aterm_font_init();
+
+    if (changed <= 0) {
+
+        if (changed < 0) {
+            ulog_warnf("keeping the faces in use: %s", strerror(errno));
+        }
+
+        pthread_mutex_unlock(&context.lock);
+        return;
     }
 
-    context.age = 0;
+    const unsigned int width  = (unsigned int)aterm_window_width();
+    const unsigned int height = (unsigned int)aterm_window_height();
+
+    aterm_fit(width, height);
 
     tsm_draw_locked();
 
@@ -1024,7 +1082,7 @@ int aterm_fb_connect(void) {
         close(fd);
         return -1;
     }
-    
+
     ulog_infof("framebuffer %dx%dx%d [ptr(%p), size(%p)]", context.fb.var.xres, context.fb.var.yres, context.fb.var.bits_per_pixel, (void*)((uintptr_t)context.fb.fix.smem_start), (void*)((uintptr_t)context.fb.fix.smem_len));
 
     context.fb.fd = fd;
@@ -1080,6 +1138,10 @@ static void* thr_ui_handler(void* arg) {
 
             case UI_EVENT_CONFIGURE:
                 tsm_resize(ev.configure.width, ev.configure.height);
+                break;
+
+            case UI_EVENT_THEME:
+                aterm_restyle();
                 break;
 
             case UI_EVENT_CLOSE:

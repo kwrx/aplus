@@ -2840,7 +2840,7 @@ static void editor_layout(ui_view_t* view, int width, int height, void* user) {
 
 
 /**
- * @brief Gives the panels and the status labels the colours of the theme in use.
+ * @brief Gives the panels and the status labels the colours of the theme in use, and the text its monospaced face.
  * @param view The view.
  * @param user Unused.
  */
@@ -2848,6 +2848,10 @@ static void editor_restyle(ui_view_t* view, void* user) {
 
     (void)view;
     (void)user;
+
+    if (editor_canvas_set_font() < 0) {
+        ulog_warnf("keeping the font in use: %s", strerror(errno));
+    }
 
     const ui_theme_t* theme = ui_theme();
 
@@ -3083,11 +3087,6 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    if (editor_canvas_init() < 0) {
-        ulog_errorf("cannot load %s: %s", EDITOR_FONT_PATH, strerror(errno));
-        return 1;
-    }
-
     if (!(editor.keymap = ui_keymap_open(NULL))) {
         ulog_warnf("cannot load the keymap, typing will not work: %s", strerror(errno));
     }
@@ -3095,6 +3094,12 @@ int main(int argc, char** argv) {
 
     if (!(editor.conn = ui_connect(NULL, 5000))) {
         ulog_errorf("ui_connect() failed: %s", strerror(errno));
+        return 1;
+    }
+
+    if (editor_canvas_init() < 0) {
+        ulog_errorf("cannot load %s: %s", EDITOR_FONT_PATH, strerror(errno));
+        ui_disconnect(editor.conn);
         return 1;
     }
 

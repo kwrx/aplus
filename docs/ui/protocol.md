@@ -524,6 +524,10 @@ typedef struct {
     char font_regular[UI_THEME_PATH_MAX];
     char font_medium[UI_THEME_PATH_MAX];
     char font_bold[UI_THEME_PATH_MAX];
+
+    char font_mono[UI_THEME_PATH_MAX];
+    char font_mono_bold[UI_THEME_PATH_MAX];
+    double font_mono_size;
 } __attribute__((packed)) ui_msg_theme_t;
 ```
 
@@ -531,7 +535,9 @@ The roles of [`ui_theme_t`](theming.md#the-roles), resolved by the server out of
 file in use, so that no client parses one. It goes out after the hello and again to every
 client each time the theme changes; it names no window, since the theme belongs to the
 connection. Colours are straight alpha, 0 to 1, as doubles so that the built-in theme crosses
-the socket exactly. An empty `font_medium` or `font_bold` means the regular face.
+the socket exactly. An empty `font_medium` or `font_bold` means the regular face; an empty
+`font_mono` leaves the face to the application, an empty `font_mono_bold` means `font_mono`,
+and a `font_mono_size` of `0.0` leaves the size to the application.
 
 `ui_next_event()` stores the payload and reports `UI_EVENT_THEME`; nothing changes on the
 client until `ui_theme_update()` adopts it, which `ui_view_dispatch()` does for itself. It is

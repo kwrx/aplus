@@ -112,6 +112,10 @@ typedef struct {
     const char* font_medium;
     const char* font_bold;
 
+    const char* font_mono;
+    const char* font_mono_bold;
+    double font_mono_size;
+
 } ui_theme_t;
 
 

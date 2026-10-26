@@ -393,6 +393,10 @@ typedef struct {
     char font_medium[UI_THEME_PATH_MAX];
     char font_bold[UI_THEME_PATH_MAX];
 
+    char font_mono[UI_THEME_PATH_MAX];
+    char font_mono_bold[UI_THEME_PATH_MAX];
+    double font_mono_size;
+
 } __attribute__((packed)) ui_msg_theme_t;
 
 

@@ -174,22 +174,46 @@ static size_t editor_canvas_count_digits(void) {
 }
 
 
-int editor_canvas_init(void) {
+/**
+ * @brief Loads the theme's monospaced face, or EDITOR_FONT_PATH when it names none or that one cannot be loaded.
+ * @return The face, or NULL when neither loads.
+ */
+static cairo_font_face_t* editor_canvas_face(void) {
+
+    const char* path = ui_theme()->font_mono;
+
+    cairo_font_face_t* face = path ? ui_font_face(path) : NULL;
+
+    return face ? face : ui_font_face(EDITOR_FONT_PATH);
+}
+
+
+int editor_canvas_set_font(void) {
 
     editor_canvas_t* canvas = &editor.canvas;
 
-    cairo_font_face_t* face = ui_font_face(EDITOR_FONT_PATH);
+    cairo_font_face_t* face = editor_canvas_face();
 
     if (!face) {
         errno = ENOENT;
         return -1;
     }
 
-    cairo_scaled_font_t* scaled = ui_font_scaled(face, EDITOR_FONT_SIZE);
+    const double size = ui_theme()->font_mono_size > 0.0 ? ui_theme()->font_mono_size : EDITOR_FONT_SIZE;
+
+    cairo_scaled_font_t* scaled = ui_font_scaled(face, size);
 
     if (!scaled) {
         errno = ENOMEM;
         return -1;
+    }
+
+    if (scaled == canvas->font) {
+        return 0;
+    }
+
+    if (canvas->font) {
+        cairo_scaled_font_destroy(canvas->font);
     }
 
     canvas->font = cairo_scaled_font_reference(scaled);
@@ -220,6 +244,18 @@ int editor_canvas_init(void) {
 
     if (!canvas->replacement) {
         canvas->replacement = editor_canvas_glyph('?');
+    }
+
+    return 1;
+}
+
+
+int editor_canvas_init(void) {
+
+    editor_canvas_t* canvas = &editor.canvas;
+
+    if (editor_canvas_set_font() < 0) {
+        return -1;
     }
 
     canvas->digits   = editor_canvas_count_digits();

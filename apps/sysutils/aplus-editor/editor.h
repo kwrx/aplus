@@ -42,10 +42,10 @@
 #define EDITOR_NAME "aplus-editor"
 
 /**
- * @brief The monospaced face the text is drawn with, and its size in pixels.
+ * @brief The monospaced face the text is drawn with, and its size in pixels, when the theme names none.
  */
 #define EDITOR_FONT_PATH "/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf"
-#define EDITOR_FONT_SIZE 16
+#define EDITOR_FONT_SIZE 14
 
 /**
  * @brief How many codepoints keep the glyph they map to one array lookup away.
@@ -245,6 +245,12 @@ bool editor_selection(editor_pos_t* from, editor_pos_t* to);
  * @return 0, or -1 with errno set.
  */
 int editor_canvas_init(void);
+
+/**
+ * @brief Loads the theme's monospaced face at its size, or the EDITOR_FONT_* ones, keeping the face in use on failure.
+ * @return 1 when the face changed, 0 when it was already in use, or -1 with errno set.
+ */
+int editor_canvas_set_font(void);
 
 /**
  * @brief Releases what the text area holds.
