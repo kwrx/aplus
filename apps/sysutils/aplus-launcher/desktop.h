@@ -43,15 +43,12 @@
 
 typedef struct {
 
-    //? The .desktop file itself, which is what gets handed to the opener.
     char path[PATH_MAX];
 
     char name[LAUNCHER_FIELD_MAX];
     char comment[LAUNCHER_FIELD_MAX];
     char exec[LAUNCHER_FIELD_MAX];
 
-    //? What the Icon key said, which is a theme name rather than a file unless it carries
-    //? a '/'. Left empty by a file that named none, for the caller to fall back from.
     char icon[LAUNCHER_FIELD_MAX];
 
 } launcher_entry_t;

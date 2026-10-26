@@ -59,8 +59,6 @@ typedef struct {
     char* text;
     char* detail;
 
-    //? The icon's name rather than the icon, resolved at paint time out of the shared
-    //? cache: a row outlives any one surface the cache is holding.
     char* icon;
 
     void* user;
@@ -93,21 +91,15 @@ typedef struct {
     bool (*on_motion)(ui_widget_t* widget, int x, int y);
     bool (*on_press)(ui_widget_t* widget, int x, int y);
 
-    //? Motion while the widget holds the press, whether or not the pointer is still over it.
     bool (*on_drag)(ui_widget_t* widget, int x, int y, bool inside);
 
-    //? `clicks` is 0 when the press was cancelled rather than released over the widget.
     bool (*on_release)(ui_widget_t* widget, int x, int y, bool inside, int clicks);
 
     bool (*on_scroll)(ui_widget_t* widget, int delta);
 
-    //? Reports whether the key was handled, and invalidates itself if it changed anything.
     bool (*on_key)(ui_widget_t* widget, uint16_t vkey, bool down);
     bool (*on_focus)(ui_widget_t* widget, bool focused);
 
-    //? Asked before the loop blocks, and again every time the deadline it named passes.
-    //? Reports the milliseconds until the widget next has to be repainted, or -1 when it
-    //? is not animating; whatever it changed it invalidates for itself.
     int (*tick)(ui_widget_t* widget, uint64_t now);
 
     void (*destroy)(ui_widget_t* widget);
@@ -127,24 +119,18 @@ struct ui_widget {
     bool visible;
     bool enabled;
 
-    //? Whether the widget is in the running for pointer events at all. A panel and a label
-    //? are not, which is what lets them sit under a button without swallowing its clicks.
     bool interactive;
 
-    //? The pointer shape while the widget is under the pointer or holding a press.
     ui_cursor_t cursor;
 
     void* user;
 
-    //? The view's theme, copied here so that a widget never has to reach back through the
-    //? view to paint itself.
     const ui_theme_t* theme;
 
     union {
 
         struct {
 
-            //? Each colour is the theme's (surface, border) until the app names one.
             ui_color_t color;
             ui_color_t border_color;
 
@@ -160,7 +146,6 @@ struct ui_widget {
 
             char text[UI_LABEL_TEXT_MAX];
 
-            //? The theme's text colour until the app names one.
             ui_color_t color;
             bool color_set;
 
@@ -182,14 +167,11 @@ struct ui_widget {
             ui_font_weight_t weight;
             double size;
 
-            //? The icon's name, empty for none, resolved out of the shared cache at paint time.
             char icon[UI_ICON_NAME_MAX];
             int icon_size;
 
             ui_action_fn on_click;
 
-            //? Pointer state, kept apart from `held`: a key binding lights a button without
-            //? the pointer being anywhere near it, and the two must not cancel each other.
             bool hovered;
             bool pressed;
             bool held;
@@ -208,12 +190,9 @@ struct ui_widget {
             int selected;
             int row_height;
 
-            //? The gutter the icons are drawn in, 0 for the one the row height implies,
-            //? and only reserved at all once a row has been given an icon.
             int icon_size;
             bool icons;
 
-            //? Pixels of content scrolled off the top, never past what the content allows.
             int scroll;
             ui_anim_t scroll_anim;
 
@@ -231,7 +210,6 @@ struct ui_widget {
 
             bool focused;
 
-            //? Set while the scrollbar thumb is being dragged, with the grab point inside it.
             bool dragging;
             int drag_grab;
 
@@ -251,25 +229,17 @@ struct ui_widget {
             ui_font_weight_t weight;
             double size;
 
-            //? Where the caret sits, as a byte offset into the text.
             size_t caret;
 
-            //? Pixels of text scrolled off the left, kept at whatever holds the caret in
-            //? view: a field narrower than what has been typed into it has to move.
             int scroll;
 
             bool focused;
 
-            //? Whether the caret is in the shown half of its blink, and when that half
-            //? began. Editing restarts it shown: a caret that vanishes under the keys
-            //? being typed reads as a dropped keystroke.
             bool caret_on;
             uint64_t caret_at;
 
             ui_anim_t focus_anim;
 
-            //? Opened the first time a key arrives rather than at construction, so a view
-            //? that never takes text never reads a file.
             ui_keymap_t* keymap;
             bool keymap_tried;
 
@@ -290,16 +260,11 @@ struct ui_view {
 
     ui_window_t* window;
 
-    //? Snapshotted when the view is created rather than read through ui_theme() at paint
-    //? time, so that a window cannot change appearance underneath itself because something
-    //? else swapped the global theme.
     const ui_theme_t* theme;
 
     cairo_surface_t* surface;
     cairo_t* cr;
 
-    //? In paint order, head first. Hit testing walks it to the end and keeps the last
-    //? match, which is the topmost one.
     ui_widget_t* widgets;
     ui_widget_t* widgets_tail;
 
@@ -307,10 +272,8 @@ struct ui_view {
     ui_widget_t* pressed;
     ui_widget_t* focused;
 
-    //? The pointer shape where no widget answers for it, as ui_view_set_cursor() left it.
     ui_cursor_t cursor;
 
-    //? The last press, against which the next one is counted as a double click.
     ui_widget_t* click_widget;
     uint64_t click_time;
     int click_x;
@@ -328,10 +291,8 @@ struct ui_view {
 
     ui_damage_t damage;
 
-    //? The clock reading the last frame was painted at, which every transition is drawn against.
     uint64_t frame_time;
 
-    //? Whether the window holds the server's focus, without which a selection greys out and no caret blinks.
     bool active;
 
     bool closed;

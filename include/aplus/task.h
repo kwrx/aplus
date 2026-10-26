@@ -318,20 +318,6 @@ typedef struct task {
     struct timespec clock[TASK_CLOCK_MAX];
 
 
-    //? A vfork() borrows the parent's address space, so the two must never run
-    //? at the same time: the parent is parked in do_fork() until the child has
-    //? either execve()d into a space of its own or exited. `waiter` names the
-    //? task parked on this one, and `futex` is the word that task watches,
-    //? bumped once the loan is over.
-    //?
-    //? A tid rather than a pointer because the two ends can outlive each other:
-    //? a parent killed while parked becomes a zombie, and whoever reaps it frees
-    //? the task outright while the child still holds the link.
-    //?
-    //? The wait is a restarted syscall like every other one here, so `pending`
-    //? and `child` carry what the first attempt already did across the restart:
-    //? without them do_fork() would run again from the top and spawn a second
-    //? child on every wakeup.
     struct {
 
         pid_t waiter;
@@ -430,21 +416,11 @@ typedef struct task {
         long param4;
         long param5;
 
-        //? A syscall that sleeps is restarted from the top with these same
-        //? arguments, so a relative timeout would start over every time and
-        //? never come due. Whoever sleeps stamps the absolute deadline here on
-        //? the first attempt and clears it on the way out.
         struct timespec deadline;
         bool deadline_valid;
 
-        //? A word nothing ever bumps, so a sleep with no descriptor to watch
-        //? can still be woken by its deadline and nothing else.
         volatile uint32_t deadline_futex;
 
-        //? ppoll() and pselect6() swap the blocked-signal mask for as long as
-        //? they wait, so the mask to put back has to outlive the attempt that
-        //? installed it. One slot, like the deadline above: a wait nested
-        //? inside a signal handler would share it.
         sigset_t sigmask;
         bool sigmask_valid;
 
@@ -477,17 +453,11 @@ typedef struct task {
        exactly when ps comes along to read it. @see sys_exit(). */
     char comm[TASK_COMM_LEN];
 
-    //? argv, packed NUL-separated the way /proc/<pid>/cmdline hands it out. task->argv is
-    //? no use for this: it is inherited verbatim from the parent and execve never updates
-    //? it, so every process claims to be whatever init was called.
     char cmdline[TASK_CMDLINE_LEN];
     size_t cmdline_len;
 
-    //? USER_HZ ticks since boot, stamped once when the task is created.
     uint64_t start_time;
 
-    //? The parent's tgid. It is a number rather than a pointer so that it cannot dangle, and
-    //? it becomes 1 once every thread of the parent has exited. @see sched_exit().
     pid_t ppid;
 
 } task_t;

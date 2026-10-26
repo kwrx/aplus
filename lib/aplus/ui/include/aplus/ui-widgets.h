@@ -81,30 +81,19 @@ ui_color_t ui_color_blend(ui_color_t under, ui_color_t over);
 
 typedef struct {
 
-    //? Three depths, darkest to lightest is *not* the order: `background` is the window
-    //? backdrop, `surface` sits raised on it, and `surface_sunken` is a well cut into it
-    //? -- a display, a text area, anything that should read as recessed.
     ui_color_t background;
     ui_color_t surface;
     ui_color_t surface_sunken;
 
-    //? The accent, for the one control on a screen that is the point of the screen. Paired
-    //? with the colour text drawn on top of it has to be, since the pairing is a property
-    //? of the scheme and not something a caller should have to get right.
     ui_color_t primary;
     ui_color_t on_primary;
 
-    //? Ordinary controls.
     ui_color_t secondary;
     ui_color_t on_secondary;
 
-    //? Destructive controls.
     ui_color_t danger;
     ui_color_t on_danger;
 
-    //? State washes, composited over whatever a control is already painted with. Their
-    //? alpha is what carries the strength, so the same two colours work on the accent and
-    //? on a plain grey button alike.
     ui_color_t hover;
     ui_color_t active;
 
@@ -114,14 +103,11 @@ typedef struct {
     ui_color_t text;
     ui_color_t text_muted;
 
-    //? How much a disabled control fades towards the surface behind it, 0 to 1.
     double disabled_fade;
 
     double corner_radius;
     double font_size;
 
-    //? Absolute paths. There is no fontconfig in the sysroot, so a family name would have
-    //? nothing to resolve against.
     const char* font_regular;
     const char* font_medium;
     const char* font_bold;
@@ -363,7 +349,6 @@ void ui_label_set_padding(ui_widget_t* widget, int padding);
 
 typedef enum {
 
-    //? The scheme's secondary role: what a button looks like when nothing says otherwise.
     UI_BUTTON_STYLE_DEFAULT = 0,
     UI_BUTTON_STYLE_PRIMARY,
     UI_BUTTON_STYLE_DANGER,

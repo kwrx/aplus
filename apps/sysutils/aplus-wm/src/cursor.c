@@ -41,13 +41,9 @@ typedef struct {
 
     const char* name;
 
-    //? The pixel inside the image that lands on the pointer position. For an arrow it is the
-    //? tip; for the resize shapes, which are double-headed and symmetric, it is the middle.
     int hot_x;
     int hot_y;
 
-    //? Loading is attempted once per shape and remembered either way, so a theme with a file
-    //? missing does not re-open it on every pointer movement.
     bool tried;
 
     int width;
@@ -55,9 +51,6 @@ typedef struct {
 
     cairo_surface_t* surface;
 
-    //? Straight-alpha ARGB32 as the decoder returned it, for the cursor plane. NULL where the
-    //? pointer is drawn into the frame instead, since there the premultiplied copy is the only
-    //? one anything reads.
     uint32_t* image;
 
 } wm_cursor_t;

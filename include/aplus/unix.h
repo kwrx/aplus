@@ -101,17 +101,12 @@ struct unix_sock {
 
     struct unix_sock* peer;
 
-    //? Connections that have been queued by connect() but not yet claimed by
-    //? accept(). Only ever non-NULL on a listening socket.
     struct unix_sock** backlog;
     size_t backlog_len;
     size_t backlog_cap;
 
-    //? Shared with the endpoint inode, so a write on one side wakes whoever is
-    //? parked on the other.
     inode_events_t ev;
 
-    //? The S_IFSOCK directory entry bind() attached this socket to, if any.
     inode_t* bound;
 
     int shutdown_flags;

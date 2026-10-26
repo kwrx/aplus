@@ -85,9 +85,6 @@ struct ui_keymap {
         ui_keymap_key_t keys[NR_KEYS];
     } __attribute__((packed)) maps[UI_KEYMAP_MAPS];
 
-    //? Which table the next lookup is made against. Maintained by the shift and lock
-    //? entries of the map itself rather than by a list of key codes here, so a map that
-    //? puts a modifier somewhere unusual still works.
     uint8_t modifiers;
 };
 

@@ -43,11 +43,6 @@
 
 typedef struct {
 
-    //? A slot is in use from the moment shm_get() claims it. It is not usable until @frames
-    //? is filled in, though: the frames are allocated with the table unlocked, so that a
-    //? multi-megabyte segment does not hold every other CPU off with interrupts disabled for
-    //? the length of the allocation. A lookup therefore treats a slot with no frames as if it
-    //? were not there.
     bool used;
 
     int id;
@@ -59,9 +54,6 @@ typedef struct {
 
     size_t attaches;
 
-    //? IPC_RMID has been seen. The segment is gone as far as shmget(2) and shmat(2) are
-    //? concerned, but the frames stay until whoever still has it attached lets go -- which is
-    //? what lets a display server hand a surface to a client and forget about it.
     bool removed;
 
     mode_t mode;

@@ -138,17 +138,10 @@ static struct {
 
     ui_widget_t* keys[CALC_KEY_COUNT];
 
-    //? The number on screen, held as the text of it rather than as a double. A calculator
-    //? has to show "3." and "0.50" while they are being typed, and neither survives a trip
-    //? through a double and back.
     char entry[CALC_ENTRY_MAX];
 
-    //? Whether `entry` is something being typed or the result of something. The difference
-    //? is what the next digit does: extend it, or start over.
     bool typing;
 
-    //? Latched until the next clear. Arithmetic on a value that is already wrong only
-    //? produces a different wrong value, so nothing runs until it is cleared.
     bool error;
 
     double accumulator;

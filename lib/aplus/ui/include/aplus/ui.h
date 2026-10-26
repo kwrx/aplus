@@ -195,9 +195,6 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 
-    //? UI_WINDOW_*. Unknown bits are refused rather than ignored, so that a client asking
-    //? for something this server has never heard of fails at once instead of silently
-    //? getting a window that is not what it asked for.
     uint32_t flags;
 
     char title[UI_TITLE_MAX];
@@ -213,9 +210,6 @@ typedef struct {
 
     uint32_t window_id;
 
-    //? Echoed back from the last UI_EV_CONFIGURE the client drew against. The server
-    //? drops a commit whose serial is stale, which is what keeps a resize that races an
-    //? in-flight frame from being read against the wrong surface.
     uint32_t serial;
 
     uint16_t x;
@@ -296,15 +290,10 @@ typedef struct {
     uint16_t width;
     uint16_t height;
 
-    //? System V shared memory id of the window's surface, to be passed to shmat(2).
     int32_t shm_id;
 
-    //? Bytes per row. Not width * 4: cairo picks the stride for an image surface, and the
-    //? two ends have to agree on it byte for byte since they are writing and reading the
-    //? same memory.
     uint32_t stride;
 
-    //? Size of the segment, so the client can sanity check what it attached.
     uint32_t shm_size;
 
 } __attribute__((packed)) ui_msg_configure_t;
@@ -314,9 +303,6 @@ typedef struct {
 
     uint32_t window_id;
 
-    //? Raw KEY_* code from <aplus/input.h>, exactly as it came out of /dev/kbd. The
-    //? server does not own a keymap: translation stays wherever the characters are
-    //? actually needed.
     uint16_t vkey;
     uint8_t down;
 
@@ -327,7 +313,6 @@ typedef struct {
 
     uint32_t window_id;
 
-    //? Relative to the content area, which excludes the server-drawn decorations.
     int16_t x;
     int16_t y;
     uint8_t buttons;

@@ -361,9 +361,6 @@ int lwip_getaddrinfo(const char* nodename, const char* servname, const struct ad
         struct sockaddr_in6* sa6 = (struct sockaddr_in6*)sa;
         /* set up sockaddr */
         inet6_addr_from_ip6addr(&sa6->sin6_addr, ip_2_ip6(&addr));
-        //? Length first, family last: the two share storage in this port's Linux sockaddr
-        //? layout, so whichever is written second is the one that survives -- and it has to
-        //? be the family. See lwip_sock_addr_len() in sockets.c.
         sa6->sin6_len      = sizeof(struct sockaddr_in6);
         sa6->sin6_family   = AF_INET6;
         sa6->sin6_port     = lwip_htons((u16_t)port_nr);

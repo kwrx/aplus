@@ -348,14 +348,8 @@ typedef struct {
     cairo_t* cr;
     cairo_t* cr_screen;
 
-    //? What the desktop is painted with, built once: the wallpaper when one decoded, the
-    //? gradient otherwise. It spans the whole screen and changes only with the theme, so
-    //? rebuilding it per frame would only cost allocations.
     cairo_pattern_t* background;
 
-    //? Whether the adapter composites a cursor plane of its own. When it does, the pointer is
-    //? not drawn into the frame at all and moving it costs one small ioctl instead of two
-    //? damaged rectangles and the repaint and flush they pull in.
     bool hwcursor;
 
 } wm_display_t;
@@ -366,8 +360,6 @@ typedef struct {
  */
 typedef struct {
 
-    //? Rows then columns: a corner, the one-pixel strip that is stretched along an edge, and
-    //? the opposite corner. The middle of the middle is never drawn, since a frame covers it.
     cairo_surface_t* pieces[3][3];
 
     int blur;
@@ -418,40 +410,23 @@ typedef struct wm_window {
     uint32_t id;
     wm_client_t* client;
 
-    //? UI_WINDOW_*, as the client asked for at creation. Nothing changes them afterwards:
-    //? a window that came up borderless stays borderless.
     uint32_t flags;
 
-    //? Whether the client has ever said that it drew something. A window is created before
-    //? its client has been told where to draw, so until the first commit its surface holds
-    //? nothing anybody chose, and showing it means a black rectangle for the frame or two
-    //? that takes.
     bool committed;
 
     char title[UI_TITLE_MAX];
 
-    //? Already scaled to WM_ICON_SIZE, and a copy rather than libui's cached surface,
-    //? which the cache destroys once other icons push it out.
     cairo_surface_t* icon;
 
-    //? The shape the client asked the pointer to take over the content area.
     wm_cursor_shape_t cursor;
 
-    //? Position of the *content* area on screen. The frame is derived from it.
     int x;
     int y;
     int width;
     int height;
 
-    //? Bumped on every resize. A commit stamped with an older serial describes the surface
-    //? the window used to have and is dropped rather than read against the current one.
     uint32_t serial;
 
-    //? The window's surface, and the shared memory segment it lives in. The server creates
-    //? the segment and hands its id to the client, which maps the same frames and copies
-    //? each finished frame into them from a back buffer of its own as it commits -- so
-    //? `backstore` is what compositing reads, and nothing but a damage rectangle travels
-    //? over the socket.
     cairo_surface_t* backstore;
 
     int shm_id;
@@ -460,8 +435,6 @@ typedef struct wm_window {
 
     void* shm_addr;
 
-    //? Transitions: growing in on the first commit, the focus state, and the light on each
-    //? titlebar button.
     ui_anim_t appear;
     ui_anim_t focus;
     ui_anim_t hover_close;
@@ -469,16 +442,12 @@ typedef struct wm_window {
     ui_anim_t hover_minimize;
     ui_anim_t hover_task;
 
-    //? Hidden in its taskbar entry, and how far it has gone there: 1 once it is out of sight.
     bool minimized;
     ui_anim_t minimize;
 
-    //? Filling the display, and the content area it had before, to go back to.
     bool maximized;
     wm_rect_t restore;
 
-    //? Maximising or restoring: a picture of the frame as it was, stretched towards where the
-    //? frame now is while the live window grows out of it.
     cairo_surface_t* morph;
     wm_rect_t morph_rect;
     wm_rect_t morph_from;
@@ -497,7 +466,6 @@ struct wm_client {
     bool dead;
     bool control;
 
-    //? The protocol version the client said hello with, between UI_PROTOCOL_VERSION_MIN and UI_PROTOCOL_VERSION.
     uint32_t version;
 
     struct {
@@ -506,8 +474,6 @@ struct wm_client {
         size_t capacity;
     } rx;
 
-    //? Events are queued rather than written straight out. A blocking write here would
-    //? deadlock against a client blocked writing a commit into a full socket buffer.
     struct {
         uint8_t* data;
         size_t head;
@@ -546,41 +512,30 @@ typedef struct {
 
     wm_theme_t theme;
 
-    //? The wallpaper named on the command line, which overrides the theme's; NULL for none.
     const char* wallpaper;
 
-    //? Head is the topmost window; compositing walks the list backwards.
     wm_window_t* windows;
     wm_client_t* clients;
 
     wm_window_t* focused;
 
-    //? The window whose content area the pointer is over. Tracked only so that the client
-    //? can be told when the pointer leaves again: a toolkit highlighting whatever is under
-    //? the pointer has no other way to find out, since the stream of UI_EV_POINTER simply
-    //? stops at the edge of the content.
     wm_window_t* pointer_focus;
 
-    //? The titlebar button the pointer is over, if any. It doubles as the "still on the
-    //? button" test that decides whether releasing there actually does anything.
     struct {
         wm_window_t* window;
         wm_region_t region;
     } hover;
 
-    //? The last press on a titlebar, against which the next one is counted as a double click.
     struct {
         uint32_t window_id;
         uint64_t time;
     } title_click;
 
-    //? Windows already gone, still fading out, painted over every window still open.
     wm_ghost_t* ghosts;
 
     wm_shadow_t shadow_key;
     wm_shadow_t shadow_ambient;
 
-    //? The clock reading the frame being composited is drawn at.
     uint64_t frame_time;
 
     uint32_t next_window_id;
@@ -603,8 +558,6 @@ typedef struct {
         wm_rect_t origin;
     } drag;
 
-    //? The taskbar item the pointer is over and the one it went down on: a window id,
-    //? WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item, or 0 for nothing. And the minute the clock last showed.
     struct {
         uint32_t hover;
         uint32_t pressed;
@@ -612,15 +565,12 @@ typedef struct {
         ui_anim_t hover_power;
         long minute;
 
-        //? The session menu: how far out it is, the wash behind each of its rows, and where the last frame drew it.
         struct {
             ui_anim_t open;
             ui_anim_t hover[WM_TASKBAR_SESSION_ROWS];
             wm_rect_t painted;
         } session;
 
-        //? The label beside the hovered item: what it says, how far out it is, where it is
-        //? centred and how wide it is when fully out, and where the last frame drew it.
         struct {
             char text[UI_TITLE_MAX * 2];
             ui_anim_t open;
@@ -632,9 +582,6 @@ typedef struct {
 
     wm_drawer_t drawer;
 
-    //? What has to be repainted before the next frame reaches the screen, as a handful of
-    //? rectangles rather than the one box around them all: dragging a window damages where it was
-    //? and where it now is, and the box around those two covers the whole sweep between them.
     ui_damage_t damage;
 
     bool running;

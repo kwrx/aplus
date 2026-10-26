@@ -38,41 +38,26 @@ struct ui_window {
     uint32_t id;
     uint32_t serial;
 
-    //? UI_WINDOW_*, as the window was created with. The server will not change them, so
-    //? this copy stays the answer for the rest of the window's life.
     uint32_t flags;
 
     int width;
     int height;
 
-    //? The size last asked for with ui_window_request_size(), or last granted when that
-    //? was the server's idea. Compared against rather than the size in force, so that a
-    //? second request made while the first is still in flight is not mistaken for a
-    //? request to stay as things are.
     int asked_width;
     int asked_height;
 
-    //? Bytes per row, as the server chose it. Never assumed to be width * 4: the two ends
-    //? are reading and writing the same memory and have to agree exactly.
     size_t stride;
 
-    //? The window's surface, mapped from the server's shared memory segment. Owned by the
-    //? server; this end only attaches and detaches.
     uint32_t* front;
 
-    //? What the client draws into, private to it and laid out like the front.
     uint32_t* back;
 
     int shm_id;
 
     ui_damage_t damage;
 
-    //? The pointer shape last sent, so that asking for the same one again costs nothing.
     ui_cursor_t cursor;
 
-    //? A configure that has arrived but has not been acted on yet. The surface is only
-    //? reallocated when the caller asks, because ui_next_event() usually runs on a
-    //? different thread from the one drawing into the pixels.
     struct {
 
         bool valid;
@@ -98,10 +83,6 @@ struct ui_connection {
     int fd;
     ui_window_t* windows;
 
-    //? Bytes read off the socket but not yet handed out. Every read on the connection goes
-    //? through here, so one read(2) serves a whole burst of events instead of two syscalls
-    //? per event. Anything checking for a pending event has to look here before it polls:
-    //? a whole event sitting in this buffer raises nothing on the descriptor.
     struct {
 
         uint8_t* data;

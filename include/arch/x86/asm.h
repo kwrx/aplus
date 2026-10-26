@@ -68,7 +68,7 @@
      */
 
     #define KERNEL_VIDEO_AREA 0x000000C000000000
-    #define KERNEL_VIDEO_SIZE 0x0000000040000000 //? 1GiB
+    #define KERNEL_VIDEO_SIZE 0x0000000040000000
 
 #elif defined(__i386__)
     #error "i386: not supported"

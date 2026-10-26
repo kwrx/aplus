@@ -104,8 +104,6 @@ static void probe(const char* server, int connected) {
     printf(TAG "--- %s, %s ---\n", server, connected ? "connect()+send()" : "sendto()");
 
 
-    //? What musl actually asks for. A kernel that rejects the flags makes musl retry without
-    //? them, so this is reported rather than fatal.
     int flagged = socket(AF_INET, SOCK_DGRAM | SOCK_CLOEXEC | SOCK_NONBLOCK, 0);
 
     if (flagged < 0)
@@ -229,8 +227,6 @@ int main(int argc, char** argv) {
     }
 
 
-    //? Same call against a literal, which never reaches DNS: it isolates the resolver from
-    //? getaddrinfo() itself.
     res = NULL;
     e   = getaddrinfo("93.184.216.34", "80", &hints, &res);
 

@@ -70,9 +70,9 @@
  */
 typedef enum {
 
-    POLL_DEADLINE_FOREVER,   //? No timeout was asked for: only a descriptor wakes it.
-    POLL_DEADLINE_REMAINING, //? Some time is left; the caller sleeps for that much.
-    POLL_DEADLINE_EXPIRED,   //? Nothing left: the caller reports a timeout.
+    POLL_DEADLINE_FOREVER,
+    POLL_DEADLINE_REMAINING,
+    POLL_DEADLINE_EXPIRED,
 
 } poll_deadline_t;
 

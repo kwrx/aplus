@@ -55,8 +55,6 @@ static struct {
     char name[UI_ICON_NAME_MAX];
     int size;
 
-    //? NULL when the name resolved to nothing, which is cached as well: a missing icon is
-    //? looked for once and not on every frame it is not drawn in.
     cairo_surface_t* surface;
 
 } ui_icon_cache[UI_ICON_CACHE_MAX];

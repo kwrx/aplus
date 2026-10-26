@@ -67,14 +67,8 @@ struct pipe {
     atomic_int readers;
     atomic_int writers;
 
-    //? One change counter for the whole channel, shared by every endpoint
-    //? inode on it. Waking through the channel rather than through a
-    //? particular peer inode is what lets a named FIFO have more than one
-    //? reader or writer without anyone being left asleep.
     inode_events_t ev;
 
-    //? The directory entry a named FIFO was opened through, so the last close
-    //? can detach the channel from it. NULL for an anonymous pipe.
     inode_t* node;
 
     spinlock_t lock;
