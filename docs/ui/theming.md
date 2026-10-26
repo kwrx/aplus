@@ -186,7 +186,7 @@ window manager falls back on `WM_FONT_PATH` for its titles. The terminal's are t
 `ATERM_FONT_PATH`, `ATERM_FONT_BOLD_PATH` and `ATERM_FONT_SIZE`, the editor's
 `EDITOR_FONT_PATH` and `EDITOR_FONT_SIZE`. A theme that names `font_mono` alone gets it for
 bold as well, and a face that cannot be loaded falls back the same way. `dark.conf` and
-`light.conf` both name JetBrains Mono at 16:
+`light.conf` both name JetBrains Mono at 14:
 
 ```
 /usr/share/fonts/ttf/JetBrainsMono-Regular.ttf
