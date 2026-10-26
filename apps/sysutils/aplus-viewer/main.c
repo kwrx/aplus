@@ -1567,6 +1567,28 @@ static void viewer_layout(ui_view_t* view, int width, int height, void* user) {
 
 
 /**
+ * @brief Gives the panels and the status label the colours of the theme in use.
+ *
+ * @param view The view.
+ * @param user Unused.
+ */
+static void viewer_restyle(ui_view_t* view, void* user) {
+
+    (void)view;
+    (void)user;
+
+    const ui_theme_t* theme = ui_theme();
+
+    ui_panel_set_color(viewer.toolbar, theme->surface);
+
+    ui_panel_set_color(viewer.frame, theme->surface_sunken);
+    ui_panel_set_border(viewer.frame, theme->border, 1.0);
+
+    ui_label_set_color(viewer.status, theme->text_muted);
+}
+
+
+/**
  * @brief Creates the widgets.
  *
  * @param view The view to create them in.
@@ -1599,17 +1621,13 @@ static int viewer_build(ui_view_t* view) {
     }
 
 
-    ui_panel_set_color(viewer.toolbar, theme->surface);
     ui_panel_set_radius(viewer.toolbar, theme->corner_radius);
-
-    ui_panel_set_color(viewer.frame, theme->surface_sunken);
     ui_panel_set_radius(viewer.frame, theme->corner_radius);
-    ui_panel_set_border(viewer.frame, theme->border, 1.0);
 
     ui_label_set_padding(viewer.name, 8);
-
-    ui_label_set_color(viewer.status, theme->text_muted);
     ui_label_set_align(viewer.status, UI_ALIGN_RIGHT);
+
+    viewer_restyle(view, NULL);
 
     return 0;
 }
@@ -1781,6 +1799,7 @@ int main(int argc, char** argv) {
 
     ui_view_on_key(viewer.view, viewer_on_key, NULL);
     ui_view_on_layout(viewer.view, viewer_layout, NULL);
+    ui_view_on_theme(viewer.view, viewer_restyle, NULL);
 
 
     if (argc > 1 && viewer_open(argv[1]) < 0) {

@@ -402,6 +402,25 @@ ui_connection_t* ui_connect(const char* path, int retry_ms) {
         return NULL;
     }
 
+
+    if (ui_conn_read(conn, &hdr, sizeof(hdr)) < 0) {
+        ui_disconnect(conn);
+        return NULL;
+    }
+
+    if (hdr.type != UI_EV_THEME || hdr.length != sizeof(conn->theme.msg)) {
+        ui_disconnect(conn);
+        errno = EPROTO;
+        return NULL;
+    }
+
+    if (ui_conn_read(conn, &conn->theme.msg, sizeof(conn->theme.msg)) < 0) {
+        ui_disconnect(conn);
+        return NULL;
+    }
+
+    ui_theme_adopt(&conn->theme.msg);
+
     return conn;
 }
 

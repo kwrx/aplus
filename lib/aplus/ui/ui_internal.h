@@ -111,6 +111,14 @@ struct ui_connection {
         size_t capacity;
 
     } rx;
+
+    struct {
+
+        bool valid;
+
+        ui_msg_theme_t msg;
+
+    } theme;
 };
 
 
@@ -120,6 +128,13 @@ int ui_conn_fill(ui_connection_t* conn);
 
 
 ui_window_t* ui_window_from_id(ui_connection_t* conn, uint32_t id);
+
+/**
+ * @brief Copies a theme the server sent into the one every view created against the system theme draws with.
+ *
+ * @param msg The theme, as it came off the wire.
+ */
+void ui_theme_adopt(const ui_msg_theme_t* msg);
 
 int ui_window_adopt_surface(ui_window_t* win, int width, int height, size_t stride, int shm_id, size_t shm_size, uint32_t serial);
 void ui_window_drop_surface(ui_window_t* win);

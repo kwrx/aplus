@@ -80,10 +80,11 @@
 
 
 /**
- * @brief The washes the text area paints under the text.
+ * @brief The wash the text area paints under a search match, and the strength of the selection's in an idle window.
  */
 static const ui_color_t editor_color_match = UI_RGBA(0xF5, 0xC2, 0x11, 0.28);
-static const ui_color_t editor_color_idle  = UI_RGBA(0xFF, 0xFF, 0xFF, 0.12);
+
+#define EDITOR_SELECTION_IDLE_ALPHA 0.12
 
 #define EDITOR_SELECTION_ALPHA    0.40
 #define EDITOR_CURRENT_LINE_ALPHA 0.045
@@ -940,7 +941,7 @@ static void editor_canvas_draw_line(cairo_t* cr, size_t index, int y, const edit
         const size_t start = index == from->line ? editor_text_column(line->text, line->length, from->offset) : 0;
         const size_t stop  = index == to->line ? editor_text_column(line->text, line->length, to->offset) : editor_text_column(line->text, line->length, line->length) + 1;
 
-        editor_canvas_fill_columns(cr, start, stop, y, editor.active ? editor_canvas_alpha(theme->primary, EDITOR_SELECTION_ALPHA) : editor_color_idle);
+        editor_canvas_fill_columns(cr, start, stop, y, editor_canvas_alpha(editor.active ? theme->primary : theme->text, editor.active ? EDITOR_SELECTION_ALPHA : EDITOR_SELECTION_IDLE_ALPHA));
     }
 
     editor_canvas_draw_text(cr, line, y + canvas->baseline);

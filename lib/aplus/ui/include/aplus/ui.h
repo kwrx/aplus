@@ -39,8 +39,13 @@ extern "C" {
  */
 #define UI_DEFAULT_SOCKET "/tmp/aplus-wm.sock"
 
-#define UI_PROTOCOL_VERSION 6
+#define UI_PROTOCOL_VERSION 7
 #define UI_TITLE_MAX        64
+
+/**
+ * @brief The oldest version a server still accepts, echoing it back in its UI_EV_HELLO.
+ */
+#define UI_PROTOCOL_VERSION_MIN 6
 
 /**
  * @brief How long an icon name may be, terminator included; a longer one resolves to nothing.
@@ -106,6 +111,14 @@ extern "C" {
  * @brief A wheel step, kept apart from UI_EV_POINTER because that one goes out on every motion.
  */
 #define UI_EV_SCROLL 0x8008
+
+/**
+ * @brief The theme a client draws with, sent right after UI_EV_HELLO and again whenever it changes.
+ *
+ * Only to a client that said hello with UI_EV_THEME_SINCE or later.
+ */
+#define UI_EV_THEME       0x8009
+#define UI_EV_THEME_SINCE 7
 
 
 /**
@@ -344,6 +357,60 @@ typedef struct {
 } __attribute__((packed)) ui_msg_scroll_t;
 
 
+/**
+ * @brief How long a theme's name and a path inside a theme may be, terminator included.
+ */
+#define UI_THEME_NAME_MAX 32
+#define UI_THEME_PATH_MAX 128
+
+
+/**
+ * @brief A colour on the wire, straight rather than premultiplied, each component 0 to 1.
+ */
+typedef struct {
+
+    double r;
+    double g;
+    double b;
+    double a;
+
+} __attribute__((packed)) ui_msg_color_t;
+
+
+/**
+ * @brief Every role of the theme clients draw their widgets with, as the server resolved it.
+ */
+typedef struct {
+
+    char name[UI_THEME_NAME_MAX];
+
+    ui_msg_color_t background;
+    ui_msg_color_t surface;
+    ui_msg_color_t surface_sunken;
+    ui_msg_color_t primary;
+    ui_msg_color_t on_primary;
+    ui_msg_color_t secondary;
+    ui_msg_color_t on_secondary;
+    ui_msg_color_t danger;
+    ui_msg_color_t on_danger;
+    ui_msg_color_t hover;
+    ui_msg_color_t active;
+    ui_msg_color_t border;
+    ui_msg_color_t focus_ring;
+    ui_msg_color_t text;
+    ui_msg_color_t text_muted;
+
+    double disabled_fade;
+    double corner_radius;
+    double font_size;
+
+    char font_regular[UI_THEME_PATH_MAX];
+    char font_medium[UI_THEME_PATH_MAX];
+    char font_bold[UI_THEME_PATH_MAX];
+
+} __attribute__((packed)) ui_msg_theme_t;
+
+
 #define UI_BUTTON_LEFT   (1 << 0)
 #define UI_BUTTON_RIGHT  (1 << 1)
 #define UI_BUTTON_MIDDLE (1 << 2)
@@ -403,6 +470,7 @@ typedef enum {
     UI_EVENT_CLOSE,
     UI_EVENT_LEAVE,
     UI_EVENT_SCROLL,
+    UI_EVENT_THEME,
 
 } ui_event_type_t;
 
@@ -445,7 +513,7 @@ typedef struct {
 
 
 /**
- * @brief Connects to the server.
+ * @brief Connects to the server and takes up the theme it announces, before anything is drawn.
  *
  * @param path The socket to connect to, or NULL for UI_DEFAULT_SOCKET.
  * @param retry_ms How long to keep retrying for, which lets a client start alongside the server.

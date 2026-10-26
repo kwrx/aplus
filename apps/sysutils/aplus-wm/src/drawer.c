@@ -32,6 +32,27 @@
 
 
 /**
+ * @brief Traces the drawer's outline from the top border round to the rail, an edge's width out from the shape.
+ *
+ * @param cr The cairo context.
+ * @param x0 The rail's edge.
+ * @param y0 The top border's edge.
+ * @param x1 The drawer's right edge.
+ * @param y1 The drawer's bottom.
+ * @param top The radius of the fillet into the top border.
+ * @param corner The radius of the outer corner.
+ * @param bottom The radius of the fillet into the rail.
+ * @param edge How far out to trace it: 0 for the shape itself, 0.5 for its hairline.
+ */
+static void wm_drawer_outline(cairo_t* cr, double x0, double y0, double x1, double y1, double top, double corner, double bottom, double edge) {
+
+    cairo_arc_negative(cr, x1 + top, y0 + top, WM_MAX(top - edge, 0.0), 3.0 * M_PI / 2.0, M_PI);
+    cairo_arc(cr, x1 - corner, y1 - corner, corner + edge, 0.0, M_PI / 2.0);
+    cairo_arc_negative(cr, x0 + bottom, y1 + bottom, WM_MAX(bottom - edge, 0.0), 3.0 * M_PI / 2.0, M_PI);
+}
+
+
+/**
  * @brief Reports where the drawer is at a moment, with the fillets that join it to the rail and the border.
  *
  * @param now The clock reading.
@@ -54,7 +75,7 @@ static wm_rect_t wm_drawer_extent(uint64_t now) {
 
     const wm_rect_t r = {wm.drawer.rect.x, wm.drawer.rect.y, (int)ceil(reveal) + WM_TASKBAR_RADIUS + 2, (int)ceil(height) + WM_TASKBAR_RADIUS + 2};
 
-    return r;
+    return wm_taskbar_shadow_extent(r);
 }
 
 
@@ -285,18 +306,20 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     const double top    = WM_MIN(WM_TASKBAR_RADIUS, reveal);
     const double bottom = WM_MIN(WM_TASKBAR_RADIUS, reveal - corner);
 
+    const wm_rect_t shape = {(int)x0, (int)y0, (int)ceil(reveal), (int)(y1 - y0)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
     cairo_save(cr);
 
     cairo_new_path(cr);
     cairo_move_to(cr, x0, y0);
     cairo_line_to(cr, x1 + top, y0);
-    cairo_arc_negative(cr, x1 + top, y0 + top, top, 3.0 * M_PI / 2.0, M_PI);
-    cairo_arc(cr, x1 - corner, y1 - corner, corner, 0.0, M_PI / 2.0);
-    cairo_arc_negative(cr, x0 + bottom, y1 + bottom, bottom, 3.0 * M_PI / 2.0, M_PI);
+    wm_drawer_outline(cr, x0, y0, x1, y1, top, corner, bottom, 0.0);
     cairo_close_path(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
-    cairo_set_source_rgba(cr, WM_COLOR_TASKBAR);
+    wm_source(cr, wm.theme.taskbar, 1.0);
     cairo_fill_preserve(cr);
     cairo_clip(cr);
 
@@ -315,6 +338,11 @@ void wm_drawer_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     }
 
     cairo_restore(cr);
+
+
+    cairo_new_path(cr);
+    wm_drawer_outline(cr, x0, y0, x1, y1, top, corner, bottom, 0.5);
+    wm_taskbar_edge(cr);
 }
 
 

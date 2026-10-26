@@ -736,6 +736,25 @@ static void calc_layout(ui_view_t* view, int width, int height, void* user) {
 }
 
 
+/**
+ * @brief Gives the display and its labels the colours of the theme in use.
+ *
+ * @param view The view.
+ * @param user Unused.
+ */
+static void calc_restyle(ui_view_t* view, void* user) {
+
+    (void)view;
+    (void)user;
+
+    ui_panel_set_color(calc.display, ui_theme()->surface_sunken);
+    ui_panel_set_border(calc.display, ui_theme()->border, 1.0);
+
+    ui_label_set_color(calc.expression, ui_theme()->text_muted);
+    ui_label_set_color(calc.value, ui_theme()->text);
+}
+
+
 static int calc_build(ui_view_t* view) {
 
     calc.view = view;
@@ -745,9 +764,7 @@ static int calc_build(ui_view_t* view) {
         return -1;
     }
 
-    ui_panel_set_color(calc.display, ui_theme()->surface_sunken);
     ui_panel_set_radius(calc.display, 10.0);
-    ui_panel_set_border(calc.display, ui_theme()->border, 1.0);
 
 
     if ((calc.expression = ui_label_create(view, "")) == NULL) {
@@ -755,7 +772,6 @@ static int calc_build(ui_view_t* view) {
     }
 
     ui_label_set_align(calc.expression, UI_ALIGN_RIGHT);
-    ui_label_set_color(calc.expression, ui_theme()->text_muted);
 
 
     if ((calc.value = ui_label_create(view, calc.entry)) == NULL) {
@@ -763,7 +779,8 @@ static int calc_build(ui_view_t* view) {
     }
 
     ui_label_set_align(calc.value, UI_ALIGN_RIGHT);
-    ui_label_set_color(calc.value, ui_theme()->text);
+
+    calc_restyle(view, NULL);
 
 
     for (size_t i = 0; i < sizeof(calc_keypad) / sizeof(calc_keypad[0]); i++) {
@@ -831,6 +848,7 @@ int main(int argc, char** argv) {
 
     ui_view_on_key(view, calc_on_key, NULL);
     ui_view_on_layout(view, calc_layout, NULL);
+    ui_view_on_theme(view, calc_restyle, NULL);
 
     calc_refresh();
 

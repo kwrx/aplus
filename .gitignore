@@ -25,6 +25,7 @@
 *.log
 *.conf
 !apps/core/pkg/assets/etc/pkg.conf
+!apps/sysutils/aplus-wm/assets/usr/share/themes/*.conf
 *.old
 *.out
 *.generated.h

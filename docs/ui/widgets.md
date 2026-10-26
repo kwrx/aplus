@@ -21,7 +21,8 @@ widgets, and a record of what has changed since the last frame.
 It also takes a copy of the current theme pointer when it is created. That snapshot is
 deliberate — it means a window cannot change appearance underneath itself because something
 else swapped the global theme — and it means `ui_theme_set()` has to be called *before*
-`ui_view_create()` to have any effect. See [theming.md](theming.md).
+`ui_view_create()` to have any effect. The system theme is the exception: it is rewritten in
+place when the server sends a new one, and the view repaints. See [theming.md](theming.md).
 
 `ui_view_destroy()` frees every widget in the view. Widget pointers are valid until then, or
 until the widget is explicitly destroyed.

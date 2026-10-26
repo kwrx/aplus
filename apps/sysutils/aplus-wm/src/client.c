@@ -86,7 +86,14 @@ static int wm_buffer_reserve(uint8_t** data, size_t* capacity, size_t needed, si
 }
 
 
-wm_client_t* wm_client_accept(int listener) {
+/**
+ * @brief Takes a peer off a listening socket, as a window client or as a control peer.
+ *
+ * @param listener The socket.
+ * @param control Whether it is the control socket.
+ * @return The peer, or NULL.
+ */
+wm_client_t* wm_client_accept(int listener, bool control) {
 
     int fd = accept4(listener, NULL, NULL, O_NONBLOCK);
 
@@ -102,7 +109,8 @@ wm_client_t* wm_client_accept(int listener) {
         return NULL;
     }
 
-    client->fd = fd;
+    client->fd      = fd;
+    client->control = control;
 
     client->next = wm.clients;
     wm.clients   = client;
@@ -200,6 +208,25 @@ int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, siz
 }
 
 
+/**
+ * @brief Queues a message for every window client that has said hello with at least a given version.
+ *
+ * @param type The message type.
+ * @param since The oldest protocol version that knows the message.
+ * @param payload The message body.
+ * @param size The length of the body.
+ */
+void wm_client_broadcast(uint16_t type, uint32_t since, const void* payload, size_t size) {
+
+    for (wm_client_t* client = wm.clients; client; client = client->next) {
+
+        if (client->hello && !client->control && client->version >= since) {
+            wm_client_queue(client, type, payload, size);
+        }
+    }
+}
+
+
 bool wm_client_wants_write(const wm_client_t* client) {
     return client->tx.size > client->tx.head;
 }
@@ -244,16 +271,23 @@ static int wm_client_handle_hello(wm_client_t* client, const uint8_t* payload, s
 
     memcpy(&hello, payload, sizeof(hello));
 
-    if (hello.version != UI_PROTOCOL_VERSION) {
-        ulog_warnf("client speaks protocol %u, expected %u", hello.version, UI_PROTOCOL_VERSION);
+    if (hello.version < UI_PROTOCOL_VERSION_MIN || hello.version > UI_PROTOCOL_VERSION) {
+        ulog_warnf("client speaks protocol %u, expected %u to %u", hello.version, UI_PROTOCOL_VERSION_MIN, UI_PROTOCOL_VERSION);
         return -1;
     }
 
-    client->hello = true;
+    client->hello   = true;
+    client->version = hello.version;
 
-    hello.version = UI_PROTOCOL_VERSION;
+    if (wm_client_queue(client, UI_EV_HELLO, &hello, sizeof(hello)) < 0) {
+        return -1;
+    }
 
-    return wm_client_queue(client, UI_EV_HELLO, &hello, sizeof(hello));
+    if (client->version < UI_EV_THEME_SINCE) {
+        return 0;
+    }
+
+    return wm_client_queue(client, UI_EV_THEME, &wm.theme.client, sizeof(wm.theme.client));
 }
 
 
@@ -491,6 +525,10 @@ static int wm_client_handle_destroy_window(wm_client_t* client, const uint8_t* p
 
 
 static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* payload, size_t size) {
+
+    if (client->control) {
+        return wm_control_handle(client, type, payload, size);
+    }
 
     if (!client->hello && type != UI_REQ_HELLO) {
         return -1;

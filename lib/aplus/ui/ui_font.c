@@ -36,7 +36,7 @@
  * @brief How many faces the cache holds; faces are keyed by path and never released.
  */
 
-#define UI_FONT_CACHE_MAX 6
+#define UI_FONT_CACHE_MAX 16
 
 
 static FT_Library ui_ft = NULL;

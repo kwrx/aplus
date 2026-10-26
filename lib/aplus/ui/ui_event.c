@@ -278,6 +278,24 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 return 1;
             }
 
+            case UI_EV_THEME: {
+
+                if (hdr.length != sizeof(conn->theme.msg)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, &conn->theme.msg, sizeof(conn->theme.msg)) < 0) {
+                    return -1;
+                }
+
+                conn->theme.valid = true;
+
+                out->type = UI_EVENT_THEME;
+
+                return 1;
+            }
+
             default:
 
                 if (ui_drain_payload(conn, hdr.length) < 0) {

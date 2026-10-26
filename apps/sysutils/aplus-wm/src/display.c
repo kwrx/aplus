@@ -185,16 +185,39 @@ static int wm_display_setup(wm_display_t* display) {
     }
 
 
-    display->background = wm_wallpaper_load(display->wallpaper, display->width, display->height);
+    return wm_display_background(display);
+}
 
-    if (!display->background) {
-        display->background = wm_wallpaper_gradient(display->height);
+
+/**
+ * @brief Builds the desktop the theme asks for, replacing the one painted so far only once the new one exists.
+ *
+ * @param display The display to paint the desktop of.
+ * @return 0 on success, or -1 when neither the wallpaper nor the gradient could be built.
+ */
+int wm_display_background(wm_display_t* display) {
+
+    cairo_pattern_t* background = wm_wallpaper_load(wm_theme_wallpaper(), display->width, display->height);
+
+    if (!background) {
+        background = wm_wallpaper_gradient(display->height);
     }
 
-    if (!display->background || cairo_pattern_status(display->background) != CAIRO_STATUS_SUCCESS) {
+    if (!background || cairo_pattern_status(background) != CAIRO_STATUS_SUCCESS) {
+
+        if (background) {
+            cairo_pattern_destroy(background);
+        }
+
         ulog_errorf("cannot create the desktop background");
         return -1;
     }
+
+    if (display->background) {
+        cairo_pattern_destroy(display->background);
+    }
+
+    display->background = background;
 
     return 0;
 }
@@ -234,12 +257,11 @@ static void wm_display_release(wm_display_t* display) {
 }
 
 
-int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper) {
+int wm_display_open(wm_display_t* display, const char* device) {
 
     memset(display, 0, sizeof(*display));
 
-    display->fd        = -1;
-    display->wallpaper = wallpaper;
+    display->fd = -1;
 
 
     if ((display->fd = open(device, O_RDWR)) < 0) {

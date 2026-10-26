@@ -32,7 +32,9 @@
 
 #include <aplus/fb.h>
 #include <aplus/ui-anim.h>
+#include <aplus/ui-control.h>
 #include <aplus/ui-draw.h>
+#include <aplus/ui-widgets.h>
 #include <aplus/ui.h>
 
 
@@ -76,6 +78,11 @@
 #define WM_SHADOW_IDLE          0.55
 
 /**
+ * @brief How dark the shadow under the taskbar's drawers is, against a window's.
+ */
+#define WM_SHADOW_TASKBAR 0.60
+
+/**
  * @brief How a window grows into place when it opens and shrinks away when it closes.
  */
 #define WM_OPEN_SCALE  0.94
@@ -93,7 +100,7 @@
 
 
 /**
- * @brief The palette, as cairo component lists that drop straight into a set_source call.
+ * @brief The default palette, as component lists, for whatever the theme file leaves out or when there is none.
  *
  * Every surface is a neutral dark grey a shade apart from the one behind it; the ring marks the active window.
  */
@@ -101,11 +108,8 @@
 #define WM_COLOR_DESKTOP_TOP    0.086, 0.086, 0.086
 #define WM_COLOR_DESKTOP_BOTTOM 0.043, 0.043, 0.043
 
-#define WM_COLOR_FRAME_ACTIVE 0.169, 0.169, 0.169
-#define WM_COLOR_FRAME_IDLE   0.141, 0.141, 0.141
-
 #define WM_COLOR_TITLE_ACTIVE 0.933, 0.933, 0.933
-#define WM_COLOR_TITLE_IDLE   0.540, 0.540, 0.540
+#define WM_COLOR_TITLE_IDLE   0.588, 0.588, 0.588
 
 #define WM_COLOR_OUTLINE        0.000, 0.000, 0.000, 0.55
 #define WM_COLOR_HIGHLIGHT      1.000, 1.000, 1.000, 0.10
@@ -126,6 +130,7 @@
 #define WM_COLOR_TASKBAR_DOWN   1.000, 1.000, 1.000, 0.16
 #define WM_COLOR_TASKBAR_MARK   0.600, 0.600, 0.600, 0.70
 #define WM_COLOR_TASKBAR_POWER  0.898, 0.282, 0.302
+#define WM_COLOR_TASKBAR_EDGE   1.000, 1.000, 1.000, 0.08
 
 /**
  * @brief The typeface titles are drawn in, loaded once at startup.
@@ -148,7 +153,7 @@
  * The limit is on the image as it comes out of the file, before it is scaled down to the screen.
  */
 
-#define WM_WALLPAPER_PATH     "/usr/share/images/01.webp"
+#define WM_WALLPAPER_PATH     "/usr/share/images/aplus-dark.webp"
 #define WM_WALLPAPER_MAX_SIZE 8192
 
 /**
@@ -287,11 +292,49 @@ typedef struct {
 } wm_insets_t;
 
 
+/**
+ * @brief The theme: what the server draws its own pixels with, and the part it hands to every client.
+ */
+typedef struct {
+
+    ui_color_t desktop_top;
+    ui_color_t desktop_bottom;
+    ui_color_t title_active;
+    ui_color_t title_idle;
+    ui_color_t outline;
+    ui_color_t highlight;
+    ui_color_t highlight_idle;
+    ui_color_t button;
+    ui_color_t button_over;
+    ui_color_t button_down;
+    ui_color_t close_over;
+    ui_color_t close_down;
+    ui_color_t accent;
+    ui_color_t taskbar;
+    ui_color_t taskbar_hover;
+    ui_color_t taskbar_active;
+    ui_color_t taskbar_down;
+    ui_color_t taskbar_mark;
+    ui_color_t taskbar_power;
+    ui_color_t taskbar_edge;
+
+    double shadow_key;
+    double shadow_ambient;
+    double taskbar_shadow;
+
+    char font[UI_THEME_PATH_MAX];
+    double font_size;
+
+    char wallpaper[UI_THEME_PATH_MAX];
+
+    ui_msg_theme_t client;
+
+} wm_theme_t;
+
+
 typedef struct {
 
     int fd;
-
-    const char* wallpaper;
 
     struct fb_var_screeninfo var;
     struct fb_fix_screeninfo fix;
@@ -306,8 +349,8 @@ typedef struct {
     cairo_t* cr_screen;
 
     //? What the desktop is painted with, built once: the wallpaper when one decoded, the
-    //? gradient otherwise. It spans the whole screen and never changes, so rebuilding it per
-    //? frame only costs allocations.
+    //? gradient otherwise. It spans the whole screen and changes only with the theme, so
+    //? rebuilding it per frame would only cost allocations.
     cairo_pattern_t* background;
 
     //? Whether the adapter composites a cursor plane of its own. When it does, the pointer is
@@ -452,6 +495,10 @@ struct wm_client {
 
     bool hello;
     bool dead;
+    bool control;
+
+    //? The protocol version the client said hello with, between UI_PROTOCOL_VERSION_MIN and UI_PROTOCOL_VERSION.
+    uint32_t version;
 
     struct {
         uint8_t* data;
@@ -496,6 +543,11 @@ typedef enum {
 typedef struct {
 
     wm_display_t display;
+
+    wm_theme_t theme;
+
+    //? The wallpaper named on the command line, which overrides the theme's; NULL for none.
+    const char* wallpaper;
 
     //? Head is the topmost window; compositing walks the list backwards.
     wm_window_t* windows;
@@ -613,11 +665,14 @@ void* wm_image_probe(const char* path, int max_size, size_t* size, int* width, i
  */
 cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height);
 cairo_surface_t* wm_icon_create(const char* name, int size);
+void wm_source(cairo_t* cr, ui_color_t color, double alpha);
+void wm_source_mix(cairo_t* cr, ui_color_t a, ui_color_t b, double t);
 
 /**
  * @brief Implemented in display.c.
  */
-int wm_display_open(wm_display_t* display, const char* device, const char* wallpaper);
+int wm_display_open(wm_display_t* display, const char* device);
+int wm_display_background(wm_display_t* display);
 int wm_display_resize(wm_display_t* display);
 void wm_display_close(wm_display_t* display);
 int wm_display_flush(wm_display_t* display, const wm_rect_t* rects, size_t count);
@@ -657,6 +712,20 @@ cairo_pattern_t* wm_wallpaper_load(const char* path, int width, int height);
 cairo_pattern_t* wm_wallpaper_gradient(int height);
 
 /**
+ * @brief Implemented in theme.c.
+ */
+void wm_theme_init(void);
+int wm_theme_switch(const char* name, char* text, size_t size);
+int wm_theme_reload(char* text, size_t size);
+const char* wm_theme_wallpaper(void);
+ui_color_t wm_theme_frame(void);
+
+/**
+ * @brief Implemented in control.c.
+ */
+int wm_control_handle(wm_client_t* client, uint16_t type, const uint8_t* payload, size_t size);
+
+/**
  * @brief Implemented in input.c.
  */
 int wm_input_open(void);
@@ -690,6 +759,9 @@ bool wm_taskbar_dismiss(void);
 int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
 void wm_taskbar_fini(void);
+wm_rect_t wm_taskbar_shadow_extent(wm_rect_t extent);
+void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength);
+void wm_taskbar_edge(cairo_t* cr);
 
 /**
  * @brief Implemented in drawer.c.
@@ -748,12 +820,13 @@ int wm_window_damage_content(wm_window_t* win, int x, int y, int width, int heig
 /**
  * @brief Implemented in client.c.
  */
-wm_client_t* wm_client_accept(int listener);
+wm_client_t* wm_client_accept(int listener, bool control);
 void wm_client_destroy(wm_client_t* client);
 int wm_client_read(wm_client_t* client);
 int wm_client_flush(wm_client_t* client);
 bool wm_client_wants_write(const wm_client_t* client);
 int wm_client_queue(wm_client_t* client, uint16_t type, const void* payload, size_t size);
+void wm_client_broadcast(uint16_t type, uint32_t since, const void* payload, size_t size);
 
 /**
  * @brief Implemented in main.c.

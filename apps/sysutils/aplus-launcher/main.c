@@ -230,7 +230,7 @@ static struct {
 
 
 /**
- * @brief The dark theme with the light let through it: nothing but the panel paints a background, and the selection takes the accent.
+ * @brief The system theme with the light let through it: nothing but the panel paints a background, and the selection takes the accent.
  *
  * The panel is what the window looks like, so the view is left with nothing of its own to
  * fill -- anything it painted would sit under the panel and darken it for no gain.
@@ -244,7 +244,7 @@ static ui_theme_t launcher_theme;
 
 static void launcher_theme_init(void) {
 
-    launcher_theme = *ui_theme_dark();
+    launcher_theme = *ui_theme_system();
 
     launcher_theme.background     = ui_rgba(0x00, 0x00, 0x00, 0.0);
     launcher_theme.surface_sunken = ui_rgba(0x00, 0x00, 0x00, 0.0);
@@ -1082,14 +1082,49 @@ static void launcher_layout(ui_view_t* view, int width, int height, void* user) 
 
 
 /**
+ * @brief Follows the system theme: the launcher's own theme, the panels' colours and the field's font.
+ *
+ * @param view The view.
+ * @param user Unused.
+ */
+static void launcher_restyle(ui_view_t* view, void* user) {
+
+    (void)view;
+    (void)user;
+
+    launcher_theme_init();
+
+    const ui_theme_t* system = ui_theme_system();
+
+    if (launcher.backdrop) {
+
+        ui_color_t well = system->surface_sunken;
+        ui_color_t edge = system->border;
+
+        well.a = 0.5;
+
+        ui_color_t panel = ui_color_blend(system->background, well);
+
+        panel.a = 0.90;
+        edge.a *= 2.0;
+
+        ui_panel_set_color(launcher.backdrop, panel);
+        ui_panel_set_border(launcher.backdrop, edge, 1.0);
+    }
+
+    ui_panel_set_color(launcher.separator, system->border);
+
+    ui_entry_set_font(launcher.field, UI_FONT_REGULAR, launcher_theme.font_size + 4.0);
+}
+
+
+/**
  * @brief Builds the widgets, in the order they are painted in.
  *
  * @return 0 on success, or -1 when a widget could not be created.
  */
 
 static int launcher_build(void) {
-
-    const ui_theme_t* theme = ui_theme();
 
     launcher.backdrop  = launcher.drawer ? NULL : ui_panel_create(launcher.view);
 #if defined(CONFIG_HAVE_AI)
@@ -1105,16 +1140,14 @@ static int launcher_build(void) {
     }
 
     if (launcher.backdrop) {
-        ui_panel_set_color(launcher.backdrop, ui_rgba(0x24, 0x24, 0x24, 0.90));
         ui_panel_set_radius(launcher.backdrop, (double)UI_WINDOW_RADIUS);
-        ui_panel_set_border(launcher.backdrop, ui_rgba(0xFF, 0xFF, 0xFF, 0.14), 1.0);
     }
 
-    ui_panel_set_color(launcher.separator, ui_rgba(0xFF, 0xFF, 0xFF, 0.09));
     ui_panel_set_radius(launcher.separator, 0.0);
     ui_widget_set_visible(launcher.separator, false);
 
-    ui_entry_set_font(launcher.field, UI_FONT_REGULAR, theme->font_size + 4.0);
+    launcher_restyle(launcher.view, NULL);
+
     ui_entry_on_change(launcher.field, launcher_on_change, NULL);
     ui_entry_on_submit(launcher.field, launcher_on_submit, NULL);
 
@@ -1316,6 +1349,7 @@ int main(int argc, char** argv) {
 
     ui_view_on_key(launcher.view, launcher_on_key, NULL);
     ui_view_on_layout(launcher.view, launcher_layout, NULL);
+    ui_view_on_theme(launcher.view, launcher_restyle, NULL);
 
     launcher_refilter();
 

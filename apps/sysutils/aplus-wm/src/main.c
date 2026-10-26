@@ -314,7 +314,8 @@ static void show_usage(void) {
            "Run the aplus display server.\n\n"
            "   -d, --device                framebuffer device (default: /dev/fb0)\n"
            "   -s, --socket                listening socket (default: " UI_DEFAULT_SOCKET ")\n"
-           "   -w, --wallpaper             desktop wallpaper (default: " WM_WALLPAPER_PATH ")\n"
+           "   -c, --control               control socket (default: " UI_CONTROL_SOCKET ")\n"
+           "   -w, --wallpaper             desktop wallpaper, instead of the theme's\n"
            "       --help                  show this help\n");
 
     exit(0);
@@ -330,19 +331,20 @@ int main(int argc, char** argv) {
     static struct option long_options[] = {
         {"device",    required_argument, NULL, 'd'},
         {"socket",    required_argument, NULL, 's'},
+        {"control",   required_argument, NULL, 'c'},
         {"wallpaper", required_argument, NULL, 'w'},
         {"help",      no_argument,       NULL, 'h'},
         {NULL,        0,                 NULL, 0  }
     };
 
-    const char* device    = "/dev/fb0";
-    const char* path      = UI_DEFAULT_SOCKET;
-    const char* wallpaper = WM_WALLPAPER_PATH;
+    const char* device  = "/dev/fb0";
+    const char* path    = UI_DEFAULT_SOCKET;
+    const char* control = UI_CONTROL_SOCKET;
 
 
     int c, idx;
 
-    while ((c = getopt_long(argc, argv, "d:s:w:h", long_options, &idx)) != -1) {
+    while ((c = getopt_long(argc, argv, "d:s:c:w:h", long_options, &idx)) != -1) {
 
         switch (c) {
 
@@ -352,8 +354,11 @@ int main(int argc, char** argv) {
             case 's':
                 path = optarg;
                 break;
+            case 'c':
+                control = optarg;
+                break;
             case 'w':
-                wallpaper = optarg;
+                wm.wallpaper = optarg;
                 break;
             case 'h':
             case '?':
@@ -369,7 +374,9 @@ int main(int argc, char** argv) {
     wm.running        = true;
 
 
-    if (wm_display_open(&wm.display, device, wallpaper) < 0) {
+    wm_theme_init();
+
+    if (wm_display_open(&wm.display, device) < 0) {
         return 1;
     }
 
@@ -377,7 +384,7 @@ int main(int argc, char** argv) {
     wm.pointer.y = wm.display.height / 2;
 
 
-    ui_font_face(WM_FONT_PATH);
+    ui_font_face(wm.theme.font);
 
     if (wm_shadow_init(&wm.shadow_key, WM_SHADOW_KEY_BLUR, UI_WINDOW_RADIUS) < 0 || wm_shadow_init(&wm.shadow_ambient, WM_SHADOW_AMBIENT_BLUR, UI_WINDOW_RADIUS) < 0) {
         ulog_warnf("cannot render the window shadows, drawing none");
@@ -391,10 +398,19 @@ int main(int argc, char** argv) {
         return 1;
     }
 
+    int controller = wm_listen(control);
+
+    if (controller < 0) {
+        close(listener);
+        wm_display_close(&wm.display);
+        return 1;
+    }
+
 
     int input = wm_input_open();
 
     if (input < 0) {
+        close(controller);
         close(listener);
         wm_display_close(&wm.display);
         return 1;
@@ -411,7 +427,7 @@ int main(int argc, char** argv) {
     signal(SIGHUP, SIG_IGN);
 
 
-    ulog_infof("listening on %s", path);
+    ulog_infof("listening on %s, control on %s", path, control);
 
 
     wm_rect_t everything = {0, 0, wm.display.width, wm.display.height};
@@ -432,6 +448,11 @@ int main(int argc, char** argv) {
         nfds_t count = 0;
 
         pfds[count].fd     = listener;
+        pfds[count].events = POLLIN;
+        owners[count]      = NULL;
+        count++;
+
+        pfds[count].fd     = controller;
         pfds[count].events = POLLIN;
         owners[count]      = NULL;
         count++;
@@ -472,10 +493,14 @@ int main(int argc, char** argv) {
 
 
         if (pfds[0].revents & POLLIN) {
-            wm_client_accept(listener);
+            wm_client_accept(listener, false);
         }
 
         if (pfds[1].revents & POLLIN) {
+            wm_client_accept(controller, true);
+        }
+
+        if (pfds[2].revents & POLLIN) {
 
             if (wm_input_dispatch(input) < 0) {
                 ulog_errorf("the input pipe went away");
@@ -484,12 +509,12 @@ int main(int argc, char** argv) {
         }
 
 
-        if (pfds[2].revents & POLLIN) {
+        if (pfds[3].revents & POLLIN) {
             wm_taskbar_tick(clock);
         }
 
 
-        for (nfds_t i = 3; i < count; i++) {
+        for (nfds_t i = 4; i < count; i++) {
 
             wm_client_t* client = owners[i];
 
@@ -574,6 +599,9 @@ int main(int argc, char** argv) {
     wm_shadow_fini(&wm.shadow_key);
     wm_shadow_fini(&wm.shadow_ambient);
     wm_display_close(&wm.display);
+
+    close(controller);
+    unlink(control);
 
     close(listener);
     unlink(path);

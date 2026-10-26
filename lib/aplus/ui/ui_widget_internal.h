@@ -144,8 +144,12 @@ struct ui_widget {
 
         struct {
 
+            //? Each colour is the theme's (surface, border) until the app names one.
             ui_color_t color;
             ui_color_t border_color;
+
+            bool color_set;
+            bool border_set;
 
             double radius;
             double border_width;
@@ -156,7 +160,10 @@ struct ui_widget {
 
             char text[UI_LABEL_TEXT_MAX];
 
+            //? The theme's text colour until the app names one.
             ui_color_t color;
+            bool color_set;
+
             ui_align_t align;
 
             ui_font_weight_t weight;
@@ -315,6 +322,9 @@ struct ui_view {
 
     ui_key_fn key;
     void* key_user;
+
+    ui_theme_fn restyle;
+    void* restyle_user;
 
     ui_damage_t damage;
 

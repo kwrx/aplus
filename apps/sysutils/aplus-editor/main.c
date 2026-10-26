@@ -2840,6 +2840,29 @@ static void editor_layout(ui_view_t* view, int width, int height, void* user) {
 
 
 /**
+ * @brief Gives the panels and the status labels the colours of the theme in use.
+ * @param view The view.
+ * @param user Unused.
+ */
+static void editor_restyle(ui_view_t* view, void* user) {
+
+    (void)view;
+    (void)user;
+
+    const ui_theme_t* theme = ui_theme();
+
+    ui_panel_set_color(editor.toolbar, theme->surface);
+    ui_panel_set_color(editor.prompt_bar, theme->surface);
+
+    ui_panel_set_color(editor.frame, theme->surface_sunken);
+    ui_panel_set_border(editor.frame, theme->border, 1.0);
+
+    ui_label_set_color(editor.message, theme->text_muted);
+    ui_label_set_color(editor.position, theme->text_muted);
+}
+
+
+/**
  * @brief Creates the widgets.
  * @param view The view to create them in.
  * @return 0, or -1 when one of them could not be created.
@@ -2886,13 +2909,11 @@ static int editor_build(ui_view_t* view) {
     }
 
 
-    ui_panel_set_color(editor.toolbar, theme->surface);
     ui_panel_set_radius(editor.toolbar, theme->corner_radius);
 
     ui_label_set_padding(editor.name, EDITOR_LABEL_PAD);
     ui_label_set_font(editor.name, UI_FONT_MEDIUM, 0.0);
 
-    ui_panel_set_color(editor.prompt_bar, theme->surface);
     ui_panel_set_radius(editor.prompt_bar, theme->corner_radius);
 
     ui_label_set_padding(editor.prompt_label, EDITOR_LABEL_PAD);
@@ -2904,13 +2925,11 @@ static int editor_build(ui_view_t* view) {
     ui_widget_set_visible(editor.prompt_label, false);
     ui_widget_set_visible(editor.prompt_entry, false);
 
-    ui_panel_set_color(editor.frame, theme->surface_sunken);
     ui_panel_set_radius(editor.frame, theme->corner_radius);
-    ui_panel_set_border(editor.frame, theme->border, 1.0);
 
-    ui_label_set_color(editor.message, theme->text_muted);
-    ui_label_set_color(editor.position, theme->text_muted);
     ui_label_set_align(editor.position, UI_ALIGN_RIGHT);
+
+    editor_restyle(view, NULL);
 
     return 0;
 }
@@ -3102,6 +3121,7 @@ int main(int argc, char** argv) {
 
     ui_view_on_key(editor.view, editor_on_key, NULL);
     ui_view_on_layout(editor.view, editor_layout, NULL);
+    ui_view_on_theme(editor.view, editor_restyle, NULL);
 
 
     if (path) {

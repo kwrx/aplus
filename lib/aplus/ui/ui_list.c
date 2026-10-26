@@ -850,7 +850,7 @@ static void ui_list_draw(ui_widget_t* widget, cairo_t* cr) {
 
             taken = ui_draw_text_width(detail, theme->font_regular, theme->font_size) + UI_LIST_GAP;
 
-            ui_color_t muted = selected ? ui_color_alpha(text, 0.8) : theme->text_muted;
+            ui_color_t muted = selected ? text : theme->text_muted;
 
             if (!widget->enabled) {
                 muted = ui_draw_dim(muted, theme);
