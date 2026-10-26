@@ -1,0 +1,85 @@
+#!/usr/bin/env python3
+
+# Usage
+#   gen-wallpapers
+
+# This script paints the wallpapers the aplus-wm themes name: soft fields of blue, violet and
+# teal, light and dark, blurred into one another with a fine grain against banding. The webp
+# files are committed, so a normal build never needs Pillow.
+
+import os
+import random
+import sys
+
+try:
+    from PIL import Image, ImageChops, ImageDraw, ImageFilter, features
+except ImportError:
+    sys.exit("gen-wallpapers: Pillow is required (python-pillow)")
+
+ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+OUTDIR = os.path.join(ROOTDIR, "apps/sysutils/aplus-wm/assets/usr/share/images")
+
+WIDTH, HEIGHT = 1920, 1080
+SCALE = 2
+GRAIN = 6
+
+# The base colour of each wallpaper, and its fields: an ellipse on a 240x135 grid, a colour and an opacity.
+WALLPAPERS = {
+    "aplus-light": ((0x9F, 0xBF, 0xEA), [
+        ((-70, -80, 140, 80), (0x4F, 0x8C, 0xE0), 0.90),
+        ((130, -60, 320, 70), (0x9E, 0x97, 0xE6), 0.80),
+        ((140, 60, 330, 200), (0x6F, 0xC1, 0xDF), 0.80),
+        ((-60, 70, 110, 210), (0x86, 0xA9, 0xE8), 0.85),
+        ((60, 20, 190, 120), (0xD6, 0xE4, 0xF7), 0.75),
+    ]),
+    "aplus-dark": ((0x12, 0x17, 0x26), [
+        ((-70, -80, 140, 80), (0x1B, 0x3A, 0x78), 0.90),
+        ((130, -60, 320, 70), (0x3A, 0x2C, 0x6E), 0.80),
+        ((140, 60, 330, 200), (0x0E, 0x4A, 0x5E), 0.80),
+        ((-60, 70, 110, 210), (0x16, 0x22, 0x44), 0.85),
+        ((60, 20, 190, 120), (0x2A, 0x45, 0x80), 0.55),
+    ]),
+}
+
+
+# @brief Paints one wallpaper at half size and scales it up to the full one.
+# @param base The colour under every field.
+# @param fields The fields, painted in order.
+# @return The image.
+def paint(base, fields):
+
+    w, h = WIDTH // SCALE, HEIGHT // SCALE
+    k = w / 240
+
+    image = Image.new("RGB", (w, h), base)
+
+    for box, color, alpha in fields:
+        mask = Image.new("L", (w, h), 0)
+        ImageDraw.Draw(mask).ellipse(tuple(v * k for v in box), fill=int(255 * alpha))
+        image = Image.composite(Image.new("RGB", (w, h), color), image, mask.filter(ImageFilter.GaussianBlur(26 * k)))
+
+    return image.filter(ImageFilter.GaussianBlur(6 * k)).resize((WIDTH, HEIGHT), Image.BICUBIC)
+
+
+# @brief Adds the same small grain to every channel, from a fixed seed so that the files come out the same each run.
+# @param image The image.
+# @return The grained image.
+def grain(image):
+
+    noise = Image.frombytes("L", image.size, random.Random(1).randbytes(WIDTH * HEIGHT))
+    noise = noise.point(lambda v: 128 + (v - 128) * GRAIN // 128).convert("RGB")
+    grey = Image.new("RGB", image.size, (128, 128, 128))
+
+    image = ImageChops.add(image, ImageChops.subtract(noise, grey))
+
+    return ImageChops.subtract(image, ImageChops.subtract(grey, noise))
+
+
+if not features.check("webp"):
+    sys.exit("gen-wallpapers: Pillow was built without WebP support")
+
+os.makedirs(OUTDIR, exist_ok=True)
+
+for name, (base, fields) in WALLPAPERS.items():
+    print("    WALL    %s.webp" % name)
+    grain(paint(base, fields)).save(os.path.join(OUTDIR, name + ".webp"), "WEBP", quality=88, method=6)
