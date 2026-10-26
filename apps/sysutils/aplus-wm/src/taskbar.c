@@ -232,6 +232,115 @@ bool wm_taskbar_contains(int x, int y) {
 
 
 /**
+ * @brief Grows the extent of something the taskbar slides out by the shadow it casts.
+ *
+ * @param extent Its bounding box, fillets included.
+ * @return The box with the shadow around it, or the extent as it was when empty.
+ */
+wm_rect_t wm_taskbar_shadow_extent(wm_rect_t extent) {
+
+    if (extent.width <= 0 || extent.height <= 0) {
+        return extent;
+    }
+
+    extent.x -= WM_SHADOW_KEY_BLUR;
+    extent.y -= WM_SHADOW_KEY_BLUR;
+    extent.width += 2 * WM_SHADOW_KEY_BLUR + 1;
+    extent.height += 2 * WM_SHADOW_KEY_BLUR + WM_SHADOW_KEY_OFFSET + 1;
+
+    return extent;
+}
+
+
+/**
+ * @brief Paints the shadow something slid out of the taskbar casts, kept inside the work area so that it never falls on the rail it grows from.
+ *
+ * @param cr The cairo context.
+ * @param shape What casts it, leaving out the fillets.
+ * @param strength How far out it is, 0 to 1, which the shadow darkens with.
+ */
+void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength) {
+
+    const wm_rect_t work = wm_workarea();
+    const double alpha   = wm.theme.taskbar_shadow * WM_CLAMP(strength, 0.0, 1.0);
+
+    if (alpha <= 0.0 || shape->width <= 0 || shape->height <= 0) {
+        return;
+    }
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
+    cairo_clip(cr);
+
+    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * alpha);
+    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * alpha);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Strokes the current path, traced half a pixel out from the taskbar, as the hairline that edges it.
+ *
+ * @param cr The cairo context.
+ */
+void wm_taskbar_edge(cairo_t* cr) {
+
+    cairo_save(cr);
+
+    cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+    cairo_set_line_width(cr, 1.0);
+    wm_source(cr, wm.theme.taskbar_edge, 1.0);
+    cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Traces the popout's outline from the rail round to the rail again, an edge's width out from the shape.
+ *
+ * @param cr The cairo context.
+ * @param x0 The rail's edge.
+ * @param x1 The popout's right edge.
+ * @param top The popout's top.
+ * @param bottom The popout's bottom.
+ * @param fillet The radius of the fillets into the rail.
+ * @param corner The radius of the outer corners.
+ * @param edge How far out to trace it: 0 for the shape itself, 0.5 for its hairline.
+ */
+static void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge) {
+
+    cairo_arc_negative(cr, x0 + fillet, top - fillet, WM_MAX(fillet - edge, 0.0), M_PI, M_PI / 2.0);
+    cairo_arc(cr, x1 - corner, top + corner, corner + edge, -M_PI / 2.0, 0.0);
+    cairo_arc(cr, x1 - corner, bottom - corner, corner + edge, 0.0, M_PI / 2.0);
+    cairo_arc_negative(cr, x0 + fillet, bottom + fillet, WM_MAX(fillet - edge, 0.0), 3.0 * M_PI / 2.0, M_PI);
+}
+
+
+/**
+ * @brief Traces the session menu's outline from the rail round to the bottom border, an edge's width out from the shape.
+ *
+ * @param cr The cairo context.
+ * @param x0 The rail's edge.
+ * @param x1 The menu's right edge.
+ * @param top The menu's top.
+ * @param bottom The bottom border's edge.
+ * @param fillet The radius of the fillets into the rail and the border.
+ * @param corner The radius of the outer corner.
+ * @param edge How far out to trace it: 0 for the shape itself, 0.5 for its hairline.
+ */
+static void wm_taskbar_session_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge) {
+
+    cairo_arc_negative(cr, x0 + fillet, top - fillet, WM_MAX(fillet - edge, 0.0), M_PI, M_PI / 2.0);
+    cairo_arc(cr, x1 - corner, top + corner, corner + edge, -M_PI / 2.0, 0.0);
+    cairo_arc_negative(cr, x1 + fillet, bottom - fillet, WM_MAX(fillet - edge, 0.0), M_PI, M_PI / 2.0);
+}
+
+
+/**
  * @brief Reports where the popout is at a moment, with the fillets that join it to the rail.
  *
  * @param now The clock reading.
@@ -255,7 +364,7 @@ static wm_rect_t wm_taskbar_popout_extent(uint64_t now) {
 
     const wm_rect_t r = {WM_TASKBAR_WIDTH, (int)floor(center - reach) - 2, (int)ceil(width) + 2, (int)ceil(2.0 * reach) + 4};
 
-    return r;
+    return wm_taskbar_shadow_extent(r);
 }
 
 
@@ -281,7 +390,7 @@ static wm_rect_t wm_taskbar_session_extent(uint64_t now) {
 
     const wm_rect_t r = {panel.x, panel.y - WM_TASKBAR_POPOUT_RADIUS - 2, (int)ceil(panel.width * open) + WM_TASKBAR_POPOUT_RADIUS + 2, panel.height + WM_TASKBAR_POPOUT_RADIUS + 4};
 
-    return r;
+    return wm_taskbar_shadow_extent(r);
 }
 
 
@@ -580,7 +689,7 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
         return false;
     }
 
-    ui_draw_ellipsize(out, size, text, WM_FONT_PATH, WM_TASKBAR_FONT_SIZE, WM_TASKBAR_POPOUT_MAX - 2 * WM_TASKBAR_POPOUT_PAD);
+    ui_draw_ellipsize(out, size, text, wm.theme.font, WM_TASKBAR_FONT_SIZE, WM_TASKBAR_POPOUT_MAX - 2 * WM_TASKBAR_POPOUT_PAD);
 
     return out[0] != '\0';
 }
@@ -609,7 +718,7 @@ static void wm_taskbar_popout(uint32_t item) {
 
 
     const double center = at.y + at.height / 2.0;
-    const double width  = ceil(ui_draw_text_width(text, WM_FONT_PATH, WM_TASKBAR_FONT_SIZE)) + 2.0 * WM_TASKBAR_POPOUT_PAD;
+    const double width  = ceil(ui_draw_text_width(text, wm.theme.font, WM_TASKBAR_FONT_SIZE)) + 2.0 * WM_TASKBAR_POPOUT_PAD;
 
     if (ui_anim_value(&wm.taskbar.popout.open, now) <= 0.0) {
 
@@ -871,17 +980,23 @@ void wm_taskbar_forget(const wm_window_t* win) {
  */
 static void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active) {
 
-    const double over[4] = {WM_COLOR_TASKBAR_HOVER};
-    const double on[4]   = {WM_COLOR_TASKBAR_ACTIVE};
-    const double down[4] = {WM_COLOR_TASKBAR_DOWN};
+    const ui_color_t over = wm.theme.taskbar_hover;
+    const ui_color_t on   = wm.theme.taskbar_active;
+    const ui_color_t down = wm.theme.taskbar_down;
 
-    const double alpha = pressed ? down[3] : on[3] * active + over[3] * hover;
+    const double w_on   = pressed ? 0.0 : on.a * active;
+    const double w_over = pressed ? 0.0 : over.a * hover;
+    const double alpha  = pressed ? down.a : w_on + w_over;
 
     if (alpha <= 0.0) {
         return;
     }
 
-    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, alpha);
+    if (pressed) {
+        wm_source(cr, down, 1.0);
+    } else {
+        cairo_set_source_rgba(cr, (on.r * w_on + over.r * w_over) / alpha, (on.g * w_on + over.g * w_over) / alpha, (on.b * w_on + over.b * w_over) / alpha, alpha);
+    }
 
     ui_draw_rounded_rect_d(cr, r->x, r->y, r->width, r->height, WM_TASKBAR_ITEM_RADIUS);
     cairo_fill(cr);
@@ -925,7 +1040,7 @@ static void wm_taskbar_paint_icon(cairo_t* cr, cairo_surface_t* icon, int x, int
  */
 static void wm_taskbar_paint_launcher(cairo_t* cr, const wm_rect_t* r, double open) {
 
-    const double grey[4] = {WM_COLOR_TASKBAR_MARK};
+    const ui_color_t grey = wm.theme.taskbar_mark;
 
     cairo_save(cr);
     cairo_translate(cr, r->x + r->width / 2.0, r->y + r->height / 2.0);
@@ -942,7 +1057,7 @@ static void wm_taskbar_paint_launcher(cairo_t* cr, const wm_rect_t* r, double op
             }
         }
 
-        cairo_set_source_rgba(cr, grey[0], grey[1], grey[2], grey[3] * (1.0 - open));
+        wm_source(cr, grey, 1.0 - open);
         cairo_fill(cr);
     }
 
@@ -959,7 +1074,7 @@ static void wm_taskbar_paint_launcher(cairo_t* cr, const wm_rect_t* r, double op
         }
     }
 
-    cairo_set_source_rgb(cr, WM_COLOR_ACCENT);
+    wm_source(cr, wm.theme.accent, 1.0);
     cairo_fill(cr);
 
     cairo_restore(cr);
@@ -1061,7 +1176,7 @@ static void wm_taskbar_paint_power(cairo_t* cr) {
 
     wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.taskbar.hover_power, wm.frame_time), held, open);
 
-    cairo_set_source_rgb(cr, WM_COLOR_TASKBAR_POWER);
+    wm_source(cr, wm.theme.taskbar_power, 1.0);
     wm_taskbar_paint_power_glyph(cr, r.x + r.width / 2.0, r.y + r.height / 2.0);
 }
 
@@ -1088,12 +1203,9 @@ static void wm_taskbar_paint_entry(cairo_t* cr, wm_window_t* win, const wm_rect_
     wm_taskbar_paint_icon(cr, win->icon, r->x + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, r->y + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, ui_lerp(1.0, WM_ICON_IDLE, gone));
 
 
-    const double grey[4]   = {WM_COLOR_TASKBAR_MARK};
-    const double accent[3] = {WM_COLOR_ACCENT};
-
     const double height = ui_lerp(8.0, 20.0, active);
 
-    cairo_set_source_rgba(cr, ui_lerp(grey[0], accent[0], active), ui_lerp(grey[1], accent[1], active), ui_lerp(grey[2], accent[2], active), ui_lerp(grey[3], 1.0, active));
+    wm_source_mix(cr, wm.theme.taskbar_mark, wm.theme.accent, active);
 
     ui_draw_rounded_rect_d(cr, (WM_TASKBAR_PAD - WM_TASKBAR_MARK) / 2.0, r->y + (r->height - height) / 2.0, WM_TASKBAR_MARK, height, WM_TASKBAR_MARK / 2.0);
     cairo_fill(cr);
@@ -1111,7 +1223,7 @@ static void wm_taskbar_paint_title(cairo_t* cr, int top, int bottom) {
 
     const wm_window_t* win = wm.focused;
 
-    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
     const double length = bottom - top - 4 * WM_TASKBAR_GAP;
 
@@ -1122,7 +1234,7 @@ static void wm_taskbar_paint_title(cairo_t* cr, int top, int bottom) {
 
     char title[UI_TITLE_MAX * 2];
 
-    ui_draw_ellipsize(title, sizeof(title), win->title, WM_FONT_PATH, WM_TASKBAR_FONT_SIZE, length);
+    ui_draw_ellipsize(title, sizeof(title), win->title, wm.theme.font, WM_TASKBAR_FONT_SIZE, length);
 
 
     cairo_text_extents_t extents;
@@ -1138,7 +1250,7 @@ static void wm_taskbar_paint_title(cairo_t* cr, int top, int bottom) {
     cairo_translate(cr, round(WM_TASKBAR_WIDTH / 2.0 + (font.ascent - font.descent) / 2.0), round((top + bottom + extents.x_advance) / 2.0));
     cairo_rotate(cr, -M_PI / 2.0);
 
-    cairo_set_source_rgb(cr, WM_COLOR_TITLE_IDLE);
+    wm_source(cr, wm.theme.title_idle, 1.0);
     cairo_move_to(cr, 0.0, 0.0);
     cairo_show_text(cr, title);
 
@@ -1153,7 +1265,7 @@ static void wm_taskbar_paint_title(cairo_t* cr, int top, int bottom) {
  */
 static void wm_taskbar_paint_clock(cairo_t* cr) {
 
-    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
     if (!face) {
         return;
@@ -1182,7 +1294,7 @@ static void wm_taskbar_paint_clock(cairo_t* cr) {
     cairo_set_font_size(cr, WM_TASKBAR_CLOCK_SIZE);
     cairo_font_extents(cr, &font);
 
-    cairo_set_source_rgb(cr, WM_COLOR_TITLE_ACTIVE);
+    wm_source(cr, wm.theme.title_active, 1.0);
 
     for (size_t i = 0; i < WM_ARRAY_COUNT(lines); i++) {
 
@@ -1226,22 +1338,26 @@ static void wm_taskbar_paint_popout(cairo_t* cr) {
     const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
     const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
 
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
     cairo_save(cr);
 
     cairo_new_path(cr);
-    cairo_move_to(cr, x0, top - fillet);
-    cairo_arc_negative(cr, x0 + fillet, top - fillet, fillet, M_PI, M_PI / 2.0);
-    cairo_arc(cr, x1 - corner, top + corner, corner, -M_PI / 2.0, 0.0);
-    cairo_arc(cr, x1 - corner, bottom - corner, corner, 0.0, M_PI / 2.0);
-    cairo_arc_negative(cr, x0 + fillet, bottom + fillet, fillet, 3.0 * M_PI / 2.0, M_PI);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
     cairo_close_path(cr);
 
-    cairo_set_source_rgba(cr, WM_COLOR_TASKBAR);
+    wm_source(cr, wm.theme.taskbar, 1.0);
     cairo_fill_preserve(cr);
     cairo_clip(cr);
 
 
-    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
     if (face) {
 
@@ -1254,7 +1370,7 @@ static void wm_taskbar_paint_popout(cairo_t* cr) {
         const double x = x1 - full + WM_TASKBAR_POPOUT_PAD;
         const double y = top + (WM_TASKBAR_ITEM - (font.ascent + font.descent)) / 2.0 + font.ascent;
 
-        cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, open);
+        wm_source(cr, wm.theme.title_active, open);
         cairo_move_to(cr, round(x), round(y));
         cairo_show_text(cr, wm.taskbar.popout.text);
     }
@@ -1288,18 +1404,18 @@ static void wm_taskbar_paint_session_row(cairo_t* cr, int index, int shift, doub
     const double cy = r.y + r.height / 2.0;
 
     if (item == WM_TASKBAR_SHUTDOWN) {
-        cairo_set_source_rgba(cr, WM_COLOR_TASKBAR_POWER, alpha);
+        wm_source(cr, wm.theme.taskbar_power, alpha);
         wm_taskbar_paint_power_glyph(cr, cx, cy);
     } else if (item == WM_TASKBAR_RESTART) {
-        cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+        wm_source(cr, wm.theme.title_active, alpha);
         wm_taskbar_paint_restart_glyph(cr, cx, cy);
     } else {
-        cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+        wm_source(cr, wm.theme.title_active, alpha);
         wm_taskbar_paint_halt_glyph(cr, cx, cy);
     }
 
 
-    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
     if (!face) {
         return;
@@ -1313,7 +1429,7 @@ static void wm_taskbar_paint_session_row(cairo_t* cr, int index, int shift, doub
 
     const double y = r.y + (r.height - (font.ascent + font.descent)) / 2.0 + font.ascent;
 
-    cairo_set_source_rgba(cr, WM_COLOR_TITLE_ACTIVE, alpha);
+    wm_source(cr, wm.theme.title_active, alpha);
     cairo_move_to(cr, r.x + WM_TASKBAR_ITEM, round(y));
     cairo_show_text(cr, wm_taskbar_session_rows[index].label);
 }
@@ -1345,17 +1461,22 @@ static void wm_taskbar_paint_session(cairo_t* cr) {
     const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
     const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
 
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_session_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
     cairo_save(cr);
 
     cairo_new_path(cr);
-    cairo_move_to(cr, x0, top - fillet);
-    cairo_arc_negative(cr, x0 + fillet, top - fillet, fillet, M_PI, M_PI / 2.0);
-    cairo_arc(cr, x1 - corner, top + corner, corner, -M_PI / 2.0, 0.0);
-    cairo_arc_negative(cr, x1 + fillet, bottom - fillet, fillet, M_PI, M_PI / 2.0);
+    wm_taskbar_session_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
     cairo_line_to(cr, x0, bottom);
     cairo_close_path(cr);
 
-    cairo_set_source_rgba(cr, WM_COLOR_TASKBAR);
+    wm_source(cr, wm.theme.taskbar, 1.0);
     cairo_fill_preserve(cr);
     cairo_clip(cr);
 
@@ -1435,12 +1556,16 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
-    cairo_set_source_rgba(cr, WM_COLOR_TASKBAR);
+    wm_source(cr, wm.theme.taskbar, 1.0);
     cairo_rectangle(cr, 0, 0, wm.display.width, wm.display.height);
     ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
     cairo_fill(cr);
 
     cairo_set_fill_rule(cr, CAIRO_FILL_RULE_WINDING);
+
+    cairo_new_path(cr);
+    ui_draw_rounded_rect_d(cr, work.x + 0.5, work.y + 0.5, work.width - 1.0, work.height - 1.0, WM_TASKBAR_RADIUS - 0.5);
+    wm_taskbar_edge(cr);
 
     wm_taskbar_paint_session(cr);
     wm_taskbar_paint_popout(cr);

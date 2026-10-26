@@ -1133,6 +1133,23 @@ static void explorer_layout(ui_view_t* view, int width, int height, void* user) 
 
 
 /**
+ * @brief Gives the labels the colour of the theme in use.
+ *
+ * @param view The view.
+ * @param user Unused.
+ */
+static void explorer_restyle(ui_view_t* view, void* user) {
+
+    (void)view;
+    (void)user;
+
+    ui_label_set_color(explorer.path, ui_theme()->text_muted);
+    ui_label_set_color(explorer.sidebar_header, ui_theme()->text_muted);
+    ui_label_set_color(explorer.status, ui_theme()->text_muted);
+}
+
+
+/**
  * @brief Creates the widgets, in the order they are painted.
  *
  * @param view The view to create them in.
@@ -1157,15 +1174,13 @@ static int explorer_build(ui_view_t* view) {
     ui_button_set_icon(explorer.up, "go-up");
     ui_button_set_icon_size(explorer.up, EXPLORER_UP_ICON);
 
-    ui_label_set_color(explorer.path, ui_theme()->text_muted);
     ui_label_set_padding(explorer.path, EXPLORER_GAP);
 
-    ui_label_set_color(explorer.sidebar_header, ui_theme()->text_muted);
     ui_label_set_font(explorer.sidebar_header, UI_FONT_REGULAR, EXPLORER_SIDEBAR_FONT_SIZE);
 
     ui_list_on_select(explorer.sidebar, explorer_on_place, NULL);
 
-    ui_label_set_color(explorer.status, ui_theme()->text_muted);
+    explorer_restyle(view, NULL);
 
     ui_list_on_select(explorer.list, explorer_on_select, NULL);
     ui_list_on_activate(explorer.list, explorer_on_activate, NULL);
@@ -1227,6 +1242,7 @@ int main(int argc, char** argv) {
 
     ui_view_on_key(view, explorer_on_key, NULL);
     ui_view_on_layout(view, explorer_layout, NULL);
+    ui_view_on_theme(view, explorer_restyle, NULL);
 
     explorer_open(argc > 1 ? argv[1] : "/");
 

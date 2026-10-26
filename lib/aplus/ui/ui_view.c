@@ -264,6 +264,17 @@ void ui_view_on_key(ui_view_t* view, ui_key_fn fn, void* user) {
 }
 
 
+void ui_view_on_theme(ui_view_t* view, ui_theme_fn fn, void* user) {
+
+    if (!view) {
+        return;
+    }
+
+    view->restyle      = fn;
+    view->restyle_user = user;
+}
+
+
 bool ui_view_closed(ui_view_t* view) {
     return view ? view->closed : true;
 }
@@ -580,6 +591,18 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
         case UI_EVENT_CLOSE:
 
             view->closed = true;
+
+            return true;
+
+        case UI_EVENT_THEME:
+
+            ui_theme_update(view->window->conn);
+
+            if (view->restyle) {
+                view->restyle(view, view->restyle_user);
+            }
+
+            ui_view_relayout(view);
 
             return true;
 

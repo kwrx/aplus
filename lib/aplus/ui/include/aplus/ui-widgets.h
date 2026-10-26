@@ -129,15 +129,44 @@ typedef struct {
 } ui_theme_t;
 
 
+/**
+ * @brief Reports the dark theme built into the library, which is what a server that sent nothing leaves in place.
+ *
+ * @return The theme.
+ */
 const ui_theme_t* ui_theme_dark(void);
 
 /**
- * @brief Sets the theme a view is created against, or restores the dark default when given NULL.
+ * @brief Reports the theme the server sent, which ui_theme_update() rewrites in place when it changes.
  *
- * A view takes its copy when it is created, so set this before ui_view_create().
+ * @return The theme, the dark default until a connection has been made.
+ */
+const ui_theme_t* ui_theme_system(void);
+
+/**
+ * @brief Reports the name the server gave the system theme.
+ *
+ * @return The name, "default" when the server is using its built-in one.
+ */
+const char* ui_theme_name(void);
+
+/**
+ * @brief Sets the theme a view is created against, or restores the system theme when given NULL.
+ *
+ * A view keeps the theme it is created against, so set this before ui_view_create().
  */
 void ui_theme_set(const ui_theme_t* theme);
 const ui_theme_t* ui_theme(void);
+
+/**
+ * @brief Adopts the theme the last UI_EVENT_THEME announced, from wherever drawing is serialised.
+ *
+ * ui_view_dispatch() does this for itself; a loop that draws on its own calls it directly.
+ *
+ * @param conn The connection the event came in on.
+ * @return 1 if the system theme changed, 0 if nothing was pending.
+ */
+int ui_theme_update(ui_connection_t* conn);
 
 
 typedef enum {
@@ -179,6 +208,11 @@ typedef void (*ui_layout_fn)(ui_view_t* view, int width, int height, void* user)
  */
 typedef bool (*ui_key_fn)(ui_view_t* view, uint16_t vkey, bool down, void* user);
 
+/**
+ * @brief Called after the system theme changed, before the view lays out and repaints against it.
+ */
+typedef void (*ui_theme_fn)(ui_view_t* view, void* user);
+
 
 /**
  * @brief The view: it owns the widgets, the drawing surface over the window's pixels, and what has changed.
@@ -191,6 +225,15 @@ ui_window_t* ui_view_window(ui_view_t* view);
 
 void ui_view_on_layout(ui_view_t* view, ui_layout_fn fn, void* user);
 void ui_view_on_key(ui_view_t* view, ui_key_fn fn, void* user);
+
+/**
+ * @brief Names what re-applies the colours and fonts the app copied out of the theme into its widgets.
+ *
+ * @param view The view.
+ * @param fn The callback, or NULL for none.
+ * @param user Handed back to the callback.
+ */
+void ui_view_on_theme(ui_view_t* view, ui_theme_fn fn, void* user);
 
 /**
  * @brief Feeds one event into the widgets, applying a configure here so the caller need not.

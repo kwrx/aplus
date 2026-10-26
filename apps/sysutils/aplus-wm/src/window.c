@@ -1236,20 +1236,6 @@ void wm_window_restore(wm_window_t* win) {
 
 
 /**
- * @brief Sets the source to a colour part way between two, each given as four cairo components.
- *
- * @param cr The cairo context.
- * @param a The colour at 0.
- * @param b The colour at 1.
- * @param t How far towards the second one.
- */
-static void wm_source_mix(cairo_t* cr, const double* a, const double* b, double t) {
-
-    cairo_set_source_rgba(cr, ui_lerp(a[0], b[0], t), ui_lerp(a[1], b[1], t), ui_lerp(a[2], b[2], t), ui_lerp(a[3], b[3], t));
-}
-
-
-/**
  * @brief Draws the title centred on the frame, pushed aside by the buttons when it is too long.
  *
  * @param cr The cairo context.
@@ -1259,7 +1245,7 @@ static void wm_source_mix(cairo_t* cr, const double* a, const double* b, double 
  */
 static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_rect_t* f, double focus) {
 
-    cairo_font_face_t* face = ui_font_face(WM_FONT_PATH);
+    cairo_font_face_t* face = ui_font_face(wm.theme.font);
 
     if (!face || !win->title[0]) {
         return;
@@ -1279,7 +1265,7 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     cairo_save(cr);
 
     cairo_set_font_face(cr, face);
-    cairo_set_font_size(cr, WM_FONT_SIZE);
+    cairo_set_font_size(cr, wm.theme.font_size);
 
     cairo_rectangle(cr, left, f->y, right - left, WM_TITLEBAR_HEIGHT);
     cairo_clip(cr);
@@ -1304,7 +1290,7 @@ static void wm_window_paint_title(cairo_t* cr, const wm_window_t* win, const wm_
     const double y = f->y + (WM_TITLEBAR_HEIGHT - (font.ascent + font.descent)) / 2.0 + font.ascent;
 
 
-    wm_source_mix(cr, (const double[]){WM_COLOR_TITLE_IDLE, 1.0}, (const double[]){WM_COLOR_TITLE_ACTIVE, 1.0}, focus);
+    wm_source_mix(cr, wm.theme.title_idle, wm.theme.title_active, focus);
 
     cairo_move_to(cr, round(x), round(y));
     cairo_show_text(cr, win->title);
@@ -1369,33 +1355,39 @@ static void wm_window_paint_button(cairo_t* cr, wm_window_t* win, wm_region_t re
     cairo_new_path(cr);
     cairo_arc(cr, cx, cy, r.width / 2.0, 0.0, 2.0 * M_PI);
 
-    const double rest[4] = {WM_COLOR_BUTTON};
+    ui_color_t idle = wm.theme.button;
 
-    const double idle[4] = {rest[0], rest[1], rest[2], rest[3] * ui_lerp(0.5, 1.0, focus)};
+    idle.a *= ui_lerp(0.5, 1.0, focus);
 
     if (close) {
 
         if (pressed) {
-            cairo_set_source_rgb(cr, WM_COLOR_CLOSE_DOWN);
+            wm_source(cr, wm.theme.close_down, 1.0);
         } else {
-            wm_source_mix(cr, idle, (const double[]){WM_COLOR_CLOSE_OVER, 1.0}, hover);
+            wm_source_mix(cr, idle, wm.theme.close_over, hover);
         }
 
     } else {
 
         if (pressed) {
-            cairo_set_source_rgba(cr, WM_COLOR_BUTTON_DOWN);
+            wm_source(cr, wm.theme.button_down, 1.0);
         } else {
-            wm_source_mix(cr, idle, (const double[]){WM_COLOR_BUTTON_OVER}, hover);
+            wm_source_mix(cr, idle, wm.theme.button_over, hover);
         }
     }
 
     cairo_fill(cr);
 
 
-    const double glyph[4] = {ui_lerp(0.540, 0.933, focus), ui_lerp(0.540, 0.933, focus), ui_lerp(0.540, 0.933, focus), 1.0};
+    ui_color_t glyph = {
 
-    wm_source_mix(cr, glyph, (const double[]){1.0, 1.0, 1.0, 1.0}, close ? hover : 0.0);
+        .r = ui_lerp(wm.theme.title_idle.r, wm.theme.title_active.r, focus),
+        .g = ui_lerp(wm.theme.title_idle.g, wm.theme.title_active.g, focus),
+        .b = ui_lerp(wm.theme.title_idle.b, wm.theme.title_active.b, focus),
+        .a = 1.0,
+    };
+
+    wm_source_mix(cr, glyph, (ui_color_t){1.0, 1.0, 1.0, 1.0}, close ? hover : 0.0);
 
     cairo_set_line_width(cr, 1.5);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
@@ -1473,8 +1465,8 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
             cairo_clip(cr);
         }
 
-        wm_shadow_paint(cr, &wm.shadow_key, &f, WM_SHADOW_KEY_OFFSET, WM_SHADOW_KEY_ALPHA * strength);
-        wm_shadow_paint(cr, &wm.shadow_ambient, &f, 0, WM_SHADOW_AMBIENT_ALPHA * strength);
+        wm_shadow_paint(cr, &wm.shadow_key, &f, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength);
+        wm_shadow_paint(cr, &wm.shadow_ambient, &f, 0, wm.theme.shadow_ambient * strength);
 
         cairo_restore(cr);
     }
@@ -1497,7 +1489,7 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
 
     if (!borderless) {
 
-        wm_source_mix(cr, (const double[]){WM_COLOR_FRAME_IDLE, 1.0}, (const double[]){WM_COLOR_FRAME_ACTIVE, 1.0}, focus);
+        wm_source(cr, wm_theme_frame(), 1.0);
 
         cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
@@ -1519,7 +1511,7 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
 
     if ((cw < win->width || ch < win->height) && !translucent) {
 
-        cairo_set_source_rgb(cr, WM_COLOR_FRAME_ACTIVE);
+        wm_source(cr, wm_theme_frame(), 1.0);
 
         cairo_set_fill_rule(cr, CAIRO_FILL_RULE_EVEN_ODD);
 
@@ -1551,13 +1543,13 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
 
     if (!win->maximized) {
 
-        cairo_set_source_rgba(cr, WM_COLOR_OUTLINE);
+        wm_source(cr, wm.theme.outline, 1.0);
 
         ui_draw_rounded_rect_d(cr, f.x + 0.5, f.y + 0.5, f.width - 1.0, f.height - 1.0, radius - 0.5);
         cairo_stroke(cr);
     }
 
-    wm_source_mix(cr, (const double[]){WM_COLOR_HIGHLIGHT_IDLE}, (const double[]){WM_COLOR_HIGHLIGHT}, focus);
+    wm_source_mix(cr, wm.theme.highlight_idle, wm.theme.highlight, focus);
 
     ui_draw_rounded_rect_d(cr, f.x + 1.5, f.y + 1.5, f.width - 3.0, f.height - 3.0, radius > 1.5 ? radius - 1.5 : 0.0);
     cairo_stroke(cr);
@@ -1613,7 +1605,7 @@ static void wm_window_paint_morph(cairo_t* cr, wm_window_t* win) {
 
     cairo_save(cr);
 
-    wm_source_mix(cr, (const double[]){WM_COLOR_FRAME_IDLE, 1.0}, (const double[]){WM_COLOR_FRAME_ACTIVE, 1.0}, ui_anim_value(&win->focus, wm.frame_time));
+    wm_source(cr, wm_theme_frame(), 1.0);
 
     ui_draw_rounded_rect_d(cr, now.x, now.y, now.width, now.height, radius);
     cairo_fill(cr);

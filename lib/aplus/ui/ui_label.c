@@ -43,7 +43,6 @@ ui_widget_t* ui_label_create(ui_view_t* view, const char* text) {
         return NULL;
     }
 
-    widget->label.color   = widget->theme->text;
     widget->label.align   = UI_ALIGN_LEFT;
     widget->label.weight  = UI_FONT_REGULAR;
     widget->label.size    = widget->theme->font_size;
@@ -108,7 +107,8 @@ void ui_label_set_color(ui_widget_t* widget, ui_color_t color) {
         return;
     }
 
-    widget->label.color = color;
+    widget->label.color     = color;
+    widget->label.color_set = true;
 
     ui_widget_invalidate(widget);
 }
@@ -143,7 +143,7 @@ static void ui_label_draw(ui_widget_t* widget, cairo_t* cr) {
 
     const char* font = ui_draw_font(widget->theme, widget->label.weight);
 
-    ui_color_t color = widget->label.color;
+    ui_color_t color = widget->label.color_set ? widget->label.color : widget->theme->text;
 
     if (!widget->enabled) {
         color = ui_draw_dim(color, widget->theme);

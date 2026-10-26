@@ -41,9 +41,7 @@ ui_widget_t* ui_panel_create(ui_view_t* view) {
         return NULL;
     }
 
-    widget->panel.color        = widget->theme->surface;
     widget->panel.radius       = widget->theme->corner_radius;
-    widget->panel.border_color = widget->theme->border;
     widget->panel.border_width = 0.0;
 
     return widget;
@@ -56,7 +54,8 @@ void ui_panel_set_color(ui_widget_t* widget, ui_color_t color) {
         return;
     }
 
-    widget->panel.color = color;
+    widget->panel.color     = color;
+    widget->panel.color_set = true;
 
     ui_widget_invalidate(widget);
 }
@@ -81,6 +80,7 @@ void ui_panel_set_border(ui_widget_t* widget, ui_color_t color, double width) {
     }
 
     widget->panel.border_color = color;
+    widget->panel.border_set   = true;
     widget->panel.border_width = width;
 
     ui_widget_invalidate(widget);
@@ -90,7 +90,7 @@ void ui_panel_set_border(ui_widget_t* widget, ui_color_t color, double width) {
 static void ui_panel_draw(ui_widget_t* widget, cairo_t* cr) {
 
     ui_draw_rounded_rect(cr, widget->rect, widget->panel.radius);
-    ui_draw_set_color(cr, widget->panel.color);
+    ui_draw_set_color(cr, widget->panel.color_set ? widget->panel.color : widget->theme->surface);
 
     if (widget->panel.border_width <= 0.0) {
         cairo_fill(cr);
@@ -106,7 +106,7 @@ static void ui_panel_draw(ui_widget_t* widget, cairo_t* cr) {
 
     ui_draw_rounded_rect_d(cr, widget->rect.x + half, widget->rect.y + half, widget->rect.width - widget->panel.border_width, widget->rect.height - widget->panel.border_width, widget->panel.radius - half);
 
-    ui_draw_set_color(cr, widget->panel.border_color);
+    ui_draw_set_color(cr, widget->panel.border_set ? widget->panel.border_color : widget->theme->border);
 
     cairo_set_line_width(cr, widget->panel.border_width);
     cairo_stroke(cr);

@@ -77,8 +77,9 @@ have the high bit set.
 | `0x8006` | `UI_EV_CLOSE` | `ui_msg_window_t` |
 | `0x8007` | `UI_EV_LEAVE` | `ui_msg_window_t` |
 | `0x8008` | `UI_EV_SCROLL` | `ui_msg_scroll_t` |
+| `0x8009` | `UI_EV_THEME` | `ui_msg_theme_t` |
 
-Every payload except the hello and the create-window begins with a `uint32_t window_id`.
+Every payload except the hello, the create-window and the theme begins with a `uint32_t window_id`.
 
 There is no reply channel and no request ids. Requests are fire-and-forget; the only
 synchronous exchanges are the handshake and window creation, and both work by waiting for a
@@ -89,15 +90,18 @@ specific event rather than by correlating a reply.
 ```
 client → UI_REQ_HELLO   { version }
 server → UI_EV_HELLO    { version }
+server → UI_EV_THEME    { theme }       version 7 and later
 ```
 
 ```c
-#define UI_PROTOCOL_VERSION 6
+#define UI_PROTOCOL_VERSION     7
+#define UI_PROTOCOL_VERSION_MIN 6
 ```
 
 The client sends its version and compares what comes back; a mismatch is fatal on the client
-side (`EPROTONOSUPPORT`). Nothing is negotiated — the exchange establishes agreement or ends
-the connection.
+side (`EPROTONOSUPPORT`). The server accepts any version from `UI_PROTOCOL_VERSION_MIN` to
+`UI_PROTOCOL_VERSION` and echoes the client's own back, so the comparison succeeds for every
+version it still speaks; anything else ends the connection. Nothing else is negotiated.
 
 Version 2 is where the pixels left the socket. In version 1 a commit carried its rectangle as
 a trailing payload, cut into tiles small enough to fit the socket buffer, and the server
@@ -147,8 +151,17 @@ anyway. A bump would have had every client already linked against version 6 refu
 handshake over a request it never makes. `UI_REQ_SET_CURSOR` followed on the same terms: a
 server that drains it keeps its arrow.
 
-Unlike every other read in the client, the hello reply is read without skipping unknown
-messages: nothing else can legitimately arrive before it.
+Version 7 added `UI_EV_THEME`, and is the first bump the server does not enforce. An event on
+its own would not need one, but `ui_connect()` now waits for the theme straight after the hello,
+so that an application's first frame is already drawn in it. A version 7 client facing a server
+that never sends one would wait forever, and the bump is what refuses that pairing instead.
+Nothing breaks the other way, so the server still accepts version 6. That matters because the
+packaged Doom, NES emulator and NetSurf link libui statically and speak 6 until aplus-packages
+is rebuilt. They are never sent a `UI_EV_THEME`, at the hello or later, and keep libui's
+built-in dark theme.
+
+Unlike every other read in the client, the hello reply and the theme after it are read without
+skipping unknown messages: nothing else can legitimately arrive before them.
 
 ## Creating a window
 
@@ -486,6 +499,78 @@ used, so the convention above holds whatever the pointer is.
 and once at the end of a resize drag rather than on every mouse packet — a client repainting at a hundred sizes a second is the thing being
 avoided. Its payload is [the window surface](#the-window-surface). The serial changes only
 when the size actually did.
+
+## The theme
+
+```c
+typedef struct {
+    double r;
+    double g;
+    double b;
+    double a;
+} __attribute__((packed)) ui_msg_color_t;
+
+typedef struct {
+    char name[UI_THEME_NAME_MAX];
+
+    ui_msg_color_t background;
+    /* ... every colour role of ui_theme_t, in its order ... */
+    ui_msg_color_t text_muted;
+
+    double disabled_fade;
+    double corner_radius;
+    double font_size;
+
+    char font_regular[UI_THEME_PATH_MAX];
+    char font_medium[UI_THEME_PATH_MAX];
+    char font_bold[UI_THEME_PATH_MAX];
+} __attribute__((packed)) ui_msg_theme_t;
+```
+
+The roles of [`ui_theme_t`](theming.md#the-roles), resolved by the server out of the theme
+file in use, so that no client parses one. It goes out after the hello and again to every
+client each time the theme changes; it names no window, since the theme belongs to the
+connection. Colours are straight alpha, 0 to 1, as doubles so that the built-in theme crosses
+the socket exactly. An empty `font_medium` or `font_bold` means the regular face.
+
+`ui_next_event()` stores the payload and reports `UI_EVENT_THEME`; nothing changes on the
+client until `ui_theme_update()` adopts it, which `ui_view_dispatch()` does for itself. It is
+the same split as a configure's: the event usually arrives on the thread reading the socket,
+and the theme belongs to the thread that draws. See [theming.md](theming.md#the-system-theme).
+
+## The control socket
+
+```c
+#define UI_CONTROL_SOCKET "/tmp/aplus-wm-ctl.sock"
+```
+
+Requests that change how the server works, rather than what a window shows, go over a second
+socket of their own, declared in `<aplus/ui-control.h>`. It is kept apart so that its
+permissions can be set on their own; today anyone may connect. The framing is the window
+socket's, but a control peer sends no hello, owns no windows and is sent no events. Every
+request gets exactly one reply:
+
+| Opcode | Name | Payload |
+|---|---|---|
+| `0x1001` | `UI_CTL_SET_THEME` | `ui_msg_ctl_theme_t` |
+| `0x1002` | `UI_CTL_GET_THEME` | none |
+| `0x1003` | `UI_CTL_RELOAD` | none |
+| `0x9001` | `UI_CTL_REPLY` | `ui_msg_ctl_reply_t` |
+
+```c
+typedef struct {
+    int32_t status;
+    char text[UI_CTL_TEXT_MAX];
+} __attribute__((packed)) ui_msg_ctl_reply_t;
+```
+
+`status` is 0 or an `errno` value, and `text` a line saying what happened: the theme's name
+for a `UI_CTL_GET_THEME`, the line of a theme file that did not parse, or, on success, a
+warning that the switch could not be kept for the next boot. A request the server does not
+know gets `ENOSYS` rather than being drained, since the peer is waiting for an answer.
+
+`ui_control_request()` sends one request and waits for its reply; `ui_control_set_theme()` is
+the same for `UI_CTL_SET_THEME`. `aplus-wmctl` is the command-line front end.
 
 ## Extending it
 

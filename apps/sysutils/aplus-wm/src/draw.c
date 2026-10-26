@@ -94,3 +94,30 @@ cairo_surface_t* wm_icon_create(const char* name, int size) {
 
     return icon;
 }
+
+
+/**
+ * @brief Sets a theme colour as the source, its alpha scaled by another.
+ *
+ * @param cr The cairo context.
+ * @param color The colour.
+ * @param alpha How much of the colour's own alpha to keep, 0 to 1.
+ */
+void wm_source(cairo_t* cr, ui_color_t color, double alpha) {
+
+    cairo_set_source_rgba(cr, color.r, color.g, color.b, color.a * alpha);
+}
+
+
+/**
+ * @brief Sets as the source a colour partway between two, alpha included.
+ *
+ * @param cr The cairo context.
+ * @param a The colour at 0.
+ * @param b The colour at 1.
+ * @param t How far towards b, 0 to 1.
+ */
+void wm_source_mix(cairo_t* cr, ui_color_t a, ui_color_t b, double t) {
+
+    cairo_set_source_rgba(cr, ui_lerp(a.r, b.r, t), ui_lerp(a.g, b.g, t), ui_lerp(a.b, b.b, t), ui_lerp(a.a, b.a, t));
+}

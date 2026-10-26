@@ -54,18 +54,20 @@ its whole frame instead — see
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
 | `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server — see [Animation](animation.md) |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
+| `lib/aplus/ui/include/aplus/ui-control.h`, `ui_control.c` | Requests over the server's control socket |
 | `lib/aplus/ui/ui_window.c` | Window creation, the shared surface and its back buffer, resize, damage, commits |
 | `lib/aplus/ui/ui_event.c` | Event decoding and `ui_next_event()` |
 | `lib/aplus/ui/ui_view.c` | The view: surface binding, dispatch, paint, run loop |
 | `lib/aplus/ui/ui_widget.c` | Widget base, grid, rect helpers |
 | `lib/aplus/ui/ui_panel.c`, `ui_label.c`, `ui_button.c`, `ui_list.c`, `ui_entry.c` | The widgets themselves |
 | `lib/aplus/ui/ui_keymap.c` | The console keymap, for the widget that needs characters rather than key codes |
-| `lib/aplus/ui/ui_theme.c` | The colour scheme and the default dark theme |
+| `lib/aplus/ui/ui_theme.c` | The colour scheme, the default dark theme, and the system theme the server sends |
 | `lib/aplus/ui/ui_draw.c`, `ui_font.c` | Cairo drawing helpers and the FreeType face cache |
 | `lib/aplus/ui/ui_icon.c` | Icons by name, out of the theme in `/usr/share/icons` |
 | `lib/aplus/ui/assets/icons/` | The default icon theme, and the SVG sources it is rendered from |
 | `lib/aplus/ui/ui_damage.c` | The damage set both the window and the view keep |
-| `apps/sysutils/aplus-wm/` | The server |
+| `apps/sysutils/aplus-wm/` | The server, and the themes it installs in `/usr/share/themes` |
+| `apps/sysutils/aplus-wmctl/` | Switches the theme from the command line, over the control socket |
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-viewer/` | The one that mixes the layers: a toolbar of widgets around a PDF or a picture that mupdf renders a tile at a time straight into the window pixels, and the canvas scrolls, zooms and drags over |
@@ -265,7 +267,7 @@ window is a lifecycle with no leak in it.
   lifecycle.
 - [Animation](animation.md) — transitions, the curves and the shared durations, how frames
   are scheduled, and what the widgets and the server animate by themselves.
-- [Theming](theming.md) — the colour roles, the default dark scheme, and writing your own.
+- [Theming](theming.md) — the colour roles, the default dark scheme, the system theme and its files, and writing your own.
 - [Icons](icons.md) — the theme in `/usr/share/icons`, how a name is resolved, and what
   `Icon` in a desktop entry buys.
 - [Window and event API](window-api.md) — the surface layer in full: the shared pixels and

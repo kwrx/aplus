@@ -209,8 +209,11 @@ cairo_pattern_t* wm_wallpaper_gradient(int height) {
         return NULL;
     }
 
-    cairo_pattern_add_color_stop_rgb(pattern, 0.0, WM_COLOR_DESKTOP_TOP);
-    cairo_pattern_add_color_stop_rgb(pattern, 1.0, WM_COLOR_DESKTOP_BOTTOM);
+    const ui_color_t top    = wm.theme.desktop_top;
+    const ui_color_t bottom = wm.theme.desktop_bottom;
+
+    cairo_pattern_add_color_stop_rgb(pattern, 0.0, top.r, top.g, top.b);
+    cairo_pattern_add_color_stop_rgb(pattern, 1.0, bottom.r, bottom.g, bottom.b);
 
     return pattern;
 }

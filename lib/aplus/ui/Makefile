@@ -10,6 +10,7 @@ RESOURCES += $(SYSROOT)/usr/include/aplus/ui-widgets.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui-draw.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui-keymap.h
 RESOURCES += $(SYSROOT)/usr/include/aplus/ui-anim.h
+RESOURCES += $(SYSROOT)/usr/include/aplus/ui-control.h
 
 # The default icon theme, rendered from assets/icons/svg by scripts/gen-icons and installed
 # as it stands: nothing here needs an SVG renderer at build time.

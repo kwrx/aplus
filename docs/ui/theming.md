@@ -112,18 +112,19 @@ button style costs one colour rather than three.
 
 ## The default dark scheme
 
-`ui_theme_dark()` returns it, and it is what a process starts with.
+`ui_theme_dark()` returns it. It is what a process holds until it connects, and what the server
+sends when no theme file is installed.
 
 | Role | |
 |---|---|
 | `background` | `#2B2B2B` |
 | `surface` | `#343434` |
 | `surface_sunken` | `#1C1C1C` |
-| `primary` / `on_primary` | `#3584E4` / `#FFFFFF` |
+| `primary` / `on_primary` | `#1B6ACA` / `#FFFFFF` |
 | `secondary` / `on_secondary` | `#3A3A3A` / `#EEEEEE` |
-| `danger` / `on_danger` | `#E5484D` / `#FFFFFF` |
+| `danger` / `on_danger` | `#C9363C` / `#FFFFFF` |
 | `hover` / `active` | white at 7% / white at 14% |
-| `border` / `focus_ring` | white at 7% / `#3584E4` at 75% |
+| `border` / `focus_ring` | white at 7% / `#3584E4` |
 | `text` / `text_muted` | `#EEEEEE` / `#9A9A9A` |
 | `disabled_fade` | `0.55` |
 | `corner_radius` / `font_size` | `8.0` / `14.0` |
@@ -135,10 +136,12 @@ into the frame instead of as the inside of it. `aplus-terminal` takes its backgr
 default text colour from `surface_sunken` and `text` for the same reason.
 
 The chrome is deliberately hueless — the window manager marks the active window with a brighter
-frame and title and a deeper shadow, not a colour — but an application has one thing on screen
-that is the point of the screen and nothing in the chrome to say so. That is what `primary` is
-for, and it is the only saturated colour in the scheme; the focus ring borrows it, since that
-too says where the keyboard is.
+title and a deeper shadow, not a colour — but an application has one thing on screen that is
+the point of the screen and nothing in the chrome to say so. That is what `primary` is for, and
+it is the only saturated colour in the scheme. The focus ring is the same blue, brighter: a fill
+that carries white text has to be deep enough for the text, at least 4.5:1 and still past it
+under the hover wash, while a ring drawn on a dark surface has to be bright enough to be seen,
+at least 3:1. `danger` is deepened the same way.
 
 ## Fonts
 
@@ -165,8 +168,9 @@ Ubuntu light, condensed and mono faces if a theme wants something else.
 
 Three limits come from the face cache in `ui_font.c`:
 
-- **Six distinct font files per process.** Faces are cached by path and never released; a
-  theme names three, which leaves room for a pair of mono faces and one more.
+- **Sixteen distinct font files per process.** Faces are cached by path and never released; a
+  theme names three, so every switch to a theme with fonts of its own uses up more of them, and
+  the seventeenth face draws no text.
 - **Paths under 128 bytes.** A longer one is refused rather than truncated, because a
   truncated key would go on matching every other path sharing its prefix and hand back the
   wrong face.
@@ -178,11 +182,14 @@ Three limits come from the face cache in `ui_font.c`:
 
 ```c
 const ui_theme_t* ui_theme_dark(void);
+const ui_theme_t* ui_theme_system(void);
+const char*       ui_theme_name(void);
 void              ui_theme_set(const ui_theme_t* theme);
 const ui_theme_t* ui_theme(void);
 ```
 
-`ui_theme_set()` sets a process-global pointer; `NULL` restores the dark default. A view
+`ui_theme()` starts out as the [system theme](#the-system-theme), the one the server sent.
+`ui_theme_set()` sets a process-global pointer; `NULL` restores the system theme. A view
 snapshots that pointer when it is created, so **the theme has to be set before
 `ui_view_create()`**. Changing it afterwards does not restyle a window that already exists.
 
@@ -204,7 +211,93 @@ hardcoded colours out of a layout:
     ui_label_set_color(calc.expression, ui_theme()->text_muted);
 ```
 
+Those are copies, though, so they belong in a restyle callback, which the next section covers.
+
+## The system theme
+
+The desktop has one theme, and the server owns it. It reads `/etc/ui/theme.conf`, a link to
+one of the files in `/usr/share/themes`. It draws its own frames, taskbar and desktop from
+it, and sends the `[ui]` half to every client at connection and again whenever it changes.
+Switching is one command:
+
+```
+aplus-wmctl list-themes
+aplus-wmctl set-theme light
+```
+
+The server parses `/usr/share/themes/light.conf`, repoints the link so the next boot starts
+with it, repaints and tells every client. A file that does not parse is refused with the line
+that is wrong, and nothing changes. `aplus-wmctl reload` reads the theme in use again after an
+edit in place. An application does the same through `ui_control_set_theme()`, over the
+[control socket](protocol.md#the-control-socket).
+
+### Theme files
+
+```
+# Colours are #RRGGBB or #RRGGBBAA, or #RRGGBB followed by an alpha from 0 to 1.
+
+[ui]
+background = #F2F2F2
+hover      = #000000 0.06
+font_size  = 14
+
+[wm]
+wallpaper  = /usr/share/images/03.webp
+taskbar    = #EBEBEB
+```
+
+`[ui]` holds every role of `ui_theme_t`, under the field's own name. `[wm]` is the server's
+own palette: `desktop_top`, `desktop_bottom`, `title_active`,
+`title_idle`, `outline`, `highlight`, `highlight_idle`, `button`, `button_over`, `button_down`,
+`close_over`, `close_down`, `accent`, the `taskbar` colours, the two shadow strengths
+`shadow_key` and `shadow_ambient`, the titlebar `font` and `font_size`, and the `wallpaper`.
+`taskbar_edge` is the hairline along every edge the taskbar shows the desktop, the rail's and
+those of whatever slides out of it, as one line; `taskbar_shadow` is how dark the shadow under
+the drawer, the session menu and the popout is, against a window's. The rail casts none.
+An empty wallpaper means the gradient between the two desktop colours. There is no frame
+colour: the server paints every titlebar and border with `[ui] background`, focused or not, so
+a window's frame and its content always meet without a seam. An unfocused window is told apart
+by its title, buttons, icon and shadow instead.
+
+Anything a file leaves out keeps the built-in value, so a theme can be a single accent colour.
+A key nothing knows is logged and skipped. With no file at all, the server uses the built-in
+theme and reports its name as `default`. `dark.conf` spells the built-in values out, and
+`light.conf` is its counterpart.
+
+### Following it in an application
+
+```c
+static void calc_restyle(ui_view_t* view, void* user) {
+
+    ui_panel_set_color(calc.display, ui_theme()->surface_sunken);
+    ui_panel_set_border(calc.display, ui_theme()->border, 1.0);
+    ui_label_set_color(calc.expression, ui_theme()->text_muted);
+}
+
+    ui_view_on_theme(view, calc_restyle, NULL);
+```
+
+`ui_view_dispatch()` handles `UI_EVENT_THEME` by rewriting the system theme in place, calling
+the view's `ui_view_on_theme()` callback, and laying out and repainting the whole view.
+Anything that reads the theme as it draws follows by itself: the buttons, lists and entries,
+and panels and labels left on their default colours. What does not follow is whatever the
+application copied out of the theme with a setter, which is what the callback is for.
+
+Three things do not follow:
+
+- **A view created against a theme of the application's own** keeps it, as `ui_theme_set()`
+  promises. The launcher derives its theme from `ui_theme_system()`, and its callback derives
+  it again.
+- **Font sizes taken when a label, button or entry was created** keep the old size, since the
+  widget copied it. Both installed themes use the same size.
+- **A loop that draws without a view** has to call `ui_theme_update()` itself on
+  `UI_EVENT_THEME`, from the thread that draws. `aplus-terminal` keeps `ui_theme_dark()` on
+  purpose.
+
 ## Writing a theme
+
+For the whole desktop, write a file in `/usr/share/themes` (above). A struct like the one below
+is for an application that wants a scheme of its own.
 
 Start from the default and change what you mean to change. Copying the struct wholesale is
 deliberate: the fields are documented individually in the header, and an aggregate
