@@ -65,6 +65,7 @@ static bool ui_list_on_scroll(ui_widget_t* widget, int delta);
 static bool ui_list_on_key(ui_widget_t* widget, uint16_t vkey, bool down);
 static bool ui_list_on_focus(ui_widget_t* widget, bool focused);
 static int ui_list_tick(ui_widget_t* widget, uint64_t now);
+static void ui_list_restyle(ui_widget_t* widget);
 static void ui_list_on_destroy(ui_widget_t* widget);
 
 
@@ -80,6 +81,7 @@ static const ui_widget_ops_t ui_list_ops = {
     .on_key     = ui_list_on_key,
     .on_focus   = ui_list_on_focus,
     .tick       = ui_list_tick,
+    .restyle    = ui_list_restyle,
     .destroy    = ui_list_on_destroy,
 };
 
@@ -590,15 +592,13 @@ void ui_list_select(ui_widget_t* widget, int index) {
 }
 
 
-void ui_list_set_row_height(ui_widget_t* widget, int height) {
-
-    if (!widget || widget->kind != UI_WIDGET_LIST) {
-        return;
-    }
-
-    if (height <= 0) {
-        height = (int)(widget->theme->font_size * 2.0);
-    }
+/**
+ * @brief Gives the rows a height, moving the selection's highlight and clamping the scroll to match.
+ *
+ * @param widget The list.
+ * @param height The height in pixels.
+ */
+static void ui_list_apply_row_height(ui_widget_t* widget, int height) {
 
     if (widget->list.row_height == height) {
         return;
@@ -611,6 +611,31 @@ void ui_list_set_row_height(ui_widget_t* widget, int height) {
     ui_list_set_scroll(widget, widget->list.scroll);
 
     ui_widget_invalidate(widget);
+}
+
+
+void ui_list_set_row_height(ui_widget_t* widget, int height) {
+
+    if (!widget || widget->kind != UI_WIDGET_LIST) {
+        return;
+    }
+
+    widget->list.row_height_set = height > 0;
+
+    ui_list_apply_row_height(widget, height > 0 ? height : (int)(widget->theme->font_size * 2.0));
+}
+
+
+/**
+ * @brief Follows the row height the theme's font size implies, unless the app named one.
+ *
+ * @param widget The list.
+ */
+static void ui_list_restyle(ui_widget_t* widget) {
+
+    if (!widget->list.row_height_set) {
+        ui_list_apply_row_height(widget, (int)(widget->theme->font_size * 2.0));
+    }
 }
 
 

@@ -305,18 +305,19 @@ static void calc_restyle(ui_view_t* view, void* user) {
 ```
 
 `ui_view_dispatch()` handles `UI_EVENT_THEME` by rewriting the system theme in place, calling
-the view's `ui_view_on_theme()` callback, and laying out and repainting the whole view.
-Anything that reads the theme as it draws follows by itself: the buttons, lists and entries,
-and panels and labels left on their default colours. What does not follow is whatever the
-application copied out of the theme with a setter, which is what the callback is for.
+the view's `ui_view_on_theme()` callback, refreshing what each widget took from the theme, and
+laying out and repainting the whole view. Anything that reads the theme as it draws follows by
+itself: the buttons, lists and entries, and panels and labels left on their default colours.
+So do the font sizes of labels, buttons and entries, and a list's row height, unless the
+application named one. What does not follow is whatever the application copied out of the
+theme with a setter, which is what the callback is for; the widgets are refreshed after it, so
+a size it sets there is the one that stays.
 
-Three things do not follow:
+Two things do not follow:
 
 - **A view created against a theme of the application's own** keeps it, as `ui_theme_set()`
   promises. The launcher derives its theme from `ui_theme_system()`, and its callback derives
   it again.
-- **Font sizes taken when a label, button or entry was created** keep the old size, since the
-  widget copied it. Both installed themes use the same size.
 - **A loop that draws without a view** has to call `ui_theme_update()` itself on
   `UI_EVENT_THEME`, from the thread that draws. `aplus-terminal` does, but only for its faces:
   its colours stay `ui_theme_dark()`'s on purpose. A theme with other monospaced faces or

@@ -33,6 +33,7 @@ static bool ui_button_on_press(ui_widget_t* widget, int x, int y);
 static bool ui_button_on_drag(ui_widget_t* widget, int x, int y, bool inside);
 static bool ui_button_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks);
 static int ui_button_tick(ui_widget_t* widget, uint64_t now);
+static void ui_button_restyle(ui_widget_t* widget);
 
 
 /**
@@ -59,6 +60,7 @@ static const ui_widget_ops_t ui_button_ops = {
     .on_drag    = ui_button_on_drag,
     .on_release = ui_button_on_release,
     .tick       = ui_button_tick,
+    .restyle    = ui_button_restyle,
 };
 
 
@@ -127,10 +129,24 @@ void ui_button_set_font(ui_widget_t* widget, ui_font_weight_t weight, double siz
         return;
     }
 
-    widget->button.weight = weight;
-    widget->button.size   = size > 0.0 ? size : widget->theme->font_size;
+    widget->button.weight   = weight;
+    widget->button.size     = size > 0.0 ? size : widget->theme->font_size;
+    widget->button.size_set = size > 0.0;
 
     ui_widget_invalidate(widget);
+}
+
+
+/**
+ * @brief Follows the theme's font size, unless the app named one.
+ *
+ * @param widget The button.
+ */
+static void ui_button_restyle(ui_widget_t* widget) {
+
+    if (!widget->button.size_set) {
+        widget->button.size = widget->theme->font_size;
+    }
 }
 
 

@@ -102,6 +102,8 @@ typedef struct {
 
     int (*tick)(ui_widget_t* widget, uint64_t now);
 
+    void (*restyle)(ui_widget_t* widget);
+
     void (*destroy)(ui_widget_t* widget);
 
 } ui_widget_ops_t;
@@ -152,7 +154,9 @@ struct ui_widget {
             ui_align_t align;
 
             ui_font_weight_t weight;
+
             double size;
+            bool size_set;
 
             int padding;
 
@@ -165,7 +169,9 @@ struct ui_widget {
             ui_button_style_t style;
 
             ui_font_weight_t weight;
+
             double size;
+            bool size_set;
 
             char icon[UI_ICON_NAME_MAX];
             int icon_size;
@@ -188,7 +194,9 @@ struct ui_widget {
             size_t capacity;
 
             int selected;
+
             int row_height;
+            bool row_height_set;
 
             int icon_size;
             bool icons;
@@ -227,7 +235,9 @@ struct ui_widget {
             char placeholder[UI_LABEL_TEXT_MAX];
 
             ui_font_weight_t weight;
+
             double size;
+            bool size_set;
 
             size_t caret;
 

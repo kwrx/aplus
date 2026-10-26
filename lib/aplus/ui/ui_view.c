@@ -602,6 +602,13 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
                 view->restyle(view, view->restyle_user);
             }
 
+            for (ui_widget_t* w = view->widgets; w; w = w->next) {
+
+                if (w->ops->restyle) {
+                    w->ops->restyle(w);
+                }
+            }
+
             ui_view_relayout(view);
 
             return true;

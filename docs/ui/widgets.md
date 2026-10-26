@@ -364,7 +364,8 @@ reading `7 8 9 +` sit at four different heights, because none of those glyphs ha
 ink box.
 
 `ui_label_set_font()` with a size of `0.0` or less resets to the theme's size rather than
-drawing nothing.
+drawing nothing, and the label follows that size when the theme changes. A size it names
+stays put. Buttons and entries behave the same.
 
 There is no wrapping and no multi-line label. A paragraph is several labels and some
 arithmetic, or your own cairo — see
@@ -581,7 +582,7 @@ selection.
 already visible, otherwise the list moves by the least that makes it so.
 
 `ui_list_set_row_height()` overrides the height a row is given; `0` restores the height the
-theme implies. Rows are a fixed height, which is what makes hit testing and the visible range
+theme implies, twice its font size, and follows it when the theme changes. Rows are a fixed height, which is what makes hit testing and the visible range
 arithmetic rather than a walk — only the rows actually on screen are drawn, so a list of ten
 thousand paints what a list of twenty paints.
 

@@ -461,7 +461,7 @@ void ui_list_select(ui_widget_t* widget, int index);
 void ui_list_scroll_to(ui_widget_t* widget, int index);
 
 /**
- * @brief Sets the height of a row in pixels, or restores the height the theme implies when given 0.
+ * @brief Sets the height of a row in pixels, or follows the height the theme implies when given 0.
  */
 void ui_list_set_row_height(ui_widget_t* widget, int height);
 

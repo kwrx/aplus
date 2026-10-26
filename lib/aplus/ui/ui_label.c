@@ -27,11 +27,13 @@
 
 
 static void ui_label_draw(ui_widget_t* widget, cairo_t* cr);
+static void ui_label_restyle(ui_widget_t* widget);
 
 
 static const ui_widget_ops_t ui_label_ops = {
 
-    .draw = ui_label_draw,
+    .draw    = ui_label_draw,
+    .restyle = ui_label_restyle,
 };
 
 
@@ -120,8 +122,9 @@ void ui_label_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size
         return;
     }
 
-    widget->label.weight = weight;
-    widget->label.size   = size > 0.0 ? size : widget->theme->font_size;
+    widget->label.weight   = weight;
+    widget->label.size     = size > 0.0 ? size : widget->theme->font_size;
+    widget->label.size_set = size > 0.0;
 
     ui_widget_invalidate(widget);
 }
@@ -136,6 +139,19 @@ void ui_label_set_padding(ui_widget_t* widget, int padding) {
     widget->label.padding = padding;
 
     ui_widget_invalidate(widget);
+}
+
+
+/**
+ * @brief Follows the theme's font size, unless the app named one.
+ *
+ * @param widget The label.
+ */
+static void ui_label_restyle(ui_widget_t* widget) {
+
+    if (!widget->label.size_set) {
+        widget->label.size = widget->theme->font_size;
+    }
 }
 
 

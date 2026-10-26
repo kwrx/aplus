@@ -59,6 +59,7 @@ static bool ui_entry_on_press(ui_widget_t* widget, int x, int y);
 static bool ui_entry_on_key(ui_widget_t* widget, uint16_t vkey, bool down);
 static bool ui_entry_on_focus(ui_widget_t* widget, bool focused);
 static int ui_entry_tick(ui_widget_t* widget, uint64_t now);
+static void ui_entry_restyle(ui_widget_t* widget);
 static void ui_entry_on_destroy(ui_widget_t* widget);
 
 
@@ -69,6 +70,7 @@ static const ui_widget_ops_t ui_entry_ops = {
     .on_key   = ui_entry_on_key,
     .on_focus = ui_entry_on_focus,
     .tick     = ui_entry_tick,
+    .restyle  = ui_entry_restyle,
     .destroy  = ui_entry_on_destroy,
 };
 
@@ -416,11 +418,29 @@ void ui_entry_set_font(ui_widget_t* widget, ui_font_weight_t weight, double size
         return;
     }
 
-    widget->entry.weight = weight;
-    widget->entry.size   = size > 0.0 ? size : widget->theme->font_size;
+    widget->entry.weight   = weight;
+    widget->entry.size     = size > 0.0 ? size : widget->theme->font_size;
+    widget->entry.size_set = size > 0.0;
 
     ui_entry_reveal_caret(widget);
     ui_widget_invalidate(widget);
+}
+
+
+/**
+ * @brief Follows the theme's font size, unless the app named one, and scrolls the caret back into view at it.
+ *
+ * @param widget The entry.
+ */
+static void ui_entry_restyle(ui_widget_t* widget) {
+
+    if (widget->entry.size_set) {
+        return;
+    }
+
+    widget->entry.size = widget->theme->font_size;
+
+    ui_entry_reveal_caret(widget);
 }
 
 
