@@ -106,8 +106,8 @@ every PNG under it. It ships the icons the in-tree applications ask for, the pla
 
 | | |
 |---|---|
-| Applications | `aplus-calculator`, `aplus-editor`, `aplus-explorer`, `aplus-launcher`, `aplus-terminal`, `aplus-viewer`, `doom`, `gl-gears`, `gl-shaders-scene`, `gl-shaders-triangle` |
-| Places and actions | `applications-system`, `document-new`, `document-open`, `document-save`, `document-save-as`, `drive-harddisk`, `edit-find`, `folder`, `go-up`, `system-run`, `user-home` |
+| Applications | `aplus-calculator`, `aplus-editor`, `aplus-explorer`, `aplus-launcher`, `aplus-settings`, `aplus-terminal`, `aplus-viewer`, `doom`, `gl-gears`, `gl-shaders-scene`, `gl-shaders-triangle` |
+| Places and actions | `applications-system`, `computer`, `document-new`, `document-open`, `document-save`, `document-save-as`, `drive-harddisk`, `edit-find`, `folder`, `go-up`, `network-wired`, `preferences-desktop-theme`, `preferences-desktop-wallpaper`, `system-run`, `user-home` |
 | File types | `application-pdf`, `application-x-executable`, `application-x-nes-rom`, `audio-x-generic`, `font-x-generic`, `image-x-generic`, `package-x-generic`, `text-x-generic`, `text-x-script`, `video-x-generic` |
 
 The PNGs are rendered from the SVG sources in `assets/icons/svg` and committed alongside them,
