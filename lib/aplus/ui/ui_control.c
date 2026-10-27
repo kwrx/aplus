@@ -22,6 +22,7 @@
  */
 
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -117,6 +118,61 @@ int ui_control_set_theme(const char* name, ui_msg_ctl_reply_t* reply) {
         errno = status;
         return -1;
     }
+
+    return 0;
+}
+
+
+int ui_control_set_options(const ui_msg_ctl_option_t* options, size_t count, ui_msg_ctl_reply_t* reply) {
+
+    if (!options || count == 0 || count > UI_CTL_OPTIONS_MAX) {
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    ui_msg_ctl_reply_t answer;
+
+    if (ui_control_request(NULL, UI_CTL_SET_OPTIONS, options, count * sizeof(*options), reply ? reply : &answer) < 0) {
+        return -1;
+    }
+
+    const int32_t status = reply ? reply->status : answer.status;
+
+    if (status) {
+        errno = status;
+        return -1;
+    }
+
+    return 0;
+}
+
+
+int ui_control_get_option(const char* section, const char* key, char* out, size_t size) {
+
+    if (!section || !key || !out || strlen(section) >= UI_CTL_SECTION_MAX || strlen(key) >= UI_CTL_KEY_MAX) {
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    ui_msg_ctl_option_t option;
+    ui_msg_ctl_reply_t reply;
+
+    memset(&option, 0, sizeof(option));
+    strcpy(option.section, section);
+    strcpy(option.key, key);
+
+    if (ui_control_request(NULL, UI_CTL_GET_OPTION, &option, sizeof(option), &reply) < 0) {
+        return -1;
+    }
+
+    if (reply.status) {
+        errno = reply.status;
+        return -1;
+    }
+
+    snprintf(out, size, "%s", reply.text);
 
     return 0;
 }

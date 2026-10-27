@@ -55,7 +55,10 @@ static void show_usage(int status) {
            "   set-theme NAME              switch to " UI_THEME_DIR "/NAME.conf and keep it\n"
            "   get-theme                   show the theme in use\n"
            "   list-themes                 show the installed themes, starring the one in use\n"
-           "   reload                      read the theme in use again\n\n"
+           "   reload                      read the theme in use again\n"
+           "   get SECTION.KEY             show the value a theme key has right now\n"
+           "   set SECTION.KEY VALUE       override a theme key for every theme, and keep it\n"
+           "   unset SECTION.KEY           give a key back to the theme\n\n"
            "Options:\n"
            "   -s, --socket                control socket (default: " UI_CONTROL_SOCKET ")\n"
            "       --help                  show this help\n");
@@ -133,6 +136,95 @@ static int wmctl_simple(const char* path, uint16_t type) {
     ui_msg_ctl_reply_t reply;
 
     if (wmctl_request(path, type, NULL, 0, &reply) < 0) {
+        return 1;
+    }
+
+    printf("%s\n", reply.text);
+
+    return 0;
+}
+
+
+/**
+ * @brief Splits a SECTION.KEY argument into the option it names.
+ *
+ * @param name The argument.
+ * @param option Receives the section and the key, everything else zeroed.
+ * @return 0, or -1 after reporting a malformed name.
+ */
+static int wmctl_option(const char* name, ui_msg_ctl_option_t* option) {
+
+    memset(option, 0, sizeof(*option));
+
+    const char* dot = strchr(name, '.');
+
+    if (!dot || dot == name || !dot[1] || (size_t)(dot - name) >= sizeof(option->section) || strlen(dot + 1) >= sizeof(option->key)) {
+        fprintf(stderr, WMCTL_NAME ": expected SECTION.KEY, such as ui.font_size: %s\n", name);
+        return -1;
+    }
+
+    memcpy(option->section, name, (size_t)(dot - name));
+    strcpy(option->key, dot + 1);
+
+    return 0;
+}
+
+
+/**
+ * @brief Overrides a theme key, or gives it back to the theme.
+ *
+ * @param path The control socket, or NULL for the default.
+ * @param name The key, as SECTION.KEY.
+ * @param value The value, or NULL to unset it.
+ * @return The exit status.
+ */
+static int wmctl_set_option(const char* path, const char* name, const char* value) {
+
+    ui_msg_ctl_option_t option;
+    ui_msg_ctl_reply_t reply;
+
+    if (wmctl_option(name, &option) < 0) {
+        return 1;
+    }
+
+    if (value && strlen(value) >= sizeof(option.value)) {
+        fprintf(stderr, WMCTL_NAME ": value is too long: %s\n", value);
+        return 1;
+    }
+
+    if (value) {
+        strcpy(option.value, value);
+    } else {
+        option.flags = UI_CTL_OPTION_RESET;
+    }
+
+    if (wmctl_request(path, UI_CTL_SET_OPTIONS, &option, sizeof(option), &reply) < 0) {
+        return 1;
+    }
+
+    printf("%s\n", reply.text);
+
+    return 0;
+}
+
+
+/**
+ * @brief Prints the value a theme key has right now.
+ *
+ * @param path The control socket, or NULL for the default.
+ * @param name The key, as SECTION.KEY.
+ * @return The exit status.
+ */
+static int wmctl_get_option(const char* path, const char* name) {
+
+    ui_msg_ctl_option_t option;
+    ui_msg_ctl_reply_t reply;
+
+    if (wmctl_option(name, &option) < 0) {
+        return 1;
+    }
+
+    if (wmctl_request(path, UI_CTL_GET_OPTION, &option, sizeof(option), &reply) < 0) {
         return 1;
     }
 
@@ -240,6 +332,18 @@ int main(int argc, char** argv) {
 
     if (strcmp(command, "list-themes") == 0 && extra == 0) {
         return wmctl_list_themes(path);
+    }
+
+    if (strcmp(command, "get") == 0 && extra == 1) {
+        return wmctl_get_option(path, argv[optind + 1]);
+    }
+
+    if (strcmp(command, "set") == 0 && extra == 2) {
+        return wmctl_set_option(path, argv[optind + 1], argv[optind + 2]);
+    }
+
+    if (strcmp(command, "unset") == 0 && extra == 1) {
+        return wmctl_set_option(path, argv[optind + 1], NULL);
     }
 
     show_usage(1);

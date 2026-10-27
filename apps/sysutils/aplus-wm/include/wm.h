@@ -332,6 +332,24 @@ typedef struct {
 } wm_theme_t;
 
 
+/**
+ * @brief How many keys the user may lay over the theme.
+ */
+#define WM_SETTINGS_MAX 64
+
+
+/**
+ * @brief One key the user laid over the theme, as text, the way the settings file spells it.
+ */
+typedef struct {
+
+    char section[UI_CTL_SECTION_MAX];
+    char key[UI_CTL_KEY_MAX];
+    char value[UI_THEME_PATH_MAX];
+
+} wm_setting_t;
+
+
 typedef struct {
 
     int fd;
@@ -511,6 +529,10 @@ typedef struct {
     wm_display_t display;
 
     wm_theme_t theme;
+    wm_theme_t base;
+
+    wm_setting_t settings[WM_SETTINGS_MAX];
+    size_t settings_count;
 
     const char* wallpaper;
 
@@ -664,6 +686,8 @@ cairo_pattern_t* wm_wallpaper_gradient(int height);
 void wm_theme_init(void);
 int wm_theme_switch(const char* name, char* text, size_t size);
 int wm_theme_reload(char* text, size_t size);
+int wm_theme_set_options(const ui_msg_ctl_option_t* options, size_t count, char* text, size_t size);
+int wm_theme_get_option(const char* section, const char* key, char* text, size_t size);
 const char* wm_theme_wallpaper(void);
 ui_color_t wm_theme_frame(void);
 
