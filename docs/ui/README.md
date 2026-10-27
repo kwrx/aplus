@@ -68,6 +68,7 @@ its whole frame instead — see
 | `lib/aplus/ui/ui_damage.c` | The damage set both the window and the view keep |
 | `apps/sysutils/aplus-wm/` | The server, and the themes it installs in `/usr/share/themes` |
 | `apps/sysutils/aplus-wmctl/` | Switches the theme from the command line, over the control socket |
+| `apps/sysutils/aplus-settings/` | The settings: theme, fonts and wallpaper over the control socket, network, packages and the device's name, one file per page; a loop of its own folds in each page's ticks, hand-drawn thumbnails and pointer handling |
 | `apps/sysutils/aplus-calculator/` | The reference widget-layer application: a grid of buttons and a keyboard |
 | `apps/sysutils/aplus-explorer/` | The other one: a list, a selection and a keyboard focus |
 | `apps/sysutils/aplus-viewer/` | The one that mixes the layers: a toolbar of widgets around a PDF or a picture that mupdf renders a tile at a time straight into the window pixels, and the canvas scrolls, zooms and drags over |

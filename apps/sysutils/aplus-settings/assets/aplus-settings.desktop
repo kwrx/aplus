@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Settings
+Comment=Change the theme and see what the system runs on
+Exec=aplus-settings
+Icon=aplus-settings
+Terminal=false
+Type=Application
+Categories=Settings;System;
