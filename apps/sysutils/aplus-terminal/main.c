@@ -83,6 +83,12 @@
 #define ATERM_PADDING 10
 
 /**
+ * @brief The window's name, and the suffix put after any title the shell sets.
+ */
+#define ATERM_TITLE        "Console"
+#define ATERM_TITLE_SUFFIX " - " ATERM_TITLE
+
+/**
  * @brief The colour codes libtsm stamps a cell with when it uses the default foreground and background.
  */
 #define ATERM_CODE_FOREGROUND 16
@@ -619,7 +625,7 @@ static void aterm_clear(void) {
  * glyph reaching past its own advance would otherwise leave a piece of itself in a neighbour
  * that is never drawn again.
  */
-static int fb_draw_cb(struct tsm_screen* con, uint32_t id, const uint32_t* ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr* attr, tsm_age_t age, void* data) {
+static int fb_draw_cb(struct tsm_screen* con, uint64_t id, const uint32_t* ch, size_t len, uint32_t width, uint32_t posx, uint32_t posy, const struct tsm_screen_attr* attr, tsm_age_t age, void* data) {
 
     (void)id;
     (void)width;
@@ -907,6 +913,34 @@ static void aterm_restyle(void) {
 
 
 /**
+ * @brief Names the window after a title the shell sets, followed by the terminal's own name.
+ * @param title The UTF-8 title; an empty one names the window after the terminal alone.
+ */
+static void aterm_set_title(const char* title) {
+
+    char buf[UI_TITLE_MAX];
+
+    size_t len = strlen(title);
+    size_t max = sizeof(buf) - sizeof(ATERM_TITLE_SUFFIX);
+
+    if (len > max) {
+        len = max;
+        while (len > 0 && ((unsigned char)title[len] & 0xC0) == 0x80) {
+            len--;
+        }
+    }
+
+    if (len == 0) {
+        ui_window_set_title(context.win, ATERM_TITLE);
+        return;
+    }
+
+    snprintf(buf, sizeof(buf), "%.*s" ATERM_TITLE_SUFFIX, (int)len, title);
+    ui_window_set_title(context.win, buf);
+}
+
+
+/**
  * @brief Sends the bytes a key produced to the shell, which echoes back whatever should appear.
  *
  * @param out The pty master to write to.
@@ -1097,7 +1131,6 @@ static void* thr_ui_handler(void* arg) {
     for (;;) {
 
         ui_event_t ev;
-
         int e = ui_next_event(context.conn, &ev, -1);
 
         if (e < 0) {
@@ -1220,6 +1253,47 @@ static void tsm_write_cb(struct tsm_vte* vte, const char* u8, size_t len, void* 
 }
 
 
+static void tsm_osc_cb(struct tsm_vte* vte, const char* u8, size_t len, void* data) {
+
+    (void)vte;
+    (void)len;
+    (void)data;
+
+    char* end;
+    long osc_type = strtol(u8, &end, 10);
+
+    if (end == u8 || (*end != ';' && *end != '\0')) {
+        ulog_warnf("tsm_osc_cb() malformed osc received: %s", u8);
+        return;
+    }
+
+    const char* osc_data = *end == ';' ? end + 1 : NULL;
+
+    switch (osc_type) {
+        case 0:
+        case 2:
+            if (osc_data) {
+                aterm_set_title(osc_data);
+            }
+            break;
+        case 1:
+        case 7:
+            break;
+        default:
+            ulog_debugf("tsm_osc_cb() unknown osc type received: %ld", osc_type);
+            break;
+    }
+}
+
+
+static void tsm_bell_cb(struct tsm_vte* vte, void* data) {
+
+    (void)vte;
+    (void)data;
+
+}
+
+
 int main(int argc, char** argv) {
 
     static struct option long_options[] = {
@@ -1293,7 +1367,7 @@ int main(int argc, char** argv) {
 
     //* Window initialization
     if (context.windowed) {
-        if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, "Console")) == NULL) {
+        if ((context.win = ui_window_create(context.conn, cols * context.font.width + 2 * ATERM_PADDING, rows * context.font.height + 2 * ATERM_PADDING, ATERM_TITLE)) == NULL) {
             ulog_errorf("ui_window_create() failed: %s", strerror(errno));
             exit(1);
         }
@@ -1331,6 +1405,9 @@ int main(int argc, char** argv) {
     }
 
     assert(context.vte);
+
+    tsm_vte_set_osc_cb(context.vte, tsm_osc_cb, NULL);
+    tsm_vte_set_bell_cb(context.vte, tsm_bell_cb, NULL);
 
 
     int resized = tsm_screen_resize(context.con, context.cols, context.rows);
