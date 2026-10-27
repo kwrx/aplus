@@ -54,6 +54,7 @@ const procfs_root_entry_t procfs_root_table[] = {
     {"cpuinfo",     S_IFREG | 0444, 8,  DT_REG},
     {"loadavg",     S_IFREG | 0444, 9,  DT_REG},
     {"mounts",      S_IFLNK | 0777, 10, DT_LNK},
+    {"net",         S_IFDIR | 0555, 11, DT_DIR},
 };
 
 const size_t procfs_root_entries = sizeof(procfs_root_table) / sizeof(procfs_root_table[0]);

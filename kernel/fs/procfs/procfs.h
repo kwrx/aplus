@@ -177,6 +177,7 @@ inode_t* procfs_service_stat_inode(inode_t* parent);
 inode_t* procfs_service_cpuinfo_inode(inode_t* parent);
 inode_t* procfs_service_loadavg_inode(inode_t* parent);
 inode_t* procfs_service_mounts_inode(inode_t* parent);
+inode_t* procfs_service_net_inode(inode_t* parent);
 
 inode_t* procfs_service_inode(inode_t* parent, const char* name, mode_t mode, int (*fetch)(inode_t*, char** buf, size_t*, void*), void* arg);
 
