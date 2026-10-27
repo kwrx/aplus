@@ -20,7 +20,7 @@ ARCH=$(gcc -dumpmachine | cut -d- -f1)
 
 # Repositories
 REPO_PACKAGES="kwrx/aplus-packages"
-REPO_PACKAGES_VERSION="0.10.0"
+REPO_PACKAGES_VERSION="0.11.0"
 REPO_TOOLCHAIN="kwrx/aplus-toolchain"
 REPO_TOOLCHAIN_VERSION="0.2.0"
 
