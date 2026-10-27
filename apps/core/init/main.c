@@ -308,7 +308,7 @@ static void init_hostname() {
 
         for (size_t i = 0; i < sizeof(hostname); i++) {
 
-            if (isalnum(hostname[i]) && !isblank(hostname[i]) && !isspace(hostname[i]))
+            if (isalnum(hostname[i]) || hostname[i] == '-' || hostname[i] == '.')
                 continue;
 
             hostname[i] = '\0';
