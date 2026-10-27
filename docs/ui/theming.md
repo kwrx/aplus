@@ -256,7 +256,8 @@ The server parses `/usr/share/themes/light.conf`, repoints the link so the next 
 with it, repaints and tells every client. A file that does not parse is refused with the line
 that is wrong, and nothing changes. `aplus-wmctl reload` reads the theme in use again after an
 edit in place. An application does the same through `ui_control_set_theme()`, over the
-[control socket](protocol.md#the-control-socket).
+[control socket](protocol.md#the-control-socket); `aplus-settings` is one, with a tile per
+installed theme on its Appearance page.
 
 ### User settings
 
@@ -274,7 +275,8 @@ aplus-wmctl unset ui.font_size
 
 A value is checked the way a theme file's is, so a font or a picture that does not exist is
 refused and nothing changes. A key that stops applying later, say a font that was removed, is
-skipped with a warning and the theme's value stands.
+skipped with a warning and the theme's value stands. `aplus-settings` sets the fonts from its
+Appearance page and the wallpaper from its Wallpaper page through the same requests.
 
 ### Theme files
 
