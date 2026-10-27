@@ -32,6 +32,7 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -262,9 +263,266 @@ static ssize_t sockfs_write(inode_t* inode, const void* buf, off_t offset, size_
 }
 
 
+/**
+ * @brief The Linux interface ioctls, which lwIP has no notion of.
+ */
+#define SOCKFS_SIOCGIFCONF    0x8912
+#define SOCKFS_SIOCGIFFLAGS   0x8913
+#define SOCKFS_SIOCGIFADDR    0x8915
+#define SOCKFS_SIOCGIFBRDADDR 0x8919
+#define SOCKFS_SIOCGIFNETMASK 0x891B
+#define SOCKFS_SIOCGIFMTU     0x8921
+#define SOCKFS_SIOCGIFHWADDR  0x8927
+#define SOCKFS_SIOCGIFINDEX   0x8933
+
+#define SOCKFS_IFNAMSIZ      16
+#define SOCKFS_IFCONF_MAX    8
+#define SOCKFS_IFF_UP        0x0001
+#define SOCKFS_IFF_BROADCAST 0x0002
+#define SOCKFS_IFF_LOOPBACK  0x0008
+#define SOCKFS_IFF_RUNNING   0x0040
+#define SOCKFS_IFF_MULTICAST 0x1000
+#define SOCKFS_ARPHRD_ETHER  1
+#define SOCKFS_ARPHRD_LOOP   772
+
+
+/**
+ * @brief struct ifreq as Linux lays it out, which is what the C library hands over.
+ */
+struct sockfs_ifreq {
+
+    char name[SOCKFS_IFNAMSIZ];
+
+    union {
+
+        struct {
+            uint16_t family;
+            uint16_t port;
+            uint32_t addr;
+            uint8_t zero[8];
+        } in;
+
+        struct {
+            uint16_t family;
+            uint8_t data[14];
+        } hw;
+
+        int16_t flags;
+        int32_t value;
+
+        struct {
+            unsigned long mem_start;
+            unsigned long mem_end;
+            unsigned short base_addr;
+            unsigned char irq;
+            unsigned char dma;
+            unsigned char port;
+        } map;
+    };
+};
+
+
+/**
+ * @brief struct ifconf as Linux lays it out.
+ */
+struct sockfs_ifconf {
+
+    int len;
+
+    union {
+        char* buf;
+        struct sockfs_ifreq* req;
+    };
+};
+
+
+/**
+ * @brief Reports whether a whole user buffer can be accessed.
+ *
+ * @param p The buffer.
+ * @param size Its length.
+ * @param mode R_OK, W_OK or both.
+ * @return true when both ends are mapped with that access.
+ */
+static bool sockfs_user(const void* p, size_t size, int mode) {
+    return p && size && uio_check(p, mode) && uio_check((const uint8_t*)p + size - 1, mode);
+}
+
+
+/**
+ * @brief Writes an interface's name the way lwIP looks it up: two letters and a number.
+ *
+ * @param netif The interface.
+ * @param out Receives the name, SOCKFS_IFNAMSIZ long.
+ */
+static void sockfs_ifname(const struct netif* netif, char* out) {
+    snprintf(out, SOCKFS_IFNAMSIZ, "%c%c%u", netif->name[0], netif->name[1], (unsigned)netif->num);
+}
+
+
+/**
+ * @brief Lists the interfaces and their IPv4 addresses, for a SIOCGIFCONF.
+ *
+ * @param arg The caller's struct ifconf.
+ * @return 0, or a negative errno.
+ */
+static int sockfs_ioctl_ifconf(void* arg) {
+
+    struct sockfs_ifconf conf;
+    struct sockfs_ifreq reqs[SOCKFS_IFCONF_MAX];
+
+    if (unlikely(!sockfs_user(arg, sizeof(conf), R_OK | W_OK)))
+        return -EFAULT;
+
+    uio_memcpy_u2s(&conf, arg, sizeof(conf));
+
+    memset(reqs, 0, sizeof(reqs));
+
+    size_t count = 0;
+
+    LOCK_TCPIP_CORE();
+
+    struct netif* netif;
+
+    NETIF_FOREACH(netif) {
+
+        if (count == SOCKFS_IFCONF_MAX)
+            break;
+
+        sockfs_ifname(netif, reqs[count].name);
+
+        reqs[count].in.family = AF_INET;
+        reqs[count].in.addr   = ip4_addr_get_u32(netif_ip4_addr(netif));
+
+        count++;
+    }
+
+    UNLOCK_TCPIP_CORE();
+
+
+    if (conf.buf) {
+
+        size_t fit = conf.len > 0 ? (size_t)conf.len / sizeof(reqs[0]) : 0;
+
+        if (fit > count)
+            fit = count;
+
+        if (fit && unlikely(!sockfs_user(conf.buf, fit * sizeof(reqs[0]), W_OK)))
+            return -EFAULT;
+
+        if (fit)
+            uio_memcpy_s2u(conf.buf, reqs, fit * sizeof(reqs[0]));
+
+        count = fit;
+    }
+
+    conf.len = (int)(count * sizeof(reqs[0]));
+
+    uio_memcpy_s2u(arg, &conf, sizeof(conf));
+
+    return 0;
+}
+
+
+/**
+ * @brief Answers the per-interface requests: flags, addresses, MTU, hardware address and index.
+ *
+ * @param req One of the SOCKFS_SIOCGIF* that take a struct ifreq.
+ * @param arg The caller's struct ifreq, naming the interface.
+ * @return 0, or a negative errno: ENODEV for an interface that does not exist.
+ */
+static int sockfs_ioctl_ifreq(long req, void* arg) {
+
+    struct sockfs_ifreq r;
+
+    if (unlikely(!sockfs_user(arg, sizeof(r), R_OK | W_OK)))
+        return -EFAULT;
+
+    uio_memcpy_u2s(&r, arg, sizeof(r));
+
+    r.name[SOCKFS_IFNAMSIZ - 1] = '\0';
+
+
+    LOCK_TCPIP_CORE();
+
+    struct netif* netif = netif_find(r.name);
+
+    if (unlikely(!netif)) {
+        UNLOCK_TCPIP_CORE();
+        return -ENODEV;
+    }
+
+    const bool loopback = netif->name[0] == 'l' && netif->name[1] == 'o';
+
+    const uint32_t ip   = ip4_addr_get_u32(netif_ip4_addr(netif));
+    const uint32_t mask = ip4_addr_get_u32(netif_ip4_netmask(netif));
+
+    memset(&r.map, 0, sizeof(r.map));
+
+    switch (req) {
+
+        case SOCKFS_SIOCGIFFLAGS:
+            r.flags = (int16_t)((netif_is_up(netif) ? SOCKFS_IFF_UP : 0) | (netif_is_link_up(netif) ? SOCKFS_IFF_RUNNING : 0) | ((netif->flags & NETIF_FLAG_BROADCAST) ? SOCKFS_IFF_BROADCAST : 0) | (loopback ? SOCKFS_IFF_LOOPBACK : 0) |
+                                ((netif->flags & NETIF_FLAG_IGMP) ? SOCKFS_IFF_MULTICAST : 0));
+            break;
+
+        case SOCKFS_SIOCGIFADDR:
+            r.in.family = AF_INET;
+            r.in.addr   = ip;
+            break;
+
+        case SOCKFS_SIOCGIFNETMASK:
+            r.in.family = AF_INET;
+            r.in.addr   = mask;
+            break;
+
+        case SOCKFS_SIOCGIFBRDADDR:
+            r.in.family = AF_INET;
+            r.in.addr   = ip | ~mask;
+            break;
+
+        case SOCKFS_SIOCGIFMTU:
+            r.value = netif->mtu;
+            break;
+
+        case SOCKFS_SIOCGIFHWADDR:
+            r.hw.family = loopback ? SOCKFS_ARPHRD_LOOP : SOCKFS_ARPHRD_ETHER;
+            memcpy(r.hw.data, netif->hwaddr, netif->hwaddr_len < sizeof(r.hw.data) ? netif->hwaddr_len : sizeof(r.hw.data));
+            break;
+
+        case SOCKFS_SIOCGIFINDEX:
+            r.value = netif_get_index(netif);
+            break;
+    }
+
+    UNLOCK_TCPIP_CORE();
+
+
+    uio_memcpy_s2u(arg, &r, sizeof(r));
+
+    return 0;
+}
+
+
 static int sockfs_ioctl(inode_t* inode, long req, void* arg) {
 
     DEBUG_ASSERT(inode);
+
+
+    switch (req) {
+
+        case SOCKFS_SIOCGIFCONF:
+            return sockfs_ioctl_ifconf(arg);
+
+        case SOCKFS_SIOCGIFFLAGS:
+        case SOCKFS_SIOCGIFADDR:
+        case SOCKFS_SIOCGIFBRDADDR:
+        case SOCKFS_SIOCGIFNETMASK:
+        case SOCKFS_SIOCGIFMTU:
+        case SOCKFS_SIOCGIFHWADDR:
+        case SOCKFS_SIOCGIFINDEX:
+            return sockfs_ioctl_ifreq(req, arg);
+    }
 
 
     int socket = socket_from_inode(inode);

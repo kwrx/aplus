@@ -114,6 +114,9 @@ inode_t* procfs_root_finddir(inode_t* inode, const char* name) {
     if (strcmp(name, "mounts") == 0)
         return procfs_service_mounts_inode(inode);
 
+    if (strcmp(name, "net") == 0)
+        return procfs_service_net_inode(inode);
+
 
     return errno = ENOENT, NULL;
 }
