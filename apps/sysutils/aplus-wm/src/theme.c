@@ -417,16 +417,44 @@ static const wm_theme_key_t* wm_theme_find(const char* section, const char* name
 
 
 /**
- * @brief Reads a theme file over the built-in theme, line by line.
+ * @brief What a parser hands each `key = value` line to.
+ *
+ * @param path The file, for the warnings.
+ * @param number The line number.
+ * @param section The section the line is under.
+ * @param name The key.
+ * @param value The text after the `=`.
+ * @param user What the caller handed the parser.
+ * @param text Receives what was wrong, on failure.
+ * @param size The size of text.
+ * @return 0 to go on, or -1 to stop the parse.
+ */
+typedef int (*wm_theme_line_fn)(const char* path, int number, const char* section, const char* name, const char* value, void* user, char* text, size_t size);
+
+
+/**
+ * @brief The keys of a settings file, as they are read.
+ */
+typedef struct {
+
+    wm_setting_t* list;
+    size_t count;
+
+} wm_theme_settings_t;
+
+
+/**
+ * @brief Reads a file of `[section]` and `key = value` lines, handing each key to a callback.
  *
  * @param f The open file.
  * @param path Its path, for the warnings.
- * @param theme The theme to fill in, already holding the defaults.
+ * @param fn What each key is handed to.
+ * @param user Handed to fn.
  * @param text Receives what was wrong, on failure.
  * @param size The size of text.
  * @return 0, or -1 when a line does not parse.
  */
-static int wm_theme_parse(FILE* f, const char* path, wm_theme_t* theme, char* text, size_t size) {
+static int wm_theme_parse(FILE* f, const char* path, wm_theme_line_fn fn, void* user, char* text, size_t size) {
 
     char line[WM_THEME_LINE_MAX];
     char section[WM_THEME_SECTION_MAX] = "";
@@ -479,16 +507,7 @@ static int wm_theme_parse(FILE* f, const char* path, wm_theme_t* theme, char* te
         const char* name  = wm_theme_trim(s);
         const char* value = wm_theme_trim(equals + 1);
 
-
-        const wm_theme_key_t* key = wm_theme_find(section, name);
-
-        if (!key) {
-            ulog_warnf("%s: line %d: no such key %s.%s, ignored", path, number, section, name);
-            continue;
-        }
-
-        if (wm_theme_store(theme, key, value) < 0) {
-            snprintf(text, size, "line %d: bad value for %s.%s", number, section, name);
+        if (fn(path, number, section, name, value, user, text, size) < 0) {
             return -1;
         }
     }
@@ -499,6 +518,265 @@ static int wm_theme_parse(FILE* f, const char* path, wm_theme_t* theme, char* te
     }
 
     return 0;
+}
+
+
+/**
+ * @brief Stores a theme file's key into the theme being read.
+ *
+ * @param path The file, for the warnings.
+ * @param number The line number.
+ * @param section The section the line is under.
+ * @param name The key.
+ * @param value The text after the `=`.
+ * @param user The wm_theme_t being read.
+ * @param text Receives what was wrong, on failure.
+ * @param size The size of text.
+ * @return 0, or -1 when the value does not fit the key.
+ */
+static int wm_theme_parse_key(const char* path, int number, const char* section, const char* name, const char* value, void* user, char* text, size_t size) {
+
+    const wm_theme_key_t* key = wm_theme_find(section, name);
+
+    if (!key) {
+        ulog_warnf("%s: line %d: no such key %s.%s, ignored", path, number, section, name);
+        return 0;
+    }
+
+    if (wm_theme_store((wm_theme_t*)user, key, value) < 0) {
+        snprintf(text, size, "line %d: bad value for %s.%s", number, section, name);
+        return -1;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Finds a key in a list of settings.
+ *
+ * @param list The settings.
+ * @param count How many there are.
+ * @param section The section.
+ * @param key The key.
+ * @return Its index, or count when it is not there.
+ */
+static size_t wm_theme_setting_find(const wm_setting_t* list, size_t count, const char* section, const char* key) {
+
+    for (size_t i = 0; i < count; i++) {
+
+        if (strcmp(list[i].section, section) == 0 && strcmp(list[i].key, key) == 0) {
+            return i;
+        }
+    }
+
+    return count;
+}
+
+
+/**
+ * @brief Sets a key in a list of settings, replacing the value it had.
+ *
+ * @param list The settings, WM_SETTINGS_MAX long.
+ * @param count How many there are, updated.
+ * @param section The section.
+ * @param key The key.
+ * @param value The value.
+ * @return 0, or -1 when a name is too long or the list is full.
+ */
+static int wm_theme_setting_put(wm_setting_t* list, size_t* count, const char* section, const char* key, const char* value) {
+
+    if (strlen(section) >= UI_CTL_SECTION_MAX || strlen(key) >= UI_CTL_KEY_MAX || strlen(value) >= UI_THEME_PATH_MAX) {
+        return -1;
+    }
+
+    const size_t i = wm_theme_setting_find(list, *count, section, key);
+
+    if (i == *count) {
+
+        if (*count >= WM_SETTINGS_MAX) {
+            return -1;
+        }
+
+        (*count)++;
+    }
+
+    snprintf(list[i].section, sizeof(list[i].section), "%s", section);
+    snprintf(list[i].key, sizeof(list[i].key), "%s", key);
+    snprintf(list[i].value, sizeof(list[i].value), "%s", value);
+
+    return 0;
+}
+
+
+/**
+ * @brief Collects a settings file's key into the list being read.
+ *
+ * @param path The file, for the warnings.
+ * @param number The line number.
+ * @param section The section the line is under.
+ * @param name The key.
+ * @param value The text after the `=`.
+ * @param user The wm_theme_settings_t being read.
+ * @param text Unused.
+ * @param size Unused.
+ * @return 0.
+ */
+static int wm_theme_parse_setting(const char* path, int number, const char* section, const char* name, const char* value, void* user, char* text, size_t size) {
+
+    (void)text;
+    (void)size;
+
+    wm_theme_settings_t* settings = user;
+
+    if (!wm_theme_find(section, name) || wm_theme_setting_put(settings->list, &settings->count, section, name, value) < 0) {
+        ulog_warnf("%s: line %d: cannot keep %s.%s, ignored", path, number, section, name);
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Reads the user's settings from UI_SETTINGS_PATH, keeping the ones before when it does not parse.
+ */
+static void wm_theme_read_settings(void) {
+
+    FILE* f = fopen(UI_SETTINGS_PATH, "r");
+
+    if (!f) {
+
+        if (errno == ENOENT) {
+            wm.settings_count = 0;
+        }
+
+        return;
+    }
+
+
+    static wm_setting_t list[WM_SETTINGS_MAX];
+
+    wm_theme_settings_t settings = {list, 0};
+
+    char text[UI_CTL_TEXT_MAX];
+
+    const int e = wm_theme_parse(f, UI_SETTINGS_PATH, wm_theme_parse_setting, &settings, text, sizeof(text));
+
+    fclose(f);
+
+    if (e < 0) {
+        ulog_warnf("%s: %s, keeping the settings before", UI_SETTINGS_PATH, text);
+        return;
+    }
+
+    memcpy(wm.settings, list, settings.count * sizeof(list[0]));
+
+    wm.settings_count = settings.count;
+}
+
+
+/**
+ * @brief Writes a list of settings to UI_SETTINGS_PATH, replacing the file in one rename, or removes it when the list is empty.
+ *
+ * @param list The settings.
+ * @param count How many there are.
+ * @return 0, or -1 with errno set.
+ */
+static int wm_theme_write_settings(const wm_setting_t* list, size_t count) {
+
+    if (count == 0) {
+        return unlink(UI_SETTINGS_PATH) < 0 && errno != ENOENT ? -1 : 0;
+    }
+
+
+    char staging[WM_THEME_FILE_MAX];
+
+    snprintf(staging, sizeof(staging), "%s", UI_SETTINGS_PATH);
+
+    *strrchr(staging, '/') = '\0';
+
+    if (mkdir(staging, 0755) < 0 && errno != EEXIST) {
+        return -1;
+    }
+
+    snprintf(staging, sizeof(staging), "%s.new", UI_SETTINGS_PATH);
+
+    FILE* f = fopen(staging, "w");
+
+    if (!f) {
+        return -1;
+    }
+
+    fprintf(f, "# Written by aplus-wm: the keys changed over whichever theme is in use.\n");
+
+    for (size_t i = 0; i < count; i++) {
+
+        bool first = true;
+
+        for (size_t j = 0; j < i; j++) {
+
+            if (strcmp(list[j].section, list[i].section) == 0) {
+                first = false;
+            }
+        }
+
+        if (!first) {
+            continue;
+        }
+
+        fprintf(f, "\n[%s]\n", list[i].section);
+
+        for (size_t j = i; j < count; j++) {
+
+            if (strcmp(list[j].section, list[i].section) == 0) {
+                fprintf(f, "%s = %s\n", list[j].key, list[j].value);
+            }
+        }
+    }
+
+    const bool failed = ferror(f) != 0;
+
+    if (fclose(f) != 0 || failed) {
+
+        const int e = errno;
+
+        unlink(staging);
+
+        errno = e;
+        return -1;
+    }
+
+    if (rename(staging, UI_SETTINGS_PATH) < 0) {
+
+        const int e = errno;
+
+        unlink(staging);
+
+        errno = e;
+        return -1;
+    }
+
+    return 0;
+}
+
+
+/**
+ * @brief Lays a list of settings over a theme, skipping with a warning any that no longer apply.
+ *
+ * @param theme The theme.
+ * @param list The settings.
+ * @param count How many there are.
+ */
+static void wm_theme_overlay(wm_theme_t* theme, const wm_setting_t* list, size_t count) {
+
+    for (size_t i = 0; i < count; i++) {
+
+        const wm_theme_key_t* key = wm_theme_find(list[i].section, list[i].key);
+
+        if (!key || wm_theme_store(theme, key, list[i].value) < 0) {
+            ulog_warnf("%s: %s.%s = %s no longer applies, ignored", UI_SETTINGS_PATH, list[i].section, list[i].key, list[i].value);
+        }
+    }
 }
 
 
@@ -531,7 +809,7 @@ static int wm_theme_load(const char* path, const char* name, wm_theme_t* theme, 
 
     snprintf(theme->client.name, sizeof(theme->client.name), "%s", name);
 
-    const int e = wm_theme_parse(f, path, theme, text, size);
+    const int e = wm_theme_parse(f, path, wm_theme_parse_key, theme, text, size);
 
     fclose(f);
 
@@ -690,20 +968,47 @@ static void wm_theme_apply(const wm_theme_t* next) {
 
 
 /**
- * @brief Reads the theme in use at startup, falling back on the built-in one.
+ * @brief Puts a theme read from a file in use, with the user's settings laid over it.
+ *
+ * @param base The theme as its file has it.
+ */
+static void wm_theme_use(const wm_theme_t* base) {
+
+    static wm_theme_t next;
+
+    next = *base;
+
+    wm_theme_overlay(&next, wm.settings, wm.settings_count);
+
+    if (base != &wm.base) {
+        wm.base = *base;
+    }
+
+    wm_theme_apply(&next);
+}
+
+
+/**
+ * @brief Reads the theme in use and the user's settings at startup, falling back on the built-in theme.
  */
 void wm_theme_init(void) {
 
     char text[UI_CTL_TEXT_MAX];
 
-    if (wm_theme_load_link(&wm.theme, text, sizeof(text)) < 0) {
+    wm_theme_read_settings();
+
+    if (wm_theme_load_link(&wm.base, text, sizeof(text)) < 0) {
 
         if (errno != ENOENT) {
             ulog_warnf("%s, using the built-in theme", text);
         }
 
-        wm_theme_defaults(&wm.theme);
+        wm_theme_defaults(&wm.base);
     }
+
+    wm.theme = wm.base;
+
+    wm_theme_overlay(&wm.theme, wm.settings, wm.settings_count);
 
     ulog_infof("theme %s", wm.theme.client.name);
 }
@@ -731,7 +1036,7 @@ int wm_theme_switch(const char* name, char* text, size_t size) {
     snprintf(path, sizeof(path), "%s/%s.conf", UI_THEME_DIR, name);
 
 
-    wm_theme_t next;
+    static wm_theme_t next;
 
     if (wm_theme_load(path, name, &next, text, size) < 0) {
 
@@ -745,7 +1050,7 @@ int wm_theme_switch(const char* name, char* text, size_t size) {
         return -1;
     }
 
-    wm_theme_apply(&next);
+    wm_theme_use(&next);
 
 
     if (wm_theme_link(path) < 0) {
@@ -778,7 +1083,7 @@ int wm_theme_switch(const char* name, char* text, size_t size) {
  */
 int wm_theme_reload(char* text, size_t size) {
 
-    wm_theme_t next;
+    static wm_theme_t next;
 
     if (wm_theme_load_link(&next, text, size) < 0) {
 
@@ -789,9 +1094,150 @@ int wm_theme_reload(char* text, size_t size) {
         wm_theme_defaults(&next);
     }
 
-    wm_theme_apply(&next);
+    wm_theme_read_settings();
+    wm_theme_use(&next);
 
     snprintf(text, size, "reloaded %s", wm.theme.client.name);
+
+    return 0;
+}
+
+
+/**
+ * @brief Changes keys over every theme, all or none, and keeps them in UI_SETTINGS_PATH for the next boot.
+ *
+ * @param options The keys, each with its value or UI_CTL_OPTION_RESET, their strings terminated.
+ * @param count How many there are.
+ * @param text Receives what happened, or what was wrong.
+ * @param size The size of text.
+ * @return 0, or -1 with errno set: EINVAL for an unknown key or a bad value, ENOSPC when the list is full.
+ */
+int wm_theme_set_options(const ui_msg_ctl_option_t* options, size_t count, char* text, size_t size) {
+
+    static wm_setting_t list[WM_SETTINGS_MAX];
+    static wm_theme_t check;
+
+    size_t n = wm.settings_count;
+
+    memcpy(list, wm.settings, n * sizeof(list[0]));
+
+    check = wm.base;
+
+
+    for (size_t i = 0; i < count; i++) {
+
+        const ui_msg_ctl_option_t* option = &options[i];
+        const wm_theme_key_t* key         = wm_theme_find(option->section, option->key);
+
+        if (!key) {
+            snprintf(text, size, "no such key: %s.%s", option->section, option->key);
+            errno = EINVAL;
+            return -1;
+        }
+
+        if (option->flags & UI_CTL_OPTION_RESET) {
+
+            const size_t at = wm_theme_setting_find(list, n, option->section, option->key);
+
+            if (at < n) {
+                memmove(&list[at], &list[at + 1], (n - at - 1) * sizeof(list[0]));
+                n--;
+            }
+
+            continue;
+        }
+
+        if (wm_theme_store(&check, key, option->value) < 0) {
+            snprintf(text, size, "bad value for %s.%s", option->section, option->key);
+            errno = EINVAL;
+            return -1;
+        }
+
+        if (wm_theme_setting_put(list, &n, option->section, option->key, option->value) < 0) {
+            snprintf(text, size, "too many settings to keep");
+            errno = ENOSPC;
+            return -1;
+        }
+    }
+
+
+    const int kept = wm_theme_write_settings(list, n);
+    const int e    = errno;
+
+    memcpy(wm.settings, list, n * sizeof(list[0]));
+
+    wm.settings_count = n;
+
+    wm_theme_use(&wm.base);
+
+
+    if (kept < 0) {
+
+        snprintf(text, size, "changed, but cannot keep it: %s", strerror(e));
+        ulog_warnf("%s", text);
+
+        return 0;
+    }
+
+    snprintf(text, size, "changed %zu key%s", count, count == 1 ? "" : "s");
+
+    return 0;
+}
+
+
+/**
+ * @brief Reports the value a key has right now, spelled the way a theme file would.
+ *
+ * @param section The section.
+ * @param name The key.
+ * @param text Receives the value, or what was wrong.
+ * @param size The size of text.
+ * @return 0, or -1 with errno set: EINVAL for an unknown key.
+ */
+int wm_theme_get_option(const char* section, const char* name, char* text, size_t size) {
+
+    const wm_theme_key_t* key = wm_theme_find(section, name);
+
+    if (!key) {
+        snprintf(text, size, "no such key: %s.%s", section, name);
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    const uint8_t* field = (const uint8_t*)&wm.theme + key->offset;
+
+    switch (key->kind) {
+
+        case WM_THEME_COLOR: {
+
+            ui_color_t c;
+
+            memcpy(&c, field, sizeof(c));
+
+            snprintf(text, size, "#%02X%02X%02X%02X", (unsigned)lround(c.r * 255.0), (unsigned)lround(c.g * 255.0), (unsigned)lround(c.b * 255.0), (unsigned)lround(c.a * 255.0));
+
+            break;
+        }
+
+        case WM_THEME_NUMBER: {
+
+            double number;
+
+            memcpy(&number, field, sizeof(number));
+
+            snprintf(text, size, "%g", number);
+
+            break;
+        }
+
+        case WM_THEME_PATH:
+        case WM_THEME_PATH_OPTIONAL:
+
+            snprintf(text, size, "%s", (const char*)field);
+
+            break;
+    }
 
     return 0;
 }

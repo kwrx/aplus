@@ -561,6 +561,8 @@ request gets exactly one reply:
 | `0x1001` | `UI_CTL_SET_THEME` | `ui_msg_ctl_theme_t` |
 | `0x1002` | `UI_CTL_GET_THEME` | none |
 | `0x1003` | `UI_CTL_RELOAD` | none |
+| `0x1004` | `UI_CTL_SET_OPTIONS` | 1 to `UI_CTL_OPTIONS_MAX` (8) `ui_msg_ctl_option_t`, back to back |
+| `0x1005` | `UI_CTL_GET_OPTION` | one `ui_msg_ctl_option_t`, its `value` ignored |
 | `0x9001` | `UI_CTL_REPLY` | `ui_msg_ctl_reply_t` |
 
 ```c
@@ -577,6 +579,29 @@ know gets `ENOSYS` rather than being drained, since the peer is waiting for an a
 
 `ui_control_request()` sends one request and waits for its reply; `ui_control_set_theme()` is
 the same for `UI_CTL_SET_THEME`. `aplus-wmctl` is the command-line front end.
+
+### Settings over the theme
+
+```c
+typedef struct {
+    char section[UI_CTL_SECTION_MAX];
+    char key[UI_CTL_KEY_MAX];
+    char value[UI_THEME_PATH_MAX];
+    uint32_t flags;
+} __attribute__((packed)) ui_msg_ctl_option_t;
+```
+
+An option is one key of a theme file, named by its section and key and spelled the way the
+file would spell its value. `UI_CTL_SET_OPTIONS` lays its keys over every theme at once: either
+all of them are taken or none is, `EINVAL` naming the unknown key or the value that does not
+fit. `UI_CTL_OPTION_RESET` in `flags` drops the user's value instead, giving the key back to
+the theme. The server keeps what was set in `UI_SETTINGS_PATH`, re-reads the theme with it laid
+over, and sends every client a `UI_EV_THEME`, so a font or a wallpaper changes the way a theme
+switch does.
+
+`UI_CTL_GET_OPTION` answers with the value the key has right now in `text`: the user's when
+there is one, the theme's otherwise. `ui_control_set_options()` and `ui_control_get_option()`
+wrap the two.
 
 ## Extending it
 

@@ -258,6 +258,24 @@ that is wrong, and nothing changes. `aplus-wmctl reload` reads the theme in use 
 edit in place. An application does the same through `ui_control_set_theme()`, over the
 [control socket](protocol.md#the-control-socket).
 
+### User settings
+
+What the user changes is not written into a theme. The server keeps it in
+`/etc/ui/settings.conf`, a file in the theme format that only it writes, and lays it over
+whichever theme is in use, at startup, on a switch and on a reload. A key it holds wins over
+every theme until it is given back:
+
+```
+aplus-wmctl set ui.font_size 15
+aplus-wmctl set wm.wallpaper /usr/share/images/05.webp
+aplus-wmctl get ui.font_size
+aplus-wmctl unset ui.font_size
+```
+
+A value is checked the way a theme file's is, so a font or a picture that does not exist is
+refused and nothing changes. A key that stops applying later, say a font that was removed, is
+skipped with a warning and the theme's value stands.
+
 ### Theme files
 
 ```

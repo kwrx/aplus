@@ -60,6 +60,67 @@ static void wm_control_set_theme(const uint8_t* payload, size_t size, ui_msg_ctl
 
 
 /**
+ * @brief Changes theme keys for every theme, for a UI_CTL_SET_OPTIONS.
+ *
+ * @param payload The request body: one to UI_CTL_OPTIONS_MAX ui_msg_ctl_option_t.
+ * @param size The length of the body.
+ * @param reply Receives the answer.
+ */
+static void wm_control_set_options(const uint8_t* payload, size_t size, ui_msg_ctl_reply_t* reply) {
+
+    ui_msg_ctl_option_t options[UI_CTL_OPTIONS_MAX];
+
+    const size_t count = size / sizeof(options[0]);
+
+    if (size % sizeof(options[0]) != 0 || count == 0 || count > UI_CTL_OPTIONS_MAX) {
+        reply->status = EINVAL;
+        snprintf(reply->text, sizeof(reply->text), "malformed request");
+        return;
+    }
+
+    memcpy(options, payload, size);
+
+    for (size_t i = 0; i < count; i++) {
+        options[i].section[sizeof(options[i].section) - 1] = '\0';
+        options[i].key[sizeof(options[i].key) - 1]         = '\0';
+        options[i].value[sizeof(options[i].value) - 1]     = '\0';
+    }
+
+    if (wm_theme_set_options(options, count, reply->text, sizeof(reply->text)) < 0) {
+        reply->status = errno ? errno : EIO;
+    }
+}
+
+
+/**
+ * @brief Reports the value of one theme key, for a UI_CTL_GET_OPTION.
+ *
+ * @param payload The request body: one ui_msg_ctl_option_t, whose value is ignored.
+ * @param size The length of the body.
+ * @param reply Receives the answer.
+ */
+static void wm_control_get_option(const uint8_t* payload, size_t size, ui_msg_ctl_reply_t* reply) {
+
+    ui_msg_ctl_option_t option;
+
+    if (size != sizeof(option)) {
+        reply->status = EINVAL;
+        snprintf(reply->text, sizeof(reply->text), "malformed request");
+        return;
+    }
+
+    memcpy(&option, payload, sizeof(option));
+
+    option.section[sizeof(option.section) - 1] = '\0';
+    option.key[sizeof(option.key) - 1]         = '\0';
+
+    if (wm_theme_get_option(option.section, option.key, reply->text, sizeof(reply->text)) < 0) {
+        reply->status = errno ? errno : EIO;
+    }
+}
+
+
+/**
  * @brief Answers one request from a control peer.
  *
  * @param client The peer.
@@ -82,6 +143,14 @@ int wm_control_handle(wm_client_t* client, uint16_t type, const uint8_t* payload
 
         case UI_CTL_GET_THEME:
             snprintf(reply.text, sizeof(reply.text), "%s", wm.theme.client.name);
+            break;
+
+        case UI_CTL_SET_OPTIONS:
+            wm_control_set_options(payload, size, &reply);
+            break;
+
+        case UI_CTL_GET_OPTION:
+            wm_control_get_option(payload, size, &reply);
             break;
 
         case UI_CTL_RELOAD:
