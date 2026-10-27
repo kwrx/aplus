@@ -2856,7 +2856,10 @@ static void editor_restyle(ui_view_t* view, void* user) {
     const ui_theme_t* theme = ui_theme();
 
     ui_panel_set_color(editor.toolbar, theme->surface);
+    ui_panel_set_border(editor.toolbar, theme->border, 1.0);
+
     ui_panel_set_color(editor.prompt_bar, theme->surface);
+    ui_panel_set_border(editor.prompt_bar, theme->border, 1.0);
 
     ui_panel_set_color(editor.frame, theme->surface_sunken);
     ui_panel_set_border(editor.frame, theme->border, 1.0);

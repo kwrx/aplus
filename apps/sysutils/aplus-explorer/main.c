@@ -1133,7 +1133,7 @@ static void explorer_layout(ui_view_t* view, int width, int height, void* user) 
 
 
 /**
- * @brief Gives the labels the colour of the theme in use.
+ * @brief Gives the toolbar's edge and the labels the colours of the theme in use.
  *
  * @param view The view.
  * @param user Unused.
@@ -1142,6 +1142,8 @@ static void explorer_restyle(ui_view_t* view, void* user) {
 
     (void)view;
     (void)user;
+
+    ui_panel_set_border(explorer.toolbar, ui_theme()->border, 1.0);
 
     ui_label_set_color(explorer.path, ui_theme()->text_muted);
     ui_label_set_color(explorer.sidebar_header, ui_theme()->text_muted);

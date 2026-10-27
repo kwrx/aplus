@@ -1580,6 +1580,7 @@ static void viewer_restyle(ui_view_t* view, void* user) {
     const ui_theme_t* theme = ui_theme();
 
     ui_panel_set_color(viewer.toolbar, theme->surface);
+    ui_panel_set_border(viewer.toolbar, theme->border, 1.0);
 
     ui_panel_set_color(viewer.frame, theme->surface_sunken);
     ui_panel_set_border(viewer.frame, theme->border, 1.0);
