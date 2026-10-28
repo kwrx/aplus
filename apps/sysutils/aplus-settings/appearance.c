@@ -24,7 +24,7 @@
  */
 
 /**
- * @brief The Appearance page: the theme, and the fonts and sizes laid over whichever theme is in use.
+ * @brief The Appearance page: the theme and its variant, and the fonts and sizes laid over whichever theme is in use.
  */
 
 #include <ctype.h>
@@ -102,6 +102,17 @@ typedef struct {
 
 
 /**
+ * @brief The variants a theme comes in, as the server spells them and as their tiles say.
+ */
+static const char* const appearance_variants[][2] = {
+    {UI_THEME_VARIANT_DARK, "Dark"},
+    {UI_THEME_VARIANT_LIGHT, "Light"},
+};
+
+#define APPEARANCE_VARIANTS (sizeof(appearance_variants) / sizeof(appearance_variants[0]))
+
+
+/**
  * @brief The headings the font groups are shown under.
  */
 static const char* const appearance_group_names[APPEARANCE_GROUPS] = {
@@ -119,6 +130,8 @@ static struct {
 
     ui_widget_t* theme_heading;
     ui_widget_t* status;
+
+    ui_widget_t* variants[APPEARANCE_VARIANTS];
 
     char themes[APPEARANCE_THEMES_MAX][UI_THEME_NAME_MAX];
     ui_widget_t* tiles[APPEARANCE_THEMES_MAX];
@@ -214,6 +227,29 @@ static void appearance_on_theme(ui_widget_t* widget, void* user) {
     }
 
     appearance_report("");
+}
+
+
+/**
+ * @brief Switches every theme to the variant a tile names.
+ *
+ * @param widget The tile.
+ * @param user The variant's index.
+ */
+static void appearance_on_variant(ui_widget_t* widget, void* user) {
+
+    (void)widget;
+
+    const char* variant = appearance_variants[(size_t)(intptr_t)user][0];
+
+    if (strcmp(variant, ui_theme_variant()) == 0) {
+        return;
+    }
+
+    ui_msg_ctl_option_t option;
+
+    appearance_option(&option, "wm", "variant", variant);
+    appearance_apply(&option, 1);
 }
 
 
@@ -521,6 +557,14 @@ static int appearance_build(void) {
     }
 
 
+    for (size_t i = 0; i < APPEARANCE_VARIANTS; i++) {
+
+        if ((appearance.variants[i] = settings_own(ui_button_create(settings.view, appearance_variants[i][1], appearance_on_variant, (void*)(intptr_t)i))) == NULL) {
+            return -1;
+        }
+    }
+
+
     appearance_scan_fonts();
 
     for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
@@ -611,7 +655,7 @@ static int appearance_place_tiles(ui_widget_t* const* tiles, const char* const* 
 
 
 /**
- * @brief Lays out the theme tiles under their heading, each font group under its heading and stepper, and the foot.
+ * @brief Lays out the theme tiles under their heading and variant switch, each font group under its heading and stepper, and the foot.
  *
  * @param page The page's rectangle.
  */
@@ -623,7 +667,22 @@ static void appearance_layout(ui_rect_t page) {
     int y = settings_header_place(&appearance.header, page, 0);
 
 
-    ui_widget_set_rect(appearance.theme_heading, page.x, y, page.width, control);
+    int toggle = 0;
+
+    for (size_t i = 0; i < APPEARANCE_VARIANTS; i++) {
+
+        const int w = settings_text_width(appearance_variants[i][1], UI_FONT_MEDIUM) + 2 * SETTINGS_CARD_PADDING;
+
+        if (w > toggle) {
+            toggle = w;
+        }
+    }
+
+    for (size_t i = 0; i < APPEARANCE_VARIANTS; i++) {
+        ui_widget_set_rect(appearance.variants[i], right - (int)(APPEARANCE_VARIANTS - i) * toggle - (int)(APPEARANCE_VARIANTS - 1 - i) * SETTINGS_GAP, y, toggle, control);
+    }
+
+    ui_widget_set_rect(appearance.theme_heading, page.x, y, page.width - (int)APPEARANCE_VARIANTS * (toggle + SETTINGS_GAP), control);
 
     y += control + SETTINGS_GAP;
     const char* themes[APPEARANCE_THEMES_MAX];
@@ -664,7 +723,7 @@ static void appearance_layout(ui_rect_t page) {
 
 
 /**
- * @brief Highlights the theme and the families in use, and shows the sizes in use.
+ * @brief Highlights the theme, the variant and the families in use, and shows the sizes in use.
  */
 static void appearance_restyle(void) {
 
@@ -674,6 +733,10 @@ static void appearance_restyle(void) {
 
     for (size_t i = 0; i < appearance.theme_count; i++) {
         ui_button_set_style(appearance.tiles[i], strcmp(appearance.themes[i], ui_theme_name()) == 0 ? UI_BUTTON_STYLE_PRIMARY : UI_BUTTON_STYLE_DEFAULT);
+    }
+
+    for (size_t i = 0; i < APPEARANCE_VARIANTS; i++) {
+        ui_button_set_style(appearance.variants[i], strcmp(appearance_variants[i][0], ui_theme_variant()) == 0 ? UI_BUTTON_STYLE_PRIMARY : UI_BUTTON_STYLE_DEFAULT);
     }
 
     for (size_t g = 0; g < APPEARANCE_GROUPS; g++) {
