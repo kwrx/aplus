@@ -72,7 +72,7 @@ entry() {
 
     pushd $SYSROOT &>/dev/null
 
-    for ko in $(find usr/lib/modules -type f -iname "*.ko"); do
+    for ko in $(find usr/lib/modules -type f -iname "*.ko" | LC_ALL=C sort); do
         test -f "$ko" || continue
         echo -e "   module2 /$ko.gz type=module $3"
     done
