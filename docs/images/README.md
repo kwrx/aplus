@@ -101,3 +101,13 @@ Themes are files read by the window manager and switched at runtime: `aplus-wmct
 </p>
 
 * **Console mode**: the *aplus - Console Mode* boot entry skips the desktop and runs the terminal full screen on the framebuffer, with `bash`, Python and a native `gcc`
+
+### Late October 2026: Linux inside aplus
+
+[Bochs](https://bochs.sourceforge.io/) 3.1 was ported with a native frontend on libui and ships as a regular package. It emulates a 32-bit PC in an aplus window, fast enough to boot Tiny Core Linux to its desktop.
+
+<p align="center" width="100%">
+    <img src="./v0.7-bochs-and-linux.png" alt="aplus v0.7 - Bochs booting Tiny Core Linux in a window" width="100%"></img>
+</p>
+
+* **Bochs**: Tiny Core Linux running in the emulator, where `uname -a` reports Linux on `i686`; the console below reports aplus on `x86_64`, and the one on the left shows the Bochs log
