@@ -40,9 +40,9 @@ extern "C" {
 /**
  * @brief The durations the toolkit and the server share, so that every transition moves at one pace.
  */
-#define UI_MOTION_FAST   110
-#define UI_MOTION_NORMAL 180
-#define UI_MOTION_SLOW   240
+#define UI_MOTION_FAST    110
+#define UI_MOTION_NORMAL  180
+#define UI_MOTION_SLOW    240
 
 
 /**
@@ -54,6 +54,9 @@ typedef enum {
     UI_EASE_IN,
     UI_EASE_IN_OUT,
     UI_EASE_LINEAR,
+    UI_EASE_OUT_CUBIC,
+    UI_EASE_OUT_QUART,
+    UI_EASE_OUT_QUINT,
 
 } ui_ease_t;
 

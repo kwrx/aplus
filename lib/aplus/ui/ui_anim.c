@@ -22,6 +22,7 @@
  */
 
 #include <time.h>
+#include <math.h>
 
 #include <aplus/ui-anim.h>
 
@@ -59,10 +60,17 @@ double ui_ease(ui_ease_t ease, double t) {
 
         case UI_EASE_LINEAR:
             return t;
+        
+        case UI_EASE_OUT_CUBIC:
+            return 1.0 - (1.0 - t) * (1.0 - t) * (1.0 - t);
+
+        case UI_EASE_OUT_QUINT:
+            return 1.0 - (1.0 - t) * (1.0 - t) * (1.0 - t) * (1.0 - t) * (1.0 - t);
 
         case UI_EASE_OUT:
+        case UI_EASE_OUT_QUART:
         default:
-            return 1.0 - (1.0 - t) * (1.0 - t) * (1.0 - t);
+            return 1.0 - (1.0 - t) * (1.0 - t) * (1.0 - t) * (1.0 - t);
     }
 }
 
