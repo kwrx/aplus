@@ -703,7 +703,6 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 static void wm_taskbar_popout(uint32_t item) {
 
     const uint64_t now = ui_anim_now();
-
     const wm_rect_t at = wm_taskbar_item_rect(item);
 
     char text[sizeof(wm.taskbar.popout.text)];
