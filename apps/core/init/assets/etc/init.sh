@@ -6,6 +6,8 @@ export HOME=/home/root
 cd $HOME
 
 mkdir -p /var/log/init.d
+mkdir -p /var/run/init.d
+
 for i in /etc/init.d/*; do
     if [ -x "$i" ]; then
         "$i" start 2>&1 | tee /var/log/init.d/${i##*/}.log > /dev/kmsg &

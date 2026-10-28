@@ -42,6 +42,7 @@ MAX_PREVIEW = 1024 * 1024
 MAX_ENTRIES = 2000
 HEXDUMP_BYTES = 4096
 INITD_DIR = "/etc/init.d"
+INITD_RUN_DIR = "/var/run/init.d"
 LOG_DIR = "/var/log"
 DEFAULT_PATH = "/usr/sbin:/usr/bin:/sbin:/bin"
 
@@ -570,14 +571,24 @@ def service_log(name):
     return os.path.join(LOG_DIR, "init.d", name + ".log")
 
 
-## @brief Lists the /etc/init.d services and whether their programs are running.
-#  @param processes Rows from ProcessTable.scan().
+## @brief Returns the pid file 00-init.sh tracks a service's program with.
+#  @param name Script file name.
+#  @return The pid file's path.
+def service_pid_file(name):
+    return os.path.join(INITD_RUN_DIR, name + ".pid")
+
+
+## @brief Reads the pid a service's pid file records.
+#  @param name Script file name.
+#  @return The pid, or None when the file is missing or does not hold a valid pid.
+def read_service_pid(name):
+    text = (read_text(service_pid_file(name)) or "").strip()
+    return int(text) if text.isdigit() and int(text) > 0 else None
+
+
+## @brief Lists the /etc/init.d services and their state from the pid files in /var/run/init.d.
 #  @return One dict per service.
-def list_services(processes):
-    running = {}
-    for row in processes:
-        for key in {row["name"], row["exe"], row["script"]}:
-            running.setdefault(key, []).append(row["pid"])
+def list_services():
     try:
         entries = sorted(os.listdir(INITD_DIR))
     except OSError:
@@ -588,36 +599,43 @@ def list_services(processes):
         if not os.path.isfile(path):
             continue
         fields = dict(SERVICE_FIELD.findall(read_text(path) or ""))
-        program = fields.get("EXEC_NAME")
+        if "EXEC_NAME" not in fields:
+            continue
+        pid = read_service_pid(name)
+        running = pid is not None and os.path.isdir(f"/proc/{pid}")
         log = service_log(name)
         services.append({
             "name": name,
-            "program": program,
+            "program": fields["EXEC_NAME"],
             "description": fields.get("EXEC_DESC") or name,
             "enabled": os.access(path, os.X_OK),
-            "running": bool(running.get(program)) if program else None,
-            "pids": running.get(program, []) if program else [],
+            "running": running,
+            "pid": pid if running else None,
+            "stale": pid is not None and not running,
             "log": log if os.path.isfile(log) else None,
         })
     return services
 
 
-## @brief Starts a service in its own session, since init.d scripts keep their program in the foreground.
+## @brief Runs a service's start script with its output appended to the service log.
 #  @param name Script file name.
 #  @param path Script path.
-#  @return A line describing the outcome.
+#  @return The text the script and its program wrote while it ran.
 def start_service(name, path):
     log_path = service_log(name)
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
     with open(log_path, "ab") as log:
+        offset = log.tell()
         child = subprocess.Popen([path, "start"], env=command_env(), stdin=subprocess.DEVNULL, stdout=log, stderr=subprocess.STDOUT, start_new_session=True)
     try:
-        code = child.wait(timeout=1.0)
+        code = child.wait(timeout=15)
     except subprocess.TimeoutExpired:
         threading.Thread(target=child.wait, name=f"reap-{child.pid}", daemon=True).start()
-        return f"{name}: started as pid {child.pid}, output in {log_path}\n"
-    text, _ = tail_file(log_path, 2048)
-    return f"{name}: start exited with status {code}\n{text}"
+        return f"{name}: start script still running after 15 s, output in {log_path}\n"
+    with open(log_path, "rb") as log:
+        log.seek(offset)
+        text = log.read(MAX_OUTPUT).decode("utf-8", "replace")
+    return text if code == 0 else f"{text}{name}: start exited with status {code}\n"
 
 
 ## @brief Starts, stops or restarts an /etc/init.d service.
@@ -630,7 +648,10 @@ def service_action(name, action):
     path = service_path(name)
     output = ""
     if action in ("stop", "restart"):
-        output += run_command([path, "stop"], 15)["output"]
+        result = run_command([path, "stop"], 15)
+        output += result["output"]
+        if result["code"] != 0:
+            return output
     if action in ("start", "restart"):
         output += start_service(name, path)
     return output
@@ -839,7 +860,7 @@ def route_process(handler, args):
 #  @param args Query arguments.
 #  @return The services and their state.
 def route_services(handler, args):
-    return {"services": list_services(handler.server.processes.scan())}
+    return {"services": list_services()}
 
 
 ## @brief GET /api/mounts.
@@ -1397,7 +1418,7 @@ a.btn { text-decoration: none; display: inline-block; color: inherit; }
 
   <section id="tab-services" hidden>
     <div class="card table-wrap">
-      <h2>Services</h2><p class="sub">Scripts in /etc/init.d. Start runs the program in its own session and logs to /var/log/init.d.</p>
+      <h2>Services</h2><p class="sub">Scripts in /etc/init.d, tracked by their pid files in /var/run/init.d. Output goes to /var/log/init.d.</p>
       <table id="svc-table"><thead><tr><th>Service</th><th>Description</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table>
     </div>
     <div class="card" style="margin-top:16px"><h2>Output</h2><p class="sub">From the last service action</p><pre class="out" id="svc-output">No action yet.</pre></div>
@@ -1999,16 +2020,16 @@ async function loadServices() {
     return;
   }
   body.replaceChildren(...data.services.map(s => {
-    const status = s.running === null
-      ? el("span", {class: "state"}, el("span", {class: "dot neutral"}), "unknown")
-      : el("span", {class: "state"}, el("span", {class: `dot ${s.running ? "good" : "neutral"}`}), s.running ? `running (pid ${s.pids.join(", ")})` : "stopped");
+    const status = s.running
+      ? el("span", {class: "state"}, el("span", {class: "dot good"}), `running (pid ${s.pid})`)
+      : el("span", {class: "state"}, el("span", {class: `dot ${s.stale ? "warning" : "neutral"}`}), s.stale ? "stopped, stale pid file" : "stopped");
     return el("tr", {style: "cursor:default"},
       el("td", {}, el("span", {class: "mono", text: s.name}), s.enabled ? null : el("span", {class: "tag", style: "margin-left:8px", text: "not executable"})),
       el("td", {text: s.description}),
       el("td", {}, status),
       el("td", {}, el("div", {class: "buttons"},
-        el("button", {class: "btn small", text: "Start", disabled: s.running === true, onclick: () => serviceAction(s.name, "start")}),
-        el("button", {class: "btn small", text: "Stop", disabled: s.running === false, onclick: () => serviceAction(s.name, "stop")}),
+        el("button", {class: "btn small", text: "Start", disabled: s.running, onclick: () => serviceAction(s.name, "start")}),
+        el("button", {class: "btn small", text: "Stop", disabled: !s.running && !s.stale, onclick: () => serviceAction(s.name, "stop")}),
         el("button", {class: "btn small", text: "Restart", onclick: () => serviceAction(s.name, "restart")}),
         el("button", {class: "btn small", text: "Log", disabled: !s.log, onclick: () => openLog(s.log)}))));
   }));
