@@ -75,7 +75,8 @@ static const ui_theme_t ui_theme_default = {
 static ui_theme_t ui_theme_live;
 static bool ui_theme_live_ready = false;
 
-static char ui_theme_live_name[UI_THEME_NAME_MAX] = "default";
+static char ui_theme_live_name[UI_THEME_NAME_MAX]       = "default";
+static char ui_theme_live_variant[UI_THEME_VARIANT_MAX] = UI_THEME_VARIANT_DARK;
 static char ui_theme_live_fonts[5][UI_THEME_PATH_MAX];
 
 
@@ -111,6 +112,16 @@ const ui_theme_t* ui_theme_system(void) {
 
 const char* ui_theme_name(void) {
     return ui_theme_live_name;
+}
+
+
+const char* ui_theme_variant(void) {
+    return ui_theme_live_variant;
+}
+
+
+bool ui_theme_is_light(void) {
+    return strcmp(ui_theme_live_variant, UI_THEME_VARIANT_LIGHT) == 0;
 }
 
 
@@ -212,6 +223,10 @@ void ui_theme_adopt(const ui_msg_theme_t* msg) {
     theme->font_mono_size = msg->font_mono_size > 0.0 ? msg->font_mono_size : 0.0;
 
     snprintf(ui_theme_live_name, sizeof(ui_theme_live_name), "%.*s", UI_THEME_NAME_MAX - 1, msg->name);
+
+    const bool light = strncmp(msg->variant, UI_THEME_VARIANT_LIGHT, sizeof(msg->variant)) == 0;
+
+    snprintf(ui_theme_live_variant, sizeof(ui_theme_live_variant), "%s", light ? UI_THEME_VARIANT_LIGHT : UI_THEME_VARIANT_DARK);
 }
 
 

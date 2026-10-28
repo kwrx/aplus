@@ -343,10 +343,17 @@ typedef struct {
 
 
 /**
- * @brief How long a theme's name and a path inside a theme may be, terminator included.
+ * @brief How long a theme's name, a path inside a theme and a variant's name may be, terminator included.
  */
-#define UI_THEME_NAME_MAX 32
-#define UI_THEME_PATH_MAX 128
+#define UI_THEME_NAME_MAX    32
+#define UI_THEME_PATH_MAX    128
+#define UI_THEME_VARIANT_MAX 16
+
+/**
+ * @brief The variants a theme may come in.
+ */
+#define UI_THEME_VARIANT_DARK  "dark"
+#define UI_THEME_VARIANT_LIGHT "light"
 
 
 /**
@@ -396,6 +403,8 @@ typedef struct {
     char font_mono[UI_THEME_PATH_MAX];
     char font_mono_bold[UI_THEME_PATH_MAX];
     double font_mono_size;
+
+    char variant[UI_THEME_VARIANT_MAX];
 
 } __attribute__((packed)) ui_msg_theme_t;
 

@@ -185,8 +185,8 @@ theme file that does not name them; each application then falls back on its own,
 window manager falls back on `WM_FONT_PATH` for its titles. The terminal's are the Kconfig
 `ATERM_FONT_PATH`, `ATERM_FONT_BOLD_PATH` and `ATERM_FONT_SIZE`, the editor's
 `EDITOR_FONT_PATH` and `EDITOR_FONT_SIZE`. A theme that names `font_mono` alone gets it for
-bold as well, and a face that cannot be loaded falls back the same way. `dark.conf` and
-`light.conf` both name JetBrains Mono at 14:
+bold as well, and a face that cannot be loaded falls back the same way. Every shipped theme
+names JetBrains Mono at 14:
 
 ```
 /usr/share/fonts/ttf/JetBrainsMono-Regular.ttf
@@ -249,15 +249,38 @@ Switching is one command:
 
 ```
 aplus-wmctl list-themes
-aplus-wmctl set-theme light
+aplus-wmctl set-theme crimson
 ```
 
-The server parses `/usr/share/themes/light.conf`, repoints the link so the next boot starts
+The server parses `/usr/share/themes/crimson.conf`, repoints the link so the next boot starts
 with it, repaints and tells every client. A file that does not parse is refused with the line
 that is wrong, and nothing changes. `aplus-wmctl reload` reads the theme in use again after an
 edit in place. An application does the same through `ui_control_set_theme()`, over the
 [control socket](protocol.md#the-control-socket); `aplus-settings` is one, with a tile per
 installed theme on its Appearance page.
+
+### Variants
+
+A theme comes in a dark and a light variant, and which one is in use is the user's choice,
+not the theme's: the `wm.variant` key of the [user settings](#user-settings), `dark` when it
+is not set. It stays across theme switches, so picking light once makes every theme light.
+
+```
+aplus-wmctl set wm.variant light
+aplus-wmctl unset wm.variant
+```
+
+The server reads the theme file again in the new variant and sends it to every client like any
+other change; the Dark and Light buttons next to the Theme heading in `aplus-settings` do the
+same. An application that draws something the theme has no role for asks which one it got:
+
+```c
+const char* ui_theme_variant(void);
+bool        ui_theme_is_light(void);
+```
+
+`ui_theme_variant()` returns `UI_THEME_VARIANT_DARK` or `UI_THEME_VARIANT_LIGHT`, carried in the
+`variant` field of the theme message.
 
 ### User settings
 
@@ -284,14 +307,26 @@ Appearance page and the wallpaper from its Wallpaper page through the same reque
 # Colours are #RRGGBB or #RRGGBBAA, or #RRGGBB followed by an alpha from 0 to 1.
 
 [ui]
-background = #F2F2F2
-hover      = #000000 0.06
 font_size  = 14
 
 [wm]
 wallpaper  = /usr/share/images/03.webp
+
+[dark.ui]
+background = #2B2B2B
+hover      = #FFFFFF 0.07
+
+[light.ui]
+background = #F2F2F2
+hover      = #000000 0.06
+
+[light.wm]
 taskbar    = #EBEBEB
 ```
+
+`[ui]` and `[wm]` hold what both variants share. A section prefixed with `dark.` or `light.`
+counts only in that variant. The file is read top to bottom, so a key set again in a variant's
+section after the shared one wins. A file with no variant sections looks the same in both.
 
 `[ui]` holds every role of `ui_theme_t`, under the field's own name. `[wm]` is the server's
 own palette: `desktop_top`, `desktop_bottom`, `title_active`,
@@ -308,8 +343,15 @@ by its title, buttons, icon and shadow instead.
 
 Anything a file leaves out keeps the built-in value, so a theme can be a single accent colour.
 A key nothing knows is logged and skipped. With no file at all, the server uses the built-in
-theme and reports its name as `default`. `dark.conf` spells the built-in values out, and
-`light.conf` is its counterpart.
+theme and reports its name as `default`. The dark variant of `default.conf` spells the built-in
+values out, and its light variant is the counterpart.
+
+The other shipped themes are generated, one per wallpaper in `/usr/share/images` (the `aplus-*`
+pictures excepted), by `scripts/gen-themes`: the hue that carries the most colour in the picture
+becomes `primary`, `focus_ring` and the WM `accent`, the greys are tinted slightly towards it,
+and every pair a widget draws is checked against WCAG contrast before the file is written. Run
+it again after adding a wallpaper rather than editing the generated files; its `NAMES` table
+gives each picture a theme name.
 
 ### Following it in an application
 

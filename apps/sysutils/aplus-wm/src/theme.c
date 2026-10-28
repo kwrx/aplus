@@ -24,8 +24,9 @@
 /**
  * @brief The theme: read from UI_THEME_LINK at startup, switched at runtime, and broadcast to every client.
  *
- * A theme file is `key = value` lines under `[ui]` and `[wm]` sections; whatever it leaves out
- * keeps the built-in value, and a missing file means the built-in theme as a whole.
+ * A theme file is `key = value` lines under `[ui]` and `[wm]` sections, and under `[dark.ui]`,
+ * `[light.wm]` and so on for what only one variant sets; whatever it leaves out keeps the
+ * built-in value, and a missing file means the built-in theme as a whole.
  */
 
 #include <errno.h>
@@ -67,6 +68,7 @@ typedef enum {
     WM_THEME_NUMBER,
     WM_THEME_PATH,
     WM_THEME_PATH_OPTIONAL,
+    WM_THEME_VARIANT,
 
 } wm_theme_kind_t;
 
@@ -156,6 +158,16 @@ static const wm_theme_key_t wm_theme_keys[] = {
     WM_THEME_WM_PATH(font, WM_THEME_PATH),
     WM_THEME_WM_NUMBER(font_size, 4.0, 72.0),
     WM_THEME_WM_PATH(wallpaper, WM_THEME_PATH_OPTIONAL),
+    WM_THEME_KEY("wm", "variant", WM_THEME_VARIANT, client.variant, 0.0, 0.0),
+};
+
+
+/**
+ * @brief The variants a theme file may set apart, each a prefix of its sections.
+ */
+static const char* const wm_theme_variants[] = {
+    UI_THEME_VARIANT_DARK,
+    UI_THEME_VARIANT_LIGHT,
 };
 
 
@@ -218,6 +230,7 @@ static void wm_theme_defaults(wm_theme_t* theme) {
     ui_msg_theme_t* client = &theme->client;
 
     snprintf(client->name, sizeof(client->name), "%s", WM_THEME_BUILTIN);
+    snprintf(client->variant, sizeof(client->variant), "%s", UI_THEME_VARIANT_DARK);
 
     client->background     = wm_theme_wire(ui->background);
     client->surface        = wm_theme_wire(ui->surface);
@@ -390,6 +403,18 @@ static int wm_theme_store(wm_theme_t* theme, const wm_theme_key_t* key, const ch
             memcpy(field, value, strlen(value) + 1);
 
             return 0;
+
+        case WM_THEME_VARIANT:
+
+            for (size_t i = 0; i < WM_ARRAY_COUNT(wm_theme_variants); i++) {
+
+                if (strcmp(value, wm_theme_variants[i]) == 0) {
+                    snprintf((char*)field, key->size, "%s", value);
+                    return 0;
+                }
+            }
+
+            return -1;
     }
 
     return -1;
@@ -430,6 +455,17 @@ static const wm_theme_key_t* wm_theme_find(const char* section, const char* name
  * @return 0 to go on, or -1 to stop the parse.
  */
 typedef int (*wm_theme_line_fn)(const char* path, int number, const char* section, const char* name, const char* value, void* user, char* text, size_t size);
+
+
+/**
+ * @brief A theme file as it is read: the theme it fills in and the variant whose sections count.
+ */
+typedef struct {
+
+    wm_theme_t* theme;
+    const char* variant;
+
+} wm_theme_reading_t;
 
 
 /**
@@ -522,28 +558,62 @@ static int wm_theme_parse(FILE* f, const char* path, wm_theme_line_fn fn, void* 
 
 
 /**
- * @brief Stores a theme file's key into the theme being read.
+ * @brief Strips a variant's prefix off a section, telling apart the sections of the other variants.
+ *
+ * @param section The section, `ui` or `VARIANT.ui`.
+ * @param variant The variant being read.
+ * @return The section without its prefix, or NULL when it belongs to another variant.
+ */
+static const char* wm_theme_section(const char* section, const char* variant) {
+
+    const char* dot = strchr(section, '.');
+
+    if (!dot) {
+        return section;
+    }
+
+    const size_t length = (size_t)(dot - section);
+
+    return strlen(variant) == length && strncmp(section, variant, length) == 0 ? dot + 1 : NULL;
+}
+
+
+/**
+ * @brief Stores a theme file's key into the theme being read, skipping the sections of the other variants.
  *
  * @param path The file, for the warnings.
  * @param number The line number.
  * @param section The section the line is under.
  * @param name The key.
  * @param value The text after the `=`.
- * @param user The wm_theme_t being read.
+ * @param user The wm_theme_reading_t being read.
  * @param text Receives what was wrong, on failure.
  * @param size The size of text.
  * @return 0, or -1 when the value does not fit the key.
  */
 static int wm_theme_parse_key(const char* path, int number, const char* section, const char* name, const char* value, void* user, char* text, size_t size) {
 
-    const wm_theme_key_t* key = wm_theme_find(section, name);
+    wm_theme_reading_t* reading = user;
+
+    const char* own = wm_theme_section(section, reading->variant);
+
+    if (!own) {
+        return 0;
+    }
+
+    const wm_theme_key_t* key = wm_theme_find(own, name);
 
     if (!key) {
         ulog_warnf("%s: line %d: no such key %s.%s, ignored", path, number, section, name);
         return 0;
     }
 
-    if (wm_theme_store((wm_theme_t*)user, key, value) < 0) {
+    if (key->kind == WM_THEME_VARIANT) {
+        ulog_warnf("%s: line %d: %s.%s is the user's to choose, ignored", path, number, section, name);
+        return 0;
+    }
+
+    if (wm_theme_store(reading->theme, key, value) < 0) {
         snprintf(text, size, "line %d: bad value for %s.%s", number, section, name);
         return -1;
     }
@@ -781,16 +851,32 @@ static void wm_theme_overlay(wm_theme_t* theme, const wm_setting_t* list, size_t
 
 
 /**
+ * @brief Reports the variant the user's settings ask for, dark when they name none.
+ *
+ * @param list The settings.
+ * @param count How many there are.
+ * @return UI_THEME_VARIANT_DARK or UI_THEME_VARIANT_LIGHT.
+ */
+static const char* wm_theme_variant(const wm_setting_t* list, size_t count) {
+
+    const size_t i = wm_theme_setting_find(list, count, "wm", "variant");
+
+    return i < count && strcmp(list[i].value, UI_THEME_VARIANT_LIGHT) == 0 ? UI_THEME_VARIANT_LIGHT : UI_THEME_VARIANT_DARK;
+}
+
+
+/**
  * @brief Reads a theme file into a theme of its own, leaving the one in use alone.
  *
  * @param path The file.
  * @param name What to call the theme.
+ * @param variant Which variant's sections to read.
  * @param theme Receives the theme.
  * @param text Receives what was wrong, on failure.
  * @param size The size of text.
  * @return 0, or -1 with errno set: ENOENT when there is no such file, EINVAL when it does not parse.
  */
-static int wm_theme_load(const char* path, const char* name, wm_theme_t* theme, char* text, size_t size) {
+static int wm_theme_load(const char* path, const char* name, const char* variant, wm_theme_t* theme, char* text, size_t size) {
 
     FILE* f = fopen(path, "r");
 
@@ -808,8 +894,11 @@ static int wm_theme_load(const char* path, const char* name, wm_theme_t* theme, 
     wm_theme_defaults(theme);
 
     snprintf(theme->client.name, sizeof(theme->client.name), "%s", name);
+    snprintf(theme->client.variant, sizeof(theme->client.variant), "%s", variant);
 
-    const int e = wm_theme_parse(f, path, wm_theme_parse_key, theme, text, size);
+    wm_theme_reading_t reading = {theme, variant};
+
+    const int e = wm_theme_parse(f, path, wm_theme_parse_key, &reading, text, size);
 
     fclose(f);
 
@@ -857,7 +946,7 @@ static void wm_theme_link_name(char* name, size_t size) {
 
 
 /**
- * @brief Reads the theme UI_THEME_LINK names.
+ * @brief Reads the theme UI_THEME_LINK names, in the variant the user's settings ask for.
  *
  * @param theme Receives the theme.
  * @param text Receives what was wrong, on failure.
@@ -870,7 +959,7 @@ static int wm_theme_load_link(wm_theme_t* theme, char* text, size_t size) {
 
     wm_theme_link_name(name, sizeof(name));
 
-    return wm_theme_load(UI_THEME_LINK, name, theme, text, size);
+    return wm_theme_load(UI_THEME_LINK, name, wm_theme_variant(wm.settings, wm.settings_count), theme, text, size);
 }
 
 
@@ -1038,7 +1127,7 @@ int wm_theme_switch(const char* name, char* text, size_t size) {
 
     static wm_theme_t next;
 
-    if (wm_theme_load(path, name, &next, text, size) < 0) {
+    if (wm_theme_load(path, name, wm_theme_variant(wm.settings, wm.settings_count), &next, text, size) < 0) {
 
         const int e = errno;
 
@@ -1085,6 +1174,8 @@ int wm_theme_reload(char* text, size_t size) {
 
     static wm_theme_t next;
 
+    wm_theme_read_settings();
+
     if (wm_theme_load_link(&next, text, size) < 0) {
 
         if (errno != ENOENT) {
@@ -1094,12 +1185,34 @@ int wm_theme_reload(char* text, size_t size) {
         wm_theme_defaults(&next);
     }
 
-    wm_theme_read_settings();
     wm_theme_use(&next);
 
     snprintf(text, size, "reloaded %s", wm.theme.client.name);
 
     return 0;
+}
+
+
+/**
+ * @brief Reads the theme in use again into wm.base, for a change of variant, keeping the base before when it no longer parses.
+ */
+static void wm_theme_rebase(void) {
+
+    static wm_theme_t next;
+
+    char text[UI_CTL_TEXT_MAX];
+
+    if (wm_theme_load_link(&next, text, sizeof(text)) < 0) {
+
+        if (errno != ENOENT) {
+            ulog_warnf("%s, keeping the theme before", text);
+            return;
+        }
+
+        wm_theme_defaults(&next);
+    }
+
+    wm.base = next;
 }
 
 
@@ -1164,9 +1277,15 @@ int wm_theme_set_options(const ui_msg_ctl_option_t* options, size_t count, char*
     const int kept = wm_theme_write_settings(list, n);
     const int e    = errno;
 
+    const bool rebase = strcmp(wm_theme_variant(list, n), wm.base.client.variant) != 0;
+
     memcpy(wm.settings, list, n * sizeof(list[0]));
 
     wm.settings_count = n;
+
+    if (rebase) {
+        wm_theme_rebase();
+    }
 
     wm_theme_use(&wm.base);
 
@@ -1233,6 +1352,7 @@ int wm_theme_get_option(const char* section, const char* name, char* text, size_
 
         case WM_THEME_PATH:
         case WM_THEME_PATH_OPTIONAL:
+        case WM_THEME_VARIANT:
 
             snprintf(text, size, "%s", (const char*)field);
 
