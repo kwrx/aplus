@@ -35,6 +35,8 @@ See [FEATURES.md](/docs/FEATURES.md) for more information about features.
     <img src="./docs/images/v0.7-ui-2.png" alt="aplus v0.7 - desktop running on Qemu" width="100%"></img>
 </p>
 
+More screenshots, from the v0.4 text console to the themed desktop, are in the [screenshot timeline](/docs/images/README.md).
+
 
 ## :electron: Kernel
 The kernel provides a basic *unix* environment with a minimal subset of *posix* stuff.
