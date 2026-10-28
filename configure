@@ -197,6 +197,7 @@ stage_3() {
         packages="$packages nano"
         packages="$packages util-linux"
         packages="$packages Python"
+        packages="$packages bochs"
     fi
 
     die python ./scripts/get-pkg.py --repo $REPO_PACKAGES --repo-version $REPO_PACKAGES_VERSION --prefix $CONFIG_SYSTEM_PATH_SYSROOT --db $CONFIG_SYSTEM_PATH_SYSROOT/var/lib/pkg/pkg.db -i $packages
