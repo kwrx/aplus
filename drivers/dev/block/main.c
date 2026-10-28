@@ -76,6 +76,31 @@ int block_getattr(device_t* device, struct stat* st) {
 }
 
 
+/**
+ * @brief Copies the part of a write that falls on the cached sector into the cache, so it stays valid.
+ * @param device The block device.
+ * @param buf The data being written.
+ * @param offset The absolute byte offset of the write on the disk.
+ * @param size The number of bytes.
+ */
+static void block_cache_refresh(device_t* device, const void* buf, off_t offset, size_t size) {
+
+    if (!device->blk.cache.c_cached)
+        return;
+
+    off_t start = (off_t)device->blk.cache.c_blkno * device->blk.blksize;
+    off_t end   = start + device->blk.blksize;
+
+    if (offset >= end || offset + (off_t)size <= start)
+        return;
+
+    off_t from = offset > start ? offset : start;
+    off_t to   = offset + (off_t)size < end ? offset + (off_t)size : end;
+
+    memcpy((void*)((uintptr_t)device->blk.cache.c_data + (uintptr_t)(from - start)), (const void*)((uintptr_t)buf + (uintptr_t)(from - offset)), to - from);
+}
+
+
 ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size) {
 
     DEBUG_ASSERT(device);
@@ -107,9 +132,9 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
 
     current_task->rusage.ru_oublock++;
 
-    __cache_update(device->blk.cache, 0, 0);
-
     offset += device->blk.blkoff * device->blk.blksize;
+
+    block_cache_refresh(device, buf, offset, size);
 
     long sb = offset / device->blk.blksize;
     long eb = (offset + size - 1) / device->blk.blksize;
@@ -127,7 +152,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
         if (unlikely(!__cache_is_cached(device->blk.cache, sb))) {
 
             if (device->blk.read(device, device->blk.cache.c_data, sb, 1) <= 0)
-                return errno = EIO, xoff;
+                return device->blk.cache.c_cached = 0, errno = EIO, xoff;
 
             __cache_update(device->blk.cache, sb, 1);
         }
@@ -135,7 +160,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
         memcpy((void*)((uintptr_t)device->blk.cache.c_data + ((uintptr_t)offset % device->blk.blksize)), buf, p);
 
         if (device->blk.write(device, device->blk.cache.c_data, sb, 1) <= 0)
-            return errno = EIO, xoff;
+            return device->blk.cache.c_cached = 0, errno = EIO, xoff;
 
         xoff += p;
         sb++;
@@ -152,7 +177,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
         if (unlikely(!__cache_is_cached(device->blk.cache, eb))) {
 
             if (device->blk.read(device, device->blk.cache.c_data, eb, 1) <= 0)
-                return errno = EIO, xoff;
+                return device->blk.cache.c_cached = 0, errno = EIO, xoff;
 
             __cache_update(device->blk.cache, eb, 1);
         }
@@ -160,7 +185,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
         memcpy(device->blk.cache.c_data, (void*)((uintptr_t)buf + size - p), p);
 
         if (device->blk.write(device, device->blk.cache.c_data, eb, 1) <= 0)
-            return errno = EIO, xoff;
+            return device->blk.cache.c_cached = 0, errno = EIO, xoff;
 
         eb--;
     }
@@ -178,7 +203,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
             for (; i - max >= 0; i -= max, sb += max, xoff += device->blk.blksize * max) {
 
                 if (unlikely(device->blk.write(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, device->blk.blkmax)) <= 0)
-                    return errno = EIO, xoff;
+                    return device->blk.cache.c_cached = 0, errno = EIO, xoff;
             }
         }
 
@@ -186,7 +211,7 @@ ssize_t block_write(device_t* device, const void* buf, off_t offset, size_t size
         if (likely(i > 0)) {
 
             if (unlikely(device->blk.write(device, (void*)((uintptr_t)buf + (uintptr_t)xoff), sb, i)) <= 0)
-                return errno = EIO, xoff;
+                return device->blk.cache.c_cached = 0, errno = EIO, xoff;
         }
     }
 
