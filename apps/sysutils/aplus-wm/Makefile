@@ -29,10 +29,10 @@ $(SYSROOT)/usr/share/images/%.webp: assets/usr/share/images/%.webp
 	$(QUIET)echo "    INSTALL $(shell realpath -m --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)install -D -m 644 $< $@
 
-$(SYSROOT)/etc/ui/theme.conf: | $(SYSROOT)/usr/share/themes/dark.conf
+$(SYSROOT)/etc/ui/theme.conf: | $(SYSROOT)/usr/share/themes/default.conf
 	$(QUIET)echo "    LN      $(shell realpath -m -s --relative-base=$(ROOTDIR) $@)"
 	$(QUIET)mkdir -p $(dir $@)
-	$(QUIET)ln -sfn ../../usr/share/themes/dark.conf $@
+	$(QUIET)ln -sfn ../../usr/share/themes/default.conf $@
 
 include $(ROOTDIR)/build/cross.mk
 include $(ROOTDIR)/build/build-binary.mk

@@ -58,7 +58,8 @@ static void show_usage(int status) {
            "   reload                      read the theme in use again\n"
            "   get SECTION.KEY             show the value a theme key has right now\n"
            "   set SECTION.KEY VALUE       override a theme key for every theme, and keep it\n"
-           "   unset SECTION.KEY           give a key back to the theme\n\n"
+           "   unset SECTION.KEY           give a key back to the theme\n"
+           "   set wm.variant dark|light   pick the variant of every theme\n\n"
            "Options:\n"
            "   -s, --socket                control socket (default: " UI_CONTROL_SOCKET ")\n"
            "       --help                  show this help\n");

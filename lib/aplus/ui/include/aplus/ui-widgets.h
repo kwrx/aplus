@@ -141,6 +141,20 @@ const ui_theme_t* ui_theme_system(void);
 const char* ui_theme_name(void);
 
 /**
+ * @brief Reports which variant of the system theme is in use.
+ *
+ * @return UI_THEME_VARIANT_DARK or UI_THEME_VARIANT_LIGHT.
+ */
+const char* ui_theme_variant(void);
+
+/**
+ * @brief Reports whether the system theme is in its light variant.
+ *
+ * @return true for light, false for dark.
+ */
+bool ui_theme_is_light(void);
+
+/**
  * @brief Sets the theme a view is created against, or restores the system theme when given NULL.
  *
  * A view keeps the theme it is created against, so set this before ui_view_create().
