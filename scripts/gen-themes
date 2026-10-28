@@ -1,0 +1,409 @@
+#!/usr/bin/env python3
+
+# Usage
+#   gen-themes [IMAGES]
+
+# This script writes an aplus-wm theme for every wallpaper in IMAGES (default: the sysroot's
+# /usr/share/images), the aplus-* ones excepted: the hue that carries the most colour in the
+# picture becomes the accent, and the greys are tinted towards it, in a dark and a light variant.
+# Every pair a widget draws is checked against WCAG contrast before the file is written. The
+# .conf files are committed, so a normal build never needs Pillow.
+
+import math
+import os
+import sys
+
+try:
+    from PIL import Image
+except ImportError:
+    sys.exit("gen-themes: Pillow is required (python-pillow)")
+
+ROOTDIR = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+OUTDIR = os.path.join(ROOTDIR, "apps/sysutils/aplus-wm/assets/usr/share/themes")
+GUESTDIR = "/usr/share/images"
+
+# What each wallpaper's theme is called; one not listed is named after its file.
+NAMES = {
+    "01": "lagoon",
+    "02": "slate",
+    "03": "meadow",
+    "04": "midnight",
+    "05": "dusk",
+    "06": "ocean",
+    "07": "crimson",
+}
+
+# The red every variant draws danger and the close button with, as in the default theme.
+RED = {
+    "dark": ("#C9363C", "#E5484D", "#BD3238"),
+    "light": ("#D93B41", "#D93B41", "#BD2F35"),
+}
+
+# The tone (Oklab lightness) and colourfulness (Oklab chroma) of every grey, per variant.
+GREYS = {
+    "dark": {
+        "background": (0.290, 0.012),
+        "surface": (0.325, 0.012),
+        "surface_sunken": (0.225, 0.012),
+        "secondary": (0.355, 0.014),
+        "taskbar": (0.190, 0.012),
+        "text": (0.950, 0.006),
+        "text_muted": (0.720, 0.012),
+    },
+    "light": {
+        "background": (0.972, 0.006),
+        "surface": (0.995, 0.002),
+        "surface_sunken": (0.995, 0.002),
+        "secondary": (0.918, 0.010),
+        "taskbar": (0.935, 0.010),
+        "text": (0.235, 0.010),
+        "text_muted": (0.520, 0.014),
+    },
+}
+
+# The keys both variants share, written under [ui] and [wm].
+COMMON_UI = [
+    ("on_primary", "#FFFFFF"),
+    ("on_danger", "#FFFFFF"),
+    ("disabled_fade", "0.55"),
+    ("corner_radius", "8"),
+    ("font_size", "14"),
+    ("font_regular", "/usr/share/fonts/ttf/NotoSans-Regular.ttf"),
+    ("font_medium", "/usr/share/fonts/ttf/NotoSans-Medium.ttf"),
+    ("font_bold", "/usr/share/fonts/ttf/NotoSans-Bold.ttf"),
+    ("font_mono", "/usr/share/fonts/ttf/JetBrainsMono-Regular.ttf"),
+    ("font_mono_bold", "/usr/share/fonts/ttf/JetBrainsMono-Bold.ttf"),
+    ("font_mono_size", "14"),
+]
+
+COMMON_WM = [
+    ("taskbar_shadow", "0.60"),
+    ("font", "/usr/share/fonts/ttf/NotoSans-Regular.ttf"),
+    ("font_size", "14"),
+]
+
+# The translucent washes and marks, per variant, as in the default theme.
+WASHES = {
+    "dark": {
+        "ui": [
+            ("hover", "#FFFFFF 0.07"),
+            ("active", "#FFFFFF 0.14"),
+            ("border", "#FFFFFF 0.07"),
+        ],
+        "wm": [
+            ("outline", "#000000 0.55"),
+            ("highlight", "#FFFFFF 0.10"),
+            ("highlight_idle", "#FFFFFF 0.05"),
+            ("button", "#FFFFFF 0.07"),
+            ("button_over", "#FFFFFF 0.16"),
+            ("button_down", "#FFFFFF 0.24"),
+            ("taskbar_hover", "#FFFFFF 0.07"),
+            ("taskbar_active", "#FFFFFF 0.11"),
+            ("taskbar_down", "#FFFFFF 0.16"),
+            ("taskbar_mark", "#999999 0.70"),
+            ("taskbar_edge", "#FFFFFF 0.08"),
+            ("shadow_key", "0.42"),
+            ("shadow_ambient", "0.30"),
+        ],
+    },
+    "light": {
+        "ui": [
+            ("hover", "#000000 0.06"),
+            ("active", "#000000 0.10"),
+            ("border", "#000000 0.11"),
+        ],
+        "wm": [
+            ("outline", "#000000 0.16"),
+            ("highlight", "#FFFFFF 0.85"),
+            ("highlight_idle", "#FFFFFF 0.45"),
+            ("button", "#000000 0.05"),
+            ("button_over", "#000000 0.10"),
+            ("button_down", "#000000 0.16"),
+            ("taskbar_hover", "#000000 0.06"),
+            ("taskbar_active", "#000000 0.08"),
+            ("taskbar_down", "#000000 0.13"),
+            ("taskbar_mark", "#000000 0.50"),
+            ("taskbar_edge", "#000000 0.12"),
+            ("shadow_key", "0.24"),
+            ("shadow_ambient", "0.16"),
+        ],
+    },
+}
+
+
+# @brief Converts an sRGB component from 0..1 to linear light.
+# @param c The component.
+# @return The linear component.
+def linear(c):
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+# @brief Converts a linear component back to sRGB.
+# @param c The linear component.
+# @return The sRGB component.
+def gamma(c):
+    return 12.92 * c if c <= 0.0031308 else 1.055 * c ** (1 / 2.4) - 0.055
+
+
+# @brief Converts sRGB to Oklab.
+# @param rgb The colour, each component 0..1.
+# @return (L, a, b).
+def oklab(rgb):
+    r, g, b = (linear(c) for c in rgb)
+    l = (0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b) ** (1 / 3)
+    m = (0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b) ** (1 / 3)
+    s = (0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b) ** (1 / 3)
+    return (0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+            1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+            0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s)
+
+
+# @brief Converts Oklch to linear sRGB, which may fall outside 0..1.
+# @param L The lightness.
+# @param C The chroma.
+# @param h The hue in radians.
+# @return (r, g, b), linear.
+def oklch_linear(L, C, h):
+    a, b = C * math.cos(h), C * math.sin(h)
+    l = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3
+    m = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3
+    s = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3
+    return (4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s,
+            -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s,
+            -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s)
+
+
+# @brief Converts Oklch to sRGB, giving up chroma until the colour fits the gamut.
+# @param L The lightness.
+# @param C The chroma.
+# @param h The hue in radians.
+# @return (r, g, b), each 0..1.
+def oklch(L, C, h):
+    while C > 0 and not all(-1e-6 <= c <= 1 + 1e-6 for c in oklch_linear(L, C, h)):
+        C -= 0.002
+    return tuple(min(1.0, max(0.0, gamma(min(1.0, max(0.0, c))))) for c in oklch_linear(L, max(C, 0.0), h))
+
+
+# @brief Reports the WCAG relative luminance of a colour.
+# @param rgb The colour.
+# @return The luminance.
+def luminance(rgb):
+    r, g, b = (linear(c) for c in rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+# @brief Reports the WCAG contrast ratio between two colours.
+# @param x One colour.
+# @param y The other.
+# @return The ratio, 1 to 21.
+def contrast(x, y):
+    a, b = sorted((luminance(x), luminance(y)), reverse=True)
+    return (a + 0.05) / (b + 0.05)
+
+
+# @brief Lays a translucent colour over an opaque one.
+# @param under The colour beneath.
+# @param over The colour on top.
+# @param alpha How opaque the top one is.
+# @return The result.
+def blend(under, over, alpha):
+    return tuple(u * (1 - alpha) + o * alpha for u, o in zip(under, over))
+
+
+# @brief Spells a colour the way a theme file does.
+# @param rgb The colour.
+# @return "#RRGGBB".
+def hexcolor(rgb):
+    return "#%02X%02X%02X" % tuple(round(c * 255) for c in rgb)
+
+
+# @brief Finds the hue that carries the most colour in a picture, and how colourful it is there.
+# @param image The picture.
+# @return (hue in radians, chroma).
+def seed(image):
+
+    small = image.convert("RGB").resize((160, 90), Image.BILINEAR)
+    bins = [[0.0, 0.0, 0.0, 0.0] for _ in range(36)]
+
+    for r, g, b in (small.get_flattened_data() if hasattr(small, "get_flattened_data") else small.getdata()):
+        L, A, B = oklab((r / 255, g / 255, b / 255))
+        C = math.hypot(A, B)
+        if C < 0.02 or L < 0.15 or L > 0.95:
+            continue
+        h = math.atan2(B, A) % (2 * math.pi)
+        k = int(h / (2 * math.pi) * 36) % 36
+        bins[k][0] += C
+        bins[k][1] += A
+        bins[k][2] += B
+        bins[k][3] += 1
+
+    weights = [bins[k][0] + 0.5 * (bins[k - 1][0] + bins[(k + 1) % 36][0]) for k in range(36)]
+    k = max(range(36), key=lambda i: weights[i])
+
+    if bins[k][3] == 0:
+        return 4.40, 0.0
+
+    return math.atan2(bins[k][2], bins[k][1]) % (2 * math.pi), bins[k][0] / bins[k][3]
+
+
+# @brief Finds the mean colour of the top and the bottom of a picture, for the gradient the desktop falls back on.
+# @param image The picture.
+# @return (top, bottom), each sRGB.
+def ends(image):
+    small = image.convert("RGB").resize((1, 2), Image.BOX)
+    return tuple(tuple(c / 255 for c in small.getpixel((0, y))) for y in range(2))
+
+
+# @brief Finds the lightest (or darkest) tone of a hue whose colour still keeps a contrast against every one of a set.
+# @param h The hue.
+# @param C The chroma wanted.
+# @param pairs (colour, wash colour or None, wash alpha, ratio) the result must keep against, each once washed over.
+# @param lighter True to search down from white, False up from black.
+# @return The colour.
+def solve(h, C, pairs, lighter):
+
+    steps = [i / 400 for i in range(400, 0, -1)] if lighter else [i / 400 for i in range(1, 401)]
+
+    for L in steps:
+        rgb = oklch(L, C, h)
+        if all(contrast(blend(rgb, w, a) if w else rgb, other) >= ratio for other, w, a, ratio in pairs):
+            return rgb
+
+    sys.exit("gen-themes: no tone of hue %.2f meets %r" % (h, pairs))
+
+
+# @brief Builds one variant of a theme from the seed.
+# @param variant "dark" or "light".
+# @param h The seed's hue.
+# @param C The seed's chroma.
+# @return (ui keys, wm keys), each a list of (key, value).
+def variant(variant, h, C):
+
+    white, black = (1.0, 1.0, 1.0), (0.0, 0.0, 0.0)
+    tint = min(1.0, C / 0.08)
+    greys = {k: oklch(L, c * tint, h) for k, (L, c) in GREYS[variant].items()}
+
+    chroma = min(max(C * 1.6, 0.11), 0.17)
+
+    if variant == "dark":
+        primary = solve(h, chroma, [(white, white, 0.14, 4.6)], lighter=True)
+        ring = solve(h, chroma, [(greys["background"], None, 0, 4.5), (greys["surface"], None, 0, 4.0)], lighter=False)
+    else:
+        primary = solve(h, chroma, [(white, black, 0.0, 4.6), (greys["background"], None, 0, 4.0)], lighter=True)
+        ring = primary
+
+    danger, close_over, close_down = RED[variant]
+
+    ui = [
+        ("background", hexcolor(greys["background"])),
+        ("surface", hexcolor(greys["surface"])),
+        ("surface_sunken", hexcolor(greys["surface_sunken"])),
+        ("primary", hexcolor(primary)),
+        ("secondary", hexcolor(greys["secondary"])),
+        ("on_secondary", hexcolor(greys["text"])),
+        ("danger", danger),
+    ] + WASHES[variant]["ui"] + [
+        ("focus_ring", hexcolor(ring)),
+        ("text", hexcolor(greys["text"])),
+        ("text_muted", hexcolor(greys["text_muted"])),
+    ]
+
+    wm = [
+        ("title_active", hexcolor(greys["text"])),
+        ("title_idle", hexcolor(blend(greys["text_muted"], greys["background"], 0.15))),
+        ("close_over", close_over),
+        ("close_down", close_down),
+        ("accent", hexcolor(ring)),
+        ("taskbar", hexcolor(greys["taskbar"])),
+        ("taskbar_power", close_over),
+    ] + WASHES[variant]["wm"]
+
+    audit(variant, greys, primary, ring)
+
+    return ui, wm
+
+
+# @brief Checks the pairs a widget draws, stopping the script when one falls short.
+# @param variant "dark" or "light".
+# @param greys The variant's greys.
+# @param primary The fill under white text.
+# @param ring The focus ring and accent marks.
+def audit(variant, greys, primary, ring):
+
+    white = (1.0, 1.0, 1.0)
+    wash = white if variant == "dark" else (0.0, 0.0, 0.0)
+    hover = 0.07 if variant == "dark" else 0.06
+
+    checks = [
+        ("text on background", greys["text"], greys["background"], 7.0),
+        ("text on surface", greys["text"], greys["surface"], 7.0),
+        ("text on sunken", greys["text"], greys["surface_sunken"], 7.0),
+        ("text on secondary", greys["text"], greys["secondary"], 4.5),
+        ("text on hovered surface", greys["text"], blend(greys["surface"], wash, hover), 4.5),
+        ("muted on background", greys["text_muted"], greys["background"], 4.5),
+        ("muted on surface", greys["text_muted"], greys["surface"], 4.5),
+        ("white on primary", white, primary, 4.5),
+        ("white on hovered primary", white, blend(primary, wash, hover), 4.5),
+        ("ring on background", ring, greys["background"], 3.0),
+        ("ring on surface", ring, greys["surface"], 3.0),
+    ]
+
+    for name, x, y, ratio in checks:
+        if contrast(x, y) < ratio:
+            sys.exit("gen-themes: %s %s: %.2f < %.1f" % (variant, name, contrast(x, y), ratio))
+
+
+# @brief Writes the theme of one wallpaper.
+# @param path The wallpaper.
+# @param name The theme's name.
+def write(path, name):
+
+    image = Image.open(path)
+    h, C = seed(image)
+    top, bottom = ends(image)
+    stem = os.path.basename(path)
+
+    lines = [
+        "# %s: generated by scripts/gen-themes from %s, with its greys tinted towards the" % (name, stem),
+        "# picture's most colourful hue (Oklch %.0f°). Run it again rather than editing this file." % math.degrees(h),
+        "#",
+        "# Colours are #RRGGBB or #RRGGBBAA, or #RRGGBB followed by an alpha from 0 to 1.",
+        "# [ui] and [wm] hold what both variants share; [dark.*] and [light.*] what each sets apart.",
+    ]
+
+    width = max(len(k) for k, _ in COMMON_UI + COMMON_WM + WASHES["dark"]["wm"] + [("surface_sunken", ""), ("desktop_bottom", "")])
+
+    def section(title, keys):
+        lines.append("")
+        lines.append("[%s]" % title)
+        lines.extend("%-*s = %s" % (width, k, v) for k, v in keys)
+
+    section("ui", COMMON_UI)
+    section("wm", [("wallpaper", "%s/%s" % (GUESTDIR, stem)), ("desktop_top", hexcolor(top)), ("desktop_bottom", hexcolor(bottom))] + COMMON_WM)
+
+    for v in ("dark", "light"):
+        ui, wm = variant(v, h, C)
+        section("%s.ui" % v, ui)
+        section("%s.wm" % v, wm)
+
+    with open(os.path.join(OUTDIR, name + ".conf"), "w") as f:
+        f.write("\n".join(lines) + "\n")
+
+    print("    THEME   %s.conf (%s, hue %.0f, chroma %.3f)" % (name, stem, math.degrees(h), C))
+
+
+images = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOTDIR, "root" + GUESTDIR)
+
+if not os.path.isdir(images):
+    sys.exit("gen-themes: no such directory: %s" % images)
+
+os.makedirs(OUTDIR, exist_ok=True)
+
+for entry in sorted(os.listdir(images)):
+
+    stem, ext = os.path.splitext(entry)
+
+    if ext.lower() != ".webp" or stem.startswith("aplus-"):
+        continue
+
+    write(os.path.join(images, entry), NAMES.get(stem, stem))
