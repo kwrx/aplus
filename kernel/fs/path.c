@@ -181,7 +181,7 @@ inode_t* path_follows(inode_t* inode) {
 
 
 /**
- * @brief Resolves a path from a directory, creating the last component when asked to.
+ * @brief Resolves a path from a directory, creating the last component when asked to; an empty path names nothing, as on Linux.
  *
  * @return The inode, referenced, or NULL with errno set; @p created, when given, is set if the last component was created.
  */
@@ -189,6 +189,10 @@ static inode_t* __path_lookup(inode_t* cwd, const char* path, int flags, mode_t 
 
     DEBUG_ASSERT(cwd);
     DEBUG_ASSERT(path);
+
+    if (unlikely(path[0] == '\0')) {
+        return errno = ENOENT, NULL;
+    }
 
 
     inode_t* c = NULL;
