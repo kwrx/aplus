@@ -80,18 +80,9 @@ int ext2_unlink(inode_t* parent, const char* name) {
                 break;
 
         } else {
-            uint64_t size   = ext2_inode_is_fast_symlink(node) ? 0 : ext2_inode_get_size(ext2, node);
-            uint32_t blocks = (size + ext2->blocksize - 1) / ext2->blocksize;
-            bool failed     = false;
+            uint64_t size = ext2_inode_is_fast_symlink(node) ? 0 : ext2_inode_get_size(ext2, node);
 
-            for (uint32_t block = blocks; block > 0; block--) {
-                if (ext2_utils_free_inode_data(ext2, node, block - 1) < 0) {
-                    failed = true;
-                    break;
-                }
-            }
-
-            if (failed)
+            if (size > 0 && ext2_utils_free_inode_range(ext2, node, 0) < 0)
                 break;
 
             memset(node, 0, ext2->inodesize);

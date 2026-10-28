@@ -54,6 +54,9 @@ int ext2_umount(inode_t* dir) {
             kfree(ext2->mapcache[i].pointers);
     }
 
+    if (ext2->balloc.bitmap)
+        kfree(ext2->balloc.bitmap);
+
     kfree(ext2->iocache);
     kfree(ext2);
 

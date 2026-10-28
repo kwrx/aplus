@@ -13,6 +13,7 @@
 #include <aplus.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/memory.h>
 #include <aplus/vfs.h>
 
 #include "../ext2.h"
@@ -85,6 +86,39 @@ int ext2_utils_read_blocks(ext2_t* ext2, uint32_t block, uint32_t offset, void* 
 }
 
 
+/**
+ * @brief Writes to a run of physically consecutive blocks in a single device request.
+ * @param ext2 The filesystem.
+ * @param block The first block of the run.
+ * @param offset The byte offset into the first block.
+ * @param data The source.
+ * @param size The number of bytes, which may span several blocks.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_write_blocks(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(data);
+
+    uint64_t start = (uint64_t)block * ext2->blocksize + offset;
+    uint64_t end   = (uint64_t)ext2->sb.s_blocks_count * ext2->blocksize;
+
+    if (unlikely(block == 0 || block >= ext2->sb.s_blocks_count || offset >= ext2->blocksize || size > end - start))
+        return errno = EIO, -1;
+
+    for (size_t i = 0; i < EXT2_IND_LEVELS; i++) {
+        uint64_t cached = (uint64_t)ext2->mapcache[i].block * ext2->blocksize;
+
+        if (cached + ext2->blocksize > start && cached < start + size)
+            ext2->mapcache[i].block = 0;
+    }
+
+    if (unlikely(vfs_write(ext2->dev, data, (off_t)start, size) != (ssize_t)size))
+        return errno = EIO, -1;
+
+    return 0;
+}
+
+
 int ext2_utils_write_block(ext2_t* ext2, uint32_t block, uint32_t offset, const void* data, size_t size) {
     DEBUG_ASSERT(ext2);
     DEBUG_ASSERT(data);
@@ -151,66 +185,201 @@ int ext2_utils_write_super(ext2_t* ext2) {
 }
 
 
-int ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
-    DEBUG_ASSERT(ext2);
-    DEBUG_ASSERT(block);
+/**
+ * @brief Writes the in-memory bitmap and descriptor of the loaded group back to disk.
+ * @param ext2 The filesystem, locked.
+ * @return 0 on success, -1 with errno set.
+ */
+static int ext2_balloc_flush(ext2_t* ext2) {
+    ext2_balloc_t* balloc = &ext2->balloc;
 
-    *block = 0;
+    if (!balloc->dirty)
+        return 0;
+
+    if (ext2_utils_write_block(ext2, balloc->desc.bg_block_bitmap, 0, balloc->bitmap, ext2->blocksize) < 0)
+        return -1;
+
+    if (ext2_utils_write_group_desc(ext2, balloc->group, &balloc->desc) < 0)
+        return -1;
+
+    balloc->dirty = false;
+    return 0;
+}
+
+
+/**
+ * @brief Loads the block bitmap and descriptor of a group, flushing the group loaded before it.
+ * @param ext2 The filesystem, locked.
+ * @param group The group.
+ * @param desc Its descriptor if already read, or NULL.
+ * @return 0 on success, -1 with errno set.
+ */
+static int ext2_balloc_load(ext2_t* ext2, uint32_t group, const struct ext2_group_desc* desc) {
+    ext2_balloc_t* balloc = &ext2->balloc;
+
+    if (balloc->loaded && balloc->group == group)
+        return 0;
+
+    if (ext2_balloc_flush(ext2) < 0)
+        return -1;
+
+    balloc->loaded = false;
+
+    if (unlikely(!balloc->bitmap && !(balloc->bitmap = (uint8_t*)kmalloc(ext2->blocksize, GFP_KERNEL))))
+        return errno = ENOMEM, -1;
+
+    if (desc)
+        balloc->desc = *desc;
+    else if (ext2_utils_read_group_desc(ext2, group, &balloc->desc) < 0)
+        return -1;
+
+    if (ext2_utils_read_block(ext2, balloc->desc.bg_block_bitmap, 0, balloc->bitmap, ext2->blocksize, false) < 0)
+        return -1;
+
+    balloc->group  = group;
+    balloc->loaded = true;
+    return 0;
+}
+
+
+/**
+ * @brief Writes back the bitmap, descriptor and superblock changed by allocations since the last commit.
+ * @param ext2 The filesystem, locked.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_alloc_commit(ext2_t* ext2) {
+    DEBUG_ASSERT(ext2);
+
+    int result = ext2_balloc_flush(ext2);
+
+    ext2->balloc.loaded = false;
+
+    if (ext2->sb_dirty) {
+        ext2->sb_dirty = false;
+
+        if (ext2_utils_write_super(ext2) < 0)
+            result = -1;
+    }
+
+    return result;
+}
+
+
+/**
+ * @brief Allocates a run of consecutive free blocks, searching forward from a goal; nothing reaches the disk until ext2_utils_alloc_commit.
+ * @param ext2 The filesystem, locked.
+ * @param goal The block to search from, or 0 for the last allocation.
+ * @param count The most blocks the run may cover.
+ * @param first Receives the first block of the run.
+ * @return The number of blocks allocated, or -1 with errno set.
+ */
+long ext2_utils_alloc_blocks(ext2_t* ext2, uint32_t goal, size_t count, uint32_t* first) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(first);
+    DEBUG_ASSERT(count > 0);
+
+    *first = 0;
 
     if (unlikely(ext2->sb.s_free_blocks_count == 0))
         return errno = ENOSPC, -1;
 
-    for (uint32_t group = 0; group < ext2->count_block_group; group++) {
-        struct ext2_group_desc desc;
+    if (goal == 0)
+        goal = ext2->goal;
 
-        if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
-            return -1;
+    if (goal < ext2->sb.s_first_data_block || goal >= ext2->sb.s_blocks_count)
+        goal = ext2->sb.s_first_data_block;
 
-        if (desc.bg_free_blocks_count == 0)
+    uint32_t start_group = (goal - ext2->sb.s_first_data_block) / ext2->sb.s_blocks_per_group;
+    uint32_t start_bit   = (goal - ext2->sb.s_first_data_block) % ext2->sb.s_blocks_per_group;
+
+    for (uint32_t i = 0; i <= ext2->count_block_group; i++) {
+        uint32_t group = (start_group + i) % ext2->count_block_group;
+
+        if (!ext2->balloc.loaded || ext2->balloc.group != group) {
+            struct ext2_group_desc desc;
+
+            if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
+                return -1;
+
+            if (desc.bg_free_blocks_count == 0)
+                continue;
+
+            if (ext2_balloc_load(ext2, group, &desc) < 0)
+                return -1;
+
+        } else if (ext2->balloc.desc.bg_free_blocks_count == 0) {
             continue;
+        }
 
-        if (ext2_utils_read_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false) < 0)
-            return -1;
-
+        uint8_t* bitmap      = ext2->balloc.bitmap;
         uint64_t group_start = ext2->sb.s_first_data_block + ((uint64_t)group * ext2->sb.s_blocks_per_group);
         uint32_t bits        = ext2->sb.s_blocks_per_group;
+        uint32_t bit         = i == 0 ? start_bit : 0;
 
         if (group_start + bits > ext2->sb.s_blocks_count)
             bits = ext2->sb.s_blocks_count - group_start;
 
-        for (uint32_t bit = 0; bit < bits; bit++) {
-            uint32_t candidate = group_start + bit;
-
-            if (ext2_bitmap_test(ext2->iocache, bit))
-                continue;
-
-            if (ext2_utils_zero_block(ext2, candidate) < 0)
-                return -1;
-
-            ext2_bitmap_set(ext2->iocache, bit);
-
-            if (ext2_utils_write_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize) < 0)
-                return -1;
-
-            desc.bg_free_blocks_count--;
-            ext2->sb.s_free_blocks_count--;
-
-            if (ext2_utils_write_group_desc(ext2, group, &desc) < 0 || ext2_utils_write_super(ext2) < 0)
-                return -1;
-
-            ext2->root->sb->st.f_bfree--;
-            ext2->root->sb->st.f_bavail--;
-
-            *block = candidate;
-            return 0;
+        while (bit < bits) {
+            if ((bit & 7) == 0 && bitmap[bit >> 3] == 0xFF)
+                bit += 8;
+            else if (ext2_bitmap_test(bitmap, bit))
+                bit++;
+            else
+                break;
         }
+
+        if (bit >= bits)
+            continue;
+
+        uint32_t run = 0;
+
+        while (run < count && run < ext2->balloc.desc.bg_free_blocks_count && bit + run < bits && !ext2_bitmap_test(bitmap, bit + run)) {
+            ext2_bitmap_set(bitmap, bit + run);
+            run++;
+        }
+
+        ext2->balloc.desc.bg_free_blocks_count -= run;
+        ext2->balloc.dirty = true;
+
+        ext2->sb.s_free_blocks_count -= run;
+        ext2->sb_dirty = true;
+
+        ext2->root->sb->st.f_bfree -= run;
+        ext2->root->sb->st.f_bavail -= run;
+
+        *first     = group_start + bit;
+        ext2->goal = *first + run;
+
+        return run;
     }
 
     return errno = ENOSPC, -1;
 }
 
 
-int ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
+int ext2_utils_alloc_block(ext2_t* ext2, uint32_t* block) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(block);
+
+    int result = 0;
+
+    if (ext2_utils_alloc_blocks(ext2, 0, 1, block) < 0 || ext2_utils_zero_block(ext2, *block) < 0)
+        result = -1;
+
+    if (ext2_utils_alloc_commit(ext2) < 0)
+        result = -1;
+
+    return result;
+}
+
+
+/**
+ * @brief Frees a block; nothing reaches the disk until ext2_utils_alloc_commit.
+ * @param ext2 The filesystem, locked.
+ * @param block The block.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_release_block(ext2_t* ext2, uint32_t block) {
     DEBUG_ASSERT(ext2);
 
     if (unlikely(block < ext2->sb.s_first_data_block || block >= ext2->sb.s_blocks_count))
@@ -221,30 +390,35 @@ int ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
     uint32_t relative = block - ext2->sb.s_first_data_block;
     uint32_t group    = relative / ext2->sb.s_blocks_per_group;
     uint32_t bit      = relative % ext2->sb.s_blocks_per_group;
-    struct ext2_group_desc desc;
 
-    if (ext2_utils_read_group_desc(ext2, group, &desc) < 0)
+    if (ext2_balloc_load(ext2, group, NULL) < 0)
         return -1;
 
-    if (ext2_utils_read_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize, false) < 0)
-        return -1;
-
-    if (unlikely(!ext2_bitmap_test(ext2->iocache, bit)))
+    if (unlikely(!ext2_bitmap_test(ext2->balloc.bitmap, bit)))
         return errno = EINVAL, -1;
 
-    ext2_bitmap_clear(ext2->iocache, bit);
+    ext2_bitmap_clear(ext2->balloc.bitmap, bit);
 
-    if (ext2_utils_write_block(ext2, desc.bg_block_bitmap, 0, ext2->iocache, ext2->blocksize) < 0)
-        return -1;
+    ext2->balloc.desc.bg_free_blocks_count++;
+    ext2->balloc.dirty = true;
 
-    desc.bg_free_blocks_count++;
     ext2->sb.s_free_blocks_count++;
-
-    if (ext2_utils_write_group_desc(ext2, group, &desc) < 0 || ext2_utils_write_super(ext2) < 0)
-        return -1;
+    ext2->sb_dirty = true;
 
     ext2->root->sb->st.f_bfree++;
     ext2->root->sb->st.f_bavail++;
 
     return 0;
+}
+
+
+int ext2_utils_free_block(ext2_t* ext2, uint32_t block) {
+    DEBUG_ASSERT(ext2);
+
+    int result = ext2_utils_release_block(ext2, block);
+
+    if (ext2_utils_alloc_commit(ext2) < 0)
+        result = -1;
+
+    return result;
 }
