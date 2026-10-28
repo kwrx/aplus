@@ -528,7 +528,7 @@ inode_t* ext2_creat(inode_t*, const char*, mode_t);
 inode_t* ext2_finddir(inode_t*, const char*);
 ssize_t ext2_readdir(inode_t*, struct dirent*, off_t, size_t);
 
-int ext2_rename(inode_t*, const char*, const char*);
+int ext2_rename(inode_t*, const char*, inode_t*, const char*);
 int ext2_symlink(inode_t*, const char*, const char*);
 int ext2_unlink(inode_t*, const char*);
 int ext2_link(inode_t*, inode_t*, const char*);
@@ -579,6 +579,7 @@ uint8_t ext2_utils_dir_type(mode_t);
 int ext2_utils_add_dir_entry(ext2_t*, struct ext2_inode*, ino_t, const char*, mode_t);
 int ext2_utils_remove_dir_entry(ext2_t*, struct ext2_inode*, const char*, ino_t*, uint8_t*);
 int ext2_utils_init_dir(ext2_t*, struct ext2_inode*, ino_t, ino_t);
+int ext2_utils_set_dir_parent(ext2_t*, struct ext2_inode*, ino_t);
 int ext2_utils_dir_empty(ext2_t*, struct ext2_inode*);
 
 #endif

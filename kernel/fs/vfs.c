@@ -943,10 +943,20 @@ ssize_t vfs_readdir(inode_t* inode, struct dirent* ent, off_t off, size_t size) 
 }
 
 
-int vfs_rename(inode_t* inode, const char* name, const char* newname) {
+/**
+ * @brief Moves a directory entry to a new name, in the same directory or another one of the same filesystem.
+ *
+ * @param inode The directory holding the entry.
+ * @param name The current name of the entry.
+ * @param into The directory the entry moves to.
+ * @param newname The new name, which must not exist yet.
+ * @return 0 on success, or -1 with errno set.
+ */
+int vfs_rename(inode_t* inode, const char* name, inode_t* into, const char* newname) {
 
     DEBUG_ASSERT(inode);
     DEBUG_ASSERT(name);
+    DEBUG_ASSERT(into);
     DEBUG_ASSERT(newname);
 
 
@@ -962,26 +972,45 @@ int vfs_rename(inode_t* inode, const char* name, const char* newname) {
     if (newname[0] == '.' && newname[1] == '.' && newname[2] == '\0')
         return errno = EEXIST, -1;
 
+    if (unlikely(inode->sb != into->sb))
+        return errno = EXDEV, -1;
+
+    if (unlikely(vfs_inode_unlinked(into)))
+        return errno = ENOENT, -1;
+
 
 
     if (likely(inode->ops.rename)) {
 
         int r = -1;
 
-        scoped_lock(&inode->lock) {
+        inode_t* first  = inode < into ? inode : into;
+        inode_t* second = inode < into ? into : inode;
 
-            inode_t* cached = vfs_dcache_detach(inode, name);
+        spinlock_lock(&first->lock);
 
-            r = inode->ops.rename(inode, name, newname);
+        if (second != first)
+            spinlock_lock(&second->lock);
 
-            if (cached && r == 0) {
-                strncpy(cached->name, newname, sizeof(cached->name) - 1);
-                cached->name[sizeof(cached->name) - 1] = '\0';
-            }
 
-            if (cached)
-                vfs_dcache_add(inode, cached);
+        inode_t* cached = vfs_dcache_detach(inode, name);
+
+        r = inode->ops.rename(inode, name, into, newname);
+
+        if (cached && r == 0) {
+            strncpy(cached->name, newname, sizeof(cached->name) - 1);
+            cached->name[sizeof(cached->name) - 1] = '\0';
+            cached->parent                         = into;
         }
+
+        if (cached)
+            vfs_dcache_add(cached->parent, cached);
+
+
+        if (second != first)
+            spinlock_unlock(&second->lock);
+
+        spinlock_unlock(&first->lock);
 
         return r;
     }

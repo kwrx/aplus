@@ -119,7 +119,7 @@ struct inode_ops {
     inode_t* (*finddir)(inode_t*, const char*);
     ssize_t (*readdir)(inode_t*, struct dirent*, off_t, size_t);
 
-    int (*rename)(inode_t*, const char*, const char*);
+    int (*rename)(inode_t*, const char*, inode_t*, const char*);
     int (*symlink)(inode_t*, const char*, const char*);
     int (*unlink)(inode_t*, const char*);
 
@@ -269,7 +269,7 @@ inode_t* vfs_creat(inode_t*, const char*, mode_t);
 inode_t* vfs_finddir(inode_t*, const char*);
 ssize_t vfs_readdir(inode_t*, struct dirent*, off_t, size_t);
 
-int vfs_rename(inode_t*, const char*, const char*);
+int vfs_rename(inode_t*, const char*, inode_t*, const char*);
 int vfs_symlink(inode_t*, const char*, const char*);
 int vfs_unlink(inode_t*, const char*);
 int vfs_link(inode_t*, inode_t*, const char*);

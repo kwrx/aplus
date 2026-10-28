@@ -76,7 +76,7 @@ inode_t* tmpfs_creat(inode_t*, const char*, mode_t);
 inode_t* tmpfs_finddir(inode_t*, const char*);
 ssize_t tmpfs_readdir(inode_t*, struct dirent*, off_t, size_t);
 
-int tmpfs_rename(inode_t*, const char*, const char*);
+int tmpfs_rename(inode_t*, const char*, inode_t*, const char*);
 int tmpfs_symlink(inode_t*, const char*, const char*);
 int tmpfs_unlink(inode_t*, const char*);
 int tmpfs_link(inode_t*, inode_t*, const char*);

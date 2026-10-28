@@ -220,6 +220,38 @@ int ext2_utils_init_dir(ext2_t* ext2, struct ext2_inode* node, ino_t ino, ino_t 
 
 
 /**
+ * @brief Points the ".." entry of a directory at a new parent.
+ * @param ext2 The filesystem.
+ * @param node The directory.
+ * @param parent The inode number of its new parent.
+ * @return 0 on success, -1 with errno set.
+ */
+int ext2_utils_set_dir_parent(ext2_t* ext2, struct ext2_inode* node, ino_t parent) {
+    DEBUG_ASSERT(ext2);
+    DEBUG_ASSERT(node);
+
+    if (ext2_utils_read_inode_data(ext2, node, 0, 0, ext2->iocache, ext2->blocksize) < 0)
+        return -1;
+
+    for (uint32_t offset = 0; offset < ext2->blocksize;) {
+        struct ext2_dir_entry_2* entry = (struct ext2_dir_entry_2*)((uint8_t*)ext2->iocache + offset);
+
+        if (unlikely(entry->rec_len < 8 || entry->rec_len > ext2->blocksize - offset || entry->name_len > entry->rec_len - 8))
+            return errno = EIO, -1;
+
+        if (entry->inode != 0 && entry->name_len == 2 && entry->name[0] == '.' && entry->name[1] == '.') {
+            entry->inode = parent;
+            return ext2_utils_write_inode_data(ext2, node, 0, 0, ext2->iocache, ext2->blocksize);
+        }
+
+        offset += entry->rec_len;
+    }
+
+    return errno = EIO, -1;
+}
+
+
+/**
  * @brief Tells whether a directory holds nothing but its "." and ".." entries.
  * @param ext2 The filesystem.
  * @param node The directory.

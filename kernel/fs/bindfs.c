@@ -54,7 +54,7 @@ bind_fn(readlink, ssize_t, (inode_t * inode, char* buf, size_t size), (d, buf, s
 bind_fn(creat, inode_t*, (inode_t * inode, const char* name, mode_t mode), (d, name, mode)) bind_fn(finddir, inode_t*, (inode_t * inode, const char* name), (d, name));
 bind_fn(readdir, ssize_t, (inode_t * inode, struct dirent* e, off_t off, size_t size), (d, e, off, size));
 
-bind_fn(rename, int, (inode_t * inode, const char* o, const char* n), (d, o, n)) bind_fn(symlink, int, (inode_t * inode, const char* o, const char* n), (d, o, n));
+bind_fn(rename, int, (inode_t * inode, const char* o, inode_t* into, const char* n), (d, o, into == inode ? d : into, n)) bind_fn(symlink, int, (inode_t * inode, const char* o, const char* n), (d, o, n));
 bind_fn(unlink, int, (inode_t * inode, const char* o), (d, o)) bind_fn(link, int, (inode_t * inode, inode_t* t, const char* n), (d, t, n));
 
 

@@ -182,6 +182,25 @@ static bool renameat2_writable(inode_t* dir) {
 }
 
 
+/**
+ * @brief Reports whether a directory is an inode or lies anywhere below it.
+ *
+ * @param dir The directory.
+ * @param inode The inode it may descend from.
+ * @return true when walking up from dir reaches inode.
+ */
+static bool renameat2_beneath(inode_t* dir, inode_t* inode) {
+
+    for (inode_t* p = dir; p; p = p->parent) {
+
+        if (p == inode || (p->sb == inode->sb && p->ino == inode->ino))
+            return true;
+    }
+
+    return false;
+}
+
+
 /***
  * Name:        renameat2
  * Description: change the name or location of a file
@@ -246,10 +265,10 @@ SYSCALL(
         if (!into)
             return -errno;
 
-        if (dir != into || !dir->ops.rename)
+        if (dir->sb != into->sb || !dir->ops.rename)
             return -EXDEV;
 
-        if (!renameat2_writable(dir))
+        if (!renameat2_writable(dir) || !renameat2_writable(into))
             return -EACCES;
 
 
@@ -270,10 +289,13 @@ SYSCALL(
 
         const bool directory = S_ISDIR(st.st_mode);
 
+        if (directory && renameat2_beneath(into, source))
+            return -EINVAL;
+
 
         errno = 0;
 
-        inode_t* target __scoped(vfs_inode_cleanup) = vfs_finddir(dir, to);
+        inode_t* target __scoped(vfs_inode_cleanup) = vfs_finddir(into, to);
 
         if (target) {
 
@@ -295,7 +317,7 @@ SYSCALL(
             if (!directory && S_ISDIR(st.st_mode))
                 return -EISDIR;
 
-            if (vfs_unlink(dir, to) < 0)
+            if (vfs_unlink(into, to) < 0)
                 return -errno;
 
         } else if (errno && errno != ENOENT) {
@@ -304,7 +326,7 @@ SYSCALL(
         }
 
 
-        if (vfs_rename(dir, from, to) < 0)
+        if (vfs_rename(dir, from, into, to) < 0)
             return -errno;
 
         return 0;
