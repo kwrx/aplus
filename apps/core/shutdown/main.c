@@ -76,12 +76,12 @@ int main(int argc, char** argv) {
                 sig_to_send = SIGUSR2;
                 break;
             case 'x':
-            case '?':
                 show_usage();
                 return 0;
             case 'v':
                 show_version();
                 return 0;
+            case '?':
             default:
                 show_usage();
                 return 1;
