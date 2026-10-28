@@ -41,24 +41,8 @@ int ext2_truncate(inode_t* inode, off_t len) {
 
     scoped_lock(&ext2->lock) {
         if (new_size > old_size) {
-            uint8_t zero[EXT2_MAX_BLOCK_SIZE] = {0};
-            uint64_t offset                   = old_size;
-
-            while (offset < new_size) {
-                uint32_t block   = offset / ext2->blocksize;
-                uint32_t inblock = offset % ext2->blocksize;
-                size_t chunk     = ext2->blocksize - inblock;
-
-                if (chunk > new_size - offset)
-                    chunk = new_size - offset;
-
-                if (ext2_utils_write_inode_data(ext2, node, block, inblock, zero, chunk) < 0) {
-                    result = -1;
-                    break;
-                }
-
-                offset += chunk;
-            }
+            if (ext2_utils_zero_range(ext2, node, old_size, new_size) < 0)
+                result = -1;
 
             if (result == 0)
                 ext2_inode_set_size(ext2, node, new_size);
@@ -67,20 +51,11 @@ int ext2_truncate(inode_t* inode, off_t len) {
             uint32_t old_blocks = (old_size + ext2->blocksize - 1) / ext2->blocksize;
             uint32_t new_blocks = (new_size + ext2->blocksize - 1) / ext2->blocksize;
 
-            if (new_size % ext2->blocksize) {
-                uint8_t zero[EXT2_MAX_BLOCK_SIZE] = {0};
-                uint32_t inblock                  = new_size % ext2->blocksize;
+            if (ext2_utils_zero_range(ext2, node, new_size, old_size) < 0)
+                result = -1;
 
-                if (ext2_utils_write_inode_data(ext2, node, new_size / ext2->blocksize, inblock, zero, ext2->blocksize - inblock) < 0)
-                    result = -1;
-            }
-
-            for (uint32_t block = old_blocks; block > new_blocks; block--) {
-                if (ext2_utils_free_inode_data(ext2, node, block - 1) < 0) {
-                    result = -1;
-                    break;
-                }
-            }
+            if (new_blocks < old_blocks && ext2_utils_free_inode_range(ext2, node, new_blocks) < 0)
+                result = -1;
 
             ext2_inode_set_size(ext2, node, new_size);
         }

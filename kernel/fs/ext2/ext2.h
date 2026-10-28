@@ -449,9 +449,22 @@ typedef struct {
 } ext2_mapcache_t;
 
 
+/**
+ * @brief The block bitmap and descriptor of one group, held in memory between an allocation and its commit.
+ */
+typedef struct {
+    uint32_t group;
+    bool loaded;
+    bool dirty;
+    struct ext2_group_desc desc;
+    uint8_t* bitmap;
+} ext2_balloc_t;
+
+
 typedef struct {
 
     struct ext2_super_block sb;
+    bool sb_dirty;
 
     uint32_t first_block_group;
     uint32_t count_block_group;
@@ -460,6 +473,8 @@ typedef struct {
 
     void* iocache;
     ext2_mapcache_t mapcache[EXT2_IND_LEVELS];
+    ext2_balloc_t balloc;
+    uint32_t goal;
     cache_t bcache;
     spinlock_t lock;
 
@@ -538,11 +553,15 @@ int ext2_utils_count_dir(ext2_t*, ino_t, int);
 int ext2_utils_read_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, void*, size_t);
 int ext2_utils_write_inode_data(ext2_t*, struct ext2_inode*, uint32_t, uint32_t, const void*, size_t);
 int ext2_utils_free_inode_data(ext2_t*, struct ext2_inode*, uint32_t);
+int ext2_utils_free_inode_range(ext2_t*, struct ext2_inode*, uint32_t);
+int ext2_utils_zero_range(ext2_t*, struct ext2_inode*, uint64_t, uint64_t);
 long ext2_utils_map_blocks(ext2_t*, struct ext2_inode*, uint32_t, size_t, uint32_t*);
+long ext2_utils_map_alloc_blocks(ext2_t*, struct ext2_inode*, uint32_t, size_t, uint32_t*, bool*);
 
 int ext2_utils_read_block(ext2_t*, uint32_t, uint32_t, void*, size_t, bool);
 int ext2_utils_read_blocks(ext2_t*, uint32_t, uint32_t, void*, size_t);
 int ext2_utils_write_block(ext2_t*, uint32_t, uint32_t, const void*, size_t);
+int ext2_utils_write_blocks(ext2_t*, uint32_t, uint32_t, const void*, size_t);
 int ext2_utils_zero_block(ext2_t*, uint32_t);
 
 int ext2_utils_read_group_desc(ext2_t*, uint32_t, struct ext2_group_desc*);
@@ -550,7 +569,10 @@ int ext2_utils_write_group_desc(ext2_t*, uint32_t, const struct ext2_group_desc*
 int ext2_utils_write_super(ext2_t*);
 
 int ext2_utils_alloc_block(ext2_t*, uint32_t*);
+long ext2_utils_alloc_blocks(ext2_t*, uint32_t, size_t, uint32_t*);
+int ext2_utils_alloc_commit(ext2_t*);
 int ext2_utils_free_block(ext2_t*, uint32_t);
+int ext2_utils_release_block(ext2_t*, uint32_t);
 
 mode_t ext2_utils_file_type(uint8_t);
 uint8_t ext2_utils_dir_type(mode_t);

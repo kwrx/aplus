@@ -19,21 +19,52 @@
 #include "ext2.h"
 
 
-static int ext2_zero_range(ext2_t* ext2, struct ext2_inode* inode, uint64_t start, uint64_t end) {
-    uint8_t zero[EXT2_MAX_BLOCK_SIZE] = {0};
+/**
+ * @brief Writes data into a run of newly allocated blocks, zeroing the parts of its first and last blocks the data leaves uncovered.
+ * @param ext2 The filesystem, locked.
+ * @param physical The first block of the run.
+ * @param inblock The byte offset of the data in the first block.
+ * @param data The data.
+ * @param size The number of bytes.
+ * @return 0 on success, -1 with errno set.
+ */
+static int ext2_write_fresh(ext2_t* ext2, uint32_t physical, uint32_t inblock, const uint8_t* data, size_t size) {
+    uint8_t edge[EXT2_MAX_BLOCK_SIZE];
 
-    while (start < end) {
-        uint32_t block   = start / ext2->blocksize;
-        uint32_t inblock = start % ext2->blocksize;
-        size_t chunk     = ext2->blocksize - inblock;
+    if (inblock > 0) {
+        size_t chunk = ext2->blocksize - inblock;
 
-        if (chunk > end - start)
-            chunk = end - start;
+        if (chunk > size)
+            chunk = size;
 
-        if (ext2_utils_write_inode_data(ext2, inode, block, inblock, zero, chunk) < 0)
+        memset(edge, 0, ext2->blocksize);
+        memcpy(edge + inblock, data, chunk);
+
+        if (ext2_utils_write_block(ext2, physical, 0, edge, ext2->blocksize) < 0)
             return -1;
 
-        start += chunk;
+        physical++;
+        data += chunk;
+        size -= chunk;
+    }
+
+    size_t full = size - (size % ext2->blocksize);
+
+    if (full > 0) {
+        if (ext2_utils_write_blocks(ext2, physical, 0, data, full) < 0)
+            return -1;
+
+        physical += full / ext2->blocksize;
+        data += full;
+        size -= full;
+    }
+
+    if (size > 0) {
+        memset(edge, 0, ext2->blocksize);
+        memcpy(edge, data, size);
+
+        if (ext2_utils_write_block(ext2, physical, 0, edge, ext2->blocksize) < 0)
+            return -1;
     }
 
     return 0;
@@ -59,7 +90,7 @@ ssize_t ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
     int result              = 0;
 
     scoped_lock(&ext2->lock) {
-        if ((uint64_t)pos > old_size && ext2_zero_range(ext2, node, old_size, pos) < 0) {
+        if ((uint64_t)pos > old_size && ext2_utils_zero_range(ext2, node, old_size, pos) < 0) {
             result = -1;
         }
 
@@ -67,18 +98,34 @@ ssize_t ext2_write(inode_t* inode, const void* buf, off_t pos, size_t len) {
             uint64_t offset  = pos + done;
             uint32_t block   = offset / ext2->blocksize;
             uint32_t inblock = offset % ext2->blocksize;
-            size_t chunk     = ext2->blocksize - inblock;
+            size_t blocks    = (inblock + (len - done) + ext2->blocksize - 1) / ext2->blocksize;
+            uint32_t physical;
+            bool fresh;
+
+            long run = ext2_utils_map_alloc_blocks(ext2, node, block, blocks, &physical, &fresh);
+
+            if (run < 0) {
+                result = -1;
+                break;
+            }
+
+            size_t chunk = (size_t)run * ext2->blocksize - inblock;
 
             if (chunk > len - done)
                 chunk = len - done;
 
-            if (ext2_utils_write_inode_data(ext2, node, block, inblock, (const uint8_t*)buf + done, chunk) < 0) {
+            const uint8_t* data = (const uint8_t*)buf + done;
+
+            if ((fresh ? ext2_write_fresh(ext2, physical, inblock, data, chunk) : ext2_utils_write_blocks(ext2, physical, inblock, data, chunk)) < 0) {
                 result = -1;
                 break;
             }
 
             done += chunk;
         }
+
+        if (ext2_utils_alloc_commit(ext2) < 0)
+            result = -1;
 
         if (done > 0) {
             uint64_t new_size = pos + done;
