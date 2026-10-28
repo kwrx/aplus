@@ -42,7 +42,7 @@
 
 
 MODULE_NAME("virtio/virtio-pci");
-MODULE_DEPS("dev/interface,dev/pci");
+MODULE_DEPS("dev/interface,dev/pci,virtio/virtio-queue");
 MODULE_AUTHOR("Antonino Natale");
 MODULE_LICENSE("GPL");
 
