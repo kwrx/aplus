@@ -21,6 +21,7 @@ MEMORY=2G
 VIRTIO=1
 KVM=auto
 REMOTE=
+DASHBOARD=0
 
 # @brief Print the usage message.
 # @return Nothing.
@@ -47,6 +48,7 @@ Settings (config.txt):
   VIRTIO     1 to use the virtio GPU and network card, 0 for std VGA and pcnet
   KVM        1 to run with KVM, 0 to emulate the CPU, "auto" to use it if present
   REMOTE     VNC display to show the screen on (e.g. 127.0.0.1:0), empty for a window
+  DASHBOARD  1 to open the web dashboard (http://localhost:8080) in the browser at boot
 EOF
 }
 
@@ -199,6 +201,7 @@ ask_config() {
     VIRTIO=$(ask_bool 'Use the virtio GPU and network card' "$VIRTIO")
     KVM=$(ask_bool 'Run with KVM' "$KVM")
     REMOTE=$(ask 'VNC display to show the screen on (empty for a local window)' "$REMOTE")
+    DASHBOARD=$(ask_bool 'Open the web dashboard in the browser at boot' "$DASHBOARD")
     printf '\n' >&2
 }
 
@@ -228,6 +231,9 @@ KVM=$KVM
 
 # VNC display to show the screen on, e.g. 127.0.0.1:0, empty for a local window.
 REMOTE=$REMOTE
+
+# 1 to open the web dashboard (http://localhost:8080) in the browser once the guest serves it.
+DASHBOARD=$DASHBOARD
 EOF
     printf 'run.sh: settings written to %s\n' "$CONFIG_FILE" >&2
 }
@@ -254,6 +260,7 @@ read_config() {
         VIRTIO) VIRTIO=$value ;;
         KVM) KVM=$value ;;
         REMOTE) REMOTE=$value ;;
+        DASHBOARD) DASHBOARD=$value ;;
         *) die "$CONFIG_FILE: unknown setting \"$key\"" ;;
         esac
     done <"$CONFIG_FILE"
@@ -280,6 +287,7 @@ check_config() {
     esac
 
     VIRTIO=$(to_bool "$VIRTIO" VIRTIO)
+    DASHBOARD=$(to_bool "$DASHBOARD" DASHBOARD)
 
     case $KVM in
     auto | Auto | AUTO)
@@ -320,6 +328,47 @@ check_config() {
         die "UEFI firmware \"$BIOS\" is not usable with -bios, its size must be a multiple of 64K: use a whole OVMF.fd image, not a split OVMF_CODE one"
     fi
 }
+
+# @brief Tell whether the web dashboard answers on the forwarded port.
+# @return Zero when it answers, non zero otherwise.
+dashboard_ready() {
+    if command -v curl >/dev/null 2>&1; then
+        curl -fsS -o /dev/null --max-time 2 "$DASHBOARD_URL" 2>/dev/null
+    else
+        wget -q -O /dev/null -T 2 "$DASHBOARD_URL" 2>/dev/null
+    fi
+}
+
+# @brief Wait in the background for the guest to serve the web dashboard, then open it in the browser.
+# @param $1 PID of the QEMU process, the wait stops when it exits.
+# @return Nothing.
+open_dashboard() {
+    if command -v xdg-open >/dev/null 2>&1; then
+        opener=xdg-open
+    elif command -v open >/dev/null 2>&1; then
+        opener=open
+    else
+        printf 'run.sh: no xdg-open or open found, browse %s by hand\n' "$DASHBOARD_URL" >&2
+        return 0
+    fi
+    if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
+        printf 'run.sh: no curl or wget found, browse %s by hand\n' "$DASHBOARD_URL" >&2
+        return 0
+    fi
+    (
+        tries=0
+        while [ $tries -lt 300 ] && kill -0 "$1" 2>/dev/null; do
+            if dashboard_ready; then
+                "$opener" "$DASHBOARD_URL" >/dev/null 2>&1
+                exit 0
+            fi
+            tries=$((tries + 1))
+            sleep 1
+        done
+    ) </dev/null &
+}
+
+DASHBOARD_URL=http://localhost:8080
 
 while [ $# -gt 0 ]; do
     case $1 in
@@ -451,6 +500,10 @@ printf '\n'
 
 if [ $DRY_RUN -eq 1 ]; then
     exit 0
+fi
+
+if [ "$DASHBOARD" -eq 1 ]; then
+    open_dashboard $$
 fi
 
 exec "qemu-system-$ARCH" "$@"

@@ -108,10 +108,11 @@ First run prompts for:
 - Virtio or emulated devices
 - KVM support
 - Display mode (local window or VNC)
+- Opening the web dashboard (`http://localhost:8080`) in the browser at boot
 
 Settings are saved to `config.txt`. Edit the file or run `./run.sh --reconfigure` to change settings; `./run.sh --defaults` skips the questions, `./run.sh --dry-run` prints the QEMU command line without running it. Use `./run.sh --help` for all available options.
 
-The guest console is written to `console.log`, the QEMU monitor listens on `telnet 127.0.0.1:4444`, and the host port `8080` is forwarded to the guest's `80`.
+The guest console is written to `console.log`, the QEMU monitor listens on `telnet 127.0.0.1:4444`, and the host port `8080` is forwarded to the guest's `8080`, where pymonitor serves its web dashboard.
 
 ### Build from Linux:
 Clone this repository and change working directory.
@@ -177,6 +178,8 @@ $ ./makew all
 $ ./makew run
 ```
    Use `./makew run-headless` to run without a graphical display, which is handy to capture console output.
+
+   Once booted, [pymonitor](/apps/extra/pymonitor) serves a web dashboard to monitor and control the guest at http://localhost:8080.
 
 ---
 
