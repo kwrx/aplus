@@ -496,6 +496,13 @@ the point where a row of any plausible width has been ellipsised anyway.
 `ui_list_text()` returns a pointer into the row's own storage, valid until the list is cleared
 or destroyed.
 
+`ui_list_clear()` drops every row and the selection with them, scrolls back to the top, and
+runs no callback. A rebuild that should keep the selected row has to remember it — by its user
+pointer, since its index is about to mean something else — and select it again afterwards; and
+because selecting `-1` when nothing is selected runs no callback either, a rebuild that ends
+with nothing to select has to refresh whatever follows the selection by hand. There is a worked
+example in [tutorial-components.md](tutorial-components.md#lists).
+
 ### Icons
 
 A row can carry an icon, named rather than loaded: `ui_list_add_icon()` takes the name a
@@ -733,6 +740,30 @@ bounds, and a span swallows the gaps it crosses so it lines up with the cells ab
 below. An out-of-range cell returns `{0, 0, 0, 0}` rather than being clamped into a
 neighbour's space. Worked examples in
 [tutorial-layout.md](tutorial-layout.md#the-grid).
+
+## Text and shape helpers
+
+```c
+#include <aplus/ui-draw.h>
+
+double ui_draw_text_width(const char* text, const char* font, double size);
+void   ui_draw_ellipsize(char* out, size_t size, const char* text, const char* font, double fsize, double max_width);
+
+void ui_draw_rounded_rect(cairo_t* cr, ui_rect_t rect, double radius);
+void ui_draw_rounded_rect_d(cairo_t* cr, double x, double y, double w, double h, double radius);
+
+cairo_font_face_t*   ui_font_face(const char* path);
+cairo_scaled_font_t* ui_font_scaled(cairo_font_face_t* face, double size);
+```
+
+What the widgets are drawn with, in a header of its own because it names cairo types and
+`ui-widgets.h` deliberately does not. Two of them are useful to an application that never
+draws anything itself: a label clips rather than ellipsising, so text whose length you do not
+control goes through `ui_draw_ellipsize()` against the label's width first, and
+`ui_draw_text_width()` sizes a rectangle to the text it will hold. `font` is a font file, as
+the theme names them — `ui_theme()->font_regular` for a label on its defaults. The rest are for
+drawing of your own; see
+[tutorial-custom-drawing.md](tutorial-custom-drawing.md#text-without-widgets).
 
 ## Adding a widget
 

@@ -261,6 +261,26 @@ costs at most eight of those. What grows with the damage is the copy into the se
 compositing the server then does. There is no reason to be clever about batching frames, and
 every reason to keep damage tight.
 
+The set is a plain value in `<aplus/ui.h>`, and the merging is reachable on its own:
+
+```c
+typedef struct {
+    ui_rect_t rects[UI_DAMAGE_MAX];
+    size_t    count;
+} ui_damage_t;
+
+void ui_damage_reset(ui_damage_t* damage);
+void ui_damage_add(ui_damage_t* damage, ui_rect_t rect);
+void ui_damage_clip(ui_damage_t* damage, int width, int height);
+```
+
+`ui_damage_add()` ignores an empty rectangle and otherwise applies the rule above;
+`ui_damage_clip()` clips every rectangle to a size and drops those left empty;
+`ui_damage_reset()` empties the set. The window and the widget view each keep one, and so does
+`aplus-wm` for the screen, so the client and the server agree on what is worth merging. A
+client that tracks its own dirty regions — a canvas inside a view, say — can keep one too and
+hand each rectangle to `ui_window_damage()` when it commits.
+
 ### Resizing
 
 ```c

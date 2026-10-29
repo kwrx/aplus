@@ -52,6 +52,8 @@ its whole frame instead — see
 |---|---|
 | `lib/aplus/ui/include/aplus/ui.h` | Surface API and the wire protocol, shared with the server |
 | `lib/aplus/ui/include/aplus/ui-widgets.h` | Widget API |
+| `lib/aplus/ui/include/aplus/ui-draw.h` | The helpers that name a cairo type: rounded rectangles, text measurement and ellipsis, the font cache and icons |
+| `lib/aplus/ui/include/aplus/ui-keymap.h` | Key codes to characters, through the console keymap |
 | `lib/aplus/ui/include/aplus/ui-anim.h`, `ui_anim.c` | Easing and transitions, shared by the widgets and the server — see [Animation](animation.md) |
 | `lib/aplus/ui/ui_connection.c` | Connect, handshake, framing helpers |
 | `lib/aplus/ui/include/aplus/ui-control.h`, `ui_control.c` | Requests over the server's control socket |
@@ -74,7 +76,7 @@ its whole frame instead — see
 | `apps/sysutils/aplus-viewer/` | The one that mixes the layers: a toolbar of widgets around a PDF or a picture that mupdf renders a tile at a time straight into the window pixels, and the canvas scrolls, zooms and drags over |
 | `apps/sysutils/aplus-editor/` | The bigger mix: a toolbar, a prompt bar and a status line of widgets around a text area it draws, damages and blinks a caret in by itself |
 | `apps/sysutils/aplus-launcher/` | The one with a search field: an entry driving a list, in a translucent window only as tall as it has results — borderless and centred, or a drawer out of the taskbar's rail with `--drawer` |
-| `apps/test/ui-test/` | The reference surface-layer application |
+| `tests/ui-test/` | The reference surface-layer application |
 
 ## Building against it
 
@@ -130,7 +132,7 @@ naming the build directory here picks up the archive that was just built.
 archives are searched left to right.
 
 There is nothing else to register. `apps/Makefile` finds every directory under
-`apps/{core,sysutils,extra,test}` that contains a `Makefile`, so a new application is a new
+`apps/{core,sysutils,extra}` that contains a `Makefile`, so a new application is a new
 directory and nothing more.
 
 A graphical application also ships a desktop entry, which is what lets something else start it
@@ -255,6 +257,9 @@ window is a lifecycle with no leak in it.
 
 - [Getting started](getting-started.md) — a window, a panel, a label and a button, from an
   empty directory to a running application.
+- [Components by example](tutorial-components.md) — every widget in use, the patterns that
+  recur with each, and `ui-places`: a search field, a filtered list, a details card and the
+  buttons that act on it.
 - [Layout and resizing](tutorial-layout.md) — the layout callback, the grid, and binding
   the keyboard to the same widgets the pointer drives.
 - [Custom drawing](tutorial-custom-drawing.md) — dropping to raw pixels, and mixing your
