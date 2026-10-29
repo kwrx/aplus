@@ -229,6 +229,8 @@
 #define WM_TASKBAR_RESTART  (UINT32_MAX - 3)
 #define WM_TASKBAR_SHUTDOWN (UINT32_MAX - 4)
 #define WM_TASKBAR_HALT     (UINT32_MAX - 5)
+#define WM_TASKBAR_MENU(i)  (UINT32_MAX - 32 - (uint32_t)(i))
+#define WM_TASKBAR_PIN(i)   (UINT32_MAX - 64 - (uint32_t)(i))
 #define WM_SHUTDOWN_PATH    "/usr/sbin/shutdown"
 #define WM_LAUNCHER_PATH    "/usr/bin/aplus-launcher"
 
@@ -237,6 +239,22 @@
  */
 #define WM_CACHE_PATH    "/tmp/.wm"
 #define WM_LAUNCHER_COPY WM_CACHE_PATH "/aplus-launcher"
+
+/**
+ * @brief The applications pinned to the taskbar, where the list is kept between boots, and what describes and opens them.
+ */
+#define WM_PINS_MAX          16
+#define WM_PINS_PATH         "/etc/ui/pinned.conf"
+#define WM_APPLICATIONS_PATH "/usr/share/applications"
+#define WM_OPENER_PATH       "/usr/bin/aplus-xopen"
+#define WM_APP_PATH_MAX      256
+
+/**
+ * @brief The context menu that grows out of the rail beside an entry: its most rows, its narrowest width and the rule under its title.
+ */
+#define WM_MENU_ROWS_MAX  8
+#define WM_MENU_MIN_WIDTH 168
+#define WM_MENU_RULE      9
 
 
 /**
@@ -423,6 +441,80 @@ typedef struct {
 } wm_drawer_t;
 
 
+/**
+ * @brief An installed application, as its .desktop file describes it and as its windows name themselves.
+ */
+typedef struct {
+
+    char id[UI_ICON_NAME_MAX];
+    char path[WM_APP_PATH_MAX];
+    char name[UI_TITLE_MAX];
+    char icon[UI_ICON_NAME_MAX];
+
+} wm_app_t;
+
+
+/**
+ * @brief An application pinned to the taskbar, which keeps an entry there whether or not it has a window open.
+ */
+typedef struct {
+
+    wm_app_t app;
+
+    cairo_surface_t* icon;
+    ui_anim_t hover;
+
+} wm_pin_t;
+
+
+/**
+ * @brief The marks drawn in front of a context menu's rows.
+ */
+typedef enum {
+
+    WM_MENU_GLYPH_NONE = 0,
+    WM_MENU_GLYPH_OPEN,
+    WM_MENU_GLYPH_PIN,
+    WM_MENU_GLYPH_UNPIN,
+    WM_MENU_GLYPH_QUIT,
+
+} wm_menu_glyph_t;
+
+
+/**
+ * @brief One row of a context menu: what it says, what it is marked with, and what it does for whoever opened the menu.
+ */
+typedef struct {
+
+    uint32_t action;
+    const char* label;
+    wm_menu_glyph_t glyph;
+
+} wm_menu_row_t;
+
+
+/**
+ * @brief The context menu: a title over a column of rows, slid out of the rail beside the item it was opened on.
+ */
+typedef struct {
+
+    uint32_t owner;
+
+    char title[UI_TITLE_MAX * 2];
+
+    wm_menu_row_t rows[WM_MENU_ROWS_MAX];
+    int count;
+
+    wm_rect_t rect;
+
+    ui_anim_t open;
+    ui_anim_t hover[WM_MENU_ROWS_MAX];
+
+    wm_rect_t painted;
+
+} wm_menu_t;
+
+
 typedef struct wm_window {
 
     uint32_t id;
@@ -434,6 +526,7 @@ typedef struct wm_window {
 
     char title[UI_TITLE_MAX];
 
+    char app[UI_ICON_NAME_MAX];
     cairo_surface_t* icon;
 
     wm_cursor_shape_t cursor;
@@ -600,7 +693,14 @@ typedef struct {
             ui_anim_t width;
             wm_rect_t painted;
         } popout;
+
+        wm_pin_t pins[WM_PINS_MAX];
+        size_t pins_count;
+
+        wm_app_t menu_app;
     } taskbar;
+
+    wm_menu_t menu;
 
     wm_drawer_t drawer;
 
@@ -725,14 +825,41 @@ void wm_taskbar_hover(int x, int y);
 void wm_taskbar_press(int x, int y);
 bool wm_taskbar_release(int x, int y);
 void wm_taskbar_forget(const wm_window_t* win);
-void wm_taskbar_session_press(int x, int y);
+void wm_taskbar_dismiss_at(int x, int y);
 bool wm_taskbar_dismiss(void);
+bool wm_taskbar_context(int x, int y);
+void wm_taskbar_pins_changed(void);
 int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
 void wm_taskbar_fini(void);
 wm_rect_t wm_taskbar_shadow_extent(wm_rect_t extent);
 void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength);
 void wm_taskbar_edge(cairo_t* cr);
+void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge);
+void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active);
+
+/**
+ * @brief Implemented in menu.c.
+ */
+void wm_menu_show(uint32_t owner, int anchor, const char* title, const wm_menu_row_t* rows, int count);
+void wm_menu_hide(void);
+bool wm_menu_shown(void);
+bool wm_menu_contains(int x, int y);
+int wm_menu_row_at(int x, int y);
+double wm_menu_hold(uint32_t owner, uint64_t now);
+wm_rect_t wm_menu_extent(uint64_t now);
+void wm_menu_paint(cairo_t* cr, int held);
+
+/**
+ * @brief Implemented in pins.c.
+ */
+bool wm_app_resolve(const char* id, wm_app_t* out);
+void wm_app_launch(const wm_app_t* app);
+void wm_pins_load(void);
+int wm_pins_find(const char* id);
+int wm_pins_add(const wm_app_t* app);
+void wm_pins_remove(int index);
+void wm_pins_fini(void);
 
 /**
  * @brief Implemented in drawer.c.

@@ -164,6 +164,15 @@ int wm_animate(uint64_t now) {
     running |= wm_anim_step(&wm.taskbar.popout.open, now, &rail);
     running |= wm_anim_step(&wm.taskbar.popout.center, now, &rail);
     running |= wm_anim_step(&wm.taskbar.popout.width, now, &rail);
+    running |= wm_anim_step(&wm.menu.open, now, &rail);
+
+    for (size_t i = 0; i < WM_ARRAY_COUNT(wm.menu.hover); i++) {
+        running |= wm_anim_step(&wm.menu.hover[i], now, &rail);
+    }
+
+    for (size_t i = 0; i < wm.taskbar.pins_count; i++) {
+        running |= wm_anim_step(&wm.taskbar.pins[i].hover, now, &rail);
+    }
 
     if (rail) {
         wm_taskbar_damage();
