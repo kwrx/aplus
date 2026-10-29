@@ -94,6 +94,7 @@ typedef struct {
     bool (*on_drag)(ui_widget_t* widget, int x, int y, bool inside);
 
     bool (*on_release)(ui_widget_t* widget, int x, int y, bool inside, int clicks);
+    bool (*on_context)(ui_widget_t* widget, int x, int y);
 
     bool (*on_scroll)(ui_widget_t* widget, int delta);
 
@@ -227,6 +228,9 @@ struct ui_widget {
             ui_list_fn on_activate;
             void* on_activate_user;
 
+            ui_list_fn on_context;
+            void* on_context_user;
+
         } list;
 
         struct {
@@ -306,6 +310,17 @@ struct ui_view {
     bool active;
 
     bool closed;
+
+    uint8_t buttons;
+    uint8_t shift;
+
+    struct {
+        int x;
+        int y;
+        uint32_t serial;
+        ui_menu_fn fn;
+        void* user;
+    } menu;
 };
 
 
@@ -316,6 +331,23 @@ struct ui_view {
  * @param rect The part to repaint, in view coordinates.
  */
 void ui_widget_invalidate_rect(ui_widget_t* widget, ui_rect_t rect);
+
+/**
+ * @brief Sets where the view's next context menu opens, which a press otherwise puts under the pointer. Implemented in ui_view.c.
+ *
+ * @param view The view.
+ * @param x The point, in view coordinates.
+ * @param y The point, in view coordinates.
+ */
+void ui_view_menu_anchor(ui_view_t* view, int x, int y);
+
+/**
+ * @brief Reports whether either Shift key is held, as the view last heard. Implemented in ui_view.c.
+ *
+ * @param view The view.
+ * @return true while one is down.
+ */
+bool ui_view_shift(const ui_view_t* view);
 
 /**
  * @brief Implemented in ui_widget.c.

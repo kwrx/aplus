@@ -61,6 +61,7 @@ static bool ui_list_on_motion(ui_widget_t* widget, int x, int y);
 static bool ui_list_on_press(ui_widget_t* widget, int x, int y);
 static bool ui_list_on_drag(ui_widget_t* widget, int x, int y, bool inside);
 static bool ui_list_on_release(ui_widget_t* widget, int x, int y, bool inside, int clicks);
+static bool ui_list_on_right_press(ui_widget_t* widget, int x, int y);
 static bool ui_list_on_scroll(ui_widget_t* widget, int delta);
 static bool ui_list_on_key(ui_widget_t* widget, uint16_t vkey, bool down);
 static bool ui_list_on_focus(ui_widget_t* widget, bool focused);
@@ -77,6 +78,7 @@ static const ui_widget_ops_t ui_list_ops = {
     .on_press   = ui_list_on_press,
     .on_drag    = ui_list_on_drag,
     .on_release = ui_list_on_release,
+    .on_context = ui_list_on_right_press,
     .on_scroll  = ui_list_on_scroll,
     .on_key     = ui_list_on_key,
     .on_focus   = ui_list_on_focus,
@@ -661,6 +663,17 @@ void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user) {
 }
 
 
+void ui_list_on_context(ui_widget_t* widget, ui_list_fn fn, void* user) {
+
+    if (!widget || widget->kind != UI_WIDGET_LIST) {
+        return;
+    }
+
+    widget->list.on_context      = fn;
+    widget->list.on_context_user = user;
+}
+
+
 /**
  * @brief Runs whatever a double click or Enter on the selected row is bound to.
  *
@@ -1236,6 +1249,66 @@ static bool ui_list_on_release(ui_widget_t* widget, int x, int y, bool inside, i
 }
 
 
+/**
+ * @brief Opens the context menu from the keyboard for the selected row, under it, or at the top of the list when none is.
+ *
+ * @param widget The list.
+ * @return false when nothing listens for it, which leaves the key to the view.
+ */
+static bool ui_list_context_key(ui_widget_t* widget) {
+
+    if (!widget->list.on_context) {
+        return false;
+    }
+
+    const ui_rect_t rows = ui_list_rows_rect(widget);
+    const int index      = widget->list.selected;
+
+    int y = rows.y + (index + 1) * widget->list.row_height - widget->list.scroll;
+
+    if (index < 0 || y < rows.y) {
+        y = rows.y;
+    } else if (y > rows.y + rows.height) {
+        y = rows.y + rows.height;
+    }
+
+    ui_view_menu_anchor(widget->view, rows.x + widget->list.row_height, y);
+
+    widget->list.on_context(widget, index, widget->list.on_context_user);
+
+    return true;
+}
+
+
+/**
+ * @brief Selects the row under a right press and hands it to the context callback, or -1 below the last row.
+ *
+ * @param widget The list.
+ * @param x The press.
+ * @param y The press.
+ * @return false, the selection having repainted whatever it changed.
+ */
+static bool ui_list_on_right_press(ui_widget_t* widget, int x, int y) {
+
+    ui_rect_t track;
+    ui_rect_t thumb;
+
+    if (!widget->list.on_context || (ui_list_scrollbar(widget, &track, &thumb) && x >= track.x)) {
+        return false;
+    }
+
+    const int index = ui_list_row_at(widget, y);
+
+    if (index >= 0) {
+        ui_list_select(widget, index);
+    }
+
+    widget->list.on_context(widget, index, widget->list.on_context_user);
+
+    return false;
+}
+
+
 static bool ui_list_on_scroll(ui_widget_t* widget, int delta) {
 
     ui_list_glide(widget, ui_list_scroll_target(widget) - delta * widget->list.row_height * UI_LIST_WHEEL_ROWS);
@@ -1286,6 +1359,13 @@ static bool ui_list_on_key(ui_widget_t* widget, uint16_t vkey, bool down) {
         case KEY_KPENTER:
             ui_list_activate(widget);
             return true;
+
+        case KEY_COMPOSE:
+        case KEY_MENU:
+            return ui_list_context_key(widget);
+
+        case KEY_F10:
+            return ui_view_shift(widget->view) && ui_list_context_key(widget);
 
         default:
             return false;

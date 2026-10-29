@@ -217,6 +217,11 @@ typedef bool (*ui_key_fn)(ui_view_t* view, uint16_t vkey, bool down, void* user)
  */
 typedef void (*ui_theme_fn)(ui_view_t* view, void* user);
 
+/**
+ * @brief Called with the id of the item picked from a context menu, or 0 when the menu went away without one.
+ */
+typedef void (*ui_menu_fn)(ui_view_t* view, uint32_t id, void* user);
+
 
 /**
  * @brief The view: it owns the widgets, the drawing surface over the window's pixels, and what has changed.
@@ -300,6 +305,21 @@ ui_widget_t* ui_view_focused(const ui_view_t* view);
  * @param cursor The shape.
  */
 void ui_view_set_cursor(ui_view_t* view, ui_cursor_t cursor);
+
+
+/**
+ * @brief Opens a context menu where the pointer last was, taking over from any the view still has open.
+ *
+ * The server draws it; fn runs once with what was picked when the answer arrives through ui_view_dispatch().
+ *
+ * @param view The view.
+ * @param items Its items, top to bottom, each with a non-zero id.
+ * @param count How many there are, at most UI_MENU_ITEMS_MAX.
+ * @param fn What runs with the answer.
+ * @param user Handed back to fn.
+ * @return 0, or -1 with errno set.
+ */
+int ui_view_popup_menu(ui_view_t* view, const ui_menu_item_t* items, size_t count, ui_menu_fn fn, void* user);
 
 
 /**
@@ -485,6 +505,11 @@ void ui_list_on_select(ui_widget_t* widget, ui_list_fn fn, void* user);
  * @brief Sets what a double click or Enter on a row runs.
  */
 void ui_list_on_activate(ui_widget_t* widget, ui_list_fn fn, void* user);
+
+/**
+ * @brief Sets what a right press runs: on a row, which is selected first, or on the empty space below the rows, as -1.
+ */
+void ui_list_on_context(ui_widget_t* widget, ui_list_fn fn, void* user);
 
 
 /**

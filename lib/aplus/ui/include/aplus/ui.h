@@ -95,6 +95,14 @@ extern "C" {
  */
 #define UI_REQ_SET_CURSOR 0x0008
 
+/**
+ * @brief Shows a context menu at a point in a window's content area, which the server draws, places and puts away.
+ *
+ * The answer is a UI_EV_MENU carrying the same serial. A server that has never heard of this
+ * request drains it and shows nothing, so no answer comes.
+ */
+#define UI_REQ_POPUP_MENU 0x0009
+
 #define UI_EV_HELLO     0x8001
 #define UI_EV_CONFIGURE 0x8002
 #define UI_EV_KEY       0x8003
@@ -119,6 +127,11 @@ extern "C" {
  */
 #define UI_EV_THEME       0x8009
 #define UI_EV_THEME_SINCE 7
+
+/**
+ * @brief The answer to a UI_REQ_POPUP_MENU: the id of the item picked, or 0 when the menu went away without one.
+ */
+#define UI_EV_MENU 0x800A
 
 
 /**
@@ -270,6 +283,66 @@ typedef struct {
     uint16_t height;
 
 } __attribute__((packed)) ui_msg_resize_t;
+
+
+/**
+ * @brief How many items a context menu holds, and how long an item's label may be, terminator included.
+ */
+#define UI_MENU_ITEMS_MAX 16
+#define UI_MENU_LABEL_MAX 48
+
+/**
+ * @brief What a context menu item is besides a label: a rule between groups, greyed out, something destructive,
+ * or something asked about first.
+ *
+ * A UI_MENU_CONFIRM item is not picked by the first press: the menu stays out and the item reads as its confirm
+ * text, its label and a question mark when that is empty, and only a second press on it picks it.
+ */
+#define UI_MENU_SEPARATOR (1 << 0)
+#define UI_MENU_DISABLED  (1 << 1)
+#define UI_MENU_DANGER    (1 << 2)
+#define UI_MENU_CONFIRM   (1 << 3)
+
+/**
+ * @brief One item of a context menu, its id never 0, which is what a dismissed menu answers with.
+ */
+typedef struct {
+
+    uint32_t id;
+    uint32_t flags;
+
+    char label[UI_MENU_LABEL_MAX];
+    char icon[UI_ICON_NAME_MAX];
+    char confirm[UI_MENU_LABEL_MAX];
+
+} __attribute__((packed)) ui_menu_item_t;
+
+
+/**
+ * @brief A context menu, top to bottom, opened at a point in a window's content area.
+ */
+typedef struct {
+
+    uint32_t window_id;
+    uint32_t serial;
+
+    int16_t x;
+    int16_t y;
+
+    uint16_t count;
+
+    ui_menu_item_t items[UI_MENU_ITEMS_MAX];
+
+} __attribute__((packed)) ui_msg_popup_menu_t;
+
+
+typedef struct {
+
+    uint32_t window_id;
+    uint32_t serial;
+    uint32_t id;
+
+} __attribute__((packed)) ui_msg_menu_t;
 
 
 typedef struct {
@@ -469,6 +542,7 @@ typedef enum {
     UI_EVENT_LEAVE,
     UI_EVENT_SCROLL,
     UI_EVENT_THEME,
+    UI_EVENT_MENU,
 
 } ui_event_type_t;
 
@@ -505,6 +579,11 @@ typedef struct {
             int16_t dx;
             int16_t dy;
         } scroll;
+
+        struct {
+            uint32_t serial;
+            uint32_t id;
+        } menu;
     };
 
 } ui_event_t;
@@ -592,6 +671,19 @@ int ui_window_set_icon(ui_window_t* win, const char* name);
  * @return 0, or -1 with errno set: EINVAL for a shape ui_cursor_t does not name.
  */
 int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor);
+
+/**
+ * @brief Asks the server to show a context menu, whose answer arrives later as a UI_EVENT_MENU with the same serial.
+ *
+ * @param win The window the menu belongs to.
+ * @param x The point it opens at, in the content area.
+ * @param y The point it opens at, in the content area.
+ * @param items Its items, top to bottom, each with a non-zero id.
+ * @param count How many there are, at most UI_MENU_ITEMS_MAX.
+ * @param serial Receives the serial the answer carries, or NULL.
+ * @return 0, or -1 with errno set.
+ */
+int ui_window_popup_menu(ui_window_t* win, int x, int y, const ui_menu_item_t* items, size_t count, uint32_t* serial);
 
 /**
  * @brief Waits for the next event on a connection.

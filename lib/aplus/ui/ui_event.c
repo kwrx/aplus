@@ -220,6 +220,27 @@ int ui_next_event(ui_connection_t* conn, ui_event_t* out, int timeout_ms) {
                 return 1;
             }
 
+            case UI_EV_MENU: {
+
+                ui_msg_menu_t menu;
+
+                if (hdr.length != sizeof(menu)) {
+                    errno = EPROTO;
+                    return -1;
+                }
+
+                if (ui_conn_read(conn, &menu, sizeof(menu)) < 0) {
+                    return -1;
+                }
+
+                out->type        = UI_EVENT_MENU;
+                out->window_id   = menu.window_id;
+                out->menu.serial = menu.serial;
+                out->menu.id     = menu.id;
+
+                return 1;
+            }
+
             case UI_EV_FOCUS: {
 
                 ui_msg_focus_t focus;
