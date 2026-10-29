@@ -613,6 +613,40 @@ int ui_window_set_icon(ui_window_t* win, const char* name) {
 }
 
 
+int ui_window_popup_menu(ui_window_t* win, int x, int y, const ui_menu_item_t* items, size_t count, uint32_t* serial) {
+
+    static uint32_t next = 0;
+
+    if (!win || !items || count == 0 || count > UI_MENU_ITEMS_MAX) {
+        errno = EINVAL;
+        return -1;
+    }
+
+
+    ui_msg_popup_menu_t req;
+
+    memset(&req, 0, sizeof(req));
+
+    req.window_id = win->id;
+    req.serial    = ++next;
+    req.x         = (int16_t)x;
+    req.y         = (int16_t)y;
+    req.count     = (uint16_t)count;
+
+    memcpy(req.items, items, count * sizeof(items[0]));
+
+    if (ui_send_msg(win->conn->fd, UI_REQ_POPUP_MENU, &req, sizeof(req)) < 0) {
+        return -1;
+    }
+
+    if (serial) {
+        *serial = req.serial;
+    }
+
+    return 0;
+}
+
+
 int ui_window_set_cursor(ui_window_t* win, ui_cursor_t cursor) {
 
     if (!win || (unsigned)cursor >= UI_CURSOR_COUNT) {

@@ -24,6 +24,8 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include <aplus/input.h>
+
 #include "ui_internal.h"
 #include "ui_widget_internal.h"
 
@@ -453,7 +455,21 @@ static bool ui_view_pointer(ui_view_t* view, const ui_event_t* event) {
 
     bool changed = ui_view_set_hovered(view, over);
 
-    const bool down = (event->pointer.buttons & UI_BUTTON_LEFT) != 0;
+    const bool down    = (event->pointer.buttons & UI_BUTTON_LEFT) != 0;
+    const bool context = (event->pointer.buttons & UI_BUTTON_RIGHT) && !(view->buttons & UI_BUTTON_RIGHT);
+
+    view->buttons = event->pointer.buttons;
+    view->menu.x  = x;
+    view->menu.y  = y;
+
+    if (context && over && !view->pressed && over->ops->on_context) {
+
+        if (over->ops->on_key) {
+            changed |= ui_view_focus(view, over);
+        }
+
+        changed |= ui_view_notified(over, over->ops->on_context(over, x, y));
+    }
 
 
     if (down) {
@@ -575,6 +591,13 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
 
         case UI_EVENT_KEY:
 
+            if (event->key.vkey == KEY_LEFTSHIFT || event->key.vkey == KEY_RIGHTSHIFT) {
+
+                const uint8_t side = event->key.vkey == KEY_LEFTSHIFT ? 1 : 2;
+
+                view->shift = event->key.down ? view->shift | side : view->shift & (uint8_t)~side;
+            }
+
             if (view->focused && view->focused->ops->on_key) {
 
                 if (view->focused->ops->on_key(view->focused, event->key.vkey, event->key.down != 0)) {
@@ -593,6 +616,21 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
             view->closed = true;
 
             return true;
+
+        case UI_EVENT_MENU: {
+
+            const ui_menu_fn fn = view->menu.fn;
+
+            if (!fn || event->menu.serial != view->menu.serial) {
+                return false;
+            }
+
+            view->menu.fn = NULL;
+
+            fn(view, event->menu.id, view->menu.user);
+
+            return true;
+        }
 
         case UI_EVENT_THEME:
 
@@ -622,6 +660,9 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
             }
 
             if (!event->focus.focused) {
+
+                view->shift = 0;
+
                 return ui_view_set_hovered(view, NULL) | ui_view_cancel_pressed(view);
             }
 
@@ -630,6 +671,39 @@ bool ui_view_dispatch(ui_view_t* view, const ui_event_t* event) {
         default:
             return false;
     }
+}
+
+
+void ui_view_menu_anchor(ui_view_t* view, int x, int y) {
+
+    view->menu.x = x;
+    view->menu.y = y;
+}
+
+
+bool ui_view_shift(const ui_view_t* view) {
+    return view->shift != 0;
+}
+
+
+int ui_view_popup_menu(ui_view_t* view, const ui_menu_item_t* items, size_t count, ui_menu_fn fn, void* user) {
+
+    uint32_t serial;
+
+    if (!view) {
+        errno = EINVAL;
+        return -1;
+    }
+
+    if (ui_window_popup_menu(view->window, view->menu.x, view->menu.y, items, count, &serial) < 0) {
+        return -1;
+    }
+
+    view->menu.serial = serial;
+    view->menu.fn     = fn;
+    view->menu.user   = user;
+
+    return 0;
 }
 
 
