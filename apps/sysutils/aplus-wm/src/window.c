@@ -83,6 +83,19 @@ bool wm_window_translucent(const wm_window_t* win) {
 
 
 /**
+ * @brief Reports whether a window is frosted glass this frame: translucent, asking for UI_WINDOW_BLUR, shown, and not a drawer,
+ * which sits on the taskbar's background instead.
+ *
+ * @param win The window to test.
+ * @return true when what shows through it is blurred.
+ */
+bool wm_window_frosted(const wm_window_t* win) {
+
+    return (win->flags & UI_WINDOW_BLUR) && wm_window_translucent(win) && !wm_window_drawer(win) && win->committed && !win->minimized;
+}
+
+
+/**
  * @brief Reports how far the decorations reach out from a window's content area.
  *
  * @param win The window to measure.
@@ -668,6 +681,8 @@ void wm_window_destroy(wm_window_t* win) {
         cairo_surface_destroy(win->icon);
         win->icon = NULL;
     }
+
+    wm_blur_fini(&win->backdrop);
 
     free(win);
 }
@@ -1435,7 +1450,8 @@ static void wm_window_paint_button(cairo_t* cr, wm_window_t* win, wm_region_t re
 
 
 /**
- * @brief Draws a window as it stands, with no transition applied: shadow, frame, content and outline.
+ * @brief Draws a window as it stands, with no transition applied: shadow, frame, content and outline, over a backdrop
+ * blurred from the back buffer when it is frosted, or over the last one when drawn anywhere else.
  *
  * @param cr The cairo context to draw with.
  * @param win The window to draw.
@@ -1450,6 +1466,8 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
     const wm_rect_t f      = wm_window_frame(win);
     const bool borderless  = wm_window_borderless(win);
     const bool translucent = wm_window_translucent(win);
+    const bool composited  = cairo_get_target(cr) == wm.display.back;
+    const bool frosted     = wm_window_frosted(win) && (!composited || wm_blur_capture(&win->backdrop, &f));
     const double radius    = (double)wm_window_radius(win);
     const double focus     = ui_anim_value(&win->focus, wm.frame_time);
 
@@ -1485,6 +1503,10 @@ void wm_window_paint_still(cairo_t* cr, wm_window_t* win) {
     cairo_clip(cr);
 
     cairo_set_operator(cr, CAIRO_OPERATOR_OVER);
+
+    if (frosted) {
+        wm_blur_paint(cr, &win->backdrop);
+    }
 
 
     const int bw = cairo_image_surface_get_width(win->backstore);

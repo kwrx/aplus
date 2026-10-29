@@ -146,6 +146,8 @@ static void wm_composite(void) {
         return;
     }
 
+    wm_blur_damage();
+
 
     wm_rect_t damage[UI_DAMAGE_MAX];
 

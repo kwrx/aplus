@@ -35,6 +35,80 @@
 
 
 /**
+ * @brief The colours and font a menu is drawn in.
+ */
+typedef struct {
+
+    ui_color_t fill;
+    ui_color_t rule;
+    ui_color_t text;
+    ui_color_t muted;
+    ui_color_t dim;
+    ui_color_t danger;
+    ui_color_t hover;
+    ui_color_t down;
+
+    double radius;
+
+    const char* font;
+    double size;
+
+} wm_menu_palette_t;
+
+
+/**
+ * @brief Picks the palette of the menu out now: the taskbar's for the rail's, and for a client's the one its windows and widgets use.
+ *
+ * @return The palette.
+ */
+static wm_menu_palette_t wm_menu_palette(void) {
+
+    if (wm.menu.anchor == WM_MENU_RAIL) {
+
+        ui_color_t dim = wm.theme.title_active;
+
+        dim.a *= 0.4;
+
+        return (wm_menu_palette_t){
+            .fill   = wm.theme.taskbar,
+            .rule   = wm.theme.taskbar_edge,
+            .text   = wm.theme.title_active,
+            .muted  = wm.theme.title_idle,
+            .dim    = dim,
+            .danger = wm.theme.close_over,
+            .hover  = wm.theme.taskbar_hover,
+            .down   = wm.theme.taskbar_down,
+            .radius = WM_TASKBAR_ITEM_RADIUS,
+            .font   = wm.theme.font,
+            .size   = WM_TASKBAR_FONT_SIZE,
+        };
+    }
+
+    const ui_msg_theme_t* client = &wm.theme.client;
+
+    ui_color_t fill = wm_theme_role(client->surface);
+    ui_color_t fade = wm_theme_role(client->background);
+
+    fill.a = WM_BLUR_TINT;
+    fade.a = client->disabled_fade;
+
+    return (wm_menu_palette_t){
+        .fill   = fill,
+        .rule   = wm_theme_role(client->border),
+        .text   = wm_theme_role(client->text),
+        .muted  = wm_theme_role(client->text_muted),
+        .dim    = ui_color_blend(wm_theme_role(client->text), fade),
+        .danger = wm_theme_role(client->danger),
+        .hover  = wm_theme_role(client->hover),
+        .down   = wm_theme_role(client->active),
+        .radius = WM_MENU_ROW_RADIUS,
+        .font   = client->font_regular,
+        .size   = WM_MAX(client->font_size - WM_MENU_FONT_STEP, 1.0),
+    };
+}
+
+
+/**
  * @brief Reports how much of the column a row takes, the gap after it included.
  *
  * @param index The row's place in the menu.
@@ -112,16 +186,21 @@ static void wm_menu_release(void) {
 /**
  * @brief Takes up a title and rows, answering whoever the menu was out for before.
  *
+ * @param anchor Where the menu comes out of, which picks its palette.
  * @param title What the menu is about, cut to fit, or NULL for none.
  * @param rows Its rows, top to bottom.
  * @param count How many there are.
  */
-static void wm_menu_set(const char* title, const wm_menu_row_t* rows, int count) {
+static void wm_menu_set(wm_menu_anchor_t anchor, const char* title, const wm_menu_row_t* rows, int count) {
 
     wm_menu_answer(0);
     wm_menu_release();
 
-    ui_draw_ellipsize(wm.menu.title, sizeof(wm.menu.title), title ? title : "", wm.theme.font, WM_TASKBAR_FONT_SIZE, WM_TASKBAR_POPOUT_MAX - 2 * WM_TASKBAR_POPOUT_PAD);
+    wm.menu.anchor = anchor;
+
+    const wm_menu_palette_t palette = wm_menu_palette();
+
+    ui_draw_ellipsize(wm.menu.title, sizeof(wm.menu.title), title ? title : "", palette.font, palette.size, WM_TASKBAR_POPOUT_MAX - 2 * WM_TASKBAR_POPOUT_PAD);
 
     bool marked = false;
 
@@ -167,7 +246,9 @@ static void wm_menu_set(const char* title, const wm_menu_row_t* rows, int count)
  */
 static void wm_menu_measure(int* width, int* height) {
 
-    double w = wm.menu.title[0] ? ui_draw_text_width(wm.menu.title, wm.theme.font, WM_TASKBAR_FONT_SIZE) + 2 * WM_TASKBAR_POPOUT_PAD : 0.0;
+    const wm_menu_palette_t palette = wm_menu_palette();
+
+    double w = wm.menu.title[0] ? ui_draw_text_width(wm.menu.title, palette.font, palette.size) + 2 * WM_TASKBAR_POPOUT_PAD : 0.0;
     int h    = 2 * WM_TASKBAR_PAD + (wm.menu.title[0] ? WM_TASKBAR_ITEM + WM_MENU_RULE : 0);
 
     for (int i = 0; i < wm.menu.count; i++) {
@@ -175,8 +256,8 @@ static void wm_menu_measure(int* width, int* height) {
         h += wm_menu_pitch(i);
 
         if (!(wm.menu.rows[i].flags & UI_MENU_SEPARATOR)) {
-            w = WM_MAX(w, 2 * WM_TASKBAR_PAD + wm.menu.indent + ui_draw_text_width(wm.menu.rows[i].label, wm.theme.font, WM_TASKBAR_FONT_SIZE) + WM_TASKBAR_POPOUT_PAD);
-            w = WM_MAX(w, 2 * WM_TASKBAR_PAD + wm.menu.indent + ui_draw_text_width(wm.menu.rows[i].confirm, wm.theme.font, WM_TASKBAR_FONT_SIZE) + WM_TASKBAR_POPOUT_PAD);
+            w = WM_MAX(w, 2 * WM_TASKBAR_PAD + wm.menu.indent + ui_draw_text_width(wm.menu.rows[i].label, palette.font, palette.size) + WM_TASKBAR_POPOUT_PAD);
+            w = WM_MAX(w, 2 * WM_TASKBAR_PAD + wm.menu.indent + ui_draw_text_width(wm.menu.rows[i].confirm, palette.font, palette.size) + WM_TASKBAR_POPOUT_PAD);
         }
     }
 
@@ -212,7 +293,7 @@ static void wm_menu_start(uint32_t motion) {
  */
 void wm_menu_show(uint32_t owner, int anchor, const char* title, const wm_menu_row_t* rows, int count) {
 
-    wm_menu_set(title, rows, count);
+    wm_menu_set(WM_MENU_RAIL, title, rows, count);
 
     int width;
     int height;
@@ -225,7 +306,6 @@ void wm_menu_show(uint32_t owner, int anchor, const char* title, const wm_menu_r
 
     const wm_rect_t r = {WM_TASKBAR_WIDTH, top, width, height};
 
-    wm.menu.anchor    = WM_MENU_RAIL;
     wm.menu.upwards   = false;
     wm.menu.leftwards = false;
     wm.menu.owner     = owner;
@@ -248,7 +328,7 @@ void wm_menu_show(uint32_t owner, int anchor, const char* title, const wm_menu_r
  */
 void wm_menu_popup(wm_window_t* win, uint32_t serial, int x, int y, const wm_menu_row_t* rows, int count) {
 
-    wm_menu_set(NULL, rows, count);
+    wm_menu_set(WM_MENU_POINTER, NULL, rows, count);
 
     int width;
     int height;
@@ -266,7 +346,6 @@ void wm_menu_popup(wm_window_t* win, uint32_t serial, int x, int y, const wm_men
 
     const wm_rect_t r = {WM_CLAMP(left, work.x, work.x + work.width - width), WM_MAX(WM_MIN(top, work.y + work.height - height), work.y), width, height};
 
-    wm.menu.anchor    = WM_MENU_POINTER;
     wm.menu.upwards   = upwards;
     wm.menu.leftwards = leftwards;
     wm.menu.owner     = 0;
@@ -465,15 +544,34 @@ wm_rect_t wm_menu_extent(uint64_t now) {
 
 
 /**
+ * @brief Reports whether a client's menu is frosted this frame.
+ *
+ * @param shape Receives its panel.
+ * @return true while a client's menu is on its way out, out, or on its way in.
+ */
+bool wm_menu_frosted(wm_rect_t* shape) {
+
+    if (wm.menu.anchor != WM_MENU_POINTER || ui_anim_value(&wm.menu.open, wm.frame_time) <= 0.0) {
+        return false;
+    }
+
+    *shape = wm.menu.rect;
+
+    return true;
+}
+
+
+/**
  * @brief Draws a row's mark: a plus to open, a pushpin to pin, the pushpin struck through to unpin, a red cross to quit.
  *
  * @param cr The cairo context.
+ * @param palette The menu's palette.
  * @param glyph The mark.
  * @param x The centre.
  * @param y The centre.
  * @param alpha How opaque to draw it.
  */
-static void wm_menu_paint_glyph(cairo_t* cr, wm_menu_glyph_t glyph, double x, double y, double alpha) {
+static void wm_menu_paint_glyph(cairo_t* cr, const wm_menu_palette_t* palette, wm_menu_glyph_t glyph, double x, double y, double alpha) {
 
     const double g = WM_TASKBAR_SESSION_GLYPH;
     const double d = g - 2.0;
@@ -488,7 +586,7 @@ static void wm_menu_paint_glyph(cairo_t* cr, wm_menu_glyph_t glyph, double x, do
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
     cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
 
-    wm_source(cr, glyph == WM_MENU_GLYPH_QUIT ? wm.theme.close_over : wm.theme.title_active, alpha);
+    wm_source(cr, glyph == WM_MENU_GLYPH_QUIT ? palette->danger : palette->text, alpha);
 
     cairo_new_path(cr);
 
@@ -543,16 +641,38 @@ static void wm_menu_paint_glyph(cairo_t* cr, wm_menu_glyph_t glyph, double x, do
 
 
 /**
+ * @brief Fills a row's rounded wash: the pressed one while it is held, else the hover one as lit as it is.
+ *
+ * @param cr The cairo context.
+ * @param palette The menu's palette.
+ * @param r The row.
+ * @param hover How lit it is, 0 to 1.
+ * @param held Whether it is held down.
+ */
+static void wm_menu_paint_wash(cairo_t* cr, const wm_menu_palette_t* palette, const wm_rect_t* r, double hover, bool held) {
+
+    if (!held && hover <= 0.0) {
+        return;
+    }
+
+    wm_source(cr, held ? palette->down : palette->hover, held ? 1.0 : hover);
+    ui_draw_rounded_rect_d(cr, r->x, r->y, r->width, r->height, palette->radius);
+    cairo_fill(cr);
+}
+
+
+/**
  * @brief Draws one row: a rule, or its wash, its mark or icon and its label, greyed out or in red as its flags say.
  *
  * @param cr The cairo context, clipped to the menu, its font set.
+ * @param palette The menu's palette.
  * @param index The row's place in the menu.
  * @param dx How far the menu still is from all the way out across, which the row is slid back by.
  * @param dy How far it still is from all the way out down or up.
  * @param alpha How opaque to draw it.
  * @param held Whether the row is pressed with the pointer still on it.
  */
-static void wm_menu_paint_row(cairo_t* cr, int index, int dx, int dy, double alpha, bool held) {
+static void wm_menu_paint_row(cairo_t* cr, const wm_menu_palette_t* palette, int index, int dx, int dy, double alpha, bool held) {
 
     wm_rect_t r = wm_menu_row_rect(index);
 
@@ -569,7 +689,7 @@ static void wm_menu_paint_row(cairo_t* cr, int index, int dx, int dy, double alp
         cairo_move_to(cr, r.x, y);
         cairo_line_to(cr, r.x + r.width, y);
         cairo_set_line_width(cr, 1.0);
-        wm_source(cr, wm.theme.taskbar_edge, alpha);
+        wm_source(cr, palette->rule, alpha);
         cairo_stroke(cr);
 
         return;
@@ -578,8 +698,8 @@ static void wm_menu_paint_row(cairo_t* cr, int index, int dx, int dy, double alp
 
     const double fade = flags & UI_MENU_DISABLED ? alpha * 0.4 : alpha;
 
-    wm_taskbar_paint_wash(cr, &r, ui_anim_value(&wm.menu.hover[index], wm.frame_time), held, 0.0);
-    wm_menu_paint_glyph(cr, wm.menu.rows[index].glyph, r.x + WM_TASKBAR_ITEM / 2.0, r.y + r.height / 2.0, fade);
+    wm_menu_paint_wash(cr, palette, &r, ui_anim_value(&wm.menu.hover[index], wm.frame_time), held);
+    wm_menu_paint_glyph(cr, palette, wm.menu.rows[index].glyph, r.x + WM_TASKBAR_ITEM / 2.0, r.y + r.height / 2.0, fade);
 
     cairo_surface_t* icon = wm.menu.rows[index].icon;
 
@@ -596,7 +716,7 @@ static void wm_menu_paint_row(cairo_t* cr, int index, int dx, int dy, double alp
 
     cairo_font_extents(cr, &font);
 
-    wm_source(cr, flags & UI_MENU_DANGER ? wm.theme.close_over : wm.theme.title_active, fade);
+    wm_source(cr, flags & UI_MENU_DISABLED ? palette->dim : flags & UI_MENU_DANGER ? palette->danger : palette->text, alpha);
     cairo_move_to(cr, r.x + wm.menu.indent, round(r.y + (r.height - (font.ascent + font.descent)) / 2.0 + font.ascent));
     cairo_show_text(cr, wm.menu.rows[index].armed ? wm.menu.rows[index].confirm : wm.menu.rows[index].label);
 }
@@ -632,83 +752,172 @@ static void wm_menu_trace(cairo_t* cr, double x, double y, double width, double 
 
 
 /**
- * @brief Traces the menu's shape at a moment, casts its shadow and draws its hairline, then fills it and clips to it.
+ * @brief Reports how much of a client's menu has dropped out at a moment.
+ *
+ * @param open How far out it is, 0 to 1.
+ * @param top Receives the top edge of what is out.
+ * @param radius Receives the radius of its rounded corners.
+ * @return How tall what is out is.
+ */
+static double wm_menu_reach(double open, double* top, double* radius) {
+
+    const wm_rect_t panel = wm.menu.rect;
+    const double reach    = panel.height * open;
+
+    *top    = wm.menu.upwards ? panel.y + panel.height - reach : panel.y;
+    *radius = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, reach / 2.0);
+
+    return reach;
+}
+
+
+/**
+ * @brief Casts a client's menu's shadow as a focused window's, kept inside the work area like the windows' own.
  *
  * @param cr The cairo context.
+ * @param shape What casts it.
+ * @param strength How far out the menu is, 0 to 1, which the shadow darkens with.
+ */
+static void wm_menu_shadow(cairo_t* cr, const wm_rect_t* shape, double strength) {
+
+    const wm_rect_t work = wm_workarea();
+
+    cairo_save(cr);
+
+    cairo_new_path(cr);
+    ui_draw_rounded_rect_d(cr, work.x, work.y, work.width, work.height, WM_TASKBAR_RADIUS);
+    cairo_clip(cr);
+
+    wm_shadow_paint(cr, &wm.shadow_key, shape, WM_SHADOW_KEY_OFFSET, wm.theme.shadow_key * strength);
+    wm_shadow_paint(cr, &wm.shadow_ambient, shape, 0, wm.theme.shadow_ambient * strength);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Strokes a client's menu's edges inside its shape as a focused window's: the outline, and the highlight within it.
+ *
+ * @param cr The cairo context.
+ * @param open How far out it is, 0 to 1.
+ */
+static void wm_menu_paint_edges(cairo_t* cr, double open) {
+
+    const wm_rect_t panel = wm.menu.rect;
+
+    double top;
+    double radius;
+
+    const double reach = wm_menu_reach(open, &top, &radius);
+
+    if (reach < 4.0) {
+        return;
+    }
+
+    cairo_save(cr);
+
+    cairo_set_line_width(cr, 1.0);
+
+    cairo_new_path(cr);
+    wm_menu_trace(cr, panel.x + 0.5, top + 0.5, panel.width - 1.0, reach - 1.0, WM_MAX(radius - 0.5, 0.0));
+    wm_source(cr, wm.theme.outline, 1.0);
+    cairo_stroke(cr);
+
+    cairo_new_path(cr);
+    wm_menu_trace(cr, panel.x + 1.5, top + 1.5, panel.width - 3.0, reach - 3.0, WM_MAX(radius - 1.5, 0.0));
+    wm_source(cr, wm.theme.highlight, 1.0);
+    cairo_stroke(cr);
+
+    cairo_restore(cr);
+}
+
+
+/**
+ * @brief Traces the menu's shape at a moment, casts its shadow, then fills it and clips to it.
+ *
+ * @param cr The cairo context.
+ * @param palette The menu's palette.
  * @param open How far out it is, 0 to 1.
  * @param dx Receives how far its contents are slid back across.
  * @param dy Receives how far its contents are slid back down or up.
  * @return false while too little of it is out to draw, with nothing drawn.
  */
-static bool wm_menu_paint_shape(cairo_t* cr, double open, int* dx, int* dy) {
+static bool wm_menu_paint_shape(cairo_t* cr, const wm_menu_palette_t* palette, double open, int* dx, int* dy) {
 
     const wm_rect_t panel = wm.menu.rect;
 
     if (wm.menu.anchor == WM_MENU_POINTER) {
 
-        const double reach  = panel.height * open;
-        const double top    = wm.menu.upwards ? panel.y + panel.height - reach : panel.y;
-        const double radius = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, reach / 2.0);
+        double top;
+        double radius;
+
+        const double reach = wm_menu_reach(open, &top, &radius);
 
         if (reach < 1.0) {
             return false;
         }
 
         const wm_rect_t shape = {panel.x, (int)top, panel.width, (int)ceil(reach)};
+        const bool frosted    = wm_blur_capture(&wm.menu.backdrop, &panel);
 
-        wm_taskbar_shadow(cr, &shape, open);
-
-        cairo_new_path(cr);
-        wm_menu_trace(cr, panel.x - 0.5, top - 0.5, panel.width + 1.0, reach + 1.0, radius + 0.5);
-        wm_taskbar_edge(cr);
+        wm_menu_shadow(cr, &shape, open);
 
         cairo_new_path(cr);
         wm_menu_trace(cr, panel.x, top, panel.width, reach, radius);
+        cairo_clip(cr);
+
+        if (frosted) {
+            wm_blur_paint(cr, &wm.menu.backdrop);
+        }
+
+        cairo_set_source_rgba(cr, palette->fill.r, palette->fill.g, palette->fill.b, frosted ? palette->fill.a : 1.0);
+        cairo_paint(cr);
 
         *dx = 0;
         *dy = (int)round(wm.menu.upwards ? panel.height - reach : reach - panel.height);
 
-    } else {
-
-        const double x0 = panel.x;
-        const double x1 = x0 + panel.width * open;
-
-        if (x1 - x0 < 1.0) {
-            return false;
-        }
-
-        const double top    = panel.y;
-        const double bottom = panel.y + panel.height;
-
-        const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
-        const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
-
-        const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
-
-        wm_taskbar_shadow(cr, &shape, open);
-
-        cairo_new_path(cr);
-        wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
-        wm_taskbar_edge(cr);
-
-        cairo_new_path(cr);
-        wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
-        cairo_close_path(cr);
-
-        *dx = -(int)round(panel.width - (x1 - x0));
-        *dy = 0;
+        return true;
     }
 
-    wm_source(cr, wm.theme.taskbar, 1.0);
+
+    const double x0 = panel.x;
+    const double x1 = x0 + panel.width * open;
+
+    if (x1 - x0 < 1.0) {
+        return false;
+    }
+
+    const double top    = panel.y;
+    const double bottom = panel.y + panel.height;
+
+    const double fillet = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, x1 - x0);
+    const double corner = WM_MIN(WM_TASKBAR_POPOUT_RADIUS, (x1 - x0) / 2.0);
+
+    const wm_rect_t shape = {(int)x0, (int)top, (int)ceil(x1 - x0), (int)(bottom - top)};
+
+    wm_taskbar_shadow(cr, &shape, open);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.5);
+    wm_taskbar_edge(cr);
+
+    cairo_new_path(cr);
+    wm_taskbar_popout_outline(cr, x0, x1, top, bottom, fillet, corner, 0.0);
+    cairo_close_path(cr);
+
+    wm_source(cr, palette->fill, 1.0);
     cairo_fill_preserve(cr);
     cairo_clip(cr);
+
+    *dx = -(int)round(panel.width - (x1 - x0));
+    *dy = 0;
 
     return true;
 }
 
 
 /**
- * @brief Draws the menu on its way out or in: its title and a rule under it when it has one, then its rows.
+ * @brief Draws the menu on its way out or in: its title and a rule under it when it has one, its rows, and a client's menu's edges over them.
  *
  * @param cr The cairo context.
  * @param held The row pressed with the pointer still on it, or -1.
@@ -720,7 +929,9 @@ void wm_menu_paint(cairo_t* cr, int held) {
     const double open     = ui_anim_value(&wm.menu.open, wm.frame_time);
     const wm_rect_t panel = wm.menu.rect;
 
-    cairo_font_face_t* face = ui_font_face(wm.theme.font);
+    const wm_menu_palette_t palette = wm_menu_palette();
+
+    cairo_font_face_t* face = ui_font_face(palette.font);
 
     if (open <= 0.0 || !face) {
         return;
@@ -732,7 +943,7 @@ void wm_menu_paint(cairo_t* cr, int held) {
 
     cairo_save(cr);
 
-    if (!wm_menu_paint_shape(cr, open, &dx, &dy)) {
+    if (!wm_menu_paint_shape(cr, &palette, open, &dx, &dy)) {
         cairo_restore(cr);
         return;
     }
@@ -741,7 +952,7 @@ void wm_menu_paint(cairo_t* cr, int held) {
     cairo_font_extents_t font;
 
     cairo_set_font_face(cr, face);
-    cairo_set_font_size(cr, WM_TASKBAR_FONT_SIZE);
+    cairo_set_font_size(cr, palette.size);
     cairo_font_extents(cr, &font);
 
     if (wm.menu.title[0]) {
@@ -749,7 +960,7 @@ void wm_menu_paint(cairo_t* cr, int held) {
         const double top  = panel.y + dy + WM_TASKBAR_PAD;
         const double rule = top + WM_TASKBAR_ITEM + WM_MENU_RULE / 2 + 0.5;
 
-        wm_source(cr, wm.theme.title_idle, open);
+        wm_source(cr, palette.muted, open);
         cairo_move_to(cr, panel.x + dx + WM_TASKBAR_POPOUT_PAD, round(top + (WM_TASKBAR_ITEM - (font.ascent + font.descent)) / 2.0 + font.ascent));
         cairo_show_text(cr, wm.menu.title);
 
@@ -757,12 +968,16 @@ void wm_menu_paint(cairo_t* cr, int held) {
         cairo_move_to(cr, panel.x + dx + WM_TASKBAR_PAD, rule);
         cairo_line_to(cr, panel.x + dx + panel.width - WM_TASKBAR_PAD, rule);
         cairo_set_line_width(cr, 1.0);
-        wm_source(cr, wm.theme.taskbar_edge, open);
+        wm_source(cr, palette.rule, open);
         cairo_stroke(cr);
     }
 
     for (int i = 0; i < wm.menu.count; i++) {
-        wm_menu_paint_row(cr, i, dx, dy, open, i == held);
+        wm_menu_paint_row(cr, &palette, i, dx, dy, open, i == held);
+    }
+
+    if (wm.menu.anchor == WM_MENU_POINTER) {
+        wm_menu_paint_edges(cr, open);
     }
 
     cairo_restore(cr);
@@ -774,4 +989,6 @@ void wm_menu_fini(void) {
     wm.menu.pending = false;
 
     wm_menu_release();
+
+    wm_blur_fini(&wm.menu.backdrop);
 }
