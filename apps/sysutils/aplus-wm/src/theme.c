@@ -1377,6 +1377,17 @@ ui_color_t wm_theme_frame(void) {
 
 
 /**
+ * @brief Converts one of the roles clients draw their widgets with into a colour the server paints with.
+ *
+ * @param role The role, as the theme resolved it.
+ * @return The colour.
+ */
+ui_color_t wm_theme_role(ui_msg_color_t role) {
+    return (ui_color_t){role.r, role.g, role.b, role.a};
+}
+
+
+/**
  * @brief Reports the wallpaper to paint: the one on the command line, or else the theme's.
  *
  * @return The path, or NULL for the gradient.

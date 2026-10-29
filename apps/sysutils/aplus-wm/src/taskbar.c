@@ -1439,7 +1439,7 @@ void wm_taskbar_forget(const wm_window_t* win) {
  * @param pressed Whether it is held down.
  * @param active How much it is the active window's, 0 to 1.
  */
-void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active) {
+static void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active) {
 
     const ui_color_t over = wm.theme.taskbar_hover;
     const ui_color_t on   = wm.theme.taskbar_active;

@@ -250,12 +250,24 @@
 #define WM_APP_PATH_MAX      256
 
 /**
- * @brief The context menu: its most rows, its narrowest width, the rule under its title or between groups, and its icons' size.
+ * @brief The context menu: its most rows, its narrowest width, the rule under its title or between groups, its icons' size,
+ * the radius of the wash under a client menu's row, which is a list highlight's, and how much smaller than the theme's
+ * text a client menu's is.
  */
-#define WM_MENU_ROWS_MAX  UI_MENU_ITEMS_MAX
-#define WM_MENU_MIN_WIDTH 168
-#define WM_MENU_RULE      9
-#define WM_MENU_ICON      16
+#define WM_MENU_ROWS_MAX   UI_MENU_ITEMS_MAX
+#define WM_MENU_MIN_WIDTH  168
+#define WM_MENU_RULE       9
+#define WM_MENU_ICON       16
+#define WM_MENU_ROW_RADIUS 6
+#define WM_MENU_FONT_STEP  1.0
+
+/**
+ * @brief Frosted glass, for a client's menu and a UI_WINDOW_BLUR window: what lies under it, blurred this far in this many
+ * box passes at half size, then tinted this much with its own colour where the server paints that.
+ */
+#define WM_BLUR_RADIUS 24
+#define WM_BLUR_PASSES 3
+#define WM_BLUR_TINT   0.6
 
 
 /**
@@ -425,6 +437,17 @@ typedef struct wm_window wm_window_t;
 
 
 /**
+ * @brief A frosted backdrop: what lay under something, blurred at half size, and the rectangle it was read from.
+ */
+typedef struct {
+
+    cairo_surface_t* surface;
+    wm_rect_t rect;
+
+} wm_blur_t;
+
+
+/**
  * @brief The drawer: the window slid out of the rail, or a picture of it sliding back in after it has gone.
  */
 typedef struct {
@@ -547,6 +570,8 @@ typedef struct {
 
     wm_rect_t painted;
 
+    wm_blur_t backdrop;
+
 } wm_menu_t;
 
 
@@ -598,6 +623,8 @@ typedef struct wm_window {
     wm_rect_t morph_rect;
     wm_rect_t morph_from;
     ui_anim_t morph_anim;
+
+    wm_blur_t backdrop;
 
     struct wm_window* next;
 
@@ -827,6 +854,7 @@ int wm_theme_set_options(const ui_msg_ctl_option_t* options, size_t count, char*
 int wm_theme_get_option(const char* section, const char* key, char* text, size_t size);
 const char* wm_theme_wallpaper(void);
 ui_color_t wm_theme_frame(void);
+ui_color_t wm_theme_role(ui_msg_color_t role);
 
 /**
  * @brief Implemented in control.c.
@@ -874,7 +902,6 @@ wm_rect_t wm_taskbar_shadow_extent(wm_rect_t extent);
 void wm_taskbar_shadow(cairo_t* cr, const wm_rect_t* shape, double strength);
 void wm_taskbar_edge(cairo_t* cr);
 void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge);
-void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active);
 
 /**
  * @brief Implemented in menu.c.
@@ -891,6 +918,7 @@ int wm_menu_row_at(int x, int y);
 int wm_menu_next(int from, int step);
 double wm_menu_hold(uint32_t owner, uint64_t now);
 wm_rect_t wm_menu_extent(uint64_t now);
+bool wm_menu_frosted(wm_rect_t* shape);
 void wm_menu_paint(cairo_t* cr, int held);
 void wm_menu_fini(void);
 
@@ -904,6 +932,14 @@ int wm_pins_find(const char* id);
 int wm_pins_add(const wm_app_t* app);
 void wm_pins_remove(int index);
 void wm_pins_fini(void);
+
+/**
+ * @brief Implemented in blur.c.
+ */
+void wm_blur_damage(void);
+bool wm_blur_capture(wm_blur_t* blur, const wm_rect_t* shape);
+void wm_blur_paint(cairo_t* cr, const wm_blur_t* blur);
+void wm_blur_fini(wm_blur_t* blur);
 
 /**
  * @brief Implemented in drawer.c.
@@ -936,6 +972,7 @@ bool wm_window_borderless(const wm_window_t* win);
 bool wm_window_centered(const wm_window_t* win);
 bool wm_window_drawer(const wm_window_t* win);
 bool wm_window_translucent(const wm_window_t* win);
+bool wm_window_frosted(const wm_window_t* win);
 wm_insets_t wm_window_insets(const wm_window_t* win);
 cairo_format_t wm_window_format(const wm_window_t* win);
 wm_rect_t wm_window_frame(const wm_window_t* win);
