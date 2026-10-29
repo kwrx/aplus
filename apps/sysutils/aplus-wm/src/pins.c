@@ -163,6 +163,8 @@ static bool wm_app_read(const char* path, wm_app_t* out, char* exec, size_t size
 
     fclose(f);
 
+    wm_utf8_sanitize(out->name);
+
     return program;
 }
 
