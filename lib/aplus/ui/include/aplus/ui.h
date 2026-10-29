@@ -198,9 +198,17 @@ typedef struct {
 #define UI_WINDOW_DRAWER (1 << 3)
 
 /**
+ * @brief Frosted glass: the server blurs whatever shows through the window.
+ *
+ * Only a UI_WINDOW_TRANSLUCENT window lets anything through, and a drawer sits on the
+ * taskbar's background whatever it asks for.
+ */
+#define UI_WINDOW_BLUR (1 << 4)
+
+/**
  * @brief Every flag this version knows, which is what both ends validate against.
  */
-#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER)
+#define UI_WINDOW_FLAGS_ALL (UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_DRAWER | UI_WINDOW_BLUR)
 
 
 typedef struct {

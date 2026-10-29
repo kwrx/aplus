@@ -262,7 +262,8 @@ ui_window_t* ui_window_create(ui_connection_t* conn, int width, int height, cons
  * still ask for a size with ui_window_request_size(). A UI_WINDOW_CENTERED one comes up in
  * the middle of the display instead of on the cascade. A UI_WINDOW_TRANSLUCENT one is
  * handed a surface that carries alpha, which the server blends over what is behind it.
- * A UI_WINDOW_DRAWER one slides out of the taskbar's rail.
+ * A UI_WINDOW_DRAWER one slides out of the taskbar's rail. A UI_WINDOW_BLUR one has what
+ * shows through it blurred.
  *
  * @param conn The connection to create it on.
  * @param width The width of the content area in pixels, which the server may clamp.
