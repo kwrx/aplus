@@ -11,7 +11,7 @@ The finished article, if you would rather read that first, is
 ## 1. The directory
 
 An application is a directory with a `Makefile` and a `main.c`. Nothing registers it:
-`apps/Makefile` walks `apps/{core,sysutils,extra,test}` and builds every directory that
+`apps/Makefile` walks `apps/{core,sysutils,extra}` and builds every directory that
 contains a `Makefile`.
 
 ```bash
@@ -525,6 +525,7 @@ For an automated run with the console captured instead of a display, `./makew ru
 ## Where to go next
 
 - The keyboard, spanning grid cells, and a layout that adapts: [tutorial-layout.md](tutorial-layout.md).
+- Every widget in use, and a search field driving a list: [tutorial-components.md](tutorial-components.md).
 - A list of things to pick from, and the focus that comes with it: [widgets.md](widgets.md#list).
 - Drawing something the widgets cannot express: [tutorial-custom-drawing.md](tutorial-custom-drawing.md).
 - Making something of your own move: [tutorial-animation.md](tutorial-animation.md).

@@ -1,6 +1,6 @@
 # Custom drawing
 
-Three widgets do not cover everything. A plot, a game board, a hex dump, a video frame —
+Five widgets do not cover everything. A plot, a game board, a hex dump, a video frame —
 none of those is a panel with a label on it, and none of them should be. This covers the two
 ways out: dropping to the raw surface entirely, and cutting a hole in a widget view and
 drawing into it yourself.
@@ -45,7 +45,7 @@ for (int y = 0; y < ui_window_height(win); y++) {
 }
 ```
 
-`apps/test/ui-test/main.c` paints its gradient exactly like that.
+`tests/ui-test/main.c` paints its gradient exactly like that.
 
 Write whatever you like into it, then say what changed and send it:
 
@@ -69,7 +69,7 @@ frame the server never hears about.
 
 ## Doing without widgets entirely
 
-`apps/test/ui-test/main.c` is the whole surface layer in one file: connect, create a window,
+`tests/ui-test/main.c` is the whole surface layer in one file: connect, create a window,
 paint a gradient, and print every event. Its event loop is the shape every surface-layer
 client has:
 
@@ -284,23 +284,60 @@ internally.
 
 ## Text without widgets
 
-`ui_draw_text()` and the font cache are internal to the library — `ui_widget_internal.h` is
-not installed — so hand-drawn text goes through cairo directly. The theme still tells you
-which file to open:
+`ui_draw_text()`, which the widgets draw their text with, is internal to the library —
+`ui_widget_internal.h` is not installed — but what it is built from is public, in
+`<aplus/ui-draw.h>`: the font cache, a measurement, and an ellipsis. There is no fontconfig in
+the sysroot, so `ui_theme()->font_regular`, `->font_medium`, `->font_bold` and `->font_mono` are
+absolute paths to font files, and cairo's toy font API (`cairo_select_font_face()`) has
+nothing to select from. Ask the cache for the face instead:
 
 ```c
-    cairo_font_face_t* face = /* your own cairo_ft_font_face_create_for_ft_face() */;
+#include <aplus/ui-draw.h>
 
-    cairo_set_font_size(cr, ui_theme()->font_size);
+    const ui_theme_t* theme = ui_theme();
+
+    cairo_font_face_t* face = ui_font_face(theme->font_regular);
+
+    if (face) {
+
+        cairo_set_font_face(cr, face);
+        cairo_set_font_size(cr, theme->font_size);
+
+        cairo_set_source_rgba(cr, theme->text.r, theme->text.g, theme->text.b, theme->text.a);
+        cairo_move_to(cr, x, baseline);
+        cairo_show_text(cr, text);
+    }
 ```
 
-`ui_theme()->font_regular` and `->font_bold` are absolute paths, because there is no
-fontconfig in the sysroot for a family name to resolve against. Load them with FreeType and
-wrap them with `cairo_ft_font_face_create_for_ft_face()`; cairo's toy font API
-(`cairo_select_font_face()`) has nothing to select from here.
+| | |
+|---|---|
+| `ui_font_face(path)` | Loads a font file through FreeType once and keeps the face for the life of the process. The face belongs to the cache: do not destroy it. `NULL` when the file cannot be loaded, or when the cache already holds 16 other faces, which means draw no text rather than fail. |
+| `ui_font_scaled(face, size)` | The same face at a size, as a cached `cairo_scaled_font_t`, for measuring with `cairo_scaled_font_text_extents()` without a context, or drawing with `cairo_set_scaled_font()`. Also owned by the cache. |
+| `ui_draw_text_width(text, path, size)` | How far a string advances, in pixels; `0` when the font cannot be loaded. |
+| `ui_draw_ellipsize(out, size, text, path, fsize, width)` | Copies `text` into `out`, cut short with `…` where it would be wider than `width`, never in the middle of a UTF-8 sequence. |
 
-Cache whatever face you create. A toolkit asks for one on every string it draws, and
-reopening the file that often dominates the cost of painting.
+The cache is the point. Opening a font file is far more expensive than drawing a string with
+it, and a canvas asks for its faces on every frame; going through `ui_font_face()` makes every
+request after the first a lookup, and shares the faces the widgets have already loaded.
+
+`ui_draw_rounded_rect()` and `ui_draw_rounded_rect_d()` are the path the panels, buttons and
+lists are drawn with, so a hand-drawn card can match them exactly. The first takes a
+`ui_rect_t`; the second takes doubles, for the half-pixel inset a one-pixel stroke needs to land
+on whole pixels:
+
+```c
+    ui_draw_rounded_rect(cr, card, theme->corner_radius);
+    cairo_set_source_rgba(cr, theme->surface_sunken.r, theme->surface_sunken.g, theme->surface_sunken.b, theme->surface_sunken.a);
+    cairo_fill(cr);
+
+    ui_draw_rounded_rect_d(cr, card.x + 0.5, card.y + 0.5, card.width - 1.0, card.height - 1.0, theme->corner_radius);
+    cairo_set_source_rgba(cr, theme->border.r, theme->border.g, theme->border.b, theme->border.a);
+    cairo_set_line_width(cr, 1.0);
+    cairo_stroke(cr);
+```
+
+Both clamp the radius at half the shorter side. Icons are in the same header — see
+[Icons](icons.md).
 
 ## Choosing between the two
 
