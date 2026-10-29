@@ -35,6 +35,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <aplus/input.h>
 #include <aplus/ulog.h>
 
 #include <wm.h>
@@ -255,7 +256,8 @@ static bool wm_taskbar_session_open(void) {
  *
  * @param x The point.
  * @param y The point.
- * @return true on the rail, the border, a corner it rounds off, or the session or context menu while it is out.
+ * @return true on the rail, the border, a corner it rounds off, or the session or context menu while it is out,
+ * wherever that menu was opened.
  */
 bool wm_taskbar_contains(int x, int y) {
 
@@ -937,14 +939,11 @@ static void wm_taskbar_light(uint32_t item, bool lit) {
 
 
 /**
- * @brief Follows the pointer from item to item, lighting none while a window is being dragged.
+ * @brief Moves the light from the item that had it to another, and the popout along with it.
  *
- * @param x The pointer.
- * @param y The pointer.
+ * @param item The item to light, or 0 for none.
  */
-void wm_taskbar_hover(int x, int y) {
-
-    const uint32_t item = wm.drag.window ? 0 : wm_taskbar_item_at(x, y);
+static void wm_taskbar_set_hover(uint32_t item) {
 
     if (item == wm.taskbar.hover) {
         return;
@@ -961,6 +960,17 @@ void wm_taskbar_hover(int x, int y) {
     }
 
     wm_taskbar_popout(item);
+}
+
+
+/**
+ * @brief Follows the pointer from item to item, lighting none while a window is being dragged.
+ *
+ * @param x The pointer.
+ * @param y The pointer.
+ */
+void wm_taskbar_hover(int x, int y) {
+    wm_taskbar_set_hover(wm.drag.window ? 0 : wm_taskbar_item_at(x, y));
 }
 
 
@@ -1047,17 +1057,17 @@ static void wm_taskbar_menu_open(uint32_t item) {
     int count = 0;
 
     if (known) {
-        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_OPEN, win ? "New window" : "Open", WM_MENU_GLYPH_OPEN};
+        rows[count++] = (wm_menu_row_t){.action = WM_TASKBAR_ACT_OPEN, .label = win ? "New window" : "Open", .glyph = WM_MENU_GLYPH_OPEN};
     }
 
     if (pinned >= 0) {
-        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_UNPIN, "Unpin from taskbar", WM_MENU_GLYPH_UNPIN};
+        rows[count++] = (wm_menu_row_t){.action = WM_TASKBAR_ACT_UNPIN, .label = "Unpin from taskbar", .glyph = WM_MENU_GLYPH_UNPIN};
     } else if (known) {
-        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_PIN, "Pin to taskbar", WM_MENU_GLYPH_PIN};
+        rows[count++] = (wm_menu_row_t){.action = WM_TASKBAR_ACT_PIN, .label = "Pin to taskbar", .glyph = WM_MENU_GLYPH_PIN};
     }
 
     if (win) {
-        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_QUIT, "Quit", WM_MENU_GLYPH_QUIT};
+        rows[count++] = (wm_menu_row_t){.action = WM_TASKBAR_ACT_QUIT, .label = "Quit", .glyph = WM_MENU_GLYPH_QUIT};
     }
 
 
@@ -1112,6 +1122,88 @@ static void wm_taskbar_menu_act(uint32_t action) {
 
             break;
     }
+}
+
+
+/**
+ * @brief Acts on a context menu row: asks first when it has to, then tells the client that opened the menu it was picked,
+ * or does what a taskbar row says.
+ *
+ * @param row The row's place in the menu.
+ */
+static void wm_taskbar_menu_pick(int row) {
+
+    if (wm_menu_arm(row)) {
+
+        wm_taskbar_damage();
+
+        return;
+    }
+
+    if (wm_menu_choose(row)) {
+
+        wm_taskbar_refresh();
+        wm_taskbar_damage();
+
+        return;
+    }
+
+    wm_taskbar_menu_act(wm.menu.rows[row].action);
+}
+
+
+/**
+ * @brief Drives the context menu from the keyboard: the arrows, Home and End move the light between the rows that can be
+ * picked, Enter or Space picks the lit one and Escape puts the menu away.
+ *
+ * @param vkey The key pressed.
+ * @return true while a menu is out, which keeps every key from the focused window.
+ */
+bool wm_taskbar_menu_key(uint16_t vkey) {
+
+    if (!wm_menu_shown()) {
+        return false;
+    }
+
+    const int row = wm_taskbar_menu_index(wm.taskbar.hover);
+
+    int next = -1;
+
+    switch (vkey) {
+
+        case KEY_UP:
+        case KEY_DOWN:
+            next = wm_menu_next(row, vkey == KEY_DOWN ? 1 : -1);
+            break;
+
+        case KEY_HOME:
+        case KEY_END:
+            next = wm_menu_next(-1, vkey == KEY_HOME ? 1 : -1);
+            break;
+
+        case KEY_ENTER:
+        case KEY_KPENTER:
+        case KEY_SPACE:
+
+            if (row >= 0) {
+                wm_taskbar_menu_pick(row);
+            }
+
+            return true;
+
+        case KEY_ESC:
+            wm_taskbar_menu_close();
+            return true;
+
+        default:
+            return true;
+    }
+
+    if (next >= 0) {
+        wm_taskbar_set_hover(WM_TASKBAR_MENU(next));
+    }
+
+    return true;
 }
 
 
@@ -1219,7 +1311,8 @@ void wm_taskbar_pins_changed(void) {
 
 /**
  * @brief Acts on a release over the item the press went down on: open or close the launcher or the session menu,
- * restart or power off, do what a context menu row says, open a pinned application, or show, raise or hide a window.
+ * restart or power off, do what a context menu row says or tell its client it was picked, open a pinned application,
+ * or show, raise or hide a window.
  *
  * @param x The pointer.
  * @param y The pointer.
@@ -1263,7 +1356,7 @@ bool wm_taskbar_release(int x, int y) {
 
     if (entry >= 0) {
 
-        wm_taskbar_menu_act(wm.menu.rows[entry].action);
+        wm_taskbar_menu_pick(entry);
 
         return true;
     }

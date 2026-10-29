@@ -54,6 +54,47 @@ cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height)
 
 
 /**
+ * @brief Replaces with '?' every byte that is not part of a well-formed UTF-8 sequence, and drops one cut short at the end,
+ * since cairo refuses a whole string over either and then stops drawing anything at all.
+ *
+ * @param text The string, changed in place.
+ */
+void wm_utf8_sanitize(char* text) {
+
+    unsigned char* s = (unsigned char*)text;
+
+    while (*s) {
+
+        const unsigned char c = s[0];
+
+        const size_t length = c < 0x80 ? 1 : c >= 0xC2 && c <= 0xDF ? 2 : c >= 0xE0 && c <= 0xEF ? 3 : c >= 0xF0 && c <= 0xF4 ? 4 : 0;
+
+        const unsigned char lo = c == 0xE0 ? 0xA0 : c == 0xF0 ? 0x90 : 0x80;
+        const unsigned char hi = c == 0xED ? 0x9F : c == 0xF4 ? 0x8F : 0xBF;
+
+        bool valid = length > 0;
+        size_t i   = 1;
+
+        for (; valid && i < length; i++) {
+            valid = i == 1 ? s[i] >= lo && s[i] <= hi : s[i] >= 0x80 && s[i] <= 0xBF;
+        }
+
+        if (!valid && length > 0 && s[i - 1] == '\0') {
+            *s = '\0';
+            break;
+        }
+
+        if (!valid) {
+            *s++ = '?';
+            continue;
+        }
+
+        s += length;
+    }
+}
+
+
+/**
  * @brief Renders a theme icon at a size into a surface of its own, falling back to WM_ICON_FALLBACK.
  *
  * The copy is the caller's: libui's cache destroys its own surfaces once other icons push them out.
@@ -64,15 +105,22 @@ cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height)
  */
 cairo_surface_t* wm_icon_create(const char* name, int size) {
 
-    cairo_surface_t* source = NULL;
+    cairo_surface_t* icon = wm_icon_find(name, size);
 
-    if (name && *name && !strchr(name, '/')) {
-        source = ui_icon_load(name, size);
-    }
+    return icon ? icon : wm_icon_find(WM_ICON_FALLBACK, size);
+}
 
-    if (!source) {
-        source = ui_icon_load(WM_ICON_FALLBACK, size);
-    }
+
+/**
+ * @brief Renders a theme icon at a size into a surface of its own, with nothing to fall back on.
+ *
+ * @param name A name in the icon theme.
+ * @param size The width and height in pixels.
+ * @return The surface, or NULL for a path, a name the theme lacks, or NULL.
+ */
+cairo_surface_t* wm_icon_find(const char* name, int size) {
+
+    cairo_surface_t* source = name && *name && !strchr(name, '/') ? ui_icon_load(name, size) : NULL;
 
     if (!source) {
         return NULL;

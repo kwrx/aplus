@@ -652,6 +652,7 @@ void wm_window_destroy(wm_window_t* win) {
         wm_window_focus(wm_window_topmost());
     }
 
+    wm_menu_forget(win);
     wm_taskbar_forget(win);
 
 
