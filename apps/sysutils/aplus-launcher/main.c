@@ -24,7 +24,7 @@
 /**
  * @brief A search field over the installed applications, summoned with Super+Space.
  *
- * The window is borderless, centred and translucent, and it is only ever as tall as it has
+ * The window is borderless, centred and frosted, and it is only ever as tall as it has
  * rows to show. It is gone the moment it is used: whatever is picked replaces this process
  * rather than being forked from it, so aplus-wm, which spawned the launcher, ends up with
  * the application as its child and reaps it as usual.
@@ -104,6 +104,11 @@
 
 
 #define LAUNCHER_WINDOW_WIDTH 680
+
+/**
+ * @brief How much of its colour the panel keeps over the blur the server puts behind the window.
+ */
+#define LAUNCHER_PANEL_ALPHA 0.6
 
 #define LAUNCHER_FIELD     56
 #define LAUNCHER_ROW       40
@@ -1105,7 +1110,7 @@ static void launcher_restyle(ui_view_t* view, void* user) {
 
         ui_color_t panel = ui_color_blend(system->background, well);
 
-        panel.a = 0.90;
+        panel.a = LAUNCHER_PANEL_ALPHA;
         edge.a *= 2.0;
 
         ui_panel_set_color(launcher.backdrop, panel);
@@ -1319,7 +1324,7 @@ int main(int argc, char** argv) {
     }
 
 
-    const uint32_t flags = launcher.drawer ? UI_WINDOW_DRAWER | UI_WINDOW_TRANSLUCENT : UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT;
+    const uint32_t flags = launcher.drawer ? UI_WINDOW_DRAWER | UI_WINDOW_TRANSLUCENT : UI_WINDOW_BORDERLESS | UI_WINDOW_CENTERED | UI_WINDOW_TRANSLUCENT | UI_WINDOW_BLUR;
 
     launcher.window = ui_window_create_ex(launcher.conn, LAUNCHER_WINDOW_WIDTH, launcher_height(launcher.all ? (int)launcher.count : 0), LAUNCHER_NAME, flags);
 
