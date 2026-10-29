@@ -24,11 +24,13 @@
 /**
  * @brief A file browser, built out of libui's widgets.
  *
- * It only reads: nothing here creates, renames or removes anything on the filesystem.
+ * Nothing here creates or renames anything on the filesystem; the one thing it changes is deleting what the context
+ * menu is told to, once its Delete row has been pressed a second time to confirm.
  */
 
 #include <dirent.h>
 #include <errno.h>
+#include <ftw.h>
 #include <limits.h>
 #include <pwd.h>
 #include <stdio.h>
@@ -95,6 +97,12 @@
 #define EXPLORER_OPENER "aplus-xopen"
 
 /**
+ * @brief What the context menu opens a folder in a window of its own with, and a console in a directory with.
+ */
+#define EXPLORER_WINDOW  "aplus-explorer"
+#define EXPLORER_CONSOLE "aplus-terminal"
+
+/**
  * @brief How long an icon name read out of a .desktop file may be.
  */
 #define EXPLORER_ICON_MAX 128
@@ -122,6 +130,20 @@ typedef struct {
     off_t size;
 
 } explorer_entry_t;
+
+
+/**
+ * @brief What the rows of the listing's context menu do.
+ */
+typedef enum {
+
+    EXPLORER_MENU_OPEN = 1,
+    EXPLORER_MENU_WINDOW,
+    EXPLORER_MENU_CONSOLE,
+    EXPLORER_MENU_REFRESH,
+    EXPLORER_MENU_DELETE,
+
+} explorer_menu_t;
 
 
 /**
@@ -160,6 +182,13 @@ static struct {
     size_t places_count;
 
     bool syncing;
+
+    struct {
+        int index;
+        char name[NAME_MAX + 1];
+        char path[PATH_MAX];
+        bool directory;
+    } menu;
 
 } explorer = {0};
 
@@ -692,17 +721,12 @@ static bool explorer_desktop_read(const char* path, char* name, size_t name_max,
 
 
 /**
- * @brief Hands a path to the opener, first collecting the children that have since exited.
+ * @brief Starts a program, first collecting the children that have since exited.
  *
- * The opener replaces itself with the application, so what is spawned here is the application.
- *
- * @param path The file to open.
+ * @param argv The program, found on the PATH, and its arguments, NULL terminated.
  * @return 0 on success, -1 with errno set otherwise.
  */
-
-static int explorer_open_with(const char* path) {
-
-    char* argv[] = {(char*)EXPLORER_OPENER, (char*)path, NULL};
+static int explorer_spawn(char* const* argv) {
 
     while (waitpid(-1, NULL, WNOHANG) > 0) {
         ;
@@ -727,6 +751,20 @@ static int explorer_open_with(const char* path) {
     }
 
     return 0;
+}
+
+
+/**
+ * @brief Hands a path to the opener, which replaces itself with the application, so what is spawned is the application.
+ *
+ * @param path The file to open.
+ * @return 0 on success, -1 with errno set otherwise.
+ */
+static int explorer_open_with(const char* path) {
+
+    char* argv[] = {(char*)EXPLORER_OPENER, (char*)path, NULL};
+
+    return explorer_spawn(argv);
 }
 
 
@@ -1015,6 +1053,165 @@ static void explorer_on_activate(ui_widget_t* widget, int index, void* user) {
 
 
 /**
+ * @brief Removes one thing the walk of a folder being deleted reaches, which it does children before their parents.
+ *
+ * @param path What to remove.
+ * @param st Unused.
+ * @param type Unused.
+ * @param ftw Unused.
+ * @return 0 to carry on, or -1 with errno set to stop the walk.
+ */
+static int explorer_remove(const char* path, const struct stat* st, int type, struct FTW* ftw) {
+
+    (void)st;
+    (void)type;
+    (void)ftw;
+
+    return remove(path);
+}
+
+
+/**
+ * @brief Deletes a file, or a folder with everything in it, never following a link or crossing onto another filesystem.
+ *
+ * @param path What to delete.
+ * @param directory Whether it is a folder.
+ * @return 0 on success, -1 with errno set otherwise.
+ */
+static int explorer_delete(const char* path, bool directory) {
+
+    if (!directory) {
+        return unlink(path);
+    }
+
+    return nftw(path, explorer_remove, 16, FTW_DEPTH | FTW_PHYS | FTW_MOUNT) == 0 ? 0 : -1;
+}
+
+
+/**
+ * @brief Does what a row of the listing's context menu says, for the row it was opened on.
+ *
+ * @param view The view.
+ * @param id The row's action, or 0 when the menu went away without one.
+ * @param user Unused.
+ */
+static void explorer_on_menu(ui_view_t* view, uint32_t id, void* user) {
+
+    (void)view;
+    (void)user;
+
+    char* path = explorer.menu.path;
+    int e      = 0;
+
+    switch (id) {
+
+        case EXPLORER_MENU_OPEN:
+            explorer_on_activate(explorer.list, explorer.menu.index, NULL);
+            return;
+
+        case EXPLORER_MENU_WINDOW: {
+            char* argv[] = {(char*)EXPLORER_WINDOW, path, NULL};
+            e            = explorer_spawn(argv);
+            break;
+        }
+
+        case EXPLORER_MENU_CONSOLE: {
+            char* argv[] = {(char*)EXPLORER_CONSOLE, (char*)"-w", explorer.menu.directory ? path : explorer.directory, NULL};
+            e            = explorer_spawn(argv);
+            break;
+        }
+
+        case EXPLORER_MENU_REFRESH:
+            explorer_open(explorer.directory);
+            return;
+
+        case EXPLORER_MENU_DELETE: {
+
+            char text[PATH_MAX];
+
+            if (explorer_delete(path, explorer.menu.directory) < 0) {
+                snprintf(text, sizeof(text), "cannot delete %.255s: %s", explorer.menu.name, strerror(errno));
+            } else {
+                snprintf(text, sizeof(text), "deleted %.255s", explorer.menu.name);
+            }
+
+            explorer_open(explorer.directory);
+
+            ui_list_select(explorer.list, explorer.menu.index <= (int)explorer.count ? explorer.menu.index : (int)explorer.count);
+            ui_label_set_text(explorer.status, text);
+            return;
+        }
+
+        default:
+            return;
+    }
+
+    if (e < 0) {
+
+        char text[PATH_MAX];
+
+        snprintf(text, sizeof(text), "cannot open %.255s: %s", path, strerror(errno));
+
+        ui_label_set_text(explorer.status, text);
+    }
+}
+
+
+/**
+ * @brief Opens the context menu for a row of the listing, or for the directory itself below the last row.
+ *
+ * A folder can be opened here or in a window of its own, a file with whatever handles it; either can have a console opened
+ * beside it, or be deleted once Delete has been pressed again on the question it turns into.
+ *
+ * @param widget The listing.
+ * @param index The row, already selected, or -1.
+ * @param user Unused.
+ */
+static void explorer_on_context(ui_widget_t* widget, int index, void* user) {
+
+    (void)widget;
+    (void)user;
+
+    const explorer_entry_t* entry = index > 0 && (size_t)index <= explorer.count ? &explorer.entries[index - 1] : NULL;
+
+    explorer.menu.index     = index;
+    explorer.menu.directory = index == 0 || !entry || entry->directory;
+
+    snprintf(explorer.menu.name, sizeof(explorer.menu.name), "%s", entry ? entry->name : "");
+
+    explorer_join(explorer.directory, index == 0 ? ".." : entry ? entry->name : ".", explorer.menu.path, sizeof(explorer.menu.path));
+
+
+    ui_menu_item_t items[UI_MENU_ITEMS_MAX];
+
+    size_t count = 0;
+
+    memset(items, 0, sizeof(items));
+
+    if (index >= 0) {
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_OPEN, .label = "Open", .icon = "document-open"};
+    }
+
+    if (explorer.menu.directory) {
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_WINDOW, .label = "Open in New Window", .icon = "aplus-explorer"};
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_CONSOLE, .label = "Open in Console", .icon = "aplus-terminal"};
+    } else {
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_CONSOLE, .label = "Open Console Here", .icon = "aplus-terminal"};
+    }
+
+    items[count++] = (ui_menu_item_t){.flags = UI_MENU_SEPARATOR};
+    items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_REFRESH, .label = "Refresh"};
+
+    if (entry) {
+        items[count++] = (ui_menu_item_t){.flags = UI_MENU_SEPARATOR};
+        items[count++] = (ui_menu_item_t){.id = EXPLORER_MENU_DELETE, .flags = UI_MENU_DANGER | UI_MENU_CONFIRM, .label = "Delete", .confirm = "Delete permanently?"};
+    }
+
+    ui_view_popup_menu(explorer.view, items, count, explorer_on_menu, NULL);
+}
+
+
+/**
  * @brief The keys the list itself does not take: Backspace goes up, F5 reads the directory again.
  *
  * @param view The view the key arrived at.
@@ -1186,6 +1383,7 @@ static int explorer_build(ui_view_t* view) {
 
     ui_list_on_select(explorer.list, explorer_on_select, NULL);
     ui_list_on_activate(explorer.list, explorer_on_activate, NULL);
+    ui_list_on_context(explorer.list, explorer_on_context, NULL);
 
     explorer_build_places();
 
