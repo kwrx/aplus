@@ -194,6 +194,8 @@ $ ./makew run
 ## :globe_with_meridians: Third-Party Software
 `aplus` uses and depends on a large number of third-party open-source tools and libraries which are outside of this repository.
 
+The look of the [aplus-wm](/apps/sysutils/aplus-wm) taskbar, with its popups growing out of the bar, was inspired by [Caelestia Shell](https://github.com/caelestia-dots/shell).
+
 ## :robot: AI Usage
 The graphical userspace, namely the system applications under [apps/sysutils](/apps/sysutils) (display server, terminal, file explorer, ...) and the [libui](/lib/aplus/ui) library they are built on, has been written mostly with AI coding assistants. The rest of the project is mostly hand-written, with AI assistance used here and there.
 
