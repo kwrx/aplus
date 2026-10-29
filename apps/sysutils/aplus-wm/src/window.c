@@ -475,6 +475,7 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 
     if (title) {
         strncpy(win->title, title, UI_TITLE_MAX - 1);
+        wm_utf8_sanitize(win->title);
     }
 
 
