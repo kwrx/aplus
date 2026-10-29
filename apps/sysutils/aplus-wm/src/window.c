@@ -529,12 +529,17 @@ wm_window_t* wm_window_create(wm_client_t* client, int width, int height, const 
 
 
 /**
- * @brief Gives a window the icon its titlebar shows, scaled here once so that painting it is a plain copy.
+ * @brief Gives a window the icon its titlebar shows, scaled here once so that painting it is a plain copy, and keeps its name
+ * as the application the taskbar pins the window by.
  *
  * @param win The window.
  * @param name A name in the server's icon theme; a path, a name the theme lacks, or NULL gets WM_ICON_FALLBACK.
  */
 void wm_window_set_icon(wm_window_t* win, const char* name) {
+
+    snprintf(win->app, sizeof(win->app), "%s", name && !strchr(name, '/') ? name : "");
+
+    wm_taskbar_damage();
 
     cairo_surface_t* icon = wm_icon_create(name, WM_ICON_SIZE);
 

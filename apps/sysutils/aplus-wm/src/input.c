@@ -622,7 +622,7 @@ static void input_handle_button_left(uint8_t down) {
     wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &win);
 
     wm_drawer_press(win, region);
-    wm_taskbar_session_press(wm.pointer.x, wm.pointer.y);
+    wm_taskbar_dismiss_at(wm.pointer.x, wm.pointer.y);
 
     if (region == WM_REGION_NONE) {
         return;
@@ -706,6 +706,10 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
         wm.pointer.buttons &= (uint8_t)~mask;
     }
 
+
+    if (mask == UI_BUTTON_RIGHT && down && !wm.drag.window && wm_taskbar_context(wm.pointer.x, wm.pointer.y)) {
+        return;
+    }
 
     if (mask != UI_BUTTON_LEFT) {
 

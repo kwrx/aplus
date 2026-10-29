@@ -22,8 +22,8 @@
  */
 
 /**
- * @brief The taskbar: a rail down the left edge with the launcher's button, an entry per window in the order they opened,
- * a clock and a power button, joined to a border round the rest of the screen.
+ * @brief The taskbar: a rail down the left edge with the launcher's button, the pinned applications, an entry per other window
+ * in the order they opened, a clock and a power button, joined to a border round the rest of the screen.
  */
 
 #include <errno.h>
@@ -50,6 +50,30 @@ static const char* const wm_taskbar_command[]  = {WM_LAUNCHER_PATH, "--all", "--
 static const char* const wm_taskbar_halt[]     = {WM_SHUTDOWN_PATH, "--halt", "now", NULL};
 static const char* const wm_taskbar_restart[]  = {WM_SHUTDOWN_PATH, "--reboot", "now", NULL};
 static const char* const wm_taskbar_shutdown[] = {WM_SHUTDOWN_PATH, "--poweroff", "now", NULL};
+
+
+/**
+ * @brief What the rows of an entry's context menu do.
+ */
+typedef enum {
+
+    WM_TASKBAR_ACT_OPEN = 1,
+    WM_TASKBAR_ACT_PIN,
+    WM_TASKBAR_ACT_UNPIN,
+    WM_TASKBAR_ACT_QUIT,
+
+} wm_taskbar_action_t;
+
+
+/**
+ * @brief One entry on the rail: a window, a pinned application with no window open, or a window of a pinned one.
+ */
+typedef struct {
+
+    wm_window_t* win;
+    int pin;
+
+} wm_taskbar_entry_t;
 
 
 /**
@@ -82,6 +106,34 @@ static int wm_taskbar_session_index(uint32_t item) {
     }
 
     return -1;
+}
+
+
+/**
+ * @brief Finds a pinned application's entry from the item that names it while it has no window open.
+ *
+ * @param item Any taskbar item.
+ * @return Its index in wm.taskbar.pins, or -1 when it is not a pin.
+ */
+static int wm_taskbar_pin_index(uint32_t item) {
+
+    const uint32_t index = WM_TASKBAR_PIN(0) - item;
+
+    return item <= WM_TASKBAR_PIN(0) && index < wm.taskbar.pins_count ? (int)index : -1;
+}
+
+
+/**
+ * @brief Finds a row of the context menu from its item.
+ *
+ * @param item Any taskbar item.
+ * @return Its place in the menu, or -1 when it is not a menu row.
+ */
+static int wm_taskbar_menu_index(uint32_t item) {
+
+    const uint32_t index = WM_TASKBAR_MENU(0) - item;
+
+    return item <= WM_TASKBAR_MENU(0) && index < (uint32_t)wm.menu.count ? (int)index : -1;
 }
 
 
@@ -203,7 +255,7 @@ static bool wm_taskbar_session_open(void) {
  *
  * @param x The point.
  * @param y The point.
- * @return true on the rail, the border, a corner it rounds off, or the session menu while it is out.
+ * @return true on the rail, the border, a corner it rounds off, or the session or context menu while it is out.
  */
 bool wm_taskbar_contains(int x, int y) {
 
@@ -216,6 +268,10 @@ bool wm_taskbar_contains(int x, int y) {
     const wm_rect_t session = wm_taskbar_session_rect();
 
     if (wm_taskbar_session_open() && wm_rect_contains_point(&session, x, y)) {
+        return true;
+    }
+
+    if (wm_menu_contains(x, y)) {
         return true;
     }
 
@@ -311,7 +367,7 @@ void wm_taskbar_edge(cairo_t* cr) {
  * @param corner The radius of the outer corners.
  * @param edge How far out to trace it: 0 for the shape itself, 0.5 for its hairline.
  */
-static void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge) {
+void wm_taskbar_popout_outline(cairo_t* cr, double x0, double x1, double top, double bottom, double fillet, double corner, double edge) {
 
     cairo_arc_negative(cr, x0 + fillet, top - fillet, WM_MAX(fillet - edge, 0.0), M_PI, M_PI / 2.0);
     cairo_arc(cr, x1 - corner, top + corner, corner + edge, -M_PI / 2.0, 0.0);
@@ -395,19 +451,22 @@ static wm_rect_t wm_taskbar_session_extent(uint64_t now) {
 
 
 /**
- * @brief Repaints the rail, and the popout and the session menu where the last frame drew them and where the next one will.
+ * @brief Repaints the rail, and the popout and the session and context menus where the last frame drew them and where the next one will.
  */
 void wm_taskbar_damage(void) {
 
     const wm_rect_t bar     = wm_taskbar_rect();
     const wm_rect_t popout  = wm_taskbar_popout_extent(wm.frame_time);
     const wm_rect_t session = wm_taskbar_session_extent(wm.frame_time);
+    const wm_rect_t menu    = wm_menu_extent(wm.frame_time);
 
     wm_damage(&bar);
     wm_damage(&wm.taskbar.popout.painted);
     wm_damage(&popout);
     wm_damage(&wm.taskbar.session.painted);
     wm_damage(&session);
+    wm_damage(&wm.menu.painted);
+    wm_damage(&menu);
 }
 
 
@@ -437,6 +496,62 @@ static size_t wm_taskbar_windows(wm_window_t** out) {
     }
 
     return count;
+}
+
+
+/**
+ * @brief Lays out the entries: each pinned application in the order it was pinned, followed by its windows or standing alone
+ * while it has none, and then every other window in the order they opened.
+ *
+ * @param out Receives the entries, WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX long.
+ * @return How many there are.
+ */
+static size_t wm_taskbar_entries(wm_taskbar_entry_t* out) {
+
+    wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
+    bool taken[WM_TASKBAR_ENTRIES_MAX] = {false};
+
+    const size_t count = wm_taskbar_windows(windows);
+
+    size_t n = 0;
+
+    for (size_t p = 0; p < wm.taskbar.pins_count; p++) {
+
+        const size_t first = n;
+
+        for (size_t i = 0; i < count; i++) {
+
+            if (!taken[i] && strcmp(windows[i]->app, wm.taskbar.pins[p].app.id) == 0) {
+
+                taken[i] = true;
+                out[n++] = (wm_taskbar_entry_t){windows[i], (int)p};
+            }
+        }
+
+        if (n == first) {
+            out[n++] = (wm_taskbar_entry_t){NULL, (int)p};
+        }
+    }
+
+    for (size_t i = 0; i < count; i++) {
+
+        if (!taken[i]) {
+            out[n++] = (wm_taskbar_entry_t){windows[i], -1};
+        }
+    }
+
+    return n;
+}
+
+
+/**
+ * @brief Reports the item an entry answers to.
+ *
+ * @param entry The entry.
+ * @return Its window's id, or the pin's item while it has no window.
+ */
+static uint32_t wm_taskbar_entry_item(const wm_taskbar_entry_t* entry) {
+    return entry->win ? entry->win->id : WM_TASKBAR_PIN(entry->pin);
 }
 
 
@@ -521,13 +636,13 @@ static wm_rect_t wm_taskbar_slot(size_t index) {
  */
 wm_rect_t wm_taskbar_entry_rect(const wm_window_t* win) {
 
-    wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
+    wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
 
-    const size_t count = wm_taskbar_windows(windows);
+    const size_t count = wm_taskbar_entries(entries);
 
     for (size_t i = 0; i < count; i++) {
 
-        if (windows[i] != win) {
+        if (entries[i].win != win) {
             continue;
         }
 
@@ -548,7 +663,7 @@ wm_rect_t wm_taskbar_entry_rect(const wm_window_t* win) {
 /**
  * @brief Reports where an item sits on the rail.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, WM_TASKBAR_POWER, or 0.
+ * @param item A window id, a pin, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, WM_TASKBAR_POWER, or 0.
  * @return Its rectangle, empty when it is not on show.
  */
 static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
@@ -566,16 +681,21 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
     }
 
 
-    const wm_window_t* win = item ? wm_window_from_id(item) : NULL;
+    wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
 
-    if (!win) {
+    const size_t count = item ? wm_taskbar_entries(entries) : 0;
 
-        const wm_rect_t none = {0, 0, 0, 0};
+    for (size_t i = 0; i < count; i++) {
 
-        return none;
+        if (wm_taskbar_entry_item(&entries[i]) == item) {
+            return wm_taskbar_slot(i);
+        }
     }
 
-    return wm_taskbar_entry_rect(win);
+
+    const wm_rect_t none = {0, 0, 0, 0};
+
+    return none;
 }
 
 
@@ -584,11 +704,22 @@ static wm_rect_t wm_taskbar_item_rect(uint32_t item) {
  *
  * @param x The point.
  * @param y The point.
- * @return A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item, or 0 for nothing.
+ * @return A window id, a pin, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item, a menu row, or 0 for nothing.
  */
 static uint32_t wm_taskbar_item_at(int x, int y) {
 
     if (!wm_taskbar_contains(x, y)) {
+        return 0;
+    }
+
+
+    const int row = wm_menu_row_at(x, y);
+
+    if (row >= 0) {
+        return WM_TASKBAR_MENU(row);
+    }
+
+    if (wm_menu_contains(x, y)) {
         return 0;
     }
 
@@ -625,16 +756,16 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
     }
 
 
-    wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
+    wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
 
-    const size_t count = wm_taskbar_windows(windows);
+    const size_t count = wm_taskbar_entries(entries);
 
     for (size_t i = 0; i < count; i++) {
 
         const wm_rect_t r = wm_taskbar_slot(i);
 
         if (wm_rect_contains_point(&r, x, y)) {
-            return windows[i]->id;
+            return wm_taskbar_entry_item(&entries[i]);
         }
     }
 
@@ -643,12 +774,13 @@ static uint32_t wm_taskbar_item_at(int x, int y) {
 
 
 /**
- * @brief Writes what the popout says for an item: the window's title, the date, or what the launcher's button opens.
+ * @brief Writes what the popout says for an item: the window's title, the pinned application's name, the date,
+ * or what the launcher's button opens.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE or a session item.
+ * @param item A window id, a pin, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item or a menu row.
  * @param out Receives the text, cut to fit the popout.
  * @param size The size of out.
- * @return false when there is nothing to say.
+ * @return false when there is nothing to say, which is always while the context menu is out.
  */
 static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 
@@ -656,9 +788,15 @@ static bool wm_taskbar_label(uint32_t item, char* out, size_t size) {
 
     const char* text = NULL;
 
-    if (wm_taskbar_session_index(item) >= 0) {
+    const int pin = wm_taskbar_pin_index(item);
+
+    if (wm_menu_shown() || wm_taskbar_session_index(item) >= 0) {
 
         return false;
+
+    } else if (pin >= 0) {
+
+        text = wm.taskbar.pins[pin].app.name;
 
     } else if (item == WM_TASKBAR_POWER) {
 
@@ -741,7 +879,7 @@ static void wm_taskbar_popout(uint32_t item) {
 /**
  * @brief Finds the wash behind a taskbar item.
  *
- * @param item A window id, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE or a session item.
+ * @param item A window id, a pin, WM_TASKBAR_LAUNCHER, WM_TASKBAR_DATE, a session item or a menu row.
  * @return Its animation, or NULL for an item that has none.
  */
 static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
@@ -760,6 +898,18 @@ static ui_anim_t* wm_taskbar_hover_anim(uint32_t item) {
 
     if (row >= 0) {
         return &wm.taskbar.session.hover[row];
+    }
+
+    const int entry = wm_taskbar_menu_index(item);
+
+    if (entry >= 0) {
+        return &wm.menu.hover[entry];
+    }
+
+    const int pin = wm_taskbar_pin_index(item);
+
+    if (pin >= 0) {
+        return &wm.taskbar.pins[pin].hover;
     }
 
     wm_window_t* win = wm_window_from_id(item);
@@ -823,13 +973,9 @@ void wm_taskbar_press(int x, int y) {
 
 
 /**
- * @brief Slides the session menu out of the rail or back in, and brings the pointer's item and label up to date.
- *
- * @param open Whether it comes out.
+ * @brief Brings the item under the pointer, its wash and its label up to date after something slid in or out.
  */
-static void wm_taskbar_session(bool open) {
-
-    ui_anim_to(&wm.taskbar.session.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, ui_anim_now());
+static void wm_taskbar_refresh(void) {
 
     wm_taskbar_hover(wm.pointer.x, wm.pointer.y);
     wm_taskbar_popout(wm.taskbar.hover);
@@ -837,12 +983,146 @@ static void wm_taskbar_session(bool open) {
 
 
 /**
- * @brief Closes the session menu when a press lands anywhere but on it or on the power button.
+ * @brief Slides the context menu back into the rail.
+ */
+static void wm_taskbar_menu_close(void) {
+
+    wm_menu_hide();
+    wm_taskbar_refresh();
+    wm_taskbar_damage();
+}
+
+
+/**
+ * @brief Slides the session menu out of the rail or back in, putting the context menu away as it comes out.
+ *
+ * @param open Whether it comes out.
+ */
+static void wm_taskbar_session(bool open) {
+
+    ui_anim_to(&wm.taskbar.session.open, open ? 1.0 : 0.0, open ? UI_MOTION_NORMAL : UI_MOTION_FAST, ui_anim_now());
+
+    if (open) {
+        wm_menu_hide();
+    }
+
+    wm_taskbar_refresh();
+}
+
+
+/**
+ * @brief Slides the context menu out beside an entry, with the rows that apply to it.
+ *
+ * A window's application can be opened again and pinned once its .desktop file is found; any window can be quit,
+ * and a pinned application can be opened or unpinned whether or not it has a window.
+ *
+ * @param item A window id or a pin.
+ */
+static void wm_taskbar_menu_open(uint32_t item) {
+
+    const wm_rect_t at = wm_taskbar_item_rect(item);
+    const int pin      = wm_taskbar_pin_index(item);
+
+    wm_window_t* win = pin < 0 ? wm_window_from_id(item) : NULL;
+
+    if (at.width <= 0 || (pin < 0 && !win)) {
+        return;
+    }
+
+
+    wm_app_t* app = &wm.taskbar.menu_app;
+
+    const int pinned = pin >= 0 ? pin : wm_pins_find(win->app);
+    const bool known = pinned >= 0 || wm_app_resolve(win->app, app);
+
+    if (pinned >= 0) {
+        *app = wm.taskbar.pins[pinned].app;
+    } else if (!known) {
+        memset(app, 0, sizeof(*app));
+    }
+
+
+    wm_menu_row_t rows[WM_MENU_ROWS_MAX];
+
+    int count = 0;
+
+    if (known) {
+        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_OPEN, win ? "New window" : "Open", WM_MENU_GLYPH_OPEN};
+    }
+
+    if (pinned >= 0) {
+        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_UNPIN, "Unpin from taskbar", WM_MENU_GLYPH_UNPIN};
+    } else if (known) {
+        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_PIN, "Pin to taskbar", WM_MENU_GLYPH_PIN};
+    }
+
+    if (win) {
+        rows[count++] = (wm_menu_row_t){WM_TASKBAR_ACT_QUIT, "Quit", WM_MENU_GLYPH_QUIT};
+    }
+
+
+    ui_anim_to(&wm.taskbar.session.open, 0.0, UI_MOTION_FAST, ui_anim_now());
+
+    if (wm.drawer.window) {
+        wm_window_request_close(wm.drawer.window);
+    }
+
+    wm_menu_show(item, at.y, win && win->title[0] ? win->title : app->name, rows, count);
+
+    wm_taskbar_refresh();
+    wm_taskbar_damage();
+}
+
+
+/**
+ * @brief Does what a row of the context menu says, for the entry it was opened on, and puts the menu away.
+ *
+ * @param action The row's action.
+ */
+static void wm_taskbar_menu_act(uint32_t action) {
+
+    const wm_app_t app = wm.taskbar.menu_app;
+
+    wm_window_t* win = wm_window_from_id(wm.menu.owner);
+
+    wm_taskbar_menu_close();
+
+    switch (action) {
+
+        case WM_TASKBAR_ACT_OPEN:
+            wm_app_launch(&app);
+            break;
+
+        case WM_TASKBAR_ACT_PIN:
+            wm_pins_add(&app);
+            break;
+
+        case WM_TASKBAR_ACT_UNPIN:
+            wm_pins_remove(wm_pins_find(app.id));
+            break;
+
+        case WM_TASKBAR_ACT_QUIT:
+
+            for (wm_window_t* it = wm.windows; win && it; it = it->next) {
+
+                if (it->client == win->client) {
+                    wm_window_request_close(it);
+                }
+            }
+
+            break;
+    }
+}
+
+
+/**
+ * @brief Closes the session menu when a press lands anywhere but on it or on the power button, and the context menu
+ * when one lands anywhere but on it.
  *
  * @param x The press.
  * @param y The press.
  */
-void wm_taskbar_session_press(int x, int y) {
+void wm_taskbar_dismiss_at(int x, int y) {
 
     const wm_rect_t panel = wm_taskbar_session_rect();
     const wm_rect_t power = wm_taskbar_power_rect();
@@ -850,15 +1130,26 @@ void wm_taskbar_session_press(int x, int y) {
     if (wm_taskbar_session_open() && !wm_rect_contains_point(&panel, x, y) && !wm_rect_contains_point(&power, x, y)) {
         wm_taskbar_session(false);
     }
+
+    if (wm_menu_shown() && !wm_menu_contains(x, y)) {
+        wm_taskbar_menu_close();
+    }
 }
 
 
 /**
- * @brief Closes the session menu, which is what Escape does while it is out.
+ * @brief Closes the context menu or the session menu, which is what Escape does while one is out.
  *
- * @return true when it was out.
+ * @return true when one was out.
  */
 bool wm_taskbar_dismiss(void) {
+
+    if (wm_menu_shown()) {
+
+        wm_taskbar_menu_close();
+
+        return true;
+    }
 
     if (!wm_taskbar_session_open()) {
         return false;
@@ -871,8 +1162,64 @@ bool wm_taskbar_dismiss(void) {
 
 
 /**
+ * @brief Acts on a right press: opens the context menu on an entry, or closes it when it was already out for that entry,
+ * and puts away whatever menu the press lands outside of.
+ *
+ * @param x The press.
+ * @param y The press.
+ * @return true when the press was on the taskbar, which then owns it.
+ */
+bool wm_taskbar_context(int x, int y) {
+
+    const uint32_t item = wm_taskbar_item_at(x, y);
+    const bool again    = wm_menu_shown() && wm.menu.owner == item;
+
+    if (wm_menu_contains(x, y)) {
+        return true;
+    }
+
+    wm_taskbar_dismiss_at(x, y);
+
+    if (!wm_taskbar_contains(x, y)) {
+        return false;
+    }
+
+    if (!again && (wm_taskbar_pin_index(item) >= 0 || wm_window_from_id(item))) {
+        wm_taskbar_menu_open(item);
+    }
+
+    return true;
+}
+
+
+/**
+ * @brief Lets go of the items that named pins once the pins have changed, and repaints the rail laid out afresh.
+ */
+void wm_taskbar_pins_changed(void) {
+
+    const uint32_t first = WM_TASKBAR_PIN(0);
+    const uint32_t last  = WM_TASKBAR_PIN(WM_PINS_MAX - 1);
+
+    if (wm.taskbar.hover >= last && wm.taskbar.hover <= first) {
+        wm.taskbar.hover = 0;
+    }
+
+    if (wm.taskbar.pressed >= last && wm.taskbar.pressed <= first) {
+        wm.taskbar.pressed = 0;
+    }
+
+    for (size_t i = 0; i < wm.taskbar.pins_count; i++) {
+        ui_anim_set(&wm.taskbar.pins[i].hover, 0.0);
+    }
+
+    wm_taskbar_refresh();
+    wm_taskbar_damage();
+}
+
+
+/**
  * @brief Acts on a release over the item the press went down on: open or close the launcher or the session menu,
- * restart or power off, or show, raise or hide a window.
+ * restart or power off, do what a context menu row says, open a pinned application, or show, raise or hide a window.
  *
  * @param x The pointer.
  * @param y The pointer.
@@ -908,6 +1255,24 @@ bool wm_taskbar_release(int x, int y) {
 
         wm_taskbar_session(false);
         wm_spawn(wm_taskbar_session_rows[row].argv);
+
+        return true;
+    }
+
+    const int entry = wm_taskbar_menu_index(pressed);
+
+    if (entry >= 0) {
+
+        wm_taskbar_menu_act(wm.menu.rows[entry].action);
+
+        return true;
+    }
+
+    const int pin = wm_taskbar_pin_index(pressed);
+
+    if (pin >= 0) {
+
+        wm_app_launch(&wm.taskbar.pins[pin].app);
 
         return true;
     }
@@ -949,11 +1314,15 @@ bool wm_taskbar_release(int x, int y) {
 
 
 /**
- * @brief Lets go of a window that is going away, so that no item is left lit, pressed or labelled for it.
+ * @brief Lets go of a window that is going away, so that no item is left lit, pressed, labelled or holding the context menu for it.
  *
  * @param win The window.
  */
 void wm_taskbar_forget(const wm_window_t* win) {
+
+    if (wm_menu_shown() && wm.menu.owner == win->id) {
+        wm_menu_hide();
+    }
 
     if (wm.taskbar.hover == win->id) {
         wm.taskbar.hover = 0;
@@ -977,7 +1346,7 @@ void wm_taskbar_forget(const wm_window_t* win) {
  * @param pressed Whether it is held down.
  * @param active How much it is the active window's, 0 to 1.
  */
-static void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active) {
+void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool pressed, double active) {
 
     const ui_color_t over = wm.theme.taskbar_hover;
     const ui_color_t on   = wm.theme.taskbar_active;
@@ -1191,7 +1560,7 @@ static void wm_taskbar_paint_power(cairo_t* cr) {
  */
 static void wm_taskbar_paint_entry(cairo_t* cr, wm_window_t* win, const wm_rect_t* r) {
 
-    const double hover  = ui_anim_value(&win->hover_task, wm.frame_time);
+    const double hover  = WM_MAX(ui_anim_value(&win->hover_task, wm.frame_time), wm_menu_hold(win->id, wm.frame_time));
     const double active = ui_anim_value(&win->focus, wm.frame_time);
     const double gone   = ui_anim_value(&win->minimize, wm.frame_time);
 
@@ -1208,6 +1577,24 @@ static void wm_taskbar_paint_entry(cairo_t* cr, wm_window_t* win, const wm_rect_
 
     ui_draw_rounded_rect_d(cr, (WM_TASKBAR_PAD - WM_TASKBAR_MARK) / 2.0, r->y + (r->height - height) / 2.0, WM_TASKBAR_MARK, height, WM_TASKBAR_MARK / 2.0);
     cairo_fill(cr);
+}
+
+
+/**
+ * @brief Draws a pinned application's entry while it has no window open: its icon, with no mark against the rail.
+ *
+ * @param cr The cairo context.
+ * @param pin The pin's index in wm.taskbar.pins.
+ * @param r The entry.
+ */
+static void wm_taskbar_paint_pin(cairo_t* cr, int pin, const wm_rect_t* r) {
+
+    const uint32_t item = WM_TASKBAR_PIN(pin);
+    const double hover  = WM_MAX(ui_anim_value(&wm.taskbar.pins[pin].hover, wm.frame_time), wm_menu_hold(item, wm.frame_time));
+    const bool pressed  = wm.taskbar.pressed == item && wm.taskbar.hover == item;
+
+    wm_taskbar_paint_wash(cr, r, hover, pressed, 0.0);
+    wm_taskbar_paint_icon(cr, wm.taskbar.pins[pin].icon, r->x + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, r->y + (WM_TASKBAR_ITEM - WM_ICON_SIZE) / 2, 1.0);
 }
 
 
@@ -1490,7 +1877,8 @@ static void wm_taskbar_paint_session(cairo_t* cr) {
 
 
 /**
- * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, the popout or the session menu.
+ * @brief Reports whether any damage reaches the taskbar: the rail, the border, a corner it rounds off, the popout, the session menu
+ * or the context menu.
  *
  * @param damage The damaged rectangles.
  * @param count How many there are.
@@ -1513,6 +1901,8 @@ static bool wm_taskbar_visible(const wm_rect_t* damage, size_t count) {
         wm_taskbar_popout_extent(wm.frame_time),
         wm.taskbar.session.painted,
         wm_taskbar_session_extent(wm.frame_time),
+        wm.menu.painted,
+        wm_menu_extent(wm.frame_time),
     };
 
     for (size_t i = 0; i < WM_ARRAY_COUNT(parts); i++) {
@@ -1568,6 +1958,7 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
 
     wm_taskbar_paint_session(cr);
     wm_taskbar_paint_popout(cr);
+    wm_menu_paint(cr, wm.taskbar.pressed == wm.taskbar.hover ? wm_taskbar_menu_index(wm.taskbar.pressed) : -1);
 
 
     const wm_rect_t launcher = wm_taskbar_launcher_rect();
@@ -1579,13 +1970,13 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
     wm_taskbar_paint_launcher(cr, &launcher, open);
 
 
-    wm_window_t* windows[WM_TASKBAR_ENTRIES_MAX];
+    wm_taskbar_entry_t entries[WM_TASKBAR_ENTRIES_MAX + WM_PINS_MAX];
 
-    const size_t entries = wm_taskbar_windows(windows);
+    const size_t shown = wm_taskbar_entries(entries);
 
     int below = launcher.y + launcher.height;
 
-    for (size_t i = 0; i < entries; i++) {
+    for (size_t i = 0; i < shown; i++) {
 
         const wm_rect_t r = wm_taskbar_slot(i);
 
@@ -1593,7 +1984,11 @@ void wm_taskbar_paint(cairo_t* cr, const wm_rect_t* damage, size_t count) {
             break;
         }
 
-        wm_taskbar_paint_entry(cr, windows[i], &r);
+        if (entries[i].win) {
+            wm_taskbar_paint_entry(cr, entries[i].win, &r);
+        } else {
+            wm_taskbar_paint_pin(cr, entries[i].pin, &r);
+        }
 
         below = r.y + r.height;
     }
