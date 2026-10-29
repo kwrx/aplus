@@ -717,6 +717,13 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
         const wm_region_t region = wm_window_hit_test(wm.pointer.x, wm.pointer.y, &over);
 
+        if (mask == UI_BUTTON_RIGHT && down && over && !wm.drag.window) {
+
+            wm_drawer_press(over, region);
+            wm_window_raise(over);
+            wm_window_focus(over);
+        }
+
         input_track_pointer(over, region);
 
         return;

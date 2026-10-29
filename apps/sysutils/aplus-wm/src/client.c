@@ -467,6 +467,65 @@ static int wm_client_handle_set_cursor(wm_client_t* client, const uint8_t* paylo
 }
 
 
+/**
+ * @brief Acts on a request for a context menu, answering at once that nothing was picked when the window cannot show one.
+ *
+ * @param client The client that asked.
+ * @param payload The message body.
+ * @param size The length of the message body.
+ * @return 0 on success, or -1 for a malformed request.
+ */
+static int wm_client_handle_popup_menu(wm_client_t* client, const uint8_t* payload, size_t size) {
+
+    static ui_msg_popup_menu_t req;
+
+    if (size != sizeof(req)) {
+        return -1;
+    }
+
+    memcpy(&req, payload, sizeof(req));
+
+
+    wm_window_t* win = wm_window_from_id(req.window_id);
+
+    if (!win || win->client != client || req.count > UI_MENU_ITEMS_MAX) {
+        return -1;
+    }
+
+    if (win->minimized || !win->committed || req.count == 0) {
+
+        const ui_msg_menu_t none = {.window_id = req.window_id, .serial = req.serial, .id = 0};
+
+        return wm_client_queue(client, UI_EV_MENU, &none, sizeof(none));
+    }
+
+
+    wm_menu_row_t rows[UI_MENU_ITEMS_MAX];
+
+    for (uint16_t i = 0; i < req.count; i++) {
+
+        req.items[i].label[UI_MENU_LABEL_MAX - 1]   = '\0';
+        req.items[i].icon[UI_ICON_NAME_MAX - 1]     = '\0';
+        req.items[i].confirm[UI_MENU_LABEL_MAX - 1] = '\0';
+
+        rows[i] = (wm_menu_row_t){
+
+            .action  = req.items[i].id,
+            .flags   = req.items[i].id ? req.items[i].flags : req.items[i].flags | UI_MENU_DISABLED,
+            .label   = req.items[i].label,
+            .icon    = req.items[i].icon,
+            .confirm = req.items[i].confirm,
+        };
+    }
+
+    wm_taskbar_dismiss();
+    wm_menu_popup(win, req.serial, req.x, req.y, rows, req.count);
+    wm_taskbar_damage();
+
+    return 0;
+}
+
+
 static int wm_client_handle_resize_window(wm_client_t* client, const uint8_t* payload, size_t size) {
 
     ui_msg_resize_t req;
@@ -553,6 +612,9 @@ static int wm_client_handle(wm_client_t* client, uint16_t type, const uint8_t* p
 
         case UI_REQ_SET_CURSOR:
             return wm_client_handle_set_cursor(client, payload, size);
+
+        case UI_REQ_POPUP_MENU:
+            return wm_client_handle_popup_menu(client, payload, size);
 
         case UI_REQ_RESIZE_WINDOW:
             return wm_client_handle_resize_window(client, payload, size);

@@ -599,6 +599,7 @@ int main(int argc, char** argv) {
     wm_drawer_fini();
     wm_taskbar_fini();
     wm_pins_fini();
+    wm_menu_fini();
     wm_shadow_fini(&wm.shadow_key);
     wm_shadow_fini(&wm.shadow_ambient);
     wm_display_close(&wm.display);

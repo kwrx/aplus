@@ -250,11 +250,12 @@
 #define WM_APP_PATH_MAX      256
 
 /**
- * @brief The context menu that grows out of the rail beside an entry: its most rows, its narrowest width and the rule under its title.
+ * @brief The context menu: its most rows, its narrowest width, the rule under its title or between groups, and its icons' size.
  */
-#define WM_MENU_ROWS_MAX  8
+#define WM_MENU_ROWS_MAX  UI_MENU_ITEMS_MAX
 #define WM_MENU_MIN_WIDTH 168
 #define WM_MENU_RULE      9
+#define WM_MENU_ICON      16
 
 
 /**
@@ -482,28 +483,62 @@ typedef enum {
 
 
 /**
- * @brief One row of a context menu: what it says, what it is marked with, and what it does for whoever opened the menu.
+ * @brief One row of a context menu as it is asked for: what it does, what it says, how it is marked, and UI_MENU_* flags.
  */
 typedef struct {
 
     uint32_t action;
+    uint32_t flags;
+
     const char* label;
+    const char* icon;
+    const char* confirm;
+
     wm_menu_glyph_t glyph;
 
 } wm_menu_row_t;
 
 
 /**
- * @brief The context menu: a title over a column of rows, slid out of the rail beside the item it was opened on.
+ * @brief Where the context menu comes from: out of the rail beside a taskbar item, or out of a point in a client's window.
+ */
+typedef enum {
+
+    WM_MENU_RAIL = 0,
+    WM_MENU_POINTER,
+
+} wm_menu_anchor_t;
+
+
+/**
+ * @brief The context menu: an optional title over a column of rows, and whom it answers.
  */
 typedef struct {
 
+    wm_menu_anchor_t anchor;
+    bool upwards;
+    bool leftwards;
+
     uint32_t owner;
+
+    uint32_t window_id;
+    uint32_t serial;
+    bool pending;
 
     char title[UI_TITLE_MAX * 2];
 
-    wm_menu_row_t rows[WM_MENU_ROWS_MAX];
+    struct {
+        uint32_t action;
+        uint32_t flags;
+        char label[UI_MENU_LABEL_MAX];
+        char confirm[UI_MENU_LABEL_MAX];
+        bool armed;
+        wm_menu_glyph_t glyph;
+        cairo_surface_t* icon;
+    } rows[WM_MENU_ROWS_MAX];
+
     int count;
+    int indent;
 
     wm_rect_t rect;
 
@@ -733,8 +768,10 @@ void* wm_image_probe(const char* path, int max_size, size_t* size, int* width, i
  * @brief Implemented in draw.c.
  */
 cairo_surface_t* wm_surface_create(cairo_format_t format, int width, int height);
+cairo_surface_t* wm_icon_find(const char* name, int size);
 cairo_surface_t* wm_icon_create(const char* name, int size);
 void wm_source(cairo_t* cr, ui_color_t color, double alpha);
+void wm_utf8_sanitize(char* text);
 void wm_source_mix(cairo_t* cr, ui_color_t a, ui_color_t b, double t);
 
 /**
@@ -828,6 +865,7 @@ void wm_taskbar_forget(const wm_window_t* win);
 void wm_taskbar_dismiss_at(int x, int y);
 bool wm_taskbar_dismiss(void);
 bool wm_taskbar_context(int x, int y);
+bool wm_taskbar_menu_key(uint16_t vkey);
 void wm_taskbar_pins_changed(void);
 int wm_taskbar_open(void);
 void wm_taskbar_tick(int fd);
@@ -842,13 +880,19 @@ void wm_taskbar_paint_wash(cairo_t* cr, const wm_rect_t* r, double hover, bool p
  * @brief Implemented in menu.c.
  */
 void wm_menu_show(uint32_t owner, int anchor, const char* title, const wm_menu_row_t* rows, int count);
+void wm_menu_popup(wm_window_t* win, uint32_t serial, int x, int y, const wm_menu_row_t* rows, int count);
+bool wm_menu_arm(int row);
+bool wm_menu_choose(int row);
+void wm_menu_forget(const wm_window_t* win);
 void wm_menu_hide(void);
 bool wm_menu_shown(void);
 bool wm_menu_contains(int x, int y);
 int wm_menu_row_at(int x, int y);
+int wm_menu_next(int from, int step);
 double wm_menu_hold(uint32_t owner, uint64_t now);
 wm_rect_t wm_menu_extent(uint64_t now);
 void wm_menu_paint(cairo_t* cr, int held);
+void wm_menu_fini(void);
 
 /**
  * @brief Implemented in pins.c.

@@ -340,6 +340,11 @@ bool wm_keys_handle(uint16_t vkey, uint8_t down) {
         return true;
     }
 
+    if (wm_taskbar_menu_key(vkey)) {
+        wm_swallowed[word] |= bit;
+        return true;
+    }
+
     if (wm_swallowed[word] & bit) {
         return true;
     }
