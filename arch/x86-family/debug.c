@@ -23,6 +23,7 @@
  * along with aplus.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdatomic.h>
 #include <stdint.h>
 
 #include <aplus.h>
@@ -42,8 +43,16 @@
 #define COM3_DEFAULT_PORT 0x3E8
 #define COM4_DEFAULT_PORT 0x2E8
 
-
 static uint16_t com_address = 0;
+
+#define DEBUG_BUFFER_SIZE (1U << 16)
+#define DEBUG_BUFFER_MASK (DEBUG_BUFFER_SIZE - 1)
+
+static struct {
+    uint8_t data[DEBUG_BUFFER_SIZE];
+    uint32_t r_index;
+    _Atomic uint32_t w_index;
+} buffer;
 
 
 #if defined(CONFIG_X86_ENABLE_DEBUG_VGA)
@@ -221,6 +230,33 @@ void arch_debug_init(void) {
 }
 
 
+/**
+ * @brief Reads the oldest unread character of the debug output, skipping what was overwritten.
+ *
+ * @return The character, or -1 when everything has been read.
+ */
+int arch_debug_getc(void) {
+
+    for (;;) {
+
+        uint32_t w = atomic_load_explicit(&buffer.w_index, memory_order_acquire);
+
+        if (buffer.r_index == w)
+            return -1;
+
+        if (w - buffer.r_index > DEBUG_BUFFER_SIZE)
+            buffer.r_index = w - DEBUG_BUFFER_SIZE;
+
+        uint8_t ch = buffer.data[buffer.r_index & DEBUG_BUFFER_MASK];
+
+        if (atomic_load_explicit(&buffer.w_index, memory_order_acquire) - buffer.r_index > DEBUG_BUFFER_SIZE)
+            continue;
+
+        buffer.r_index++;
+        return ch;
+    }
+}
+
 /*!
  * @brief Write to Debugger.
  *
@@ -229,6 +265,10 @@ void arch_debug_init(void) {
  * TODO: CONFIG_DEBUG_PRINT_TIMESTAMP is meant to stamp each line and does nothing yet.
  */
 void arch_debug_putc(char ch) {
+
+    uint32_t w = atomic_load_explicit(&buffer.w_index, memory_order_relaxed);
+    buffer.data[w & DEBUG_BUFFER_MASK] = (uint8_t)ch;
+    atomic_store_explicit(&buffer.w_index, w + 1, memory_order_release);
 
 
 #define com_wait()                                                                 \
