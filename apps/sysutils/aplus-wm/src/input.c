@@ -458,7 +458,7 @@ static void input_update_drag(void) {
 
     if (wm.drag.region == WM_REGION_TITLEBAR) {
 
-        if (win->maximized) {
+        if (wm_window_tiled(win)) {
 
             if (abs(dx) < WM_UNMAXIMIZE_SLOP && abs(dy) < WM_UNMAXIMIZE_SLOP) {
                 return;
@@ -702,6 +702,7 @@ static void input_handle_button(uint16_t vkey, uint8_t down) {
 
     if (down) {
         wm.pointer.buttons |= mask;
+        wm.keyboard.super_tap = false;
     } else {
         wm.pointer.buttons &= (uint8_t)~mask;
     }

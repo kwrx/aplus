@@ -1010,7 +1010,7 @@ end of `main()`.
 ./makew run
 ```
 
-Open a terminal with `Ctrl+Alt+T` and start it:
+Open a terminal with `Super+Enter` and start it:
 
 ```sh
 ui-places

@@ -917,7 +917,7 @@ int main(int argc, char** argv) {
 ./makew run
 ```
 
-Open a terminal with `Ctrl+Alt+T` and start it:
+Open a terminal with `Super+Enter` and start it:
 
 ```sh
 ui-meter
@@ -930,7 +930,7 @@ The window grows in, and the bar glides from empty to 40% while it does. Then tr
 - **`Empty`, then `Full` before the bar has emptied.** It turns round in place. The second
   transition starts at full speed, which is why the reversal looks immediate.
 - **`Full`.** The bar glides to the end, and only once it has landed does the pulse fade in.
-- **`Ctrl+Alt+T` while it pulses.** The new terminal takes the focus, the pulse fades out, and
+- **`Super+Enter` while it pulses.** The new terminal takes the focus, the pulse fades out, and
   the meter stops waking up at all until it gets another event. Click its taskbar entry and the
   pulse fades back in.
 - **Drag an edge during a glide.** The bar keeps gliding at its new width.
