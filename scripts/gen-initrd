@@ -43,9 +43,24 @@ tar -C "$SYSROOT" \
     --exclude='./usr/lib/modules/*' \
     -cf - . | tar -C "$STAGING_ROOT" -xf -
 
-IMAGE_SIZE_KIB=$(du -sk --apparent-size "$STAGING_ROOT" | cut -f1)
-IMAGE_SIZE_KIB=$((IMAGE_SIZE_KIB + IMAGE_SIZE_KIB / 10 + 8192))
+FREE_KIB=$((25 * 1024))
 
-fakeroot -- /bin/sh -c \
-    'chown -R 0:0 "$1" && mke2fs -q -F -t ext2 -m 0 -d "$1" "$2" "${3}K"' \
-    _ "$STAGING_ROOT" "$OUTPUT_DIR/initrd.img" "$IMAGE_SIZE_KIB"
+IMAGE_SIZE_KIB=$(du -sk "$STAGING_ROOT" | cut -f1)
+IMAGE_SIZE_KIB=$((IMAGE_SIZE_KIB + IMAGE_SIZE_KIB / 20 + FREE_KIB))
+
+for pass in 1 2 3; do
+    rm -f "$OUTPUT_DIR/initrd.img"
+
+    fakeroot -- /bin/sh -c \
+        'chown -R 0:0 "$1" && mke2fs -q -F -t ext2 -b 4096 -m 0 -d "$1" "$2" "${3}K"' \
+        _ "$STAGING_ROOT" "$OUTPUT_DIR/initrd.img" "$IMAGE_SIZE_KIB"
+
+    FREE_BLOCKS=$(dumpe2fs -h "$OUTPUT_DIR/initrd.img" 2>/dev/null | sed -n 's/^Free blocks: *//p')
+    MISSING_KIB=$((FREE_KIB - FREE_BLOCKS * 4))
+
+    if [ "$MISSING_KIB" -le 0 ] && [ "$MISSING_KIB" -gt -4096 ]; then
+        break
+    fi
+
+    IMAGE_SIZE_KIB=$((IMAGE_SIZE_KIB + MISSING_KIB + 1024))
+done
