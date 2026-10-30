@@ -450,7 +450,7 @@ struct ahci {
 };
 
 
-static struct ahci devices[AHCI_MAX_DEVICES];
+static struct ahci devices[AHCI_MAX_DEVICES] = {0};
 static uint8_t devices_count = 0;
 
 
