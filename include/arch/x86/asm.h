@@ -49,26 +49,34 @@
 
 
 #if defined(__x86_64__)
+
+    /* Low area: 0-1GiB */
     #define KERNEL_LOW_AREA   0x0000000000000000
     #define KERNEL_LOW_SIZE   0x0000000040000000 //? 1GiB
+
+    /* High area: Kernel code/data */
     #define KERNEL_HIGH_AREA  0xFFFFFFFF80000000
     #define KERNEL_HIGH_SIZE  0x0000000040000000 //? 1GiB
+
+    /* High area: Kernel stack (percpu) */
     #define KERNEL_STACK_AREA 0xFFFFFFFFC0000000
     #define KERNEL_STACK_SIZE 0x0000000000200000 //? 2Mib
+
+    /* High area: Kernel heap, 1:1 mapping of physical memory */
     #define KERNEL_HEAP_AREA  0xFFFF800000000000
     #define KERNEL_HEAP_SIZE  0x0000020000000000 //? 2TiB
+
+    /* High area: MMIO devices mappings, 1:1 mapping of physical memory */
+    #define KERNEL_MMIO_AREA  0xFFFF820000000000
+    #define KERNEL_MMIO_SIZE  0x0000002000000000 //? 128GiB
+
+    /* Low area: MMAP syscall mappings */
     #define KERNEL_MMAP_AREA  0x000000A000000000
     #define KERNEL_MMAP_SIZE  0x0000002000000000 //? 128GiB
 
-    /**
-     * @brief Where an adapter's framebuffer is published to userspace, directly above the mmap window.
-     *
-     * Out of reach of both the heap and an mmap, which an adapter allocating its framebuffer out of
-     * system memory needs: a low physical address cannot be identity-mapped clear of every process.
-     */
-
+    /* Low area: Video framebuffer mappings, optimized */
     #define KERNEL_VIDEO_AREA 0x000000C000000000
-    #define KERNEL_VIDEO_SIZE 0x0000000040000000
+    #define KERNEL_VIDEO_SIZE 0x0000000040000000 //? 1GiB
 
 #elif defined(__i386__)
     #error "i386: not supported"

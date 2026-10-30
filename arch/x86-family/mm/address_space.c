@@ -91,6 +91,9 @@ static inline bool __mm_is_kernel_slot(int level, size_t i) {
     if (i >= MM_PML4_SLOT(KERNEL_HEAP_AREA) && i < MM_PML4_SLOT(KERNEL_HEAP_AREA) + MM_PML4_SPANS(KERNEL_HEAP_SIZE))
         return true;
 
+    if (i >= MM_PML4_SLOT(KERNEL_MMIO_AREA) && i < MM_PML4_SLOT(KERNEL_MMIO_AREA) + MM_PML4_SPANS(KERNEL_MMIO_SIZE))
+        return true;
+
     if (i == MM_PML4_SLOT(KERNEL_HIGH_AREA))
         return true;
 
