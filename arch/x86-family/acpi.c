@@ -195,8 +195,11 @@ int acpi_find(acpi_sdt_t** sdt, const char name[4]) {
 
         acpi_sdt_t* tmp = (acpi_sdt_t*)arch_vmm_p2v(address, ARCH_VMM_AREA_HEAP);
 
-        //! Check if it's a valid ACPI table
-        PANIC_ASSERT(acpi_cksum((const char*)tmp, tmp->length));
+#if DEBUG_LEVEL_WARN
+        if(!acpi_cksum((const char*)tmp, tmp->length)) {
+            kprintf("acpi: WARN! table %.4s as wrong checksum", name);
+        }
+#endif
 
         if (memcmp(tmp->magic, name, 4) != 0)
             continue;
