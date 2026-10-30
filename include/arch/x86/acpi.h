@@ -106,7 +106,7 @@ typedef struct {
     uint8_t reserved;
     uint8_t pwrmode;
     uint16_t sci_interrupt;
-    uint16_t smi_command;
+    uint32_t smi_command;
     uint8_t acpi_enable;
     uint8_t acpi_disable;
     uint8_t s4bios_req;
