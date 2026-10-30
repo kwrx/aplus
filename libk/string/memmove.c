@@ -37,19 +37,29 @@ void* memmove(void* dest, const void* src, size_t n) {
     DEBUG_ASSERT(src);
     DEBUG_ASSERT(n > 0);
 
-    unsigned char* d = (unsigned char*)dest;
-    unsigned char* s = (unsigned char*)src;
+    uintptr_t d = (uintptr_t)dest;
+    uintptr_t s = (uintptr_t)src;
 
 
-    if ((uintptr_t)dest < (uintptr_t)src) {
+    if (d < s) {
 
-        for (size_t i = 0; i < n; i++)
-            d[i] = s[i];
+        size_t i = 0;
+
+        for (; i + 8 <= n; i += 8)
+            *((uint64_t*)(d + i)) = *((uint64_t*)(s + i));
+
+        for (; i < n; i++)
+            *((uint8_t*)(d + i)) = *((uint8_t*)(s + i));
 
     } else {
 
-        for (size_t i = 0; i < n; i++)
-            d[n - (i + 1)] = s[n - (i + 1)];
+        size_t i = n;
+
+        for (; i >= 8; i -= 8)
+            *((uint64_t*)(d + i - 8)) = *((uint64_t*)(s + i - 8));
+
+        for (; i > 0; i--)
+            *((uint8_t*)(d + i - 1)) = *((uint8_t*)(s + i - 1));
     }
 
     return dest;
