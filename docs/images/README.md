@@ -1,6 +1,6 @@
 # Screenshots
 
-A timeline of aplus as it looked along the way, oldest first. Every screenshot was taken in a QEMU virtual machine; the newest ones were taken at 1920x1080 with `virtio-vga` and 4 CPUs.
+A timeline of aplus as it looked along the way, oldest first. Every screenshot was taken in a QEMU virtual machine, except for the last photo, taken on a real laptop; the newest screenshots were taken at 1920x1080 with `virtio-vga` and 4 CPUs.
 
 <br>
 
@@ -133,3 +133,13 @@ aplus-wm learned to draw context menus, both its own and on behalf of clients: a
 </p>
 
 * **Frosted launcher**: Super+Space opens the centred launcher as a `UI_WINDOW_BLUR` window, so the windows and the wallpaper behind it show through blurred
+
+### Late October 2026: on real hardware
+
+aplus running on a real machine, an old Huawei laptop with an 11th generation Intel Core i3. The desktop came up and the keyboard worked; the touchpad and the network card have no driver yet, so there is no mouse and no network.
+
+<p align="center" width="100%">
+    <img src="./v0.7-real-machine-test.jpg" alt="aplus v0.7 - the desktop on a Huawei laptop with an Intel Core i3-1115G4" width="100%"></img>
+</p>
+
+* **Hardware**: `/proc/cpuinfo` lists the four threads of the Intel Core i3-1115G4 at 3.00 GHz, and `free -h` reports about 8 GB of memory with some 830 MB in use
