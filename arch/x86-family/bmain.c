@@ -306,6 +306,9 @@ void bmain(multiboot_uint32_t magic, struct multiboot_tag* btags) {
     //* Initialize Physical Memory Manager
     pmm_init((core->memory.phys_upper + core->memory.phys_lower) * 1024);
 
+    //* Map Debug Console
+    arch_debug_map();
+
     //* Spawn BSP INIT Process
     arch_task_spawn_init();
 
