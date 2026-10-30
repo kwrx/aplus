@@ -163,6 +163,7 @@ uint64_t arch_random(void);
 
 
 void arch_debug_init(void);
+void arch_debug_map(void);
 void arch_debug_putc(char);
 void arch_debug_stacktrace(uintptr_t*, size_t);
 
