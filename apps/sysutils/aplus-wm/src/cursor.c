@@ -196,6 +196,21 @@ static bool wm_cursor_load(wm_cursor_t* cursor) {
 
 
 /**
+ * @brief Returns the current shape, decoding it from the theme the first time it is needed.
+ *
+ * @return The current shape, whose surface is NULL when the theme has none.
+ */
+static wm_cursor_t* wm_cursor_current(void) {
+
+    wm_cursor_t* cursor = &wm_cursors[wm_cursor_shape];
+
+    wm_cursor_load(cursor);
+
+    return cursor;
+}
+
+
+/**
  * @brief Draws the arrow to fall back on when the theme has given us nothing, with its tip at (x, y).
  *
  * @param cr The cairo context to draw with.
@@ -232,7 +247,7 @@ static void wm_cursor_paint_fallback(cairo_t* cr, double x, double y) {
  */
 wm_rect_t wm_cursor_rect(void) {
 
-    const wm_cursor_t* cursor = &wm_cursors[wm_cursor_shape];
+    const wm_cursor_t* cursor = wm_cursor_current();
 
     wm_rect_t r;
 
@@ -264,7 +279,7 @@ wm_rect_t wm_cursor_rect(void) {
  */
 void wm_cursor_paint(cairo_t* cr, double x, double y) {
 
-    const wm_cursor_t* cursor = &wm_cursors[wm_cursor_shape];
+    const wm_cursor_t* cursor = wm_cursor_current();
 
     if (!cursor->surface) {
         wm_cursor_paint_fallback(cr, x, y);
