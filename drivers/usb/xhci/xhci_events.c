@@ -93,6 +93,8 @@ xhci_handle_transfer_event(xhci_t *const xhci)
 		if (cc == CC_SUCCESS || cc == CC_SHORT_PACKET) {
 			TRB_SET(TL, intrq->ready,
 				intrq->size - TRB_GET(EVTL, ev));
+		} else if (cc == CC_STOPPED || cc == CC_STOPPED_LENGTH_INVALID) {
+			TRB_SET(TL, intrq->ready, 0);
 		} else {
 			xhci_debug("Interrupt Transfer failed: %d\n",
 				   cc);

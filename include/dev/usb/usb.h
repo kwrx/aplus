@@ -203,6 +203,7 @@ typedef enum { CONTROL = 0, ISOCHRONOUS = 1, BULK = 2, INTERRUPT = 3
 typedef struct {
 	usbdev_t *dev;
 	int endpoint;
+	int interface;
 	direction_t direction;
 	int toggle;
 	int maxpacketsize;
