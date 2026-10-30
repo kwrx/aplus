@@ -129,6 +129,19 @@ static void __unix_put(struct unix_sock* sock) {
 }
 
 
+/**
+ * @brief Records the calling task as the one holding this end, which SO_PEERCRED reports to the other end.
+ *
+ * @param sock The endpoint.
+ */
+static void __unix_cred_set(struct unix_sock* sock) {
+
+    sock->cred.pid = (int32_t)current_task->pid;
+    sock->cred.uid = (uint32_t)current_task->euid;
+    sock->cred.gid = (uint32_t)current_task->egid;
+}
+
+
 static struct unix_sock* __unix_alloc(int type) {
 
     struct unix_sock* sock = kcalloc(1, sizeof(struct unix_sock), GFP_KERNEL);
@@ -157,6 +170,8 @@ static struct unix_sock* __unix_alloc(int type) {
 
     atomic_store(&sock->refcount, 1);
     spinlock_init(&sock->lock);
+
+    __unix_cred_set(sock);
 
     return sock;
 }
@@ -781,6 +796,8 @@ long unix_listen(struct unix_sock* sock, int backlog) {
         }
 
         sock->state = UNIX_SOCK_LISTENING;
+
+        __unix_cred_set(sock);
     }
 
     return 0;
@@ -796,6 +813,8 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
 
     if (unlikely(sock->state != UNIX_SOCK_UNBOUND && sock->state != UNIX_SOCK_BOUND))
         return -EINVAL;
+
+    __unix_cred_set(sock);
 
 
     char path[CONFIG_PATH_MAX] = {0};
@@ -860,6 +879,7 @@ long unix_connect(struct unix_sock* sock, const void* addr, uint32_t len) {
 
             server->peer  = __unix_get(sock);
             sock->peer    = __unix_get(server);
+            server->cred  = listener->cred;
             server->state = UNIX_SOCK_CONNECTED;
             sock->state   = UNIX_SOCK_CONNECTED;
 
@@ -1041,4 +1061,52 @@ long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len) {
     __unix_put(peer);
 
     return __unix_addr_out(name, addr, len);
+}
+
+
+long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optval, uint32_t* optlen) {
+
+    DEBUG_ASSERT(sock);
+
+    if (unlikely(level != UNIX_SOL_SOCKET || optname != UNIX_SO_PEERCRED))
+        return -ENOPROTOOPT;
+
+    if (unlikely(!optval || !optlen))
+        return -EFAULT;
+
+    if (unlikely(!uio_check(optlen, R_OK | W_OK)))
+        return -EFAULT;
+
+    if (unlikely(sock->state != UNIX_SOCK_CONNECTED))
+        return -ENOTCONN;
+
+
+    struct unix_sock* peer = NULL;
+
+    scoped_lock(&sock->lock) {
+        peer = __unix_get(sock->peer);
+    }
+
+    if (unlikely(!peer))
+        return -ENOTCONN;
+
+    typeof(peer->cred) cred = peer->cred;
+
+    __unix_put(peer);
+
+
+    uint32_t copy = uio_r32(optlen);
+
+    if (copy > sizeof(cred))
+        copy = sizeof(cred);
+
+    if (unlikely(copy && !uio_check(optval, W_OK)))
+        return -EFAULT;
+
+    if (copy)
+        uio_memcpy_s2u(optval, &cred, copy);
+
+    uio_w32(optlen, copy);
+
+    return 0;
 }

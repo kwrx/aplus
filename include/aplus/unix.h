@@ -80,6 +80,13 @@ struct sockaddr_un_k {
     #define UNIX_TYPE_CLOEXEC  02000000
 
 
+    /**
+     * @brief The SO_PEERCRED option, with Linux's values for its level and name.
+     */
+    #define UNIX_SOL_SOCKET  1
+    #define UNIX_SO_PEERCRED 17
+
+
     #define UNIX_SOCK_BUFSIZ  CONFIG_PIPESIZ
     #define UNIX_SOCK_BACKLOG 128
 
@@ -110,6 +117,12 @@ struct unix_sock {
     inode_t* bound;
 
     int shutdown_flags;
+
+    struct {
+        int32_t pid;
+        uint32_t uid;
+        uint32_t gid;
+    } cred;
 
     spinlock_t lock;
 };
@@ -150,6 +163,11 @@ uint32_t unix_sock_seq(struct unix_sock* sock);
 void unix_sock_wait(struct unix_sock* sock, uint32_t seq);
 long unix_getsockname(struct unix_sock* sock, void* addr, uint32_t* len);
 long unix_getpeername(struct unix_sock* sock, void* addr, uint32_t* len);
+
+/**
+ * @brief Reads an option of a local socket, of which only SO_PEERCRED exists.
+ */
+long unix_getsockopt(struct unix_sock* sock, int level, int optname, void* optval, uint32_t* optlen);
 
 __END_DECLS
 
