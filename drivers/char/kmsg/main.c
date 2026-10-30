@@ -28,6 +28,7 @@
 #include <aplus/debug.h>
 #include <aplus/errno.h>
 #include <aplus/hal.h>
+#include <aplus/ipc.h>
 #include <aplus/module.h>
 #include <aplus/vfs.h>
 
@@ -45,7 +46,6 @@ MODULE_LICENSE("GPL");
 
 static ssize_t kmsg_read(device_t*, void*, size_t);
 static ssize_t kmsg_write(device_t*, const void*, size_t);
-
 
 device_t device = {
 
@@ -72,12 +72,36 @@ device_t device = {
 
 
 
+/**
+ * @brief Drains the unread part of the kernel log, which every reader shares one cursor into.
+ *
+ * @param device The kmsg device.
+ * @param buf Where to copy the log.
+ * @param size How many bytes fit in @p buf.
+ * @return How many bytes were copied, 0 once the log has been read up to its end.
+ */
 static ssize_t kmsg_read(device_t* device, void* buf, size_t size) {
+
+    static spinlock_t read_lock = SPINLOCK_INIT;
 
     DEBUG_ASSERT(device);
     DEBUG_ASSERT(buf);
 
-    return 0;
+    size_t i = 0;
+    scoped_lock(&read_lock) {
+
+        for (; i < size; i++) {
+
+            int ch = arch_debug_getc();
+
+            if (ch < 0)
+                break;
+
+            ((char*)buf)[i] = (char)ch;
+        }
+    }
+
+    return i;
 }
 
 
@@ -97,9 +121,9 @@ static ssize_t kmsg_write(device_t* device, const void* buf, size_t size) {
     arch_debug_putc('7');
     arch_debug_putc('m');
 
-    size_t i;
-    for (i = 0; i < size; i++)
+    for (size_t i = 0; i < size; i++) {
         arch_debug_putc(((char*)buf)[i]);
+    }
 
     arch_debug_putc('\e');
     arch_debug_putc('[');
@@ -107,7 +131,6 @@ static ssize_t kmsg_write(device_t* device, const void* buf, size_t size) {
     arch_debug_putc('m');
 
     kprintf_resume();
-
 
     return size;
 }
