@@ -455,57 +455,43 @@ set_address(hci_t *controller, usb_speed speed, int hubport, int hubaddr)
 	}
 
 	/*
-	 * If the device is not well known (ifnum == -1), we use the first
-	 * interface we encounter, as there was no need to implement something
-	 * else for the time being. If you need it, see the SetInterface and
-	 * GetInterface functions in the USB specification and set it yourself.
+	 * If the device is not well known (ifnum == -1), every interface is
+	 * used in its default setting and the class driver picks among them.
 	 */
 	usb_debug("device has %x interfaces\n", cd->bNumInterfaces);
 	int ifnum = usb_interface_check(dev->descriptor->idVendor,
 					dev->descriptor->idProduct);
-	if (cd->bNumInterfaces > 1 && ifnum < 0)
-		usb_debug("NOTICE: Your device has multiple interfaces and\n"
-			   "this driver will only use the first one. That may\n"
-			   "be the wrong choice and cause the device to not\n"
-			   "work correctly. Please report this case\n"
-			   "(including the above debugging output) to\n"
-			   "coreboot@coreboot.org to have the device added to\n"
-			   "the list of well-known quirks.\n");
 
 	u8 *end = (void *)dev->configuration + cd->wTotalLength;
-	interface_descriptor_t *intf;
 	u8 *ptr;
 
-	/* Find our interface (or the first good one if we don't know) */
-	for (ptr = (void *)dev->configuration + sizeof(*cd); ; ptr += ptr[0]) {
-		if (ptr + 2 > end || !ptr[0] || ptr + ptr[0] > end) {
-			usb_debug("Couldn't find usable DT_INTF\n");
-			usb_detach_device(controller, dev->address);
-			return -1;
-		}
-		if (ptr[1] != DT_INTF)
-			continue;
-		intf = (void *)ptr;
-		if (intf->bLength != sizeof(*intf)) {
-			usb_debug("Skipping broken DT_INTF\n");
-			continue;
-		}
-		if (ifnum >= 0 && intf->bInterfaceNumber != ifnum)
-			continue;
-		usb_debug("Interface %d: class 0x%x, sub 0x%x. proto 0x%x\n",
-			intf->bInterfaceNumber, intf->bInterfaceClass,
-			intf->bInterfaceSubClass, intf->bInterfaceProtocol);
-		ptr += sizeof(*intf);
-		break;
-	}
-
-	/* Gather up all endpoints belonging to this interface */
+	/* Gather the endpoints of every interface's default setting (or only of the known one) */
+	interface_descriptor_t *intf = NULL;
+	int ifcur = -1;
 	dev->num_endp = 1;
-	for (; ptr + 2 <= end && ptr[0] && ptr + ptr[0] <= end; ptr += ptr[0]) {
-		if (ptr[1] == DT_INTF || ptr[1] == DT_CFG ||
+	for (ptr = (void *)dev->configuration + sizeof(*cd);
+			ptr + 2 <= end && ptr[0] && ptr + ptr[0] <= end; ptr += ptr[0]) {
+		if (ptr[1] == DT_INTF) {
+			interface_descriptor_t *const id = (void *)ptr;
+			ifcur = -1;
+			if (id->bLength != sizeof(*id)) {
+				usb_debug("Skipping broken DT_INTF\n");
+				continue;
+			}
+			if (id->bAlternateSetting != 0)
+				continue;
+			if (ifnum >= 0 && id->bInterfaceNumber != ifnum)
+				continue;
+			usb_debug("Interface %d: class 0x%x, sub 0x%x. proto 0x%x\n",
+				id->bInterfaceNumber, id->bInterfaceClass,
+				id->bInterfaceSubClass, id->bInterfaceProtocol);
+			ifcur = id->bInterfaceNumber;
+			if (!intf)
+				intf = id;
+			continue;
+		}
+		if (ptr[1] != DT_ENDP || ifcur < 0 ||
 				dev->num_endp >= ARRAY_SIZE(dev->endpoints))
-			break;
-		if (ptr[1] != DT_ENDP)
 			continue;
 
 		endpoint_descriptor_t *desc = (void *)ptr;
@@ -521,12 +507,19 @@ set_address(hci_t *controller, usb_speed speed, int hubport, int hubaddr)
 		endpoint_t *ep = &dev->endpoints[dev->num_endp++];
 		ep->dev = dev;
 		ep->endpoint = desc->bEndpointAddress;
+		ep->interface = ifcur;
 		ep->toggle = 0;
 		ep->maxpacketsize = desc->wMaxPacketSize;
 		ep->direction = (desc->bEndpointAddress & 0x80) ? IN : OUT;
 		ep->type = desc->bmAttributes & 0x3;
 		ep->interval = usb_decode_interval(dev->speed, ep->type,
 						    desc->bInterval);
+	}
+
+	if (!intf) {
+		usb_debug("Couldn't find usable DT_INTF\n");
+		usb_detach_device(controller, dev->address);
+		return -1;
 	}
 
 	if ((controller->finish_device_config &&
